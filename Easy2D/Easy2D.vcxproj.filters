@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\Style">
+      <UniqueIdentifier>{18e7fd5c-0935-47bb-9a2e-38da40377f7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Tool">
+      <UniqueIdentifier>{682a1a3c-39d8-4ac9-ba03-fa90c089c9ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Node">
+      <UniqueIdentifier>{d6778635-8947-4f9b-9388-dd088642b5b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Node\Sprite">
+      <UniqueIdentifier>{e5ec6183-113b-4140-8285-18b18ea37d15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Node\Button">
+      <UniqueIdentifier>{051f9343-e5a5-4491-8110-f13fc27c3827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Node\Shape">
+      <UniqueIdentifier>{065a3244-7169-4a45-bc9f-f2a80d8a9759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Msg">
+      <UniqueIdentifier>{72dbabab-8278-4ee4-917f-bfffb474a51b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Style\Color.cpp">
+      <Filter>源文件\Style</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\Timer.cpp">
+      <Filter>源文件\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\MusicUtils.cpp">
+      <Filter>源文件\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\FileUtils.cpp">
+      <Filter>源文件\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Style\FontStyle.cpp">
+      <Filter>源文件\Style</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\BatchNode.cpp">
+      <Filter>源文件\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Image.cpp">
+      <Filter>源文件\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Node.cpp">
+      <Filter>源文件\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Text.cpp">
+      <Filter>源文件\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Sprite\Sprite.cpp">
+      <Filter>源文件\Node\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Sprite\SpriteFrame.cpp">
+      <Filter>源文件\Node\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Shape\Circle.cpp">
+      <Filter>源文件\Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Shape\Rectangle.cpp">
+      <Filter>源文件\Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Shape\Shape.cpp">
+      <Filter>源文件\Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Button\Button.cpp">
+      <Filter>源文件\Node\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\MouseNode.cpp">
+      <Filter>源文件\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Button\TextButton.cpp">
+      <Filter>源文件\Node\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Button\ImageButton.cpp">
+      <Filter>源文件\Node\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Style\LineStyle.cpp">
+      <Filter>源文件\Style</Filter>
+    </ClCompile>
+    <ClCompile Include="FreePool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Style\FillStyle.cpp">
+      <Filter>源文件\Style</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\MouseMsg.cpp">
+      <Filter>源文件\Msg</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\KeyMsg.cpp">
+      <Filter>源文件\Msg</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="easy2d.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
