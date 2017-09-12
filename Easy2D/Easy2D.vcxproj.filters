@@ -25,23 +25,20 @@
     <Filter Include="源文件\Node\Sprite">
       <UniqueIdentifier>{e5ec6183-113b-4140-8285-18b18ea37d15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Node\Button">
-      <UniqueIdentifier>{051f9343-e5a5-4491-8110-f13fc27c3827}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\Node\Shape">
       <UniqueIdentifier>{065a3244-7169-4a45-bc9f-f2a80d8a9759}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\Msg">
       <UniqueIdentifier>{72dbabab-8278-4ee4-917f-bfffb474a51b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Node\Button">
+      <UniqueIdentifier>{bdcd902b-b53d-4537-9632-76ea14c141a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -87,17 +84,8 @@
     <ClCompile Include="Node\Shape\Shape.cpp">
       <Filter>源文件\Node\Shape</Filter>
     </ClCompile>
-    <ClCompile Include="Node\Button\Button.cpp">
-      <Filter>源文件\Node\Button</Filter>
-    </ClCompile>
     <ClCompile Include="Node\MouseNode.cpp">
       <Filter>源文件\Node</Filter>
-    </ClCompile>
-    <ClCompile Include="Node\Button\TextButton.cpp">
-      <Filter>源文件\Node\Button</Filter>
-    </ClCompile>
-    <ClCompile Include="Node\Button\ImageButton.cpp">
-      <Filter>源文件\Node\Button</Filter>
     </ClCompile>
     <ClCompile Include="Style\LineStyle.cpp">
       <Filter>源文件\Style</Filter>
@@ -116,6 +104,18 @@
     </ClCompile>
     <ClCompile Include="Msg\KeyMsg.cpp">
       <Filter>源文件\Msg</Filter>
+    </ClCompile>
+    <ClCompile Include="App.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Button\Button.cpp">
+      <Filter>源文件\Node\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Button\ImageButton.cpp">
+      <Filter>源文件\Node\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\Button\TextButton.cpp">
+      <Filter>源文件\Node\Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

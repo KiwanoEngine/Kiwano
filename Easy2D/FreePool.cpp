@@ -34,6 +34,5 @@ void FreePool::__flush()
 
 void FreePool::add(Object * nptr)
 {
-	// 将一个对象放入释放池中
-	pool.push_back(nptr);
+	pool.push_back(nptr);	// 将一个对象放入释放池中
 }

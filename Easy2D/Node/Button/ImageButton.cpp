@@ -14,7 +14,7 @@ ImageButton::ImageButton() :
 ImageButton::ImageButton(Image * image) :
 	ImageButton()
 {
-	setNormalImage(image);	// 设置按钮在正常状态时的图片
+	setNormal(image);	// 设置按钮在正常状态时的图片
 }
 
 ImageButton::~ImageButton()
@@ -70,7 +70,7 @@ void ImageButton::_onDisable()
 	}
 }
 
-void ImageButton::setNormalImage(Image * image)
+void ImageButton::setNormal(Image * image)
 {
 	if (image)
 	{
@@ -85,7 +85,7 @@ void ImageButton::setNormalImage(Image * image)
 	}
 }
 
-void ImageButton::setMouseInImage(Image * image)
+void ImageButton::setMouseIn(Image * image)
 {
 	if (image)
 	{
@@ -96,7 +96,7 @@ void ImageButton::setMouseInImage(Image * image)
 	}
 }
 
-void ImageButton::setSelectedImage(Image * image)
+void ImageButton::setSelected(Image * image)
 {
 	if (image)
 	{
@@ -107,7 +107,7 @@ void ImageButton::setSelectedImage(Image * image)
 	}
 }
 
-void ImageButton::setUnableImage(Image * image)
+void ImageButton::setUnable(Image * image)
 {
 	if (image)
 	{

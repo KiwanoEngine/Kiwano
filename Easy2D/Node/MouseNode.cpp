@@ -25,7 +25,7 @@ bool MouseNode::_exec(bool active)
 	if (m_eStatus == MOUSEIN || m_eStatus == SELECTED)
 	{
 		// 节点被鼠标选中，且鼠标左键抬起
-		if (m_bTarget && MouseMsg::getLButtonUpMsg())
+		if (m_bTarget && MouseMsg::isOnLButtonUp())
 		{
 			onClicked();	// 执行回调函数
 		}

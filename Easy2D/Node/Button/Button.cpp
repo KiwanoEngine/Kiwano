@@ -43,7 +43,7 @@ void Button::_judge()
 		_setMouseIn();
 
 		// 若鼠标在按钮上，且鼠标左键按下
-		if (MouseMsg::getLButtonDownMsg())
+		if (MouseMsg::isLButtonDown())
 		{
 			_setSelected();
 		}

@@ -159,7 +159,7 @@ void Image::screenshot()
 	{
 		// ±£´æ´°¿Ú½ØÍ¼
 		IMAGE image;
-		getimage(&image, 0, 0, Application::get()->getWidth(), Application::get()->getHeight());
+		getimage(&image, 0, 0, App::get()->getWidth(), App::get()->getHeight());
 		saveimage(savePath.c_str(), &image);
 	}
 }

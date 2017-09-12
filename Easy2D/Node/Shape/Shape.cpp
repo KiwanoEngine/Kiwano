@@ -1,7 +1,9 @@
 #include "..\..\Easy2d.h"
 #include "..\..\EasyX\easyx.h"
 
-Shape::Shape()
+Shape::Shape() :
+	lineColor(Color::black),
+	fillColor(Color::white)
 {
 }
 

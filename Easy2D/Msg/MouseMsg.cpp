@@ -15,7 +15,7 @@ void easy2d::MouseMsg::__exec()
 		// 转换鼠标消息
 		ConvertMsg(GetMouseMsg());
 		// 执行场景程序
-		Application::get()->getCurrentScene()->_exec();
+		App::get()->getCurrentScene()->_exec();
 	}
 }
 
@@ -24,17 +24,17 @@ MouseMsg MouseMsg::getMsg()
 	return s_mouseMsg;	// 获取当前鼠标消息
 }
 
-bool MouseMsg::getLButtonDown()
+bool MouseMsg::isLButtonDown()
 {
 	return s_mouseMsg.mkLButton;
 }
 
-bool MouseMsg::getRButtonDown()
+bool MouseMsg::isRButtonDown()
 {
 	return s_mouseMsg.mkRButton;
 }
 
-bool MouseMsg::getMButtonDown()
+bool MouseMsg::isMButtonDown()
 {
 	return s_mouseMsg.mkMButton;
 }
@@ -54,57 +54,57 @@ int MouseMsg::getMouseWheel()
 	return s_mouseMsg.wheel;
 }
 
-bool MouseMsg::getMouseMovedMsg()
+bool MouseMsg::isOnMouseMoved()
 {
 	return s_mouseMsg.uMsg == WM_MOUSEMOVE;
 }
 
-bool MouseMsg::getLButtonDBClickedMsg()
+bool MouseMsg::isOnLButtonDBClicked()
 {
 	return s_mouseMsg.uMsg == WM_LBUTTONDBLCLK;
 }
 
-bool MouseMsg::getLButtonDownMsg()
+bool MouseMsg::isOnLButtonDown()
 {
 	return s_mouseMsg.uMsg == WM_LBUTTONDOWN;
 }
 
-bool MouseMsg::getLButtonUpMsg()
+bool MouseMsg::isOnLButtonUp()
 {
 	return s_mouseMsg.uMsg == WM_LBUTTONUP;
 }
 
-bool MouseMsg::getRButtonDBClicked()
+bool MouseMsg::isOnRButtonDBClicked()
 {
 	return s_mouseMsg.uMsg == WM_RBUTTONDBLCLK;
 }
 
-bool MouseMsg::getRButtonDownMsg()
+bool MouseMsg::isOnRButtonDown()
 {
 	return s_mouseMsg.uMsg == WM_RBUTTONDOWN;
 }
 
-bool MouseMsg::getRButtonUpMsg()
+bool MouseMsg::isOnRButtonUp()
 {
 	return s_mouseMsg.uMsg == WM_LBUTTONUP;
 }
 
-bool MouseMsg::getMButtonDBClicked()
+bool MouseMsg::isOnMButtonDBClicked()
 {
 	return s_mouseMsg.uMsg == WM_MBUTTONDBLCLK;
 }
 
-bool MouseMsg::getMButtonDownMsg()
+bool MouseMsg::isOnMButtonDown()
 {
 	return s_mouseMsg.uMsg == WM_MBUTTONDOWN;
 }
 
-bool MouseMsg::getMButtonUpMsg()
+bool MouseMsg::isOnMButtonUp()
 {
 	return s_mouseMsg.uMsg == WM_MBUTTONUP;
 }
 
-bool MouseMsg::getWheelMsg()
+bool MouseMsg::isOnWheel()
 {
 	return s_mouseMsg.uMsg == WM_MOUSEWHEEL;
 }
@@ -118,8 +118,7 @@ void ConvertMsg(MOUSEMSG msg)
 {
 	// 将 MOUSEMSG 转换为 MouseMsg
 	/// 虽然 MOUSEMSG 和 MouseMsg 本质上是一样的
-	/// 但是为了实现 Easy2D 与 EasyX 的相对隔离，所以定义了新的 MouseMsg
-	/// 将来 Msg 对消息的处理会统一用 WinAPI实现，而不再用 EasyX 的函数
+	/// 但是为了实现 Easy2D 与 EasyX 的分离，所以定义了新的 MouseMsg
 	s_mouseMsg.uMsg = msg.uMsg;
 	s_mouseMsg.mkLButton = msg.mkLButton;
 	s_mouseMsg.mkMButton = msg.mkMButton;

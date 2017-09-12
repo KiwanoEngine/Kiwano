@@ -8,13 +8,13 @@
 #pragma comment(lib, "winmm.lib")
 
 
-// Application 的唯一实例
-static Application * s_pInstance = nullptr;
+// App 的唯一实例
+static App * s_pInstance = nullptr;
 // 坐标原点的物理坐标
 static int originX = 0;
 static int originY = 0;
 
-Application::Application() : 
+App::App() : 
 	m_currentScene(nullptr), 
 	m_nextScene(nullptr), 
 	m_bRunning(false), 
@@ -23,40 +23,40 @@ Application::Application() :
 	m_nHeight(0),
 	m_nWindowMode(0)
 {
-	assert(!s_pInstance);	// 不能同时存在两个 Application 实例
+	assert(!s_pInstance);	// 不能同时存在两个 App 实例
 	s_pInstance = this;		// 保存实例对象
 	setFPS(60);				// 默认 FPS 为 60
 }
 
-Application::~Application()
+App::~App()
 {
-	destory();				// 销毁 Application
+	destory();				// 销毁 App
 }
 
-Application * Application::get()
+App * App::get()
 {
 	assert(s_pInstance);	// 断言实例存在
-	return s_pInstance;		// 获取 Application 的唯一实例
+	return s_pInstance;		// 获取 App 的唯一实例
 }
 
-void Application::setOrigin(int originX, int originY)
+void App::setOrigin(int originX, int originY)
 {
 	::originX = originX;
 	::originY = originY;
 	setorigin(originX, originY);
 }
 
-int Application::getOriginX()
+int App::getOriginX()
 {
 	return ::originX;
 }
 
-int Application::getOriginY()
+int App::getOriginY()
 {
 	return ::originY;
 }
 
-int Application::run()
+int App::run()
 {
 	// 开启批量绘图
 	BeginBatchDraw();
@@ -115,7 +115,7 @@ int Application::run()
 	return 0;
 }
 
-void Application::_initGraph()
+void App::_initGraph()
 {
 	// 创建绘图环境
 	initgraph(m_nWidth, m_nHeight, m_nWindowMode);
@@ -152,7 +152,7 @@ void Application::_initGraph()
 	}
 }
 
-void Application::_mainLoop()
+void App::_mainLoop()
 {
 	// 游戏暂停
 	if (m_bPause)
@@ -178,7 +178,7 @@ void Application::_mainLoop()
 	FreePool::__flush();		// 刷新内存池
 }
 
-void Application::createWindow(int width, int height, int mode)
+void App::createWindow(int width, int height, int mode)
 {
 	// 保存窗口信息
 	m_nWidth = width;
@@ -188,7 +188,7 @@ void Application::createWindow(int width, int height, int mode)
 	_initGraph();
 }
 
-void Application::createWindow(tstring title, int width, int height, int mode)
+void App::createWindow(tstring title, int width, int height, int mode)
 {
 	// 保存窗口信息
 	m_nWidth = width;
@@ -199,43 +199,37 @@ void Application::createWindow(tstring title, int width, int height, int mode)
 	_initGraph();
 }
 
-void Application::setWindowSize(int width, int height)
+void App::setWindowSize(int width, int height)
 {
 	// 游戏正在运行时才允许修改窗口大小
 	assert(m_bRunning);
 
-	// 重启窗口
-	closegraph();
-	/* 重启窗口会导致内存占用急剧增加，也许是 EasyX 遗留的 BUG，已向 yangw80 报告了这个情况 */
-	initgraph(width, height, m_nWindowMode);
-
-	/* EasyX 不支持用 Windows API 修改窗口大小 */
-	/////////////////////////////////////////////////////////////////////////////////
-	//	// 获取屏幕分辨率
-	//	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	//	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	//	// 获取窗口大小（包含菜单栏）
-	//	CRect rcWindow;
-	//	GetWindowRect(GetHWnd(), &rcWindow);
-	//	// 获取客户区大小
-	//	CRect rcClient;
-	//	GetClientRect(GetHWnd(), &rcClient);
-	//	// 计算边框大小
-	//	width += (rcWindow.right - rcWindow.left) - (rcClient.right - rcClient.left);
-	//	height += (rcWindow.bottom - rcWindow.top) - (rcClient.bottom - rcClient.top);
-	//	// 修改窗口大小，并设置窗口在屏幕居中
-	//	SetWindowPos(
-	//		GetHWnd(),
-	//		HWND_TOP,
-	//		(screenWidth - width) / 2,
-	//		(screenHeight - height) / 2,
-	//		width,
-	//		height,
-	//		SWP_SHOWWINDOW | SWP_NOREDRAW);
-	//////////////////////////////////////////////////////////////////////////////////
+	// 获取屏幕分辨率
+	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	// 获取窗口大小（包含菜单栏）
+	CRect rcWindow;
+	GetWindowRect(GetHWnd(), &rcWindow);
+	// 获取客户区大小
+	CRect rcClient;
+	GetClientRect(GetHWnd(), &rcClient);
+	// 计算边框大小
+	width += (rcWindow.right - rcWindow.left) - (rcClient.right - rcClient.left);
+	height += (rcWindow.bottom - rcWindow.top) - (rcClient.bottom - rcClient.top);
+	// 销毁当前窗口
+	// DestroyWindow(GetHWnd());/* 无法操作多线程导致失效 */
+	// 修改窗口大小，并设置窗口在屏幕居中
+	SetWindowPos(GetHWnd(), HWND_TOP,
+		(screenWidth - width) / 2,
+		(screenHeight - height) / 2,
+		width,
+		height,
+		SWP_SHOWWINDOW);
+	// 重置窗口属性
+	reset();
 }
 
-void Application::setWindowText(tstring title)
+void App::setWindowText(tstring title)
 {
 	// 设置窗口标题
 	SetWindowText(GetHWnd(), title.c_str());
@@ -243,13 +237,12 @@ void Application::setWindowText(tstring title)
 	m_sTitle = title;
 }
 
-void Application::close()
+void App::close()
 {
-	// 关闭绘图环境
-	closegraph();
+	closegraph();	// 关闭绘图环境
 }
 
-void Application::enterScene(Scene * scene, bool save)
+void App::enterScene(Scene * scene, bool save)
 {
 	// 保存下一场景的指针
 	m_nextScene = scene;
@@ -257,7 +250,7 @@ void Application::enterScene(Scene * scene, bool save)
 	m_bSaveScene = save;
 }
 
-void Application::backScene()
+void App::backScene()
 {
 	// 从栈顶取出场景指针，作为下一场景
 	m_nextScene = m_sceneStack.top();
@@ -265,7 +258,12 @@ void Application::backScene()
 	m_bSaveScene = false;
 }
 
-void Application::_enterNextScene()
+void App::setBkColor(COLORREF color)
+{
+	setbkcolor(color);
+}
+
+void App::_enterNextScene()
 {
 	// 若下一场景处于栈顶，说明正在返回上一场景
 	if (m_sceneStack.size() && m_nextScene == m_sceneStack.top())
@@ -286,27 +284,27 @@ void Application::_enterNextScene()
 	m_nextScene = nullptr;					// 下一场景置空
 }
 
-void Application::quit()
+void App::quit()
 {
 	m_bRunning = false;
 }
 
-void Application::end()
+void App::end()
 {
 	m_bRunning = false;
 }
 
-void Application::pause()
+void App::pause()
 {
 	m_bPause = true;
 }
 
-bool Application::isRunning()
+bool App::isRunning()
 {
 	return m_bRunning && !m_bPause;
 }
 
-void Application::reset()
+void App::reset()
 {
 	// 重置绘图环境
 	graphdefaults();
@@ -314,18 +312,18 @@ void Application::reset()
 	setbkcolor(Color::black);
 }
 
-Scene * Application::getCurrentScene()
+Scene * App::getCurrentScene()
 {
 	// 获取当前场景的指针
 	return m_currentScene;
 }
 
-LPCTSTR easy2d::Application::getVersion()
+LPCTSTR easy2d::App::getVersion()
 {
 	return _T("1.0.0");
 }
 
-void Application::setFPS(DWORD fps)
+void App::setFPS(DWORD fps)
 {
 	// 设置画面帧率，以毫秒为单位
 	LARGE_INTEGER nFreq;
@@ -333,17 +331,17 @@ void Application::setFPS(DWORD fps)
 	m_nAnimationInterval.QuadPart = (LONGLONG)(1.0 / fps * nFreq.QuadPart);
 }
 
-int Application::getWidth() const
+int App::getWidth() const
 {
 	return m_nWidth;
 }
 
-int Application::getHeight() const
+int App::getHeight() const
 {
 	return m_nHeight;
 }
 
-void Application::free()
+void App::free()
 {
 	// 释放场景内存
 	SAFE_DELETE(m_currentScene);
@@ -359,7 +357,7 @@ void Application::free()
 	Timer::clearAllTimers();
 }
 
-void Application::destory()
+void App::destory()
 {
 	// 释放所有内存
 	free();

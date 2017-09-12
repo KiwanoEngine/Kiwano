@@ -338,7 +338,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="App.cpp" />
     <ClCompile Include="FreePool.cpp" />
     <ClCompile Include="Msg\KeyMsg.cpp" />
     <ClCompile Include="Msg\MouseMsg.cpp" />

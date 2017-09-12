@@ -14,7 +14,7 @@ TextButton::TextButton() :
 TextButton::TextButton(Text * text) :
 	TextButton()
 {
-	setNormalText(text);	// 设置按钮在正常状态时的文字
+	setNormal(text);	// 设置按钮在正常状态时的文字
 }
 
 TextButton::~TextButton()
@@ -70,7 +70,7 @@ void TextButton::_onDisable()
 	}
 }
 
-void TextButton::setNormalText(Text * text)
+void TextButton::setNormal(Text * text)
 {
 	if (text)
 	{
@@ -85,7 +85,7 @@ void TextButton::setNormalText(Text * text)
 	}
 }
 
-void TextButton::setMouseInText(Text * text)
+void TextButton::setMouseIn(Text * text)
 {
 	if (text)
 	{
@@ -96,7 +96,7 @@ void TextButton::setMouseInText(Text * text)
 	}
 }
 
-void TextButton::setSelectedText(Text * text)
+void TextButton::setSelected(Text * text)
 {
 	if (text)
 	{
@@ -107,7 +107,7 @@ void TextButton::setSelectedText(Text * text)
 	}
 }
 
-void TextButton::setUnableText(Text * text)
+void TextButton::setUnable(Text * text)
 {
 	if (text)
 	{

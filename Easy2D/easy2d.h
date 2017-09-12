@@ -11,6 +11,10 @@
 	#error Easy2D is only for C++
 #endif
 
+#if _MSC_VER < 1600
+	#error Do Visual Studio 2010/2013/2015/2017 specific stuff
+#endif
+
 
 // String macros
 
@@ -52,7 +56,7 @@
 namespace easy2d {
 
 // 基础类
-class Application;
+class App;
 class Scene;
 class KeyMsg;
 class MouseMsg;
@@ -85,7 +89,7 @@ typedef std::function<void()>		TIMER_CALLBACK;
 typedef std::function<void(VK_KEY)>	KEY_CALLBACK;
 
 
-class Application
+class App
 {
 protected:
 	tstring				m_sTitle;
@@ -106,13 +110,13 @@ protected:
 	void _enterNextScene();
 
 public:
-	Application();
-	~Application();
+	App();
+	~App();
 
 	// 窗口可选模式
 	enum { SHOW_CONSOLE = 1, NO_CLOSE = 2, NO_MINI_MIZE = 4 };
 	// 获取程序实例
-	static Application * get();
+	static App * get();
 	// 设置坐标原点
 	static void setOrigin(int originX, int originY);
 	// 获取坐标原点的物理横坐标
@@ -131,12 +135,12 @@ public:
 	void createWindow(int width, int height, int mode = 0);
 	// 定义绘图窗口
 	void createWindow(tstring title, int width, int height, int mode = 0);
+	// 关闭窗口
+	void close();
 	// 修改窗口大小
 	void setWindowSize(int width, int height);
 	// 设置窗口标题
 	void setWindowText(tstring title);
-	// 关闭窗口
-	void close();
 	// 获取窗口宽度
 	int getWidth() const;
 	// 获取窗口高度
@@ -145,6 +149,8 @@ public:
 	void enterScene(Scene *scene, bool save = true);
 	// 返回上一场景
 	void backScene();
+	// 修改窗口背景色
+	void setBkColor(COLORREF color);
 	// 游戏是否正在运行
 	bool isRunning();
 	// 设置帧率
@@ -163,7 +169,7 @@ public:
 
 class FreePool
 {
-	friend class Application;
+	friend class App;
 
 private:
 	static void __flush();
@@ -175,7 +181,7 @@ public:
 
 class Scene
 {
-	friend class Application;
+	friend class App;
 	friend class MouseMsg;
 
 protected:
@@ -200,7 +206,7 @@ public:
 
 class MouseMsg
 {
-	friend class Application;
+	friend class App;
 
 private:
 	static void __exec();
@@ -218,11 +224,11 @@ public:
 	// 获取当前鼠标消息
 	static MouseMsg getMsg();
 	// 左键是否按下
-	static bool getLButtonDown();
+	static bool isLButtonDown();
 	// 右键是否按下
-	static bool getRButtonDown();
+	static bool isRButtonDown();
 	// 中键是否按下
-	static bool getMButtonDown();
+	static bool isMButtonDown();
 	// 获取鼠标X坐标
 	static int getMouseX();
 	// 获取鼠标Y坐标
@@ -230,27 +236,27 @@ public:
 	// 获取鼠标滚轮值
 	static int getMouseWheel();
 	// 鼠标移动消息
-	static bool getMouseMovedMsg();
+	static bool isOnMouseMoved();
 	// 左键双击消息
-	static bool getLButtonDBClickedMsg();
+	static bool isOnLButtonDBClicked();
 	// 右键按下消息
-	static bool getLButtonDownMsg();
+	static bool isOnLButtonDown();
 	// 左键弹起消息
-	static bool getLButtonUpMsg();
+	static bool isOnLButtonUp();
 	// 右键双击消息
-	static bool getRButtonDBClicked();
+	static bool isOnRButtonDBClicked();
 	// 右键按下消息
-	static bool getRButtonDownMsg();
+	static bool isOnRButtonDown();
 	// 右键弹起消息
-	static bool getRButtonUpMsg();
+	static bool isOnRButtonUp();
 	// 中键双击消息
-	static bool getMButtonDBClicked();
+	static bool isOnMButtonDBClicked();
 	// 中键按下消息
-	static bool getMButtonDownMsg();
+	static bool isOnMButtonDown();
 	// 中键弹起消息
-	static bool getMButtonUpMsg();
+	static bool isOnMButtonUp();
 	// 鼠标滚轮拨动消息
-	static bool getWheelMsg();
+	static bool isOnWheel();
 	// 清空鼠标消息
 	static void resetMouseMsg();
 };
@@ -258,7 +264,7 @@ public:
 
 class KeyMsg
 {
-	friend class Application;
+	friend class App;
 
 public:
 	// 字母键值
@@ -352,7 +358,7 @@ public:
 
 class Timer
 {
-	friend class Application;
+	friend class App;
 
 protected:
 	bool			m_bRunning;
@@ -798,13 +804,13 @@ public:
 	virtual ~TextButton();
 
 	// 设置按钮文字
-	void setNormalText(Text * text);
+	void setNormal(Text * text);
 	// 设置鼠标移入时的按钮文字
-	void setMouseInText(Text * text);
+	void setMouseIn(Text * text);
 	// 设置鼠标选中时的按钮文字
-	void setSelectedText(Text * text);
+	void setSelected(Text * text);
 	// 设置按钮禁用时的按钮文字
-	void setUnableText(Text * text);
+	void setUnable(Text * text);
 
 	// 设置按钮横坐标
 	virtual void setX(int x) override;
@@ -840,13 +846,13 @@ public:
 	virtual ~ImageButton();
 
 	// 设置按钮图片
-	void setNormalImage(Image * image);
+	void setNormal(Image * image);
 	// 设置鼠标移入时的按钮图片
-	void setMouseInImage(Image * image);
+	void setMouseIn(Image * image);
 	// 设置鼠标选中时的按钮图片
-	void setSelectedImage(Image * image);
+	void setSelected(Image * image);
 	// 设置按钮禁用时的按钮图片
-	void setUnableImage(Image * image);
+	void setUnable(Image * image);
 
 	// 设置按钮横坐标
 	virtual void setX(int x) override;
@@ -863,8 +869,8 @@ class Shape :
 protected:
 	enum STYLE { round, solid, fill };	// 形状填充样式
 	STYLE		_style;
-	COLORREF	fillColor = 0;
-	COLORREF	lineColor = 0;
+	COLORREF	fillColor;
+	COLORREF	lineColor;
 
 protected:
 	virtual void _onDraw() override;
