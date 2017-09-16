@@ -52,10 +52,25 @@ float Image::getScaleY() const
 	return m_fScaleY;
 }
 
-void Image::setImageFile(LPCTSTR ImageFile, int x, int y, int width, int height)
+bool Image::setImageFile(LPCTSTR ImageFile, int x, int y, int width, int height)
 {
+	//判断图片路径是否存在
+	if (!PathFileExists(ImageFile))
+	{
+		return false;
+	}
+	// 清空原资源
+	if (!m_Image.IsNull())
+	{
+		m_Image.Destroy();
+	}
 	// 加载图片
 	m_Image.Load(ImageFile);
+	// 加载失败
+	if (m_Image.IsNull()) 
+	{
+		return false;
+	}
 	// 获取扩展名，对 PNG 图片进行特殊处理
 	if (_T(".png") == FileUtils::getFileExtension(ImageFile))
 	{
@@ -68,18 +83,27 @@ void Image::setImageFile(LPCTSTR ImageFile, int x, int y, int width, int height)
 	m_rDest.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
 	// 裁剪图片大小
 	crop(x, y, width, height);
+
+	return true;
 }
 
-void Image::setImageRes(LPCTSTR pResName, int x, int y, int width, int height)
+bool Image::setImageRes(LPCTSTR pResName, int x, int y, int width, int height)
 {
 	// 从资源加载图片（不支持 PNG）
 	m_Image.LoadFromResource(GetModuleHandle(NULL), pResName);
+	// 加载失败
+	if (m_Image.IsNull())
+	{
+		return false;
+	}
 	// 重置缩放属性
 	m_fScaleX = 0, m_fScaleY = 0;
 	// 设置目标矩形（即绘制到窗口的位置和大小）
 	m_rDest.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
 	// 裁剪图片大小
 	crop(x, y, width, height);
+
+	return true;
 }
 
 void Image::crop(int x, int y, int width, int height)

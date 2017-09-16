@@ -32,7 +32,11 @@ void FreePool::__flush()
 	}
 }
 
-void FreePool::add(Object * nptr)
+void FreePool::__add(Object * nptr)
 {
-	pool.push_back(nptr);	// 将一个对象放入释放池中
+	for (auto o : pool)
+	{
+		if (o == nptr) return;	// 不得有重复的指针存在
+	}
+	pool.push_back(nptr);		// 将一个对象放入释放池中
 }

@@ -3,7 +3,7 @@
 Object::Object() :
 	m_nRef(0)
 {
-	FreePool::add(this);	// 将该对象放入释放池中
+	FreePool::__add(this);	// 将该对象放入释放池中
 }
 
 Object::~Object()

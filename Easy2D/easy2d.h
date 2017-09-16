@@ -1,5 +1,5 @@
 /******************************************************
-* Easy2D Game Engine (v1.0.0)
+* Easy2D Game Engine (v1.0.2)
 * http://www.easy2d.cn
 * 
 * Depends on EasyX (Ver:20170827(beta))
@@ -31,6 +31,7 @@
 #define SAFE_DELETE_ARRAY(p)	{ if (p) { delete[] (p); (p) = nullptr; } }
 #define SAFE_RELEASE(p)			{ if (p) p->release(); }
 
+#pragma warning (disable: 4099)
 
 #include <windows.h>
 #include <tchar.h>
@@ -83,10 +84,12 @@ class TextButton;
 class ImageButton;
 
 
+typedef BatchNode					Layer;
 typedef unsigned int				VK_KEY;
 typedef std::function<void()>		CLICK_CALLBACK;
 typedef std::function<void()>		TIMER_CALLBACK;
 typedef std::function<void(VK_KEY)>	KEY_CALLBACK;
+typedef std::function<void(MouseMsg)>	MOUSE_CALLBACK;
 
 
 class App
@@ -101,7 +104,6 @@ protected:
 	int					m_nHeight;
 	int					m_nWindowMode;
 	bool				m_bRunning;
-	bool				m_bPause;
 	bool				m_bSaveScene;
 
 protected:
@@ -125,8 +127,6 @@ public:
 	static int getOriginY();
 	// 启动程序
 	int run();
-	// 暂停程序
-	void pause();
 	// 终止程序
 	void quit();
 	// 终止程序
@@ -151,8 +151,6 @@ public:
 	void backScene();
 	// 修改窗口背景色
 	void setBkColor(COLORREF color);
-	// 游戏是否正在运行
-	bool isRunning();
 	// 设置帧率
 	void setFPS(DWORD fps);
 	// 重置绘图样式为默认值
@@ -170,13 +168,13 @@ public:
 class FreePool
 {
 	friend class App;
+	friend class Object;
 
 private:
+	// 刷新内存池
 	static void __flush();
-
-public:
 	// 将一个节点放入释放池
-	static void add(Object * nptr);
+	static void __add(Object * nptr);
 };
 
 class Scene
@@ -211,6 +209,10 @@ class MouseMsg
 private:
 	static void __exec();
 
+protected:
+	tstring m_sName;
+	MOUSE_CALLBACK m_callback;
+
 public:
 	UINT uMsg;			// 当前鼠标消息
 	bool mkLButton;		// 鼠标左键是否按下
@@ -219,6 +221,21 @@ public:
 	short x;			// 当前鼠标 x 坐标
 	short y;			// 当前鼠标 y 坐标
 	short wheel;		// 鼠标滚轮滚动值 (120 的倍数)
+
+public:
+	MouseMsg();
+	MouseMsg(tstring name, const MOUSE_CALLBACK& callback);
+	~MouseMsg();
+
+	// 执行回调函数
+	void onMouseMsg(MouseMsg mouse);
+
+	// 添加键盘监听
+	static void addListener(tstring name, const MOUSE_CALLBACK& callback);
+	// 删除键盘监听
+	static bool delListener(tstring name);
+	// 删除所有键盘监听
+	static void clearAllListener();
 
 public:
 	// 获取当前鼠标消息
@@ -530,7 +547,6 @@ class Node :
 	public virtual Object
 {
 	friend class Scene;
-	friend class Layer;
 	friend class BatchNode;
 
 protected:
@@ -634,13 +650,15 @@ public:
 	/**
 	*  从图片文件获取图像(png/bmp/jpg/gif/emf/wmf/ico)
 	*  参数：图片文件名，图片裁剪坐标，图片裁剪宽度和高度
+	*  返回值：图片加载是否成功
 	*/
-	void setImageFile(LPCTSTR ImageFile, int x = 0, int y = 0, int width = 0, int height = 0);
+	bool setImageFile(LPCTSTR ImageFile, int x = 0, int y = 0, int width = 0, int height = 0);
 	/**
 	*  从资源文件获取图像，不支持 png (bmp/jpg/gif/emf/wmf/ico)
 	*  参数：资源名称，图片裁剪坐标，图片裁剪宽度和高度
+	*  返回值：图片加载是否成功
 	*/
-	void setImageRes(LPCTSTR pResName, int x = 0, int y = 0, int width = 0, int height = 0);
+	bool setImageRes(LPCTSTR pResName, int x = 0, int y = 0, int width = 0, int height = 0);
 	// 裁剪图片（裁剪后会恢复 stretch 拉伸）
 	void crop(int x = 0, int y = 0, int width = 0, int height = 0);
 	// 将图片拉伸到固定宽高
@@ -711,19 +729,25 @@ class MouseNode :
 private:
 	bool m_bTarget;
 	bool m_bBlock;
-	enum { NORMAL, MOUSEIN, SELECTED } m_eStatus;
-	CLICK_CALLBACK m_callback;
+	enum Status { NORMAL, MOUSEIN, SELECTED } m_eStatus;
+	CLICK_CALLBACK m_OnMouseInCallback;
+	CLICK_CALLBACK m_OnMouseOutCallback;
+	CLICK_CALLBACK m_OnSelectCallback;
+	CLICK_CALLBACK m_OnUnselectCallback;
+	CLICK_CALLBACK m_ClickCallback;
+
+protected:
+	int m_nWidth;
+	int m_nHeight;
 
 protected:
 	virtual bool _exec(bool active) override;
 	virtual void _onDraw() override;
 
-	void _setNormal();
-	void _setMouseIn();
-	void _setSelected();
-
-	// 重写该函数，实现鼠标位置的判定
-	virtual void _judge() = 0;
+	// 重写这个方法可以自定义按钮的判断方法
+	virtual bool _judge();
+	// 切换状态
+	void _setStatus(Status status);
 	// 正常状态
 	virtual void _onNormal() = 0;
 	// 鼠标移入时
@@ -735,14 +759,20 @@ public:
 	MouseNode();
 	virtual ~MouseNode();
 
-	// 鼠标点击时
-	virtual void onClicked();
 	// 鼠标是否移入
 	virtual bool isMouseIn();
 	// 鼠标是否选中
 	virtual bool isSelected();
 	// 设置回调函数
-	virtual void setOnMouseClicked(const CLICK_CALLBACK & callback);
+	virtual void setClickedCallback(const CLICK_CALLBACK & callback);
+	// 设置回调函数
+	virtual void setMouseInCallback(const CLICK_CALLBACK & callback);
+	// 设置回调函数
+	virtual void setMouseOutCallback(const CLICK_CALLBACK & callback);
+	// 设置回调函数
+	virtual void setSelectCallback(const CLICK_CALLBACK & callback);
+	// 设置回调函数
+	virtual void setUnselectCallback(const CLICK_CALLBACK & callback);
 	// 重置状态
 	virtual void reset();
 	// 设置节点是否阻塞鼠标消息
@@ -754,14 +784,11 @@ class Button :
 	public virtual MouseNode
 {
 protected:
-	int m_nWidth;
-	int m_nHeight;
 	bool m_bEnable;
 
 protected:
 	virtual bool _exec(bool active) override;
 	virtual void _onDraw() override;
-	virtual void _judge() override;
 
 	virtual void _onNormal() = 0;
 	virtual void _onMouseIn() = 0;

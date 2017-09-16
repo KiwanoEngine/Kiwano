@@ -18,7 +18,6 @@ App::App() :
 	m_currentScene(nullptr), 
 	m_nextScene(nullptr), 
 	m_bRunning(false), 
-	m_bPause(false),
 	m_nWidth(0),
 	m_nHeight(0),
 	m_nWindowMode(0)
@@ -154,11 +153,6 @@ void App::_initGraph()
 
 void App::_mainLoop()
 {
-	// 游戏暂停
-	if (m_bPause)
-	{
-		return;
-	}
 	// 进入下一场景
 	if (m_nextScene)
 	{
@@ -294,16 +288,6 @@ void App::end()
 	m_bRunning = false;
 }
 
-void App::pause()
-{
-	m_bPause = true;
-}
-
-bool App::isRunning()
-{
-	return m_bRunning && !m_bPause;
-}
-
 void App::reset()
 {
 	// 重置绘图环境
@@ -320,7 +304,7 @@ Scene * App::getCurrentScene()
 
 LPCTSTR easy2d::App::getVersion()
 {
-	return _T("1.0.0");
+	return _T("1.0.2");
 }
 
 void App::setFPS(DWORD fps)

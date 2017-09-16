@@ -266,6 +266,14 @@ void MusicUtils::end()
 // BackgroundMusic
 //////////////////////////////////////////////////////////////////////////
 
+/*
+void MusicUtils::setVolume(float volume)
+{
+	if (volume < 0 || volume > 1) return;
+	waveOutSetVolume(NULL, DWORD(volume * 65535));
+}
+*/
+
 void MusicUtils::playBackgroundMusic(tstring pszFilePath, bool bLoop)
 {
 	if (pszFilePath.empty())

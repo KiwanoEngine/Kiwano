@@ -335,9 +335,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="FreePool.cpp" />
     <ClCompile Include="Msg\KeyMsg.cpp" />

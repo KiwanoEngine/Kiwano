@@ -4,7 +4,11 @@
 MouseNode::MouseNode() :
 	m_bBlock(true),
 	m_bTarget(false),
-	m_callback([]() {})
+	m_ClickCallback([]() {}),
+	m_OnMouseInCallback([]() {}),
+	m_OnMouseOutCallback([]() {}),
+	m_OnSelectCallback([]() {}),
+	m_OnUnselectCallback([]() {})
 {
 }
 
@@ -19,15 +23,40 @@ bool MouseNode::_exec(bool active)
 	{
 		return false;
 	}
-	// 判断节点状态
-	_judge();
-	// 鼠标在节点上（被选中时鼠标也在节点上）
-	if (m_eStatus == MOUSEIN || m_eStatus == SELECTED)
+	// 判断节点当前的状态
+	// 若节点未取得焦点，则重新判断节点状态
+	if (!m_bTarget)
 	{
-		// 节点被鼠标选中，且鼠标左键抬起
-		if (m_bTarget && MouseMsg::isOnLButtonUp())
+		// 若鼠标位置在节点所在的矩形区域中
+		if (_judge())
 		{
-			onClicked();	// 执行回调函数
+			// 状态设为 MOUSEIN
+			_setStatus(MOUSEIN);
+			// 若此时按下鼠标左键
+			if (MouseMsg::isOnLButtonDown())
+			{
+				m_bTarget = true;		// 取得焦点标记
+				_setStatus(SELECTED);	// 状态设为 SELECTED
+			}
+			// 若节点不阻塞鼠标消息，则取得画面焦点
+			if (!m_bBlock) return true;
+		}
+		else
+		{
+			reset();		// 恢复默认状态
+		}
+	}
+	else
+	{
+		// 节点取得焦点时鼠标左键抬起
+		if (MouseMsg::isOnLButtonUp())
+		{
+			// 若左键抬起时鼠标仍在节点内
+			if (_judge())
+			{
+				m_ClickCallback();	// 执行回调函数
+			}
+			reset();				// 恢复默认状态
 		}
 		// 若节点不阻塞鼠标消息，则取得画面焦点
 		if (!m_bBlock) return true;
@@ -61,26 +90,36 @@ void MouseNode::_onDraw()
 	}
 }
 
-void MouseNode::_setNormal()
+bool MouseNode::_judge()
 {
-	m_bTarget = false;		// 失去焦点标记
-	m_eStatus = NORMAL;
+	return (MouseMsg::getMsg().x >= m_nX && MouseMsg::getMsg().x <= m_nX + m_nWidth) &&
+		(MouseMsg::getMsg().y >= m_nY && MouseMsg::getMsg().y <= m_nY + m_nHeight);
 }
 
-void MouseNode::_setMouseIn()
+void MouseNode::_setStatus(Status status)
 {
-	m_eStatus = MOUSEIN;
-}
-
-void MouseNode::_setSelected()
-{
-	m_bTarget = true;		// 取得焦点标记
-	m_eStatus = SELECTED;
-}
-
-void MouseNode::onClicked()
-{
-	m_callback();
+	if (m_eStatus != status)
+	{
+		// 退出某个状态的回调函数
+		if (m_eStatus == MOUSEIN)
+		{
+			m_OnMouseOutCallback();
+		}
+		else if (m_eStatus == SELECTED)
+		{
+			m_OnUnselectCallback();
+		}
+		// 进入某个状态的回调函数
+		if (status == MOUSEIN)
+		{
+			m_OnMouseInCallback();
+		}
+		else if (status == SELECTED)
+		{
+			m_OnSelectCallback();
+		}
+		m_eStatus = status;
+	}
 }
 
 bool MouseNode::isMouseIn()
@@ -93,14 +132,35 @@ bool MouseNode::isSelected()
 	return m_eStatus == SELECTED;
 }
 
-void MouseNode::setOnMouseClicked(const CLICK_CALLBACK & callback)
+void MouseNode::setClickedCallback(const CLICK_CALLBACK & callback)
 {
-	m_callback = callback;
+	m_ClickCallback = callback;
+}
+
+void MouseNode::setMouseInCallback(const CLICK_CALLBACK & callback)
+{
+	m_OnMouseInCallback = callback;
+}
+
+void MouseNode::setMouseOutCallback(const CLICK_CALLBACK & callback)
+{
+	m_OnMouseOutCallback = callback;
+}
+
+void MouseNode::setSelectCallback(const CLICK_CALLBACK & callback)
+{
+	m_OnSelectCallback = callback;
+}
+
+void MouseNode::setUnselectCallback(const CLICK_CALLBACK & callback)
+{
+	m_OnUnselectCallback = callback;
 }
 
 void MouseNode::reset()
 {
-	m_eStatus = NORMAL;
+	m_bTarget = false;		// 失去焦点标记
+	_setStatus(NORMAL);		// 恢复默认状态
 }
 
 void MouseNode::setBlock(bool block)

@@ -134,7 +134,7 @@ void KeyMsg::addListener(tstring name, const KEY_CALLBACK & callback)
 	s_vKeyMsg.push_back(key);
 }
 
-bool easy2d::KeyMsg::delListener(tstring name)
+bool KeyMsg::delListener(tstring name)
 {
 	// 创建迭代器
 	std::vector<KeyMsg*>::iterator iter;
@@ -154,12 +154,12 @@ bool easy2d::KeyMsg::delListener(tstring name)
 	return false;
 }
 
-void easy2d::KeyMsg::clearAllListener()
+void KeyMsg::clearAllListener()
 {
 	// 删除所有监听器
-	for (auto t : s_vKeyMsg)
+	for (auto k : s_vKeyMsg)
 	{
-		delete t;
+		delete k;
 	}
 	// 清空容器
 	s_vKeyMsg.clear();
