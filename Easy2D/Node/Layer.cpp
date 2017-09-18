@@ -22,7 +22,6 @@ void Layer::setBlock(bool block)
 
 bool Layer::_exec(bool active)
 {
-	BatchNode::_exec(active);
 	// 若图层阻塞消息，则永远取得画面焦点
-	return m_bBlock;
+	return BatchNode::_exec(active) || m_bBlock;
 }
