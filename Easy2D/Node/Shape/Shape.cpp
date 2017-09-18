@@ -3,7 +3,8 @@
 
 Shape::Shape() :
 	lineColor(Color::black),
-	fillColor(Color::white)
+	fillColor(Color::white),
+	m_eStyle(SOLID)
 {
 }
 
@@ -23,15 +24,15 @@ void Shape::_onDraw()
 	setfillcolor(fillColor);
 
 	// 根据形状的样式进行不同的绘制
-	if (_style == Shape::STYLE::round) 
+	if (m_eStyle == Shape::STYLE::ROUND) 
 	{
 		roundShape();
 	}
-	else if (_style == Shape::STYLE::solid) 
+	else if (m_eStyle == Shape::STYLE::SOLID) 
 	{
 		solidShape();
 	}
-	else if (_style == Shape::STYLE::fill) 
+	else if (m_eStyle == Shape::STYLE::FILL) 
 	{
 		fillShape();
 	}
@@ -55,4 +56,9 @@ void Shape::setFillColor(COLORREF color)
 void Shape::setLineColor(COLORREF color)
 {
 	lineColor = color;
+}
+
+void Shape::setStyle(STYLE style)
+{
+	m_eStyle = style;
 }

@@ -1,5 +1,5 @@
 /******************************************************
-* Easy2D Game Engine (v1.0.2)
+* Easy2D Game Engine (v1.0.3)
 * http://www.easy2d.cn
 * 
 * Depends on EasyX (Ver:20170827(beta))
@@ -11,8 +11,8 @@
 	#error Easy2D is only for C++
 #endif
 
-#if _MSC_VER < 1600
-	#error Do Visual Studio 2010/2013/2015/2017 specific stuff
+#if _MSC_VER < 1900
+	#error Do Visual Studio 2015/2017 specific stuff
 #endif
 
 
@@ -72,6 +72,7 @@ class FileUtils;
 // 对象
 class Object;
 class Node;
+class Layer;
 class BatchNode;
 class MouseNode;
 class Image;
@@ -84,7 +85,6 @@ class TextButton;
 class ImageButton;
 
 
-typedef BatchNode					Layer;
 typedef unsigned int				VK_KEY;
 typedef std::function<void()>		CLICK_CALLBACK;
 typedef std::function<void()>		TIMER_CALLBACK;
@@ -149,6 +149,8 @@ public:
 	void enterScene(Scene *scene, bool save = true);
 	// 返回上一场景
 	void backScene();
+	// 清空之前保存的所有场景
+	void clearScene();
 	// 修改窗口背景色
 	void setBkColor(COLORREF color);
 	// 设置帧率
@@ -193,6 +195,10 @@ public:
 	Scene();
 	~Scene();
 
+	// 重写这个函数，它将在进入这个场景时自动执行
+	virtual void onEnter();
+	// 重写这个函数，它将在离开这个场景时自动执行
+	virtual void onExit();
 	// 添加子成员到场景
 	void add(Node * child, int zOrder = 0);
 	// 删除子成员
@@ -233,7 +239,7 @@ public:
 	// 添加键盘监听
 	static void addListener(tstring name, const MOUSE_CALLBACK& callback);
 	// 删除键盘监听
-	static bool delListener(tstring name);
+	static bool deleteListener(tstring name);
 	// 删除所有键盘监听
 	static void clearAllListener();
 
@@ -289,7 +295,7 @@ public:
 	// 数字键值
 	static const VK_KEY NUM_1, NUM_2, NUM_3, NUM_4, NUM_5, NUM_6, NUM_7, NUM_8, NUM_9, NUM_0;
 	// 小数字键盘值
-	static const VK_KEY NUMPAD_1, NUMPAD_2, NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8, NUMPAD_9, NUMPAD_0, Decimal;
+	static const VK_KEY NUMPAD_1, NUMPAD_2, NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8, NUMPAD_9, NUMPAD_0;
 	// 控制键值
 	static const VK_KEY Enter, Space, Up, Down, Left, Right, Esc, Shift, LShift, RShift, Ctrl, LCtrl, RCtrl;
 	// F 键值
@@ -312,7 +318,7 @@ public:
 	// 添加键盘监听
 	static void addListener(tstring name, const KEY_CALLBACK& callback);
 	// 删除键盘监听
-	static bool delListener(tstring name);
+	static bool deleteListener(tstring name);
 	// 删除所有键盘监听
 	static void clearAllListener();
 	// 判断键是否被按下，按下返回true
@@ -614,6 +620,26 @@ public:
 };
 
 
+class Layer :
+	public virtual BatchNode
+{
+protected:
+	bool m_bBlock;
+
+protected:
+	virtual bool _exec(bool active) override;
+
+public:
+	Layer();
+	virtual ~Layer();
+
+	// 图层是否阻塞消息
+	int getBlock() const;
+	// 设置图层是否阻塞消息
+	void setBlock(bool block);
+};
+
+
 class Image :
 	public virtual Node
 {
@@ -648,23 +674,33 @@ public:
 	float getScaleY() const;
 
 	/**
-	*  从图片文件获取图像(png/bmp/jpg/gif/emf/wmf/ico)
-	*  参数：图片文件名，图片裁剪坐标，图片裁剪宽度和高度
+	*  从图片文件获取图像 (png/bmp/jpg/gif/emf/wmf/ico)
 	*  返回值：图片加载是否成功
 	*/
-	bool setImageFile(LPCTSTR ImageFile, int x = 0, int y = 0, int width = 0, int height = 0);
+	bool setImage(LPCTSTR ImageFile);
+	/**
+	*  从图片文件获取图像 (png/bmp/jpg/gif/emf/wmf/ico)
+	*  参数：图片文件名，图片裁剪起始坐标，图片裁剪宽度和高度
+	*  返回值：图片加载是否成功
+	*/
+	bool setImage(LPCTSTR ImageFile, int x, int y, int width, int height);
+	/**
+	*  从资源文件获取图像，不支持 png (bmp/jpg/gif/emf/wmf/ico)
+	*  返回值：图片加载是否成功
+	*/
+	bool setImageFromRes(LPCTSTR pResName);
 	/**
 	*  从资源文件获取图像，不支持 png (bmp/jpg/gif/emf/wmf/ico)
 	*  参数：资源名称，图片裁剪坐标，图片裁剪宽度和高度
 	*  返回值：图片加载是否成功
 	*/
-	bool setImageRes(LPCTSTR pResName, int x = 0, int y = 0, int width = 0, int height = 0);
+	bool setImageFromRes(LPCTSTR pResName, int x, int y, int width, int height);
 	// 裁剪图片（裁剪后会恢复 stretch 拉伸）
-	void crop(int x = 0, int y = 0, int width = 0, int height = 0);
+	void crop(int x, int y, int width, int height);
 	// 将图片拉伸到固定宽高
 	void stretch(int width = 0, int height = 0);
-	// 按比例拉伸图片（0 ~ 1.0f）
-	void scale(float scaleX, float scaleY);
+	// 按比例拉伸图片
+	void scale(float scaleX = 1.0f, float scaleY = 1.0f);
 	// 设置图片位置
 	void setPos(int x, int y) override;
 	// 移动图片
@@ -827,6 +863,7 @@ protected:
 
 public:
 	TextButton();
+	TextButton(tstring text);
 	TextButton(Text * text);
 	virtual ~TextButton();
 
@@ -869,6 +906,7 @@ protected:
 
 public:
 	ImageButton();
+	ImageButton(LPCTSTR image);
 	ImageButton(Image * image);
 	virtual ~ImageButton();
 
@@ -894,8 +932,6 @@ class Shape :
 	public virtual Node
 {
 protected:
-	enum STYLE { round, solid, fill };	// 形状填充样式
-	STYLE		_style;
 	COLORREF	fillColor;
 	COLORREF	lineColor;
 
@@ -904,6 +940,9 @@ protected:
 	virtual void solidShape() = 0;
 	virtual void fillShape() = 0;
 	virtual void roundShape() = 0;
+
+public:
+	enum STYLE { ROUND, SOLID, FILL } m_eStyle;	// 形状填充样式
 
 public:
 	Shape();
@@ -917,6 +956,8 @@ public:
 	void setFillColor(COLORREF color);
 	// 设置线条颜色
 	void setLineColor(COLORREF color);
+	// 设置填充样式
+	void setStyle(STYLE style);
 };
 
 

@@ -14,13 +14,19 @@ const LONG FontWeight::extraBold = 800;
 const LONG FontWeight::black = 900;
 const LONG FontWeight::heavy = 900;
 
-// Ä¬ÈÏ×ÖÌå
-static const FontStyle s_defaultFont(_T(""), 18, FontWeight::normal);
-
 
 FontStyle::FontStyle()
 {
-	m_font = s_defaultFont.m_font;
+	setFontFamily(_T(""));
+	m_font.lfWeight = 18;
+	m_font.lfHeight = 0;
+	m_font.lfWidth = 0;
+	m_font.lfItalic = 0;
+	m_font.lfUnderline = 0;
+	m_font.lfStrikeOut = 0;
+	m_font.lfEscapement = 0;
+	m_font.lfOrientation = 0;
+	setQuality(true);
 }
 
 FontStyle::FontStyle(LPCTSTR fontfamily, LONG height, LONG weight, LONG width, bool italic, bool underline, bool strikeout, LONG escapement, LONG orientation, bool quality)
@@ -43,7 +49,7 @@ FontStyle::~FontStyle()
 
 FontStyle * FontStyle::getDefault()
 {
-	return new FontStyle(s_defaultFont);
+	return new FontStyle(_T(""), 18, FontWeight::normal);
 }
 
 void FontStyle::setHeight(LONG value)

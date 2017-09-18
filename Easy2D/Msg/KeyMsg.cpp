@@ -5,21 +5,6 @@
 // 按键监听回调函数的容器
 static std::vector<KeyMsg*> s_vKeyMsg;
 
-// 虚拟键值的容器
-static std::vector<VK_KEY> s_vKeys = {
-	KeyMsg::A, KeyMsg::B, KeyMsg::C, KeyMsg::D, KeyMsg::E, KeyMsg::F, KeyMsg::G, KeyMsg::H, KeyMsg::I, KeyMsg::J,
-	KeyMsg::K, KeyMsg::L, KeyMsg::M, KeyMsg::N, KeyMsg::O, KeyMsg::P, KeyMsg::Q, KeyMsg::R, KeyMsg::S, KeyMsg::T,
-	KeyMsg::U, KeyMsg::V, KeyMsg::W, KeyMsg::X, KeyMsg::Y, KeyMsg::Z,
-	KeyMsg::NUM_1, KeyMsg::NUM_2, KeyMsg::NUM_3, KeyMsg::NUM_4, KeyMsg::NUM_5,
-	KeyMsg::NUM_6, KeyMsg::NUM_7, KeyMsg::NUM_8, KeyMsg::NUM_9, KeyMsg::NUM_0,
-	KeyMsg::NUMPAD_1, KeyMsg::NUMPAD_2, KeyMsg::NUMPAD_3, KeyMsg::NUMPAD_4, KeyMsg::NUMPAD_5,
-	KeyMsg::NUMPAD_6, KeyMsg::NUMPAD_7, KeyMsg::NUMPAD_8, KeyMsg::NUMPAD_9, KeyMsg::NUMPAD_0,
-	KeyMsg::Enter, KeyMsg::Space, KeyMsg::Up, KeyMsg::Down, KeyMsg::Left, KeyMsg::Right, KeyMsg::Esc,
-	KeyMsg::Decimal, KeyMsg::Shift, KeyMsg::LShift, KeyMsg::RShift, KeyMsg::Ctrl, KeyMsg::LCtrl, KeyMsg::RCtrl,
-	KeyMsg::F1, KeyMsg::F2, KeyMsg::F3, KeyMsg::F4, KeyMsg::F5, KeyMsg::F6,
-	KeyMsg::F7, KeyMsg::F8, KeyMsg::F9, KeyMsg::F10, KeyMsg::F11, KeyMsg::F12
-};
-
 // 虚拟键值的定义
 const VK_KEY KeyMsg::A = 'A';
 const VK_KEY KeyMsg::B = 'B';
@@ -69,7 +54,6 @@ const VK_KEY KeyMsg::NUMPAD_8 = VK_NUMPAD8;
 const VK_KEY KeyMsg::NUMPAD_9 = VK_NUMPAD9;
 const VK_KEY KeyMsg::Enter = VK_RETURN;
 const VK_KEY KeyMsg::Space = VK_SPACE;
-const VK_KEY KeyMsg::Decimal = VK_DECIMAL;
 const VK_KEY KeyMsg::Ctrl = VK_CONTROL;
 const VK_KEY KeyMsg::LCtrl = VK_LCONTROL;
 const VK_KEY KeyMsg::RCtrl = VK_RCONTROL;
@@ -94,6 +78,8 @@ const VK_KEY KeyMsg::F10 = VK_F10;
 const VK_KEY KeyMsg::F11 = VK_F11;
 const VK_KEY KeyMsg::F12 = VK_F12;
 
+static VK_KEY convert(int ascii);
+
 KeyMsg::KeyMsg(tstring name, const KEY_CALLBACK & callback)
 {
 	m_sName = name;
@@ -111,17 +97,13 @@ void KeyMsg::onKbHit(VK_KEY key)
 
 void KeyMsg::__exec()
 {
-	if (_kbhit())								// 获取键盘消息
+	if (_kbhit())						// 检测有无按键消息
 	{
-		for (VK_KEY key : s_vKeys)				// 循环遍历所有的虚拟键值
+		VK_KEY key = convert(_getch());	// 获取键盘消息
+
+		for (auto k : s_vKeyMsg)		// 分发该消息
 		{
-			if (GetAsyncKeyState(key) & 0x8000)	// 判断该键是否按下
-			{
-				for (auto k : s_vKeyMsg)		// 分发该按键消息
-				{
-					k->onKbHit(key);			// 执行按键回调函数
-				}
-			}
+			k->onKbHit(key);			// 执行按键回调函数
 		}
 	}
 }
@@ -134,7 +116,7 @@ void KeyMsg::addListener(tstring name, const KEY_CALLBACK & callback)
 	s_vKeyMsg.push_back(key);
 }
 
-bool KeyMsg::delListener(tstring name)
+bool KeyMsg::deleteListener(tstring name)
 {
 	// 创建迭代器
 	std::vector<KeyMsg*>::iterator iter;
@@ -169,4 +151,60 @@ bool KeyMsg::isKeyDown(VK_KEY key)
 {
 	// 获取 key 的按下情况
 	return (GetAsyncKeyState(key) & 0x8000);
+}
+
+
+VK_KEY convert(int ascii)
+{
+	if (ascii >= 'a' && ascii <= 'z' || ascii >= 'A' && ascii <= 'Z')
+	{
+		return VK_KEY(ascii);
+	}
+	else if (ascii >= '0' && ascii <= '9')
+	{
+		return VK_KEY(ascii);
+	}
+	else if (ascii == 0x0D || ascii == 0x20 || ascii == 0x1B)
+	{
+		return VK_KEY(ascii);
+	}
+	else if (ascii == 0 || ascii == 0xE0)
+	{
+		switch (_getch())
+		{
+		case 72:
+			return KeyMsg::Up;
+		case 75:
+			return KeyMsg::Left;
+		case 77:
+			return KeyMsg::Right;
+		case 80:
+			return KeyMsg::Down;
+		case 59:
+			return KeyMsg::F1;
+		case 60:
+			return KeyMsg::F2;
+		case 61:
+			return KeyMsg::F3;
+		case 62:
+			return KeyMsg::F4;
+		case 63:
+			return KeyMsg::F5;
+		case 64:
+			return KeyMsg::F6;
+		case 65:
+			return KeyMsg::F7;
+		case 66:
+			return KeyMsg::F8;
+		case 67:
+			return KeyMsg::F9;
+		case 133:
+			return KeyMsg::F10;
+		case 134:
+			return KeyMsg::F11;
+		default:
+			return 0;
+		}
+	}
+	return 0;
 }

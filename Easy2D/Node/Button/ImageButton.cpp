@@ -11,6 +11,12 @@ ImageButton::ImageButton() :
 	m_nHeight = 0;
 }
 
+ImageButton::ImageButton(LPCTSTR image) :
+	ImageButton()
+{
+	setNormal(new Image(image));	// 设置按钮在正常状态时的图片
+}
+
 ImageButton::ImageButton(Image * image) :
 	ImageButton()
 {

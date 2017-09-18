@@ -344,6 +344,7 @@
     <ClCompile Include="Node\Button\ImageButton.cpp" />
     <ClCompile Include="Node\Button\TextButton.cpp" />
     <ClCompile Include="Node\Image.cpp" />
+    <ClCompile Include="Node\Layer.cpp" />
     <ClCompile Include="Node\MouseNode.cpp" />
     <ClCompile Include="Node\Node.cpp" />
     <ClCompile Include="Node\Shape\Circle.cpp" />

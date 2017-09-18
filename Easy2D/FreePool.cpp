@@ -1,7 +1,7 @@
 #include "easy2d.h"
 
 // FreePool 释放池的实现机制：
-/// Object 类中的引用计数（m_nRef）引用计数保证了指针的使用安全
+/// Object 类中的引用计数（m_nRef）保证了指针的使用安全
 /// 它记录了对象被使用的次数，当计数为 0 时，FreePool 会自动释放这个对象
 /// 所有的 Object 对象都应在被使用时（例如 Text 添加到了场景中）
 /// 调用 retain 函数保证该对象不被删除，并在不再使用时调用 release 函数

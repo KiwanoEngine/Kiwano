@@ -11,6 +11,12 @@ TextButton::TextButton() :
 	m_nHeight = 0;
 }
 
+TextButton::TextButton(tstring text) :
+	TextButton()
+{
+	setNormal(new Text(text));	// 设置按钮在正常状态时的文字
+}
+
 TextButton::TextButton(Text * text) :
 	TextButton()
 {

@@ -54,7 +54,7 @@ void MouseMsg::addListener(tstring name, const MOUSE_CALLBACK & callback)
 	s_vMouseMsg.push_back(mouse);
 }
 
-bool MouseMsg::delListener(tstring name)
+bool MouseMsg::deleteListener(tstring name)
 {
 	// ´´½¨µü´úÆ÷
 	std::vector<MouseMsg*>::iterator iter;

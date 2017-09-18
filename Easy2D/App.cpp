@@ -153,10 +153,18 @@ void App::_initGraph()
 
 void App::_mainLoop()
 {
-	// 进入下一场景
+	// 下一场景指针不为空时，切换场景
 	if (m_nextScene)
 	{
+		// 执行当前场景的 onExit 函数
+		if (m_currentScene)
+		{
+			m_currentScene->onExit();
+		}
+		// 进入下一场景
 		_enterNextScene();
+		// 执行当前场景的 onEnter 函数
+		m_currentScene->onEnter();
 	}
 	// 断言当前场景非空
 	assert(m_currentScene);
@@ -250,6 +258,17 @@ void App::backScene()
 	m_nextScene = m_sceneStack.top();
 	// 不保存当前场景
 	m_bSaveScene = false;
+}
+
+void App::clearScene()
+{
+	// 清空场景栈
+	while (m_sceneStack.size())
+	{
+		auto temp = m_sceneStack.top();
+		SAFE_DELETE(temp);
+		m_sceneStack.pop();
+	}
 }
 
 void App::setBkColor(COLORREF color)

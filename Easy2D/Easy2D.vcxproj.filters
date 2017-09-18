@@ -114,6 +114,9 @@
     <ClCompile Include="Node\Button\TextButton.cpp">
       <Filter>源文件\Node\Button</Filter>
     </ClCompile>
+    <ClCompile Include="Node\Layer.cpp">
+      <Filter>源文件\Node</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="easy2d.h">

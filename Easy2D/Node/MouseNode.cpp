@@ -18,9 +18,15 @@ MouseNode::~MouseNode()
 
 bool MouseNode::_exec(bool active)
 {
-	// 若画面已取得焦点，或 display 属性为 false，退出函数
-	if (!active || !m_bDisplay)
+	// 若 display 属性为 false，退出函数
+	if (!m_bDisplay)
 	{
+		return false;
+	}
+	// 若画面已取得焦点，重置按钮属性并退出
+	if (!active)
+	{
+		reset();
 		return false;
 	}
 	// 判断节点当前的状态
@@ -38,8 +44,8 @@ bool MouseNode::_exec(bool active)
 				m_bTarget = true;		// 取得焦点标记
 				_setStatus(SELECTED);	// 状态设为 SELECTED
 			}
-			// 若节点不阻塞鼠标消息，则取得画面焦点
-			if (!m_bBlock) return true;
+			// 若节点阻塞鼠标消息，则取得画面焦点
+			if (m_bBlock) return true;
 		}
 		else
 		{
@@ -58,8 +64,8 @@ bool MouseNode::_exec(bool active)
 			}
 			reset();				// 恢复默认状态
 		}
-		// 若节点不阻塞鼠标消息，则取得画面焦点
-		if (!m_bBlock) return true;
+		// 若节点阻塞鼠标消息，则取得画面焦点
+		if (m_bBlock) return true;
 	}
 	return false;
 }

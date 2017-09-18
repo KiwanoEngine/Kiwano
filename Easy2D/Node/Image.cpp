@@ -14,7 +14,7 @@ Image::Image(LPCTSTR ImageFile, int x, int y, int width, int height) :
 	m_fScaleX(1),
 	m_fScaleY(1)
 {
-	setImageFile(ImageFile, x, y, width, height);	// 设置图片资源和裁剪大小
+	setImage(ImageFile, x, y, width, height);	// 设置图片资源和裁剪大小
 }
 
 Image::~Image()
@@ -52,7 +52,7 @@ float Image::getScaleY() const
 	return m_fScaleY;
 }
 
-bool Image::setImageFile(LPCTSTR ImageFile, int x, int y, int width, int height)
+bool Image::setImage(LPCTSTR ImageFile)
 {
 	//判断图片路径是否存在
 	if (!PathFileExists(ImageFile))
@@ -67,7 +67,7 @@ bool Image::setImageFile(LPCTSTR ImageFile, int x, int y, int width, int height)
 	// 加载图片
 	m_Image.Load(ImageFile);
 	// 加载失败
-	if (m_Image.IsNull()) 
+	if (m_Image.IsNull())
 	{
 		return false;
 	}
@@ -80,14 +80,25 @@ bool Image::setImageFile(LPCTSTR ImageFile, int x, int y, int width, int height)
 		m_Image.AlphaBlend(GetImageHDC(), 15, 30);
 	}
 	// 设置目标矩形（即绘制到窗口的位置和大小）
-	m_rDest.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
+	m_rDest.SetRect(m_nX, m_nY, m_nX + m_Image.GetWidth(), m_nY + m_Image.GetHeight());
+	m_rSrc.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
+
+	return true;
+}
+
+bool Image::setImage(LPCTSTR ImageFile, int x, int y, int width, int height)
+{
+	if (!setImage(ImageFile))
+	{
+		return false;
+	}
 	// 裁剪图片大小
 	crop(x, y, width, height);
 
 	return true;
 }
 
-bool Image::setImageRes(LPCTSTR pResName, int x, int y, int width, int height)
+bool Image::setImageFromRes(LPCTSTR pResName)
 {
 	// 从资源加载图片（不支持 PNG）
 	m_Image.LoadFromResource(GetModuleHandle(NULL), pResName);
@@ -96,10 +107,19 @@ bool Image::setImageRes(LPCTSTR pResName, int x, int y, int width, int height)
 	{
 		return false;
 	}
-	// 重置缩放属性
-	m_fScaleX = 0, m_fScaleY = 0;
 	// 设置目标矩形（即绘制到窗口的位置和大小）
-	m_rDest.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
+	m_rDest.SetRect(m_nX, m_nY, m_nX + m_Image.GetWidth(), m_nY + m_Image.GetHeight());
+	m_rSrc.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
+
+	return true;
+}
+
+bool Image::setImageFromRes(LPCTSTR pResName, int x, int y, int width, int height)
+{
+	if (!setImageFromRes(pResName))
+	{
+		return false;
+	}
 	// 裁剪图片大小
 	crop(x, y, width, height);
 
@@ -131,8 +151,8 @@ void Image::stretch(int width, int height)
 
 void Image::scale(float scaleX, float scaleY)
 {
-	m_fScaleX = min(max(scaleX, 0), 1.0f);
-	m_fScaleY = min(max(scaleY, 0), 1.0f);
+	m_fScaleX = max(scaleX, 0);
+	m_fScaleY = max(scaleY, 0);
 	m_rDest.SetRect(
 		m_nX, m_nY, 
 		m_nX + int(m_Image.GetWidth() * scaleX), 

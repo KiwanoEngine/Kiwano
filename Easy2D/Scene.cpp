@@ -35,6 +35,14 @@ void Scene::_onDraw()
 	}
 }
 
+void Scene::onEnter()
+{
+}
+
+void Scene::onExit()
+{
+}
+
 void Scene::add(Node * child, int zOrder)
 {
 	// 断言添加的节点非空
