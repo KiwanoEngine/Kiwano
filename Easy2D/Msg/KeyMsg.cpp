@@ -116,7 +116,7 @@ void KeyMsg::addListener(tstring name, const KEY_CALLBACK & callback)
 	s_vKeyMsg.push_back(key);
 }
 
-bool KeyMsg::deleteListener(tstring name)
+bool KeyMsg::delListener(tstring name)
 {
 	// 创建迭代器
 	std::vector<KeyMsg*>::iterator iter;
@@ -136,7 +136,7 @@ bool KeyMsg::deleteListener(tstring name)
 	return false;
 }
 
-void KeyMsg::clearAllListener()
+void KeyMsg::clearAllListeners()
 {
 	// 删除所有监听器
 	for (auto k : s_vKeyMsg)
@@ -156,18 +156,26 @@ bool KeyMsg::isKeyDown(VK_KEY key)
 
 VK_KEY convert(int ascii)
 {
-	if (ascii >= 'a' && ascii <= 'z' || ascii >= 'A' && ascii <= 'Z')
+	// 字母键
+	if (ascii >= 'a' && ascii <= 'z')
+	{
+		return VK_KEY(ascii - ('a' - 'A'));
+	}
+	else if (ascii >= 'A' && ascii <= 'Z')
 	{
 		return VK_KEY(ascii);
 	}
+	// 数字键
 	else if (ascii >= '0' && ascii <= '9')
 	{
 		return VK_KEY(ascii);
 	}
+	// 回车、空格、Esc键
 	else if (ascii == 0x0D || ascii == 0x20 || ascii == 0x1B)
 	{
 		return VK_KEY(ascii);
 	}
+	// 功能键
 	else if (ascii == 0 || ascii == 0xE0)
 	{
 		switch (_getch())

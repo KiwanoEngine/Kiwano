@@ -98,8 +98,8 @@ void MouseNode::_onDraw()
 
 bool MouseNode::_judge()
 {
-	return (MouseMsg::getMsg().x >= m_nX && MouseMsg::getMsg().x <= m_nX + m_nWidth) &&
-		(MouseMsg::getMsg().y >= m_nY && MouseMsg::getMsg().y <= m_nY + m_nHeight);
+	return (MouseMsg::getX() >= m_nX && MouseMsg::getX() <= m_nX + m_nWidth) &&
+		(MouseMsg::getY() >= m_nY && MouseMsg::getY() <= m_nY + m_nHeight);
 }
 
 void MouseNode::_setStatus(Status status)

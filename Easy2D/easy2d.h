@@ -1,5 +1,5 @@
 /******************************************************
-* Easy2D Game Engine (v1.0.3)
+* Easy2D Game Engine (v1.0.4)
 * http://www.easy2d.cn
 * 
 * Depends on EasyX (Ver:20170827(beta))
@@ -89,34 +89,18 @@ typedef unsigned int				VK_KEY;
 typedef std::function<void()>		CLICK_CALLBACK;
 typedef std::function<void()>		TIMER_CALLBACK;
 typedef std::function<void(VK_KEY)>	KEY_CALLBACK;
-typedef std::function<void(MouseMsg)>	MOUSE_CALLBACK;
+typedef std::function<void()>		MOUSE_CALLBACK;
 
 
 class App
 {
-protected:
-	tstring				m_sTitle;
-	Scene*				m_currentScene;
-	Scene*				m_nextScene;
-	std::stack<Scene*>	m_sceneStack;
-	LARGE_INTEGER		m_nAnimationInterval;
-	int					m_nWidth;
-	int					m_nHeight;
-	int					m_nWindowMode;
-	bool				m_bRunning;
-	bool				m_bSaveScene;
-
-protected:
-	void _initGraph();
-	void _mainLoop();
-	void _enterNextScene();
-
 public:
 	App();
 	~App();
 
 	// 窗口可选模式
 	enum { SHOW_CONSOLE = 1, NO_CLOSE = 2, NO_MINI_MIZE = 4 };
+
 	// 获取程序实例
 	static App * get();
 	// 设置坐标原点
@@ -140,7 +124,9 @@ public:
 	// 修改窗口大小
 	void setWindowSize(int width, int height);
 	// 设置窗口标题
-	void setWindowText(tstring title);
+	void setWindowTitle(tstring title);
+	// 获取窗口标题
+	tstring getWindowTitle();
 	// 获取窗口宽度
 	int getWidth() const;
 	// 获取窗口高度
@@ -151,6 +137,10 @@ public:
 	void backScene();
 	// 清空之前保存的所有场景
 	void clearScene();
+	// 设置 AppName
+	void setAppName(tstring appname);
+	// 获取 AppName
+	tstring getAppName() const;
 	// 修改窗口背景色
 	void setBkColor(COLORREF color);
 	// 设置帧率
@@ -165,6 +155,24 @@ public:
 	Scene * getCurrentScene();
 	// 获取 Easy2D 版本号
 	LPCTSTR getVersion();
+
+protected:
+	tstring				m_sTitle;
+	tstring				m_sAppName;
+	Scene*				m_currentScene;
+	Scene*				m_nextScene;
+	std::stack<Scene*>	m_sceneStack;
+	LARGE_INTEGER		m_nAnimationInterval;
+	int					m_nWidth;
+	int					m_nHeight;
+	int					m_nWindowMode;
+	bool				m_bRunning;
+	bool				m_bSaveScene;
+
+protected:
+	void _initGraph();
+	void _mainLoop();
+	void _enterNextScene();
 };
 
 class FreePool
@@ -184,13 +192,6 @@ class Scene
 	friend class App;
 	friend class MouseMsg;
 
-protected:
-	std::vector<Node*> m_vChildren;
-
-protected:
-	void _exec();
-	void _onDraw();
-
 public:
 	Scene();
 	~Scene();
@@ -205,6 +206,13 @@ public:
 	bool del(Node * child);
 	// 清空所有子成员
 	void clearAllChildren();
+
+protected:
+	std::vector<Node*> m_vChildren;
+
+protected:
+	void _exec();
+	void _onDraw();
 };
 
 
@@ -212,40 +220,17 @@ class MouseMsg
 {
 	friend class App;
 
-private:
-	static void __exec();
-
-protected:
-	tstring m_sName;
-	MOUSE_CALLBACK m_callback;
-
-public:
-	UINT uMsg;			// 当前鼠标消息
-	bool mkLButton;		// 鼠标左键是否按下
-	bool mkMButton;		// 鼠标中键是否按下
-	bool mkRButton;		// 鼠标右键是否按下
-	short x;			// 当前鼠标 x 坐标
-	short y;			// 当前鼠标 y 坐标
-	short wheel;		// 鼠标滚轮滚动值 (120 的倍数)
-
 public:
 	MouseMsg();
 	MouseMsg(tstring name, const MOUSE_CALLBACK& callback);
 	~MouseMsg();
 
-	// 执行回调函数
-	void onMouseMsg(MouseMsg mouse);
-
 	// 添加键盘监听
 	static void addListener(tstring name, const MOUSE_CALLBACK& callback);
 	// 删除键盘监听
-	static bool deleteListener(tstring name);
+	static bool delListener(tstring name);
 	// 删除所有键盘监听
-	static void clearAllListener();
-
-public:
-	// 获取当前鼠标消息
-	static MouseMsg getMsg();
+	static void clearAllListeners();
 	// 左键是否按下
 	static bool isLButtonDown();
 	// 右键是否按下
@@ -253,11 +238,11 @@ public:
 	// 中键是否按下
 	static bool isMButtonDown();
 	// 获取鼠标X坐标
-	static int getMouseX();
+	static int getX();
 	// 获取鼠标Y坐标
-	static int getMouseY();
+	static int getY();
 	// 获取鼠标滚轮值
-	static int getMouseWheel();
+	static int getWheel();
 	// 鼠标移动消息
 	static bool isOnMouseMoved();
 	// 左键双击消息
@@ -282,12 +267,39 @@ public:
 	static bool isOnWheel();
 	// 清空鼠标消息
 	static void resetMouseMsg();
+
+private:
+	static void __exec();
+
+protected:
+	tstring m_sName;
+	MOUSE_CALLBACK m_callback;
+
+protected:
+	// 执行回调函数
+	void onMouseMsg();
 };
 
 
 class KeyMsg
 {
 	friend class App;
+
+public:
+	KeyMsg(tstring name, const KEY_CALLBACK& callback);
+	~KeyMsg();
+
+	// 执行回调函数
+	void onKbHit(VK_KEY key);
+
+	// 添加键盘监听
+	static void addListener(tstring name, const KEY_CALLBACK& callback);
+	// 删除键盘监听
+	static bool delListener(tstring name);
+	// 删除所有键盘监听
+	static void clearAllListeners();
+	// 判断键是否被按下，按下返回true
+	static bool isKeyDown(VK_KEY key);
 
 public:
 	// 字母键值
@@ -307,28 +319,28 @@ private:
 protected:
 	tstring m_sName;
 	KEY_CALLBACK m_callback;
-
-public:
-	KeyMsg(tstring name, const KEY_CALLBACK& callback);
-	~KeyMsg();
-
-	// 执行回调函数
-	void onKbHit(VK_KEY key);
-
-	// 添加键盘监听
-	static void addListener(tstring name, const KEY_CALLBACK& callback);
-	// 删除键盘监听
-	static bool deleteListener(tstring name);
-	// 删除所有键盘监听
-	static void clearAllListener();
-	// 判断键是否被按下，按下返回true
-	static bool isKeyDown(VK_KEY key);
 };
 
 
 class FileUtils
 {
 public:
+	// 获取系统的 AppData\Local 路径
+	static tstring getLocalAppDataPath();
+	// 获取默认的保存路径
+	static tstring getDefaultSavePath();
+	// 保存 int 型的值
+	static void saveInt(LPCTSTR key, int value);
+	// 保存 double 型的值
+	static void saveDouble(LPCTSTR key, double value);
+	// 保存 字符串 型的值（不要在 Unicode 字符集下保存中文字符）
+	static void saveString(LPCTSTR key, tstring value);
+	// 获取 int 型的值（若不存在则返回 default 参数的值）
+	static int getInt(LPCTSTR key, int default);
+	// 获取 double 型的值（若不存在则返回 default 参数的值）
+	static double getDouble(LPCTSTR key, double default);
+	// 获取 字符串 型的值（若不存在则返回 default 参数的值）
+	static tstring getString(LPCTSTR key, tstring default);
 	// 得到文件扩展名（小写）
 	static tstring getFileExtension(const tstring& filePath);
 	/**
@@ -343,7 +355,7 @@ class MusicUtils
 {
 public:
 	// 播放背景音乐
-	static void playBackgroundMusic(tstring pszFilePath, bool bLoop = false);
+	static void playBackgroundMusic(tstring pszFilePath, bool bLoop = true);
 	// 停止背景音乐
 	static void stopBackgroundMusic(bool bReleaseData = false);
 	// 暂停背景音乐
@@ -354,6 +366,8 @@ public:
 	static void rewindBackgroundMusic();
 	// 背景音乐是否正在播放
 	static bool isBackgroundMusicPlaying();
+	// 设置背景音乐音量，0 ~ 1.0f
+	static void setBackgroundMusicVolume(float volume);
 
 	// 播放音效
 	static unsigned int playMusic(tstring pszFilePath, bool loop = false);
@@ -367,6 +381,8 @@ public:
 	static void resumeMusic(unsigned int nSoundId);
 	// 卸载音效
 	static void unloadMusic(LPCTSTR pszFilePath);
+	// 设置特定音乐的音量，0 ~ 1.0f
+	static void setVolume(tstring pszFilePath, float volume);
 
 	// 暂停所有音乐
 	static void pauseAllMusics();
@@ -376,23 +392,14 @@ public:
 	static void stopAllMusics();
 	// 停止所有音乐，并释放内存
 	static void end();
+	// 设置总音量，0 ~ 1.0f
+	static void setVolume(float volume);
 };
 
 
 class Timer
 {
 	friend class App;
-
-protected:
-	bool			m_bRunning;
-	tstring			m_sName;
-	TIMER_CALLBACK	m_callback;
-	LARGE_INTEGER	m_nLast;
-	LARGE_INTEGER	m_nAnimationInterval;
-	UINT			m_nMilliSeconds;
-
-private:
-	static void __exec();
 
 public:
 	Timer(tstring name, UINT ms, const TIMER_CALLBACK & callback);
@@ -410,7 +417,6 @@ public:
 	void setCallback(const TIMER_CALLBACK& callback);
 	// 设置定时器名称
 	void setName(tstring name);
-
 	// 获取定时器间隔时间
 	UINT getInterval() const;
 	// 获取定时器名称
@@ -427,9 +433,20 @@ public:
 	// 停止特定定时器
 	static bool stopTimer(tstring name);
 	// 删除特定定时器
-	static bool deleteTimer(tstring name);
+	static bool delTimer(tstring name);
 	// 删除所有定时器
 	static void clearAllTimers();
+
+protected:
+	bool			m_bRunning;
+	tstring			m_sName;
+	TIMER_CALLBACK	m_callback;
+	LARGE_INTEGER	m_nLast;
+	LARGE_INTEGER	m_nAnimationInterval;
+	UINT			m_nMilliSeconds;
+
+private:
+	static void __exec();
 };
 
 
@@ -475,15 +492,15 @@ class Object
 {
 	friend class FreePool;
 
-protected:
-	int m_nRef;
-
 public:
 	Object();
 	virtual ~Object();
 
 	void retain();
 	void release();
+
+protected:
+	int m_nRef;
 };
 
 
@@ -491,9 +508,6 @@ class FontStyle :
 	public virtual Object
 {
 	friend class Text;
-
-protected:
-	LOGFONT m_font;
 
 public:
 	FontStyle();
@@ -528,6 +542,9 @@ public:
 	void setOrientation(LONG value);
 	// 设置字体抗锯齿，默认为true
 	void setQuality(bool value);
+
+protected:
+	LOGFONT m_font;
 };
 
 
@@ -554,18 +571,6 @@ class Node :
 {
 	friend class Scene;
 	friend class BatchNode;
-
-protected:
-	int		m_nZOrder;
-	bool	m_bDisplay;
-	Scene*	m_pScene;
-	int		m_nX;
-	int		m_nY;
-
-protected:
-	virtual bool _exec(bool active);
-	virtual void _onDraw() = 0;
-	void setParentScene(Scene * scene);
 
 public:
 	Node();
@@ -594,19 +599,24 @@ public:
 	virtual void setZOrder(int z);
 	// 获取节点所在场景
 	Scene * getParentScene();
+
+protected:
+	int		m_nZOrder;
+	bool	m_bDisplay;
+	Scene*	m_pScene;
+	int		m_nX;
+	int		m_nY;
+
+protected:
+	virtual bool _exec(bool active);
+	virtual void _onDraw() = 0;
+	void setParentScene(Scene * scene);
 };
 
 
 class BatchNode :
 	public virtual Node
 {
-protected:
-	std::vector<Node*> m_vChildren;
-
-protected:
-	virtual bool _exec(bool active) override;
-	virtual void _onDraw() override;
-
 public:
 	BatchNode();
 	virtual ~BatchNode();
@@ -617,18 +627,19 @@ public:
 	bool del(Node * child);
 	// 清空所有子节点
 	void clearAllChildren();
+
+protected:
+	std::vector<Node*> m_vChildren;
+
+protected:
+	virtual bool _exec(bool active) override;
+	virtual void _onDraw() override;
 };
 
 
 class Layer :
 	public virtual BatchNode
 {
-protected:
-	bool m_bBlock;
-
-protected:
-	virtual bool _exec(bool active) override;
-
 public:
 	Layer();
 	virtual ~Layer();
@@ -637,6 +648,12 @@ public:
 	int getBlock() const;
 	// 设置图层是否阻塞消息
 	void setBlock(bool block);
+
+protected:
+	bool m_bBlock;
+
+protected:
+	virtual bool _exec(bool active) override;
 };
 
 
@@ -645,23 +662,15 @@ class Image :
 {
 	friend class ImageButton;
 
-protected:
-	CImage m_Image;
-	CRect m_rDest;
-	CRect m_rSrc;
-	float m_fScaleX;
-	float m_fScaleY;
-
-protected:
-	virtual void _onDraw() override;
-
 public:
 	Image();
+	// 从图片文件获取图像
+	Image(LPCTSTR ImageFile);
 	/**
-	*  从图片文件获取图像(png/bmp/jpg/gif/emf/wmf/ico)
+	*  从图片文件获取图像
 	*  参数：图片文件名，图片裁剪坐标，图片裁剪宽度和高度
 	*/
-	Image(LPCTSTR ImageFile, int x = 0, int y = 0, int width = 0, int height = 0);
+	Image(LPCTSTR ImageFile, int x, int y, int width, int height);
 	virtual ~Image();
 
 	// 获取图像宽度
@@ -674,23 +683,23 @@ public:
 	float getScaleY() const;
 
 	/**
-	*  从图片文件获取图像 (png/bmp/jpg/gif/emf/wmf/ico)
+	*  从图片文件获取图像
 	*  返回值：图片加载是否成功
 	*/
 	bool setImage(LPCTSTR ImageFile);
 	/**
-	*  从图片文件获取图像 (png/bmp/jpg/gif/emf/wmf/ico)
+	*  从图片文件获取图像
 	*  参数：图片文件名，图片裁剪起始坐标，图片裁剪宽度和高度
 	*  返回值：图片加载是否成功
 	*/
 	bool setImage(LPCTSTR ImageFile, int x, int y, int width, int height);
 	/**
-	*  从资源文件获取图像，不支持 png (bmp/jpg/gif/emf/wmf/ico)
+	*  从资源文件获取图像，不支持 png
 	*  返回值：图片加载是否成功
 	*/
 	bool setImageFromRes(LPCTSTR pResName);
 	/**
-	*  从资源文件获取图像，不支持 png (bmp/jpg/gif/emf/wmf/ico)
+	*  从资源文件获取图像，不支持 png
 	*  参数：资源名称，图片裁剪坐标，图片裁剪宽度和高度
 	*  返回值：图片加载是否成功
 	*/
@@ -698,7 +707,7 @@ public:
 	// 裁剪图片（裁剪后会恢复 stretch 拉伸）
 	void crop(int x, int y, int width, int height);
 	// 将图片拉伸到固定宽高
-	void stretch(int width = 0, int height = 0);
+	void stretch(int width, int height);
 	// 按比例拉伸图片
 	void scale(float scaleX = 1.0f, float scaleY = 1.0f);
 	// 设置图片位置
@@ -711,8 +720,18 @@ public:
 	void setY(int y) override;
 	// 设置透明色
 	void setTransparentColor(COLORREF value);
-	// 保存到截图
-	static void screenshot();
+	// 保存游戏截图
+	static void saveScreenshot();
+
+protected:
+	CImage m_Image;
+	CRect m_rDest;
+	CRect m_rSrc;
+	float m_fScaleX;
+	float m_fScaleY;
+
+protected:
+	virtual void _onDraw() override;
 };
 
 
@@ -720,14 +739,6 @@ class Text :
 	public virtual Node
 {
 	friend class TextButton;
-
-protected:
-	tstring		m_sText;
-	COLORREF	m_color;
-	FontStyle *	m_pFontStyle;
-
-protected:
-	virtual void _onDraw() override;
 
 public:
 	Text();
@@ -756,12 +767,43 @@ public:
 	void setColor(COLORREF color);
 	// 设置字体
 	void setFontStyle(FontStyle * style);
+
+protected:
+	tstring		m_sText;
+	COLORREF	m_color;
+	FontStyle *	m_pFontStyle;
+
+protected:
+	virtual void _onDraw() override;
 };
 
 
 class MouseNode :
 	public virtual Node
 {
+public:
+	MouseNode();
+	virtual ~MouseNode();
+
+	// 鼠标是否移入
+	virtual bool isMouseIn();
+	// 鼠标是否选中
+	virtual bool isSelected();
+	// 设置回调函数
+	virtual void setClickedCallback(const CLICK_CALLBACK & callback);
+	// 设置回调函数
+	virtual void setMouseInCallback(const CLICK_CALLBACK & callback);
+	// 设置回调函数
+	virtual void setMouseOutCallback(const CLICK_CALLBACK & callback);
+	// 设置回调函数
+	virtual void setSelectCallback(const CLICK_CALLBACK & callback);
+	// 设置回调函数
+	virtual void setUnselectCallback(const CLICK_CALLBACK & callback);
+	// 重置状态
+	virtual void reset();
+	// 设置节点是否阻塞鼠标消息
+	void setBlock(bool block);
+
 private:
 	bool m_bTarget;
 	bool m_bBlock;
@@ -790,35 +832,21 @@ protected:
 	virtual void _onMouseIn() = 0;
 	// 鼠标选中时
 	virtual void _onSelected() = 0;
-
-public:
-	MouseNode();
-	virtual ~MouseNode();
-
-	// 鼠标是否移入
-	virtual bool isMouseIn();
-	// 鼠标是否选中
-	virtual bool isSelected();
-	// 设置回调函数
-	virtual void setClickedCallback(const CLICK_CALLBACK & callback);
-	// 设置回调函数
-	virtual void setMouseInCallback(const CLICK_CALLBACK & callback);
-	// 设置回调函数
-	virtual void setMouseOutCallback(const CLICK_CALLBACK & callback);
-	// 设置回调函数
-	virtual void setSelectCallback(const CLICK_CALLBACK & callback);
-	// 设置回调函数
-	virtual void setUnselectCallback(const CLICK_CALLBACK & callback);
-	// 重置状态
-	virtual void reset();
-	// 设置节点是否阻塞鼠标消息
-	void setBlock(bool block);
 };
 
 
 class Button :
 	public virtual MouseNode
 {
+public:
+	Button();
+	virtual ~Button();
+
+	// 按钮是否启用
+	virtual bool isEnable();
+	// 设置是否启用
+	virtual void setEnable(bool enable);
+
 protected:
 	bool m_bEnable;
 
@@ -830,15 +858,6 @@ protected:
 	virtual void _onMouseIn() = 0;
 	virtual void _onSelected() = 0;
 	virtual void _onDisable() = 0;
-
-public:
-	Button();
-	virtual ~Button();
-
-	// 按钮是否启用
-	virtual bool isEnable();
-	// 设置是否启用
-	virtual void setEnable(bool enable);
 };
 
 
@@ -846,21 +865,6 @@ public:
 class TextButton :
 	public virtual Button
 {
-protected:
-	Text * m_pNormalText;
-	Text * m_pMouseInText;
-	Text * m_pSelectedText;
-	Text * m_pUnableText;
-
-protected:
-	// 重置文字位置（居中显示）
-	void resetTextPosition();
-
-	virtual void _onNormal() override;
-	virtual void _onMouseIn() override;
-	virtual void _onSelected() override;
-	virtual void _onDisable() override;
-
 public:
 	TextButton();
 	TextButton(tstring text);
@@ -882,6 +886,21 @@ public:
 	virtual void setY(int y) override;
 	// 设置按钮横纵坐标
 	virtual void setPos(int x, int y) override;
+
+protected:
+	Text * m_pNormalText;
+	Text * m_pMouseInText;
+	Text * m_pSelectedText;
+	Text * m_pUnableText;
+
+protected:
+	// 重置文字位置（居中显示）
+	void resetTextPosition();
+
+	virtual void _onNormal() override;
+	virtual void _onMouseIn() override;
+	virtual void _onSelected() override;
+	virtual void _onDisable() override;
 };
 
 
@@ -889,21 +908,6 @@ public:
 class ImageButton :
 	public virtual Button
 {
-protected:
-	Image * m_pNormalImage;
-	Image * m_pMouseInImage;
-	Image * m_pSelectedImage;
-	Image * m_pUnableImage;
-
-protected:
-	// 重置图片位置（居中显示）
-	void resetImagePosition();
-
-	virtual void _onNormal() override;
-	virtual void _onMouseIn() override;
-	virtual void _onSelected() override;
-	virtual void _onDisable() override;
-
 public:
 	ImageButton();
 	ImageButton(LPCTSTR image);
@@ -925,28 +929,32 @@ public:
 	virtual void setY(int y) override;
 	// 设置按钮横纵坐标
 	virtual void setPos(int x, int y) override;
+
+protected:
+	Image * m_pNormalImage;
+	Image * m_pMouseInImage;
+	Image * m_pSelectedImage;
+	Image * m_pUnableImage;
+
+protected:
+	// 重置图片位置（居中显示）
+	void resetImagePosition();
+
+	virtual void _onNormal() override;
+	virtual void _onMouseIn() override;
+	virtual void _onSelected() override;
+	virtual void _onDisable() override;
 };
 
 
 class Shape :
 	public virtual Node
 {
-protected:
-	COLORREF	fillColor;
-	COLORREF	lineColor;
-
-protected:
-	virtual void _onDraw() override;
-	virtual void solidShape() = 0;
-	virtual void fillShape() = 0;
-	virtual void roundShape() = 0;
-
-public:
-	enum STYLE { ROUND, SOLID, FILL } m_eStyle;	// 形状填充样式
-
 public:
 	Shape();
 	virtual ~Shape();
+
+	enum STYLE { ROUND, SOLID, FILL } m_eStyle;	// 形状填充样式
 
 	// 获取形状的填充颜色
 	COLORREF getFillColor() const;
@@ -958,21 +966,22 @@ public:
 	void setLineColor(COLORREF color);
 	// 设置填充样式
 	void setStyle(STYLE style);
+
+protected:
+	COLORREF	fillColor;
+	COLORREF	lineColor;
+
+protected:
+	virtual void _onDraw() override;
+	virtual void solidShape() = 0;
+	virtual void fillShape() = 0;
+	virtual void roundShape() = 0;
 };
 
 
 class Rect :
 	public virtual Shape
 {
-protected:
-	int m_nWidth;
-	int m_nHeight;
-
-protected:
-	virtual void solidShape() override;
-	virtual void fillShape() override;
-	virtual void roundShape() override;
-
 public:
 	Rect();
 	Rect(int x, int y, int width, int height);
@@ -988,20 +997,21 @@ public:
 	void setHeight(int height);
 	// 设置矩形大小
 	void setSize(int width, int height);
+
+protected:
+	int m_nWidth;
+	int m_nHeight;
+
+protected:
+	virtual void solidShape() override;
+	virtual void fillShape() override;
+	virtual void roundShape() override;
 };
 
 
 class Circle :
 	public virtual Shape
 {
-protected:
-	int m_nRadius;
-
-protected:
-	virtual void solidShape() override;
-	virtual void fillShape() override;
-	virtual void roundShape() override;
-
 public:
 	Circle();
 	Circle(int x, int y, int radius);
@@ -1011,6 +1021,14 @@ public:
 	int getRadius() const;
 	// 设置圆形半径
 	void setRadius(int m_nRadius);
+
+protected:
+	int m_nRadius;
+
+protected:
+	virtual void solidShape() override;
+	virtual void fillShape() override;
+	virtual void roundShape() override;
 };
 
 }	// End of easy2d namespace

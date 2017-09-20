@@ -7,6 +7,8 @@
 #include <mmsystem.h>
 #pragma comment(lib, "winmm.lib")
 
+// Easy2D 版本号
+#define E2D_VERSION _T("1.0.4")
 
 // App 的唯一实例
 static App * s_pInstance = nullptr;
@@ -144,10 +146,11 @@ void App::_initGraph()
 		TCHAR title[31];
 		GetWindowText(GetHWnd(), title, 30);
 		m_sTitle = title;
+		m_sAppName = title;
 	}
 	else
 	{
-		setWindowText(m_sTitle);
+		setWindowTitle(m_sTitle);
 	}
 }
 
@@ -197,6 +200,7 @@ void App::createWindow(tstring title, int width, int height, int mode)
 	m_nHeight = height;
 	m_nWindowMode = mode;
 	m_sTitle = title;
+	m_sAppName = title;
 	// 创建窗口
 	_initGraph();
 }
@@ -231,12 +235,17 @@ void App::setWindowSize(int width, int height)
 	reset();
 }
 
-void App::setWindowText(tstring title)
+void App::setWindowTitle(tstring title)
 {
 	// 设置窗口标题
 	SetWindowText(GetHWnd(), title.c_str());
 	// 保存当前标题，用于修改窗口大小时恢复标题
 	m_sTitle = title;
+}
+
+tstring App::getWindowTitle()
+{
+	return m_sTitle;
 }
 
 void App::close()
@@ -269,6 +278,16 @@ void App::clearScene()
 		SAFE_DELETE(temp);
 		m_sceneStack.pop();
 	}
+}
+
+void App::setAppName(tstring appname)
+{
+	m_sAppName = appname;
+}
+
+tstring App::getAppName() const
+{
+	return m_sAppName;
 }
 
 void App::setBkColor(COLORREF color)
@@ -321,9 +340,9 @@ Scene * App::getCurrentScene()
 	return m_currentScene;
 }
 
-LPCTSTR easy2d::App::getVersion()
+LPCTSTR App::getVersion()
 {
-	return _T("1.0.2");
+	return E2D_VERSION;
 }
 
 void App::setFPS(DWORD fps)

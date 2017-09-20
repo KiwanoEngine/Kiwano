@@ -5,24 +5,21 @@
 static std::vector<MouseMsg*> s_vMouseMsg;
 
 // 鼠标消息
-static MouseMsg s_mouseMsg = MouseMsg();
-
-// 将 EasyX 的 MOUSEMSG 转换为 MouseMsg
-static void ConvertMsg(MOUSEMSG msg);
+static MOUSEMSG s_mouseMsg;
 
 void MouseMsg::__exec()
 {
 	// 获取鼠标消息
 	while (MouseHit())
 	{
-		// 转换鼠标消息
-		ConvertMsg(GetMouseMsg());
+		// 获取鼠标消息
+		s_mouseMsg = GetMouseMsg();
 		// 执行场景程序
 		App::get()->getCurrentScene()->_exec();
 		// 执行鼠标监听回调函数
-		for (auto m : s_vMouseMsg)		// 循环遍历所有的鼠标监听
+		for (auto m : s_vMouseMsg)	// 循环遍历所有的鼠标监听
 		{
-			m->onMouseMsg(s_mouseMsg);	// 执行回调函数
+			m->onMouseMsg();		// 执行回调函数
 		}
 	}
 }
@@ -41,9 +38,9 @@ MouseMsg::~MouseMsg()
 {
 }
 
-void MouseMsg::onMouseMsg(MouseMsg mouse)
+void MouseMsg::onMouseMsg()
 {
-	m_callback(mouse);
+	m_callback();
 }
 
 void MouseMsg::addListener(tstring name, const MOUSE_CALLBACK & callback)
@@ -54,7 +51,7 @@ void MouseMsg::addListener(tstring name, const MOUSE_CALLBACK & callback)
 	s_vMouseMsg.push_back(mouse);
 }
 
-bool MouseMsg::deleteListener(tstring name)
+bool MouseMsg::delListener(tstring name)
 {
 	// 创建迭代器
 	std::vector<MouseMsg*>::iterator iter;
@@ -74,7 +71,7 @@ bool MouseMsg::deleteListener(tstring name)
 	return false;
 }
 
-void MouseMsg::clearAllListener()
+void MouseMsg::clearAllListeners()
 {
 	// 删除所有监听器
 	for (auto m : s_vMouseMsg)
@@ -83,11 +80,6 @@ void MouseMsg::clearAllListener()
 	}
 	// 清空容器
 	s_vMouseMsg.clear();
-}
-
-MouseMsg MouseMsg::getMsg()
-{
-	return s_mouseMsg;	// 获取当前鼠标消息
 }
 
 bool MouseMsg::isLButtonDown()
@@ -105,17 +97,17 @@ bool MouseMsg::isMButtonDown()
 	return s_mouseMsg.mkMButton;
 }
 
-int MouseMsg::getMouseX()
+int MouseMsg::getX()
 {
 	return s_mouseMsg.x;
 }
 
-int MouseMsg::getMouseY()
+int MouseMsg::getY()
 {
 	return s_mouseMsg.y;
 }
 
-int MouseMsg::getMouseWheel()
+int MouseMsg::getWheel()
 {
 	return s_mouseMsg.wheel;
 }
@@ -178,18 +170,4 @@ bool MouseMsg::isOnWheel()
 void MouseMsg::resetMouseMsg()
 {
 	s_mouseMsg.uMsg = 0;
-}
-
-void ConvertMsg(MOUSEMSG msg)
-{
-	// 将 MOUSEMSG 转换为 MouseMsg
-	/// 虽然 MOUSEMSG 和 MouseMsg 本质上是一样的
-	/// 但是为了实现 Easy2D 与 EasyX 的分离，所以定义了新的 MouseMsg
-	s_mouseMsg.uMsg = msg.uMsg;
-	s_mouseMsg.mkLButton = msg.mkLButton;
-	s_mouseMsg.mkMButton = msg.mkMButton;
-	s_mouseMsg.mkRButton = msg.mkRButton;
-	s_mouseMsg.wheel = msg.wheel;
-	s_mouseMsg.x = msg.x;
-	s_mouseMsg.y = msg.y;
 }

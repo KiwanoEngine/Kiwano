@@ -10,6 +10,13 @@ Image::Image() :
 {
 }
 
+Image::Image(LPCTSTR ImageFile) :
+	m_fScaleX(1),
+	m_fScaleY(1)
+{
+	setImage(ImageFile);	// 设置图片资源
+}
+
 Image::Image(LPCTSTR ImageFile, int x, int y, int width, int height) :
 	m_fScaleX(1),
 	m_fScaleY(1)
@@ -82,6 +89,9 @@ bool Image::setImage(LPCTSTR ImageFile)
 	// 设置目标矩形（即绘制到窗口的位置和大小）
 	m_rDest.SetRect(m_nX, m_nY, m_nX + m_Image.GetWidth(), m_nY + m_Image.GetHeight());
 	m_rSrc.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
+	// 重置缩放属性
+	m_fScaleX = 1;
+	m_fScaleY = 1;
 
 	return true;
 }
@@ -110,6 +120,9 @@ bool Image::setImageFromRes(LPCTSTR pResName)
 	// 设置目标矩形（即绘制到窗口的位置和大小）
 	m_rDest.SetRect(m_nX, m_nY, m_nX + m_Image.GetWidth(), m_nY + m_Image.GetHeight());
 	m_rSrc.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
+	// 重置缩放属性
+	m_fScaleX = 1;
+	m_fScaleY = 1;
 
 	return true;
 }
@@ -128,25 +141,23 @@ bool Image::setImageFromRes(LPCTSTR pResName, int x, int y, int width, int heigh
 
 void Image::crop(int x, int y, int width, int height)
 {
+	width = min(max(width, 0), m_Image.GetWidth());
+	height = min(max(height, 0), m_Image.GetHeight());
 	// 设置源矩形的位置和大小（用于裁剪）
-	m_rSrc.SetRect(
-		x, y, 
-		x + (width ? width : m_Image.GetWidth() - x), 
-		y + (height ? height : m_Image.GetHeight() - y));
+	m_rSrc.SetRect(x, y, x + width, y + height);
 	// 设置目标矩形（即绘制到窗口的位置和大小）
-	m_rDest.SetRect(
-		m_nX, m_nY, 
-		m_nX + (width ? width : int(m_rSrc.Width() * m_fScaleX)), 
-		m_nY + (height ? height : int(m_rSrc.Height() * m_fScaleY)));
+	m_rDest.SetRect(m_nX, m_nY, m_nX + int(width * m_fScaleX), m_nY + int(height * m_fScaleY));
 }
 
 void Image::stretch(int width, int height)
 {
+	width = max(width, 0);
+	height = max(height, 0);
 	// 设置目标矩形的位置和大小（即绘制到窗口的位置和大小，用于拉伸图片）
-	m_rDest.SetRect(
-		m_nX, m_nY, 
-		m_nX + (width ? width : m_Image.GetWidth()), 
-		m_nY + (height ? height : m_Image.GetHeight()));
+	m_rDest.SetRect(m_nX, m_nY, m_nX + width, m_nY + height);
+	// 重置比例缩放属性
+	m_fScaleX = 1;
+	m_fScaleY = 1;
 }
 
 void Image::scale(float scaleX, float scaleY)
@@ -155,8 +166,8 @@ void Image::scale(float scaleX, float scaleY)
 	m_fScaleY = max(scaleY, 0);
 	m_rDest.SetRect(
 		m_nX, m_nY, 
-		m_nX + int(m_Image.GetWidth() * scaleX), 
-		m_nY + int(m_Image.GetHeight() * scaleY));
+		m_nX + int(m_rSrc.Width() * scaleX),
+		m_nY + int(m_rSrc.Height() * scaleY));
 }
 
 void Image::setPos(int x, int y)
@@ -195,7 +206,7 @@ void Image::setTransparentColor(COLORREF value)
 	m_Image.SetTransparentColor(value);
 }
 
-void Image::screenshot()
+void Image::saveScreenshot()
 {
 	tstring savePath;
 	// 获取保存位置

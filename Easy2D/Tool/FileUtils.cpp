@@ -1,7 +1,130 @@
 #include "..\Easy2d.h"
 #include "..\EasyX\easyx.h"
 #include <algorithm>
+#include <sstream>
+#include <Shlobj.h>
+#pragma comment(lib, "shell32.lib")
 
+#ifndef UNICODE
+	#include <io.h>
+	#include <direct.h>
+#endif
+
+tstring FileUtils::getLocalAppDataPath()
+{
+	TCHAR m_lpszDefaultDir[MAX_PATH] = { 0 };
+	TCHAR szDocument[MAX_PATH] = { 0 };
+
+	// 获取 AppData\Local 文件夹的 ID
+	LPITEMIDLIST pidl = NULL;
+	SHGetSpecialFolderLocation(NULL, CSIDL_LOCAL_APPDATA, &pidl);
+	if (pidl && SHGetPathFromIDList(pidl, szDocument))
+	{
+		// 获取文件夹路径
+		GetShortPathName(szDocument, m_lpszDefaultDir, _MAX_PATH);
+	}
+
+	return m_lpszDefaultDir;
+}
+
+tstring FileUtils::getDefaultSavePath()
+{
+	TCHAR m_lpszDefaultDir[MAX_PATH] = { 0 };
+	TCHAR szDocument[MAX_PATH] = { 0 };
+
+	// 获取 AppData\Local 文件夹的 ID
+	LPITEMIDLIST pidl = NULL;
+	SHGetSpecialFolderLocation(NULL, CSIDL_LOCAL_APPDATA, &pidl);
+	if (pidl && SHGetPathFromIDList(pidl, szDocument))
+	{
+		// 获取文件夹路径
+		GetShortPathName(szDocument, m_lpszDefaultDir, _MAX_PATH);
+	}
+
+	tstring path = m_lpszDefaultDir;
+	path.append(_T("\\"));
+	path.append(App::get()->getAppName());
+
+#ifdef UNICODE
+	if (_waccess(path.c_str(), 0) == -1)
+	{
+		_wmkdir(path.c_str());
+	}
+#else
+	if (_access(path.c_str(), 0) == -1)
+	{
+		_mkdir(path.c_str());
+	}
+#endif
+
+	path.append(_T("\\DefaultData.ini"));
+
+	return path;
+}
+
+void FileUtils::saveInt(LPCTSTR key, int value)
+{
+#ifdef UNICODE
+	std::wstringstream ss;
+#else
+	std::stringstream ss;
+#endif
+	ss << value;
+	::WritePrivateProfileString(_T("Default"), key, ss.str().c_str(), getDefaultSavePath().c_str());
+}
+
+void FileUtils::saveDouble(LPCTSTR key, double value)
+{
+#ifdef UNICODE
+	std::wstringstream ss;
+#else
+	std::stringstream ss;
+#endif
+	ss << value;
+	::WritePrivateProfileString(_T("Default"), key, ss.str().c_str(), getDefaultSavePath().c_str());
+}
+
+void FileUtils::saveString(LPCTSTR key, tstring value)
+{
+	::WritePrivateProfileString(_T("Default"), key, value.c_str(), getDefaultSavePath().c_str());
+}
+
+int FileUtils::getInt(LPCTSTR key, int default)
+{
+	return ::GetPrivateProfileInt(_T("Default"), key, default, getDefaultSavePath().c_str());
+}
+#include <iostream>
+using namespace std;
+double FileUtils::getDouble(LPCTSTR key, double default)
+{
+	// 将 default 参数转化为字符串
+#ifdef UNICODE
+	std::wstringstream ss;
+#else
+	std::stringstream ss;
+#endif
+	ss << default;
+	// 读取数据
+	TCHAR temp[128] = { 0 };
+	::GetPrivateProfileString(_T("Default"), key, ss.str().c_str(), temp, 128, getDefaultSavePath().c_str());
+	// 转换为字符串流
+	ss.str(_T(""));
+	ss << temp;
+	// 将字符串转化为 double
+#ifdef UNICODE
+	double d = _wtof(ss.str().c_str());
+#else
+	double d = atof(ss.str().c_str());
+#endif
+	return d;
+}
+
+tstring FileUtils::getString(LPCTSTR key, tstring default)
+{
+	TCHAR temp[128] = { 0 };
+	::GetPrivateProfileString(_T("Default"), key, default.c_str(), temp, 128, getDefaultSavePath().c_str());
+	return tstring(temp);
+}
 
 tstring FileUtils::getFileExtension(const tstring & filePath)
 {

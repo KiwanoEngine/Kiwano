@@ -151,7 +151,7 @@ bool Timer::stopTimer(tstring name)
 	return false;
 }
 
-bool Timer::deleteTimer(tstring name)
+bool Timer::delTimer(tstring name)
 {
 	// ´´½¨µü´úÆ÷
 	std::vector<Timer*>::iterator iter;
