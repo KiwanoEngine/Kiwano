@@ -1,4 +1,4 @@
-#include "easy2d.h"
+#include "..\easy2d.h"
 #include <assert.h>
 
 Scene::Scene()
@@ -77,8 +77,7 @@ void Scene::add(Node * child, int zOrder)
 
 bool Scene::del(Node * child)
 {
-	// 断言节点非空
-	assert(child);
+	if (child == nullptr) return false;
 
 	// 寻找是否有相同节点
 	std::vector<Node*>::iterator iter;

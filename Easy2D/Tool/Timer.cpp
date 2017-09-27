@@ -1,4 +1,4 @@
-#include "..\Easy2d.h"
+#include "..\easy2d.h"
 
 // 储存所有定时器的容器
 static std::vector<Timer*> s_nTimers;

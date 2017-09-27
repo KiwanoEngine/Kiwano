@@ -8,9 +8,9 @@ Circle::Circle() :
 }
 
 Circle::Circle(int x, int y, int radius) :
-	Node(x, y),
 	m_nRadius(radius)
 {
+	setPos(x, y);
 }
 
 Circle::~Circle()
@@ -19,17 +19,17 @@ Circle::~Circle()
 
 void Circle::solidShape()
 {
-	solidcircle(m_nX, m_nY, m_nRadius);
+	solidcircle(getX(), getY(), m_nRadius);
 }
 
 void Circle::fillShape()
 {
-	fillcircle(m_nX, m_nY, m_nRadius);
+	fillcircle(getX(), getY(), m_nRadius);
 }
 
 void Circle::roundShape()
 {
-	circle(m_nX, m_nY, m_nRadius);
+	circle(getX(), getY(), m_nRadius);
 }
 
 int Circle::getRadius() const

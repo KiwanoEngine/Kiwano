@@ -1,4 +1,5 @@
 #include "..\easy2d.h"
+#include "..\e2dobj.h"
 
 
 MouseNode::MouseNode() :
@@ -34,7 +35,7 @@ bool MouseNode::_exec(bool active)
 	if (!m_bTarget)
 	{
 		// 若鼠标位置在节点所在的矩形区域中
-		if (_judge())
+		if (_isMouseIn())
 		{
 			// 状态设为 MOUSEIN
 			_setStatus(MOUSEIN);
@@ -58,7 +59,7 @@ bool MouseNode::_exec(bool active)
 		if (MouseMsg::isOnLButtonUp())
 		{
 			// 若左键抬起时鼠标仍在节点内
-			if (_judge())
+			if (_isMouseIn())
 			{
 				m_ClickCallback();	// 执行回调函数
 			}
@@ -96,10 +97,9 @@ void MouseNode::_onDraw()
 	}
 }
 
-bool MouseNode::_judge()
+bool MouseNode::_isMouseIn()
 {
-	return (MouseMsg::getX() >= m_nX && MouseMsg::getX() <= m_nX + m_nWidth) &&
-		(MouseMsg::getY() >= m_nY && MouseMsg::getY() <= m_nY + m_nHeight);
+	return isPointIn(MouseMsg::getPos());
 }
 
 void MouseNode::_setStatus(Status status)

@@ -1,5 +1,6 @@
 #include "..\easy2d.h"
 #include "..\EasyX\easyx.h"
+#include "..\e2dmsg.h"
 
 // 鼠标监听回调函数的容器
 static std::vector<MouseMsg*> s_vMouseMsg;
@@ -105,6 +106,11 @@ int MouseMsg::getX()
 int MouseMsg::getY()
 {
 	return s_mouseMsg.y;
+}
+
+CPoint MouseMsg::getPos()
+{
+	return CPoint(s_mouseMsg.x, s_mouseMsg.y);
 }
 
 int MouseMsg::getWheel()

@@ -1,9 +1,9 @@
-#include "..\Easy2d.h"
+#include "..\easy2d.h"
 #include "..\EasyX\easyx.h"
-#include <algorithm>
-#include <sstream>
 #include <Shlobj.h>
 #pragma comment(lib, "shell32.lib")
+#include <sstream>
+#include <algorithm>
 
 #ifndef UNICODE
 	#include <io.h>

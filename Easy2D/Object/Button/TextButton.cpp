@@ -1,4 +1,4 @@
-#include "..\..\Easy2d.h"
+#include "..\..\easy2d.h"
 
 
 TextButton::TextButton() :
@@ -7,8 +7,6 @@ TextButton::TextButton() :
 	m_pSelectedText(nullptr),
 	m_pUnableText(nullptr)
 {
-	m_nWidth = 0;
-	m_nHeight = 0;
 }
 
 TextButton::TextButton(tstring text) :
@@ -30,6 +28,26 @@ TextButton::~TextButton()
 	SAFE_RELEASE(m_pMouseInText);
 	SAFE_RELEASE(m_pSelectedText);
 	SAFE_RELEASE(m_pUnableText);
+}
+
+void TextButton::_setStatus(Status status)
+{
+	if (m_eStatus != status)
+	{
+		if (status == MOUSEIN)
+		{
+			if (m_pMouseInText) setRect(m_pMouseInText->getRect());
+		}
+		else if (status == SELECTED)
+		{
+			if (m_pSelectedText) setRect(m_pSelectedText->getRect());
+		}
+		else
+		{
+			setRect(m_pNormalText->getRect());
+		}
+	}
+	MouseNode::_setStatus(status);
 }
 
 void TextButton::_onNormal()
@@ -86,8 +104,10 @@ void TextButton::setNormal(Text * text)
 		m_pNormalText = text;
 		// 现文本引用计数加一
 		m_pNormalText->retain();
+		// 根据文字宽高设定按钮大小
+		setSize(m_pNormalText->getSize());
 		// 重新计算文本位置
-		resetTextPosition();
+		_resetPosition();
 	}
 }
 
@@ -98,7 +118,7 @@ void TextButton::setMouseIn(Text * text)
 		SAFE_RELEASE(m_pMouseInText);
 		m_pMouseInText = text;
 		m_pMouseInText->retain();
-		resetTextPosition();
+		_resetPosition();
 	}
 }
 
@@ -109,7 +129,7 @@ void TextButton::setSelected(Text * text)
 		SAFE_RELEASE(m_pSelectedText);
 		m_pSelectedText = text;
 		m_pSelectedText->retain();
-		resetTextPosition();
+		_resetPosition();
 	}
 }
 
@@ -120,54 +140,33 @@ void TextButton::setUnable(Text * text)
 		SAFE_RELEASE(m_pUnableText);
 		m_pUnableText = text;
 		m_pUnableText->retain();
-		resetTextPosition();
+		_resetPosition();
 	}
 }
 
-void TextButton::setX(int x)
-{
-	Node::setX(x);
-	resetTextPosition();
-}
-
-void TextButton::setY(int y)
-{
-	Node::setY(y);
-	resetTextPosition();
-}
-
-void TextButton::setPos(int x, int y)
-{
-	Node::setPos(x, y);
-	resetTextPosition();
-}
-
-void TextButton::resetTextPosition()
+void TextButton::_resetPosition()
 {
 	if (m_pNormalText)
 	{
-		// 根据文字宽高设定按钮大小
-		m_nWidth = m_pNormalText->getWidth();
-		m_nHeight = m_pNormalText->getHeight();
 		// 根据按钮位置和文字宽高设置文字位置居中显示
-		m_pNormalText->setPos(m_nX , m_nY);
+		m_pNormalText->setPos(getX() , getY());
 	}
 	if (m_pMouseInText)
 	{
 		m_pMouseInText->setPos(
-			m_nX + (m_nWidth - m_pMouseInText->getWidth()) / 2, 
-			m_nY + (m_nHeight - m_pMouseInText->getHeight()) / 2);
+			getX() + (getWidth() - m_pMouseInText->getWidth()) / 2,
+			getY() + (getHeight() - m_pMouseInText->getHeight()) / 2);
 	}
 	if (m_pSelectedText)
 	{
 		m_pSelectedText->setPos(
-			m_nX + (m_nWidth - m_pSelectedText->getWidth()) / 2, 
-			m_nY + (m_nHeight - m_pSelectedText->getHeight()) / 2);
+			getX() + (getWidth() - m_pSelectedText->getWidth()) / 2,
+			getY() + (getHeight() - m_pSelectedText->getHeight()) / 2);
 	}
 	if (m_pUnableText)
 	{
 		m_pUnableText->setPos(
-			m_nX + (m_nWidth - m_pUnableText->getWidth()) / 2, 
-			m_nY + (m_nHeight - m_pUnableText->getHeight()) / 2);
+			getX() + (getWidth() - m_pUnableText->getWidth()) / 2,
+			getY() + (getHeight() - m_pUnableText->getHeight()) / 2);
 	}
 }

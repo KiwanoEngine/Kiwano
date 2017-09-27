@@ -1,4 +1,4 @@
-#include "..\Easy2d.h"
+#include "..\easy2d.h"
 #include "..\EasyX\easyx.h"
 
 
@@ -11,19 +11,19 @@ Text::Text() :
 }
 
 Text::Text(tstring text, COLORREF color, FontStyle * font) : 
-	m_sText(text),
 	m_color(color),
 	m_pFontStyle(font)
 {
+	setText(text);
 	m_pFontStyle->retain();		// 字体引用计数加一
 }
 
 Text::Text(int x, int y, tstring text, COLORREF color, FontStyle * font) :
-	Node(x, y),
-	m_sText(text),
 	m_color(color),
 	m_pFontStyle(font)
 {
+	setText(text);
+	setPos(x, y);
 	m_pFontStyle->retain();		// 字体引用计数加一
 }
 
@@ -44,7 +44,7 @@ void Text::_onDraw()
 	// 设置文本颜色
 	settextcolor(m_color);
 	// 输出文字
-	outtextxy(m_nX, m_nY, m_sText.c_str());
+	outtextxy(getX(), getY(), m_sText.c_str());
 }
 
 COLORREF Text::getColor() const
@@ -62,20 +62,6 @@ FontStyle * Text::getFontStyle()
 	return m_pFontStyle;
 }
 
-int Text::getWidth()
-{
-	// 先设置字体，然后获取该文本在该字体下的宽度
-	settextstyle(&m_pFontStyle->m_font);
-	return textwidth(getText().c_str());
-}
-
-int Text::getHeight()
-{
-	// 先设置字体，然后获取该文本在该字体下的高度
-	settextstyle(&m_pFontStyle->m_font);
-	return textheight(getText().c_str());
-}
-
 bool Text::isEmpty() const
 {
 	return m_sText.empty();	// 文本是否为空
@@ -84,6 +70,9 @@ bool Text::isEmpty() const
 void Text::setText(tstring text)
 {
 	m_sText = text;
+	// 先设置字体，然后获取该文本在该字体下的宽度和高度
+	settextstyle(&m_pFontStyle->m_font);
+	setSize(textwidth(getText().c_str()), textheight(getText().c_str()));
 }
 
 void Text::setColor(COLORREF color)
@@ -96,4 +85,7 @@ void Text::setFontStyle(FontStyle * style)
 	SAFE_RELEASE(m_pFontStyle);	// 原字体引用计数减一
 	m_pFontStyle = style;		// 修改字体
 	m_pFontStyle->retain();		// 现字体引用计数加一
+	// 先设置字体，然后获取该文本在该字体下的宽度和高度
+	settextstyle(&m_pFontStyle->m_font);
+	setSize(textwidth(getText().c_str()), textheight(getText().c_str()));
 }

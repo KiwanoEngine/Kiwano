@@ -335,35 +335,57 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
-    <ClCompile Include="FreePool.cpp" />
+    <ClCompile Include="Action\Action.cpp" />
+    <ClCompile Include="Action\ActionCallback.cpp" />
+    <ClCompile Include="Action\ActionDelay.cpp" />
+    <ClCompile Include="Action\ActionFrames.cpp" />
+    <ClCompile Include="Action\ActionMoveTo.cpp" />
+    <ClCompile Include="Action\ActionMoveBy.cpp" />
+    <ClCompile Include="Action\ActionNeverStop.cpp" />
+    <ClCompile Include="Action\ActionOpacityTo.cpp" />
+    <ClCompile Include="Action\ActionOpacityBy.cpp" />
+    <ClCompile Include="Action\ActionScaleBy.cpp" />
+    <ClCompile Include="Action\ActionScaleTo.cpp" />
+    <ClCompile Include="Action\ActionSequence.cpp" />
+    <ClCompile Include="Action\ActionTwo.cpp" />
+    <ClCompile Include="Action\Animation.cpp" />
+    <ClCompile Include="Base\App.cpp" />
+    <ClCompile Include="Base\FreePool.cpp" />
+    <ClCompile Include="Base\Scene.cpp" />
     <ClCompile Include="Msg\KeyMsg.cpp" />
     <ClCompile Include="Msg\MouseMsg.cpp" />
-    <ClCompile Include="Node\BatchNode.cpp" />
-    <ClCompile Include="Node\Button\Button.cpp" />
-    <ClCompile Include="Node\Button\ImageButton.cpp" />
-    <ClCompile Include="Node\Button\TextButton.cpp" />
-    <ClCompile Include="Node\Image.cpp" />
-    <ClCompile Include="Node\Layer.cpp" />
-    <ClCompile Include="Node\MouseNode.cpp" />
-    <ClCompile Include="Node\Node.cpp" />
-    <ClCompile Include="Node\Shape\Circle.cpp" />
-    <ClCompile Include="Node\Shape\Rectangle.cpp" />
-    <ClCompile Include="Node\Shape\Shape.cpp" />
-    <ClCompile Include="Node\Sprite\Sprite.cpp" />
-    <ClCompile Include="Node\Sprite\SpriteFrame.cpp" />
-    <ClCompile Include="Node\Text.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Object\BatchNode.cpp" />
+    <ClCompile Include="Object\BatchSprite.cpp" />
+    <ClCompile Include="Object\Button\Button.cpp" />
+    <ClCompile Include="Object\Button\ImageButton.cpp" />
+    <ClCompile Include="Object\Button\TextButton.cpp" />
+    <ClCompile Include="Object\Image.cpp" />
+    <ClCompile Include="Object\Layer.cpp" />
+    <ClCompile Include="Object\MouseNode.cpp" />
+    <ClCompile Include="Object\Node.cpp" />
+    <ClCompile Include="Object\RectNode.cpp" />
+    <ClCompile Include="Object\Shape\Circle.cpp" />
+    <ClCompile Include="Object\Shape\Rectangle.cpp" />
+    <ClCompile Include="Object\Shape\Shape.cpp" />
+    <ClCompile Include="Object\Sprite.cpp" />
+    <ClCompile Include="Object\Text.cpp" />
+    <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Style\Color.cpp" />
     <ClCompile Include="Style\FillStyle.cpp" />
     <ClCompile Include="Style\FontStyle.cpp" />
     <ClCompile Include="Style\LineStyle.cpp" />
+    <ClCompile Include="Tool\ActionManager.cpp" />
     <ClCompile Include="Tool\FileUtils.cpp" />
     <ClCompile Include="Tool\MusicUtils.cpp" />
     <ClCompile Include="Tool\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="e2daction.h" />
+    <ClInclude Include="e2dbase.h" />
+    <ClInclude Include="e2dmsg.h" />
+    <ClInclude Include="e2dobj.h" />
+    <ClInclude Include="e2dstyle.h" />
+    <ClInclude Include="e2dtool.h" />
     <ClInclude Include="easy2d.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

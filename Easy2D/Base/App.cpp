@@ -1,14 +1,11 @@
-#include "easy2d.h"
-#include "EasyX\easyx.h"
+#include "..\easy2d.h"
+#include "..\EasyX\easyx.h"
 #include <time.h>
 #include <assert.h>
 #include <imm.h>
 #pragma comment(lib, "imm32.lib")
 #include <mmsystem.h>
 #pragma comment(lib, "winmm.lib")
-
-// Easy2D 版本号
-#define E2D_VERSION _T("1.0.4")
 
 // App 的唯一实例
 static App * s_pInstance = nullptr;
@@ -17,11 +14,9 @@ static int originX = 0;
 static int originY = 0;
 
 App::App() : 
-	m_currentScene(nullptr), 
-	m_nextScene(nullptr), 
+	m_CurrentScene(nullptr), 
+	m_NextScene(nullptr), 
 	m_bRunning(false), 
-	m_nWidth(0),
-	m_nHeight(0),
 	m_nWindowMode(0)
 {
 	assert(!s_pInstance);	// 不能同时存在两个 App 实例
@@ -119,7 +114,7 @@ int App::run()
 void App::_initGraph()
 {
 	// 创建绘图环境
-	initgraph(m_nWidth, m_nHeight, m_nWindowMode);
+	initgraph(m_Size.cx, m_Size.cy, m_nWindowMode);
 	// 隐藏当前窗口（防止在加载阶段显示黑窗口）
 	ShowWindow(GetHWnd(), SW_HIDE);
 	// 获取屏幕分辨率
@@ -157,47 +152,53 @@ void App::_initGraph()
 void App::_mainLoop()
 {
 	// 下一场景指针不为空时，切换场景
-	if (m_nextScene)
+	if (m_NextScene)
 	{
 		// 执行当前场景的 onExit 函数
-		if (m_currentScene)
+		if (m_CurrentScene)
 		{
-			m_currentScene->onExit();
+			m_CurrentScene->onExit();
 		}
 		// 进入下一场景
 		_enterNextScene();
 		// 执行当前场景的 onEnter 函数
-		m_currentScene->onEnter();
+		m_CurrentScene->onEnter();
 	}
 	// 断言当前场景非空
-	assert(m_currentScene);
+	assert(m_CurrentScene);
 	
 	cleardevice();				// 清空画面
-	m_currentScene->_onDraw();	// 绘制当前场景
+	m_CurrentScene->_onDraw();	// 绘制当前场景
 	FlushBatchDraw();			// 刷新画面
 
 	// 其他执行程序
 	MouseMsg::__exec();			// 鼠标检测
 	KeyMsg::__exec();			// 键盘按键检测
 	Timer::__exec();			// 定时器执行程序
+	ActionManager::__exec();	// 动作管理器执行程序
 	FreePool::__flush();		// 刷新内存池
 }
 
 void App::createWindow(int width, int height, int mode)
 {
 	// 保存窗口信息
-	m_nWidth = width;
-	m_nHeight = height;
+	m_Size.cx = width;
+	m_Size.cy = height;
 	m_nWindowMode = mode;
 	// 创建窗口
 	_initGraph();
 }
 
+void App::createWindow(CSize size, int mode)
+{
+	createWindow(size.cx, size.cy, mode);
+}
+
 void App::createWindow(tstring title, int width, int height, int mode)
 {
 	// 保存窗口信息
-	m_nWidth = width;
-	m_nHeight = height;
+	m_Size.cx = width;
+	m_Size.cy = height;
 	m_nWindowMode = mode;
 	m_sTitle = title;
 	m_sAppName = title;
@@ -205,10 +206,15 @@ void App::createWindow(tstring title, int width, int height, int mode)
 	_initGraph();
 }
 
+void App::createWindow(tstring title, CSize size, int mode)
+{
+	createWindow(title, size.cx, size.cy, mode);
+}
+
 void App::setWindowSize(int width, int height)
 {
 	// 游戏正在运行时才允许修改窗口大小
-	assert(m_bRunning);
+	assert(s_pInstance->m_bRunning);
 
 	// 获取屏幕分辨率
 	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
@@ -235,17 +241,22 @@ void App::setWindowSize(int width, int height)
 	reset();
 }
 
+void App::setWindowSize(CSize size)
+{
+	setWindowSize(size.cx, size.cy);
+}
+
 void App::setWindowTitle(tstring title)
 {
 	// 设置窗口标题
 	SetWindowText(GetHWnd(), title.c_str());
 	// 保存当前标题，用于修改窗口大小时恢复标题
-	m_sTitle = title;
+	s_pInstance->m_sTitle = title;
 }
 
 tstring App::getWindowTitle()
 {
-	return m_sTitle;
+	return s_pInstance->m_sTitle;
 }
 
 void App::close()
@@ -256,38 +267,38 @@ void App::close()
 void App::enterScene(Scene * scene, bool save)
 {
 	// 保存下一场景的指针
-	m_nextScene = scene;
+	s_pInstance->m_NextScene = scene;
 	// 切换场景时，是否保存当前场景
-	m_bSaveScene = save;
+	s_pInstance->m_bSaveScene = save;
 }
 
 void App::backScene()
 {
 	// 从栈顶取出场景指针，作为下一场景
-	m_nextScene = m_sceneStack.top();
+	s_pInstance->m_NextScene = s_pInstance->m_SceneStack.top();
 	// 不保存当前场景
-	m_bSaveScene = false;
+	s_pInstance->m_bSaveScene = false;
 }
 
 void App::clearScene()
 {
 	// 清空场景栈
-	while (m_sceneStack.size())
+	while (s_pInstance->m_SceneStack.size())
 	{
-		auto temp = m_sceneStack.top();
+		auto temp = s_pInstance->m_SceneStack.top();
 		SAFE_DELETE(temp);
-		m_sceneStack.pop();
+		s_pInstance->m_SceneStack.pop();
 	}
 }
 
 void App::setAppName(tstring appname)
 {
-	m_sAppName = appname;
+	s_pInstance->m_sAppName = appname;
 }
 
-tstring App::getAppName() const
+tstring App::getAppName()
 {
-	return m_sAppName;
+	return s_pInstance->m_sAppName;
 }
 
 void App::setBkColor(COLORREF color)
@@ -298,32 +309,32 @@ void App::setBkColor(COLORREF color)
 void App::_enterNextScene()
 {
 	// 若下一场景处于栈顶，说明正在返回上一场景
-	if (m_sceneStack.size() && m_nextScene == m_sceneStack.top())
+	if (m_SceneStack.size() && m_NextScene == m_SceneStack.top())
 	{
-		m_sceneStack.pop();					// 删除栈顶场景
+		m_SceneStack.pop();					// 删除栈顶场景
 	}
 	
 	if (m_bSaveScene)
 	{
-		m_sceneStack.push(m_currentScene);	// 若要保存当前场景，把它的指针放到栈顶
+		m_SceneStack.push(m_CurrentScene);	// 若要保存当前场景，把它的指针放到栈顶
 	}
 	else
 	{
-		SAFE_DELETE(m_currentScene);		// 否则删除当前场景
+		SAFE_DELETE(m_CurrentScene);		// 否则删除当前场景
 	}
 	
-	m_currentScene = m_nextScene;			// 切换场景
-	m_nextScene = nullptr;					// 下一场景置空
+	m_CurrentScene = m_NextScene;			// 切换场景
+	m_NextScene = nullptr;					// 下一场景置空
 }
 
 void App::quit()
 {
-	m_bRunning = false;
+	s_pInstance->m_bRunning = false;
 }
 
 void App::end()
 {
-	m_bRunning = false;
+	s_pInstance->m_bRunning = false;
 }
 
 void App::reset()
@@ -337,12 +348,7 @@ void App::reset()
 Scene * App::getCurrentScene()
 {
 	// 获取当前场景的指针
-	return m_currentScene;
-}
-
-LPCTSTR App::getVersion()
-{
-	return E2D_VERSION;
+	return s_pInstance->m_CurrentScene;
 }
 
 void App::setFPS(DWORD fps)
@@ -350,30 +356,30 @@ void App::setFPS(DWORD fps)
 	// 设置画面帧率，以毫秒为单位
 	LARGE_INTEGER nFreq;
 	QueryPerformanceFrequency(&nFreq);
-	m_nAnimationInterval.QuadPart = (LONGLONG)(1.0 / fps * nFreq.QuadPart);
+	s_pInstance->m_nAnimationInterval.QuadPart = (LONGLONG)(1.0 / fps * nFreq.QuadPart);
 }
 
-int App::getWidth() const
+int App::getWidth()
 {
-	return m_nWidth;
+	return s_pInstance->m_Size.cx;
 }
 
-int App::getHeight() const
+int App::getHeight()
 {
-	return m_nHeight;
+	return s_pInstance->m_Size.cy;
 }
 
 void App::free()
 {
 	// 释放场景内存
-	SAFE_DELETE(m_currentScene);
-	SAFE_DELETE(m_nextScene);
+	SAFE_DELETE(m_CurrentScene);
+	SAFE_DELETE(m_NextScene);
 	// 清空场景栈
-	while (m_sceneStack.size())
+	while (m_SceneStack.size())
 	{
-		auto temp = m_sceneStack.top();
+		auto temp = m_SceneStack.top();
 		SAFE_DELETE(temp);
-		m_sceneStack.pop();
+		m_SceneStack.pop();
 	}
 	// 删除所有定时器
 	Timer::clearAllTimers();

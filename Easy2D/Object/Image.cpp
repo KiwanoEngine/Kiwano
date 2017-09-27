@@ -1,25 +1,24 @@
-#include "..\Easy2d.h"
+#include "..\easy2d.h"
 #include "..\EasyX\easyx.h"
 
 // 对 PNG 图像进行像素转换
 static void CrossImage(CImage &img);
 
 Image::Image() :
+	m_nAlpha(255),
 	m_fScaleX(1),
 	m_fScaleY(1)
 {
 }
 
 Image::Image(LPCTSTR ImageFile) :
-	m_fScaleX(1),
-	m_fScaleY(1)
+	Image()
 {
 	setImage(ImageFile);	// 设置图片资源
 }
 
 Image::Image(LPCTSTR ImageFile, int x, int y, int width, int height) :
-	m_fScaleX(1),
-	m_fScaleY(1)
+	Image()
 {
 	setImage(ImageFile, x, y, width, height);	// 设置图片资源和裁剪大小
 }
@@ -36,17 +35,14 @@ void Image::_onDraw()
 		return;
 	}
 	// 绘制图片
-	m_Image.Draw(GetImageHDC(), m_rDest, m_rSrc);
-}
-
-int Image::getWidth() const
-{
-	return m_rDest.Width();		// 目标矩形的宽度
-}
-
-int Image::getHeight() const
-{
-	return m_rDest.Height();	// 目标矩形的高度
+	if (m_Image.GetBPP() == 32)
+	{
+		m_Image.AlphaBlend(GetImageHDC(), m_Rect, m_SrcRect, m_nAlpha, AC_SRC_OVER);
+	}
+	else
+	{
+		m_Image.Draw(GetImageHDC(), m_Rect, m_SrcRect);
+	}
 }
 
 float Image::getScaleX() const
@@ -57,6 +53,11 @@ float Image::getScaleX() const
 float Image::getScaleY() const
 {
 	return m_fScaleY;
+}
+
+float Image::getOpacity() const
+{
+	return m_nAlpha / 255.0f;
 }
 
 bool Image::setImage(LPCTSTR ImageFile)
@@ -78,20 +79,13 @@ bool Image::setImage(LPCTSTR ImageFile)
 	{
 		return false;
 	}
-	// 获取扩展名，对 PNG 图片进行特殊处理
-	if (_T(".png") == FileUtils::getFileExtension(ImageFile))
+	// 确认该图像包含 Alpha 通道
+	if (m_Image.GetBPP() == 32)
 	{
-		// 像素转换
+		// 透明图片处理
 		CrossImage(m_Image);
-		// Alpha 通道
-		m_Image.AlphaBlend(GetImageHDC(), 15, 30);
 	}
-	// 设置目标矩形（即绘制到窗口的位置和大小）
-	m_rDest.SetRect(m_nX, m_nY, m_nX + m_Image.GetWidth(), m_nY + m_Image.GetHeight());
-	m_rSrc.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
-	// 重置缩放属性
-	m_fScaleX = 1;
-	m_fScaleY = 1;
+	reset();
 
 	return true;
 }
@@ -117,12 +111,7 @@ bool Image::setImageFromRes(LPCTSTR pResName)
 	{
 		return false;
 	}
-	// 设置目标矩形（即绘制到窗口的位置和大小）
-	m_rDest.SetRect(m_nX, m_nY, m_nX + m_Image.GetWidth(), m_nY + m_Image.GetHeight());
-	m_rSrc.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
-	// 重置缩放属性
-	m_fScaleX = 1;
-	m_fScaleY = 1;
+	reset();
 
 	return true;
 }
@@ -144,66 +133,52 @@ void Image::crop(int x, int y, int width, int height)
 	width = min(max(width, 0), m_Image.GetWidth());
 	height = min(max(height, 0), m_Image.GetHeight());
 	// 设置源矩形的位置和大小（用于裁剪）
-	m_rSrc.SetRect(x, y, x + width, y + height);
+	m_SrcRect.SetRect(x, y, x + width, y + height);
 	// 设置目标矩形（即绘制到窗口的位置和大小）
-	m_rDest.SetRect(m_nX, m_nY, m_nX + int(width * m_fScaleX), m_nY + int(height * m_fScaleY));
+	setSize(int(width * m_fScaleX), int(height * m_fScaleY));
 }
 
 void Image::stretch(int width, int height)
 {
-	width = max(width, 0);
-	height = max(height, 0);
 	// 设置目标矩形的位置和大小（即绘制到窗口的位置和大小，用于拉伸图片）
-	m_rDest.SetRect(m_nX, m_nY, m_nX + width, m_nY + height);
+	setSize(max(width, 0), max(height, 0));
 	// 重置比例缩放属性
 	m_fScaleX = 1;
 	m_fScaleY = 1;
 }
 
-void Image::scale(float scaleX, float scaleY)
+void Image::setScale(float scaleX, float scaleY)
 {
 	m_fScaleX = max(scaleX, 0);
 	m_fScaleY = max(scaleY, 0);
-	m_rDest.SetRect(
-		m_nX, m_nY, 
-		m_nX + int(m_rSrc.Width() * scaleX),
-		m_nY + int(m_rSrc.Height() * scaleY));
+	setSize(int(m_SrcRect.Width() * scaleX), int(m_SrcRect.Height() * scaleY));
 }
 
-void Image::setPos(int x, int y)
+void Image::setOpacity(float value)
 {
-	// 移动目标矩形
-	m_rDest.MoveToXY(x, y);
-	m_nX = x;
-	m_nY = y;
-}
-
-void Image::move(int x, int y)
-{
-	// 移动目标矩形
-	m_rDest.OffsetRect(x, y);
-	m_nX += x;
-	m_nY += y;
-}
-
-void Image::setX(int x)
-{
-	// 移动目标矩形
-	m_rDest.MoveToX(x);
-	m_nX = x;
-}
-
-void Image::setY(int y)
-{
-	// 移动目标矩形
-	m_rDest.MoveToY(y);
-	m_nY = y;
+	if (m_Image.GetBPP() == 32)
+	{
+		m_nAlpha = BYTE(min(max(value, 0), 1) * 255);
+	}
 }
 
 void Image::setTransparentColor(COLORREF value)
 {
 	// 设置透明色
 	m_Image.SetTransparentColor(value);
+}
+
+void Image::reset()
+{
+	// 设置目标矩形（即绘制到窗口的位置和大小）
+	setSize(m_Image.GetWidth(), m_Image.GetHeight());
+	// 设置源矩形（即截取图片的大小）
+	m_SrcRect.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
+	// 重置缩放属性
+	m_fScaleX = 1;
+	m_fScaleY = 1;
+	// 重置透明度
+	m_nAlpha = 255;
 }
 
 void Image::saveScreenshot()
@@ -223,6 +198,7 @@ void Image::saveScreenshot()
 // 对 PNG 图像进行像素转换
 void CrossImage(CImage &img)
 {
+	// 进行像素转换
 	for (int i = 0; i < img.GetWidth(); i++)
 	{
 		for (int j = 0; j < img.GetHeight(); j++)

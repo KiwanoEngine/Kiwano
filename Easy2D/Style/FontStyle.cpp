@@ -1,4 +1,4 @@
-#include "..\Easy2d.h"
+#include "..\easy2d.h"
 
 // 常用字体粗细值的定义
 const LONG FontWeight::dontcare = 0;

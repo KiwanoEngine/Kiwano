@@ -1,18 +1,19 @@
-#include "..\Easy2d.h"
+#include "..\easy2d.h"
 
 Node::Node() :
 	m_nZOrder(0),
-	m_bDisplay(true),
-	m_nX(0), 
-	m_nY(0)
+	m_bDisplay(true)
+{
+}
+
+Node::Node(CPoint p) :
+	m_Pos(p)
 {
 }
 
 Node::Node(int x, int y) :
 	m_nZOrder(0),
-	m_bDisplay(true),
-	m_nX(x),
-	m_nY(y)
+	m_bDisplay(true)
 {
 }
 
@@ -29,36 +30,49 @@ void Node::_onDraw()
 {
 }
 
-const int Node::getX() const
+int Node::getX() const
 {
-	return m_nX;
+	return m_Pos.x;
 }
 
-const int Node::getY() const
+int Node::getY() const
 {
-	return m_nY;
+	return m_Pos.y;
+}
+
+CPoint Node::getPos() const
+{
+	return m_Pos;
 }
 
 void Node::setX(int x)
 {
-	m_nX = x;
+	m_Pos.x = x;
 }
 
 void Node::setY(int y)
 {
-	m_nY = y;
+	m_Pos.y = y;
 }
 
 void Node::setPos(int x, int y)
 {
-	m_nX = x;
-	m_nY = y;
+	m_Pos.SetPoint(x, y);
+}
+
+void Node::setPos(CPoint p)
+{
+	m_Pos = p;
 }
 
 void Node::move(int x, int y)
 {
-	m_nX += x;
-	m_nY += y;
+	m_Pos.Offset(x, y);
+}
+
+void Node::move(CVector v)
+{
+	m_Pos.Offset(v);
 }
 
 int Node::getZOrder() const

@@ -1,7 +1,8 @@
-#include "..\Easy2d.h"
-#include <Digitalv.h>
+#include "..\easy2d.h"
 #include <mmsystem.h>
 #pragma comment(lib , "winmm.lib")
+
+#include <Digitalv.h>
 #include <map>
 
 ////////////////////////////////////////////////////////////////////

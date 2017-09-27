@@ -1,6 +1,5 @@
 #include "..\easy2d.h"
 #include "..\EasyX\easyx.h"
-#include <assert.h>
 
 BatchNode::BatchNode()
 {
@@ -22,7 +21,6 @@ bool BatchNode::_exec(bool active)
 	// 逆序遍历所有子节点
 	for (int i = int(m_vChildren.size() - 1); i >= 0; i--)
 	{
-		assert(m_vChildren[i]);
 		if (m_vChildren[i]->_exec(active))
 		{
 			active = false;
@@ -41,19 +39,18 @@ void BatchNode::_onDraw()
 	}
 	
 	// 在相对位置绘制子节点
-	App::setOrigin(App::getOriginX() + m_nX, App::getOriginY() + m_nY);
+	App::setOrigin(App::getOriginX() + getX(), App::getOriginY() + getY());
 	for (auto child : m_vChildren)
 	{
-		assert(child);
 		child->_onDraw();
 	}
-	App::setOrigin(App::getOriginX() - m_nX, App::getOriginY() - m_nY);
+	App::setOrigin(App::getOriginX() - getX(), App::getOriginY() - getY());
 }
 
 void BatchNode::add(Node * child, int z_Order)
 {
-	// 断言添加的节点非空
-	assert(child);
+	if (child == nullptr) return;
+
 	// 设置节点的父场景
 	child->setParentScene(this->getParentScene());
 	// 设置节点在批量节点中的 z 轴顺序
@@ -83,8 +80,7 @@ void BatchNode::add(Node * child, int z_Order)
 
 bool BatchNode::del(Node * child)
 {
-	// 断言节点非空
-	assert(child);
+	if (child == nullptr) return false;
 
 	// 寻找是否有相同节点
 	std::vector<Node*>::iterator iter;

@@ -2,17 +2,14 @@
 #include "..\..\EasyX\easyx.h"
 
 
-Rect::Rect() :
-	m_nWidth(0),
-	m_nHeight(0)
+Rect::Rect()
 {
 }
 
 Rect::Rect(int x, int y, int width, int height) :
-	Node(x, y),
-	m_nWidth(width),
-	m_nHeight(height)
+	m_Size(width, height)
 {
+	setPos(x, y);
 }
 
 Rect::~Rect()
@@ -21,41 +18,41 @@ Rect::~Rect()
 
 void Rect::solidShape()
 {
-	solidrectangle(m_nX, m_nY, m_nX + m_nWidth, m_nY + m_nHeight);
+	solidrectangle(getX(), getY(), getX() + m_Size.cx, getY() + m_Size.cy);
 }
 
 void Rect::fillShape()
 {
-	fillrectangle(m_nX, m_nY, m_nX + m_nWidth, m_nY + m_nHeight);
+	fillrectangle(getX(), getY(), getX() + m_Size.cx, getY() + m_Size.cy);
 }
 
 void Rect::roundShape()
 {
-	rectangle(m_nX, m_nY, m_nX + m_nWidth, m_nY + m_nHeight);
+	rectangle(getX(), getY(), getX() + m_Size.cx, getY() + m_Size.cy);
 }
 
 int Rect::getWidth() const
 {
-	return m_nWidth;
+	return m_Size.cx;
 }
 
 int Rect::getHeight() const
 {
-	return m_nHeight;
+	return m_Size.cy;
 }
 
 void Rect::setWidth(int width)
 {
-	m_nWidth = width;
+	m_Size.cx = width;
 }
 
 void Rect::setHeight(int height)
 {
-	m_nHeight = height;
+	m_Size.cy = height;
 }
 
 void Rect::setSize(int width, int height)
 {
-	m_nWidth = width;
-	m_nHeight = height;
+	m_Size.cx = width;
+	m_Size.cy = height;
 }

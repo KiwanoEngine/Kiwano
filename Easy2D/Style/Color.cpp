@@ -1,4 +1,4 @@
-#include "..\Easy2d.h"
+#include "..\easy2d.h"
 #include "..\EasyX\easyx.h"
 
 // 常用颜色值的定义

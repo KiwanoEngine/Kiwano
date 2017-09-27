@@ -1,4 +1,5 @@
-#include "easy2d.h"
+#include "..\easy2d.h"
+#include <assert.h>
 
 // FreePool 释放池的实现机制：
 /// Object 类中的引用计数（m_nRef）保证了指针的使用安全
@@ -34,9 +35,12 @@ void FreePool::__flush()
 
 void FreePool::__add(Object * nptr)
 {
+#ifdef _DEBUG
 	for (auto o : pool)
 	{
-		if (o == nptr) return;	// 不得有重复的指针存在
+		assert(o != nptr);	// 不得有重复的指针存在
 	}
+#endif
+
 	pool.push_back(nptr);		// 将一个对象放入释放池中
 }
