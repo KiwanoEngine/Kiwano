@@ -1,5 +1,4 @@
 #include "..\easy2d.h"
-#include "..\e2dobj.h"
 
 
 MouseNode::MouseNode() :

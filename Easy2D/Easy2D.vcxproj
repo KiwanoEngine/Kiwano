@@ -380,12 +380,6 @@
     <ClCompile Include="Tool\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="e2daction.h" />
-    <ClInclude Include="e2dbase.h" />
-    <ClInclude Include="e2dmsg.h" />
-    <ClInclude Include="e2dobj.h" />
-    <ClInclude Include="e2dstyle.h" />
-    <ClInclude Include="e2dtool.h" />
     <ClInclude Include="easy2d.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

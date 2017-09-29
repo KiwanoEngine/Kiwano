@@ -170,24 +170,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="e2daction.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="e2dbase.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="e2dmsg.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="e2dobj.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="e2dstyle.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="e2dtool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="easy2d.h">
       <Filter>头文件</Filter>
     </ClInclude>

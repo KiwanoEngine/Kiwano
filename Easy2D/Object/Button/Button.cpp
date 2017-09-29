@@ -1,6 +1,5 @@
 #include "..\..\easy2d.h"
 #include "..\..\EasyX\easyx.h"
-#include "..\..\e2dobj.h"
 
 
 Button::Button() : 

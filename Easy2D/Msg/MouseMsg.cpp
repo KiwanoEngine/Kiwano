@@ -1,6 +1,5 @@
 #include "..\easy2d.h"
 #include "..\EasyX\easyx.h"
-#include "..\e2dmsg.h"
 
 // 鼠标监听回调函数的容器
 static std::vector<MouseMsg*> s_vMouseMsg;
