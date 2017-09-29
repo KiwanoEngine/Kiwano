@@ -1,5 +1,5 @@
 /******************************************************
-* Easy2D Game Engine (v1.1.0)
+* Easy2D Game Engine
 * http://www.easy2d.cn
 * 
 * Depends on EasyX (Ver:20170827(beta))
