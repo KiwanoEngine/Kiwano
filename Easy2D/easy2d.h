@@ -722,11 +722,11 @@ public:
 	// 添加动作
 	virtual void addAction(Action * action);
 	// 暂停所有动作
-	virtual void pauseAllAction();
+	virtual void pauseAllActions();
 	// 继续所有动作
-	virtual void resumeAllAction();
+	virtual void resumeAllActions();
 	// 停止所有动作
-	virtual void stopAllAction();
+	virtual void stopAllActions();
 
 	virtual float getScaleX() const;
 	virtual float getScaleY() const;

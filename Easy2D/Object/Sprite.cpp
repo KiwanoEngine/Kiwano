@@ -74,17 +74,17 @@ void Sprite::addAction(Action * action)
 	}
 }
 
-void Sprite::pauseAllAction()
+void Sprite::pauseAllActions()
 {
 	ActionManager::pauseSpriteAllActions(this);
 }
 
-void Sprite::resumeAllAction()
+void Sprite::resumeAllActions()
 {
 	ActionManager::resumeSpriteAllActions(this);
 }
 
-void Sprite::stopAllAction()
+void Sprite::stopAllActions()
 {
 	ActionManager::stopSpriteAllActions(this);
 }
