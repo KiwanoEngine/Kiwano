@@ -9,9 +9,9 @@ ActionDelay::~ActionDelay()
 {
 }
 
-ActionDelay * easy2d::ActionDelay::copy()
+ActionDelay * ActionDelay::copy() const
 {
-	return new ActionDelay(*this);
+	return new ActionDelay(m_nMilliSeconds / 1000.0f);
 }
 
 void ActionDelay::_init()

@@ -9,7 +9,7 @@ ActionCallback::~ActionCallback()
 {
 }
 
-ActionCallback * ActionCallback::copy()
+ActionCallback * ActionCallback::copy() const
 {
 	return new ActionCallback(m_Callback);
 }

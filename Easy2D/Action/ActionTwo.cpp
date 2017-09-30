@@ -14,16 +14,21 @@ ActionTwo::~ActionTwo()
 	SAFE_RELEASE(m_SecondAction);
 }
 
-ActionTwo * ActionTwo::copy()
+ActionTwo * ActionTwo::copy() const
 {
-	auto a = new ActionTwo(*this);
-	a->_reset();
-	return a;
+	return new ActionTwo(m_FirstAction->copy(), m_SecondAction->copy());
 }
 
-ActionTwo * ActionTwo::reverse() const
+ActionTwo * ActionTwo::reverse(bool actionReverse) const
 {
-	return new ActionTwo(m_SecondAction->copy(), m_FirstAction->copy());
+	if (actionReverse)
+	{
+		return new ActionTwo(m_SecondAction->reverse(), m_FirstAction->reverse());
+	}
+	else
+	{
+		return new ActionTwo(m_SecondAction->copy(), m_FirstAction->copy());
+	}
 }
 
 void ActionTwo::_init()

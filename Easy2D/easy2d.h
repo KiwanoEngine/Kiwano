@@ -1044,7 +1044,7 @@ public:
 	void pause();
 	void stop();
 	void setInterval(UINT ms);
-	virtual Action * copy() = 0;
+	virtual Action * copy() const = 0;
 	virtual Action * reverse() const;
 
 protected:
@@ -1073,6 +1073,7 @@ protected:
 	UINT	m_nTotalDuration;
 
 protected:
+	bool _isEnd() const;
 	virtual void _init() override;
 	virtual bool _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
@@ -1085,7 +1086,7 @@ public:
 	ActionMoveBy(float duration, CVector vec);
 	virtual ~ActionMoveBy();
 
-	virtual ActionMoveBy * copy() override;
+	virtual ActionMoveBy * copy() const override;
 	virtual ActionMoveBy * reverse() const override;
 
 protected:
@@ -1105,7 +1106,7 @@ public:
 	ActionMoveTo(float duration, CPoint pos);
 	virtual ~ActionMoveTo();
 
-	virtual ActionMoveTo * copy() override;
+	virtual ActionMoveTo * copy() const override;
 
 protected:
 	CPoint m_EndPos;
@@ -1122,7 +1123,7 @@ public:
 	ActionScaleBy(float duration, float scaleX, float scaleY);
 	virtual ~ActionScaleBy();
 
-	virtual ActionScaleBy * copy() override;
+	virtual ActionScaleBy * copy() const override;
 	virtual ActionScaleBy * reverse() const override;
 
 protected:
@@ -1144,7 +1145,7 @@ public:
 	ActionScaleTo(float duration, float scaleX, float scaleY);
 	virtual ~ActionScaleTo();
 
-	virtual ActionScaleTo * copy() override;
+	virtual ActionScaleTo * copy() const override;
 
 protected:
 	float	m_nEndScaleX;
@@ -1162,7 +1163,7 @@ public:
 	ActionOpacityBy(float duration, float opacity);
 	virtual ~ActionOpacityBy();
 
-	virtual ActionOpacityBy * copy() override;
+	virtual ActionOpacityBy * copy() const override;
 	virtual ActionOpacityBy * reverse() const override;
 
 protected:
@@ -1182,7 +1183,7 @@ public:
 	ActionOpacityTo(float duration, float opacity);
 	virtual ~ActionOpacityTo();
 
-	virtual ActionOpacityTo * copy() override;
+	virtual ActionOpacityTo * copy() const override;
 
 protected:
 	float m_nEndVal;
@@ -1213,8 +1214,8 @@ public:
 	ActionTwo(Action * actionFirst, Action * actionSecond);
 	virtual ~ActionTwo();
 
-	virtual ActionTwo * copy() override;
-	virtual ActionTwo * reverse() const override;
+	virtual ActionTwo * copy() const override;
+	virtual ActionTwo * reverse(bool actionReverse = true) const;
 
 protected:
 	Action * m_FirstAction;
@@ -1230,11 +1231,13 @@ class ActionSequence :
 	public Action
 {
 public:
+	ActionSequence();
 	ActionSequence(int number, Action * action1, ...);
 	virtual ~ActionSequence();
 
-	virtual ActionSequence * copy() override;
-	virtual ActionSequence * reverse() const override;
+	void addAction(Action * action);
+	virtual ActionSequence * copy() const override;
+	virtual ActionSequence * reverse(bool actionReverse = true) const;
 
 protected:
 	UINT					m_nActionIndex;
@@ -1253,7 +1256,7 @@ public:
 	ActionDelay(float duration);
 	virtual ~ActionDelay();
 
-	virtual ActionDelay * copy() override;
+	virtual ActionDelay * copy() const override;
 
 protected:
 	virtual void _init() override;
@@ -1268,7 +1271,7 @@ public:
 	ActionNeverStop(Action * action);
 	virtual ~ActionNeverStop();
 
-	virtual ActionNeverStop * copy() override;
+	virtual ActionNeverStop * copy() const override;
 
 protected:
 	Action * m_Action;
@@ -1284,10 +1287,11 @@ class ActionFrames :
 {
 public:
 	ActionFrames();
+	ActionFrames(UINT frameDelay);
 	~ActionFrames();
 
 	void addFrame(Image * frame);
-	virtual ActionFrames * copy() override;
+	virtual ActionFrames * copy() const override;
 	virtual ActionFrames * reverse() const override;
 
 protected:
@@ -1307,7 +1311,7 @@ public:
 	ActionCallback(const std::function<void()>& callback);
 	~ActionCallback();
 
-	virtual ActionCallback * copy() override;
+	virtual ActionCallback * copy() const override;
 
 protected:
 	std::function<void()> m_Callback;

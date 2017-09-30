@@ -10,6 +10,11 @@ Animation::~Animation()
 {
 }
 
+bool Animation::_isEnd() const
+{
+	return m_nDuration >= m_nTotalDuration;
+}
+
 void Animation::_init()
 {
 	// 记录当前时间

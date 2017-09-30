@@ -29,7 +29,7 @@ bool ActionMoveBy::_exec(LARGE_INTEGER nNow)
 		m_pParent->setPos(int(m_BeginPos.x + m_MoveVector.x * scale), 
 			int(m_BeginPos.y + m_MoveVector.y * scale));
 		// 判断动作是否结束
-		if (m_nDuration >= m_nTotalDuration)
+		if (_isEnd())
 		{
 			return true;
 		}
@@ -42,11 +42,9 @@ void ActionMoveBy::_reset()
 	Animation::_reset();
 }
 
-ActionMoveBy * ActionMoveBy::copy()
+ActionMoveBy * ActionMoveBy::copy() const
 {
-	auto a = new ActionMoveBy(*this);
-	a->_reset();
-	return a;
+	return new ActionMoveBy(m_nMilliSeconds / 1000.0f, m_MoveVector);
 }
 
 ActionMoveBy * ActionMoveBy::reverse() const

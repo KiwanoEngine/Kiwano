@@ -11,7 +11,7 @@ ActionNeverStop::~ActionNeverStop()
 	SAFE_RELEASE(m_Action);
 }
 
-ActionNeverStop * ActionNeverStop::copy()
+ActionNeverStop * ActionNeverStop::copy() const
 {
 	return new ActionNeverStop(m_Action->copy());
 }

@@ -30,7 +30,7 @@ bool ActionScaleBy::_exec(LARGE_INTEGER nNow)
 		// 移动 Sprite
 		m_pParent->setScale(m_nBeginScaleX + m_nVariationX * scale, m_nBeginScaleX + m_nVariationX * scale);
 		// 判断动作是否结束
-		if (m_nDuration >= m_nTotalDuration)
+		if (_isEnd())
 		{
 			return true;
 		}
@@ -43,11 +43,9 @@ void ActionScaleBy::_reset()
 	Animation::_reset();
 }
 
-ActionScaleBy * ActionScaleBy::copy()
+ActionScaleBy * ActionScaleBy::copy() const
 {
-	auto a = new ActionScaleBy(*this);
-	a->_reset();
-	return a;
+	return new ActionScaleBy(m_nMilliSeconds / 1000.0f, m_nVariationX, m_nVariationY);
 }
 
 ActionScaleBy * ActionScaleBy::reverse() const

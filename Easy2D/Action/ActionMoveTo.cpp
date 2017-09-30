@@ -10,11 +10,9 @@ ActionMoveTo::~ActionMoveTo()
 {
 }
 
-ActionMoveTo * ActionMoveTo::copy()
+ActionMoveTo * ActionMoveTo::copy() const
 {
-	auto a = new ActionMoveTo(*this);
-	a->_reset();
-	return a;
+	return new ActionMoveTo(m_nMilliSeconds / 1000.0f, m_EndPos);
 }
 
 void ActionMoveTo::_init()

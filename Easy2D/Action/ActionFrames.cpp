@@ -7,6 +7,12 @@ ActionFrames::ActionFrames() :
 	setInterval(500);
 }
 
+ActionFrames::ActionFrames(UINT frameDelay) :
+	m_nFrameIndex(0)
+{
+	setInterval(frameDelay);
+}
+
 ActionFrames::~ActionFrames()
 {
 	for (auto frame : m_vFrames)
@@ -33,6 +39,7 @@ bool ActionFrames::_exec(LARGE_INTEGER nNow)
 		m_nLast.QuadPart = nNow.QuadPart - (nNow.QuadPart % m_nAnimationInterval.QuadPart);
 		m_pParent->setImage(m_vFrames[m_nFrameIndex]);
 		m_nFrameIndex++;
+		// 判断动作是否结束
 		if (m_nFrameIndex == m_vFrames.size())
 		{
 			return true;
@@ -55,9 +62,9 @@ void ActionFrames::addFrame(Image * frame)
 	}
 }
 
-ActionFrames * ActionFrames::copy()
+ActionFrames * ActionFrames::copy() const
 {
-	auto a = new ActionFrames();
+	auto a = new ActionFrames(this->m_nMilliSeconds);
 	for (auto f : m_vFrames)
 	{
 		a->addFrame(f);
@@ -67,8 +74,7 @@ ActionFrames * ActionFrames::copy()
 
 ActionFrames * ActionFrames::reverse() const
 {
-	auto a = new ActionFrames();
-	a->m_vFrames = this->m_vFrames;
+	auto a = this->copy();
 	a->m_vFrames.reserve(m_vFrames.size());
 	return a;
 }

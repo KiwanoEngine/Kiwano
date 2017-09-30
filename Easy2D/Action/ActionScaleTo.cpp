@@ -11,11 +11,9 @@ ActionScaleTo::~ActionScaleTo()
 {
 }
 
-ActionScaleTo * ActionScaleTo::copy()
+ActionScaleTo * ActionScaleTo::copy() const
 {
-	auto a = new ActionScaleTo(*this);
-	a->_reset();
-	return a;
+	return new ActionScaleTo(m_nMilliSeconds / 1000.0f, m_nEndScaleX, m_nEndScaleY);
 }
 
 void ActionScaleTo::_init()

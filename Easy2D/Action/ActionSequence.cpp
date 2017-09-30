@@ -1,6 +1,11 @@
 #include "..\easy2d.h"
 #include <stdarg.h>
 
+ActionSequence::ActionSequence() :
+	m_nActionIndex(0)
+{
+}
+
 ActionSequence::ActionSequence(int number, Action * action1, ...) :
 	m_nActionIndex(0)
 {
@@ -9,9 +14,7 @@ ActionSequence::ActionSequence(int number, Action * action1, ...) :
 
 	while (number > 0)
 	{
-		Action* arg = va_arg(params, Action*);
-		arg->retain();
-		m_vActions.push_back(arg);
+		this->addAction(va_arg(params, Action*));
 		number--;
 	}
 
@@ -64,26 +67,37 @@ void ActionSequence::_reset()
 	m_nActionIndex = 0;
 }
 
-ActionSequence * ActionSequence::copy()
+void ActionSequence::addAction(Action * action)
 {
-	auto a = new ActionSequence(*this);
-	a->_reset();
+	m_vActions.push_back(action);
+	action->retain();
+}
+
+ActionSequence * ActionSequence::copy() const
+{
+	auto a = new ActionSequence();
+	for (auto action : m_vActions)
+	{
+		a->addAction(action->copy());
+	}
 	return a;
 }
 
-ActionSequence * ActionSequence::reverse() const
+ActionSequence * ActionSequence::reverse(bool actionReverse) const
 {
-	// 复制一个相同的动作
-	auto a = new ActionSequence(*this);
-	a->_reset();
-	a->m_bRunning = true;
-	a->m_bStop = false;
-	// 将动作顺序逆序排列
-	a->m_vActions.reserve(m_vActions.size());
-	// 将所有动作逆向运行
+	auto a = new ActionSequence();
 	for (auto action : a->m_vActions)
 	{
-		action->reverse();
+		if (actionReverse)
+		{
+			a->addAction(action->reverse());
+		}
+		else
+		{
+			a->addAction(action->copy());
+		}
 	}
+	// 将动作顺序逆序排列
+	a->m_vActions.reserve(m_vActions.size());
 	return a;
 }

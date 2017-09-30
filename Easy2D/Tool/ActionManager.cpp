@@ -1,4 +1,5 @@
 #include "..\easy2d.h"
+#include <assert.h>
 
 static std::vector<Action*> s_vActions;
 
@@ -28,9 +29,14 @@ void ActionManager::addAction(Action * action)
 {
 	if (action)
 	{
-		action->_init();
+#ifdef _DEBUG
+		for (auto a : s_vActions)
+		{
+			assert(a != action);
+		}
+#endif
 		s_vActions.push_back(action);
-		action->retain();
+		action->_init();
 	}
 }
 

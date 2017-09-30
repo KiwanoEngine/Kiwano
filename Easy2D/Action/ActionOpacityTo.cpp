@@ -10,11 +10,9 @@ ActionOpacityTo::~ActionOpacityTo()
 {
 }
 
-ActionOpacityTo * ActionOpacityTo::copy()
+ActionOpacityTo * ActionOpacityTo::copy() const
 {
-	auto a = new ActionOpacityTo(*this);
-	a->_reset();
-	return a;
+	return new ActionOpacityTo(m_nMilliSeconds / 1000.0f, m_nEndVal);
 }
 
 void ActionOpacityTo::_init()

@@ -28,7 +28,7 @@ bool ActionOpacityBy::_exec(LARGE_INTEGER nNow)
 		// 移动 Sprite
 		m_pParent->setOpacity(m_nBeginVal + m_nVariation * scale);
 		// 判断动作是否结束
-		if (m_nDuration >= m_nTotalDuration)
+		if (_isEnd())
 		{
 			return true;
 		}
@@ -41,11 +41,9 @@ void ActionOpacityBy::_reset()
 	Animation::_reset();
 }
 
-ActionOpacityBy * ActionOpacityBy::copy()
+ActionOpacityBy * ActionOpacityBy::copy() const
 {
-	auto a = new ActionOpacityBy(*this);
-	a->_reset();
-	return a;
+	return new ActionOpacityBy(m_nMilliSeconds / 1000.0f, m_nVariation);
 }
 
 ActionOpacityBy * ActionOpacityBy::reverse() const
