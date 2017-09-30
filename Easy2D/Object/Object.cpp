@@ -1,4 +1,4 @@
-#include "easy2d.h"
+#include "..\easy2d.h"
 
 Object::Object() :
 	m_nRef(0)

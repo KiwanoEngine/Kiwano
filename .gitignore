@@ -1,8 +1,8 @@
 # ignore all files in the /Easy2D/** directory
 Easy2D/Win32/
 Easy2D/x64/
-Win32
-x64
-backup
+Win32/
+x64/
+backup/
 *.lnk
 .vs
