@@ -228,9 +228,7 @@ CImage* GetCImage(tstring name, bool fromRes)
 			// Í¸Ã÷Í¼Æ¬´¦Àí
 			CrossImage(cImage);
 		}
+		s_mCImages.insert(map<tstring, CImage>::value_type(name, cImage));
 	}
-	else
-	{
-		return &s_mCImages.at(name);
-	}
+	return &s_mCImages.at(name);
 }
