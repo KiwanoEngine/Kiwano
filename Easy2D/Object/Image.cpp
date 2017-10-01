@@ -1,10 +1,18 @@
 #include "..\easy2d.h"
 #include "..\EasyX\easyx.h"
+#include <map>
+using namespace std;
 
+// 图片缓存
+static map<tstring, CImage> s_mCImages;
+// 从图片缓存中读取图片
+static CImage* GetCImage(tstring name, bool fromRes = false);
 // 对 PNG 图像进行像素转换
 static void CrossImage(CImage &img);
 
+
 Image::Image() :
+	m_pCImage(nullptr),
 	m_nAlpha(255),
 	m_fScaleX(1),
 	m_fScaleY(1)
@@ -30,18 +38,18 @@ Image::~Image()
 void Image::_onDraw()
 {
 	// display 属性为 false，或未设置图片资源时，不绘制该图片
-	if (!m_bDisplay || m_Image.IsNull())
+	if (!m_bDisplay || !m_pCImage)
 	{
 		return;
 	}
 	// 绘制图片
-	if (m_Image.GetBPP() == 32)
+	if (m_pCImage->GetBPP() == 32)
 	{
-		m_Image.AlphaBlend(GetImageHDC(), m_Rect, m_SrcRect, m_nAlpha, AC_SRC_OVER);
+		m_pCImage->AlphaBlend(GetImageHDC(), m_Rect, m_SrcRect, m_nAlpha, AC_SRC_OVER);
 	}
 	else
 	{
-		m_Image.Draw(GetImageHDC(), m_Rect, m_SrcRect);
+		m_pCImage->Draw(GetImageHDC(), m_Rect, m_SrcRect);
 	}
 }
 
@@ -62,32 +70,13 @@ float Image::getOpacity() const
 
 bool Image::setImage(LPCTSTR ImageFile)
 {
-	//判断图片路径是否存在
-	if (!PathFileExists(ImageFile))
+	m_pCImage = GetCImage(ImageFile);
+	if (m_pCImage)
 	{
-		return false;
+		reset();
+		return true;
 	}
-	// 清空原资源
-	if (!m_Image.IsNull())
-	{
-		m_Image.Destroy();
-	}
-	// 加载图片
-	m_Image.Load(ImageFile);
-	// 加载失败
-	if (m_Image.IsNull())
-	{
-		return false;
-	}
-	// 确认该图像包含 Alpha 通道
-	if (m_Image.GetBPP() == 32)
-	{
-		// 透明图片处理
-		CrossImage(m_Image);
-	}
-	reset();
-
-	return true;
+	return false;
 }
 
 bool Image::setImage(LPCTSTR ImageFile, int x, int y, int width, int height)
@@ -104,16 +93,13 @@ bool Image::setImage(LPCTSTR ImageFile, int x, int y, int width, int height)
 
 bool Image::setImageFromRes(LPCTSTR pResName)
 {
-	// 从资源加载图片（不支持 PNG）
-	m_Image.LoadFromResource(GetModuleHandle(NULL), pResName);
-	// 加载失败
-	if (m_Image.IsNull())
+	m_pCImage = GetCImage(pResName, true);
+	if (m_pCImage)
 	{
-		return false;
+		reset();
+		return true;
 	}
-	reset();
-
-	return true;
+	return false;
 }
 
 bool Image::setImageFromRes(LPCTSTR pResName, int x, int y, int width, int height)
@@ -130,8 +116,8 @@ bool Image::setImageFromRes(LPCTSTR pResName, int x, int y, int width, int heigh
 
 void Image::crop(int x, int y, int width, int height)
 {
-	width = min(max(width, 0), m_Image.GetWidth());
-	height = min(max(height, 0), m_Image.GetHeight());
+	width = min(max(width, 0), m_pCImage->GetWidth());
+	height = min(max(height, 0), m_pCImage->GetHeight());
 	// 设置源矩形的位置和大小（用于裁剪）
 	m_SrcRect.SetRect(x, y, x + width, y + height);
 	// 设置目标矩形（即绘制到窗口的位置和大小）
@@ -156,7 +142,7 @@ void Image::setScale(float scaleX, float scaleY)
 
 void Image::setOpacity(float value)
 {
-	if (m_Image.GetBPP() == 32)
+	if (m_pCImage->GetBPP() == 32)
 	{
 		m_nAlpha = BYTE(min(max(value, 0), 1) * 255);
 	}
@@ -165,15 +151,15 @@ void Image::setOpacity(float value)
 void Image::setTransparentColor(COLORREF value)
 {
 	// 设置透明色
-	m_Image.SetTransparentColor(value);
+	m_pCImage->SetTransparentColor(value);
 }
 
 void Image::reset()
 {
 	// 设置目标矩形（即绘制到窗口的位置和大小）
-	setSize(m_Image.GetWidth(), m_Image.GetHeight());
+	setSize(m_pCImage->GetWidth(), m_pCImage->GetHeight());
 	// 设置源矩形（即截取图片的大小）
-	m_SrcRect.SetRect(0, 0, m_Image.GetWidth(), m_Image.GetHeight());
+	m_SrcRect.SetRect(0, 0, m_pCImage->GetWidth(), m_pCImage->GetHeight());
 	// 重置缩放属性
 	m_fScaleX = 1;
 	m_fScaleY = 1;
@@ -208,5 +194,43 @@ void CrossImage(CImage &img)
 			cr[1] = cr[1] * cr[3] / 255;
 			cr[2] = cr[2] * cr[3] / 255;
 		}
+	}
+}
+
+CImage* GetCImage(tstring name, bool fromRes)
+{
+	if (s_mCImages.find(name) == s_mCImages.end())
+	{
+		CImage cImage;
+		// 加载图片
+		if (fromRes)
+		{
+			// 从资源加载图片（不支持 PNG）
+			cImage.LoadFromResource(GetModuleHandle(NULL), name.c_str());
+		}
+		else
+		{
+			//判断图片路径是否存在
+			if (!PathFileExists(name.c_str()))
+			{
+				return nullptr;
+			}
+			cImage.Load(name.c_str());
+		}
+		// 加载失败
+		if (cImage.IsNull())
+		{
+			return nullptr;
+		}
+		// 确认该图像包含 Alpha 通道
+		if (cImage.GetBPP() == 32)
+		{
+			// 透明图片处理
+			CrossImage(cImage);
+		}
+	}
+	else
+	{
+		return &s_mCImages.at(name);
 	}
 }

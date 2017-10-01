@@ -695,7 +695,7 @@ public:
 	static void saveScreenshot();
 
 protected:
-	CImage	m_Image;
+	CImage*	m_pCImage;
 	CRect	m_SrcRect;
 	BYTE	m_nAlpha;
 	float	m_fScaleX;

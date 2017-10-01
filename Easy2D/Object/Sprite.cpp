@@ -35,18 +35,18 @@ bool Sprite::_exec(bool active)
 void Sprite::_onDraw()
 {
 	// display 属性为 false，或未设置图片资源时，不绘制该图片
-	if (!m_bDisplay || m_pImage->m_Image.IsNull())
+	if (!m_bDisplay || !m_pImage->m_pCImage)
 	{
 		return;
 	}
 	// 绘制图片
-	if (m_pImage->m_Image.GetBPP() == 32)
+	if (m_pImage->m_pCImage->GetBPP() == 32)
 	{
-		m_pImage->m_Image.AlphaBlend(GetImageHDC(), getRect(), m_pImage->m_SrcRect, m_nAlpha, AC_SRC_OVER);
+		m_pImage->m_pCImage->AlphaBlend(GetImageHDC(), getRect(), m_pImage->m_SrcRect, m_nAlpha, AC_SRC_OVER);
 	}
 	else
 	{
-		m_pImage->m_Image.Draw(GetImageHDC(), getRect(), m_pImage->m_SrcRect);
+		m_pImage->m_pCImage->Draw(GetImageHDC(), getRect(), m_pImage->m_SrcRect);
 	}
 }
 
