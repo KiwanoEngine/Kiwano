@@ -4,7 +4,7 @@
 using namespace std;
 
 // 图片缓存
-static map<tstring, CImage> s_mCImages;
+static map<tstring, CImage*> s_mCImages;
 // 从图片缓存中读取图片
 static CImage* GetCImage(tstring name, bool fromRes = false);
 // 对 PNG 图像进行像素转换
@@ -201,12 +201,13 @@ CImage* GetCImage(tstring name, bool fromRes)
 {
 	if (s_mCImages.find(name) == s_mCImages.end())
 	{
-		CImage cImage;
+		CImage* cImage = nullptr;
 		// 加载图片
 		if (fromRes)
 		{
+			cImage = new CImage();
 			// 从资源加载图片（不支持 PNG）
-			cImage.LoadFromResource(GetModuleHandle(NULL), name.c_str());
+			cImage->LoadFromResource(GetModuleHandle(NULL), name.c_str());
 		}
 		else
 		{
@@ -215,20 +216,21 @@ CImage* GetCImage(tstring name, bool fromRes)
 			{
 				return nullptr;
 			}
-			cImage.Load(name.c_str());
+			cImage = new CImage();
+			cImage->Load(name.c_str());
 		}
 		// 加载失败
-		if (cImage.IsNull())
+		if (!cImage || cImage->IsNull())
 		{
 			return nullptr;
 		}
 		// 确认该图像包含 Alpha 通道
-		if (cImage.GetBPP() == 32)
+		if (cImage->GetBPP() == 32)
 		{
 			// 透明图片处理
-			CrossImage(cImage);
+			CrossImage(*cImage);
 		}
-		s_mCImages.insert(map<tstring, CImage>::value_type(name, cImage));
+		s_mCImages.insert(map<tstring, CImage*>::value_type(name, cImage));
 	}
-	return &s_mCImages.at(name);
+	return s_mCImages.at(name);
 }
