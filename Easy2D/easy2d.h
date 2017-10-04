@@ -2,8 +2,8 @@
 * Easy2D Game Engine
 * 
 * Website: http://www.easy2d.cn
-* Github: https://github.com/Nomango/Easy2D
-* Gitee: https://gitee.com/werelone/Easy2D
+* Github:  https://github.com/Nomango/Easy2D
+* Gitee:   https://gitee.com/werelone/Easy2D
 ******************************************************/
 
 #pragma once
