@@ -8,7 +8,7 @@ ActionNeverStop::ActionNeverStop(Action * action) :
 
 ActionNeverStop::~ActionNeverStop()
 {
-	SAFE_RELEASE(m_Action);
+	SafeRelease(m_Action);
 }
 
 ActionNeverStop * ActionNeverStop::copy() const

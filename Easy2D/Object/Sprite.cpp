@@ -24,7 +24,7 @@ Sprite::Sprite(LPCTSTR imageFileName) :
 
 Sprite::~Sprite()
 {
-	SAFE_RELEASE(m_pImage);
+	SafeRelease(m_pImage);
 }
 
 bool Sprite::_exec(bool active)
@@ -52,7 +52,7 @@ void Sprite::_onDraw()
 
 void Sprite::setImage(Image * image)
 {
-	SAFE_RELEASE(m_pImage);
+	SafeRelease(m_pImage);
 	m_pImage = image;
 	setSize(int(m_pImage->getWidth() * m_fScaleX), int(m_pImage->getHeight() * m_fScaleY));
 	m_pImage->retain();

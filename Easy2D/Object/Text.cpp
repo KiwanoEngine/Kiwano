@@ -10,7 +10,7 @@ Text::Text() :
 	m_pFontStyle->retain();		// 字体引用计数加一
 }
 
-Text::Text(tstring text, COLORREF color, FontStyle * font) : 
+Text::Text(TString text, COLORREF color, FontStyle * font) : 
 	m_color(color),
 	m_pFontStyle(font)
 {
@@ -18,7 +18,7 @@ Text::Text(tstring text, COLORREF color, FontStyle * font) :
 	m_pFontStyle->retain();		// 字体引用计数加一
 }
 
-Text::Text(int x, int y, tstring text, COLORREF color, FontStyle * font) :
+Text::Text(int x, int y, TString text, COLORREF color, FontStyle * font) :
 	m_color(color),
 	m_pFontStyle(font)
 {
@@ -29,7 +29,7 @@ Text::Text(int x, int y, tstring text, COLORREF color, FontStyle * font) :
 
 Text::~Text()
 {
-	SAFE_RELEASE(m_pFontStyle);	// 字体引用计数减一
+	SafeRelease(m_pFontStyle);	// 字体引用计数减一
 }
 
 void Text::_onDraw()
@@ -52,7 +52,7 @@ COLORREF Text::getColor() const
 	return m_color;
 }
 
-tstring Text::getText() const
+TString Text::getText() const
 {
 	return m_sText;
 }
@@ -67,7 +67,7 @@ bool Text::isEmpty() const
 	return m_sText.empty();	// 文本是否为空
 }
 
-void Text::setText(tstring text)
+void Text::setText(TString text)
 {
 	m_sText = text;
 	// 先设置字体，然后获取该文本在该字体下的宽度和高度
@@ -82,7 +82,7 @@ void Text::setColor(COLORREF color)
 
 void Text::setFontStyle(FontStyle * style)
 {
-	SAFE_RELEASE(m_pFontStyle);	// 原字体引用计数减一
+	SafeRelease(m_pFontStyle);	// 原字体引用计数减一
 	m_pFontStyle = style;		// 修改字体
 	m_pFontStyle->retain();		// 现字体引用计数加一
 	// 先设置字体，然后获取该文本在该字体下的宽度和高度

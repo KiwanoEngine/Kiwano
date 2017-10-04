@@ -28,7 +28,7 @@ MouseMsg::MouseMsg()
 {
 }
 
-MouseMsg::MouseMsg(tstring name, const MOUSE_CALLBACK & callback)
+MouseMsg::MouseMsg(TString name, const MOUSE_CALLBACK & callback)
 {
 	m_sName = name;
 	m_callback = callback;
@@ -43,7 +43,7 @@ void MouseMsg::onMouseMsg()
 	m_callback();
 }
 
-void MouseMsg::addListener(tstring name, const MOUSE_CALLBACK & callback)
+void MouseMsg::addListener(TString name, const MOUSE_CALLBACK & callback)
 {
 	// 创建新的监听对象
 	auto mouse = new MouseMsg(name, callback);
@@ -51,7 +51,7 @@ void MouseMsg::addListener(tstring name, const MOUSE_CALLBACK & callback)
 	s_vMouseMsg.push_back(mouse);
 }
 
-bool MouseMsg::delListener(tstring name)
+bool MouseMsg::delListener(TString name)
 {
 	// 创建迭代器
 	std::vector<MouseMsg*>::iterator iter;

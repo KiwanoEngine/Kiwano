@@ -4,9 +4,9 @@
 using namespace std;
 
 // 图片缓存
-static map<tstring, CImage*> s_mCImages;
+static map<TString, CImage*> s_mCImages;
 // 从图片缓存中读取图片
-static CImage* GetCImage(tstring name, bool fromRes = false);
+static CImage* GetCImage(TString name, bool fromRes = false);
 // 对 PNG 图像进行像素转换
 static void CrossImage(CImage &img);
 
@@ -169,7 +169,7 @@ void Image::reset()
 
 void Image::saveScreenshot()
 {
-	tstring savePath;
+	TString savePath;
 	// 获取保存位置
 	if (FileUtils::getSaveFilePath(savePath, _T("截图保存到"), _T("jpg")))
 	{
@@ -197,7 +197,7 @@ void CrossImage(CImage &img)
 	}
 }
 
-CImage* GetCImage(tstring name, bool fromRes)
+CImage* GetCImage(TString name, bool fromRes)
 {
 	if (s_mCImages.find(name) == s_mCImages.end())
 	{
@@ -230,7 +230,7 @@ CImage* GetCImage(tstring name, bool fromRes)
 			// 透明图片处理
 			CrossImage(*cImage);
 		}
-		s_mCImages.insert(map<tstring, CImage*>::value_type(name, cImage));
+		s_mCImages.insert(map<TString, CImage*>::value_type(name, cImage));
 	}
 	return s_mCImages.at(name);
 }

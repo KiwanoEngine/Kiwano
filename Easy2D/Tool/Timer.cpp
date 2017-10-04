@@ -3,7 +3,7 @@
 // 储存所有定时器的容器
 static std::vector<Timer*> s_nTimers;
 
-Timer::Timer(tstring name, UINT ms, const TIMER_CALLBACK & callback) :
+Timer::Timer(TString name, UINT ms, const TIMER_CALLBACK & callback) :
 	m_sName(name),
 	m_bRunning(false),
 	m_callback(callback)
@@ -48,7 +48,7 @@ void Timer::setCallback(const TIMER_CALLBACK & callback)
 	m_callback = callback;		// 保存回调函数
 }
 
-void Timer::setName(tstring name)
+void Timer::setName(TString name)
 {
 	m_sName = name;				// 修改定时器名称
 }
@@ -58,7 +58,7 @@ UINT Timer::getInterval() const
 	return m_nMilliSeconds;		// 获取定时器的时间间隔
 }
 
-tstring Timer::getName() const
+TString Timer::getName() const
 {
 	return m_sName;				// 获取定时器的名称
 }
@@ -100,7 +100,7 @@ void Timer::addTimer(Timer * timer)
 	s_nTimers.push_back(timer);
 }
 
-void Timer::addTimer(tstring name, UINT ms, const TIMER_CALLBACK & callback)
+void Timer::addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback)
 {
 	// 创建定时器
 	auto timer = new Timer(name, ms, callback);
@@ -108,7 +108,7 @@ void Timer::addTimer(tstring name, UINT ms, const TIMER_CALLBACK & callback)
 	addTimer(timer);
 }
 
-Timer * Timer::getTimer(tstring name)
+Timer * Timer::getTimer(TString name)
 {
 	// 查找是否有相同名称的定时器
 	for (auto timer : s_nTimers)
@@ -123,7 +123,7 @@ Timer * Timer::getTimer(tstring name)
 	return nullptr;
 }
 
-bool Timer::startTimer(tstring name)
+bool Timer::startTimer(TString name)
 {
 	// 启动指定名称的定时器，先找到该定时器
 	auto t = getTimer(name);
@@ -137,7 +137,7 @@ bool Timer::startTimer(tstring name)
 	return false;
 }
 
-bool Timer::stopTimer(tstring name)
+bool Timer::stopTimer(TString name)
 {
 	// 停止指定名称的定时器，先找到该定时器
 	auto t = getTimer(name);
@@ -151,7 +151,7 @@ bool Timer::stopTimer(tstring name)
 	return false;
 }
 
-bool Timer::delTimer(tstring name)
+bool Timer::delTimer(TString name)
 {
 	// 创建迭代器
 	std::vector<Timer*>::iterator iter;

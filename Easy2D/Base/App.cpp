@@ -194,7 +194,7 @@ void App::createWindow(CSize size, int mode)
 	createWindow(size.cx, size.cy, mode);
 }
 
-void App::createWindow(tstring title, int width, int height, int mode)
+void App::createWindow(TString title, int width, int height, int mode)
 {
 	// 保存窗口信息
 	m_Size.cx = width;
@@ -206,7 +206,7 @@ void App::createWindow(tstring title, int width, int height, int mode)
 	_initGraph();
 }
 
-void App::createWindow(tstring title, CSize size, int mode)
+void App::createWindow(TString title, CSize size, int mode)
 {
 	createWindow(title, size.cx, size.cy, mode);
 }
@@ -246,7 +246,7 @@ void App::setWindowSize(CSize size)
 	setWindowSize(size.cx, size.cy);
 }
 
-void App::setWindowTitle(tstring title)
+void App::setWindowTitle(TString title)
 {
 	// 设置窗口标题
 	SetWindowText(GetHWnd(), title.c_str());
@@ -254,7 +254,7 @@ void App::setWindowTitle(tstring title)
 	s_pInstance->m_sTitle = title;
 }
 
-tstring App::getWindowTitle()
+TString App::getWindowTitle()
 {
 	return s_pInstance->m_sTitle;
 }
@@ -286,17 +286,17 @@ void App::clearScene()
 	while (s_pInstance->m_SceneStack.size())
 	{
 		auto temp = s_pInstance->m_SceneStack.top();
-		SAFE_DELETE(temp);
+		SafeDelete(temp);
 		s_pInstance->m_SceneStack.pop();
 	}
 }
 
-void App::setAppName(tstring appname)
+void App::setAppName(TString appname)
 {
 	s_pInstance->m_sAppName = appname;
 }
 
-tstring App::getAppName()
+TString App::getAppName()
 {
 	return s_pInstance->m_sAppName;
 }
@@ -320,7 +320,7 @@ void App::_enterNextScene()
 	}
 	else
 	{
-		SAFE_DELETE(m_CurrentScene);		// 否则删除当前场景
+		SafeDelete(m_CurrentScene);		// 否则删除当前场景
 	}
 	
 	m_CurrentScene = m_NextScene;			// 切换场景
@@ -372,13 +372,13 @@ int App::getHeight()
 void App::free()
 {
 	// 释放场景内存
-	SAFE_DELETE(m_CurrentScene);
-	SAFE_DELETE(m_NextScene);
+	SafeDelete(m_CurrentScene);
+	SafeDelete(m_NextScene);
 	// 清空场景栈
 	while (m_SceneStack.size())
 	{
 		auto temp = m_SceneStack.top();
-		SAFE_DELETE(temp);
+		SafeDelete(temp);
 		m_SceneStack.pop();
 	}
 	// 删除所有定时器

@@ -80,7 +80,7 @@ const VK_KEY KeyMsg::F12 = VK_F12;
 
 static VK_KEY convert(int ascii);
 
-KeyMsg::KeyMsg(tstring name, const KEY_CALLBACK & callback)
+KeyMsg::KeyMsg(TString name, const KEY_CALLBACK & callback)
 {
 	m_sName = name;
 	m_callback = callback;
@@ -108,7 +108,7 @@ void KeyMsg::__exec()
 	}
 }
 
-void KeyMsg::addListener(tstring name, const KEY_CALLBACK & callback)
+void KeyMsg::addListener(TString name, const KEY_CALLBACK & callback)
 {
 	// 创建新的监听对象
 	auto key = new KeyMsg(name, callback);
@@ -116,7 +116,7 @@ void KeyMsg::addListener(tstring name, const KEY_CALLBACK & callback)
 	s_vKeyMsg.push_back(key);
 }
 
-bool KeyMsg::delListener(tstring name)
+bool KeyMsg::delListener(TString name)
 {
 	// 创建迭代器
 	std::vector<KeyMsg*>::iterator iter;

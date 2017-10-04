@@ -10,7 +10,7 @@
 	#include <direct.h>
 #endif
 
-tstring FileUtils::getLocalAppDataPath()
+TString FileUtils::getLocalAppDataPath()
 {
 	TCHAR m_lpszDefaultDir[MAX_PATH] = { 0 };
 	TCHAR szDocument[MAX_PATH] = { 0 };
@@ -27,7 +27,7 @@ tstring FileUtils::getLocalAppDataPath()
 	return m_lpszDefaultDir;
 }
 
-tstring FileUtils::getDefaultSavePath()
+TString FileUtils::getDefaultSavePath()
 {
 	TCHAR m_lpszDefaultDir[MAX_PATH] = { 0 };
 	TCHAR szDocument[MAX_PATH] = { 0 };
@@ -41,7 +41,7 @@ tstring FileUtils::getDefaultSavePath()
 		GetShortPathName(szDocument, m_lpszDefaultDir, _MAX_PATH);
 	}
 
-	tstring path = m_lpszDefaultDir;
+	TString path = m_lpszDefaultDir;
 	path.append(_T("\\"));
 	path.append(App::get()->getAppName());
 
@@ -84,7 +84,7 @@ void FileUtils::saveDouble(LPCTSTR key, double value)
 	::WritePrivateProfileString(_T("Default"), key, ss.str().c_str(), getDefaultSavePath().c_str());
 }
 
-void FileUtils::saveString(LPCTSTR key, tstring value)
+void FileUtils::saveString(LPCTSTR key, TString value)
 {
 	::WritePrivateProfileString(_T("Default"), key, value.c_str(), getDefaultSavePath().c_str());
 }
@@ -119,20 +119,20 @@ double FileUtils::getDouble(LPCTSTR key, double default)
 	return d;
 }
 
-tstring FileUtils::getString(LPCTSTR key, tstring default)
+TString FileUtils::geTString(LPCTSTR key, TString default)
 {
 	TCHAR temp[128] = { 0 };
 	::GetPrivateProfileString(_T("Default"), key, default.c_str(), temp, 128, getDefaultSavePath().c_str());
-	return tstring(temp);
+	return TString(temp);
 }
 
-tstring FileUtils::getFileExtension(const tstring & filePath)
+TString FileUtils::getFileExtension(const TString & filePath)
 {
-	tstring fileExtension;
+	TString fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
 	size_t pos = filePath.find_last_of('.');
 	// 判断 pos 是否是个有效位置
-	if (pos != tstring::npos)
+	if (pos != TString::npos)
 	{
 		// 截取扩展名
 		fileExtension = filePath.substr(pos, filePath.length());
@@ -143,7 +143,7 @@ tstring FileUtils::getFileExtension(const tstring & filePath)
 	return fileExtension;
 }
 
-bool FileUtils::getSaveFilePath(tstring& path, LPCTSTR title, LPCTSTR defExt)
+bool FileUtils::getSaveFilePath(TString& path, LPCTSTR title, LPCTSTR defExt)
 {
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };

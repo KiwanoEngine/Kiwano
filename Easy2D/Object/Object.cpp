@@ -1,9 +1,8 @@
 #include "..\easy2d.h"
 
 Object::Object() :
-	m_nRef(0)
+	m_nRefCount(0)
 {
-	FreePool::__add(this);	// 将该对象放入释放池中
 }
 
 Object::~Object()
@@ -12,10 +11,15 @@ Object::~Object()
 
 void Object::retain()
 {
-	m_nRef++;	// 引用计数加一
+	m_nRefCount++;	// 引用计数加一
 }
 
 void Object::release()
 {
-	m_nRef--;	// 引用计数减一
+	m_nRefCount--;	// 引用计数减一
+}
+
+void Object::autoRelease()
+{
+	FreePool::__add(this);	// 将该对象放入释放池中
 }

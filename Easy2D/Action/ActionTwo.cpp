@@ -10,8 +10,8 @@ ActionTwo::ActionTwo(Action * actionFirst, Action * actionSecond) :
 
 ActionTwo::~ActionTwo()
 {
-	SAFE_RELEASE(m_FirstAction);
-	SAFE_RELEASE(m_SecondAction);
+	SafeRelease(m_FirstAction);
+	SafeRelease(m_SecondAction);
 }
 
 ActionTwo * ActionTwo::copy() const
@@ -50,7 +50,7 @@ bool ActionTwo::_exec(LARGE_INTEGER nNow)
 		{
 			// 返回 true 表示第一个动作已经结束，删除这个
 			// 动作，并初始化第二个动作
-			SAFE_RELEASE(m_FirstAction);
+			SafeRelease(m_FirstAction);
 			m_FirstAction = nullptr;
 			m_SecondAction->_init();
 		}
@@ -59,7 +59,7 @@ bool ActionTwo::_exec(LARGE_INTEGER nNow)
 	{
 		if (m_SecondAction->_exec(nNow))
 		{
-			SAFE_RELEASE(m_SecondAction);
+			SafeRelease(m_SecondAction);
 			m_SecondAction = nullptr;
 			return true;
 		}

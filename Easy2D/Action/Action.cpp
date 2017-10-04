@@ -8,8 +8,6 @@ Action::Action() :
 {
 	// 默认动作 15ms 运行一次
 	setInterval(15);
-	// 保留动作
-	this->retain();
 }
 
 Action::~Action()

@@ -9,7 +9,7 @@ TextButton::TextButton() :
 {
 }
 
-TextButton::TextButton(tstring text) :
+TextButton::TextButton(TString text) :
 	TextButton()
 {
 	setNormal(new Text(text));	// 设置按钮在正常状态时的文字
@@ -24,10 +24,10 @@ TextButton::TextButton(Text * text) :
 TextButton::~TextButton()
 {
 	// 所有文本的引用计数减一
-	SAFE_RELEASE(m_pNormalText);
-	SAFE_RELEASE(m_pMouseInText);
-	SAFE_RELEASE(m_pSelectedText);
-	SAFE_RELEASE(m_pUnableText);
+	SafeRelease(m_pNormalText);
+	SafeRelease(m_pMouseInText);
+	SafeRelease(m_pSelectedText);
+	SafeRelease(m_pUnableText);
 }
 
 void TextButton::_setStatus(Status status)
@@ -99,7 +99,7 @@ void TextButton::setNormal(Text * text)
 	if (text)
 	{
 		// 原文本引用计数减一
-		SAFE_RELEASE(m_pNormalText);
+		SafeRelease(m_pNormalText);
 		// 修改文本
 		m_pNormalText = text;
 		// 现文本引用计数加一
@@ -115,7 +115,7 @@ void TextButton::setMouseIn(Text * text)
 {
 	if (text)
 	{
-		SAFE_RELEASE(m_pMouseInText);
+		SafeRelease(m_pMouseInText);
 		m_pMouseInText = text;
 		m_pMouseInText->retain();
 		_resetPosition();
@@ -126,7 +126,7 @@ void TextButton::setSelected(Text * text)
 {
 	if (text)
 	{
-		SAFE_RELEASE(m_pSelectedText);
+		SafeRelease(m_pSelectedText);
 		m_pSelectedText = text;
 		m_pSelectedText->retain();
 		_resetPosition();
@@ -137,7 +137,7 @@ void TextButton::setUnable(Text * text)
 {
 	if (text)
 	{
-		SAFE_RELEASE(m_pUnableText);
+		SafeRelease(m_pUnableText);
 		m_pUnableText = text;
 		m_pUnableText->retain();
 		_resetPosition();

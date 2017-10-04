@@ -25,7 +25,7 @@ ActionSequence::~ActionSequence()
 {
 	for (auto action : m_vActions)
 	{
-		SAFE_RELEASE(action);
+		SafeRelease(action);
 	}
 }
 

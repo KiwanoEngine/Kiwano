@@ -16,7 +16,7 @@ public:
 	~MciPlayer();
 
 	void close();
-	void open(tstring pFileName, UINT uId);
+	void open(TString pFileName, UINT uId);
 	void play(bool bLoop = false);
 	void pause();
 	void resume();
@@ -33,7 +33,7 @@ private:
 	UINT        m_nSoundID;
 	bool        m_bPlaying;
 	bool		m_bLoop;
-	tstring		m_sExt;
+	TString		m_sExt;
 };
 
 
@@ -51,7 +51,7 @@ MciPlayer::~MciPlayer()
 	close();	// 关闭播放器
 }
 
-void MciPlayer::open(tstring pFileName, UINT uId)
+void MciPlayer::open(TString pFileName, UINT uId)
 {
 	// 忽略不存在的文件
 	if (pFileName.empty() || !PathFileExists(pFileName.c_str())) return;
@@ -206,7 +206,7 @@ void MciPlayer::_sendCommand(int nCommand, DWORD_PTR param1, DWORD_PTR parma2)
 typedef std::map<unsigned int, MciPlayer *> MusicList;
 typedef std::pair<unsigned int, MciPlayer *> Music;
 
-static unsigned int _Hash(tstring key);
+static unsigned int _Hash(TString key);
 
 
 static MusicList& getMciPlayerList()
@@ -228,7 +228,7 @@ void MusicUtils::end()
 	// 停止其他所有音乐
 	for (auto& iter : getMciPlayerList())
 	{
-		SAFE_DELETE(iter.second);
+		SafeDelete(iter.second);
 	}
 	// 清空音乐列表
 	getMciPlayerList().clear();
@@ -246,7 +246,7 @@ void MusicUtils::setVolume(float volume)
 	}
 }
 
-void MusicUtils::setVolume(tstring pszFilePath, float volume)
+void MusicUtils::setVolume(TString pszFilePath, float volume)
 {
 	unsigned int nRet = ::_Hash(pszFilePath);
 
@@ -257,7 +257,7 @@ void MusicUtils::setVolume(tstring pszFilePath, float volume)
 	}
 }
 
-void MusicUtils::playBackgroundMusic(tstring pszFilePath, bool bLoop)
+void MusicUtils::playBackgroundMusic(TString pszFilePath, bool bLoop)
 {
 	if (pszFilePath.empty())
 	{
@@ -305,7 +305,7 @@ void MusicUtils::setBackgroundMusicVolume(float volume)
 	getBgMciPlayer().setVolume(volume);
 }
 
-unsigned int MusicUtils::playMusic(tstring pszFilePath, bool bLoop)
+unsigned int MusicUtils::playMusic(TString pszFilePath, bool bLoop)
 {
 	unsigned int nRet = ::_Hash(pszFilePath);
 
@@ -328,7 +328,7 @@ void MusicUtils::stopMusic(unsigned int nSoundId)
 	}
 }
 
-void MusicUtils::preloadMusic(tstring pszFilePath)
+void MusicUtils::preloadMusic(TString pszFilePath)
 {
 	if (pszFilePath.empty()) return;
 
@@ -396,14 +396,14 @@ void MusicUtils::unloadMusic(LPCTSTR pszFilePath)
 	MusicList::iterator p = getMciPlayerList().find(nID);
 	if (p != getMciPlayerList().end())
 	{
-		SAFE_DELETE(p->second);
+		SafeDelete(p->second);
 		getMciPlayerList().erase(nID);
 	}
 }
 
 
 
-unsigned int _Hash(tstring key)
+unsigned int _Hash(TString key)
 {
 	unsigned int len = unsigned(key.size());
 	unsigned int hash = 0;

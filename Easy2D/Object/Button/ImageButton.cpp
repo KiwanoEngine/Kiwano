@@ -24,10 +24,10 @@ ImageButton::ImageButton(Image * image) :
 ImageButton::~ImageButton()
 {
 	// 所有图片的引用计数减一
-	SAFE_RELEASE(m_pNormalImage);
-	SAFE_RELEASE(m_pMouseInImage);
-	SAFE_RELEASE(m_pSelectedImage);
-	SAFE_RELEASE(m_pUnableImage);
+	SafeRelease(m_pNormalImage);
+	SafeRelease(m_pMouseInImage);
+	SafeRelease(m_pSelectedImage);
+	SafeRelease(m_pUnableImage);
 }
 
 void ImageButton::_setStatus(Status status)
@@ -99,7 +99,7 @@ void ImageButton::setNormal(Image * image)
 	if (image)
 	{
 		// 原图片引用计数减一
-		SAFE_RELEASE(m_pNormalImage);
+		SafeRelease(m_pNormalImage);
 		// 修改图片
 		m_pNormalImage = image;
 		// 现图片引用计数加一
@@ -115,7 +115,7 @@ void ImageButton::setMouseIn(Image * image)
 {
 	if (image)
 	{
-		SAFE_RELEASE(m_pMouseInImage);
+		SafeRelease(m_pMouseInImage);
 		m_pMouseInImage = image;
 		m_pMouseInImage->retain();
 		_resetPosition();
@@ -126,7 +126,7 @@ void ImageButton::setSelected(Image * image)
 {
 	if (image)
 	{
-		SAFE_RELEASE(m_pSelectedImage);
+		SafeRelease(m_pSelectedImage);
 		m_pSelectedImage = image;
 		m_pSelectedImage->retain();
 		_resetPosition();
@@ -137,7 +137,7 @@ void ImageButton::setUnable(Image * image)
 {
 	if (image)
 	{
-		SAFE_RELEASE(m_pUnableImage);
+		SafeRelease(m_pUnableImage);
 		m_pUnableImage = image;
 		m_pUnableImage->retain();
 		_resetPosition();

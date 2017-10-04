@@ -1,8 +1,9 @@
 /******************************************************
 * Easy2D Game Engine
-* http://www.easy2d.cn
 * 
-* Depends on EasyX (Ver:20170827(beta))
+* Website: http://www.easy2d.cn
+* Github: https://github.com/Nomango/Easy2D
+* Gitee: https://gitee.com/werelone/Easy2D
 ******************************************************/
 
 #pragma once
@@ -36,22 +37,6 @@
 #endif
 
 
-// String macros
-
-#ifdef UNICODE
-	#define tstring std::wstring
-#else
-	#define tstring std::string
-#endif
-
-
-// Safe macros
-
-#define SAFE_DELETE(p)			{ delete (p); (p) = nullptr; }
-#define SAFE_DELETE_ARRAY(p)	{ if (p) { delete[] (p); (p) = nullptr; } }
-#define SAFE_RELEASE(p)			{ if (p) p->release(); }
-
-
 // Type Declare
 
 typedef CPoint						CVector;
@@ -61,6 +46,11 @@ typedef std::function<void()>		TIMER_CALLBACK;
 typedef std::function<void(VK_KEY)>	KEY_CALLBACK;
 typedef std::function<void()>		MOUSE_CALLBACK;
 
+#ifdef UNICODE
+	typedef std::wstring TString;
+#else
+	typedef std::string TString;
+#endif
 
 // Classes Declare
 
@@ -114,6 +104,9 @@ namespace easy2d
 	class ActionManager;
 }
 
+
+// Classes
+
 namespace easy2d
 {
 
@@ -131,9 +124,9 @@ public:
 	// 定义绘图窗口
 	void createWindow(CSize size, int mode = 0);
 	// 定义绘图窗口
-	void createWindow(tstring title, int width, int height, int mode = 0);
+	void createWindow(TString title, int width, int height, int mode = 0);
 	// 定义绘图窗口
-	void createWindow(tstring title, CSize size, int mode = 0);
+	void createWindow(TString title, CSize size, int mode = 0);
 	// 启动程序
 	int run();
 	// 释放所有内存资源
@@ -160,9 +153,9 @@ public:
 	// 关闭窗口
 	static void close();
 	// 设置窗口标题
-	static void setWindowTitle(tstring title);
+	static void setWindowTitle(TString title);
 	// 获取窗口标题
-	static tstring getWindowTitle();
+	static TString getWindowTitle();
 	// 获取窗口宽度
 	static int getWidth();
 	// 获取窗口高度
@@ -174,9 +167,9 @@ public:
 	// 清空之前保存的所有场景
 	static void clearScene();
 	// 设置 AppName
-	static void setAppName(tstring appname);
+	static void setAppName(TString appname);
 	// 获取 AppName
-	static tstring getAppName();
+	static TString getAppName();
 	// 修改窗口背景色
 	static void setBkColor(COLORREF color);
 	// 设置帧率
@@ -187,8 +180,8 @@ public:
 	static Scene * getCurrentScene();
 
 protected:
-	tstring				m_sTitle;
-	tstring				m_sAppName;
+	TString				m_sTitle;
+	TString				m_sAppName;
 	Scene*				m_CurrentScene;
 	Scene*				m_NextScene;
 	std::stack<Scene*>	m_SceneStack;
@@ -206,9 +199,8 @@ protected:
 
 class FreePool
 {
-	friend class App;
-	friend class Object;
-
+	friend App;
+	friend Object;
 private:
 	// 刷新内存池
 	static void __flush();
@@ -218,9 +210,8 @@ private:
 
 class Scene
 {
-	friend class App;
-	friend class MouseMsg;
-
+	friend App;
+	friend MouseMsg;
 public:
 	Scene();
 	~Scene();
@@ -246,32 +237,35 @@ protected:
 
 class Object
 {
-	friend class FreePool;
-
+	friend FreePool;
 public:
 	Object();
 	virtual ~Object();
 
+	// 保留这个对象
 	void retain();
+	// 释放这个对象
 	void release();
+	// 让引擎自动释放这个对象
+	void autoRelease();
 
 protected:
-	int m_nRef;
+	int m_nRefCount;
 };
 
 class MouseMsg
 {
-	friend class App;
+	friend App;
 
 public:
 	MouseMsg();
-	MouseMsg(tstring name, const MOUSE_CALLBACK& callback);
+	MouseMsg(TString name, const MOUSE_CALLBACK& callback);
 	~MouseMsg();
 
 	// 添加键盘监听
-	static void addListener(tstring name, const MOUSE_CALLBACK& callback);
+	static void addListener(TString name, const MOUSE_CALLBACK& callback);
 	// 删除键盘监听
-	static bool delListener(tstring name);
+	static bool delListener(TString name);
 	// 删除所有键盘监听
 	static void clearAllListeners();
 	// 左键是否按下
@@ -317,7 +311,7 @@ private:
 	static void __exec();
 
 protected:
-	tstring			m_sName;
+	TString			m_sName;
 	MOUSE_CALLBACK	m_callback;
 
 protected:
@@ -327,19 +321,19 @@ protected:
 
 class KeyMsg
 {
-	friend class App;
+	friend App;
 
 public:
-	KeyMsg(tstring name, const KEY_CALLBACK& callback);
+	KeyMsg(TString name, const KEY_CALLBACK& callback);
 	~KeyMsg();
 
 	// 执行回调函数
 	void onKbHit(VK_KEY key);
 
 	// 添加键盘监听
-	static void addListener(tstring name, const KEY_CALLBACK& callback);
+	static void addListener(TString name, const KEY_CALLBACK& callback);
 	// 删除键盘监听
-	static bool delListener(tstring name);
+	static bool delListener(TString name);
 	// 删除所有键盘监听
 	static void clearAllListeners();
 	// 判断键是否被按下，按下返回true
@@ -361,14 +355,14 @@ private:
 	static void __exec();
 
 protected:
-	tstring			m_sName;
+	TString			m_sName;
 	KEY_CALLBACK	m_callback;
 };
 
 class FontStyle :
 	public Object
 {
-	friend class Text;
+	friend Text;
 
 public:
 	FontStyle();
@@ -465,8 +459,8 @@ public:
 class Node :
 	public Object
 {
-	friend class Scene;
-	friend class BatchNode;
+	friend Scene;
+	friend BatchNode;
 
 public:
 	Node();
@@ -599,34 +593,34 @@ protected:
 class Text :
 	public RectNode
 {
-	friend class TextButton;
+	friend TextButton;
 
 public:
 	Text();
 	// 根据字符串、颜色和字体创建文字
-	Text(tstring text, COLORREF color = Color::white, FontStyle * font = FontStyle::getDefault());
+	Text(TString text, COLORREF color = Color::white, FontStyle * font = FontStyle::getDefault());
 	// 根据横纵坐标、字符串、颜色和字体创建文字
-	Text(int x, int y, tstring text, COLORREF color = Color::white, FontStyle * font = FontStyle::getDefault());
+	Text(int x, int y, TString text, COLORREF color = Color::white, FontStyle * font = FontStyle::getDefault());
 	virtual ~Text();
 
 	// 获取当前颜色
 	COLORREF getColor() const;
 	// 获取当前文字
-	tstring getText() const;
+	TString getText() const;
 	// 获取当前字体
 	FontStyle * getFontStyle();
 	// 文本是否为空
 	bool isEmpty() const;
 
 	// 设置文字
-	void setText(tstring text);
+	void setText(TString text);
 	// 设置文字颜色
 	void setColor(COLORREF color);
 	// 设置字体
 	void setFontStyle(FontStyle * style);
 
 protected:
-	tstring		m_sText;
+	TString		m_sText;
 	COLORREF	m_color;
 	FontStyle *	m_pFontStyle;
 
@@ -637,8 +631,8 @@ protected:
 class Image :
 	public RectNode
 {
-	friend class Sprite;
-	friend class ImageButton;
+	friend Sprite;
+	friend ImageButton;
 public:
 	Image();
 	// 从图片文件获取图像
@@ -708,7 +702,7 @@ protected:
 class Sprite :
 	public RectNode
 {
-	friend class BatchSprite;
+	friend BatchSprite;
 public:
 	Sprite();
 	Sprite(Image * image);
@@ -882,7 +876,7 @@ class TextButton :
 {
 public:
 	TextButton();
-	TextButton(tstring text);
+	TextButton(TString text);
 	TextButton(Text * text);
 	virtual ~TextButton();
 
@@ -1029,11 +1023,11 @@ protected:
 class Action :
 	public Object
 {
-	friend class Sprite;
-	friend class ActionManager;
-	friend class ActionTwo;
-	friend class ActionNeverStop;
-	friend class ActionSequence;
+	friend Sprite;
+	friend ActionManager;
+	friend ActionTwo;
+	friend ActionNeverStop;
+	friend ActionSequence;
 public:
 	Action();
 	virtual ~Action();
@@ -1326,35 +1320,35 @@ class FileUtils
 {
 public:
 	// 获取系统的 AppData\Local 路径
-	static tstring getLocalAppDataPath();
+	static TString getLocalAppDataPath();
 	// 获取默认的保存路径
-	static tstring getDefaultSavePath();
+	static TString getDefaultSavePath();
 	// 保存 int 型的值
 	static void saveInt(LPCTSTR key, int value);
 	// 保存 double 型的值
 	static void saveDouble(LPCTSTR key, double value);
 	// 保存 字符串 型的值（不要在 Unicode 字符集下保存中文字符）
-	static void saveString(LPCTSTR key, tstring value);
+	static void saveString(LPCTSTR key, TString value);
 	// 获取 int 型的值（若不存在则返回 default 参数的值）
 	static int getInt(LPCTSTR key, int default);
 	// 获取 double 型的值（若不存在则返回 default 参数的值）
 	static double getDouble(LPCTSTR key, double default);
 	// 获取 字符串 型的值（若不存在则返回 default 参数的值）
-	static tstring getString(LPCTSTR key, tstring default);
+	static TString geTString(LPCTSTR key, TString default);
 	// 得到文件扩展名（小写）
-	static tstring getFileExtension(const tstring& filePath);
+	static TString getFileExtension(const TString& filePath);
 	/**
 	*  打开保存文件对话框，得到有效保存路径返回 true
 	*  参数：返回文件路径的字符串，窗口标题，设置扩展名过滤，设置默认扩展名
 	*/
-	static bool getSaveFilePath(tstring& path, LPCTSTR title = _T("保存到"), LPCTSTR defExt = NULL);
+	static bool getSaveFilePath(TString& path, LPCTSTR title = _T("保存到"), LPCTSTR defExt = NULL);
 };
 
 class MusicUtils
 {
 public:
 	// 播放背景音乐
-	static void playBackgroundMusic(tstring pszFilePath, bool bLoop = true);
+	static void playBackgroundMusic(TString pszFilePath, bool bLoop = true);
 	// 停止背景音乐
 	static void stopBackgroundMusic(bool bReleaseData = false);
 	// 暂停背景音乐
@@ -1369,11 +1363,11 @@ public:
 	static void setBackgroundMusicVolume(float volume);
 
 	// 播放音效
-	static unsigned int playMusic(tstring pszFilePath, bool loop = false);
+	static unsigned int playMusic(TString pszFilePath, bool loop = false);
 	// 停止音效
 	static void stopMusic(unsigned int nSoundId);
 	// 预加载音效
-	static void preloadMusic(tstring pszFilePath);
+	static void preloadMusic(TString pszFilePath);
 	// 暂停音效
 	static void pauseMusic(unsigned int nSoundId);
 	// 继续播放音效
@@ -1381,7 +1375,7 @@ public:
 	// 卸载音效
 	static void unloadMusic(LPCTSTR pszFilePath);
 	// 设置特定音乐的音量，0 ~ 1.0f
-	static void setVolume(tstring pszFilePath, float volume);
+	static void setVolume(TString pszFilePath, float volume);
 
 	// 暂停所有音乐
 	static void pauseAllMusics();
@@ -1397,10 +1391,10 @@ public:
 
 class Timer
 {
-	friend class App;
+	friend App;
 
 public:
-	Timer(tstring name, UINT ms, const TIMER_CALLBACK & callback);
+	Timer(TString name, UINT ms, const TIMER_CALLBACK & callback);
 	~Timer();
 
 	// 启动定时器
@@ -1414,30 +1408,30 @@ public:
 	// 设置回调函数
 	void setCallback(const TIMER_CALLBACK& callback);
 	// 设置定时器名称
-	void setName(tstring name);
+	void setName(TString name);
 	// 获取定时器间隔时间
 	UINT getInterval() const;
 	// 获取定时器名称
-	tstring getName() const;
+	TString getName() const;
 
 	// 添加定时器
 	static void addTimer(Timer * timer);
 	// 添加定时器
-	static void addTimer(tstring name, UINT ms, const TIMER_CALLBACK & callback);
+	static void addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback);
 	// 根据名称获取定时器
-	static Timer * getTimer(tstring name);
+	static Timer * getTimer(TString name);
 	// 启动特定定时器
-	static bool startTimer(tstring name);
+	static bool startTimer(TString name);
 	// 停止特定定时器
-	static bool stopTimer(tstring name);
+	static bool stopTimer(TString name);
 	// 删除特定定时器
-	static bool delTimer(tstring name);
+	static bool delTimer(TString name);
 	// 删除所有定时器
 	static void clearAllTimers();
 
 protected:
 	bool			m_bRunning;
-	tstring			m_sName;
+	TString			m_sName;
 	TIMER_CALLBACK	m_callback;
 	LARGE_INTEGER	m_nLast;
 	LARGE_INTEGER	m_nAnimationInterval;
@@ -1449,8 +1443,8 @@ private:
 
 class ActionManager
 {
-	friend class App;
-	friend class Sprite;
+	friend App;
+	friend Sprite;
 public:
 	// 继续一个特定的动作
 	static void startAction(Action * action);
@@ -1486,5 +1480,11 @@ private:
 };
 
 }	// End of easy2d namespace
+
+
+// Functions Declare
+
+inline void SafeRelease(easy2d::Object * p) { if (p) p->release(); }
+inline void SafeDelete(void * p) { if (p) delete p; }
 
 using namespace easy2d;
