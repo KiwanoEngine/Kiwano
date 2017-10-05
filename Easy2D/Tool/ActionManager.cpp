@@ -9,18 +9,14 @@ void ActionManager::__exec()
 	static LARGE_INTEGER nNow;
 	QueryPerformanceCounter(&nNow);
 	// 循环遍历所有正在运行的动作
-	std::vector<Action*>::iterator iter;
-	for (iter = s_vActions.begin(); iter != s_vActions.end();)
+	for (size_t i = 0; i < s_vActions.size(); i++)
 	{
-		if ((*iter)->isRunning() && (*iter)->_exec(nNow))
+		auto a = s_vActions[i];
+		if (a->isRunning() && a->_exec(nNow))
 		{
 			// _exec 返回 true 时说明动作已经结束
-			(*iter)->release();
-			iter = s_vActions.erase(iter);
-		}
-		else
-		{
-			iter++;
+			a->release();
+			s_vActions.erase(s_vActions.begin() + i);
 		}
 	}
 }
