@@ -116,8 +116,8 @@ bool Image::setImageFromRes(LPCTSTR pResName, int x, int y, int width, int heigh
 
 void Image::crop(int x, int y, int width, int height)
 {
-	width = min(max(width, 0), m_pCImage->GetWidth());
-	height = min(max(height, 0), m_pCImage->GetHeight());
+	width = min(max(width, 0), m_pCImage->GetWidth() - x);
+	height = min(max(height, 0), m_pCImage->GetHeight() - y);
 	// 设置源矩形的位置和大小（用于裁剪）
 	m_SrcRect.SetRect(x, y, x + width, y + height);
 	// 设置目标矩形（即绘制到窗口的位置和大小）
