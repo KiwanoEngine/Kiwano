@@ -201,7 +201,7 @@ void App::createWindow(TString title, int width, int height, int mode)
 	m_Size.cy = height;
 	m_nWindowMode = mode;
 	m_sTitle = title;
-	m_sAppName = title;
+	if (m_sAppName.empty()) m_sAppName = title;
 	// ´´½¨´°¿Ú
 	_initGraph();
 }
