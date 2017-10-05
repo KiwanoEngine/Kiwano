@@ -104,6 +104,7 @@ void BatchNode::clearAllChildren()
 	// 所有节点的引用计数减一
 	for (auto child : m_vChildren)
 	{
+		child->autoRelease();
 		child->release();
 	}
 	// 清空储存节点的容器
