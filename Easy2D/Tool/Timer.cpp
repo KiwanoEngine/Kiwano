@@ -1,12 +1,13 @@
 #include "..\easy2d.h"
 
 // 储存所有定时器的容器
-static std::vector<Timer*> s_nTimers;
+static std::vector<Timer*> s_vTimers;
 
 Timer::Timer(TString name, UINT ms, const TIMER_CALLBACK & callback) :
 	m_sName(name),
 	m_bRunning(false),
-	m_callback(callback)
+	m_callback(callback),
+	m_pParentScene(nullptr)
 {
 	setInterval(ms);			// 设置定时器的时间间隔
 }
@@ -66,7 +67,7 @@ TString Timer::getName() const
 void Timer::__exec()
 {
 	// 定时器容器为空
-	if (!s_nTimers.size())
+	if (!s_vTimers.size())
 	{
 		return;
 	}
@@ -74,7 +75,7 @@ void Timer::__exec()
 	static LARGE_INTEGER nNow;
 	QueryPerformanceCounter(&nNow);
 	// 循环遍历所有的定时器
-	for (auto timer : s_nTimers)
+	for (auto timer : s_vTimers)
 	{
 		// 若定时器未运行，跳过这个定时器
 		if (!timer->m_bRunning) 
@@ -96,8 +97,9 @@ void Timer::addTimer(Timer * timer)
 {
 	// 启动定时器
 	timer->start();
+	timer->m_pParentScene = App::getCurrentScene();
 	// 将该定时器放入容器
-	s_nTimers.push_back(timer);
+	s_vTimers.push_back(timer);
 }
 
 void Timer::addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback)
@@ -111,7 +113,7 @@ void Timer::addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback)
 Timer * Timer::getTimer(TString name)
 {
 	// 查找是否有相同名称的定时器
-	for (auto timer : s_nTimers)
+	for (auto timer : s_vTimers)
 	{
 		if (timer->m_sName == name)
 		{
@@ -156,14 +158,14 @@ bool Timer::delTimer(TString name)
 	// 创建迭代器
 	std::vector<Timer*>::iterator iter;
 	// 循环遍历所有定时器
-	for (iter = s_nTimers.begin(); iter != s_nTimers.end(); iter++)
+	for (iter = s_vTimers.begin(); iter != s_vTimers.end(); iter++)
 	{
 		// 查找相同名称的定时器
 		if ((*iter)->m_sName == name)
 		{
 			// 删除该定时器
 			delete (*iter);
-			s_nTimers.erase(iter);
+			s_vTimers.erase(iter);
 			return true;
 		}
 	}
@@ -174,10 +176,32 @@ bool Timer::delTimer(TString name)
 void Timer::clearAllTimers()
 {
 	// 删除所有定时器
-	for (auto t : s_nTimers)
+	for (auto t : s_vTimers)
 	{
 		delete t;
 	}
 	// 清空容器
-	s_nTimers.clear();
+	s_vTimers.clear();
+}
+
+void Timer::bindTimersWithScene(Scene * scene)
+{
+	for (auto t : s_vTimers)
+	{
+		if (!t->m_pParentScene)
+		{
+			t->m_pParentScene = App::getCurrentScene();
+		}
+	}
+}
+
+void Timer::stopAllSceneTimers(Scene * scene)
+{
+	for (auto t : s_vTimers)
+	{
+		if (t->m_pParentScene == scene)
+		{
+			t->stop();
+		}
+	}
 }

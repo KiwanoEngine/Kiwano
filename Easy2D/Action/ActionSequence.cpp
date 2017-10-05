@@ -33,7 +33,7 @@ void ActionSequence::_init()
 {
 	for (auto action : m_vActions)
 	{
-		action->m_pParent = m_pParent;
+		action->m_pTargetSprite = m_pTargetSprite;
 	}
 	m_vActions[0]->_init();
 }

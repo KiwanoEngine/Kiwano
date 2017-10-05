@@ -13,7 +13,7 @@ ActionMoveBy::~ActionMoveBy()
 void ActionMoveBy::_init()
 {
 	Animation::_init();
-	m_BeginPos = m_pParent->getPos();
+	m_BeginPos = m_pTargetSprite->getPos();
 }
 
 bool ActionMoveBy::_exec(LARGE_INTEGER nNow)
@@ -26,7 +26,7 @@ bool ActionMoveBy::_exec(LARGE_INTEGER nNow)
 		// 计算移动位置
 		float scale = float(m_nDuration) / m_nTotalDuration;
 		// 移动 Sprite
-		m_pParent->setPos(int(m_BeginPos.x + m_MoveVector.x * scale), 
+		m_pTargetSprite->setPos(int(m_BeginPos.x + m_MoveVector.x * scale), 
 			int(m_BeginPos.y + m_MoveVector.y * scale));
 		// 判断动作是否结束
 		if (_isEnd())

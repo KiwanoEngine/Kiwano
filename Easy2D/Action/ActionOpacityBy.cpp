@@ -13,7 +13,7 @@ ActionOpacityBy::~ActionOpacityBy()
 void ActionOpacityBy::_init()
 {
 	Animation::_init();
-	m_nBeginVal = m_pParent->getOpacity();
+	m_nBeginVal = m_pTargetSprite->getOpacity();
 }
 
 bool ActionOpacityBy::_exec(LARGE_INTEGER nNow)
@@ -26,7 +26,7 @@ bool ActionOpacityBy::_exec(LARGE_INTEGER nNow)
 		// 计算移动位置
 		float scale = float(m_nDuration) / m_nTotalDuration;
 		// 移动 Sprite
-		m_pParent->setOpacity(m_nBeginVal + m_nVariation * scale);
+		m_pTargetSprite->setOpacity(m_nBeginVal + m_nVariation * scale);
 		// 判断动作是否结束
 		if (_isEnd())
 		{

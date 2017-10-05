@@ -37,7 +37,7 @@ bool ActionFrames::_exec(LARGE_INTEGER nNow)
 	{
 		// 用求余的方法重新记录时间
 		m_nLast.QuadPart = nNow.QuadPart - (nNow.QuadPart % m_nAnimationInterval.QuadPart);
-		m_pParent->setImage(m_vFrames[m_nFrameIndex]);
+		m_pTargetSprite->setImage(m_vFrames[m_nFrameIndex]);
 		m_nFrameIndex++;
 		// 判断动作是否结束
 		if (m_nFrameIndex == m_vFrames.size())

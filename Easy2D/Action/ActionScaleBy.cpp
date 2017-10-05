@@ -14,8 +14,8 @@ ActionScaleBy::~ActionScaleBy()
 void ActionScaleBy::_init()
 {
 	Animation::_init();
-	m_nBeginScaleX = m_pParent->getScaleX();
-	m_nBeginScaleY = m_pParent->getScaleY();
+	m_nBeginScaleX = m_pTargetSprite->getScaleX();
+	m_nBeginScaleY = m_pTargetSprite->getScaleY();
 }
 
 bool ActionScaleBy::_exec(LARGE_INTEGER nNow)
@@ -28,7 +28,7 @@ bool ActionScaleBy::_exec(LARGE_INTEGER nNow)
 		// 计算移动位置
 		float scale = float(m_nDuration) / m_nTotalDuration;
 		// 移动 Sprite
-		m_pParent->setScale(m_nBeginScaleX + m_nVariationX * scale, m_nBeginScaleX + m_nVariationX * scale);
+		m_pTargetSprite->setScale(m_nBeginScaleX + m_nVariationX * scale, m_nBeginScaleX + m_nVariationX * scale);
 		// 判断动作是否结束
 		if (_isEnd())
 		{

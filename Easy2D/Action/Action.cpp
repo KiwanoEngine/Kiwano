@@ -4,7 +4,8 @@
 Action::Action() :
 	m_bRunning(true),
 	m_bStop(false),
-	m_pParent(nullptr)
+	m_pTargetSprite(nullptr),
+	m_pParentScene(nullptr)
 {
 	// 默认动作 15ms 运行一次
 	setInterval(15);

@@ -182,8 +182,8 @@ public:
 protected:
 	TString				m_sTitle;
 	TString				m_sAppName;
-	Scene*				m_CurrentScene;
-	Scene*				m_NextScene;
+	Scene*				m_pCurrentScene;
+	Scene*				m_pNextScene;
 	std::stack<Scene*>	m_SceneStack;
 	LARGE_INTEGER		m_nAnimationInterval;
 	CSize				m_Size;
@@ -271,6 +271,10 @@ public:
 	static bool delListener(TString name);
 	// 删除所有键盘监听
 	static void clearAllListeners();
+	// 将未绑定的监听器绑定在场景上
+	static void bindListenersWithScene(Scene* scene);
+	// 停止绑定在场景上的所有监听器
+	static void clearAllSceneListeners(Scene* scene);
 	// 左键是否按下
 	static bool isLButtonDown();
 	// 右键是否按下
@@ -316,6 +320,7 @@ private:
 protected:
 	TString			m_sName;
 	MOUSE_CALLBACK	m_callback;
+	Scene *			m_pParentScene;
 
 protected:
 	// 执行回调函数
@@ -325,7 +330,6 @@ protected:
 class KeyMsg
 {
 	friend App;
-
 public:
 	KeyMsg(TString name, const KEY_CALLBACK& callback);
 	~KeyMsg();
@@ -339,6 +343,10 @@ public:
 	static bool delListener(TString name);
 	// 删除所有键盘监听
 	static void clearAllListeners();
+	// 将未绑定的监听器绑定在场景上
+	static void bindListenersWithScene(Scene* scene);
+	// 停止绑定在场景上的所有定时器
+	static void clearAllSceneListeners(Scene* scene);
 	// 判断键是否被按下，按下返回true
 	static bool isKeyDown(VK_KEY key);
 
@@ -360,6 +368,7 @@ private:
 protected:
 	TString			m_sName;
 	KEY_CALLBACK	m_callback;
+	Scene *			m_pParentScene;
 };
 
 class FontStyle :
@@ -1050,7 +1059,8 @@ public:
 protected:
 	bool			m_bRunning;
 	bool			m_bStop;
-	Sprite *		m_pParent;
+	Sprite *		m_pTargetSprite;
+	Scene *			m_pParentScene;
 	UINT			m_nMilliSeconds;
 	LARGE_INTEGER	m_nLast;
 	LARGE_INTEGER	m_nAnimationInterval;
@@ -1399,7 +1409,6 @@ public:
 class Timer
 {
 	friend App;
-
 public:
 	Timer(TString name, UINT ms, const TIMER_CALLBACK & callback);
 	~Timer();
@@ -1436,6 +1445,11 @@ public:
 	// 删除所有定时器
 	static void clearAllTimers();
 
+	// 将未绑定的定时器绑定在场景上
+	static void bindTimersWithScene(Scene* scene);
+	// 停止绑定在场景上的所有定时器
+	static void stopAllSceneTimers(Scene* scene);
+
 protected:
 	bool			m_bRunning;
 	TString			m_sName;
@@ -1443,6 +1457,7 @@ protected:
 	LARGE_INTEGER	m_nLast;
 	LARGE_INTEGER	m_nAnimationInterval;
 	UINT			m_nMilliSeconds;
+	Scene *			m_pParentScene;
 
 private:
 	static void __exec();
@@ -1481,6 +1496,11 @@ public:
 	static void stopAllActions();
 	// 删除当前存在的所有动作
 	static void clearAllActions();
+
+	// 将未绑定的动作绑定在场景上
+	static void bindActionsWithScene(Scene* scene);
+	// 停止绑定在场景上的动作
+	static void stopAllSceneActions(Scene* scene);
 
 private:
 	static void __exec();

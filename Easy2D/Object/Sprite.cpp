@@ -68,7 +68,7 @@ void Sprite::addAction(Action * action)
 	if (action)
 	{
 		// 将动作与 Sprite 绑定
-		action->m_pParent = this;
+		action->m_pTargetSprite = this;
 		// 将动作加入动作管理器，管理器会处理这个动作
 		ActionManager::addAction(action);
 	}

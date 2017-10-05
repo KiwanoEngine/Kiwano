@@ -14,8 +14,8 @@ static int originX = 0;
 static int originY = 0;
 
 App::App() : 
-	m_CurrentScene(nullptr), 
-	m_NextScene(nullptr), 
+	m_pCurrentScene(nullptr), 
+	m_pNextScene(nullptr), 
 	m_bRunning(false), 
 	m_nWindowMode(0)
 {
@@ -152,23 +152,23 @@ void App::_initGraph()
 void App::_mainLoop()
 {
 	// 下一场景指针不为空时，切换场景
-	if (m_NextScene)
+	if (m_pNextScene)
 	{
 		// 执行当前场景的 onExit 函数
-		if (m_CurrentScene)
+		if (m_pCurrentScene)
 		{
-			m_CurrentScene->onExit();
+			m_pCurrentScene->onExit();
 		}
 		// 进入下一场景
 		_enterNextScene();
 		// 执行当前场景的 onEnter 函数
-		m_CurrentScene->onEnter();
+		m_pCurrentScene->onEnter();
 	}
 	// 断言当前场景非空
-	assert(m_CurrentScene);
+	assert(m_pCurrentScene);
 	
 	cleardevice();				// 清空画面
-	m_CurrentScene->_onDraw();	// 绘制当前场景
+	m_pCurrentScene->_onDraw();	// 绘制当前场景
 	FlushBatchDraw();			// 刷新画面
 
 	// 其他执行程序
@@ -267,7 +267,7 @@ void App::close()
 void App::enterScene(Scene * scene, bool save)
 {
 	// 保存下一场景的指针
-	s_pInstance->m_NextScene = scene;
+	s_pInstance->m_pNextScene = scene;
 	// 切换场景时，是否保存当前场景
 	s_pInstance->m_bSaveScene = save;
 }
@@ -275,7 +275,7 @@ void App::enterScene(Scene * scene, bool save)
 void App::backScene()
 {
 	// 从栈顶取出场景指针，作为下一场景
-	s_pInstance->m_NextScene = s_pInstance->m_SceneStack.top();
+	s_pInstance->m_pNextScene = s_pInstance->m_SceneStack.top();
 	// 不保存当前场景
 	s_pInstance->m_bSaveScene = false;
 }
@@ -309,22 +309,22 @@ void App::setBkColor(COLORREF color)
 void App::_enterNextScene()
 {
 	// 若下一场景处于栈顶，说明正在返回上一场景
-	if (m_SceneStack.size() && m_NextScene == m_SceneStack.top())
+	if (m_SceneStack.size() && m_pNextScene == m_SceneStack.top())
 	{
 		m_SceneStack.pop();					// 删除栈顶场景
 	}
 	
 	if (m_bSaveScene)
 	{
-		m_SceneStack.push(m_CurrentScene);	// 若要保存当前场景，把它的指针放到栈顶
+		m_SceneStack.push(m_pCurrentScene);	// 若要保存当前场景，把它的指针放到栈顶
 	}
 	else
 	{
-		SafeDelete(m_CurrentScene);			// 删除当前场景
+		SafeDelete(m_pCurrentScene);			// 删除当前场景
 	}
 	
-	m_CurrentScene = m_NextScene;			// 切换场景
-	m_NextScene = nullptr;					// 下一场景置空
+	m_pCurrentScene = m_pNextScene;			// 切换场景
+	m_pNextScene = nullptr;					// 下一场景置空
 }
 
 void App::quit()
@@ -348,7 +348,14 @@ void App::reset()
 Scene * App::getCurrentScene()
 {
 	// 获取当前场景的指针
-	return s_pInstance->m_CurrentScene;
+	if (s_pInstance->m_pCurrentScene)
+	{
+		return s_pInstance->m_pCurrentScene;
+	}
+	else
+	{
+		return s_pInstance->m_pNextScene;
+	}
 }
 
 void App::setFPS(DWORD fps)
@@ -372,8 +379,8 @@ int App::getHeight()
 void App::free()
 {
 	// 释放场景内存
-	SafeDelete(m_CurrentScene);
-	SafeDelete(m_NextScene);
+	SafeDelete(m_pCurrentScene);
+	SafeDelete(m_pNextScene);
 	// 清空场景栈
 	while (m_SceneStack.size())
 	{

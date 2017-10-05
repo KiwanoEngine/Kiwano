@@ -31,8 +31,31 @@ void ActionManager::addAction(Action * action)
 			assert(a != action);
 		}
 #endif
-		s_vActions.push_back(action);
+		action->m_pParentScene = App::getCurrentScene();
 		action->_init();
+		s_vActions.push_back(action);
+	}
+}
+
+void ActionManager::bindActionsWithScene(Scene * scene)
+{
+	for (auto action : s_vActions)
+	{
+		if (!action->m_pParentScene)
+		{
+			action->m_pParentScene = App::getCurrentScene();
+		}
+	}
+}
+
+void ActionManager::stopAllSceneActions(Scene * scene)
+{
+	for (auto action : s_vActions)
+	{
+		if (action->m_pParentScene == scene)
+		{
+			action->stop();
+		}
 	}
 }
 
@@ -83,7 +106,7 @@ void ActionManager::resumeSpriteAllActions(Sprite * sprite)
 {
 	for (auto action : s_vActions)
 	{
-		if (action->m_pParent == sprite)
+		if (action->m_pTargetSprite == sprite)
 		{
 			action->resume();
 		}
@@ -94,7 +117,7 @@ void ActionManager::pauseSpriteAllActions(Sprite * sprite)
 {
 	for (auto action : s_vActions)
 	{
-		if (action->m_pParent == sprite)
+		if (action->m_pTargetSprite == sprite)
 		{
 			action->pause();
 		}
@@ -105,7 +128,7 @@ void ActionManager::stopSpriteAllActions(Sprite * sprite)
 {
 	for (auto action : s_vActions)
 	{
-		if (action->m_pParent == sprite)
+		if (action->m_pTargetSprite == sprite)
 		{
 			action->stop();
 		}

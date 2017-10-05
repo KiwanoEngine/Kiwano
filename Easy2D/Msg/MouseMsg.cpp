@@ -24,14 +24,17 @@ void MouseMsg::__exec()
 	}
 }
 
-MouseMsg::MouseMsg()
+MouseMsg::MouseMsg() :
+	m_callback([]() {}),
+	m_pParentScene(nullptr)
 {
 }
 
-MouseMsg::MouseMsg(TString name, const MOUSE_CALLBACK & callback)
+MouseMsg::MouseMsg(TString name, const MOUSE_CALLBACK & callback) :
+	m_sName(name),
+	m_callback(callback),
+	m_pParentScene(nullptr)
 {
-	m_sName = name;
-	m_callback = callback;
 }
 
 MouseMsg::~MouseMsg()
@@ -47,6 +50,7 @@ void MouseMsg::addListener(TString name, const MOUSE_CALLBACK & callback)
 {
 	// 创建新的监听对象
 	auto mouse = new MouseMsg(name, callback);
+	mouse->m_pParentScene = App::getCurrentScene();
 	// 添加新的按键回调函数
 	s_vMouseMsg.push_back(mouse);
 }
@@ -69,6 +73,34 @@ bool MouseMsg::delListener(TString name)
 	}
 	// 若未找到同样名称的监听器，返回 false
 	return false;
+}
+
+void MouseMsg::bindListenersWithScene(Scene * scene)
+{
+	for (auto m : s_vMouseMsg)
+	{
+		if (!m->m_pParentScene)
+		{
+			m->m_pParentScene = App::getCurrentScene();
+		}
+	}
+}
+
+void MouseMsg::clearAllSceneListeners(Scene * scene)
+{
+	// 创建迭代器
+	std::vector<MouseMsg*>::iterator iter;
+	// 循环遍历所有监听器
+	for (iter = s_vMouseMsg.begin(); iter != s_vMouseMsg.end(); iter++)
+	{
+		// 查找相同名称的监听器
+		if ((*iter)->m_pParentScene == scene)
+		{
+			// 删除该定时器
+			delete (*iter);
+			s_vMouseMsg.erase(iter);
+		}
+	}
 }
 
 void MouseMsg::clearAllListeners()
