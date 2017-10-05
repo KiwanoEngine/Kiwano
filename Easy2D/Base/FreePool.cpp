@@ -9,14 +9,14 @@
 /// 让其自动释放
 
 // 释放池容器
-static std::vector<Object*> pool;
+static std::vector<Object*> s_vPool;
 
 void FreePool::__flush()
 {
 	// 创建迭代器
 	std::vector<Object*>::iterator iter;
 	// 循环遍历容器中的所有对象
-	for (iter = pool.begin(); iter != pool.end();)
+	for (iter = s_vPool.begin(); iter != s_vPool.end();)
 	{
 		// 若对象的引用的计数为 0
 		if ((*iter)->m_nRefCount == 0)
@@ -24,7 +24,7 @@ void FreePool::__flush()
 			// 释放该对象
 			delete (*iter);
 			// 从释放池中删除该对象
-			iter = pool.erase(iter);
+			iter = s_vPool.erase(iter);
 		}
 		else
 		{
@@ -35,12 +35,14 @@ void FreePool::__flush()
 
 void FreePool::__add(Object * nptr)
 {
-#ifdef _DEBUG
-	for (auto o : pool)
-	{
-		assert(o != nptr);	// 不得有重复的指针存在
-	}
-#endif
+	s_vPool.push_back(nptr);	// 将一个对象放入释放池中
+}
 
-	pool.push_back(nptr);		// 将一个对象放入释放池中
+void FreePool::__clearAllObjects()
+{
+	for (auto o : s_vPool)
+	{
+		delete o;
+	}
+	s_vPool.clear();
 }

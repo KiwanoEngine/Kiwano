@@ -144,3 +144,13 @@ void ActionManager::stopAllActions()
 		action->stop();
 	}
 }
+
+void ActionManager::clearAllActions()
+{
+	for (auto action : s_vActions)
+	{
+		action->autoRelease();
+		action->release();
+	}
+	s_vActions.clear();
+}

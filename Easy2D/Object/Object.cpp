@@ -1,7 +1,8 @@
 #include "..\easy2d.h"
 
 Object::Object() :
-	m_nRefCount(0)
+	m_nRefCount(0),
+	m_bAutoRelease(false)
 {
 }
 
@@ -21,5 +22,9 @@ void Object::release()
 
 void Object::autoRelease()
 {
-	FreePool::__add(this);	// 将该对象放入释放池中
+	if (!m_bAutoRelease)
+	{
+		m_bAutoRelease = true;
+		FreePool::__add(this);	// 将该对象放入释放池中
+	}
 }

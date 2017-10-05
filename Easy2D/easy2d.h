@@ -206,6 +206,8 @@ private:
 	static void __flush();
 	// 将一个节点放入释放池
 	static void __add(Object * nptr);
+	// 删除所有节点
+	static void __clearAllObjects();
 };
 
 class Scene
@@ -251,6 +253,7 @@ public:
 
 protected:
 	int m_nRefCount;
+	bool m_bAutoRelease;
 };
 
 class MouseMsg
@@ -1472,6 +1475,8 @@ public:
 	static void pauseAllActions();
 	// 停止当前存在的所有动作
 	static void stopAllActions();
+	// 删除当前存在的所有动作
+	static void clearAllActions();
 
 private:
 	static void __exec();

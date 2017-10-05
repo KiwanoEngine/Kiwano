@@ -383,6 +383,11 @@ void App::free()
 	}
 	// 删除所有定时器
 	Timer::clearAllTimers();
+	MouseMsg::clearAllListeners();
+	KeyMsg::clearAllListeners();
+	ActionManager::clearAllActions();
+	// 删除所有对象
+	FreePool::__clearAllObjects();
 }
 
 void App::destory()
