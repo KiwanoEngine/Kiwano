@@ -131,8 +131,6 @@ public:
 	int run();
 	// 释放所有内存资源
 	void free();
-	// 销毁该对象
-	void destory();
 
 	// 获取程序实例
 	static App * get();
@@ -178,6 +176,8 @@ public:
 	static void reset();
 	// 获取当前场景
 	static Scene * getCurrentScene();
+	// 销毁该对象
+	static void destory();
 
 protected:
 	TString				m_sTitle;

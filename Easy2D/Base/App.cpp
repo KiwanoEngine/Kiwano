@@ -393,7 +393,8 @@ void App::free()
 void App::destory()
 {
 	// 释放所有内存
-	free();
+	s_pInstance->free();
 	// 实例指针置空
+	delete s_pInstance;
 	s_pInstance = nullptr;
 }
