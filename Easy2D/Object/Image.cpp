@@ -167,6 +167,47 @@ void Image::reset()
 	m_nAlpha = 255;
 }
 
+bool Image::preload(LPCTSTR fileName, bool fromRes)
+{
+	// 判断图片是否已经加载
+	if (s_mCImages.find(fileName) != s_mCImages.end())
+	{
+		return true;
+	}
+	// 加载图片
+	CImage* cImage = nullptr;
+	if (fromRes)
+	{
+		cImage = new CImage();
+		// 从资源加载图片（不支持 PNG）
+		cImage->LoadFromResource(GetModuleHandle(NULL), fileName);
+	}
+	else
+	{
+		//判断图片路径是否存在
+		if (!PathFileExists(fileName))
+		{
+			return false;
+		}
+		cImage = new CImage();
+		cImage->Load(fileName);
+	}
+	// 加载失败
+	if (!cImage || cImage->IsNull())
+	{
+		return false;
+	}
+	// 确认该图像包含 Alpha 通道
+	if (cImage->GetBPP() == 32)
+	{
+		// 透明图片处理
+		CrossImage(*cImage);
+	}
+	s_mCImages.insert(map<TString, CImage*>::value_type(fileName, cImage));
+
+	return true;
+}
+
 void Image::saveScreenshot()
 {
 	TString savePath;
@@ -175,7 +216,7 @@ void Image::saveScreenshot()
 	{
 		// 保存窗口截图
 		IMAGE image;
-		getimage(&image, 0, 0, App::get()->getWidth(), App::get()->getHeight());
+		getimage(&image, 0, 0, App::getWidth(), App::getHeight());
 		saveimage(savePath.c_str(), &image);
 	}
 }
@@ -199,38 +240,12 @@ void CrossImage(CImage &img)
 
 CImage* GetCImage(TString name, bool fromRes)
 {
-	if (s_mCImages.find(name) == s_mCImages.end())
+	if (Image::preload(name.c_str()))
 	{
-		CImage* cImage = nullptr;
-		// 加载图片
-		if (fromRes)
-		{
-			cImage = new CImage();
-			// 从资源加载图片（不支持 PNG）
-			cImage->LoadFromResource(GetModuleHandle(NULL), name.c_str());
-		}
-		else
-		{
-			//判断图片路径是否存在
-			if (!PathFileExists(name.c_str()))
-			{
-				return nullptr;
-			}
-			cImage = new CImage();
-			cImage->Load(name.c_str());
-		}
-		// 加载失败
-		if (!cImage || cImage->IsNull())
-		{
-			return nullptr;
-		}
-		// 确认该图像包含 Alpha 通道
-		if (cImage->GetBPP() == 32)
-		{
-			// 透明图片处理
-			CrossImage(*cImage);
-		}
-		s_mCImages.insert(map<TString, CImage*>::value_type(name, cImage));
+		return s_mCImages.at(name);
 	}
-	return s_mCImages.at(name);
+	else
+	{
+		return nullptr;
+	}
 }

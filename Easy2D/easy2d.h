@@ -688,6 +688,9 @@ public:
 	void setTransparentColor(COLORREF value);
 	// ÷ÿ÷√Õº∆¨ Ù–‘
 	void reset();
+
+	// ‘§º”‘ÿÕº∆¨
+	static bool preload(LPCTSTR fileName, bool fromRes = false);
 	// ±£¥Ê”Œœ∑ΩÿÕº
 	static void saveScreenshot();
 
