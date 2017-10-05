@@ -2,10 +2,11 @@
 
 ActionTwo::ActionTwo(Action * actionFirst, Action * actionSecond) :
 	m_FirstAction(actionFirst),
-	m_SecondAction(actionSecond)
+	m_SecondAction(actionSecond),
+	m_bFirstFinished(false)
 {
-	if (m_FirstAction) m_FirstAction->retain();
-	if (m_SecondAction) m_SecondAction->retain();
+	m_FirstAction->retain();
+	m_SecondAction->retain();
 }
 
 ActionTwo::~ActionTwo()
@@ -34,9 +35,9 @@ ActionTwo * ActionTwo::reverse(bool actionReverse) const
 void ActionTwo::_init()
 {
 	m_FirstAction->m_pParent = m_pParent;
-	m_FirstAction->_init();
-	
 	m_SecondAction->m_pParent = m_pParent;
+
+	m_FirstAction->_init();
 }
 
 bool ActionTwo::_exec(LARGE_INTEGER nNow)
@@ -44,27 +45,16 @@ bool ActionTwo::_exec(LARGE_INTEGER nNow)
 	if (m_bStop) return true;
 	if (!m_bRunning) return false;
 
-	if (m_FirstAction)
+	if (!m_bFirstFinished)
 	{
 		if (m_FirstAction->_exec(nNow))
 		{
-			// 返回 true 表示第一个动作已经结束，删除这个
-			// 动作，并初始化第二个动作
-			SafeRelease(m_FirstAction);
-			m_FirstAction = nullptr;
+			// 返回 true 表示第一个动作已经结束
 			m_SecondAction->_init();
+			m_bFirstFinished = true;
 		}
 	}
-	else if (m_SecondAction)
-	{
-		if (m_SecondAction->_exec(nNow))
-		{
-			SafeRelease(m_SecondAction);
-			m_SecondAction = nullptr;
-			return true;
-		}
-	}
-	else
+	else if (m_SecondAction->_exec(nNow))
 	{
 		return true;
 	}
@@ -73,6 +63,9 @@ bool ActionTwo::_exec(LARGE_INTEGER nNow)
 
 void ActionTwo::_reset()
 {
-	if (m_FirstAction) m_FirstAction->_reset();
-	if (m_SecondAction) m_SecondAction->_reset();
+	m_FirstAction->_reset();
+	m_SecondAction->_reset();
+
+	m_FirstAction->_init();
+	m_bFirstFinished = false;
 }

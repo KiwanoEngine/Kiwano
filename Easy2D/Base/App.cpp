@@ -141,7 +141,7 @@ void App::_initGraph()
 		TCHAR title[31];
 		GetWindowText(GetHWnd(), title, 30);
 		m_sTitle = title;
-		m_sAppName = title;
+		if (m_sAppName.empty()) m_sAppName = title;
 	}
 	else
 	{
@@ -320,7 +320,7 @@ void App::_enterNextScene()
 	}
 	else
 	{
-		SafeDelete(m_CurrentScene);		// 否则删除当前场景
+		SafeDelete(m_CurrentScene);			// 删除当前场景
 	}
 	
 	m_CurrentScene = m_NextScene;			// 切换场景

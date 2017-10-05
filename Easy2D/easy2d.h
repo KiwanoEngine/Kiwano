@@ -1218,8 +1218,9 @@ public:
 	virtual ActionTwo * reverse(bool actionReverse = true) const;
 
 protected:
-	Action * m_FirstAction;
-	Action * m_SecondAction;
+	Action *	m_FirstAction;
+	Action *	m_SecondAction;
+	bool		m_bFirstFinished;
 
 protected:
 	virtual void _init() override;

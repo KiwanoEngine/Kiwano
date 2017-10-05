@@ -64,6 +64,7 @@ void ActionSequence::_reset()
 	{
 		action->_reset();
 	}
+	m_vActions[0]->_init();
 	m_nActionIndex = 0;
 }
 
