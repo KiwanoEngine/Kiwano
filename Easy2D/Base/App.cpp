@@ -26,30 +26,12 @@ App::App() :
 
 App::~App()
 {
-	destory();				// 销毁 App
 }
 
 App * App::get()
 {
 	assert(s_pInstance);	// 断言实例存在
 	return s_pInstance;		// 获取 App 的唯一实例
-}
-
-void App::setOrigin(int originX, int originY)
-{
-	::originX = originX;
-	::originY = originY;
-	setorigin(originX, originY);
-}
-
-int App::getOriginX()
-{
-	return ::originX;
-}
-
-int App::getOriginY()
-{
-	return ::originY;
 }
 
 int App::run()
@@ -95,8 +77,7 @@ int App::run()
 			// 计算挂起时长
 			waitMS = LONG((m_nAnimationInterval.QuadPart - interval) * 1000LL / freq.QuadPart) - 1L;
 			// 挂起线程，释放 CPU 占用
-			if (waitMS > 1L)
-				Sleep(waitMS);
+			if (waitMS > 1L) Sleep(waitMS);
 		}
 	}
 	// 停止批量绘图
@@ -104,7 +85,7 @@ int App::run()
 	// 关闭窗口
 	close();
 	// 释放所有内存占用
-	destory();
+	free();
 	// 重置时间精度
 	timeEndPeriod(1);
 
@@ -314,7 +295,7 @@ void App::_enterNextScene()
 		m_SceneStack.pop();					// 删除栈顶场景
 	}
 	
-	if (m_bSaveScene)
+	if (m_bSaveScene && m_pCurrentScene)
 	{
 		m_SceneStack.push(m_pCurrentScene);	// 若要保存当前场景，把它的指针放到栈顶
 	}
@@ -376,6 +357,23 @@ int App::getHeight()
 	return s_pInstance->m_Size.cy;
 }
 
+void App::setOrigin(int originX, int originY)
+{
+	::originX = originX;
+	::originY = originY;
+	setorigin(originX, originY);
+}
+
+int App::getOriginX()
+{
+	return ::originX;
+}
+
+int App::getOriginY()
+{
+	return ::originY;
+}
+
 void App::free()
 {
 	// 释放场景内存
@@ -395,13 +393,4 @@ void App::free()
 	ActionManager::clearAllActions();
 	// 删除所有对象
 	FreePool::__clearAllObjects();
-}
-
-void App::destory()
-{
-	// 释放所有内存
-	s_pInstance->free();
-	// 实例指针置空
-	delete s_pInstance;
-	s_pInstance = nullptr;
 }

@@ -176,8 +176,6 @@ public:
 	static void reset();
 	// 获取当前场景
 	static Scene * getCurrentScene();
-	// 销毁该对象
-	static void destory();
 
 protected:
 	TString				m_sTitle;
