@@ -149,62 +149,7 @@ int MouseMsg::getWheel()
 	return s_mouseMsg.wheel;
 }
 
-bool MouseMsg::isOnMouseMoved()
+MouseMsg::MESSAGE MouseMsg::getMsg()
 {
-	return s_mouseMsg.uMsg == WM_MOUSEMOVE;
-}
-
-bool MouseMsg::isOnLButtonDBClicked()
-{
-	return s_mouseMsg.uMsg == WM_LBUTTONDBLCLK;
-}
-
-bool MouseMsg::isOnLButtonDown()
-{
-	return s_mouseMsg.uMsg == WM_LBUTTONDOWN;
-}
-
-bool MouseMsg::isOnLButtonUp()
-{
-	return s_mouseMsg.uMsg == WM_LBUTTONUP;
-}
-
-bool MouseMsg::isOnRButtonDBClicked()
-{
-	return s_mouseMsg.uMsg == WM_RBUTTONDBLCLK;
-}
-
-bool MouseMsg::isOnRButtonDown()
-{
-	return s_mouseMsg.uMsg == WM_RBUTTONDOWN;
-}
-
-bool MouseMsg::isOnRButtonUp()
-{
-	return s_mouseMsg.uMsg == WM_LBUTTONUP;
-}
-
-bool MouseMsg::isOnMButtonDBClicked()
-{
-	return s_mouseMsg.uMsg == WM_MBUTTONDBLCLK;
-}
-
-bool MouseMsg::isOnMButtonDown()
-{
-	return s_mouseMsg.uMsg == WM_MBUTTONDOWN;
-}
-
-bool MouseMsg::isOnMButtonUp()
-{
-	return s_mouseMsg.uMsg == WM_MBUTTONUP;
-}
-
-bool MouseMsg::isOnWheel()
-{
-	return s_mouseMsg.uMsg == WM_MOUSEWHEEL;
-}
-
-void MouseMsg::resetMouseMsg()
-{
-	s_mouseMsg.uMsg = 0;
+	return MESSAGE(s_mouseMsg.uMsg);
 }

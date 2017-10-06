@@ -257,11 +257,25 @@ protected:
 class MouseMsg
 {
 	friend App;
-
 public:
 	MouseMsg();
 	MouseMsg(TString name, const MOUSE_CALLBACK& callback);
 	~MouseMsg();
+
+	enum MESSAGE 
+	{
+		MOVE = 0x0200,	// 鼠标移动
+		LBUTTON_DOWN,	// 鼠标左键按下
+		LBUTTON_UP,		// 鼠标左键抬起
+		LBUTTON_DBLCLK,	// 鼠标左键双击
+		RBUTTON_DOWN,	// 鼠标右键按下
+		RBUTTON_UP,		// 鼠标右键抬起
+		RBUTTON_DBLCLK,	// 鼠标右键双击
+		MBUTTON_DOWN,	// 鼠标中键按下
+		MBUTTON_UP,		// 鼠标中键抬起
+		MBUTTON_DBLCLK,	// 鼠标中键双击
+		WHEEL			// 滑动滚轮
+	};
 
 	// 添加键盘监听
 	static void addListener(TString name, const MOUSE_CALLBACK& callback);
@@ -287,30 +301,8 @@ public:
 	static CPoint getPos();
 	// 获取鼠标滚轮值
 	static int getWheel();
-	// 鼠标移动消息
-	static bool isOnMouseMoved();
-	// 左键双击消息
-	static bool isOnLButtonDBClicked();
-	// 右键按下消息
-	static bool isOnLButtonDown();
-	// 左键弹起消息
-	static bool isOnLButtonUp();
-	// 右键双击消息
-	static bool isOnRButtonDBClicked();
-	// 右键按下消息
-	static bool isOnRButtonDown();
-	// 右键弹起消息
-	static bool isOnRButtonUp();
-	// 中键双击消息
-	static bool isOnMButtonDBClicked();
-	// 中键按下消息
-	static bool isOnMButtonDown();
-	// 中键弹起消息
-	static bool isOnMButtonUp();
-	// 鼠标滚轮拨动消息
-	static bool isOnWheel();
-	// 清空鼠标消息
-	static void resetMouseMsg();
+	// 获取当前鼠标消息
+	static MESSAGE getMsg();
 
 private:
 	static void __exec();
@@ -373,7 +365,6 @@ class FontStyle :
 	public Object
 {
 	friend Text;
-
 public:
 	FontStyle();
 	/**
@@ -471,7 +462,6 @@ class Node :
 {
 	friend Scene;
 	friend BatchNode;
-
 public:
 	Node();
 	Node(CPoint p);
@@ -604,7 +594,6 @@ class Text :
 	public RectNode
 {
 	friend TextButton;
-
 public:
 	Text();
 	// 根据字符串、颜色和字体创建文字
