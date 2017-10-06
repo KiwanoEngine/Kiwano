@@ -216,6 +216,8 @@ public:
 	Scene();
 	~Scene();
 
+	// 重写这个函数，初始化这个场景
+	virtual void init() = 0;
 	// 重写这个函数，它将在进入这个场景时自动执行
 	virtual void onEnter();
 	// 重写这个函数，它将在离开这个场景时自动执行
@@ -277,16 +279,11 @@ public:
 		WHEEL			// 滑动滚轮
 	};
 
-	// 添加键盘监听
-	static void addListener(TString name, const MOUSE_CALLBACK& callback);
-	// 删除键盘监听
-	static bool delListener(TString name);
-	// 删除所有键盘监听
-	static void clearAllListeners();
-	// 将未绑定的监听器绑定在场景上
-	static void bindListenersWithScene(Scene* scene);
-	// 停止绑定在场景上的所有监听器
-	static void clearAllSceneListeners(Scene* scene);
+	// 启动监听
+	void start();
+	// 停止监听
+	void stop();
+
 	// 左键是否按下
 	static bool isLButtonDown();
 	// 右键是否按下
@@ -304,10 +301,28 @@ public:
 	// 获取当前鼠标消息
 	static MESSAGE getMsg();
 
+	// 添加鼠标消息监听
+	static void addListener(TString name, const MOUSE_CALLBACK& callback);
+	// 启动鼠标消息监听
+	static void startListener(TString name);
+	// 停止鼠标消息监听
+	static void stopListener(TString name);
+	// 删除鼠标消息监听
+	static void delListener(TString name);
+	// 删除所有鼠标消息监听
+	static void clearAllListeners();
+	// 启动绑定在场景上的所有监听器
+	static void startAllSceneListeners(Scene* scene);
+	// 停止绑定在场景上的所有监听器
+	static void stopAllSceneListeners(Scene* scene);
+	// 清除绑定在场景上的所有监听器
+	static void clearAllSceneListeners(Scene* scene);
+
 private:
 	static void __exec();
 
 protected:
+	bool			m_bRunning;
 	TString			m_sName;
 	MOUSE_CALLBACK	m_callback;
 	Scene *			m_pParentScene;
@@ -326,19 +341,29 @@ public:
 
 	// 执行回调函数
 	void onKbHit(VK_KEY key);
+	// 启动监听
+	void start();
+	// 停止监听
+	void stop();
 
-	// 添加键盘监听
-	static void addListener(TString name, const KEY_CALLBACK& callback);
-	// 删除键盘监听
-	static bool delListener(TString name);
-	// 删除所有键盘监听
-	static void clearAllListeners();
-	// 将未绑定的监听器绑定在场景上
-	static void bindListenersWithScene(Scene* scene);
-	// 停止绑定在场景上的所有定时器
-	static void clearAllSceneListeners(Scene* scene);
 	// 判断键是否被按下，按下返回true
 	static bool isKeyDown(VK_KEY key);
+	// 添加按键监听
+	static void addListener(TString name, const KEY_CALLBACK& callback);
+	// 启动按键监听
+	static void startListener(TString name);
+	// 停止按键监听
+	static void stopListener(TString name);
+	// 删除按键监听
+	static void KeyMsg::delListener(TString name);
+	// 启动绑定在场景上的所有监听器
+	static void startAllSceneListeners(Scene* scene);
+	// 停止绑定在场景上的所有监听器
+	static void stopAllSceneListeners(Scene* scene);
+	// 停止绑定在场景上的所有定时器
+	static void clearAllSceneListeners(Scene* scene);
+	// 删除所有按键监听
+	static void clearAllListeners();
 
 public:
 	// 字母键值
@@ -356,6 +381,7 @@ private:
 	static void __exec();
 
 protected:
+	bool			m_bRunning;
 	TString			m_sName;
 	KEY_CALLBACK	m_callback;
 	Scene *			m_pParentScene;
@@ -1421,21 +1447,21 @@ public:
 	static void addTimer(Timer * timer);
 	// 添加定时器
 	static void addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback);
-	// 根据名称获取定时器
-	static Timer * getTimer(TString name);
 	// 启动特定定时器
-	static bool startTimer(TString name);
+	static void startTimer(TString name);
 	// 停止特定定时器
-	static bool stopTimer(TString name);
+	static void stopTimer(TString name);
 	// 删除特定定时器
-	static bool delTimer(TString name);
+	static void delTimer(TString name);
 	// 删除所有定时器
 	static void clearAllTimers();
 
-	// 将未绑定的定时器绑定在场景上
-	static void bindTimersWithScene(Scene* scene);
+	// 继续绑定在场景上的所有定时器
+	static void startAllSceneTimers(Scene* scene);
 	// 停止绑定在场景上的所有定时器
 	static void stopAllSceneTimers(Scene* scene);
+	// 清除绑定在场景上的所有定时器
+	static void clearAllSceneTimers(Scene* scene);
 
 protected:
 	bool			m_bRunning;
@@ -1484,8 +1510,10 @@ public:
 	// 删除当前存在的所有动作
 	static void clearAllActions();
 
-	// 将未绑定的动作绑定在场景上
-	static void bindActionsWithScene(Scene* scene);
+	// 继续绑定在场景上的动作
+	static void startAllSceneActions(Scene* scene);
+	// 暂停绑定在场景上的动作
+	static void pauseAllSceneActions(Scene* scene);
 	// 停止绑定在场景上的动作
 	static void stopAllSceneActions(Scene* scene);
 

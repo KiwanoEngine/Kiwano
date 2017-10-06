@@ -37,20 +37,10 @@ void Scene::_onDraw()
 
 void Scene::onEnter()
 {
-	// 将定时器与当前场景绑定
-	Timer::bindTimersWithScene(this);
-	MouseMsg::bindListenersWithScene(this);
-	KeyMsg::bindListenersWithScene(this);
-	ActionManager::bindActionsWithScene(this);
 }
 
 void Scene::onExit()
 {
-	// 停止当前场景上运行的所有定时器
-	Timer::stopAllSceneTimers(this);
-	MouseMsg::clearAllSceneListeners(this);
-	KeyMsg::clearAllSceneListeners(this);
-	ActionManager::stopAllSceneActions(this);
 }
 
 void Scene::add(Node * child, int zOrder)

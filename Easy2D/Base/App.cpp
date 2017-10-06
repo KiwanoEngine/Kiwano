@@ -17,7 +17,8 @@ App::App() :
 	m_pCurrentScene(nullptr), 
 	m_pNextScene(nullptr), 
 	m_bRunning(false), 
-	m_nWindowMode(0)
+	m_nWindowMode(0),
+	m_bSaveScene(true)
 {
 	assert(!s_pInstance);	// 不能同时存在两个 App 实例
 	s_pInstance = this;		// 保存实例对象
@@ -135,15 +136,8 @@ void App::_mainLoop()
 	// 下一场景指针不为空时，切换场景
 	if (m_pNextScene)
 	{
-		// 执行当前场景的 onExit 函数
-		if (m_pCurrentScene)
-		{
-			m_pCurrentScene->onExit();
-		}
 		// 进入下一场景
 		_enterNextScene();
-		// 执行当前场景的 onEnter 函数
-		m_pCurrentScene->onEnter();
 	}
 	// 断言当前场景非空
 	assert(m_pCurrentScene);
@@ -289,23 +283,58 @@ void App::setBkColor(COLORREF color)
 
 void App::_enterNextScene()
 {
+	bool bBackScene = false;
+
 	// 若下一场景处于栈顶，说明正在返回上一场景
 	if (m_SceneStack.size() && m_pNextScene == m_SceneStack.top())
 	{
-		m_SceneStack.pop();					// 删除栈顶场景
+		bBackScene = true;
+		// 删除栈顶场景
+		m_SceneStack.pop();
 	}
-	
-	if (m_bSaveScene && m_pCurrentScene)
+
+	// 执行当前场景的 onExit 函数
+	if (m_pCurrentScene)
 	{
-		m_SceneStack.push(m_pCurrentScene);	// 若要保存当前场景，把它的指针放到栈顶
+		m_pCurrentScene->onExit();
+		if (m_bSaveScene)
+		{
+			// 若要保存当前场景，把它放入栈中
+			m_SceneStack.push(m_pCurrentScene);
+			// 暂停当前场景上运行的所有定时器
+			Timer::stopAllSceneTimers(m_pCurrentScene);
+			MouseMsg::stopAllSceneListeners(m_pCurrentScene);
+			KeyMsg::stopAllSceneListeners(m_pCurrentScene);
+			ActionManager::pauseAllSceneActions(m_pCurrentScene);
+		}
+		else
+		{
+			// 不保存场景时，停止当前场景上运行的所有定时器，并删除当前场景
+			Timer::clearAllSceneTimers(m_pCurrentScene);
+			MouseMsg::clearAllSceneListeners(m_pCurrentScene);
+			KeyMsg::clearAllSceneListeners(m_pCurrentScene);
+			ActionManager::stopAllSceneActions(m_pCurrentScene);
+			SafeDelete(m_pCurrentScene);
+		}
+	}
+
+	m_pCurrentScene = m_pNextScene;		// 切换场景
+	m_pNextScene = nullptr;				// 下一场景置空
+
+	if (bBackScene)
+	{
+		// 返回上一场景时，恢复场景上的定时器
+		Timer::startAllSceneTimers(m_pCurrentScene);
+		MouseMsg::startAllSceneListeners(m_pCurrentScene);
+		KeyMsg::startAllSceneListeners(m_pCurrentScene);
+		ActionManager::startAllSceneActions(m_pCurrentScene);
 	}
 	else
 	{
-		SafeDelete(m_pCurrentScene);			// 删除当前场景
+		m_pCurrentScene->init();		// 进入一个新场景时，执行它的 init 函数
 	}
-	
-	m_pCurrentScene = m_pNextScene;			// 切换场景
-	m_pNextScene = nullptr;					// 下一场景置空
+
+	m_pCurrentScene->onEnter();			// 执行下一场景的 onEnter 函数
 }
 
 void App::quit()

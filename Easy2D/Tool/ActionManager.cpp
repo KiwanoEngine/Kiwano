@@ -37,13 +37,24 @@ void ActionManager::addAction(Action * action)
 	}
 }
 
-void ActionManager::bindActionsWithScene(Scene * scene)
+void ActionManager::startAllSceneActions(Scene * scene)
 {
 	for (auto action : s_vActions)
 	{
-		if (!action->m_pParentScene)
+		if (action->m_pParentScene == scene)
 		{
-			action->m_pParentScene = App::getCurrentScene();
+			action->start();
+		}
+	}
+}
+
+void ActionManager::pauseAllSceneActions(Scene * scene)
+{
+	for (auto action : s_vActions)
+	{
+		if (action->m_pParentScene == scene)
+		{
+			action->pause();
 		}
 	}
 }

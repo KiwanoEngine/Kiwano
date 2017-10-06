@@ -97,6 +97,7 @@ void Timer::addTimer(Timer * timer)
 {
 	// 启动定时器
 	timer->start();
+	// 绑定在场景上
 	timer->m_pParentScene = App::getCurrentScene();
 	// 将该定时器放入容器
 	s_vTimers.push_back(timer);
@@ -110,67 +111,51 @@ void Timer::addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback)
 	addTimer(timer);
 }
 
-Timer * Timer::getTimer(TString name)
+void Timer::startTimer(TString name)
 {
-	// 查找是否有相同名称的定时器
+	// 查找名称相同的定时器
 	for (auto timer : s_vTimers)
 	{
-		if (timer->m_sName == name)
+		if (timer->m_sName == name && timer->m_pParentScene == App::getCurrentScene())
 		{
-			// 若找到，返回该定时器的指针
-			return timer;
+			// 启动定时器
+			timer->start();
 		}
 	}
-	// 若未找到，返回空指针
-	return nullptr;
 }
 
-bool Timer::startTimer(TString name)
+void Timer::stopTimer(TString name)
 {
-	// 启动指定名称的定时器，先找到该定时器
-	auto t = getTimer(name);
-	if (t)
+	// 查找名称相同的定时器
+	for (auto timer : s_vTimers)
 	{
-		// 启动定时器
-		t->start();
-		return true;
+		if (timer->m_sName == name && timer->m_pParentScene == App::getCurrentScene())
+		{
+			// 停止定时器
+			timer->stop();
+		}
 	}
-	// 若未找到同样名称的定时器，返回 false
-	return false;
 }
 
-bool Timer::stopTimer(TString name)
-{
-	// 停止指定名称的定时器，先找到该定时器
-	auto t = getTimer(name);
-	if (t)
-	{
-		// 停止定时器
-		t->stop();
-		return true;
-	}
-	// 若未找到同样名称的定时器，返回 false
-	return false;
-}
-
-bool Timer::delTimer(TString name)
+void Timer::delTimer(TString name)
 {
 	// 创建迭代器
 	std::vector<Timer*>::iterator iter;
 	// 循环遍历所有定时器
-	for (iter = s_vTimers.begin(); iter != s_vTimers.end(); iter++)
+	for (iter = s_vTimers.begin(); iter != s_vTimers.end();)
 	{
 		// 查找相同名称的定时器
-		if ((*iter)->m_sName == name)
+		if ((*iter)->m_sName == name && (*iter)->m_pParentScene == App::getCurrentScene())
 		{
 			// 删除该定时器
 			delete (*iter);
-			s_vTimers.erase(iter);
-			return true;
+			iter = s_vTimers.erase(iter);
+		}
+		else
+		{
+			iter++;
 		}
 	}
-	// 若未找到同样名称的定时器，返回 false
-	return false;
 }
 
 void Timer::clearAllTimers()
@@ -184,13 +169,13 @@ void Timer::clearAllTimers()
 	s_vTimers.clear();
 }
 
-void Timer::bindTimersWithScene(Scene * scene)
+void Timer::startAllSceneTimers(Scene * scene)
 {
 	for (auto t : s_vTimers)
 	{
-		if (!t->m_pParentScene)
+		if (t->m_pParentScene == scene)
 		{
-			t->m_pParentScene = App::getCurrentScene();
+			t->start();
 		}
 	}
 }
@@ -202,6 +187,27 @@ void Timer::stopAllSceneTimers(Scene * scene)
 		if (t->m_pParentScene == scene)
 		{
 			t->stop();
+		}
+	}
+}
+
+void Timer::clearAllSceneTimers(Scene * scene)
+{
+	// 创建迭代器
+	std::vector<Timer*>::iterator iter;
+	// 循环遍历所有定时器
+	for (iter = s_vTimers.begin(); iter != s_vTimers.end();)
+	{
+		// 查找相同名称的定时器
+		if ((*iter)->m_pParentScene == scene)
+		{
+			// 删除该定时器
+			delete (*iter);
+			iter = s_vTimers.erase(iter);
+		}
+		else
+		{
+			iter++;
 		}
 	}
 }

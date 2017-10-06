@@ -39,7 +39,7 @@ bool MouseNode::_exec(bool active)
 			// 状态设为 MOUSEIN
 			_setStatus(MOUSEIN);
 			// 若此时按下鼠标左键
-			if (MouseMsg::isOnLButtonDown())
+			if (MouseMsg::getMsg() == MouseMsg::LBUTTON_DOWN)
 			{
 				m_bTarget = true;		// 取得焦点标记
 				_setStatus(SELECTED);	// 状态设为 SELECTED
@@ -55,7 +55,7 @@ bool MouseNode::_exec(bool active)
 	else
 	{
 		// 节点取得焦点时鼠标左键抬起
-		if (MouseMsg::isOnLButtonUp())
+		if (MouseMsg::getMsg() == MouseMsg::LBUTTON_UP)
 		{
 			// 若左键抬起时鼠标仍在节点内
 			if (_isMouseIn())

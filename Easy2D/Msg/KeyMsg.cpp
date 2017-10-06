@@ -3,7 +3,7 @@
 #include <conio.h>
 
 // 按键监听回调函数的容器
-static std::vector<KeyMsg*> s_vKeyMsg;
+static std::vector<KeyMsg*> s_vListeners;
 
 // 虚拟键值的定义
 const VK_KEY KeyMsg::A = 'A';
@@ -83,7 +83,8 @@ static VK_KEY convert(int ascii);
 KeyMsg::KeyMsg(TString name, const KEY_CALLBACK & callback) :
 	m_sName(name),
 	m_callback(callback),
-	m_pParentScene(nullptr)
+	m_pParentScene(nullptr),
+	m_bRunning(true)
 {
 }
 
@@ -96,15 +97,28 @@ void KeyMsg::onKbHit(VK_KEY key)
 	m_callback(key);
 }
 
+void KeyMsg::start()
+{
+	m_bRunning = true;
+}
+
+void KeyMsg::stop()
+{
+	m_bRunning = false;
+}
+
 void KeyMsg::__exec()
 {
 	if (_kbhit())						// 检测有无按键消息
 	{
 		VK_KEY key = convert(_getch());	// 获取键盘消息
 
-		for (auto k : s_vKeyMsg)		// 分发该消息
+		for (auto l : s_vListeners)		// 分发该消息
 		{
-			k->onKbHit(key);			// 执行按键回调函数
+			if (l->m_bRunning)
+			{
+				l->onKbHit(key);		// 执行按键回调函数
+			}
 		}
 	}
 }
@@ -112,39 +126,76 @@ void KeyMsg::__exec()
 void KeyMsg::addListener(TString name, const KEY_CALLBACK & callback)
 {
 	// 创建新的监听对象
-	auto key = new KeyMsg(name, callback);
-	key->m_pParentScene = App::getCurrentScene();
+	auto listener = new KeyMsg(name, callback);
+	// 绑定在场景上
+	listener->m_pParentScene = App::getCurrentScene();
 	// 添加新的按键回调函数
-	s_vKeyMsg.push_back(key);
+	s_vListeners.push_back(listener);
 }
 
-bool KeyMsg::delListener(TString name)
+void KeyMsg::startListener(TString name)
+{
+	// 查找名称相同的监听器
+	for (auto l : s_vListeners)
+	{
+		if (l->m_sName == name && l->m_pParentScene == App::getCurrentScene())
+		{
+			l->start();
+		}
+	}
+}
+
+void KeyMsg::stopListener(TString name)
+{
+	// 查找名称相同的监听器
+	for (auto l : s_vListeners)
+	{
+		if (l->m_sName == name && l->m_pParentScene == App::getCurrentScene())
+		{
+			l->stop();
+		}
+	}
+}
+
+void KeyMsg::delListener(TString name)
 {
 	// 创建迭代器
 	std::vector<KeyMsg*>::iterator iter;
 	// 循环遍历所有监听器
-	for (iter = s_vKeyMsg.begin(); iter != s_vKeyMsg.end(); iter++)
+	for (iter = s_vListeners.begin(); iter != s_vListeners.end();)
 	{
 		// 查找相同名称的监听器
-		if ((*iter)->m_sName == name)
+		if ((*iter)->m_sName == name && (*iter)->m_pParentScene == App::getCurrentScene())
 		{
 			// 删除该定时器
 			delete (*iter);
-			s_vKeyMsg.erase(iter);
-			return true;
+			iter = s_vListeners.erase(iter);
+		}
+		else
+		{
+			iter++;
 		}
 	}
-	// 若未找到同样名称的监听器，返回 false
-	return false;
 }
 
-void KeyMsg::bindListenersWithScene(Scene * scene)
+void KeyMsg::startAllSceneListeners(Scene * scene)
 {
-	for (auto k : s_vKeyMsg)
+	for (auto l : s_vListeners)
 	{
-		if (!k->m_pParentScene)
+		if (l->m_pParentScene == scene)
 		{
-			k->m_pParentScene = App::getCurrentScene();
+			l->start();
+		}
+	}
+}
+
+void KeyMsg::stopAllSceneListeners(Scene * scene)
+{
+	for (auto l : s_vListeners)
+	{
+		if (l->m_pParentScene == scene)
+		{
+			l->stop();
 		}
 	}
 }
@@ -154,14 +205,14 @@ void KeyMsg::clearAllSceneListeners(Scene * scene)
 	// 创建迭代器
 	std::vector<KeyMsg*>::iterator iter;
 	// 循环遍历所有监听器
-	for (iter = s_vKeyMsg.begin(); iter != s_vKeyMsg.end(); iter++)
+	for (iter = s_vListeners.begin(); iter != s_vListeners.end(); iter++)
 	{
 		// 查找相同名称的监听器
 		if ((*iter)->m_pParentScene == scene)
 		{
 			// 删除该定时器
 			delete (*iter);
-			s_vKeyMsg.erase(iter);
+			s_vListeners.erase(iter);
 		}
 	}
 }
@@ -169,12 +220,12 @@ void KeyMsg::clearAllSceneListeners(Scene * scene)
 void KeyMsg::clearAllListeners()
 {
 	// 删除所有监听器
-	for (auto k : s_vKeyMsg)
+	for (auto l : s_vListeners)
 	{
-		delete k;
+		delete l;
 	}
 	// 清空容器
-	s_vKeyMsg.clear();
+	s_vListeners.clear();
 }
 
 bool KeyMsg::isKeyDown(VK_KEY key)
