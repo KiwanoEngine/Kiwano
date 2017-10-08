@@ -6,6 +6,7 @@ static std::vector<Timer*> s_vTimers;
 Timer::Timer(TString name, UINT ms, const TIMER_CALLBACK & callback) :
 	m_sName(name),
 	m_bRunning(false),
+	m_bWaiting(false),
 	m_callback(callback),
 	m_pParentScene(nullptr)
 {
@@ -19,19 +20,29 @@ Timer::~Timer()
 void Timer::start()
 {
 	// 标志该定时器正在运行
-	this->m_bRunning = true;
+	m_bRunning = true;
 	// 记录当前时间
 	QueryPerformanceCounter(&m_nLast);
 }
 
 void Timer::stop()
 {
-	this->m_bRunning = false;	// 标志该定时器已停止
+	m_bRunning = false;	// 标志该定时器已停止
+}
+
+void Timer::wait()
+{
+	m_bWaiting = true;
+}
+
+void Timer::notify()
+{
+	m_bWaiting = false;
 }
 
 bool Timer::isRunning()
 {
-	return m_bRunning;			// 获取该定时器的运行状态
+	return m_bRunning && !m_bWaiting;			// 获取该定时器的运行状态
 }
 
 void Timer::setInterval(UINT ms)
@@ -78,7 +89,7 @@ void Timer::__exec()
 	for (auto timer : s_vTimers)
 	{
 		// 若定时器未运行，跳过这个定时器
-		if (!timer->m_bRunning) 
+		if (!timer->isRunning()) 
 		{
 			continue;
 		}
@@ -98,7 +109,7 @@ void Timer::addTimer(Timer * timer)
 	// 启动定时器
 	timer->start();
 	// 绑定在场景上
-	timer->m_pParentScene = App::getCurrentScene();
+	timer->m_pParentScene = App::getLoadingScene();
 	// 将该定时器放入容器
 	s_vTimers.push_back(timer);
 }
@@ -169,24 +180,24 @@ void Timer::clearAllTimers()
 	s_vTimers.clear();
 }
 
-void Timer::startAllSceneTimers(Scene * scene)
+void Timer::notifyAllSceneTimers(Scene * scene)
 {
 	for (auto t : s_vTimers)
 	{
 		if (t->m_pParentScene == scene)
 		{
-			t->start();
+			t->notify();
 		}
 	}
 }
 
-void Timer::stopAllSceneTimers(Scene * scene)
+void Timer::waitAllSceneTimers(Scene * scene)
 {
 	for (auto t : s_vTimers)
 	{
 		if (t->m_pParentScene == scene)
 		{
-			t->stop();
+			t->wait();
 		}
 	}
 }

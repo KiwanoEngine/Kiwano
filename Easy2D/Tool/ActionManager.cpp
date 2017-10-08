@@ -11,12 +11,18 @@ void ActionManager::__exec()
 	// 循环遍历所有正在运行的动作
 	for (size_t i = 0; i < s_vActions.size(); i++)
 	{
-		auto a = s_vActions[i];
-		if (a->isRunning() && a->_exec(nNow))
+		if (s_vActions[i]->isRunning())
 		{
-			// _exec 返回 true 时说明动作已经结束
-			a->release();
-			s_vActions.erase(s_vActions.begin() + i);
+			if (s_vActions[i]->isEnding())
+			{
+				// 动作已经结束
+				s_vActions[i]->release();
+				s_vActions.erase(s_vActions.begin() + i);
+			}
+			else
+			{
+				s_vActions[i]->_exec(nNow);
+			}
 		}
 	}
 }
@@ -31,30 +37,30 @@ void ActionManager::addAction(Action * action)
 			assert(a != action);
 		}
 #endif
-		action->m_pParentScene = App::getCurrentScene();
+		action->m_pParentScene = App::getLoadingScene();
 		action->_init();
 		s_vActions.push_back(action);
 	}
 }
 
-void ActionManager::startAllSceneActions(Scene * scene)
+void ActionManager::notifyAllSceneActions(Scene * scene)
 {
 	for (auto action : s_vActions)
 	{
 		if (action->m_pParentScene == scene)
 		{
-			action->start();
+			action->notify();
 		}
 	}
 }
 
-void ActionManager::pauseAllSceneActions(Scene * scene)
+void ActionManager::waitAllSceneActions(Scene * scene)
 {
 	for (auto action : s_vActions)
 	{
 		if (action->m_pParentScene == scene)
 		{
-			action->pause();
+			action->wait();
 		}
 	}
 }

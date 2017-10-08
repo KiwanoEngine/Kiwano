@@ -38,28 +38,27 @@ void ActionSequence::_init()
 	m_vActions[0]->_init();
 }
 
-bool ActionSequence::_exec(LARGE_INTEGER nNow)
+void ActionSequence::_exec(LARGE_INTEGER nNow)
 {
-	if (m_bStop) return true;
-	if (!m_bRunning) return false;
+	m_vActions[m_nActionIndex]->_exec(nNow);
 
-	if (m_vActions[m_nActionIndex]->_exec(nNow))
+	if (m_vActions[m_nActionIndex]->isEnding())
 	{
 		m_nActionIndex++;
 		if (m_nActionIndex == m_vActions.size())
 		{
-			return true;
+			this->stop();
 		}
 		else
 		{
 			m_vActions[m_nActionIndex]->_init();
 		}
 	}
-	return false;
 }
 
 void ActionSequence::_reset()
 {
+	Action::_reset();
 	for (auto action : m_vActions)
 	{
 		action->_reset();

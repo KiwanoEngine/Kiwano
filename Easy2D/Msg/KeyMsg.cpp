@@ -84,7 +84,8 @@ KeyMsg::KeyMsg(TString name, const KEY_CALLBACK & callback) :
 	m_sName(name),
 	m_callback(callback),
 	m_pParentScene(nullptr),
-	m_bRunning(true)
+	m_bRunning(true),
+	m_bWaiting(false)
 {
 }
 
@@ -107,6 +108,16 @@ void KeyMsg::stop()
 	m_bRunning = false;
 }
 
+void KeyMsg::wait()
+{
+	m_bWaiting = true;
+}
+
+void KeyMsg::notify()
+{
+	m_bWaiting = false;
+}
+
 void KeyMsg::__exec()
 {
 	if (_kbhit())						// 检测有无按键消息
@@ -115,7 +126,7 @@ void KeyMsg::__exec()
 
 		for (auto l : s_vListeners)		// 分发该消息
 		{
-			if (l->m_bRunning)
+			if (!l->m_bWaiting && l->m_bRunning)
 			{
 				l->onKbHit(key);		// 执行按键回调函数
 			}
@@ -128,7 +139,7 @@ void KeyMsg::addListener(TString name, const KEY_CALLBACK & callback)
 	// 创建新的监听对象
 	auto listener = new KeyMsg(name, callback);
 	// 绑定在场景上
-	listener->m_pParentScene = App::getCurrentScene();
+	listener->m_pParentScene = App::getLoadingScene();
 	// 添加新的按键回调函数
 	s_vListeners.push_back(listener);
 }
@@ -138,7 +149,7 @@ void KeyMsg::startListener(TString name)
 	// 查找名称相同的监听器
 	for (auto l : s_vListeners)
 	{
-		if (l->m_sName == name && l->m_pParentScene == App::getCurrentScene())
+		if (l->m_sName == name)
 		{
 			l->start();
 		}
@@ -150,7 +161,7 @@ void KeyMsg::stopListener(TString name)
 	// 查找名称相同的监听器
 	for (auto l : s_vListeners)
 	{
-		if (l->m_sName == name && l->m_pParentScene == App::getCurrentScene())
+		if (l->m_sName == name)
 		{
 			l->stop();
 		}
@@ -165,7 +176,7 @@ void KeyMsg::delListener(TString name)
 	for (iter = s_vListeners.begin(); iter != s_vListeners.end();)
 	{
 		// 查找相同名称的监听器
-		if ((*iter)->m_sName == name && (*iter)->m_pParentScene == App::getCurrentScene())
+		if ((*iter)->m_sName == name)
 		{
 			// 删除该定时器
 			delete (*iter);
@@ -178,24 +189,24 @@ void KeyMsg::delListener(TString name)
 	}
 }
 
-void KeyMsg::startAllSceneListeners(Scene * scene)
+void KeyMsg::notifyAllSceneListeners(Scene * scene)
 {
 	for (auto l : s_vListeners)
 	{
 		if (l->m_pParentScene == scene)
 		{
-			l->start();
+			l->notify();
 		}
 	}
 }
 
-void KeyMsg::stopAllSceneListeners(Scene * scene)
+void KeyMsg::waitAllSceneListeners(Scene * scene)
 {
 	for (auto l : s_vListeners)
 	{
 		if (l->m_pParentScene == scene)
 		{
-			l->stop();
+			l->wait();
 		}
 	}
 }

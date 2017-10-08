@@ -20,21 +20,18 @@ void ActionDelay::_init()
 	QueryPerformanceCounter(&m_nLast);
 }
 
-bool ActionDelay::_exec(LARGE_INTEGER nNow)
+void ActionDelay::_exec(LARGE_INTEGER nNow)
 {
-	if (m_bStop) return true;
-	if (!m_bRunning) return false;
-
 	// 判断时间间隔是否足够
 	if (nNow.QuadPart - m_nLast.QuadPart > m_nAnimationInterval.QuadPart)
 	{
-		return true;
+		this->stop();
 	}
-	return false;
 }
 
 void ActionDelay::_reset()
 {
+	Action::_reset();
 	// 重新记录当前时间
 	QueryPerformanceCounter(&m_nLast);
 }

@@ -112,6 +112,7 @@ namespace easy2d
 
 class App
 {
+	friend Scene;
 public:
 	App();
 	~App();
@@ -176,12 +177,15 @@ public:
 	static void reset();
 	// 获取当前场景
 	static Scene * getCurrentScene();
+	// 获取正处于加载中的场景
+	static Scene * getLoadingScene();
 
 protected:
 	TString				m_sTitle;
 	TString				m_sAppName;
 	Scene*				m_pCurrentScene;
 	Scene*				m_pNextScene;
+	Scene*				m_pLoadingScene;
 	std::stack<Scene*>	m_SceneStack;
 	LARGE_INTEGER		m_nAnimationInterval;
 	CSize				m_Size;
@@ -283,6 +287,10 @@ public:
 	void start();
 	// 停止监听
 	void stop();
+	// 进入等待状态
+	void wait();
+	// 唤醒
+	void notify();
 
 	// 左键是否按下
 	static bool isLButtonDown();
@@ -312,9 +320,9 @@ public:
 	// 删除所有鼠标消息监听
 	static void clearAllListeners();
 	// 启动绑定在场景上的所有监听器
-	static void startAllSceneListeners(Scene* scene);
+	static void notifyAllSceneListeners(Scene* scene);
 	// 停止绑定在场景上的所有监听器
-	static void stopAllSceneListeners(Scene* scene);
+	static void waitAllSceneListeners(Scene* scene);
 	// 清除绑定在场景上的所有监听器
 	static void clearAllSceneListeners(Scene* scene);
 
@@ -323,6 +331,7 @@ private:
 
 protected:
 	bool			m_bRunning;
+	bool			m_bWaiting;
 	TString			m_sName;
 	MOUSE_CALLBACK	m_callback;
 	Scene *			m_pParentScene;
@@ -345,6 +354,10 @@ public:
 	void start();
 	// 停止监听
 	void stop();
+	// 进入等待状态
+	void wait();
+	// 唤醒
+	void notify();
 
 	// 判断键是否被按下，按下返回true
 	static bool isKeyDown(VK_KEY key);
@@ -357,9 +370,9 @@ public:
 	// 删除按键监听
 	static void KeyMsg::delListener(TString name);
 	// 启动绑定在场景上的所有监听器
-	static void startAllSceneListeners(Scene* scene);
+	static void notifyAllSceneListeners(Scene* scene);
 	// 停止绑定在场景上的所有监听器
-	static void stopAllSceneListeners(Scene* scene);
+	static void waitAllSceneListeners(Scene* scene);
 	// 停止绑定在场景上的所有定时器
 	static void clearAllSceneListeners(Scene* scene);
 	// 删除所有按键监听
@@ -382,6 +395,7 @@ private:
 
 protected:
 	bool			m_bRunning;
+	bool			m_bWaiting;
 	TString			m_sName;
 	KEY_CALLBACK	m_callback;
 	Scene *			m_pParentScene;
@@ -1060,18 +1074,33 @@ public:
 	Action();
 	virtual ~Action();
 
-	bool isRunning();
-	void start();
-	void resume();
-	void pause();
-	void stop();
-	void setInterval(UINT ms);
+	// 获取动作运行状态
+	virtual bool isRunning();
+	// 获取动作结束状态
+	virtual bool isEnding();
+	// 继续动作
+	virtual void start();
+	// 继续动作
+	virtual void resume();
+	// 暂停动作
+	virtual void pause();
+	// 停止动作
+	virtual void stop();
+	// 进入等待状态
+	virtual void wait();
+	// 唤醒
+	virtual void notify();
+	// 设置动作每一帧时间间隔
+	virtual void setInterval(UINT ms);
+	// 获取一个新的拷贝动作
 	virtual Action * copy() const = 0;
+	// 获取一个新的逆向动作
 	virtual Action * reverse() const;
 
 protected:
 	bool			m_bRunning;
-	bool			m_bStop;
+	bool			m_bWaiting;
+	bool			m_bEnding;
 	Sprite *		m_pTargetSprite;
 	Scene *			m_pParentScene;
 	UINT			m_nMilliSeconds;
@@ -1080,8 +1109,8 @@ protected:
 
 protected:
 	virtual void _init() = 0;
-	virtual bool _exec(LARGE_INTEGER nNow) = 0;
-	virtual void _reset() = 0;
+	virtual void _exec(LARGE_INTEGER nNow) = 0;
+	virtual void _reset();
 };
 
 class Animation :
@@ -1097,8 +1126,8 @@ protected:
 
 protected:
 	bool _isEnd() const;
+	bool _isDelayEnough(LARGE_INTEGER nNow);
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1118,7 +1147,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1157,7 +1186,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1195,7 +1224,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1243,11 +1272,10 @@ public:
 protected:
 	Action *	m_FirstAction;
 	Action *	m_SecondAction;
-	bool		m_bFirstFinished;
 
 protected:
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1269,7 +1297,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1284,7 +1312,7 @@ public:
 
 protected:
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1302,7 +1330,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1324,7 +1352,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1342,7 +1370,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual bool _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(LARGE_INTEGER nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1430,6 +1458,10 @@ public:
 	void start();
 	// 停止定时器
 	void stop();
+	// 进入等待状态
+	void wait();
+	// 唤醒
+	void notify();
 	// 定时器是否正在运行
 	bool isRunning();
 	// 设置间隔时间
@@ -1457,14 +1489,15 @@ public:
 	static void clearAllTimers();
 
 	// 继续绑定在场景上的所有定时器
-	static void startAllSceneTimers(Scene* scene);
+	static void notifyAllSceneTimers(Scene* scene);
 	// 停止绑定在场景上的所有定时器
-	static void stopAllSceneTimers(Scene* scene);
+	static void waitAllSceneTimers(Scene* scene);
 	// 清除绑定在场景上的所有定时器
 	static void clearAllSceneTimers(Scene* scene);
 
 protected:
 	bool			m_bRunning;
+	bool			m_bWaiting;
 	TString			m_sName;
 	TIMER_CALLBACK	m_callback;
 	LARGE_INTEGER	m_nLast;
@@ -1511,9 +1544,9 @@ public:
 	static void clearAllActions();
 
 	// 继续绑定在场景上的动作
-	static void startAllSceneActions(Scene* scene);
+	static void notifyAllSceneActions(Scene* scene);
 	// 暂停绑定在场景上的动作
-	static void pauseAllSceneActions(Scene* scene);
+	static void waitAllSceneActions(Scene* scene);
 	// 停止绑定在场景上的动作
 	static void stopAllSceneActions(Scene* scene);
 

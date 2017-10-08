@@ -16,12 +16,9 @@ void ActionMoveBy::_init()
 	m_BeginPos = m_pTargetSprite->getPos();
 }
 
-bool ActionMoveBy::_exec(LARGE_INTEGER nNow)
+void ActionMoveBy::_exec(LARGE_INTEGER nNow)
 {
-	if (m_bStop) return true;
-	if (!m_bRunning) return false;
-	
-	while (Animation::_exec(nNow))
+	if (Animation::_isDelayEnough(nNow))
 	{
 		// 计算移动位置
 		float scale = float(m_nDuration) / m_nTotalDuration;
@@ -31,10 +28,9 @@ bool ActionMoveBy::_exec(LARGE_INTEGER nNow)
 		// 判断动作是否结束
 		if (_isEnd())
 		{
-			return true;
+			this->stop();
 		}
 	}
-	return false;
 }
 
 void ActionMoveBy::_reset()

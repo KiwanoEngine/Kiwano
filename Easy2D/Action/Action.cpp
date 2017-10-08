@@ -3,7 +3,8 @@
 
 Action::Action() :
 	m_bRunning(true),
-	m_bStop(false),
+	m_bWaiting(false),
+	m_bEnding(false),
 	m_pTargetSprite(nullptr),
 	m_pParentScene(nullptr)
 {
@@ -17,7 +18,12 @@ Action::~Action()
 
 bool Action::isRunning()
 {
-	return m_bRunning;
+	return m_bRunning && !m_bWaiting;
+}
+
+bool Action::isEnding()
+{
+	return m_bEnding;
 }
 
 void Action::start()
@@ -37,7 +43,16 @@ void Action::pause()
 
 void Action::stop()
 {
-	m_bStop = true;
+	m_bEnding = true;
+}
+void Action::wait()
+{
+	m_bWaiting = true;
+}
+
+void Action::notify()
+{
+	m_bWaiting = false;
 }
 
 void Action::setInterval(UINT ms)
@@ -54,4 +69,9 @@ Action * Action::reverse() const
 {
 	assert(0);
 	return nullptr;
+}
+
+void Action::_reset()
+{
+	m_bEnding = false;
 }

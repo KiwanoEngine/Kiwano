@@ -2,8 +2,7 @@
 
 ActionTwo::ActionTwo(Action * actionFirst, Action * actionSecond) :
 	m_FirstAction(actionFirst),
-	m_SecondAction(actionSecond),
-	m_bFirstFinished(false)
+	m_SecondAction(actionSecond)
 {
 	m_FirstAction->retain();
 	m_SecondAction->retain();
@@ -40,32 +39,33 @@ void ActionTwo::_init()
 	m_FirstAction->_init();
 }
 
-bool ActionTwo::_exec(LARGE_INTEGER nNow)
+void ActionTwo::_exec(LARGE_INTEGER nNow)
 {
-	if (m_bStop) return true;
-	if (!m_bRunning) return false;
-
-	if (!m_bFirstFinished)
+	if (!m_FirstAction->isEnding())
 	{
-		if (m_FirstAction->_exec(nNow))
+		m_FirstAction->_exec(nNow);
+		if (m_FirstAction->isEnding())
 		{
 			// 返回 true 表示第一个动作已经结束
 			m_SecondAction->_init();
-			m_bFirstFinished = true;
 		}
 	}
-	else if (m_SecondAction->_exec(nNow))
+	else if (!m_SecondAction->isEnding())
 	{
-		return true;
+		m_SecondAction->_exec(nNow);
 	}
-	return false;
+	else
+	{
+		this->stop();
+	}
 }
 
 void ActionTwo::_reset()
 {
+	Action::_reset();
+
 	m_FirstAction->_reset();
 	m_SecondAction->_reset();
 
 	m_FirstAction->_init();
-	m_bFirstFinished = false;
 }

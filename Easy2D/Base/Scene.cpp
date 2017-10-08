@@ -3,6 +3,7 @@
 
 Scene::Scene()
 {
+	App::get()->m_pLoadingScene = this;
 }
 
 Scene::~Scene()

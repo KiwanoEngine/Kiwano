@@ -27,11 +27,8 @@ void ActionFrames::_init()
 	QueryPerformanceCounter(&m_nLast);
 }
 
-bool ActionFrames::_exec(LARGE_INTEGER nNow)
+void ActionFrames::_exec(LARGE_INTEGER nNow)
 {
-	if (m_bStop) return true;
-	if (!m_bRunning) return false;
-
 	// 判断时间间隔是否足够
 	while (nNow.QuadPart - m_nLast.QuadPart > m_nAnimationInterval.QuadPart)
 	{
@@ -42,14 +39,14 @@ bool ActionFrames::_exec(LARGE_INTEGER nNow)
 		// 判断动作是否结束
 		if (m_nFrameIndex == m_vFrames.size())
 		{
-			return true;
+			this->stop();
 		}
 	}
-	return false;
 }
 
 void ActionFrames::_reset()
 {
+	Action::_reset();
 	m_nFrameIndex = 0;
 }
 

@@ -18,15 +18,13 @@ void ActionCallback::_init()
 {
 }
 
-bool ActionCallback::_exec(LARGE_INTEGER nNow)
+void ActionCallback::_exec(LARGE_INTEGER nNow)
 {
-	if (!m_bStop)
-	{
-		m_Callback();
-	}
-	return true;
+	m_Callback();
+	this->stop();
 }
 
 void ActionCallback::_reset()
 {
+	Action::_reset();
 }

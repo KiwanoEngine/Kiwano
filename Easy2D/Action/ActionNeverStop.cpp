@@ -22,20 +22,17 @@ void ActionNeverStop::_init()
 	m_Action->_init();
 }
 
-bool ActionNeverStop::_exec(LARGE_INTEGER nNow)
+void ActionNeverStop::_exec(LARGE_INTEGER nNow)
 {
-	if (m_bStop) return true;
-	if (!m_bRunning) return false;
+	m_Action->_exec(nNow);
 
-	if (m_Action->_exec(nNow))
+	if (m_Action->isEnding())
 	{
 		m_Action->_reset();
 	}
-	// ÓÀ²»½áÊø
-	return false;
 }
 
 void ActionNeverStop::_reset()
 {
-	m_Action->_reset();
+	Action::_reset();
 }

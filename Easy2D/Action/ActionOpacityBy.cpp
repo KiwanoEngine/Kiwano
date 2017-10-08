@@ -16,12 +16,9 @@ void ActionOpacityBy::_init()
 	m_nBeginVal = m_pTargetSprite->getOpacity();
 }
 
-bool ActionOpacityBy::_exec(LARGE_INTEGER nNow)
+void ActionOpacityBy::_exec(LARGE_INTEGER nNow)
 {
-	if (m_bStop) return true;
-	if (!m_bRunning) return false;
-
-	while (Animation::_exec(nNow))
+	if (Animation::_isDelayEnough(nNow))
 	{
 		// 计算移动位置
 		float scale = float(m_nDuration) / m_nTotalDuration;
@@ -30,10 +27,9 @@ bool ActionOpacityBy::_exec(LARGE_INTEGER nNow)
 		// 判断动作是否结束
 		if (_isEnd())
 		{
-			return true;
+			this->stop();
 		}
 	}
-	return false;
 }
 
 void ActionOpacityBy::_reset()

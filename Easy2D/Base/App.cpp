@@ -16,6 +16,7 @@ static int originY = 0;
 App::App() : 
 	m_pCurrentScene(nullptr), 
 	m_pNextScene(nullptr), 
+	m_pLoadingScene(nullptr),
 	m_bRunning(false), 
 	m_nWindowMode(0),
 	m_bSaveScene(true)
@@ -302,10 +303,10 @@ void App::_enterNextScene()
 			// 若要保存当前场景，把它放入栈中
 			m_SceneStack.push(m_pCurrentScene);
 			// 暂停当前场景上运行的所有定时器
-			Timer::stopAllSceneTimers(m_pCurrentScene);
-			MouseMsg::stopAllSceneListeners(m_pCurrentScene);
-			KeyMsg::stopAllSceneListeners(m_pCurrentScene);
-			ActionManager::pauseAllSceneActions(m_pCurrentScene);
+			Timer::waitAllSceneTimers(m_pCurrentScene);
+			MouseMsg::waitAllSceneListeners(m_pCurrentScene);
+			KeyMsg::waitAllSceneListeners(m_pCurrentScene);
+			ActionManager::waitAllSceneActions(m_pCurrentScene);
 		}
 		else
 		{
@@ -324,10 +325,10 @@ void App::_enterNextScene()
 	if (bBackScene)
 	{
 		// 返回上一场景时，恢复场景上的定时器
-		Timer::startAllSceneTimers(m_pCurrentScene);
-		MouseMsg::startAllSceneListeners(m_pCurrentScene);
-		KeyMsg::startAllSceneListeners(m_pCurrentScene);
-		ActionManager::startAllSceneActions(m_pCurrentScene);
+		Timer::notifyAllSceneTimers(m_pCurrentScene);
+		MouseMsg::notifyAllSceneListeners(m_pCurrentScene);
+		KeyMsg::notifyAllSceneListeners(m_pCurrentScene);
+		ActionManager::notifyAllSceneActions(m_pCurrentScene);
 	}
 	else
 	{
@@ -358,14 +359,12 @@ void App::reset()
 Scene * App::getCurrentScene()
 {
 	// 获取当前场景的指针
-	if (s_pInstance->m_pCurrentScene)
-	{
-		return s_pInstance->m_pCurrentScene;
-	}
-	else
-	{
-		return s_pInstance->m_pNextScene;
-	}
+	return s_pInstance->m_pCurrentScene;
+}
+
+Scene * App::getLoadingScene()
+{
+	return s_pInstance->m_pLoadingScene;
 }
 
 void App::setFPS(DWORD fps)
