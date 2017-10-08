@@ -35,7 +35,7 @@ bool Sprite::_exec(bool active)
 void Sprite::_onDraw()
 {
 	// display 属性为 false，或未设置图片资源时，不绘制该图片
-	if (!m_bDisplay || !m_pImage->m_pCImage)
+	if (!m_bDisplay || !m_pImage || !m_pImage->m_pCImage)
 	{
 		return;
 	}
