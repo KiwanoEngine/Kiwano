@@ -757,6 +757,12 @@ public:
 	virtual void setImage(Image * image);
 	// 添加动作
 	virtual void addAction(Action * action);
+	// 继续动作
+	virtual void resumeAction(Action * action);
+	// 暂停动作
+	virtual void pauseAction(Action * action);
+	// 停止动作
+	virtual void stopAction(Action * action);
 	// 暂停所有动作
 	virtual void pauseAllActions();
 	// 继续所有动作
