@@ -36,6 +36,10 @@ void Scene::_onDraw()
 	}
 }
 
+void Scene::init()
+{
+}
+
 void Scene::onEnter()
 {
 }

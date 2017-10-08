@@ -222,7 +222,7 @@ public:
 	~Scene();
 
 	// 重写这个函数，初始化这个场景
-	virtual void init() = 0;
+	virtual void init();
 	// 重写这个函数，它将在进入这个场景时自动执行
 	virtual void onEnter();
 	// 重写这个函数，它将在离开这个场景时自动执行
