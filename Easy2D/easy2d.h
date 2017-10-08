@@ -1487,6 +1487,8 @@ public:
 	// 添加定时器
 	static void addTimer(Timer * timer);
 	// 添加定时器
+	static void addTimer(TString name, const TIMER_CALLBACK & callback);
+	// 添加定时器
 	static void addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback);
 	// 启动特定定时器
 	static void startTimer(TString name);

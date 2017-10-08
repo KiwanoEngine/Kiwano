@@ -114,6 +114,11 @@ void Timer::addTimer(Timer * timer)
 	s_vTimers.push_back(timer);
 }
 
+void Timer::addTimer(TString name, const TIMER_CALLBACK & callback)
+{
+	addTimer(name, 20, callback);
+}
+
 void Timer::addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback)
 {
 	// 创建定时器
