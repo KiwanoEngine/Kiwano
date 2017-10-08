@@ -23,6 +23,7 @@ ActionFrames::~ActionFrames()
 
 void ActionFrames::_init()
 {
+	Action::_init();
 	// 记录当前时间
 	QueryPerformanceCounter(&m_nLast);
 }

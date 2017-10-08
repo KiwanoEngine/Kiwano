@@ -31,10 +31,13 @@ ActionSequence::~ActionSequence()
 
 void ActionSequence::_init()
 {
+	Action::_init();
+	// 将所有动作与目标绑定
 	for (auto action : m_vActions)
 	{
 		action->m_pTargetSprite = m_pTargetSprite;
 	}
+	// 初始化第一个动作
 	m_vActions[0]->_init();
 }
 
@@ -63,7 +66,6 @@ void ActionSequence::_reset()
 	{
 		action->_reset();
 	}
-	m_vActions[0]->_init();
 	m_nActionIndex = 0;
 }
 

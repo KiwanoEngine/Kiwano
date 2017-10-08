@@ -5,6 +5,7 @@ Action::Action() :
 	m_bRunning(true),
 	m_bWaiting(false),
 	m_bEnding(false),
+	m_bInit(false),
 	m_pTargetSprite(nullptr),
 	m_pParentScene(nullptr)
 {
@@ -76,7 +77,13 @@ Sprite * Action::getTarget()
 	return m_pTargetSprite;
 }
 
+void Action::_init()
+{
+	m_bInit = true;
+}
+
 void Action::_reset()
 {
+	m_bInit = false;
 	m_bEnding = false;
 }

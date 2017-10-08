@@ -16,6 +16,7 @@ ActionDelay * ActionDelay::copy() const
 
 void ActionDelay::_init()
 {
+	Action::_init();
 	// 记录当前时间
 	QueryPerformanceCounter(&m_nLast);
 }

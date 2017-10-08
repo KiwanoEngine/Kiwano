@@ -18,6 +18,7 @@ ActionNeverStop * ActionNeverStop::copy() const
 
 void ActionNeverStop::_init()
 {
+	Action::_init();
 	m_Action->m_pTargetSprite = m_pTargetSprite;
 	m_Action->_init();
 }

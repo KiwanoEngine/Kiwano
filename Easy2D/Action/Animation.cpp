@@ -17,6 +17,7 @@ bool Animation::_isEnd() const
 
 void Animation::_init()
 {
+	Action::_init();
 	// 记录当前时间
 	QueryPerformanceCounter(&m_nLast);
 }

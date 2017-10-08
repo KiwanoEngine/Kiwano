@@ -33,6 +33,7 @@ ActionTwo * ActionTwo::reverse(bool actionReverse) const
 
 void ActionTwo::_init()
 {
+	Action::_init();
 	m_FirstAction->m_pTargetSprite = m_pTargetSprite;
 	m_SecondAction->m_pTargetSprite = m_pTargetSprite;
 
@@ -66,6 +67,4 @@ void ActionTwo::_reset()
 
 	m_FirstAction->_reset();
 	m_SecondAction->_reset();
-
-	m_FirstAction->_init();
 }

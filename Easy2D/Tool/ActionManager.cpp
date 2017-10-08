@@ -8,20 +8,30 @@ void ActionManager::__exec()
 	// 获取当前时间
 	static LARGE_INTEGER nNow;
 	QueryPerformanceCounter(&nNow);
+	// 临时指针
+	Action * action;
 	// 循环遍历所有正在运行的动作
 	for (size_t i = 0; i < s_vActions.size(); i++)
 	{
-		if (s_vActions[i]->isRunning())
+		action = s_vActions[i];
+		// 获取动作运行状态
+		if (action->isRunning())
 		{
-			if (s_vActions[i]->isEnding())
+			if (action->isEnding())
 			{
 				// 动作已经结束
-				s_vActions[i]->release();
+				action->release();
 				s_vActions.erase(s_vActions.begin() + i);
 			}
 			else
 			{
-				s_vActions[i]->_exec(nNow);
+				// 初始化动作
+				if (!action->m_bInit)
+				{
+					action->_init();
+				}
+				// 执行动作
+				action->_exec(nNow);
 			}
 		}
 	}
@@ -38,7 +48,6 @@ void ActionManager::addAction(Action * action)
 		}
 #endif
 		action->m_pParentScene = App::getLoadingScene();
-		action->_init();
 		s_vActions.push_back(action);
 	}
 }

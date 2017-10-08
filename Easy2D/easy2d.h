@@ -1108,6 +1108,7 @@ protected:
 	bool			m_bRunning;
 	bool			m_bWaiting;
 	bool			m_bEnding;
+	bool			m_bInit;
 	Sprite *		m_pTargetSprite;
 	Scene *			m_pParentScene;
 	UINT			m_nMilliSeconds;
@@ -1115,7 +1116,7 @@ protected:
 	LARGE_INTEGER	m_nAnimationInterval;
 
 protected:
-	virtual void _init() = 0;
+	virtual void _init();
 	virtual void _exec(LARGE_INTEGER nNow) = 0;
 	virtual void _reset();
 };

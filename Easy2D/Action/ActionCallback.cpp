@@ -16,6 +16,7 @@ ActionCallback * ActionCallback::copy() const
 
 void ActionCallback::_init()
 {
+	Action::_init();
 }
 
 void ActionCallback::_exec(LARGE_INTEGER nNow)
