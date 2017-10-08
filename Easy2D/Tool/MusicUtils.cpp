@@ -62,7 +62,7 @@ void MciPlayer::open(TString pFileName, UINT uId)
 
 	// 设置 MCI_OPEN_PARMS 参数
 	MCI_OPEN_PARMS mciOpen = { 0 };
-	mciOpen.lpstrDeviceType = (LPCTSTR)MCI_ALL_DEVICE_ID;
+	mciOpen.lpstrDeviceType = (LPCTSTR)-1;	// device ID for "all devices"
 	mciOpen.lpstrElementName = pFileName.c_str();
 
 	// 打开这个文件
@@ -133,7 +133,7 @@ void MciPlayer::resume()
 		_sendCommand(MCI_STATUS, MCI_STATUS_ITEM, reinterpret_cast<DWORD_PTR>(&mciStatusParms));
 		// 设置播放起始位置，并开始播放
 		MCI_PLAY_PARMS mciPlayParms;
-		mciPlayParms.dwFrom = mciStatusParms.dwReturn;
+		mciPlayParms.dwFrom = (DWORD)mciStatusParms.dwReturn;
 		_sendCommand(MCI_PLAY, MCI_FROM, reinterpret_cast<DWORD_PTR>(&mciPlayParms));
 	}
 	else
@@ -171,7 +171,7 @@ void MciPlayer::setVolume(float volume)
 	MCI_DGV_SETAUDIO_PARMS  mciSetAudioPara = { 0 };
 	mciSetAudioPara.dwItem = MCI_DGV_SETAUDIO_VOLUME;
 	mciSetAudioPara.dwValue = DWORD(1000 * volume);
-	mciSendCommand(m_dev, MCI_SETAUDIO, MCI_DGV_SETAUDIO_VALUE | MCI_DGV_SETAUDIO_ITEM, (DWORD)(LPVOID)&mciSetAudioPara);
+	mciSendCommand(m_dev, MCI_SETAUDIO, MCI_DGV_SETAUDIO_VALUE | MCI_DGV_SETAUDIO_ITEM, (DWORD_PTR)&mciSetAudioPara);
 }
 
 bool MciPlayer::isPlaying()
