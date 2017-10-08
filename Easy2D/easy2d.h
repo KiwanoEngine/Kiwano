@@ -783,7 +783,7 @@ protected:
 };
 
 class BatchSprite :
-	public Node
+	public Sprite
 {
 public:
 	BatchSprite();
@@ -801,21 +801,20 @@ public:
 	// 判断点是否在精灵内部
 	// 返回值：若这个点在任意一个精灵内部，返回这个精灵，否则返回空指针
 	Sprite * isPointIn(CPoint point);
+	// 所有精灵同时执行一段动画
+	virtual void addAction(Action * action) override;
 	// 同时修改所有精灵的图片
-	virtual void setImage(Image * image);
+	virtual void setImage(Image * image) override;
 
-	virtual float getScaleX() const;
-	virtual float getScaleY() const;
-	virtual float getOpacity() const;
+	virtual float getScaleX() const override;
+	virtual float getScaleY() const override;
+	virtual float getOpacity() const override;
 
-	virtual void setScale(float scaleX, float scaleY);
-	virtual void setOpacity(float opacity);
+	virtual void setScale(float scaleX, float scaleY) override;
+	virtual void setOpacity(float opacity) override;
 
 protected:
 	std::vector<Sprite*> m_vSprites;
-	float	m_fScaleX;
-	float	m_fScaleY;
-	BYTE	m_nAlpha;
 
 protected:
 	bool _exec(bool active) override;

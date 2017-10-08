@@ -131,6 +131,11 @@ Sprite * BatchSprite::isPointIn(CPoint point)
 	return nullptr;
 }
 
+void BatchSprite::addAction(Action * action)
+{
+	Sprite::addAction(action);
+}
+
 float BatchSprite::getScaleX() const
 {
 	return m_fScaleX;
