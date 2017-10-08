@@ -99,12 +99,15 @@ void BatchSprite::_onDraw()
 	}
 
 	// 在相对位置绘制子节点
-	App::setOrigin(App::getOriginX() + getX(), App::getOriginY() + getY());
 	for (auto sprite : m_vSprites)
 	{
+		// 将子节点移动到相对位置
+		sprite->move(getX(), getY());
+		// 绘制子节点
 		sprite->_onDraw();
+		// 将子节点移回原位
+		sprite->move(-getX(), -getY());
 	}
-	App::setOrigin(App::getOriginX() - getX(), App::getOriginY() - getY());
 }
 
 Sprite * BatchSprite::isCollisionWith(Sprite * sprite)

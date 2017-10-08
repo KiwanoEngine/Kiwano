@@ -38,13 +38,15 @@ void BatchNode::_onDraw()
 		return;
 	}
 	
-	// 在相对位置绘制子节点
-	App::setOrigin(App::getOriginX() + getX(), App::getOriginY() + getY());
 	for (auto child : m_vChildren)
 	{
+		// 将子节点移动到相对位置
+		child->move(getX(), getY());
+		// 绘制子节点
 		child->_onDraw();
+		// 将子节点移回原位
+		child->move(-getX(), -getY());
 	}
-	App::setOrigin(App::getOriginX() - getX(), App::getOriginY() - getY());
 }
 
 void BatchNode::add(Node * child, int z_Order)
