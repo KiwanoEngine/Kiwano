@@ -24,6 +24,7 @@
 #include <vector>
 #include <stack>
 #include <functional>
+#include <random>
 
 
 #if defined(UNICODE) && (_DEBUG)
@@ -1564,6 +1565,27 @@ private:
 	static void addAction(Action * action);
 };
 
+class Math
+{
+public:
+	// 取得整型范围内的一个随机数
+	template<typename T>
+	static T randomInt(T min, T max)
+	{
+		std::uniform_int_distribution<T> dist(min, max);
+		return dist(getEngine());
+	}
+	// 取得浮点数类型范围内的一个随机数
+	template<typename T>
+	static T randomReal(T min, T max)
+	{
+		std::uniform_real_distribution<T> dist(min, max);
+		return dist(getEngine());
+	}
+	// 获取随机数产生器
+	static std::default_random_engine &getEngine();
+};
+
 }	// End of easy2d namespace
 
 
@@ -1571,5 +1593,11 @@ private:
 
 inline void SafeRelease(easy2d::Object * p) { if (p) p->release(); }
 inline void SafeDelete(void * p) { if (p) delete p; }
+
+template<typename T>
+inline T random(T min, T max) { return easy2d::Math::randomInt(min, max); }
+inline float random(float min, float max) { return easy2d::Math::randomReal(min, max); }
+inline double random(double min, double max) { return easy2d::Math::randomReal(min, max); }
+inline long double random(long double min, long double max) { return easy2d::Math::randomReal(min, max); }
 
 using namespace easy2d;

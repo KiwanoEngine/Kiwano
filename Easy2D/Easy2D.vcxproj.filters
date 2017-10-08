@@ -168,6 +168,9 @@
     <ClCompile Include="Object\RectNode.cpp">
       <Filter>源文件\Object</Filter>
     </ClCompile>
+    <ClCompile Include="Tool\Math.cpp">
+      <Filter>源文件\Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="easy2d.h">

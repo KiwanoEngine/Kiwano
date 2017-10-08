@@ -388,6 +388,7 @@
     <ClCompile Include="Style\LineStyle.cpp" />
     <ClCompile Include="Tool\ActionManager.cpp" />
     <ClCompile Include="Tool\FileUtils.cpp" />
+    <ClCompile Include="Tool\Math.cpp" />
     <ClCompile Include="Tool\MusicUtils.cpp" />
     <ClCompile Include="Tool\Timer.cpp" />
   </ItemGroup>
