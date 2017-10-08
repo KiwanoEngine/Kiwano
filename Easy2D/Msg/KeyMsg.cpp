@@ -216,14 +216,18 @@ void KeyMsg::clearAllSceneListeners(Scene * scene)
 	// 创建迭代器
 	std::vector<KeyMsg*>::iterator iter;
 	// 循环遍历所有监听器
-	for (iter = s_vListeners.begin(); iter != s_vListeners.end(); iter++)
+	for (iter = s_vListeners.begin(); iter != s_vListeners.end();)
 	{
 		// 查找相同名称的监听器
 		if ((*iter)->m_pParentScene == scene)
 		{
 			// 删除该定时器
 			delete (*iter);
-			s_vListeners.erase(iter);
+			iter = s_vListeners.erase(iter);
+		}
+		else
+		{
+			iter++;
 		}
 	}
 }
