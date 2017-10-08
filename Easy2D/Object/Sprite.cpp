@@ -76,7 +76,7 @@ void Sprite::addAction(Action * action)
 
 void Sprite::resumeAction(Action * action)
 {
-	if (action->m_pTargetSprite == this)
+	if (action->getTarget() == this)
 	{
 		ActionManager::resumeAction(action);
 	}
@@ -84,7 +84,7 @@ void Sprite::resumeAction(Action * action)
 
 void Sprite::pauseAction(Action * action)
 {
-	if (action->m_pTargetSprite == this)
+	if (action->getTarget() == this)
 	{
 		ActionManager::pauseAction(action);
 	}
@@ -92,7 +92,7 @@ void Sprite::pauseAction(Action * action)
 
 void Sprite::stopAction(Action * action)
 {
-	if (action->m_pTargetSprite == this)
+	if (action->getTarget() == this)
 	{
 		ActionManager::stopAction(action);
 	}

@@ -71,6 +71,11 @@ Action * Action::reverse() const
 	return nullptr;
 }
 
+Sprite * Action::getTarget()
+{
+	return m_pTargetSprite;
+}
+
 void Action::_reset()
 {
 	m_bEnding = false;

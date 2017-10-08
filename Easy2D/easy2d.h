@@ -1101,6 +1101,8 @@ public:
 	virtual Action * copy() const = 0;
 	// 获取一个新的逆向动作
 	virtual Action * reverse() const;
+	// 获取执行该动作的目标
+	virtual Sprite * getTarget();
 
 protected:
 	bool			m_bRunning;
