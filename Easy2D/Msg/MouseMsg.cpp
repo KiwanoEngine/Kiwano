@@ -68,7 +68,7 @@ void MouseMsg::startListener(TString name)
 	// 查找名称相同的监听器
 	for (auto l : s_vListeners)
 	{
-		if (l->m_sName == name)
+		if (l->m_sName == name && l->m_pParentScene == App::getCurrentScene())
 		{
 			l->start();
 		}
@@ -80,7 +80,7 @@ void MouseMsg::stopListener(TString name)
 	// 查找名称相同的监听器
 	for (auto l : s_vListeners)
 	{
-		if (l->m_sName == name)
+		if (l->m_sName == name && l->m_pParentScene == App::getCurrentScene())
 		{
 			l->stop();
 		}
@@ -95,7 +95,7 @@ void MouseMsg::delListener(TString name)
 	for (iter = s_vListeners.begin(); iter != s_vListeners.end();)
 	{
 		// 查找相同名称的监听器
-		if ((*iter)->m_sName == name)
+		if ((*iter)->m_sName == name && (*iter)->m_pParentScene == App::getCurrentScene())
 		{
 			// 删除该定时器
 			delete (*iter);
