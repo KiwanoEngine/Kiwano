@@ -13,7 +13,7 @@ ActionScaleTo::~ActionScaleTo()
 
 ActionScaleTo * ActionScaleTo::copy() const
 {
-	return new ActionScaleTo(m_nMilliSeconds / 1000.0f, m_nEndScaleX, m_nEndScaleY);
+	return new ActionScaleTo(m_nAnimationInterval / 1000.0f, m_nEndScaleX, m_nEndScaleY);
 }
 
 void ActionScaleTo::_init()

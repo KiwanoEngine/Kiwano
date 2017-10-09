@@ -19,7 +19,7 @@ void ActionCallback::_init()
 	Action::_init();
 }
 
-void ActionCallback::_exec(LARGE_INTEGER nNow)
+void ActionCallback::_exec(std::chrono::steady_clock::time_point nNow)
 {
 	m_Callback();
 	this->stop();

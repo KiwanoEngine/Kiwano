@@ -1,4 +1,5 @@
 #include "..\easy2d.h"
+#include "..\Win\winbase.h"
 
 ActionScaleBy::ActionScaleBy(float duration, float scaleX, float scaleY) :
 	Animation(duration)
@@ -18,7 +19,7 @@ void ActionScaleBy::_init()
 	m_nBeginScaleY = m_pTargetSprite->getScaleY();
 }
 
-void ActionScaleBy::_exec(LARGE_INTEGER nNow)
+void ActionScaleBy::_exec(steady_clock::time_point nNow)
 {
 	if (Animation::_isDelayEnough(nNow))
 	{
@@ -41,7 +42,7 @@ void ActionScaleBy::_reset()
 
 ActionScaleBy * ActionScaleBy::copy() const
 {
-	return new ActionScaleBy(m_nMilliSeconds / 1000.0f, m_nVariationX, m_nVariationY);
+	return new ActionScaleBy(m_nAnimationInterval / 1000.0f, m_nVariationX, m_nVariationY);
 }
 
 ActionScaleBy * ActionScaleBy::reverse() const

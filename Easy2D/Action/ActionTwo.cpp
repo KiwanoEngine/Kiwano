@@ -40,7 +40,7 @@ void ActionTwo::_init()
 	m_FirstAction->_init();
 }
 
-void ActionTwo::_exec(LARGE_INTEGER nNow)
+void ActionTwo::_exec(std::chrono::steady_clock::time_point nNow)
 {
 	if (!m_FirstAction->isEnding())
 	{

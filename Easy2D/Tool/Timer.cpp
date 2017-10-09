@@ -1,16 +1,17 @@
 #include "..\easy2d.h"
+#include "..\Win\winbase.h"
 
 // 储存所有定时器的容器
 static std::vector<Timer*> s_vTimers;
 
-Timer::Timer(TString name, UINT ms, const TIMER_CALLBACK & callback) :
+Timer::Timer(TString name, LONGLONG milliSeconds, const TIMER_CALLBACK & callback) :
 	m_sName(name),
 	m_bRunning(false),
 	m_bWaiting(false),
 	m_callback(callback),
 	m_pParentScene(nullptr)
 {
-	setInterval(ms);			// 设置定时器的时间间隔
+	setInterval(milliSeconds);		// 设置定时器的时间间隔
 }
 
 Timer::~Timer()
@@ -22,7 +23,7 @@ void Timer::start()
 	// 标志该定时器正在运行
 	m_bRunning = true;
 	// 记录当前时间
-	QueryPerformanceCounter(&m_nLast);
+	m_nLast = steady_clock::now();
 }
 
 void Timer::stop()
@@ -45,14 +46,10 @@ bool Timer::isRunning()
 	return m_bRunning && !m_bWaiting;			// 获取该定时器的运行状态
 }
 
-void Timer::setInterval(UINT ms)
+void Timer::setInterval(LONGLONG milliSeconds)
 {
 	// 设置定时器的时间间隔
-	LARGE_INTEGER nFreq;
-	QueryPerformanceFrequency(&nFreq);
-	m_nAnimationInterval.QuadPart = (LONGLONG)(ms / 1000.0 * nFreq.QuadPart);
-	// 保存时间间隔的时长
-	this->m_nMilliSeconds = ms;
+	m_nAnimationInterval = milliSeconds;
 }
 
 void Timer::setCallback(const TIMER_CALLBACK & callback)
@@ -65,9 +62,9 @@ void Timer::setName(TString name)
 	m_sName = name;				// 修改定时器名称
 }
 
-UINT Timer::getInterval() const
+LONGLONG Timer::getInterval() const
 {
-	return m_nMilliSeconds;		// 获取定时器的时间间隔
+	return m_nAnimationInterval;// 获取定时器的时间间隔
 }
 
 TString Timer::getName() const
@@ -82,9 +79,6 @@ void Timer::__exec()
 	{
 		return;
 	}
-	// 获取当前时间
-	static LARGE_INTEGER nNow;
-	QueryPerformanceCounter(&nNow);
 	// 循环遍历所有的定时器
 	for (auto timer : s_vTimers)
 	{
@@ -94,10 +88,10 @@ void Timer::__exec()
 			continue;
 		}
 		// 判断时间间隔是否足够
-		if (nNow.QuadPart - timer->m_nLast.QuadPart > timer->m_nAnimationInterval.QuadPart)
+		if (duration_cast<milliseconds>(GetNow() - timer->m_nLast).count() > timer->m_nAnimationInterval)
 		{
-			// 用求余的方法重新记录时间
-			timer->m_nLast.QuadPart = nNow.QuadPart - (nNow.QuadPart % timer->m_nAnimationInterval.QuadPart);
+			// 重新记录时间
+			timer->m_nLast += milliseconds(timer->m_nAnimationInterval);
 			// 运行回调函数
 			timer->m_callback();
 		}
@@ -119,10 +113,10 @@ void Timer::addTimer(TString name, const TIMER_CALLBACK & callback)
 	addTimer(name, 20, callback);
 }
 
-void Timer::addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback)
+void Timer::addTimer(TString name, LONGLONG milliSeconds, const TIMER_CALLBACK & callback)
 {
 	// 创建定时器
-	auto timer = new Timer(name, ms, callback);
+	auto timer = new Timer(name, milliSeconds, callback);
 	// 添加定时器
 	addTimer(timer);
 }

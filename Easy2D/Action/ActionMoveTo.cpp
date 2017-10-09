@@ -12,7 +12,7 @@ ActionMoveTo::~ActionMoveTo()
 
 ActionMoveTo * ActionMoveTo::copy() const
 {
-	return new ActionMoveTo(m_nMilliSeconds / 1000.0f, m_EndPos);
+	return new ActionMoveTo(m_nAnimationInterval / 1000.0f, m_EndPos);
 }
 
 void ActionMoveTo::_init()

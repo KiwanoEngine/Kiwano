@@ -1,4 +1,5 @@
 #include "..\easy2d.h"
+#include "..\Win\winbase.h"
 
 ActionMoveBy::ActionMoveBy(float duration, CVector vec) :
 	Animation(duration)
@@ -16,7 +17,7 @@ void ActionMoveBy::_init()
 	m_BeginPos = m_pTargetSprite->getPos();
 }
 
-void ActionMoveBy::_exec(LARGE_INTEGER nNow)
+void ActionMoveBy::_exec(steady_clock::time_point nNow)
 {
 	if (Animation::_isDelayEnough(nNow))
 	{
@@ -40,7 +41,7 @@ void ActionMoveBy::_reset()
 
 ActionMoveBy * ActionMoveBy::copy() const
 {
-	return new ActionMoveBy(m_nMilliSeconds / 1000.0f, m_MoveVector);
+	return new ActionMoveBy(m_nAnimationInterval / 1000.0f, m_MoveVector);
 }
 
 ActionMoveBy * ActionMoveBy::reverse() const

@@ -23,7 +23,7 @@ void ActionNeverStop::_init()
 	m_Action->_init();
 }
 
-void ActionNeverStop::_exec(LARGE_INTEGER nNow)
+void ActionNeverStop::_exec(std::chrono::steady_clock::time_point nNow)
 {
 	m_Action->_exec(nNow);
 

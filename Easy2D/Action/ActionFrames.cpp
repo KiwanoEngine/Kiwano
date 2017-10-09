@@ -1,4 +1,5 @@
 #include "..\easy2d.h"
+#include "..\Win\winbase.h"
 
 ActionFrames::ActionFrames() :
 	m_nFrameIndex(0)
@@ -7,7 +8,7 @@ ActionFrames::ActionFrames() :
 	setInterval(500);
 }
 
-ActionFrames::ActionFrames(UINT frameDelay) :
+ActionFrames::ActionFrames(LONGLONG frameDelay) :
 	m_nFrameIndex(0)
 {
 	setInterval(frameDelay);
@@ -25,16 +26,16 @@ void ActionFrames::_init()
 {
 	Action::_init();
 	// 记录当前时间
-	QueryPerformanceCounter(&m_nLast);
+	m_nLast = steady_clock::now();
 }
 
-void ActionFrames::_exec(LARGE_INTEGER nNow)
+void ActionFrames::_exec(steady_clock::time_point nNow)
 {
 	// 判断时间间隔是否足够
-	while (nNow.QuadPart - m_nLast.QuadPart > m_nAnimationInterval.QuadPart)
+	while (duration_cast<milliseconds>(nNow - m_nLast).count() > m_nAnimationInterval)
 	{
-		// 用求余的方法重新记录时间
-		m_nLast.QuadPart = nNow.QuadPart - (nNow.QuadPart % m_nAnimationInterval.QuadPart);
+		// 重新记录时间
+		m_nLast += milliseconds(m_nAnimationInterval);
 		m_pTargetSprite->setImage(m_vFrames[m_nFrameIndex]);
 		m_nFrameIndex++;
 		// 判断动作是否结束
@@ -49,6 +50,8 @@ void ActionFrames::_reset()
 {
 	Action::_reset();
 	m_nFrameIndex = 0;
+	// 记录当前时间
+	m_nLast = steady_clock::now();
 }
 
 void ActionFrames::addFrame(Image * frame)
@@ -62,7 +65,7 @@ void ActionFrames::addFrame(Image * frame)
 
 ActionFrames * ActionFrames::copy() const
 {
-	auto a = new ActionFrames(this->m_nMilliSeconds);
+	auto a = new ActionFrames(this->m_nAnimationInterval);
 	for (auto f : m_vFrames)
 	{
 		a->addFrame(f);

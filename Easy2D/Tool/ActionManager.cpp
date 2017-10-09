@@ -1,15 +1,13 @@
 #include "..\easy2d.h"
+#include "..\Win\winbase.h"
 #include <assert.h>
 
 static std::vector<Action*> s_vActions;
 
 void ActionManager::__exec()
 {
-	// 获取当前时间
-	static LARGE_INTEGER nNow;
-	QueryPerformanceCounter(&nNow);
 	// 临时指针
-	Action * action;
+	static Action * action;
 	// 循环遍历所有正在运行的动作
 	for (size_t i = 0; i < s_vActions.size(); i++)
 	{
@@ -31,7 +29,7 @@ void ActionManager::__exec()
 					action->_init();
 				}
 				// 执行动作
-				action->_exec(nNow);
+				action->_exec(GetNow());
 			}
 		}
 	}

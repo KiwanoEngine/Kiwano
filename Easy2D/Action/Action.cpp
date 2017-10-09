@@ -56,14 +56,10 @@ void Action::notify()
 	m_bWaiting = false;
 }
 
-void Action::setInterval(UINT ms)
+void Action::setInterval(LONGLONG milliSeconds)
 {
 	// 设置动作的时间间隔
-	LARGE_INTEGER nFreq;
-	QueryPerformanceFrequency(&nFreq);
-	m_nAnimationInterval.QuadPart = (LONGLONG)(ms / 1000.0 * nFreq.QuadPart);
-	// 保存时间间隔的时长
-	this->m_nMilliSeconds = ms;
+	m_nAnimationInterval = milliSeconds;
 }
 
 Action * Action::reverse() const

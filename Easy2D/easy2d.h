@@ -21,8 +21,8 @@
 #include <tchar.h>
 #include <atltypes.h>
 #include <atlimage.h>
+#include <chrono>
 #include <vector>
-#include <stack>
 #include <functional>
 #include <random>
 
@@ -136,12 +136,6 @@ public:
 
 	// 获取程序实例
 	static App * get();
-	// 设置坐标原点
-	static void setOrigin(int originX, int originY);
-	// 获取坐标原点的物理横坐标
-	static int getOriginX();
-	// 获取坐标原点的物理纵坐标
-	static int getOriginY();
 	// 终止程序
 	static void quit();
 	// 终止程序
@@ -172,8 +166,6 @@ public:
 	static TString getAppName();
 	// 修改窗口背景色
 	static void setBkColor(COLORREF color);
-	// 设置帧率
-	static void setFPS(DWORD fps);
 	// 重置绘图样式为默认值
 	static void reset();
 	// 获取当前场景
@@ -182,20 +174,19 @@ public:
 	static Scene * getLoadingScene();
 
 protected:
-	TString				m_sTitle;
-	TString				m_sAppName;
-	Scene*				m_pCurrentScene;
-	Scene*				m_pNextScene;
-	Scene*				m_pLoadingScene;
-	std::stack<Scene*>	m_SceneStack;
-	LARGE_INTEGER		m_nAnimationInterval;
-	CSize				m_Size;
-	int					m_nWindowMode;
-	bool				m_bRunning;
-	bool				m_bSaveScene;
+	TString	m_sTitle;
+	TString	m_sAppName;
+	Scene*	m_pCurrentScene;
+	Scene*	m_pNextScene;
+	Scene*	m_pLoadingScene;
+	CSize	m_Size;
+	int		m_nWindowMode;
+	bool	m_bRunning;
+	bool	m_bSaveScene;
 
 protected:
 	void _initGraph();
+	void _draw();
 	void _mainLoop();
 	void _enterNextScene();
 };
@@ -1158,7 +1149,7 @@ public:
 	// 唤醒
 	virtual void notify();
 	// 设置动作每一帧时间间隔
-	virtual void setInterval(UINT ms);
+	virtual void setInterval(LONGLONG milliSeconds);
 	// 获取一个新的拷贝动作
 	virtual Action * copy() const = 0;
 	// 获取一个新的逆向动作
@@ -1167,19 +1158,18 @@ public:
 	virtual Sprite * getTarget();
 
 protected:
-	bool			m_bRunning;
-	bool			m_bWaiting;
-	bool			m_bEnding;
-	bool			m_bInit;
-	Sprite *		m_pTargetSprite;
-	Scene *			m_pParentScene;
-	UINT			m_nMilliSeconds;
-	LARGE_INTEGER	m_nLast;
-	LARGE_INTEGER	m_nAnimationInterval;
+	bool		m_bRunning;
+	bool		m_bWaiting;
+	bool		m_bEnding;
+	bool		m_bInit;
+	Sprite *	m_pTargetSprite;
+	Scene *		m_pParentScene;
+	LONGLONG	m_nAnimationInterval;
+	std::chrono::steady_clock::time_point m_nLast;
 
 protected:
 	virtual void _init();
-	virtual void _exec(LARGE_INTEGER nNow) = 0;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) = 0;
 	virtual void _reset();
 };
 
@@ -1191,12 +1181,12 @@ public:
 	virtual ~Animation();
 
 protected:
-	UINT	m_nDuration;
-	UINT	m_nTotalDuration;
+	LONGLONG m_nDuration;
+	LONGLONG m_nTotalDuration;
 
 protected:
 	bool _isEnd() const;
-	bool _isDelayEnough(LARGE_INTEGER nNow);
+	bool _isDelayEnough(std::chrono::steady_clock::time_point nNow);
 	virtual void _init() override;
 	virtual void _reset() override;
 };
@@ -1217,7 +1207,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual void _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1256,7 +1246,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual void _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1294,7 +1284,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual void _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1345,7 +1335,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual void _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1367,7 +1357,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual void _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1382,7 +1372,7 @@ public:
 
 protected:
 	virtual void _init() override;
-	virtual void _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1400,7 +1390,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual void _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1409,7 +1399,7 @@ class ActionFrames :
 {
 public:
 	ActionFrames();
-	ActionFrames(UINT frameDelay);
+	ActionFrames(LONGLONG frameDelay);
 	~ActionFrames();
 
 	void addFrame(Image * frame);
@@ -1422,7 +1412,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual void _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1440,7 +1430,7 @@ protected:
 
 protected:
 	virtual void _init() override;
-	virtual void _exec(LARGE_INTEGER nNow) override;
+	virtual void _exec(std::chrono::steady_clock::time_point nNow) override;
 	virtual void _reset() override;
 };
 
@@ -1521,7 +1511,7 @@ class Timer
 {
 	friend App;
 public:
-	Timer(TString name, UINT ms, const TIMER_CALLBACK & callback);
+	Timer(TString name, LONGLONG milliSeconds, const TIMER_CALLBACK & callback);
 	~Timer();
 
 	// 启动定时器
@@ -1535,13 +1525,13 @@ public:
 	// 定时器是否正在运行
 	bool isRunning();
 	// 设置间隔时间
-	void setInterval(UINT ms);
+	void setInterval(LONGLONG milliSeconds);
 	// 设置回调函数
 	void setCallback(const TIMER_CALLBACK& callback);
 	// 设置定时器名称
 	void setName(TString name);
 	// 获取定时器间隔时间
-	UINT getInterval() const;
+	LONGLONG getInterval() const;
 	// 获取定时器名称
 	TString getName() const;
 
@@ -1550,7 +1540,7 @@ public:
 	// 添加定时器
 	static void addTimer(TString name, const TIMER_CALLBACK & callback);
 	// 添加定时器
-	static void addTimer(TString name, UINT ms, const TIMER_CALLBACK & callback);
+	static void addTimer(TString name, LONGLONG milliSeconds, const TIMER_CALLBACK & callback);
 	// 启动特定定时器
 	static void startTimer(TString name);
 	// 停止特定定时器
@@ -1572,10 +1562,9 @@ protected:
 	bool			m_bWaiting;
 	TString			m_sName;
 	TIMER_CALLBACK	m_callback;
-	LARGE_INTEGER	m_nLast;
-	LARGE_INTEGER	m_nAnimationInterval;
-	UINT			m_nMilliSeconds;
+	LONGLONG		m_nAnimationInterval;
 	Scene *			m_pParentScene;
+	std::chrono::steady_clock::time_point m_nLast;
 
 private:
 	static void __exec();

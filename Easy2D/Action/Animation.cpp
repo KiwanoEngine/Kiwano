@@ -1,4 +1,5 @@
 #include "..\easy2d.h"
+#include "..\Win\winbase.h"
 
 Animation::Animation(float duration)
 {
@@ -19,17 +20,17 @@ void Animation::_init()
 {
 	Action::_init();
 	// 记录当前时间
-	QueryPerformanceCounter(&m_nLast);
+	m_nLast = steady_clock::now();
 }
 
-bool Animation::_isDelayEnough(LARGE_INTEGER nNow)
+bool Animation::_isDelayEnough(steady_clock::time_point nNow)
 {
 	// 判断时间间隔是否足够
-	if (nNow.QuadPart - m_nLast.QuadPart > m_nAnimationInterval.QuadPart)
+	if (duration_cast<milliseconds>(nNow - m_nLast).count() > m_nAnimationInterval)
 	{
-		// 用求余的方法重新记录时间
-		m_nLast.QuadPart = nNow.QuadPart - (nNow.QuadPart % m_nAnimationInterval.QuadPart);
-		m_nDuration += m_nMilliSeconds;
+		// 重新记录时间
+		m_nLast += milliseconds(m_nAnimationInterval);
+		m_nDuration += m_nAnimationInterval;
 		return true;
 	}
 	return false;
@@ -39,6 +40,6 @@ void Animation::_reset()
 {
 	Action::_reset();
 	m_nDuration = 0;
-	// 重新记录当前时间
-	QueryPerformanceCounter(&m_nLast);
+	// 记录当前时间
+	m_nLast = steady_clock::now();
 }

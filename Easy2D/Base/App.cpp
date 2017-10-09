@@ -1,17 +1,20 @@
 #include "..\easy2d.h"
+#include "..\Win\winbase.h"
 #include "..\EasyX\easyx.h"
 #include <time.h>
 #include <assert.h>
 #include <imm.h>
 #pragma comment(lib, "imm32.lib")
-#include <mmsystem.h>
-#pragma comment(lib, "winmm.lib")
+#include <stack>
+#include <chrono>
+#include <thread>
+
+using namespace std::chrono;
 
 // App 的唯一实例
 static App * s_pInstance = nullptr;
-// 坐标原点的物理坐标
-static int originX = 0;
-static int originY = 0;
+// 场景栈
+static std::stack<Scene*> s_SceneStack;
 
 App::App() : 
 	m_pCurrentScene(nullptr), 
@@ -23,7 +26,6 @@ App::App() :
 {
 	assert(!s_pInstance);	// 不能同时存在两个 App 实例
 	s_pInstance = this;		// 保存实例对象
-	setFPS(60);				// 默认 FPS 为 60
 }
 
 App::~App()
@@ -40,46 +42,48 @@ int App::run()
 {
 	// 开启批量绘图
 	BeginBatchDraw();
-	// 修改时间精度
-	timeBeginPeriod(1);
-	// 获取 CPU 每秒滴答声个数
-	LARGE_INTEGER freq;
-	QueryPerformanceFrequency(&freq);
-	// 创建时间变量
-	LARGE_INTEGER nLast;
-	LARGE_INTEGER nNow;
 	// 记录当前时间
-	QueryPerformanceCounter(&nLast);
+	steady_clock::time_point nLast = steady_clock::now();
+	// 帧间隔
+	LONGLONG nAnimationInterval = 17LL;
 	// 时间间隔
-	LONGLONG interval = 0LL;
+	LONGLONG nInterval = 0LL;
 	// 挂起时长
-	LONG waitMS = 0L;
+	LONGLONG nWaitMS = 0L;
+
 	// 将隐藏的窗口显示
 	ShowWindow(GetHWnd(), SW_NORMAL);
 	// 运行游戏
 	m_bRunning = true;
 
+	// 启动多线程
+	//std::thread t(std::bind(&App::_mainLoop, this));
+	//t.join();
+
 	// 进入主循环
 	while (m_bRunning)
 	{
-		// 获取当前时间
-		QueryPerformanceCounter(&nNow);
+		// 刷新计时
+		::FlushSteadyClock();
 		// 计算时间间隔
-		interval = nNow.QuadPart - nLast.QuadPart;
+		nInterval = duration_cast<milliseconds>(GetNow() - nLast).count();
 		// 判断间隔时间是否足够
-		if (interval >= m_nAnimationInterval.QuadPart)
+		if (nInterval >= nAnimationInterval)
 		{
 			// 记录当前时间
-			nLast.QuadPart = nNow.QuadPart;
-			// 执行游戏逻辑
-			_mainLoop();
+			nLast = GetNow();
+			// 刷新游戏画面
+			_draw();
 		}
 		else
 		{
 			// 计算挂起时长
-			waitMS = LONG((m_nAnimationInterval.QuadPart - interval) * 1000LL / freq.QuadPart) - 1L;
+			/*nWaitMS = nAnimationInterval * 2 - nInterval;
 			// 挂起线程，释放 CPU 占用
-			if (waitMS > 1L) Sleep(waitMS);
+			if (nWaitMS > 1LL)
+			{
+				std::this_thread::sleep_for(milliseconds(nWaitMS));
+			}*/
 		}
 	}
 	// 停止批量绘图
@@ -88,8 +92,6 @@ int App::run()
 	close();
 	// 释放所有内存占用
 	free();
-	// 重置时间精度
-	timeEndPeriod(1);
 
 	return 0;
 }
@@ -132,7 +134,7 @@ void App::_initGraph()
 	}
 }
 
-void App::_mainLoop()
+void App::_draw()
 {
 	// 下一场景指针不为空时，切换场景
 	if (m_pNextScene)
@@ -142,17 +144,33 @@ void App::_mainLoop()
 	}
 	// 断言当前场景非空
 	assert(m_pCurrentScene);
-	
+
 	cleardevice();				// 清空画面
 	m_pCurrentScene->_onDraw();	// 绘制当前场景
 	FlushBatchDraw();			// 刷新画面
 
-	// 其他执行程序
 	MouseMsg::__exec();			// 鼠标检测
 	KeyMsg::__exec();			// 键盘按键检测
 	Timer::__exec();			// 定时器执行程序
 	ActionManager::__exec();	// 动作管理器执行程序
 	FreePool::__flush();		// 刷新内存池
+}
+
+void App::_mainLoop()
+{
+	while (true)
+	{
+		if (m_bRunning)
+		{
+			MouseMsg::__exec();			// 鼠标检测
+			KeyMsg::__exec();			// 键盘按键检测
+			Timer::__exec();			// 定时器执行程序
+			ActionManager::__exec();	// 动作管理器执行程序
+			FreePool::__flush();		// 刷新内存池
+		}
+		std::this_thread::sleep_for(milliseconds(10));
+	}
+	
 }
 
 void App::createWindow(int width, int height, int mode)
@@ -251,7 +269,7 @@ void App::enterScene(Scene * scene, bool save)
 void App::backScene()
 {
 	// 从栈顶取出场景指针，作为下一场景
-	s_pInstance->m_pNextScene = s_pInstance->m_SceneStack.top();
+	s_pInstance->m_pNextScene = s_SceneStack.top();
 	// 不保存当前场景
 	s_pInstance->m_bSaveScene = false;
 }
@@ -259,11 +277,11 @@ void App::backScene()
 void App::clearScene()
 {
 	// 清空场景栈
-	while (s_pInstance->m_SceneStack.size())
+	while (s_SceneStack.size())
 	{
-		auto temp = s_pInstance->m_SceneStack.top();
+		auto temp = s_SceneStack.top();
 		SafeDelete(temp);
-		s_pInstance->m_SceneStack.pop();
+		s_SceneStack.pop();
 	}
 }
 
@@ -287,11 +305,11 @@ void App::_enterNextScene()
 	bool bBackScene = false;
 
 	// 若下一场景处于栈顶，说明正在返回上一场景
-	if (m_SceneStack.size() && m_pNextScene == m_SceneStack.top())
+	if (s_SceneStack.size() && m_pNextScene == s_SceneStack.top())
 	{
 		bBackScene = true;
 		// 删除栈顶场景
-		m_SceneStack.pop();
+		s_SceneStack.pop();
 	}
 
 	// 执行当前场景的 onExit 函数
@@ -301,7 +319,7 @@ void App::_enterNextScene()
 		if (m_bSaveScene)
 		{
 			// 若要保存当前场景，把它放入栈中
-			m_SceneStack.push(m_pCurrentScene);
+			s_SceneStack.push(m_pCurrentScene);
 			// 暂停当前场景上运行的所有定时器
 			Timer::waitAllSceneTimers(m_pCurrentScene);
 			MouseMsg::waitAllSceneListeners(m_pCurrentScene);
@@ -367,14 +385,6 @@ Scene * App::getLoadingScene()
 	return s_pInstance->m_pLoadingScene;
 }
 
-void App::setFPS(DWORD fps)
-{
-	// 设置画面帧率，以毫秒为单位
-	LARGE_INTEGER nFreq;
-	QueryPerformanceFrequency(&nFreq);
-	s_pInstance->m_nAnimationInterval.QuadPart = (LONGLONG)(1.0 / fps * nFreq.QuadPart);
-}
-
 int App::getWidth()
 {
 	return s_pInstance->m_Size.cx;
@@ -385,34 +395,17 @@ int App::getHeight()
 	return s_pInstance->m_Size.cy;
 }
 
-void App::setOrigin(int originX, int originY)
-{
-	::originX = originX;
-	::originY = originY;
-	setorigin(originX, originY);
-}
-
-int App::getOriginX()
-{
-	return ::originX;
-}
-
-int App::getOriginY()
-{
-	return ::originY;
-}
-
 void App::free()
 {
 	// 释放场景内存
 	SafeDelete(m_pCurrentScene);
 	SafeDelete(m_pNextScene);
 	// 清空场景栈
-	while (m_SceneStack.size())
+	while (s_SceneStack.size())
 	{
-		auto temp = m_SceneStack.top();
+		auto temp = s_SceneStack.top();
 		SafeDelete(temp);
-		m_SceneStack.pop();
+		s_SceneStack.pop();
 	}
 	// 删除所有定时器
 	Timer::clearAllTimers();

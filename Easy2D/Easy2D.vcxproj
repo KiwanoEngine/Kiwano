@@ -391,9 +391,11 @@
     <ClCompile Include="Tool\Math.cpp" />
     <ClCompile Include="Tool\MusicUtils.cpp" />
     <ClCompile Include="Tool\Timer.cpp" />
+    <ClCompile Include="Win\winbase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="easy2d.h" />
+    <ClInclude Include="Win\winbase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

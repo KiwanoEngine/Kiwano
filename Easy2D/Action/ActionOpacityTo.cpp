@@ -12,7 +12,7 @@ ActionOpacityTo::~ActionOpacityTo()
 
 ActionOpacityTo * ActionOpacityTo::copy() const
 {
-	return new ActionOpacityTo(m_nMilliSeconds / 1000.0f, m_nEndVal);
+	return new ActionOpacityTo(m_nAnimationInterval / 1000.0f, m_nEndVal);
 }
 
 void ActionOpacityTo::_init()

@@ -41,7 +41,7 @@ void ActionSequence::_init()
 	m_vActions[0]->_init();
 }
 
-void ActionSequence::_exec(LARGE_INTEGER nNow)
+void ActionSequence::_exec(std::chrono::steady_clock::time_point nNow)
 {
 	m_vActions[m_nActionIndex]->_exec(nNow);
 

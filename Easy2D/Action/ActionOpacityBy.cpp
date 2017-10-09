@@ -1,4 +1,5 @@
 #include "..\easy2d.h"
+#include "..\Win\winbase.h"
 
 ActionOpacityBy::ActionOpacityBy(float duration, float opacity) :
 	Animation(duration)
@@ -16,7 +17,7 @@ void ActionOpacityBy::_init()
 	m_nBeginVal = m_pTargetSprite->getOpacity();
 }
 
-void ActionOpacityBy::_exec(LARGE_INTEGER nNow)
+void ActionOpacityBy::_exec(steady_clock::time_point nNow)
 {
 	if (Animation::_isDelayEnough(nNow))
 	{
@@ -39,7 +40,7 @@ void ActionOpacityBy::_reset()
 
 ActionOpacityBy * ActionOpacityBy::copy() const
 {
-	return new ActionOpacityBy(m_nMilliSeconds / 1000.0f, m_nVariation);
+	return new ActionOpacityBy(m_nAnimationInterval / 1000.0f, m_nVariation);
 }
 
 ActionOpacityBy * ActionOpacityBy::reverse() const

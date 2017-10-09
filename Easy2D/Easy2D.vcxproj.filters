@@ -37,6 +37,9 @@
     <Filter Include="源文件\Base">
       <UniqueIdentifier>{261633d3-3814-40c7-bd6d-201ede6c6ade}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Win">
+      <UniqueIdentifier>{37b7730c-acb0-4b57-b1f8-01680951611c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Style\Color.cpp">
@@ -171,10 +174,16 @@
     <ClCompile Include="Tool\Math.cpp">
       <Filter>源文件\Tool</Filter>
     </ClCompile>
+    <ClCompile Include="Win\winbase.cpp">
+      <Filter>源文件\Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="easy2d.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Win\winbase.h">
+      <Filter>源文件\Win</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
