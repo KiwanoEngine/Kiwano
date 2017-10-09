@@ -202,7 +202,7 @@ void BatchSprite::setY(int y)
 	{
 		s->move(0, var);
 	}
-	RectNode::setX(y);
+	RectNode::setY(y);
 }
 
 void BatchSprite::setPos(int x, int y)
@@ -236,7 +236,7 @@ void BatchSprite::move(int x, int y)
 	{
 		s->move(x, y);
 	}
-	RectNode::setPos(x, y);
+	RectNode::move(x, y);
 }
 
 void BatchSprite::move(CVector v)
@@ -246,5 +246,5 @@ void BatchSprite::move(CVector v)
 	{
 		s->move(v);
 	}
-	RectNode::setPos(v);
+	RectNode::move(v);
 }

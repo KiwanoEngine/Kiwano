@@ -132,7 +132,7 @@ void BatchNode::setY(int y)
 	{
 		child->move(0, var);
 	}
-	Node::setX(y);
+	Node::setY(y);
 }
 
 void BatchNode::setPos(int x, int y)
@@ -166,7 +166,7 @@ void BatchNode::move(int x, int y)
 	{
 		child->move(x, y);
 	}
-	Node::setPos(x, y);
+	Node::move(x, y);
 }
 
 void BatchNode::move(CVector v)
@@ -176,5 +176,5 @@ void BatchNode::move(CVector v)
 	{
 		child->move(v);
 	}
-	Node::setPos(v);
+	Node::move(v);
 }
