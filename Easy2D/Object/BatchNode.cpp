@@ -40,12 +40,8 @@ void BatchNode::_onDraw()
 	
 	for (auto child : m_vChildren)
 	{
-		// 将子节点移动到相对位置
-		child->move(getX(), getY());
 		// 绘制子节点
 		child->_onDraw();
-		// 将子节点移回原位
-		child->move(-getX(), -getY());
 	}
 }
 
@@ -59,6 +55,8 @@ void BatchNode::add(Node * child, int z_Order)
 	child->setZOrder(z_Order);
 	// 对象的引用计数加一
 	child->retain();
+	// 修改子节点位置
+	child->move(getPos());
 
 	// 按 z 轴顺序插入节点
 	size_t size = m_vChildren.size();
@@ -111,4 +109,72 @@ void BatchNode::clearAllChildren()
 	}
 	// 清空储存节点的容器
 	m_vChildren.clear();
+}
+
+void BatchNode::setX(int x)
+{
+	// 计算相对移动位置
+	int var = x - getX();
+	// 移动所有子节点的位置
+	for (auto child : m_vChildren)
+	{
+		child->move(var, 0);
+	}
+	Node::setX(x);
+}
+
+void BatchNode::setY(int y)
+{
+	// 计算相对移动位置
+	int var = y - getY();
+	// 移动所有子节点的位置
+	for (auto child : m_vChildren)
+	{
+		child->move(0, var);
+	}
+	Node::setX(y);
+}
+
+void BatchNode::setPos(int x, int y)
+{
+	// 计算相对移动位置
+	CPoint var(x - getX(), y - getY());
+	// 移动所有子节点的位置
+	for (auto child : m_vChildren)
+	{
+		child->move(var);
+	}
+	Node::setPos(x, y);
+}
+
+void BatchNode::setPos(CPoint p)
+{
+	// 计算相对移动位置
+	CPoint var(p - getPos());
+	// 移动所有子节点的位置
+	for (auto child : m_vChildren)
+	{
+		child->move(var);
+	}
+	Node::setPos(p);
+}
+
+void BatchNode::move(int x, int y)
+{
+	// 移动所有子节点的位置
+	for (auto child : m_vChildren)
+	{
+		child->move(x, y);
+	}
+	Node::setPos(x, y);
+}
+
+void BatchNode::move(CVector v)
+{
+	// 移动所有子节点的位置
+	for (auto child : m_vChildren)
+	{
+		child->move(v);
+	}
+	Node::setPos(v);
 }
