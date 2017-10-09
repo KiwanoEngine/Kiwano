@@ -78,12 +78,12 @@ int App::run()
 		else
 		{
 			// 计算挂起时长
-			/*nWaitMS = nAnimationInterval * 2 - nInterval;
+			nWaitMS = nAnimationInterval - nInterval - 1;
 			// 挂起线程，释放 CPU 占用
 			if (nWaitMS > 1LL)
 			{
 				std::this_thread::sleep_for(milliseconds(nWaitMS));
-			}*/
+			}
 		}
 	}
 	// 停止批量绘图
