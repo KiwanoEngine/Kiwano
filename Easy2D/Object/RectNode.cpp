@@ -12,7 +12,8 @@ RectNode::~RectNode()
 
 bool RectNode::isCollisionWith(RectNode * rectNode) const
 {
-	return IntersectRect(NULL, &m_Rect, &rectNode->m_Rect);
+	static CRect rt;
+	return IntersectRect(&rt, &m_Rect, &rectNode->m_Rect);
 }
 
 bool RectNode::isPointIn(CPoint p) const

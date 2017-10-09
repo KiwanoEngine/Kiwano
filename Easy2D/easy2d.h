@@ -564,6 +564,19 @@ public:
 	// 清空所有子节点
 	void clearAllChildren();
 
+	// 设置节点横坐标
+	virtual void setX(int x) override;
+	// 设置节点纵坐标
+	virtual void setY(int y) override;
+	// 设置节点坐标
+	virtual void setPos(int x, int y) override;
+	// 设置节点坐标
+	virtual void setPos(CPoint p) override;
+	// 移动节点
+	virtual void move(int x, int y) override;
+	// 移动节点
+	virtual void move(CVector v) override;
+
 protected:
 	std::vector<Node*> m_vChildren;
 
@@ -598,33 +611,58 @@ public:
 	RectNode();
 	~RectNode();
 
+	// 判断两节点是否碰撞
 	virtual bool isCollisionWith(RectNode * rectNode) const;
+	// 判断点是否在节点内
 	virtual bool isPointIn(CPoint p) const;
 
-	virtual void setWindowCenterX();
-	virtual void setWindowCenterY();
+	// 设置节点在窗口居中
 	virtual void setWindowCenter();
+	// 设置节点在窗口横向居中
+	virtual void setWindowCenterX();
+	// 设置节点在窗口纵向居中
+	virtual void setWindowCenterY();
 
+	// 获取节点横坐标
 	virtual int getX() const override;
+	// 获取节点纵坐标
 	virtual int getY() const override;
+	// 获取节点坐标
 	virtual CPoint getPos() const override;
+	// 获取节点宽度
 	virtual int getWidth() const;
+	// 获取节点高度
 	virtual int getHeight() const;
+	// 获取节点大小
 	virtual CSize getSize() const;
+	// 获取节点所在的矩形
 	virtual CRect getRect() const;
 
+	// 设置节点横坐标
 	virtual void setX(int x) override;
+	// 设置节点纵坐标
 	virtual void setY(int y) override;
+	// 设置节点坐标
 	virtual void setPos(int x, int y) override;
+	// 设置节点坐标
 	virtual void setPos(CPoint p) override;
+	// 移动节点
 	virtual void move(int x, int y) override;
+	// 移动节点
 	virtual void move(CVector v) override;
+	// 设置节点宽度
 	virtual void setWidth(int width);
+	// 设置节点高度
 	virtual void setHeight(int height);
+	// 设置节点大小
 	virtual void setSize(int width, int height);
+	// 设置节点大小
 	virtual void setSize(CSize size);
+	// 设置节点所在的矩形
 	virtual void setRect(int x1, int y1, int x2, int y2);
+	// 设置节点所在的矩形
 	virtual void setRect(CPoint leftTop, CPoint rightBottom);
+	// 设置节点所在的矩形
 	virtual void setRect(CRect rect);
 
 protected:

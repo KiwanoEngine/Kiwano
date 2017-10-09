@@ -60,7 +60,8 @@ void Sprite::setImage(Image * image)
 
 bool Sprite::isCollisionWith(Sprite * sprite)
 {
-	return IntersectRect(new CRect(), &getRect(), &sprite->getRect());
+	static CRect rt;
+	return IntersectRect(&rt, &getRect(), &sprite->getRect());
 }
 
 void Sprite::addAction(Action * action)
