@@ -99,6 +99,16 @@ bool BatchNode::del(Node * child)
 	return false;
 }
 
+int BatchNode::getCount()
+{
+	return (int)m_vChildren.size();
+}
+
+std::vector<Node*>& BatchNode::getChildren()
+{
+	return m_vChildren;
+}
+
 void BatchNode::clearAllChildren()
 {
 	// 所有节点的引用计数减一

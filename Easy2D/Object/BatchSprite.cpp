@@ -60,6 +60,16 @@ bool BatchSprite::delSprite(Sprite * sprite)
 	return false;
 }
 
+int BatchSprite::getCount()
+{
+	return (int)m_vSprites.size();
+}
+
+std::vector<Sprite*>& BatchSprite::getChildren()
+{
+	return m_vSprites;
+}
+
 void BatchSprite::clearAllSprites()
 {
 	// 所有节点的引用计数减一

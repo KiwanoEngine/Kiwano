@@ -561,6 +561,10 @@ public:
 	void add(Node *child, int z_Order = 0);
 	// 删除子节点
 	bool del(Node * child);
+	// 获取子节点数量
+	int getCount();
+	// 获取所有子节点
+	std::vector<Node*> &getChildren();
 	// 清空所有子节点
 	void clearAllChildren();
 
@@ -840,6 +844,10 @@ public:
 	void addSprite(Sprite * sprite, int z_Order = 0);
 	// 删除精灵
 	bool delSprite(Sprite * child);
+	// 获取精灵数量
+	int getCount();
+	// 获取所有精灵
+	std::vector<Sprite*> &getChildren();
 	// 删除所有精灵
 	void clearAllSprites();
 	// 判断是否有精灵产生碰撞
