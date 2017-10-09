@@ -180,3 +180,71 @@ void BatchSprite::setImage(Image * image)
 		s->setImage(image);
 	}
 }
+
+void BatchSprite::setX(int x)
+{
+	// 计算相对移动位置
+	int var = x - getX();
+	// 移动所有子节点的位置
+	for (auto s : m_vSprites)
+	{
+		s->move(var, 0);
+	}
+	RectNode::setX(x);
+}
+
+void BatchSprite::setY(int y)
+{
+	// 计算相对移动位置
+	int var = y - getY();
+	// 移动所有子节点的位置
+	for (auto s : m_vSprites)
+	{
+		s->move(0, var);
+	}
+	RectNode::setX(y);
+}
+
+void BatchSprite::setPos(int x, int y)
+{
+	// 计算相对移动位置
+	CPoint var(x - getX(), y - getY());
+	// 移动所有子节点的位置
+	for (auto s : m_vSprites)
+	{
+		s->move(var);
+	}
+	RectNode::setPos(x, y);
+}
+
+void BatchSprite::setPos(CPoint p)
+{
+	// 计算相对移动位置
+	CPoint var(p - getPos());
+	// 移动所有子节点的位置
+	for (auto s : m_vSprites)
+	{
+		s->move(var);
+	}
+	RectNode::setPos(p);
+}
+
+void BatchSprite::move(int x, int y)
+{
+	// 移动所有子节点的位置
+	for (auto s : m_vSprites)
+	{
+		s->move(x, y);
+	}
+	RectNode::setPos(x, y);
+}
+
+void BatchSprite::move(CVector v)
+{
+	// 移动所有子节点的位置
+	for (auto s : m_vSprites)
+	{
+		s->move(v);
+	}
+	RectNode::setPos(v);
+}

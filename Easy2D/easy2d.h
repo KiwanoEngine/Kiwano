@@ -851,6 +851,19 @@ public:
 	// 同时修改所有精灵的图片
 	virtual void setImage(Image * image) override;
 
+	// 设置节点横坐标
+	virtual void setX(int x) override;
+	// 设置节点纵坐标
+	virtual void setY(int y) override;
+	// 设置节点坐标
+	virtual void setPos(int x, int y) override;
+	// 设置节点坐标
+	virtual void setPos(CPoint p) override;
+	// 移动节点
+	virtual void move(int x, int y) override;
+	// 移动节点
+	virtual void move(CVector v) override;
+
 	virtual float getScaleX() const override;
 	virtual float getScaleY() const override;
 	virtual float getOpacity() const override;
