@@ -75,6 +75,11 @@ void Sprite::addAction(Action * action)
 	}
 }
 
+void Sprite::runAction(Action * action)
+{
+	addAction(action);
+}
+
 void Sprite::resumeAction(Action * action)
 {
 	if (action->getTarget() == this)

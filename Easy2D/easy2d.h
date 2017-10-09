@@ -794,8 +794,10 @@ public:
 	bool isCollisionWith(Sprite * sprite);
 	// 修改精灵图片
 	virtual void setImage(Image * image);
-	// 添加动作
+	// 执行动作
 	virtual void addAction(Action * action);
+	// 执行动作
+	virtual void runAction(Action * action);
 	// 继续动作
 	virtual void resumeAction(Action * action);
 	// 暂停动作
