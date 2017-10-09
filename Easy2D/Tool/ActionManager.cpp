@@ -18,6 +18,7 @@ void ActionManager::__exec()
 			if (action->isEnding())
 			{
 				// 动作已经结束
+				action->autoRelease();
 				action->release();
 				s_vActions.erase(s_vActions.begin() + i);
 			}
