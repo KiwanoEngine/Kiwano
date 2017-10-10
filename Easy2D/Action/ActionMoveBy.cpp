@@ -19,7 +19,7 @@ void ActionMoveBy::_init()
 
 void ActionMoveBy::_exec(steady_clock::time_point nNow)
 {
-	if (Animation::_isDelayEnough(nNow))
+	while (Animation::_isDelayEnough(nNow))
 	{
 		// ¼ÆËãÒÆ¶¯Î»ÖÃ
 		float scale = float(m_nDuration) / m_nTotalDuration;
@@ -30,6 +30,7 @@ void ActionMoveBy::_exec(steady_clock::time_point nNow)
 		if (_isEnd())
 		{
 			this->stop();
+			break;
 		}
 	}
 }

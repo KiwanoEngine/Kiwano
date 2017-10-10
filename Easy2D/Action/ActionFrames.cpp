@@ -18,6 +18,7 @@ ActionFrames::~ActionFrames()
 {
 	for (auto frame : m_vFrames)
 	{
+		frame->autoRelease();
 		frame->release();
 	}
 }
@@ -42,6 +43,7 @@ void ActionFrames::_exec(steady_clock::time_point nNow)
 		if (m_nFrameIndex == m_vFrames.size())
 		{
 			this->stop();
+			break;
 		}
 	}
 }

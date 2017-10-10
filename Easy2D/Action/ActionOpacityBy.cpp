@@ -19,7 +19,7 @@ void ActionOpacityBy::_init()
 
 void ActionOpacityBy::_exec(steady_clock::time_point nNow)
 {
-	if (Animation::_isDelayEnough(nNow))
+	while (Animation::_isDelayEnough(nNow))
 	{
 		// ¼ÆËãÒÆ¶¯Î»ÖÃ
 		float scale = float(m_nDuration) / m_nTotalDuration;
@@ -29,6 +29,7 @@ void ActionOpacityBy::_exec(steady_clock::time_point nNow)
 		if (_isEnd())
 		{
 			this->stop();
+			break;
 		}
 	}
 }
