@@ -23,12 +23,12 @@ bool RectNode::isPointIn(CPoint p) const
 
 void RectNode::setWindowCenterX()
 {
-	setX((App::getWidth() - getWidth()) / 2);
+	setX((EApp::getWidth() - getWidth()) / 2);
 }
 
 void RectNode::setWindowCenterY()
 {
-	setY((App::getHeight() - getHeight()) / 2);
+	setY((EApp::getHeight() - getHeight()) / 2);
 }
 
 void RectNode::setWindowCenter()

@@ -46,7 +46,7 @@ void ActionManager::addAction(Action * action)
 			assert(a != action);
 		}
 #endif
-		action->m_pParentScene = App::getLoadingScene();
+		action->m_pParentScene = EApp::getLoadingScene();
 		s_vActions.push_back(action);
 	}
 }

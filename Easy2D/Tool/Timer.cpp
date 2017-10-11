@@ -103,7 +103,7 @@ void Timer::addTimer(Timer * timer)
 	// 启动定时器
 	timer->start();
 	// 绑定在场景上
-	timer->m_pParentScene = App::getLoadingScene();
+	timer->m_pParentScene = EApp::getLoadingScene();
 	// 将该定时器放入容器
 	s_vTimers.push_back(timer);
 }
@@ -126,7 +126,7 @@ void Timer::startTimer(TString name)
 	// 查找名称相同的定时器
 	for (auto timer : s_vTimers)
 	{
-		if (timer->m_sName == name && timer->m_pParentScene == App::getCurrentScene())
+		if (timer->m_sName == name && timer->m_pParentScene == EApp::getCurrentScene())
 		{
 			// 启动定时器
 			timer->start();
@@ -139,7 +139,7 @@ void Timer::stopTimer(TString name)
 	// 查找名称相同的定时器
 	for (auto timer : s_vTimers)
 	{
-		if (timer->m_sName == name && timer->m_pParentScene == App::getCurrentScene())
+		if (timer->m_sName == name && timer->m_pParentScene == EApp::getCurrentScene())
 		{
 			// 停止定时器
 			timer->stop();
@@ -155,7 +155,7 @@ void Timer::delTimer(TString name)
 	for (iter = s_vTimers.begin(); iter != s_vTimers.end();)
 	{
 		// 查找相同名称的定时器
-		if ((*iter)->m_sName == name && (*iter)->m_pParentScene == App::getCurrentScene())
+		if ((*iter)->m_sName == name && (*iter)->m_pParentScene == EApp::getCurrentScene())
 		{
 			// 删除该定时器
 			delete (*iter);

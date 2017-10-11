@@ -15,7 +15,7 @@ void MouseMsg::__exec()
 		// 获取鼠标消息
 		s_mouseMsg = GetMouseMsg();
 		// 执行场景程序
-		App::get()->getCurrentScene()->_exec();
+		EApp::get()->getCurrentScene()->_exec();
 		// 执行鼠标监听回调函数
 		for (auto l : s_vListeners)	// 循环遍历所有的鼠标监听
 		{
@@ -58,7 +58,7 @@ void MouseMsg::addListener(TString name, const MOUSE_CALLBACK & callback)
 	// 创建新的监听对象
 	auto listener = new MouseMsg(name, callback);
 	// 绑定在场景上
-	listener->m_pParentScene = App::getLoadingScene();
+	listener->m_pParentScene = EApp::getLoadingScene();
 	// 添加新的按键回调函数
 	s_vListeners.push_back(listener);
 }
@@ -68,7 +68,7 @@ void MouseMsg::startListener(TString name)
 	// 查找名称相同的监听器
 	for (auto l : s_vListeners)
 	{
-		if (l->m_sName == name && l->m_pParentScene == App::getCurrentScene())
+		if (l->m_sName == name && l->m_pParentScene == EApp::getCurrentScene())
 		{
 			l->start();
 		}
@@ -80,7 +80,7 @@ void MouseMsg::stopListener(TString name)
 	// 查找名称相同的监听器
 	for (auto l : s_vListeners)
 	{
-		if (l->m_sName == name && l->m_pParentScene == App::getCurrentScene())
+		if (l->m_sName == name && l->m_pParentScene == EApp::getCurrentScene())
 		{
 			l->stop();
 		}
@@ -95,7 +95,7 @@ void MouseMsg::delListener(TString name)
 	for (iter = s_vListeners.begin(); iter != s_vListeners.end();)
 	{
 		// 查找相同名称的监听器
-		if ((*iter)->m_sName == name && (*iter)->m_pParentScene == App::getCurrentScene())
+		if ((*iter)->m_sName == name && (*iter)->m_pParentScene == EApp::getCurrentScene())
 		{
 			// 删除该定时器
 			delete (*iter);

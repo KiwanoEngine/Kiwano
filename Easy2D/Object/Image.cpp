@@ -216,7 +216,7 @@ void Image::saveScreenshot()
 	{
 		// ±£´æ´°¿Ú½ØÍ¼
 		IMAGE image;
-		getimage(&image, 0, 0, App::getWidth(), App::getHeight());
+		getimage(&image, 0, 0, EApp::getWidth(), EApp::getHeight());
 		saveimage(savePath.c_str(), &image);
 	}
 }

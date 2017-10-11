@@ -190,8 +190,10 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <Lib>
-      <AdditionalDependencies>EasyXa.lib;GdiPlus.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>EasyX\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugW|Win32'">
@@ -209,10 +211,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>EasyXw.lib;GdiPlus.lib</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
-      <AdditionalLibraryDirectories>EasyX\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -233,8 +237,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>EasyX\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>EasyXa.lib;GdiPlus.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugW|x64'">
@@ -252,8 +258,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>EasyXw.lib;GdiPlus.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>EasyX\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -274,8 +282,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>EasyX\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>EasyXa.lib;GdiPlus.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseW|Win32'">
@@ -296,8 +306,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>EasyXw.lib;GdiPlus.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>EasyX\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Lib>
@@ -320,8 +332,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>EasyX\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>EasyXa.lib;GdiPlus.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseW|x64'">
@@ -342,59 +356,22 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>EasyXw.lib;GdiPlus.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>EasyX\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Action\Action.cpp" />
-    <ClCompile Include="Action\ActionCallback.cpp" />
-    <ClCompile Include="Action\ActionDelay.cpp" />
-    <ClCompile Include="Action\ActionFrames.cpp" />
-    <ClCompile Include="Action\ActionMoveTo.cpp" />
-    <ClCompile Include="Action\ActionMoveBy.cpp" />
-    <ClCompile Include="Action\ActionNeverStop.cpp" />
-    <ClCompile Include="Action\ActionOpacityTo.cpp" />
-    <ClCompile Include="Action\ActionOpacityBy.cpp" />
-    <ClCompile Include="Action\ActionScaleBy.cpp" />
-    <ClCompile Include="Action\ActionScaleTo.cpp" />
-    <ClCompile Include="Action\ActionSequence.cpp" />
-    <ClCompile Include="Action\ActionTwo.cpp" />
-    <ClCompile Include="Action\Animation.cpp" />
     <ClCompile Include="Base\App.cpp" />
     <ClCompile Include="Base\FreePool.cpp" />
     <ClCompile Include="Base\Scene.cpp" />
-    <ClCompile Include="Msg\KeyMsg.cpp" />
-    <ClCompile Include="Msg\MouseMsg.cpp" />
-    <ClCompile Include="Object\BatchNode.cpp" />
-    <ClCompile Include="Object\BatchSprite.cpp" />
-    <ClCompile Include="Object\Button\Button.cpp" />
-    <ClCompile Include="Object\Button\ImageButton.cpp" />
-    <ClCompile Include="Object\Button\TextButton.cpp" />
-    <ClCompile Include="Object\Image.cpp" />
-    <ClCompile Include="Object\Layer.cpp" />
-    <ClCompile Include="Object\MouseNode.cpp" />
-    <ClCompile Include="Object\Node.cpp" />
-    <ClCompile Include="Object\RectNode.cpp" />
-    <ClCompile Include="Object\Shape\Circle.cpp" />
-    <ClCompile Include="Object\Shape\Rectangle.cpp" />
-    <ClCompile Include="Object\Shape\Shape.cpp" />
-    <ClCompile Include="Object\Sprite.cpp" />
-    <ClCompile Include="Object\Text.cpp" />
-    <ClCompile Include="Object\Object.cpp" />
-    <ClCompile Include="Style\Color.cpp" />
-    <ClCompile Include="Style\FillStyle.cpp" />
-    <ClCompile Include="Style\FontStyle.cpp" />
-    <ClCompile Include="Style\LineStyle.cpp" />
-    <ClCompile Include="Tool\ActionManager.cpp" />
-    <ClCompile Include="Tool\FileUtils.cpp" />
-    <ClCompile Include="Tool\Math.cpp" />
-    <ClCompile Include="Tool\MusicUtils.cpp" />
-    <ClCompile Include="Tool\Timer.cpp" />
     <ClCompile Include="Win\winbase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="easy2d.h" />
+    <ClInclude Include="ecommon.h" />
+    <ClInclude Include="emacros.h" />
     <ClInclude Include="Win\winbase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

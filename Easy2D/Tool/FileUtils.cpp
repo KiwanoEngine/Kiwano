@@ -43,7 +43,7 @@ TString FileUtils::getDefaultSavePath()
 
 	TString path = m_lpszDefaultDir;
 	path.append(_T("\\"));
-	path.append(App::getAppName());
+	path.append(EApp::getAppName());
 
 #ifdef UNICODE
 	if (_waccess(path.c_str(), 0) == -1)

@@ -13,104 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\Style">
-      <UniqueIdentifier>{18e7fd5c-0935-47bb-9a2e-38da40377f7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Tool">
-      <UniqueIdentifier>{682a1a3c-39d8-4ac9-ba03-fa90c089c9ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Object">
-      <UniqueIdentifier>{d6778635-8947-4f9b-9388-dd088642b5b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Object\Shape">
-      <UniqueIdentifier>{065a3244-7169-4a45-bc9f-f2a80d8a9759}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Msg">
-      <UniqueIdentifier>{72dbabab-8278-4ee4-917f-bfffb474a51b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Object\Button">
-      <UniqueIdentifier>{bdcd902b-b53d-4537-9632-76ea14c141a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Action">
-      <UniqueIdentifier>{e1501580-8f69-4ad6-a9f1-76d825572c3d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\Base">
       <UniqueIdentifier>{261633d3-3814-40c7-bd6d-201ede6c6ade}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\Win">
-      <UniqueIdentifier>{37b7730c-acb0-4b57-b1f8-01680951611c}</UniqueIdentifier>
+      <UniqueIdentifier>{2f0f3d30-bfc2-4aea-a170-258bbaacaa79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Style\Color.cpp">
-      <Filter>源文件\Style</Filter>
-    </ClCompile>
-    <ClCompile Include="Tool\Timer.cpp">
-      <Filter>源文件\Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="Tool\MusicUtils.cpp">
-      <Filter>源文件\Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="Tool\FileUtils.cpp">
-      <Filter>源文件\Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="Style\FontStyle.cpp">
-      <Filter>源文件\Style</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\BatchNode.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Image.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Node.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Text.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Shape\Circle.cpp">
-      <Filter>源文件\Object\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Shape\Rectangle.cpp">
-      <Filter>源文件\Object\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Shape\Shape.cpp">
-      <Filter>源文件\Object\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\MouseNode.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Style\LineStyle.cpp">
-      <Filter>源文件\Style</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Object.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Style\FillStyle.cpp">
-      <Filter>源文件\Style</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\MouseMsg.cpp">
-      <Filter>源文件\Msg</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\KeyMsg.cpp">
-      <Filter>源文件\Msg</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Button\Button.cpp">
-      <Filter>源文件\Object\Button</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Button\ImageButton.cpp">
-      <Filter>源文件\Object\Button</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Button\TextButton.cpp">
-      <Filter>源文件\Object\Button</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Layer.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\Action.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
     <ClCompile Include="Base\App.cpp">
       <Filter>源文件\Base</Filter>
     </ClCompile>
@@ -120,66 +30,18 @@
     <ClCompile Include="Base\Scene.cpp">
       <Filter>源文件\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Action\ActionMoveBy.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionMoveTo.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionTwo.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionNeverStop.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\Sprite.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionCallback.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionDelay.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Tool\ActionManager.cpp">
-      <Filter>源文件\Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionSequence.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionFrames.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionScaleBy.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionScaleTo.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\Animation.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionOpacityTo.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionOpacityBy.cpp">
-      <Filter>源文件\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\BatchSprite.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\RectNode.cpp">
-      <Filter>源文件\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Tool\Math.cpp">
-      <Filter>源文件\Tool</Filter>
-    </ClCompile>
     <ClCompile Include="Win\winbase.cpp">
       <Filter>源文件\Win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="easy2d.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ecommon.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="emacros.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Win\winbase.h">
