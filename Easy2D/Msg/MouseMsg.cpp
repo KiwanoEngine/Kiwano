@@ -139,7 +139,7 @@ void MouseMsg::clearAllListeners()
 	s_vListeners.clear();
 }
 
-void MouseMsg::notifyAllSceneListeners(Scene * scene)
+void MouseMsg::notifyAllSceneListeners(EScene * scene)
 {
 	for (auto l : s_vListeners)
 	{
@@ -150,7 +150,7 @@ void MouseMsg::notifyAllSceneListeners(Scene * scene)
 	}
 }
 
-void MouseMsg::waitAllSceneListeners(Scene * scene)
+void MouseMsg::waitAllSceneListeners(EScene * scene)
 {
 	for (auto l : s_vListeners)
 	{
@@ -161,7 +161,7 @@ void MouseMsg::waitAllSceneListeners(Scene * scene)
 	}
 }
 
-void MouseMsg::clearAllSceneListeners(Scene * scene)
+void MouseMsg::clearAllSceneListeners(EScene * scene)
 {
 	// ´´½¨µü´úÆ÷
 	std::vector<MouseMsg*>::iterator iter;

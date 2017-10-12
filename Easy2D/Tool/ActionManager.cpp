@@ -51,7 +51,7 @@ void ActionManager::addAction(Action * action)
 	}
 }
 
-void ActionManager::notifyAllSceneActions(Scene * scene)
+void ActionManager::notifyAllSceneActions(EScene * scene)
 {
 	for (auto action : s_vActions)
 	{
@@ -62,7 +62,7 @@ void ActionManager::notifyAllSceneActions(Scene * scene)
 	}
 }
 
-void ActionManager::waitAllSceneActions(Scene * scene)
+void ActionManager::waitAllSceneActions(EScene * scene)
 {
 	for (auto action : s_vActions)
 	{
@@ -73,7 +73,7 @@ void ActionManager::waitAllSceneActions(Scene * scene)
 	}
 }
 
-void ActionManager::stopAllSceneActions(Scene * scene)
+void ActionManager::stopAllSceneActions(EScene * scene)
 {
 	for (auto action : s_vActions)
 	{

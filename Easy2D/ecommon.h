@@ -1,15 +1,18 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include <atltypes.h>
+
+namespace e2d
+{
 
 typedef std::wstring EString;
 
 
-typedef struct
-{
-	UINT32 width;
-	UINT32 height;
-} ESize;
+typedef CSize ESize;
+typedef CPoint EPoint;
+typedef EPoint EVector;
+typedef CRect ERect;
 
 
 typedef struct
@@ -168,3 +171,5 @@ public:
 	};
 
 };
+
+}

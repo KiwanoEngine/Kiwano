@@ -19,19 +19,31 @@
     <Filter Include="源文件\Win">
       <UniqueIdentifier>{2f0f3d30-bfc2-4aea-a170-258bbaacaa79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Node">
+      <UniqueIdentifier>{51864c81-02ee-4043-bf09-9ce3cbe5b6da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Tool">
+      <UniqueIdentifier>{42d46a92-c043-4667-8c20-358319e5c313}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Base\App.cpp">
-      <Filter>源文件\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Base\FreePool.cpp">
-      <Filter>源文件\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Base\Scene.cpp">
-      <Filter>源文件\Base</Filter>
-    </ClCompile>
     <ClCompile Include="Win\winbase.cpp">
       <Filter>源文件\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\EObject.cpp">
+      <Filter>源文件\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\EApp.cpp">
+      <Filter>源文件\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\ENode.cpp">
+      <Filter>源文件\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\EObjectManager.cpp">
+      <Filter>源文件\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\EScene.cpp">
+      <Filter>源文件\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +58,15 @@
     </ClInclude>
     <ClInclude Include="Win\winbase.h">
       <Filter>源文件\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="ebase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="enodes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="etools.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -189,7 +189,7 @@ void KeyMsg::delListener(TString name)
 	}
 }
 
-void KeyMsg::notifyAllSceneListeners(Scene * scene)
+void KeyMsg::notifyAllSceneListeners(EScene * scene)
 {
 	for (auto l : s_vListeners)
 	{
@@ -200,7 +200,7 @@ void KeyMsg::notifyAllSceneListeners(Scene * scene)
 	}
 }
 
-void KeyMsg::waitAllSceneListeners(Scene * scene)
+void KeyMsg::waitAllSceneListeners(EScene * scene)
 {
 	for (auto l : s_vListeners)
 	{
@@ -211,7 +211,7 @@ void KeyMsg::waitAllSceneListeners(Scene * scene)
 	}
 }
 
-void KeyMsg::clearAllSceneListeners(Scene * scene)
+void KeyMsg::clearAllSceneListeners(EScene * scene)
 {
 	// ´´½¨µü´úÆ÷
 	std::vector<KeyMsg*>::iterator iter;

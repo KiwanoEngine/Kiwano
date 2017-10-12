@@ -1,24 +1,23 @@
-#include "..\easy2d.h"
-#include <assert.h>
+#include "..\ebase.h"
+#include "..\enodes.h"
 
-Scene::Scene()
+e2d::EScene::EScene()
 {
-	EApp::get()->m_pLoadingScene = this;
+	EApp::get()->setLoadingScene(this);
 }
 
-Scene::~Scene()
+e2d::EScene::~EScene()
 {
 	clearAllChildren();
 }
 
-void Scene::_exec()
+void e2d::EScene::_exec()
 {
 	// active 标志画面是否取得焦点
 	bool active = true;
 	// 逆序执行，最后绘制的节点（即位于画面最上方）最先被访问
 	for (int i = int(m_vChildren.size()) - 1; i >= 0; i--)
 	{
-		assert(m_vChildren[i]);
 		if (m_vChildren[i]->_exec(active))	// 执行节点程序
 		{
 			active = false;					// 若子节点取得焦点，将标志置 false
@@ -26,32 +25,33 @@ void Scene::_exec()
 	}
 }
 
-void Scene::_onDraw()
+void e2d::EScene::_onDraw()
 {
 	// 绘制所有节点
 	for (auto child : m_vChildren)
 	{
-		assert(child);
 		child->_onDraw();
 	}
 }
 
-void Scene::init()
+void e2d::EScene::init()
 {
 }
 
-void Scene::onEnter()
+void e2d::EScene::onEnter()
 {
 }
 
-void Scene::onExit()
+void e2d::EScene::onExit()
 {
 }
 
-void Scene::add(Node * child, int zOrder)
+void e2d::EScene::add(ENode * child, int zOrder)
 {
 	// 断言添加的节点非空
-	assert(child);
+	ASSERT(child != nullptr);
+	// 忽略空指针
+	if (child == nullptr) return;
 	// 设置节点的父场景
 	child->setParentScene(this);
 	// 设置 z 轴顺序
@@ -80,12 +80,12 @@ void Scene::add(Node * child, int zOrder)
 	}
 }
 
-bool Scene::del(Node * child)
+bool e2d::EScene::del(ENode * child)
 {
 	if (child == nullptr) return false;
 
 	// 寻找是否有相同节点
-	std::vector<Node*>::iterator iter;
+	std::vector<ENode*>::iterator iter;
 	for (iter = m_vChildren.begin(); iter != m_vChildren.end(); iter++)
 	{
 		// 找到相同节点
@@ -102,7 +102,12 @@ bool Scene::del(Node * child)
 	return false;
 }
 
-void Scene::clearAllChildren()
+std::vector<e2d::ENode*>& e2d::EScene::getChildren()
+{
+	return m_vChildren;
+}
+
+void e2d::EScene::clearAllChildren()
 {
 	// 所有节点的引用计数减一
 	for (auto child : m_vChildren)

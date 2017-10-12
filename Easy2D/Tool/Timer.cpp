@@ -179,7 +179,7 @@ void Timer::clearAllTimers()
 	s_vTimers.clear();
 }
 
-void Timer::notifyAllSceneTimers(Scene * scene)
+void Timer::notifyAllSceneTimers(EScene * scene)
 {
 	for (auto t : s_vTimers)
 	{
@@ -190,7 +190,7 @@ void Timer::notifyAllSceneTimers(Scene * scene)
 	}
 }
 
-void Timer::waitAllSceneTimers(Scene * scene)
+void Timer::waitAllSceneTimers(EScene * scene)
 {
 	for (auto t : s_vTimers)
 	{
@@ -201,7 +201,7 @@ void Timer::waitAllSceneTimers(Scene * scene)
 	}
 }
 
-void Timer::clearAllSceneTimers(Scene * scene)
+void Timer::clearAllSceneTimers(EScene * scene)
 {
 	// ´´½¨µü´úÆ÷
 	std::vector<Timer*>::iterator iter;

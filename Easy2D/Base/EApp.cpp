@@ -1,4 +1,4 @@
-#include "..\easy2d.h"
+#include "..\ebase.h"
 #include "..\Win\winbase.h"
 #include <stack>
 #include <chrono>
@@ -13,8 +13,8 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #endif
 
 
-EApp * s_pInstance = nullptr;
-std::stack<Scene*> s_SceneStack;
+e2d::EApp * s_pInstance = nullptr;
+std::stack<e2d::EScene*> s_SceneStack;
 
 e2d::EApp::EApp()
 	: m_bRunning(false)
@@ -33,18 +33,18 @@ e2d::EApp::~EApp()
 	SafeReleaseInterface(&GetRenderTarget());
 }
 
-EApp * e2d::EApp::get()
+e2d::EApp * e2d::EApp::get()
 {
-	Assert(s_pInstance);	// 断言实例存在
+	ASSERT(s_pInstance != nullptr);
 	return s_pInstance;		// 获取 EApp 的唯一实例
 }
 
-bool e2d::EApp::init(EString title, ESize size, bool bShowConsole /* = false */)
+bool e2d::EApp::init(e2d::EString title, e2d::ESize size, bool bShowConsole /* = false */)
 {
-	return init(title, size.width, size.height, bShowConsole);
+	return init(title, size.cx, size.cy, bShowConsole);
 }
 
-bool e2d::EApp::init(EString title, UINT32 width, UINT32 height, bool bShowConsole /* = false */)
+bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShowConsole /* = false */)
 {
 	m_sTitle = title;
 
@@ -60,7 +60,7 @@ bool e2d::EApp::init(EString title, UINT32 width, UINT32 height, bool bShowConso
 
 			if (hwnd)
 			{
-				hr = ShowWindow(hwnd, SW_HIDE);
+				ShowWindow(hwnd, SW_HIDE);
 			}
 		}
 	}
@@ -69,7 +69,7 @@ bool e2d::EApp::init(EString title, UINT32 width, UINT32 height, bool bShowConso
 	{
 		// 初始化 device-indpendent 资源
 		// 比如 Direct2D factory.
-		hr = CreateDeviceIndependentResources();
+		hr = _createDeviceIndependentResources();
 
 		if (SUCCEEDED(hr))
 		{
@@ -115,6 +115,11 @@ bool e2d::EApp::init(EString title, UINT32 width, UINT32 height, bool bShowConso
 		}
 	}
 
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"Initialize Failed!", L"Error", MB_OK);
+	}
+
 	return SUCCEEDED(hr);
 }
 
@@ -131,19 +136,25 @@ void e2d::EApp::run()
 
 	while (m_bRunning)
 	{
-		// 处理窗口消息
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
+			// 处理窗口消息
 			if (msg.message == WM_QUIT)
 			{
 				m_bRunning = false;
+				break;
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		// 执行主循环
-		_mainLoop();
+		else
+		{
+			// 执行主循环
+			_mainLoop();
+		}
 	}
+	// 游戏结束后再执行一次循环
+	_mainLoop();
 	// 关闭窗口
 	close();
 	// 释放所有内存占用
@@ -196,13 +207,13 @@ void e2d::EApp::_onControl()
 		_enterNextScene();
 	}
 	// 断言当前场景非空
-	Assert(m_pCurrentScene);
+	ASSERT(m_pCurrentScene != nullptr);
 
 	//MouseMsg::__exec();			// 鼠标检测
 	//KeyMsg::__exec();			// 键盘按键检测
 	//Timer::__exec();			// 定时器执行程序
 	//ActionManager::__exec();	// 动作管理器执行程序
-	//FreePool::__flush();		// 刷新内存池
+	//EObjectManager::__flush();		// 刷新内存池
 }
 
 // This method discards device-specific
@@ -212,7 +223,7 @@ bool e2d::EApp::_onRender()
 {
 	HRESULT hr = S_OK;
 
-	hr = CreateDeviceResources();
+	hr = _createDeviceResources();
 
 	if (SUCCEEDED(hr))
 	{
@@ -230,7 +241,7 @@ bool e2d::EApp::_onRender()
 	if (hr == D2DERR_RECREATE_TARGET)
 	{
 		hr = S_OK;
-		DiscardDeviceResources();
+		_discardDeviceResources();
 	}
 
 	return SUCCEEDED(hr);
@@ -264,12 +275,12 @@ void e2d::EApp::setWindowSize(int width, int height)
 	);
 }
 
-void e2d::EApp::setWindowSize(ESize size)
+void e2d::EApp::setWindowSize(e2d::ESize size)
 {
-	setWindowSize(size.width, size.height);
+	setWindowSize(size.cx, size.cy);
 }
 
-void e2d::EApp::setWindowTitle(EString title)
+void e2d::EApp::setWindowTitle(e2d::EString title)
 {
 	// 设置窗口标题
 	SetWindowText(GetHWnd(), title.c_str());
@@ -277,22 +288,27 @@ void e2d::EApp::setWindowTitle(EString title)
 	m_sTitle = title;
 }
 
-EString e2d::EApp::getTitle()
+e2d::EString e2d::EApp::getTitle()
 {
 	return m_sTitle;
 }
 
-int e2d::EApp::getWidth()
+e2d::ESize e2d::EApp::getSize()
+{
+	return e2d::ESize(GetRenderTarget()->GetPixelSize().width, GetRenderTarget()->GetPixelSize().height);
+}
+
+UINT32 e2d::EApp::getWidth()
 {
 	return GetRenderTarget()->GetPixelSize().width;
 }
 
-int e2d::EApp::getHeight()
+UINT32 e2d::EApp::getHeight()
 {
 	return GetRenderTarget()->GetPixelSize().height;
 }
 
-void e2d::EApp::enterScene(Scene * scene, bool save /* = true */)
+void e2d::EApp::enterScene(EScene * scene, bool save /* = true */)
 {
 	// 保存下一场景的指针
 	m_pNextScene = scene;
@@ -319,27 +335,32 @@ void e2d::EApp::clearScene()
 	}
 }
 
-Scene * e2d::EApp::getCurrentScene()
+e2d::EScene * e2d::EApp::getCurrentScene()
 {
 	return m_pCurrentScene;
 }
 
-Scene * e2d::EApp::getLoadingScene()
+e2d::EScene * e2d::EApp::getLoadingScene()
 {
 	return m_pLoadingScene;
 }
 
-void e2d::EApp::setAppName(EString appname)
+void e2d::EApp::setLoadingScene(EScene * scene)
+{
+	m_pLoadingScene = scene;
+}
+
+void e2d::EApp::setAppName(e2d::EString appname)
 {
 	s_pInstance->m_sAppName = appname;
 }
 
-EString e2d::EApp::getAppName()
+e2d::EString e2d::EApp::getAppName()
 {
 	return s_pInstance->m_sAppName;
 }
 
-void EApp::setBkColor(EColor::Enum color)
+void e2d::EApp::setBkColor(EColor::Enum color)
 {
 	m_ClearColor = color;
 }
@@ -354,7 +375,7 @@ void e2d::EApp::show()
 	ShowWindow(GetHWnd(), SW_NORMAL);
 }
 
-void EApp::free()
+void e2d::EApp::free()
 {
 	// 释放场景内存
 	SafeDelete(&m_pCurrentScene);
@@ -372,20 +393,20 @@ void EApp::free()
 	//KeyMsg::clearAllListeners();
 	//ActionManager::clearAllActions();
 	// 删除所有对象
-	//FreePool::__clearAllObjects();
+	//EObjectManager::__clearAllObjects();
 }
 
-void EApp::quit()
+void e2d::EApp::quit()
 {
 	m_bRunning = false;
 }
 
-void EApp::end()
+void e2d::EApp::end()
 {
 	m_bRunning = false;
 }
 
-void EApp::_enterNextScene()
+void e2d::EApp::_enterNextScene()
 {
 	bool bBackScene = false;
 
@@ -444,21 +465,26 @@ void EApp::_enterNextScene()
 // Creates resources that are not bound to a particular device.
 // Their lifetime effectively extends for the duration of the
 // application.
-HRESULT e2d::EApp::CreateDeviceIndependentResources()
+HRESULT e2d::EApp::_createDeviceIndependentResources()
 {
 	HRESULT hr = S_OK;
 
 	// Create a Direct2D factory.
 	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &GetFactory());
 
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"Create Device Independent Resources Fail!", L"Error", MB_OK);
+	}
+
 	return hr;
 }
 
 // Creates resources that are bound to a particular
 // Direct3D device. These resources need to be recreated
-// if the Direct3D device dissapears, such as when the display
+// if the Direct3D device dissapears, such as when the isVisiable
 // changes, the window is remoted, etc.
-HRESULT e2d::EApp::CreateDeviceResources()
+HRESULT e2d::EApp::_createDeviceResources()
 {
 	HRESULT hr = S_OK;
 
@@ -485,13 +511,13 @@ HRESULT e2d::EApp::CreateDeviceResources()
 
 // Discards device-dependent resources. These resources must be
 // recreated when the Direct3D device is lost.
-void e2d::EApp::DiscardDeviceResources()
+void e2d::EApp::_discardDeviceResources()
 {
 	SafeReleaseInterface(&GetRenderTarget());
 }
 
 //  If the application receives a WM_SIZE message, this method
-//  resizes the render target appropriately.
+//  re2d::ESizes the render target appropriately.
 void e2d::EApp::_onResize(UINT width, UINT height)
 {
 	if (GetRenderTarget())
@@ -535,6 +561,17 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		{
 			switch (message)
 			{
+			/*case WM_ACTIVATE:
+			{
+				if (LOWORD(wParam) == WA_INACTIVE)
+				{
+					MSG msg;
+					do
+					{
+						GetMessage(&msg, nullptr, 0, 0);
+					} while (msg.wParam != WA_ACTIVE);
+				}
+			}*/
 			case WM_SIZE:
 			{
 				UINT width = LOWORD(lParam);
@@ -580,5 +617,3 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
 	return result;
 }
-
-

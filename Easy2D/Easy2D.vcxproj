@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="DebugW|Win32">
@@ -363,15 +363,20 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Base\App.cpp" />
-    <ClCompile Include="Base\FreePool.cpp" />
-    <ClCompile Include="Base\Scene.cpp" />
+    <ClCompile Include="Base\EApp.cpp" />
+    <ClCompile Include="Base\EObject.cpp" />
+    <ClCompile Include="Base\EScene.cpp" />
+    <ClCompile Include="Node\ENode.cpp" />
+    <ClCompile Include="Tool\EObjectManager.cpp" />
     <ClCompile Include="Win\winbase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="easy2d.h" />
+    <ClInclude Include="ebase.h" />
     <ClInclude Include="ecommon.h" />
     <ClInclude Include="emacros.h" />
+    <ClInclude Include="enodes.h" />
+    <ClInclude Include="etools.h" />
     <ClInclude Include="Win\winbase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
