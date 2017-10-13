@@ -1,22 +1,22 @@
 #include "..\..\emsg.h"
 
 e2d::EKeyPressListener::EKeyPressListener()
-	: EKeyListener()
+	: EKeyboardListener()
 {
 }
 
 e2d::EKeyPressListener::EKeyPressListener(EString name)
-	: EKeyListener(name)
+	: EKeyboardListener(name)
 {
 }
 
 e2d::EKeyPressListener::EKeyPressListener(const KEY_LISTENER_CALLBACK & callback)
-	: EKeyListener(callback)
+	: EKeyboardListener(callback)
 {
 }
 
 e2d::EKeyPressListener::EKeyPressListener(EString name, const KEY_LISTENER_CALLBACK & callback)
-	: EKeyListener(name, callback)
+	: EKeyboardListener(name, callback)
 {
 }
 

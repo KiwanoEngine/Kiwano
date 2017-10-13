@@ -28,4 +28,6 @@ void e2d::EObject::release()
 void e2d::EObject::autoRelease()
 {
 	m_bAutoRelease = true;
+	// 通知对象管理池刷新
+	EObjectManager::notifyFlush();
 }

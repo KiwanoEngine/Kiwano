@@ -60,6 +60,9 @@
     <ClCompile Include="Msg\Listener\EKeyPressListener.cpp">
       <Filter>Msg\Listener</Filter>
     </ClCompile>
+    <ClCompile Include="Tool\ETimerManager.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">

@@ -10,9 +10,14 @@
 
 // 释放池容器
 static std::vector<e2d::EObject*> s_vPool;
+// 标志释放池执行状态
+static bool s_bNotifyed = false;
 
 void e2d::EObjectManager::__flush()
 {
+	if (!s_bNotifyed) return;
+
+	s_bNotifyed = false;
 	// 创建迭代器
 	static std::vector<e2d::EObject*>::iterator iter;
 	// 循环遍历容器中的所有对象
@@ -48,4 +53,9 @@ void e2d::EObjectManager::clearAllObjects()
 		delete o;
 	}
 	s_vPool.clear();
+}
+
+void e2d::EObjectManager::notifyFlush()
+{
+	s_bNotifyed = true;
 }

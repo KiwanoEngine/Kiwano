@@ -4,6 +4,9 @@
 namespace e2d 
 {
 
+class EScene;
+class EObject;
+
 class ENode :
 	public EObject
 {
@@ -144,7 +147,7 @@ public:
 	);
 
 	// 设置节点所在场景
-	void setParentScene(
+	void bindWithScene(
 		EScene * scene
 	);
 

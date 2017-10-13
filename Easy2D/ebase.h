@@ -12,6 +12,8 @@ namespace e2d
 class EScene;
 class ENode;
 class EObjectManager;
+class EMouseListener;
+class EKeyboardListener;
 
 class EApp
 {
@@ -42,81 +44,75 @@ public:
 	void run();
 
 	// 修改窗口大小
-	void setWindowSize(
+	static void setWindowSize(
 		int width,
 		int height
 	);
 
 	// 修改窗口大小
-	void setWindowSize(
+	static void setWindowSize(
 		e2d::ESize size
 	);
 
 	// 设置窗口标题
-	void setWindowTitle(
+	static void setWindowTitle(
 		e2d::EString title
 	);
 
 	// 获取窗口标题
-	e2d::EString getTitle();
+	static e2d::EString getTitle();
 
 	// 获取窗口大小
-	e2d::ESize getSize();
+	static e2d::ESize getSize();
 
 	// 获取窗口宽度
-	UINT32 getWidth();
+	static UINT32 getWidth();
 
 	// 获取窗口高度
-	UINT32 getHeight();
+	static UINT32 getHeight();
 
 	// 切换场景
-	void enterScene(
+	static void enterScene(
 		EScene * scene,
 		bool save = true
 	);
 
 	// 返回上一场景
-	void backScene();
+	static void backScene();
 
 	// 清空保存的所有场景
-	void clearScene();
+	static void clearScene();
 
 	// 获取当前场景
-	EScene * getCurrentScene();
-
-	// 获取正处于加载中的场景
-	EScene * getLoadingScene();
-
-	// 设置正处于加载中的场景
-	void setLoadingScene(EScene * scene);
+	static EScene * getCurrentScene();
 
 	// 获取 AppName
-	e2d::EString getAppName();
+	static e2d::EString getAppName();
 
 	// 设置 AppName
-	void setAppName(
+	static void setAppName(
 		e2d::EString appname
 	);
 
 	// 修改窗口背景色
-	void setBkColor(
+	static void setBkColor(
 		EColor::Enum color
 	);
 
 	// 释放所有内存资源
-	void free();
+	static void free();
 
 	// 关闭窗口
-	void close();
+	static void close();
 
 	// 显示窗口
-	void show();
+	static void show();
 
 	// 终止程序
-	void quit();
+	static void quit();
 
 	// 终止程序
-	void end();
+	static void end();
 
 protected:
 	// Initialize device-independent resources.
@@ -133,7 +129,7 @@ protected:
 	void _onControl();
 
 	// Draw content.
-	bool _onRender();
+	void _onRender();
 
 	void _enterNextScene();
 
@@ -160,7 +156,6 @@ protected:
 
 	EScene *	m_pCurrentScene;
 	EScene *	m_pNextScene;
-	EScene *	m_pLoadingScene;
 };
 
 
@@ -169,12 +164,9 @@ class EScene
 	friend EApp;
 
 public:
-	EScene();
+	EScene() = default;
 
 	~EScene();
-
-	// 重写这个函数，初始化这个场景
-	virtual void init();
 
 	// 重写这个函数，它将在进入这个场景时自动执行
 	virtual void onEnter();
@@ -200,14 +192,18 @@ public:
 	// 清空所有子成员
 	void clearAllChildren();
 
+	// 绑定鼠标消息监听器
+	void bindListener(EMouseListener * listener);
+
+	// 绑定按键消息监听器
+	void bindListener(EKeyboardListener * listener);
+
+protected:
+	// 渲染场景画面
+	void _onRender();
+
 protected:
 	std::vector<e2d::ENode*> m_vChildren;
-
-protected:
-	// 场景
-	void _exec();
-
-	void _onRender();
 };
 
 

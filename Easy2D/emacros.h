@@ -25,14 +25,18 @@
 
 #ifndef ASSERT_IF
 #if defined( DEBUG ) || defined( _DEBUG )
-	#define ASSERT(b) do {if (!(b)) { OutputDebugStringA("Assert: " #b "\n"); }} while(0)
+#define ASSERT(b, m) do {if (!(b)) { fprintf(stderr, "Assert: " #m "\n"); abort(); }} while(0)
 #else
-	#define ASSERT(b)
+	#define ASSERT(b, m) ((void)0)
 #endif //DEBUG || _DEBUG
 #endif
 
 #ifndef WARN_IF
-#define WARN_IF(b, m) do {if (b) { fprintf(stderr, "Warning: " #m "/n"); }} while(0)
+#if defined( DEBUG ) || defined( _DEBUG )
+#define WARN_IF(b, m) do {if (b) { fprintf(stderr, "Warning: " #m "\n"); }} while(0)
+#else
+#define WARN_IF(b, m) ((void)0)
+#endif //DEBUG || _DEBUG
 #endif
 
 

@@ -1,12 +1,6 @@
 #include "..\Easy2D\easy2d.h"
 
-
-int WINAPI WinMain(
-	HINSTANCE hInstance, 
-	HINSTANCE hPrevInstance, 
-	LPSTR lpCmdLine, 
-	int nCmdShow
-)
+int main()
 {
 	EApp app;
 
@@ -20,13 +14,13 @@ int WINAPI WinMain(
 		scene->add(node);
 
 		/*auto listener = new EMouseListener([=] {
-			if (!EMouseMsg::isLButtonDown())
-			{
-				if (EMouseMsg::getMsg() == EMouseMsg::MOVE)
-				{
-					node->setPos(EMouseMsg::getPos());
-				}
-			}
+		if (!EMouseMsg::isLButtonDown())
+		{
+		if (EMouseMsg::getMsg() == EMouseMsg::MOVE)
+		{
+		node->setPos(EMouseMsg::getPos());
+		}
+		}
 		});*/
 
 		auto listener = new EKeyPressListener([=] {
@@ -41,7 +35,6 @@ int WINAPI WinMain(
 					node->move(3, 0);
 				}
 			}
-			EApp::setWindowSize(500, 500);
 		});
 
 		listener->bindWithNode(node);

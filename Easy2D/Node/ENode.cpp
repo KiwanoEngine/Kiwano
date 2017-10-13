@@ -183,7 +183,7 @@ e2d::EScene * &e2d::ENode::getParentScene()
 	return m_pParentScene;
 }
 
-void e2d::ENode::setParentScene(EScene * scene)
+void e2d::ENode::bindWithScene(EScene * scene)
 {
 	m_pParentScene = scene;
 }

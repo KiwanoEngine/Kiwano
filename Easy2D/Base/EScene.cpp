@@ -1,17 +1,14 @@
 #include "..\ebase.h"
 #include "..\enodes.h"
+#include "..\emsg.h"
 
-e2d::EScene::EScene()
-{
-	EApp::get()->setLoadingScene(this);
-}
 
 e2d::EScene::~EScene()
 {
 	clearAllChildren();
 }
 
-void e2d::EScene::_exec()
+/*void e2d::EScene::_exec()
 {
 	// active 标志画面是否取得焦点
 	bool active = true;
@@ -23,7 +20,7 @@ void e2d::EScene::_exec()
 			active = false;					// 若子节点取得焦点，将标志置 false
 		}
 	}
-}
+}*/
 
 void e2d::EScene::_onRender()
 {
@@ -32,10 +29,6 @@ void e2d::EScene::_onRender()
 	{
 		child->_onRender();
 	}
-}
-
-void e2d::EScene::init()
-{
 }
 
 void e2d::EScene::onEnter()
@@ -49,11 +42,11 @@ void e2d::EScene::onExit()
 void e2d::EScene::add(ENode * child, int zOrder /* = 0 */)
 {
 	// 断言添加的节点非空
-	ASSERT(child != nullptr);
+	ASSERT(child != nullptr, "Scene::add NULL pointer exception.");
 	// 忽略空指针
 	if (child == nullptr) return;
 	// 设置节点的父场景
-	child->setParentScene(this);
+	child->bindWithScene(this);
 	// 设置 z 轴顺序
 	child->setZOrder(zOrder);
 	// 对象的引用计数加一
@@ -118,4 +111,14 @@ void e2d::EScene::clearAllChildren()
 	}
 	// 清空储存节点的容器
 	m_vChildren.clear();
+}
+
+void e2d::EScene::bindListener(EMouseListener * listener)
+{
+	EMsgManager::bindListenerWithScene(listener, this);
+}
+
+void e2d::EScene::bindListener(EKeyboardListener * listener)
+{
+	EMsgManager::bindListenerWithScene(listener, this);
 }

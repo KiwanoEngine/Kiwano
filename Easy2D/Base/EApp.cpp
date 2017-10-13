@@ -24,7 +24,6 @@ e2d::EApp::EApp()
 	, m_bSaveScene(true)
 	, m_pCurrentScene(nullptr)
 	, m_pNextScene(nullptr)
-	, m_pLoadingScene(nullptr)
 {
 	s_pInstance = this;		// 保存实例对象
 }
@@ -37,7 +36,7 @@ e2d::EApp::~EApp()
 
 e2d::EApp * e2d::EApp::get()
 {
-	ASSERT(s_pInstance != nullptr);
+	ASSERT(s_pInstance != nullptr, "Nonexistent EApp instance.");
 	return s_pInstance;		// 获取 EApp 的唯一实例
 }
 
@@ -45,7 +44,7 @@ bool e2d::EApp::init(e2d::EString title, e2d::ESize size, bool bShowConsole /* =
 {
 	return init(title, size.cx, size.cy, bShowConsole);
 }
-
+#include <iostream>
 bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShowConsole /* = false */)
 {
 	HRESULT hr;
@@ -54,14 +53,28 @@ bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShow
 	if (SUCCEEDED(hr))
 	{
 		// 关闭控制台
-		if (!bShowConsole)
+		if (bShowConsole)
 		{
-			HWND consoleHWnd = FindWindow(L"ConsoleWindowClass", NULL);
-
-			if (consoleHWnd)
+			// 查找是否已经存在控制台
+			if (!GetConsoleWindow())
 			{
-				ShowWindow(consoleHWnd, SW_HIDE);
+				// 显示一个新控制台
+				if (AllocConsole())
+				{
+					FILE *stream;
+					freopen_s(&stream, "CONOUT$", "w+t", stdout);
+					freopen_s(&stream, "CONOUT$", "w+t", stderr);
+					freopen_s(&stream, "CONIN$", "r+t", stdin);
+				}
+				else
+				{
+					MessageBox(nullptr, L"Alloc Console Failed!", L"Error", MB_OK);
+				}
 			}
+		}
+		else
+		{
+			FreeConsole();
 		}
 
 		// 初始化 device-indpendent 资源
@@ -117,6 +130,24 @@ bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShow
 			UnregisterClass(L"E2DApp", HINST_THISCOMPONENT);
 			MessageBox(nullptr, L"Create Window Failed!", L"Error", MB_OK);
 		}
+		else
+		{
+			// 获取屏幕分辨率
+			int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+			int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+			// 获取窗口大小（包含菜单栏）
+			tagRECT rcWindow;
+			GetWindowRect(GetHWnd(), &rcWindow);
+			// 修改窗口大小，并设置窗口在屏幕居中
+			MoveWindow(
+				GetHWnd(), 
+				(screenWidth - (rcWindow.right - rcWindow.left)) / 2,
+				(screenHeight - (rcWindow.bottom - rcWindow.top)) / 2,
+				(rcWindow.right - rcWindow.left), 
+				(rcWindow.bottom - rcWindow.top), 
+				FALSE
+			);
+		}
 	}
 
 	if (FAILED(hr))
@@ -130,7 +161,7 @@ bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShow
 // 运行游戏
 void e2d::EApp::run()
 {
-	ASSERT(m_pNextScene != nullptr);
+	ASSERT(m_pNextScene != nullptr, "Next scene NULL pointer exception.");
 	// 进入第一个场景
 	_enterNextScene();
 	// 显示窗口
@@ -161,9 +192,7 @@ void e2d::EApp::run()
 		}
 	}
 	// 游戏结束后再执行一次循环
-	_mainLoop();
-	// 关闭窗口
-	close();
+	_onControl();
 	// 释放所有内存占用
 	free();
 }
@@ -214,10 +243,8 @@ void e2d::EApp::_onControl()
 		_enterNextScene();
 	}
 	// 断言当前场景非空
-	ASSERT(m_pCurrentScene != nullptr);
+	ASSERT(m_pCurrentScene != nullptr, "Current scene NULL pointer exception.");
 
-	//MouseMsg::__exec();			// 鼠标检测
-	//KeyMsg::__exec();			// 键盘按键检测
 	//Timer::__exec();			// 定时器执行程序
 	//ActionManager::__exec();	// 动作管理器执行程序
 	EObjectManager::__flush();		// 刷新内存池
@@ -226,7 +253,7 @@ void e2d::EApp::_onControl()
 // This method discards device-specific
 // resources if the Direct3D device dissapears during execution and
 // recreates the resources the next time it's invoked.
-bool e2d::EApp::_onRender()
+void e2d::EApp::_onRender()
 {
 	HRESULT hr = S_OK;
 
@@ -251,7 +278,10 @@ bool e2d::EApp::_onRender()
 		_discardDeviceResources();
 	}
 
-	return SUCCEEDED(hr);
+	if (FAILED(hr))
+	{
+		exit(EXIT_FAILURE);
+	}
 }
 
 void e2d::EApp::setWindowSize(int width, int height)
@@ -268,18 +298,8 @@ void e2d::EApp::setWindowSize(int width, int height)
 	// 计算边框大小
 	width += (rcWindow.right - rcWindow.left) - (rcClient.right - rcClient.left);
 	height += (rcWindow.bottom - rcWindow.top) - (rcClient.bottom - rcClient.top);
-	// 销毁当前窗口
-	// DestroyWindow(m_);
 	// 修改窗口大小，并设置窗口在屏幕居中
-	SetWindowPos(
-		GetHWnd(), 
-		HWND_TOP,
-		(screenWidth - width) / 2,
-		(screenHeight - height) / 2,
-		width,
-		height,
-		SWP_SHOWWINDOW
-	);
+	MoveWindow(GetHWnd(), (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
 }
 
 void e2d::EApp::setWindowSize(e2d::ESize size)
@@ -292,12 +312,12 @@ void e2d::EApp::setWindowTitle(e2d::EString title)
 	// 设置窗口标题
 	SetWindowText(GetHWnd(), title.c_str());
 	// 保存当前标题，用于修改窗口大小时恢复标题
-	m_sTitle = title;
+	get()->m_sTitle = title;
 }
 
 e2d::EString e2d::EApp::getTitle()
 {
-	return m_sTitle;
+	return get()->m_sTitle;
 }
 
 e2d::ESize e2d::EApp::getSize()
@@ -318,17 +338,17 @@ UINT32 e2d::EApp::getHeight()
 void e2d::EApp::enterScene(EScene * scene, bool save /* = true */)
 {
 	// 保存下一场景的指针
-	m_pNextScene = scene;
+	get()->m_pNextScene = scene;
 	// 切换场景时，是否保存当前场景
-	m_bSaveScene = save;
+	get()->m_bSaveScene = save;
 }
 
 void e2d::EApp::backScene()
 {
 	// 从栈顶取出场景指针，作为下一场景
-	m_pNextScene = s_SceneStack.top();
+	get()->m_pNextScene = s_SceneStack.top();
 	// 不保存当前场景
-	m_bSaveScene = false;
+	get()->m_bSaveScene = false;
 }
 
 void e2d::EApp::clearScene()
@@ -344,17 +364,7 @@ void e2d::EApp::clearScene()
 
 e2d::EScene * e2d::EApp::getCurrentScene()
 {
-	return m_pCurrentScene;
-}
-
-e2d::EScene * e2d::EApp::getLoadingScene()
-{
-	return m_pLoadingScene;
-}
-
-void e2d::EApp::setLoadingScene(EScene * scene)
-{
-	m_pLoadingScene = scene;
+	return get()->m_pCurrentScene;
 }
 
 void e2d::EApp::setAppName(e2d::EString appname)
@@ -369,7 +379,7 @@ e2d::EString e2d::EApp::getAppName()
 
 void e2d::EApp::setBkColor(EColor::Enum color)
 {
-	m_ClearColor = color;
+	get()->m_ClearColor = color;
 }
 
 void e2d::EApp::close()
@@ -385,8 +395,8 @@ void e2d::EApp::show()
 void e2d::EApp::free()
 {
 	// 释放场景内存
-	SafeDelete(&m_pCurrentScene);
-	SafeDelete(&m_pNextScene);
+	SafeDelete(&get()->m_pCurrentScene);
+	SafeDelete(&get()->m_pNextScene);
 	// 清空场景栈
 	while (s_SceneStack.size())
 	{
@@ -394,33 +404,34 @@ void e2d::EApp::free()
 		SafeDelete(&temp);
 		s_SceneStack.pop();
 	}
-	// 删除所有定时器
+	// 删除所有定时器、监听器
 	//Timer::clearAllTimers();
-	//MouseMsg::clearAllListeners();
-	//KeyMsg::clearAllListeners();
+	EMsgManager::clearAllKeyboardListeners();
+	EMsgManager::clearAllMouseListeners();
 	//ActionManager::clearAllActions();
 	// 删除所有对象
-	//EObjectManager::__clearAllObjects();
+	EObjectManager::clearAllObjects();
 }
 
 void e2d::EApp::quit()
 {
-	m_bRunning = false;
+	get()->m_bRunning = false;
 }
 
 void e2d::EApp::end()
 {
-	m_bRunning = false;
+	get()->m_bRunning = false;
 }
 
 void e2d::EApp::_enterNextScene()
 {
-	bool bBackScene = false;
-
 	// 若下一场景处于栈顶，说明正在返回上一场景
 	if (s_SceneStack.size() && m_pNextScene == s_SceneStack.top())
 	{
-		bBackScene = true;
+		// 返回上一场景时，恢复场景上的定时器
+		//Timer::notifyAllSceneTimers(m_pNextScene);
+		EMsgManager::notifyAllListenersBindWithScene(m_pNextScene);
+		//ActionManager::notifyAllSceneActions(m_pNextScene);
 		// 删除栈顶场景
 		s_SceneStack.pop();
 	}
@@ -435,37 +446,23 @@ void e2d::EApp::_enterNextScene()
 			s_SceneStack.push(m_pCurrentScene);
 			// 暂停当前场景上运行的所有定时器
 			//Timer::waitAllSceneTimers(m_pCurrentScene);
-			//MouseMsg::waitAllSceneListeners(m_pCurrentScene);
-			//KeyMsg::waitAllSceneListeners(m_pCurrentScene);
+			EMsgManager::waitAllListenersBindWithScene(m_pCurrentScene);
 			//ActionManager::waitAllSceneActions(m_pCurrentScene);
 		}
 		else
 		{
 			// 不保存场景时，停止当前场景上运行的所有定时器，并删除当前场景
 			//Timer::clearAllSceneTimers(m_pCurrentScene);
-			//MouseMsg::clearAllSceneListeners(m_pCurrentScene);
-			//KeyMsg::clearAllSceneListeners(m_pCurrentScene);
+			EMsgManager::clearAllListenersBindWithScene(m_pCurrentScene);
 			//ActionManager::stopAllSceneActions(m_pCurrentScene);
 			SafeDelete(&m_pCurrentScene);
 		}
 	}
 
+	m_pNextScene->onEnter();			// 执行下一场景的 onEnter 函数
+
 	m_pCurrentScene = m_pNextScene;		// 切换场景
 	m_pNextScene = nullptr;				// 下一场景置空
-
-	if (bBackScene)
-	{
-		// 返回上一场景时，恢复场景上的定时器
-		//Timer::notifyAllSceneTimers(m_pCurrentScene);
-		EMsgManager::notifyAllListenersOnScene(m_pCurrentScene);
-		//ActionManager::notifyAllSceneActions(m_pCurrentScene);
-	}
-	else
-	{
-		m_pCurrentScene->init();		// 进入一个新场景时，执行它的 init 函数
-	}
-
-	m_pCurrentScene->onEnter();			// 执行下一场景的 onEnter 函数
 }
 
 // Creates resources that are not bound to a particular device.
@@ -602,7 +599,6 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
 			case WM_KEYDOWN:
 			case WM_KEYUP:
-			case WM_CHAR:
 			{
 				EMsgManager::KeyboardProc(message, wParam, lParam);
 			}
@@ -638,6 +634,10 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
 			case WM_DESTROY:
 			{
+				if (GetConsoleWindow())
+				{
+					FreeConsole();
+				}
 				PostQuitMessage(0);
 			}
 			result = 1;
