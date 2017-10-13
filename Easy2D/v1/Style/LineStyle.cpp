@@ -1,0 +1,1 @@
+/* LineStyle 是 EasyX 中的类，目前尚未考虑实现 */
