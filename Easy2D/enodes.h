@@ -7,6 +7,8 @@ namespace e2d
 class ENode :
 	public EObject
 {
+	friend EScene;
+
 public:
 	ENode();
 
@@ -52,7 +54,7 @@ public:
 	virtual e2d::ENode* &getParent();
 
 	// 获取节点所在场景
-	e2d::EScene * &getParentScene();
+	EScene * &getParentScene();
 
 	// 设置节点是否显示
 	virtual void setVisiable(
@@ -138,19 +140,18 @@ public:
 
 	// 设置父节点
 	virtual void setParent(
-		e2d::ENode* parent
+		ENode* parent
 	);
 
 	// 设置节点所在场景
 	void setParentScene(
-		e2d::EScene * scene
+		EScene * scene
 	);
 
 protected:
-	friend e2d::EScene;
 	int			m_nZOrder;
 	bool		m_bVisiable;
-	e2d::ERect	m_Rect;
+	ERect		m_Rect;
 	EScene *	m_pParentScene;
 	ENode *		m_pParent;
 

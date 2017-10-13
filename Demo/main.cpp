@@ -15,6 +15,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		node->setSize(30, 180);
 		scene->add(node);
 
+		auto mouselistener = new EMouseListener(L"listener", [=] {
+			if (!EMouseMsg::isLButtonDown())
+			{
+				if (EMouseMsg::getMsg() == EMouseMsg::MOVE)
+				{
+					node->setPos(EMouseMsg::getPos());
+				}
+			}
+		});
+
+		EMsgManager::addListener(mouselistener);
+
 		app.enterScene(scene);
 
 		app.run();

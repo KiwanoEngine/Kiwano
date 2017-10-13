@@ -99,7 +99,7 @@ bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShow
 		GetHWnd() = CreateWindow(
 			L"E2DApp",
 			m_sTitle.c_str(),
-			WS_OVERLAPPEDWINDOW,
+			WS_OVERLAPPEDWINDOW | CS_DBLCLKS,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
 			static_cast<UINT>(ceil(width * dpiX / 96.f)),
@@ -595,7 +595,16 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			case WM_MOUSEMOVE:
 			case WM_MOUSEWHEEL:
 			{
-				EMsgManager::setMouseMsg(message);
+				EMsgManager::MouseProc(message, wParam, lParam);
+			}
+			result = 0;
+			break;
+
+			case WM_KEYDOWN:
+			case WM_KEYUP:
+			case WM_CHAR:
+			{
+				EMsgManager::KeyboardProc(message, wParam, lParam);
 			}
 			result = 0;
 			break;

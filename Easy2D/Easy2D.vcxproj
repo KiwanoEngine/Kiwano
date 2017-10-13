@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -196,6 +196,10 @@
     <ClCompile Include="Base\EObject.cpp" />
     <ClCompile Include="Base\EScene.cpp" />
     <ClCompile Include="Node\ENode.cpp" />
+    <ClCompile Include="Tool\EKeyListener.cpp" />
+    <ClCompile Include="Tool\EListener.cpp" />
+    <ClCompile Include="Tool\EMouseClickListener.cpp" />
+    <ClCompile Include="Tool\EMouseDraggedListener.cpp" />
     <ClCompile Include="Tool\EMouseListener.cpp" />
     <ClCompile Include="Tool\EMsgManager.cpp" />
     <ClCompile Include="Tool\EObjectManager.cpp" />

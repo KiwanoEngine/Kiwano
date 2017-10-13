@@ -93,22 +93,22 @@ e2d::ERect e2d::ENode::getRect() const
 
 void e2d::ENode::setX(int x)
 {
-	m_Rect.TopLeft().x = x;
+	m_Rect.MoveToX(x);
 }
 
 void e2d::ENode::setY(int y)
 {
-	m_Rect.TopLeft().y = y;
+	m_Rect.MoveToY(y);
 }
 
 void e2d::ENode::setPos(int x, int y)
 {
-	m_Rect.TopLeft().SetPoint(x, y);
+	m_Rect.MoveToXY(x, y);
 }
 
 void e2d::ENode::setPos(EPoint p)
 {
-	m_Rect.TopLeft() = p;
+	m_Rect.MoveToXY(p.x, p.y);
 }
 
 void e2d::ENode::move(int x, int y)
@@ -137,7 +137,7 @@ void e2d::ENode::setSize(UINT32 width, UINT32 height)
 	setHeight(height);
 }
 
-void e2d::ENode::setSize(e2d::ESize size)
+void e2d::ENode::setSize(ESize size)
 {
 	setSize(size.cx, size.cy);
 }
@@ -153,7 +153,7 @@ void e2d::ENode::setRect(EPoint leftTop, EPoint rightBottom)
 	m_Rect.BottomRight() = rightBottom;
 }
 
-void e2d::ENode::setRect(e2d::ERect rect)
+void e2d::ENode::setRect(ERect rect)
 {
 	m_Rect = rect;
 }
@@ -168,7 +168,7 @@ void e2d::ENode::setZOrder(int z)
 	m_nZOrder = z;
 }
 
-void e2d::ENode::setParent(e2d::ENode * parent)
+void e2d::ENode::setParent(ENode * parent)
 {
 	m_pParent = parent;
 }
@@ -183,7 +183,7 @@ e2d::EScene * &e2d::ENode::getParentScene()
 	return m_pParentScene;
 }
 
-void e2d::ENode::setParentScene(e2d::EScene * scene)
+void e2d::ENode::setParentScene(EScene * scene)
 {
 	m_pParentScene = scene;
 }

@@ -42,6 +42,18 @@
     <ClCompile Include="Tool\EMouseListener.cpp">
       <Filter>Tool\Listener</Filter>
     </ClCompile>
+    <ClCompile Include="Tool\EListener.cpp">
+      <Filter>Tool\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\EKeyListener.cpp">
+      <Filter>Tool\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\EMouseClickListener.cpp">
+      <Filter>Tool\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\EMouseDraggedListener.cpp">
+      <Filter>Tool\Listener</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">

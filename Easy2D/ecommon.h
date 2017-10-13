@@ -9,9 +9,6 @@ namespace e2d
 
 typedef std::wstring EString;
 
-//typedef std::function<void(VK_KEY)>	KEY_CALLBACK;
-typedef std::function<void()>		MOUSE_CALLBACK;
-
 
 typedef CSize ESize;
 typedef CPoint EPoint;
@@ -24,6 +21,11 @@ typedef struct
 	FLOAT width;
 	FLOAT height;
 } ESize_F;
+
+
+typedef std::function<void()> KEY_LISTENER_CALLBACK;
+typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
+typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
 
 
 class EColor
