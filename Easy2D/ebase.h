@@ -166,8 +166,9 @@ protected:
 
 class EScene
 {
-public:
+	friend EApp;
 
+public:
 	EScene();
 
 	~EScene();
@@ -200,7 +201,6 @@ public:
 	void clearAllChildren();
 
 protected:
-	friend EApp;
 	std::vector<e2d::ENode*> m_vChildren;
 
 protected:
@@ -213,6 +213,8 @@ protected:
 
 class EObject
 {
+	friend EObjectManager;
+
 public:
 	EObject();
 
@@ -228,7 +230,6 @@ public:
 	void autoRelease();
 
 private:
-	friend EObjectManager;
 	int m_nRefCount;
 	bool m_bManaged;
 	bool m_bAutoRelease;

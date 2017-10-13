@@ -2,11 +2,15 @@
 #include <Windows.h>
 #include <string>
 #include <atltypes.h>
+#include <functional>
 
 namespace e2d
 {
 
 typedef std::wstring EString;
+
+//typedef std::function<void(VK_KEY)>	KEY_CALLBACK;
+typedef std::function<void()>		MOUSE_CALLBACK;
 
 
 typedef CSize ESize;
