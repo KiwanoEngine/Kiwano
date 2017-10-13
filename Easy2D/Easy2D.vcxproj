@@ -195,13 +195,14 @@
     <ClCompile Include="Base\EApp.cpp" />
     <ClCompile Include="Base\EObject.cpp" />
     <ClCompile Include="Base\EScene.cpp" />
+    <ClCompile Include="Msg\EMsgManager.cpp" />
+    <ClCompile Include="Msg\Listener\EKeyListener.cpp" />
+    <ClCompile Include="Msg\Listener\EKeyPressListener.cpp" />
+    <ClCompile Include="Msg\Listener\EListener.cpp" />
+    <ClCompile Include="Msg\Listener\EMouseClickListener.cpp" />
+    <ClCompile Include="Msg\Listener\EMouseDraggedListener.cpp" />
+    <ClCompile Include="Msg\Listener\EMouseListener.cpp" />
     <ClCompile Include="Node\ENode.cpp" />
-    <ClCompile Include="Tool\EKeyListener.cpp" />
-    <ClCompile Include="Tool\EListener.cpp" />
-    <ClCompile Include="Tool\EMouseClickListener.cpp" />
-    <ClCompile Include="Tool\EMouseDraggedListener.cpp" />
-    <ClCompile Include="Tool\EMouseListener.cpp" />
-    <ClCompile Include="Tool\EMsgManager.cpp" />
     <ClCompile Include="Tool\EObjectManager.cpp" />
     <ClCompile Include="Win\winbase.cpp" />
   </ItemGroup>
@@ -210,6 +211,7 @@
     <ClInclude Include="ebase.h" />
     <ClInclude Include="ecommon.h" />
     <ClInclude Include="emacros.h" />
+    <ClInclude Include="emsg.h" />
     <ClInclude Include="enodes.h" />
     <ClInclude Include="etools.h" />
     <ClInclude Include="Win\winbase.h" />

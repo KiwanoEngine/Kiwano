@@ -25,6 +25,7 @@ typedef struct
 
 typedef std::function<void()> KEY_LISTENER_CALLBACK;
 typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
+typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
 typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
 
 

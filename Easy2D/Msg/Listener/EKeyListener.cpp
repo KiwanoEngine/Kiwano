@@ -1,4 +1,4 @@
-#include "..\etools.h"
+#include "..\..\emsg.h"
 
 e2d::EKeyListener::EKeyListener()
 	: EListener()

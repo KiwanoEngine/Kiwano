@@ -19,6 +19,7 @@
 #include "emacros.h"
 #include "ecommon.h"
 #include "ebase.h"
+#include "emsg.h"
 #include "enodes.h"
 #include "etools.h"
 

@@ -15,7 +15,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		node->setSize(30, 180);
 		scene->add(node);
 
-		auto mouselistener = new EMouseListener(L"listener", [=] {
+		/*auto listener = new EMouseListener([=] {
 			if (!EMouseMsg::isLButtonDown())
 			{
 				if (EMouseMsg::getMsg() == EMouseMsg::MOVE)
@@ -23,9 +23,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					node->setPos(EMouseMsg::getPos());
 				}
 			}
+		});*/
+
+		auto listener = new EKeyPressListener([=] {
+			if (EKeyMsg::isCapitalLockOn())
+			{
+				if (EKeyMsg::getVal() == EKeyMsg::KEY::LEFT)
+				{
+					node->move(-3, 0);
+				}
+				if (EKeyMsg::getVal() == EKeyMsg::KEY::RIGHT)
+				{
+					node->move(3, 0);
+				}
+			}
 		});
 
-		EMsgManager::addListener(mouselistener);
+		EMsgManager::addListener(listener);
 
 		app.enterScene(scene);
 

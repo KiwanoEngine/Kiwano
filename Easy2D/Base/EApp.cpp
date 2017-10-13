@@ -1,5 +1,6 @@
 #include "..\ebase.h"
 #include "..\Win\winbase.h"
+#include "..\emsg.h"
 #include "..\etools.h"
 #include <stack>
 #include <chrono>
@@ -456,8 +457,7 @@ void e2d::EApp::_enterNextScene()
 	{
 		// 返回上一场景时，恢复场景上的定时器
 		//Timer::notifyAllSceneTimers(m_pCurrentScene);
-		//MouseMsg::notifyAllSceneListeners(m_pCurrentScene);
-		//KeyMsg::notifyAllSceneListeners(m_pCurrentScene);
+		EMsgManager::notifyAllListenersOnScene(m_pCurrentScene);
 		//ActionManager::notifyAllSceneActions(m_pCurrentScene);
 	}
 	else

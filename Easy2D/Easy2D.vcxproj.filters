@@ -13,8 +13,11 @@
     <Filter Include="Base">
       <UniqueIdentifier>{261633d3-3814-40c7-bd6d-201ede6c6ade}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tool\Listener">
-      <UniqueIdentifier>{bdc55351-669e-4ee5-ba0b-ee0e4b628fea}</UniqueIdentifier>
+    <Filter Include="Msg">
+      <UniqueIdentifier>{cc102a62-b34d-493c-be3c-f3e5dfbe4cf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Msg\Listener">
+      <UniqueIdentifier>{b9bb1728-5106-4574-998e-8564b49cb4a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,23 +39,26 @@
     <ClCompile Include="Base\EScene.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Tool\EMsgManager.cpp">
-      <Filter>Tool</Filter>
+    <ClCompile Include="Msg\EMsgManager.cpp">
+      <Filter>Msg</Filter>
     </ClCompile>
-    <ClCompile Include="Tool\EMouseListener.cpp">
-      <Filter>Tool\Listener</Filter>
+    <ClCompile Include="Msg\Listener\EKeyListener.cpp">
+      <Filter>Msg\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="Tool\EListener.cpp">
-      <Filter>Tool\Listener</Filter>
+    <ClCompile Include="Msg\Listener\EListener.cpp">
+      <Filter>Msg\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="Tool\EKeyListener.cpp">
-      <Filter>Tool\Listener</Filter>
+    <ClCompile Include="Msg\Listener\EMouseClickListener.cpp">
+      <Filter>Msg\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="Tool\EMouseClickListener.cpp">
-      <Filter>Tool\Listener</Filter>
+    <ClCompile Include="Msg\Listener\EMouseDraggedListener.cpp">
+      <Filter>Msg\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="Tool\EMouseDraggedListener.cpp">
-      <Filter>Tool\Listener</Filter>
+    <ClCompile Include="Msg\Listener\EMouseListener.cpp">
+      <Filter>Msg\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\Listener\EKeyPressListener.cpp">
+      <Filter>Msg\Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,5 +71,6 @@
     <ClInclude Include="ecommon.h" />
     <ClInclude Include="ebase.h" />
     <ClInclude Include="easy2d.h" />
+    <ClInclude Include="emsg.h" />
   </ItemGroup>
 </Project>
