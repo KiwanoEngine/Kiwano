@@ -1,5 +1,6 @@
 #include "..\ebase.h"
 #include "..\Win\winbase.h"
+#include "..\etools.h"
 #include <stack>
 #include <chrono>
 #include <thread>
@@ -18,7 +19,7 @@ std::stack<e2d::EScene*> s_SceneStack;
 
 e2d::EApp::EApp()
 	: m_bRunning(false)
-	, m_ClearColor(EColor::White)
+	, m_ClearColor(EColor::Black)
 	, m_bSaveScene(true)
 	, m_pCurrentScene(nullptr)
 	, m_pNextScene(nullptr)
@@ -46,72 +47,74 @@ bool e2d::EApp::init(e2d::EString title, e2d::ESize size, bool bShowConsole /* =
 
 bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShowConsole /* = false */)
 {
-	m_sTitle = title;
-
 	HRESULT hr;
 	hr = CoInitialize(NULL);
 
 	if (SUCCEEDED(hr))
 	{
-		// 关闭控制台.
-		if (bShowConsole)
+		// 关闭控制台
+		if (!bShowConsole)
 		{
-			HWND hwnd = FindWindow(L"ConsoleWindowClass", NULL);
+			HWND consoleHWnd = FindWindow(L"ConsoleWindowClass", NULL);
 
-			if (hwnd)
+			if (consoleHWnd)
 			{
-				ShowWindow(hwnd, SW_HIDE);
+				ShowWindow(consoleHWnd, SW_HIDE);
 			}
 		}
+
+		// 初始化 device-indpendent 资源
+		// 比如 Direct2D factory.
+		hr = _createDeviceIndependentResources();
 	}
 
 	if (SUCCEEDED(hr))
 	{
-		// 初始化 device-indpendent 资源
-		// 比如 Direct2D factory.
-		hr = _createDeviceIndependentResources();
+		// 注册窗口类
+		WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
+		wcex.style = CS_HREDRAW | CS_VREDRAW;
+		wcex.lpfnWndProc = EApp::WndProc;
+		wcex.cbClsExtra = 0;
+		wcex.cbWndExtra = sizeof(LONG_PTR);
+		wcex.hInstance = HINST_THISCOMPONENT;
+		wcex.hbrBackground = NULL;
+		wcex.lpszMenuName = NULL;
+		wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
+		wcex.lpszClassName = L"E2DApp";
 
-		if (SUCCEEDED(hr))
+		RegisterClassEx(&wcex);
+
+
+		// Because the CreateWindow function takes its size in pixels,
+		// obtain the system DPI and use it to scale the window size.
+		FLOAT dpiX, dpiY;
+
+		// The factory returns the current system DPI. This is also the value it will use
+		// to create its own windows.
+		GetFactory()->GetDesktopDpi(&dpiX, &dpiY);
+
+		m_sTitle = title;
+
+		// Create the window.
+		GetHWnd() = CreateWindow(
+			L"E2DApp",
+			m_sTitle.c_str(),
+			WS_OVERLAPPEDWINDOW,
+			CW_USEDEFAULT,
+			CW_USEDEFAULT,
+			static_cast<UINT>(ceil(width * dpiX / 96.f)),
+			static_cast<UINT>(ceil(height * dpiY / 96.f)),
+			NULL,
+			NULL,
+			HINST_THISCOMPONENT,
+			this
+		);
+
+		hr = GetHWnd() ? S_OK : E_FAIL;
+		if (FAILED(hr))
 		{
-			// 注册窗口类
-			WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
-			wcex.style = CS_HREDRAW | CS_VREDRAW;
-			wcex.lpfnWndProc = EApp::WndProc;
-			wcex.cbClsExtra = 0;
-			wcex.cbWndExtra = sizeof(LONG_PTR);
-			wcex.hInstance = HINST_THISCOMPONENT;
-			wcex.hbrBackground = NULL;
-			wcex.lpszMenuName = NULL;
-			wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
-			wcex.lpszClassName = L"E2DApp";
-
-			RegisterClassEx(&wcex);
-
-
-			// Because the CreateWindow function takes its size in pixels,
-			// obtain the system DPI and use it to scale the window size.
-			FLOAT dpiX, dpiY;
-
-			// The factory returns the current system DPI. This is also the value it will use
-			// to create its own windows.
-			GetFactory()->GetDesktopDpi(&dpiX, &dpiY);
-
-
-			// Create the window.
-			GetHWnd() = CreateWindow(
-				L"E2DApp",
-				m_sTitle.c_str(),
-				WS_OVERLAPPEDWINDOW,
-				CW_USEDEFAULT,
-				CW_USEDEFAULT,
-				static_cast<UINT>(ceil(width * dpiX / 96.f)),
-				static_cast<UINT>(ceil(height * dpiY / 96.f)),
-				NULL,
-				NULL,
-				HINST_THISCOMPONENT,
-				this
-			);
-			hr = GetHWnd() ? S_OK : E_FAIL;
+			UnregisterClass(L"E2DApp", HINST_THISCOMPONENT);
+			MessageBox(nullptr, L"Create Window Failed!", L"Error", MB_OK);
 		}
 	}
 
@@ -126,6 +129,9 @@ bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShow
 // 运行游戏
 void e2d::EApp::run()
 {
+	ASSERT(m_pNextScene != nullptr);
+	// 进入第一个场景
+	_enterNextScene();
 	// 显示窗口
 	ShowWindow(GetHWnd(), SW_SHOWNORMAL);
 	UpdateWindow(GetHWnd());
@@ -181,7 +187,7 @@ void e2d::EApp::_mainLoop()
 	{
 		// 记录当前时间
 		nLast = nNow;
-		// 
+		// 执行游戏控制
 		_onControl();
 		// 刷新游戏画面
 		_onRender();
@@ -213,7 +219,7 @@ void e2d::EApp::_onControl()
 	//KeyMsg::__exec();			// 键盘按键检测
 	//Timer::__exec();			// 定时器执行程序
 	//ActionManager::__exec();	// 动作管理器执行程序
-	//EObjectManager::__flush();		// 刷新内存池
+	EObjectManager::__flush();		// 刷新内存池
 }
 
 // This method discards device-specific
@@ -233,7 +239,7 @@ bool e2d::EApp::_onRender()
 
 		GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor));
 
-		m_pCurrentScene->_onDraw();	// 绘制当前场景
+		m_pCurrentScene->_onRender();	// 绘制当前场景
 
 		hr = GetRenderTarget()->EndDraw();
 	}
@@ -474,7 +480,7 @@ HRESULT e2d::EApp::_createDeviceIndependentResources()
 
 	if (FAILED(hr))
 	{
-		MessageBox(nullptr, L"Create Device Independent Resources Fail!", L"Error", MB_OK);
+		MessageBox(nullptr, L"Create Device Independent Resources Failed!", L"Error", MB_OK);
 	}
 
 	return hr;
@@ -504,6 +510,11 @@ HRESULT e2d::EApp::_createDeviceResources()
 			D2D1::HwndRenderTargetProperties(GetHWnd(), size),
 			&GetRenderTarget()
 		);
+	}
+
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"Create Device Resources Failed!", L"Error", MB_OK);
 	}
 
 	return hr;
@@ -537,10 +548,10 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 	if (message == WM_CREATE)
 	{
 		LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
-		EApp *pEApp = (EApp *)pcs->lpCreateParams;
+		e2d::EApp *pEApp = (e2d::EApp *)pcs->lpCreateParams;
 
 		::SetWindowLongPtrW(
-			GetHWnd(),
+			hWnd,
 			GWLP_USERDATA,
 			PtrToUlong(pEApp)
 		);
@@ -549,9 +560,9 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 	}
 	else
 	{
-		EApp *pEApp = reinterpret_cast<EApp *>(static_cast<LONG_PTR>(
+		e2d::EApp *pEApp = reinterpret_cast<e2d::EApp *>(static_cast<LONG_PTR>(
 			::GetWindowLongPtrW(
-				GetHWnd(),
+				hWnd,
 				GWLP_USERDATA
 			)));
 
@@ -572,6 +583,23 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 					} while (msg.wParam != WA_ACTIVE);
 				}
 			}*/
+			case WM_LBUTTONUP:
+			case WM_LBUTTONDOWN:
+			case WM_LBUTTONDBLCLK:
+			case WM_MBUTTONUP:
+			case WM_MBUTTONDOWN:
+			case WM_MBUTTONDBLCLK:
+			case WM_RBUTTONUP:
+			case WM_RBUTTONDOWN:
+			case WM_RBUTTONDBLCLK:
+			case WM_MOUSEMOVE:
+			case WM_MOUSEWHEEL:
+			{
+				EMsgManager::setMouseMsg(message);
+			}
+			result = 0;
+			break;
+
 			case WM_SIZE:
 			{
 				UINT width = LOWORD(lParam);
@@ -584,7 +612,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
 			case WM_DISPLAYCHANGE:
 			{
-				InvalidateRect(GetHWnd(), NULL, FALSE);
+				InvalidateRect(hWnd, NULL, FALSE);
 			}
 			result = 0;
 			wasHandled = true;
@@ -593,7 +621,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			case WM_PAINT:
 			{
 				pEApp->_onRender();
-				ValidateRect(GetHWnd(), NULL);
+				ValidateRect(hWnd, NULL);
 			}
 			result = 0;
 			wasHandled = true;
@@ -611,7 +639,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
 		if (!wasHandled)
 		{
-			result = DefWindowProc(GetHWnd(), message, wParam, lParam);
+			result = DefWindowProc(hWnd, message, wParam, lParam);
 		}
 	}
 

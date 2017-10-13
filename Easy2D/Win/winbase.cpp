@@ -1,24 +1,24 @@
 #include "winbase.h"
 #include "..\emacros.h"
 
-HWND m_hwnd = nullptr;
-ID2D1Factory * m_pDirect2dFactory = nullptr;
-ID2D1HwndRenderTarget * m_pRenderTarget = nullptr;
+HWND hwnd = nullptr;
+ID2D1Factory * pDirect2dFactory = nullptr;
+ID2D1HwndRenderTarget * pRenderTarget = nullptr;
 
 
 HWND &GetHWnd()
 {
-	return m_hwnd;
+	return hwnd;
 }
 
 ID2D1Factory * &GetFactory()
 {
-	return m_pDirect2dFactory;
+	return pDirect2dFactory;
 }
 
 ID2D1HwndRenderTarget * &GetRenderTarget()
 {
-	return m_pRenderTarget;
+	return pRenderTarget;
 }
 
 void WindowCenter(HWND hWnd)

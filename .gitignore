@@ -3,6 +3,8 @@ Easy2D/Win32/
 Easy2D/x64/
 /Win32/
 /x64/
+Debug/
+Release/
 backup/
 *.lnk
 .vs

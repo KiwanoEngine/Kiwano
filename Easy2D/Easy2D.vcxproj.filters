@@ -1,72 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="头文件">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="资源文件">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="源文件\Base">
-      <UniqueIdentifier>{261633d3-3814-40c7-bd6d-201ede6c6ade}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Win">
+    <Filter Include="Win">
       <UniqueIdentifier>{2f0f3d30-bfc2-4aea-a170-258bbaacaa79}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Node">
+    <Filter Include="Tool">
+      <UniqueIdentifier>{42d46a92-c043-4667-8c20-358319e5c313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Node">
       <UniqueIdentifier>{51864c81-02ee-4043-bf09-9ce3cbe5b6da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Tool">
-      <UniqueIdentifier>{42d46a92-c043-4667-8c20-358319e5c313}</UniqueIdentifier>
+    <Filter Include="Base">
+      <UniqueIdentifier>{261633d3-3814-40c7-bd6d-201ede6c6ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tool\Listener">
+      <UniqueIdentifier>{bdc55351-669e-4ee5-ba0b-ee0e4b628fea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Win\winbase.cpp">
-      <Filter>源文件\Win</Filter>
+      <Filter>Win</Filter>
     </ClCompile>
     <ClCompile Include="Base\EObject.cpp">
-      <Filter>源文件\Base</Filter>
+      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Base\EApp.cpp">
-      <Filter>源文件\Base</Filter>
+      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Node\ENode.cpp">
-      <Filter>源文件\Node</Filter>
+      <Filter>Node</Filter>
     </ClCompile>
     <ClCompile Include="Tool\EObjectManager.cpp">
-      <Filter>源文件\Tool</Filter>
+      <Filter>Tool</Filter>
     </ClCompile>
     <ClCompile Include="Base\EScene.cpp">
-      <Filter>源文件\Base</Filter>
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\EMsgManager.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\EMouseListener.cpp">
+      <Filter>Tool\Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="easy2d.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ecommon.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="emacros.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Win\winbase.h">
-      <Filter>源文件\Win</Filter>
+      <Filter>Win</Filter>
     </ClInclude>
-    <ClInclude Include="ebase.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="enodes.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="etools.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
+    <ClInclude Include="etools.h" />
+    <ClInclude Include="enodes.h" />
+    <ClInclude Include="emacros.h" />
+    <ClInclude Include="ecommon.h" />
+    <ClInclude Include="ebase.h" />
+    <ClInclude Include="easy2d.h" />
   </ItemGroup>
 </Project>

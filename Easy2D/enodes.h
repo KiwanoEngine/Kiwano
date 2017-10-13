@@ -158,7 +158,7 @@ protected:
 
 	virtual bool _exec(bool active);
 
-	virtual void _onDraw() = 0;
+	virtual void _onRender();
 };
 
 }

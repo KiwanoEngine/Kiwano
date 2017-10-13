@@ -1,4 +1,5 @@
 #include "..\enodes.h"
+#include "..\Win\winbase.h"
 
 e2d::ENode::ENode()
 	: m_nZOrder(0)
@@ -27,8 +28,20 @@ bool e2d::ENode::_exec(bool active)
 	return false;
 }
 
-void e2d::ENode::_onDraw()
+void e2d::ENode::_onRender()
 {
+	D2D1_RECT_F rectangle = D2D1::RectF(
+		m_Rect.left,
+		m_Rect.top,
+		m_Rect.right,
+		m_Rect.bottom
+	);
+	ID2D1SolidColorBrush* m_pLightSlateGrayBrush;
+	GetRenderTarget()->CreateSolidColorBrush(
+		D2D1::ColorF(D2D1::ColorF::LightSlateGray),
+		&m_pLightSlateGrayBrush
+	);
+	GetRenderTarget()->FillRectangle(&rectangle, m_pLightSlateGrayBrush);
 }
 
 int e2d::ENode::getX() const

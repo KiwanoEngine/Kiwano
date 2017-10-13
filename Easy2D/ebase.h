@@ -3,6 +3,7 @@
 #include "ecommon.h"
 #include <vector>
 
+
 // Base Classes
 
 namespace e2d
@@ -188,7 +189,8 @@ public:
 
 	// 删除子成员
 	bool del(
-		e2d::ENode * child
+		e2d::ENode * child,
+		bool autoRelease = true
 	);
 
 	// 获取所有子节点
@@ -202,9 +204,10 @@ protected:
 	std::vector<e2d::ENode*> m_vChildren;
 
 protected:
+	// 场景
 	void _exec();
 
-	void _onDraw();
+	void _onRender();
 };
 
 

@@ -25,12 +25,12 @@ void e2d::EScene::_exec()
 	}
 }
 
-void e2d::EScene::_onDraw()
+void e2d::EScene::_onRender()
 {
 	// 绘制所有节点
 	for (auto child : m_vChildren)
 	{
-		child->_onDraw();
+		child->_onRender();
 	}
 }
 
@@ -46,7 +46,7 @@ void e2d::EScene::onExit()
 {
 }
 
-void e2d::EScene::add(ENode * child, int zOrder)
+void e2d::EScene::add(ENode * child, int zOrder /* = 0 */)
 {
 	// 断言添加的节点非空
 	ASSERT(child != nullptr);
@@ -80,7 +80,7 @@ void e2d::EScene::add(ENode * child, int zOrder)
 	}
 }
 
-bool e2d::EScene::del(ENode * child)
+bool e2d::EScene::del(ENode * child, bool autoRelease /* = true */)
 {
 	if (child == nullptr) return false;
 
@@ -91,6 +91,7 @@ bool e2d::EScene::del(ENode * child)
 		// 找到相同节点
 		if (*iter == child)
 		{
+			if (autoRelease) (*iter)->autoRelease();
 			// 对象的引用计数减一
 			(*iter)->release();
 			// 去掉该节点
