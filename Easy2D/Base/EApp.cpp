@@ -43,43 +43,40 @@ bool e2d::EApp::init(e2d::EString title, e2d::ESize size, bool bShowConsole /* =
 {
 	return init(title, size.cx, size.cy, bShowConsole);
 }
-#include <iostream>
+
 bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShowConsole /* = false */)
 {
 	HRESULT hr;
-	hr = CoInitialize(NULL);
+	CoInitialize(NULL);
 
-	if (SUCCEEDED(hr))
+	// 关闭控制台
+	if (bShowConsole)
 	{
-		// 关闭控制台
-		if (bShowConsole)
+		// 查找是否已经存在控制台
+		if (!GetConsoleWindow())
 		{
-			// 查找是否已经存在控制台
-			if (!GetConsoleWindow())
+			// 显示一个新控制台
+			if (AllocConsole())
 			{
-				// 显示一个新控制台
-				if (AllocConsole())
-				{
-					FILE *stream;
-					freopen_s(&stream, "CONOUT$", "w+t", stdout);
-					freopen_s(&stream, "CONOUT$", "w+t", stderr);
-					freopen_s(&stream, "CONIN$", "r+t", stdin);
-				}
-				else
-				{
-					MessageBox(nullptr, L"Alloc Console Failed!", L"Error", MB_OK);
-				}
+				FILE *stream;
+				freopen_s(&stream, "CONOUT$", "w+t", stdout);
+				freopen_s(&stream, "CONOUT$", "w+t", stderr);
+				freopen_s(&stream, "CONIN$", "r+t", stdin);
+			}
+			else
+			{
+				MessageBox(nullptr, L"Alloc Console Failed!", L"Error", MB_OK);
 			}
 		}
-		else
-		{
-			FreeConsole();
-		}
-
-		// 初始化 device-indpendent 资源
-		// 比如 Direct2D factory.
-		hr = _createDeviceIndependentResources();
 	}
+	else
+	{
+		FreeConsole();
+	}
+
+	// 初始化 device-indpendent 资源
+	// 比如 Direct2D factory.
+	hr = _createDeviceIndependentResources();
 
 	if (SUCCEEDED(hr))
 	{
@@ -194,6 +191,8 @@ void e2d::EApp::run()
 	_onControl();
 	// 释放所有内存占用
 	free();
+
+	CoUninitialize();
 }
 
 void e2d::EApp::_mainLoop()
@@ -261,8 +260,6 @@ void e2d::EApp::_onRender()
 	if (SUCCEEDED(hr))
 	{
 		GetRenderTarget()->BeginDraw();
-
-		GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 
 		GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor));
 

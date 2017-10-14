@@ -1,5 +1,4 @@
 #include "winbase.h"
-#include "..\emacros.h"
 
 HWND hwnd = nullptr;
 ID2D1Factory * pDirect2dFactory = nullptr;
@@ -22,9 +21,12 @@ ID2D1HwndRenderTarget * &GetRenderTarget()
 	return pRenderTarget;
 }
 
-ID2D1SolidColorBrush *& GetSolidColorBrush(D2D1_COLOR_F & color)
+ID2D1SolidColorBrush *& GetSolidColorBrush()
 {
-	pRenderTarget->CreateSolidColorBrush(color, &m_pSolidBrush);
+	if (!m_pSolidBrush)
+	{
+		pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &m_pSolidBrush);
+	}
 	return m_pSolidBrush;
 }
 

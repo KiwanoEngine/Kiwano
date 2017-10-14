@@ -18,6 +18,8 @@ void e2d::EScene::_onRender()
 {
 	this->_sortChildren();
 
+	GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+
 	// 访问所有节点
 	for (auto child : m_vChildren)
 	{

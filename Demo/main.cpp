@@ -24,8 +24,8 @@ int WINAPI WinMain(
 		node2->setSize(40, 40);
 		node->addChild(node2);
 
-		auto mlistener = new EMouseClickListener([](EPoint) {
-			EApp::getCurrentScene()->getChild(L"node1")->setPos(EMouseMsg::getPos());
+		auto mlistener = new EMouseClickListener([](EPoint p) {
+			EApp::getCurrentScene()->getChild(L"node1")->setPos(p.x, p.y);
 		});
 
 		mlistener->bindWith(node);

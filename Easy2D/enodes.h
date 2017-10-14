@@ -1,5 +1,6 @@
 #pragma once
 #include "ebase.h"
+#include "Win\winbase.h"
 
 namespace e2d 
 {
@@ -23,25 +24,34 @@ public:
 	virtual int getOrder() const;
 
 	// 获取节点横坐标
-	virtual int getX() const;
+	virtual float getX() const;
 
 	// 获取节点纵坐标
-	virtual int getY() const;
-
-	// 获取节点坐标
-	virtual EPoint getPos() const;
+	virtual float getY() const;
 
 	// 获取节点宽度
-	virtual UINT32 getWidth() const;
+	virtual float getWidth() const;
 
 	// 获取节点高度
-	virtual UINT32 getHeight() const;
+	virtual float getHeight() const;
 
-	// 获取节点大小
-	virtual ESize getSize() const;
+	// 获取节点横向缩放倍数
+	virtual float getScaleX() const;
 
-	// 获取节点所在的矩形
-	virtual ERect getRect() const;
+	// 获取节点纵向缩放倍数
+	virtual float getScaleY() const;
+
+	// 获取节点横向倾斜角度
+	virtual float getSkewX() const;
+
+	// 获取节点纵向倾斜角度
+	virtual float getSkewY() const;
+
+	// 获取节点旋转角度
+	virtual float getRotation() const;
+
+	// 获取节点透明度
+	virtual float getOpacity() const;
 
 	// 获取父节点
 	virtual ENode * getParent() const;
@@ -78,79 +88,92 @@ public:
 
 	// 设置节点横坐标
 	virtual void setX(
-		int x
+		float x
 	);
 
 	// 设置节点纵坐标
 	virtual void setY(
-		int y
+		float y
 	);
 
 	// 设置节点坐标
 	virtual void setPos(
-		int x, 
-		int y
-	);
-
-	// 设置节点坐标
-	virtual void setPos(
-		EPoint p
+		float x,
+		float y
 	);
 
 	// 移动节点
 	virtual void move(
-		int x, 
-		int y
-	);
-
-	// 移动节点
-	virtual void move(
-		EVector v
+		float x,
+		float y
 	);
 
 	// 设置节点宽度
 	virtual void setWidth(
-		UINT32 width
+		float width
 	);
 
 	// 设置节点高度
 	virtual void setHeight(
-		UINT32 height
+		float height
 	);
 
 	// 设置节点大小
 	virtual void setSize(
-		UINT32 width, 
-		UINT32 height
-	);
-
-	// 设置节点大小
-	virtual void setSize(
-		ESize size
-	);
-
-	// 设置节点所在的矩形
-	virtual void setRect(
-		int x1, 
-		int y1, 
-		int x2, 
-		int y2
-	);
-
-	// 设置节点所在的矩形
-	virtual void setRect(
-		EPoint leftTop, 
-		EPoint rightBottom
-	);
-
-	// 设置节点所在的矩形
-	virtual void setRect(
-		ERect rect
+		float width,
+		float height
 	);
 
 	// 设置节点绘图顺序
 	virtual void setOrder(
 		int order
+	);
+
+	// 设置横向缩放
+	virtual void setScaleX(
+		float scaleX
+	);
+
+	// 设置纵向缩放
+	virtual void setScaleY(
+		float scaleY
+	);
+
+	// 设置缩放
+	virtual void setScale(
+		float scaleX,
+		float scaleY
+	);
+
+	// 设置缩放
+	virtual void setScale(
+		float scale
+	);
+
+	// 设置横向倾斜角度
+	virtual void setSkewX(
+		float angleX
+	);
+
+	// 设置纵向倾斜角度
+	virtual void setSkewY(
+		float angleY
+	);
+
+	// 设置倾斜角度
+	virtual void setSkew(
+		float angleX,
+		float angleY
+	);
+
+	// 设置旋转角度
+	virtual void setRotation(
+		float rotation
+	);
+
+	// 设置透明度
+	virtual void setOpacity(
+		float opacity
 	);
 
 	// 设置节点所在场景
@@ -193,9 +216,6 @@ protected:
 	// 渲染节点
 	virtual void _onRender();
 
-	// 节点状态转换
-	virtual void _onTransfrom();
-
 	// 子节点排序
 	void _sortChildren();
 
@@ -205,12 +225,22 @@ protected:
 protected:
 	EString		m_sName;
 	size_t		m_nHashName;
+	float		m_fPosX;
+	float		m_fPosY;
+	float		m_fWidth;
+	float		m_fHeight;
+	float		m_fScaleX;
+	float		m_fScaleY;
+	float		m_fRotation;
+	float		m_fSkewAngleX;
+	float		m_fSkewAngleY;
+	float		m_fDisplayOpacity;
+	float		m_fRealOpacity;
+	D2D1::Matrix3x2F m_Matri;
 	int			m_nOrder;
 	bool		m_bVisiable;
 	bool		m_bSortNeeded;
 	bool		m_bTransformNeeded;
-	ERect		m_Rect;
-	EPoint		m_Pos;
 	EScene *	m_pParentScene;
 	ENode *		m_pParent;
 	std::vector<ENode*> m_vChildren;
@@ -220,10 +250,18 @@ protected:
 class ERectangle :
 	public ENode
 {
+public:
+	ERectangle();
+
+	EColor::Enum getColor() const;
+
+	void setColor(EColor::Enum color);
+
 protected:
 	virtual void _onRender() override;
 
-	virtual void _onTransfrom() override;
+protected:
+	EColor::Enum m_Color;
 };
 
 }

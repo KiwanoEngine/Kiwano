@@ -2,18 +2,23 @@
 #include "..\Win\winbase.h"
 
 
-void e2d::ERectangle::_onRender()
+e2d::ERectangle::ERectangle()
 {
-	static D2D1_RECT_F rectangle = D2D1::RectF(
-		m_Rect.left,
-		m_Rect.top,
-		m_Rect.right,
-		m_Rect.bottom
-	);
-	GetRenderTarget()->FillRectangle(&rectangle, GetSolidColorBrush(D2D1::ColorF(D2D1::ColorF::LightSlateGray)));
 }
 
-void e2d::ERectangle::_onTransfrom()
+e2d::EColor::Enum e2d::ERectangle::getColor() const
 {
-	
+	return m_Color;
+}
+
+void e2d::ERectangle::setColor(EColor::Enum color)
+{
+	m_Color = color;
+}
+
+void e2d::ERectangle::_onRender()
+{
+	D2D1_RECT_F rectangle = D2D1::RectF(0, 0, m_fWidth, m_fHeight);
+	GetSolidColorBrush()->SetColor(D2D1::ColorF(m_Color, m_fDisplayOpacity));
+	GetRenderTarget()->FillRectangle(&rectangle, GetSolidColorBrush());
 }
