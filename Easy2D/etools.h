@@ -27,6 +27,14 @@ private:
 };
 
 
+// 定时器
+class ETimer :
+	public EObject
+{
+
+};
+
+
 // 定时器管理器
 class ETimerManager
 {

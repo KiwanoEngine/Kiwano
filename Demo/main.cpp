@@ -10,36 +10,25 @@ int WINAPI WinMain(
 {
 	EApp app;
 
-	if (app.init(L"Easy2D Demo", 640, 480, true))
+	if (app.init(L"Easy2D Demo", 640, 480))
 	{
 		auto scene = new EScene();
 
-		auto node = new ENode();
+		auto node = new ENode(L"node1");
 		node->setPos(50, 80);
-		node->setSize(30, 180);
+		node->setSize(30, 30);
 		scene->add(node);
 
-		auto mlistener = new EMouseClickListener([=](EPoint) {
-			node->setPos(EMouseMsg::getPos());
-		});
+		auto node2 = new ENode(L"node2");
+		node2->setPos(20, 20);
+		node2->setSize(40, 40);
+		node->addChild(node2);
 
-		auto klistener = new EKeyPressListener([=] {
-			if (EKeyMsg::isCapitalLockOn())
-			{
-				if (EKeyMsg::getVal() == EKeyMsg::KEY::LEFT)
-				{
-					node->move(-3, 0);
-				}
-				if (EKeyMsg::getVal() == EKeyMsg::KEY::RIGHT)
-				{
-					node->move(3, 0);
-				}
-			}
+		auto mlistener = new EMouseClickListener([](EPoint) {
+			EApp::getCurrentScene()->getChild(L"node1")->setPos(EMouseMsg::getPos());
 		});
 
 		mlistener->bindWith(node);
-
-		scene->bindListener(klistener);
 
 		app.enterScene(scene);
 

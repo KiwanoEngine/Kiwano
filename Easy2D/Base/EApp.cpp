@@ -21,7 +21,6 @@ std::stack<e2d::EScene*> s_SceneStack;
 e2d::EApp::EApp()
 	: m_bRunning(false)
 	, m_ClearColor(EColor::Black)
-	, m_bSaveScene(true)
 	, m_pCurrentScene(nullptr)
 	, m_pNextScene(nullptr)
 {
@@ -340,15 +339,22 @@ void e2d::EApp::enterScene(EScene * scene, bool save /* = true */)
 	// 保存下一场景的指针
 	get()->m_pNextScene = scene;
 	// 切换场景时，是否保存当前场景
-	get()->m_bSaveScene = save;
+	if (get()->m_pCurrentScene)
+	{
+		get()->m_pCurrentScene->m_bWillSave = save;
+	}
 }
 
 void e2d::EApp::backScene()
 {
 	// 从栈顶取出场景指针，作为下一场景
 	get()->m_pNextScene = s_SceneStack.top();
+	s_SceneStack.pop();
 	// 不保存当前场景
-	get()->m_bSaveScene = false;
+	if (get()->m_pCurrentScene)
+	{
+		get()->m_pCurrentScene->m_bWillSave = false;
+	}
 }
 
 void e2d::EApp::clearScene()
@@ -404,7 +410,7 @@ void e2d::EApp::free()
 		SafeDelete(&temp);
 		s_SceneStack.pop();
 	}
-	// 删除所有定时器、监听器
+	// 删除所有定时器、监听器和动画
 	//Timer::clearAllTimers();
 	EMsgManager::clearAllKeyboardListeners();
 	EMsgManager::clearAllMouseListeners();
@@ -425,36 +431,18 @@ void e2d::EApp::end()
 
 void e2d::EApp::_enterNextScene()
 {
-	// 若下一场景处于栈顶，说明正在返回上一场景
-	if (s_SceneStack.size() && m_pNextScene == s_SceneStack.top())
-	{
-		// 返回上一场景时，恢复场景上的定时器
-		//Timer::notifyAllSceneTimers(m_pNextScene);
-		EMsgManager::notifyAllListenersBindWithScene(m_pNextScene);
-		//ActionManager::notifyAllSceneActions(m_pNextScene);
-		// 删除栈顶场景
-		s_SceneStack.pop();
-	}
-
 	// 执行当前场景的 onExit 函数
 	if (m_pCurrentScene)
 	{
 		m_pCurrentScene->onExit();
-		if (m_bSaveScene)
+
+		if (m_pCurrentScene->m_bWillSave)
 		{
 			// 若要保存当前场景，把它放入栈中
 			s_SceneStack.push(m_pCurrentScene);
-			// 暂停当前场景上运行的所有定时器
-			//Timer::waitAllSceneTimers(m_pCurrentScene);
-			EMsgManager::waitAllListenersBindWithScene(m_pCurrentScene);
-			//ActionManager::waitAllSceneActions(m_pCurrentScene);
 		}
 		else
 		{
-			// 不保存场景时，停止当前场景上运行的所有定时器，并删除当前场景
-			//Timer::clearAllSceneTimers(m_pCurrentScene);
-			EMsgManager::clearAllListenersBindWithScene(m_pCurrentScene);
-			//ActionManager::stopAllSceneActions(m_pCurrentScene);
 			SafeDelete(&m_pCurrentScene);
 		}
 	}

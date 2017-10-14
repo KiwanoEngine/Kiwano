@@ -12,6 +12,8 @@ ID2D1Factory * &GetFactory();
 
 ID2D1HwndRenderTarget * &GetRenderTarget();
 
+ID2D1SolidColorBrush * &GetSolidColorBrush(D2D1_COLOR_F &color);
+
 
 template<class Interface>
 inline void SafeReleaseInterface(

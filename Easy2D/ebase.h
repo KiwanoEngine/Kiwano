@@ -149,7 +149,6 @@ protected:
 
 protected:
 	bool	m_bRunning;
-	bool	m_bSaveScene;
 	EString	m_sTitle;
 	EString	m_sAppName;
 	EColor::Enum m_ClearColor;
@@ -164,7 +163,7 @@ class EScene
 	friend EApp;
 
 public:
-	EScene() = default;
+	EScene();
 
 	~EScene();
 
@@ -181,13 +180,21 @@ public:
 	);
 
 	// 删除子成员
-	bool del(
+	bool remove(
 		e2d::ENode * child,
 		bool autoRelease = true
 	);
 
 	// 获取所有子节点
 	std::vector<e2d::ENode*> &getChildren();
+
+	// 获取子节点数量
+	size_t getChildrenCount() const;
+
+	// 根据名称获取子节点
+	ENode * getChild(
+		EString childName
+	) const;
 
 	// 清空所有子成员
 	void clearAllChildren();
@@ -202,7 +209,12 @@ protected:
 	// 渲染场景画面
 	void _onRender();
 
+	// 子节点排序
+	void _sortChildren();
+
 protected:
+	bool m_bSortNeeded;
+	bool m_bWillSave;
 	std::vector<e2d::ENode*> m_vChildren;
 };
 

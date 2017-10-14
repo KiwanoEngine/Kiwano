@@ -7,8 +7,6 @@ namespace e2d
 class ENode :
 	public EObject
 {
-	friend EScene;
-
 public:
 	ENode();
 
@@ -22,7 +20,7 @@ public:
 	virtual bool isVisiable() const;
 
 	// 获取节点绘图顺序
-	virtual int getZOrder() const;
+	virtual int getOrder() const;
 
 	// 获取节点横坐标
 	virtual int getX() const;
@@ -46,19 +44,27 @@ public:
 	virtual ERect getRect() const;
 
 	// 获取父节点
-	virtual ENode * &getParent();
+	virtual ENode * getParent() const;
 
 	// 获取节点所在场景
-	virtual EScene * &getParentScene();
+	virtual EScene * getParentScene() const;
 
 	// 获取所有子节点
 	virtual std::vector<ENode*> &getChildren();
 
 	// 获取子节点数量
-	virtual int getChildrenCount() const;
+	virtual size_t getChildrenCount() const;
 
 	// 根据名字获取子节点
-	virtual ENode * getChild(EString name);
+	virtual ENode * getChild(
+		EString name
+	) const;
+
+	// 根据名字获取子节点
+	static ENode * getChild(
+		EString name,
+		const std::vector<ENode*> &children
+	);
 
 	// 设置节点是否显示
 	virtual void setVisiable(
@@ -66,7 +72,9 @@ public:
 	);
 
 	// 设置节点名称
-	virtual void setName(EString name);
+	virtual void setName(
+		EString name
+	);
 
 	// 设置节点横坐标
 	virtual void setX(
@@ -140,9 +148,9 @@ public:
 		ERect rect
 	);
 
-	// 设置节点绘图顺序（0为最先绘制，显示在最底层）
-	virtual void setZOrder(
-		int z
+	// 设置节点绘图顺序
+	virtual void setOrder(
+		int order
 	);
 
 	// 设置节点所在场景
@@ -156,30 +164,66 @@ public:
 	);
 
 	// 添加子节点
-	virtual void addChild(ENode * child);
+	virtual void addChild(
+		ENode * child,
+		int order = 0
+	);
 
 	// 从父节点移除
-	virtual void removeFromParent(bool release = false);
+	virtual void removeFromParent(
+		bool release = false
+	);
 
 	// 移除子节点
-	virtual void removeChild(ENode * child, bool release = false);
+	virtual void removeChild(
+		ENode * child, 
+		bool release = false
+	);
 
 	// 移除子节点
-	virtual void removeChild(EString childName, bool release = false);
+	virtual void removeChild(
+		EString childName, 
+		bool release = false
+	);
+
+	// 访问节点
+	virtual void callOn();
 
 protected:
 	// 渲染节点
 	virtual void _onRender();
 
+	// 节点状态转换
+	virtual void _onTransfrom();
+
+	// 子节点排序
+	void _sortChildren();
+
+	// 节点状态转换
+	void _transfrom();
+
 protected:
 	EString		m_sName;
 	size_t		m_nHashName;
-	int			m_nZOrder;
+	int			m_nOrder;
 	bool		m_bVisiable;
+	bool		m_bSortNeeded;
+	bool		m_bTransformNeeded;
 	ERect		m_Rect;
+	EPoint		m_Pos;
 	EScene *	m_pParentScene;
 	ENode *		m_pParent;
 	std::vector<ENode*> m_vChildren;
+};
+
+
+class ERectangle :
+	public ENode
+{
+protected:
+	virtual void _onRender() override;
+
+	virtual void _onTransfrom() override;
 };
 
 }
