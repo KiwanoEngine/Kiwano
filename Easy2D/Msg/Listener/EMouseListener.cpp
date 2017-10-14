@@ -31,3 +31,23 @@ void e2d::EMouseListener::setCallback(const MOUSE_LISTENER_CALLBACK & callback)
 {
 	m_callback = callback;
 }
+
+void e2d::EMouseListener::bindWith(EScene * pParentScene)
+{
+	WARN_IF(m_pParentScene != nullptr || m_pParentNode != nullptr, "EListener cannot bind with two object.");
+
+	if (pParentScene)
+	{
+		EMsgManager::bindListenerWith(this, pParentScene);
+	}
+}
+
+void e2d::EMouseListener::bindWith(ENode * pParentNode)
+{
+	WARN_IF(m_pParentScene != nullptr || m_pParentNode != nullptr, "EListener cannot bind with two object.");
+
+	if (pParentNode != nullptr && m_pParentScene == nullptr)
+	{
+		EMsgManager::bindListenerWith(this, pParentNode);
+	}
+}

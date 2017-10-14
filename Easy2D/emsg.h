@@ -14,7 +14,7 @@ class EMouseMsg
 
 public:
 	// 鼠标消息集合
-	enum class MOUSE_MSG
+	enum MOUSE_MSG
 	{
 		MOVE = 0x0200,	// 鼠标移动
 		LBUTTON_DOWN,	// 鼠标左键按下
@@ -73,7 +73,7 @@ class EKeyMsg
 
 public:
 	// 按键消息类型集合
-	enum class KEYBOARD_MSG
+	enum KEYBOARD_MSG
 	{
 		KEY_DOWN = 0x0100,	// 按下
 		KEY_UP				// 抬起
@@ -141,6 +141,8 @@ protected:
 class EListener :
 	public EObject
 {
+	friend EMsgManager;
+
 public:
 	EListener();
 
@@ -166,9 +168,6 @@ public:
 	// 唤醒
 	void notify();
 
-	// 克隆一个相同的监听器
-	virtual EListener * clone();
-
 	// 获取监听器名称
 	EString getName() const;
 
@@ -184,14 +183,14 @@ public:
 	);
 
 	// 绑定监听器到场景
-	void bindWithScene(
+	virtual void bindWithScene(
 		EScene * pParentScene
-	);
+	) = 0;
 
 	// 绑定监听器到节点
-	void bindWithNode(
+	virtual void bindWithNode(
 		ENode * pParentNode
-	);
+	) = 0;
 
 protected:
 	EString		m_sName;
@@ -228,6 +227,16 @@ public:
 	// 设置监听器回调函数
 	void setCallback(
 		const MOUSE_LISTENER_CALLBACK &callback
+	);
+
+	// 绑定监听器到场景
+	virtual void bindWith(
+		EScene * pParentScene
+	);
+
+	// 绑定监听器到节点
+	virtual void bindWith(
+		ENode * pParentNode
 	);
 
 protected:
@@ -331,6 +340,16 @@ public:
 		const KEY_LISTENER_CALLBACK &callback
 	);
 
+	// 绑定监听器到场景
+	virtual void bindWithScene(
+		EScene * pParentScene
+	);
+
+	// 绑定监听器到节点
+	virtual void bindWithNode(
+		ENode * pParentNode
+	);
+
 protected:
 	KEY_LISTENER_CALLBACK m_callback;
 };
@@ -368,15 +387,27 @@ class EMsgManager
 
 public:
 	// 绑定鼠标消息监听器到场景
-	static void bindListenerWithScene(
+	static void bindListenerWith(
 		EMouseListener * listener,
 		EScene * pParentScene
 	);
 
-	// 绑定按键消息监听器到场景
-	static void bindListenerWithScene(
+	// 绑定鼠标消息监听器到场景
+	static void bindListenerWith(
 		EKeyboardListener * listener,
 		EScene * pParentScene
+	);
+
+	// 绑定按键消息监听器到节点
+	static void bindListenerWith(
+		EMouseListener * listener,
+		ENode * pParentNode
+	);
+
+	// 绑定按键消息监听器到节点
+	static void bindListenerWith(
+		EKeyboardListener * listener,
+		ENode * pParentNode
 	);
 
 	// 启动具有相同名称的监听器

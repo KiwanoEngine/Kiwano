@@ -115,10 +115,10 @@ void e2d::EScene::clearAllChildren()
 
 void e2d::EScene::bindListener(EMouseListener * listener)
 {
-	EMsgManager::bindListenerWithScene(listener, this);
+	EMsgManager::bindListenerWith(listener, this);
 }
 
 void e2d::EScene::bindListener(EKeyboardListener * listener)
 {
-	EMsgManager::bindListenerWithScene(listener, this);
+	EMsgManager::bindListenerWith(listener, this);
 }

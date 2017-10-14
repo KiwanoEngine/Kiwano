@@ -45,11 +45,6 @@ void e2d::EListener::notify()
 	m_bWaiting = false;
 }
 
-e2d::EListener * e2d::EListener::clone()
-{
-	return nullptr;
-}
-
 e2d::EString e2d::EListener::getName() const
 {
 	return m_sName;
@@ -68,24 +63,4 @@ e2d::ENode * e2d::EListener::getParentNode() const
 void e2d::EListener::setName(EString name)
 {
 	m_sName = name;
-}
-
-void e2d::EListener::bindWithScene(EScene * scene)
-{
-	WARN_IF(m_pParentNode != nullptr, "EListener bind with Scene Failed! Please use its clone.");
-
-	if (scene != nullptr && m_pParentNode == nullptr)
-	{
-		m_pParentScene = scene;
-	}
-}
-
-void e2d::EListener::bindWithNode(ENode * pParentNode)
-{
-	WARN_IF(m_pParentScene != nullptr, "EListener bind with Node Failed! Please use its clone.");
-
-	if (pParentNode != nullptr && m_pParentScene == nullptr)
-	{
-		m_pParentNode = pParentNode;
-	}
 }

@@ -10,7 +10,7 @@ e2d::EKeyMsg keyMsg;
 // 鼠标消息监听器
 std::vector<e2d::EMouseListener*> s_vMouseListeners;
 // 按键消息监听器
-std::vector<e2d::EKeyboardListener*> s_vKeyListeners;
+std::vector<e2d::EKeyboardListener*> s_vKeyboardListeners;
 
 
 DWORD e2d::EMouseMsg::getX()
@@ -141,7 +141,7 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 	keyMsg.m_wParam = wParam;
 	keyMsg.m_lParam = lParam;
 	// 执行按键消息监听函数
-	for (auto klistener : s_vKeyListeners)
+	for (auto klistener : s_vKeyboardListeners)
 	{
 		if (klistener->isRunning())
 		{
@@ -150,7 +150,7 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void e2d::EMsgManager::bindListenerWithScene(e2d::EMouseListener * listener, EScene * pParentScene)
+void e2d::EMsgManager::bindListenerWith(e2d::EMouseListener * listener, EScene * pParentScene)
 {
 	WARN_IF(listener == nullptr, "EMouseListener NULL pointer exception!");
 	WARN_IF(pParentScene == nullptr, "Bind EMouseListener with a NULL EScene pointer!");
@@ -159,12 +159,12 @@ void e2d::EMsgManager::bindListenerWithScene(e2d::EMouseListener * listener, ESc
 	{
 		listener->start();
 		listener->retain();
-		listener->bindWithScene(pParentScene);
+		listener->m_pParentScene = pParentScene;
 		s_vMouseListeners.push_back(listener);
 	}
 }
 
-void e2d::EMsgManager::bindListenerWithScene(e2d::EKeyboardListener * listener, EScene * pParentScene)
+void e2d::EMsgManager::bindListenerWith(EKeyboardListener * listener, EScene * pParentScene)
 {
 	WARN_IF(listener == nullptr, "EKeyboardListener NULL pointer exception!");
 	WARN_IF(pParentScene == nullptr, "Bind EKeyboardListener with a NULL EScene pointer!");
@@ -173,8 +173,36 @@ void e2d::EMsgManager::bindListenerWithScene(e2d::EKeyboardListener * listener, 
 	{
 		listener->start();
 		listener->retain();
-		listener->bindWithScene(pParentScene);
-		s_vKeyListeners.push_back(listener);
+		listener->m_pParentScene = pParentScene;
+		s_vKeyboardListeners.push_back(listener);
+	}
+}
+
+void e2d::EMsgManager::bindListenerWith(EMouseListener * listener, ENode * pParentNode)
+{
+	WARN_IF(listener == nullptr, "EMouseListener NULL pointer exception!");
+	WARN_IF(pParentNode == nullptr, "Bind EMouseListener with a NULL ENode pointer!");
+
+	if (listener && pParentNode)
+	{
+		listener->start();
+		listener->retain();
+		listener->m_pParentNode = pParentNode;
+		s_vMouseListeners.push_back(listener);
+	}
+}
+
+void e2d::EMsgManager::bindListenerWith(EKeyboardListener * listener, ENode * pParentNode)
+{
+	WARN_IF(listener == nullptr, "EKeyboardListener NULL pointer exception!");
+	WARN_IF(pParentNode == nullptr, "Bind EKeyboardListener with a NULL ENode pointer!");
+
+	if (listener && pParentNode)
+	{
+		listener->start();
+		listener->retain();
+		listener->m_pParentNode = pParentNode;
+		s_vKeyboardListeners.push_back(listener);
 	}
 }
 
@@ -189,7 +217,7 @@ void e2d::EMsgManager::startListener(EString name)
 		}
 	}
 	// 启动按键消息监听器
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (l->getName() == name)
 		{
@@ -209,7 +237,7 @@ void e2d::EMsgManager::stopListener(EString name)
 		}
 	}
 	// 停止按键消息监听器
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (l->getName() == name)
 		{
@@ -237,13 +265,13 @@ void e2d::EMsgManager::delListener(EString name)
 	}
 	// 删除按键消息监听器
 	std::vector<EKeyboardListener*>::iterator kIter;
-	for (kIter = s_vKeyListeners.begin(); kIter != s_vKeyListeners.end();)
+	for (kIter = s_vKeyboardListeners.begin(); kIter != s_vKeyboardListeners.end();)
 	{
 		if ((*kIter)->getName() == name)
 		{
 			(*kIter)->autoRelease();
 			(*kIter)->release();
-			kIter = s_vKeyListeners.erase(kIter);
+			kIter = s_vKeyboardListeners.erase(kIter);
 		}
 		else
 		{
@@ -286,7 +314,7 @@ void e2d::EMsgManager::clearAllMouseListeners()
 
 void e2d::EMsgManager::startAllKeyboardListener()
 {
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (!l->isWaiting())
 		{
@@ -297,7 +325,7 @@ void e2d::EMsgManager::startAllKeyboardListener()
 
 void e2d::EMsgManager::stopAllKeyboardListener()
 {
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (!l->isWaiting())
 		{
@@ -308,12 +336,12 @@ void e2d::EMsgManager::stopAllKeyboardListener()
 
 void e2d::EMsgManager::clearAllKeyboardListeners()
 {
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		l->autoRelease();
 		l->release();
 	}
-	s_vKeyListeners.clear();
+	s_vKeyboardListeners.clear();
 }
 
 void e2d::EMsgManager::startAllMouseListenersBindWithScene(EScene * pParentScene)
@@ -343,7 +371,7 @@ void e2d::EMsgManager::stopAllMouseListenersBindWithScene(EScene * pParentScene)
 void e2d::EMsgManager::startAllKeyboardListenersBindWithScene(EScene * pParentScene)
 {
 	// 启动按键消息监听器
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (l->getParentScene() == pParentScene)
 		{
@@ -355,7 +383,7 @@ void e2d::EMsgManager::startAllKeyboardListenersBindWithScene(EScene * pParentSc
 void e2d::EMsgManager::stopAllKeyboardListenersBindWithScene(EScene * pParentScene)
 {
 	// 停止按键消息监听器
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (l->getParentScene() == pParentScene)
 		{
@@ -375,7 +403,7 @@ void e2d::EMsgManager::waitAllListenersBindWithScene(EScene * scene)
 		}
 	}
 	// 挂起按键消息监听器
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (l->getParentScene() == scene)
 		{
@@ -395,7 +423,7 @@ void e2d::EMsgManager::notifyAllListenersBindWithScene(EScene * scene)
 		}
 	}
 	// 重启按键消息监听器
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (l->getParentScene() == scene)
 		{
@@ -421,13 +449,13 @@ void e2d::EMsgManager::clearAllListenersBindWithScene(EScene * scene)
 		}
 	}
 	std::vector<EKeyboardListener*>::iterator kIter;
-	for (kIter = s_vKeyListeners.begin(); kIter != s_vKeyListeners.end();)
+	for (kIter = s_vKeyboardListeners.begin(); kIter != s_vKeyboardListeners.end();)
 	{
 		if ((*kIter)->getParentScene() == scene)
 		{
 			(*kIter)->autoRelease();
 			(*kIter)->release();
-			kIter = s_vKeyListeners.erase(kIter);
+			kIter = s_vKeyboardListeners.erase(kIter);
 		}
 		else
 		{
@@ -447,7 +475,7 @@ void e2d::EMsgManager::waitAllListenersBindWithNode(ENode * pParentNode)
 		}
 	}
 	// 挂起按键消息监听器
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (l->getParentNode() == pParentNode)
 		{
@@ -467,7 +495,7 @@ void e2d::EMsgManager::notifyAllListenersBindWithNode(ENode * pParentNode)
 		}
 	}
 	// 重启按键消息监听器
-	for (auto l : s_vKeyListeners)
+	for (auto l : s_vKeyboardListeners)
 	{
 		if (l->getParentNode() == pParentNode)
 		{
@@ -493,13 +521,13 @@ void e2d::EMsgManager::clearAllListenersBindWithNode(ENode * pParentNode)
 		}
 	}
 	std::vector<EKeyboardListener*>::iterator kIter;
-	for (kIter = s_vKeyListeners.begin(); kIter != s_vKeyListeners.end();)
+	for (kIter = s_vKeyboardListeners.begin(); kIter != s_vKeyboardListeners.end();)
 	{
 		if ((*kIter)->getParentNode() == pParentNode)
 		{
 			(*kIter)->autoRelease();
 			(*kIter)->release();
-			kIter = s_vKeyListeners.erase(kIter);
+			kIter = s_vKeyboardListeners.erase(kIter);
 		}
 		else
 		{
