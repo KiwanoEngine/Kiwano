@@ -183,12 +183,12 @@ public:
 	);
 
 	// 绑定监听器到场景
-	virtual void bindWithScene(
+	virtual void bindWith(
 		EScene * pParentScene
 	) = 0;
 
 	// 绑定监听器到节点
-	virtual void bindWithNode(
+	virtual void bindWith(
 		ENode * pParentNode
 	) = 0;
 
@@ -232,12 +232,12 @@ public:
 	// 绑定监听器到场景
 	virtual void bindWith(
 		EScene * pParentScene
-	);
+	) override;
 
 	// 绑定监听器到节点
 	virtual void bindWith(
 		ENode * pParentNode
-	);
+	) override;
 
 protected:
 	MOUSE_LISTENER_CALLBACK m_callback;
@@ -341,14 +341,14 @@ public:
 	);
 
 	// 绑定监听器到场景
-	virtual void bindWithScene(
+	virtual void bindWith(
 		EScene * pParentScene
-	);
+	) override;
 
 	// 绑定监听器到节点
-	virtual void bindWithNode(
+	virtual void bindWith(
 		ENode * pParentNode
-	);
+	) override;
 
 protected:
 	KEY_LISTENER_CALLBACK m_callback;

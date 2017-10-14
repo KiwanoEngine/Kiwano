@@ -24,8 +24,7 @@ e2d::EMouseClickListener::EMouseClickListener(EString name, const MOUSE_CLICK_LI
 
 void e2d::EMouseClickListener::runCallback()
 {
-	if (EMouseMsg::getMsg() == EMouseMsg::MOUSE_MSG::LBUTTON_DOWN || 
-		EMouseMsg::getMsg() == EMouseMsg::MOUSE_MSG::LBUTTON_DBLCLK)
+	if (EMouseMsg::getMsg() == EMouseMsg::MOUSE_MSG::LBUTTON_UP)
 	{
 		m_callback(EMouseMsg::getPos());
 	}

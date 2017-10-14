@@ -4,9 +4,6 @@
 namespace e2d 
 {
 
-class EScene;
-class EObject;
-
 class ENode :
 	public EObject
 {
@@ -16,12 +13,7 @@ public:
 	ENode();
 
 	ENode(
-		EPoint p
-	);
-
-	ENode(
-		int x, 
-		int y
+		EString name
 	);
 
 	virtual ~ENode();
@@ -48,21 +40,33 @@ public:
 	virtual UINT32 getHeight() const;
 
 	// 获取节点大小
-	virtual e2d::ESize getSize() const;
+	virtual ESize getSize() const;
 
 	// 获取节点所在的矩形
-	virtual e2d::ERect getRect() const;
+	virtual ERect getRect() const;
 
 	// 获取父节点
-	virtual e2d::ENode* &getParent();
+	virtual ENode * &getParent();
 
 	// 获取节点所在场景
-	EScene * &getParentScene();
+	virtual EScene * &getParentScene();
+
+	// 获取所有子节点
+	virtual std::vector<ENode*> &getChildren();
+
+	// 获取子节点数量
+	virtual int getChildrenCount() const;
+
+	// 根据名字获取子节点
+	virtual ENode * getChild(EString name);
 
 	// 设置节点是否显示
 	virtual void setVisiable(
 		bool value
 	);
+
+	// 设置节点名称
+	virtual void setName(EString name);
 
 	// 设置节点横坐标
 	virtual void setX(
@@ -114,7 +118,7 @@ public:
 
 	// 设置节点大小
 	virtual void setSize(
-		e2d::ESize size
+		ESize size
 	);
 
 	// 设置节点所在的矩形
@@ -133,7 +137,7 @@ public:
 
 	// 设置节点所在的矩形
 	virtual void setRect(
-		e2d::ERect rect
+		ERect rect
 	);
 
 	// 设置节点绘图顺序（0为最先绘制，显示在最底层）
@@ -141,28 +145,41 @@ public:
 		int z
 	);
 
+	// 设置节点所在场景
+	virtual void setParentScene(
+		EScene * scene
+	);
+
 	// 设置父节点
 	virtual void setParent(
 		ENode* parent
 	);
 
-	// 设置节点所在场景
-	void bindWithScene(
-		EScene * scene
-	);
+	// 添加子节点
+	virtual void addChild(ENode * child);
+
+	// 从父节点移除
+	virtual void removeFromParent(bool release = false);
+
+	// 移除子节点
+	virtual void removeChild(ENode * child, bool release = false);
+
+	// 移除子节点
+	virtual void removeChild(EString childName, bool release = false);
 
 protected:
+	// 渲染节点
+	virtual void _onRender();
+
+protected:
+	EString		m_sName;
+	size_t		m_nHashName;
 	int			m_nZOrder;
 	bool		m_bVisiable;
 	ERect		m_Rect;
 	EScene *	m_pParentScene;
 	ENode *		m_pParent;
-
-protected:
-
-	virtual bool _exec(bool active);
-
-	virtual void _onRender();
+	std::vector<ENode*> m_vChildren;
 };
 
 }

@@ -19,14 +19,11 @@ int WINAPI WinMain(
 		node->setSize(30, 180);
 		scene->add(node);
 
-		auto listener = new EMouseClickListener([=](EPoint) {
-			if (EMouseMsg::getMsg() == EMouseMsg::MOUSE_MSG::MOVE)
-			{
-				node->setPos(EMouseMsg::getPos());
-			}
+		auto mlistener = new EMouseClickListener([=](EPoint) {
+			node->setPos(EMouseMsg::getPos());
 		});
 
-		auto listener = new EKeyPressListener([=] {
+		auto klistener = new EKeyPressListener([=] {
 			if (EKeyMsg::isCapitalLockOn())
 			{
 				if (EKeyMsg::getVal() == EKeyMsg::KEY::LEFT)
@@ -40,9 +37,9 @@ int WINAPI WinMain(
 			}
 		});
 
-		listener->bindWithNode(node);
+		mlistener->bindWith(node);
 
-		scene->bindListener(listener);
+		scene->bindListener(klistener);
 
 		app.enterScene(scene);
 

@@ -46,7 +46,7 @@ void e2d::EScene::add(ENode * child, int zOrder /* = 0 */)
 	// 忽略空指针
 	if (child == nullptr) return;
 	// 设置节点的父场景
-	child->bindWithScene(this);
+	child->setParentScene(this);
 	// 设置 z 轴顺序
 	child->setZOrder(zOrder);
 	// 对象的引用计数加一

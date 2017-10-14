@@ -20,12 +20,12 @@
 
 // Windows Header Files:
 #include <windows.h>
-
+#include <assert.h>
 
 
 #ifndef ASSERT_IF
 #if defined( DEBUG ) || defined( _DEBUG )
-#define ASSERT(b, m) do {if (!(b)) { fprintf(stderr, "Assert: " #m "\n"); abort(); }} while(0)
+#define ASSERT(b, m) do {if (!(b)) { fprintf(stderr, "Assert: " #m "\n"); assert(b); }} while(0)
 #else
 	#define ASSERT(b, m) ((void)0)
 #endif //DEBUG || _DEBUG

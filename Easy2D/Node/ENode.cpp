@@ -4,28 +4,20 @@
 e2d::ENode::ENode()
 	: m_nZOrder(0)
 	, m_bVisiable(true)
+	, m_pParent(nullptr)
+	, m_pParentScene(nullptr)
+	, m_nHashName(0)
 {
 }
 
-e2d::ENode::ENode(EPoint p) 
+e2d::ENode::ENode(EString name)
 	: ENode()
 {
-	setPos(p);
-}
-
-e2d::ENode::ENode(int x, int y)
-	: ENode()
-{
-	setPos(x, y);
+	setName(name);
 }
 
 e2d::ENode::~ENode()
 {
-}
-
-bool e2d::ENode::_exec(bool active)
-{
-	return false;
 }
 
 void e2d::ENode::_onRender()
@@ -173,6 +165,19 @@ void e2d::ENode::setParent(ENode * parent)
 	m_pParent = parent;
 }
 
+void e2d::ENode::addChild(ENode * child)
+{
+	WARN_IF(child == nullptr, "NULL ENode pointer exception.");
+
+	if (child)
+	{
+		for (ENode * parent = this; parent != nullptr; parent = parent->getParent())
+		{
+			ASSERT(child != parent, "A ENode cannot be the child of his own children");
+		}
+	}
+}
+
 e2d::ENode *& e2d::ENode::getParent()
 {
 	return m_pParent;
@@ -183,14 +188,66 @@ e2d::EScene * &e2d::ENode::getParentScene()
 	return m_pParentScene;
 }
 
-void e2d::ENode::bindWithScene(EScene * scene)
+std::vector<e2d::ENode*>& e2d::ENode::getChildren()
+{
+	return m_vChildren;
+}
+
+int e2d::ENode::getChildrenCount() const
+{
+	return m_vChildren.size();
+}
+
+e2d::ENode * e2d::ENode::getChild(EString name)
+{
+	WARN_IF(name.empty(), "Invalid ENode name.");
+
+	std::hash<EString> h;
+	size_t hash = h(name);
+
+	for (const auto& child : m_vChildren)
+	{
+		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
+		if (child->m_nHashName == hash && child->m_sName == name)
+			return child;
+	}
+	return nullptr;
+}
+
+void e2d::ENode::setParentScene(EScene * scene)
 {
 	m_pParentScene = scene;
+}
+
+void e2d::ENode::removeFromParent(bool release)
+{
+}
+
+void e2d::ENode::removeChild(ENode * child, bool release)
+{
+}
+
+void e2d::ENode::removeChild(EString childName, bool release)
+{
 }
 
 void e2d::ENode::setVisiable(bool value)
 {
 	m_bVisiable = value;
+}
+
+void e2d::ENode::setName(EString name)
+{
+	WARN_IF(name.empty(), "Invalid ENode name.");
+
+	if (!name.empty())
+	{
+		// 保存节点名
+		m_sName = name;
+		// 保存节点 Hash 名
+		std::hash<EString> h;
+		m_nHashName = h(name);
+	}
 }
 
 bool e2d::ENode::isVisiable() const
