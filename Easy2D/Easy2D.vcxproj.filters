@@ -48,9 +48,6 @@
     <ClCompile Include="Msg\Listener\EMouseClickListener.cpp">
       <Filter>Msg\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="Msg\Listener\EMouseDraggedListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
     <ClCompile Include="Msg\Listener\EMouseListener.cpp">
       <Filter>Msg\Listener</Filter>
     </ClCompile>
@@ -65,6 +62,18 @@
     </ClCompile>
     <ClCompile Include="Node\ERectangle.cpp">
       <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\ESprite.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\Listener\EMousePressListener.cpp">
+      <Filter>Msg\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\Listener\EMouseDoubleClickListener.cpp">
+      <Filter>Msg\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\Listener\EMouseDragListener.cpp">
+      <Filter>Msg\Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

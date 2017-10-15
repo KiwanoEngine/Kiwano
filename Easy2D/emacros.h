@@ -22,6 +22,11 @@
 #include <windows.h>
 #include <assert.h>
 
+// C RunTime Header Files
+#include <wchar.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 
 #ifndef ASSERT_IF
 #if defined( DEBUG ) || defined( _DEBUG )

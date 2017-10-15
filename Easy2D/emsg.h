@@ -244,6 +244,39 @@ protected:
 };
 
 
+// 鼠标按下消息监听器
+class EMousePressListener :
+	public EMouseListener
+{
+public:
+	EMousePressListener();
+
+	EMousePressListener(
+		EString name
+	);
+
+	EMousePressListener(
+		const MOUSE_PRESS_LISTENER_CALLBACK &callback
+	);
+
+	EMousePressListener(
+		EString name,
+		const MOUSE_PRESS_LISTENER_CALLBACK &callback
+	);
+
+	// 执行监听器回调函数
+	virtual void runCallback() override;
+
+	// 设置监听器回调函数
+	void setCallback(
+		const MOUSE_PRESS_LISTENER_CALLBACK &callback
+	);
+
+protected:
+	MOUSE_PRESS_LISTENER_CALLBACK m_callback;
+};
+
+
 // 鼠标点击消息监听器
 class EMouseClickListener :
 	public EMouseListener
@@ -273,26 +306,61 @@ public:
 	);
 
 protected:
+	bool m_bPressed;
 	MOUSE_CLICK_LISTENER_CALLBACK m_callback;
 };
 
 
-// 鼠标拖动消息监听器
-class EMouseDraggedListener :
+// 鼠标点击消息监听器
+class EMouseDoubleClickListener :
 	public EMouseListener
 {
 public:
-	EMouseDraggedListener();
+	EMouseDoubleClickListener();
 
-	EMouseDraggedListener(
+	EMouseDoubleClickListener(
 		EString name
 	);
 
-	EMouseDraggedListener(
+	EMouseDoubleClickListener(
+		const MOUSE_DBLCLK_LISTENER_CALLBACK &callback
+	);
+
+	EMouseDoubleClickListener(
+		EString name,
+		const MOUSE_DBLCLK_LISTENER_CALLBACK &callback
+	);
+
+	// 执行监听器回调函数
+	virtual void runCallback() override;
+
+	// 设置监听器回调函数
+	void setCallback(
+		const MOUSE_DBLCLK_LISTENER_CALLBACK &callback
+	);
+
+protected:
+	bool m_bPressed;
+	MOUSE_DBLCLK_LISTENER_CALLBACK m_callback;
+};
+
+
+// 鼠标拖动消息监听器
+class EMouseDragListener :
+	public EMouseListener
+{
+public:
+	EMouseDragListener();
+
+	EMouseDragListener(
+		EString name
+	);
+
+	EMouseDragListener(
 		const MOUSE_DRAG_LISTENER_CALLBACK &callback
 	);
 
-	EMouseDraggedListener(
+	EMouseDragListener(
 		EString name,
 		const MOUSE_DRAG_LISTENER_CALLBACK &callback
 	);
@@ -306,8 +374,7 @@ public:
 	);
 
 protected:
-	EPoint m_Begin;
-	EPoint m_End;
+	EPoint	m_Begin;
 	MOUSE_DRAG_LISTENER_CALLBACK m_callback;
 };
 

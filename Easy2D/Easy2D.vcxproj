@@ -200,10 +200,13 @@
     <ClCompile Include="Msg\Listener\EKeyPressListener.cpp" />
     <ClCompile Include="Msg\Listener\EListener.cpp" />
     <ClCompile Include="Msg\Listener\EMouseClickListener.cpp" />
-    <ClCompile Include="Msg\Listener\EMouseDraggedListener.cpp" />
+    <ClCompile Include="Msg\Listener\EMouseDoubleClickListener.cpp" />
+    <ClCompile Include="Msg\Listener\EMouseDragListener.cpp" />
     <ClCompile Include="Msg\Listener\EMouseListener.cpp" />
+    <ClCompile Include="Msg\Listener\EMousePressListener.cpp" />
     <ClCompile Include="Node\ENode.cpp" />
     <ClCompile Include="Node\ERectangle.cpp" />
+    <ClCompile Include="Node\ESprite.cpp" />
     <ClCompile Include="Tool\EObjectManager.cpp" />
     <ClCompile Include="Tool\ETimerManager.cpp" />
     <ClCompile Include="Win\winbase.cpp" />

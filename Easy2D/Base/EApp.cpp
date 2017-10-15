@@ -9,12 +9,6 @@ using namespace std::chrono;
 using namespace std::this_thread;
 
 
-#ifndef HINST_THISCOMPONENT
-EXTERN_C IMAGE_DOS_HEADER __ImageBase;
-#define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
-#endif
-
-
 e2d::EApp * s_pInstance = nullptr;
 std::stack<e2d::EScene*> s_SceneStack;
 
@@ -134,7 +128,7 @@ bool e2d::EApp::init(e2d::EString title, UINT32 width, UINT32 height, bool bShow
 			// 获取窗口大小（包含菜单栏）
 			tagRECT rcWindow;
 			GetWindowRect(GetHWnd(), &rcWindow);
-			// 修改窗口大小，并设置窗口在屏幕居中
+			// 设置窗口在屏幕居中
 			MoveWindow(
 				GetHWnd(), 
 				(screenWidth - (rcWindow.right - rcWindow.left)) / 2,
@@ -432,6 +426,7 @@ void e2d::EApp::_enterNextScene()
 	if (m_pCurrentScene)
 	{
 		m_pCurrentScene->onExit();
+		m_pCurrentScene->_onExit();
 
 		if (m_pCurrentScene->m_bWillSave)
 		{
@@ -444,7 +439,9 @@ void e2d::EApp::_enterNextScene()
 		}
 	}
 
-	m_pNextScene->onEnter();			// 执行下一场景的 onEnter 函数
+	// 执行下一场景的 onEnter 函数
+	m_pNextScene->_onEnter();
+	m_pNextScene->onEnter();
 
 	m_pCurrentScene = m_pNextScene;		// 切换场景
 	m_pNextScene = nullptr;				// 下一场景置空
@@ -474,32 +471,10 @@ HRESULT e2d::EApp::_createDeviceIndependentResources()
 // changes, the window is remoted, etc.
 HRESULT e2d::EApp::_createDeviceResources()
 {
-	HRESULT hr = S_OK;
+	// 这个函数将自动创建设备相关资源
+	GetRenderTarget();
 
-	if (!GetRenderTarget())
-	{
-		RECT rc;
-		GetClientRect(GetHWnd(), &rc);
-
-		D2D1_SIZE_U size = D2D1::SizeU(
-			rc.right - rc.left,
-			rc.bottom - rc.top
-		);
-
-		// Create a Direct2D render target.
-		hr = GetFactory()->CreateHwndRenderTarget(
-			D2D1::RenderTargetProperties(),
-			D2D1::HwndRenderTargetProperties(GetHWnd(), size),
-			&GetRenderTarget()
-		);
-	}
-
-	if (FAILED(hr))
-	{
-		MessageBox(nullptr, L"Create Device Resources Failed!", L"Error", MB_OK);
-	}
-
-	return hr;
+	return S_OK;
 }
 
 // Discards device-dependent resources. These resources must be

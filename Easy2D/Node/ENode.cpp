@@ -8,20 +8,22 @@ e2d::ENode::ENode()
 	, m_fPosY(0)
 	, m_fWidth(0)
 	, m_fHeight(0)
-	, m_fScaleX(1)
-	, m_fScaleY(1)
+	, m_fScaleX(1.0f)
+	, m_fScaleY(1.0f)
 	, m_fRotation(0)
 	, m_fSkewAngleX(0)
 	, m_fSkewAngleY(0)
-	, m_fDisplayOpacity(1)
-	, m_fRealOpacity(1)
+	, m_fDisplayOpacity(1.0f)
+	, m_fRealOpacity(1.0f)
+	, m_fAnchorX(0)
+	, m_fAnchorY(0)
 	, m_Matri(D2D1::Matrix3x2F::Identity())
 	, m_bVisiable(true)
 	, m_pParent(nullptr)
 	, m_pParentScene(nullptr)
 	, m_nHashName(0)
-	, m_bSortNeeded(false)
-	, m_bTransformNeeded(false)
+	, m_bSortChildrenNeeded(false)
+	, m_bTransformChildrenNeeded(false)
 {
 }
 
@@ -35,14 +37,17 @@ e2d::ENode::~ENode()
 {
 }
 
-void e2d::ENode::callOn()
+void e2d::ENode::_callOn()
 {
 	if (!m_bVisiable)
 	{
 		return;
 	}
 
-	this->_transfrom();
+	if (m_bTransformChildrenNeeded)
+	{
+		_updateTransform(this);
+	}
 
 	if (!m_vChildren.empty())
 	{
@@ -56,7 +61,7 @@ void e2d::ENode::callOn()
 			// 访问 Order 小于零的节点
 			if (child->getOrder() < 0)
 			{
-				child->callOn();
+				child->_callOn();
 			}
 			else
 			{
@@ -70,7 +75,7 @@ void e2d::ENode::callOn()
 
 		// 访问剩余节点
 		for (; i < size; i++)
-			m_vChildren[i]->callOn();
+			m_vChildren[i]->_callOn();
 	}
 	else
 	{
@@ -86,7 +91,7 @@ void e2d::ENode::_onRender()
 
 void e2d::ENode::_sortChildren()
 {
-	if (m_bSortNeeded)
+	if (m_bSortChildrenNeeded)
 	{
 		// 子节点排序
 		std::sort(
@@ -97,34 +102,75 @@ void e2d::ENode::_sortChildren()
 			}
 		);
 
-		m_bSortNeeded = false;
+		m_bSortChildrenNeeded = false;
 	}
 }
 
-void e2d::ENode::_transfrom()
+void e2d::ENode::_updateTransformToReal()
 {
-	if (m_bTransformNeeded)
+	// 计算锚点坐标
+	D2D1_POINT_2F anchorPos = D2D1::Point2F(
+		m_fWidth * m_fAnchorX,
+		m_fHeight * m_fAnchorY
+	);
+	// 计算左上角坐标
+	D2D1_POINT_2F upperLeftCorner = D2D1::Point2F(
+		m_fPosX - m_fWidth * m_fAnchorX,
+		m_fPosY - m_fHeight * m_fAnchorY
+	);
+	// 二维矩形变换
+	m_Matri = D2D1::Matrix3x2F::Scale(
+		m_fScaleX,
+		m_fScaleY,
+		anchorPos
+	) * D2D1::Matrix3x2F::Rotation(
+		m_fRotation, 
+		anchorPos
+	) * D2D1::Matrix3x2F::Skew(
+		m_fSkewAngleX,
+		m_fSkewAngleY,
+		anchorPos
+	) * D2D1::Matrix3x2F::Translation(
+		upperLeftCorner.x,
+		upperLeftCorner.y
+	);
+}
+
+void e2d::ENode::_updateChildrenTransform()
+{
+	for (const auto &child : m_vChildren)
 	{
-		// 二维矩形变换
-		m_Matri = D2D1::Matrix3x2F::Identity();
-		m_Matri = m_Matri.Translation(m_fPosX, m_fPosY);
-		m_Matri = m_Matri.Rotation(m_fRotation);
-		m_Matri = m_Matri.Scale(m_fScaleX, m_fScaleY);
-		m_Matri = m_Matri.Skew(m_fSkewAngleX, m_fSkewAngleY);
-		
-		if (m_pParent)
-		{
-			//m_Matri.SetProduct()
-		}
-
-		// 提示子节点更新属性
-		for (const auto &child : m_vChildren)
-		{
-			child->m_bTransformNeeded = true;
-		}
-
-		m_bTransformNeeded = false;
+		_updateTransform(child);
 	}
+}
+
+void e2d::ENode::_updateTransform(ENode * node)
+{
+	node->_updateTransformToReal();
+	if (node->m_pParent)
+	{
+		node->m_Matri = node->m_Matri * node->m_pParent->m_Matri;
+	}
+	// 遍历子节点下的所有节点
+	node->_updateChildrenTransform();
+	node->m_bTransformChildrenNeeded = false;
+}
+
+void e2d::ENode::_updateChildrenOpacity()
+{
+	for (const auto &child : m_vChildren)
+	{
+		_updateOpacity(child);
+	}
+}
+
+void e2d::ENode::_updateOpacity(ENode * node)
+{
+	if (node->m_pParent)
+	{
+		node->m_fDisplayOpacity = node->m_fRealOpacity * node->m_pParent->m_fDisplayOpacity;
+	}
+	node->_updateChildrenOpacity();
 }
 
 bool e2d::ENode::isVisiable() const
@@ -179,7 +225,7 @@ float e2d::ENode::getRotation() const
 
 float e2d::ENode::getOpacity() const
 {
-	return m_fDisplayOpacity;
+	return m_fRealOpacity;
 }
 
 int e2d::ENode::getOrder() const
@@ -207,10 +253,9 @@ void e2d::ENode::setPos(float x, float y)
 	if (m_fPosX == x && m_fPosY == y)
 		return;
 
-	//m_Matri.Translation(x, y);
 	m_fPosX = x;
 	m_fPosY = y;
-	m_bTransformNeeded = true;
+	m_bTransformChildrenNeeded = true;
 }
 
 void e2d::ENode::move(float x, float y)
@@ -235,6 +280,7 @@ void e2d::ENode::setSize(float width, float height)
 
 	m_fWidth = width;
 	m_fHeight = height;
+	m_bTransformChildrenNeeded = true;
 }
 
 void e2d::ENode::setScaleX(float scaleX)
@@ -257,10 +303,9 @@ void e2d::ENode::setScale(float scaleX, float scaleY)
 	if (m_fScaleX == scaleX && m_fScaleY == scaleY)
 		return;
 
-	//m_Matri.Scale(scaleX, scaleY);
 	m_fScaleX = scaleX;
 	m_fScaleY = scaleY;
-	m_bTransformNeeded = true;
+	m_bTransformChildrenNeeded = true;
 }
 
 void e2d::ENode::setSkewX(float angleX)
@@ -278,10 +323,9 @@ void e2d::ENode::setSkew(float angleX, float angleY)
 	if (m_fSkewAngleX == angleX && m_fSkewAngleY == angleY)
 		return;
 
-	//m_Matri.Skew(angleX, angleY);
 	m_fSkewAngleX = angleX;
 	m_fSkewAngleY = angleY;
-	m_bTransformNeeded = true;
+	m_bTransformChildrenNeeded = true;
 }
 
 void e2d::ENode::setRotation(float angle)
@@ -289,14 +333,38 @@ void e2d::ENode::setRotation(float angle)
 	if (m_fRotation == angle)
 		return;
 
-	//m_Matri.Rotation(angle);
 	m_fRotation = angle;
-	m_bTransformNeeded = true;
+	m_bTransformChildrenNeeded = true;
 }
 
 void e2d::ENode::setOpacity(float opacity)
 {
-	m_fDisplayOpacity = m_fRealOpacity = opacity;
+	if (m_fRealOpacity == opacity)
+		return;
+
+	m_fDisplayOpacity = m_fRealOpacity = min(max(opacity, 0), 1);
+	// 更新子节点透明度
+	_updateChildrenOpacity();
+}
+
+void e2d::ENode::setAnchorX(float anchorX)
+{
+	this->setAnchor(anchorX, m_fAnchorY);
+}
+
+void e2d::ENode::setAnchorY(float anchorY)
+{
+	this->setAnchor(m_fAnchorX, anchorY);
+}
+
+void e2d::ENode::setAnchor(float anchorX, float anchorY)
+{
+	if (m_fAnchorX == anchorX && m_fAnchorY == anchorY)
+		return;
+
+	m_fAnchorX = min(max(anchorX, 0), 1);
+	m_fAnchorY = min(max(anchorY, 0), 1);
+	m_bTransformChildrenNeeded = true;
 }
 
 void e2d::ENode::setParent(ENode * parent)
@@ -325,13 +393,15 @@ void e2d::ENode::addChild(ENode * child, int order  /* = 0 */)
 
 		m_vChildren.push_back(child);
 
-		child->m_pParent = this;
-
 		child->setOrder(order);
 
 		child->retain();
 
-		m_bSortNeeded = true;
+		child->m_pParent = this;
+
+		_updateOpacity(child);
+
+		m_bSortChildrenNeeded = true;
 	}
 }
 

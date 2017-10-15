@@ -14,7 +14,7 @@ int WINAPI WinMain(
 	{
 		auto scene = new EScene();
 
-		auto node = new ENode(L"node1");
+		/*auto node = new ENode(L"node1");
 		node->setPos(50, 80);
 		node->setSize(30, 30);
 		scene->add(node);
@@ -25,13 +25,29 @@ int WINAPI WinMain(
 		node->addChild(node2);
 
 		auto mlistener = new EMouseClickListener([](EPoint p) {
-			EApp::getCurrentScene()->getChild(L"node1")->setPos(p.x, p.y);
+		EApp::getCurrentScene()->getChild(L"node1")->setPos(p.x, p.y);
 		});
 
-		mlistener->bindWith(node);
+		mlistener->bindWith(node);*/
 
+		auto sprite = new ESprite(L"test.png");
+		sprite->setAnchor(0.5f, 0.5f);
+		sprite->setPos(sprite->getWidth() / 2, sprite->getHeight() / 2);
+
+		auto sprite2 = new ESprite(L"test.png");
+		sprite2->setScale(0.5);
+		sprite2->setRotation(45);
+
+		sprite->addChild(sprite2);
+
+		auto mlistener = new EMouseClickListener([=](EPoint p) {
+			sprite->setRotation(sprite->getRotation() + 10);
+		});
+
+		mlistener->bindWith(sprite);
+
+		scene->add(sprite);
 		app.enterScene(scene);
-
 		app.run();
 	}
 

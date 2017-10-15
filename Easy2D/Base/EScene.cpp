@@ -14,6 +14,14 @@ e2d::EScene::~EScene()
 	clearAllChildren();
 }
 
+void e2d::EScene::onEnter()
+{
+}
+
+void e2d::EScene::onExit()
+{
+}
+
 void e2d::EScene::_onRender()
 {
 	this->_sortChildren();
@@ -23,7 +31,7 @@ void e2d::EScene::_onRender()
 	// 访问所有节点
 	for (auto child : m_vChildren)
 	{
-		child->callOn();
+		child->_callOn();
 	}
 }
 
@@ -44,7 +52,7 @@ void e2d::EScene::_sortChildren()
 	}
 }
 
-void e2d::EScene::onEnter()
+void e2d::EScene::_onEnter()
 {
 	// 启用场景上的所有定时器、监听器和动画
 	//Timer::notifyAllSceneTimers(m_pNextScene);
@@ -52,7 +60,7 @@ void e2d::EScene::onEnter()
 	//ActionManager::notifyAllSceneActions(m_pNextScene);
 }
 
-void e2d::EScene::onExit()
+void e2d::EScene::_onExit()
 {
 	if (m_bWillSave)
 	{

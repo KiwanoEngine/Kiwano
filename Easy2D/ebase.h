@@ -212,6 +212,12 @@ protected:
 	// 子节点排序
 	void _sortChildren();
 
+	// 进入场景时需调用该函数
+	virtual void _onEnter();
+
+	// 退出场景时需调用该函数
+	virtual void _onExit();
+
 protected:
 	bool m_bSortNeeded;
 	bool m_bWillSave;
