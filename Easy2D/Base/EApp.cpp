@@ -254,10 +254,11 @@ void e2d::EApp::_mainLoop()
 	// 判断间隔时间是否足够
 	if (nInterval >= nAnimationInterval)
 	{
+		// 记录当前时间
+		tLast = GetNow();
+
 		if (!m_bPaused)
 		{
-			// 记录当前时间
-			tLast = GetNow();
 			// 游戏控制流程
 			_onControl();
 			// 刷新游戏画面

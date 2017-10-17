@@ -28,6 +28,11 @@ static ID2D1Bitmap * GetBitmapFromResource(const e2d::EString & resourceName, co
 
 
 e2d::ESprite::ESprite()
+	: m_pBitmap(nullptr)
+	, m_fSourcePosX(0)
+	, m_fSourcePosY(0)
+	, m_fSourceWidth(0)
+	, m_fSourceHeight(0)
 {
 }
 
@@ -37,10 +42,64 @@ e2d::ESprite::ESprite(const EString & imageFileName)
 	setImage(imageFileName);
 }
 
+e2d::ESprite::ESprite(const EString & imageFileName, float x, float y, float width, float height)
+{
+	setImage(imageFileName);
+	clipImage(x, y, width, height);
+}
+
 e2d::ESprite::ESprite(const EString & resourceName, const EString & resourceType)
 	: ESprite()
 {
 	setImage(resourceName, resourceType);
+}
+
+e2d::ESprite::ESprite(const EString & resourceName, const EString & resourceType, float x, float y, float width, float height)
+{
+	setImage(resourceName, resourceType);
+	clipImage(x, y, width, height);
+}
+
+float e2d::ESprite::getWidth() const
+{
+	return m_fSourceWidth * m_fScaleX;
+}
+
+float e2d::ESprite::getHeight() const
+{
+	return m_fSourceHeight * m_fScaleY;
+}
+
+e2d::ESize e2d::ESprite::getSize() const
+{
+	return ESize(getWidth(), getHeight());
+}
+
+float e2d::ESprite::getRealWidth() const
+{
+	return m_fSourceWidth;
+}
+
+float e2d::ESprite::getRealHeight() const
+{
+	return m_fSourceHeight;
+}
+
+e2d::ESize e2d::ESprite::getRealSize() const
+{
+	return ESize(m_fSourceWidth, m_fSourceHeight);
+}
+
+void e2d::ESprite::setWidth(float)
+{
+}
+
+void e2d::ESprite::setHeight(float)
+{
+}
+
+void e2d::ESprite::setSize(float, float)
+{
 }
 
 void e2d::ESprite::setImage(const EString & fileName)
@@ -52,12 +111,20 @@ void e2d::ESprite::setImage(const EString & fileName)
 
 	m_sFileName = fileName;
 
-	SafeReleaseInterface(&pBitmap);
-	pBitmap = GetBitmapFromFile(m_sFileName);
+	SafeReleaseInterface(&m_pBitmap);
+	m_pBitmap = GetBitmapFromFile(m_sFileName);
 
-	ASSERT(pBitmap, "ESprite create device resources failed!");
+	ASSERT(m_pBitmap, "ESprite create device resources failed!");
 
-	this->setSize(pBitmap->GetSize().width, pBitmap->GetSize().height);
+	m_fSourcePosX = m_fSourcePosY = 0;
+	m_fSourceWidth = m_pBitmap->GetSize().width;
+	m_fSourceHeight = m_pBitmap->GetSize().height;
+}
+
+void e2d::ESprite::setImage(const EString & fileName, float x, float y, float width, float height)
+{
+	setImage(fileName);
+	clipImage(x, y, width, height);
 }
 
 void e2d::ESprite::setImage(const EString & resourceName, const EString & resourceType)
@@ -76,23 +143,41 @@ void e2d::ESprite::setImage(const EString & resourceName, const EString & resour
 	m_sResourceName = resourceName;
 	m_sResourceType = resourceType;
 
-	SafeReleaseInterface(&pBitmap);
-	pBitmap = GetBitmapFromResource(resourceName, resourceType);
+	SafeReleaseInterface(&m_pBitmap);
+	m_pBitmap = GetBitmapFromResource(resourceName, resourceType);
 
-	ASSERT(pBitmap, "ESprite create device resources failed!");
+	ASSERT(m_pBitmap, "ESprite create device resources failed!");
 
-	this->setSize(pBitmap->GetSize().width, pBitmap->GetSize().height);
+	m_fSourcePosX = m_fSourcePosY = 0;
+	m_fSourceWidth = m_pBitmap->GetSize().width;
+	m_fSourceHeight = m_pBitmap->GetSize().height;
+}
+
+void e2d::ESprite::setImage(const EString & resourceName, const EString & resourceType, float x, float y, float width, float height)
+{
+	setImage(resourceName, resourceType);
+	clipImage(x, y, width, height);
+}
+
+void e2d::ESprite::clipImage(float x, float y, float width, float height)
+{
+	m_fSourcePosX = max(x, 0);
+	m_fSourcePosY = max(y, 0);
+	m_fSourceWidth = min(max(width, 0), m_pBitmap->GetSize().width - m_fSourcePosX);
+	m_fSourceHeight = min(max(height, 0), m_pBitmap->GetSize().width - m_fSourcePosX);
 }
 
 void e2d::ESprite::_onRender()
 {
-	if (pBitmap)
+	if (m_pBitmap)
 	{
 		// Draw bitmap
 		GetRenderTarget()->DrawBitmap(
-			pBitmap,
-			D2D1::RectF(0, 0, getRealWidth(), getRealHeight()),
-			m_fDisplayOpacity
+			m_pBitmap,
+			D2D1::RectF(0, 0, m_fSourceWidth, m_fSourceHeight),
+			m_fDisplayOpacity,
+			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+			D2D1::RectF(m_fSourcePosX, m_fSourcePosY, m_fSourceWidth, m_fSourceHeight)
 		);
 	}
 }

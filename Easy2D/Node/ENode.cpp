@@ -164,13 +164,13 @@ void e2d::ENode::_updateTransformToReal()
 {
 	// 计算锚点坐标
 	D2D1_POINT_2F anchorPos = D2D1::Point2F(
-		m_Size.width * m_fAnchorX,
-		m_Size.height * m_fAnchorY
+		getRealWidth() * m_fAnchorX,
+		getRealHeight() * m_fAnchorY
 	);
 	// 计算左上角坐标
 	D2D1_POINT_2F upperLeftCorner = D2D1::Point2F(
-		m_Pos.x - m_Size.width * m_fAnchorX,
-		m_Pos.y - m_Size.height * m_fAnchorY
+		m_Pos.x - getRealWidth() * m_fAnchorX,
+		m_Pos.y - getRealHeight() * m_fAnchorY
 	);
 	// 二维矩形变换
 	m_Matri = D2D1::Matrix3x2F::Scale(

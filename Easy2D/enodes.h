@@ -368,21 +368,94 @@ public:
 		const EString & imageFileName
 	);
 
+	// 从文件图片创建精灵并裁剪
+	ESprite(
+		const EString & imageFileName,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
 	// 从资源图片创建精灵
 	ESprite(
 		const EString & resourceName,
 		const EString & resourceType
 	);
+
+	// 从资源图片创建精灵并裁剪
+	ESprite(
+		const EString & resourceName,
+		const EString & resourceType,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+	// 获取精灵宽度
+	virtual float getWidth() const override;
+
+	// 获取精灵高度
+	virtual float getHeight() const override;
+
+	// 获取精灵大小
+	virtual ESize getSize() const override;
+
+	// 获取精灵宽度（不考虑缩放）
+	virtual float getRealWidth() const override;
+
+	// 获取精灵高度（不考虑缩放）
+	virtual float getRealHeight() const override;
+
+	// 获取精灵大小（不考虑缩放）
+	virtual ESize getRealSize() const override;
+
+	// 设置精灵宽度是失效的
+	virtual void setWidth(float) override;
+
+	// 设置精灵高度是失效的
+	virtual void setHeight(float) override;
+
+	// 设置精灵大小是失效的
+	virtual void setSize(float, float) override;
 	
 	// 从文件加载图片
 	void setImage(
 		const EString & fileName
 	);
 
+	// 从文件加载图片并裁剪
+	void setImage(
+		const EString & fileName,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
 	// 从资源加载图片
 	void setImage(
 		const EString & resourceName,
 		const EString & resourceType
+	);
+
+	// 从资源加载图片并裁剪
+	void setImage(
+		const EString & resourceName,
+		const EString & resourceType,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+	// 裁剪原图片
+	void clipImage(
+		float x,
+		float y,
+		float width,
+		float height
 	);
 
 	// 预加载资源
@@ -404,10 +477,14 @@ protected:
 	virtual void _onRender() override;
 
 protected:
+	float	m_fSourcePosX;
+	float	m_fSourcePosY;
+	float	m_fSourceWidth;
+	float	m_fSourceHeight;
 	EString m_sFileName;
 	EString m_sResourceName;
 	EString m_sResourceType;
-	ID2D1Bitmap * pBitmap;
+	ID2D1Bitmap * m_pBitmap;
 };
 
 }

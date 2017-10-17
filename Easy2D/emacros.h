@@ -52,5 +52,8 @@
 #endif
 
 
+#define DEPRECATED_ATTRIBUTE __declspec(deprecated)
+
+
 template<typename T>
 inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }

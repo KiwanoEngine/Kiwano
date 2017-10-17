@@ -26,6 +26,16 @@ struct EPoint
 		this->y = y;
 	}
 
+	EPoint operator + (EPoint const & p)
+	{
+		return EPoint(x + p.x, y + p.y);
+	}
+
+	EPoint operator - (EPoint const & p)
+	{
+		return EPoint(x - p.x, y - p.y);
+	}
+
 	float x;
 	float y;
 };
@@ -44,6 +54,16 @@ struct ESize
 	{
 		this->width = width;
 		this->height = height;
+	}
+
+	ESize operator + (ESize const & size)
+	{
+		return ESize(width + size.width, height + size.height);
+	}
+
+	ESize operator - (ESize const & size)
+	{
+		return ESize(width - size.width, height - size.height);
 	}
 
 	float width;
