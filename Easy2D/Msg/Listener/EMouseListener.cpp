@@ -5,7 +5,7 @@ e2d::EMouseListener::EMouseListener()
 {
 }
 
-e2d::EMouseListener::EMouseListener(EString name)
+e2d::EMouseListener::EMouseListener(const EString & name)
 	: EListener(name)
 {
 }
@@ -13,23 +13,23 @@ e2d::EMouseListener::EMouseListener(EString name)
 e2d::EMouseListener::EMouseListener(const MOUSE_LISTENER_CALLBACK & callback)
 	: EListener()
 {
-	m_callback = callback;
+	m_Callback = callback;
 }
 
-e2d::EMouseListener::EMouseListener(EString name, const MOUSE_LISTENER_CALLBACK & callback)
+e2d::EMouseListener::EMouseListener(const EString & name, const MOUSE_LISTENER_CALLBACK & callback)
 	: EListener(name)
 {
-	m_callback = callback;
+	m_Callback = callback;
 }
 
-void e2d::EMouseListener::runCallback()
+void e2d::EMouseListener::_runCallback()
 {
-	m_callback();
+	m_Callback();
 }
 
 void e2d::EMouseListener::setCallback(const MOUSE_LISTENER_CALLBACK & callback)
 {
-	m_callback = callback;
+	m_Callback = callback;
 }
 
 void e2d::EMouseListener::bindWith(EScene * pParentScene)
@@ -38,7 +38,7 @@ void e2d::EMouseListener::bindWith(EScene * pParentScene)
 
 	if (pParentScene)
 	{
-		EMsgManager::bindListenerWith(this, pParentScene);
+		EMsgManager::bindListener(this, pParentScene);
 	}
 }
 
@@ -48,6 +48,6 @@ void e2d::EMouseListener::bindWith(ENode * pParentNode)
 
 	if (pParentNode != nullptr && m_pParentScene == nullptr)
 	{
-		EMsgManager::bindListenerWith(this, pParentNode);
+		EMsgManager::bindListener(this, pParentNode);
 	}
 }

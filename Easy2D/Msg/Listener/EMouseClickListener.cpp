@@ -6,7 +6,7 @@ e2d::EMouseClickListener::EMouseClickListener()
 {
 }
 
-e2d::EMouseClickListener::EMouseClickListener(EString name)
+e2d::EMouseClickListener::EMouseClickListener(const EString & name)
 	: EMouseListener(name)
 	, m_bPressed(false)
 {
@@ -14,19 +14,19 @@ e2d::EMouseClickListener::EMouseClickListener(EString name)
 
 e2d::EMouseClickListener::EMouseClickListener(const MOUSE_CLICK_LISTENER_CALLBACK & callback)
 	: EMouseListener()
-	, m_callback(callback)
+	, m_Callback(callback)
 	, m_bPressed(false)
 {
 }
 
-e2d::EMouseClickListener::EMouseClickListener(EString name, const MOUSE_CLICK_LISTENER_CALLBACK & callback)
+e2d::EMouseClickListener::EMouseClickListener(const EString & name, const MOUSE_CLICK_LISTENER_CALLBACK & callback)
 	: EMouseListener(name)
-	, m_callback(callback)
+	, m_Callback(callback)
 	, m_bPressed(false)
 {
 }
 
-void e2d::EMouseClickListener::runCallback()
+void e2d::EMouseClickListener::_runCallback()
 {
 	if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DOWN ||
 		EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DBLCLK)
@@ -35,12 +35,12 @@ void e2d::EMouseClickListener::runCallback()
 	}
 	else if (m_bPressed && EMouseMsg::getMsg() == EMouseMsg::LBUTTON_UP)
 	{
-		m_callback(EMouseMsg::getPos());
+		m_Callback(EMouseMsg::getPos());
 		m_bPressed = false;
 	}
 }
 
 void e2d::EMouseClickListener::setCallback(const MOUSE_CLICK_LISTENER_CALLBACK & callback)
 {
-	m_callback = callback;
+	m_Callback = callback;
 }

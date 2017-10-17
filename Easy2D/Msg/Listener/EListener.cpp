@@ -3,13 +3,12 @@
 e2d::EListener::EListener()
 	: m_bRunning(false)
 	, m_bWaiting(false)
-	, m_sName(L"")
 	, m_pParentScene(nullptr)
 	, m_pParentNode(nullptr)
 {
 }
 
-e2d::EListener::EListener(EString name)
+e2d::EListener::EListener(const EString & name)
 	: EListener()
 {
 	m_sName = name;
@@ -35,12 +34,12 @@ void e2d::EListener::stop()
 	m_bRunning = false;
 }
 
-void e2d::EListener::wait()
+void e2d::EListener::_wait()
 {
 	m_bWaiting = true;
 }
 
-void e2d::EListener::notify()
+void e2d::EListener::_notify()
 {
 	m_bWaiting = false;
 }
@@ -60,7 +59,7 @@ e2d::ENode * e2d::EListener::getParentNode() const
 	return m_pParentNode;
 }
 
-void e2d::EListener::setName(EString name)
+void e2d::EListener::setName(const EString & name)
 {
 	m_sName = name;
 }

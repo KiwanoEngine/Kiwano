@@ -6,7 +6,7 @@ e2d::EMouseDoubleClickListener::EMouseDoubleClickListener()
 {
 }
 
-e2d::EMouseDoubleClickListener::EMouseDoubleClickListener(EString name)
+e2d::EMouseDoubleClickListener::EMouseDoubleClickListener(const EString & name)
 	: EMouseListener(name)
 	, m_bPressed(false)
 {
@@ -14,32 +14,36 @@ e2d::EMouseDoubleClickListener::EMouseDoubleClickListener(EString name)
 
 e2d::EMouseDoubleClickListener::EMouseDoubleClickListener(const MOUSE_DBLCLK_LISTENER_CALLBACK & callback)
 	: EMouseListener()
-	, m_callback(callback)
+	, m_Callback(callback)
 	, m_bPressed(false)
 {
 }
 
-e2d::EMouseDoubleClickListener::EMouseDoubleClickListener(EString name, const MOUSE_DBLCLK_LISTENER_CALLBACK & callback)
+e2d::EMouseDoubleClickListener::EMouseDoubleClickListener(const EString & name, const MOUSE_DBLCLK_LISTENER_CALLBACK & callback)
 	: EMouseListener(name)
-	, m_callback(callback)
+	, m_Callback(callback)
 	, m_bPressed(false)
 {
 }
 
-void e2d::EMouseDoubleClickListener::runCallback()
+void e2d::EMouseDoubleClickListener::_runCallback()
 {
-	if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DBLCLK)
+	if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DOWN)
+	{
+		m_bPressed = false;
+	}
+	else if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DBLCLK)
 	{
 		m_bPressed = true;
 	}
 	else if (m_bPressed && EMouseMsg::getMsg() == EMouseMsg::LBUTTON_UP)
 	{
-		m_callback(EMouseMsg::getPos());
+		m_Callback(EMouseMsg::getPos());
 		m_bPressed = false;
 	}
 }
 
 void e2d::EMouseDoubleClickListener::setCallback(const MOUSE_DBLCLK_LISTENER_CALLBACK & callback)
 {
-	m_callback = callback;
+	m_Callback = callback;
 }

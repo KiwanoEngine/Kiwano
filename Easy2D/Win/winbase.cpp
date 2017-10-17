@@ -1,43 +1,46 @@
 #include "winbase.h"
+using namespace std::chrono;
 
-HWND hwnd = nullptr;
-ID2D1Factory * pDirect2dFactory = nullptr;
-ID2D1HwndRenderTarget * pRenderTarget = nullptr;
-ID2D1SolidColorBrush * m_pSolidBrush = nullptr;
-IWICImagingFactory * pIWICFactory = nullptr;
+
+HWND s_HWnd = nullptr;
+ID2D1Factory * s_pDirect2dFactory = nullptr;
+ID2D1HwndRenderTarget * s_pRenderTarget = nullptr;
+ID2D1SolidColorBrush * s_pSolidBrush = nullptr;
+IWICImagingFactory * s_pIWICFactory = nullptr;
+steady_clock::time_point s_tNow;
 
 
 HWND &GetHWnd()
 {
-	return hwnd;
+	return s_HWnd;
 }
 
 ID2D1Factory * &GetFactory()
 {
-	return pDirect2dFactory;
+	return s_pDirect2dFactory;
 }
 
 IWICImagingFactory * &GetImagingFactory()
 {
-	if (!pIWICFactory)
+	if (!s_pIWICFactory)
 	{
 		CoCreateInstance(
 			CLSID_WICImagingFactory,
 			NULL,
 			CLSCTX_INPROC_SERVER,
 			IID_IWICImagingFactory,
-			reinterpret_cast<void **>(&pIWICFactory)
+			reinterpret_cast<void **>(&s_pIWICFactory)
 		);
 	}
-	return pIWICFactory;
+	return s_pIWICFactory;
 }
 
 ID2D1HwndRenderTarget * &GetRenderTarget()
 {
-	if (!pRenderTarget)
+	if (!s_pRenderTarget)
 	{
 		RECT rc;
-		GetClientRect(hwnd, &rc);
+		GetClientRect(s_HWnd, &rc);
 
 		D2D1_SIZE_U size = D2D1::SizeU(
 			rc.right - rc.left,
@@ -46,23 +49,32 @@ ID2D1HwndRenderTarget * &GetRenderTarget()
 
 		// Create a Direct2D render target.
 		HRESULT hr;
-		hr = pDirect2dFactory->CreateHwndRenderTarget(
+		hr = s_pDirect2dFactory->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
-			D2D1::HwndRenderTargetProperties(hwnd, size),
-			&pRenderTarget
+			D2D1::HwndRenderTargetProperties(s_HWnd, size),
+			&s_pRenderTarget
 		);
 		
 		ASSERT(SUCCEEDED(hr), "Create Render Target Failed!");
 	}
-	return pRenderTarget;
+	return s_pRenderTarget;
 }
 
 ID2D1SolidColorBrush * &GetSolidColorBrush()
 {
-	if (!m_pSolidBrush)
+	if (!s_pSolidBrush)
 	{
-		pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &m_pSolidBrush);
+		s_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &s_pSolidBrush);
 	}
-	return m_pSolidBrush;
+	return s_pSolidBrush;
 }
 
+steady_clock::time_point &GetNow()
+{
+	return s_tNow;
+}
+
+long long GetInterval(steady_clock::time_point tLast)
+{
+	return duration_cast<milliseconds>(s_tNow - tLast).count();
+}

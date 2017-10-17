@@ -14,28 +14,52 @@ public:
 	ENode();
 
 	ENode(
-		EString name
+		const EString & name
 	);
 
 	virtual ~ENode();
 
-	// 节点是否显示
+	// 重写这个函数，它将在节点进入场景时自动执行
+	virtual void onEnter();
+
+	// 重写这个函数，它将在节点离开场景时自动执行
+	virtual void onExit();
+
+	// 获取节点显示状态
 	virtual bool isVisiable() const;
+
+	// 获取节点名称
+	virtual EString getName() const;
 
 	// 获取节点绘图顺序
 	virtual int getOrder() const;
 
 	// 获取节点横坐标
-	virtual float getX() const;
+	virtual float getPosX() const;
 
 	// 获取节点纵坐标
-	virtual float getY() const;
+	virtual float getPosY() const;
+
+	// 获取节点坐标
+	virtual EPoint getPos() const;
 
 	// 获取节点宽度
 	virtual float getWidth() const;
 
 	// 获取节点高度
 	virtual float getHeight() const;
+
+	// 获取节点宽度（不考虑缩放）
+	virtual float getRealWidth() const;
+
+	// 获取节点高度（不考虑缩放）
+	virtual float getRealHeight() const;
+
+	// 获取节点大小（不考虑缩放）
+	virtual ESize getRealSize() const;
+
+	// 获取节点大小
+	virtual ESize getSize() const;
 
 	// 获取节点横向缩放比例
 	virtual float getScaleX() const;
@@ -62,20 +86,14 @@ public:
 	virtual EScene * getParentScene() const;
 
 	// 获取所有子节点
-	virtual std::vector<ENode*> &getChildren();
+	virtual EVector<ENode*> &getChildren();
 
 	// 获取子节点数量
 	virtual size_t getChildrenCount() const;
 
 	// 根据名字获取子节点
 	virtual ENode * getChild(
-		EString name
-	) const;
-
-	// 根据名字获取子节点
-	static ENode * getChild(
-		EString name,
-		const std::vector<ENode*> &children
+		const EString & name
 	);
 
 	// 设置节点是否显示
@@ -85,17 +103,22 @@ public:
 
 	// 设置节点名称
 	virtual void setName(
-		EString name
+		const EString & name
 	);
 
 	// 设置节点横坐标
-	virtual void setX(
+	virtual void setPosX(
 		float x
 	);
 
 	// 设置节点纵坐标
-	virtual void setY(
+	virtual void setPosY(
 		float y
+	);
+
+	// 设置节点坐标
+	virtual void setPos(
+		const EPoint & point
 	);
 
 	// 设置节点坐标
@@ -110,6 +133,11 @@ public:
 		float y
 	);
 
+	// 移动节点
+	virtual void move(
+		const EVec & v
+	);
+
 	// 设置节点宽度
 	virtual void setWidth(
 		float width
@@ -118,6 +146,11 @@ public:
 	// 设置节点高度
 	virtual void setHeight(
 		float height
+	);
+
+	// 设置节点大小
+	virtual void setSize(
+		const ESize & size
 	);
 
 	// 设置节点大小
@@ -207,11 +240,6 @@ public:
 		float anchorY
 	);
 
-	// 设置节点所在场景
-	virtual void setParentScene(
-		EScene * scene
-	);
-
 	// 设置父节点
 	virtual void setParent(
 		ENode* parent
@@ -229,14 +257,19 @@ public:
 	);
 
 	// 移除子节点
-	virtual void removeChild(
+	virtual bool removeChild(
 		ENode * child, 
 		bool release = false
 	);
 
 	// 移除子节点
 	virtual void removeChild(
-		EString childName, 
+		const EString & childName,
+		bool release = false
+	);
+
+	// 移除所有节点
+	virtual void clearAllChildren(
 		bool release = false
 	);
 
@@ -247,8 +280,22 @@ protected:
 	// 渲染节点
 	virtual void _onRender();
 
+	// 节点被添加到场景时的执行程序
+	virtual void _onEnter();
+
+	// 节点从场景中消失时的执行程序
+	virtual void _onExit();
+
+	// 节点清除时的执行程序
+	virtual void _onClear();
+
 	// 子节点排序
 	void _sortChildren();
+
+	// 设置节点所在场景
+	virtual void _setParentScene(
+		EScene * scene
+	);
 
 	// 只考虑自身进行二维矩阵变换
 	void _updateTransformToReal();
@@ -268,10 +315,8 @@ protected:
 protected:
 	EString		m_sName;
 	size_t		m_nHashName;
-	float		m_fPosX;
-	float		m_fPosY;
-	float		m_fWidth;
-	float		m_fHeight;
+	EPoint		m_Pos;
+	ESize		m_Size;
 	float		m_fScaleX;
 	float		m_fScaleY;
 	float		m_fRotation;
@@ -281,14 +326,15 @@ protected:
 	float		m_fRealOpacity;
 	float		m_fAnchorX;
 	float		m_fAnchorY;
-	D2D1::Matrix3x2F m_Matri;
 	int			m_nOrder;
 	bool		m_bVisiable;
+	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
 	bool		m_bTransformChildrenNeeded;
 	EScene *	m_pParentScene;
 	ENode *		m_pParent;
-	std::vector<ENode*> m_vChildren;
+	D2D1::Matrix3x2F	m_Matri;
+	EVector<ENode*>	m_vChildren;
 };
 
 
@@ -298,15 +344,15 @@ class ERectangle :
 public:
 	ERectangle();
 
-	EColor::Enum getColor() const;
+	EColor getColor() const;
 
-	void setColor(EColor::Enum color);
+	void setColor(EColor color);
 
 protected:
 	virtual void _onRender() override;
 
 protected:
-	EColor::Enum m_Color;
+	EColor m_Color;
 };
 
 
@@ -314,17 +360,47 @@ class ESprite :
 	public ENode
 {
 public:
+	// 创建一个空精灵
 	ESprite();
 
-	ESprite(EString imageFileName);
+	// 从文件图片创建精灵
+	ESprite(
+		const EString & imageFileName
+	);
 
-	ESprite(EString resourceName, EString resourceType);
+	// 从资源图片创建精灵
+	ESprite(
+		const EString & resourceName,
+		const EString & resourceType
+	);
+	
+	// 从文件加载图片
+	void setImage(
+		const EString & fileName
+	);
 
-	void setImage(EString fileName);
+	// 从资源加载图片
+	void setImage(
+		const EString & resourceName,
+		const EString & resourceType
+	);
 
-	void setImage(EString resourceName, EString resourceType);
+	// 预加载资源
+	static bool preloadImage(
+		const EString & fileName
+	);
+
+	// 预加载资源
+	static bool preloadImage(
+		const EString & resourceName,
+		const EString & resourceType
+	);
+
+	// 清空图片缓存
+	static void clearCache();
 
 protected:
+	// 渲染精灵
 	virtual void _onRender() override;
 
 protected:

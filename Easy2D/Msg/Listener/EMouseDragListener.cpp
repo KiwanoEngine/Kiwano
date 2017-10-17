@@ -5,24 +5,24 @@ e2d::EMouseDragListener::EMouseDragListener()
 {
 }
 
-e2d::EMouseDragListener::EMouseDragListener(EString name)
+e2d::EMouseDragListener::EMouseDragListener(const EString & name)
 	: EMouseListener(name)
 {
 }
 
 e2d::EMouseDragListener::EMouseDragListener(const MOUSE_DRAG_LISTENER_CALLBACK & callback)
 	: EMouseListener()
-	, m_callback(callback)
+	, m_Callback(callback)
 {
 }
 
-e2d::EMouseDragListener::EMouseDragListener(EString name, const MOUSE_DRAG_LISTENER_CALLBACK & callback)
+e2d::EMouseDragListener::EMouseDragListener(const EString & name, const MOUSE_DRAG_LISTENER_CALLBACK & callback)
 	: EMouseListener(name)
-	, m_callback(callback)
+	, m_Callback(callback)
 {
 }
 
-void e2d::EMouseDragListener::runCallback()
+void e2d::EMouseDragListener::_runCallback()
 {
 	if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DOWN ||
 		EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DBLCLK)
@@ -31,11 +31,11 @@ void e2d::EMouseDragListener::runCallback()
 	}
 	else if (EMouseMsg::isLButtonDown() && EMouseMsg::getMsg() == EMouseMsg::MOVE)
 	{
-		m_callback(m_Begin, EMouseMsg::getPos());
+		m_Callback(m_Begin, EMouseMsg::getPos());
 	}
 }
 
 void e2d::EMouseDragListener::setCallback(const MOUSE_DRAG_LISTENER_CALLBACK & callback)
 {
-	m_callback = callback;
+	m_Callback = callback;
 }

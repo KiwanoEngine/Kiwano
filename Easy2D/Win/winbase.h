@@ -1,12 +1,6 @@
 #pragma once
 #include "..\emacros.h"
-#include <d2d1.h>
-#include <d2d1helper.h>
-#include <dwrite.h>
-#include <wincodec.h>
-#pragma comment(lib, "d2d1.lib")
-#pragma comment(lib, "dwrite.lib")
-#pragma comment(lib, "windowscodecs.lib")
+#include <chrono>
 
 
 #ifndef HINST_THISCOMPONENT
@@ -24,6 +18,11 @@ ID2D1HwndRenderTarget * &GetRenderTarget();
 ID2D1SolidColorBrush * &GetSolidColorBrush();
 
 IWICImagingFactory * &GetImagingFactory();
+
+std::chrono::steady_clock::time_point &GetNow();
+
+long long GetInterval(std::chrono::steady_clock::time_point tLast);
+
 
 template<class Interface>
 inline void SafeReleaseInterface(

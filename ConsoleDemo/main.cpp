@@ -23,23 +23,23 @@ int main()
 		}
 		});*/
 
-		auto listener = new EKeyPressListener([=] {
-			if (EKeyMsg::isCapitalLockOn())
+		auto listener = new EKeyboardPressListener([=] {
+			if (EKeyboardMsg::isCapitalLockOn())
 			{
-				if (EKeyMsg::getVal() == EKeyMsg::KEY::LEFT)
+				if (EKeyboardMsg::getVal() == EKeyboardMsg::KEY::LEFT)
 				{
 					node->move(-3, 0);
 				}
-				if (EKeyMsg::getVal() == EKeyMsg::KEY::RIGHT)
+				if (EKeyboardMsg::getVal() == EKeyboardMsg::KEY::RIGHT)
 				{
 					node->move(3, 0);
 				}
 			}
 		});
 
-		listener->bindWithNode(node);
+		listener->bindWith(node);
 
-		EMsgManager::bindListenerWithScene(listener, scene);
+		EMsgManager::bindListener(listener, scene);
 
 		app.enterScene(scene);
 

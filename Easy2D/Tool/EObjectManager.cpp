@@ -1,5 +1,4 @@
 #include "..\etools.h"
-#include <vector>
 
 // EObjectManager 释放池的实现机制：
 /// EObject 类中的引用计数（m_nRefCount）保证了指针的使用安全
@@ -9,7 +8,7 @@
 /// 让其自动释放
 
 // 释放池容器
-static std::vector<e2d::EObject*> s_vPool;
+static e2d::EVector<e2d::EObject*> s_vPool;
 // 标志释放池执行状态
 static bool s_bNotifyed = false;
 
@@ -19,11 +18,11 @@ void e2d::EObjectManager::__flush()
 
 	s_bNotifyed = false;
 	// 创建迭代器
-	static std::vector<e2d::EObject*>::iterator iter;
+	static EVector<e2d::EObject*>::iterator iter;
 	// 循环遍历容器中的所有对象
 	for (iter = s_vPool.begin(); iter != s_vPool.end();)
 	{
-		if ((*iter)->m_bAutoRelease && (*iter)->m_nRefCount == 0)
+		if ((*iter)->m_bAutoRelease && (*iter)->m_nRefCount <= 0)
 		{
 			// 若对象的引用的计数为 0, 释放该对象
 			delete (*iter);

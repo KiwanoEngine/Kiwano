@@ -195,9 +195,10 @@
     <ClCompile Include="Base\EApp.cpp" />
     <ClCompile Include="Base\EObject.cpp" />
     <ClCompile Include="Base\EScene.cpp" />
+    <ClCompile Include="ETimer.cpp" />
     <ClCompile Include="Msg\EMsgManager.cpp" />
     <ClCompile Include="Msg\Listener\EKeyboardListener.cpp" />
-    <ClCompile Include="Msg\Listener\EKeyPressListener.cpp" />
+    <ClCompile Include="Msg\Listener\EKeyboardPressListener.cpp" />
     <ClCompile Include="Msg\Listener\EListener.cpp" />
     <ClCompile Include="Msg\Listener\EMouseClickListener.cpp" />
     <ClCompile Include="Msg\Listener\EMouseDoubleClickListener.cpp" />

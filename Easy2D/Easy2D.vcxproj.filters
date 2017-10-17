@@ -54,12 +54,6 @@
     <ClCompile Include="Tool\ETimerManager.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="Msg\Listener\EKeyboardListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\Listener\EKeyPressListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
     <ClCompile Include="Node\ERectangle.cpp">
       <Filter>Node</Filter>
     </ClCompile>
@@ -73,6 +67,15 @@
       <Filter>Msg\Listener</Filter>
     </ClCompile>
     <ClCompile Include="Msg\Listener\EMouseDragListener.cpp">
+      <Filter>Msg\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="ETimer.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\Listener\EKeyboardListener.cpp">
+      <Filter>Msg\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\Listener\EKeyboardPressListener.cpp">
       <Filter>Msg\Listener</Filter>
     </ClCompile>
   </ItemGroup>

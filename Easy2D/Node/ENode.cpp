@@ -1,13 +1,11 @@
 #include "..\enodes.h"
+#include "..\emsg.h"
+#include "..\etools.h"
 #include "..\Win\winbase.h"
 #include <algorithm>
 
 e2d::ENode::ENode()
 	: m_nOrder(0)
-	, m_fPosX(0)
-	, m_fPosY(0)
-	, m_fWidth(0)
-	, m_fHeight(0)
 	, m_fScaleX(1.0f)
 	, m_fScaleY(1.0f)
 	, m_fRotation(0)
@@ -19,6 +17,7 @@ e2d::ENode::ENode()
 	, m_fAnchorY(0)
 	, m_Matri(D2D1::Matrix3x2F::Identity())
 	, m_bVisiable(true)
+	, m_bDisplayedInScene(false)
 	, m_pParent(nullptr)
 	, m_pParentScene(nullptr)
 	, m_nHashName(0)
@@ -27,13 +26,21 @@ e2d::ENode::ENode()
 {
 }
 
-e2d::ENode::ENode(EString name)
+e2d::ENode::ENode(const EString & name)
 	: ENode()
 {
 	setName(name);
 }
 
 e2d::ENode::~ENode()
+{
+}
+
+void e2d::ENode::onEnter()
+{
+}
+
+void e2d::ENode::onExit()
 {
 }
 
@@ -89,6 +96,53 @@ void e2d::ENode::_onRender()
 {
 }
 
+void e2d::ENode::_onEnter()
+{
+	if (!this->m_bDisplayedInScene && this->isVisiable())
+	{
+		this->m_bDisplayedInScene = true;
+
+		ETimerManager::_notifyAllTimersBindedWith(this);
+		EMsgManager::_notifyAllMouseListenersBindedWith(this);
+		EMsgManager::_notifyAllKeyboardListenersBindedWith(this);
+		this->onEnter();
+
+		for (const auto &child : m_vChildren)
+		{
+			child->_onEnter();
+		}
+	}
+}
+
+void e2d::ENode::_onExit()
+{
+	if (this->m_bDisplayedInScene)
+	{
+		this->m_bDisplayedInScene = false;
+
+		ETimerManager::_waitAllTimersBindedWith(this);
+		EMsgManager::_waitAllMouseListenersBindedWith(this);
+		EMsgManager::_waitAllKeyboardListenersBindedWith(this);
+		this->onExit();
+
+		for (const auto &child : m_vChildren)
+		{
+			child->_onExit();
+		}
+	}
+}
+
+void e2d::ENode::_onClear()
+{
+	ETimerManager::clearAllTimersBindedWith(this);
+	EMsgManager::clearAllMouseListenersBindedWith(this);
+	EMsgManager::clearAllKeyboardListenersBindedWith(this);
+	for (const auto &child : m_vChildren)
+	{
+		child->_onClear();
+	}
+}
+
 void e2d::ENode::_sortChildren()
 {
 	if (m_bSortChildrenNeeded)
@@ -110,25 +164,25 @@ void e2d::ENode::_updateTransformToReal()
 {
 	// 计算锚点坐标
 	D2D1_POINT_2F anchorPos = D2D1::Point2F(
-		m_fWidth * m_fAnchorX,
-		m_fHeight * m_fAnchorY
+		m_Size.width * m_fAnchorX,
+		m_Size.height * m_fAnchorY
 	);
 	// 计算左上角坐标
 	D2D1_POINT_2F upperLeftCorner = D2D1::Point2F(
-		m_fPosX - m_fWidth * m_fAnchorX,
-		m_fPosY - m_fHeight * m_fAnchorY
+		m_Pos.x - m_Size.width * m_fAnchorX,
+		m_Pos.y - m_Size.height * m_fAnchorY
 	);
 	// 二维矩形变换
 	m_Matri = D2D1::Matrix3x2F::Scale(
 		m_fScaleX,
 		m_fScaleY,
 		anchorPos
-	) * D2D1::Matrix3x2F::Rotation(
-		m_fRotation, 
-		anchorPos
 	) * D2D1::Matrix3x2F::Skew(
 		m_fSkewAngleX,
 		m_fSkewAngleY,
+		anchorPos
+	) * D2D1::Matrix3x2F::Rotation(
+		m_fRotation,
 		anchorPos
 	) * D2D1::Matrix3x2F::Translation(
 		upperLeftCorner.x,
@@ -178,24 +232,54 @@ bool e2d::ENode::isVisiable() const
 	return m_bVisiable;
 }
 
-float e2d::ENode::getX() const
+e2d::EString e2d::ENode::getName() const
 {
-	return m_fPosX;
+	return m_sName;
 }
 
-float e2d::ENode::getY() const
+float e2d::ENode::getPosX() const
 {
-	return m_fPosY;
+	return m_Pos.x;
+}
+
+float e2d::ENode::getPosY() const
+{
+	return m_Pos.y;
+}
+
+e2d::EPoint e2d::ENode::getPos() const
+{
+	return m_Pos;
 }
 
 float e2d::ENode::getWidth() const
 {
-	return m_fWidth;
+	return m_Size.width * m_fScaleX;
 }
 
 float e2d::ENode::getHeight() const
 {
-	return m_fHeight;
+	return m_Size.height * m_fScaleY;
+}
+
+float e2d::ENode::getRealWidth() const
+{
+	return m_Size.width;
+}
+
+float e2d::ENode::getRealHeight() const
+{
+	return m_Size.height;
+}
+
+e2d::ESize e2d::ENode::getRealSize() const
+{
+	return m_Size;
+}
+
+e2d::ESize e2d::ENode::getSize() const
+{
+	return ESize(getWidth(), getHeight());
 }
 
 float e2d::ENode::getScaleX() const
@@ -238,48 +322,63 @@ void e2d::ENode::setOrder(int order)
 	m_nOrder = order;
 }
 
-void e2d::ENode::setX(float x)
+void e2d::ENode::setPosX(float x)
 {
-	this->setPos(x, m_fPosY);
+	this->setPos(x, m_Pos.y);
 }
 
-void e2d::ENode::setY(float y)
+void e2d::ENode::setPosY(float y)
 {
-	this->setPos(m_fPosX, y);
+	this->setPos(m_Pos.x, y);
+}
+
+void e2d::ENode::setPos(const EPoint & p)
+{
+	this->setPos(p.x, p.y);
 }
 
 void e2d::ENode::setPos(float x, float y)
 {
-	if (m_fPosX == x && m_fPosY == y)
+	if (m_Pos.x == x && m_Pos.y == y)
 		return;
 
-	m_fPosX = x;
-	m_fPosY = y;
+	m_Pos.x = x;
+	m_Pos.y = y;
 	m_bTransformChildrenNeeded = true;
 }
 
 void e2d::ENode::move(float x, float y)
 {
-	this->setPos(m_fPosX + x, m_fPosY + y);
+	this->setPos(m_Pos.x + x, m_Pos.y + y);
+}
+
+void e2d::ENode::move(const EVec & v)
+{
+	this->move(v.x, v.y);
 }
 
 void e2d::ENode::setWidth(float width)
 {
-	this->setSize(width, m_fHeight);
+	this->setSize(width, m_Size.height);
 }
 
 void e2d::ENode::setHeight(float height)
 {
-	this->setSize(m_fWidth, height);
+	this->setSize(m_Size.width, height);
+}
+
+void e2d::ENode::setSize(const ESize & size)
+{
+	this->setSize(size.width, size.height);
 }
 
 void e2d::ENode::setSize(float width, float height)
 {
-	if (m_fWidth == width && m_fHeight == height)
+	if (m_Size.width == width && m_Size.height == height)
 		return;
 
-	m_fWidth = width;
-	m_fHeight = height;
+	m_Size.width = width;
+	m_Size.height = height;
 	m_bTransformChildrenNeeded = true;
 }
 
@@ -382,7 +481,7 @@ void e2d::ENode::setParent(ENode * parent)
 void e2d::ENode::addChild(ENode * child, int order  /* = 0 */)
 {
 	WARN_IF(child == nullptr, "ENode::addChild NULL pointer exception.");
-	ASSERT(child->m_pParent == nullptr, "Child already added. It can't be added again!");
+	ASSERT(child->m_pParent == nullptr, "ENode already added. It can't be added again!");
 
 	if (child)
 	{
@@ -401,6 +500,16 @@ void e2d::ENode::addChild(ENode * child, int order  /* = 0 */)
 
 		_updateOpacity(child);
 
+		if (this->m_pParentScene)
+		{
+			child->_setParentScene(this->m_pParentScene);
+		}
+
+		if (this->m_bDisplayedInScene)
+		{
+			child->_onEnter();
+		}
+
 		m_bSortChildrenNeeded = true;
 	}
 }
@@ -415,7 +524,7 @@ e2d::EScene * e2d::ENode::getParentScene() const
 	return m_pParentScene;
 }
 
-std::vector<e2d::ENode*>& e2d::ENode::getChildren()
+e2d::EVector<e2d::ENode*>& e2d::ENode::getChildren()
 {
 	return m_vChildren;
 }
@@ -425,33 +534,20 @@ size_t e2d::ENode::getChildrenCount() const
 	return m_vChildren.size();
 }
 
-e2d::ENode * e2d::ENode::getChild(EString name) const
-{
-	return ENode::getChild(name, this->m_vChildren);
-}
-
-e2d::ENode * e2d::ENode::getChild(EString name, const std::vector<ENode*> &children)
+e2d::ENode * e2d::ENode::getChild(const EString & name)
 {
 	WARN_IF(name.empty(), "Invalid ENode name.");
 
 	std::hash<EString> h;
 	size_t hash = h(name);
 
-	for (const auto& child : children)
+	for (const auto& child : m_vChildren)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
 		if (child->m_nHashName == hash && child->m_sName == name)
 			return child;
 	}
 	return nullptr;
-}
-
-void e2d::ENode::setParentScene(EScene * scene)
-{
-	if (m_pParentScene)
-	{
-		m_pParentScene = scene;
-	}
 }
 
 void e2d::ENode::removeFromParent(bool release /* = false */)
@@ -462,13 +558,13 @@ void e2d::ENode::removeFromParent(bool release /* = false */)
 	}
 }
 
-void e2d::ENode::removeChild(ENode * child, bool release /* = false */)
+bool e2d::ENode::removeChild(ENode * child, bool release /* = false */)
 {
 	WARN_IF(child == nullptr, "ENode::removeChild NULL pointer exception.");
 
 	if (m_vChildren.empty())
 	{
-		return;
+		return false;
 	}
 
 	if (child)
@@ -480,16 +576,22 @@ void e2d::ENode::removeChild(ENode * child, bool release /* = false */)
 			{
 				m_vChildren.erase(m_vChildren.begin() + i);
 				child->m_pParent = nullptr;
+				if (child->m_pParentScene)
+				{
+					child->_setParentScene(nullptr);
+				}
+				child->_onExit();
 				child->release();
 				if (release)
 					child->autoRelease();
-				return;
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
-void e2d::ENode::removeChild(EString childName, bool release /* = false */)
+void e2d::ENode::removeChild(const EString & childName, bool release /* = false */)
 {
 	WARN_IF(childName.empty(), "Invalid ENode name.");
 
@@ -498,8 +600,10 @@ void e2d::ENode::removeChild(EString childName, bool release /* = false */)
 		return;
 	}
 
+	// 计算名称 Hash 值
 	std::hash<EString> h;
 	size_t hash = h(childName);
+
 	size_t size = m_vChildren.size();
 	for (size_t i = 0; i < size; i++)
 	{
@@ -508,6 +612,11 @@ void e2d::ENode::removeChild(EString childName, bool release /* = false */)
 		{
 			m_vChildren.erase(m_vChildren.begin() + i);
 			child->m_pParent = nullptr;
+			if (child->m_pParentScene)
+			{
+				child->_setParentScene(nullptr);
+			}
+			child->_onExit();
 			child->release();
 			if (release)
 				child->autoRelease();
@@ -516,12 +625,36 @@ void e2d::ENode::removeChild(EString childName, bool release /* = false */)
 	}
 }
 
+void e2d::ENode::clearAllChildren(bool release /* = false */)
+{
+	// 所有节点的引用计数减一
+	for (auto child : m_vChildren)
+	{
+		if (release)
+		{
+			child->_onClear();
+			child->autoRelease();
+		}
+		else
+		{
+			child->_onExit();
+		}
+		child->release();
+	}
+	// 清空储存节点的容器
+	m_vChildren.clear();
+}
+
 void e2d::ENode::setVisiable(bool value)
 {
 	m_bVisiable = value;
+	if (m_bDisplayedInScene == false)
+	{
+		this->_onEnter();
+	}
 }
 
-void e2d::ENode::setName(EString name)
+void e2d::ENode::setName(const EString & name)
 {
 	WARN_IF(name.empty(), "Invalid ENode name.");
 
@@ -532,5 +665,14 @@ void e2d::ENode::setName(EString name)
 		// 保存节点 Hash 名
 		std::hash<EString> h;
 		m_nHashName = h(name);
+	}
+}
+
+void e2d::ENode::_setParentScene(EScene * scene)
+{
+	m_pParentScene = scene;
+	for (const auto &child : m_vChildren)
+	{
+		child->_setParentScene(scene);
 	}
 }

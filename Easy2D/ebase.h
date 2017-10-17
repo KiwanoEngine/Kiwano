@@ -1,7 +1,6 @@
 #pragma once
 #include "emacros.h"
 #include "ecommon.h"
-#include <vector>
 
 
 // Base Classes
@@ -22,48 +21,58 @@ public:
 
 	~EApp();
 
-	// 获取程序实例
-	static EApp * get();
-
-	// Register the window class and call methods for instantiating drawing resources
+	// 初始化游戏界面
 	bool init(
-		e2d::EString title,
-		e2d::ESize size,
-		bool bShowConsole = false
+		const EString &title,	/* 窗口标题 */
+		UINT32 width,			/* 窗口宽度 */
+		UINT32 height,			/* 窗口高度 */
+		bool showConsole = false/* 是否显示控制台 */
 	);
 
-	// Register the window class and call methods for instantiating drawing resources
+	// 初始化游戏界面
 	bool init(
-		e2d::EString title,
-		UINT32 width,
-		UINT32 height,
-		bool bShowConsole = false
+		const EString &title,	/* 窗口标题 */
+		UINT32 width,			/* 窗口宽度 */
+		UINT32 height,			/* 窗口高度 */
+		int windowStyle,		/* 窗口样式 */
+		bool showConsole = false/* 是否显示控制台 */
 	);
 
 	// 启动程序
 	void run();
 
-	// 修改窗口大小
-	static void setWindowSize(
-		int width,
-		int height
+	// 预设画面帧数
+	void setFPS(
+		UINT32 fps
+	);
+
+	// 退出程序时的执行程序
+	virtual bool onExit();
+
+	// 释放所有内存资源
+	void free();
+
+	// 获取程序实例
+	static EApp * get();
+
+	// 显示或隐藏控制台（默认隐藏）
+	static void showConsole(
+		bool show
 	);
 
 	// 修改窗口大小
 	static void setWindowSize(
-		e2d::ESize size
+		UINT32 width,
+		UINT32 height
 	);
 
 	// 设置窗口标题
 	static void setWindowTitle(
-		e2d::EString title
+		const EString &title
 	);
 
 	// 获取窗口标题
-	static e2d::EString getTitle();
-
-	// 获取窗口大小
-	static e2d::ESize getSize();
+	static EString getTitle();
 
 	// 获取窗口宽度
 	static UINT32 getWidth();
@@ -74,7 +83,7 @@ public:
 	// 切换场景
 	static void enterScene(
 		EScene * scene,
-		bool save = true
+		bool saveCurrentScene = true
 	);
 
 	// 返回上一场景
@@ -87,26 +96,31 @@ public:
 	static EScene * getCurrentScene();
 
 	// 获取 AppName
-	static e2d::EString getAppName();
+	static EString getAppName();
 
 	// 设置 AppName
 	static void setAppName(
-		e2d::EString appname
+		const EString &appname
 	);
 
 	// 修改窗口背景色
 	static void setBkColor(
-		EColor::Enum color
+		EColor color
 	);
 
-	// 释放所有内存资源
-	static void free();
+	// 设置程序是否响应输入法
+	static void setKeyboardLayoutEnable(
+		bool value
+	);
 
-	// 关闭窗口
-	static void close();
+	// 获取窗口句柄
+	static HWND getHWnd();
+
+	// 隐藏窗口
+	static void closeWindow();
 
 	// 显示窗口
-	static void show();
+	static void showWindow();
 
 	// 终止程序
 	static void quit();
@@ -115,31 +129,34 @@ public:
 	static void end();
 
 protected:
-	// Initialize device-independent resources.
+	// 创建设备无关资源
 	HRESULT _createDeviceIndependentResources();
 
-	// Initialize device-dependent resources.
+	// 创建设备相关资源
 	HRESULT _createDeviceResources();
 
-	// Release device-dependent resource.
+	// 释放设备相关资源
 	void _discardDeviceResources();
 
+	// 游戏主循环
 	void _mainLoop();
 
+	// 游戏控制流程
 	void _onControl();
 
-	// Draw content.
-	void _onRender();
+	// 渲染游戏画面
+	bool _onRender();
 
+	// 进入下一场景
 	void _enterNextScene();
 
-	// ReSize the render target.
+	// 重定 render target 大小
 	void _onResize(
-		UINT width,
-		UINT height
+		UINT32 width,
+		UINT32 height
 	);
 
-	// The windows procedure.
+	// 窗口程序
 	static LRESULT CALLBACK WndProc(
 		HWND hWnd,
 		UINT message,
@@ -151,10 +168,11 @@ protected:
 	bool	m_bRunning;
 	EString	m_sTitle;
 	EString	m_sAppName;
-	EColor::Enum m_ClearColor;
+	EColor	m_ClearColor;
+	LONGLONG nAnimationInterval;
 
-	EScene *	m_pCurrentScene;
-	EScene *	m_pNextScene;
+	EScene * m_pCurrentScene;
+	EScene * m_pNextScene;
 };
 
 
@@ -173,28 +191,34 @@ public:
 	// 重写这个函数，它将在离开这个场景时自动执行
 	virtual void onExit();
 
-	// 添加子成员到场景
+	// 添加子节点到场景
 	void add(
-		e2d::ENode * child, 
+		ENode * child, 
 		int zOrder = 0
 	);
 
-	// 删除子成员
+	// 删除子节点
 	bool remove(
-		e2d::ENode * child,
-		bool autoRelease = true
+		ENode * child,
+		bool release = false
+	);
+
+	// 根据名称删除子节点
+	void remove(
+		const EString &childName,
+		bool release = false
 	);
 
 	// 获取所有子节点
-	std::vector<e2d::ENode*> &getChildren();
+	EVector<e2d::ENode*> &getChildren();
 
 	// 获取子节点数量
 	size_t getChildrenCount() const;
 
 	// 根据名称获取子节点
 	ENode * getChild(
-		EString childName
-	) const;
+		const EString &childName
+	);
 
 	// 清空所有子成员
 	void clearAllChildren();
@@ -209,9 +233,6 @@ protected:
 	// 渲染场景画面
 	void _onRender();
 
-	// 子节点排序
-	void _sortChildren();
-
 	// 进入场景时需调用该函数
 	virtual void _onEnter();
 
@@ -221,7 +242,7 @@ protected:
 protected:
 	bool m_bSortNeeded;
 	bool m_bWillSave;
-	std::vector<e2d::ENode*> m_vChildren;
+	ENode * const m_Root;
 };
 
 

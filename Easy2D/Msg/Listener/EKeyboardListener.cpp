@@ -5,7 +5,7 @@ e2d::EKeyboardListener::EKeyboardListener()
 {
 }
 
-e2d::EKeyboardListener::EKeyboardListener(EString name)
+e2d::EKeyboardListener::EKeyboardListener(const EString & name)
 	: EListener(name)
 {
 }
@@ -13,23 +13,23 @@ e2d::EKeyboardListener::EKeyboardListener(EString name)
 e2d::EKeyboardListener::EKeyboardListener(const KEY_LISTENER_CALLBACK & callback)
 	: EListener()
 {
-	m_callback = callback;
+	m_Callback = callback;
 }
 
-e2d::EKeyboardListener::EKeyboardListener(EString name, const KEY_LISTENER_CALLBACK & callback)
+e2d::EKeyboardListener::EKeyboardListener(const EString & name, const KEY_LISTENER_CALLBACK & callback)
 	: EListener(name)
 {
-	m_callback = callback;
+	m_Callback = callback;
 }
 
-void e2d::EKeyboardListener::runCallback()
+void e2d::EKeyboardListener::_runCallback()
 {
-	m_callback();
+	m_Callback();
 }
 
 void e2d::EKeyboardListener::setCallback(const KEY_LISTENER_CALLBACK & callback)
 {
-	m_callback = callback;
+	m_Callback = callback;
 }
 
 void e2d::EKeyboardListener::bindWith(EScene * pParentScene)
@@ -38,7 +38,7 @@ void e2d::EKeyboardListener::bindWith(EScene * pParentScene)
 
 	if (pParentScene)
 	{
-		EMsgManager::bindListenerWith(this, pParentScene);
+		EMsgManager::bindListener(this, pParentScene);
 	}
 }
 
@@ -48,6 +48,6 @@ void e2d::EKeyboardListener::bindWith(ENode * pParentNode)
 
 	if (pParentNode != nullptr && m_pParentScene == nullptr)
 	{
-		EMsgManager::bindListenerWith(this, pParentNode);
+		EMsgManager::bindListener(this, pParentNode);
 	}
 }

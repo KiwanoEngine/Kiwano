@@ -30,10 +30,10 @@ public:
 	};
 
 	// 获取鼠标横坐标
-	static DWORD getX();
+	static DWORD getPosX();
 
 	// 获取鼠标纵坐标
-	static DWORD getY();
+	static DWORD getPosY();
 
 	// 获取鼠标坐标
 	static EPoint getPos();
@@ -67,7 +67,7 @@ protected:
 
 
 // 按键消息
-class EKeyMsg
+class EKeyboardMsg
 {
 	friend EMsgManager;
 
@@ -147,7 +147,7 @@ public:
 	EListener();
 
 	EListener(
-		EString name
+		const EString &name
 	);
 
 	// 获取监听器状态
@@ -162,12 +162,6 @@ public:
 	// 停止监听
 	void stop();
 
-	// 进入等待状态
-	void wait();
-
-	// 唤醒
-	void notify();
-
 	// 获取监听器名称
 	EString getName() const;
 
@@ -179,7 +173,7 @@ public:
 
 	// 设置监听器名称
 	void setName(
-		EString name
+		const EString &name
 	);
 
 	// 绑定监听器到场景
@@ -191,6 +185,16 @@ public:
 	virtual void bindWith(
 		ENode * pParentNode
 	) = 0;
+
+protected:
+	// 进入等待状态
+	void _wait();
+
+	// 唤醒
+	void _notify();
+
+	// 执行监听器回调函数
+	virtual void _runCallback() = 0;
 
 protected:
 	EString		m_sName;
@@ -205,11 +209,13 @@ protected:
 class EMouseListener :
 	public EListener
 {
+	friend EMsgManager;
+
 public:
 	EMouseListener();
 
 	EMouseListener(
-		EString name
+		const EString &name
 	);
 
 	EMouseListener(
@@ -217,12 +223,9 @@ public:
 	);
 
 	EMouseListener(
-		EString name,
+		const EString &name,
 		const MOUSE_LISTENER_CALLBACK &callback
 	);
-
-	// 执行监听器回调函数
-	virtual void runCallback();
 
 	// 设置监听器回调函数
 	void setCallback(
@@ -240,7 +243,11 @@ public:
 	) override;
 
 protected:
-	MOUSE_LISTENER_CALLBACK m_callback;
+	// 执行监听器回调函数
+	virtual void _runCallback() override;
+
+protected:
+	MOUSE_LISTENER_CALLBACK m_Callback;
 };
 
 
@@ -252,7 +259,7 @@ public:
 	EMousePressListener();
 
 	EMousePressListener(
-		EString name
+		const EString &name
 	);
 
 	EMousePressListener(
@@ -260,12 +267,9 @@ public:
 	);
 
 	EMousePressListener(
-		EString name,
+		const EString &name,
 		const MOUSE_PRESS_LISTENER_CALLBACK &callback
 	);
-
-	// 执行监听器回调函数
-	virtual void runCallback() override;
 
 	// 设置监听器回调函数
 	void setCallback(
@@ -273,7 +277,11 @@ public:
 	);
 
 protected:
-	MOUSE_PRESS_LISTENER_CALLBACK m_callback;
+	// 执行监听器回调函数
+	virtual void _runCallback() override;
+
+protected:
+	MOUSE_PRESS_LISTENER_CALLBACK m_Callback;
 };
 
 
@@ -285,7 +293,7 @@ public:
 	EMouseClickListener();
 
 	EMouseClickListener(
-		EString name
+		const EString &name
 	);
 
 	EMouseClickListener(
@@ -293,12 +301,9 @@ public:
 	);
 
 	EMouseClickListener(
-		EString name,
+		const EString &name,
 		const MOUSE_CLICK_LISTENER_CALLBACK &callback
 	);
-
-	// 执行监听器回调函数
-	virtual void runCallback() override;
 
 	// 设置监听器回调函数
 	void setCallback(
@@ -306,8 +311,12 @@ public:
 	);
 
 protected:
+	// 执行监听器回调函数
+	virtual void _runCallback() override;
+
+protected:
 	bool m_bPressed;
-	MOUSE_CLICK_LISTENER_CALLBACK m_callback;
+	MOUSE_CLICK_LISTENER_CALLBACK m_Callback;
 };
 
 
@@ -319,7 +328,7 @@ public:
 	EMouseDoubleClickListener();
 
 	EMouseDoubleClickListener(
-		EString name
+		const EString &name
 	);
 
 	EMouseDoubleClickListener(
@@ -327,12 +336,9 @@ public:
 	);
 
 	EMouseDoubleClickListener(
-		EString name,
+		const EString &name,
 		const MOUSE_DBLCLK_LISTENER_CALLBACK &callback
 	);
-
-	// 执行监听器回调函数
-	virtual void runCallback() override;
 
 	// 设置监听器回调函数
 	void setCallback(
@@ -340,8 +346,12 @@ public:
 	);
 
 protected:
+	// 执行监听器回调函数
+	virtual void _runCallback() override;
+
+protected:
 	bool m_bPressed;
-	MOUSE_DBLCLK_LISTENER_CALLBACK m_callback;
+	MOUSE_DBLCLK_LISTENER_CALLBACK m_Callback;
 };
 
 
@@ -353,7 +363,7 @@ public:
 	EMouseDragListener();
 
 	EMouseDragListener(
-		EString name
+		const EString &name
 	);
 
 	EMouseDragListener(
@@ -361,12 +371,9 @@ public:
 	);
 
 	EMouseDragListener(
-		EString name,
+		const EString &name,
 		const MOUSE_DRAG_LISTENER_CALLBACK &callback
 	);
-
-	// 执行监听器回调函数
-	virtual void runCallback() override;
 
 	// 设置监听器回调函数
 	void setCallback(
@@ -374,8 +381,12 @@ public:
 	);
 
 protected:
+	// 执行监听器回调函数
+	virtual void _runCallback() override;
+
+protected:
 	EPoint	m_Begin;
-	MOUSE_DRAG_LISTENER_CALLBACK m_callback;
+	MOUSE_DRAG_LISTENER_CALLBACK m_Callback;
 };
 
 
@@ -383,11 +394,13 @@ protected:
 class EKeyboardListener :
 	public EListener
 {
+	friend EMsgManager;
+
 public:
 	EKeyboardListener();
 
 	EKeyboardListener(
-		EString name
+		const EString &name
 	);
 
 	EKeyboardListener(
@@ -395,12 +408,9 @@ public:
 	);
 
 	EKeyboardListener(
-		EString name,
+		const EString &name,
 		const KEY_LISTENER_CALLBACK &callback
 	);
-
-	// 执行监听器回调函数
-	virtual void runCallback();
 
 	// 设置监听器回调函数
 	void setCallback(
@@ -418,32 +428,39 @@ public:
 	) override;
 
 protected:
-	KEY_LISTENER_CALLBACK m_callback;
+	// 执行监听器回调函数
+	virtual void _runCallback() override;
+
+protected:
+	KEY_LISTENER_CALLBACK m_Callback;
 };
 
 
 // 按键按下消息监听
-class EKeyPressListener :
+class EKeyboardPressListener :
 	public EKeyboardListener
 {
+	friend EMsgManager;
+
 public:
-	EKeyPressListener();
+	EKeyboardPressListener();
 
-	EKeyPressListener(
-		EString name
+	EKeyboardPressListener(
+		const EString &name
 	);
 
-	EKeyPressListener(
+	EKeyboardPressListener(
 		const KEY_LISTENER_CALLBACK &callback
 	);
 
-	EKeyPressListener(
-		EString name,
+	EKeyboardPressListener(
+		const EString &name,
 		const KEY_LISTENER_CALLBACK &callback
 	);
 
+protected:
 	// 执行监听器回调函数
-	virtual void runCallback() override;
+	virtual void _runCallback() override;
 };
 
 
@@ -451,122 +468,192 @@ public:
 class EMsgManager
 {
 	friend EApp;
+	friend EScene;
+	friend ENode;
 
 public:
 	// 绑定鼠标消息监听器到场景
-	static void bindListenerWith(
+	static void bindListener(
 		EMouseListener * listener,
 		EScene * pParentScene
 	);
 
-	// 绑定鼠标消息监听器到场景
-	static void bindListenerWith(
-		EKeyboardListener * listener,
-		EScene * pParentScene
-	);
-
-	// 绑定按键消息监听器到节点
-	static void bindListenerWith(
+	// 绑定鼠标消息监听器到节点
+	static void bindListener(
 		EMouseListener * listener,
 		ENode * pParentNode
 	);
 
-	// 绑定按键消息监听器到节点
-	static void bindListenerWith(
-		EKeyboardListener * listener,
+	// 启动具有相同名称的鼠标消息监听器
+	static void startMouseListeners(
+		const EString &name
+	);
+
+	// 停止具有相同名称的鼠标消息监听器
+	static void stopMouseListeners(
+		const EString &name
+	);
+
+	// 删除具有相同名称的鼠标消息监听器
+	static void delMouseListeners(
+		const EString &name
+	);
+
+	// 启动绑定在场景及其子节点上的所有鼠标消息监听器
+	static void startAllMouseListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 停止绑定在场景及其子节点上的所有鼠标消息监听器
+	static void stopAllMouseListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 清除绑定在场景及其子节点上的所有鼠标消息监听器
+	static void clearAllMouseListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 启动绑定在节点上的所有鼠标消息监听器
+	static void startAllMouseListenersBindedWith(
 		ENode * pParentNode
 	);
 
-	// 启动具有相同名称的监听器
-	static void startListener(
-		EString name
+	// 停止绑定在节点上的所有鼠标消息监听器
+	static void stopAllMouseListenersBindedWith(
+		ENode * pParentNode
 	);
 
-	// 停止具有相同名称的监听器
-	static void stopListener(
-		EString name
-	);
-
-	// 删除具有相同名称的监听器
-	static void delListener(
-		EString name
+	// 清除绑定在节点上的所有鼠标消息监听器
+	static void clearAllMouseListenersBindedWith(
+		ENode * pParentNode
 	);
 
 	// 启动所有鼠标消息监听器
-	static void startAllMouseListener();
+	static void startAllMouseListeners();
 
 	// 停止所有鼠标消息监听器
-	static void stopAllMouseListener();
+	static void stopAllMouseListeners();
 
 	// 清除所有鼠标消息监听器
 	static void clearAllMouseListeners();
 
+	// 绑定按键消息监听器到场景
+	static void bindListener(
+		EKeyboardListener * listener,
+		EScene * pParentScene
+	);
+
+	// 绑定按键消息监听器到节点
+	static void bindListener(
+		EKeyboardListener * listener,
+		ENode * pParentNode
+	);
+
+	// 启动名称相同的按键消息监听器
+	static void startKeyboardListeners(
+		const EString &name
+	);
+
+	// 停止名称相同的按键消息监听器
+	static void stopKeyboardListeners(
+		const EString &name
+	);
+
+	// 删除名称相同的按键消息监听器
+	static void delKeyboardListeners(
+		const EString &name
+	);
+
+	// 启动绑定在场景及其子节点上的所有按键消息监听器
+	static void startAllKeyboardListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 停止绑定在场景及其子节点上的所有按键消息监听器
+	static void stopAllKeyboardListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 清除绑定在场景及其子节点上的所有按键消息监听器
+	static void clearAllKeyboardListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 启动绑定在节点上的所有按键消息监听器
+	static void startAllKeyboardListenersBindedWith(
+		ENode * pParentNode
+	);
+
+	// 停止绑定在节点上的所有按键消息监听器
+	static void stopAllKeyboardListenersBindedWith(
+		ENode * pParentNode
+	);
+
+	// 清除绑定在节点上的所有按键消息监听器
+	static void clearAllKeyboardListenersBindedWith(
+		ENode * pParentNode
+	);
+
 	// 启动所有按键消息监听器
-	static void startAllKeyboardListener();
+	static void startAllKeyboardListeners();
 
 	// 停止所有按键消息监听器
-	static void stopAllKeyboardListener();
+	static void stopAllKeyboardListeners();
 
 	// 清除所有按键消息监听器
 	static void clearAllKeyboardListeners();
 
-	// 启动绑定在场景上的所有鼠标消息监听器
-	static void startAllMouseListenersBindWithScene(
+private:
+	// 挂起绑定在场景上的所有鼠标消息监听器
+	static void _waitAllMouseListenersBindedWith(
 		EScene * pParentScene
 	);
 
 	// 重启绑定在场景上的所有鼠标消息监听器
-	static void stopAllMouseListenersBindWithScene(
+	static void _notifyAllMouseListenersBindedWith(
 		EScene * pParentScene
 	);
 
-	// 启动绑定在场景上的所有按键消息监听器
-	static void startAllKeyboardListenersBindWithScene(
-		EScene * pParentScene
-	);
-
-	// 重启绑定在场景上的所有按键消息监听器
-	static void stopAllKeyboardListenersBindWithScene(
-		EScene * pParentScene
-	);
-
-	// 挂起绑定在场景上的所有监听器
-	static void waitAllListenersBindWithScene(
-		EScene * pParentScene
-	);
-
-	// 重启绑定在场景上的所有监听器
-	static void notifyAllListenersBindWithScene(
-		EScene * pParentScene
-	);
-
-	// 清空绑定在场景上的所有监听器
-	static void clearAllListenersBindWithScene(
-		EScene * pParentScene
-	);
-
-	// 挂起绑定在节点上的所有监听器
-	static void waitAllListenersBindWithNode(
+	// 挂起绑定在节点上的所有鼠标消息监听器
+	static void _waitAllMouseListenersBindedWith(
 		ENode * pParentNode
 	);
 
-	// 重启绑定在节点上的所有监听器
-	static void notifyAllListenersBindWithNode(
+	// 重启绑定在节点上的所有鼠标消息监听器
+	static void _notifyAllMouseListenersBindedWith(
 		ENode * pParentNode
 	);
 
-	// 清空绑定在节点上的所有监听器
-	static void clearAllListenersBindWithNode(
+
+	// 挂起绑定在场景及其子节点上的所有按键监听器
+	static void _waitAllKeyboardListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 重启绑定在场景及其子节点上的所有按键监听器
+	static void _notifyAllKeyboardListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 挂起绑定在节点上的所有按键监听器
+	static void _waitAllKeyboardListenersBindedWith(
 		ENode * pParentNode
 	);
 
-private:
+	// 重启绑定在节点上的所有按键监听器
+	static void _notifyAllKeyboardListenersBindedWith(
+		ENode * pParentNode
+	);
+
+	// 鼠标消息程序
 	static void MouseProc(
 		UINT message,
 		WPARAM wParam,
 		LPARAM lParam
 	);
 
+	// 按键消息程序
 	static void KeyboardProc(
 		UINT message,
 		WPARAM wParam,
