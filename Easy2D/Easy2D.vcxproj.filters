@@ -78,6 +78,9 @@
     <ClCompile Include="Msg\Listener\EKeyboardPressListener.cpp">
       <Filter>Msg\Listener</Filter>
     </ClCompile>
+    <ClCompile Include="Node\EText.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">

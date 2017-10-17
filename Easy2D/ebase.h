@@ -46,8 +46,14 @@ public:
 		UINT32 fps
 	);
 
-	// 退出程序时的执行程序
-	virtual bool onExit();
+	// 重写这个函数，它将在窗口激活时执行
+	virtual void onActivate();
+
+	// 重写这个函数，它将在窗口非激活时执行
+	virtual void onInactive();
+
+	// 重写这个函数，它将在关闭窗口时执行
+	virtual bool onCloseWindow();
 
 	// 释放所有内存资源
 	void free();
@@ -95,6 +101,12 @@ public:
 	// 获取当前场景
 	static EScene * getCurrentScene();
 
+	// 获取窗口句柄
+	static HWND getHWnd();
+
+	// 获取从游戏开始到当前经过的毫秒数
+	static LONGLONG getTotalDurationFromStart();
+
 	// 获取 AppName
 	static EString getAppName();
 
@@ -113,11 +125,8 @@ public:
 		bool value
 	);
 
-	// 获取窗口句柄
-	static HWND getHWnd();
-
 	// 隐藏窗口
-	static void closeWindow();
+	static void hideWindow();
 
 	// 显示窗口
 	static void showWindow();
@@ -166,6 +175,7 @@ protected:
 
 protected:
 	bool	m_bRunning;
+	bool	m_bPaused;
 	EString	m_sTitle;
 	EString	m_sAppName;
 	EColor	m_ClearColor;
@@ -190,6 +200,15 @@ public:
 
 	// 重写这个函数，它将在离开这个场景时自动执行
 	virtual void onExit();
+
+	// 重写这个函数，它将在窗口激活时执行
+	virtual void onActivate();
+
+	// 重写这个函数，它将在窗口非激活时执行
+	virtual void onInactive();
+
+	// 重写这个函数，它将在关闭窗口时执行
+	virtual bool onCloseWindow();
 
 	// 添加子节点到场景
 	void add(

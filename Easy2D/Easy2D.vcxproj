@@ -208,6 +208,7 @@
     <ClCompile Include="Node\ENode.cpp" />
     <ClCompile Include="Node\ERectangle.cpp" />
     <ClCompile Include="Node\ESprite.cpp" />
+    <ClCompile Include="Node\EText.cpp" />
     <ClCompile Include="Tool\EObjectManager.cpp" />
     <ClCompile Include="Tool\ETimerManager.cpp" />
     <ClCompile Include="Win\winbase.cpp" />

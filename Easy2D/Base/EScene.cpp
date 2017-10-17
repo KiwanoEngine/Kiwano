@@ -26,6 +26,19 @@ void e2d::EScene::onExit()
 {
 }
 
+void e2d::EScene::onActivate()
+{
+}
+
+void e2d::EScene::onInactive()
+{
+}
+
+bool e2d::EScene::onCloseWindow()
+{
+	return true;
+}
+
 void e2d::EScene::_onRender()
 {
 	m_Root->_callOn();

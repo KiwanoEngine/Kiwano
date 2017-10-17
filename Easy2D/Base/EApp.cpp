@@ -16,6 +16,8 @@ using namespace std::chrono;
 e2d::EApp * s_pInstance = nullptr;
 // 场景栈
 std::stack<e2d::EScene*> s_SceneStack;
+// 游戏开始时间
+static steady_clock::time_point s_tStart;
 
 e2d::EApp::EApp()
 	: m_bRunning(false)
@@ -195,6 +197,8 @@ void e2d::EApp::run()
 	UpdateWindow(GetHWnd());
 	// 运行游戏
 	m_bRunning = true;
+	// 记录开始时间
+	s_tStart = steady_clock::now();
 
 	MSG msg;
 
@@ -222,7 +226,15 @@ void e2d::EApp::setFPS(UINT32 fps)
 	nAnimationInterval = 1000 / fps;
 }
 
-bool e2d::EApp::onExit()
+void e2d::EApp::onActivate()
+{
+}
+
+void e2d::EApp::onInactive()
+{
+}
+
+bool e2d::EApp::onCloseWindow()
 {
 	return true;
 }
@@ -242,15 +254,18 @@ void e2d::EApp::_mainLoop()
 	// 判断间隔时间是否足够
 	if (nInterval >= nAnimationInterval)
 	{
-		// 记录当前时间
-		tLast = GetNow();
-		// 游戏控制流程
-		_onControl();
-		// 刷新游戏画面
-		if (!_onRender())
+		if (!m_bPaused)
 		{
-			MessageBox(GetHWnd(), L"Game Render Failed!", L"Error", MB_OK);
-			this->quit();
+			// 记录当前时间
+			tLast = GetNow();
+			// 游戏控制流程
+			_onControl();
+			// 刷新游戏画面
+			if (!_onRender())
+			{
+				MessageBox(GetHWnd(), L"Game Render Failed!", L"Error", MB_OK);
+				this->quit();
+			}
 		}
 	}
 	else
@@ -436,7 +451,12 @@ HWND e2d::EApp::getHWnd()
 	return GetHWnd();
 }
 
-void e2d::EApp::closeWindow()
+LONGLONG e2d::EApp::getTotalDurationFromStart()
+{
+	return GetInterval(s_tStart);
+}
+
+void e2d::EApp::hideWindow()
 {
 	ShowWindow(GetHWnd(), SW_HIDE);
 }
@@ -460,11 +480,6 @@ void e2d::EApp::free()
 	}
 	// 删除图片缓存
 	ESprite::clearCache();
-	// 删除所有定时器、监听器和动画
-	ETimerManager::clearAllTimers();
-	EMsgManager::clearAllKeyboardListeners();
-	EMsgManager::clearAllMouseListeners();
-	//ActionManager::clearAllActions();
 	// 删除所有对象
 	EObjectManager::clearAllObjects();
 }
@@ -481,7 +496,7 @@ void e2d::EApp::end()
 
 void e2d::EApp::_enterNextScene()
 {
-	// 执行当前场景的 onExit 函数
+	// 执行当前场景的 onCloseWindow 函数
 	if (m_pCurrentScene)
 	{
 		m_pCurrentScene->onExit();
@@ -650,10 +665,31 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			wasHandled = true;
 			break;
 
+			// 窗口激活消息
+			case WM_ACTIVATE:
+			{
+				if (LOWORD(wParam) == WA_INACTIVE)
+				{
+					pEApp->getCurrentScene()->onInactive();
+					pEApp->onInactive();
+					pEApp->m_bPaused = true;
+				}
+				else
+				{
+					pEApp->onActivate();
+					pEApp->getCurrentScene()->onActivate();
+					pEApp->m_bPaused = false;
+				}
+			}
+			result = 1;
+			wasHandled = true;
+			break;
+
 			// 窗口关闭消息
 			case WM_CLOSE:
 			{
-				if (pEApp->onExit())
+				if (pEApp->getCurrentScene()->onCloseWindow() && 
+					pEApp->onCloseWindow())
 				{
 					DestroyWindow(hWnd);
 				}
