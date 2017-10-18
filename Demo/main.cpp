@@ -14,25 +14,16 @@ int WINAPI WinMain(
 	{
 		auto scene = new EScene();
 
-		auto sprite = new ESprite(L"test.png");
-		sprite->setAnchor(0.5f, 0.5f);
-		sprite->setPos(EApp::getWidth() / 2, sprite->getHeight() / 2);
+		auto text = new EText(L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试", EColor::WHITE, L"Microsoft Yahei");
+		text->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
+		//text->setWordWrapping(true);
+		//text->setWordWrappingWidth(130);
+		text->setRotation(40);
+		text->getFont()->setItalic(true);
+		text->setAnchor(0.5f, 0.5f);
+		text->setColor(EColor::WHITE);
+		scene->add(text);
 
-		auto sprite2 = new ESprite(L"test.png");
-		sprite2->setPos(30, 0);
-		sprite2->setScale(0.5);
-		sprite2->setRotation(45);
-
-		sprite->addChild(sprite2);
-
-		auto mlistener = new EMouseDoubleClickListener([=](EPoint p) {
-			//sprite->setRotation(sprite->getRotation() + 10);
-			EApp::setWindowSize(640, 480);
-		});
-
-		mlistener->bindWith(sprite);
-
-		scene->add(sprite);
 		app.enterScene(scene);
 		app.run();
 	}

@@ -10,7 +10,7 @@ int main()
 
 		auto node = new ENode();
 		node->setPos(50, 80);
-		node->setSize(30, 180);
+		node->_setSize(30, 180);
 		scene->add(node);
 
 		/*auto listener = new EMouseListener([=] {

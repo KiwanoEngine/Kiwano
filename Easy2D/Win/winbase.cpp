@@ -2,12 +2,13 @@
 using namespace std::chrono;
 
 
-HWND s_HWnd = nullptr;
-ID2D1Factory * s_pDirect2dFactory = nullptr;
-ID2D1HwndRenderTarget * s_pRenderTarget = nullptr;
-ID2D1SolidColorBrush * s_pSolidBrush = nullptr;
-IWICImagingFactory * s_pIWICFactory = nullptr;
-steady_clock::time_point s_tNow;
+static HWND s_HWnd = nullptr;
+static ID2D1Factory * s_pDirect2dFactory = nullptr;
+static ID2D1HwndRenderTarget * s_pRenderTarget = nullptr;
+static ID2D1SolidColorBrush * s_pSolidBrush = nullptr;
+static IWICImagingFactory * s_pIWICFactory = nullptr;
+static IDWriteFactory * s_pDWriteFactory = nullptr;
+static steady_clock::time_point s_tNow;
 
 
 HWND &GetHWnd()
@@ -58,6 +59,21 @@ ID2D1HwndRenderTarget * &GetRenderTarget()
 		ASSERT(SUCCEEDED(hr), "Create Render Target Failed!");
 	}
 	return s_pRenderTarget;
+}
+
+IDWriteFactory * &GetDirectWriteFactory()
+{
+	if (!s_pDWriteFactory)
+	{
+		HRESULT hr;
+		hr = DWriteCreateFactory(
+			DWRITE_FACTORY_TYPE_SHARED,
+			__uuidof(IDWriteFactory),
+			reinterpret_cast<IUnknown**>(&s_pDWriteFactory)
+		);
+		ASSERT(SUCCEEDED(hr), "Create DirectWrite Factory Failed!");
+	}
+	return s_pDWriteFactory;
 }
 
 ID2D1SolidColorBrush * &GetSolidColorBrush()

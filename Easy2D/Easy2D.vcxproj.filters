@@ -54,9 +54,6 @@
     <ClCompile Include="Tool\ETimerManager.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="Node\ERectangle.cpp">
-      <Filter>Node</Filter>
-    </ClCompile>
     <ClCompile Include="Node\ESprite.cpp">
       <Filter>Node</Filter>
     </ClCompile>
@@ -79,6 +76,12 @@
       <Filter>Msg\Listener</Filter>
     </ClCompile>
     <ClCompile Include="Node\EText.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\EFont.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\ETexture.cpp">
       <Filter>Node</Filter>
     </ClCompile>
   </ItemGroup>

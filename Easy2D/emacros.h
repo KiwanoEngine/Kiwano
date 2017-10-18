@@ -57,3 +57,6 @@
 
 template<typename T>
 inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
+
+template<typename T>
+inline void SafeRelease(T** p) { if (*p) { (*p)->autoRelease(); (*p)->release(); *p = nullptr; } }

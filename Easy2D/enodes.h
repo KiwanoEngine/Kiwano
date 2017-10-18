@@ -1,9 +1,11 @@
 #pragma once
 #include "ebase.h"
-#include "Win\winbase.h"
 
 namespace e2d 
 {
+
+class EText;
+class ESprite;
 
 class ENode :
 	public EObject
@@ -136,27 +138,6 @@ public:
 	// 移动节点
 	virtual void move(
 		const EVec & v
-	);
-
-	// 设置节点宽度
-	virtual void setWidth(
-		float width
-	);
-
-	// 设置节点高度
-	virtual void setHeight(
-		float height
-	);
-
-	// 设置节点大小
-	virtual void setSize(
-		const ESize & size
-	);
-
-	// 设置节点大小
-	virtual void setSize(
-		float width,
-		float height
 	);
 
 	// 设置节点绘图顺序
@@ -312,6 +293,27 @@ protected:
 	// 更新节点透明度
 	static void _updateOpacity(ENode * node);
 
+	// 设置节点宽度
+	virtual void _setWidth(
+		float width
+	);
+
+	// 设置节点高度
+	virtual void _setHeight(
+		float height
+	);
+
+	// 设置节点大小
+	virtual void _setSize(
+		const ESize & size
+	);
+
+	// 设置节点大小
+	virtual void _setSize(
+		float width,
+		float height
+	);
+
 protected:
 	EString		m_sName;
 	size_t		m_nHashName;
@@ -338,21 +340,67 @@ protected:
 };
 
 
-class ERectangle :
-	public ENode
+class ETexture :
+	public EObject
 {
+	friend ESprite;
+
 public:
-	ERectangle();
+	// 创建一个空的纹理
+	ETexture();
 
-	EColor getColor() const;
+	// 从本地文件中读取资源
+	ETexture(
+		const EString & fileName
+	);
 
-	void setColor(EColor color);
+	// 读取程序资源
+	ETexture(
+		const EString & resourceName,
+		const EString & resourceType
+	);
+
+	~ETexture();
+
+	// 从本地文件中读取资源
+	void loadFromFile(
+		const EString & fileName
+	);
+
+	// 读取程序资源
+	void loadFromResource(
+		const EString & resourceName,
+		const EString & resourceType
+	);
+
+	// 获取源图片宽度
+	virtual float getSourceWidth() const;
+
+	// 获取源图片高度
+	virtual float getSourceHeight() const;
+
+	// 获取源图片大小
+	virtual ESize getSourceSize() const;
+
+	// 预加载资源
+	static bool preload(
+		const EString & fileName
+	);
+
+	// 预加载资源
+	static bool preload(
+		const EString & resourceName,
+		const EString & resourceType
+	);
+
+	// 清空缓存
+	static void clearCache();
 
 protected:
-	virtual void _onRender() override;
+	ID2D1Bitmap * _getBitmap();
 
 protected:
-	EColor m_Color;
+	ID2D1Bitmap * m_pBitmap;
 };
 
 
@@ -393,84 +441,29 @@ public:
 		float height
 	);
 
-	// 获取精灵宽度
-	virtual float getWidth() const override;
-
-	// 获取精灵高度
-	virtual float getHeight() const override;
-
-	// 获取精灵大小
-	virtual ESize getSize() const override;
-
-	// 获取精灵宽度（不考虑缩放）
-	virtual float getRealWidth() const override;
-
-	// 获取精灵高度（不考虑缩放）
-	virtual float getRealHeight() const override;
-
-	// 获取精灵大小（不考虑缩放）
-	virtual ESize getRealSize() const override;
-
-	// 设置精灵宽度是失效的
-	virtual void setWidth(float) override;
-
-	// 设置精灵高度是失效的
-	virtual void setHeight(float) override;
-
-	// 设置精灵大小是失效的
-	virtual void setSize(float, float) override;
+	~ESprite();
 	
-	// 从文件加载图片
-	void setImage(
-		const EString & fileName
+	// 设置精灵纹理
+	void setTexture(
+		ETexture * texture
 	);
 
-	// 从文件加载图片并裁剪
-	void setImage(
-		const EString & fileName,
+	// 设置精灵纹理并裁剪
+	void setTexture(
+		ETexture * texture,
 		float x,
 		float y,
 		float width,
 		float height
 	);
 
-	// 从资源加载图片
-	void setImage(
-		const EString & resourceName,
-		const EString & resourceType
-	);
-
-	// 从资源加载图片并裁剪
-	void setImage(
-		const EString & resourceName,
-		const EString & resourceType,
+	// 裁剪纹理
+	void clipTexture(
 		float x,
 		float y,
 		float width,
 		float height
 	);
-
-	// 裁剪原图片
-	void clipImage(
-		float x,
-		float y,
-		float width,
-		float height
-	);
-
-	// 预加载资源
-	static bool preloadImage(
-		const EString & fileName
-	);
-
-	// 预加载资源
-	static bool preloadImage(
-		const EString & resourceName,
-		const EString & resourceType
-	);
-
-	// 清空图片缓存
-	static void clearCache();
 
 protected:
 	// 渲染精灵
@@ -479,12 +472,157 @@ protected:
 protected:
 	float	m_fSourcePosX;
 	float	m_fSourcePosY;
-	float	m_fSourceWidth;
-	float	m_fSourceHeight;
-	EString m_sFileName;
-	EString m_sResourceName;
-	EString m_sResourceType;
-	ID2D1Bitmap * m_pBitmap;
+	ETexture * m_pTexture;
+};
+
+
+class EFont :
+	public EObject
+{
+	friend EText;
+
+public:
+	EFont();
+
+	EFont(
+		EString fontFamily,
+		float fontSize = 22,
+		EFontWeight fontWeight = EFontWeight::REGULAR,
+		bool italic = false
+	);
+
+	~EFont();
+
+	// 获取当前字号
+	float getFontSize() const;
+
+	// 获取当前字体粗细值
+	EFontWeight getFontWeight() const;
+
+	// 是否是斜体
+	bool isItalic() const;
+
+	// 设置字体
+	void setFamily(
+		EString fontFamily
+	);
+
+	// 设置字号
+	void setSize(
+		float fontSize
+	);
+
+	// 设置字体粗细值
+	void setWeight(
+		EFontWeight fontWeight
+	);
+
+	// 设置文字斜体
+	void setItalic(
+		bool value
+	);
+
+protected:
+	// 创建文字格式
+	void _initTextFormat();
+
+	// 获取文字格式
+	IDWriteTextFormat * _getTextFormat();
+
+protected:
+	EString		m_sFontFamily;
+	float		m_fFontSize;
+	EFontWeight	m_FontWeight;
+	bool		m_bItalic;
+	bool		m_bRecreateNeeded;
+	IDWriteTextFormat * m_pTextFormat;
+};
+
+
+class EText :
+	public ENode
+{
+public:
+	EText();
+
+	EText(
+		const EString & text
+	);
+
+	EText(
+		EFont * font
+	);
+
+	EText(
+		const EString & text,
+		EColor color,
+		EFont * font
+	);
+
+	EText(
+		const EString & text,
+		EColor color,
+		EString fontFamily,
+		float fontSize = 22,
+		EFontWeight fontWeight = EFontWeight::REGULAR,
+		bool italic = false
+	);
+
+	~EText();
+
+	// 获取文本
+	EString getText() const;
+
+	// 获取文本宽度
+	virtual float getWidth() const override;
+
+	// 获取文本宽度（不考虑缩放）
+	virtual float getRealWidth() const override;
+
+	// 获取文字颜色
+	EColor getColor() const;
+
+	// 获取字体
+	EFont * getFont() const;
+
+	// 设置文本
+	void setText(
+		const EString & text
+	);
+
+	// 设置文字颜色
+	void setColor(
+		EColor color
+	);
+
+	// 设置字体
+	void setFont(
+		EFont * font
+	);
+
+	// 设置文字自动换行
+	void setWordWrapping(
+		bool value
+	);
+
+	// 设置文字换行宽度（WordWrapping 打开时生效）
+	void setWordWrappingWidth(
+		float wordWrapWidth
+	);
+
+protected:
+	// 渲染文字
+	virtual void _onRender() override;
+
+	// 创建文字布局
+	void _initTextLayout();
+
+protected:
+	EString	m_sText;
+	EColor	m_Color;
+	bool	m_bWordWrapping;
+	float	m_fWordWrappingWidth;
+	EFont * m_pFont;
 };
 
 }

@@ -357,22 +357,22 @@ void e2d::ENode::move(const EVec & v)
 	this->move(v.x, v.y);
 }
 
-void e2d::ENode::setWidth(float width)
+void e2d::ENode::_setWidth(float width)
 {
-	this->setSize(width, m_Size.height);
+	this->_setSize(width, m_Size.height);
 }
 
-void e2d::ENode::setHeight(float height)
+void e2d::ENode::_setHeight(float height)
 {
-	this->setSize(m_Size.width, height);
+	this->_setSize(m_Size.width, height);
 }
 
-void e2d::ENode::setSize(const ESize & size)
+void e2d::ENode::_setSize(const ESize & size)
 {
-	this->setSize(size.width, size.height);
+	this->_setSize(size.width, size.height);
 }
 
-void e2d::ENode::setSize(float width, float height)
+void e2d::ENode::_setSize(float width, float height)
 {
 	if (m_Size.width == width && m_Size.height == height)
 		return;

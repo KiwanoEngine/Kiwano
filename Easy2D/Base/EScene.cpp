@@ -30,8 +30,9 @@ void e2d::EScene::onActivate()
 {
 }
 
-void e2d::EScene::onInactive()
+bool e2d::EScene::onInactive()
 {
+	return true;
 }
 
 bool e2d::EScene::onCloseWindow()

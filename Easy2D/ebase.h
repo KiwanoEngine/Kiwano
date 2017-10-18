@@ -50,7 +50,7 @@ public:
 	virtual void onActivate();
 
 	// 重写这个函数，它将在窗口非激活时执行
-	virtual void onInactive();
+	virtual bool onInactive();
 
 	// 重写这个函数，它将在关闭窗口时执行
 	virtual bool onCloseWindow();
@@ -205,7 +205,7 @@ public:
 	virtual void onActivate();
 
 	// 重写这个函数，它将在窗口非激活时执行
-	virtual void onInactive();
+	virtual bool onInactive();
 
 	// 重写这个函数，它将在关闭窗口时执行
 	virtual bool onCloseWindow();

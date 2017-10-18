@@ -19,6 +19,8 @@ ID2D1SolidColorBrush * &GetSolidColorBrush();
 
 IWICImagingFactory * &GetImagingFactory();
 
+IDWriteFactory * &GetDirectWriteFactory();
+
 std::chrono::steady_clock::time_point &GetNow();
 
 long long GetInterval(std::chrono::steady_clock::time_point tLast);

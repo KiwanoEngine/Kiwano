@@ -13,16 +13,16 @@ using namespace std::chrono;
 
 
 // 唯一实例指针
-e2d::EApp * s_pInstance = nullptr;
+static e2d::EApp * s_pInstance = nullptr;
 // 场景栈
-std::stack<e2d::EScene*> s_SceneStack;
+static std::stack<e2d::EScene*> s_SceneStack;
 // 游戏开始时间
 static steady_clock::time_point s_tStart;
 
 e2d::EApp::EApp()
 	: m_bRunning(false)
 	, nAnimationInterval(17LL)
-	, m_ClearColor(EColor::Black)
+	, m_ClearColor(EColor::BLACK)
 	, m_pCurrentScene(nullptr)
 	, m_pNextScene(nullptr)
 {
@@ -91,8 +91,12 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, int wind
 		height = static_cast<UINT>(ceil(height * dpiY / 96.f));
 
 		// 获取屏幕分辨率
-		int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-		int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+		UINT screenWidth = static_cast<UINT>(GetSystemMetrics(SM_CXSCREEN));
+		UINT screenHeight = static_cast<UINT>(GetSystemMetrics(SM_CYSCREEN));
+		// 当输入的窗口大小比分辨率大时，给出警告
+		WARN_IF(screenWidth < width || screenHeight < height, "The window is larger than screen!");
+		width = min(width, screenWidth);
+		height = min(height, screenHeight);
 		// 创建屏幕居中的矩形
 		RECT rtWindow;
 		rtWindow.left = (screenWidth - width) / 2;
@@ -230,8 +234,9 @@ void e2d::EApp::onActivate()
 {
 }
 
-void e2d::EApp::onInactive()
+bool e2d::EApp::onInactive()
 {
+	return true;
 }
 
 bool e2d::EApp::onCloseWindow()
@@ -310,7 +315,7 @@ bool e2d::EApp::_onRender()
 	{
 		GetRenderTarget()->BeginDraw();
 		// 使用背景色清空屏幕
-		GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor));
+		GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor.value));
 		// 绘制当前场景
 		m_pCurrentScene->_onRender();
 		
@@ -480,7 +485,7 @@ void e2d::EApp::free()
 		s_SceneStack.pop();
 	}
 	// 删除图片缓存
-	ESprite::clearCache();
+	ETexture::clearCache();
 	// 删除所有对象
 	EObjectManager::clearAllObjects();
 }
@@ -671,9 +676,11 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			{
 				if (LOWORD(wParam) == WA_INACTIVE)
 				{
-					pEApp->getCurrentScene()->onInactive();
-					pEApp->onInactive();
-					pEApp->m_bPaused = true;
+					if (pEApp->getCurrentScene()->onInactive() &&
+						pEApp->onInactive())
+					{
+						pEApp->m_bPaused = true;
+					}
 				}
 				else
 				{
