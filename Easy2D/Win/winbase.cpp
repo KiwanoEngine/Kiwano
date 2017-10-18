@@ -1,5 +1,4 @@
 #include "winbase.h"
-using namespace std::chrono;
 
 
 static HWND s_HWnd = nullptr;

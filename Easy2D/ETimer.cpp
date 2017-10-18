@@ -1,4 +1,5 @@
 #include "etools.h"
+#include "Win\winbase.h"
 
 e2d::ETimer::ETimer()
 	: m_bRunning(false)
@@ -43,7 +44,7 @@ bool e2d::ETimer::isWaiting() const
 void e2d::ETimer::start()
 {
 	m_bRunning = true;
-	m_tLast = std::chrono::steady_clock::now();
+	m_tLast = GetNow();
 }
 
 void e2d::ETimer::stop()
@@ -59,7 +60,7 @@ void e2d::ETimer::_wait()
 void e2d::ETimer::_notify()
 {
 	m_bWaiting = false;
-	m_tLast = std::chrono::steady_clock::now();
+	m_tLast = GetNow();
 }
 
 e2d::EString e2d::ETimer::getName() const
@@ -97,7 +98,7 @@ void e2d::ETimer::bindWith(ENode * pParentNode)
 	ETimerManager::bindTimer(this, pParentNode);
 }
 
-void e2d::ETimer::_runCallback()
+void e2d::ETimer::_callOn()
 {
 	m_Callback(m_nRunTimes);
 	m_nRunTimes++;

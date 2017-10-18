@@ -22,7 +22,7 @@ e2d::EMouseListener::EMouseListener(const EString & name, const MOUSE_LISTENER_C
 	m_Callback = callback;
 }
 
-void e2d::EMouseListener::_runCallback()
+void e2d::EMouseListener::_callOn()
 {
 	m_Callback();
 }

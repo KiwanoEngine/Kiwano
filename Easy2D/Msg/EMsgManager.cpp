@@ -129,7 +129,7 @@ void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (mlistener->isRunning())
 		{
-			mlistener->_runCallback();
+			mlistener->_callOn();
 		}
 	}
 }
@@ -145,7 +145,7 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (klistener->isRunning())
 		{
-			klistener->_runCallback();
+			klistener->_callOn();
 		}
 	}
 }

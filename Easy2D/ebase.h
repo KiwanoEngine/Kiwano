@@ -19,7 +19,7 @@ class EApp
 public:
 	EApp();
 
-	~EApp();
+	virtual ~EApp();
 
 	// 初始化游戏界面
 	bool init(
@@ -193,7 +193,7 @@ class EScene
 public:
 	EScene();
 
-	~EScene();
+	virtual ~EScene();
 
 	// 重写这个函数，它将在进入这个场景时自动执行
 	virtual void onEnter();

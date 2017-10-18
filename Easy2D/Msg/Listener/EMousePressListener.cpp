@@ -22,7 +22,7 @@ e2d::EMousePressListener::EMousePressListener(const EString & name, const MOUSE_
 {
 }
 
-void e2d::EMousePressListener::_runCallback()
+void e2d::EMousePressListener::_callOn()
 {
 	if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DOWN ||
 		EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DBLCLK)

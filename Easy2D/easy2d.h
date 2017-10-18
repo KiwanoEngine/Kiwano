@@ -22,6 +22,7 @@
 #include "enodes.h"
 #include "emsg.h"
 #include "etools.h"
+#include "eactions.h"
 
 
 #if defined(DEBUG) || defined(_DEBUG)

@@ -20,7 +20,7 @@ e2d::EKeyboardPressListener::EKeyboardPressListener(const EString & name, const 
 {
 }
 
-void e2d::EKeyboardPressListener::_runCallback()
+void e2d::EKeyboardPressListener::_callOn()
 {
 	if (EKeyboardMsg::getMsg() == EKeyboardMsg::KEYBOARD_MSG::KEY_DOWN)
 	{

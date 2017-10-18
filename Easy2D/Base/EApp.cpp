@@ -37,7 +37,10 @@ e2d::EApp::~EApp()
 	// 释放资源
 	SafeReleaseInterface(&GetRenderTarget());
 	SafeReleaseInterface(&GetFactory());
-
+	SafeReleaseInterface(&GetImagingFactory());
+	SafeReleaseInterface(&GetDirectWriteFactory());
+	SafeReleaseInterface(&GetSolidColorBrush());
+	
 	CoUninitialize();
 }
 
@@ -297,9 +300,9 @@ void e2d::EApp::_onControl()
 	// 断言当前场景非空
 	ASSERT(m_pCurrentScene != nullptr, "Current scene NULL pointer exception.");
 
-	ETimerManager::TimerProc();		// 定时器执行程序
-	//ActionManager::__exec();	// 动作管理器执行程序
-	EObjectManager::__flush();	// 刷新内存池
+	ETimerManager::TimerProc();		// 定时器管理器执行程序
+	EActionManager::ActionProc();	// 动作管理器执行程序
+	EObjectManager::__flush();		// 刷新内存池
 }
 
 // This method discards device-specific

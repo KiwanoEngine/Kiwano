@@ -6,6 +6,7 @@ namespace e2d
 {
 
 class ETimerManager;
+class EAction;
 
 // 对象管理器
 class EObjectManager
@@ -103,7 +104,7 @@ protected:
 	void _notify();
 
 	// 执行回调函数
-	virtual void _runCallback();
+	virtual void _callOn();
 
 protected:
 	EString			m_sName;
@@ -215,6 +216,85 @@ private:
 
 	// 定时器执行程序
 	static void TimerProc();
+};
+
+
+// 动作管理器
+class EActionManager
+{
+	friend EApp;
+	friend EScene;
+	friend ENode;
+
+public:
+	// 绑定动作到节点
+	static void bindAction(
+		EAction * action,
+		ENode * pParentNode
+	);
+
+	// 启动绑定在场景子节点上的所有动作
+	static void startAllActionsBindedWith(
+		EScene * pParentScene
+	);
+
+	// 停止绑定在场景子节点上的所有动作
+	static void stopAllActionsBindedWith(
+		EScene * pParentScene
+	);
+
+	// 清空绑定在场景子节点上的所有动作
+	static void clearAllActionsBindedWith(
+		EScene * pParentScene
+	);
+
+	// 启动绑定在节点上的所有动作
+	static void startAllActionsBindedWith(
+		ENode * pParentNode
+	);
+
+	// 停止绑定在节点上的所有动作
+	static void stopAllActionsBindedWith(
+		ENode * pParentNode
+	);
+
+	// 清空绑定在节点上的所有动作
+	static void clearAllActionsBindedWith(
+		ENode * pParentNode
+	);
+
+	// 启动所有动作
+	static void startAllActions();
+
+	// 停止所有动作
+	static void stopAllActions();
+
+	// 清除所有动作
+	static void clearAllActions();
+
+private:
+	// 挂起绑定在场景子节点上的所有动作
+	static void _waitAllActionsBindedWith(
+		EScene * pParentScene
+	);
+
+	// 重启绑定在场景子节点上的所有动作
+	static void _notifyAllActionsBindedWith(
+		EScene * pParentScene
+	);
+
+	// 挂起绑定在节点上的所有动作
+	static void _waitAllActionsBindedWith(
+		ENode * pParentNode
+	);
+
+	// 重启绑定在节点上的所有动作
+	static void _notifyAllActionsBindedWith(
+		ENode * pParentNode
+	);
+
+	// 动作执行程序
+	static void ActionProc();
 };
 
 }

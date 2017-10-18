@@ -26,7 +26,7 @@ e2d::EMouseDoubleClickListener::EMouseDoubleClickListener(const EString & name, 
 {
 }
 
-void e2d::EMouseDoubleClickListener::_runCallback()
+void e2d::EMouseDoubleClickListener::_callOn()
 {
 	if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DOWN)
 	{

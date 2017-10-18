@@ -22,7 +22,7 @@ e2d::EKeyboardListener::EKeyboardListener(const EString & name, const KEY_LISTEN
 	m_Callback = callback;
 }
 
-void e2d::EKeyboardListener::_runCallback()
+void e2d::EKeyboardListener::_callOn()
 {
 	m_Callback();
 }

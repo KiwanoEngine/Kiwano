@@ -194,7 +194,7 @@ protected:
 	void _notify();
 
 	// 执行监听器回调函数
-	virtual void _runCallback() = 0;
+	virtual void _callOn() = 0;
 
 protected:
 	EString		m_sName;
@@ -244,7 +244,7 @@ public:
 
 protected:
 	// 执行监听器回调函数
-	virtual void _runCallback() override;
+	virtual void _callOn() override;
 
 protected:
 	MOUSE_LISTENER_CALLBACK m_Callback;
@@ -278,7 +278,7 @@ public:
 
 protected:
 	// 执行监听器回调函数
-	virtual void _runCallback() override;
+	virtual void _callOn() override;
 
 protected:
 	MOUSE_PRESS_LISTENER_CALLBACK m_Callback;
@@ -312,7 +312,7 @@ public:
 
 protected:
 	// 执行监听器回调函数
-	virtual void _runCallback() override;
+	virtual void _callOn() override;
 
 protected:
 	bool m_bPressed;
@@ -347,7 +347,7 @@ public:
 
 protected:
 	// 执行监听器回调函数
-	virtual void _runCallback() override;
+	virtual void _callOn() override;
 
 protected:
 	bool m_bPressed;
@@ -382,7 +382,7 @@ public:
 
 protected:
 	// 执行监听器回调函数
-	virtual void _runCallback() override;
+	virtual void _callOn() override;
 
 protected:
 	EPoint	m_Begin;
@@ -429,7 +429,7 @@ public:
 
 protected:
 	// 执行监听器回调函数
-	virtual void _runCallback() override;
+	virtual void _callOn() override;
 
 protected:
 	KEY_LISTENER_CALLBACK m_Callback;
@@ -460,7 +460,7 @@ public:
 
 protected:
 	// 执行监听器回调函数
-	virtual void _runCallback() override;
+	virtual void _callOn() override;
 };
 
 

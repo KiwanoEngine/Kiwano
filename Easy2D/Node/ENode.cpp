@@ -1,6 +1,7 @@
 #include "..\enodes.h"
 #include "..\emsg.h"
 #include "..\etools.h"
+#include "..\eactions.h"
 #include "..\Win\winbase.h"
 #include <algorithm>
 
@@ -34,6 +35,10 @@ e2d::ENode::ENode(const EString & name)
 
 e2d::ENode::~ENode()
 {
+	ETimerManager::clearAllTimersBindedWith(this);
+	EMsgManager::clearAllMouseListenersBindedWith(this);
+	EMsgManager::clearAllKeyboardListenersBindedWith(this);
+	EActionManager::clearAllActionsBindedWith(this);
 }
 
 void e2d::ENode::onEnter()
@@ -105,6 +110,7 @@ void e2d::ENode::_onEnter()
 		ETimerManager::_notifyAllTimersBindedWith(this);
 		EMsgManager::_notifyAllMouseListenersBindedWith(this);
 		EMsgManager::_notifyAllKeyboardListenersBindedWith(this);
+		EActionManager::_notifyAllActionsBindedWith(this);
 		this->onEnter();
 
 		for (const auto &child : m_vChildren)
@@ -123,23 +129,13 @@ void e2d::ENode::_onExit()
 		ETimerManager::_waitAllTimersBindedWith(this);
 		EMsgManager::_waitAllMouseListenersBindedWith(this);
 		EMsgManager::_waitAllKeyboardListenersBindedWith(this);
+		EActionManager::_waitAllActionsBindedWith(this);
 		this->onExit();
 
 		for (const auto &child : m_vChildren)
 		{
 			child->_onExit();
 		}
-	}
-}
-
-void e2d::ENode::_onClear()
-{
-	ETimerManager::clearAllTimersBindedWith(this);
-	EMsgManager::clearAllMouseListenersBindedWith(this);
-	EMsgManager::clearAllKeyboardListenersBindedWith(this);
-	for (const auto &child : m_vChildren)
-	{
-		child->_onClear();
 	}
 }
 
@@ -558,7 +554,7 @@ void e2d::ENode::removeFromParent(bool release /* = false */)
 	}
 }
 
-bool e2d::ENode::removeChild(ENode * child, bool release /* = false */)
+bool e2d::ENode::removeChild(ENode * child, bool release /* = true */)
 {
 	WARN_IF(child == nullptr, "ENode::removeChild NULL pointer exception.");
 
@@ -591,7 +587,7 @@ bool e2d::ENode::removeChild(ENode * child, bool release /* = false */)
 	return false;
 }
 
-void e2d::ENode::removeChild(const EString & childName, bool release /* = false */)
+void e2d::ENode::removeChild(const EString & childName, bool release /* = true */)
 {
 	WARN_IF(childName.empty(), "Invalid ENode name.");
 
@@ -625,24 +621,29 @@ void e2d::ENode::removeChild(const EString & childName, bool release /* = false 
 	}
 }
 
-void e2d::ENode::clearAllChildren(bool release /* = false */)
+void e2d::ENode::clearAllChildren(bool release /* = true */)
 {
 	// 所有节点的引用计数减一
 	for (auto child : m_vChildren)
 	{
 		if (release)
 		{
-			child->_onClear();
 			child->autoRelease();
 		}
-		else
-		{
-			child->_onExit();
-		}
+		child->_onExit();
 		child->release();
 	}
 	// 清空储存节点的容器
 	m_vChildren.clear();
+}
+
+void e2d::ENode::runAction(EAction * action)
+{
+	EActionManager::bindAction(action, this);
+}
+
+void e2d::ENode::stopAction(EAction * action)
+{
 }
 
 void e2d::ENode::setVisiable(bool value)

@@ -6,6 +6,7 @@ namespace e2d
 
 class EText;
 class ESprite;
+class EAction;
 
 class ENode :
 	public EObject
@@ -240,18 +241,28 @@ public:
 	// 移除子节点
 	virtual bool removeChild(
 		ENode * child, 
-		bool release = false
+		bool release = true
 	);
 
 	// 移除子节点
 	virtual void removeChild(
 		const EString & childName,
-		bool release = false
+		bool release = true
 	);
 
 	// 移除所有节点
 	virtual void clearAllChildren(
-		bool release = false
+		bool release = true
+	);
+
+	// 执行动画
+	virtual void runAction(
+		EAction * action
+	);
+
+	// 停止动画
+	virtual void stopAction(
+		EAction * action
 	);
 
 protected:
@@ -266,9 +277,6 @@ protected:
 
 	// 节点从场景中消失时的执行程序
 	virtual void _onExit();
-
-	// 节点清除时的执行程序
-	virtual void _onClear();
 
 	// 子节点排序
 	void _sortChildren();
@@ -336,7 +344,7 @@ protected:
 	EScene *	m_pParentScene;
 	ENode *		m_pParent;
 	D2D1::Matrix3x2F	m_Matri;
-	EVector<ENode*>	m_vChildren;
+	EVector<ENode*>		m_vChildren;
 };
 
 
@@ -360,7 +368,7 @@ public:
 		const EString & resourceType
 	);
 
-	~ETexture();
+	virtual ~ETexture();
 
 	// 从本地文件中读取资源
 	void loadFromFile(
@@ -441,7 +449,7 @@ public:
 		float height
 	);
 
-	~ESprite();
+	virtual ~ESprite();
 	
 	// 设置精灵纹理
 	void setTexture(
@@ -491,7 +499,7 @@ public:
 		bool italic = false
 	);
 
-	~EFont();
+	virtual ~EFont();
 
 	// 获取当前字号
 	float getFontSize() const;
@@ -568,7 +576,7 @@ public:
 		bool italic = false
 	);
 
-	~EText();
+	virtual ~EText();
 
 	// 获取文本
 	EString getText() const;

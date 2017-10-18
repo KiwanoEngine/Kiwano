@@ -26,7 +26,7 @@ e2d::EMouseClickListener::EMouseClickListener(const EString & name, const MOUSE_
 {
 }
 
-void e2d::EMouseClickListener::_runCallback()
+void e2d::EMouseClickListener::_callOn()
 {
 	if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DOWN ||
 		EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DBLCLK)

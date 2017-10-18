@@ -257,7 +257,7 @@ void e2d::ETimerManager::TimerProc()
 	{
 		if (GetInterval(t->m_tLast) >= t->m_nInterval)
 		{
-			t->_runCallback();
+			t->_callOn();
 			t->m_tLast = GetNow();
 		}
 	}

@@ -51,7 +51,7 @@ void e2d::EScene::_onEnter()
 	ETimerManager::_notifyAllTimersBindedWith(this);
 	EMsgManager::_notifyAllMouseListenersBindedWith(this);
 	EMsgManager::_notifyAllKeyboardListenersBindedWith(this);
-	//ActionManager::notifyAllSceneActions(m_pNextScene);
+	EActionManager::_notifyAllActionsBindedWith(this);
 }
 
 void e2d::EScene::_onExit()
@@ -61,14 +61,14 @@ void e2d::EScene::_onExit()
 		ETimerManager::_waitAllTimersBindedWith(this);
 		EMsgManager::_waitAllMouseListenersBindedWith(this);
 		EMsgManager::_waitAllKeyboardListenersBindedWith(this);
-		//ActionManager::waitAllSceneActions(m_pCurrentScene);
+		EActionManager::_waitAllActionsBindedWith(this);
 	}
 	else
 	{
 		ETimerManager::clearAllTimersBindedWith(this);
 		EMsgManager::clearAllMouseListenersBindedWith(this);
 		EMsgManager::clearAllKeyboardListenersBindedWith(this);
-		//ActionManager::stopAllSceneActions(m_pCurrentScene);
+		EActionManager::clearAllActionsBindedWith(this);
 	}
 }
 

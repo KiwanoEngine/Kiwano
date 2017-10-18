@@ -1,6 +1,7 @@
 #pragma once
 #include "..\emacros.h"
 #include <chrono>
+using namespace std::chrono;
 
 
 #ifndef HINST_THISCOMPONENT

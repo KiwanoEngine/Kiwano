@@ -22,7 +22,7 @@ e2d::EMouseDragListener::EMouseDragListener(const EString & name, const MOUSE_DR
 {
 }
 
-void e2d::EMouseDragListener::_runCallback()
+void e2d::EMouseDragListener::_callOn()
 {
 	if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DOWN ||
 		EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DBLCLK)
