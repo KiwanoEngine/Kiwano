@@ -18,8 +18,7 @@ e2d::EActionFrames::~EActionFrames()
 {
 	for (auto frame : m_vFrames)
 	{
-		frame->autoRelease();
-		frame->release();
+		SafeRelease(&frame);
 	}
 }
 

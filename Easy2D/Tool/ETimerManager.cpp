@@ -69,8 +69,7 @@ void e2d::ETimerManager::delTimers(const EString & name)
 	{
 		if ((*mIter)->getName() == name)
 		{
-			(*mIter)->autoRelease();
-			(*mIter)->release();
+			SafeRelease(&(*mIter));
 			mIter = s_vTimers.erase(mIter);
 		}
 		else
@@ -117,8 +116,7 @@ void e2d::ETimerManager::clearAllTimersBindedWith(EScene * pParentScene)
 		auto t = s_vTimers[i];
 		if (t->getParentScene() == pParentScene)
 		{
-			t->autoRelease();
-			t->release();
+			SafeRelease(&t);
 			s_vTimers.erase(s_vTimers.begin() + i);
 		}
 		else
@@ -169,8 +167,7 @@ void e2d::ETimerManager::clearAllTimersBindedWith(ENode * pParentNode)
 		auto t = s_vTimers[i];
 		if (t->getParentNode() == pParentNode)
 		{
-			t->autoRelease();
-			t->release();
+			SafeRelease(&t);
 			s_vTimers.erase(s_vTimers.begin() + i);
 		}
 		else

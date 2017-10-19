@@ -252,8 +252,7 @@ void e2d::EMsgManager::delMouseListeners(const EString & name)
 	{
 		if ((*mIter)->getName() == name)
 		{
-			(*mIter)->autoRelease();
-			(*mIter)->release();
+			SafeRelease(&(*mIter));
 			mIter = s_vMouseListeners.erase(mIter);
 		}
 		else
@@ -295,8 +294,7 @@ void e2d::EMsgManager::delKeyboardListeners(const EString & name)
 	{
 		if ((*kIter)->getName() == name)
 		{
-			(*kIter)->autoRelease();
-			(*kIter)->release();
+			SafeRelease(&(*kIter));
 			kIter = s_vKeyboardListeners.erase(kIter);
 		}
 		else
@@ -433,8 +431,7 @@ void e2d::EMsgManager::clearAllMouseListenersBindedWith(EScene * pParentScene)
 		auto t = s_vMouseListeners[i];
 		if (t->getParentScene() == pParentScene)
 		{
-			t->autoRelease();
-			t->release();
+			SafeRelease(&t);
 			s_vMouseListeners.erase(s_vMouseListeners.begin() + i);
 		}
 		else
@@ -455,8 +452,7 @@ void e2d::EMsgManager::clearAllKeyboardListenersBindedWith(EScene * pParentScene
 		auto t = s_vKeyboardListeners[i];
 		if (t->getParentScene() == pParentScene)
 		{
-			t->autoRelease();
-			t->release();
+			SafeRelease(&t);
 			s_vKeyboardListeners.erase(s_vKeyboardListeners.begin() + i);
 		}
 		else
@@ -477,8 +473,7 @@ void e2d::EMsgManager::clearAllMouseListenersBindedWith(ENode * pParentNode)
 		auto t = s_vMouseListeners[i];
 		if (t->getParentNode() == pParentNode)
 		{
-			t->autoRelease();
-			t->release();
+			SafeRelease(&t);
 			s_vMouseListeners.erase(s_vMouseListeners.begin() + i);
 		}
 		else
@@ -499,8 +494,7 @@ void e2d::EMsgManager::clearAllKeyboardListenersBindedWith(ENode * pParentNode)
 		auto t = s_vKeyboardListeners[i];
 		if (t->getParentNode() == pParentNode)
 		{
-			t->autoRelease();
-			t->release();
+			SafeRelease(&t);
 			s_vKeyboardListeners.erase(s_vKeyboardListeners.begin() + i);
 		}
 		else

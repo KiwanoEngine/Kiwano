@@ -88,8 +88,8 @@ public:
 
 	// 切换场景
 	static void enterScene(
-		EScene * scene,
-		bool saveCurrentScene = true
+		EScene * scene,					/* 下一个场景的指针 */
+		bool saveCurrentScene = true	/* 是否保存当前场景 */
 	);
 
 	// 返回上一场景
@@ -261,7 +261,7 @@ protected:
 protected:
 	bool m_bSortNeeded;
 	bool m_bWillSave;
-	ENode * const m_Root;
+	ENode * m_pRoot;
 };
 
 
