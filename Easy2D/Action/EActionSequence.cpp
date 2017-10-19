@@ -1,12 +1,12 @@
 #include "..\eactions.h"
 #include <stdarg.h>
 
-e2d::ActionSequence::ActionSequence() :
+e2d::EActionSequence::EActionSequence() :
 	m_nActionIndex(0)
 {
 }
 
-e2d::ActionSequence::ActionSequence(int number, EAction * action1, ...) :
+e2d::EActionSequence::EActionSequence(int number, EAction * action1, ...) :
 	m_nActionIndex(0)
 {
 	va_list params;
@@ -21,7 +21,7 @@ e2d::ActionSequence::ActionSequence(int number, EAction * action1, ...) :
 	va_end(params);
 }
 
-e2d::ActionSequence::~ActionSequence()
+e2d::EActionSequence::~EActionSequence()
 {
 	for (auto action : m_vActions)
 	{
@@ -29,7 +29,7 @@ e2d::ActionSequence::~ActionSequence()
 	}
 }
 
-void e2d::ActionSequence::_init()
+void e2d::EActionSequence::_init()
 {
 	EAction::_init();
 	// 将所有动作与目标绑定
@@ -41,7 +41,7 @@ void e2d::ActionSequence::_init()
 	m_vActions[0]->_init();
 }
 
-void e2d::ActionSequence::_exec()
+void e2d::EActionSequence::_exec()
 {
 	m_vActions[m_nActionIndex]->_exec();
 
@@ -59,7 +59,7 @@ void e2d::ActionSequence::_exec()
 	}
 }
 
-void e2d::ActionSequence::_reset()
+void e2d::EActionSequence::_reset()
 {
 	EAction::_reset();
 	for (auto action : m_vActions)
@@ -69,15 +69,15 @@ void e2d::ActionSequence::_reset()
 	m_nActionIndex = 0;
 }
 
-void e2d::ActionSequence::addAction(EAction * action)
+void e2d::EActionSequence::addAction(EAction * action)
 {
 	m_vActions.push_back(action);
 	action->retain();
 }
 
-e2d::ActionSequence * e2d::ActionSequence::copy() const
+e2d::EActionSequence * e2d::EActionSequence::copy() const
 {
-	auto a = new ActionSequence();
+	auto a = new EActionSequence();
 	for (auto action : m_vActions)
 	{
 		a->addAction(action->copy());
@@ -85,9 +85,9 @@ e2d::ActionSequence * e2d::ActionSequence::copy() const
 	return a;
 }
 
-e2d::ActionSequence * e2d::ActionSequence::reverse(bool actionReverse) const
+e2d::EActionSequence * e2d::EActionSequence::reverse(bool actionReverse) const
 {
-	auto a = new ActionSequence();
+	auto a = new EActionSequence();
 	for (auto action : a->m_vActions)
 	{
 		if (actionReverse)

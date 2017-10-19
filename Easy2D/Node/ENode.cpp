@@ -642,8 +642,28 @@ void e2d::ENode::runAction(EAction * action)
 	EActionManager::bindAction(action, this);
 }
 
+void e2d::ENode::resumeAction(EAction * action)
+{
+	if (action->getTarget() == this)
+	{
+		action->resume();
+	}
+}
+
+void e2d::ENode::pauseAction(EAction * action)
+{
+	if (action->getTarget() == this)
+	{
+		action->pause();
+	}
+}
+
 void e2d::ENode::stopAction(EAction * action)
 {
+	if (action->getTarget() == this)
+	{
+		action->stop();
+	}
 }
 
 void e2d::ENode::setVisiable(bool value)

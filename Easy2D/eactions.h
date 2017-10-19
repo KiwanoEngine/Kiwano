@@ -5,18 +5,18 @@
 namespace e2d
 {
 
-class ActionTwo;
-class ActionNeverStop;
-class ActionSequence;
+class EActionTwo;
+class EActionNeverStop;
+class EActionSequence;
 
 class EAction :
 	public EObject
 {
 	friend ENode;
 	friend EActionManager;
-	friend ActionTwo;
-	friend ActionNeverStop;
-	friend ActionSequence;
+	friend EActionTwo;
+	friend EActionNeverStop;
+	friend EActionSequence;
 
 public:
 	EAction();
@@ -25,20 +25,30 @@ public:
 
 	// 获取动作运行状态
 	virtual bool isRunning();
+
 	// 获取动作结束状态
 	virtual bool isEnding();
+
 	// 继续动作
 	virtual void start();
+
 	// 继续动作
 	virtual void resume();
+
 	// 暂停动作
 	virtual void pause();
+
 	// 停止动作
 	virtual void stop();
-	// 设置动作每一帧时间间隔
-	virtual void setInterval(LONGLONG milliSeconds);
+
+	// 设置动作每一帧的时间间隔
+	virtual void setInterval(
+		LONGLONG milliSeconds
+	);
+
 	// 获取一个新的拷贝动作
 	virtual EAction * copy() const = 0;
+
 	// 获取一个新的逆向动作
 	virtual EAction * reverse() const;
 	// 获取执行该动作的目标
@@ -72,12 +82,12 @@ protected:
 };
 
 
-class Animation :
+class EAnimation :
 	public EAction
 {
 public:
-	Animation(float duration);
-	virtual ~Animation();
+	EAnimation(float duration);
+	virtual ~EAnimation();
 
 protected:
 	LONGLONG m_nDuration;
@@ -91,15 +101,15 @@ protected:
 };
 
 
-class ActionMoveBy :
-	public Animation
+class EActionMoveBy :
+	public EAnimation
 {
 public:
-	ActionMoveBy(float duration, EVec vector);
-	virtual ~ActionMoveBy();
+	EActionMoveBy(float duration, EVec vector);
+	virtual ~EActionMoveBy();
 
-	virtual ActionMoveBy * copy() const override;
-	virtual ActionMoveBy * reverse() const override;
+	virtual EActionMoveBy * copy() const override;
+	virtual EActionMoveBy * reverse() const override;
 
 protected:
 	EPoint	m_BeginPos;
@@ -112,14 +122,14 @@ protected:
 };
 
 
-class ActionMoveTo :
-	public ActionMoveBy
+class EActionMoveTo :
+	public EActionMoveBy
 {
 public:
-	ActionMoveTo(float duration, EPoint pos);
-	virtual ~ActionMoveTo();
+	EActionMoveTo(float duration, EPoint pos);
+	virtual ~EActionMoveTo();
 
-	virtual ActionMoveTo * copy() const override;
+	virtual EActionMoveTo * copy() const override;
 
 protected:
 	EPoint m_EndPos;
@@ -130,15 +140,15 @@ protected:
 };
 
 
-class ActionScaleBy :
-	public Animation
+class EActionScaleBy :
+	public EAnimation
 {
 public:
-	ActionScaleBy(float duration, float scaleX, float scaleY);
-	virtual ~ActionScaleBy();
+	EActionScaleBy(float duration, float scaleX, float scaleY);
+	virtual ~EActionScaleBy();
 
-	virtual ActionScaleBy * copy() const override;
-	virtual ActionScaleBy * reverse() const override;
+	virtual EActionScaleBy * copy() const override;
+	virtual EActionScaleBy * reverse() const override;
 
 protected:
 	float	m_nBeginScaleX;
@@ -153,14 +163,14 @@ protected:
 };
 
 
-class ActionScaleTo :
-	public ActionScaleBy
+class EActionScaleTo :
+	public EActionScaleBy
 {
 public:
-	ActionScaleTo(float duration, float scaleX, float scaleY);
-	virtual ~ActionScaleTo();
+	EActionScaleTo(float duration, float scaleX, float scaleY);
+	virtual ~EActionScaleTo();
 
-	virtual ActionScaleTo * copy() const override;
+	virtual EActionScaleTo * copy() const override;
 
 protected:
 	float	m_nEndScaleX;
@@ -172,15 +182,15 @@ protected:
 };
 
 
-class ActionOpacityBy :
-	public Animation
+class EActionOpacityBy :
+	public EAnimation
 {
 public:
-	ActionOpacityBy(float duration, float opacity);
-	virtual ~ActionOpacityBy();
+	EActionOpacityBy(float duration, float opacity);
+	virtual ~EActionOpacityBy();
 
-	virtual ActionOpacityBy * copy() const override;
-	virtual ActionOpacityBy * reverse() const override;
+	virtual EActionOpacityBy * copy() const override;
+	virtual EActionOpacityBy * reverse() const override;
 
 protected:
 	float m_nBeginVal;
@@ -193,14 +203,14 @@ protected:
 };
 
 
-class ActionOpacityTo :
-	public ActionOpacityBy
+class EActionOpacityTo :
+	public EActionOpacityBy
 {
 public:
-	ActionOpacityTo(float duration, float opacity);
-	virtual ~ActionOpacityTo();
+	EActionOpacityTo(float duration, float opacity);
+	virtual ~EActionOpacityTo();
 
-	virtual ActionOpacityTo * copy() const override;
+	virtual EActionOpacityTo * copy() const override;
 
 protected:
 	float m_nEndVal;
@@ -212,30 +222,30 @@ protected:
 
 
 class ActionFadeIn :
-	public ActionOpacityTo
+	public EActionOpacityTo
 {
 public:
-	ActionFadeIn(float duration) : ActionOpacityTo(duration, 1) {}
+	ActionFadeIn(float duration) : EActionOpacityTo(duration, 1) {}
 };
 
 
 class ActionFadeOut :
-	public ActionOpacityTo
+	public EActionOpacityTo
 {
 public:
-	ActionFadeOut(float duration) : ActionOpacityTo(duration, 0) {}
+	ActionFadeOut(float duration) : EActionOpacityTo(duration, 0) {}
 };
 
 
-class ActionTwo :
+class EActionTwo :
 	public EAction
 {
 public:
-	ActionTwo(EAction * actionFirst, EAction * actionSecond);
-	virtual ~ActionTwo();
+	EActionTwo(EAction * actionFirst, EAction * actionSecond);
+	virtual ~EActionTwo();
 
-	virtual ActionTwo * copy() const override;
-	virtual ActionTwo * reverse(bool actionReverse = true) const;
+	virtual EActionTwo * copy() const override;
+	virtual EActionTwo * reverse(bool actionReverse = true) const;
 
 protected:
 	EAction *	m_FirstAction;
@@ -248,17 +258,17 @@ protected:
 };
 
 
-class ActionSequence :
+class EActionSequence :
 	public EAction
 {
 public:
-	ActionSequence();
-	ActionSequence(int number, EAction * action1, ...);
-	virtual ~ActionSequence();
+	EActionSequence();
+	EActionSequence(int number, EAction * action1, ...);
+	virtual ~EActionSequence();
 
 	void addAction(EAction * action);
-	virtual ActionSequence * copy() const override;
-	virtual ActionSequence * reverse(bool actionReverse = true) const;
+	virtual EActionSequence * copy() const override;
+	virtual EActionSequence * reverse(bool actionReverse = true) const;
 
 protected:
 	UINT					m_nActionIndex;
@@ -271,14 +281,14 @@ protected:
 };
 
 
-class ActionDelay :
+class EActionDelay :
 	public EAction
 {
 public:
-	ActionDelay(float duration);
-	virtual ~ActionDelay();
+	EActionDelay(float duration);
+	virtual ~EActionDelay();
 
-	virtual ActionDelay * copy() const override;
+	virtual EActionDelay * copy() const override;
 
 protected:
 	virtual void _init() override;
@@ -287,14 +297,14 @@ protected:
 };
 
 
-class ActionNeverStop :
+class EActionNeverStop :
 	public EAction
 {
 public:
-	ActionNeverStop(EAction * action);
-	virtual ~ActionNeverStop();
+	EActionNeverStop(EAction * action);
+	virtual ~EActionNeverStop();
 
-	virtual ActionNeverStop * copy() const override;
+	virtual EActionNeverStop * copy() const override;
 
 protected:
 	EAction * m_Action;
@@ -306,21 +316,21 @@ protected:
 };
 
 
-class ActionFrames :
+class EActionFrames :
 	public EAction
 {
 public:
-	ActionFrames();
-	ActionFrames(LONGLONG frameDelay);
-	~ActionFrames();
+	EActionFrames();
+	EActionFrames(LONGLONG frameDelay);
+	~EActionFrames();
 
-	void addFrame(Image * frame);
-	virtual ActionFrames * copy() const override;
-	virtual ActionFrames * reverse() const override;
+	void addFrame(ESpriteFrame * frame);
+	virtual EActionFrames * copy() const override;
+	virtual EActionFrames * reverse() const override;
 
 protected:
-	UINT			m_nFrameIndex;
-	EVector<Image*> m_vFrames;
+	UINT m_nFrameIndex;
+	EVector<ESpriteFrame*> m_vFrames;
 
 protected:
 	virtual void _init() override;
@@ -329,14 +339,14 @@ protected:
 };
 
 
-class ActionCallback :
+class EActionCallback :
 	public EAction
 {
 public:
-	ActionCallback(const std::function<void()>& callback);
-	~ActionCallback();
+	EActionCallback(const std::function<void()>& callback);
+	~EActionCallback();
 
-	virtual ActionCallback * copy() const override;
+	virtual EActionCallback * copy() const override;
 
 protected:
 	std::function<void()> m_Callback;

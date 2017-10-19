@@ -87,50 +87,50 @@
     <ClCompile Include="Node\ETexture.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="Action\Action.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionCallback.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionDelay.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionFrames.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionMoveBy.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionMoveTo.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionNeverStop.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionOpacityBy.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionOpacityTo.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionScaleBy.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionScaleTo.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionSequence.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\ActionTwo.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\Animation.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="Tool\EActionManager.cpp">
       <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EAction.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionCallback.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionDelay.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionFrames.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionMoveBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionMoveTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionNeverStop.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionOpacityBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionOpacityTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionScaleBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionScaleTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionSequence.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionTwo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EAnimation.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

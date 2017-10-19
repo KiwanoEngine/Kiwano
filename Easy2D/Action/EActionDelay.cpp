@@ -1,28 +1,28 @@
 #include "..\eactions.h"
 #include "..\Win\winbase.h"
 
-e2d::ActionDelay::ActionDelay(float duration)
+e2d::EActionDelay::EActionDelay(float duration)
 {
 	setInterval(LONGLONG(duration * 1000));
 }
 
-e2d::ActionDelay::~ActionDelay()
+e2d::EActionDelay::~EActionDelay()
 {
 }
 
-e2d::ActionDelay * e2d::ActionDelay::copy() const
+e2d::EActionDelay * e2d::EActionDelay::copy() const
 {
-	return new ActionDelay(m_nAnimationInterval / 1000.0f);
+	return new EActionDelay(m_nAnimationInterval / 1000.0f);
 }
 
-void e2d::ActionDelay::_init()
+void e2d::EActionDelay::_init()
 {
 	EAction::_init();
 	// 记录当前时间
 	m_nLast = GetNow();
 }
 
-void e2d::ActionDelay::_exec()
+void e2d::EActionDelay::_exec()
 {
 	// 判断时间间隔是否足够
 	if (GetInterval(m_nLast) > m_nAnimationInterval)
@@ -31,7 +31,7 @@ void e2d::ActionDelay::_exec()
 	}
 }
 
-void e2d::ActionDelay::_reset()
+void e2d::EActionDelay::_reset()
 {
 	EAction::_reset();
 	// 记录当前时间

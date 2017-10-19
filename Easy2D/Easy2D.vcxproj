@@ -192,20 +192,20 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Action\Action.cpp" />
-    <ClCompile Include="Action\ActionCallback.cpp" />
-    <ClCompile Include="Action\ActionDelay.cpp" />
-    <ClCompile Include="Action\ActionFrames.cpp" />
-    <ClCompile Include="Action\ActionMoveBy.cpp" />
-    <ClCompile Include="Action\ActionMoveTo.cpp" />
-    <ClCompile Include="Action\ActionNeverStop.cpp" />
-    <ClCompile Include="Action\ActionOpacityBy.cpp" />
-    <ClCompile Include="Action\ActionOpacityTo.cpp" />
-    <ClCompile Include="Action\ActionScaleBy.cpp" />
-    <ClCompile Include="Action\ActionScaleTo.cpp" />
-    <ClCompile Include="Action\ActionSequence.cpp" />
-    <ClCompile Include="Action\ActionTwo.cpp" />
-    <ClCompile Include="Action\Animation.cpp" />
+    <ClCompile Include="Action\EAction.cpp" />
+    <ClCompile Include="Action\EActionCallback.cpp" />
+    <ClCompile Include="Action\EActionDelay.cpp" />
+    <ClCompile Include="Action\EActionFrames.cpp" />
+    <ClCompile Include="Action\EActionMoveBy.cpp" />
+    <ClCompile Include="Action\EActionMoveTo.cpp" />
+    <ClCompile Include="Action\EActionNeverStop.cpp" />
+    <ClCompile Include="Action\EActionOpacityBy.cpp" />
+    <ClCompile Include="Action\EActionOpacityTo.cpp" />
+    <ClCompile Include="Action\EActionScaleBy.cpp" />
+    <ClCompile Include="Action\EActionScaleTo.cpp" />
+    <ClCompile Include="Action\EActionSequence.cpp" />
+    <ClCompile Include="Action\EActionTwo.cpp" />
+    <ClCompile Include="Action\EAnimation.cpp" />
     <ClCompile Include="Base\EApp.cpp" />
     <ClCompile Include="Base\EObject.cpp" />
     <ClCompile Include="Base\EScene.cpp" />

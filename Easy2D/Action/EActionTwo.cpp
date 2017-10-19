@@ -1,6 +1,6 @@
 #include "..\eactions.h"
 
-e2d::ActionTwo::ActionTwo(EAction * actionFirst, EAction * actionSecond) :
+e2d::EActionTwo::EActionTwo(EAction * actionFirst, EAction * actionSecond) :
 	m_FirstAction(actionFirst),
 	m_SecondAction(actionSecond)
 {
@@ -8,30 +8,30 @@ e2d::ActionTwo::ActionTwo(EAction * actionFirst, EAction * actionSecond) :
 	m_SecondAction->retain();
 }
 
-e2d::ActionTwo::~ActionTwo()
+e2d::EActionTwo::~EActionTwo()
 {
 	SafeRelease(&m_FirstAction);
 	SafeRelease(&m_SecondAction);
 }
 
-e2d::ActionTwo * e2d::ActionTwo::copy() const
+e2d::EActionTwo * e2d::EActionTwo::copy() const
 {
-	return new ActionTwo(m_FirstAction->copy(), m_SecondAction->copy());
+	return new EActionTwo(m_FirstAction->copy(), m_SecondAction->copy());
 }
 
-e2d::ActionTwo * e2d::ActionTwo::reverse(bool actionReverse) const
+e2d::EActionTwo * e2d::EActionTwo::reverse(bool actionReverse) const
 {
 	if (actionReverse)
 	{
-		return new ActionTwo(m_SecondAction->reverse(), m_FirstAction->reverse());
+		return new EActionTwo(m_SecondAction->reverse(), m_FirstAction->reverse());
 	}
 	else
 	{
-		return new ActionTwo(m_SecondAction->copy(), m_FirstAction->copy());
+		return new EActionTwo(m_SecondAction->copy(), m_FirstAction->copy());
 	}
 }
 
-void e2d::ActionTwo::_init()
+void e2d::EActionTwo::_init()
 {
 	EAction::_init();
 	m_FirstAction->m_pTarget = m_pTarget;
@@ -40,7 +40,7 @@ void e2d::ActionTwo::_init()
 	m_FirstAction->_init();
 }
 
-void e2d::ActionTwo::_exec()
+void e2d::EActionTwo::_exec()
 {
 	if (!m_FirstAction->isEnding())
 	{
@@ -61,7 +61,7 @@ void e2d::ActionTwo::_exec()
 	}
 }
 
-void e2d::ActionTwo::_reset()
+void e2d::EActionTwo::_reset()
 {
 	EAction::_reset();
 

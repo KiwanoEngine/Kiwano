@@ -260,6 +260,16 @@ public:
 		EAction * action
 	);
 
+	// ¼ÌÐø¶¯»­
+	virtual void resumeAction(
+		EAction * action
+	);
+
+	// ÔÝÍ£¶¯»­
+	virtual void pauseAction(
+		EAction * action
+	);
+
 	// Í£Ö¹¶¯»­
 	virtual void stopAction(
 		EAction * action
@@ -481,6 +491,14 @@ protected:
 	float	m_fSourcePosX;
 	float	m_fSourcePosY;
 	ETexture * m_pTexture;
+};
+
+
+class ESpriteFrame :
+	public EObject
+{
+protected:
+	ETexture * texture;
 };
 
 
