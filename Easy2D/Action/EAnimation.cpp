@@ -7,10 +7,6 @@ e2d::EAnimation::EAnimation(float duration)
 	m_nTotalDuration = UINT(duration * 1000);
 }
 
-e2d::EAnimation::~EAnimation()
-{
-}
-
 bool e2d::EAnimation::_isEnd() const
 {
 	return m_nDuration >= m_nTotalDuration;

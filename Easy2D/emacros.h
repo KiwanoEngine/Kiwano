@@ -11,12 +11,18 @@
 #define _WIN32_WINNT 0x0700 // Change this to the appropriate value to target other versions of Windows.
 #endif
 
+#ifndef NTDDI_VERSION
+#define NTDDI_VERSION NTDDI_WIN7
+#endif
+
 #ifndef UNICODE
 #define UNICODE
 #endif
 
 // Exclude rarely-used items from Windows headers.
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
 
 // Windows Header Files:
 #include <windows.h>

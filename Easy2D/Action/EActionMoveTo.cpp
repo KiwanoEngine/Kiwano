@@ -6,11 +6,7 @@ e2d::EActionMoveTo::EActionMoveTo(float duration, EPoint pos) :
 	m_EndPos = pos;
 }
 
-e2d::EActionMoveTo::~EActionMoveTo()
-{
-}
-
-e2d::EActionMoveTo * e2d::EActionMoveTo::copy() const
+e2d::EActionMoveTo * e2d::EActionMoveTo::clone() const
 {
 	return new EActionMoveTo(m_nAnimationInterval / 1000.0f, m_EndPos);
 }

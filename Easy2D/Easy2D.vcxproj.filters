@@ -132,6 +132,21 @@
     <ClCompile Include="Action\EAnimation.cpp">
       <Filter>Action</Filter>
     </ClCompile>
+    <ClCompile Include="Action\EActionRotateBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionRotateTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\EFileUtils.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\ERandom.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionTwoAtSameTime.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">

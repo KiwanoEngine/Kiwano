@@ -255,10 +255,13 @@ void e2d::ETimerManager::TimerProc()
 {
 	for (auto t : s_vTimers)
 	{
-		if (GetInterval(t->m_tLast) >= t->m_nInterval)
+		if (t->isRunning())
 		{
-			t->_callOn();
-			t->m_tLast = GetNow();
+			if (GetInterval(t->m_tLast) >= t->m_nInterval)
+			{
+				t->_callOn();
+				t->m_tLast = GetNow();
+			}
 		}
 	}
 }

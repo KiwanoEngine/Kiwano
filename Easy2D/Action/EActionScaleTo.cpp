@@ -7,11 +7,7 @@ e2d::EActionScaleTo::EActionScaleTo(float duration, float scaleX, float scaleY) 
 	m_nEndScaleY = scaleY;
 }
 
-e2d::EActionScaleTo::~EActionScaleTo()
-{
-}
-
-e2d::EActionScaleTo * e2d::EActionScaleTo::copy() const
+e2d::EActionScaleTo * e2d::EActionScaleTo::clone() const
 {
 	return new EActionScaleTo(m_nAnimationInterval / 1000.0f, m_nEndScaleX, m_nEndScaleY);
 }

@@ -7,17 +7,13 @@ e2d::EActionOpacityBy::EActionOpacityBy(float duration, float opacity) :
 	m_nVariation = opacity;
 }
 
-e2d::EActionOpacityBy::~EActionOpacityBy()
-{
-}
-
 void e2d::EActionOpacityBy::_init()
 {
 	EAnimation::_init();
 	m_nBeginVal = m_pTarget->getOpacity();
 }
 
-void e2d::EActionOpacityBy::_exec()
+void e2d::EActionOpacityBy::_callOn()
 {
 	while (EAnimation::_isDelayEnough())
 	{
@@ -39,7 +35,7 @@ void e2d::EActionOpacityBy::_reset()
 	EAnimation::_reset();
 }
 
-e2d::EActionOpacityBy * e2d::EActionOpacityBy::copy() const
+e2d::EActionOpacityBy * e2d::EActionOpacityBy::clone() const
 {
 	return new EActionOpacityBy(m_nAnimationInterval / 1000.0f, m_nVariation);
 }

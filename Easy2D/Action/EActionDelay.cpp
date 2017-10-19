@@ -6,11 +6,7 @@ e2d::EActionDelay::EActionDelay(float duration)
 	setInterval(LONGLONG(duration * 1000));
 }
 
-e2d::EActionDelay::~EActionDelay()
-{
-}
-
-e2d::EActionDelay * e2d::EActionDelay::copy() const
+e2d::EActionDelay * e2d::EActionDelay::clone() const
 {
 	return new EActionDelay(m_nAnimationInterval / 1000.0f);
 }
@@ -22,7 +18,7 @@ void e2d::EActionDelay::_init()
 	m_nLast = GetNow();
 }
 
-void e2d::EActionDelay::_exec()
+void e2d::EActionDelay::_callOn()
 {
 	// 判断时间间隔是否足够
 	if (GetInterval(m_nLast) > m_nAnimationInterval)

@@ -1,7 +1,7 @@
 #include "..\eactions.h"
 
 e2d::EAction::EAction() :
-	m_bRunning(true),
+	m_bRunning(false),
 	m_bWaiting(false),
 	m_bEnding(false),
 	m_bInit(false),
@@ -21,7 +21,7 @@ bool e2d::EAction::isRunning()
 	return m_bRunning && !m_bWaiting;
 }
 
-bool e2d::EAction::isEnding()
+bool e2d::EAction::_isEnding()
 {
 	return m_bEnding;
 }
@@ -45,12 +45,12 @@ void e2d::EAction::stop()
 {
 	m_bEnding = true;
 }
-void e2d::EAction::wait()
+void e2d::EAction::_wait()
 {
 	m_bWaiting = true;
 }
 
-void e2d::EAction::notify()
+void e2d::EAction::_notify()
 {
 	m_bWaiting = false;
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "ebase.h"
 #include <chrono>
+#include <random>
 
 namespace e2d
 {
@@ -230,7 +231,7 @@ public:
 	// 绑定动作到节点
 	static void bindAction(
 		EAction * action,
-		ENode * pParentNode
+		ENode * pTargetNode
 	);
 
 	// 启动绑定在场景子节点上的所有动作
@@ -250,17 +251,17 @@ public:
 
 	// 启动绑定在节点上的所有动作
 	static void startAllActionsBindedWith(
-		ENode * pParentNode
+		ENode * pTargetNode
 	);
 
 	// 停止绑定在节点上的所有动作
 	static void stopAllActionsBindedWith(
-		ENode * pParentNode
+		ENode * pTargetNode
 	);
 
 	// 清空绑定在节点上的所有动作
 	static void clearAllActionsBindedWith(
-		ENode * pParentNode
+		ENode * pTargetNode
 	);
 
 	// 启动所有动作
@@ -285,16 +286,84 @@ private:
 
 	// 挂起绑定在节点上的所有动作
 	static void _waitAllActionsBindedWith(
-		ENode * pParentNode
+		ENode * pTargetNode
 	);
 
 	// 重启绑定在节点上的所有动作
 	static void _notifyAllActionsBindedWith(
-		ENode * pParentNode
+		ENode * pTargetNode
 	);
 
 	// 动作执行程序
 	static void ActionProc();
 };
+
+
+class EFileUtils
+{
+public:
+	// 获取系统的 AppData\Local 路径
+	static EString getLocalAppDataPath();
+
+	// 获取默认的保存路径
+	static EString getDefaultSavePath();
+
+	// 保存 int 型的值
+	static void saveInt(LPCTSTR key, int value);
+
+	// 保存 double 型的值
+	static void saveDouble(LPCTSTR key, double value);
+
+	// 保存 字符串 型的值（不要在 Unicode 字符集下保存中文字符）
+	static void saveString(LPCTSTR key, EString value);
+
+	// 获取 int 型的值（若不存在则返回 default 参数的值）
+	static int getInt(LPCTSTR key, int default);
+
+	// 获取 double 型的值（若不存在则返回 default 参数的值）
+	static double getDouble(LPCTSTR key, double default);
+
+	// 获取 字符串 型的值（若不存在则返回 default 参数的值）
+	static EString geTString(LPCTSTR key, EString default);
+
+	// 得到文件扩展名（小写）
+	static EString getFileExtension(const EString & filePath);
+
+	/**
+	*  打开保存文件对话框，得到有效保存路径返回 true
+	*  参数：返回文件路径的字符串，窗口标题，设置扩展名过滤，设置默认扩展名
+	*/
+	static EString getSaveFilePath(LPCTSTR title = L"保存到", LPCTSTR defExt = NULL);
+};
+
+
+class ERandom
+{
+public:
+	// 取得整型范围内的一个随机数
+	template<typename T>
+	static T randomInt(T min, T max)
+	{
+		std::uniform_int_distribution<T> dist(min, max);
+		return dist(getEngine());
+	}
+
+	// 取得浮点数类型范围内的一个随机数
+	template<typename T>
+	static T randomReal(T min, T max)
+	{
+		std::uniform_real_distribution<T> dist(min, max);
+		return dist(getEngine());
+	}
+
+	// 获取随机数产生器
+	static std::default_random_engine &getEngine();
+};
+
+template<typename T>
+inline T random(T min, T max) { return e2d::ERandom::randomInt(min, max); }
+inline float random(float min, float max) { return e2d::ERandom::randomReal(min, max); }
+inline double random(double min, double max) { return e2d::ERandom::randomReal(min, max); }
+inline long double random(long double min, long double max) { return e2d::ERandom::randomReal(min, max); }
 
 }

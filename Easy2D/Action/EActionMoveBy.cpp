@@ -7,17 +7,13 @@ e2d::EActionMoveBy::EActionMoveBy(float duration, EVec vector) :
 	m_MoveVector = vector;
 }
 
-e2d::EActionMoveBy::~EActionMoveBy()
-{
-}
-
 void e2d::EActionMoveBy::_init()
 {
 	EAnimation::_init();
 	m_BeginPos = m_pTarget->getPos();
 }
 
-void e2d::EActionMoveBy::_exec()
+void e2d::EActionMoveBy::_callOn()
 {
 	while (EAnimation::_isDelayEnough())
 	{
@@ -42,7 +38,7 @@ void e2d::EActionMoveBy::_reset()
 	EAnimation::_reset();
 }
 
-e2d::EActionMoveBy * e2d::EActionMoveBy::copy() const
+e2d::EActionMoveBy * e2d::EActionMoveBy::clone() const
 {
 	return new EActionMoveBy(m_nAnimationInterval / 1000.0f, m_MoveVector);
 }

@@ -1,59 +1,59 @@
 #include "..\eactions.h"
 
 e2d::EActionTwo::EActionTwo(EAction * actionFirst, EAction * actionSecond) :
-	m_FirstAction(actionFirst),
-	m_SecondAction(actionSecond)
+	m_pFirstAction(actionFirst),
+	m_pSecondAction(actionSecond)
 {
-	m_FirstAction->retain();
-	m_SecondAction->retain();
+	m_pFirstAction->retain();
+	m_pSecondAction->retain();
 }
 
 e2d::EActionTwo::~EActionTwo()
 {
-	SafeRelease(&m_FirstAction);
-	SafeRelease(&m_SecondAction);
+	SafeRelease(&m_pFirstAction);
+	SafeRelease(&m_pSecondAction);
 }
 
-e2d::EActionTwo * e2d::EActionTwo::copy() const
+e2d::EActionTwo * e2d::EActionTwo::clone() const
 {
-	return new EActionTwo(m_FirstAction->copy(), m_SecondAction->copy());
+	return new EActionTwo(m_pFirstAction->clone(), m_pSecondAction->clone());
 }
 
 e2d::EActionTwo * e2d::EActionTwo::reverse(bool actionReverse) const
 {
 	if (actionReverse)
 	{
-		return new EActionTwo(m_SecondAction->reverse(), m_FirstAction->reverse());
+		return new EActionTwo(m_pSecondAction->reverse(), m_pFirstAction->reverse());
 	}
 	else
 	{
-		return new EActionTwo(m_SecondAction->copy(), m_FirstAction->copy());
+		return new EActionTwo(m_pSecondAction->clone(), m_pFirstAction->clone());
 	}
 }
 
 void e2d::EActionTwo::_init()
 {
 	EAction::_init();
-	m_FirstAction->m_pTarget = m_pTarget;
-	m_SecondAction->m_pTarget = m_pTarget;
+	m_pFirstAction->m_pTarget = m_pTarget;
+	m_pSecondAction->m_pTarget = m_pTarget;
 
-	m_FirstAction->_init();
+	m_pFirstAction->_init();
 }
 
-void e2d::EActionTwo::_exec()
+void e2d::EActionTwo::_callOn()
 {
-	if (!m_FirstAction->isEnding())
+	if (!m_pFirstAction->_isEnding())
 	{
-		m_FirstAction->_exec();
-		if (m_FirstAction->isEnding())
+		m_pFirstAction->_callOn();
+		if (m_pFirstAction->_isEnding())
 		{
 			// 返回 true 表示第一个动作已经结束
-			m_SecondAction->_init();
+			m_pSecondAction->_init();
 		}
 	}
-	else if (!m_SecondAction->isEnding())
+	else if (!m_pSecondAction->_isEnding())
 	{
-		m_SecondAction->_exec();
+		m_pSecondAction->_callOn();
 	}
 	else
 	{
@@ -65,6 +65,6 @@ void e2d::EActionTwo::_reset()
 {
 	EAction::_reset();
 
-	m_FirstAction->_reset();
-	m_SecondAction->_reset();
+	m_pFirstAction->_reset();
+	m_pSecondAction->_reset();
 }

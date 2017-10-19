@@ -30,7 +30,7 @@ void e2d::EActionFrames::_init()
 	m_nLast = GetNow();
 }
 
-void e2d::EActionFrames::_exec()
+void e2d::EActionFrames::_callOn()
 {
 	// 判断时间间隔是否足够
 	while (GetInterval(m_nLast) > m_nAnimationInterval)
@@ -65,7 +65,7 @@ void e2d::EActionFrames::addFrame(ESpriteFrame * frame)
 	}
 }
 
-e2d::EActionFrames * e2d::EActionFrames::copy() const
+e2d::EActionFrames * e2d::EActionFrames::clone() const
 {
 	auto a = new EActionFrames(this->m_nAnimationInterval);
 	for (auto f : m_vFrames)
@@ -77,7 +77,7 @@ e2d::EActionFrames * e2d::EActionFrames::copy() const
 
 e2d::EActionFrames * e2d::EActionFrames::reverse() const
 {
-	auto a = this->copy();
+	auto a = this->clone();
 	a->m_vFrames.reserve(m_vFrames.size());
 	return a;
 }

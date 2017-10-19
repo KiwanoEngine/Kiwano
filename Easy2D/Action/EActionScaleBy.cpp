@@ -8,10 +8,6 @@ e2d::EActionScaleBy::EActionScaleBy(float duration, float scaleX, float scaleY) 
 	m_nVariationY = scaleY;
 }
 
-e2d::EActionScaleBy::~EActionScaleBy()
-{
-}
-
 void e2d::EActionScaleBy::_init()
 {
 	EAnimation::_init();
@@ -19,7 +15,7 @@ void e2d::EActionScaleBy::_init()
 	m_nBeginScaleY = m_pTarget->getScaleY();
 }
 
-void e2d::EActionScaleBy::_exec()
+void e2d::EActionScaleBy::_callOn()
 {
 	while (EAnimation::_isDelayEnough())
 	{
@@ -41,7 +37,7 @@ void e2d::EActionScaleBy::_reset()
 	EAnimation::_reset();
 }
 
-e2d::EActionScaleBy * e2d::EActionScaleBy::copy() const
+e2d::EActionScaleBy * e2d::EActionScaleBy::clone() const
 {
 	return new EActionScaleBy(m_nAnimationInterval / 1000.0f, m_nVariationX, m_nVariationY);
 }

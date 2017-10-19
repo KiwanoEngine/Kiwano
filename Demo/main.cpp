@@ -24,6 +24,8 @@ int WINAPI WinMain(
 		text->setColor(EColor::WHITE);
 		scene->add(text);
 
+		text->runAction(new EActionLoop(new EActionTwo(new EActionFadeOut(1), new EActionFadeIn(1))));
+
 		app.enterScene(scene);
 		app.run();
 	}

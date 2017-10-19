@@ -41,11 +41,11 @@ void e2d::EActionSequence::_init()
 	m_vActions[0]->_init();
 }
 
-void e2d::EActionSequence::_exec()
+void e2d::EActionSequence::_callOn()
 {
-	m_vActions[m_nActionIndex]->_exec();
+	m_vActions[m_nActionIndex]->_callOn();
 
-	if (m_vActions[m_nActionIndex]->isEnding())
+	if (m_vActions[m_nActionIndex]->_isEnding())
 	{
 		m_nActionIndex++;
 		if (m_nActionIndex == m_vActions.size())
@@ -75,12 +75,12 @@ void e2d::EActionSequence::addAction(EAction * action)
 	action->retain();
 }
 
-e2d::EActionSequence * e2d::EActionSequence::copy() const
+e2d::EActionSequence * e2d::EActionSequence::clone() const
 {
 	auto a = new EActionSequence();
 	for (auto action : m_vActions)
 	{
-		a->addAction(action->copy());
+		a->addAction(action->clone());
 	}
 	return a;
 }
@@ -96,7 +96,7 @@ e2d::EActionSequence * e2d::EActionSequence::reverse(bool actionReverse) const
 		}
 		else
 		{
-			a->addAction(action->copy());
+			a->addAction(action->clone());
 		}
 	}
 	// 将动作顺序逆序排列

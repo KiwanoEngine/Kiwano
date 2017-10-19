@@ -6,17 +6,18 @@ namespace e2d
 {
 
 class EActionTwo;
-class EActionNeverStop;
+class EActionLoop;
 class EActionSequence;
+class EActionTwoAtSameTime;
 
 class EAction :
 	public EObject
 {
-	friend ENode;
 	friend EActionManager;
 	friend EActionTwo;
-	friend EActionNeverStop;
+	friend EActionLoop;
 	friend EActionSequence;
+	friend EActionTwoAtSameTime;
 
 public:
 	EAction();
@@ -25,9 +26,6 @@ public:
 
 	// 获取动作运行状态
 	virtual bool isRunning();
-
-	// 获取动作结束状态
-	virtual bool isEnding();
 
 	// 继续动作
 	virtual void start();
@@ -41,16 +39,17 @@ public:
 	// 停止动作
 	virtual void stop();
 
+	// 获取一个新的拷贝动作
+	virtual EAction * clone() const = 0;
+
+	// 获取一个新的逆向动作
+	virtual EAction * reverse() const;
+
 	// 设置动作每一帧的时间间隔
 	virtual void setInterval(
 		LONGLONG milliSeconds
 	);
 
-	// 获取一个新的拷贝动作
-	virtual EAction * copy() const = 0;
-
-	// 获取一个新的逆向动作
-	virtual EAction * reverse() const;
 	// 获取执行该动作的目标
 	virtual ENode * getTarget();
 
@@ -59,16 +58,19 @@ protected:
 	virtual void _init();
 
 	// 执行动作
-	virtual void _exec() = 0;
+	virtual void _callOn() = 0;
+
+	// 获取动作结束状态
+	virtual bool _isEnding();
 
 	// 重置动作
 	virtual void _reset();
 
 	// 进入等待状态
-	virtual void wait();
+	virtual void _wait();
 
 	// 唤醒
-	virtual void notify();
+	virtual void _notify();
 
 protected:
 	bool		m_bRunning;
@@ -86,18 +88,27 @@ class EAnimation :
 	public EAction
 {
 public:
-	EAnimation(float duration);
-	virtual ~EAnimation();
+	// 创建时长动画
+	EAnimation(
+		float duration
+	);
+
+protected:
+	// 判断动作是否结束
+	bool _isEnd() const;
+
+	// 判断延时是否足够
+	bool _isDelayEnough();
+
+	// 初始化动画
+	virtual void _init() override;
+
+	// 重置动画
+	virtual void _reset() override;
 
 protected:
 	LONGLONG m_nDuration;
 	LONGLONG m_nTotalDuration;
-
-protected:
-	bool _isEnd() const;
-	bool _isDelayEnough();
-	virtual void _init() override;
-	virtual void _reset() override;
 };
 
 
@@ -105,20 +116,31 @@ class EActionMoveBy :
 	public EAnimation
 {
 public:
-	EActionMoveBy(float duration, EVec vector);
-	virtual ~EActionMoveBy();
+	// 创建相对位移动画
+	EActionMoveBy(
+		float duration, /* 动画持续时长 */
+		EVec vector		/* 位移向量 */
+	);
 
-	virtual EActionMoveBy * copy() const override;
+	// 获取该动画的拷贝对象
+	virtual EActionMoveBy * clone() const override;
+
+	// 获取该动画的逆动画
 	virtual EActionMoveBy * reverse() const override;
+
+protected:
+	// 初始化动画
+	virtual void _init() override;
+
+	// 执行动画
+	virtual void _callOn() override;
+
+	// 重置动画
+	virtual void _reset() override;
 
 protected:
 	EPoint	m_BeginPos;
 	EVec	m_MoveVector;
-
-protected:
-	virtual void _init() override;
-	virtual void _exec() override;
-	virtual void _reset() override;
 };
 
 
@@ -126,17 +148,24 @@ class EActionMoveTo :
 	public EActionMoveBy
 {
 public:
-	EActionMoveTo(float duration, EPoint pos);
-	virtual ~EActionMoveTo();
+	// 创建位移动画
+	EActionMoveTo(
+		float duration, /* 动画持续时长 */
+		EPoint pos		/* 位移至目标点的坐标 */
+	);
 
-	virtual EActionMoveTo * copy() const override;
+	// 获取该动画的拷贝对象
+	virtual EActionMoveTo * clone() const override;
+
+protected:
+	// 初始化动画
+	virtual void _init() override;
+
+	// 重置动画
+	virtual void _reset() override;
 
 protected:
 	EPoint m_EndPos;
-
-protected:
-	virtual void _init() override;
-	virtual void _reset() override;
 };
 
 
@@ -144,22 +173,34 @@ class EActionScaleBy :
 	public EAnimation
 {
 public:
-	EActionScaleBy(float duration, float scaleX, float scaleY);
-	virtual ~EActionScaleBy();
+	// 创建相对缩放动画
+	EActionScaleBy(
+		float duration, /* 动画持续时长 */
+		float scaleX,	/* 横向缩放比例变化 */
+		float scaleY	/* 纵向缩放比例变化 */
+	);
 
-	virtual EActionScaleBy * copy() const override;
+	// 获取该动画的拷贝对象
+	virtual EActionScaleBy * clone() const override;
+
+	// 获取该动画的逆动画
 	virtual EActionScaleBy * reverse() const override;
+
+protected:
+	// 初始化动画
+	virtual void _init() override;
+
+	// 执行动画
+	virtual void _callOn() override;
+
+	// 重置动画
+	virtual void _reset() override;
 
 protected:
 	float	m_nBeginScaleX;
 	float	m_nBeginScaleY;
 	float	m_nVariationX;
 	float	m_nVariationY;
-
-protected:
-	virtual void _init() override;
-	virtual void _exec() override;
-	virtual void _reset() override;
 };
 
 
@@ -167,18 +208,26 @@ class EActionScaleTo :
 	public EActionScaleBy
 {
 public:
-	EActionScaleTo(float duration, float scaleX, float scaleY);
-	virtual ~EActionScaleTo();
+	// 创建缩放动画
+	EActionScaleTo(
+		float duration, /* 动画持续时长 */
+		float scaleX,	/* 横向缩放至目标比例 */
+		float scaleY	/* 纵向缩放至目标比例 */
+	);
 
-	virtual EActionScaleTo * copy() const override;
+	// 获取该动画的拷贝对象
+	virtual EActionScaleTo * clone() const override;
+
+protected:
+	// 初始化动画
+	virtual void _init() override;
+
+	// 重置动画
+	virtual void _reset() override;
 
 protected:
 	float	m_nEndScaleX;
 	float	m_nEndScaleY;
-
-protected:
-	virtual void _init() override;
-	virtual void _reset() override;
 };
 
 
@@ -186,20 +235,31 @@ class EActionOpacityBy :
 	public EAnimation
 {
 public:
-	EActionOpacityBy(float duration, float opacity);
-	virtual ~EActionOpacityBy();
+	// 创建透明度相对渐变动画
+	EActionOpacityBy(
+		float duration, /* 动画持续时长 */
+		float opacity	/* 透明度相对变化值 */
+	);
 
-	virtual EActionOpacityBy * copy() const override;
+	// 获取该动画的拷贝对象
+	virtual EActionOpacityBy * clone() const override;
+
+	// 获取该动画的逆动画
 	virtual EActionOpacityBy * reverse() const override;
+
+protected:
+	// 初始化动画
+	virtual void _init() override;
+
+	// 执行动画
+	virtual void _callOn() override;
+
+	// 重置动画
+	virtual void _reset() override;
 
 protected:
 	float m_nBeginVal;
 	float m_nVariation;
-
-protected:
-	virtual void _init() override;
-	virtual void _exec() override;
-	virtual void _reset() override;
 };
 
 
@@ -207,33 +267,103 @@ class EActionOpacityTo :
 	public EActionOpacityBy
 {
 public:
-	EActionOpacityTo(float duration, float opacity);
-	virtual ~EActionOpacityTo();
+	// 创建透明度渐变动画
+	EActionOpacityTo(
+		float duration,	/* 动画持续时长 */
+		float opacity	/* 透明度渐变至目标值 */
+	);
 
-	virtual EActionOpacityTo * copy() const override;
+	// 获取该动画的拷贝对象
+	virtual EActionOpacityTo * clone() const override;
+
+protected:
+	// 初始化动画
+	virtual void _init() override;
+
+	// 重置动画
+	virtual void _reset() override;
 
 protected:
 	float m_nEndVal;
+};
+
+
+class EActionFadeIn :
+	public EActionOpacityTo
+{
+public:
+	// 创建淡入动画
+	EActionFadeIn(
+		float duration	/* 动画持续时长 */
+	) : EActionOpacityTo(duration, 1) {}
+};
+
+
+class EActionFadeOut :
+	public EActionOpacityTo
+{
+public:
+	// 创建淡出动画
+	EActionFadeOut(
+		float duration	/* 动画持续时长 */
+	) : EActionOpacityTo(duration, 0) {}
+};
+
+
+class EActionRotateBy :
+	public EAnimation
+{
+public:
+	// 创建相对旋转动画
+	EActionRotateBy(
+		float duration,	/* 动画持续时长 */
+		float rotation	/* 旋转角度变化值 */
+	);
+
+	// 获取该动画的拷贝对象
+	virtual EActionRotateBy * clone() const override;
+
+	// 获取该动画的逆动画
+	virtual EActionRotateBy * reverse() const override;
 
 protected:
+	// 初始化动画
 	virtual void _init() override;
+
+	// 执行动画
+	virtual void _callOn() override;
+
+	// 重置动画
 	virtual void _reset() override;
+
+protected:
+	float m_nBeginVal;
+	float m_nVariation;
 };
 
 
-class ActionFadeIn :
-	public EActionOpacityTo
+class EActionRotateTo :
+	public EActionRotateBy
 {
 public:
-	ActionFadeIn(float duration) : EActionOpacityTo(duration, 1) {}
-};
+	// 创建旋转动画
+	EActionRotateTo(
+		float duration,	/* 动画持续时长 */
+		float rotation	/* 旋转角度至目标值 */
+	);
 
+	// 获取该动画的拷贝对象
+	virtual EActionRotateTo * clone() const override;
 
-class ActionFadeOut :
-	public EActionOpacityTo
-{
-public:
-	ActionFadeOut(float duration) : EActionOpacityTo(duration, 0) {}
+protected:
+	// 初始化动画
+	virtual void _init() override;
+
+	// 重置动画
+	virtual void _reset() override;
+
+protected:
+	float m_nEndVal;
 };
 
 
@@ -241,20 +371,35 @@ class EActionTwo :
 	public EAction
 {
 public:
-	EActionTwo(EAction * actionFirst, EAction * actionSecond);
+	// 创建两个动作的连续动作
+	EActionTwo(
+		EAction * actionFirst,	/* 第一个动作 */
+		EAction * actionSecond	/* 第二个动作 */
+	);
+
 	virtual ~EActionTwo();
 
-	virtual EActionTwo * copy() const override;
-	virtual EActionTwo * reverse(bool actionReverse = true) const;
+	// 获取该动作的拷贝对象
+	virtual EActionTwo * clone() const override;
+
+	// 获取该动作的逆动作
+	virtual EActionTwo * reverse(
+		bool actionReverse = true	/* 子动作是否执行逆动作 */
+	) const;
 
 protected:
-	EAction *	m_FirstAction;
-	EAction *	m_SecondAction;
-
-protected:
+	// 初始化动作
 	virtual void _init() override;
-	virtual void _exec() override;
+
+	// 执行动作
+	virtual void _callOn() override;
+
+	// 重置动作
 	virtual void _reset() override;
+
+protected:
+	EAction *	m_pFirstAction;
+	EAction *	m_pSecondAction;
 };
 
 
@@ -262,22 +407,44 @@ class EActionSequence :
 	public EAction
 {
 public:
+	// 创建顺序动作
 	EActionSequence();
-	EActionSequence(int number, EAction * action1, ...);
+
+	// 创建顺序动作
+	EActionSequence(
+		int number,			/* 顺序动作数量 */
+		EAction * action1,	/* 第一个动作 */
+		...
+	);
+
 	virtual ~EActionSequence();
 
-	void addAction(EAction * action);
-	virtual EActionSequence * copy() const override;
-	virtual EActionSequence * reverse(bool actionReverse = true) const;
+	// 向顺序动作中添加动作
+	void addAction(
+		EAction * action	/* 将动作添加至顺序动作尾部 */
+	);
+
+	// 获取该动作的拷贝对象
+	virtual EActionSequence * clone() const override;
+
+	// 获取该动作的逆动作
+	virtual EActionSequence * reverse(
+		bool actionReverse = true	/* 子动作是否执行逆动作 */
+	) const;
+
+protected:
+	// 初始化动作
+	virtual void _init() override;
+
+	// 执行动作
+	virtual void _callOn() override;
+
+	// 重置动作
+	virtual void _reset() override;
 
 protected:
 	UINT					m_nActionIndex;
 	std::vector<EAction*>	m_vActions;
-
-protected:
-	virtual void _init() override;
-	virtual void _exec() override;
-	virtual void _reset() override;
 };
 
 
@@ -285,34 +452,88 @@ class EActionDelay :
 	public EAction
 {
 public:
-	EActionDelay(float duration);
-	virtual ~EActionDelay();
+	// 创建延时动作
+	EActionDelay(
+		float duration	/* 延迟时长（秒） */
+	);
 
-	virtual EActionDelay * copy() const override;
+	// 获取该动作的拷贝对象
+	virtual EActionDelay * clone() const override;
 
 protected:
+	// 初始化动作
 	virtual void _init() override;
-	virtual void _exec() override;
+
+	// 执行动作
+	virtual void _callOn() override;
+
+	// 重置动作
 	virtual void _reset() override;
 };
 
 
-class EActionNeverStop :
+class EActionTwoAtSameTime :
 	public EAction
 {
 public:
-	EActionNeverStop(EAction * action);
-	virtual ~EActionNeverStop();
+	// 创建两个动作同时执行的动作
+	EActionTwoAtSameTime(
+		EAction * actionFirst,	/* 第一个动作 */
+		EAction * actionSecond	/* 第二个动作 */
+	);
 
-	virtual EActionNeverStop * copy() const override;
+	virtual ~EActionTwoAtSameTime();
+
+	// 获取该动作的拷贝对象
+	virtual EActionTwoAtSameTime * clone() const override;
+
+	// 获取该动作的逆动作
+	virtual EActionTwoAtSameTime * reverse(
+		bool actionReverse = true	/* 子动作是否执行逆动作 */
+	) const;
+
+protected:
+	// 初始化动作
+	virtual void _init() override;
+
+	// 执行动作
+	virtual void _callOn() override;
+
+	// 重置动作
+	virtual void _reset() override;
+
+protected:
+	EAction *	m_pFirstAction;
+	EAction *	m_pSecondAction;
+};
+
+
+class EActionLoop :
+	public EAction
+{
+public:
+	// 创建循环动作
+	EActionLoop(
+		EAction * action	/* 执行循环的动作 */
+	);
+
+	virtual ~EActionLoop();
+
+	// 获取该动作的拷贝对象
+	virtual EActionLoop * clone() const override;
+
+protected:
+	// 初始化动作
+	virtual void _init() override;
+
+	// 执行动作
+	virtual void _callOn() override;
+
+	// 重置动作
+	virtual void _reset() override;
 
 protected:
 	EAction * m_Action;
-
-protected:
-	virtual void _init() override;
-	virtual void _exec() override;
-	virtual void _reset() override;
 };
 
 
@@ -320,22 +541,40 @@ class EActionFrames :
 	public EAction
 {
 public:
+	// 创建帧动画
 	EActionFrames();
-	EActionFrames(LONGLONG frameDelay);
-	~EActionFrames();
 
-	void addFrame(ESpriteFrame * frame);
-	virtual EActionFrames * copy() const override;
+	// 创建特定帧间隔的帧动画
+	EActionFrames(
+		LONGLONG frameDelay	/* 帧间隔（毫秒） */
+	);
+
+	virtual ~EActionFrames();
+
+	// 添加帧
+	void addFrame(
+		ESpriteFrame * frame /* 添加帧 */
+	);
+
+	// 获取该动画的拷贝对象
+	virtual EActionFrames * clone() const override;
+
+	// 获取该动画的逆动画
 	virtual EActionFrames * reverse() const override;
+
+protected:
+	// 初始化动作
+	virtual void _init() override;
+
+	// 执行动作
+	virtual void _callOn() override;
+
+	// 重置动作
+	virtual void _reset() override;
 
 protected:
 	UINT m_nFrameIndex;
 	EVector<ESpriteFrame*> m_vFrames;
-
-protected:
-	virtual void _init() override;
-	virtual void _exec() override;
-	virtual void _reset() override;
 };
 
 
@@ -343,18 +582,26 @@ class EActionCallback :
 	public EAction
 {
 public:
-	EActionCallback(const std::function<void()>& callback);
-	~EActionCallback();
+	// 创建执行回调函数的动作
+	EActionCallback(
+		const std::function<void()> & callback /* 回调函数 */
+	);
 
-	virtual EActionCallback * copy() const override;
+	// 获取该动作的拷贝对象
+	virtual EActionCallback * clone() const override;
+
+protected:
+	// 初始化动作
+	virtual void _init() override;
+
+	// 执行动作
+	virtual void _callOn() override;
+
+	// 重置动作
+	virtual void _reset() override;
 
 protected:
 	std::function<void()> m_Callback;
-
-protected:
-	virtual void _init() override;
-	virtual void _exec() override;
-	virtual void _reset() override;
 };
 
 }

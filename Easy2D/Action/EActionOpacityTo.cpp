@@ -7,11 +7,7 @@ e2d::EActionOpacityTo::EActionOpacityTo(float duration, float opacity) :
 	m_nEndVal = opacity;
 }
 
-e2d::EActionOpacityTo::~EActionOpacityTo()
-{
-}
-
-e2d::EActionOpacityTo * e2d::EActionOpacityTo::copy() const
+e2d::EActionOpacityTo * e2d::EActionOpacityTo::clone() const
 {
 	return new EActionOpacityTo(m_nAnimationInterval / 1000.0f, m_nEndVal);
 }

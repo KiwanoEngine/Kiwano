@@ -201,10 +201,13 @@
     <ClCompile Include="Action\EActionNeverStop.cpp" />
     <ClCompile Include="Action\EActionOpacityBy.cpp" />
     <ClCompile Include="Action\EActionOpacityTo.cpp" />
+    <ClCompile Include="Action\EActionRotateBy.cpp" />
+    <ClCompile Include="Action\EActionRotateTo.cpp" />
     <ClCompile Include="Action\EActionScaleBy.cpp" />
     <ClCompile Include="Action\EActionScaleTo.cpp" />
     <ClCompile Include="Action\EActionSequence.cpp" />
     <ClCompile Include="Action\EActionTwo.cpp" />
+    <ClCompile Include="Action\EActionTwoAtSameTime.cpp" />
     <ClCompile Include="Action\EAnimation.cpp" />
     <ClCompile Include="Base\EApp.cpp" />
     <ClCompile Include="Base\EObject.cpp" />
@@ -225,7 +228,9 @@
     <ClCompile Include="Node\EFont.cpp" />
     <ClCompile Include="Node\ETexture.cpp" />
     <ClCompile Include="Tool\EActionManager.cpp" />
+    <ClCompile Include="Tool\EFileUtils.cpp" />
     <ClCompile Include="Tool\EObjectManager.cpp" />
+    <ClCompile Include="Tool\ERandom.cpp" />
     <ClCompile Include="Tool\ETimerManager.cpp" />
     <ClCompile Include="Win\winbase.cpp" />
   </ItemGroup>
