@@ -2,7 +2,7 @@
 
 
 e2d::EActionScaleBy::EActionScaleBy(float duration, float scaleX, float scaleY) :
-	EAnimation(duration)
+	EActionGradual(duration)
 {
 	m_nVariationX = scaleX;
 	m_nVariationY = scaleY;
@@ -10,14 +10,22 @@ e2d::EActionScaleBy::EActionScaleBy(float duration, float scaleX, float scaleY) 
 
 void e2d::EActionScaleBy::_init()
 {
-	EAnimation::_init();
-	m_nBeginScaleX = m_pTarget->getScaleX();
-	m_nBeginScaleY = m_pTarget->getScaleY();
+	EActionGradual::_init();
+	if (m_pTarget)
+	{
+		m_nBeginScaleX = m_pTarget->getScaleX();
+		m_nBeginScaleY = m_pTarget->getScaleY();
+	}
 }
 
 void e2d::EActionScaleBy::_callOn()
 {
-	while (EAnimation::_isDelayEnough())
+	if (m_pTarget == nullptr)
+	{
+		this->stop();
+		return;
+	}
+	while (EActionGradual::_isDelayEnough())
 	{
 		// º∆À„“∆∂ØŒª÷√
 		float scale = static_cast<float>(m_nDuration) / m_nTotalDuration;
@@ -34,7 +42,7 @@ void e2d::EActionScaleBy::_callOn()
 
 void e2d::EActionScaleBy::_reset()
 {
-	EAnimation::_reset();
+	EActionGradual::_reset();
 }
 
 e2d::EActionScaleBy * e2d::EActionScaleBy::clone() const

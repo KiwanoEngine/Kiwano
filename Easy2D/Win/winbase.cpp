@@ -49,7 +49,7 @@ ID2D1HwndRenderTarget * &GetRenderTarget()
 
 		// Create a Direct2D render target.
 		HRESULT hr;
-		hr = s_pDirect2dFactory->CreateHwndRenderTarget(
+		hr = GetFactory()->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(s_HWnd, size),
 			&s_pRenderTarget
@@ -79,7 +79,12 @@ ID2D1SolidColorBrush * &GetSolidColorBrush()
 {
 	if (!s_pSolidBrush)
 	{
-		s_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &s_pSolidBrush);
+		HRESULT hr;
+		hr = GetRenderTarget()->CreateSolidColorBrush(
+			D2D1::ColorF(D2D1::ColorF::White), 
+			&s_pSolidBrush
+		);
+		ASSERT(SUCCEEDED(hr), "Create Solid Color Brush Failed!");
 	}
 	return s_pSolidBrush;
 }

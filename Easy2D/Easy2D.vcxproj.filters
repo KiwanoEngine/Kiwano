@@ -13,14 +13,17 @@
     <Filter Include="Base">
       <UniqueIdentifier>{261633d3-3814-40c7-bd6d-201ede6c6ade}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Msg">
-      <UniqueIdentifier>{cc102a62-b34d-493c-be3c-f3e5dfbe4cf4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Msg\Listener">
-      <UniqueIdentifier>{b9bb1728-5106-4574-998e-8564b49cb4a1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Action">
       <UniqueIdentifier>{50293f38-87fe-4dde-b938-cf1b7a2921f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Transition">
+      <UniqueIdentifier>{563b19f2-4c5e-4362-983a-94d2ae724550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{9031e36b-fa85-4b4e-8e80-657c7e68f283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{b9bb1728-5106-4574-998e-8564b49cb4a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,47 +39,14 @@
     <ClCompile Include="Node\ENode.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="Tool\EObjectManager.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="Base\EScene.cpp">
       <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\EMsgManager.cpp">
-      <Filter>Msg</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\Listener\EListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\Listener\EMouseClickListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\Listener\EMouseListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Tool\ETimerManager.cpp">
-      <Filter>Tool</Filter>
     </ClCompile>
     <ClCompile Include="Node\ESprite.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="Msg\Listener\EMousePressListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\Listener\EMouseDoubleClickListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\Listener\EMouseDragListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
     <ClCompile Include="ETimer.cpp">
       <Filter>Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\Listener\EKeyboardListener.cpp">
-      <Filter>Msg\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg\Listener\EKeyboardPressListener.cpp">
-      <Filter>Msg\Listener</Filter>
     </ClCompile>
     <ClCompile Include="Node\EText.cpp">
       <Filter>Node</Filter>
@@ -87,9 +57,6 @@
     <ClCompile Include="Node\ETexture.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="Tool\EActionManager.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="Action\EAction.cpp">
       <Filter>Action</Filter>
     </ClCompile>
@@ -99,16 +66,10 @@
     <ClCompile Include="Action\EActionDelay.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="Action\EActionFrames.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="Action\EActionMoveBy.cpp">
       <Filter>Action</Filter>
     </ClCompile>
     <ClCompile Include="Action\EActionMoveTo.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="Action\EActionNeverStop.cpp">
       <Filter>Action</Filter>
     </ClCompile>
     <ClCompile Include="Action\EActionOpacityBy.cpp">
@@ -129,9 +90,6 @@
     <ClCompile Include="Action\EActionTwo.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="Action\EAnimation.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="Action\EActionRotateBy.cpp">
       <Filter>Action</Filter>
     </ClCompile>
@@ -147,6 +105,60 @@
     <ClCompile Include="Action\EActionTwoAtSameTime.cpp">
       <Filter>Action</Filter>
     </ClCompile>
+    <ClCompile Include="Tool\EMusicUtils.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\ESpriteFrame.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionGradual.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EAnimation.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition\ETransitionFade.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\EActionLoop.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\EActionManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\EMsgManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\EObjectManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\ETimerManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EKeyboardListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EKeyboardPressListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EMouseClickListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EMouseDoubleClickListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EMouseDragListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EMouseListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EMousePressListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">
@@ -160,5 +172,6 @@
     <ClInclude Include="easy2d.h" />
     <ClInclude Include="emsg.h" />
     <ClInclude Include="eactions.h" />
+    <ClInclude Include="etransitions.h" />
   </ItemGroup>
 </Project>

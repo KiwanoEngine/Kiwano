@@ -47,9 +47,9 @@ void e2d::EObjectManager::add(e2d::EObject * nptr)
 
 void e2d::EObjectManager::clearAllObjects()
 {
-	for (auto o : s_vPool)
+	for (const auto &obj : s_vPool)
 	{
-		delete o;
+		delete obj;
 	}
 	s_vPool.clear();
 }

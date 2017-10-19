@@ -15,13 +15,13 @@ void e2d::EActionDelay::_init()
 {
 	EAction::_init();
 	// 记录当前时间
-	m_nLast = GetNow();
+	m_tLast = GetNow();
 }
 
 void e2d::EActionDelay::_callOn()
 {
 	// 判断时间间隔是否足够
-	if (GetInterval(m_nLast) > m_nAnimationInterval)
+	if (GetInterval(m_tLast) > m_nAnimationInterval)
 	{
 		this->stop();
 	}
@@ -31,5 +31,5 @@ void e2d::EActionDelay::_reset()
 {
 	EAction::_reset();
 	// 记录当前时间
-	m_nLast = GetNow();
+	m_tLast = GetNow();
 }

@@ -33,9 +33,15 @@ void e2d::EActionSequence::_init()
 {
 	EAction::_init();
 	// 将所有动作与目标绑定
-	for (auto action : m_vActions)
+	if (m_pTarget)
 	{
-		action->m_pTarget = m_pTarget;
+		for (auto action : m_vActions)
+		{
+			if (!action->getTarget())
+			{
+				action->setTarget(m_pTarget);
+			}
+		}
 	}
 	// 初始化第一个动作
 	m_vActions[0]->_init();

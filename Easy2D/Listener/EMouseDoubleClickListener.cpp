@@ -1,4 +1,4 @@
-#include "..\..\emsg.h"
+#include "..\emsg.h"
 
 e2d::EMouseDoubleClickListener::EMouseDoubleClickListener()
 	: EMouseListener()

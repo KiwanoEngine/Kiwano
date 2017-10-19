@@ -153,9 +153,6 @@ public:
 	// 获取监听器状态
 	bool isRunning() const;
 
-	// 获取监听器挂起状态
-	bool isWaiting() const;
-
 	// 启动监听
 	void start();
 
@@ -187,19 +184,12 @@ public:
 	) = 0;
 
 protected:
-	// 进入等待状态
-	void _wait();
-
-	// 唤醒
-	void _notify();
-
 	// 执行监听器回调函数
 	virtual void _callOn() = 0;
 
 protected:
 	EString		m_sName;
 	bool		m_bRunning;
-	bool		m_bWaiting;
 	EScene *	m_pParentScene;
 	ENode *		m_pParentNode;
 };
@@ -605,46 +595,8 @@ public:
 	static void clearAllKeyboardListeners();
 
 private:
-	// 挂起绑定在场景上的所有鼠标消息监听器
-	static void _waitAllMouseListenersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 重启绑定在场景上的所有鼠标消息监听器
-	static void _notifyAllMouseListenersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 挂起绑定在节点上的所有鼠标消息监听器
-	static void _waitAllMouseListenersBindedWith(
-		ENode * pParentNode
-	);
-
-	// 重启绑定在节点上的所有鼠标消息监听器
-	static void _notifyAllMouseListenersBindedWith(
-		ENode * pParentNode
-	);
-
-
-	// 挂起绑定在场景及其子节点上的所有按键监听器
-	static void _waitAllKeyboardListenersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 重启绑定在场景及其子节点上的所有按键监听器
-	static void _notifyAllKeyboardListenersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 挂起绑定在节点上的所有按键监听器
-	static void _waitAllKeyboardListenersBindedWith(
-		ENode * pParentNode
-	);
-
-	// 重启绑定在节点上的所有按键监听器
-	static void _notifyAllKeyboardListenersBindedWith(
-		ENode * pParentNode
-	);
+	// 清除所有监听器
+	static void _clearManager();
 
 	// 鼠标消息程序
 	static void MouseProc(

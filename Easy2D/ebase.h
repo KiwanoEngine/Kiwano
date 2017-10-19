@@ -13,6 +13,7 @@ class ENode;
 class EObjectManager;
 class EMouseListener;
 class EKeyboardListener;
+class ETransition;
 
 class EApp
 {
@@ -20,6 +21,13 @@ public:
 	EApp();
 
 	virtual ~EApp();
+
+	enum WINDOW_STYLE
+	{
+		NO_CLOSE = 1,		/* 禁用关闭按钮 */
+		NO_MINI_SIZE = 2,	/* 禁用最小化按钮 */
+		TOP_MOST = 4			/* 窗口置顶 */
+	};
 
 	// 初始化游戏界面
 	bool init(
@@ -41,13 +49,8 @@ public:
 	// 启动程序
 	void run();
 
-	// 预设画面帧数
-	void setFPS(
-		UINT32 fps
-	);
-
 	// 重写这个函数，它将在窗口激活时执行
-	virtual void onActivate();
+	virtual bool onActivate();
 
 	// 重写这个函数，它将在窗口非激活时执行
 	virtual bool onInactive();
@@ -55,27 +58,58 @@ public:
 	// 重写这个函数，它将在关闭窗口时执行
 	virtual bool onCloseWindow();
 
-	// 释放所有内存资源
-	void free();
-
 	// 获取程序实例
 	static EApp * get();
 
-	// 显示或隐藏控制台（默认隐藏）
+	// 暂停游戏
+	static void pause();
+
+	// 继续游戏
+	static void resume();
+
+	// 获取游戏是否暂停
+	static bool isPaused();
+
+	// 切换场景
+	static void enterScene(
+		EScene * scene,					/* 下一个场景的指针 */
+		bool saveCurrentScene = true	/* 是否保存当前场景 */
+	);
+
+	// 切换场景
+	static void enterScene(
+		EScene * scene,					/* 下一个场景的指针 */
+		ETransition * transition,		/* 场景切换动画 */
+		bool saveCurrentScene = true	/* 是否保存当前场景 */
+	);
+
+	// 返回上一场景
+	static void backScene();
+
+	// 返回上一场景
+	static void backScene(
+		ETransition * transition		/* 场景切换动画 */
+	);
+
+	// 清空保存的所有场景
+	static void clearScene();
+
+	// 隐藏窗口
+	static void hideWindow();
+
+	// 显示窗口
+	static void showWindow();
+
+	// 是否打开控制台
 	static void showConsole(
 		bool show
 	);
 
-	// 修改窗口大小
-	static void setWindowSize(
-		UINT32 width,
-		UINT32 height
-	);
+	// 终止程序
+	static void quit();
 
-	// 设置窗口标题
-	static void setWindowTitle(
-		const EString &title
-	);
+	// 终止程序
+	static void end();
 
 	// 获取窗口标题
 	static EString getTitle();
@@ -85,18 +119,6 @@ public:
 
 	// 获取窗口高度
 	static UINT32 getHeight();
-
-	// 切换场景
-	static void enterScene(
-		EScene * scene,					/* 下一个场景的指针 */
-		bool saveCurrentScene = true	/* 是否保存当前场景 */
-	);
-
-	// 返回上一场景
-	static void backScene();
-
-	// 清空保存的所有场景
-	static void clearScene();
 
 	// 获取当前场景
 	static EScene * getCurrentScene();
@@ -109,6 +131,17 @@ public:
 
 	// 获取 AppName
 	static EString getAppName();
+
+	// 修改窗口大小
+	static void setWindowSize(
+		UINT32 width,
+		UINT32 height
+	);
+
+	// 设置窗口标题
+	static void setWindowTitle(
+		const EString & title
+	);
 
 	// 设置 AppName
 	static void setAppName(
@@ -125,17 +158,10 @@ public:
 		bool value
 	);
 
-	// 隐藏窗口
-	static void hideWindow();
-
-	// 显示窗口
-	static void showWindow();
-
-	// 终止程序
-	static void quit();
-
-	// 终止程序
-	static void end();
+	// 预设画面帧数
+	static void setFPS(
+		UINT32 fps
+	);
 
 protected:
 	// 创建设备无关资源
@@ -154,7 +180,7 @@ protected:
 	void _onControl();
 
 	// 渲染游戏画面
-	bool _onRender();
+	void _onRender();
 
 	// 进入下一场景
 	void _enterNextScene();
@@ -165,6 +191,9 @@ protected:
 		UINT32 height
 	);
 
+	// 释放所有内存资源
+	void _free();
+
 	// 窗口程序
 	static LRESULT CALLBACK WndProc(
 		HWND hWnd,
@@ -174,19 +203,48 @@ protected:
 	);
 
 protected:
-	bool	m_bRunning;
+	bool	m_bEnd;
 	bool	m_bPaused;
+	bool	m_bManualPaused;
+	bool	m_bTransitional;
+	bool	m_bEnterNextScene;
+	bool	m_bTopMost;
 	EString	m_sTitle;
 	EString	m_sAppName;
 	EColor	m_ClearColor;
 	LONGLONG nAnimationInterval;
-
 	EScene * m_pCurrentScene;
 	EScene * m_pNextScene;
 };
 
 
-class EScene
+class EObject
+{
+	friend EObjectManager;
+
+public:
+	EObject();
+
+	virtual ~EObject();
+
+	// 引用计数加一
+	void retain();
+
+	// 引用计数减一
+	void release();
+
+	// 让引擎自动释放这个对象
+	void autoRelease();
+
+private:
+	int m_nRefCount;
+	bool m_bManaged;
+	bool m_bAutoRelease;
+};
+
+
+class EScene :
+	public EObject
 {
 	friend EApp;
 
@@ -202,7 +260,7 @@ public:
 	virtual void onExit();
 
 	// 重写这个函数，它将在窗口激活时执行
-	virtual void onActivate();
+	virtual bool onActivate();
 
 	// 重写这个函数，它将在窗口非激活时执行
 	virtual bool onInactive();
@@ -239,6 +297,9 @@ public:
 		const EString &childName
 	);
 
+	// 获取根节点
+	ENode * getRoot() const;
+
 	// 清空所有子成员
 	void clearAllChildren();
 
@@ -252,41 +313,10 @@ protected:
 	// 渲染场景画面
 	void _onRender();
 
-	// 进入场景时需调用该函数
-	virtual void _onEnter();
-
-	// 退出场景时需调用该函数
-	virtual void _onExit();
-
 protected:
 	bool m_bSortNeeded;
 	bool m_bWillSave;
 	ENode * m_pRoot;
-};
-
-
-class EObject
-{
-	friend EObjectManager;
-
-public:
-	EObject();
-
-	virtual ~EObject();
-
-	// 引用计数加一
-	void retain();
-
-	// 引用计数减一
-	void release();
-
-	// 让引擎自动释放这个对象
-	void autoRelease();
-
-private:
-	int m_nRefCount;
-	bool m_bManaged;
-	bool m_bAutoRelease;
 };
 
 }

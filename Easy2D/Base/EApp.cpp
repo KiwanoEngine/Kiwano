@@ -3,6 +3,7 @@
 #include "..\emsg.h"
 #include "..\etools.h"
 #include "..\enodes.h"
+#include "..\etransitions.h"
 #include <stack>
 #include <thread>
 #include <imm.h>  
@@ -20,7 +21,12 @@ static std::stack<e2d::EScene*> s_SceneStack;
 static steady_clock::time_point s_tStart;
 
 e2d::EApp::EApp()
-	: m_bRunning(false)
+	: m_bEnd(false)
+	, m_bPaused(false)
+	, m_bManualPaused(false)
+	, m_bTransitional(false)
+	, m_bEnterNextScene(true)
+	, m_bTopMost(false)
 	, nAnimationInterval(17LL)
 	, m_ClearColor(EColor::BLACK)
 	, m_pCurrentScene(nullptr)
@@ -29,17 +35,17 @@ e2d::EApp::EApp()
 	ASSERT(s_pInstance == nullptr, "EApp instance already exists!");
 	s_pInstance = this;		// 保存实例对象
 
-	CoInitialize(NULL);
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 }
 
 e2d::EApp::~EApp()
 {
 	// 释放资源
+	SafeReleaseInterface(&GetSolidColorBrush());
 	SafeReleaseInterface(&GetRenderTarget());
 	SafeReleaseInterface(&GetFactory());
 	SafeReleaseInterface(&GetImagingFactory());
 	SafeReleaseInterface(&GetDirectWriteFactory());
-	SafeReleaseInterface(&GetSolidColorBrush());
 	
 	CoUninitialize();
 }
@@ -52,7 +58,7 @@ e2d::EApp * e2d::EApp::get()
 
 bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, bool showConsole /* = false */)
 {
-	return init(title, width, height, WS_OVERLAPPEDWINDOW, showConsole);
+	return init(title, width, height, 0, showConsole);
 }
 
 bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, int windowStyle, bool showConsole /* = false */)
@@ -69,7 +75,12 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, int wind
 	{
 		// 注册窗口类
 		WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
-		wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+		UINT style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+		if (windowStyle & EApp::NO_CLOSE)
+		{
+			style |= CS_NOCLOSE;
+		}
+		wcex.style = style;
 		wcex.lpfnWndProc = EApp::WndProc;
 		wcex.cbClsExtra = 0;
 		wcex.cbWndExtra = sizeof(LONG_PTR);
@@ -106,15 +117,25 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, int wind
 		rtWindow.top = (screenHeight - height) / 2;
 		rtWindow.right = rtWindow.left + width;
 		rtWindow.bottom = rtWindow.top + height;
+		// 创建窗口样式
+		DWORD dwStyle = WS_OVERLAPPED | WS_SYSMENU;
+		if (windowStyle & EApp::NO_MINI_SIZE)
+		{
+			dwStyle &= ~WS_MINIMIZEBOX;
+		}
+		if (windowStyle & EApp::TOP_MOST)
+		{
+			m_bTopMost = true;
+		}
 		// 计算客户区大小
-		AdjustWindowRectEx(&rtWindow, windowStyle, FALSE, 0L);
+		AdjustWindowRectEx(&rtWindow, dwStyle, FALSE, 0L);
 		// 保存窗口名称
 		m_sTitle = title;
 		// 创建窗口
 		GetHWnd() = CreateWindow(
 			L"Easy2DApp",
 			m_sTitle.c_str(),
-			windowStyle,
+			dwStyle,
 			rtWindow.left,
 			rtWindow.top,
 			rtWindow.right - rtWindow.left,
@@ -144,6 +165,27 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, int wind
 	}
 
 	return SUCCEEDED(hr);
+}
+
+void e2d::EApp::pause()
+{
+	EApp::get()->m_bManualPaused = true;
+}
+
+void e2d::EApp::resume()
+{
+	if (isPaused())
+	{
+		EApp::get()->m_bPaused = false;
+		EApp::get()->m_bManualPaused = false;
+		EActionManager::_resetAllActions();
+		ETimerManager::_resetAllTimers();
+	}
+}
+
+bool e2d::EApp::isPaused()
+{
+	return s_pInstance->m_bPaused || s_pInstance->m_bManualPaused;
 }
 
 void e2d::EApp::showConsole(bool show)
@@ -198,18 +240,20 @@ void e2d::EApp::run()
 	ASSERT(GetHWnd() != nullptr, "Cannot find Game Window.");
 	// 进入第一个场景
 	_enterNextScene();
-	ASSERT(m_pCurrentScene != nullptr, "Current scene NULL pointer exception.");
 	// 显示窗口
 	ShowWindow(GetHWnd(), SW_SHOWNORMAL);
 	UpdateWindow(GetHWnd());
-	// 运行游戏
-	m_bRunning = true;
+	// 设置窗口置顶
+	if (m_bTopMost)
+	{
+		SetWindowPos(GetHWnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	}
 	// 记录开始时间
 	s_tStart = steady_clock::now();
 
 	MSG msg;
 
-	while (m_bRunning)
+	while (!m_bEnd)
 	{
 		// 处理窗口消息
 		while (PeekMessage(&msg, GetHWnd(), 0, 0, PM_REMOVE))
@@ -224,17 +268,18 @@ void e2d::EApp::run()
 	// 关闭控制台
 	EApp::showConsole(false);
 	// 释放所有内存资源
-	this->free();
+	this->_free();
 }
 
 void e2d::EApp::setFPS(UINT32 fps)
 {
 	fps = min(max(fps, 30), 120);
-	nAnimationInterval = 1000 / fps;
+	s_pInstance->nAnimationInterval = 1000 / fps;
 }
 
-void e2d::EApp::onActivate()
+bool e2d::EApp::onActivate()
 {
+	return true;
 }
 
 bool e2d::EApp::onInactive()
@@ -264,18 +309,10 @@ void e2d::EApp::_mainLoop()
 	{
 		// 记录当前时间
 		tLast = GetNow();
-
-		if (!m_bPaused)
-		{
-			// 游戏控制流程
-			_onControl();
-			// 刷新游戏画面
-			if (!_onRender())
-			{
-				MessageBox(GetHWnd(), L"Game Render Failed!", L"Error", MB_OK);
-				this->quit();
-			}
-		}
+		// 游戏控制流程
+		_onControl();
+		// 刷新游戏画面
+		_onRender();
 	}
 	else
 	{
@@ -292,11 +329,20 @@ void e2d::EApp::_mainLoop()
 void e2d::EApp::_onControl()
 {
 	// 下一场景指针不为空时，切换场景
-	if (m_pNextScene)
+	if (m_bEnterNextScene)
 	{
 		// 进入下一场景
 		_enterNextScene();
+		m_bEnterNextScene = false;
 	}
+
+	// 正在切换场景时，只执行动画
+	if (m_bTransitional)
+	{
+		EActionManager::ActionProc();
+		return;
+	}
+
 	// 断言当前场景非空
 	ASSERT(m_pCurrentScene != nullptr, "Current scene NULL pointer exception.");
 
@@ -308,7 +354,7 @@ void e2d::EApp::_onControl()
 // This method discards device-specific
 // resources if the Direct3D device dissapears during execution and
 // recreates the resources the next time it's invoked.
-bool e2d::EApp::_onRender()
+void e2d::EApp::_onRender()
 {
 	HRESULT hr = S_OK;
 
@@ -316,12 +362,13 @@ bool e2d::EApp::_onRender()
 
 	if (SUCCEEDED(hr))
 	{
+		// 开始绘图
 		GetRenderTarget()->BeginDraw();
 		// 使用背景色清空屏幕
 		GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor.value));
 		// 绘制当前场景
 		m_pCurrentScene->_onRender();
-		
+		// 终止绘图
 		hr = GetRenderTarget()->EndDraw();
 		// 刷新界面
 		UpdateWindow(GetHWnd());
@@ -333,7 +380,11 @@ bool e2d::EApp::_onRender()
 		_discardDeviceResources();
 	}
 
-	return SUCCEEDED(hr);
+	if (FAILED(hr))
+	{
+		MessageBox(GetHWnd(), L"Game Render Failed!", L"Error", MB_OK);
+		this->quit();
+	}
 }
 
 void e2d::EApp::setWindowSize(UINT32 width, UINT32 height)
@@ -377,18 +428,44 @@ UINT32 e2d::EApp::getHeight()
 	return GetRenderTarget()->GetPixelSize().height;
 }
 
-void e2d::EApp::enterScene(EScene * scene, bool save /* = true */)
+void e2d::EApp::enterScene(EScene * scene, bool saveCurrentScene /* = true */)
 {
+	enterScene(scene, nullptr, saveCurrentScene);
+}
+
+void e2d::EApp::enterScene(EScene * scene, ETransition * transition, bool saveCurrentScene /* = true */)
+{
+	scene->retain();
 	// 保存下一场景的指针
 	get()->m_pNextScene = scene;
 	// 切换场景时，是否保存当前场景
 	if (get()->m_pCurrentScene)
 	{
-		get()->m_pCurrentScene->m_bWillSave = save;
+		get()->m_pCurrentScene->m_bWillSave = saveCurrentScene;
+	}
+	// 设置切换场景动画
+	if (transition)
+	{
+		get()->m_bTransitional = true;
+		transition->_setTarget(
+			get()->m_pCurrentScene, 
+			get()->m_pNextScene, 
+			get()->m_bEnterNextScene,
+			get()->m_bTransitional
+		);
+	}
+	else
+	{
+		get()->m_bTransitional = false;
 	}
 }
 
 void e2d::EApp::backScene()
+{
+	backScene(nullptr);
+}
+
+void e2d::EApp::backScene(ETransition * transition)
 {
 	ASSERT(s_SceneStack.size(), "Scene stack now is empty!");
 	// 从栈顶取出场景指针，作为下一场景
@@ -399,6 +476,21 @@ void e2d::EApp::backScene()
 	{
 		get()->m_pCurrentScene->m_bWillSave = false;
 	}
+	// 设置切换场景动画
+	if (transition)
+	{
+		get()->m_bTransitional = true;
+		transition->_setTarget(
+			get()->m_pCurrentScene, 
+			get()->m_pNextScene, 
+			get()->m_bEnterNextScene,
+			get()->m_bTransitional
+		);
+	}
+	else
+	{
+		get()->m_bTransitional = false;
+	}
 }
 
 void e2d::EApp::clearScene()
@@ -407,7 +499,7 @@ void e2d::EApp::clearScene()
 	while (s_SceneStack.size())
 	{
 		auto temp = s_SceneStack.top();
-		SafeDelete(&temp);
+		SafeRelease(&temp);
 		s_SceneStack.pop();
 	}
 }
@@ -475,41 +567,43 @@ void e2d::EApp::showWindow()
 	ShowWindow(GetHWnd(), SW_SHOWNORMAL);
 }
 
-void e2d::EApp::free()
+void e2d::EApp::_free()
 {
-	// 释放场景内存
-	SafeDelete(&m_pCurrentScene);
-	SafeDelete(&m_pNextScene);
 	// 清空场景栈
-	while (s_SceneStack.size())
-	{
-		auto temp = s_SceneStack.top();
-		SafeDelete(&temp);
-		s_SceneStack.pop();
-	}
+	clearScene();
+	// 释放场景内存
+	SafeRelease(&m_pCurrentScene);
+	SafeRelease(&m_pNextScene);
+	
 	// 删除图片缓存
 	ETexture::clearCache();
+	// 停止所有定时器、监听器、动画
+	ETimerManager::_clearManager();
+	EMsgManager::_clearManager();
+	EActionManager::_clearManager();
 	// 删除所有对象
 	EObjectManager::clearAllObjects();
 }
 
 void e2d::EApp::quit()
 {
-	get()->m_bRunning = false;
+	get()->m_bEnd = true;
 }
 
 void e2d::EApp::end()
 {
-	get()->m_bRunning = false;
+	get()->m_bEnd = true;
 }
 
 void e2d::EApp::_enterNextScene()
 {
+	if (m_pNextScene == nullptr)
+		return;
+
 	// 执行当前场景的 onCloseWindow 函数
 	if (m_pCurrentScene)
 	{
 		m_pCurrentScene->onExit();
-		m_pCurrentScene->_onExit();
 
 		if (m_pCurrentScene->m_bWillSave)
 		{
@@ -518,12 +612,11 @@ void e2d::EApp::_enterNextScene()
 		}
 		else
 		{
-			SafeDelete(&m_pCurrentScene);
+			SafeRelease(&m_pCurrentScene);
 		}
 	}
 
 	// 执行下一场景的 onEnter 函数
-	m_pNextScene->_onEnter();
 	m_pNextScene->onEnter();
 
 	m_pCurrentScene = m_pNextScene;		// 切换场景
@@ -627,7 +720,11 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			case WM_MOUSEMOVE:
 			case WM_MOUSEWHEEL:
 			{
-				EMsgManager::MouseProc(message, wParam, lParam);
+				// 执行场景切换时屏蔽按键和鼠标消息
+				if (!pEApp->m_bTransitional)
+				{
+					EMsgManager::MouseProc(message, wParam, lParam);
+				}
 			}
 			result = 0;
 			wasHandled = true;
@@ -637,7 +734,11 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			case WM_KEYDOWN:
 			case WM_KEYUP:
 			{
-				EMsgManager::KeyboardProc(message, wParam, lParam);
+				// 执行场景切换时屏蔽按键和鼠标消息
+				if (!pEApp->m_bTransitional)
+				{
+					EMsgManager::KeyboardProc(message, wParam, lParam);
+				}
 			}
 			result = 0;
 			wasHandled = true;
@@ -687,9 +788,11 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 				}
 				else
 				{
-					pEApp->onActivate();
-					pEApp->getCurrentScene()->onActivate();
-					pEApp->m_bPaused = false;
+					if (pEApp->getCurrentScene()->onActivate() &&
+						pEApp->onActivate())
+					{
+						pEApp->m_bPaused = false;
+					}
 				}
 			}
 			result = 1;

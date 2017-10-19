@@ -222,11 +222,6 @@ public:
 		float anchorY
 	);
 
-	// 设置父节点
-	virtual void setParent(
-		ENode* parent
-	);
-
 	// 添加子节点
 	virtual void addChild(
 		ENode * child,
@@ -422,6 +417,84 @@ protected:
 };
 
 
+class ESpriteFrame :
+	public EObject
+{
+	friend ESprite;
+
+public:
+	// 创建空的精灵帧
+	ESpriteFrame();
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		ETexture * texture
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		const EString & imageFileName
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		const EString & resourceName,
+		const EString & resourceType
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		ETexture * texture,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		const EString & imageFileName,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		const EString & resourceName,
+		const EString & resourceType,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+	virtual ~ESpriteFrame();
+
+protected:
+	// 获取纹理
+	void _setTexture(
+		ETexture * texture
+	);
+
+	// 裁剪纹理
+	void _clipTexture(
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+protected:
+	float	m_fSourceClipX;
+	float	m_fSourceClipY;
+	float	m_fSourceClipWidth;
+	float	m_fSourceClipHeight;
+	ETexture * m_pTexture;
+};
+
+
 class ESprite :
 	public ENode
 {
@@ -475,6 +548,11 @@ public:
 		float height
 	);
 
+	// 从 ESpriteFrame 加载资源
+	void loadFromSpriteFrame(
+		ESpriteFrame * frame
+	);
+
 	// 裁剪纹理
 	void clipTexture(
 		float x,
@@ -488,17 +566,9 @@ protected:
 	virtual void _onRender() override;
 
 protected:
-	float	m_fSourcePosX;
-	float	m_fSourcePosY;
+	float	m_fSourceClipX;
+	float	m_fSourceClipY;
 	ETexture * m_pTexture;
-};
-
-
-class ESpriteFrame :
-	public EObject
-{
-protected:
-	ETexture * texture;
 };
 
 

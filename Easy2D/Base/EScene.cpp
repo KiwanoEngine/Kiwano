@@ -15,11 +15,11 @@ e2d::EScene::EScene()
 
 e2d::EScene::~EScene()
 {
-	SafeRelease(&m_pRoot);
 	ETimerManager::clearAllTimersBindedWith(this);
 	EMsgManager::clearAllMouseListenersBindedWith(this);
 	EMsgManager::clearAllKeyboardListenersBindedWith(this);
 	EActionManager::clearAllActionsBindedWith(this);
+	SafeRelease(&m_pRoot);
 }
 
 void e2d::EScene::onEnter()
@@ -30,8 +30,9 @@ void e2d::EScene::onExit()
 {
 }
 
-void e2d::EScene::onActivate()
+bool e2d::EScene::onActivate()
 {
+	return true;
 }
 
 bool e2d::EScene::onInactive()
@@ -47,26 +48,6 @@ bool e2d::EScene::onCloseWindow()
 void e2d::EScene::_onRender()
 {
 	m_pRoot->_callOn();
-}
-
-void e2d::EScene::_onEnter()
-{
-	// 启用场景上的所有定时器、监听器和动画
-	ETimerManager::_notifyAllTimersBindedWith(this);
-	EMsgManager::_notifyAllMouseListenersBindedWith(this);
-	EMsgManager::_notifyAllKeyboardListenersBindedWith(this);
-	EActionManager::_notifyAllActionsBindedWith(this);
-}
-
-void e2d::EScene::_onExit()
-{
-	if (m_bWillSave)
-	{
-		ETimerManager::_waitAllTimersBindedWith(this);
-		EMsgManager::_waitAllMouseListenersBindedWith(this);
-		EMsgManager::_waitAllKeyboardListenersBindedWith(this);
-		EActionManager::_waitAllActionsBindedWith(this);
-	}
 }
 
 void e2d::EScene::add(ENode * child, int order /* = 0 */)
@@ -97,6 +78,11 @@ size_t e2d::EScene::getChildrenCount() const
 e2d::ENode * e2d::EScene::getChild(const EString &childName)
 {
 	return m_pRoot->getChild(childName);
+}
+
+e2d::ENode * e2d::EScene::getRoot() const
+{
+	return m_pRoot;
 }
 
 void e2d::EScene::clearAllChildren()

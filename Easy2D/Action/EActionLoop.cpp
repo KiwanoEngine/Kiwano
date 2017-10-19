@@ -19,7 +19,10 @@ e2d::EActionLoop * e2d::EActionLoop::clone() const
 void e2d::EActionLoop::_init()
 {
 	EAction::_init();
-	m_Action->m_pTarget = m_pTarget;
+	if (!m_Action->getTarget() && m_pTarget)
+	{
+		m_Action->setTarget(m_pTarget);
+	}
 	m_Action->_init();
 }
 

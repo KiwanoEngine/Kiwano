@@ -106,11 +106,6 @@ void e2d::ENode::_onEnter()
 	if (!this->m_bDisplayedInScene && this->isVisiable())
 	{
 		this->m_bDisplayedInScene = true;
-
-		ETimerManager::_notifyAllTimersBindedWith(this);
-		EMsgManager::_notifyAllMouseListenersBindedWith(this);
-		EMsgManager::_notifyAllKeyboardListenersBindedWith(this);
-		EActionManager::_notifyAllActionsBindedWith(this);
 		this->onEnter();
 
 		for (const auto &child : m_vChildren)
@@ -125,11 +120,6 @@ void e2d::ENode::_onExit()
 	if (this->m_bDisplayedInScene)
 	{
 		this->m_bDisplayedInScene = false;
-
-		ETimerManager::_waitAllTimersBindedWith(this);
-		EMsgManager::_waitAllMouseListenersBindedWith(this);
-		EMsgManager::_waitAllKeyboardListenersBindedWith(this);
-		EActionManager::_waitAllActionsBindedWith(this);
 		this->onExit();
 
 		for (const auto &child : m_vChildren)
@@ -462,18 +452,6 @@ void e2d::ENode::setAnchor(float anchorX, float anchorY)
 	m_bTransformChildrenNeeded = true;
 }
 
-void e2d::ENode::setParent(ENode * parent)
-{
-	if (m_pParent)
-	{
-		m_pParent->addChild(this);
-	}
-	else
-	{
-		removeFromParent();
-	}
-}
-
 void e2d::ENode::addChild(ENode * child, int order  /* = 0 */)
 {
 	WARN_IF(child == nullptr, "ENode::addChild NULL pointer exception.");
@@ -639,7 +617,12 @@ void e2d::ENode::clearAllChildren(bool release /* = true */)
 
 void e2d::ENode::runAction(EAction * action)
 {
-	EActionManager::bindAction(action, this);
+	ASSERT(
+		(!action->getTarget()),
+		"The action is already running, it cannot running again!"
+	);
+	action->setTarget(this);
+	EActionManager::addAction(action);
 }
 
 void e2d::ENode::resumeAction(EAction * action)

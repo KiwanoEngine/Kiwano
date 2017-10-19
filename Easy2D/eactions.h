@@ -9,6 +9,7 @@ class EActionTwo;
 class EActionLoop;
 class EActionSequence;
 class EActionTwoAtSameTime;
+class ETransitionFade;
 
 class EAction :
 	public EObject
@@ -45,13 +46,18 @@ public:
 	// 获取一个新的逆向动作
 	virtual EAction * reverse() const;
 
+	// 获取执行该动作的目标
+	virtual ENode * getTarget();
+
 	// 设置动作每一帧的时间间隔
 	virtual void setInterval(
 		LONGLONG milliSeconds
 	);
 
-	// 获取执行该动作的目标
-	virtual ENode * getTarget();
+	// 设置动作执行目标
+	virtual void setTarget(
+		ENode * node
+	);
 
 protected:
 	// 初始化动作
@@ -66,30 +72,23 @@ protected:
 	// 重置动作
 	virtual void _reset();
 
-	// 进入等待状态
-	virtual void _wait();
-
-	// 唤醒
-	virtual void _notify();
-
 protected:
 	bool		m_bRunning;
-	bool		m_bWaiting;
 	bool		m_bEnding;
 	bool		m_bInit;
 	ENode *		m_pTarget;
 	EScene *	m_pParentScene;
 	LONGLONG	m_nAnimationInterval;
-	std::chrono::steady_clock::time_point m_nLast;
+	std::chrono::steady_clock::time_point m_tLast;
 };
 
 
-class EAnimation :
+class EActionGradual :
 	public EAction
 {
 public:
 	// 创建时长动画
-	EAnimation(
+	EActionGradual(
 		float duration
 	);
 
@@ -113,7 +112,7 @@ protected:
 
 
 class EActionMoveBy :
-	public EAnimation
+	public EActionGradual
 {
 public:
 	// 创建相对位移动画
@@ -170,7 +169,7 @@ protected:
 
 
 class EActionScaleBy :
-	public EAnimation
+	public EActionGradual
 {
 public:
 	// 创建相对缩放动画
@@ -232,7 +231,7 @@ protected:
 
 
 class EActionOpacityBy :
-	public EAnimation
+	public EActionGradual
 {
 public:
 	// 创建透明度相对渐变动画
@@ -311,7 +310,7 @@ public:
 
 
 class EActionRotateBy :
-	public EAnimation
+	public EActionGradual
 {
 public:
 	// 创建相对旋转动画
@@ -537,19 +536,19 @@ protected:
 };
 
 
-class EActionFrames :
+class EAnimation :
 	public EAction
 {
 public:
 	// 创建帧动画
-	EActionFrames();
+	EAnimation();
 
 	// 创建特定帧间隔的帧动画
-	EActionFrames(
+	EAnimation(
 		LONGLONG frameDelay	/* 帧间隔（毫秒） */
 	);
 
-	virtual ~EActionFrames();
+	virtual ~EAnimation();
 
 	// 添加帧
 	void addFrame(
@@ -557,10 +556,10 @@ public:
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EActionFrames * clone() const override;
+	virtual EAnimation * clone() const override;
 
 	// 获取该动画的逆动画
-	virtual EActionFrames * reverse() const override;
+	virtual EAnimation * reverse() const override;
 
 protected:
 	// 初始化动作

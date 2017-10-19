@@ -181,55 +181,16 @@ void e2d::ETimerManager::clearAllTimersBindedWith(ENode * pParentNode)
 	}
 }
 
-void e2d::ETimerManager::_notifyAllTimersBindedWith(EScene * pParentScene)
+void e2d::ETimerManager::_clearManager()
 {
-	for (auto t : s_vTimers)
-	{
-		if (t->getParentScene() == pParentScene)
-			t->_notify();
-	}
-	for (auto child : pParentScene->getChildren())
-	{
-		_notifyAllTimersBindedWith(child);
-	}
+	s_vTimers.clear();
 }
 
-void e2d::ETimerManager::_waitAllTimersBindedWith(EScene * pParentScene)
+void e2d::ETimerManager::_resetAllTimers()
 {
-	for (auto t : s_vTimers)
+	for (const auto & t : s_vTimers)
 	{
-		if (t->getParentScene() == pParentScene)
-			t->_wait();
-	}
-	for (auto child : pParentScene->getChildren())
-	{
-		_waitAllTimersBindedWith(child);
-	}
-}
-
-void e2d::ETimerManager::_notifyAllTimersBindedWith(ENode * pParentNode)
-{
-	for (auto t : s_vTimers)
-	{
-		if (t->getParentNode() == pParentNode)
-			t->_notify();
-	}
-	for (auto child : pParentNode->getChildren())
-	{
-		_notifyAllTimersBindedWith(child);
-	}
-}
-
-void e2d::ETimerManager::_waitAllTimersBindedWith(ENode * pParentNode)
-{
-	for (auto t : s_vTimers)
-	{
-		if (t->getParentNode() == pParentNode)
-			t->_notify();
-	}
-	for (auto child : pParentNode->getChildren())
-	{
-		_waitAllTimersBindedWith(child);
+		t->m_tLast = GetNow();
 	}
 }
 
@@ -250,14 +211,21 @@ void e2d::ETimerManager::clearAllTimers()
 
 void e2d::ETimerManager::TimerProc()
 {
+	if (EApp::isPaused())
+		return;
+
 	for (auto t : s_vTimers)
 	{
 		if (t->isRunning())
 		{
-			if (GetInterval(t->m_tLast) >= t->m_nInterval)
+			if (t->getParentScene() == EApp::getCurrentScene() ||
+				(t->getParentNode() && t->getParentNode()->getParentScene() == EApp::getCurrentScene()))
 			{
-				t->_callOn();
-				t->m_tLast = GetNow();
+				if (GetInterval(t->m_tLast) >= t->m_nInterval)
+				{
+					t->_callOn();
+					t->m_tLast = GetNow();
+				}
 			}
 		}
 	}

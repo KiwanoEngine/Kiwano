@@ -42,7 +42,6 @@ e2d::ETexture::ETexture(const EString & resourceName, const EString & resourceTy
 
 e2d::ETexture::~ETexture()
 {
-	SafeReleaseInterface(&m_pBitmap);
 }
 
 void e2d::ETexture::loadFromFile(const EString & fileName)
@@ -51,8 +50,6 @@ void e2d::ETexture::loadFromFile(const EString & fileName)
 
 	if (fileName.empty())
 		return;
-
-	SafeReleaseInterface(&m_pBitmap);
 
 	if (!e2d::ETexture::preload(fileName))
 	{
@@ -72,8 +69,6 @@ void e2d::ETexture::loadFromResource(const EString & resourceName, const EString
 
 	if (resourceName.empty() || resourceType.empty())
 		return;
-
-	SafeReleaseInterface(&m_pBitmap);
 
 	if (!e2d::ETexture::preload(resourceName, resourceType))
 	{

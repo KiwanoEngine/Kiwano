@@ -1,8 +1,8 @@
 #include "..\eactions.h"
+#include "..\Win\winbase.h"
 
 e2d::EAction::EAction() :
 	m_bRunning(false),
-	m_bWaiting(false),
 	m_bEnding(false),
 	m_bInit(false),
 	m_pTarget(nullptr),
@@ -18,7 +18,7 @@ e2d::EAction::~EAction()
 
 bool e2d::EAction::isRunning()
 {
-	return m_bRunning && !m_bWaiting;
+	return m_bRunning;
 }
 
 bool e2d::EAction::_isEnding()
@@ -28,12 +28,13 @@ bool e2d::EAction::_isEnding()
 
 void e2d::EAction::start()
 {
-	m_bRunning = true;
+	this->resume();
 }
 
 void e2d::EAction::resume()
 {
 	m_bRunning = true;
+	m_tLast = GetNow();
 }
 
 void e2d::EAction::pause()
@@ -45,20 +46,19 @@ void e2d::EAction::stop()
 {
 	m_bEnding = true;
 }
-void e2d::EAction::_wait()
-{
-	m_bWaiting = true;
-}
-
-void e2d::EAction::_notify()
-{
-	m_bWaiting = false;
-}
 
 void e2d::EAction::setInterval(LONGLONG milliSeconds)
 {
 	// 设置动作的时间间隔
 	m_nAnimationInterval = milliSeconds;
+}
+
+void e2d::EAction::setTarget(ENode * node)
+{
+	if (node)
+	{
+		m_pTarget = node;
+	}
 }
 
 e2d::EAction * e2d::EAction::reverse() const

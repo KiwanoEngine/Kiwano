@@ -1,23 +1,18 @@
 #include "..\etools.h"
 #include "..\eactions.h"
+#include "..\Win\winbase.h"
 
 static e2d::EVector<e2d::EAction*> s_vActions;
 
 
-void e2d::EActionManager::bindAction(EAction * action, ENode * pTargetNode)
+void e2d::EActionManager::addAction(EAction * action)
 {
-	ASSERT(
-		(!action->m_pTarget),
-		"The action is already running, it cannot running again!"
-	);
 	WARN_IF(action == nullptr, "EAction NULL pointer exception!");
-	WARN_IF(pTargetNode == nullptr, "EAction's target is NULL!");
 
-	if (action && pTargetNode)
+	if (action)
 	{
 		action->start();
 		action->retain();
-		action->m_pTarget = pTargetNode;
 		s_vActions.push_back(action);
 	}
 }
@@ -130,67 +125,22 @@ void e2d::EActionManager::clearAllActions()
 	EActionManager::clearAllActionsBindedWith(EApp::getCurrentScene());
 }
 
-void e2d::EActionManager::_waitAllActionsBindedWith(EScene * pParentScene)
+void e2d::EActionManager::_clearManager()
 {
-	if (pParentScene)
-	{
-		for (const auto &child : pParentScene->getChildren())
-		{
-			EActionManager::_waitAllActionsBindedWith(child);
-		}
-	}
+	s_vActions.clear();
 }
 
-void e2d::EActionManager::_notifyAllActionsBindedWith(EScene * pParentScene)
+void e2d::EActionManager::_resetAllActions()
 {
-	if (pParentScene)
+	for (const auto & action : s_vActions)
 	{
-		for (const auto &child : pParentScene->getChildren())
-		{
-			EActionManager::_notifyAllActionsBindedWith(child);
-		}
-	}
-}
-
-void e2d::EActionManager::_waitAllActionsBindedWith(ENode * pTargetNode)
-{
-	if (pTargetNode)
-	{
-		for (const auto &action : s_vActions)
-		{
-			if (action->getTarget() == pTargetNode)
-			{
-				action->_wait();
-			}
-		}
-		for (const auto &child : pTargetNode->getChildren())
-		{
-			EActionManager::_waitAllActionsBindedWith(child);
-		}
-	}
-}
-
-void e2d::EActionManager::_notifyAllActionsBindedWith(ENode * pTargetNode)
-{
-	if (pTargetNode)
-	{
-		for (const auto &action : s_vActions)
-		{
-			if (action->getTarget() == pTargetNode)
-			{
-				action->_notify();
-			}
-		}
-		for (const auto &child : pTargetNode->getChildren())
-		{
-			EActionManager::_notifyAllActionsBindedWith(child);
-		}
+		action->m_tLast = GetNow();
 	}
 }
 
 void e2d::EActionManager::ActionProc()
 {
-	if (s_vActions.empty())
+	if (EApp::isPaused() || s_vActions.empty())
 		return;
 	
 	EAction * action;
@@ -199,7 +149,8 @@ void e2d::EActionManager::ActionProc()
 	{
 		action = s_vActions[i];
 		// 获取动作运行状态
-		if (action->isRunning())
+		if (action->isRunning() ||
+			(action->getTarget() && action->getTarget()->getParentScene() == EApp::getCurrentScene()))
 		{
 			if (action->_isEnding())
 			{

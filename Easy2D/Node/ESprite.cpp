@@ -3,8 +3,8 @@
 
 
 e2d::ESprite::ESprite()
-	: m_fSourcePosX(0)
-	, m_fSourcePosY(0)
+	: m_fSourceClipX(0)
+	, m_fSourceClipY(0)
 	, m_pTexture(nullptr)
 {
 }
@@ -44,7 +44,7 @@ void e2d::ESprite::setTexture(ETexture * texture)
 	m_pTexture = texture;
 	m_pTexture->retain();
 
-	m_fSourcePosX = m_fSourcePosY = 0;
+	m_fSourceClipX = m_fSourceClipY = 0;
 	ENode::_setWidth(m_pTexture->getSourceWidth());
 	ENode::_setHeight(m_pTexture->getSourceHeight());
 }
@@ -55,12 +55,18 @@ void e2d::ESprite::setTexture(ETexture * texture, float x, float y, float width,
 	clipTexture(x, y, width, height);
 }
 
+void e2d::ESprite::loadFromSpriteFrame(ESpriteFrame * frame)
+{
+	setTexture(frame->m_pTexture);
+	clipTexture(frame->m_fSourceClipX, frame->m_fSourceClipY, frame->m_fSourceClipWidth, frame->m_fSourceClipHeight);
+}
+
 void e2d::ESprite::clipTexture(float x, float y, float width, float height)
 {
-	m_fSourcePosX = max(x, 0);
-	m_fSourcePosY = max(y, 0);
-	ENode::_setWidth(min(max(width, 0), m_pTexture->getSourceWidth() - m_fSourcePosX));
-	ENode::_setHeight(min(max(height, 0), m_pTexture->getSourceHeight() - m_fSourcePosX));
+	m_fSourceClipX = min(max(x, 0), m_pTexture->getSourceWidth());
+	m_fSourceClipY = min(max(y, 0), m_pTexture->getSourceHeight());
+	ENode::_setWidth(min(max(width, 0), m_pTexture->getSourceWidth() - m_fSourceClipX));
+	ENode::_setHeight(min(max(height, 0), m_pTexture->getSourceHeight() - m_fSourceClipX));
 }
 
 void e2d::ESprite::_onRender()
@@ -73,7 +79,12 @@ void e2d::ESprite::_onRender()
 			D2D1::RectF(0, 0, getRealWidth(), getRealHeight()),
 			m_fDisplayOpacity,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-			D2D1::RectF(m_fSourcePosX, m_fSourcePosY, getRealWidth(), getRealHeight())
+			D2D1::RectF(
+				m_fSourceClipX, 
+				m_fSourceClipY, 
+				m_fSourceClipX + getRealWidth(), 
+				m_fSourceClipY + getRealHeight()
+			)
 		);
 	}
 }

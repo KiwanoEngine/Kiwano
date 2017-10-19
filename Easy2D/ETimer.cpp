@@ -3,7 +3,6 @@
 
 e2d::ETimer::ETimer()
 	: m_bRunning(false)
-	, m_bWaiting(false)
 	, m_nRunTimes(0)
 	, m_pParentScene(nullptr)
 	, m_pParentNode(nullptr)
@@ -33,12 +32,7 @@ e2d::ETimer::ETimer(const EString & name, const TIMER_CALLBACK & callback, LONGL
 
 bool e2d::ETimer::isRunning() const
 {
-	return m_bRunning && !m_bWaiting;
-}
-
-bool e2d::ETimer::isWaiting() const
-{
-	return m_bWaiting;
+	return m_bRunning;
 }
 
 void e2d::ETimer::start()
@@ -50,17 +44,6 @@ void e2d::ETimer::start()
 void e2d::ETimer::stop()
 {
 	m_bRunning = false;
-}
-
-void e2d::ETimer::_wait()
-{
-	m_bWaiting = true;
-}
-
-void e2d::ETimer::_notify()
-{
-	m_bWaiting = false;
-	m_tLast = GetNow();
 }
 
 e2d::EString e2d::ETimer::getName() const

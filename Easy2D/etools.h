@@ -59,9 +59,6 @@ public:
 	// 获取定时器状态
 	bool isRunning() const;
 
-	// 获取定时器挂起状态
-	bool isWaiting() const;
-
 	// 启动监听
 	void start();
 
@@ -98,19 +95,12 @@ public:
 	);
 
 protected:
-	// 进入等待状态
-	void _wait();
-
-	// 唤醒
-	void _notify();
-
 	// 执行回调函数
 	virtual void _callOn();
 
 protected:
 	EString			m_sName;
 	bool			m_bRunning;
-	bool			m_bWaiting;
 	int				m_nRunTimes;
 	EScene *		m_pParentScene;
 	ENode *			m_pParentNode;
@@ -195,25 +185,11 @@ public:
 	static void clearAllTimers();
 
 private:
-	// 挂起绑定在场景及其子节点上的所有定时器
-	static void _waitAllTimersBindedWith(
-		EScene * pParentScene
-	);
+	// 清空定时器管理器
+	static void _clearManager();
 
-	// 重启绑定在场景及其子节点上的所有定时器
-	static void _notifyAllTimersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 挂起绑定在节点上的所有定时器
-	static void _waitAllTimersBindedWith(
-		ENode * pParentNode
-	);
-
-	// 重启绑定在节点上的所有定时器
-	static void _notifyAllTimersBindedWith(
-		ENode * pParentNode
-	);
+	// 重置定时器状态
+	static void _resetAllTimers();
 
 	// 定时器执行程序
 	static void TimerProc();
@@ -228,10 +204,9 @@ class EActionManager
 	friend ENode;
 
 public:
-	// 绑定动作到节点
-	static void bindAction(
-		EAction * action,
-		ENode * pTargetNode
+	// 添加动作
+	static void addAction(
+		EAction * action
 	);
 
 	// 启动绑定在场景子节点上的所有动作
@@ -274,28 +249,22 @@ public:
 	static void clearAllActions();
 
 private:
-	// 挂起绑定在场景子节点上的所有动作
-	static void _waitAllActionsBindedWith(
-		EScene * pParentScene
-	);
+	// 清空动画管理器
+	static void _clearManager();
 
-	// 重启绑定在场景子节点上的所有动作
-	static void _notifyAllActionsBindedWith(
-		EScene * pParentScene
-	);
-
-	// 挂起绑定在节点上的所有动作
-	static void _waitAllActionsBindedWith(
-		ENode * pTargetNode
-	);
-
-	// 重启绑定在节点上的所有动作
-	static void _notifyAllActionsBindedWith(
-		ENode * pTargetNode
-	);
+	// 重置所有动作状态
+	static void _resetAllActions();
 
 	// 动作执行程序
 	static void ActionProc();
+};
+
+
+class EMusicUtils
+{
+public:
+	// 播放音效
+	static void play(LPCTSTR musicFileName, bool loop = false);
 };
 
 

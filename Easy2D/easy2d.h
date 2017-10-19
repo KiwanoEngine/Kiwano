@@ -23,6 +23,7 @@
 #include "emsg.h"
 #include "etools.h"
 #include "eactions.h"
+#include "etransitions.h"
 
 
 #if defined(DEBUG) || defined(_DEBUG)

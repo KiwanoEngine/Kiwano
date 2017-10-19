@@ -2,20 +2,28 @@
 
 
 e2d::EActionMoveBy::EActionMoveBy(float duration, EVec vector) :
-	EAnimation(duration)
+	EActionGradual(duration)
 {
 	m_MoveVector = vector;
 }
 
 void e2d::EActionMoveBy::_init()
 {
-	EAnimation::_init();
-	m_BeginPos = m_pTarget->getPos();
+	EActionGradual::_init();
+	if (m_pTarget)
+	{
+		m_BeginPos = m_pTarget->getPos();
+	}
 }
 
 void e2d::EActionMoveBy::_callOn()
 {
-	while (EAnimation::_isDelayEnough())
+	if (m_pTarget == nullptr)
+	{
+		this->stop();
+		return;
+	}
+	while (EActionGradual::_isDelayEnough())
 	{
 		// º∆À„“∆∂ØŒª÷√
 		float scale = static_cast<float>(m_nDuration) / m_nTotalDuration;
@@ -35,7 +43,7 @@ void e2d::EActionMoveBy::_callOn()
 
 void e2d::EActionMoveBy::_reset()
 {
-	EAnimation::_reset();
+	EActionGradual::_reset();
 }
 
 e2d::EActionMoveBy * e2d::EActionMoveBy::clone() const

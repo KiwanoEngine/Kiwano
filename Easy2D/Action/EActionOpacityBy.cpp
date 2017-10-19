@@ -2,20 +2,28 @@
 
 
 e2d::EActionOpacityBy::EActionOpacityBy(float duration, float opacity) :
-	EAnimation(duration)
+	EActionGradual(duration)
 {
 	m_nVariation = opacity;
 }
 
 void e2d::EActionOpacityBy::_init()
 {
-	EAnimation::_init();
-	m_nBeginVal = m_pTarget->getOpacity();
+	EActionGradual::_init();
+	if (m_pTarget)
+	{
+		m_nBeginVal = m_pTarget->getOpacity();
+	}
 }
 
 void e2d::EActionOpacityBy::_callOn()
 {
-	while (EAnimation::_isDelayEnough())
+	if (m_pTarget == nullptr)
+	{
+		this->stop();
+		return;
+	}
+	while (EActionGradual::_isDelayEnough())
 	{
 		// º∆À„“∆∂ØŒª÷√
 		float scale = static_cast<float>(m_nDuration) / m_nTotalDuration;
@@ -32,7 +40,7 @@ void e2d::EActionOpacityBy::_callOn()
 
 void e2d::EActionOpacityBy::_reset()
 {
-	EAnimation::_reset();
+	EActionGradual::_reset();
 }
 
 e2d::EActionOpacityBy * e2d::EActionOpacityBy::clone() const
