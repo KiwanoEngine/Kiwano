@@ -1,15 +1,15 @@
 #include "..\eactions.h"
 
 
-e2d::EActionRotateTo::EActionRotateTo(float duration, float opacity) :
+e2d::EActionRotateTo::EActionRotateTo(float duration, float rotation) :
 	EActionRotateBy(duration, 0)
 {
-	m_nEndVal = opacity;
+	m_nEndVal = rotation;
 }
 
 e2d::EActionRotateTo * e2d::EActionRotateTo::clone() const
 {
-	return new EActionRotateTo(m_nAnimationInterval / 1000.0f, m_nEndVal);
+	return new EActionRotateTo(m_fTotalDuration / 1000, m_nEndVal);
 }
 
 void e2d::EActionRotateTo::_init()

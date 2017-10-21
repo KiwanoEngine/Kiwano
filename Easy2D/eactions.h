@@ -1,10 +1,11 @@
 #pragma once
 #include "enodes.h"
-#include "etools.h"
+#include <chrono>
 
 namespace e2d
 {
 
+class EActionManager;
 class EActionTwo;
 class EActionLoop;
 class EActionSequence;
@@ -106,8 +107,9 @@ protected:
 	virtual void _reset() override;
 
 protected:
-	LONGLONG m_nDuration;
-	LONGLONG m_nTotalDuration;
+	float m_fDuration;
+	float m_fTotalDuration;
+	float m_fRateOfProgress;
 };
 
 
@@ -175,6 +177,12 @@ public:
 	// 创建相对缩放动画
 	EActionScaleBy(
 		float duration, /* 动画持续时长 */
+		float scale		/* 缩放比例变化 */
+	);
+
+	// 创建相对缩放动画
+	EActionScaleBy(
+		float duration, /* 动画持续时长 */
 		float scaleX,	/* 横向缩放比例变化 */
 		float scaleY	/* 纵向缩放比例变化 */
 	);
@@ -207,6 +215,12 @@ class EActionScaleTo :
 	public EActionScaleBy
 {
 public:
+	// 创建缩放动画
+	EActionScaleTo(
+		float duration, /* 动画持续时长 */
+		float scale		/* 缩放至目标比例 */
+	);
+
 	// 创建缩放动画
 	EActionScaleTo(
 		float duration, /* 动画持续时长 */

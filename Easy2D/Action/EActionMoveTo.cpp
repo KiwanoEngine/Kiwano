@@ -8,7 +8,7 @@ e2d::EActionMoveTo::EActionMoveTo(float duration, EPoint pos) :
 
 e2d::EActionMoveTo * e2d::EActionMoveTo::clone() const
 {
-	return new EActionMoveTo(m_nAnimationInterval / 1000.0f, m_EndPos);
+	return new EActionMoveTo(m_fTotalDuration / 1000, m_EndPos);
 }
 
 void e2d::EActionMoveTo::_init()

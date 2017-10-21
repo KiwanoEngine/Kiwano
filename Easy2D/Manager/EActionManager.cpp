@@ -17,39 +17,6 @@ void e2d::EActionManager::addAction(EAction * action)
 	}
 }
 
-void e2d::EActionManager::startAllActionsBindedWith(EScene * pParentScene)
-{
-	if (pParentScene)
-	{
-		for (const auto &child : pParentScene->getChildren())
-		{
-			EActionManager::startAllActionsBindedWith(child);
-		}
-	}
-}
-
-void e2d::EActionManager::stopAllActionsBindedWith(EScene * pParentScene)
-{
-	if (pParentScene)
-	{
-		for (const auto &child : pParentScene->getChildren())
-		{
-			EActionManager::stopAllActionsBindedWith(child);
-		}
-	}
-}
-
-void e2d::EActionManager::clearAllActionsBindedWith(EScene * pParentScene)
-{
-	if (pParentScene)
-	{
-		for (const auto & child : pParentScene->getChildren())
-		{
-			ETimerManager::clearAllTimersBindedWith(child);
-		}
-	}
-}
-
 void e2d::EActionManager::startAllActionsBindedWith(ENode * pTargetNode)
 {
 	if (pTargetNode)
@@ -64,6 +31,24 @@ void e2d::EActionManager::startAllActionsBindedWith(ENode * pTargetNode)
 		for (const auto &child : pTargetNode->getChildren())
 		{
 			EActionManager::startAllActionsBindedWith(child);
+		}
+	}
+}
+
+void e2d::EActionManager::pauseAllActionsBindedWith(ENode * pTargetNode)
+{
+	if (pTargetNode)
+	{
+		for (const auto &action : s_vActions)
+		{
+			if (action->getTarget() == pTargetNode)
+			{
+				action->pause();
+			}
+		}
+		for (const auto &child : pTargetNode->getChildren())
+		{
+			EActionManager::pauseAllActionsBindedWith(child);
 		}
 	}
 }
@@ -86,7 +71,7 @@ void e2d::EActionManager::stopAllActionsBindedWith(ENode * pTargetNode)
 	}
 }
 
-void e2d::EActionManager::clearAllActionsBindedWith(ENode * pTargetNode)
+void e2d::EActionManager::_clearAllActionsBindedWith(ENode * pTargetNode)
 {
 	if (pTargetNode)
 	{
@@ -95,7 +80,7 @@ void e2d::EActionManager::clearAllActionsBindedWith(ENode * pTargetNode)
 			auto a = s_vActions[i];
 			if (a->getTarget() == pTargetNode)
 			{
-				SafeRelease(&a);
+				SafeReleaseAndClear(&a);
 				s_vActions.erase(s_vActions.begin() + i);
 			}
 			else
@@ -103,26 +88,31 @@ void e2d::EActionManager::clearAllActionsBindedWith(ENode * pTargetNode)
 				i++;
 			}
 		}
-		for (auto child : pTargetNode->getChildren())
-		{
-			ETimerManager::clearAllTimersBindedWith(child);
-		}
 	}
 }
 
 void e2d::EActionManager::startAllActions()
 {
-	EActionManager::startAllActionsBindedWith(EApp::getCurrentScene());
+	for (auto child : EApp::getCurrentScene()->getChildren())
+	{
+		EActionManager::startAllActionsBindedWith(child);
+	}
+}
+
+void e2d::EActionManager::pauseAllActions()
+{
+	for (auto child : EApp::getCurrentScene()->getChildren())
+	{
+		EActionManager::pauseAllActionsBindedWith(child);
+	}
 }
 
 void e2d::EActionManager::stopAllActions()
 {
-	EActionManager::stopAllActionsBindedWith(EApp::getCurrentScene());
-}
-
-void e2d::EActionManager::clearAllActions()
-{
-	EActionManager::clearAllActionsBindedWith(EApp::getCurrentScene());
+	for (auto child : EApp::getCurrentScene()->getChildren())
+	{
+		EActionManager::stopAllActionsBindedWith(child);
+	}
 }
 
 void e2d::EActionManager::_clearManager()
@@ -143,11 +133,10 @@ void e2d::EActionManager::ActionProc()
 	if (EApp::isPaused() || s_vActions.empty())
 		return;
 	
-	EAction * action;
 	// 循环遍历所有正在运行的动作
 	for (size_t i = 0; i < s_vActions.size(); i++)
 	{
-		action = s_vActions[i];
+		auto &action = s_vActions[i];
 		// 获取动作运行状态
 		if (action->isRunning() ||
 			(action->getTarget() && action->getTarget()->getParentScene() == EApp::getCurrentScene()))
@@ -155,7 +144,7 @@ void e2d::EActionManager::ActionProc()
 			if (action->_isEnding())
 			{
 				// 动作已经结束
-				SafeRelease(&action);
+				SafeReleaseAndClear(&action);
 				s_vActions.erase(s_vActions.begin() + i);
 			}
 			else

@@ -2,21 +2,20 @@
 #include "..\Win\winbase.h"
 
 e2d::EActionGradual::EActionGradual(float duration)
+	: m_fRateOfProgress(0)
+	, m_fDuration(0)
+	, m_fTotalDuration(duration * 1000)
 {
-	m_nDuration = 0;
-	m_nTotalDuration = UINT(duration * 1000);
 }
 
 bool e2d::EActionGradual::_isEnd() const
 {
-	return m_nDuration >= m_nTotalDuration;
+	return m_fDuration >= m_fTotalDuration;
 }
 
 void e2d::EActionGradual::_init()
 {
 	EAction::_init();
-	// 记录当前时间
-	m_tLast = GetNow();
 }
 
 bool e2d::EActionGradual::_isDelayEnough()
@@ -26,7 +25,9 @@ bool e2d::EActionGradual::_isDelayEnough()
 	{
 		// 重新记录时间
 		m_tLast += milliseconds(m_nAnimationInterval);
-		m_nDuration += m_nAnimationInterval;
+		m_fDuration += static_cast<float>(m_nAnimationInterval);
+		// 计算动画进度
+		m_fRateOfProgress = m_fDuration / m_fTotalDuration;
 		return true;
 	}
 	return false;
@@ -35,7 +36,5 @@ bool e2d::EActionGradual::_isDelayEnough()
 void e2d::EActionGradual::_reset()
 {
 	EAction::_reset();
-	m_nDuration = 0;
-	// 记录当前时间
-	m_tLast = GetNow();
+	m_fDuration = 0;
 }

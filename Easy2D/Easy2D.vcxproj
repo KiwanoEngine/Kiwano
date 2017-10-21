@@ -146,7 +146,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
@@ -212,7 +212,6 @@
     <ClCompile Include="Base\EApp.cpp" />
     <ClCompile Include="Base\EObject.cpp" />
     <ClCompile Include="Base\EScene.cpp" />
-    <ClCompile Include="ETimer.cpp" />
     <ClCompile Include="Listener\EKeyboardListener.cpp" />
     <ClCompile Include="Listener\EKeyboardPressListener.cpp" />
     <ClCompile Include="Listener\EListener.cpp" />
@@ -225,6 +224,7 @@
     <ClCompile Include="Manager\EMsgManager.cpp" />
     <ClCompile Include="Manager\EObjectManager.cpp" />
     <ClCompile Include="Manager\ETimerManager.cpp" />
+    <ClCompile Include="Node\EButton.cpp" />
     <ClCompile Include="Node\ENode.cpp" />
     <ClCompile Include="Node\ESprite.cpp" />
     <ClCompile Include="Node\ESpriteFrame.cpp" />
@@ -232,9 +232,13 @@
     <ClCompile Include="Node\EFont.cpp" />
     <ClCompile Include="Node\ETexture.cpp" />
     <ClCompile Include="Tool\EFileUtils.cpp" />
-    <ClCompile Include="Tool\EMusicUtils.cpp" />
     <ClCompile Include="Tool\ERandom.cpp" />
+    <ClCompile Include="Tool\ETimer.cpp" />
+    <ClCompile Include="Transition\ETransitionEmerge.cpp" />
     <ClCompile Include="Transition\ETransitionFade.cpp" />
+    <ClCompile Include="Transition\ETransitionMove.cpp" />
+    <ClCompile Include="Transition\ETransitionScale.cpp" />
+    <ClCompile Include="Transition\ETransitionScaleEmerge.cpp" />
     <ClCompile Include="Win\winbase.cpp" />
   </ItemGroup>
   <ItemGroup>

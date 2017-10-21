@@ -19,20 +19,13 @@ e2d::EAnimation::~EAnimation()
 {
 	for (auto frame : m_vFrames)
 	{
-		SafeRelease(&frame);
+		SafeReleaseAndClear(&frame);
 	}
 }
 
 void e2d::EAnimation::_init()
 {
-	// 判断执行帧动画的目标类型是否是 ESprite
-	ASSERT(
-		typeid(ESprite) == typeid(*m_pTarget),
-		"Only ESprite can use EAnimation!"
-	);
 	EAction::_init();
-	// 记录当前时间
-	m_tLast = GetNow();
 }
 
 void e2d::EAnimation::_callOn()
@@ -47,7 +40,8 @@ void e2d::EAnimation::_callOn()
 	{
 		// 重新记录时间
 		m_tLast += milliseconds(m_nAnimationInterval);
-		reinterpret_cast<ESprite*>(m_pTarget)->loadFromSpriteFrame(m_vFrames[m_nFrameIndex]);
+		// 加载精灵帧
+		reinterpret_cast<ESprite*>(m_pTarget)->loadFrom(m_vFrames[m_nFrameIndex]);
 		m_nFrameIndex++;
 		// 判断动作是否结束
 		if (m_nFrameIndex == m_vFrames.size())
@@ -62,8 +56,6 @@ void e2d::EAnimation::_reset()
 {
 	EAction::_reset();
 	m_nFrameIndex = 0;
-	// 记录当前时间
-	m_tLast = steady_clock::now();
 }
 
 void e2d::EAnimation::addFrame(ESpriteFrame * frame)

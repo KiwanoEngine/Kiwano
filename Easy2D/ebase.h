@@ -22,13 +22,6 @@ public:
 
 	virtual ~EApp();
 
-	enum WINDOW_STYLE
-	{
-		NO_CLOSE = 1,		/* 禁用关闭按钮 */
-		NO_MINI_SIZE = 2,	/* 禁用最小化按钮 */
-		TOP_MOST = 4			/* 窗口置顶 */
-	};
-
 	// 初始化游戏界面
 	bool init(
 		const EString &title,	/* 窗口标题 */
@@ -42,7 +35,7 @@ public:
 		const EString &title,	/* 窗口标题 */
 		UINT32 width,			/* 窗口宽度 */
 		UINT32 height,			/* 窗口高度 */
-		int windowStyle,		/* 窗口样式 */
+		EWindowStyle wStyle,	/* 窗口样式 */
 		bool showConsole = false/* 是否显示控制台 */
 	);
 
@@ -115,10 +108,10 @@ public:
 	static EString getTitle();
 
 	// 获取窗口宽度
-	static UINT32 getWidth();
+	static float getWidth();
 
 	// 获取窗口高度
-	static UINT32 getHeight();
+	static float getHeight();
 
 	// 获取当前场景
 	static EScene * getCurrentScene();
@@ -207,7 +200,6 @@ protected:
 	bool	m_bPaused;
 	bool	m_bManualPaused;
 	bool	m_bTransitional;
-	bool	m_bEnterNextScene;
 	bool	m_bTopMost;
 	EString	m_sTitle;
 	EString	m_sAppName;

@@ -9,7 +9,7 @@ e2d::EActionOpacityTo::EActionOpacityTo(float duration, float opacity) :
 
 e2d::EActionOpacityTo * e2d::EActionOpacityTo::clone() const
 {
-	return new EActionOpacityTo(m_nAnimationInterval / 1000.0f, m_nEndVal);
+	return new EActionOpacityTo(m_fTotalDuration / 1000, m_nEndVal);
 }
 
 void e2d::EActionOpacityTo::_init()

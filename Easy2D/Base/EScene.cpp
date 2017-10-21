@@ -11,15 +11,16 @@ e2d::EScene::EScene()
 {
 	m_pRoot->_onEnter();
 	m_pRoot->_setParentScene(this);
+	m_pRoot->_setSize(EApp::getWidth(), EApp::getHeight());
+	m_pRoot->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
 }
 
 e2d::EScene::~EScene()
 {
-	ETimerManager::clearAllTimersBindedWith(this);
-	EMsgManager::clearAllMouseListenersBindedWith(this);
-	EMsgManager::clearAllKeyboardListenersBindedWith(this);
-	EActionManager::clearAllActionsBindedWith(this);
-	SafeRelease(&m_pRoot);
+	ETimerManager::_clearAllTimersBindedWith(this);
+	EMsgManager::_clearAllMouseListenersBindedWith(this);
+	EMsgManager::_clearAllKeyboardListenersBindedWith(this);
+	SafeReleaseAndClear(&m_pRoot);
 }
 
 void e2d::EScene::onEnter()

@@ -7,11 +7,13 @@ namespace e2d
 class EText;
 class ESprite;
 class EAction;
+class EButton;
 
 class ENode :
 	public EObject
 {
 	friend EScene;
+	friend EButton;
 
 public:
 	ENode();
@@ -204,19 +206,19 @@ public:
 	);
 
 	// 设置纵向锚点
-	// 默认为 0, 范围 [0, 1]
+	// 默认为 0.5f, 范围 [0, 1]
 	virtual void setAnchorX(
 		float anchorX
 	);
 
 	// 设置横向锚点
-	// 默认为 0, 范围 [0, 1]
+	// 默认为 0.5f, 范围 [0, 1]
 	virtual void setAnchorY(
 		float anchorY
 	);
 
 	// 设置锚点
-	// 默认为 (0, 0), 范围 [0, 1]
+	// 默认为 (0.5f, 0.5f), 范围 [0, 1]
 	virtual void setAnchor(
 		float anchorX,
 		float anchorY
@@ -268,6 +270,20 @@ public:
 	// 停止动画
 	virtual void stopAction(
 		EAction * action
+	);
+
+	// 继续所有暂停动画
+	virtual void startAllActions();
+
+	// 暂停所有动画
+	virtual void pauseAllActions();
+
+	// 停止所有动画
+	virtual void stopAllActions();
+
+	// 判断点是否在节点内
+	virtual bool isPointIn(
+		EPoint point
 	);
 
 protected:
@@ -472,6 +488,15 @@ public:
 
 	virtual ~ESpriteFrame();
 
+	// 获取宽度
+	float getWidth() const;
+
+	// 获取高度
+	float getHeight() const;
+
+	// 获取纹理
+	ETexture * getTexture() const;
+
 protected:
 	// 获取纹理
 	void _setTexture(
@@ -501,6 +526,16 @@ class ESprite :
 public:
 	// 创建一个空精灵
 	ESprite();
+
+	// 从文理资源创建精灵
+	ESprite(
+		ETexture * texture
+	);
+
+	// 从精灵帧创建精灵
+	ESprite(
+		ESpriteFrame * spriteFrame
+	);
 
 	// 从文件图片创建精灵
 	ESprite(
@@ -535,12 +570,12 @@ public:
 	virtual ~ESprite();
 	
 	// 设置精灵纹理
-	void setTexture(
+	void loadFrom(
 		ETexture * texture
 	);
 
 	// 设置精灵纹理并裁剪
-	void setTexture(
+	void loadFrom(
 		ETexture * texture,
 		float x,
 		float y,
@@ -548,13 +583,13 @@ public:
 		float height
 	);
 
-	// 从 ESpriteFrame 加载资源
-	void loadFromSpriteFrame(
+	// 从精灵帧加载资源
+	void loadFrom(
 		ESpriteFrame * frame
 	);
 
 	// 裁剪纹理
-	void clipTexture(
+	void clip(
 		float x,
 		float y,
 		float width,
@@ -719,6 +754,94 @@ protected:
 	bool	m_bWordWrapping;
 	float	m_fWordWrappingWidth;
 	EFont * m_pFont;
+};
+
+
+class EButton :
+	public ENode
+{
+public:
+	// 创建一个空按钮
+	EButton();
+
+	// 创建按钮
+	EButton(
+		ENode * normal,
+		const BUTTON_CLICK_CALLBACK & callback
+	);
+
+	// 创建按钮
+	EButton(
+		ENode * normal,
+		ENode * selected,
+		const BUTTON_CLICK_CALLBACK & callback
+	);
+
+	// 创建按钮
+	EButton(
+		ENode * normal,
+		ENode * mouseover,
+		ENode * selected,
+		const BUTTON_CLICK_CALLBACK & callback
+	);
+
+	// 创建按钮
+	EButton(
+		ENode * normal,
+		ENode * mouseover,
+		ENode * selected,
+		ENode * disabled,
+		const BUTTON_CLICK_CALLBACK & callback
+	);
+
+	// 设置一般情况下显示的按钮
+	void setNormal(
+		ENode * normal
+	);
+
+	// 设置鼠标移入按钮时显示的按钮
+	void setMouseOver(
+		ENode * mouseover
+	);
+
+	// 设置鼠标选中按钮时显示的按钮
+	void setSelected(
+		ENode * selected
+	);
+
+	// 设置按钮被禁用时显示的按钮
+	void setDisabled(
+		ENode * disabled
+	);
+
+	// 设置按钮禁用
+	void setDisable(
+		bool disable
+	);
+
+	// 设置回调函数
+	void setCallback(
+		const BUTTON_CLICK_CALLBACK & callback
+	);
+
+protected:
+	// 渲染按钮
+	virtual void _callOn() override;
+
+	// 鼠标消息监听
+	void _listenerCallback();
+
+protected:
+	enum STATUS { NORMAL, MOUSEOVER, SELECTED, DISABLED };
+	STATUS	m_eStatus;
+	ENode * m_pNormal;
+	ENode * m_pMouseover;
+	ENode * m_pSelected;
+	ENode * m_pDisabled;
+	ENode * m_pDisplayed;
+	bool	m_bIsDisable;
+	bool	m_bIsSelected;
+	BUTTON_CLICK_CALLBACK m_Callback;
 };
 
 }

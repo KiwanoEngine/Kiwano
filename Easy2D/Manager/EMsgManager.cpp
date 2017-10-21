@@ -15,16 +15,18 @@ e2d::EVector<e2d::EKeyboardListener*> s_vKeyboardListeners;
 
 void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (EApp::isPaused())
-		return;
-
 	// 保存鼠标消息
 	s_MouseMsg.m_nMsg = message;
 	s_MouseMsg.m_wParam = wParam;
 	s_MouseMsg.m_lParam = lParam;
 	// 执行鼠标消息监听函数
-	for (auto mlistener : s_vMouseListeners)
+	for (size_t i = 0; i < s_vMouseListeners.size(); i++)
 	{
+		auto &mlistener = s_vMouseListeners[i];
+
+		if (EApp::isPaused() && !mlistener->m_bAlways)
+			continue;
+
 		if (mlistener->isRunning())
 		{
 			if (mlistener->getParentScene() == EApp::getCurrentScene() ||
@@ -38,16 +40,18 @@ void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (EApp::isPaused())
-		return;
-
 	// 保存按键消息
 	s_KeyboardMsg.m_nMsg = message;
 	s_KeyboardMsg.m_wParam = wParam;
 	s_KeyboardMsg.m_lParam = lParam;
 	// 执行按键消息监听函数
-	for (auto klistener : s_vKeyboardListeners)
+	for (size_t i = 0; i < s_vKeyboardListeners.size(); i++)
 	{
+		auto &klistener = s_vKeyboardListeners[i];
+
+		if (EApp::isPaused() && !klistener->m_bAlways)
+			continue;
+
 		if (klistener->isRunning())
 		{
 			if (klistener->getParentScene() == EApp::getCurrentScene() ||
@@ -163,7 +167,7 @@ bool e2d::EKeyboardMsg::isScrollLockOn()
 	return false;
 }
 
-void e2d::EMsgManager::bindListener(e2d::EMouseListener * listener, EScene * pParentScene)
+void e2d::EMsgManager::bindListener(e2d::EMouseListener * listener, EScene * pParentScene, bool always /* = false */)
 {
 	ASSERT(
 		(!listener->m_pParentNode) && (!listener->m_pParentScene),
@@ -177,11 +181,12 @@ void e2d::EMsgManager::bindListener(e2d::EMouseListener * listener, EScene * pPa
 		listener->start();
 		listener->retain();
 		listener->m_pParentScene = pParentScene;
+		listener->m_bAlways = always;
 		s_vMouseListeners.push_back(listener);
 	}
 }
 
-void e2d::EMsgManager::bindListener(EKeyboardListener * listener, EScene * pParentScene)
+void e2d::EMsgManager::bindListener(EKeyboardListener * listener, EScene * pParentScene, bool always /* = false */)
 {
 	ASSERT(
 		(!listener->m_pParentNode) && (!listener->m_pParentScene),
@@ -195,11 +200,12 @@ void e2d::EMsgManager::bindListener(EKeyboardListener * listener, EScene * pPare
 		listener->start();
 		listener->retain();
 		listener->m_pParentScene = pParentScene;
+		listener->m_bAlways = always;
 		s_vKeyboardListeners.push_back(listener);
 	}
 }
 
-void e2d::EMsgManager::bindListener(EMouseListener * listener, ENode * pParentNode)
+void e2d::EMsgManager::bindListener(EMouseListener * listener, ENode * pParentNode, bool always /* = false */)
 {
 	ASSERT(
 		(!listener->m_pParentNode) && (!listener->m_pParentScene),
@@ -212,12 +218,13 @@ void e2d::EMsgManager::bindListener(EMouseListener * listener, ENode * pParentNo
 	{
 		listener->start();
 		listener->retain();
+		listener->m_bAlways = always;
 		listener->m_pParentNode = pParentNode;
 		s_vMouseListeners.push_back(listener);
 	}
 }
 
-void e2d::EMsgManager::bindListener(EKeyboardListener * listener, ENode * pParentNode)
+void e2d::EMsgManager::bindListener(EKeyboardListener * listener, ENode * pParentNode, bool always /* = false */)
 {
 	ASSERT(
 		(!listener->m_pParentNode) && (!listener->m_pParentScene),
@@ -231,6 +238,7 @@ void e2d::EMsgManager::bindListener(EKeyboardListener * listener, ENode * pParen
 		listener->start();
 		listener->retain();
 		listener->m_pParentNode = pParentNode;
+		listener->m_bAlways = always;
 		s_vKeyboardListeners.push_back(listener);
 	}
 }
@@ -265,7 +273,7 @@ void e2d::EMsgManager::delMouseListeners(const EString & name)
 	{
 		if ((*mIter)->getName() == name)
 		{
-			SafeRelease(&(*mIter));
+			SafeReleaseAndClear(&(*mIter));
 			mIter = s_vMouseListeners.erase(mIter);
 		}
 		else
@@ -307,7 +315,7 @@ void e2d::EMsgManager::delKeyboardListeners(const EString & name)
 	{
 		if ((*kIter)->getName() == name)
 		{
-			SafeRelease(&(*kIter));
+			SafeReleaseAndClear(&(*kIter));
 			kIter = s_vKeyboardListeners.erase(kIter);
 		}
 		else
@@ -437,14 +445,14 @@ void e2d::EMsgManager::stopAllKeyboardListenersBindedWith(ENode * pParentNode)
 	}
 }
 
-void e2d::EMsgManager::clearAllMouseListenersBindedWith(EScene * pParentScene)
+void e2d::EMsgManager::_clearAllMouseListenersBindedWith(EScene * pParentScene)
 {
 	for (size_t i = 0; i < s_vMouseListeners.size();)
 	{
 		auto t = s_vMouseListeners[i];
 		if (t->getParentScene() == pParentScene)
 		{
-			SafeRelease(&t);
+			SafeReleaseAndClear(&t);
 			s_vMouseListeners.erase(s_vMouseListeners.begin() + i);
 		}
 		else
@@ -452,20 +460,16 @@ void e2d::EMsgManager::clearAllMouseListenersBindedWith(EScene * pParentScene)
 			i++;
 		}
 	}
-	for (auto child : pParentScene->getChildren())
-	{
-		EMsgManager::clearAllMouseListenersBindedWith(child);
-	}
 }
 
-void e2d::EMsgManager::clearAllKeyboardListenersBindedWith(EScene * pParentScene)
+void e2d::EMsgManager::_clearAllKeyboardListenersBindedWith(EScene * pParentScene)
 {
 	for (size_t i = 0; i < s_vKeyboardListeners.size();)
 	{
 		auto t = s_vKeyboardListeners[i];
 		if (t->getParentScene() == pParentScene)
 		{
-			SafeRelease(&t);
+			SafeReleaseAndClear(&t);
 			s_vKeyboardListeners.erase(s_vKeyboardListeners.begin() + i);
 		}
 		else
@@ -473,20 +477,16 @@ void e2d::EMsgManager::clearAllKeyboardListenersBindedWith(EScene * pParentScene
 			i++;
 		}
 	}
-	for (auto child : pParentScene->getChildren())
-	{
-		EMsgManager::clearAllKeyboardListenersBindedWith(child);
-	}
 }
 
-void e2d::EMsgManager::clearAllMouseListenersBindedWith(ENode * pParentNode)
+void e2d::EMsgManager::_clearAllMouseListenersBindedWith(ENode * pParentNode)
 {
 	for (size_t i = 0; i < s_vMouseListeners.size();)
 	{
 		auto t = s_vMouseListeners[i];
 		if (t->getParentNode() == pParentNode)
 		{
-			SafeRelease(&t);
+			SafeReleaseAndClear(&t);
 			s_vMouseListeners.erase(s_vMouseListeners.begin() + i);
 		}
 		else
@@ -494,30 +494,22 @@ void e2d::EMsgManager::clearAllMouseListenersBindedWith(ENode * pParentNode)
 			i++;
 		}
 	}
-	for (auto child : pParentNode->getChildren())
-	{
-		EMsgManager::clearAllMouseListenersBindedWith(child);
-	}
 }
 
-void e2d::EMsgManager::clearAllKeyboardListenersBindedWith(ENode * pParentNode)
+void e2d::EMsgManager::_clearAllKeyboardListenersBindedWith(ENode * pParentNode)
 {
 	for (size_t i = 0; i < s_vKeyboardListeners.size();)
 	{
 		auto t = s_vKeyboardListeners[i];
 		if (t->getParentNode() == pParentNode)
 		{
-			SafeRelease(&t);
+			SafeReleaseAndClear(&t);
 			s_vKeyboardListeners.erase(s_vKeyboardListeners.begin() + i);
 		}
 		else
 		{
 			i++;
 		}
-	}
-	for (auto child : pParentNode->getChildren())
-	{
-		EMsgManager::clearAllKeyboardListenersBindedWith(child);
 	}
 }
 
@@ -537,11 +529,6 @@ void e2d::EMsgManager::stopAllMouseListeners()
 	EMsgManager::stopAllMouseListenersBindedWith(EApp::getCurrentScene());
 }
 
-void e2d::EMsgManager::clearAllMouseListeners()
-{
-	EMsgManager::clearAllMouseListenersBindedWith(EApp::getCurrentScene());
-}
-
 void e2d::EMsgManager::startAllKeyboardListeners()
 {
 	EMsgManager::startAllKeyboardListenersBindedWith(EApp::getCurrentScene());
@@ -550,9 +537,4 @@ void e2d::EMsgManager::startAllKeyboardListeners()
 void e2d::EMsgManager::stopAllKeyboardListeners()
 {
 	EMsgManager::stopAllKeyboardListenersBindedWith(EApp::getCurrentScene());
-}
-
-void e2d::EMsgManager::clearAllKeyboardListeners()
-{
-	EMsgManager::clearAllKeyboardListenersBindedWith(EApp::getCurrentScene());
 }

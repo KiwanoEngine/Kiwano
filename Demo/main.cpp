@@ -10,20 +10,11 @@ int WINAPI WinMain(
 {
 	EApp app;
 
-	if (app.init(L"Easy2D Demo", 640, 480, app.NO_CLOSE | app.NO_MINI_SIZE | app.TOP_MOST))
+	if (app.init(L"Easy2D Demo", 640, 480, app.NO_MINI_SIZE))
 	{
 		auto scene = new EScene();
-		auto scene2 = new EScene();
 
-		auto listener = new EKeyboardPressListener([=]() {
-			if (EKeyboardMsg::getVal() == EKeyboardMsg::KEY::SPACE)
-			{
-				EApp::enterScene(scene, new ETransitionFade(2, 2));
-			}
-		});
-		listener->bindWith(scene2);
-
-		auto text = new EText(L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试", EColor::WHITE, L"Microsoft Yahei");
+		auto text = new EText(L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试", EColor::WHITE, L"楷体");
 		text->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
 		//text->setWordWrapping(true);
 		//text->setWordWrappingWidth(130);
@@ -31,9 +22,18 @@ int WINAPI WinMain(
 		text->getFont()->setItalic(true);
 		text->setAnchor(0.5f, 0.5f);
 		text->setColor(EColor::WHITE);
+		//text->runAction(new EActionLoop(new EActionTwo(new EActionFadeOut(1), new EActionFadeIn(1))));
 		scene->add(text);
 
-		text->runAction(new EActionLoop(new EActionTwo(new EActionFadeOut(1), new EActionFadeIn(1))));
+		auto listener = new EKeyboardPressListener([=]() {
+			if (EKeyboardMsg::getVal() == EKeyboardMsg::KEY::SPACE)
+			{
+				EApp::backScene(new ETransitionFade(0.5f, 0.5f));
+			}
+		});
+		listener->bindWith(scene);
+
+		auto scene2 = new EScene();
 
 		auto bird = new ESprite();
 		auto animation = new EAnimation();
@@ -45,15 +45,26 @@ int WINAPI WinMain(
 		bird->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
 		scene2->add(bird);
 
-		auto listener2 = new EKeyboardPressListener([=]() {
-			if (EKeyboardMsg::getVal() == EKeyboardMsg::KEY::SPACE)
+		auto btnStart = new ESprite(L"atlas.png", 702, 234, 116, 70);
+		btnStart->setAnchor(0.5f, 0.5f);
+		auto btnStartSelected = new ESprite(L"atlas.png", 702, 234, 116, 70);
+		btnStartSelected->setAnchor(0.5f, 0.5f);
+		btnStartSelected->setPosY(5);
+		auto button = new EButton(btnStart, btnStartSelected, [=] {
+			if (EApp::isPaused())
 			{
-				EApp::backScene(new ETransitionFade(0.5f, 0.5f));
+				EApp::resume();
 			}
+			else
+			{
+				EApp::pause();
+			}
+			//EApp::enterScene(scene, new ETransitionScaleEmerge(1, ETransitionScaleEmerge::BACK));
 		});
-		listener2->bindWith(scene);
+		button->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2 + 100);
+		scene2->add(button);
 
-		app.enterScene(scene2, new ETransitionFade(2, 4));
+		app.enterScene(scene2, new ETransitionFade(0, 1));
 		app.run();
 	}
 

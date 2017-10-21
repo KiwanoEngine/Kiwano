@@ -14,8 +14,8 @@ e2d::ENode::ENode()
 	, m_fSkewAngleY(0)
 	, m_fDisplayOpacity(1.0f)
 	, m_fRealOpacity(1.0f)
-	, m_fAnchorX(0)
-	, m_fAnchorY(0)
+	, m_fAnchorX(0.5f)
+	, m_fAnchorY(0.5f)
 	, m_Matri(D2D1::Matrix3x2F::Identity())
 	, m_bVisiable(true)
 	, m_bDisplayedInScene(false)
@@ -35,10 +35,10 @@ e2d::ENode::ENode(const EString & name)
 
 e2d::ENode::~ENode()
 {
-	ETimerManager::clearAllTimersBindedWith(this);
-	EMsgManager::clearAllMouseListenersBindedWith(this);
-	EMsgManager::clearAllKeyboardListenersBindedWith(this);
-	EActionManager::clearAllActionsBindedWith(this);
+	ETimerManager::_clearAllTimersBindedWith(this);
+	EMsgManager::_clearAllMouseListenersBindedWith(this);
+	EMsgManager::_clearAllKeyboardListenersBindedWith(this);
+	EActionManager::_clearAllActionsBindedWith(this);
 }
 
 void e2d::ENode::onEnter()
@@ -428,8 +428,8 @@ void e2d::ENode::setOpacity(float opacity)
 		return;
 
 	m_fDisplayOpacity = m_fRealOpacity = min(max(opacity, 0), 1);
-	// 更新子节点透明度
-	_updateChildrenOpacity();
+	// 更新节点透明度
+	_updateOpacity(this);
 }
 
 void e2d::ENode::setAnchorX(float anchorX)
@@ -557,7 +557,9 @@ bool e2d::ENode::removeChild(ENode * child, bool release /* = true */)
 				child->_onExit();
 				child->release();
 				if (release)
+				{
 					child->autoRelease();
+				}
 				return true;
 			}
 		}
@@ -593,7 +595,9 @@ void e2d::ENode::removeChild(const EString & childName, bool release /* = true *
 			child->_onExit();
 			child->release();
 			if (release)
+			{
 				child->autoRelease();
+			}
 			return;
 		}
 	}
@@ -604,12 +608,12 @@ void e2d::ENode::clearAllChildren(bool release /* = true */)
 	// 所有节点的引用计数减一
 	for (auto child : m_vChildren)
 	{
+		child->_onExit();
+		child->release();
 		if (release)
 		{
 			child->autoRelease();
 		}
-		child->_onExit();
-		child->release();
 	}
 	// 清空储存节点的容器
 	m_vChildren.clear();
@@ -619,7 +623,7 @@ void e2d::ENode::runAction(EAction * action)
 {
 	ASSERT(
 		(!action->getTarget()),
-		"The action is already running, it cannot running again!"
+		"The action is already running, it cannot run again!"
 	);
 	action->setTarget(this);
 	EActionManager::addAction(action);
@@ -641,12 +645,62 @@ void e2d::ENode::pauseAction(EAction * action)
 	}
 }
 
+bool e2d::ENode::isPointIn(EPoint point)
+{
+	if (m_bTransformChildrenNeeded)
+	{
+		_updateTransform(this);
+	}
+	// 保存节点所在矩形
+	D2D1_POINT_2F leftTop = m_Matri.TransformPoint(
+		D2D1::Point2F(0, 0)
+	);
+	D2D1_POINT_2F rightBottom = m_Matri.TransformPoint(
+		D2D1::Point2F(getRealWidth(), getRealHeight())
+	);
+	D2D1_RECT_F rt = D2D1::RectF(
+		leftTop.x,
+		leftTop.y,
+		rightBottom.x,
+		rightBottom.y
+	);
+	if (point.x >= rt.left &&
+		point.x <= rt.right &&
+		point.y >= rt.top &&
+		point.y <= rt.bottom)
+	{
+		return true;
+	}
+	else
+	{
+		for (const auto & child : m_vChildren)
+			if (child->isPointIn(point))
+				return true;
+	}
+	return false;
+}
+
 void e2d::ENode::stopAction(EAction * action)
 {
 	if (action->getTarget() == this)
 	{
 		action->stop();
 	}
+}
+
+void e2d::ENode::startAllActions()
+{
+	EActionManager::startAllActionsBindedWith(this);
+}
+
+void e2d::ENode::pauseAllActions()
+{
+	EActionManager::pauseAllActionsBindedWith(this);
+}
+
+void e2d::ENode::stopAllActions()
+{
+	EActionManager::stopAllActionsBindedWith(this);
 }
 
 void e2d::ENode::setVisiable(bool value)

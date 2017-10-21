@@ -25,10 +25,8 @@ void e2d::EActionOpacityBy::_callOn()
 	}
 	while (EActionGradual::_isDelayEnough())
 	{
-		// 计算移动位置
-		float scale = static_cast<float>(m_nDuration) / m_nTotalDuration;
-		// 移动 Sprite
-		m_pTarget->setOpacity(m_nBeginVal + m_nVariation * scale);
+		// 设置节点透明度
+		m_pTarget->setOpacity(m_nBeginVal + m_nVariation * m_fRateOfProgress);
 		// 判断动作是否结束
 		if (_isEnd())
 		{
@@ -45,10 +43,10 @@ void e2d::EActionOpacityBy::_reset()
 
 e2d::EActionOpacityBy * e2d::EActionOpacityBy::clone() const
 {
-	return new EActionOpacityBy(m_nAnimationInterval / 1000.0f, m_nVariation);
+	return new EActionOpacityBy(m_fTotalDuration / 1000, m_nVariation);
 }
 
 e2d::EActionOpacityBy * e2d::EActionOpacityBy::reverse() const
 {
-	return new EActionOpacityBy(m_nTotalDuration / 1000.0f, -m_nVariation);
+	return new EActionOpacityBy(m_fTotalDuration / 1000, -m_nVariation);
 }

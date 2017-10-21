@@ -45,9 +45,6 @@
     <ClCompile Include="Node\ESprite.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="ETimer.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="Node\EText.cpp">
       <Filter>Node</Filter>
     </ClCompile>
@@ -105,9 +102,6 @@
     <ClCompile Include="Action\EActionTwoAtSameTime.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="Tool\EMusicUtils.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="Node\ESpriteFrame.cpp">
       <Filter>Node</Filter>
     </ClCompile>
@@ -158,6 +152,24 @@
     </ClCompile>
     <ClCompile Include="Listener\EMousePressListener.cpp">
       <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Node\EButton.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition\ETransitionEmerge.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition\ETransitionMove.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition\ETransitionScale.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition\ETransitionScaleEmerge.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool\ETimer.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

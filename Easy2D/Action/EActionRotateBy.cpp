@@ -25,10 +25,8 @@ void e2d::EActionRotateBy::_callOn()
 	}
 	while (EActionGradual::_isDelayEnough())
 	{
-		// 计算移动位置
-		float scale = static_cast<float>(m_nDuration) / m_nTotalDuration;
-		// 移动 Sprite
-		m_pTarget->setRotation(m_nBeginVal + m_nVariation * scale);
+		// 旋转节点
+		m_pTarget->setRotation(m_nBeginVal + m_nVariation * m_fRateOfProgress);
 		// 判断动作是否结束
 		if (_isEnd())
 		{
@@ -45,10 +43,10 @@ void e2d::EActionRotateBy::_reset()
 
 e2d::EActionRotateBy * e2d::EActionRotateBy::clone() const
 {
-	return new EActionRotateBy(m_nAnimationInterval / 1000.0f, m_nVariation);
+	return new EActionRotateBy(m_fTotalDuration / 1000, m_nVariation);
 }
 
 e2d::EActionRotateBy * e2d::EActionRotateBy::reverse() const
 {
-	return new EActionRotateBy(m_nTotalDuration / 1000.0f, -m_nVariation);
+	return new EActionRotateBy(m_fTotalDuration / 1000, -m_nVariation);
 }

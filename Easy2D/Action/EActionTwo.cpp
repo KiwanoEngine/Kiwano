@@ -10,8 +10,8 @@ e2d::EActionTwo::EActionTwo(EAction * actionFirst, EAction * actionSecond) :
 
 e2d::EActionTwo::~EActionTwo()
 {
-	SafeRelease(&m_pFirstAction);
-	SafeRelease(&m_pSecondAction);
+	SafeReleaseAndClear(&m_pFirstAction);
+	SafeReleaseAndClear(&m_pSecondAction);
 }
 
 e2d::EActionTwo * e2d::EActionTwo::clone() const

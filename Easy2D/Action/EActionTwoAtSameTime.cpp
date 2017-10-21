@@ -10,8 +10,8 @@ e2d::EActionTwoAtSameTime::EActionTwoAtSameTime(EAction * actionFirst, EAction *
 
 e2d::EActionTwoAtSameTime::~EActionTwoAtSameTime()
 {
-	SafeRelease(&m_pFirstAction);
-	SafeRelease(&m_pSecondAction);
+	SafeReleaseAndClear(&m_pFirstAction);
+	SafeReleaseAndClear(&m_pSecondAction);
 }
 
 e2d::EActionTwoAtSameTime * e2d::EActionTwoAtSameTime::clone() const

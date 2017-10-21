@@ -2,6 +2,7 @@
 
 e2d::EListener::EListener()
 	: m_bRunning(false)
+	, m_bAlways(false)
 	, m_pParentScene(nullptr)
 	, m_pParentNode(nullptr)
 {

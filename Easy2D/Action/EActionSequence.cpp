@@ -25,7 +25,7 @@ e2d::EActionSequence::~EActionSequence()
 {
 	for (auto action : m_vActions)
 	{
-		SafeRelease(&action);
+		SafeReleaseAndClear(&action);
 	}
 }
 
@@ -49,9 +49,10 @@ void e2d::EActionSequence::_init()
 
 void e2d::EActionSequence::_callOn()
 {
-	m_vActions[m_nActionIndex]->_callOn();
+	auto &action = m_vActions[m_nActionIndex];
+	action->_callOn();
 
-	if (m_vActions[m_nActionIndex]->_isEnding())
+	if (action->_isEnding())
 	{
 		m_nActionIndex++;
 		if (m_nActionIndex == m_vActions.size())

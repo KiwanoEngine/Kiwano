@@ -1,8 +1,15 @@
 #include "..\eactions.h"
 
 
-e2d::EActionScaleBy::EActionScaleBy(float duration, float scaleX, float scaleY) :
-	EActionGradual(duration)
+e2d::EActionScaleBy::EActionScaleBy(float duration, float scale)
+	: EActionGradual(duration)
+{
+	m_nVariationX = scale;
+	m_nVariationY = scale;
+}
+
+e2d::EActionScaleBy::EActionScaleBy(float duration, float scaleX, float scaleY)
+	: EActionGradual(duration)
 {
 	m_nVariationX = scaleX;
 	m_nVariationY = scaleY;
@@ -27,10 +34,10 @@ void e2d::EActionScaleBy::_callOn()
 	}
 	while (EActionGradual::_isDelayEnough())
 	{
-		// 计算移动位置
-		float scale = static_cast<float>(m_nDuration) / m_nTotalDuration;
-		// 移动 Sprite
-		m_pTarget->setScale(m_nBeginScaleX + m_nVariationX * scale, m_nBeginScaleX + m_nVariationX * scale);
+		// 缩放节点
+		m_pTarget->setScale(
+			m_nBeginScaleX + m_nVariationX * m_fRateOfProgress, 
+			m_nBeginScaleX + m_nVariationX * m_fRateOfProgress);
 		// 判断动作是否结束
 		if (_isEnd())
 		{
@@ -47,10 +54,10 @@ void e2d::EActionScaleBy::_reset()
 
 e2d::EActionScaleBy * e2d::EActionScaleBy::clone() const
 {
-	return new EActionScaleBy(m_nAnimationInterval / 1000.0f, m_nVariationX, m_nVariationY);
+	return new EActionScaleBy(m_fTotalDuration / 1000, m_nVariationX, m_nVariationY);
 }
 
 e2d::EActionScaleBy * e2d::EActionScaleBy::reverse() const
 {
-	return new EActionScaleBy(m_nTotalDuration / 1000.0f, -m_nVariationX, -m_nVariationY);
+	return new EActionScaleBy(m_fTotalDuration / 1000, -m_nVariationX, -m_nVariationY);
 }

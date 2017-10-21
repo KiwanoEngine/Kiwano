@@ -12,6 +12,45 @@ typedef std::wstring EString;
 template<typename T>
 using EVector = std::vector<T>;
 
+struct EWindowStyle
+{
+	EWindowStyle()
+	{
+		ICON_ID = 0;
+		NO_CLOSE = false;
+		NO_MINI_SIZE = false;
+		TOP_MOST = false;
+	}
+
+	EWindowStyle(
+		LPCTSTR ICON_ID
+	)
+	{
+		this->ICON_ID = ICON_ID;
+		NO_CLOSE = false;
+		NO_MINI_SIZE = false;
+		TOP_MOST = false;
+	}
+
+	EWindowStyle(
+		LPCTSTR ICON_ID,
+		bool NO_CLOSE,
+		bool NO_MINI_SIZE,
+		bool TOP_MOST
+	)
+	{
+		this->ICON_ID = ICON_ID;
+		this->NO_CLOSE = NO_CLOSE;
+		this->NO_MINI_SIZE = NO_MINI_SIZE;
+		this->TOP_MOST = TOP_MOST;
+	}
+
+	LPCTSTR ICON_ID;	/* 程序图标 ID */
+	bool NO_CLOSE;		/* 禁用关闭按钮 */
+	bool NO_MINI_SIZE;	/* 禁用最小化按钮 */
+	bool TOP_MOST;		/* 窗口置顶 */
+};
+
 struct EPoint
 {
 	EPoint()
@@ -71,14 +110,22 @@ struct ESize
 };
 
 
-typedef std::function<void()> KEY_LISTENER_CALLBACK;
-typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
-typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
-typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_PRESS_LISTENER_CALLBACK;
-typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_DBLCLK_LISTENER_CALLBACK;
-typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
-
+// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
 typedef std::function<void(int)> TIMER_CALLBACK;
+// 按钮点击回调函数
+typedef std::function<void()> BUTTON_CLICK_CALLBACK;
+// 按键消息监听回调函数
+typedef std::function<void()> KEY_LISTENER_CALLBACK;
+// 鼠标消息监听回调函数
+typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
+// 鼠标点击消息监听回调函数（参数为点击位置）
+typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
+// 鼠标按下消息监听回调函数（参数为按下位置）
+typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_PRESS_LISTENER_CALLBACK;
+// 鼠标双击消息监听回调函数（参数为双击位置）
+typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_DBLCLK_LISTENER_CALLBACK;
+// 鼠标拖动消息监听函数（参数为拖动前位置和拖动后位置）
+typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
 
 
 

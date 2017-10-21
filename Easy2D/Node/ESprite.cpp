@@ -9,64 +9,82 @@ e2d::ESprite::ESprite()
 {
 }
 
+e2d::ESprite::ESprite(ETexture * texture)
+	: ESprite()
+{
+	loadFrom(texture);
+}
+
+e2d::ESprite::ESprite(ESpriteFrame * spriteFrame)
+	: ESprite()
+{
+	loadFrom(spriteFrame);
+}
+
 e2d::ESprite::ESprite(const EString & imageFileName)
 	: ESprite()
 {
-	setTexture(new ETexture(imageFileName));
+	loadFrom(new ETexture(imageFileName));
 }
 
 e2d::ESprite::ESprite(const EString & imageFileName, float x, float y, float width, float height)
 {
-	setTexture(new ETexture(imageFileName));
-	clipTexture(x, y, width, height);
+	loadFrom(new ETexture(imageFileName));
+	clip(x, y, width, height);
 }
 
 e2d::ESprite::ESprite(const EString & resourceName, const EString & resourceType)
 	: ESprite()
 {
-	setTexture(new ETexture(resourceName, resourceType));
+	loadFrom(new ETexture(resourceName, resourceType));
 }
 
 e2d::ESprite::ESprite(const EString & resourceName, const EString & resourceType, float x, float y, float width, float height)
 {
-	setTexture(new ETexture(resourceName, resourceType));
-	clipTexture(x, y, width, height);
+	loadFrom(new ETexture(resourceName, resourceType));
+	clip(x, y, width, height);
 }
 
 e2d::ESprite::~ESprite()
 {
-	SafeRelease(&m_pTexture);
+	SafeReleaseAndClear(&m_pTexture);
 }
 
-void e2d::ESprite::setTexture(ETexture * texture)
+void e2d::ESprite::loadFrom(ETexture * texture)
 {
-	SafeRelease(&m_pTexture);
-	m_pTexture = texture;
-	m_pTexture->retain();
+	if (texture)
+	{
+		SafeReleaseAndClear(&m_pTexture);
+		m_pTexture = texture;
+		m_pTexture->retain();
 
-	m_fSourceClipX = m_fSourceClipY = 0;
-	ENode::_setWidth(m_pTexture->getSourceWidth());
-	ENode::_setHeight(m_pTexture->getSourceHeight());
+		m_fSourceClipX = m_fSourceClipY = 0;
+		ENode::_setWidth(m_pTexture->getSourceWidth());
+		ENode::_setHeight(m_pTexture->getSourceHeight());
+	}
 }
 
-void e2d::ESprite::setTexture(ETexture * texture, float x, float y, float width, float height)
+void e2d::ESprite::loadFrom(ETexture * texture, float x, float y, float width, float height)
 {
-	setTexture(texture);
-	clipTexture(x, y, width, height);
+	loadFrom(texture);
+	clip(x, y, width, height);
 }
 
-void e2d::ESprite::loadFromSpriteFrame(ESpriteFrame * frame)
+void e2d::ESprite::loadFrom(ESpriteFrame * frame)
 {
-	setTexture(frame->m_pTexture);
-	clipTexture(frame->m_fSourceClipX, frame->m_fSourceClipY, frame->m_fSourceClipWidth, frame->m_fSourceClipHeight);
+	if (frame)
+	{
+		loadFrom(frame->m_pTexture);
+		clip(frame->m_fSourceClipX, frame->m_fSourceClipY, frame->m_fSourceClipWidth, frame->m_fSourceClipHeight);
+	}
 }
 
-void e2d::ESprite::clipTexture(float x, float y, float width, float height)
+void e2d::ESprite::clip(float x, float y, float width, float height)
 {
 	m_fSourceClipX = min(max(x, 0), m_pTexture->getSourceWidth());
 	m_fSourceClipY = min(max(y, 0), m_pTexture->getSourceHeight());
 	ENode::_setWidth(min(max(width, 0), m_pTexture->getSourceWidth() - m_fSourceClipX));
-	ENode::_setHeight(min(max(height, 0), m_pTexture->getSourceHeight() - m_fSourceClipX));
+	ENode::_setHeight(min(max(height, 0), m_pTexture->getSourceHeight() - m_fSourceClipY));
 }
 
 void e2d::ESprite::_onRender()

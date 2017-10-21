@@ -50,20 +50,29 @@ e2d::ESpriteFrame::ESpriteFrame(const EString & resourceName, const EString & re
 
 e2d::ESpriteFrame::~ESpriteFrame()
 {
-	if (m_pTexture)
-	{
-		m_pTexture->release();
-	}
+	SafeRelease(&m_pTexture);
+}
+
+float e2d::ESpriteFrame::getWidth() const
+{
+	return m_fSourceClipWidth;
+}
+
+float e2d::ESpriteFrame::getHeight() const
+{
+	return m_fSourceClipHeight;
+}
+
+e2d::ETexture * e2d::ESpriteFrame::getTexture() const
+{
+	return m_pTexture;
 }
 
 void e2d::ESpriteFrame::_setTexture(ETexture * texture)
 {
 	if (texture)
 	{
-		if (m_pTexture)
-		{
-			m_pTexture->release();
-		}
+		SafeRelease(&m_pTexture);
 		m_pTexture = texture;
 		m_pTexture->retain();
 		m_fSourceClipX = 0;

@@ -25,7 +25,6 @@ e2d::EApp::EApp()
 	, m_bPaused(false)
 	, m_bManualPaused(false)
 	, m_bTransitional(false)
-	, m_bEnterNextScene(true)
 	, m_bTopMost(false)
 	, nAnimationInterval(17LL)
 	, m_ClearColor(EColor::BLACK)
@@ -58,10 +57,10 @@ e2d::EApp * e2d::EApp::get()
 
 bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, bool showConsole /* = false */)
 {
-	return init(title, width, height, 0, showConsole);
+	return init(title, width, height, EWindowStyle(), showConsole);
 }
 
-bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, int windowStyle, bool showConsole /* = false */)
+bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowStyle wStyle, bool showConsole /* = false */)
 {
 	HRESULT hr;
 
@@ -76,7 +75,7 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, int wind
 		// 注册窗口类
 		WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
 		UINT style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-		if (windowStyle & EApp::NO_CLOSE)
+		if (wStyle.NO_CLOSE)
 		{
 			style |= CS_NOCLOSE;
 		}
@@ -89,6 +88,10 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, int wind
 		wcex.lpszMenuName = NULL;
 		wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
 		wcex.lpszClassName = L"Easy2DApp";
+		if (wStyle.ICON_ID)
+		{
+			wcex.hIcon = (HICON)::LoadImage(GetModuleHandle(NULL), wStyle.ICON_ID, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+		}
 
 		RegisterClassEx(&wcex);
 
@@ -119,14 +122,12 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, int wind
 		rtWindow.bottom = rtWindow.top + height;
 		// 创建窗口样式
 		DWORD dwStyle = WS_OVERLAPPED | WS_SYSMENU;
-		if (windowStyle & EApp::NO_MINI_SIZE)
+		if (!wStyle.NO_MINI_SIZE)
 		{
-			dwStyle &= ~WS_MINIMIZEBOX;
+			dwStyle |= WS_MINIMIZEBOX;
 		}
-		if (windowStyle & EApp::TOP_MOST)
-		{
-			m_bTopMost = true;
-		}
+		// 保存窗口是否置顶显示
+		m_bTopMost = wStyle.TOP_MOST;
 		// 计算客户区大小
 		AdjustWindowRectEx(&rtWindow, dwStyle, FALSE, 0L);
 		// 保存窗口名称
@@ -178,6 +179,9 @@ void e2d::EApp::resume()
 	{
 		EApp::get()->m_bPaused = false;
 		EApp::get()->m_bManualPaused = false;
+		// 刷新当前时间
+		GetNow() = steady_clock::now();
+		// 重置动画和定时器
 		EActionManager::_resetAllActions();
 		ETimerManager::_resetAllTimers();
 	}
@@ -298,9 +302,10 @@ void e2d::EApp::_mainLoop()
 	static LONGLONG nInterval = 0LL;
 	// 挂起时长
 	static LONGLONG nWaitMS = 0L;
-	// 刷新计时
+	// 上一帧画面绘制时间
 	static steady_clock::time_point tLast = steady_clock::now();
 
+	// 刷新当前时间
 	GetNow() = steady_clock::now();
 	// 计算时间间隔
 	nInterval = GetInterval(tLast);
@@ -308,7 +313,7 @@ void e2d::EApp::_mainLoop()
 	if (nInterval >= nAnimationInterval)
 	{
 		// 记录当前时间
-		tLast = GetNow();
+		tLast += microseconds(nAnimationInterval);
 		// 游戏控制流程
 		_onControl();
 		// 刷新游戏画面
@@ -328,19 +333,22 @@ void e2d::EApp::_mainLoop()
 
 void e2d::EApp::_onControl()
 {
-	// 下一场景指针不为空时，切换场景
-	if (m_bEnterNextScene)
-	{
-		// 进入下一场景
-		_enterNextScene();
-		m_bEnterNextScene = false;
-	}
-
-	// 正在切换场景时，只执行动画
+	// 正在切换场景时，执行场景切换动画
 	if (m_bTransitional)
 	{
 		EActionManager::ActionProc();
-		return;
+		// 若场景切换未结束，不执行后面的部分
+		if (m_bTransitional)
+		{
+			return;
+		}
+	}
+
+	// 下一场景指针不为空时，切换场景
+	if (m_pNextScene)
+	{
+		// 进入下一场景
+		_enterNextScene();
 	}
 
 	// 断言当前场景非空
@@ -367,7 +375,15 @@ void e2d::EApp::_onRender()
 		// 使用背景色清空屏幕
 		GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor.value));
 		// 绘制当前场景
-		m_pCurrentScene->_onRender();
+		if (m_pCurrentScene)
+		{
+			m_pCurrentScene->_onRender();
+		}
+		// 切换场景时，同时绘制两场景
+		if (m_bTransitional && m_pNextScene)
+		{
+			m_pNextScene->_onRender();
+		}
 		// 终止绘图
 		hr = GetRenderTarget()->EndDraw();
 		// 刷新界面
@@ -418,14 +434,14 @@ e2d::EString e2d::EApp::getTitle()
 	return get()->m_sTitle;
 }
 
-UINT32 e2d::EApp::getWidth()
+float e2d::EApp::getWidth()
 {
-	return GetRenderTarget()->GetPixelSize().width;
+	return GetRenderTarget()->GetSize().width;
 }
 
-UINT32 e2d::EApp::getHeight()
+float e2d::EApp::getHeight()
 {
-	return GetRenderTarget()->GetPixelSize().height;
+	return GetRenderTarget()->GetSize().height;
 }
 
 void e2d::EApp::enterScene(EScene * scene, bool saveCurrentScene /* = true */)
@@ -450,7 +466,6 @@ void e2d::EApp::enterScene(EScene * scene, ETransition * transition, bool saveCu
 		transition->_setTarget(
 			get()->m_pCurrentScene, 
 			get()->m_pNextScene, 
-			get()->m_bEnterNextScene,
 			get()->m_bTransitional
 		);
 	}
@@ -483,7 +498,6 @@ void e2d::EApp::backScene(ETransition * transition)
 		transition->_setTarget(
 			get()->m_pCurrentScene, 
 			get()->m_pNextScene, 
-			get()->m_bEnterNextScene,
 			get()->m_bTransitional
 		);
 	}
@@ -499,7 +513,7 @@ void e2d::EApp::clearScene()
 	while (s_SceneStack.size())
 	{
 		auto temp = s_SceneStack.top();
-		SafeRelease(&temp);
+		SafeReleaseAndClear(&temp);
 		s_SceneStack.pop();
 	}
 }
@@ -569,19 +583,9 @@ void e2d::EApp::showWindow()
 
 void e2d::EApp::_free()
 {
-	// 清空场景栈
-	clearScene();
-	// 释放场景内存
-	SafeRelease(&m_pCurrentScene);
-	SafeRelease(&m_pNextScene);
-	
 	// 删除图片缓存
 	ETexture::clearCache();
-	// 停止所有定时器、监听器、动画
-	ETimerManager::_clearManager();
-	EMsgManager::_clearManager();
-	EActionManager::_clearManager();
-	// 删除所有对象
+	// 删除所有对象（包括所有场景、定时器、监听器、动画）
 	EObjectManager::clearAllObjects();
 }
 
@@ -612,7 +616,7 @@ void e2d::EApp::_enterNextScene()
 		}
 		else
 		{
-			SafeRelease(&m_pCurrentScene);
+			SafeReleaseAndClear(&m_pCurrentScene);
 		}
 	}
 
@@ -721,7 +725,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			case WM_MOUSEWHEEL:
 			{
 				// 执行场景切换时屏蔽按键和鼠标消息
-				if (!pEApp->m_bTransitional)
+				if (!pEApp->m_bTransitional && !pEApp->m_pNextScene)
 				{
 					EMsgManager::MouseProc(message, wParam, lParam);
 				}
@@ -735,7 +739,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			case WM_KEYUP:
 			{
 				// 执行场景切换时屏蔽按键和鼠标消息
-				if (!pEApp->m_bTransitional)
+				if (!pEApp->m_bTransitional && !pEApp->m_pNextScene)
 				{
 					EMsgManager::KeyboardProc(message, wParam, lParam);
 				}
@@ -780,7 +784,8 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			{
 				if (LOWORD(wParam) == WA_INACTIVE)
 				{
-					if (pEApp->getCurrentScene()->onInactive() &&
+					if (pEApp->getCurrentScene() && 
+						pEApp->getCurrentScene()->onInactive() &&
 						pEApp->onInactive())
 					{
 						pEApp->m_bPaused = true;
@@ -788,7 +793,8 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 				}
 				else
 				{
-					if (pEApp->getCurrentScene()->onActivate() &&
+					if (pEApp->getCurrentScene() && 
+						pEApp->getCurrentScene()->onActivate() &&
 						pEApp->onActivate())
 					{
 						pEApp->m_bPaused = false;
@@ -802,10 +808,20 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			// 窗口关闭消息
 			case WM_CLOSE:
 			{
-				if (pEApp->getCurrentScene()->onCloseWindow() && 
-					pEApp->onCloseWindow())
+				if (!pEApp->getCurrentScene())
 				{
-					DestroyWindow(hWnd);
+					if (pEApp->onCloseWindow())
+					{
+						DestroyWindow(hWnd);
+					}
+				}
+				else 
+				{
+					if (pEApp->getCurrentScene()->onCloseWindow() &&
+						pEApp->onCloseWindow())
+					{
+						DestroyWindow(hWnd);
+					}
 				}
 			}
 			result = 1;

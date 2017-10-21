@@ -42,27 +42,27 @@ public:
 	ETimer();
 
 	ETimer(
-		const EString &name				/* 定时器名称 */
-	);
-
-	ETimer(
 		const TIMER_CALLBACK &callback,	/* 定时器回调函数 */
-		LONGLONG delay = 20LL			/* 时间间隔 */
+		int repeatTimes = -1,			/* 定时器执行次数 */
+		LONGLONG interval = 0LL,		/* 时间间隔（毫秒） */
+		bool atOnce = false				/* 是否立即执行 */
 	);
 
 	ETimer(
 		const EString &name,			/* 定时器名称 */
 		const TIMER_CALLBACK &callback,	/* 定时器回调函数 */
-		LONGLONG delay = 20LL			/* 时间间隔 */
+		int repeatTimes = -1,			/* 定时器执行次数 */
+		LONGLONG interval = 0LL,		/* 时间间隔（毫秒） */
+		bool atOnce = false				/* 是否立即执行 */
 	);
 
 	// 获取定时器状态
 	bool isRunning() const;
 
-	// 启动监听
+	// 启动定时器
 	void start();
 
-	// 停止监听
+	// 停止定时器
 	void stop();
 
 	// 获取定时器名称
@@ -84,6 +84,16 @@ public:
 		LONGLONG interval
 	);
 
+	// 设置定时器回调函数
+	void setCallback(
+		const TIMER_CALLBACK & callback
+	);
+
+	// 设置定时器重复执行次数
+	void setRepeatTimes(
+		int repeatTimes
+	);
+
 	// 绑定定时器到场景
 	virtual void bindWith(
 		EScene * pParentScene
@@ -98,10 +108,15 @@ protected:
 	// 执行回调函数
 	virtual void _callOn();
 
+	// 判断是否达到执行状态
+	bool _isReady();
+
 protected:
 	EString			m_sName;
 	bool			m_bRunning;
+	bool			m_bAtOnce;
 	int				m_nRunTimes;
+	int				m_nRepeatTimes;
 	EScene *		m_pParentScene;
 	ENode *			m_pParentNode;
 	TIMER_CALLBACK	m_Callback;
@@ -155,11 +170,6 @@ public:
 		EScene * pParentScene
 	);
 
-	// 清空绑定在场景及其子节点上的所有定时器
-	static void clearAllTimersBindedWith(
-		EScene * pParentScene
-	);
-
 	// 启动绑定在节点上的所有定时器
 	static void startAllTimersBindedWith(
 		ENode * pParentNode
@@ -170,23 +180,25 @@ public:
 		ENode * pParentNode
 	);
 
-	// 清空绑定在节点上的所有定时器
-	static void clearAllTimersBindedWith(
-		ENode * pParentNode
-	);
-
 	// 启动所有定时器
 	static void startAllTimers();
 
 	// 停止所有定时器
 	static void stopAllTimers();
 
-	// 清除所有定时器
-	static void clearAllTimers();
-
 private:
 	// 清空定时器管理器
 	static void _clearManager();
+
+	// 清空绑定在场景及其子节点上的所有定时器
+	static void _clearAllTimersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 清空绑定在节点上的所有定时器
+	static void _clearAllTimersBindedWith(
+		ENode * pParentNode
+	);
 
 	// 重置定时器状态
 	static void _resetAllTimers();
@@ -209,23 +221,13 @@ public:
 		EAction * action
 	);
 
-	// 启动绑定在场景子节点上的所有动作
+	// 继续绑定在节点上的所有动作
 	static void startAllActionsBindedWith(
-		EScene * pParentScene
+		ENode * pTargetNode
 	);
 
-	// 停止绑定在场景子节点上的所有动作
-	static void stopAllActionsBindedWith(
-		EScene * pParentScene
-	);
-
-	// 清空绑定在场景子节点上的所有动作
-	static void clearAllActionsBindedWith(
-		EScene * pParentScene
-	);
-
-	// 启动绑定在节点上的所有动作
-	static void startAllActionsBindedWith(
+	// 暂停绑定在节点上的所有动作
+	static void pauseAllActionsBindedWith(
 		ENode * pTargetNode
 	);
 
@@ -234,37 +236,29 @@ public:
 		ENode * pTargetNode
 	);
 
-	// 清空绑定在节点上的所有动作
-	static void clearAllActionsBindedWith(
-		ENode * pTargetNode
-	);
-
-	// 启动所有动作
+	// 继续所有动作
 	static void startAllActions();
+
+	// 暂停所有动作
+	static void pauseAllActions();
 
 	// 停止所有动作
 	static void stopAllActions();
 
-	// 清除所有动作
-	static void clearAllActions();
-
 private:
 	// 清空动画管理器
 	static void _clearManager();
+
+	// 清空绑定在节点上的所有动作
+	static void _clearAllActionsBindedWith(
+		ENode * pTargetNode
+	);
 
 	// 重置所有动作状态
 	static void _resetAllActions();
 
 	// 动作执行程序
 	static void ActionProc();
-};
-
-
-class EMusicUtils
-{
-public:
-	// 播放音效
-	static void play(LPCTSTR musicFileName, bool loop = false);
 };
 
 
@@ -311,7 +305,22 @@ class ERandom
 public:
 	// 取得整型范围内的一个随机数
 	template<typename T>
-	static T randomInt(T min, T max)
+	static inline T between(T min, T max) { return e2d::ERandom::randomInt(min, max); }
+
+	// 取得浮点数范围内的一个随机数
+	static inline float between(float min, float max) { return e2d::ERandom::randomReal(min, max); }
+
+	// 取得浮点数范围内的一个随机数
+	static inline double between(double min, double max) { return e2d::ERandom::randomReal(min, max); }
+
+	// 取得浮点数范围内的一个随机数
+	static inline long double between(long double min, long double max) { return e2d::ERandom::randomReal(min, max); }
+
+	// 取得整型范围内的一个随机数
+	template<typename T>
+	static T randomInt(
+		T min, 
+		T max)
 	{
 		std::uniform_int_distribution<T> dist(min, max);
 		return dist(getEngine());
@@ -319,7 +328,9 @@ public:
 
 	// 取得浮点数类型范围内的一个随机数
 	template<typename T>
-	static T randomReal(T min, T max)
+	static T randomReal(
+		T min, 
+		T max)
 	{
 		std::uniform_real_distribution<T> dist(min, max);
 		return dist(getEngine());
@@ -328,11 +339,5 @@ public:
 	// 获取随机数产生器
 	static std::default_random_engine &getEngine();
 };
-
-template<typename T>
-inline T random(T min, T max) { return e2d::ERandom::randomInt(min, max); }
-inline float random(float min, float max) { return e2d::ERandom::randomReal(min, max); }
-inline double random(double min, double max) { return e2d::ERandom::randomReal(min, max); }
-inline long double random(long double min, long double max) { return e2d::ERandom::randomReal(min, max); }
 
 }

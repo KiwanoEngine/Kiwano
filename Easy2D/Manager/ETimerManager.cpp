@@ -4,6 +4,29 @@
 
 static e2d::EVector<e2d::ETimer*> s_vTimers;
 
+
+void e2d::ETimerManager::TimerProc()
+{
+	if (EApp::isPaused())
+		return;
+
+	for (size_t i = 0; i < s_vTimers.size(); i++)
+	{
+		auto &t = s_vTimers[i];
+		if (t->isRunning())
+		{
+			if (t->getParentScene() == EApp::getCurrentScene() ||
+				(t->getParentNode() && (t->getParentNode()->getParentScene() == EApp::getCurrentScene())))
+			{
+				if (t->_isReady())
+				{
+					t->_callOn();
+				}
+			}
+		}
+	}
+}
+
 void e2d::ETimerManager::bindTimer(ETimer * timer, EScene * pParentScene)
 {
 	ASSERT(
@@ -69,7 +92,7 @@ void e2d::ETimerManager::delTimers(const EString & name)
 	{
 		if ((*mIter)->getName() == name)
 		{
-			SafeRelease(&(*mIter));
+			SafeReleaseAndClear(&(*mIter));
 			mIter = s_vTimers.erase(mIter);
 		}
 		else
@@ -109,24 +132,20 @@ void e2d::ETimerManager::stopAllTimersBindedWith(EScene * pParentScene)
 	}
 }
 
-void e2d::ETimerManager::clearAllTimersBindedWith(EScene * pParentScene)
+void e2d::ETimerManager::_clearAllTimersBindedWith(EScene * pParentScene)
 {
 	for (size_t i = 0; i < s_vTimers.size();)
 	{
 		auto t = s_vTimers[i];
 		if (t->getParentScene() == pParentScene)
 		{
-			SafeRelease(&t);
+			SafeReleaseAndClear(&t);
 			s_vTimers.erase(s_vTimers.begin() + i);
 		}
 		else
 		{
 			i++;
 		}
-	}
-	for (auto child : pParentScene->getChildren())
-	{
-		ETimerManager::clearAllTimersBindedWith(child);
 	}
 }
 
@@ -160,24 +179,20 @@ void e2d::ETimerManager::stopAllTimersBindedWith(ENode * pParentNode)
 	}
 }
 
-void e2d::ETimerManager::clearAllTimersBindedWith(ENode * pParentNode)
+void e2d::ETimerManager::_clearAllTimersBindedWith(ENode * pParentNode)
 {
 	for (size_t i = 0; i < s_vTimers.size();)
 	{
 		auto t = s_vTimers[i];
 		if (t->getParentNode() == pParentNode)
 		{
-			SafeRelease(&t);
+			SafeReleaseAndClear(&t);
 			s_vTimers.erase(s_vTimers.begin() + i);
 		}
 		else
 		{
 			i++;
 		}
-	}
-	for (auto child : pParentNode->getChildren())
-	{
-		ETimerManager::clearAllTimersBindedWith(child);
 	}
 }
 
@@ -202,31 +217,4 @@ void e2d::ETimerManager::startAllTimers()
 void e2d::ETimerManager::stopAllTimers()
 {
 	ETimerManager::stopAllTimersBindedWith(EApp::getCurrentScene());
-}
-
-void e2d::ETimerManager::clearAllTimers()
-{
-	ETimerManager::clearAllTimersBindedWith(EApp::getCurrentScene());
-}
-
-void e2d::ETimerManager::TimerProc()
-{
-	if (EApp::isPaused())
-		return;
-
-	for (auto t : s_vTimers)
-	{
-		if (t->isRunning())
-		{
-			if (t->getParentScene() == EApp::getCurrentScene() ||
-				(t->getParentNode() && t->getParentNode()->getParentScene() == EApp::getCurrentScene()))
-			{
-				if (GetInterval(t->m_tLast) >= t->m_nInterval)
-				{
-					t->_callOn();
-					t->m_tLast = GetNow();
-				}
-			}
-		}
-	}
 }

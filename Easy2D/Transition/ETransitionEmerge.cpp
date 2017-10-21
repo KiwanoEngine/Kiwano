@@ -2,26 +2,25 @@
 #include "..\eactions.h"
 #include "..\etools.h"
 
-e2d::ETransitionFade::ETransitionFade(float fadeOutDuration, float fadeInDuration)
-	: m_fFadeOutDuration(fadeOutDuration)
-	, m_fFadeInDuration(fadeInDuration)
+e2d::ETransitionEmerge::ETransitionEmerge(float emergeDuration)
+	: m_fEmergeDuration(emergeDuration)
 {
 }
 
-void e2d::ETransitionFade::_setTarget(EScene * prev, EScene * next, bool & transitional)
+void e2d::ETransitionEmerge::_setTarget(EScene * prev, EScene * next, bool & transitional)
 {
 	// 初始化场景属性
 	next->getRoot()->setOpacity(0);
 
 	// 第一个场景淡出
-	auto action1 = new EActionFadeOut(m_fFadeOutDuration);
+	auto action1 = new EActionFadeOut(m_fEmergeDuration);
 	if (prev)
 	{
 		action1->setTarget(prev->getRoot());
 	}
-	
+
 	// 第二个场景淡入
-	auto action2 = new EActionFadeIn(m_fFadeInDuration);
+	auto action2 = new EActionFadeIn(m_fEmergeDuration);
 	action2->setTarget(next->getRoot());
 
 	// 标志动画结束
@@ -36,5 +35,5 @@ void e2d::ETransitionFade::_setTarget(EScene * prev, EScene * next, bool & trans
 	});
 
 	// 添加顺序动作
-	EActionManager::addAction(new EActionSequence(3, action1, action2, action3));
+	EActionManager::addAction(new EActionSequence(2, new EActionTwoAtSameTime(action1, action2), action3));
 }

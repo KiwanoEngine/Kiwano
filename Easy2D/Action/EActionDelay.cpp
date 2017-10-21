@@ -14,8 +14,6 @@ e2d::EActionDelay * e2d::EActionDelay::clone() const
 void e2d::EActionDelay::_init()
 {
 	EAction::_init();
-	// 记录当前时间
-	m_tLast = GetNow();
 }
 
 void e2d::EActionDelay::_callOn()
@@ -30,6 +28,4 @@ void e2d::EActionDelay::_callOn()
 void e2d::EActionDelay::_reset()
 {
 	EAction::_reset();
-	// 记录当前时间
-	m_tLast = GetNow();
 }

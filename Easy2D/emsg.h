@@ -190,6 +190,7 @@ protected:
 protected:
 	EString		m_sName;
 	bool		m_bRunning;
+	bool		m_bAlways;
 	EScene *	m_pParentScene;
 	ENode *		m_pParentNode;
 };
@@ -465,13 +466,15 @@ public:
 	// 绑定鼠标消息监听器到场景
 	static void bindListener(
 		EMouseListener * listener,
-		EScene * pParentScene
+		EScene * pParentScene,
+		bool always = false /* 是否在游戏暂停时仍然监听 */
 	);
 
 	// 绑定鼠标消息监听器到节点
 	static void bindListener(
 		EMouseListener * listener,
-		ENode * pParentNode
+		ENode * pParentNode,
+		bool always = false /* 是否在游戏暂停时仍然监听 */
 	);
 
 	// 启动具有相同名称的鼠标消息监听器
@@ -499,11 +502,6 @@ public:
 		EScene * pParentScene
 	);
 
-	// 清除绑定在场景及其子节点上的所有鼠标消息监听器
-	static void clearAllMouseListenersBindedWith(
-		EScene * pParentScene
-	);
-
 	// 启动绑定在节点上的所有鼠标消息监听器
 	static void startAllMouseListenersBindedWith(
 		ENode * pParentNode
@@ -514,30 +512,24 @@ public:
 		ENode * pParentNode
 	);
 
-	// 清除绑定在节点上的所有鼠标消息监听器
-	static void clearAllMouseListenersBindedWith(
-		ENode * pParentNode
-	);
-
 	// 启动所有鼠标消息监听器
 	static void startAllMouseListeners();
 
 	// 停止所有鼠标消息监听器
 	static void stopAllMouseListeners();
 
-	// 清除所有鼠标消息监听器
-	static void clearAllMouseListeners();
-
 	// 绑定按键消息监听器到场景
 	static void bindListener(
 		EKeyboardListener * listener,
-		EScene * pParentScene
+		EScene * pParentScene,
+		bool always = false /* 是否在游戏暂停时仍然监听 */
 	);
 
 	// 绑定按键消息监听器到节点
 	static void bindListener(
 		EKeyboardListener * listener,
-		ENode * pParentNode
+		ENode * pParentNode,
+		bool always = false /* 是否在游戏暂停时仍然监听 */
 	);
 
 	// 启动名称相同的按键消息监听器
@@ -565,11 +557,6 @@ public:
 		EScene * pParentScene
 	);
 
-	// 清除绑定在场景及其子节点上的所有按键消息监听器
-	static void clearAllKeyboardListenersBindedWith(
-		EScene * pParentScene
-	);
-
 	// 启动绑定在节点上的所有按键消息监听器
 	static void startAllKeyboardListenersBindedWith(
 		ENode * pParentNode
@@ -580,23 +567,35 @@ public:
 		ENode * pParentNode
 	);
 
-	// 清除绑定在节点上的所有按键消息监听器
-	static void clearAllKeyboardListenersBindedWith(
-		ENode * pParentNode
-	);
-
 	// 启动所有按键消息监听器
 	static void startAllKeyboardListeners();
 
 	// 停止所有按键消息监听器
 	static void stopAllKeyboardListeners();
 
-	// 清除所有按键消息监听器
-	static void clearAllKeyboardListeners();
-
 private:
 	// 清除所有监听器
 	static void _clearManager();
+
+	// 清除绑定在节点上的所有鼠标消息监听器
+	static void _clearAllMouseListenersBindedWith(
+		ENode * pParentNode
+	);
+
+	// 清除绑定在场景及其子节点上的所有按键消息监听器
+	static void _clearAllKeyboardListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 清除绑定在场景及其子节点上的所有鼠标消息监听器
+	static void _clearAllMouseListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 清除绑定在节点上的所有按键消息监听器
+	static void _clearAllKeyboardListenersBindedWith(
+		ENode * pParentNode
+	);
 
 	// 鼠标消息程序
 	static void MouseProc(

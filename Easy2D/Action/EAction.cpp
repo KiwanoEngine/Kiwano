@@ -75,10 +75,14 @@ e2d::ENode * e2d::EAction::getTarget()
 void e2d::EAction::_init()
 {
 	m_bInit = true;
+	// 记录当前时间
+	m_tLast = GetNow();
 }
 
 void e2d::EAction::_reset()
 {
 	m_bInit = false;
 	m_bEnding = false;
+	// 记录当前时间
+	m_tLast = GetNow();
 }

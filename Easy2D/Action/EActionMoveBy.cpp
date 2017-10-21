@@ -25,12 +25,10 @@ void e2d::EActionMoveBy::_callOn()
 	}
 	while (EActionGradual::_isDelayEnough())
 	{
-		// 计算移动位置
-		float scale = static_cast<float>(m_nDuration) / m_nTotalDuration;
-		// 移动 Sprite
+		// 移动节点
 		m_pTarget->setPos(
-			m_BeginPos.x + m_MoveVector.x * scale, 
-			m_BeginPos.y + m_MoveVector.y * scale
+			m_BeginPos.x + m_MoveVector.x * m_fRateOfProgress,
+			m_BeginPos.y + m_MoveVector.y * m_fRateOfProgress
 		);
 		// 判断动作是否结束
 		if (_isEnd())
@@ -48,10 +46,10 @@ void e2d::EActionMoveBy::_reset()
 
 e2d::EActionMoveBy * e2d::EActionMoveBy::clone() const
 {
-	return new EActionMoveBy(m_nAnimationInterval / 1000.0f, m_MoveVector);
+	return new EActionMoveBy(m_fTotalDuration / 1000, m_MoveVector);
 }
 
 e2d::EActionMoveBy * e2d::EActionMoveBy::reverse() const
 {
-	return new EActionMoveBy(m_nTotalDuration / 1000.0f, EVec(-m_MoveVector.x, -m_MoveVector.y));
+	return new EActionMoveBy(m_fTotalDuration / 1000, EVec(-m_MoveVector.x, -m_MoveVector.y));
 }

@@ -23,11 +23,11 @@ void e2d::EObject::retain()
 void e2d::EObject::release()
 {
 	m_nRefCount--;
+	// 通知对象管理池刷新
+	EObjectManager::notifyFlush();
 }
 
 void e2d::EObject::autoRelease()
 {
 	m_bAutoRelease = true;
-	// 通知对象管理池刷新
-	EObjectManager::notifyFlush();
 }

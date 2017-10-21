@@ -8,7 +8,7 @@ e2d::EActionLoop::EActionLoop(EAction * action) :
 
 e2d::EActionLoop::~EActionLoop()
 {
-	SafeRelease(&m_Action);
+	SafeReleaseAndClear(&m_Action);
 }
 
 e2d::EActionLoop * e2d::EActionLoop::clone() const

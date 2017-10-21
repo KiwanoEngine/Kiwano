@@ -40,7 +40,7 @@ e2d::EText::EText(const EString & text, EColor color, EString fontFamily, float 
 
 e2d::EText::~EText()
 {
-	SafeRelease(&m_pFont);
+	SafeReleaseAndClear(&m_pFont);
 }
 
 e2d::EString e2d::EText::getText() const
@@ -83,7 +83,7 @@ void e2d::EText::setFont(EFont * font)
 {
 	if (font)
 	{
-		SafeRelease(&m_pFont);
+		SafeReleaseAndClear(&m_pFont);
 		m_pFont = font;
 		font->retain();
 
@@ -108,7 +108,7 @@ void e2d::EText::_onRender()
 	GetSolidColorBrush()->SetColor(D2D1::ColorF(m_Color.value, m_fDisplayOpacity));
 	GetRenderTarget()->DrawTextW(
 		m_sText.c_str(),
-		m_sText.length(),
+		UINT32(m_sText.length()),
 		m_pFont->_getTextFormat(),
 		D2D1::RectF(
 			0,
@@ -145,7 +145,7 @@ void e2d::EText::_initTextLayout()
 
 	HRESULT hr = GetDirectWriteFactory()->CreateTextLayout(
 		m_sText.c_str(),
-		m_sText.size(),
+		UINT32(m_sText.size()),
 		m_pFont->_getTextFormat(),
 		m_bWordWrapping ? m_fWordWrappingWidth : 0,
 		0,
