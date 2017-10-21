@@ -271,8 +271,6 @@ void e2d::EApp::run()
 
 	// 关闭控制台
 	EApp::showConsole(false);
-	// 释放所有内存资源
-	this->_free();
 }
 
 void e2d::EApp::setFPS(UINT32 fps)
@@ -579,14 +577,6 @@ void e2d::EApp::hideWindow()
 void e2d::EApp::showWindow()
 {
 	ShowWindow(GetHWnd(), SW_SHOWNORMAL);
-}
-
-void e2d::EApp::_free()
-{
-	// 删除图片缓存
-	ETexture::clearCache();
-	// 删除所有对象（包括所有场景、定时器、监听器、动画）
-	EObjectManager::clearAllObjects();
 }
 
 void e2d::EApp::quit()

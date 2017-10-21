@@ -184,9 +184,6 @@ protected:
 		UINT32 height
 	);
 
-	// 释放所有内存资源
-	void _free();
-
 	// 窗口程序
 	static LRESULT CALLBACK WndProc(
 		HWND hWnd,

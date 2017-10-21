@@ -39,6 +39,10 @@ e2d::ENode::~ENode()
 	EMsgManager::_clearAllMouseListenersBindedWith(this);
 	EMsgManager::_clearAllKeyboardListenersBindedWith(this);
 	EActionManager::_clearAllActionsBindedWith(this);
+	for (auto child : m_vChildren)
+	{
+		SafeReleaseAndClear(&child);
+	}
 }
 
 void e2d::ENode::onEnter()

@@ -20,9 +20,6 @@ public:
 		e2d::EObject * nptr
 	);
 
-	// 删除所有节点
-	static void clearAllObjects();
-
 	// 通知内存池刷新
 	static void notifyFlush();
 

@@ -1,11 +1,11 @@
 #include "..\etools.h"
 
 // EObjectManager 释放池的实现机制：
-/// EObject 类中的引用计数（m_nRefCount）保证了指针的使用安全
-/// 它记录了对象被使用的次数，当计数为 0 时，EObjectManager 会自动释放这个对象
-/// 所有的 EObject 对象都应在被使用时（例如 Text 添加到了场景中）
-/// 调用 retain 函数保证该对象不被删除，并在不再使用时调用 release 函数
-/// 让其自动释放
+// EObject 类中的引用计数（m_nRefCount）保证了指针的使用安全
+// 它记录了对象被使用的次数，当计数为 0 时，EObjectManager 会自动释放这个对象
+// 所有的 EObject 对象都应在被使用时（例如 Text 添加到了场景中）
+// 调用 retain 函数保证该对象不被删除，并在不再使用时调用 release 函数
+// 让其自动释放
 
 // 释放池容器
 static e2d::EVector<e2d::EObject*> s_vPool;
@@ -43,15 +43,6 @@ void e2d::EObjectManager::add(e2d::EObject * nptr)
 		nptr->m_bManaged = true;
 		s_vPool.push_back(nptr);	// 将一个对象放入释放池中
 	}
-}
-
-void e2d::EObjectManager::clearAllObjects()
-{
-	for (const auto &obj : s_vPool)
-	{
-		delete obj;
-	}
-	s_vPool.clear();
 }
 
 void e2d::EObjectManager::notifyFlush()
