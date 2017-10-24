@@ -171,6 +171,9 @@
     <ClCompile Include="Tool\ETimer.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
+    <ClCompile Include="Tool\EMusicUtils.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">

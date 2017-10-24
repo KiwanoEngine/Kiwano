@@ -10,8 +10,10 @@ int WINAPI WinMain(
 {
 	EApp app;
 
-	if (app.init(L"Easy2D Demo", 640, 480, app.NO_MINI_SIZE))
+	if (app.init(L"Easy2D Demo", 640, 480))
 	{
+		float w = EApp::getWidth();
+		float h = EApp::getHeight();
 		auto scene = new EScene();
 
 		auto text = new EText(L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试", EColor::WHITE, L"楷体");

@@ -101,7 +101,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
@@ -230,6 +230,7 @@
     <ClCompile Include="Node\EFont.cpp" />
     <ClCompile Include="Node\ETexture.cpp" />
     <ClCompile Include="Tool\EFileUtils.cpp" />
+    <ClCompile Include="Tool\EMusicUtils.cpp" />
     <ClCompile Include="Tool\ERandom.cpp" />
     <ClCompile Include="Tool\ETimer.cpp" />
     <ClCompile Include="Transition\ETransitionEmerge.cpp" />

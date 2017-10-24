@@ -114,12 +114,7 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 		WARN_IF(screenWidth < width || screenHeight < height, "The window is larger than screen!");
 		width = min(width, screenWidth);
 		height = min(height, screenHeight);
-		// 创建屏幕居中的矩形
-		RECT rtWindow;
-		rtWindow.left = (screenWidth - width) / 2;
-		rtWindow.top = (screenHeight - height) / 2;
-		rtWindow.right = rtWindow.left + width;
-		rtWindow.bottom = rtWindow.top + height;
+		
 		// 创建窗口样式
 		DWORD dwStyle = WS_OVERLAPPED | WS_SYSMENU;
 		if (!wStyle.NO_MINI_SIZE)
@@ -128,8 +123,6 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 		}
 		// 保存窗口是否置顶显示
 		m_bTopMost = wStyle.TOP_MOST;
-		// 计算客户区大小
-		AdjustWindowRectEx(&rtWindow, dwStyle, FALSE, 0L);
 		// 保存窗口名称
 		m_sTitle = title;
 		// 创建窗口
@@ -137,10 +130,10 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 			L"Easy2DApp",
 			m_sTitle.c_str(),
 			dwStyle,
-			rtWindow.left,
-			rtWindow.top,
-			rtWindow.right - rtWindow.left,
-			rtWindow.bottom - rtWindow.top,
+			0,
+			0,
+			width,
+			height,
 			NULL,
 			NULL,
 			HINST_THISCOMPONENT,
@@ -153,6 +146,8 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 		{
 			// 禁用输入法
 			this->setKeyboardLayoutEnable(false);
+			// 重设客户区大小
+			this->setWindowSize(width, height);
 		}
 		else
 		{
