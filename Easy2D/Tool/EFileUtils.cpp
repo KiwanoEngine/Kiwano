@@ -53,21 +53,17 @@ e2d::EString e2d::EFileUtils::getDefaultSavePath()
 
 void e2d::EFileUtils::saveInt(LPCTSTR key, int value)
 {
-	std::wstringstream ss;
-	ss << value;
-	::WritePrivateProfileString(L"Default", key, ss.str().c_str(), getDefaultSavePath().c_str());
+	::WritePrivateProfileString(L"Default", key, std::to_wstring(value).c_str(), getDefaultSavePath().c_str());
 }
 
-void e2d::EFileUtils::saveDouble(LPCTSTR key, double value)
+void e2d::EFileUtils::saveFloat(LPCTSTR key, float value)
 {
-	std::wstringstream ss;
-	ss << value;
-	::WritePrivateProfileString(L"Default", key, ss.str().c_str(), getDefaultSavePath().c_str());
+	::WritePrivateProfileString(L"Default", key, std::to_wstring(value).c_str(), getDefaultSavePath().c_str());
 }
 
-void e2d::EFileUtils::saveString(LPCTSTR key, EString value)
+void e2d::EFileUtils::saveString(LPCTSTR key, LPCTSTR value)
 {
-	::WritePrivateProfileString(L"Default", key, value.c_str(), getDefaultSavePath().c_str());
+	::WritePrivateProfileString(L"Default", key, value, getDefaultSavePath().c_str());
 }
 
 int e2d::EFileUtils::getInt(LPCTSTR key, int default)
@@ -75,25 +71,17 @@ int e2d::EFileUtils::getInt(LPCTSTR key, int default)
 	return ::GetPrivateProfileInt(L"Default", key, default, getDefaultSavePath().c_str());
 }
 
-double e2d::EFileUtils::getDouble(LPCTSTR key, double default)
+float e2d::EFileUtils::getFloat(LPCTSTR key, float default)
 {
-	// 将 default 参数转化为字符串
-	std::wstringstream ss;
-	ss << default;
-	// 读取数据
-	TCHAR temp[128] = { 0 };
-	::GetPrivateProfileString(L"Default", key, ss.str().c_str(), temp, 128, getDefaultSavePath().c_str());
-	// 转换为字符串流
-	ss.str(L"");
-	ss << temp;
-	// 将字符串转化为 double
-	return _wtof(ss.str().c_str());
+	TCHAR temp[32] = { 0 };
+	::GetPrivateProfileString(L"Default", key, std::to_wstring(default).c_str(), temp, 31, getDefaultSavePath().c_str());
+	return std::stof(temp);
 }
 
-e2d::EString e2d::EFileUtils::geTString(LPCTSTR key, EString default)
+e2d::EString e2d::EFileUtils::geTString(LPCTSTR key, LPCTSTR default)
 {
-	TCHAR temp[128] = { 0 };
-	::GetPrivateProfileString(L"Default", key, default.c_str(), temp, 128, getDefaultSavePath().c_str());
+	TCHAR temp[256] = { 0 };
+	::GetPrivateProfileString(L"Default", key, default, temp, 255, getDefaultSavePath().c_str());
 	return EString(temp);
 }
 
