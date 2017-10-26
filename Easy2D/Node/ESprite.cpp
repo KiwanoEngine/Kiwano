@@ -24,24 +24,24 @@ e2d::ESprite::ESprite(ESpriteFrame * spriteFrame)
 e2d::ESprite::ESprite(const EString & imageFileName)
 	: ESprite()
 {
-	loadFrom(new ETexture(imageFileName));
+	loadFrom(imageFileName);
 }
 
 e2d::ESprite::ESprite(const EString & imageFileName, float x, float y, float width, float height)
 {
-	loadFrom(new ETexture(imageFileName));
+	loadFrom(imageFileName);
 	clip(x, y, width, height);
 }
 
 e2d::ESprite::ESprite(const EString & resourceName, const EString & resourceType)
 	: ESprite()
 {
-	loadFrom(new ETexture(resourceName, resourceType));
+	loadFrom(resourceName, resourceType);
 }
 
 e2d::ESprite::ESprite(const EString & resourceName, const EString & resourceType, float x, float y, float width, float height)
 {
-	loadFrom(new ETexture(resourceName, resourceType));
+	loadFrom(resourceName, resourceType);
 	clip(x, y, width, height);
 }
 
@@ -62,6 +62,16 @@ void e2d::ESprite::loadFrom(ETexture * texture)
 		ENode::_setWidth(m_pTexture->getSourceWidth());
 		ENode::_setHeight(m_pTexture->getSourceHeight());
 	}
+}
+
+void e2d::ESprite::loadFrom(const EString & imageFileName)
+{
+	loadFrom(new ETexture(imageFileName));
+}
+
+void e2d::ESprite::loadFrom(const EString & resourceName, const EString & resourceType)
+{
+	loadFrom(new ETexture(resourceName, resourceType));
 }
 
 void e2d::ESprite::loadFrom(ETexture * texture, float x, float y, float width, float height)

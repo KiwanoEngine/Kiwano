@@ -1,6 +1,6 @@
 #include "..\etransitions.h"
 #include "..\eactions.h"
-#include "..\etools.h"
+#include "..\emanagers.h"
 
 e2d::ETransitionFade::ETransitionFade(float fadeOutDuration, float fadeInDuration)
 	: m_fFadeOutDuration(fadeOutDuration)

@@ -25,6 +25,12 @@
     <Filter Include="Listener">
       <UniqueIdentifier>{b9bb1728-5106-4574-998e-8564b49cb4a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{d5f86335-f3a0-450d-92a3-7edd9348d995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{be5d9314-b00a-4f11-bd2a-1f720dc32407}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Win\winbase.cpp">
@@ -174,6 +180,30 @@
     <ClCompile Include="Tool\EMusicUtils.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
+    <ClCompile Include="Geometry\ERectangle.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\EGeometry.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\ECircle.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\EEllipse.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\ECollisionListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EMouseMsg.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EKeyboardMsg.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\EPhysicsManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">
@@ -185,8 +215,10 @@
     <ClInclude Include="ecommon.h" />
     <ClInclude Include="ebase.h" />
     <ClInclude Include="easy2d.h" />
-    <ClInclude Include="emsg.h" />
     <ClInclude Include="eactions.h" />
     <ClInclude Include="etransitions.h" />
+    <ClInclude Include="egeometry.h" />
+    <ClInclude Include="elisteners.h" />
+    <ClInclude Include="emanagers.h" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
-#include "..\emsg.h"
+#include "..\elisteners.h"
+#include "..\emanagers.h"
 
 e2d::EMouseListener::EMouseListener()
 	: EListener()

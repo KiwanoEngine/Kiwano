@@ -9,25 +9,6 @@ namespace e2d
 class ETimerManager;
 class EAction;
 
-// 对象管理器
-class EObjectManager
-{
-	friend EApp;
-
-public:
-	// 将一个节点放入内存池
-	static void add(
-		e2d::EObject * nptr
-	);
-
-	// 通知内存池刷新
-	static void notifyFlush();
-
-private:
-	// 刷新内存池
-	static void __flush();
-};
-
 
 // 定时器
 class ETimer :
@@ -64,9 +45,6 @@ public:
 
 	// 获取定时器名称
 	EString getName() const;
-
-	// 获取定时器所在场景
-	EScene * getParentScene() const;
 
 	// 获取定时器所在节点
 	ENode * getParentNode() const;
@@ -114,148 +92,10 @@ protected:
 	bool			m_bAtOnce;
 	int				m_nRunTimes;
 	int				m_nRepeatTimes;
-	EScene *		m_pParentScene;
 	ENode *			m_pParentNode;
 	TIMER_CALLBACK	m_Callback;
 	LONGLONG		m_nInterval;
 	std::chrono::steady_clock::time_point m_tLast;
-};
-
-
-// 定时器管理器
-class ETimerManager
-{
-	friend EApp;
-	friend EScene;
-	friend ENode;
-
-public:
-	// 绑定定时器到场景
-	static void bindTimer(
-		ETimer * timer,
-		EScene * pParentScene
-	);
-
-	// 绑定定时器到节点
-	static void bindTimer(
-		ETimer * timer,
-		ENode * pParentNode
-	);
-
-	// 启动具有相同名称的定时器
-	static void startTimers(
-		const EString &name
-	);
-
-	// 停止具有相同名称的定时器
-	static void stopTimers(
-		const EString &name
-	);
-
-	// 删除具有相同名称的定时器
-	static void delTimers(
-		const EString &name
-	);
-
-	// 启动绑定在场景及其子节点上的所有定时器
-	static void startAllTimersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 停止绑定在场景及其子节点上的所有定时器
-	static void stopAllTimersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 启动绑定在节点上的所有定时器
-	static void startAllTimersBindedWith(
-		ENode * pParentNode
-	);
-
-	// 停止绑定在节点上的所有定时器
-	static void stopAllTimersBindedWith(
-		ENode * pParentNode
-	);
-
-	// 启动所有定时器
-	static void startAllTimers();
-
-	// 停止所有定时器
-	static void stopAllTimers();
-
-private:
-	// 清空定时器管理器
-	static void _clearManager();
-
-	// 清空绑定在场景及其子节点上的所有定时器
-	static void _clearAllTimersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 清空绑定在节点上的所有定时器
-	static void _clearAllTimersBindedWith(
-		ENode * pParentNode
-	);
-
-	// 重置定时器状态
-	static void _resetAllTimers();
-
-	// 定时器执行程序
-	static void TimerProc();
-};
-
-
-// 动作管理器
-class EActionManager
-{
-	friend EApp;
-	friend EScene;
-	friend ENode;
-
-public:
-	// 添加动作
-	static void addAction(
-		EAction * action
-	);
-
-	// 继续绑定在节点上的所有动作
-	static void startAllActionsBindedWith(
-		ENode * pTargetNode
-	);
-
-	// 暂停绑定在节点上的所有动作
-	static void pauseAllActionsBindedWith(
-		ENode * pTargetNode
-	);
-
-	// 停止绑定在节点上的所有动作
-	static void stopAllActionsBindedWith(
-		ENode * pTargetNode
-	);
-
-	// 继续所有动作
-	static void startAllActions();
-
-	// 暂停所有动作
-	static void pauseAllActions();
-
-	// 停止所有动作
-	static void stopAllActions();
-
-private:
-	// 清空动画管理器
-	static void _clearManager();
-
-	// 清空绑定在节点上的所有动作
-	static void _clearAllActionsBindedWith(
-		ENode * pTargetNode
-	);
-
-	// 重置所有动作状态
-	static void _resetAllActions();
-
-	// 动作执行程序
-	static void ActionProc();
 };
 
 

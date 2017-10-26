@@ -1,3 +1,4 @@
+#include "..\emanagers.h"
 #include "..\etools.h"
 #include "..\enodes.h"
 #include "..\Win\winbase.h"
@@ -15,8 +16,8 @@ void e2d::ETimerManager::TimerProc()
 		auto &t = s_vTimers[i];
 		if (t->isRunning())
 		{
-			if (t->getParentScene() == EApp::getCurrentScene() ||
-				(t->getParentNode() && (t->getParentNode()->getParentScene() == EApp::getCurrentScene())))
+			if (t->getParentNode() && 
+				t->getParentNode()->getParentScene() == EApp::getCurrentScene())
 			{
 				if (t->_isReady())
 				{
@@ -29,33 +30,21 @@ void e2d::ETimerManager::TimerProc()
 
 void e2d::ETimerManager::bindTimer(ETimer * timer, EScene * pParentScene)
 {
-	ASSERT(
-		(!timer->m_pParentScene) && (!timer->m_pParentNode),
-		"The timer is already binded, it cannot bind again!"
-	);
-	WARN_IF(timer == nullptr, "ETimer NULL pointer exception!");
-	WARN_IF(pParentScene == nullptr, "Bind ETimer with a NULL EScene pointer!");
-
-	if (timer && pParentScene)
-	{
-		timer->start();
-		timer->retain();
-		timer->m_pParentScene = pParentScene;
-		s_vTimers.push_back(timer);
-	}
+	ETimerManager::bindTimer(timer, pParentScene->getRoot());
 }
 
 void e2d::ETimerManager::bindTimer(ETimer * timer, ENode * pParentNode)
 {
-	ASSERT(
-		(!timer->m_pParentScene) && (!timer->m_pParentNode),
-		"The timer is already binded, it cannot bind again!"
-	);
 	WARN_IF(timer == nullptr, "ETimer NULL pointer exception!");
 	WARN_IF(pParentNode == nullptr, "Bind ETimer with a NULL ENode pointer!");
 
 	if (timer && pParentNode)
 	{
+		ASSERT(
+			!timer->m_pParentNode,
+			"The timer is already binded, it cannot bind again!"
+		);
+
 		timer->start();
 		timer->retain();
 		timer->m_pParentNode = pParentNode;
@@ -104,49 +93,12 @@ void e2d::ETimerManager::delTimers(const EString & name)
 
 void e2d::ETimerManager::startAllTimersBindedWith(EScene * pParentScene)
 {
-	for (auto t : s_vTimers)
-	{
-		if (t->getParentScene() == pParentScene)
-		{
-			t->start();
-		}
-	}
-	for (auto child : pParentScene->getChildren())
-	{
-		ETimerManager::startAllTimersBindedWith(child);
-	}
+	ETimerManager::startAllTimersBindedWith(pParentScene->getRoot());
 }
 
 void e2d::ETimerManager::stopAllTimersBindedWith(EScene * pParentScene)
 {
-	for (auto t : s_vTimers)
-	{
-		if (t->getParentScene() == pParentScene)
-		{
-			t->stop();
-		}
-	}
-	for (auto child : pParentScene->getChildren())
-	{
-		ETimerManager::stopAllTimersBindedWith(child);
-	}
-}
-
-void e2d::ETimerManager::_clearAllTimersBindedWith(EScene * pParentScene)
-{
-	for (size_t i = 0; i < s_vTimers.size();)
-	{
-		auto t = s_vTimers[i];
-		if (t->getParentScene() == pParentScene)
-		{
-			SafeReleaseAndClear(&t);
-			s_vTimers.erase(s_vTimers.begin() + i);
-		}
-		else
-		{
-			i++;
-		}
-	}
+	ETimerManager::stopAllTimersBindedWith(pParentScene->getRoot());
 }
 
 void e2d::ETimerManager::startAllTimersBindedWith(ENode * pParentNode)

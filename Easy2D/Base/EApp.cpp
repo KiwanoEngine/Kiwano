@@ -1,12 +1,11 @@
 #include "..\ebase.h"
 #include "..\Win\winbase.h"
-#include "..\emsg.h"
-#include "..\etools.h"
+#include "..\emanagers.h"
 #include "..\enodes.h"
 #include "..\etransitions.h"
 #include <stack>
 #include <thread>
-#include <imm.h>  
+#include <imm.h>
 #pragma comment (lib ,"imm32.lib")
 
 using namespace std::this_thread;
@@ -75,7 +74,7 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 		// 注册窗口类
 		WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
 		UINT style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-		if (wStyle.NO_CLOSE)
+		if (wStyle.m_bNoClose)
 		{
 			style |= CS_NOCLOSE;
 		}
@@ -88,9 +87,9 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 		wcex.lpszMenuName = NULL;
 		wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
 		wcex.lpszClassName = L"Easy2DApp";
-		if (wStyle.ICON_ID)
+		if (wStyle.m_pIconID)
 		{
-			wcex.hIcon = (HICON)::LoadImage(GetModuleHandle(NULL), wStyle.ICON_ID, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+			wcex.hIcon = (HICON)::LoadImage(GetModuleHandle(NULL), wStyle.m_pIconID, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 		}
 
 		RegisterClassEx(&wcex);
@@ -117,12 +116,12 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 		
 		// 创建窗口样式
 		DWORD dwStyle = WS_OVERLAPPED | WS_SYSMENU;
-		if (!wStyle.NO_MINI_SIZE)
+		if (!wStyle.m_bNoMiniSize)
 		{
 			dwStyle |= WS_MINIMIZEBOX;
 		}
 		// 保存窗口是否置顶显示
-		m_bTopMost = wStyle.TOP_MOST;
+		m_bTopMost = wStyle.m_bTopMost;
 		// 保存窗口名称
 		m_sTitle = title;
 		// 创建窗口
@@ -366,7 +365,7 @@ void e2d::EApp::_onRender()
 		// 开始绘图
 		GetRenderTarget()->BeginDraw();
 		// 使用背景色清空屏幕
-		GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor.value));
+		GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor));
 		// 绘制当前场景
 		if (m_pCurrentScene)
 		{
@@ -528,7 +527,7 @@ e2d::EString e2d::EApp::getAppName()
 	return s_pInstance->m_sAppName;
 }
 
-void e2d::EApp::setBkColor(EColor color)
+void e2d::EApp::setBkColor(UINT32 color)
 {
 	get()->m_ClearColor = color;
 }

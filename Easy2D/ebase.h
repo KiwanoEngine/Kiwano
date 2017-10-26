@@ -13,6 +13,7 @@ class ENode;
 class EObjectManager;
 class EMouseListener;
 class EKeyboardListener;
+class EAction;
 class ETransition;
 
 class EApp
@@ -143,7 +144,7 @@ public:
 
 	// 修改窗口背景色
 	static void setBkColor(
-		EColor color
+		UINT32 color
 	);
 
 	// 设置程序是否响应输入法
@@ -200,7 +201,7 @@ protected:
 	bool	m_bTopMost;
 	EString	m_sTitle;
 	EString	m_sAppName;
-	EColor	m_ClearColor;
+	UINT32	m_ClearColor;
 	LONGLONG nAnimationInterval;
 	EScene * m_pCurrentScene;
 	EScene * m_pNextScene;
@@ -291,6 +292,11 @@ public:
 
 	// 清空所有子成员
 	void clearAllChildren();
+
+	// 执行动画
+	void runAction(
+		EAction * action
+	);
 
 	// 绑定鼠标消息监听器
 	void bindListener(EMouseListener * listener);

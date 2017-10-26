@@ -210,6 +210,13 @@
     <ClCompile Include="Base\EApp.cpp" />
     <ClCompile Include="Base\EObject.cpp" />
     <ClCompile Include="Base\EScene.cpp" />
+    <ClCompile Include="Common\EKeyboardMsg.cpp" />
+    <ClCompile Include="Common\EMouseMsg.cpp" />
+    <ClCompile Include="Geometry\ECircle.cpp" />
+    <ClCompile Include="Geometry\EEllipse.cpp" />
+    <ClCompile Include="Geometry\EGeometry.cpp" />
+    <ClCompile Include="Geometry\ERectangle.cpp" />
+    <ClCompile Include="Listener\ECollisionListener.cpp" />
     <ClCompile Include="Listener\EKeyboardListener.cpp" />
     <ClCompile Include="Listener\EKeyboardPressListener.cpp" />
     <ClCompile Include="Listener\EListener.cpp" />
@@ -221,6 +228,7 @@
     <ClCompile Include="Manager\EActionManager.cpp" />
     <ClCompile Include="Manager\EMsgManager.cpp" />
     <ClCompile Include="Manager\EObjectManager.cpp" />
+    <ClCompile Include="Manager\EPhysicsManager.cpp" />
     <ClCompile Include="Manager\ETimerManager.cpp" />
     <ClCompile Include="Node\EButton.cpp" />
     <ClCompile Include="Node\ENode.cpp" />
@@ -245,8 +253,10 @@
     <ClInclude Include="easy2d.h" />
     <ClInclude Include="ebase.h" />
     <ClInclude Include="ecommon.h" />
+    <ClInclude Include="egeometry.h" />
+    <ClInclude Include="elisteners.h" />
     <ClInclude Include="emacros.h" />
-    <ClInclude Include="emsg.h" />
+    <ClInclude Include="emanagers.h" />
     <ClInclude Include="enodes.h" />
     <ClInclude Include="etools.h" />
     <ClInclude Include="etransitions.h" />

@@ -1,6 +1,6 @@
 #include "..\etransitions.h"
 #include "..\eactions.h"
-#include "..\etools.h"
+#include "..\emanagers.h"
 
 e2d::ETransitionScale::ETransitionScale(float scaleOutDuration, float scaleInDuration)
 	: m_fScaleOutDuration(scaleOutDuration)

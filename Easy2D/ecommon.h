@@ -7,52 +7,51 @@
 namespace e2d
 {
 
-typedef std::wstring EString;
-
-template<typename T>
-using EVector = std::vector<T>;
-
 struct EWindowStyle
 {
+	LPCTSTR m_pIconID;	/* 程序图标 ID */
+	bool m_bNoClose;	/* 禁用关闭按钮 */
+	bool m_bNoMiniSize;	/* 禁用最小化按钮 */
+	bool m_bTopMost;	/* 窗口置顶 */
+
 	EWindowStyle()
 	{
-		ICON_ID = 0;
-		NO_CLOSE = false;
-		NO_MINI_SIZE = false;
-		TOP_MOST = false;
+		m_pIconID = 0;
+		m_bNoClose = false;
+		m_bNoMiniSize = false;
+		m_bTopMost = false;
 	}
 
 	EWindowStyle(
-		LPCTSTR ICON_ID
+		LPCTSTR pIconID
 	)
 	{
-		this->ICON_ID = ICON_ID;
-		NO_CLOSE = false;
-		NO_MINI_SIZE = false;
-		TOP_MOST = false;
+		m_pIconID = pIconID;
+		m_bNoClose = false;
+		m_bNoMiniSize = false;
+		m_bTopMost = false;
 	}
 
 	EWindowStyle(
-		LPCTSTR ICON_ID,
-		bool NO_CLOSE,
-		bool NO_MINI_SIZE,
-		bool TOP_MOST
+		LPCTSTR pIconID,
+		bool bNoClose,
+		bool bNoMiniSize,
+		bool bTopMost
 	)
 	{
-		this->ICON_ID = ICON_ID;
-		this->NO_CLOSE = NO_CLOSE;
-		this->NO_MINI_SIZE = NO_MINI_SIZE;
-		this->TOP_MOST = TOP_MOST;
+		m_pIconID = pIconID;
+		m_bNoClose = bNoClose;
+		m_bNoMiniSize = bNoMiniSize;
+		m_bTopMost = bTopMost;
 	}
-
-	LPCTSTR ICON_ID;	/* 程序图标 ID */
-	bool NO_CLOSE;		/* 禁用关闭按钮 */
-	bool NO_MINI_SIZE;	/* 禁用最小化按钮 */
-	bool TOP_MOST;		/* 窗口置顶 */
 };
+
 
 struct EPoint
 {
+	float x;
+	float y;
+
 	EPoint()
 	{
 		x = 0;
@@ -74,15 +73,15 @@ struct EPoint
 	{
 		return EPoint(x - p.x, y - p.y);
 	}
-
-	float x;
-	float y;
 };
 
 typedef EPoint EVec;
 
 struct ESize
 {
+	float width;
+	float height;
+
 	ESize()
 	{
 		width = 0;
@@ -104,46 +103,43 @@ struct ESize
 	{
 		return ESize(width - size.width, height - size.height);
 	}
-
-	float width;
-	float height;
 };
+
+typedef std::wstring EString;
+
+template<typename T>
+using EVector = std::vector<T>;
 
 
 // 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
 typedef std::function<void(int)> TIMER_CALLBACK;
+
 // 按钮点击回调函数
 typedef std::function<void()> BUTTON_CLICK_CALLBACK;
+
 // 按键消息监听回调函数
 typedef std::function<void()> KEY_LISTENER_CALLBACK;
+
 // 鼠标消息监听回调函数
 typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
+
 // 鼠标点击消息监听回调函数（参数为点击位置）
 typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
+
 // 鼠标按下消息监听回调函数（参数为按下位置）
 typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_PRESS_LISTENER_CALLBACK;
+
 // 鼠标双击消息监听回调函数（参数为双击位置）
 typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_DBLCLK_LISTENER_CALLBACK;
+
 // 鼠标拖动消息监听函数（参数为拖动前位置和拖动后位置）
 typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
-
 
 
 class EColor
 {
 public:
-
-	EColor()
-	{
-		value = VALUE::WHITE;
-	}
-
-	EColor(int color)
-	{
-		value = VALUE(color);
-	}
-	
-	enum VALUE
+	enum COMMON_VALUE
 	{
 		ALICE_BLUE = 0xF0F8FF,
 		ANTIQUE_WHITE = 0xFAEBD7,
@@ -286,26 +282,13 @@ public:
 		YELLOW = 0xFFFF00,
 		YELLOW_GREEN = 0x9ACD32
 	};
-
-	VALUE value;
 };
 
 
 class EFontWeight
 {
 public:
-
-	EFontWeight()
-	{
-		value = VALUE::REGULAR;
-	}
-
-	EFontWeight(int fontWeight)
-	{
-		value = VALUE(fontWeight);
-	}
-
-	enum VALUE
+	enum COMMON_VALUE
 	{
 		THIN = 100,
 		EXTRA_LIGHT = 200,
@@ -325,8 +308,138 @@ public:
 		EXTRA_BLACK = 950,
 		ULTRA_BLACK = 950
 	};
+};
 
-	VALUE value;
+
+// 鼠标消息
+class EMouseMsg
+{
+public:
+	// 鼠标消息集合
+	enum MOUSE_MSG
+	{
+		MOVE = 0x0200,	// 鼠标移动
+		LBUTTON_DOWN,	// 鼠标左键按下
+		LBUTTON_UP,		// 鼠标左键抬起
+		LBUTTON_DBLCLK,	// 鼠标左键双击
+		RBUTTON_DOWN,	// 鼠标右键按下
+		RBUTTON_UP,		// 鼠标右键抬起
+		RBUTTON_DBLCLK,	// 鼠标右键双击
+		MBUTTON_DOWN,	// 鼠标中键按下
+		MBUTTON_UP,		// 鼠标中键抬起
+		MBUTTON_DBLCLK,	// 鼠标中键双击
+		WHEEL			// 滑动滚轮
+	};
+
+	// 获取鼠标横坐标
+	static DWORD getPosX();
+
+	// 获取鼠标纵坐标
+	static DWORD getPosY();
+
+	// 获取鼠标坐标
+	static EPoint getPos();
+
+	// 获取鼠标左键按下状态
+	static bool isLButtonDown();
+
+	// 获取鼠标中键按下状态
+	static bool isMButtonDown();
+
+	// 获取鼠标右键按下状态
+	static bool isRButtonDown();
+
+	// 获取 Shift 按键状态
+	static bool isShiftDown();
+
+	// 获取 Ctrl 按键状态
+	static bool isCtrlDown();
+
+	// 获取鼠标滚轮值
+	static DWORD getWheelDelta();
+
+	// 获取当前鼠标消息类型
+	static MOUSE_MSG getMsg();
+
+	// 获取当前鼠标消息
+	static EMouseMsg & getMouseMsg();
+
+public:
+	UINT m_nMsg = 0;
+	WPARAM m_wParam = 0;
+	LPARAM m_lParam = 0;
+};
+
+
+// 按键消息
+class EKeyboardMsg
+{
+public:
+	// 按键消息类型集合
+	enum KEYBOARD_MSG
+	{
+		KEY_DOWN = 0x0100,	// 按下
+		KEY_UP				// 抬起
+	};
+
+	// 按键键值集合
+	enum class KEY
+	{
+		A = 'A', B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,					// 字母键值
+		NUM0 = '0', NUM1, NUM2, NUM3, NUM4, NUM5, NUM6, NUM7, NUM8, NUM9,									// 数字键值
+		NUMPAD0 = 0x60, NUMPAD1, NUMPAD2, NUMPAD3, NUMPAD4, NUMPAD5, NUMPAD6, NUMPAD7, NUMPAD8, NUMPAD9,	// 数字小键盘键值
+		F1 = 0x70, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,											// F键键值
+		MULTIPLY,		// 乘号键键值
+		ADD,			// 加号键键值
+		SEPARATOR,		// 分割键键值
+		SUBTRACT,		// 减号键键值
+		DECIMAL,		// 小数点键键值
+		DIVIDE,			// 除号键键值
+		TAB = 0x09,		// TAB 键键值
+		ENTER = 0x0D,	// 回车键键值
+		SHIFT, CTRL, 	// SHIFT 键键值
+		ESC = 0x1B, 	// ESCAPE 键键值
+		SPACE = 0x20, 	// 空格键键值
+		PAGE_UP, 		// PageUp 键键值
+		PAGE_DOWN, 		// PageDown 键键值
+		END, 			// End 键键值
+		HOME, 			// Home 键键值
+		LEFT, 			// 左键键值
+		UP, 			// 上键键值
+		RIGHT, 			// 右键键值
+		DOWN			// 下键键值
+	};
+
+	// 获取按键消息类型
+	static KEYBOARD_MSG getMsg();
+
+	// 获取键值
+	static KEY getVal();
+
+	// 获取按键消息的计数
+	static DWORD getCount();
+
+	// 获取特定按键的状态
+	static bool isKeyDown(
+		KEY key
+	);
+
+	// 获取大小写锁定状态
+	static bool isCapitalLockOn();
+
+	// 获取数字小键盘锁定状态
+	static bool isNumpadLockOn();
+
+	// 获取滑动锁定状态
+	static bool isScrollLockOn();
+
+	// 获取当前按键消息
+	static EKeyboardMsg & getKeyboardMsg();
+
+public:
+	UINT m_nMsg = 0;
+	WPARAM m_wParam = 0;
+	LPARAM m_lParam = 0;
 };
 
 }

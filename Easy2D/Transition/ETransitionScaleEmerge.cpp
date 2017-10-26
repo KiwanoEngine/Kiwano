@@ -1,6 +1,6 @@
 #include "..\etransitions.h"
 #include "..\eactions.h"
-#include "..\etools.h"
+#include "..\emanagers.h"
 
 e2d::ETransitionScaleEmerge::ETransitionScaleEmerge(float duration, SCALE_EMERGE_MODE mode)
 	: m_fDuration(duration)

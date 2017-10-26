@@ -1,10 +1,10 @@
 #include "..\etools.h"
+#include "..\emanagers.h"
 #include "..\Win\winbase.h"
 
 e2d::ETimer::ETimer()
 	: m_bRunning(false)
 	, m_nRunTimes(0)
-	, m_pParentScene(nullptr)
 	, m_pParentNode(nullptr)
 	, m_Callback([](int) {})
 	, m_nInterval(0)
@@ -51,11 +51,6 @@ void e2d::ETimer::stop()
 e2d::EString e2d::ETimer::getName() const
 {
 	return m_sName;
-}
-
-e2d::EScene * e2d::ETimer::getParentScene() const
-{
-	return m_pParentScene;
 }
 
 e2d::ENode * e2d::ETimer::getParentNode() const

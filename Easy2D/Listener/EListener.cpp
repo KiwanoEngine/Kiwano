@@ -1,9 +1,8 @@
-#include "..\emsg.h"
+#include "..\elisteners.h"
 
 e2d::EListener::EListener()
 	: m_bRunning(false)
 	, m_bAlways(false)
-	, m_pParentScene(nullptr)
 	, m_pParentNode(nullptr)
 {
 }
@@ -32,11 +31,6 @@ void e2d::EListener::stop()
 e2d::EString e2d::EListener::getName() const
 {
 	return m_sName;
-}
-
-e2d::EScene * e2d::EListener::getParentScene() const
-{
-	return m_pParentScene;
 }
 
 e2d::ENode * e2d::EListener::getParentNode() const

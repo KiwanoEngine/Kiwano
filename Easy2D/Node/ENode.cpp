@@ -1,7 +1,8 @@
 #include "..\enodes.h"
-#include "..\emsg.h"
+#include "..\emanagers.h"
 #include "..\etools.h"
 #include "..\eactions.h"
+#include "..\egeometry.h"
 #include "..\Win\winbase.h"
 #include <algorithm>
 
@@ -19,6 +20,7 @@ e2d::ENode::ENode()
 	, m_Matri(D2D1::Matrix3x2F::Identity())
 	, m_bVisiable(true)
 	, m_bDisplayedInScene(false)
+	, m_pGeometry(nullptr)
 	, m_pParent(nullptr)
 	, m_pParentScene(nullptr)
 	, m_nHashName(0)
@@ -43,6 +45,7 @@ e2d::ENode::~ENode()
 	{
 		SafeReleaseAndClear(&child);
 	}
+	SafeReleaseAndClear(&m_pGeometry);
 }
 
 void e2d::ENode::onEnter()
@@ -190,11 +193,14 @@ void e2d::ENode::_updateChildrenTransform()
 
 void e2d::ENode::_updateTransform(ENode * node)
 {
+	// 计算自身的转换矩阵
 	node->_updateTransformToReal();
+	// 和父节点矩阵相乘
 	if (node->m_pParent)
 	{
 		node->m_Matri = node->m_Matri * node->m_pParent->m_Matri;
 	}
+	// 转换矩阵后判断
 	// 遍历子节点下的所有节点
 	node->_updateChildrenTransform();
 	node->m_bTransformChildrenNeeded = false;
@@ -265,6 +271,16 @@ float e2d::ENode::getRealHeight() const
 e2d::ESize e2d::ENode::getRealSize() const
 {
 	return m_Size;
+}
+
+float e2d::ENode::getAnchorX() const
+{
+	return m_fAnchorX;
+}
+
+float e2d::ENode::getAnchorY() const
+{
+	return m_fAnchorY;
 }
 
 e2d::ESize e2d::ENode::getSize() const
@@ -454,6 +470,11 @@ void e2d::ENode::setAnchor(float anchorX, float anchorY)
 	m_fAnchorX = min(max(anchorX, 0), 1);
 	m_fAnchorY = min(max(anchorY, 0), 1);
 	m_bTransformChildrenNeeded = true;
+}
+
+void e2d::ENode::setGeometry(EGeometry * geometry)
+{
+	EPhysicsManager::bindWith(geometry, this);
 }
 
 void e2d::ENode::addChild(ENode * child, int order  /* = 0 */)

@@ -1,6 +1,6 @@
 #include "..\etransitions.h"
 #include "..\eactions.h"
-#include "..\etools.h"
+#include "..\emanagers.h"
 
 e2d::ETransitionMove::ETransitionMove(float moveDuration, MOVE_DIRECT direct)
 	: m_fMoveDuration(moveDuration)

@@ -1,7 +1,8 @@
 #include "..\ebase.h"
 #include "..\enodes.h"
-#include "..\emsg.h"
+#include "..\emanagers.h"
 #include "..\etools.h"
+#include "..\eactions.h"
 #include <algorithm>
 
 e2d::EScene::EScene()
@@ -17,9 +18,6 @@ e2d::EScene::EScene()
 
 e2d::EScene::~EScene()
 {
-	ETimerManager::_clearAllTimersBindedWith(this);
-	EMsgManager::_clearAllMouseListenersBindedWith(this);
-	EMsgManager::_clearAllKeyboardListenersBindedWith(this);
 	SafeReleaseAndClear(&m_pRoot);
 }
 
@@ -89,6 +87,11 @@ e2d::ENode * e2d::EScene::getRoot() const
 void e2d::EScene::clearAllChildren()
 {
 	m_pRoot->clearAllChildren();
+}
+
+void e2d::EScene::runAction(EAction * action)
+{
+	this->m_pRoot->runAction(action);
 }
 
 void e2d::EScene::bindListener(EMouseListener * listener)

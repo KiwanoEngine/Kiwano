@@ -1,4 +1,4 @@
-#include "..\etools.h"
+#include "..\emanagers.h"
 #include "..\eactions.h"
 #include "..\Win\winbase.h"
 

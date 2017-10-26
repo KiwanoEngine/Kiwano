@@ -1,5 +1,6 @@
 #include "..\enodes.h"
-#include "..\emsg.h"
+#include "..\elisteners.h"
+#include "..\emanagers.h"
 #include "..\Win\winbase.h"
 
 e2d::EButton::EButton()

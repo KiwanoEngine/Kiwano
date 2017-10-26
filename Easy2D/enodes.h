@@ -8,6 +8,7 @@ class EText;
 class ESprite;
 class EAction;
 class EButton;
+class EGeometry;
 
 class ENode :
 	public EObject
@@ -62,6 +63,12 @@ public:
 
 	// 获取节点大小（不考虑缩放）
 	virtual ESize getRealSize() const;
+
+	// 获取节点的锚点
+	virtual float getAnchorX() const;
+
+	// 获取节点的锚点
+	virtual float getAnchorY() const;
 
 	// 获取节点大小
 	virtual ESize getSize() const;
@@ -224,6 +231,11 @@ public:
 		float anchorY
 	);
 
+	// 设置节点形状
+	virtual void setGeometry(
+		EGeometry * geometry
+	);
+
 	// 添加子节点
 	virtual void addChild(
 		ENode * child,
@@ -362,6 +374,7 @@ protected:
 	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
 	bool		m_bTransformChildrenNeeded;
+	EGeometry * m_pGeometry;
 	EScene *	m_pParentScene;
 	ENode *		m_pParent;
 	D2D1::Matrix3x2F	m_Matri;
@@ -569,12 +582,23 @@ public:
 
 	virtual ~ESprite();
 	
-	// 设置精灵纹理
+	// 加载精灵纹理
 	void loadFrom(
 		ETexture * texture
 	);
 
-	// 设置精灵纹理并裁剪
+	// 从本地文件加载纹理
+	void loadFrom(
+		const EString & imageFileName
+	);
+
+	// 从资源加载纹理
+	void loadFrom(
+		const EString & resourceName,
+		const EString & resourceType
+	);
+
+	// 加载纹理并裁剪
 	void loadFrom(
 		ETexture * texture,
 		float x,
@@ -618,7 +642,8 @@ public:
 	EFont(
 		EString fontFamily,
 		float fontSize = 22,
-		EFontWeight fontWeight = EFontWeight::REGULAR,
+		UINT32 color = EColor::WHITE,
+		UINT32 fontWeight = EFontWeight::REGULAR,
 		bool italic = false
 	);
 
@@ -628,7 +653,10 @@ public:
 	float getFontSize() const;
 
 	// 获取当前字体粗细值
-	EFontWeight getFontWeight() const;
+	UINT32 getFontWeight() const;
+
+	// 获取文字颜色
+	UINT32 getColor() const;
 
 	// 是否是斜体
 	bool isItalic() const;
@@ -645,7 +673,12 @@ public:
 
 	// 设置字体粗细值
 	void setWeight(
-		EFontWeight fontWeight
+		UINT32 fontWeight
+	);
+
+	// 设置文字颜色
+	void setColor(
+		UINT32 color
 	);
 
 	// 设置文字斜体
@@ -663,7 +696,8 @@ protected:
 protected:
 	EString		m_sFontFamily;
 	float		m_fFontSize;
-	EFontWeight	m_FontWeight;
+	UINT32		m_FontWeight;
+	UINT32		m_Color;
 	bool		m_bItalic;
 	bool		m_bRecreateNeeded;
 	IDWriteTextFormat * m_pTextFormat;
@@ -686,16 +720,15 @@ public:
 
 	EText(
 		const EString & text,
-		EColor color,
 		EFont * font
 	);
 
 	EText(
 		const EString & text,
-		EColor color,
 		EString fontFamily,
 		float fontSize = 22,
-		EFontWeight fontWeight = EFontWeight::REGULAR,
+		UINT32 color = EColor::WHITE,
+		UINT32 fontWeight = EFontWeight::REGULAR,
 		bool italic = false
 	);
 
@@ -710,20 +743,12 @@ public:
 	// 获取文本宽度（不考虑缩放）
 	virtual float getRealWidth() const override;
 
-	// 获取文字颜色
-	EColor getColor() const;
-
 	// 获取字体
 	EFont * getFont() const;
 
 	// 设置文本
 	void setText(
 		const EString & text
-	);
-
-	// 设置文字颜色
-	void setColor(
-		EColor color
 	);
 
 	// 设置字体
@@ -750,7 +775,6 @@ protected:
 
 protected:
 	EString	m_sText;
-	EColor	m_Color;
 	bool	m_bWordWrapping;
 	float	m_fWordWrappingWidth;
 	EFont * m_pFont;

@@ -1,4 +1,5 @@
-#include "..\etools.h"
+#include "..\emanagers.h"
+#include "..\ebase.h"
 
 // EObjectManager 释放池的实现机制：
 // EObject 类中的引用计数（m_nRefCount）保证了指针的使用安全

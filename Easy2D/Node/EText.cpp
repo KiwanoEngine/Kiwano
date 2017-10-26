@@ -2,8 +2,7 @@
 #include "..\Win\winbase.h"
 
 e2d::EText::EText()
-	: m_Color(EColor::WHITE)
-	, m_bWordWrapping(false)
+	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
 {
@@ -23,19 +22,17 @@ e2d::EText::EText(EFont * font)
 	this->setFont(font);
 }
 
-e2d::EText::EText(const EString & text, EColor color, EFont * font)
+e2d::EText::EText(const EString & text, EFont * font)
 	: EText()
 {
 	this->setText(text);
-	this->setColor(color);
 	this->setFont(font);
 }
 
-e2d::EText::EText(const EString & text, EColor color, EString fontFamily, float fontSize, EFontWeight fontWeight, bool italic)
+e2d::EText::EText(const EString & text, EString fontFamily, float fontSize, UINT32 color, UINT32 fontWeight, bool italic)
 {
 	this->setText(text);
-	this->setColor(color);
-	this->setFont(new EFont(fontFamily, fontSize, fontWeight, italic));
+	this->setFont(new EFont(fontFamily, fontSize, color, fontWeight, italic));
 }
 
 e2d::EText::~EText()
@@ -58,11 +55,6 @@ float e2d::EText::getRealWidth() const
 	return m_fWordWrappingWidth;
 }
 
-e2d::EColor e2d::EText::getColor() const
-{
-	return m_Color;
-}
-
 e2d::EFont * e2d::EText::getFont() const
 {
 	return m_pFont;
@@ -72,11 +64,6 @@ void e2d::EText::setText(const EString & text)
 {
 	m_sText = text;
 	_initTextLayout();
-}
-
-void e2d::EText::setColor(EColor color)
-{
-	m_Color = color;
 }
 
 void e2d::EText::setFont(EFont * font)
@@ -105,7 +92,7 @@ void e2d::EText::setWordWrappingWidth(float wordWrapWidth)
 
 void e2d::EText::_onRender()
 {
-	GetSolidColorBrush()->SetColor(D2D1::ColorF(m_Color.value, m_fDisplayOpacity));
+	GetSolidColorBrush()->SetColor(D2D1::ColorF(m_pFont->m_Color, m_fDisplayOpacity));
 	GetRenderTarget()->DrawTextW(
 		m_sText.c_str(),
 		UINT32(m_sText.length()),
