@@ -3,11 +3,13 @@
 #include "..\Win\winbase.h"
 
 e2d::ERectangle::ERectangle()
+	: m_pD2dRectangle(nullptr)
 {
 	this->_setRect(0, 0, 0, 0);
 }
 
 e2d::ERectangle::ERectangle(float x, float y, float width, float height)
+	: ERectangle()
 {
 	this->_setRect(x, y, x + width, y + height);
 }
@@ -16,8 +18,8 @@ e2d::ERectangle::ERectangle(ENode * node)
 {
 	// ¼ÆËã×óÉÏ½Ç×ø±ê
 	D2D1_POINT_2F upperLeftCorner = D2D1::Point2F(
-		node->getPosX() - node->getRealWidth() * node->getAnchorX(),
-		node->getPosY() - node->getRealHeight() * node->getAnchorY()
+		node->getRealWidth() * node->getAnchorX(),
+		node->getRealHeight() * node->getAnchorY()
 	);
 	this->_setRect(
 		upperLeftCorner.x,

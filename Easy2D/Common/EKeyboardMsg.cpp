@@ -1,20 +1,22 @@
 #include "..\ecommon.h"
 
-static e2d::EKeyboardMsg s_KeyboardMsg;
+UINT e2d::EKeyboardMsg::s_nMsg = 0;
+WPARAM e2d::EKeyboardMsg::s_wParam = 0;
+LPARAM e2d::EKeyboardMsg::s_lParam = 0;
 
 e2d::EKeyboardMsg::KEYBOARD_MSG e2d::EKeyboardMsg::getMsg()
 {
-	return KEYBOARD_MSG(s_KeyboardMsg.m_nMsg);
+	return KEYBOARD_MSG(EKeyboardMsg::s_nMsg);
 }
 
 e2d::EKeyboardMsg::KEY e2d::EKeyboardMsg::getVal()
 {
-	return KEY(s_KeyboardMsg.m_wParam);
+	return KEY(EKeyboardMsg::s_wParam);
 }
 
 DWORD e2d::EKeyboardMsg::getCount()
 {
-	return (((DWORD)s_KeyboardMsg.m_lParam) & 0x0000FFFF);
+	return (((DWORD)EKeyboardMsg::s_lParam) & 0x0000FFFF);
 }
 
 bool e2d::EKeyboardMsg::isKeyDown(KEY key)
@@ -51,9 +53,4 @@ bool e2d::EKeyboardMsg::isScrollLockOn()
 		return true;
 	}
 	return false;
-}
-
-e2d::EKeyboardMsg & e2d::EKeyboardMsg::getKeyboardMsg()
-{
-	return s_KeyboardMsg;
 }

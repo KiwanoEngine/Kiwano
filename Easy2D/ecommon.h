@@ -111,31 +111,6 @@ template<typename T>
 using EVector = std::vector<T>;
 
 
-// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
-typedef std::function<void(int)> TIMER_CALLBACK;
-
-// 按钮点击回调函数
-typedef std::function<void()> BUTTON_CLICK_CALLBACK;
-
-// 按键消息监听回调函数
-typedef std::function<void()> KEY_LISTENER_CALLBACK;
-
-// 鼠标消息监听回调函数
-typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
-
-// 鼠标点击消息监听回调函数（参数为点击位置）
-typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
-
-// 鼠标按下消息监听回调函数（参数为按下位置）
-typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_PRESS_LISTENER_CALLBACK;
-
-// 鼠标双击消息监听回调函数（参数为双击位置）
-typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_DBLCLK_LISTENER_CALLBACK;
-
-// 鼠标拖动消息监听函数（参数为拖动前位置和拖动后位置）
-typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
-
-
 class EColor
 {
 public:
@@ -361,13 +336,10 @@ public:
 	// 获取当前鼠标消息类型
 	static MOUSE_MSG getMsg();
 
-	// 获取当前鼠标消息
-	static EMouseMsg & getMouseMsg();
-
 public:
-	UINT m_nMsg = 0;
-	WPARAM m_wParam = 0;
-	LPARAM m_lParam = 0;
+	static UINT s_nMsg;
+	static WPARAM s_wParam;
+	static LPARAM s_lParam;
 };
 
 
@@ -433,13 +405,35 @@ public:
 	// 获取滑动锁定状态
 	static bool isScrollLockOn();
 
-	// 获取当前按键消息
-	static EKeyboardMsg & getKeyboardMsg();
-
 public:
-	UINT m_nMsg = 0;
-	WPARAM m_wParam = 0;
-	LPARAM m_lParam = 0;
+	static UINT s_nMsg;
+	static WPARAM s_wParam;
+	static LPARAM s_lParam;
 };
+
+
+// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
+typedef std::function<void(int)> TIMER_CALLBACK;
+
+// 按钮点击回调函数
+typedef std::function<void()> BUTTON_CLICK_CALLBACK;
+
+// 按键消息监听回调函数
+typedef std::function<void()> KEY_LISTENER_CALLBACK;
+
+// 鼠标消息监听回调函数
+typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
+
+// 鼠标点击消息监听回调函数（参数为点击位置）
+typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
+
+// 鼠标按下消息监听回调函数（参数为按下位置）
+typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_PRESS_LISTENER_CALLBACK;
+
+// 鼠标双击消息监听回调函数（参数为双击位置）
+typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_DBLCLK_LISTENER_CALLBACK;
+
+// 鼠标拖动消息监听回调函数（参数为拖动前位置和拖动后位置）
+typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
 
 }

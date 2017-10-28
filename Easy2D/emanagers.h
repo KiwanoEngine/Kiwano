@@ -13,6 +13,8 @@ class ETimer;
 class EAction;
 class EMouseListener;
 class EKeyboardListener;
+class EGeometry;
+class EPhysicsListener;
 
 // 对象管理器
 class EObjectManager
@@ -316,16 +318,88 @@ private:
 
 class EPhysicsManager
 {
+	friend EApp;
+	friend EScene;
+	friend ENode;
+
 public:
-	// 绑定形状到节点
-	static void bindWith(
-		EGeometry * geometry,
-		ENode * node
+	// 添加形状
+	static void addGeometry(
+		EGeometry * geometry
 	);
 
-protected:
+	// 删除已绑定的形状
+	static void delGeometry(
+		EGeometry * geometry
+	);
+
+	// 将监听器与场景绑定
+	static void bindListener(
+		EPhysicsListener * listener,
+		EScene * pParentScene
+	);
+
+	// 将监听器与节点绑定
+	static void bindListener(
+		EPhysicsListener * listener,
+		ENode * pParentNode
+	);
+
+	// 启动具有相同名称的监听器
+	static void startListeners(
+		const EString &name
+	);
+
+	// 停止具有相同名称的监听器
+	static void stopListeners(
+		const EString &name
+	);
+
+	// 删除具有相同名称的监听器
+	static void delListeners(
+		const EString &name
+	);
+
+	// 启动绑定在场景及其子节点上的所有监听器
+	static void startAllListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 停止绑定在场景及其子节点上的所有监听器
+	static void stopAllListenersBindedWith(
+		EScene * pParentScene
+	);
+
+	// 启动绑定在节点上的所有监听器
+	static void startAllListenersBindedWith(
+		ENode * pParentNode
+	);
+
+	// 停止绑定在节点上的所有监听器
+	static void stopAllListenersBindedWith(
+		ENode * pParentNode
+	);
+
+	// 启动所有监听器
+	static void startAllListeners();
+
+	// 停止所有监听器
+	static void stopAllListeners();
+
+private:
+	// 清空监听器管理器
+	static void _clearManager();
+
+	// 清空绑定在节点上的所有监听器
+	static void _clearAllListenersBindedWith(
+		ENode * pParentNode
+	);
+
 	// 物理引擎执行程序
 	static void PhysicsProc();
+
+	// 物理碰撞监听器执行程序
+	static void PhysicsListenerProc();
 };
 
 }

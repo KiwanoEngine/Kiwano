@@ -41,11 +41,12 @@ e2d::ENode::~ENode()
 	EMsgManager::_clearAllMouseListenersBindedWith(this);
 	EMsgManager::_clearAllKeyboardListenersBindedWith(this);
 	EActionManager::_clearAllActionsBindedWith(this);
+	EPhysicsManager::_clearAllListenersBindedWith(this);
+	EPhysicsManager::delGeometry(m_pGeometry);
 	for (auto child : m_vChildren)
 	{
 		SafeReleaseAndClear(&child);
 	}
-	SafeReleaseAndClear(&m_pGeometry);
 }
 
 void e2d::ENode::onEnter()
@@ -200,10 +201,14 @@ void e2d::ENode::_updateTransform(ENode * node)
 	{
 		node->m_Matri = node->m_Matri * node->m_pParent->m_Matri;
 	}
-	// 转换矩阵后判断
 	// 遍历子节点下的所有节点
 	node->_updateChildrenTransform();
 	node->m_bTransformChildrenNeeded = false;
+	// 绑定于自身的形状也进行相应转换
+	if (node->m_pGeometry)
+	{
+		node->m_pGeometry->m_bTransformNeeded = true;
+	}
 }
 
 void e2d::ENode::_updateChildrenOpacity()
@@ -474,7 +479,20 @@ void e2d::ENode::setAnchor(float anchorX, float anchorY)
 
 void e2d::ENode::setGeometry(EGeometry * geometry)
 {
-	EPhysicsManager::bindWith(geometry, this);
+	// 删除旧的形状
+	if (m_pGeometry)
+	{
+		EPhysicsManager::delGeometry(m_pGeometry);
+	}
+	// 双向绑定
+	this->m_pGeometry = geometry;
+	if (geometry) geometry->m_pParentNode = this;
+	
+	if (geometry)
+	{
+		m_pGeometry->_transform();
+		EPhysicsManager::addGeometry(geometry);
+	}
 }
 
 void e2d::ENode::addChild(ENode * child, int order  /* = 0 */)

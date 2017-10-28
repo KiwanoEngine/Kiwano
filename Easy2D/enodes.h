@@ -15,6 +15,7 @@ class ENode :
 {
 	friend EScene;
 	friend EButton;
+	friend EGeometry;
 
 public:
 	ENode();

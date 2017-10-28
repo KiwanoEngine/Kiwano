@@ -204,6 +204,12 @@
     <ClCompile Include="Manager\EPhysicsManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Listener\EPhysicsListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\EPhysicsMsg.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">

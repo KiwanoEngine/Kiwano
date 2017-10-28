@@ -348,6 +348,7 @@ void e2d::EApp::_onControl()
 
 	ETimerManager::TimerProc();		// 定时器管理器执行程序
 	EActionManager::ActionProc();	// 动作管理器执行程序
+	EPhysicsManager::PhysicsProc();	// 物理引擎执行程序
 	EObjectManager::__flush();		// 刷新内存池
 }
 

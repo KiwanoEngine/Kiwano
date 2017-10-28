@@ -2,11 +2,13 @@
 #include "..\Win\winbase.h"
 
 e2d::ECircle::ECircle()
+	: m_pD2dCircle(nullptr)
 {
 	this->_setCircle(EPoint(), 0);
 }
 
 e2d::ECircle::ECircle(EPoint center, float radius)
+	: ECircle()
 {
 	this->_setCircle(center, radius);
 }

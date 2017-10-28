@@ -13,9 +13,9 @@ e2d::EVector<e2d::EKeyboardListener*> s_vKeyboardListeners;
 void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// 保存鼠标消息
-	EMouseMsg::getMouseMsg().m_nMsg = message;
-	EMouseMsg::getMouseMsg().m_wParam = wParam;
-	EMouseMsg::getMouseMsg().m_lParam = lParam;
+	EMouseMsg::s_nMsg = message;
+	EMouseMsg::s_wParam = wParam;
+	EMouseMsg::s_lParam = lParam;
 	// 执行鼠标消息监听函数
 	for (size_t i = 0; i < s_vMouseListeners.size(); i++)
 	{
@@ -38,9 +38,9 @@ void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// 保存按键消息
-	EKeyboardMsg::getKeyboardMsg().m_nMsg = message;
-	EKeyboardMsg::getKeyboardMsg().m_wParam = wParam;
-	EKeyboardMsg::getKeyboardMsg().m_lParam = lParam;
+	EKeyboardMsg::s_nMsg = message;
+	EKeyboardMsg::s_wParam = wParam;
+	EKeyboardMsg::s_lParam = lParam;
 	// 执行按键消息监听函数
 	for (size_t i = 0; i < s_vKeyboardListeners.size(); i++)
 	{

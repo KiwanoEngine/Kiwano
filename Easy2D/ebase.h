@@ -298,12 +298,6 @@ public:
 		EAction * action
 	);
 
-	// 绑定鼠标消息监听器
-	void bindListener(EMouseListener * listener);
-
-	// 绑定按键消息监听器
-	void bindListener(EKeyboardListener * listener);
-
 protected:
 	// 渲染场景画面
 	void _onRender();

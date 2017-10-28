@@ -215,6 +215,7 @@
     <ClCompile Include="Geometry\ECircle.cpp" />
     <ClCompile Include="Geometry\EEllipse.cpp" />
     <ClCompile Include="Geometry\EGeometry.cpp" />
+    <ClCompile Include="Geometry\EPhysicsMsg.cpp" />
     <ClCompile Include="Geometry\ERectangle.cpp" />
     <ClCompile Include="Listener\ECollisionListener.cpp" />
     <ClCompile Include="Listener\EKeyboardListener.cpp" />
@@ -225,6 +226,7 @@
     <ClCompile Include="Listener\EMouseDragListener.cpp" />
     <ClCompile Include="Listener\EMouseListener.cpp" />
     <ClCompile Include="Listener\EMousePressListener.cpp" />
+    <ClCompile Include="Listener\EPhysicsListener.cpp" />
     <ClCompile Include="Manager\EActionManager.cpp" />
     <ClCompile Include="Manager\EMsgManager.cpp" />
     <ClCompile Include="Manager\EObjectManager.cpp" />

@@ -1,12 +1,13 @@
 #pragma once
 #include "ebase.h"
+#include "egeometry.h"
 
 namespace e2d
 {
 
 class ENode;
 class EMsgManager;
-
+class EPhysicsManager;
 
 // 监听器
 class EListener :
@@ -319,6 +320,88 @@ public:
 protected:
 	// 执行监听器回调函数
 	virtual void _callOn() override;
+};
+
+
+// 物理世界消息监听器回调函数（参数：主动方、被动方、两方关系）
+typedef std::function<void(ENode *active, ENode *passive, int relation)> PHYSICS_LISTENER_CALLBACK;
+
+// 碰撞消息监听器回调函数（参数：主动方、被动方）
+typedef std::function<void(ENode *active, ENode *passive)> COLLISION_LISTENER_CALLBACK;
+
+// 物理世界消息监听器
+class EPhysicsListener :
+	public EListener
+{
+	friend EPhysicsManager;
+
+public:
+	EPhysicsListener();
+
+	EPhysicsListener(
+		const EString &name
+	);
+
+	EPhysicsListener(
+		const PHYSICS_LISTENER_CALLBACK &callback
+	);
+
+	EPhysicsListener(
+		const EString &name,
+		const PHYSICS_LISTENER_CALLBACK &callback
+	);
+
+	// 设置监听器回调函数
+	void setCallback(
+		const PHYSICS_LISTENER_CALLBACK &callback
+	);
+
+	// 将监听器与场景绑定
+	virtual void bindWith(
+		EScene * pParentScene
+	) override;
+
+	// 将监听器与节点绑定
+	virtual void bindWith(
+		ENode * pParentNode
+	) override;
+
+protected:
+	// 执行监听器回调函数
+	virtual void _callOn() override;
+
+protected:
+	PHYSICS_LISTENER_CALLBACK m_Callback;
+};
+
+
+class ECollisionListener :
+	public EPhysicsListener
+{
+	friend EMsgManager;
+
+public:
+	ECollisionListener();
+
+	ECollisionListener(
+		const EString &name
+	);
+
+	ECollisionListener(
+		const COLLISION_LISTENER_CALLBACK &callback
+	);
+
+	ECollisionListener(
+		const EString &name,
+		const COLLISION_LISTENER_CALLBACK &callback
+	);
+
+protected:
+	// 执行监听器回调函数
+	virtual void _callOn() override;
+
+protected:
+	COLLISION_LISTENER_CALLBACK m_Callback;
 };
 
 }

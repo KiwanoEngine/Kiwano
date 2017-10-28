@@ -93,13 +93,3 @@ void e2d::EScene::runAction(EAction * action)
 {
 	this->m_pRoot->runAction(action);
 }
-
-void e2d::EScene::bindListener(EMouseListener * listener)
-{
-	EMsgManager::bindListener(listener, this);
-}
-
-void e2d::EScene::bindListener(EKeyboardListener * listener)
-{
-	EMsgManager::bindListener(listener, this);
-}

@@ -2,11 +2,13 @@
 #include "..\Win\winbase.h"
 
 e2d::EEllipse::EEllipse()
+	: m_pD2dEllipse(nullptr)
 {
 	this->_setEllipse(EPoint(), 0, 0);
 }
 
 e2d::EEllipse::EEllipse(EPoint center, float radiusX, float radiusY)
+	: EEllipse()
 {
 	this->_setEllipse(center, radiusX, radiusY);
 }

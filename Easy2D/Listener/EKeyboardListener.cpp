@@ -35,7 +35,7 @@ void e2d::EKeyboardListener::setCallback(const KEY_LISTENER_CALLBACK & callback)
 
 void e2d::EKeyboardListener::bindWith(EScene * pParentScene)
 {
-	WARN_IF(m_pParentScene != nullptr || m_pParentNode != nullptr, "EListener cannot bind with two object.");
+	WARN_IF(m_pParentNode != nullptr, "A listener cannot bind with two object.");
 
 	if (pParentScene)
 	{
@@ -45,9 +45,9 @@ void e2d::EKeyboardListener::bindWith(EScene * pParentScene)
 
 void e2d::EKeyboardListener::bindWith(ENode * pParentNode)
 {
-	WARN_IF(m_pParentScene != nullptr || m_pParentNode != nullptr, "EListener cannot bind with two object.");
+	WARN_IF(m_pParentNode != nullptr, "A listener cannot bind with two object.");
 
-	if (pParentNode != nullptr && m_pParentScene == nullptr)
+	if (pParentNode)
 	{
 		EMsgManager::bindListener(this, pParentNode);
 	}

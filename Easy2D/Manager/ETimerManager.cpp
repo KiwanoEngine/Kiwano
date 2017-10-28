@@ -127,7 +127,7 @@ void e2d::ETimerManager::stopAllTimersBindedWith(ENode * pParentNode)
 	}
 	for (auto child : pParentNode->getChildren())
 	{
-		ETimerManager::startAllTimersBindedWith(child);
+		ETimerManager::stopAllTimersBindedWith(child);
 	}
 }
 

@@ -6,24 +6,65 @@ namespace e2d
 {
 
 class EPhysicsManager;
+class ENode;
+class EGeometry;
+
+class EPhysicsMsg
+{
+	friend EPhysicsManager;
+
+public:
+	enum INTERSECT_RELATION
+	{
+		UNKNOWN = 0,		/* 关系不确定 */
+		DISJOINT = 1,		/* 没有交集 */
+		IS_CONTAINED = 2,	/* 完全被包含 */
+		CONTAINS = 3,		/* 完全包含 */
+		OVERLAP = 4			/* 部分重叠 */
+	};
+
+	// 获取当前物理碰撞消息类型
+	static INTERSECT_RELATION getMsg();
+
+	// 获取主动方
+	static EGeometry * getActiveGeometry();
+
+	// 获取被动方
+	static EGeometry * getPassiveGeometry();
+
+public:
+	static INTERSECT_RELATION s_nRelation;
+	static EGeometry * s_pActiveGeometry;
+	static EGeometry * s_pPassiveGeometry;
+};
 
 class EGeometry :
 	public EObject
 {
 	friend EPhysicsManager;
+	friend ENode;
+
 public:
 	EGeometry();
 
+	// 获取父节点
+	ENode * getParentNode() const;
+
 protected:
-	virtual bool _isCollisionWith(
+	// 判断两形状的交集关系
+	virtual EPhysicsMsg::INTERSECT_RELATION _intersectWith(
 		EGeometry * pGeometry
 	);
+
+	// 转换形状
+	virtual void _transform();
 
 	virtual ID2D1Geometry * _getD2dGeometry() const = 0;
 
 protected:
-	bool	m_bTransformed;
+	bool	m_bTransformNeeded;
 	ENode * m_pParentNode;
+	ID2D1TransformedGeometry * m_pTransformedGeometry;
 };
 
 
