@@ -298,6 +298,11 @@ public:
 		EAction * action
 	);
 
+	// 开启几何图形的渲染
+	void setGeometryVisiable(
+		bool visiable
+	);
+
 protected:
 	// 渲染场景画面
 	void _onRender();
@@ -305,6 +310,7 @@ protected:
 protected:
 	bool m_bSortNeeded;
 	bool m_bWillSave;
+	bool m_bGeometryVisiable;
 	ENode * m_pRoot;
 };
 

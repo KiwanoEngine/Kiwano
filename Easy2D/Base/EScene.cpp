@@ -3,11 +3,13 @@
 #include "..\emanagers.h"
 #include "..\etools.h"
 #include "..\eactions.h"
+#include "..\Win\winbase.h"
 #include <algorithm>
 
 e2d::EScene::EScene()
 	: m_bWillSave(true)
 	, m_bSortNeeded(false)
+	, m_bGeometryVisiable(false)
 	, m_pRoot(new ENode())
 {
 	m_pRoot->_onEnter();
@@ -46,7 +48,17 @@ bool e2d::EScene::onCloseWindow()
 
 void e2d::EScene::_onRender()
 {
+	// 访问根节点
 	m_pRoot->_callOn();
+
+	// 恢复矩阵转换
+	GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+
+	// 绘制所有几何图形
+	if (m_bGeometryVisiable)
+	{
+		m_pRoot->_drawGeometry();
+	}
 }
 
 void e2d::EScene::add(ENode * child, int order /* = 0 */)
@@ -92,4 +104,9 @@ void e2d::EScene::clearAllChildren()
 void e2d::EScene::runAction(EAction * action)
 {
 	this->m_pRoot->runAction(action);
+}
+
+void e2d::EScene::setGeometryVisiable(bool visiable)
+{
+	m_bGeometryVisiable = visiable;
 }

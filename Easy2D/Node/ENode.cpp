@@ -109,6 +109,21 @@ void e2d::ENode::_onRender()
 {
 }
 
+void e2d::ENode::_drawGeometry()
+{
+	// 绘制自身的几何形状
+	if (m_pGeometry)
+	{
+		m_pGeometry->_onRender();
+	}
+
+	// 绘制所有子节点的几何形状
+	for (auto &child : m_vChildren)
+	{
+		child->_drawGeometry();
+	}
+}
+
 void e2d::ENode::_onEnter()
 {
 	if (!this->m_bDisplayedInScene && this->isVisiable())
@@ -201,13 +216,19 @@ void e2d::ENode::_updateTransform(ENode * node)
 	{
 		node->m_Matri = node->m_Matri * node->m_pParent->m_Matri;
 	}
+	// 转换几何形状
+	if (node->m_pGeometry)
+	{
+		node->m_pGeometry->_transform();
+	}
 	// 遍历子节点下的所有节点
 	node->_updateChildrenTransform();
+	// 标志已执行过变换
 	node->m_bTransformChildrenNeeded = false;
 	// 绑定于自身的形状也进行相应转换
 	if (node->m_pGeometry)
 	{
-		node->m_pGeometry->m_bTransformNeeded = true;
+		node->m_pGeometry->m_bTransformed = true;
 	}
 }
 
@@ -480,18 +501,19 @@ void e2d::ENode::setAnchor(float anchorX, float anchorY)
 void e2d::ENode::setGeometry(EGeometry * geometry)
 {
 	// 删除旧的形状
-	if (m_pGeometry)
-	{
-		EPhysicsManager::delGeometry(m_pGeometry);
-	}
-	// 双向绑定
-	this->m_pGeometry = geometry;
-	if (geometry) geometry->m_pParentNode = this;
-	
+	EPhysicsManager::delGeometry(m_pGeometry);
+	// 添加新的形状
+	EPhysicsManager::addGeometry(geometry);
+
 	if (geometry)
 	{
-		m_pGeometry->_transform();
-		EPhysicsManager::addGeometry(geometry);
+		// 双向绑定
+		this->m_pGeometry = geometry;
+		geometry->m_pParentNode = this;
+	}
+	else
+	{
+		this->m_pGeometry = nullptr;
 	}
 }
 

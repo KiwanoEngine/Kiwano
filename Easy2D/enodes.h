@@ -306,6 +306,9 @@ protected:
 	// 渲染节点
 	virtual void _onRender();
 
+	// 渲染几何图形
+	virtual void _drawGeometry();
+
 	// 节点被添加到场景时的执行程序
 	virtual void _onEnter();
 

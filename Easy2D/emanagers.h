@@ -398,6 +398,11 @@ private:
 	// 物理引擎执行程序
 	static void PhysicsProc();
 
+	// 几何图形判断程序
+	static void PhysicsGeometryProc(
+		EGeometry * pActiveGeometry
+	);
+
 	// 物理碰撞监听器执行程序
 	static void PhysicsListenerProc();
 };

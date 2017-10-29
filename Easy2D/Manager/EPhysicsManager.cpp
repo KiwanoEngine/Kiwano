@@ -14,32 +14,46 @@ void e2d::EPhysicsManager::PhysicsProc()
 	if (s_vListeners.empty() || s_vGeometries.empty() || EApp::isPaused())
 		return;
 
-	// 判断任意两形状间的交集
-	for (auto &g1 : s_vGeometries)
+	for (auto &geometry : s_vGeometries)
 	{
+		if (!geometry->getParentNode() ||
+			(geometry->getParentNode()->getParentScene() != EApp::getCurrentScene()))
+			continue;
+
 		// 只对进行了变化了对象进行判断
-		if (g1->m_bTransformNeeded)
+		if (geometry->m_bTransformed)
 		{
-			// 变化对象
-			g1->_transform();
-			// g1 为主动方
-			EPhysicsMsg::s_pActiveGeometry = g1;
-			// 判断变化后的状态
-			for (auto &g2 : s_vGeometries)
+			// 判断变化后的图形情况
+			PhysicsGeometryProc(geometry);
+			// 取消变化标志
+			geometry->m_bTransformed = false;
+		}
+	}
+}
+
+void e2d::EPhysicsManager::PhysicsGeometryProc(EGeometry * pActiveGeometry)
+{
+	// pActiveGeometry 为主动方
+	EPhysicsMsg::s_pActiveGeometry = pActiveGeometry;
+	// 判断变化后的状态
+	for (auto &pPassiveGeometry : s_vGeometries)
+	{
+		if (!pPassiveGeometry->getParentNode() || 
+			(pPassiveGeometry->getParentNode()->getParentScene() != EApp::getCurrentScene()))
+			continue;
+
+		if (pActiveGeometry != pPassiveGeometry)
+		{
+			// pPassiveGeometry 为被动方
+			EPhysicsMsg::s_pPassiveGeometry = pPassiveGeometry;
+			// 获取两方的关系
+			EPhysicsMsg::s_nRelation = pActiveGeometry->_intersectWith(pPassiveGeometry);
+			// 如果关系不为未知或无交集，响应监听器
+			if (EPhysicsMsg::s_nRelation != EPhysicsMsg::UNKNOWN &&
+				EPhysicsMsg::s_nRelation != EPhysicsMsg::DISJOINT)
 			{
-				if (g1 != g2)
-				{
-					// g2 为被动方
-					EPhysicsMsg::s_pPassiveGeometry = g2;
-					// 获取两方的关系
-					EPhysicsMsg::s_nRelation = g1->_intersectWith(g2);
-					// 如果关系不为未知或无交集，响应监听器
-					if (EPhysicsMsg::s_nRelation != EPhysicsMsg::UNKNOWN &&
-						EPhysicsMsg::s_nRelation != EPhysicsMsg::DISJOINT)
-					{
-						PhysicsListenerProc();
-					}
-				}
+				// 执行监听器
+				PhysicsListenerProc();
 			}
 		}
 	}
@@ -47,8 +61,6 @@ void e2d::EPhysicsManager::PhysicsProc()
 
 void e2d::EPhysicsManager::PhysicsListenerProc()
 {
-	if (s_vListeners.empty()) return;
-
 	// 执行鼠标消息监听函数
 	for (size_t i = 0; i < s_vListeners.size(); i++)
 	{

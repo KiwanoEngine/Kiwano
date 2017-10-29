@@ -346,10 +346,10 @@ void e2d::EApp::_onControl()
 	// 断言当前场景非空
 	ASSERT(m_pCurrentScene != nullptr, "Current scene NULL pointer exception.");
 
+	EObjectManager::__flush();		// 刷新内存池
 	ETimerManager::TimerProc();		// 定时器管理器执行程序
 	EActionManager::ActionProc();	// 动作管理器执行程序
 	EPhysicsManager::PhysicsProc();	// 物理引擎执行程序
-	EObjectManager::__flush();		// 刷新内存池
 }
 
 // This method discards device-specific
@@ -391,7 +391,7 @@ void e2d::EApp::_onRender()
 
 	if (FAILED(hr))
 	{
-		MessageBox(GetHWnd(), L"Game Render Failed!", L"Error", MB_OK);
+		MessageBox(GetHWnd(), L"Game rendering failed!", L"Error", MB_OK);
 		this->quit();
 	}
 }

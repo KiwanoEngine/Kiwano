@@ -1,16 +1,34 @@
 #include "..\egeometry.h"
+#include "..\enodes.h"
 #include "..\Win\winbase.h"
 
 e2d::ECircle::ECircle()
 	: m_pD2dCircle(nullptr)
 {
-	this->_setCircle(EPoint(), 0);
 }
 
 e2d::ECircle::ECircle(EPoint center, float radius)
 	: ECircle()
 {
 	this->_setCircle(center, radius);
+}
+
+e2d::ECircle::ECircle(ENode * node)
+	: ECircle()
+{
+	float minSide = min(node->getRealWidth(), node->getRealHeight());
+	this->_setCircle(
+		EPoint(
+			node->getRealWidth() / 2,
+			node->getRealHeight() / 2
+		),
+		minSide / 2
+	);
+}
+
+e2d::ECircle::~ECircle()
+{
+	SafeReleaseInterface(&m_pD2dCircle);
 }
 
 void e2d::ECircle::_setCircle(EPoint center, float radius)
