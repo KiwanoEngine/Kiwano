@@ -47,14 +47,14 @@ e2d::ESprite::ESprite(const EString & resourceName, const EString & resourceType
 
 e2d::ESprite::~ESprite()
 {
-	SafeReleaseAndClear(&m_pTexture);
+	SafeRelease(&m_pTexture);
 }
 
 void e2d::ESprite::loadFrom(ETexture * texture)
 {
 	if (texture)
 	{
-		SafeReleaseAndClear(&m_pTexture);
+		SafeRelease(&m_pTexture);
 		m_pTexture = texture;
 		m_pTexture->retain();
 

@@ -102,8 +102,11 @@ protected:
 class EFileUtils
 {
 public:
-	// 获取系统的 AppData\Local 路径
+	// 获取系统的 AppData Local 路径
 	static EString getLocalAppDataPath();
+
+	// 获取临时文件目录
+	static EString getTempPath();
 
 	// 获取默认的保存路径
 	static EString getDefaultSavePath();

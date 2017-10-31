@@ -1,15 +1,18 @@
 #include "..\egeometry.h"
-#include "..\Win\winbase.h"
+#include "..\emanagers.h"
 #include "..\enodes.h"
+#include "..\Win\winbase.h"
 
 e2d::EGeometry::EGeometry()
 	: m_bTransformed(false)
+	, m_nCategoryBitmask(0)
+	,m_nContactBitmask(0)
+	, m_bIsVisiable(true)
 	, m_nColor(EColor::RED)
 	, m_fOpacity(1)
 	, m_pParentNode(nullptr)
 	, m_pTransformedGeometry(nullptr)
 {
-	this->autoRelease();
 }
 
 e2d::EGeometry::~EGeometry()
@@ -17,9 +20,39 @@ e2d::EGeometry::~EGeometry()
 	SafeReleaseInterface(&m_pTransformedGeometry);
 }
 
+bool e2d::EGeometry::isContactWith(EGeometry * geometry)
+{
+	return ((this->m_nContactBitmask & geometry->m_nCategoryBitmask) != 0);
+}
+
 e2d::ENode * e2d::EGeometry::getParentNode() const
 {
 	return m_pParentNode;
+}
+
+UINT32 e2d::EGeometry::getCategoryBitmask() const
+{
+	return m_nCategoryBitmask;
+}
+
+UINT32 e2d::EGeometry::getContactBitmask() const
+{
+	return m_nContactBitmask;
+}
+
+void e2d::EGeometry::setCategoryBitmask(UINT32 mask)
+{
+	m_nCategoryBitmask = mask;
+}
+
+void e2d::EGeometry::setContactBitmask(UINT32 mask)
+{
+	m_nContactBitmask = mask;
+}
+
+void e2d::EGeometry::setVisiable(bool bVisiable)
+{
+	m_bIsVisiable = bVisiable;
 }
 
 void e2d::EGeometry::setColor(UINT32 color)
@@ -29,7 +62,7 @@ void e2d::EGeometry::setColor(UINT32 color)
 
 void e2d::EGeometry::setOpacity(float opacity)
 {
-	m_fOpacity = opacity;
+	m_fOpacity = min(max(opacity, 0), 1);
 }
 
 void e2d::EGeometry::_onRender()
@@ -71,14 +104,17 @@ void e2d::EGeometry::_transform()
 {
 	if (m_pParentNode)
 	{
+		// 释放原形状
 		SafeReleaseInterface(&m_pTransformedGeometry);
 
+		// 根据父节点转换几何图形
 		GetFactory()->CreateTransformedGeometry(
 			_getD2dGeometry(),
 			m_pParentNode->m_Matri,
 			&m_pTransformedGeometry
 		);
 
-		this->m_bTransformed = true;
+		// 判断形状变换后的情况
+		EPhysicsManager::PhysicsGeometryProc(this);
 	}
 }

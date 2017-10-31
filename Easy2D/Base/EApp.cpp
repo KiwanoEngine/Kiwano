@@ -25,6 +25,7 @@ e2d::EApp::EApp()
 	, m_bManualPaused(false)
 	, m_bTransitional(false)
 	, m_bTopMost(false)
+	, m_bShowConsole(false)
 	, nAnimationInterval(17LL)
 	, m_ClearColor(EColor::BLACK)
 	, m_pCurrentScene(nullptr)
@@ -33,7 +34,7 @@ e2d::EApp::EApp()
 	ASSERT(s_pInstance == nullptr, "EApp instance already exists!");
 	s_pInstance = this;		// 保存实例对象
 
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	CoInitialize(NULL);
 }
 
 e2d::EApp::~EApp()
@@ -54,104 +55,101 @@ e2d::EApp * e2d::EApp::get()
 	return s_pInstance;		// 获取 EApp 的唯一实例
 }
 
-bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, bool showConsole /* = false */)
+bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height)
 {
-	return init(title, width, height, EWindowStyle(), showConsole);
+	return init(title, width, height, EWindowStyle());
 }
 
-bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowStyle wStyle, bool showConsole /* = false */)
+bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowStyle wStyle)
 {
 	HRESULT hr;
 
-	// 显示或关闭控制台
-	EApp::showConsole(showConsole);
+	// 注册窗口类
+	WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
+	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	wcex.lpfnWndProc = EApp::WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = sizeof(LONG_PTR);
+	wcex.hInstance = HINST_THISCOMPONENT;
+	wcex.hbrBackground = (HBRUSH)(GetStockObject(BLACK_BRUSH));
+	wcex.lpszMenuName = NULL;
+	wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
+	wcex.lpszClassName = L"Easy2DApp";
+	// 设置窗口是否有关闭按钮
+	if (wStyle.m_bNoClose)
+	{
+		wcex.style |= CS_NOCLOSE;
+	}
+	// 设置程序图标
+	if (wStyle.m_pIconID)
+	{
+		wcex.hIcon = (HICON)::LoadImage(
+			GetModuleHandle(NULL), 
+			wStyle.m_pIconID, 
+			IMAGE_ICON, 
+			0, 
+			0, 
+			LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+	}
 
-	// 创建设备无关资源
-	hr = _createDeviceIndependentResources();
+	RegisterClassEx(&wcex);
+
+	// 因为 CreateWindow 函数使用的是像素大小，获取系统的 DPI 以使它
+	// 适应窗口缩放
+	FLOAT dpiX, dpiY;
+
+	// 工厂将返回当前的系统 DPI，这个值也将用来创建窗口
+	GetFactory()->GetDesktopDpi(&dpiX, &dpiY);
+
+	width = static_cast<UINT>(ceil(width * dpiX / 96.f));
+	height = static_cast<UINT>(ceil(height * dpiY / 96.f));
+
+	// 获取屏幕分辨率
+	UINT screenWidth = static_cast<UINT>(GetSystemMetrics(SM_CXSCREEN));
+	UINT screenHeight = static_cast<UINT>(GetSystemMetrics(SM_CYSCREEN));
+	// 当输入的窗口大小比分辨率大时，给出警告
+	WARN_IF(screenWidth < width || screenHeight < height, "The window is larger than screen!");
+	// 取最小值
+	width = min(width, screenWidth);
+	height = min(height, screenHeight);
+		
+	// 创建窗口样式
+	DWORD dwStyle = WS_OVERLAPPED | WS_SYSMENU;
+	if (!wStyle.m_bNoMiniSize)
+	{
+		dwStyle |= WS_MINIMIZEBOX;
+	}
+	// 保存窗口是否置顶显示
+	m_bTopMost = wStyle.m_bTopMost;
+	// 保存窗口名称
+	m_sTitle = title;
+	// 创建窗口
+	GetHWnd() = CreateWindow(
+		L"Easy2DApp",
+		m_sTitle.c_str(),
+		dwStyle,
+		0,
+		0,
+		width,
+		height,
+		NULL,
+		NULL,
+		HINST_THISCOMPONENT,
+		this
+	);
+
+	hr = GetHWnd() ? S_OK : E_FAIL;
 
 	if (SUCCEEDED(hr))
 	{
-		// 注册窗口类
-		WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
-		UINT style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-		if (wStyle.m_bNoClose)
-		{
-			style |= CS_NOCLOSE;
-		}
-		wcex.style = style;
-		wcex.lpfnWndProc = EApp::WndProc;
-		wcex.cbClsExtra = 0;
-		wcex.cbWndExtra = sizeof(LONG_PTR);
-		wcex.hInstance = HINST_THISCOMPONENT;
-		wcex.hbrBackground = (HBRUSH)(GetStockObject(BLACK_BRUSH));
-		wcex.lpszMenuName = NULL;
-		wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
-		wcex.lpszClassName = L"Easy2DApp";
-		if (wStyle.m_pIconID)
-		{
-			wcex.hIcon = (HICON)::LoadImage(GetModuleHandle(NULL), wStyle.m_pIconID, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
-		}
-
-		RegisterClassEx(&wcex);
-
-
-		// Because the CreateWindow function takes its size in pixels,
-		// obtain the system DPI and use it to scale the window size.
-		FLOAT dpiX, dpiY;
-
-		// The factory returns the current system DPI. This is also the value it will use
-		// to create its own windows.
-		GetFactory()->GetDesktopDpi(&dpiX, &dpiY);
-
-		width = static_cast<UINT>(ceil(width * dpiX / 96.f));
-		height = static_cast<UINT>(ceil(height * dpiY / 96.f));
-
-		// 获取屏幕分辨率
-		UINT screenWidth = static_cast<UINT>(GetSystemMetrics(SM_CXSCREEN));
-		UINT screenHeight = static_cast<UINT>(GetSystemMetrics(SM_CYSCREEN));
-		// 当输入的窗口大小比分辨率大时，给出警告
-		WARN_IF(screenWidth < width || screenHeight < height, "The window is larger than screen!");
-		width = min(width, screenWidth);
-		height = min(height, screenHeight);
-		
-		// 创建窗口样式
-		DWORD dwStyle = WS_OVERLAPPED | WS_SYSMENU;
-		if (!wStyle.m_bNoMiniSize)
-		{
-			dwStyle |= WS_MINIMIZEBOX;
-		}
-		// 保存窗口是否置顶显示
-		m_bTopMost = wStyle.m_bTopMost;
-		// 保存窗口名称
-		m_sTitle = title;
-		// 创建窗口
-		GetHWnd() = CreateWindow(
-			L"Easy2DApp",
-			m_sTitle.c_str(),
-			dwStyle,
-			0,
-			0,
-			width,
-			height,
-			NULL,
-			NULL,
-			HINST_THISCOMPONENT,
-			this
-		);
-
-		hr = GetHWnd() ? S_OK : E_FAIL;
-
-		if (SUCCEEDED(hr))
-		{
-			// 禁用输入法
-			this->setKeyboardLayoutEnable(false);
-			// 重设客户区大小
-			this->setWindowSize(width, height);
-		}
-		else
-		{
-			UnregisterClass(L"E2DApp", HINST_THISCOMPONENT);
-		}
+		// 禁用输入法
+		this->setKeyboardLayoutEnable(false);
+		// 重设客户区大小
+		this->setWindowSize(width, height);
+	}
+	else
+	{
+		UnregisterClass(L"E2DApp", HINST_THISCOMPONENT);
 	}
 
 	if (FAILED(hr))
@@ -186,13 +184,15 @@ bool e2d::EApp::isPaused()
 	return s_pInstance->m_bPaused || s_pInstance->m_bManualPaused;
 }
 
-void e2d::EApp::showConsole(bool show)
+void e2d::EApp::showConsole(bool show /* = true */)
 {
-	// 查找已存在的控制台句柄
-	HWND hwnd = GetConsoleWindow();
 	static FILE * stdoutstream = nullptr;
 	static FILE * stdinstream = nullptr;
 	static FILE * stderrstream = nullptr;
+
+	EApp::get()->m_bShowConsole = show;
+	// 查找已存在的控制台句柄
+	HWND hwnd = GetConsoleWindow();
 	// 关闭控制台
 	if (show)
 	{
@@ -238,6 +238,11 @@ void e2d::EApp::run()
 	ASSERT(GetHWnd() != nullptr, "Cannot find Game Window.");
 	// 进入第一个场景
 	_enterNextScene();
+	// 关闭控制台
+	if (!m_bShowConsole)
+	{
+		showConsole(false);
+	}
 	// 显示窗口
 	ShowWindow(GetHWnd(), SW_SHOWNORMAL);
 	UpdateWindow(GetHWnd());
@@ -349,48 +354,42 @@ void e2d::EApp::_onControl()
 	EObjectManager::__flush();		// 刷新内存池
 	ETimerManager::TimerProc();		// 定时器管理器执行程序
 	EActionManager::ActionProc();	// 动作管理器执行程序
-	EPhysicsManager::PhysicsProc();	// 物理引擎执行程序
 }
 
-// This method discards device-specific
-// resources if the Direct3D device dissapears during execution and
-// recreates the resources the next time it's invoked.
 void e2d::EApp::_onRender()
 {
 	HRESULT hr = S_OK;
 
-	hr = _createDeviceResources();
-
-	if (SUCCEEDED(hr))
+	// 开始绘图
+	GetRenderTarget()->BeginDraw();
+	// 使用背景色清空屏幕
+	GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor));
+	// 绘制当前场景
+	if (m_pCurrentScene)
 	{
-		// 开始绘图
-		GetRenderTarget()->BeginDraw();
-		// 使用背景色清空屏幕
-		GetRenderTarget()->Clear(D2D1::ColorF(m_ClearColor));
-		// 绘制当前场景
-		if (m_pCurrentScene)
-		{
-			m_pCurrentScene->_onRender();
-		}
-		// 切换场景时，同时绘制两场景
-		if (m_bTransitional && m_pNextScene)
-		{
-			m_pNextScene->_onRender();
-		}
-		// 终止绘图
-		hr = GetRenderTarget()->EndDraw();
-		// 刷新界面
-		UpdateWindow(GetHWnd());
+		m_pCurrentScene->_onRender();
 	}
+	// 切换场景时，同时绘制两场景
+	if (m_bTransitional && m_pNextScene)
+	{
+		m_pNextScene->_onRender();
+	}
+	// 终止绘图
+	hr = GetRenderTarget()->EndDraw();
+	// 刷新界面
+	UpdateWindow(GetHWnd());
 
 	if (hr == D2DERR_RECREATE_TARGET)
 	{
+		// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
+		// 并在下一次调用时重建资源
 		hr = S_OK;
-		_discardDeviceResources();
+		SafeReleaseInterface(&GetRenderTarget());
 	}
 
 	if (FAILED(hr))
 	{
+		// 渲染时产生了未知的错误，退出游戏
 		MessageBox(GetHWnd(), L"Game rendering failed!", L"Error", MB_OK);
 		this->quit();
 	}
@@ -468,22 +467,22 @@ void e2d::EApp::enterScene(EScene * scene, ETransition * transition, bool saveCu
 	}
 }
 
-void e2d::EApp::backScene()
+void e2d::EApp::backScene(ETransition * transition /* = nullptr */)
 {
-	backScene(nullptr);
-}
+	// 栈为空时，调用返回场景函数失败
+	WARN_IF(s_SceneStack.size() == 0, "Scene stack now is empty!");
+	if (s_SceneStack.size() == 0) return;
 
-void e2d::EApp::backScene(ETransition * transition)
-{
-	ASSERT(s_SceneStack.size(), "Scene stack now is empty!");
 	// 从栈顶取出场景指针，作为下一场景
 	get()->m_pNextScene = s_SceneStack.top();
 	s_SceneStack.pop();
-	// 不保存当前场景
+
+	// 返回上一场景时，不保存当前场景
 	if (get()->m_pCurrentScene)
 	{
 		get()->m_pCurrentScene->m_bWillSave = false;
 	}
+
 	// 设置切换场景动画
 	if (transition)
 	{
@@ -496,6 +495,8 @@ void e2d::EApp::backScene(ETransition * transition)
 	}
 	else
 	{
+		// 把这个变量赋为 false，场景将在下一帧画面
+		// 进行切换
 		get()->m_bTransitional = false;
 	}
 }
@@ -506,7 +507,7 @@ void e2d::EApp::clearScene()
 	while (s_SceneStack.size())
 	{
 		auto temp = s_SceneStack.top();
-		SafeReleaseAndClear(&temp);
+		SafeRelease(&temp);
 		s_SceneStack.pop();
 	}
 }
@@ -518,14 +519,14 @@ e2d::EScene * e2d::EApp::getCurrentScene()
 
 void e2d::EApp::setAppName(const EString &appname)
 {
-	s_pInstance->m_sAppName = appname;
+	get()->m_sAppName = appname;
 }
 
 e2d::EString e2d::EApp::getAppName()
 {
-	if (s_pInstance->m_sAppName.empty())
-		s_pInstance->m_sAppName = s_pInstance->m_sTitle;
-	return s_pInstance->m_sAppName;
+	if (get()->m_sAppName.empty())
+		get()->m_sAppName = get()->m_sTitle;
+	return get()->m_sAppName;
 }
 
 void e2d::EApp::setBkColor(UINT32 color)
@@ -576,12 +577,13 @@ void e2d::EApp::showWindow()
 
 void e2d::EApp::quit()
 {
+	// 这个变量将控制游戏是否结束
 	get()->m_bEnd = true;
 }
 
 void e2d::EApp::end()
 {
-	get()->m_bEnd = true;
+	EApp::quit();
 }
 
 void e2d::EApp::_enterNextScene()
@@ -601,7 +603,7 @@ void e2d::EApp::_enterNextScene()
 		}
 		else
 		{
-			SafeReleaseAndClear(&m_pCurrentScene);
+			SafeRelease(&m_pCurrentScene);
 		}
 	}
 
@@ -612,59 +614,9 @@ void e2d::EApp::_enterNextScene()
 	m_pNextScene = nullptr;				// 下一场景置空
 }
 
-// Creates resources that are not bound to a particular device.
-// Their lifetime effectively extends for the duration of the
-// application.
-HRESULT e2d::EApp::_createDeviceIndependentResources()
-{
-	HRESULT hr = S_OK;
-
-	// Create a Direct2D factory.
-	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &GetFactory());
-
-	if (FAILED(hr))
-	{
-		MessageBox(nullptr, L"Create Device Independent Resources Failed!", L"Error", MB_OK);
-	}
-
-	return hr;
-}
-
-// Creates resources that are bound to a particular
-// Direct3D device. These resources need to be recreated
-// if the Direct3D device dissapears, such as when the isVisiable
-// changes, the window is remoted, etc.
-HRESULT e2d::EApp::_createDeviceResources()
-{
-	// 这个函数将自动创建设备相关资源
-	GetRenderTarget();
-
-	return S_OK;
-}
-
-// Discards device-dependent resources. These resources must be
-// recreated when the Direct3D device is lost.
-void e2d::EApp::_discardDeviceResources()
-{
-	SafeReleaseInterface(&GetRenderTarget());
-}
-
-//  If the application receives a WM_SIZE message, this method
-//  re2d::ESizes the render target appropriately.
-void e2d::EApp::_onResize(UINT32 width, UINT32 height)
-{
-	if (GetRenderTarget())
-	{
-		// Note: This method can fail, but it's okay to ignore the
-		// error here, because the error will be returned again
-		// the next time EndDraw is called.
-		GetRenderTarget()->Resize(D2D1::SizeU(width, height));
-	}
-}
-
-// Handles window messages.
 LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	// 处理窗口消息
 	LRESULT result = 0;
 
 	if (message == WM_CREATE)
@@ -738,7 +690,10 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			{
 				UINT width = LOWORD(lParam);
 				UINT height = HIWORD(lParam);
-				pEApp->_onResize(width, height);
+				// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
+				// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
+				// 错误，因为这个错误将在下一次调用 EndDraw 时产生
+				GetRenderTarget()->Resize(D2D1::SizeU(width, height));
 			}
 			result = 0;
 			wasHandled = true;
@@ -827,6 +782,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			}
 		}
 
+		// 对当前消息没有特定的处理程序时，执行默认的窗口函数
 		if (!wasHandled)
 		{
 			result = DefWindowProc(hWnd, message, wParam, lParam);

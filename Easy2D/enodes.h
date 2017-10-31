@@ -244,26 +244,20 @@ public:
 	);
 
 	// 从父节点移除
-	virtual void removeFromParent(
-		bool release = false
-	);
+	virtual void removeFromParent();
 
 	// 移除子节点
 	virtual bool removeChild(
-		ENode * child, 
-		bool release = true
+		ENode * child
 	);
 
 	// 移除子节点
 	virtual void removeChild(
-		const EString & childName,
-		bool release = true
+		const EString & childName
 	);
 
 	// 移除所有节点
-	virtual void clearAllChildren(
-		bool release = true
-	);
+	virtual void clearAllChildren();
 
 	// 执行动画
 	virtual void runAction(

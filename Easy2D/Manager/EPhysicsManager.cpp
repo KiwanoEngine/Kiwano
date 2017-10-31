@@ -9,41 +9,26 @@ e2d::EVector<e2d::EPhysicsListener*> s_vListeners;
 e2d::EVector<e2d::EGeometry*> s_vGeometries;
 
 
-void e2d::EPhysicsManager::PhysicsProc()
+void e2d::EPhysicsManager::PhysicsGeometryProc(EGeometry * pActiveGeometry)
 {
 	if (s_vListeners.empty() || s_vGeometries.empty() || EApp::isPaused())
 		return;
 
-	for (auto &geometry : s_vGeometries)
-	{
-		if (!geometry->getParentNode() ||
-			(geometry->getParentNode()->getParentScene() != EApp::getCurrentScene()))
-			continue;
-
-		// 只对进行了变化了对象进行判断
-		if (geometry->m_bTransformed)
-		{
-			// 判断变化后的图形情况
-			PhysicsGeometryProc(geometry);
-			// 取消变化标志
-			geometry->m_bTransformed = false;
-		}
-	}
-}
-
-void e2d::EPhysicsManager::PhysicsGeometryProc(EGeometry * pActiveGeometry)
-{
 	// pActiveGeometry 为主动方
 	EPhysicsMsg::s_pActiveGeometry = pActiveGeometry;
 	// 判断变化后的状态
 	for (auto &pPassiveGeometry : s_vGeometries)
 	{
+		// 不与其他场景的物体判断
 		if (!pPassiveGeometry->getParentNode() || 
 			(pPassiveGeometry->getParentNode()->getParentScene() != EApp::getCurrentScene()))
 			continue;
 
 		if (pActiveGeometry != pPassiveGeometry)
 		{
+			// 判断两物体是否会产生接触消息
+			if (!pActiveGeometry->isContactWith(pPassiveGeometry))
+				continue;
 			// pPassiveGeometry 为被动方
 			EPhysicsMsg::s_pPassiveGeometry = pPassiveGeometry;
 			// 获取两方的关系
@@ -101,7 +86,7 @@ void e2d::EPhysicsManager::bindListener(EPhysicsListener * listener, ENode * pPa
 	}
 }
 
-void e2d::EPhysicsManager::addGeometry(EGeometry * geometry)
+void e2d::EPhysicsManager::_addGeometry(EGeometry * geometry)
 {
 	if (geometry)
 	{
@@ -110,7 +95,7 @@ void e2d::EPhysicsManager::addGeometry(EGeometry * geometry)
 	}
 }
 
-void e2d::EPhysicsManager::delGeometry(EGeometry * geometry)
+void e2d::EPhysicsManager::_delGeometry(EGeometry * geometry)
 {
 	if (geometry)
 	{
@@ -118,7 +103,7 @@ void e2d::EPhysicsManager::delGeometry(EGeometry * geometry)
 		{
 			if (s_vGeometries[i] == geometry)
 			{
-				SafeReleaseAndClear(&geometry);
+				SafeRelease(&geometry);
 				s_vGeometries.erase(s_vGeometries.begin() + i);
 				return;
 			}
@@ -155,7 +140,7 @@ void e2d::EPhysicsManager::delListeners(const EString & name)
 	{
 		if ((*iter)->getName() == name)
 		{
-			SafeReleaseAndClear(&(*iter));
+			SafeRelease(&(*iter));
 			iter = s_vListeners.erase(iter);
 		}
 		else
@@ -227,7 +212,7 @@ void e2d::EPhysicsManager::_clearAllListenersBindedWith(ENode * pParentNode)
 		auto listener = s_vListeners[i];
 		if (listener->getParentNode() == pParentNode)
 		{
-			SafeReleaseAndClear(&listener);
+			SafeRelease(&listener);
 			s_vListeners.erase(s_vListeners.begin() + i);
 		}
 		else

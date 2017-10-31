@@ -1,10 +1,12 @@
 #include "..\etools.h"
 #include "..\Win\winbase.h"
+#include <map>
 #include <mmsystem.h>
+#include <Digitalv.h>
 #pragma comment(lib , "winmm.lib")
 
-#include <map>
-#include <Digitalv.h>
+static size_t Hash(const e2d::EString & key);
+static bool ExtractResource(LPCTSTR strDstFile, LPCTSTR strResType, LPCTSTR strResName);
 
 
 ////////////////////////////////////////////////////////////////////
@@ -18,8 +20,8 @@ public:
 	~MciPlayer();
 
 	void close();
-	void open(const e2d::EString & pFileName, UINT uId);
-	void open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, UINT uId);
+	bool open(const e2d::EString & pFileName, UINT uId);
+	bool open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, UINT uId);
 	void play(bool bLoop = false);
 	void pause();
 	void resume();
@@ -36,7 +38,7 @@ private:
 	UINT        m_nSoundID;
 	bool        m_bPlaying;
 	bool		m_bLoop;
-	e2d::EString m_sTmpFileName;
+	e2d::EString m_sTempFileName;
 };
 
 
@@ -53,76 +55,65 @@ MciPlayer::~MciPlayer()
 	close();	// 关闭播放器
 }
 
-void MciPlayer::open(const e2d::EString & pFileName, UINT uId)
+bool MciPlayer::open(const e2d::EString & pFileName, UINT uId)
 {
 	// 忽略不存在的文件
-	if (pFileName.empty()) return;
+	if (pFileName.empty()) 
+		return false;
+
 	// 停止当前音乐
 	close();
 
 	// 设置 MCI_OPEN_PARMS 参数
 	MCI_OPEN_PARMS mciOpen = { 0 };
-	mciOpen.lpstrDeviceType = (LPCTSTR)-1;
 	mciOpen.lpstrElementName = pFileName.c_str();
 
 	// 打开这个文件
 	MCIERROR mciError;
-	mciError = mciSendCommand(0, MCI_OPEN, MCI_OPEN_ELEMENT, reinterpret_cast<DWORD_PTR>(&mciOpen));
-	// 出现错误时，忽略这次操作
-	if (mciError) return;
+	mciError = mciSendCommand(
+		0, 
+		MCI_OPEN, 
+		MCI_OPEN_ELEMENT | MCI_NOTIFY,
+		reinterpret_cast<DWORD_PTR>(&mciOpen)
+	);
 
-	// 保存设备等信息
-	m_dev = mciOpen.wDeviceID;
-	m_nSoundID = uId;
-	m_bPlaying = false;
-}
-
-void MciPlayer::open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, UINT uId)
-{
-	bool ExtractResource(LPCTSTR strDstFile, LPCTSTR strResType, LPCTSTR strResName);
-
-	// 忽略不存在的文件
-	if (pResouceName.empty() || pResouceType.empty()) return;
-	
-	// 获取临时文件目录
-	TCHAR tmpFilePath[_MAX_PATH];
-	::GetTempPath(_MAX_PATH, tmpFilePath);
-
-	// 创建临时文件目录
-	e2d::EString tmpFileName = tmpFilePath + e2d::EApp::getAppName();
-	if (_waccess(tmpFileName.c_str(), 0) == -1)
+	if (mciError)
 	{
-		_wmkdir(tmpFileName.c_str());
+		return false;
 	}
-
-	// 产生临时文件的文件名
-	tmpFileName.append(L"\\");
-	tmpFileName.append(std::to_wstring(uId));
-	tmpFileName.append(L"." + musicExtension);
-
-	// 导出资源为临时文件
-	if (ExtractResource(tmpFileName.c_str(), pResouceType.c_str(), pResouceName.c_str()))
+	else
 	{
-		// 停止当前音乐
-		close();
-
-		// 设置 MCI_OPEN_PARMS 参数
-		MCI_OPEN_PARMS mciOpen = { 0 };
-		mciOpen.lpstrDeviceType = (LPCTSTR)-1;
-		mciOpen.lpstrElementName = tmpFileName.c_str();
-
-		// 打开这个文件
-		MCIERROR mciError;
-		mciError = mciSendCommand(0, MCI_OPEN, MCI_OPEN_ELEMENT, reinterpret_cast<DWORD_PTR>(&mciOpen));
-		// 出现错误时，忽略这次操作
-		if (mciError) return;
-		
 		// 保存设备等信息
 		m_dev = mciOpen.wDeviceID;
 		m_nSoundID = uId;
 		m_bPlaying = false;
-		m_sTmpFileName = tmpFileName;
+		return true;
 	}
+}
+
+bool MciPlayer::open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, UINT uId)
+{
+	// 忽略不存在的文件
+	if (pResouceName.empty() || pResouceType.empty() || musicExtension.empty()) return false;
+
+	// 获取临时文件目录
+	e2d::EString tempFileName = e2d::EFileUtils::getTempPath();
+
+	// 产生临时文件的文件名
+	tempFileName.append(L"\\");
+	tempFileName.append(std::to_wstring(uId));
+	tempFileName.append(L"." + musicExtension);
+
+	// 导出资源为临时文件
+	if (ExtractResource(tempFileName.c_str(), pResouceType.c_str(), pResouceName.c_str()))
+	{
+		if (open(tempFileName, uId))
+		{
+			m_sTempFileName = tempFileName;
+			return true;
+		}
+	}
+	return false;
 }
 
 void MciPlayer::play(bool bLoop)
@@ -135,8 +126,15 @@ void MciPlayer::play(bool bLoop)
 	// 设置播放参数
 	MCI_PLAY_PARMS mciPlay = { 0 };
 	MCIERROR s_mciError;
+
 	// 播放声音
-	s_mciError = mciSendCommand(m_dev, MCI_PLAY, MCI_FROM | (bLoop ? MCI_DGV_PLAY_REPEAT : 0), reinterpret_cast<DWORD_PTR>(&mciPlay));
+	s_mciError = mciSendCommand(
+		m_dev, 
+		MCI_PLAY, 
+		MCI_FROM | MCI_NOTIFY | (bLoop ? MCI_DGV_PLAY_REPEAT : 0),
+		reinterpret_cast<DWORD_PTR>(&mciPlay)
+	);
+	
 	// 未出错时，置 m_bPlaying 为 true
 	if (!s_mciError)
 	{
@@ -158,10 +156,10 @@ void MciPlayer::close()
 		_sendCommand(MCI_CLOSE);
 	}
 	// 删除临时文件
-	if (!m_sTmpFileName.empty())
+	if (!m_sTempFileName.empty())
 	{
-		DeleteFile(m_sTmpFileName.c_str());
-		m_sTmpFileName.clear();
+		DeleteFile(m_sTempFileName.c_str());
+		m_sTempFileName.clear();
 	}
 	// 恢复默认属性
 	m_dev = 0;
@@ -197,10 +195,24 @@ void MciPlayer::rewind()
 		return;
 	}
 	// 重置播放位置
-	mciSendCommand(m_dev, MCI_SEEK, MCI_SEEK_TO_START, 0);
+	mciSendCommand(
+		m_dev,
+		MCI_SEEK, 
+		MCI_SEEK_TO_START | MCI_NOTIFY, 
+		0
+	);
 	// 播放音乐
 	MCI_PLAY_PARMS mciPlay = { 0 };
-	m_bPlaying = mciSendCommand(m_dev, MCI_PLAY, (m_bLoop ? MCI_DGV_PLAY_REPEAT : 0), reinterpret_cast<DWORD_PTR>(&mciPlay)) ? false : true;
+	MCIERROR s_mciError;
+
+	// 播放声音
+	s_mciError = mciSendCommand(
+		m_dev, 
+		MCI_PLAY,
+		MCI_NOTIFY | (m_bLoop ? MCI_DGV_PLAY_REPEAT : 0),
+		reinterpret_cast<DWORD_PTR>(&mciPlay)
+	);
+	m_bPlaying = s_mciError ? false : true;
 }
 
 void MciPlayer::setVolume(float volume)
@@ -208,7 +220,12 @@ void MciPlayer::setVolume(float volume)
 	MCI_DGV_SETAUDIO_PARMS  mciSetAudioPara = { 0 };
 	mciSetAudioPara.dwItem = MCI_DGV_SETAUDIO_VOLUME;
 	mciSetAudioPara.dwValue = DWORD(1000 * min(max(volume, 0), 1));
-	mciSendCommand(m_dev, MCI_SETAUDIO, MCI_DGV_SETAUDIO_VALUE | MCI_DGV_SETAUDIO_ITEM, (DWORD_PTR)&mciSetAudioPara);
+	mciSendCommand(
+		m_dev, 
+		MCI_SETAUDIO, 
+		MCI_NOTIFY | MCI_DGV_SETAUDIO_VALUE | MCI_DGV_SETAUDIO_ITEM,
+		(DWORD_PTR)&mciSetAudioPara
+	);
 }
 
 bool MciPlayer::isPlaying()
@@ -242,8 +259,6 @@ void MciPlayer::_sendCommand(int nCommand, DWORD_PTR param1, DWORD_PTR parma2)
 
 typedef std::map<unsigned int, MciPlayer *> MusicList;
 typedef std::pair<unsigned int, MciPlayer *> Music;
-
-static size_t Hash(const e2d::EString & key);
 
 
 static MusicList& getMciPlayerList()

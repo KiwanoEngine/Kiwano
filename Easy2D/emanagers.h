@@ -321,18 +321,9 @@ class EPhysicsManager
 	friend EApp;
 	friend EScene;
 	friend ENode;
+	friend EGeometry;
 
 public:
-	// 添加形状
-	static void addGeometry(
-		EGeometry * geometry
-	);
-
-	// 删除已绑定的形状
-	static void delGeometry(
-		EGeometry * geometry
-	);
-
 	// 将监听器与场景绑定
 	static void bindListener(
 		EPhysicsListener * listener,
@@ -390,13 +381,20 @@ private:
 	// 清空监听器管理器
 	static void _clearManager();
 
+	// 添加形状
+	static void _addGeometry(
+		EGeometry * geometry
+	);
+
+	// 删除已绑定的形状
+	static void _delGeometry(
+		EGeometry * geometry
+	);
+
 	// 清空绑定在节点上的所有监听器
 	static void _clearAllListenersBindedWith(
 		ENode * pParentNode
 	);
-
-	// 物理引擎执行程序
-	static void PhysicsProc();
 
 	// 几何图形判断程序
 	static void PhysicsGeometryProc(

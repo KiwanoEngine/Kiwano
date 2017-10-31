@@ -24,7 +24,7 @@ void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 		if (EApp::isPaused() && !mlistener->m_bAlways)
 			continue;
 
-		if (mlistener->isRunning())
+		if (mlistener->m_bAlways || mlistener->isRunning())
 		{
 			if (mlistener->getParentNode() && 
 				mlistener->getParentNode()->getParentScene() == EApp::getCurrentScene())
@@ -49,7 +49,7 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 		if (EApp::isPaused() && !klistener->m_bAlways)
 			continue;
 
-		if (klistener->isRunning())
+		if (klistener->m_bAlways || klistener->isRunning())
 		{
 			if (klistener->getParentNode() && 
 				klistener->getParentNode()->getParentScene() == EApp::getCurrentScene())
@@ -140,7 +140,7 @@ void e2d::EMsgManager::delMouseListeners(const EString & name)
 	{
 		if ((*mIter)->getName() == name)
 		{
-			SafeReleaseAndClear(&(*mIter));
+			SafeRelease(&(*mIter));
 			mIter = s_vMouseListeners.erase(mIter);
 		}
 		else
@@ -182,7 +182,7 @@ void e2d::EMsgManager::delKeyboardListeners(const EString & name)
 	{
 		if ((*kIter)->getName() == name)
 		{
-			SafeReleaseAndClear(&(*kIter));
+			SafeRelease(&(*kIter));
 			kIter = s_vKeyboardListeners.erase(kIter);
 		}
 		else
@@ -279,7 +279,7 @@ void e2d::EMsgManager::_clearAllMouseListenersBindedWith(ENode * pParentNode)
 		auto t = s_vMouseListeners[i];
 		if (t->getParentNode() == pParentNode)
 		{
-			SafeReleaseAndClear(&t);
+			SafeRelease(&t);
 			s_vMouseListeners.erase(s_vMouseListeners.begin() + i);
 		}
 		else
@@ -296,7 +296,7 @@ void e2d::EMsgManager::_clearAllKeyboardListenersBindedWith(ENode * pParentNode)
 		auto t = s_vKeyboardListeners[i];
 		if (t->getParentNode() == pParentNode)
 		{
-			SafeReleaseAndClear(&t);
+			SafeRelease(&t);
 			s_vKeyboardListeners.erase(s_vKeyboardListeners.begin() + i);
 		}
 		else

@@ -42,10 +42,10 @@ e2d::ENode::~ENode()
 	EMsgManager::_clearAllKeyboardListenersBindedWith(this);
 	EActionManager::_clearAllActionsBindedWith(this);
 	EPhysicsManager::_clearAllListenersBindedWith(this);
-	EPhysicsManager::delGeometry(m_pGeometry);
+	EPhysicsManager::_delGeometry(m_pGeometry);
 	for (auto child : m_vChildren)
 	{
-		SafeReleaseAndClear(&child);
+		SafeRelease(&child);
 	}
 }
 
@@ -112,7 +112,7 @@ void e2d::ENode::_onRender()
 void e2d::ENode::_drawGeometry()
 {
 	// 绘制自身的几何形状
-	if (m_pGeometry)
+	if (m_pGeometry && m_pGeometry->m_bIsVisiable)
 	{
 		m_pGeometry->_onRender();
 	}
@@ -501,9 +501,9 @@ void e2d::ENode::setAnchor(float anchorX, float anchorY)
 void e2d::ENode::setGeometry(EGeometry * geometry)
 {
 	// 删除旧的形状
-	EPhysicsManager::delGeometry(m_pGeometry);
+	EPhysicsManager::_delGeometry(m_pGeometry);
 	// 添加新的形状
-	EPhysicsManager::addGeometry(geometry);
+	EPhysicsManager::_addGeometry(geometry);
 
 	if (geometry)
 	{
@@ -589,15 +589,15 @@ e2d::ENode * e2d::ENode::getChild(const EString & name)
 	return nullptr;
 }
 
-void e2d::ENode::removeFromParent(bool release /* = false */)
+void e2d::ENode::removeFromParent()
 {
 	if (m_pParent)
 	{
-		m_pParent->removeChild(this, release);
+		m_pParent->removeChild(this);
 	}
 }
 
-bool e2d::ENode::removeChild(ENode * child, bool release /* = true */)
+bool e2d::ENode::removeChild(ENode * child)
 {
 	WARN_IF(child == nullptr, "ENode::removeChild NULL pointer exception.");
 
@@ -621,10 +621,6 @@ bool e2d::ENode::removeChild(ENode * child, bool release /* = true */)
 				}
 				child->_onExit();
 				child->release();
-				if (release)
-				{
-					child->autoRelease();
-				}
 				return true;
 			}
 		}
@@ -632,7 +628,7 @@ bool e2d::ENode::removeChild(ENode * child, bool release /* = true */)
 	return false;
 }
 
-void e2d::ENode::removeChild(const EString & childName, bool release /* = true */)
+void e2d::ENode::removeChild(const EString & childName)
 {
 	WARN_IF(childName.empty(), "Invalid ENode name.");
 
@@ -659,26 +655,18 @@ void e2d::ENode::removeChild(const EString & childName, bool release /* = true *
 			}
 			child->_onExit();
 			child->release();
-			if (release)
-			{
-				child->autoRelease();
-			}
 			return;
 		}
 	}
 }
 
-void e2d::ENode::clearAllChildren(bool release /* = true */)
+void e2d::ENode::clearAllChildren()
 {
 	// 所有节点的引用计数减一
 	for (auto child : m_vChildren)
 	{
 		child->_onExit();
 		child->release();
-		if (release)
-		{
-			child->autoRelease();
-		}
 	}
 	// 清空储存节点的容器
 	m_vChildren.clear();

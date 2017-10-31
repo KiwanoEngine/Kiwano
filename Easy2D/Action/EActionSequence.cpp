@@ -25,7 +25,7 @@ e2d::EActionSequence::~EActionSequence()
 {
 	for (auto action : m_vActions)
 	{
-		SafeReleaseAndClear(&action);
+		SafeRelease(&action);
 	}
 }
 

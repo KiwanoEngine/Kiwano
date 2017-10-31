@@ -80,7 +80,7 @@ void e2d::EActionManager::_clearAllActionsBindedWith(ENode * pTargetNode)
 			auto a = s_vActions[i];
 			if (a->getTarget() == pTargetNode)
 			{
-				SafeReleaseAndClear(&a);
+				SafeRelease(&a);
 				s_vActions.erase(s_vActions.begin() + i);
 			}
 			else
@@ -144,7 +144,7 @@ void e2d::EActionManager::ActionProc()
 			if (action->_isEnding())
 			{
 				// 动作已经结束
-				SafeReleaseAndClear(&action);
+				SafeRelease(&action);
 				s_vActions.erase(s_vActions.begin() + i);
 			}
 			else

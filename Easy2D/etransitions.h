@@ -8,8 +8,6 @@ class ETransition :
 	public EObject
 {
 	friend EApp;
-public:
-	ETransition() { this->autoRelease(); }
 
 protected:
 	// 保存当前场景和下一场景的指针，和控制场景切换的变量

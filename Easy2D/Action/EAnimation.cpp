@@ -19,7 +19,7 @@ e2d::EAnimation::~EAnimation()
 {
 	for (auto frame : m_vFrames)
 	{
-		SafeReleaseAndClear(&frame);
+		SafeRelease(&frame);
 	}
 }
 

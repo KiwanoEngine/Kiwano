@@ -375,23 +375,23 @@ protected:
 };
 
 
-class ECollisionListener :
+class EContactListener :
 	public EPhysicsListener
 {
 	friend EMsgManager;
 
 public:
-	ECollisionListener();
+	EContactListener();
 
-	ECollisionListener(
+	EContactListener(
 		const EString &name
 	);
 
-	ECollisionListener(
+	EContactListener(
 		const COLLISION_LISTENER_CALLBACK &callback
 	);
 
-	ECollisionListener(
+	EContactListener(
 		const EString &name,
 		const COLLISION_LISTENER_CALLBACK &callback
 	);

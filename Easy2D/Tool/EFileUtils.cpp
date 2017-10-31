@@ -33,6 +33,21 @@ e2d::EString e2d::EFileUtils::getLocalAppDataPath()
 	return L"";
 }
 
+e2d::EString e2d::EFileUtils::getTempPath()
+{
+	// 获取临时文件目录
+	TCHAR path[_MAX_PATH];
+	::GetTempPath(_MAX_PATH, path);
+
+	// 创建临时文件目录
+	e2d::EString tempFilePath = path + e2d::EApp::getAppName();
+	if (_waccess(tempFilePath.c_str(), 0) == -1)
+	{
+		_wmkdir(tempFilePath.c_str());
+	}
+	return tempFilePath;
+}
+
 e2d::EString e2d::EFileUtils::getDefaultSavePath()
 {
 	EString path = EFileUtils::getLocalAppDataPath();

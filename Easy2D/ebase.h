@@ -27,8 +27,7 @@ public:
 	bool init(
 		const EString &title,	/* 窗口标题 */
 		UINT32 width,			/* 窗口宽度 */
-		UINT32 height,			/* 窗口高度 */
-		bool showConsole = false/* 是否显示控制台 */
+		UINT32 height			/* 窗口高度 */
 	);
 
 	// 初始化游戏界面
@@ -36,8 +35,7 @@ public:
 		const EString &title,	/* 窗口标题 */
 		UINT32 width,			/* 窗口宽度 */
 		UINT32 height,			/* 窗口高度 */
-		EWindowStyle wStyle,	/* 窗口样式 */
-		bool showConsole = false/* 是否显示控制台 */
+		EWindowStyle wStyle		/* 窗口样式 */
 	);
 
 	// 启动程序
@@ -61,7 +59,7 @@ public:
 	// 继续游戏
 	static void resume();
 
-	// 获取游戏是否暂停
+	// 游戏是否暂停
 	static bool isPaused();
 
 	// 切换场景
@@ -78,11 +76,8 @@ public:
 	);
 
 	// 返回上一场景
-	static void backScene();
-
-	// 返回上一场景
 	static void backScene(
-		ETransition * transition		/* 场景切换动画 */
+		ETransition * transition = nullptr	/* 场景切换动画 */
 	);
 
 	// 清空保存的所有场景
@@ -96,7 +91,7 @@ public:
 
 	// 是否打开控制台
 	static void showConsole(
-		bool show
+		bool show = true
 	);
 
 	// 终止程序
@@ -158,15 +153,6 @@ public:
 	);
 
 protected:
-	// 创建设备无关资源
-	HRESULT _createDeviceIndependentResources();
-
-	// 创建设备相关资源
-	HRESULT _createDeviceResources();
-
-	// 释放设备相关资源
-	void _discardDeviceResources();
-
 	// 游戏主循环
 	void _mainLoop();
 
@@ -178,12 +164,6 @@ protected:
 
 	// 进入下一场景
 	void _enterNextScene();
-
-	// 重定 render target 大小
-	void _onResize(
-		UINT32 width,
-		UINT32 height
-	);
 
 	// 窗口程序
 	static LRESULT CALLBACK WndProc(
@@ -199,6 +179,7 @@ protected:
 	bool	m_bManualPaused;
 	bool	m_bTransitional;
 	bool	m_bTopMost;
+	bool	m_bShowConsole;
 	EString	m_sTitle;
 	EString	m_sAppName;
 	UINT32	m_ClearColor;
@@ -223,13 +204,9 @@ public:
 	// 引用计数减一
 	void release();
 
-	// 让引擎自动释放这个对象
-	void autoRelease();
-
 private:
 	int m_nRefCount;
 	bool m_bManaged;
-	bool m_bAutoRelease;
 };
 
 
@@ -266,14 +243,12 @@ public:
 
 	// 删除子节点
 	bool remove(
-		ENode * child,
-		bool release = false
+		ENode * child
 	);
 
-	// 根据名称删除子节点
+	// 删除相同名称的子节点
 	void remove(
-		const EString &childName,
-		bool release = false
+		const EString &childName
 	);
 
 	// 获取所有子节点

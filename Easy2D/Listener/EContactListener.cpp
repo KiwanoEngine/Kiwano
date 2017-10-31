@@ -1,29 +1,29 @@
 #include "..\elisteners.h"
 #include "..\egeometry.h"
 
-e2d::ECollisionListener::ECollisionListener()
+e2d::EContactListener::EContactListener()
 	: EPhysicsListener()
 {
 }
 
-e2d::ECollisionListener::ECollisionListener(const EString & name)
+e2d::EContactListener::EContactListener(const EString & name)
 	: EPhysicsListener(name)
 {
 }
 
-e2d::ECollisionListener::ECollisionListener(const COLLISION_LISTENER_CALLBACK & callback)
+e2d::EContactListener::EContactListener(const COLLISION_LISTENER_CALLBACK & callback)
 	: EPhysicsListener()
 {
 	this->m_Callback = callback;
 }
 
-e2d::ECollisionListener::ECollisionListener(const EString & name, const COLLISION_LISTENER_CALLBACK & callback)
+e2d::EContactListener::EContactListener(const EString & name, const COLLISION_LISTENER_CALLBACK & callback)
 	: EPhysicsListener(name)
 {
 	this->m_Callback = callback;
 }
 
-void e2d::ECollisionListener::_callOn()
+void e2d::EContactListener::_callOn()
 {
 	if (EPhysicsMsg::getMsg() == EPhysicsMsg::OVERLAP ||
 		EPhysicsMsg::getMsg() == EPhysicsMsg::CONTAINS || 

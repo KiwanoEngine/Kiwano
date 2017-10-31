@@ -37,7 +37,7 @@ e2d::EText::EText(const EString & text, EString fontFamily, float fontSize, UINT
 
 e2d::EText::~EText()
 {
-	SafeReleaseAndClear(&m_pFont);
+	SafeRelease(&m_pFont);
 }
 
 e2d::EString e2d::EText::getText() const
@@ -70,7 +70,7 @@ void e2d::EText::setFont(EFont * font)
 {
 	if (font)
 	{
-		SafeReleaseAndClear(&m_pFont);
+		SafeRelease(&m_pFont);
 		m_pFont = font;
 		font->retain();
 

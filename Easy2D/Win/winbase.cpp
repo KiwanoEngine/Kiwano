@@ -17,55 +17,71 @@ HWND &GetHWnd()
 
 ID2D1Factory * &GetFactory()
 {
-	return s_pDirect2dFactory;
-}
-
-IWICImagingFactory * &GetImagingFactory()
-{
-	if (!s_pIWICFactory)
+	if (!s_pDirect2dFactory)
 	{
-		CoCreateInstance(
-			CLSID_WICImagingFactory,
-			NULL,
-			CLSCTX_INPROC_SERVER,
-			IID_IWICImagingFactory,
-			reinterpret_cast<void **>(&s_pIWICFactory)
-		);
+		// 创建设备无关资源，它们的生命周期和程序的时长相同
+		HRESULT hr = S_OK;
+
+		// 创建一个 Direct2D 工厂
+		hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &s_pDirect2dFactory);
+
+		ASSERT(SUCCEEDED(hr), "Create Device Independent Resources Failed!");
 	}
-	return s_pIWICFactory;
+	return s_pDirect2dFactory;
 }
 
 ID2D1HwndRenderTarget * &GetRenderTarget()
 {
 	if (!s_pRenderTarget)
 	{
+		// 创建设备相关资源。这些资源应在 Direct3D 设备消失时重建，
+		// 比如当 isVisiable 被修改，等等
 		RECT rc;
-		GetClientRect(s_HWnd, &rc);
+		GetClientRect(GetHWnd(), &rc);
 
 		D2D1_SIZE_U size = D2D1::SizeU(
 			rc.right - rc.left,
 			rc.bottom - rc.top
 		);
 
-		// Create a Direct2D render target.
+		// 创建一个 Direct2D 渲染目标
 		HRESULT hr;
 		hr = GetFactory()->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
-			D2D1::HwndRenderTargetProperties(s_HWnd, size),
+			D2D1::HwndRenderTargetProperties(
+				GetHWnd(), 
+				size),
 			&s_pRenderTarget
 		);
 		
-		ASSERT(SUCCEEDED(hr), "Create Render Target Failed!");
+		ASSERT(SUCCEEDED(hr), "Create Render Target Failed! Maybe you should initalize EApp first.");
 	}
 	return s_pRenderTarget;
+}
+
+IWICImagingFactory * &GetImagingFactory()
+{
+	if (!s_pIWICFactory)
+	{
+		// 创建 WIC 绘图工厂，用于统一处理各种格式的图片
+		HRESULT hr = CoCreateInstance(
+			CLSID_WICImagingFactory,
+			NULL,
+			CLSCTX_INPROC_SERVER,
+			IID_IWICImagingFactory,
+			reinterpret_cast<void**>(&s_pIWICFactory)
+		);
+		ASSERT(SUCCEEDED(hr), "Create WICImagingFactory Failed!");
+	}
+	return s_pIWICFactory;
 }
 
 IDWriteFactory * &GetDirectWriteFactory()
 {
 	if (!s_pDWriteFactory)
 	{
-		HRESULT hr;
-		hr = DWriteCreateFactory(
+		// 创建 DirectWrite 工厂
+		HRESULT hr = DWriteCreateFactory(
 			DWRITE_FACTORY_TYPE_SHARED,
 			__uuidof(IDWriteFactory),
 			reinterpret_cast<IUnknown**>(&s_pDWriteFactory)

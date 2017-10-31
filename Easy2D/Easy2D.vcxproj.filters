@@ -192,9 +192,6 @@
     <ClCompile Include="Geometry\EEllipse.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Listener\ECollisionListener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
     <ClCompile Include="Common\EMouseMsg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -209,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="Geometry\EPhysicsMsg.cpp">
       <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EContactListener.cpp">
+      <Filter>Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

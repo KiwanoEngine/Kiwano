@@ -23,9 +23,9 @@ void e2d::EObjectManager::__flush()
 	// 循环遍历容器中的所有对象
 	for (iter = s_vPool.begin(); iter != s_vPool.end();)
 	{
-		if ((*iter)->m_bAutoRelease && (*iter)->m_nRefCount <= 0)
+		if ((*iter)->m_nRefCount <= 0)
 		{
-			// 若对象的引用的计数为 0, 释放该对象
+			// 若对象的引用的计数小于等于 0, 释放该对象
 			delete (*iter);
 			// 从释放池中删除该对象
 			iter = s_vPool.erase(iter);
