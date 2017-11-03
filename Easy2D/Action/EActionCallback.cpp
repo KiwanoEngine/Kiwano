@@ -12,7 +12,7 @@ e2d::EActionCallback * e2d::EActionCallback::clone() const
 
 void e2d::EActionCallback::_init()
 {
-	EAction::_init();
+	// 执行回调函数的动作不需要初始化
 }
 
 void e2d::EActionCallback::_callOn()

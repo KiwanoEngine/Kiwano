@@ -27,11 +27,14 @@ void e2d::EActionScaleBy::_init()
 
 void e2d::EActionScaleBy::_callOn()
 {
+	EAction::_callOn();
+
 	if (m_pTarget == nullptr)
 	{
 		this->stop();
 		return;
 	}
+
 	while (EActionGradual::_isDelayEnough())
 	{
 		// Ëõ·Å½Úµã

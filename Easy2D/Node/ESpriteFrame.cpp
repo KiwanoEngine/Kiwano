@@ -21,7 +21,7 @@ e2d::ESpriteFrame::ESpriteFrame(const EString & imageFileName)
 	_setTexture(new ETexture(imageFileName));
 }
 
-e2d::ESpriteFrame::ESpriteFrame(const EString & resourceName, const EString & resourceType)
+e2d::ESpriteFrame::ESpriteFrame(LPCTSTR resourceName, LPCTSTR resourceType)
 	: ESpriteFrame()
 {
 	_setTexture(new ETexture(resourceName, resourceType));
@@ -41,7 +41,7 @@ e2d::ESpriteFrame::ESpriteFrame(const EString & imageFileName, float x, float y,
 	_clipTexture(x, y, width, height);
 }
 
-e2d::ESpriteFrame::ESpriteFrame(const EString & resourceName, const EString & resourceType, float x, float y, float width, float height)
+e2d::ESpriteFrame::ESpriteFrame(LPCTSTR resourceName, LPCTSTR resourceType, float x, float y, float width, float height)
 	: ESpriteFrame()
 {
 	_setTexture(new ETexture(resourceName, resourceType));

@@ -35,7 +35,7 @@ e2d::ETexture::ETexture(const EString & fileName)
 	this->loadFromFile(fileName);
 }
 
-e2d::ETexture::ETexture(const EString & resourceName, const EString & resourceType)
+e2d::ETexture::ETexture(LPCTSTR resourceName, LPCTSTR resourceType)
 {
 	this->loadFromResource(resourceName, resourceType);
 }
@@ -63,11 +63,11 @@ void e2d::ETexture::loadFromFile(const EString & fileName)
 	m_pBitmap = s_mBitmapsFromFile.at(hash);
 }
 
-void e2d::ETexture::loadFromResource(const EString & resourceName, const EString & resourceType)
+void e2d::ETexture::loadFromResource(LPCTSTR resourceName, LPCTSTR resourceType)
 {
-	WARN_IF(resourceName.empty() || resourceType.empty(), "ETexture cannot load bitmap from NULL resource.");
+	WARN_IF(!resourceName || !resourceType, "ETexture cannot load bitmap from NULL resource.");
 
-	if (resourceName.empty() || resourceType.empty())
+	if (!resourceName || !resourceType)
 		return;
 
 	if (!e2d::ETexture::preload(resourceName, resourceType))
@@ -77,7 +77,7 @@ void e2d::ETexture::loadFromResource(const EString & resourceName, const EString
 	}
 
 	ResKey key;
-	std::hash<e2d::EString> h;
+	std::hash<LPCTSTR> h;
 	key.resNameHash = h(resourceName);
 	key.resTypeHash = h(resourceType);
 
@@ -202,9 +202,9 @@ bool e2d::ETexture::preload(const EString & fileName)
 	return SUCCEEDED(hr);
 }
 
-bool e2d::ETexture::preload(const EString & resourceName, const EString & resourceType)
+bool e2d::ETexture::preload(LPCTSTR resourceName, LPCTSTR resourceType)
 {
-	std::hash<e2d::EString> h;
+	std::hash<LPCTSTR> h;
 
 	ResKey key;
 	key.resNameHash = h(resourceName);
@@ -230,7 +230,7 @@ bool e2d::ETexture::preload(const EString & resourceName, const EString & resour
 	DWORD imageFileSize = 0;
 
 	// 定位资源
-	imageResHandle = ::FindResourceW(HINST_THISCOMPONENT, resourceName.c_str(), resourceType.c_str());
+	imageResHandle = ::FindResourceW(HINST_THISCOMPONENT, resourceName, resourceType);
 
 	hr = imageResHandle ? S_OK : E_FAIL;
 	if (SUCCEEDED(hr))
@@ -321,7 +321,7 @@ bool e2d::ETexture::preload(const EString & resourceName, const EString & resour
 
 	if (SUCCEEDED(hr))
 	{
-		std::hash<e2d::EString> h;
+		std::hash<LPCTSTR> h;
 
 		ResKey key;
 		key.resNameHash = h(resourceName);

@@ -55,6 +55,12 @@ void e2d::EAction::setInterval(LONGLONG milliSeconds)
 
 void e2d::EAction::setTarget(ENode * node)
 {
+	if (m_pTarget)
+	{
+		// 动作只能有一个目标
+		return;
+	}
+
 	if (node)
 	{
 		m_pTarget = node;
@@ -77,6 +83,14 @@ void e2d::EAction::_init()
 	m_bInit = true;
 	// 记录当前时间
 	m_tLast = GetNow();
+}
+
+void e2d::EAction::_callOn()
+{
+	if (!m_bInit)
+	{
+		_init();
+	}
 }
 
 void e2d::EAction::_reset()

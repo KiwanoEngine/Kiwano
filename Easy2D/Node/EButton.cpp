@@ -109,7 +109,7 @@ void e2d::EButton::setDisable(bool disable)
 
 void e2d::EButton::setCallback(const BUTTON_CLICK_CALLBACK & callback)
 {
-	auto listener = new EMouseListener(std::bind(&EButton::_listenerCallback, this));
+	auto listener = new EListenerMouse(std::bind(&EButton::_listenerCallback, this));
 	EMsgManager::bindListener(listener, this, true);
 	m_Callback = callback;
 }

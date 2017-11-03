@@ -4,43 +4,33 @@ int main()
 {
 	EApp app;
 
-	if (app.init(L"Easy2D Demo", 640, 480, true))
+	if (app.init(L"Easy2D Demo", 320, 320))
 	{
 		auto scene = new EScene();
 
-		auto node = new ENode();
-		node->setPos(50, 80);
-		node->_setSize(30, 180);
-		scene->add(node);
-
-		/*auto listener = new EMouseListener([=] {
-		if (!EMouseMsg::isLButtonDown())
-		{
-		if (EMouseMsg::getMsg() == EMouseMsg::MOVE)
-		{
-		node->setPos(EMouseMsg::getPos());
-		}
-		}
-		});*/
-
-		auto listener = new EKeyboardPressListener([=] {
-			if (EKeyboardMsg::isCapitalLockOn())
-			{
-				if (EKeyboardMsg::getVal() == EKeyboardMsg::KEY::LEFT)
-				{
-					node->move(-3, 0);
-				}
-				if (EKeyboardMsg::getVal() == EKeyboardMsg::KEY::RIGHT)
-				{
-					node->move(3, 0);
-				}
-			}
+		auto sprite = new ESprite(L"elyse.png");
+		sprite->setScale(0.3f);
+		// 获取窗口宽度
+		float width = EApp::getWidth();
+		// 获取窗口高度
+		float height = EApp::getHeight();
+		// 移动精灵的位置
+		sprite->setPos(width / 2, height / 2);
+		//sprite->setAnchor(0, 0);
+		scene->add(sprite);
+		auto text = new EText(L"balabalabalabalabala", L"宋体", 80, EColor::BLUE);
+		//text->setWordWrapping(true);
+		//text->setWordWrappingWidth(50);
+		text->setAnchor(0, 0);
+		
+		auto listener = new EListenerMouseClick([=](EPoint) {
+			EPoint p = EMouseMsg::getPos();
+			sprite->setPos(p);
 		});
-
-		listener->bindWith(node);
-
-		EMsgManager::bindListener(listener, scene);
-
+		listener->bindWith(scene);
+		EMsgManager::stopAllMouseListeners();
+		EMsgManager::stopAllKeyboardListeners();
+		scene->add(text, -1);
 		app.enterScene(scene);
 
 		app.run();

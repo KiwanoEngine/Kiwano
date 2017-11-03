@@ -35,7 +35,7 @@ void e2d::ETransitionMove::_setTarget(EScene * prev, EScene * next, bool & trans
 	}
 
 	// 初始化场景属性
-	next->getRoot()->move(-distPosX, -distPosY);
+	next->getRoot()->movePos(-distPosX, -distPosY);
 
 	// 第一个场景移出
 	auto action1 = new EActionMoveBy(m_fMoveDuration, EVec(distPosX, distPosY));

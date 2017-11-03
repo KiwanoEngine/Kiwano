@@ -11,10 +11,10 @@ class EScene;
 class ENode;
 class ETimer;
 class EAction;
-class EMouseListener;
-class EKeyboardListener;
+class EListenerMouse;
+class EListenerKeyboard;
 class EGeometry;
-class EPhysicsListener;
+class EListenerPhysics;
 
 // 对象管理器
 class EObjectManager
@@ -46,14 +46,14 @@ class EMsgManager
 public:
 	// 绑定鼠标消息监听器到场景
 	static void bindListener(
-		EMouseListener * listener,
+		EListenerMouse * listener,
 		EScene * pParentScene,
 		bool always = false /* 是否在游戏暂停时仍然监听 */
 	);
 
 	// 绑定鼠标消息监听器到节点
 	static void bindListener(
-		EMouseListener * listener,
+		EListenerMouse * listener,
 		ENode * pParentNode,
 		bool always = false /* 是否在游戏暂停时仍然监听 */
 	);
@@ -101,14 +101,14 @@ public:
 
 	// 绑定按键消息监听器到场景
 	static void bindListener(
-		EKeyboardListener * listener,
+		EListenerKeyboard * listener,
 		EScene * pParentScene,
 		bool always = false /* 是否在游戏暂停时仍然监听 */
 	);
 
 	// 绑定按键消息监听器到节点
 	static void bindListener(
-		EKeyboardListener * listener,
+		EListenerKeyboard * listener,
 		ENode * pParentNode,
 		bool always = false /* 是否在游戏暂停时仍然监听 */
 	);
@@ -326,13 +326,13 @@ class EPhysicsManager
 public:
 	// 将监听器与场景绑定
 	static void bindListener(
-		EPhysicsListener * listener,
+		EListenerPhysics * listener,
 		EScene * pParentScene
 	);
 
 	// 将监听器与节点绑定
 	static void bindListener(
-		EPhysicsListener * listener,
+		EListenerPhysics * listener,
 		ENode * pParentNode
 	);
 

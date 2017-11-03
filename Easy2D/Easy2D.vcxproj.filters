@@ -135,28 +135,7 @@
     <ClCompile Include="Manager\ETimerManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Listener\EKeyboardListener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Listener\EKeyboardPressListener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
     <ClCompile Include="Listener\EListener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Listener\EMouseClickListener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Listener\EMouseDoubleClickListener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Listener\EMouseDragListener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Listener\EMouseListener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="Listener\EMousePressListener.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
     <ClCompile Include="Node\EButton.cpp">
@@ -201,13 +180,34 @@
     <ClCompile Include="Manager\EPhysicsManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Listener\EPhysicsListener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
     <ClCompile Include="Geometry\EPhysicsMsg.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Listener\EContactListener.cpp">
+    <ClCompile Include="Listener\EListenerMouse.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListenerKeyboard.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListenerKeyboardPress.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListenerMouseClick.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListenerMouseDoubleClick.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListenerMouseDrag.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListenerMousePress.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListenerPhysics.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListenerPhysicsContact.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
   </ItemGroup>

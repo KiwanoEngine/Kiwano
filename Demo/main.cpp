@@ -16,18 +16,16 @@ int WINAPI WinMain(
 		float h = EApp::getHeight();
 		auto scene = new EScene();
 
-		auto text = new EText(L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试", EColor::WHITE, L"楷体");
+		auto text = new EText(L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试", L"楷体");
 		text->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
 		//text->setWordWrapping(true);
 		//text->setWordWrappingWidth(130);
 		text->setRotation(40);
-		text->getFont()->setItalic(true);
 		text->setAnchor(0.5f, 0.5f);
-		text->setColor(EColor::WHITE);
 		//text->runAction(new EActionLoop(new EActionTwo(new EActionFadeOut(1), new EActionFadeIn(1))));
 		scene->add(text);
 
-		auto listener = new EKeyboardPressListener([=]() {
+		auto listener = new EListenerKeyboardPress([=]() {
 			if (EKeyboardMsg::getVal() == EKeyboardMsg::KEY::SPACE)
 			{
 				EApp::backScene(new ETransitionFade(0.5f, 0.5f));

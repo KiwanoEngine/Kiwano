@@ -2,29 +2,29 @@
 #include "..\egeometry.h"
 #include "..\emanagers.h"
 
-e2d::EPhysicsListener::EPhysicsListener()
+e2d::EListenerPhysics::EListenerPhysics()
 	: EListener()
 {
 }
 
-e2d::EPhysicsListener::EPhysicsListener(const EString & name)
+e2d::EListenerPhysics::EListenerPhysics(const EString & name)
 	: EListener(name)
 {
 }
 
-e2d::EPhysicsListener::EPhysicsListener(const PHYSICS_LISTENER_CALLBACK & callback)
+e2d::EListenerPhysics::EListenerPhysics(const PHYSICS_LISTENER_CALLBACK & callback)
 	: EListener()
 {
 	m_Callback = callback;
 }
 
-e2d::EPhysicsListener::EPhysicsListener(const EString & name, const PHYSICS_LISTENER_CALLBACK & callback)
+e2d::EListenerPhysics::EListenerPhysics(const EString & name, const PHYSICS_LISTENER_CALLBACK & callback)
 	: EListener(name)
 {
 	m_Callback = callback;
 }
 
-void e2d::EPhysicsListener::_callOn()
+void e2d::EListenerPhysics::_callOn()
 {
 	m_Callback(
 		EPhysicsMsg::getActiveGeometry()->getParentNode(),
@@ -33,12 +33,12 @@ void e2d::EPhysicsListener::_callOn()
 	);
 }
 
-void e2d::EPhysicsListener::setCallback(const PHYSICS_LISTENER_CALLBACK & callback)
+void e2d::EListenerPhysics::setCallback(const PHYSICS_LISTENER_CALLBACK & callback)
 {
 	m_Callback = callback;
 }
 
-void e2d::EPhysicsListener::bindWith(EScene * pParentScene)
+void e2d::EListenerPhysics::bindWith(EScene * pParentScene)
 {
 	WARN_IF(m_pParentNode != nullptr, "A listener cannot bind with two object.");
 
@@ -48,7 +48,7 @@ void e2d::EPhysicsListener::bindWith(EScene * pParentScene)
 	}
 }
 
-void e2d::EPhysicsListener::bindWith(ENode * pParentNode)
+void e2d::EListenerPhysics::bindWith(ENode * pParentNode)
 {
 	WARN_IF(m_pParentNode != nullptr, "A listener cannot bind with two object.");
 

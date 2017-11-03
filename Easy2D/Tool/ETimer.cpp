@@ -40,7 +40,7 @@ bool e2d::ETimer::isRunning() const
 void e2d::ETimer::start()
 {
 	m_bRunning = true;
-	m_tLast = GetNow();
+	m_tLast = steady_clock::now();
 }
 
 void e2d::ETimer::stop()

@@ -65,23 +65,23 @@ protected:
 
 
 // 鼠标消息监听器
-class EMouseListener :
+class EListenerMouse :
 	public EListener
 {
 	friend EMsgManager;
 
 public:
-	EMouseListener();
+	EListenerMouse();
 
-	EMouseListener(
+	EListenerMouse(
 		const EString &name
 	);
 
-	EMouseListener(
+	EListenerMouse(
 		const MOUSE_LISTENER_CALLBACK &callback
 	);
 
-	EMouseListener(
+	EListenerMouse(
 		const EString &name,
 		const MOUSE_LISTENER_CALLBACK &callback
 	);
@@ -111,21 +111,21 @@ protected:
 
 
 // 鼠标按下消息监听器
-class EMousePressListener :
-	public EMouseListener
+class EListenerMousePress :
+	public EListenerMouse
 {
 public:
-	EMousePressListener();
+	EListenerMousePress();
 
-	EMousePressListener(
+	EListenerMousePress(
 		const EString &name
 	);
 
-	EMousePressListener(
+	EListenerMousePress(
 		const MOUSE_PRESS_LISTENER_CALLBACK &callback
 	);
 
-	EMousePressListener(
+	EListenerMousePress(
 		const EString &name,
 		const MOUSE_PRESS_LISTENER_CALLBACK &callback
 	);
@@ -145,21 +145,21 @@ protected:
 
 
 // 鼠标点击消息监听器
-class EMouseClickListener :
-	public EMouseListener
+class EListenerMouseClick :
+	public EListenerMouse
 {
 public:
-	EMouseClickListener();
+	EListenerMouseClick();
 
-	EMouseClickListener(
+	EListenerMouseClick(
 		const EString &name
 	);
 
-	EMouseClickListener(
+	EListenerMouseClick(
 		const MOUSE_CLICK_LISTENER_CALLBACK &callback
 	);
 
-	EMouseClickListener(
+	EListenerMouseClick(
 		const EString &name,
 		const MOUSE_CLICK_LISTENER_CALLBACK &callback
 	);
@@ -180,21 +180,21 @@ protected:
 
 
 // 鼠标点击消息监听器
-class EMouseDoubleClickListener :
-	public EMouseListener
+class EListenerMouseDoubleClick :
+	public EListenerMouse
 {
 public:
-	EMouseDoubleClickListener();
+	EListenerMouseDoubleClick();
 
-	EMouseDoubleClickListener(
+	EListenerMouseDoubleClick(
 		const EString &name
 	);
 
-	EMouseDoubleClickListener(
+	EListenerMouseDoubleClick(
 		const MOUSE_DBLCLK_LISTENER_CALLBACK &callback
 	);
 
-	EMouseDoubleClickListener(
+	EListenerMouseDoubleClick(
 		const EString &name,
 		const MOUSE_DBLCLK_LISTENER_CALLBACK &callback
 	);
@@ -215,21 +215,21 @@ protected:
 
 
 // 鼠标拖动消息监听器
-class EMouseDragListener :
-	public EMouseListener
+class EListenerMouseDrag :
+	public EListenerMouse
 {
 public:
-	EMouseDragListener();
+	EListenerMouseDrag();
 
-	EMouseDragListener(
+	EListenerMouseDrag(
 		const EString &name
 	);
 
-	EMouseDragListener(
+	EListenerMouseDrag(
 		const MOUSE_DRAG_LISTENER_CALLBACK &callback
 	);
 
-	EMouseDragListener(
+	EListenerMouseDrag(
 		const EString &name,
 		const MOUSE_DRAG_LISTENER_CALLBACK &callback
 	);
@@ -250,23 +250,23 @@ protected:
 
 
 // 按键消息监听器
-class EKeyboardListener :
+class EListenerKeyboard :
 	public EListener
 {
 	friend EMsgManager;
 
 public:
-	EKeyboardListener();
+	EListenerKeyboard();
 
-	EKeyboardListener(
+	EListenerKeyboard(
 		const EString &name
 	);
 
-	EKeyboardListener(
+	EListenerKeyboard(
 		const KEY_LISTENER_CALLBACK &callback
 	);
 
-	EKeyboardListener(
+	EListenerKeyboard(
 		const EString &name,
 		const KEY_LISTENER_CALLBACK &callback
 	);
@@ -296,23 +296,23 @@ protected:
 
 
 // 按键按下消息监听
-class EKeyboardPressListener :
-	public EKeyboardListener
+class EListenerKeyboardPress :
+	public EListenerKeyboard
 {
 	friend EMsgManager;
 
 public:
-	EKeyboardPressListener();
+	EListenerKeyboardPress();
 
-	EKeyboardPressListener(
+	EListenerKeyboardPress(
 		const EString &name
 	);
 
-	EKeyboardPressListener(
+	EListenerKeyboardPress(
 		const KEY_LISTENER_CALLBACK &callback
 	);
 
-	EKeyboardPressListener(
+	EListenerKeyboardPress(
 		const EString &name,
 		const KEY_LISTENER_CALLBACK &callback
 	);
@@ -330,23 +330,23 @@ typedef std::function<void(ENode *active, ENode *passive, int relation)> PHYSICS
 typedef std::function<void(ENode *active, ENode *passive)> COLLISION_LISTENER_CALLBACK;
 
 // 物理世界消息监听器
-class EPhysicsListener :
+class EListenerPhysics :
 	public EListener
 {
 	friend EPhysicsManager;
 
 public:
-	EPhysicsListener();
+	EListenerPhysics();
 
-	EPhysicsListener(
+	EListenerPhysics(
 		const EString &name
 	);
 
-	EPhysicsListener(
+	EListenerPhysics(
 		const PHYSICS_LISTENER_CALLBACK &callback
 	);
 
-	EPhysicsListener(
+	EListenerPhysics(
 		const EString &name,
 		const PHYSICS_LISTENER_CALLBACK &callback
 	);
@@ -375,23 +375,23 @@ protected:
 };
 
 
-class EContactListener :
-	public EPhysicsListener
+class EListenerPhysicsContact :
+	public EListenerPhysics
 {
 	friend EMsgManager;
 
 public:
-	EContactListener();
+	EListenerPhysicsContact();
 
-	EContactListener(
+	EListenerPhysicsContact(
 		const EString &name
 	);
 
-	EContactListener(
+	EListenerPhysicsContact(
 		const COLLISION_LISTENER_CALLBACK &callback
 	);
 
-	EContactListener(
+	EListenerPhysicsContact(
 		const EString &name,
 		const COLLISION_LISTENER_CALLBACK &callback
 	);

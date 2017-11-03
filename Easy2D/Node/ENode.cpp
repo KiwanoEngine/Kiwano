@@ -379,14 +379,24 @@ void e2d::ENode::setPos(float x, float y)
 	m_bTransformChildrenNeeded = true;
 }
 
-void e2d::ENode::move(float x, float y)
+void e2d::ENode::movePosX(float x)
+{
+	this->movePos(x, 0);
+}
+
+void e2d::ENode::movePosY(float y)
+{
+	this->movePos(0, y);
+}
+
+void e2d::ENode::movePos(float x, float y)
 {
 	this->setPos(m_Pos.x + x, m_Pos.y + y);
 }
 
-void e2d::ENode::move(const EVec & v)
+void e2d::ENode::movePos(const EVec & v)
 {
-	this->move(v.x, v.y);
+	this->movePos(v.x, v.y);
 }
 
 void e2d::ENode::_setWidth(float width)

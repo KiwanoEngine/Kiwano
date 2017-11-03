@@ -12,17 +12,20 @@ void e2d::EActionRotateBy::_init()
 	EActionGradual::_init();
 	if (m_pTarget)
 	{
-		m_nBeginVal = m_pTarget->getOpacity();
+		m_nBeginVal = m_pTarget->getRotation();
 	}
 }
 
 void e2d::EActionRotateBy::_callOn()
 {
+	EAction::_callOn();
+
 	if (m_pTarget == nullptr)
 	{
 		this->stop();
 		return;
 	}
+
 	while (EActionGradual::_isDelayEnough())
 	{
 		// Ðý×ª½Úµã

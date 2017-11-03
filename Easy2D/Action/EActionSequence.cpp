@@ -37,10 +37,7 @@ void e2d::EActionSequence::_init()
 	{
 		for (auto action : m_vActions)
 		{
-			if (!action->getTarget())
-			{
-				action->setTarget(m_pTarget);
-			}
+			action->setTarget(m_pTarget);
 		}
 	}
 	// 初始化第一个动作
@@ -49,6 +46,8 @@ void e2d::EActionSequence::_init()
 
 void e2d::EActionSequence::_callOn()
 {
+	EAction::_callOn();
+
 	auto &action = m_vActions[m_nActionIndex];
 	action->_callOn();
 

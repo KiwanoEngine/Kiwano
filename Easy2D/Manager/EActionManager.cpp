@@ -149,11 +149,6 @@ void e2d::EActionManager::ActionProc()
 			}
 			else
 			{
-				// 初始化动作
-				if (!action->m_bInit)
-				{
-					action->_init();
-				}
 				// 执行动作
 				action->_callOn();
 			}

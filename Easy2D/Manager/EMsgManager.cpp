@@ -5,9 +5,9 @@
 
 
 // 鼠标消息监听器
-e2d::EVector<e2d::EMouseListener*> s_vMouseListeners;
+e2d::EVector<e2d::EListenerMouse*> s_vMouseListeners;
 // 按键消息监听器
-e2d::EVector<e2d::EKeyboardListener*> s_vKeyboardListeners;
+e2d::EVector<e2d::EListenerKeyboard*> s_vKeyboardListeners;
 
 
 void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
@@ -60,20 +60,20 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void e2d::EMsgManager::bindListener(e2d::EMouseListener * listener, EScene * pParentScene, bool always /* = false */)
+void e2d::EMsgManager::bindListener(e2d::EListenerMouse * listener, EScene * pParentScene, bool always /* = false */)
 {
 	EMsgManager::bindListener(listener, pParentScene->getRoot(), always);
 }
 
-void e2d::EMsgManager::bindListener(EKeyboardListener * listener, EScene * pParentScene, bool always /* = false */)
+void e2d::EMsgManager::bindListener(EListenerKeyboard * listener, EScene * pParentScene, bool always /* = false */)
 {
 	EMsgManager::bindListener(listener, pParentScene->getRoot(), always);
 }
 
-void e2d::EMsgManager::bindListener(EMouseListener * listener, ENode * pParentNode, bool always /* = false */)
+void e2d::EMsgManager::bindListener(EListenerMouse * listener, ENode * pParentNode, bool always /* = false */)
 {
-	WARN_IF(listener == nullptr, "EMouseListener NULL pointer exception!");
-	WARN_IF(pParentNode == nullptr, "Bind EMouseListener with a NULL ENode pointer!");
+	WARN_IF(listener == nullptr, "EListenerMouse NULL pointer exception!");
+	WARN_IF(pParentNode == nullptr, "Bind EListenerMouse with a NULL ENode pointer!");
 
 	if (listener && pParentNode)
 	{
@@ -90,10 +90,10 @@ void e2d::EMsgManager::bindListener(EMouseListener * listener, ENode * pParentNo
 	}
 }
 
-void e2d::EMsgManager::bindListener(EKeyboardListener * listener, ENode * pParentNode, bool always /* = false */)
+void e2d::EMsgManager::bindListener(EListenerKeyboard * listener, ENode * pParentNode, bool always /* = false */)
 {
-	WARN_IF(listener == nullptr, "EKeyboardListener NULL pointer exception!");
-	WARN_IF(pParentNode == nullptr, "Bind EKeyboardListener with a NULL ENode pointer!");
+	WARN_IF(listener == nullptr, "EListenerKeyboard NULL pointer exception!");
+	WARN_IF(pParentNode == nullptr, "Bind EListenerKeyboard with a NULL ENode pointer!");
 
 	if (listener && pParentNode)
 	{
@@ -135,7 +135,7 @@ void e2d::EMsgManager::stopMouseListeners(const EString & name)
 void e2d::EMsgManager::delMouseListeners(const EString & name)
 {
 	// 删除鼠标消息监听器
-	EVector<EMouseListener*>::iterator mIter;
+	EVector<EListenerMouse*>::iterator mIter;
 	for (mIter = s_vMouseListeners.begin(); mIter != s_vMouseListeners.end();)
 	{
 		if ((*mIter)->getName() == name)
@@ -177,7 +177,7 @@ void e2d::EMsgManager::stopKeyboardListeners(const EString & name)
 void e2d::EMsgManager::delKeyboardListeners(const EString & name)
 {
 	// 删除按键消息监听器
-	EVector<EKeyboardListener*>::iterator kIter;
+	EVector<EListenerKeyboard*>::iterator kIter;
 	for (kIter = s_vKeyboardListeners.begin(); kIter != s_vKeyboardListeners.end();)
 	{
 		if ((*kIter)->getName() == name)

@@ -141,13 +141,23 @@ public:
 	);
 
 	// 移动节点
-	virtual void move(
+	virtual void movePosX(
+		float x
+	);
+
+	// 移动节点
+	virtual void movePosY(
+		float y
+	);
+
+	// 移动节点
+	virtual void movePos(
 		float x,
 		float y
 	);
 
 	// 移动节点
-	virtual void move(
+	virtual void movePos(
 		const EVec & v
 	);
 
@@ -396,8 +406,8 @@ public:
 
 	// 读取程序资源
 	ETexture(
-		const EString & resourceName,
-		const EString & resourceType
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
 	);
 
 	virtual ~ETexture();
@@ -409,8 +419,8 @@ public:
 
 	// 读取程序资源
 	void loadFromResource(
-		const EString & resourceName,
-		const EString & resourceType
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
 	);
 
 	// 获取源图片宽度
@@ -429,8 +439,8 @@ public:
 
 	// 预加载资源
 	static bool preload(
-		const EString & resourceName,
-		const EString & resourceType
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
 	);
 
 	// 清空缓存
@@ -465,8 +475,8 @@ public:
 
 	// 创建空的精灵帧
 	ESpriteFrame(
-		const EString & resourceName,
-		const EString & resourceType
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
 	);
 
 	// 创建空的精灵帧
@@ -489,8 +499,8 @@ public:
 
 	// 创建空的精灵帧
 	ESpriteFrame(
-		const EString & resourceName,
-		const EString & resourceType,
+		LPCTSTR resourceName,
+		LPCTSTR resourceType,
 		float x,
 		float y,
 		float width,
@@ -564,14 +574,14 @@ public:
 
 	// 从资源图片创建精灵
 	ESprite(
-		const EString & resourceName,
-		const EString & resourceType
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
 	);
 
 	// 从资源图片创建精灵并裁剪
 	ESprite(
-		const EString & resourceName,
-		const EString & resourceType,
+		LPCTSTR resourceName,
+		LPCTSTR resourceType,
 		float x,
 		float y,
 		float width,
@@ -592,8 +602,8 @@ public:
 
 	// 从资源加载纹理
 	void loadFrom(
-		const EString & resourceName,
-		const EString & resourceType
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
 	);
 
 	// 加载纹理并裁剪

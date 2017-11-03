@@ -11,8 +11,8 @@ namespace e2d
 class EScene;
 class ENode;
 class EObjectManager;
-class EMouseListener;
-class EKeyboardListener;
+class EListenerMouse;
+class EListenerKeyboard;
 class EAction;
 class ETransition;
 
@@ -109,6 +109,9 @@ public:
 	// 获取窗口高度
 	static float getHeight();
 
+	// 获取窗口大小
+	static ESize getSize();
+
 	// 获取当前场景
 	static EScene * getCurrentScene();
 
@@ -183,7 +186,7 @@ protected:
 	EString	m_sTitle;
 	EString	m_sAppName;
 	UINT32	m_ClearColor;
-	LONGLONG nAnimationInterval;
+	LONGLONG m_nAnimationInterval;
 	EScene * m_pCurrentScene;
 	EScene * m_pNextScene;
 };

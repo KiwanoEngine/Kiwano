@@ -1,39 +1,39 @@
 #include "..\elisteners.h"
 #include "..\emanagers.h"
 
-e2d::EKeyboardListener::EKeyboardListener()
+e2d::EListenerKeyboard::EListenerKeyboard()
 	: EListener()
 {
 }
 
-e2d::EKeyboardListener::EKeyboardListener(const EString & name)
+e2d::EListenerKeyboard::EListenerKeyboard(const EString & name)
 	: EListener(name)
 {
 }
 
-e2d::EKeyboardListener::EKeyboardListener(const KEY_LISTENER_CALLBACK & callback)
+e2d::EListenerKeyboard::EListenerKeyboard(const KEY_LISTENER_CALLBACK & callback)
 	: EListener()
 {
 	m_Callback = callback;
 }
 
-e2d::EKeyboardListener::EKeyboardListener(const EString & name, const KEY_LISTENER_CALLBACK & callback)
+e2d::EListenerKeyboard::EListenerKeyboard(const EString & name, const KEY_LISTENER_CALLBACK & callback)
 	: EListener(name)
 {
 	m_Callback = callback;
 }
 
-void e2d::EKeyboardListener::_callOn()
+void e2d::EListenerKeyboard::_callOn()
 {
 	m_Callback();
 }
 
-void e2d::EKeyboardListener::setCallback(const KEY_LISTENER_CALLBACK & callback)
+void e2d::EListenerKeyboard::setCallback(const KEY_LISTENER_CALLBACK & callback)
 {
 	m_Callback = callback;
 }
 
-void e2d::EKeyboardListener::bindWith(EScene * pParentScene)
+void e2d::EListenerKeyboard::bindWith(EScene * pParentScene)
 {
 	WARN_IF(m_pParentNode != nullptr, "A listener cannot bind with two object.");
 
@@ -43,7 +43,7 @@ void e2d::EKeyboardListener::bindWith(EScene * pParentScene)
 	}
 }
 
-void e2d::EKeyboardListener::bindWith(ENode * pParentNode)
+void e2d::EListenerKeyboard::bindWith(ENode * pParentNode)
 {
 	WARN_IF(m_pParentNode != nullptr, "A listener cannot bind with two object.");
 

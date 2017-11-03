@@ -30,11 +30,14 @@ void e2d::EAnimation::_init()
 
 void e2d::EAnimation::_callOn()
 {
+	EAction::_callOn();
+
 	if (m_pTarget == nullptr)
 	{
 		this->stop();
 		return;
 	}
+
 	// 判断时间间隔是否足够
 	while (GetInterval(m_tLast) > m_nAnimationInterval)
 	{

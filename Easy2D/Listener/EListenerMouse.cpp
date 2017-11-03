@@ -1,39 +1,39 @@
 #include "..\elisteners.h"
 #include "..\emanagers.h"
 
-e2d::EMouseListener::EMouseListener()
+e2d::EListenerMouse::EListenerMouse()
 	: EListener()
 {
 }
 
-e2d::EMouseListener::EMouseListener(const EString & name)
+e2d::EListenerMouse::EListenerMouse(const EString & name)
 	: EListener(name)
 {
 }
 
-e2d::EMouseListener::EMouseListener(const MOUSE_LISTENER_CALLBACK & callback)
+e2d::EListenerMouse::EListenerMouse(const MOUSE_LISTENER_CALLBACK & callback)
 	: EListener()
 {
 	m_Callback = callback;
 }
 
-e2d::EMouseListener::EMouseListener(const EString & name, const MOUSE_LISTENER_CALLBACK & callback)
+e2d::EListenerMouse::EListenerMouse(const EString & name, const MOUSE_LISTENER_CALLBACK & callback)
 	: EListener(name)
 {
 	m_Callback = callback;
 }
 
-void e2d::EMouseListener::_callOn()
+void e2d::EListenerMouse::_callOn()
 {
 	m_Callback();
 }
 
-void e2d::EMouseListener::setCallback(const MOUSE_LISTENER_CALLBACK & callback)
+void e2d::EListenerMouse::setCallback(const MOUSE_LISTENER_CALLBACK & callback)
 {
 	m_Callback = callback;
 }
 
-void e2d::EMouseListener::bindWith(EScene * pParentScene)
+void e2d::EListenerMouse::bindWith(EScene * pParentScene)
 {
 	WARN_IF(m_pParentNode != nullptr, "A listener cannot bind with two object.");
 
@@ -43,7 +43,7 @@ void e2d::EMouseListener::bindWith(EScene * pParentScene)
 	}
 }
 
-void e2d::EMouseListener::bindWith(ENode * pParentNode)
+void e2d::EListenerMouse::bindWith(ENode * pParentNode)
 {
 	WARN_IF(m_pParentNode != nullptr, "A listener cannot bind with two object.");
 

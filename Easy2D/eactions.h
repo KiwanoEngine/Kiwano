@@ -65,7 +65,7 @@ protected:
 	virtual void _init();
 
 	// 执行动作
-	virtual void _callOn() = 0;
+	virtual void _callOn();
 
 	// 获取动作结束状态
 	virtual bool _isEnding();
@@ -527,7 +527,8 @@ class EActionLoop :
 public:
 	// 创建循环动作
 	EActionLoop(
-		EAction * action	/* 执行循环的动作 */
+		EAction * action,	/* 执行循环的动作 */
+		int times = -1		/* 循环次数 */
 	);
 
 	virtual ~EActionLoop();
@@ -546,7 +547,9 @@ protected:
 	virtual void _reset() override;
 
 protected:
-	EAction * m_Action;
+	EAction * m_pAction;
+	int m_nTimes;
+	int m_nTotalTimes;
 };
 
 

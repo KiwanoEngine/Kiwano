@@ -21,6 +21,12 @@ void e2d::EActionGradual::_init()
 bool e2d::EActionGradual::_isDelayEnough()
 {
 	// 判断时间间隔是否足够
+	if (m_fTotalDuration == 0)
+	{
+		m_fRateOfProgress = 1;
+		return true;
+	}
+
 	if (GetInterval(m_tLast) > m_nAnimationInterval)
 	{
 		// 重新记录时间

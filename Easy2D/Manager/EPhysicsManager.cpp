@@ -4,7 +4,7 @@
 #include "..\egeometry.h"
 
 // 监听器集合
-e2d::EVector<e2d::EPhysicsListener*> s_vListeners;
+e2d::EVector<e2d::EListenerPhysics*> s_vListeners;
 // 形状集合
 e2d::EVector<e2d::EGeometry*> s_vGeometries;
 
@@ -62,15 +62,15 @@ void e2d::EPhysicsManager::PhysicsListenerProc()
 	}
 }
 
-void e2d::EPhysicsManager::bindListener(EPhysicsListener * listener, EScene * pParentScene)
+void e2d::EPhysicsManager::bindListener(EListenerPhysics * listener, EScene * pParentScene)
 {
 	EPhysicsManager::bindListener(listener, pParentScene->getRoot());
 }
 
-void e2d::EPhysicsManager::bindListener(EPhysicsListener * listener, ENode * pParentNode)
+void e2d::EPhysicsManager::bindListener(EListenerPhysics * listener, ENode * pParentNode)
 {
-	WARN_IF(listener == nullptr, "EPhysicsListener NULL pointer exception!");
-	WARN_IF(pParentNode == nullptr, "EPhysicsListener add to a NULL ENode pointer!");
+	WARN_IF(listener == nullptr, "EListenerPhysics NULL pointer exception!");
+	WARN_IF(pParentNode == nullptr, "EListenerPhysics add to a NULL ENode pointer!");
 
 	if (listener && pParentNode)
 	{
@@ -135,7 +135,7 @@ void e2d::EPhysicsManager::stopListeners(const EString & name)
 
 void e2d::EPhysicsManager::delListeners(const EString & name)
 {
-	EVector<EPhysicsListener*>::iterator iter;
+	EVector<EListenerPhysics*>::iterator iter;
 	for (iter = s_vListeners.begin(); iter != s_vListeners.end();)
 	{
 		if ((*iter)->getName() == name)

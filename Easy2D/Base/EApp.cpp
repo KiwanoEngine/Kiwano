@@ -19,6 +19,7 @@ static std::stack<e2d::EScene*> s_SceneStack;
 // 游戏开始时间
 static steady_clock::time_point s_tStart;
 
+
 e2d::EApp::EApp()
 	: m_bEnd(false)
 	, m_bPaused(false)
@@ -26,7 +27,7 @@ e2d::EApp::EApp()
 	, m_bTransitional(false)
 	, m_bTopMost(false)
 	, m_bShowConsole(false)
-	, nAnimationInterval(17LL)
+	, m_nAnimationInterval(17LL)
 	, m_ClearColor(EColor::BLACK)
 	, m_pCurrentScene(nullptr)
 	, m_pNextScene(nullptr)
@@ -112,7 +113,7 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 	// 取最小值
 	width = min(width, screenWidth);
 	height = min(height, screenHeight);
-		
+
 	// 创建窗口样式
 	DWORD dwStyle = WS_OVERLAPPED | WS_SYSMENU;
 	if (!wStyle.m_bNoMiniSize)
@@ -251,9 +252,10 @@ void e2d::EApp::run()
 	{
 		SetWindowPos(GetHWnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 	}
+
 	// 记录开始时间
 	s_tStart = steady_clock::now();
-
+	// 窗口消息
 	MSG msg;
 
 	while (!m_bEnd)
@@ -275,7 +277,7 @@ void e2d::EApp::run()
 void e2d::EApp::setFPS(UINT32 fps)
 {
 	fps = min(max(fps, 30), 120);
-	s_pInstance->nAnimationInterval = 1000 / fps;
+	s_pInstance->m_nAnimationInterval = 1000 / fps;
 }
 
 bool e2d::EApp::onActivate()
@@ -295,10 +297,10 @@ bool e2d::EApp::onCloseWindow()
 
 void e2d::EApp::_mainLoop()
 {
-	// 时间间隔
-	static LONGLONG nInterval = 0LL;
 	// 挂起时长
 	static LONGLONG nWaitMS = 0L;
+	// 时间间隔
+	static LONGLONG nInterval;
 	// 上一帧画面绘制时间
 	static steady_clock::time_point tLast = steady_clock::now();
 
@@ -307,10 +309,10 @@ void e2d::EApp::_mainLoop()
 	// 计算时间间隔
 	nInterval = GetInterval(tLast);
 	// 判断间隔时间是否足够
-	if (nInterval >= nAnimationInterval)
+	if (nInterval >= m_nAnimationInterval)
 	{
 		// 记录当前时间
-		tLast += microseconds(nAnimationInterval);
+		tLast += microseconds(m_nAnimationInterval);
 		// 游戏控制流程
 		_onControl();
 		// 刷新游戏画面
@@ -319,7 +321,7 @@ void e2d::EApp::_mainLoop()
 	else
 	{
 		// 计算挂起时长
-		nWaitMS = nAnimationInterval - nInterval - 1;
+		nWaitMS = m_nAnimationInterval - nInterval - 1;
 		// 挂起线程，释放 CPU 占用
 		if (nWaitMS > 1LL)
 		{
@@ -434,6 +436,11 @@ float e2d::EApp::getWidth()
 float e2d::EApp::getHeight()
 {
 	return GetRenderTarget()->GetSize().height;
+}
+
+e2d::ESize e2d::EApp::getSize()
+{
+	return ESize(GetRenderTarget()->GetSize().width, GetRenderTarget()->GetSize().height);
 }
 
 void e2d::EApp::enterScene(EScene * scene, bool saveCurrentScene /* = true */)

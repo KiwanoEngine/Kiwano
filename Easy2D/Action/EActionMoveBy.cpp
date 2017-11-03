@@ -18,11 +18,14 @@ void e2d::EActionMoveBy::_init()
 
 void e2d::EActionMoveBy::_callOn()
 {
+	EAction::_callOn();
+
 	if (m_pTarget == nullptr)
 	{
 		this->stop();
 		return;
 	}
+
 	while (EActionGradual::_isDelayEnough())
 	{
 		// ÒÆ¶¯½Úµã

@@ -18,6 +18,7 @@ void e2d::EActionDelay::_init()
 
 void e2d::EActionDelay::_callOn()
 {
+	EAction::_callOn();
 	// 判断时间间隔是否足够
 	if (GetInterval(m_tLast) > m_nAnimationInterval)
 	{

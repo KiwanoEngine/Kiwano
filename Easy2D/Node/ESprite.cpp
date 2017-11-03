@@ -33,13 +33,13 @@ e2d::ESprite::ESprite(const EString & imageFileName, float x, float y, float wid
 	clip(x, y, width, height);
 }
 
-e2d::ESprite::ESprite(const EString & resourceName, const EString & resourceType)
+e2d::ESprite::ESprite(LPCTSTR resourceName, LPCTSTR resourceType)
 	: ESprite()
 {
 	loadFrom(resourceName, resourceType);
 }
 
-e2d::ESprite::ESprite(const EString & resourceName, const EString & resourceType, float x, float y, float width, float height)
+e2d::ESprite::ESprite(LPCTSTR resourceName, LPCTSTR resourceType, float x, float y, float width, float height)
 {
 	loadFrom(resourceName, resourceType);
 	clip(x, y, width, height);
@@ -69,7 +69,7 @@ void e2d::ESprite::loadFrom(const EString & imageFileName)
 	loadFrom(new ETexture(imageFileName));
 }
 
-void e2d::ESprite::loadFrom(const EString & resourceName, const EString & resourceType)
+void e2d::ESprite::loadFrom(LPCTSTR resourceName, LPCTSTR resourceType)
 {
 	loadFrom(new ETexture(resourceName, resourceType));
 }

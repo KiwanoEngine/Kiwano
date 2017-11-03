@@ -18,11 +18,14 @@ void e2d::EActionOpacityBy::_init()
 
 void e2d::EActionOpacityBy::_callOn()
 {
+	EAction::_callOn();
+
 	if (m_pTarget == nullptr)
 	{
 		this->stop();
 		return;
 	}
+
 	while (EActionGradual::_isDelayEnough())
 	{
 		// 设置节点透明度
