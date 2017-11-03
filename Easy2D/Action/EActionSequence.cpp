@@ -9,16 +9,14 @@ e2d::EActionSequence::EActionSequence() :
 e2d::EActionSequence::EActionSequence(int number, EAction * action1, ...) :
 	m_nActionIndex(0)
 {
-	va_list params;
-	va_start(params, number);
+	EAction ** ppAction = &action1;
 
 	while (number > 0)
 	{
-		this->addAction(va_arg(params, EAction*));
+		this->addAction(*ppAction);
+		ppAction++;
 		number--;
 	}
-
-	va_end(params);
 }
 
 e2d::EActionSequence::~EActionSequence()
@@ -77,8 +75,11 @@ void e2d::EActionSequence::_reset()
 
 void e2d::EActionSequence::addAction(EAction * action)
 {
-	m_vActions.push_back(action);
-	action->retain();
+	if (action)
+	{
+		m_vActions.push_back(action);
+		action->retain();
+	}
 }
 
 e2d::EActionSequence * e2d::EActionSequence::clone() const

@@ -109,6 +109,8 @@ void e2d::EButton::setDisable(bool disable)
 
 void e2d::EButton::setCallback(const BUTTON_CLICK_CALLBACK & callback)
 {
+	EMsgManager::stopAllMouseListenersBindedWith(this);
+
 	auto listener = new EListenerMouse(std::bind(&EButton::_listenerCallback, this));
 	EMsgManager::bindListener(listener, this, true);
 	m_Callback = callback;
@@ -153,6 +155,11 @@ void e2d::EButton::_listenerCallback()
 {
 	if (!m_bIsDisable)
 	{
+		if (!m_pDisplayed)
+		{
+			m_pDisplayed = m_pNormal;
+		}
+
 		if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DOWN &&
 			m_pDisplayed &&
 			m_pDisplayed->isPointIn(EMouseMsg::getPos()))

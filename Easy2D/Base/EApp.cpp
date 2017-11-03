@@ -625,173 +625,136 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 {
 	// 处理窗口消息
 	LRESULT result = 0;
+	e2d::EApp *pEApp = EApp::get();
 
-	if (message == WM_CREATE)
+	if (pEApp)
 	{
-		// 获取发送 WM_CREATE 消息的 EApp 实例对象指针
-		LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
-		e2d::EApp *pEApp = (e2d::EApp *)pcs->lpCreateParams;
-		// 保存 EApp 指针到 GWLP_USERDATA 字段
-		::SetWindowLongPtrW(
-			hWnd,
-			GWLP_USERDATA,
-			PtrToUlong(pEApp)
-		);
-
-		result = 1;
-	}
-	else
-	{
-		// 从 GWLP_USERDATA 字段取出 EApp 指针
-		e2d::EApp *pEApp = reinterpret_cast<e2d::EApp *>(static_cast<LONG_PTR>(
-			::GetWindowLongPtrW(
-				hWnd,
-				GWLP_USERDATA
-			)));
-
-		bool wasHandled = false;
-
-		if (pEApp)
+		switch (message)
 		{
-			switch (message)
+		// 处理鼠标消息
+		case WM_LBUTTONUP:
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONDBLCLK:
+		case WM_MBUTTONUP:
+		case WM_MBUTTONDOWN:
+		case WM_MBUTTONDBLCLK:
+		case WM_RBUTTONUP:
+		case WM_RBUTTONDOWN:
+		case WM_RBUTTONDBLCLK:
+		case WM_MOUSEMOVE:
+		case WM_MOUSEWHEEL:
+		{
+			// 执行场景切换时屏蔽按键和鼠标消息
+			if (!pEApp->m_bTransitional && !pEApp->m_pNextScene)
 			{
-			// 处理鼠标消息
-			case WM_LBUTTONUP:
-			case WM_LBUTTONDOWN:
-			case WM_LBUTTONDBLCLK:
-			case WM_MBUTTONUP:
-			case WM_MBUTTONDOWN:
-			case WM_MBUTTONDBLCLK:
-			case WM_RBUTTONUP:
-			case WM_RBUTTONDOWN:
-			case WM_RBUTTONDBLCLK:
-			case WM_MOUSEMOVE:
-			case WM_MOUSEWHEEL:
-			{
-				// 执行场景切换时屏蔽按键和鼠标消息
-				if (!pEApp->m_bTransitional && !pEApp->m_pNextScene)
-				{
-					EMsgManager::MouseProc(message, wParam, lParam);
-				}
-			}
-			result = 0;
-			wasHandled = true;
-			break;
-
-			// 处理按键消息
-			case WM_KEYDOWN:
-			case WM_KEYUP:
-			{
-				// 执行场景切换时屏蔽按键和鼠标消息
-				if (!pEApp->m_bTransitional && !pEApp->m_pNextScene)
-				{
-					EMsgManager::KeyboardProc(message, wParam, lParam);
-				}
-			}
-			result = 0;
-			wasHandled = true;
-			break;
-
-			// 处理窗口大小变化消息
-			case WM_SIZE:
-			{
-				UINT width = LOWORD(lParam);
-				UINT height = HIWORD(lParam);
-				// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
-				// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
-				// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-				GetRenderTarget()->Resize(D2D1::SizeU(width, height));
-			}
-			result = 0;
-			wasHandled = true;
-			break;
-
-			// 处理分辨率变化消息
-			case WM_DISPLAYCHANGE:
-			{
-				// 重绘客户区
-				InvalidateRect(hWnd, NULL, FALSE);
-			}
-			result = 0;
-			wasHandled = true;
-			break;
-
-			// 重绘窗口
-			case WM_PAINT:
-			{
-				pEApp->_onRender();
-				ValidateRect(hWnd, NULL);
-			}
-			result = 0;
-			wasHandled = true;
-			break;
-
-			// 窗口激活消息
-			case WM_ACTIVATE:
-			{
-				if (LOWORD(wParam) == WA_INACTIVE)
-				{
-					if (pEApp->getCurrentScene() && 
-						pEApp->getCurrentScene()->onInactive() &&
-						pEApp->onInactive())
-					{
-						pEApp->m_bPaused = true;
-					}
-				}
-				else
-				{
-					if (pEApp->getCurrentScene() && 
-						pEApp->getCurrentScene()->onActivate() &&
-						pEApp->onActivate())
-					{
-						pEApp->m_bPaused = false;
-					}
-				}
-			}
-			result = 1;
-			wasHandled = true;
-			break;
-
-			// 窗口关闭消息
-			case WM_CLOSE:
-			{
-				if (!pEApp->getCurrentScene())
-				{
-					if (pEApp->onCloseWindow())
-					{
-						DestroyWindow(hWnd);
-					}
-				}
-				else 
-				{
-					if (pEApp->getCurrentScene()->onCloseWindow() &&
-						pEApp->onCloseWindow())
-					{
-						DestroyWindow(hWnd);
-					}
-				}
-			}
-			result = 1;
-			wasHandled = true;
-			break;
-
-			// 窗口被销毁
-			case WM_DESTROY:
-			{
-				// 退出程序
-				pEApp->quit();
-				// 发送退出消息
-				PostQuitMessage(0);
-			}
-			result = 1;
-			wasHandled = true;
-			break;
+				EMsgManager::MouseProc(message, wParam, lParam);
 			}
 		}
+		result = 0;
+		break;
 
-		// 对当前消息没有特定的处理程序时，执行默认的窗口函数
-		if (!wasHandled)
+		// 处理按键消息
+		case WM_KEYDOWN:
+		case WM_KEYUP:
 		{
+			// 执行场景切换时屏蔽按键和鼠标消息
+			if (!pEApp->m_bTransitional && !pEApp->m_pNextScene)
+			{
+				EMsgManager::KeyboardProc(message, wParam, lParam);
+			}
+		}
+		result = 0;
+		break;
+
+		// 处理窗口大小变化消息
+		case WM_SIZE:
+		{
+			UINT width = LOWORD(lParam);
+			UINT height = HIWORD(lParam);
+			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
+			// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
+			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
+			GetRenderTarget()->Resize(D2D1::SizeU(width, height));
+		}
+		break;
+
+		// 处理分辨率变化消息
+		case WM_DISPLAYCHANGE:
+		{
+			// 重绘客户区
+			InvalidateRect(hWnd, NULL, FALSE);
+		}
+		result = 0;
+		break;
+
+		// 重绘窗口
+		case WM_PAINT:
+		{
+			pEApp->_onRender();
+			ValidateRect(hWnd, NULL);
+		}
+		result = 0;
+		break;
+
+		// 窗口激活消息
+		case WM_ACTIVATE:
+		{
+			if (LOWORD(wParam) == WA_INACTIVE)
+			{
+				if (pEApp->getCurrentScene() && 
+					pEApp->getCurrentScene()->onInactive() &&
+					pEApp->onInactive())
+				{
+					pEApp->m_bPaused = true;
+				}
+			}
+			else
+			{
+				if (pEApp->getCurrentScene() && 
+					pEApp->getCurrentScene()->onActivate() &&
+					pEApp->onActivate())
+				{
+					pEApp->m_bPaused = false;
+				}
+			}
+		}
+		result = 1;
+		break;
+
+		// 窗口关闭消息
+		case WM_CLOSE:
+		{
+			if (!pEApp->getCurrentScene())
+			{
+				if (pEApp->onCloseWindow())
+				{
+					DestroyWindow(hWnd);
+				}
+			}
+			else 
+			{
+				if (pEApp->getCurrentScene()->onCloseWindow() &&
+					pEApp->onCloseWindow())
+				{
+					DestroyWindow(hWnd);
+				}
+			}
+		}
+		result = 1;
+		break;
+
+		// 窗口被销毁
+		case WM_DESTROY:
+		{
+			// 退出程序
+			pEApp->quit();
+			// 发送退出消息
+			PostQuitMessage(0);
+		}
+		result = 1;
+		break;
+
+		default:
 			result = DefWindowProc(hWnd, message, wParam, lParam);
 		}
 	}

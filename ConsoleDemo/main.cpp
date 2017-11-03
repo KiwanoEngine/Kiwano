@@ -1,4 +1,4 @@
-#include "..\Easy2D\easy2d.h"
+#include <easy2d.h>
 
 int main()
 {
@@ -6,6 +6,7 @@ int main()
 
 	if (app.init(L"Easy2D Demo", 320, 320))
 	{
+		app.showConsole();
 		auto scene = new EScene();
 
 		auto sprite = new ESprite(L"elyse.png");
@@ -17,20 +18,15 @@ int main()
 		// 移动精灵的位置
 		sprite->setPos(width / 2, height / 2);
 		//sprite->setAnchor(0, 0);
-		scene->add(sprite);
+		//scene->add(sprite);
 		auto text = new EText(L"balabalabalabalabala", L"宋体", 80, EColor::BLUE);
-		//text->setWordWrapping(true);
-		//text->setWordWrappingWidth(50);
-		text->setAnchor(0, 0);
-		
-		auto listener = new EListenerMouseClick([=](EPoint) {
-			EPoint p = EMouseMsg::getPos();
-			sprite->setPos(p);
-		});
-		listener->bindWith(scene);
-		EMsgManager::stopAllMouseListeners();
-		EMsgManager::stopAllKeyboardListeners();
 		scene->add(text, -1);
+		sprite->setName(L"test");
+		auto button = new EButton(sprite, [=] {
+			EApp::enterScene(new EScene);
+		});
+		scene->add(button);
+
 		app.enterScene(scene);
 
 		app.run();

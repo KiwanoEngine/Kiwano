@@ -20,8 +20,8 @@ public:
 	~MciPlayer();
 
 	void close();
-	bool open(const e2d::EString & pFileName, UINT uId);
-	bool open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, UINT uId);
+	bool open(const e2d::EString & pFileName, size_t uId);
+	bool open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, size_t uId);
 	void play(bool bLoop = false);
 	void pause();
 	void resume();
@@ -29,13 +29,13 @@ public:
 	void rewind();
 	void setVolume(float volume);
 	bool isPlaying();
-	UINT getSoundID();
+	size_t getSoundID();
 
 private:
 	void _sendCommand(int nCommand, DWORD_PTR param1 = 0, DWORD_PTR parma2 = 0);
 
 	MCIDEVICEID m_dev;
-	UINT        m_nSoundID;
+	size_t		m_nSoundID;
 	bool        m_bPlaying;
 	bool		m_bLoop;
 	e2d::EString m_sTempFileName;
@@ -55,7 +55,7 @@ MciPlayer::~MciPlayer()
 	close();	// 关闭播放器
 }
 
-bool MciPlayer::open(const e2d::EString & pFileName, UINT uId)
+bool MciPlayer::open(const e2d::EString & pFileName, size_t uId)
 {
 	// 忽略不存在的文件
 	if (pFileName.empty()) 
@@ -91,7 +91,7 @@ bool MciPlayer::open(const e2d::EString & pFileName, UINT uId)
 	}
 }
 
-bool MciPlayer::open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, UINT uId)
+bool MciPlayer::open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, size_t uId)
 {
 	// 忽略不存在的文件
 	if (pResouceName.empty() || pResouceType.empty() || musicExtension.empty()) return false;
@@ -233,7 +233,7 @@ bool MciPlayer::isPlaying()
 	return m_bPlaying;
 }
 
-UINT MciPlayer::getSoundID()
+size_t MciPlayer::getSoundID()
 {
 	return m_nSoundID;
 }
@@ -257,8 +257,8 @@ void MciPlayer::_sendCommand(int nCommand, DWORD_PTR param1, DWORD_PTR parma2)
 ////////////////////////////////////////////////////////////////////
 
 
-typedef std::map<unsigned int, MciPlayer *> MusicList;
-typedef std::pair<unsigned int, MciPlayer *> Music;
+typedef std::map<size_t, MciPlayer *> MusicList;
+typedef std::pair<size_t, MciPlayer *> Music;
 
 
 static MusicList& getMciPlayerList()
@@ -300,7 +300,7 @@ void e2d::EMusicUtils::setVolume(float volume)
 
 void e2d::EMusicUtils::setVolume(const EString & musicFilePath, float volume)
 {
-	unsigned int nRet = ::Hash(musicFilePath);
+	size_t nRet = ::Hash(musicFilePath);
 
 	MusicList::iterator p = getMciPlayerList().find(nRet);
 	if (p != getMciPlayerList().end())
@@ -370,7 +370,7 @@ void e2d::EMusicUtils::setBackgroundMusicVolume(float volume)
 
 void e2d::EMusicUtils::playMusic(const EString & musicFilePath, bool bLoop)
 {
-	unsigned int nRet = ::Hash(musicFilePath);
+	size_t nRet = ::Hash(musicFilePath);
 
 	preloadMusic(musicFilePath);
 
@@ -383,7 +383,7 @@ void e2d::EMusicUtils::playMusic(const EString & musicFilePath, bool bLoop)
 
 void e2d::EMusicUtils::playMusic(const EString & musicResourceName, const EString & musicResourceType, const EString & musicExtension, bool loop)
 {
-	unsigned int nRet = ::Hash(musicResourceName);
+	size_t nRet = ::Hash(musicResourceName);
 
 	preloadMusic(musicResourceName, musicResourceType, musicExtension);
 
@@ -407,7 +407,7 @@ void e2d::EMusicUtils::preloadMusic(const EString & musicFilePath)
 {
 	if (musicFilePath.empty()) return;
 
-	int nRet = ::Hash(musicFilePath);
+	size_t nRet = ::Hash(musicFilePath);
 
 	if (getMciPlayerList().end() != getMciPlayerList().find(nRet)) return;
 
@@ -426,7 +426,7 @@ void e2d::EMusicUtils::preloadMusic(const EString & musicResourceName, const ESt
 {
 	if (musicResourceName.empty() || musicResourceType.empty()) return;
 
-	int nRet = ::Hash(musicResourceName);
+	size_t nRet = ::Hash(musicResourceName);
 
 	if (getMciPlayerList().end() != getMciPlayerList().find(nRet)) return;
 
@@ -485,7 +485,7 @@ void e2d::EMusicUtils::stopAllMusics()
 
 void e2d::EMusicUtils::unloadMusic(const EString & musicFilePath)
 {
-	unsigned int nID = ::Hash(musicFilePath);
+	size_t nID = ::Hash(musicFilePath);
 
 	MusicList::iterator p = getMciPlayerList().find(nID);
 	if (p != getMciPlayerList().end())
