@@ -503,8 +503,8 @@ void e2d::ENode::setAnchor(float anchorX, float anchorY)
 	if (m_fAnchorX == anchorX && m_fAnchorY == anchorY)
 		return;
 
-	m_fAnchorX = min(max(anchorX, 0), 1);
-	m_fAnchorY = min(max(anchorY, 0), 1);
+	m_fAnchorX = anchorX;
+	m_fAnchorY = anchorY;
 	m_bTransformChildrenNeeded = true;
 }
 
