@@ -60,17 +60,17 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void e2d::EMsgManager::bindListener(e2d::EListenerMouse * listener, EScene * pParentScene, bool always /* = false */)
+void e2d::EMsgManager::bindListener(e2d::EListenerMouse * listener, EScene * pParentScene)
 {
-	EMsgManager::bindListener(listener, pParentScene->getRoot(), always);
+	EMsgManager::bindListener(listener, pParentScene->getRoot());
 }
 
-void e2d::EMsgManager::bindListener(EListenerKeyboard * listener, EScene * pParentScene, bool always /* = false */)
+void e2d::EMsgManager::bindListener(EListenerKeyboard * listener, EScene * pParentScene)
 {
-	EMsgManager::bindListener(listener, pParentScene->getRoot(), always);
+	EMsgManager::bindListener(listener, pParentScene->getRoot());
 }
 
-void e2d::EMsgManager::bindListener(EListenerMouse * listener, ENode * pParentNode, bool always /* = false */)
+void e2d::EMsgManager::bindListener(EListenerMouse * listener, ENode * pParentNode)
 {
 	WARN_IF(listener == nullptr, "EListenerMouse NULL pointer exception!");
 	WARN_IF(pParentNode == nullptr, "Bind EListenerMouse with a NULL ENode pointer!");
@@ -84,13 +84,12 @@ void e2d::EMsgManager::bindListener(EListenerMouse * listener, ENode * pParentNo
 
 		listener->start();
 		listener->retain();
-		listener->m_bAlways = always;
 		listener->m_pParentNode = pParentNode;
 		s_vMouseListeners.push_back(listener);
 	}
 }
 
-void e2d::EMsgManager::bindListener(EListenerKeyboard * listener, ENode * pParentNode, bool always /* = false */)
+void e2d::EMsgManager::bindListener(EListenerKeyboard * listener, ENode * pParentNode)
 {
 	WARN_IF(listener == nullptr, "EListenerKeyboard NULL pointer exception!");
 	WARN_IF(pParentNode == nullptr, "Bind EListenerKeyboard with a NULL ENode pointer!");
@@ -105,7 +104,6 @@ void e2d::EMsgManager::bindListener(EListenerKeyboard * listener, ENode * pParen
 		listener->start();
 		listener->retain();
 		listener->m_pParentNode = pParentNode;
-		listener->m_bAlways = always;
 		s_vKeyboardListeners.push_back(listener);
 	}
 }

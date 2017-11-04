@@ -42,3 +42,8 @@ void e2d::EListener::setName(const EString & name)
 {
 	m_sName = name;
 }
+
+void e2d::EListener::setAlwaysWorking(bool bAlways)
+{
+	m_bAlways = bAlways;
+}

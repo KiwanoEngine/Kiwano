@@ -42,6 +42,11 @@ public:
 		const EString &name
 	);
 
+	// 设置监听器在游戏暂停时继续工作
+	void setAlwaysWorking(
+		bool bAlways
+	);
+
 	// 绑定监听器到场景
 	virtual void bindWith(
 		EScene * pParentScene

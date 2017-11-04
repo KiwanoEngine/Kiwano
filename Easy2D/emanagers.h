@@ -47,15 +47,13 @@ public:
 	// 绑定鼠标消息监听器到场景
 	static void bindListener(
 		EListenerMouse * listener,
-		EScene * pParentScene,
-		bool always = false /* 是否在游戏暂停时仍然监听 */
+		EScene * pParentScene
 	);
 
 	// 绑定鼠标消息监听器到节点
 	static void bindListener(
 		EListenerMouse * listener,
-		ENode * pParentNode,
-		bool always = false /* 是否在游戏暂停时仍然监听 */
+		ENode * pParentNode
 	);
 
 	// 启动具有相同名称的鼠标消息监听器
@@ -102,15 +100,13 @@ public:
 	// 绑定按键消息监听器到场景
 	static void bindListener(
 		EListenerKeyboard * listener,
-		EScene * pParentScene,
-		bool always = false /* 是否在游戏暂停时仍然监听 */
+		EScene * pParentScene
 	);
 
 	// 绑定按键消息监听器到节点
 	static void bindListener(
 		EListenerKeyboard * listener,
-		ENode * pParentNode,
-		bool always = false /* 是否在游戏暂停时仍然监听 */
+		ENode * pParentNode
 	);
 
 	// 启动名称相同的按键消息监听器
