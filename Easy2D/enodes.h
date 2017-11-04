@@ -66,10 +66,10 @@ public:
 	virtual ESize getRealSize() const;
 
 	// 获取节点的锚点
-	virtual float getAnchorX() const;
+	virtual float getPivotX() const;
 
 	// 获取节点的锚点
-	virtual float getAnchorY() const;
+	virtual float getPivotY() const;
 
 	// 获取节点大小
 	virtual ESize getSize() const;
@@ -223,23 +223,23 @@ public:
 		float opacity
 	);
 
-	// 设置纵向锚点
+	// 设置支点的横向位置
 	// 默认为 0.5f, 范围 [0, 1]
-	virtual void setAnchorX(
-		float anchorX
+	virtual void setPivotX(
+		float pivotX
 	);
 
-	// 设置横向锚点
+	// 设置支点的纵向位置
 	// 默认为 0.5f, 范围 [0, 1]
-	virtual void setAnchorY(
-		float anchorY
+	virtual void setPivotY(
+		float pivotY
 	);
 
-	// 设置锚点
+	// 设置支点位置
 	// 默认为 (0.5f, 0.5f), 范围 [0, 1]
-	virtual void setAnchor(
-		float anchorX,
-		float anchorY
+	virtual void setPivot(
+		float pivotX,
+		float pivotY
 	);
 
 	// 设置节点形状
@@ -375,8 +375,8 @@ protected:
 	float		m_fSkewAngleY;
 	float		m_fDisplayOpacity;
 	float		m_fRealOpacity;
-	float		m_fAnchorX;
-	float		m_fAnchorY;
+	float		m_fPivotX;
+	float		m_fPivotY;
 	int			m_nOrder;
 	bool		m_bVisiable;
 	bool		m_bDisplayedInScene;
@@ -387,70 +387,6 @@ protected:
 	ENode *		m_pParent;
 	D2D1::Matrix3x2F	m_Matri;
 	EVector<ENode*>		m_vChildren;
-};
-
-
-class ETexture :
-	public EObject
-{
-	friend ESprite;
-
-public:
-	// 创建一个空的纹理
-	ETexture();
-
-	// 从本地文件中读取资源
-	ETexture(
-		const EString & fileName
-	);
-
-	// 读取程序资源
-	ETexture(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType
-	);
-
-	virtual ~ETexture();
-
-	// 从本地文件中读取资源
-	void loadFromFile(
-		const EString & fileName
-	);
-
-	// 读取程序资源
-	void loadFromResource(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType
-	);
-
-	// 获取源图片宽度
-	virtual float getSourceWidth() const;
-
-	// 获取源图片高度
-	virtual float getSourceHeight() const;
-
-	// 获取源图片大小
-	virtual ESize getSourceSize() const;
-
-	// 预加载资源
-	static bool preload(
-		const EString & fileName
-	);
-
-	// 预加载资源
-	static bool preload(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType
-	);
-
-	// 清空缓存
-	static void clearCache();
-
-protected:
-	ID2D1Bitmap * _getBitmap();
-
-protected:
-	ID2D1Bitmap * m_pBitmap;
 };
 
 
@@ -636,79 +572,6 @@ protected:
 	float	m_fSourceClipX;
 	float	m_fSourceClipY;
 	ETexture * m_pTexture;
-};
-
-
-class EFont :
-	public EObject
-{
-	friend EText;
-
-public:
-	EFont();
-
-	EFont(
-		EString fontFamily,
-		float fontSize = 22,
-		UINT32 color = EColor::WHITE,
-		UINT32 fontWeight = EFontWeight::REGULAR,
-		bool italic = false
-	);
-
-	virtual ~EFont();
-
-	// 获取当前字号
-	float getFontSize() const;
-
-	// 获取当前字体粗细值
-	UINT32 getFontWeight() const;
-
-	// 获取文字颜色
-	UINT32 getColor() const;
-
-	// 是否是斜体
-	bool isItalic() const;
-
-	// 设置字体
-	void setFamily(
-		EString fontFamily
-	);
-
-	// 设置字号
-	void setSize(
-		float fontSize
-	);
-
-	// 设置字体粗细值
-	void setWeight(
-		UINT32 fontWeight
-	);
-
-	// 设置文字颜色
-	void setColor(
-		UINT32 color
-	);
-
-	// 设置文字斜体
-	void setItalic(
-		bool value
-	);
-
-protected:
-	// 创建文字格式
-	void _initTextFormat();
-
-	// 获取文字格式
-	IDWriteTextFormat * _getTextFormat();
-
-protected:
-	EString		m_sFontFamily;
-	float		m_fFontSize;
-	UINT32		m_FontWeight;
-	UINT32		m_Color;
-	bool		m_bItalic;
-	bool		m_bRecreateNeeded;
-	IDWriteTextFormat * m_pTextFormat;
 };
 
 

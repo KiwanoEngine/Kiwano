@@ -36,9 +36,6 @@
     <ClCompile Include="Win\winbase.cpp">
       <Filter>Win</Filter>
     </ClCompile>
-    <ClCompile Include="Base\EObject.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="Base\EApp.cpp">
       <Filter>Base</Filter>
     </ClCompile>
@@ -52,12 +49,6 @@
       <Filter>Node</Filter>
     </ClCompile>
     <ClCompile Include="Node\EText.cpp">
-      <Filter>Node</Filter>
-    </ClCompile>
-    <ClCompile Include="Node\EFont.cpp">
-      <Filter>Node</Filter>
-    </ClCompile>
-    <ClCompile Include="Node\ETexture.cpp">
       <Filter>Node</Filter>
     </ClCompile>
     <ClCompile Include="Action\EAction.cpp">
@@ -210,6 +201,15 @@
     <ClCompile Include="Listener\EListenerPhysicsContact.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
+    <ClCompile Include="Common\EFont.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EObject.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ETexture.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">
@@ -226,5 +226,6 @@
     <ClInclude Include="egeometry.h" />
     <ClInclude Include="elisteners.h" />
     <ClInclude Include="emanagers.h" />
+    <ClInclude Include="etypedef.h" />
   </ItemGroup>
 </Project>

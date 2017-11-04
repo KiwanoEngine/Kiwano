@@ -9,7 +9,6 @@ int WINAPI WinMain(
 )
 {
 	EApp app;
-
 	if (app.init(L"Easy2D Demo", 640, 480))
 	{
 		float w = EApp::getWidth();
@@ -21,7 +20,6 @@ int WINAPI WinMain(
 		//text->setWordWrapping(true);
 		//text->setWordWrappingWidth(130);
 		text->setRotation(40);
-		text->setAnchor(0.5f, 0.5f);
 		//text->runAction(new EActionLoop(new EActionTwo(new EActionFadeOut(1), new EActionFadeIn(1))));
 		scene->add(text);
 
@@ -41,14 +39,14 @@ int WINAPI WinMain(
 		animation->addFrame(new ESpriteFrame(L"atlas.png", 61, 982, 34, 24));
 		animation->addFrame(new ESpriteFrame(L"atlas.png", 117, 982, 34, 24));
 		bird->runAction(new EActionLoop(animation));
-		bird->setAnchor(0.5f, 0.5f);
+		bird->setPivot(0.5f, 0.5f);
 		bird->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
 		scene2->add(bird);
 
 		auto btnStart = new ESprite(L"atlas.png", 702, 234, 116, 70);
-		btnStart->setAnchor(0.5f, 0.5f);
+		btnStart->setPivot(0.5f, 0.5f);
 		auto btnStartSelected = new ESprite(L"atlas.png", 702, 234, 116, 70);
-		btnStartSelected->setAnchor(0.5f, 0.5f);
+		btnStartSelected->setPivot(0.5f, 0.5f);
 		btnStartSelected->setPosY(5);
 		auto button = new EButton(btnStart, btnStartSelected, [=] {
 			if (EApp::isPaused())

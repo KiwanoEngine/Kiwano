@@ -17,6 +17,7 @@
 
 
 #include "emacros.h"
+#include "etypedef.h"
 #include "ecommon.h"
 #include "ebase.h"
 #include "emanagers.h"

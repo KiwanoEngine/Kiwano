@@ -192,27 +192,6 @@ protected:
 };
 
 
-class EObject
-{
-	friend EObjectManager;
-
-public:
-	EObject();
-
-	virtual ~EObject();
-
-	// 引用计数加一
-	void retain();
-
-	// 引用计数减一
-	void release();
-
-private:
-	int m_nRefCount;
-	bool m_bManaged;
-};
-
-
 class EScene :
 	public EObject
 {

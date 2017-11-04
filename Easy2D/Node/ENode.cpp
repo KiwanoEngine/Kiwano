@@ -15,8 +15,8 @@ e2d::ENode::ENode()
 	, m_fSkewAngleY(0)
 	, m_fDisplayOpacity(1.0f)
 	, m_fRealOpacity(1.0f)
-	, m_fAnchorX(0.5f)
-	, m_fAnchorY(0.5f)
+	, m_fPivotX(0.5f)
+	, m_fPivotY(0.5f)
 	, m_Matri(D2D1::Matrix3x2F::Identity())
 	, m_bVisiable(true)
 	, m_bDisplayedInScene(false)
@@ -172,27 +172,27 @@ void e2d::ENode::_sortChildren()
 void e2d::ENode::_updateTransformToReal()
 {
 	// 计算锚点坐标
-	D2D1_POINT_2F anchorPos = D2D1::Point2F(
-		getRealWidth() * m_fAnchorX,
-		getRealHeight() * m_fAnchorY
+	D2D1_POINT_2F pivot = D2D1::Point2F(
+		getRealWidth() * m_fPivotX,
+		getRealHeight() * m_fPivotY
 	);
 	// 计算左上角坐标
 	D2D1_POINT_2F upperLeftCorner = D2D1::Point2F(
-		m_Pos.x - getRealWidth() * m_fAnchorX,
-		m_Pos.y - getRealHeight() * m_fAnchorY
+		m_Pos.x - getRealWidth() * m_fPivotX,
+		m_Pos.y - getRealHeight() * m_fPivotY
 	);
 	// 二维矩形变换
 	m_Matri = D2D1::Matrix3x2F::Scale(
 		m_fScaleX,
 		m_fScaleY,
-		anchorPos
+		pivot
 	) * D2D1::Matrix3x2F::Skew(
 		m_fSkewAngleX,
 		m_fSkewAngleY,
-		anchorPos
+		pivot
 	) * D2D1::Matrix3x2F::Rotation(
 		m_fRotation,
-		anchorPos
+		pivot
 	) * D2D1::Matrix3x2F::Translation(
 		upperLeftCorner.x,
 		upperLeftCorner.y
@@ -299,14 +299,14 @@ e2d::ESize e2d::ENode::getRealSize() const
 	return m_Size;
 }
 
-float e2d::ENode::getAnchorX() const
+float e2d::ENode::getPivotX() const
 {
-	return m_fAnchorX;
+	return m_fPivotX;
 }
 
-float e2d::ENode::getAnchorY() const
+float e2d::ENode::getPivotY() const
 {
-	return m_fAnchorY;
+	return m_fPivotY;
 }
 
 e2d::ESize e2d::ENode::getSize() const
@@ -488,23 +488,23 @@ void e2d::ENode::setOpacity(float opacity)
 	_updateOpacity(this);
 }
 
-void e2d::ENode::setAnchorX(float anchorX)
+void e2d::ENode::setPivotX(float pivotX)
 {
-	this->setAnchor(anchorX, m_fAnchorY);
+	this->setPivot(pivotX, m_fPivotY);
 }
 
-void e2d::ENode::setAnchorY(float anchorY)
+void e2d::ENode::setPivotY(float pivotY)
 {
-	this->setAnchor(m_fAnchorX, anchorY);
+	this->setPivot(m_fPivotX, pivotY);
 }
 
-void e2d::ENode::setAnchor(float anchorX, float anchorY)
+void e2d::ENode::setPivot(float pivotX, float pivotY)
 {
-	if (m_fAnchorX == anchorX && m_fAnchorY == anchorY)
+	if (m_fPivotX == pivotX && m_fPivotY == pivotY)
 		return;
 
-	m_fAnchorX = anchorX;
-	m_fAnchorY = anchorY;
+	m_fPivotX = min(max(pivotX, 0), 1);
+	m_fPivotY = min(max(pivotY, 0), 1);
 	m_bTransformChildrenNeeded = true;
 }
 

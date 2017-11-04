@@ -208,10 +208,12 @@
     <ClCompile Include="Action\EActionTwoAtSameTime.cpp" />
     <ClCompile Include="Action\EActionGradual.cpp" />
     <ClCompile Include="Base\EApp.cpp" />
-    <ClCompile Include="Base\EObject.cpp" />
     <ClCompile Include="Base\EScene.cpp" />
+    <ClCompile Include="Common\EFont.cpp" />
     <ClCompile Include="Common\EKeyboardMsg.cpp" />
     <ClCompile Include="Common\EMouseMsg.cpp" />
+    <ClCompile Include="Common\EObject.cpp" />
+    <ClCompile Include="Common\ETexture.cpp" />
     <ClCompile Include="Geometry\ECircle.cpp" />
     <ClCompile Include="Geometry\EEllipse.cpp" />
     <ClCompile Include="Geometry\EGeometry.cpp" />
@@ -237,8 +239,6 @@
     <ClCompile Include="Node\ESprite.cpp" />
     <ClCompile Include="Node\ESpriteFrame.cpp" />
     <ClCompile Include="Node\EText.cpp" />
-    <ClCompile Include="Node\EFont.cpp" />
-    <ClCompile Include="Node\ETexture.cpp" />
     <ClCompile Include="Tool\EFileUtils.cpp" />
     <ClCompile Include="Tool\EMusicUtils.cpp" />
     <ClCompile Include="Tool\ERandom.cpp" />
@@ -262,6 +262,7 @@
     <ClInclude Include="enodes.h" />
     <ClInclude Include="etools.h" />
     <ClInclude Include="etransitions.h" />
+    <ClInclude Include="etypedef.h" />
     <ClInclude Include="Win\winbase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

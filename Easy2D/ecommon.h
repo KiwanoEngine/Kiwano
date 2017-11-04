@@ -1,114 +1,9 @@
 #pragma once
-#include <Windows.h>
-#include <string>
-#include <vector>
-#include <functional>
+#include "emacros.h"
+#include "etypedef.h"
 
 namespace e2d
 {
-
-struct EWindowStyle
-{
-	LPCTSTR m_pIconID;	/* 程序图标 ID */
-	bool m_bNoClose;	/* 禁用关闭按钮 */
-	bool m_bNoMiniSize;	/* 禁用最小化按钮 */
-	bool m_bTopMost;	/* 窗口置顶 */
-
-	EWindowStyle()
-	{
-		m_pIconID = 0;
-		m_bNoClose = false;
-		m_bNoMiniSize = false;
-		m_bTopMost = false;
-	}
-
-	EWindowStyle(
-		LPCTSTR pIconID
-	)
-	{
-		m_pIconID = pIconID;
-		m_bNoClose = false;
-		m_bNoMiniSize = false;
-		m_bTopMost = false;
-	}
-
-	EWindowStyle(
-		LPCTSTR pIconID,
-		bool bNoClose,
-		bool bNoMiniSize,
-		bool bTopMost
-	)
-	{
-		m_pIconID = pIconID;
-		m_bNoClose = bNoClose;
-		m_bNoMiniSize = bNoMiniSize;
-		m_bTopMost = bTopMost;
-	}
-};
-
-
-struct EPoint
-{
-	float x;
-	float y;
-
-	EPoint()
-	{
-		x = 0;
-		y = 0;
-	}
-
-	EPoint(float x, float y)
-	{
-		this->x = x;
-		this->y = y;
-	}
-
-	EPoint operator + (EPoint const & p)
-	{
-		return EPoint(x + p.x, y + p.y);
-	}
-
-	EPoint operator - (EPoint const & p)
-	{
-		return EPoint(x - p.x, y - p.y);
-	}
-};
-
-typedef EPoint EVec;
-
-struct ESize
-{
-	float width;
-	float height;
-
-	ESize()
-	{
-		width = 0;
-		height = 0;
-	}
-
-	ESize(float width, float height)
-	{
-		this->width = width;
-		this->height = height;
-	}
-
-	ESize operator + (ESize const & size)
-	{
-		return ESize(width + size.width, height + size.height);
-	}
-
-	ESize operator - (ESize const & size)
-	{
-		return ESize(width - size.width, height - size.height);
-	}
-};
-
-typedef std::wstring EString;
-
-template<typename T>
-using EVector = std::vector<T>;
 
 
 class EColor
@@ -412,28 +307,167 @@ public:
 };
 
 
-// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
-typedef std::function<void(int)> TIMER_CALLBACK;
+class EObjectManager;
 
-// 按钮点击回调函数
-typedef std::function<void()> BUTTON_CLICK_CALLBACK;
+class EObject
+{
+	friend EObjectManager;
 
-// 按键消息监听回调函数
-typedef std::function<void()> KEY_LISTENER_CALLBACK;
+public:
+	EObject();
 
-// 鼠标消息监听回调函数
-typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
+	virtual ~EObject();
 
-// 鼠标点击消息监听回调函数（参数为点击位置）
-typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
+	// 引用计数加一
+	void retain();
 
-// 鼠标按下消息监听回调函数（参数为按下位置）
-typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_PRESS_LISTENER_CALLBACK;
+	// 引用计数减一
+	void release();
 
-// 鼠标双击消息监听回调函数（参数为双击位置）
-typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_DBLCLK_LISTENER_CALLBACK;
+private:
+	int m_nRefCount;
+	bool m_bManaged;
+};
 
-// 鼠标拖动消息监听回调函数（参数为拖动前位置和拖动后位置）
-typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
+
+class EText;
+
+class EFont :
+	public EObject
+{
+	friend EText;
+
+public:
+	EFont();
+
+	EFont(
+		EString fontFamily,
+		float fontSize = 22,
+		UINT32 color = EColor::WHITE,
+		UINT32 fontWeight = EFontWeight::REGULAR,
+		bool italic = false
+	);
+
+	virtual ~EFont();
+
+	// 获取当前字号
+	float getFontSize() const;
+
+	// 获取当前字体粗细值
+	UINT32 getFontWeight() const;
+
+	// 获取文字颜色
+	UINT32 getColor() const;
+
+	// 是否是斜体
+	bool isItalic() const;
+
+	// 设置字体
+	void setFamily(
+		EString fontFamily
+	);
+
+	// 设置字号
+	void setSize(
+		float fontSize
+	);
+
+	// 设置字体粗细值
+	void setWeight(
+		UINT32 fontWeight
+	);
+
+	// 设置文字颜色
+	void setColor(
+		UINT32 color
+	);
+
+	// 设置文字斜体
+	void setItalic(
+		bool value
+	);
+
+protected:
+	// 创建文字格式
+	void _initTextFormat();
+
+	// 获取文字格式
+	IDWriteTextFormat * _getTextFormat();
+
+protected:
+	EString		m_sFontFamily;
+	float		m_fFontSize;
+	UINT32		m_FontWeight;
+	UINT32		m_Color;
+	bool		m_bItalic;
+	bool		m_bRecreateNeeded;
+	IDWriteTextFormat * m_pTextFormat;
+};
+
+
+class ESprite;
+
+class ETexture :
+	public EObject
+{
+	friend ESprite;
+
+public:
+	// 创建一个空的纹理
+	ETexture();
+
+	// 从本地文件中读取资源
+	ETexture(
+		const EString & fileName
+	);
+
+	// 读取程序资源
+	ETexture(
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
+	);
+
+	virtual ~ETexture();
+
+	// 从本地文件中读取资源
+	void loadFromFile(
+		const EString & fileName
+	);
+
+	// 读取程序资源
+	void loadFromResource(
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
+	);
+
+	// 获取源图片宽度
+	virtual float getSourceWidth() const;
+
+	// 获取源图片高度
+	virtual float getSourceHeight() const;
+
+	// 获取源图片大小
+	virtual ESize getSourceSize() const;
+
+	// 预加载资源
+	static bool preload(
+		const EString & fileName
+	);
+
+	// 预加载资源
+	static bool preload(
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
+	);
+
+	// 清空缓存
+	static void clearCache();
+
+protected:
+	ID2D1Bitmap * _getBitmap();
+
+protected:
+	ID2D1Bitmap * m_pBitmap;
+};
 
 }
