@@ -9,7 +9,7 @@ e2d::EKeyboardMsg::KEYBOARD_MSG e2d::EKeyboardMsg::getMsg()
 	return KEYBOARD_MSG(EKeyboardMsg::s_nMsg);
 }
 
-e2d::EKeyboardMsg::KEY e2d::EKeyboardMsg::getVal()
+e2d::EKeyboardMsg::KEY e2d::EKeyboardMsg::getKeyValue()
 {
 	return KEY(EKeyboardMsg::s_wParam);
 }

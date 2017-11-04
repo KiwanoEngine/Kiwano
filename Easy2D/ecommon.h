@@ -281,7 +281,7 @@ public:
 	static KEYBOARD_MSG getMsg();
 
 	// 获取键值
-	static KEY getVal();
+	static KEY getKeyValue();
 
 	// 获取按键消息的计数
 	static DWORD getCount();

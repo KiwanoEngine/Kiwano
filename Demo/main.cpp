@@ -9,6 +9,8 @@ int WINAPI WinMain(
 )
 {
 	EApp app;
+	auto listenerCallback = [](EPoint p) {};
+	auto s = new EListenerMouseClick(listenerCallback);
 	if (app.init(L"Easy2D Demo", 640, 480))
 	{
 		float w = EApp::getWidth();
@@ -24,7 +26,7 @@ int WINAPI WinMain(
 		scene->add(text);
 
 		auto listener = new EListenerKeyboardPress([=]() {
-			if (EKeyboardMsg::getVal() == EKeyboardMsg::KEY::SPACE)
+			if (EKeyboardMsg::getKeyValue() == EKeyboardMsg::KEY::SPACE)
 			{
 				EApp::backScene(new ETransitionFade(0.5f, 0.5f));
 			}
