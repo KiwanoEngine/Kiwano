@@ -103,12 +103,18 @@ struct EWindowStyle
 	}
 };
 
+// 二维向量
 typedef EPoint EVec;
 
+// 字符串
 typedef std::wstring EString;
 
+// Vector 容器
 template<typename T>
 using EVector = std::vector<T>;
+
+
+class ENode;
 
 // 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
 typedef std::function<void(int)> TIMER_CALLBACK;
@@ -133,5 +139,11 @@ typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_DBLCLK_LISTENER_CALLBACK;
 
 // 鼠标拖动消息监听回调函数（参数为拖动前位置和拖动后位置）
 typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
+
+// 物理世界消息监听器回调函数（参数：主动方、被动方、两方关系）
+typedef std::function<void(ENode *active, ENode *passive, int relation)> PHYSICS_LISTENER_CALLBACK;
+
+// 碰撞消息监听器回调函数（参数：主动方、被动方）
+typedef std::function<void(ENode *active, ENode *passive)> COLLISION_LISTENER_CALLBACK;
 
 }

@@ -198,9 +198,6 @@
     <ClCompile Include="Listener\EListenerPhysics.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
-    <ClCompile Include="Listener\EListenerPhysicsContact.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
     <ClCompile Include="Common\EFont.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -209,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="Common\ETexture.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener\EListenerPhysicsCollision.cpp">
+      <Filter>Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

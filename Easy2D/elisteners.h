@@ -328,12 +328,6 @@ protected:
 };
 
 
-// 物理世界消息监听器回调函数（参数：主动方、被动方、两方关系）
-typedef std::function<void(ENode *active, ENode *passive, int relation)> PHYSICS_LISTENER_CALLBACK;
-
-// 碰撞消息监听器回调函数（参数：主动方、被动方）
-typedef std::function<void(ENode *active, ENode *passive)> COLLISION_LISTENER_CALLBACK;
-
 // 物理世界消息监听器
 class EListenerPhysics :
 	public EListener
@@ -380,23 +374,22 @@ protected:
 };
 
 
-class EListenerPhysicsContact :
+// 几何体冲突消息监听器
+class EListenerPhysicsCollision :
 	public EListenerPhysics
 {
-	friend EMsgManager;
-
 public:
-	EListenerPhysicsContact();
+	EListenerPhysicsCollision();
 
-	EListenerPhysicsContact(
+	EListenerPhysicsCollision(
 		const EString &name
 	);
 
-	EListenerPhysicsContact(
+	EListenerPhysicsCollision(
 		const COLLISION_LISTENER_CALLBACK &callback
 	);
 
-	EListenerPhysicsContact(
+	EListenerPhysicsCollision(
 		const EString &name,
 		const COLLISION_LISTENER_CALLBACK &callback
 	);

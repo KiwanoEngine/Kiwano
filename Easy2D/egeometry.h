@@ -49,27 +49,22 @@ public:
 
 	virtual ~EGeometry();
 
-	// 判断是否可以和另一几何图形产生接触消息
-	bool isContactWith(
-		EGeometry * geometry
-	);
-
 	// 获取父节点
 	ENode * getParentNode() const;
 
 	// 获取类别掩码
 	UINT32 getCategoryBitmask() const;
 
-	// 获取接触掩码
-	UINT32 getContactBitmask() const;
+	// 获取冲突掩码
+	UINT32 getCollisionBitmask() const;
 
 	// 设置类别掩码
 	void setCategoryBitmask(
 		UINT32 mask
 	);
 
-	// 设置接触掩码
-	void setContactBitmask(
+	// 设置冲突掩码
+	void setCollisionBitmask(
 		UINT32 mask
 	);
 
@@ -106,7 +101,7 @@ protected:
 	bool	m_bTransformed;
 	bool	m_bIsVisiable;
 	UINT32	m_nCategoryBitmask;
-	UINT32	m_nContactBitmask;
+	UINT32	m_nCollisionBitmask;
 	UINT32	m_nColor;
 	float	m_fOpacity;
 	ENode * m_pParentNode;

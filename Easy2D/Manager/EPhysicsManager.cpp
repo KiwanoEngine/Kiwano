@@ -26,19 +26,20 @@ void e2d::EPhysicsManager::PhysicsGeometryProc(EGeometry * pActiveGeometry)
 
 		if (pActiveGeometry != pPassiveGeometry)
 		{
-			// 判断两物体是否会产生接触消息
-			if (!pActiveGeometry->isContactWith(pPassiveGeometry))
-				continue;
-			// pPassiveGeometry 为被动方
-			EPhysicsMsg::s_pPassiveGeometry = pPassiveGeometry;
-			// 获取两方的关系
-			EPhysicsMsg::s_nRelation = pActiveGeometry->_intersectWith(pPassiveGeometry);
-			// 如果关系不为未知或无交集，响应监听器
-			if (EPhysicsMsg::s_nRelation != EPhysicsMsg::UNKNOWN &&
-				EPhysicsMsg::s_nRelation != EPhysicsMsg::DISJOINT)
+			// 判断两物体是否是相互冲突的物体
+			if (pActiveGeometry->m_nCollisionBitmask & pPassiveGeometry->m_nCategoryBitmask)
 			{
-				// 执行监听器
-				PhysicsListenerProc();
+				// pPassiveGeometry 为被动方
+				EPhysicsMsg::s_pPassiveGeometry = pPassiveGeometry;
+				// 获取两方的关系
+				EPhysicsMsg::s_nRelation = pActiveGeometry->_intersectWith(pPassiveGeometry);
+				// 如果关系不为未知或无交集，响应监听器
+				if (EPhysicsMsg::s_nRelation != EPhysicsMsg::UNKNOWN &&
+					EPhysicsMsg::s_nRelation != EPhysicsMsg::DISJOINT)
+				{
+					// 执行监听器
+					PhysicsListenerProc();
+				}
 			}
 		}
 	}

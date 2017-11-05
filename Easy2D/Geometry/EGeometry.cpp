@@ -6,7 +6,7 @@
 e2d::EGeometry::EGeometry()
 	: m_bTransformed(false)
 	, m_nCategoryBitmask(0)
-	,m_nContactBitmask(0)
+	, m_nCollisionBitmask(0)
 	, m_bIsVisiable(true)
 	, m_nColor(EColor::RED)
 	, m_fOpacity(1)
@@ -20,11 +20,6 @@ e2d::EGeometry::~EGeometry()
 	SafeReleaseInterface(&m_pTransformedGeometry);
 }
 
-bool e2d::EGeometry::isContactWith(EGeometry * geometry)
-{
-	return ((this->m_nContactBitmask & geometry->m_nCategoryBitmask) != 0);
-}
-
 e2d::ENode * e2d::EGeometry::getParentNode() const
 {
 	return m_pParentNode;
@@ -35,9 +30,9 @@ UINT32 e2d::EGeometry::getCategoryBitmask() const
 	return m_nCategoryBitmask;
 }
 
-UINT32 e2d::EGeometry::getContactBitmask() const
+UINT32 e2d::EGeometry::getCollisionBitmask() const
 {
-	return m_nContactBitmask;
+	return m_nCollisionBitmask;
 }
 
 void e2d::EGeometry::setCategoryBitmask(UINT32 mask)
@@ -45,9 +40,9 @@ void e2d::EGeometry::setCategoryBitmask(UINT32 mask)
 	m_nCategoryBitmask = mask;
 }
 
-void e2d::EGeometry::setContactBitmask(UINT32 mask)
+void e2d::EGeometry::setCollisionBitmask(UINT32 mask)
 {
-	m_nContactBitmask = mask;
+	m_nCollisionBitmask = mask;
 }
 
 void e2d::EGeometry::setVisiable(bool bVisiable)

@@ -219,7 +219,7 @@
     <ClCompile Include="Geometry\EGeometry.cpp" />
     <ClCompile Include="Geometry\EPhysicsMsg.cpp" />
     <ClCompile Include="Geometry\ERectangle.cpp" />
-    <ClCompile Include="Listener\EListenerPhysicsContact.cpp" />
+    <ClCompile Include="Listener\EListenerPhysicsCollision.cpp" />
     <ClCompile Include="Listener\EListenerKeyboard.cpp" />
     <ClCompile Include="Listener\EListenerKeyboardPress.cpp" />
     <ClCompile Include="Listener\EListener.cpp" />
