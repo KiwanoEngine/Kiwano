@@ -168,9 +168,6 @@
     <ClCompile Include="Manager\EPhysicsManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry\EPhysicsMsg.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Listener\EListenerMouse.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
@@ -212,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="Node\EMenu.cpp">
       <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EPhysicsMsg.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

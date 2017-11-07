@@ -213,11 +213,11 @@
     <ClCompile Include="Common\EKeyboardMsg.cpp" />
     <ClCompile Include="Common\EMouseMsg.cpp" />
     <ClCompile Include="Common\EObject.cpp" />
+    <ClCompile Include="Common\EPhysicsMsg.cpp" />
     <ClCompile Include="Common\ETexture.cpp" />
     <ClCompile Include="Geometry\ECircle.cpp" />
     <ClCompile Include="Geometry\EEllipse.cpp" />
     <ClCompile Include="Geometry\EGeometry.cpp" />
-    <ClCompile Include="Geometry\EPhysicsMsg.cpp" />
     <ClCompile Include="Geometry\ERectangle.cpp" />
     <ClCompile Include="Listener\EListenerPhysicsCollision.cpp" />
     <ClCompile Include="Listener\EListenerKeyboard.cpp" />
