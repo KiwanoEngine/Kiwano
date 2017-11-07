@@ -12,6 +12,7 @@ e2d::EFont::EFont()
 }
 
 e2d::EFont::EFont(EString fontFamily, float fontSize /* = 22 */, UINT32 color /* = EColor::WHITE */, UINT32 fontWeight, bool italic /* = false */)
+	: EFont()
 {
 	this->setFamily(fontFamily);
 	this->setSize(fontSize);

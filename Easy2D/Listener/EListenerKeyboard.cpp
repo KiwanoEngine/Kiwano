@@ -3,29 +3,34 @@
 
 e2d::EListenerKeyboard::EListenerKeyboard()
 	: EListener()
+	, m_Callback(nullptr)
 {
 }
 
 e2d::EListenerKeyboard::EListenerKeyboard(const EString & name)
 	: EListener(name)
+	, m_Callback(nullptr)
 {
 }
 
 e2d::EListenerKeyboard::EListenerKeyboard(const KEY_LISTENER_CALLBACK & callback)
 	: EListener()
+	, m_Callback(callback)
 {
-	m_Callback = callback;
 }
 
 e2d::EListenerKeyboard::EListenerKeyboard(const EString & name, const KEY_LISTENER_CALLBACK & callback)
 	: EListener(name)
+	, m_Callback(callback)
 {
-	m_Callback = callback;
 }
 
 void e2d::EListenerKeyboard::_callOn()
 {
-	m_Callback();
+	if (m_Callback)
+	{
+		m_Callback();
+	}
 }
 
 void e2d::EListenerKeyboard::setCallback(const KEY_LISTENER_CALLBACK & callback)

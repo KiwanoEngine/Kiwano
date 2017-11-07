@@ -8,6 +8,7 @@ class EText;
 class ESprite;
 class EAction;
 class EButton;
+class EButtonToggle;
 class EGeometry;
 
 class ENode :
@@ -15,6 +16,7 @@ class ENode :
 {
 	friend EScene;
 	friend EButton;
+	friend EButtonToggle;
 	friend EGeometry;
 
 public:
@@ -661,57 +663,60 @@ public:
 
 	// 创建按钮
 	EButton(
-		ENode * normal,
-		const BUTTON_CLICK_CALLBACK & callback
+		ENode * normal,		/* 普通状态 */
+		const BUTTON_CLICK_CALLBACK & callback = nullptr
 	);
 
 	// 创建按钮
 	EButton(
-		ENode * normal,
-		ENode * selected,
-		const BUTTON_CLICK_CALLBACK & callback
+		ENode * normal,		/* 普通状态 */
+		ENode * selected,	/* 鼠标按下状态 */
+		const BUTTON_CLICK_CALLBACK & callback = nullptr
 	);
 
 	// 创建按钮
 	EButton(
-		ENode * normal,
-		ENode * mouseover,
-		ENode * selected,
-		const BUTTON_CLICK_CALLBACK & callback
+		ENode * normal,		/* 普通状态 */
+		ENode * mouseover,	/* 鼠标移入状态 */
+		ENode * selected,	/* 鼠标按下状态 */
+		const BUTTON_CLICK_CALLBACK & callback = nullptr
 	);
 
 	// 创建按钮
 	EButton(
-		ENode * normal,
-		ENode * mouseover,
-		ENode * selected,
-		ENode * disabled,
-		const BUTTON_CLICK_CALLBACK & callback
+		ENode * normal,		/* 普通状态 */
+		ENode * mouseover,	/* 鼠标移入状态 */
+		ENode * selected,	/* 鼠标移入状态 */
+		ENode * disabled,	/* 按钮禁用状态 */
+		const BUTTON_CLICK_CALLBACK & callback = nullptr
+	);
+
+	// 获取按钮状态是启用还是禁用
+	bool isEnable() const;
+
+	// 设置按钮启用或禁用
+	void setEnable(
+		bool bEnable
 	);
 
 	// 设置一般情况下显示的按钮
-	void setNormal(
+	virtual void setNormal(
 		ENode * normal
 	);
 
 	// 设置鼠标移入按钮时显示的按钮
-	void setMouseOver(
+	virtual void setMouseOver(
 		ENode * mouseover
 	);
 
 	// 设置鼠标选中按钮时显示的按钮
-	void setSelected(
+	virtual void setSelected(
 		ENode * selected
 	);
 
 	// 设置按钮被禁用时显示的按钮
-	void setDisabled(
+	virtual void setDisabled(
 		ENode * disabled
-	);
-
-	// 设置按钮禁用
-	void setDisable(
-		bool disable
 	);
 
 	// 设置回调函数
@@ -720,23 +725,148 @@ public:
 	);
 
 protected:
-	// 渲染按钮
-	virtual void _callOn() override;
+	enum STATUS { NORMAL, MOUSEOVER, SELECTED };
 
-	// 鼠标消息监听
-	void _listenerCallback();
+	// 设置按钮状态
+	virtual void _setStatus(STATUS status);
+
+	// 刷新按钮显示
+	virtual void _updateVisiable();
+
+	// 刷新按钮状态
+	virtual void _updateStatus();
+
+	// 执行按钮回调函数
+	virtual void _runCallback();
 
 protected:
-	enum STATUS { NORMAL, MOUSEOVER, SELECTED, DISABLED };
 	STATUS	m_eStatus;
 	ENode * m_pNormal;
 	ENode * m_pMouseover;
 	ENode * m_pSelected;
 	ENode * m_pDisabled;
-	ENode * m_pDisplayed;
-	bool	m_bIsDisable;
+	bool	m_bEnable;
 	bool	m_bIsSelected;
+	EListenerMouse * m_pListener;
 	BUTTON_CLICK_CALLBACK m_Callback;
+};
+
+
+class EButtonToggle :
+	public EButton
+{
+public:
+	// 创建一个空的开关按钮
+	EButtonToggle();
+
+	// 创建开关按钮
+	EButtonToggle(
+		ENode * toggleOnNormal,
+		ENode * toggleOffNormal,
+		const BUTTON_CLICK_CALLBACK & callback = nullptr
+	);
+
+	// 创建开关按钮
+	EButtonToggle(
+		ENode * toggleOnNormal,
+		ENode * toggleOffNormal,
+		ENode * toggleOnSelected,
+		ENode * toggleOffSelected,
+		const BUTTON_CLICK_CALLBACK & callback = nullptr
+	);
+
+	// 创建开关按钮
+	EButtonToggle(
+		ENode * toggleOnNormal,
+		ENode * toggleOffNormal,
+		ENode * toggleOnMouseOver,
+		ENode * toggleOffMouseOver,
+		ENode * toggleOnSelected,
+		ENode * toggleOffSelected,
+		const BUTTON_CLICK_CALLBACK & callback = nullptr
+	);
+
+	// 创建开关按钮
+	EButtonToggle(
+		ENode * toggleOnNormal,
+		ENode * toggleOffNormal,
+		ENode * toggleOnMouseOver,
+		ENode * toggleOffMouseOver,
+		ENode * toggleOnSelected,
+		ENode * toggleOffSelected,
+		ENode * toggleOnDisabled,
+		ENode * toggleOffDisabled,
+		const BUTTON_CLICK_CALLBACK & callback = nullptr
+	);
+
+	// 切换开关状态
+	void toggle();
+
+	// 获取开关状态
+	bool isToggleOn() const;
+
+	// 打开或关闭开关
+	void setToggle(
+		bool toggle
+	);
+
+	// 设置按钮打开状态下显示的按钮
+	virtual void setNormal(
+		ENode * normal
+	) override;
+
+	// 设置按钮打开状态下，鼠标移入按钮时显示的按钮
+	virtual void setMouseOver(
+		ENode * mouseover
+	) override;
+
+	// 设置按钮打开状态下，鼠标选中按钮时显示的按钮
+	virtual void setSelected(
+		ENode * selected
+	) override;
+
+	// 设置按钮打开状态下，被禁用时显示的按钮
+	virtual void setDisabled(
+		ENode * disabled
+	) override;
+
+	// 设置按钮关闭状态下显示的按钮
+	void setNormalOff(
+		ENode * normal
+	);
+
+	// 设置按钮关闭状态下，鼠标移入按钮时显示的按钮
+	void setMouseOverOff(
+		ENode * mouseover
+	);
+
+	// 设置按钮关闭状态下，鼠标选中按钮时显示的按钮
+	void setSelectedOff(
+		ENode * selected
+	);
+
+	// 设置按钮关闭状态下，按钮被禁用时显示的按钮
+	void setDisabledOff(
+		ENode * disabled
+	);
+
+protected:
+	// 刷新按钮开关
+	virtual void _updateToggle();
+
+	// 执行按钮回调函数
+	virtual void _runCallback() override;
+
+protected:
+	ENode * m_pNormalOn;
+	ENode * m_pNormalOff;
+	ENode * m_pMouseoverOn;
+	ENode * m_pMouseoverOff;
+	ENode * m_pSelectedOn;
+	ENode * m_pSelectedOff;
+	ENode * m_pDisabledOn;
+	ENode * m_pDisabledOff;
+	bool	m_bToggle;
 };
 
 }

@@ -132,18 +132,18 @@ typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
 typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
 
 // 鼠标按下消息监听回调函数（参数为按下位置）
-typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_PRESS_LISTENER_CALLBACK;
+typedef MOUSE_CLICK_LISTENER_CALLBACK  MOUSE_PRESS_LISTENER_CALLBACK;
 
 // 鼠标双击消息监听回调函数（参数为双击位置）
-typedef MOUSE_CLICK_LISTENER_CALLBACK MOUSE_DBLCLK_LISTENER_CALLBACK;
+typedef MOUSE_CLICK_LISTENER_CALLBACK  MOUSE_DBLCLK_LISTENER_CALLBACK;
 
 // 鼠标拖动消息监听回调函数（参数为拖动前位置和拖动后位置）
 typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
 
-// 物理世界消息监听器回调函数（参数：主动方、被动方、两方关系）
-typedef std::function<void(ENode *active, ENode *passive, int relation)> PHYSICS_LISTENER_CALLBACK;
+// 物理世界消息监听器回调函数
+typedef std::function<void()> PHYSICS_LISTENER_CALLBACK;
 
-// 碰撞消息监听器回调函数（参数：主动方、被动方）
-typedef std::function<void(ENode *active, ENode *passive)> COLLISION_LISTENER_CALLBACK;
+// 碰撞消息监听器回调函数
+typedef PHYSICS_LISTENER_CALLBACK  COLLISION_LISTENER_CALLBACK;
 
 }

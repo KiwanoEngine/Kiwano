@@ -2,11 +2,13 @@
 
 e2d::EListenerMousePress::EListenerMousePress()
 	: EListenerMouse()
+	, m_Callback(nullptr)
 {
 }
 
 e2d::EListenerMousePress::EListenerMousePress(const EString & name)
 	: EListenerMouse(name)
+	, m_Callback(nullptr)
 {
 }
 
@@ -27,7 +29,10 @@ void e2d::EListenerMousePress::_callOn()
 	if (EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DOWN ||
 		EMouseMsg::getMsg() == EMouseMsg::LBUTTON_DBLCLK)
 	{
-		m_Callback(EMouseMsg::getPos());
+		if (m_Callback)
+		{
+			m_Callback(EMouseMsg::getPos());
+		}
 	}
 }
 

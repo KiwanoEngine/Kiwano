@@ -24,6 +24,9 @@ void e2d::EListenerKeyboardPress::_callOn()
 {
 	if (EKeyboardMsg::getMsg() == EKeyboardMsg::KEYBOARD_MSG::KEY_DOWN)
 	{
-		m_Callback();
+		if (m_Callback)
+		{
+			m_Callback();
+		}
 	}
 }

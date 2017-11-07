@@ -3,12 +3,14 @@
 e2d::EListenerMouseClick::EListenerMouseClick()
 	: EListenerMouse()
 	, m_bPressed(false)
+	, m_Callback(nullptr)
 {
 }
 
 e2d::EListenerMouseClick::EListenerMouseClick(const EString & name)
 	: EListenerMouse(name)
 	, m_bPressed(false)
+	, m_Callback(nullptr)
 {
 }
 
@@ -35,7 +37,10 @@ void e2d::EListenerMouseClick::_callOn()
 	}
 	else if (m_bPressed && EMouseMsg::getMsg() == EMouseMsg::LBUTTON_UP)
 	{
-		m_Callback(EMouseMsg::getPos());
+		if (m_Callback)
+		{
+			m_Callback(EMouseMsg::getPos());
+		}
 		m_bPressed = false;
 	}
 }

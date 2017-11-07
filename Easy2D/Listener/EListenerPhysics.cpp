@@ -4,33 +4,34 @@
 
 e2d::EListenerPhysics::EListenerPhysics()
 	: EListener()
+	, m_Callback(nullptr)
 {
 }
 
 e2d::EListenerPhysics::EListenerPhysics(const EString & name)
 	: EListener(name)
+	, m_Callback(nullptr)
 {
 }
 
 e2d::EListenerPhysics::EListenerPhysics(const PHYSICS_LISTENER_CALLBACK & callback)
 	: EListener()
+	, m_Callback(callback)
 {
-	m_Callback = callback;
 }
 
 e2d::EListenerPhysics::EListenerPhysics(const EString & name, const PHYSICS_LISTENER_CALLBACK & callback)
 	: EListener(name)
+	, m_Callback(callback)
 {
-	m_Callback = callback;
 }
 
 void e2d::EListenerPhysics::_callOn()
 {
-	m_Callback(
-		EPhysicsMsg::getActiveGeometry()->getParentNode(),
-		EPhysicsMsg::getPassiveGeometry()->getParentNode(),
-		EPhysicsMsg::getMsg()
-	);
+	if (m_Callback)
+	{
+		m_Callback();
+	}
 }
 
 void e2d::EListenerPhysics::setCallback(const PHYSICS_LISTENER_CALLBACK & callback)

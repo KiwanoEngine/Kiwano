@@ -210,6 +210,9 @@
     <ClCompile Include="Listener\EListenerPhysicsCollision.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
+    <ClCompile Include="Node\EButtonToggle.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">

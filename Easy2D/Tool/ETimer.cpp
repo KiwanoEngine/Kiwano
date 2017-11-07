@@ -6,7 +6,7 @@ e2d::ETimer::ETimer()
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_pParentNode(nullptr)
-	, m_Callback([](int) {})
+	, m_Callback(nullptr)
 	, m_nInterval(0)
 	, m_nRepeatTimes(0)
 	, m_bAtOnce(false)
@@ -96,7 +96,10 @@ void e2d::ETimer::_callOn()
 		return;
 	}
 
-	m_Callback(m_nRunTimes);
+	if (m_Callback)
+	{
+		m_Callback(m_nRunTimes);
+	}
 	m_nRunTimes++;
 }
 

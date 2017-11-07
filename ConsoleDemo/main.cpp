@@ -4,21 +4,31 @@ int main()
 {
 	EApp app;
 
-	if (app.init(L"Easy2D Demo", 640, 640))
+	if (app.init(L"Easy2D Demo", 640, 480))
 	{
 		app.showConsole();
 		auto scene = new EScene();
 
-		auto sprite = new ESprite(L"haha.png");
-		// 获取窗口宽度
-		float width = EApp::getWidth();
-		// 获取窗口高度
-		float height = EApp::getHeight();
-		// 移动精灵的位置
-		sprite->setPos(width / 2 + sprite->getWidth(), height / 2);
-		scene->add(sprite);
+		// 创建一个文本
+		auto btnNormal = new EText(L"开");
+		auto btnSelected = new EText(L"开");
+		btnSelected->movePosY(2);
+		auto btnNormal2 = new EText(L"关");
+		auto btnSelected2 = new EText(L"关");
+		btnSelected2->movePosY(2);
+		// 创建一个按钮
+		auto button = new EButtonToggle(btnNormal, btnNormal2, btnSelected, btnSelected2);
+		button->setCallback([=]() {
+			//button->setEnable(false);
+		});
+		button->toggle();
+		button->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
+		scene->add(button);
 
-		scene->getRoot()->runAction(new EActionLoop(new EActionRotateBy(1, 60)));
+		// 创建按钮
+		auto button2 = new EButton(new EText(L"关闭"), [=]() { button->setEnable(!button->isEnable()); });
+		button2->setPos(40, 40);
+		scene->add(button2);
 
 		app.enterScene(scene);
 

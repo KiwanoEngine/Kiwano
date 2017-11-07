@@ -2,11 +2,13 @@
 
 e2d::EListenerMouseDrag::EListenerMouseDrag()
 	: EListenerMouse()
+	, m_Callback(nullptr)
 {
 }
 
 e2d::EListenerMouseDrag::EListenerMouseDrag(const EString & name)
 	: EListenerMouse(name)
+	, m_Callback(nullptr)
 {
 }
 
@@ -31,7 +33,10 @@ void e2d::EListenerMouseDrag::_callOn()
 	}
 	else if (EMouseMsg::isLButtonDown() && EMouseMsg::getMsg() == EMouseMsg::MOVE)
 	{
-		m_Callback(m_Begin, EMouseMsg::getPos());
+		if (m_Callback)
+		{
+			m_Callback(m_Begin, EMouseMsg::getPos());
+		}
 	}
 }
 

@@ -3,29 +3,34 @@
 
 e2d::EListenerMouse::EListenerMouse()
 	: EListener()
+	, m_Callback(nullptr)
 {
 }
 
 e2d::EListenerMouse::EListenerMouse(const EString & name)
 	: EListener(name)
+	, m_Callback(nullptr)
 {
 }
 
 e2d::EListenerMouse::EListenerMouse(const MOUSE_LISTENER_CALLBACK & callback)
 	: EListener()
+	, m_Callback(callback)
 {
-	m_Callback = callback;
 }
 
 e2d::EListenerMouse::EListenerMouse(const EString & name, const MOUSE_LISTENER_CALLBACK & callback)
 	: EListener(name)
+	, m_Callback(callback)
 {
-	m_Callback = callback;
 }
 
 void e2d::EListenerMouse::_callOn()
 {
-	m_Callback();
+	if (m_Callback)
+	{
+		m_Callback();
+	}
 }
 
 void e2d::EListenerMouse::setCallback(const MOUSE_LISTENER_CALLBACK & callback)
