@@ -238,7 +238,6 @@
     <ClCompile Include="Node\EButtonToggle.cpp" />
     <ClCompile Include="Node\ENode.cpp" />
     <ClCompile Include="Node\ESprite.cpp" />
-    <ClCompile Include="Node\ESpriteFrame.cpp" />
     <ClCompile Include="Node\EText.cpp" />
     <ClCompile Include="Tool\EFileUtils.cpp" />
     <ClCompile Include="Tool\EMusicUtils.cpp" />

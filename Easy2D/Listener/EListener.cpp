@@ -4,6 +4,7 @@ e2d::EListener::EListener()
 	: m_bRunning(false)
 	, m_bAlways(false)
 	, m_pParentNode(nullptr)
+	, m_bSwallow(false)
 {
 }
 
@@ -41,6 +42,11 @@ e2d::ENode * e2d::EListener::getParentNode() const
 void e2d::EListener::setName(const EString & name)
 {
 	m_sName = name;
+}
+
+void e2d::EListener::setSwallow(bool bSwallow)
+{
+	m_bSwallow = bSwallow;
 }
 
 void e2d::EListener::setAlwaysWorking(bool bAlways)

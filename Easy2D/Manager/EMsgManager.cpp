@@ -16,10 +16,15 @@ void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 	EMouseMsg::s_nMsg = message;
 	EMouseMsg::s_wParam = wParam;
 	EMouseMsg::s_lParam = lParam;
+
+	if (s_vMouseListeners.empty()) return;
+
 	// 执行鼠标消息监听函数
-	for (size_t i = 0; i < s_vMouseListeners.size(); i++)
+	EVector<EListenerMouse*>::size_type i = s_vMouseListeners.size();
+
+	do
 	{
-		auto &mlistener = s_vMouseListeners[i];
+		auto &mlistener = s_vMouseListeners[--i];
 
 		if (EApp::isPaused() && !mlistener->m_bAlways)
 			continue;
@@ -30,9 +35,12 @@ void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 				mlistener->getParentNode()->getParentScene() == EApp::getCurrentScene())
 			{
 				mlistener->_callOn();
+
+				if (mlistener->m_bSwallow)
+					break;
 			}
 		}
-	}
+	} while (i != 0);
 }
 
 void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
@@ -41,10 +49,15 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 	EKeyboardMsg::s_nMsg = message;
 	EKeyboardMsg::s_wParam = wParam;
 	EKeyboardMsg::s_lParam = lParam;
+
+	if (s_vKeyboardListeners.empty()) return;
+
 	// 执行按键消息监听函数
-	for (size_t i = 0; i < s_vKeyboardListeners.size(); i++)
+	EVector<EListenerMouse*>::size_type i = s_vKeyboardListeners.size();
+
+	do
 	{
-		auto &klistener = s_vKeyboardListeners[i];
+		auto &klistener = s_vKeyboardListeners[--i];
 
 		if (EApp::isPaused() && !klistener->m_bAlways)
 			continue;
@@ -55,9 +68,12 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 				klistener->getParentNode()->getParentScene() == EApp::getCurrentScene())
 			{
 				klistener->_callOn();
+
+				if (klistener->m_bSwallow)
+					break;
 			}
 		}
-	}
+	} while (i != 0);
 }
 
 void e2d::EMsgManager::bindListener(e2d::EListenerMouse * listener, EScene * pParentScene)

@@ -99,9 +99,6 @@
     <ClCompile Include="Action\EActionTwoAtSameTime.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="Node\ESpriteFrame.cpp">
-      <Filter>Node</Filter>
-    </ClCompile>
     <ClCompile Include="Action\EActionGradual.cpp">
       <Filter>Action</Filter>
     </ClCompile>

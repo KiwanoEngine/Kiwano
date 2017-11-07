@@ -307,6 +307,37 @@ public:
 };
 
 
+class EGeometry;
+
+// 物理消息
+class EPhysicsMsg
+{
+public:
+	enum INTERSECT_RELATION
+	{
+		UNKNOWN = 0,		/* 关系不确定 */
+		DISJOINT = 1,		/* 没有交集 */
+		IS_CONTAINED = 2,	/* 完全被包含 */
+		CONTAINS = 3,		/* 完全包含 */
+		OVERLAP = 4			/* 部分重叠 */
+	};
+
+	// 获取当前物理碰撞消息类型
+	static INTERSECT_RELATION getMsg();
+
+	// 获取主动方
+	static EGeometry * getActiveGeometry();
+
+	// 获取被动方
+	static EGeometry * getPassiveGeometry();
+
+public:
+	static INTERSECT_RELATION s_nRelation;
+	static EGeometry * s_pActiveGeometry;
+	static EGeometry * s_pPassiveGeometry;
+};
+
+
 class EObjectManager;
 
 class EObject
@@ -468,6 +499,93 @@ protected:
 
 protected:
 	ID2D1Bitmap * m_pBitmap;
+};
+
+
+class ESpriteFrame :
+	public EObject
+{
+	friend ESprite;
+
+public:
+	// 创建空的精灵帧
+	ESpriteFrame();
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		ETexture * texture
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		const EString & imageFileName
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		LPCTSTR resourceName,
+		LPCTSTR resourceType
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		ETexture * texture,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		const EString & imageFileName,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+	// 创建空的精灵帧
+	ESpriteFrame(
+		LPCTSTR resourceName,
+		LPCTSTR resourceType,
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+	virtual ~ESpriteFrame();
+
+	// 获取宽度
+	float getWidth() const;
+
+	// 获取高度
+	float getHeight() const;
+
+	// 获取纹理
+	ETexture * getTexture() const;
+
+protected:
+	// 获取纹理
+	void _setTexture(
+		ETexture * texture
+	);
+
+	// 裁剪纹理
+	void _clipTexture(
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+protected:
+	float	m_fSourceClipX;
+	float	m_fSourceClipY;
+	float	m_fSourceClipWidth;
+	float	m_fSourceClipHeight;
+	ETexture * m_pTexture;
 };
 
 }

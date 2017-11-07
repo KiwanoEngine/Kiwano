@@ -42,6 +42,11 @@ public:
 		const EString &name
 	);
 
+	// 设置监听器吞噬消息
+	void setSwallow(
+		bool bSwallow
+	);
+
 	// 设置监听器在游戏暂停时继续工作
 	void setAlwaysWorking(
 		bool bAlways
@@ -65,6 +70,7 @@ protected:
 	EString		m_sName;
 	bool		m_bRunning;
 	bool		m_bAlways;
+	bool		m_bSwallow;
 	ENode *		m_pParentNode;
 };
 

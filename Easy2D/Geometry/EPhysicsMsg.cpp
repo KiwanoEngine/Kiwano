@@ -1,4 +1,4 @@
-#include "..\egeometry.h"
+#include "..\ecommon.h"
 
 e2d::EPhysicsMsg::INTERSECT_RELATION e2d::EPhysicsMsg::s_nRelation = e2d::EPhysicsMsg::INTERSECT_RELATION::UNKNOWN;
 e2d::EGeometry * e2d::EPhysicsMsg::s_pActiveGeometry = nullptr;

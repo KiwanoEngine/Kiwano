@@ -1,4 +1,4 @@
-#include "..\enodes.h"
+#include "..\ecommon.h"
 
 e2d::ESpriteFrame::ESpriteFrame()
 	: m_fSourceClipX(0)

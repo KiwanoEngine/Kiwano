@@ -7,36 +7,7 @@ namespace e2d
 
 class EPhysicsManager;
 class ENode;
-class EGeometry;
 
-class EPhysicsMsg
-{
-	friend EPhysicsManager;
-
-public:
-	enum INTERSECT_RELATION
-	{
-		UNKNOWN = 0,		/* 关系不确定 */
-		DISJOINT = 1,		/* 没有交集 */
-		IS_CONTAINED = 2,	/* 完全被包含 */
-		CONTAINS = 3,		/* 完全包含 */
-		OVERLAP = 4			/* 部分重叠 */
-	};
-
-	// 获取当前物理碰撞消息类型
-	static INTERSECT_RELATION getMsg();
-
-	// 获取主动方
-	static EGeometry * getActiveGeometry();
-
-	// 获取被动方
-	static EGeometry * getPassiveGeometry();
-
-public:
-	static INTERSECT_RELATION s_nRelation;
-	static EGeometry * s_pActiveGeometry;
-	static EGeometry * s_pPassiveGeometry;
-};
 
 class EGeometry :
 	public EObject
