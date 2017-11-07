@@ -210,6 +210,9 @@
     <ClCompile Include="Node\EButtonToggle.cpp">
       <Filter>Node</Filter>
     </ClCompile>
+    <ClCompile Include="Node\EMenu.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">

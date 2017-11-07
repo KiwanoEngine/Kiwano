@@ -113,38 +113,38 @@ public:
 
 	// 保存 int 型的值
 	static void saveInt(
-		LPCTSTR key, 
+		const EString & key,
 		int value
 	);
 
 	// 保存 float 型的值
 	static void saveFloat(
-		LPCTSTR key, 
+		const EString & key,
 		float value
 	);
 
 	// 保存 字符串 型的值（不要在 Unicode 字符集下保存中文字符）
 	static void saveString(
-		LPCTSTR key, 
-		LPCTSTR value
+		const EString & key,
+		const EString & value
 	);
 
 	// 获取 int 型的值（若不存在则返回 default 参数的值）
 	static int getInt(
-		LPCTSTR key, 
+		const EString & key,
 		int default
 	);
 
 	// 获取 float 型的值（若不存在则返回 default 参数的值）
 	static float getFloat(
-		LPCTSTR key, 
+		const EString & key,
 		float default
 	);
 
 	// 获取 字符串 型的值（若不存在则返回 default 参数的值）
 	static EString geTString(
-		LPCTSTR key, 
-		LPCTSTR default
+		const EString & key,
+		const EString & default
 	);
 
 	// 得到文件扩展名（小写）
@@ -157,8 +157,8 @@ public:
 	*  参数：返回文件路径的字符串，窗口标题，设置扩展名过滤，设置默认扩展名
 	*/
 	static EString getSaveFilePath(
-		LPCTSTR title = L"保存到", 
-		LPCTSTR defExt = NULL
+		const EString & title = L"保存到",
+		const EString & defExt = NULL
 	);
 };
 

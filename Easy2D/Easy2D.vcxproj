@@ -236,6 +236,7 @@
     <ClCompile Include="Manager\ETimerManager.cpp" />
     <ClCompile Include="Node\EButton.cpp" />
     <ClCompile Include="Node\EButtonToggle.cpp" />
+    <ClCompile Include="Node\EMenu.cpp" />
     <ClCompile Include="Node\ENode.cpp" />
     <ClCompile Include="Node\ESprite.cpp" />
     <ClCompile Include="Node\EText.cpp" />

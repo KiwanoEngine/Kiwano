@@ -782,4 +782,45 @@ protected:
 	bool	m_bToggle;
 };
 
+
+class EMenu :
+	public ENode
+{
+public:
+	// 创建空菜单
+	EMenu();
+
+	// 创建菜单
+	EMenu(
+		int number,			/* 菜单中按钮的数量 */
+		EButton * button1,	/* 第一个按钮 */
+		...
+	);
+
+	// 获取菜单是否禁用
+	bool isEnable() const;
+
+	// 获取菜单中的按钮数量
+	size_t getButtonCount() const;
+
+	// 设置菜单启用或禁用
+	void setEnable(
+		bool enable
+	);
+
+	// 添加按钮
+	void addButton(
+		EButton * button
+	);
+
+	// 移除按钮
+	bool removeButton(
+		EButton * button
+	);
+
+protected:
+	bool m_bEnable;
+	EVector<EButton*> m_vButtons;
+};
+
 }

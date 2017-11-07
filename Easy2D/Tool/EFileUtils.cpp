@@ -66,37 +66,37 @@ e2d::EString e2d::EFileUtils::getDefaultSavePath()
 	return path;
 }
 
-void e2d::EFileUtils::saveInt(LPCTSTR key, int value)
+void e2d::EFileUtils::saveInt(const EString & key, int value)
 {
-	::WritePrivateProfileString(L"Default", key, std::to_wstring(value).c_str(), getDefaultSavePath().c_str());
+	::WritePrivateProfileString(L"Default", key.c_str(), std::to_wstring(value).c_str(), getDefaultSavePath().c_str());
 }
 
-void e2d::EFileUtils::saveFloat(LPCTSTR key, float value)
+void e2d::EFileUtils::saveFloat(const EString & key, float value)
 {
-	::WritePrivateProfileString(L"Default", key, std::to_wstring(value).c_str(), getDefaultSavePath().c_str());
+	::WritePrivateProfileString(L"Default", key.c_str(), std::to_wstring(value).c_str(), getDefaultSavePath().c_str());
 }
 
-void e2d::EFileUtils::saveString(LPCTSTR key, LPCTSTR value)
+void e2d::EFileUtils::saveString(const EString & key, const EString & value)
 {
-	::WritePrivateProfileString(L"Default", key, value, getDefaultSavePath().c_str());
+	::WritePrivateProfileString(L"Default", key.c_str(), value.c_str(), getDefaultSavePath().c_str());
 }
 
-int e2d::EFileUtils::getInt(LPCTSTR key, int default)
+int e2d::EFileUtils::getInt(const EString & key, int default)
 {
-	return ::GetPrivateProfileInt(L"Default", key, default, getDefaultSavePath().c_str());
+	return ::GetPrivateProfileInt(L"Default", key.c_str(), default, getDefaultSavePath().c_str());
 }
 
-float e2d::EFileUtils::getFloat(LPCTSTR key, float default)
+float e2d::EFileUtils::getFloat(const EString & key, float default)
 {
 	TCHAR temp[32] = { 0 };
-	::GetPrivateProfileString(L"Default", key, std::to_wstring(default).c_str(), temp, 31, getDefaultSavePath().c_str());
+	::GetPrivateProfileString(L"Default", key.c_str(), std::to_wstring(default).c_str(), temp, 31, getDefaultSavePath().c_str());
 	return std::stof(temp);
 }
 
-e2d::EString e2d::EFileUtils::geTString(LPCTSTR key, LPCTSTR default)
+e2d::EString e2d::EFileUtils::geTString(const EString & key, const EString & default)
 {
 	TCHAR temp[256] = { 0 };
-	::GetPrivateProfileString(L"Default", key, default, temp, 255, getDefaultSavePath().c_str());
+	::GetPrivateProfileString(L"Default", key.c_str(), default.c_str(), temp, 255, getDefaultSavePath().c_str());
 	return EString(temp);
 }
 
@@ -117,7 +117,7 @@ e2d::EString e2d::EFileUtils::getFileExtension(const EString & filePath)
 	return fileExtension;
 }
 
-e2d::EString e2d::EFileUtils::getSaveFilePath(LPCTSTR title, LPCTSTR defExt)
+e2d::EString e2d::EFileUtils::getSaveFilePath(const EString & title, const EString & defExt)
 {
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };
@@ -130,8 +130,8 @@ e2d::EString e2d::EFileUtils::getSaveFilePath(LPCTSTR title, LPCTSTR defExt)
 	ofn.nMaxFile = sizeof(strFilename);					// 缓冲区长度
 	ofn.lpstrInitialDir = NULL;							// 初始目录为默认
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;// 目录必须存在，覆盖文件前发出警告
-	ofn.lpstrTitle = title;								// 使用系统默认标题留空即可
-	ofn.lpstrDefExt = defExt;							// 默认追加的扩展名
+	ofn.lpstrTitle = title.c_str();						// 使用系统默认标题留空即可
+	ofn.lpstrDefExt = defExt.c_str();					// 默认追加的扩展名
 
 	if (GetSaveFileName(&ofn))
 	{
