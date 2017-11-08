@@ -48,19 +48,19 @@ void e2d::EPhysicsManager::PhysicsGeometryProc(EGeometry * pActiveGeometry)
 void e2d::EPhysicsManager::PhysicsListenerProc()
 {
 	// 执行鼠标消息监听函数
-	for (size_t i = 0; i < s_vListeners.size(); i++)
-	{
-		auto &listener = s_vListeners[i];
+	EVector<EListenerPhysics*>::size_type i = s_vListeners.size();
 
-		if (listener->isRunning())
+	do
+	{
+		auto listener = s_vListeners[--i];
+
+		if (listener->_isReady())
 		{
-			if (listener->getParentNode() &&
-				listener->getParentNode()->getParentScene() == EApp::getCurrentScene())
-			{
-				listener->_callOn();
-			}
+			listener->_callOn();
+			if (listener->m_bSwallow)
+				break;
 		}
-	}
+	} while (i != 0);
 }
 
 void e2d::EPhysicsManager::bindListener(EListenerPhysics * listener, EScene * pParentScene)

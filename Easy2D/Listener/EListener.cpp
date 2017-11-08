@@ -1,4 +1,5 @@
 #include "..\elisteners.h"
+#include "..\enodes.h"
 
 e2d::EListener::EListener()
 	: m_bRunning(false)
@@ -52,4 +53,17 @@ void e2d::EListener::setSwallow(bool bSwallow)
 void e2d::EListener::setAlwaysWorking(bool bAlways)
 {
 	m_bAlways = bAlways;
+}
+
+bool e2d::EListener::_isReady() const
+{
+	if (m_bRunning && m_pParentNode)
+	{
+		if (m_pParentNode->getParentScene() == EApp::getCurrentScene())
+		{
+			if (!EApp::isPaused() || m_bAlways)
+				return true;
+		}
+	}
+	return false;
 }

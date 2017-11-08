@@ -1,4 +1,5 @@
 #include "..\etools.h"
+#include "..\enodes.h"
 #include "..\emanagers.h"
 #include "..\Win\winbase.h"
 
@@ -105,16 +106,21 @@ void e2d::ETimer::_callOn()
 
 bool e2d::ETimer::_isReady()
 {
-	if (m_bAtOnce && m_nRunTimes == 0)
-		return true;
-
-	if (m_nInterval == 0)
-		return true;
-
-	if (GetInterval(m_tLast) >= m_nInterval)
+	if (m_bRunning && 
+		m_pParentNode &&
+		m_pParentNode->getParentScene() == EApp::getCurrentScene())
 	{
-		m_tLast += milliseconds(m_nInterval);
-		return true;
+		if (m_bAtOnce && m_nRunTimes == 0)
+			return true;
+
+		if (m_nInterval == 0)
+			return true;
+
+		if (GetInterval(m_tLast) >= m_nInterval)
+		{
+			m_tLast += milliseconds(m_nInterval);
+			return true;
+		}
 	}
 	return false;
 }

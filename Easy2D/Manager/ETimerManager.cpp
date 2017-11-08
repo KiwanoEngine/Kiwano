@@ -8,22 +8,15 @@ static e2d::EVector<e2d::ETimer*> s_vTimers;
 
 void e2d::ETimerManager::TimerProc()
 {
-	if (EApp::isPaused())
+	if (s_vTimers.empty() || EApp::isPaused())
 		return;
 
 	for (size_t i = 0; i < s_vTimers.size(); i++)
 	{
 		auto &t = s_vTimers[i];
-		if (t->isRunning())
+		if (t->_isReady())
 		{
-			if (t->getParentNode() && 
-				t->getParentNode()->getParentScene() == EApp::getCurrentScene())
-			{
-				if (t->_isReady())
-				{
-					t->_callOn();
-				}
-			}
+			t->_callOn();
 		}
 	}
 }

@@ -66,6 +66,9 @@ protected:
 	// 执行监听器回调函数
 	virtual void _callOn() = 0;
 
+	// 获取监听器状态是否就绪
+	virtual bool _isReady() const;
+
 protected:
 	EString		m_sName;
 	bool		m_bRunning;

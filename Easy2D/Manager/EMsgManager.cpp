@@ -24,21 +24,13 @@ void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 	do
 	{
-		auto &mlistener = s_vMouseListeners[--i];
+		auto mlistener = s_vMouseListeners[--i];
 
-		if (EApp::isPaused() && !mlistener->m_bAlways)
-			continue;
-
-		if (mlistener->m_bAlways || mlistener->isRunning())
+		if (mlistener->_isReady())
 		{
-			if (mlistener->getParentNode() && 
-				mlistener->getParentNode()->getParentScene() == EApp::getCurrentScene())
-			{
-				mlistener->_callOn();
-
-				if (mlistener->m_bSwallow)
-					break;
-			}
+			mlistener->_callOn();
+			if (mlistener->m_bSwallow)
+				break;
 		}
 	} while (i != 0);
 }
@@ -57,21 +49,13 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 	do
 	{
-		auto &klistener = s_vKeyboardListeners[--i];
+		auto klistener = s_vKeyboardListeners[--i];
 
-		if (EApp::isPaused() && !klistener->m_bAlways)
-			continue;
-
-		if (klistener->m_bAlways || klistener->isRunning())
+		if (klistener->_isReady())
 		{
-			if (klistener->getParentNode() && 
-				klistener->getParentNode()->getParentScene() == EApp::getCurrentScene())
-			{
-				klistener->_callOn();
-
-				if (klistener->m_bSwallow)
-					break;
-			}
+			klistener->_callOn();
+			if (klistener->m_bSwallow)
+				break;
 		}
 	} while (i != 0);
 }
