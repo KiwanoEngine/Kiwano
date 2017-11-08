@@ -10,6 +10,7 @@ class EAction;
 class EButton;
 class EButtonToggle;
 class EGeometry;
+class EMenu;
 
 class ENode :
 	public EObject
@@ -570,6 +571,8 @@ protected:
 class EButton :
 	public ENode
 {
+	friend EMenu;
+
 public:
 	// 创建一个空按钮
 	EButton();

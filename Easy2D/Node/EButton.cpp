@@ -14,6 +14,9 @@ e2d::EButton::EButton()
 	, m_pDisabled(nullptr)
 	, m_pListener(nullptr)
 {
+	m_pListener = new EListenerMouse(std::bind(&EButton::_updateStatus, this));
+	m_pListener->setAlwaysWorking(true);
+	EMsgManager::bindListener(m_pListener, this);
 }
 
 e2d::EButton::EButton(ENode * normal, const BUTTON_CLICK_CALLBACK & callback)
@@ -145,13 +148,6 @@ void e2d::EButton::setCallback(const BUTTON_CLICK_CALLBACK & callback)
 	WARN_IF(m_pNormal == nullptr, "EButton cannot work without something to show. Please set its normal displayed.");
 	
 	m_Callback = callback;
-
-	if (m_pListener == nullptr)
-	{
-		m_pListener = new EListenerMouse(std::bind(&EButton::_updateStatus, this));
-		m_pListener->setAlwaysWorking(true);
-		EMsgManager::bindListener(m_pListener, this);
-	}
 }
 
 void e2d::EButton::_setStatus(STATUS status)

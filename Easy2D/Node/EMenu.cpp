@@ -1,4 +1,5 @@
 #include "..\enodes.h"
+#include "..\elisteners.h"
 
 e2d::EMenu::EMenu()
 	: m_bEnable(true)
@@ -30,18 +31,40 @@ size_t e2d::EMenu::getButtonCount() const
 
 void e2d::EMenu::setEnable(bool enable)
 {
-	m_bEnable = enable;
-
-	for (auto &buttons : m_vButtons)
+	if (m_bEnable != enable)
 	{
-		buttons->setEnable(enable);
+		m_bEnable = enable;
+
+		for (auto &button : m_vButtons)
+		{
+			if (enable)
+			{
+				button->m_pListener->start();
+			}
+			else
+			{
+				button->m_pListener->stop();
+			}
+		}
 	}
 }
 
 void e2d::EMenu::addButton(EButton * button)
 {
-	this->addChild(button);
-	m_vButtons.push_back(button);
+	if (button)
+	{
+		this->addChild(button);
+		m_vButtons.push_back(button);
+
+		if (m_bEnable)
+		{
+			button->m_pListener->start();
+		}
+		else
+		{
+			button->m_pListener->stop();
+		}
+	}
 }
 
 bool e2d::EMenu::removeButton(EButton * button)
@@ -60,6 +83,8 @@ bool e2d::EMenu::removeButton(EButton * button)
 		{
 			if (m_vButtons[i] == button)
 			{
+				// 移除按钮前，将它的监听器启用
+				button->m_pListener->start();
 				m_vButtons.erase(m_vButtons.begin() + i);
 				return true;
 			}

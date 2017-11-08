@@ -214,6 +214,7 @@
     <ClCompile Include="Common\EMouseMsg.cpp" />
     <ClCompile Include="Common\EObject.cpp" />
     <ClCompile Include="Common\EPhysicsMsg.cpp" />
+    <ClCompile Include="Common\ESpriteFrame.cpp" />
     <ClCompile Include="Common\ETexture.cpp" />
     <ClCompile Include="Geometry\ECircle.cpp" />
     <ClCompile Include="Geometry\EEllipse.cpp" />
