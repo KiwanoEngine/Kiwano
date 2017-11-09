@@ -10,44 +10,44 @@ e2d::ETransitionScaleEmerge::ETransitionScaleEmerge(float duration, SCALE_EMERGE
 
 void e2d::ETransitionScaleEmerge::_setTarget(EScene * prev, EScene * next, bool & transitional)
 {
-	float prevScaleTo;
-	float nextScaleStart;
+	float prevScaleBy;
+	float nextScaleBy;
 	if (m_Mode == SCALE_EMERGE_MODE::ENTER)
 	{
-		prevScaleTo = 1.2f;
-		nextScaleStart = 0.8f;
+		prevScaleBy = 0.2f;
+		nextScaleBy = -0.2f;
 	}
 	else
 	{
-		prevScaleTo = 0.8f;
-		nextScaleStart = 1.2f;
+		prevScaleBy = -0.2f;
+		nextScaleBy = 0.2f;
 	}
 
 	// 初始化场景属性
-	next->getRoot()->setScale(nextScaleStart);
+	next->getRoot()->setScale(next->getRoot()->getScaleX() - nextScaleBy, next->getRoot()->getScaleY() - nextScaleBy);
 	next->getRoot()->setOpacity(0);
 
 	// 第一个场景淡出
 	auto prevActionFadeOut = new EActionFadeOut(m_fDuration);
-	auto prevActionScaleTo = new EActionScaleTo(m_fDuration, prevScaleTo);
+	auto prevActionScaleBy = new EActionScaleBy(m_fDuration, prevScaleBy);
 	auto action1 = new EActionTwoAtSameTime(
 		prevActionFadeOut,
-		prevActionScaleTo);
+		prevActionScaleBy);
 	if (prev)
 	{
 		prevActionFadeOut->setTarget(prev->getRoot());
-		prevActionScaleTo->setTarget(prev->getRoot());
+		prevActionScaleBy->setTarget(prev->getRoot());
 	}
 
 	// 第二个场景淡入
 	auto nextActionFadeOut = new EActionFadeIn(m_fDuration);
-	auto nextActionScaleTo = new EActionScaleTo(m_fDuration, 1);
+	auto nextActionScaleBy = new EActionScaleBy(m_fDuration, nextScaleBy);
 	auto action2 = new EActionTwoAtSameTime(
 		nextActionFadeOut,
-		nextActionScaleTo);
+		nextActionScaleBy);
 
 	nextActionFadeOut->setTarget(next->getRoot());
-	nextActionScaleTo->setTarget(next->getRoot());
+	nextActionScaleBy->setTarget(next->getRoot());
 
 	// 标志动画结束
 	auto action3 = new EActionCallback([&, prev, next] {

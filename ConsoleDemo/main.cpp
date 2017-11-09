@@ -1,35 +1,53 @@
 #include <easy2d.h>
 
+class Scene2 :
+	public EScene
+{
+public:
+	Scene2()
+	{
+		auto text = new EText(L"测试按钮");
+		auto text2 = new EText(L"测试按钮", L"", 22, EColor::BLUE);
+		auto button = new EButton(text, text2, text);
+		button->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
+		button->setCallback([]() {
+			EApp::backScene(new ETransitionScaleEmerge(1, ETransitionScaleEmerge::ENTER));
+		});
+		this->add(button);
+	}
+};
+
+class Scene :
+	public EScene
+{
+public:
+	Scene()
+	{
+		/*auto sprite = new ESprite(L"test2.png");
+		auto button = new EButton(sprite);
+		button->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
+		button->setCallback([]() {
+			EApp::enterScene(new Scene2(), new ETransitionScaleEmerge(1, ETransitionScaleEmerge::ENTER));
+		});
+		this->add(button);*/
+		auto sprite = new ESprite(L"test2.png");
+		sprite->setPivot(-1, 0);
+		sprite->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
+		this->add(sprite);
+
+		sprite->runAction(new EActionLoop(new EActionRotateBy(1, 60)));
+	}
+};
+
 int main()
 {
 	EApp app;
 
 	if (app.init(L"Easy2D Demo", 640, 480))
 	{
-		app.showConsole();
-		auto scene = new EScene();
+		ENode::setDefaultPiovt(0.5f, 0.5f);
 
-		// 创建一个文本
-		auto btnNormal = new EText(L"开");
-		auto btnSelected = new EText(L"开");
-		btnSelected->movePosY(2);
-		auto btnNormal2 = new EText(L"关");
-		auto btnSelected2 = new EText(L"关");
-		btnSelected2->movePosY(2);
-		// 创建一个按钮
-		auto button = new EButtonToggle(btnNormal, btnNormal2, btnSelected, btnSelected2);
-		button->setCallback([=]() {
-			//button->setEnable(false);
-		});
-		button->toggle();
-		button->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
-		scene->add(button);
-
-		// 创建按钮
-		auto button2 = new EButton(new EText(L"关闭"), [=]() { button->setEnable(!button->isEnable()); });
-		button2->setPos(40, 40);
-		scene->add(button2);
-
+		auto scene = new Scene();
 		app.enterScene(scene);
 
 		app.run();

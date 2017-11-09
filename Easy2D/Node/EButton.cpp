@@ -73,6 +73,7 @@ void e2d::EButton::setNormal(ENode * normal)
 			this->addChild(normal);
 		}
 		m_pNormal = normal;
+
 		_updateVisiable();
 	}
 }
@@ -139,6 +140,7 @@ void e2d::EButton::setEnable(bool bEnable)
 	if (m_bEnable != bEnable)
 	{
 		m_bEnable = bEnable;
+		_updateVisiable();
 		_updateStatus();
 	}
 }
@@ -157,6 +159,12 @@ void e2d::EButton::_setStatus(STATUS status)
 		m_eStatus = status;
 		_updateVisiable();
 	}
+}
+
+void e2d::EButton::_updateTransform()
+{
+	ENode::_updateTransform();
+	_updateStatus();
 }
 
 void e2d::EButton::_updateVisiable()

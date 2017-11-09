@@ -69,7 +69,6 @@ protected:
 	virtual ID2D1Geometry * _getD2dGeometry() const = 0;
 
 protected:
-	bool	m_bTransformed;
 	bool	m_bIsVisiable;
 	UINT32	m_nCategoryBitmask;
 	UINT32	m_nCollisionBitmask;

@@ -68,10 +68,10 @@ public:
 	// 获取节点大小（不考虑缩放）
 	virtual ESize getRealSize() const;
 
-	// 获取节点的锚点
+	// 获取节点的中心点
 	virtual float getPivotX() const;
 
-	// 获取节点的锚点
+	// 获取节点的中心点
 	virtual float getPivotY() const;
 
 	// 获取节点大小
@@ -226,20 +226,20 @@ public:
 		float opacity
 	);
 
-	// 设置支点的横向位置
-	// 默认为 0.5f, 范围 [0, 1]
+	// 设置中心点的横向位置
+	// 默认为 0, 范围 [0, 1]
 	virtual void setPivotX(
 		float pivotX
 	);
 
-	// 设置支点的纵向位置
-	// 默认为 0.5f, 范围 [0, 1]
+	// 设置中心点的纵向位置
+	// 默认为 0, 范围 [0, 1]
 	virtual void setPivotY(
 		float pivotY
 	);
 
-	// 设置支点位置
-	// 默认为 (0.5f, 0.5f), 范围 [0, 1]
+	// 设置中心点位置
+	// 默认为 (0, 0), 范围 [0, 1]
 	virtual void setPivot(
 		float pivotX,
 		float pivotY
@@ -306,6 +306,12 @@ public:
 		EPoint point
 	);
 
+	// 修改节点的默认中心点位置
+	static void setDefaultPiovt(
+		float defaultPiovtX,
+		float defaultPiovtY
+	);
+
 protected:
 	// 访问节点
 	virtual void _callOn();
@@ -330,14 +336,14 @@ protected:
 		EScene * scene
 	);
 
-	// 只考虑自身进行二维矩阵变换
-	void _updateTransformToReal();
+	// 对自身进行二维矩阵变换
+	virtual void _updateTransform();
 
 	// 更新所有子节点矩阵
-	void _updateChildrenTransform();
+	virtual void _updateChildrenTransform();
 
 	// 更新所有子节点透明度
-	void _updateChildrenOpacity();
+	virtual void _updateChildrenOpacity();
 
 	// 更新节点矩阵
 	static void _updateTransform(ENode * node);
@@ -384,11 +390,12 @@ protected:
 	bool		m_bVisiable;
 	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
-	bool		m_bTransformChildrenNeeded;
+	bool		m_bTransformNeeded;
 	EGeometry * m_pGeometry;
 	EScene *	m_pParentScene;
 	ENode *		m_pParent;
-	D2D1::Matrix3x2F	m_Matri;
+	D2D1::Matrix3x2F	m_MatriInitial;
+	D2D1::Matrix3x2F	m_MatriFinal;
 	EVector<ENode*>		m_vChildren;
 };
 
@@ -646,6 +653,9 @@ protected:
 	// 设置按钮状态
 	virtual void _setStatus(STATUS status);
 
+	// 对自身进行二维矩阵变换
+	virtual void _updateTransform() override;
+
 	// 刷新按钮显示
 	virtual void _updateVisiable();
 
@@ -715,13 +725,14 @@ public:
 		const BUTTON_CLICK_CALLBACK & callback = nullptr
 	);
 
-	// 切换开关状态
+	// 切换开关状态，并执行回调函数
 	void toggle();
 
 	// 获取开关状态
 	bool isToggleOn() const;
 
 	// 打开或关闭开关
+	// 仅设置按钮状态，不执行回调函数
 	void setToggle(
 		bool toggle
 	);

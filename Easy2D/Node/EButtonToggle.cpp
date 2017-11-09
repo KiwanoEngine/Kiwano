@@ -63,9 +63,13 @@ e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNorma
 
 void e2d::EButtonToggle::toggle()
 {
-	m_bToggle = !m_bToggle;
-	_updateToggle();
-	_updateVisiable();
+	// 设置按钮状态
+	setToggle(!m_bToggle);
+	// 执行回调函数
+	if (m_Callback)
+	{
+		m_Callback();
+	}
 }
 
 bool e2d::EButtonToggle::isToggleOn() const
@@ -79,6 +83,7 @@ void e2d::EButtonToggle::setToggle(bool toggle)
 	{
 		m_bToggle = toggle;
 		_updateToggle();
+		_updateVisiable();
 	}
 }
 

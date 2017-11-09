@@ -15,8 +15,8 @@ e2d::EScene::EScene()
 	m_pRoot->retain();
 	m_pRoot->_onEnter();
 	m_pRoot->_setParentScene(this);
+	m_pRoot->setPivot(0, 0);
 	m_pRoot->_setSize(EApp::getWidth(), EApp::getHeight());
-	m_pRoot->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
 }
 
 e2d::EScene::~EScene()

@@ -395,7 +395,7 @@ public:
 
 	// ÉèÖÃ×ÖÌå
 	void setFamily(
-		EString fontFamily
+		const EString & fontFamily
 	);
 
 	// ÉèÖÃ×ÖºÅ

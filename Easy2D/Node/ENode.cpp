@@ -6,6 +6,10 @@
 #include "..\Win\winbase.h"
 #include <algorithm>
 
+// 默认中心点位置
+static float s_fDefaultPiovtX = 0;
+static float s_fDefaultPiovtY = 0;
+
 e2d::ENode::ENode()
 	: m_nOrder(0)
 	, m_fScaleX(1.0f)
@@ -15,9 +19,10 @@ e2d::ENode::ENode()
 	, m_fSkewAngleY(0)
 	, m_fDisplayOpacity(1.0f)
 	, m_fRealOpacity(1.0f)
-	, m_fPivotX(0.5f)
-	, m_fPivotY(0.5f)
-	, m_Matri(D2D1::Matrix3x2F::Identity())
+	, m_fPivotX(s_fDefaultPiovtX)
+	, m_fPivotY(s_fDefaultPiovtY)
+	, m_MatriInitial(D2D1::Matrix3x2F::Identity())
+	, m_MatriFinal(D2D1::Matrix3x2F::Identity())
 	, m_bVisiable(true)
 	, m_bDisplayedInScene(false)
 	, m_pGeometry(nullptr)
@@ -25,7 +30,7 @@ e2d::ENode::ENode()
 	, m_pParentScene(nullptr)
 	, m_nHashName(0)
 	, m_bSortChildrenNeeded(false)
-	, m_bTransformChildrenNeeded(false)
+	, m_bTransformNeeded(false)
 {
 }
 
@@ -64,7 +69,7 @@ void e2d::ENode::_callOn()
 		return;
 	}
 
-	if (m_bTransformChildrenNeeded)
+	if (m_bTransformNeeded)
 	{
 		_updateTransform(this);
 	}
@@ -89,7 +94,7 @@ void e2d::ENode::_callOn()
 			}
 		}
 
-		GetRenderTarget()->SetTransform(m_Matri);
+		GetRenderTarget()->SetTransform(m_MatriFinal);
 		// 渲染自身
 		this->_onRender();
 
@@ -99,7 +104,7 @@ void e2d::ENode::_callOn()
 	}
 	else
 	{
-		GetRenderTarget()->SetTransform(m_Matri);
+		GetRenderTarget()->SetTransform(m_MatriFinal);
 		// 渲染自身
 		this->_onRender();
 	}
@@ -169,20 +174,15 @@ void e2d::ENode::_sortChildren()
 	}
 }
 
-void e2d::ENode::_updateTransformToReal()
+void e2d::ENode::_updateTransform()
 {
-	// 计算锚点坐标
+	// 计算中心点坐标
 	D2D1_POINT_2F pivot = D2D1::Point2F(
 		getRealWidth() * m_fPivotX,
 		getRealHeight() * m_fPivotY
 	);
-	// 计算左上角坐标
-	D2D1_POINT_2F upperLeftCorner = D2D1::Point2F(
-		m_Pos.x - getRealWidth() * m_fPivotX,
-		m_Pos.y - getRealHeight() * m_fPivotY
-	);
-	// 二维矩形变换
-	m_Matri = D2D1::Matrix3x2F::Scale(
+	// 初步的二维矩形变换，子节点将根据这个矩阵进行变换
+	m_MatriInitial = D2D1::Matrix3x2F::Scale(
 		m_fScaleX,
 		m_fScaleY,
 		pivot
@@ -194,9 +194,16 @@ void e2d::ENode::_updateTransformToReal()
 		m_fRotation,
 		pivot
 	) * D2D1::Matrix3x2F::Translation(
-		upperLeftCorner.x,
-		upperLeftCorner.y
+		m_Pos.x,
+		m_Pos.y
 	);
+	// 和父节点矩阵相乘
+	if (m_pParent)
+	{
+		m_MatriInitial = m_MatriInitial * m_pParent->m_MatriInitial;
+	}
+	// 根据自身中心点做最终变换
+	m_MatriFinal = m_MatriInitial * D2D1::Matrix3x2F::Translation(-pivot.x, -pivot.y);
 }
 
 void e2d::ENode::_updateChildrenTransform()
@@ -210,13 +217,8 @@ void e2d::ENode::_updateChildrenTransform()
 void e2d::ENode::_updateTransform(ENode * node)
 {
 	// 计算自身的转换矩阵
-	node->_updateTransformToReal();
-	// 和父节点矩阵相乘
-	if (node->m_pParent)
-	{
-		node->m_Matri = node->m_Matri * node->m_pParent->m_Matri;
-	}
-	// 转换几何形状
+	node->_updateTransform();
+	// 绑定于自身的形状也进行相应转换
 	if (node->m_pGeometry)
 	{
 		node->m_pGeometry->_transform();
@@ -224,12 +226,7 @@ void e2d::ENode::_updateTransform(ENode * node)
 	// 遍历子节点下的所有节点
 	node->_updateChildrenTransform();
 	// 标志已执行过变换
-	node->m_bTransformChildrenNeeded = false;
-	// 绑定于自身的形状也进行相应转换
-	if (node->m_pGeometry)
-	{
-		node->m_pGeometry->m_bTransformed = true;
-	}
+	node->m_bTransformNeeded = false;
 }
 
 void e2d::ENode::_updateChildrenOpacity()
@@ -376,7 +373,7 @@ void e2d::ENode::setPos(float x, float y)
 
 	m_Pos.x = x;
 	m_Pos.y = y;
-	m_bTransformChildrenNeeded = true;
+	m_bTransformNeeded = true;
 }
 
 void e2d::ENode::movePosX(float x)
@@ -421,7 +418,7 @@ void e2d::ENode::_setSize(float width, float height)
 
 	m_Size.width = width;
 	m_Size.height = height;
-	m_bTransformChildrenNeeded = true;
+	m_bTransformNeeded = true;
 }
 
 void e2d::ENode::setScaleX(float scaleX)
@@ -446,7 +443,7 @@ void e2d::ENode::setScale(float scaleX, float scaleY)
 
 	m_fScaleX = scaleX;
 	m_fScaleY = scaleY;
-	m_bTransformChildrenNeeded = true;
+	m_bTransformNeeded = true;
 }
 
 void e2d::ENode::setSkewX(float angleX)
@@ -466,7 +463,7 @@ void e2d::ENode::setSkew(float angleX, float angleY)
 
 	m_fSkewAngleX = angleX;
 	m_fSkewAngleY = angleY;
-	m_bTransformChildrenNeeded = true;
+	m_bTransformNeeded = true;
 }
 
 void e2d::ENode::setRotation(float angle)
@@ -475,7 +472,7 @@ void e2d::ENode::setRotation(float angle)
 		return;
 
 	m_fRotation = angle;
-	m_bTransformChildrenNeeded = true;
+	m_bTransformNeeded = true;
 }
 
 void e2d::ENode::setOpacity(float opacity)
@@ -505,7 +502,7 @@ void e2d::ENode::setPivot(float pivotX, float pivotY)
 
 	m_fPivotX = min(max(pivotX, 0), 1);
 	m_fPivotY = min(max(pivotY, 0), 1);
-	m_bTransformChildrenNeeded = true;
+	m_bTransformNeeded = true;
 }
 
 void e2d::ENode::setGeometry(EGeometry * geometry)
@@ -547,8 +544,6 @@ void e2d::ENode::addChild(ENode * child, int order  /* = 0 */)
 
 		child->m_pParent = this;
 
-		_updateOpacity(child);
-
 		if (this->m_pParentScene)
 		{
 			child->_setParentScene(this->m_pParentScene);
@@ -559,6 +554,11 @@ void e2d::ENode::addChild(ENode * child, int order  /* = 0 */)
 			child->_onEnter();
 		}
 
+		// 更新子节点透明度
+		_updateOpacity(child);
+		// 更新节点转换
+		child->m_bTransformNeeded = true;
+		// 更新子节点排序
 		m_bSortChildrenNeeded = true;
 	}
 }
@@ -710,27 +710,26 @@ void e2d::ENode::pauseAction(EAction * action)
 
 bool e2d::ENode::isPointIn(EPoint point)
 {
-	if (m_bTransformChildrenNeeded)
+	if (m_bTransformNeeded)
 	{
 		_updateTransform(this);
 	}
-	// 保存节点所在矩形
-	D2D1_POINT_2F leftTop = m_Matri.TransformPoint(
-		D2D1::Point2F(0, 0)
+	// 为节点创建一个形状
+	ID2D1RectangleGeometry * rect;
+	GetFactory()->CreateRectangleGeometry(
+		D2D1::RectF(0, 0, getRealWidth(), getRealHeight()),
+		&rect
 	);
-	D2D1_POINT_2F rightBottom = m_Matri.TransformPoint(
-		D2D1::Point2F(getRealWidth(), getRealHeight())
+	// 判断点是否在形状内
+	BOOL ret;
+	rect->FillContainsPoint(
+		D2D1::Point2F(
+			point.x,
+			point.y),
+		&m_MatriFinal,
+		&ret
 	);
-	D2D1_RECT_F rt = D2D1::RectF(
-		leftTop.x,
-		leftTop.y,
-		rightBottom.x,
-		rightBottom.y
-	);
-	if (point.x >= rt.left &&
-		point.x <= rt.right &&
-		point.y >= rt.top &&
-		point.y <= rt.bottom)
+	if (ret)
 	{
 		return true;
 	}
@@ -741,6 +740,12 @@ bool e2d::ENode::isPointIn(EPoint point)
 				return true;
 	}
 	return false;
+}
+
+void e2d::ENode::setDefaultPiovt(float defaultPiovtX, float defaultPiovtY)
+{
+	s_fDefaultPiovtX = min(max(defaultPiovtX, 0), 1);
+	s_fDefaultPiovtY = min(max(defaultPiovtY, 0), 1);
 }
 
 void e2d::ENode::stopAction(EAction * action)

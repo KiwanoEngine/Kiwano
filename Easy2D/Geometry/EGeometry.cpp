@@ -4,8 +4,7 @@
 #include "..\Win\winbase.h"
 
 e2d::EGeometry::EGeometry()
-	: m_bTransformed(false)
-	, m_nCategoryBitmask(0)
+	: m_nCategoryBitmask(0)
 	, m_nCollisionBitmask(0)
 	, m_bIsVisiable(true)
 	, m_nColor(EColor::RED)
@@ -105,7 +104,7 @@ void e2d::EGeometry::_transform()
 		// 根据父节点转换几何图形
 		GetFactory()->CreateTransformedGeometry(
 			_getD2dGeometry(),
-			m_pParentNode->m_Matri,
+			m_pParentNode->m_MatriFinal,
 			&m_pTransformedGeometry
 		);
 
