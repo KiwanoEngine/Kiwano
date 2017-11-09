@@ -93,7 +93,7 @@ float e2d::EFileUtils::getFloat(const EString & key, float default)
 	return std::stof(temp);
 }
 
-e2d::EString e2d::EFileUtils::geTString(const EString & key, const EString & default)
+e2d::EString e2d::EFileUtils::getString(const EString & key, const EString & default)
 {
 	TCHAR temp[256] = { 0 };
 	::GetPrivateProfileString(L"Default", key.c_str(), default.c_str(), temp, 255, getDefaultSavePath().c_str());

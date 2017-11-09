@@ -31,20 +31,24 @@ public:
 		});
 		this->add(button);*/
 		auto sprite = new ESprite(L"test2.png");
-		sprite->setPivot(-1, 0);
 		sprite->setPos(EApp::getWidth() / 2, EApp::getHeight() / 2);
 		this->add(sprite);
 
 		sprite->runAction(new EActionLoop(new EActionRotateBy(1, 60)));
 	}
 };
-
+#include <iostream>
 int main()
 {
 	EApp app;
 
 	if (app.init(L"Easy2D Demo", 640, 480))
 	{
+		app.showConsole();
+		for (int i = 0; i < 20; i++)
+		{
+			std::cout << ERandom::between(1, 3) << std::endl;
+		}
 		ENode::setDefaultPiovt(0.5f, 0.5f);
 
 		auto scene = new Scene();

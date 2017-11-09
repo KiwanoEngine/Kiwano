@@ -142,7 +142,7 @@ public:
 	);
 
 	// 获取 字符串 型的值（若不存在则返回 default 参数的值）
-	static EString geTString(
+	static EString getString(
 		const EString & key,
 		const EString & default
 	);
