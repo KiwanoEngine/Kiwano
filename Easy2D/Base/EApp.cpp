@@ -714,7 +714,12 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 					pEApp->getCurrentScene()->onActivate() &&
 					pEApp->onActivate())
 				{
-					pEApp->m_bPaused = false;
+					EApp::get()->m_bPaused = false;
+					// 刷新当前时间
+					GetNow() = steady_clock::now();
+					// 重置动画和定时器
+					EActionManager::_resetAllActions();
+					ETimerManager::_resetAllTimers();
 				}
 			}
 		}
