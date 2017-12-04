@@ -73,6 +73,14 @@ void e2d::EActionSequence::_reset()
 	m_nActionIndex = 0;
 }
 
+void e2d::EActionSequence::_resetTime()
+{
+	for (auto action : m_vActions)
+	{
+		action->_resetTime();
+	}
+}
+
 void e2d::EActionSequence::addAction(EAction * action)
 {
 	if (action)

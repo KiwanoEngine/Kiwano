@@ -1,6 +1,5 @@
 #include "..\etools.h"
 #include "..\Win\winbase.h"
-#include <sstream>
 #include <algorithm>
 #include <commdlg.h>
 

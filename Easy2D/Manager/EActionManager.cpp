@@ -124,13 +124,13 @@ void e2d::EActionManager::_resetAllActions()
 {
 	for (const auto & action : s_vActions)
 	{
-		action->m_tLast = GetNow();
+		action->_resetTime();
 	}
 }
 
 void e2d::EActionManager::ActionProc()
 {
-	if (EApp::isPaused() || s_vActions.empty())
+	if (s_vActions.empty())
 		return;
 	
 	// 循环遍历所有正在运行的动作

@@ -370,31 +370,14 @@ void e2d::EMusicUtils::setBackgroundMusicVolume(float volume)
 
 void e2d::EMusicUtils::playMusic(const EString & musicFilePath, bool bLoop)
 {
-	MCI_OPEN_PARMS mciOpen = { 0 };
-	mciOpen.lpstrElementName = musicFilePath.c_str();
+	size_t nRet = ::Hash(musicFilePath);
 
-	// 打开这个文件
-	MCIERROR mciError;
-	mciError = mciSendCommand(
-		0,
-		MCI_OPEN,
-		MCI_OPEN_ELEMENT | MCI_NOTIFY,
-		reinterpret_cast<DWORD_PTR>(&mciOpen)
-	);
+	preloadMusic(musicFilePath);
 
-	if (!mciError)
+	MusicList::iterator p = getMciPlayerList().find(nRet);
+	if (p != getMciPlayerList().end())
 	{
-		// 设置播放参数
-		MCI_PLAY_PARMS mciPlay = { 0 };
-		MCIERROR s_mciError;
-
-		// 播放声音
-		s_mciError = mciSendCommand(
-			mciOpen.wDeviceID,
-			MCI_PLAY,
-			MCI_FROM | MCI_NOTIFY | (bLoop ? MCI_DGV_PLAY_REPEAT : 0),
-			reinterpret_cast<DWORD_PTR>(&mciPlay)
-		);
+		p->second->play(bLoop);
 	}
 }
 

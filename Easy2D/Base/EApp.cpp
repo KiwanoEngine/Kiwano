@@ -332,6 +332,11 @@ void e2d::EApp::_mainLoop()
 
 void e2d::EApp::_onControl()
 {
+	if (isPaused())
+	{
+		return;
+	}
+
 	// 正在切换场景时，执行场景切换动画
 	if (m_bTransitional)
 	{
@@ -708,13 +713,13 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 					pEApp->m_bPaused = true;
 				}
 			}
-			else
+			else if (pEApp->m_bPaused)
 			{
 				if (pEApp->getCurrentScene() && 
 					pEApp->getCurrentScene()->onActivate() &&
 					pEApp->onActivate())
 				{
-					EApp::get()->m_bPaused = false;
+					pEApp->m_bPaused = false;
 					// 刷新当前时间
 					GetNow() = steady_clock::now();
 					// 重置动画和定时器

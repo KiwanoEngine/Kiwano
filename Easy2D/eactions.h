@@ -73,6 +73,9 @@ protected:
 	// 重置动作
 	virtual void _reset();
 
+	// 重置动画时间
+	virtual void _resetTime();
+
 protected:
 	bool		m_bRunning;
 	bool		m_bEnding;
@@ -410,6 +413,9 @@ protected:
 	// 重置动作
 	virtual void _reset() override;
 
+	// 重置动画时间
+	virtual void _resetTime() override;
+
 protected:
 	EAction *	m_pFirstAction;
 	EAction *	m_pSecondAction;
@@ -454,6 +460,9 @@ protected:
 
 	// 重置动作
 	virtual void _reset() override;
+
+	// 重置动画时间
+	virtual void _resetTime() override;
 
 protected:
 	UINT					m_nActionIndex;
@@ -515,6 +524,9 @@ protected:
 	// 重置动作
 	virtual void _reset() override;
 
+	// 重置动画时间
+	virtual void _resetTime() override;
+
 protected:
 	EAction *	m_pFirstAction;
 	EAction *	m_pSecondAction;
@@ -545,6 +557,9 @@ protected:
 
 	// 重置动作
 	virtual void _reset() override;
+
+	// 重置动画时间
+	virtual void _resetTime() override;
 
 protected:
 	EAction * m_pAction;

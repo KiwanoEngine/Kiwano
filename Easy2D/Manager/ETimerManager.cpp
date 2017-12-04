@@ -8,7 +8,7 @@ static e2d::EVector<e2d::ETimer*> s_vTimers;
 
 void e2d::ETimerManager::TimerProc()
 {
-	if (s_vTimers.empty() || EApp::isPaused())
+	if (s_vTimers.empty())
 		return;
 
 	for (size_t i = 0; i < s_vTimers.size(); i++)

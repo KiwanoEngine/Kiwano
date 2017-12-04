@@ -97,6 +97,10 @@ void e2d::EAction::_reset()
 {
 	m_bInit = false;
 	m_bEnding = false;
-	// 记录当前时间
+	m_tLast = GetNow();
+}
+
+void e2d::EAction::_resetTime()
+{
 	m_tLast = GetNow();
 }

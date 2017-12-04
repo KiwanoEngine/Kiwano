@@ -70,3 +70,9 @@ void e2d::EActionTwo::_reset()
 	m_pFirstAction->_reset();
 	m_pSecondAction->_reset();
 }
+
+void e2d::EActionTwo::_resetTime()
+{
+	m_pFirstAction->_resetTime();
+	m_pSecondAction->_resetTime();
+}

@@ -53,3 +53,8 @@ void e2d::EActionLoop::_reset()
 	m_pAction->_reset();
 	m_nTimes = 0;
 }
+
+void e2d::EActionLoop::_resetTime()
+{
+	m_pAction->_resetTime();
+}
