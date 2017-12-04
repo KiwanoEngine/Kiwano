@@ -66,7 +66,12 @@ public:
 
 	// 设置定时器重复执行次数
 	void setRepeatTimes(
-		int repeatTimes
+		int nRepeatTimes
+	);
+
+	// 设置定时器在绑定后立即执行一次
+	virtual void setRunAtOnce(
+		bool bAtOnce
 	);
 
 	// 绑定定时器到场景

@@ -79,6 +79,11 @@ void e2d::ETimer::setRepeatTimes(int repeatTimes)
 	m_nRepeatTimes = repeatTimes;
 }
 
+void e2d::ETimer::setRunAtOnce(bool bAtOnce)
+{
+	m_bAtOnce = bAtOnce;
+}
+
 void e2d::ETimer::bindWith(EScene * pParentScene)
 {
 	ETimerManager::bindTimer(this, pParentScene);
