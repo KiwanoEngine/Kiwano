@@ -647,6 +647,25 @@ public:
 		const BUTTON_CLICK_CALLBACK & callback
 	);
 
+	// 设置中心点的横向位置
+	// 默认为 0, 范围 [0, 1]
+	virtual void setPivotX(
+		float pivotX
+	) override;
+
+	// 设置中心点的纵向位置
+	// 默认为 0, 范围 [0, 1]
+	virtual void setPivotY(
+		float pivotY
+	) override;
+
+	// 设置中心点位置
+	// 默认为 (0, 0), 范围 [0, 1]
+	virtual void setPivot(
+		float pivotX,
+		float pivotY
+	) override;
+
 protected:
 	enum STATUS { NORMAL, MOUSEOVER, SELECTED };
 

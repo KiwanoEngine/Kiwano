@@ -71,6 +71,7 @@ void e2d::EButton::setNormal(ENode * normal)
 		if (normal)
 		{
 			this->addChild(normal);
+			normal->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pNormal = normal;
 
@@ -91,6 +92,7 @@ void e2d::EButton::setMouseOver(ENode * mouseover)
 		if (mouseover)
 		{
 			this->addChild(mouseover);
+			mouseover->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pMouseover = mouseover;
 		_updateVisiable();
@@ -110,6 +112,7 @@ void e2d::EButton::setSelected(ENode * selected)
 		if (selected)
 		{
 			this->addChild(selected);
+			selected->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pSelected = selected;
 		_updateVisiable();
@@ -129,6 +132,7 @@ void e2d::EButton::setDisabled(ENode * disabled)
 		if (disabled)
 		{
 			this->addChild(disabled);
+			disabled->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pDisabled = disabled;
 		_updateVisiable();
@@ -150,6 +154,33 @@ void e2d::EButton::setCallback(const BUTTON_CLICK_CALLBACK & callback)
 	WARN_IF(m_pNormal == nullptr, "EButton cannot work without something to show. Please set its normal displayed.");
 	
 	m_Callback = callback;
+}
+
+void e2d::EButton::setPivotX(float pivotX)
+{
+	ENode::setPivotX(pivotX);
+	if (m_pNormal) m_pNormal->setPivotX(pivotX);
+	if (m_pMouseover) m_pMouseover->setPivotX(pivotX);
+	if (m_pSelected) m_pSelected->setPivotX(pivotX);
+	if (m_pDisabled) m_pDisabled->setPivotX(pivotX);
+}
+
+void e2d::EButton::setPivotY(float pivotY)
+{
+	ENode::setPivotY(pivotY);
+	if (m_pNormal) m_pNormal->setPivotY(pivotY);
+	if (m_pMouseover) m_pMouseover->setPivotY(pivotY);
+	if (m_pSelected) m_pSelected->setPivotY(pivotY);
+	if (m_pDisabled) m_pDisabled->setPivotY(pivotY);
+}
+
+void e2d::EButton::setPivot(float pivotX, float pivotY)
+{
+	ENode::setPivot(pivotX, pivotY);
+	if (m_pNormal) m_pNormal->setPivot(pivotX, pivotY);
+	if (m_pMouseover) m_pMouseover->setPivot(pivotX, pivotY);
+	if (m_pSelected) m_pSelected->setPivot(pivotX, pivotY);
+	if (m_pDisabled) m_pDisabled->setPivot(pivotX, pivotY);
 }
 
 void e2d::EButton::_setStatus(STATUS status)
