@@ -19,19 +19,18 @@ class ETransition;
 class EApp
 {
 public:
-	EApp();
-
-	virtual ~EApp();
+	// 获取程序实例
+	static EApp * getInstance();
 
 	// 初始化游戏界面
-	bool init(
+	static bool init(
 		const EString &title,	/* 窗口标题 */
 		UINT32 width,			/* 窗口宽度 */
 		UINT32 height			/* 窗口高度 */
 	);
 
 	// 初始化游戏界面
-	bool init(
+	static bool init(
 		const EString &title,	/* 窗口标题 */
 		UINT32 width,			/* 窗口宽度 */
 		UINT32 height,			/* 窗口高度 */
@@ -39,19 +38,7 @@ public:
 	);
 
 	// 启动程序
-	void run();
-
-	// 重写这个函数，它将在窗口激活时执行
-	virtual bool onActivate();
-
-	// 重写这个函数，它将在窗口非激活时执行
-	virtual bool onInactive();
-
-	// 重写这个函数，它将在关闭窗口时执行
-	virtual bool onCloseWindow();
-
-	// 获取程序实例
-	static EApp * get();
+	static int run();
 
 	// 暂停游戏
 	static void pause();
@@ -59,20 +46,14 @@ public:
 	// 继续游戏
 	static void resume();
 
-	// 游戏是否暂停
-	static bool isPaused();
+	// 结束游戏
+	static void quit();
 
 	// 切换场景
 	static void enterScene(
-		EScene * scene,					/* 下一个场景的指针 */
-		bool saveCurrentScene = true	/* 是否保存当前场景 */
-	);
-
-	// 切换场景
-	static void enterScene(
-		EScene * scene,					/* 下一个场景的指针 */
-		ETransition * transition,		/* 场景切换动画 */
-		bool saveCurrentScene = true	/* 是否保存当前场景 */
+		EScene * scene,						/* 下一个场景的指针 */
+		bool saveCurrentScene = true,		/* 是否保存当前场景 */
+		ETransition * transition = nullptr	/* 场景切换动画 */
 	);
 
 	// 返回上一场景
@@ -94,11 +75,8 @@ public:
 		bool show = true
 	);
 
-	// 终止程序
-	static void quit();
-
-	// 终止程序
-	static void end();
+	// 游戏是否暂停
+	static bool isPaused();
 
 	// 获取窗口标题
 	static EString getTitle();
@@ -155,7 +133,21 @@ public:
 		UINT32 fps
 	);
 
-protected:
+public:
+	// 重写这个函数，它将在窗口激活时执行
+	virtual bool onActivate();
+
+	// 重写这个函数，它将在窗口非激活时执行
+	virtual bool onInactive();
+
+	// 重写这个函数，它将在关闭窗口时执行
+	virtual bool onCloseWindow();
+
+private:
+	EApp();
+
+	virtual ~EApp();
+
 	// 游戏主循环
 	void _mainLoop();
 
@@ -169,7 +161,7 @@ protected:
 	void _enterNextScene();
 
 	// 刷新游戏时间
-	static void _updateTime();
+	void _updateTime();
 
 	// 窗口程序
 	static LRESULT CALLBACK WndProc(
@@ -179,7 +171,7 @@ protected:
 		LPARAM lParam
 	);
 
-protected:
+private:
 	bool	m_bEnd;
 	bool	m_bPaused;
 	bool	m_bManualPaused;

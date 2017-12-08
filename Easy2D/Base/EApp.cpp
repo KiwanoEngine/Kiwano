@@ -33,27 +33,23 @@ e2d::EApp::EApp()
 	, m_pCurrentScene(nullptr)
 	, m_pNextScene(nullptr)
 {
-	ASSERT(s_pInstance == nullptr, "EApp instance already exists!");
-	s_pInstance = this;		// 保存实例对象
-
-	CoInitialize(NULL);
 }
 
 e2d::EApp::~EApp()
 {
-	// 释放资源
 	SafeReleaseInterface(&GetSolidColorBrush());
 	SafeReleaseInterface(&GetRenderTarget());
 	SafeReleaseInterface(&GetFactory());
 	SafeReleaseInterface(&GetImagingFactory());
 	SafeReleaseInterface(&GetDirectWriteFactory());
-	
-	CoUninitialize();
 }
 
-e2d::EApp * e2d::EApp::get()
+e2d::EApp * e2d::EApp::getInstance()
 {
-	ASSERT(s_pInstance != nullptr, "Nonexistent EApp instance.");
+	if (!s_pInstance)
+	{
+		s_pInstance = new EApp();
+	}
 	return s_pInstance;		// 获取 EApp 的唯一实例
 }
 
@@ -64,6 +60,8 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height)
 
 bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowStyle wStyle)
 {
+	CoInitialize(NULL);
+
 	HRESULT hr;
 
 	// 注册窗口类
@@ -122,19 +120,19 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 		dwStyle |= WS_MINIMIZEBOX;
 	}
 	// 保存窗口是否置顶显示
-	m_bTopMost = wStyle.m_bTopMost;
+	EApp::getInstance()->m_bTopMost = wStyle.m_bTopMost;
 	// 保存窗口名称
-	m_sTitle = title;
+	EApp::getInstance()->m_sTitle = title;
 	// 创建窗口
 	GetHWnd() = CreateWindow(
 		L"Easy2DApp",
-		m_sTitle.c_str(),
+		title.c_str(),
 		dwStyle,
 		0, 0, width, height,
 		NULL,
 		NULL,
 		HINST_THISCOMPONENT,
-		this
+		NULL
 	);
 
 	hr = GetHWnd() ? S_OK : E_FAIL;
@@ -142,9 +140,9 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 	if (SUCCEEDED(hr))
 	{
 		// 禁用输入法
-		this->setKeyboardLayoutEnable(false);
+		EApp::setKeyboardLayoutEnable(false);
 		// 重设客户区大小
-		this->setWindowSize(width, height);
+		EApp::setWindowSize(width, height);
 	}
 	else
 	{
@@ -159,18 +157,67 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 	return SUCCEEDED(hr);
 }
 
+int e2d::EApp::run()
+{
+	if (GetHWnd() == nullptr)
+	{
+		MessageBox(nullptr, L"Invalid window handle!", L"Error", MB_OK);
+		return -1;
+	}
+
+	EApp * pApp = EApp::getInstance();
+	// 进入第一个场景
+	pApp->_enterNextScene();
+	// 关闭控制台
+	if (!pApp->m_bShowConsole)
+	{
+		showConsole(false);
+	}
+	// 显示窗口
+	ShowWindow(GetHWnd(), SW_SHOWNORMAL);
+	UpdateWindow(GetHWnd());
+	// 设置窗口置顶
+	if (pApp->m_bTopMost)
+	{
+		SetWindowPos(GetHWnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	}
+
+	// 记录开始时间
+	s_tStart = steady_clock::now();
+	// 窗口消息
+	MSG msg;
+
+	while (!pApp->m_bEnd)
+	{
+		// 处理窗口消息
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		// 执行主循环
+		pApp->_mainLoop();
+	}
+
+	// 关闭控制台
+	EApp::showConsole(false);
+
+	CoUninitialize();
+	return 0;
+}
+
 void e2d::EApp::pause()
 {
-	EApp::get()->m_bManualPaused = true;
+	EApp::getInstance()->m_bManualPaused = true;
 }
 
 void e2d::EApp::resume()
 {
 	if (isPaused())
 	{
-		EApp::get()->m_bPaused = false;
-		EApp::get()->m_bManualPaused = false;
-		EApp::_updateTime();
+		EApp::getInstance()->m_bPaused = false;
+		EApp::getInstance()->m_bManualPaused = false;
+		EApp::getInstance()->_updateTime();
 	}
 }
 
@@ -179,13 +226,18 @@ bool e2d::EApp::isPaused()
 	return s_pInstance->m_bPaused || s_pInstance->m_bManualPaused;
 }
 
+void e2d::EApp::quit()
+{
+	getInstance()->m_bEnd = true;	// 这个变量将控制游戏是否结束
+}
+
 void e2d::EApp::showConsole(bool show /* = true */)
 {
 	static FILE * stdoutstream = nullptr;
 	static FILE * stdinstream = nullptr;
 	static FILE * stderrstream = nullptr;
 
-	EApp::get()->m_bShowConsole = show;
+	EApp::getInstance()->m_bShowConsole = show;
 	// 查找已存在的控制台句柄
 	HWND hwnd = GetConsoleWindow();
 	// 关闭控制台
@@ -225,53 +277,6 @@ void e2d::EApp::showConsole(bool show /* = true */)
 			FreeConsole();
 		}
 	}
-}
-
-// 运行游戏
-void e2d::EApp::run()
-{
-	ASSERT(GetHWnd() != nullptr, "Cannot find Game Window.");
-	// 进入第一个场景
-	_enterNextScene();
-	// 关闭控制台
-	if (!m_bShowConsole)
-	{
-		showConsole(false);
-	}
-	// 显示窗口
-	ShowWindow(GetHWnd(), SW_SHOWNORMAL);
-	UpdateWindow(GetHWnd());
-	// 设置窗口置顶
-	if (m_bTopMost)
-	{
-		SetWindowPos(GetHWnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-	}
-
-	// 记录开始时间
-	s_tStart = steady_clock::now();
-	// 窗口消息
-	MSG msg;
-
-	while (!m_bEnd)
-	{
-		// 处理窗口消息
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		// 执行主循环
-		_mainLoop();
-	}
-
-	// 关闭控制台
-	EApp::showConsole(false);
-}
-
-void e2d::EApp::setFPS(UINT32 fps)
-{
-	fps = min(max(fps, 30), 120);
-	s_pInstance->m_nAnimationInterval = 1000 / fps;
 }
 
 bool e2d::EApp::onActivate()
@@ -419,12 +424,12 @@ void e2d::EApp::setWindowTitle(const EString &title)
 	// 设置窗口标题
 	SetWindowText(GetHWnd(), title.c_str());
 	// 保存当前标题，用于修改窗口大小时恢复标题
-	get()->m_sTitle = title;
+	getInstance()->m_sTitle = title;
 }
 
 e2d::EString e2d::EApp::getTitle()
 {
-	return get()->m_sTitle;
+	return getInstance()->m_sTitle;
 }
 
 float e2d::EApp::getWidth()
@@ -442,34 +447,29 @@ e2d::ESize e2d::EApp::getSize()
 	return ESize(GetRenderTarget()->GetSize().width, GetRenderTarget()->GetSize().height);
 }
 
-void e2d::EApp::enterScene(EScene * scene, bool saveCurrentScene /* = true */)
-{
-	enterScene(scene, nullptr, saveCurrentScene);
-}
-
-void e2d::EApp::enterScene(EScene * scene, ETransition * transition, bool saveCurrentScene /* = true */)
+void e2d::EApp::enterScene(EScene * scene, bool saveCurrentScene /* = true */, ETransition * transition /* = nullptr */)
 {
 	scene->retain();
 	// 保存下一场景的指针
-	get()->m_pNextScene = scene;
+	getInstance()->m_pNextScene = scene;
 	// 切换场景时，是否保存当前场景
-	if (get()->m_pCurrentScene)
+	if (getInstance()->m_pCurrentScene)
 	{
-		get()->m_pCurrentScene->m_bWillSave = saveCurrentScene;
+		getInstance()->m_pCurrentScene->m_bWillSave = saveCurrentScene;
 	}
 	// 设置切换场景动画
 	if (transition)
 	{
-		get()->m_bTransitional = true;
+		getInstance()->m_bTransitional = true;
 		transition->_setTarget(
-			get()->m_pCurrentScene, 
-			get()->m_pNextScene, 
-			get()->m_bTransitional
+			getInstance()->m_pCurrentScene, 
+			getInstance()->m_pNextScene, 
+			getInstance()->m_bTransitional
 		);
 	}
 	else
 	{
-		get()->m_bTransitional = false;
+		getInstance()->m_bTransitional = false;
 	}
 }
 
@@ -480,30 +480,30 @@ void e2d::EApp::backScene(ETransition * transition /* = nullptr */)
 	if (s_SceneStack.size() == 0) return;
 
 	// 从栈顶取出场景指针，作为下一场景
-	get()->m_pNextScene = s_SceneStack.top();
+	getInstance()->m_pNextScene = s_SceneStack.top();
 	s_SceneStack.pop();
 
 	// 返回上一场景时，不保存当前场景
-	if (get()->m_pCurrentScene)
+	if (getInstance()->m_pCurrentScene)
 	{
-		get()->m_pCurrentScene->m_bWillSave = false;
+		getInstance()->m_pCurrentScene->m_bWillSave = false;
 	}
 
 	// 设置切换场景动画
 	if (transition)
 	{
-		get()->m_bTransitional = true;
+		getInstance()->m_bTransitional = true;
 		transition->_setTarget(
-			get()->m_pCurrentScene, 
-			get()->m_pNextScene, 
-			get()->m_bTransitional
+			getInstance()->m_pCurrentScene, 
+			getInstance()->m_pNextScene, 
+			getInstance()->m_bTransitional
 		);
 	}
 	else
 	{
 		// 把这个变量赋为 false，场景将在下一帧画面
 		// 进行切换
-		get()->m_bTransitional = false;
+		getInstance()->m_bTransitional = false;
 	}
 }
 
@@ -518,26 +518,32 @@ void e2d::EApp::clearScene()
 	}
 }
 
+void e2d::EApp::setFPS(UINT32 fps)
+{
+	fps = min(max(fps, 30), 120);
+	s_pInstance->m_nAnimationInterval = 1000 / fps;
+}
+
 e2d::EScene * e2d::EApp::getCurrentScene()
 {
-	return get()->m_pCurrentScene;
+	return getInstance()->m_pCurrentScene;
 }
 
 void e2d::EApp::setAppName(const EString &appname)
 {
-	get()->m_sAppName = appname;
+	getInstance()->m_sAppName = appname;
 }
 
 e2d::EString e2d::EApp::getAppName()
 {
-	if (get()->m_sAppName.empty())
-		get()->m_sAppName = get()->m_sTitle;
-	return get()->m_sAppName;
+	if (getInstance()->m_sAppName.empty())
+		getInstance()->m_sAppName = getInstance()->m_sTitle;
+	return getInstance()->m_sAppName;
 }
 
 void e2d::EApp::setBkColor(UINT32 color)
 {
-	get()->m_ClearColor = color;
+	getInstance()->m_ClearColor = color;
 }
 
 void e2d::EApp::setKeyboardLayoutEnable(bool value)
@@ -579,17 +585,6 @@ void e2d::EApp::hideWindow()
 void e2d::EApp::showWindow()
 {
 	ShowWindow(GetHWnd(), SW_SHOWNORMAL);
-}
-
-void e2d::EApp::quit()
-{
-	// 这个变量将控制游戏是否结束
-	get()->m_bEnd = true;
-}
-
-void e2d::EApp::end()
-{
-	EApp::quit();
 }
 
 void e2d::EApp::_enterNextScene()
@@ -709,29 +704,27 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		// 窗口激活消息
 		case WM_ACTIVATE:
 		{
+			EScene * pCurrentScene = s_pInstance->getCurrentScene();
+
 			if (LOWORD(wParam) == WA_INACTIVE)
 			{
-				if (s_pInstance->getCurrentScene() && 
-					s_pInstance->getCurrentScene()->onInactive() &&
+				if (pCurrentScene &&
+					pCurrentScene->onInactive() &&
 					s_pInstance->onInactive())
 				{
 					s_pInstance->m_bPaused = true;
-					// 暂停音乐
-					EMusicUtils::pauseAllMusics();
 				}
 			}
 			else if (s_pInstance->m_bPaused)
 			{
-				if (s_pInstance->getCurrentScene() && 
-					s_pInstance->getCurrentScene()->onActivate() &&
+				if (pCurrentScene &&
+					pCurrentScene->onActivate() &&
 					s_pInstance->onActivate())
 				{
 					s_pInstance->m_bPaused = false;
 					if (!s_pInstance->m_bManualPaused)
 					{
-						EApp::_updateTime();
-						// 继续播放音乐
-						EMusicUtils::resumeAllMusics();
+						s_pInstance->_updateTime();
 					}
 				}
 			}
@@ -742,17 +735,19 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		// 窗口关闭消息
 		case WM_CLOSE:
 		{
-			if (!s_pInstance->getCurrentScene())
+			EScene * pCurrentScene = s_pInstance->getCurrentScene();
+
+			if (pCurrentScene)
 			{
-				if (s_pInstance->onCloseWindow())
+				if (pCurrentScene->onCloseWindow() && 
+					s_pInstance->onCloseWindow())
 				{
 					DestroyWindow(hWnd);
 				}
 			}
 			else 
 			{
-				if (s_pInstance->getCurrentScene()->onCloseWindow() &&
-					s_pInstance->onCloseWindow())
+				if (s_pInstance->onCloseWindow())
 				{
 					DestroyWindow(hWnd);
 				}
