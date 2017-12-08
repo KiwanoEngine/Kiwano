@@ -34,12 +34,12 @@ void e2d::EScene::onExit()
 
 bool e2d::EScene::onActivate()
 {
-	return true;
+	return false;
 }
 
 bool e2d::EScene::onInactive()
 {
-	return true;
+	return false;
 }
 
 bool e2d::EScene::onCloseWindow()

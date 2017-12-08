@@ -281,12 +281,12 @@ void e2d::EApp::showConsole(bool show /* = true */)
 
 bool e2d::EApp::onActivate()
 {
-	return true;
+	return false;
 }
 
 bool e2d::EApp::onInactive()
 {
-	return true;
+	return false;
 }
 
 bool e2d::EApp::onCloseWindow()
