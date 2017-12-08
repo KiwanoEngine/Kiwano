@@ -250,6 +250,7 @@
     <ClCompile Include="Transition\ETransitionMove.cpp" />
     <ClCompile Include="Transition\ETransitionScale.cpp" />
     <ClCompile Include="Transition\ETransitionScaleEmerge.cpp" />
+    <ClCompile Include="Win\MciPlayer.cpp" />
     <ClCompile Include="Win\winbase.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +266,7 @@
     <ClInclude Include="etools.h" />
     <ClInclude Include="etransitions.h" />
     <ClInclude Include="etypedef.h" />
+    <ClInclude Include="Win\MciPlayer.h" />
     <ClInclude Include="Win\winbase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

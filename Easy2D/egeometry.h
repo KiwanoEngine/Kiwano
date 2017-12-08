@@ -64,7 +64,7 @@ protected:
 	virtual void _transform();
 
 	// ‰÷»æº∏∫ŒÕº–Œ
-	virtual void _onRender();
+	virtual void _render();
 
 	virtual ID2D1Geometry * _getD2dGeometry() const = 0;
 

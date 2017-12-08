@@ -16,9 +16,9 @@ void e2d::EActionOpacityBy::_init()
 	}
 }
 
-void e2d::EActionOpacityBy::_callOn()
+void e2d::EActionOpacityBy::_update()
 {
-	EAction::_callOn();
+	EAction::_update();
 
 	if (m_pTarget == nullptr)
 	{

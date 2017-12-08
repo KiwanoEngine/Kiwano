@@ -16,9 +16,9 @@ void e2d::EActionMoveBy::_init()
 	}
 }
 
-void e2d::EActionMoveBy::_callOn()
+void e2d::EActionMoveBy::_update()
 {
-	EAction::_callOn();
+	EAction::_update();
 
 	if (m_pTarget == nullptr)
 	{

@@ -59,7 +59,7 @@ void e2d::EGeometry::setOpacity(float opacity)
 	m_fOpacity = min(max(opacity, 0), 1);
 }
 
-void e2d::EGeometry::_onRender()
+void e2d::EGeometry::_render()
 {
 	if (m_pTransformedGeometry)
 	{

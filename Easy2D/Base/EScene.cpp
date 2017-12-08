@@ -47,10 +47,10 @@ bool e2d::EScene::onCloseWindow()
 	return true;
 }
 
-void e2d::EScene::_onRender()
+void e2d::EScene::_render()
 {
 	// 访问根节点
-	m_pRoot->_callOn();
+	m_pRoot->_update();
 
 	// 恢复矩阵转换
 	GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());

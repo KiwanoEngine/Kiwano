@@ -25,9 +25,9 @@ void e2d::EActionLoop::_init()
 	m_pAction->_init();
 }
 
-void e2d::EActionLoop::_callOn()
+void e2d::EActionLoop::_update()
 {
-	EAction::_callOn();
+	EAction::_update();
 
 	if (m_nTimes == m_nTotalTimes)
 	{
@@ -35,7 +35,7 @@ void e2d::EActionLoop::_callOn()
 		return;
 	}
 
-	m_pAction->_callOn();
+	m_pAction->_update();
 
 	if (m_pAction->_isEnding())
 	{

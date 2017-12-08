@@ -40,13 +40,13 @@ void e2d::EActionTwo::_init()
 	m_pFirstAction->_init();
 }
 
-void e2d::EActionTwo::_callOn()
+void e2d::EActionTwo::_update()
 {
-	EAction::_callOn();
+	EAction::_update();
 
 	if (!m_pFirstAction->_isEnding())
 	{
-		m_pFirstAction->_callOn();
+		m_pFirstAction->_update();
 		if (m_pFirstAction->_isEnding())
 		{
 			// 返回 true 表示第一个动作已经结束
@@ -55,7 +55,7 @@ void e2d::EActionTwo::_callOn()
 	}
 	else if (!m_pSecondAction->_isEnding())
 	{
-		m_pSecondAction->_callOn();
+		m_pSecondAction->_update();
 	}
 	else
 	{

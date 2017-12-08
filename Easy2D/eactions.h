@@ -65,7 +65,7 @@ protected:
 	virtual void _init();
 
 	// 执行动作
-	virtual void _callOn();
+	virtual void _update();
 
 	// 获取动作结束状态
 	virtual bool _isEnding();
@@ -137,7 +137,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动画
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动画
 	virtual void _reset() override;
@@ -201,7 +201,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动画
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动画
 	virtual void _reset() override;
@@ -268,7 +268,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动画
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动画
 	virtual void _reset() override;
@@ -347,7 +347,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动画
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动画
 	virtual void _reset() override;
@@ -408,7 +408,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动作
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动作
 	virtual void _reset() override;
@@ -456,7 +456,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动作
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动作
 	virtual void _reset() override;
@@ -487,7 +487,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动作
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动作
 	virtual void _reset() override;
@@ -519,7 +519,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动作
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动作
 	virtual void _reset() override;
@@ -553,7 +553,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动作
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动作
 	virtual void _reset() override;
@@ -598,7 +598,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动作
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动作
 	virtual void _reset() override;
@@ -626,7 +626,7 @@ protected:
 	virtual void _init() override;
 
 	// 执行动作
-	virtual void _callOn() override;
+	virtual void _update() override;
 
 	// 重置动作
 	virtual void _reset() override;

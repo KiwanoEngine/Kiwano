@@ -97,7 +97,7 @@ void e2d::ESprite::clip(float x, float y, float width, float height)
 	ENode::_setHeight(min(max(height, 0), m_pTexture->getSourceHeight() - m_fSourceClipY));
 }
 
-void e2d::ESprite::_onRender()
+void e2d::ESprite::_render()
 {
 	if (m_pTexture && m_pTexture->_getBitmap())
 	{

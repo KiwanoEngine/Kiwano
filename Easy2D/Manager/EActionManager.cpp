@@ -150,7 +150,7 @@ void e2d::EActionManager::ActionProc()
 			else
 			{
 				// Ö´ĞĞ¶¯×÷
-				action->_callOn();
+				action->_update();
 			}
 		}
 	}

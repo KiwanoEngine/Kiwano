@@ -212,77 +212,60 @@ public:
 class EMusicUtils
 {
 public:
-	// 播放背景音乐
-	static void playBackgroundMusic(
-		const EString & musicFilePath, 
-		bool loop = true
+	// 播放音乐
+	static UINT playMusic(
+		const EString & musicFilePath,		/* 音乐文件路径 */
+		int repeatTimes = 1
 	);
 
-	// 播放背景音乐
-	static void playBackgroundMusic(
+	// 播放音乐
+	static UINT playMusic(
 		const EString & musicResourceName,	/* 资源名称 */
 		const EString & musicResourceType,	/* 资源类别 */
 		const EString & musicExtension,		/* 指定资源的扩展名 */
-		bool loop = true
+		int repeatTimes = 1
 	);
 
-	// 停止背景音乐
-	static void stopBackgroundMusic(
-		bool release = false
+	// 暂停音乐
+	static bool pauseMusic(
+		UINT musicId
 	);
 
-	// 暂停背景音乐
-	static void pauseBackgroundMusic();
-
-	// 继续播放背景音乐
-	static void resumeBackgroundMusic();
-
-	// 从头播放背景音乐
-	static void rewindBackgroundMusic();
-
-	// 背景音乐是否正在播放
-	static bool isBackgroundMusicPlaying();
-
-	// 设置背景音乐音量，范围 [0 ~ 1.0]
-	static void setBackgroundMusicVolume(
-		float volume
+	// 暂停音乐
+	static bool pauseMusic(
+		const EString& musicName
 	);
 
-	// 播放音效
-	static void playMusic(
-		const EString & musicFilePath, 
-		bool loop = false
+	// 继续播放音乐
+	static bool resumeMusic(
+		UINT musicId
 	);
 
-	// 播放音效
-	static void playMusic(
-		const EString & musicResourceName,	/* 资源名称 */
-		const EString & musicResourceType,	/* 资源类别 */
-		const EString & musicExtension,		/* 指定资源的扩展名 */
-		bool loop = false
+	// 继续播放音乐
+	static bool resumeMusic(
+		const EString& musicName
 	);
 
-	// 预加载音效
-	static void preloadMusic(
+	// 停止音乐
+	static bool stopMusic(
+		UINT musicId
+	);
+
+	// 停止音乐
+	static bool stopMusic(
+		const EString& musicName
+	);
+
+	// 预加载音乐
+	static UINT preloadMusic(
 		const EString & musicFilePath
 	);
 
-	// 预加载音效
-	static void preloadMusic(
+	// 预加载音乐
+	static UINT preloadMusic(
 		const EString & musicResourceName,	/* 资源名称 */
 		const EString & musicResourceType,	/* 资源类别 */
 		const EString & musicExtension		/* 指定资源的扩展名 */
-	);
-
-	// 卸载音效
-	static void unloadMusic(
-		const EString & musicFilePath
-	);
-
-	// 设置特定音乐的音量，范围 [0 ~ 1.0]
-	static void setVolume(
-		const EString & musicFilePath, 
-		float volume
 	);
 
 	// 暂停所有音乐
@@ -293,30 +276,6 @@ public:
 
 	// 停止所有音乐
 	static void stopAllMusics();
-
-	// 停止所有音乐，并释放内存
-	static void end();
-
-	// 设置总音量，范围 [0 ~ 1.0]
-	static void setVolume(
-		float volume
-	);
-
-protected:
-	// 暂停音效
-	static void _pauseMusic(
-		size_t nSoundId
-	);
-
-	// 继续播放音效
-	static void _resumeMusic(
-		size_t nSoundId
-	);
-
-	// 停止音效
-	static void _stopMusic(
-		size_t nSoundId
-	);
 };
 
 }

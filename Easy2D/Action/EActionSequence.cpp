@@ -42,12 +42,12 @@ void e2d::EActionSequence::_init()
 	m_vActions[0]->_init();
 }
 
-void e2d::EActionSequence::_callOn()
+void e2d::EActionSequence::_update()
 {
-	EAction::_callOn();
+	EAction::_update();
 
 	auto &action = m_vActions[m_nActionIndex];
-	action->_callOn();
+	action->_update();
 
 	if (action->_isEnding())
 	{

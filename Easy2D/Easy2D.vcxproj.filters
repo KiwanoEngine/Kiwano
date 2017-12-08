@@ -216,6 +216,9 @@
     <ClCompile Include="Common\ESpriteFrame.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="Win\MciPlayer.cpp">
+      <Filter>Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">
@@ -233,5 +236,8 @@
     <ClInclude Include="elisteners.h" />
     <ClInclude Include="emanagers.h" />
     <ClInclude Include="etypedef.h" />
+    <ClInclude Include="Win\MciPlayer.h">
+      <Filter>Win</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

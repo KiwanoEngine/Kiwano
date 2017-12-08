@@ -90,7 +90,7 @@ void e2d::EText::setWordWrappingWidth(float wordWrapWidth)
 	_initTextLayout();
 }
 
-void e2d::EText::_onRender()
+void e2d::EText::_render()
 {
 	GetSolidColorBrush()->SetColor(D2D1::ColorF(m_pFont->m_Color, m_fDisplayOpacity));
 	GetRenderTarget()->DrawTextW(

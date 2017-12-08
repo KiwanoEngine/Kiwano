@@ -16,9 +16,9 @@ void e2d::EActionRotateBy::_init()
 	}
 }
 
-void e2d::EActionRotateBy::_callOn()
+void e2d::EActionRotateBy::_update()
 {
-	EAction::_callOn();
+	EAction::_update();
 
 	if (m_pTarget == nullptr)
 	{

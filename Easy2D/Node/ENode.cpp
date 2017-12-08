@@ -62,7 +62,7 @@ void e2d::ENode::onExit()
 {
 }
 
-void e2d::ENode::_callOn()
+void e2d::ENode::_update()
 {
 	if (!m_bVisiable)
 	{
@@ -86,7 +86,7 @@ void e2d::ENode::_callOn()
 			// 访问 Order 小于零的节点
 			if (child->getOrder() < 0)
 			{
-				child->_callOn();
+				child->_update();
 			}
 			else
 			{
@@ -96,21 +96,21 @@ void e2d::ENode::_callOn()
 
 		GetRenderTarget()->SetTransform(m_MatriFinal);
 		// 渲染自身
-		this->_onRender();
+		this->_render();
 
 		// 访问剩余节点
 		for (; i < size; i++)
-			m_vChildren[i]->_callOn();
+			m_vChildren[i]->_update();
 	}
 	else
 	{
 		GetRenderTarget()->SetTransform(m_MatriFinal);
 		// 渲染自身
-		this->_onRender();
+		this->_render();
 	}
 }
 
-void e2d::ENode::_onRender()
+void e2d::ENode::_render()
 {
 }
 
@@ -119,7 +119,7 @@ void e2d::ENode::_drawGeometry()
 	// 绘制自身的几何形状
 	if (m_pGeometry && m_pGeometry->m_bIsVisiable)
 	{
-		m_pGeometry->_onRender();
+		m_pGeometry->_render();
 	}
 
 	// 绘制所有子节点的几何形状

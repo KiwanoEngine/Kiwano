@@ -3,6 +3,7 @@
 #include "..\emanagers.h"
 #include "..\enodes.h"
 #include "..\etransitions.h"
+#include "..\etools.h"
 #include <stack>
 #include <thread>
 #include <imm.h>
@@ -129,10 +130,7 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 		L"Easy2DApp",
 		m_sTitle.c_str(),
 		dwStyle,
-		0,
-		0,
-		width,
-		height,
+		0, 0, width, height,
 		NULL,
 		NULL,
 		HINST_THISCOMPONENT,
@@ -150,7 +148,7 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 	}
 	else
 	{
-		UnregisterClass(L"E2DApp", HINST_THISCOMPONENT);
+		UnregisterClass(L"Easy2DApp", HINST_THISCOMPONENT);
 	}
 
 	if (FAILED(hr))
@@ -172,11 +170,7 @@ void e2d::EApp::resume()
 	{
 		EApp::get()->m_bPaused = false;
 		EApp::get()->m_bManualPaused = false;
-		// 刷新当前时间
-		GetNow() = steady_clock::now();
-		// 重置动画和定时器
-		EActionManager::_resetAllActions();
-		ETimerManager::_resetAllTimers();
+		EApp::_updateTime();
 	}
 }
 
@@ -261,7 +255,7 @@ void e2d::EApp::run()
 	while (!m_bEnd)
 	{
 		// 处理窗口消息
-		while (PeekMessage(&msg, GetHWnd(), 0, 0, PM_REMOVE))
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -314,9 +308,9 @@ void e2d::EApp::_mainLoop()
 		// 记录当前时间
 		tLast += microseconds(m_nAnimationInterval);
 		// 游戏控制流程
-		_onControl();
+		_update();
 		// 刷新游戏画面
-		_onRender();
+		_render();
 	}
 	else
 	{
@@ -330,7 +324,7 @@ void e2d::EApp::_mainLoop()
 	}
 }
 
-void e2d::EApp::_onControl()
+void e2d::EApp::_update()
 {
 	if (isPaused())
 	{
@@ -363,7 +357,7 @@ void e2d::EApp::_onControl()
 	EActionManager::ActionProc();	// 动作管理器执行程序
 }
 
-void e2d::EApp::_onRender()
+void e2d::EApp::_render()
 {
 	HRESULT hr = S_OK;
 
@@ -374,12 +368,12 @@ void e2d::EApp::_onRender()
 	// 绘制当前场景
 	if (m_pCurrentScene)
 	{
-		m_pCurrentScene->_onRender();
+		m_pCurrentScene->_render();
 	}
 	// 切换场景时，同时绘制两场景
 	if (m_bTransitional && m_pNextScene)
 	{
-		m_pNextScene->_onRender();
+		m_pNextScene->_render();
 	}
 	// 终止绘图
 	hr = GetRenderTarget()->EndDraw();
@@ -626,14 +620,25 @@ void e2d::EApp::_enterNextScene()
 	m_pNextScene = nullptr;				// 下一场景置空
 }
 
+void e2d::EApp::_updateTime()
+{
+	// 刷新当前时间
+	GetNow() = steady_clock::now();
+	// 重置动画和定时器
+	EActionManager::_resetAllActions();
+	ETimerManager::_resetAllTimers();
+}
+
 LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	// 处理窗口消息
-	LRESULT result = 0;
-	e2d::EApp *pEApp = EApp::get();
-
-	if (pEApp)
+	if (s_pInstance == nullptr)
 	{
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	else
+	{
+		LRESULT result = 0;
+
 		switch (message)
 		{
 		// 处理鼠标消息
@@ -650,7 +655,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		case WM_MOUSEWHEEL:
 		{
 			// 执行场景切换时屏蔽按键和鼠标消息
-			if (!pEApp->m_bTransitional && !pEApp->m_pNextScene)
+			if (!s_pInstance->m_bTransitional && !s_pInstance->m_pNextScene)
 			{
 				EMsgManager::MouseProc(message, wParam, lParam);
 			}
@@ -663,7 +668,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		case WM_KEYUP:
 		{
 			// 执行场景切换时屏蔽按键和鼠标消息
-			if (!pEApp->m_bTransitional && !pEApp->m_pNextScene)
+			if (!s_pInstance->m_bTransitional && !s_pInstance->m_pNextScene)
 			{
 				EMsgManager::KeyboardProc(message, wParam, lParam);
 			}
@@ -695,7 +700,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		// 重绘窗口
 		case WM_PAINT:
 		{
-			pEApp->_onRender();
+			s_pInstance->_render();
 			ValidateRect(hWnd, NULL);
 		}
 		result = 0;
@@ -706,25 +711,28 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		{
 			if (LOWORD(wParam) == WA_INACTIVE)
 			{
-				if (pEApp->getCurrentScene() && 
-					pEApp->getCurrentScene()->onInactive() &&
-					pEApp->onInactive())
+				if (s_pInstance->getCurrentScene() && 
+					s_pInstance->getCurrentScene()->onInactive() &&
+					s_pInstance->onInactive())
 				{
-					pEApp->m_bPaused = true;
+					s_pInstance->m_bPaused = true;
+					// 暂停音乐
+					EMusicUtils::pauseAllMusics();
 				}
 			}
-			else if (pEApp->m_bPaused)
+			else if (s_pInstance->m_bPaused)
 			{
-				if (pEApp->getCurrentScene() && 
-					pEApp->getCurrentScene()->onActivate() &&
-					pEApp->onActivate())
+				if (s_pInstance->getCurrentScene() && 
+					s_pInstance->getCurrentScene()->onActivate() &&
+					s_pInstance->onActivate())
 				{
-					pEApp->m_bPaused = false;
-					// 刷新当前时间
-					GetNow() = steady_clock::now();
-					// 重置动画和定时器
-					EActionManager::_resetAllActions();
-					ETimerManager::_resetAllTimers();
+					s_pInstance->m_bPaused = false;
+					if (!s_pInstance->m_bManualPaused)
+					{
+						EApp::_updateTime();
+						// 继续播放音乐
+						EMusicUtils::resumeAllMusics();
+					}
 				}
 			}
 		}
@@ -734,17 +742,17 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		// 窗口关闭消息
 		case WM_CLOSE:
 		{
-			if (!pEApp->getCurrentScene())
+			if (!s_pInstance->getCurrentScene())
 			{
-				if (pEApp->onCloseWindow())
+				if (s_pInstance->onCloseWindow())
 				{
 					DestroyWindow(hWnd);
 				}
 			}
 			else 
 			{
-				if (pEApp->getCurrentScene()->onCloseWindow() &&
-					pEApp->onCloseWindow())
+				if (s_pInstance->getCurrentScene()->onCloseWindow() &&
+					s_pInstance->onCloseWindow())
 				{
 					DestroyWindow(hWnd);
 				}
@@ -757,7 +765,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		case WM_DESTROY:
 		{
 			// 退出程序
-			pEApp->quit();
+			s_pInstance->quit();
 			// 发送退出消息
 			PostQuitMessage(0);
 		}
@@ -767,7 +775,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		default:
 			result = DefWindowProc(hWnd, message, wParam, lParam);
 		}
-	}
 
-	return result;
+		return result;
+	}
 }

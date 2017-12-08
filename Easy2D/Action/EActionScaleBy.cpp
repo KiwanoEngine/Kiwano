@@ -25,9 +25,9 @@ void e2d::EActionScaleBy::_init()
 	}
 }
 
-void e2d::EActionScaleBy::_callOn()
+void e2d::EActionScaleBy::_update()
 {
-	EAction::_callOn();
+	EAction::_update();
 
 	if (m_pTarget == nullptr)
 	{

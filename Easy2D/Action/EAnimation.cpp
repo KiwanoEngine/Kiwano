@@ -28,9 +28,9 @@ void e2d::EAnimation::_init()
 	EAction::_init();
 }
 
-void e2d::EAnimation::_callOn()
+void e2d::EAnimation::_update()
 {
-	EAction::_callOn();
+	EAction::_update();
 
 	if (m_pTarget == nullptr)
 	{

@@ -313,11 +313,11 @@ public:
 	);
 
 protected:
-	// 访问节点
-	virtual void _callOn();
+	// 更新节点
+	virtual void _update();
 
 	// 渲染节点
-	virtual void _onRender();
+	virtual void _render();
 
 	// 渲染几何图形
 	virtual void _drawGeometry();
@@ -489,7 +489,7 @@ public:
 
 protected:
 	// 渲染精灵
-	virtual void _onRender() override;
+	virtual void _render() override;
 
 protected:
 	float	m_fSourceClipX;
@@ -562,7 +562,7 @@ public:
 
 protected:
 	// 渲染文字
-	virtual void _onRender() override;
+	virtual void _render() override;
 
 	// 创建文字布局
 	void _initTextLayout();

@@ -15,7 +15,7 @@ void e2d::EActionCallback::_init()
 	// 执行回调函数的动作不需要初始化
 }
 
-void e2d::EActionCallback::_callOn()
+void e2d::EActionCallback::_update()
 {
 	m_Callback();
 	this->stop();

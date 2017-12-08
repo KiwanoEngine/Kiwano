@@ -85,7 +85,7 @@ void e2d::EAction::_init()
 	m_tLast = GetNow();
 }
 
-void e2d::EAction::_callOn()
+void e2d::EAction::_update()
 {
 	if (!m_bInit)
 	{

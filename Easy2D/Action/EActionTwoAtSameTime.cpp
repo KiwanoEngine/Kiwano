@@ -41,17 +41,17 @@ void e2d::EActionTwoAtSameTime::_init()
 	m_pSecondAction->_init();
 }
 
-void e2d::EActionTwoAtSameTime::_callOn()
+void e2d::EActionTwoAtSameTime::_update()
 {
-	EAction::_callOn();
+	EAction::_update();
 
 	if (!m_pFirstAction->_isEnding())
 	{
-		m_pFirstAction->_callOn();
+		m_pFirstAction->_update();
 	}
 	if (!m_pSecondAction->_isEnding())
 	{
-		m_pSecondAction->_callOn();
+		m_pSecondAction->_update();
 	}
 
 	// 两个动作都结束时，动作结束

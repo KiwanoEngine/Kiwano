@@ -160,13 +160,16 @@ protected:
 	void _mainLoop();
 
 	// 游戏控制流程
-	void _onControl();
+	void _update();
 
 	// 渲染游戏画面
-	void _onRender();
+	void _render();
 
 	// 进入下一场景
 	void _enterNextScene();
+
+	// 刷新游戏时间
+	static void _updateTime();
 
 	// 窗口程序
 	static LRESULT CALLBACK WndProc(
@@ -262,7 +265,7 @@ public:
 
 protected:
 	// 渲染场景画面
-	void _onRender();
+	void _render();
 
 protected:
 	bool m_bSortNeeded;
