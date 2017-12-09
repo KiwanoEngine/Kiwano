@@ -1,5 +1,6 @@
 #pragma once
 #include "ebase.h"
+#include <chrono>
 
 namespace e2d
 {
@@ -9,13 +10,38 @@ class ETransition :
 {
 	friend EApp;
 
+public:
+	ETransition(float duration);
+
+	// 场景切换动画是否结束
+	bool isEnding();
+
 protected:
-	// 保存当前场景和下一场景的指针，和控制场景切换的变量
-	virtual void _setTarget(
+	// 更新动画
+	virtual void _update() = 0;
+
+	virtual void _init() = 0;
+
+	virtual void _reset() = 0;
+
+	virtual bool _isDelayEnough();
+
+	virtual void _stop();
+
+	// 保存当前场景和下一场景的指针
+	void _setTarget(
 		EScene * prev,
-		EScene * next,
-		bool &transitional
-	) = 0;
+		EScene * next
+	);
+
+protected:
+	bool m_bEnd;
+	float m_fTotalDuration;
+	float m_fDuration;
+	float m_fRateOfProgress;
+	EScene * m_pPrevScene;
+	EScene * m_pNextScene;
+	std::chrono::steady_clock::time_point m_tLast;
 };
 
 
@@ -30,16 +56,17 @@ public:
 	);
 
 protected:
-	// 保存当前场景和下一场景的指针，和控制场景切换的变量
-	virtual void _setTarget(
-		EScene * prev,
-		EScene * next,
-		bool &transitional
-	) override;
+	// 更新动画
+	virtual void _update() override;
+
+	virtual void _init() override;
+
+	virtual void _reset() override;
 
 protected:
 	float m_fFadeOutDuration;
 	float m_fFadeInDuration;
+	bool m_bFadeOutTransioning;
 };
 
 
@@ -49,19 +76,16 @@ class ETransitionEmerge :
 public:
 	// 创建浮现式的场景切换动画
 	ETransitionEmerge(
-		float emergeDuration	/* 浮现动画持续时长 */
+		float duration	/* 浮现动画持续时长 */
 	);
 
 protected:
-	// 保存当前场景和下一场景的指针，和控制场景切换的变量
-	virtual void _setTarget(
-		EScene * prev,
-		EScene * next,
-		bool &transitional
-	) override;
+	// 更新动画
+	virtual void _update() override;
 
-protected:
-	float m_fEmergeDuration;
+	virtual void _init() override;
+
+	virtual void _reset() override;
 };
 
 
@@ -79,75 +103,22 @@ public:
 
 	// 创建移动式的场景切换动画
 	ETransitionMove(
-		float moveDuration,	/* 场景移动动画持续时长 */
-		MOVE_DIRECT direct	/* 场景移动方向 */
+		float moveDuration,			/* 场景移动动画持续时长 */
+		MOVE_DIRECT direct = LEFT	/* 场景移动方向 */
 	);
 
 protected:
-	// 保存当前场景和下一场景的指针，和控制场景切换的变量
-	virtual void _setTarget(
-		EScene * prev,
-		EScene * next,
-		bool &transitional
-	) override;
+	// 更新动画
+	virtual void _update() override;
+
+	virtual void _init() override;
+
+	virtual void _reset() override;
 
 protected:
-	float m_fMoveDuration;
 	MOVE_DIRECT m_Direct;
-};
-
-
-class ETransitionScale :
-	public ETransition
-{
-public:
-	// 创建缩放式的场景切换动画
-	ETransitionScale(
-		float scaleOutDuration,	/* 第一个场景缩放动画持续时长 */
-		float scaleInDuration	/* 第二个场景缩放动画持续时长 */
-	);
-
-protected:
-	// 保存当前场景和下一场景的指针，和控制场景切换的变量
-	virtual void _setTarget(
-		EScene * prev,
-		EScene * next,
-		bool &transitional
-	) override;
-
-protected:
-	float m_fScaleOutDuration;
-	float m_fScaleInDuration;
-};
-
-
-class ETransitionScaleEmerge :
-	public ETransition
-{
-public:
-	enum SCALE_EMERGE_MODE
-	{
-		ENTER,
-		BACK
-	};
-
-	// 创建缩放浮现式的场景切换动画
-	ETransitionScaleEmerge(
-		float duration,			/* 场景动画持续时长 */
-		SCALE_EMERGE_MODE mode	/* 场景移动方向 */
-	);
-
-protected:
-	// 保存当前场景和下一场景的指针，和控制场景切换的变量
-	virtual void _setTarget(
-		EScene * prev,
-		EScene * next,
-		bool &transitional
-	) override;
-
-protected:
-	float m_fDuration;
-	SCALE_EMERGE_MODE m_Mode;
+	EVec m_Vec;
+	EPoint m_NextPos;
 };
 
 }

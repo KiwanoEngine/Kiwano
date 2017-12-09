@@ -11,6 +11,7 @@ class EButton;
 class EButtonToggle;
 class EGeometry;
 class EMenu;
+class ETransition;
 
 class ENode :
 	public EObject
@@ -19,6 +20,7 @@ class ENode :
 	friend EButton;
 	friend EButtonToggle;
 	friend EGeometry;
+	friend ETransition;
 
 public:
 	ENode();

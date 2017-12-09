@@ -1,39 +1,33 @@
 #include "..\etransitions.h"
-#include "..\eactions.h"
-#include "..\emanagers.h"
+#include "..\enodes.h"
 
-e2d::ETransitionEmerge::ETransitionEmerge(float emergeDuration)
-	: m_fEmergeDuration(emergeDuration)
+e2d::ETransitionEmerge::ETransitionEmerge(float duration)
+	: ETransition(duration)
 {
 }
 
-void e2d::ETransitionEmerge::_setTarget(EScene * prev, EScene * next, bool & transitional)
+void e2d::ETransitionEmerge::_update()
 {
-	// 初始化场景属性
-	next->getRoot()->setOpacity(0);
-
-	// 第一个场景淡出
-	auto action1 = new EActionFadeOut(m_fEmergeDuration);
-	if (prev)
+	if (_isDelayEnough())
 	{
-		action1->setTarget(prev->getRoot());
-	}
+		if (m_pPrevScene) m_pPrevScene->getRoot()->setOpacity(1 - m_fRateOfProgress);
+		m_pNextScene->getRoot()->setOpacity(m_fRateOfProgress);
 
-	// 第二个场景淡入
-	auto action2 = new EActionFadeIn(m_fEmergeDuration);
-	action2->setTarget(next->getRoot());
-
-	// 标志动画结束
-	auto action3 = new EActionCallback([&, prev, next] {
-		transitional = false;
-		// 还原场景状态
-		if (prev)
+		if (m_fDuration >= m_fTotalDuration)
 		{
-			prev->getRoot()->setOpacity(1);
+			this->_stop();
 		}
-		next->getRoot()->setOpacity(1);
-	});
+	}
+}
 
-	// 添加顺序动作
-	EActionManager::addAction(new EActionSequence(2, new EActionTwoAtSameTime(action1, action2), action3));
+void e2d::ETransitionEmerge::_init()
+{
+	if (m_pPrevScene) m_pPrevScene->getRoot()->setOpacity(1);
+	m_pNextScene->getRoot()->setOpacity(0);
+}
+
+void e2d::ETransitionEmerge::_reset()
+{
+	if (m_pPrevScene) m_pPrevScene->getRoot()->setOpacity(1);
+	m_pNextScene->getRoot()->setOpacity(1);
 }

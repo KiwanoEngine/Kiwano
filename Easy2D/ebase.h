@@ -52,8 +52,8 @@ public:
 	// 切换场景
 	static void enterScene(
 		EScene * scene,						/* 下一个场景的指针 */
-		bool saveCurrentScene = true,		/* 是否保存当前场景 */
-		ETransition * transition = nullptr	/* 场景切换动画 */
+		ETransition * transition = nullptr,	/* 场景切换动画 */
+		bool saveCurrentScene = true		/* 是否保存当前场景 */
 	);
 
 	// 返回上一场景
@@ -175,7 +175,6 @@ private:
 	bool	m_bEnd;
 	bool	m_bPaused;
 	bool	m_bManualPaused;
-	bool	m_bTransitional;
 	bool	m_bTopMost;
 	bool	m_bShowConsole;
 	EString	m_sTitle;
@@ -184,6 +183,7 @@ private:
 	LONGLONG m_nAnimationInterval;
 	EScene * m_pCurrentScene;
 	EScene * m_pNextScene;
+	ETransition * m_pTransition;
 };
 
 

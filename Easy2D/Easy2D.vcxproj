@@ -245,11 +245,10 @@
     <ClCompile Include="Tool\EMusicUtils.cpp" />
     <ClCompile Include="Tool\ERandom.cpp" />
     <ClCompile Include="Tool\ETimer.cpp" />
+    <ClCompile Include="Transition\ETransition.cpp" />
     <ClCompile Include="Transition\ETransitionEmerge.cpp" />
     <ClCompile Include="Transition\ETransitionFade.cpp" />
     <ClCompile Include="Transition\ETransitionMove.cpp" />
-    <ClCompile Include="Transition\ETransitionScale.cpp" />
-    <ClCompile Include="Transition\ETransitionScaleEmerge.cpp" />
     <ClCompile Include="Win\MciPlayer.cpp" />
     <ClCompile Include="Win\winbase.cpp" />
   </ItemGroup>

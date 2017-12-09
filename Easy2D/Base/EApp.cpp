@@ -25,11 +25,11 @@ e2d::EApp::EApp()
 	: m_bEnd(false)
 	, m_bPaused(false)
 	, m_bManualPaused(false)
-	, m_bTransitional(false)
 	, m_bTopMost(false)
 	, m_bShowConsole(false)
 	, m_nAnimationInterval(17LL)
 	, m_ClearColor(EColor::BLACK)
+	, m_pTransition(nullptr)
 	, m_pCurrentScene(nullptr)
 	, m_pNextScene(nullptr)
 {
@@ -337,14 +337,17 @@ void e2d::EApp::_update()
 	}
 
 	// 正在切换场景时，执行场景切换动画
-	if (m_bTransitional)
+	if (m_pTransition)
 	{
-		EActionManager::ActionProc();
-		// 若场景切换未结束，不执行后面的部分
-		if (m_bTransitional)
+		m_pTransition->_update();
+		if (m_pTransition->isEnding())
 		{
-			return;
+			m_pTransition->release();
+			m_pTransition = nullptr;
+			// 进入下一场景
+			_enterNextScene();
 		}
+		return;
 	}
 
 	// 下一场景指针不为空时，切换场景
@@ -376,7 +379,7 @@ void e2d::EApp::_render()
 		m_pCurrentScene->_render();
 	}
 	// 切换场景时，同时绘制两场景
-	if (m_bTransitional && m_pNextScene)
+	if (m_pTransition && m_pNextScene)
 	{
 		m_pNextScene->_render();
 	}
@@ -447,8 +450,9 @@ e2d::ESize e2d::EApp::getSize()
 	return ESize(GetRenderTarget()->GetSize().width, GetRenderTarget()->GetSize().height);
 }
 
-void e2d::EApp::enterScene(EScene * scene, bool saveCurrentScene /* = true */, ETransition * transition /* = nullptr */)
+void e2d::EApp::enterScene(EScene * scene, ETransition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
 {
+	ASSERT(scene != nullptr, "Next scene NULL pointer exception!");
 	scene->retain();
 	// 保存下一场景的指针
 	getInstance()->m_pNextScene = scene;
@@ -460,16 +464,12 @@ void e2d::EApp::enterScene(EScene * scene, bool saveCurrentScene /* = true */, E
 	// 设置切换场景动画
 	if (transition)
 	{
-		getInstance()->m_bTransitional = true;
+		getInstance()->m_pTransition = transition;
+		transition->retain();
 		transition->_setTarget(
 			getInstance()->m_pCurrentScene, 
-			getInstance()->m_pNextScene, 
-			getInstance()->m_bTransitional
+			getInstance()->m_pNextScene
 		);
-	}
-	else
-	{
-		getInstance()->m_bTransitional = false;
 	}
 }
 
@@ -492,18 +492,12 @@ void e2d::EApp::backScene(ETransition * transition /* = nullptr */)
 	// 设置切换场景动画
 	if (transition)
 	{
-		getInstance()->m_bTransitional = true;
+		getInstance()->m_pTransition = transition;
+		transition->retain();
 		transition->_setTarget(
 			getInstance()->m_pCurrentScene, 
-			getInstance()->m_pNextScene, 
-			getInstance()->m_bTransitional
+			getInstance()->m_pNextScene
 		);
-	}
-	else
-	{
-		// 把这个变量赋为 false，场景将在下一帧画面
-		// 进行切换
-		getInstance()->m_bTransitional = false;
 	}
 }
 
@@ -650,7 +644,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		case WM_MOUSEWHEEL:
 		{
 			// 执行场景切换时屏蔽按键和鼠标消息
-			if (!s_pInstance->m_bTransitional && !s_pInstance->m_pNextScene)
+			if (!s_pInstance->m_pTransition && !s_pInstance->m_pNextScene)
 			{
 				EMsgManager::MouseProc(message, wParam, lParam);
 			}
@@ -663,7 +657,7 @@ LRESULT e2d::EApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		case WM_KEYUP:
 		{
 			// 执行场景切换时屏蔽按键和鼠标消息
-			if (!s_pInstance->m_bTransitional && !s_pInstance->m_pNextScene)
+			if (!s_pInstance->m_pTransition && !s_pInstance->m_pNextScene)
 			{
 				EMsgManager::KeyboardProc(message, wParam, lParam);
 			}
