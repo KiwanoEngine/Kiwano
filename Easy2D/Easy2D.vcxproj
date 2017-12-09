@@ -210,10 +210,7 @@
     <ClCompile Include="Base\EApp.cpp" />
     <ClCompile Include="Base\EScene.cpp" />
     <ClCompile Include="Common\EFont.cpp" />
-    <ClCompile Include="Common\EKeyboardMsg.cpp" />
-    <ClCompile Include="Common\EMouseMsg.cpp" />
     <ClCompile Include="Common\EObject.cpp" />
-    <ClCompile Include="Common\EPhysicsMsg.cpp" />
     <ClCompile Include="Common\ESpriteFrame.cpp" />
     <ClCompile Include="Common\ETexture.cpp" />
     <ClCompile Include="Geometry\ECircle.cpp" />
@@ -235,6 +232,9 @@
     <ClCompile Include="Manager\EObjectManager.cpp" />
     <ClCompile Include="Manager\EPhysicsManager.cpp" />
     <ClCompile Include="Manager\ETimerManager.cpp" />
+    <ClCompile Include="Msg\EKeyboardMsg.cpp" />
+    <ClCompile Include="Msg\EMouseMsg.cpp" />
+    <ClCompile Include="Msg\EPhysicsMsg.cpp" />
     <ClCompile Include="Node\EButton.cpp" />
     <ClCompile Include="Node\EButtonToggle.cpp" />
     <ClCompile Include="Node\EMenu.cpp" />

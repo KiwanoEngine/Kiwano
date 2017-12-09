@@ -31,6 +31,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{be5d9314-b00a-4f11-bd2a-1f720dc32407}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Msg">
+      <UniqueIdentifier>{3c524aef-fb91-4f44-a3dc-bff34de229eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Win\winbase.cpp">
@@ -153,12 +156,6 @@
     <ClCompile Include="Geometry\EEllipse.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Common\EMouseMsg.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EKeyboardMsg.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="Manager\EPhysicsManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -204,9 +201,6 @@
     <ClCompile Include="Node\EMenu.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="Common\EPhysicsMsg.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="Common\ESpriteFrame.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -215,6 +209,15 @@
     </ClCompile>
     <ClCompile Include="Transition\ETransition.cpp">
       <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\EKeyboardMsg.cpp">
+      <Filter>Msg</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\EMouseMsg.cpp">
+      <Filter>Msg</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg\EPhysicsMsg.cpp">
+      <Filter>Msg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

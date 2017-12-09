@@ -26,15 +26,8 @@ public:
 	static bool init(
 		const EString &title,	/* 窗口标题 */
 		UINT32 width,			/* 窗口宽度 */
-		UINT32 height			/* 窗口高度 */
-	);
-
-	// 初始化游戏界面
-	static bool init(
-		const EString &title,	/* 窗口标题 */
-		UINT32 width,			/* 窗口宽度 */
 		UINT32 height,			/* 窗口高度 */
-		EWindowStyle wStyle		/* 窗口样式 */
+		const EWindowStyle &wStyle = nullptr	/* 窗口样式 */
 	);
 
 	// 启动程序
@@ -95,6 +88,9 @@ public:
 
 	// 获取窗口句柄
 	static HWND getHWnd();
+
+	// 获取窗口样式
+	static EWindowStyle getWindowStyle();
 
 	// 获取从游戏开始到当前经过的毫秒数
 	static LONGLONG getTotalDurationFromStart();
@@ -175,7 +171,6 @@ private:
 	bool	m_bEnd;
 	bool	m_bPaused;
 	bool	m_bManualPaused;
-	bool	m_bTopMost;
 	bool	m_bShowConsole;
 	EString	m_sTitle;
 	EString	m_sAppName;
@@ -183,6 +178,7 @@ private:
 	LONGLONG m_nAnimationInterval;
 	EScene * m_pCurrentScene;
 	EScene * m_pNextScene;
+	EWindowStyle m_WindowStyle;
 	ETransition * m_pTransition;
 };
 

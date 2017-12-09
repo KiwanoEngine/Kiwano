@@ -25,7 +25,6 @@ e2d::EApp::EApp()
 	: m_bEnd(false)
 	, m_bPaused(false)
 	, m_bManualPaused(false)
-	, m_bTopMost(false)
 	, m_bShowConsole(false)
 	, m_nAnimationInterval(17LL)
 	, m_ClearColor(EColor::BLACK)
@@ -53,16 +52,16 @@ e2d::EApp * e2d::EApp::getInstance()
 	return s_pInstance;		// 获取 EApp 的唯一实例
 }
 
-bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height)
-{
-	return init(title, width, height, EWindowStyle());
-}
-
-bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowStyle wStyle)
+bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, const EWindowStyle &wStyle /* = nullptr */)
 {
 	CoInitialize(NULL);
 
 	HRESULT hr;
+
+	// 保存窗口样式
+	EApp::getInstance()->m_WindowStyle = wStyle;
+	// 保存窗口名称
+	EApp::getInstance()->m_sTitle = title;
 
 	// 注册窗口类
 	WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
@@ -119,10 +118,6 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, EWindowS
 	{
 		dwStyle |= WS_MINIMIZEBOX;
 	}
-	// 保存窗口是否置顶显示
-	EApp::getInstance()->m_bTopMost = wStyle.m_bTopMost;
-	// 保存窗口名称
-	EApp::getInstance()->m_sTitle = title;
 	// 创建窗口
 	GetHWnd() = CreateWindow(
 		L"Easy2DApp",
@@ -177,7 +172,7 @@ int e2d::EApp::run()
 	ShowWindow(GetHWnd(), SW_SHOWNORMAL);
 	UpdateWindow(GetHWnd());
 	// 设置窗口置顶
-	if (pApp->m_bTopMost)
+	if (pApp->m_WindowStyle.m_bTopMost)
 	{
 		SetWindowPos(GetHWnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 	}
@@ -564,6 +559,11 @@ void e2d::EApp::setKeyboardLayoutEnable(bool value)
 HWND e2d::EApp::getHWnd()
 {
 	return GetHWnd();
+}
+
+e2d::EWindowStyle e2d::EApp::getWindowStyle()
+{
+	return getInstance()->m_WindowStyle;
 }
 
 LONGLONG e2d::EApp::getTotalDurationFromStart()
