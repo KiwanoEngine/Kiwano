@@ -161,7 +161,7 @@ public:
 	EString operator+(const std::wstring &);
 
 	template<typename T>
-	EString &operator+(const T value)
+	EString operator+(const T value)
 	{
 		EString str_temp(*this);
 
@@ -203,23 +203,23 @@ public:
 	EString sub(int offset, int count = -1) const;
 
 	// 获取字符串中第一个特定字符的下标
-	int findFirstOf(wchar_t ch) const;
+	int findFirstOf(const wchar_t ch) const;
 
 	// 获取字符串中最后一个特定字符的下标
-	int findLastOf(wchar_t ch) const;
+	int findLastOf(const wchar_t ch) const;
 
 	// 后接字符
-	EString &append(wchar_t ch);
+	EString &append(const wchar_t ch);
 
 	// 后接字符串
-	EString &append(wchar_t *str);
+	EString &append(const wchar_t *str);
 
 	// 后接字符串
-	EString &append(EString &str);
+	EString &append(const EString &str);
 
 	// 后接字符串
 	template<typename T>
-	EString &append(T &value)
+	EString &append(const T &value)
 	{
 		return (*this) += value;
 	}

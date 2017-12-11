@@ -314,7 +314,7 @@ EString e2d::EString::sub(int offset, int count) const
 	return std::move(str_temp);
 }
 
-int e2d::EString::findFirstOf(wchar_t ch) const
+int e2d::EString::findFirstOf(const wchar_t ch) const
 {
 	for (int i = 0; i < _size; i++)
 		if (_string[i] == ch)
@@ -323,7 +323,7 @@ int e2d::EString::findFirstOf(wchar_t ch) const
 	return -1;
 }
 
-int e2d::EString::findLastOf(wchar_t ch) const
+int e2d::EString::findLastOf(const wchar_t ch) const
 {
 	int index = -1;
 
@@ -334,17 +334,17 @@ int e2d::EString::findLastOf(wchar_t ch) const
 	return index;
 }
 
-EString & e2d::EString::append(wchar_t ch)
+EString & e2d::EString::append(const wchar_t ch)
 {
 	return (*this) += ch;
 }
 
-EString & e2d::EString::append(wchar_t * str)
+EString & e2d::EString::append(const wchar_t * str)
 {
 	return (*this) += str;
 }
 
-EString & e2d::EString::append(EString & str)
+EString & e2d::EString::append(const EString & str)
 {
 	return (*this) += str;
 }

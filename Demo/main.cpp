@@ -16,17 +16,9 @@ int WINAPI WinMain(
 	str += L"4";
 	UINT h1 = str.hash();
 
-	EString s = L"abcdea";
-	EString ss = s.sub(0);
-	EString sss = s.sub(0, 5);
-	EString ssss = s.sub(0, 9);
-	EString ssssss = s.sub(1, 4);
-	EString sssss = s.sub(-1, 3);
-	int i = s.findFirstOf(L'a');
-	int j = s.findLastOf(L'a');
-
-	EString string = L"Hello";
-	string = string + 2017 + L"!";
+	EString string;
+	string = string + L"Hello" + 2017 + L"!";
+	string.append(L"Hello").append(2017).append(L"!");
 
 	EString str2;
 	str2 += 1;
