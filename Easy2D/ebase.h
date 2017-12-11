@@ -225,7 +225,7 @@ public:
 	);
 
 	// 获取所有子节点
-	EVector<e2d::ENode*> &getChildren();
+	std::vector<e2d::ENode*> &getChildren();
 
 	// 获取子节点数量
 	size_t getChildrenCount() const;

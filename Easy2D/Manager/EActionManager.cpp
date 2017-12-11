@@ -2,7 +2,7 @@
 #include "..\eactions.h"
 #include "..\Win\winbase.h"
 
-static e2d::EVector<e2d::EAction*> s_vActions;
+static std::vector<e2d::EAction*> s_vActions;
 
 
 void e2d::EActionManager::addAction(EAction * action)

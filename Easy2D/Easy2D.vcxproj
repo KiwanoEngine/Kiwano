@@ -212,6 +212,7 @@
     <ClCompile Include="Common\EFont.cpp" />
     <ClCompile Include="Common\EObject.cpp" />
     <ClCompile Include="Common\ESpriteFrame.cpp" />
+    <ClCompile Include="Common\EString.cpp" />
     <ClCompile Include="Common\ETexture.cpp" />
     <ClCompile Include="Geometry\ECircle.cpp" />
     <ClCompile Include="Geometry\EEllipse.cpp" />
@@ -264,7 +265,6 @@
     <ClInclude Include="enodes.h" />
     <ClInclude Include="etools.h" />
     <ClInclude Include="etransitions.h" />
-    <ClInclude Include="etypedef.h" />
     <ClInclude Include="Win\MciPlayer.h" />
     <ClInclude Include="Win\winbase.h" />
   </ItemGroup>

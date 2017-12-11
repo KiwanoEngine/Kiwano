@@ -94,7 +94,7 @@ void e2d::EText::_render()
 {
 	GetSolidColorBrush()->SetColor(D2D1::ColorF(m_pFont->m_Color, m_fDisplayOpacity));
 	GetRenderTarget()->DrawTextW(
-		m_sText.c_str(),
+		m_sText,
 		UINT32(m_sText.length()),
 		m_pFont->_getTextFormat(),
 		D2D1::RectF(
@@ -110,7 +110,7 @@ void e2d::EText::_render()
 void e2d::EText::_initTextLayout()
 {
 	// 未设置字体或空字符串时，文本宽高为 0
-	if (!m_pFont || m_sText.empty())
+	if (!m_pFont || m_sText.isEmpty())
 	{
 		this->_setHeight(0);
 		m_fWordWrappingWidth = 0;
@@ -131,8 +131,8 @@ void e2d::EText::_initTextLayout()
 	IDWriteTextLayout * pDWriteTextLayout = nullptr;
 
 	HRESULT hr = GetDirectWriteFactory()->CreateTextLayout(
-		m_sText.c_str(),
-		UINT32(m_sText.size()),
+		m_sText,
+		UINT32(m_sText.length()),
 		m_pFont->_getTextFormat(),
 		m_bWordWrapping ? m_fWordWrappingWidth : 0,
 		0,

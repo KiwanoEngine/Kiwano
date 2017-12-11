@@ -104,7 +104,7 @@ public:
 	virtual EScene * getParentScene() const;
 
 	// 获取所有子节点
-	virtual EVector<ENode*> &getChildren();
+	virtual std::vector<ENode*> &getChildren();
 
 	// 获取子节点数量
 	virtual size_t getChildrenCount() const;
@@ -398,7 +398,7 @@ protected:
 	ENode *		m_pParent;
 	D2D1::Matrix3x2F	m_MatriInitial;
 	D2D1::Matrix3x2F	m_MatriFinal;
-	EVector<ENode*>		m_vChildren;
+	std::vector<ENode*>		m_vChildren;
 };
 
 
@@ -855,7 +855,7 @@ public:
 
 protected:
 	bool m_bEnable;
-	EVector<EButton*> m_vButtons;
+	std::vector<EButton*> m_vButtons;
 };
 
 }

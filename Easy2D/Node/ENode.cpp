@@ -573,7 +573,7 @@ e2d::EScene * e2d::ENode::getParentScene() const
 	return m_pParentScene;
 }
 
-e2d::EVector<e2d::ENode*>& e2d::ENode::getChildren()
+std::vector<e2d::ENode*>& e2d::ENode::getChildren()
 {
 	return m_vChildren;
 }
@@ -585,10 +585,9 @@ size_t e2d::ENode::getChildrenCount() const
 
 e2d::ENode * e2d::ENode::getChild(const EString & name)
 {
-	WARN_IF(name.empty(), "Invalid ENode name.");
+	WARN_IF(name.isEmpty(), "Invalid ENode name.");
 
-	std::hash<EString> h;
-	size_t hash = h(name);
+	unsigned int hash = name.hash();
 
 	for (const auto& child : m_vChildren)
 	{
@@ -640,7 +639,7 @@ bool e2d::ENode::removeChild(ENode * child)
 
 void e2d::ENode::removeChild(const EString & childName)
 {
-	WARN_IF(childName.empty(), "Invalid ENode name.");
+	WARN_IF(childName.isEmpty(), "Invalid ENode name.");
 
 	if (m_vChildren.empty())
 	{
@@ -648,8 +647,7 @@ void e2d::ENode::removeChild(const EString & childName)
 	}
 
 	// 计算名称 Hash 值
-	std::hash<EString> h;
-	size_t hash = h(childName);
+	unsigned int hash = childName.hash();
 
 	size_t size = m_vChildren.size();
 	for (size_t i = 0; i < size; i++)
@@ -782,15 +780,14 @@ void e2d::ENode::setVisiable(bool value)
 
 void e2d::ENode::setName(const EString & name)
 {
-	WARN_IF(name.empty(), "Invalid ENode name.");
+	WARN_IF(name.isEmpty(), "Invalid ENode name.");
 
-	if (!name.empty())
+	if (!name.isEmpty())
 	{
 		// 保存节点名
 		m_sName = name;
 		// 保存节点 Hash 名
-		std::hash<EString> h;
-		m_nHashName = h(name);
+		m_nHashName = name.hash();
 	}
 }
 

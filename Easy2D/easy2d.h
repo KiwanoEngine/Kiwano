@@ -1,9 +1,10 @@
 /******************************************************
-* Easy2D Game Engine
+* Easy2D Game Framework
 * 
 * Website: http://www.easy2d.cn
-* Source Code: https://gitee.com/werelone/Easy2D
+* Source Code: https://github.com/Nomango/Easy2D
 ******************************************************/
+
 
 #pragma once
 
@@ -17,7 +18,6 @@
 
 
 #include "emacros.h"
-#include "etypedef.h"
 #include "ecommon.h"
 #include "ebase.h"
 #include "emanagers.h"

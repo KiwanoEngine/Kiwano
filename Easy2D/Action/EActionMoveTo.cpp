@@ -14,7 +14,7 @@ e2d::EActionMoveTo * e2d::EActionMoveTo::clone() const
 void e2d::EActionMoveTo::_init()
 {
 	EActionMoveBy::_init();
-	m_MoveVector = m_EndPos - m_BeginPos;
+	m_MoveVec = m_EndPos - m_BeginPos;
 }
 
 void e2d::EActionMoveTo::_reset()

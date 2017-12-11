@@ -77,7 +77,7 @@ void e2d::EScene::remove(const EString &childName)
 	return m_pRoot->removeChild(childName);
 }
 
-e2d::EVector<e2d::ENode*>& e2d::EScene::getChildren()
+std::vector<e2d::ENode*>& e2d::EScene::getChildren()
 {
 	return m_pRoot->m_vChildren;
 }

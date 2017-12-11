@@ -219,6 +219,9 @@
     <ClCompile Include="Msg\EPhysicsMsg.cpp">
       <Filter>Msg</Filter>
     </ClCompile>
+    <ClCompile Include="Common\EString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\winbase.h">
@@ -235,7 +238,6 @@
     <ClInclude Include="egeometry.h" />
     <ClInclude Include="elisteners.h" />
     <ClInclude Include="emanagers.h" />
-    <ClInclude Include="etypedef.h" />
     <ClInclude Include="Win\MciPlayer.h">
       <Filter>Win</Filter>
     </ClInclude>

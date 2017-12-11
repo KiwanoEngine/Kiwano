@@ -121,7 +121,7 @@ bool e2d::EApp::init(const EString &title, UINT32 width, UINT32 height, const EW
 	// 创建窗口
 	GetHWnd() = CreateWindow(
 		L"Easy2DApp",
-		title.c_str(),
+		title,
 		dwStyle,
 		0, 0, width, height,
 		NULL,
@@ -420,7 +420,7 @@ void e2d::EApp::setWindowSize(UINT32 width, UINT32 height)
 void e2d::EApp::setWindowTitle(const EString &title)
 {
 	// 设置窗口标题
-	SetWindowText(GetHWnd(), title.c_str());
+	SetWindowText(GetHWnd(), title);
 	// 保存当前标题，用于修改窗口大小时恢复标题
 	getInstance()->m_sTitle = title;
 }
@@ -525,7 +525,7 @@ void e2d::EApp::setAppName(const EString &appname)
 
 e2d::EString e2d::EApp::getAppName()
 {
-	if (getInstance()->m_sAppName.empty())
+	if (getInstance()->m_sAppName.isEmpty())
 		getInstance()->m_sAppName = getInstance()->m_sTitle;
 	return getInstance()->m_sAppName;
 }

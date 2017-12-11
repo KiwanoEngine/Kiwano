@@ -6,12 +6,6 @@
 typedef std::pair<UINT, MciPlayer *> Music;
 typedef std::map<UINT, MciPlayer *> MusicList;
 
-static UINT Hash(const e2d::EString & key)
-{
-	static std::hash<e2d::EString> h;
-	return h(key);
-}
-
 static MusicList& getMciPlayerList()
 {
 	static MusicList s_List;
@@ -43,10 +37,10 @@ UINT e2d::EMusicUtils::playMusic(const EString & musicResourceName, const EStrin
 
 UINT e2d::EMusicUtils::preloadMusic(const EString & musicFilePath)
 {
-	if (musicFilePath.empty()) 
+	if (musicFilePath.isEmpty()) 
 		return 0;
 
-	UINT nRet = ::Hash(musicFilePath);
+	UINT nRet = musicFilePath.hash();
 
 	if (getMciPlayerList().end() != getMciPlayerList().find(nRet)) 
 		return nRet;
@@ -64,10 +58,10 @@ UINT e2d::EMusicUtils::preloadMusic(const EString & musicFilePath)
 
 UINT e2d::EMusicUtils::preloadMusic(const EString & musicResourceName, const EString & musicResourceType, const EString & musicExtension)
 {
-	if (musicResourceName.empty() || musicResourceType.empty()) 
+	if (musicResourceName.isEmpty() || musicResourceType.isEmpty())
 		return 0;
 
-	UINT nRet = ::Hash(musicResourceName);
+	UINT nRet = musicResourceName.hash();
 
 	if (getMciPlayerList().end() != getMciPlayerList().find(nRet)) 
 		return nRet;
@@ -96,7 +90,7 @@ bool e2d::EMusicUtils::resumeMusic(UINT musicId)
 
 bool e2d::EMusicUtils::resumeMusic(const EString & musicName)
 {
-	return resumeMusic(Hash(musicName));;
+	return resumeMusic(musicName.hash());;
 }
 
 bool e2d::EMusicUtils::pauseMusic(UINT musicId)
@@ -112,7 +106,7 @@ bool e2d::EMusicUtils::pauseMusic(UINT musicId)
 
 bool e2d::EMusicUtils::pauseMusic(const EString & musicName)
 {
-	return pauseMusic(Hash(musicName));
+	return pauseMusic(musicName.hash());
 }
 
 bool e2d::EMusicUtils::stopMusic(UINT musicId)
@@ -128,7 +122,7 @@ bool e2d::EMusicUtils::stopMusic(UINT musicId)
 
 bool e2d::EMusicUtils::stopMusic(const EString & musicName)
 {
-	return stopMusic(Hash(musicName));;
+	return stopMusic(musicName.hash());;
 }
 
 void e2d::EMusicUtils::pauseAllMusics()

@@ -1,11 +1,251 @@
 #pragma once
 #include "emacros.h"
-#include "etypedef.h"
+#include <vector>
+#include <functional>
+#include <sstream>
 
 namespace e2d
 {
 
 
+// 表示坐标的结构体
+struct EPoint
+{
+	float x;
+	float y;
+
+	EPoint()
+	{
+		x = 0;
+		y = 0;
+	}
+
+	EPoint(float x, float y)
+	{
+		this->x = x;
+		this->y = y;
+	}
+
+	EPoint operator + (EPoint const & p)
+	{
+		return EPoint(x + p.x, y + p.y);
+	}
+
+	EPoint operator - (EPoint const & p)
+	{
+		return EPoint(x - p.x, y - p.y);
+	}
+
+	EPoint operator * (float const & value)
+	{
+		return EPoint(x * value, y * value);
+	}
+
+	EPoint operator / (float const & value)
+	{
+		return EPoint(x / value, y / value);
+	}
+};
+
+// 表示二维向量的结构体
+typedef EPoint EVec;
+
+// 表示大小的结构体
+struct ESize
+{
+	float width;
+	float height;
+
+	ESize()
+	{
+		width = 0;
+		height = 0;
+	}
+
+	ESize(float width, float height)
+	{
+		this->width = width;
+		this->height = height;
+	}
+
+	ESize operator + (ESize const & size)
+	{
+		return ESize(width + size.width, height + size.height);
+	}
+
+	ESize operator - (ESize const & size)
+	{
+		return ESize(width - size.width, height - size.height);
+	}
+
+	ESize operator * (float const & value)
+	{
+		return ESize(width * value, height * value);
+	}
+
+	ESize operator / (float const & value)
+	{
+		return ESize(width / value, height / value);
+	}
+};
+
+// 表示窗口样式的结构体
+struct EWindowStyle
+{
+	LPCTSTR m_pIconID;	/* 程序图标 ID */
+	bool m_bNoClose;	/* 禁用关闭按钮 */
+	bool m_bNoMiniSize;	/* 禁用最小化按钮 */
+	bool m_bTopMost;	/* 窗口置顶 */
+
+	EWindowStyle()
+	{
+		m_pIconID = 0;
+		m_bNoClose = false;
+		m_bNoMiniSize = false;
+		m_bTopMost = false;
+	}
+
+	EWindowStyle(
+		LPCTSTR pIconID
+	)
+	{
+		m_pIconID = pIconID;
+		m_bNoClose = false;
+		m_bNoMiniSize = false;
+		m_bTopMost = false;
+	}
+
+	EWindowStyle(
+		LPCTSTR pIconID,
+		bool bNoClose,
+		bool bNoMiniSize,
+		bool bTopMost
+	)
+	{
+		m_pIconID = pIconID;
+		m_bNoClose = bNoClose;
+		m_bNoMiniSize = bNoMiniSize;
+		m_bTopMost = bTopMost;
+	}
+};
+
+// 字符串
+class EString
+{
+public:
+	EString();
+	EString(const wchar_t *);
+	EString(const EString &);
+	EString(const std::wstring &);
+	EString(EString &&);
+
+	~EString();
+
+	EString& operator=(const wchar_t *);
+	EString& operator=(const EString &);
+	EString& operator=(const std::wstring &);
+
+	bool operator==(const wchar_t *);
+	bool operator==(const EString &);
+	bool operator==(const std::wstring &);
+
+	bool operator!=(const wchar_t *);
+	bool operator!=(const EString &);
+	bool operator!=(const std::wstring &);
+
+	wchar_t &operator[](int);
+
+	EString operator+(const wchar_t);
+	EString operator+(const wchar_t *);
+	EString operator+(const EString &);
+	EString operator+(const std::wstring &);
+
+	template<typename T>
+	EString &operator+(const T value)
+	{
+		EString str_temp(*this);
+
+		str_temp += value;
+		return std::move(str_temp);
+	}
+
+	EString &operator +=(const wchar_t);
+	EString &operator +=(const wchar_t *);
+	EString &operator +=(const EString &);
+	EString &operator +=(const std::wstring &);
+
+	template<typename T>
+	EString &operator +=(const T value)
+	{
+		std::wostringstream ss;
+		ss << value;
+		return (*this) += ss.str();
+	}
+
+	friend std::wistream &operator>>(std::wistream &, EString &);
+
+	operator const wchar_t*() const { return _string; }
+	operator bool() const { return _size != 0; }
+
+	// 判断字符串是否为空
+	bool isEmpty() const { return _size == 0; }
+
+	// 获取字符串长度
+	int length() const { return _size; }
+
+	// 获取大写字符串
+	EString upper() const;
+
+	// 获取小写字符串
+	EString lower() const;
+
+	// 获取裁剪字符串
+	EString sub(int offset, int count = -1) const;
+
+	// 获取字符串中第一个特定字符的下标
+	int findFirstOf(wchar_t ch) const;
+
+	// 获取字符串中最后一个特定字符的下标
+	int findLastOf(wchar_t ch) const;
+
+	// 后接字符
+	EString &append(wchar_t ch);
+
+	// 后接字符串
+	EString &append(wchar_t *str);
+
+	// 后接字符串
+	EString &append(EString &str);
+
+	// 后接字符串
+	template<typename T>
+	EString &append(T &value)
+	{
+		return (*this) += value;
+	}
+
+	// 获取该字符串的散列值
+	unsigned int hash() const;
+
+	// 将模板类型转化为字符串
+	template<typename T>
+	static EString parse(const T value)
+	{
+		EString str;
+
+		std::wostringstream ss;
+		ss << value;
+		str += ss.str();
+
+		return std::move(str);
+	}
+
+private:
+	wchar_t *_string;
+	int _size;
+};
+
+// 颜色
 class EColor
 {
 public:
@@ -154,7 +394,7 @@ public:
 	};
 };
 
-
+// 字体粗细值
 class EFontWeight
 {
 public:
@@ -587,5 +827,37 @@ protected:
 	float	m_fSourceClipHeight;
 	ETexture * m_pTexture;
 };
+
+class ENode;
+
+// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
+typedef std::function<void(int)> TIMER_CALLBACK;
+
+// 按钮点击回调函数
+typedef std::function<void()> BUTTON_CLICK_CALLBACK;
+
+// 按键消息监听回调函数
+typedef std::function<void()> KEY_LISTENER_CALLBACK;
+
+// 鼠标消息监听回调函数
+typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
+
+// 鼠标点击消息监听回调函数（参数为点击位置）
+typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
+
+// 鼠标按下消息监听回调函数（参数为按下位置）
+typedef MOUSE_CLICK_LISTENER_CALLBACK  MOUSE_PRESS_LISTENER_CALLBACK;
+
+// 鼠标双击消息监听回调函数（参数为双击位置）
+typedef MOUSE_CLICK_LISTENER_CALLBACK  MOUSE_DBLCLK_LISTENER_CALLBACK;
+
+// 鼠标拖动消息监听回调函数（参数为拖动前位置和拖动后位置）
+typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
+
+// 物理世界消息监听器回调函数
+typedef std::function<void()> PHYSICS_LISTENER_CALLBACK;
+
+// 碰撞消息监听器回调函数
+typedef PHYSICS_LISTENER_CALLBACK  COLLISION_LISTENER_CALLBACK;
 
 }

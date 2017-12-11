@@ -3,7 +3,7 @@
 #include "..\enodes.h"
 #include "..\Win\winbase.h"
 
-static e2d::EVector<e2d::ETimer*> s_vTimers;
+static std::vector<e2d::ETimer*> s_vTimers;
 
 
 void e2d::ETimerManager::TimerProc()
@@ -69,7 +69,7 @@ void e2d::ETimerManager::stopTimers(const EString & name)
 
 void e2d::ETimerManager::delTimers(const EString & name)
 {
-	EVector<ETimer*>::iterator mIter;
+	std::vector<ETimer*>::iterator mIter;
 	for (mIter = s_vTimers.begin(); mIter != s_vTimers.end();)
 	{
 		if ((*mIter)->getName() == name)

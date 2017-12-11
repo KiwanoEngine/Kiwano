@@ -4,7 +4,7 @@
 e2d::EActionMoveBy::EActionMoveBy(float duration, EVec vector) :
 	EActionGradual(duration)
 {
-	m_MoveVector = vector;
+	m_MoveVec = vector;
 }
 
 void e2d::EActionMoveBy::_init()
@@ -30,8 +30,8 @@ void e2d::EActionMoveBy::_update()
 	{
 		// 移动节点
 		m_pTarget->setPos(
-			m_BeginPos.x + m_MoveVector.x * m_fRateOfProgress,
-			m_BeginPos.y + m_MoveVector.y * m_fRateOfProgress
+			m_BeginPos.x + m_MoveVec.x * m_fRateOfProgress,
+			m_BeginPos.y + m_MoveVec.y * m_fRateOfProgress
 		);
 		// 判断动作是否结束
 		if (_isEnd())
@@ -49,10 +49,10 @@ void e2d::EActionMoveBy::_reset()
 
 e2d::EActionMoveBy * e2d::EActionMoveBy::clone() const
 {
-	return new EActionMoveBy(m_fTotalDuration / 1000, m_MoveVector);
+	return new EActionMoveBy(m_fTotalDuration / 1000, m_MoveVec);
 }
 
 e2d::EActionMoveBy * e2d::EActionMoveBy::reverse() const
 {
-	return new EActionMoveBy(m_fTotalDuration / 1000, EVec(-m_MoveVector.x, -m_MoveVector.y));
+	return new EActionMoveBy(m_fTotalDuration / 1000, EVec(-m_MoveVec.x, -m_MoveVec.y));
 }

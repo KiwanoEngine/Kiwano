@@ -144,7 +144,7 @@ protected:
 
 protected:
 	EPoint	m_BeginPos;
-	EVec	m_MoveVector;
+	EVec	m_MoveVec;
 };
 
 
@@ -605,7 +605,7 @@ protected:
 
 protected:
 	UINT m_nFrameIndex;
-	EVector<ESpriteFrame*> m_vFrames;
+	std::vector<ESpriteFrame*> m_vFrames;
 };
 
 

@@ -66,14 +66,14 @@ MciPlayer::~MciPlayer()
 
 bool MciPlayer::open(const e2d::EString & pFileName, UINT uId)
 {
-	if (pFileName.empty())
+	if (pFileName.isEmpty())
 		return false;
 
 	close();
 
 	MCI_OPEN_PARMS mciOpen = { 0 };
 	mciOpen.lpstrDeviceType = (LPCTSTR)MCI_ALL_DEVICE_ID;
-	mciOpen.lpstrElementName = pFileName.c_str();
+	mciOpen.lpstrElementName = pFileName;
 
 	MCIERROR mciError;
 	mciError = mciSendCommand(
@@ -96,18 +96,16 @@ bool MciPlayer::open(const e2d::EString & pFileName, UINT uId)
 bool MciPlayer::open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, UINT uId)
 {
 	// 忽略不存在的文件
-	if (pResouceName.empty() || pResouceType.empty() || musicExtension.empty()) return false;
+	if (pResouceName.isEmpty() || pResouceType.isEmpty() || musicExtension.isEmpty()) return false;
 
 	// 获取临时文件目录
 	e2d::EString tempFileName = e2d::EFileUtils::getTempPath();
 
 	// 产生临时文件的文件名
-	tempFileName.append(L"\\");
-	tempFileName.append(std::to_wstring(uId));
-	tempFileName.append(L"." + musicExtension);
+	tempFileName = tempFileName + L"\\" + uId + L"." + musicExtension;
 
 	// 导出资源为临时文件
-	if (ExtractResource(tempFileName.c_str(), pResouceType.c_str(), pResouceName.c_str()))
+	if (ExtractResource(tempFileName, pResouceType, pResouceName))
 	{
 		return open(tempFileName, uId);
 	}

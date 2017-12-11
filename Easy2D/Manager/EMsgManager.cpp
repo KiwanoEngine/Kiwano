@@ -5,9 +5,9 @@
 
 
 // 鼠标消息监听器
-e2d::EVector<e2d::EListenerMouse*> s_vMouseListeners;
+std::vector<e2d::EListenerMouse*> s_vMouseListeners;
 // 按键消息监听器
-e2d::EVector<e2d::EListenerKeyboard*> s_vKeyboardListeners;
+std::vector<e2d::EListenerKeyboard*> s_vKeyboardListeners;
 
 
 void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
@@ -20,7 +20,7 @@ void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 	if (s_vMouseListeners.empty()) return;
 
 	// 执行鼠标消息监听函数
-	EVector<EListenerMouse*>::size_type i = s_vMouseListeners.size();
+	std::vector<EListenerMouse*>::size_type i = s_vMouseListeners.size();
 
 	do
 	{
@@ -45,7 +45,7 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 	if (s_vKeyboardListeners.empty()) return;
 
 	// 执行按键消息监听函数
-	EVector<EListenerMouse*>::size_type i = s_vKeyboardListeners.size();
+	std::vector<EListenerMouse*>::size_type i = s_vKeyboardListeners.size();
 
 	do
 	{
@@ -133,7 +133,7 @@ void e2d::EMsgManager::stopMouseListeners(const EString & name)
 void e2d::EMsgManager::delMouseListeners(const EString & name)
 {
 	// 删除鼠标消息监听器
-	EVector<EListenerMouse*>::iterator mIter;
+	std::vector<EListenerMouse*>::iterator mIter;
 	for (mIter = s_vMouseListeners.begin(); mIter != s_vMouseListeners.end();)
 	{
 		if ((*mIter)->getName() == name)
@@ -175,7 +175,7 @@ void e2d::EMsgManager::stopKeyboardListeners(const EString & name)
 void e2d::EMsgManager::delKeyboardListeners(const EString & name)
 {
 	// 删除按键消息监听器
-	EVector<EListenerKeyboard*>::iterator kIter;
+	std::vector<EListenerKeyboard*>::iterator kIter;
 	for (kIter = s_vKeyboardListeners.begin(); kIter != s_vKeyboardListeners.end();)
 	{
 		if ((*kIter)->getName() == name)

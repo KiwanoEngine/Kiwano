@@ -46,9 +46,9 @@ e2d::ETexture::~ETexture()
 
 void e2d::ETexture::loadFromFile(const EString & fileName)
 {
-	WARN_IF(fileName.empty(), "ETexture cannot load bitmap from NULL file name.");
+	WARN_IF(fileName.isEmpty(), "ETexture cannot load bitmap from NULL file name.");
 
-	if (fileName.empty())
+	if (fileName.isEmpty())
 		return;
 
 	if (!e2d::ETexture::preload(fileName))
@@ -57,10 +57,7 @@ void e2d::ETexture::loadFromFile(const EString & fileName)
 		return;
 	}
 
-	std::hash<e2d::EString> h;
-	size_t hash = h(fileName);
-
-	m_pBitmap = s_mBitmapsFromFile.at(hash);
+	m_pBitmap = s_mBitmapsFromFile.at(fileName.hash());
 }
 
 void e2d::ETexture::loadFromResource(LPCTSTR resourceName, LPCTSTR resourceType)
@@ -122,10 +119,7 @@ e2d::ESize e2d::ETexture::getSourceSize() const
 
 bool e2d::ETexture::preload(const EString & fileName)
 {
-	std::hash<e2d::EString> h;
-	size_t hash = h(fileName);
-
-	if (s_mBitmapsFromFile.find(hash) != s_mBitmapsFromFile.end())
+	if (s_mBitmapsFromFile.find(fileName.hash()) != s_mBitmapsFromFile.end())
 	{
 		return true;
 	}
@@ -140,7 +134,7 @@ bool e2d::ETexture::preload(const EString & fileName)
 
 	// 创建解码器
 	hr = GetImagingFactory()->CreateDecoderFromFilename(
-		fileName.c_str(),
+		fileName,
 		NULL,
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnLoad,
@@ -183,12 +177,9 @@ bool e2d::ETexture::preload(const EString & fileName)
 	if (SUCCEEDED(hr))
 	{
 		// 保存图片指针和图片的 Hash 名
-		std::hash<e2d::EString> h;
-		size_t hash = h(fileName);
-
 		s_mBitmapsFromFile.insert(
 			std::map<size_t, ID2D1Bitmap*>::value_type(
-				hash,
+				fileName.hash(),
 				pBitmap)
 		);
 	}

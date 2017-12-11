@@ -4,9 +4,9 @@
 #include "..\egeometry.h"
 
 // 监听器集合
-e2d::EVector<e2d::EListenerPhysics*> s_vListeners;
+std::vector<e2d::EListenerPhysics*> s_vListeners;
 // 形状集合
-e2d::EVector<e2d::EGeometry*> s_vGeometries;
+std::vector<e2d::EGeometry*> s_vGeometries;
 
 
 void e2d::EPhysicsManager::PhysicsGeometryProc(EGeometry * pActiveGeometry)
@@ -48,7 +48,7 @@ void e2d::EPhysicsManager::PhysicsGeometryProc(EGeometry * pActiveGeometry)
 void e2d::EPhysicsManager::PhysicsListenerProc()
 {
 	// 执行鼠标消息监听函数
-	EVector<EListenerPhysics*>::size_type i = s_vListeners.size();
+	std::vector<EListenerPhysics*>::size_type i = s_vListeners.size();
 
 	do
 	{
@@ -136,7 +136,7 @@ void e2d::EPhysicsManager::stopListeners(const EString & name)
 
 void e2d::EPhysicsManager::delListeners(const EString & name)
 {
-	EVector<EListenerPhysics*>::iterator iter;
+	std::vector<EListenerPhysics*>::iterator iter;
 	for (iter = s_vListeners.begin(); iter != s_vListeners.end();)
 	{
 		if ((*iter)->getName() == name)

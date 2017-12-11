@@ -80,13 +80,13 @@ void e2d::EFont::_initTextFormat()
 	SafeReleaseInterface(&m_pTextFormat);
 
 	HRESULT hr = GetDirectWriteFactory()->CreateTextFormat(
-		m_sFontFamily.c_str(),
-		NULL,                          // Font collection(NULL sets it to the system font collection)
+		m_sFontFamily,
+		NULL,
 		DWRITE_FONT_WEIGHT(m_FontWeight),
 		m_bItalic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
 		m_fFontSize,
-		L"en-us",                      // Local
+		L"en-us",
 		&m_pTextFormat
 	);
 
