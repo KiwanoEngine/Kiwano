@@ -249,6 +249,38 @@ EString & e2d::EString::operator+=(const std::wstring &str)
 	return *this;
 }
 
+bool e2d::EString::operator<(EString const &str) const
+{
+	for (int i = 0; i <= _size; i++)
+		if (_string[i] != str._string[i])
+			return _string[i] < str[i];
+	return false;
+}
+
+bool e2d::EString::operator<=(EString const &str) const
+{
+	for (int i = 0; i <= _size; i++)
+		if (_string[i] != str._string[i])
+			return _string[i] < str[i];
+	return true;
+}
+
+bool e2d::EString::operator>(EString const &str) const
+{
+	for (int i = 0; i <= _size; i++)
+		if (_string[i] != str._string[i])
+			return _string[i] > str[i];
+	return false;
+}
+
+bool e2d::EString::operator>=(EString const &str) const
+{
+	for (int i = 0; i <= _size; i++)
+		if (_string[i] != str._string[i])
+			return _string[i] > str[i];
+	return true;
+}
+
 unsigned int e2d::EString::hash() const
 {
 	unsigned int hash = 0;

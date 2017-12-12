@@ -182,6 +182,11 @@ public:
 		return (*this) += ss.str();
 	}
 
+	bool operator < (EString const&) const;
+	bool operator <= (EString const&) const;
+	bool operator > (EString const&) const;
+	bool operator >= (EString const&) const;
+
 	friend std::wistream &operator>>(std::wistream &, EString &);
 
 	operator const wchar_t*() const { return _string; }

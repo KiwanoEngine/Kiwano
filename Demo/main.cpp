@@ -11,26 +11,13 @@ int WINAPI WinMain(
 	if (!EApp::init(L"Demo", 250, 150))
 		return -1;
 
-	EString str;
-	str += L"123";
-	str += L"4";
-	UINT h1 = str.hash();
+	EString str = L"1245";
+	EString str2 = L"1243";
 
-	EString string;
-	string = string + L"Hello" + 2017 + L"!";
-	string.append(L"Hello").append(2017).append(L"!");
-
-	EString str2;
-	str2 += 1;
-	str2 += 2L;
-	str2 += 2.3;
-	str2 += 4.6f;
-	UINT h2 = str2.hash();
-
-	str2 += std::wstring(L"sdf");
-	EString str3;
-	str3 += str2 + str;
-	UINT h3 = str3.hash();
+	bool b = str > str2;
+	bool b2 = str >= str2;
+	bool b3 = str < str2;
+	bool b4 = str <= str2;
 
 	auto scene = new EScene();
 	EApp::enterScene(scene);
