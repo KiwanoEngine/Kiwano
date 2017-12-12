@@ -11,13 +11,12 @@ int WINAPI WinMain(
 	if (!EApp::init(L"Demo", 250, 150))
 		return -1;
 
-	EString str = L"1245";
+	wchar_t str[] = L"1245";
 	EString str2 = L"1243";
 
-	bool b = str > str2;
-	bool b2 = str >= str2;
-	bool b3 = str < str2;
-	bool b4 = str <= str2;
+	EString str3;
+	str + str2;
+	str3 = str + str2;
 
 	auto scene = new EScene();
 	EApp::enterScene(scene);

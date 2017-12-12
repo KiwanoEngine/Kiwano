@@ -134,6 +134,7 @@ class EString
 {
 public:
 	EString();
+	EString(const wchar_t);
 	EString(const wchar_t *);
 	EString(const EString &);
 	EString(const std::wstring &);
@@ -187,10 +188,20 @@ public:
 	bool operator > (EString const&) const;
 	bool operator >= (EString const&) const;
 
-	friend std::wistream &operator>>(std::wistream &, EString &);
-
 	operator const wchar_t*() const { return _string; }
 	operator bool() const { return _size != 0; }
+
+	friend EString operator+(const wchar_t, const EString &);
+	friend EString operator+(const wchar_t*, const EString &);
+	friend EString operator+(const EString &, const EString &);
+	friend EString operator+(const std::wstring &, const EString &);
+	template<typename T>
+	friend EString operator+(const T &value, const EString &str)
+	{
+		return std::move((EString::parse(value) + str2));
+	}
+
+	friend std::wistream &operator>>(std::wistream &, EString &);
 
 	// ÅÐ¶Ï×Ö·û´®ÊÇ·ñÎª¿Õ
 	bool isEmpty() const { return _size == 0; }

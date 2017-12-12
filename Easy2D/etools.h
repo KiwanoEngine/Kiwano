@@ -159,11 +159,11 @@ public:
 
 	/**
 	*  打开保存文件对话框，得到有效保存路径返回 true
-	*  参数：返回文件路径的字符串，窗口标题，设置扩展名过滤，设置默认扩展名
+	*  参数：窗口标题，默认扩展名
 	*/
 	static EString getSaveFilePath(
 		const EString & title = L"保存到",
-		const EString & defExt = NULL
+		const EString & defExt = L""
 	);
 };
 

@@ -9,6 +9,14 @@ EString::EString()
 	_string = nullptr;
 }
 
+e2d::EString::EString(const wchar_t ch)
+{
+	_size = 1;
+	_string = new wchar_t[2];
+	_string[0] = ch;
+	_string[1] = 0;
+}
+
 EString::EString(const wchar_t *str)
 {
 	if (str)
@@ -291,6 +299,26 @@ unsigned int e2d::EString::hash() const
 		hash ^= (unsigned int)towupper(_string[i]);
 	}
 	return (hash);
+}
+
+EString e2d::operator+(const wchar_t ch, const EString &str)
+{
+	return std::move((EString(ch) + str));
+}
+
+EString e2d::operator+(const wchar_t *str1, const EString &str2)
+{
+	return std::move((EString(str1) + str2));
+}
+
+EString e2d::operator+(const EString &str1, const EString &str2)
+{
+	return std::move((EString(str1) + str2));
+}
+
+EString e2d::operator+(const std::wstring &str1, const EString &str2)
+{
+	return std::move((EString(str1) + str2));
 }
 
 std::wistream & e2d::operator>>(std::wistream &cin, EString &str)

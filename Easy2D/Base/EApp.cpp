@@ -341,6 +341,8 @@ void e2d::EApp::_update()
 			m_pTransition = nullptr;
 			// 进入下一场景
 			_enterNextScene();
+			// 刷新计时器
+			_updateTime();
 		}
 		return;
 	}
