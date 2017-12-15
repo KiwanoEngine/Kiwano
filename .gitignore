@@ -1,10 +1,14 @@
 # ignore all files in the /Easy2D/** directory
-Easy2D/Win32/
-Easy2D/x64/
-/Win32/
-/x64/
+Win32/
+x64/
 Debug/
 Release/
-backup/
+
+# vs2010
+ipch/
+*.opensdf
+*.sdf
+
+*.user
 *.lnk
 .vs

@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Win">
+      <UniqueIdentifier>{2f0f3d30-bfc2-4aea-a170-258bbaacaa79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tool">
+      <UniqueIdentifier>{42d46a92-c043-4667-8c20-358319e5c313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Node">
+      <UniqueIdentifier>{51864c81-02ee-4043-bf09-9ce3cbe5b6da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{261633d3-3814-40c7-bd6d-201ede6c6ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Action">
+      <UniqueIdentifier>{50293f38-87fe-4dde-b938-cf1b7a2921f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Transition">
+      <UniqueIdentifier>{563b19f2-4c5e-4362-983a-94d2ae724550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{9031e36b-fa85-4b4e-8e80-657c7e68f283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{b9bb1728-5106-4574-998e-8564b49cb4a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{d5f86335-f3a0-450d-92a3-7edd9348d995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{be5d9314-b00a-4f11-bd2a-1f720dc32407}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Msg">
+      <UniqueIdentifier>{3c524aef-fb91-4f44-a3dc-bff34de229eb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\core\Win\winbase.cpp">
+      <Filter>Win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Base\EApp.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\ENode.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Base\EScene.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\ESprite.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\EText.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EAction.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionCallback.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionDelay.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionMoveBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionMoveTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionOpacityBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionOpacityTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionScaleBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionScaleTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionSequence.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionTwo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionRotateBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionRotateTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\EFileUtils.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\ERandom.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionTwoAtSameTime.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionGradual.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EAnimation.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\ETransitionFade.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\EActionLoop.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\EActionManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\EMsgManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\EObjectManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\ETimerManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListener.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\EButton.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\ETransitionEmerge.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\ETransitionMove.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\ETimer.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\EMusicUtils.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Geometry\ERectangle.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Geometry\EGeometry.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Geometry\ECircle.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Geometry\EEllipse.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\EPhysicsManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListenerMouse.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListenerKeyboard.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListenerKeyboardPress.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListenerMouseClick.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListenerMouseDoubleClick.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListenerMouseDrag.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListenerMousePress.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListenerPhysics.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\EFont.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\EObject.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\ETexture.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Listener\EListenerPhysicsCollision.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\EButtonToggle.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\EMenu.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\ESpriteFrame.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Win\MciPlayer.cpp">
+      <Filter>Win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\ETransition.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Msg\EKeyboardMsg.cpp">
+      <Filter>Msg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Msg\EMouseMsg.cpp">
+      <Filter>Msg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Msg\EPhysicsMsg.cpp">
+      <Filter>Msg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\EString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\core\Win\winbase.h">
+      <Filter>Win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\etools.h" />
+    <ClInclude Include="..\..\core\enodes.h" />
+    <ClInclude Include="..\..\core\emacros.h" />
+    <ClInclude Include="..\..\core\ecommon.h" />
+    <ClInclude Include="..\..\core\ebase.h" />
+    <ClInclude Include="..\..\core\easy2d.h" />
+    <ClInclude Include="..\..\core\eactions.h" />
+    <ClInclude Include="..\..\core\etransitions.h" />
+    <ClInclude Include="..\..\core\egeometry.h" />
+    <ClInclude Include="..\..\core\elisteners.h" />
+    <ClInclude Include="..\..\core\emanagers.h" />
+    <ClInclude Include="..\..\core\Win\MciPlayer.h">
+      <Filter>Win</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
