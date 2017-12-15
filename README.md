@@ -1,5 +1,25 @@
 # Easy2D
 
-Easy2D 为 C++ 初学者提供 Windows 桌面游戏的开发框架，简单易学，容易上手。你只需要为游戏场景中的每一个元素设置它们的属性，Easy2D 就可以自动处理它们，让一切变得井然有序。
+## Introduction
+Easy2D is a open-source 2D C++ game engine, only support win32 platform.
+Easy2D-Core is a game irrelevant lib that provide a lot useful tools can be used in other projects. I made a lot wheels to make cpp simpler to use.
+Easy2D is still under heavy developing. I write it and use it to developy my own tiny games.
+More docs and examples will be added later.
 
-中文官网：[www.easy2d.cn](http://www.easy2d.cn)
+## Features
+* Scene management
+* Transitions between scenes
+* Actions behaviours
+* Buttons and menus
+* Texture atlas support
+* Audio support
+* Custom data storage
+* Direct2D based
+
+## Next plan
+* Physical engine
+* Particle system
+
+## Contact
+* Website: www.easy2d.cn
+* QQ Group: 608406540

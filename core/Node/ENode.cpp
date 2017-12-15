@@ -97,8 +97,8 @@ void e2d::ENode::_update()
 	{
 		this->_sortChildren();
 
-		UINT size = m_vChildren.size();
-		UINT i;
+		size_t size = m_vChildren.size();
+		size_t i;
 		for (i = 0; i < size; i++)
 		{
 			auto child = m_vChildren[i];
@@ -597,7 +597,7 @@ std::vector<e2d::ENode*>& e2d::ENode::getChildren()
 	return m_vChildren;
 }
 
-UINT e2d::ENode::getChildrenCount() const
+size_t e2d::ENode::getChildrenCount() const
 {
 	return m_vChildren.size();
 }
@@ -636,8 +636,8 @@ bool e2d::ENode::removeChild(ENode * child)
 
 	if (child)
 	{
-		UINT size = m_vChildren.size();
-		for (UINT i = 0; i < size; i++)
+		size_t size = m_vChildren.size();
+		for (size_t i = 0; i < size; i++)
 		{
 			if (m_vChildren[i] == child)
 			{
@@ -668,8 +668,8 @@ void e2d::ENode::removeChild(const EString & childName)
 	// ¼ÆËãÃû³Æ Hash Öµ
 	unsigned int hash = childName.hash();
 
-	UINT size = m_vChildren.size();
-	for (UINT i = 0; i < size; i++)
+	size_t size = m_vChildren.size();
+	for (size_t i = 0; i < size; i++)
 	{
 		auto child = m_vChildren[i];
 		if (child->m_nHashName == hash && child->m_sName == childName)
