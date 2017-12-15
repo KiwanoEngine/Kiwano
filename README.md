@@ -2,8 +2,11 @@
 
 ## Introduction
 Easy2D is a open-source 2D C++ game engine, only support win32 platform.
+
 Easy2D-Core is a game irrelevant lib that provide a lot useful tools can be used in other projects. I made a lot wheels to make cpp simpler to use.
-Easy2D is still under heavy developing. I write it and use it to developy my own tiny games.
+
+It's still under heavy developing. I write it and use it to developy my own tiny games.
+
 More docs and examples will be added later.
 
 ## Features
