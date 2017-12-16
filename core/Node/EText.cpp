@@ -36,6 +36,9 @@ e2d::EText::EText(const EString & text, EFont * font)
 }
 
 e2d::EText::EText(const EString & text, EString fontFamily, float fontSize, UINT32 color, UINT32 fontWeight, bool italic)
+	: m_bWordWrapping(false)
+	, m_pFont(nullptr)
+	, m_fWordWrappingWidth(0)
 {
 	this->setText(text);
 	this->setFont(new EFont(fontFamily, fontSize, color, fontWeight, italic));

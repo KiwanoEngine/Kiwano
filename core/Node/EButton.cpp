@@ -14,9 +14,7 @@ e2d::EButton::EButton()
 	, m_pDisabled(nullptr)
 	, m_pListener(nullptr)
 {
-	m_pListener = new EListenerMouse(std::bind(&EButton::_updateStatus, this));
-	m_pListener->setAlwaysWorking(true);
-	EMsgManager::bindListener(m_pListener, this);
+	this->_init();
 }
 
 e2d::EButton::EButton(ENode * normal, const BUTTON_CLICK_CALLBACK & callback)
@@ -30,6 +28,7 @@ e2d::EButton::EButton(ENode * normal, const BUTTON_CLICK_CALLBACK & callback)
 	, m_pDisabled(nullptr)
 	, m_pListener(nullptr)
 {
+	this->_init();
 	this->setNormal(normal);
 	this->setCallback(callback);
 }
@@ -45,6 +44,7 @@ e2d::EButton::EButton(ENode * normal, ENode * selected, const BUTTON_CLICK_CALLB
 	, m_pDisabled(nullptr)
 	, m_pListener(nullptr)
 {
+	this->_init();
 	this->setNormal(normal);
 	this->setSelected(selected);
 	this->setCallback(callback);
@@ -61,6 +61,7 @@ e2d::EButton::EButton(ENode * normal, ENode * mouseover, ENode * selected, const
 	, m_pDisabled(nullptr)
 	, m_pListener(nullptr)
 {
+	this->_init();
 	this->setNormal(normal);
 	this->setMouseOver(mouseover);
 	this->setSelected(selected);
@@ -78,6 +79,7 @@ e2d::EButton::EButton(ENode * normal, ENode * mouseover, ENode * selected, ENode
 	, m_pDisabled(nullptr)
 	, m_pListener(nullptr)
 {
+	this->_init();
 	this->setNormal(normal);
 	this->setMouseOver(mouseover);
 	this->setSelected(selected);
@@ -213,6 +215,13 @@ void e2d::EButton::setPivot(float pivotX, float pivotY)
 	if (m_pMouseover) m_pMouseover->setPivot(pivotX, pivotY);
 	if (m_pSelected) m_pSelected->setPivot(pivotX, pivotY);
 	if (m_pDisabled) m_pDisabled->setPivot(pivotX, pivotY);
+}
+
+void e2d::EButton::_init()
+{
+	m_pListener = new EListenerMouse(std::bind(&EButton::_updateStatus, this));
+	m_pListener->setAlwaysWorking(true);
+	EMsgManager::bindListener(m_pListener, this);
 }
 
 void e2d::EButton::_setStatus(STATUS status)

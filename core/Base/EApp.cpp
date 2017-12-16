@@ -392,8 +392,6 @@ void e2d::EApp::_render()
 	}
 	// ÖÕÖ¹»æÍ¼
 	hr = GetRenderTarget()->EndDraw();
-	// Ë¢ÐÂ½çÃæ
-	UpdateWindow(GetHWnd());
 
 	if (hr == D2DERR_RECREATE_TARGET)
 	{

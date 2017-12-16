@@ -56,7 +56,7 @@ e2d::ENode::ENode(const EString & name)
 	, m_bSortChildrenNeeded(false)
 	, m_bTransformNeeded(false)
 {
-	setName(name);
+	this->setName(name);
 }
 
 e2d::ENode::~ENode()

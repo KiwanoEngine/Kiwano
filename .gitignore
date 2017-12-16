@@ -8,6 +8,7 @@ Release/
 ipch/
 *.opensdf
 *.sdf
+*.suo
 
 *.user
 *.lnk

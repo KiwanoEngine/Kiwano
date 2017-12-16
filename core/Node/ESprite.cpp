@@ -34,6 +34,9 @@ e2d::ESprite::ESprite(const EString & imageFileName)
 }
 
 e2d::ESprite::ESprite(const EString & imageFileName, float x, float y, float width, float height)
+	: m_fSourceClipX(0)
+	, m_fSourceClipY(0)
+	, m_pTexture(nullptr)
 {
 	loadFrom(imageFileName);
 	clip(x, y, width, height);
@@ -48,6 +51,9 @@ e2d::ESprite::ESprite(LPCTSTR resourceName, LPCTSTR resourceType)
 }
 
 e2d::ESprite::ESprite(LPCTSTR resourceName, LPCTSTR resourceType, float x, float y, float width, float height)
+	: m_fSourceClipX(0)
+	, m_fSourceClipY(0)
+	, m_pTexture(nullptr)
 {
 	loadFrom(resourceName, resourceType);
 	clip(x, y, width, height);

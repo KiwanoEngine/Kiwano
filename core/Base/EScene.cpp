@@ -52,12 +52,11 @@ void e2d::EScene::_render()
 	// 访问根节点
 	m_pRoot->_update();
 
-	// 恢复矩阵转换
-	GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-
-	// 绘制所有几何图形
 	if (m_bGeometryVisiable)
 	{
+		// 恢复矩阵转换
+		GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+		// 绘制所有几何图形
 		m_pRoot->_drawGeometry();
 	}
 }

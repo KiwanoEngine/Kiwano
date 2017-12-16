@@ -20,7 +20,7 @@ void e2d::EMsgManager::MouseProc(UINT message, WPARAM wParam, LPARAM lParam)
 	if (s_vMouseListeners.empty()) return;
 
 	// 执行鼠标消息监听函数
-	std::vector<EListenerMouse*>::size_type i = s_vMouseListeners.size();
+	size_t i = s_vMouseListeners.size();
 
 	do
 	{
@@ -45,7 +45,7 @@ void e2d::EMsgManager::KeyboardProc(UINT message, WPARAM wParam, LPARAM lParam)
 	if (s_vKeyboardListeners.empty()) return;
 
 	// 执行按键消息监听函数
-	std::vector<EListenerMouse*>::size_type i = s_vKeyboardListeners.size();
+	size_t i = s_vKeyboardListeners.size();
 
 	do
 	{

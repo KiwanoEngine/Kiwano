@@ -13,7 +13,7 @@
 #endif
 
 #if _MSC_VER < 1600
-	#error Do Visual Studio 2015/2017 specific stuff
+	#error MSVC version is too low
 #endif
 
 

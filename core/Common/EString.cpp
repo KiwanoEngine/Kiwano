@@ -28,8 +28,7 @@ EString::EString(const wchar_t *str)
 	}
 	else
 	{
-		_string = nullptr;
-		_size = 0;
+		this->EString::EString();
 	}
 }
 
@@ -50,8 +49,7 @@ EString::EString(const EString &str)
 	}
 	else
 	{
-		_string = nullptr;
-		_size = 0;
+		this->EString::EString();
 	}
 }
 
@@ -65,8 +63,7 @@ e2d::EString::EString(const std::wstring &str)
 	}
 	else
 	{
-		_string = nullptr;
-		_size = 0;
+		this->EString::EString();
 	}
 }
 

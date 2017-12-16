@@ -13,6 +13,7 @@ e2d::EActionSequence::EActionSequence(int number, EAction * action1, ...) :
 
 	while (number > 0)
 	{
+		ASSERT((*ppAction) != nullptr, "EActionSequence NULL pointer exception!");
 		this->addAction(*ppAction);
 		ppAction++;
 		number--;

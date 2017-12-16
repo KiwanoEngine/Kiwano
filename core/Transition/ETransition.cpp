@@ -9,6 +9,7 @@ e2d::ETransition::ETransition(float duration)
 	, m_pPrevScene(nullptr)
 	, m_pNextScene(nullptr)
 {
+	SetInterval(m_nAnimationInterval, 15LL);
 }
 
 bool e2d::ETransition::isEnding()

@@ -671,6 +671,9 @@ public:
 protected:
 	enum STATUS { NORMAL, MOUSEOVER, SELECTED };
 
+	// 初始化按钮
+	virtual void _init();
+
 	// 设置按钮状态
 	virtual void _setStatus(STATUS status);
 

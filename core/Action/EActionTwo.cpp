@@ -4,6 +4,7 @@ e2d::EActionTwo::EActionTwo(EAction * actionFirst, EAction * actionSecond) :
 	m_pFirstAction(actionFirst),
 	m_pSecondAction(actionSecond)
 {
+	ASSERT(m_pFirstAction && m_pSecondAction, "EActionTwo NULL pointer exception!");
 	m_pFirstAction->retain();
 	m_pSecondAction->retain();
 }

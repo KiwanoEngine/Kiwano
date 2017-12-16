@@ -49,7 +49,7 @@ void e2d::EPhysicsManager::PhysicsGeometryProc(EGeometry * pActiveGeometry)
 void e2d::EPhysicsManager::PhysicsListenerProc()
 {
 	// 执行鼠标消息监听函数
-	std::vector<EListenerPhysics*>::size_type i = s_vListeners.size();
+	size_t i = s_vListeners.size();
 
 	do
 	{
