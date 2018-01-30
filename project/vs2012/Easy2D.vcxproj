@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\core\eactions.h" />
+    <ClInclude Include="..\..\core\easy2d.h" />
+    <ClInclude Include="..\..\core\ebase.h" />
+    <ClInclude Include="..\..\core\ecommon.h" />
+    <ClInclude Include="..\..\core\egeometry.h" />
+    <ClInclude Include="..\..\core\elisteners.h" />
+    <ClInclude Include="..\..\core\emacros.h" />
+    <ClInclude Include="..\..\core\emanagers.h" />
+    <ClInclude Include="..\..\core\enodes.h" />
+    <ClInclude Include="..\..\core\etools.h" />
+    <ClInclude Include="..\..\core\etransitions.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\core\Action\Action.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionCallback.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionDelay.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionGradual.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionLoop.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionMoveBy.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionMoveTo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionOpacityBy.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionOpacityTo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionRotateBy.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionRotateTo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionScaleBy.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionScaleTo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionSequence.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionTwo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionTwoAtSameTime.cpp" />
+    <ClCompile Include="..\..\core\Action\Animation.cpp" />
+    <ClCompile Include="..\..\core\Base\Game.cpp" />
+    <ClCompile Include="..\..\core\Base\Input.cpp" />
+    <ClCompile Include="..\..\core\Base\Renderer.cpp" />
+    <ClCompile Include="..\..\core\Base\Time.cpp" />
+    <ClCompile Include="..\..\core\Base\Window.cpp" />
+    <ClCompile Include="..\..\core\Common\Font.cpp" />
+    <ClCompile Include="..\..\core\Common\Image.cpp" />
+    <ClCompile Include="..\..\core\Common\Keyframe.cpp" />
+    <ClCompile Include="..\..\core\Common\Object.cpp" />
+    <ClCompile Include="..\..\core\Common\Scene.cpp" />
+    <ClCompile Include="..\..\core\Common\String.cpp" />
+    <ClCompile Include="..\..\core\Event\PhysicsEvent.cpp" />
+    <ClCompile Include="..\..\core\Geometry\Circle.cpp" />
+    <ClCompile Include="..\..\core\Geometry\Ellipse.cpp" />
+    <ClCompile Include="..\..\core\Geometry\Geometry.cpp" />
+    <ClCompile Include="..\..\core\Geometry\Rectangle.cpp" />
+    <ClCompile Include="..\..\core\Listener\Listener.cpp" />
+    <ClCompile Include="..\..\core\Listener\ListenerPhysics.cpp" />
+    <ClCompile Include="..\..\core\Listener\ListenerPhysicsCollision.cpp" />
+    <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\ObjectManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\PhysicsManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\TimerManager.cpp" />
+    <ClCompile Include="..\..\core\Node\Button.cpp" />
+    <ClCompile Include="..\..\core\Node\ButtonToggle.cpp" />
+    <ClCompile Include="..\..\core\Node\Menu.cpp" />
+    <ClCompile Include="..\..\core\Node\Node.cpp" />
+    <ClCompile Include="..\..\core\Node\Sprite.cpp" />
+    <ClCompile Include="..\..\core\Node\Text.cpp" />
+    <ClCompile Include="..\..\core\Tool\Data.cpp" />
+    <ClCompile Include="..\..\core\Tool\Music.cpp" />
+    <ClCompile Include="..\..\core\Tool\Random.cpp" />
+    <ClCompile Include="..\..\core\Tool\Timer.cpp" />
+    <ClCompile Include="..\..\core\Transition\ETransition.cpp" />
+    <ClCompile Include="..\..\core\Transition\ETransitionEmerge.cpp" />
+    <ClCompile Include="..\..\core\Transition\ETransitionFade.cpp" />
+    <ClCompile Include="..\..\core\Transition\ETransitionMove.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{722EA245-ADD5-4296-8C85-8FF42C0335D3}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Easy2D</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\</OutDir>
+    <IntDir>$(Configuration)\$(Platform)\</IntDir>
+    <TargetName>Easy2Ddw</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\</OutDir>
+    <IntDir>$(Configuration)\$(Platform)\</IntDir>
+    <TargetName>Easy2Dw</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <DebugInformationFormat>None</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

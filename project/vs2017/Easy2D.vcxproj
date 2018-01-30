@@ -43,6 +43,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -189,68 +190,62 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\core\Action\EAction.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionCallback.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionDelay.cpp" />
-    <ClCompile Include="..\..\core\Action\EAnimation.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionMoveBy.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionMoveTo.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionLoop.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionOpacityBy.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionOpacityTo.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionRotateBy.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionRotateTo.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionScaleBy.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionScaleTo.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionSequence.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionTwo.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionTwoAtSameTime.cpp" />
-    <ClCompile Include="..\..\core\Action\EActionGradual.cpp" />
-    <ClCompile Include="..\..\core\Base\EApp.cpp" />
-    <ClCompile Include="..\..\core\Base\EScene.cpp" />
-    <ClCompile Include="..\..\core\Common\EFont.cpp" />
-    <ClCompile Include="..\..\core\Common\EObject.cpp" />
-    <ClCompile Include="..\..\core\Common\ESpriteFrame.cpp" />
-    <ClCompile Include="..\..\core\Common\EString.cpp" />
-    <ClCompile Include="..\..\core\Common\ETexture.cpp" />
-    <ClCompile Include="..\..\core\Geometry\ECircle.cpp" />
-    <ClCompile Include="..\..\core\Geometry\EEllipse.cpp" />
-    <ClCompile Include="..\..\core\Geometry\EGeometry.cpp" />
-    <ClCompile Include="..\..\core\Geometry\ERectangle.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListenerPhysicsCollision.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListenerKeyboard.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListenerKeyboardPress.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListener.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListenerMouseClick.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListenerMouseDoubleClick.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListenerMouseDrag.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListenerMouse.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListenerMousePress.cpp" />
-    <ClCompile Include="..\..\core\Listener\EListenerPhysics.cpp" />
-    <ClCompile Include="..\..\core\Manager\EActionManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\EMsgManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\EObjectManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\EPhysicsManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\ETimerManager.cpp" />
-    <ClCompile Include="..\..\core\Msg\EKeyboardMsg.cpp" />
-    <ClCompile Include="..\..\core\Msg\EMouseMsg.cpp" />
-    <ClCompile Include="..\..\core\Msg\EPhysicsMsg.cpp" />
-    <ClCompile Include="..\..\core\Node\EButton.cpp" />
-    <ClCompile Include="..\..\core\Node\EButtonToggle.cpp" />
-    <ClCompile Include="..\..\core\Node\EMenu.cpp" />
-    <ClCompile Include="..\..\core\Node\ENode.cpp" />
-    <ClCompile Include="..\..\core\Node\ESprite.cpp" />
-    <ClCompile Include="..\..\core\Node\EText.cpp" />
-    <ClCompile Include="..\..\core\Tool\EFileUtils.cpp" />
-    <ClCompile Include="..\..\core\Tool\EMusicUtils.cpp" />
-    <ClCompile Include="..\..\core\Tool\ERandom.cpp" />
-    <ClCompile Include="..\..\core\Tool\ETimer.cpp" />
+    <ClCompile Include="..\..\core\Action\Action.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionCallback.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionDelay.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionMoveBy.cpp" />
+    <ClCompile Include="..\..\core\Action\Animation.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionMoveTo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionLoop.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionOpacityBy.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionOpacityTo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionRotateBy.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionRotateTo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionScaleBy.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionScaleTo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionSequence.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionTwo.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionTwoAtSameTime.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionGradual.cpp" />
+    <ClCompile Include="..\..\core\Base\Game.cpp" />
+    <ClCompile Include="..\..\core\Base\Input.cpp" />
+    <ClCompile Include="..\..\core\Base\Renderer.cpp" />
+    <ClCompile Include="..\..\core\Base\Time.cpp" />
+    <ClCompile Include="..\..\core\Base\Window.cpp" />
+    <ClCompile Include="..\..\core\Common\Font.cpp" />
+    <ClCompile Include="..\..\core\Common\Object.cpp" />
+    <ClCompile Include="..\..\core\Common\Keyframe.cpp" />
+    <ClCompile Include="..\..\core\Common\Scene.cpp" />
+    <ClCompile Include="..\..\core\Common\String.cpp" />
+    <ClCompile Include="..\..\core\Common\Image.cpp" />
+    <ClCompile Include="..\..\core\Event\PhysicsEvent.cpp" />
+    <ClCompile Include="..\..\core\Geometry\Circle.cpp" />
+    <ClCompile Include="..\..\core\Geometry\Ellipse.cpp" />
+    <ClCompile Include="..\..\core\Geometry\Geometry.cpp" />
+    <ClCompile Include="..\..\core\Geometry\Rectangle.cpp" />
+    <ClCompile Include="..\..\core\Listener\ListenerPhysicsCollision.cpp" />
+    <ClCompile Include="..\..\core\Listener\Listener.cpp" />
+    <ClCompile Include="..\..\core\Listener\ListenerPhysics.cpp" />
+    <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\ObjectManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\PhysicsManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\TimerManager.cpp" />
+    <ClCompile Include="..\..\core\Node\Button.cpp" />
+    <ClCompile Include="..\..\core\Node\ButtonToggle.cpp" />
+    <ClCompile Include="..\..\core\Node\Menu.cpp" />
+    <ClCompile Include="..\..\core\Node\Node.cpp" />
+    <ClCompile Include="..\..\core\Node\Sprite.cpp" />
+    <ClCompile Include="..\..\core\Node\Text.cpp" />
+    <ClCompile Include="..\..\core\Tool\Data.cpp" />
+    <ClCompile Include="..\..\core\Tool\File.cpp" />
+    <ClCompile Include="..\..\core\Tool\Music.cpp" />
+    <ClCompile Include="..\..\core\Tool\Random.cpp" />
+    <ClCompile Include="..\..\core\Tool\Timer.cpp" />
     <ClCompile Include="..\..\core\Transition\ETransition.cpp" />
     <ClCompile Include="..\..\core\Transition\ETransitionEmerge.cpp" />
     <ClCompile Include="..\..\core\Transition\ETransitionFade.cpp" />
     <ClCompile Include="..\..\core\Transition\ETransitionMove.cpp" />
-    <ClCompile Include="..\..\core\Win\MciPlayer.cpp" />
-    <ClCompile Include="..\..\core\Win\winbase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\eactions.h" />
@@ -264,8 +259,6 @@
     <ClInclude Include="..\..\core\enodes.h" />
     <ClInclude Include="..\..\core\etools.h" />
     <ClInclude Include="..\..\core\etransitions.h" />
-    <ClInclude Include="..\..\core\Win\MciPlayer.h" />
-    <ClInclude Include="..\..\core\Win\winbase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

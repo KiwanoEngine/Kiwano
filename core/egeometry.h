@@ -56,7 +56,7 @@ public:
 
 protected:
 	// 判断两形状的交集关系
-	virtual EPhysicsMsg::INTERSECT_RELATION _intersectWith(
+	virtual EPhysicsEvent::INTERSECT_RELATION _intersectWith(
 		EGeometry * pGeometry
 	);
 

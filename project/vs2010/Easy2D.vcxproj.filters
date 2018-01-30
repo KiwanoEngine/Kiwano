@@ -1,275 +1,215 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="头文件">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="源文件\Base">
-      <UniqueIdentifier>{d4a509dd-1bc0-4456-9554-d414de91b50c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Msg">
-      <UniqueIdentifier>{3ff66c81-6040-4f84-a39a-d21b4bb54819}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Action">
+    <Filter Include="Action">
       <UniqueIdentifier>{5be538cb-a432-4f84-9678-bbf408eca288}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Transition">
-      <UniqueIdentifier>{6c760a81-9bc8-4fb0-a145-8e119b783365}</UniqueIdentifier>
+    <Filter Include="Base">
+      <UniqueIdentifier>{d4a509dd-1bc0-4456-9554-d414de91b50c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Manager">
-      <UniqueIdentifier>{7b102f67-5905-4c0e-8400-51c128da026a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Node">
-      <UniqueIdentifier>{c536c42c-283d-4a10-b19b-0699b4f1e051}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Tool">
-      <UniqueIdentifier>{17bdc67b-1801-4b69-b79b-ffcbbee8dae0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Win">
-      <UniqueIdentifier>{7454d212-5d2e-4b0b-865c-30fb02d2878c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Listener">
-      <UniqueIdentifier>{c5f168c6-1403-486a-9cae-ab29495a723c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Common">
+    <Filter Include="Common">
       <UniqueIdentifier>{c907d829-e510-472c-bd47-cf4eab6f9266}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Geometry">
+    <Filter Include="Event">
+      <UniqueIdentifier>{62d6a1d4-f1ec-458a-aee0-377b16012bed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
       <UniqueIdentifier>{508b39c8-a430-45c3-9405-364fbc281220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{c5f168c6-1403-486a-9cae-ab29495a723c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{7b102f67-5905-4c0e-8400-51c128da026a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Node">
+      <UniqueIdentifier>{c536c42c-283d-4a10-b19b-0699b4f1e051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tool">
+      <UniqueIdentifier>{17bdc67b-1801-4b69-b79b-ffcbbee8dae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Transition">
+      <UniqueIdentifier>{6c760a81-9bc8-4fb0-a145-8e119b783365}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\core\eactions.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\easy2d.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\ebase.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\ecommon.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\egeometry.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\elisteners.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\emacros.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\emanagers.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\enodes.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\etools.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\etransitions.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\Win\MciPlayer.h">
-      <Filter>源文件\Win</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\Win\winbase.h">
-      <Filter>源文件\Win</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\core\eactions.h" />
+    <ClInclude Include="..\..\core\etransitions.h" />
+    <ClInclude Include="..\..\core\easy2d.h" />
+    <ClInclude Include="..\..\core\ebase.h" />
+    <ClInclude Include="..\..\core\ecommon.h" />
+    <ClInclude Include="..\..\core\egeometry.h" />
+    <ClInclude Include="..\..\core\elisteners.h" />
+    <ClInclude Include="..\..\core\emacros.h" />
+    <ClInclude Include="..\..\core\emanagers.h" />
+    <ClInclude Include="..\..\core\enodes.h" />
+    <ClInclude Include="..\..\core\etools.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\core\Base\EApp.cpp">
-      <Filter>源文件\Base</Filter>
+    <ClCompile Include="..\..\core\Action\Action.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Base\EScene.cpp">
-      <Filter>源文件\Base</Filter>
+    <ClCompile Include="..\..\core\Action\ActionCallback.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Msg\EKeyboardMsg.cpp">
-      <Filter>源文件\Msg</Filter>
+    <ClCompile Include="..\..\core\Action\ActionDelay.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Msg\EMouseMsg.cpp">
-      <Filter>源文件\Msg</Filter>
+    <ClCompile Include="..\..\core\Action\ActionGradual.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Msg\EPhysicsMsg.cpp">
-      <Filter>源文件\Msg</Filter>
+    <ClCompile Include="..\..\core\Action\ActionLoop.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EAction.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionMoveBy.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionCallback.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionMoveTo.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionDelay.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionOpacityBy.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionGradual.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionOpacityTo.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionLoop.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionRotateBy.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionMoveBy.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionRotateTo.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionMoveTo.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionScaleBy.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionOpacityBy.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionScaleTo.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionOpacityTo.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionSequence.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionRotateBy.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionTwo.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionRotateTo.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\ActionTwoAtSameTime.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionScaleBy.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Action\Animation.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionScaleTo.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Base\Game.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionSequence.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Base\Input.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionTwo.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Base\Renderer.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EActionTwoAtSameTime.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Base\Time.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\EAnimation.cpp">
-      <Filter>源文件\Action</Filter>
+    <ClCompile Include="..\..\core\Base\Window.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\EActionManager.cpp">
-      <Filter>源文件\Manager</Filter>
+    <ClCompile Include="..\..\core\Common\Font.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\EMsgManager.cpp">
-      <Filter>源文件\Manager</Filter>
+    <ClCompile Include="..\..\core\Common\Image.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\EObjectManager.cpp">
-      <Filter>源文件\Manager</Filter>
+    <ClCompile Include="..\..\core\Common\Keyframe.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\EPhysicsManager.cpp">
-      <Filter>源文件\Manager</Filter>
+    <ClCompile Include="..\..\core\Common\Object.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\ETimerManager.cpp">
-      <Filter>源文件\Manager</Filter>
+    <ClCompile Include="..\..\core\Common\Scene.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListener.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Common\String.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListenerKeyboard.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Geometry\Circle.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListenerKeyboardPress.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Geometry\Ellipse.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListenerMouse.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Geometry\Geometry.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListenerMouseClick.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Geometry\Rectangle.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListenerMouseDoubleClick.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Event\PhysicsEvent.cpp">
+      <Filter>Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListenerMouseDrag.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Listener\Listener.cpp">
+      <Filter>Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListenerMousePress.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Listener\ListenerPhysics.cpp">
+      <Filter>Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListenerPhysics.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Listener\ListenerPhysicsCollision.cpp">
+      <Filter>Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Listener\EListenerPhysicsCollision.cpp">
-      <Filter>源文件\Listener</Filter>
+    <ClCompile Include="..\..\core\Manager\ActionManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\EFont.cpp">
-      <Filter>源文件\Common</Filter>
+    <ClCompile Include="..\..\core\Manager\ObjectManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\EObject.cpp">
-      <Filter>源文件\Common</Filter>
+    <ClCompile Include="..\..\core\Manager\PhysicsManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\ESpriteFrame.cpp">
-      <Filter>源文件\Common</Filter>
+    <ClCompile Include="..\..\core\Manager\SceneManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\EString.cpp">
-      <Filter>源文件\Common</Filter>
+    <ClCompile Include="..\..\core\Manager\TimerManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\ETexture.cpp">
-      <Filter>源文件\Common</Filter>
+    <ClCompile Include="..\..\core\Node\Button.cpp">
+      <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\ECircle.cpp">
-      <Filter>源文件\Geometry</Filter>
+    <ClCompile Include="..\..\core\Node\ButtonToggle.cpp">
+      <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\EEllipse.cpp">
-      <Filter>源文件\Geometry</Filter>
+    <ClCompile Include="..\..\core\Node\Menu.cpp">
+      <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\EGeometry.cpp">
-      <Filter>源文件\Geometry</Filter>
+    <ClCompile Include="..\..\core\Node\Node.cpp">
+      <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\ERectangle.cpp">
-      <Filter>源文件\Geometry</Filter>
+    <ClCompile Include="..\..\core\Node\Sprite.cpp">
+      <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Win\MciPlayer.cpp">
-      <Filter>源文件\Win</Filter>
+    <ClCompile Include="..\..\core\Node\Text.cpp">
+      <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Win\winbase.cpp">
-      <Filter>源文件\Win</Filter>
+    <ClCompile Include="..\..\core\Tool\Data.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\EFileUtils.cpp">
-      <Filter>源文件\Tool</Filter>
+    <ClCompile Include="..\..\core\Tool\Music.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\EMusicUtils.cpp">
-      <Filter>源文件\Tool</Filter>
+    <ClCompile Include="..\..\core\Tool\Random.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\ERandom.cpp">
-      <Filter>源文件\Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Tool\ETimer.cpp">
-      <Filter>源文件\Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\EButton.cpp">
-      <Filter>源文件\Node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\EButtonToggle.cpp">
-      <Filter>源文件\Node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\EMenu.cpp">
-      <Filter>源文件\Node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\ENode.cpp">
-      <Filter>源文件\Node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\ESprite.cpp">
-      <Filter>源文件\Node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\EText.cpp">
-      <Filter>源文件\Node</Filter>
+    <ClCompile Include="..\..\core\Tool\Timer.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Transition\ETransition.cpp">
-      <Filter>源文件\Transition</Filter>
+      <Filter>Transition</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Transition\ETransitionEmerge.cpp">
-      <Filter>源文件\Transition</Filter>
+      <Filter>Transition</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Transition\ETransitionFade.cpp">
-      <Filter>源文件\Transition</Filter>
+      <Filter>Transition</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Transition\ETransitionMove.cpp">
-      <Filter>源文件\Transition</Filter>
+      <Filter>Transition</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

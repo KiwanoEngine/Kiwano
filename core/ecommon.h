@@ -47,9 +47,6 @@ struct EPoint
 	}
 };
 
-// 表示二维向量的结构体
-typedef EPoint EVec;
-
 // 表示大小的结构体
 struct ESize
 {
@@ -86,46 +83,6 @@ struct ESize
 	ESize operator / (float const & value)
 	{
 		return ESize(width / value, height / value);
-	}
-};
-
-// 表示窗口样式的结构体
-struct EWindowStyle
-{
-	LPCTSTR m_pIconID;	/* 程序图标 ID */
-	bool m_bNoClose;	/* 禁用关闭按钮 */
-	bool m_bNoMiniSize;	/* 禁用最小化按钮 */
-	bool m_bTopMost;	/* 窗口置顶 */
-
-	EWindowStyle()
-	{
-		m_pIconID = 0;
-		m_bNoClose = false;
-		m_bNoMiniSize = false;
-		m_bTopMost = false;
-	}
-
-	EWindowStyle(
-		LPCTSTR pIconID
-	)
-	{
-		m_pIconID = pIconID;
-		m_bNoClose = false;
-		m_bNoMiniSize = false;
-		m_bTopMost = false;
-	}
-
-	EWindowStyle(
-		LPCTSTR pIconID,
-		bool bNoClose,
-		bool bNoMiniSize,
-		bool bTopMost
-	)
-	{
-		m_pIconID = pIconID;
-		m_bNoClose = bNoClose;
-		m_bNoMiniSize = bNoMiniSize;
-		m_bTopMost = bTopMost;
 	}
 };
 
@@ -261,6 +218,32 @@ private:
 	int _size;
 };
 
+
+// 二维向量
+typedef EPoint EVector2;
+
+// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
+typedef std::function<void(int)> TimerCallback;
+
+// 按钮点击回调函数
+typedef std::function<void()> BtnClkCallback;
+
+// 物理世界消息监听器回调函数
+typedef std::function<void()> PhysLsnrCallback;
+
+// 碰撞消息监听器回调函数
+typedef PhysLsnrCallback  ClsLsnrCallback;
+
+template<typename T>
+inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
+
+template<typename Obj>
+inline void SafeRelease(Obj** p) { if (*p) { (*p)->release(); *p = nullptr; } }
+
+template<class Interface>
+inline void SafeReleaseInterface(Interface **pp) { if (*pp != nullptr) { (*pp)->Release(); (*pp) = nullptr; } }
+
+
 // 颜色
 class EColor
 {
@@ -268,143 +251,65 @@ public:
 	enum COMMON_VALUE
 	{
 		ALICE_BLUE = 0xF0F8FF,
-		ANTIQUE_WHITE = 0xFAEBD7,
 		AQUA = 0x00FFFF,
-		AQUAMARINE = 0x7FFFD4,
 		AZURE = 0xF0FFFF,
 		BEIGE = 0xF5F5DC,
-		BISQUE = 0xFFE4C4,
 		BLACK = 0x000000,
-		BLANCHED_ALMOND = 0xFFEBCD,
 		BLUE = 0x0000FF,
 		BLUE_VIOLET = 0x8A2BE2,
 		BROWN = 0xA52A2A,
-		BURLY_WOOD = 0xDEB887,
-		CADET_BLUE = 0x5F9EA0,
-		CHARTREUSE = 0x7FFF00,
 		CHOCOLATE = 0xD2691E,
-		CORAL = 0xFF7F50,
-		CORNFLOWER_BLUE = 0x6495ED,
-		CORNSILK = 0xFFF8DC,
-		CRIMSON = 0xDC143C,
 		CYAN = 0x00FFFF,
 		DARK_BLUE = 0x00008B,
 		DARK_CYAN = 0x008B8B,
 		DARK_GOLDENROD = 0xB8860B,
 		DARK_GRAY = 0xA9A9A9,
 		DARK_GREEN = 0x006400,
-		DARK_KHAKI = 0xBDB76B,
-		DARK_MAGENTA = 0x8B008B,
-		DARK_OLIVE_GREEN = 0x556B2F,
 		DARK_ORANGE = 0xFF8C00,
-		DARK_ORCHID = 0x9932CC,
 		DARK_RED = 0x8B0000,
-		DARK_SALMON = 0xE9967A,
 		DARK_SEA_GREEN = 0x8FBC8F,
-		DARK_SLATE_BLUE = 0x483D8B,
-		DARK_SLATE_GRAY = 0x2F4F4F,
-		DARK_TURQUOISE = 0x00CED1,
 		DARK_VIOLET = 0x9400D3,
 		DEEP_PINK = 0xFF1493,
 		DEEP_SKY_BLUE = 0x00BFFF,
-		DIM_GRAY = 0x696969,
-		DODGER_BLUE = 0x1E90FF,
-		FIREBRICK = 0xB22222,
-		FLORAL_WHITE = 0xFFFAF0,
 		FOREST_GREEN = 0x228B22,
-		FUCHSIA = 0xFF00FF,
-		GAINSCORO = 0xDCDCDC,
-		GHOST_WHITE = 0xF8F8FF,
 		GOLD = 0xFFD700,
 		GOLDENROD = 0xDAA520,
 		GRAY = 0x808080,
 		GREEN = 0x008000,
 		GREEN_YELLOW = 0xADFF2F,
-		HONEYDEW = 0xF0FFF0,
-		HOT_PINK = 0xFF69B4,
-		INDIAN_RED = 0xCD5C5C,
-		INDIGO = 0x4B0082,
-		IVORY = 0xFFFFF0,
-		KHAKI = 0xF0E68C,
-		LAVENDER = 0xE6E6FA,
-		LAVENDER_BLUSH = 0xFFF0F5,
-		LAWN_GREEN = 0x7CFC00,
-		LEMON_CHIFFON = 0xFFFACD,
 		LIGHT_BLUE = 0xADD8E6,
-		LIGHT_CORAL = 0xF08080,
 		LIGHT_CYAN = 0xE0FFFF,
 		LIGHT_GOLDENROD_YELLOW = 0xFAFAD2,
 		LIGHT_GREEN = 0x90EE90,
 		LIGHT_GRAY = 0xD3D3D3,
 		LIGHT_PINK = 0xFFB6C1,
-		LIGHT_SALMON = 0xFFA07A,
 		LIGHT_SEA_GREEN = 0x20B2AA,
 		LIGHT_SKY_BLUE = 0x87CEFA,
 		LIGHT_SLATE_GRAY = 0x778899,
-		LIGHT_STEEL_BLUE = 0xB0C4DE,
 		LIGHT_YELLOW = 0xFFFFE0,
-		LIME = 0x00FF00,
-		LIME_GREEN = 0x32CD32,
-		LINEN = 0xFAF0E6,
-		MAGENTA = 0xFF00FF,
-		MAROON = 0x800000,
-		MEDIUM_AQUAMARINE = 0x66CDAA,
 		MEDIUM_BLUE = 0x0000CD,
-		MEDIUM_ORCHID = 0xBA55D3,
 		MEDIUM_PURPLE = 0x9370DB,
 		MEDIUM_SEA_GREEN = 0x3CB371,
-		MEDIUM_SLATE_BLUE = 0x7B68EE,
 		MEDIUM_SPRING_GREEN = 0x00FA9A,
-		MEDIUM_TURQUOISE = 0x48D1CC,
 		MEDUIM_VIOLET_RED = 0xC71585,
 		MIDNIGHT_BLUE = 0x191970,
-		MINT_CREAM = 0xF5FFFA,
-		MISTY_ROSE = 0xFFE4E1,
-		MOCCASIN = 0xFFE4B5,
-		NAVAJO_WHITE = 0xFFDEAD,
-		NAVY = 0x000080,
-		OLD_LACE = 0xFDF5E6,
-		OLIVE = 0x808000,
-		OLIVE_DRAB = 0x6B8E23,
 		ORANGE = 0xFFA500,
 		ORANGE_RED = 0xFF4500,
-		ORCHID = 0xDA70D6,
-		PALE_GOLDENROD = 0xEEE8AA,
-		PALE_GREEN = 0x98FB98,
-		PALE_TURQUOISE = 0xAFEEEE,
-		PALE_VIOLET_RED = 0xDB7093,
-		PAPAYA_WHIP = 0xFFEFD5,
-		PEACH_PUFF = 0xFFDAB9,
-		PERU = 0xCD853F,
 		PINK = 0xFFC0CB,
-		PLUM = 0xDDA0DD,
-		POWDER_BLUE = 0xB0E0E6,
 		PURPLE = 0x800080,
 		RED = 0xFF0000,
-		ROSY_BROWN = 0xBC8F8F,
-		ROYAL_BLUE = 0x4169E1,
-		SADDLE_BROWN = 0x8B4513,
-		SALMON = 0xFA8072,
-		SANDY_BROWN = 0xF4A460,
 		SEA_GREEN = 0x2E8B57,
 		SEA_SHELL = 0xFFF5EE,
-		SIENNA = 0xA0522D,
 		SILVER = 0xC0C0C0,
 		SKY_BLUE = 0x87CEEB,
-		SLATE_BLUE = 0x6A5ACD,
-		SLATE_GRAY = 0x708090,
 		SNOW = 0xFFFAFA,
 		SPRING_GREEN = 0x00FF7F,
-		STEEL_BLUE = 0x4682B4,
-		TAN = 0xD2B48C,
-		TEAL = 0x008080,
-		THISTLE = 0xD8BFD8,
 		TOMATO = 0xFF6347,
-		TURQUOISE = 0x40E0D0,
 		VIOLET = 0xEE82EE,
 		WHEAT = 0xF5DEB3,
 		WHITE = 0xFFFFFF,
 		WHITE_SMOKE = 0xF5F5F5,
+		WOOD = 0xDEB887,
 		YELLOW = 0xFFFF00,
 		YELLOW_GREEN = 0x9ACD32
 	};
@@ -437,136 +342,86 @@ public:
 };
 
 
-// 鼠标消息
-class EMouseMsg
+// 键值集合
+class EKeyCode
 {
 public:
-	// 鼠标消息集合
-	enum MOUSE_MSG
+	enum VALUE
 	{
-		MOVE = 0x0200,	// 鼠标移动
-		LBUTTON_DOWN,	// 鼠标左键按下
-		LBUTTON_UP,		// 鼠标左键抬起
-		LBUTTON_DBLCLK,	// 鼠标左键双击
-		RBUTTON_DOWN,	// 鼠标右键按下
-		RBUTTON_UP,		// 鼠标右键抬起
-		RBUTTON_DBLCLK,	// 鼠标右键双击
-		MBUTTON_DOWN,	// 鼠标中键按下
-		MBUTTON_UP,		// 鼠标中键抬起
-		MBUTTON_DBLCLK,	// 鼠标中键双击
-		WHEEL			// 滑动滚轮
+		UP = 0xC8,
+		LEFT = 0xCB,
+		RIGHT = 0xCD,
+		DOWN = 0xD0,
+		ENTER = 0x1C,
+		SPACE = 0x39,
+		ESC = 0x01,
+		BACK = 0x0E,
+		TAB = 0x0F,
+		PAUSE = 0xC5,
+		Q = 0x10,
+		W = 0x11,
+		E = 0x12,
+		R = 0x13,
+		T = 0x14,
+		Y = 0x15,
+		U = 0x16,
+		I = 0x17,
+		O = 0x18,
+		P = 0x19,
+		A = 0x1E,
+		S = 0x1F,
+		D = 0x20,
+		F = 0x21,
+		G = 0x22,
+		H = 0x23,
+		J = 0x24,
+		K = 0x25,
+		L = 0x26,
+		Z = 0x2C,
+		X = 0x2D,
+		C = 0x2E,
+		V = 0x2F,
+		B = 0x30,
+		N = 0x31,
+		M = 0x32,
+		NUM1 = 0x02,
+		NUM2 = 0x03,
+		NUM3 = 0x04,
+		NUM4 = 0x05,
+		NUM5 = 0x06,
+		NUM6 = 0x07,
+		NUM7 = 0x08,
+		NUM8 = 0x09,
+		NUM9 = 0x0A,
+		NUM0 = 0x0B,
+		NUMPAD7 = 0x47,
+		NUMPAD8 = 0x48,
+		NUMPAD9 = 0x49,
+		NUMPAD4 = 0x4B,
+		NUMPAD5 = 0x4C,
+		NUMPAD6 = 0x4D,
+		NUMPAD1 = 0x4F,
+		NUMPAD2 = 0x50,
+		NUMPAD3 = 0x51,
+		NUMPAD0 = 0x52,
+		F1 = 0x3B,
+		F2 = 0x3C,
+		F3 = 0x3D,
+		F4 = 0x3E,
+		F5 = 0x3F,
+		F6 = 0x40,
+		F7 = 0x41,
+		F8 = 0x42,
+		F9 = 0x43,
+		F10 = 0x44
 	};
-
-	// 获取鼠标横坐标
-	static DWORD getPosX();
-
-	// 获取鼠标纵坐标
-	static DWORD getPosY();
-
-	// 获取鼠标坐标
-	static EPoint getPos();
-
-	// 获取鼠标左键按下状态
-	static bool isLButtonDown();
-
-	// 获取鼠标中键按下状态
-	static bool isMButtonDown();
-
-	// 获取鼠标右键按下状态
-	static bool isRButtonDown();
-
-	// 获取 Shift 按键状态
-	static bool isShiftDown();
-
-	// 获取 Ctrl 按键状态
-	static bool isCtrlDown();
-
-	// 获取鼠标滚轮值
-	static DWORD getWheelDelta();
-
-	// 获取当前鼠标消息类型
-	static MOUSE_MSG getMsg();
-
-public:
-	static UINT s_nMsg;
-	static WPARAM s_wParam;
-	static LPARAM s_lParam;
-};
-
-
-// 按键消息
-class EKeyboardMsg
-{
-public:
-	// 按键消息类型集合
-	enum KEYBOARD_MSG
-	{
-		KEY_DOWN = 0x0100,	// 按下
-		KEY_UP				// 抬起
-	};
-
-	// 按键键值集合
-	enum KEY
-	{
-		A = 'A', B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,					// 字母键值
-		NUM0 = '0', NUM1, NUM2, NUM3, NUM4, NUM5, NUM6, NUM7, NUM8, NUM9,									// 数字键值
-		NUMPAD0 = 0x60, NUMPAD1, NUMPAD2, NUMPAD3, NUMPAD4, NUMPAD5, NUMPAD6, NUMPAD7, NUMPAD8, NUMPAD9,	// 数字小键盘键值
-		F1 = 0x70, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,											// F键键值
-		MULTIPLY,		// 乘号键键值
-		ADD,			// 加号键键值
-		SEPARATOR,		// 分割键键值
-		SUBTRACT,		// 减号键键值
-		DECIMAL,		// 小数点键键值
-		DIVIDE,			// 除号键键值
-		TAB = 0x09,		// TAB 键键值
-		ENTER = 0x0D,	// 回车键键值
-		SHIFT, CTRL, 	// SHIFT 键键值
-		ESC = 0x1B, 	// ESCAPE 键键值
-		SPACE = 0x20, 	// 空格键键值
-		PAGE_UP, 		// PageUp 键键值
-		PAGE_DOWN, 		// PageDown 键键值
-		END, 			// End 键键值
-		HOME, 			// Home 键键值
-		LEFT, 			// 左键键值
-		UP, 			// 上键键值
-		RIGHT, 			// 右键键值
-		DOWN			// 下键键值
-	};
-
-	// 获取按键消息类型
-	static KEYBOARD_MSG getMsg();
-
-	// 获取键值
-	static KEY getKeyValue();
-
-	// 获取按键消息的计数
-	static DWORD getCount();
-
-	// 获取特定按键的状态
-	static bool isKeyDown(
-		KEY key
-	);
-
-	// 获取大小写锁定状态
-	static bool isCapitalLockOn();
-
-	// 获取数字小键盘锁定状态
-	static bool isNumpadLockOn();
-
-	// 获取滑动锁定状态
-	static bool isScrollLockOn();
-
-public:
-	static UINT s_nMsg;
-	static WPARAM s_wParam;
-	static LPARAM s_lParam;
 };
 
 
 class EGeometry;
 
 // 物理消息
-class EPhysicsMsg
+class EPhysicsEvent
 {
 public:
 	enum INTERSECT_RELATION
@@ -694,27 +549,27 @@ protected:
 
 class ESprite;
 
-class ETexture :
+class EImage :
 	public EObject
 {
 	friend ESprite;
 
 public:
-	// 创建一个空的纹理
-	ETexture();
+	// 创建一个空的图片
+	EImage();
 
 	// 从本地文件中读取资源
-	ETexture(
-		const EString & fileName
+	EImage(
+		LPCTSTR fileName
 	);
 
 	// 读取程序资源
-	ETexture(
+	EImage(
 		LPCTSTR resourceName,
 		LPCTSTR resourceType
 	);
 
-	virtual ~ETexture();
+	virtual ~EImage();
 
 	// 从本地文件中读取资源
 	void loadFromFile(
@@ -758,42 +613,42 @@ protected:
 };
 
 
-class ESpriteFrame :
+class EKeyframe :
 	public EObject
 {
 	friend ESprite;
 
 public:
-	// 创建空的精灵帧
-	ESpriteFrame();
+	// 创建空的关键帧
+	EKeyframe();
 
-	// 创建空的精灵帧
-	ESpriteFrame(
-		ETexture * texture
+	// 创建空的关键帧
+	EKeyframe(
+		EImage * texture
 	);
 
-	// 创建空的精灵帧
-	ESpriteFrame(
+	// 创建空的关键帧
+	EKeyframe(
 		const EString & imageFileName
 	);
 
-	// 创建空的精灵帧
-	ESpriteFrame(
+	// 创建空的关键帧
+	EKeyframe(
 		LPCTSTR resourceName,
 		LPCTSTR resourceType
 	);
 
-	// 创建空的精灵帧
-	ESpriteFrame(
-		ETexture * texture,
+	// 创建空的关键帧
+	EKeyframe(
+		EImage * texture,
 		float x,
 		float y,
 		float width,
 		float height
 	);
 
-	// 创建空的精灵帧
-	ESpriteFrame(
+	// 创建空的关键帧
+	EKeyframe(
 		const EString & imageFileName,
 		float x,
 		float y,
@@ -801,8 +656,8 @@ public:
 		float height
 	);
 
-	// 创建空的精灵帧
-	ESpriteFrame(
+	// 创建空的关键帧
+	EKeyframe(
 		LPCTSTR resourceName,
 		LPCTSTR resourceType,
 		float x,
@@ -811,7 +666,7 @@ public:
 		float height
 	);
 
-	virtual ~ESpriteFrame();
+	virtual ~EKeyframe();
 
 	// 获取宽度
 	float getWidth() const;
@@ -819,16 +674,16 @@ public:
 	// 获取高度
 	float getHeight() const;
 
-	// 获取纹理
-	ETexture * getTexture() const;
+	// 获取图片
+	EImage * getImage() const;
 
 protected:
-	// 获取纹理
-	void _setTexture(
-		ETexture * texture
+	// 修改图片
+	void _setImage(
+		EImage * texture
 	);
 
-	// 裁剪纹理
+	// 裁剪图片
 	void _clipTexture(
 		float x,
 		float y,
@@ -841,39 +696,98 @@ protected:
 	float	m_fSourceClipY;
 	float	m_fSourceClipWidth;
 	float	m_fSourceClipHeight;
-	ETexture * m_pTexture;
+	EImage * m_pImage;
 };
 
+
+class ESceneManager;
 class ENode;
+class EAction;
 
-// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
-typedef std::function<void(int)> TIMER_CALLBACK;
+// 场景
+class EScene :
+	public EObject
+{
+	friend ESceneManager;
 
-// 按钮点击回调函数
-typedef std::function<void()> BUTTON_CLICK_CALLBACK;
+public:
+	EScene();
 
-// 按键消息监听回调函数
-typedef std::function<void()> KEY_LISTENER_CALLBACK;
+	virtual ~EScene();
 
-// 鼠标消息监听回调函数
-typedef std::function<void()> MOUSE_LISTENER_CALLBACK;
+	// 重写这个函数，它将在进入这个场景时自动执行
+	virtual void onEnter() {}
 
-// 鼠标点击消息监听回调函数（参数为点击位置）
-typedef std::function<void(EPoint mousePos)> MOUSE_CLICK_LISTENER_CALLBACK;
+	// 重写这个函数，它将在离开这个场景时自动执行
+	virtual void onExit() {}
 
-// 鼠标按下消息监听回调函数（参数为按下位置）
-typedef MOUSE_CLICK_LISTENER_CALLBACK  MOUSE_PRESS_LISTENER_CALLBACK;
+	// 重写这个函数，它将在窗口激活时执行
+	virtual bool onActivate() { return false; }
 
-// 鼠标双击消息监听回调函数（参数为双击位置）
-typedef MOUSE_CLICK_LISTENER_CALLBACK  MOUSE_DBLCLK_LISTENER_CALLBACK;
+	// 重写这个函数，它将在窗口非激活时执行
+	virtual bool onInactive() { return false; }
 
-// 鼠标拖动消息监听回调函数（参数为拖动前位置和拖动后位置）
-typedef std::function<void(EPoint begin, EPoint end)> MOUSE_DRAG_LISTENER_CALLBACK;
+	// 重写这个函数，它将在关闭窗口时执行
+	virtual bool onCloseWindow() { return true; }
 
-// 物理世界消息监听器回调函数
-typedef std::function<void()> PHYSICS_LISTENER_CALLBACK;
+	// 重写这个函数，它将在每一帧画面刷新时执行
+	virtual void onUpdate() {}
 
-// 碰撞消息监听器回调函数
-typedef PHYSICS_LISTENER_CALLBACK  COLLISION_LISTENER_CALLBACK;
+	// 添加子节点到场景
+	void add(
+		ENode * child,
+		int zOrder = 0
+	);
+
+	// 删除子节点
+	bool remove(
+		ENode * child
+	);
+
+	// 删除相同名称的子节点
+	void remove(
+		const EString &childName
+	);
+
+	// 获取所有子节点
+	std::vector<e2d::ENode*> getChildren();
+
+	// 获取子节点数量
+	size_t getChildrenCount() const;
+
+	// 根据名称获取子节点
+	ENode * getChild(
+		const EString &childName
+	);
+
+	// 获取根节点
+	ENode * getRoot() const;
+
+	// 清空所有子成员
+	void clearAllChildren();
+
+	// 执行动画
+	void runAction(
+		EAction * action
+	);
+
+	// 开启几何图形的渲染
+	void setGeometryVisiable(
+		bool visiable
+	);
+
+protected:
+	// 渲染场景画面
+	void _render();
+
+	// 更新场景内容
+	void _update();
+
+protected:
+	bool m_bSortNeeded;
+	bool m_bWillSave;
+	bool m_bGeometryVisiable;
+	ENode * m_pRoot;
+};
 
 }

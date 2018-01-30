@@ -3,34 +3,33 @@
 
 e2d::ETransitionFade::ETransitionFade(float fadeOutDuration, float fadeInDuration)
 	: ETransition(0)
-	, m_fFadeOutDuration(fadeOutDuration * 1000)
-	, m_fFadeInDuration(fadeInDuration * 1000)
+	, m_fFadeOutDuration(fadeOutDuration)
+	, m_fFadeInDuration(fadeInDuration)
 	, m_bFadeOutTransioning(true)
 {
-	m_fTotalDuration = m_fFadeOutDuration;
+	m_fDuration = max(m_fFadeOutDuration, 0);
 }
 
 void e2d::ETransitionFade::_update()
 {
-	if (_isDelayEnough())
+	this->_calcRateOfProgress();
+
+	if (m_bFadeOutTransioning)
 	{
-		if (m_bFadeOutTransioning)
+		m_pPrevScene->getRoot()->setOpacity(1 - m_fRateOfProgress);
+		if (m_fRateOfProgress >= 1)
 		{
-			m_pPrevScene->getRoot()->setOpacity(1 - m_fRateOfProgress);
-			if (m_fDuration >= m_fTotalDuration)
-			{
-				m_bFadeOutTransioning = false;
-				m_fTotalDuration = m_fFadeInDuration;
-				m_fDuration = 0;
-			}
+			m_bFadeOutTransioning = false;
+			m_fDuration = max(m_fFadeInDuration, 0);
+			m_fLast = ETime::getTotalTime();
 		}
-		else
+	}
+	else
+	{
+		m_pNextScene->getRoot()->setOpacity(m_fRateOfProgress);
+		if (m_fRateOfProgress >= 1)
 		{
-			m_pNextScene->getRoot()->setOpacity(m_fRateOfProgress);
-			if (m_fDuration >= m_fTotalDuration)
-			{
-				this->_stop();
-			}
+			this->_stop();
 		}
 	}
 }
@@ -45,7 +44,7 @@ void e2d::ETransitionFade::_init()
 	else
 	{
 		m_bFadeOutTransioning = false;
-		m_fTotalDuration = m_fFadeInDuration;
+		m_fDuration = m_fFadeInDuration;
 	}
 	m_pNextScene->getRoot()->setOpacity(0);
 }

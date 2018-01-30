@@ -49,11 +49,6 @@ public:
 	// 获取执行该动作的目标
 	virtual ENode * getTarget();
 
-	// 设置动作每一帧的时间间隔
-	virtual void setInterval(
-		LONGLONG milliSeconds
-	);
-
 	// 设置动作执行目标
 	virtual void setTarget(
 		ENode * node
@@ -76,13 +71,12 @@ protected:
 	virtual void _resetTime();
 
 protected:
-	bool		m_bRunning;
-	bool		m_bEnding;
-	bool		m_bInit;
-	ENode *		m_pTarget;
-	EScene *	m_pParentScene;
-	LARGE_INTEGER m_nAnimationInterval;
-	LARGE_INTEGER m_tLast;
+	bool	m_bRunning;
+	bool	m_bEnding;
+	bool	m_bInit;
+	ENode *	m_pTarget;
+	EScene *m_pParentScene;
+	float	m_fLast;
 };
 
 
@@ -96,21 +90,17 @@ public:
 	);
 
 protected:
-	// 判断动作是否结束
-	bool _isEnd() const;
-
-	// 判断延时是否足够
-	bool _isDelayEnough();
-
 	// 初始化动画
 	virtual void _init() override;
+
+	// 更新动画
+	virtual void _update() override;
 
 	// 重置动画
 	virtual void _reset() override;
 
 protected:
 	float m_fDuration;
-	float m_fTotalDuration;
 	float m_fRateOfProgress;
 };
 
@@ -122,7 +112,7 @@ public:
 	// 创建相对位移动画
 	EActionMoveBy(
 		float duration, /* 动画持续时长 */
-		EVec vector		/* 位移向量 */
+		EVector2 vector		/* 位移向量 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -143,7 +133,7 @@ protected:
 
 protected:
 	EPoint	m_BeginPos;
-	EVec	m_MoveVec;
+	EVector2	m_MoveVec;
 };
 
 
@@ -490,6 +480,9 @@ protected:
 
 	// 重置动作
 	virtual void _reset() override;
+
+protected:
+	float m_fDelayTime;
 };
 
 
@@ -576,14 +569,19 @@ public:
 
 	// 创建特定帧间隔的帧动画
 	EAnimation(
-		LONGLONG frameDelay	/* 帧间隔（毫秒） */
+		float interval	/* 帧间隔（秒） */
 	);
 
 	virtual ~EAnimation();
 
-	// 添加帧
-	void addFrame(
-		ESpriteFrame * frame /* 添加帧 */
+	// 添加关键帧
+	void addKeyframe(
+		EKeyframe * frame	/* 添加关键帧 */
+	);
+
+	// 设置每一帧的时间间隔（秒）
+	void setInterval(
+		float interval
 	);
 
 	// 获取该动画的拷贝对象
@@ -603,8 +601,9 @@ protected:
 	virtual void _reset() override;
 
 protected:
-	UINT m_nFrameIndex;
-	std::vector<ESpriteFrame*> m_vFrames;
+	float	m_fInterval;
+	UINT	m_nFrameIndex;
+	std::vector<EKeyframe*> m_vFrames;
 };
 
 

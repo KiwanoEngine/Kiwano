@@ -6,15 +6,12 @@ namespace e2d
 {
 
 class ENode;
-class EMsgManager;
 class EPhysicsManager;
 
 // 监听器
 class EListener :
 	public EObject
 {
-	friend EMsgManager;
-
 public:
 	EListener();
 
@@ -78,265 +75,6 @@ protected:
 };
 
 
-// 鼠标消息监听器
-class EListenerMouse :
-	public EListener
-{
-	friend EMsgManager;
-
-public:
-	EListenerMouse();
-
-	EListenerMouse(
-		const EString &name
-	);
-
-	EListenerMouse(
-		const MOUSE_LISTENER_CALLBACK &callback
-	);
-
-	EListenerMouse(
-		const EString &name,
-		const MOUSE_LISTENER_CALLBACK &callback
-	);
-
-	// 设置监听器回调函数
-	void setCallback(
-		const MOUSE_LISTENER_CALLBACK &callback
-	);
-
-	// 绑定监听器到场景
-	virtual void bindWith(
-		EScene * pParentScene
-	) override;
-
-	// 绑定监听器到节点
-	virtual void bindWith(
-		ENode * pParentNode
-	) override;
-
-protected:
-	// 执行监听器回调函数
-	virtual void _callOn() override;
-
-protected:
-	MOUSE_LISTENER_CALLBACK m_Callback;
-};
-
-
-// 鼠标按下消息监听器
-class EListenerMousePress :
-	public EListenerMouse
-{
-public:
-	EListenerMousePress();
-
-	EListenerMousePress(
-		const EString &name
-	);
-
-	EListenerMousePress(
-		const MOUSE_PRESS_LISTENER_CALLBACK &callback
-	);
-
-	EListenerMousePress(
-		const EString &name,
-		const MOUSE_PRESS_LISTENER_CALLBACK &callback
-	);
-
-	// 设置监听器回调函数
-	void setCallback(
-		const MOUSE_PRESS_LISTENER_CALLBACK &callback
-	);
-
-protected:
-	// 执行监听器回调函数
-	virtual void _callOn() override;
-
-protected:
-	MOUSE_PRESS_LISTENER_CALLBACK m_Callback;
-};
-
-
-// 鼠标点击消息监听器
-class EListenerMouseClick :
-	public EListenerMouse
-{
-public:
-	EListenerMouseClick();
-
-	EListenerMouseClick(
-		const EString &name
-	);
-
-	EListenerMouseClick(
-		const MOUSE_CLICK_LISTENER_CALLBACK &callback
-	);
-
-	EListenerMouseClick(
-		const EString &name,
-		const MOUSE_CLICK_LISTENER_CALLBACK &callback
-	);
-
-	// 设置监听器回调函数
-	void setCallback(
-		const MOUSE_CLICK_LISTENER_CALLBACK &callback
-	);
-
-protected:
-	// 执行监听器回调函数
-	virtual void _callOn() override;
-
-protected:
-	bool m_bPressed;
-	MOUSE_CLICK_LISTENER_CALLBACK m_Callback;
-};
-
-
-// 鼠标点击消息监听器
-class EListenerMouseDoubleClick :
-	public EListenerMouse
-{
-public:
-	EListenerMouseDoubleClick();
-
-	EListenerMouseDoubleClick(
-		const EString &name
-	);
-
-	EListenerMouseDoubleClick(
-		const MOUSE_DBLCLK_LISTENER_CALLBACK &callback
-	);
-
-	EListenerMouseDoubleClick(
-		const EString &name,
-		const MOUSE_DBLCLK_LISTENER_CALLBACK &callback
-	);
-
-	// 设置监听器回调函数
-	void setCallback(
-		const MOUSE_DBLCLK_LISTENER_CALLBACK &callback
-	);
-
-protected:
-	// 执行监听器回调函数
-	virtual void _callOn() override;
-
-protected:
-	bool m_bPressed;
-	MOUSE_DBLCLK_LISTENER_CALLBACK m_Callback;
-};
-
-
-// 鼠标拖动消息监听器
-class EListenerMouseDrag :
-	public EListenerMouse
-{
-public:
-	EListenerMouseDrag();
-
-	EListenerMouseDrag(
-		const EString &name
-	);
-
-	EListenerMouseDrag(
-		const MOUSE_DRAG_LISTENER_CALLBACK &callback
-	);
-
-	EListenerMouseDrag(
-		const EString &name,
-		const MOUSE_DRAG_LISTENER_CALLBACK &callback
-	);
-
-	// 设置监听器回调函数
-	void setCallback(
-		const MOUSE_DRAG_LISTENER_CALLBACK &callback
-	);
-
-protected:
-	// 执行监听器回调函数
-	virtual void _callOn() override;
-
-protected:
-	EPoint	m_Begin;
-	MOUSE_DRAG_LISTENER_CALLBACK m_Callback;
-};
-
-
-// 按键消息监听器
-class EListenerKeyboard :
-	public EListener
-{
-	friend EMsgManager;
-
-public:
-	EListenerKeyboard();
-
-	EListenerKeyboard(
-		const EString &name
-	);
-
-	EListenerKeyboard(
-		const KEY_LISTENER_CALLBACK &callback
-	);
-
-	EListenerKeyboard(
-		const EString &name,
-		const KEY_LISTENER_CALLBACK &callback
-	);
-
-	// 设置监听器回调函数
-	void setCallback(
-		const KEY_LISTENER_CALLBACK &callback
-	);
-
-	// 绑定监听器到场景
-	virtual void bindWith(
-		EScene * pParentScene
-	) override;
-
-	// 绑定监听器到节点
-	virtual void bindWith(
-		ENode * pParentNode
-	) override;
-
-protected:
-	// 执行监听器回调函数
-	virtual void _callOn() override;
-
-protected:
-	KEY_LISTENER_CALLBACK m_Callback;
-};
-
-
-// 按键按下消息监听
-class EListenerKeyboardPress :
-	public EListenerKeyboard
-{
-	friend EMsgManager;
-
-public:
-	EListenerKeyboardPress();
-
-	EListenerKeyboardPress(
-		const EString &name
-	);
-
-	EListenerKeyboardPress(
-		const KEY_LISTENER_CALLBACK &callback
-	);
-
-	EListenerKeyboardPress(
-		const EString &name,
-		const KEY_LISTENER_CALLBACK &callback
-	);
-
-protected:
-	// 执行监听器回调函数
-	virtual void _callOn() override;
-};
-
-
 // 物理世界消息监听器
 class EListenerPhysics :
 	public EListener
@@ -351,17 +89,17 @@ public:
 	);
 
 	EListenerPhysics(
-		const PHYSICS_LISTENER_CALLBACK &callback
+		const PhysLsnrCallback &callback
 	);
 
 	EListenerPhysics(
 		const EString &name,
-		const PHYSICS_LISTENER_CALLBACK &callback
+		const PhysLsnrCallback &callback
 	);
 
 	// 设置监听器回调函数
 	void setCallback(
-		const PHYSICS_LISTENER_CALLBACK &callback
+		const PhysLsnrCallback &callback
 	);
 
 	// 将监听器与场景绑定
@@ -379,7 +117,7 @@ protected:
 	virtual void _callOn() override;
 
 protected:
-	PHYSICS_LISTENER_CALLBACK m_Callback;
+	PhysLsnrCallback m_Callback;
 };
 
 
@@ -395,12 +133,12 @@ public:
 	);
 
 	EListenerPhysicsCollision(
-		const COLLISION_LISTENER_CALLBACK &callback
+		const ClsLsnrCallback &callback
 	);
 
 	EListenerPhysicsCollision(
 		const EString &name,
-		const COLLISION_LISTENER_CALLBACK &callback
+		const ClsLsnrCallback &callback
 	);
 
 protected:
@@ -408,7 +146,7 @@ protected:
 	virtual void _callOn() override;
 
 protected:
-	COLLISION_LISTENER_CALLBACK m_Callback;
+	ClsLsnrCallback m_Callback;
 };
 
 }

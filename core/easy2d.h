@@ -1,7 +1,7 @@
 /******************************************************
-* Easy2D Game Framework
+* Easy2D Game Core
 * 
-* Website: http://www.easy2d.cn
+* Website: https://www.easy2d.cn
 * Source Code: https://github.com/Nomango/Easy2D
 ******************************************************/
 
@@ -9,11 +9,11 @@
 #pragma once
 
 #ifndef __cplusplus
-	#error Easy2D is only for C++
+	#error 仅能在 C++ 环境下使用 Easy2D
 #endif
 
 #if _MSC_VER < 1600
-	#error MSVC version is too low
+	#error Easy2D 不支持 Visual Studio 2010 以下版本
 #endif
 
 

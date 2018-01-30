@@ -31,11 +31,17 @@ public:
 
 	virtual ~ENode();
 
-	// 重写这个函数，它将在节点进入场景时自动执行
-	virtual void onEnter();
+	// 节点进入场景时，这个函数将自动运行
+	virtual void onEnter() {}
 
-	// 重写这个函数，它将在节点离开场景时自动执行
-	virtual void onExit();
+	// 节点离开场景时，这个函数将自动运行
+	virtual void onExit() {}
+
+	// 每一帧画面刷新时，这个函数将自动运行
+	virtual void onUpdate() {}
+
+	// 渲染节点时，这个函数将自动运行
+	virtual void onRender() {}
 
 	// 获取节点显示状态
 	virtual bool isVisiable() const;
@@ -163,7 +169,7 @@ public:
 
 	// 移动节点
 	virtual void movePos(
-		const EVec & v
+		const EVector2 & v
 	);
 
 	// 设置节点绘图顺序
@@ -295,7 +301,7 @@ public:
 	);
 
 	// 继续所有暂停动画
-	virtual void startAllActions();
+	virtual void resumeAllActions();
 
 	// 暂停所有动画
 	virtual void pauseAllActions();
@@ -411,22 +417,22 @@ public:
 
 	// 从文理资源创建精灵
 	ESprite(
-		ETexture * texture
+		EImage * image
 	);
 
-	// 从精灵帧创建精灵
+	// 从关键帧创建精灵
 	ESprite(
-		ESpriteFrame * spriteFrame
+		EKeyframe * spriteFrame
 	);
 
 	// 从文件图片创建精灵
 	ESprite(
-		const EString & imageFileName
+		LPCTSTR imageFileName
 	);
 
 	// 从文件图片创建精灵并裁剪
 	ESprite(
-		const EString & imageFileName,
+		LPCTSTR imageFileName,
 		float x,
 		float y,
 		float width,
@@ -451,37 +457,37 @@ public:
 
 	virtual ~ESprite();
 	
-	// 加载精灵纹理
+	// 加载精灵图片
 	void loadFrom(
-		ETexture * texture
+		EImage * texture
 	);
 
-	// 从本地文件加载纹理
+	// 从本地文件加载图片
 	void loadFrom(
-		const EString & imageFileName
+		LPCTSTR imageFileName
 	);
 
-	// 从资源加载纹理
+	// 从资源加载图片
 	void loadFrom(
 		LPCTSTR resourceName,
 		LPCTSTR resourceType
 	);
 
-	// 加载纹理并裁剪
+	// 加载图片并裁剪
 	void loadFrom(
-		ETexture * texture,
+		EImage * image,
 		float x,
 		float y,
 		float width,
 		float height
 	);
 
-	// 从精灵帧加载资源
+	// 从关键帧加载资源
 	void loadFrom(
-		ESpriteFrame * frame
+		EKeyframe * frame
 	);
 
-	// 裁剪纹理
+	// 裁剪图片
 	void clip(
 		float x,
 		float y,
@@ -489,14 +495,13 @@ public:
 		float height
 	);
 
-protected:
 	// 渲染精灵
-	virtual void _render() override;
+	virtual void onRender() override;
 
 protected:
 	float	m_fSourceClipX;
 	float	m_fSourceClipY;
-	ETexture * m_pTexture;
+	EImage * m_pImage;
 };
 
 
@@ -562,10 +567,10 @@ public:
 		float wordWrapWidth
 	);
 
-protected:
 	// 渲染文字
-	virtual void _render() override;
+	virtual void onRender() override;
 
+protected:
 	// 创建文字布局
 	void _initTextLayout();
 
@@ -589,14 +594,14 @@ public:
 	// 创建按钮
 	EButton(
 		ENode * normal,		/* 普通状态 */
-		const BUTTON_CLICK_CALLBACK & callback = nullptr
+		const BtnClkCallback & callback = nullptr
 	);
 
 	// 创建按钮
 	EButton(
 		ENode * normal,		/* 普通状态 */
 		ENode * selected,	/* 鼠标按下状态 */
-		const BUTTON_CLICK_CALLBACK & callback = nullptr
+		const BtnClkCallback & callback = nullptr
 	);
 
 	// 创建按钮
@@ -604,7 +609,7 @@ public:
 		ENode * normal,		/* 普通状态 */
 		ENode * mouseover,	/* 鼠标移入状态 */
 		ENode * selected,	/* 鼠标按下状态 */
-		const BUTTON_CLICK_CALLBACK & callback = nullptr
+		const BtnClkCallback & callback = nullptr
 	);
 
 	// 创建按钮
@@ -613,7 +618,7 @@ public:
 		ENode * mouseover,	/* 鼠标移入状态 */
 		ENode * selected,	/* 鼠标移入状态 */
 		ENode * disabled,	/* 按钮禁用状态 */
-		const BUTTON_CLICK_CALLBACK & callback = nullptr
+		const BtnClkCallback & callback = nullptr
 	);
 
 	// 获取按钮状态是启用还是禁用
@@ -646,7 +651,7 @@ public:
 
 	// 设置回调函数
 	void setCallback(
-		const BUTTON_CLICK_CALLBACK & callback
+		const BtnClkCallback & callback
 	);
 
 	// 设置中心点的横向位置
@@ -668,23 +673,17 @@ public:
 		float pivotY
 	) override;
 
+	// 更新按钮状态
+	virtual void onUpdate();
+
 protected:
 	enum STATUS { NORMAL, MOUSEOVER, SELECTED };
-
-	// 初始化按钮
-	virtual void _init();
 
 	// 设置按钮状态
 	virtual void _setStatus(STATUS status);
 
-	// 对自身进行二维矩阵变换
-	virtual void _updateTransform() override;
-
 	// 刷新按钮显示
 	virtual void _updateVisiable();
-
-	// 刷新按钮状态
-	virtual void _updateStatus();
 
 	// 执行按钮回调函数
 	virtual void _runCallback();
@@ -697,8 +696,7 @@ protected:
 	ENode * m_pDisabled;
 	bool	m_bEnable;
 	bool	m_bIsSelected;
-	EListenerMouse * m_pListener;
-	BUTTON_CLICK_CALLBACK m_Callback;
+	BtnClkCallback m_Callback;
 };
 
 
@@ -713,7 +711,7 @@ public:
 	EButtonToggle(
 		ENode * toggleOnNormal,
 		ENode * toggleOffNormal,
-		const BUTTON_CLICK_CALLBACK & callback = nullptr
+		const BtnClkCallback & callback = nullptr
 	);
 
 	// 创建开关按钮
@@ -722,7 +720,7 @@ public:
 		ENode * toggleOffNormal,
 		ENode * toggleOnSelected,
 		ENode * toggleOffSelected,
-		const BUTTON_CLICK_CALLBACK & callback = nullptr
+		const BtnClkCallback & callback = nullptr
 	);
 
 	// 创建开关按钮
@@ -733,7 +731,7 @@ public:
 		ENode * toggleOffMouseOver,
 		ENode * toggleOnSelected,
 		ENode * toggleOffSelected,
-		const BUTTON_CLICK_CALLBACK & callback = nullptr
+		const BtnClkCallback & callback = nullptr
 	);
 
 	// 创建开关按钮
@@ -746,7 +744,7 @@ public:
 		ENode * toggleOffSelected,
 		ENode * toggleOnDisabled,
 		ENode * toggleOffDisabled,
-		const BUTTON_CLICK_CALLBACK & callback = nullptr
+		const BtnClkCallback & callback = nullptr
 	);
 
 	// 切换开关状态，并执行回调函数

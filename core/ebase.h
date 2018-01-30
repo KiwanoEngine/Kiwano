@@ -8,29 +8,22 @@
 namespace e2d
 {
 
-class EScene;
-class ENode;
-class EObjectManager;
-class EListenerMouse;
-class EListenerKeyboard;
-class EAction;
-class ETransition;
 
-class EApp
+class EGame
 {
 public:
-	// 获取程序实例
-	static EApp * getInstance();
-
-	// 初始化游戏界面
+	// 初始化游戏
 	static bool init(
-		const EString &title,	/* 窗口标题 */
-		UINT32 width,			/* 窗口宽度 */
-		UINT32 height,			/* 窗口高度 */
-		const EWindowStyle &wStyle = nullptr	/* 窗口样式 */
+		LPCTSTR sTitle,				/* 窗口标题 */
+		UINT32 nWidth,				/* 窗口宽度 */
+		UINT32 nHeight,				/* 窗口高度 */
+		LPCTSTR pIconID = nullptr,	/* 窗口图标 */
+		bool bNoClose = false,		/* 禁用关闭按钮 */
+		bool bNoMiniSize = false,	/* 禁用最小化按钮 */
+		bool bTopMost = false		/* 窗口置顶 */
 	);
 
-	// 启动程序
+	// 启动游戏
 	static int run();
 
 	// 暂停游戏
@@ -42,35 +35,32 @@ public:
 	// 结束游戏
 	static void quit();
 
-	// 切换场景
-	static void enterScene(
-		EScene * scene,						/* 下一个场景的指针 */
-		ETransition * transition = nullptr,	/* 场景切换动画 */
-		bool saveCurrentScene = true		/* 是否保存当前场景 */
-	);
-
-	// 返回上一场景
-	static void backScene(
-		ETransition * transition = nullptr	/* 场景切换动画 */
-	);
-
-	// 清空保存的所有场景
-	static void clearScene();
-
-	// 隐藏窗口
-	static void hideWindow();
-
-	// 显示窗口
-	static void showWindow();
-
-	// 是否打开控制台
-	static void showConsole(
-		bool show = true
-	);
+	// 回收游戏资源
+	static void uninit();
 
 	// 游戏是否暂停
 	static bool isPaused();
 
+	// 获取 AppName
+	static EString getAppName();
+
+	// 设置 AppName
+	static void setAppName(
+		const EString &appname
+	);
+
+private:
+	// 更新游戏内容
+	static void __update();
+};
+
+
+// 控制窗口属性
+class EWindow
+{
+	friend EGame;
+
+public:
 	// 获取窗口标题
 	static EString getTitle();
 
@@ -83,175 +73,209 @@ public:
 	// 获取窗口大小
 	static ESize getSize();
 
-	// 获取当前场景
-	static EScene * getCurrentScene();
-
 	// 获取窗口句柄
 	static HWND getHWnd();
 
-	// 获取窗口样式
-	static EWindowStyle getWindowStyle();
-
-	// 获取从游戏开始到当前经过的毫秒数
-	static LONGLONG getTotalDurationFromStart();
-
-	// 获取 AppName
-	static EString getAppName();
-
 	// 修改窗口大小
-	static void setWindowSize(
+	static void setSize(
 		UINT32 width,
 		UINT32 height
 	);
 
 	// 设置窗口标题
-	static void setWindowTitle(
+	static void setTitle(
 		const EString & title
 	);
 
-	// 设置 AppName
-	static void setAppName(
-		const EString &appname
+	// 打开/隐藏控制台
+	static void showConsole(
+		bool show = true
 	);
 
-	// 修改窗口背景色
-	static void setBkColor(
-		UINT32 color
-	);
+	// 隐藏主窗口
+	static void hideWindow();
 
-	// 设置程序是否响应输入法
-	static void setKeyboardLayoutEnable(
-		bool value
-	);
+	// 显示主窗口
+	static void showWindow();
 
-	// 预设画面帧数
-	static void setFPS(
-		UINT32 fps
-	);
-
-public:
-	// 重写这个函数，它将在窗口激活时执行
-	virtual bool onActivate();
-
-	// 重写这个函数，它将在窗口非激活时执行
-	virtual bool onInactive();
-
-	// 重写这个函数，它将在关闭窗口时执行
-	virtual bool onCloseWindow();
-
-private:
-	EApp();
-
-	virtual ~EApp();
-
-	void _update();
-
-	void _render();
-
-	void _enterNextScene();
-
-	void _updateTime();
-
-	static LRESULT CALLBACK WndProc(
-		HWND hWnd,
-		UINT message,
-		WPARAM wParam,
-		LPARAM lParam
+	// 是否允许响应输入法
+	static void setTypewritingEnable(
+		bool bEnable
 	);
 
 private:
-	bool	m_bEnd;
-	bool	m_bPaused;
-	bool	m_bManualPaused;
-	bool	m_bShowConsole;
-	EString	m_sTitle;
-	EString	m_sAppName;
-	UINT32	m_ClearColor;
-	LARGE_INTEGER m_nAnimationInterval;
-	EScene * m_pCurrentScene;
-	EScene * m_pNextScene;
-	EWindowStyle m_WindowStyle;
-	ETransition * m_pTransition;
+	// 初始化窗口
+	static bool __init(
+		LPCTSTR sTitle,		/* 窗口标题 */
+		UINT32 nWidth,		/* 窗口宽度 */
+		UINT32 nHeight,		/* 窗口高度 */
+		LPCTSTR pIconID,	/* 窗口图标 */
+		bool bNoClose,		/* 禁用关闭按钮 */
+		bool bNoMiniSize,	/* 禁用最小化按钮 */
+		bool bTopMost		/* 窗口置顶 */
+	);
+
+	// 重置窗口属性
+	static void __uninit();
+
+	// 处理窗口消息
+	static void __poll();
+
+	// Win32 窗口消息回调程序
+	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 
-class EScene :
-	public EObject
+// 控制游戏时间
+class ETime
 {
-	friend EApp;
+	friend EGame;
 
 public:
-	EScene();
+	// 获取上一帧与当前帧的时间间隔（毫秒）
+	static int getDeltaTime();
 
-	virtual ~EScene();
+	// 获取游戏开始时长（秒）
+	static float getTotalTime();
 
-	// 重写这个函数，它将在进入这个场景时自动执行
-	virtual void onEnter();
+private:
+	// 初始化计时操作
+	static void __init();
 
-	// 重写这个函数，它将在离开这个场景时自动执行
-	virtual void onExit();
+	// 重置计时操作
+	static void __uninit();
 
-	// 重写这个函数，它将在窗口激活时执行
-	virtual bool onActivate();
+	// 更新当前时间
+	static void __updateNow();
 
-	// 重写这个函数，它将在窗口非激活时执行
-	virtual bool onInactive();
+	// 更新时间信息
+	static void __updateLast();
 
-	// 重写这个函数，它将在关闭窗口时执行
-	virtual bool onCloseWindow();
+	// 挂起线程
+	static void __sleep();
+};
 
-	// 添加子节点到场景
-	void add(
-		ENode * child, 
-		int zOrder = 0
+
+// 控制键盘和鼠标的输入
+class EInput
+{
+	friend EGame;
+
+public:
+	// 检测键盘某按键是否正被按下
+	static bool isKeyDown(
+		int nKeyCode
 	);
 
-	// 删除子节点
-	bool remove(
-		ENode * child
+	// 检测键盘某按键是否被点击
+	static bool isKeyPress(
+		int nKeyCode
 	);
 
-	// 删除相同名称的子节点
-	void remove(
-		const EString &childName
+	// 检测键盘某按键是否正在松开
+	static bool isKeyRelease(
+		int nKeyCode
 	);
 
-	// 获取所有子节点
-	std::vector<e2d::ENode*> &getChildren();
+	// 检测鼠标左键是否正被按下
+	static bool isMouseLButtonDown();
 
-	// 获取子节点数量
-	size_t getChildrenCount() const;
+	// 检测鼠标右键是否正被按下
+	static bool isMouseRButtonDown();
 
-	// 根据名称获取子节点
-	ENode * getChild(
-		const EString &childName
+	// 检测鼠标中键是否正被按下
+	static bool isMouseMButtonDown();
+
+	// 检测鼠标左键是否被点击
+	static bool isMouseLButtonPress();
+
+	// 检测鼠标右键是否被点击
+	static bool isMouseRButtonPress();
+
+	// 检测鼠标中键是否被点击
+	static bool isMouseMButtonPress();
+
+	// 检测鼠标左键是否正在松开
+	static bool isMouseLButtonRelease();
+
+	// 检测鼠标右键是否正在松开
+	static bool isMouseRButtonRelease();
+
+	// 检测鼠标中键是否正在松开
+	static bool isMouseMButtonRelease();
+
+	// 获得鼠标X轴坐标值
+	static float getMouseX();
+
+	// 获得鼠标Y轴坐标值
+	static float getMouseY();
+
+	// 获得鼠标坐标值
+	static EPoint getMousePos();
+
+	// 获得鼠标X轴坐标增量
+	static float getMouseDeltaX();
+
+	// 获得鼠标Y轴坐标增量
+	static float getMouseDeltaY();
+
+	// 获得鼠标Z轴（鼠标滚轮）坐标增量
+	static float getMouseDeltaZ();
+
+private:
+	// 初始化 DirectInput 以及键盘鼠标设备
+	static HRESULT __init();
+
+	// 获得输入信息
+	static void __updateDeviceState();
+
+	// 卸载 DirectInput
+	static void __uninit();
+};
+
+
+// 渲染器
+class ERenderer
+{
+	friend EGame;
+	friend EWindow;
+
+public:
+	// 修改背景色
+	static void setBackgroundColor(
+		UINT32 color
 	);
 
-	// 获取根节点
-	ENode * getRoot() const;
+	// 获取 ID2D1Factory 对象
+	static ID2D1Factory * getID2D1Factory();
 
-	// 清空所有子成员
-	void clearAllChildren();
+	// 获取 ID2D1HwndRenderTarget 对象
+	static ID2D1HwndRenderTarget * getRenderTarget();
 
-	// 执行动画
-	void runAction(
-		EAction * action
-	);
+	// 获取 ID2D1SolidColorBrush 对象
+	static ID2D1SolidColorBrush * getSolidColorBrush();
 
-	// 开启几何图形的渲染
-	void setGeometryVisiable(
-		bool visiable
-	);
+	// 获取 IWICImagingFactory 对象
+	static IWICImagingFactory * getIWICImagingFactory();
 
-protected:
-	// 渲染场景画面
-	void _render();
+	// 获取 IDWriteFactory 对象
+	static IDWriteFactory * getIDWriteFactory();
 
-protected:
-	bool m_bSortNeeded;
-	bool m_bWillSave;
-	bool m_bGeometryVisiable;
-	ENode * m_pRoot;
+private:
+	// 渲染游戏画面
+	static void __render();
+
+	// 创建设备无关资源
+	static bool __createDeviceIndependentResources();
+
+	// 创建设备相关资源
+	static bool __createDeviceResources();
+
+	// 删除设备相关资源
+	static void __discardDeviceResources();
+
+	// 删除所有渲染相关资源
+	static void __discardResources();
 };
 
 }

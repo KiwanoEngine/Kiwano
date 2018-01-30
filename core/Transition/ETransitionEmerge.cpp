@@ -8,15 +8,14 @@ e2d::ETransitionEmerge::ETransitionEmerge(float duration)
 
 void e2d::ETransitionEmerge::_update()
 {
-	if (_isDelayEnough())
-	{
-		if (m_pPrevScene) m_pPrevScene->getRoot()->setOpacity(1 - m_fRateOfProgress);
-		m_pNextScene->getRoot()->setOpacity(m_fRateOfProgress);
+	this->_calcRateOfProgress();
 
-		if (m_fDuration >= m_fTotalDuration)
-		{
-			this->_stop();
-		}
+	if (m_pPrevScene) m_pPrevScene->getRoot()->setOpacity(1 - m_fRateOfProgress);
+	m_pNextScene->getRoot()->setOpacity(m_fRateOfProgress);
+
+	if (m_fRateOfProgress >= 1)
+	{
+		this->_stop();
 	}
 }
 

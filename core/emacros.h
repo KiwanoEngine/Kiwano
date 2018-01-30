@@ -24,6 +24,10 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
+#ifndef DIRECTINPUT_VERSION
+#define DIRECTINPUT_VERSION 0x0800
+#endif
+
 // Windows Header Files:
 #include <windows.h>
 #include <assert.h>
@@ -34,15 +38,22 @@
 #include <d2d1.h>
 #include <d2d1helper.h>
 #include <dwrite.h>
+#include <dinput.h>
 #include <wincodec.h>
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "windowscodecs.lib")
 
 
+#ifndef HINST_THISCOMPONENT
+EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+#define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
+#endif
+
+
 #ifndef ASSERT_IF
 #if defined( DEBUG ) || defined( _DEBUG )
-#define ASSERT(b, m) do {if (!(b)) { fprintf(stderr, "Assert: " #m "\n"); assert(b); }} while(0)
+	#define ASSERT(b, m) do {if (!(b)) { fprintf(stderr, "Assert: " #m "\n"); assert(b); }} while(0)
 #else
 	#define ASSERT(b, m) ((void)0)
 #endif //DEBUG || _DEBUG
@@ -50,18 +61,8 @@
 
 #ifndef WARN_IF
 #if defined( DEBUG ) || defined( _DEBUG )
-#define WARN_IF(b, m) do {if (b) { fprintf(stderr, "Warning: " #m "\n"); }} while(0)
+	#define WARN_IF(b, m) do {if (b) { fprintf(stderr, "Warning: " #m "\n"); }} while(0)
 #else
-#define WARN_IF(b, m) ((void)0)
+	#define WARN_IF(b, m) ((void)0)
 #endif //DEBUG || _DEBUG
 #endif
-
-
-#define DEPRECATED_ATTRIBUTE __declspec(deprecated)
-
-
-template<typename T>
-inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
-
-template<typename T>
-inline void SafeRelease(T** p) { if (*p) { (*p)->release(); *p = nullptr; } }
