@@ -18,9 +18,7 @@ public:
 		UINT32 nWidth,				/* 窗口宽度 */
 		UINT32 nHeight,				/* 窗口高度 */
 		LPCTSTR pIconID = nullptr,	/* 窗口图标 */
-		bool bNoClose = false,		/* 禁用关闭按钮 */
-		bool bNoMiniSize = false,	/* 禁用最小化按钮 */
-		bool bTopMost = false		/* 窗口置顶 */
+		LPCTSTR sAppname = nullptr	/* AppName */
 	);
 
 	// 启动游戏
@@ -43,11 +41,6 @@ public:
 
 	// 获取 AppName
 	static EString getAppName();
-
-	// 设置 AppName
-	static void setAppName(
-		const EString &appname
-	);
 
 private:
 	// 更新游戏内容
@@ -78,25 +71,19 @@ public:
 
 	// 修改窗口大小
 	static void setSize(
-		UINT32 width,
-		UINT32 height
+		UINT32 nWidth,
+		UINT32 nHeight
 	);
 
 	// 设置窗口标题
 	static void setTitle(
-		const EString & title
+		const EString & sTitle
 	);
 
 	// 打开/隐藏控制台
 	static void showConsole(
-		bool show = true
+		bool bShow = true
 	);
-
-	// 隐藏主窗口
-	static void hideWindow();
-
-	// 显示主窗口
-	static void showWindow();
 
 	// 是否允许响应输入法
 	static void setTypewritingEnable(
@@ -106,13 +93,10 @@ public:
 private:
 	// 初始化窗口
 	static bool __init(
-		LPCTSTR sTitle,		/* 窗口标题 */
-		UINT32 nWidth,		/* 窗口宽度 */
-		UINT32 nHeight,		/* 窗口高度 */
-		LPCTSTR pIconID,	/* 窗口图标 */
-		bool bNoClose,		/* 禁用关闭按钮 */
-		bool bNoMiniSize,	/* 禁用最小化按钮 */
-		bool bTopMost		/* 窗口置顶 */
+		LPCTSTR sTitle,
+		UINT32 nWidth,
+		UINT32 nHeight,
+		LPCTSTR pIconID
 	);
 
 	// 重置窗口属性

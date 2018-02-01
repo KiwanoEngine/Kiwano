@@ -1,8 +1,5 @@
 #include "..\ebase.h"
 #include "..\emanagers.h"
-#include "..\enodes.h"
-#include "..\etransitions.h"
-#include "..\etools.h"
 
 
 // 控制游戏终止
@@ -15,7 +12,7 @@ static bool s_bInitialized = false;
 static e2d::EString s_sAppName;
 
 
-bool e2d::EGame::init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID, bool bNoClose, bool bNoMiniSize, bool bTopMost)
+bool e2d::EGame::init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID, LPCTSTR sAppname)
 {
 	if (s_bInitialized)
 	{
@@ -30,16 +27,22 @@ bool e2d::EGame::init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIc
 		if (ERenderer::__createDeviceIndependentResources())
 		{
 			// 初始化窗口
-			if (EWindow::__init(sTitle, nWidth, nHeight, pIconID, bNoClose, bNoMiniSize, bTopMost))
+			if (EWindow::__init(sTitle, nWidth, nHeight, pIconID))
 			{
 				// 创建设备相关资源
 				if (ERenderer::__createDeviceResources())
 				{
 					// 重设 Client 大小
 					EWindow::setSize(nWidth, nHeight);
-					// 设置默认 AppName
-					if (s_sAppName.isEmpty())
+					// 设置 AppName
+					if (sAppname)
+					{
+						s_sAppName = sAppname;
+					}
+					else
+					{
 						s_sAppName = EWindow::getTitle();
+					}
 					// 标志初始化成功
 					s_bInitialized = true;
 				}
@@ -65,7 +68,7 @@ int e2d::EGame::run()
 	// 进入第一个场景
 	ESceneManager::__enterNextScene();
 	// 显示窗口
-	EWindow::showWindow();
+	::ShowWindow(EWindow::getHWnd(), SW_SHOWNORMAL);
 	// 刷新窗口内容
 	::UpdateWindow(EWindow::getHWnd());
 	// 处理窗口消息
@@ -73,9 +76,6 @@ int e2d::EGame::run()
 	// 刷新时间信息
 	ETime::__updateNow();
 	ETime::__updateLast();
-
-	// 挂起时长
-	int nWaitMS = 0;
 
 	while (!s_bEndGame)
 	{
@@ -87,8 +87,9 @@ int e2d::EGame::run()
 		// 判断是否达到了刷新状态
 		if (ETime::getDeltaTime() >= 17)
 		{
-			ETime::__updateLast();
-			EGame::__update();
+			ETime::__updateLast();		// 刷新时间信息
+			EGame::__update();			// 更新游戏内容
+			ERenderer::__render();		// 渲染游戏画面
 		}
 		else
 		{
@@ -144,20 +145,13 @@ void e2d::EGame::uninit()
 
 void e2d::EGame::__update()
 {
-	EInput::__updateDeviceState();		// 获取用户输入
+	if (s_bPaused)
+		return;
 
-	if (!s_bPaused)
-	{
-		ETimerManager::__update();		// 定时器管理器执行程序
-		EActionManager::__update();		// 动作管理器执行程序
-		ESceneManager::__update();		// 更新游戏内容
-		ERenderer::__render();			// 渲染游戏画面
-	}
-}
-
-void e2d::EGame::setAppName(const EString &appname)
-{
-	s_sAppName = appname;
+	EInput::__updateDeviceState();	// 获取用户输入
+	ETimerManager::__update();		// 定时器管理器执行程序
+	EActionManager::__update();		// 动作管理器执行程序
+	ESceneManager::__update();		// 更新游戏内容
 }
 
 e2d::EString e2d::EGame::getAppName()

@@ -8,10 +8,11 @@
 
 DEFINE_KNOWN_FOLDER(FOLDERID_LocalAppData, 0xF1B32785, 0x6FBA, 0x4FCF, 0x9D, 0x55, 0x7B, 0x8E, 0x7F, 0x15, 0x70, 0x91);
 
-typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
 
 e2d::EString e2d::EFile::getLocalAppDataPath()
 {
+	typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
+
 	// 获取 AppData\Local 文件夹的路径
 	PWSTR pszPath = NULL;
 	HMODULE hModule = LoadLibrary(L"shell32.dll");
@@ -35,9 +36,9 @@ e2d::EString e2d::EFile::getTempPath()
 
 	// 创建临时文件目录
 	e2d::EString tempFilePath = path + e2d::EGame::getAppName();
-	if (_waccess(tempFilePath, 0) == -1)
+	if (::_waccess(tempFilePath, 0) == -1)
 	{
-		_wmkdir(tempFilePath);
+		::_wmkdir(tempFilePath);
 	}
 	return tempFilePath;
 }
@@ -49,9 +50,9 @@ e2d::EString e2d::EFile::getDefaultSavePath()
 
 	path += L"\\" + EGame::getAppName();
 
-	if (_waccess(path, 0) == -1)
+	if (::_waccess(path, 0) == -1)
 	{
-		_wmkdir(path);
+		::_wmkdir(path);
 	}
 
 	path += L"\\DefaultData.ini";

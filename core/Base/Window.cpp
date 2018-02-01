@@ -9,7 +9,7 @@ static HWND s_HWnd = nullptr;
 static bool s_bShowConsole = false;
 
 
-bool e2d::EWindow::__init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID /*= nullptr*/, bool bNoClose /*= false*/, bool bNoMiniSize /*= false*/, bool bTopMost /*= false*/)
+bool e2d::EWindow::__init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID /*= nullptr*/)
 {
 	// 注册窗口类
 	WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
@@ -22,11 +22,6 @@ bool e2d::EWindow::__init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR
 	wcex.lpszMenuName = NULL;
 	wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
 	wcex.lpszClassName = L"Easy2DApp";
-	// 设置窗口是否有关闭按钮
-	if (bNoClose)
-	{
-		wcex.style |= CS_NOCLOSE;
-	}
 	// 设置程序图标
 	if (pIconID)
 	{
@@ -60,17 +55,11 @@ bool e2d::EWindow::__init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR
 	nWidth = min(nWidth, screenWidth);
 	nHeight = min(nHeight, screenHeight);
 
-	// 创建窗口样式
-	DWORD dwStyle = WS_OVERLAPPED | WS_SYSMENU;
-	if (!bNoMiniSize)
-	{
-		dwStyle |= WS_MINIMIZEBOX;
-	}
 	// 创建窗口
 	s_HWnd = CreateWindow(
 		L"Easy2DApp",
 		sTitle,
-		dwStyle,
+		WS_OVERLAPPED | WS_SYSMENU,
 		0, 0, nWidth, nHeight,
 		NULL,
 		NULL,
@@ -84,11 +73,6 @@ bool e2d::EWindow::__init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR
 	{
 		// 禁用输入法
 		EWindow::setTypewritingEnable(false);
-		// 设置窗口置顶
-		if (bTopMost)
-		{
-			::SetWindowPos(s_HWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-		}
 		// 查找是否存在控制台
 		HWND hwnd = ::GetConsoleWindow();
 		if (hwnd)
@@ -177,7 +161,7 @@ void e2d::EWindow::setSize(UINT32 width, UINT32 height)
 void e2d::EWindow::setTitle(const EString &title)
 {
 	// 设置窗口标题
-	SetWindowText(s_HWnd, title);
+	::SetWindowText(s_HWnd, title);
 }
 
 e2d::EString e2d::EWindow::getTitle()
@@ -227,16 +211,6 @@ void e2d::EWindow::showConsole(bool show /* = true */)
 			::ShowWindow(hwnd, SW_HIDE);
 		}
 	}
-}
-
-void e2d::EWindow::hideWindow()
-{
-	::ShowWindow(s_HWnd, SW_HIDE);
-}
-
-void e2d::EWindow::showWindow()
-{
-	::ShowWindow(s_HWnd, SW_SHOWNORMAL);
 }
 
 void e2d::EWindow::setTypewritingEnable(bool bEnable)

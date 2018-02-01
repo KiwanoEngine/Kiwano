@@ -17,7 +17,7 @@ bool e2d::ERenderer::__createDeviceIndependentResources()
 		&s_pDirect2dFactory
 	);
 
-	ASSERT(SUCCEEDED(hr), "Create Device Independent Resources Failed!");
+	ASSERT(SUCCEEDED(hr), "Create ID2D1Factory Failed!");
 
 	if (SUCCEEDED(hr))
 	{
@@ -29,7 +29,7 @@ bool e2d::ERenderer::__createDeviceIndependentResources()
 			IID_IWICImagingFactory,
 			reinterpret_cast<void**>(&s_pIWICFactory)
 		);
-		ASSERT(SUCCEEDED(hr), "Create WICImagingFactory Failed!");
+		ASSERT(SUCCEEDED(hr), "Create IWICImagingFactory Failed!");
 	}
 
 	if (SUCCEEDED(hr))
@@ -40,7 +40,7 @@ bool e2d::ERenderer::__createDeviceIndependentResources()
 			__uuidof(IDWriteFactory),
 			reinterpret_cast<IUnknown**>(&s_pDWriteFactory)
 		);
-		ASSERT(SUCCEEDED(hr), "Create DirectWrite Factory Failed!");
+		ASSERT(SUCCEEDED(hr), "Create IDWriteFactory Failed!");
 	}
 
 	return SUCCEEDED(hr);
@@ -73,18 +73,19 @@ bool e2d::ERenderer::__createDeviceResources()
 			&s_pRenderTarget
 		);
 
-		ASSERT(SUCCEEDED(hr), "Create Render Target Failed!");
-	}
+		ASSERT(SUCCEEDED(hr), "Create ID2D1HwndRenderTarget Failed!");
 
-	if (SUCCEEDED(hr))
-	{
-		// 创建画刷
-		hr = s_pRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(D2D1::ColorF::White),
-			&s_pSolidBrush
-		);
-		ASSERT(SUCCEEDED(hr), "Create Solid Color Brush Failed!");
+		if (SUCCEEDED(hr))
+		{
+			// 创建画刷
+			hr = s_pRenderTarget->CreateSolidColorBrush(
+				D2D1::ColorF(D2D1::ColorF::White),
+				&s_pSolidBrush
+			);
+			ASSERT(SUCCEEDED(hr), "Create ID2D1SolidColorBrush Failed!");
+		}
 	}
+	
 	return SUCCEEDED(hr);
 }
 
