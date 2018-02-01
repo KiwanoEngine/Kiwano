@@ -28,7 +28,7 @@ void EInput::__uninit()
 	SafeReleaseInterface(&s_pDirectInput);
 }
 
-HRESULT EInput::__init()
+bool EInput::__init()
 {
 	ZeroMemory(s_KeyBuffer, sizeof(s_KeyBuffer));
 	ZeroMemory(s_KeySecBuffer, sizeof(s_KeySecBuffer));
@@ -41,7 +41,7 @@ HRESULT EInput::__init()
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
 		(void**)&s_pDirectInput,
-		NULL
+		nullptr
 	);
 
 	if (SUCCEEDED(hr))
@@ -50,7 +50,7 @@ HRESULT EInput::__init()
 		hr = s_pDirectInput->CreateDevice(
 			GUID_SysKeyboard,
 			&s_KeyboardDevice,
-			NULL
+			nullptr
 		);
 
 		if (SUCCEEDED(hr))
@@ -77,7 +77,7 @@ HRESULT EInput::__init()
 	if (SUCCEEDED(hr))
 	{
 		// 初始化鼠标设备
-		hr = s_pDirectInput->CreateDevice(GUID_SysMouse, &s_MouseDevice, NULL);
+		hr = s_pDirectInput->CreateDevice(GUID_SysMouse, &s_MouseDevice, nullptr);
 
 		if (SUCCEEDED(hr))
 		{

@@ -33,9 +33,10 @@ static steady_clock::time_point s_tNow;
 static steady_clock::time_point s_tLast;
 
 
-void e2d::ETime::__init()
+bool e2d::ETime::__init()
 {
 	s_tStart = s_tLast = s_tNow = steady_clock::now();
+	return true;
 }
 
 void e2d::ETime::__uninit()
@@ -83,12 +84,23 @@ static LARGE_INTEGER s_tLast;
 
 
 
-void e2d::ETime::__init()
+bool e2d::ETime::__init()
 {
-	::timeBeginPeriod(1);					// 修改时间精度
-	::QueryPerformanceFrequency(&s_tFreq);	// 获取时钟频率
-	::QueryPerformanceCounter(&s_tNow);		// 刷新当前时间
-	s_tStart = s_tLast = s_tNow;
+	bool bRet = false;
+	if (::timeBeginPeriod(1))
+	{
+		// 修改时间精度
+		if (::QueryPerformanceFrequency(&s_tFreq))	// 获取时钟频率
+		{
+
+			if (::QueryPerformanceCounter(&s_tNow))		// 刷新当前时间
+			{
+				s_tStart = s_tLast = s_tNow;
+				bRet = true;
+			}
+		}
+	}
+	return bRet;
 }
 
 void e2d::ETime::__uninit()

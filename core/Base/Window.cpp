@@ -59,7 +59,7 @@ bool e2d::EWindow::__init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR
 	s_HWnd = CreateWindow(
 		L"Easy2DApp",
 		sTitle,
-		WS_OVERLAPPED | WS_SYSMENU,
+		WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,
 		0, 0, nWidth, nHeight,
 		NULL,
 		NULL,
@@ -193,7 +193,7 @@ void e2d::EWindow::showConsole(bool show /* = true */)
 				FILE * stdoutStream, * stdinStream, * stderrStream;
 				freopen_s(&stdoutStream, "conout$", "w+t", stdout);
 				freopen_s(&stdinStream, "conin$", "r+t", stdin);
-				freopen_s(&stderrStream, "conerr$", "w+t", stderr);
+				freopen_s(&stderrStream, "conout$", "w+t", stderr);
 				// 禁用控制台关闭按钮
 				HMENU hmenu = ::GetSystemMenu(hwnd, FALSE);
 				::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);

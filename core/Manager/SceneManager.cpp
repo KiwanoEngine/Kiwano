@@ -94,8 +94,24 @@ void e2d::ESceneManager::__update()
 	// 下一场景指针不为空时，切换场景
 	if (s_pNextScene)
 	{
-		// 进入下一场景
-		__enterNextScene();
+		// 若要保存当前场景，把它放入栈中
+		if (s_pCurrentScene->m_bWillSave)
+		{
+			s_SceneStack.push(s_pCurrentScene);
+		}
+		else
+		{
+			SafeRelease(&s_pCurrentScene);
+		}
+
+		// 执行当前场景的 onExit 函数
+		s_pCurrentScene->onExit();
+
+		// 执行下一场景的 onEnter 函数
+		s_pNextScene->onEnter();
+
+		s_pCurrentScene = s_pNextScene;		// 切换场景
+		s_pNextScene = nullptr;				// 下一场景置空
 	}
 
 	// 断言当前场景非空
@@ -119,30 +135,21 @@ void e2d::ESceneManager::__render()
 	}
 }
 
-void e2d::ESceneManager::__enterNextScene()
+bool e2d::ESceneManager::__init()
 {
 	if (s_pNextScene == nullptr)
-		return;
+		return false;
 
-	// 执行当前场景的 onCloseWindow 函数
-	if (s_pCurrentScene)
-	{
-		s_pCurrentScene->onExit();
+	s_pCurrentScene = s_pNextScene;
+	s_pCurrentScene->onEnter();
+	s_pNextScene = nullptr;
+	return true;
+}
 
-		if (s_pCurrentScene->m_bWillSave)
-		{
-			// 若要保存当前场景，把它放入栈中
-			s_SceneStack.push(s_pCurrentScene);
-		}
-		else
-		{
-			SafeRelease(&s_pCurrentScene);
-		}
-	}
-
-	// 执行下一场景的 onEnter 函数
-	s_pNextScene->onEnter();
-
-	s_pCurrentScene = s_pNextScene;		// 切换场景
-	s_pNextScene = nullptr;				// 下一场景置空
+void e2d::ESceneManager::__uninit()
+{
+	SafeRelease(&s_pCurrentScene);
+	SafeRelease(&s_pNextScene);
+	SafeRelease(&s_pTransition);
+	ESceneManager::clearScene();
 }

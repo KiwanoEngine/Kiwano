@@ -20,36 +20,66 @@ bool e2d::EGame::init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIc
 		return false;
 	}
 
-	// 初始化 COM 组件
-	if (SUCCEEDED(CoInitialize(NULL)))
+	do
 	{
-		// 创建设备无关资源
-		if (ERenderer::__createDeviceIndependentResources())
+		// 初始化 COM 组件
+		if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
 		{
-			// 初始化窗口
-			if (EWindow::__init(sTitle, nWidth, nHeight, pIconID))
-			{
-				// 创建设备相关资源
-				if (ERenderer::__createDeviceResources())
-				{
-					// 重设 Client 大小
-					EWindow::setSize(nWidth, nHeight);
-					// 设置 AppName
-					if (sAppname)
-					{
-						s_sAppName = sAppname;
-					}
-					else
-					{
-						s_sAppName = EWindow::getTitle();
-					}
-					// 标志初始化成功
-					s_bInitialized = true;
-				}
-			}
+			WARN_IF(true, "CoInitializeEx Failed!");
+			break;
 		}
-	}
-	
+
+		// 创建设备无关资源
+		if (!ERenderer::__createDeviceIndependentResources())
+		{
+			WARN_IF(true, "ERenderer::__createDeviceIndependentResources Failed!");
+			break;
+		}
+
+		// 初始化窗口
+		if (!EWindow::__init(sTitle, nWidth, nHeight, pIconID))
+		{
+			WARN_IF(true, "EWindow::__init Failed!");
+			break;
+		}
+
+		// 创建设备相关资源
+		if (!ERenderer::__createDeviceResources())
+		{
+			WARN_IF(true, "ERenderer::__createDeviceResources Failed!");
+			break;
+		}
+
+		// 初始化计时
+		if (!ETime::__init())
+		{
+			WARN_IF(true, "ETime::__init Failed!");
+			break;
+		}
+
+		// 初始化 DirectInput
+		if (!EInput::__init())
+		{
+			WARN_IF(true, "EInput::__init Failed!");
+			break;
+		}
+
+		// 初始化播放器
+		if (!EMusicManager::__init())
+		{
+			WARN_IF(true, "EMusicManager::__init Failed!");
+			break;
+		}
+
+		// 重设 Client 大小
+		EWindow::setSize(nWidth, nHeight);
+		// 设置 AppName
+		s_sAppName = (sAppname != nullptr) ? sAppname : EWindow::getTitle();
+		// 标志初始化成功
+		s_bInitialized = true;
+
+	} while (0);
+
 	return s_bInitialized;
 }
 
@@ -61,12 +91,8 @@ int e2d::EGame::run()
 		return -1;
 	}
 
-	// 初始化 DirectInput
-	EInput::__init();
-	// 初始化计时操作
-	ETime::__init();
-	// 进入第一个场景
-	ESceneManager::__enterNextScene();
+	// 初始化场景管理器
+	ESceneManager::__init();
 	// 显示窗口
 	::ShowWindow(EWindow::getHWnd(), SW_SHOWNORMAL);
 	// 刷新窗口内容
@@ -93,8 +119,8 @@ int e2d::EGame::run()
 		}
 		else
 		{
-			// 挂起线程
-			ETime::__sleep();
+			EObjectManager::__flush();	// 刷新内存池
+			ETime::__sleep();			// 挂起线程
 		}
 	}
 
@@ -131,16 +157,24 @@ void e2d::EGame::quit()
 
 void e2d::EGame::uninit()
 {
+	// 删除所有场景
+	ESceneManager::__uninit();
 	// 重置窗口属性
 	EWindow::__uninit();
 	// 关闭输入
 	EInput::__uninit();
+	// 关闭播放器
+	EMusicManager::__uninit();
 	// 恢复计时操作
 	ETime::__uninit();
 	// 删除渲染相关资源
 	ERenderer::__discardResources();
+	// 刷新内存池
+	EObjectManager::__flush();
 
 	CoUninitialize();
+
+	s_bInitialized = false;
 }
 
 void e2d::EGame::__update()

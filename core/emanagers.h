@@ -12,6 +12,7 @@ class EScene;
 class ENode;
 class ETimer;
 class EAction;
+class EMusic;
 class EGeometry;
 class ETransition;
 class EListenerPhysics;
@@ -68,8 +69,11 @@ private:
 	// 渲染场景画面
 	static void __render();
 
-	// 进入下一场景
-	static void __enterNextScene();
+	// 初始化场景
+	static bool __init();
+
+	// 回收场景资源
+	static void __uninit();
 };
 
 
@@ -196,6 +200,46 @@ private:
 
 	// 重置所有动作状态
 	static void __resetAllActions();
+};
+
+
+// 音乐管理工具
+class EMusicManager
+{
+	friend EGame;
+
+public:
+	// 添加音乐文件
+	static EMusic * add(
+		const EString & strFilePath	/* 音乐文件路径 */
+	);
+
+	// 获取指定音乐的 EMusic 对象
+	static EMusic * get(
+		const EString & strFilePath	/* 音乐文件路径 */
+	);
+
+	// 暂停所有音乐
+	static void pauseAllMusics();
+
+	// 继续播放所有音乐
+	static void resumeAllMusics();
+
+	// 停止所有音乐
+	static void stopAllMusics();
+
+	// 获取 IXAudio2 对象
+	static IXAudio2 * getIXAudio2();
+
+	// 获取 IXAudio2MasteringVoice 对象
+	static IXAudio2MasteringVoice * getIXAudio2MasteringVoice();
+
+private:
+	// 初始化 XAudio2
+	static bool __init();
+
+	// 回收相关资源
+	static void __uninit();
 };
 
 

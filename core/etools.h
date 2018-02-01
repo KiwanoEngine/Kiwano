@@ -6,7 +6,7 @@ namespace e2d
 {
 
 class ETimerManager;
-class EAction;
+class EMusicManager;
 
 // 随机数产生器
 class ERandom
@@ -215,74 +215,88 @@ public:
 };
 
 
-// 音乐管理工具
+// 音乐播放器
 class EMusic
+	: public EObject
 {
+	friend EMusicManager;
+
 public:
-	// 播放音乐
-	static UINT play(
-		const EString & musicFilePath,		/* 音乐文件路径 */
-		int repeatTimes = 1
+	// 播放
+	bool play(
+		int nLoopCount = 0	/* 重复播放次数 */
 	);
 
-	// 播放音乐
-	static UINT play(
-		const EString & musicResourceName,	/* 资源名称 */
-		const EString & musicResourceType,	/* 资源类别 */
-		const EString & musicExtension,		/* 指定资源的扩展名 */
-		int repeatTimes = 1
+	// 暂停
+	bool pause();
+
+	// 继续
+	bool resume();
+
+	// 停止
+	bool stop();
+
+	// 获取音乐播放状态
+	bool isPlaying();
+
+	// 获取音量
+	float getVolume() const;
+
+	// 设置音量
+	bool setVolume(
+		float fVolume	/* 音量范围为 -224 ~ 224，其中 0 是静音，1 是正常音量 */
 	);
 
-	// 暂停音乐
-	static bool pause(
-		UINT musicId
+	// 获取频率比
+	float getFrequencyRatio() const;
+
+	// 设置频率比
+	bool setFrequencyRatio(
+		float fFrequencyRatio	/* 频率比范围为 1/1024.0f ~ 1024.0f，其中 1.0 为正常声调 */
 	);
 
-	// 暂停音乐
-	static bool pause(
-		const EString& musicName
+	// 获取 IXAudio2SourceVoice 对象
+	IXAudio2SourceVoice* getIXAudio2SourceVoice() const;
+
+protected:
+	EMusic();
+
+	virtual ~EMusic();
+
+	// 打开音乐文件
+	bool _open(
+		LPWSTR strFileName
 	);
 
-	// 继续播放音乐
-	static bool resume(
-		UINT musicId
+	// 关闭该播放器
+	void _close();
+
+	bool _readMMIO();
+
+	bool _resetFile();
+
+	bool _read(
+		BYTE* pBuffer, 
+		DWORD dwSizeToRead
 	);
 
-	// 继续播放音乐
-	static bool resume(
-		const EString& musicName
+	bool _findMediaFileCch(
+		WCHAR* strDestPath, 
+		int cchDest, 
+		LPCWSTR strFilename
 	);
 
-	// 停止音乐
-	static bool stop(
-		UINT musicId
-	);
-
-	// 停止音乐
-	static bool stop(
-		const EString& musicName
-	);
-
-	// 预加载音乐
-	static UINT preload(
-		const EString & musicFilePath
-	);
-
-	// 预加载音乐
-	static UINT preload(
-		const EString & musicResourceName,	/* 资源名称 */
-		const EString & musicResourceType,	/* 资源类别 */
-		const EString & musicExtension		/* 指定资源的扩展名 */
-	);
-
-	// 暂停所有音乐
-	static void pauseAllMusics();
-
-	// 继续播放所有音乐
-	static void resumeAllMusics();
-
-	// 停止所有音乐
-	static void stopAllMusics();
+protected:
+	bool m_bOpened;
+	bool m_bPlaying;
+	DWORD m_dwSize;
+	CHAR* m_pResourceBuffer;
+	BYTE* m_pbWaveData;
+	HMMIO m_hmmio;
+	MMCKINFO m_ck;
+	MMCKINFO m_ckRiff;
+	WAVEFORMATEX* m_pwfx;
+	IXAudio2SourceVoice* m_pSourceVoice;
 };
 
 }

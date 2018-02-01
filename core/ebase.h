@@ -124,7 +124,7 @@ public:
 
 private:
 	// 初始化计时操作
-	static void __init();
+	static bool __init();
 
 	// 重置计时操作
 	static void __uninit();
@@ -208,7 +208,7 @@ public:
 
 private:
 	// 初始化 DirectInput 以及键盘鼠标设备
-	static HRESULT __init();
+	static bool __init();
 
 	// 获得输入信息
 	static void __updateDeviceState();

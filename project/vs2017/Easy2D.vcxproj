@@ -101,7 +101,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
@@ -227,6 +227,7 @@
     <ClCompile Include="..\..\core\Listener\Listener.cpp" />
     <ClCompile Include="..\..\core\Listener\ListenerPhysics.cpp" />
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\MusicManager.cpp" />
     <ClCompile Include="..\..\core\Manager\ObjectManager.cpp" />
     <ClCompile Include="..\..\core\Manager\PhysicsManager.cpp" />
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />

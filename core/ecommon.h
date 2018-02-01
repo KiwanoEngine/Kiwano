@@ -145,7 +145,7 @@ public:
 	bool operator > (EString const&) const;
 	bool operator >= (EString const&) const;
 
-	operator const wchar_t*() const { return _string; }
+	operator wchar_t*() const { return _string; }
 	operator bool() const { return _size != 0; }
 
 	friend EString operator+(const wchar_t, const EString &);

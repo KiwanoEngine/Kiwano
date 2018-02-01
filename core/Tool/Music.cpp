@@ -1,443 +1,469 @@
 #include "..\etools.h"
-#include <map>
-#include <mmsystem.h>
-#pragma comment(lib , "winmm.lib")
+#include "..\emanagers.h"
 
-#define WIN_CLASS_NAME L"MciPlayerCallbackWnd"
+using namespace e2d;
 
-static HINSTANCE s_hInstance = nullptr;
+#ifndef SAFE_DELETE
+#define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=nullptr; } }
+#endif
+#ifndef SAFE_DELETE_ARRAY
+#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p);   (p)=nullptr; } }
+#endif
 
-LRESULT WINAPI _MciPlayerProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-static bool ExtractResource(LPCTSTR strDstFile, LPCTSTR strResType, LPCTSTR strResName);
-
-class MciPlayer
+inline bool TraceError(LPCTSTR sPrompt)
 {
-public:
-	MciPlayer();
-	~MciPlayer();
+	WARN_IF(true, "EMusic error: %s failed!", sPrompt);
+	return false;
+}
 
-	void close();
-	bool open(const e2d::EString & pFileName, UINT uId);
-	bool open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, UINT uId);
-	void play(int repeatTimes);
-	void pause();
-	void resume();
-	void stop();
-	void rewind();
-	bool isPlaying();
-	UINT getMusicID();
-
-private:
-	friend LRESULT WINAPI _MciPlayerProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-	void _sendCommand(int nCommand, DWORD_PTR param1 = 0, DWORD_PTR parma2 = 0);
-
-	MCIDEVICEID m_dev;
-	HWND        m_wnd;
-	UINT		m_nMusicID;
-	bool        m_bPlaying;
-	int			m_nRepeatTimes;
-};
+inline bool TraceError(LPCTSTR sPrompt, HRESULT hr)
+{
+	WARN_IF(true, "EMusic error: %s (%#X)", sPrompt, hr);
+	return false;
+}
 
 
-MciPlayer::MciPlayer()
-	: m_wnd(NULL)
-	, m_dev(0L)
-	, m_nMusicID(0)
+EMusic::EMusic()
+	: m_bOpened(false)
 	, m_bPlaying(false)
-	, m_nRepeatTimes(0)
+	, m_pwfx(nullptr)
+	, m_hmmio(nullptr)
+	, m_pResourceBuffer(nullptr)
+	, m_pbWaveData(nullptr)
+	, m_dwSize(0)
+	, m_pSourceVoice(nullptr)
 {
-	if (!s_hInstance)
-	{
-		s_hInstance = HINST_THISCOMPONENT;
-
-		WNDCLASS  wc;
-		wc.style = 0;
-		wc.lpfnWndProc = _MciPlayerProc;
-		wc.cbClsExtra = 0;
-		wc.cbWndExtra = 0;
-		wc.hInstance = s_hInstance;
-		wc.hIcon = 0;
-		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = NULL;
-		wc.lpszMenuName = NULL;
-		wc.lpszClassName = WIN_CLASS_NAME;
-
-		if (!RegisterClass(&wc) && 1410 != GetLastError())
-		{
-			return;
-		}
-	}
-
-	m_wnd = CreateWindowEx(
-		WS_EX_APPWINDOW,
-		WIN_CLASS_NAME,
-		NULL,
-		WS_POPUPWINDOW,
-		0, 0, 0, 0,
-		NULL,
-		NULL,
-		s_hInstance,
-		NULL);
-
-	if (m_wnd)
-	{
-		SetWindowLongPtr(m_wnd, GWLP_USERDATA, (LONG_PTR)this);
-	}
 }
 
-MciPlayer::~MciPlayer()
+EMusic::~EMusic()
 {
-	close();
-	DestroyWindow(m_wnd);
+	_close();
 }
 
-bool MciPlayer::open(const e2d::EString & pFileName, UINT uId)
+bool EMusic::_open(LPWSTR strFileName)
 {
-	if (pFileName.isEmpty())
+	if (m_bOpened)
+	{
+		WARN_IF(true, L"EMusic can be opened only once!");
 		return false;
-
-	close();
-
-	MCI_OPEN_PARMS mciOpen = { 0 };
-	mciOpen.lpstrDeviceType = 0;
-	mciOpen.lpstrElementName = pFileName;
-
-	MCIERROR mciError;
-	mciError = mciSendCommand(
-		0,
-		MCI_OPEN,
-		MCI_OPEN_ELEMENT,
-		reinterpret_cast<DWORD_PTR>(&mciOpen)
-	);
-
-	if (mciError == 0)
-	{
-		m_dev = mciOpen.wDeviceID;
-		m_nMusicID = uId;
-		m_bPlaying = false;
-		return true;
 	}
-	return false;
+
+	if (strFileName == nullptr)
+	{
+		WARN_IF(true, L"EMusic::_open Invalid file name.");
+		return false;
+	}
+
+	IXAudio2 * pXAudio2 = EMusicManager::getIXAudio2();
+	if (!pXAudio2)
+	{
+		WARN_IF(true, L"IXAudio2 nullptr pointer error!");
+		return false;
+	}
+
+	// 定位 wave 文件
+	wchar_t strFilePath[MAX_PATH];
+	if (!_findMediaFileCch(strFilePath, MAX_PATH, strFileName))
+	{
+		WARN_IF(true, L"Failed to find media file: %s", strFileName);
+		return false;
+	}
+
+	m_hmmio = mmioOpen(strFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
+
+	if (nullptr == m_hmmio)
+	{
+		return TraceError(L"mmioOpen");
+	}
+
+	if (!_readMMIO())
+	{
+		// 读取非 wave 文件时 ReadMMIO 调用失败
+		mmioClose(m_hmmio, 0);
+		return TraceError(L"_readMMIO");
+	}
+
+	if (!_resetFile())
+		return TraceError(L"_resetFile");
+
+	// 重置文件后，wave 文件的大小是 m_ck.cksize
+	m_dwSize = m_ck.cksize;
+
+	// 将样本数据读取到内存中
+	m_pbWaveData = new BYTE[m_dwSize];
+
+	if (!_read(m_pbWaveData, m_dwSize))
+	{
+		TraceError(L"Failed to read WAV data");
+		SAFE_DELETE_ARRAY(m_pbWaveData);
+		return false;
+	}
+
+	// 创建音源
+	HRESULT hr;
+	if (FAILED(hr = pXAudio2->CreateSourceVoice(&m_pSourceVoice, m_pwfx)))
+	{
+		TraceError(L"Error %#X creating source voice", hr);
+		SAFE_DELETE_ARRAY(m_pbWaveData);
+		return false;
+	}
+
+	m_bOpened = true;
+	m_bPlaying = false;
+	return true;
 }
 
-bool MciPlayer::open(const e2d::EString & pResouceName, const e2d::EString & pResouceType, const e2d::EString & musicExtension, UINT uId)
+bool EMusic::play(int nLoopCount)
 {
-	// 忽略不存在的文件
-	if (pResouceName.isEmpty() || pResouceType.isEmpty() || musicExtension.isEmpty()) return false;
+	HRESULT hr;
 
-	// 获取临时文件目录
-	e2d::EString tempFileName = e2d::EFile::getTempPath();
-
-	// 产生临时文件的文件名
-	tempFileName = tempFileName + L"\\" + uId + L"." + musicExtension;
-
-	// 导出资源为临时文件
-	if (ExtractResource(tempFileName, pResouceType, pResouceName))
-	{
-		return open(tempFileName, uId);
-	}
-	return false;
-}
-
-void MciPlayer::play(int repeatTimes)
-{
-	if (!m_dev)
-	{
-		return;
-	}
-
-	MCI_PLAY_PARMS mciPlay = { 0 };
-	mciPlay.dwCallback = reinterpret_cast<DWORD_PTR>(m_wnd);
-
-	// 播放声音
-	MCIERROR mciError = mciSendCommand(
-		m_dev,
-		MCI_PLAY,
-		MCI_FROM | MCI_NOTIFY,
-		reinterpret_cast<DWORD_PTR>(&mciPlay)
-	);
-
-	if (!mciError)
-	{
-		m_bPlaying = true;
-		m_nRepeatTimes = repeatTimes;
-	}
-}
-
-void MciPlayer::close()
-{
 	if (m_bPlaying)
 	{
 		stop();
 	}
 
-	if (m_dev)
+	// 提交 wave 样本数据
+	XAUDIO2_BUFFER buffer = { 0 };
+	buffer.pAudioData = m_pbWaveData;
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	buffer.AudioBytes = m_dwSize;
+	buffer.LoopCount = nLoopCount;
+
+	if (FAILED(hr = m_pSourceVoice->SubmitSourceBuffer(&buffer)))
 	{
-		_sendCommand(MCI_CLOSE);
-	}
-
-	m_dev = 0;
-	m_bPlaying = false;
-}
-
-void MciPlayer::pause()
-{
-	_sendCommand(MCI_PAUSE);
-	m_bPlaying = false;
-}
-
-void MciPlayer::resume()
-{
-	_sendCommand(MCI_RESUME);
-	m_bPlaying = true;
-}
-
-void MciPlayer::stop()
-{
-	_sendCommand(MCI_STOP);
-	m_bPlaying = false;
-}
-
-void MciPlayer::rewind()
-{
-	if (!m_dev)
-	{
-		return;
-	}
-
-	mciSendCommand(m_dev, MCI_SEEK, MCI_SEEK_TO_START, 0);
-
-	MCI_PLAY_PARMS mciPlay = { 0 };
-	mciPlay.dwCallback = reinterpret_cast<DWORD_PTR>(m_wnd);
-
-	MCIERROR mciError = mciSendCommand(
-		m_dev,
-		MCI_PLAY,
-		MCI_NOTIFY,
-		reinterpret_cast<DWORD_PTR>(&mciPlay)
-	);
-	m_bPlaying = mciError ? false : true;
-}
-
-bool MciPlayer::isPlaying()
-{
-	return m_bPlaying;
-}
-
-UINT MciPlayer::getMusicID()
-{
-	return m_nMusicID;
-}
-
-void MciPlayer::_sendCommand(int nCommand, DWORD_PTR param1, DWORD_PTR parma2)
-{
-	// 空设备时忽略这次操作
-	if (!m_dev)
-	{
-		return;
-	}
-	// 向当前设备发送操作
-	mciSendCommand(m_dev, nCommand, param1, parma2);
-}
-
-
-
-
-bool ExtractResource(LPCTSTR strDstFile, LPCTSTR strResType, LPCTSTR strResName)
-{
-	// 创建文件
-	HANDLE hFile = ::CreateFile(strDstFile, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
-	if (hFile == INVALID_HANDLE_VALUE)
+		TraceError(L"Error %#X submitting source buffer", hr);
+		m_pSourceVoice->DestroyVoice();
+		SAFE_DELETE_ARRAY(m_pbWaveData);
 		return false;
+	}
 
-	// 查找资源文件中、加载资源到内存、得到资源大小
-	HRSRC	hRes = ::FindResource(NULL, strResName, strResType);
-	HGLOBAL	hMem = ::LoadResource(NULL, hRes);
-	DWORD	dwSize = ::SizeofResource(NULL, hRes);
+	if (SUCCEEDED(hr = m_pSourceVoice->Start(0)))
+	{
+		m_bPlaying = true;
+	}
+	
+	return SUCCEEDED(hr);
+}
 
-	// 写入文件
-	DWORD dwWrite = 0;  	// 返回写入字节
-	::WriteFile(hFile, hMem, dwSize, &dwWrite, NULL);
-	::CloseHandle(hFile);
+bool EMusic::pause()
+{
+	if (m_pSourceVoice)
+	{
+		if (SUCCEEDED(m_pSourceVoice->Stop()))
+		{
+			m_bPlaying = false;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool EMusic::resume()
+{
+	if (m_pSourceVoice)
+	{
+		if (SUCCEEDED(m_pSourceVoice->Start()))
+		{
+			m_bPlaying = true;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool EMusic::stop()
+{
+	if (m_pSourceVoice)
+	{
+		if (SUCCEEDED(m_pSourceVoice->Stop()))
+		{
+			m_pSourceVoice->ExitLoop();
+			m_pSourceVoice->FlushSourceBuffers();
+			m_bPlaying = false;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool EMusic::isPlaying()
+{
+	if (m_pSourceVoice)
+	{
+		XAUDIO2_VOICE_STATE state;
+		m_pSourceVoice->GetState(&state);
+
+		if (state.BuffersQueued == 0)
+		{
+			m_bPlaying = false;
+		}
+		return m_bPlaying;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+float e2d::EMusic::getVolume() const
+{
+	float fVolume = 0.0f;
+	if (m_pSourceVoice)
+	{
+		m_pSourceVoice->GetVolume(&fVolume);
+	}
+	return fVolume;
+}
+
+bool e2d::EMusic::setVolume(float fVolume)
+{
+	if (m_pSourceVoice)
+	{
+		return SUCCEEDED(m_pSourceVoice->SetVolume(min(max(fVolume, -224), 224)));
+	}
+	return false;
+}
+
+float e2d::EMusic::getFrequencyRatio() const
+{
+	float fFrequencyRatio = 0.0f;
+	if (m_pSourceVoice)
+	{
+		m_pSourceVoice->GetFrequencyRatio(&fFrequencyRatio);
+	}
+	return fFrequencyRatio;
+}
+
+bool e2d::EMusic::setFrequencyRatio(float fFrequencyRatio)
+{
+	if (m_pSourceVoice)
+	{
+		fFrequencyRatio = min(max(fFrequencyRatio, XAUDIO2_MIN_FREQ_RATIO), XAUDIO2_MAX_FREQ_RATIO);
+		return SUCCEEDED(m_pSourceVoice->SetFrequencyRatio(fFrequencyRatio));
+	}
+	return false;
+}
+
+IXAudio2SourceVoice * e2d::EMusic::getIXAudio2SourceVoice() const
+{
+	return m_pSourceVoice;
+}
+
+void EMusic::_close()
+{
+	if (m_pSourceVoice)
+	{
+		m_pSourceVoice->DestroyVoice();
+		m_pSourceVoice = nullptr;
+	}
+
+	if (m_hmmio != nullptr)
+	{
+		mmioClose(m_hmmio, 0);
+		m_hmmio = nullptr;
+	}
+
+	SAFE_DELETE_ARRAY(m_pResourceBuffer);
+	SAFE_DELETE_ARRAY(m_pbWaveData);
+	SAFE_DELETE_ARRAY(m_pwfx);
+
+	m_bOpened = false;
+	m_bPlaying = false;
+}
+
+bool EMusic::_readMMIO()
+{
+	MMCKINFO ckIn;
+	PCMWAVEFORMAT pcmWaveFormat;
+
+	memset(&ckIn, 0, sizeof(ckIn));
+
+	m_pwfx = nullptr;
+
+	if ((0 != mmioDescend(m_hmmio, &m_ckRiff, nullptr, 0)))
+		return TraceError(L"mmioDescend");
+
+	// 确认文件是一个合法的 wave 文件
+	if ((m_ckRiff.ckid != FOURCC_RIFF) ||
+		(m_ckRiff.fccType != mmioFOURCC('W', 'A', 'V', 'E')))
+		return TraceError(L"mmioFOURCC");
+
+	// 在输入文件中查找 'fmt' 块
+	ckIn.ckid = mmioFOURCC('f', 'm', 't', ' ');
+	if (0 != mmioDescend(m_hmmio, &ckIn, &m_ckRiff, MMIO_FINDCHUNK))
+		return TraceError(L"mmioDescend");
+
+	// 'fmt' 块至少应和 PCMWAVEFORMAT 一样大
+	if (ckIn.cksize < (LONG)sizeof(PCMWAVEFORMAT))
+		return TraceError(L"sizeof(PCMWAVEFORMAT)");
+
+	// 将 'fmt' 块读取到 pcmWaveFormat 中
+	if (mmioRead(m_hmmio, (HPSTR)&pcmWaveFormat,
+		sizeof(pcmWaveFormat)) != sizeof(pcmWaveFormat))
+		return TraceError(L"mmioRead");
+
+	// 分配 WAVEFORMATEX，但如果它不是 PCM 格式，再读取一个 WORD 大小
+	// 的数据，这个数据就是额外分配的大小
+	if (pcmWaveFormat.wf.wFormatTag == WAVE_FORMAT_PCM)
+	{
+		m_pwfx = (WAVEFORMATEX*)new CHAR[sizeof(WAVEFORMATEX)];
+
+		// 拷贝数据
+		memcpy(m_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
+		m_pwfx->cbSize = 0;
+	}
+	else
+	{
+		// 读取额外数据的大小
+		WORD cbExtraBytes = 0L;
+		if (mmioRead(m_hmmio, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD))
+			return TraceError(L"mmioRead");
+
+		m_pwfx = (WAVEFORMATEX*)new CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
+
+		// 拷贝数据
+		memcpy(m_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
+		m_pwfx->cbSize = cbExtraBytes;
+
+		// 读取额外数据
+		if (mmioRead(m_hmmio, (CHAR*)(((BYTE*)&(m_pwfx->cbSize)) + sizeof(WORD)),
+			cbExtraBytes) != cbExtraBytes)
+		{
+			SAFE_DELETE(m_pwfx);
+			return TraceError(L"mmioRead");
+		}
+	}
+
+	if (0 != mmioAscend(m_hmmio, &ckIn, 0))
+	{
+		SAFE_DELETE(m_pwfx);
+		return TraceError(L"mmioAscend");
+	}
 
 	return true;
 }
 
-LRESULT WINAPI _MciPlayerProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+bool EMusic::_resetFile()
 {
-	MciPlayer * pPlayer = NULL;
+	// Seek to the data
+	if (-1 == mmioSeek(m_hmmio, m_ckRiff.dwDataOffset + sizeof(FOURCC),
+		SEEK_SET))
+		return TraceError(L"mmioSeek");
 
-	if (Msg == MM_MCINOTIFY
-		&& wParam == MCI_NOTIFY_SUCCESSFUL
-		&& (pPlayer = (MciPlayer *)GetWindowLongPtr(hWnd, GWLP_USERDATA)))
+	// Search the input file for the 'data' chunk.
+	m_ck.ckid = mmioFOURCC('d', 'a', 't', 'a');
+	if (0 != mmioDescend(m_hmmio, &m_ck, &m_ckRiff, MMIO_FINDCHUNK))
+		return TraceError(L"mmioDescend");
+
+	return true;
+}
+
+bool EMusic::_read(BYTE* pBuffer, DWORD dwSizeToRead)
+{
+	MMIOINFO mmioinfoIn; // current status of m_hmmio
+
+	if (0 != mmioGetInfo(m_hmmio, &mmioinfoIn, 0))
+		return TraceError(L"mmioGetInfo");
+
+	UINT cbDataIn = dwSizeToRead;
+	if (cbDataIn > m_ck.cksize)
+		cbDataIn = m_ck.cksize;
+
+	m_ck.cksize -= cbDataIn;
+
+	for (DWORD cT = 0; cT < cbDataIn; cT++)
 	{
-		if (pPlayer->m_nRepeatTimes > 0)
+		// Copy the bytes from the io to the buffer.
+		if (mmioinfoIn.pchNext == mmioinfoIn.pchEndRead)
 		{
-			pPlayer->m_nRepeatTimes--;
+			if (0 != mmioAdvance(m_hmmio, &mmioinfoIn, MMIO_READ))
+				return TraceError(L"mmioAdvance");
+
+			if (mmioinfoIn.pchNext == mmioinfoIn.pchEndRead)
+				return TraceError(L"mmioinfoIn.pchNext");
 		}
 
-		if (pPlayer->m_nRepeatTimes)
+		// Actual copy.
+		*((BYTE*)pBuffer + cT) = *((BYTE*)mmioinfoIn.pchNext);
+		mmioinfoIn.pchNext++;
+	}
+
+	if (0 != mmioSetInfo(m_hmmio, &mmioinfoIn, 0))
+		return TraceError(L"mmioSetInfo");
+
+	return true;
+}
+
+bool EMusic::_findMediaFileCch(WCHAR* strDestPath, int cchDest, LPCWSTR strFilename)
+{
+	bool bFound = false;
+
+	if (nullptr == strFilename || strFilename[0] == 0 || nullptr == strDestPath || cchDest < 10)
+		return false;
+
+	// Get the exe name, and exe path
+	WCHAR strExePath[MAX_PATH] = { 0 };
+	WCHAR strExeName[MAX_PATH] = { 0 };
+	WCHAR* strLastSlash = nullptr;
+	GetModuleFileName(HINST_THISCOMPONENT, strExePath, MAX_PATH);
+	strExePath[MAX_PATH - 1] = 0;
+	strLastSlash = wcsrchr(strExePath, TEXT('\\'));
+	if (strLastSlash)
+	{
+		wcscpy_s(strExeName, MAX_PATH, &strLastSlash[1]);
+
+		// Chop the exe name from the exe path
+		*strLastSlash = 0;
+
+		// Chop the .exe from the exe name
+		strLastSlash = wcsrchr(strExeName, TEXT('.'));
+		if (strLastSlash)
+			*strLastSlash = 0;
+	}
+
+	wcscpy_s(strDestPath, cchDest, strFilename);
+	if (GetFileAttributes(strDestPath) != 0xFFFFFFFF)
+		return true;
+
+	// Search all parent directories starting at .\ and using strFilename as the leaf name
+	WCHAR strLeafName[MAX_PATH] = { 0 };
+	wcscpy_s(strLeafName, MAX_PATH, strFilename);
+
+	WCHAR strFullPath[MAX_PATH] = { 0 };
+	WCHAR strFullFileName[MAX_PATH] = { 0 };
+	WCHAR strSearch[MAX_PATH] = { 0 };
+	WCHAR* strFilePart = nullptr;
+
+	GetFullPathName(L".", MAX_PATH, strFullPath, &strFilePart);
+	if (strFilePart == nullptr)
+		return false;
+
+	while (strFilePart != nullptr && *strFilePart != '\0')
+	{
+		swprintf_s(strFullFileName, MAX_PATH, L"%s\\%s", strFullPath, strLeafName);
+		if (GetFileAttributes(strFullFileName) != 0xFFFFFFFF)
 		{
-			mciSendCommand(static_cast<MCIDEVICEID>(lParam), MCI_SEEK, MCI_SEEK_TO_START, 0);
-
-			MCI_PLAY_PARMS mciPlay = { 0 };
-			mciPlay.dwCallback = reinterpret_cast<DWORD_PTR>(hWnd);
-			mciSendCommand(static_cast<MCIDEVICEID>(lParam), MCI_PLAY, MCI_NOTIFY, reinterpret_cast<DWORD_PTR>(&mciPlay));
+			wcscpy_s(strDestPath, cchDest, strFullFileName);
+			bFound = true;
+			break;
 		}
-		else
+
+		swprintf_s(strFullFileName, MAX_PATH, L"%s\\%s\\%s", strFullPath, strExeName, strLeafName);
+		if (GetFileAttributes(strFullFileName) != 0xFFFFFFFF)
 		{
-			pPlayer->m_bPlaying = false;
-			return 0;
+			wcscpy_s(strDestPath, cchDest, strFullFileName);
+			bFound = true;
+			break;
 		}
+
+		swprintf_s(strSearch, MAX_PATH, L"%s\\..", strFullPath);
+		GetFullPathName(strSearch, MAX_PATH, strFullPath, &strFilePart);
 	}
-	return DefWindowProc(hWnd, Msg, wParam, lParam);
-}
-
-
-
-
-typedef std::pair<UINT, MciPlayer *> MusicPair;
-typedef std::map<UINT, MciPlayer *> MusicList;
-
-static MusicList& getMciPlayerList()
-{
-	static MusicList s_List;
-	return s_List;
-}
-
-
-UINT e2d::EMusic::play(const EString & musicFilePath, int repeatTimes)
-{
-	UINT nRet = preload(musicFilePath);
-
-	if (nRet)
-	{
-		getMciPlayerList()[nRet]->play(repeatTimes);
-	}
-	return nRet;
-}
-
-UINT e2d::EMusic::play(const EString & musicResourceName, const EString & musicResourceType, const EString & musicExtension, int repeatTimes)
-{
-	UINT nRet = preload(musicResourceName, musicResourceType, musicExtension);
-
-	if (nRet)
-	{
-		getMciPlayerList()[nRet]->play(repeatTimes);
-	}
-	return nRet;
-}
-
-UINT e2d::EMusic::preload(const EString & musicFilePath)
-{
-	if (musicFilePath.isEmpty()) 
-		return 0;
-
-	UINT nRet = musicFilePath.hash();
-
-	if (getMciPlayerList().end() != getMciPlayerList().find(nRet)) 
-		return nRet;
-
-	getMciPlayerList().insert(MusicPair(nRet, new MciPlayer()));
-	MciPlayer * pPlayer = getMciPlayerList()[nRet];
-	pPlayer->open(musicFilePath, nRet);
-
-	if (nRet == pPlayer->getMusicID()) return nRet;
-
-	delete pPlayer;
-	getMciPlayerList().erase(nRet);
-	return 0;
-}
-
-UINT e2d::EMusic::preload(const EString & musicResourceName, const EString & musicResourceType, const EString & musicExtension)
-{
-	if (musicResourceName.isEmpty() || musicResourceType.isEmpty())
-		return 0;
-
-	UINT nRet = musicResourceName.hash();
-
-	if (getMciPlayerList().end() != getMciPlayerList().find(nRet)) 
-		return nRet;
-
-	getMciPlayerList().insert(MusicPair(nRet, new MciPlayer()));
-	MciPlayer * pPlayer = getMciPlayerList()[nRet];
-	pPlayer->open(musicResourceName, musicResourceType, musicExtension, nRet);
-
-	if (nRet == pPlayer->getMusicID()) return nRet;
-
-	delete pPlayer;
-	getMciPlayerList().erase(nRet);
-	return 0;
-}
-
-bool e2d::EMusic::resume(UINT musicId)
-{
-	MusicList::iterator p = getMciPlayerList().find(musicId);
-	if (p != getMciPlayerList().end())
-	{
-		p->second->resume();
+	if (bFound)
 		return true;
-	}
+
+	// 失败时，将文件作为路径返回，同时也返回错误代码
+	wcscpy_s(strDestPath, cchDest, strFilename);
+
 	return false;
-}
-
-bool e2d::EMusic::resume(const EString & musicName)
-{
-	return resume(musicName.hash());;
-}
-
-bool e2d::EMusic::pause(UINT musicId)
-{
-	MusicList::iterator p = getMciPlayerList().find(musicId);
-	if (p != getMciPlayerList().end())
-	{
-		p->second->pause();
-		return true;
-	}
-	return false;
-}
-
-bool e2d::EMusic::pause(const EString & musicName)
-{
-	return pause(musicName.hash());
-}
-
-bool e2d::EMusic::stop(UINT musicId)
-{
-	MusicList::iterator p = getMciPlayerList().find(musicId);
-	if (p != getMciPlayerList().end())
-	{
-		p->second->stop();
-		return true;
-	}
-	return false;
-}
-
-bool e2d::EMusic::stop(const EString & musicName)
-{
-	return stop(musicName.hash());;
-}
-
-void e2d::EMusic::pauseAllMusics()
-{
-	for (auto iter = getMciPlayerList().begin(); iter != getMciPlayerList().end(); iter++)
-	{
-		(*iter).second->pause();
-	}
-}
-
-void e2d::EMusic::resumeAllMusics()
-{
-	for (auto iter = getMciPlayerList().begin(); iter != getMciPlayerList().end(); iter++)
-	{
-		(*iter).second->resume();
-	}
-}
-
-void e2d::EMusic::stopAllMusics()
-{
-	for (auto iter = getMciPlayerList().begin(); iter != getMciPlayerList().end(); iter++)
-	{
-		(*iter).second->stop();
-	}
 }

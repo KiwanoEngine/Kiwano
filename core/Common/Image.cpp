@@ -211,7 +211,6 @@ bool e2d::EImage::preload(LPCTSTR resourceName, LPCTSTR resourceType)
 	IWICBitmapFrameDecode *pSource = nullptr;
 	IWICStream *pStream = nullptr;
 	IWICFormatConverter *pConverter = nullptr;
-	IWICBitmapScaler *pScaler = nullptr;
 	ID2D1Bitmap *pBitmap = nullptr;
 
 	HRSRC imageResHandle = nullptr;
@@ -329,7 +328,6 @@ bool e2d::EImage::preload(LPCTSTR resourceName, LPCTSTR resourceType)
 	SafeReleaseInterface(&pSource);
 	SafeReleaseInterface(&pStream);
 	SafeReleaseInterface(&pConverter);
-	SafeReleaseInterface(&pScaler);
 
 	return SUCCEEDED(hr);
 }

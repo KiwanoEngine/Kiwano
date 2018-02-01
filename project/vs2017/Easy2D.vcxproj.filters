@@ -201,6 +201,9 @@
     <ClCompile Include="..\..\core\Tool\File.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Manager\MusicManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\etools.h" />

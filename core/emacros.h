@@ -35,14 +35,19 @@
 // C RunTime Header Files
 #include <stdio.h>
 #include <wchar.h>
+#include <wincodec.h>
+#include <mmsystem.h>
 #include <d2d1.h>
-#include <d2d1helper.h>
 #include <dwrite.h>
 #include <dinput.h>
-#include <wincodec.h>
+#include <xaudio2.h>
+#include <d2d1helper.h>
+
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
+#pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "windowscodecs.lib")
+#pragma comment(lib, "winmm.lib")
 
 
 #ifndef HINST_THISCOMPONENT
@@ -53,7 +58,7 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 
 #ifndef ASSERT_IF
 #if defined( DEBUG ) || defined( _DEBUG )
-	#define ASSERT(b, m) do {if (!(b)) { fprintf(stderr, "Assert: " #m "\n"); assert(b); }} while(0)
+	#define ASSERT(b, m, ...) do {if (!(b)) { fwprintf(stderr, L"Assert: " #m L"\n", __VA_ARGS__); assert(b); }} while(0)
 #else
 	#define ASSERT(b, m) ((void)0)
 #endif //DEBUG || _DEBUG
@@ -61,7 +66,7 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 
 #ifndef WARN_IF
 #if defined( DEBUG ) || defined( _DEBUG )
-	#define WARN_IF(b, m) do {if (b) { fprintf(stderr, "Warning: " #m "\n"); }} while(0)
+	#define WARN_IF(b, m, ...) do {if (b) { fwprintf(stderr, L"Warning: " #m L"\n", __VA_ARGS__); }} while(0)
 #else
 	#define WARN_IF(b, m) ((void)0)
 #endif //DEBUG || _DEBUG
