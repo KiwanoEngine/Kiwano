@@ -60,7 +60,7 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #if defined( DEBUG ) || defined( _DEBUG )
 	#define ASSERT(b, m, ...) do {if (!(b)) { fwprintf(stderr, L"Assert: " #m L"\n", __VA_ARGS__); assert(b); }} while(0)
 #else
-	#define ASSERT(b, m) ((void)0)
+	#define ASSERT(b, m, ...) ((void)0)
 #endif //DEBUG || _DEBUG
 #endif
 
@@ -68,6 +68,6 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #if defined( DEBUG ) || defined( _DEBUG )
 	#define WARN_IF(b, m, ...) do {if (b) { fwprintf(stderr, L"Warning: " #m L"\n", __VA_ARGS__); }} while(0)
 #else
-	#define WARN_IF(b, m) ((void)0)
+	#define WARN_IF(b, m, ...) ((void)0)
 #endif //DEBUG || _DEBUG
 #endif
