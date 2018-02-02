@@ -8,11 +8,11 @@ using namespace e2d;
 static IDirectInput8* s_pDirectInput = nullptr;			// DirectInput 接口对象
 static IDirectInputDevice8* s_KeyboardDevice = nullptr;	// 键盘设备接口
 static char s_KeyBuffer[256] = { 0 };					// 用于保存键盘按键信息缓冲区
-static char s_KeySecBuffer[256] = { 0 };				// 键盘消息二级缓冲区
+static char s_KeyRecordBuffer[256] = { 0 };				// 键盘消息二级缓冲区
 
 static IDirectInputDevice8* s_MouseDevice = nullptr;	// 鼠标设备接口
 static DIMOUSESTATE s_MouseState;						// 鼠标信息存储结构体
-static DIMOUSESTATE s_MouseSecState;					// 鼠标信息二级缓冲
+static DIMOUSESTATE s_MouseRecordState;					// 鼠标信息二级缓冲
 static POINT s_MousePosition;							// 鼠标位置存储结构体
 
 
@@ -31,9 +31,9 @@ void EInput::__uninit()
 bool EInput::__init()
 {
 	ZeroMemory(s_KeyBuffer, sizeof(s_KeyBuffer));
-	ZeroMemory(s_KeySecBuffer, sizeof(s_KeySecBuffer));
+	ZeroMemory(s_KeyRecordBuffer, sizeof(s_KeyRecordBuffer));
 	ZeroMemory(&s_MouseState, sizeof(s_MouseState));
-	ZeroMemory(&s_MouseSecState, sizeof(s_MouseSecState));
+	ZeroMemory(&s_MouseRecordState, sizeof(s_MouseRecordState));
 
 	// 初始化接口对象
 	HRESULT hr = DirectInput8Create(
@@ -113,7 +113,7 @@ void EInput::__updateDeviceState()
 		else
 		{
 			for (int i = 0; i < 256; i++)
-				s_KeySecBuffer[i] = s_KeyBuffer[i];
+				s_KeyRecordBuffer[i] = s_KeyBuffer[i];
 
 			s_KeyboardDevice->GetDeviceState(sizeof(s_KeyBuffer), (void**)&s_KeyBuffer);
 		}
@@ -130,7 +130,7 @@ void EInput::__updateDeviceState()
 		}
 		else
 		{
-			s_MouseSecState = s_MouseState;
+			s_MouseRecordState = s_MouseState;
 			s_MouseDevice->GetDeviceState(sizeof(s_MouseState), (void**)&s_MouseState);
 		}
 		DIK_0;
@@ -149,14 +149,14 @@ bool EInput::isKeyDown(int nKeyCode)
 
 bool EInput::isKeyPress(int nKeyCode)
 {
-	if ((s_KeyBuffer[nKeyCode] & 0x80) && !(s_KeySecBuffer[nKeyCode] & 0x80))
+	if ((s_KeyBuffer[nKeyCode] & 0x80) && !(s_KeyRecordBuffer[nKeyCode] & 0x80))
 		return true;
 	return false;
 }
 
 bool EInput::isKeyRelease(int nKeyCode)
 {
-	if (!(s_KeyBuffer[nKeyCode] & 0x80) && (s_KeySecBuffer[nKeyCode] & 0x80))
+	if (!(s_KeyBuffer[nKeyCode] & 0x80) && (s_KeyRecordBuffer[nKeyCode] & 0x80))
 		return true;
 	return false;
 }
@@ -184,42 +184,42 @@ bool EInput::isMouseMButtonDown()
 
 bool EInput::isMouseLButtonPress()
 {
-	if ((s_MouseState.rgbButtons[0] & 0x80) && !(s_MouseSecState.rgbButtons[0] & 0x80))
+	if ((s_MouseState.rgbButtons[0] & 0x80) && !(s_MouseRecordState.rgbButtons[0] & 0x80))
 		return true;
 	return false;
 }
 
 bool EInput::isMouseRButtonPress()
 {
-	if ((s_MouseState.rgbButtons[1] & 0x80) && !(s_MouseSecState.rgbButtons[1] & 0x80))
+	if ((s_MouseState.rgbButtons[1] & 0x80) && !(s_MouseRecordState.rgbButtons[1] & 0x80))
 		return true;
 	return false;
 }
 
 bool EInput::isMouseMButtonPress()
 {
-	if ((s_MouseState.rgbButtons[2] & 0x80) && !(s_MouseSecState.rgbButtons[2] & 0x80))
+	if ((s_MouseState.rgbButtons[2] & 0x80) && !(s_MouseRecordState.rgbButtons[2] & 0x80))
 		return true;
 	return false;
 }
 
 bool EInput::isMouseLButtonRelease()
 {
-	if (!(s_MouseState.rgbButtons[0] & 0x80) && (s_MouseSecState.rgbButtons[0] & 0x80))
+	if (!(s_MouseState.rgbButtons[0] & 0x80) && (s_MouseRecordState.rgbButtons[0] & 0x80))
 		return true;
 	return false;
 }
 
 bool EInput::isMouseRButtonRelease()
 {
-	if (!(s_MouseState.rgbButtons[1] & 0x80) && (s_MouseSecState.rgbButtons[1] & 0x80))
+	if (!(s_MouseState.rgbButtons[1] & 0x80) && (s_MouseRecordState.rgbButtons[1] & 0x80))
 		return true;
 	return false;
 }
 
 bool EInput::isMouseMButtonRelease()
 {
-	if (!(s_MouseState.rgbButtons[2] & 0x80) && (s_MouseSecState.rgbButtons[2] & 0x80))
+	if (!(s_MouseState.rgbButtons[2] & 0x80) && (s_MouseRecordState.rgbButtons[2] & 0x80))
 		return true;
 	return false;
 }

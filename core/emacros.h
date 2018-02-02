@@ -28,13 +28,8 @@
 #define DIRECTINPUT_VERSION 0x0800
 #endif
 
-// Windows Header Files:
+// Windows Header Files
 #include <windows.h>
-#include <assert.h>
-
-// C RunTime Header Files
-#include <stdio.h>
-#include <wchar.h>
 #include <wincodec.h>
 #include <mmsystem.h>
 #include <d2d1.h>
@@ -43,6 +38,11 @@
 #include <xaudio2.h>
 #include <d2d1helper.h>
 
+// C RunTime Header Files
+#include <stdio.h>
+#include <wchar.h>
+
+// Import Libraries
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "xaudio2.lib")
@@ -56,18 +56,18 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #endif
 
 
-#ifndef ASSERT_IF
+#ifndef ASSERT
 #if defined( DEBUG ) || defined( _DEBUG )
-	#define ASSERT(b, m, ...) do {if (!(b)) { fwprintf(stderr, L"Assert: " #m L"\n", __VA_ARGS__); assert(b); }} while(0)
+	#define ASSERT(expression, message, ...) do {if (!(expression)) { fwprintf(stderr, L"Assert: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); abort(); }} while(0)
 #else
-	#define ASSERT(b, m, ...) ((void)0)
+	#define ASSERT(expression, message, ...) ((void)0)
 #endif //DEBUG || _DEBUG
 #endif
 
 #ifndef WARN_IF
 #if defined( DEBUG ) || defined( _DEBUG )
-	#define WARN_IF(b, m, ...) do {if (b) { fwprintf(stderr, L"Warning: " #m L"\n", __VA_ARGS__); }} while(0)
+	#define WARN_IF(expression, message, ...) do {if (expression) { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); }} while(0)
 #else
-	#define WARN_IF(b, m, ...) ((void)0)
+	#define WARN_IF(expression, message, ...) ((void)0)
 #endif //DEBUG || _DEBUG
 #endif
