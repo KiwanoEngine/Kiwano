@@ -79,21 +79,40 @@ e2d::EScene * e2d::ESceneManager::getCurrentScene()
 
 void e2d::ESceneManager::__update()
 {
+	// 更新场景内容
+	if (s_pCurrentScene)
+	{
+		s_pCurrentScene->_update();
+	}
+
 	// 正在切换场景时，执行场景切换动画
 	if (s_pTransition)
 	{
+		// 更新场景内容
+		if (s_pNextScene)
+		{
+			s_pNextScene->_update();
+		}
+		// 更新场景动画
 		s_pTransition->_update();
+
 		if (s_pTransition->isEnding())
 		{
 			s_pTransition->release();
 			s_pTransition = nullptr;
 		}
-		return;
+		else
+		{
+			return;
+		}
 	}
 
 	// 下一场景指针不为空时，切换场景
 	if (s_pNextScene)
 	{
+		// 执行当前场景的 onExit 函数
+		s_pCurrentScene->onExit();
+
 		// 若要保存当前场景，把它放入栈中
 		if (s_pCurrentScene->m_bWillSave)
 		{
@@ -104,21 +123,12 @@ void e2d::ESceneManager::__update()
 			SafeRelease(&s_pCurrentScene);
 		}
 
-		// 执行当前场景的 onExit 函数
-		s_pCurrentScene->onExit();
-
 		// 执行下一场景的 onEnter 函数
 		s_pNextScene->onEnter();
 
 		s_pCurrentScene = s_pNextScene;		// 切换场景
 		s_pNextScene = nullptr;				// 下一场景置空
 	}
-
-	// 断言当前场景非空
-	ASSERT(s_pCurrentScene != nullptr, "Current scene NULL pointer exception.");
-
-	// 更新场景内容
-	s_pCurrentScene->_update();
 }
 
 void e2d::ESceneManager::__render()

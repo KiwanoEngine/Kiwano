@@ -1,4 +1,4 @@
-#include "..\egeometry.h"
+#include "..\eshape.h"
 #include "..\enodes.h"
 
 e2d::EEllipse::EEllipse()

@@ -13,9 +13,9 @@ e2d::EAnimation::EAnimation(float invertal)
 
 e2d::EAnimation::~EAnimation()
 {
-	for (auto frame = m_vFrames.begin(); frame != m_vFrames.end(); frame++)
+	for (auto frame : m_vFrames)
 	{
-		SafeRelease(&(*frame));
+		SafeRelease(&frame);
 	}
 }
 
@@ -62,7 +62,7 @@ void e2d::EAnimation::_reset()
 	m_nFrameIndex = 0;
 }
 
-void e2d::EAnimation::addKeyframe(EKeyframe * frame)
+void e2d::EAnimation::addKeyframe(EImage * frame)
 {
 	if (frame)
 	{
@@ -74,9 +74,9 @@ void e2d::EAnimation::addKeyframe(EKeyframe * frame)
 e2d::EAnimation * e2d::EAnimation::clone() const
 {
 	auto a = new EAnimation(m_fInterval);
-	for (auto frame = m_vFrames.begin(); frame != m_vFrames.end(); frame++)
+	for (auto frame : m_vFrames)
 	{
-		a->addKeyframe((*frame));
+		a->addKeyframe(frame);
 	}
 	return a;
 }

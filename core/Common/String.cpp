@@ -28,7 +28,9 @@ EString::EString(const wchar_t *str)
 	}
 	else
 	{
-		this->EString::EString();
+		_size = 0;
+		_string = new wchar_t[1];
+		_string[0] = 0;
 	}
 }
 
@@ -49,7 +51,9 @@ EString::EString(const EString &str)
 	}
 	else
 	{
-		this->EString::EString();
+		_size = 0;
+		_string = new wchar_t[1];
+		_string[0] = 0;
 	}
 }
 
@@ -63,7 +67,9 @@ e2d::EString::EString(const std::wstring &str)
 	}
 	else
 	{
-		this->EString::EString();
+		_size = 0;
+		_string = new wchar_t[1];
+		_string[0] = 0;
 	}
 }
 
@@ -86,8 +92,9 @@ EString &EString::operator=(const wchar_t *str)
 	}
 	else
 	{
-		_string = nullptr;
 		_size = 0;
+		_string = new wchar_t[1];
+		_string[0] = 0;
 	}
 	return *this;
 }
@@ -106,8 +113,9 @@ EString &EString::operator=(const EString &str)
 	}
 	else
 	{
-		_string = nullptr;
 		_size = 0;
+		_string = new wchar_t[1];
+		_string[0] = 0;
 	}
 	return *this;
 }
@@ -123,15 +131,23 @@ EString & e2d::EString::operator=(const std::wstring &str)
 	}
 	else
 	{
-		_string = nullptr;
 		_size = 0;
+		_string = new wchar_t[1];
+		_string[0] = 0;
 	}
 	return *this;
 }
 
 bool EString::operator==(const wchar_t *str)
 {
-	return (wcscmp(str, _string) == 0);
+	if (str)
+	{
+		return (wcscmp(str, _string) == 0);
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool EString::operator ==(const EString &str)

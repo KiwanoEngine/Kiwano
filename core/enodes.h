@@ -4,47 +4,48 @@
 namespace e2d 
 {
 
-class EText;
-class ESprite;
+
 class EAction;
-class EButton;
-class EButtonToggle;
-class EGeometry;
-class EMenu;
+class EShape;
 class ETransition;
 
 class ENode :
 	public EObject
 {
 	friend EScene;
-	friend EButton;
-	friend EButtonToggle;
-	friend EGeometry;
+	friend EShape;
 	friend ETransition;
 
 public:
 	ENode();
 
-	ENode(
-		const EString & name
-	);
-
 	virtual ~ENode();
 
-	// 节点进入场景时，这个函数将自动运行
-	virtual void onEnter() {}
-
-	// 节点离开场景时，这个函数将自动运行
-	virtual void onExit() {}
-
-	// 每一帧画面刷新时，这个函数将自动运行
+	// 更新节点
 	virtual void onUpdate() {}
 
-	// 渲染节点时，这个函数将自动运行
+	// 渲染节点
 	virtual void onRender() {}
+
+	// 碰撞处理
+	virtual void onCollide(
+		ENode* pCollisionNode,	/* 发生碰撞的节点 */
+		int nRelation			/* 碰撞关系，取值为 ERelation::VALUE 中的一种 */
+	) {}
+
+	// 进入场景时执行
+	virtual void onEnter() {}
+
+	// 离开场景时执行
+	virtual void onExit() {}
 
 	// 获取节点显示状态
 	virtual bool isVisiable() const;
+
+	// 判断点是否在节点内
+	virtual bool isPointIn(
+		EPoint point
+	);
 
 	// 获取节点名称
 	virtual EString getName() const;
@@ -103,26 +104,55 @@ public:
 	// 获取节点透明度
 	virtual float getOpacity() const;
 
+	// 获取节点形状
+	virtual EShape * getShape() const;
+
 	// 获取父节点
 	virtual ENode * getParent() const;
 
 	// 获取节点所在场景
 	virtual EScene * getParentScene() const;
 
-	// 获取所有子节点
-	virtual std::vector<ENode*> &getChildren();
-
-	// 获取子节点数量
-	virtual size_t getChildrenCount() const;
-
-	// 根据名字获取子节点
+	// 获取名称相同的子节点
 	virtual ENode * getChild(
 		const EString & name
 	);
 
+	// 获取所有名称相同的子节点
+	virtual std::vector<ENode*> getChildren(
+		const EString & name
+	);
+
+	// 获取所有子节点
+	virtual std::vector<ENode*> &getChildren();
+
+	// 获取子节点数量
+	virtual int getChildrenCount() const;
+
+	// 移除子节点
+	virtual bool removeChild(
+		ENode * child
+	);
+
+	// 移除所有名称相同的子节点
+	virtual void removeChildren(
+		const EString & childName
+	);
+
+	// 从父节点移除
+	virtual void removeFromParent();
+
+	// 移除所有节点
+	virtual void clearAllChildren();
+
 	// 设置节点是否显示
 	virtual void setVisiable(
 		bool value
+	);
+
+	// 开启或禁用 onUpdate 函数
+	virtual void setAutoUpdate(
+		bool bAutoUpdate
 	);
 
 	// 设置节点名称
@@ -254,8 +284,8 @@ public:
 	);
 
 	// 设置节点形状
-	virtual void setGeometry(
-		EGeometry * geometry
+	virtual void setShape(
+		EShape * pShape
 	);
 
 	// 添加子节点
@@ -263,22 +293,6 @@ public:
 		ENode * child,
 		int order = 0
 	);
-
-	// 从父节点移除
-	virtual void removeFromParent();
-
-	// 移除子节点
-	virtual bool removeChild(
-		ENode * child
-	);
-
-	// 移除子节点
-	virtual void removeChild(
-		const EString & childName
-	);
-
-	// 移除所有节点
-	virtual void clearAllChildren();
 
 	// 执行动画
 	virtual void runAction(
@@ -309,11 +323,6 @@ public:
 	// 停止所有动画
 	virtual void stopAllActions();
 
-	// 判断点是否在节点内
-	virtual bool isPointIn(
-		EPoint point
-	);
-
 	// 修改节点的默认中心点位置
 	static void setDefaultPiovt(
 		float defaultPiovtX,
@@ -328,16 +337,13 @@ protected:
 	virtual void _render();
 
 	// 渲染几何图形
-	virtual void _drawGeometry();
+	virtual void _drawShape();
 
 	// 节点被添加到场景时的执行程序
 	virtual void _onEnter();
 
 	// 节点从场景中消失时的执行程序
 	virtual void _onExit();
-
-	// 子节点排序
-	void _sortChildren();
 
 	// 设置节点所在场景
 	virtual void _setParentScene(
@@ -359,22 +365,7 @@ protected:
 	// 更新节点透明度
 	static void _updateOpacity(ENode * node);
 
-	// 设置节点宽度
-	virtual void _setWidth(
-		float width
-	);
-
-	// 设置节点高度
-	virtual void _setHeight(
-		float height
-	);
-
-	// 设置节点大小
-	virtual void _setSize(
-		const ESize & size
-	);
-
-	// 设置节点大小
+	// 修改节点大小
 	virtual void _setSize(
 		float width,
 		float height
@@ -396,15 +387,16 @@ protected:
 	float		m_fPivotY;
 	int			m_nOrder;
 	bool		m_bVisiable;
+	bool		m_bAutoUpdate;
 	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
 	bool		m_bTransformNeeded;
-	EGeometry * m_pGeometry;
+	EShape *	m_pShape;
 	EScene *	m_pParentScene;
 	ENode *		m_pParent;
 	D2D1::Matrix3x2F	m_MatriInitial;
 	D2D1::Matrix3x2F	m_MatriFinal;
-	std::vector<ENode*>		m_vChildren;
+	std::vector<ENode*>	m_vChildren;
 };
 
 
@@ -415,14 +407,9 @@ public:
 	// 创建一个空精灵
 	ESprite();
 
-	// 从文理资源创建精灵
+	// 从 EImage 对象创建精灵
 	ESprite(
 		EImage * image
-	);
-
-	// 从关键帧创建精灵
-	ESprite(
-		EKeyframe * spriteFrame
 	);
 
 	// 从文件图片创建精灵
@@ -439,68 +426,33 @@ public:
 		float height
 	);
 
-	// 从资源图片创建精灵
-	ESprite(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType
-	);
-
-	// 从资源图片创建精灵并裁剪
-	ESprite(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType,
-		float x,
-		float y,
-		float width,
-		float height
-	);
-
 	virtual ~ESprite();
 	
 	// 加载精灵图片
-	void loadFrom(
+	virtual void loadFrom(
 		EImage * texture
 	);
 
 	// 从本地文件加载图片
-	void loadFrom(
+	virtual void loadFrom(
 		LPCTSTR imageFileName
 	);
 
-	// 从资源加载图片
-	void loadFrom(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType
-	);
-
-	// 加载图片并裁剪
-	void loadFrom(
-		EImage * image,
-		float x,
-		float y,
-		float width,
-		float height
-	);
-
-	// 从关键帧加载资源
-	void loadFrom(
-		EKeyframe * frame
-	);
-
 	// 裁剪图片
-	void clip(
+	virtual void clip(
 		float x,
 		float y,
 		float width,
 		float height
 	);
+
+	// 获取 EImage 对象
+	virtual EImage * getImage() const;
 
 	// 渲染精灵
 	virtual void onRender() override;
 
 protected:
-	float	m_fSourceClipX;
-	float	m_fSourceClipY;
 	EImage * m_pImage;
 };
 
@@ -585,8 +537,6 @@ protected:
 class EButton :
 	public ENode
 {
-	friend EMenu;
-
 public:
 	// 创建一个空按钮
 	EButton();

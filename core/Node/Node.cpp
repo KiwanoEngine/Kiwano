@@ -2,7 +2,7 @@
 #include "..\emanagers.h"
 #include "..\etools.h"
 #include "..\eactions.h"
-#include "..\egeometry.h"
+#include "..\eshape.h"
 #include <algorithm>
 
 // 默认中心点位置
@@ -24,59 +24,29 @@ e2d::ENode::ENode()
 	, m_MatriFinal(D2D1::Matrix3x2F::Identity())
 	, m_bVisiable(true)
 	, m_bDisplayedInScene(false)
-	, m_pGeometry(nullptr)
+	, m_pShape(nullptr)
 	, m_pParent(nullptr)
 	, m_pParentScene(nullptr)
 	, m_nHashName(0)
 	, m_bSortChildrenNeeded(false)
 	, m_bTransformNeeded(false)
+	, m_bAutoUpdate(true)
 {
-}
-
-e2d::ENode::ENode(const EString & name)
-	: m_nOrder(0)
-	, m_fScaleX(1.0f)
-	, m_fScaleY(1.0f)
-	, m_fRotation(0)
-	, m_fSkewAngleX(0)
-	, m_fSkewAngleY(0)
-	, m_fDisplayOpacity(1.0f)
-	, m_fRealOpacity(1.0f)
-	, m_fPivotX(s_fDefaultPiovtX)
-	, m_fPivotY(s_fDefaultPiovtY)
-	, m_MatriInitial(D2D1::Matrix3x2F::Identity())
-	, m_MatriFinal(D2D1::Matrix3x2F::Identity())
-	, m_bVisiable(true)
-	, m_bDisplayedInScene(false)
-	, m_pGeometry(nullptr)
-	, m_pParent(nullptr)
-	, m_pParentScene(nullptr)
-	, m_nHashName(0)
-	, m_bSortChildrenNeeded(false)
-	, m_bTransformNeeded(false)
-{
-	this->setName(name);
 }
 
 e2d::ENode::~ENode()
 {
 	ETimerManager::__clearAllTimersBindedWith(this);
 	EActionManager::__clearAllActionsBindedWith(this);
-	EPhysicsManager::_clearAllListenersBindedWith(this);
-	EPhysicsManager::_delGeometry(m_pGeometry);
-	for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
+	EShapeManager::__delShape(m_pShape);
+	for (auto child : m_vChildren)
 	{
-		SafeRelease(&(*child));
+		SafeRelease(&child);
 	}
 }
 
 void e2d::ENode::_update()
 {
-	if (!m_bVisiable)
-	{
-		return;
-	}
-
 	if (m_bTransformNeeded)
 	{
 		_updateTransform(this);
@@ -84,8 +54,21 @@ void e2d::ENode::_update()
 
 	if (!m_vChildren.empty())
 	{
-		this->_sortChildren();
+		// 子节点排序
+		if (m_bSortChildrenNeeded)
+		{
+			std::sort(
+				std::begin(m_vChildren),
+				std::end(m_vChildren),
+				[](ENode * n1, ENode * n2) {
+				return n1->getOrder() < n2->getOrder();
+			}
+			);
 
+			m_bSortChildrenNeeded = false;
+		}
+
+		// 遍历子节点
 		size_t size = m_vChildren.size();
 		size_t i;
 		for (i = 0; i < size; i++)
@@ -103,7 +86,10 @@ void e2d::ENode::_update()
 		}
 
 		// 执行 onUpdate 函数
-		this->onUpdate();
+		if (m_bAutoUpdate)
+		{
+			this->onUpdate();
+		}
 
 		// 访问剩余节点
 		for (; i < size; i++)
@@ -159,31 +145,31 @@ void e2d::ENode::_render()
 	}
 }
 
-void e2d::ENode::_drawGeometry()
+void e2d::ENode::_drawShape()
 {
 	// 绘制自身的几何形状
-	if (m_pGeometry && m_pGeometry->m_bIsVisiable)
+	if (m_pShape && m_pShape->m_bIsVisiable)
 	{
-		m_pGeometry->_render();
+		m_pShape->_render();
 	}
 
 	// 绘制所有子节点的几何形状
-	for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
+	for (auto child : m_vChildren)
 	{
-		(*child)->_drawGeometry();
+		child->_drawShape();
 	}
 }
 
 void e2d::ENode::_onEnter()
 {
-	if (!this->m_bDisplayedInScene && this->isVisiable())
+	if (!this->m_bDisplayedInScene)
 	{
 		this->m_bDisplayedInScene = true;
 		this->onEnter();
 
-		for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
+		for (auto child : m_vChildren)
 		{
-			(*child)->_onEnter();
+			child->_onEnter();
 		}
 	}
 }
@@ -195,27 +181,10 @@ void e2d::ENode::_onExit()
 		this->m_bDisplayedInScene = false;
 		this->onExit();
 
-		for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
+		for (auto child : m_vChildren)
 		{
-			(*child)->_onExit();
+			child->_onExit();
 		}
-	}
-}
-
-void e2d::ENode::_sortChildren()
-{
-	if (m_bSortChildrenNeeded)
-	{
-		// 子节点排序
-		std::sort(
-			std::begin(m_vChildren), 
-			std::end(m_vChildren), 
-			[](ENode * n1, ENode * n2) {
-				return n1->getOrder() < n2->getOrder();
-			}
-		);
-
-		m_bSortChildrenNeeded = false;
 	}
 }
 
@@ -253,9 +222,9 @@ void e2d::ENode::_updateTransform()
 
 void e2d::ENode::_updateChildrenTransform()
 {
-	for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
+	for (auto child : m_vChildren)
 	{
-		_updateTransform((*child));
+		_updateTransform(child);
 	}
 }
 
@@ -264,9 +233,9 @@ void e2d::ENode::_updateTransform(ENode * node)
 	// 计算自身的转换矩阵
 	node->_updateTransform();
 	// 绑定于自身的形状也进行相应转换
-	if (node->m_pGeometry)
+	if (node->m_pShape)
 	{
-		node->m_pGeometry->_transform();
+		node->m_pShape->_transform();
 	}
 	// 遍历子节点下的所有节点
 	node->_updateChildrenTransform();
@@ -276,9 +245,9 @@ void e2d::ENode::_updateTransform(ENode * node)
 
 void e2d::ENode::_updateChildrenOpacity()
 {
-	for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
+	for (auto child : m_vChildren)
 	{
-		_updateOpacity((*child));
+		_updateOpacity(child);
 	}
 }
 
@@ -386,6 +355,11 @@ float e2d::ENode::getOpacity() const
 	return m_fRealOpacity;
 }
 
+e2d::EShape * e2d::ENode::getShape() const
+{
+	return m_pShape;
+}
+
 int e2d::ENode::getOrder() const
 {
 	return m_nOrder;
@@ -439,21 +413,6 @@ void e2d::ENode::movePos(float x, float y)
 void e2d::ENode::movePos(const EVector2 & v)
 {
 	this->movePos(v.x, v.y);
-}
-
-void e2d::ENode::_setWidth(float width)
-{
-	this->_setSize(width, m_Size.height);
-}
-
-void e2d::ENode::_setHeight(float height)
-{
-	this->_setSize(m_Size.width, height);
-}
-
-void e2d::ENode::_setSize(const ESize & size)
-{
-	this->_setSize(size.width, size.height);
 }
 
 void e2d::ENode::_setSize(float width, float height)
@@ -550,32 +509,33 @@ void e2d::ENode::setPivot(float pivotX, float pivotY)
 	m_bTransformNeeded = true;
 }
 
-void e2d::ENode::setGeometry(EGeometry * geometry)
+void e2d::ENode::setShape(EShape * pShape)
 {
 	// 删除旧的形状
-	EPhysicsManager::_delGeometry(m_pGeometry);
+	EShapeManager::__delShape(m_pShape);
 	// 添加新的形状
-	EPhysicsManager::_addGeometry(geometry);
+	EShapeManager::__addShape(pShape);
 
-	if (geometry)
+	if (pShape)
 	{
 		// 双向绑定
-		this->m_pGeometry = geometry;
-		geometry->m_pParentNode = this;
+		this->m_pShape = pShape;
+		pShape->m_pParentNode = this;
 	}
 	else
 	{
-		this->m_pGeometry = nullptr;
+		this->m_pShape = nullptr;
 	}
 }
 
 void e2d::ENode::addChild(ENode * child, int order  /* = 0 */)
 {
 	WARN_IF(child == nullptr, "ENode::addChild NULL pointer exception.");
-	ASSERT(child->m_pParent == nullptr, "ENode already added. It can't be added again!");
 
 	if (child)
 	{
+		ASSERT(child->m_pParent == nullptr, "ENode already added. It can't be added again!");
+
 		for (ENode * parent = this; parent != nullptr; parent = parent->getParent())
 		{
 			ASSERT(child != parent, "A ENode cannot be the child of his own children!");
@@ -623,9 +583,9 @@ std::vector<e2d::ENode*>& e2d::ENode::getChildren()
 	return m_vChildren;
 }
 
-size_t e2d::ENode::getChildrenCount() const
+int e2d::ENode::getChildrenCount() const
 {
-	return m_vChildren.size();
+	return static_cast<int>(m_vChildren.size());
 }
 
 e2d::ENode * e2d::ENode::getChild(const EString & name)
@@ -634,13 +594,28 @@ e2d::ENode * e2d::ENode::getChild(const EString & name)
 
 	unsigned int hash = name.hash();
 
-	for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
+	for (auto child : m_vChildren)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
-		if ((*child)->m_nHashName == hash && (*child)->m_sName == name)
-			return (*child);
+		if (child->m_nHashName == hash && child->m_sName == name)
+			return child;
 	}
 	return nullptr;
+}
+
+std::vector<e2d::ENode*> e2d::ENode::getChildren(const EString & name)
+{
+	std::vector<ENode*> vChildren;
+
+	WARN_IF(name.isEmpty(), "Invalid ENode name.");
+
+	unsigned int hash = name.hash();
+
+	for (auto child : m_vChildren)
+		if (child->m_nHashName == hash && child->m_sName == name)
+			vChildren.push_back(child);
+
+	return std::move(vChildren);
 }
 
 void e2d::ENode::removeFromParent()
@@ -653,7 +628,7 @@ void e2d::ENode::removeFromParent()
 
 bool e2d::ENode::removeChild(ENode * child)
 {
-	WARN_IF(child == nullptr, "ENode::removeChild NULL pointer exception.");
+	WARN_IF(child == nullptr, "ENode::removeChildren NULL pointer exception.");
 
 	if (m_vChildren.empty())
 	{
@@ -669,11 +644,16 @@ bool e2d::ENode::removeChild(ENode * child)
 			{
 				m_vChildren.erase(m_vChildren.begin() + i);
 				child->m_pParent = nullptr;
+
 				if (child->m_pParentScene)
 				{
 					child->_setParentScene(nullptr);
 				}
-				child->_onExit();
+				if (child->m_bDisplayedInScene)
+				{
+					child->_onExit();
+				}
+
 				child->release();
 				return true;
 			}
@@ -682,7 +662,7 @@ bool e2d::ENode::removeChild(ENode * child)
 	return false;
 }
 
-void e2d::ENode::removeChild(const EString & childName)
+void e2d::ENode::removeChildren(const EString & childName)
 {
 	WARN_IF(childName.isEmpty(), "Invalid ENode name.");
 
@@ -706,9 +686,11 @@ void e2d::ENode::removeChild(const EString & childName)
 			{
 				child->_setParentScene(nullptr);
 			}
-			child->_onExit();
+			if (child->m_bDisplayedInScene)
+			{
+				child->_onExit();
+			}
 			child->release();
-			return;
 		}
 	}
 }
@@ -716,10 +698,13 @@ void e2d::ENode::removeChild(const EString & childName)
 void e2d::ENode::clearAllChildren()
 {
 	// 所有节点的引用计数减一
-	for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
+	for (auto child : m_vChildren)
 	{
-		(*child)->_onExit();
-		(*child)->release();
+		if (child->m_bDisplayedInScene)
+		{
+			child->_onExit();
+		}
+		child->release();
 	}
 	// 清空储存节点的容器
 	m_vChildren.clear();
@@ -727,10 +712,14 @@ void e2d::ENode::clearAllChildren()
 
 void e2d::ENode::runAction(EAction * action)
 {
-	ASSERT(
-		(!action->getTarget()),
-		"The action is already running, it cannot run again!"
+	WARN_IF(
+		action->getTarget() != nullptr,
+		"The action is already running, The clone of the action will be created automatically!"
 	);
+	if (action->getTarget())
+	{
+		action = action->clone();
+	}
 	action->setTarget(this);
 	EActionManager::addAction(action);
 }
@@ -778,11 +767,16 @@ bool e2d::ENode::isPointIn(EPoint point)
 	}
 	else
 	{
-		for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
-			if ((*child)->isPointIn(point))
+		for (auto child : m_vChildren)
+			if (child->isPointIn(point))
 				return true;
 	}
 	return false;
+}
+
+void e2d::ENode::setAutoUpdate(bool bAutoUpdate)
+{
+	m_bAutoUpdate = bAutoUpdate;
 }
 
 void e2d::ENode::setDefaultPiovt(float defaultPiovtX, float defaultPiovtY)
@@ -817,17 +811,13 @@ void e2d::ENode::stopAllActions()
 void e2d::ENode::setVisiable(bool value)
 {
 	m_bVisiable = value;
-	if (m_bDisplayedInScene == false)
-	{
-		this->_onEnter();
-	}
 }
 
 void e2d::ENode::setName(const EString & name)
 {
 	WARN_IF(name.isEmpty(), "Invalid ENode name.");
 
-	if (!name.isEmpty())
+	if (!name.isEmpty() && m_sName != name)
 	{
 		// 保存节点名
 		m_sName = name;
@@ -839,8 +829,8 @@ void e2d::ENode::setName(const EString & name)
 void e2d::ENode::_setParentScene(EScene * scene)
 {
 	m_pParentScene = scene;
-	for (auto child = m_vChildren.begin(); child != m_vChildren.end(); child++)
+	for (auto child : m_vChildren)
 	{
-		(*child)->_setParentScene(scene);
+		child->_setParentScene(scene);
 	}
 }

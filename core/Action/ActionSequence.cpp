@@ -21,9 +21,9 @@ e2d::EActionSequence::EActionSequence(int number, EAction * action1, ...) :
 
 e2d::EActionSequence::~EActionSequence()
 {
-	for (auto action = m_vActions.begin(); action != m_vActions.end(); action++)
+	for (auto action : m_vActions)
 	{
-		SafeRelease(&(*action));
+		SafeRelease(&action);
 	}
 }
 
@@ -33,9 +33,9 @@ void e2d::EActionSequence::_init()
 	// 将所有动作与目标绑定
 	if (m_pTarget)
 	{
-		for (auto action = m_vActions.begin(); action != m_vActions.end(); action++)
+		for (auto action : m_vActions)
 		{
-			(*action)->setTarget(m_pTarget);
+			action->setTarget(m_pTarget);
 		}
 	}
 	// 初始化第一个动作
@@ -66,18 +66,18 @@ void e2d::EActionSequence::_update()
 void e2d::EActionSequence::_reset()
 {
 	EAction::_reset();
-	for (auto action = m_vActions.begin(); action != m_vActions.end(); action++)
+	for (auto action : m_vActions)
 	{
-		(*action)->_reset();
+		action->_reset();
 	}
 	m_nActionIndex = 0;
 }
 
 void e2d::EActionSequence::_resetTime()
 {
-	for (auto action = m_vActions.begin(); action != m_vActions.end(); action++)
+	for (auto action : m_vActions)
 	{
-		(*action)->_resetTime();
+		action->_resetTime();
 	}
 }
 
@@ -93,9 +93,9 @@ void e2d::EActionSequence::addAction(EAction * action)
 e2d::EActionSequence * e2d::EActionSequence::clone() const
 {
 	auto a = new EActionSequence();
-	for (auto action = m_vActions.begin(); action != m_vActions.end(); action++)
+	for (auto action : m_vActions)
 	{
-		a->addAction((*action)->clone());
+		a->addAction(action->clone());
 	}
 	return a;
 }
@@ -103,15 +103,15 @@ e2d::EActionSequence * e2d::EActionSequence::clone() const
 e2d::EActionSequence * e2d::EActionSequence::reverse(bool actionReverse) const
 {
 	auto a = new EActionSequence();
-	for (auto action = m_vActions.begin(); action != m_vActions.end(); action++)
+	for (auto action : m_vActions)
 	{
 		if (actionReverse)
 		{
-			a->addAction((*action)->reverse());
+			a->addAction(action->reverse());
 		}
 		else
 		{
-			a->addAction((*action)->clone());
+			a->addAction(action->clone());
 		}
 	}
 	// 将动作顺序逆序排列

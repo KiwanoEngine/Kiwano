@@ -1,6 +1,4 @@
 #include "..\enodes.h"
-#include "..\elisteners.h"
-#include "..\emanagers.h"
 
 e2d::EButtonToggle::EButtonToggle()
 	: EButton()

@@ -19,17 +19,11 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{9031e36b-fa85-4b4e-8e80-657c7e68f283}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Listener">
-      <UniqueIdentifier>{b9bb1728-5106-4574-998e-8564b49cb4a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Geometry">
-      <UniqueIdentifier>{d5f86335-f3a0-450d-92a3-7edd9348d995}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{be5d9314-b00a-4f11-bd2a-1f720dc32407}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Event">
-      <UniqueIdentifier>{6d0b43af-2432-4221-b572-4bef331ae10e}</UniqueIdentifier>
+    <Filter Include="Shape">
+      <UniqueIdentifier>{d5f86335-f3a0-450d-92a3-7edd9348d995}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +99,6 @@
     <ClCompile Include="..\..\core\Common\Image.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Keyframe.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Object.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -117,37 +108,10 @@
     <ClCompile Include="..\..\core\Common\Scene.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Event\PhysicsEvent.cpp">
-      <Filter>Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\Circle.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\Ellipse.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\Geometry.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\Rectangle.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Listener\Listener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Listener\ListenerPhysics.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Listener\ListenerPhysicsCollision.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Manager\ObjectManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Manager\PhysicsManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Manager\TimerManager.cpp">
@@ -204,6 +168,21 @@
     <ClCompile Include="..\..\core\Manager\MusicManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Manager\ShapeManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\Circle.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\Ellipse.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\Rectangle.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\Shape.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\etools.h" />
@@ -214,8 +193,7 @@
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\eactions.h" />
     <ClInclude Include="..\..\core\etransitions.h" />
-    <ClInclude Include="..\..\core\egeometry.h" />
-    <ClInclude Include="..\..\core\elisteners.h" />
     <ClInclude Include="..\..\core\emanagers.h" />
+    <ClInclude Include="..\..\core\eshape.h" />
   </ItemGroup>
 </Project>

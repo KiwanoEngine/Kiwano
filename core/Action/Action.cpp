@@ -56,7 +56,7 @@ void e2d::EAction::setTarget(ENode * node)
 
 e2d::EAction * e2d::EAction::reverse() const
 {
-	assert(0);
+	ASSERT(false, "EAction cannot be reversed!");
 	return nullptr;
 }
 

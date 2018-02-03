@@ -13,7 +13,7 @@ class ENode;
 class ETimer;
 class EAction;
 class EMusic;
-class EGeometry;
+class EShape;
 class ETransition;
 class EListenerPhysics;
 
@@ -81,7 +81,6 @@ private:
 class ETimerManager
 {
 	friend EGame;
-	friend EScene;
 	friend ENode;
 
 public:
@@ -156,7 +155,6 @@ private:
 class EActionManager
 {
 	friend EGame;
-	friend EScene;
 	friend ENode;
 
 public:
@@ -210,7 +208,7 @@ class EMusicManager
 
 public:
 	// 添加音乐文件
-	static EMusic * add(
+	static bool add(
 		const EString & strFilePath	/* 音乐文件路径 */
 	);
 
@@ -243,93 +241,27 @@ private:
 };
 
 
-class EPhysicsManager
+class EShapeManager
 {
 	friend EGame;
-	friend EScene;
 	friend ENode;
-	friend EGeometry;
-
-public:
-	// 将监听器与场景绑定
-	static void bindListener(
-		EListenerPhysics * listener,
-		EScene * pParentScene
-	);
-
-	// 将监听器与节点绑定
-	static void bindListener(
-		EListenerPhysics * listener,
-		ENode * pParentNode
-	);
-
-	// 启动具有相同名称的监听器
-	static void startListeners(
-		const EString &name
-	);
-
-	// 停止具有相同名称的监听器
-	static void stopListeners(
-		const EString &name
-	);
-
-	// 删除具有相同名称的监听器
-	static void delListeners(
-		const EString &name
-	);
-
-	// 启动绑定在场景及其子节点上的所有监听器
-	static void startAllListenersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 停止绑定在场景及其子节点上的所有监听器
-	static void stopAllListenersBindedWith(
-		EScene * pParentScene
-	);
-
-	// 启动绑定在节点上的所有监听器
-	static void startAllListenersBindedWith(
-		ENode * pParentNode
-	);
-
-	// 停止绑定在节点上的所有监听器
-	static void stopAllListenersBindedWith(
-		ENode * pParentNode
-	);
-
-	// 启动所有监听器
-	static void startAllListeners();
-
-	// 停止所有监听器
-	static void stopAllListeners();
+	friend EShape;
 
 private:
-	// 清空监听器管理器
-	static void _clearManager();
+	// 更新形状
+	static void __updateShape(
+		EShape * pActiveShape
+	);
 
 	// 添加形状
-	static void _addGeometry(
-		EGeometry * geometry
+	static void __addShape(
+		EShape * pShape
 	);
 
 	// 删除已绑定的形状
-	static void _delGeometry(
-		EGeometry * geometry
+	static void __delShape(
+		EShape * pShape
 	);
-
-	// 清空绑定在节点上的所有监听器
-	static void _clearAllListenersBindedWith(
-		ENode * pParentNode
-	);
-
-	// 几何图形判断程序
-	static void PhysicsGeometryProc(
-		EGeometry * pActiveGeometry
-	);
-
-	// 物理碰撞监听器执行程序
-	static void PhysicsListenerProc();
 };
 
 }

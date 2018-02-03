@@ -1,5 +1,4 @@
 #include "..\enodes.h"
-#include "..\elisteners.h"
 
 e2d::EMenu::EMenu()
 	: m_bEnable(true)
@@ -35,9 +34,9 @@ void e2d::EMenu::setEnable(bool enable)
 	{
 		m_bEnable = enable;
 
-		for (auto button = m_vButtons.begin(); button != m_vButtons.end(); button++)
+		for (auto button : m_vButtons)
 		{
-			(*button)->setEnable(enable);
+			button->setEnable(enable);
 		}
 	}
 }

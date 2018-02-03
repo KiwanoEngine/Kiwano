@@ -205,7 +205,7 @@ bool EMusic::isPlaying()
 	}
 }
 
-float e2d::EMusic::getVolume() const
+float EMusic::getVolume() const
 {
 	float fVolume = 0.0f;
 	if (m_pSourceVoice)
@@ -215,7 +215,7 @@ float e2d::EMusic::getVolume() const
 	return fVolume;
 }
 
-bool e2d::EMusic::setVolume(float fVolume)
+bool EMusic::setVolume(float fVolume)
 {
 	if (m_pSourceVoice)
 	{
@@ -224,7 +224,7 @@ bool e2d::EMusic::setVolume(float fVolume)
 	return false;
 }
 
-float e2d::EMusic::getFrequencyRatio() const
+float EMusic::getFrequencyRatio() const
 {
 	float fFrequencyRatio = 0.0f;
 	if (m_pSourceVoice)
@@ -234,7 +234,7 @@ float e2d::EMusic::getFrequencyRatio() const
 	return fFrequencyRatio;
 }
 
-bool e2d::EMusic::setFrequencyRatio(float fFrequencyRatio)
+bool EMusic::setFrequencyRatio(float fFrequencyRatio)
 {
 	if (m_pSourceVoice)
 	{
@@ -244,7 +244,7 @@ bool e2d::EMusic::setFrequencyRatio(float fFrequencyRatio)
 	return false;
 }
 
-IXAudio2SourceVoice * e2d::EMusic::getIXAudio2SourceVoice() const
+IXAudio2SourceVoice * EMusic::getIXAudio2SourceVoice() const
 {
 	return m_pSourceVoice;
 }

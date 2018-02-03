@@ -13,6 +13,7 @@ void e2d::EActionGradual::_init()
 
 void e2d::EActionGradual::_update()
 {
+	EAction::_update();
 	// 判断时间间隔是否足够
 	if (m_fDuration == 0)
 	{

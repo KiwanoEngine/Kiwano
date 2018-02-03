@@ -86,6 +86,7 @@ struct ESize
 	}
 };
 
+
 // 字符串
 class EString
 {
@@ -217,31 +218,6 @@ private:
 	wchar_t *_string;
 	int _size;
 };
-
-
-// 二维向量
-typedef EPoint EVector2;
-
-// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
-typedef std::function<void(int)> TimerCallback;
-
-// 按钮点击回调函数
-typedef std::function<void()> BtnClkCallback;
-
-// 物理世界消息监听器回调函数
-typedef std::function<void()> PhysLsnrCallback;
-
-// 碰撞消息监听器回调函数
-typedef PhysLsnrCallback  ClsLsnrCallback;
-
-template<typename T>
-inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
-
-template<typename Obj>
-inline void SafeRelease(Obj** p) { if (*p) { (*p)->release(); *p = nullptr; } }
-
-template<class Interface>
-inline void SafeReleaseInterface(Interface **pp) { if (*pp != nullptr) { (*pp)->Release(); (*pp) = nullptr; } }
 
 
 // 颜色
@@ -418,13 +394,11 @@ public:
 };
 
 
-class EGeometry;
-
-// 物理消息
-class EPhysicsEvent
+// 形状交集关系
+class ERelation
 {
 public:
-	enum INTERSECT_RELATION
+	enum VALUE
 	{
 		UNKNOWN = 0,		/* 关系不确定 */
 		DISJOINT = 1,		/* 没有交集 */
@@ -432,25 +406,12 @@ public:
 		CONTAINS = 3,		/* 完全包含 */
 		OVERLAP = 4			/* 部分重叠 */
 	};
-
-	// 获取当前物理碰撞消息类型
-	static INTERSECT_RELATION getMsg();
-
-	// 获取主动方
-	static EGeometry * getActiveGeometry();
-
-	// 获取被动方
-	static EGeometry * getPassiveGeometry();
-
-public:
-	static INTERSECT_RELATION s_nRelation;
-	static EGeometry * s_pActiveGeometry;
-	static EGeometry * s_pPassiveGeometry;
 };
 
 
 class EObjectManager;
 
+// 基础对象
 class EObject
 {
 	friend EObjectManager;
@@ -547,40 +508,60 @@ protected:
 };
 
 
-class ESprite;
-
+// 图片
 class EImage :
 	public EObject
 {
-	friend ESprite;
-
 public:
 	// 创建一个空的图片
 	EImage();
 
 	// 从本地文件中读取资源
 	EImage(
-		LPCTSTR fileName
+		LPCTSTR strFilePath	/* 图片文件路径 */
 	);
 
-	// 读取程序资源
+	// 从本地文件中读取资源
 	EImage(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType
+		LPCTSTR strFilePath,/* 图片文件路径 */
+		float nClipX,		/* 裁剪位置 X 坐标 */
+		float nClipY,		/* 裁剪位置 Y 坐标 */
+		float nClipWidth,	/* 裁剪宽度 */
+		float nClipHeight	/* 裁剪高度 */
 	);
 
 	virtual ~EImage();
 
-	// 从本地文件中读取资源
-	void loadFromFile(
-		const EString & fileName
+	// 裁剪图片
+	void clip(
+		float nClipX,		/* 裁剪位置 X 坐标 */
+		float nClipY,		/* 裁剪位置 Y 坐标 */
+		float nClipWidth,	/* 裁剪宽度 */
+		float nClipHeight	/* 裁剪高度 */
 	);
 
-	// 读取程序资源
-	void loadFromResource(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType
+	// 从本地文件中读取图片
+	void loadFrom(
+		const EString & strFilePath
 	);
+
+	// 从本地文件中读取图片并裁剪
+	void loadFrom(
+		const EString & strFilePath,/* 图片文件路径 */
+		float nClipX,				/* 裁剪位置 X 坐标 */
+		float nClipY,				/* 裁剪位置 Y 坐标 */
+		float nClipWidth,			/* 裁剪宽度 */
+		float nClipHeight			/* 裁剪高度 */
+	);
+
+	// 获取宽度
+	virtual float getWidth() const;
+
+	// 获取高度
+	virtual float getHeight() const;
+
+	// 获取大小
+	virtual ESize getSize() const;
 
 	// 获取源图片宽度
 	virtual float getSourceWidth() const;
@@ -590,113 +571,33 @@ public:
 
 	// 获取源图片大小
 	virtual ESize getSourceSize() const;
+	
+	// 获取裁剪位置 X 坐标
+	virtual float getClipX() const;
+
+	// 获取裁剪位置 Y 坐标
+	virtual float getClipY() const;
+
+	// 获取裁剪位置
+	virtual EPoint getClipPos() const;
+
+	// 获取 ID2D1Bitmap 对象
+	ID2D1Bitmap * getBitmap();
 
 	// 预加载资源
 	static bool preload(
-		const EString & fileName
-	);
-
-	// 预加载资源
-	static bool preload(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType
+		const EString & sFileName	/* 图片文件路径 */
 	);
 
 	// 清空缓存
 	static void clearCache();
 
 protected:
-	ID2D1Bitmap * _getBitmap();
-
-protected:
-	ID2D1Bitmap * m_pBitmap;
-};
-
-
-class EKeyframe :
-	public EObject
-{
-	friend ESprite;
-
-public:
-	// 创建空的关键帧
-	EKeyframe();
-
-	// 创建空的关键帧
-	EKeyframe(
-		EImage * texture
-	);
-
-	// 创建空的关键帧
-	EKeyframe(
-		const EString & imageFileName
-	);
-
-	// 创建空的关键帧
-	EKeyframe(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType
-	);
-
-	// 创建空的关键帧
-	EKeyframe(
-		EImage * texture,
-		float x,
-		float y,
-		float width,
-		float height
-	);
-
-	// 创建空的关键帧
-	EKeyframe(
-		const EString & imageFileName,
-		float x,
-		float y,
-		float width,
-		float height
-	);
-
-	// 创建空的关键帧
-	EKeyframe(
-		LPCTSTR resourceName,
-		LPCTSTR resourceType,
-		float x,
-		float y,
-		float width,
-		float height
-	);
-
-	virtual ~EKeyframe();
-
-	// 获取宽度
-	float getWidth() const;
-
-	// 获取高度
-	float getHeight() const;
-
-	// 获取图片
-	EImage * getImage() const;
-
-protected:
-	// 修改图片
-	void _setImage(
-		EImage * texture
-	);
-
-	// 裁剪图片
-	void _clipTexture(
-		float x,
-		float y,
-		float width,
-		float height
-	);
-
-protected:
 	float	m_fSourceClipX;
 	float	m_fSourceClipY;
 	float	m_fSourceClipWidth;
 	float	m_fSourceClipHeight;
-	EImage * m_pImage;
+	ID2D1Bitmap * m_pBitmap;
 };
 
 
@@ -721,11 +622,11 @@ public:
 	// 重写这个函数，它将在离开这个场景时自动执行
 	virtual void onExit() {}
 
-	// 重写这个函数，它将在窗口激活时执行
-	virtual bool onActivate() { return false; }
-
-	// 重写这个函数，它将在窗口非激活时执行
-	virtual bool onInactive() { return false; }
+	// 重写这个函数，它将在碰撞发生时自动执行
+	virtual void onCollide(
+		ENode * pActiveNode,	/* 主动发生碰撞的节点 */
+		ENode * pPassiveNode	/* 被动发生碰撞的节点 */
+	) {}
 
 	// 重写这个函数，它将在关闭窗口时执行
 	virtual bool onCloseWindow() { return true; }
@@ -733,7 +634,12 @@ public:
 	// 重写这个函数，它将在每一帧画面刷新时执行
 	virtual void onUpdate() {}
 
-	// 添加子节点到场景
+	// 开启或禁用 onUpdate 函数
+	virtual void setAutoUpdate(
+		bool bAutoUpdate
+	);
+
+	// 添加节点到场景
 	void add(
 		ENode * child,
 		int zOrder = 0
@@ -744,35 +650,11 @@ public:
 		ENode * child
 	);
 
-	// 删除相同名称的子节点
-	void remove(
-		const EString &childName
-	);
-
-	// 获取所有子节点
-	std::vector<e2d::ENode*> getChildren();
-
-	// 获取子节点数量
-	size_t getChildrenCount() const;
-
-	// 根据名称获取子节点
-	ENode * getChild(
-		const EString &childName
-	);
-
 	// 获取根节点
 	ENode * getRoot() const;
 
-	// 清空所有子成员
-	void clearAllChildren();
-
-	// 执行动画
-	void runAction(
-		EAction * action
-	);
-
 	// 开启几何图形的渲染
-	void setGeometryVisiable(
+	void setShapeVisiable(
 		bool visiable
 	);
 
@@ -784,10 +666,30 @@ protected:
 	void _update();
 
 protected:
+	bool m_bAutoUpdate;
 	bool m_bSortNeeded;
 	bool m_bWillSave;
-	bool m_bGeometryVisiable;
+	bool m_bShapeVisiable;
 	ENode * m_pRoot;
 };
+
+
+// 二维向量
+typedef EPoint EVector2;
+
+// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
+typedef std::function<void(int)> TimerCallback;
+
+// 按钮点击回调函数
+typedef std::function<void()> BtnClkCallback;
+
+template<typename T>
+inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
+
+template<typename Obj>
+inline void SafeRelease(Obj** p) { if (*p) { (*p)->release(); *p = nullptr; } }
+
+template<class Interface>
+inline void SafeReleaseInterface(Interface **pp) { if (*pp != nullptr) { (*pp)->Release(); (*pp) = nullptr; } }
 
 }

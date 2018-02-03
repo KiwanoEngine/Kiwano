@@ -7,8 +7,9 @@
 
 e2d::EScene::EScene()
 	: m_bWillSave(true)
+	, m_bAutoUpdate(true)
 	, m_bSortNeeded(false)
-	, m_bGeometryVisiable(false)
+	, m_bShapeVisiable(false)
 	, m_pRoot(new ENode())
 {
 	m_pRoot->retain();
@@ -27,21 +28,29 @@ void e2d::EScene::_render()
 {
 	m_pRoot->_render();
 
-	if (m_bGeometryVisiable)
+	if (m_bShapeVisiable)
 	{
 		// 恢复矩阵转换
 		ERenderer::getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 		// 绘制所有几何图形
-		m_pRoot->_drawGeometry();
+		m_pRoot->_drawShape();
 	}
 }
 
 void e2d::EScene::_update()
 {
 	// 执行 onUpdate 函数
-	this->onUpdate();
+	if (m_bAutoUpdate)
+	{
+		this->onUpdate();
+	}
 	// 更新根节点
 	m_pRoot->_update();
+}
+
+void e2d::EScene::setAutoUpdate(bool bAutoUpdate)
+{
+	m_bAutoUpdate = bAutoUpdate;
 }
 
 void e2d::EScene::add(ENode * child, int order /* = 0 */)
@@ -54,42 +63,12 @@ bool e2d::EScene::remove(ENode * child)
 	return m_pRoot->removeChild(child);
 }
 
-void e2d::EScene::remove(const EString &childName)
-{
-	return m_pRoot->removeChild(childName);
-}
-
-std::vector<e2d::ENode*> e2d::EScene::getChildren()
-{
-	return m_pRoot->m_vChildren;
-}
-
-size_t e2d::EScene::getChildrenCount() const
-{
-	return m_pRoot->getChildrenCount();
-}
-
-e2d::ENode * e2d::EScene::getChild(const EString &childName)
-{
-	return m_pRoot->getChild(childName);
-}
-
 e2d::ENode * e2d::EScene::getRoot() const
 {
 	return m_pRoot;
 }
 
-void e2d::EScene::clearAllChildren()
+void e2d::EScene::setShapeVisiable(bool visiable)
 {
-	m_pRoot->clearAllChildren();
-}
-
-void e2d::EScene::runAction(EAction * action)
-{
-	this->m_pRoot->runAction(action);
-}
-
-void e2d::EScene::setGeometryVisiable(bool visiable)
-{
-	m_bGeometryVisiable = visiable;
+	m_bShapeVisiable = visiable;
 }

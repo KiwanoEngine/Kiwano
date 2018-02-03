@@ -167,6 +167,8 @@ void e2d::EGame::uninit()
 	EMusicManager::__uninit();
 	// 恢复计时操作
 	ETime::__uninit();
+	// 清空图片缓存
+	EImage::clearCache();
 	// 删除渲染相关资源
 	ERenderer::__discardResources();
 	// 刷新内存池

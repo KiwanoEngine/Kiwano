@@ -46,22 +46,22 @@ void e2d::ETimerManager::bindTimer(ETimer * timer, ENode * pParentNode)
 
 void e2d::ETimerManager::startTimers(const EString & name)
 {
-	for (auto timer = s_vTimers.begin(); timer != s_vTimers.end(); timer++)
+	for (auto timer : s_vTimers)
 	{
-		if ((*timer)->getName() == name)
+		if (timer->getName() == name)
 		{
-			(*timer)->start();
+			timer->start();
 		}
 	}
 }
 
 void e2d::ETimerManager::stopTimers(const EString & name)
 {
-	for (auto timer = s_vTimers.begin(); timer != s_vTimers.end(); timer++)
+	for (auto timer : s_vTimers)
 	{
-		if ((*timer)->getName() == name)
+		if (timer->getName() == name)
 		{
-			(*timer)->stop();
+			timer->stop();
 		}
 	}
 }
@@ -95,11 +95,11 @@ void e2d::ETimerManager::stopAllTimersBindedWith(EScene * pParentScene)
 
 void e2d::ETimerManager::startAllTimersBindedWith(ENode * pParentNode)
 {
-	for (auto timer = s_vTimers.begin(); timer != s_vTimers.end(); timer++)
+	for (auto timer : s_vTimers)
 	{
-		if ((*timer)->getParentNode() == pParentNode)
+		if (timer->getParentNode() == pParentNode)
 		{
-			(*timer)->start();
+			timer->start();
 		}
 	}
 	for (auto child = pParentNode->getChildren().begin(); child != pParentNode->getChildren().end(); child++)
@@ -110,16 +110,16 @@ void e2d::ETimerManager::startAllTimersBindedWith(ENode * pParentNode)
 
 void e2d::ETimerManager::stopAllTimersBindedWith(ENode * pParentNode)
 {
-	for (auto timer = s_vTimers.begin(); timer != s_vTimers.end(); timer++)
+	for (auto timer : s_vTimers)
 	{
-		if ((*timer)->getParentNode() == pParentNode)
+		if (timer->getParentNode() == pParentNode)
 		{
-			(*timer)->stop();
+			timer->stop();
 		}
 	}
-	for (auto child = pParentNode->getChildren().begin(); child != pParentNode->getChildren().end(); child++)
+	for (auto child : pParentNode->getChildren())
 	{
-		ETimerManager::stopAllTimersBindedWith((*child));
+		ETimerManager::stopAllTimersBindedWith(child);
 	}
 }
 
@@ -142,9 +142,9 @@ void e2d::ETimerManager::__clearAllTimersBindedWith(ENode * pParentNode)
 
 void e2d::ETimerManager::__resetAllTimers()
 {
-	for (auto timer = s_vTimers.begin(); timer != s_vTimers.end(); timer++)
+	for (auto timer : s_vTimers)
 	{
-		(*timer)->m_fLast = ETime::getTotalTime();
+		timer->m_fLast = ETime::getTotalTime();
 	}
 }
 

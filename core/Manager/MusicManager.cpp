@@ -15,29 +15,27 @@ static MusicList& getMusicList()
 }
 
 
-e2d::EMusic * e2d::EMusicManager::add(const EString & strFilePath)
+bool e2d::EMusicManager::add(const EString & strFilePath)
 {
 	EMusic * pPlayer = get(strFilePath);
 	if (pPlayer)
 	{
-		return pPlayer;
+		return true;
 	}
 	else
 	{
 		UINT nRet = strFilePath.hash();
-
-		getMusicList().insert(MusicPair(nRet, new EMusic()));
-		pPlayer = getMusicList()[nRet];
+		pPlayer = new EMusic();
 
 		if (pPlayer->_open(strFilePath))
 		{
-			return pPlayer;
+			getMusicList().insert(MusicPair(nRet, pPlayer));
+			return true;
 		}
 		else
 		{
 			delete pPlayer;
-			getMusicList().erase(nRet);
-			return nullptr;
+			return false;
 		}
 	}
 }
@@ -57,25 +55,25 @@ e2d::EMusic * e2d::EMusicManager::get(const EString & strFilePath)
 
 void e2d::EMusicManager::pauseAllMusics()
 {
-	for (auto iter = getMusicList().begin(); iter != getMusicList().end(); iter++)
+	for (auto iter : getMusicList())
 	{
-		(*iter).second->pause();
+		iter.second->pause();
 	}
 }
 
 void e2d::EMusicManager::resumeAllMusics()
 {
-	for (auto iter = getMusicList().begin(); iter != getMusicList().end(); iter++)
+	for (auto iter : getMusicList())
 	{
-		(*iter).second->resume();
+		iter.second->resume();
 	}
 }
 
 void e2d::EMusicManager::stopAllMusics()
 {
-	for (auto iter = getMusicList().begin(); iter != getMusicList().end(); iter++)
+	for (auto iter : getMusicList())
 	{
-		(*iter).second->stop();
+		iter.second->stop();
 	}
 }
 
@@ -111,10 +109,10 @@ bool e2d::EMusicManager::__init()
 
 void e2d::EMusicManager::__uninit()
 {
-	for (auto iter = getMusicList().begin(); iter != getMusicList().end(); iter++)
+	for (auto iter : getMusicList())
 	{
-		(*iter).second->_close();
-		(*iter).second->release();
+		iter.second->_close();
+		delete iter.second;
 	}
 	getMusicList().clear();
 

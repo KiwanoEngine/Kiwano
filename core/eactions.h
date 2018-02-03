@@ -576,7 +576,7 @@ public:
 
 	// 添加关键帧
 	void addKeyframe(
-		EKeyframe * frame	/* 添加关键帧 */
+		EImage * frame	/* 添加关键帧 */
 	);
 
 	// 设置每一帧的时间间隔（秒）
@@ -603,7 +603,7 @@ protected:
 protected:
 	float	m_fInterval;
 	UINT	m_nFrameIndex;
-	std::vector<EKeyframe*> m_vFrames;
+	std::vector<EImage*> m_vFrames;
 };
 
 

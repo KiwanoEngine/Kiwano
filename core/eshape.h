@@ -5,20 +5,25 @@
 namespace e2d
 {
 
-class EPhysicsManager;
+class EShapeManager;
 class ENode;
 
 
-class EGeometry :
+class EShape :
 	public EObject
 {
-	friend EPhysicsManager;
+	friend EShapeManager;
 	friend ENode;
 
 public:
-	EGeometry();
+	EShape();
 
-	virtual ~EGeometry();
+	virtual ~EShape();
+
+	// 判断两形状的交集关系
+	virtual int getRelationWith(
+		EShape * pShape
+	) const;
 
 	// 获取父节点
 	ENode * getParentNode() const;
@@ -39,7 +44,12 @@ public:
 		UINT32 mask
 	);
 
-	// 设置几何形状的可见性
+	// 启用或关闭该形状
+	virtual void setEnable(
+		bool bEnable
+	);
+
+	// 设置形状的可见性
 	void setVisiable(
 		bool bVisiable
 	);
@@ -55,38 +65,35 @@ public:
 	);
 
 protected:
-	// 判断两形状的交集关系
-	virtual EPhysicsEvent::INTERSECT_RELATION _intersectWith(
-		EGeometry * pGeometry
-	);
-
 	// 转换形状
 	virtual void _transform();
 
-	// 渲染几何图形
+	// 渲染形状
 	virtual void _render();
 
+	// 获取 ID2D1Geometry 对象
 	virtual ID2D1Geometry * _getD2dGeometry() const = 0;
 
 protected:
+	bool	m_bEnable;
 	bool	m_bIsVisiable;
 	UINT32	m_nCategoryBitmask;
 	UINT32	m_nCollisionBitmask;
 	UINT32	m_nColor;
 	float	m_fOpacity;
 	ENode * m_pParentNode;
-	ID2D1TransformedGeometry * m_pTransformedGeometry;
+	ID2D1TransformedGeometry * m_pTransformedShape;
 };
 
 
 class ERectangle :
-	public EGeometry
+	public EShape
 {
 public:
-	// 创建一个空几何矩形
+	// 创建一个空矩形
 	ERectangle();
 
-	// 根据左上角坐标和宽高创建几何矩形
+	// 根据左上角坐标和宽高创建矩形
 	ERectangle(
 		float x,
 		float y,
@@ -94,7 +101,7 @@ public:
 		float height
 	);
 
-	// 创建一个和节点位置大小相同的几何矩形
+	// 创建一个和节点位置大小相同的矩形
 	ERectangle(
 		ENode * node
 	);
@@ -117,19 +124,19 @@ protected:
 
 
 class ECircle :
-	public EGeometry
+	public EShape
 {
 public:
-	// 创建一个空的几何圆形
+	// 创建一个空的圆形
 	ECircle();
 
-	// 根据圆心和半径创建几何圆形
+	// 根据圆心和半径创建圆形
 	ECircle(
 		EPoint center,
 		float radius
 	);
 
-	// 创建一个和节点位置大小相同的几何圆形
+	// 创建一个和节点位置大小相同的圆形
 	ECircle(
 		ENode * node
 	);
@@ -150,20 +157,20 @@ protected:
 
 
 class EEllipse :
-	public EGeometry
+	public EShape
 {
 public:
-	// 创建一个空的几何椭圆
+	// 创建一个空的椭圆
 	EEllipse();
 
-	// 根据圆心和半径创建几何椭圆
+	// 根据圆心和半径创建椭圆
 	EEllipse(
 		EPoint center,
 		float radiusX,
 		float radiusY
 	);
 
-	// 创建一个和节点位置大小相同的几何椭圆
+	// 创建一个和节点位置大小相同的椭圆
 	EEllipse(
 		ENode * node
 	);

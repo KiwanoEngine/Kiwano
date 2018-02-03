@@ -120,7 +120,7 @@ void e2d::EText::_initTextLayout()
 	// 未设置字体或空字符串时，文本宽高为 0
 	if (!m_pFont || m_sText.isEmpty())
 	{
-		this->_setHeight(0);
+		this->_setSize(0, 0);
 		m_fWordWrappingWidth = 0;
 		return;
 	}

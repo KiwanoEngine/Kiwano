@@ -10,17 +10,8 @@
     <Filter Include="Common">
       <UniqueIdentifier>{08126b0c-d139-48f9-8559-3d9d9e3a5940}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Event">
-      <UniqueIdentifier>{a00a6f30-ec6b-42be-93a2-c540466670a8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager">
       <UniqueIdentifier>{a8185fe2-5477-4293-97d6-d84f27d354bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Geometry">
-      <UniqueIdentifier>{dfaa8954-50d7-49c5-8aa6-7232c6d5c557}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Listener">
-      <UniqueIdentifier>{9b2673ff-9077-4d74-b7ec-b435e5540b66}</UniqueIdentifier>
     </Filter>
     <Filter Include="Node">
       <UniqueIdentifier>{70412fec-4c60-425b-81c9-4547e5a1b78a}</UniqueIdentifier>
@@ -31,19 +22,21 @@
     <Filter Include="Transition">
       <UniqueIdentifier>{337d5a0f-60fd-473a-83da-b2a3515affd9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shape">
+      <UniqueIdentifier>{dfaa8954-50d7-49c5-8aa6-7232c6d5c557}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\eactions.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\ebase.h" />
     <ClInclude Include="..\..\core\ecommon.h" />
-    <ClInclude Include="..\..\core\egeometry.h" />
-    <ClInclude Include="..\..\core\elisteners.h" />
     <ClInclude Include="..\..\core\emacros.h" />
     <ClInclude Include="..\..\core\emanagers.h" />
     <ClInclude Include="..\..\core\enodes.h" />
     <ClInclude Include="..\..\core\etools.h" />
     <ClInclude Include="..\..\core\etransitions.h" />
+    <ClInclude Include="..\..\core\eshape.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Action\Action.cpp">
@@ -118,9 +111,6 @@
     <ClCompile Include="..\..\core\Common\Image.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Keyframe.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Object.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -130,16 +120,10 @@
     <ClCompile Include="..\..\core\Common\String.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Event\PhysicsEvent.cpp">
-      <Filter>Event</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Manager\ObjectManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Manager\PhysicsManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp">
@@ -147,27 +131,6 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Manager\TimerManager.cpp">
       <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\Circle.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\Ellipse.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\Geometry.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Geometry\Rectangle.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Listener\Listener.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Listener\ListenerPhysics.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Listener\ListenerPhysicsCollision.cpp">
-      <Filter>Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Tool\Data.cpp">
       <Filter>Tool</Filter>
@@ -210,6 +173,27 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Node\Text.cpp">
       <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\Circle.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\Ellipse.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\Rectangle.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\Shape.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\ShapeManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\File.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\MusicManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

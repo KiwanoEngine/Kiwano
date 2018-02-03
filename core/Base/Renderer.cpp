@@ -133,7 +133,7 @@ void e2d::ERenderer::__render()
 	if (FAILED(hr))
 	{
 		// 渲染时产生了未知的错误，退出游戏
-		ASSERT(false, L"Renderer error!");
+		ASSERT(false, L"Renderer error: %#X!", hr);
 		EGame::quit();
 	}
 }

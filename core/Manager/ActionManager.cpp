@@ -20,16 +20,16 @@ void e2d::EActionManager::resumeAllActionsBindedWith(ENode * pTargetNode)
 {
 	if (pTargetNode)
 	{
-		for (auto action = s_vActions.begin(); action != s_vActions.end(); action++)
+		for (auto action : s_vActions)
 		{
-			if ((*action)->getTarget() == pTargetNode)
+			if (action->getTarget() == pTargetNode)
 			{
-				(*action)->start();
+				action->start();
 			}
 		}
-		for (auto child = pTargetNode->getChildren().begin(); child != pTargetNode->getChildren().end(); child++)
+		for (auto child : pTargetNode->getChildren())
 		{
-			EActionManager::resumeAllActionsBindedWith((*child));
+			EActionManager::resumeAllActionsBindedWith(child);
 		}
 	}
 }
@@ -38,16 +38,16 @@ void e2d::EActionManager::pauseAllActionsBindedWith(ENode * pTargetNode)
 {
 	if (pTargetNode)
 	{
-		for (auto action = s_vActions.begin(); action != s_vActions.end(); action++)
+		for (auto action : s_vActions)
 		{
-			if ((*action)->getTarget() == pTargetNode)
+			if (action->getTarget() == pTargetNode)
 			{
-				(*action)->pause();
+				action->pause();
 			}
 		}
-		for (auto child = pTargetNode->getChildren().begin(); child != pTargetNode->getChildren().end(); child++)
+		for (auto child : pTargetNode->getChildren())
 		{
-			EActionManager::pauseAllActionsBindedWith((*child));
+			EActionManager::pauseAllActionsBindedWith(child);
 		}
 	}
 }
@@ -56,16 +56,16 @@ void e2d::EActionManager::stopAllActionsBindedWith(ENode * pTargetNode)
 {
 	if (pTargetNode)
 	{
-		for (auto action = s_vActions.begin(); action != s_vActions.end(); action++)
+		for (auto action : s_vActions)
 		{
-			if ((*action)->getTarget() == pTargetNode)
+			if (action->getTarget() == pTargetNode)
 			{
-				(*action)->stop();
+				action->stop();
 			}
 		}
-		for (auto child = pTargetNode->getChildren().begin(); child != pTargetNode->getChildren().end(); child++)
+		for (auto child : pTargetNode->getChildren())
 		{
-			EActionManager::stopAllActionsBindedWith((*child));
+			EActionManager::stopAllActionsBindedWith(child);
 		}
 	}
 }
@@ -92,33 +92,33 @@ void e2d::EActionManager::__clearAllActionsBindedWith(ENode * pTargetNode)
 
 void e2d::EActionManager::resumeAllActions()
 {
-	for (auto child = ESceneManager::getCurrentScene()->getChildren().begin(); child != ESceneManager::getCurrentScene()->getChildren().end(); child++)
+	for (auto child : ESceneManager::getCurrentScene()->getRoot()->getChildren())
 	{
-		EActionManager::resumeAllActionsBindedWith((*child));
+		EActionManager::resumeAllActionsBindedWith(child);
 	}
 }
 
 void e2d::EActionManager::pauseAllActions()
 {
-	for (auto child = ESceneManager::getCurrentScene()->getChildren().begin(); child != ESceneManager::getCurrentScene()->getChildren().end(); child++)
+	for (auto child : ESceneManager::getCurrentScene()->getRoot()->getChildren())
 	{
-		EActionManager::pauseAllActionsBindedWith((*child));
+		EActionManager::pauseAllActionsBindedWith(child);
 	}
 }
 
 void e2d::EActionManager::stopAllActions()
 {
-	for (auto child = ESceneManager::getCurrentScene()->getChildren().begin(); child != ESceneManager::getCurrentScene()->getChildren().end(); child++)
+	for (auto child : ESceneManager::getCurrentScene()->getRoot()->getChildren())
 	{
-		EActionManager::stopAllActionsBindedWith((*child));
+		EActionManager::stopAllActionsBindedWith(child);
 	}
 }
 
 void e2d::EActionManager::__resetAllActions()
 {
-	for (auto action = s_vActions.begin(); action != s_vActions.end(); action++)
+	for (auto action : s_vActions)
 	{
-		(*action)->_resetTime();
+		action->_resetTime();
 	}
 }
 

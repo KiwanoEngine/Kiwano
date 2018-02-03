@@ -217,14 +217,13 @@ public:
 
 // 音乐播放器
 class EMusic
-	: public EObject
 {
 	friend EMusicManager;
 
 public:
 	// 播放
 	bool play(
-		int nLoopCount = 0	/* 重复播放次数 */
+		int nLoopCount = 0	/* 重复播放次数，设置为 255 时循环播放 */
 	);
 
 	// 暂停
