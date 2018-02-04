@@ -22,7 +22,7 @@ e2d::EActionLoop * e2d::EActionLoop::clone() const
 void e2d::EActionLoop::_init()
 {
 	EAction::_init();
-	m_pAction->setTarget(m_pTarget);
+	m_pAction->_setTarget(m_pTarget);
 	m_pAction->_init();
 }
 

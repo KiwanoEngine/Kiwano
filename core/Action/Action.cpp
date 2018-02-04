@@ -45,13 +45,9 @@ void e2d::EAction::stop()
 	m_bEnding = true;
 }
 
-void e2d::EAction::setTarget(ENode * node)
+void e2d::EAction::_setTarget(ENode * node)
 {
-	if (!m_pTarget && node)
-	{
-		// 动作只能有一个目标
-		m_pTarget = node;
-	}
+	m_pTarget = node;
 }
 
 e2d::EAction * e2d::EAction::reverse() const

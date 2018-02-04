@@ -21,6 +21,12 @@ public:
 
 	virtual ~ENode();
 
+	// 进入场景时执行
+	virtual void onEnter() {}
+
+	// 离开场景时执行
+	virtual void onExit() {}
+
 	// 更新节点
 	virtual void onUpdate() {}
 
@@ -33,11 +39,11 @@ public:
 		int nRelation			/* 碰撞关系，取值为 ERelation::VALUE 中的一种 */
 	) {}
 
-	// 进入场景时执行
-	virtual void onEnter() {}
+	// 游戏暂停时的处理
+	virtual void onPause() {}
 
-	// 离开场景时执行
-	virtual void onExit() {}
+	// 节点被销毁时的处理
+	virtual void onDestroy() {}
 
 	// 获取节点显示状态
 	virtual bool isVisiable() const;
@@ -331,45 +337,47 @@ public:
 
 protected:
 	// 更新节点
-	virtual void _update();
+	void _update(
+		bool bPaused
+	);
 
 	// 渲染节点
-	virtual void _render();
+	void _render();
 
-	// 渲染几何图形
-	virtual void _drawShape();
+	// 渲染图形
+	void _drawShape();
 
 	// 节点被添加到场景时的执行程序
-	virtual void _onEnter();
+	void _onEnter();
 
 	// 节点从场景中消失时的执行程序
-	virtual void _onExit();
+	void _onExit();
 
 	// 设置节点所在场景
-	virtual void _setParentScene(
+	void _setParentScene(
 		EScene * scene
 	);
 
 	// 对自身进行二维矩阵变换
-	virtual void _updateTransform();
+	void _updateTransform();
 
 	// 更新所有子节点矩阵
-	virtual void _updateChildrenTransform();
+	void _updateChildrenTransform();
 
 	// 更新所有子节点透明度
-	virtual void _updateChildrenOpacity();
+	void _updateChildrenOpacity();
 
-	// 更新节点矩阵
+	// 修改节点大小
+	void _setSize(
+		float width,
+		float height
+	);
+
+	// 更新节点二维矩阵
 	static void _updateTransform(ENode * node);
 
 	// 更新节点透明度
 	static void _updateOpacity(ENode * node);
-
-	// 修改节点大小
-	virtual void _setSize(
-		float width,
-		float height
-	);
 
 protected:
 	EString		m_sName;
@@ -624,13 +632,16 @@ public:
 	) override;
 
 	// 更新按钮状态
-	virtual void onUpdate();
+	virtual void onUpdate() override;
+
+	// 更新游戏暂停时的按钮状态
+	virtual void onPause() override;
 
 protected:
-	enum STATUS { NORMAL, MOUSEOVER, SELECTED };
+	enum BTN_STATE { NORMAL, MOUSEOVER, SELECTED };
 
 	// 设置按钮状态
-	virtual void _setStatus(STATUS status);
+	virtual void _setState(BTN_STATE state);
 
 	// 刷新按钮显示
 	virtual void _updateVisiable();
@@ -639,14 +650,14 @@ protected:
 	virtual void _runCallback();
 
 protected:
-	STATUS	m_eStatus;
-	ENode * m_pNormal;
-	ENode * m_pMouseover;
-	ENode * m_pSelected;
-	ENode * m_pDisabled;
-	bool	m_bEnable;
-	bool	m_bIsSelected;
-	BtnClkCallback m_Callback;
+	ENode *			m_pNormal;
+	ENode *			m_pMouseover;
+	ENode *			m_pSelected;
+	ENode *			m_pDisabled;
+	bool			m_bEnable;
+	bool			m_bIsSelected;
+	BTN_STATE		m_eBtnState;
+	BtnClkCallback	m_Callback;
 };
 
 
@@ -659,54 +670,53 @@ public:
 
 	// 创建开关按钮
 	EButtonToggle(
-		ENode * toggleOnNormal,
-		ENode * toggleOffNormal,
+		ENode * onNormal,
+		ENode * offNormal,
 		const BtnClkCallback & callback = nullptr
 	);
 
 	// 创建开关按钮
 	EButtonToggle(
-		ENode * toggleOnNormal,
-		ENode * toggleOffNormal,
-		ENode * toggleOnSelected,
-		ENode * toggleOffSelected,
+		ENode * onNormal,
+		ENode * offNormal,
+		ENode * onSelected,
+		ENode * offSelected,
 		const BtnClkCallback & callback = nullptr
 	);
 
 	// 创建开关按钮
 	EButtonToggle(
-		ENode * toggleOnNormal,
-		ENode * toggleOffNormal,
-		ENode * toggleOnMouseOver,
-		ENode * toggleOffMouseOver,
-		ENode * toggleOnSelected,
-		ENode * toggleOffSelected,
+		ENode * onNormal,
+		ENode * offNormal,
+		ENode * onMouseOver,
+		ENode * offMouseOver,
+		ENode * onSelected,
+		ENode * offSelected,
 		const BtnClkCallback & callback = nullptr
 	);
 
 	// 创建开关按钮
 	EButtonToggle(
-		ENode * toggleOnNormal,
-		ENode * toggleOffNormal,
-		ENode * toggleOnMouseOver,
-		ENode * toggleOffMouseOver,
-		ENode * toggleOnSelected,
-		ENode * toggleOffSelected,
-		ENode * toggleOnDisabled,
-		ENode * toggleOffDisabled,
+		ENode * onNormal,
+		ENode * offNormal,
+		ENode * onMouseOver,
+		ENode * offMouseOver,
+		ENode * onSelected,
+		ENode * offSelected,
+		ENode * onDisabled,
+		ENode * offDisabled,
 		const BtnClkCallback & callback = nullptr
 	);
 
-	// 切换开关状态，并执行回调函数
+	// 切换开关状态（执行回调函数）
 	void toggle();
 
 	// 获取开关状态
-	bool isToggleOn() const;
+	bool getState() const;
 
-	// 打开或关闭开关
-	// 仅设置按钮状态，不执行回调函数
-	void setToggle(
-		bool toggle
+	// 设置开关按钮的状态（打开或关闭）
+	void setState(
+		bool bState
 	);
 
 	// 设置按钮打开状态下显示的按钮
@@ -749,9 +759,28 @@ public:
 		ENode * disabled
 	);
 
+	// 设置中心点的横向位置
+	// 默认为 0, 范围 [0, 1]
+	virtual void setPivotX(
+		float pivotX
+	) override;
+
+	// 设置中心点的纵向位置
+	// 默认为 0, 范围 [0, 1]
+	virtual void setPivotY(
+		float pivotY
+	) override;
+
+	// 设置中心点位置
+	// 默认为 (0, 0), 范围 [0, 1]
+	virtual void setPivot(
+		float pivotX,
+		float pivotY
+	) override;
+
 protected:
 	// 刷新按钮开关
-	virtual void _updateToggle();
+	virtual void _updateState();
 
 	// 执行按钮回调函数
 	virtual void _runCallback() override;
@@ -765,7 +794,7 @@ protected:
 	ENode * m_pSelectedOff;
 	ENode * m_pDisabledOn;
 	ENode * m_pDisabledOff;
-	bool	m_bToggle;
+	bool	m_bState;
 };
 
 

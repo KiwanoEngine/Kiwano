@@ -45,7 +45,7 @@ e2d::ENode::~ENode()
 	}
 }
 
-void e2d::ENode::_update()
+void e2d::ENode::_update(bool bPaused)
 {
 	if (m_bTransformNeeded)
 	{
@@ -77,7 +77,7 @@ void e2d::ENode::_update()
 			// 访问 Order 小于零的节点
 			if (child->getOrder() < 0)
 			{
-				child->_update();
+				child->_update(bPaused);
 			}
 			else
 			{
@@ -85,20 +85,29 @@ void e2d::ENode::_update()
 			}
 		}
 
-		// 执行 onUpdate 函数
-		if (m_bAutoUpdate)
+		if (bPaused)
+		{
+			this->onPause();
+		}
+		else if (m_bAutoUpdate)
 		{
 			this->onUpdate();
 		}
 
 		// 访问剩余节点
 		for (; i < size; i++)
-			m_vChildren[i]->_update();
+			m_vChildren[i]->_update(bPaused);
 	}
 	else
 	{
-		// 执行 onUpdate 函数
-		this->onUpdate();
+		if (bPaused)
+		{
+			this->onPause();
+		}
+		else if (m_bAutoUpdate)
+		{
+			this->onUpdate();
+		}
 	}
 }
 
@@ -720,7 +729,7 @@ void e2d::ENode::runAction(EAction * action)
 	{
 		action = action->clone();
 	}
-	action->setTarget(this);
+	action->_setTarget(this);
 	EActionManager::addAction(action);
 }
 

@@ -253,6 +253,8 @@ void EMusic::_close()
 {
 	if (m_pSourceVoice)
 	{
+		m_pSourceVoice->Stop();
+		m_pSourceVoice->FlushSourceBuffers();
 		m_pSourceVoice->DestroyVoice();
 		m_pSourceVoice = nullptr;
 	}

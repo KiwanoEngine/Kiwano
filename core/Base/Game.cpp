@@ -50,13 +50,6 @@ bool e2d::EGame::init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIc
 			break;
 		}
 
-		// 初始化计时
-		if (!ETime::__init())
-		{
-			WARN_IF(true, "ETime::__init Failed!");
-			break;
-		}
-
 		// 初始化 DirectInput
 		if (!EInput::__init())
 		{
@@ -99,22 +92,32 @@ int e2d::EGame::run()
 	::UpdateWindow(EWindow::getHWnd());
 	// 处理窗口消息
 	EWindow::__poll();
-	// 刷新时间信息
-	ETime::__updateNow();
-	ETime::__updateLast();
+	// 初始化计时
+	ETime::__init();
 
 	while (!s_bEndGame)
 	{
 		// 处理窗口消息
 		EWindow::__poll();
-		// 刷新时间信息
+		// 刷新时间
 		ETime::__updateNow();
 
 		// 判断是否达到了刷新状态
-		if (ETime::getDeltaTime() >= 17)
+		if (ETime::__isReady())
 		{
-			ETime::__updateLast();		// 刷新时间信息
-			EGame::__update();			// 更新游戏内容
+			while (ETime::__isReady())
+			{
+				EInput::__updateDeviceState();	// 获取用户输入
+				ESceneManager::__update();		// 更新场景内容
+				ETime::__updateLast();			// 刷新时间信息
+			}
+
+			if (!s_bPaused)
+			{
+				ETimerManager::__update();	// 定时器管理器执行程序
+				EActionManager::__update();	// 动作管理器执行程序
+			}
+			
 			ERenderer::__render();		// 渲染游戏画面
 		}
 		else
@@ -159,8 +162,6 @@ void e2d::EGame::uninit()
 {
 	// 删除所有场景
 	ESceneManager::__uninit();
-	// 重置窗口属性
-	EWindow::__uninit();
 	// 关闭输入
 	EInput::__uninit();
 	// 关闭播放器
@@ -169,25 +170,16 @@ void e2d::EGame::uninit()
 	ETime::__uninit();
 	// 清空图片缓存
 	EImage::clearCache();
-	// 删除渲染相关资源
-	ERenderer::__discardResources();
 	// 刷新内存池
 	EObjectManager::__flush();
+	// 删除渲染相关资源
+	ERenderer::__discardResources();
+	// 销毁窗口
+	EWindow::__uninit();
 
 	CoUninitialize();
 
 	s_bInitialized = false;
-}
-
-void e2d::EGame::__update()
-{
-	if (s_bPaused)
-		return;
-
-	EInput::__updateDeviceState();	// 获取用户输入
-	ETimerManager::__update();		// 定时器管理器执行程序
-	EActionManager::__update();		// 动作管理器执行程序
-	ESceneManager::__update();		// 更新游戏内容
 }
 
 e2d::EString e2d::EGame::getAppName()

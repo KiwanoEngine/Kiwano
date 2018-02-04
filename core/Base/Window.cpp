@@ -102,10 +102,14 @@ bool e2d::EWindow::__init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR
 
 void e2d::EWindow::__uninit()
 {
+	// 关闭控制台
 	if (::GetConsoleWindow())
 	{
 		::FreeConsole();
 	}
+	// 关闭窗口
+	DestroyWindow(s_HWnd);
+	s_HWnd = nullptr;
 }
 
 void e2d::EWindow::__poll()

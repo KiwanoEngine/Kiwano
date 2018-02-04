@@ -4,6 +4,7 @@
 namespace e2d
 {
 
+class ENode;
 class EActionManager;
 class EActionTwo;
 class EActionLoop;
@@ -14,6 +15,7 @@ class ETransitionFade;
 class EAction :
 	public EObject
 {
+	friend ENode;
 	friend EActionManager;
 	friend EActionTwo;
 	friend EActionLoop;
@@ -49,11 +51,6 @@ public:
 	// 获取执行该动作的目标
 	virtual ENode * getTarget();
 
-	// 设置动作执行目标
-	virtual void setTarget(
-		ENode * node
-	);
-
 protected:
 	// 初始化动作
 	virtual void _init();
@@ -69,6 +66,11 @@ protected:
 
 	// 重置动画时间
 	virtual void _resetTime();
+
+	// 设置动作执行目标
+	virtual void _setTarget(
+		ENode * node
+	);
 
 protected:
 	bool	m_bRunning;
@@ -579,9 +581,9 @@ public:
 		EImage * frame	/* 添加关键帧 */
 	);
 
-	// 设置每一帧的时间间隔（秒）
+	// 设置每一帧的时间间隔
 	void setInterval(
-		float interval
+		float interval	/* 帧间隔（秒） */
 	);
 
 	// 获取该动画的拷贝对象
@@ -600,9 +602,15 @@ protected:
 	// 重置动作
 	virtual void _reset() override;
 
+	// 设置动作执行目标
+	virtual void _setTarget(
+		ENode * node
+	) override;
+
 protected:
-	float	m_fInterval;
-	UINT	m_nFrameIndex;
+	float		m_fInterval;
+	UINT		m_nFrameIndex;
+	ESprite*	m_pTarget;
 	std::vector<EImage*> m_vFrames;
 };
 

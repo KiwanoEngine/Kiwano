@@ -35,8 +35,8 @@ e2d::EActionTwo * e2d::EActionTwo::reverse(bool actionReverse) const
 void e2d::EActionTwo::_init()
 {
 	EAction::_init();
-	m_pFirstAction->setTarget(m_pTarget);
-	m_pSecondAction->setTarget(m_pTarget);
+	m_pFirstAction->_setTarget(m_pTarget);
+	m_pSecondAction->_setTarget(m_pTarget);
 
 	m_pFirstAction->_init();
 }

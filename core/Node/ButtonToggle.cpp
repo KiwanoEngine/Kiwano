@@ -2,7 +2,7 @@
 
 e2d::EButtonToggle::EButtonToggle()
 	: EButton()
-	, m_bToggle(true)
+	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
 	, m_pSelectedOn(nullptr)
@@ -16,7 +16,7 @@ e2d::EButtonToggle::EButtonToggle()
 
 e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNormal, const BtnClkCallback & callback)
 	: EButton()
-	, m_bToggle(true)
+	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
 	, m_pSelectedOn(nullptr)
@@ -33,7 +33,7 @@ e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNorma
 
 e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNormal, ENode * toggleOnSelected, ENode * toggleOffSelected, const BtnClkCallback & callback)
 	: EButton()
-	, m_bToggle(true)
+	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
 	, m_pSelectedOn(nullptr)
@@ -52,7 +52,7 @@ e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNorma
 
 e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNormal, ENode * toggleOnMouseOver, ENode * toggleOffMouseOver, ENode * toggleOnSelected, ENode * toggleOffSelected, const BtnClkCallback & callback)
 	: EButton()
-	, m_bToggle(true)
+	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
 	, m_pSelectedOn(nullptr)
@@ -73,7 +73,7 @@ e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNorma
 
 e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNormal, ENode * toggleOnMouseOver, ENode * toggleOffMouseOver, ENode * toggleOnSelected, ENode * toggleOffSelected, ENode * toggleOnDisabled, ENode * toggleOffDisabled, const BtnClkCallback & callback)
 	: EButton()
-	, m_bToggle(true)
+	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
 	, m_pSelectedOn(nullptr)
@@ -97,7 +97,7 @@ e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNorma
 void e2d::EButtonToggle::toggle()
 {
 	// 设置按钮状态
-	setToggle(!m_bToggle);
+	setState(!m_bState);
 	// 执行回调函数
 	if (m_Callback)
 	{
@@ -105,17 +105,17 @@ void e2d::EButtonToggle::toggle()
 	}
 }
 
-bool e2d::EButtonToggle::isToggleOn() const
+bool e2d::EButtonToggle::getState() const
 {
-	return m_bToggle;
+	return m_bState;
 }
 
-void e2d::EButtonToggle::setToggle(bool toggle)
+void e2d::EButtonToggle::setState(bool bState)
 {
-	if (m_bToggle != toggle)
+	if (m_bState != bState)
 	{
-		m_bToggle = toggle;
-		_updateToggle();
+		m_bState = bState;
+		_updateState();
 		_updateVisiable();
 	}
 }
@@ -133,10 +133,11 @@ void e2d::EButtonToggle::setNormal(ENode * normal)
 		if (normal)
 		{
 			this->addChild(normal);
+			normal->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pNormalOn = normal;
 
-		_updateToggle();
+		_updateState();
 		_updateVisiable();
 	}
 }
@@ -154,10 +155,11 @@ void e2d::EButtonToggle::setMouseOver(ENode * mouseover)
 		if (mouseover)
 		{
 			this->addChild(mouseover);
+			mouseover->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pMouseoverOn = mouseover;
 
-		_updateToggle();
+		_updateState();
 		_updateVisiable();
 	}
 }
@@ -175,10 +177,11 @@ void e2d::EButtonToggle::setSelected(ENode * selected)
 		if (selected)
 		{
 			this->addChild(selected);
+			selected->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pSelectedOn = selected;
 
-		_updateToggle();
+		_updateState();
 		_updateVisiable();
 	}
 }
@@ -196,10 +199,11 @@ void e2d::EButtonToggle::setDisabled(ENode * disabled)
 		if (disabled)
 		{
 			this->addChild(disabled);
+			disabled->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pDisabledOn = disabled;
 
-		_updateToggle();
+		_updateState();
 		_updateVisiable();
 	}
 }
@@ -217,10 +221,11 @@ void e2d::EButtonToggle::setNormalOff(ENode * normal)
 		if (normal)
 		{
 			this->addChild(normal);
+			normal->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pNormalOff = normal;
 
-		_updateToggle();
+		_updateState();
 		_updateVisiable();
 	}
 }
@@ -238,10 +243,11 @@ void e2d::EButtonToggle::setMouseOverOff(ENode * mouseover)
 		if (mouseover)
 		{
 			this->addChild(mouseover);
+			mouseover->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pMouseoverOff = mouseover;
 
-		_updateToggle();
+		_updateState();
 		_updateVisiable();
 	}
 }
@@ -259,10 +265,11 @@ void e2d::EButtonToggle::setSelectedOff(ENode * selected)
 		if (selected)
 		{
 			this->addChild(selected);
+			selected->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pSelectedOff = selected;
 
-		_updateToggle();
+		_updateState();
 		_updateVisiable();
 	}
 }
@@ -280,17 +287,57 @@ void e2d::EButtonToggle::setDisabledOff(ENode * disabled)
 		if (disabled)
 		{
 			this->addChild(disabled);
+			disabled->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pDisabledOff = disabled;
 
-		_updateToggle();
+		_updateState();
 		_updateVisiable();
 	}
 }
 
-void e2d::EButtonToggle::_updateToggle()
+void e2d::EButtonToggle::setPivotX(float pivotX)
 {
-	if (m_bToggle)
+	ENode::setPivotX(pivotX);
+	if (m_pNormalOn) m_pNormalOn->setPivotX(pivotX);
+	if (m_pMouseoverOn) m_pMouseoverOn->setPivotX(pivotX);
+	if (m_pSelectedOn) m_pSelectedOn->setPivotX(pivotX);
+	if (m_pDisabledOn) m_pDisabledOn->setPivotX(pivotX);
+	if (m_pNormalOff) m_pNormalOff->setPivotX(pivotX);
+	if (m_pMouseoverOff) m_pMouseoverOff->setPivotX(pivotX);
+	if (m_pSelectedOff) m_pSelectedOff->setPivotX(pivotX);
+	if (m_pDisabledOff) m_pDisabledOff->setPivotX(pivotX);
+}
+
+void e2d::EButtonToggle::setPivotY(float pivotY)
+{
+	ENode::setPivotY(pivotY);
+	if (m_pNormalOn) m_pNormalOn->setPivotY(pivotY);
+	if (m_pMouseoverOn) m_pMouseoverOn->setPivotY(pivotY);
+	if (m_pSelectedOn) m_pSelectedOn->setPivotY(pivotY);
+	if (m_pDisabledOn) m_pDisabledOn->setPivotY(pivotY);
+	if (m_pNormalOff) m_pNormalOff->setPivotY(pivotY);
+	if (m_pMouseoverOff) m_pMouseoverOff->setPivotY(pivotY);
+	if (m_pSelectedOff) m_pSelectedOff->setPivotY(pivotY);
+	if (m_pDisabledOff) m_pDisabledOff->setPivotY(pivotY);
+}
+
+void e2d::EButtonToggle::setPivot(float pivotX, float pivotY)
+{
+	ENode::setPivot(pivotX, pivotY);
+	if (m_pNormalOn) m_pNormalOn->setPivot(pivotX, pivotY);
+	if (m_pMouseoverOn) m_pMouseoverOn->setPivot(pivotX, pivotY);
+	if (m_pSelectedOn) m_pSelectedOn->setPivot(pivotX, pivotY);
+	if (m_pDisabledOn) m_pDisabledOn->setPivot(pivotX, pivotY);
+	if (m_pNormalOff) m_pNormalOff->setPivot(pivotX, pivotY);
+	if (m_pMouseoverOff) m_pMouseoverOff->setPivot(pivotX, pivotY);
+	if (m_pSelectedOff) m_pSelectedOff->setPivot(pivotX, pivotY);
+	if (m_pDisabledOff) m_pDisabledOff->setPivot(pivotX, pivotY);
+}
+
+void e2d::EButtonToggle::_updateState()
+{
+	if (m_bState)
 	{
 		m_pNormal = m_pNormalOn;
 		m_pMouseover = m_pMouseoverOn;
@@ -318,8 +365,8 @@ void e2d::EButtonToggle::_updateToggle()
 
 void e2d::EButtonToggle::_runCallback()
 {
-	m_bToggle = !m_bToggle;
-	_updateToggle();
+	m_bState = !m_bState;
+	_updateState();
 
 	if (m_Callback)
 	{

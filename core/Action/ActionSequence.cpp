@@ -35,7 +35,7 @@ void e2d::EActionSequence::_init()
 	{
 		for (auto action : m_vActions)
 		{
-			action->setTarget(m_pTarget);
+			action->_setTarget(m_pTarget);
 		}
 	}
 	// 初始化第一个动作

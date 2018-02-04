@@ -41,10 +41,6 @@ public:
 
 	// 获取 AppName
 	static EString getAppName();
-
-private:
-	// 更新游戏内容
-	static void __update();
 };
 
 
@@ -128,6 +124,9 @@ private:
 
 	// 重置计时操作
 	static void __uninit();
+
+	// 是否达到更新时间
+	static bool __isReady();
 
 	// 更新当前时间
 	static void __updateNow();

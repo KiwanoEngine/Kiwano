@@ -35,8 +35,8 @@ e2d::EActionTwoAtSameTime * e2d::EActionTwoAtSameTime::reverse(bool actionRevers
 void e2d::EActionTwoAtSameTime::_init()
 {
 	EAction::_init();
-	m_pFirstAction->setTarget(m_pTarget);
-	m_pSecondAction->setTarget(m_pTarget);
+	m_pFirstAction->_setTarget(m_pTarget);
+	m_pSecondAction->_setTarget(m_pTarget);
 
 	m_pFirstAction->_init();
 	m_pSecondAction->_init();

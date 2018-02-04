@@ -2,7 +2,7 @@
 
 e2d::EButton::EButton()
 	: m_Callback((const BtnClkCallback &)nullptr)
-	, m_eStatus(EButton::NORMAL)
+	, m_eBtnState(EButton::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -14,7 +14,7 @@ e2d::EButton::EButton()
 
 e2d::EButton::EButton(ENode * normal, const BtnClkCallback & callback)
 	: m_Callback((const BtnClkCallback &)nullptr)
-	, m_eStatus(EButton::NORMAL)
+	, m_eBtnState(EButton::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -28,7 +28,7 @@ e2d::EButton::EButton(ENode * normal, const BtnClkCallback & callback)
 
 e2d::EButton::EButton(ENode * normal, ENode * selected, const BtnClkCallback & callback)
 	: m_Callback((const BtnClkCallback &)nullptr)
-	, m_eStatus(EButton::NORMAL)
+	, m_eBtnState(EButton::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -43,7 +43,7 @@ e2d::EButton::EButton(ENode * normal, ENode * selected, const BtnClkCallback & c
 
 e2d::EButton::EButton(ENode * normal, ENode * mouseover, ENode * selected, const BtnClkCallback & callback)
 	: m_Callback((const BtnClkCallback &)nullptr)
-	, m_eStatus(EButton::NORMAL)
+	, m_eBtnState(EButton::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -59,7 +59,7 @@ e2d::EButton::EButton(ENode * normal, ENode * mouseover, ENode * selected, const
 
 e2d::EButton::EButton(ENode * normal, ENode * mouseover, ENode * selected, ENode * disabled, const BtnClkCallback & callback)
 	: m_Callback((const BtnClkCallback &)nullptr)
-	, m_eStatus(EButton::NORMAL)
+	, m_eBtnState(EButton::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -228,7 +228,7 @@ void e2d::EButton::onUpdate()
 			{
 				// 鼠标左键按下，且位于按钮内时，标记 m_bIsSelected 为 true
 				m_bIsSelected = true;
-				_setStatus(EButton::SELECTED);
+				_setState(EButton::SELECTED);
 				return;
 			}
 		}
@@ -237,25 +237,30 @@ void e2d::EButton::onUpdate()
 		{
 			if (pSelected->isPointIn(EInput::getMousePos()))
 			{
-				_setStatus(EButton::SELECTED);
+				_setState(EButton::SELECTED);
 				return;
 			}
 		}
 		else if (m_pNormal->isPointIn(EInput::getMousePos()))
 		{
-			_setStatus(EButton::MOUSEOVER);
+			_setState(EButton::MOUSEOVER);
 			return;
 		}
 
-		_setStatus(EButton::NORMAL);
+		_setState(EButton::NORMAL);
 	}
 }
 
-void e2d::EButton::_setStatus(STATUS status)
+void e2d::EButton::onPause()
 {
-	if (m_eStatus != status)
+	this->onUpdate();
+}
+
+void e2d::EButton::_setState(BTN_STATE state)
+{
+	if (m_eBtnState != state)
 	{
-		m_eStatus = status;
+		m_eBtnState = state;
 		_updateVisiable();
 	}
 }
@@ -269,11 +274,11 @@ void e2d::EButton::_updateVisiable()
 
 	if (m_bEnable)
 	{
-		if (m_eStatus == EButton::SELECTED && m_pSelected)
+		if (m_eBtnState == EButton::SELECTED && m_pSelected)
 		{
 			m_pSelected->setVisiable(true);
 		}
-		else if (m_eStatus == EButton::MOUSEOVER && m_pMouseover)
+		else if (m_eBtnState == EButton::MOUSEOVER && m_pMouseover)
 		{
 			m_pMouseover->setVisiable(true);
 		}
