@@ -1,4 +1,5 @@
 #include "..\eactions.h"
+#include "..\emanagers.h"
 
 e2d::EAction::EAction() 
 	: m_bRunning(false)
@@ -12,6 +13,7 @@ e2d::EAction::EAction()
 
 e2d::EAction::~EAction()
 {
+	EActionManager::__destroyAction(this);
 }
 
 bool e2d::EAction::isRunning()
@@ -24,9 +26,10 @@ bool e2d::EAction::_isEnding()
 	return m_bEnding;
 }
 
-void e2d::EAction::start()
+void e2d::EAction::startWith(ENode* pTarget)
 {
-	this->resume();
+	m_bRunning = true;
+	m_pTarget = pTarget;
 }
 
 void e2d::EAction::resume()
@@ -43,11 +46,6 @@ void e2d::EAction::pause()
 void e2d::EAction::stop()
 {
 	m_bEnding = true;
-}
-
-void e2d::EAction::_setTarget(ENode * node)
-{
-	m_pTarget = node;
 }
 
 e2d::EAction * e2d::EAction::reverse() const
@@ -76,7 +74,7 @@ void e2d::EAction::_update()
 	}
 }
 
-void e2d::EAction::_reset()
+void e2d::EAction::reset()
 {
 	m_bInit = false;
 	m_bEnding = false;

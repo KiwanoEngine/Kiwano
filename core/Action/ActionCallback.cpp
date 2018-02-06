@@ -20,8 +20,3 @@ void e2d::EActionCallback::_update()
 	m_Callback();
 	this->stop();
 }
-
-void e2d::EActionCallback::_reset()
-{
-	EAction::_reset();
-}

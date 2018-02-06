@@ -4,7 +4,7 @@
 namespace e2d
 {
 
-class ENode;
+
 class EActionManager;
 class EActionTwo;
 class EActionLoop;
@@ -15,7 +15,6 @@ class ETransitionFade;
 class EAction :
 	public EObject
 {
-	friend ENode;
 	friend EActionManager;
 	friend EActionTwo;
 	friend EActionLoop;
@@ -30,8 +29,10 @@ public:
 	// 获取动作运行状态
 	virtual bool isRunning();
 
-	// 继续动作
-	virtual void start();
+	// 开始动作
+	virtual void startWith(
+		ENode* pTarget	/* 执行该动作的目标 */
+	);
 
 	// 继续动作
 	virtual void resume();
@@ -48,7 +49,10 @@ public:
 	// 获取一个新的逆向动作
 	virtual EAction * reverse() const;
 
-	// 获取执行该动作的目标
+	// 重置动作
+	virtual void reset();
+
+	// 获取该动作的执行目标
 	virtual ENode * getTarget();
 
 protected:
@@ -61,16 +65,8 @@ protected:
 	// 获取动作结束状态
 	virtual bool _isEnding();
 
-	// 重置动作
-	virtual void _reset();
-
 	// 重置动画时间
 	virtual void _resetTime();
-
-	// 设置动作执行目标
-	virtual void _setTarget(
-		ENode * node
-	);
 
 protected:
 	bool	m_bRunning;
@@ -97,9 +93,6 @@ protected:
 
 	// 更新动画
 	virtual void _update() override;
-
-	// 重置动画
-	virtual void _reset() override;
 
 protected:
 	float m_fDuration;
@@ -130,11 +123,8 @@ protected:
 	// 执行动画
 	virtual void _update() override;
 
-	// 重置动画
-	virtual void _reset() override;
-
 protected:
-	EPoint	m_BeginPos;
+	EPoint		m_BeginPos;
 	EVector2	m_MoveVec;
 };
 
@@ -155,9 +145,6 @@ public:
 protected:
 	// 初始化动画
 	virtual void _init() override;
-
-	// 重置动画
-	virtual void _reset() override;
 
 protected:
 	EPoint m_EndPos;
@@ -194,9 +181,6 @@ protected:
 	// 执行动画
 	virtual void _update() override;
 
-	// 重置动画
-	virtual void _reset() override;
-
 protected:
 	float	m_nBeginScaleX;
 	float	m_nBeginScaleY;
@@ -229,9 +213,6 @@ protected:
 	// 初始化动画
 	virtual void _init() override;
 
-	// 重置动画
-	virtual void _reset() override;
-
 protected:
 	float	m_nEndScaleX;
 	float	m_nEndScaleY;
@@ -261,9 +242,6 @@ protected:
 	// 执行动画
 	virtual void _update() override;
 
-	// 重置动画
-	virtual void _reset() override;
-
 protected:
 	float m_nBeginVal;
 	float m_nVariation;
@@ -286,9 +264,6 @@ public:
 protected:
 	// 初始化动画
 	virtual void _init() override;
-
-	// 重置动画
-	virtual void _reset() override;
 
 protected:
 	float m_nEndVal;
@@ -340,9 +315,6 @@ protected:
 	// 执行动画
 	virtual void _update() override;
 
-	// 重置动画
-	virtual void _reset() override;
-
 protected:
 	float m_nBeginVal;
 	float m_nVariation;
@@ -365,9 +337,6 @@ public:
 protected:
 	// 初始化动画
 	virtual void _init() override;
-
-	// 重置动画
-	virtual void _reset() override;
 
 protected:
 	float m_nEndVal;
@@ -394,15 +363,15 @@ public:
 		bool actionReverse = true	/* 子动作是否执行逆动作 */
 	) const;
 
+	// 重置动作
+	virtual void reset() override;
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
 
 	// 执行动作
 	virtual void _update() override;
-
-	// 重置动作
-	virtual void _reset() override;
 
 	// 重置动画时间
 	virtual void _resetTime() override;
@@ -442,15 +411,15 @@ public:
 		bool actionReverse = true	/* 子动作是否执行逆动作 */
 	) const;
 
+	// 重置动作
+	virtual void reset() override;
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
 
 	// 执行动作
 	virtual void _update() override;
-
-	// 重置动作
-	virtual void _reset() override;
 
 	// 重置动画时间
 	virtual void _resetTime() override;
@@ -480,9 +449,6 @@ protected:
 	// 执行动作
 	virtual void _update() override;
 
-	// 重置动作
-	virtual void _reset() override;
-
 protected:
 	float m_fDelayTime;
 };
@@ -508,15 +474,15 @@ public:
 		bool actionReverse = true	/* 子动作是否执行逆动作 */
 	) const;
 
+	// 重置动作
+	virtual void reset() override;
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
 
 	// 执行动作
 	virtual void _update() override;
-
-	// 重置动作
-	virtual void _reset() override;
 
 	// 重置动画时间
 	virtual void _resetTime() override;
@@ -542,15 +508,15 @@ public:
 	// 获取该动作的拷贝对象
 	virtual EActionLoop * clone() const override;
 
+	// 重置动作
+	virtual void reset() override;
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
 
 	// 执行动作
 	virtual void _update() override;
-
-	// 重置动作
-	virtual void _reset() override;
 
 	// 重置动画时间
 	virtual void _resetTime() override;
@@ -592,6 +558,9 @@ public:
 	// 获取该动画的逆动画
 	virtual EAnimation * reverse() const override;
 
+	// 重置动作
+	virtual void reset() override;
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -599,18 +568,9 @@ protected:
 	// 执行动作
 	virtual void _update() override;
 
-	// 重置动作
-	virtual void _reset() override;
-
-	// 设置动作执行目标
-	virtual void _setTarget(
-		ENode * node
-	) override;
-
 protected:
-	float		m_fInterval;
-	UINT		m_nFrameIndex;
-	ESprite*	m_pTarget;
+	float	m_fInterval;
+	UINT	m_nFrameIndex;
 	std::vector<EImage*> m_vFrames;
 };
 
@@ -633,9 +593,6 @@ protected:
 
 	// 执行动作
 	virtual void _update() override;
-
-	// 重置动作
-	virtual void _reset() override;
 
 protected:
 	std::function<void()> m_Callback;

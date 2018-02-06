@@ -2,14 +2,12 @@
 
 e2d::EAnimation::EAnimation() 
 	: m_nFrameIndex(0)
-	, m_pTarget(nullptr)
 {
 }
 
 e2d::EAnimation::EAnimation(float invertal)
 	: m_nFrameIndex(0)
 	, m_fInterval(invertal)
-	, m_pTarget(nullptr)
 {
 }
 
@@ -47,7 +45,7 @@ void e2d::EAnimation::_update()
 		// 重新记录时间
 		m_fLast += m_fInterval;
 		// 加载关键帧
-		m_pTarget->loadFrom(m_vFrames[m_nFrameIndex]);
+		static_cast<ESprite*>(m_pTarget)->loadFrom(m_vFrames[m_nFrameIndex]);
 		m_nFrameIndex++;
 		// 判断动作是否结束
 		if (m_nFrameIndex == m_vFrames.size())
@@ -58,15 +56,10 @@ void e2d::EAnimation::_update()
 	}
 }
 
-void e2d::EAnimation::_reset()
+void e2d::EAnimation::reset()
 {
-	EAction::_reset();
+	EAction::reset();
 	m_nFrameIndex = 0;
-}
-
-void e2d::EAnimation::_setTarget(ENode * node)
-{
-	m_pTarget = static_cast<ESprite*>(node);
 }
 
 void e2d::EAnimation::addKeyframe(EImage * frame)

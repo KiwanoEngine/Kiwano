@@ -721,16 +721,23 @@ void e2d::ENode::clearAllChildren()
 
 void e2d::ENode::runAction(EAction * action)
 {
-	WARN_IF(
-		action->getTarget() != nullptr,
-		"The action is already running, The clone of the action will be created automatically!"
-	);
-	if (action->getTarget())
+	if (this != action->getTarget())
 	{
-		action = action->clone();
+		WARN_IF(
+			nullptr != action->getTarget(),
+			"The action has already got a target, The clone of the action will be created automatically!"
+		);
+
+		if (nullptr != action->getTarget())
+		{
+			action = action->clone();
+		}
+		EActionManager::addAction(action, this);
 	}
-	action->_setTarget(this);
-	EActionManager::addAction(action);
+	else
+	{
+		action->reset();
+	}
 }
 
 void e2d::ENode::resumeAction(EAction * action)

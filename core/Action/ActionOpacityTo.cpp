@@ -17,8 +17,3 @@ void e2d::EActionOpacityTo::_init()
 	EActionOpacityBy::_init();
 	m_nVariation = m_nEndVal - m_nBeginVal;
 }
-
-void e2d::EActionOpacityTo::_reset()
-{
-	EActionOpacityBy::_reset();
-}

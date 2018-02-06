@@ -29,11 +29,6 @@ void e2d::EActionOpacityBy::_update()
 	m_pTarget->setOpacity(m_nBeginVal + m_nVariation * m_fRateOfProgress);
 }
 
-void e2d::EActionOpacityBy::_reset()
-{
-	EActionGradual::_reset();
-}
-
 e2d::EActionOpacityBy * e2d::EActionOpacityBy::clone() const
 {
 	return new EActionOpacityBy(m_fDuration, m_nVariation);

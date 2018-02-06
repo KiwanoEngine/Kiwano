@@ -35,7 +35,7 @@ void e2d::EActionSequence::_init()
 	{
 		for (auto action : m_vActions)
 		{
-			action->_setTarget(m_pTarget);
+			action->m_pTarget = m_pTarget;
 		}
 	}
 	// 初始化第一个动作
@@ -63,12 +63,12 @@ void e2d::EActionSequence::_update()
 	}
 }
 
-void e2d::EActionSequence::_reset()
+void e2d::EActionSequence::reset()
 {
-	EAction::_reset();
+	EAction::reset();
 	for (auto action : m_vActions)
 	{
-		action->_reset();
+		action->reset();
 	}
 	m_nActionIndex = 0;
 }

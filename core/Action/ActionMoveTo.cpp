@@ -16,8 +16,3 @@ void e2d::EActionMoveTo::_init()
 	EActionMoveBy::_init();
 	m_MoveVec = m_EndPos - m_BeginPos;
 }
-
-void e2d::EActionMoveTo::_reset()
-{
-	EActionMoveBy::_reset();
-}

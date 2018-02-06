@@ -35,8 +35,8 @@ e2d::EActionTwoAtSameTime * e2d::EActionTwoAtSameTime::reverse(bool actionRevers
 void e2d::EActionTwoAtSameTime::_init()
 {
 	EAction::_init();
-	m_pFirstAction->_setTarget(m_pTarget);
-	m_pSecondAction->_setTarget(m_pTarget);
+	m_pFirstAction->m_pTarget = m_pTarget;
+	m_pSecondAction->m_pTarget = m_pTarget;
 
 	m_pFirstAction->_init();
 	m_pSecondAction->_init();
@@ -63,12 +63,12 @@ void e2d::EActionTwoAtSameTime::_update()
 	}
 }
 
-void e2d::EActionTwoAtSameTime::_reset()
+void e2d::EActionTwoAtSameTime::reset()
 {
-	EAction::_reset();
+	EAction::reset();
 
-	m_pFirstAction->_reset();
-	m_pSecondAction->_reset();
+	m_pFirstAction->reset();
+	m_pSecondAction->reset();
 }
 
 void e2d::EActionTwoAtSameTime::_resetTime()

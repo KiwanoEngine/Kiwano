@@ -22,7 +22,7 @@ e2d::EActionLoop * e2d::EActionLoop::clone() const
 void e2d::EActionLoop::_init()
 {
 	EAction::_init();
-	m_pAction->_setTarget(m_pTarget);
+	m_pAction->m_pTarget = m_pTarget;
 	m_pAction->_init();
 }
 
@@ -42,16 +42,16 @@ void e2d::EActionLoop::_update()
 	{
 		m_nTimes++;
 		
-		EAction::_reset();
-		m_pAction->_reset();
+		EAction::reset();
+		m_pAction->reset();
 	}
 }
 
-void e2d::EActionLoop::_reset()
+void e2d::EActionLoop::reset()
 {
-	EAction::_reset();
+	EAction::reset();
 
-	m_pAction->_reset();
+	m_pAction->reset();
 	m_nTimes = 0;
 }
 

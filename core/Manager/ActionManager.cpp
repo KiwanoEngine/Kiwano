@@ -4,15 +4,15 @@
 static std::vector<e2d::EAction*> s_vActions;
 
 
-void e2d::EActionManager::addAction(EAction * action)
+void e2d::EActionManager::addAction(EAction * pAction, ENode * pTargetNode)
 {
-	WARN_IF(action == nullptr, "EAction NULL pointer exception!");
+	WARN_IF(pAction == nullptr, "EAction NULL pointer exception!");
 
-	if (action)
+	if (pAction)
 	{
-		action->start();
-		action->retain();
-		s_vActions.push_back(action);
+		pAction->startWith(pTargetNode);
+		pAction->retain();
+		s_vActions.push_back(pAction);
 	}
 }
 
@@ -24,7 +24,7 @@ void e2d::EActionManager::resumeAllActionsBindedWith(ENode * pTargetNode)
 		{
 			if (action->getTarget() == pTargetNode)
 			{
-				action->start();
+				action->resume();
 			}
 		}
 		for (auto child : pTargetNode->getChildren())
@@ -90,6 +90,18 @@ void e2d::EActionManager::__clearAllActionsBindedWith(ENode * pTargetNode)
 	}
 }
 
+void e2d::EActionManager::__destroyAction(EAction * pAction)
+{
+	for (size_t i = 0; i < s_vActions.size(); i++)
+	{
+		if (pAction == s_vActions[i])
+		{
+			s_vActions.erase(s_vActions.begin() + i);
+			return;
+		}
+	}
+}
+
 void e2d::EActionManager::resumeAllActions()
 {
 	for (auto child : ESceneManager::getCurrentScene()->getRoot()->getChildren())
@@ -128,18 +140,17 @@ void e2d::EActionManager::__update()
 		return;
 	
 	// 循环遍历所有正在运行的动作
-	for (size_t i = 0; i < s_vActions.size(); i++)
+	for (auto &action : s_vActions)
 	{
-		auto &action = s_vActions[i];
 		// 获取动作运行状态
-		if (action->isRunning() ||
-			(action->getTarget() && action->getTarget()->getParentScene() == ESceneManager::getCurrentScene()))
+		if (action->isRunning() &&
+			action->getTarget() && 
+			action->getTarget()->getParentScene() == ESceneManager::getCurrentScene())
 		{
 			if (action->_isEnding())
 			{
 				// 动作已经结束
-				SafeRelease(&action);
-				s_vActions.erase(s_vActions.begin() + i);
+				action->release();
 			}
 			else
 			{

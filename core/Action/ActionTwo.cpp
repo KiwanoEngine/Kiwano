@@ -35,8 +35,8 @@ e2d::EActionTwo * e2d::EActionTwo::reverse(bool actionReverse) const
 void e2d::EActionTwo::_init()
 {
 	EAction::_init();
-	m_pFirstAction->_setTarget(m_pTarget);
-	m_pSecondAction->_setTarget(m_pTarget);
+	m_pFirstAction->m_pTarget = m_pTarget;
+	m_pSecondAction->m_pTarget = m_pTarget;
 
 	m_pFirstAction->_init();
 }
@@ -64,12 +64,12 @@ void e2d::EActionTwo::_update()
 	}
 }
 
-void e2d::EActionTwo::_reset()
+void e2d::EActionTwo::reset()
 {
-	EAction::_reset();
+	EAction::reset();
 
-	m_pFirstAction->_reset();
-	m_pSecondAction->_reset();
+	m_pFirstAction->reset();
+	m_pSecondAction->reset();
 }
 
 void e2d::EActionTwo::_resetTime()

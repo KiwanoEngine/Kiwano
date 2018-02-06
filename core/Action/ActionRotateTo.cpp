@@ -17,8 +17,3 @@ void e2d::EActionRotateTo::_init()
 	EActionRotateBy::_init();
 	m_nVariation = m_nEndVal - m_nBeginVal;
 }
-
-void e2d::EActionRotateTo::_reset()
-{
-	EActionRotateBy::_reset();
-}

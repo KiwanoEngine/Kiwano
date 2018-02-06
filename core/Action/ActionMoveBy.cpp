@@ -33,11 +33,6 @@ void e2d::EActionMoveBy::_update()
 	);
 }
 
-void e2d::EActionMoveBy::_reset()
-{
-	EActionGradual::_reset();
-}
-
 e2d::EActionMoveBy * e2d::EActionMoveBy::clone() const
 {
 	return new EActionMoveBy(m_fDuration, m_MoveVec);

@@ -41,11 +41,6 @@ void e2d::EActionScaleBy::_update()
 		m_nBeginScaleX + m_nVariationX * m_fRateOfProgress);
 }
 
-void e2d::EActionScaleBy::_reset()
-{
-	EActionGradual::_reset();
-}
-
 e2d::EActionScaleBy * e2d::EActionScaleBy::clone() const
 {
 	return new EActionScaleBy(m_fDuration, m_nVariationX, m_nVariationY);

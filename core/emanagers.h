@@ -156,11 +156,13 @@ class EActionManager
 {
 	friend EGame;
 	friend ENode;
+	friend EAction;
 
 public:
 	// 添加动作
 	static void addAction(
-		EAction * action
+		EAction * pAction,
+		ENode * pTargetNode
 	);
 
 	// 继续绑定在节点上的所有动作
@@ -194,6 +196,11 @@ private:
 	// 清空绑定在节点上的所有动作
 	static void __clearAllActionsBindedWith(
 		ENode * pTargetNode
+	);
+
+	// 删除指定的动作
+	static void __destroyAction(
+		EAction * pAction
 	);
 
 	// 重置所有动作状态

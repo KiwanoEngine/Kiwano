@@ -30,11 +30,6 @@ void e2d::EActionRotateBy::_update()
 	m_pTarget->setRotation(m_nBeginVal + m_nVariation * m_fRateOfProgress);
 }
 
-void e2d::EActionRotateBy::_reset()
-{
-	EActionGradual::_reset();
-}
-
 e2d::EActionRotateBy * e2d::EActionRotateBy::clone() const
 {
 	return new EActionRotateBy(m_fDuration, m_nVariation);

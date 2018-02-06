@@ -25,8 +25,3 @@ void e2d::EActionScaleTo::_init()
 	m_nVariationX = m_nEndScaleX - m_nBeginScaleX;
 	m_nVariationY = m_nEndScaleY - m_nBeginScaleY;
 }
-
-void e2d::EActionScaleTo::_reset()
-{
-	EActionScaleBy::_reset();
-}

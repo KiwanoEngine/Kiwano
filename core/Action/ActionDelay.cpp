@@ -24,8 +24,3 @@ void e2d::EActionDelay::_update()
 		this->stop();
 	}
 }
-
-void e2d::EActionDelay::_reset()
-{
-	EAction::_reset();
-}

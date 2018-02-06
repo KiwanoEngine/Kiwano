@@ -29,8 +29,3 @@ void e2d::EActionGradual::_update()
 		this->stop();
 	}
 }
-
-void e2d::EActionGradual::_reset()
-{
-	EAction::_reset();
-}
