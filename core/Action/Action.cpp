@@ -1,5 +1,4 @@
 #include "..\eactions.h"
-#include "..\emanagers.h"
 
 e2d::EAction::EAction() 
 	: m_bRunning(false)
@@ -13,7 +12,6 @@ e2d::EAction::EAction()
 
 e2d::EAction::~EAction()
 {
-	EActionManager::__destroyAction(this);
 }
 
 bool e2d::EAction::isRunning()
@@ -30,6 +28,7 @@ void e2d::EAction::startWith(ENode* pTarget)
 {
 	m_bRunning = true;
 	m_pTarget = pTarget;
+	this->reset();
 }
 
 void e2d::EAction::resume()

@@ -62,6 +62,9 @@ public:
 	// 获取当前场景
 	static EScene * getCurrentScene();
 
+	// 是否正在进行转场动画
+	static bool isTransitioning();
+
 private:
 	// 更新场景内容
 	static void __update();
@@ -196,11 +199,6 @@ private:
 	// 清空绑定在节点上的所有动作
 	static void __clearAllActionsBindedWith(
 		ENode * pTargetNode
-	);
-
-	// 删除指定的动作
-	static void __destroyAction(
-		EAction * pAction
 	);
 
 	// 重置所有动作状态

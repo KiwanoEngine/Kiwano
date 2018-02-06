@@ -39,21 +39,13 @@ void e2d::EScene::_render()
 
 void e2d::EScene::_update()
 {
-	if (!EGame::isPaused())
+	// 执行 onUpdate 函数
+	if (m_bAutoUpdate)
 	{
-		// 执行 onUpdate 函数
-		if (m_bAutoUpdate)
-		{
-			this->onUpdate();
-		}
-		// 更新根节点
-		m_pRoot->_update(false);
+		this->onUpdate();
 	}
-	else
-	{
-		// 更新根节点
-		m_pRoot->_update(true);
-	}
+	// 更新根节点
+	m_pRoot->_update();
 }
 
 void e2d::EScene::setAutoUpdate(bool bAutoUpdate)

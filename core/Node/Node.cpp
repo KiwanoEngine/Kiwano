@@ -45,7 +45,7 @@ e2d::ENode::~ENode()
 	}
 }
 
-void e2d::ENode::_update(bool bPaused)
+void e2d::ENode::_update()
 {
 	if (m_bTransformNeeded)
 	{
@@ -77,7 +77,7 @@ void e2d::ENode::_update(bool bPaused)
 			// 访问 Order 小于零的节点
 			if (child->getOrder() < 0)
 			{
-				child->_update(bPaused);
+				child->_update();
 			}
 			else
 			{
@@ -85,28 +85,28 @@ void e2d::ENode::_update(bool bPaused)
 			}
 		}
 
-		if (bPaused)
+		if (m_bAutoUpdate)
 		{
-			this->onPause();
-		}
-		else if (m_bAutoUpdate)
-		{
-			this->onUpdate();
+			if (!EGame::isPaused())
+			{
+				this->onUpdate();
+			}
+			this->onFixedUpdate();
 		}
 
 		// 访问剩余节点
 		for (; i < size; i++)
-			m_vChildren[i]->_update(bPaused);
+			m_vChildren[i]->_update();
 	}
 	else
 	{
-		if (bPaused)
+		if (m_bAutoUpdate)
 		{
-			this->onPause();
-		}
-		else if (m_bAutoUpdate)
-		{
-			this->onUpdate();
+			if (!EGame::isPaused())
+			{
+				this->onUpdate();
+			}
+			this->onFixedUpdate();
 		}
 	}
 }
@@ -765,15 +765,13 @@ bool e2d::ENode::isPointIn(EPoint point)
 	// 为节点创建一个形状
 	ID2D1RectangleGeometry * rect;
 	ERenderer::getID2D1Factory()->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, getRealWidth(), getRealHeight()),
+		D2D1::RectF(0, 0, getWidth(), getHeight()),
 		&rect
 	);
 	// 判断点是否在形状内
 	BOOL ret;
 	rect->FillContainsPoint(
-		D2D1::Point2F(
-			point.x,
-			point.y),
+		D2D1::Point2F(point.x, point.y),
 		&m_MatriFinal,
 		&ret
 	);

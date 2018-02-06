@@ -134,6 +134,7 @@ void e2d::EButtonToggle::setNormal(ENode * normal)
 		{
 			this->addChild(normal);
 			normal->setPivot(m_fPivotX, m_fPivotY);
+			this->_setSize(normal->getWidth(), normal->getHeight());
 		}
 		m_pNormalOn = normal;
 

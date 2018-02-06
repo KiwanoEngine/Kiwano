@@ -30,6 +30,9 @@ public:
 	// 更新节点
 	virtual void onUpdate() {}
 
+	// 固定地更新（游戏暂停时仍然运行）
+	virtual void onFixedUpdate() {}
+
 	// 渲染节点
 	virtual void onRender() {}
 
@@ -38,9 +41,6 @@ public:
 		ENode* pCollisionNode,	/* 发生碰撞的节点 */
 		int nRelation			/* 碰撞关系，取值为 ERelation::VALUE 中的一种 */
 	) {}
-
-	// 游戏暂停时的处理
-	virtual void onPause() {}
 
 	// 节点被销毁时的处理
 	virtual void onDestroy() {}
@@ -337,9 +337,7 @@ public:
 
 protected:
 	// 更新节点
-	void _update(
-		bool bPaused
-	);
+	void _update();
 
 	// 渲染节点
 	void _render();
@@ -632,10 +630,7 @@ public:
 	) override;
 
 	// 更新按钮状态
-	virtual void onUpdate() override;
-
-	// 更新游戏暂停时的按钮状态
-	virtual void onPause() override;
+	virtual void onFixedUpdate() override;
 
 protected:
 	enum BTN_STATE { NORMAL, MOUSEOVER, SELECTED };

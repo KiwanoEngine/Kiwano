@@ -223,7 +223,7 @@ class EMusic
 public:
 	// 播放
 	bool play(
-		int nLoopCount = 0	/* 重复播放次数，设置为 255 时循环播放 */
+		int nLoopCount = 0	/* 重复播放次数，设置 -1 为循环播放 */
 	);
 
 	// 暂停
@@ -262,28 +262,21 @@ protected:
 
 	virtual ~EMusic();
 
-	// 打开音乐文件
-	bool _open(
-		LPWSTR strFileName
-	);
+	EMusic(const EMusic &) = delete;
+	
+	EMusic &operator =(const EMusic &) = delete;
 
-	// 关闭该播放器
+	bool _open(LPWSTR strFileName);
+
 	void _close();
 
 	bool _readMMIO();
 
 	bool _resetFile();
 
-	bool _read(
-		BYTE* pBuffer, 
-		DWORD dwSizeToRead
-	);
+	bool _read(BYTE* pBuffer, DWORD dwSizeToRead);
 
-	bool _findMediaFileCch(
-		WCHAR* strDestPath, 
-		int cchDest, 
-		LPCWSTR strFilename
-	);
+	bool _findMediaFileCch(WCHAR* strDestPath, int cchDest, LPCWSTR strFilename);
 
 protected:
 	bool m_bOpened;

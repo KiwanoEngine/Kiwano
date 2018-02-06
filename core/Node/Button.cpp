@@ -1,4 +1,5 @@
 #include "..\enodes.h"
+#include "..\emanagers.h"
 
 e2d::EButton::EButton()
 	: m_Callback((const BtnClkCallback &)nullptr)
@@ -93,6 +94,7 @@ void e2d::EButton::setNormal(ENode * normal)
 		{
 			this->addChild(normal);
 			normal->setPivot(m_fPivotX, m_fPivotY);
+			this->_setSize(normal->getWidth(), normal->getHeight());
 		}
 		m_pNormal = normal;
 
@@ -203,18 +205,18 @@ void e2d::EButton::setPivot(float pivotX, float pivotY)
 	if (m_pDisabled) m_pDisabled->setPivot(pivotX, pivotY);
 }
 
-void e2d::EButton::onUpdate()
+void e2d::EButton::onFixedUpdate()
 {
-	if (m_bEnable && m_pNormal)
-	{
-		ENode * pMouseover = m_pMouseover ? m_pMouseover : m_pNormal;
-		ENode * pSelected = m_pSelected ? m_pSelected : m_pNormal;
+	if (ESceneManager::isTransitioning())
+		return;
 
+	if (m_bEnable && m_bVisiable && m_pNormal)
+	{
 		if (EInput::isMouseLButtonRelease())
 		{
 			// 鼠标左键抬起时，判断鼠标坐标是否在按钮内部
 			if (m_bIsSelected &&
-				pSelected->isPointIn(EInput::getMousePos()))
+				m_pNormal->isPointIn(EInput::getMousePos()))
 			{
 				_runCallback();
 			}
@@ -224,18 +226,17 @@ void e2d::EButton::onUpdate()
 
 		if (EInput::isMouseLButtonPress())
 		{
-			if (pMouseover->isPointIn(EInput::getMousePos()))
+			if (m_pNormal->isPointIn(EInput::getMousePos()))
 			{
 				// 鼠标左键按下，且位于按钮内时，标记 m_bIsSelected 为 true
 				m_bIsSelected = true;
-				_setState(EButton::SELECTED);
 				return;
 			}
 		}
 
 		if (m_bIsSelected && EInput::isMouseLButtonDown())
 		{
-			if (pSelected->isPointIn(EInput::getMousePos()))
+			if (m_pNormal->isPointIn(EInput::getMousePos()))
 			{
 				_setState(EButton::SELECTED);
 				return;
@@ -249,11 +250,6 @@ void e2d::EButton::onUpdate()
 
 		_setState(EButton::NORMAL);
 	}
-}
-
-void e2d::EButton::onPause()
-{
-	this->onUpdate();
 }
 
 void e2d::EButton::_setState(BTN_STATE state)

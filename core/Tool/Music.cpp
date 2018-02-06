@@ -122,6 +122,9 @@ bool EMusic::play(int nLoopCount)
 		stop();
 	}
 
+	nLoopCount = min(nLoopCount, XAUDIO2_LOOP_INFINITE - 1);
+	nLoopCount = (nLoopCount < 0) ? XAUDIO2_LOOP_INFINITE : nLoopCount;
+
 	// 提交 wave 样本数据
 	XAUDIO2_BUFFER buffer = { 0 };
 	buffer.pAudioData = m_pbWaveData;

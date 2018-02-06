@@ -90,18 +90,6 @@ void e2d::EActionManager::__clearAllActionsBindedWith(ENode * pTargetNode)
 	}
 }
 
-void e2d::EActionManager::__destroyAction(EAction * pAction)
-{
-	for (size_t i = 0; i < s_vActions.size(); i++)
-	{
-		if (pAction == s_vActions[i])
-		{
-			s_vActions.erase(s_vActions.begin() + i);
-			return;
-		}
-	}
-}
-
 void e2d::EActionManager::resumeAllActions()
 {
 	for (auto child : ESceneManager::getCurrentScene()->getRoot()->getChildren())
@@ -140,22 +128,25 @@ void e2d::EActionManager::__update()
 		return;
 	
 	// 循环遍历所有正在运行的动作
-	for (auto &action : s_vActions)
+	for (size_t i = 0; i < s_vActions.size(); i++)
 	{
+		auto &action = s_vActions[i];
 		// 获取动作运行状态
 		if (action->isRunning() &&
 			action->getTarget() && 
 			action->getTarget()->getParentScene() == ESceneManager::getCurrentScene())
 		{
-			if (action->_isEnding())
-			{
-				// 动作已经结束
-				action->release();
-			}
-			else
+			if (!action->_isEnding())
 			{
 				// 执行动作
 				action->_update();
+			}
+			else
+			{
+				// 动作已经结束
+				action->release();
+				action->m_pTarget = nullptr;
+				s_vActions.erase(s_vActions.begin() + i);
 			}
 		}
 	}

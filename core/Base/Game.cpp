@@ -23,11 +23,7 @@ bool e2d::EGame::init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIc
 	do
 	{
 		// 初始化 COM 组件
-		if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-		{
-			WARN_IF(true, "CoInitializeEx Failed!");
-			break;
-		}
+		CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
 		// 创建设备无关资源
 		if (!ERenderer::__createDeviceIndependentResources())

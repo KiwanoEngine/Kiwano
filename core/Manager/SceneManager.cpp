@@ -77,6 +77,11 @@ e2d::EScene * e2d::ESceneManager::getCurrentScene()
 	return s_pCurrentScene;
 }
 
+bool e2d::ESceneManager::isTransitioning()
+{
+	return s_pTransition != nullptr;
+}
+
 void e2d::ESceneManager::__update()
 {
 	// 更新场景内容
@@ -147,8 +152,10 @@ void e2d::ESceneManager::__render()
 
 bool e2d::ESceneManager::__init()
 {
-	if (s_pNextScene == nullptr)
-		return false;
+	if (!s_pNextScene)
+	{
+		s_pNextScene = new EScene();
+	}
 
 	s_pCurrentScene = s_pNextScene;
 	s_pCurrentScene->onEnter();
