@@ -1,24 +1,24 @@
 #include "..\eactions.h"
 
 
-e2d::EActionOpacityBy::EActionOpacityBy(float duration, float opacity) :
-	EActionGradual(duration)
+e2d::ActionOpacityBy::ActionOpacityBy(float duration, float opacity) :
+	ActionGradual(duration)
 {
 	m_nVariation = opacity;
 }
 
-void e2d::EActionOpacityBy::_init()
+void e2d::ActionOpacityBy::_init()
 {
-	EActionGradual::_init();
+	ActionGradual::_init();
 	if (m_pTarget)
 	{
 		m_nBeginVal = m_pTarget->getOpacity();
 	}
 }
 
-void e2d::EActionOpacityBy::_update()
+void e2d::ActionOpacityBy::_update()
 {
-	EActionGradual::_update();
+	ActionGradual::_update();
 
 	if (m_pTarget == nullptr)
 	{
@@ -29,12 +29,12 @@ void e2d::EActionOpacityBy::_update()
 	m_pTarget->setOpacity(m_nBeginVal + m_nVariation * m_fRateOfProgress);
 }
 
-e2d::EActionOpacityBy * e2d::EActionOpacityBy::clone() const
+e2d::ActionOpacityBy * e2d::ActionOpacityBy::clone() const
 {
-	return new EActionOpacityBy(m_fDuration, m_nVariation);
+	return new ActionOpacityBy(m_fDuration, m_nVariation);
 }
 
-e2d::EActionOpacityBy * e2d::EActionOpacityBy::reverse() const
+e2d::ActionOpacityBy * e2d::ActionOpacityBy::reverse() const
 {
-	return new EActionOpacityBy(m_fDuration, -m_nVariation);
+	return new ActionOpacityBy(m_fDuration, -m_nVariation);
 }

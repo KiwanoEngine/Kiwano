@@ -3,12 +3,12 @@
 #include "..\etransitions.h"
 #include <stack>
 
-static e2d::EScene * s_pCurrentScene = nullptr;
-static e2d::EScene * s_pNextScene = nullptr;
-static e2d::ETransition * s_pTransition = nullptr;
-static std::stack<e2d::EScene*> s_SceneStack;
+static e2d::Scene * s_pCurrentScene = nullptr;
+static e2d::Scene * s_pNextScene = nullptr;
+static e2d::Transition * s_pTransition = nullptr;
+static std::stack<e2d::Scene*> s_SceneStack;
 
-void e2d::ESceneManager::enterScene(EScene * scene, ETransition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
+void e2d::SceneManager::enterScene(Scene * scene, Transition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
 {
 	ASSERT(scene != nullptr, "Next scene NULL pointer exception!");
 	scene->retain();
@@ -33,7 +33,7 @@ void e2d::ESceneManager::enterScene(EScene * scene, ETransition * transition /* 
 	}
 }
 
-void e2d::ESceneManager::backScene(ETransition * transition /* = nullptr */)
+void e2d::SceneManager::backScene(Transition * transition /* = nullptr */)
 {
 	// 栈为空时，调用返回场景函数失败
 	WARN_IF(s_SceneStack.size() == 0, "Scene stack now is empty!");
@@ -61,7 +61,7 @@ void e2d::ESceneManager::backScene(ETransition * transition /* = nullptr */)
 	}
 }
 
-void e2d::ESceneManager::clearScene()
+void e2d::SceneManager::clearScene()
 {
 	// 清空场景栈
 	while (s_SceneStack.size())
@@ -72,17 +72,17 @@ void e2d::ESceneManager::clearScene()
 	}
 }
 
-e2d::EScene * e2d::ESceneManager::getCurrentScene()
+e2d::Scene * e2d::SceneManager::getCurrentScene()
 {
 	return s_pCurrentScene;
 }
 
-bool e2d::ESceneManager::isTransitioning()
+bool e2d::SceneManager::isTransitioning()
 {
 	return s_pTransition != nullptr;
 }
 
-void e2d::ESceneManager::__update()
+void e2d::SceneManager::__update()
 {
 	// 更新场景内容
 	if (s_pCurrentScene)
@@ -136,7 +136,7 @@ void e2d::ESceneManager::__update()
 	}
 }
 
-void e2d::ESceneManager::__render()
+void e2d::SceneManager::__render()
 {
 	// 绘制当前场景
 	if (s_pCurrentScene)
@@ -150,11 +150,11 @@ void e2d::ESceneManager::__render()
 	}
 }
 
-bool e2d::ESceneManager::__init()
+bool e2d::SceneManager::__init()
 {
 	if (!s_pNextScene)
 	{
-		s_pNextScene = new EScene();
+		s_pNextScene = new Scene();
 	}
 
 	s_pCurrentScene = s_pNextScene;
@@ -163,10 +163,10 @@ bool e2d::ESceneManager::__init()
 	return true;
 }
 
-void e2d::ESceneManager::__uninit()
+void e2d::SceneManager::__uninit()
 {
 	SafeRelease(&s_pCurrentScene);
 	SafeRelease(&s_pNextScene);
 	SafeRelease(&s_pTransition);
-	ESceneManager::clearScene();
+	SceneManager::clearScene();
 }

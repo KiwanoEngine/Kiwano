@@ -1,25 +1,25 @@
 #include "..\eactions.h"
 
-e2d::EActionDelay::EActionDelay(float duration)
+e2d::ActionDelay::ActionDelay(float duration)
 {
 	m_fDelayTime = max(duration, 0);
 }
 
-e2d::EActionDelay * e2d::EActionDelay::clone() const
+e2d::ActionDelay * e2d::ActionDelay::clone() const
 {
-	return new EActionDelay(m_fDelayTime);
+	return new ActionDelay(m_fDelayTime);
 }
 
-void e2d::EActionDelay::_init()
+void e2d::ActionDelay::_init()
 {
-	EAction::_init();
+	Action::_init();
 }
 
-void e2d::EActionDelay::_update()
+void e2d::ActionDelay::_update()
 {
-	EAction::_update();
+	Action::_update();
 	// 判断时间间隔是否足够
-	if ((ETime::getTotalTime() - m_fLast) >= m_fDelayTime)
+	if ((Time::getTotalTime() - m_fLast) >= m_fDelayTime)
 	{
 		this->stop();
 	}

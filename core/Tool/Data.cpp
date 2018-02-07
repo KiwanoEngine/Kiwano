@@ -1,36 +1,36 @@
 #include "..\etools.h"
 
 
-void e2d::EData::saveInt(const EString & key, int value)
+void e2d::Data::saveInt(const String & key, int value)
 {
-	::WritePrivateProfileString(L"Default", key, EString::parse(value), EFile::getDefaultSavePath());
+	::WritePrivateProfileString(L"Default", key, String::parse(value), File::getDefaultSavePath());
 }
 
-void e2d::EData::saveFloat(const EString & key, float value)
+void e2d::Data::saveFloat(const String & key, float value)
 {
-	::WritePrivateProfileString(L"Default", key, EString::parse(value), EFile::getDefaultSavePath());
+	::WritePrivateProfileString(L"Default", key, String::parse(value), File::getDefaultSavePath());
 }
 
-void e2d::EData::saveString(const EString & key, const EString & value)
+void e2d::Data::saveString(const String & key, const String & value)
 {
-	::WritePrivateProfileString(L"Default", key, value, EFile::getDefaultSavePath());
+	::WritePrivateProfileString(L"Default", key, value, File::getDefaultSavePath());
 }
 
-int e2d::EData::getInt(const EString & key, int default)
+int e2d::Data::getInt(const String & key, int default)
 {
-	return ::GetPrivateProfileInt(L"Default", key, default, EFile::getDefaultSavePath());
+	return ::GetPrivateProfileInt(L"Default", key, default, File::getDefaultSavePath());
 }
 
-float e2d::EData::getFloat(const EString & key, float default)
+float e2d::Data::getFloat(const String & key, float default)
 {
 	wchar_t temp[32] = { 0 };
-	::GetPrivateProfileString(L"Default", key, EString::parse(default), temp, 31, EFile::getDefaultSavePath());
+	::GetPrivateProfileString(L"Default", key, String::parse(default), temp, 31, File::getDefaultSavePath());
 	return std::stof(temp);
 }
 
-e2d::EString e2d::EData::getString(const EString & key, const EString & default)
+e2d::String e2d::Data::getString(const String & key, const String & default)
 {
 	wchar_t temp[256] = { 0 };
-	::GetPrivateProfileString(L"Default", key, default, temp, 255, EFile::getDefaultSavePath());
+	::GetPrivateProfileString(L"Default", key, default, temp, 255, File::getDefaultSavePath());
 	return temp;
 }

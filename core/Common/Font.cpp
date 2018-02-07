@@ -1,20 +1,20 @@
 #include "..\enodes.h"
 
-e2d::EFont::EFont()
+e2d::Font::Font()
 	: m_pTextFormat(nullptr)
-	, m_Color(EColor::WHITE)
+	, m_Color(Color::WHITE)
 	, m_fFontSize(22)
-	, m_FontWeight(EFontWeight::REGULAR)
+	, m_FontWeight(FontWeight::REGULAR)
 	, m_bItalic(false)
 	, m_bRecreateNeeded(true)
 {
 }
 
-e2d::EFont::EFont(EString fontFamily, float fontSize /* = 22 */, UINT32 color /* = EColor::WHITE */, UINT32 fontWeight, bool italic /* = false */)
+e2d::Font::Font(String fontFamily, float fontSize /* = 22 */, UINT32 color /* = EColor::WHITE */, UINT32 fontWeight, bool italic /* = false */)
 	: m_pTextFormat(nullptr)
-	, m_Color(EColor::WHITE)
+	, m_Color(Color::WHITE)
 	, m_fFontSize(22)
-	, m_FontWeight(EFontWeight::REGULAR)
+	, m_FontWeight(FontWeight::REGULAR)
 	, m_bItalic(false)
 	, m_bRecreateNeeded(true)
 {
@@ -25,65 +25,65 @@ e2d::EFont::EFont(EString fontFamily, float fontSize /* = 22 */, UINT32 color /*
 	this->setItalic(italic);
 }
 
-e2d::EFont::~EFont()
+e2d::Font::~Font()
 {
 	SafeReleaseInterface(&m_pTextFormat);
 }
 
-float e2d::EFont::getFontSize() const
+float e2d::Font::getFontSize() const
 {
 	return m_fFontSize;
 }
 
-UINT32 e2d::EFont::getFontWeight() const
+UINT32 e2d::Font::getFontWeight() const
 {
 	return m_FontWeight;
 }
 
-UINT32 e2d::EFont::getColor() const
+UINT32 e2d::Font::getColor() const
 {
 	return m_Color;
 }
 
-bool e2d::EFont::isItalic() const
+bool e2d::Font::isItalic() const
 {
 	return m_bItalic;
 }
 
-void e2d::EFont::setFamily(const EString & fontFamily)
+void e2d::Font::setFamily(const String & fontFamily)
 {
 	m_sFontFamily = fontFamily;
 	m_bRecreateNeeded = true;
 }
 
-void e2d::EFont::setSize(float fontSize)
+void e2d::Font::setSize(float fontSize)
 {
 	m_fFontSize = fontSize;
 	m_bRecreateNeeded = true;
 }
 
-void e2d::EFont::setWeight(UINT32 fontWeight)
+void e2d::Font::setWeight(UINT32 fontWeight)
 {
 	m_FontWeight = fontWeight;
 	m_bRecreateNeeded = true;
 }
 
-void e2d::EFont::setColor(UINT32 color)
+void e2d::Font::setColor(UINT32 color)
 {
 	m_Color = color;
 }
 
-void e2d::EFont::setItalic(bool value)
+void e2d::Font::setItalic(bool value)
 {
 	m_bItalic = value;
 	m_bRecreateNeeded = true;
 }
 
-void e2d::EFont::_initTextFormat()
+void e2d::Font::_initTextFormat()
 {
 	SafeReleaseInterface(&m_pTextFormat);
 
-	HRESULT hr = ERenderer::getIDWriteFactory()->CreateTextFormat(
+	HRESULT hr = Renderer::getIDWriteFactory()->CreateTextFormat(
 		m_sFontFamily,
 		NULL,
 		DWRITE_FONT_WEIGHT(m_FontWeight),
@@ -97,7 +97,7 @@ void e2d::EFont::_initTextFormat()
 	ASSERT(SUCCEEDED(hr), "Create IDWriteTextFormat Failed!");
 }
 
-IDWriteTextFormat * e2d::EFont::_getTextFormat()
+IDWriteTextFormat * e2d::Font::_getTextFormat()
 {
 	if (m_bRecreateNeeded)
 	{

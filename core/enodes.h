@@ -5,21 +5,21 @@ namespace e2d
 {
 
 
-class EAction;
-class EShape;
-class ETransition;
+class Action;
+class Shape;
+class Transition;
 
-class ENode :
-	public EObject
+class Node :
+	public Obj
 {
-	friend EScene;
-	friend EShape;
-	friend ETransition;
+	friend Scene;
+	friend Shape;
+	friend Transition;
 
 public:
-	ENode();
+	Node();
 
-	virtual ~ENode();
+	virtual ~Node();
 
 	// 进入场景时执行
 	virtual void onEnter() {}
@@ -38,7 +38,7 @@ public:
 
 	// 碰撞处理
 	virtual void onCollide(
-		ENode* pCollisionNode,	/* 发生碰撞的节点 */
+		Node* pCollisionNode,	/* 发生碰撞的节点 */
 		int nRelation			/* 碰撞关系，取值为 ERelation::VALUE 中的一种 */
 	) {}
 
@@ -50,11 +50,11 @@ public:
 
 	// 判断点是否在节点内
 	virtual bool isPointIn(
-		EPoint point
+		Point point
 	);
 
 	// 获取节点名称
-	virtual EString getName() const;
+	virtual String getName() const;
 
 	// 获取节点绘图顺序
 	virtual int getOrder() const;
@@ -66,7 +66,7 @@ public:
 	virtual float getPosY() const;
 
 	// 获取节点坐标
-	virtual EPoint getPos() const;
+	virtual Point getPos() const;
 
 	// 获取节点宽度
 	virtual float getWidth() const;
@@ -81,7 +81,7 @@ public:
 	virtual float getRealHeight() const;
 
 	// 获取节点大小（不考虑缩放）
-	virtual ESize getRealSize() const;
+	virtual Size getRealSize() const;
 
 	// 获取节点的中心点
 	virtual float getPivotX() const;
@@ -90,7 +90,7 @@ public:
 	virtual float getPivotY() const;
 
 	// 获取节点大小
-	virtual ESize getSize() const;
+	virtual Size getSize() const;
 
 	// 获取节点横向缩放比例
 	virtual float getScaleX() const;
@@ -111,38 +111,38 @@ public:
 	virtual float getOpacity() const;
 
 	// 获取节点形状
-	virtual EShape * getShape() const;
+	virtual Shape * getShape() const;
 
 	// 获取父节点
-	virtual ENode * getParent() const;
+	virtual Node * getParent() const;
 
 	// 获取节点所在场景
-	virtual EScene * getParentScene() const;
+	virtual Scene * getParentScene() const;
 
 	// 获取名称相同的子节点
-	virtual ENode * getChild(
-		const EString & name
+	virtual Node * getChild(
+		const String & name
 	);
 
 	// 获取所有名称相同的子节点
-	virtual std::vector<ENode*> getChildren(
-		const EString & name
+	virtual std::vector<Node*> getChildren(
+		const String & name
 	);
 
 	// 获取所有子节点
-	virtual std::vector<ENode*> &getChildren();
+	virtual std::vector<Node*> &getChildren();
 
 	// 获取子节点数量
 	virtual int getChildrenCount() const;
 
 	// 移除子节点
 	virtual bool removeChild(
-		ENode * child
+		Node * child
 	);
 
 	// 移除所有名称相同的子节点
 	virtual void removeChildren(
-		const EString & childName
+		const String & childName
 	);
 
 	// 从父节点移除
@@ -163,7 +163,7 @@ public:
 
 	// 设置节点名称
 	virtual void setName(
-		const EString & name
+		const String & name
 	);
 
 	// 设置节点横坐标
@@ -178,7 +178,7 @@ public:
 
 	// 设置节点坐标
 	virtual void setPos(
-		const EPoint & point
+		const Point & point
 	);
 
 	// 设置节点坐标
@@ -205,7 +205,7 @@ public:
 
 	// 移动节点
 	virtual void movePos(
-		const EVector2 & v
+		const Vector & v
 	);
 
 	// 设置节点绘图顺序
@@ -291,33 +291,33 @@ public:
 
 	// 设置节点形状
 	virtual void setShape(
-		EShape * pShape
+		Shape * pShape
 	);
 
 	// 添加子节点
 	virtual void addChild(
-		ENode * child,
+		Node * child,
 		int order = 0
 	);
 
 	// 执行动画
 	virtual void runAction(
-		EAction * action
+		Action * action
 	);
 
 	// 继续动画
 	virtual void resumeAction(
-		EAction * action
+		Action * action
 	);
 
 	// 暂停动画
 	virtual void pauseAction(
-		EAction * action
+		Action * action
 	);
 
 	// 停止动画
 	virtual void stopAction(
-		EAction * action
+		Action * action
 	);
 
 	// 继续所有暂停动画
@@ -353,7 +353,7 @@ protected:
 
 	// 设置节点所在场景
 	void _setParentScene(
-		EScene * scene
+		Scene * scene
 	);
 
 	// 对自身进行二维矩阵变换
@@ -372,16 +372,16 @@ protected:
 	);
 
 	// 更新节点二维矩阵
-	static void _updateTransform(ENode * node);
+	static void _updateTransform(Node * node);
 
 	// 更新节点透明度
-	static void _updateOpacity(ENode * node);
+	static void _updateOpacity(Node * node);
 
 protected:
-	EString		m_sName;
+	String		m_sName;
 	size_t		m_nHashName;
-	EPoint		m_Pos;
-	ESize		m_Size;
+	Point		m_Pos;
+	Size		m_Size;
 	float		m_fScaleX;
 	float		m_fScaleY;
 	float		m_fRotation;
@@ -397,34 +397,34 @@ protected:
 	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
 	bool		m_bTransformNeeded;
-	EShape *	m_pShape;
-	EScene *	m_pParentScene;
-	ENode *		m_pParent;
+	Shape *	m_pShape;
+	Scene *		m_pParentScene;
+	Node *		m_pParent;
 	D2D1::Matrix3x2F	m_MatriInitial;
 	D2D1::Matrix3x2F	m_MatriFinal;
-	std::vector<ENode*>	m_vChildren;
+	std::vector<Node*>	m_vChildren;
 };
 
 
-class ESprite :
-	public ENode
+class Sprite :
+	public Node
 {
 public:
 	// 创建一个空精灵
-	ESprite();
+	Sprite();
 
 	// 从 EImage 对象创建精灵
-	ESprite(
-		EImage * image
+	Sprite(
+		Image * image
 	);
 
 	// 从文件图片创建精灵
-	ESprite(
+	Sprite(
 		LPCTSTR imageFileName
 	);
 
 	// 从文件图片创建精灵并裁剪
-	ESprite(
+	Sprite(
 		LPCTSTR imageFileName,
 		float x,
 		float y,
@@ -432,11 +432,11 @@ public:
 		float height
 	);
 
-	virtual ~ESprite();
+	virtual ~Sprite();
 	
 	// 加载精灵图片
 	virtual void loadFrom(
-		EImage * texture
+		Image * texture
 	);
 
 	// 从本地文件加载图片
@@ -453,48 +453,48 @@ public:
 	);
 
 	// 获取 EImage 对象
-	virtual EImage * getImage() const;
+	virtual Image * getImage() const;
 
 	// 渲染精灵
 	virtual void onRender() override;
 
 protected:
-	EImage * m_pImage;
+	Image * m_pImage;
 };
 
 
-class EText :
-	public ENode
+class Text :
+	public Node
 {
 public:
-	EText();
+	Text();
 
-	EText(
-		const EString & text
+	Text(
+		const String & text
 	);
 
-	EText(
-		EFont * font
+	Text(
+		Font * font
 	);
 
-	EText(
-		const EString & text,
-		EFont * font
+	Text(
+		const String & text,
+		Font * font
 	);
 
-	EText(
-		const EString & text,
-		EString fontFamily,
+	Text(
+		const String & text,
+		String fontFamily,
 		float fontSize = 22,
-		UINT32 color = EColor::WHITE,
-		UINT32 fontWeight = EFontWeight::REGULAR,
+		UINT32 color = Color::WHITE,
+		UINT32 fontWeight = FontWeight::REGULAR,
 		bool italic = false
 	);
 
-	virtual ~EText();
+	virtual ~Text();
 
 	// 获取文本
-	EString getText() const;
+	String getText() const;
 
 	// 获取文本宽度
 	virtual float getWidth() const override;
@@ -503,16 +503,16 @@ public:
 	virtual float getRealWidth() const override;
 
 	// 获取字体
-	EFont * getFont() const;
+	Font * getFont() const;
 
 	// 设置文本
 	void setText(
-		const EString & text
+		const String & text
 	);
 
 	// 设置字体
 	void setFont(
-		EFont * font
+		Font * font
 	);
 
 	// 设置文字自动换行
@@ -533,48 +533,48 @@ protected:
 	void _initTextLayout();
 
 protected:
-	EString	m_sText;
+	String	m_sText;
 	bool	m_bWordWrapping;
 	float	m_fWordWrappingWidth;
-	EFont * m_pFont;
+	Font * m_pFont;
 };
 
 
-class EButton :
-	public ENode
+class Button :
+	public Node
 {
 public:
 	// 创建一个空按钮
-	EButton();
+	Button();
 
 	// 创建按钮
-	EButton(
-		ENode * normal,		/* 普通状态 */
-		const BtnClkCallback & callback = nullptr
+	Button(
+		Node * normal,		/* 普通状态 */
+		const ButtonCallback & callback = nullptr
 	);
 
 	// 创建按钮
-	EButton(
-		ENode * normal,		/* 普通状态 */
-		ENode * selected,	/* 鼠标按下状态 */
-		const BtnClkCallback & callback = nullptr
+	Button(
+		Node * normal,		/* 普通状态 */
+		Node * selected,	/* 鼠标按下状态 */
+		const ButtonCallback & callback = nullptr
 	);
 
 	// 创建按钮
-	EButton(
-		ENode * normal,		/* 普通状态 */
-		ENode * mouseover,	/* 鼠标移入状态 */
-		ENode * selected,	/* 鼠标按下状态 */
-		const BtnClkCallback & callback = nullptr
+	Button(
+		Node * normal,		/* 普通状态 */
+		Node * mouseover,	/* 鼠标移入状态 */
+		Node * selected,	/* 鼠标按下状态 */
+		const ButtonCallback & callback = nullptr
 	);
 
 	// 创建按钮
-	EButton(
-		ENode * normal,		/* 普通状态 */
-		ENode * mouseover,	/* 鼠标移入状态 */
-		ENode * selected,	/* 鼠标移入状态 */
-		ENode * disabled,	/* 按钮禁用状态 */
-		const BtnClkCallback & callback = nullptr
+	Button(
+		Node * normal,		/* 普通状态 */
+		Node * mouseover,	/* 鼠标移入状态 */
+		Node * selected,	/* 鼠标移入状态 */
+		Node * disabled,	/* 按钮禁用状态 */
+		const ButtonCallback & callback = nullptr
 	);
 
 	// 获取按钮状态是启用还是禁用
@@ -587,27 +587,27 @@ public:
 
 	// 设置一般情况下显示的按钮
 	virtual void setNormal(
-		ENode * normal
+		Node * normal
 	);
 
 	// 设置鼠标移入按钮时显示的按钮
 	virtual void setMouseOver(
-		ENode * mouseover
+		Node * mouseover
 	);
 
 	// 设置鼠标选中按钮时显示的按钮
 	virtual void setSelected(
-		ENode * selected
+		Node * selected
 	);
 
 	// 设置按钮被禁用时显示的按钮
 	virtual void setDisabled(
-		ENode * disabled
+		Node * disabled
 	);
 
 	// 设置回调函数
 	void setCallback(
-		const BtnClkCallback & callback
+		const ButtonCallback & callback
 	);
 
 	// 设置中心点的横向位置
@@ -645,68 +645,65 @@ protected:
 	virtual void _runCallback();
 
 protected:
-	ENode *			m_pNormal;
-	ENode *			m_pMouseover;
-	ENode *			m_pSelected;
-	ENode *			m_pDisabled;
+	Node *			m_pNormal;
+	Node *			m_pMouseover;
+	Node *			m_pSelected;
+	Node *			m_pDisabled;
 	bool			m_bEnable;
 	bool			m_bIsSelected;
 	BTN_STATE		m_eBtnState;
-	BtnClkCallback	m_Callback;
+	ButtonCallback	m_Callback;
 };
 
 
-class EButtonToggle :
-	public EButton
+class ButtonToggle :
+	public Button
 {
 public:
 	// 创建一个空的开关按钮
-	EButtonToggle();
+	ButtonToggle();
 
 	// 创建开关按钮
-	EButtonToggle(
-		ENode * onNormal,
-		ENode * offNormal,
-		const BtnClkCallback & callback = nullptr
+	ButtonToggle(
+		Node * onNormal,
+		Node * offNormal,
+		const ButtonCallback & callback = nullptr
 	);
 
 	// 创建开关按钮
-	EButtonToggle(
-		ENode * onNormal,
-		ENode * offNormal,
-		ENode * onSelected,
-		ENode * offSelected,
-		const BtnClkCallback & callback = nullptr
+	ButtonToggle(
+		Node * onNormal,
+		Node * offNormal,
+		Node * onSelected,
+		Node * offSelected,
+		const ButtonCallback & callback = nullptr
 	);
 
 	// 创建开关按钮
-	EButtonToggle(
-		ENode * onNormal,
-		ENode * offNormal,
-		ENode * onMouseOver,
-		ENode * offMouseOver,
-		ENode * onSelected,
-		ENode * offSelected,
-		const BtnClkCallback & callback = nullptr
+	ButtonToggle(
+		Node * onNormal,
+		Node * offNormal,
+		Node * onMouseOver,
+		Node * offMouseOver,
+		Node * onSelected,
+		Node * offSelected,
+		const ButtonCallback & callback = nullptr
 	);
 
 	// 创建开关按钮
-	EButtonToggle(
-		ENode * onNormal,
-		ENode * offNormal,
-		ENode * onMouseOver,
-		ENode * offMouseOver,
-		ENode * onSelected,
-		ENode * offSelected,
-		ENode * onDisabled,
-		ENode * offDisabled,
-		const BtnClkCallback & callback = nullptr
+	ButtonToggle(
+		Node * onNormal,
+		Node * offNormal,
+		Node * onMouseOver,
+		Node * offMouseOver,
+		Node * onSelected,
+		Node * offSelected,
+		Node * onDisabled,
+		Node * offDisabled,
+		const ButtonCallback & callback = nullptr
 	);
 
-	// 切换开关状态（执行回调函数）
-	void toggle();
-
-	// 获取开关状态
+	// 获取开关状态（打开或关闭）
 	bool getState() const;
 
 	// 设置开关按钮的状态（打开或关闭）
@@ -716,42 +713,42 @@ public:
 
 	// 设置按钮打开状态下显示的按钮
 	virtual void setNormal(
-		ENode * normal
+		Node * normal
 	) override;
 
 	// 设置按钮打开状态下，鼠标移入按钮时显示的按钮
 	virtual void setMouseOver(
-		ENode * mouseover
+		Node * mouseover
 	) override;
 
 	// 设置按钮打开状态下，鼠标选中按钮时显示的按钮
 	virtual void setSelected(
-		ENode * selected
+		Node * selected
 	) override;
 
 	// 设置按钮打开状态下，被禁用时显示的按钮
 	virtual void setDisabled(
-		ENode * disabled
+		Node * disabled
 	) override;
 
 	// 设置按钮关闭状态下显示的按钮
 	void setNormalOff(
-		ENode * normal
+		Node * normal
 	);
 
 	// 设置按钮关闭状态下，鼠标移入按钮时显示的按钮
 	void setMouseOverOff(
-		ENode * mouseover
+		Node * mouseover
 	);
 
 	// 设置按钮关闭状态下，鼠标选中按钮时显示的按钮
 	void setSelectedOff(
-		ENode * selected
+		Node * selected
 	);
 
 	// 设置按钮关闭状态下，按钮被禁用时显示的按钮
 	void setDisabledOff(
-		ENode * disabled
+		Node * disabled
 	);
 
 	// 设置中心点的横向位置
@@ -781,29 +778,29 @@ protected:
 	virtual void _runCallback() override;
 
 protected:
-	ENode * m_pNormalOn;
-	ENode * m_pNormalOff;
-	ENode * m_pMouseoverOn;
-	ENode * m_pMouseoverOff;
-	ENode * m_pSelectedOn;
-	ENode * m_pSelectedOff;
-	ENode * m_pDisabledOn;
-	ENode * m_pDisabledOff;
+	Node * m_pNormalOn;
+	Node * m_pNormalOff;
+	Node * m_pMouseoverOn;
+	Node * m_pMouseoverOff;
+	Node * m_pSelectedOn;
+	Node * m_pSelectedOff;
+	Node * m_pDisabledOn;
+	Node * m_pDisabledOff;
 	bool	m_bState;
 };
 
 
-class EMenu :
-	public ENode
+class Menu :
+	public Node
 {
 public:
 	// 创建空菜单
-	EMenu();
+	Menu();
 
 	// 创建菜单
-	EMenu(
+	Menu(
 		int number,			/* 菜单中按钮的数量 */
-		EButton * button1,	/* 第一个按钮 */
+		Button * button1,	/* 第一个按钮 */
 		...
 	);
 
@@ -820,17 +817,17 @@ public:
 
 	// 添加按钮
 	void addButton(
-		EButton * button
+		Button * button
 	);
 
 	// 移除按钮
 	bool removeButton(
-		EButton * button
+		Button * button
 	);
 
 protected:
 	bool m_bEnable;
-	std::vector<EButton*> m_vButtons;
+	std::vector<Button*> m_vButtons;
 };
 
 }

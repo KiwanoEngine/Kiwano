@@ -1,12 +1,12 @@
 #include "..\emanagers.h"
 #include "..\eactions.h"
 
-static std::vector<e2d::EAction*> s_vActions;
+static std::vector<e2d::Action*> s_vActions;
 
 
-void e2d::EActionManager::addAction(EAction * pAction, ENode * pTargetNode)
+void e2d::ActionManager::_add(Action * pAction, Node * pTargetNode)
 {
-	WARN_IF(pAction == nullptr, "EAction NULL pointer exception!");
+	WARN_IF(pAction == nullptr, "Action NULL pointer exception!");
 
 	if (pAction)
 	{
@@ -16,7 +16,7 @@ void e2d::EActionManager::addAction(EAction * pAction, ENode * pTargetNode)
 	}
 }
 
-void e2d::EActionManager::resumeAllActionsBindedWith(ENode * pTargetNode)
+void e2d::ActionManager::resumeAllActionsBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
@@ -29,12 +29,12 @@ void e2d::EActionManager::resumeAllActionsBindedWith(ENode * pTargetNode)
 		}
 		for (auto child : pTargetNode->getChildren())
 		{
-			EActionManager::resumeAllActionsBindedWith(child);
+			ActionManager::resumeAllActionsBindedWith(child);
 		}
 	}
 }
 
-void e2d::EActionManager::pauseAllActionsBindedWith(ENode * pTargetNode)
+void e2d::ActionManager::pauseAllActionsBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
@@ -47,12 +47,12 @@ void e2d::EActionManager::pauseAllActionsBindedWith(ENode * pTargetNode)
 		}
 		for (auto child : pTargetNode->getChildren())
 		{
-			EActionManager::pauseAllActionsBindedWith(child);
+			ActionManager::pauseAllActionsBindedWith(child);
 		}
 	}
 }
 
-void e2d::EActionManager::stopAllActionsBindedWith(ENode * pTargetNode)
+void e2d::ActionManager::stopAllActionsBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
@@ -65,12 +65,12 @@ void e2d::EActionManager::stopAllActionsBindedWith(ENode * pTargetNode)
 		}
 		for (auto child : pTargetNode->getChildren())
 		{
-			EActionManager::stopAllActionsBindedWith(child);
+			ActionManager::stopAllActionsBindedWith(child);
 		}
 	}
 }
 
-void e2d::EActionManager::__clearAllActionsBindedWith(ENode * pTargetNode)
+void e2d::ActionManager::__clearAllActionsBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
@@ -90,31 +90,31 @@ void e2d::EActionManager::__clearAllActionsBindedWith(ENode * pTargetNode)
 	}
 }
 
-void e2d::EActionManager::resumeAllActions()
+void e2d::ActionManager::resumeAllActions()
 {
-	for (auto child : ESceneManager::getCurrentScene()->getRoot()->getChildren())
+	for (auto child : SceneManager::getCurrentScene()->getRoot()->getChildren())
 	{
-		EActionManager::resumeAllActionsBindedWith(child);
+		ActionManager::resumeAllActionsBindedWith(child);
 	}
 }
 
-void e2d::EActionManager::pauseAllActions()
+void e2d::ActionManager::pauseAllActions()
 {
-	for (auto child : ESceneManager::getCurrentScene()->getRoot()->getChildren())
+	for (auto child : SceneManager::getCurrentScene()->getRoot()->getChildren())
 	{
-		EActionManager::pauseAllActionsBindedWith(child);
+		ActionManager::pauseAllActionsBindedWith(child);
 	}
 }
 
-void e2d::EActionManager::stopAllActions()
+void e2d::ActionManager::stopAllActions()
 {
-	for (auto child : ESceneManager::getCurrentScene()->getRoot()->getChildren())
+	for (auto child : SceneManager::getCurrentScene()->getRoot()->getChildren())
 	{
-		EActionManager::stopAllActionsBindedWith(child);
+		ActionManager::stopAllActionsBindedWith(child);
 	}
 }
 
-void e2d::EActionManager::__resetAllActions()
+void e2d::ActionManager::__resetAllActions()
 {
 	for (auto action : s_vActions)
 	{
@@ -122,9 +122,9 @@ void e2d::EActionManager::__resetAllActions()
 	}
 }
 
-void e2d::EActionManager::__update()
+void e2d::ActionManager::__update()
 {
-	if (s_vActions.empty())
+	if (s_vActions.empty() || Game::isPaused())
 		return;
 	
 	// 循环遍历所有正在运行的动作
@@ -134,7 +134,7 @@ void e2d::EActionManager::__update()
 		// 获取动作运行状态
 		if (action->isRunning() &&
 			action->getTarget() && 
-			action->getTarget()->getParentScene() == ESceneManager::getCurrentScene())
+			action->getTarget()->getParentScene() == SceneManager::getCurrentScene())
 		{
 			if (!action->_isEnding())
 			{

@@ -16,7 +16,7 @@ static DIMOUSESTATE s_MouseRecordState;					// 鼠标信息二级缓冲
 static POINT s_MousePosition;							// 鼠标位置存储结构体
 
 
-void EInput::__uninit()
+void Input::__uninit()
 {
 	if (s_KeyboardDevice)
 		s_KeyboardDevice->Unacquire();
@@ -28,7 +28,7 @@ void EInput::__uninit()
 	SafeReleaseInterface(&s_pDirectInput);
 }
 
-bool EInput::__init()
+bool Input::__init()
 {
 	ZeroMemory(s_KeyBuffer, sizeof(s_KeyBuffer));
 	ZeroMemory(s_KeyRecordBuffer, sizeof(s_KeyRecordBuffer));
@@ -56,7 +56,7 @@ bool EInput::__init()
 		if (SUCCEEDED(hr))
 		{
 			s_KeyboardDevice->SetCooperativeLevel(
-				EWindow::getHWnd(),
+				Window::getHWnd(),
 				DISCL_FOREGROUND | DISCL_NONEXCLUSIVE
 			);
 			s_KeyboardDevice->SetDataFormat(
@@ -69,7 +69,7 @@ bool EInput::__init()
 			MessageBox(nullptr, L"Keyboard not found. The game will now exit.",
 				L"Error",
 				MB_ICONERROR | MB_OK);
-			EGame::quit();
+			Game::quit();
 			return false;
 		}
 	}
@@ -81,7 +81,7 @@ bool EInput::__init()
 
 		if (SUCCEEDED(hr))
 		{
-			s_MouseDevice->SetCooperativeLevel(EWindow::getHWnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+			s_MouseDevice->SetCooperativeLevel(Window::getHWnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 			s_MouseDevice->SetDataFormat(&c_dfDIMouse);
 			s_MouseDevice->Acquire();
 			s_MouseDevice->Poll();
@@ -91,7 +91,7 @@ bool EInput::__init()
 			MessageBox(nullptr, L"Mouse not found. The game will now exit.",
 				L"Error",
 				MB_ICONERROR | MB_OK);
-			EGame::quit();
+			Game::quit();
 			return false;
 		}
 	}
@@ -99,7 +99,7 @@ bool EInput::__init()
 	return SUCCEEDED(hr);
 }
 
-void EInput::__updateDeviceState()
+void Input::__updateDeviceState()
 {
 	if (s_KeyboardDevice)
 	{
@@ -137,119 +137,119 @@ void EInput::__updateDeviceState()
 	}
 
 	GetCursorPos(&s_MousePosition);
-	ScreenToClient(EWindow::getHWnd(), &s_MousePosition);
+	ScreenToClient(Window::getHWnd(), &s_MousePosition);
 }
 
-bool EInput::isKeyDown(int nKeyCode)
+bool Input::isKeyDown(int nKeyCode)
 {
 	if (s_KeyBuffer[nKeyCode] & 0x80)
 		return true;
 	return false;
 }
 
-bool EInput::isKeyPress(int nKeyCode)
+bool Input::isKeyPress(int nKeyCode)
 {
 	if ((s_KeyBuffer[nKeyCode] & 0x80) && !(s_KeyRecordBuffer[nKeyCode] & 0x80))
 		return true;
 	return false;
 }
 
-bool EInput::isKeyRelease(int nKeyCode)
+bool Input::isKeyRelease(int nKeyCode)
 {
 	if (!(s_KeyBuffer[nKeyCode] & 0x80) && (s_KeyRecordBuffer[nKeyCode] & 0x80))
 		return true;
 	return false;
 }
 
-bool EInput::isMouseLButtonDown()
+bool Input::isMouseLButtonDown()
 {
 	if (s_MouseState.rgbButtons[0] & 0x80)
 		return true;
 	return false;
 }
 
-bool EInput::isMouseRButtonDown()
+bool Input::isMouseRButtonDown()
 {
 	if (s_MouseState.rgbButtons[1] & 0x80)
 		return true;
 	return false;
 }
 
-bool EInput::isMouseMButtonDown()
+bool Input::isMouseMButtonDown()
 {
 	if (s_MouseState.rgbButtons[2] & 0x80)
 		return true;
 	return false;
 }
 
-bool EInput::isMouseLButtonPress()
+bool Input::isMouseLButtonPress()
 {
 	if ((s_MouseState.rgbButtons[0] & 0x80) && !(s_MouseRecordState.rgbButtons[0] & 0x80))
 		return true;
 	return false;
 }
 
-bool EInput::isMouseRButtonPress()
+bool Input::isMouseRButtonPress()
 {
 	if ((s_MouseState.rgbButtons[1] & 0x80) && !(s_MouseRecordState.rgbButtons[1] & 0x80))
 		return true;
 	return false;
 }
 
-bool EInput::isMouseMButtonPress()
+bool Input::isMouseMButtonPress()
 {
 	if ((s_MouseState.rgbButtons[2] & 0x80) && !(s_MouseRecordState.rgbButtons[2] & 0x80))
 		return true;
 	return false;
 }
 
-bool EInput::isMouseLButtonRelease()
+bool Input::isMouseLButtonRelease()
 {
 	if (!(s_MouseState.rgbButtons[0] & 0x80) && (s_MouseRecordState.rgbButtons[0] & 0x80))
 		return true;
 	return false;
 }
 
-bool EInput::isMouseRButtonRelease()
+bool Input::isMouseRButtonRelease()
 {
 	if (!(s_MouseState.rgbButtons[1] & 0x80) && (s_MouseRecordState.rgbButtons[1] & 0x80))
 		return true;
 	return false;
 }
 
-bool EInput::isMouseMButtonRelease()
+bool Input::isMouseMButtonRelease()
 {
 	if (!(s_MouseState.rgbButtons[2] & 0x80) && (s_MouseRecordState.rgbButtons[2] & 0x80))
 		return true;
 	return false;
 }
 
-float EInput::getMouseX()
+float Input::getMouseX()
 {
 	return (float)s_MousePosition.x;
 }
 
-float EInput::getMouseY()
+float Input::getMouseY()
 {
 	return (float)s_MousePosition.y;
 }
 
-EPoint EInput::getMousePos()
+Point Input::getMousePos()
 {
-	return EPoint((float)s_MousePosition.x, (float)s_MousePosition.y);
+	return Point((float)s_MousePosition.x, (float)s_MousePosition.y);
 }
 
-float EInput::getMouseDeltaX()
+float Input::getMouseDeltaX()
 {
 	return (float)s_MouseState.lX;
 }
 
-float EInput::getMouseDeltaY()
+float Input::getMouseDeltaY()
 {
 	return (float)s_MouseState.lY;
 }
 
-float EInput::getMouseDeltaZ()
+float Input::getMouseDeltaZ()
 {
 	return (float)s_MouseState.lZ;
 }

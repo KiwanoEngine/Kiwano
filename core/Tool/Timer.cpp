@@ -2,7 +2,7 @@
 #include "..\enodes.h"
 #include "..\emanagers.h"
 
-e2d::ETimer::ETimer()
+e2d::Timer::Timer()
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_pParentNode(nullptr)
@@ -14,7 +14,7 @@ e2d::ETimer::ETimer()
 {
 }
 
-e2d::ETimer::ETimer(const TimerCallback & callback, int repeatTimes /* = -1 */, float interval /* = 0 */, bool atOnce /* = false */)
+e2d::Timer::Timer(const TimerCallback & callback, float interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */)
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_pParentNode(nullptr)
@@ -30,7 +30,7 @@ e2d::ETimer::ETimer(const TimerCallback & callback, int repeatTimes /* = -1 */, 
 	m_bAtOnce = atOnce;
 }
 
-e2d::ETimer::ETimer(const EString & name, const TimerCallback & callback, int repeatTimes /* = -1 */, float interval /* = 0 */, bool atOnce /* = false */)
+e2d::Timer::Timer(const String & name, const TimerCallback & callback, float interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */)
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_pParentNode(nullptr)
@@ -47,87 +47,78 @@ e2d::ETimer::ETimer(const EString & name, const TimerCallback & callback, int re
 	m_bAtOnce = atOnce;
 }
 
-bool e2d::ETimer::isRunning() const
+bool e2d::Timer::isRunning() const
 {
 	return m_bRunning;
 }
 
-void e2d::ETimer::start()
-{
-	m_bRunning = true;
-	m_fLast = ETime::getTotalTime();
-}
-
-void e2d::ETimer::stop()
+void e2d::Timer::stop()
 {
 	m_bRunning = false;
 }
 
-e2d::EString e2d::ETimer::getName() const
+void e2d::Timer::start()
+{
+	m_bRunning = true;
+	m_fLast = Time::getTotalTime();
+}
+
+e2d::String e2d::Timer::getName() const
 {
 	return m_sName;
 }
 
-e2d::ENode * e2d::ETimer::getParentNode() const
+e2d::Node * e2d::Timer::getParentNode() const
 {
 	return m_pParentNode;
 }
 
-void e2d::ETimer::setName(const EString & name)
+void e2d::Timer::setName(const String & name)
 {
 	m_sName = name;
 }
 
-void e2d::ETimer::setInterval(float interval)
+void e2d::Timer::setInterval(float interval)
 {
 	m_fInterval = max(interval, 0);
 }
 
-void e2d::ETimer::setCallback(const TimerCallback & callback)
+void e2d::Timer::setCallback(const TimerCallback & callback)
 {
 	m_Callback = callback;
 }
 
-void e2d::ETimer::setRepeatTimes(int repeatTimes)
+void e2d::Timer::setRepeatTimes(int repeatTimes)
 {
 	m_nRepeatTimes = repeatTimes;
 }
 
-void e2d::ETimer::setRunAtOnce(bool bAtOnce)
+void e2d::Timer::setRunAtOnce(bool bAtOnce)
 {
 	m_bAtOnce = bAtOnce;
 }
 
-void e2d::ETimer::bindWith(EScene * pParentScene)
+void e2d::Timer::_callOn()
 {
-	ETimerManager::bindTimer(this, pParentScene);
-}
+	if (m_Callback)
+	{
+		m_Callback();
+	}
 
-void e2d::ETimer::bindWith(ENode * pParentNode)
-{
-	ETimerManager::bindTimer(this, pParentNode);
-}
+	m_nRunTimes++;
+	m_fLast += m_fInterval;
 
-void e2d::ETimer::_callOn()
-{
 	if (m_nRunTimes == m_nRepeatTimes)
 	{
 		this->stop();
-		return;
 	}
-
-	if (m_Callback)
-	{
-		m_Callback(m_nRunTimes);
-	}
-	m_nRunTimes++;
 }
 
-bool e2d::ETimer::_isReady()
+bool e2d::Timer::_isReady() const
 {
 	if (m_bRunning && 
 		m_pParentNode &&
-		m_pParentNode->getParentScene() == ESceneManager::getCurrentScene())
+		m_pParentNode->getParentScene() == SceneManager::getCurrentScene())
 	{
 		if (m_bAtOnce && m_nRunTimes == 0)
 			return true;
@@ -135,9 +126,8 @@ bool e2d::ETimer::_isReady()
 		if (m_fInterval == 0)
 			return true;
 
-		if ((ETime::getTotalTime() - m_fLast) >= m_fInterval)
+		if ((Time::getTotalTime() - m_fLast) >= m_fInterval)
 		{
-			m_fLast += m_fInterval;
 			return true;
 		}
 	}

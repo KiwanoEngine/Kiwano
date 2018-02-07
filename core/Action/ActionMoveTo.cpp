@@ -1,18 +1,18 @@
 #include "..\eactions.h"
 
-e2d::EActionMoveTo::EActionMoveTo(float duration, EPoint pos) :
-	EActionMoveBy(duration, EVector2())
+e2d::ActionMoveTo::ActionMoveTo(float duration, Point pos) :
+	ActionMoveBy(duration, Vector())
 {
 	m_EndPos = pos;
 }
 
-e2d::EActionMoveTo * e2d::EActionMoveTo::clone() const
+e2d::ActionMoveTo * e2d::ActionMoveTo::clone() const
 {
-	return new EActionMoveTo(m_fDuration, m_EndPos);
+	return new ActionMoveTo(m_fDuration, m_EndPos);
 }
 
-void e2d::EActionMoveTo::_init()
+void e2d::ActionMoveTo::_init()
 {
-	EActionMoveBy::_init();
+	ActionMoveBy::_init();
 	m_MoveVec = m_EndPos - m_BeginPos;
 }

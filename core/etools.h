@@ -5,25 +5,25 @@
 namespace e2d
 {
 
-class ETimerManager;
-class EMusicManager;
+class TimerManager;
+class MusicManager;
 
 // 随机数产生器
-class ERandom
+class Random
 {
 public:
 	// 取得整型范围内的一个随机数
 	template<typename T>
-	static inline T range(T min, T max) { return e2d::ERandom::randomInt(min, max); }
+	static inline T range(T min, T max) { return e2d::Random::randomInt(min, max); }
 
 	// 取得浮点数范围内的一个随机数
-	static inline float range(float min, float max) { return e2d::ERandom::randomReal(min, max); }
+	static inline float range(float min, float max) { return e2d::Random::randomReal(min, max); }
 
 	// 取得浮点数范围内的一个随机数
-	static inline double range(double min, double max) { return e2d::ERandom::randomReal(min, max); }
+	static inline double range(double min, double max) { return e2d::Random::randomReal(min, max); }
 
 	// 取得浮点数范围内的一个随机数
-	static inline long double range(long double min, long double max) { return e2d::ERandom::randomReal(min, max); }
+	static inline long double range(long double min, long double max) { return e2d::Random::randomReal(min, max); }
 
 	// 取得整型范围内的一个随机数
 	template<typename T>
@@ -51,31 +51,28 @@ public:
 
 
 // 定时器
-class ETimer :
-	public EObject
+class Timer :
+	public Obj
 {
-	friend ETimerManager;
+	friend TimerManager;
 
 public:
-	ETimer();
+	Timer();
 
-	ETimer(
+	Timer(
 		const TimerCallback &callback,	/* 定时器回调函数 */
-		int repeatTimes = -1,			/* 定时器执行次数 */
-		float interval = 0LL,			/* 时间间隔（秒） */
-		bool atOnce = false				/* 是否立即执行 */
-	);
-
-	ETimer(
-		const EString &name,			/* 定时器名称 */
-		const TimerCallback &callback,	/* 定时器回调函数 */
-		int repeatTimes = -1,			/* 定时器执行次数 */
 		float interval = 0,				/* 时间间隔（秒） */
+		int repeatTimes = -1,			/* 定时器执行次数 */
 		bool atOnce = false				/* 是否立即执行 */
 	);
 
-	// 获取定时器状态
-	bool isRunning() const;
+	Timer(
+		const String &name,			/* 定时器名称 */
+		const TimerCallback &callback,	/* 定时器回调函数 */
+		float interval = 0,				/* 时间间隔（秒） */
+		int repeatTimes = -1,			/* 定时器执行次数 */
+		bool atOnce = false				/* 是否立即执行 */
+	);
 
 	// 启动定时器
 	void start();
@@ -83,15 +80,18 @@ public:
 	// 停止定时器
 	void stop();
 
+	// 获取定时器状态
+	bool isRunning() const;
+
 	// 获取定时器名称
-	EString getName() const;
+	String getName() const;
 
 	// 获取定时器所在节点
-	ENode * getParentNode() const;
+	Node * getParentNode() const;
 
 	// 设置定时器名称
 	void setName(
-		const EString &name
+		const String &name
 	);
 
 	// 设置定时器执行间隔（秒）
@@ -114,111 +114,101 @@ public:
 		bool bAtOnce
 	);
 
-	// 绑定定时器到场景
-	virtual void bindWith(
-		EScene * pParentScene
-	);
-
-	// 绑定定时器到节点
-	virtual void bindWith(
-		ENode * pParentNode
-	);
-
 protected:
 	// 执行回调函数
-	virtual void _callOn();
+	void _callOn();
 
 	// 判断是否达到执行状态
-	bool _isReady();
+	bool _isReady() const;
 
 protected:
-	EString			m_sName;
+	String			m_sName;
 	bool			m_bRunning;
 	bool			m_bAtOnce;
 	int				m_nRunTimes;
 	int				m_nRepeatTimes;
 	float			m_fInterval;
 	float			m_fLast;
-	ENode *			m_pParentNode;
+	Node *			m_pParentNode;
 	TimerCallback	m_Callback;
 };
 
 
 // 数据管理工具
-class EData
+class Data
 {
 public:
 	// 保存 int 类型的值
 	static void saveInt(
-		const EString & key,
+		const String & key,
 		int value
 	);
 
 	// 保存 float 类型的值
 	static void saveFloat(
-		const EString & key,
+		const String & key,
 		float value
 	);
 
 	// 保存 字符串 类型的值
 	static void saveString(
-		const EString & key,
-		const EString & value
+		const String & key,
+		const String & value
 	);
 
 	// 获取 int 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static int getInt(
-		const EString & key,
+		const String & key,
 		int defaultValue
 	);
 
 	// 获取 float 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static float getFloat(
-		const EString & key,
+		const String & key,
 		float defaultValue
 	);
 
 	// 获取 字符串 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	static EString getString(
-		const EString & key,
-		const EString & defaultValue
+	static String getString(
+		const String & key,
+		const String & defaultValue
 	);
 };
 
 
 // 文件管理工具
-class EFile
+class File
 {
 public:
 	// 获取系统的 AppData Local 路径
-	static EString getLocalAppDataPath();
+	static String getLocalAppDataPath();
 
 	// 获取临时文件目录
-	static EString getTempPath();
+	static String getTempPath();
 
 	// 获取默认的保存路径
-	static EString getDefaultSavePath();
+	static String getDefaultSavePath();
 
 	// 获取文件扩展名
-	static EString getFileExtension(
-		const EString & filePath
+	static String getFileExtension(
+		const String & filePath
 	);
 
 	// 打开保存文件对话框
-	static EString getSaveFilePath(
-		const EString & title = L"保存到",	/* 对话框标题 */
-		const EString & defExt = L""		/* 默认扩展名 */
+	static String getSaveFilePath(
+		const String & title = L"保存到",	/* 对话框标题 */
+		const String & defExt = L""		/* 默认扩展名 */
 	);
 };
 
 
 // 音乐播放器
-class EMusic
+class Music
 {
-	friend EMusicManager;
+	friend MusicManager;
 
 public:
 	// 播放
@@ -258,13 +248,9 @@ public:
 	IXAudio2SourceVoice* getIXAudio2SourceVoice() const;
 
 protected:
-	EMusic();
+	Music();
 
-	virtual ~EMusic();
-
-	EMusic(const EMusic &) = delete;
-	
-	EMusic &operator =(const EMusic &) = delete;
+	virtual ~Music();
 
 	bool _open(LPWSTR strFileName);
 

@@ -1,23 +1,23 @@
 #include "..\eshape.h"
 #include "..\enodes.h"
 
-e2d::ECircle::ECircle()
+e2d::Circle::Circle()
 	: m_pD2dCircle(nullptr)
 {
 }
 
-e2d::ECircle::ECircle(EPoint center, float radius)
+e2d::Circle::Circle(Point center, float radius)
 	: m_pD2dCircle(nullptr)
 {
 	this->_setCircle(center, radius);
 }
 
-e2d::ECircle::ECircle(ENode * node)
+e2d::Circle::Circle(Node * node)
 	: m_pD2dCircle(nullptr)
 {
 	float minSide = min(node->getRealWidth(), node->getRealHeight());
 	this->_setCircle(
-		EPoint(
+		Point(
 			node->getRealWidth() / 2,
 			node->getRealHeight() / 2
 		),
@@ -25,16 +25,16 @@ e2d::ECircle::ECircle(ENode * node)
 	);
 }
 
-e2d::ECircle::~ECircle()
+e2d::Circle::~Circle()
 {
 	SafeReleaseInterface(&m_pD2dCircle);
 }
 
-void e2d::ECircle::_setCircle(EPoint center, float radius)
+void e2d::Circle::_setCircle(Point center, float radius)
 {
 	SafeReleaseInterface(&m_pD2dCircle);
 
-	ERenderer::getID2D1Factory()->CreateEllipseGeometry(
+	Renderer::getID2D1Factory()->CreateEllipseGeometry(
 		D2D1::Ellipse(
 			D2D1::Point2F(
 				center.x, 
@@ -45,7 +45,7 @@ void e2d::ECircle::_setCircle(EPoint center, float radius)
 		);
 }
 
-ID2D1EllipseGeometry * e2d::ECircle::_getD2dGeometry() const
+ID2D1EllipseGeometry * e2d::Circle::_getD2dGeometry() const
 {
 	return m_pD2dCircle;
 }

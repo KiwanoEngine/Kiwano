@@ -20,39 +20,39 @@ static float s_fTotalTime = 0;
 static milliseconds s_tExceptedInvertal;
 
 
-float e2d::ETime::getTotalTime()
+float e2d::Time::getTotalTime()
 {
 	return s_fTotalTime;
 }
 
-int e2d::ETime::getDeltaTime()
+int e2d::Time::getDeltaTime()
 {
 	return s_nInterval;
 }
 
-bool e2d::ETime::__init()
+bool e2d::Time::__init()
 {
 	s_tStart = s_tLastUpdate = s_tFixedUpdate = s_tNow = steady_clock::now();
 	s_tExceptedInvertal = milliseconds(17);
 	return true;
 }
 
-void e2d::ETime::__uninit()
+void e2d::Time::__uninit()
 {
 }
 
-bool e2d::ETime::__isReady()
+bool e2d::Time::__isReady()
 {
 	return s_tExceptedInvertal < duration_cast<milliseconds>(s_tNow - s_tFixedUpdate);
 }
 
-void e2d::ETime::__updateNow()
+void e2d::Time::__updateNow()
 {
 	// 刷新时间
 	s_tNow = steady_clock::now();
 }
 
-void e2d::ETime::__updateLast()
+void e2d::Time::__updateLast()
 {
 	s_tFixedUpdate += s_tExceptedInvertal;
 	s_tLastUpdate = s_tNow;
@@ -62,7 +62,7 @@ void e2d::ETime::__updateLast()
 	s_fTotalTime = static_cast<float>(duration_cast<milliseconds>(s_tNow - s_tStart).count()) / 1000.0f;
 }
 
-void e2d::ETime::__sleep()
+void e2d::Time::__sleep()
 {
 	// 计算挂起时长
 	int nWaitMS = 16 - static_cast<int>(duration_cast<milliseconds>(s_tNow - s_tFixedUpdate).count());

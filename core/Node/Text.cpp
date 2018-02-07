@@ -1,23 +1,23 @@
 #include "..\enodes.h"
 
-e2d::EText::EText()
+e2d::Text::Text()
 	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
 {
-	this->setFont(new EFont());
+	this->setFont(new Font());
 }
 
-e2d::EText::EText(const EString & text)
+e2d::Text::Text(const String & text)
 	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
 {
 	this->setText(text);
-	this->setFont(new EFont());
+	this->setFont(new Font());
 }
 
-e2d::EText::EText(EFont * font)
+e2d::Text::Text(Font * font)
 	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
@@ -25,7 +25,7 @@ e2d::EText::EText(EFont * font)
 	this->setFont(font);
 }
 
-e2d::EText::EText(const EString & text, EFont * font)
+e2d::Text::Text(const String & text, Font * font)
 	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
@@ -34,47 +34,47 @@ e2d::EText::EText(const EString & text, EFont * font)
 	this->setFont(font);
 }
 
-e2d::EText::EText(const EString & text, EString fontFamily, float fontSize, UINT32 color, UINT32 fontWeight, bool italic)
+e2d::Text::Text(const String & text, String fontFamily, float fontSize, UINT32 color, UINT32 fontWeight, bool italic)
 	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
 {
 	this->setText(text);
-	this->setFont(new EFont(fontFamily, fontSize, color, fontWeight, italic));
+	this->setFont(new Font(fontFamily, fontSize, color, fontWeight, italic));
 }
 
-e2d::EText::~EText()
+e2d::Text::~Text()
 {
 	SafeRelease(&m_pFont);
 }
 
-e2d::EString e2d::EText::getText() const
+e2d::String e2d::Text::getText() const
 {
 	return m_sText;
 }
 
-float e2d::EText::getWidth() const
+float e2d::Text::getWidth() const
 {
 	return m_fWordWrappingWidth * m_fScaleX;
 }
 
-float e2d::EText::getRealWidth() const
+float e2d::Text::getRealWidth() const
 {
 	return m_fWordWrappingWidth;
 }
 
-e2d::EFont * e2d::EText::getFont() const
+e2d::Font * e2d::Text::getFont() const
 {
 	return m_pFont;
 }
 
-void e2d::EText::setText(const EString & text)
+void e2d::Text::setText(const String & text)
 {
 	m_sText = text;
 	_initTextLayout();
 }
 
-void e2d::EText::setFont(EFont * font)
+void e2d::Text::setFont(Font * font)
 {
 	if (font)
 	{
@@ -86,22 +86,22 @@ void e2d::EText::setFont(EFont * font)
 	}
 }
 
-void e2d::EText::setWordWrapping(bool value)
+void e2d::Text::setWordWrapping(bool value)
 {
 	m_bWordWrapping = value;
 	_initTextLayout();
 }
 
-void e2d::EText::setWordWrappingWidth(float wordWrapWidth)
+void e2d::Text::setWordWrappingWidth(float wordWrapWidth)
 {
 	m_fWordWrappingWidth = max(wordWrapWidth, 0);
 	_initTextLayout();
 }
 
-void e2d::EText::onRender()
+void e2d::Text::onRender()
 {
-	ERenderer::getSolidColorBrush()->SetColor(D2D1::ColorF(m_pFont->m_Color, m_fDisplayOpacity));
-	ERenderer::getRenderTarget()->DrawTextW(
+	Renderer::getSolidColorBrush()->SetColor(D2D1::ColorF(m_pFont->m_Color, m_fDisplayOpacity));
+	Renderer::getRenderTarget()->DrawTextW(
 		m_sText,
 		UINT32(m_sText.length()),
 		m_pFont->_getTextFormat(),
@@ -111,11 +111,11 @@ void e2d::EText::onRender()
 			m_bWordWrapping ? m_fWordWrappingWidth : m_Size.width,
 			getRealHeight()
 		),
-		ERenderer::getSolidColorBrush()
+		Renderer::getSolidColorBrush()
 	);
 }
 
-void e2d::EText::_initTextLayout()
+void e2d::Text::_initTextLayout()
 {
 	// 未设置字体或空字符串时，文本宽高为 0
 	if (!m_pFont || m_sText.isEmpty())
@@ -138,7 +138,7 @@ void e2d::EText::_initTextLayout()
 	// 获取 TextLayout
 	IDWriteTextLayout * pDWriteTextLayout = nullptr;
 
-	HRESULT hr = ERenderer::getIDWriteFactory()->CreateTextLayout(
+	HRESULT hr = Renderer::getIDWriteFactory()->CreateTextLayout(
 		m_sText,
 		UINT32(m_sText.length()),
 		m_pFont->_getTextFormat(),

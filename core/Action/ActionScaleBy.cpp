@@ -1,23 +1,23 @@
 #include "..\eactions.h"
 
 
-e2d::EActionScaleBy::EActionScaleBy(float duration, float scale)
-	: EActionGradual(duration)
+e2d::ActionScaleBy::ActionScaleBy(float duration, float scale)
+	: ActionGradual(duration)
 {
 	m_nVariationX = scale;
 	m_nVariationY = scale;
 }
 
-e2d::EActionScaleBy::EActionScaleBy(float duration, float scaleX, float scaleY)
-	: EActionGradual(duration)
+e2d::ActionScaleBy::ActionScaleBy(float duration, float scaleX, float scaleY)
+	: ActionGradual(duration)
 {
 	m_nVariationX = scaleX;
 	m_nVariationY = scaleY;
 }
 
-void e2d::EActionScaleBy::_init()
+void e2d::ActionScaleBy::_init()
 {
-	EActionGradual::_init();
+	ActionGradual::_init();
 	if (m_pTarget)
 	{
 		m_nBeginScaleX = m_pTarget->getScaleX();
@@ -25,9 +25,9 @@ void e2d::EActionScaleBy::_init()
 	}
 }
 
-void e2d::EActionScaleBy::_update()
+void e2d::ActionScaleBy::_update()
 {
-	EActionGradual::_update();
+	ActionGradual::_update();
 
 	if (m_pTarget == nullptr)
 	{
@@ -41,12 +41,12 @@ void e2d::EActionScaleBy::_update()
 		m_nBeginScaleX + m_nVariationX * m_fRateOfProgress);
 }
 
-e2d::EActionScaleBy * e2d::EActionScaleBy::clone() const
+e2d::ActionScaleBy * e2d::ActionScaleBy::clone() const
 {
-	return new EActionScaleBy(m_fDuration, m_nVariationX, m_nVariationY);
+	return new ActionScaleBy(m_fDuration, m_nVariationX, m_nVariationY);
 }
 
-e2d::EActionScaleBy * e2d::EActionScaleBy::reverse() const
+e2d::ActionScaleBy * e2d::ActionScaleBy::reverse() const
 {
-	return new EActionScaleBy(m_fDuration, -m_nVariationX, -m_nVariationY);
+	return new ActionScaleBy(m_fDuration, -m_nVariationX, -m_nVariationY);
 }

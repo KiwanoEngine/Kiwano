@@ -9,7 +9,7 @@
 DEFINE_KNOWN_FOLDER(FOLDERID_LocalAppData, 0xF1B32785, 0x6FBA, 0x4FCF, 0x9D, 0x55, 0x7B, 0x8E, 0x7F, 0x15, 0x70, 0x91);
 
 
-e2d::EString e2d::EFile::getLocalAppDataPath()
+e2d::String e2d::File::getLocalAppDataPath()
 {
 	typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
 
@@ -21,21 +21,21 @@ e2d::EString e2d::EFile::getLocalAppDataPath()
 
 	if (SUCCEEDED(hr))
 	{
-		EString path = pszPath;
+		String path = pszPath;
 		CoTaskMemFree(pszPath);
 		return path;
 	}
 	return L"";
 }
 
-e2d::EString e2d::EFile::getTempPath()
+e2d::String e2d::File::getTempPath()
 {
 	// 获取临时文件目录
 	wchar_t path[_MAX_PATH];
 	::GetTempPath(_MAX_PATH, path);
 
 	// 创建临时文件目录
-	e2d::EString tempFilePath = path + e2d::EGame::getAppName();
+	e2d::String tempFilePath = path + e2d::Game::getAppName();
 	if (::_waccess(tempFilePath, 0) == -1)
 	{
 		::_wmkdir(tempFilePath);
@@ -43,12 +43,12 @@ e2d::EString e2d::EFile::getTempPath()
 	return tempFilePath;
 }
 
-e2d::EString e2d::EFile::getDefaultSavePath()
+e2d::String e2d::File::getDefaultSavePath()
 {
-	EString path = EFile::getLocalAppDataPath();
+	String path = File::getLocalAppDataPath();
 	WARN_IF(path.isEmpty(), "Cannot get local AppData path!");
 
-	path += L"\\" + EGame::getAppName();
+	path += L"\\" + Game::getAppName();
 
 	if (::_waccess(path, 0) == -1)
 	{
@@ -60,9 +60,9 @@ e2d::EString e2d::EFile::getDefaultSavePath()
 	return path;
 }
 
-e2d::EString e2d::EFile::getFileExtension(const EString & filePath)
+e2d::String e2d::File::getFileExtension(const String & filePath)
 {
-	EString fileExtension;
+	String fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
 	int pos = filePath.findLastOf(L'.');
 	// 判断 pos 是否是个有效位置
@@ -77,13 +77,13 @@ e2d::EString e2d::EFile::getFileExtension(const EString & filePath)
 	return fileExtension;
 }
 
-e2d::EString e2d::EFile::getSaveFilePath(const EString & title, const EString & defExt)
+e2d::String e2d::File::getSaveFilePath(const String & title, const String & defExt)
 {
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };
 	TCHAR strFilename[MAX_PATH] = { 0 };				// 用于接收文件名
 	ofn.lStructSize = sizeof(OPENFILENAME);				// 结构体大小
-	ofn.hwndOwner = EWindow::getHWnd();					// 窗口句柄
+	ofn.hwndOwner = Window::getHWnd();					// 窗口句柄
 	ofn.lpstrFilter = L"所有文件\0*.*\0\0";				// 设置过滤
 	ofn.nFilterIndex = 1;								// 过滤器索引
 	ofn.lpstrFile = strFilename;						// 接收返回的文件路径和文件名

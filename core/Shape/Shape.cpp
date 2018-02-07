@@ -2,11 +2,11 @@
 #include "..\emanagers.h"
 #include "..\enodes.h"
 
-e2d::EShape::EShape()
+e2d::Shape::Shape()
 	: m_nCategoryBitmask(0)
 	, m_nCollisionBitmask(0)
 	, m_bIsVisiable(true)
-	, m_nColor(EColor::RED)
+	, m_nColor(Color::RED)
 	, m_fOpacity(1)
 	, m_pParentNode(nullptr)
 	, m_pTransformedShape(nullptr)
@@ -14,74 +14,74 @@ e2d::EShape::EShape()
 {
 }
 
-e2d::EShape::~EShape()
+e2d::Shape::~Shape()
 {
 	SafeReleaseInterface(&m_pTransformedShape);
 }
 
-e2d::ENode * e2d::EShape::getParentNode() const
+e2d::Node * e2d::Shape::getParentNode() const
 {
 	return m_pParentNode;
 }
 
-UINT32 e2d::EShape::getCategoryBitmask() const
+UINT32 e2d::Shape::getCategoryBitmask() const
 {
 	return m_nCategoryBitmask;
 }
 
-UINT32 e2d::EShape::getCollisionBitmask() const
+UINT32 e2d::Shape::getCollisionBitmask() const
 {
 	return m_nCollisionBitmask;
 }
 
-void e2d::EShape::setCategoryBitmask(UINT32 mask)
+void e2d::Shape::setCategoryBitmask(UINT32 mask)
 {
 	m_nCategoryBitmask = mask;
 }
 
-void e2d::EShape::setCollisionBitmask(UINT32 mask)
+void e2d::Shape::setCollisionBitmask(UINT32 mask)
 {
 	m_nCollisionBitmask = mask;
 }
 
-void e2d::EShape::setEnable(bool bEnable)
+void e2d::Shape::setEnable(bool bEnable)
 {
 	m_bEnable = bEnable;
 }
 
-void e2d::EShape::setVisiable(bool bVisiable)
+void e2d::Shape::setVisiable(bool bVisiable)
 {
 	m_bIsVisiable = bVisiable;
 }
 
-void e2d::EShape::setColor(UINT32 color)
+void e2d::Shape::setColor(UINT32 color)
 {
 	m_nColor = color;
 }
 
-void e2d::EShape::setOpacity(float opacity)
+void e2d::Shape::setOpacity(float opacity)
 {
 	m_fOpacity = min(max(opacity, 0), 1);
 }
 
-void e2d::EShape::_render()
+void e2d::Shape::_render()
 {
 	if (m_pTransformedShape && m_bEnable)
 	{
-		ID2D1SolidColorBrush * pBrush = ERenderer::getSolidColorBrush();
+		ID2D1SolidColorBrush * pBrush = Renderer::getSolidColorBrush();
 		// 创建画刷
-		ERenderer::getRenderTarget()->CreateSolidColorBrush(
+		Renderer::getRenderTarget()->CreateSolidColorBrush(
 			D2D1::ColorF(
 				m_nColor,
 				m_fOpacity),
 			&pBrush
 		);
 		// 绘制几何形状
-		ERenderer::getRenderTarget()->DrawGeometry(m_pTransformedShape, pBrush);
+		Renderer::getRenderTarget()->DrawGeometry(m_pTransformedShape, pBrush);
 	}
 }
 
-int e2d::EShape::getRelationWith(EShape * pShape) const
+int e2d::Shape::getRelationWith(Shape * pShape) const
 {
 	if (m_pTransformedShape && pShape->m_pTransformedShape)
 	{
@@ -101,7 +101,7 @@ int e2d::EShape::getRelationWith(EShape * pShape) const
 	return 0;
 }
 
-void e2d::EShape::_transform()
+void e2d::Shape::_transform()
 {
 	if (m_pParentNode && m_bEnable)
 	{
@@ -109,12 +109,12 @@ void e2d::EShape::_transform()
 		SafeReleaseInterface(&m_pTransformedShape);
 
 		// 根据父节点转换几何图形
-		ERenderer::getID2D1Factory()->CreateTransformedGeometry(
+		Renderer::getID2D1Factory()->CreateTransformedGeometry(
 			_getD2dGeometry(),
 			m_pParentNode->m_MatriFinal,
 			&m_pTransformedShape
 		);
 
-		EShapeManager::__updateShape(this);
+		ShapeManager::__updateShape(this);
 	}
 }

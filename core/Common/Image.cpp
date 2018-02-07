@@ -4,7 +4,7 @@
 static std::map<size_t, ID2D1Bitmap*> s_mBitmapsFromFile;
 
 
-e2d::EImage::EImage()
+e2d::Image::Image()
 	: m_pBitmap(nullptr)
 	, m_fSourceClipX(0)
 	, m_fSourceClipY(0)
@@ -13,31 +13,31 @@ e2d::EImage::EImage()
 {
 }
 
-e2d::EImage::EImage(LPCTSTR strFileName)
+e2d::Image::Image(LPCTSTR strFileName)
 {
 	this->loadFrom(strFileName);
 }
 
-e2d::EImage::EImage(LPCTSTR strFileName, float nClipX, float nClipY, float nClipWidth, float nClipHeight)
+e2d::Image::Image(LPCTSTR strFileName, float nClipX, float nClipY, float nClipWidth, float nClipHeight)
 {
 	this->loadFrom(strFileName);
 	this->clip(nClipX, nClipY, nClipWidth, nClipHeight);
 }
 
-e2d::EImage::~EImage()
+e2d::Image::~Image()
 {
 }
 
-void e2d::EImage::loadFrom(const EString & strFilePath)
+void e2d::Image::loadFrom(const String & strFilePath)
 {
-	WARN_IF(strFilePath.isEmpty(), "EImage cannot load bitmap from NULL file name.");
+	WARN_IF(strFilePath.isEmpty(), "Image cannot load bitmap from NULL file name.");
 
 	if (strFilePath.isEmpty())
 		return;
 
-	if (!EImage::preload(strFilePath))
+	if (!Image::preload(strFilePath))
 	{
-		WARN_IF(true, "Load EImage from file failed!");
+		WARN_IF(true, "Load Image from file failed!");
 		return;
 	}
 
@@ -47,13 +47,13 @@ void e2d::EImage::loadFrom(const EString & strFilePath)
 	m_fSourceClipHeight = m_pBitmap->GetSize().height;
 }
 
-void e2d::EImage::loadFrom(const EString & strFilePath, float x, float y, float width, float height)
+void e2d::Image::loadFrom(const String & strFilePath, float x, float y, float width, float height)
 {
 	loadFrom(strFilePath);
 	clip(x, y, width, height);
 }
 
-void e2d::EImage::clip(float x, float y, float width, float height)
+void e2d::Image::clip(float x, float y, float width, float height)
 {
 	if (m_pBitmap)
 	{
@@ -64,22 +64,22 @@ void e2d::EImage::clip(float x, float y, float width, float height)
 	}
 }
 
-float e2d::EImage::getWidth() const
+float e2d::Image::getWidth() const
 {
 	return m_fSourceClipWidth;
 }
 
-float e2d::EImage::getHeight() const
+float e2d::Image::getHeight() const
 {
 	return m_fSourceClipHeight;
 }
 
-e2d::ESize e2d::EImage::getSize() const
+e2d::Size e2d::Image::getSize() const
 {
-	return ESize(m_fSourceClipWidth, m_fSourceClipHeight);
+	return Size(m_fSourceClipWidth, m_fSourceClipHeight);
 }
 
-float e2d::EImage::getSourceWidth() const
+float e2d::Image::getSourceWidth() const
 {
 	if (m_pBitmap)
 	{
@@ -91,7 +91,7 @@ float e2d::EImage::getSourceWidth() const
 	}
 }
 
-float e2d::EImage::getSourceHeight() const
+float e2d::Image::getSourceHeight() const
 {
 	if (m_pBitmap)
 	{
@@ -103,34 +103,34 @@ float e2d::EImage::getSourceHeight() const
 	}
 }
 
-e2d::ESize e2d::EImage::getSourceSize() const
+e2d::Size e2d::Image::getSourceSize() const
 {
 	if (m_pBitmap)
 	{
-		return ESize(getSourceWidth(), getSourceHeight());
+		return Size(getSourceWidth(), getSourceHeight());
 	}
 	else
 	{
-		return ESize();
+		return Size();
 	}
 }
 
-float e2d::EImage::getClipX() const
+float e2d::Image::getClipX() const
 {
 	return m_fSourceClipX;
 }
 
-float e2d::EImage::getClipY() const
+float e2d::Image::getClipY() const
 {
 	return m_fSourceClipY;
 }
 
-e2d::EPoint e2d::EImage::getClipPos() const
+e2d::Point e2d::Image::getClipPos() const
 {
-	return EPoint(m_fSourceClipX, m_fSourceClipY);
+	return Point(m_fSourceClipX, m_fSourceClipY);
 }
 
-bool e2d::EImage::preload(const EString & fileName)
+bool e2d::Image::preload(const String & fileName)
 {
 	if (s_mBitmapsFromFile.find(fileName.hash()) != s_mBitmapsFromFile.end())
 	{
@@ -146,7 +146,7 @@ bool e2d::EImage::preload(const EString & fileName)
 	ID2D1Bitmap *pBitmap = nullptr;
 
 	// 创建解码器
-	hr = ERenderer::getIWICImagingFactory()->CreateDecoderFromFilename(
+	hr = Renderer::getIWICImagingFactory()->CreateDecoderFromFilename(
 		fileName,
 		NULL,
 		GENERIC_READ,
@@ -164,7 +164,7 @@ bool e2d::EImage::preload(const EString & fileName)
 	{
 		// 创建图片格式转换器
 		// (DXGI_FORMAT_B8G8R8A8_UNORM + D2D1_ALPHA_MODE_PREMULTIPLIED).
-		hr = ERenderer::getIWICImagingFactory()->CreateFormatConverter(&pConverter);
+		hr = Renderer::getIWICImagingFactory()->CreateFormatConverter(&pConverter);
 	}
 	if (SUCCEEDED(hr))
 	{
@@ -181,7 +181,7 @@ bool e2d::EImage::preload(const EString & fileName)
 	if (SUCCEEDED(hr))
 	{
 		// 从 WIC 位图创建一个 Direct2D 位图
-		hr = ERenderer::getRenderTarget()->CreateBitmapFromWicBitmap(
+		hr = Renderer::getRenderTarget()->CreateBitmapFromWicBitmap(
 			pConverter,
 			NULL,
 			&pBitmap
@@ -206,7 +206,7 @@ bool e2d::EImage::preload(const EString & fileName)
 	return SUCCEEDED(hr);
 }
 
-void e2d::EImage::clearCache()
+void e2d::Image::clearCache()
 {
 	for (auto child : s_mBitmapsFromFile)
 	{
@@ -215,7 +215,7 @@ void e2d::EImage::clearCache()
 	s_mBitmapsFromFile.clear();
 }
 
-ID2D1Bitmap * e2d::EImage::getBitmap()
+ID2D1Bitmap * e2d::Image::getBitmap()
 {
 	return m_pBitmap;
 }

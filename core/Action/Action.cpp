@@ -1,6 +1,6 @@
 #include "..\eactions.h"
 
-e2d::EAction::EAction() 
+e2d::Action::Action() 
 	: m_bRunning(false)
 	, m_bEnding(false)
 	, m_bInit(false)
@@ -10,62 +10,62 @@ e2d::EAction::EAction()
 {
 }
 
-e2d::EAction::~EAction()
+e2d::Action::~Action()
 {
 }
 
-bool e2d::EAction::isRunning()
+bool e2d::Action::isRunning()
 {
 	return m_bRunning;
 }
 
-bool e2d::EAction::_isEnding()
+bool e2d::Action::_isEnding()
 {
 	return m_bEnding;
 }
 
-void e2d::EAction::startWith(ENode* pTarget)
+void e2d::Action::startWith(Node* pTarget)
 {
 	m_bRunning = true;
 	m_pTarget = pTarget;
 	this->reset();
 }
 
-void e2d::EAction::resume()
+void e2d::Action::resume()
 {
 	m_bRunning = true;
-	m_fLast = ETime::getTotalTime();
+	m_fLast = Time::getTotalTime();
 }
 
-void e2d::EAction::pause()
+void e2d::Action::pause()
 {
 	m_bRunning = false;
 }
 
-void e2d::EAction::stop()
+void e2d::Action::stop()
 {
 	m_bEnding = true;
 }
 
-e2d::EAction * e2d::EAction::reverse() const
+e2d::Action * e2d::Action::reverse() const
 {
-	ASSERT(false, "EAction cannot be reversed!");
+	ASSERT(false, "Action cannot be reversed!");
 	return nullptr;
 }
 
-e2d::ENode * e2d::EAction::getTarget()
+e2d::Node * e2d::Action::getTarget()
 {
 	return m_pTarget;
 }
 
-void e2d::EAction::_init()
+void e2d::Action::_init()
 {
 	m_bInit = true;
 	// 记录当前时间
-	m_fLast = ETime::getTotalTime();
+	m_fLast = Time::getTotalTime();
 }
 
-void e2d::EAction::_update()
+void e2d::Action::_update()
 {
 	if (!m_bInit)
 	{
@@ -73,14 +73,14 @@ void e2d::EAction::_update()
 	}
 }
 
-void e2d::EAction::reset()
+void e2d::Action::reset()
 {
 	m_bInit = false;
 	m_bEnding = false;
-	m_fLast = ETime::getTotalTime();
+	m_fLast = Time::getTotalTime();
 }
 
-void e2d::EAction::_resetTime()
+void e2d::Action::_resetTime()
 {
-	m_fLast = ETime::getTotalTime();
+	m_fLast = Time::getTotalTime();
 }

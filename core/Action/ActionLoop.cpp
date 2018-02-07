@@ -1,34 +1,34 @@
 #include "..\eactions.h"
 
-e2d::EActionLoop::EActionLoop(EAction * action, int times /* = -1 */)
+e2d::ActionLoop::ActionLoop(Action * action, int times /* = -1 */)
 	: m_pAction(action)
 	, m_nTimes(0)
 	, m_nTotalTimes(times)
 {
-	ASSERT(m_pAction != nullptr, "EActionLoop NULL pointer exception!");
+	ASSERT(m_pAction != nullptr, "ActionLoop NULL pointer exception!");
 	m_pAction->retain();
 }
 
-e2d::EActionLoop::~EActionLoop()
+e2d::ActionLoop::~ActionLoop()
 {
 	SafeRelease(&m_pAction);
 }
 
-e2d::EActionLoop * e2d::EActionLoop::clone() const
+e2d::ActionLoop * e2d::ActionLoop::clone() const
 {
-	return new EActionLoop(m_pAction->clone());
+	return new ActionLoop(m_pAction->clone());
 }
 
-void e2d::EActionLoop::_init()
+void e2d::ActionLoop::_init()
 {
-	EAction::_init();
+	Action::_init();
 	m_pAction->m_pTarget = m_pTarget;
 	m_pAction->_init();
 }
 
-void e2d::EActionLoop::_update()
+void e2d::ActionLoop::_update()
 {
-	EAction::_update();
+	Action::_update();
 
 	if (m_nTimes == m_nTotalTimes)
 	{
@@ -42,20 +42,20 @@ void e2d::EActionLoop::_update()
 	{
 		m_nTimes++;
 		
-		EAction::reset();
+		Action::reset();
 		m_pAction->reset();
 	}
 }
 
-void e2d::EActionLoop::reset()
+void e2d::ActionLoop::reset()
 {
-	EAction::reset();
+	Action::reset();
 
 	m_pAction->reset();
 	m_nTimes = 0;
 }
 
-void e2d::EActionLoop::_resetTime()
+void e2d::ActionLoop::_resetTime()
 {
 	m_pAction->_resetTime();
 }

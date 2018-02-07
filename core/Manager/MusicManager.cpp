@@ -5,8 +5,8 @@
 static IXAudio2 * s_pXAudio2 = nullptr;
 static IXAudio2MasteringVoice * s_pMasteringVoice = nullptr;
 
-typedef std::pair<UINT, e2d::EMusic *> MusicPair;
-typedef std::map<UINT, e2d::EMusic *> MusicList;
+typedef std::pair<UINT, e2d::Music *> MusicPair;
+typedef std::map<UINT, e2d::Music *> MusicList;
 
 static MusicList& getMusicList()
 {
@@ -15,9 +15,9 @@ static MusicList& getMusicList()
 }
 
 
-bool e2d::EMusicManager::add(const EString & strFilePath)
+bool e2d::MusicManager::add(const String & strFilePath)
 {
-	EMusic * pPlayer = get(strFilePath);
+	Music * pPlayer = get(strFilePath);
 	if (pPlayer)
 	{
 		return true;
@@ -25,7 +25,7 @@ bool e2d::EMusicManager::add(const EString & strFilePath)
 	else
 	{
 		UINT nRet = strFilePath.hash();
-		pPlayer = new EMusic();
+		pPlayer = new Music();
 
 		if (pPlayer->_open(strFilePath))
 		{
@@ -40,7 +40,7 @@ bool e2d::EMusicManager::add(const EString & strFilePath)
 	}
 }
 
-e2d::EMusic * e2d::EMusicManager::get(const EString & strFilePath)
+e2d::Music * e2d::MusicManager::get(const String & strFilePath)
 {
 	if (strFilePath.isEmpty())
 		return nullptr;
@@ -53,7 +53,7 @@ e2d::EMusic * e2d::EMusicManager::get(const EString & strFilePath)
 	return nullptr;
 }
 
-void e2d::EMusicManager::pauseAllMusics()
+void e2d::MusicManager::pauseAllMusics()
 {
 	for (auto iter : getMusicList())
 	{
@@ -61,7 +61,7 @@ void e2d::EMusicManager::pauseAllMusics()
 	}
 }
 
-void e2d::EMusicManager::resumeAllMusics()
+void e2d::MusicManager::resumeAllMusics()
 {
 	for (auto iter : getMusicList())
 	{
@@ -69,7 +69,7 @@ void e2d::EMusicManager::resumeAllMusics()
 	}
 }
 
-void e2d::EMusicManager::stopAllMusics()
+void e2d::MusicManager::stopAllMusics()
 {
 	for (auto iter : getMusicList())
 	{
@@ -77,17 +77,17 @@ void e2d::EMusicManager::stopAllMusics()
 	}
 }
 
-IXAudio2 * e2d::EMusicManager::getIXAudio2()
+IXAudio2 * e2d::MusicManager::getIXAudio2()
 {
 	return s_pXAudio2;
 }
 
-IXAudio2MasteringVoice * e2d::EMusicManager::getIXAudio2MasteringVoice()
+IXAudio2MasteringVoice * e2d::MusicManager::getIXAudio2MasteringVoice()
 {
 	return s_pMasteringVoice;
 }
 
-bool e2d::EMusicManager::__init()
+bool e2d::MusicManager::__init()
 {
 	HRESULT hr;
 
@@ -107,7 +107,7 @@ bool e2d::EMusicManager::__init()
 	return true;
 }
 
-void e2d::EMusicManager::__uninit()
+void e2d::MusicManager::__uninit()
 {
 	for (auto iter : getMusicList())
 	{

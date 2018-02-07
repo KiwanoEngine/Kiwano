@@ -3,16 +3,16 @@
 #include "..\eshape.h"
 
 // 形状集合
-std::vector<e2d::EShape*> s_vShapes;
+std::vector<e2d::Shape*> s_vShapes;
 
 
-void e2d::EShapeManager::__updateShape(e2d::EShape * pActiveShape)
+void e2d::ShapeManager::__updateShape(e2d::Shape * pActiveShape)
 {
-	ENode* pActiveNode = pActiveShape->m_pParentNode;
+	Node* pActiveNode = pActiveShape->m_pParentNode;
 	if (pActiveNode)
 	{
 		// 获取节点所在场景
-		EScene* pCurrentScene = pActiveNode->getParentScene();
+		Scene* pCurrentScene = pActiveNode->getParentScene();
 		// 判断与其他形状的交集情况
 		for (auto pPassiveShape : s_vShapes)
 		{
@@ -20,7 +20,7 @@ void e2d::EShapeManager::__updateShape(e2d::EShape * pActiveShape)
 			if (pActiveShape->m_nCollisionBitmask & pPassiveShape->m_nCategoryBitmask)
 			{
 				// 获取被碰撞节点
-				ENode* pPassiveNode = pPassiveShape->m_pParentNode;
+				Node* pPassiveNode = pPassiveShape->m_pParentNode;
 				// 判断两节点是否处于同一场景中
 				if (pPassiveNode &&
 					pPassiveNode != pActiveNode &&
@@ -29,7 +29,7 @@ void e2d::EShapeManager::__updateShape(e2d::EShape * pActiveShape)
 					// 判断两形状交集情况
 					int relation = pActiveShape->getRelationWith(pPassiveShape);
 					// 忽略 UNKNOWN 和 DISJOINT 情况
-					if (relation != ERelation::UNKNOWN && relation != ERelation::DISJOINT)
+					if (relation != Relation::UNKNOWN && relation != Relation::DISJOINT)
 					{
 						pActiveNode->onCollide(pPassiveNode, relation);
 						pPassiveNode->onCollide(pActiveNode, pPassiveShape->getRelationWith(pActiveShape));
@@ -41,7 +41,7 @@ void e2d::EShapeManager::__updateShape(e2d::EShape * pActiveShape)
 	}
 }
 
-void e2d::EShapeManager::__addShape(EShape * pShape)
+void e2d::ShapeManager::__addShape(Shape * pShape)
 {
 	if (pShape)
 	{
@@ -50,7 +50,7 @@ void e2d::EShapeManager::__addShape(EShape * pShape)
 	}
 }
 
-void e2d::EShapeManager::__delShape(EShape * pShape)
+void e2d::ShapeManager::__delShape(Shape * pShape)
 {
 	if (pShape)
 	{

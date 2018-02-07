@@ -1,7 +1,7 @@
 #include "..\enodes.h"
 
-e2d::EButtonToggle::EButtonToggle()
-	: EButton()
+e2d::ButtonToggle::ButtonToggle()
+	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
@@ -14,8 +14,8 @@ e2d::EButtonToggle::EButtonToggle()
 {
 }
 
-e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNormal, const BtnClkCallback & callback)
-	: EButton()
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, const ButtonCallback & callback)
+	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
@@ -31,8 +31,8 @@ e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNorma
 	this->setCallback(callback);
 }
 
-e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNormal, ENode * toggleOnSelected, ENode * toggleOffSelected, const BtnClkCallback & callback)
-	: EButton()
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, const ButtonCallback & callback)
+	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
@@ -50,8 +50,8 @@ e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNorma
 	this->setCallback(callback);
 }
 
-e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNormal, ENode * toggleOnMouseOver, ENode * toggleOffMouseOver, ENode * toggleOnSelected, ENode * toggleOffSelected, const BtnClkCallback & callback)
-	: EButton()
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, const ButtonCallback & callback)
+	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
@@ -71,8 +71,8 @@ e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNorma
 	this->setCallback(callback);
 }
 
-e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNormal, ENode * toggleOnMouseOver, ENode * toggleOffMouseOver, ENode * toggleOnSelected, ENode * toggleOffSelected, ENode * toggleOnDisabled, ENode * toggleOffDisabled, const BtnClkCallback & callback)
-	: EButton()
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Node * toggleOnDisabled, Node * toggleOffDisabled, const ButtonCallback & callback)
+	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
 	, m_pMouseoverOn(nullptr)
@@ -94,23 +94,12 @@ e2d::EButtonToggle::EButtonToggle(ENode * toggleOnNormal, ENode * toggleOffNorma
 	this->setCallback(callback);
 }
 
-void e2d::EButtonToggle::toggle()
-{
-	// 设置按钮状态
-	setState(!m_bState);
-	// 执行回调函数
-	if (m_Callback)
-	{
-		m_Callback();
-	}
-}
-
-bool e2d::EButtonToggle::getState() const
+bool e2d::ButtonToggle::getState() const
 {
 	return m_bState;
 }
 
-void e2d::EButtonToggle::setState(bool bState)
+void e2d::ButtonToggle::setState(bool bState)
 {
 	if (m_bState != bState)
 	{
@@ -120,7 +109,7 @@ void e2d::EButtonToggle::setState(bool bState)
 	}
 }
 
-void e2d::EButtonToggle::setNormal(ENode * normal)
+void e2d::ButtonToggle::setNormal(Node * normal)
 {
 	if (normal != m_pNormalOn)
 	{
@@ -143,7 +132,7 @@ void e2d::EButtonToggle::setNormal(ENode * normal)
 	}
 }
 
-void e2d::EButtonToggle::setMouseOver(ENode * mouseover)
+void e2d::ButtonToggle::setMouseOver(Node * mouseover)
 {
 	if (mouseover != m_pMouseoverOn)
 	{
@@ -165,7 +154,7 @@ void e2d::EButtonToggle::setMouseOver(ENode * mouseover)
 	}
 }
 
-void e2d::EButtonToggle::setSelected(ENode * selected)
+void e2d::ButtonToggle::setSelected(Node * selected)
 {
 	if (selected != m_pSelectedOn)
 	{
@@ -187,7 +176,7 @@ void e2d::EButtonToggle::setSelected(ENode * selected)
 	}
 }
 
-void e2d::EButtonToggle::setDisabled(ENode * disabled)
+void e2d::ButtonToggle::setDisabled(Node * disabled)
 {
 	if (disabled != m_pDisabledOn)
 	{
@@ -209,7 +198,7 @@ void e2d::EButtonToggle::setDisabled(ENode * disabled)
 	}
 }
 
-void e2d::EButtonToggle::setNormalOff(ENode * normal)
+void e2d::ButtonToggle::setNormalOff(Node * normal)
 {
 	if (normal != m_pNormalOff)
 	{
@@ -231,7 +220,7 @@ void e2d::EButtonToggle::setNormalOff(ENode * normal)
 	}
 }
 
-void e2d::EButtonToggle::setMouseOverOff(ENode * mouseover)
+void e2d::ButtonToggle::setMouseOverOff(Node * mouseover)
 {
 	if (mouseover != m_pMouseoverOff)
 	{
@@ -253,7 +242,7 @@ void e2d::EButtonToggle::setMouseOverOff(ENode * mouseover)
 	}
 }
 
-void e2d::EButtonToggle::setSelectedOff(ENode * selected)
+void e2d::ButtonToggle::setSelectedOff(Node * selected)
 {
 	if (selected != m_pSelectedOff)
 	{
@@ -275,7 +264,7 @@ void e2d::EButtonToggle::setSelectedOff(ENode * selected)
 	}
 }
 
-void e2d::EButtonToggle::setDisabledOff(ENode * disabled)
+void e2d::ButtonToggle::setDisabledOff(Node * disabled)
 {
 	if (disabled != m_pDisabledOff)
 	{
@@ -297,9 +286,9 @@ void e2d::EButtonToggle::setDisabledOff(ENode * disabled)
 	}
 }
 
-void e2d::EButtonToggle::setPivotX(float pivotX)
+void e2d::ButtonToggle::setPivotX(float pivotX)
 {
-	ENode::setPivotX(pivotX);
+	Node::setPivotX(pivotX);
 	if (m_pNormalOn) m_pNormalOn->setPivotX(pivotX);
 	if (m_pMouseoverOn) m_pMouseoverOn->setPivotX(pivotX);
 	if (m_pSelectedOn) m_pSelectedOn->setPivotX(pivotX);
@@ -310,9 +299,9 @@ void e2d::EButtonToggle::setPivotX(float pivotX)
 	if (m_pDisabledOff) m_pDisabledOff->setPivotX(pivotX);
 }
 
-void e2d::EButtonToggle::setPivotY(float pivotY)
+void e2d::ButtonToggle::setPivotY(float pivotY)
 {
-	ENode::setPivotY(pivotY);
+	Node::setPivotY(pivotY);
 	if (m_pNormalOn) m_pNormalOn->setPivotY(pivotY);
 	if (m_pMouseoverOn) m_pMouseoverOn->setPivotY(pivotY);
 	if (m_pSelectedOn) m_pSelectedOn->setPivotY(pivotY);
@@ -323,9 +312,9 @@ void e2d::EButtonToggle::setPivotY(float pivotY)
 	if (m_pDisabledOff) m_pDisabledOff->setPivotY(pivotY);
 }
 
-void e2d::EButtonToggle::setPivot(float pivotX, float pivotY)
+void e2d::ButtonToggle::setPivot(float pivotX, float pivotY)
 {
-	ENode::setPivot(pivotX, pivotY);
+	Node::setPivot(pivotX, pivotY);
 	if (m_pNormalOn) m_pNormalOn->setPivot(pivotX, pivotY);
 	if (m_pMouseoverOn) m_pMouseoverOn->setPivot(pivotX, pivotY);
 	if (m_pSelectedOn) m_pSelectedOn->setPivot(pivotX, pivotY);
@@ -336,7 +325,7 @@ void e2d::EButtonToggle::setPivot(float pivotX, float pivotY)
 	if (m_pDisabledOff) m_pDisabledOff->setPivot(pivotX, pivotY);
 }
 
-void e2d::EButtonToggle::_updateState()
+void e2d::ButtonToggle::_updateState()
 {
 	if (m_bState)
 	{
@@ -364,7 +353,7 @@ void e2d::EButtonToggle::_updateState()
 	}
 }
 
-void e2d::EButtonToggle::_runCallback()
+void e2d::ButtonToggle::_runCallback()
 {
 	m_bState = !m_bState;
 	_updateState();

@@ -1,14 +1,14 @@
 #include "..\enodes.h"
 
-e2d::EMenu::EMenu()
+e2d::Menu::Menu()
 	: m_bEnable(true)
 {
 }
 
-e2d::EMenu::EMenu(int number, EButton * button1, ...)
+e2d::Menu::Menu(int number, Button * button1, ...)
 	: m_bEnable(true)
 {
-	EButton ** ppButton = &button1;
+	Button ** ppButton = &button1;
 
 	while (number > 0)
 	{
@@ -18,17 +18,17 @@ e2d::EMenu::EMenu(int number, EButton * button1, ...)
 	}
 }
 
-bool e2d::EMenu::isEnable() const
+bool e2d::Menu::isEnable() const
 {
 	return m_bEnable;
 }
 
-size_t e2d::EMenu::getButtonCount() const
+size_t e2d::Menu::getButtonCount() const
 {
 	return m_vButtons.size();
 }
 
-void e2d::EMenu::setEnable(bool enable)
+void e2d::Menu::setEnable(bool enable)
 {
 	if (m_bEnable != enable)
 	{
@@ -41,7 +41,7 @@ void e2d::EMenu::setEnable(bool enable)
 	}
 }
 
-void e2d::EMenu::addButton(EButton * button)
+void e2d::Menu::addButton(Button * button)
 {
 	if (button)
 	{
@@ -51,7 +51,7 @@ void e2d::EMenu::addButton(EButton * button)
 	}
 }
 
-bool e2d::EMenu::removeButton(EButton * button)
+bool e2d::Menu::removeButton(Button * button)
 {
 	if (m_vButtons.empty())
 	{

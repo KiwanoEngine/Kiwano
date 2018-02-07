@@ -1,19 +1,19 @@
 #include "..\eactions.h"
 
 
-e2d::EActionRotateTo::EActionRotateTo(float duration, float rotation) :
-	EActionRotateBy(duration, 0)
+e2d::ActionRotateTo::ActionRotateTo(float duration, float rotation) :
+	ActionRotateBy(duration, 0)
 {
 	m_nEndVal = rotation;
 }
 
-e2d::EActionRotateTo * e2d::EActionRotateTo::clone() const
+e2d::ActionRotateTo * e2d::ActionRotateTo::clone() const
 {
-	return new EActionRotateTo(m_fDuration, m_nEndVal);
+	return new ActionRotateTo(m_fDuration, m_nEndVal);
 }
 
-void e2d::EActionRotateTo::_init()
+void e2d::ActionRotateTo::_init()
 {
-	EActionRotateBy::_init();
+	ActionRotateBy::_init();
 	m_nVariation = m_nEndVal - m_nBeginVal;
 }

@@ -1,13 +1,13 @@
 #include "..\etransitions.h"
 #include "..\enodes.h"
 
-e2d::ETransitionMove::ETransitionMove(float duration, MOVE_DIRECT direct)
-	: ETransition(duration)
+e2d::TransitionMove::TransitionMove(float duration, MOVE_DIRECT direct)
+	: Transition(duration)
 	, m_Direct(direct)
 {
 }
 
-void e2d::ETransitionMove::_update()
+void e2d::TransitionMove::_update()
 {
 	this->_calcRateOfProgress();
 
@@ -20,34 +20,34 @@ void e2d::ETransitionMove::_update()
 	}
 }
 
-void e2d::ETransitionMove::_init()
+void e2d::TransitionMove::_init()
 {
-	if (m_Direct == ETransitionMove::UP)
+	if (m_Direct == TransitionMove::UP)
 	{
-		m_Vec = EVector2(0, -EWindow::getHeight());
-		m_NextPos = EPoint(0, EWindow::getHeight());
+		m_Vec = Vector(0, -Window::getHeight());
+		m_NextPos = Point(0, Window::getHeight());
 	}
-	else if (m_Direct == ETransitionMove::DOWN)
+	else if (m_Direct == TransitionMove::DOWN)
 	{
-		m_Vec = EVector2(0, EWindow::getHeight());
-		m_NextPos = EPoint(0, -EWindow::getHeight());
+		m_Vec = Vector(0, Window::getHeight());
+		m_NextPos = Point(0, -Window::getHeight());
 	}
-	else if (m_Direct == ETransitionMove::LEFT)
+	else if (m_Direct == TransitionMove::LEFT)
 	{
-		m_Vec = EVector2(-EWindow::getWidth(), 0);
-		m_NextPos = EPoint(EWindow::getWidth(), 0);
+		m_Vec = Vector(-Window::getWidth(), 0);
+		m_NextPos = Point(Window::getWidth(), 0);
 	}
-	else if (m_Direct == ETransitionMove::RIGHT)
+	else if (m_Direct == TransitionMove::RIGHT)
 	{
-		m_Vec = EVector2(EWindow::getWidth(), 0);
-		m_NextPos = EPoint(-EWindow::getWidth(), 0);
+		m_Vec = Vector(Window::getWidth(), 0);
+		m_NextPos = Point(-Window::getWidth(), 0);
 	}
 
 	if (m_pPrevScene) m_pPrevScene->getRoot()->setPos(0, 0);
 	m_pNextScene->getRoot()->setPos(m_NextPos);
 }
 
-void e2d::ETransitionMove::_reset()
+void e2d::TransitionMove::_reset()
 {
 	if (m_pPrevScene) m_pPrevScene->getRoot()->setPos(0, 0);
 	m_pNextScene->getRoot()->setPos(0, 0);

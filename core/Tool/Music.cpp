@@ -12,18 +12,18 @@ using namespace e2d;
 
 inline bool TraceError(LPCTSTR sPrompt)
 {
-	WARN_IF(true, "EMusic error: %s failed!", sPrompt);
+	WARN_IF(true, "Music error: %s failed!", sPrompt);
 	return false;
 }
 
 inline bool TraceError(LPCTSTR sPrompt, HRESULT hr)
 {
-	WARN_IF(true, "EMusic error: %s (%#X)", sPrompt, hr);
+	WARN_IF(true, "Music error: %s (%#X)", sPrompt, hr);
 	return false;
 }
 
 
-EMusic::EMusic()
+Music::Music()
 	: m_bOpened(false)
 	, m_bPlaying(false)
 	, m_pwfx(nullptr)
@@ -35,26 +35,26 @@ EMusic::EMusic()
 {
 }
 
-EMusic::~EMusic()
+Music::~Music()
 {
 	_close();
 }
 
-bool EMusic::_open(LPWSTR strFileName)
+bool Music::_open(LPWSTR strFileName)
 {
 	if (m_bOpened)
 	{
-		WARN_IF(true, L"EMusic can be opened only once!");
+		WARN_IF(true, L"Music can be opened only once!");
 		return false;
 	}
 
 	if (strFileName == nullptr)
 	{
-		WARN_IF(true, L"EMusic::_open Invalid file name.");
+		WARN_IF(true, L"Music::_open Invalid file name.");
 		return false;
 	}
 
-	IXAudio2 * pXAudio2 = EMusicManager::getIXAudio2();
+	IXAudio2 * pXAudio2 = MusicManager::getIXAudio2();
 	if (!pXAudio2)
 	{
 		WARN_IF(true, L"IXAudio2 nullptr pointer error!");
@@ -113,7 +113,7 @@ bool EMusic::_open(LPWSTR strFileName)
 	return true;
 }
 
-bool EMusic::play(int nLoopCount)
+bool Music::play(int nLoopCount)
 {
 	HRESULT hr;
 
@@ -148,7 +148,7 @@ bool EMusic::play(int nLoopCount)
 	return SUCCEEDED(hr);
 }
 
-bool EMusic::pause()
+bool Music::pause()
 {
 	if (m_pSourceVoice)
 	{
@@ -161,7 +161,7 @@ bool EMusic::pause()
 	return false;
 }
 
-bool EMusic::resume()
+bool Music::resume()
 {
 	if (m_pSourceVoice)
 	{
@@ -174,7 +174,7 @@ bool EMusic::resume()
 	return false;
 }
 
-bool EMusic::stop()
+bool Music::stop()
 {
 	if (m_pSourceVoice)
 	{
@@ -189,7 +189,7 @@ bool EMusic::stop()
 	return false;
 }
 
-bool EMusic::isPlaying()
+bool Music::isPlaying()
 {
 	if (m_pSourceVoice)
 	{
@@ -208,7 +208,7 @@ bool EMusic::isPlaying()
 	}
 }
 
-float EMusic::getVolume() const
+float Music::getVolume() const
 {
 	float fVolume = 0.0f;
 	if (m_pSourceVoice)
@@ -218,7 +218,7 @@ float EMusic::getVolume() const
 	return fVolume;
 }
 
-bool EMusic::setVolume(float fVolume)
+bool Music::setVolume(float fVolume)
 {
 	if (m_pSourceVoice)
 	{
@@ -227,7 +227,7 @@ bool EMusic::setVolume(float fVolume)
 	return false;
 }
 
-float EMusic::getFrequencyRatio() const
+float Music::getFrequencyRatio() const
 {
 	float fFrequencyRatio = 0.0f;
 	if (m_pSourceVoice)
@@ -237,7 +237,7 @@ float EMusic::getFrequencyRatio() const
 	return fFrequencyRatio;
 }
 
-bool EMusic::setFrequencyRatio(float fFrequencyRatio)
+bool Music::setFrequencyRatio(float fFrequencyRatio)
 {
 	if (m_pSourceVoice)
 	{
@@ -247,12 +247,12 @@ bool EMusic::setFrequencyRatio(float fFrequencyRatio)
 	return false;
 }
 
-IXAudio2SourceVoice * EMusic::getIXAudio2SourceVoice() const
+IXAudio2SourceVoice * Music::getIXAudio2SourceVoice() const
 {
 	return m_pSourceVoice;
 }
 
-void EMusic::_close()
+void Music::_close()
 {
 	if (m_pSourceVoice)
 	{
@@ -276,7 +276,7 @@ void EMusic::_close()
 	m_bPlaying = false;
 }
 
-bool EMusic::_readMMIO()
+bool Music::_readMMIO()
 {
 	MMCKINFO ckIn;
 	PCMWAVEFORMAT pcmWaveFormat;
@@ -348,7 +348,7 @@ bool EMusic::_readMMIO()
 	return true;
 }
 
-bool EMusic::_resetFile()
+bool Music::_resetFile()
 {
 	// Seek to the data
 	if (-1 == mmioSeek(m_hmmio, m_ckRiff.dwDataOffset + sizeof(FOURCC),
@@ -363,7 +363,7 @@ bool EMusic::_resetFile()
 	return true;
 }
 
-bool EMusic::_read(BYTE* pBuffer, DWORD dwSizeToRead)
+bool Music::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 {
 	MMIOINFO mmioinfoIn; // current status of m_hmmio
 
@@ -399,7 +399,7 @@ bool EMusic::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 	return true;
 }
 
-bool EMusic::_findMediaFileCch(WCHAR* strDestPath, int cchDest, LPCWSTR strFilename)
+bool Music::_findMediaFileCch(WCHAR* strDestPath, int cchDest, LPCWSTR strFilename)
 {
 	bool bFound = false;
 

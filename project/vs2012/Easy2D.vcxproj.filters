@@ -83,9 +83,6 @@
     <ClCompile Include="..\..\core\Action\ActionTwo.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionTwoAtSameTime.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Action\Animation.cpp">
       <Filter>Action</Filter>
     </ClCompile>
@@ -179,9 +176,6 @@
     <ClCompile Include="..\..\core\Shape\Ellipse.cpp">
       <Filter>Shape</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Shape\Rectangle.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Shape\Shape.cpp">
       <Filter>Shape</Filter>
     </ClCompile>
@@ -193,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Tool\File.cpp">
       <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\Rect.cpp">
+      <Filter>Shape</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

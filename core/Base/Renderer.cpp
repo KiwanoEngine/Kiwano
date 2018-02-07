@@ -9,7 +9,7 @@ static IDWriteFactory * s_pDWriteFactory = nullptr;
 static D2D1_COLOR_F s_nClearColor = D2D1::ColorF(D2D1::ColorF::Black);
 
 
-bool e2d::ERenderer::__createDeviceIndependentResources()
+bool e2d::Renderer::__createDeviceIndependentResources()
 {
 	// 创建设备无关资源，它们的生命周期和程序的时长相同
 	HRESULT hr = D2D1CreateFactory(
@@ -46,13 +46,13 @@ bool e2d::ERenderer::__createDeviceIndependentResources()
 	return SUCCEEDED(hr);
 }
 
-bool e2d::ERenderer::__createDeviceResources()
+bool e2d::Renderer::__createDeviceResources()
 {
 	HRESULT hr = S_OK;
 	
 	if (!s_pRenderTarget)
 	{
-		HWND hWnd = EWindow::getHWnd();
+		HWND hWnd = Window::getHWnd();
 
 		// 创建设备相关资源。这些资源应在 Direct3D 设备消失时重建，
 		// 比如当 isVisiable 被修改，等等
@@ -89,13 +89,13 @@ bool e2d::ERenderer::__createDeviceResources()
 	return SUCCEEDED(hr);
 }
 
-void e2d::ERenderer::__discardDeviceResources()
+void e2d::Renderer::__discardDeviceResources()
 {
 	SafeReleaseInterface(&s_pRenderTarget);
 	SafeReleaseInterface(&s_pSolidBrush);
 }
 
-void e2d::ERenderer::__discardResources()
+void e2d::Renderer::__discardResources()
 {
 	SafeReleaseInterface(&s_pDirect2dFactory);
 	SafeReleaseInterface(&s_pRenderTarget);
@@ -104,12 +104,12 @@ void e2d::ERenderer::__discardResources()
 	SafeReleaseInterface(&s_pDWriteFactory);
 }
 
-void e2d::ERenderer::__render()
+void e2d::Renderer::__render()
 {
 	HRESULT hr = S_OK;
 
 	// 创建设备相关资源
-	ERenderer::__createDeviceResources();
+	Renderer::__createDeviceResources();
 
 	// 开始渲染
 	s_pRenderTarget->BeginDraw();
@@ -117,7 +117,7 @@ void e2d::ERenderer::__render()
 	s_pRenderTarget->Clear(s_nClearColor);
 
 	// 渲染场景
-	ESceneManager::__render();
+	SceneManager::__render();
 
 	// 终止渲染
 	hr = s_pRenderTarget->EndDraw();
@@ -127,44 +127,44 @@ void e2d::ERenderer::__render()
 		// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
 		// 并在下一次调用时重建资源
 		hr = S_OK;
-		ERenderer::__discardDeviceResources();
+		Renderer::__discardDeviceResources();
 	}
 
 	if (FAILED(hr))
 	{
 		// 渲染时产生了未知的错误，退出游戏
 		ASSERT(false, L"Renderer error: %#X!", hr);
-		EGame::quit();
+		Game::quit();
 	}
 }
 
 
-void e2d::ERenderer::setBackgroundColor(UINT32 color)
+void e2d::Renderer::setBackgroundColor(UINT32 color)
 {
 	s_nClearColor = D2D1::ColorF(color);
 }
 
-ID2D1Factory * e2d::ERenderer::getID2D1Factory()
+ID2D1Factory * e2d::Renderer::getID2D1Factory()
 {
 	return s_pDirect2dFactory;
 }
 
-ID2D1HwndRenderTarget * e2d::ERenderer::getRenderTarget()
+ID2D1HwndRenderTarget * e2d::Renderer::getRenderTarget()
 {
 	return s_pRenderTarget;
 }
 
-ID2D1SolidColorBrush * e2d::ERenderer::getSolidColorBrush()
+ID2D1SolidColorBrush * e2d::Renderer::getSolidColorBrush()
 {
 	return s_pSolidBrush;
 }
 
-IWICImagingFactory * e2d::ERenderer::getIWICImagingFactory()
+IWICImagingFactory * e2d::Renderer::getIWICImagingFactory()
 {
 	return s_pIWICFactory;
 }
 
-IDWriteFactory * e2d::ERenderer::getIDWriteFactory()
+IDWriteFactory * e2d::Renderer::getIDWriteFactory()
 {
 	return s_pDWriteFactory;
 }

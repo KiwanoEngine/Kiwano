@@ -1,8 +1,8 @@
 #include "..\etransitions.h"
 #include "..\enodes.h"
 
-e2d::ETransitionFade::ETransitionFade(float fadeOutDuration, float fadeInDuration)
-	: ETransition(0)
+e2d::TransitionFade::TransitionFade(float fadeOutDuration, float fadeInDuration)
+	: Transition(0)
 	, m_fFadeOutDuration(fadeOutDuration)
 	, m_fFadeInDuration(fadeInDuration)
 	, m_bFadeOutTransioning(true)
@@ -10,7 +10,7 @@ e2d::ETransitionFade::ETransitionFade(float fadeOutDuration, float fadeInDuratio
 	m_fDuration = max(m_fFadeOutDuration, 0);
 }
 
-void e2d::ETransitionFade::_update()
+void e2d::TransitionFade::_update()
 {
 	this->_calcRateOfProgress();
 
@@ -21,7 +21,7 @@ void e2d::ETransitionFade::_update()
 		{
 			m_bFadeOutTransioning = false;
 			m_fDuration = max(m_fFadeInDuration, 0);
-			m_fLast = ETime::getTotalTime();
+			m_fLast = Time::getTotalTime();
 		}
 	}
 	else
@@ -34,7 +34,7 @@ void e2d::ETransitionFade::_update()
 	}
 }
 
-void e2d::ETransitionFade::_init()
+void e2d::TransitionFade::_init()
 {
 	if (m_pPrevScene)
 	{
@@ -49,7 +49,7 @@ void e2d::ETransitionFade::_init()
 	m_pNextScene->getRoot()->setOpacity(0);
 }
 
-void e2d::ETransitionFade::_reset()
+void e2d::TransitionFade::_reset()
 {
 	if (m_pPrevScene) m_pPrevScene->getRoot()->setOpacity(1);
 	m_pNextScene->getRoot()->setOpacity(1);

@@ -3,14 +3,14 @@
 using namespace e2d;
 
 
-EString::EString()
+String::String()
 {
 	_size = 0;
 	_string = new wchar_t[1];
 	_string[0] = 0;
 }
 
-e2d::EString::EString(const wchar_t ch)
+e2d::String::String(const wchar_t ch)
 {
 	_size = 1;
 	_string = new wchar_t[2];
@@ -18,7 +18,7 @@ e2d::EString::EString(const wchar_t ch)
 	_string[1] = 0;
 }
 
-EString::EString(const wchar_t *str)
+String::String(const wchar_t *str)
 {
 	if (str)
 	{
@@ -34,14 +34,14 @@ EString::EString(const wchar_t *str)
 	}
 }
 
-EString::EString(EString && str)
+String::String(String && str)
 {
 	_size = str._size;
 	_string = str._string;
 	str._string = nullptr;
 }
 
-EString::EString(const EString &str)
+String::String(const String &str)
 {
 	if (str._size)
 	{
@@ -57,7 +57,7 @@ EString::EString(const EString &str)
 	}
 }
 
-e2d::EString::EString(const std::wstring &str)
+e2d::String::String(const std::wstring &str)
 {
 	if (!str.empty())
 	{
@@ -73,12 +73,12 @@ e2d::EString::EString(const std::wstring &str)
 	}
 }
 
-EString::~EString()
+String::~String()
 {
 	delete[] _string;
 }
 
-EString &EString::operator=(const wchar_t *str)
+String &String::operator=(const wchar_t *str)
 {
 	if (_string == str)
 		return *this;
@@ -99,7 +99,7 @@ EString &EString::operator=(const wchar_t *str)
 	return *this;
 }
 
-EString &EString::operator=(const EString &str)
+String &String::operator=(const String &str)
 {
 	if (_string == str._string)
 		return *this;
@@ -120,7 +120,7 @@ EString &EString::operator=(const EString &str)
 	return *this;
 }
 
-EString & e2d::EString::operator=(const std::wstring &str)
+String & e2d::String::operator=(const std::wstring &str)
 {
 	if (!str.empty())
 	{
@@ -138,7 +138,7 @@ EString & e2d::EString::operator=(const std::wstring &str)
 	return *this;
 }
 
-bool EString::operator==(const wchar_t *str)
+bool String::operator==(const wchar_t *str)
 {
 	if (str)
 	{
@@ -150,70 +150,70 @@ bool EString::operator==(const wchar_t *str)
 	}
 }
 
-bool EString::operator ==(const EString &str)
+bool String::operator ==(const String &str)
 {
 	return (wcscmp(str._string, _string) == 0);
 }
 
-bool e2d::EString::operator==(const std::wstring &str)
+bool e2d::String::operator==(const std::wstring &str)
 {
 	return (str.compare(_string) == 0);
 }
 
-bool e2d::EString::operator!=(const wchar_t *str)
+bool e2d::String::operator!=(const wchar_t *str)
 {
 	return (wcscmp(str, _string) != 0);
 }
 
-bool e2d::EString::operator!=(const EString &str)
+bool e2d::String::operator!=(const String &str)
 {
 	return (wcscmp(str._string, _string) != 0);
 }
 
-bool e2d::EString::operator!=(const std::wstring &str)
+bool e2d::String::operator!=(const std::wstring &str)
 {
 	return (str.compare(_string) != 0);
 }
 
-wchar_t &EString::operator[](int index)
+wchar_t &String::operator[](int index)
 {
-	ASSERT(index >= 0 && index < _size, "EString subscript out of range");
+	ASSERT(index >= 0 && index < _size, "String subscript out of range");
 	return _string[index];
 }
 
-EString EString::operator+(const wchar_t *str)
+String String::operator+(const wchar_t *str)
 {
-	EString str_temp(*this);
+	String str_temp(*this);
 
 	str_temp += str;
 	return std::move(str_temp);
 }
 
-EString EString::operator+(const wchar_t x)
+String String::operator+(const wchar_t x)
 {
-	EString str_temp(*this);
+	String str_temp(*this);
 
 	str_temp += x;
 	return std::move(str_temp);
 }
 
-EString EString::operator+(const EString &str)
+String String::operator+(const String &str)
 {
-	EString str_temp(*this);
+	String str_temp(*this);
 
 	str_temp += str;
 	return std::move(str_temp);
 }
 
-EString e2d::EString::operator+(const std::wstring &str)
+String e2d::String::operator+(const std::wstring &str)
 {
-	EString str_temp(*this);
+	String str_temp(*this);
 
 	str_temp += str;
 	return std::move(str_temp);
 }
 
-EString &EString::operator+=(const wchar_t x)
+String &String::operator+=(const wchar_t x)
 {
 	wchar_t *str_temp = new wchar_t[_size + 2];
 	if (_string) wcscpy_s(str_temp, _size + 2, _string);
@@ -226,7 +226,7 @@ EString &EString::operator+=(const wchar_t x)
 	return *this;
 }
 
-EString &EString::operator+=(const wchar_t *str)
+String &String::operator+=(const wchar_t *str)
 {
 	if (!str) return *this;
 
@@ -243,7 +243,7 @@ EString &EString::operator+=(const wchar_t *str)
 	return *this;
 }
 
-EString &EString::operator+=(const EString &str)
+String &String::operator+=(const String &str)
 {
 	if (str._size == 0) return *this;
 
@@ -257,7 +257,7 @@ EString &EString::operator+=(const EString &str)
 	return *this;
 }
 
-EString & e2d::EString::operator+=(const std::wstring &str)
+String & e2d::String::operator+=(const std::wstring &str)
 {
 	if (str.length() == 0) return *this;
 
@@ -271,7 +271,7 @@ EString & e2d::EString::operator+=(const std::wstring &str)
 	return *this;
 }
 
-bool e2d::EString::operator<(EString const &str) const
+bool e2d::String::operator<(String const &str) const
 {
 	for (int i = 0; i <= _size; i++)
 		if (_string[i] != str._string[i])
@@ -279,7 +279,7 @@ bool e2d::EString::operator<(EString const &str) const
 	return false;
 }
 
-bool e2d::EString::operator<=(EString const &str) const
+bool e2d::String::operator<=(String const &str) const
 {
 	for (int i = 0; i <= _size; i++)
 		if (_string[i] != str._string[i])
@@ -287,7 +287,7 @@ bool e2d::EString::operator<=(EString const &str) const
 	return true;
 }
 
-bool e2d::EString::operator>(EString const &str) const
+bool e2d::String::operator>(String const &str) const
 {
 	for (int i = 0; i <= _size; i++)
 		if (_string[i] != str._string[i])
@@ -295,7 +295,7 @@ bool e2d::EString::operator>(EString const &str) const
 	return false;
 }
 
-bool e2d::EString::operator>=(EString const &str) const
+bool e2d::String::operator>=(String const &str) const
 {
 	for (int i = 0; i <= _size; i++)
 		if (_string[i] != str._string[i])
@@ -303,7 +303,7 @@ bool e2d::EString::operator>=(EString const &str) const
 	return true;
 }
 
-unsigned int e2d::EString::hash() const
+unsigned int e2d::String::hash() const
 {
 	unsigned int hash = 0;
 
@@ -315,27 +315,27 @@ unsigned int e2d::EString::hash() const
 	return (hash);
 }
 
-EString e2d::operator+(const wchar_t ch, const EString &str)
+String e2d::operator+(const wchar_t ch, const String &str)
 {
-	return std::move((EString(ch) + str));
+	return std::move((String(ch) + str));
 }
 
-EString e2d::operator+(const wchar_t *str1, const EString &str2)
+String e2d::operator+(const wchar_t *str1, const String &str2)
 {
-	return std::move((EString(str1) + str2));
+	return std::move((String(str1) + str2));
 }
 
-EString e2d::operator+(const EString &str1, const EString &str2)
+String e2d::operator+(const String &str1, const String &str2)
 {
-	return std::move((EString(str1) + str2));
+	return std::move((String(str1) + str2));
 }
 
-EString e2d::operator+(const std::wstring &str1, const EString &str2)
+String e2d::operator+(const std::wstring &str1, const String &str2)
 {
-	return std::move((EString(str1) + str2));
+	return std::move((String(str1) + str2));
 }
 
-std::wistream & e2d::operator>>(std::wistream &cin, EString &str)
+std::wistream & e2d::operator>>(std::wistream &cin, String &str)
 {
 	const int limit_string_size = 4096;
 
@@ -347,9 +347,9 @@ std::wistream & e2d::operator>>(std::wistream &cin, EString &str)
 }
 
 
-EString e2d::EString::upper() const
+String e2d::String::upper() const
 {
-	EString str(*this);
+	String str(*this);
 
 	for (int i = 0; i < str._size; i++)
 		if (str._string[i] >= L'a' && str._string[i] <= L'z')
@@ -358,9 +358,9 @@ EString e2d::EString::upper() const
 	return std::move(str);
 }
 
-EString e2d::EString::lower() const
+String e2d::String::lower() const
 {
-	EString str(*this);
+	String str(*this);
 
 	for (int i = 0; i < str._size; i++)
 		str._string[i] = towlower(str._string[i]);
@@ -368,17 +368,17 @@ EString e2d::EString::lower() const
 	return std::move(str);
 }
 
-EString e2d::EString::sub(int offset, int count) const
+String e2d::String::sub(int offset, int count) const
 {
 	if (_size == 0 || offset >= _size)
-		return std::move(EString());
+		return std::move(String());
 
 	offset = offset >= 0 ? offset : 0;
 
 	if (count < 0 || (offset + count) > _size)
 		count = _size - offset;
 
-	EString str_temp;
+	String str_temp;
 	str_temp._string = new wchar_t[count + 1];
 
 	for (int i = 0; i < count; i++)
@@ -388,7 +388,7 @@ EString e2d::EString::sub(int offset, int count) const
 	return std::move(str_temp);
 }
 
-int e2d::EString::findFirstOf(const wchar_t ch) const
+int e2d::String::findFirstOf(const wchar_t ch) const
 {
 	for (int i = 0; i < _size; i++)
 		if (_string[i] == ch)
@@ -397,7 +397,7 @@ int e2d::EString::findFirstOf(const wchar_t ch) const
 	return -1;
 }
 
-int e2d::EString::findLastOf(const wchar_t ch) const
+int e2d::String::findLastOf(const wchar_t ch) const
 {
 	int index = -1;
 
@@ -408,17 +408,17 @@ int e2d::EString::findLastOf(const wchar_t ch) const
 	return index;
 }
 
-EString & e2d::EString::append(const wchar_t ch)
+String & e2d::String::append(const wchar_t ch)
 {
 	return (*this) += ch;
 }
 
-EString & e2d::EString::append(const wchar_t * str)
+String & e2d::String::append(const wchar_t * str)
 {
 	return (*this) += str;
 }
 
-EString & e2d::EString::append(const EString & str)
+String & e2d::String::append(const String & str)
 {
 	return (*this) += str;
 }

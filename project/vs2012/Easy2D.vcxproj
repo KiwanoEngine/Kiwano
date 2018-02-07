@@ -45,7 +45,6 @@
     <ClCompile Include="..\..\core\Action\ActionScaleTo.cpp" />
     <ClCompile Include="..\..\core\Action\ActionSequence.cpp" />
     <ClCompile Include="..\..\core\Action\ActionTwo.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionTwoAtSameTime.cpp" />
     <ClCompile Include="..\..\core\Action\Animation.cpp" />
     <ClCompile Include="..\..\core\Base\Game.cpp" />
     <ClCompile Include="..\..\core\Base\Input.cpp" />
@@ -71,7 +70,7 @@
     <ClCompile Include="..\..\core\Node\Text.cpp" />
     <ClCompile Include="..\..\core\Shape\Circle.cpp" />
     <ClCompile Include="..\..\core\Shape\Ellipse.cpp" />
-    <ClCompile Include="..\..\core\Shape\Rectangle.cpp" />
+    <ClCompile Include="..\..\core\Shape\Rect.cpp" />
     <ClCompile Include="..\..\core\Shape\Shape.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
     <ClCompile Include="..\..\core\Tool\File.cpp" />

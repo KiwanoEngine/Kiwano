@@ -5,28 +5,28 @@
 namespace e2d
 {
 
-class EShapeManager;
-class ENode;
+class ShapeManager;
+class Node;
 
 
-class EShape :
-	public EObject
+class Shape :
+	public Obj
 {
-	friend EShapeManager;
-	friend ENode;
+	friend ShapeManager;
+	friend Node;
 
 public:
-	EShape();
+	Shape();
 
-	virtual ~EShape();
+	virtual ~Shape();
 
 	// 判断两形状的交集关系
 	virtual int getRelationWith(
-		EShape * pShape
+		Shape * pShape
 	) const;
 
 	// 获取父节点
-	ENode * getParentNode() const;
+	Node * getParentNode() const;
 
 	// 获取类别掩码
 	UINT32 getCategoryBitmask() const;
@@ -81,20 +81,20 @@ protected:
 	UINT32	m_nCollisionBitmask;
 	UINT32	m_nColor;
 	float	m_fOpacity;
-	ENode * m_pParentNode;
+	Node * m_pParentNode;
 	ID2D1TransformedGeometry * m_pTransformedShape;
 };
 
 
-class ERectangle :
-	public EShape
+class Rect :
+	public Shape
 {
 public:
 	// 创建一个空矩形
-	ERectangle();
+	Rect();
 
 	// 根据左上角坐标和宽高创建矩形
-	ERectangle(
+	Rect(
 		float x,
 		float y,
 		float width,
@@ -102,11 +102,11 @@ public:
 	);
 
 	// 创建一个和节点位置大小相同的矩形
-	ERectangle(
-		ENode * node
+	Rect(
+		Node * node
 	);
 
-	virtual ~ERectangle();
+	virtual ~Rect();
 
 protected:
 	void _setRect(
@@ -123,29 +123,29 @@ protected:
 };
 
 
-class ECircle :
-	public EShape
+class Circle :
+	public Shape
 {
 public:
 	// 创建一个空的圆形
-	ECircle();
+	Circle();
 
 	// 根据圆心和半径创建圆形
-	ECircle(
-		EPoint center,
+	Circle(
+		Point center,
 		float radius
 	);
 
 	// 创建一个和节点位置大小相同的圆形
-	ECircle(
-		ENode * node
+	Circle(
+		Node * node
 	);
 
-	virtual ~ECircle();
+	virtual ~Circle();
 
 protected:
 	void _setCircle(
-		EPoint center,
+		Point center,
 		float radius
 	);
 
@@ -156,30 +156,30 @@ protected:
 };
 
 
-class EEllipse :
-	public EShape
+class Ellipse :
+	public Shape
 {
 public:
 	// 创建一个空的椭圆
-	EEllipse();
+	Ellipse();
 
 	// 根据圆心和半径创建椭圆
-	EEllipse(
-		EPoint center,
+	Ellipse(
+		Point center,
 		float radiusX,
 		float radiusY
 	);
 
 	// 创建一个和节点位置大小相同的椭圆
-	EEllipse(
-		ENode * node
+	Ellipse(
+		Node * node
 	);
 
-	virtual ~EEllipse();
+	virtual ~Ellipse();
 
 protected:
 	void _setEllipse(
-		EPoint center,
+		Point center,
 		float radiusX,
 		float radiusY
 	);

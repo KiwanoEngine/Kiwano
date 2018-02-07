@@ -1,25 +1,25 @@
 #include "..\eactions.h"
 
-e2d::EActionSequence::EActionSequence() :
+e2d::ActionSequence::ActionSequence() :
 	m_nActionIndex(0)
 {
 }
 
-e2d::EActionSequence::EActionSequence(int number, EAction * action1, ...) :
+e2d::ActionSequence::ActionSequence(int number, Action * action1, ...) :
 	m_nActionIndex(0)
 {
-	EAction ** ppAction = &action1;
+	Action ** ppAction = &action1;
 
 	while (number > 0)
 	{
-		ASSERT((*ppAction) != nullptr, "EActionSequence NULL pointer exception!");
-		this->addAction(*ppAction);
+		ASSERT((*ppAction) != nullptr, "ActionSequence NULL pointer exception!");
+		this->_add(*ppAction);
 		ppAction++;
 		number--;
 	}
 }
 
-e2d::EActionSequence::~EActionSequence()
+e2d::ActionSequence::~ActionSequence()
 {
 	for (auto action : m_vActions)
 	{
@@ -27,9 +27,9 @@ e2d::EActionSequence::~EActionSequence()
 	}
 }
 
-void e2d::EActionSequence::_init()
+void e2d::ActionSequence::_init()
 {
-	EAction::_init();
+	Action::_init();
 	// 将所有动作与目标绑定
 	if (m_pTarget)
 	{
@@ -42,9 +42,9 @@ void e2d::EActionSequence::_init()
 	m_vActions[0]->_init();
 }
 
-void e2d::EActionSequence::_update()
+void e2d::ActionSequence::_update()
 {
-	EAction::_update();
+	Action::_update();
 
 	auto &action = m_vActions[m_nActionIndex];
 	action->_update();
@@ -63,9 +63,9 @@ void e2d::EActionSequence::_update()
 	}
 }
 
-void e2d::EActionSequence::reset()
+void e2d::ActionSequence::reset()
 {
-	EAction::reset();
+	Action::reset();
 	for (auto action : m_vActions)
 	{
 		action->reset();
@@ -73,7 +73,7 @@ void e2d::EActionSequence::reset()
 	m_nActionIndex = 0;
 }
 
-void e2d::EActionSequence::_resetTime()
+void e2d::ActionSequence::_resetTime()
 {
 	for (auto action : m_vActions)
 	{
@@ -81,7 +81,7 @@ void e2d::EActionSequence::_resetTime()
 	}
 }
 
-void e2d::EActionSequence::addAction(EAction * action)
+void e2d::ActionSequence::_add(Action * action)
 {
 	if (action)
 	{
@@ -90,28 +90,28 @@ void e2d::EActionSequence::addAction(EAction * action)
 	}
 }
 
-e2d::EActionSequence * e2d::EActionSequence::clone() const
+e2d::ActionSequence * e2d::ActionSequence::clone() const
 {
-	auto a = new EActionSequence();
+	auto a = new ActionSequence();
 	for (auto action : m_vActions)
 	{
-		a->addAction(action->clone());
+		a->_add(action->clone());
 	}
 	return a;
 }
 
-e2d::EActionSequence * e2d::EActionSequence::reverse(bool actionReverse) const
+e2d::ActionSequence * e2d::ActionSequence::reverse(bool actionReverse) const
 {
-	auto a = new EActionSequence();
+	auto a = new ActionSequence();
 	for (auto action : m_vActions)
 	{
 		if (actionReverse)
 		{
-			a->addAction(action->reverse());
+			a->_add(action->reverse());
 		}
 		else
 		{
-			a->addAction(action->clone());
+			a->_add(action->clone());
 		}
 	}
 	// 将动作顺序逆序排列

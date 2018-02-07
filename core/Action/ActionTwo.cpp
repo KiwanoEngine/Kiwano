@@ -1,78 +1,89 @@
 #include "..\eactions.h"
 
-e2d::EActionTwo::EActionTwo(EAction * actionFirst, EAction * actionSecond) :
-	m_pFirstAction(actionFirst),
-	m_pSecondAction(actionSecond)
+e2d::ActionTwo::ActionTwo(Action * pActionFirst, Action * pActionSecond, bool bAtSameTime/* = false*/)
+	: m_pFirstAction(pActionFirst)
+	, m_pSecondAction(pActionSecond)
+	, m_bAtSameTime(bAtSameTime)
 {
-	ASSERT(m_pFirstAction && m_pSecondAction, "EActionTwo NULL pointer exception!");
+	ASSERT(m_pFirstAction && m_pSecondAction, "ActionTwo NULL pointer exception!");
 	m_pFirstAction->retain();
 	m_pSecondAction->retain();
 }
 
-e2d::EActionTwo::~EActionTwo()
+e2d::ActionTwo::~ActionTwo()
 {
 	SafeRelease(&m_pFirstAction);
 	SafeRelease(&m_pSecondAction);
 }
 
-e2d::EActionTwo * e2d::EActionTwo::clone() const
+e2d::ActionTwo * e2d::ActionTwo::clone() const
 {
-	return new EActionTwo(m_pFirstAction->clone(), m_pSecondAction->clone());
+	return new ActionTwo(m_pFirstAction->clone(), m_pSecondAction->clone());
 }
 
-e2d::EActionTwo * e2d::EActionTwo::reverse(bool actionReverse) const
+e2d::ActionTwo * e2d::ActionTwo::reverse(bool actionReverse) const
 {
 	if (actionReverse)
 	{
-		return new EActionTwo(m_pSecondAction->reverse(), m_pFirstAction->reverse());
+		return new ActionTwo(m_pSecondAction->reverse(), m_pFirstAction->reverse());
 	}
 	else
 	{
-		return new EActionTwo(m_pSecondAction->clone(), m_pFirstAction->clone());
+		return new ActionTwo(m_pSecondAction->clone(), m_pFirstAction->clone());
 	}
 }
 
-void e2d::EActionTwo::_init()
+void e2d::ActionTwo::_init()
 {
-	EAction::_init();
+	Action::_init();
 	m_pFirstAction->m_pTarget = m_pTarget;
 	m_pSecondAction->m_pTarget = m_pTarget;
 
 	m_pFirstAction->_init();
+	if (m_bAtSameTime) m_pSecondAction->_init();
 }
 
-void e2d::EActionTwo::_update()
+void e2d::ActionTwo::_update()
 {
-	EAction::_update();
+	Action::_update();
 
 	if (!m_pFirstAction->_isEnding())
 	{
 		m_pFirstAction->_update();
-		if (m_pFirstAction->_isEnding())
+
+		if (!m_bAtSameTime && m_pFirstAction->_isEnding())
 		{
-			// 返回 true 表示第一个动作已经结束
 			m_pSecondAction->_init();
 		}
 	}
-	else if (!m_pSecondAction->_isEnding())
+
+	if (m_bAtSameTime)
+	{
+		if (!m_pSecondAction->_isEnding())
+		{
+			m_pSecondAction->_update();
+		}
+	}
+	else if (m_pFirstAction->_isEnding())
 	{
 		m_pSecondAction->_update();
 	}
-	else
+
+	if (m_pFirstAction->_isEnding() && m_pSecondAction->_isEnding())
 	{
 		this->stop();
 	}
 }
 
-void e2d::EActionTwo::reset()
+void e2d::ActionTwo::reset()
 {
-	EAction::reset();
+	Action::reset();
 
 	m_pFirstAction->reset();
 	m_pSecondAction->reset();
 }
 
-void e2d::EActionTwo::_resetTime()
+void e2d::ActionTwo::_resetTime()
 {
 	m_pFirstAction->_resetTime();
 	m_pSecondAction->_resetTime();

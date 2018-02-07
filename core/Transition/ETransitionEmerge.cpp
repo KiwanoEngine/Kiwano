@@ -1,12 +1,12 @@
 #include "..\etransitions.h"
 #include "..\enodes.h"
 
-e2d::ETransitionEmerge::ETransitionEmerge(float duration)
-	: ETransition(duration)
+e2d::TransitionEmerge::TransitionEmerge(float duration)
+	: Transition(duration)
 {
 }
 
-void e2d::ETransitionEmerge::_update()
+void e2d::TransitionEmerge::_update()
 {
 	this->_calcRateOfProgress();
 
@@ -19,13 +19,13 @@ void e2d::ETransitionEmerge::_update()
 	}
 }
 
-void e2d::ETransitionEmerge::_init()
+void e2d::TransitionEmerge::_init()
 {
 	if (m_pPrevScene) m_pPrevScene->getRoot()->setOpacity(1);
 	m_pNextScene->getRoot()->setOpacity(0);
 }
 
-void e2d::ETransitionEmerge::_reset()
+void e2d::TransitionEmerge::_reset()
 {
 	if (m_pPrevScene) m_pPrevScene->getRoot()->setOpacity(1);
 	m_pNextScene->getRoot()->setOpacity(1);

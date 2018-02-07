@@ -9,7 +9,7 @@ namespace e2d
 {
 
 
-class EGame
+class Game
 {
 public:
 	// 初始化游戏
@@ -40,18 +40,18 @@ public:
 	static bool isPaused();
 
 	// 获取 AppName
-	static EString getAppName();
+	static String getAppName();
 };
 
 
 // 控制窗口属性
-class EWindow
+class Window
 {
-	friend EGame;
+	friend Game;
 
 public:
 	// 获取窗口标题
-	static EString getTitle();
+	static String getTitle();
 
 	// 获取窗口宽度
 	static float getWidth();
@@ -60,7 +60,7 @@ public:
 	static float getHeight();
 
 	// 获取窗口大小
-	static ESize getSize();
+	static Size getSize();
 
 	// 获取窗口句柄
 	static HWND getHWnd();
@@ -73,7 +73,7 @@ public:
 
 	// 设置窗口标题
 	static void setTitle(
-		const EString & sTitle
+		const String & sTitle
 	);
 
 	// 打开/隐藏控制台
@@ -107,9 +107,9 @@ private:
 
 
 // 控制游戏时间
-class ETime
+class Time
 {
-	friend EGame;
+	friend Game;
 
 public:
 	// 获取上一帧与当前帧的时间间隔（毫秒）
@@ -140,9 +140,9 @@ private:
 
 
 // 控制键盘和鼠标的输入
-class EInput
+class Input
 {
-	friend EGame;
+	friend Game;
 
 public:
 	// 检测键盘某按键是否正被按下
@@ -194,7 +194,7 @@ public:
 	static float getMouseY();
 
 	// 获得鼠标坐标值
-	static EPoint getMousePos();
+	static Point getMousePos();
 
 	// 获得鼠标X轴坐标增量
 	static float getMouseDeltaX();
@@ -218,10 +218,10 @@ private:
 
 
 // 渲染器
-class ERenderer
+class Renderer
 {
-	friend EGame;
-	friend EWindow;
+	friend Game;
+	friend Window;
 
 public:
 	// 修改背景色

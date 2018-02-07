@@ -1,22 +1,22 @@
 #include "..\eshape.h"
 #include "..\enodes.h"
 
-e2d::EEllipse::EEllipse()
+e2d::Ellipse::Ellipse()
 	: m_pD2dEllipse(nullptr)
 {
 }
 
-e2d::EEllipse::EEllipse(EPoint center, float radiusX, float radiusY)
+e2d::Ellipse::Ellipse(Point center, float radiusX, float radiusY)
 	: m_pD2dEllipse(nullptr)
 {
 	this->_setEllipse(center, radiusX, radiusY);
 }
 
-e2d::EEllipse::EEllipse(ENode * node)
+e2d::Ellipse::Ellipse(Node * node)
 	: m_pD2dEllipse(nullptr)
 {
 	this->_setEllipse(
-		EPoint(
+		Point(
 			node->getWidth() / 2,
 			node->getHeight() / 2
 		),
@@ -25,16 +25,16 @@ e2d::EEllipse::EEllipse(ENode * node)
 	);
 }
 
-e2d::EEllipse::~EEllipse()
+e2d::Ellipse::~Ellipse()
 {
 	SafeReleaseInterface(&m_pD2dEllipse);
 }
 
-void e2d::EEllipse::_setEllipse(EPoint center, float radiusX, float radiusY)
+void e2d::Ellipse::_setEllipse(Point center, float radiusX, float radiusY)
 {
 	SafeReleaseInterface(&m_pD2dEllipse);
 
-	ERenderer::getID2D1Factory()->CreateEllipseGeometry(
+	Renderer::getID2D1Factory()->CreateEllipseGeometry(
 		D2D1::Ellipse(
 			D2D1::Point2F(
 				center.x,
@@ -45,7 +45,7 @@ void e2d::EEllipse::_setEllipse(EPoint center, float radiusX, float radiusY)
 	);
 }
 
-ID2D1EllipseGeometry * e2d::EEllipse::_getD2dGeometry() const
+ID2D1EllipseGeometry * e2d::Ellipse::_getD2dGeometry() const
 {
 	return m_pD2dEllipse;
 }

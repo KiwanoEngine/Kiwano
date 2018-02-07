@@ -9,157 +9,157 @@ namespace e2d
 
 
 // 表示坐标的结构体
-struct EPoint
+struct Point
 {
 	float x;
 	float y;
 
-	EPoint()
+	Point()
 	{
 		x = 0;
 		y = 0;
 	}
 
-	EPoint(float x, float y)
+	Point(float x, float y)
 	{
 		this->x = x;
 		this->y = y;
 	}
 
-	EPoint operator + (EPoint const & p)
+	Point operator + (Point const & p)
 	{
-		return EPoint(x + p.x, y + p.y);
+		return Point(x + p.x, y + p.y);
 	}
 
-	EPoint operator - (EPoint const & p)
+	Point operator - (Point const & p)
 	{
-		return EPoint(x - p.x, y - p.y);
+		return Point(x - p.x, y - p.y);
 	}
 
-	EPoint operator * (float const & value)
+	Point operator * (float const & value)
 	{
-		return EPoint(x * value, y * value);
+		return Point(x * value, y * value);
 	}
 
-	EPoint operator / (float const & value)
+	Point operator / (float const & value)
 	{
-		return EPoint(x / value, y / value);
+		return Point(x / value, y / value);
 	}
 };
 
 // 表示大小的结构体
-struct ESize
+struct Size
 {
 	float width;
 	float height;
 
-	ESize()
+	Size()
 	{
 		width = 0;
 		height = 0;
 	}
 
-	ESize(float width, float height)
+	Size(float width, float height)
 	{
 		this->width = width;
 		this->height = height;
 	}
 
-	ESize operator + (ESize const & size)
+	Size operator + (Size const & size)
 	{
-		return ESize(width + size.width, height + size.height);
+		return Size(width + size.width, height + size.height);
 	}
 
-	ESize operator - (ESize const & size)
+	Size operator - (Size const & size)
 	{
-		return ESize(width - size.width, height - size.height);
+		return Size(width - size.width, height - size.height);
 	}
 
-	ESize operator * (float const & value)
+	Size operator * (float const & value)
 	{
-		return ESize(width * value, height * value);
+		return Size(width * value, height * value);
 	}
 
-	ESize operator / (float const & value)
+	Size operator / (float const & value)
 	{
-		return ESize(width / value, height / value);
+		return Size(width / value, height / value);
 	}
 };
 
 
 // 字符串
-class EString
+class String
 {
 public:
-	EString();
-	EString(const wchar_t);
-	EString(const wchar_t *);
-	EString(const EString &);
-	EString(const std::wstring &);
-	EString(EString &&);
+	String();
+	String(const wchar_t);
+	String(const wchar_t *);
+	String(const String &);
+	String(const std::wstring &);
+	String(String &&);
 
-	~EString();
+	~String();
 
-	EString& operator=(const wchar_t *);
-	EString& operator=(const EString &);
-	EString& operator=(const std::wstring &);
+	String& operator=(const wchar_t *);
+	String& operator=(const String &);
+	String& operator=(const std::wstring &);
 
 	bool operator==(const wchar_t *);
-	bool operator==(const EString &);
+	bool operator==(const String &);
 	bool operator==(const std::wstring &);
 
 	bool operator!=(const wchar_t *);
-	bool operator!=(const EString &);
+	bool operator!=(const String &);
 	bool operator!=(const std::wstring &);
 
 	wchar_t &operator[](int);
 
-	EString operator+(const wchar_t);
-	EString operator+(const wchar_t *);
-	EString operator+(const EString &);
-	EString operator+(const std::wstring &);
+	String operator+(const wchar_t);
+	String operator+(const wchar_t *);
+	String operator+(const String &);
+	String operator+(const std::wstring &);
 
 	template<typename T>
-	EString operator+(const T value)
+	String operator+(const T value)
 	{
-		EString str_temp(*this);
+		String str_temp(*this);
 
 		str_temp += value;
 		return std::move(str_temp);
 	}
 
-	EString &operator +=(const wchar_t);
-	EString &operator +=(const wchar_t *);
-	EString &operator +=(const EString &);
-	EString &operator +=(const std::wstring &);
+	String &operator +=(const wchar_t);
+	String &operator +=(const wchar_t *);
+	String &operator +=(const String &);
+	String &operator +=(const std::wstring &);
 
 	template<typename T>
-	EString &operator +=(const T value)
+	String &operator +=(const T value)
 	{
 		std::wostringstream ss;
 		ss << value;
 		return (*this) += ss.str();
 	}
 
-	bool operator < (EString const&) const;
-	bool operator <= (EString const&) const;
-	bool operator > (EString const&) const;
-	bool operator >= (EString const&) const;
+	bool operator < (String const&) const;
+	bool operator <= (String const&) const;
+	bool operator > (String const&) const;
+	bool operator >= (String const&) const;
 
 	operator wchar_t*() const { return _string; }
 	operator bool() const { return _size != 0; }
 
-	friend EString operator+(const wchar_t, const EString &);
-	friend EString operator+(const wchar_t*, const EString &);
-	friend EString operator+(const EString &, const EString &);
-	friend EString operator+(const std::wstring &, const EString &);
+	friend String operator+(const wchar_t, const String &);
+	friend String operator+(const wchar_t*, const String &);
+	friend String operator+(const String &, const String &);
+	friend String operator+(const std::wstring &, const String &);
 	template<typename T>
-	friend EString operator+(const T &value, const EString &str)
+	friend String operator+(const T &value, const String &str)
 	{
-		return std::move((EString::parse(value) + str2));
+		return std::move((String::parse(value) + str2));
 	}
 
-	friend std::wistream &operator>>(std::wistream &, EString &);
+	friend std::wistream &operator>>(std::wistream &, String &);
 
 	// 判断字符串是否为空
 	bool isEmpty() const { return _size == 0; }
@@ -168,13 +168,13 @@ public:
 	int length() const { return _size; }
 
 	// 获取大写字符串
-	EString upper() const;
+	String upper() const;
 
 	// 获取小写字符串
-	EString lower() const;
+	String lower() const;
 
 	// 获取裁剪字符串
-	EString sub(int offset, int count = -1) const;
+	String sub(int offset, int count = -1) const;
 
 	// 获取字符串中第一个特定字符的下标
 	int findFirstOf(const wchar_t ch) const;
@@ -183,17 +183,17 @@ public:
 	int findLastOf(const wchar_t ch) const;
 
 	// 后接字符
-	EString &append(const wchar_t ch);
+	String &append(const wchar_t ch);
 
 	// 后接字符串
-	EString &append(const wchar_t *str);
+	String &append(const wchar_t *str);
 
 	// 后接字符串
-	EString &append(const EString &str);
+	String &append(const String &str);
 
 	// 后接字符串
 	template<typename T>
-	EString &append(const T &value)
+	String &append(const T &value)
 	{
 		return (*this) += value;
 	}
@@ -203,9 +203,9 @@ public:
 
 	// 将模板类型转化为字符串
 	template<typename T>
-	static EString parse(const T value)
+	static String parse(const T value)
 	{
-		EString str;
+		String str;
 
 		std::wostringstream ss;
 		ss << value;
@@ -221,7 +221,7 @@ private:
 
 
 // 颜色
-class EColor
+class Color
 {
 public:
 	enum COMMON_VALUE
@@ -292,7 +292,7 @@ public:
 };
 
 // 字体粗细值
-class EFontWeight
+class FontWeight
 {
 public:
 	enum COMMON_VALUE
@@ -319,7 +319,7 @@ public:
 
 
 // 键值集合
-class EKeyCode
+class KeyCode
 {
 public:
 	enum VALUE
@@ -395,7 +395,7 @@ public:
 
 
 // 形状交集关系
-class ERelation
+class Relation
 {
 public:
 	enum VALUE
@@ -409,17 +409,17 @@ public:
 };
 
 
-class EObjectManager;
+class ObjectManager;
 
 // 基础对象
-class EObject
+class Obj
 {
-	friend EObjectManager;
+	friend ObjectManager;
 
 public:
-	EObject();
+	Obj();
 
-	virtual ~EObject();
+	virtual ~Obj();
 
 	// 引用计数加一
 	void retain();
@@ -433,25 +433,25 @@ private:
 };
 
 
-class EText;
+class Text;
 
-class EFont :
-	public EObject
+class Font :
+	public Obj
 {
-	friend EText;
+	friend Text;
 
 public:
-	EFont();
+	Font();
 
-	EFont(
-		EString fontFamily,
+	Font(
+		String fontFamily,
 		float fontSize = 22,
-		UINT32 color = EColor::WHITE,
-		UINT32 fontWeight = EFontWeight::REGULAR,
+		UINT32 color = Color::WHITE,
+		UINT32 fontWeight = FontWeight::REGULAR,
 		bool italic = false
 	);
 
-	virtual ~EFont();
+	virtual ~Font();
 
 	// 获取当前字号
 	float getFontSize() const;
@@ -467,7 +467,7 @@ public:
 
 	// 设置字体
 	void setFamily(
-		const EString & fontFamily
+		const String & fontFamily
 	);
 
 	// 设置字号
@@ -498,7 +498,7 @@ protected:
 	IDWriteTextFormat * _getTextFormat();
 
 protected:
-	EString		m_sFontFamily;
+	String		m_sFontFamily;
 	float		m_fFontSize;
 	UINT32		m_FontWeight;
 	UINT32		m_Color;
@@ -509,20 +509,20 @@ protected:
 
 
 // 图片
-class EImage :
-	public EObject
+class Image :
+	public Obj
 {
 public:
 	// 创建一个空的图片
-	EImage();
+	Image();
 
 	// 从本地文件中读取资源
-	EImage(
+	Image(
 		LPCTSTR strFilePath	/* 图片文件路径 */
 	);
 
 	// 从本地文件中读取资源
-	EImage(
+	Image(
 		LPCTSTR strFilePath,/* 图片文件路径 */
 		float nClipX,		/* 裁剪位置 X 坐标 */
 		float nClipY,		/* 裁剪位置 Y 坐标 */
@@ -530,7 +530,7 @@ public:
 		float nClipHeight	/* 裁剪高度 */
 	);
 
-	virtual ~EImage();
+	virtual ~Image();
 
 	// 裁剪图片
 	void clip(
@@ -542,12 +542,12 @@ public:
 
 	// 从本地文件中读取图片
 	void loadFrom(
-		const EString & strFilePath
+		const String & strFilePath
 	);
 
 	// 从本地文件中读取图片并裁剪
 	void loadFrom(
-		const EString & strFilePath,/* 图片文件路径 */
+		const String & strFilePath,/* 图片文件路径 */
 		float nClipX,				/* 裁剪位置 X 坐标 */
 		float nClipY,				/* 裁剪位置 Y 坐标 */
 		float nClipWidth,			/* 裁剪宽度 */
@@ -561,7 +561,7 @@ public:
 	virtual float getHeight() const;
 
 	// 获取大小
-	virtual ESize getSize() const;
+	virtual Size getSize() const;
 
 	// 获取源图片宽度
 	virtual float getSourceWidth() const;
@@ -570,7 +570,7 @@ public:
 	virtual float getSourceHeight() const;
 
 	// 获取源图片大小
-	virtual ESize getSourceSize() const;
+	virtual Size getSourceSize() const;
 	
 	// 获取裁剪位置 X 坐标
 	virtual float getClipX() const;
@@ -579,14 +579,14 @@ public:
 	virtual float getClipY() const;
 
 	// 获取裁剪位置
-	virtual EPoint getClipPos() const;
+	virtual Point getClipPos() const;
 
 	// 获取 ID2D1Bitmap 对象
 	ID2D1Bitmap * getBitmap();
 
 	// 预加载资源
 	static bool preload(
-		const EString & sFileName	/* 图片文件路径 */
+		const String & sFileName	/* 图片文件路径 */
 	);
 
 	// 清空缓存
@@ -601,20 +601,20 @@ protected:
 };
 
 
-class ESceneManager;
-class ENode;
-class EAction;
+class SceneManager;
+class Node;
+class Action;
 
 // 场景
-class EScene :
-	public EObject
+class Scene :
+	public Obj
 {
-	friend ESceneManager;
+	friend SceneManager;
 
 public:
-	EScene();
+	Scene();
 
-	virtual ~EScene();
+	virtual ~Scene();
 
 	// 重写这个函数，它将在进入这个场景时自动执行
 	virtual void onEnter() {}
@@ -624,8 +624,8 @@ public:
 
 	// 重写这个函数，它将在碰撞发生时自动执行
 	virtual void onCollide(
-		ENode * pActiveNode,	/* 主动发生碰撞的节点 */
-		ENode * pPassiveNode	/* 被动发生碰撞的节点 */
+		Node * pActiveNode,	/* 主动发生碰撞的节点 */
+		Node * pPassiveNode	/* 被动发生碰撞的节点 */
 	) {}
 
 	// 重写这个函数，它将在关闭窗口时执行
@@ -644,17 +644,17 @@ public:
 
 	// 添加节点到场景
 	void add(
-		ENode * child,
+		Node * child,
 		int zOrder = 0
 	);
 
 	// 删除子节点
 	bool remove(
-		ENode * child
+		Node * child
 	);
 
 	// 获取根节点
-	ENode * getRoot() const;
+	Node * getRoot() const;
 
 	// 开启几何图形的渲染
 	void setShapeVisiable(
@@ -673,18 +673,21 @@ protected:
 	bool m_bSortNeeded;
 	bool m_bWillSave;
 	bool m_bShapeVisiable;
-	ENode * m_pRoot;
+	Node * m_pRoot;
 };
 
 
 // 二维向量
-typedef EPoint EVector2;
+typedef Point Vector;
 
-// 定时器回调函数（参数为该定时器被调用的次数，从 0 开始）
-typedef std::function<void(int)> TimerCallback;
+// 返回值和参数列表都为空的函数
+typedef std::function<void(void)> VoidFunction;
+
+// 定时器回调函数
+typedef VoidFunction TimerCallback;
 
 // 按钮点击回调函数
-typedef std::function<void()> BtnClkCallback;
+typedef VoidFunction ButtonCallback;
 
 template<typename T>
 inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }

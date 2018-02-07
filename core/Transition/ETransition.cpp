@@ -1,7 +1,7 @@
 #include "..\ebase.h"
 #include "..\etransitions.h"
 
-e2d::ETransition::ETransition(float duration)
+e2d::Transition::Transition(float duration)
 	: m_bEnd(false)
 	, m_fLast(0)
 	, m_fRateOfProgress(0)
@@ -11,12 +11,12 @@ e2d::ETransition::ETransition(float duration)
 	m_fDuration = max(duration, 0);
 }
 
-bool e2d::ETransition::isEnding()
+bool e2d::Transition::isEnding()
 {
 	return m_bEnd;
 }
 
-void e2d::ETransition::_calcRateOfProgress()
+void e2d::Transition::_calcRateOfProgress()
 {
 	// 判断时间间隔是否足够
 	if (m_fDuration == 0)
@@ -26,18 +26,18 @@ void e2d::ETransition::_calcRateOfProgress()
 	}
 
 	// 计算动画进度
-	m_fRateOfProgress = min((ETime::getTotalTime() - m_fLast) / m_fDuration, 1);
+	m_fRateOfProgress = min((Time::getTotalTime() - m_fLast) / m_fDuration, 1);
 }
 
-void e2d::ETransition::_stop()
+void e2d::Transition::_stop()
 {
 	m_bEnd = true;
 	_reset();
 }
 
-void e2d::ETransition::_setTarget(EScene * prev, EScene * next)
+void e2d::Transition::_setTarget(Scene * prev, Scene * next)
 {
-	m_fLast = ETime::getTotalTime();
+	m_fLast = Time::getTotalTime();
 	m_pPrevScene = prev;
 	m_pNextScene = next;
 	_init();

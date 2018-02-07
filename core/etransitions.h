@@ -5,15 +5,15 @@ namespace e2d
 {
 
 
-class ESceneManager;
+class SceneManager;
 
-class ETransition :
-	public EObject
+class Transition :
+	public Obj
 {
-	friend ESceneManager;
+	friend SceneManager;
 
 public:
-	ETransition(float duration);
+	Transition(float duration);
 
 	// 场景切换动画是否结束
 	bool isEnding();
@@ -36,8 +36,8 @@ protected:
 
 	// 保存当前场景和下一场景的指针
 	void _setTarget(
-		EScene * prev,
-		EScene * next
+		Scene * prev,
+		Scene * next
 	);
 
 protected:
@@ -45,17 +45,17 @@ protected:
 	float m_fLast;
 	float m_fDuration;
 	float m_fRateOfProgress;
-	EScene * m_pPrevScene;
-	EScene * m_pNextScene;
+	Scene * m_pPrevScene;
+	Scene * m_pNextScene;
 };
 
 
-class ETransitionFade :
-	public ETransition
+class TransitionFade :
+	public Transition
 {
 public:
 	// 创建淡入淡出式的场景切换动画
-	ETransitionFade(
+	TransitionFade(
 		float fadeOutDuration,	/* 前一场景淡出动画持续时长 */
 		float fadeInDuration	/* 后一场景淡入动画持续时长 */
 	);
@@ -75,12 +75,12 @@ protected:
 };
 
 
-class ETransitionEmerge :
-	public ETransition
+class TransitionEmerge :
+	public Transition
 {
 public:
 	// 创建浮现式的场景切换动画
-	ETransitionEmerge(
+	TransitionEmerge(
 		float duration	/* 浮现动画持续时长 */
 	);
 
@@ -94,8 +94,8 @@ protected:
 };
 
 
-class ETransitionMove :
-	public ETransition
+class TransitionMove :
+	public Transition
 {
 public:
 	enum MOVE_DIRECT
@@ -107,7 +107,7 @@ public:
 	};
 
 	// 创建移动式的场景切换动画
-	ETransitionMove(
+	TransitionMove(
 		float moveDuration,			/* 场景移动动画持续时长 */
 		MOVE_DIRECT direct = LEFT	/* 场景移动方向 */
 	);
@@ -122,8 +122,8 @@ protected:
 
 protected:
 	MOVE_DIRECT m_Direct;
-	EVector2 m_Vec;
-	EPoint m_NextPos;
+	Vector m_Vec;
+	Point m_NextPos;
 };
 
 }

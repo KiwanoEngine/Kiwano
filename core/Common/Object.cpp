@@ -1,27 +1,27 @@
 #include "..\ebase.h"
 #include "..\emanagers.h"
 
-e2d::EObject::EObject()
+e2d::Obj::Obj()
 	: m_nRefCount(0)
 	, m_bManaged(false)
 {
-	EObjectManager::add(this);	// 将该对象放入释放池中
+	ObjectManager::add(this);	// 将该对象放入释放池中
 }
 
-e2d::EObject::~EObject()
+e2d::Obj::~Obj()
 {
 }
 
 // 引用计数加一
-void e2d::EObject::retain()
+void e2d::Obj::retain()
 {
 	m_nRefCount++;
 }
 
 // 引用计数减一
-void e2d::EObject::release()
+void e2d::Obj::release()
 {
 	m_nRefCount--;
 	// 通知对象管理池刷新
-	EObjectManager::notifyFlush();
+	ObjectManager::notifyFlush();
 }

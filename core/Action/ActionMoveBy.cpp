@@ -1,24 +1,24 @@
 #include "..\eactions.h"
 
 
-e2d::EActionMoveBy::EActionMoveBy(float duration, EVector2 vector) :
-	EActionGradual(duration)
+e2d::ActionMoveBy::ActionMoveBy(float duration, Vector vector) :
+	ActionGradual(duration)
 {
 	m_MoveVec = vector;
 }
 
-void e2d::EActionMoveBy::_init()
+void e2d::ActionMoveBy::_init()
 {
-	EActionGradual::_init();
+	ActionGradual::_init();
 	if (m_pTarget)
 	{
 		m_BeginPos = m_pTarget->getPos();
 	}
 }
 
-void e2d::EActionMoveBy::_update()
+void e2d::ActionMoveBy::_update()
 {
-	EActionGradual::_update();
+	ActionGradual::_update();
 
 	if (m_pTarget == nullptr)
 	{
@@ -33,12 +33,12 @@ void e2d::EActionMoveBy::_update()
 	);
 }
 
-e2d::EActionMoveBy * e2d::EActionMoveBy::clone() const
+e2d::ActionMoveBy * e2d::ActionMoveBy::clone() const
 {
-	return new EActionMoveBy(m_fDuration, m_MoveVec);
+	return new ActionMoveBy(m_fDuration, m_MoveVec);
 }
 
-e2d::EActionMoveBy * e2d::EActionMoveBy::reverse() const
+e2d::ActionMoveBy * e2d::ActionMoveBy::reverse() const
 {
-	return new EActionMoveBy(m_fDuration, EVector2(-m_MoveVec.x, -m_MoveVec.y));
+	return new ActionMoveBy(m_fDuration, Vector(-m_MoveVec.x, -m_MoveVec.y));
 }

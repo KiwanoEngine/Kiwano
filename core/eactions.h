@@ -5,33 +5,33 @@ namespace e2d
 {
 
 
-class EActionManager;
-class EActionTwo;
-class EActionLoop;
-class EActionSequence;
+class ActionManager;
+class ActionTwo;
+class ActionLoop;
+class ActionSequence;
 class EActionTwoAtSameTime;
-class ETransitionFade;
+class TransitionFade;
 
-class EAction :
-	public EObject
+class Action :
+	public Obj
 {
-	friend EActionManager;
-	friend EActionTwo;
-	friend EActionLoop;
-	friend EActionSequence;
+	friend ActionManager;
+	friend ActionTwo;
+	friend ActionLoop;
+	friend ActionSequence;
 	friend EActionTwoAtSameTime;
 
 public:
-	EAction();
+	Action();
 
-	virtual ~EAction();
+	virtual ~Action();
 
 	// 获取动作运行状态
 	virtual bool isRunning();
 
 	// 开始动作
 	virtual void startWith(
-		ENode* pTarget	/* 执行该动作的目标 */
+		Node* pTarget	/* 执行该动作的目标 */
 	);
 
 	// 继续动作
@@ -44,16 +44,16 @@ public:
 	virtual void stop();
 
 	// 获取一个新的拷贝动作
-	virtual EAction * clone() const = 0;
+	virtual Action * clone() const = 0;
 
 	// 获取一个新的逆向动作
-	virtual EAction * reverse() const;
+	virtual Action * reverse() const;
 
 	// 重置动作
 	virtual void reset();
 
 	// 获取该动作的执行目标
-	virtual ENode * getTarget();
+	virtual Node * getTarget();
 
 protected:
 	// 初始化动作
@@ -72,18 +72,18 @@ protected:
 	bool	m_bRunning;
 	bool	m_bEnding;
 	bool	m_bInit;
-	ENode *	m_pTarget;
-	EScene *m_pParentScene;
+	Node *	m_pTarget;
+	Scene *m_pParentScene;
 	float	m_fLast;
 };
 
 
-class EActionGradual :
-	public EAction
+class ActionGradual :
+	public Action
 {
 public:
 	// 创建时长动画
-	EActionGradual(
+	ActionGradual(
 		float duration
 	);
 
@@ -100,21 +100,21 @@ protected:
 };
 
 
-class EActionMoveBy :
-	public EActionGradual
+class ActionMoveBy :
+	public ActionGradual
 {
 public:
 	// 创建相对位移动画
-	EActionMoveBy(
+	ActionMoveBy(
 		float duration, /* 动画持续时长 */
-		EVector2 vector		/* 位移向量 */
+		Vector vector		/* 位移向量 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EActionMoveBy * clone() const override;
+	virtual ActionMoveBy * clone() const override;
 
 	// 获取该动画的逆动画
-	virtual EActionMoveBy * reverse() const override;
+	virtual ActionMoveBy * reverse() const override;
 
 protected:
 	// 初始化动画
@@ -124,55 +124,55 @@ protected:
 	virtual void _update() override;
 
 protected:
-	EPoint		m_BeginPos;
-	EVector2	m_MoveVec;
+	Point		m_BeginPos;
+	Vector	m_MoveVec;
 };
 
 
-class EActionMoveTo :
-	public EActionMoveBy
+class ActionMoveTo :
+	public ActionMoveBy
 {
 public:
 	// 创建位移动画
-	EActionMoveTo(
+	ActionMoveTo(
 		float duration, /* 动画持续时长 */
-		EPoint pos		/* 位移至目标点的坐标 */
+		Point pos		/* 位移至目标点的坐标 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EActionMoveTo * clone() const override;
+	virtual ActionMoveTo * clone() const override;
 
 protected:
 	// 初始化动画
 	virtual void _init() override;
 
 protected:
-	EPoint m_EndPos;
+	Point m_EndPos;
 };
 
 
-class EActionScaleBy :
-	public EActionGradual
+class ActionScaleBy :
+	public ActionGradual
 {
 public:
 	// 创建相对缩放动画
-	EActionScaleBy(
+	ActionScaleBy(
 		float duration, /* 动画持续时长 */
 		float scale		/* 缩放比例变化 */
 	);
 
 	// 创建相对缩放动画
-	EActionScaleBy(
+	ActionScaleBy(
 		float duration, /* 动画持续时长 */
 		float scaleX,	/* 横向缩放比例变化 */
 		float scaleY	/* 纵向缩放比例变化 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EActionScaleBy * clone() const override;
+	virtual ActionScaleBy * clone() const override;
 
 	// 获取该动画的逆动画
-	virtual EActionScaleBy * reverse() const override;
+	virtual ActionScaleBy * reverse() const override;
 
 protected:
 	// 初始化动画
@@ -189,25 +189,25 @@ protected:
 };
 
 
-class EActionScaleTo :
-	public EActionScaleBy
+class ActionScaleTo :
+	public ActionScaleBy
 {
 public:
 	// 创建缩放动画
-	EActionScaleTo(
+	ActionScaleTo(
 		float duration, /* 动画持续时长 */
 		float scale		/* 缩放至目标比例 */
 	);
 
 	// 创建缩放动画
-	EActionScaleTo(
+	ActionScaleTo(
 		float duration, /* 动画持续时长 */
 		float scaleX,	/* 横向缩放至目标比例 */
 		float scaleY	/* 纵向缩放至目标比例 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EActionScaleTo * clone() const override;
+	virtual ActionScaleTo * clone() const override;
 
 protected:
 	// 初始化动画
@@ -219,21 +219,21 @@ protected:
 };
 
 
-class EActionOpacityBy :
-	public EActionGradual
+class ActionOpacityBy :
+	public ActionGradual
 {
 public:
 	// 创建透明度相对渐变动画
-	EActionOpacityBy(
+	ActionOpacityBy(
 		float duration, /* 动画持续时长 */
 		float opacity	/* 透明度相对变化值 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EActionOpacityBy * clone() const override;
+	virtual ActionOpacityBy * clone() const override;
 
 	// 获取该动画的逆动画
-	virtual EActionOpacityBy * reverse() const override;
+	virtual ActionOpacityBy * reverse() const override;
 
 protected:
 	// 初始化动画
@@ -248,18 +248,18 @@ protected:
 };
 
 
-class EActionOpacityTo :
-	public EActionOpacityBy
+class ActionOpacityTo :
+	public ActionOpacityBy
 {
 public:
 	// 创建透明度渐变动画
-	EActionOpacityTo(
+	ActionOpacityTo(
 		float duration,	/* 动画持续时长 */
 		float opacity	/* 透明度渐变至目标值 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EActionOpacityTo * clone() const override;
+	virtual ActionOpacityTo * clone() const override;
 
 protected:
 	// 初始化动画
@@ -270,43 +270,43 @@ protected:
 };
 
 
-class EActionFadeIn :
-	public EActionOpacityTo
+class ActionFadeIn :
+	public ActionOpacityTo
 {
 public:
 	// 创建淡入动画
-	EActionFadeIn(
+	ActionFadeIn(
 		float duration	/* 动画持续时长 */
-	) : EActionOpacityTo(duration, 1) {}
+	) : ActionOpacityTo(duration, 1) {}
 };
 
 
-class EActionFadeOut :
-	public EActionOpacityTo
+class ActionFadeOut :
+	public ActionOpacityTo
 {
 public:
 	// 创建淡出动画
-	EActionFadeOut(
+	ActionFadeOut(
 		float duration	/* 动画持续时长 */
-	) : EActionOpacityTo(duration, 0) {}
+	) : ActionOpacityTo(duration, 0) {}
 };
 
 
-class EActionRotateBy :
-	public EActionGradual
+class ActionRotateBy :
+	public ActionGradual
 {
 public:
 	// 创建相对旋转动画
-	EActionRotateBy(
+	ActionRotateBy(
 		float duration,	/* 动画持续时长 */
 		float rotation	/* 旋转角度变化值 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EActionRotateBy * clone() const override;
+	virtual ActionRotateBy * clone() const override;
 
 	// 获取该动画的逆动画
-	virtual EActionRotateBy * reverse() const override;
+	virtual ActionRotateBy * reverse() const override;
 
 protected:
 	// 初始化动画
@@ -321,18 +321,18 @@ protected:
 };
 
 
-class EActionRotateTo :
-	public EActionRotateBy
+class ActionRotateTo :
+	public ActionRotateBy
 {
 public:
 	// 创建旋转动画
-	EActionRotateTo(
+	ActionRotateTo(
 		float duration,	/* 动画持续时长 */
 		float rotation	/* 旋转角度至目标值 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EActionRotateTo * clone() const override;
+	virtual ActionRotateTo * clone() const override;
 
 protected:
 	// 初始化动画
@@ -343,23 +343,24 @@ protected:
 };
 
 
-class EActionTwo :
-	public EAction
+class ActionTwo :
+	public Action
 {
 public:
 	// 创建两个动作的连续动作
-	EActionTwo(
-		EAction * actionFirst,	/* 第一个动作 */
-		EAction * actionSecond	/* 第二个动作 */
+	ActionTwo(
+		Action * pActionFirst,		/* 第一个动作 */
+		Action * pActionSecond,		/* 第二个动作 */
+		bool bAtSameTime = false	/* 同时开始 */
 	);
 
-	virtual ~EActionTwo();
+	virtual ~ActionTwo();
 
 	// 获取该动作的拷贝对象
-	virtual EActionTwo * clone() const override;
+	virtual ActionTwo * clone() const override;
 
 	// 获取该动作的逆动作
-	virtual EActionTwo * reverse(
+	virtual ActionTwo * reverse(
 		bool actionReverse = true	/* 子动作是否执行逆动作 */
 	) const;
 
@@ -377,37 +378,38 @@ protected:
 	virtual void _resetTime() override;
 
 protected:
-	EAction *	m_pFirstAction;
-	EAction *	m_pSecondAction;
+	Action*	m_pFirstAction;
+	Action*	m_pSecondAction;
+	bool	m_bAtSameTime;
 };
 
 
-class EActionSequence :
-	public EAction
+class ActionSequence :
+	public Action
 {
 public:
 	// 创建顺序动作
-	EActionSequence();
+	ActionSequence();
 
 	// 创建顺序动作
-	EActionSequence(
+	ActionSequence(
 		int number,			/* 顺序动作数量 */
-		EAction * action1,	/* 第一个动作 */
+		Action * action1,	/* 第一个动作 */
 		...
 	);
 
-	virtual ~EActionSequence();
+	virtual ~ActionSequence();
 
 	// 向顺序动作中添加动作
-	void addAction(
-		EAction * action	/* 将动作添加至顺序动作尾部 */
+	void _add(
+		Action * action	/* 将动作添加至顺序动作尾部 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual EActionSequence * clone() const override;
+	virtual ActionSequence * clone() const override;
 
 	// 获取该动作的逆动作
-	virtual EActionSequence * reverse(
+	virtual ActionSequence * reverse(
 		bool actionReverse = true	/* 子动作是否执行逆动作 */
 	) const;
 
@@ -426,21 +428,21 @@ protected:
 
 protected:
 	UINT					m_nActionIndex;
-	std::vector<EAction*>	m_vActions;
+	std::vector<Action*>	m_vActions;
 };
 
 
-class EActionDelay :
-	public EAction
+class ActionDelay :
+	public Action
 {
 public:
 	// 创建延时动作
-	EActionDelay(
+	ActionDelay(
 		float duration	/* 延迟时长（秒） */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual EActionDelay * clone() const override;
+	virtual ActionDelay * clone() const override;
 
 protected:
 	// 初始化动作
@@ -454,59 +456,20 @@ protected:
 };
 
 
-class EActionTwoAtSameTime :
-	public EAction
-{
-public:
-	// 创建两个动作同时执行的动作
-	EActionTwoAtSameTime(
-		EAction * actionFirst,	/* 第一个动作 */
-		EAction * actionSecond	/* 第二个动作 */
-	);
-
-	virtual ~EActionTwoAtSameTime();
-
-	// 获取该动作的拷贝对象
-	virtual EActionTwoAtSameTime * clone() const override;
-
-	// 获取该动作的逆动作
-	virtual EActionTwoAtSameTime * reverse(
-		bool actionReverse = true	/* 子动作是否执行逆动作 */
-	) const;
-
-	// 重置动作
-	virtual void reset() override;
-
-protected:
-	// 初始化动作
-	virtual void _init() override;
-
-	// 执行动作
-	virtual void _update() override;
-
-	// 重置动画时间
-	virtual void _resetTime() override;
-
-protected:
-	EAction *	m_pFirstAction;
-	EAction *	m_pSecondAction;
-};
-
-
-class EActionLoop :
-	public EAction
+class ActionLoop :
+	public Action
 {
 public:
 	// 创建循环动作
-	EActionLoop(
-		EAction * action,	/* 执行循环的动作 */
+	ActionLoop(
+		Action * action,	/* 执行循环的动作 */
 		int times = -1		/* 循环次数 */
 	);
 
-	virtual ~EActionLoop();
+	virtual ~ActionLoop();
 
 	// 获取该动作的拷贝对象
-	virtual EActionLoop * clone() const override;
+	virtual ActionLoop * clone() const override;
 
 	// 重置动作
 	virtual void reset() override;
@@ -522,29 +485,29 @@ protected:
 	virtual void _resetTime() override;
 
 protected:
-	EAction * m_pAction;
+	Action * m_pAction;
 	int m_nTimes;
 	int m_nTotalTimes;
 };
 
 
-class EAnimation :
-	public EAction
+class Animation :
+	public Action
 {
 public:
 	// 创建帧动画
-	EAnimation();
+	Animation();
 
 	// 创建特定帧间隔的帧动画
-	EAnimation(
+	Animation(
 		float interval	/* 帧间隔（秒） */
 	);
 
-	virtual ~EAnimation();
+	virtual ~Animation();
 
 	// 添加关键帧
 	void addKeyframe(
-		EImage * frame	/* 添加关键帧 */
+		Image * frame	/* 添加关键帧 */
 	);
 
 	// 设置每一帧的时间间隔
@@ -553,10 +516,10 @@ public:
 	);
 
 	// 获取该动画的拷贝对象
-	virtual EAnimation * clone() const override;
+	virtual Animation * clone() const override;
 
 	// 获取该动画的逆动画
-	virtual EAnimation * reverse() const override;
+	virtual Animation * reverse() const override;
 
 	// 重置动作
 	virtual void reset() override;
@@ -571,21 +534,21 @@ protected:
 protected:
 	float	m_fInterval;
 	UINT	m_nFrameIndex;
-	std::vector<EImage*> m_vFrames;
+	std::vector<Image*> m_vFrames;
 };
 
 
-class EActionCallback :
-	public EAction
+class ActionCallback :
+	public Action
 {
 public:
 	// 创建执行回调函数的动作
-	EActionCallback(
-		const std::function<void()> & callback /* 回调函数 */
+	ActionCallback(
+		const VoidFunction & callback /* 回调函数 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual EActionCallback * clone() const override;
+	virtual ActionCallback * clone() const override;
 
 protected:
 	// 初始化动作
@@ -595,7 +558,7 @@ protected:
 	virtual void _update() override;
 
 protected:
-	std::function<void()> m_Callback;
+	VoidFunction m_Callback;
 };
 
 }
