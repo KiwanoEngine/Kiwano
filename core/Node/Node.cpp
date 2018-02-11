@@ -54,15 +54,17 @@ void e2d::Node::_update()
 
 	if (!m_vChildren.empty())
 	{
-		// 子节点排序
 		if (m_bSortChildrenNeeded)
 		{
+			// 子节点排序
+			auto sortFunc = [](Node * n1, Node * n2) {
+				return n1->getOrder() < n2->getOrder();
+			};
+
 			std::sort(
 				std::begin(m_vChildren),
 				std::end(m_vChildren),
-				[](Node * n1, Node * n2) {
-				return n1->getOrder() < n2->getOrder();
-			}
+				sortFunc
 			);
 
 			m_bSortChildrenNeeded = false;
@@ -204,6 +206,7 @@ void e2d::Node::_updateTransform()
 		getRealWidth() * m_fPivotX,
 		getRealHeight() * m_fPivotY
 	);
+	D2D1_POINT_2F point = D2D1::Point2F(m_Pos.x, m_Pos.y);
 	// 初步的二维矩形变换，子节点将根据这个矩阵进行变换
 	m_MatriInitial = D2D1::Matrix3x2F::Scale(
 		m_fScaleX,
@@ -220,13 +223,14 @@ void e2d::Node::_updateTransform()
 		m_Pos.x,
 		m_Pos.y
 	);
+	// 根据自身中心点做最终变换
+	m_MatriFinal = m_MatriInitial * D2D1::Matrix3x2F::Translation(-pivot.x, -pivot.y);
 	// 和父节点矩阵相乘
 	if (m_pParent)
 	{
 		m_MatriInitial = m_MatriInitial * m_pParent->m_MatriInitial;
+		m_MatriFinal = m_MatriFinal * m_pParent->m_MatriInitial;
 	}
-	// 根据自身中心点做最终变换
-	m_MatriFinal = m_MatriInitial * D2D1::Matrix3x2F::Translation(-pivot.x, -pivot.y);
 }
 
 void e2d::Node::_updateChildrenTransform()
