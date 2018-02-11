@@ -206,8 +206,7 @@ void e2d::Node::_updateTransform()
 		getRealWidth() * m_fPivotX,
 		getRealHeight() * m_fPivotY
 	);
-	D2D1_POINT_2F point = D2D1::Point2F(m_Pos.x, m_Pos.y);
-	// 初步的二维矩形变换，子节点将根据这个矩阵进行变换
+	// 变换 Initial 矩阵，子节点将根据这个矩阵进行变换
 	m_MatriInitial = D2D1::Matrix3x2F::Scale(
 		m_fScaleX,
 		m_fScaleY,
@@ -223,7 +222,7 @@ void e2d::Node::_updateTransform()
 		m_Pos.x,
 		m_Pos.y
 	);
-	// 根据自身中心点做最终变换
+	// 根据自身中心点变换 Final 矩阵
 	m_MatriFinal = m_MatriInitial * D2D1::Matrix3x2F::Translation(-pivot.x, -pivot.y);
 	// 和父节点矩阵相乘
 	if (m_pParent)
