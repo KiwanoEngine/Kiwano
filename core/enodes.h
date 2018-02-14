@@ -512,17 +512,17 @@ public:
 
 	// 设置字体
 	void setFont(
-		Font * font
+		Font * pFont
 	);
 
 	// 设置文字自动换行
-	void setWordWrapping(
-		bool value
+	void setWordWrappingEnable(
+		bool bEnable
 	);
 
 	// 设置文字换行宽度（WordWrapping 打开时生效）
 	void setWordWrappingWidth(
-		float wordWrapWidth
+		float fWordWrapWidth
 	);
 
 	// 渲染文字
@@ -609,25 +609,6 @@ public:
 	void setCallback(
 		const ButtonCallback & callback
 	);
-
-	// 设置中心点的横向位置
-	// 默认为 0, 范围 [0, 1]
-	virtual void setPivotX(
-		float pivotX
-	) override;
-
-	// 设置中心点的纵向位置
-	// 默认为 0, 范围 [0, 1]
-	virtual void setPivotY(
-		float pivotY
-	) override;
-
-	// 设置中心点位置
-	// 默认为 (0, 0), 范围 [0, 1]
-	virtual void setPivot(
-		float pivotX,
-		float pivotY
-	) override;
 
 	// 更新按钮状态
 	virtual void onFixedUpdate() override;
@@ -750,25 +731,6 @@ public:
 	void setDisabledOff(
 		Node * disabled
 	);
-
-	// 设置中心点的横向位置
-	// 默认为 0, 范围 [0, 1]
-	virtual void setPivotX(
-		float pivotX
-	) override;
-
-	// 设置中心点的纵向位置
-	// 默认为 0, 范围 [0, 1]
-	virtual void setPivotY(
-		float pivotY
-	) override;
-
-	// 设置中心点位置
-	// 默认为 (0, 0), 范围 [0, 1]
-	virtual void setPivot(
-		float pivotX,
-		float pivotY
-	) override;
 
 protected:
 	// 刷新按钮开关

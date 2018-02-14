@@ -1,6 +1,9 @@
 #include "..\enodes.h"
 #include "..\emanagers.h"
 
+#define SAFE_SETTER(pointer, func, ...) if (pointer) { pointer->##func(__VA_ARGS__); }
+
+
 e2d::Button::Button()
 	: m_Callback((const ButtonCallback &)nullptr)
 	, m_eBtnState(Button::NORMAL)
@@ -93,7 +96,6 @@ void e2d::Button::setNormal(Node * normal)
 		if (normal)
 		{
 			this->addChild(normal);
-			normal->setPivot(m_fPivotX, m_fPivotY);
 			this->_setSize(normal->getWidth(), normal->getHeight());
 		}
 		m_pNormal = normal;
@@ -115,7 +117,6 @@ void e2d::Button::setMouseOver(Node * mouseover)
 		if (mouseover)
 		{
 			this->addChild(mouseover);
-			mouseover->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pMouseover = mouseover;
 		_updateVisiable();
@@ -135,7 +136,6 @@ void e2d::Button::setSelected(Node * selected)
 		if (selected)
 		{
 			this->addChild(selected);
-			selected->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pSelected = selected;
 		_updateVisiable();
@@ -155,7 +155,6 @@ void e2d::Button::setDisabled(Node * disabled)
 		if (disabled)
 		{
 			this->addChild(disabled);
-			disabled->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pDisabled = disabled;
 		_updateVisiable();
@@ -176,33 +175,6 @@ void e2d::Button::setCallback(const ButtonCallback & callback)
 	WARN_IF(m_pNormal == nullptr, "Button cannot work without anything to show. Please set its normal displayed.");
 	
 	m_Callback = callback;
-}
-
-void e2d::Button::setPivotX(float pivotX)
-{
-	Node::setPivotX(pivotX);
-	if (m_pNormal) m_pNormal->setPivotX(pivotX);
-	if (m_pMouseover) m_pMouseover->setPivotX(pivotX);
-	if (m_pSelected) m_pSelected->setPivotX(pivotX);
-	if (m_pDisabled) m_pDisabled->setPivotX(pivotX);
-}
-
-void e2d::Button::setPivotY(float pivotY)
-{
-	Node::setPivotY(pivotY);
-	if (m_pNormal) m_pNormal->setPivotY(pivotY);
-	if (m_pMouseover) m_pMouseover->setPivotY(pivotY);
-	if (m_pSelected) m_pSelected->setPivotY(pivotY);
-	if (m_pDisabled) m_pDisabled->setPivotY(pivotY);
-}
-
-void e2d::Button::setPivot(float pivotX, float pivotY)
-{
-	Node::setPivot(pivotX, pivotY);
-	if (m_pNormal) m_pNormal->setPivot(pivotX, pivotY);
-	if (m_pMouseover) m_pMouseover->setPivot(pivotX, pivotY);
-	if (m_pSelected) m_pSelected->setPivot(pivotX, pivotY);
-	if (m_pDisabled) m_pDisabled->setPivot(pivotX, pivotY);
 }
 
 void e2d::Button::onFixedUpdate()
@@ -263,10 +235,10 @@ void e2d::Button::_setState(BTN_STATE state)
 
 void e2d::Button::_updateVisiable()
 {
-	if (m_pNormal) m_pNormal->setVisiable(false);
-	if (m_pMouseover) m_pMouseover->setVisiable(false);
-	if (m_pSelected) m_pSelected->setVisiable(false);
-	if (m_pDisabled) m_pDisabled->setVisiable(false);
+	SAFE_SETTER(m_pNormal, setVisiable, false);
+	SAFE_SETTER(m_pMouseover, setVisiable, false);
+	SAFE_SETTER(m_pSelected, setVisiable, false);
+	SAFE_SETTER(m_pDisabled, setVisiable, false);
 
 	if (m_bEnable)
 	{

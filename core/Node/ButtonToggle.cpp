@@ -122,7 +122,6 @@ void e2d::ButtonToggle::setNormal(Node * normal)
 		if (normal)
 		{
 			this->addChild(normal);
-			normal->setPivot(m_fPivotX, m_fPivotY);
 			this->_setSize(normal->getWidth(), normal->getHeight());
 		}
 		m_pNormalOn = normal;
@@ -145,7 +144,6 @@ void e2d::ButtonToggle::setMouseOver(Node * mouseover)
 		if (mouseover)
 		{
 			this->addChild(mouseover);
-			mouseover->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pMouseoverOn = mouseover;
 
@@ -167,7 +165,6 @@ void e2d::ButtonToggle::setSelected(Node * selected)
 		if (selected)
 		{
 			this->addChild(selected);
-			selected->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pSelectedOn = selected;
 
@@ -189,7 +186,6 @@ void e2d::ButtonToggle::setDisabled(Node * disabled)
 		if (disabled)
 		{
 			this->addChild(disabled);
-			disabled->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pDisabledOn = disabled;
 
@@ -211,7 +207,6 @@ void e2d::ButtonToggle::setNormalOff(Node * normal)
 		if (normal)
 		{
 			this->addChild(normal);
-			normal->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pNormalOff = normal;
 
@@ -233,7 +228,6 @@ void e2d::ButtonToggle::setMouseOverOff(Node * mouseover)
 		if (mouseover)
 		{
 			this->addChild(mouseover);
-			mouseover->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pMouseoverOff = mouseover;
 
@@ -255,7 +249,6 @@ void e2d::ButtonToggle::setSelectedOff(Node * selected)
 		if (selected)
 		{
 			this->addChild(selected);
-			selected->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pSelectedOff = selected;
 
@@ -277,52 +270,12 @@ void e2d::ButtonToggle::setDisabledOff(Node * disabled)
 		if (disabled)
 		{
 			this->addChild(disabled);
-			disabled->setPivot(m_fPivotX, m_fPivotY);
 		}
 		m_pDisabledOff = disabled;
 
 		_updateState();
 		_updateVisiable();
 	}
-}
-
-void e2d::ButtonToggle::setPivotX(float pivotX)
-{
-	Node::setPivotX(pivotX);
-	if (m_pNormalOn) m_pNormalOn->setPivotX(pivotX);
-	if (m_pMouseoverOn) m_pMouseoverOn->setPivotX(pivotX);
-	if (m_pSelectedOn) m_pSelectedOn->setPivotX(pivotX);
-	if (m_pDisabledOn) m_pDisabledOn->setPivotX(pivotX);
-	if (m_pNormalOff) m_pNormalOff->setPivotX(pivotX);
-	if (m_pMouseoverOff) m_pMouseoverOff->setPivotX(pivotX);
-	if (m_pSelectedOff) m_pSelectedOff->setPivotX(pivotX);
-	if (m_pDisabledOff) m_pDisabledOff->setPivotX(pivotX);
-}
-
-void e2d::ButtonToggle::setPivotY(float pivotY)
-{
-	Node::setPivotY(pivotY);
-	if (m_pNormalOn) m_pNormalOn->setPivotY(pivotY);
-	if (m_pMouseoverOn) m_pMouseoverOn->setPivotY(pivotY);
-	if (m_pSelectedOn) m_pSelectedOn->setPivotY(pivotY);
-	if (m_pDisabledOn) m_pDisabledOn->setPivotY(pivotY);
-	if (m_pNormalOff) m_pNormalOff->setPivotY(pivotY);
-	if (m_pMouseoverOff) m_pMouseoverOff->setPivotY(pivotY);
-	if (m_pSelectedOff) m_pSelectedOff->setPivotY(pivotY);
-	if (m_pDisabledOff) m_pDisabledOff->setPivotY(pivotY);
-}
-
-void e2d::ButtonToggle::setPivot(float pivotX, float pivotY)
-{
-	Node::setPivot(pivotX, pivotY);
-	if (m_pNormalOn) m_pNormalOn->setPivot(pivotX, pivotY);
-	if (m_pMouseoverOn) m_pMouseoverOn->setPivot(pivotX, pivotY);
-	if (m_pSelectedOn) m_pSelectedOn->setPivot(pivotX, pivotY);
-	if (m_pDisabledOn) m_pDisabledOn->setPivot(pivotX, pivotY);
-	if (m_pNormalOff) m_pNormalOff->setPivot(pivotX, pivotY);
-	if (m_pMouseoverOff) m_pMouseoverOff->setPivot(pivotX, pivotY);
-	if (m_pSelectedOff) m_pSelectedOff->setPivot(pivotX, pivotY);
-	if (m_pDisabledOff) m_pDisabledOff->setPivot(pivotX, pivotY);
 }
 
 void e2d::ButtonToggle::_updateState()

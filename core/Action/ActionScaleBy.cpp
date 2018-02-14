@@ -38,7 +38,7 @@ void e2d::ActionScaleBy::_update()
 	// Ëõ·Å½Úµã
 	m_pTarget->setScale(
 		m_nBeginScaleX + m_nVariationX * m_fRateOfProgress, 
-		m_nBeginScaleX + m_nVariationX * m_fRateOfProgress);
+		m_nBeginScaleY + m_nVariationY * m_fRateOfProgress);
 }
 
 e2d::ActionScaleBy * e2d::ActionScaleBy::clone() const

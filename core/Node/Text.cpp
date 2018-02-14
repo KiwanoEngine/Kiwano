@@ -86,7 +86,7 @@ void e2d::Text::setFont(Font * font)
 	}
 }
 
-void e2d::Text::setWordWrapping(bool value)
+void e2d::Text::setWordWrappingEnable(bool value)
 {
 	m_bWordWrapping = value;
 	_initTextLayout();
