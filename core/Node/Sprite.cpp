@@ -18,7 +18,7 @@ e2d::Sprite::Sprite(LPCTSTR imageFileName)
 	loadFrom(imageFileName);
 }
 
-e2d::Sprite::Sprite(LPCTSTR imageFileName, float x, float y, float width, float height)
+e2d::Sprite::Sprite(LPCTSTR imageFileName, double x, double y, double width, double height)
 	: m_pImage(nullptr)
 {
 	loadFrom(imageFileName);
@@ -47,7 +47,7 @@ void e2d::Sprite::loadFrom(LPCTSTR imageFileName)
 	loadFrom(new Image(imageFileName));
 }
 
-void e2d::Sprite::clip(float x, float y, float width, float height)
+void e2d::Sprite::clip(double x, double y, double width, double height)
 {
 	m_pImage->clip(x, y, width, height);
 	Node::_setSize(
@@ -65,17 +65,19 @@ void e2d::Sprite::onRender()
 {
 	if (m_pImage && m_pImage->getBitmap())
 	{
+		float fClipX = static_cast<float>(m_pImage->getClipX());
+		float fClipY = static_cast<float>(m_pImage->getClipY());
 		// äÖÈ¾Í¼Æ¬
 		Renderer::getRenderTarget()->DrawBitmap(
 			m_pImage->getBitmap(),
-			D2D1::RectF(0, 0, getRealWidth(), getRealHeight()),
+			D2D1::RectF(0, 0, m_fWidth, m_fHeight),
 			m_fDisplayOpacity,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			D2D1::RectF(
-				m_pImage->getClipX(),
-				m_pImage->getClipY(),
-				m_pImage->getClipX() + getRealWidth(),
-				m_pImage->getClipY() + getRealHeight()
+				fClipX,
+				fClipY,
+				fClipX + m_fWidth,
+				fClipY + m_fHeight
 			)
 		);
 	}

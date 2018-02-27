@@ -54,10 +54,10 @@ public:
 	static String getTitle();
 
 	// 获取窗口宽度
-	static float getWidth();
+	static double getWidth();
 
 	// 获取窗口高度
-	static float getHeight();
+	static double getHeight();
 
 	// 获取窗口大小
 	static Size getSize();
@@ -116,7 +116,7 @@ public:
 	static int getDeltaTime();
 
 	// 获取游戏开始时长（秒）
-	static float getTotalTime();
+	static double getTotalTime();
 
 private:
 	// 初始化计时操作
@@ -188,22 +188,22 @@ public:
 	static bool isMouseMButtonRelease();
 
 	// 获得鼠标X轴坐标值
-	static float getMouseX();
+	static double getMouseX();
 
 	// 获得鼠标Y轴坐标值
-	static float getMouseY();
+	static double getMouseY();
 
 	// 获得鼠标坐标值
 	static Point getMousePos();
 
 	// 获得鼠标X轴坐标增量
-	static float getMouseDeltaX();
+	static double getMouseDeltaX();
 
 	// 获得鼠标Y轴坐标增量
-	static float getMouseDeltaY();
+	static double getMouseDeltaY();
 
 	// 获得鼠标Z轴（鼠标滚轮）坐标增量
-	static float getMouseDeltaZ();
+	static double getMouseDeltaZ();
 
 private:
 	// 初始化 DirectInput 以及键盘鼠标设备

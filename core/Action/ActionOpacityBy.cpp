@@ -1,7 +1,7 @@
 #include "..\eactions.h"
 
 
-e2d::ActionOpacityBy::ActionOpacityBy(float duration, float opacity) :
+e2d::ActionOpacityBy::ActionOpacityBy(double duration, double opacity) :
 	ActionGradual(duration)
 {
 	m_nVariation = opacity;

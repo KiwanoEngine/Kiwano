@@ -1,7 +1,7 @@
 #include "..\etransitions.h"
 #include "..\enodes.h"
 
-e2d::TransitionEmerge::TransitionEmerge(float duration)
+e2d::TransitionEmerge::TransitionEmerge(double duration)
 	: Transition(duration)
 {
 }

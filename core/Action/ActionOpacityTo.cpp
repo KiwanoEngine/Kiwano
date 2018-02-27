@@ -1,7 +1,7 @@
 #include "..\eactions.h"
 
 
-e2d::ActionOpacityTo::ActionOpacityTo(float duration, float opacity) :
+e2d::ActionOpacityTo::ActionOpacityTo(double duration, double opacity) :
 	ActionOpacityBy(duration, 0)
 {
 	m_nEndVal = opacity;

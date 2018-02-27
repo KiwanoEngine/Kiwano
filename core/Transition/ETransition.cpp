@@ -1,7 +1,7 @@
 #include "..\ebase.h"
 #include "..\etransitions.h"
 
-e2d::Transition::Transition(float duration)
+e2d::Transition::Transition(double duration)
 	: m_bEnd(false)
 	, m_fLast(0)
 	, m_fRateOfProgress(0)

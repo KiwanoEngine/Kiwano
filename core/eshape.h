@@ -61,7 +61,7 @@ public:
 
 	// 设置绘制透明度
 	void setOpacity(
-		float opacity
+		double opacity
 	);
 
 protected:
@@ -95,10 +95,10 @@ public:
 
 	// 根据左上角坐标和宽高创建矩形
 	Rect(
-		float x,
-		float y,
-		float width,
-		float height
+		double x,
+		double y,
+		double width,
+		double height
 	);
 
 	// 创建一个和节点位置大小相同的矩形
@@ -110,10 +110,10 @@ public:
 
 protected:
 	void _setRect(
-		float left,
-		float top,
-		float right,
-		float bottom
+		double left,
+		double top,
+		double right,
+		double bottom
 	);
 
 	virtual ID2D1RectangleGeometry * _getD2dGeometry() const override;
@@ -133,7 +133,7 @@ public:
 	// 根据圆心和半径创建圆形
 	Circle(
 		Point center,
-		float radius
+		double radius
 	);
 
 	// 创建一个和节点位置大小相同的圆形
@@ -146,7 +146,7 @@ public:
 protected:
 	void _setCircle(
 		Point center,
-		float radius
+		double radius
 	);
 
 	virtual ID2D1EllipseGeometry * _getD2dGeometry() const override;
@@ -166,8 +166,8 @@ public:
 	// 根据圆心和半径创建椭圆
 	Ellipse(
 		Point center,
-		float radiusX,
-		float radiusY
+		double radiusX,
+		double radiusY
 	);
 
 	// 创建一个和节点位置大小相同的椭圆
@@ -180,8 +180,8 @@ public:
 protected:
 	void _setEllipse(
 		Point center,
-		float radiusX,
-		float radiusY
+		double radiusX,
+		double radiusY
 	);
 
 	virtual ID2D1EllipseGeometry * _getD2dGeometry() const override;

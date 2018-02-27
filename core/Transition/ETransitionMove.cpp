@@ -1,7 +1,7 @@
 #include "..\etransitions.h"
 #include "..\enodes.h"
 
-e2d::TransitionMove::TransitionMove(float duration, MOVE_DIRECT direct)
+e2d::TransitionMove::TransitionMove(double duration, MOVE_DIRECT direct)
 	: Transition(duration)
 	, m_Direct(direct)
 {

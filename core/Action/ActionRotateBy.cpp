@@ -1,7 +1,7 @@
 #include "..\eactions.h"
 
 
-e2d::ActionRotateBy::ActionRotateBy(float duration, float rotation) :
+e2d::ActionRotateBy::ActionRotateBy(double duration, double rotation) :
 	ActionGradual(duration)
 {
 	m_nVariation = rotation;

@@ -34,7 +34,7 @@ e2d::Text::Text(const String & text, Font * font)
 	this->setFont(font);
 }
 
-e2d::Text::Text(const String & text, String fontFamily, float fontSize, UINT32 color, UINT32 fontWeight, bool italic)
+e2d::Text::Text(const String & text, String fontFamily, double fontSize, UINT32 color, UINT32 fontWeight, bool italic)
 	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
@@ -53,12 +53,12 @@ e2d::String e2d::Text::getText() const
 	return m_sText;
 }
 
-float e2d::Text::getWidth() const
+double e2d::Text::getWidth() const
 {
 	return m_fWordWrappingWidth * m_fScaleX;
 }
 
-float e2d::Text::getRealWidth() const
+double e2d::Text::getRealWidth() const
 {
 	return m_fWordWrappingWidth;
 }
@@ -92,9 +92,9 @@ void e2d::Text::setWordWrappingEnable(bool value)
 	_initTextLayout();
 }
 
-void e2d::Text::setWordWrappingWidth(float wordWrapWidth)
+void e2d::Text::setWordWrappingWidth(double wordWrapWidth)
 {
-	m_fWordWrappingWidth = max(wordWrapWidth, 0);
+	m_fWordWrappingWidth = max(static_cast<float>(wordWrapWidth), 0);
 	_initTextLayout();
 }
 
@@ -108,8 +108,8 @@ void e2d::Text::onRender()
 		D2D1::RectF(
 			0,
 			0,
-			m_bWordWrapping ? m_fWordWrappingWidth : m_Size.width,
-			getRealHeight()
+			m_bWordWrapping ? m_fWordWrappingWidth : m_fWidth,
+			m_fHeight
 		),
 		Renderer::getSolidColorBrush()
 	);

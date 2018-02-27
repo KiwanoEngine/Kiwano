@@ -1,7 +1,7 @@
 #include "..\etransitions.h"
 #include "..\enodes.h"
 
-e2d::TransitionFade::TransitionFade(float fadeOutDuration, float fadeInDuration)
+e2d::TransitionFade::TransitionFade(double fadeOutDuration, double fadeInDuration)
 	: Transition(0)
 	, m_fFadeOutDuration(fadeOutDuration)
 	, m_fFadeInDuration(fadeInDuration)

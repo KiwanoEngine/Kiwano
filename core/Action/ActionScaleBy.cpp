@@ -1,14 +1,14 @@
 #include "..\eactions.h"
 
 
-e2d::ActionScaleBy::ActionScaleBy(float duration, float scale)
+e2d::ActionScaleBy::ActionScaleBy(double duration, double scale)
 	: ActionGradual(duration)
 {
 	m_nVariationX = scale;
 	m_nVariationY = scale;
 }
 
-e2d::ActionScaleBy::ActionScaleBy(float duration, float scaleX, float scaleY)
+e2d::ActionScaleBy::ActionScaleBy(double duration, double scaleX, double scaleY)
 	: ActionGradual(duration)
 {
 	m_nVariationX = scaleX;

@@ -6,7 +6,7 @@ e2d::Ellipse::Ellipse()
 {
 }
 
-e2d::Ellipse::Ellipse(Point center, float radiusX, float radiusY)
+e2d::Ellipse::Ellipse(Point center, double radiusX, double radiusY)
 	: m_pD2dEllipse(nullptr)
 {
 	this->_setEllipse(center, radiusX, radiusY);
@@ -30,17 +30,17 @@ e2d::Ellipse::~Ellipse()
 	SafeReleaseInterface(&m_pD2dEllipse);
 }
 
-void e2d::Ellipse::_setEllipse(Point center, float radiusX, float radiusY)
+void e2d::Ellipse::_setEllipse(Point center, double radiusX, double radiusY)
 {
 	SafeReleaseInterface(&m_pD2dEllipse);
 
 	Renderer::getID2D1Factory()->CreateEllipseGeometry(
 		D2D1::Ellipse(
 			D2D1::Point2F(
-				center.x,
-				center.y),
-			radiusX,
-			radiusY),
+				static_cast<float>(center.x),
+				static_cast<float>(center.y)),
+			static_cast<float>(radiusX),
+			static_cast<float>(radiusY)),
 		&m_pD2dEllipse
 	);
 }

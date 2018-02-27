@@ -1,6 +1,6 @@
 #include "..\eactions.h"
 
-e2d::ActionMoveTo::ActionMoveTo(float duration, Point pos) :
+e2d::ActionMoveTo::ActionMoveTo(double duration, Point pos) :
 	ActionMoveBy(duration, Vector())
 {
 	m_EndPos = pos;

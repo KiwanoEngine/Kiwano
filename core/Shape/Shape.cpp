@@ -59,9 +59,9 @@ void e2d::Shape::setColor(UINT32 color)
 	m_nColor = color;
 }
 
-void e2d::Shape::setOpacity(float opacity)
+void e2d::Shape::setOpacity(double opacity)
 {
-	m_fOpacity = min(max(opacity, 0), 1);
+	m_fOpacity = min(max(static_cast<float>(opacity), 0), 1);
 }
 
 void e2d::Shape::_render()

@@ -1,13 +1,13 @@
 #include "..\eactions.h"
 
-e2d::ActionScaleTo::ActionScaleTo(float duration, float scale)
+e2d::ActionScaleTo::ActionScaleTo(double duration, double scale)
 	: ActionScaleBy(duration, 0, 0)
 {
 	m_nEndScaleX = scale;
 	m_nEndScaleY = scale;
 }
 
-e2d::ActionScaleTo::ActionScaleTo(float duration, float scaleX, float scaleY)
+e2d::ActionScaleTo::ActionScaleTo(double duration, double scaleX, double scaleY)
 	: ActionScaleBy(duration, 0, 0)
 {
 	m_nEndScaleX = scaleX;

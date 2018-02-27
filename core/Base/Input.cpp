@@ -224,32 +224,32 @@ bool Input::isMouseMButtonRelease()
 	return false;
 }
 
-float Input::getMouseX()
+double Input::getMouseX()
 {
-	return (float)s_MousePosition.x;
+	return (double)s_MousePosition.x;
 }
 
-float Input::getMouseY()
+double Input::getMouseY()
 {
-	return (float)s_MousePosition.y;
+	return (double)s_MousePosition.y;
 }
 
 Point Input::getMousePos()
 {
-	return Point((float)s_MousePosition.x, (float)s_MousePosition.y);
+	return Point((double)s_MousePosition.x, (double)s_MousePosition.y);
 }
 
-float Input::getMouseDeltaX()
+double Input::getMouseDeltaX()
 {
-	return (float)s_MouseState.lX;
+	return (double)s_MouseState.lX;
 }
 
-float Input::getMouseDeltaY()
+double Input::getMouseDeltaY()
 {
-	return (float)s_MouseState.lY;
+	return (double)s_MouseState.lY;
 }
 
-float Input::getMouseDeltaZ()
+double Input::getMouseDeltaZ()
 {
-	return (float)s_MouseState.lZ;
+	return (double)s_MouseState.lZ;
 }

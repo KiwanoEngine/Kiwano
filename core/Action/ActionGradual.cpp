@@ -1,6 +1,6 @@
 #include "..\eactions.h"
 
-e2d::ActionGradual::ActionGradual(float duration)
+e2d::ActionGradual::ActionGradual(double duration)
 	: m_fRateOfProgress(0)
 {
 	m_fDuration = max(duration, 0);

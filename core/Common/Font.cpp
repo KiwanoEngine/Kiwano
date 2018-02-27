@@ -10,7 +10,7 @@ e2d::Font::Font()
 {
 }
 
-e2d::Font::Font(String fontFamily, float fontSize /* = 22 */, UINT32 color /* = EColor::WHITE */, UINT32 fontWeight, bool italic /* = false */)
+e2d::Font::Font(String fontFamily, double fontSize /* = 22 */, UINT32 color /* = EColor::WHITE */, UINT32 fontWeight, bool italic /* = false */)
 	: m_pTextFormat(nullptr)
 	, m_Color(Color::WHITE)
 	, m_fFontSize(22)
@@ -30,7 +30,7 @@ e2d::Font::~Font()
 	SafeReleaseInterface(&m_pTextFormat);
 }
 
-float e2d::Font::getFontSize() const
+double e2d::Font::getFontSize() const
 {
 	return m_fFontSize;
 }
@@ -56,9 +56,9 @@ void e2d::Font::setFamily(const String & fontFamily)
 	m_bRecreateNeeded = true;
 }
 
-void e2d::Font::setSize(float fontSize)
+void e2d::Font::setSize(double fontSize)
 {
-	m_fFontSize = fontSize;
+	m_fFontSize = static_cast<float>(fontSize);
 	m_bRecreateNeeded = true;
 }
 

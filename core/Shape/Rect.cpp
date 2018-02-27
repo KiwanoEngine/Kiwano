@@ -6,7 +6,7 @@ e2d::Rect::Rect()
 {
 }
 
-e2d::Rect::Rect(float x, float y, float width, float height)
+e2d::Rect::Rect(double x, double y, double width, double height)
 	: m_pD2dRectangle(nullptr)
 {
 	this->_setRect(x, y, x + width, y + height);
@@ -28,12 +28,16 @@ e2d::Rect::~Rect()
 	SafeReleaseInterface(&m_pD2dRectangle);
 }
 
-void e2d::Rect::_setRect(float left, float top, float right, float bottom)
+void e2d::Rect::_setRect(double left, double top, double right, double bottom)
 {
 	SafeReleaseInterface(&m_pD2dRectangle);
 
 	Renderer::getID2D1Factory()->CreateRectangleGeometry(
-		D2D1::RectF(left, top, right, bottom),
+		D2D1::RectF(
+			static_cast<float>(left), 
+			static_cast<float>(top), 
+			static_cast<float>(right), 
+			static_cast<float>(bottom)),
 		&m_pD2dRectangle
 	);
 }

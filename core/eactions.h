@@ -74,7 +74,7 @@ protected:
 	bool	m_bInit;
 	Node *	m_pTarget;
 	Scene *m_pParentScene;
-	float	m_fLast;
+	double	m_fLast;
 };
 
 
@@ -84,7 +84,7 @@ class ActionGradual :
 public:
 	// 创建时长动画
 	ActionGradual(
-		float duration
+		double duration
 	);
 
 protected:
@@ -95,8 +95,8 @@ protected:
 	virtual void _update() override;
 
 protected:
-	float m_fDuration;
-	float m_fRateOfProgress;
+	double m_fDuration;
+	double m_fRateOfProgress;
 };
 
 
@@ -106,7 +106,7 @@ class ActionMoveBy :
 public:
 	// 创建相对位移动画
 	ActionMoveBy(
-		float duration, /* 动画持续时长 */
+		double duration, /* 动画持续时长 */
 		Vector vector		/* 位移向量 */
 	);
 
@@ -135,7 +135,7 @@ class ActionMoveTo :
 public:
 	// 创建位移动画
 	ActionMoveTo(
-		float duration, /* 动画持续时长 */
+		double duration, /* 动画持续时长 */
 		Point pos		/* 位移至目标点的坐标 */
 	);
 
@@ -157,15 +157,15 @@ class ActionScaleBy :
 public:
 	// 创建相对缩放动画
 	ActionScaleBy(
-		float duration, /* 动画持续时长 */
-		float scale		/* 缩放比例变化 */
+		double duration, /* 动画持续时长 */
+		double scale		/* 缩放比例变化 */
 	);
 
 	// 创建相对缩放动画
 	ActionScaleBy(
-		float duration, /* 动画持续时长 */
-		float scaleX,	/* 横向缩放比例变化 */
-		float scaleY	/* 纵向缩放比例变化 */
+		double duration, /* 动画持续时长 */
+		double scaleX,	/* 横向缩放比例变化 */
+		double scaleY	/* 纵向缩放比例变化 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -182,10 +182,10 @@ protected:
 	virtual void _update() override;
 
 protected:
-	float	m_nBeginScaleX;
-	float	m_nBeginScaleY;
-	float	m_nVariationX;
-	float	m_nVariationY;
+	double	m_nBeginScaleX;
+	double	m_nBeginScaleY;
+	double	m_nVariationX;
+	double	m_nVariationY;
 };
 
 
@@ -195,15 +195,15 @@ class ActionScaleTo :
 public:
 	// 创建缩放动画
 	ActionScaleTo(
-		float duration, /* 动画持续时长 */
-		float scale		/* 缩放至目标比例 */
+		double duration, /* 动画持续时长 */
+		double scale		/* 缩放至目标比例 */
 	);
 
 	// 创建缩放动画
 	ActionScaleTo(
-		float duration, /* 动画持续时长 */
-		float scaleX,	/* 横向缩放至目标比例 */
-		float scaleY	/* 纵向缩放至目标比例 */
+		double duration, /* 动画持续时长 */
+		double scaleX,	/* 横向缩放至目标比例 */
+		double scaleY	/* 纵向缩放至目标比例 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -214,8 +214,8 @@ protected:
 	virtual void _init() override;
 
 protected:
-	float	m_nEndScaleX;
-	float	m_nEndScaleY;
+	double	m_nEndScaleX;
+	double	m_nEndScaleY;
 };
 
 
@@ -225,8 +225,8 @@ class ActionOpacityBy :
 public:
 	// 创建透明度相对渐变动画
 	ActionOpacityBy(
-		float duration, /* 动画持续时长 */
-		float opacity	/* 透明度相对变化值 */
+		double duration, /* 动画持续时长 */
+		double opacity	/* 透明度相对变化值 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -243,8 +243,8 @@ protected:
 	virtual void _update() override;
 
 protected:
-	float m_nBeginVal;
-	float m_nVariation;
+	double m_nBeginVal;
+	double m_nVariation;
 };
 
 
@@ -254,8 +254,8 @@ class ActionOpacityTo :
 public:
 	// 创建透明度渐变动画
 	ActionOpacityTo(
-		float duration,	/* 动画持续时长 */
-		float opacity	/* 透明度渐变至目标值 */
+		double duration,	/* 动画持续时长 */
+		double opacity	/* 透明度渐变至目标值 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -266,7 +266,7 @@ protected:
 	virtual void _init() override;
 
 protected:
-	float m_nEndVal;
+	double m_nEndVal;
 };
 
 
@@ -276,7 +276,7 @@ class ActionFadeIn :
 public:
 	// 创建淡入动画
 	ActionFadeIn(
-		float duration	/* 动画持续时长 */
+		double duration	/* 动画持续时长 */
 	) : ActionOpacityTo(duration, 1) {}
 };
 
@@ -287,7 +287,7 @@ class ActionFadeOut :
 public:
 	// 创建淡出动画
 	ActionFadeOut(
-		float duration	/* 动画持续时长 */
+		double duration	/* 动画持续时长 */
 	) : ActionOpacityTo(duration, 0) {}
 };
 
@@ -298,8 +298,8 @@ class ActionRotateBy :
 public:
 	// 创建相对旋转动画
 	ActionRotateBy(
-		float duration,	/* 动画持续时长 */
-		float rotation	/* 旋转角度变化值 */
+		double duration,	/* 动画持续时长 */
+		double rotation	/* 旋转角度变化值 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -316,8 +316,8 @@ protected:
 	virtual void _update() override;
 
 protected:
-	float m_nBeginVal;
-	float m_nVariation;
+	double m_nBeginVal;
+	double m_nVariation;
 };
 
 
@@ -327,8 +327,8 @@ class ActionRotateTo :
 public:
 	// 创建旋转动画
 	ActionRotateTo(
-		float duration,	/* 动画持续时长 */
-		float rotation	/* 旋转角度至目标值 */
+		double duration,	/* 动画持续时长 */
+		double rotation	/* 旋转角度至目标值 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -339,7 +339,7 @@ protected:
 	virtual void _init() override;
 
 protected:
-	float m_nEndVal;
+	double m_nEndVal;
 };
 
 
@@ -438,7 +438,7 @@ class ActionDelay :
 public:
 	// 创建延时动作
 	ActionDelay(
-		float duration	/* 延迟时长（秒） */
+		double duration	/* 延迟时长（秒） */
 	);
 
 	// 获取该动作的拷贝对象
@@ -452,7 +452,7 @@ protected:
 	virtual void _update() override;
 
 protected:
-	float m_fDelayTime;
+	double m_fDelayTime;
 };
 
 
@@ -500,7 +500,7 @@ public:
 
 	// 创建特定帧间隔的帧动画
 	Animation(
-		float interval	/* 帧间隔（秒） */
+		double interval	/* 帧间隔（秒） */
 	);
 
 	virtual ~Animation();
@@ -512,7 +512,7 @@ public:
 
 	// 设置每一帧的时间间隔
 	void setInterval(
-		float interval	/* 帧间隔（秒） */
+		double interval	/* 帧间隔（秒） */
 	);
 
 	// 获取该动画的拷贝对象
@@ -532,7 +532,7 @@ protected:
 	virtual void _update() override;
 
 protected:
-	float	m_fInterval;
+	double	m_fInterval;
 	UINT	m_nFrameIndex;
 	std::vector<Image*> m_vFrames;
 };

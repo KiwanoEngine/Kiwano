@@ -60,55 +60,55 @@ public:
 	virtual int getOrder() const;
 
 	// 获取节点横坐标
-	virtual float getPosX() const;
+	virtual double getPosX() const;
 
 	// 获取节点纵坐标
-	virtual float getPosY() const;
+	virtual double getPosY() const;
 
 	// 获取节点坐标
 	virtual Point getPos() const;
 
 	// 获取节点宽度
-	virtual float getWidth() const;
+	virtual double getWidth() const;
 
 	// 获取节点高度
-	virtual float getHeight() const;
+	virtual double getHeight() const;
 
 	// 获取节点宽度（不考虑缩放）
-	virtual float getRealWidth() const;
+	virtual double getRealWidth() const;
 
 	// 获取节点高度（不考虑缩放）
-	virtual float getRealHeight() const;
+	virtual double getRealHeight() const;
 
 	// 获取节点大小（不考虑缩放）
 	virtual Size getRealSize() const;
 
 	// 获取节点的中心点
-	virtual float getPivotX() const;
+	virtual double getPivotX() const;
 
 	// 获取节点的中心点
-	virtual float getPivotY() const;
+	virtual double getPivotY() const;
 
 	// 获取节点大小
 	virtual Size getSize() const;
 
 	// 获取节点横向缩放比例
-	virtual float getScaleX() const;
+	virtual double getScaleX() const;
 
 	// 获取节点纵向缩放比例
-	virtual float getScaleY() const;
+	virtual double getScaleY() const;
 
 	// 获取节点横向倾斜角度
-	virtual float getSkewX() const;
+	virtual double getSkewX() const;
 
 	// 获取节点纵向倾斜角度
-	virtual float getSkewY() const;
+	virtual double getSkewY() const;
 
 	// 获取节点旋转角度
-	virtual float getRotation() const;
+	virtual double getRotation() const;
 
 	// 获取节点透明度
-	virtual float getOpacity() const;
+	virtual double getOpacity() const;
 
 	// 获取节点形状
 	virtual Shape * getShape() const;
@@ -168,12 +168,12 @@ public:
 
 	// 设置节点横坐标
 	virtual void setPosX(
-		float x
+		double x
 	);
 
 	// 设置节点纵坐标
 	virtual void setPosY(
-		float y
+		double y
 	);
 
 	// 设置节点坐标
@@ -183,24 +183,24 @@ public:
 
 	// 设置节点坐标
 	virtual void setPos(
-		float x,
-		float y
+		double x,
+		double y
 	);
 
 	// 移动节点
 	virtual void movePosX(
-		float x
+		double x
 	);
 
 	// 移动节点
 	virtual void movePosY(
-		float y
+		double y
 	);
 
 	// 移动节点
 	virtual void movePos(
-		float x,
-		float y
+		double x,
+		double y
 	);
 
 	// 移动节点
@@ -217,76 +217,76 @@ public:
 	// 设置横向缩放比例
 	// 默认为 1.0f
 	virtual void setScaleX(
-		float scaleX
+		double scaleX
 	);
 
 	// 设置纵向缩放比例
 	// 默认为 1.0f
 	virtual void setScaleY(
-		float scaleY
+		double scaleY
 	);
 
 	// 设置缩放比例
 	// 默认为 (1.0f, 1.0f)
 	virtual void setScale(
-		float scaleX,
-		float scaleY
+		double scaleX,
+		double scaleY
 	);
 
 	// 设置缩放比例
 	// 默认为 1.0f
 	virtual void setScale(
-		float scale
+		double scale
 	);
 
 	// 设置横向倾斜角度
 	// 默认为 0
 	virtual void setSkewX(
-		float angleX
+		double angleX
 	);
 
 	// 设置纵向倾斜角度
 	// 默认为 0
 	virtual void setSkewY(
-		float angleY
+		double angleY
 	);
 
 	// 设置倾斜角度
 	// 默认为 (0, 0)
 	virtual void setSkew(
-		float angleX,
-		float angleY
+		double angleX,
+		double angleY
 	);
 
 	// 设置旋转角度
 	// 默认为 0
 	virtual void setRotation(
-		float rotation
+		double rotation
 	);
 
 	// 设置透明度
 	// 默认为 1.0f, 范围 [0, 1]
 	virtual void setOpacity(
-		float opacity
+		double opacity
 	);
 
 	// 设置中心点的横向位置
 	// 默认为 0, 范围 [0, 1]
 	virtual void setPivotX(
-		float pivotX
+		double pivotX
 	);
 
 	// 设置中心点的纵向位置
 	// 默认为 0, 范围 [0, 1]
 	virtual void setPivotY(
-		float pivotY
+		double pivotY
 	);
 
 	// 设置中心点位置
 	// 默认为 (0, 0), 范围 [0, 1]
 	virtual void setPivot(
-		float pivotX,
-		float pivotY
+		double pivotX,
+		double pivotY
 	);
 
 	// 设置节点形状
@@ -331,8 +331,8 @@ public:
 
 	// 修改节点的默认中心点位置
 	static void setDefaultPiovt(
-		float defaultPiovtX,
-		float defaultPiovtY
+		double defaultPiovtX,
+		double defaultPiovtY
 	);
 
 protected:
@@ -367,8 +367,8 @@ protected:
 
 	// 修改节点大小
 	void _setSize(
-		float width,
-		float height
+		double width,
+		double height
 	);
 
 	// 更新节点二维矩阵
@@ -379,9 +379,11 @@ protected:
 
 protected:
 	String		m_sName;
-	size_t		m_nHashName;
-	Point		m_Pos;
-	Size		m_Size;
+	unsigned	m_nHashName;
+	float		m_fPosX;
+	float		m_fPosY;
+	float		m_fWidth;
+	float		m_fHeight;
 	float		m_fScaleX;
 	float		m_fScaleY;
 	float		m_fRotation;
@@ -426,10 +428,10 @@ public:
 	// 从文件图片创建精灵并裁剪
 	Sprite(
 		LPCTSTR imageFileName,
-		float x,
-		float y,
-		float width,
-		float height
+		double x,
+		double y,
+		double width,
+		double height
 	);
 
 	virtual ~Sprite();
@@ -446,10 +448,10 @@ public:
 
 	// 裁剪图片
 	virtual void clip(
-		float x,
-		float y,
-		float width,
-		float height
+		double x,
+		double y,
+		double width,
+		double height
 	);
 
 	// 获取 EImage 对象
@@ -485,7 +487,7 @@ public:
 	Text(
 		const String & text,
 		String fontFamily,
-		float fontSize = 22,
+		double fontSize = 22,
 		UINT32 color = Color::WHITE,
 		UINT32 fontWeight = FontWeight::REGULAR,
 		bool italic = false
@@ -497,10 +499,10 @@ public:
 	String getText() const;
 
 	// 获取文本宽度
-	virtual float getWidth() const override;
+	virtual double getWidth() const override;
 
 	// 获取文本宽度（不考虑缩放）
-	virtual float getRealWidth() const override;
+	virtual double getRealWidth() const override;
 
 	// 获取字体
 	Font * getFont() const;
@@ -522,7 +524,7 @@ public:
 
 	// 设置文字换行宽度（WordWrapping 打开时生效）
 	void setWordWrappingWidth(
-		float fWordWrapWidth
+		double fWordWrapWidth
 	);
 
 	// 渲染文字

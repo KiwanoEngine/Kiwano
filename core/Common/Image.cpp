@@ -18,7 +18,7 @@ e2d::Image::Image(LPCTSTR strFileName)
 	this->loadFrom(strFileName);
 }
 
-e2d::Image::Image(LPCTSTR strFileName, float nClipX, float nClipY, float nClipWidth, float nClipHeight)
+e2d::Image::Image(LPCTSTR strFileName, double nClipX, double nClipY, double nClipWidth, double nClipHeight)
 {
 	this->loadFrom(strFileName);
 	this->clip(nClipX, nClipY, nClipWidth, nClipHeight);
@@ -47,13 +47,13 @@ void e2d::Image::loadFrom(const String & strFilePath)
 	m_fSourceClipHeight = m_pBitmap->GetSize().height;
 }
 
-void e2d::Image::loadFrom(const String & strFilePath, float x, float y, float width, float height)
+void e2d::Image::loadFrom(const String & strFilePath, double x, double y, double width, double height)
 {
 	loadFrom(strFilePath);
 	clip(x, y, width, height);
 }
 
-void e2d::Image::clip(float x, float y, float width, float height)
+void e2d::Image::clip(double x, double y, double width, double height)
 {
 	if (m_pBitmap)
 	{
@@ -64,12 +64,12 @@ void e2d::Image::clip(float x, float y, float width, float height)
 	}
 }
 
-float e2d::Image::getWidth() const
+double e2d::Image::getWidth() const
 {
 	return m_fSourceClipWidth;
 }
 
-float e2d::Image::getHeight() const
+double e2d::Image::getHeight() const
 {
 	return m_fSourceClipHeight;
 }
@@ -79,7 +79,7 @@ e2d::Size e2d::Image::getSize() const
 	return Size(m_fSourceClipWidth, m_fSourceClipHeight);
 }
 
-float e2d::Image::getSourceWidth() const
+double e2d::Image::getSourceWidth() const
 {
 	if (m_pBitmap)
 	{
@@ -91,7 +91,7 @@ float e2d::Image::getSourceWidth() const
 	}
 }
 
-float e2d::Image::getSourceHeight() const
+double e2d::Image::getSourceHeight() const
 {
 	if (m_pBitmap)
 	{
@@ -115,12 +115,12 @@ e2d::Size e2d::Image::getSourceSize() const
 	}
 }
 
-float e2d::Image::getClipX() const
+double e2d::Image::getClipX() const
 {
 	return m_fSourceClipX;
 }
 
-float e2d::Image::getClipY() const
+double e2d::Image::getClipY() const
 {
 	return m_fSourceClipY;
 }

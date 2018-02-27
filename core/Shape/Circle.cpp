@@ -6,7 +6,7 @@ e2d::Circle::Circle()
 {
 }
 
-e2d::Circle::Circle(Point center, float radius)
+e2d::Circle::Circle(Point center, double radius)
 	: m_pD2dCircle(nullptr)
 {
 	this->_setCircle(center, radius);
@@ -15,7 +15,7 @@ e2d::Circle::Circle(Point center, float radius)
 e2d::Circle::Circle(Node * node)
 	: m_pD2dCircle(nullptr)
 {
-	float minSide = min(node->getRealWidth(), node->getRealHeight());
+	double minSide = min(node->getRealWidth(), node->getRealHeight());
 	this->_setCircle(
 		Point(
 			node->getRealWidth() / 2,
@@ -30,17 +30,17 @@ e2d::Circle::~Circle()
 	SafeReleaseInterface(&m_pD2dCircle);
 }
 
-void e2d::Circle::_setCircle(Point center, float radius)
+void e2d::Circle::_setCircle(Point center, double radius)
 {
 	SafeReleaseInterface(&m_pD2dCircle);
 
 	Renderer::getID2D1Factory()->CreateEllipseGeometry(
 		D2D1::Ellipse(
 			D2D1::Point2F(
-				center.x, 
-				center.y),
-			radius,
-			radius),
+				static_cast<float>(center.x), 
+				static_cast<float>(center.y)),
+			static_cast<float>(radius),
+			static_cast<float>(radius)),
 			&m_pD2dCircle
 		);
 }

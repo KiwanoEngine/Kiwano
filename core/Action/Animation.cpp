@@ -5,7 +5,7 @@ e2d::Animation::Animation()
 {
 }
 
-e2d::Animation::Animation(float invertal)
+e2d::Animation::Animation(double invertal)
 	: m_nFrameIndex(0)
 	, m_fInterval(invertal)
 {
@@ -19,7 +19,7 @@ e2d::Animation::~Animation()
 	}
 }
 
-void e2d::Animation::setInterval(float interval)
+void e2d::Animation::setInterval(double interval)
 {
 	m_fInterval = max(interval, 0);
 }

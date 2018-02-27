@@ -17,19 +17,11 @@ public:
 	static inline T range(T min, T max) { return e2d::Random::randomInt(min, max); }
 
 	// 取得浮点数范围内的一个随机数
-	static inline float range(float min, float max) { return e2d::Random::randomReal(min, max); }
-
-	// 取得浮点数范围内的一个随机数
 	static inline double range(double min, double max) { return e2d::Random::randomReal(min, max); }
-
-	// 取得浮点数范围内的一个随机数
-	static inline long double range(long double min, long double max) { return e2d::Random::randomReal(min, max); }
 
 	// 取得整型范围内的一个随机数
 	template<typename T>
-	static T randomInt(
-		T min,
-		T max)
+	static T randomInt(T min, T max)
 	{
 		std::uniform_int_distribution<T> dist(min, max);
 		return dist(getEngine());
@@ -37,9 +29,7 @@ public:
 
 	// 取得浮点数类型范围内的一个随机数
 	template<typename T>
-	static T randomReal(
-		T min,
-		T max)
+	static T randomReal(T min, T max)
 	{
 		std::uniform_real_distribution<T> dist(min, max);
 		return dist(getEngine());
@@ -61,7 +51,7 @@ public:
 
 	Timer(
 		const TimerCallback &callback,	/* 定时器回调函数 */
-		float interval = 0,				/* 时间间隔（秒） */
+		double interval = 0,				/* 时间间隔（秒） */
 		int repeatTimes = -1,			/* 定时器执行次数 */
 		bool atOnce = false				/* 是否立即执行 */
 	);
@@ -69,7 +59,7 @@ public:
 	Timer(
 		const String &name,			/* 定时器名称 */
 		const TimerCallback &callback,	/* 定时器回调函数 */
-		float interval = 0,				/* 时间间隔（秒） */
+		double interval = 0,				/* 时间间隔（秒） */
 		int repeatTimes = -1,			/* 定时器执行次数 */
 		bool atOnce = false				/* 是否立即执行 */
 	);
@@ -96,7 +86,7 @@ public:
 
 	// 设置定时器执行间隔（秒）
 	void setInterval(
-		float interval
+		double interval
 	);
 
 	// 设置定时器回调函数
@@ -127,8 +117,8 @@ protected:
 	bool			m_bAtOnce;
 	int				m_nRunTimes;
 	int				m_nRepeatTimes;
-	float			m_fInterval;
-	float			m_fLast;
+	double			m_fInterval;
+	double			m_fLast;
 	Node *			m_pParentNode;
 	TimerCallback	m_Callback;
 };
@@ -144,10 +134,10 @@ public:
 		int value
 	);
 
-	// 保存 float 类型的值
-	static void saveFloat(
+	// 保存 double 类型的值
+	static void saveDouble(
 		const String & key,
-		float value
+		double value
 	);
 
 	// 保存 字符串 类型的值
@@ -163,11 +153,11 @@ public:
 		int defaultValue
 	);
 
-	// 获取 float 类型的值
+	// 获取 double 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	static float getFloat(
+	static double getDouble(
 		const String & key,
-		float defaultValue
+		double defaultValue
 	);
 
 	// 获取 字符串 类型的值
@@ -229,19 +219,19 @@ public:
 	bool isPlaying();
 
 	// 获取音量
-	float getVolume() const;
+	double getVolume() const;
 
 	// 设置音量
 	bool setVolume(
-		float fVolume	/* 音量范围为 -224 ~ 224，其中 0 是静音，1 是正常音量 */
+		double fVolume	/* 音量范围为 -224 ~ 224，其中 0 是静音，1 是正常音量 */
 	);
 
 	// 获取频率比
-	float getFrequencyRatio() const;
+	double getFrequencyRatio() const;
 
 	// 设置频率比
 	bool setFrequencyRatio(
-		float fFrequencyRatio	/* 频率比范围为 1/1024.0f ~ 1024.0f，其中 1.0 为正常声调 */
+		double fFrequencyRatio	/* 频率比范围为 1/1024.0f ~ 1024.0f，其中 1.0 为正常声调 */
 	);
 
 	// 获取 IXAudio2SourceVoice 对象

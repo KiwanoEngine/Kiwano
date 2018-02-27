@@ -11,8 +11,8 @@ namespace e2d
 // 表示坐标的结构体
 struct Point
 {
-	float x;
-	float y;
+	double x;
+	double y;
 
 	Point()
 	{
@@ -20,7 +20,7 @@ struct Point
 		y = 0;
 	}
 
-	Point(float x, float y)
+	Point(double x, double y)
 	{
 		this->x = x;
 		this->y = y;
@@ -36,12 +36,12 @@ struct Point
 		return Point(x - p.x, y - p.y);
 	}
 
-	Point operator * (float const & value)
+	Point operator * (double const & value)
 	{
 		return Point(x * value, y * value);
 	}
 
-	Point operator / (float const & value)
+	Point operator / (double const & value)
 	{
 		return Point(x / value, y / value);
 	}
@@ -50,8 +50,8 @@ struct Point
 // 表示大小的结构体
 struct Size
 {
-	float width;
-	float height;
+	double width;
+	double height;
 
 	Size()
 	{
@@ -59,7 +59,7 @@ struct Size
 		height = 0;
 	}
 
-	Size(float width, float height)
+	Size(double width, double height)
 	{
 		this->width = width;
 		this->height = height;
@@ -75,12 +75,12 @@ struct Size
 		return Size(width - size.width, height - size.height);
 	}
 
-	Size operator * (float const & value)
+	Size operator * (double const & value)
 	{
 		return Size(width * value, height * value);
 	}
 
-	Size operator / (float const & value)
+	Size operator / (double const & value)
 	{
 		return Size(width / value, height / value);
 	}
@@ -428,7 +428,7 @@ public:
 
 	Font(
 		String fontFamily,
-		float fontSize = 22,
+		double fontSize = 22,
 		UINT32 color = Color::WHITE,
 		UINT32 fontWeight = FontWeight::REGULAR,
 		bool italic = false
@@ -437,7 +437,7 @@ public:
 	virtual ~Font();
 
 	// 获取当前字号
-	float getFontSize() const;
+	double getFontSize() const;
 
 	// 获取当前字体粗细值
 	UINT32 getFontWeight() const;
@@ -455,7 +455,7 @@ public:
 
 	// 设置字号
 	void setSize(
-		float fontSize
+		double fontSize
 	);
 
 	// 设置字体粗细值
@@ -507,20 +507,20 @@ public:
 	// 从本地文件中读取资源
 	Image(
 		LPCTSTR strFilePath,/* 图片文件路径 */
-		float nClipX,		/* 裁剪位置 X 坐标 */
-		float nClipY,		/* 裁剪位置 Y 坐标 */
-		float nClipWidth,	/* 裁剪宽度 */
-		float nClipHeight	/* 裁剪高度 */
+		double nClipX,		/* 裁剪位置 X 坐标 */
+		double nClipY,		/* 裁剪位置 Y 坐标 */
+		double nClipWidth,	/* 裁剪宽度 */
+		double nClipHeight	/* 裁剪高度 */
 	);
 
 	virtual ~Image();
 
 	// 裁剪图片
 	void clip(
-		float nClipX,		/* 裁剪位置 X 坐标 */
-		float nClipY,		/* 裁剪位置 Y 坐标 */
-		float nClipWidth,	/* 裁剪宽度 */
-		float nClipHeight	/* 裁剪高度 */
+		double nClipX,		/* 裁剪位置 X 坐标 */
+		double nClipY,		/* 裁剪位置 Y 坐标 */
+		double nClipWidth,	/* 裁剪宽度 */
+		double nClipHeight	/* 裁剪高度 */
 	);
 
 	// 从本地文件中读取图片
@@ -531,35 +531,35 @@ public:
 	// 从本地文件中读取图片并裁剪
 	void loadFrom(
 		const String & strFilePath,/* 图片文件路径 */
-		float nClipX,				/* 裁剪位置 X 坐标 */
-		float nClipY,				/* 裁剪位置 Y 坐标 */
-		float nClipWidth,			/* 裁剪宽度 */
-		float nClipHeight			/* 裁剪高度 */
+		double nClipX,				/* 裁剪位置 X 坐标 */
+		double nClipY,				/* 裁剪位置 Y 坐标 */
+		double nClipWidth,			/* 裁剪宽度 */
+		double nClipHeight			/* 裁剪高度 */
 	);
 
 	// 获取宽度
-	virtual float getWidth() const;
+	virtual double getWidth() const;
 
 	// 获取高度
-	virtual float getHeight() const;
+	virtual double getHeight() const;
 
 	// 获取大小
 	virtual Size getSize() const;
 
 	// 获取源图片宽度
-	virtual float getSourceWidth() const;
+	virtual double getSourceWidth() const;
 
 	// 获取源图片高度
-	virtual float getSourceHeight() const;
+	virtual double getSourceHeight() const;
 
 	// 获取源图片大小
 	virtual Size getSourceSize() const;
 	
 	// 获取裁剪位置 X 坐标
-	virtual float getClipX() const;
+	virtual double getClipX() const;
 
 	// 获取裁剪位置 Y 坐标
-	virtual float getClipY() const;
+	virtual double getClipY() const;
 
 	// 获取裁剪位置
 	virtual Point getClipPos() const;
@@ -576,10 +576,10 @@ public:
 	static void clearCache();
 
 protected:
-	float	m_fSourceClipX;
-	float	m_fSourceClipY;
-	float	m_fSourceClipWidth;
-	float	m_fSourceClipHeight;
+	double	m_fSourceClipX;
+	double	m_fSourceClipY;
+	double	m_fSourceClipWidth;
+	double	m_fSourceClipHeight;
 	ID2D1Bitmap * m_pBitmap;
 };
 

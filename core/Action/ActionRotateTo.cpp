@@ -1,7 +1,7 @@
 #include "..\eactions.h"
 
 
-e2d::ActionRotateTo::ActionRotateTo(float duration, float rotation) :
+e2d::ActionRotateTo::ActionRotateTo(double duration, double rotation) :
 	ActionRotateBy(duration, 0)
 {
 	m_nEndVal = rotation;

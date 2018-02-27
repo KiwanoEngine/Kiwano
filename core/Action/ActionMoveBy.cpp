@@ -1,7 +1,7 @@
 #include "..\eactions.h"
 
 
-e2d::ActionMoveBy::ActionMoveBy(float duration, Vector vector) :
+e2d::ActionMoveBy::ActionMoveBy(double duration, Vector vector) :
 	ActionGradual(duration)
 {
 	m_MoveVec = vector;

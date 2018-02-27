@@ -208,41 +208,41 @@ bool Music::isPlaying()
 	}
 }
 
-float Music::getVolume() const
+double Music::getVolume() const
 {
 	float fVolume = 0.0f;
 	if (m_pSourceVoice)
 	{
 		m_pSourceVoice->GetVolume(&fVolume);
 	}
-	return fVolume;
+	return static_cast<double>(fVolume);
 }
 
-bool Music::setVolume(float fVolume)
+bool Music::setVolume(double fVolume)
 {
 	if (m_pSourceVoice)
 	{
-		return SUCCEEDED(m_pSourceVoice->SetVolume(min(max(fVolume, -224), 224)));
+		return SUCCEEDED(m_pSourceVoice->SetVolume(min(max(static_cast<float>(fVolume), -224), 224)));
 	}
 	return false;
 }
 
-float Music::getFrequencyRatio() const
+double Music::getFrequencyRatio() const
 {
 	float fFrequencyRatio = 0.0f;
 	if (m_pSourceVoice)
 	{
 		m_pSourceVoice->GetFrequencyRatio(&fFrequencyRatio);
 	}
-	return fFrequencyRatio;
+	return static_cast<double>(fFrequencyRatio);
 }
 
-bool Music::setFrequencyRatio(float fFrequencyRatio)
+bool Music::setFrequencyRatio(double fFrequencyRatio)
 {
 	if (m_pSourceVoice)
 	{
 		fFrequencyRatio = min(max(fFrequencyRatio, XAUDIO2_MIN_FREQ_RATIO), XAUDIO2_MAX_FREQ_RATIO);
-		return SUCCEEDED(m_pSourceVoice->SetFrequencyRatio(fFrequencyRatio));
+		return SUCCEEDED(m_pSourceVoice->SetFrequencyRatio(static_cast<float>(fFrequencyRatio)));
 	}
 	return false;
 }

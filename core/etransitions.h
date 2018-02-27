@@ -13,7 +13,7 @@ class Transition :
 	friend SceneManager;
 
 public:
-	Transition(float duration);
+	Transition(double duration);
 
 	// 场景切换动画是否结束
 	bool isEnding();
@@ -42,9 +42,9 @@ protected:
 
 protected:
 	bool m_bEnd;
-	float m_fLast;
-	float m_fDuration;
-	float m_fRateOfProgress;
+	double m_fLast;
+	double m_fDuration;
+	double m_fRateOfProgress;
 	Scene * m_pPrevScene;
 	Scene * m_pNextScene;
 };
@@ -56,8 +56,8 @@ class TransitionFade :
 public:
 	// 创建淡入淡出式的场景切换动画
 	TransitionFade(
-		float fadeOutDuration,	/* 前一场景淡出动画持续时长 */
-		float fadeInDuration	/* 后一场景淡入动画持续时长 */
+		double fadeOutDuration,	/* 前一场景淡出动画持续时长 */
+		double fadeInDuration	/* 后一场景淡入动画持续时长 */
 	);
 
 protected:
@@ -69,8 +69,8 @@ protected:
 	virtual void _reset() override;
 
 protected:
-	float m_fFadeOutDuration;
-	float m_fFadeInDuration;
+	double m_fFadeOutDuration;
+	double m_fFadeInDuration;
 	bool m_bFadeOutTransioning;
 };
 
@@ -81,7 +81,7 @@ class TransitionEmerge :
 public:
 	// 创建浮现式的场景切换动画
 	TransitionEmerge(
-		float duration	/* 浮现动画持续时长 */
+		double duration	/* 浮现动画持续时长 */
 	);
 
 protected:
@@ -108,7 +108,7 @@ public:
 
 	// 创建移动式的场景切换动画
 	TransitionMove(
-		float moveDuration,			/* 场景移动动画持续时长 */
+		double moveDuration,			/* 场景移动动画持续时长 */
 		MOVE_DIRECT direct = LEFT	/* 场景移动方向 */
 	);
 

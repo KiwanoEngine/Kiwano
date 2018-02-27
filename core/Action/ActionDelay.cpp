@@ -1,6 +1,6 @@
 #include "..\eactions.h"
 
-e2d::ActionDelay::ActionDelay(float duration)
+e2d::ActionDelay::ActionDelay(double duration)
 {
 	m_fDelayTime = max(duration, 0);
 }

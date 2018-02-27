@@ -15,12 +15,12 @@ static steady_clock::time_point s_tLastUpdate;
 // 上一帧与当前帧的时间间隔
 static int s_nInterval = 0;
 // 游戏开始时长
-static float s_fTotalTime = 0;
+static double s_fTotalTime = 0;
 // 每一帧间隔
 static milliseconds s_tExceptedInvertal;
 
 
-float e2d::Time::getTotalTime()
+double e2d::Time::getTotalTime()
 {
 	return s_fTotalTime;
 }
@@ -59,7 +59,7 @@ void e2d::Time::__updateLast()
 
 	s_tNow = steady_clock::now();
 	s_nInterval = static_cast<int>(duration_cast<milliseconds>(s_tNow - s_tLastUpdate).count());
-	s_fTotalTime = static_cast<float>(duration_cast<milliseconds>(s_tNow - s_tStart).count()) / 1000.0f;
+	s_fTotalTime = static_cast<double>(duration_cast<milliseconds>(s_tNow - s_tStart).count()) / 1000.0f;
 }
 
 void e2d::Time::__sleep()

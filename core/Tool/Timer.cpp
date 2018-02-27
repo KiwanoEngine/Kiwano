@@ -14,7 +14,7 @@ e2d::Timer::Timer()
 {
 }
 
-e2d::Timer::Timer(const TimerCallback & callback, float interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */)
+e2d::Timer::Timer(const TimerCallback & callback, double interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */)
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_pParentNode(nullptr)
@@ -30,7 +30,7 @@ e2d::Timer::Timer(const TimerCallback & callback, float interval /* = 0 */, int 
 	m_bAtOnce = atOnce;
 }
 
-e2d::Timer::Timer(const String & name, const TimerCallback & callback, float interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */)
+e2d::Timer::Timer(const String & name, const TimerCallback & callback, double interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */)
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_pParentNode(nullptr)
@@ -78,7 +78,7 @@ void e2d::Timer::setName(const String & name)
 	m_sName = name;
 }
 
-void e2d::Timer::setInterval(float interval)
+void e2d::Timer::setInterval(double interval)
 {
 	m_fInterval = max(interval, 0);
 }
