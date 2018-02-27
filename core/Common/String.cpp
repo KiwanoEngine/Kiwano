@@ -1,148 +1,60 @@
 #include "..\ecommon.h"
 #include <iomanip>
-using namespace e2d;
 
 
-String::String()
+e2d::String::String()
+	: m_str(L"")
 {
-	_size = 0;
-	_string = new wchar_t[1];
-	_string[0] = 0;
 }
 
-e2d::String::String(const wchar_t ch)
+e2d::String::String(const wchar_t *str)
+	: m_str(str)
 {
-	_size = 1;
-	_string = new wchar_t[2];
-	_string[0] = ch;
-	_string[1] = 0;
 }
 
-String::String(const wchar_t *str)
+e2d::String::String(e2d::String && str)
 {
-	if (str)
-	{
-		_size = static_cast<int>(wcslen(str));
-		_string = new wchar_t[_size + 1];
-		wcscpy_s(_string, _size + 1, str);
-	}
-	else
-	{
-		_size = 0;
-		_string = new wchar_t[1];
-		_string[0] = 0;
-	}
+	m_str = std::move(str.m_str);
 }
 
-String::String(String && str)
+e2d::String::String(const e2d::String &str)
+	: m_str(str.m_str)
 {
-	_size = str._size;
-	_string = str._string;
-	str._string = nullptr;
-}
-
-String::String(const String &str)
-{
-	if (str._size)
-	{
-		_size = str._size;
-		_string = new wchar_t[_size + 1];
-		wcscpy_s(_string, _size + 1, str._string);
-	}
-	else
-	{
-		_size = 0;
-		_string = new wchar_t[1];
-		_string[0] = 0;
-	}
 }
 
 e2d::String::String(const std::wstring &str)
+	: m_str(str)
 {
-	if (!str.empty())
-	{
-		_size = static_cast<int>(str.length());
-		_string = new wchar_t[_size + 1];
-		wcscpy_s(_string, _size + 1, str.c_str());
-	}
-	else
-	{
-		_size = 0;
-		_string = new wchar_t[1];
-		_string[0] = 0;
-	}
 }
 
-String::~String()
+e2d::String::~String()
 {
-	delete[] _string;
+	m_str.clear();
 }
 
-String &String::operator=(const wchar_t *str)
+e2d::String &e2d::String::operator=(const wchar_t *str)
 {
-	if (_string == str)
-		return *this;
-
-	if (str)
-	{
-		delete[] _string;
-		_size = static_cast<int>(wcslen(str));
-		_string = new wchar_t[_size + 1];
-		wcscpy_s(_string, _size + 1, str);
-	}
-	else
-	{
-		_size = 0;
-		_string = new wchar_t[1];
-		_string[0] = 0;
-	}
+	m_str = str;
 	return *this;
 }
 
-String &String::operator=(const String &str)
+e2d::String & e2d::String::operator=(const String &str)
 {
-	if (_string == str._string)
-		return *this;
-
-	if (str._size)
-	{
-		delete[] _string;
-		_size = str._size;
-		_string = new wchar_t[_size + 1];
-		wcscpy_s(_string, _size + 1, str._string);
-	}
-	else
-	{
-		_size = 0;
-		_string = new wchar_t[1];
-		_string[0] = 0;
-	}
+	m_str = str.m_str;
 	return *this;
 }
 
-String & e2d::String::operator=(const std::wstring &str)
+e2d::String & e2d::String::operator=(const std::wstring &str)
 {
-	if (!str.empty())
-	{
-		delete[] _string;
-		_size = static_cast<int>(str.length());
-		_string = new wchar_t[_size + 1];
-		wcscpy_s(_string, _size + 1, str.c_str());
-	}
-	else
-	{
-		_size = 0;
-		_string = new wchar_t[1];
-		_string[0] = 0;
-	}
+	m_str = str;
 	return *this;
 }
 
-bool String::operator==(const wchar_t *str)
+bool e2d::String::operator==(const wchar_t *str)
 {
 	if (str)
 	{
-		return (wcscmp(str, _string) == 0);
+		return (m_str.compare(str) == 0);
 	}
 	else
 	{
@@ -150,248 +62,227 @@ bool String::operator==(const wchar_t *str)
 	}
 }
 
-bool String::operator ==(const String &str)
+bool e2d::String::operator ==(const e2d::String &str)
 {
-	return (wcscmp(str._string, _string) == 0);
+	return m_str == str.m_str;
 }
 
 bool e2d::String::operator==(const std::wstring &str)
 {
-	return (str.compare(_string) == 0);
+	return m_str == str;
 }
 
 bool e2d::String::operator!=(const wchar_t *str)
 {
-	return (wcscmp(str, _string) != 0);
+	if (str)
+	{
+		return (m_str.compare(str) != 0);
+	}
+	else
+	{
+		return true;
+	}
 }
 
-bool e2d::String::operator!=(const String &str)
+bool e2d::String::operator!=(const e2d::String &str)
 {
-	return (wcscmp(str._string, _string) != 0);
+	return m_str != str.m_str;
 }
 
 bool e2d::String::operator!=(const std::wstring &str)
 {
-	return (str.compare(_string) != 0);
+	return m_str != str;
 }
 
-wchar_t &String::operator[](int index)
+wchar_t &e2d::String::operator[](int index)
 {
-	ASSERT(index >= 0 && index < _size, "String subscript out of range");
-	return _string[index];
+	return m_str[static_cast<size_t>(index)];
 }
 
-String String::operator+(const wchar_t *str)
+e2d::String e2d::String::operator+(const wchar_t *str)
 {
-	String str_temp(*this);
-
-	str_temp += str;
-	return std::move(str_temp);
+	String temp;
+	temp.m_str = m_str + str;
+	return std::move(temp);
 }
 
-String String::operator+(const wchar_t x)
+e2d::String e2d::String::operator+(const wchar_t x)
 {
-	String str_temp(*this);
-
-	str_temp += x;
-	return std::move(str_temp);
+	String temp;
+	temp.m_str = m_str + x;
+	return std::move(temp);
 }
 
-String String::operator+(const String &str)
+e2d::String e2d::String::operator+(const e2d::String &str)
 {
-	String str_temp(*this);
-
-	str_temp += str;
-	return std::move(str_temp);
+	String temp;
+	temp.m_str = m_str + str.m_str;
+	return std::move(temp);
 }
 
-String e2d::String::operator+(const std::wstring &str)
+e2d::String e2d::String::operator+(const std::wstring &str)
 {
-	String str_temp(*this);
-
-	str_temp += str;
-	return std::move(str_temp);
+	String temp;
+	temp.m_str = m_str + str;
+	return std::move(temp);
 }
 
-String &String::operator+=(const wchar_t x)
+e2d::String e2d::operator+(const wchar_t ch, const e2d::String &str)
 {
-	wchar_t *str_temp = new wchar_t[_size + 2];
-	if (_string) wcscpy_s(str_temp, _size + 2, _string);
-	str_temp[_size] = x;
-	str_temp[_size + 1] = 0;
+	String temp;
+	temp.m_str = ch + str.m_str;
+	return std::move(temp);
+}
 
-	delete[] _string;
-	_string = str_temp;
-	_size++;
+e2d::String e2d::operator+(const wchar_t *str1, const e2d::String &str2)
+{
+	String temp;
+	temp.m_str = str1 + str2.m_str;
+	return std::move(temp);
+}
+
+e2d::String e2d::operator+(const std::wstring &str1, const e2d::String &str2)
+{
+	String temp;
+	temp.m_str = str1 + str2.m_str;
+	return std::move(temp);
+}
+
+e2d::String &e2d::String::operator+=(const wchar_t x)
+{
+	m_str += x;
 	return *this;
 }
 
-String &String::operator+=(const wchar_t *str)
+e2d::String &e2d::String::operator+=(const wchar_t *str)
 {
-	if (!str) return *this;
-
-	int d_size = static_cast<int>(wcslen(str));
-	if (d_size == 0) return *this;
-
-	wchar_t *str_temp = new wchar_t[_size + d_size + 1];
-	if (_string) wcscpy_s(str_temp, _size + d_size + 1, _string);
-	wcscpy_s(str_temp + _size, d_size + 1, str);
-
-	delete[] _string;
-	_string = str_temp;
-	_size += d_size;
+	m_str += str;
 	return *this;
 }
 
-String &String::operator+=(const String &str)
+e2d::String &e2d::String::operator+=(const e2d::String &str)
 {
-	if (str._size == 0) return *this;
-
-	wchar_t *str_temp = new wchar_t[_size + str._size + 1];
-	if (_string) wcscpy_s(str_temp, _size + str._size + 1, _string);
-	wcscpy_s(str_temp + _size, str._size + 1, str._string);
-
-	delete[] _string;
-	_string = str_temp;
-	_size += str._size;
+	m_str += str.m_str;
 	return *this;
 }
 
-String & e2d::String::operator+=(const std::wstring &str)
+e2d::String & e2d::String::operator+=(const std::wstring &str)
 {
-	if (str.length() == 0) return *this;
-
-	wchar_t *str_temp = new wchar_t[_size + str.length() + 1];
-	if (_string) wcscpy_s(str_temp, _size + str.length() + 1, _string);
-	wcscpy_s(str_temp + _size, str.length() + 1, str.c_str());
-
-	delete[] _string;
-	_string = str_temp;
-	_size += static_cast<int>(str.length());
+	m_str += str;
 	return *this;
 }
 
-bool e2d::String::operator<(String const &str) const
+e2d::String::operator const wchar_t*() const
 {
-	for (int i = 0; i <= _size; i++)
-		if (_string[i] != str._string[i])
-			return _string[i] < str[i];
-	return false;
+	return m_str.c_str();
 }
 
-bool e2d::String::operator<=(String const &str) const
+e2d::String::operator bool() const
 {
-	for (int i = 0; i <= _size; i++)
-		if (_string[i] != str._string[i])
-			return _string[i] < str[i];
-	return true;
+	return getLength() != 0;
 }
 
-bool e2d::String::operator>(String const &str) const
+bool e2d::String::isEmpty() const
 {
-	for (int i = 0; i <= _size; i++)
-		if (_string[i] != str._string[i])
-			return _string[i] > str[i];
-	return false;
+	return m_str.empty();
 }
 
-bool e2d::String::operator>=(String const &str) const
+int e2d::String::getLength() const
 {
-	for (int i = 0; i <= _size; i++)
-		if (_string[i] != str._string[i])
-			return _string[i] > str[i];
-	return true;
+	return static_cast<int>(m_str.size());
 }
 
-unsigned int e2d::String::hash() const
+unsigned int e2d::String::getHash() const
 {
 	unsigned int hash = 0;
 
-	for (int i = 0; i < _size; i++)
+	for (int i = 0; i < getLength(); i++)
 	{
 		hash *= 16777619;
-		hash ^= (unsigned int)towupper(_string[i]);
+		hash ^= (unsigned int)towupper(m_str[i]);
 	}
-	return (hash);
+	return hash;
 }
 
-String e2d::operator+(const wchar_t ch, const String &str)
+std::wistream & e2d::operator>>(std::wistream &cin, e2d::String &str)
 {
-	return std::move((String(ch) + str));
-}
-
-String e2d::operator+(const wchar_t *str1, const String &str2)
-{
-	return std::move((String(str1) + str2));
-}
-
-String e2d::operator+(const String &str1, const String &str2)
-{
-	return std::move((String(str1) + str2));
-}
-
-String e2d::operator+(const std::wstring &str1, const String &str2)
-{
-	return std::move((String(str1) + str2));
-}
-
-std::wistream & e2d::operator>>(std::wistream &cin, String &str)
-{
-	const int limit_string_size = 4096;
-
-	str._string = new wchar_t[limit_string_size];
-
-	cin >> std::setw(limit_string_size) >> str._string;
-	str._size = static_cast<int>(wcslen(str._string));
+	cin >> str.m_str;
 	return cin;
 }
 
-
-String e2d::String::upper() const
+e2d::String e2d::String::toUpper() const
 {
 	String str(*this);
 
-	for (int i = 0; i < str._size; i++)
-		if (str._string[i] >= L'a' && str._string[i] <= L'z')
-			str._string[i] -= (L'a' - L'A');
+	for (int i = 0; i < getLength(); i++)
+		str[i] = towupper(str[i]);
 
 	return std::move(str);
 }
 
-String e2d::String::lower() const
+e2d::String e2d::String::toLower() const
 {
-	String str(*this);
+	e2d::String str(*this);
 
-	for (int i = 0; i < str._size; i++)
-		str._string[i] = towlower(str._string[i]);
+	for (int i = 0; i < getLength(); i++)
+		str[i] = towlower(str[i]);
 
 	return std::move(str);
 }
 
-String e2d::String::sub(int offset, int count) const
+int e2d::String::toInt() const
 {
-	if (_size == 0 || offset >= _size)
-		return std::move(String());
+	if (getLength() == 0)
+	{
+		return 0;
+	}
+	return _wtoi(m_str.c_str());
+}
+
+double e2d::String::toDouble() const
+{
+	if (getLength() == 0)
+	{
+		return 0.0;
+	}
+	return _wtof(m_str.c_str());
+}
+
+bool e2d::String::toBool() const
+{
+	if (getLength() == 0)
+	{
+		return false;
+	}
+
+	if (m_str.compare(L"0") == 0 || m_str.compare(L"false") == 0)
+	{
+		return false;
+	}
+	return true;
+}
+
+e2d::String e2d::String::subtract(int offset, int count) const
+{
+	String temp;
+	int length = getLength();
+
+	if (length == 0 || offset >= length)
+		return std::move(temp);
 
 	offset = offset >= 0 ? offset : 0;
 
-	if (count < 0 || (offset + count) > _size)
-		count = _size - offset;
+	if (count < 0 || (offset + count) > length)
+		count = length - offset;
 
-	String str_temp;
-	str_temp._string = new wchar_t[count + 1];
-
-	for (int i = 0; i < count; i++)
-		str_temp._string[i] = (_string + offset)[i];
-	str_temp._string[count] = 0;
-
-	return std::move(str_temp);
+	temp.m_str = m_str.substr(offset, count);
+	return std::move(temp);
 }
 
 int e2d::String::findFirstOf(const wchar_t ch) const
 {
-	for (int i = 0; i < _size; i++)
-		if (_string[i] == ch)
+	for (int i = 0; i < getLength(); i++)
+		if (m_str[i] == ch)
 			return i;
 
 	return -1;
@@ -401,24 +292,24 @@ int e2d::String::findLastOf(const wchar_t ch) const
 {
 	int index = -1;
 
-	for (int i = 0; i < _size; i++)
-		if (_string[i] == ch)
+	for (int i = 0; i < getLength(); i++)
+		if (m_str[i] == ch)
 			index = i;
 
 	return index;
 }
 
-String & e2d::String::append(const wchar_t ch)
+e2d::String & e2d::String::append(const wchar_t ch)
 {
 	return (*this) += ch;
 }
 
-String & e2d::String::append(const wchar_t * str)
+e2d::String & e2d::String::append(const wchar_t * str)
 {
 	return (*this) += str;
 }
 
-String & e2d::String::append(const String & str)
+e2d::String & e2d::String::append(const e2d::String & str)
 {
 	return (*this) += str;
 }

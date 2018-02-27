@@ -604,7 +604,7 @@ e2d::Node * e2d::Node::getChild(const String & name)
 {
 	WARN_IF(name.isEmpty(), "Invalid Node name.");
 
-	unsigned int hash = name.hash();
+	unsigned int hash = name.getHash();
 
 	for (auto child : m_vChildren)
 	{
@@ -621,7 +621,7 @@ std::vector<e2d::Node*> e2d::Node::getChildren(const String & name)
 
 	WARN_IF(name.isEmpty(), "Invalid Node name.");
 
-	unsigned int hash = name.hash();
+	unsigned int hash = name.getHash();
 
 	for (auto child : m_vChildren)
 		if (child->m_nHashName == hash && child->m_sName == name)
@@ -684,7 +684,7 @@ void e2d::Node::removeChildren(const String & childName)
 	}
 
 	// 计算名称 Hash 值
-	unsigned int hash = childName.hash();
+	unsigned int hash = childName.getHash();
 
 	size_t size = m_vChildren.size();
 	for (size_t i = 0; i < size; i++)
@@ -839,7 +839,7 @@ void e2d::Node::setName(const String & name)
 		// 保存节点名
 		m_sName = name;
 		// 保存节点 Hash 名
-		m_nHashName = name.hash();
+		m_nHashName = name.getHash();
 	}
 }
 

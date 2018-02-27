@@ -252,7 +252,7 @@ protected:
 
 	virtual ~Music();
 
-	bool _open(LPWSTR strFileName);
+	bool _open(LPCWSTR strFileName);
 
 	void _close();
 

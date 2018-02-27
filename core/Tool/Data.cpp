@@ -3,12 +3,12 @@
 
 void e2d::Data::saveInt(const String & key, int value)
 {
-	::WritePrivateProfileString(L"Default", key, String::parse(value), File::getDefaultSavePath());
+	::WritePrivateProfileString(L"Default", key, String::toString(value), File::getDefaultSavePath());
 }
 
 void e2d::Data::saveFloat(const String & key, float value)
 {
-	::WritePrivateProfileString(L"Default", key, String::parse(value), File::getDefaultSavePath());
+	::WritePrivateProfileString(L"Default", key, String::toString(value), File::getDefaultSavePath());
 }
 
 void e2d::Data::saveString(const String & key, const String & value)
@@ -24,7 +24,7 @@ int e2d::Data::getInt(const String & key, int default)
 float e2d::Data::getFloat(const String & key, float default)
 {
 	wchar_t temp[32] = { 0 };
-	::GetPrivateProfileString(L"Default", key, String::parse(default), temp, 31, File::getDefaultSavePath());
+	::GetPrivateProfileString(L"Default", key, String::toString(default), temp, 31, File::getDefaultSavePath());
 	return std::stof(temp);
 }
 

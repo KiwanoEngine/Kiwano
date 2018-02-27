@@ -69,9 +69,9 @@ e2d::String e2d::File::getFileExtension(const String & filePath)
 	if (pos != -1)
 	{
 		// 截取扩展名
-		fileExtension = filePath.sub(pos, filePath.length());
+		fileExtension = filePath.subtract(pos);
 		// 转换为小写字母
-		fileExtension = fileExtension.lower();
+		fileExtension = fileExtension.toLower();
 	}
 
 	return fileExtension;

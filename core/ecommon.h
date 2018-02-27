@@ -92,7 +92,6 @@ class String
 {
 public:
 	String();
-	String(const wchar_t);
 	String(const wchar_t *);
 	String(const String &);
 	String(const std::wstring &);
@@ -100,87 +99,55 @@ public:
 
 	~String();
 
-	String& operator=(const wchar_t *);
-	String& operator=(const String &);
-	String& operator=(const std::wstring &);
+	String& operator= (const wchar_t *);
+	String& operator= (const String &);
+	String& operator= (const std::wstring &);
 
-	bool operator==(const wchar_t *);
-	bool operator==(const String &);
-	bool operator==(const std::wstring &);
+	bool operator== (const wchar_t *);
+	bool operator== (const String &);
+	bool operator== (const std::wstring &);
 
-	bool operator!=(const wchar_t *);
-	bool operator!=(const String &);
-	bool operator!=(const std::wstring &);
+	bool operator!= (const wchar_t *);
+	bool operator!= (const String &);
+	bool operator!= (const std::wstring &);
 
-	wchar_t &operator[](int);
+	wchar_t &operator[] (int);
 
-	String operator+(const wchar_t);
-	String operator+(const wchar_t *);
-	String operator+(const String &);
-	String operator+(const std::wstring &);
+	String operator+ (const wchar_t);
+	String operator+ (const wchar_t *);
+	String operator+ (const String &);
+	String operator+ (const std::wstring &);
 
-	template<typename T>
-	String operator+(const T value)
-	{
-		String str_temp(*this);
+	friend String operator+ (const wchar_t, const String &);
+	friend String operator+ (const wchar_t*, const String &);
+	friend String operator+ (const std::wstring &, const String &);
 
-		str_temp += value;
-		return std::move(str_temp);
-	}
-
-	String &operator +=(const wchar_t);
-	String &operator +=(const wchar_t *);
-	String &operator +=(const String &);
-	String &operator +=(const std::wstring &);
+	String& operator+= (const wchar_t);
+	String& operator+= (const wchar_t *);
+	String& operator+= (const String &);
+	String& operator+= (const std::wstring &);
 
 	template<typename T>
-	String &operator +=(const T value)
+	String& operator<< (const T value)
 	{
 		std::wostringstream ss;
 		ss << value;
 		return (*this) += ss.str();
 	}
 
-	bool operator < (String const&) const;
-	bool operator <= (String const&) const;
-	bool operator > (String const&) const;
-	bool operator >= (String const&) const;
+	operator const wchar_t* () const;
+	operator bool () const;
 
-	operator wchar_t*() const { return _string; }
-	operator bool() const { return _size != 0; }
-
-	friend String operator+(const wchar_t, const String &);
-	friend String operator+(const wchar_t*, const String &);
-	friend String operator+(const String &, const String &);
-	friend String operator+(const std::wstring &, const String &);
-	template<typename T>
-	friend String operator+(const T &value, const String &str)
-	{
-		return std::move((String::parse(value) + str2));
-	}
-
-	friend std::wistream &operator>>(std::wistream &, String &);
+	friend std::wistream& operator>> (std::wistream &, String &);
 
 	// 判断字符串是否为空
-	bool isEmpty() const { return _size == 0; }
+	bool isEmpty() const;
 
 	// 获取字符串长度
-	int length() const { return _size; }
+	int getLength() const;
 
-	// 获取大写字符串
-	String upper() const;
-
-	// 获取小写字符串
-	String lower() const;
-
-	// 获取裁剪字符串
-	String sub(int offset, int count = -1) const;
-
-	// 获取字符串中第一个特定字符的下标
-	int findFirstOf(const wchar_t ch) const;
-
-	// 获取字符串中最后一个特定字符的下标
-	int findLastOf(const wchar_t ch) const;
+	// 获取该字符串的散列值
+	unsigned int getHash() const;
 
 	// 后接字符
 	String &append(const wchar_t ch);
@@ -198,25 +165,41 @@ public:
 		return (*this) += value;
 	}
 
-	// 获取该字符串的散列值
-	unsigned int hash() const;
+	// 获取裁剪字符串
+	String subtract(int offset, int count = -1) const;
 
-	// 将模板类型转化为字符串
+	// 获取字符串中第一个特定字符的下标
+	int findFirstOf(const wchar_t ch) const;
+
+	// 获取字符串中最后一个特定字符的下标
+	int findLastOf(const wchar_t ch) const;
+
+	// 获取大写字符串
+	String toUpper() const;
+
+	// 获取小写字符串
+	String toLower() const;
+
+	// 将字符串转化为 int 型
+	int toInt() const;
+
+	// 将字符串转化为 double 型
+	double toDouble() const;
+
+	// 将字符串转化为 bool 型
+	bool toBool() const;
+
+	// 将任意类型转化为字符串
 	template<typename T>
-	static String parse(const T value)
+	static String toString(const T value)
 	{
-		String str;
-
 		std::wostringstream ss;
 		ss << value;
-		str += ss.str();
-
-		return std::move(str);
+		return ss.str();
 	}
 
 private:
-	wchar_t *_string;
-	int _size;
+	std::wstring m_str;
 };
 
 

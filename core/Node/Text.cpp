@@ -103,7 +103,7 @@ void e2d::Text::onRender()
 	Renderer::getSolidColorBrush()->SetColor(D2D1::ColorF(m_pFont->m_Color, m_fDisplayOpacity));
 	Renderer::getRenderTarget()->DrawTextW(
 		m_sText,
-		UINT32(m_sText.length()),
+		static_cast<UINT32>(m_sText.getLength()),
 		m_pFont->_getTextFormat(),
 		D2D1::RectF(
 			0,
@@ -140,7 +140,7 @@ void e2d::Text::_initTextLayout()
 
 	HRESULT hr = Renderer::getIDWriteFactory()->CreateTextLayout(
 		m_sText,
-		UINT32(m_sText.length()),
+		static_cast<UINT32>(m_sText.getLength()),
 		m_pFont->_getTextFormat(),
 		m_bWordWrapping ? m_fWordWrappingWidth : 0,
 		0,

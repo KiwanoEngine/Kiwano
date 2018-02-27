@@ -40,7 +40,7 @@ Music::~Music()
 	_close();
 }
 
-bool Music::_open(LPWSTR strFileName)
+bool Music::_open(LPCWSTR strFileName)
 {
 	if (m_bOpened)
 	{
