@@ -180,6 +180,12 @@
     <ClCompile Include="..\..\core\Shape\Rect.cpp">
       <Filter>Shape</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Common\Point.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\Size.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\etools.h" />

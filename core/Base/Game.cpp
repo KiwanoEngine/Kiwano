@@ -25,6 +25,9 @@ bool e2d::Game::init(const String & sTitle, UINT32 nWidth, UINT32 nHeight, LPCTS
 		// 初始化 COM 组件
 		CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
+		// 设置 AppName
+		s_sAppName = sAppname;
+
 		// 创建设备无关资源
 		if (!Renderer::__createDeviceIndependentResources())
 		{
@@ -62,8 +65,6 @@ bool e2d::Game::init(const String & sTitle, UINT32 nWidth, UINT32 nHeight, LPCTS
 
 		// 重设 Client 大小
 		Window::setSize(nWidth, nHeight);
-		// 设置 AppName
-		s_sAppName = sAppname.isEmpty() ? Window::getTitle() : sAppname;
 		// 标志初始化成功
 		s_bInitialized = true;
 

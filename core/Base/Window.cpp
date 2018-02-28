@@ -11,8 +11,14 @@ static bool s_bShowConsole = false;
 
 bool e2d::Window::__init(const String & sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID /*= nullptr*/)
 {
+	if (!Window::__initMutex(sTitle))
+	{
+		return false;
+	}
+
 	// 注册窗口类
-	WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
+	WNDCLASSEX wcex = { 0 };
+	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = Window::WndProc;
 	wcex.cbClsExtra = 0;
@@ -98,6 +104,42 @@ bool e2d::Window::__init(const String & sTitle, UINT32 nWidth, UINT32 nHeight, L
 	}
 
 	return SUCCEEDED(hr);
+}
+
+bool e2d::Window::__initMutex(const String & sTitle)
+{
+	// 创建进程互斥体
+	HANDLE m_hMutex = ::CreateMutex(NULL, TRUE, sTitle);
+
+	if (m_hMutex == nullptr)
+	{
+		WARN_IF(true, "CreateMutex Failed!");
+		return true;
+	}
+
+	// 如果程序已经存在并且正在运行
+	if (::GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		// 获取窗口句柄
+		HWND hProgramWnd = ::FindWindow(L"Easy2DApp", sTitle);
+		if (hProgramWnd)
+		{
+			// 获取窗口显示状态
+			WINDOWPLACEMENT wpm;
+			::GetWindowPlacement(hProgramWnd, &wpm);
+			// 将运行的程序窗口还原成正常状态
+			wpm.showCmd = SW_SHOW;
+			::SetWindowPlacement(hProgramWnd, &wpm);
+			::SetWindowPos(hProgramWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+		}
+
+		// 关闭进程互斥体
+		CloseHandle(m_hMutex);
+		m_hMutex = nullptr;
+		return false;
+	}
+
+	return true;
 }
 
 void e2d::Window::__uninit()

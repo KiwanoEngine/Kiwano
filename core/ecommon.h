@@ -8,82 +8,44 @@ namespace e2d
 {
 
 
+struct Size;
+
 // 表示坐标的结构体
 struct Point
 {
-	double x;
-	double y;
+	Point();
 
-	Point()
-	{
-		x = 0;
-		y = 0;
-	}
+	Point(double x, double y);
 
-	Point(double x, double y)
-	{
-		this->x = x;
-		this->y = y;
-	}
+	Point operator + (Point const & p);
+	Point operator - (Point const & p);
+	Point operator * (double const & value);
+	Point operator / (double const & value);
 
-	Point operator + (Point const & p)
-	{
-		return Point(x + p.x, y + p.y);
-	}
+	operator Size() const;
 
-	Point operator - (Point const & p)
-	{
-		return Point(x - p.x, y - p.y);
-	}
-
-	Point operator * (double const & value)
-	{
-		return Point(x * value, y * value);
-	}
-
-	Point operator / (double const & value)
-	{
-		return Point(x / value, y / value);
-	}
+	/* 成员变量 */
+	double x;	// X 坐标
+	double y;	// Y 坐标
 };
 
 // 表示大小的结构体
 struct Size
 {
-	double width;
-	double height;
+	Size();
 
-	Size()
-	{
-		width = 0;
-		height = 0;
-	}
+	Size(double width, double height);
 
-	Size(double width, double height)
-	{
-		this->width = width;
-		this->height = height;
-	}
+	Size operator + (Size const & size);
+	Size operator - (Size const & size);
+	Size operator * (double const & value);
+	Size operator / (double const & value);
 
-	Size operator + (Size const & size)
-	{
-		return Size(width + size.width, height + size.height);
-	}
+	operator Point() const;
 
-	Size operator - (Size const & size)
-	{
-		return Size(width - size.width, height - size.height);
-	}
-
-	Size operator * (double const & value)
-	{
-		return Size(width * value, height * value);
-	}
-
-	Size operator / (double const & value)
-	{
-		return Size(width / value, height / value);
-	}
+	/* 成员变量 */
+	double width;	// 宽度
+	double height;	// 高度
 };
 
 

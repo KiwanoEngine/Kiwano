@@ -95,6 +95,11 @@ private:
 		LPCTSTR pIconID
 	);
 
+	// 创建进程互斥体
+	static bool __initMutex(
+		const String & sTitle
+	);
+
 	// 重置窗口属性
 	static void __uninit();
 
