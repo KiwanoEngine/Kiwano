@@ -12,7 +12,7 @@ static bool s_bInitialized = false;
 static e2d::String s_sAppName;
 
 
-bool e2d::Game::init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID, LPCTSTR sAppname)
+bool e2d::Game::init(const String & sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID, const String & sAppname)
 {
 	if (s_bInitialized)
 	{
@@ -63,7 +63,7 @@ bool e2d::Game::init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIco
 		// 重设 Client 大小
 		Window::setSize(nWidth, nHeight);
 		// 设置 AppName
-		s_sAppName = (sAppname != nullptr) ? sAppname : Window::getTitle();
+		s_sAppName = sAppname.isEmpty() ? Window::getTitle() : sAppname;
 		// 标志初始化成功
 		s_bInitialized = true;
 

@@ -51,15 +51,15 @@ public:
 
 	Timer(
 		const TimerCallback &callback,	/* 定时器回调函数 */
-		double interval = 0,				/* 时间间隔（秒） */
+		double interval = 0,			/* 时间间隔（秒） */
 		int repeatTimes = -1,			/* 定时器执行次数 */
 		bool atOnce = false				/* 是否立即执行 */
 	);
 
 	Timer(
-		const String &name,			/* 定时器名称 */
+		const String &name,				/* 定时器名称 */
 		const TimerCallback &callback,	/* 定时器回调函数 */
-		double interval = 0,				/* 时间间隔（秒） */
+		double interval = 0,			/* 时间间隔（秒） */
 		int repeatTimes = -1,			/* 定时器执行次数 */
 		bool atOnce = false				/* 是否立即执行 */
 	);
@@ -190,7 +190,7 @@ public:
 	// 打开保存文件对话框
 	static String getSaveFilePath(
 		const String & title = L"保存到",	/* 对话框标题 */
-		const String & defExt = L""		/* 默认扩展名 */
+		const String & defExt = L""			/* 默认扩展名 */
 	);
 };
 
@@ -242,7 +242,7 @@ protected:
 
 	virtual ~Music();
 
-	bool _open(LPCWSTR strFileName);
+	bool _open(const String & strFileName);
 
 	void _close();
 
@@ -252,7 +252,7 @@ protected:
 
 	bool _read(BYTE* pBuffer, DWORD dwSizeToRead);
 
-	bool _findMediaFileCch(WCHAR* strDestPath, int cchDest, LPCWSTR strFilename);
+	bool _findMediaFileCch(wchar_t* strDestPath, int cchDest, const String & strFilename);
 
 protected:
 	bool m_bOpened;

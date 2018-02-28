@@ -422,12 +422,12 @@ public:
 
 	// 从文件图片创建精灵
 	Sprite(
-		LPCTSTR imageFileName
+		const String & imageFileName
 	);
 
 	// 从文件图片创建精灵并裁剪
 	Sprite(
-		LPCTSTR imageFileName,
+		const String & imageFileName,
 		double x,
 		double y,
 		double width,
@@ -443,7 +443,7 @@ public:
 
 	// 从本地文件加载图片
 	virtual void loadFrom(
-		LPCTSTR imageFileName
+		const String & imageFileName
 	);
 
 	// 裁剪图片
@@ -472,25 +472,25 @@ public:
 	Text();
 
 	Text(
-		const String & text
+		const String & text	/* 文字内容 */
 	);
 
 	Text(
-		Font * font
+		Font * font			/* 字体样式 */
 	);
 
 	Text(
-		const String & text,
-		Font * font
+		const String & text,/* 文字内容 */
+		Font * font			/* 字体样式 */
 	);
 
 	Text(
-		const String & text,
-		String fontFamily,
-		double fontSize = 22,
-		UINT32 color = Color::WHITE,
-		UINT32 fontWeight = FontWeight::REGULAR,
-		bool italic = false
+		const String & text,					/* 文字内容*/
+		String fontFamily,						/* 字体 */
+		double fontSize = 22,					/* 字号 */
+		UINT32 color = Color::WHITE,			/* 颜色 */
+		UINT32 fontWeight = FontWeight::REGULAR,/* 粗细值 */
+		bool italic = false						/* 斜体 */
 	);
 
 	virtual ~Text();

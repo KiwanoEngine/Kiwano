@@ -81,7 +81,7 @@ e2d::String e2d::File::getSaveFilePath(const String & title, const String & defE
 {
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };
-	TCHAR strFilename[MAX_PATH] = { 0 };				// 用于接收文件名
+	wchar_t strFilename[MAX_PATH] = { 0 };				// 用于接收文件名
 	ofn.lStructSize = sizeof(OPENFILENAME);				// 结构体大小
 	ofn.hwndOwner = Window::getHWnd();					// 窗口句柄
 	ofn.lpstrFilter = L"所有文件\0*.*\0\0";				// 设置过滤

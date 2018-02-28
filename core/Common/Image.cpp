@@ -13,12 +13,12 @@ e2d::Image::Image()
 {
 }
 
-e2d::Image::Image(LPCTSTR strFileName)
+e2d::Image::Image(const String & strFileName)
 {
 	this->loadFrom(strFileName);
 }
 
-e2d::Image::Image(LPCTSTR strFileName, double nClipX, double nClipY, double nClipWidth, double nClipHeight)
+e2d::Image::Image(const String & strFileName, double nClipX, double nClipY, double nClipWidth, double nClipHeight)
 {
 	this->loadFrom(strFileName);
 	this->clip(nClipX, nClipY, nClipWidth, nClipHeight);

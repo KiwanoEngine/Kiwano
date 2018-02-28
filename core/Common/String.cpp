@@ -1,5 +1,22 @@
 #include "..\ecommon.h"
 #include <iomanip>
+#include <comutil.h>
+#pragma comment(lib, "comsuppw.lib")
+
+
+// 将 Unicode 字符串转化为 ANSI 字符串
+static std::string ConvertWide2Ansi(const wchar_t* wstr)
+{
+	std::string str = static_cast<char*>(_bstr_t(wstr));
+	return std::move(str);
+}
+
+// 将 ANSI 字符串转化为 Unicode 字符串
+static std::wstring ConvertAnsi2Wide(const char* cstr)
+{
+	std::wstring str = static_cast<wchar_t*>(_bstr_t(cstr));
+	return std::move(str);
+}
 
 
 e2d::String::String()
@@ -9,6 +26,16 @@ e2d::String::String()
 
 e2d::String::String(const wchar_t *str)
 	: m_str(str)
+{
+}
+
+e2d::String::String(const char *cstr)
+	: m_str(ConvertAnsi2Wide(cstr))
+{
+}
+
+e2d::String::String(const std::string &str)
+	: m_str(ConvertAnsi2Wide(str.c_str()))
 {
 }
 
@@ -38,6 +65,12 @@ e2d::String &e2d::String::operator=(const wchar_t *str)
 	return *this;
 }
 
+e2d::String & e2d::String::operator=(const char *cstr)
+{
+	m_str = ConvertAnsi2Wide(cstr);
+	return *this;
+}
+
 e2d::String & e2d::String::operator=(const String &str)
 {
 	m_str = str.m_str;
@@ -50,11 +83,30 @@ e2d::String & e2d::String::operator=(const std::wstring &str)
 	return *this;
 }
 
+e2d::String & e2d::String::operator=(const std::string &str)
+{
+	m_str = ConvertAnsi2Wide(str.c_str());
+	return *this;
+}
+
 bool e2d::String::operator==(const wchar_t *str)
 {
 	if (str)
 	{
 		return (m_str.compare(str) == 0);
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool e2d::String::operator==(const char *str)
+{
+	if (str)
+	{
+		String temp(str);
+		return (m_str == temp.m_str);
 	}
 	else
 	{
@@ -84,6 +136,19 @@ bool e2d::String::operator!=(const wchar_t *str)
 	}
 }
 
+bool e2d::String::operator!=(const char *str)
+{
+	if (str)
+	{
+		String temp(str);
+		return (m_str != temp.m_str);
+	}
+	else
+	{
+		return true;
+	}
+}
+
 bool e2d::String::operator!=(const e2d::String &str)
 {
 	return m_str != str.m_str;
@@ -106,10 +171,10 @@ e2d::String e2d::String::operator+(const wchar_t *str)
 	return std::move(temp);
 }
 
-e2d::String e2d::String::operator+(const wchar_t x)
+e2d::String e2d::String::operator+(const char *str)
 {
-	String temp;
-	temp.m_str = m_str + x;
+	String temp(str);
+	temp.m_str += m_str;
 	return std::move(temp);
 }
 
@@ -127,17 +192,17 @@ e2d::String e2d::String::operator+(const std::wstring &str)
 	return std::move(temp);
 }
 
-e2d::String e2d::operator+(const wchar_t ch, const e2d::String &str)
-{
-	String temp;
-	temp.m_str = ch + str.m_str;
-	return std::move(temp);
-}
-
 e2d::String e2d::operator+(const wchar_t *str1, const e2d::String &str2)
 {
 	String temp;
 	temp.m_str = str1 + str2.m_str;
+	return std::move(temp);
+}
+
+e2d::String e2d::operator+(const char *str1, const String &str2)
+{
+	String temp(str1);
+	temp.m_str += str2.m_str;
 	return std::move(temp);
 }
 
@@ -148,33 +213,73 @@ e2d::String e2d::operator+(const std::wstring &str1, const e2d::String &str2)
 	return std::move(temp);
 }
 
-e2d::String &e2d::String::operator+=(const wchar_t x)
-{
-	m_str += x;
-	return *this;
-}
-
-e2d::String &e2d::String::operator+=(const wchar_t *str)
+e2d::String & e2d::String::operator+=(const wchar_t *str)
 {
 	m_str += str;
-	return *this;
+	return (*this);
 }
 
-e2d::String &e2d::String::operator+=(const e2d::String &str)
+e2d::String & e2d::String::operator+=(const char *str)
+{
+	m_str += ::ConvertAnsi2Wide(str);
+	return (*this);
+}
+
+e2d::String & e2d::String::operator+=(const String &str)
 {
 	m_str += str.m_str;
-	return *this;
+	return (*this);
 }
 
 e2d::String & e2d::String::operator+=(const std::wstring &str)
 {
 	m_str += str;
-	return *this;
+	return (*this);
+}
+
+bool e2d::String::operator>(const String &str) const
+{
+	return m_str > str.m_str;
+}
+
+bool e2d::String::operator>=(const String &str) const
+{
+	return m_str >= str.m_str;
+}
+
+bool e2d::String::operator<(const String &str) const
+{
+	return m_str < str.m_str;
+}
+
+bool e2d::String::operator<=(const String &str) const
+{
+	return m_str <= str.m_str;
+}
+
+e2d::String & e2d::String::operator<<(const char * value)
+{
+	return this->append(value);
+}
+
+e2d::String & e2d::String::operator<<(char * value)
+{
+	return this->append(value);
 }
 
 e2d::String::operator const wchar_t*() const
 {
 	return m_str.c_str();
+}
+
+e2d::String::operator wchar_t*() const
+{
+	return const_cast<wchar_t*>(m_str.c_str());
+}
+
+e2d::String::operator const char*() const
+{
+	return ::ConvertWide2Ansi(m_str.c_str()).c_str();
 }
 
 e2d::String::operator bool() const
@@ -202,12 +307,6 @@ unsigned int e2d::String::getHash() const
 		hash ^= (unsigned int)towupper(m_str[i]);
 	}
 	return hash;
-}
-
-std::wistream & e2d::operator>>(std::wistream &cin, e2d::String &str)
-{
-	cin >> str.m_str;
-	return cin;
 }
 
 e2d::String e2d::String::toUpper() const
@@ -299,17 +398,52 @@ int e2d::String::findLastOf(const wchar_t ch) const
 	return index;
 }
 
-e2d::String & e2d::String::append(const wchar_t ch)
-{
-	return (*this) += ch;
-}
-
 e2d::String & e2d::String::append(const wchar_t * str)
 {
-	return (*this) += str;
+	m_str += str;
+	return *this;
+}
+
+e2d::String & e2d::String::append(const char * str)
+{
+	m_str += ::ConvertAnsi2Wide(str);
+	return *this;
+}
+
+e2d::String & e2d::String::append(char * str)
+{
+	m_str += ::ConvertAnsi2Wide(str);
+	return *this;
 }
 
 e2d::String & e2d::String::append(const e2d::String & str)
 {
-	return (*this) += str;
+	m_str += str.m_str;
+	return (*this);
+}
+
+std::wostream & e2d::operator<<(std::wostream &cout, String &str)
+{
+	cout << str.m_str;
+	return cout;
+}
+
+std::wistream & e2d::operator>>(std::wistream &cin, e2d::String &str)
+{
+	cin >> str.m_str;
+	return cin;
+}
+
+std::ostream & e2d::operator<<(std::ostream &cout, String &str)
+{
+	cout << ::ConvertWide2Ansi(str.m_str.c_str());
+	return cout;
+}
+
+std::istream & e2d::operator>>(std::istream &cin, e2d::String &str)
+{
+	std::string temp;
+	cin >> temp;
+	str.m_str = ::ConvertAnsi2Wide(temp.c_str());
+	return cin;
 }

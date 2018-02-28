@@ -12,13 +12,13 @@ e2d::Sprite::Sprite(Image * image)
 	loadFrom(image);
 }
 
-e2d::Sprite::Sprite(LPCTSTR imageFileName)
+e2d::Sprite::Sprite(const String & imageFileName)
 	: m_pImage(nullptr)
 {
 	loadFrom(imageFileName);
 }
 
-e2d::Sprite::Sprite(LPCTSTR imageFileName, double x, double y, double width, double height)
+e2d::Sprite::Sprite(const String & imageFileName, double x, double y, double width, double height)
 	: m_pImage(nullptr)
 {
 	loadFrom(imageFileName);
@@ -42,7 +42,7 @@ void e2d::Sprite::loadFrom(Image * image)
 	}
 }
 
-void e2d::Sprite::loadFrom(LPCTSTR imageFileName)
+void e2d::Sprite::loadFrom(const String & imageFileName)
 {
 	loadFrom(new Image(imageFileName));
 }

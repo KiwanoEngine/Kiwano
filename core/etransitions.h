@@ -108,7 +108,7 @@ public:
 
 	// 创建移动式的场景切换动画
 	TransitionMove(
-		double moveDuration,			/* 场景移动动画持续时长 */
+		double moveDuration,		/* 场景移动动画持续时长 */
 		MOVE_DIRECT direct = LEFT	/* 场景移动方向 */
 	);
 

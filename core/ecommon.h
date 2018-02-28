@@ -99,47 +99,6 @@ public:
 
 	~String();
 
-	String& operator= (const wchar_t *);
-	String& operator= (const String &);
-	String& operator= (const std::wstring &);
-
-	bool operator== (const wchar_t *);
-	bool operator== (const String &);
-	bool operator== (const std::wstring &);
-
-	bool operator!= (const wchar_t *);
-	bool operator!= (const String &);
-	bool operator!= (const std::wstring &);
-
-	wchar_t &operator[] (int);
-
-	String operator+ (const wchar_t);
-	String operator+ (const wchar_t *);
-	String operator+ (const String &);
-	String operator+ (const std::wstring &);
-
-	friend String operator+ (const wchar_t, const String &);
-	friend String operator+ (const wchar_t*, const String &);
-	friend String operator+ (const std::wstring &, const String &);
-
-	String& operator+= (const wchar_t);
-	String& operator+= (const wchar_t *);
-	String& operator+= (const String &);
-	String& operator+= (const std::wstring &);
-
-	template<typename T>
-	String& operator<< (const T value)
-	{
-		std::wostringstream ss;
-		ss << value;
-		return (*this) += ss.str();
-	}
-
-	operator const wchar_t* () const;
-	operator bool () const;
-
-	friend std::wistream& operator>> (std::wistream &, String &);
-
 	// 判断字符串是否为空
 	bool isEmpty() const;
 
@@ -149,30 +108,41 @@ public:
 	// 获取该字符串的散列值
 	unsigned int getHash() const;
 
-	// 后接字符
-	String &append(const wchar_t ch);
+	// 后接字符串
+	String& append(
+		const wchar_t *str
+	);
 
 	// 后接字符串
-	String &append(const wchar_t *str);
-
-	// 后接字符串
-	String &append(const String &str);
+	String& append(
+		const String &str
+	);
 
 	// 后接字符串
 	template<typename T>
-	String &append(const T &value)
+	String& append(const T &value)
 	{
-		return (*this) += value;
+		std::wostringstream ss;
+		ss << value;
+		m_str += ss.str();
+		return (*this);
 	}
 
 	// 获取裁剪字符串
-	String subtract(int offset, int count = -1) const;
+	String subtract(
+		int offset,		/* 偏移量 */
+		int count = -1	/* 截取字符数量 */
+	) const;
 
 	// 获取字符串中第一个特定字符的下标
-	int findFirstOf(const wchar_t ch) const;
+	int findFirstOf(
+		const wchar_t ch
+	) const;
 
 	// 获取字符串中最后一个特定字符的下标
-	int findLastOf(const wchar_t ch) const;
+	int findLastOf(
+		const wchar_t ch
+	) const;
 
 	// 获取大写字符串
 	String toUpper() const;
@@ -197,6 +167,68 @@ public:
 		ss << value;
 		return ss.str();
 	}
+
+	static String toString(const wchar_t * str) { return std::move(String(str)); }
+	static String toString(const char * str) { return std::move(String(str)); }
+
+	String& operator= (const wchar_t *);
+	String& operator= (const String &);
+	String& operator= (const std::wstring &);
+
+	bool operator== (const wchar_t *);
+	bool operator== (const String &);
+	bool operator== (const std::wstring &);
+
+	bool operator!= (const wchar_t *);
+	bool operator!= (const String &);
+	bool operator!= (const std::wstring &);
+
+	wchar_t &operator[] (int);
+
+	String operator+ (const wchar_t *);
+	String operator+ (const String &);
+	String operator+ (const std::wstring &);
+
+	friend String operator+ (const wchar_t*, const String &);
+	friend String operator+ (const std::wstring &, const String &);
+
+	String& operator+= (const wchar_t *);
+	String& operator+= (const String &);
+	String& operator+= (const std::wstring &);
+
+	bool operator> (const String &) const;
+	bool operator>= (const String &) const;
+	bool operator< (const String &) const;
+	bool operator<= (const String &) const;
+
+	template<typename T>
+	String& operator<< (const T value) { return this->append<>(value); }
+
+	operator const wchar_t* () const;
+	operator wchar_t* () const;
+	operator bool () const;
+
+	friend std::wostream& operator<< (std::wostream &, String &);
+	friend std::wistream& operator>> (std::wistream &, String &);
+
+	// 为 ANSI 作出的适应
+	String(const char *);
+	String(const std::string &);
+	operator const char* () const;
+	String& operator= (const char *);
+	String& operator= (const std::string &);
+	bool operator== (const char *);
+	bool operator!= (const char *);
+	String operator+ (const char *);
+	friend String operator+ (const char *, const String &);
+	String& operator+= (const char *);
+	String& operator<< (const char *);
+	String& operator<< (char *);
+	String& append(const char *);
+	String& append(char *);
+
+	friend std::ostream& operator<< (std::ostream &, String &);
+	friend std::istream& operator>> (std::istream &, String &);
 
 private:
 	std::wstring m_str;
@@ -501,12 +533,12 @@ public:
 
 	// 从本地文件中读取资源
 	Image(
-		LPCTSTR strFilePath	/* 图片文件路径 */
+		const String & strFilePath	/* 图片文件路径 */
 	);
 
 	// 从本地文件中读取资源
 	Image(
-		LPCTSTR strFilePath,/* 图片文件路径 */
+		const String & strFilePath,/* 图片文件路径 */
 		double nClipX,		/* 裁剪位置 X 坐标 */
 		double nClipY,		/* 裁剪位置 Y 坐标 */
 		double nClipWidth,	/* 裁剪宽度 */

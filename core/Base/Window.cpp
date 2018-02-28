@@ -9,7 +9,7 @@ static HWND s_HWnd = nullptr;
 static bool s_bShowConsole = false;
 
 
-bool e2d::Window::__init(LPCTSTR sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID /*= nullptr*/)
+bool e2d::Window::__init(const String & sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID /*= nullptr*/)
 {
 	// ×¢²á´°¿ÚÀà
 	WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };

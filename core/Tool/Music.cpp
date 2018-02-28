@@ -10,13 +10,13 @@ using namespace e2d;
 #define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p);   (p)=nullptr; } }
 #endif
 
-inline bool TraceError(LPCTSTR sPrompt)
+inline bool TraceError(wchar_t* sPrompt)
 {
 	WARN_IF(true, "Music error: %s failed!", sPrompt);
 	return false;
 }
 
-inline bool TraceError(LPCTSTR sPrompt, HRESULT hr)
+inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 {
 	WARN_IF(true, "Music error: %s (%#X)", sPrompt, hr);
 	return false;
@@ -40,7 +40,7 @@ Music::~Music()
 	_close();
 }
 
-bool Music::_open(LPCWSTR strFileName)
+bool Music::_open(const String & strFileName)
 {
 	if (m_bOpened)
 	{
@@ -48,7 +48,7 @@ bool Music::_open(LPCWSTR strFileName)
 		return false;
 	}
 
-	if (strFileName == nullptr)
+	if (strFileName.isEmpty())
 	{
 		WARN_IF(true, L"Music::_open Invalid file name.");
 		return false;
@@ -65,7 +65,7 @@ bool Music::_open(LPCWSTR strFileName)
 	wchar_t strFilePath[MAX_PATH];
 	if (!_findMediaFileCch(strFilePath, MAX_PATH, strFileName))
 	{
-		WARN_IF(true, L"Failed to find media file: %s", strFileName);
+		WARN_IF(true, L"Failed to find media file: %s", (const wchar_t*)strFileName);
 		return false;
 	}
 
@@ -399,17 +399,17 @@ bool Music::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 	return true;
 }
 
-bool Music::_findMediaFileCch(WCHAR* strDestPath, int cchDest, LPCWSTR strFilename)
+bool Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const String & strFilename)
 {
 	bool bFound = false;
 
-	if (nullptr == strFilename || strFilename[0] == 0 || nullptr == strDestPath || cchDest < 10)
+	if (strFilename.isEmpty() || nullptr == strDestPath || cchDest < 10)
 		return false;
 
 	// Get the exe name, and exe path
-	WCHAR strExePath[MAX_PATH] = { 0 };
-	WCHAR strExeName[MAX_PATH] = { 0 };
-	WCHAR* strLastSlash = nullptr;
+	wchar_t strExePath[MAX_PATH] = { 0 };
+	wchar_t strExeName[MAX_PATH] = { 0 };
+	wchar_t* strLastSlash = nullptr;
 	GetModuleFileName(HINST_THISCOMPONENT, strExePath, MAX_PATH);
 	strExePath[MAX_PATH - 1] = 0;
 	strLastSlash = wcsrchr(strExePath, TEXT('\\'));
@@ -431,13 +431,13 @@ bool Music::_findMediaFileCch(WCHAR* strDestPath, int cchDest, LPCWSTR strFilena
 		return true;
 
 	// Search all parent directories starting at .\ and using strFilename as the leaf name
-	WCHAR strLeafName[MAX_PATH] = { 0 };
+	wchar_t strLeafName[MAX_PATH] = { 0 };
 	wcscpy_s(strLeafName, MAX_PATH, strFilename);
 
-	WCHAR strFullPath[MAX_PATH] = { 0 };
-	WCHAR strFullFileName[MAX_PATH] = { 0 };
-	WCHAR strSearch[MAX_PATH] = { 0 };
-	WCHAR* strFilePart = nullptr;
+	wchar_t strFullPath[MAX_PATH] = { 0 };
+	wchar_t strFullFileName[MAX_PATH] = { 0 };
+	wchar_t strSearch[MAX_PATH] = { 0 };
+	wchar_t* strFilePart = nullptr;
 
 	GetFullPathName(L".", MAX_PATH, strFullPath, &strFilePart);
 	if (strFilePart == nullptr)
