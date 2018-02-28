@@ -140,6 +140,12 @@ public:
 		double value
 	);
 
+	// 保存 bool 类型的值
+	static void saveBool(
+		const String & key,
+		bool value
+	);
+
 	// 保存 字符串 类型的值
 	static void saveString(
 		const String & key,
@@ -158,6 +164,13 @@ public:
 	static double getDouble(
 		const String & key,
 		double defaultValue
+	);
+
+	// 获取 bool 类型的值
+	// （若不存在则返回 defaultValue 参数的值）
+	static bool getBool(
+		const String & key,
+		bool defaultValue
 	);
 
 	// 获取 字符串 类型的值
