@@ -289,6 +289,27 @@ public:
 		double pivotY
 	);
 
+	// 修改节点宽度
+	void setWidth(
+		double width
+	);
+
+	// 修改节点高度
+	void setHeight(
+		double height
+	);
+
+	// 修改节点大小
+	void setSize(
+		double width,
+		double height
+	);
+
+	// 修改节点大小
+	void setSize(
+		Size size
+	);
+
 	// 设置节点形状
 	virtual void setShape(
 		Shape * pShape
@@ -364,12 +385,6 @@ protected:
 
 	// 更新所有子节点透明度
 	void _updateChildrenOpacity();
-
-	// 修改节点大小
-	void _setSize(
-		double width,
-		double height
-	);
 
 	// 更新节点二维矩阵
 	static void _updateTransform(Node * node);

@@ -431,16 +431,6 @@ void e2d::Node::movePos(const Vector & v)
 	this->movePos(v.x, v.y);
 }
 
-void e2d::Node::_setSize(double width, double height)
-{
-	if (m_fWidth == width && m_fHeight == height)
-		return;
-
-	m_fWidth = static_cast<float>(width);
-	m_fHeight = static_cast<float>(height);
-	m_bTransformNeeded = true;
-}
-
 void e2d::Node::setScaleX(double scaleX)
 {
 	this->setScale(scaleX, m_fScaleY);
@@ -523,6 +513,31 @@ void e2d::Node::setPivot(double pivotX, double pivotY)
 	m_fPivotX = min(max(static_cast<float>(pivotX), 0), 1);
 	m_fPivotY = min(max(static_cast<float>(pivotY), 0), 1);
 	m_bTransformNeeded = true;
+}
+
+void e2d::Node::setWidth(double width)
+{
+	this->setSize(width, m_fHeight);
+}
+
+void e2d::Node::setHeight(double height)
+{
+	this->setSize(m_fWidth, height);
+}
+
+void e2d::Node::setSize(double width, double height)
+{
+	if (m_fWidth == width && m_fHeight == height)
+		return;
+
+	m_fWidth = static_cast<float>(width);
+	m_fHeight = static_cast<float>(height);
+	m_bTransformNeeded = true;
+}
+
+void e2d::Node::setSize(Size size)
+{
+	this->setSize(size.width, size.height);
 }
 
 void e2d::Node::setShape(Shape * pShape)

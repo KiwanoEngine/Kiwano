@@ -282,11 +282,6 @@ e2d::String::operator const char*() const
 	return ::ConvertWide2Ansi(m_str.c_str()).c_str();
 }
 
-e2d::String::operator bool() const
-{
-	return getLength() != 0;
-}
-
 bool e2d::String::isEmpty() const
 {
 	return m_str.empty();

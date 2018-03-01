@@ -13,8 +13,8 @@ void e2d::Data::saveDouble(const String & key, double value)
 
 void e2d::Data::saveBool(const String & key, bool value)
 {
-	int nValue = value ? 1 : 0;
-	::WritePrivateProfileString(L"Default", key, String::toString(nValue), File::getDefaultSavePath());
+	const wchar_t* sValue = value ? L"1" : L"0";
+	::WritePrivateProfileString(L"Default", key, sValue, File::getDefaultSavePath());
 }
 
 void e2d::Data::saveString(const String & key, const String & value)

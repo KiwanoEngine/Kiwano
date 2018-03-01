@@ -22,7 +22,7 @@ struct Point
 	Point operator * (double const & value);
 	Point operator / (double const & value);
 
-	operator Size() const;
+	operator e2d::Size() const;
 
 	/* 成员变量 */
 	double x;	// X 坐标
@@ -41,7 +41,7 @@ struct Size
 	Size operator * (double const & value);
 	Size operator / (double const & value);
 
-	operator Point() const;
+	operator e2d::Point() const;
 
 	/* 成员变量 */
 	double width;	// 宽度
@@ -168,7 +168,6 @@ public:
 
 	operator const wchar_t* () const;
 	operator wchar_t* () const;
-	operator bool () const;
 
 	friend std::wostream& operator<< (std::wostream &, String &);
 	friend std::wistream& operator>> (std::wistream &, String &);

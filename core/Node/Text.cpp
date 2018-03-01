@@ -120,7 +120,7 @@ void e2d::Text::_initTextLayout()
 	// 未设置字体或空字符串时，文本宽高为 0
 	if (!m_pFont || m_sText.isEmpty())
 	{
-		this->_setSize(0, 0);
+		this->setSize(0, 0);
 		m_fWordWrappingWidth = 0;
 		return;
 	}
@@ -153,7 +153,7 @@ void e2d::Text::_initTextLayout()
 	DWRITE_TEXT_METRICS metrics;
 	pDWriteTextLayout->GetMetrics(&metrics);
 
-	this->_setSize(metrics.widthIncludingTrailingWhitespace, metrics.height);
+	this->setSize(metrics.widthIncludingTrailingWhitespace, metrics.height);
 	m_fWordWrappingWidth = metrics.widthIncludingTrailingWhitespace;
 
 	// 删除相关资源

@@ -109,7 +109,7 @@ bool e2d::Window::__init(const String & sTitle, UINT32 nWidth, UINT32 nHeight, L
 bool e2d::Window::__initMutex(const String & sTitle)
 {
 	// 创建进程互斥体
-	HANDLE m_hMutex = ::CreateMutex(NULL, TRUE, sTitle);
+	HANDLE m_hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + sTitle);
 
 	if (m_hMutex == nullptr)
 	{

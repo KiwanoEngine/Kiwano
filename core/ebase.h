@@ -17,7 +17,7 @@ public:
 		const String & sTitle,			/* 窗口标题 */
 		UINT32 nWidth,					/* 窗口宽度 */
 		UINT32 nHeight,					/* 窗口高度 */
-		LPCTSTR pIconID = L"",			/* 窗口图标 */
+		LPCTSTR pIconID = nullptr,		/* 窗口图标 */
 		const String & sAppname = L""	/* AppName */
 	);
 

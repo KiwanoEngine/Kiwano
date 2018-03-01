@@ -96,7 +96,7 @@ void e2d::Button::setNormal(Node * normal)
 		if (normal)
 		{
 			this->addChild(normal);
-			this->_setSize(normal->getWidth(), normal->getHeight());
+			this->setSize(normal->getWidth(), normal->getHeight());
 		}
 		m_pNormal = normal;
 

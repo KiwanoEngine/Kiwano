@@ -38,7 +38,7 @@ void e2d::Sprite::loadFrom(Image * image)
 		m_pImage = image;
 		m_pImage->retain();
 
-		Node::_setSize(m_pImage->getWidth(), m_pImage->getHeight());
+		Node::setSize(m_pImage->getWidth(), m_pImage->getHeight());
 	}
 }
 
@@ -50,7 +50,7 @@ void e2d::Sprite::loadFrom(const String & imageFileName)
 void e2d::Sprite::clip(double x, double y, double width, double height)
 {
 	m_pImage->clip(x, y, width, height);
-	Node::_setSize(
+	Node::setSize(
 		min(max(width, 0), m_pImage->getSourceWidth() - m_pImage->getClipX()),
 		min(max(height, 0), m_pImage->getSourceHeight() - m_pImage->getClipY())
 	);
