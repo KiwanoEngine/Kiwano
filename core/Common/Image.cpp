@@ -41,7 +41,7 @@ void e2d::Image::loadFrom(const String & strFilePath)
 		return;
 	}
 
-	m_pBitmap = s_mBitmapsFromFile.at(strFilePath.getHash());
+	m_pBitmap = s_mBitmapsFromFile.at(strFilePath.getHashCode());
 	m_fSourceClipX = m_fSourceClipY = 0;
 	m_fSourceClipWidth = m_pBitmap->GetSize().width;
 	m_fSourceClipHeight = m_pBitmap->GetSize().height;
@@ -132,7 +132,7 @@ e2d::Point e2d::Image::getClipPos() const
 
 bool e2d::Image::preload(const String & fileName)
 {
-	if (s_mBitmapsFromFile.find(fileName.getHash()) != s_mBitmapsFromFile.end())
+	if (s_mBitmapsFromFile.find(fileName.getHashCode()) != s_mBitmapsFromFile.end())
 	{
 		return true;
 	}
@@ -192,7 +192,7 @@ bool e2d::Image::preload(const String & fileName)
 		// 保存图片指针和图片的 Hash 名
 		s_mBitmapsFromFile.insert(
 			std::map<size_t, ID2D1Bitmap*>::value_type(
-				fileName.getHash(),
+				fileName.getHashCode(),
 				pBitmap)
 		);
 	}

@@ -24,7 +24,7 @@ bool e2d::MusicManager::add(const String & strFilePath)
 	}
 	else
 	{
-		UINT nRet = strFilePath.getHash();
+		UINT nRet = strFilePath.getHashCode();
 		pPlayer = new Music();
 
 		if (pPlayer->_open(strFilePath))
@@ -45,7 +45,7 @@ e2d::Music * e2d::MusicManager::get(const String & strFilePath)
 	if (strFilePath.isEmpty())
 		return nullptr;
 
-	UINT nRet = strFilePath.getHash();
+	UINT nRet = strFilePath.getHashCode();
 
 	if (getMusicList().end() != getMusicList().find(nRet))
 		return getMusicList()[nRet];

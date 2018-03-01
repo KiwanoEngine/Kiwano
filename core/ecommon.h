@@ -68,7 +68,7 @@ public:
 	int getLength() const;
 
 	// 获取该字符串的散列值
-	unsigned int getHash() const;
+	unsigned int getHashCode() const;
 
 	// 后接字符串
 	String& append(

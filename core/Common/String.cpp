@@ -292,7 +292,7 @@ int e2d::String::getLength() const
 	return static_cast<int>(m_str.size());
 }
 
-unsigned int e2d::String::getHash() const
+unsigned int e2d::String::getHashCode() const
 {
 	unsigned int hash = 0;
 
