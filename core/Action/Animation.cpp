@@ -45,7 +45,7 @@ void e2d::Animation::_update()
 		// 重新记录时间
 		m_fLast += m_fInterval;
 		// 加载关键帧
-		static_cast<Sprite*>(m_pTarget)->loadFrom(m_vFrames[m_nFrameIndex]);
+		static_cast<Sprite*>(m_pTarget)->open(m_vFrames[m_nFrameIndex]);
 		m_nFrameIndex++;
 		// 判断动作是否结束
 		if (m_nFrameIndex == m_vFrames.size())

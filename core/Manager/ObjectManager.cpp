@@ -37,7 +37,7 @@ void e2d::ObjectManager::__flush()
 	}
 }
 
-void e2d::ObjectManager::add(e2d::Obj * nptr)
+void e2d::ObjectManager::preload(e2d::Obj * nptr)
 {
 	if (!nptr->m_bManaged)
 	{

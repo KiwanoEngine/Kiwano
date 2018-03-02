@@ -15,28 +15,71 @@ static MusicList& getMusicList()
 }
 
 
-bool e2d::MusicManager::add(const String & strFilePath)
+bool e2d::MusicManager::preload(const String & strFilePath)
 {
-	Music * pPlayer = get(strFilePath);
-	if (pPlayer)
+	UINT nRet = strFilePath.getHashCode();
+
+	if (getMusicList().end() != getMusicList().find(nRet))
 	{
 		return true;
 	}
 	else
 	{
-		UINT nRet = strFilePath.getHashCode();
-		pPlayer = new Music();
+		Music * pPlayer = new Music();
 
-		if (pPlayer->_open(strFilePath))
+		if (pPlayer->open(strFilePath))
 		{
 			getMusicList().insert(MusicPair(nRet, pPlayer));
+			pPlayer->retain();
 			return true;
 		}
 		else
 		{
-			delete pPlayer;
-			return false;
+			pPlayer->release();
+			pPlayer = nullptr;
 		}
+	}
+	return false;
+}
+
+bool e2d::MusicManager::play(const String & strFilePath, int nLoopCount)
+{
+	if (MusicManager::preload(strFilePath))
+	{
+		UINT nRet = strFilePath.getHashCode();
+		Music * pMusic = getMusicList()[nRet];
+		if (pMusic->play(nLoopCount))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void e2d::MusicManager::pause(const String & strFilePath)
+{
+	auto music = MusicManager::get(strFilePath);
+	if (music)
+	{
+		music->pause();
+	}
+}
+
+void e2d::MusicManager::resume(const String & strFilePath)
+{
+	auto music = MusicManager::get(strFilePath);
+	if (music)
+	{
+		music->resume();
+	}
+}
+
+void e2d::MusicManager::stop(const String & strFilePath)
+{
+	auto music = MusicManager::get(strFilePath);
+	if (music)
+	{
+		music->stop();
 	}
 }
 
@@ -111,8 +154,8 @@ void e2d::MusicManager::__uninit()
 {
 	for (auto iter : getMusicList())
 	{
-		iter.second->_close();
-		delete iter.second;
+		iter.second->close();
+		iter.second->release();
 	}
 	getMusicList().clear();
 

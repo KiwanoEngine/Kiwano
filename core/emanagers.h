@@ -23,7 +23,7 @@ class ObjectManager
 
 public:
 	// 将一个节点放入内存池
-	static void add(
+	static void preload(
 		e2d::Obj * nptr
 	);
 
@@ -87,13 +87,13 @@ class TimerManager
 
 public:
 	// 绑定定时器到场景
-	static void add(
+	static void preload(
 		Timer * pTimer,
 		Scene * pParentScene
 	);
 
 	// 绑定定时器到节点
-	static void add(
+	static void preload(
 		Timer * pTimer,
 		Node * pParentNode
 	);
@@ -211,8 +211,29 @@ class MusicManager
 	friend Game;
 
 public:
-	// 添加音乐文件
-	static bool add(
+	// 预加载音乐资源
+	static bool preload(
+		const String & strFilePath	/* 音乐文件路径 */
+	);
+
+	// 播放音乐
+	static bool play(
+		const String & strFilePath,	/* 音乐文件路径 */
+		int nLoopCount = 0			/* 重复播放次数，设置 -1 为循环播放 */
+	);
+
+	// 暂停音乐
+	static void pause(
+		const String & strFilePath	/* 音乐文件路径 */
+	);
+
+	// 继续播放音乐
+	static void resume(
+		const String & strFilePath	/* 音乐文件路径 */
+	);
+
+	// 停止音乐
+	static void stop(
 		const String & strFilePath	/* 音乐文件路径 */
 	);
 

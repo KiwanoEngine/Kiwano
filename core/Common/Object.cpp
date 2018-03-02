@@ -5,7 +5,7 @@ e2d::Obj::Obj()
 	: m_nRefCount(0)
 	, m_bManaged(false)
 {
-	ObjectManager::add(this);	// 将该对象放入释放池中
+	ObjectManager::preload(this);	// 将该对象放入释放池中
 }
 
 e2d::Obj::~Obj()

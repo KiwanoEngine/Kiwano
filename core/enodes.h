@@ -452,12 +452,12 @@ public:
 	virtual ~Sprite();
 	
 	// 加载精灵图片
-	virtual void loadFrom(
+	virtual void open(
 		Image * texture
 	);
 
 	// 从本地文件加载图片
-	virtual void loadFrom(
+	virtual void open(
 		const String & imageFileName
 	);
 

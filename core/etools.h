@@ -209,24 +209,41 @@ public:
 
 
 // 音乐播放器
-class Music
+class Music : 
+	public Obj
 {
 	friend MusicManager;
 
 public:
+	Music();
+
+	Music(
+		const String & strFileName	/* 音乐文件路径 */
+	);
+
+	virtual ~Music();
+
+	// 打开音乐文件
+	bool open(
+		const String & strFileName	/* 音乐文件路径 */
+	);
+
 	// 播放
 	bool play(
 		int nLoopCount = 0	/* 重复播放次数，设置 -1 为循环播放 */
 	);
 
 	// 暂停
-	bool pause();
+	void pause();
 
 	// 继续
-	bool resume();
+	void resume();
 
 	// 停止
-	bool stop();
+	void stop();
+
+	// 关闭音乐文件
+	void close();
 
 	// 获取音乐播放状态
 	bool isPlaying();
@@ -234,13 +251,13 @@ public:
 	// 获取音量
 	double getVolume() const;
 
+	// 获取频率比
+	double getFrequencyRatio() const;
+
 	// 设置音量
 	bool setVolume(
 		double fVolume	/* 音量范围为 -224 ~ 224，其中 0 是静音，1 是正常音量 */
 	);
-
-	// 获取频率比
-	double getFrequencyRatio() const;
 
 	// 设置频率比
 	bool setFrequencyRatio(
@@ -251,21 +268,20 @@ public:
 	IXAudio2SourceVoice* getIXAudio2SourceVoice() const;
 
 protected:
-	Music();
-
-	virtual ~Music();
-
-	bool _open(const String & strFileName);
-
-	void _close();
-
 	bool _readMMIO();
 
 	bool _resetFile();
 
-	bool _read(BYTE* pBuffer, DWORD dwSizeToRead);
+	bool _read(
+		BYTE* pBuffer, 
+		DWORD dwSizeToRead
+	);
 
-	bool _findMediaFileCch(wchar_t* strDestPath, int cchDest, const String & strFilename);
+	bool _findMediaFileCch(
+		wchar_t* strDestPath, 
+		int cchDest, 
+		const wchar_t * strFilename
+	);
 
 protected:
 	bool m_bOpened;

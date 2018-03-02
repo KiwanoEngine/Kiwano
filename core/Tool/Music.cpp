@@ -35,12 +35,25 @@ Music::Music()
 {
 }
 
-Music::~Music()
+e2d::Music::Music(const String & strFileName)
+	: m_bOpened(false)
+	, m_bPlaying(false)
+	, m_pwfx(nullptr)
+	, m_hmmio(nullptr)
+	, m_pResourceBuffer(nullptr)
+	, m_pbWaveData(nullptr)
+	, m_dwSize(0)
+	, m_pSourceVoice(nullptr)
 {
-	_close();
+	this->open(strFileName);
 }
 
-bool Music::_open(const String & strFileName)
+Music::~Music()
+{
+	close();
+}
+
+bool Music::open(const String & strFileName)
 {
 	if (m_bOpened)
 	{
@@ -50,7 +63,7 @@ bool Music::_open(const String & strFileName)
 
 	if (strFileName.isEmpty())
 	{
-		WARN_IF(true, L"Music::_open Invalid file name.");
+		WARN_IF(true, L"Music::open Invalid file name.");
 		return false;
 	}
 
@@ -115,7 +128,17 @@ bool Music::_open(const String & strFileName)
 
 bool Music::play(int nLoopCount)
 {
-	HRESULT hr;
+	if (!m_bOpened)
+	{
+		WARN_IF(true, "Music::play Failed: Music must be opened first!");
+		return false;
+	}
+
+	if (m_pSourceVoice == nullptr)
+	{
+		WARN_IF(true, "Music::play Failed: IXAudio2SourceVoice Null pointer exception!");
+		return false;
+	}
 
 	if (m_bPlaying)
 	{
@@ -132,6 +155,7 @@ bool Music::play(int nLoopCount)
 	buffer.AudioBytes = m_dwSize;
 	buffer.LoopCount = nLoopCount;
 
+	HRESULT hr;
 	if (FAILED(hr = m_pSourceVoice->SubmitSourceBuffer(&buffer)))
 	{
 		TraceError(L"Error %#X submitting source buffer", hr);
@@ -148,33 +172,29 @@ bool Music::play(int nLoopCount)
 	return SUCCEEDED(hr);
 }
 
-bool Music::pause()
+void Music::pause()
 {
 	if (m_pSourceVoice)
 	{
 		if (SUCCEEDED(m_pSourceVoice->Stop()))
 		{
 			m_bPlaying = false;
-			return true;
 		}
 	}
-	return false;
 }
 
-bool Music::resume()
+void Music::resume()
 {
 	if (m_pSourceVoice)
 	{
 		if (SUCCEEDED(m_pSourceVoice->Start()))
 		{
 			m_bPlaying = true;
-			return true;
 		}
 	}
-	return false;
 }
 
-bool Music::stop()
+void Music::stop()
 {
 	if (m_pSourceVoice)
 	{
@@ -183,15 +203,37 @@ bool Music::stop()
 			m_pSourceVoice->ExitLoop();
 			m_pSourceVoice->FlushSourceBuffers();
 			m_bPlaying = false;
-			return true;
 		}
 	}
-	return false;
+}
+
+void Music::close()
+{
+	if (m_pSourceVoice)
+	{
+		m_pSourceVoice->Stop();
+		m_pSourceVoice->FlushSourceBuffers();
+		m_pSourceVoice->DestroyVoice();
+		m_pSourceVoice = nullptr;
+	}
+
+	if (m_hmmio != nullptr)
+	{
+		mmioClose(m_hmmio, 0);
+		m_hmmio = nullptr;
+	}
+
+	SAFE_DELETE_ARRAY(m_pResourceBuffer);
+	SAFE_DELETE_ARRAY(m_pbWaveData);
+	SAFE_DELETE_ARRAY(m_pwfx);
+
+	m_bOpened = false;
+	m_bPlaying = false;
 }
 
 bool Music::isPlaying()
 {
-	if (m_pSourceVoice)
+	if (m_bOpened && m_pSourceVoice)
 	{
 		XAUDIO2_VOICE_STATE state;
 		m_pSourceVoice->GetState(&state);
@@ -250,30 +292,6 @@ bool Music::setFrequencyRatio(double fFrequencyRatio)
 IXAudio2SourceVoice * Music::getIXAudio2SourceVoice() const
 {
 	return m_pSourceVoice;
-}
-
-void Music::_close()
-{
-	if (m_pSourceVoice)
-	{
-		m_pSourceVoice->Stop();
-		m_pSourceVoice->FlushSourceBuffers();
-		m_pSourceVoice->DestroyVoice();
-		m_pSourceVoice = nullptr;
-	}
-
-	if (m_hmmio != nullptr)
-	{
-		mmioClose(m_hmmio, 0);
-		m_hmmio = nullptr;
-	}
-
-	SAFE_DELETE_ARRAY(m_pResourceBuffer);
-	SAFE_DELETE_ARRAY(m_pbWaveData);
-	SAFE_DELETE_ARRAY(m_pwfx);
-
-	m_bOpened = false;
-	m_bPlaying = false;
 }
 
 bool Music::_readMMIO()
@@ -399,11 +417,11 @@ bool Music::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 	return true;
 }
 
-bool Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const String & strFilename)
+bool Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wchar_t * strFilename)
 {
 	bool bFound = false;
 
-	if (strFilename.isEmpty() || nullptr == strDestPath || cchDest < 10)
+	if (nullptr == strFilename || nullptr == strDestPath || cchDest < 10)
 		return false;
 
 	// Get the exe name, and exe path

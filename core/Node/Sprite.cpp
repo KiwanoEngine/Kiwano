@@ -9,19 +9,19 @@ e2d::Sprite::Sprite()
 e2d::Sprite::Sprite(Image * image)
 	: m_pImage(nullptr)
 {
-	loadFrom(image);
+	open(image);
 }
 
 e2d::Sprite::Sprite(const String & imageFileName)
 	: m_pImage(nullptr)
 {
-	loadFrom(imageFileName);
+	open(imageFileName);
 }
 
 e2d::Sprite::Sprite(const String & imageFileName, double x, double y, double width, double height)
 	: m_pImage(nullptr)
 {
-	loadFrom(imageFileName);
+	open(imageFileName);
 	clip(x, y, width, height);
 }
 
@@ -30,7 +30,7 @@ e2d::Sprite::~Sprite()
 	SafeRelease(&m_pImage);
 }
 
-void e2d::Sprite::loadFrom(Image * image)
+void e2d::Sprite::open(Image * image)
 {
 	if (image)
 	{
@@ -42,9 +42,9 @@ void e2d::Sprite::loadFrom(Image * image)
 	}
 }
 
-void e2d::Sprite::loadFrom(const String & imageFileName)
+void e2d::Sprite::open(const String & imageFileName)
 {
-	loadFrom(new Image(imageFileName));
+	open(new Image(imageFileName));
 }
 
 void e2d::Sprite::clip(double x, double y, double width, double height)

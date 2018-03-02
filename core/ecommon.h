@@ -508,26 +508,26 @@ public:
 
 	virtual ~Image();
 
+	// 从本地文件中读取图片
+	void open(
+		const String & strFilePath
+	);
+
+	// 从本地文件中读取图片并裁剪
+	void open(
+		const String & strFilePath,/* 图片文件路径 */
+		double nClipX,				/* 裁剪位置 X 坐标 */
+		double nClipY,				/* 裁剪位置 Y 坐标 */
+		double nClipWidth,			/* 裁剪宽度 */
+		double nClipHeight			/* 裁剪高度 */
+	);
+
 	// 裁剪图片
 	void clip(
 		double nClipX,		/* 裁剪位置 X 坐标 */
 		double nClipY,		/* 裁剪位置 Y 坐标 */
 		double nClipWidth,	/* 裁剪宽度 */
 		double nClipHeight	/* 裁剪高度 */
-	);
-
-	// 从本地文件中读取图片
-	void loadFrom(
-		const String & strFilePath
-	);
-
-	// 从本地文件中读取图片并裁剪
-	void loadFrom(
-		const String & strFilePath,/* 图片文件路径 */
-		double nClipX,				/* 裁剪位置 X 坐标 */
-		double nClipY,				/* 裁剪位置 Y 坐标 */
-		double nClipWidth,			/* 裁剪宽度 */
-		double nClipHeight			/* 裁剪高度 */
 	);
 
 	// 获取宽度
@@ -619,7 +619,7 @@ public:
 	);
 
 	// 添加节点到场景
-	void add(
+	void preload(
 		Node * child,
 		int zOrder = 0
 	);

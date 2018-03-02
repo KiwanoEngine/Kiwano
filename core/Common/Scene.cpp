@@ -51,7 +51,7 @@ void e2d::Scene::setAutoUpdate(bool bAutoUpdate)
 	m_bAutoUpdate = bAutoUpdate;
 }
 
-void e2d::Scene::add(Node * child, int order /* = 0 */)
+void e2d::Scene::preload(Node * child, int order /* = 0 */)
 {
 	m_pRoot->addChild(child, order);
 }

@@ -15,12 +15,12 @@ e2d::Image::Image()
 
 e2d::Image::Image(const String & strFileName)
 {
-	this->loadFrom(strFileName);
+	this->open(strFileName);
 }
 
 e2d::Image::Image(const String & strFileName, double nClipX, double nClipY, double nClipWidth, double nClipHeight)
 {
-	this->loadFrom(strFileName);
+	this->open(strFileName);
 	this->clip(nClipX, nClipY, nClipWidth, nClipHeight);
 }
 
@@ -28,7 +28,7 @@ e2d::Image::~Image()
 {
 }
 
-void e2d::Image::loadFrom(const String & strFilePath)
+void e2d::Image::open(const String & strFilePath)
 {
 	WARN_IF(strFilePath.isEmpty(), "Image cannot load bitmap from NULL file name.");
 
@@ -47,9 +47,9 @@ void e2d::Image::loadFrom(const String & strFilePath)
 	m_fSourceClipHeight = m_pBitmap->GetSize().height;
 }
 
-void e2d::Image::loadFrom(const String & strFilePath, double x, double y, double width, double height)
+void e2d::Image::open(const String & strFilePath, double x, double y, double width, double height)
 {
-	loadFrom(strFilePath);
+	open(strFilePath);
 	clip(x, y, width, height);
 }
 
