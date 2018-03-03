@@ -31,8 +31,11 @@ public:
 	static void clear();
 
 private:
-	// 释放引用计数为 0 的对象
-	static void __clearObjects();
+	// 更新对象管理器
+	static void __update();
+
+	// 清空所有对象
+	static void __clearAllObjects();
 };
 
 
@@ -86,16 +89,9 @@ class TimerManager
 	friend Node;
 
 public:
-	// 添加一个定时器，并将它绑定到场景
+	// 添加一个定时器
 	static void add(
-		Timer * pTimer,
-		Scene * pParentScene
-	);
-
-	// 添加一个定时器，并将它绑定到节点
-	static void add(
-		Timer * pTimer,
-		Node * pParentNode
+		Timer * pTimer
 	);
 
 	// 等待一段时间后执行指定函数
@@ -105,38 +101,28 @@ public:
 	);
 
 	// 启动具有相同名称的定时器
-	static void startTimers(
+	static void start(
 		const String &name
 	);
 
 	// 停止具有相同名称的定时器
-	static void stopTimers(
+	static void stop(
 		const String &name
 	);
 
 	// 删除具有相同名称的定时器
-	static void deleteTimers(
+	static void stopAndClear(
 		const String &name
 	);
 
-	// 启动绑定在场景及其子节点上的所有定时器
-	static void startAllTimersBindedWith(
-		Scene * pParentScene
+	// 获取名称相同的定时器（有多个时返回第一个）
+	static Timer * get(
+		const String & name
 	);
 
-	// 停止绑定在场景及其子节点上的所有定时器
-	static void stopAllTimersBindedWith(
-		Scene * pParentScene
-	);
-
-	// 启动绑定在节点上的所有定时器
-	static void startAllTimersBindedWith(
-		Node * pParentNode
-	);
-
-	// 停止绑定在节点上的所有定时器
-	static void stopAllTimersBindedWith(
-		Node * pParentNode
+	// 获取名称相同的定时器
+	static std::vector<Timer*> getTimers(
+		const String & name
 	);
 
 	// 启动所有定时器
@@ -145,17 +131,21 @@ public:
 	// 停止所有定时器
 	static void stopAllTimers();
 
+	// 停止并清除所有定时器
+	static void stopAndClearAllTimers();
+
+	// 获取所有定时器
+	static std::vector<Timer*> getAllTimers();
+
 private:
 	// 更新定时器
 	static void __update();
 
-	// 清空绑定在节点上的所有定时器
-	static void __clearAllTimersBindedWith(
-		Node * pParentNode
-	);
-
 	// 重置定时器状态
 	static void __resetAllTimers();
+
+	// 清空定时器
+	static void __uninit();
 };
 
 

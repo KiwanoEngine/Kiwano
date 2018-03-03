@@ -10,80 +10,19 @@ void e2d::TimerManager::__update()
 	if (s_vTimers.empty() || Game::isPaused())
 		return;
 
-	for (auto &timer : s_vTimers)
-	{
-		if (timer->_isReady())
-		{
-			timer->_callOn();
-		}
-	}
-}
-
-void e2d::TimerManager::add(double timeOut, TimerCallback callback)
-{
-	auto pTimer = new Timer(callback, timeOut, 0, false);
-	TimerManager::add(pTimer, SceneManager::getCurrentScene());
-}
-
-void e2d::TimerManager::add(Timer * pTimer, Scene * pParentScene)
-{
-	WARN_IF(pParentScene == nullptr, "Bind Timer with a NULL Scene pointer!");
-
-	if (pParentScene)
-	{
-		TimerManager::add(pTimer, pParentScene->getRoot());
-	}
-}
-
-void e2d::TimerManager::add(Timer * pTimer, Node * pParentNode)
-{
-	WARN_IF(pTimer == nullptr, "Timer NULL pointer exception!");
-	WARN_IF(pParentNode == nullptr, "Bind Timer with a NULL Node pointer!");
-
-	if (pTimer && pParentNode)
-	{
-		ASSERT(
-			pTimer->m_pParentNode != nullptr,
-			"The timer is already binded, cannot be binded again!"
-		);
-
-		pTimer->start();
-		pTimer->retain();
-		pTimer->m_pParentNode = pParentNode;
-		s_vTimers.push_back(pTimer);
-	}
-}
-
-void e2d::TimerManager::startTimers(const String & name)
-{
-	for (auto timer : s_vTimers)
-	{
-		if (timer->getName() == name)
-		{
-			timer->start();
-		}
-	}
-}
-
-void e2d::TimerManager::stopTimers(const String & name)
-{
-	for (auto timer : s_vTimers)
-	{
-		if (timer->getName() == name)
-		{
-			timer->stop();
-		}
-	}
-}
-
-void e2d::TimerManager::deleteTimers(const String & name)
-{
 	std::vector<Timer*>::iterator mIter;
 	for (mIter = s_vTimers.begin(); mIter != s_vTimers.end();)
 	{
-		if ((*mIter)->getName() == name)
+		Timer * pTimer = (*mIter);
+		// 更新定时器
+		if (pTimer->isReady())
 		{
-			SafeRelease(&(*mIter));
+			pTimer->update();
+		}
+		// 清除不必要的定时器
+		if (pTimer->m_bClear)
+		{
+			pTimer->release();
 			mIter = s_vTimers.erase(mIter);
 		}
 		else
@@ -93,61 +32,128 @@ void e2d::TimerManager::deleteTimers(const String & name)
 	}
 }
 
-void e2d::TimerManager::startAllTimersBindedWith(Scene * pParentScene)
+void e2d::TimerManager::add(double timeOut, TimerCallback callback)
 {
-	TimerManager::startAllTimersBindedWith(pParentScene->getRoot());
+	auto pTimer = new Timer(L"", callback, timeOut, 1, false, true);
+	pTimer->start();
 }
 
-void e2d::TimerManager::stopAllTimersBindedWith(Scene * pParentScene)
+void e2d::TimerManager::add(Timer * pTimer)
 {
-	TimerManager::stopAllTimersBindedWith(pParentScene->getRoot());
+	WARN_IF(pTimer == nullptr, "Timer NULL pointer exception!");
+
+	if (pTimer)
+	{
+		auto findTimer = [](Timer * pTimer) -> bool
+		{
+			for (const auto &t : s_vTimers)
+			{
+				if (pTimer == t)
+				{
+					return true;
+				}
+			}
+			return false;
+		};
+
+		bool bHasTimer = findTimer(pTimer);
+		WARN_IF(bHasTimer, "The timer is already added, cannot be added again!");
+
+		if (!bHasTimer)
+		{
+			pTimer->retain();
+			s_vTimers.push_back(pTimer);
+		}
+	}
 }
 
-void e2d::TimerManager::startAllTimersBindedWith(Node * pParentNode)
+void e2d::TimerManager::start(const String & name)
 {
 	for (auto timer : s_vTimers)
 	{
-		if (timer->getParentNode() == pParentNode)
+		if (timer->getName() == name)
 		{
 			timer->start();
 		}
 	}
-	for (auto child = pParentNode->getChildren().begin(); child != pParentNode->getChildren().end(); child++)
-	{
-		TimerManager::startAllTimersBindedWith((*child));
-	}
 }
 
-void e2d::TimerManager::stopAllTimersBindedWith(Node * pParentNode)
+void e2d::TimerManager::stop(const String & name)
 {
 	for (auto timer : s_vTimers)
 	{
-		if (timer->getParentNode() == pParentNode)
+		if (timer->getName() == name)
 		{
 			timer->stop();
 		}
 	}
-	for (auto child : pParentNode->getChildren())
+}
+
+void e2d::TimerManager::stopAndClear(const String & name)
+{
+	for (auto timer : s_vTimers)
 	{
-		TimerManager::stopAllTimersBindedWith(child);
+		if (timer->getName() == name)
+		{
+			timer->stopAndClear();
+		}
 	}
 }
 
-void e2d::TimerManager::__clearAllTimersBindedWith(Node * pParentNode)
+e2d::Timer * e2d::TimerManager::get(const String & name)
 {
-	for (size_t i = 0; i < s_vTimers.size();)
+	for (auto timer : s_vTimers)
 	{
-		auto t = s_vTimers[i];
-		if (t->getParentNode() == pParentNode)
+		if (timer->getName() == name)
 		{
-			SafeRelease(&t);
-			s_vTimers.erase(s_vTimers.begin() + i);
-		}
-		else
-		{
-			i++;
+			return timer;
 		}
 	}
+	return nullptr;
+}
+
+std::vector<e2d::Timer*> e2d::TimerManager::getTimers(const String & name)
+{
+	std::vector<Timer*> vTimers;
+	for (auto timer : s_vTimers)
+	{
+		if (timer->getName() == name)
+		{
+			vTimers.push_back(timer);
+		}
+	}
+	return std::move(vTimers);
+}
+
+void e2d::TimerManager::startAllTimers()
+{
+	for (auto timer : s_vTimers)
+	{
+		timer->start();
+	}
+}
+
+void e2d::TimerManager::stopAllTimers()
+{
+	for (auto timer : s_vTimers)
+	{
+		timer->stop();
+	}
+}
+
+void e2d::TimerManager::stopAndClearAllTimers()
+{
+	for (auto timer : s_vTimers)
+	{
+		timer->stop();
+		timer->release();
+	}
+	s_vTimers.clear();
+}
+
+std::vector<e2d::Timer*> e2d::TimerManager::getAllTimers()
+{
+	return s_vTimers;
 }
 
 void e2d::TimerManager::__resetAllTimers()
@@ -158,12 +164,11 @@ void e2d::TimerManager::__resetAllTimers()
 	}
 }
 
-void e2d::TimerManager::startAllTimers()
+void e2d::TimerManager::__uninit()
 {
-	TimerManager::startAllTimersBindedWith(SceneManager::getCurrentScene());
-}
-
-void e2d::TimerManager::stopAllTimers()
-{
-	TimerManager::stopAllTimersBindedWith(SceneManager::getCurrentScene());
+	for (const auto timer : s_vTimers)
+	{
+		timer->release();
+	}
+	s_vTimers.clear();
 }

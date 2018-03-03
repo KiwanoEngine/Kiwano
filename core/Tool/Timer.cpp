@@ -5,45 +5,25 @@
 e2d::Timer::Timer()
 	: m_bRunning(false)
 	, m_nRunTimes(0)
-	, m_pParentNode(nullptr)
 	, m_Callback(nullptr)
 	, m_fInterval(0)
 	, m_fLast(0)
-	, m_nRepeatTimes(-1)
+	, m_nUpdateTimes(-1)
 	, m_bAtOnce(false)
+	, m_bAutoRelease(false)
+	, m_bClear(false)
 {
+	TimerManager::add(this);
 }
 
-e2d::Timer::Timer(const TimerCallback & callback, double interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */)
-	: m_bRunning(false)
-	, m_nRunTimes(0)
-	, m_pParentNode(nullptr)
-	, m_Callback(nullptr)
-	, m_fInterval(0)
-	, m_fLast(0)
-	, m_nRepeatTimes(-1)
-	, m_bAtOnce(false)
-{
-	this->setCallback(callback);
-	this->setRepeatTimes(repeatTimes);
-	this->setInterval(interval);
-	m_bAtOnce = atOnce;
-}
-
-e2d::Timer::Timer(const String & name, const TimerCallback & callback, double interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */)
-	: m_bRunning(false)
-	, m_nRunTimes(0)
-	, m_pParentNode(nullptr)
-	, m_Callback(nullptr)
-	, m_fInterval(0)
-	, m_fLast(0)
-	, m_nRepeatTimes(-1)
-	, m_bAtOnce(false)
+e2d::Timer::Timer(const String & name, const TimerCallback & callback, double interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
+	: Timer()
 {
 	this->setName(name);
 	this->setCallback(callback);
-	this->setRepeatTimes(repeatTimes);
+	this->setUpdateTimes(repeatTimes);
 	this->setInterval(interval);
+	m_bAutoRelease = autoRelease;
 	m_bAtOnce = atOnce;
 }
 
@@ -57,6 +37,12 @@ void e2d::Timer::stop()
 	m_bRunning = false;
 }
 
+void e2d::Timer::stopAndClear()
+{
+	m_bRunning = false;
+	m_bClear = true;
+}
+
 void e2d::Timer::start()
 {
 	m_bRunning = true;
@@ -66,11 +52,6 @@ void e2d::Timer::start()
 e2d::String e2d::Timer::getName() const
 {
 	return m_sName;
-}
-
-e2d::Node * e2d::Timer::getParentNode() const
-{
-	return m_pParentNode;
 }
 
 void e2d::Timer::setName(const String & name)
@@ -88,9 +69,9 @@ void e2d::Timer::setCallback(const TimerCallback & callback)
 	m_Callback = callback;
 }
 
-void e2d::Timer::setRepeatTimes(int repeatTimes)
+void e2d::Timer::setUpdateTimes(int repeatTimes)
 {
-	m_nRepeatTimes = repeatTimes;
+	m_nUpdateTimes = repeatTimes;
 }
 
 void e2d::Timer::setRunAtOnce(bool bAtOnce)
@@ -98,9 +79,9 @@ void e2d::Timer::setRunAtOnce(bool bAtOnce)
 	m_bAtOnce = bAtOnce;
 }
 
-void e2d::Timer::_callOn()
+void e2d::Timer::update()
 {
-	if (m_Callback)
+	if (m_Callback && m_nRunTimes < m_nUpdateTimes)
 	{
 		m_Callback();
 	}
@@ -108,17 +89,22 @@ void e2d::Timer::_callOn()
 	m_nRunTimes++;
 	m_fLast += m_fInterval;
 
-	if (m_nRunTimes == m_nRepeatTimes)
+	if (m_nRunTimes >= m_nUpdateTimes)
 	{
-		this->stop();
+		if (m_bAutoRelease)
+		{
+			this->stopAndClear();
+		}
+		else
+		{
+			this->stop();
+		}
 	}
 }
 
-bool e2d::Timer::_isReady() const
+bool e2d::Timer::isReady() const
 {
-	if (m_bRunning && 
-		m_pParentNode &&
-		m_pParentNode->getParentScene() == SceneManager::getCurrentScene())
+	if (m_bRunning)
 	{
 		if (m_bAtOnce && m_nRunTimes == 0)
 			return true;

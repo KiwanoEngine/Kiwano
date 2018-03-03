@@ -25,3 +25,8 @@ void e2d::Object::release()
 	// 通知对象管理池刷新
 	ObjectManager::clear();
 }
+
+int e2d::Object::getReferenceCount() const
+{
+	return m_nRefCount;
+}

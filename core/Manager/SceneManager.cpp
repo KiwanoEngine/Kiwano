@@ -155,6 +155,7 @@ bool e2d::SceneManager::__init()
 	if (!s_pNextScene)
 	{
 		s_pNextScene = new Scene();
+		s_pNextScene->retain();
 	}
 
 	s_pCurrentScene = s_pNextScene;

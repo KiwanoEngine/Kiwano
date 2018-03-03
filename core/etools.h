@@ -50,18 +50,12 @@ public:
 	Timer();
 
 	Timer(
-		const TimerCallback &callback,	/* 定时器回调函数 */
-		double interval = 0,			/* 时间间隔（秒） */
-		int repeatTimes = -1,			/* 定时器执行次数 */
-		bool atOnce = false				/* 是否立即执行 */
-	);
-
-	Timer(
 		const String &name,				/* 定时器名称 */
 		const TimerCallback &callback,	/* 定时器回调函数 */
 		double interval = 0,			/* 时间间隔（秒） */
-		int repeatTimes = -1,			/* 定时器执行次数 */
-		bool atOnce = false				/* 是否立即执行 */
+		int times = -1,					/* 执行次数（设 -1 为永久执行） */
+		bool atOnce = false,			/* 是否立即执行 */
+		bool autoRelease = false		/* 自动清除 */
 	);
 
 	// 启动定时器
@@ -70,23 +64,29 @@ public:
 	// 停止定时器
 	void stop();
 
+	// 停止并清除该定时器
+	void stopAndClear();
+
+	// 更新定时器
+	void update();
+
 	// 获取定时器状态
 	bool isRunning() const;
 
+	// 判断是否达到执行状态
+	bool isReady() const;
+
 	// 获取定时器名称
 	String getName() const;
-
-	// 获取定时器所在节点
-	Node * getParentNode() const;
 
 	// 设置定时器名称
 	void setName(
 		const String &name
 	);
 
-	// 设置定时器执行间隔（秒）
+	// 设置定时器执行间隔
 	void setInterval(
-		double interval
+		double fInterval	/* 时间间隔（秒） */
 	);
 
 	// 设置定时器回调函数
@@ -94,9 +94,9 @@ public:
 		const TimerCallback & callback
 	);
 
-	// 设置定时器重复执行次数
-	void setRepeatTimes(
-		int nRepeatTimes
+	// 设置定时器执行次数
+	void setUpdateTimes(
+		int nUpdateTimes	/* 执行次数（设 -1 为永久执行） */
 	);
 
 	// 设置定时器在绑定后立即执行一次
@@ -105,21 +105,15 @@ public:
 	);
 
 protected:
-	// 执行回调函数
-	void _callOn();
-
-	// 判断是否达到执行状态
-	bool _isReady() const;
-
-protected:
 	String			m_sName;
 	bool			m_bRunning;
 	bool			m_bAtOnce;
+	bool			m_bAutoRelease;
+	bool			m_bClear;
 	int				m_nRunTimes;
-	int				m_nRepeatTimes;
+	int				m_nUpdateTimes;
 	double			m_fInterval;
 	double			m_fLast;
-	Node *			m_pParentNode;
 	TimerCallback	m_Callback;
 };
 

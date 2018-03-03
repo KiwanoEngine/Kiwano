@@ -40,7 +40,6 @@ e2d::Node::Node()
 
 e2d::Node::~Node()
 {
-	TimerManager::__clearAllTimersBindedWith(this);
 	ActionManager::__clearAllActionsBindedWith(this);
 	ShapeManager::__delShape(m_pShape);
 	for (auto child : m_vChildren)
@@ -637,9 +636,6 @@ e2d::Node * e2d::Node::getChild(const String & name)
 std::vector<e2d::Node*> e2d::Node::getChildren(const String & name)
 {
 	std::vector<Node*> vChildren;
-
-	WARN_IF(name.isEmpty(), "Invalid Node name.");
-
 	unsigned int hash = name.getHashCode();
 
 	for (auto child : m_vChildren)

@@ -3,7 +3,6 @@
 #include "..\emanagers.h"
 #include "..\etools.h"
 #include "..\eactions.h"
-#include <algorithm>
 
 e2d::Scene::Scene()
 	: m_bWillSave(true)

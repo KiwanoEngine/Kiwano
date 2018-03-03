@@ -403,6 +403,9 @@ public:
 	// 引用计数减一
 	void release();
 
+	// 获取引用计数
+	int getReferenceCount() const;
+
 private:
 	int m_nRefCount;
 	bool m_bManaged;
@@ -666,7 +669,7 @@ typedef VoidFunction TimerCallback;
 typedef VoidFunction ButtonCallback;
 
 #ifndef CreateCallback
-	#define CreateCallback(Func) std::bind(&Func, this)
+	#define CreateCallback(func, pointer) std::bind(&func, pointer)
 #endif
 
 

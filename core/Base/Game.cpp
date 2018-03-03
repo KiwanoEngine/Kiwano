@@ -115,7 +115,7 @@ int e2d::Game::run()
 		}
 		else
 		{
-			ObjectManager::__clearObjects();	// 刷新内存池
+			ObjectManager::__update();	// 刷新内存池
 			Time::__sleep();			// 挂起线程
 		}
 	}
@@ -159,12 +159,14 @@ void e2d::Game::uninit()
 	Input::__uninit();
 	// 关闭播放器
 	MusicManager::__uninit();
+	// 清空定时器
+	TimerManager::__uninit();
 	// 恢复计时操作
 	Time::__uninit();
 	// 清空图片缓存
 	Image::clearCache();
 	// 刷新内存池
-	ObjectManager::__clearObjects();
+	ObjectManager::__clearAllObjects();
 	// 删除渲染相关资源
 	Renderer::__discardResources();
 	// 销毁窗口
