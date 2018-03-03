@@ -10,7 +10,7 @@ class Shape;
 class Transition;
 
 class Node :
-	public Obj
+	public Object
 {
 	friend Scene;
 	friend Shape;

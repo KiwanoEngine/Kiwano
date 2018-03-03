@@ -8,7 +8,7 @@ namespace e2d
 class SceneManager;
 
 class Transition :
-	public Obj
+	public Object
 {
 	friend SceneManager;
 

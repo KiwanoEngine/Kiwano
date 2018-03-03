@@ -42,7 +42,7 @@ public:
 
 // ¶¨Ê±Æ÷
 class Timer :
-	public Obj
+	public Object
 {
 	friend TimerManager;
 
@@ -210,7 +210,7 @@ public:
 
 // ÒôÀÖ²¥·ÅÆ÷
 class Music : 
-	public Obj
+	public Object
 {
 	friend MusicManager;
 

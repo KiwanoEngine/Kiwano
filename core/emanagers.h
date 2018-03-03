@@ -7,7 +7,7 @@ namespace e2d
 
 class Game;
 class Renderer;
-class Obj;
+class Object;
 class Scene;
 class Node;
 class Timer;
@@ -22,17 +22,17 @@ class ObjectManager
 	friend Game;
 
 public:
-	// 将一个节点放入内存池
-	static void preload(
-		e2d::Obj * nptr
+	// 将一个对象放入内存池
+	static void add(
+		e2d::Object * nptr
 	);
 
-	// 通知内存池刷新
-	static void notifyFlush();
+	// 释放垃圾对象的内存空间
+	static void clear();
 
 private:
-	// 刷新内存池
-	static void __flush();
+	// 释放引用计数为 0 的对象
+	static void __clearObjects();
 };
 
 
@@ -44,19 +44,19 @@ class SceneManager
 
 public:
 	// 切换场景
-	static void enterScene(
+	static void enter(
 		Scene * scene,						/* 下一个场景的指针 */
 		Transition * transition = nullptr,	/* 场景切换动画 */
 		bool saveCurrentScene = true		/* 是否保存当前场景 */
 	);
 
 	// 返回上一场景
-	static void backScene(
+	static void back(
 		Transition * transition = nullptr	/* 场景切换动画 */
 	);
 
 	// 清空保存的所有场景
-	static void clearScene();
+	static void clear();
 
 	// 获取当前场景
 	static Scene * getCurrentScene();
@@ -86,16 +86,22 @@ class TimerManager
 	friend Node;
 
 public:
-	// 绑定定时器到场景
-	static void preload(
+	// 添加一个定时器，并将它绑定到场景
+	static void add(
 		Timer * pTimer,
 		Scene * pParentScene
 	);
 
-	// 绑定定时器到节点
-	static void preload(
+	// 添加一个定时器，并将它绑定到节点
+	static void add(
 		Timer * pTimer,
 		Node * pParentNode
+	);
+
+	// 等待一段时间后执行指定函数
+	static void add(
+		double timeOut,			/* 等待的时长（秒） */
+		TimerCallback callback	/* 执行的函数 */
 	);
 
 	// 启动具有相同名称的定时器

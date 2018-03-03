@@ -10,7 +10,7 @@ class Node;
 
 
 class Shape :
-	public Obj
+	public Object
 {
 	friend ShapeManager;
 	friend Node;

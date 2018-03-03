@@ -115,7 +115,7 @@ int e2d::Game::run()
 		}
 		else
 		{
-			ObjectManager::__flush();	// 刷新内存池
+			ObjectManager::__clearObjects();	// 刷新内存池
 			Time::__sleep();			// 挂起线程
 		}
 	}
@@ -164,7 +164,7 @@ void e2d::Game::uninit()
 	// 清空图片缓存
 	Image::clearCache();
 	// 刷新内存池
-	ObjectManager::__flush();
+	ObjectManager::__clearObjects();
 	// 删除渲染相关资源
 	Renderer::__discardResources();
 	// 销毁窗口

@@ -13,7 +13,7 @@ class EActionTwoAtSameTime;
 class TransitionFade;
 
 class Action :
-	public Obj
+	public Object
 {
 	friend ActionManager;
 	friend ActionTwo;

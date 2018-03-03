@@ -9,17 +9,17 @@
 // 让其自动释放
 
 // 释放池容器
-static std::vector<e2d::Obj*> s_vPool;
+static std::vector<e2d::Object*> s_vPool;
 // 标志释放池执行状态
 static bool s_bNotifyed = false;
 
-void e2d::ObjectManager::__flush()
+void e2d::ObjectManager::__clearObjects()
 {
 	if (!s_bNotifyed) return;
 
 	s_bNotifyed = false;
 	// 创建迭代器
-	static std::vector<e2d::Obj*>::iterator iter;
+	static std::vector<e2d::Object*>::iterator iter;
 	// 循环遍历容器中的所有对象
 	for (iter = s_vPool.begin(); iter != s_vPool.end();)
 	{
@@ -37,7 +37,7 @@ void e2d::ObjectManager::__flush()
 	}
 }
 
-void e2d::ObjectManager::preload(e2d::Obj * nptr)
+void e2d::ObjectManager::add(e2d::Object * nptr)
 {
 	if (!nptr->m_bManaged)
 	{
@@ -46,7 +46,7 @@ void e2d::ObjectManager::preload(e2d::Obj * nptr)
 	}
 }
 
-void e2d::ObjectManager::notifyFlush()
+void e2d::ObjectManager::clear()
 {
 	s_bNotifyed = true;
 }

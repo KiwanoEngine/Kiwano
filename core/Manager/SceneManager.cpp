@@ -8,7 +8,7 @@ static e2d::Scene * s_pNextScene = nullptr;
 static e2d::Transition * s_pTransition = nullptr;
 static std::stack<e2d::Scene*> s_SceneStack;
 
-void e2d::SceneManager::enterScene(Scene * scene, Transition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
+void e2d::SceneManager::enter(Scene * scene, Transition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
 {
 	ASSERT(scene != nullptr, "Next scene NULL pointer exception!");
 	scene->retain();
@@ -33,7 +33,7 @@ void e2d::SceneManager::enterScene(Scene * scene, Transition * transition /* = n
 	}
 }
 
-void e2d::SceneManager::backScene(Transition * transition /* = nullptr */)
+void e2d::SceneManager::back(Transition * transition /* = nullptr */)
 {
 	// 栈为空时，调用返回场景函数失败
 	WARN_IF(s_SceneStack.size() == 0, "Scene stack now is empty!");
@@ -61,7 +61,7 @@ void e2d::SceneManager::backScene(Transition * transition /* = nullptr */)
 	}
 }
 
-void e2d::SceneManager::clearScene()
+void e2d::SceneManager::clear()
 {
 	// 清空场景栈
 	while (s_SceneStack.size())
@@ -168,5 +168,5 @@ void e2d::SceneManager::__uninit()
 	SafeRelease(&s_pCurrentScene);
 	SafeRelease(&s_pNextScene);
 	SafeRelease(&s_pTransition);
-	SceneManager::clearScene();
+	SceneManager::clear();
 }

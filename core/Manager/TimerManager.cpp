@@ -19,12 +19,23 @@ void e2d::TimerManager::__update()
 	}
 }
 
-void e2d::TimerManager::preload(Timer * pTimer, Scene * pParentScene)
+void e2d::TimerManager::add(double timeOut, TimerCallback callback)
 {
-	TimerManager::preload(pTimer, pParentScene->getRoot());
+	auto pTimer = new Timer(callback, timeOut, 0, false);
+	TimerManager::add(pTimer, SceneManager::getCurrentScene());
 }
 
-void e2d::TimerManager::preload(Timer * pTimer, Node * pParentNode)
+void e2d::TimerManager::add(Timer * pTimer, Scene * pParentScene)
+{
+	WARN_IF(pParentScene == nullptr, "Bind Timer with a NULL Scene pointer!");
+
+	if (pParentScene)
+	{
+		TimerManager::add(pTimer, pParentScene->getRoot());
+	}
+}
+
+void e2d::TimerManager::add(Timer * pTimer, Node * pParentNode)
 {
 	WARN_IF(pTimer == nullptr, "Timer NULL pointer exception!");
 	WARN_IF(pParentNode == nullptr, "Bind Timer with a NULL Node pointer!");
@@ -32,7 +43,7 @@ void e2d::TimerManager::preload(Timer * pTimer, Node * pParentNode)
 	if (pTimer && pParentNode)
 	{
 		ASSERT(
-			!pTimer->m_pParentNode,
+			pTimer->m_pParentNode != nullptr,
 			"The timer is already binded, cannot be binded again!"
 		);
 

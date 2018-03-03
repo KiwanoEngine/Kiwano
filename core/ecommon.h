@@ -388,14 +388,14 @@ public:
 class ObjectManager;
 
 // 基础对象
-class Obj
+class Object
 {
 	friend ObjectManager;
 
 public:
-	Obj();
+	Object();
 
-	virtual ~Obj();
+	virtual ~Object();
 
 	// 引用计数加一
 	void retain();
@@ -412,7 +412,7 @@ private:
 class Text;
 
 class Font :
-	public Obj
+	public Object
 {
 	friend Text;
 
@@ -486,7 +486,7 @@ protected:
 
 // 图片
 class Image :
-	public Obj
+	public Object
 {
 public:
 	// 创建一个空的图片
@@ -583,7 +583,7 @@ class Action;
 
 // 场景
 class Scene :
-	public Obj
+	public Object
 {
 	friend SceneManager;
 
@@ -619,7 +619,7 @@ public:
 	);
 
 	// 添加节点到场景
-	void preload(
+	void add(
 		Node * child,
 		int zOrder = 0
 	);
@@ -665,11 +665,16 @@ typedef VoidFunction TimerCallback;
 // 按钮点击回调函数
 typedef VoidFunction ButtonCallback;
 
+#ifndef CreateCallback
+	#define CreateCallback(Func) std::bind(&Func, this)
+#endif
+
+
 template<typename T>
 inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
 
-template<typename Obj>
-inline void SafeRelease(Obj** p) { if (*p) { (*p)->release(); *p = nullptr; } }
+template<typename Object>
+inline void SafeRelease(Object** p) { if (*p) { (*p)->release(); *p = nullptr; } }
 
 template<class Interface>
 inline void SafeReleaseInterface(Interface **pp) { if (*pp != nullptr) { (*pp)->Release(); (*pp) = nullptr; } }
