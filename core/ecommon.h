@@ -669,7 +669,7 @@ typedef VoidFunction TimerCallback;
 typedef VoidFunction ButtonCallback;
 
 #ifndef CreateCallback
-	#define CreateCallback(func, pointer) std::bind(&func, pointer)
+	#define CreateCallback(pointer, func) std::bind(&func, pointer)
 #endif
 
 

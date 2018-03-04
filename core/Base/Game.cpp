@@ -102,15 +102,14 @@ int e2d::Game::run()
 		// 判断是否达到了刷新状态
 		if (Time::__isReady())
 		{
+			TimerManager::__update();	// 定时器管理器执行程序
+			ActionManager::__update();	// 动作管理器执行程序
 			while (Time::__isReady())
 			{
 				Input::__updateDeviceState();	// 获取用户输入
 				SceneManager::__update();		// 更新场景内容
 				Time::__updateLast();			// 刷新时间信息
 			}
-
-			TimerManager::__update();	// 定时器管理器执行程序
-			ActionManager::__update();	// 动作管理器执行程序
 			Renderer::__render();		// 渲染游戏画面
 		}
 		else

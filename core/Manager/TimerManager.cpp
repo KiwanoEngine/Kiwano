@@ -34,7 +34,7 @@ void e2d::TimerManager::__update()
 
 void e2d::TimerManager::add(double timeOut, TimerCallback callback)
 {
-	auto pTimer = new Timer(L"", callback, timeOut, 1, false, true);
+	auto pTimer = new Timer(callback, timeOut, 1, false, true);
 	pTimer->start();
 }
 
