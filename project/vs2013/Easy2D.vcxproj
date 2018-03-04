@@ -193,7 +193,9 @@
     <ClCompile Include="..\..\core\Common\Font.cpp" />
     <ClCompile Include="..\..\core\Common\Image.cpp" />
     <ClCompile Include="..\..\core\Common\Object.cpp" />
+    <ClCompile Include="..\..\core\Common\Point.cpp" />
     <ClCompile Include="..\..\core\Common\Scene.cpp" />
+    <ClCompile Include="..\..\core\Common\Size.cpp" />
     <ClCompile Include="..\..\core\Common\String.cpp" />
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />
     <ClCompile Include="..\..\core\Manager\MusicManager.cpp" />

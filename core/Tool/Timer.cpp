@@ -16,15 +16,43 @@ e2d::Timer::Timer()
 	TimerManager::add(this);
 }
 
-e2d::Timer::Timer(const String & name, const TimerCallback & callback, double interval /* = 0 */, int repeatTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
-	: Timer()
+e2d::Timer::Timer(const TimerCallback & callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
+	: m_bRunning(false)
+	, m_nRunTimes(0)
+	, m_Callback(nullptr)
+	, m_fInterval(0)
+	, m_fLast(0)
+	, m_nUpdateTimes(-1)
+	, m_bAtOnce(false)
+	, m_bAutoRelease(false)
+	, m_bClear(false)
 {
-	this->setName(name);
 	this->setCallback(callback);
-	this->setUpdateTimes(repeatTimes);
+	this->setUpdateTimes(updateTimes);
 	this->setInterval(interval);
 	m_bAutoRelease = autoRelease;
 	m_bAtOnce = atOnce;
+	TimerManager::add(this);
+}
+
+e2d::Timer::Timer(const String & name, const TimerCallback & callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
+	: m_bRunning(false)
+	, m_nRunTimes(0)
+	, m_Callback(nullptr)
+	, m_fInterval(0)
+	, m_fLast(0)
+	, m_nUpdateTimes(-1)
+	, m_bAtOnce(false)
+	, m_bAutoRelease(false)
+	, m_bClear(false)
+{
+	this->setName(name);
+	this->setCallback(callback);
+	this->setUpdateTimes(updateTimes);
+	this->setInterval(interval);
+	m_bAutoRelease = autoRelease;
+	m_bAtOnce = atOnce;
+	TimerManager::add(this);
 }
 
 bool e2d::Timer::isRunning() const
@@ -69,9 +97,10 @@ void e2d::Timer::setCallback(const TimerCallback & callback)
 	m_Callback = callback;
 }
 
-void e2d::Timer::setUpdateTimes(int repeatTimes)
+void e2d::Timer::setUpdateTimes(int updateTimes)
 {
-	m_nUpdateTimes = repeatTimes;
+	m_nUpdateTimes = updateTimes;
+	m_bClear = (m_nUpdateTimes == 0);
 }
 
 void e2d::Timer::setRunAtOnce(bool bAtOnce)
@@ -81,7 +110,7 @@ void e2d::Timer::setRunAtOnce(bool bAtOnce)
 
 void e2d::Timer::update()
 {
-	if (m_Callback && m_nRunTimes < m_nUpdateTimes)
+	if (m_Callback)
 	{
 		m_Callback();
 	}
@@ -89,7 +118,7 @@ void e2d::Timer::update()
 	m_nRunTimes++;
 	m_fLast += m_fInterval;
 
-	if (m_nRunTimes >= m_nUpdateTimes)
+	if (m_nRunTimes == m_nUpdateTimes)
 	{
 		if (m_bAutoRelease)
 		{
@@ -104,7 +133,7 @@ void e2d::Timer::update()
 
 bool e2d::Timer::isReady() const
 {
-	if (m_bRunning)
+	if (m_bRunning && !m_bClear)
 	{
 		if (m_bAtOnce && m_nRunTimes == 0)
 			return true;
@@ -113,9 +142,7 @@ bool e2d::Timer::isReady() const
 			return true;
 
 		if ((Time::getTotalTime() - m_fLast) >= m_fInterval)
-		{
 			return true;
-		}
 	}
 	return false;
 }

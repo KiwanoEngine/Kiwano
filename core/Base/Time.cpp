@@ -59,7 +59,7 @@ void e2d::Time::__updateLast()
 
 	s_tNow = steady_clock::now();
 	s_nInterval = static_cast<int>(duration_cast<milliseconds>(s_tNow - s_tLastUpdate).count());
-	s_fTotalTime = static_cast<double>(duration_cast<milliseconds>(s_tNow - s_tStart).count()) / 1000.0f;
+	s_fTotalTime = static_cast<double>(duration_cast<milliseconds>(s_tNow - s_tStart).count()) / 1000.0;
 }
 
 void e2d::Time::__sleep()
