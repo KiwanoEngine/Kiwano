@@ -13,7 +13,7 @@ e2d::Timer::Timer()
 	, m_bAutoRelease(false)
 	, m_bClear(false)
 {
-	TimerManager::add(this);
+	TimerManager::__add(this);
 }
 
 e2d::Timer::Timer(const TimerCallback & callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
@@ -32,7 +32,7 @@ e2d::Timer::Timer(const TimerCallback & callback, double interval /* = 0 */, int
 	this->setInterval(interval);
 	m_bAutoRelease = autoRelease;
 	m_bAtOnce = atOnce;
-	TimerManager::add(this);
+	TimerManager::__add(this);
 }
 
 e2d::Timer::Timer(const String & name, const TimerCallback & callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
@@ -52,7 +52,7 @@ e2d::Timer::Timer(const String & name, const TimerCallback & callback, double in
 	this->setInterval(interval);
 	m_bAutoRelease = autoRelease;
 	m_bAtOnce = atOnce;
-	TimerManager::add(this);
+	TimerManager::__add(this);
 }
 
 bool e2d::Timer::isRunning() const

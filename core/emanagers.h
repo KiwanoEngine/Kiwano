@@ -35,7 +35,7 @@ private:
 	static void __update();
 
 	// 清空所有对象
-	static void __clearAllObjects();
+	static void __uninit();
 };
 
 
@@ -87,15 +87,11 @@ class TimerManager
 {
 	friend Game;
 	friend Node;
+	friend Timer;
 
 public:
-	// 添加一个定时器
-	static void add(
-		Timer * pTimer
-	);
-
 	// 等待一段时间后执行指定函数
-	static void add(
+	static void start(
 		double timeOut,			/* 等待的时长（秒） */
 		TimerCallback callback	/* 执行的函数 */
 	);
@@ -113,11 +109,6 @@ public:
 	// 删除具有相同名称的定时器
 	static void stopAndClear(
 		const String &name
-	);
-
-	// 获取名称相同的定时器（有多个时返回第一个）
-	static Timer * get(
-		const String & name
 	);
 
 	// 获取名称相同的定时器
@@ -141,6 +132,11 @@ private:
 	// 更新定时器
 	static void __update();
 
+	// 添加一个定时器
+	static void __add(
+		Timer * pTimer
+	);
+
 	// 重置定时器状态
 	static void __resetAllTimers();
 
@@ -157,6 +153,21 @@ class ActionManager
 	friend Action;
 
 public:
+	// 继续名称相同的所有动作
+	static void resumeAllActions(
+		const String & strActionName
+	);
+
+	// 暂停名称相同的所有动作
+	static void pauseAllActions(
+		const String & strActionName
+	);
+
+	// 停止名称相同的所有动作
+	static void stopAllActions(
+		const String & strActionName
+	);
+
 	// 继续绑定在节点上的所有动作
 	static void resumeAllActionsBindedWith(
 		Node * pTargetNode
@@ -181,15 +192,33 @@ public:
 	// 停止所有动作
 	static void stopAllActions();
 
+	// 获取所有名称相同的动作
+	static std::vector<Action *> getActions(
+		const String & strActionName
+	);
+
+	// 获取所有动作
+	static std::vector<Action*> getAllActions();
+
 private:
+	// 更新动画状态
+	static void __update();
+
 	// 添加动作
-	static void _add(
+	static void __add(
+		Action * pAction
+	);
+
+	// 删除动作
+	static void __remove(
+		Action * pAction
+	);
+
+	// 执行动作
+	static void __startAction(
 		Action * pAction,
 		Node * pTargetNode
 	);
-
-	// 更新动画状态
-	static void __update();
 
 	// 清空绑定在节点上的所有动作
 	static void __clearAllActionsBindedWith(

@@ -750,7 +750,7 @@ void e2d::Node::runAction(Action * action)
 		{
 			action = action->clone();
 		}
-		ActionManager::_add(action, this);
+		ActionManager::__startAction(action, this);
 	}
 	else
 	{
@@ -758,20 +758,71 @@ void e2d::Node::runAction(Action * action)
 	}
 }
 
-void e2d::Node::resumeAction(Action * action)
+void e2d::Node::resumeAction(const String & strActionName)
 {
-	if (action->getTarget() == this)
+	auto actions = ActionManager::getActions(strActionName);
+	for (auto action : actions)
 	{
-		action->resume();
+		if (action->getTarget() == this)
+		{
+			action->resume();
+		}
 	}
 }
 
-void e2d::Node::pauseAction(Action * action)
+void e2d::Node::pauseAction(const String & strActionName)
 {
-	if (action->getTarget() == this)
+	auto actions = ActionManager::getActions(strActionName);
+	for (auto action : actions)
 	{
-		action->pause();
+		if (action->getTarget() == this)
+		{
+			action->pause();
+		}
 	}
+}
+
+void e2d::Node::stopAction(const String & strActionName)
+{
+	auto actions = ActionManager::getActions(strActionName);
+	for (auto action : actions)
+	{
+		if (action->getTarget() == this)
+		{
+			action->stop();
+		}
+	}
+}
+
+e2d::Action * e2d::Node::getAction(const String & strActionName)
+{
+	auto actions = ActionManager::getActions(strActionName);
+	for (auto action : actions)
+	{
+		if (action->getTarget() == this)
+		{
+			return action;
+		}
+	}
+	return nullptr;
+}
+
+std::vector<e2d::Action*> e2d::Node::getActions(const String & strActionName)
+{
+	std::vector<Action*>::iterator iter;
+	auto actions = ActionManager::getActions(strActionName);
+	for (iter = actions.begin(); iter != actions.end();)
+	{
+		if ((*iter)->getTarget() != this)
+		{
+			iter = actions.erase(iter);
+		}
+		else
+		{
+			iter++;
+		}
+	}
+	return std::move(actions);
 }
 
 bool e2d::Node::isPointIn(Point point)
@@ -808,6 +859,39 @@ bool e2d::Node::isPointIn(Point point)
 	return false;
 }
 
+bool e2d::Node::isIntersectWith(Node * pNode) const
+{
+	ID2D1RectangleGeometry * pRect1;
+	ID2D1RectangleGeometry * pRect2;
+	ID2D1TransformedGeometry * pShape;
+	D2D1_GEOMETRY_RELATION relation;
+
+	// 根据自身大小位置创建矩形
+	Renderer::getID2D1Factory()->CreateRectangleGeometry(
+		D2D1::RectF(0, 0, m_fWidth * m_fScaleX, m_fHeight * m_fScaleY),
+		&pRect1
+	);
+	// 根据二维矩阵进行转换
+	Renderer::getID2D1Factory()->CreateTransformedGeometry(
+		pRect1,
+		this->m_MatriFinal,
+		&pShape
+	);
+	// 根据相比较节点的大小位置创建矩形
+	Renderer::getID2D1Factory()->CreateRectangleGeometry(
+		D2D1::RectF(0, 0, pNode->m_fWidth * pNode->m_fScaleX, pNode->m_fHeight * pNode->m_fScaleY),
+		&pRect2
+	);
+	// 获取相交状态
+	pShape->CompareWithGeometry(
+		pRect2,
+		pNode->m_MatriFinal,
+		&relation
+	);
+	return (relation != D2D1_GEOMETRY_RELATION::D2D1_GEOMETRY_RELATION_UNKNOWN) && 
+		(relation != D2D1_GEOMETRY_RELATION::D2D1_GEOMETRY_RELATION_DISJOINT);
+}
+
 void e2d::Node::setAutoUpdate(bool bAutoUpdate)
 {
 	m_bAutoUpdate = bAutoUpdate;
@@ -817,14 +901,6 @@ void e2d::Node::setDefaultPiovt(double defaultPiovtX, double defaultPiovtY)
 {
 	s_fDefaultPiovtX = min(max(static_cast<float>(defaultPiovtX), 0), 1);
 	s_fDefaultPiovtY = min(max(static_cast<float>(defaultPiovtY), 0), 1);
-}
-
-void e2d::Node::stopAction(Action * action)
-{
-	if (action->getTarget() == this)
-	{
-		action->stop();
-	}
 }
 
 void e2d::Node::resumeAllActions()

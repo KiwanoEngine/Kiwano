@@ -10,10 +10,9 @@ void e2d::TimerManager::__update()
 	if (s_vTimers.empty() || Game::isPaused())
 		return;
 
-	std::vector<Timer*>::iterator mIter;
-	for (mIter = s_vTimers.begin(); mIter != s_vTimers.end();)
+	for (size_t i = 0; i < s_vTimers.size(); i++)
 	{
-		Timer * pTimer = (*mIter);
+		auto pTimer = s_vTimers[i];
 		// 更新定时器
 		if (pTimer->isReady())
 		{
@@ -23,22 +22,19 @@ void e2d::TimerManager::__update()
 		if (pTimer->m_bClear)
 		{
 			pTimer->release();
-			mIter = s_vTimers.erase(mIter);
-		}
-		else
-		{
-			mIter++;
+			s_vTimers.erase(s_vTimers.begin() + i);
+			i--;
 		}
 	}
 }
 
-void e2d::TimerManager::add(double timeOut, TimerCallback callback)
+void e2d::TimerManager::start(double timeOut, TimerCallback callback)
 {
 	auto pTimer = new Timer(callback, timeOut, 1, false, true);
 	pTimer->start();
 }
 
-void e2d::TimerManager::add(Timer * pTimer)
+void e2d::TimerManager::__add(Timer * pTimer)
 {
 	WARN_IF(pTimer == nullptr, "Timer NULL pointer exception!");
 
@@ -98,18 +94,6 @@ void e2d::TimerManager::stopAndClear(const String & name)
 			timer->stopAndClear();
 		}
 	}
-}
-
-e2d::Timer * e2d::TimerManager::get(const String & name)
-{
-	for (auto timer : s_vTimers)
-	{
-		if (timer->getName() == name)
-		{
-			return timer;
-		}
-	}
-	return nullptr;
 }
 
 std::vector<e2d::Timer*> e2d::TimerManager::getTimers(const String & name)

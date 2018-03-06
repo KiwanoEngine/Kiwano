@@ -30,7 +30,7 @@ public:
 	virtual bool isRunning();
 
 	// 开始动作
-	virtual void startWith(
+	virtual void setTarget(
 		Node* pTarget	/* 执行该动作的目标 */
 	);
 
@@ -42,6 +42,14 @@ public:
 
 	// 停止动作
 	virtual void stop();
+
+	// 获取动作名称
+	virtual String getName() const;
+
+	// 设置动作名称
+	virtual void setName(
+		const String &name
+	);
 
 	// 获取一个新的拷贝动作
 	virtual Action * clone() const = 0;
@@ -69,11 +77,12 @@ protected:
 	virtual void _resetTime();
 
 protected:
+	String	m_sName;
 	bool	m_bRunning;
 	bool	m_bEnding;
 	bool	m_bInit;
 	Node *	m_pTarget;
-	Scene *m_pParentScene;
+	Scene * m_pParentScene;
 	double	m_fLast;
 };
 
@@ -106,7 +115,7 @@ class ActionMoveBy :
 public:
 	// 创建相对位移动画
 	ActionMoveBy(
-		double duration, /* 动画持续时长 */
+		double duration,	/* 动画持续时长 */
 		Vector vector		/* 位移向量 */
 	);
 
@@ -135,8 +144,8 @@ class ActionMoveTo :
 public:
 	// 创建位移动画
 	ActionMoveTo(
-		double duration, /* 动画持续时长 */
-		Point pos		/* 位移至目标点的坐标 */
+		double duration,	/* 动画持续时长 */
+		Point pos			/* 位移至目标点的坐标 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -157,15 +166,15 @@ class ActionScaleBy :
 public:
 	// 创建相对缩放动画
 	ActionScaleBy(
-		double duration, /* 动画持续时长 */
+		double duration,	/* 动画持续时长 */
 		double scale		/* 缩放比例变化 */
 	);
 
 	// 创建相对缩放动画
 	ActionScaleBy(
-		double duration, /* 动画持续时长 */
-		double scaleX,	/* 横向缩放比例变化 */
-		double scaleY	/* 纵向缩放比例变化 */
+		double duration,	/* 动画持续时长 */
+		double scaleX,		/* 横向缩放比例变化 */
+		double scaleY		/* 纵向缩放比例变化 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -195,15 +204,15 @@ class ActionScaleTo :
 public:
 	// 创建缩放动画
 	ActionScaleTo(
-		double duration, /* 动画持续时长 */
+		double duration,	/* 动画持续时长 */
 		double scale		/* 缩放至目标比例 */
 	);
 
 	// 创建缩放动画
 	ActionScaleTo(
-		double duration, /* 动画持续时长 */
-		double scaleX,	/* 横向缩放至目标比例 */
-		double scaleY	/* 纵向缩放至目标比例 */
+		double duration,	/* 动画持续时长 */
+		double scaleX,		/* 横向缩放至目标比例 */
+		double scaleY		/* 纵向缩放至目标比例 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -225,8 +234,8 @@ class ActionOpacityBy :
 public:
 	// 创建透明度相对渐变动画
 	ActionOpacityBy(
-		double duration, /* 动画持续时长 */
-		double opacity	/* 透明度相对变化值 */
+		double duration,	/* 动画持续时长 */
+		double opacity		/* 透明度相对变化值 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -255,7 +264,7 @@ public:
 	// 创建透明度渐变动画
 	ActionOpacityTo(
 		double duration,	/* 动画持续时长 */
-		double opacity	/* 透明度渐变至目标值 */
+		double opacity		/* 透明度渐变至目标值 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -299,7 +308,7 @@ public:
 	// 创建相对旋转动画
 	ActionRotateBy(
 		double duration,	/* 动画持续时长 */
-		double rotation	/* 旋转角度变化值 */
+		double rotation		/* 旋转角度变化值 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -328,7 +337,7 @@ public:
 	// 创建旋转动画
 	ActionRotateTo(
 		double duration,	/* 动画持续时长 */
-		double rotation	/* 旋转角度至目标值 */
+		double rotation		/* 旋转角度至目标值 */
 	);
 
 	// 获取该动画的拷贝对象
@@ -401,7 +410,7 @@ public:
 	virtual ~ActionSequence();
 
 	// 向顺序动作中添加动作
-	void _add(
+	void add(
 		Action * action	/* 将动作添加至顺序动作尾部 */
 	);
 

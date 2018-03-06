@@ -13,7 +13,7 @@ e2d::ActionSequence::ActionSequence(int number, Action * action1, ...) :
 	while (number > 0)
 	{
 		ASSERT((*ppAction) != nullptr, "ActionSequence NULL pointer exception!");
-		this->_add(*ppAction);
+		this->add(*ppAction);
 		ppAction++;
 		number--;
 	}
@@ -81,7 +81,7 @@ void e2d::ActionSequence::_resetTime()
 	}
 }
 
-void e2d::ActionSequence::_add(Action * action)
+void e2d::ActionSequence::add(Action * action)
 {
 	if (action)
 	{
@@ -95,7 +95,7 @@ e2d::ActionSequence * e2d::ActionSequence::clone() const
 	auto a = new ActionSequence();
 	for (auto action : m_vActions)
 	{
-		a->_add(action->clone());
+		a->add(action->clone());
 	}
 	return a;
 }
@@ -107,11 +107,11 @@ e2d::ActionSequence * e2d::ActionSequence::reverse(bool actionReverse) const
 	{
 		if (actionReverse)
 		{
-			a->_add(action->reverse());
+			a->add(action->reverse());
 		}
 		else
 		{
-			a->_add(action->clone());
+			a->add(action->clone());
 		}
 	}
 	// 将动作顺序逆序排列

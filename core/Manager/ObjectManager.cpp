@@ -37,13 +37,14 @@ void e2d::ObjectManager::__update()
 	}
 }
 
-void e2d::ObjectManager::__clearAllObjects()
+void e2d::ObjectManager::__uninit()
 {
-	for (const auto &obj : s_vObjectPool)
-	{
-		delete obj;
-	}
-	s_vObjectPool.clear();
+	//  Õ∑≈¡Ω±Èƒ⁄¥Ê
+	s_bNotifyed = true;
+	ObjectManager::__update();
+
+	s_bNotifyed = true;
+	ObjectManager::__update();
 }
 
 void e2d::ObjectManager::add(e2d::Object * nptr)

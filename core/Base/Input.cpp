@@ -66,9 +66,7 @@ bool Input::__init()
 		}
 		else
 		{
-			MessageBox(nullptr, L"Keyboard not found. The game will now exit.",
-				L"Error",
-				MB_ICONERROR | MB_OK);
+			MessageBox(nullptr, L"Keyboard not found!", L"Error", MB_ICONERROR | MB_OK);
 			Game::quit();
 			return false;
 		}
@@ -88,10 +86,7 @@ bool Input::__init()
 		}
 		else
 		{
-			MessageBox(nullptr, L"Mouse not found. The game will now exit.",
-				L"Error",
-				MB_ICONERROR | MB_OK);
-			Game::quit();
+			MessageBox(nullptr, L"Mouse not found!", L"Error", MB_ICONERROR | MB_OK);
 			return false;
 		}
 	}
@@ -133,7 +128,6 @@ void Input::__updateDeviceState()
 			s_MouseRecordState = s_MouseState;
 			s_MouseDevice->GetDeviceState(sizeof(s_MouseState), (void**)&s_MouseState);
 		}
-		DIK_0;
 	}
 
 	GetCursorPos(&s_MousePosition);

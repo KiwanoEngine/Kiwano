@@ -1,4 +1,5 @@
 #include "..\eactions.h"
+#include "..\emanagers.h"
 
 e2d::Action::Action() 
 	: m_bRunning(false)
@@ -8,10 +9,12 @@ e2d::Action::Action()
 	, m_pParentScene(nullptr)
 	, m_fLast(0)
 {
+	ActionManager::__add(this);
 }
 
 e2d::Action::~Action()
 {
+	ActionManager::__remove(this);
 }
 
 bool e2d::Action::isRunning()
@@ -24,11 +27,14 @@ bool e2d::Action::_isEnding()
 	return m_bEnding;
 }
 
-void e2d::Action::startWith(Node* pTarget)
+void e2d::Action::setTarget(Node* pTarget)
 {
-	m_bRunning = true;
-	m_pTarget = pTarget;
-	this->reset();
+	if (pTarget)
+	{
+		m_bRunning = true;
+		m_pTarget = pTarget;
+		this->reset();
+	}
 }
 
 void e2d::Action::resume()
@@ -45,6 +51,16 @@ void e2d::Action::pause()
 void e2d::Action::stop()
 {
 	m_bEnding = true;
+}
+
+e2d::String e2d::Action::getName() const
+{
+	return m_sName;
+}
+
+void e2d::Action::setName(const String & name)
+{
+	m_sName = name;
 }
 
 e2d::Action * e2d::Action::reverse() const

@@ -53,6 +53,11 @@ public:
 		Point point
 	);
 
+	// 判断两节点是否相交
+	virtual bool isIntersectWith(
+		Node * pNode
+	) const;
+
 	// 获取节点名称
 	virtual String getName() const;
 
@@ -328,17 +333,27 @@ public:
 
 	// 继续动画
 	virtual void resumeAction(
-		Action * action
+		const String & strActionName
 	);
 
 	// 暂停动画
 	virtual void pauseAction(
-		Action * action
+		const String & strActionName
 	);
 
 	// 停止动画
 	virtual void stopAction(
-		Action * action
+		const String & strActionName
+	);
+
+	// 获取名称相同的动画
+	virtual Action * getAction(
+		const String & strActionName
+	);
+
+	// 获取所有名称相同的动画
+	virtual std::vector<Action*> getActions(
+		const String & strActionName
 	);
 
 	// 继续所有暂停动画

@@ -165,7 +165,7 @@ void e2d::Game::uninit()
 	// 清空图片缓存
 	Image::clearCache();
 	// 刷新内存池
-	ObjectManager::__clearAllObjects();
+	ObjectManager::__uninit();
 	// 删除渲染相关资源
 	Renderer::__discardResources();
 	// 销毁窗口
