@@ -24,7 +24,7 @@ class ObjectManager
 public:
 	// 将一个对象放入内存池
 	static void add(
-		e2d::Object * nptr
+		Object * nptr
 	);
 
 	// 释放垃圾对象的内存空间

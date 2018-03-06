@@ -613,9 +613,6 @@ public:
 	// 重写这个函数，它将在每一帧画面刷新时执行
 	virtual void onUpdate() {}
 
-	// 重写这个函数，它将在游戏暂停时执行
-	virtual void onPause() {}
-
 	// 开启或禁用 onUpdate 函数
 	void setAutoUpdate(
 		bool bAutoUpdate

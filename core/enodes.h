@@ -39,11 +39,8 @@ public:
 	// 碰撞处理
 	virtual void onCollide(
 		Node* pCollisionNode,	/* 发生碰撞的节点 */
-		int nRelation			/* 碰撞关系，取值为 ERelation::VALUE 中的一种 */
+		int nRelation			/* 碰撞关系，取值为 Relation::VALUE 中的一种 */
 	) {}
-
-	// 节点被销毁时的处理
-	virtual void onDestroy() {}
 
 	// 获取节点显示状态
 	virtual bool isVisiable() const;
