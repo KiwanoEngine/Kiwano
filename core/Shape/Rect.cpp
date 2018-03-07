@@ -42,6 +42,19 @@ void e2d::Rect::_setRect(double left, double top, double right, double bottom)
 	);
 }
 
+void e2d::Rect::_resize()
+{
+	if (m_pParentNode && m_bEnable)
+	{
+		this->_setRect(
+			0,
+			0,
+			m_pParentNode->getRealWidth(),
+			m_pParentNode->getRealHeight()
+		);
+	}
+}
+
 ID2D1RectangleGeometry * e2d::Rect::_getD2dGeometry() const
 {
 	return m_pD2dRectangle;

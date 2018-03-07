@@ -64,9 +64,17 @@ public:
 		double opacity
 	);
 
+	// 设置大小跟随
+	void setAutoResize(
+		bool bEnable
+	);
+
 protected:
 	// 转换形状
 	virtual void _transform();
+
+	// 重设大小
+	virtual void _resize() = 0;
 
 	// 渲染形状
 	virtual void _render();
@@ -77,11 +85,12 @@ protected:
 protected:
 	bool	m_bEnable;
 	bool	m_bIsVisiable;
+	bool	m_bAutoResize;
 	UINT32	m_nCategoryBitmask;
 	UINT32	m_nCollisionBitmask;
 	UINT32	m_nColor;
 	float	m_fOpacity;
-	Node * m_pParentNode;
+	Node *	m_pParentNode;
 	ID2D1TransformedGeometry * m_pTransformedShape;
 };
 
@@ -116,6 +125,9 @@ protected:
 		double bottom
 	);
 
+	// 重设大小
+	virtual void _resize();
+
 	virtual ID2D1RectangleGeometry * _getD2dGeometry() const override;
 
 protected:
@@ -148,6 +160,9 @@ protected:
 		Point center,
 		double radius
 	);
+
+	// 重设大小
+	virtual void _resize();
 
 	virtual ID2D1EllipseGeometry * _getD2dGeometry() const override;
 
@@ -183,6 +198,9 @@ protected:
 		double radiusX,
 		double radiusY
 	);
+
+	// 重设大小
+	virtual void _resize();
 
 	virtual ID2D1EllipseGeometry * _getD2dGeometry() const override;
 

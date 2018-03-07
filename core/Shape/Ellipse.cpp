@@ -45,6 +45,21 @@ void e2d::Ellipse::_setEllipse(Point center, double radiusX, double radiusY)
 	);
 }
 
+void e2d::Ellipse::_resize()
+{
+	if (m_pParentNode && m_bEnable)
+	{
+		this->_setEllipse(
+			Point(
+				m_pParentNode->getWidth() / 2,
+				m_pParentNode->getHeight() / 2
+			),
+			m_pParentNode->getWidth() / 2,
+			m_pParentNode->getHeight() / 2
+		);
+	}
+}
+
 ID2D1EllipseGeometry * e2d::Ellipse::_getD2dGeometry() const
 {
 	return m_pD2dEllipse;

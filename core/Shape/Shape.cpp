@@ -11,6 +11,7 @@ e2d::Shape::Shape()
 	, m_pParentNode(nullptr)
 	, m_pTransformedShape(nullptr)
 	, m_bEnable(true)
+	, m_bAutoResize(true)
 {
 }
 
@@ -64,6 +65,11 @@ void e2d::Shape::setOpacity(double opacity)
 	m_fOpacity = min(max(static_cast<float>(opacity), 0), 1);
 }
 
+void e2d::Shape::setAutoResize(bool bEnable)
+{
+	m_bAutoResize = bEnable;
+}
+
 void e2d::Shape::_render()
 {
 	if (m_pTransformedShape && m_bEnable)
@@ -105,6 +111,11 @@ void e2d::Shape::_transform()
 {
 	if (m_pParentNode && m_bEnable)
 	{
+		if (m_bAutoResize)
+		{
+			this->_resize();
+		}
+
 		// ÊÍ·ÅÔ­ÐÎ×´
 		SafeReleaseInterface(&m_pTransformedShape);
 

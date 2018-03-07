@@ -45,6 +45,21 @@ void e2d::Circle::_setCircle(Point center, double radius)
 		);
 }
 
+void e2d::Circle::_resize()
+{
+	if (m_pParentNode && m_bEnable)
+	{
+		double minSide = min(m_pParentNode->getRealWidth(), m_pParentNode->getRealHeight());
+		this->_setCircle(
+			Point(
+				m_pParentNode->getRealWidth() / 2,
+				m_pParentNode->getRealHeight() / 2
+			),
+			minSide / 2
+		);
+	}
+}
+
 ID2D1EllipseGeometry * e2d::Circle::_getD2dGeometry() const
 {
 	return m_pD2dCircle;

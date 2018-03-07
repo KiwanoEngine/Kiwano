@@ -8,6 +8,7 @@
 // 默认中心点位置
 static float s_fDefaultPiovtX = 0;
 static float s_fDefaultPiovtY = 0;
+static bool s_fDefaultShapeEnabled = true;
 
 e2d::Node::Node()
 	: m_nOrder(0)
@@ -36,6 +37,11 @@ e2d::Node::Node()
 	, m_bTransformNeeded(false)
 	, m_bAutoUpdate(true)
 {
+	if (s_fDefaultShapeEnabled)
+	{
+		auto rect = new Rect(this);
+		this->setShape(rect);
+	}
 }
 
 e2d::Node::~Node()
@@ -825,27 +831,24 @@ std::vector<e2d::Action*> e2d::Node::getActions(const String & strActionName)
 	return std::move(actions);
 }
 
-bool e2d::Node::isPointIn(Point point)
+bool e2d::Node::isPointIn(Point point) const
 {
-	if (m_bTransformNeeded)
-	{
-		_updateTransform(this);
-	}
 	// 为节点创建一个形状
 	ID2D1RectangleGeometry * rect;
 	Renderer::getID2D1Factory()->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, m_fWidth * m_fScaleX, m_fHeight * m_fScaleY),
+		D2D1::RectF(0, 0, m_fWidth, m_fHeight),
 		&rect
 	);
 	// 判断点是否在形状内
-	BOOL ret;
+	BOOL ret = 0;
 	rect->FillContainsPoint(
 		D2D1::Point2F(
 			static_cast<float>(point.x), 
 			static_cast<float>(point.y)),
-		&m_MatriFinal,
+		m_MatriFinal,
 		&ret
 	);
+
 	if (ret)
 	{
 		return true;
@@ -868,7 +871,7 @@ bool e2d::Node::isIntersectWith(Node * pNode) const
 
 	// 根据自身大小位置创建矩形
 	Renderer::getID2D1Factory()->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, m_fWidth * m_fScaleX, m_fHeight * m_fScaleY),
+		D2D1::RectF(0, 0, m_fWidth, m_fHeight),
 		&pRect1
 	);
 	// 根据二维矩阵进行转换
@@ -879,7 +882,7 @@ bool e2d::Node::isIntersectWith(Node * pNode) const
 	);
 	// 根据相比较节点的大小位置创建矩形
 	Renderer::getID2D1Factory()->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, pNode->m_fWidth * pNode->m_fScaleX, pNode->m_fHeight * pNode->m_fScaleY),
+		D2D1::RectF(0, 0, pNode->m_fWidth, pNode->m_fHeight),
 		&pRect2
 	);
 	// 获取相交状态
@@ -901,6 +904,11 @@ void e2d::Node::setDefaultPiovt(double defaultPiovtX, double defaultPiovtY)
 {
 	s_fDefaultPiovtX = min(max(static_cast<float>(defaultPiovtX), 0), 1);
 	s_fDefaultPiovtY = min(max(static_cast<float>(defaultPiovtY), 0), 1);
+}
+
+void e2d::Node::setDefaultShapeEnable(bool bEnable)
+{
+	s_fDefaultShapeEnabled = bEnable;
 }
 
 void e2d::Node::resumeAllActions()

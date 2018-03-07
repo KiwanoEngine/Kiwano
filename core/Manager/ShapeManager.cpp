@@ -45,6 +45,11 @@ void e2d::ShapeManager::__addShape(Shape * pShape)
 {
 	if (pShape)
 	{
+		if (pShape->m_pParentNode)
+		{
+			WARN_IF(true, "ShapeManager::__addShape Failed! The shape is already added.");
+			return;
+		}
 		pShape->retain();
 		s_vShapes.push_back(pShape);
 	}

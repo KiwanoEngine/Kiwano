@@ -48,7 +48,7 @@ public:
 	// 判断点是否在节点内
 	virtual bool isPointIn(
 		Point point
-	);
+	) const;
 
 	// 判断两节点是否相交
 	virtual bool isIntersectWith(
@@ -366,6 +366,11 @@ public:
 	static void setDefaultPiovt(
 		double defaultPiovtX,
 		double defaultPiovtY
+	);
+
+	// 设置节点是否包含默认形状（默认打开）
+	static void setDefaultShapeEnable(
+		bool bEnable
 	);
 
 protected:
