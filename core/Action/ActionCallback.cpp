@@ -1,6 +1,6 @@
 #include "..\eactions.h"
 
-e2d::ActionCallback::ActionCallback(const VoidFunction& callback) :
+e2d::ActionCallback::ActionCallback(VoidFunction callback) :
 	m_Callback(callback)
 {
 }

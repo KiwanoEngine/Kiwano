@@ -14,7 +14,7 @@ e2d::ButtonToggle::ButtonToggle()
 {
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, const ButtonCallback & callback)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, ButtonCallback callback)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -31,7 +31,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, c
 	this->setCallback(callback);
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, const ButtonCallback & callback)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, ButtonCallback callback)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -50,7 +50,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setCallback(callback);
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, const ButtonCallback & callback)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, ButtonCallback callback)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -71,7 +71,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setCallback(callback);
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Node * toggleOnDisabled, Node * toggleOffDisabled, const ButtonCallback & callback)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Node * toggleOnDisabled, Node * toggleOffDisabled, ButtonCallback callback)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)

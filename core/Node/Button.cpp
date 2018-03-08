@@ -5,7 +5,7 @@
 
 
 e2d::Button::Button()
-	: m_Callback((const ButtonCallback &)nullptr)
+	: m_Callback(nullptr)
 	, m_eBtnState(Button::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
@@ -16,8 +16,8 @@ e2d::Button::Button()
 {
 }
 
-e2d::Button::Button(Node * normal, const ButtonCallback & callback)
-	: m_Callback((const ButtonCallback &)nullptr)
+e2d::Button::Button(Node * normal, ButtonCallback callback)
+	: m_Callback(nullptr)
 	, m_eBtnState(Button::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
@@ -30,8 +30,8 @@ e2d::Button::Button(Node * normal, const ButtonCallback & callback)
 	this->setCallback(callback);
 }
 
-e2d::Button::Button(Node * normal, Node * selected, const ButtonCallback & callback)
-	: m_Callback((const ButtonCallback &)nullptr)
+e2d::Button::Button(Node * normal, Node * selected, ButtonCallback callback)
+	: m_Callback(nullptr)
 	, m_eBtnState(Button::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
@@ -45,8 +45,8 @@ e2d::Button::Button(Node * normal, Node * selected, const ButtonCallback & callb
 	this->setCallback(callback);
 }
 
-e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const ButtonCallback & callback)
-	: m_Callback((const ButtonCallback &)nullptr)
+e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, ButtonCallback callback)
+	: m_Callback(nullptr)
 	, m_eBtnState(Button::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
@@ -61,8 +61,8 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Butt
 	this->setCallback(callback);
 }
 
-e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const ButtonCallback & callback)
-	: m_Callback((const ButtonCallback &)nullptr)
+e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, ButtonCallback callback)
+	: m_Callback(nullptr)
 	, m_eBtnState(Button::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
@@ -170,7 +170,7 @@ void e2d::Button::setEnable(bool bEnable)
 	}
 }
 
-void e2d::Button::setCallback(const ButtonCallback & callback)
+void e2d::Button::setCallback(ButtonCallback callback)
 {
 	WARN_IF(m_pNormal == nullptr, "Button cannot work without anything to show. Please set its normal displayed.");
 	

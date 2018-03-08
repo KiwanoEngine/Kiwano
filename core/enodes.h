@@ -584,14 +584,14 @@ public:
 	// 创建按钮
 	Button(
 		Node * normal,		/* 普通状态 */
-		const ButtonCallback & callback = nullptr
+		ButtonCallback callback = nullptr
 	);
 
 	// 创建按钮
 	Button(
 		Node * normal,		/* 普通状态 */
 		Node * selected,	/* 鼠标按下状态 */
-		const ButtonCallback & callback = nullptr
+		ButtonCallback callback = nullptr
 	);
 
 	// 创建按钮
@@ -599,7 +599,7 @@ public:
 		Node * normal,		/* 普通状态 */
 		Node * mouseover,	/* 鼠标移入状态 */
 		Node * selected,	/* 鼠标按下状态 */
-		const ButtonCallback & callback = nullptr
+		ButtonCallback callback = nullptr
 	);
 
 	// 创建按钮
@@ -608,7 +608,7 @@ public:
 		Node * mouseover,	/* 鼠标移入状态 */
 		Node * selected,	/* 鼠标移入状态 */
 		Node * disabled,	/* 按钮禁用状态 */
-		const ButtonCallback & callback = nullptr
+		ButtonCallback callback = nullptr
 	);
 
 	// 获取按钮状态是启用还是禁用
@@ -641,7 +641,7 @@ public:
 
 	// 设置回调函数
 	void setCallback(
-		const ButtonCallback & callback
+		ButtonCallback callback
 	);
 
 	// 更新按钮状态
@@ -682,7 +682,7 @@ public:
 	ButtonToggle(
 		Node * onNormal,
 		Node * offNormal,
-		const ButtonCallback & callback = nullptr
+		ButtonCallback callback = nullptr
 	);
 
 	// 创建开关按钮
@@ -691,7 +691,7 @@ public:
 		Node * offNormal,
 		Node * onSelected,
 		Node * offSelected,
-		const ButtonCallback & callback = nullptr
+		ButtonCallback callback = nullptr
 	);
 
 	// 创建开关按钮
@@ -702,7 +702,7 @@ public:
 		Node * offMouseOver,
 		Node * onSelected,
 		Node * offSelected,
-		const ButtonCallback & callback = nullptr
+		ButtonCallback callback = nullptr
 	);
 
 	// 创建开关按钮
@@ -715,7 +715,7 @@ public:
 		Node * offSelected,
 		Node * onDisabled,
 		Node * offDisabled,
-		const ButtonCallback & callback = nullptr
+		ButtonCallback callback = nullptr
 	);
 
 	// 获取开关状态（打开或关闭）

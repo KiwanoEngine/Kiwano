@@ -11,12 +11,12 @@ e2d::Timer::Timer()
 	, m_nUpdateTimes(-1)
 	, m_bAtOnce(false)
 	, m_bAutoRelease(false)
-	, m_bClear(false)
+	, m_bClear(true)
 {
 	TimerManager::__add(this);
 }
 
-e2d::Timer::Timer(const TimerCallback & callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
+e2d::Timer::Timer(TimerCallback callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_Callback(nullptr)
@@ -25,7 +25,7 @@ e2d::Timer::Timer(const TimerCallback & callback, double interval /* = 0 */, int
 	, m_nUpdateTimes(-1)
 	, m_bAtOnce(false)
 	, m_bAutoRelease(false)
-	, m_bClear(false)
+	, m_bClear(true)
 {
 	this->setCallback(callback);
 	this->setUpdateTimes(updateTimes);
@@ -35,7 +35,7 @@ e2d::Timer::Timer(const TimerCallback & callback, double interval /* = 0 */, int
 	TimerManager::__add(this);
 }
 
-e2d::Timer::Timer(const String & name, const TimerCallback & callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
+e2d::Timer::Timer(const String & name, TimerCallback callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_Callback(nullptr)
@@ -44,7 +44,7 @@ e2d::Timer::Timer(const String & name, const TimerCallback & callback, double in
 	, m_nUpdateTimes(-1)
 	, m_bAtOnce(false)
 	, m_bAutoRelease(false)
-	, m_bClear(false)
+	, m_bClear(true)
 {
 	this->setName(name);
 	this->setCallback(callback);
@@ -92,7 +92,7 @@ void e2d::Timer::setInterval(double interval)
 	m_fInterval = max(interval, 0);
 }
 
-void e2d::Timer::setCallback(const TimerCallback & callback)
+void e2d::Timer::setCallback(TimerCallback callback)
 {
 	m_Callback = callback;
 }

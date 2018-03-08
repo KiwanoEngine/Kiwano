@@ -50,20 +50,20 @@ public:
 	Timer();
 
 	Timer(
-		const TimerCallback &callback,	/* 定时器回调函数 */
-		double interval = 0,			/* 时间间隔（秒） */
-		int times = -1,					/* 执行次数（设 -1 为永久执行） */
-		bool atOnce = false,			/* 是否立即执行 */
-		bool autoRelease = false		/* 自动清除 */
+		TimerCallback callback,		/* 定时器回调函数 */
+		double interval = 0,		/* 时间间隔（秒） */
+		int times = -1,				/* 执行次数（设 -1 为永久执行） */
+		bool atOnce = false,		/* 是否立即执行 */
+		bool autoRelease = false	/* 自动清除 */
 	);
 
 	Timer(
-		const String &name,							/* 定时器名称 */
-		const TimerCallback &callback = nullptr,	/* 定时器回调函数 */
-		double interval = 0,						/* 时间间隔（秒） */
-		int times = -1,								/* 执行次数（设 -1 为永久执行） */
-		bool atOnce = false,						/* 是否立即执行 */
-		bool autoRelease = false					/* 自动清除 */
+		const String &name,					/* 定时器名称 */
+		TimerCallback callback = nullptr,	/* 定时器回调函数 */
+		double interval = 0,				/* 时间间隔（秒） */
+		int times = -1,						/* 执行次数（设 -1 为永久执行） */
+		bool atOnce = false,				/* 是否立即执行 */
+		bool autoRelease = false			/* 自动清除 */
 	);
 
 	// 启动定时器
@@ -99,7 +99,7 @@ public:
 
 	// 设置定时器回调函数
 	void setCallback(
-		const TimerCallback & callback
+		TimerCallback callback
 	);
 
 	// 设置定时器执行次数

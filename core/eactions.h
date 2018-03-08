@@ -553,7 +553,7 @@ class ActionCallback :
 public:
 	// 创建执行回调函数的动作
 	ActionCallback(
-		const VoidFunction & callback /* 回调函数 */
+		VoidFunction callback /* 回调函数 */
 	);
 
 	// 获取该动作的拷贝对象

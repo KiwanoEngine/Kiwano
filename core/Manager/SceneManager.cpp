@@ -152,15 +152,17 @@ void e2d::SceneManager::__render()
 
 bool e2d::SceneManager::__init()
 {
-	if (!s_pNextScene)
+	// 若游戏初始化时场景不为空，进入该场景
+	if (s_pNextScene)
 	{
-		s_pNextScene = new Scene();
-		s_pNextScene->retain();
+		s_pCurrentScene = s_pNextScene;
+		s_pCurrentScene->onEnter();
+		s_pNextScene = nullptr;
 	}
 
-	s_pCurrentScene = s_pNextScene;
-	s_pCurrentScene->onEnter();
-	s_pNextScene = nullptr;
+	// 更新场景内容
+	SceneManager::__update();
+
 	return true;
 }
 
