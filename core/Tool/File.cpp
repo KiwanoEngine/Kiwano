@@ -9,7 +9,7 @@
 DEFINE_KNOWN_FOLDER(FOLDERID_LocalAppData, 0xF1B32785, 0x6FBA, 0x4FCF, 0x9D, 0x55, 0x7B, 0x8E, 0x7F, 0x15, 0x70, 0x91);
 
 
-e2d::String e2d::File::getLocalAppDataPath()
+e2d::String e2d::Path::getLocalAppDataPath()
 {
 	typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
 
@@ -28,39 +28,74 @@ e2d::String e2d::File::getLocalAppDataPath()
 	return L"";
 }
 
-e2d::String e2d::File::getTempPath()
+e2d::String e2d::Path::getTempPath()
 {
 	// 获取临时文件目录
 	wchar_t path[_MAX_PATH];
-	::GetTempPath(_MAX_PATH, path);
+	if (0 == ::GetTempPath(_MAX_PATH, path))
+	{
+		return L"";
+	}
 
 	// 创建临时文件目录
-	e2d::String tempFilePath = path + e2d::Game::getAppName();
-	if (::_waccess(tempFilePath, 0) == -1)
+	e2d::String tempFilePath;
+	tempFilePath << path << L"Easy2DGameTemp";
+	// 创建文件夹
+	if (!Path::createFolder(tempFilePath))
 	{
-		::_wmkdir(tempFilePath);
+		return path;
 	}
-	return tempFilePath;
+
+	// 获取 AppName
+	String sAppName = Game::getAppName();
+	if (!sAppName.isEmpty())
+	{
+		// 创建文件夹
+		if (!Path::createFolder(tempFilePath + L"\\" + sAppName))
+		{
+			return std::move(tempFilePath);
+		}
+		tempFilePath << L"\\" << sAppName;
+	}
+	tempFilePath << L"\\";
+	return std::move(tempFilePath);
 }
 
-e2d::String e2d::File::getDefaultSavePath()
+e2d::String e2d::Path::getDefaultSavePath()
 {
-	String path = File::getLocalAppDataPath();
-	WARN_IF(path.isEmpty(), "Cannot get local AppData path!");
+	// 获取 AppData 路径
+	String path = Path::getLocalAppDataPath();
 
-	path += L"\\" + Game::getAppName();
-
-	if (::_waccess(path, 0) == -1)
+	if (path.isEmpty())
 	{
-		::_wmkdir(path);
+		WARN_IF(true, "Cannot get local AppData path!");
+		return std::move(path);
 	}
+	
+	// 创建文件夹
+	if (!Path::createFolder(path + L"\\Easy2DGameData"))
+	{
+		return std::move(path);
+	}
+	path << L"\\Easy2DGameData";
 
-	path += L"\\DefaultData.ini";
-
-	return path;
+	// 获取 AppName
+	String sAppName = Game::getAppName();
+	if (!sAppName.isEmpty())
+	{
+		// 创建文件夹
+		if (!Path::createFolder(path + L"\\" + sAppName))
+		{
+			return std::move(path);
+		}
+		path << L"\\" << sAppName;
+	}
+	path << L"\\";
+	
+	return std::move(path);
 }
 
-e2d::String e2d::File::getFileExtension(const String & filePath)
+e2d::String e2d::Path::getFileExtension(const String & filePath)
 {
 	String fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
@@ -77,7 +112,7 @@ e2d::String e2d::File::getFileExtension(const String & filePath)
 	return fileExtension;
 }
 
-e2d::String e2d::File::getSaveFilePath(const String & title, const String & defExt)
+e2d::String e2d::Path::getSaveFilePath(const String & title, const String & defExt)
 {
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };
@@ -98,4 +133,22 @@ e2d::String e2d::File::getSaveFilePath(const String & title, const String & defE
 		return strFilename;
 	}
 	return L"";
+}
+
+bool e2d::Path::createFolder(const String & strDirPath)
+{
+	if (strDirPath.isEmpty())
+	{
+		WARN_IF(true, "Path::createFolder Failed: Invalid directory path!");
+		return false;
+	}
+
+	if (-1 == ::_waccess(strDirPath, 0))
+	{
+		if (0 != ::_wmkdir(strDirPath))
+		{
+			return false;
+		}
+	}
+	return true;
 }

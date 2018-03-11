@@ -96,7 +96,7 @@ e2d::Music * e2d::MusicManager::get(const String & strFilePath)
 	return nullptr;
 }
 
-void e2d::MusicManager::pauseAllMusics()
+void e2d::MusicManager::pauseAll()
 {
 	for (auto iter : getMusicList())
 	{
@@ -104,7 +104,7 @@ void e2d::MusicManager::pauseAllMusics()
 	}
 }
 
-void e2d::MusicManager::resumeAllMusics()
+void e2d::MusicManager::resumeAll()
 {
 	for (auto iter : getMusicList())
 	{
@@ -112,7 +112,7 @@ void e2d::MusicManager::resumeAllMusics()
 	}
 }
 
-void e2d::MusicManager::stopAllMusics()
+void e2d::MusicManager::stopAll()
 {
 	for (auto iter : getMusicList())
 	{

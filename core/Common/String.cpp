@@ -173,8 +173,8 @@ e2d::String e2d::String::operator+(const wchar_t *str)
 
 e2d::String e2d::String::operator+(const char *str)
 {
-	String temp(str);
-	temp.m_str += m_str;
+	String temp;
+	temp.m_str = m_str + ::ConvertAnsi2Wide(str);
 	return std::move(temp);
 }
 
@@ -201,8 +201,8 @@ e2d::String e2d::operator+(const wchar_t *str1, const e2d::String &str2)
 
 e2d::String e2d::operator+(const char *str1, const String &str2)
 {
-	String temp(str1);
-	temp.m_str += str2.m_str;
+	String temp;
+	temp.m_str = ::ConvertAnsi2Wide(str1) + str2.m_str;
 	return std::move(temp);
 }
 
@@ -255,6 +255,21 @@ bool e2d::String::operator<(const String &str) const
 bool e2d::String::operator<=(const String &str) const
 {
 	return m_str <= str.m_str;
+}
+
+e2d::String & e2d::String::operator<<(const String &str)
+{
+	return this->append(str);
+}
+
+e2d::String & e2d::String::operator<<(const wchar_t *str)
+{
+	return this->append(str);
+}
+
+e2d::String & e2d::String::operator<<(wchar_t *str)
+{
+	return this->append(str);
 }
 
 e2d::String & e2d::String::operator<<(const char * value)
@@ -393,7 +408,18 @@ int e2d::String::findLastOf(const wchar_t ch) const
 	return index;
 }
 
+void e2d::String::clear()
+{
+	m_str.clear();
+}
+
 e2d::String & e2d::String::append(const wchar_t * str)
+{
+	m_str += str;
+	return *this;
+}
+
+e2d::String & e2d::String::append(wchar_t * str)
 {
 	m_str += str;
 	return *this;

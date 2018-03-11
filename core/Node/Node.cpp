@@ -46,7 +46,7 @@ e2d::Node::Node()
 
 e2d::Node::~Node()
 {
-	ActionManager::__clearAllActionsBindedWith(this);
+	ActionManager::__clearAllBindedWith(this);
 	ShapeManager::__delShape(m_pShape);
 	for (auto child : m_vChildren)
 	{
@@ -614,7 +614,23 @@ e2d::Scene * e2d::Node::getParentScene() const
 	return m_pParentScene;
 }
 
-std::vector<e2d::Node*>& e2d::Node::getChildren()
+std::vector<e2d::Node*> e2d::Node::getChildren(const String & name)
+{
+	std::vector<Node*> vChildren;
+	unsigned int hash = name.getHashCode();
+
+	for (auto child : m_vChildren)
+	{
+		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
+		if (child->m_nHashName == hash && child->m_sName == name)
+		{
+			vChildren.push_back(child);
+		}
+	}
+	return std::move(vChildren);
+}
+
+std::vector<e2d::Node*> e2d::Node::getChildren()
 {
 	return m_vChildren;
 }
@@ -622,33 +638,6 @@ std::vector<e2d::Node*>& e2d::Node::getChildren()
 int e2d::Node::getChildrenCount() const
 {
 	return static_cast<int>(m_vChildren.size());
-}
-
-e2d::Node * e2d::Node::getChild(const String & name)
-{
-	WARN_IF(name.isEmpty(), "Invalid Node name.");
-
-	unsigned int hash = name.getHashCode();
-
-	for (auto child : m_vChildren)
-	{
-		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
-		if (child->m_nHashName == hash && child->m_sName == name)
-			return child;
-	}
-	return nullptr;
-}
-
-std::vector<e2d::Node*> e2d::Node::getChildren(const String & name)
-{
-	std::vector<Node*> vChildren;
-	unsigned int hash = name.getHashCode();
-
-	for (auto child : m_vChildren)
-		if (child->m_nHashName == hash && child->m_sName == name)
-			vChildren.push_back(child);
-
-	return std::move(vChildren);
 }
 
 void e2d::Node::removeFromParent()
@@ -833,15 +822,9 @@ std::vector<e2d::Action*> e2d::Node::getActions(const String & strActionName)
 
 bool e2d::Node::isPointIn(Point point) const
 {
-	// 为节点创建一个形状
-	ID2D1RectangleGeometry * rect;
-	Renderer::getID2D1Factory()->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, m_fWidth, m_fHeight),
-		&rect
-	);
 	// 判断点是否在形状内
 	BOOL ret = 0;
-	rect->FillContainsPoint(
+	this->m_pShape->_getD2dGeometry()->FillContainsPoint(
 		D2D1::Point2F(
 			static_cast<float>(point.x), 
 			static_cast<float>(point.y)),
@@ -853,46 +836,39 @@ bool e2d::Node::isPointIn(Point point) const
 	{
 		return true;
 	}
-	else
-	{
-		for (auto child : m_vChildren)
-			if (child->isPointIn(point))
-				return true;
-	}
+
+	// 判断点是否在子节点内
+	for (auto child : m_vChildren)
+		if (child->isPointIn(point))
+			return true;
+
 	return false;
 }
 
-bool e2d::Node::isIntersectWith(Node * pNode) const
+bool e2d::Node::isIntersectWith(const Node * pNode) const
 {
-	ID2D1RectangleGeometry * pRect1;
-	ID2D1RectangleGeometry * pRect2;
-	ID2D1TransformedGeometry * pShape;
-	D2D1_GEOMETRY_RELATION relation;
+	if (this->m_pShape && pNode->m_pShape)
+	{
+		int relation = this->m_pShape->getRelationWith(pNode->m_pShape);
+		if ((relation != Relation::UNKNOWN) && 
+			(relation != Relation::DISJOINT))
+		{
+			return true;
+		}
+	}
 
-	// 根据自身大小位置创建矩形
-	Renderer::getID2D1Factory()->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, m_fWidth, m_fHeight),
-		&pRect1
-	);
-	// 根据二维矩阵进行转换
-	Renderer::getID2D1Factory()->CreateTransformedGeometry(
-		pRect1,
-		this->m_MatriFinal,
-		&pShape
-	);
-	// 根据相比较节点的大小位置创建矩形
-	Renderer::getID2D1Factory()->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, pNode->m_fWidth, pNode->m_fHeight),
-		&pRect2
-	);
-	// 获取相交状态
-	pShape->CompareWithGeometry(
-		pRect2,
-		pNode->m_MatriFinal,
-		&relation
-	);
-	return (relation != D2D1_GEOMETRY_RELATION::D2D1_GEOMETRY_RELATION_UNKNOWN) && 
-		(relation != D2D1_GEOMETRY_RELATION::D2D1_GEOMETRY_RELATION_DISJOINT);
+	// 判断和其子节点是否相交
+	for (auto child : pNode->m_vChildren)
+		if (this->isIntersectWith(child))
+			return true;
+
+	// 判断子节点和其是否相交
+	for (auto child : m_vChildren)
+		if (child->isIntersectWith(pNode))
+			return true;
+
+	// 都不相交，返回 false
+	return false;
 }
 
 void e2d::Node::setAutoUpdate(bool bAutoUpdate)
@@ -913,17 +889,17 @@ void e2d::Node::setDefaultShapeEnable(bool bEnable)
 
 void e2d::Node::resumeAllActions()
 {
-	ActionManager::resumeAllActionsBindedWith(this);
+	ActionManager::__resumeAllBindedWith(this);
 }
 
 void e2d::Node::pauseAllActions()
 {
-	ActionManager::pauseAllActionsBindedWith(this);
+	ActionManager::__pauseAllBindedWith(this);
 }
 
 void e2d::Node::stopAllActions()
 {
-	ActionManager::stopAllActionsBindedWith(this);
+	ActionManager::__stopAllBindedWith(this);
 }
 
 void e2d::Node::setVisiable(bool value)

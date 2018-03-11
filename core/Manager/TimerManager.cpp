@@ -85,7 +85,7 @@ void e2d::TimerManager::stop(const String & name)
 	}
 }
 
-void e2d::TimerManager::stopAndClear(const String & name)
+void e2d::TimerManager::clear(const String & name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -96,7 +96,7 @@ void e2d::TimerManager::stopAndClear(const String & name)
 	}
 }
 
-std::vector<e2d::Timer*> e2d::TimerManager::getTimers(const String & name)
+std::vector<e2d::Timer*> e2d::TimerManager::get(const String & name)
 {
 	std::vector<Timer*> vTimers;
 	for (auto timer : s_vTimers)
@@ -109,7 +109,7 @@ std::vector<e2d::Timer*> e2d::TimerManager::getTimers(const String & name)
 	return std::move(vTimers);
 }
 
-void e2d::TimerManager::startAllTimers()
+void e2d::TimerManager::startAll()
 {
 	for (auto timer : s_vTimers)
 	{
@@ -117,7 +117,7 @@ void e2d::TimerManager::startAllTimers()
 	}
 }
 
-void e2d::TimerManager::stopAllTimers()
+void e2d::TimerManager::stopAll()
 {
 	for (auto timer : s_vTimers)
 	{
@@ -125,7 +125,7 @@ void e2d::TimerManager::stopAllTimers()
 	}
 }
 
-void e2d::TimerManager::stopAndClearAllTimers()
+void e2d::TimerManager::stopAndClearAll()
 {
 	for (auto timer : s_vTimers)
 	{
@@ -135,7 +135,7 @@ void e2d::TimerManager::stopAndClearAllTimers()
 	s_vTimers.clear();
 }
 
-std::vector<e2d::Timer*> e2d::TimerManager::getAllTimers()
+std::vector<e2d::Timer*> e2d::TimerManager::getAll()
 {
 	return s_vTimers;
 }

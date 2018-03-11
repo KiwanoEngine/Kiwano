@@ -52,7 +52,7 @@ public:
 
 	// 判断两节点是否相交
 	virtual bool isIntersectWith(
-		Node * pNode
+		const Node * pNode
 	) const;
 
 	// 获取节点名称
@@ -121,18 +121,13 @@ public:
 	// 获取节点所在场景
 	virtual Scene * getParentScene() const;
 
-	// 获取名称相同的子节点
-	virtual Node * getChild(
-		const String & name
-	);
-
 	// 获取所有名称相同的子节点
 	virtual std::vector<Node*> getChildren(
 		const String & name
 	);
 
 	// 获取所有子节点
-	virtual std::vector<Node*> &getChildren();
+	virtual std::vector<Node*> getChildren();
 
 	// 获取子节点数量
 	virtual int getChildrenCount() const;
@@ -467,15 +462,15 @@ public:
 	);
 
 	virtual ~Sprite();
-	
-	// 加载精灵图片
-	virtual void open(
-		Image * texture
-	);
 
 	// 从本地文件加载图片
 	virtual void open(
 		const String & imageFileName
+	);
+	
+	// 加载图片
+	virtual void open(
+		Image * image
 	);
 
 	// 裁剪图片

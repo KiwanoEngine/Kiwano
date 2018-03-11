@@ -64,6 +64,9 @@ public:
 	// 获取当前场景
 	static Scene * getCurrentScene();
 
+	// 获取场景栈
+	static std::stack<Scene*> getSceneStack();
+
 	// 是否正在进行转场动画
 	static bool isTransitioning();
 
@@ -107,26 +110,26 @@ public:
 	);
 
 	// 删除具有相同名称的定时器
-	static void stopAndClear(
+	static void clear(
 		const String &name
 	);
 
 	// 获取名称相同的定时器
-	static std::vector<Timer*> getTimers(
+	static std::vector<Timer*> get(
 		const String & name
 	);
 
 	// 启动所有定时器
-	static void startAllTimers();
+	static void startAll();
 
 	// 停止所有定时器
-	static void stopAllTimers();
+	static void stopAll();
 
 	// 停止并清除所有定时器
-	static void stopAndClearAllTimers();
+	static void stopAndClearAll();
 
 	// 获取所有定时器
-	static std::vector<Timer*> getAllTimers();
+	static std::vector<Timer*> getAll();
 
 private:
 	// 更新定时器
@@ -154,43 +157,28 @@ class ActionManager
 
 public:
 	// 继续名称相同的所有动作
-	static void resumeAllActions(
+	static void resume(
 		const String & strActionName
 	);
 
 	// 暂停名称相同的所有动作
-	static void pauseAllActions(
+	static void pause(
 		const String & strActionName
 	);
 
 	// 停止名称相同的所有动作
-	static void stopAllActions(
+	static void stop(
 		const String & strActionName
 	);
 
-	// 继续绑定在节点上的所有动作
-	static void resumeAllActionsBindedWith(
-		Node * pTargetNode
-	);
-
-	// 暂停绑定在节点上的所有动作
-	static void pauseAllActionsBindedWith(
-		Node * pTargetNode
-	);
-
-	// 停止绑定在节点上的所有动作
-	static void stopAllActionsBindedWith(
-		Node * pTargetNode
-	);
-
 	// 继续所有动作
-	static void resumeAllActions();
+	static void resumeAll();
 
 	// 暂停所有动作
-	static void pauseAllActions();
+	static void pauseAll();
 
 	// 停止所有动作
-	static void stopAllActions();
+	static void stopAll();
 
 	// 获取所有名称相同的动作
 	static std::vector<Action *> getActions(
@@ -220,8 +208,23 @@ private:
 		Node * pTargetNode
 	);
 
+	// 继续绑定在节点上的所有动作
+	static void __resumeAllBindedWith(
+		Node * pTargetNode
+	);
+
+	// 暂停绑定在节点上的所有动作
+	static void __pauseAllBindedWith(
+		Node * pTargetNode
+	);
+
+	// 停止绑定在节点上的所有动作
+	static void __stopAllBindedWith(
+		Node * pTargetNode
+	);
+
 	// 清空绑定在节点上的所有动作
-	static void __clearAllActionsBindedWith(
+	static void __clearAllBindedWith(
 		Node * pTargetNode
 	);
 
@@ -268,13 +271,13 @@ public:
 	);
 
 	// 暂停所有音乐
-	static void pauseAllMusics();
+	static void pauseAll();
 
 	// 继续播放所有音乐
-	static void resumeAllMusics();
+	static void resumeAll();
 
 	// 停止所有音乐
-	static void stopAllMusics();
+	static void stopAll();
 
 	// 获取 IXAudio2 对象
 	static IXAudio2 * getIXAudio2();

@@ -47,12 +47,6 @@ void e2d::Image::open(const String & strFilePath)
 	m_fSourceClipHeight = m_pBitmap->GetSize().height;
 }
 
-void e2d::Image::open(const String & strFilePath, double x, double y, double width, double height)
-{
-	open(strFilePath);
-	clip(x, y, width, height);
-}
-
 void e2d::Image::clip(double x, double y, double width, double height)
 {
 	if (m_pBitmap)

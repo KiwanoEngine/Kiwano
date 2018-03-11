@@ -15,19 +15,19 @@ void e2d::ActionManager::__update()
 	{
 		auto action = s_vRunningActions[i];
 		// 获取动作运行状态
-		if (action->isRunning())
+		if (action->_isEnding())
 		{
-			if (!action->_isEnding())
+			// 动作已经结束
+			action->release();
+			action->m_pTarget = nullptr;
+			s_vRunningActions.erase(s_vRunningActions.begin() + i);
+		}
+		else
+		{
+			if (action->isRunning())
 			{
 				// 执行动作
 				action->_update();
-			}
-			else
-			{
-				// 动作已经结束
-				action->release();
-				action->m_pTarget = nullptr;
-				s_vRunningActions.erase(s_vRunningActions.begin() + i);
 			}
 		}
 	}
@@ -72,7 +72,7 @@ void e2d::ActionManager::__startAction(Action * pAction, Node * pTargetNode)
 	}
 }
 
-void e2d::ActionManager::resumeAllActionsBindedWith(Node * pTargetNode)
+void e2d::ActionManager::__resumeAllBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
@@ -86,7 +86,7 @@ void e2d::ActionManager::resumeAllActionsBindedWith(Node * pTargetNode)
 	}
 }
 
-void e2d::ActionManager::pauseAllActionsBindedWith(Node * pTargetNode)
+void e2d::ActionManager::__pauseAllBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
@@ -100,7 +100,7 @@ void e2d::ActionManager::pauseAllActionsBindedWith(Node * pTargetNode)
 	}
 }
 
-void e2d::ActionManager::stopAllActionsBindedWith(Node * pTargetNode)
+void e2d::ActionManager::__stopAllBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
@@ -114,7 +114,7 @@ void e2d::ActionManager::stopAllActionsBindedWith(Node * pTargetNode)
 	}
 }
 
-void e2d::ActionManager::resumeAllActions(const String & strActionName)
+void e2d::ActionManager::resume(const String & strActionName)
 {
 	for (auto action : s_vRunningActions)
 	{
@@ -125,7 +125,7 @@ void e2d::ActionManager::resumeAllActions(const String & strActionName)
 	}
 }
 
-void e2d::ActionManager::pauseAllActions(const String & strActionName)
+void e2d::ActionManager::pause(const String & strActionName)
 {
 	for (auto action : s_vRunningActions)
 	{
@@ -136,7 +136,7 @@ void e2d::ActionManager::pauseAllActions(const String & strActionName)
 	}
 }
 
-void e2d::ActionManager::stopAllActions(const String & strActionName)
+void e2d::ActionManager::stop(const String & strActionName)
 {
 	for (auto action : s_vRunningActions)
 	{
@@ -147,7 +147,7 @@ void e2d::ActionManager::stopAllActions(const String & strActionName)
 	}
 }
 
-void e2d::ActionManager::__clearAllActionsBindedWith(Node * pTargetNode)
+void e2d::ActionManager::__clearAllBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
@@ -167,27 +167,27 @@ void e2d::ActionManager::__clearAllActionsBindedWith(Node * pTargetNode)
 	}
 }
 
-void e2d::ActionManager::resumeAllActions()
+void e2d::ActionManager::resumeAll()
 {
 	for (auto child : SceneManager::getCurrentScene()->getRoot()->getChildren())
 	{
-		ActionManager::resumeAllActionsBindedWith(child);
+		ActionManager::__resumeAllBindedWith(child);
 	}
 }
 
-void e2d::ActionManager::pauseAllActions()
+void e2d::ActionManager::pauseAll()
 {
 	for (auto child : SceneManager::getCurrentScene()->getRoot()->getChildren())
 	{
-		ActionManager::pauseAllActionsBindedWith(child);
+		ActionManager::__pauseAllBindedWith(child);
 	}
 }
 
-void e2d::ActionManager::stopAllActions()
+void e2d::ActionManager::stopAll()
 {
 	for (auto child : SceneManager::getCurrentScene()->getRoot()->getChildren())
 	{
-		ActionManager::stopAllActionsBindedWith(child);
+		ActionManager::__stopAllBindedWith(child);
 	}
 }
 

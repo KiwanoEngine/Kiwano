@@ -133,59 +133,77 @@ public:
 	// 保存 int 类型的值
 	static void saveInt(
 		const String & key,
-		int value
+		int value,
+		const String & fileName = L""
 	);
 
 	// 保存 double 类型的值
 	static void saveDouble(
 		const String & key,
-		double value
+		double value,
+		const String & fileName = L""
 	);
 
 	// 保存 bool 类型的值
 	static void saveBool(
 		const String & key,
-		bool value
+		bool value,
+		const String & fileName = L""
 	);
 
 	// 保存 字符串 类型的值
 	static void saveString(
 		const String & key,
-		const String & value
+		const String & value,
+		const String & fileName = L""
 	);
 
 	// 获取 int 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static int getInt(
 		const String & key,
-		int defaultValue
+		int defaultValue,
+		const String & fileName = L""
 	);
 
 	// 获取 double 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static double getDouble(
 		const String & key,
-		double defaultValue
+		double defaultValue,
+		const String & fileName = L""
 	);
 
 	// 获取 bool 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static bool getBool(
 		const String & key,
-		bool defaultValue
+		bool defaultValue,
+		const String & fileName = L""
 	);
 
 	// 获取 字符串 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static String getString(
 		const String & key,
-		const String & defaultValue
+		const String & defaultValue,
+		const String & fileName = L""
+	);
+
+	// 修改数据文件的默认名称
+	static void setDefaultFileName(
+		const String & fileName
+	);
+
+	// 获取数据文件的完整路径
+	static String getDataFilePath(
+		const String & fileName
 	);
 };
 
 
-// 文件管理工具
-class File
+// 路径工具
+class Path
 {
 public:
 	// 获取系统的 AppData Local 路径
@@ -194,7 +212,7 @@ public:
 	// 获取临时文件目录
 	static String getTempPath();
 
-	// 获取默认的保存路径
+	// 获取数据的默认保存路径
 	static String getDefaultSavePath();
 
 	// 获取文件扩展名
@@ -206,6 +224,11 @@ public:
 	static String getSaveFilePath(
 		const String & title = L"保存到",	/* 对话框标题 */
 		const String & defExt = L""			/* 默认扩展名 */
+	);
+
+	// 创建文件夹
+	static bool createFolder(
+		const String & strDirPath	/* 文件夹路径 */
 	);
 };
 

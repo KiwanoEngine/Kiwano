@@ -1,7 +1,6 @@
 #include "..\emanagers.h"
 #include "..\ebase.h"
 #include "..\etransitions.h"
-#include <stack>
 
 static e2d::Scene * s_pCurrentScene = nullptr;
 static e2d::Scene * s_pNextScene = nullptr;
@@ -75,6 +74,11 @@ void e2d::SceneManager::clear()
 e2d::Scene * e2d::SceneManager::getCurrentScene()
 {
 	return s_pCurrentScene;
+}
+
+std::stack<e2d::Scene*> e2d::SceneManager::getSceneStack()
+{
+	return s_SceneStack;
 }
 
 bool e2d::SceneManager::isTransitioning()

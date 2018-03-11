@@ -1,11 +1,43 @@
 #pragma once
 #include "emacros.h"
+#include <stack>
 #include <vector>
 #include <functional>
 #include <sstream>
 
 namespace e2d
 {
+
+
+// 返回值和参数列表都为空的函数
+typedef std::function<void(void)> VoidFunction;
+
+// 定时器回调函数
+typedef VoidFunction TimerCallback;
+
+// 按钮点击回调函数
+typedef VoidFunction ButtonCallback;
+
+template<typename Func>
+inline VoidFunction CreateCallback(Func&& func)
+{
+	return std::bind(func);
+}
+
+template<typename Object, typename Func>
+inline VoidFunction CreateCallback(Object&& obj, Func&& func)
+{
+	return std::bind(func, obj);
+}
+
+template<typename T>
+inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
+
+template<typename Object>
+inline void SafeRelease(Object** p) { if (*p) { (*p)->release(); *p = nullptr; } }
+
+template<class Interface>
+inline void SafeReleaseInterface(Interface **pp) { if (*pp != nullptr) { (*pp)->Release(); (*pp) = nullptr; } }
 
 
 struct Size;
@@ -28,6 +60,9 @@ struct Point
 	double x;	// X 坐标
 	double y;	// Y 坐标
 };
+
+// 二维向量
+typedef Point Vector;
 
 // 表示大小的结构体
 struct Size
@@ -77,6 +112,11 @@ public:
 
 	// 后接字符串
 	String& append(
+		wchar_t *str
+	);
+
+	// 后接字符串
+	String& append(
 		const String &str
 	);
 
@@ -105,6 +145,9 @@ public:
 	int findLastOf(
 		const wchar_t ch
 	) const;
+
+	// 清空字符串
+	void clear();
 
 	// 获取大写字符串
 	String toUpper() const;
@@ -163,6 +206,9 @@ public:
 	bool operator< (const String &) const;
 	bool operator<= (const String &) const;
 
+	String& operator<< (const String &);
+	String& operator<< (const wchar_t *);
+	String& operator<< (wchar_t *);
 	template<typename T>
 	String& operator<< (const T value) { return this->append<>(value); }
 
@@ -516,15 +562,6 @@ public:
 		const String & strFilePath
 	);
 
-	// 从本地文件中读取图片并裁剪
-	void open(
-		const String & strFilePath,/* 图片文件路径 */
-		double nClipX,				/* 裁剪位置 X 坐标 */
-		double nClipY,				/* 裁剪位置 Y 坐标 */
-		double nClipWidth,			/* 裁剪宽度 */
-		double nClipHeight			/* 裁剪高度 */
-	);
-
 	// 裁剪图片
 	void clip(
 		double nClipX,		/* 裁剪位置 X 坐标 */
@@ -565,7 +602,7 @@ public:
 
 	// 预加载资源
 	static bool preload(
-		const String & sFileName	/* 图片文件路径 */
+		const String & strFileName	/* 图片文件路径 */
 	);
 
 	// 清空缓存
@@ -653,30 +690,55 @@ protected:
 };
 
 
-// 二维向量
-typedef Point Vector;
+class Input;
 
-// 返回值和参数列表都为空的函数
-typedef std::function<void(void)> VoidFunction;
+// 监听器
+class Listener
+	: public Object
+{
+	friend Input;
 
-// 定时器回调函数
-typedef VoidFunction TimerCallback;
+public:
+	Listener();
 
-// 按钮点击回调函数
-typedef VoidFunction ButtonCallback;
+	Listener(
+		VoidFunction callback,		/* 回调函数 */
+		const String & name = L""	/* 监听器名称 */
+	);
 
-#ifndef CreateCallback
-	#define CreateCallback(pointer, func) std::bind(&func, pointer)
-#endif
+	// 启动
+	void start();
 
+	// 停止
+	void stop();
 
-template<typename T>
-inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
+	// 停止并清除
+	void stopAndClear();
 
-template<typename Object>
-inline void SafeRelease(Object** p) { if (*p) { (*p)->release(); *p = nullptr; } }
+	// 获取运行状态
+	bool isRunning();
 
-template<class Interface>
-inline void SafeReleaseInterface(Interface **pp) { if (*pp != nullptr) { (*pp)->Release(); (*pp) = nullptr; } }
+	// 获取名称
+	String getName();
+
+	// 修改名称
+	void setName(
+		const String & name
+	);
+
+	// 修改回调函数
+	void setCallback(
+		VoidFunction callback
+	);
+
+	// 更新
+	void update();
+
+protected:
+	String m_sName;
+	bool m_bRunning;
+	bool m_bClear;
+	VoidFunction m_callback;
+};
 
 }

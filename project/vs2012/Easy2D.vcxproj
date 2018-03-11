@@ -53,6 +53,7 @@
     <ClCompile Include="..\..\core\Base\Window.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />
     <ClCompile Include="..\..\core\Common\Image.cpp" />
+    <ClCompile Include="..\..\core\Common\Listener.cpp" />
     <ClCompile Include="..\..\core\Common\Object.cpp" />
     <ClCompile Include="..\..\core\Common\Point.cpp" />
     <ClCompile Include="..\..\core\Common\Scene.cpp" />
