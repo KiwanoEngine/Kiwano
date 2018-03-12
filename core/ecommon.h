@@ -89,9 +89,9 @@ class String
 {
 public:
 	String();
-	String(const wchar_t *);
 	String(const String &);
-	String(const std::wstring &);
+	String(const char *);
+	String(const wchar_t *);
 	String(String &&);
 
 	~String();
@@ -105,6 +105,27 @@ public:
 	// 获取该字符串的散列值
 	unsigned int getHashCode() const;
 
+	// 获取 Unicode 字符串
+	std::wstring getWString() const;
+
+	// 获取 ANSI 字符串
+	std::string getCString() const;
+
+	// 后接字符串
+	String& append(
+		const String &str
+	);
+
+	// 后接字符串
+	String& append(
+		const char * cstr
+	);
+
+	// 后接字符串
+	String& append(
+		char * cstr
+	);
+
 	// 后接字符串
 	String& append(
 		const wchar_t *str
@@ -116,19 +137,8 @@ public:
 	);
 
 	// 后接字符串
-	String& append(
-		const String &str
-	);
-
-	// 后接字符串
 	template<typename T>
-	String& append(const T &value)
-	{
-		std::wostringstream ss;
-		ss << value;
-		m_str += ss.str();
-		return (*this);
-	}
+	String& append(const T &value);
 
 	// 获取裁剪字符串
 	String subtract(
@@ -166,76 +176,58 @@ public:
 
 	// 将任意类型转化为字符串
 	template<typename T>
-	static String toString(const T value)
-	{
-		std::wostringstream ss;
-		ss << value;
-		return ss.str();
-	}
+	static String toString(const T value);
 
-	static String toString(const wchar_t * str) { return std::move(String(str)); }
-	static String toString(const char * str) { return std::move(String(str)); }
-
-	String& operator= (const wchar_t *);
+	// 赋值运算符
 	String& operator= (const String &);
-	String& operator= (const std::wstring &);
+	String& operator= (const char *);
+	String& operator= (const wchar_t *);
 
-	bool operator== (const wchar_t *);
-	bool operator== (const String &);
-	bool operator== (const std::wstring &);
-
-	bool operator!= (const wchar_t *);
-	bool operator!= (const String &);
-	bool operator!= (const std::wstring &);
-
-	wchar_t &operator[] (int);
-
-	String operator+ (const wchar_t *);
-	String operator+ (const String &);
-	String operator+ (const std::wstring &);
-
-	friend String operator+ (const wchar_t*, const String &);
-	friend String operator+ (const std::wstring &, const String &);
-
-	String& operator+= (const wchar_t *);
+	// 运算符
 	String& operator+= (const String &);
-	String& operator+= (const std::wstring &);
+	String& operator+= (const char *);
+	String& operator+= (const wchar_t *);
+	String operator+ (const String &);
+	String operator+ (const char *);
+	String operator+ (const wchar_t *);
 
+	// 友元运算符
+	friend String operator+ (const char *, const String &);
+	friend String operator+ (const wchar_t*, const String &);
+
+	// 类型转换操作符
+	operator const wchar_t* () const;
+	operator wchar_t* () const;
+
+	// 比较运算符
+	bool operator== (const String &);
+	bool operator== (const char *);
+	bool operator== (const wchar_t *);
+	bool operator!= (const String &);
+	bool operator!= (const char *);
+	bool operator!= (const wchar_t *);
 	bool operator> (const String &) const;
 	bool operator>= (const String &) const;
 	bool operator< (const String &) const;
 	bool operator<= (const String &) const;
 
+	// << 运算符
 	String& operator<< (const String &);
+	String& operator<< (const char *);
+	String& operator<< (char *);
 	String& operator<< (const wchar_t *);
 	String& operator<< (wchar_t *);
 	template<typename T>
 	String& operator<< (const T value) { return this->append<>(value); }
 
-	operator const wchar_t* () const;
-	operator wchar_t* () const;
+	// 其他运算符
+	wchar_t &operator[] (int);
 
-	friend std::wostream& operator<< (std::wostream &, String &);
-	friend std::wistream& operator>> (std::wistream &, String &);
+	friend std::ostream& operator<< (std::ostream &, const String &);
+	friend std::wostream& operator<< (std::wostream &, const String &);
 
-	// 为 ANSI 作出的适应
-	String(const char *);
-	String(const std::string &);
-	operator const char* () const;
-	String& operator= (const char *);
-	String& operator= (const std::string &);
-	bool operator== (const char *);
-	bool operator!= (const char *);
-	String operator+ (const char *);
-	friend String operator+ (const char *, const String &);
-	String& operator+= (const char *);
-	String& operator<< (const char *);
-	String& operator<< (char *);
-	String& append(const char *);
-	String& append(char *);
-
-	friend std::ostream& operator<< (std::ostream &, String &);
 	friend std::istream& operator>> (std::istream &, String &);
+	friend std::wistream& operator>> (std::wistream &, String &);
 
 private:
 	std::wstring m_str;
@@ -740,5 +732,24 @@ protected:
 	bool m_bClear;
 	VoidFunction m_callback;
 };
+
+// String 类模板函数定义
+template<typename T>
+inline e2d::String & e2d::String::append(const T & value)
+{
+	std::wostringstream ss;
+	ss << value;
+	m_str += ss.str();
+	return (*this);
+}
+
+template<typename T>
+inline e2d::String e2d::String::toString(const T value)
+{
+	std::wostringstream ss;
+	ss << value;
+	String str = ss.str().c_str();
+	return std::move(str);
+}
 
 }

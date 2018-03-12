@@ -49,7 +49,7 @@ e2d::String e2d::Data::getString(const String & key, const String & defaultValue
 	return temp;
 }
 
-void e2d::Data::setDefaultFileName(const String & fileName)
+void e2d::Data::setDataFilePath(const String & fileName)
 {
 	if (!fileName.isEmpty())
 	{

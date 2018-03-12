@@ -39,7 +39,7 @@ e2d::String e2d::Path::getTempPath()
 
 	// 创建临时文件目录
 	e2d::String tempFilePath;
-	tempFilePath << path << L"Easy2DGameTemp";
+	tempFilePath << path << L"Easy2DGameTemp\\";
 	// 创建文件夹
 	if (!Path::createFolder(tempFilePath))
 	{
@@ -51,13 +51,12 @@ e2d::String e2d::Path::getTempPath()
 	if (!sAppName.isEmpty())
 	{
 		// 创建文件夹
-		if (!Path::createFolder(tempFilePath + L"\\" + sAppName))
+		if (!Path::createFolder(tempFilePath + sAppName + L"\\"))
 		{
 			return std::move(tempFilePath);
 		}
-		tempFilePath << L"\\" << sAppName;
+		tempFilePath << sAppName << L"\\";
 	}
-	tempFilePath << L"\\";
 	return std::move(tempFilePath);
 }
 

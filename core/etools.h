@@ -191,7 +191,7 @@ public:
 	);
 
 	// 修改数据文件的默认名称
-	static void setDefaultFileName(
+	static void setDataFilePath(
 		const String & fileName
 	);
 
