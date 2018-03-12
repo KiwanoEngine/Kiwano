@@ -111,35 +111,6 @@ public:
 	// 获取 ANSI 字符串
 	std::string getCString() const;
 
-	// 后接字符串
-	String& append(
-		const String &str
-	);
-
-	// 后接字符串
-	String& append(
-		const char * cstr
-	);
-
-	// 后接字符串
-	String& append(
-		char * cstr
-	);
-
-	// 后接字符串
-	String& append(
-		const wchar_t *str
-	);
-
-	// 后接字符串
-	String& append(
-		wchar_t *str
-	);
-
-	// 后接字符串
-	template<typename T>
-	String& append(const T &value);
-
 	// 获取裁剪字符串
 	String subtract(
 		int offset,		/* 偏移量 */
@@ -211,17 +182,19 @@ public:
 	bool operator< (const String &) const;
 	bool operator<= (const String &) const;
 
-	// << 运算符
+	// << 运算符（后接字符串）
 	String& operator<< (const String &);
 	String& operator<< (const char *);
 	String& operator<< (char *);
 	String& operator<< (const wchar_t *);
 	String& operator<< (wchar_t *);
-	template<typename T>
-	String& operator<< (const T value) { return this->append<>(value); }
+	String& operator<< (int value);
+	String& operator<< (unsigned int value);
+	String& operator<< (float value);
+	String& operator<< (double value);
 
 	// 其他运算符
-	wchar_t &operator[] (int);
+	wchar_t& operator[] (int);
 
 	friend std::ostream& operator<< (std::ostream &, const String &);
 	friend std::wostream& operator<< (std::wostream &, const String &);
@@ -734,14 +707,6 @@ protected:
 };
 
 // String 类模板函数定义
-template<typename T>
-inline e2d::String & e2d::String::append(const T & value)
-{
-	std::wostringstream ss;
-	ss << value;
-	m_str += ss.str();
-	return (*this);
-}
 
 template<typename T>
 inline e2d::String e2d::String::toString(const T value)

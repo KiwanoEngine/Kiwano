@@ -37,19 +37,19 @@ e2d::String::~String()
 e2d::String &e2d::String::operator=(const wchar_t *str)
 {
 	m_str = str;
-	return *this;
+	return (*this);
 }
 
 e2d::String & e2d::String::operator=(const char *cstr)
 {
 	m_str = static_cast<wchar_t*>(_bstr_t(cstr));
-	return *this;
+	return (*this);
 }
 
 e2d::String & e2d::String::operator=(const String &str)
 {
 	m_str = str.m_str;
-	return *this;
+	return (*this);
 }
 
 bool e2d::String::operator==(const wchar_t *str)
@@ -192,27 +192,56 @@ bool e2d::String::operator<=(const String &str) const
 
 e2d::String & e2d::String::operator<<(const String &str)
 {
-	return this->append(str);
+	m_str += str.m_str;
+	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(const wchar_t *str)
 {
-	return this->append(str);
+	m_str += str;
+	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(wchar_t *str)
 {
-	return this->append(str);
+	m_str += str;
+	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(const char * value)
+e2d::String & e2d::String::operator<<(const char * cstr)
 {
-	return this->append(value);
+	m_str += static_cast<wchar_t*>(_bstr_t(cstr));
+	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(char * value)
+e2d::String & e2d::String::operator<<(char * cstr)
 {
-	return this->append(value);
+	m_str += static_cast<wchar_t*>(_bstr_t(cstr));
+	return (*this);
+}
+
+e2d::String & e2d::String::operator<<(int value)
+{
+	(*this) += String::toString(value);
+	return (*this);
+}
+
+e2d::String & e2d::String::operator<<(unsigned int value)
+{
+	(*this) += String::toString(value);
+	return (*this);
+}
+
+e2d::String & e2d::String::operator<<(float value)
+{
+	(*this) += String::toString(value);
+	return (*this);
+}
+
+e2d::String & e2d::String::operator<<(double value)
+{
+	(*this) += String::toString(value);
+	return (*this);
 }
 
 e2d::String::operator const wchar_t*() const
@@ -350,36 +379,6 @@ int e2d::String::findLastOf(const wchar_t ch) const
 void e2d::String::clear()
 {
 	m_str.clear();
-}
-
-e2d::String & e2d::String::append(const wchar_t * str)
-{
-	m_str += str;
-	return *this;
-}
-
-e2d::String & e2d::String::append(wchar_t * str)
-{
-	m_str += str;
-	return *this;
-}
-
-e2d::String & e2d::String::append(const char * str)
-{
-	m_str += static_cast<wchar_t*>(_bstr_t(str));
-	return *this;
-}
-
-e2d::String & e2d::String::append(char * str)
-{
-	m_str += static_cast<wchar_t*>(_bstr_t(str));
-	return *this;
-}
-
-e2d::String & e2d::String::append(const e2d::String & str)
-{
-	m_str += str.m_str;
-	return (*this);
 }
 
 std::wostream & e2d::operator<<(std::wostream &cout, const String &str)
