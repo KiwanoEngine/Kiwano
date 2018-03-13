@@ -214,9 +214,9 @@
     <ClCompile Include="..\..\core\Shape\Ellipse.cpp" />
     <ClCompile Include="..\..\core\Shape\Rect.cpp" />
     <ClCompile Include="..\..\core\Shape\Shape.cpp" />
-    <ClCompile Include="..\..\core\Tool\Data.cpp" />
     <ClCompile Include="..\..\core\Tool\File.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
+    <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Random.cpp" />
     <ClCompile Include="..\..\core\Tool\Timer.cpp" />
     <ClCompile Include="..\..\core\Transition\ETransition.cpp" />

@@ -191,7 +191,7 @@ void e2d::ActionManager::stopAll()
 	}
 }
 
-std::vector<e2d::Action*> e2d::ActionManager::getActions(const String & strActionName)
+std::vector<e2d::Action*> e2d::ActionManager::get(const String & strActionName)
 {
 	std::vector<Action*> vActions;
 	for (const auto action : s_vActions)
@@ -204,7 +204,7 @@ std::vector<e2d::Action*> e2d::ActionManager::getActions(const String & strActio
 	return std::move(vActions);
 }
 
-std::vector<e2d::Action*> e2d::ActionManager::getAllActions()
+std::vector<e2d::Action*> e2d::ActionManager::getAll()
 {
 	return s_vActions;
 }

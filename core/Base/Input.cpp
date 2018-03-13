@@ -186,7 +186,7 @@ void e2d::Input::__add(Listener * pListener)
 	}
 }
 
-void e2d::Input::add(VoidFunction callback, const String & name)
+void e2d::Input::add(ListenerCallback callback, const String & name)
 {
 	auto pListener = new Listener(callback, name);
 	pListener->start();

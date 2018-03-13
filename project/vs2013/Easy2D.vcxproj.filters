@@ -129,9 +129,6 @@
     <ClCompile Include="..\..\core\Manager\TimerManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Data.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Tool\Music.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
@@ -200,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Listener.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Path.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

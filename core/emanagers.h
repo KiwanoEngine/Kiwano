@@ -181,12 +181,12 @@ public:
 	static void stopAll();
 
 	// 获取所有名称相同的动作
-	static std::vector<Action *> getActions(
+	static std::vector<Action *> get(
 		const String & strActionName
 	);
 
 	// 获取所有动作
-	static std::vector<Action*> getAllActions();
+	static std::vector<Action*> getAll();
 
 private:
 	// 更新动画状态
@@ -300,6 +300,12 @@ class ShapeManager
 	friend Node;
 	friend Shape;
 
+public:
+	// 开启或禁用碰撞触发 onCollide 函数
+	static void setCollisionEnable(
+		bool bEnable
+	);
+
 private:
 	// 更新形状
 	static void __updateShape(
@@ -307,12 +313,12 @@ private:
 	);
 
 	// 添加形状
-	static void __addShape(
+	static void __add(
 		Shape * pShape
 	);
 
 	// 删除已绑定的形状
-	static void __delShape(
+	static void __remove(
 		Shape * pShape
 	);
 };

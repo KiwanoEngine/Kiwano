@@ -12,6 +12,9 @@ namespace e2d
 // 返回值和参数列表都为空的函数
 typedef std::function<void(void)> VoidFunction;
 
+// 监听器回调函数
+typedef VoidFunction ListenerCallback;
+
 // 定时器回调函数
 typedef VoidFunction TimerCallback;
 
@@ -582,9 +585,9 @@ protected:
 };
 
 
-class SceneManager;
 class Node;
 class Action;
+class SceneManager;
 
 // 场景
 class Scene :
@@ -667,7 +670,7 @@ public:
 	Listener();
 
 	Listener(
-		VoidFunction callback,		/* 回调函数 */
+		ListenerCallback callback,	/* 回调函数 */
 		const String & name = L""	/* 监听器名称 */
 	);
 
@@ -693,7 +696,7 @@ public:
 
 	// 修改回调函数
 	void setCallback(
-		VoidFunction callback
+		ListenerCallback callback
 	);
 
 	// 更新
@@ -703,7 +706,7 @@ protected:
 	String m_sName;
 	bool m_bRunning;
 	bool m_bClear;
-	VoidFunction m_callback;
+	ListenerCallback m_callback;
 };
 
 // String 类模板函数定义

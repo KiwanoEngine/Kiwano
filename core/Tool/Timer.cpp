@@ -2,39 +2,6 @@
 #include "..\enodes.h"
 #include "..\emanagers.h"
 
-e2d::Timer::Timer()
-	: m_bRunning(false)
-	, m_nRunTimes(0)
-	, m_Callback(nullptr)
-	, m_fInterval(0)
-	, m_fLast(0)
-	, m_nUpdateTimes(-1)
-	, m_bAtOnce(false)
-	, m_bAutoRelease(false)
-	, m_bClear(true)
-{
-	TimerManager::__add(this);
-}
-
-e2d::Timer::Timer(TimerCallback callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
-	: m_bRunning(false)
-	, m_nRunTimes(0)
-	, m_Callback(nullptr)
-	, m_fInterval(0)
-	, m_fLast(0)
-	, m_nUpdateTimes(-1)
-	, m_bAtOnce(false)
-	, m_bAutoRelease(false)
-	, m_bClear(true)
-{
-	this->setCallback(callback);
-	this->setUpdateTimes(updateTimes);
-	this->setInterval(interval);
-	m_bAutoRelease = autoRelease;
-	m_bAtOnce = atOnce;
-	TimerManager::__add(this);
-}
-
 e2d::Timer::Timer(const String & name, TimerCallback callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
 	: m_bRunning(false)
 	, m_nRunTimes(0)

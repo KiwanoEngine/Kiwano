@@ -47,7 +47,7 @@ e2d::Node::Node()
 e2d::Node::~Node()
 {
 	ActionManager::__clearAllBindedWith(this);
-	ShapeManager::__delShape(m_pShape);
+	ShapeManager::__remove(m_pShape);
 	for (auto child : m_vChildren)
 	{
 		SafeRelease(&child);
@@ -548,9 +548,9 @@ void e2d::Node::setSize(Size size)
 void e2d::Node::setShape(Shape * pShape)
 {
 	// 删除旧的形状
-	ShapeManager::__delShape(m_pShape);
+	ShapeManager::__remove(m_pShape);
 	// 添加新的形状
-	ShapeManager::__addShape(pShape);
+	ShapeManager::__add(pShape);
 
 	if (pShape)
 	{
@@ -755,7 +755,7 @@ void e2d::Node::runAction(Action * action)
 
 void e2d::Node::resumeAction(const String & strActionName)
 {
-	auto actions = ActionManager::getActions(strActionName);
+	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -767,7 +767,7 @@ void e2d::Node::resumeAction(const String & strActionName)
 
 void e2d::Node::pauseAction(const String & strActionName)
 {
-	auto actions = ActionManager::getActions(strActionName);
+	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -779,7 +779,7 @@ void e2d::Node::pauseAction(const String & strActionName)
 
 void e2d::Node::stopAction(const String & strActionName)
 {
-	auto actions = ActionManager::getActions(strActionName);
+	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -791,7 +791,7 @@ void e2d::Node::stopAction(const String & strActionName)
 
 e2d::Action * e2d::Node::getAction(const String & strActionName)
 {
-	auto actions = ActionManager::getActions(strActionName);
+	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -805,7 +805,7 @@ e2d::Action * e2d::Node::getAction(const String & strActionName)
 std::vector<e2d::Action*> e2d::Node::getActions(const String & strActionName)
 {
 	std::vector<Action*>::iterator iter;
-	auto actions = ActionManager::getActions(strActionName);
+	auto actions = ActionManager::get(strActionName);
 	for (iter = actions.begin(); iter != actions.end();)
 	{
 		if ((*iter)->getTarget() != this)

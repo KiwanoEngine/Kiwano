@@ -9,7 +9,7 @@ e2d::Listener::Listener()
 	Input::__add(this);
 }
 
-e2d::Listener::Listener(VoidFunction callback, const String & name)
+e2d::Listener::Listener(ListenerCallback callback, const String & name)
 	: m_bRunning(false)
 	, m_sName(name)
 	, m_callback(callback)
@@ -49,7 +49,7 @@ void e2d::Listener::setName(const String & name)
 	m_sName = name;
 }
 
-void e2d::Listener::setCallback(VoidFunction callback)
+void e2d::Listener::setCallback(ListenerCallback callback)
 {
 	m_callback = callback;
 }

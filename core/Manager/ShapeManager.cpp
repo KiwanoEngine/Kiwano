@@ -3,19 +3,35 @@
 #include "..\eshape.h"
 
 // 形状集合
-std::vector<e2d::Shape*> s_vShapes;
+static std::vector<e2d::Shape*> s_vShapes;
+// 碰撞触发状态
+static bool s_bCollisionEnable = false;
 
+
+void e2d::ShapeManager::setCollisionEnable(bool bEnable)
+{
+	s_bCollisionEnable = bEnable;
+}
 
 void e2d::ShapeManager::__updateShape(e2d::Shape * pActiveShape)
 {
+	// 判断碰撞触发是否打开
+	if (!s_bCollisionEnable)
+		return;
+
 	Node* pActiveNode = pActiveShape->m_pParentNode;
 	if (pActiveNode)
 	{
 		// 获取节点所在场景
 		Scene* pCurrentScene = pActiveNode->getParentScene();
+		
 		// 判断与其他形状的交集情况
-		for (auto pPassiveShape : s_vShapes)
+		for (size_t i = 0; i < s_vShapes.size(); i++)
 		{
+			auto pPassiveShape = s_vShapes[i];
+			// 判断两个形状是否是同一个对象
+			if (pActiveShape == pPassiveShape)
+				return;
 			// 判断两物体是否是相互冲突的物体
 			if (pActiveShape->m_nCollisionBitmask & pPassiveShape->m_nCategoryBitmask)
 			{
@@ -23,7 +39,6 @@ void e2d::ShapeManager::__updateShape(e2d::Shape * pActiveShape)
 				Node* pPassiveNode = pPassiveShape->m_pParentNode;
 				// 判断两节点是否处于同一场景中
 				if (pPassiveNode &&
-					pPassiveNode != pActiveNode &&
 					pPassiveNode->getParentScene() == pCurrentScene)
 				{
 					// 判断两形状交集情况
@@ -41,13 +56,13 @@ void e2d::ShapeManager::__updateShape(e2d::Shape * pActiveShape)
 	}
 }
 
-void e2d::ShapeManager::__addShape(Shape * pShape)
+void e2d::ShapeManager::__add(Shape * pShape)
 {
 	if (pShape)
 	{
 		if (pShape->m_pParentNode)
 		{
-			WARN_IF(true, "ShapeManager::__addShape Failed! The shape is already added.");
+			WARN_IF(true, "ShapeManager::__add Failed! The shape is already added.");
 			return;
 		}
 		pShape->retain();
@@ -55,7 +70,7 @@ void e2d::ShapeManager::__addShape(Shape * pShape)
 	}
 }
 
-void e2d::ShapeManager::__delShape(Shape * pShape)
+void e2d::ShapeManager::__remove(Shape * pShape)
 {
 	if (pShape)
 	{

@@ -153,7 +153,7 @@ class Input
 public:
 	// 添加输入监听
 	static void add(
-		VoidFunction callback,		/* 回调函数 */
+		ListenerCallback callback,	/* 回调函数 */
 		const String & name = L""	/* 监听器名称 */
 	);
 
