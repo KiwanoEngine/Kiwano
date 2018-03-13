@@ -122,73 +122,71 @@ class Data
 public:
 	// 保存 int 类型的值
 	static void saveInt(
-		const String & key,
-		int value,
-		const String & fileName = L""
+		const String & key,					/* 键值 */
+		int value,							/* 数据 */
+		const String & field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 保存 double 类型的值
 	static void saveDouble(
-		const String & key,
-		double value,
-		const String & fileName = L""
+		const String & key,					/* 键值 */
+		double value,						/* 数据 */
+		const String & field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 保存 bool 类型的值
 	static void saveBool(
-		const String & key,
-		bool value,
-		const String & fileName = L""
+		const String & key,					/* 键值 */
+		bool value,							/* 数据 */
+		const String & field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 保存 字符串 类型的值
 	static void saveString(
-		const String & key,
-		const String & value,
-		const String & fileName = L""
+		const String & key,					/* 键值 */
+		const String & value,				/* 数据 */
+		const String & field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 获取 int 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static int getInt(
-		const String & key,
-		int defaultValue,
-		const String & fileName = L""
+		const String & key,					/* 键值 */
+		int defaultValue,					/* 默认值 */
+		const String & field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 获取 double 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static double getDouble(
-		const String & key,
-		double defaultValue,
-		const String & fileName = L""
+		const String & key,					/* 键值 */
+		double defaultValue,				/* 默认值 */
+		const String & field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 获取 bool 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static bool getBool(
-		const String & key,
-		bool defaultValue,
-		const String & fileName = L""
+		const String & key,					/* 键值 */
+		bool defaultValue,					/* 默认值 */
+		const String & field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 获取 字符串 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static String getString(
-		const String & key,
-		const String & defaultValue,
-		const String & fileName = L""
+		const String & key,					/* 键值 */
+		const String & defaultValue,		/* 默认值 */
+		const String & field = L"Defalut"	/* 字段名称 */
 	);
 
-	// 修改数据文件的默认名称
-	static void setDataFilePath(
-		const String & fileName
+	// 修改数据文件的名称
+	static void setDataFileName(
+		const String & strFileName			/* 文件名称 */
 	);
 
 	// 获取数据文件的完整路径
-	static String getDataFilePath(
-		const String & fileName
-	);
+	static String getDataFilePath();
 };
 
 
