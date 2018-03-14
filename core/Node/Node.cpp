@@ -822,15 +822,37 @@ std::vector<e2d::Action*> e2d::Node::getActions(const String & strActionName)
 
 bool e2d::Node::isPointIn(Point point) const
 {
-	// 判断点是否在形状内
 	BOOL ret = 0;
-	this->m_pShape->_getD2dGeometry()->FillContainsPoint(
-		D2D1::Point2F(
-			static_cast<float>(point.x), 
-			static_cast<float>(point.y)),
-		m_MatriFinal,
-		&ret
-	);
+	// 如果存在形状，用形状判断
+	if (m_pShape)
+	{
+		m_pShape->_getD2dGeometry()->FillContainsPoint(
+			D2D1::Point2F(
+				static_cast<float>(point.x),
+				static_cast<float>(point.y)),
+			m_MatriFinal,
+			&ret
+		);
+	}
+	else
+	{
+		// 为节点创建一个临时形状
+		ID2D1RectangleGeometry * rect;
+		Renderer::getID2D1Factory()->CreateRectangleGeometry(
+			D2D1::RectF(0, 0, m_fWidth, m_fHeight),
+			&rect
+		);
+		// 判断点是否在形状内
+		rect->FillContainsPoint(
+			D2D1::Point2F(
+				static_cast<float>(point.x),
+				static_cast<float>(point.y)),
+			m_MatriFinal,
+			&ret
+		);
+		// 删除临时创建的形状
+		SafeReleaseInterface(&rect);
+	}
 
 	if (ret)
 	{
@@ -847,11 +869,52 @@ bool e2d::Node::isPointIn(Point point) const
 
 bool e2d::Node::isIntersectWith(const Node * pNode) const
 {
+	// 如果存在形状，用形状判断
 	if (this->m_pShape && pNode->m_pShape)
 	{
 		int relation = this->m_pShape->getRelationWith(pNode->m_pShape);
 		if ((relation != Relation::UNKNOWN) && 
 			(relation != Relation::DISJOINT))
+		{
+			return true;
+		}
+	}
+	else
+	{
+		// 为节点创建一个临时形状
+		ID2D1RectangleGeometry * pRect1;
+		ID2D1RectangleGeometry * pRect2;
+		ID2D1TransformedGeometry * pShape;
+		D2D1_GEOMETRY_RELATION relation;
+
+		// 根据自身大小位置创建矩形
+		Renderer::getID2D1Factory()->CreateRectangleGeometry(
+			D2D1::RectF(0, 0, m_fWidth, m_fHeight),
+			&pRect1
+		);
+		// 根据二维矩阵进行转换
+		Renderer::getID2D1Factory()->CreateTransformedGeometry(
+			pRect1,
+			m_MatriFinal,
+			&pShape
+		);
+		// 根据相比较节点的大小位置创建矩形
+		Renderer::getID2D1Factory()->CreateRectangleGeometry(
+			D2D1::RectF(0, 0, pNode->m_fWidth, pNode->m_fHeight),
+			&pRect2
+		);
+		// 获取相交状态
+		pShape->CompareWithGeometry(
+			pRect2,
+			pNode->m_MatriFinal,
+			&relation
+		);
+		// 删除临时创建的形状
+		SafeReleaseInterface(&pRect1);
+		SafeReleaseInterface(&pRect2);
+		SafeReleaseInterface(&pShape);
+		if ((relation != D2D1_GEOMETRY_RELATION::D2D1_GEOMETRY_RELATION_UNKNOWN) &&
+			(relation != D2D1_GEOMETRY_RELATION::D2D1_GEOMETRY_RELATION_DISJOINT))
 		{
 			return true;
 		}
