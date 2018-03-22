@@ -148,9 +148,12 @@ public:
 	// 将字符串转化为 bool 型
 	bool toBool() const;
 
-	// 将任意类型转化为字符串
+	// 将数字转化为字符串
 	template<typename T>
-	static String toString(const T value);
+	static String toString(T value);
+
+	String& format(const char * format, ...);
+	String& format(const wchar_t * format, ...);
 
 	// 赋值运算符
 	String& operator= (const String &);
@@ -712,12 +715,11 @@ protected:
 // String 类模板函数定义
 
 template<typename T>
-inline e2d::String e2d::String::toString(const T value)
+inline e2d::String e2d::String::toString(T value)
 {
-	std::wostringstream ss;
-	ss << value;
-	String str = ss.str().c_str();
-	return std::move(str);
+	String tmp;
+	tmp.m_str = std::to_wstring(value);
+	return std::move(tmp);
 }
 
 }

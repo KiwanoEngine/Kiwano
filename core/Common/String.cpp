@@ -46,6 +46,50 @@ e2d::String & e2d::String::operator=(const char *cstr)
 	return (*this);
 }
 
+e2d::String & e2d::String::format(const char * format, ...)
+{
+	std::string tmp;
+
+	va_list marker = NULL;
+	va_start(marker, format);
+
+	size_t num_of_chars = _vscprintf(format, marker);
+
+	if (num_of_chars > tmp.capacity()) 
+	{
+		tmp.resize(num_of_chars + 1);
+	}
+
+	vsprintf_s(const_cast<LPSTR>(tmp.data()), tmp.capacity(), format, marker);
+
+	va_end(marker);
+
+	m_str = static_cast<wchar_t*>(_bstr_t(tmp.c_str()));
+	return (*this);
+}
+
+e2d::String & e2d::String::format(const wchar_t * format, ...)
+{
+	std::wstring tmp;
+
+	va_list marker = NULL;
+	va_start(marker, format);
+
+	size_t num_of_chars = _vscwprintf(format, marker);
+
+	if (num_of_chars > tmp.capacity())
+	{
+		tmp.resize(num_of_chars + 1);
+	}
+
+	vswprintf_s(const_cast<LPWSTR>(tmp.data()), tmp.capacity(), format, marker);
+
+	va_end(marker);
+
+	m_str = tmp.c_str();
+	return (*this);
+}
+
 e2d::String & e2d::String::operator=(const String &str)
 {
 	m_str = str.m_str;
