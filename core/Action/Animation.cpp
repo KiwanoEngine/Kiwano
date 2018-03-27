@@ -5,10 +5,25 @@ e2d::Animation::Animation()
 {
 }
 
-e2d::Animation::Animation(double invertal)
+e2d::Animation::Animation(double interval)
 	: m_nFrameIndex(0)
-	, m_fInterval(invertal)
+	, m_fInterval(interval)
 {
+}
+
+e2d::Animation::Animation(double interval, int number, Image * frame, ...)
+	: m_nFrameIndex(0)
+	, m_fInterval(interval)
+{
+	Image ** ppImage = &frame;
+
+	while (number > 0)
+	{
+		ASSERT((*ppImage) != nullptr, "Animation NULL pointer exception!");
+		this->addKeyframe(*ppImage);
+		ppImage++;
+		number--;
+	}
 }
 
 e2d::Animation::~Animation()

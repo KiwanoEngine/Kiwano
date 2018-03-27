@@ -91,7 +91,7 @@ class ActionGradual :
 	public Action
 {
 public:
-	// 创建时长动画
+	// 创建特定时长的持续动画
 	ActionGradual(
 		double duration
 	);
@@ -403,7 +403,7 @@ public:
 	// 创建顺序动作
 	ActionSequence(
 		int number,			/* 顺序动作数量 */
-		Action * action1,	/* 第一个动作 */
+		Action * action,	/* 第一个动作 */
 		...
 	);
 
@@ -509,14 +509,22 @@ public:
 
 	// 创建特定帧间隔的帧动画
 	Animation(
-		double interval	/* 帧间隔（秒） */
+		double interval		/* 帧间隔（秒） */
+	);
+
+	// 创建帧动画
+	Animation(
+		double interval,	/* 帧间隔（秒） */
+		int number,			/* 帧数量 */
+		Image * frame,		/* 第一帧 */
+		...
 	);
 
 	virtual ~Animation();
 
 	// 添加关键帧
 	void addKeyframe(
-		Image * frame	/* 添加关键帧 */
+		Image * frame	/* 关键帧 */
 	);
 
 	// 设置每一帧的时间间隔
@@ -570,4 +578,120 @@ protected:
 	VoidFunction m_Callback;
 };
 
+}
+
+namespace e2d
+{
+	namespace action
+	{
+		// 创建相对位移动画
+		ActionMoveBy* MoveBy(
+			double duration,	/* 动画持续时长 */
+			Vector vector		/* 位移向量 */
+		);
+
+		// 创建位移动画
+		ActionMoveTo* MoveTo(
+			double duration,	/* 动画持续时长 */
+			Point pos			/* 位移至目标点的坐标 */
+		);
+
+		// 创建相对缩放动画
+		ActionScaleBy* ScaleBy(
+			double duration,	/* 动画持续时长 */
+			double scale		/* 缩放比例变化 */
+		);
+
+		// 创建相对缩放动画
+		ActionScaleBy* ScaleBy(
+			double duration,	/* 动画持续时长 */
+			double scaleX,		/* 横向缩放比例变化 */
+			double scaleY		/* 纵向缩放比例变化 */
+		);
+
+		// 创建缩放动画
+		ActionScaleTo* ScaleTo(
+			double duration,	/* 动画持续时长 */
+			double scale		/* 缩放至目标比例 */
+		);
+
+		// 创建缩放动画
+		ActionScaleTo* ScaleTo(
+			double duration,	/* 动画持续时长 */
+			double scaleX,		/* 横向缩放至目标比例 */
+			double scaleY		/* 纵向缩放至目标比例 */
+		);
+
+		// 创建透明度相对渐变动画
+		ActionOpacityBy* OpacityBy(
+			double duration,	/* 动画持续时长 */
+			double opacity		/* 透明度相对变化值 */
+		);
+
+		// 创建透明度渐变动画
+		ActionOpacityTo* OpacityTo(
+			double duration,	/* 动画持续时长 */
+			double opacity		/* 透明度渐变至目标值 */
+		);
+
+		// 创建淡入动画
+		ActionFadeIn* FadeIn(
+			double duration	/* 动画持续时长 */
+		);
+
+		// 创建淡出动画
+		ActionFadeOut* FadeOut(
+			double duration	/* 动画持续时长 */
+		);
+
+		// 创建相对旋转动画
+		ActionRotateBy* RotateBy(
+			double duration,	/* 动画持续时长 */
+			double rotation		/* 旋转角度变化值 */
+		);
+
+		// 创建旋转动画
+		ActionRotateTo* RotateTo(
+			double duration,	/* 动画持续时长 */
+			double rotation		/* 旋转角度至目标值 */
+		);
+
+		// 创建两个动作的连续动作
+		ActionTwo* Two(
+			Action * pActionFirst,		/* 第一个动作 */
+			Action * pActionSecond,		/* 第二个动作 */
+			bool bAtSameTime = false	/* 同时开始 */
+		);
+
+		// 创建顺序动作
+		ActionSequence* Sequence(
+			int number,			/* 顺序动作数量 */
+			Action * action1,	/* 第一个动作 */
+			...
+		);
+
+		// 创建延时动作
+		ActionDelay* Delay(
+			double duration	/* 延迟时长（秒） */
+		);
+
+		// 创建循环动作
+		ActionLoop* Loop(
+			Action * action,	/* 执行循环的动作 */
+			int times = -1		/* 循环次数 */
+		);
+
+		// 创建特定帧间隔的帧动画
+		Animation* Animate(
+			double interval,	/* 帧间隔（秒） */
+			int number,			/* 帧数量 */
+			Image * frame,		/* 第一帧 */
+			...
+		);
+
+		// 创建执行回调函数的动作
+		ActionCallback* Callback(
+			VoidFunction callback /* 回调函数 */
+		);
+	}
 }
