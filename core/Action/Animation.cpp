@@ -2,6 +2,7 @@
 
 e2d::Animation::Animation() 
 	: m_nFrameIndex(0)
+	, m_fInterval(1)
 {
 }
 
@@ -11,9 +12,9 @@ e2d::Animation::Animation(double interval)
 {
 }
 
-e2d::Animation::Animation(double interval, int number, Image * frame, ...)
+e2d::Animation::Animation(int number, Image * frame, ...)
 	: m_nFrameIndex(0)
-	, m_fInterval(interval)
+	, m_fInterval(1)
 {
 	Image ** ppImage = &frame;
 

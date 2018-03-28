@@ -123,7 +123,7 @@ public:
 
 	// 获取所有名称相同的子节点
 	virtual std::vector<Node*> getChildren(
-		const String & name
+		String& name
 	);
 
 	// 获取所有子节点
@@ -139,7 +139,7 @@ public:
 
 	// 移除所有名称相同的子节点
 	virtual void removeChildren(
-		const String & childName
+		String& childName
 	);
 
 	// 从父节点移除
@@ -160,7 +160,7 @@ public:
 
 	// 设置节点名称
 	virtual void setName(
-		const String & name
+		String& name
 	);
 
 	// 设置节点横坐标
@@ -325,27 +325,27 @@ public:
 
 	// 继续动画
 	virtual void resumeAction(
-		const String & strActionName
+		String& strActionName
 	);
 
 	// 暂停动画
 	virtual void pauseAction(
-		const String & strActionName
+		String& strActionName
 	);
 
 	// 停止动画
 	virtual void stopAction(
-		const String & strActionName
+		String& strActionName
 	);
 
 	// 获取名称相同的动画
 	virtual Action * getAction(
-		const String & strActionName
+		String& strActionName
 	);
 
 	// 获取所有名称相同的动画
 	virtual std::vector<Action*> getActions(
-		const String & strActionName
+		String& strActionName
 	);
 
 	// 继续所有暂停动画
@@ -449,12 +449,12 @@ public:
 
 	// 从文件图片创建精灵
 	Sprite(
-		const String & imageFileName
+		String& imageFileName
 	);
 
 	// 从文件图片创建精灵并裁剪
 	Sprite(
-		const String & imageFileName,
+		String& imageFileName,
 		double x,
 		double y,
 		double width,
@@ -465,7 +465,7 @@ public:
 
 	// 从本地文件加载图片
 	virtual void open(
-		const String & imageFileName
+		String& imageFileName
 	);
 	
 	// 加载图片
@@ -499,7 +499,7 @@ public:
 	Text();
 
 	Text(
-		const String & text	/* 文字内容 */
+		String& text	/* 文字内容 */
 	);
 
 	Text(
@@ -507,12 +507,12 @@ public:
 	);
 
 	Text(
-		const String & text,/* 文字内容 */
+		String& text,/* 文字内容 */
 		Font * font			/* 字体样式 */
 	);
 
 	Text(
-		const String & text,					/* 文字内容*/
+		String& text,					/* 文字内容*/
 		String fontFamily,						/* 字体 */
 		double fontSize = 22,					/* 字号 */
 		UINT32 color = Color::WHITE,			/* 颜色 */
@@ -536,7 +536,7 @@ public:
 
 	// 设置文本
 	void setText(
-		const String & text
+		String& text
 	);
 
 	// 设置字体
@@ -578,32 +578,32 @@ public:
 
 	// 创建按钮
 	Button(
-		Node * normal,		/* 普通状态 */
-		ButtonCallback callback = nullptr
+		Node * normal,			/* 普通状态 */
+		Function func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建按钮
 	Button(
-		Node * normal,		/* 普通状态 */
-		Node * selected,	/* 鼠标按下状态 */
-		ButtonCallback callback = nullptr
+		Node * normal,			/* 普通状态 */
+		Node * selected,		/* 鼠标按下状态 */
+		Function func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建按钮
 	Button(
-		Node * normal,		/* 普通状态 */
-		Node * mouseover,	/* 鼠标移入状态 */
-		Node * selected,	/* 鼠标按下状态 */
-		ButtonCallback callback = nullptr
+		Node * normal,			/* 普通状态 */
+		Node * mouseover,		/* 鼠标移入状态 */
+		Node * selected,		/* 鼠标按下状态 */
+		Function func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建按钮
 	Button(
-		Node * normal,		/* 普通状态 */
-		Node * mouseover,	/* 鼠标移入状态 */
-		Node * selected,	/* 鼠标移入状态 */
-		Node * disabled,	/* 按钮禁用状态 */
-		ButtonCallback callback = nullptr
+		Node * normal,			/* 普通状态 */
+		Node * mouseover,		/* 鼠标移入状态 */
+		Node * selected,		/* 鼠标移入状态 */
+		Node * disabled,		/* 按钮禁用状态 */
+		Function func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 获取按钮状态是启用还是禁用
@@ -624,7 +624,7 @@ public:
 		Node * mouseover
 	);
 
-	// 设置鼠标选中按钮时显示的按钮
+	// 设置鼠标按下按钮时显示的按钮
 	virtual void setSelected(
 		Node * selected
 	);
@@ -634,9 +634,9 @@ public:
 		Node * disabled
 	);
 
-	// 设置回调函数
-	void setCallback(
-		ButtonCallback callback
+	// 设置按钮点击后的执行函数
+	void setFunction(
+		Function func
 	);
 
 	// 更新按钮状态
@@ -651,18 +651,18 @@ protected:
 	// 刷新按钮显示
 	virtual void _updateVisiable();
 
-	// 执行按钮回调函数
+	// 执行按钮函数对象
 	virtual void _runCallback();
 
 protected:
-	Node *			m_pNormal;
-	Node *			m_pMouseover;
-	Node *			m_pSelected;
-	Node *			m_pDisabled;
-	bool			m_bEnable;
-	bool			m_bIsSelected;
-	BTN_STATE		m_eBtnState;
-	ButtonCallback	m_Callback;
+	Node *		m_pNormal;
+	Node *		m_pMouseover;
+	Node *		m_pSelected;
+	Node *		m_pDisabled;
+	bool		m_bEnable;
+	bool		m_bIsSelected;
+	BTN_STATE	m_eBtnState;
+	Function	m_Callback;
 };
 
 
@@ -675,42 +675,42 @@ public:
 
 	// 创建开关按钮
 	ButtonToggle(
-		Node * onNormal,
-		Node * offNormal,
-		ButtonCallback callback = nullptr
+		Node * onNormal,		/* 按钮打开时，普通状态 */
+		Node * offNormal,		/* 按钮关闭时，普通状态 */
+		Function func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建开关按钮
 	ButtonToggle(
-		Node * onNormal,
-		Node * offNormal,
-		Node * onSelected,
-		Node * offSelected,
-		ButtonCallback callback = nullptr
+		Node * onNormal,		/* 按钮打开时，普通状态 */
+		Node * offNormal,		/* 按钮关闭时，普通状态 */
+		Node * onSelected,		/* 按钮打开时，鼠标按下状态 */
+		Node * offSelected,		/* 按钮关闭时，鼠标按下状态 */
+		Function func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建开关按钮
 	ButtonToggle(
-		Node * onNormal,
-		Node * offNormal,
-		Node * onMouseOver,
-		Node * offMouseOver,
-		Node * onSelected,
-		Node * offSelected,
-		ButtonCallback callback = nullptr
+		Node * onNormal,		/* 按钮打开时，普通状态 */
+		Node * offNormal,		/* 按钮关闭时，普通状态 */
+		Node * onMouseOver,		/* 按钮打开时，鼠标移入状态 */
+		Node * offMouseOver,	/* 按钮关闭时，鼠标移入状态 */
+		Node * onSelected,		/* 按钮打开时，鼠标按下状态 */
+		Node * offSelected,		/* 按钮关闭时，鼠标按下状态 */
+		Function func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建开关按钮
 	ButtonToggle(
-		Node * onNormal,
-		Node * offNormal,
-		Node * onMouseOver,
-		Node * offMouseOver,
-		Node * onSelected,
-		Node * offSelected,
-		Node * onDisabled,
-		Node * offDisabled,
-		ButtonCallback callback = nullptr
+		Node * onNormal,		/* 按钮打开时，普通状态 */
+		Node * offNormal,		/* 按钮关闭时，普通状态 */
+		Node * onMouseOver,		/* 按钮打开时，鼠标移入状态 */
+		Node * offMouseOver,	/* 按钮关闭时，鼠标移入状态 */
+		Node * onSelected,		/* 按钮打开时，鼠标按下状态 */
+		Node * offSelected,		/* 按钮关闭时，鼠标按下状态 */
+		Node * onDisabled,		/* 按钮打开时，禁用状态 */
+		Node * offDisabled,		/* 按钮关闭时，禁用状态 */
+		Function func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 获取开关状态（打开或关闭）
@@ -731,7 +731,7 @@ public:
 		Node * mouseover
 	) override;
 
-	// 设置按钮打开状态下，鼠标选中按钮时显示的按钮
+	// 设置按钮打开状态下，鼠标按下按钮时显示的按钮
 	virtual void setSelected(
 		Node * selected
 	) override;
@@ -751,7 +751,7 @@ public:
 		Node * mouseover
 	);
 
-	// 设置按钮关闭状态下，鼠标选中按钮时显示的按钮
+	// 设置按钮关闭状态下，鼠标按下按钮时显示的按钮
 	void setSelectedOff(
 		Node * selected
 	);
@@ -765,18 +765,18 @@ protected:
 	// 刷新按钮开关
 	virtual void _updateState();
 
-	// 执行按钮回调函数
+	// 执行按钮函数对象
 	virtual void _runCallback() override;
 
 protected:
-	Node * m_pNormalOn;
-	Node * m_pNormalOff;
-	Node * m_pMouseoverOn;
-	Node * m_pMouseoverOff;
-	Node * m_pSelectedOn;
-	Node * m_pSelectedOff;
-	Node * m_pDisabledOn;
-	Node * m_pDisabledOff;
+	Node *	m_pNormalOn;
+	Node *	m_pNormalOff;
+	Node *	m_pMouseoverOn;
+	Node *	m_pMouseoverOff;
+	Node *	m_pSelectedOn;
+	Node *	m_pSelectedOff;
+	Node *	m_pDisabledOn;
+	Node *	m_pDisabledOff;
 	bool	m_bState;
 };
 

@@ -9,26 +9,19 @@ namespace e2d
 {
 
 
-// 返回值和参数列表都为空的函数
-typedef std::function<void(void)> VoidFunction;
+// 函数对象
+typedef std::function<void()> Function;
 
-// 监听器回调函数
-typedef VoidFunction ListenerCallback;
-
-// 定时器回调函数
-typedef VoidFunction TimerCallback;
-
-// 按钮点击回调函数
-typedef VoidFunction ButtonCallback;
-
+// 创建函数对象
 template<typename Func>
-inline VoidFunction CreateCallback(Func&& func)
+inline Function CreateFunc(Func&& func)
 {
 	return std::bind(func);
 }
 
+// 创建函数对象
 template<typename Object, typename Func>
-inline VoidFunction CreateCallback(Object&& obj, Func&& func)
+inline Function CreateFunc(Object&& obj, Func&& func)
 {
 	return std::bind(func, obj);
 }
@@ -463,7 +456,7 @@ public:
 
 	// 设置字体
 	void setFamily(
-		const String & fontFamily
+		String& fontFamily
 	);
 
 	// 设置字号
@@ -514,12 +507,12 @@ public:
 
 	// 从本地文件中读取资源
 	Image(
-		const String & strFilePath	/* 图片文件路径 */
+		String& strFilePath	/* 图片文件路径 */
 	);
 
 	// 从本地文件中读取资源
 	Image(
-		const String & strFilePath,/* 图片文件路径 */
+		String& strFilePath,/* 图片文件路径 */
 		double nClipX,		/* 裁剪位置 X 坐标 */
 		double nClipY,		/* 裁剪位置 Y 坐标 */
 		double nClipWidth,	/* 裁剪宽度 */
@@ -530,7 +523,7 @@ public:
 
 	// 从本地文件中读取图片
 	void open(
-		const String & strFilePath
+		String& strFilePath
 	);
 
 	// 裁剪图片
@@ -573,7 +566,7 @@ public:
 
 	// 预加载资源
 	static bool preload(
-		const String & strFileName	/* 图片文件路径 */
+		String& strFileName	/* 图片文件路径 */
 	);
 
 	// 清空缓存
@@ -673,8 +666,12 @@ public:
 	Listener();
 
 	Listener(
-		ListenerCallback callback,	/* 回调函数 */
-		const String & name = L""	/* 监听器名称 */
+		Function func	/* 监听到消息时的执行函数 */
+	);
+
+	Listener(
+		Function func,	/* 监听到消息时的执行函数 */
+		String& name	/* 监听器名称 */
 	);
 
 	// 启动
@@ -694,12 +691,12 @@ public:
 
 	// 修改名称
 	void setName(
-		const String & name
+		String& name
 	);
 
-	// 修改回调函数
-	void setCallback(
-		ListenerCallback callback
+	// 设置监听到消息时的执行函数
+	void setFunction(
+		Function func
 	);
 
 	// 更新
@@ -709,7 +706,7 @@ protected:
 	String m_sName;
 	bool m_bRunning;
 	bool m_bClear;
-	ListenerCallback m_callback;
+	Function m_callback;
 };
 
 // String 类模板函数定义

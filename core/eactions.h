@@ -48,14 +48,14 @@ public:
 
 	// 设置动作名称
 	virtual void setName(
-		const String &name
+		String&name
 	);
-
-	// 获取一个新的拷贝动作
-	virtual Action * clone() const = 0;
 
 	// 获取一个新的逆向动作
 	virtual Action * reverse() const;
+
+	// 获取一个新的拷贝动作
+	virtual Action * clone() const = 0;
 
 	// 重置动作
 	virtual void reset();
@@ -514,7 +514,6 @@ public:
 
 	// 创建帧动画
 	Animation(
-		double interval,	/* 帧间隔（秒） */
 		int number,			/* 帧数量 */
 		Image * frame,		/* 第一帧 */
 		...
@@ -555,17 +554,17 @@ protected:
 };
 
 
-class ActionCallback :
+class ActionFunc :
 	public Action
 {
 public:
-	// 创建执行回调函数的动作
-	ActionCallback(
-		VoidFunction callback /* 回调函数 */
+	// 创建执行函数对象的动作
+	ActionFunc(
+		Function func /* 函数对象 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual ActionCallback * clone() const override;
+	virtual ActionFunc * clone() const override;
 
 protected:
 	// 初始化动作
@@ -575,7 +574,7 @@ protected:
 	virtual void _update() override;
 
 protected:
-	VoidFunction m_Callback;
+	Function m_Callback;
 };
 
 }
@@ -689,9 +688,9 @@ namespace e2d
 			...
 		);
 
-		// 创建执行回调函数的动作
-		ActionCallback* Callback(
-			VoidFunction callback /* 回调函数 */
+		// 创建执行函数对象的动作
+		ActionFunc* Func(
+			Function func /* 函数对象 */
 		);
 	}
 }

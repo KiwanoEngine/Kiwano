@@ -76,15 +76,15 @@
     <ClCompile Include="..\..\core\Shape\Ellipse.cpp" />
     <ClCompile Include="..\..\core\Shape\Rect.cpp" />
     <ClCompile Include="..\..\core\Shape\Shape.cpp" />
-    <ClCompile Include="..\..\core\Tool\File.cpp" />
+    <ClCompile Include="..\..\core\Tool\Data.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
     <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Random.cpp" />
     <ClCompile Include="..\..\core\Tool\Timer.cpp" />
-    <ClCompile Include="..\..\core\Transition\ETransition.cpp" />
-    <ClCompile Include="..\..\core\Transition\ETransitionEmerge.cpp" />
-    <ClCompile Include="..\..\core\Transition\ETransitionFade.cpp" />
-    <ClCompile Include="..\..\core\Transition\ETransitionMove.cpp" />
+    <ClCompile Include="..\..\core\Transition\Transition.cpp" />
+    <ClCompile Include="..\..\core\Transition\TransitionEmerge.cpp" />
+    <ClCompile Include="..\..\core\Transition\TransitionFade.cpp" />
+    <ClCompile Include="..\..\core\Transition\TransitionMove.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{722EA245-ADD5-4296-8C85-8FF42C0335D3}</ProjectGuid>

@@ -14,7 +14,7 @@ e2d::ButtonToggle::ButtonToggle()
 {
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, ButtonCallback callback)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Function func)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -28,10 +28,10 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, B
 {
 	this->setNormal(toggleOnNormal);
 	this->setNormalOff(toggleOffNormal);
-	this->setCallback(callback);
+	this->setFunction(func);
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, ButtonCallback callback)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, Function func)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -47,10 +47,10 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setNormalOff(toggleOffNormal);
 	this->setSelected(toggleOnSelected);
 	this->setSelectedOff(toggleOffSelected);
-	this->setCallback(callback);
+	this->setFunction(func);
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, ButtonCallback callback)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Function func)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -68,10 +68,10 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setMouseOverOff(toggleOffMouseOver);
 	this->setSelected(toggleOnSelected);
 	this->setSelectedOff(toggleOffSelected);
-	this->setCallback(callback);
+	this->setFunction(func);
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Node * toggleOnDisabled, Node * toggleOffDisabled, ButtonCallback callback)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Node * toggleOnDisabled, Node * toggleOffDisabled, Function func)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -91,7 +91,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setSelectedOff(toggleOffSelected);
 	this->setDisabled(toggleOnDisabled);
 	this->setDisabledOff(toggleOffDisabled);
-	this->setCallback(callback);
+	this->setFunction(func);
 }
 
 bool e2d::ButtonToggle::getState() const

@@ -144,9 +144,6 @@
     <ClCompile Include="..\..\core\Tool\Music.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\File.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\MusicManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -174,9 +171,6 @@
     <ClCompile Include="..\..\core\Common\Listener.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Path.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Transition\Transition.cpp">
       <Filter>Transition</Filter>
     </ClCompile>
@@ -188,6 +182,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Transition\TransitionMove.cpp">
       <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Data.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Path.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

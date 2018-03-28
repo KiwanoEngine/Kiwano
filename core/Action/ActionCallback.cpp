@@ -1,21 +1,21 @@
 #include "..\eactions.h"
 
-e2d::ActionCallback::ActionCallback(VoidFunction callback) :
-	m_Callback(callback)
+e2d::ActionFunc::ActionFunc(Function func) :
+	m_Callback(func)
 {
 }
 
-e2d::ActionCallback * e2d::ActionCallback::clone() const
+e2d::ActionFunc * e2d::ActionFunc::clone() const
 {
-	return new ActionCallback(m_Callback);
+	return new ActionFunc(m_Callback);
 }
 
-void e2d::ActionCallback::_init()
+void e2d::ActionFunc::_init()
 {
-	// 执行回调函数的动作不需要初始化
+	// 执行函数对象的动作不需要初始化
 }
 
-void e2d::ActionCallback::_update()
+void e2d::ActionFunc::_update()
 {
 	m_Callback();
 	this->stop();

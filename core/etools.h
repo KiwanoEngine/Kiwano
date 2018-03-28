@@ -48,12 +48,12 @@ class Timer :
 
 public:
 	Timer(
-		const String &name = L"",			/* 定时器名称 */
-		TimerCallback callback = nullptr,	/* 定时器回调函数 */
-		double interval = 0,				/* 时间间隔（秒） */
-		int times = -1,						/* 执行次数（设 -1 为永久执行） */
-		bool atOnce = false,				/* 是否立即执行 */
-		bool autoRelease = false			/* 自动清除 */
+		Function func = nullptr,	/* 定时器执行函数 */
+		String name = L"",			/* 定时器名称 */
+		double interval = 0,		/* 时间间隔（秒） */
+		int times = -1,				/* 执行次数（设 -1 为永久执行） */
+		bool atOnce = false,		/* 是否立即执行 */
+		bool autoRelease = false	/* 自动清除 */
 	);
 
 	// 启动定时器
@@ -79,7 +79,7 @@ public:
 
 	// 设置定时器名称
 	void setName(
-		const String &name
+		String&name
 	);
 
 	// 设置定时器执行间隔
@@ -87,9 +87,9 @@ public:
 		double fInterval	/* 时间间隔（秒） */
 	);
 
-	// 设置定时器回调函数
-	void setCallback(
-		TimerCallback callback
+	// 设置定时器的执行函数
+	void setFunction(
+		Function func
 	);
 
 	// 设置定时器执行次数
@@ -112,7 +112,7 @@ protected:
 	int				m_nUpdateTimes;
 	double			m_fInterval;
 	double			m_fLast;
-	TimerCallback	m_Callback;
+	Function	m_Callback;
 };
 
 
@@ -122,67 +122,67 @@ class Data
 public:
 	// 保存 int 类型的值
 	static void saveInt(
-		const String & key,					/* 键值 */
-		int value,							/* 数据 */
-		const String & field = L"Defalut"	/* 字段名称 */
+		String& key,				/* 键值 */
+		int value,					/* 数据 */
+		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 保存 double 类型的值
 	static void saveDouble(
-		const String & key,					/* 键值 */
-		double value,						/* 数据 */
-		const String & field = L"Defalut"	/* 字段名称 */
+		String& key,				/* 键值 */
+		double value,				/* 数据 */
+		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 保存 bool 类型的值
 	static void saveBool(
-		const String & key,					/* 键值 */
-		bool value,							/* 数据 */
-		const String & field = L"Defalut"	/* 字段名称 */
+		String& key,				/* 键值 */
+		bool value,					/* 数据 */
+		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 保存 字符串 类型的值
 	static void saveString(
-		const String & key,					/* 键值 */
-		const String & value,				/* 数据 */
-		const String & field = L"Defalut"	/* 字段名称 */
+		String& key,				/* 键值 */
+		String& value,				/* 数据 */
+		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 获取 int 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static int getInt(
-		const String & key,					/* 键值 */
-		int defaultValue,					/* 默认值 */
-		const String & field = L"Defalut"	/* 字段名称 */
+		String& key,				/* 键值 */
+		int defaultValue,			/* 默认值 */
+		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 获取 double 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static double getDouble(
-		const String & key,					/* 键值 */
-		double defaultValue,				/* 默认值 */
-		const String & field = L"Defalut"	/* 字段名称 */
+		String& key,				/* 键值 */
+		double defaultValue,		/* 默认值 */
+		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 获取 bool 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static bool getBool(
-		const String & key,					/* 键值 */
-		bool defaultValue,					/* 默认值 */
-		const String & field = L"Defalut"	/* 字段名称 */
+		String& key,				/* 键值 */
+		bool defaultValue,			/* 默认值 */
+		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 获取 字符串 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static String getString(
-		const String & key,					/* 键值 */
-		const String & defaultValue,		/* 默认值 */
-		const String & field = L"Defalut"	/* 字段名称 */
+		String& key,				/* 键值 */
+		String& defaultValue,		/* 默认值 */
+		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 修改数据文件的名称
 	static void setDataFileName(
-		const String & strFileName			/* 文件名称 */
+		String& strFileName			/* 文件名称 */
 	);
 
 	// 获取数据文件的完整路径
@@ -205,18 +205,18 @@ public:
 
 	// 获取文件扩展名
 	static String getFileExtension(
-		const String & filePath
+		String& filePath
 	);
 
 	// 打开保存文件对话框
 	static String getSaveFilePath(
-		const String & title = L"保存到",	/* 对话框标题 */
-		const String & defExt = L""			/* 默认扩展名 */
+		const String& title = L"保存到",		/* 对话框标题 */
+		const String& defExt = L""			/* 默认扩展名 */
 	);
 
 	// 创建文件夹
 	static bool createFolder(
-		const String & strDirPath	/* 文件夹路径 */
+		String& strDirPath	/* 文件夹路径 */
 	);
 };
 
@@ -231,14 +231,14 @@ public:
 	Music();
 
 	Music(
-		const String & strFileName	/* 音乐文件路径 */
+		String& strFileName	/* 音乐文件路径 */
 	);
 
 	virtual ~Music();
 
 	// 打开音乐文件
 	bool open(
-		const String & strFileName	/* 音乐文件路径 */
+		String& strFileName	/* 音乐文件路径 */
 	);
 
 	// 播放

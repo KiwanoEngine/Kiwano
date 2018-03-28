@@ -8,7 +8,7 @@ e2d::Text::Text()
 	this->setFont(new Font());
 }
 
-e2d::Text::Text(const String & text)
+e2d::Text::Text(String& text)
 	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
@@ -25,7 +25,7 @@ e2d::Text::Text(Font * font)
 	this->setFont(font);
 }
 
-e2d::Text::Text(const String & text, Font * font)
+e2d::Text::Text(String& text, Font * font)
 	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
@@ -34,7 +34,7 @@ e2d::Text::Text(const String & text, Font * font)
 	this->setFont(font);
 }
 
-e2d::Text::Text(const String & text, String fontFamily, double fontSize, UINT32 color, UINT32 fontWeight, bool italic)
+e2d::Text::Text(String& text, String fontFamily, double fontSize, UINT32 color, UINT32 fontWeight, bool italic)
 	: m_bWordWrapping(false)
 	, m_pFont(nullptr)
 	, m_fWordWrappingWidth(0)
@@ -68,7 +68,7 @@ e2d::Font * e2d::Text::getFont() const
 	return m_pFont;
 }
 
-void e2d::Text::setText(const String & text)
+void e2d::Text::setText(String& text)
 {
 	m_sText = text;
 	_initTextLayout();

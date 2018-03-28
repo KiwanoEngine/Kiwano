@@ -2,7 +2,7 @@
 #include "..\enodes.h"
 #include "..\emanagers.h"
 
-e2d::Timer::Timer(const String & name, TimerCallback callback, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
+e2d::Timer::Timer(Function func, String name, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_Callback(nullptr)
@@ -14,7 +14,7 @@ e2d::Timer::Timer(const String & name, TimerCallback callback, double interval /
 	, m_bClear(true)
 {
 	this->setName(name);
-	this->setCallback(callback);
+	this->setFunction(func);
 	this->setUpdateTimes(updateTimes);
 	this->setInterval(interval);
 	m_bAutoRelease = autoRelease;
@@ -49,7 +49,7 @@ e2d::String e2d::Timer::getName() const
 	return m_sName;
 }
 
-void e2d::Timer::setName(const String & name)
+void e2d::Timer::setName(String& name)
 {
 	m_sName = name;
 }
@@ -59,9 +59,9 @@ void e2d::Timer::setInterval(double interval)
 	m_fInterval = max(interval, 0);
 }
 
-void e2d::Timer::setCallback(TimerCallback callback)
+void e2d::Timer::setFunction(Function func)
 {
-	m_Callback = callback;
+	m_Callback = func;
 }
 
 void e2d::Timer::setUpdateTimes(int updateTimes)

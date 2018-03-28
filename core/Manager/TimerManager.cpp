@@ -28,9 +28,9 @@ void e2d::TimerManager::__update()
 	}
 }
 
-void e2d::TimerManager::start(double timeOut, TimerCallback callback)
+void e2d::TimerManager::start(double timeOut, Function func)
 {
-	(new Timer(L"", callback, timeOut, 1, false, true))->start();
+	(new Timer(func, L"", timeOut, 1, false, true))->start();
 }
 
 void e2d::TimerManager::__add(Timer * pTimer)
@@ -62,7 +62,7 @@ void e2d::TimerManager::__add(Timer * pTimer)
 	}
 }
 
-void e2d::TimerManager::start(const String & name)
+void e2d::TimerManager::start(String& name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -73,7 +73,7 @@ void e2d::TimerManager::start(const String & name)
 	}
 }
 
-void e2d::TimerManager::stop(const String & name)
+void e2d::TimerManager::stop(String& name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -84,7 +84,7 @@ void e2d::TimerManager::stop(const String & name)
 	}
 }
 
-void e2d::TimerManager::clear(const String & name)
+void e2d::TimerManager::clear(String& name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -95,7 +95,7 @@ void e2d::TimerManager::clear(const String & name)
 	}
 }
 
-std::vector<e2d::Timer*> e2d::TimerManager::get(const String & name)
+std::vector<e2d::Timer*> e2d::TimerManager::get(String& name)
 {
 	std::vector<Timer*> vTimers;
 	for (auto timer : s_vTimers)

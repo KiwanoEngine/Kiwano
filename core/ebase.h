@@ -14,11 +14,11 @@ class Game
 public:
 	// 初始化游戏
 	static bool init(
-		const String & sTitle,			/* 窗口标题 */
-		UINT32 nWidth,					/* 窗口宽度 */
-		UINT32 nHeight,					/* 窗口高度 */
-		LPCTSTR pIconID = nullptr,		/* 窗口图标 */
-		const String & sAppname = L""	/* AppName */
+		String& sTitle,				/* 窗口标题 */
+		UINT32 nWidth = 640U,		/* 窗口宽度 */
+		UINT32 nHeight = 480U,		/* 窗口高度 */
+		LPCTSTR pIconID = nullptr,	/* 窗口图标 */
+		String sAppname = L""		/* AppName */
 	);
 
 	// 启动游戏
@@ -73,7 +73,7 @@ public:
 
 	// 设置窗口标题
 	static void setTitle(
-		const String & sTitle
+		String& sTitle
 	);
 
 	// 打开/隐藏控制台
@@ -89,7 +89,7 @@ public:
 private:
 	// 初始化窗口
 	static bool __init(
-		const String & sTitle,
+		String& sTitle,
 		UINT32 nWidth,
 		UINT32 nHeight,
 		LPCTSTR pIconID
@@ -97,7 +97,7 @@ private:
 
 	// 创建进程互斥体
 	static bool __initMutex(
-		const String & sTitle
+		String& sTitle
 	);
 
 	// 重置窗口属性
@@ -153,23 +153,23 @@ class Input
 public:
 	// 添加输入监听
 	static void add(
-		ListenerCallback callback,	/* 回调函数 */
-		const String & name = L""	/* 监听器名称 */
+		Function func,		/* 监听到消息时的执行函数 */
+		String name = L""	/* 监听器名称 */
 	);
 
 	// 启动输入监听
 	static void start(
-		const String & name
+		String& name
 	);
 
 	// 停止输入监听
 	static void stop(
-		const String & name
+		String& name
 	);
 
 	// 清除输入监听
 	static void clear(
-		const String & name
+		String& name
 	);
 
 	// 启动所有监听器
@@ -183,7 +183,7 @@ public:
 
 	// 获取监听器
 	static std::vector<Listener*> get(
-		const String & name
+		String& name
 	);
 
 	// 获取全部监听器

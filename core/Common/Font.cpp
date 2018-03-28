@@ -50,7 +50,7 @@ bool e2d::Font::isItalic() const
 	return m_bItalic;
 }
 
-void e2d::Font::setFamily(const String & fontFamily)
+void e2d::Font::setFamily(String& fontFamily)
 {
 	m_sFontFamily = fontFamily;
 	m_bRecreateNeeded = true;

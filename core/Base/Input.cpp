@@ -186,13 +186,12 @@ void e2d::Input::__add(Listener * pListener)
 	}
 }
 
-void e2d::Input::add(ListenerCallback callback, const String & name)
+void e2d::Input::add(Function func, String name)
 {
-	auto pListener = new Listener(callback, name);
-	pListener->start();
+	(new Listener(func, name))->start();
 }
 
-void e2d::Input::start(const String & name)
+void e2d::Input::start(String& name)
 {
 	for (const auto & pListener : s_vListeners)
 	{
@@ -203,7 +202,7 @@ void e2d::Input::start(const String & name)
 	}
 }
 
-void e2d::Input::stop(const String & name)
+void e2d::Input::stop(String& name)
 {
 	for (const auto & pListener : s_vListeners)
 	{
@@ -214,7 +213,7 @@ void e2d::Input::stop(const String & name)
 	}
 }
 
-void e2d::Input::clear(const String & name)
+void e2d::Input::clear(String& name)
 {
 	for (const auto & pListener : s_vListeners)
 	{
@@ -249,7 +248,7 @@ void e2d::Input::clearAll()
 	}
 }
 
-std::vector<Listener*> e2d::Input::get(const String & name)
+std::vector<Listener*> e2d::Input::get(String& name)
 {
 	std::vector<Listener*> vListeners;
 	for (auto pListener : s_vListeners)

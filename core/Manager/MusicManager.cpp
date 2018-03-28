@@ -15,7 +15,7 @@ static MusicList& getMusicList()
 }
 
 
-bool e2d::MusicManager::preload(const String & strFilePath)
+bool e2d::MusicManager::preload(String& strFilePath)
 {
 	UINT nRet = strFilePath.getHashCode();
 
@@ -42,7 +42,7 @@ bool e2d::MusicManager::preload(const String & strFilePath)
 	return false;
 }
 
-bool e2d::MusicManager::play(const String & strFilePath, int nLoopCount)
+bool e2d::MusicManager::play(String& strFilePath, int nLoopCount)
 {
 	if (MusicManager::preload(strFilePath))
 	{
@@ -56,7 +56,7 @@ bool e2d::MusicManager::play(const String & strFilePath, int nLoopCount)
 	return false;
 }
 
-void e2d::MusicManager::pause(const String & strFilePath)
+void e2d::MusicManager::pause(String& strFilePath)
 {
 	auto music = MusicManager::get(strFilePath);
 	if (music)
@@ -65,7 +65,7 @@ void e2d::MusicManager::pause(const String & strFilePath)
 	}
 }
 
-void e2d::MusicManager::resume(const String & strFilePath)
+void e2d::MusicManager::resume(String& strFilePath)
 {
 	auto music = MusicManager::get(strFilePath);
 	if (music)
@@ -74,7 +74,7 @@ void e2d::MusicManager::resume(const String & strFilePath)
 	}
 }
 
-void e2d::MusicManager::stop(const String & strFilePath)
+void e2d::MusicManager::stop(String& strFilePath)
 {
 	auto music = MusicManager::get(strFilePath);
 	if (music)
@@ -83,7 +83,7 @@ void e2d::MusicManager::stop(const String & strFilePath)
 	}
 }
 
-e2d::Music * e2d::MusicManager::get(const String & strFilePath)
+e2d::Music * e2d::MusicManager::get(String& strFilePath)
 {
 	if (strFilePath.isEmpty())
 		return nullptr;

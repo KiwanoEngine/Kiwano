@@ -12,13 +12,13 @@ e2d::Sprite::Sprite(Image * image)
 	open(image);
 }
 
-e2d::Sprite::Sprite(const String & imageFileName)
+e2d::Sprite::Sprite(String& imageFileName)
 	: m_pImage(nullptr)
 {
 	open(imageFileName);
 }
 
-e2d::Sprite::Sprite(const String & imageFileName, double x, double y, double width, double height)
+e2d::Sprite::Sprite(String& imageFileName, double x, double y, double width, double height)
 	: m_pImage(nullptr)
 {
 	open(imageFileName);
@@ -42,7 +42,7 @@ void e2d::Sprite::open(Image * image)
 	}
 }
 
-void e2d::Sprite::open(const String & imageFileName)
+void e2d::Sprite::open(String& imageFileName)
 {
 	open(new Image(imageFileName));
 }

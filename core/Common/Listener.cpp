@@ -9,10 +9,18 @@ e2d::Listener::Listener()
 	Input::__add(this);
 }
 
-e2d::Listener::Listener(ListenerCallback callback, const String & name)
+e2d::Listener::Listener(Function func)
+	: m_bRunning(false)
+	, m_callback(func)
+	, m_bClear(false)
+{
+	Input::__add(this);
+}
+
+e2d::Listener::Listener(Function func, String& name)
 	: m_bRunning(false)
 	, m_sName(name)
-	, m_callback(callback)
+	, m_callback(func)
 	, m_bClear(false)
 {
 	Input::__add(this);
@@ -44,14 +52,14 @@ e2d::String e2d::Listener::getName()
 	return m_sName;
 }
 
-void e2d::Listener::setName(const String & name)
+void e2d::Listener::setName(String& name)
 {
 	m_sName = name;
 }
 
-void e2d::Listener::setCallback(ListenerCallback callback)
+void e2d::Listener::setFunction(Function func)
 {
-	m_callback = callback;
+	m_callback = func;
 }
 
 void e2d::Listener::update()

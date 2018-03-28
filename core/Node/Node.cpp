@@ -614,7 +614,7 @@ e2d::Scene * e2d::Node::getParentScene() const
 	return m_pParentScene;
 }
 
-std::vector<e2d::Node*> e2d::Node::getChildren(const String & name)
+std::vector<e2d::Node*> e2d::Node::getChildren(String& name)
 {
 	std::vector<Node*> vChildren;
 	unsigned int hash = name.getHashCode();
@@ -684,7 +684,7 @@ bool e2d::Node::removeChild(Node * child)
 	return false;
 }
 
-void e2d::Node::removeChildren(const String & childName)
+void e2d::Node::removeChildren(String& childName)
 {
 	WARN_IF(childName.isEmpty(), "Invalid Node name.");
 
@@ -753,7 +753,7 @@ void e2d::Node::runAction(Action * action)
 	}
 }
 
-void e2d::Node::resumeAction(const String & strActionName)
+void e2d::Node::resumeAction(String& strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -765,7 +765,7 @@ void e2d::Node::resumeAction(const String & strActionName)
 	}
 }
 
-void e2d::Node::pauseAction(const String & strActionName)
+void e2d::Node::pauseAction(String& strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -777,7 +777,7 @@ void e2d::Node::pauseAction(const String & strActionName)
 	}
 }
 
-void e2d::Node::stopAction(const String & strActionName)
+void e2d::Node::stopAction(String& strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -789,7 +789,7 @@ void e2d::Node::stopAction(const String & strActionName)
 	}
 }
 
-e2d::Action * e2d::Node::getAction(const String & strActionName)
+e2d::Action * e2d::Node::getAction(String& strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -802,7 +802,7 @@ e2d::Action * e2d::Node::getAction(const String & strActionName)
 	return nullptr;
 }
 
-std::vector<e2d::Action*> e2d::Node::getActions(const String & strActionName)
+std::vector<e2d::Action*> e2d::Node::getActions(String& strActionName)
 {
 	std::vector<Action*>::iterator iter;
 	auto actions = ActionManager::get(strActionName);
@@ -970,7 +970,7 @@ void e2d::Node::setVisiable(bool value)
 	m_bVisiable = value;
 }
 
-void e2d::Node::setName(const String & name)
+void e2d::Node::setName(String& name)
 {
 	WARN_IF(name.isEmpty(), "Invalid Node name.");
 
