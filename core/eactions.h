@@ -48,7 +48,7 @@ public:
 
 	// 设置动作名称
 	virtual void setName(
-		String&name
+		String name
 	);
 
 	// 获取一个新的逆向动作

@@ -14,7 +14,7 @@ class Game
 public:
 	// 初始化游戏
 	static bool init(
-		String& sTitle,				/* 窗口标题 */
+		String sTitle,				/* 窗口标题 */
 		UINT32 nWidth = 640U,		/* 窗口宽度 */
 		UINT32 nHeight = 480U,		/* 窗口高度 */
 		LPCTSTR pIconID = nullptr,	/* 窗口图标 */
@@ -73,7 +73,7 @@ public:
 
 	// 设置窗口标题
 	static void setTitle(
-		String& sTitle
+		String sTitle
 	);
 
 	// 打开/隐藏控制台
@@ -89,7 +89,7 @@ public:
 private:
 	// 初始化窗口
 	static bool __init(
-		String& sTitle,
+		const String& sTitle,
 		UINT32 nWidth,
 		UINT32 nHeight,
 		LPCTSTR pIconID
@@ -97,7 +97,7 @@ private:
 
 	// 创建进程互斥体
 	static bool __initMutex(
-		String& sTitle
+		const String& sTitle
 	);
 
 	// 重置窗口属性
@@ -159,17 +159,17 @@ public:
 
 	// 启动输入监听
 	static void start(
-		String& name
+		String name
 	);
 
 	// 停止输入监听
 	static void stop(
-		String& name
+		String name
 	);
 
 	// 清除输入监听
 	static void clear(
-		String& name
+		String name
 	);
 
 	// 启动所有监听器
@@ -183,7 +183,7 @@ public:
 
 	// 获取监听器
 	static std::vector<Listener*> get(
-		String& name
+		String name
 	);
 
 	// 获取全部监听器

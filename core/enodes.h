@@ -123,7 +123,7 @@ public:
 
 	// 获取所有名称相同的子节点
 	virtual std::vector<Node*> getChildren(
-		String& name
+		String name
 	);
 
 	// 获取所有子节点
@@ -139,7 +139,7 @@ public:
 
 	// 移除所有名称相同的子节点
 	virtual void removeChildren(
-		String& childName
+		String childName
 	);
 
 	// 从父节点移除
@@ -160,7 +160,7 @@ public:
 
 	// 设置节点名称
 	virtual void setName(
-		String& name
+		String name
 	);
 
 	// 设置节点横坐标
@@ -325,27 +325,27 @@ public:
 
 	// 继续动画
 	virtual void resumeAction(
-		String& strActionName
+		String strActionName
 	);
 
 	// 暂停动画
 	virtual void pauseAction(
-		String& strActionName
+		String strActionName
 	);
 
 	// 停止动画
 	virtual void stopAction(
-		String& strActionName
+		String strActionName
 	);
 
 	// 获取名称相同的动画
 	virtual Action * getAction(
-		String& strActionName
+		String strActionName
 	);
 
 	// 获取所有名称相同的动画
 	virtual std::vector<Action*> getActions(
-		String& strActionName
+		String strActionName
 	);
 
 	// 继续所有暂停动画
@@ -449,12 +449,12 @@ public:
 
 	// 从文件图片创建精灵
 	Sprite(
-		String& imageFileName
+		String imageFileName
 	);
 
 	// 从文件图片创建精灵并裁剪
 	Sprite(
-		String& imageFileName,
+		String imageFileName,
 		double x,
 		double y,
 		double width,
@@ -465,7 +465,7 @@ public:
 
 	// 从本地文件加载图片
 	virtual void open(
-		String& imageFileName
+		String imageFileName
 	);
 	
 	// 加载图片
@@ -499,24 +499,24 @@ public:
 	Text();
 
 	Text(
-		String& text	/* 文字内容 */
+		String text		/* 文字内容 */
 	);
 
 	Text(
-		Font * font			/* 字体样式 */
+		Font * font		/* 字体样式 */
 	);
 
 	Text(
-		String& text,/* 文字内容 */
-		Font * font			/* 字体样式 */
+		String text,	/* 文字内容 */
+		Font * font		/* 字体样式 */
 	);
 
 	Text(
-		String& text,					/* 文字内容*/
+		String text,							/* 文字内容*/
 		String fontFamily,						/* 字体 */
 		double fontSize = 22,					/* 字号 */
 		UINT32 color = Color::WHITE,			/* 颜色 */
-		UINT32 fontWeight = FontWeight::REGULAR,/* 粗细值 */
+		UINT32 fontWeight = FontWeight::NORMAL,	/* 粗细值 */
 		bool italic = false						/* 斜体 */
 	);
 
@@ -525,18 +525,12 @@ public:
 	// 获取文本
 	String getText() const;
 
-	// 获取文本宽度
-	virtual double getWidth() const override;
-
-	// 获取文本宽度（不考虑缩放）
-	virtual double getRealWidth() const override;
-
 	// 获取字体
 	Font * getFont() const;
 
 	// 设置文本
 	void setText(
-		String& text
+		String text
 	);
 
 	// 设置字体
@@ -544,14 +538,29 @@ public:
 		Font * pFont
 	);
 
-	// 设置文字自动换行
-	void setWordWrappingEnable(
-		bool bEnable
+	// 设置文本自动换行宽度（默认为 0）
+	void setWrappingWidth(
+		double fWrappingWidth
 	);
 
-	// 设置文字换行宽度（WordWrapping 打开时生效）
-	void setWordWrappingWidth(
-		double fWordWrapWidth
+	// 设置行间距（默认为 0）
+	void setLineSpacing(
+		double fLineSpacing
+	);
+
+	// 设置对齐方式（默认为 TextAlign::LEFT）
+	void setAlignment(
+		UINT32 nAlign
+	);
+
+	// 设置下划线
+	void setUnderline(
+		bool hasUnderline
+	);
+
+	// 设置删除线
+	void setStrikethrough(
+		bool hasStrikethrough
 	);
 
 	// 渲染文字
@@ -563,9 +572,12 @@ protected:
 
 protected:
 	String	m_sText;
-	bool	m_bWordWrapping;
-	float	m_fWordWrappingWidth;
-	Font * m_pFont;
+	bool	m_bWrappingEnable;
+	bool	m_bHasUnderline;
+	bool	m_bHasStrikethrough;
+	float	m_fWrappingWidth;
+	Font *	m_pFont;
+	IDWriteTextLayout * m_pDWriteTextLayout;
 };
 
 

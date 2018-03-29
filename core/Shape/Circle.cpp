@@ -60,7 +60,7 @@ void e2d::Circle::_resize()
 	}
 }
 
-ID2D1EllipseGeometry * e2d::Circle::_getD2dGeometry() const
+ID2D1EllipseGeometry * e2d::Circle::getD2dGeometry() const
 {
 	return m_pD2dCircle;
 }

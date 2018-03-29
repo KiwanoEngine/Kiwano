@@ -12,7 +12,7 @@ static bool s_bInitialized = false;
 static e2d::String s_sAppName;
 
 
-bool e2d::Game::init(String& sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID, String sAppname)
+bool e2d::Game::init(String sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID, String sAppname)
 {
 	if (s_bInitialized)
 	{

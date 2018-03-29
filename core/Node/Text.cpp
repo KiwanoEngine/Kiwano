@@ -1,43 +1,58 @@
 #include "..\enodes.h"
 
 e2d::Text::Text()
-	: m_bWordWrapping(false)
+	: m_bWrappingEnable(false)
 	, m_pFont(nullptr)
-	, m_fWordWrappingWidth(0)
+	, m_fWrappingWidth(0)
+	, m_bHasUnderline(false)
+	, m_bHasStrikethrough(false)
+	, m_pDWriteTextLayout(nullptr)
 {
 	this->setFont(new Font());
 }
 
-e2d::Text::Text(String& text)
-	: m_bWordWrapping(false)
+e2d::Text::Text(String text)
+	: m_bWrappingEnable(false)
 	, m_pFont(nullptr)
-	, m_fWordWrappingWidth(0)
+	, m_fWrappingWidth(0)
+	, m_bHasUnderline(false)
+	, m_bHasStrikethrough(false)
+	, m_pDWriteTextLayout(nullptr)
 {
 	this->setText(text);
 	this->setFont(new Font());
 }
 
 e2d::Text::Text(Font * font)
-	: m_bWordWrapping(false)
+	: m_bWrappingEnable(false)
 	, m_pFont(nullptr)
-	, m_fWordWrappingWidth(0)
+	, m_fWrappingWidth(0)
+	, m_bHasUnderline(false)
+	, m_bHasStrikethrough(false)
+	, m_pDWriteTextLayout(nullptr)
 {
 	this->setFont(font);
 }
 
-e2d::Text::Text(String& text, Font * font)
-	: m_bWordWrapping(false)
+e2d::Text::Text(String text, Font * font)
+	: m_bWrappingEnable(false)
 	, m_pFont(nullptr)
-	, m_fWordWrappingWidth(0)
+	, m_fWrappingWidth(0)
+	, m_bHasUnderline(false)
+	, m_bHasStrikethrough(false)
+	, m_pDWriteTextLayout(nullptr)
 {
 	this->setText(text);
 	this->setFont(font);
 }
 
-e2d::Text::Text(String& text, String fontFamily, double fontSize, UINT32 color, UINT32 fontWeight, bool italic)
-	: m_bWordWrapping(false)
+e2d::Text::Text(String text, String fontFamily, double fontSize, UINT32 color, UINT32 fontWeight, bool italic)
+	: m_bWrappingEnable(false)
 	, m_pFont(nullptr)
-	, m_fWordWrappingWidth(0)
+	, m_fWrappingWidth(0)
+	, m_bHasUnderline(false)
+	, m_bHasStrikethrough(false)
+	, m_pDWriteTextLayout(nullptr)
 {
 	this->setText(text);
 	this->setFont(new Font(fontFamily, fontSize, color, fontWeight, italic));
@@ -53,22 +68,12 @@ e2d::String e2d::Text::getText() const
 	return m_sText;
 }
 
-double e2d::Text::getWidth() const
-{
-	return m_fWordWrappingWidth * m_fScaleX;
-}
-
-double e2d::Text::getRealWidth() const
-{
-	return m_fWordWrappingWidth;
-}
-
 e2d::Font * e2d::Text::getFont() const
 {
 	return m_pFont;
 }
 
-void e2d::Text::setText(String& text)
+void e2d::Text::setText(String text)
 {
 	m_sText = text;
 	_initTextLayout();
@@ -86,29 +91,76 @@ void e2d::Text::setFont(Font * font)
 	}
 }
 
-void e2d::Text::setWordWrappingEnable(bool value)
+void e2d::Text::setWrappingWidth(double wordWrapWidth)
 {
-	m_bWordWrapping = value;
+	m_fWrappingWidth = max(static_cast<float>(wordWrapWidth), 0);
+	m_bWrappingEnable = (abs(m_fWrappingWidth) >= 1e-7);
 	_initTextLayout();
 }
 
-void e2d::Text::setWordWrappingWidth(double wordWrapWidth)
+void e2d::Text::setLineSpacing(double fLineSpacing)
 {
-	m_fWordWrappingWidth = max(static_cast<float>(wordWrapWidth), 0);
-	_initTextLayout();
+	if (m_pFont)
+	{
+		if (fLineSpacing == 0.0f)
+		{
+			m_pFont->getDWriteTextFormat()->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
+		}
+		else
+		{
+			m_pFont->getDWriteTextFormat()->SetLineSpacing(
+				DWRITE_LINE_SPACING_METHOD_UNIFORM,
+				static_cast<float>(fLineSpacing),
+				static_cast<float>(fLineSpacing) * 0.8f
+			);
+		}
+		
+		_initTextLayout();
+	}
+}
+
+void e2d::Text::setAlignment(UINT32 nAlign)
+{
+	if (m_pFont)
+	{
+		m_pFont->getDWriteTextFormat()->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(nAlign));
+		_initTextLayout();
+	}
+}
+
+void e2d::Text::setUnderline(bool hasUnderline)
+{
+	if (m_bHasUnderline != hasUnderline)
+	{
+		m_bHasUnderline = hasUnderline;
+		_initTextLayout();
+	}
+}
+
+void e2d::Text::setStrikethrough(bool hasStrikethrough)
+{
+	if (m_bHasStrikethrough != hasStrikethrough)
+	{
+		m_bHasStrikethrough = hasStrikethrough;
+		_initTextLayout();
+	}
 }
 
 void e2d::Text::onRender()
 {
-	D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, m_bWordWrapping ? m_fWordWrappingWidth : m_fWidth, m_fHeight);
+	// 创建文本区域
+	D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, m_bWrappingEnable ? m_fWrappingWidth : m_fWidth, m_fHeight);
+	// 设置画刷颜色和透明度
 	Renderer::getSolidColorBrush()->SetColor(D2D1::ColorF(m_pFont->m_Color, m_fDisplayOpacity));
-	Renderer::getRenderTarget()->DrawTextW(
-		m_sText,
-		static_cast<UINT32>(m_sText.getLength()),
-		m_pFont->_getTextFormat(),
-		textLayoutRect,
-		Renderer::getSolidColorBrush()
-	);
+	// 渲染文字内容
+	if (m_pDWriteTextLayout)
+	{
+		Renderer::getRenderTarget()->DrawTextLayout(
+			{ 0, 0 },
+			m_pDWriteTextLayout,
+			Renderer::getSolidColorBrush()
+		);
+	}
 }
 
 void e2d::Text::_initTextLayout()
@@ -117,41 +169,48 @@ void e2d::Text::_initTextLayout()
 	if (!m_pFont || m_sText.isEmpty())
 	{
 		this->setSize(0, 0);
-		m_fWordWrappingWidth = 0;
 		return;
 	}
 
 	// 未打开文本自动换行时，设置 TextFormat 属性为不换行
-	if (!m_bWordWrapping)
+	if (!m_bWrappingEnable)
 	{
-		m_pFont->_getTextFormat()->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+		m_pFont->getDWriteTextFormat()->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
 	}
 	else
 	{
-		m_pFont->_getTextFormat()->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
+		m_pFont->getDWriteTextFormat()->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
 	}
 	
 	// 获取 TextLayout
-	IDWriteTextLayout * pDWriteTextLayout = nullptr;
+	SafeReleaseInterface(&m_pDWriteTextLayout);
+	UINT32 length = static_cast<UINT32>(m_sText.getLength());
 
 	HRESULT hr = Renderer::getIDWriteFactory()->CreateTextLayout(
 		m_sText,
-		static_cast<UINT32>(m_sText.getLength()),
-		m_pFont->_getTextFormat(),
-		m_bWordWrapping ? m_fWordWrappingWidth : 0,
+		length,
+		m_pFont->getDWriteTextFormat(),
+		m_bWrappingEnable ? m_fWrappingWidth : 0,
 		0,
-		&pDWriteTextLayout
+		&m_pDWriteTextLayout
 	);
 
 	ASSERT(SUCCEEDED(hr), "Create IDWriteTextFormat Failed!");
 
+	// 添加下划线和删除线
+	if (m_bHasUnderline)
+	{
+		m_pDWriteTextLayout->SetUnderline(true, { 0, length });
+	}
+	if (m_bHasStrikethrough)
+	{
+		m_pDWriteTextLayout->SetStrikethrough(true, { 0, length });
+	}
+
 	// 获取文本布局的宽度和高度
 	DWRITE_TEXT_METRICS metrics;
-	pDWriteTextLayout->GetMetrics(&metrics);
+	m_pDWriteTextLayout->GetMetrics(&metrics);
 
 	this->setSize(metrics.widthIncludingTrailingWhitespace, metrics.height);
-	m_fWordWrappingWidth = metrics.widthIncludingTrailingWhitespace;
-
-	// 删除相关资源
-	SafeReleaseInterface(&pDWriteTextLayout);
+	m_fWrappingWidth = metrics.widthIncludingTrailingWhitespace;
 }

@@ -101,22 +101,22 @@ public:
 
 	// 启动具有相同名称的定时器
 	static void start(
-		String&name
+		String name
 	);
 
 	// 停止具有相同名称的定时器
 	static void stop(
-		String&name
+		String name
 	);
 
 	// 删除具有相同名称的定时器
 	static void clear(
-		String&name
+		String name
 	);
 
 	// 获取名称相同的定时器
 	static std::vector<Timer*> get(
-		String& name
+		String name
 	);
 
 	// 启动所有定时器
@@ -158,17 +158,17 @@ class ActionManager
 public:
 	// 继续名称相同的所有动作
 	static void resume(
-		String& strActionName
+		String strActionName
 	);
 
 	// 暂停名称相同的所有动作
 	static void pause(
-		String& strActionName
+		String strActionName
 	);
 
 	// 停止名称相同的所有动作
 	static void stop(
-		String& strActionName
+		String strActionName
 	);
 
 	// 继续所有动作
@@ -182,7 +182,7 @@ public:
 
 	// 获取所有名称相同的动作
 	static std::vector<Action *> get(
-		String& strActionName
+		String strActionName
 	);
 
 	// 获取所有动作
@@ -241,33 +241,33 @@ class MusicManager
 public:
 	// 预加载音乐资源
 	static bool preload(
-		String& strFilePath	/* 音乐文件路径 */
+		String strFilePath	/* 音乐文件路径 */
 	);
 
 	// 播放音乐
 	static bool play(
-		String& strFilePath,	/* 音乐文件路径 */
-		int nLoopCount = 0			/* 重复播放次数，设置 -1 为循环播放 */
+		String strFilePath,	/* 音乐文件路径 */
+		int nLoopCount = 0	/* 重复播放次数，设置 -1 为循环播放 */
 	);
 
 	// 暂停音乐
 	static void pause(
-		String& strFilePath	/* 音乐文件路径 */
+		String strFilePath	/* 音乐文件路径 */
 	);
 
 	// 继续播放音乐
 	static void resume(
-		String& strFilePath	/* 音乐文件路径 */
+		String strFilePath	/* 音乐文件路径 */
 	);
 
 	// 停止音乐
 	static void stop(
-		String& strFilePath	/* 音乐文件路径 */
+		String strFilePath	/* 音乐文件路径 */
 	);
 
 	// 获取指定音乐的 Music 对象
 	static Music * get(
-		String& strFilePath	/* 音乐文件路径 */
+		String strFilePath	/* 音乐文件路径 */
 	);
 
 	// 暂停所有音乐

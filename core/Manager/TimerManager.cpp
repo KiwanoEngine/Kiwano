@@ -62,7 +62,7 @@ void e2d::TimerManager::__add(Timer * pTimer)
 	}
 }
 
-void e2d::TimerManager::start(String& name)
+void e2d::TimerManager::start(String name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -73,7 +73,7 @@ void e2d::TimerManager::start(String& name)
 	}
 }
 
-void e2d::TimerManager::stop(String& name)
+void e2d::TimerManager::stop(String name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -84,7 +84,7 @@ void e2d::TimerManager::stop(String& name)
 	}
 }
 
-void e2d::TimerManager::clear(String& name)
+void e2d::TimerManager::clear(String name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -95,7 +95,7 @@ void e2d::TimerManager::clear(String& name)
 	}
 }
 
-std::vector<e2d::Timer*> e2d::TimerManager::get(String& name)
+std::vector<e2d::Timer*> e2d::TimerManager::get(String name)
 {
 	std::vector<Timer*> vTimers;
 	for (auto timer : s_vTimers)

@@ -297,6 +297,19 @@ public:
 };
 
 
+// 文本对齐方式
+class TextAlign
+{
+public:
+	enum COMMON_VALUE
+	{
+		LEFT,		/* 左对齐 */
+		RIGHT,		/* 右对齐 */
+		CENTER		/* 居中对齐 */
+	};
+};
+
+
 // 键值集合
 class KeyCode
 {
@@ -358,17 +371,7 @@ public:
 		NUMPAD1 = 0x4F,
 		NUMPAD2 = 0x50,
 		NUMPAD3 = 0x51,
-		NUMPAD0 = 0x52,
-		F1 = 0x3B,
-		F2 = 0x3C,
-		F3 = 0x3D,
-		F4 = 0x3E,
-		F5 = 0x3F,
-		F6 = 0x40,
-		F7 = 0x41,
-		F8 = 0x42,
-		F9 = 0x43,
-		F10 = 0x44
+		NUMPAD0 = 0x52
 	};
 };
 
@@ -449,7 +452,7 @@ public:
 
 	// 设置字体
 	void setFamily(
-		String& fontFamily
+		String fontFamily
 	);
 
 	// 设置字号
@@ -477,7 +480,7 @@ protected:
 	void _initTextFormat();
 
 	// 获取文字格式
-	IDWriteTextFormat * _getTextFormat();
+	IDWriteTextFormat * getDWriteTextFormat();
 
 protected:
 	String		m_sFontFamily;
@@ -500,12 +503,12 @@ public:
 
 	// 从本地文件中读取资源
 	Image(
-		String& strFilePath	/* 图片文件路径 */
+		String strFilePath	/* 图片文件路径 */
 	);
 
 	// 从本地文件中读取资源
 	Image(
-		String& strFilePath,/* 图片文件路径 */
+		String strFilePath,/* 图片文件路径 */
 		double nClipX,		/* 裁剪位置 X 坐标 */
 		double nClipY,		/* 裁剪位置 Y 坐标 */
 		double nClipWidth,	/* 裁剪宽度 */
@@ -516,7 +519,7 @@ public:
 
 	// 从本地文件中读取图片
 	void open(
-		String& strFilePath
+		String strFilePath
 	);
 
 	// 裁剪图片
@@ -559,7 +562,7 @@ public:
 
 	// 预加载资源
 	static bool preload(
-		String& strFileName	/* 图片文件路径 */
+		String strFileName	/* 图片文件路径 */
 	);
 
 	// 清空缓存
@@ -664,7 +667,7 @@ public:
 
 	Listener(
 		Function func,	/* 监听到消息时的执行函数 */
-		String& name	/* 监听器名称 */
+		String name		/* 监听器名称 */
 	);
 
 	// 启动
@@ -684,7 +687,7 @@ public:
 
 	// 修改名称
 	void setName(
-		String& name
+		String name
 	);
 
 	// 设置监听到消息时的执行函数

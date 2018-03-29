@@ -69,6 +69,9 @@ public:
 		bool bEnable
 	);
 
+	// 获取 ID2D1Geometry 对象
+	virtual ID2D1Geometry * getD2dGeometry() const = 0;
+
 protected:
 	// 转换形状
 	virtual void _transform();
@@ -78,9 +81,6 @@ protected:
 
 	// 渲染形状
 	virtual void _render();
-
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1Geometry * _getD2dGeometry() const = 0;
 
 protected:
 	bool	m_bEnable;
@@ -117,6 +117,9 @@ public:
 
 	virtual ~Rect();
 
+	// 获取 ID2D1Geometry 对象
+	virtual ID2D1RectangleGeometry * getD2dGeometry() const override;
+
 protected:
 	void _setRect(
 		double left,
@@ -127,8 +130,6 @@ protected:
 
 	// 重设大小
 	virtual void _resize();
-
-	virtual ID2D1RectangleGeometry * _getD2dGeometry() const override;
 
 protected:
 	ID2D1RectangleGeometry * m_pD2dRectangle;
@@ -155,6 +156,9 @@ public:
 
 	virtual ~Circle();
 
+	// 获取 ID2D1Geometry 对象
+	virtual ID2D1EllipseGeometry * getD2dGeometry() const override;
+
 protected:
 	void _setCircle(
 		Point center,
@@ -163,8 +167,6 @@ protected:
 
 	// 重设大小
 	virtual void _resize();
-
-	virtual ID2D1EllipseGeometry * _getD2dGeometry() const override;
 
 protected:
 	ID2D1EllipseGeometry * m_pD2dCircle;
@@ -192,6 +194,9 @@ public:
 
 	virtual ~Ellipse();
 
+	// 获取 ID2D1Geometry 对象
+	virtual ID2D1EllipseGeometry * getD2dGeometry() const override;
+
 protected:
 	void _setEllipse(
 		Point center,
@@ -201,8 +206,6 @@ protected:
 
 	// 重设大小
 	virtual void _resize();
-
-	virtual ID2D1EllipseGeometry * _getD2dGeometry() const override;
 
 protected:
 	ID2D1EllipseGeometry * m_pD2dEllipse;

@@ -211,10 +211,7 @@ void e2d::Node::_onExit()
 void e2d::Node::_updateTransform()
 {
 	// 计算中心点坐标
-	D2D1_POINT_2F pivot = D2D1::Point2F(
-		m_fWidth * m_fPivotX,
-		m_fHeight * m_fPivotY
-	);
+	D2D1_POINT_2F pivot = { m_fWidth * m_fPivotX, m_fHeight * m_fPivotY };
 	// 变换 Initial 矩阵，子节点将根据这个矩阵进行变换
 	m_MatriInitial = D2D1::Matrix3x2F::Scale(
 		m_fScaleX,
@@ -614,7 +611,7 @@ e2d::Scene * e2d::Node::getParentScene() const
 	return m_pParentScene;
 }
 
-std::vector<e2d::Node*> e2d::Node::getChildren(String& name)
+std::vector<e2d::Node*> e2d::Node::getChildren(String name)
 {
 	std::vector<Node*> vChildren;
 	unsigned int hash = name.getHashCode();
@@ -684,7 +681,7 @@ bool e2d::Node::removeChild(Node * child)
 	return false;
 }
 
-void e2d::Node::removeChildren(String& childName)
+void e2d::Node::removeChildren(String childName)
 {
 	WARN_IF(childName.isEmpty(), "Invalid Node name.");
 
@@ -753,7 +750,7 @@ void e2d::Node::runAction(Action * action)
 	}
 }
 
-void e2d::Node::resumeAction(String& strActionName)
+void e2d::Node::resumeAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -765,7 +762,7 @@ void e2d::Node::resumeAction(String& strActionName)
 	}
 }
 
-void e2d::Node::pauseAction(String& strActionName)
+void e2d::Node::pauseAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -777,7 +774,7 @@ void e2d::Node::pauseAction(String& strActionName)
 	}
 }
 
-void e2d::Node::stopAction(String& strActionName)
+void e2d::Node::stopAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -789,7 +786,7 @@ void e2d::Node::stopAction(String& strActionName)
 	}
 }
 
-e2d::Action * e2d::Node::getAction(String& strActionName)
+e2d::Action * e2d::Node::getAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -802,7 +799,7 @@ e2d::Action * e2d::Node::getAction(String& strActionName)
 	return nullptr;
 }
 
-std::vector<e2d::Action*> e2d::Node::getActions(String& strActionName)
+std::vector<e2d::Action*> e2d::Node::getActions(String strActionName)
 {
 	std::vector<Action*>::iterator iter;
 	auto actions = ActionManager::get(strActionName);
@@ -826,7 +823,7 @@ bool e2d::Node::isPointIn(Point point) const
 	// 如果存在形状，用形状判断
 	if (m_pShape)
 	{
-		m_pShape->_getD2dGeometry()->FillContainsPoint(
+		m_pShape->getD2dGeometry()->FillContainsPoint(
 			D2D1::Point2F(
 				static_cast<float>(point.x),
 				static_cast<float>(point.y)),
@@ -970,7 +967,7 @@ void e2d::Node::setVisiable(bool value)
 	m_bVisiable = value;
 }
 
-void e2d::Node::setName(String& name)
+void e2d::Node::setName(String name)
 {
 	WARN_IF(name.isEmpty(), "Invalid Node name.");
 

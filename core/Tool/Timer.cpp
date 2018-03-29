@@ -49,7 +49,7 @@ e2d::String e2d::Timer::getName() const
 	return m_sName;
 }
 
-void e2d::Timer::setName(String& name)
+void e2d::Timer::setName(String name)
 {
 	m_sName = name;
 }

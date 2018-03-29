@@ -12,13 +12,13 @@ e2d::Sprite::Sprite(Image * image)
 	open(image);
 }
 
-e2d::Sprite::Sprite(String& imageFileName)
+e2d::Sprite::Sprite(String imageFileName)
 	: m_pImage(nullptr)
 {
 	open(imageFileName);
 }
 
-e2d::Sprite::Sprite(String& imageFileName, double x, double y, double width, double height)
+e2d::Sprite::Sprite(String imageFileName, double x, double y, double width, double height)
 	: m_pImage(nullptr)
 {
 	open(imageFileName);
@@ -42,7 +42,7 @@ void e2d::Sprite::open(Image * image)
 	}
 }
 
-void e2d::Sprite::open(String& imageFileName)
+void e2d::Sprite::open(String imageFileName)
 {
 	open(new Image(imageFileName));
 }
@@ -65,6 +65,7 @@ void e2d::Sprite::onRender()
 {
 	if (m_pImage && m_pImage->getBitmap())
 	{
+		// »ñÈ¡Í¼Æ¬²Ã¼ôÎ»ÖÃ
 		float fClipX = static_cast<float>(m_pImage->getClipX());
 		float fClipY = static_cast<float>(m_pImage->getClipY());
 		// äÖÈ¾Í¼Æ¬

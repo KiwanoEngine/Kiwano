@@ -60,7 +60,7 @@ void e2d::Ellipse::_resize()
 	}
 }
 
-ID2D1EllipseGeometry * e2d::Ellipse::_getD2dGeometry() const
+ID2D1EllipseGeometry * e2d::Ellipse::getD2dGeometry() const
 {
 	return m_pD2dEllipse;
 }

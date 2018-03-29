@@ -9,7 +9,7 @@ static HWND s_HWnd = nullptr;
 static bool s_bShowConsole = false;
 
 
-bool e2d::Window::__init(String& sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID /*= nullptr*/)
+bool e2d::Window::__init(const String& sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID /*= nullptr*/)
 {
 	if (!Window::__initMutex(sTitle))
 	{
@@ -106,7 +106,7 @@ bool e2d::Window::__init(String& sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR 
 	return SUCCEEDED(hr);
 }
 
-bool e2d::Window::__initMutex(String& sTitle)
+bool e2d::Window::__initMutex(const String& sTitle)
 {
 	// 创建进程互斥体
 	HANDLE m_hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + sTitle);
@@ -204,7 +204,7 @@ void e2d::Window::setSize(UINT32 width, UINT32 height)
 	::MoveWindow(s_HWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
 }
 
-void e2d::Window::setTitle(String&title)
+void e2d::Window::setTitle(String title)
 {
 	// 设置窗口标题
 	::SetWindowText(s_HWnd, title);

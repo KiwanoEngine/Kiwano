@@ -114,7 +114,7 @@ void e2d::ActionManager::__stopAllBindedWith(Node * pTargetNode)
 	}
 }
 
-void e2d::ActionManager::resume(String& strActionName)
+void e2d::ActionManager::resume(String strActionName)
 {
 	for (auto action : s_vRunningActions)
 	{
@@ -125,7 +125,7 @@ void e2d::ActionManager::resume(String& strActionName)
 	}
 }
 
-void e2d::ActionManager::pause(String& strActionName)
+void e2d::ActionManager::pause(String strActionName)
 {
 	for (auto action : s_vRunningActions)
 	{
@@ -136,7 +136,7 @@ void e2d::ActionManager::pause(String& strActionName)
 	}
 }
 
-void e2d::ActionManager::stop(String& strActionName)
+void e2d::ActionManager::stop(String strActionName)
 {
 	for (auto action : s_vRunningActions)
 	{
@@ -191,7 +191,7 @@ void e2d::ActionManager::stopAll()
 	}
 }
 
-std::vector<e2d::Action*> e2d::ActionManager::get(String& strActionName)
+std::vector<e2d::Action*> e2d::ActionManager::get(String strActionName)
 {
 	std::vector<Action*> vActions;
 	for (const auto action : s_vActions)

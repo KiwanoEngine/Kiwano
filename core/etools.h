@@ -79,7 +79,7 @@ public:
 
 	// 设置定时器名称
 	void setName(
-		String&name
+		String name
 	);
 
 	// 设置定时器执行间隔
@@ -122,36 +122,36 @@ class Data
 public:
 	// 保存 int 类型的值
 	static void saveInt(
-		String& key,				/* 键值 */
+		String key,					/* 键值 */
 		int value,					/* 数据 */
 		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 保存 double 类型的值
 	static void saveDouble(
-		String& key,				/* 键值 */
+		String key,					/* 键值 */
 		double value,				/* 数据 */
 		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 保存 bool 类型的值
 	static void saveBool(
-		String& key,				/* 键值 */
+		String key,					/* 键值 */
 		bool value,					/* 数据 */
 		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 保存 字符串 类型的值
 	static void saveString(
-		String& key,				/* 键值 */
-		String& value,				/* 数据 */
+		String key,					/* 键值 */
+		String value,				/* 数据 */
 		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 获取 int 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static int getInt(
-		String& key,				/* 键值 */
+		String key,					/* 键值 */
 		int defaultValue,			/* 默认值 */
 		String field = L"Defalut"	/* 字段名称 */
 	);
@@ -159,7 +159,7 @@ public:
 	// 获取 double 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static double getDouble(
-		String& key,				/* 键值 */
+		String key,					/* 键值 */
 		double defaultValue,		/* 默认值 */
 		String field = L"Defalut"	/* 字段名称 */
 	);
@@ -167,7 +167,7 @@ public:
 	// 获取 bool 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static bool getBool(
-		String& key,				/* 键值 */
+		String key,					/* 键值 */
 		bool defaultValue,			/* 默认值 */
 		String field = L"Defalut"	/* 字段名称 */
 	);
@@ -175,14 +175,14 @@ public:
 	// 获取 字符串 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
 	static String getString(
-		String& key,				/* 键值 */
-		String& defaultValue,		/* 默认值 */
+		String key,					/* 键值 */
+		String defaultValue,		/* 默认值 */
 		String field = L"Defalut"	/* 字段名称 */
 	);
 
 	// 修改数据文件的名称
 	static void setDataFileName(
-		String& strFileName			/* 文件名称 */
+		String strFileName			/* 文件名称 */
 	);
 
 	// 获取数据文件的完整路径
@@ -205,18 +205,18 @@ public:
 
 	// 获取文件扩展名
 	static String getFileExtension(
-		String& filePath
+		String filePath
 	);
 
 	// 打开保存文件对话框
 	static String getSaveFilePath(
-		const String& title = L"保存到",		/* 对话框标题 */
-		const String& defExt = L""			/* 默认扩展名 */
+		const String title = L"保存到",		/* 对话框标题 */
+		const String defExt = L""			/* 默认扩展名 */
 	);
 
 	// 创建文件夹
 	static bool createFolder(
-		String& strDirPath	/* 文件夹路径 */
+		String strDirPath	/* 文件夹路径 */
 	);
 };
 
@@ -231,14 +231,14 @@ public:
 	Music();
 
 	Music(
-		String& strFileName	/* 音乐文件路径 */
+		String strFileName	/* 音乐文件路径 */
 	);
 
 	virtual ~Music();
 
 	// 打开音乐文件
 	bool open(
-		String& strFileName	/* 音乐文件路径 */
+		String strFileName	/* 音乐文件路径 */
 	);
 
 	// 播放

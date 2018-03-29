@@ -121,7 +121,7 @@ void e2d::Shape::_transform()
 
 		// 根据父节点转换几何图形
 		Renderer::getID2D1Factory()->CreateTransformedGeometry(
-			_getD2dGeometry(),
+			getD2dGeometry(),
 			m_pParentNode->m_MatriFinal,
 			&m_pTransformedShape
 		);

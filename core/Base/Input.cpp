@@ -191,7 +191,7 @@ void e2d::Input::add(Function func, String name)
 	(new Listener(func, name))->start();
 }
 
-void e2d::Input::start(String& name)
+void e2d::Input::start(String name)
 {
 	for (const auto & pListener : s_vListeners)
 	{
@@ -202,7 +202,7 @@ void e2d::Input::start(String& name)
 	}
 }
 
-void e2d::Input::stop(String& name)
+void e2d::Input::stop(String name)
 {
 	for (const auto & pListener : s_vListeners)
 	{
@@ -213,7 +213,7 @@ void e2d::Input::stop(String& name)
 	}
 }
 
-void e2d::Input::clear(String& name)
+void e2d::Input::clear(String name)
 {
 	for (const auto & pListener : s_vListeners)
 	{
@@ -248,7 +248,7 @@ void e2d::Input::clearAll()
 	}
 }
 
-std::vector<Listener*> e2d::Input::get(String& name)
+std::vector<Listener*> e2d::Input::get(String name)
 {
 	std::vector<Listener*> vListeners;
 	for (auto pListener : s_vListeners)

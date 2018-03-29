@@ -13,12 +13,12 @@ e2d::Image::Image()
 {
 }
 
-e2d::Image::Image(String& strFileName)
+e2d::Image::Image(String strFileName)
 {
 	this->open(strFileName);
 }
 
-e2d::Image::Image(String& strFileName, double nClipX, double nClipY, double nClipWidth, double nClipHeight)
+e2d::Image::Image(String strFileName, double nClipX, double nClipY, double nClipWidth, double nClipHeight)
 {
 	this->open(strFileName);
 	this->clip(nClipX, nClipY, nClipWidth, nClipHeight);
@@ -28,7 +28,7 @@ e2d::Image::~Image()
 {
 }
 
-void e2d::Image::open(String& strFilePath)
+void e2d::Image::open(String strFilePath)
 {
 	WARN_IF(strFilePath.isEmpty(), "Image cannot load bitmap from NULL file name.");
 
@@ -124,7 +124,7 @@ e2d::Point e2d::Image::getClipPos() const
 	return Point(m_fSourceClipX, m_fSourceClipY);
 }
 
-bool e2d::Image::preload(String& fileName)
+bool e2d::Image::preload(String fileName)
 {
 	if (s_mBitmapsFromFile.find(fileName.getHashCode()) != s_mBitmapsFromFile.end())
 	{

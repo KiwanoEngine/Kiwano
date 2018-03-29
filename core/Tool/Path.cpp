@@ -94,7 +94,7 @@ e2d::String e2d::Path::getDefaultSavePath()
 	return std::move(path);
 }
 
-e2d::String e2d::Path::getFileExtension(String& filePath)
+e2d::String e2d::Path::getFileExtension(String filePath)
 {
 	String fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
@@ -111,7 +111,7 @@ e2d::String e2d::Path::getFileExtension(String& filePath)
 	return fileExtension;
 }
 
-e2d::String e2d::Path::getSaveFilePath(const String& title, const String& defExt)
+e2d::String e2d::Path::getSaveFilePath(const String title, const String defExt)
 {
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };
@@ -134,7 +134,7 @@ e2d::String e2d::Path::getSaveFilePath(const String& title, const String& defExt
 	return L"";
 }
 
-bool e2d::Path::createFolder(String& strDirPath)
+bool e2d::Path::createFolder(String strDirPath)
 {
 	if (strDirPath.isEmpty())
 	{

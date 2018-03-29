@@ -35,7 +35,7 @@ Music::Music()
 {
 }
 
-e2d::Music::Music(String& strFileName)
+e2d::Music::Music(String strFileName)
 	: m_bOpened(false)
 	, m_bPlaying(false)
 	, m_pwfx(nullptr)
@@ -53,7 +53,7 @@ Music::~Music()
 	close();
 }
 
-bool Music::open(String& strFileName)
+bool Music::open(String strFileName)
 {
 	if (m_bOpened)
 	{

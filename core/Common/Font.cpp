@@ -50,7 +50,7 @@ bool e2d::Font::isItalic() const
 	return m_bItalic;
 }
 
-void e2d::Font::setFamily(String& fontFamily)
+void e2d::Font::setFamily(String fontFamily)
 {
 	m_sFontFamily = fontFamily;
 	m_bRecreateNeeded = true;
@@ -90,14 +90,14 @@ void e2d::Font::_initTextFormat()
 		m_bItalic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
 		m_fFontSize,
-		L"en-us",
+		L"zh-cn",
 		&m_pTextFormat
 	);
 
 	ASSERT(SUCCEEDED(hr), "Create IDWriteTextFormat Failed!");
 }
 
-IDWriteTextFormat * e2d::Font::_getTextFormat()
+IDWriteTextFormat * e2d::Font::getDWriteTextFormat()
 {
 	if (m_bRecreateNeeded)
 	{

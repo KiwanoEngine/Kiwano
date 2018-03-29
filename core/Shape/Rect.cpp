@@ -55,7 +55,7 @@ void e2d::Rect::_resize()
 	}
 }
 
-ID2D1RectangleGeometry * e2d::Rect::_getD2dGeometry() const
+ID2D1RectangleGeometry * e2d::Rect::getD2dGeometry() const
 {
 	return m_pD2dRectangle;
 }

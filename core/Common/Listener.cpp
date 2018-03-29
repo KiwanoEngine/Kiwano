@@ -17,7 +17,7 @@ e2d::Listener::Listener(Function func)
 	Input::__add(this);
 }
 
-e2d::Listener::Listener(Function func, String& name)
+e2d::Listener::Listener(Function func, String name)
 	: m_bRunning(false)
 	, m_sName(name)
 	, m_callback(func)
@@ -52,7 +52,7 @@ e2d::String e2d::Listener::getName()
 	return m_sName;
 }
 
-void e2d::Listener::setName(String& name)
+void e2d::Listener::setName(String name)
 {
 	m_sName = name;
 }
