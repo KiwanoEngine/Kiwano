@@ -13,13 +13,6 @@ namespace e2d
 typedef std::function<void()> Function;
 
 // 创建函数对象
-template<typename Func>
-inline Function CreateFunc(Func&& func)
-{
-	return std::bind(func);
-}
-
-// 创建函数对象
 template<typename Object, typename Func>
 inline Function CreateFunc(Object&& obj, Func&& func)
 {

@@ -138,18 +138,6 @@
     <ClCompile Include="..\..\core\Tool\Timer.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Transition\ETransition.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Transition\ETransitionEmerge.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Transition\ETransitionFade.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Transition\ETransitionMove.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Node\Button.cpp">
       <Filter>Node</Filter>
     </ClCompile>
@@ -180,9 +168,6 @@
     <ClCompile Include="..\..\core\Manager\ShapeManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\File.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\MusicManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -199,6 +184,21 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Tool\Path.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\Transition.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\TransitionEmerge.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\TransitionFade.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\TransitionMove.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Data.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
   </ItemGroup>

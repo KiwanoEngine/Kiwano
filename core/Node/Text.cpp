@@ -100,17 +100,13 @@ void e2d::Text::setWordWrappingWidth(double wordWrapWidth)
 
 void e2d::Text::onRender()
 {
+	D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, m_bWordWrapping ? m_fWordWrappingWidth : m_fWidth, m_fHeight);
 	Renderer::getSolidColorBrush()->SetColor(D2D1::ColorF(m_pFont->m_Color, m_fDisplayOpacity));
 	Renderer::getRenderTarget()->DrawTextW(
 		m_sText,
 		static_cast<UINT32>(m_sText.getLength()),
 		m_pFont->_getTextFormat(),
-		D2D1::RectF(
-			0,
-			0,
-			m_bWordWrapping ? m_fWordWrappingWidth : m_fWidth,
-			m_fHeight
-		),
+		textLayoutRect,
 		Renderer::getSolidColorBrush()
 	);
 }
