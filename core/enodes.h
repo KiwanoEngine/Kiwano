@@ -580,12 +580,7 @@ public:
 		bool value
 	);
 
-	// 设置文本自动换行（根据 WrappingWidth 进行自动换行，默认为 false）
-	void setWrappingEnable(
-		bool bWrappingEnable
-	);
-
-	// 设置文本换行宽度（WrappingEnable 开启时生效，默认为 0）
+	// 设置文本自动换行的宽度（设置为 0 时关闭自动换行，默认为 0）
 	void setWrappingWidth(
 		double fWrappingWidth
 	);

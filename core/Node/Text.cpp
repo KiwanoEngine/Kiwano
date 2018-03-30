@@ -145,20 +145,12 @@ void e2d::Text::setItalic(bool value)
 	_reset();
 }
 
-void e2d::Text::setWrappingEnable(bool bWrappingEnable)
-{
-	if (m_bWrappingEnable != bWrappingEnable)
-	{
-		m_bWrappingEnable = bWrappingEnable;
-		_reset();
-	}
-}
-
 void e2d::Text::setWrappingWidth(double fWrappingWidth)
 {
 	if (m_fWrappingWidth != fWrappingWidth)
 	{
 		m_fWrappingWidth = max(static_cast<float>(fWrappingWidth), 0);
+		m_bWrappingEnable = (m_fWrappingWidth > FLT_MIN);
 		_reset();
 	}
 }
