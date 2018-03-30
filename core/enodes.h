@@ -503,12 +503,12 @@ public:
 	);
 
 	Text(
-		Font * font		/* 字体样式 */
+		Font font		/* 字体样式 */
 	);
 
 	Text(
 		String text,	/* 文字内容 */
-		Font * font		/* 字体样式 */
+		Font font		/* 字体样式 */
 	);
 
 	Text(
@@ -517,7 +517,9 @@ public:
 		double fontSize = 22,					/* 字号 */
 		UINT32 color = Color::WHITE,			/* 颜色 */
 		UINT32 fontWeight = FontWeight::NORMAL,	/* 粗细值 */
-		bool italic = false						/* 斜体 */
+		bool italic = false,					/* 斜体 */
+		bool hasUnderline = false,				/* 下划线 */
+		bool hasStrikethrough = false			/* 删除线 */
 	);
 
 	virtual ~Text();
@@ -525,20 +527,65 @@ public:
 	// 获取文本
 	String getText() const;
 
+	// 获取文本样式
+	Font getFont() const;
+
 	// 获取字体
-	Font * getFont() const;
+	String getFontFamily() const;
+
+	// 获取当前字号
+	double getFontSize() const;
+
+	// 获取当前字体粗细值
+	UINT32 getFontWeight() const;
+
+	// 获取文字颜色
+	UINT32 getColor() const;
+
+	// 是否是斜体
+	bool isItalic() const;
 
 	// 设置文本
 	void setText(
 		String text
 	);
 
-	// 设置字体
+	// 设置文本样式
 	void setFont(
-		Font * pFont
+		Font pFont
 	);
 
-	// 设置文本自动换行宽度（默认为 0）
+	// 设置字体
+	void setFontFamily(
+		String fontFamily
+	);
+
+	// 设置字号（默认值为 22）
+	void setFontSize(
+		double fontSize
+	);
+
+	// 设置字体粗细值（默认值为 FontWeight::NORMAL）
+	void setFontWeight(
+		UINT32 fontWeight
+	);
+
+	// 设置文字颜色（默认值为 Color::WHITE）
+	void setColor(
+		UINT32 color
+	);
+
+	// 设置文字斜体（默认值为 false）
+	void setItalic(
+		bool value
+	);
+
+	// 设置文本自动换行（根据 WrappingWidth 进行自动换行，默认为 false）
+	void setWrappingEnable(
+		bool bWrappingEnable
+	);
+
+	// 设置文本换行宽度（WrappingEnable 开启时生效，默认为 0）
 	void setWrappingWidth(
 		double fWrappingWidth
 	);
@@ -553,12 +600,12 @@ public:
 		UINT32 nAlign
 	);
 
-	// 设置下划线
+	// 设置下划线（默认值为 false）
 	void setUnderline(
 		bool hasUnderline
 	);
 
-	// 设置删除线
+	// 设置删除线（默认值为 false）
 	void setStrikethrough(
 		bool hasStrikethrough
 	);
@@ -567,16 +614,23 @@ public:
 	virtual void onRender() override;
 
 protected:
+	// 重新排版文字
+	void _reset();
+
+	// 创建文字格式化
+	void _createFormat();
+
 	// 创建文字布局
-	void _initTextLayout();
+	void _createLayout();
 
 protected:
 	String	m_sText;
 	bool	m_bWrappingEnable;
-	bool	m_bHasUnderline;
-	bool	m_bHasStrikethrough;
 	float	m_fWrappingWidth;
-	Font *	m_pFont;
+	Font	m_Font;
+	UINT32	m_nAlign;
+	float	m_fLineSpacing;
+	IDWriteTextFormat * m_pDWriteTextFormat;
 	IDWriteTextLayout * m_pDWriteTextLayout;
 };
 

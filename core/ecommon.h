@@ -9,31 +9,15 @@ namespace e2d
 {
 
 
-// 函数对象
-typedef std::function<void()> Function;
-
-// 创建函数对象
-template<typename Object, typename Func>
-inline Function CreateFunc(Object&& obj, Func&& func)
-{
-	return std::bind(func, obj);
-}
-
-template<typename T>
-inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
-
-template<typename Object>
-inline void SafeRelease(Object** p) { if (*p) { (*p)->release(); *p = nullptr; } }
-
-template<class Interface>
-inline void SafeReleaseInterface(Interface **pp) { if (*pp != nullptr) { (*pp)->Release(); (*pp) = nullptr; } }
-
-
 struct Size;
 
 // 表示坐标的结构体
 struct Point
 {
+	double x;	// X 坐标
+	double y;	// Y 坐标
+
+	/* 构造函数 */
 	Point();
 
 	Point(double x, double y);
@@ -44,10 +28,6 @@ struct Point
 	Point operator / (double const & value);
 
 	operator e2d::Size() const;
-
-	/* 成员变量 */
-	double x;	// X 坐标
-	double y;	// Y 坐标
 };
 
 // 二维向量
@@ -56,6 +36,10 @@ typedef Point Vector;
 // 表示大小的结构体
 struct Size
 {
+	double width;	// 宽度
+	double height;	// 高度
+
+	/* 构造函数 */
 	Size();
 
 	Size(double width, double height);
@@ -66,11 +50,18 @@ struct Size
 	Size operator / (double const & value);
 
 	operator e2d::Point() const;
-
-	/* 成员变量 */
-	double width;	// 宽度
-	double height;	// 高度
 };
+
+
+// 函数对象
+typedef std::function<void()> Function;
+
+// 创建函数对象
+template<typename Object, typename Func>
+inline Function CreateFunc(Object&& obj, Func&& func)
+{
+	return std::bind(func, obj);
+}
 
 
 // 字符串
@@ -391,6 +382,32 @@ public:
 };
 
 
+// 文本样式
+struct Font
+{
+	String	fontFamily;		// 字体
+	double	size;			// 字号
+	UINT32	color;			// 颜色
+	UINT32	weight;			// 粗细值
+	bool	italic;			// 斜体
+	bool	underline;		// 下划线
+	bool	strikethrough;	// 删除线
+
+	/* 构造函数 */
+	Font();
+
+	Font(
+		String fontFamily,
+		double fontSize = 22,
+		UINT32 color = Color::WHITE,
+		UINT32 fontWeight = FontWeight::NORMAL,
+		bool italic = false,
+		bool hasUnderline = false,
+		bool hasStrikethrough = false
+	);
+};
+
+
 class ObjectManager;
 
 // 基础对象
@@ -415,81 +432,6 @@ public:
 private:
 	int m_nRefCount;
 	bool m_bManaged;
-};
-
-
-class Text;
-
-class Font :
-	public Object
-{
-	friend Text;
-
-public:
-	Font();
-
-	Font(
-		String fontFamily,
-		double fontSize = 22,
-		UINT32 color = Color::WHITE,
-		UINT32 fontWeight = FontWeight::REGULAR,
-		bool italic = false
-	);
-
-	virtual ~Font();
-
-	// 获取当前字号
-	double getFontSize() const;
-
-	// 获取当前字体粗细值
-	UINT32 getFontWeight() const;
-
-	// 获取文字颜色
-	UINT32 getColor() const;
-
-	// 是否是斜体
-	bool isItalic() const;
-
-	// 设置字体
-	void setFamily(
-		String fontFamily
-	);
-
-	// 设置字号
-	void setSize(
-		double fontSize
-	);
-
-	// 设置字体粗细值
-	void setWeight(
-		UINT32 fontWeight
-	);
-
-	// 设置文字颜色
-	void setColor(
-		UINT32 color
-	);
-
-	// 设置文字斜体
-	void setItalic(
-		bool value
-	);
-
-protected:
-	// 创建文字格式
-	void _initTextFormat();
-
-	// 获取文字格式
-	IDWriteTextFormat * getDWriteTextFormat();
-
-protected:
-	String		m_sFontFamily;
-	float		m_fFontSize;
-	UINT32		m_FontWeight;
-	UINT32		m_Color;
-	bool		m_bItalic;
-	bool		m_bRecreateNeeded;
-	IDWriteTextFormat * m_pTextFormat;
 };
 
 
@@ -705,8 +647,8 @@ protected:
 	Function m_callback;
 };
 
-// String 类模板函数定义
 
+// String 类模板函数定义
 template<typename T>
 inline e2d::String e2d::String::toString(T value)
 {
@@ -714,5 +656,14 @@ inline e2d::String e2d::String::toString(T value)
 	tmp.m_str = std::to_wstring(value);
 	return std::move(tmp);
 }
+
+template<typename T>
+inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
+
+template<typename Object>
+inline void SafeRelease(Object** p) { if (*p) { (*p)->release(); *p = nullptr; } }
+
+template<class Interface>
+inline void SafeReleaseInterface(Interface **pp) { if (*pp != nullptr) { (*pp)->Release(); (*pp) = nullptr; } }
 
 }
