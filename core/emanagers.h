@@ -6,15 +6,15 @@ namespace e2d
 {
 
 class Game;
+class Input;
 class Renderer;
-class Object;
-class Scene;
 class Node;
 class Timer;
 class Action;
 class Music;
-class Shape;
 class Transition;
+class InputListener;
+class CollisionListener;
 
 // 对象管理器
 class ObjectManager
@@ -294,31 +294,134 @@ private:
 };
 
 
-class ShapeManager
+// 键盘和鼠标消息管理器
+class InputManager
 {
-	friend Game;
-	friend Node;
-	friend Shape;
+	friend Input;
+	friend InputListener;
 
 public:
-	// 开启或禁用碰撞触发 onCollide 函数
-	static void setCollisionEnable(
+	// 添加输入监听
+	static void add(
+		Function func,		/* 监听到用户输入时的执行函数 */
+		String name = L""	/* 监听器名称 */
+	);
+
+	// 启动输入监听
+	static void start(
+		String name
+	);
+
+	// 停止输入监听
+	static void stop(
+		String name
+	);
+
+	// 清除输入监听
+	static void clear(
+		String name
+	);
+
+	// 启动所有监听器
+	static void startAll();
+
+	// 停止所有监听器
+	static void stopAll();
+
+	// 清除所有监听器
+	static void clearAll();
+
+	// 获取监听器
+	static std::vector<InputListener*> get(
+		String name
+	);
+
+	// 获取全部监听器
+	static std::vector<InputListener*> getAll();
+
+private:
+	// 添加输入监听
+	static void __add(
+		InputListener * pListener
+	);
+
+	// 更新监听器
+	static void __update();
+};
+
+
+// 碰撞管理器
+class CollisionManager
+{
+	friend Node;
+	friend Shape;
+	friend CollisionListener;
+
+public:
+	// 开启或关闭碰撞监听功能（默认关闭）
+	static void setEnable(
 		bool bEnable
 	);
 
+	// 添加碰撞监听
+	static void add(
+		Function func,		/* 监听到碰撞时的执行函数 */
+		String name = L""	/* 监听器名称 */
+	);
+
+	// 启动碰撞监听
+	static void start(
+		String name
+	);
+
+	// 停止碰撞监听
+	static void stop(
+		String name
+	);
+
+	// 清除碰撞监听
+	static void clear(
+		String name
+	);
+
+	// 启动所有监听器
+	static void startAll();
+
+	// 停止所有监听器
+	static void stopAll();
+
+	// 清除所有监听器
+	static void clearAll();
+
+	// 获取监听器
+	static std::vector<CollisionListener*> get(
+		String name
+	);
+
+	// 获取全部监听器
+	static std::vector<CollisionListener*> getAll();
+
 private:
+	// 添加碰撞监听
+	static void __add(
+		CollisionListener * pListener
+	);
+
+	// 更新监听器
+	static void __update();
+
 	// 更新形状
 	static void __updateShape(
 		Shape * pActiveShape
 	);
 
 	// 添加形状
-	static void __add(
+	static void __addShape(
 		Shape * pShape
 	);
 
 	// 删除已绑定的形状
-	static void __remove(
+	static void __removeShape(
 		Shape * pShape
 	);
 };

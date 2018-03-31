@@ -5,18 +5,10 @@ e2d::ActionSequence::ActionSequence() :
 {
 }
 
-e2d::ActionSequence::ActionSequence(int number, Action * action1, ...) :
+e2d::ActionSequence::ActionSequence(std::initializer_list<Action*>& vActions) :
 	m_nActionIndex(0)
 {
-	Action ** ppAction = &action1;
-
-	while (number > 0)
-	{
-		ASSERT((*ppAction) != nullptr, "ActionSequence NULL pointer exception!");
-		this->add(*ppAction);
-		ppAction++;
-		number--;
-	}
+	this->add(vActions);
 }
 
 e2d::ActionSequence::~ActionSequence()
@@ -87,6 +79,14 @@ void e2d::ActionSequence::add(Action * action)
 	{
 		m_vActions.push_back(action);
 		action->retain();
+	}
+}
+
+void e2d::ActionSequence::add(std::initializer_list<Action*>& vActions)
+{
+	for (const auto &action : vActions)
+	{
+		this->add(action);
 	}
 }
 

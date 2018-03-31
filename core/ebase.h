@@ -148,47 +148,8 @@ private:
 class Input
 {
 	friend Game;
-	friend Listener;
 
 public:
-	// 添加输入监听
-	static void add(
-		Function func,		/* 监听到消息时的执行函数 */
-		String name = L""	/* 监听器名称 */
-	);
-
-	// 启动输入监听
-	static void start(
-		String name
-	);
-
-	// 停止输入监听
-	static void stop(
-		String name
-	);
-
-	// 清除输入监听
-	static void clear(
-		String name
-	);
-
-	// 启动所有监听器
-	static void startAll();
-
-	// 停止所有监听器
-	static void stopAll();
-
-	// 清除所有监听器
-	static void clearAll();
-
-	// 获取监听器
-	static std::vector<Listener*> get(
-		String name
-	);
-
-	// 获取全部监听器
-	static std::vector<Listener*> getAll();
-
 	// 检测键盘某按键是否正被按下
 	static bool isKeyDown(
 		int nKeyCode
@@ -258,11 +219,6 @@ private:
 
 	// 刷新设备状态
 	static void __updateDeviceState();
-
-	// 添加输入监听
-	static void __add(
-		Listener * pListener
-	);
 
 	// 卸载 DirectInput
 	static void __uninit();

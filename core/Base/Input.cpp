@@ -1,4 +1,6 @@
 #include "..\ebase.h"
+#include "..\etools.h"
+#include "..\emanagers.h"
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -14,9 +16,6 @@ static IDirectInputDevice8* s_MouseDevice = nullptr;	// 鼠标设备接口
 static DIMOUSESTATE s_MouseState;						// 鼠标信息存储结构体
 static DIMOUSESTATE s_MouseRecordState;					// 鼠标信息二级缓冲
 static POINT s_MousePosition;							// 鼠标位置存储结构体
-
-// 监听器容器
-static std::vector<Listener*> s_vListeners;
 
 
 bool Input::__init()
@@ -100,21 +99,7 @@ void Input::__uninit()
 void e2d::Input::__update()
 {
 	Input::__updateDeviceState();
-
-	for (size_t i = 0; i < s_vListeners.size(); i++)
-	{
-		auto pListener = s_vListeners[i];
-		// 更新监听器
-		if (pListener->m_bClear)
-		{
-			pListener->release();
-			s_vListeners.erase(s_vListeners.begin() + i);
-		}
-		else if (pListener->isRunning())
-		{
-			pListener->update();
-		}
-	}
+	InputManager::__update();
 }
 
 void Input::__updateDeviceState()
@@ -155,115 +140,6 @@ void Input::__updateDeviceState()
 
 	GetCursorPos(&s_MousePosition);
 	ScreenToClient(Window::getHWnd(), &s_MousePosition);
-}
-
-void e2d::Input::__add(Listener * pListener)
-{
-	WARN_IF(pListener == nullptr, "Listener NULL pointer exception!");
-
-	if (pListener)
-	{
-		auto findListener = [](Listener * pListener) -> bool
-		{
-			for (const auto &l : s_vListeners)
-			{
-				if (pListener == l)
-				{
-					return true;
-				}
-			}
-			return false;
-		};
-
-		bool bHasListener = findListener(pListener);
-		WARN_IF(bHasListener, "The listener is already added, cannot be added again!");
-
-		if (!bHasListener)
-		{
-			pListener->retain();
-			s_vListeners.push_back(pListener);
-		}
-	}
-}
-
-void e2d::Input::add(Function func, String name)
-{
-	(new Listener(func, name))->start();
-}
-
-void e2d::Input::start(String name)
-{
-	for (const auto & pListener : s_vListeners)
-	{
-		if (pListener->getName() == name)
-		{
-			pListener->start();
-		}
-	}
-}
-
-void e2d::Input::stop(String name)
-{
-	for (const auto & pListener : s_vListeners)
-	{
-		if (pListener->getName() == name)
-		{
-			pListener->stop();
-		}
-	}
-}
-
-void e2d::Input::clear(String name)
-{
-	for (const auto & pListener : s_vListeners)
-	{
-		if (pListener->getName() == name)
-		{
-			pListener->stopAndClear();
-		}
-	}
-}
-
-void e2d::Input::startAll()
-{
-	for (const auto & pListener : s_vListeners)
-	{
-		pListener->start();
-	}
-}
-
-void e2d::Input::stopAll()
-{
-	for (const auto & pListener : s_vListeners)
-	{
-		pListener->stop();
-	}
-}
-
-void e2d::Input::clearAll()
-{
-	for (const auto & pListener : s_vListeners)
-	{
-		pListener->stopAndClear();
-	}
-}
-
-std::vector<Listener*> e2d::Input::get(String name)
-{
-	std::vector<Listener*> vListeners;
-	for (auto pListener : s_vListeners)
-	{
-		if (pListener->getName() == name)
-		{
-			vListeners.push_back(pListener);
-		}
-	}
-	return std::move(vListeners);
-}
-
-std::vector<Listener*> e2d::Input::getAll()
-{
-	return s_vListeners;
 }
 
 bool Input::isKeyDown(int nKeyCode)

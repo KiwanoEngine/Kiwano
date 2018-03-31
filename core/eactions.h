@@ -402,16 +402,19 @@ public:
 
 	// 创建顺序动作
 	ActionSequence(
-		int number,			/* 顺序动作数量 */
-		Action * action,	/* 第一个动作 */
-		...
+		std::initializer_list<Action*>& vActions	/* 动作数组 */
 	);
 
 	virtual ~ActionSequence();
 
-	// 向顺序动作中添加动作
+	// 在结尾添加动作
 	void add(
-		Action * action	/* 将动作添加至顺序动作尾部 */
+		Action * action
+	);
+
+	// 在结尾添加多个动作
+	void add(
+		std::initializer_list<Action*>& vActions	/* 动作数组 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -514,16 +517,19 @@ public:
 
 	// 创建帧动画
 	Animation(
-		int number,			/* 帧数量 */
-		Image * frame,		/* 第一帧 */
-		...
+		std::initializer_list<Image*>& vImages
 	);
 
 	virtual ~Animation();
 
 	// 添加关键帧
-	void addKeyframe(
+	void add(
 		Image * frame	/* 关键帧 */
+	);
+
+	// 添加多个关键帧
+	void add(
+		std::initializer_list<Image*>& vImages	/* 关键帧数组 */
 	);
 
 	// 设置每一帧的时间间隔
@@ -664,9 +670,7 @@ namespace e2d
 
 		// 创建顺序动作
 		ActionSequence* Sequence(
-			int number,			/* 顺序动作数量 */
-			Action * action1,	/* 第一个动作 */
-			...
+			std::initializer_list<Action*>& vActions	/* 动作数组 */
 		);
 
 		// 创建延时动作
@@ -682,15 +686,113 @@ namespace e2d
 
 		// 创建特定帧间隔的帧动画
 		Animation* Animate(
-			double interval,	/* 帧间隔（秒） */
-			int number,			/* 帧数量 */
-			Image * frame,		/* 第一帧 */
-			...
+			double interval,						/* 帧间隔（秒） */
+			std::initializer_list<Image*>& vFrames /* 关键帧数组 */
 		);
 
 		// 创建执行函数对象的动作
 		ActionFunc* Func(
 			Function func /* 函数对象 */
 		);
+	}
+
+	inline e2d::ActionMoveBy * e2d::action::MoveBy(double duration, Vector vector)
+	{
+		return new (std::nothrow) ActionMoveBy(duration, vector);
+	}
+
+	inline e2d::ActionMoveTo * e2d::action::MoveTo(double duration, Point pos)
+	{
+		return new (std::nothrow) ActionMoveTo(duration, pos);
+	}
+
+	inline e2d::ActionScaleBy * e2d::action::ScaleBy(double duration, double scale)
+	{
+		return new (std::nothrow) ActionScaleBy(duration, scale);
+	}
+
+	inline e2d::ActionScaleBy * e2d::action::ScaleBy(double duration, double scaleX, double scaleY)
+	{
+		return new (std::nothrow) ActionScaleBy(duration, scaleX, scaleY);
+	}
+
+	inline e2d::ActionScaleTo * e2d::action::ScaleTo(double duration, double scale)
+	{
+		return new (std::nothrow) ActionScaleTo(duration, scale);
+	}
+
+	inline e2d::ActionScaleTo * e2d::action::ScaleTo(double duration, double scaleX, double scaleY)
+	{
+		return new (std::nothrow) ActionScaleTo(duration, scaleX, scaleY);
+	}
+
+	inline e2d::ActionOpacityBy * e2d::action::OpacityBy(double duration, double opacity)
+	{
+		return new (std::nothrow) ActionOpacityBy(duration, opacity);
+	}
+
+	inline e2d::ActionOpacityTo * e2d::action::OpacityTo(double duration, double opacity)
+	{
+		return new (std::nothrow) ActionOpacityTo(duration, opacity);
+	}
+
+	inline e2d::ActionFadeIn * e2d::action::FadeIn(double duration)
+	{
+		return new (std::nothrow) ActionFadeIn(duration);
+	}
+
+	inline e2d::ActionFadeOut * e2d::action::FadeOut(double duration)
+	{
+		return new (std::nothrow) ActionFadeOut(duration);
+	}
+
+	inline e2d::ActionRotateBy * e2d::action::RotateBy(double duration, double rotation)
+	{
+		return new (std::nothrow) ActionRotateBy(duration, rotation);
+	}
+
+	inline e2d::ActionRotateTo * e2d::action::RotateTo(double duration, double rotation)
+	{
+		return new (std::nothrow) ActionRotateTo(duration, rotation);
+	}
+
+	inline e2d::ActionTwo * e2d::action::Two(Action * pActionFirst, Action * pActionSecond, bool bAtSameTime)
+	{
+		return new (std::nothrow) ActionTwo(pActionFirst, pActionSecond, bAtSameTime);
+	}
+
+	inline e2d::ActionSequence * e2d::action::Sequence(std::initializer_list<Action*>& vActions)
+	{
+		auto action = new (std::nothrow) ActionSequence();
+		if (action)
+		{
+			action->add(vActions);
+		}
+		return action;
+	}
+
+	inline e2d::ActionDelay * e2d::action::Delay(double duration)
+	{
+		return new (std::nothrow) ActionDelay(duration);
+	}
+
+	inline e2d::ActionLoop * e2d::action::Loop(Action * action, int times)
+	{
+		return new (std::nothrow) ActionLoop(action, times);
+	}
+
+	inline e2d::Animation * e2d::action::Animate(double interval, std::initializer_list<Image*>& vFrames)
+	{
+		auto animation = new (std::nothrow) Animation(interval);
+		if (animation)
+		{
+			animation->add(vFrames);
+		}
+		return animation;
+	}
+
+	inline e2d::ActionFunc * e2d::action::Func(Function func)
+	{
+		return new (std::nothrow) ActionFunc(func);
 	}
 }

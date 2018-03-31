@@ -1,8 +1,6 @@
 #include "..\ebase.h"
 #include "..\enodes.h"
 #include "..\emanagers.h"
-#include "..\etools.h"
-#include "..\eactions.h"
 
 e2d::Scene::Scene()
 	: m_bWillSave(true)

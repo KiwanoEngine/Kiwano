@@ -27,7 +27,7 @@ e2d::Button::Button(Node * normal, Function func)
 	, m_pDisabled(nullptr)
 {
 	this->setNormal(normal);
-	this->setFunction(func);
+	this->setClickFunc(func);
 }
 
 e2d::Button::Button(Node * normal, Node * selected, Function func)
@@ -42,7 +42,7 @@ e2d::Button::Button(Node * normal, Node * selected, Function func)
 {
 	this->setNormal(normal);
 	this->setSelected(selected);
-	this->setFunction(func);
+	this->setClickFunc(func);
 }
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Function func)
@@ -58,7 +58,7 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Function f
 	this->setNormal(normal);
 	this->setMouseOver(mouseover);
 	this->setSelected(selected);
-	this->setFunction(func);
+	this->setClickFunc(func);
 }
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, Function func)
@@ -75,7 +75,7 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * dis
 	this->setMouseOver(mouseover);
 	this->setSelected(selected);
 	this->setDisabled(disabled);
-	this->setFunction(func);
+	this->setClickFunc(func);
 }
 
 bool e2d::Button::isEnable() const
@@ -170,7 +170,7 @@ void e2d::Button::setEnable(bool bEnable)
 	}
 }
 
-void e2d::Button::setFunction(Function func)
+void e2d::Button::setClickFunc(Function func)
 {
 	WARN_IF(m_pNormal == nullptr, "Button cannot work without anything to show. Please set its normal displayed.");
 	

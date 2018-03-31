@@ -47,7 +47,7 @@ e2d::Node::Node()
 e2d::Node::~Node()
 {
 	ActionManager::__clearAllBindedWith(this);
-	ShapeManager::__remove(m_pShape);
+	CollisionManager::__removeShape(m_pShape);
 	for (auto child : m_vChildren)
 	{
 		SafeRelease(&child);
@@ -286,6 +286,11 @@ bool e2d::Node::isVisiable() const
 e2d::String e2d::Node::getName() const
 {
 	return m_sName;
+}
+
+unsigned int e2d::Node::getHashName() const
+{
+	return m_nHashName;
 }
 
 double e2d::Node::getPosX() const
@@ -575,9 +580,9 @@ void e2d::Node::setShape(Shape::TYPE type)
 void e2d::Node::setShape(Shape * pShape)
 {
 	// 删除旧的形状
-	ShapeManager::__remove(m_pShape);
+	CollisionManager::__removeShape(m_pShape);
 	// 添加新的形状
-	ShapeManager::__add(pShape);
+	CollisionManager::__addShape(pShape);
 
 	if (pShape)
 	{
@@ -589,6 +594,26 @@ void e2d::Node::setShape(Shape * pShape)
 	{
 		this->m_pShape = nullptr;
 	}
+}
+
+void e2d::Node::addCollider(String collliderName)
+{
+	unsigned int hash = collliderName.getHashCode();
+	m_vColliders.insert(hash);
+}
+
+void e2d::Node::addCollider(std::initializer_list<String>& vCollliderName)
+{
+	for (const auto &name : vCollliderName)
+	{
+		this->addCollider(name);
+	}
+}
+
+void e2d::Node::removeCollider(String collliderName)
+{
+	unsigned int hash = collliderName.getHashCode();
+	m_vColliders.erase(hash);
 }
 
 void e2d::Node::addChild(Node * child, int order  /* = 0 */)
@@ -628,6 +653,14 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 		child->m_bTransformNeeded = true;
 		// 更新子节点排序
 		m_bSortChildrenNeeded = true;
+	}
+}
+
+void e2d::Node::addChild(std::initializer_list<Node*>& vNodes, int order)
+{
+	for (const auto &node : vNodes)
+	{
+		this->addChild(node, order);
 	}
 }
 

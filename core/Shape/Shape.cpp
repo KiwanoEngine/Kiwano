@@ -3,9 +3,7 @@
 #include "..\enodes.h"
 
 e2d::Shape::Shape()
-	: m_nCategoryBitmask(0)
-	, m_nCollisionBitmask(0)
-	, m_bIsVisiable(true)
+	: m_bIsVisiable(true)
 	, m_nColor(Color::RED)
 	, m_fOpacity(1)
 	, m_pParentNode(nullptr)
@@ -23,26 +21,6 @@ e2d::Shape::~Shape()
 e2d::Node * e2d::Shape::getParentNode() const
 {
 	return m_pParentNode;
-}
-
-UINT32 e2d::Shape::getCategoryBitmask() const
-{
-	return m_nCategoryBitmask;
-}
-
-UINT32 e2d::Shape::getCollisionBitmask() const
-{
-	return m_nCollisionBitmask;
-}
-
-void e2d::Shape::setCategoryBitmask(UINT32 mask)
-{
-	m_nCategoryBitmask = mask;
-}
-
-void e2d::Shape::setCollisionBitmask(UINT32 mask)
-{
-	m_nCollisionBitmask = mask;
 }
 
 void e2d::Shape::setEnable(bool bEnable)
@@ -126,6 +104,6 @@ void e2d::Shape::_transform()
 			&m_pTransformedShape
 		);
 
-		ShapeManager::__updateShape(this);
+		CollisionManager::__updateShape(this);
 	}
 }

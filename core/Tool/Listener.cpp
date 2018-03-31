@@ -1,29 +1,16 @@
-#include "..\ecommon.h"
-#include "..\ebase.h"
+#include "..\etools.h"
 
 e2d::Listener::Listener()
 	: m_bRunning(false)
-	, m_callback(nullptr)
 	, m_bClear(false)
 {
-	Input::__add(this);
 }
 
-e2d::Listener::Listener(Function func)
-	: m_bRunning(false)
-	, m_callback(func)
-	, m_bClear(false)
-{
-	Input::__add(this);
-}
-
-e2d::Listener::Listener(Function func, String name)
+e2d::Listener::Listener(String name)
 	: m_bRunning(false)
 	, m_sName(name)
-	, m_callback(func)
 	, m_bClear(false)
 {
-	Input::__add(this);
 }
 
 void e2d::Listener::start()
@@ -55,17 +42,4 @@ e2d::String e2d::Listener::getName()
 void e2d::Listener::setName(String name)
 {
 	m_sName = name;
-}
-
-void e2d::Listener::setFunction(Function func)
-{
-	m_callback = func;
-}
-
-void e2d::Listener::update()
-{
-	if (m_callback)
-	{
-		m_callback();
-	}
 }

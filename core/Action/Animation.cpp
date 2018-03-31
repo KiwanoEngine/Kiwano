@@ -12,19 +12,9 @@ e2d::Animation::Animation(double interval)
 {
 }
 
-e2d::Animation::Animation(int number, Image * frame, ...)
-	: m_nFrameIndex(0)
-	, m_fInterval(1)
+e2d::Animation::Animation(std::initializer_list<Image*>& vImages)
 {
-	Image ** ppImage = &frame;
-
-	while (number > 0)
-	{
-		ASSERT((*ppImage) != nullptr, "Animation NULL pointer exception!");
-		this->addKeyframe(*ppImage);
-		ppImage++;
-		number--;
-	}
+	this->add(vImages);
 }
 
 e2d::Animation::~Animation()
@@ -78,7 +68,7 @@ void e2d::Animation::reset()
 	m_nFrameIndex = 0;
 }
 
-void e2d::Animation::addKeyframe(Image * frame)
+void e2d::Animation::add(Image * frame)
 {
 	if (frame)
 	{
@@ -87,12 +77,20 @@ void e2d::Animation::addKeyframe(Image * frame)
 	}
 }
 
+void e2d::Animation::add(std::initializer_list<Image*>& vImages)
+{
+	for (const auto &image : vImages)
+	{
+		this->add(image);
+	}
+}
+
 e2d::Animation * e2d::Animation::clone() const
 {
 	auto a = new Animation(m_fInterval);
 	for (auto frame : m_vFrames)
 	{
-		a->addKeyframe(frame);
+		a->add(frame);
 	}
 	return a;
 }

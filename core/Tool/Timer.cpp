@@ -14,7 +14,7 @@ e2d::Timer::Timer(Function func, String name, double interval /* = 0 */, int upd
 	, m_bClear(true)
 {
 	this->setName(name);
-	this->setFunction(func);
+	this->setFunc(func);
 	this->setUpdateTimes(updateTimes);
 	this->setInterval(interval);
 	m_bAutoRelease = autoRelease;
@@ -59,7 +59,7 @@ void e2d::Timer::setInterval(double interval)
 	m_fInterval = max(interval, 0);
 }
 
-void e2d::Timer::setFunction(Function func)
+void e2d::Timer::setFunc(Function func)
 {
 	m_Callback = func;
 }

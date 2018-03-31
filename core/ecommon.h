@@ -1,5 +1,6 @@
 #pragma once
 #include "emacros.h"
+#include <set>
 #include <stack>
 #include <vector>
 #include <functional>
@@ -520,7 +521,6 @@ protected:
 
 
 class Node;
-class Action;
 class SceneManager;
 
 // 场景
@@ -592,69 +592,13 @@ protected:
 };
 
 
-class Input;
-
-// 监听器
-class Listener
-	: public Object
-{
-	friend Input;
-
-public:
-	Listener();
-
-	Listener(
-		Function func	/* 监听到消息时的执行函数 */
-	);
-
-	Listener(
-		Function func,	/* 监听到消息时的执行函数 */
-		String name		/* 监听器名称 */
-	);
-
-	// 启动
-	void start();
-
-	// 停止
-	void stop();
-
-	// 停止并清除
-	void stopAndClear();
-
-	// 获取运行状态
-	bool isRunning();
-
-	// 获取名称
-	String getName();
-
-	// 修改名称
-	void setName(
-		String name
-	);
-
-	// 设置监听到消息时的执行函数
-	void setFunction(
-		Function func
-	);
-
-	// 更新
-	void update();
-
-protected:
-	String m_sName;
-	bool m_bRunning;
-	bool m_bClear;
-	Function m_callback;
-};
-
-
-class ShapeManager;
+class CollisionManager;
 
 // 形状
 class Shape :
 	public Object
 {
-	friend ShapeManager;
+	friend CollisionManager;
 	friend Node;
 
 public:
@@ -678,22 +622,6 @@ public:
 
 	// 获取父节点
 	Node * getParentNode() const;
-
-	// 获取类别掩码
-	UINT32 getCategoryBitmask() const;
-
-	// 获取冲突掩码
-	UINT32 getCollisionBitmask() const;
-
-	// 设置类别掩码
-	void setCategoryBitmask(
-		UINT32 mask
-	);
-
-	// 设置冲突掩码
-	void setCollisionBitmask(
-		UINT32 mask
-	);
 
 	// 启用或关闭该形状
 	virtual void setEnable(
@@ -737,8 +665,6 @@ protected:
 	bool	m_bEnable;
 	bool	m_bIsVisiable;
 	bool	m_bAutoResize;
-	UINT32	m_nCategoryBitmask;
-	UINT32	m_nCollisionBitmask;
 	UINT32	m_nColor;
 	float	m_fOpacity;
 	Node *	m_pParentNode;

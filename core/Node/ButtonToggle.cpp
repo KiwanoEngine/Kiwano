@@ -28,7 +28,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, F
 {
 	this->setNormal(toggleOnNormal);
 	this->setNormalOff(toggleOffNormal);
-	this->setFunction(func);
+	this->setClickFunc(func);
 }
 
 e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, Function func)
@@ -47,7 +47,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setNormalOff(toggleOffNormal);
 	this->setSelected(toggleOnSelected);
 	this->setSelectedOff(toggleOffSelected);
-	this->setFunction(func);
+	this->setClickFunc(func);
 }
 
 e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Function func)
@@ -68,7 +68,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setMouseOverOff(toggleOffMouseOver);
 	this->setSelected(toggleOnSelected);
 	this->setSelectedOff(toggleOffSelected);
-	this->setFunction(func);
+	this->setClickFunc(func);
 }
 
 e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Node * toggleOnDisabled, Node * toggleOffDisabled, Function func)
@@ -91,7 +91,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setSelectedOff(toggleOffSelected);
 	this->setDisabled(toggleOnDisabled);
 	this->setDisabledOff(toggleOffDisabled);
-	this->setFunction(func);
+	this->setClickFunc(func);
 }
 
 bool e2d::ButtonToggle::getState() const

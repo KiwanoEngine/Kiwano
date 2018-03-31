@@ -7,6 +7,7 @@ namespace e2d
 
 class Action;
 class Transition;
+class CollisionManager;
 
 class Node :
 	public Object
@@ -14,6 +15,7 @@ class Node :
 	friend Scene;
 	friend Shape;
 	friend Transition;
+	friend CollisionManager;
 
 public:
 	Node();
@@ -56,6 +58,9 @@ public:
 
 	// 获取节点名称
 	virtual String getName() const;
+
+	// 获取节点名称的 Hash 值
+	virtual unsigned int getHashName() const;
 
 	// 获取节点绘图顺序
 	virtual int getOrder() const;
@@ -316,10 +321,31 @@ public:
 		Shape * pShape
 	);
 
+	// 添加可碰撞节点的名称
+	virtual void addCollider(
+		String collliderName
+	);
+
+	// 添加多个可碰撞节点的名称
+	virtual void addCollider(
+		std::initializer_list<String>& vCollliderName	/* 名称数组 */
+	);
+
+	// 移除可碰撞节点的名称
+	virtual void removeCollider(
+		String collliderName
+	);
+
 	// 添加子节点
 	virtual void addChild(
 		Node * child,
-		int order = 0
+		int order = 0	/* 渲染顺序 */
+	);
+
+	// 添加多个子节点
+	virtual void addChild(
+		std::initializer_list<Node*>& vNodes,	/* 节点数组 */
+		int order = 0							/* 渲染顺序 */
 	);
 
 	// 执行动画
@@ -435,6 +461,7 @@ protected:
 	Node *		m_pParent;
 	D2D1::Matrix3x2F	m_MatriInitial;
 	D2D1::Matrix3x2F	m_MatriFinal;
+	std::set<unsigned int> m_vColliders;
 	std::vector<Node*>	m_vChildren;
 };
 
@@ -700,7 +727,7 @@ public:
 	);
 
 	// 设置按钮点击后的执行函数
-	void setFunction(
+	void setClickFunc(
 		Function func
 	);
 

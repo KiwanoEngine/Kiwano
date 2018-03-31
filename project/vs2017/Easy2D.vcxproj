@@ -191,7 +191,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Action\Action.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionCallback.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionFunc.cpp" />
     <ClCompile Include="..\..\core\Action\ActionDelay.cpp" />
     <ClCompile Include="..\..\core\Action\ActionMoveBy.cpp" />
     <ClCompile Include="..\..\core\Action\Animation.cpp" />
@@ -212,7 +212,6 @@
     <ClCompile Include="..\..\core\Base\Time.cpp" />
     <ClCompile Include="..\..\core\Base\Window.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />
-    <ClCompile Include="..\..\core\Common\Listener.cpp" />
     <ClCompile Include="..\..\core\Common\Object.cpp" />
     <ClCompile Include="..\..\core\Common\Point.cpp" />
     <ClCompile Include="..\..\core\Common\Scene.cpp" />
@@ -220,9 +219,10 @@
     <ClCompile Include="..\..\core\Common\String.cpp" />
     <ClCompile Include="..\..\core\Common\Image.cpp" />
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\InputManager.cpp" />
     <ClCompile Include="..\..\core\Manager\MusicManager.cpp" />
     <ClCompile Include="..\..\core\Manager\ObjectManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\ShapeManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\CollisionManager.cpp" />
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
     <ClCompile Include="..\..\core\Manager\TimerManager.cpp" />
     <ClCompile Include="..\..\core\Node\Button.cpp" />
@@ -235,7 +235,10 @@
     <ClCompile Include="..\..\core\Shape\ShapeEllipse.cpp" />
     <ClCompile Include="..\..\core\Shape\ShapeRectangle.cpp" />
     <ClCompile Include="..\..\core\Shape\Shape.cpp" />
+    <ClCompile Include="..\..\core\Tool\CollisionListener.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
+    <ClCompile Include="..\..\core\Tool\InputListener.cpp" />
+    <ClCompile Include="..\..\core\Tool\Listener.cpp" />
     <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
     <ClCompile Include="..\..\core\Tool\Random.cpp" />

@@ -7,6 +7,7 @@ namespace e2d
 
 class TimerManager;
 class MusicManager;
+class InputManager;
 
 // 随机数产生器
 class Random
@@ -88,7 +89,7 @@ public:
 	);
 
 	// 设置定时器的执行函数
-	void setFunction(
+	void setFunc(
 		Function func
 	);
 
@@ -113,6 +114,107 @@ protected:
 	double			m_fInterval;
 	double			m_fLast;
 	Function	m_Callback;
+};
+
+
+// 监听器
+class Listener
+	: public Object
+{
+public:
+	Listener();
+
+	Listener(
+		String name		/* 监听器名称 */
+	);
+
+	// 启动
+	virtual void start();
+
+	// 停止
+	virtual void stop();
+
+	// 停止并清除
+	virtual void stopAndClear();
+
+	// 获取运行状态
+	virtual bool isRunning();
+
+	// 获取名称
+	virtual String getName();
+
+	// 修改名称
+	virtual void setName(
+		String name
+	);
+
+protected:
+	// 更新监听器状态
+	virtual void _update() = 0;
+
+protected:
+	String m_sName;
+	bool m_bRunning;
+	bool m_bClear;
+};
+
+
+// 输入监听器
+class InputListener
+	: public Listener
+{
+	friend InputManager;
+
+public:
+	InputListener();
+
+	InputListener(
+		Function func	/* 监听到用户输入时的执行函数 */
+	);
+
+	InputListener(
+		Function func,	/* 监听到用户输入时的执行函数 */
+		String name		/* 监听器名称 */
+	);
+
+	// 设置监听到用户输入时的执行函数
+	virtual void setFunc(
+		Function func
+	);
+
+protected:
+	// 更新监听器状态
+	virtual void _update();
+
+protected:
+	Function m_callback;
+};
+
+
+// 碰撞监听器
+class CollisionListener
+	: public Listener
+{
+	friend CollisionManager;
+
+public:
+	CollisionListener();
+
+	CollisionListener(
+		Function func	/* 监听到用户输入时的执行函数 */
+	);
+
+	CollisionListener(
+		Function func,	/* 监听到用户输入时的执行函数 */
+		String name		/* 监听器名称 */
+	);
+
+protected:
+	// 更新监听器状态
+	virtual void _update();
+
+protected:
+	Function m_callback;
 };
 
 
