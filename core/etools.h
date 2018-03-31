@@ -8,6 +8,7 @@ namespace e2d
 class TimerManager;
 class MusicManager;
 class InputManager;
+class CollisionManager;
 
 // 随机数产生器
 class Random

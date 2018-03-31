@@ -372,6 +372,15 @@ enum class Relation : int
 };
 
 
+// 形状类别
+enum class Shape : int
+{
+	RECTANGLE,	/* 矩形 */
+	CIRCLE,		/* 圆形 */
+	ELLIPSE		/* 椭圆形 */
+};
+
+
 // 文本样式
 struct Font
 {
@@ -545,8 +554,14 @@ public:
 
 	// 添加节点到场景
 	void add(
-		Node * child,
-		int zOrder = 0
+		Node * child,	/* 要添加的节点 */
+		int zOrder = 0	/* 渲染顺序 */
+	);
+
+	// 添加节点到场景
+	virtual void add(
+		const std::initializer_list<Node*>& vNodes,	/* 节点数组 */
+		int order = 0								/* 渲染顺序 */
 	);
 
 	// 删除子节点
@@ -575,86 +590,6 @@ protected:
 	bool m_bWillSave;
 	bool m_bShapeVisiable;
 	Node * m_pRoot;
-};
-
-
-class CollisionManager;
-
-// 形状
-class Shape :
-	public Object
-{
-	friend CollisionManager;
-	friend Node;
-
-public:
-	// 形状类别
-	enum class TYPE : int
-	{
-		RECTANGLE,	/* 矩形 */
-		CIRCLE,		/* 圆形 */
-		ELLIPSE		/* 椭圆形 */
-	};
-
-public:
-	Shape();
-
-	virtual ~Shape();
-
-	// 判断两形状的交集关系
-	virtual Relation getRelationWith(
-		Shape * pShape
-	) const;
-
-	// 获取父节点
-	Node * getParentNode() const;
-
-	// 启用或关闭该形状
-	virtual void setEnable(
-		bool bEnable
-	);
-
-	// 设置形状的可见性
-	void setVisiable(
-		bool bVisiable
-	);
-
-	// 设置绘制颜色
-	void setColor(
-		UINT32 color
-	);
-
-	// 设置绘制透明度
-	void setOpacity(
-		double opacity
-	);
-
-	// 设置大小跟随
-	void setAutoResize(
-		bool bEnable
-	);
-
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1Geometry * getD2dGeometry() const = 0;
-
-protected:
-	// 转换形状
-	virtual void _transform();
-
-	// 重设大小
-	virtual void _resize() = 0;
-
-	// 渲染形状
-	virtual void _render();
-
-protected:
-	bool	m_bEnable;
-	bool	m_bIsVisiable;
-	bool	m_bAutoResize;
-	UINT32	m_nColor;
-	float	m_fOpacity;
-	Node *	m_pParentNode;
-	ID2D1TransformedGeometry * m_pTransformedShape;
 };
 
 

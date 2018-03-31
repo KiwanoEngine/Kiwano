@@ -2,7 +2,7 @@
 #include "..\emanagers.h"
 #include "..\enodes.h"
 
-e2d::Shape::Shape()
+e2d::ShapeBase::ShapeBase()
 	: m_bIsVisiable(true)
 	, m_nColor(Color::RED)
 	, m_fOpacity(1)
@@ -13,42 +13,42 @@ e2d::Shape::Shape()
 {
 }
 
-e2d::Shape::~Shape()
+e2d::ShapeBase::~ShapeBase()
 {
 	SafeReleaseInterface(&m_pTransformedShape);
 }
 
-e2d::Node * e2d::Shape::getParentNode() const
+e2d::Node * e2d::ShapeBase::getParentNode() const
 {
 	return m_pParentNode;
 }
 
-void e2d::Shape::setEnable(bool bEnable)
+void e2d::ShapeBase::setEnable(bool bEnable)
 {
 	m_bEnable = bEnable;
 }
 
-void e2d::Shape::setVisiable(bool bVisiable)
+void e2d::ShapeBase::setVisiable(bool bVisiable)
 {
 	m_bIsVisiable = bVisiable;
 }
 
-void e2d::Shape::setColor(UINT32 color)
+void e2d::ShapeBase::setColor(UINT32 color)
 {
 	m_nColor = color;
 }
 
-void e2d::Shape::setOpacity(double opacity)
+void e2d::ShapeBase::setOpacity(double opacity)
 {
 	m_fOpacity = min(max(static_cast<float>(opacity), 0), 1);
 }
 
-void e2d::Shape::setAutoResize(bool bEnable)
+void e2d::ShapeBase::setAutoResize(bool bEnable)
 {
 	m_bAutoResize = bEnable;
 }
 
-void e2d::Shape::_render()
+void e2d::ShapeBase::_render()
 {
 	if (m_pTransformedShape && m_bEnable)
 	{
@@ -65,7 +65,7 @@ void e2d::Shape::_render()
 	}
 }
 
-e2d::Relation e2d::Shape::getRelationWith(Shape * pShape) const
+e2d::Relation e2d::ShapeBase::getRelationWith(ShapeBase * pShape) const
 {
 	if (m_pTransformedShape && pShape->m_pTransformedShape)
 	{
@@ -85,7 +85,7 @@ e2d::Relation e2d::Shape::getRelationWith(Shape * pShape) const
 	return Relation::UNKNOWN;
 }
 
-void e2d::Shape::_transform()
+void e2d::ShapeBase::_transform()
 {
 	if (m_pParentNode && m_bEnable)
 	{

@@ -7,13 +7,14 @@ namespace e2d
 
 class Action;
 class Transition;
+class ShapeBase;
 class CollisionManager;
 
 class Node :
 	public Object
 {
 	friend Scene;
-	friend Shape;
+	friend ShapeBase;
 	friend Transition;
 	friend CollisionManager;
 
@@ -116,7 +117,7 @@ public:
 	virtual double getOpacity() const;
 
 	// 获取节点形状
-	virtual Shape * getShape() const;
+	virtual ShapeBase * getShape() const;
 
 	// 获取父节点
 	virtual Node * getParent() const;
@@ -312,12 +313,12 @@ public:
 
 	// 设置节点形状
 	virtual void setShape(
-		Shape::TYPE type
+		Shape type
 	);
 
 	// 设置节点形状
 	virtual void setShape(
-		Shape * pShape
+		ShapeBase * pShape
 	);
 
 	// 添加可碰撞节点的名称
@@ -455,7 +456,7 @@ protected:
 	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
 	bool		m_bTransformNeeded;
-	Shape *		m_pShape;
+	ShapeBase *	m_pShape;
 	Scene *		m_pParentScene;
 	Node *		m_pParent;
 	D2D1::Matrix3x2F		m_MatriInitial;

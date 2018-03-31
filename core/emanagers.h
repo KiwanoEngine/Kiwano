@@ -12,6 +12,7 @@ class Node;
 class Timer;
 class Action;
 class Music;
+class ShapeBase;
 class Transition;
 class InputListener;
 class CollisionListener;
@@ -354,7 +355,7 @@ private:
 class CollisionManager
 {
 	friend Node;
-	friend Shape;
+	friend ShapeBase;
 	friend CollisionListener;
 
 public:
@@ -401,11 +402,15 @@ public:
 	// 获取全部监听器
 	static std::vector<CollisionListener*> getAll();
 
-	// 获取发生碰撞的节点 1
-	static Node* getNode1();
+	// 判断碰撞是否由该节点引发（如果是，返回与其相撞的节点指针，否则返回空）
+	static Node* isCausedBy(
+		Node * pNode
+	);
 
-	// 获取发生碰撞的节点 2
-	static Node* getNode2();
+	// 判断发生碰撞的节点名称是否相同（若相同返回其指针，否则返回空）
+	static Node* isCausedBy(
+		String name
+	);
 
 private:
 	// 添加碰撞监听
@@ -418,17 +423,17 @@ private:
 
 	// 更新形状
 	static void __updateShape(
-		Shape * pActiveShape
+		ShapeBase * pActiveShape
 	);
 
 	// 添加形状
 	static void __addShape(
-		Shape * pShape
+		ShapeBase * pShape
 	);
 
 	// 删除已绑定的形状
 	static void __removeShape(
-		Shape * pShape
+		ShapeBase * pShape
 	);
 };
 

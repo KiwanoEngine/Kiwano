@@ -378,7 +378,7 @@ double e2d::Node::getOpacity() const
 	return m_fRealOpacity;
 }
 
-e2d::Shape * e2d::Node::getShape() const
+e2d::ShapeBase * e2d::Node::getShape() const
 {
 	return m_pShape;
 }
@@ -547,25 +547,25 @@ void e2d::Node::setSize(Size size)
 	this->setSize(size.width, size.height);
 }
 
-void e2d::Node::setShape(Shape::TYPE type)
+void e2d::Node::setShape(Shape type)
 {
 	switch (type)
 	{
-	case Shape::TYPE::RECTANGLE:
+	case Shape::RECTANGLE:
 	{
 		auto rect = new ShapeRectangle(this);
 		this->setShape(rect);
 		break;
 	}
 
-	case Shape::TYPE::CIRCLE:
+	case Shape::CIRCLE:
 	{
 		auto rect = new ShapeCircle(this);
 		this->setShape(rect);
 		break;
 	}
 
-	case Shape::TYPE::ELLIPSE:
+	case Shape::ELLIPSE:
 	{
 		auto rect = new ShapeEllipse(this);
 		this->setShape(rect);
@@ -577,7 +577,7 @@ void e2d::Node::setShape(Shape::TYPE type)
 	}
 }
 
-void e2d::Node::setShape(Shape * pShape)
+void e2d::Node::setShape(ShapeBase * pShape)
 {
 	// É¾³ý¾ÉµÄÐÎ×´
 	CollisionManager::__removeShape(m_pShape);

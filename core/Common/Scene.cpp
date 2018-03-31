@@ -53,6 +53,14 @@ void e2d::Scene::add(Node * child, int order /* = 0 */)
 	m_pRoot->addChild(child, order);
 }
 
+void e2d::Scene::add(const std::initializer_list<Node*>& vNodes, int order)
+{
+	for (const auto &node : vNodes)
+	{
+		this->add(node, order);
+	}
+}
+
 bool e2d::Scene::remove(Node * child)
 {
 	return m_pRoot->removeChild(child);

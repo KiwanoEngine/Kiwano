@@ -1,12 +1,12 @@
 #include "..\eactions.h"
 
-e2d::ActionSequence::ActionSequence() :
-	m_nActionIndex(0)
+e2d::ActionSequence::ActionSequence()
+	: m_nActionIndex(0)
 {
 }
 
-e2d::ActionSequence::ActionSequence(const std::initializer_list<Action*>& vActions) :
-	m_nActionIndex(0)
+e2d::ActionSequence::ActionSequence(const std::initializer_list<Action*>& vActions)
+	: m_nActionIndex(0)
 {
 	this->add(vActions);
 }

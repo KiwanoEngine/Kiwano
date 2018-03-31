@@ -6,9 +6,80 @@ namespace e2d
 {
 
 
+class CollisionManager;
+
+// 形状
+class ShapeBase :
+	public Object
+{
+	friend CollisionManager;
+	friend Node;
+
+public:
+	ShapeBase();
+
+	virtual ~ShapeBase();
+
+	// 判断两形状的交集关系
+	virtual Relation getRelationWith(
+		ShapeBase * pShape
+	) const;
+
+	// 获取父节点
+	Node * getParentNode() const;
+
+	// 启用或关闭该形状
+	virtual void setEnable(
+		bool bEnable
+	);
+
+	// 设置形状的可见性
+	void setVisiable(
+		bool bVisiable
+	);
+
+	// 设置绘制颜色
+	void setColor(
+		UINT32 color
+	);
+
+	// 设置绘制透明度
+	void setOpacity(
+		double opacity
+	);
+
+	// 设置大小跟随
+	void setAutoResize(
+		bool bEnable
+	);
+
+	// 获取 ID2D1Geometry 对象
+	virtual ID2D1Geometry * getD2dGeometry() const = 0;
+
+protected:
+	// 转换形状
+	virtual void _transform();
+
+	// 重设大小
+	virtual void _resize() = 0;
+
+	// 渲染形状
+	virtual void _render();
+
+protected:
+	bool	m_bEnable;
+	bool	m_bIsVisiable;
+	bool	m_bAutoResize;
+	UINT32	m_nColor;
+	float	m_fOpacity;
+	Node *	m_pParentNode;
+	ID2D1TransformedGeometry * m_pTransformedShape;
+};
+
+
 // 矩形
 class ShapeRectangle :
-	public Shape
+	public ShapeBase
 {
 public:
 	// 创建一个默认矩形
@@ -51,7 +122,7 @@ protected:
 
 // 圆形
 class ShapeCircle :
-	public Shape
+	public ShapeBase
 {
 public:
 	// 创建一个默认圆形
@@ -90,7 +161,7 @@ protected:
 
 // 椭圆形
 class ShapeEllipse :
-	public Shape
+	public ShapeBase
 {
 public:
 	// 创建一个默认椭圆

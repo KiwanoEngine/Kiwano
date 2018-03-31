@@ -4,7 +4,7 @@
 #include "..\etools.h"
 
 // ÐÎ×´¼¯ºÏ
-static std::vector<e2d::Shape*> s_vShapes;
+static std::vector<e2d::ShapeBase*> s_vShapes;
 // ¼àÌýÆ÷ÈÝÆ÷
 static std::vector<e2d::CollisionListener*> s_vListeners;
 // Åö×²´¥·¢×´Ì¬
@@ -40,7 +40,7 @@ void e2d::CollisionManager::__update()
 	}
 }
 
-void e2d::CollisionManager::__updateShape(e2d::Shape * pActiveShape)
+void e2d::CollisionManager::__updateShape(e2d::ShapeBase * pActiveShape)
 {
 	// ÅÐ¶ÏÅö×²´¥·¢ÊÇ·ñ´ò¿ª
 	if (!s_bCollisionEnable)
@@ -206,17 +206,25 @@ std::vector<e2d::CollisionListener*> e2d::CollisionManager::getAll()
 	return s_vListeners;
 }
 
-e2d::Node * e2d::CollisionManager::getNode1()
+e2d::Node* e2d::CollisionManager::isCausedBy(Node * pNode)
 {
-	return s_pActiveNode;
+	if (s_pActiveNode == pNode)
+		return s_pPassiveNode;
+	if (s_pPassiveNode == pNode)
+		return s_pActiveNode;
+	return nullptr;
 }
 
-e2d::Node * e2d::CollisionManager::getNode2()
+e2d::Node* e2d::CollisionManager::isCausedBy(String name)
 {
-	return s_pPassiveNode;
+	if (s_pActiveNode->getName() == name)
+		return s_pActiveNode;
+	if (s_pPassiveNode->getName() == name)
+		return s_pPassiveNode;
+	return nullptr;
 }
 
-void e2d::CollisionManager::__addShape(Shape * pShape)
+void e2d::CollisionManager::__addShape(ShapeBase * pShape)
 {
 	if (pShape)
 	{
@@ -230,7 +238,7 @@ void e2d::CollisionManager::__addShape(Shape * pShape)
 	}
 }
 
-void e2d::CollisionManager::__removeShape(Shape * pShape)
+void e2d::CollisionManager::__removeShape(ShapeBase * pShape)
 {
 	if (pShape)
 	{

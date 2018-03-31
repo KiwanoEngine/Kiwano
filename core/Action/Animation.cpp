@@ -13,6 +13,15 @@ e2d::Animation::Animation(double interval)
 }
 
 e2d::Animation::Animation(const std::initializer_list<Image*>& vImages)
+	: m_nFrameIndex(0)
+	, m_fInterval(1)
+{
+	this->add(vImages);
+}
+
+e2d::Animation::Animation(double interval, const std::initializer_list<Image*>& vImages)
+	: m_nFrameIndex(0)
+	, m_fInterval(interval)
 {
 	this->add(vImages);
 }

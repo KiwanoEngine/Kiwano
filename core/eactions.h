@@ -517,7 +517,13 @@ public:
 
 	// 创建帧动画
 	Animation(
-		const std::initializer_list<Image*>& vImages
+		const std::initializer_list<Image*>& vImages	/* 关键帧数组 */
+	);
+
+	// 创建特定帧间隔的帧动画
+	Animation(
+		double interval,	/* 帧间隔（秒） */
+		const std::initializer_list<Image*>& vImages	/* 关键帧数组 */
 	);
 
 	virtual ~Animation();
@@ -763,12 +769,7 @@ namespace e2d
 
 	inline e2d::ActionSequence * e2d::action::Sequence(const std::initializer_list<Action*>& vActions)
 	{
-		auto action = new (std::nothrow) ActionSequence();
-		if (action)
-		{
-			action->add(vActions);
-		}
-		return action;
+		return new (std::nothrow) ActionSequence(vActions);
 	}
 
 	inline e2d::ActionDelay * e2d::action::Delay(double duration)
@@ -783,12 +784,7 @@ namespace e2d
 
 	inline e2d::Animation * e2d::action::Animate(double interval, const std::initializer_list<Image*>& vFrames)
 	{
-		auto animation = new (std::nothrow) Animation(interval);
-		if (animation)
-		{
-			animation->add(vFrames);
-		}
-		return animation;
+		return new (std::nothrow) Animation(interval, vFrames);
 	}
 
 	inline e2d::ActionFunc * e2d::action::Func(Function func)
