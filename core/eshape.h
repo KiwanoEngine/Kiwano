@@ -5,105 +5,17 @@
 namespace e2d
 {
 
-class ShapeManager;
-class Node;
 
-
-class Shape :
-	public Object
-{
-	friend ShapeManager;
-	friend Node;
-
-public:
-	Shape();
-
-	virtual ~Shape();
-
-	// 判断两形状的交集关系
-	virtual int getRelationWith(
-		Shape * pShape
-	) const;
-
-	// 获取父节点
-	Node * getParentNode() const;
-
-	// 获取类别掩码
-	UINT32 getCategoryBitmask() const;
-
-	// 获取冲突掩码
-	UINT32 getCollisionBitmask() const;
-
-	// 设置类别掩码
-	void setCategoryBitmask(
-		UINT32 mask
-	);
-
-	// 设置冲突掩码
-	void setCollisionBitmask(
-		UINT32 mask
-	);
-
-	// 启用或关闭该形状
-	virtual void setEnable(
-		bool bEnable
-	);
-
-	// 设置形状的可见性
-	void setVisiable(
-		bool bVisiable
-	);
-
-	// 设置绘制颜色
-	void setColor(
-		UINT32 color
-	);
-
-	// 设置绘制透明度
-	void setOpacity(
-		double opacity
-	);
-
-	// 设置大小跟随
-	void setAutoResize(
-		bool bEnable
-	);
-
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1Geometry * getD2dGeometry() const = 0;
-
-protected:
-	// 转换形状
-	virtual void _transform();
-
-	// 重设大小
-	virtual void _resize() = 0;
-
-	// 渲染形状
-	virtual void _render();
-
-protected:
-	bool	m_bEnable;
-	bool	m_bIsVisiable;
-	bool	m_bAutoResize;
-	UINT32	m_nCategoryBitmask;
-	UINT32	m_nCollisionBitmask;
-	UINT32	m_nColor;
-	float	m_fOpacity;
-	Node *	m_pParentNode;
-	ID2D1TransformedGeometry * m_pTransformedShape;
-};
-
-
-class Rect :
+// 矩形
+class ShapeRectangle :
 	public Shape
 {
 public:
-	// 创建一个空矩形
-	Rect();
+	// 创建一个默认矩形
+	ShapeRectangle();
 
 	// 根据左上角坐标和宽高创建矩形
-	Rect(
+	ShapeRectangle(
 		double x,
 		double y,
 		double width,
@@ -111,23 +23,24 @@ public:
 	);
 
 	// 创建一个和节点位置大小相同的矩形
-	Rect(
+	ShapeRectangle(
 		Node * node
 	);
 
-	virtual ~Rect();
+	virtual ~ShapeRectangle();
 
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1RectangleGeometry * getD2dGeometry() const override;
-
-protected:
-	void _setRect(
+	// 修改矩形大小
+	void setRect(
 		double left,
 		double top,
 		double right,
 		double bottom
 	);
 
+	// 获取 ID2D1Geometry 对象
+	virtual ID2D1RectangleGeometry * getD2dGeometry() const override;
+
+protected:
 	// 重设大小
 	virtual void _resize();
 
@@ -136,35 +49,37 @@ protected:
 };
 
 
-class Circle :
+// 圆形
+class ShapeCircle :
 	public Shape
 {
 public:
-	// 创建一个空的圆形
-	Circle();
+	// 创建一个默认圆形
+	ShapeCircle();
 
 	// 根据圆心和半径创建圆形
-	Circle(
+	ShapeCircle(
 		Point center,
 		double radius
 	);
 
 	// 创建一个和节点位置大小相同的圆形
-	Circle(
+	ShapeCircle(
 		Node * node
 	);
 
-	virtual ~Circle();
+	virtual ~ShapeCircle();
+
+	// 修改圆形大小
+	void setCircle(
+		Point center,
+		double radius
+	);
 
 	// 获取 ID2D1Geometry 对象
 	virtual ID2D1EllipseGeometry * getD2dGeometry() const override;
 
 protected:
-	void _setCircle(
-		Point center,
-		double radius
-	);
-
 	// 重设大小
 	virtual void _resize();
 
@@ -173,37 +88,39 @@ protected:
 };
 
 
-class Ellipse :
+// 椭圆形
+class ShapeEllipse :
 	public Shape
 {
 public:
-	// 创建一个空的椭圆
-	Ellipse();
+	// 创建一个默认椭圆
+	ShapeEllipse();
 
 	// 根据圆心和半径创建椭圆
-	Ellipse(
+	ShapeEllipse(
 		Point center,
 		double radiusX,
 		double radiusY
 	);
 
 	// 创建一个和节点位置大小相同的椭圆
-	Ellipse(
+	ShapeEllipse(
 		Node * node
 	);
 
-	virtual ~Ellipse();
+	virtual ~ShapeEllipse();
 
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1EllipseGeometry * getD2dGeometry() const override;
-
-protected:
-	void _setEllipse(
+	// 修改椭圆大小
+	void setEllipse(
 		Point center,
 		double radiusX,
 		double radiusY
 	);
 
+	// 获取 ID2D1Geometry 对象
+	virtual ID2D1EllipseGeometry * getD2dGeometry() const override;
+
+protected:
 	// 重设大小
 	virtual void _resize();
 

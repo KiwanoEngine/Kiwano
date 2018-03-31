@@ -39,7 +39,7 @@ e2d::Node::Node()
 {
 	if (s_fDefaultShapeEnabled)
 	{
-		auto rect = new Rect(this);
+		auto rect = new ShapeRectangle(this);
 		this->setShape(rect);
 	}
 }
@@ -540,6 +540,36 @@ void e2d::Node::setSize(double width, double height)
 void e2d::Node::setSize(Size size)
 {
 	this->setSize(size.width, size.height);
+}
+
+void e2d::Node::setShape(Shape::TYPE type)
+{
+	switch (type)
+	{
+	case Shape::TYPE::RECTANGLE:
+	{
+		auto rect = new ShapeRectangle(this);
+		this->setShape(rect);
+		break;
+	}
+
+	case Shape::TYPE::CIRCLE:
+	{
+		auto rect = new ShapeCircle(this);
+		this->setShape(rect);
+		break;
+	}
+
+	case Shape::TYPE::ELLIPSE:
+	{
+		auto rect = new ShapeEllipse(this);
+		this->setShape(rect);
+		break;
+	}
+
+	default:
+		break;
+	}
 }
 
 void e2d::Node::setShape(Shape * pShape)

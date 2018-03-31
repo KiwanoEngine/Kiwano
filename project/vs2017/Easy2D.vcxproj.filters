@@ -150,16 +150,7 @@
     <ClCompile Include="..\..\core\Manager\ShapeManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Shape\Circle.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Shape\Ellipse.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Shape\Shape.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Shape\Rect.cpp">
       <Filter>Shape</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Point.cpp">
@@ -188,6 +179,15 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Tool\Path.cpp">
       <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\ShapeRectangle.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\ShapeEllipse.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\ShapeCircle.cpp">
+      <Filter>Shape</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,6 @@ namespace e2d
 
 
 class Action;
-class Shape;
 class Transition;
 
 class Node :
@@ -309,6 +308,11 @@ public:
 
 	// 设置节点形状
 	virtual void setShape(
+		Shape::TYPE type
+	);
+
+	// 设置节点形状
+	virtual void setShape(
 		Shape * pShape
 	);
 
@@ -426,7 +430,7 @@ protected:
 	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
 	bool		m_bTransformNeeded;
-	Shape *	m_pShape;
+	Shape *		m_pShape;
 	Scene *		m_pParentScene;
 	Node *		m_pParent;
 	D2D1::Matrix3x2F	m_MatriInitial;
@@ -704,6 +708,7 @@ public:
 	virtual void onFixedUpdate() override;
 
 protected:
+	// 按钮状态枚举
 	enum BTN_STATE { NORMAL, MOUSEOVER, SELECTED };
 
 	// 设置按钮状态

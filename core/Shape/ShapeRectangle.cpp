@@ -1,21 +1,21 @@
 #include "..\eshape.h"
 #include "..\enodes.h"
 
-e2d::Rect::Rect()
+e2d::ShapeRectangle::ShapeRectangle()
 	: m_pD2dRectangle(nullptr)
 {
 }
 
-e2d::Rect::Rect(double x, double y, double width, double height)
+e2d::ShapeRectangle::ShapeRectangle(double x, double y, double width, double height)
 	: m_pD2dRectangle(nullptr)
 {
-	this->_setRect(x, y, x + width, y + height);
+	this->setRect(x, y, x + width, y + height);
 }
 
-e2d::Rect::Rect(Node * node)
+e2d::ShapeRectangle::ShapeRectangle(Node * node)
 	: m_pD2dRectangle(nullptr)
 {
-	this->_setRect(
+	this->setRect(
 		0,
 		0,
 		node->getRealWidth(),
@@ -23,12 +23,12 @@ e2d::Rect::Rect(Node * node)
 	);
 }
 
-e2d::Rect::~Rect()
+e2d::ShapeRectangle::~ShapeRectangle()
 {
 	SafeReleaseInterface(&m_pD2dRectangle);
 }
 
-void e2d::Rect::_setRect(double left, double top, double right, double bottom)
+void e2d::ShapeRectangle::setRect(double left, double top, double right, double bottom)
 {
 	SafeReleaseInterface(&m_pD2dRectangle);
 
@@ -42,11 +42,11 @@ void e2d::Rect::_setRect(double left, double top, double right, double bottom)
 	);
 }
 
-void e2d::Rect::_resize()
+void e2d::ShapeRectangle::_resize()
 {
 	if (m_pParentNode && m_bEnable)
 	{
-		this->_setRect(
+		this->setRect(
 			0,
 			0,
 			m_pParentNode->getRealWidth(),
@@ -55,7 +55,7 @@ void e2d::Rect::_resize()
 	}
 }
 
-ID2D1RectangleGeometry * e2d::Rect::getD2dGeometry() const
+ID2D1RectangleGeometry * e2d::ShapeRectangle::getD2dGeometry() const
 {
 	return m_pD2dRectangle;
 }
