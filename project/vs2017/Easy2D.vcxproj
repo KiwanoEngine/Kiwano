@@ -231,10 +231,10 @@
     <ClCompile Include="..\..\core\Node\Node.cpp" />
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />
     <ClCompile Include="..\..\core\Node\Text.cpp" />
+    <ClCompile Include="..\..\core\Shape\ShapeBase.cpp" />
     <ClCompile Include="..\..\core\Shape\ShapeCircle.cpp" />
     <ClCompile Include="..\..\core\Shape\ShapeEllipse.cpp" />
     <ClCompile Include="..\..\core\Shape\ShapeRectangle.cpp" />
-    <ClCompile Include="..\..\core\Shape\Shape.cpp" />
     <ClCompile Include="..\..\core\Tool\CollisionListener.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
     <ClCompile Include="..\..\core\Tool\InputListener.cpp" />

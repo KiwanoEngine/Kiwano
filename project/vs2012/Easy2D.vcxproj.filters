@@ -42,9 +42,6 @@
     <ClCompile Include="..\..\core\Action\Action.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionCallback.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Action\ActionDelay.cpp">
       <Filter>Action</Filter>
     </ClCompile>
@@ -156,31 +153,13 @@
     <ClCompile Include="..\..\core\Node\Text.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Shape\Circle.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Shape\Ellipse.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Shape\Shape.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\MusicManager.cpp">
       <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Manager\ShapeManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Shape\Rect.cpp">
-      <Filter>Shape</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Point.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Size.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Common\Listener.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Tool\Path.cpp">
@@ -200,6 +179,36 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Tool\Data.cpp">
       <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\CollisionListener.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\InputListener.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Listener.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\ShapeCircle.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\ShapeEllipse.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\ShapeRectangle.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Shape\ShapeBase.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\CollisionManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\InputManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\ActionFunc.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
