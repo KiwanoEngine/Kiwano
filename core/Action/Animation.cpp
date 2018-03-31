@@ -12,7 +12,7 @@ e2d::Animation::Animation(double interval)
 {
 }
 
-e2d::Animation::Animation(std::initializer_list<Image*>& vImages)
+e2d::Animation::Animation(const std::initializer_list<Image*>& vImages)
 {
 	this->add(vImages);
 }
@@ -77,7 +77,7 @@ void e2d::Animation::add(Image * frame)
 	}
 }
 
-void e2d::Animation::add(std::initializer_list<Image*>& vImages)
+void e2d::Animation::add(const std::initializer_list<Image*>& vImages)
 {
 	for (const auto &image : vImages)
 	{

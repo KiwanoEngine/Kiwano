@@ -152,17 +152,17 @@ class Input
 public:
 	// 检测键盘某按键是否正被按下
 	static bool isKeyDown(
-		int nKeyCode
+		KeyCode nKeyCode
 	);
 
 	// 检测键盘某按键是否被点击
 	static bool isKeyPress(
-		int nKeyCode
+		KeyCode nKeyCode
 	);
 
 	// 检测键盘某按键是否正在松开
 	static bool isKeyRelease(
-		int nKeyCode
+		KeyCode nKeyCode
 	);
 
 	// 检测鼠标左键是否正被按下

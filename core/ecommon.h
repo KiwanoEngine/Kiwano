@@ -195,7 +195,7 @@ private:
 class Color
 {
 public:
-	enum COMMON_VALUE
+	enum : UINT32
 	{
 		ALICE_BLUE = 0xF0F8FF,
 		AQUA = 0x00FFFF,
@@ -262,11 +262,12 @@ public:
 	};
 };
 
+
 // 字体粗细值
 class FontWeight
 {
 public:
-	enum COMMON_VALUE
+	enum : UINT32
 	{
 		THIN = 100,
 		EXTRA_LIGHT = 200,
@@ -290,96 +291,84 @@ public:
 
 
 // 文本对齐方式
-class TextAlign
+enum class TextAlign : int
 {
-public:
-	enum COMMON_VALUE
-	{
-		LEFT,		/* 左对齐 */
-		RIGHT,		/* 右对齐 */
-		CENTER		/* 居中对齐 */
-	};
+	LEFT,		/* 左对齐 */
+	RIGHT,		/* 右对齐 */
+	CENTER		/* 居中对齐 */
 };
 
 
 // 键值集合
-class KeyCode
+enum class KeyCode : int
 {
-public:
-	enum VALUE
-	{
-		UP = 0xC8,
-		LEFT = 0xCB,
-		RIGHT = 0xCD,
-		DOWN = 0xD0,
-		ENTER = 0x1C,
-		SPACE = 0x39,
-		ESC = 0x01,
-		BACK = 0x0E,
-		TAB = 0x0F,
-		PAUSE = 0xC5,
-		Q = 0x10,
-		W = 0x11,
-		E = 0x12,
-		R = 0x13,
-		T = 0x14,
-		Y = 0x15,
-		U = 0x16,
-		I = 0x17,
-		O = 0x18,
-		P = 0x19,
-		A = 0x1E,
-		S = 0x1F,
-		D = 0x20,
-		F = 0x21,
-		G = 0x22,
-		H = 0x23,
-		J = 0x24,
-		K = 0x25,
-		L = 0x26,
-		Z = 0x2C,
-		X = 0x2D,
-		C = 0x2E,
-		V = 0x2F,
-		B = 0x30,
-		N = 0x31,
-		M = 0x32,
-		NUM1 = 0x02,
-		NUM2 = 0x03,
-		NUM3 = 0x04,
-		NUM4 = 0x05,
-		NUM5 = 0x06,
-		NUM6 = 0x07,
-		NUM7 = 0x08,
-		NUM8 = 0x09,
-		NUM9 = 0x0A,
-		NUM0 = 0x0B,
-		NUMPAD7 = 0x47,
-		NUMPAD8 = 0x48,
-		NUMPAD9 = 0x49,
-		NUMPAD4 = 0x4B,
-		NUMPAD5 = 0x4C,
-		NUMPAD6 = 0x4D,
-		NUMPAD1 = 0x4F,
-		NUMPAD2 = 0x50,
-		NUMPAD3 = 0x51,
-		NUMPAD0 = 0x52
-	};
+	UP = 0xC8,
+	LEFT = 0xCB,
+	RIGHT = 0xCD,
+	DOWN = 0xD0,
+	ENTER = 0x1C,
+	SPACE = 0x39,
+	ESC = 0x01,
+	BACK = 0x0E,
+	TAB = 0x0F,
+	PAUSE = 0xC5,
+	Q = 0x10,
+	W = 0x11,
+	E = 0x12,
+	R = 0x13,
+	T = 0x14,
+	Y = 0x15,
+	U = 0x16,
+	I = 0x17,
+	O = 0x18,
+	P = 0x19,
+	A = 0x1E,
+	S = 0x1F,
+	D = 0x20,
+	F = 0x21,
+	G = 0x22,
+	H = 0x23,
+	J = 0x24,
+	K = 0x25,
+	L = 0x26,
+	Z = 0x2C,
+	X = 0x2D,
+	C = 0x2E,
+	V = 0x2F,
+	B = 0x30,
+	N = 0x31,
+	M = 0x32,
+	NUM1 = 0x02,
+	NUM2 = 0x03,
+	NUM3 = 0x04,
+	NUM4 = 0x05,
+	NUM5 = 0x06,
+	NUM6 = 0x07,
+	NUM7 = 0x08,
+	NUM8 = 0x09,
+	NUM9 = 0x0A,
+	NUM0 = 0x0B,
+	NUMPAD7 = 0x47,
+	NUMPAD8 = 0x48,
+	NUMPAD9 = 0x49,
+	NUMPAD4 = 0x4B,
+	NUMPAD5 = 0x4C,
+	NUMPAD6 = 0x4D,
+	NUMPAD1 = 0x4F,
+	NUMPAD2 = 0x50,
+	NUMPAD3 = 0x51,
+	NUMPAD0 = 0x52
 };
 
 
 // 形状交集关系
-class Relation
+enum class Relation : int
 {
-public:
-	enum VALUE
-	{
-		UNKNOWN = 0,		/* 关系不确定 */
-		DISJOINT = 1,		/* 没有交集 */
-		IS_CONTAINED = 2,	/* 完全被包含 */
-		CONTAINS = 3,		/* 完全包含 */
-		OVERLAP = 4			/* 部分重叠 */
-	};
+	UNKNOWN = 0,		/* 关系不确定 */
+	DISJOINT = 1,		/* 没有交集 */
+	IS_CONTAINED = 2,	/* 完全被包含 */
+	CONTAINS = 3,		/* 完全包含 */
+	OVERLAP = 4			/* 部分重叠 */
 };
 
 
@@ -541,12 +530,9 @@ public:
 	virtual void onExit() {}
 
 	// 重写这个函数，它将在碰撞发生时自动执行
-	virtual void onCollide(
-		Node * pActiveNode,	/* 主动发生碰撞的节点 */
-		Node * pPassiveNode	/* 被动发生碰撞的节点 */
-	) {}
+	virtual void onCollide() {}
 
-	// 重写这个函数，它将在关闭窗口时执行
+	// 重写这个函数，它将在关闭窗口时执行（返回 false 将阻止窗口关闭）
 	virtual bool onCloseWindow() { return true; }
 
 	// 重写这个函数，它将在每一帧画面刷新时执行
@@ -603,7 +589,7 @@ class Shape :
 
 public:
 	// 形状类别
-	enum TYPE
+	enum class TYPE : int
 	{
 		RECTANGLE,	/* 矩形 */
 		CIRCLE,		/* 圆形 */
@@ -616,7 +602,7 @@ public:
 	virtual ~Shape();
 
 	// 判断两形状的交集关系
-	virtual int getRelationWith(
+	virtual Relation getRelationWith(
 		Shape * pShape
 	) const;
 

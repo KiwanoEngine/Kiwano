@@ -9,6 +9,9 @@ static std::vector<e2d::Shape*> s_vShapes;
 static std::vector<e2d::CollisionListener*> s_vListeners;
 // 碰撞触发状态
 static bool s_bCollisionEnable = false;
+// 发生碰撞的节点
+static e2d::Node * s_pActiveNode = nullptr;
+static e2d::Node * s_pPassiveNode = nullptr;
 
 
 void e2d::CollisionManager::setEnable(bool bEnable)
@@ -18,6 +21,9 @@ void e2d::CollisionManager::setEnable(bool bEnable)
 
 void e2d::CollisionManager::__update()
 {
+	if (s_vListeners.size() == 0)
+		return;
+
 	for (size_t i = 0; i < s_vListeners.size(); i++)
 	{
 		auto pListener = s_vListeners[i];
@@ -72,19 +78,23 @@ void e2d::CollisionManager::__updateShape(e2d::Shape * pActiveShape)
 				if (IsCollideWith(pActiveNode, pPassiveNode->getHashName()))
 				{
 					// 判断两形状交集情况
-					int relation = pActiveShape->getRelationWith(pPassiveShape);
+					Relation relation = pActiveShape->getRelationWith(pPassiveShape);
 					// 忽略 UNKNOWN 和 DISJOINT 情况
 					if (relation != Relation::UNKNOWN && relation != Relation::DISJOINT)
 					{
-						pActiveNode->onCollide(pPassiveNode, relation);
-						pPassiveNode->onCollide(pActiveNode, pPassiveShape->getRelationWith(pActiveShape));
-						pCurrentScene->onCollide(pActiveNode, pPassiveNode);
+						s_pActiveNode = pActiveNode;
+						s_pPassiveNode = pPassiveNode;
+						pActiveNode->onCollide(pPassiveNode);
+						pPassiveNode->onCollide(pActiveNode);
+						pCurrentScene->onCollide();
 						CollisionManager::__update();
 					}
 				}
 			}
 		}
 	}
+	s_pActiveNode = nullptr;
+	s_pPassiveNode = nullptr;
 }
 
 void e2d::CollisionManager::__add(CollisionListener * pListener)
@@ -194,6 +204,16 @@ std::vector<e2d::CollisionListener*> e2d::CollisionManager::get(String name)
 std::vector<e2d::CollisionListener*> e2d::CollisionManager::getAll()
 {
 	return s_vListeners;
+}
+
+e2d::Node * e2d::CollisionManager::getNode1()
+{
+	return s_pActiveNode;
+}
+
+e2d::Node * e2d::CollisionManager::getNode2()
+{
+	return s_pPassiveNode;
 }
 
 void e2d::CollisionManager::__addShape(Shape * pShape)

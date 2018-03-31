@@ -65,7 +65,7 @@ void e2d::Shape::_render()
 	}
 }
 
-int e2d::Shape::getRelationWith(Shape * pShape) const
+e2d::Relation e2d::Shape::getRelationWith(Shape * pShape) const
 {
 	if (m_pTransformedShape && pShape->m_pTransformedShape)
 	{
@@ -79,10 +79,10 @@ int e2d::Shape::getRelationWith(Shape * pShape) const
 				&relation
 			);
 
-			return relation;
+			return Relation(relation);
 		}
 	}
-	return 0;
+	return Relation::UNKNOWN;
 }
 
 void e2d::Shape::_transform()

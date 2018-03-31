@@ -602,7 +602,7 @@ void e2d::Node::addCollider(String collliderName)
 	m_vColliders.insert(hash);
 }
 
-void e2d::Node::addCollider(std::initializer_list<String>& vCollliderName)
+void e2d::Node::addCollider(const std::initializer_list<String>& vCollliderName)
 {
 	for (const auto &name : vCollliderName)
 	{
@@ -656,7 +656,7 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 	}
 }
 
-void e2d::Node::addChild(std::initializer_list<Node*>& vNodes, int order)
+void e2d::Node::addChild(const std::initializer_list<Node*>& vNodes, int order)
 {
 	for (const auto &node : vNodes)
 	{
@@ -932,7 +932,7 @@ bool e2d::Node::isIntersectWith(const Node * pNode) const
 	// 如果存在形状，用形状判断
 	if (this->m_pShape && pNode->m_pShape)
 	{
-		int relation = this->m_pShape->getRelationWith(pNode->m_pShape);
+		Relation relation = this->m_pShape->getRelationWith(pNode->m_pShape);
 		if ((relation != Relation::UNKNOWN) && 
 			(relation != Relation::DISJOINT))
 		{

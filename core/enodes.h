@@ -39,8 +39,7 @@ public:
 
 	// 碰撞处理
 	virtual void onCollide(
-		Node* pCollisionNode,	/* 发生碰撞的节点 */
-		int nRelation			/* 碰撞关系，取值为 Relation::VALUE 中的一种 */
+		Node* pNode	/* 发生碰撞的节点 */
 	) {}
 
 	// 获取节点显示状态
@@ -328,7 +327,7 @@ public:
 
 	// 添加多个可碰撞节点的名称
 	virtual void addCollider(
-		std::initializer_list<String>& vCollliderName	/* 名称数组 */
+		const std::initializer_list<String>& vCollliderName	/* 名称数组 */
 	);
 
 	// 移除可碰撞节点的名称
@@ -344,7 +343,7 @@ public:
 
 	// 添加多个子节点
 	virtual void addChild(
-		std::initializer_list<Node*>& vNodes,	/* 节点数组 */
+		const std::initializer_list<Node*>& vNodes,	/* 节点数组 */
 		int order = 0							/* 渲染顺序 */
 	);
 
@@ -459,10 +458,10 @@ protected:
 	Shape *		m_pShape;
 	Scene *		m_pParentScene;
 	Node *		m_pParent;
-	D2D1::Matrix3x2F	m_MatriInitial;
-	D2D1::Matrix3x2F	m_MatriFinal;
-	std::set<unsigned int> m_vColliders;
-	std::vector<Node*>	m_vChildren;
+	D2D1::Matrix3x2F		m_MatriInitial;
+	D2D1::Matrix3x2F		m_MatriFinal;
+	std::set<unsigned int>	m_vColliders;
+	std::vector<Node*>		m_vChildren;
 };
 
 
@@ -623,7 +622,7 @@ public:
 
 	// 设置对齐方式（默认为 TextAlign::LEFT）
 	void setAlignment(
-		UINT32 nAlign
+		TextAlign nAlign
 	);
 
 	// 设置下划线（默认值为 false）
@@ -654,8 +653,8 @@ protected:
 	bool	m_bWrappingEnable;
 	float	m_fWrappingWidth;
 	Font	m_Font;
-	UINT32	m_nAlign;
 	float	m_fLineSpacing;
+	TextAlign m_nAlign;
 	IDWriteTextFormat * m_pDWriteTextFormat;
 	IDWriteTextLayout * m_pDWriteTextLayout;
 };

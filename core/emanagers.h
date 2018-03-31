@@ -401,6 +401,12 @@ public:
 	// 获取全部监听器
 	static std::vector<CollisionListener*> getAll();
 
+	// 获取发生碰撞的节点 1
+	static Node* getNode1();
+
+	// 获取发生碰撞的节点 2
+	static Node* getNode2();
+
 private:
 	// 添加碰撞监听
 	static void __add(

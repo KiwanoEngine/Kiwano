@@ -5,7 +5,7 @@ e2d::ActionSequence::ActionSequence() :
 {
 }
 
-e2d::ActionSequence::ActionSequence(std::initializer_list<Action*>& vActions) :
+e2d::ActionSequence::ActionSequence(const std::initializer_list<Action*>& vActions) :
 	m_nActionIndex(0)
 {
 	this->add(vActions);
@@ -82,7 +82,7 @@ void e2d::ActionSequence::add(Action * action)
 	}
 }
 
-void e2d::ActionSequence::add(std::initializer_list<Action*>& vActions)
+void e2d::ActionSequence::add(const std::initializer_list<Action*>& vActions)
 {
 	for (const auto &action : vActions)
 	{

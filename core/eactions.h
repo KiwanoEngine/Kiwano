@@ -402,7 +402,7 @@ public:
 
 	// 创建顺序动作
 	ActionSequence(
-		std::initializer_list<Action*>& vActions	/* 动作数组 */
+		const std::initializer_list<Action*>& vActions	/* 动作数组 */
 	);
 
 	virtual ~ActionSequence();
@@ -414,7 +414,7 @@ public:
 
 	// 在结尾添加多个动作
 	void add(
-		std::initializer_list<Action*>& vActions	/* 动作数组 */
+		const std::initializer_list<Action*>& vActions	/* 动作数组 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -517,7 +517,7 @@ public:
 
 	// 创建帧动画
 	Animation(
-		std::initializer_list<Image*>& vImages
+		const std::initializer_list<Image*>& vImages
 	);
 
 	virtual ~Animation();
@@ -529,7 +529,7 @@ public:
 
 	// 添加多个关键帧
 	void add(
-		std::initializer_list<Image*>& vImages	/* 关键帧数组 */
+		const std::initializer_list<Image*>& vImages	/* 关键帧数组 */
 	);
 
 	// 设置每一帧的时间间隔
@@ -670,7 +670,7 @@ namespace e2d
 
 		// 创建顺序动作
 		ActionSequence* Sequence(
-			std::initializer_list<Action*>& vActions	/* 动作数组 */
+			const std::initializer_list<Action*>& vActions	/* 动作数组 */
 		);
 
 		// 创建延时动作
@@ -687,7 +687,7 @@ namespace e2d
 		// 创建特定帧间隔的帧动画
 		Animation* Animate(
 			double interval,						/* 帧间隔（秒） */
-			std::initializer_list<Image*>& vFrames /* 关键帧数组 */
+			const std::initializer_list<Image*>& vFrames /* 关键帧数组 */
 		);
 
 		// 创建执行函数对象的动作
@@ -761,7 +761,7 @@ namespace e2d
 		return new (std::nothrow) ActionTwo(pActionFirst, pActionSecond, bAtSameTime);
 	}
 
-	inline e2d::ActionSequence * e2d::action::Sequence(std::initializer_list<Action*>& vActions)
+	inline e2d::ActionSequence * e2d::action::Sequence(const std::initializer_list<Action*>& vActions)
 	{
 		auto action = new (std::nothrow) ActionSequence();
 		if (action)
@@ -781,7 +781,7 @@ namespace e2d
 		return new (std::nothrow) ActionLoop(action, times);
 	}
 
-	inline e2d::Animation * e2d::action::Animate(double interval, std::initializer_list<Image*>& vFrames)
+	inline e2d::Animation * e2d::action::Animate(double interval, const std::initializer_list<Image*>& vFrames)
 	{
 		auto animation = new (std::nothrow) Animation(interval);
 		if (animation)
