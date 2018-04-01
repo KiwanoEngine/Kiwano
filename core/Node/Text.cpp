@@ -327,12 +327,13 @@ void e2d::Text::_createLayout()
 	ASSERT(SUCCEEDED(hr), "Create IDWriteTextFormat Failed!");
 
 	// 添加下划线和删除线
+	DWRITE_TEXT_RANGE range = { 0, length };
 	if (m_Font.underline)
 	{
-		m_pDWriteTextLayout->SetUnderline(true, { 0, length });
+		m_pDWriteTextLayout->SetUnderline(true, range);
 	}
 	if (m_Font.strikethrough)
 	{
-		m_pDWriteTextLayout->SetStrikethrough(true, { 0, length });
+		m_pDWriteTextLayout->SetStrikethrough(true, range);
 	}
 }
