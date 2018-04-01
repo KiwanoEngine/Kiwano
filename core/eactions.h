@@ -400,10 +400,19 @@ public:
 	// 创建顺序动作
 	ActionSequence();
 
+#if HIGHER_THAN_VS2012
 	// 创建顺序动作
 	ActionSequence(
-		const std::initializer_list<Action*>& vActions	/* 动作数组 */
+		const InitList<Action*>& vActions	/* 动作数组 */
 	);
+#else
+	// 创建顺序动作
+	ActionSequence(
+		int number,			/* 动作数量 */
+		Action * action,	/* 第一个动作 */
+		...
+	);
+#endif
 
 	virtual ~ActionSequence();
 
@@ -412,10 +421,19 @@ public:
 		Action * action
 	);
 
+#if HIGHER_THAN_VS2012
 	// 在结尾添加多个动作
 	void add(
-		const std::initializer_list<Action*>& vActions	/* 动作数组 */
+		const InitList<Action*>& vActions	/* 动作数组 */
 	);
+#else
+	// 在结尾添加多个动作
+	void add(
+		int number,			/* 动作数量 */
+		Action * action,	/* 第一个动作 */
+		...
+	);
+#endif
 
 	// 获取该动作的拷贝对象
 	virtual ActionSequence * clone() const override;
@@ -515,16 +533,33 @@ public:
 		double interval		/* 帧间隔（秒） */
 	);
 
+#if HIGHER_THAN_VS2012
 	// 创建帧动画
 	Animation(
-		const std::initializer_list<Image*>& vImages	/* 关键帧数组 */
+		const InitList<Image*>& vImages	/* 关键帧数组 */
+	);
+
+	// 创建特定帧间隔的帧动画
+	Animation(
+		double interval,				/* 帧间隔（秒） */
+		const InitList<Image*>& vImages	/* 关键帧数组 */
+	);
+#else
+	// 创建帧动画
+	Animation(
+		int number,			/* 帧数量 */
+		Image * frame,		/* 第一帧 */
+		...
 	);
 
 	// 创建特定帧间隔的帧动画
 	Animation(
 		double interval,	/* 帧间隔（秒） */
-		const std::initializer_list<Image*>& vImages	/* 关键帧数组 */
+		int number,			/* 帧数量 */
+		Image * frame,		/* 第一帧 */
+		...
 	);
+#endif
 
 	virtual ~Animation();
 
@@ -533,10 +568,19 @@ public:
 		Image * frame	/* 关键帧 */
 	);
 
+#if HIGHER_THAN_VS2012
 	// 添加多个关键帧
 	void add(
-		const std::initializer_list<Image*>& vImages	/* 关键帧数组 */
+		const InitList<Image*>& vImages	/* 关键帧数组 */
 	);
+#else
+	// 添加多个关键帧
+	void add(
+		int number,			/* 帧数量 */
+		Image * frame,		/* 第一帧 */
+		...
+	);
+#endif
 
 	// 设置每一帧的时间间隔
 	void setInterval(
@@ -647,12 +691,12 @@ namespace e2d
 
 		// 创建淡入动画
 		ActionFadeIn* FadeIn(
-			double duration	/* 动画持续时长 */
+			double duration		/* 动画持续时长 */
 		);
 
 		// 创建淡出动画
 		ActionFadeOut* FadeOut(
-			double duration	/* 动画持续时长 */
+			double duration		/* 动画持续时长 */
 		);
 
 		// 创建相对旋转动画
@@ -674,14 +718,9 @@ namespace e2d
 			bool bAtSameTime = false	/* 同时开始 */
 		);
 
-		// 创建顺序动作
-		ActionSequence* Sequence(
-			const std::initializer_list<Action*>& vActions	/* 动作数组 */
-		);
-
 		// 创建延时动作
 		ActionDelay* Delay(
-			double duration	/* 延迟时长（秒） */
+			double duration		/* 延迟时长（秒） */
 		);
 
 		// 创建循环动作
@@ -690,16 +729,38 @@ namespace e2d
 			int times = -1		/* 循环次数 */
 		);
 
-		// 创建特定帧间隔的帧动画
-		Animation* Animate(
-			double interval,						/* 帧间隔（秒） */
-			const std::initializer_list<Image*>& vFrames /* 关键帧数组 */
-		);
-
 		// 创建执行函数对象的动作
 		ActionFunc* Func(
-			Function func /* 函数对象 */
+			Function func		/* 函数对象 */
 		);
+
+#if HIGHER_THAN_VS2012
+		// 创建顺序动作
+		ActionSequence* Sequence(
+			const InitList<Action*>& vActions	/* 动作数组 */
+		);
+
+		// 创建特定帧间隔的帧动画
+		Animation* Animate(
+			double interval,					/* 帧间隔（秒） */
+			const InitList<Image*>& vFrames		/* 关键帧数组 */
+		);
+#else
+		// 创建顺序动作
+		ActionSequence* Sequence(
+			int number,			/* 动作数量 */
+			Action * action1,	/* 第一个动作 */
+			...
+		);
+
+		// 创建特定帧间隔的帧动画
+		Animation* Animate(
+			double interval,	/* 帧间隔（秒） */
+			int number,			/* 帧数量 */
+			Image * frame,		/* 第一帧 */
+			...
+		);
+#endif
 	}
 
 	inline e2d::ActionMoveBy * e2d::action::MoveBy(double duration, Vector vector)
@@ -767,11 +828,6 @@ namespace e2d
 		return new (std::nothrow) ActionTwo(pActionFirst, pActionSecond, bAtSameTime);
 	}
 
-	inline e2d::ActionSequence * e2d::action::Sequence(const std::initializer_list<Action*>& vActions)
-	{
-		return new (std::nothrow) ActionSequence(vActions);
-	}
-
 	inline e2d::ActionDelay * e2d::action::Delay(double duration)
 	{
 		return new (std::nothrow) ActionDelay(duration);
@@ -782,13 +838,56 @@ namespace e2d
 		return new (std::nothrow) ActionLoop(action, times);
 	}
 
-	inline e2d::Animation * e2d::action::Animate(double interval, const std::initializer_list<Image*>& vFrames)
-	{
-		return new (std::nothrow) Animation(interval, vFrames);
-	}
-
 	inline e2d::ActionFunc * e2d::action::Func(Function func)
 	{
 		return new (std::nothrow) ActionFunc(func);
 	}
+
+#if HIGHER_THAN_VS2012
+	inline e2d::ActionSequence * e2d::action::Sequence(const InitList<Action*>& vActions)
+	{
+		return new (std::nothrow) ActionSequence(vActions);
+	}
+
+	inline e2d::Animation * e2d::action::Animate(double interval, const InitList<Image*>& vFrames)
+	{
+		return new (std::nothrow) Animation(interval, vFrames);
+	}
+#else
+	inline e2d::ActionSequence * e2d::action::Sequence(int number, Action * action1, ...)
+	{
+		auto action = new (std::nothrow) ActionSequence();
+		if (action)
+		{
+			Action ** ppAction = &action1;
+
+			while (number > 0)
+			{
+				WARN_IF((*ppAction) == nullptr, "ActionSequence NULL pointer exception!");
+				action->add(*ppAction);
+				ppAction++;
+				number--;
+			}
+		}
+		return action;
+	}
+
+	inline e2d::Animation * e2d::action::Animate(double interval, int number, Image * frame, ...)
+	{
+		auto animation = new (std::nothrow) Animation(interval);
+		if (animation)
+		{
+			Image ** ppImage = &frame;
+
+			while (number > 0)
+			{
+				WARN_IF((*ppImage) == nullptr, "Animation NULL pointer exception!");
+				animation->add(*ppImage);
+				ppImage++;
+				number--;
+			}
+		}
+		return animation;
+	}
+#endif
 }

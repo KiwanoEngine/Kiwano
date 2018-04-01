@@ -326,10 +326,12 @@ public:
 		String collliderName
 	);
 
+#if HIGHER_THAN_VS2012
 	// 添加多个可碰撞节点的名称
 	virtual void addCollider(
-		const std::initializer_list<String>& vCollliderName	/* 名称数组 */
+		const InitList<String>& vCollliderName	/* 名称数组 */
 	);
+#endif
 
 	// 移除可碰撞节点的名称
 	virtual void removeCollider(
@@ -342,11 +344,13 @@ public:
 		int order = 0	/* 渲染顺序 */
 	);
 
+#if HIGHER_THAN_VS2012
 	// 添加多个子节点
 	virtual void addChild(
-		const std::initializer_list<Node*>& vNodes,	/* 节点数组 */
+		const InitList<Node*>& vNodes,	/* 节点数组 */
 		int order = 0							/* 渲染顺序 */
 	);
+#endif
 
 	// 执行动画
 	virtual void runAction(

@@ -12,19 +12,55 @@ e2d::Animation::Animation(double interval)
 {
 }
 
-e2d::Animation::Animation(const std::initializer_list<Image*>& vImages)
+#if HIGHER_THAN_VS2012
+
+e2d::Animation::Animation(const InitList<Image*>& vImages)
 	: m_nFrameIndex(0)
 	, m_fInterval(1)
 {
 	this->add(vImages);
 }
 
-e2d::Animation::Animation(double interval, const std::initializer_list<Image*>& vImages)
+e2d::Animation::Animation(double interval, const InitList<Image*>& vImages)
 	: m_nFrameIndex(0)
 	, m_fInterval(interval)
 {
 	this->add(vImages);
 }
+
+#else
+
+e2d::Animation::Animation(int number, Image * frame, ...)
+	: m_nFrameIndex(0)
+	, m_fInterval(1)
+{
+	Image ** ppImage = &frame;
+
+	while (number > 0)
+	{
+		WARN_IF((*ppImage) == nullptr, "Animation NULL pointer exception!");
+		this->add(*ppImage);
+		ppImage++;
+		number--;
+	}
+}
+
+e2d::Animation::Animation(double interval, int number, Image * frame, ...)
+	: m_nFrameIndex(0)
+	, m_fInterval(interval)
+{
+	Image ** ppImage = &frame;
+
+	while (number > 0)
+	{
+		WARN_IF((*ppImage) == nullptr, "Animation NULL pointer exception!");
+		this->add(*ppImage);
+		ppImage++;
+		number--;
+	}
+}
+
+#endif
 
 e2d::Animation::~Animation()
 {
@@ -86,13 +122,28 @@ void e2d::Animation::add(Image * frame)
 	}
 }
 
-void e2d::Animation::add(const std::initializer_list<Image*>& vImages)
+#if HIGHER_THAN_VS2012
+void e2d::Animation::add(const InitList<Image*>& vImages)
 {
 	for (const auto &image : vImages)
 	{
 		this->add(image);
 	}
 }
+#else
+void e2d::Animation::add(int number, Image * frame, ...)
+{
+	Image ** ppImage = &frame;
+
+	while (number > 0)
+	{
+		WARN_IF((*ppImage) == nullptr, "Animation NULL pointer exception!");
+		this->add(*ppImage);
+		ppImage++;
+		number--;
+	}
+}
+#endif
 
 e2d::Animation * e2d::Animation::clone() const
 {

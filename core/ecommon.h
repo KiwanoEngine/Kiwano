@@ -10,6 +10,26 @@ namespace e2d
 {
 
 
+// 函数对象
+typedef std::function<void()> Function;
+
+// 创建函数对象
+template<typename Object, typename Func>
+inline Function CreateFunc(Object&& obj, Func&& func)
+{
+	return std::bind(func, obj);
+}
+
+
+#if HIGHER_THAN_VS2012
+
+// 初始化列表
+template <typename T>
+using InitList = std::initializer_list<T>;
+
+#endif
+
+
 struct Size;
 
 // 表示坐标的结构体
@@ -52,17 +72,6 @@ struct Size
 
 	operator e2d::Point() const;
 };
-
-
-// 函数对象
-typedef std::function<void()> Function;
-
-// 创建函数对象
-template<typename Object, typename Func>
-inline Function CreateFunc(Object&& obj, Func&& func)
-{
-	return std::bind(func, obj);
-}
 
 
 // 字符串
@@ -558,11 +567,13 @@ public:
 		int zOrder = 0	/* 渲染顺序 */
 	);
 
-	// 添加节点到场景
+#if HIGHER_THAN_VS2012
+	// 添加多个节点到场景
 	virtual void add(
-		const std::initializer_list<Node*>& vNodes,	/* 节点数组 */
-		int order = 0								/* 渲染顺序 */
+		const InitList<Node*>& vNodes,	/* 节点数组 */
+		int order = 0					/* 渲染顺序 */
 	);
+#endif
 
 	// 删除子节点
 	bool remove(
@@ -572,9 +583,9 @@ public:
 	// 获取根节点
 	Node * getRoot() const;
 
-	// 开启几何图形的渲染
-	void setShapeVisiable(
-		bool visiable
+	// 开启或关闭节点轮廓渲染
+	void showOutline(
+		bool visiable = true
 	);
 
 protected:

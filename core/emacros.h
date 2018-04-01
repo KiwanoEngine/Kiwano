@@ -71,3 +71,10 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 	#define WARN_IF(expression, message, ...) ((void)0)
 #endif //DEBUG || _DEBUG
 #endif
+
+
+#if _MSC_VER <= 1700
+#define HIGHER_THAN_VS2012 1
+#else
+#define HIGHER_THAN_VS2012 0
+#endif

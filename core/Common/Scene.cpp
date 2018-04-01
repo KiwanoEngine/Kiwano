@@ -53,13 +53,15 @@ void e2d::Scene::add(Node * child, int order /* = 0 */)
 	m_pRoot->addChild(child, order);
 }
 
-void e2d::Scene::add(const std::initializer_list<Node*>& vNodes, int order)
+#if HIGHER_THAN_VS2012
+void e2d::Scene::add(const InitList<Node*>& vNodes, int order)
 {
 	for (const auto &node : vNodes)
 	{
 		this->add(node, order);
 	}
 }
+#endif
 
 bool e2d::Scene::remove(Node * child)
 {

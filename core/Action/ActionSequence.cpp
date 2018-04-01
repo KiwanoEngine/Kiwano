@@ -5,11 +5,27 @@ e2d::ActionSequence::ActionSequence()
 {
 }
 
-e2d::ActionSequence::ActionSequence(const std::initializer_list<Action*>& vActions)
+#if HIGHER_THAN_VS2012
+e2d::ActionSequence::ActionSequence(const InitList<Action*>& vActions)
 	: m_nActionIndex(0)
 {
 	this->add(vActions);
 }
+#else
+e2d::ActionSequence::ActionSequence(int number, Action * action1, ...) :
+	m_nActionIndex(0)
+{
+	Action ** ppAction = &action1;
+
+	while (number > 0)
+	{
+		WARN_IF((*ppAction) == nullptr, "ActionSequence NULL pointer exception!");
+		this->add(*ppAction);
+		ppAction++;
+		number--;
+	}
+}
+#endif
 
 e2d::ActionSequence::~ActionSequence()
 {
@@ -82,13 +98,28 @@ void e2d::ActionSequence::add(Action * action)
 	}
 }
 
-void e2d::ActionSequence::add(const std::initializer_list<Action*>& vActions)
+#if HIGHER_THAN_VS2012
+void e2d::ActionSequence::add(const InitList<Action*>& vActions)
 {
 	for (const auto &action : vActions)
 	{
 		this->add(action);
 	}
 }
+#else
+void e2d::ActionSequence::add(int number, Action * action, ...)
+{
+	Action ** ppAction = &action;
+
+	while (number > 0)
+	{
+		WARN_IF((*ppAction) == nullptr, "ActionSequence NULL pointer exception!");
+		this->add(*ppAction);
+		ppAction++;
+		number--;
+	}
+}
+#endif
 
 e2d::ActionSequence * e2d::ActionSequence::clone() const
 {

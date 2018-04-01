@@ -602,13 +602,15 @@ void e2d::Node::addCollider(String collliderName)
 	m_vColliders.insert(hash);
 }
 
-void e2d::Node::addCollider(const std::initializer_list<String>& vCollliderName)
+#if HIGHER_THAN_VS2012
+void e2d::Node::addCollider(const InitList<String>& vCollliderName)
 {
 	for (const auto &name : vCollliderName)
 	{
 		this->addCollider(name);
 	}
 }
+#endif
 
 void e2d::Node::removeCollider(String collliderName)
 {
@@ -656,13 +658,15 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 	}
 }
 
-void e2d::Node::addChild(const std::initializer_list<Node*>& vNodes, int order)
+#if HIGHER_THAN_VS2012
+void e2d::Node::addChild(const InitList<Node*>& vNodes, int order)
 {
 	for (const auto &node : vNodes)
 	{
 		this->addChild(node, order);
 	}
 }
+#endif
 
 e2d::Node * e2d::Node::getParent() const
 {
