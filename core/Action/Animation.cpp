@@ -64,7 +64,7 @@ e2d::Animation::Animation(double interval, int number, Image * frame, ...)
 
 e2d::Animation::~Animation()
 {
-	for (auto frame : m_vFrames)
+	FOR_LOOP(frame, m_vFrames)
 	{
 		SafeRelease(&frame);
 	}
@@ -148,7 +148,7 @@ void e2d::Animation::add(int number, Image * frame, ...)
 e2d::Animation * e2d::Animation::clone() const
 {
 	auto a = new Animation(m_fInterval);
-	for (auto frame : m_vFrames)
+	FOR_LOOP(frame, m_vFrames)
 	{
 		a->add(frame);
 	}

@@ -12,8 +12,8 @@
 	#error 仅能在 C++ 环境下使用 Easy2D
 #endif
 
-#if _MSC_VER < 1700
-	#error Easy2D 不支持 Visual Studio 2012 以下版本
+#if _MSC_VER < 1600
+	#error Easy2D 不支持 Visual Studio 2010 以下版本
 #endif
 
 

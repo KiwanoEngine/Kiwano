@@ -3,7 +3,6 @@
 #include "..\emanagers.h"
 
 #pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "dxguid.lib")
 
 using namespace e2d;
 
@@ -142,14 +141,14 @@ void Input::__updateDeviceState()
 	ScreenToClient(Window::getHWnd(), &s_MousePosition);
 }
 
-bool Input::isKeyDown(KeyCode nKeyCode)
+bool Input::isKeyDown(int nKeyCode)
 {
 	if (s_KeyBuffer[static_cast<int>(nKeyCode)] & 0x80)
 		return true;
 	return false;
 }
 
-bool Input::isKeyPress(KeyCode nKeyCode)
+bool Input::isKeyPress(int nKeyCode)
 {
 	if ((s_KeyBuffer[static_cast<int>(nKeyCode)] & 0x80) && 
 		!(s_KeyRecordBuffer[static_cast<int>(nKeyCode)] & 0x80))
@@ -157,7 +156,7 @@ bool Input::isKeyPress(KeyCode nKeyCode)
 	return false;
 }
 
-bool Input::isKeyRelease(KeyCode nKeyCode)
+bool Input::isKeyRelease(int nKeyCode)
 {
 	if (!(s_KeyBuffer[static_cast<int>(nKeyCode)] & 0x80) && 
 		(s_KeyRecordBuffer[static_cast<int>(nKeyCode)] & 0x80))

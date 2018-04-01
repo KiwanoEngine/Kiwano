@@ -34,7 +34,7 @@ void e2d::Menu::setEnable(bool enable)
 	{
 		m_bEnable = enable;
 
-		for (auto button : m_vButtons)
+		FOR_LOOP(button, m_vButtons)
 		{
 			button->setEnable(enable);
 		}

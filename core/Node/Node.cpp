@@ -48,7 +48,7 @@ e2d::Node::~Node()
 {
 	ActionManager::__clearAllBindedWith(this);
 	CollisionManager::__removeShape(m_pShape);
-	for (auto child : m_vChildren)
+	FOR_LOOP(child, m_vChildren)
 	{
 		SafeRelease(&child);
 	}
@@ -174,7 +174,7 @@ void e2d::Node::_drawShape()
 	}
 
 	// 绘制所有子节点的几何形状
-	for (auto child : m_vChildren)
+	FOR_LOOP(child, m_vChildren)
 	{
 		child->_drawShape();
 	}
@@ -187,7 +187,7 @@ void e2d::Node::_onEnter()
 		this->m_bDisplayedInScene = true;
 		this->onEnter();
 
-		for (auto child : m_vChildren)
+		FOR_LOOP(child, m_vChildren)
 		{
 			child->_onEnter();
 		}
@@ -201,7 +201,7 @@ void e2d::Node::_onExit()
 		this->m_bDisplayedInScene = false;
 		this->onExit();
 
-		for (auto child : m_vChildren)
+		FOR_LOOP(child, m_vChildren)
 		{
 			child->_onExit();
 		}
@@ -240,7 +240,7 @@ void e2d::Node::_updateTransform()
 
 void e2d::Node::_updateChildrenTransform()
 {
-	for (auto child : m_vChildren)
+	FOR_LOOP(child, m_vChildren)
 	{
 		_updateTransform(child);
 	}
@@ -263,7 +263,7 @@ void e2d::Node::_updateTransform(Node * node)
 
 void e2d::Node::_updateChildrenOpacity()
 {
-	for (auto child : m_vChildren)
+	FOR_LOOP(child, m_vChildren)
 	{
 		_updateOpacity(child);
 	}
@@ -547,7 +547,7 @@ void e2d::Node::setSize(Size size)
 	this->setSize(size.width, size.height);
 }
 
-void e2d::Node::setShape(Shape type)
+void e2d::Node::setShape(int type)
 {
 	switch (type)
 	{
@@ -683,7 +683,7 @@ std::vector<e2d::Node*> e2d::Node::getChildren(String name)
 	std::vector<Node*> vChildren;
 	unsigned int hash = name.getHashCode();
 
-	for (auto child : m_vChildren)
+	FOR_LOOP(child, m_vChildren)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
 		if (child->m_nHashName == hash && child->m_sName == name)
@@ -784,7 +784,7 @@ void e2d::Node::removeChildren(String childName)
 void e2d::Node::clearAllChildren()
 {
 	// 所有节点的引用计数减一
-	for (auto child : m_vChildren)
+	FOR_LOOP(child, m_vChildren)
 	{
 		if (child->m_bDisplayedInScene)
 		{
@@ -820,7 +820,7 @@ void e2d::Node::runAction(Action * action)
 void e2d::Node::resumeAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
-	for (auto action : actions)
+	FOR_LOOP(action, actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -832,7 +832,7 @@ void e2d::Node::resumeAction(String strActionName)
 void e2d::Node::pauseAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
-	for (auto action : actions)
+	FOR_LOOP(action, actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -844,7 +844,7 @@ void e2d::Node::pauseAction(String strActionName)
 void e2d::Node::stopAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
-	for (auto action : actions)
+	FOR_LOOP(action, actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -856,7 +856,7 @@ void e2d::Node::stopAction(String strActionName)
 e2d::Action * e2d::Node::getAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
-	for (auto action : actions)
+	FOR_LOOP(action, actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -924,7 +924,7 @@ bool e2d::Node::isPointIn(Point point) const
 	}
 
 	// 判断点是否在子节点内
-	for (auto child : m_vChildren)
+	FOR_LOOP(child, m_vChildren)
 		if (child->isPointIn(point))
 			return true;
 
@@ -936,7 +936,7 @@ bool e2d::Node::isIntersectWith(const Node * pNode) const
 	// 如果存在形状，用形状判断
 	if (this->m_pShape && pNode->m_pShape)
 	{
-		Relation relation = this->m_pShape->getRelationWith(pNode->m_pShape);
+		int relation = this->m_pShape->getRelationWith(pNode->m_pShape);
 		if ((relation != Relation::UNKNOWN) && 
 			(relation != Relation::DISJOINT))
 		{
@@ -977,20 +977,20 @@ bool e2d::Node::isIntersectWith(const Node * pNode) const
 		SafeReleaseInterface(&pRect1);
 		SafeReleaseInterface(&pRect2);
 		SafeReleaseInterface(&pShape);
-		if ((relation != D2D1_GEOMETRY_RELATION::D2D1_GEOMETRY_RELATION_UNKNOWN) &&
-			(relation != D2D1_GEOMETRY_RELATION::D2D1_GEOMETRY_RELATION_DISJOINT))
+		if ((relation != D2D1_GEOMETRY_RELATION_UNKNOWN) &&
+			(relation != D2D1_GEOMETRY_RELATION_DISJOINT))
 		{
 			return true;
 		}
 	}
 
 	// 判断和其子节点是否相交
-	for (auto child : pNode->m_vChildren)
-		if (this->isIntersectWith(child))
+	FOR_LOOP(pNodeChild, pNode->m_vChildren)
+		if (this->isIntersectWith(pNodeChild))
 			return true;
 
 	// 判断子节点和其是否相交
-	for (auto child : m_vChildren)
+	FOR_LOOP(child, m_vChildren)
 		if (child->isIntersectWith(pNode))
 			return true;
 
@@ -1050,7 +1050,7 @@ void e2d::Node::setName(String name)
 void e2d::Node::_setParentScene(Scene * scene)
 {
 	m_pParentScene = scene;
-	for (auto child : m_vChildren)
+	FOR_LOOP(child, m_vChildren)
 	{
 		child->_setParentScene(scene);
 	}

@@ -202,9 +202,9 @@ bool e2d::Image::preload(String fileName)
 
 void e2d::Image::clearCache()
 {
-	for (auto child : s_mBitmapsFromFile)
+	for (auto child = s_mBitmapsFromFile.begin(); child != s_mBitmapsFromFile.end(); child++)
 	{
-		SafeReleaseInterface(&child.second);
+		SafeReleaseInterface(&(*child).second);
 	}
 	s_mBitmapsFromFile.clear();
 }

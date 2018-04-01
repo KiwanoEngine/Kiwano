@@ -29,7 +29,7 @@ e2d::ActionSequence::ActionSequence(int number, Action * action1, ...) :
 
 e2d::ActionSequence::~ActionSequence()
 {
-	for (auto action : m_vActions)
+	FOR_LOOP(action, m_vActions)
 	{
 		SafeRelease(&action);
 	}
@@ -41,7 +41,7 @@ void e2d::ActionSequence::_init()
 	// 将所有动作与目标绑定
 	if (m_pTarget)
 	{
-		for (auto action : m_vActions)
+		FOR_LOOP(action, m_vActions)
 		{
 			action->m_pTarget = m_pTarget;
 		}
@@ -74,7 +74,7 @@ void e2d::ActionSequence::_update()
 void e2d::ActionSequence::reset()
 {
 	Action::reset();
-	for (auto action : m_vActions)
+	FOR_LOOP(action, m_vActions)
 	{
 		action->reset();
 	}
@@ -83,7 +83,7 @@ void e2d::ActionSequence::reset()
 
 void e2d::ActionSequence::_resetTime()
 {
-	for (auto action : m_vActions)
+	FOR_LOOP(action, m_vActions)
 	{
 		action->_resetTime();
 	}
@@ -124,7 +124,7 @@ void e2d::ActionSequence::add(int number, Action * action, ...)
 e2d::ActionSequence * e2d::ActionSequence::clone() const
 {
 	auto a = new ActionSequence();
-	for (auto action : m_vActions)
+	FOR_LOOP(action, m_vActions)
 	{
 		a->add(action->clone());
 	}
@@ -134,7 +134,7 @@ e2d::ActionSequence * e2d::ActionSequence::clone() const
 e2d::ActionSequence * e2d::ActionSequence::reverse(bool actionReverse) const
 {
 	auto a = new ActionSequence();
-	for (auto action : m_vActions)
+	FOR_LOOP(action, m_vActions)
 	{
 		if (actionReverse)
 		{

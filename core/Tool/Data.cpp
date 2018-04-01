@@ -4,12 +4,12 @@ static e2d::String s_sDefaultFileName = L"DefaultData.ini";
 
 void e2d::Data::saveInt(String key, int value, String field)
 {
-	::WritePrivateProfileString(field, key, String::toString(value), Data::getDataFilePath());
+	::WritePrivateProfileString(field, key, String::parse(value), Data::getDataFilePath());
 }
 
 void e2d::Data::saveDouble(String key, double value, String field)
 {
-	::WritePrivateProfileString(field, key, String::toString(value), Data::getDataFilePath());
+	::WritePrivateProfileString(field, key, String::parse(value), Data::getDataFilePath());
 }
 
 void e2d::Data::saveBool(String key, bool value, String field)
@@ -31,7 +31,7 @@ int e2d::Data::getInt(String key, int defaultValue, String field)
 double e2d::Data::getDouble(String key, double defaultValue, String field)
 {
 	wchar_t temp[32] = { 0 };
-	::GetPrivateProfileString(field, key, String::toString(defaultValue), temp, 31, Data::getDataFilePath());
+	::GetPrivateProfileString(field, key, String::parse(defaultValue), temp, 31, Data::getDataFilePath());
 	return std::stof(temp);
 }
 

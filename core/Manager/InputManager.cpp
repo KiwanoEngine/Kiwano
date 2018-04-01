@@ -31,7 +31,7 @@ void e2d::InputManager::__add(InputListener * pListener)
 	{
 		auto findListener = [](InputListener * pListener) -> bool
 		{
-			for (const auto &l : s_vListeners)
+			FOR_LOOP(l, s_vListeners)
 			{
 				if (pListener == l)
 				{
@@ -59,7 +59,7 @@ void e2d::InputManager::add(Function func, String name)
 
 void e2d::InputManager::start(String name)
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		if (pListener->getName() == name)
 		{
@@ -70,7 +70,7 @@ void e2d::InputManager::start(String name)
 
 void e2d::InputManager::stop(String name)
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		if (pListener->getName() == name)
 		{
@@ -81,7 +81,7 @@ void e2d::InputManager::stop(String name)
 
 void e2d::InputManager::clear(String name)
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		if (pListener->getName() == name)
 		{
@@ -92,7 +92,7 @@ void e2d::InputManager::clear(String name)
 
 void e2d::InputManager::startAll()
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		pListener->start();
 	}
@@ -100,7 +100,7 @@ void e2d::InputManager::startAll()
 
 void e2d::InputManager::stopAll()
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		pListener->stop();
 	}
@@ -108,7 +108,7 @@ void e2d::InputManager::stopAll()
 
 void e2d::InputManager::clearAll()
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		pListener->stopAndClear();
 	}
@@ -117,7 +117,7 @@ void e2d::InputManager::clearAll()
 std::vector<e2d::InputListener*> e2d::InputManager::get(String name)
 {
 	std::vector<InputListener*> vListeners;
-	for (auto pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		if (pListener->getName() == name)
 		{

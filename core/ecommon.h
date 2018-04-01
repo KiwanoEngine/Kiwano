@@ -135,10 +135,12 @@ public:
 	// 将字符串转化为 bool 型
 	bool toBool() const;
 
-	// 将数字转化为字符串
-	template<typename T>
-	static String toString(T value);
+	// 数字类型转字符串
+	static String parse(int value);
+	static String parse(float value);
+	static String parse(double value);
 
+	// 格式化字符串
 	String& format(const char * format, ...);
 	String& format(const wchar_t * format, ...);
 
@@ -182,7 +184,6 @@ public:
 	String& operator<< (const wchar_t *);
 	String& operator<< (wchar_t *);
 	String& operator<< (int value);
-	String& operator<< (unsigned int value);
 	String& operator<< (float value);
 	String& operator<< (double value);
 
@@ -300,93 +301,109 @@ public:
 
 
 // 文本对齐方式
-enum class TextAlign : int
+class TextAlign
 {
-	LEFT,		/* 左对齐 */
-	RIGHT,		/* 右对齐 */
-	CENTER		/* 居中对齐 */
+public:
+	enum : int
+	{
+		LEFT,		/* 左对齐 */
+		RIGHT,		/* 右对齐 */
+		CENTER		/* 居中对齐 */
+	};
 };
 
 
 // 键值集合
-enum class KeyCode : int
+class KeyCode
 {
-	UP = 0xC8,
-	LEFT = 0xCB,
-	RIGHT = 0xCD,
-	DOWN = 0xD0,
-	ENTER = 0x1C,
-	SPACE = 0x39,
-	ESC = 0x01,
-	BACK = 0x0E,
-	TAB = 0x0F,
-	PAUSE = 0xC5,
-	Q = 0x10,
-	W = 0x11,
-	E = 0x12,
-	R = 0x13,
-	T = 0x14,
-	Y = 0x15,
-	U = 0x16,
-	I = 0x17,
-	O = 0x18,
-	P = 0x19,
-	A = 0x1E,
-	S = 0x1F,
-	D = 0x20,
-	F = 0x21,
-	G = 0x22,
-	H = 0x23,
-	J = 0x24,
-	K = 0x25,
-	L = 0x26,
-	Z = 0x2C,
-	X = 0x2D,
-	C = 0x2E,
-	V = 0x2F,
-	B = 0x30,
-	N = 0x31,
-	M = 0x32,
-	NUM1 = 0x02,
-	NUM2 = 0x03,
-	NUM3 = 0x04,
-	NUM4 = 0x05,
-	NUM5 = 0x06,
-	NUM6 = 0x07,
-	NUM7 = 0x08,
-	NUM8 = 0x09,
-	NUM9 = 0x0A,
-	NUM0 = 0x0B,
-	NUMPAD7 = 0x47,
-	NUMPAD8 = 0x48,
-	NUMPAD9 = 0x49,
-	NUMPAD4 = 0x4B,
-	NUMPAD5 = 0x4C,
-	NUMPAD6 = 0x4D,
-	NUMPAD1 = 0x4F,
-	NUMPAD2 = 0x50,
-	NUMPAD3 = 0x51,
-	NUMPAD0 = 0x52
+public:
+	enum : int
+	{
+		UP = 0xC8,
+		LEFT = 0xCB,
+		RIGHT = 0xCD,
+		DOWN = 0xD0,
+		ENTER = 0x1C,
+		SPACE = 0x39,
+		ESC = 0x01,
+		BACK = 0x0E,
+		TAB = 0x0F,
+		PAUSE = 0xC5,
+		Q = 0x10,
+		W = 0x11,
+		E = 0x12,
+		R = 0x13,
+		T = 0x14,
+		Y = 0x15,
+		U = 0x16,
+		I = 0x17,
+		O = 0x18,
+		P = 0x19,
+		A = 0x1E,
+		S = 0x1F,
+		D = 0x20,
+		F = 0x21,
+		G = 0x22,
+		H = 0x23,
+		J = 0x24,
+		K = 0x25,
+		L = 0x26,
+		Z = 0x2C,
+		X = 0x2D,
+		C = 0x2E,
+		V = 0x2F,
+		B = 0x30,
+		N = 0x31,
+		M = 0x32,
+		NUM1 = 0x02,
+		NUM2 = 0x03,
+		NUM3 = 0x04,
+		NUM4 = 0x05,
+		NUM5 = 0x06,
+		NUM6 = 0x07,
+		NUM7 = 0x08,
+		NUM8 = 0x09,
+		NUM9 = 0x0A,
+		NUM0 = 0x0B,
+		NUMPAD7 = 0x47,
+		NUMPAD8 = 0x48,
+		NUMPAD9 = 0x49,
+		NUMPAD4 = 0x4B,
+		NUMPAD5 = 0x4C,
+		NUMPAD6 = 0x4D,
+		NUMPAD1 = 0x4F,
+		NUMPAD2 = 0x50,
+		NUMPAD3 = 0x51,
+		NUMPAD0 = 0x52
+	};
 };
 
 
 // 形状交集关系
-enum class Relation : int
+class Relation
 {
-	UNKNOWN = 0,		/* 关系不确定 */
-	DISJOINT = 1,		/* 没有交集 */
-	IS_CONTAINED = 2,	/* 完全被包含 */
-	CONTAINS = 3,		/* 完全包含 */
-	OVERLAP = 4			/* 部分重叠 */
+public:
+	enum : int
+	{
+		UNKNOWN = 0,		/* 关系不确定 */
+		DISJOINT = 1,		/* 没有交集 */
+		IS_CONTAINED = 2,	/* 完全被包含 */
+		CONTAINS = 3,		/* 完全包含 */
+		OVERLAP = 4			/* 部分重叠 */
+	};
 };
 
 
 // 形状类别
-enum class Shape : int
+class Shape
 {
-	RECTANGLE,	/* 矩形 */
-	CIRCLE,		/* 圆形 */
-	ELLIPSE		/* 椭圆形 */
+public:
+	enum : int
+	{
+		RECTANGLE,	/* 矩形 */
+		CIRCLE,		/* 圆形 */
+		ELLIPSE		/* 椭圆形 */
+	};
 };
 
 
@@ -603,15 +620,6 @@ protected:
 	Node * m_pRoot;
 };
 
-
-// String 类模板函数定义
-template<typename T>
-inline e2d::String e2d::String::toString(T value)
-{
-	String tmp;
-	tmp.m_str = std::to_wstring(value);
-	return std::move(tmp);
-}
 
 template<typename T>
 inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }

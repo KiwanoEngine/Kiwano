@@ -362,7 +362,7 @@ public:
 	void close();
 
 	// 获取音乐播放状态
-	bool isPlaying();
+	bool isPlaying() const;
 
 	// 获取音量
 	double getVolume() const;
@@ -372,13 +372,15 @@ public:
 
 	// 设置音量
 	bool setVolume(
-		double fVolume	/* 音量范围为 -224 ~ 224，其中 0 是静音，1 是正常音量 */
+		double fVolume			/* 音量范围为 -224 ~ 224，其中 0 是静音，1 是正常音量 */
 	);
 
 	// 设置频率比
 	bool setFrequencyRatio(
 		double fFrequencyRatio	/* 频率比范围为 1/1024.0f ~ 1024.0f，其中 1.0 为正常声调 */
 	);
+
+#if HIGHER_THAN_VS2010
 
 	// 获取 IXAudio2SourceVoice 对象
 	IXAudio2SourceVoice* getIXAudio2SourceVoice() const;
@@ -401,7 +403,7 @@ protected:
 
 protected:
 	bool m_bOpened;
-	bool m_bPlaying;
+	mutable bool m_bPlaying;
 	DWORD m_dwSize;
 	CHAR* m_pResourceBuffer;
 	BYTE* m_pbWaveData;
@@ -410,6 +412,22 @@ protected:
 	MMCKINFO m_ckRiff;
 	WAVEFORMATEX* m_pwfx;
 	IXAudio2SourceVoice* m_pSourceVoice;
+
+#else
+
+protected:
+	void _sendCommand(int nCommand, DWORD_PTR param1 = 0, DWORD_PTR parma2 = 0);
+
+	static LRESULT WINAPI MusicProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+
+protected:
+	MCIDEVICEID m_dev;
+	HWND        m_wnd;
+	UINT		m_nMusicID;
+	bool        m_bPlaying;
+	int			m_nRepeatTimes;
+
+#endif
 };
 
 }

@@ -313,7 +313,7 @@ public:
 
 	// 设置节点形状
 	virtual void setShape(
-		Shape type
+		int type
 	);
 
 	// 设置节点形状
@@ -627,7 +627,7 @@ public:
 
 	// 设置对齐方式（默认为 TextAlign::LEFT）
 	void setAlignment(
-		TextAlign nAlign
+		int nAlign
 	);
 
 	// 设置下划线（默认值为 false）
@@ -659,7 +659,7 @@ protected:
 	float	m_fWrappingWidth;
 	Font	m_Font;
 	float	m_fLineSpacing;
-	TextAlign m_nAlign;
+	int		m_nAlign;
 	IDWriteTextFormat * m_pDWriteTextFormat;
 	IDWriteTextLayout * m_pDWriteTextLayout;
 };

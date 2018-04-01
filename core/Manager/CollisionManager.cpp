@@ -67,9 +67,9 @@ void e2d::CollisionManager::__updateShape(e2d::ShapeBase * pActiveShape)
 				pPassiveNode->getParentScene() == pCurrentScene)
 			{
 				// 判断两物体是否是相互冲突的物体
-				auto IsCollideWith = [](Node * active, unsigned int hash)
+				auto IsCollideWith = [](Node * active, unsigned int hash) -> bool
 				{
-					for (auto collider : active->m_vColliders)
+					FOR_LOOP(collider, active->m_vColliders)
 						if (collider == hash)
 							return true;
 					return false;
@@ -78,7 +78,7 @@ void e2d::CollisionManager::__updateShape(e2d::ShapeBase * pActiveShape)
 				if (IsCollideWith(pActiveNode, pPassiveNode->getHashName()))
 				{
 					// 判断两形状交集情况
-					Relation relation = pActiveShape->getRelationWith(pPassiveShape);
+					int relation = pActiveShape->getRelationWith(pPassiveShape);
 					// 忽略 UNKNOWN 和 DISJOINT 情况
 					if (relation != Relation::UNKNOWN && relation != Relation::DISJOINT)
 					{
@@ -105,7 +105,7 @@ void e2d::CollisionManager::__add(CollisionListener * pListener)
 	{
 		auto findListener = [](CollisionListener * pListener) -> bool
 		{
-			for (const auto &l : s_vListeners)
+			FOR_LOOP(l, s_vListeners)
 			{
 				if (pListener == l)
 				{
@@ -133,7 +133,7 @@ void e2d::CollisionManager::add(Function func, String name)
 
 void e2d::CollisionManager::start(String name)
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		if (pListener->getName() == name)
 		{
@@ -144,7 +144,7 @@ void e2d::CollisionManager::start(String name)
 
 void e2d::CollisionManager::stop(String name)
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		if (pListener->getName() == name)
 		{
@@ -155,7 +155,7 @@ void e2d::CollisionManager::stop(String name)
 
 void e2d::CollisionManager::clear(String name)
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		if (pListener->getName() == name)
 		{
@@ -166,7 +166,7 @@ void e2d::CollisionManager::clear(String name)
 
 void e2d::CollisionManager::startAll()
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		pListener->start();
 	}
@@ -174,7 +174,7 @@ void e2d::CollisionManager::startAll()
 
 void e2d::CollisionManager::stopAll()
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		pListener->stop();
 	}
@@ -182,7 +182,7 @@ void e2d::CollisionManager::stopAll()
 
 void e2d::CollisionManager::clearAll()
 {
-	for (const auto & pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		pListener->stopAndClear();
 	}
@@ -191,7 +191,7 @@ void e2d::CollisionManager::clearAll()
 std::vector<e2d::CollisionListener*> e2d::CollisionManager::get(String name)
 {
 	std::vector<CollisionListener*> vListeners;
-	for (auto pListener : s_vListeners)
+	FOR_LOOP(pListener, s_vListeners)
 	{
 		if (pListener->getName() == name)
 		{

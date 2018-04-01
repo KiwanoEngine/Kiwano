@@ -46,6 +46,39 @@ e2d::String & e2d::String::operator=(const char *cstr)
 	return (*this);
 }
 
+e2d::String e2d::String::parse(int value)
+{
+	String tmp;
+#if HIGHER_THAN_VS2010
+	tmp.m_str = std::to_wstring(value);
+#else
+	tmp.m_str = std::to_wstring(static_cast<long long>(value));
+#endif
+	return std::move(tmp);
+}
+
+e2d::String e2d::String::parse(float value)
+{
+	String tmp;
+#if HIGHER_THAN_VS2010
+	tmp.m_str = std::to_wstring(value);
+#else
+	tmp.m_str = std::to_wstring(static_cast<long double>(value));
+#endif
+	return std::move(tmp);
+}
+
+e2d::String e2d::String::parse(double value)
+{
+	String tmp;
+#if HIGHER_THAN_VS2010
+	tmp.m_str = std::to_wstring(value);
+#else
+	tmp.m_str = std::to_wstring(static_cast<long double>(value));
+#endif
+	return std::move(tmp);
+}
+
 e2d::String & e2d::String::format(const char * format, ...)
 {
 	std::string tmp;
@@ -266,25 +299,19 @@ e2d::String & e2d::String::operator<<(char * cstr)
 
 e2d::String & e2d::String::operator<<(int value)
 {
-	(*this) += String::toString(value);
-	return (*this);
-}
-
-e2d::String & e2d::String::operator<<(unsigned int value)
-{
-	(*this) += String::toString(value);
+	(*this) += String::parse(value);
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(float value)
 {
-	(*this) += String::toString(value);
+	(*this) += String::parse(value);
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(double value)
 {
-	(*this) += String::toString(value);
+	(*this) += String::parse(value);
 	return (*this);
 }
 

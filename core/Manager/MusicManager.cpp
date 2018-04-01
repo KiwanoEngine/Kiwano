@@ -2,8 +2,17 @@
 #include "..\etools.h"
 #include <map>
 
+#if HIGHER_THAN_VS2010
+
 static IXAudio2 * s_pXAudio2 = nullptr;
 static IXAudio2MasteringVoice * s_pMasteringVoice = nullptr;
+
+#else
+
+static HINSTANCE s_hInstance = nullptr;
+
+#endif
+
 
 typedef std::pair<UINT, e2d::Music *> MusicPair;
 typedef std::map<UINT, e2d::Music *> MusicList;
@@ -98,27 +107,30 @@ e2d::Music * e2d::MusicManager::get(String strFilePath)
 
 void e2d::MusicManager::pauseAll()
 {
-	for (auto iter : getMusicList())
+	for (auto iter = getMusicList().begin(); iter != getMusicList().end(); iter++)
 	{
-		iter.second->pause();
+		(*iter).second->pause();
 	}
 }
 
 void e2d::MusicManager::resumeAll()
 {
-	for (auto iter : getMusicList())
+	for (auto iter = getMusicList().begin(); iter != getMusicList().end(); iter++)
 	{
-		iter.second->resume();
+		(*iter).second->resume();
 	}
 }
 
 void e2d::MusicManager::stopAll()
 {
-	for (auto iter : getMusicList())
+	for (auto iter = getMusicList().begin(); iter != getMusicList().end(); iter++)
 	{
-		iter.second->stop();
+		(*iter).second->stop();
 	}
 }
+
+
+#if HIGHER_THAN_VS2010
 
 IXAudio2 * e2d::MusicManager::getIXAudio2()
 {
@@ -166,3 +178,45 @@ void e2d::MusicManager::__uninit()
 
 	SafeReleaseInterface(&s_pXAudio2);
 }
+
+#else
+
+HINSTANCE e2d::MusicManager::getHInstance()
+{
+	return s_hInstance;
+}
+
+bool e2d::MusicManager::__init()
+{
+	s_hInstance = HINST_THISCOMPONENT;
+
+	WNDCLASS  wc;
+	wc.style = 0;
+	wc.lpfnWndProc = Music::MusicProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = s_hInstance;
+	wc.hIcon = 0;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = NULL;
+	wc.lpszMenuName = NULL;
+	wc.lpszClassName = MUSIC_CLASS_NAME;
+
+	if (!RegisterClass(&wc) && 1410 != GetLastError())
+	{
+		return false;
+	}
+	return true;
+}
+
+void e2d::MusicManager::__uninit()
+{
+	for (auto iter = getMusicList().begin(); iter != getMusicList().end(); iter++)
+	{
+		(*iter).second->close();
+		(*iter).second->release();
+	}
+	getMusicList().clear();
+}
+
+#endif

@@ -41,7 +41,7 @@ void e2d::TimerManager::__add(Timer * pTimer)
 	{
 		auto findTimer = [](Timer * pTimer) -> bool
 		{
-			for (const auto &t : s_vTimers)
+			FOR_LOOP(t, s_vTimers)
 			{
 				if (pTimer == t)
 				{
@@ -64,7 +64,7 @@ void e2d::TimerManager::__add(Timer * pTimer)
 
 void e2d::TimerManager::start(String name)
 {
-	for (auto timer : s_vTimers)
+	FOR_LOOP(timer, s_vTimers)
 	{
 		if (timer->getName() == name)
 		{
@@ -75,7 +75,7 @@ void e2d::TimerManager::start(String name)
 
 void e2d::TimerManager::stop(String name)
 {
-	for (auto timer : s_vTimers)
+	FOR_LOOP(timer, s_vTimers)
 	{
 		if (timer->getName() == name)
 		{
@@ -86,7 +86,7 @@ void e2d::TimerManager::stop(String name)
 
 void e2d::TimerManager::clear(String name)
 {
-	for (auto timer : s_vTimers)
+	FOR_LOOP(timer, s_vTimers)
 	{
 		if (timer->getName() == name)
 		{
@@ -98,7 +98,7 @@ void e2d::TimerManager::clear(String name)
 std::vector<e2d::Timer*> e2d::TimerManager::get(String name)
 {
 	std::vector<Timer*> vTimers;
-	for (auto timer : s_vTimers)
+	FOR_LOOP(timer, s_vTimers)
 	{
 		if (timer->getName() == name)
 		{
@@ -110,7 +110,7 @@ std::vector<e2d::Timer*> e2d::TimerManager::get(String name)
 
 void e2d::TimerManager::startAll()
 {
-	for (auto timer : s_vTimers)
+	FOR_LOOP(timer, s_vTimers)
 	{
 		timer->start();
 	}
@@ -118,7 +118,7 @@ void e2d::TimerManager::startAll()
 
 void e2d::TimerManager::stopAll()
 {
-	for (auto timer : s_vTimers)
+	FOR_LOOP(timer, s_vTimers)
 	{
 		timer->stop();
 	}
@@ -126,7 +126,7 @@ void e2d::TimerManager::stopAll()
 
 void e2d::TimerManager::stopAndClearAll()
 {
-	for (auto timer : s_vTimers)
+	FOR_LOOP(timer, s_vTimers)
 	{
 		timer->stop();
 		timer->release();
@@ -141,7 +141,7 @@ std::vector<e2d::Timer*> e2d::TimerManager::getAll()
 
 void e2d::TimerManager::__resetAllTimers()
 {
-	for (auto timer : s_vTimers)
+	FOR_LOOP(timer, s_vTimers)
 	{
 		timer->m_fLast = Time::getTotalTime();
 	}
@@ -149,7 +149,7 @@ void e2d::TimerManager::__resetAllTimers()
 
 void e2d::TimerManager::__uninit()
 {
-	for (const auto timer : s_vTimers)
+	FOR_LOOP(timer, s_vTimers)
 	{
 		timer->release();
 	}

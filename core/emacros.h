@@ -28,6 +28,8 @@
 #define DIRECTINPUT_VERSION 0x0800
 #endif
 
+#define INITGUID
+
 // Windows Header Files
 #include <windows.h>
 #include <wincodec.h>
@@ -35,7 +37,6 @@
 #include <d2d1.h>
 #include <dwrite.h>
 #include <dinput.h>
-#include <xaudio2.h>
 #include <d2d1helper.h>
 
 // C RunTime Header Files
@@ -45,14 +46,33 @@
 // Import Libraries
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
-#pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "windowscodecs.lib")
 #pragma comment(lib, "winmm.lib")
+
+#if _MSC_VER > 1600
+#include <xaudio2.h>
+#pragma comment(lib, "xaudio2.lib")
+#endif
 
 
 #ifndef HINST_THISCOMPONENT
 EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
+#endif
+
+#define MUSIC_CLASS_NAME L"Easy2DMusicCallbackWnd"
+
+
+#if _MSC_VER > 1700
+#define HIGHER_THAN_VS2012 1
+#else
+#define HIGHER_THAN_VS2012 0
+#endif
+
+#if _MSC_VER > 1600
+#define HIGHER_THAN_VS2010 1
+#else
+#define HIGHER_THAN_VS2010 0
 #endif
 
 
@@ -73,8 +93,9 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #endif
 
 
-#if _MSC_VER > 1700
-#define HIGHER_THAN_VS2012 1
+#if HIGHER_THAN_VS2010
+#define FOR_LOOP(i, container) for (auto i : (container))
 #else
-#define HIGHER_THAN_VS2012 0
+#define FOR_LOOP(i, container)  auto i = (container.begin() == container.end()) ? NULL : (*(container.begin())); \
+	for (auto __iter__=(container.begin()); (__iter__ != (container.end())) && (i = (*__iter__)); __iter__++)
 #endif

@@ -21,7 +21,7 @@ public:
 	virtual ~ShapeBase();
 
 	// 判断两形状的交集关系
-	virtual Relation getRelationWith(
+	virtual int getRelationWith(
 		ShapeBase * pShape
 	) const;
 

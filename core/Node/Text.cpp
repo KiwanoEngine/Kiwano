@@ -164,7 +164,7 @@ void e2d::Text::setLineSpacing(double fLineSpacing)
 	}
 }
 
-void e2d::Text::setAlignment(TextAlign nAlign)
+void e2d::Text::setAlignment(int nAlign)
 {
 	if (m_nAlign != nAlign)
 	{
