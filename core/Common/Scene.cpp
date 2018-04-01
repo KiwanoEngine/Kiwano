@@ -73,7 +73,7 @@ e2d::Node * e2d::Scene::getRoot() const
 	return m_pRoot;
 }
 
-void e2d::Scene::setShapeVisiable(bool visiable)
+void e2d::Scene::showOutline(bool visiable)
 {
 	m_bShapeVisiable = visiable;
 }

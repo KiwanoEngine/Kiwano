@@ -73,7 +73,7 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #endif
 
 
-#if _MSC_VER > 1700
+#if _MSC_VER <= 1700
 #define HIGHER_THAN_VS2012 1
 #else
 #define HIGHER_THAN_VS2012 0

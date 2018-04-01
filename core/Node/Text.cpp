@@ -205,7 +205,7 @@ void e2d::Text::onRender()
 	if (m_pDWriteTextLayout)
 	{
 		Renderer::getRenderTarget()->DrawTextLayout(
-			{ 0, 0 },
+			D2D1::Point2F(0, 0),
 			m_pDWriteTextLayout,
 			Renderer::getSolidColorBrush()
 		);
