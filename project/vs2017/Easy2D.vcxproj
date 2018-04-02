@@ -211,6 +211,10 @@
     <ClCompile Include="..\..\core\Base\Renderer.cpp" />
     <ClCompile Include="..\..\core\Base\Time.cpp" />
     <ClCompile Include="..\..\core\Base\Window.cpp" />
+    <ClCompile Include="..\..\core\Collider\Collider.cpp" />
+    <ClCompile Include="..\..\core\Collider\ColliderCircle.cpp" />
+    <ClCompile Include="..\..\core\Collider\ColliderEllipse.cpp" />
+    <ClCompile Include="..\..\core\Collider\ColliderRect.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />
     <ClCompile Include="..\..\core\Common\Object.cpp" />
     <ClCompile Include="..\..\core\Common\Point.cpp" />
@@ -222,19 +226,20 @@
     <ClCompile Include="..\..\core\Manager\InputManager.cpp" />
     <ClCompile Include="..\..\core\Manager\MusicManager.cpp" />
     <ClCompile Include="..\..\core\Manager\ObjectManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\CollisionManager.cpp" />
+    <ClCompile Include="..\..\core\Manager\ColliderManager.cpp" />
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
     <ClCompile Include="..\..\core\Manager\TimerManager.cpp" />
     <ClCompile Include="..\..\core\Node\Button.cpp" />
     <ClCompile Include="..\..\core\Node\ButtonToggle.cpp" />
     <ClCompile Include="..\..\core\Node\Menu.cpp" />
     <ClCompile Include="..\..\core\Node\Node.cpp" />
+    <ClCompile Include="..\..\core\Node\Shape\Circle.cpp" />
+    <ClCompile Include="..\..\core\Node\Shape\Ellipse.cpp" />
+    <ClCompile Include="..\..\core\Node\Shape\Rect.cpp" />
+    <ClCompile Include="..\..\core\Node\Shape\RoundRect.cpp" />
+    <ClCompile Include="..\..\core\Node\Shape\Shape.cpp" />
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />
     <ClCompile Include="..\..\core\Node\Text.cpp" />
-    <ClCompile Include="..\..\core\Shape\ShapeBase.cpp" />
-    <ClCompile Include="..\..\core\Shape\ShapeCircle.cpp" />
-    <ClCompile Include="..\..\core\Shape\ShapeEllipse.cpp" />
-    <ClCompile Include="..\..\core\Shape\ShapeRectangle.cpp" />
     <ClCompile Include="..\..\core\Tool\CollisionListener.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
     <ClCompile Include="..\..\core\Tool\InputListener.cpp" />
@@ -249,16 +254,17 @@
     <ClCompile Include="..\..\core\Transition\TransitionMove.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\core\eactions.h" />
+    <ClInclude Include="..\..\core\eaction.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\ebase.h" />
     <ClInclude Include="..\..\core\ecommon.h" />
-    <ClInclude Include="..\..\core\eshape.h" />
+    <ClInclude Include="..\..\core\ecollider.h" />
     <ClInclude Include="..\..\core\emacros.h" />
-    <ClInclude Include="..\..\core\emanagers.h" />
-    <ClInclude Include="..\..\core\enodes.h" />
-    <ClInclude Include="..\..\core\etools.h" />
-    <ClInclude Include="..\..\core\etransitions.h" />
+    <ClInclude Include="..\..\core\emanager.h" />
+    <ClInclude Include="..\..\core\enode.h" />
+    <ClInclude Include="..\..\core\eshape.h" />
+    <ClInclude Include="..\..\core\etool.h" />
+    <ClInclude Include="..\..\core\etransition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

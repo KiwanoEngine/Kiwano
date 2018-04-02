@@ -1,5 +1,5 @@
-#include "..\emanagers.h"
-#include "..\etools.h"
+#include "..\emanager.h"
+#include "..\etool.h"
 #include <map>
 
 #if HIGHER_THAN_VS2010

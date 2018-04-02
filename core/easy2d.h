@@ -20,12 +20,13 @@
 #include "emacros.h"
 #include "ecommon.h"
 #include "ebase.h"
-#include "emanagers.h"
-#include "enodes.h"
-#include "etools.h"
-#include "eactions.h"
-#include "etransitions.h"
+#include "emanager.h"
+#include "enode.h"
 #include "eshape.h"
+#include "etool.h"
+#include "eaction.h"
+#include "etransition.h"
+#include "ecollider.h"
 
 
 #if defined(DEBUG) || defined(_DEBUG)

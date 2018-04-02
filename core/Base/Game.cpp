@@ -1,5 +1,5 @@
 #include "..\ebase.h"
-#include "..\emanagers.h"
+#include "..\emanager.h"
 
 
 // ¿ØÖÆÓÎÏ·ÖÕÖ¹

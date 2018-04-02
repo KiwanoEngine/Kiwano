@@ -1,4 +1,4 @@
-#include "..\eactions.h"
+#include "..\eaction.h"
 
 
 e2d::ActionOpacityBy::ActionOpacityBy(double duration, double opacity) :

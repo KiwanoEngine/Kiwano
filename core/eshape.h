@@ -1,202 +1,290 @@
 #pragma once
-#include "ebase.h"
-
+#include "enode.h"
 
 namespace e2d
 {
 
 
-class CollisionManager;
-
 // 形状
-class ShapeBase :
-	public Object
+class Shape :
+	public Node
 {
-	friend CollisionManager;
-	friend Node;
-
 public:
-	ShapeBase();
+	Shape();
 
-	virtual ~ShapeBase();
+	virtual ~Shape();
 
-	// 判断两形状的交集关系
-	virtual int getRelationWith(
-		ShapeBase * pShape
-	) const;
+	// 获取样式
+	int getStyle() const;
 
-	// 获取父节点
-	Node * getParentNode() const;
+	// 获取填充颜色
+	UINT32 getFillColor() const;
 
-	// 启用或关闭该形状
-	virtual void setEnable(
-		bool bEnable
+	// 获取线条颜色
+	UINT32 getLineColor() const;
+
+	// 获取线条宽度
+	double getStrokeWidth() const;
+
+	// 设置填充颜色
+	void setFillColor(
+		UINT32 fillColor
 	);
 
-	// 设置形状的可见性
-	void setVisiable(
-		bool bVisiable
+	// 设置线条颜色
+	void setLineColor(
+		UINT32 lineColor
 	);
 
-	// 设置绘制颜色
-	void setColor(
-		UINT32 color
+	// 设置线条宽度
+	void setStrokeWidth(
+		double strokeWidth
 	);
 
-	// 设置绘制透明度
-	void setOpacity(
-		double opacity
-	);
-
-	// 设置大小跟随
-	void setAutoResize(
-		bool bEnable
-	);
-
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1Geometry * getD2dGeometry() const = 0;
-
-protected:
-	// 转换形状
-	virtual void _transform();
-
-	// 重设大小
-	virtual void _resize() = 0;
+	// 设置样式
+	void setStyle(int style);
 
 	// 渲染形状
-	virtual void _render();
+	virtual void onRender() override;
 
 protected:
-	bool	m_bEnable;
-	bool	m_bIsVisiable;
-	bool	m_bAutoResize;
-	UINT32	m_nColor;
-	float	m_fOpacity;
-	Node *	m_pParentNode;
-	ID2D1TransformedGeometry * m_pTransformedShape;
+	// 渲染轮廓
+	virtual void _renderLine() = 0;
+
+	// 渲染填充色
+	virtual void _renderFill() = 0;
+
+protected:
+	int		m_nStyle;
+	float	m_fStrokeWidth;
+	UINT32	m_nLineColor;
+	UINT32	m_nFillColor;
 };
 
 
 // 矩形
-class ShapeRectangle :
-	public ShapeBase
+class Rect :
+	public Shape
 {
 public:
-	// 创建一个默认矩形
-	ShapeRectangle();
+	Rect();
 
-	// 根据左上角坐标和宽高创建矩形
-	ShapeRectangle(
-		double x,
-		double y,
-		double width,
-		double height
+	Rect(
+		double width,	/* 宽度 */
+		double height	/* 高度 */
 	);
 
-	// 创建一个和节点位置大小相同的矩形
-	ShapeRectangle(
-		Node * node
+	Rect(
+		Size size		/* 宽度和高度 */
 	);
 
-	virtual ~ShapeRectangle();
-
-	// 修改矩形大小
-	void setRect(
-		double left,
-		double top,
-		double right,
-		double bottom
+	Rect(
+		double top,		/* 左上角横坐标 */
+		double left,	/* 左上角纵坐标 */
+		double width,	/* 宽度 */
+		double height	/* 高度 */
 	);
 
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1RectangleGeometry * getD2dGeometry() const override;
+	Rect(
+		Point topLeft,	/* 左上角坐标 */
+		Size size		/* 宽度和高度 */
+	);
+
+	virtual ~Rect();
 
 protected:
-	// 重设大小
-	virtual void _resize();
+	// 渲染轮廓
+	virtual void _renderLine() override;
+
+	// 渲染填充色
+	virtual void _renderFill() override;
+};
+
+
+// 圆角矩形
+class RoundRect :
+	public Shape
+{
+public:
+	RoundRect();
+
+	RoundRect(
+		double width,	/* 宽度 */
+		double height,	/* 高度 */
+		double radiusX,	/* 圆角半径 */
+		double radiusY	/* 圆角半径 */
+	);
+
+	RoundRect(
+		Size size,		/* 宽度和高度 */
+		double radiusX,	/* 圆角半径 */
+		double radiusY	/* 圆角半径 */
+	);
+
+	RoundRect(
+		double top,		/* 左上角横坐标 */
+		double left,	/* 左上角纵坐标 */
+		double width,	/* 宽度 */
+		double height,	/* 高度 */
+		double radiusX,	/* 圆角半径 */
+		double radiusY	/* 圆角半径 */
+	);
+
+	RoundRect(
+		Point topLeft,	/* 左上角坐标 */
+		Size size,		/* 宽度和高度 */
+		double radiusX,	/* 圆角半径 */
+		double radiusY	/* 圆角半径 */
+	);
+
+	virtual ~RoundRect();
+
+	// 获取圆角半径
+	double getRadiusX() const;
+
+	// 获取圆角半径
+	double getRadiusY() const;
+
+	// 设置圆角半径
+	virtual void setRadiusX(
+		double radiusX
+	);
+
+	// 设置圆角半径
+	virtual void setRadiusY(
+		double radiusY
+	);
 
 protected:
-	ID2D1RectangleGeometry * m_pD2dRectangle;
+	// 渲染轮廓
+	virtual void _renderLine() override;
+
+	// 渲染填充色
+	virtual void _renderFill() override;
+
+protected:
+	float m_fRadiusX;
+	float m_fRadiusY;
 };
 
 
 // 圆形
-class ShapeCircle :
-	public ShapeBase
+class Circle :
+	public Shape
 {
 public:
-	// 创建一个默认圆形
-	ShapeCircle();
+	Circle();
 
-	// 根据圆心和半径创建圆形
-	ShapeCircle(
-		Point center,
+	Circle(
+		double radius	/* 半径 */
+	);
+
+	Circle(
+		Point center,	/* 圆心坐标 */
+		double radius	/* 半径 */
+	);
+
+	Circle(
+		double centerX,	/* 圆心横坐标 */
+		double centerY,	/* 圆心纵坐标 */
+		double radius	/* 半径 */
+	);
+
+	virtual ~Circle();
+
+	// 获取半径
+	double getRadius() const;
+
+	// 设置半径
+	virtual void setRadius(
 		double radius
 	);
 
-	// 创建一个和节点位置大小相同的圆形
-	ShapeCircle(
-		Node * node
-	);
+public:
+	// 禁用的函数
+	void setWidth() {}
 
-	virtual ~ShapeCircle();
+	// 禁用的函数
+	void setHeight() {}
 
-	// 修改圆形大小
-	void setCircle(
-		Point center,
-		double radius
-	);
-
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1EllipseGeometry * getD2dGeometry() const override;
+	// 禁用的函数
+	void setSize() {}
 
 protected:
-	// 重设大小
-	virtual void _resize();
+	// 渲染轮廓
+	virtual void _renderLine() override;
+
+	// 渲染填充色
+	virtual void _renderFill() override;
 
 protected:
-	ID2D1EllipseGeometry * m_pD2dCircle;
+	float m_fRadius;
 };
 
 
 // 椭圆形
-class ShapeEllipse :
-	public ShapeBase
+class Ellipse :
+	public Shape
 {
 public:
-	// 创建一个默认椭圆
-	ShapeEllipse();
+	Ellipse();
 
-	// 根据圆心和半径创建椭圆
-	ShapeEllipse(
-		Point center,
-		double radiusX,
+	Ellipse(
+		double radiusX,	/* 横轴半径 */
+		double radiusY	/* 纵轴半径 */
+	);
+
+	Ellipse(
+		Point center,	/* 圆心坐标 */
+		double radiusX,	/* 横轴半径 */
+		double radiusY	/* 纵轴半径 */
+	);
+
+	Ellipse(
+		double centerX,	/* 圆心横坐标 */
+		double centerY,	/* 圆心纵坐标 */
+		double radiusX,	/* 横轴半径 */
+		double radiusY	/* 纵轴半径 */
+	);
+
+	virtual ~Ellipse();
+
+	// 获取横轴半径
+	double getRadiusX() const;
+
+	// 获取纵轴半径
+	double getRadiusY() const;
+
+	// 设置横轴半径
+	virtual void setRadiusX(
+		double radiusX
+	);
+
+	// 设置纵轴半径
+	virtual void setRadiusY(
 		double radiusY
 	);
 
-	// 创建一个和节点位置大小相同的椭圆
-	ShapeEllipse(
-		Node * node
-	);
+public:
+	// 禁用的函数
+	void setWidth() {}
 
-	virtual ~ShapeEllipse();
+	// 禁用的函数
+	void setHeight() {}
 
-	// 修改椭圆大小
-	void setEllipse(
-		Point center,
-		double radiusX,
-		double radiusY
-	);
-
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1EllipseGeometry * getD2dGeometry() const override;
+	// 禁用的函数
+	void setSize() {}
 
 protected:
-	// 重设大小
-	virtual void _resize();
+	// 渲染轮廓
+	virtual void _renderLine() override;
+
+	// 渲染填充色
+	virtual void _renderFill() override;
 
 protected:
-	ID2D1EllipseGeometry * m_pD2dEllipse;
+	float m_fRadiusX;
+	float m_fRadiusY;
 };
 
 }

@@ -1,4 +1,4 @@
-#include "..\eactions.h"
+#include "..\eaction.h"
 
 e2d::ActionSequence::ActionSequence()
 	: m_nActionIndex(0)

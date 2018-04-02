@@ -1,6 +1,6 @@
-#include "..\emanagers.h"
-#include "..\etools.h"
-#include "..\enodes.h"
+#include "..\emanager.h"
+#include "..\etool.h"
+#include "..\enode.h"
 
 static std::vector<e2d::Timer*> s_vTimers;
 

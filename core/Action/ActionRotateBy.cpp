@@ -1,4 +1,4 @@
-#include "..\eactions.h"
+#include "..\eaction.h"
 
 
 e2d::ActionRotateBy::ActionRotateBy(double duration, double rotation) :

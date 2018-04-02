@@ -12,13 +12,13 @@ class Node;
 class Timer;
 class Action;
 class Music;
-class ShapeBase;
+class Collider;
 class Transition;
 class InputListener;
 class CollisionListener;
 
 // 对象管理器
-class ObjectManager
+class ObjectManager final
 {
 	friend Game;
 
@@ -41,7 +41,7 @@ private:
 
 
 // 场景管理器
-class SceneManager
+class SceneManager final
 {
 	friend Game;
 	friend Renderer;
@@ -87,7 +87,7 @@ private:
 
 
 // 定时器管理器
-class TimerManager
+class TimerManager final
 {
 	friend Game;
 	friend Node;
@@ -150,7 +150,7 @@ private:
 
 
 // 动作管理器
-class ActionManager
+class ActionManager final
 {
 	friend Game;
 	friend Node;
@@ -235,7 +235,7 @@ private:
 
 
 // 音乐管理工具
-class MusicManager
+class MusicManager final
 {
 	friend Game;
 
@@ -305,7 +305,7 @@ private:
 
 
 // 键盘和鼠标消息管理器
-class InputManager
+class InputManager final
 {
 	friend Input;
 	friend InputListener;
@@ -361,10 +361,10 @@ private:
 
 
 // 碰撞管理器
-class CollisionManager
+class ColliderManager final
 {
 	friend Node;
-	friend ShapeBase;
+	friend Collider;
 	friend CollisionListener;
 
 public:
@@ -411,13 +411,19 @@ public:
 	// 获取全部监听器
 	static std::vector<CollisionListener*> getAll();
 
+	// 获取碰撞发生时的主动体
+	static Node * getActiveNode();
+
+	// 获取碰撞发生时的被动体
+	static Node * getPassiveNode();
+
 	// 判断碰撞是否由该节点引发（如果是，返回与其相撞的节点指针，否则返回空）
-	static Node* isCausedBy(
+	static Node * isCausedBy(
 		Node * pNode
 	);
 
 	// 判断发生碰撞的节点名称是否相同（若相同返回其指针，否则返回空）
-	static Node* isCausedBy(
+	static Node * isCausedBy(
 		String name
 	);
 
@@ -430,19 +436,19 @@ private:
 	// 更新监听器
 	static void __update();
 
-	// 更新形状
-	static void __updateShape(
-		ShapeBase * pActiveShape
+	// 更新碰撞体
+	static void __updateCollider(
+		Collider * pActiveCollider
 	);
 
-	// 添加形状
-	static void __addShape(
-		ShapeBase * pShape
+	// 添加碰撞体
+	static void __addCollider(
+		Collider * pCollider
 	);
 
-	// 删除已绑定的形状
-	static void __removeShape(
-		ShapeBase * pShape
+	// 删除已绑定的碰撞体
+	static void __removeCollider(
+		Collider * pCollider
 	);
 };
 

@@ -1,6 +1,6 @@
-#include "..\emanagers.h"
+#include "..\emanager.h"
 #include "..\ebase.h"
-#include "..\etransitions.h"
+#include "..\etransition.h"
 
 static e2d::Scene * s_pCurrentScene = nullptr;
 static e2d::Scene * s_pNextScene = nullptr;

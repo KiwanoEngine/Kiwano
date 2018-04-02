@@ -7,16 +7,16 @@ namespace e2d
 
 class Action;
 class Transition;
-class ShapeBase;
-class CollisionManager;
+class Collider;
+class ColliderManager;
 
 class Node :
 	public Object
 {
 	friend Scene;
-	friend ShapeBase;
+	friend Collider;
 	friend Transition;
-	friend CollisionManager;
+	friend ColliderManager;
 
 public:
 	Node();
@@ -116,8 +116,8 @@ public:
 	// 获取节点透明度
 	virtual double getOpacity() const;
 
-	// 获取节点形状
-	virtual ShapeBase * getShape() const;
+	// 获取节点碰撞体
+	virtual Collider * getCollider() const;
 
 	// 获取父节点
 	virtual Node * getParent() const;
@@ -291,50 +291,50 @@ public:
 	);
 
 	// 修改节点宽度
-	void setWidth(
+	virtual void setWidth(
 		double width
 	);
 
 	// 修改节点高度
-	void setHeight(
+	virtual void setHeight(
 		double height
 	);
 
 	// 修改节点大小
-	void setSize(
+	virtual void setSize(
 		double width,
 		double height
 	);
 
 	// 修改节点大小
-	void setSize(
+	virtual void setSize(
 		Size size
 	);
 
-	// 设置节点形状
-	virtual void setShape(
-		int type
+	// 设置碰撞体
+	virtual void setCollider(
+		int nColliderType
 	);
 
-	// 设置节点形状
-	virtual void setShape(
-		ShapeBase * pShape
+	// 设置碰撞体
+	virtual void setCollider(
+		Collider * pCollider
 	);
 
 	// 添加可碰撞节点的名称
-	virtual void addCollider(
+	virtual void addColliableName(
 		String collliderName
 	);
 
 #if HIGHER_THAN_VS2012
 	// 添加多个可碰撞节点的名称
-	virtual void addCollider(
+	virtual void addColliableName(
 		const InitList<String>& vCollliderName	/* 名称数组 */
 	);
 #endif
 
 	// 移除可碰撞节点的名称
-	virtual void removeCollider(
+	virtual void removeColliableName(
 		String collliderName
 	);
 
@@ -397,8 +397,8 @@ public:
 		double defaultPiovtY
 	);
 
-	// 设置节点是否包含默认形状（默认打开）
-	static void setDefaultShapeEnable(
+	// 设置节点是否包含默认碰撞体（默认打开）
+	static void setDefaultColliderEnable(
 		bool bEnable
 	);
 
@@ -410,7 +410,7 @@ protected:
 	void _render();
 
 	// 渲染图形
-	void _drawShape();
+	void _drawCollider();
 
 	// 节点被添加到场景时的执行程序
 	void _onEnter();
@@ -460,7 +460,7 @@ protected:
 	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
 	bool		m_bTransformNeeded;
-	ShapeBase *	m_pShape;
+	Collider *	m_pCollider;
 	Scene *		m_pParentScene;
 	Node *		m_pParent;
 	D2D1::Matrix3x2F		m_MatriInitial;
@@ -885,12 +885,19 @@ public:
 	// 创建空菜单
 	Menu();
 
+#if HIGHER_THAN_VS2012
+	// 创建菜单
+	Menu(
+		const InitList<Button*>& vButtons	/* 按钮数组 */
+	);
+#else
 	// 创建菜单
 	Menu(
 		int number,			/* 菜单中按钮的数量 */
 		Button * button1,	/* 第一个按钮 */
 		...
 	);
+#endif
 
 	// 获取菜单是否禁用
 	bool isEnable() const;

@@ -1,4 +1,4 @@
-#include "..\enodes.h"
+#include "..\enode.h"
 
 e2d::Font::Font() 
 	: fontFamily("")

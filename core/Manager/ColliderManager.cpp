@@ -1,10 +1,10 @@
-#include "..\emanagers.h"
-#include "..\enodes.h"
-#include "..\eshape.h"
-#include "..\etools.h"
+#include "..\emanager.h"
+#include "..\enode.h"
+#include "..\ecollider.h"
+#include "..\etool.h"
 
-// 形状集合
-static std::vector<e2d::ShapeBase*> s_vShapes;
+// 碰撞体集合
+static std::vector<e2d::Collider*> s_vColliders;
 // 监听器容器
 static std::vector<e2d::CollisionListener*> s_vListeners;
 // 碰撞触发状态
@@ -14,12 +14,12 @@ static e2d::Node * s_pActiveNode = nullptr;
 static e2d::Node * s_pPassiveNode = nullptr;
 
 
-void e2d::CollisionManager::setEnable(bool bEnable)
+void e2d::ColliderManager::setEnable(bool bEnable)
 {
 	s_bCollisionEnable = bEnable;
 }
 
-void e2d::CollisionManager::__update()
+void e2d::ColliderManager::__update()
 {
 	if (s_vListeners.size() == 0)
 		return;
@@ -40,28 +40,28 @@ void e2d::CollisionManager::__update()
 	}
 }
 
-void e2d::CollisionManager::__updateShape(e2d::ShapeBase * pActiveShape)
+void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 {
 	// 判断碰撞触发是否打开
 	if (!s_bCollisionEnable)
 		return;
 
-	Node* pActiveNode = pActiveShape->m_pParentNode;
+	Node* pActiveNode = pActiveCollider->m_pParentNode;
 	if (pActiveNode)
 	{
 		// 获取节点所在场景
 		Scene* pCurrentScene = pActiveNode->getParentScene();
 
-		// 判断与其他形状的交集情况
-		for (size_t i = 0; i < s_vShapes.size(); i++)
+		// 判断与其他碰撞体的交集情况
+		for (size_t i = 0; i < s_vColliders.size(); i++)
 		{
-			auto pPassiveShape = s_vShapes[i];
-			// 判断两个形状是否是同一个对象
-			if (pActiveShape == pPassiveShape)
+			auto pPassiveCollider = s_vColliders[i];
+			// 判断两个碰撞体是否是同一个对象
+			if (pActiveCollider == pPassiveCollider)
 				continue;
 
 			// 获取被碰撞节点
-			Node* pPassiveNode = pPassiveShape->m_pParentNode;
+			Node* pPassiveNode = pPassiveCollider->m_pParentNode;
 			// 判断两节点是否处于同一场景中
 			if (pPassiveNode &&
 				pPassiveNode->getParentScene() == pCurrentScene)
@@ -77,8 +77,8 @@ void e2d::CollisionManager::__updateShape(e2d::ShapeBase * pActiveShape)
 
 				if (IsCollideWith(pActiveNode, pPassiveNode->getHashName()))
 				{
-					// 判断两形状交集情况
-					int relation = pActiveShape->getRelationWith(pPassiveShape);
+					// 判断两碰撞体交集情况
+					int relation = pActiveCollider->getRelationWith(pPassiveCollider);
 					// 忽略 UNKNOWN 和 DISJOINT 情况
 					if (relation != Relation::UNKNOWN && relation != Relation::DISJOINT)
 					{
@@ -86,8 +86,8 @@ void e2d::CollisionManager::__updateShape(e2d::ShapeBase * pActiveShape)
 						s_pPassiveNode = pPassiveNode;
 						pActiveNode->onCollide(pPassiveNode);
 						pPassiveNode->onCollide(pActiveNode);
-						pCurrentScene->onCollide();
-						CollisionManager::__update();
+						pCurrentScene->onCollide(pActiveNode, pPassiveNode);
+						ColliderManager::__update();
 					}
 				}
 			}
@@ -97,7 +97,7 @@ void e2d::CollisionManager::__updateShape(e2d::ShapeBase * pActiveShape)
 	s_pPassiveNode = nullptr;
 }
 
-void e2d::CollisionManager::__add(CollisionListener * pListener)
+void e2d::ColliderManager::__add(CollisionListener * pListener)
 {
 	WARN_IF(pListener == nullptr, "CollisionListener NULL pointer exception!");
 
@@ -126,12 +126,12 @@ void e2d::CollisionManager::__add(CollisionListener * pListener)
 	}
 }
 
-void e2d::CollisionManager::add(Function func, String name)
+void e2d::ColliderManager::add(Function func, String name)
 {
 	(new CollisionListener(func, name))->start();
 }
 
-void e2d::CollisionManager::start(String name)
+void e2d::ColliderManager::start(String name)
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
@@ -142,7 +142,7 @@ void e2d::CollisionManager::start(String name)
 	}
 }
 
-void e2d::CollisionManager::stop(String name)
+void e2d::ColliderManager::stop(String name)
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
@@ -153,7 +153,7 @@ void e2d::CollisionManager::stop(String name)
 	}
 }
 
-void e2d::CollisionManager::clear(String name)
+void e2d::ColliderManager::clear(String name)
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
@@ -164,7 +164,7 @@ void e2d::CollisionManager::clear(String name)
 	}
 }
 
-void e2d::CollisionManager::startAll()
+void e2d::ColliderManager::startAll()
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
@@ -172,7 +172,7 @@ void e2d::CollisionManager::startAll()
 	}
 }
 
-void e2d::CollisionManager::stopAll()
+void e2d::ColliderManager::stopAll()
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
@@ -180,7 +180,7 @@ void e2d::CollisionManager::stopAll()
 	}
 }
 
-void e2d::CollisionManager::clearAll()
+void e2d::ColliderManager::clearAll()
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
@@ -188,7 +188,7 @@ void e2d::CollisionManager::clearAll()
 	}
 }
 
-std::vector<e2d::CollisionListener*> e2d::CollisionManager::get(String name)
+std::vector<e2d::CollisionListener*> e2d::ColliderManager::get(String name)
 {
 	std::vector<CollisionListener*> vListeners;
 	FOR_LOOP(pListener, s_vListeners)
@@ -201,12 +201,22 @@ std::vector<e2d::CollisionListener*> e2d::CollisionManager::get(String name)
 	return std::move(vListeners);
 }
 
-std::vector<e2d::CollisionListener*> e2d::CollisionManager::getAll()
+std::vector<e2d::CollisionListener*> e2d::ColliderManager::getAll()
 {
 	return s_vListeners;
 }
 
-e2d::Node* e2d::CollisionManager::isCausedBy(Node * pNode)
+e2d::Node * e2d::ColliderManager::getActiveNode()
+{
+	return s_pActiveNode;
+}
+
+e2d::Node * e2d::ColliderManager::getPassiveNode()
+{
+	return s_pPassiveNode;
+}
+
+e2d::Node* e2d::ColliderManager::isCausedBy(Node * pNode)
 {
 	if (s_pActiveNode == pNode)
 		return s_pPassiveNode;
@@ -215,7 +225,7 @@ e2d::Node* e2d::CollisionManager::isCausedBy(Node * pNode)
 	return nullptr;
 }
 
-e2d::Node* e2d::CollisionManager::isCausedBy(String name)
+e2d::Node* e2d::ColliderManager::isCausedBy(String name)
 {
 	if (s_pActiveNode->getName() == name)
 		return s_pActiveNode;
@@ -224,30 +234,30 @@ e2d::Node* e2d::CollisionManager::isCausedBy(String name)
 	return nullptr;
 }
 
-void e2d::CollisionManager::__addShape(ShapeBase * pShape)
+void e2d::ColliderManager::__addCollider(Collider * pCollider)
 {
-	if (pShape)
+	if (pCollider)
 	{
-		if (pShape->m_pParentNode)
+		if (pCollider->m_pParentNode)
 		{
-			WARN_IF(true, "CollisionManager::__add Failed! The shape is already added.");
+			WARN_IF(true, "ColliderManager::__add Failed! The shape is already added.");
 			return;
 		}
-		pShape->retain();
-		s_vShapes.push_back(pShape);
+		pCollider->retain();
+		s_vColliders.push_back(pCollider);
 	}
 }
 
-void e2d::CollisionManager::__removeShape(ShapeBase * pShape)
+void e2d::ColliderManager::__removeCollider(Collider * pCollider)
 {
-	if (pShape)
+	if (pCollider)
 	{
-		for (size_t i = 0; i < s_vShapes.size(); i++)
+		for (size_t i = 0; i < s_vColliders.size(); i++)
 		{
-			if (s_vShapes[i] == pShape)
+			if (s_vColliders[i] == pCollider)
 			{
-				SafeRelease(&pShape);
-				s_vShapes.erase(s_vShapes.begin() + i);
+				SafeRelease(&pCollider);
+				s_vColliders.erase(s_vColliders.begin() + i);
 				return;
 			}
 		}

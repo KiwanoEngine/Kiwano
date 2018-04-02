@@ -8,7 +8,7 @@ namespace e2d
 class TimerManager;
 class MusicManager;
 class InputManager;
-class CollisionManager;
+class ColliderManager;
 
 // 随机数产生器
 class Random
@@ -196,7 +196,7 @@ protected:
 class CollisionListener
 	: public Listener
 {
-	friend CollisionManager;
+	friend ColliderManager;
 
 public:
 	CollisionListener();

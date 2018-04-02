@@ -1,5 +1,5 @@
-#include "..\etransitions.h"
-#include "..\enodes.h"
+#include "..\etransition.h"
+#include "..\enode.h"
 
 e2d::TransitionMove::TransitionMove(double duration, MOVE_DIRECT direct)
 	: Transition(duration)

@@ -1,5 +1,5 @@
 #include "..\ebase.h"
-#include "..\emanagers.h"
+#include "..\emanager.h"
 
 static ID2D1Factory * s_pDirect2dFactory = nullptr;
 static ID2D1HwndRenderTarget * s_pRenderTarget = nullptr;

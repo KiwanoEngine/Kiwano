@@ -1,4 +1,4 @@
-#include "..\eactions.h"
+#include "..\eaction.h"
 
 e2d::ActionGradual::ActionGradual(double duration)
 	: m_fRateOfProgress(0)

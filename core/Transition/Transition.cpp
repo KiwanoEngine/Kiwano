@@ -1,5 +1,5 @@
 #include "..\ebase.h"
-#include "..\etransitions.h"
+#include "..\etransition.h"
 
 e2d::Transition::Transition(double duration)
 	: m_bEnd(false)

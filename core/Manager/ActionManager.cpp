@@ -1,5 +1,5 @@
-#include "..\emanagers.h"
-#include "..\eactions.h"
+#include "..\emanager.h"
+#include "..\eaction.h"
 
 static std::vector<e2d::Action*> s_vActions;
 static std::vector<e2d::Action*> s_vRunningActions;

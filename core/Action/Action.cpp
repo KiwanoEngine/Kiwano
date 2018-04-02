@@ -1,5 +1,5 @@
-#include "..\eactions.h"
-#include "..\emanagers.h"
+#include "..\eaction.h"
+#include "..\emanager.h"
 
 e2d::Action::Action() 
 	: m_bRunning(false)

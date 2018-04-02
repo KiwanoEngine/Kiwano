@@ -1,18 +1,18 @@
-#include "..\eshape.h"
-#include "..\enodes.h"
+#include "..\ecollider.h"
+#include "..\enode.h"
 
-e2d::ShapeCircle::ShapeCircle()
+e2d::ColliderCircle::ColliderCircle()
 	: m_pD2dCircle(nullptr)
 {
 }
 
-e2d::ShapeCircle::ShapeCircle(Point center, double radius)
+e2d::ColliderCircle::ColliderCircle(Point center, double radius)
 	: m_pD2dCircle(nullptr)
 {
 	this->setCircle(center, radius);
 }
 
-e2d::ShapeCircle::ShapeCircle(Node * node)
+e2d::ColliderCircle::ColliderCircle(Node * node)
 	: m_pD2dCircle(nullptr)
 {
 	double minSide = min(node->getRealWidth(), node->getRealHeight());
@@ -25,12 +25,12 @@ e2d::ShapeCircle::ShapeCircle(Node * node)
 	);
 }
 
-e2d::ShapeCircle::~ShapeCircle()
+e2d::ColliderCircle::~ColliderCircle()
 {
 	SafeReleaseInterface(&m_pD2dCircle);
 }
 
-void e2d::ShapeCircle::setCircle(Point center, double radius)
+void e2d::ColliderCircle::setCircle(Point center, double radius)
 {
 	SafeReleaseInterface(&m_pD2dCircle);
 
@@ -45,7 +45,7 @@ void e2d::ShapeCircle::setCircle(Point center, double radius)
 		);
 }
 
-void e2d::ShapeCircle::_resize()
+void e2d::ColliderCircle::_resize()
 {
 	if (m_pParentNode && m_bEnable)
 	{
@@ -60,7 +60,7 @@ void e2d::ShapeCircle::_resize()
 	}
 }
 
-ID2D1EllipseGeometry * e2d::ShapeCircle::getD2dGeometry() const
+ID2D1EllipseGeometry * e2d::ColliderCircle::getD2dGeometry() const
 {
 	return m_pD2dCircle;
 }

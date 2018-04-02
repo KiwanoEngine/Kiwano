@@ -1,18 +1,18 @@
-#include "..\eshape.h"
-#include "..\enodes.h"
+#include "..\ecollider.h"
+#include "..\enode.h"
 
-e2d::ShapeEllipse::ShapeEllipse()
+e2d::ColliderEllipse::ColliderEllipse()
 	: m_pD2dEllipse(nullptr)
 {
 }
 
-e2d::ShapeEllipse::ShapeEllipse(Point center, double radiusX, double radiusY)
+e2d::ColliderEllipse::ColliderEllipse(Point center, double radiusX, double radiusY)
 	: m_pD2dEllipse(nullptr)
 {
 	this->setEllipse(center, radiusX, radiusY);
 }
 
-e2d::ShapeEllipse::ShapeEllipse(Node * node)
+e2d::ColliderEllipse::ColliderEllipse(Node * node)
 	: m_pD2dEllipse(nullptr)
 {
 	this->setEllipse(
@@ -25,12 +25,12 @@ e2d::ShapeEllipse::ShapeEllipse(Node * node)
 	);
 }
 
-e2d::ShapeEllipse::~ShapeEllipse()
+e2d::ColliderEllipse::~ColliderEllipse()
 {
 	SafeReleaseInterface(&m_pD2dEllipse);
 }
 
-void e2d::ShapeEllipse::setEllipse(Point center, double radiusX, double radiusY)
+void e2d::ColliderEllipse::setEllipse(Point center, double radiusX, double radiusY)
 {
 	SafeReleaseInterface(&m_pD2dEllipse);
 
@@ -45,7 +45,7 @@ void e2d::ShapeEllipse::setEllipse(Point center, double radiusX, double radiusY)
 	);
 }
 
-void e2d::ShapeEllipse::_resize()
+void e2d::ColliderEllipse::_resize()
 {
 	if (m_pParentNode && m_bEnable)
 	{
@@ -60,7 +60,7 @@ void e2d::ShapeEllipse::_resize()
 	}
 }
 
-ID2D1EllipseGeometry * e2d::ShapeEllipse::getD2dGeometry() const
+ID2D1EllipseGeometry * e2d::ColliderEllipse::getD2dGeometry() const
 {
 	return m_pD2dEllipse;
 }

@@ -1,5 +1,5 @@
-#include "..\emanagers.h"
-#include "..\etools.h"
+#include "..\emanager.h"
+#include "..\etool.h"
 
 // ¼àÌıÆ÷ÈİÆ÷
 static std::vector<e2d::InputListener*> s_vListeners;

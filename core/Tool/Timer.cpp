@@ -1,6 +1,6 @@
-#include "..\etools.h"
-#include "..\enodes.h"
-#include "..\emanagers.h"
+#include "..\etool.h"
+#include "..\enode.h"
+#include "..\emanager.h"
 
 e2d::Timer::Timer(Function func, String name, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
 	: m_bRunning(false)

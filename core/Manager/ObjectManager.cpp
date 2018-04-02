@@ -1,4 +1,4 @@
-#include "..\emanagers.h"
+#include "..\emanager.h"
 #include "..\ebase.h"
 
 // ObjectManager 释放池的实现机制：

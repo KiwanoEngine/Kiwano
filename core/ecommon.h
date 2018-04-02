@@ -75,7 +75,7 @@ struct Size
 
 
 // 字符串
-class String
+class String final
 {
 public:
 	String();
@@ -137,6 +137,7 @@ public:
 
 	// 数字类型转字符串
 	static String parse(int value);
+	static String parse(unsigned int value);
 	static String parse(float value);
 	static String parse(double value);
 
@@ -184,6 +185,7 @@ public:
 	String& operator<< (const wchar_t *);
 	String& operator<< (wchar_t *);
 	String& operator<< (int value);
+	String& operator<< (unsigned int value);
 	String& operator<< (float value);
 	String& operator<< (double value);
 
@@ -379,7 +381,7 @@ public:
 };
 
 
-// 形状交集关系
+// 碰撞体交集关系
 class Relation
 {
 public:
@@ -394,13 +396,26 @@ public:
 };
 
 
-// 形状类别
-class Shape
+// 形状样式
+class ShapeStyle
 {
 public:
 	enum : int
 	{
-		RECTANGLE,	/* 矩形 */
+		SOLID,		/* 填充 */
+		ROUND,		/* 轮廓 */
+		FILL,		/* 轮廓 + 填充 */
+	};
+};
+
+
+// 碰撞体类别
+class ColliderType
+{
+public:
+	enum : int
+	{
+		RECT,		/* 矩形 */
 		CIRCLE,		/* 圆形 */
 		ELLIPSE		/* 椭圆形 */
 	};
@@ -565,7 +580,10 @@ public:
 	virtual void onExit() {}
 
 	// 重写这个函数，它将在碰撞发生时自动执行
-	virtual void onCollide() {}
+	virtual void onCollide(
+		Node* pActiveNode,	/* 碰撞发生时的主动体 */
+		Node* pPassiveNode	/* 碰撞发生时的被动体 */
+	) {}
 
 	// 重写这个函数，它将在关闭窗口时执行（返回 false 将阻止窗口关闭）
 	virtual bool onCloseWindow() { return true; }
@@ -601,7 +619,7 @@ public:
 	Node * getRoot() const;
 
 	// 开启或关闭节点轮廓渲染
-	void showOutline(
+	void showCollider(
 		bool visiable = true
 	);
 
@@ -616,7 +634,7 @@ protected:
 	bool m_bAutoUpdate;
 	bool m_bSortNeeded;
 	bool m_bWillSave;
-	bool m_bShapeVisiable;
+	bool m_bColliderVisiable;
 	Node * m_pRoot;
 };
 

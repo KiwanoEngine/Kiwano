@@ -1,4 +1,4 @@
-#include "..\eactions.h"
+#include "..\eaction.h"
 
 e2d::Animation::Animation() 
 	: m_nFrameIndex(0)

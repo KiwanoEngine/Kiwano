@@ -1,14 +1,14 @@
-#include "..\enodes.h"
-#include "..\emanagers.h"
-#include "..\etools.h"
-#include "..\eactions.h"
-#include "..\eshape.h"
+#include "..\enode.h"
+#include "..\emanager.h"
+#include "..\etool.h"
+#include "..\eaction.h"
+#include "..\ecollider.h"
 #include <algorithm>
 
 // 默认中心点位置
 static float s_fDefaultPiovtX = 0;
 static float s_fDefaultPiovtY = 0;
-static bool s_fDefaultShapeEnabled = true;
+static bool s_fDefaultColliderEnabled = true;
 
 e2d::Node::Node()
 	: m_nOrder(0)
@@ -29,7 +29,7 @@ e2d::Node::Node()
 	, m_MatriFinal(D2D1::Matrix3x2F::Identity())
 	, m_bVisiable(true)
 	, m_bDisplayedInScene(false)
-	, m_pShape(nullptr)
+	, m_pCollider(nullptr)
 	, m_pParent(nullptr)
 	, m_pParentScene(nullptr)
 	, m_nHashName(0)
@@ -37,17 +37,17 @@ e2d::Node::Node()
 	, m_bTransformNeeded(false)
 	, m_bAutoUpdate(true)
 {
-	if (s_fDefaultShapeEnabled)
+	if (s_fDefaultColliderEnabled)
 	{
-		auto rect = new ShapeRectangle(this);
-		this->setShape(rect);
+		auto rect = new ColliderRect(this);
+		this->setCollider(rect);
 	}
 }
 
 e2d::Node::~Node()
 {
 	ActionManager::__clearAllBindedWith(this);
-	CollisionManager::__removeShape(m_pShape);
+	ColliderManager::__removeCollider(m_pCollider);
 	FOR_LOOP(child, m_vChildren)
 	{
 		SafeRelease(&child);
@@ -165,18 +165,18 @@ void e2d::Node::_render()
 	}
 }
 
-void e2d::Node::_drawShape()
+void e2d::Node::_drawCollider()
 {
-	// 绘制自身的几何形状
-	if (m_pShape && m_pShape->m_bIsVisiable)
+	// 绘制自身的几何碰撞体
+	if (m_pCollider && m_pCollider->m_bIsVisiable)
 	{
-		m_pShape->_render();
+		m_pCollider->_render();
 	}
 
-	// 绘制所有子节点的几何形状
+	// 绘制所有子节点的几何碰撞体
 	FOR_LOOP(child, m_vChildren)
 	{
-		child->_drawShape();
+		child->_drawCollider();
 	}
 }
 
@@ -250,10 +250,10 @@ void e2d::Node::_updateTransform(Node * node)
 {
 	// 计算自身的转换矩阵
 	node->_updateTransform();
-	// 绑定于自身的形状也进行相应转换
-	if (node->m_pShape)
+	// 绑定于自身的碰撞体也进行相应转换
+	if (node->m_pCollider)
 	{
-		node->m_pShape->_transform();
+		node->m_pCollider->_transform();
 	}
 	// 遍历子节点下的所有节点
 	node->_updateChildrenTransform();
@@ -378,9 +378,9 @@ double e2d::Node::getOpacity() const
 	return m_fRealOpacity;
 }
 
-e2d::ShapeBase * e2d::Node::getShape() const
+e2d::Collider * e2d::Node::getCollider() const
 {
-	return m_pShape;
+	return m_pCollider;
 }
 
 int e2d::Node::getOrder() const
@@ -547,28 +547,28 @@ void e2d::Node::setSize(Size size)
 	this->setSize(size.width, size.height);
 }
 
-void e2d::Node::setShape(int type)
+void e2d::Node::setCollider(int nColliderType)
 {
-	switch (type)
+	switch (nColliderType)
 	{
-	case Shape::RECTANGLE:
+	case ColliderType::RECT:
 	{
-		auto rect = new ShapeRectangle(this);
-		this->setShape(rect);
+		auto rect = new ColliderRect(this);
+		this->setCollider(rect);
 		break;
 	}
 
-	case Shape::CIRCLE:
+	case ColliderType::CIRCLE:
 	{
-		auto rect = new ShapeCircle(this);
-		this->setShape(rect);
+		auto rect = new ColliderCircle(this);
+		this->setCollider(rect);
 		break;
 	}
 
-	case Shape::ELLIPSE:
+	case ColliderType::ELLIPSE:
 	{
-		auto rect = new ShapeEllipse(this);
-		this->setShape(rect);
+		auto rect = new ColliderEllipse(this);
+		this->setCollider(rect);
 		break;
 	}
 
@@ -577,42 +577,42 @@ void e2d::Node::setShape(int type)
 	}
 }
 
-void e2d::Node::setShape(ShapeBase * pShape)
+void e2d::Node::setCollider(Collider * pCollider)
 {
-	// 删除旧的形状
-	CollisionManager::__removeShape(m_pShape);
-	// 添加新的形状
-	CollisionManager::__addShape(pShape);
+	// 删除旧的碰撞体
+	ColliderManager::__removeCollider(m_pCollider);
+	// 添加新的碰撞体
+	ColliderManager::__addCollider(pCollider);
 
-	if (pShape)
+	if (pCollider)
 	{
 		// 双向绑定
-		this->m_pShape = pShape;
-		pShape->m_pParentNode = this;
+		this->m_pCollider = pCollider;
+		pCollider->m_pParentNode = this;
 	}
 	else
 	{
-		this->m_pShape = nullptr;
+		this->m_pCollider = nullptr;
 	}
 }
 
-void e2d::Node::addCollider(String collliderName)
+void e2d::Node::addColliableName(String collliderName)
 {
 	unsigned int hash = collliderName.getHashCode();
 	m_vColliders.insert(hash);
 }
 
 #if HIGHER_THAN_VS2012
-void e2d::Node::addCollider(const InitList<String>& vCollliderName)
+void e2d::Node::addColliableName(const InitList<String>& vCollliderName)
 {
 	for (const auto &name : vCollliderName)
 	{
-		this->addCollider(name);
+		this->addColliableName(name);
 	}
 }
 #endif
 
-void e2d::Node::removeCollider(String collliderName)
+void e2d::Node::removeColliableName(String collliderName)
 {
 	unsigned int hash = collliderName.getHashCode();
 	m_vColliders.erase(hash);
@@ -887,10 +887,10 @@ std::vector<e2d::Action*> e2d::Node::getActions(String strActionName)
 bool e2d::Node::isPointIn(Point point) const
 {
 	BOOL ret = 0;
-	// 如果存在形状，用形状判断
-	if (m_pShape)
+	// 如果存在碰撞体，用碰撞体判断
+	if (m_pCollider)
 	{
-		m_pShape->getD2dGeometry()->FillContainsPoint(
+		m_pCollider->getD2dGeometry()->FillContainsPoint(
 			D2D1::Point2F(
 				static_cast<float>(point.x),
 				static_cast<float>(point.y)),
@@ -900,13 +900,13 @@ bool e2d::Node::isPointIn(Point point) const
 	}
 	else
 	{
-		// 为节点创建一个临时形状
+		// 为节点创建一个临时碰撞体
 		ID2D1RectangleGeometry * rect;
 		Renderer::getID2D1Factory()->CreateRectangleGeometry(
 			D2D1::RectF(0, 0, m_fWidth, m_fHeight),
 			&rect
 		);
-		// 判断点是否在形状内
+		// 判断点是否在碰撞体内
 		rect->FillContainsPoint(
 			D2D1::Point2F(
 				static_cast<float>(point.x),
@@ -914,7 +914,7 @@ bool e2d::Node::isPointIn(Point point) const
 			m_MatriFinal,
 			&ret
 		);
-		// 删除临时创建的形状
+		// 删除临时创建的碰撞体
 		SafeReleaseInterface(&rect);
 	}
 
@@ -933,10 +933,10 @@ bool e2d::Node::isPointIn(Point point) const
 
 bool e2d::Node::isIntersectWith(const Node * pNode) const
 {
-	// 如果存在形状，用形状判断
-	if (this->m_pShape && pNode->m_pShape)
+	// 如果存在碰撞体，用碰撞体判断
+	if (this->m_pCollider && pNode->m_pCollider)
 	{
-		int relation = this->m_pShape->getRelationWith(pNode->m_pShape);
+		int relation = this->m_pCollider->getRelationWith(pNode->m_pCollider);
 		if ((relation != Relation::UNKNOWN) && 
 			(relation != Relation::DISJOINT))
 		{
@@ -945,10 +945,10 @@ bool e2d::Node::isIntersectWith(const Node * pNode) const
 	}
 	else
 	{
-		// 为节点创建一个临时形状
+		// 为节点创建一个临时碰撞体
 		ID2D1RectangleGeometry * pRect1;
 		ID2D1RectangleGeometry * pRect2;
-		ID2D1TransformedGeometry * pShape;
+		ID2D1TransformedGeometry * pCollider;
 		D2D1_GEOMETRY_RELATION relation;
 
 		// 根据自身大小位置创建矩形
@@ -960,7 +960,7 @@ bool e2d::Node::isIntersectWith(const Node * pNode) const
 		Renderer::getID2D1Factory()->CreateTransformedGeometry(
 			pRect1,
 			m_MatriFinal,
-			&pShape
+			&pCollider
 		);
 		// 根据相比较节点的大小位置创建矩形
 		Renderer::getID2D1Factory()->CreateRectangleGeometry(
@@ -968,15 +968,15 @@ bool e2d::Node::isIntersectWith(const Node * pNode) const
 			&pRect2
 		);
 		// 获取相交状态
-		pShape->CompareWithGeometry(
+		pCollider->CompareWithGeometry(
 			pRect2,
 			pNode->m_MatriFinal,
 			&relation
 		);
-		// 删除临时创建的形状
+		// 删除临时创建的碰撞体
 		SafeReleaseInterface(&pRect1);
 		SafeReleaseInterface(&pRect2);
-		SafeReleaseInterface(&pShape);
+		SafeReleaseInterface(&pCollider);
 		if ((relation != D2D1_GEOMETRY_RELATION_UNKNOWN) &&
 			(relation != D2D1_GEOMETRY_RELATION_DISJOINT))
 		{
@@ -1009,9 +1009,9 @@ void e2d::Node::setDefaultPiovt(double defaultPiovtX, double defaultPiovtY)
 	s_fDefaultPiovtY = min(max(static_cast<float>(defaultPiovtY), 0), 1);
 }
 
-void e2d::Node::setDefaultShapeEnable(bool bEnable)
+void e2d::Node::setDefaultColliderEnable(bool bEnable)
 {
-	s_fDefaultShapeEnabled = bEnable;
+	s_fDefaultColliderEnabled = bEnable;
 }
 
 void e2d::Node::resumeAllActions()
