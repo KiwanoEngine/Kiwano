@@ -22,8 +22,14 @@
     <Filter Include="Transition">
       <UniqueIdentifier>{6c760a81-9bc8-4fb0-a145-8e119b783365}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shape">
-      <UniqueIdentifier>{508b39c8-a430-45c3-9405-364fbc281220}</UniqueIdentifier>
+    <Filter Include="Collider">
+      <UniqueIdentifier>{4c1db04d-1ba5-4313-924e-c58c35265eed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Node\Shape">
+      <UniqueIdentifier>{fe2c1cba-f77d-4a33-bc8a-4f40ecd9d618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tool\Listener">
+      <UniqueIdentifier>{72484ebf-d464-4f37-ad9b-340b378f9701}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,22 +117,7 @@
     <ClCompile Include="..\..\core\Common\String.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Shape\ShapeBase.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Shape\ShapeCircle.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Shape\ShapeEllipse.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Shape\ShapeRectangle.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Manager\CollisionManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Manager\InputManager.cpp">
@@ -162,16 +153,7 @@
     <ClCompile Include="..\..\core\Node\Text.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\CollisionListener.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Tool\Data.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Tool\InputListener.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Listener.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Tool\Music.cpp">
@@ -198,17 +180,57 @@
     <ClCompile Include="..\..\core\Transition\TransitionMove.cpp">
       <Filter>Transition</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Manager\ColliderManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Collider\Collider.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Collider\ColliderCircle.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Collider\ColliderEllipse.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Collider\ColliderRect.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Shape\Circle.cpp">
+      <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Shape\Ellipse.cpp">
+      <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Shape\Rect.cpp">
+      <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Shape\RoundRect.cpp">
+      <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Shape\Shape.cpp">
+      <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Listener\CollisionListener.cpp">
+      <Filter>Tool\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Listener\InputListener.cpp">
+      <Filter>Tool\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Listener\Listener.cpp">
+      <Filter>Tool\Listener</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\core\eactions.h" />
+    <ClInclude Include="..\..\core\eaction.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\ebase.h" />
+    <ClInclude Include="..\..\core\ecollider.h" />
     <ClInclude Include="..\..\core\ecommon.h" />
     <ClInclude Include="..\..\core\emacros.h" />
-    <ClInclude Include="..\..\core\emanagers.h" />
-    <ClInclude Include="..\..\core\enodes.h" />
+    <ClInclude Include="..\..\core\emanager.h" />
+    <ClInclude Include="..\..\core\enode.h" />
     <ClInclude Include="..\..\core\eshape.h" />
-    <ClInclude Include="..\..\core\etools.h" />
-    <ClInclude Include="..\..\core\etransitions.h" />
+    <ClInclude Include="..\..\core\etool.h" />
+    <ClInclude Include="..\..\core\etransition.h" />
   </ItemGroup>
 </Project>

@@ -75,7 +75,7 @@ struct Size
 
 
 // ×Ö·û´®
-class String final
+class String
 {
 public:
 	String();

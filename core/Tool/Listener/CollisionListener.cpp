@@ -1,5 +1,5 @@
-#include "..\etool.h"
-#include "..\emanager.h"
+#include "..\..\etool.h"
+#include "..\..\emanager.h"
 
 e2d::CollisionListener::CollisionListener()
 	: Listener()

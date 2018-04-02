@@ -18,7 +18,7 @@ class InputListener;
 class CollisionListener;
 
 // 对象管理器
-class ObjectManager final
+class ObjectManager
 {
 	friend Game;
 
@@ -41,7 +41,7 @@ private:
 
 
 // 场景管理器
-class SceneManager final
+class SceneManager
 {
 	friend Game;
 	friend Renderer;
@@ -87,7 +87,7 @@ private:
 
 
 // 定时器管理器
-class TimerManager final
+class TimerManager
 {
 	friend Game;
 	friend Node;
@@ -150,7 +150,7 @@ private:
 
 
 // 动作管理器
-class ActionManager final
+class ActionManager
 {
 	friend Game;
 	friend Node;
@@ -235,7 +235,7 @@ private:
 
 
 // 音乐管理工具
-class MusicManager final
+class MusicManager
 {
 	friend Game;
 
@@ -305,7 +305,7 @@ private:
 
 
 // 键盘和鼠标消息管理器
-class InputManager final
+class InputManager
 {
 	friend Input;
 	friend InputListener;
@@ -361,7 +361,7 @@ private:
 
 
 // 碰撞管理器
-class ColliderManager final
+class ColliderManager
 {
 	friend Node;
 	friend Collider;

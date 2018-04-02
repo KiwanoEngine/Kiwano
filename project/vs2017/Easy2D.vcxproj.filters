@@ -28,6 +28,9 @@
     <Filter Include="Node\Shape">
       <UniqueIdentifier>{eb72b49a-5b2f-4fc0-9ad2-8f5e02efac6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tool\Listener">
+      <UniqueIdentifier>{d3968182-2399-40d4-8e39-accb4711018c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Base\Input.cpp">
@@ -171,17 +174,8 @@
     <ClCompile Include="..\..\core\Tool\Path.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\InputListener.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Tool\CollisionListener.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\InputManager.cpp">
       <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Listener.cpp">
-      <Filter>Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Action\ActionFunc.cpp">
       <Filter>Action</Filter>
@@ -215,6 +209,15 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Node\Shape\Ellipse.cpp">
       <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Listener\CollisionListener.cpp">
+      <Filter>Tool\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Listener\InputListener.cpp">
+      <Filter>Tool\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Listener\Listener.cpp">
+      <Filter>Tool\Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

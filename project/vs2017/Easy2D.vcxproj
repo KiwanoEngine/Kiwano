@@ -240,10 +240,10 @@
     <ClCompile Include="..\..\core\Node\Shape\Shape.cpp" />
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />
     <ClCompile Include="..\..\core\Node\Text.cpp" />
-    <ClCompile Include="..\..\core\Tool\CollisionListener.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
-    <ClCompile Include="..\..\core\Tool\InputListener.cpp" />
-    <ClCompile Include="..\..\core\Tool\Listener.cpp" />
+    <ClCompile Include="..\..\core\Tool\Listener\CollisionListener.cpp" />
+    <ClCompile Include="..\..\core\Tool\Listener\InputListener.cpp" />
+    <ClCompile Include="..\..\core\Tool\Listener\Listener.cpp" />
     <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
     <ClCompile Include="..\..\core\Tool\Random.cpp" />
