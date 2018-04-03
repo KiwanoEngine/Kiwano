@@ -52,14 +52,10 @@ void e2d::Collider::_render()
 {
 	if (m_pTransformedGeometry && m_bEnable)
 	{
+		// 获取纯色画刷
 		ID2D1SolidColorBrush * pBrush = Renderer::getSolidColorBrush();
-		// 创建画刷
-		Renderer::getRenderTarget()->CreateSolidColorBrush(
-			D2D1::ColorF(
-				m_nColor,
-				m_fOpacity),
-			&pBrush
-		);
+		// 设置画刷颜色和透明度
+		pBrush->SetColor(D2D1::ColorF(m_nColor, m_fOpacity));
 		// 绘制几何碰撞体
 		Renderer::getRenderTarget()->DrawGeometry(m_pTransformedGeometry, pBrush);
 	}
