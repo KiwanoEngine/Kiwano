@@ -487,7 +487,7 @@ public:
 		String imageFileName
 	);
 
-	// 从文件图片创建精灵并裁剪
+	// 创建精灵并裁剪图片
 	Sprite(
 		String imageFileName,
 		double x,
@@ -508,8 +508,8 @@ public:
 		Image * image
 	);
 
-	// 裁剪图片
-	virtual void clip(
+	// 将图片裁剪为矩形
+	virtual void crop(
 		double x,
 		double y,
 		double width,

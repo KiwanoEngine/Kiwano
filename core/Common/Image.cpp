@@ -6,10 +6,10 @@ static std::map<size_t, ID2D1Bitmap*> s_mBitmapsFromFile;
 
 e2d::Image::Image()
 	: m_pBitmap(nullptr)
-	, m_fSourceClipX(0)
-	, m_fSourceClipY(0)
-	, m_fSourceClipWidth(0)
-	, m_fSourceClipHeight(0)
+	, m_fSourceCropX(0)
+	, m_fSourceCropY(0)
+	, m_fSourceCropWidth(0)
+	, m_fSourceCropHeight(0)
 {
 }
 
@@ -18,10 +18,10 @@ e2d::Image::Image(String strFileName)
 	this->open(strFileName);
 }
 
-e2d::Image::Image(String strFileName, double nClipX, double nClipY, double nClipWidth, double nClipHeight)
+e2d::Image::Image(String strFileName, double nCropX, double nCropY, double nCropWidth, double nCropHeight)
 {
 	this->open(strFileName);
-	this->clip(nClipX, nClipY, nClipWidth, nClipHeight);
+	this->crop(nCropX, nCropY, nCropWidth, nCropHeight);
 }
 
 e2d::Image::~Image()
@@ -42,35 +42,35 @@ void e2d::Image::open(String strFilePath)
 	}
 
 	m_pBitmap = s_mBitmapsFromFile.at(strFilePath.getHashCode());
-	m_fSourceClipX = m_fSourceClipY = 0;
-	m_fSourceClipWidth = m_pBitmap->GetSize().width;
-	m_fSourceClipHeight = m_pBitmap->GetSize().height;
+	m_fSourceCropX = m_fSourceCropY = 0;
+	m_fSourceCropWidth = m_pBitmap->GetSize().width;
+	m_fSourceCropHeight = m_pBitmap->GetSize().height;
 }
 
-void e2d::Image::clip(double x, double y, double width, double height)
+void e2d::Image::crop(double x, double y, double width, double height)
 {
 	if (m_pBitmap)
 	{
-		m_fSourceClipX = min(max(x, 0), this->getSourceWidth());
-		m_fSourceClipY = min(max(y, 0), this->getSourceHeight());
-		m_fSourceClipWidth = min(max(width, 0), this->getSourceWidth() - m_fSourceClipX);
-		m_fSourceClipHeight = min(max(height, 0), this->getSourceHeight() - m_fSourceClipY);
+		m_fSourceCropX = min(max(x, 0), this->getSourceWidth());
+		m_fSourceCropY = min(max(y, 0), this->getSourceHeight());
+		m_fSourceCropWidth = min(max(width, 0), this->getSourceWidth() - m_fSourceCropX);
+		m_fSourceCropHeight = min(max(height, 0), this->getSourceHeight() - m_fSourceCropY);
 	}
 }
 
 double e2d::Image::getWidth() const
 {
-	return m_fSourceClipWidth;
+	return m_fSourceCropWidth;
 }
 
 double e2d::Image::getHeight() const
 {
-	return m_fSourceClipHeight;
+	return m_fSourceCropHeight;
 }
 
 e2d::Size e2d::Image::getSize() const
 {
-	return Size(m_fSourceClipWidth, m_fSourceClipHeight);
+	return Size(m_fSourceCropWidth, m_fSourceCropHeight);
 }
 
 double e2d::Image::getSourceWidth() const
@@ -109,19 +109,19 @@ e2d::Size e2d::Image::getSourceSize() const
 	}
 }
 
-double e2d::Image::getClipX() const
+double e2d::Image::getCropX() const
 {
-	return m_fSourceClipX;
+	return m_fSourceCropX;
 }
 
-double e2d::Image::getClipY() const
+double e2d::Image::getCropY() const
 {
-	return m_fSourceClipY;
+	return m_fSourceCropY;
 }
 
-e2d::Point e2d::Image::getClipPos() const
+e2d::Point e2d::Image::getCropPos() const
 {
-	return Point(m_fSourceClipX, m_fSourceClipY);
+	return Point(m_fSourceCropX, m_fSourceCropY);
 }
 
 bool e2d::Image::preload(String fileName)

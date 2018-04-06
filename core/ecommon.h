@@ -490,11 +490,11 @@ public:
 
 	// 从本地文件中读取资源
 	Image(
-		String strFilePath,/* 图片文件路径 */
-		double nClipX,		/* 裁剪位置 X 坐标 */
-		double nClipY,		/* 裁剪位置 Y 坐标 */
-		double nClipWidth,	/* 裁剪宽度 */
-		double nClipHeight	/* 裁剪高度 */
+		String strFilePath,	/* 图片文件路径 */
+		double nCropX,		/* 裁剪位置 X 坐标 */
+		double nCropY,		/* 裁剪位置 Y 坐标 */
+		double nCropWidth,	/* 裁剪宽度 */
+		double nCropHeight	/* 裁剪高度 */
 	);
 
 	virtual ~Image();
@@ -504,12 +504,12 @@ public:
 		String strFilePath
 	);
 
-	// 裁剪图片
-	void clip(
-		double nClipX,		/* 裁剪位置 X 坐标 */
-		double nClipY,		/* 裁剪位置 Y 坐标 */
-		double nClipWidth,	/* 裁剪宽度 */
-		double nClipHeight	/* 裁剪高度 */
+	// 将图片裁剪为矩形
+	void crop(
+		double nCropX,		/* 裁剪位置 X 坐标 */
+		double nCropY,		/* 裁剪位置 Y 坐标 */
+		double nCropWidth,	/* 裁剪宽度 */
+		double nCropHeight	/* 裁剪高度 */
 	);
 
 	// 获取宽度
@@ -531,13 +531,13 @@ public:
 	virtual Size getSourceSize() const;
 	
 	// 获取裁剪位置 X 坐标
-	virtual double getClipX() const;
+	virtual double getCropX() const;
 
 	// 获取裁剪位置 Y 坐标
-	virtual double getClipY() const;
+	virtual double getCropY() const;
 
 	// 获取裁剪位置
-	virtual Point getClipPos() const;
+	virtual Point getCropPos() const;
 
 	// 获取 ID2D1Bitmap 对象
 	ID2D1Bitmap * getBitmap();
@@ -551,10 +551,10 @@ public:
 	static void clearCache();
 
 protected:
-	double	m_fSourceClipX;
-	double	m_fSourceClipY;
-	double	m_fSourceClipWidth;
-	double	m_fSourceClipHeight;
+	double	m_fSourceCropX;
+	double	m_fSourceCropY;
+	double	m_fSourceCropWidth;
+	double	m_fSourceCropHeight;
 	ID2D1Bitmap * m_pBitmap;
 };
 

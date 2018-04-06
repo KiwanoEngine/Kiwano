@@ -105,15 +105,15 @@ public:
 	);
 
 protected:
-	String			m_sName;
-	bool			m_bRunning;
-	bool			m_bAtOnce;
-	bool			m_bAutoRelease;
-	bool			m_bClear;
-	int				m_nRunTimes;
-	int				m_nUpdateTimes;
-	double			m_fInterval;
-	double			m_fLast;
+	String		m_sName;
+	bool		m_bRunning;
+	bool		m_bAtOnce;
+	bool		m_bAutoRelease;
+	bool		m_bClear;
+	int			m_nRunTimes;
+	int			m_nUpdateTimes;
+	double		m_fInterval;
+	double		m_fLast;
 	Function	m_Callback;
 };
 

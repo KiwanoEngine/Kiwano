@@ -22,7 +22,7 @@ e2d::Sprite::Sprite(String imageFileName, double x, double y, double width, doub
 	: m_pImage(nullptr)
 {
 	open(imageFileName);
-	clip(x, y, width, height);
+	crop(x, y, width, height);
 }
 
 e2d::Sprite::~Sprite()
@@ -47,12 +47,12 @@ void e2d::Sprite::open(String imageFileName)
 	open(new Image(imageFileName));
 }
 
-void e2d::Sprite::clip(double x, double y, double width, double height)
+void e2d::Sprite::crop(double x, double y, double width, double height)
 {
-	m_pImage->clip(x, y, width, height);
+	m_pImage->crop(x, y, width, height);
 	Node::setSize(
-		min(max(width, 0), m_pImage->getSourceWidth() - m_pImage->getClipX()),
-		min(max(height, 0), m_pImage->getSourceHeight() - m_pImage->getClipY())
+		min(max(width, 0), m_pImage->getSourceWidth() - m_pImage->getCropX()),
+		min(max(height, 0), m_pImage->getSourceHeight() - m_pImage->getCropY())
 	);
 }
 
@@ -66,8 +66,8 @@ void e2d::Sprite::onRender()
 	if (m_pImage && m_pImage->getBitmap())
 	{
 		// ªÒ»°Õº∆¨≤√ºÙŒª÷√
-		float fClipX = static_cast<float>(m_pImage->getClipX());
-		float fClipY = static_cast<float>(m_pImage->getClipY());
+		float fCropX = static_cast<float>(m_pImage->getCropX());
+		float fCropY = static_cast<float>(m_pImage->getCropY());
 		// ‰÷»æÕº∆¨
 		Renderer::getRenderTarget()->DrawBitmap(
 			m_pImage->getBitmap(),
@@ -75,10 +75,10 @@ void e2d::Sprite::onRender()
 			m_fDisplayOpacity,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			D2D1::RectF(
-				fClipX,
-				fClipY,
-				fClipX + m_fWidth,
-				fClipY + m_fHeight
+				fCropX,
+				fCropY,
+				fCropX + m_fWidth,
+				fCropY + m_fHeight
 			)
 		);
 	}
