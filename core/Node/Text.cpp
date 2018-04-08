@@ -99,6 +99,13 @@ UINT32 e2d::Text::getColor() const
 	return m_Font.color;
 }
 
+int e2d::Text::getLineCount() const
+{
+	DWRITE_TEXT_METRICS metrics;
+	m_pDWriteTextLayout->GetMetrics(&metrics);
+	return static_cast<int>(metrics.lineCount);
+}
+
 bool e2d::Text::isItalic() const
 {
 	return m_Font.italic;

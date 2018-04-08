@@ -577,6 +577,9 @@ public:
 	// 获取文字颜色
 	UINT32 getColor() const;
 
+	// 获取文本显示行数
+	int getLineCount() const;
+
 	// 是否是斜体
 	bool isItalic() const;
 
