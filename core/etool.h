@@ -19,6 +19,9 @@ public:
 	static inline T range(T min, T max) { return e2d::Random::randomInt(min, max); }
 
 	// 取得浮点数范围内的一个随机数
+	static inline double range(float min, float max) { return e2d::Random::randomReal(min, max); }
+
+	// 取得浮点数范围内的一个随机数
 	static inline double range(double min, double max) { return e2d::Random::randomReal(min, max); }
 
 	// 取得整型范围内的一个随机数

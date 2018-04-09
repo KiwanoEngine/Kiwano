@@ -101,9 +101,16 @@ UINT32 e2d::Text::getColor() const
 
 int e2d::Text::getLineCount() const
 {
-	DWRITE_TEXT_METRICS metrics;
-	m_pDWriteTextLayout->GetMetrics(&metrics);
-	return static_cast<int>(metrics.lineCount);
+	if (m_pDWriteTextLayout)
+	{
+		DWRITE_TEXT_METRICS metrics;
+		m_pDWriteTextLayout->GetMetrics(&metrics);
+		return static_cast<int>(metrics.lineCount);
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 bool e2d::Text::isItalic() const
