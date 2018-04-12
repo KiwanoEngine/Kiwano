@@ -8,11 +8,11 @@ static bool s_bEndGame = false;
 static bool s_bPaused = false;
 // 是否进行过初始化
 static bool s_bInitialized = false;
-// AppName
-static e2d::String s_sAppName;
+// 游戏名称
+static e2d::String s_sGameName;
 
 
-bool e2d::Game::init(String sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID, String sAppname)
+bool e2d::Game::init(String sGameName)
 {
 	if (s_bInitialized)
 	{
@@ -25,9 +25,6 @@ bool e2d::Game::init(String sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIcon
 		// 初始化 COM 组件
 		CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
-		// 设置 AppName
-		s_sAppName = sAppname;
-
 		// 创建设备无关资源
 		if (!Renderer::__createDeviceIndependentResources())
 		{
@@ -36,7 +33,7 @@ bool e2d::Game::init(String sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIcon
 		}
 
 		// 初始化窗口
-		if (!Window::__init(sTitle, nWidth, nHeight, pIconID))
+		if (!Window::__init())
 		{
 			WARN_IF(true, "Window::__init Failed!");
 			break;
@@ -62,9 +59,8 @@ bool e2d::Game::init(String sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIcon
 			WARN_IF(true, "MusicManager::__init Failed!");
 			break;
 		}
-
-		// 重设 Client 大小
-		Window::setSize(nWidth, nHeight);
+		// 保存游戏名称
+		s_sGameName = sGameName;
 		// 标志初始化成功
 		s_bInitialized = true;
 
@@ -176,7 +172,28 @@ void e2d::Game::uninit()
 	s_bInitialized = false;
 }
 
-e2d::String e2d::Game::getAppName()
+bool e2d::Game::createMutex(String sMutexName)
 {
-	return s_sAppName;
+	// 创建进程互斥体
+	HANDLE m_hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + sMutexName);
+
+	if (m_hMutex == nullptr)
+	{
+		WARN_IF(true, "CreateMutex Failed!");
+		return true;
+	}
+
+	// 如果程序已经存在并且正在运行
+	if (::GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		// 关闭进程互斥体
+		::CloseHandle(m_hMutex);
+		return false;
+	}
+	return true;
+}
+
+e2d::String e2d::Game::getName()
+{
+	return String();
 }

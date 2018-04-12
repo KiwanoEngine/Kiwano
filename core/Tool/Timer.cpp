@@ -2,7 +2,7 @@
 #include "..\enode.h"
 #include "..\emanager.h"
 
-e2d::Timer::Timer(Function func, String name, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
+e2d::Timer::Timer(String name, Function func, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
 	: m_bRunning(false)
 	, m_nRunTimes(0)
 	, m_Callback(nullptr)
@@ -19,7 +19,6 @@ e2d::Timer::Timer(Function func, String name, double interval /* = 0 */, int upd
 	this->setInterval(interval);
 	m_bAutoRelease = autoRelease;
 	m_bAtOnce = atOnce;
-	TimerManager::__add(this);
 }
 
 bool e2d::Timer::isRunning() const

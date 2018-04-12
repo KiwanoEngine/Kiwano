@@ -9,13 +9,8 @@ static HWND s_HWnd = nullptr;
 static bool s_bShowConsole = false;
 
 
-bool e2d::Window::__init(const String& sTitle, UINT32 nWidth, UINT32 nHeight, LPCTSTR pIconID /*= nullptr*/)
+bool e2d::Window::__init()
 {
-	if (!Window::__initMutex(sTitle))
-	{
-		return false;
-	}
-
 	// 注册窗口类
 	WNDCLASSEX wcex = { 0 };
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -28,17 +23,7 @@ bool e2d::Window::__init(const String& sTitle, UINT32 nWidth, UINT32 nHeight, LP
 	wcex.lpszMenuName = NULL;
 	wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
 	wcex.lpszClassName = L"Easy2DApp";
-	// 设置程序图标
-	if (pIconID)
-	{
-		wcex.hIcon = (HICON)::LoadImage(
-			GetModuleHandle(NULL),
-			pIconID,
-			IMAGE_ICON,
-			0,
-			0,
-			LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
-	}
+	wcex.hIcon = NULL;
 
 	RegisterClassEx(&wcex);
 
@@ -49,8 +34,8 @@ bool e2d::Window::__init(const String& sTitle, UINT32 nWidth, UINT32 nHeight, LP
 	// 工厂将返回当前的系统 DPI，这个值也将用来创建窗口
 	Renderer::getID2D1Factory()->GetDesktopDpi(&dpiX, &dpiY);
 
-	nWidth = static_cast<UINT>(ceil(nWidth * dpiX / 96.f));
-	nHeight = static_cast<UINT>(ceil(nHeight * dpiY / 96.f));
+	UINT nWidth = static_cast<UINT>(ceil(640 * dpiX / 96.f));
+	UINT nHeight = static_cast<UINT>(ceil(480 * dpiY / 96.f));
 
 	// 获取屏幕分辨率
 	UINT screenWidth = static_cast<UINT>(::GetSystemMetrics(SM_CXSCREEN));
@@ -61,12 +46,22 @@ bool e2d::Window::__init(const String& sTitle, UINT32 nWidth, UINT32 nHeight, LP
 	nWidth = min(nWidth, screenWidth);
 	nHeight = min(nHeight, screenHeight);
 
+	// 计算窗口大小
+	DWORD dwStyle = WS_OVERLAPPEDWINDOW &~ WS_MAXIMIZEBOX;
+	RECT wr = { 0, 0, static_cast<LONG>(nWidth), static_cast<LONG>(nHeight) };
+	::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
+	// 获取新的宽高
+	nWidth = wr.right - wr.left;
+	nHeight = wr.bottom - wr.top;
+
 	// 创建窗口
-	s_HWnd = CreateWindow(
+	s_HWnd = ::CreateWindowEx(
+		NULL,
 		L"Easy2DApp",
-		sTitle,
-		WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,
-		0, 0, nWidth, nHeight,
+		L"Easy2D Game",
+		dwStyle,
+		(screenWidth - nWidth) / 2, (screenHeight - nHeight) / 2, 
+		nWidth, nHeight,
 		NULL,
 		NULL,
 		HINST_THISCOMPONENT,
@@ -95,51 +90,15 @@ bool e2d::Window::__init(const String& sTitle, UINT32 nWidth, UINT32 nHeight, LP
 	}
 	else
 	{
-		UnregisterClass(L"Easy2DApp", HINST_THISCOMPONENT);
+		::UnregisterClass(L"Easy2DApp", HINST_THISCOMPONENT);
 	}
 
 	if (FAILED(hr))
 	{
-		MessageBox(nullptr, L"Create Window Failed!", L"Error", MB_OK);
+		::MessageBox(nullptr, L"Create Window Failed!", L"Error", MB_OK);
 	}
 
 	return SUCCEEDED(hr);
-}
-
-bool e2d::Window::__initMutex(const String& sTitle)
-{
-	// 创建进程互斥体
-	HANDLE m_hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + sTitle);
-
-	if (m_hMutex == nullptr)
-	{
-		WARN_IF(true, "CreateMutex Failed!");
-		return true;
-	}
-
-	// 如果程序已经存在并且正在运行
-	if (::GetLastError() == ERROR_ALREADY_EXISTS)
-	{
-		// 获取窗口句柄
-		HWND hProgramWnd = ::FindWindow(L"Easy2DApp", sTitle);
-		if (hProgramWnd)
-		{
-			// 获取窗口显示状态
-			WINDOWPLACEMENT wpm;
-			::GetWindowPlacement(hProgramWnd, &wpm);
-			// 将运行的程序窗口还原成正常状态
-			wpm.showCmd = SW_SHOW;
-			::SetWindowPlacement(hProgramWnd, &wpm);
-			::SetWindowPos(hProgramWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-		}
-
-		// 关闭进程互斥体
-		CloseHandle(m_hMutex);
-		m_hMutex = nullptr;
-		return false;
-	}
-
-	return true;
 }
 
 void e2d::Window::__uninit()
@@ -150,8 +109,11 @@ void e2d::Window::__uninit()
 		::FreeConsole();
 	}
 	// 关闭窗口
-	DestroyWindow(s_HWnd);
-	s_HWnd = nullptr;
+	if (s_HWnd)
+	{
+		::DestroyWindow(s_HWnd);
+		s_HWnd = nullptr;
+	}
 }
 
 void e2d::Window::__poll()
@@ -167,18 +129,38 @@ void e2d::Window::__poll()
 
 double e2d::Window::getWidth()
 {
-	return Renderer::getRenderTarget()->GetSize().width;
+	if (s_HWnd)
+	{
+		// 获取客户区大小
+		tagRECT rcClient;
+		::GetClientRect(s_HWnd, &rcClient);
+		return rcClient.right - rcClient.left;
+	}
+	return 0;
 }
 
 double e2d::Window::getHeight()
 {
-	return Renderer::getRenderTarget()->GetSize().height;
+	if (s_HWnd)
+	{
+		// 获取客户区大小
+		tagRECT rcClient;
+		::GetClientRect(s_HWnd, &rcClient);
+		return rcClient.bottom - rcClient.top;
+	}
+	return 0;
 }
 
 e2d::Size e2d::Window::getSize()
 {
-	D2D1_SIZE_F size = Renderer::getRenderTarget()->GetSize();
-	return Size(size.width, size.height);
+	if (s_HWnd)
+	{
+		// 获取客户区大小
+		tagRECT rcClient;
+		::GetClientRect(s_HWnd, &rcClient);
+		return Size(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
+	}
+	return Size();
 }
 
 HWND e2d::Window::getHWnd()
@@ -188,18 +170,16 @@ HWND e2d::Window::getHWnd()
 
 void e2d::Window::setSize(UINT32 width, UINT32 height)
 {
+	// 计算窗口大小
+	DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX;
+	RECT wr = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
+	::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
+	// 获取新的宽高
+	width = wr.right - wr.left;
+	height = wr.bottom - wr.top;
 	// 获取屏幕分辨率
 	int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
 	int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
-	// 获取窗口大小（包含菜单栏）
-	tagRECT rcWindow;
-	::GetWindowRect(s_HWnd, &rcWindow);
-	// 获取客户区大小
-	tagRECT rcClient;
-	::GetClientRect(s_HWnd, &rcClient);
-	// 计算边框大小
-	width += (rcWindow.right - rcWindow.left) - (rcClient.right - rcClient.left);
-	height += (rcWindow.bottom - rcWindow.top) - (rcClient.bottom - rcClient.top);
 	// 修改窗口大小，并设置窗口在屏幕居中
 	::MoveWindow(s_HWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
 }
@@ -208,6 +188,16 @@ void e2d::Window::setTitle(String title)
 {
 	// 设置窗口标题
 	::SetWindowText(s_HWnd, title);
+}
+
+void e2d::Window::setIcon(LPCTSTR pIconID)
+{
+	
+	HINSTANCE hInstance = ::GetModuleHandle(NULL);
+	HICON hIcon = (HICON)::LoadImage(hInstance, pIconID, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+	// 设置窗口的图标
+	::SendMessage(s_HWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+	::SendMessage(s_HWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 }
 
 e2d::String e2d::Window::getTitle()
@@ -295,7 +285,8 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 		// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
 		// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-		Renderer::getRenderTarget()->Resize(D2D1::SizeU(width, height));
+		auto pRenderTarget = Renderer::getRenderTarget();
+		if (pRenderTarget) pRenderTarget->Resize(D2D1::SizeU(width, height));
 	}
 	break;
 

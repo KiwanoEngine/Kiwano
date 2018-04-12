@@ -14,34 +14,149 @@ class ColliderManager;
 class Random
 {
 public:
-	// 取得整型范围内的一个随机数
+	// 取得范围内的一个整型随机数
 	template<typename T>
-	static inline T range(T min, T max) { return e2d::Random::randomInt(min, max); }
-
-	// 取得浮点数范围内的一个随机数
-	static inline double range(float min, float max) { return e2d::Random::randomReal(min, max); }
-
-	// 取得浮点数范围内的一个随机数
-	static inline double range(double min, double max) { return e2d::Random::randomReal(min, max); }
-
-	// 取得整型范围内的一个随机数
-	template<typename T>
-	static T randomInt(T min, T max)
-	{
-		std::uniform_int_distribution<T> dist(min, max);
-		return dist(getEngine());
+	static inline T range(T min, T max) 
+	{ 
+		return e2d::Random::__randomInt(min, max); 
 	}
 
-	// 取得浮点数类型范围内的一个随机数
+	// 取得范围内的一个浮点数随机数
+	static inline double range(float min, float max) 
+	{ 
+		return e2d::Random::__randomReal(min, max); 
+	}
+
+	// 取得范围内的一个浮点数随机数
+	static inline double range(double min, double max) 
+	{ 
+		return e2d::Random::__randomReal(min, max); 
+	}
+
+private:
 	template<typename T>
-	static T randomReal(T min, T max)
+	static T __randomInt(T min, T max)
+	{
+		std::uniform_int_distribution<T> dist(min, max);
+		return dist(Random::__getEngine());
+	}
+
+	template<typename T>
+	static T __randomReal(T min, T max)
 	{
 		std::uniform_real_distribution<T> dist(min, max);
-		return dist(getEngine());
+		return dist(Random::__getEngine());
 	}
 
 	// 获取随机数产生器
-	static std::default_random_engine &getEngine();
+	static std::default_random_engine &__getEngine();
+};
+
+
+// 音乐播放器
+class Music :
+	public Object
+{
+	friend MusicManager;
+
+public:
+	Music();
+
+	Music(
+		String strFileName	/* 音乐文件路径 */
+	);
+
+	virtual ~Music();
+
+	// 打开音乐文件
+	bool open(
+		String strFileName	/* 音乐文件路径 */
+	);
+
+	// 播放
+	bool play(
+		int nLoopCount = 0	/* 重复播放次数，设置 -1 为循环播放 */
+	);
+
+	// 暂停
+	void pause();
+
+	// 继续
+	void resume();
+
+	// 停止
+	void stop();
+
+	// 关闭音乐文件
+	void close();
+
+	// 获取音乐播放状态
+	bool isPlaying() const;
+
+	// 获取音量
+	double getVolume() const;
+
+	// 获取频率比
+	double getFrequencyRatio() const;
+
+	// 设置音量
+	bool setVolume(
+		double fVolume			/* 音量范围为 -224 ~ 224，其中 0 是静音，1 是正常音量 */
+	);
+
+	// 设置频率比
+	bool setFrequencyRatio(
+		double fFrequencyRatio	/* 频率比范围为 1/1024.0f ~ 1024.0f，其中 1.0 为正常声调 */
+	);
+
+#if HIGHER_THAN_VS2010
+
+	// 获取 IXAudio2SourceVoice 对象
+	IXAudio2SourceVoice* getIXAudio2SourceVoice() const;
+
+protected:
+	bool _readMMIO();
+
+	bool _resetFile();
+
+	bool _read(
+		BYTE* pBuffer,
+		DWORD dwSizeToRead
+	);
+
+	bool _findMediaFileCch(
+		wchar_t* strDestPath,
+		int cchDest,
+		const wchar_t * strFilename
+	);
+
+protected:
+	bool m_bOpened;
+	mutable bool m_bPlaying;
+	DWORD m_dwSize;
+	CHAR* m_pResourceBuffer;
+	BYTE* m_pbWaveData;
+	HMMIO m_hmmio;
+	MMCKINFO m_ck;
+	MMCKINFO m_ckRiff;
+	WAVEFORMATEX* m_pwfx;
+	IXAudio2SourceVoice* m_pSourceVoice;
+
+#else
+
+protected:
+	void _sendCommand(int nCommand, DWORD_PTR param1 = 0, DWORD_PTR parma2 = 0);
+
+	static LRESULT WINAPI MusicProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+
+protected:
+	MCIDEVICEID m_dev;
+	HWND        m_wnd;
+	UINT		m_nMusicID;
+	bool        m_bPlaying;
+	int			m_nRepeatTimes;
+
+#endif
 };
 
 
@@ -53,8 +168,8 @@ class Timer :
 
 public:
 	Timer(
-		Function func = nullptr,	/* 定时器执行函数 */
-		String name = L"",			/* 定时器名称 */
+		String name = L"",			/* 任务名称 */
+		Function func = nullptr,	/* 执行函数 */
 		double interval = 0,		/* 时间间隔（秒） */
 		int times = -1,				/* 执行次数（设 -1 为永久执行） */
 		bool atOnce = false,		/* 是否立即执行 */
@@ -324,113 +439,6 @@ public:
 	static bool createFolder(
 		String strDirPath	/* 文件夹路径 */
 	);
-};
-
-
-// 音乐播放器
-class Music : 
-	public Object
-{
-	friend MusicManager;
-
-public:
-	Music();
-
-	Music(
-		String strFileName	/* 音乐文件路径 */
-	);
-
-	virtual ~Music();
-
-	// 打开音乐文件
-	bool open(
-		String strFileName	/* 音乐文件路径 */
-	);
-
-	// 播放
-	bool play(
-		int nLoopCount = 0	/* 重复播放次数，设置 -1 为循环播放 */
-	);
-
-	// 暂停
-	void pause();
-
-	// 继续
-	void resume();
-
-	// 停止
-	void stop();
-
-	// 关闭音乐文件
-	void close();
-
-	// 获取音乐播放状态
-	bool isPlaying() const;
-
-	// 获取音量
-	double getVolume() const;
-
-	// 获取频率比
-	double getFrequencyRatio() const;
-
-	// 设置音量
-	bool setVolume(
-		double fVolume			/* 音量范围为 -224 ~ 224，其中 0 是静音，1 是正常音量 */
-	);
-
-	// 设置频率比
-	bool setFrequencyRatio(
-		double fFrequencyRatio	/* 频率比范围为 1/1024.0f ~ 1024.0f，其中 1.0 为正常声调 */
-	);
-
-#if HIGHER_THAN_VS2010
-
-	// 获取 IXAudio2SourceVoice 对象
-	IXAudio2SourceVoice* getIXAudio2SourceVoice() const;
-
-protected:
-	bool _readMMIO();
-
-	bool _resetFile();
-
-	bool _read(
-		BYTE* pBuffer, 
-		DWORD dwSizeToRead
-	);
-
-	bool _findMediaFileCch(
-		wchar_t* strDestPath, 
-		int cchDest, 
-		const wchar_t * strFilename
-	);
-
-protected:
-	bool m_bOpened;
-	mutable bool m_bPlaying;
-	DWORD m_dwSize;
-	CHAR* m_pResourceBuffer;
-	BYTE* m_pbWaveData;
-	HMMIO m_hmmio;
-	MMCKINFO m_ck;
-	MMCKINFO m_ckRiff;
-	WAVEFORMATEX* m_pwfx;
-	IXAudio2SourceVoice* m_pSourceVoice;
-
-#else
-
-protected:
-	void _sendCommand(int nCommand, DWORD_PTR param1 = 0, DWORD_PTR parma2 = 0);
-
-	static LRESULT WINAPI MusicProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-
-protected:
-	MCIDEVICEID m_dev;
-	HWND        m_wnd;
-	UINT		m_nMusicID;
-	bool        m_bPlaying;
-	int			m_nRepeatTimes;
-
-#endif
 };
 
 }

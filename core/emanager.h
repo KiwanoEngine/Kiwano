@@ -94,8 +94,8 @@ class TimerManager
 	friend Timer;
 
 public:
-	// 等待一段时间后执行指定函数
-	static void start(
+	// 启动一个新任务：等待一段时间后执行指定函数
+	static Timer* start(
 		double timeOut,	/* 等待的时长（秒） */
 		Function func	/* 执行的函数 */
 	);
@@ -113,6 +113,11 @@ public:
 	// 删除具有相同名称的定时器
 	static void clear(
 		String name
+	);
+
+	// 添加定时器
+	static void add(
+		Timer * pTimer
 	);
 
 	// 获取名称相同的定时器
@@ -135,11 +140,6 @@ public:
 private:
 	// 更新定时器
 	static void __update();
-
-	// 添加一个定时器
-	static void __add(
-		Timer * pTimer
-	);
 
 	// 重置定时器状态
 	static void __resetAllTimers();
@@ -296,7 +296,7 @@ public:
 #endif
 
 private:
-	// 初始化 XAudio2
+	// 初始化音乐播放器
 	static bool __init();
 
 	// 回收相关资源

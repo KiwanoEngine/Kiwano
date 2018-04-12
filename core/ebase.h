@@ -14,11 +14,7 @@ class Game
 public:
 	// 初始化游戏
 	static bool init(
-		String sTitle,				/* 窗口标题 */
-		UINT32 nWidth = 640U,		/* 窗口宽度 */
-		UINT32 nHeight = 480U,		/* 窗口高度 */
-		LPCTSTR pIconID = nullptr,	/* 窗口图标 */
-		String sAppname = L""		/* AppName */
+		String sGameName = L"E2DGame" /* 游戏英文名称 */
 	);
 
 	// 启动游戏
@@ -39,8 +35,13 @@ public:
 	// 游戏是否暂停
 	static bool isPaused();
 
-	// 获取 AppName
-	static String getAppName();
+	// 创建进程互斥体
+	static bool createMutex(
+		String sMutexName	/* 互斥体名称 */
+	);
+
+	// 获取游戏名称
+	static String getName();
 };
 
 
@@ -50,6 +51,22 @@ class Window
 	friend Game;
 
 public:
+	// 修改窗口大小
+	static void setSize(
+		UINT32 nWidth,		/* 窗口宽度 */
+		UINT32 nHeight		/* 窗口高度 */
+	);
+
+	// 设置窗口标题
+	static void setTitle(
+		String sTitle		/* 窗口标题 */
+	);
+
+	// 设置窗口图标
+	static void setIcon(
+		LPCTSTR pIconID
+	);
+
 	// 获取窗口标题
 	static String getTitle();
 
@@ -65,17 +82,6 @@ public:
 	// 获取窗口句柄
 	static HWND getHWnd();
 
-	// 修改窗口大小
-	static void setSize(
-		UINT32 nWidth,
-		UINT32 nHeight
-	);
-
-	// 设置窗口标题
-	static void setTitle(
-		String sTitle
-	);
-
 	// 打开/隐藏控制台
 	static void showConsole(
 		bool bShow = true
@@ -88,17 +94,7 @@ public:
 
 private:
 	// 初始化窗口
-	static bool __init(
-		const String& sTitle,
-		UINT32 nWidth,
-		UINT32 nHeight,
-		LPCTSTR pIconID
-	);
-
-	// 创建进程互斥体
-	static bool __initMutex(
-		const String& sTitle
-	);
+	static bool __init();
 
 	// 重置窗口属性
 	static void __uninit();

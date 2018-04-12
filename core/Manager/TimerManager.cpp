@@ -28,12 +28,14 @@ void e2d::TimerManager::__update()
 	}
 }
 
-void e2d::TimerManager::start(double timeOut, Function func)
+e2d::Timer* e2d::TimerManager::start(double timeOut, Function func)
 {
-	(new Timer(func, L"", timeOut, 1, false, true))->start();
+	auto t = new (std::nothrow) Timer(L"", func, timeOut, 1, false, true);
+	t->start();
+	return t;
 }
 
-void e2d::TimerManager::__add(Timer * pTimer)
+void e2d::TimerManager::add(Timer * pTimer)
 {
 	WARN_IF(pTimer == nullptr, "Timer NULL pointer exception!");
 

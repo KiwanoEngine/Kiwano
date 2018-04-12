@@ -1,6 +1,6 @@
 #include "..\etool.h"
 
-static e2d::String s_sDefaultFileName = L"DefaultData.ini";
+static e2d::String s_sDataFileName = L"DefaultData.ini";
 
 void e2d::Data::saveInt(String key, int value, String field)
 {
@@ -53,12 +53,12 @@ void e2d::Data::setDataFileName(String fileName)
 {
 	if (!fileName.isEmpty())
 	{
-		s_sDefaultFileName.clear();
-		s_sDefaultFileName << fileName << L".ini";
+		s_sDataFileName.clear();
+		s_sDataFileName << fileName << L".ini";
 	}
 }
 
 e2d::String e2d::Data::getDataFilePath()
 {
-	return Path::getDefaultSavePath() + s_sDefaultFileName;
+	return Path::getDefaultSavePath() + s_sDataFileName;
 }

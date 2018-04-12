@@ -46,16 +46,16 @@ e2d::String e2d::Path::getTempPath()
 		return path;
 	}
 
-	// 获取 AppName
-	String sAppName = Game::getAppName();
-	if (!sAppName.isEmpty())
+	// 获取游戏名称
+	String sGameName = Game::getName();
+	if (!sGameName.isEmpty())
 	{
 		// 创建文件夹
-		if (!Path::createFolder(tempFilePath + sAppName + L"\\"))
+		if (!Path::createFolder(tempFilePath + sGameName + L"\\"))
 		{
 			return std::move(tempFilePath);
 		}
-		tempFilePath << sAppName << L"\\";
+		tempFilePath << sGameName << L"\\";
 	}
 	return std::move(tempFilePath);
 }
@@ -78,16 +78,16 @@ e2d::String e2d::Path::getDefaultSavePath()
 	}
 	path << L"\\Easy2DGameData";
 
-	// 获取 AppName
-	String sAppName = Game::getAppName();
-	if (!sAppName.isEmpty())
+	// 获取游戏名称
+	String sGameName = Game::getName();
+	if (!sGameName.isEmpty())
 	{
 		// 创建文件夹
-		if (!Path::createFolder(path + L"\\" + sAppName))
+		if (!Path::createFolder(path + L"\\" + sGameName))
 		{
 			return std::move(path);
 		}
-		path << L"\\" << sAppName;
+		path << L"\\" << sGameName;
 	}
 	path << L"\\";
 	
