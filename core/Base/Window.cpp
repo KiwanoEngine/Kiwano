@@ -285,8 +285,8 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 		// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
 		// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-		auto pRenderTarget = Renderer::getRenderTarget();
-		if (pRenderTarget) pRenderTarget->Resize(D2D1::SizeU(width, height));
+		auto pRT = Renderer::getRenderTarget();
+		if (pRT) pRT->Resize(D2D1::SizeU(width, height));
 	}
 	break;
 

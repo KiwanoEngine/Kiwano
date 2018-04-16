@@ -381,6 +381,20 @@ public:
 };
 
 
+// 方向
+class Direct
+{
+public:
+	enum : int
+	{
+		UP,			/* 上 */
+		DOWN,		/* 下 */
+		LEFT,		/* 左 */
+		RIGHT		/* 右 */
+	};
+};
+
+
 // 碰撞体交集关系
 class Relation
 {
@@ -561,12 +575,14 @@ protected:
 
 class Node;
 class SceneManager;
+class Transition;
 
 // 场景
 class Scene :
 	public Object
 {
 	friend SceneManager;
+	friend Transition;
 
 public:
 	Scene();

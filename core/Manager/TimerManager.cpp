@@ -32,6 +32,7 @@ e2d::Timer* e2d::TimerManager::start(double timeOut, Function func)
 {
 	auto t = new (std::nothrow) Timer(L"", func, timeOut, 1, false, true);
 	t->start();
+	TimerManager::add(t);
 	return t;
 }
 

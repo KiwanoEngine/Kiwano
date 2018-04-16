@@ -172,7 +172,7 @@ void e2d::Game::uninit()
 	s_bInitialized = false;
 }
 
-bool e2d::Game::createMutex(String sMutexName)
+bool e2d::Game::createMutex(String sMutexName, String sWindowTitle)
 {
 	// 创建进程互斥体
 	HANDLE m_hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + sMutexName);
@@ -188,6 +188,22 @@ bool e2d::Game::createMutex(String sMutexName)
 	{
 		// 关闭进程互斥体
 		::CloseHandle(m_hMutex);
+		// 打开指定窗口
+		if (!sWindowTitle.isEmpty())
+		{
+			// 获取窗口句柄
+			HWND hProgramWnd = ::FindWindow(L"Easy2DApp", sWindowTitle);
+			if (hProgramWnd)
+			{
+				// 获取窗口显示状态
+				WINDOWPLACEMENT wpm;
+				::GetWindowPlacement(hProgramWnd, &wpm);
+				// 将运行的程序窗口还原成正常状态
+				wpm.showCmd = SW_SHOW;
+				::SetWindowPlacement(hProgramWnd, &wpm);
+				::SetWindowPos(hProgramWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+			}
+		}
 		return false;
 	}
 	return true;

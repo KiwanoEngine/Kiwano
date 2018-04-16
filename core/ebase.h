@@ -37,7 +37,8 @@ public:
 
 	// 创建进程互斥体
 	static bool createMutex(
-		String sMutexName	/* 互斥体名称 */
+		String sMutexName,			/* 互斥体名称 */
+		String sWindowTitle = L""	/* 窗口标题 */
 	);
 
 	// 获取游戏名称
