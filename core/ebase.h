@@ -234,6 +234,11 @@ public:
 		UINT32 color
 	);
 
+	// 显示 FPS
+	static void showFps(
+		bool show = true
+	);
+
 	// 获取 ID2D1Factory 对象
 	static ID2D1Factory * getID2D1Factory();
 

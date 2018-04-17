@@ -17,6 +17,23 @@ e2d::TransitionFade::TransitionFade(double fadeOutDuration, double fadeInDuratio
 {
 }
 
+void e2d::TransitionFade::_init(Scene * prev, Scene * next)
+{
+	Transition::_init(prev, next);
+	if (m_pPrevScene)
+	{
+		m_bFadeOutTransioning = true;
+		m_fDuration = m_fFadeOutDuration;
+	}
+	else
+	{
+		m_bFadeOutTransioning = false;
+		m_fDuration = m_fFadeInDuration;
+	}
+	m_sPrevLayerParam.opacity = 1;
+	m_sNextLayerParam.opacity = 0;
+}
+
 void e2d::TransitionFade::_updateCustom()
 {
 	if (m_bFadeOutTransioning)
@@ -37,23 +54,6 @@ void e2d::TransitionFade::_updateCustom()
 			this->_stop();
 		}
 	}
-}
-
-void e2d::TransitionFade::_init(Scene * prev, Scene * next)
-{
-	Transition::_init(prev, next);
-	if (m_pPrevScene)
-	{
-		m_bFadeOutTransioning = true;
-		m_fDuration = m_fFadeOutDuration;
-	}
-	else
-	{
-		m_bFadeOutTransioning = false;
-		m_fDuration = m_fFadeInDuration;
-	}
-	m_sPrevLayerParam.opacity = 1;
-	m_sNextLayerParam.opacity = 0;
 }
 
 void e2d::TransitionFade::_reset()

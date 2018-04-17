@@ -6,6 +6,13 @@ e2d::TransitionEmerge::TransitionEmerge(double duration)
 {
 }
 
+void e2d::TransitionEmerge::_init(Scene * prev, Scene * next)
+{
+	Transition::_init(prev, next);
+	m_sPrevLayerParam.opacity = 1;
+	m_sNextLayerParam.opacity = 0;
+}
+
 void e2d::TransitionEmerge::_updateCustom()
 {
 	m_sPrevLayerParam.opacity = float(1 - m_fRateOfProgress);
@@ -15,13 +22,6 @@ void e2d::TransitionEmerge::_updateCustom()
 	{
 		this->_stop();
 	}
-}
-
-void e2d::TransitionEmerge::_init(Scene * prev, Scene * next)
-{
-	Transition::_init(prev, next);
-	m_sPrevLayerParam.opacity = 1;
-	m_sNextLayerParam.opacity = 0;
 }
 
 void e2d::TransitionEmerge::_reset()

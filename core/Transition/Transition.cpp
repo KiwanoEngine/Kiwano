@@ -1,5 +1,6 @@
 #include "..\ebase.h"
 #include "..\etransition.h"
+#include "..\enode.h"
 
 e2d::Transition::Transition(double duration)
 	: m_bEnd(false)
@@ -49,10 +50,8 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 	if (m_pPrevScene) m_pPrevScene->retain();
 	if (m_pNextScene) m_pNextScene->retain();
 
-	auto size = Window::getSize();
-	m_sPrevLayerParam = m_sNextLayerParam = D2D1::LayerParameters(
-		D2D1::RectF(0, 0, float(size.width), float(size.height))
-	);
+	m_WindowSize = Window::getSize();
+	m_sPrevLayerParam = m_sNextLayerParam = D2D1::LayerParameters();
 }
 
 void e2d::Transition::_update()
@@ -83,27 +82,45 @@ void e2d::Transition::_update()
 void e2d::Transition::_render()
 {
 	auto pRT = Renderer::getRenderTarget();
-
+	Size windowSize = Window::getSize();
 	if (m_pPrevScene)
 	{
+		Point rootPos = m_pPrevScene->getRoot()->getPos();
+		auto clipRect = D2D1::RectF(
+			float(max(rootPos.x, 0)),
+			float(max(rootPos.y, 0)),
+			float(min(rootPos.x + windowSize.width, windowSize.width)),
+			float(min(rootPos.y + windowSize.height, windowSize.height))
+		);
 		pRT->SetTransform(D2D1::Matrix3x2F::Identity());
+		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(m_sPrevLayerParam, m_pPrevLayer);
 
 		// äÖÈ¾³¡¾°
 		m_pPrevScene->_render();
 
 		pRT->PopLayer();
+		pRT->PopAxisAlignedClip();
 	}
 
 	if (m_pNextScene)
 	{
+		Point rootPos = m_pNextScene->getRoot()->getPos();
+		auto clipRect = D2D1::RectF(
+			float(max(rootPos.x, 0)),
+			float(max(rootPos.y, 0)),
+			float(min(rootPos.x + windowSize.width, windowSize.width)),
+			float(min(rootPos.y + windowSize.height, windowSize.height))
+		);
 		pRT->SetTransform(D2D1::Matrix3x2F::Identity());
+		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(m_sNextLayerParam, m_pNextLayer);
 
 		// äÖÈ¾³¡¾°
 		m_pNextScene->_render();
 
 		pRT->PopLayer();
+		pRT->PopAxisAlignedClip();
 	}
 }
 

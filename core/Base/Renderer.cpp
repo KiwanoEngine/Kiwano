@@ -1,5 +1,6 @@
 #include "..\ebase.h"
 #include "..\emanager.h"
+#include "..\enode.h"
 
 static ID2D1Factory * s_pDirect2dFactory = nullptr;
 static ID2D1HwndRenderTarget * s_pRenderTarget = nullptr;
@@ -7,6 +8,13 @@ static ID2D1SolidColorBrush * s_pSolidBrush = nullptr;
 static IWICImagingFactory * s_pIWICFactory = nullptr;
 static IDWriteFactory * s_pDWriteFactory = nullptr;
 static D2D1_COLOR_F s_nClearColor = D2D1::ColorF(D2D1::ColorF::Black);
+
+static bool s_bShowFps = false;
+static int s_nRenderTimes = 0;
+static double s_fLastRenderTime = 0;
+static e2d::String s_sFpsText = L"";
+static IDWriteTextFormat * s_pTextFormat = nullptr;
+
 
 
 bool e2d::Renderer::__createDeviceIndependentResources()
@@ -41,6 +49,21 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 			reinterpret_cast<IUnknown**>(&s_pDWriteFactory)
 		);
 		ASSERT(SUCCEEDED(hr), "Create IDWriteFactory Failed!");
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 创建文本格式化对象
+		hr = s_pDWriteFactory->CreateTextFormat(
+			L"",
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			18,
+			L"",
+			&s_pTextFormat
+		);
 	}
 
 	return SUCCEEDED(hr);
@@ -119,6 +142,27 @@ void e2d::Renderer::__render()
 	// 渲染场景
 	SceneManager::__render();
 
+	// 渲染 FPS
+	if (s_bShowFps)
+	{
+		s_nRenderTimes++;
+
+		double fDelay = Time::getTotalTime() - s_fLastRenderTime;
+		if (fDelay >= 0.3)
+		{
+			s_sFpsText = String::format(L"FPS: %.1lf", (1 / fDelay) * s_nRenderTimes);
+			s_fLastRenderTime = Time::getTotalTime();
+			s_nRenderTimes = 0;
+		}
+
+		D2D1_SIZE_F renderTargetSize = s_pRenderTarget->GetSize();
+		D2D1_RECT_F rect = D2D1::RectF(0, 0, renderTargetSize.width, renderTargetSize.height);
+
+		s_pSolidBrush->SetColor(D2D1::ColorF(D2D1::ColorF::White));
+		s_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+		s_pRenderTarget->DrawTextW(s_sFpsText, (UINT32)s_sFpsText.getLength(), s_pTextFormat, rect, s_pSolidBrush);
+	}
+
 	// 终止渲染
 	hr = s_pRenderTarget->EndDraw();
 
@@ -142,6 +186,11 @@ void e2d::Renderer::__render()
 void e2d::Renderer::setBackgroundColor(UINT32 color)
 {
 	s_nClearColor = D2D1::ColorF(color);
+}
+
+void e2d::Renderer::showFps(bool show)
+{
+	s_bShowFps = show;
 }
 
 ID2D1Factory * e2d::Renderer::getID2D1Factory()

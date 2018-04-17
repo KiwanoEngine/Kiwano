@@ -245,7 +245,7 @@ void e2d::Text::_createFormat()
 		m_Font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
 		static_cast<float>(m_Font.size),
-		L"zh-cn",
+		L"",
 		&m_pDWriteTextFormat
 	);
 

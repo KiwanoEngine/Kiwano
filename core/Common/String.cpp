@@ -90,7 +90,7 @@ e2d::String e2d::String::parse(double value)
 	return std::move(tmp);
 }
 
-e2d::String & e2d::String::format(const char * format, ...)
+e2d::String e2d::String::format(const char * format, ...)
 {
 	std::string tmp;
 
@@ -108,11 +108,11 @@ e2d::String & e2d::String::format(const char * format, ...)
 
 	va_end(marker);
 
-	m_str = static_cast<wchar_t*>(_bstr_t(tmp.c_str()));
-	return (*this);
+	String str = tmp.c_str();
+	return std::move(str);
 }
 
-e2d::String & e2d::String::format(const wchar_t * format, ...)
+e2d::String e2d::String::format(const wchar_t * format, ...)
 {
 	std::wstring tmp;
 
@@ -130,8 +130,8 @@ e2d::String & e2d::String::format(const wchar_t * format, ...)
 
 	va_end(marker);
 
-	m_str = tmp.c_str();
-	return (*this);
+	String str = tmp.c_str();
+	return std::move(str);
 }
 
 e2d::String & e2d::String::operator=(const String &str)

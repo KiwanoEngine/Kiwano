@@ -47,6 +47,7 @@ protected:
 	double m_fLast;
 	double m_fDuration;
 	double m_fRateOfProgress;
+	Size m_WindowSize;
 	Scene * m_pPrevScene;
 	Scene * m_pNextScene;
 	ID2D1Layer * m_pPrevLayer;
@@ -136,7 +137,6 @@ protected:
 	int m_Direct;
 	Vector m_Vector;
 	Point m_NextPos;
-	Size m_WindowSize;
 };
 
 }

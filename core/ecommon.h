@@ -142,8 +142,8 @@ public:
 	static String parse(double value);
 
 	// 格式化字符串
-	String& format(const char * format, ...);
-	String& format(const wchar_t * format, ...);
+	static String format(const char * format, ...);
+	static String format(const wchar_t * format, ...);
 
 	// 赋值运算符
 	String& operator= (const String &);

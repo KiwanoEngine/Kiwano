@@ -39,7 +39,7 @@ static milliseconds s_tExceptedInvertal;
 bool e2d::Time::__init()
 {
 	s_tStart = s_tLastUpdate = s_tFixedUpdate = s_tNow = steady_clock::now();
-	s_tExceptedInvertal = milliseconds(17);
+	s_tExceptedInvertal = milliseconds(15);
 	return true;
 }
 
@@ -107,7 +107,7 @@ bool e2d::Time::__init()
 	::QueryPerformanceFrequency(&s_tFreq);	// 获取时钟频率
 	::QueryPerformanceCounter(&s_tNow);		// 刷新当前时间
 	s_tStart = s_tLastUpdate = s_tFixedUpdate = s_tNow;
-	s_tExceptedInvertal = 17LL * s_tFreq.QuadPart / 1000LL;
+	s_tExceptedInvertal = 15LL * s_tFreq.QuadPart / 1000LL;
 	return true;
 }
 
