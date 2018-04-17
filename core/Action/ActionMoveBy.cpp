@@ -27,10 +27,7 @@ void e2d::ActionMoveBy::_update()
 	}
 
 	// ÒÆ¶¯½Úµã
-	m_pTarget->setPos(
-		m_BeginPos.x + m_MoveVec.x * m_fRateOfProgress,
-		m_BeginPos.y + m_MoveVec.y * m_fRateOfProgress
-	);
+	m_pTarget->setPos(m_BeginPos + m_MoveVec * m_fRateOfProgress);
 }
 
 e2d::ActionMoveBy * e2d::ActionMoveBy::clone() const
@@ -40,5 +37,5 @@ e2d::ActionMoveBy * e2d::ActionMoveBy::clone() const
 
 e2d::ActionMoveBy * e2d::ActionMoveBy::reverse() const
 {
-	return new ActionMoveBy(m_fDuration, Vector(-m_MoveVec.x, -m_MoveVec.y));
+	return new ActionMoveBy(m_fDuration, -m_MoveVec);
 }

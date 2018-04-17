@@ -43,10 +43,11 @@ struct Point
 
 	Point(double x, double y);
 
-	Point operator + (Point const & p);
-	Point operator - (Point const & p);
-	Point operator * (double const & value);
-	Point operator / (double const & value);
+	Point operator + (Point const & p) const;
+	Point operator - (Point const & p) const;
+	Point operator * (double const & value) const;
+	Point operator / (double const & value) const;
+	Point operator - () const;
 
 	operator e2d::Size() const;
 };
@@ -65,10 +66,11 @@ struct Size
 
 	Size(double width, double height);
 
-	Size operator + (Size const & size);
-	Size operator - (Size const & size);
-	Size operator * (double const & value);
-	Size operator / (double const & value);
+	Size operator + (Size const & size) const;
+	Size operator - (Size const & size) const;
+	Size operator * (double const & value) const;
+	Size operator / (double const & value) const;
+	Size operator - () const;
 
 	operator e2d::Point() const;
 };
