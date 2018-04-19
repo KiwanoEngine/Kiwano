@@ -18,7 +18,7 @@ public:
 	);
 
 	// 启动游戏
-	static int run();
+	static int start();
 
 	// 暂停游戏
 	static void pause();
@@ -30,7 +30,7 @@ public:
 	static void quit();
 
 	// 回收游戏资源
-	static void uninit();
+	static void destroy();
 
 	// 游戏是否暂停
 	static bool isPaused();

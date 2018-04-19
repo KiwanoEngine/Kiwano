@@ -315,7 +315,6 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		if (!pCurrentScene || pCurrentScene->onCloseWindow())
 		{
 			e2d::Game::quit();
-			DestroyWindow(hWnd);
 		}
 	}
 	result = 0;

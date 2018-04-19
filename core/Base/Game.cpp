@@ -69,7 +69,7 @@ bool e2d::Game::init(String sGameName)
 	return s_bInitialized;
 }
 
-int e2d::Game::run()
+int e2d::Game::start()
 {
 	if (!s_bInitialized)
 	{
@@ -146,7 +146,7 @@ void e2d::Game::quit()
 	s_bEndGame = true;	// 这个变量将控制游戏是否结束
 }
 
-void e2d::Game::uninit()
+void e2d::Game::destroy()
 {
 	// 删除所有场景
 	SceneManager::__uninit();
@@ -211,5 +211,5 @@ bool e2d::Game::createMutex(String sMutexName, String sWindowTitle)
 
 e2d::String e2d::Game::getName()
 {
-	return String();
+	return s_sGameName;
 }

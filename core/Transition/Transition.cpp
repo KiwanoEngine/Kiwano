@@ -82,15 +82,15 @@ void e2d::Transition::_update()
 void e2d::Transition::_render()
 {
 	auto pRT = Renderer::getRenderTarget();
-	Size windowSize = Window::getSize();
+
 	if (m_pPrevScene)
 	{
 		Point rootPos = m_pPrevScene->getRoot()->getPos();
 		auto clipRect = D2D1::RectF(
 			float(max(rootPos.x, 0)),
 			float(max(rootPos.y, 0)),
-			float(min(rootPos.x + windowSize.width, windowSize.width)),
-			float(min(rootPos.y + windowSize.height, windowSize.height))
+			float(min(rootPos.x + m_WindowSize.width, m_WindowSize.width)),
+			float(min(rootPos.y + m_WindowSize.height, m_WindowSize.height))
 		);
 		pRT->SetTransform(D2D1::Matrix3x2F::Identity());
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
@@ -109,8 +109,8 @@ void e2d::Transition::_render()
 		auto clipRect = D2D1::RectF(
 			float(max(rootPos.x, 0)),
 			float(max(rootPos.y, 0)),
-			float(min(rootPos.x + windowSize.width, windowSize.width)),
-			float(min(rootPos.y + windowSize.height, windowSize.height))
+			float(min(rootPos.x + m_WindowSize.width, m_WindowSize.width)),
+			float(min(rootPos.y + m_WindowSize.height, m_WindowSize.height))
 		);
 		pRT->SetTransform(D2D1::Matrix3x2F::Identity());
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
