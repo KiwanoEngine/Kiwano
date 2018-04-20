@@ -37,14 +37,13 @@ void e2d::ObjectManager::__update()
 	}
 }
 
-void e2d::ObjectManager::__uninit()
+void e2d::ObjectManager::__clear()
 {
-	//  Õ∑≈¡Ω±Èƒ⁄¥Ê
-	s_bNotifyed = true;
-	ObjectManager::__update();
-
-	s_bNotifyed = true;
-	ObjectManager::__update();
+	if (s_vObjectPool.size() != 0)
+	{
+		s_bNotifyed = true;
+		ObjectManager::__update();
+	}
 }
 
 void e2d::ObjectManager::add(e2d::Object * nptr)
@@ -56,7 +55,7 @@ void e2d::ObjectManager::add(e2d::Object * nptr)
 	}
 }
 
-void e2d::ObjectManager::clear()
+void e2d::ObjectManager::flush()
 {
 	s_bNotifyed = true;
 }

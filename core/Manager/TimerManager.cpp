@@ -28,12 +28,28 @@ void e2d::TimerManager::__update()
 	}
 }
 
+e2d::Timer * e2d::TimerManager::start(String name, Function func, double interval, int times, bool atOnce, bool autoRelease)
+{
+	auto pTimer = new (std::nothrow) Timer(name, func, interval, times, atOnce, autoRelease);
+	if (pTimer)
+	{
+		pTimer->retain();
+		pTimer->start();
+		s_vTimers.push_back(pTimer);
+	}
+	return pTimer;
+}
+
 e2d::Timer* e2d::TimerManager::start(double timeOut, Function func)
 {
-	auto t = new (std::nothrow) Timer(L"", func, timeOut, 1, false, true);
-	t->start();
-	TimerManager::add(t);
-	return t;
+	auto pTimer = new (std::nothrow) Timer(L"", func, timeOut, 1, false, true);
+	if (pTimer)
+	{
+		pTimer->retain();
+		pTimer->start();
+		s_vTimers.push_back(pTimer);
+	}
+	return pTimer;
 }
 
 void e2d::TimerManager::add(Timer * pTimer)

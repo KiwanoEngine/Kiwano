@@ -18,7 +18,9 @@ public:
 	);
 
 	// Æô¶¯ÓÎÏ·
-	static int start();
+	static int start(
+		bool bAutoRelease = true
+	);
 
 	// ÔİÍ£ÓÎÏ·
 	static void pause();

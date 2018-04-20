@@ -173,11 +173,16 @@ public:
 		double interval = 0,		/* 时间间隔（秒） */
 		int times = -1,				/* 执行次数（设 -1 为永久执行） */
 		bool atOnce = false,		/* 是否立即执行 */
-		bool autoRelease = false	/* 自动清除 */
+		bool autoRelease = false	/* 执行结束时自动清除 */
 	);
 
 	// 启动定时器
 	void start();
+
+	// 启动定时器，并执行指定次数
+	void start(
+		int times		/* 执行次数（设 -1 为永久执行） */
+	);
 
 	// 停止定时器
 	void stop();

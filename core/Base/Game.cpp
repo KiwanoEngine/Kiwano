@@ -69,7 +69,7 @@ bool e2d::Game::init(String sGameName)
 	return s_bInitialized;
 }
 
-int e2d::Game::start()
+int e2d::Game::start(bool bAutoRelease/* true */)
 {
 	if (!s_bInitialized)
 	{
@@ -115,6 +115,11 @@ int e2d::Game::start()
 		}
 	}
 
+	if (bAutoRelease)
+	{
+		Game::destroy();
+	}
+
 	return 0;
 }
 
@@ -150,18 +155,23 @@ void e2d::Game::destroy()
 {
 	// 删除所有场景
 	SceneManager::__uninit();
-	// 关闭输入
-	Input::__uninit();
 	// 关闭播放器
 	MusicManager::__uninit();
 	// 清空定时器
 	TimerManager::__uninit();
+	// 删除监听器
+	InputManager::__uninit();
+	ColliderManager::__uninit();
+	// 删除动画
+	ActionManager::__uninit();
+	// 关闭输入
+	Input::__uninit();
 	// 恢复计时操作
 	Time::__uninit();
 	// 清空图片缓存
 	Image::clearCache();
 	// 刷新内存池
-	ObjectManager::__uninit();
+	ObjectManager::__clear();
 	// 删除渲染相关资源
 	Renderer::__discardResources();
 	// 销毁窗口

@@ -263,3 +263,12 @@ void e2d::ColliderManager::__removeCollider(Collider * pCollider)
 		}
 	}
 }
+
+void e2d::ColliderManager::__uninit()
+{
+	FOR_LOOP(listener, s_vListeners)
+	{
+		SafeRelease(&listener);
+	}
+	s_vListeners.clear();
+}

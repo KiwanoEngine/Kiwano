@@ -23,7 +23,7 @@ void e2d::Object::release()
 {
 	m_nRefCount--;
 	// 通知对象管理池刷新
-	ObjectManager::clear();
+	ObjectManager::flush();
 }
 
 int e2d::Object::getReferenceCount() const

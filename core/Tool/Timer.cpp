@@ -11,7 +11,7 @@ e2d::Timer::Timer(String name, Function func, double interval /* = 0 */, int upd
 	, m_nUpdateTimes(-1)
 	, m_bAtOnce(false)
 	, m_bAutoRelease(false)
-	, m_bClear(true)
+	, m_bClear(false)
 {
 	this->setName(name);
 	this->setFunc(func);
@@ -39,8 +39,23 @@ void e2d::Timer::stopAndClear()
 
 void e2d::Timer::start()
 {
-	m_bRunning = true;
-	m_fLast = Time::getTotalTime();
+	if (!m_bRunning)
+	{
+		m_bRunning = true;
+		m_fLast = Time::getTotalTime();
+		m_nRunTimes = 0;
+	}
+}
+
+void e2d::Timer::start(int times)
+{
+	if (!m_bRunning)
+	{
+		m_bRunning = true;
+		m_fLast = Time::getTotalTime();
+		m_nUpdateTimes = times;
+		m_nRunTimes = 0;
+	}
 }
 
 e2d::String e2d::Timer::getName() const
@@ -66,7 +81,6 @@ void e2d::Timer::setFunc(Function func)
 void e2d::Timer::setUpdateTimes(int updateTimes)
 {
 	m_nUpdateTimes = updateTimes;
-	m_bClear = (m_nUpdateTimes == 0);
 }
 
 void e2d::Timer::setRunAtOnce(bool bAtOnce)

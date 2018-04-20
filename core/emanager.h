@@ -29,14 +29,14 @@ public:
 	);
 
 	// 释放垃圾对象的内存空间
-	static void clear();
+	static void flush();
 
 private:
 	// 更新对象管理器
 	static void __update();
 
 	// 清空所有对象
-	static void __uninit();
+	static void __clear();
 };
 
 
@@ -94,6 +94,16 @@ class TimerManager
 	friend Timer;
 
 public:
+	// 启动一个新任务
+	static Timer* start(
+		String name,				/* 任务名称 */
+		Function func,				/* 执行函数 */
+		double interval = 0,		/* 时间间隔（秒） */
+		int times = -1,				/* 执行次数（设 -1 为永久执行） */
+		bool atOnce = false,		/* 是否立即执行 */
+		bool autoRelease = false	/* 自动清除 */
+	);
+
 	// 启动一个新任务：等待一段时间后执行指定函数
 	static Timer* start(
 		double timeOut,	/* 等待的时长（秒） */
@@ -231,6 +241,9 @@ private:
 
 	// 重置所有动作状态
 	static void __resetAllActions();
+
+	// 回收资源
+	static void __uninit();
 };
 
 
@@ -307,6 +320,7 @@ private:
 // 键盘和鼠标消息管理器
 class InputManager
 {
+	friend Game;
 	friend Input;
 	friend InputListener;
 
@@ -357,12 +371,16 @@ private:
 
 	// 更新监听器
 	static void __update();
+
+	// 回收资源
+	static void __uninit();
 };
 
 
 // 碰撞管理器
 class ColliderManager
 {
+	friend Game;
 	friend Node;
 	friend Collider;
 	friend CollisionListener;
@@ -450,6 +468,9 @@ private:
 	static void __removeCollider(
 		Collider * pCollider
 	);
+
+	// 回收资源
+	static void __uninit();
 };
 
 }

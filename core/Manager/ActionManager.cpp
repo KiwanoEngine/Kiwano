@@ -167,6 +167,16 @@ void e2d::ActionManager::__clearAllBindedWith(Node * pTargetNode)
 	}
 }
 
+void e2d::ActionManager::__uninit()
+{
+	FOR_LOOP(child, s_vActions)
+	{
+		SafeRelease(&child);
+	}
+	s_vActions.clear();
+	s_vRunningActions.clear();
+}
+
 void e2d::ActionManager::resumeAll()
 {
 	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getChildren())
