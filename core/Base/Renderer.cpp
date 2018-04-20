@@ -120,6 +120,7 @@ void e2d::Renderer::__discardDeviceResources()
 
 void e2d::Renderer::__discardResources()
 {
+	SafeReleaseInterface(&s_pTextFormat);
 	SafeReleaseInterface(&s_pDirect2dFactory);
 	SafeReleaseInterface(&s_pRenderTarget);
 	SafeReleaseInterface(&s_pSolidBrush);
