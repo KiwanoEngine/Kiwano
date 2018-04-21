@@ -413,6 +413,19 @@ public:
 };
 
 
+// 线条相交样式
+class LineJoin
+{
+public:
+	enum : int
+	{
+		MITER = 0,
+		BEVEL = 1,
+		ROUND = 2
+	};
+};
+
+
 // 形状样式
 class ShapeStyle
 {
@@ -440,27 +453,35 @@ public:
 
 
 // 文本样式
-struct Font
+struct TextStyle
 {
 	String	fontFamily;		// 字体
-	double	size;			// 字号
+	double	fontSize;		// 字号
 	UINT32	color;			// 颜色
 	UINT32	weight;			// 粗细值
 	bool	italic;			// 斜体
 	bool	underline;		// 下划线
 	bool	strikethrough;	// 删除线
+	bool	showOutline;	// 显示描边
+	UINT32	outlineColor;	// 描边颜色
+	double	outlineWidth;	// 描边线宽
+	int		outlineJoin;	// 描边线相交样式
 
 	/* 构造函数 */
-	Font();
+	TextStyle();
 
-	Font(
+	TextStyle(
 		String fontFamily,
 		double fontSize = 22,
 		UINT32 color = Color::WHITE,
-		UINT32 fontWeight = FontWeight::NORMAL,
+		UINT32 textStyleWeight = FontWeight::NORMAL,
 		bool italic = false,
 		bool hasUnderline = false,
-		bool hasStrikethrough = false
+		bool hasStrikethrough = false,
+		bool showOutline = true,
+		UINT32 outlineColor = Color::BLACK,
+		UINT32 outlineWidth = 1.0,
+		int outlineJoin = LineJoin::ROUND
 	);
 };
 

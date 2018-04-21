@@ -28,9 +28,10 @@ namespace e2d
 
 		STDMETHOD_(void, SetTextStyle)(
 			CONST D2D1_COLOR_F &fillColor,
+			BOOL showOutline,
 			CONST D2D1_COLOR_F &outlineColor,
-			FLOAT strokeWidth,
-			FLOAT opacity
+			FLOAT outlineWidth,
+			D2D1_LINE_JOIN outlineJoin
 		);
 
 		STDMETHOD(DrawGlyphRun)(
@@ -96,8 +97,9 @@ namespace e2d
 		unsigned long cRefCount_;
 		D2D1_COLOR_F sFillColor_;
 		D2D1_COLOR_F sOutlineColor_;
-		FLOAT fStrokeWidth_;
-		FLOAT fOpacity_;
+		FLOAT fOutlineWidth;
+		BOOL bShowOutline_;
+		D2D1_LINE_JOIN nOutlineJoin_;
 		ID2D1Factory* pD2DFactory_;
 		ID2D1HwndRenderTarget* pRT_;
 		ID2D1SolidColorBrush* pBrush_;

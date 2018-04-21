@@ -61,10 +61,10 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 		hr = s_pDWriteFactory->CreateTextFormat(
 			L"",
 			NULL,
-			DWRITE_FONT_WEIGHT_BOLD,
+			DWRITE_FONT_WEIGHT_NORMAL,
 			DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
-			22,
+			20,
 			L"",
 			&s_pTextFormat
 		);
@@ -195,11 +195,13 @@ void e2d::Renderer::__render()
 		if (SUCCEEDED(hr))
 		{
 			s_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+			s_pSolidBrush->SetOpacity(1.0f);
 			s_pTextRenderer->SetTextStyle(
 				D2D1::ColorF(D2D1::ColorF::White),
+				TRUE,
 				D2D1::ColorF(D2D1::ColorF::Black),
-				2.0f,
-				1.0f
+				1.0f,
+				D2D1_LINE_JOIN::D2D1_LINE_JOIN_ROUND
 			);
 
 			pTextLayout->Draw(NULL, s_pTextRenderer, 10, 0);

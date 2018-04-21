@@ -215,7 +215,7 @@
     <ClCompile Include="..\..\core\Collider\ColliderCircle.cpp" />
     <ClCompile Include="..\..\core\Collider\ColliderEllipse.cpp" />
     <ClCompile Include="..\..\core\Collider\ColliderRect.cpp" />
-    <ClCompile Include="..\..\core\Common\Font.cpp" />
+    <ClCompile Include="..\..\core\Common\TextStyle.cpp" />
     <ClCompile Include="..\..\core\Common\Object.cpp" />
     <ClCompile Include="..\..\core\Common\Point.cpp" />
     <ClCompile Include="..\..\core\Common\Scene.cpp" />

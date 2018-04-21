@@ -548,16 +548,16 @@ public:
 	Text();
 
 	Text(
-		String text		/* 文字内容 */
+		String text			/* 文字内容 */
 	);
 
 	Text(
-		Font font		/* 字体样式 */
+		TextStyle textStyle	/* 文字样式 */
 	);
 
 	Text(
-		String text,	/* 文字内容 */
-		Font font		/* 字体样式 */
+		String text,		/* 文字内容 */
+		TextStyle textStyle	/* 文字样式 */
 	);
 
 	Text(
@@ -568,7 +568,10 @@ public:
 		UINT32 fontWeight = FontWeight::NORMAL,	/* 粗细值 */
 		bool italic = false,					/* 斜体 */
 		bool hasUnderline = false,				/* 下划线 */
-		bool hasStrikethrough = false			/* 删除线 */
+		bool hasStrikethrough = false,			/* 删除线 */
+		bool showOutline = true,				/* 显示描边 */
+		UINT32 outlineColor = Color::BLACK,		/* 描边颜色 */
+		UINT32 outlineWidth = 1.0				/* 描边线宽 */
 	);
 
 	virtual ~Text();
@@ -577,7 +580,7 @@ public:
 	String getText() const;
 
 	// 获取文本样式
-	Font getFont() const;
+	TextStyle getTextStyle() const;
 
 	// 获取字体
 	String getFontFamily() const;
@@ -591,11 +594,23 @@ public:
 	// 获取文字颜色
 	UINT32 getColor() const;
 
+	// 获取描边颜色
+	UINT32 getOutlineColor() const;
+
+	// 获取描边线宽
+	double getOutlineWidth() const;
+
+	// 获取描边线相交样式
+	int getOutlineJoin() const;
+
 	// 获取文本显示行数
 	int getLineCount() const;
 
 	// 是否是斜体
 	bool isItalic() const;
+
+	// 是否显示描边
+	bool isShowOutline() const;
 
 	// 设置文本
 	void setText(
@@ -603,8 +618,8 @@ public:
 	);
 
 	// 设置文本样式
-	void setFont(
-		Font pFont
+	void setTextStyle(
+		TextStyle pTextStyle
 	);
 
 	// 设置字体
@@ -619,7 +634,7 @@ public:
 
 	// 设置字体粗细值（默认值为 FontWeight::NORMAL）
 	void setFontWeight(
-		UINT32 fontWeight
+		UINT32 textStyleWeight
 	);
 
 	// 设置文字颜色（默认值为 Color::WHITE）
@@ -657,6 +672,26 @@ public:
 		bool hasStrikethrough
 	);
 
+	// 设置是否显示描边
+	void showOutline(
+		bool showOutline
+	);
+
+	// 设置描边颜色
+	void setOutlineColor(
+		UINT32 outlineColor
+	);
+
+	// 设置描边线宽
+	void setOutlineWidth(
+		double outlineWidth
+	);
+
+	// 设置描边线相交样式
+	void setOutlineJoin(
+		int outlineJoin
+	);
+
 	// 渲染文字
 	virtual void onRender() override;
 
@@ -674,7 +709,7 @@ protected:
 	String	m_sText;
 	bool	m_bWrappingEnable;
 	float	m_fWrappingWidth;
-	Font	m_Font;
+	TextStyle	m_TextStyle;
 	float	m_fLineSpacing;
 	int		m_nAlign;
 	IDWriteTextFormat * m_pDWriteTextFormat;

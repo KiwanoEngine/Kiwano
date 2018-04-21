@@ -1,4 +1,5 @@
 #include "..\e2dcustom.h"
+#include "..\e2dbase.h"
 
 using namespace e2d;
 
@@ -13,8 +14,9 @@ CustomTextRenderer::CustomTextRenderer(
 	, pBrush_(pBrush)
 	, sFillColor_()
 	, sOutlineColor_()
-	, fStrokeWidth_(1)
-	, fOpacity_(1)
+	, fOutlineWidth(1)
+	, bShowOutline_(TRUE)
+	, nOutlineJoin_(D2D1_LINE_JOIN::D2D1_LINE_JOIN_MITER)
 {
 	pD2DFactory_->AddRef();
 	pRT_->AddRef();
@@ -30,15 +32,17 @@ CustomTextRenderer::~CustomTextRenderer()
 
 STDMETHODIMP_(void) CustomTextRenderer::SetTextStyle(
 	CONST D2D1_COLOR_F &fillColor,
+	BOOL showOutline,
 	CONST D2D1_COLOR_F &outlineColor,
-	FLOAT strokeWidth,
-	FLOAT opacity
+	FLOAT outlineWidth,
+	D2D1_LINE_JOIN outlineJoin
 )
 {
 	sFillColor_ = fillColor;
+	bShowOutline_ = showOutline;
 	sOutlineColor_ = outlineColor;
-	fStrokeWidth_ = strokeWidth;
-	fOpacity_ = opacity;
+	fOutlineWidth = 2 * outlineWidth;
+	nOutlineJoin_ = outlineJoin;
 }
 
 STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
@@ -101,16 +105,38 @@ STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
 		);
 	}
 
+	ID2D1StrokeStyle * pStrokeStyle = NULL;
+
 	if (SUCCEEDED(hr))
 	{
-		pBrush_->SetOpacity(fOpacity_);
-		pBrush_->SetColor(sOutlineColor_);
-
-		pRT_->DrawGeometry(
-			pTransformedGeometry,
-			pBrush_,
-			fStrokeWidth_
+		hr = Renderer::getID2D1Factory()->CreateStrokeStyle(
+			D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				nOutlineJoin_,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f),
+			NULL,
+			0,
+			&pStrokeStyle
 		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		if (bShowOutline_)
+		{
+			pBrush_->SetColor(sOutlineColor_);
+
+			pRT_->DrawGeometry(
+				pTransformedGeometry,
+				pBrush_,
+				fOutlineWidth,
+				pStrokeStyle
+			);
+		}
 
 		pBrush_->SetColor(sFillColor_);
 
@@ -166,16 +192,38 @@ STDMETHODIMP CustomTextRenderer::DrawUnderline(
 		);
 	}
 
+	ID2D1StrokeStyle * pStrokeStyle = NULL;
+
 	if (SUCCEEDED(hr))
 	{
-		pBrush_->SetOpacity(fOpacity_);
-		pBrush_->SetColor(sOutlineColor_);
-
-		pRT_->DrawGeometry(
-			pTransformedGeometry,
-			pBrush_,
-			fStrokeWidth_
+		hr = Renderer::getID2D1Factory()->CreateStrokeStyle(
+			D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				nOutlineJoin_,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f),
+			NULL,
+			0,
+			&pStrokeStyle
 		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		if (bShowOutline_)
+		{
+			pBrush_->SetColor(sOutlineColor_);
+
+			pRT_->DrawGeometry(
+				pTransformedGeometry,
+				pBrush_,
+				fOutlineWidth,
+				pStrokeStyle
+			);
+		}
 
 		pBrush_->SetColor(sFillColor_);
 
@@ -230,16 +278,38 @@ STDMETHODIMP CustomTextRenderer::DrawStrikethrough(
 		);
 	}
 
+	ID2D1StrokeStyle * pStrokeStyle = NULL;
+
 	if (SUCCEEDED(hr))
 	{
-		pBrush_->SetOpacity(fOpacity_);
-		pBrush_->SetColor(sOutlineColor_);
-
-		pRT_->DrawGeometry(
-			pTransformedGeometry,
-			pBrush_,
-			fStrokeWidth_
+		hr = Renderer::getID2D1Factory()->CreateStrokeStyle(
+			D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				nOutlineJoin_,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f),
+			NULL,
+			0,
+			&pStrokeStyle
 		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		if (bShowOutline_)
+		{
+			pBrush_->SetColor(sOutlineColor_);
+
+			pRT_->DrawGeometry(
+				pTransformedGeometry,
+				pBrush_,
+				fOutlineWidth,
+				pStrokeStyle
+			);
+		}
 
 		pBrush_->SetColor(sFillColor_);
 

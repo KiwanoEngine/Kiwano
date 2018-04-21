@@ -39,9 +39,6 @@
     <ClCompile Include="..\..\core\Base\Input.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Font.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Action\Action.cpp">
       <Filter>Action</Filter>
     </ClCompile>
@@ -224,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Custom\CustomTextRenderer.cpp">
       <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\TextStyle.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
