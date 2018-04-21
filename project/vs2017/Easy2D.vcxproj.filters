@@ -31,6 +31,9 @@
     <Filter Include="Tool\Listener">
       <UniqueIdentifier>{d3968182-2399-40d4-8e39-accb4711018c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Custom">
+      <UniqueIdentifier>{3475b59d-d50c-43b1-8334-bcb9e1703ed2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Base\Input.cpp">
@@ -219,6 +222,9 @@
     <ClCompile Include="..\..\core\Tool\Listener\Listener.cpp">
       <Filter>Tool\Listener</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Custom\CustomTextRenderer.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />
@@ -232,5 +238,6 @@
     <ClInclude Include="..\..\core\e2dshape.h" />
     <ClInclude Include="..\..\core\e2dtool.h" />
     <ClInclude Include="..\..\core\e2dtransition.h" />
+    <ClInclude Include="..\..\core\e2dcustom.h" />
   </ItemGroup>
 </Project>

@@ -241,6 +241,12 @@ public:
 		bool show = true
 	);
 
+	// 获取系统 DPI 缩放
+	static float getDpiScaleX();
+
+	// 获取系统 DPI 缩放
+	static float getDpiScaleY();
+
 	// 获取 ID2D1Factory 对象
 	static ID2D1Factory * getID2D1Factory();
 
@@ -255,6 +261,9 @@ public:
 
 	// 获取 IDWriteFactory 对象
 	static IDWriteFactory * getIDWriteFactory();
+
+	// 获取自定义的文字渲染器
+	static CustomTextRenderer * getCustomTextRenderer();
 
 private:
 	// 渲染游戏画面

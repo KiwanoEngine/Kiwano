@@ -1,5 +1,6 @@
 #pragma once
 #include "e2dmacros.h"
+#include "e2dcustom.h"
 #include <set>
 #include <stack>
 #include <vector>
@@ -677,13 +678,7 @@ protected:
 };
 
 
-template<typename T>
-inline void SafeDelete(T** p) { if (*p) { delete *p; *p = nullptr; } }
-
 template<typename Object>
 inline void SafeRelease(Object** p) { if (*p) { (*p)->release(); *p = nullptr; } }
-
-template<class Interface>
-inline void SafeReleaseInterface(Interface **pp) { if (*pp != nullptr) { (*pp)->Release(); (*pp) = nullptr; } }
 
 }

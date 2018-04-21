@@ -29,10 +29,8 @@ bool e2d::Window::__init()
 
 	// 因为 CreateWindow 函数使用的是像素大小，获取系统的 DPI 以使它
 	// 适应窗口缩放
-	float dpiX, dpiY;
-
-	// 工厂将返回当前的系统 DPI，这个值也将用来创建窗口
-	Renderer::getID2D1Factory()->GetDesktopDpi(&dpiX, &dpiY);
+	float dpiX = Renderer::getDpiScaleX();
+	float dpiY = Renderer::getDpiScaleY();
 
 	UINT nWidth = static_cast<UINT>(ceil(640 * dpiX / 96.f));
 	UINT nHeight = static_cast<UINT>(ceil(480 * dpiY / 96.f));

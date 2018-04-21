@@ -3,12 +3,15 @@
 #include "..\e2dnode.h"
 
 static bool s_bShowFps = false;
+static float s_fDpiScaleX = 0;
+static float s_fDpiScaleY = 0;
 static IDWriteTextFormat * s_pTextFormat = nullptr;
 static ID2D1Factory * s_pDirect2dFactory = nullptr;
 static ID2D1HwndRenderTarget * s_pRenderTarget = nullptr;
 static ID2D1SolidColorBrush * s_pSolidBrush = nullptr;
 static IWICImagingFactory * s_pIWICFactory = nullptr;
 static IDWriteFactory * s_pDWriteFactory = nullptr;
+static e2d::CustomTextRenderer * s_pTextRenderer = nullptr;
 static D2D1_COLOR_F s_nClearColor = D2D1::ColorF(D2D1::ColorF::Black);
 
 
@@ -16,7 +19,7 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 {
 	// 创建设备无关资源，它们的生命周期和程序的时长相同
 	HRESULT hr = D2D1CreateFactory(
-		D2D1_FACTORY_TYPE_SINGLE_THREADED, 
+		D2D1_FACTORY_TYPE_SINGLE_THREADED,
 		&s_pDirect2dFactory
 	);
 
@@ -48,19 +51,25 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 
 	if (SUCCEEDED(hr))
 	{
+		// 工厂将返回当前的系统 DPI，这个值也将用来创建窗口
+		Renderer::getID2D1Factory()->GetDesktopDpi(&s_fDpiScaleX, &s_fDpiScaleY);
+	}
+
+	if (SUCCEEDED(hr))
+	{
 		// 创建文本格式化对象
 		hr = s_pDWriteFactory->CreateTextFormat(
 			L"",
 			NULL,
-			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_WEIGHT_BOLD,
 			DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
-			18,
+			22,
 			L"",
 			&s_pTextFormat
 		);
 
-		if (s_pTextFormat)
+		if (SUCCEEDED(hr))
 		{
 			s_pTextFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
 		}
@@ -72,7 +81,7 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 bool e2d::Renderer::__createDeviceResources()
 {
 	HRESULT hr = S_OK;
-	
+
 	if (!s_pRenderTarget)
 	{
 		HWND hWnd = Window::getHWnd();
@@ -107,8 +116,18 @@ bool e2d::Renderer::__createDeviceResources()
 			);
 			ASSERT(SUCCEEDED(hr), "Create ID2D1SolidColorBrush Failed!");
 		}
+
+		if (SUCCEEDED(hr))
+		{
+			// 创建自定义的文字渲染器
+			s_pTextRenderer = new (std::nothrow) CustomTextRenderer(
+				s_pDirect2dFactory,
+				s_pRenderTarget,
+				s_pSolidBrush
+			);
+		}
 	}
-	
+
 	return SUCCEEDED(hr);
 }
 
@@ -116,6 +135,7 @@ void e2d::Renderer::__discardDeviceResources()
 {
 	SafeReleaseInterface(&s_pRenderTarget);
 	SafeReleaseInterface(&s_pSolidBrush);
+	SafeReleaseInterface(&s_pTextRenderer);
 }
 
 void e2d::Renderer::__discardResources()
@@ -124,6 +144,7 @@ void e2d::Renderer::__discardResources()
 	SafeReleaseInterface(&s_pDirect2dFactory);
 	SafeReleaseInterface(&s_pRenderTarget);
 	SafeReleaseInterface(&s_pSolidBrush);
+	SafeReleaseInterface(&s_pTextRenderer);
 	SafeReleaseInterface(&s_pIWICFactory);
 	SafeReleaseInterface(&s_pDWriteFactory);
 }
@@ -148,7 +169,7 @@ void e2d::Renderer::__render()
 	{
 		static int s_nRenderTimes = 0;
 		static double s_fLastRenderTime = 0;
-		static e2d::String s_sFpsText = L"";
+		static String s_sFpsText;
 
 		s_nRenderTimes++;
 
@@ -160,9 +181,31 @@ void e2d::Renderer::__render()
 			s_nRenderTimes = 0;
 		}
 
-		s_pSolidBrush->SetColor(D2D1::ColorF(D2D1::ColorF::White));
-		s_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-		s_pRenderTarget->DrawTextW(s_sFpsText, (UINT32)s_sFpsText.getLength(), s_pTextFormat, D2D1::RectF(), s_pSolidBrush);
+		IDWriteTextLayout * pTextLayout = nullptr;
+
+		hr = s_pDWriteFactory->CreateTextLayout(
+			s_sFpsText,
+			(UINT32)s_sFpsText.getLength(),
+			s_pTextFormat,
+			0,
+			0,
+			&pTextLayout
+		);
+
+		if (SUCCEEDED(hr))
+		{
+			s_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+			s_pTextRenderer->SetTextStyle(
+				D2D1::ColorF(D2D1::ColorF::White),
+				D2D1::ColorF(D2D1::ColorF::Black),
+				2.0f,
+				1.0f
+			);
+
+			pTextLayout->Draw(NULL, s_pTextRenderer, 10, 0);
+
+			SafeReleaseInterface(&pTextLayout);
+		}
 	}
 
 	// 终止渲染
@@ -195,6 +238,16 @@ void e2d::Renderer::showFps(bool show)
 	s_bShowFps = show;
 }
 
+float e2d::Renderer::getDpiScaleX()
+{
+	return s_fDpiScaleX;
+}
+
+float e2d::Renderer::getDpiScaleY()
+{
+	return s_fDpiScaleY;
+}
+
 ID2D1Factory * e2d::Renderer::getID2D1Factory()
 {
 	return s_pDirect2dFactory;
@@ -218,4 +271,9 @@ IWICImagingFactory * e2d::Renderer::getIWICImagingFactory()
 IDWriteFactory * e2d::Renderer::getIDWriteFactory()
 {
 	return s_pDWriteFactory;
+}
+
+e2d::CustomTextRenderer * e2d::Renderer::getCustomTextRenderer()
+{
+	return s_pTextRenderer;
 }
