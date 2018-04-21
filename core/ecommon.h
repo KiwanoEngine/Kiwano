@@ -464,6 +464,25 @@ struct Font
 };
 
 
+// 节点属性
+struct NodeProperty
+{
+	bool visable;		// 可见性
+	double posX;		// X 坐标
+	double posY;		// Y 坐标
+	double width;		// 宽度
+	double height;		// 高度
+	double opacity;		// 透明度
+	double pivotX;		// 中心点 X 坐标
+	double pivotY;		// 中心点 Y 坐标
+	double scaleX;		// 横向缩放
+	double scaleY;		// 纵向缩放
+	double rotation;	// 旋转角度
+	double skewAngleX;	// 横向倾斜角度
+	double skewAngleY;	// 纵向倾斜角度
+};
+
+
 // 基础对象
 class Object
 {

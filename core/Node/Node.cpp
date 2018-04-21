@@ -372,6 +372,25 @@ double e2d::Node::getOpacity() const
 	return m_fRealOpacity;
 }
 
+e2d::NodeProperty e2d::Node::getProperty() const
+{
+	NodeProperty prop;
+	prop.visable = m_bVisiable;
+	prop.posX = m_fPosX;
+	prop.posY = m_fPosY;
+	prop.width = m_fWidth;
+	prop.height = m_fHeight;
+	prop.opacity = m_fRealOpacity;
+	prop.pivotX = m_fPivotX;
+	prop.pivotY = m_fPivotY;
+	prop.scaleX = m_fScaleX;
+	prop.scaleY = m_fScaleY;
+	prop.rotation = m_fRotation;
+	prop.skewAngleX = m_fSkewAngleX;
+	prop.skewAngleY = m_fSkewAngleY;
+	return prop;
+}
+
 e2d::Collider * e2d::Node::getCollider() const
 {
 	return m_pCollider;
@@ -539,6 +558,18 @@ void e2d::Node::setSize(double width, double height)
 void e2d::Node::setSize(Size size)
 {
 	this->setSize(size.width, size.height);
+}
+
+void e2d::Node::setProperty(NodeProperty prop)
+{
+	this->setVisiable(prop.visable);
+	this->setPos(prop.posX, prop.posY);
+	this->setSize(prop.width, prop.height);
+	this->setOpacity(prop.opacity);
+	this->setPivot(prop.pivotX, prop.pivotY);
+	this->setScale(prop.scaleX, prop.scaleY);
+	this->setRotation(prop.rotation);
+	this->setSkew(prop.skewAngleX, prop.skewAngleY);
 }
 
 void e2d::Node::setCollider(int nColliderType)

@@ -116,6 +116,9 @@ public:
 	// 获取节点透明度
 	virtual double getOpacity() const;
 
+	// 获取节点属性
+	virtual NodeProperty getProperty() const;
+
 	// 获取节点碰撞体
 	virtual Collider * getCollider() const;
 
@@ -309,6 +312,11 @@ public:
 	// 修改节点大小
 	virtual void setSize(
 		Size size
+	);
+
+	// 设置节点属性
+	virtual void setProperty(
+		NodeProperty prop
 	);
 
 	// 设置碰撞体
