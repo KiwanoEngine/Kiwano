@@ -1,5 +1,5 @@
 #pragma once
-#include "ebase.h"
+#include "e2dbase.h"
 #include <random>
 
 namespace e2d

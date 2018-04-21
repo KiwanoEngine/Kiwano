@@ -1,4 +1,4 @@
-#include "..\..\eshape.h"
+#include "..\..\e2dshape.h"
 
 e2d::RoundRect::RoundRect()
 	: m_fRadiusX(0)

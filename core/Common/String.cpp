@@ -1,4 +1,4 @@
-#include "..\ecommon.h"
+#include "..\e2dcommon.h"
 #include <iomanip>
 #include <comutil.h>
 #pragma comment(lib, "comsuppw.lib")

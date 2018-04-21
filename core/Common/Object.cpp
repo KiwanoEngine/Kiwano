@@ -1,5 +1,5 @@
-#include "..\ebase.h"
-#include "..\emanager.h"
+#include "..\e2dbase.h"
+#include "..\e2dmanager.h"
 
 e2d::Object::Object()
 	: m_nRefCount(0)

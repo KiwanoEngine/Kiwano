@@ -221,16 +221,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\core\emacros.h" />
-    <ClInclude Include="..\..\core\ecommon.h" />
-    <ClInclude Include="..\..\core\ebase.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
-    <ClInclude Include="..\..\core\ecollider.h" />
-    <ClInclude Include="..\..\core\eshape.h" />
-    <ClInclude Include="..\..\core\etransition.h" />
-    <ClInclude Include="..\..\core\emanager.h" />
-    <ClInclude Include="..\..\core\enode.h" />
-    <ClInclude Include="..\..\core\etool.h" />
-    <ClInclude Include="..\..\core\eaction.h" />
+    <ClInclude Include="..\..\core\e2daction.h" />
+    <ClInclude Include="..\..\core\e2dbase.h" />
+    <ClInclude Include="..\..\core\e2dcollider.h" />
+    <ClInclude Include="..\..\core\e2dcommon.h" />
+    <ClInclude Include="..\..\core\e2dmacros.h" />
+    <ClInclude Include="..\..\core\e2dmanager.h" />
+    <ClInclude Include="..\..\core\e2dnode.h" />
+    <ClInclude Include="..\..\core\e2dshape.h" />
+    <ClInclude Include="..\..\core\e2dtool.h" />
+    <ClInclude Include="..\..\core\e2dtransition.h" />
   </ItemGroup>
 </Project>

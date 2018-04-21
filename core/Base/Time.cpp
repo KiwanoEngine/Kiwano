@@ -1,4 +1,4 @@
-#include "..\ebase.h"
+#include "..\e2dbase.h"
 
 // 上一帧与当前帧的时间间隔
 static int s_nInterval = 0;

@@ -1,5 +1,5 @@
-#include "..\ebase.h"
-#include "..\emanager.h"
+#include "..\e2dbase.h"
+#include "..\e2dmanager.h"
 #include <imm.h>
 #pragma comment (lib ,"imm32.lib")
 

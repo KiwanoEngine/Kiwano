@@ -1,5 +1,5 @@
-#include "..\eaction.h"
-#include "..\emanager.h"
+#include "..\e2daction.h"
+#include "..\e2dmanager.h"
 
 e2d::ActionLoop::ActionLoop(Action * action, int times /* = -1 */)
 	: m_pAction(action)

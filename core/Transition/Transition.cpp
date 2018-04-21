@@ -1,6 +1,6 @@
-#include "..\ebase.h"
-#include "..\etransition.h"
-#include "..\enode.h"
+#include "..\e2dbase.h"
+#include "..\e2dtransition.h"
+#include "..\e2dnode.h"
 
 e2d::Transition::Transition(double duration)
 	: m_bEnd(false)

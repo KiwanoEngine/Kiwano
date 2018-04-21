@@ -1,5 +1,5 @@
-#include "..\etool.h"
-#include "..\emanager.h"
+#include "..\e2dtool.h"
+#include "..\e2dmanager.h"
 
 using namespace e2d;
 

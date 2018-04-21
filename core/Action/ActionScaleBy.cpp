@@ -1,4 +1,4 @@
-#include "..\eaction.h"
+#include "..\e2daction.h"
 
 
 e2d::ActionScaleBy::ActionScaleBy(double duration, double scale)

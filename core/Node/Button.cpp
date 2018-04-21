@@ -1,5 +1,5 @@
-#include "..\enode.h"
-#include "..\emanager.h"
+#include "..\e2dnode.h"
+#include "..\e2dmanager.h"
 
 #define SAFE_SETTER(pointer, func, ...) if (pointer) { pointer->##func(__VA_ARGS__); }
 

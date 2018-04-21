@@ -1,4 +1,4 @@
-#include "..\etool.h"
+#include "..\e2dtool.h"
 
 std::default_random_engine &e2d::Random::__getEngine()
 {

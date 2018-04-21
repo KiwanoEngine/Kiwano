@@ -1,5 +1,5 @@
-#include "..\emanager.h"
-#include "..\ebase.h"
+#include "..\e2dmanager.h"
+#include "..\e2dbase.h"
 
 // ObjectManager 释放池的实现机制：
 // Object 类中的引用计数（m_nRefCount）在一定程度上保证了指针的使用安全

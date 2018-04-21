@@ -1,4 +1,4 @@
-#include "..\..\etool.h"
+#include "..\..\e2dtool.h"
 
 e2d::Listener::Listener()
 	: m_bRunning(false)

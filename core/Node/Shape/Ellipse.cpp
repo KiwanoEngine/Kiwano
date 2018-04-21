@@ -1,4 +1,4 @@
-#include "..\..\eshape.h"
+#include "..\..\e2dshape.h"
 
 e2d::Ellipse::Ellipse()
 	: m_fRadiusX(0)

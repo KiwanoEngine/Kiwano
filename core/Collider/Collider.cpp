@@ -1,6 +1,6 @@
-#include "..\ecollider.h"
-#include "..\emanager.h"
-#include "..\enode.h"
+#include "..\e2dcollider.h"
+#include "..\e2dmanager.h"
+#include "..\e2dnode.h"
 
 e2d::Collider::Collider()
 	: m_bIsVisiable(true)

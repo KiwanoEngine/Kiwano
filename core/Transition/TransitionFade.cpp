@@ -1,5 +1,5 @@
-#include "..\etransition.h"
-#include "..\enode.h"
+#include "..\e2dtransition.h"
+#include "..\e2dnode.h"
 
 e2d::TransitionFade::TransitionFade(double duration)
 	: Transition(0)

@@ -17,16 +17,16 @@
 #endif
 
 
-#include "emacros.h"
-#include "ecommon.h"
-#include "ebase.h"
-#include "emanager.h"
-#include "enode.h"
-#include "eshape.h"
-#include "etool.h"
-#include "eaction.h"
-#include "etransition.h"
-#include "ecollider.h"
+#include "e2dmacros.h"
+#include "e2dcommon.h"
+#include "e2dbase.h"
+#include "e2dmanager.h"
+#include "e2dnode.h"
+#include "e2dshape.h"
+#include "e2dtool.h"
+#include "e2daction.h"
+#include "e2dtransition.h"
+#include "e2dcollider.h"
 
 
 #if defined(DEBUG) || defined(_DEBUG)

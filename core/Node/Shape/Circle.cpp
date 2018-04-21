@@ -1,4 +1,4 @@
-#include "..\..\eshape.h"
+#include "..\..\e2dshape.h"
 
 e2d::Circle::Circle()
 	: m_fRadius(0)

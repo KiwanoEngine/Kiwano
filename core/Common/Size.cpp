@@ -1,4 +1,4 @@
-#include "..\ecommon.h"
+#include "..\e2dcommon.h"
 
 e2d::Size::Size()
 {

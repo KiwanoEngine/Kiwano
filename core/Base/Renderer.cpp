@@ -1,6 +1,6 @@
-#include "..\ebase.h"
-#include "..\emanager.h"
-#include "..\enode.h"
+#include "..\e2dbase.h"
+#include "..\e2dmanager.h"
+#include "..\e2dnode.h"
 
 static bool s_bShowFps = false;
 static IDWriteTextFormat * s_pTextFormat = nullptr;

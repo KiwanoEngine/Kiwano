@@ -1,4 +1,4 @@
-#include "..\etool.h"
+#include "..\e2dtool.h"
 
 static e2d::String s_sDataFileName = L"DefaultData.ini";
 

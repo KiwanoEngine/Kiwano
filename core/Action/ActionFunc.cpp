@@ -1,4 +1,4 @@
-#include "..\eaction.h"
+#include "..\e2daction.h"
 
 e2d::ActionFunc::ActionFunc(Function func) :
 	m_Callback(func)

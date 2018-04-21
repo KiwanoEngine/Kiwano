@@ -1,5 +1,5 @@
-#include "..\ecollider.h"
-#include "..\enode.h"
+#include "..\e2dcollider.h"
+#include "..\e2dnode.h"
 
 e2d::ColliderCircle::ColliderCircle()
 	: m_pD2dCircle(nullptr)

@@ -1,7 +1,7 @@
-#include "..\emanager.h"
-#include "..\enode.h"
-#include "..\ecollider.h"
-#include "..\etool.h"
+#include "..\e2dmanager.h"
+#include "..\e2dnode.h"
+#include "..\e2dcollider.h"
+#include "..\e2dtool.h"
 
 // Åö×²Ìå¼¯ºÏ
 static std::vector<e2d::Collider*> s_vColliders;

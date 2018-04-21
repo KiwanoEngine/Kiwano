@@ -1,5 +1,5 @@
-#include "..\emanager.h"
-#include "..\etool.h"
+#include "..\e2dmanager.h"
+#include "..\e2dtool.h"
 #include <map>
 
 #if HIGHER_THAN_VS2010

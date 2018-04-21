@@ -1,4 +1,4 @@
-#include "..\etool.h"
+#include "..\e2dtool.h"
 #include <algorithm>
 #include <commdlg.h>
 

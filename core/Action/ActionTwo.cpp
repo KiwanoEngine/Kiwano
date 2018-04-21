@@ -1,4 +1,4 @@
-#include "..\eaction.h"
+#include "..\e2daction.h"
 
 e2d::ActionTwo::ActionTwo(Action * pActionFirst, Action * pActionSecond, bool bAtSameTime/* = false*/)
 	: m_pFirstAction(pActionFirst)

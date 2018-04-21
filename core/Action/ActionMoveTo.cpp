@@ -1,4 +1,4 @@
-#include "..\eaction.h"
+#include "..\e2daction.h"
 
 e2d::ActionMoveTo::ActionMoveTo(double duration, Point pos) :
 	ActionMoveBy(duration, Vector())

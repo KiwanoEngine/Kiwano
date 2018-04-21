@@ -1,4 +1,4 @@
-#include "..\enode.h"
+#include "..\e2dnode.h"
 
 
 e2d::Text::Text()

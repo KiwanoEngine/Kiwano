@@ -1,4 +1,4 @@
-#include "..\..\eshape.h"
+#include "..\..\e2dshape.h"
 
 e2d::Shape::Shape()
 	: m_nStyle(ShapeStyle::SOLID)

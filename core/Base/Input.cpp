@@ -1,6 +1,6 @@
-#include "..\ebase.h"
-#include "..\etool.h"
-#include "..\emanager.h"
+#include "..\e2dbase.h"
+#include "..\e2dtool.h"
+#include "..\e2dmanager.h"
 
 #pragma comment(lib, "dinput8.lib")
 

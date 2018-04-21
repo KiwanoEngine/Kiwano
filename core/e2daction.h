@@ -1,5 +1,5 @@
 #pragma once
-#include "enode.h"
+#include "e2dnode.h"
 
 namespace e2d
 {
