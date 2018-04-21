@@ -18,8 +18,6 @@ e2d::Transition::Transition(double duration)
 
 e2d::Transition::~Transition()
 {
-	SafeRelease(&m_pPrevScene);
-	SafeRelease(&m_pNextScene);
 	SafeReleaseInterface(&m_pPrevLayer);
 	SafeReleaseInterface(&m_pNextLayer);
 }
@@ -27,6 +25,12 @@ e2d::Transition::~Transition()
 bool e2d::Transition::isEnding()
 {
 	return m_bEnd;
+}
+
+void e2d::Transition::destroy()
+{
+	SafeRelease(&m_pPrevScene);
+	SafeRelease(&m_pNextScene);
 }
 
 void e2d::Transition::_init(Scene * prev, Scene * next)

@@ -14,7 +14,6 @@ e2d::Action::Action()
 
 e2d::Action::~Action()
 {
-	ActionManager::__remove(this);
 }
 
 bool e2d::Action::isRunning()
@@ -72,6 +71,11 @@ e2d::Action * e2d::Action::reverse() const
 e2d::Node * e2d::Action::getTarget()
 {
 	return m_pTarget;
+}
+
+void e2d::Action::destroy()
+{
+	ActionManager::__remove(this);
 }
 
 void e2d::Action::_init()

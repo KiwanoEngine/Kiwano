@@ -20,6 +20,9 @@ public:
 	// 场景切换动画是否结束
 	bool isEnding();
 
+	// 销毁对象
+	virtual void destroy() override;
+
 protected:
 	// 初始化场景动画
 	virtual void _init(

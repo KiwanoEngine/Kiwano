@@ -46,12 +46,6 @@ e2d::Node::Node()
 
 e2d::Node::~Node()
 {
-	ActionManager::__clearAllBindedWith(this);
-	ColliderManager::__removeCollider(m_pCollider);
-	FOR_LOOP(child, m_vChildren)
-	{
-		SafeRelease(&child);
-	}
 }
 
 void e2d::Node::_update()
@@ -1012,6 +1006,16 @@ void e2d::Node::setDefaultPiovt(double defaultPiovtX, double defaultPiovtY)
 void e2d::Node::setDefaultColliderEnable(bool bEnable)
 {
 	s_fDefaultColliderEnabled = bEnable;
+}
+
+void e2d::Node::destroy()
+{
+	ActionManager::__clearAllBindedWith(this);
+	ColliderManager::__removeCollider(m_pCollider);
+	FOR_LOOP(child, m_vChildren)
+	{
+		SafeRelease(&child);
+	}
 }
 
 void e2d::Node::resumeAllActions()

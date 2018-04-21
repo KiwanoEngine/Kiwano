@@ -63,6 +63,9 @@ public:
 	// 获取该动作的执行目标
 	virtual Node * getTarget();
 
+	// 销毁对象
+	virtual void destroy() override;
+
 protected:
 	// 初始化动作
 	virtual void _init();
@@ -376,6 +379,9 @@ public:
 	// 重置动作
 	virtual void reset() override;
 
+	// 销毁对象
+	virtual void destroy() override;
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -446,6 +452,9 @@ public:
 	// 重置动作
 	virtual void reset() override;
 
+	// 销毁对象
+	virtual void destroy() override;
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -503,6 +512,9 @@ public:
 
 	// 重置动作
 	virtual void reset() override;
+
+	// 销毁对象
+	virtual void destroy() override;
 
 protected:
 	// 初始化动作
@@ -595,6 +607,9 @@ public:
 
 	// 重置动作
 	virtual void reset() override;
+
+	// 销毁对象
+	virtual void destroy() override;
 
 protected:
 	// 初始化动作

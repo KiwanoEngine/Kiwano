@@ -12,8 +12,6 @@ e2d::ActionTwo::ActionTwo(Action * pActionFirst, Action * pActionSecond, bool bA
 
 e2d::ActionTwo::~ActionTwo()
 {
-	SafeRelease(&m_pFirstAction);
-	SafeRelease(&m_pSecondAction);
 }
 
 e2d::ActionTwo * e2d::ActionTwo::clone() const
@@ -81,6 +79,13 @@ void e2d::ActionTwo::reset()
 
 	m_pFirstAction->reset();
 	m_pSecondAction->reset();
+}
+
+void e2d::ActionTwo::destroy()
+{
+	Action::destroy();
+	SafeRelease(&m_pFirstAction);
+	SafeRelease(&m_pSecondAction);
 }
 
 void e2d::ActionTwo::_resetTime()

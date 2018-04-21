@@ -402,6 +402,9 @@ public:
 		bool bEnable
 	);
 
+	// 销毁对象
+	virtual void destroy() override;
+
 protected:
 	// 更新节点
 	void _update();
@@ -521,6 +524,9 @@ public:
 
 	// 渲染精灵
 	virtual void onRender() override;
+
+	// 销毁对象
+	virtual void destroy() override;
 
 protected:
 	Image * m_pImage;

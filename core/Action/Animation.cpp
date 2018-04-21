@@ -64,10 +64,6 @@ e2d::Animation::Animation(double interval, int number, Image * frame, ...)
 
 e2d::Animation::~Animation()
 {
-	FOR_LOOP(frame, m_vFrames)
-	{
-		SafeRelease(&frame);
-	}
 }
 
 void e2d::Animation::setInterval(double interval)
@@ -111,6 +107,15 @@ void e2d::Animation::reset()
 {
 	Action::reset();
 	m_nFrameIndex = 0;
+}
+
+void e2d::Animation::destroy()
+{
+	Action::destroy();
+	FOR_LOOP(frame, m_vFrames)
+	{
+		SafeRelease(&frame);
+	}
 }
 
 void e2d::Animation::add(Image * frame)

@@ -2,19 +2,14 @@
 #include "..\emanager.h"
 #include "..\enode.h"
 
+static bool s_bShowFps = false;
+static IDWriteTextFormat * s_pTextFormat = nullptr;
 static ID2D1Factory * s_pDirect2dFactory = nullptr;
 static ID2D1HwndRenderTarget * s_pRenderTarget = nullptr;
 static ID2D1SolidColorBrush * s_pSolidBrush = nullptr;
 static IWICImagingFactory * s_pIWICFactory = nullptr;
 static IDWriteFactory * s_pDWriteFactory = nullptr;
 static D2D1_COLOR_F s_nClearColor = D2D1::ColorF(D2D1::ColorF::Black);
-
-static bool s_bShowFps = false;
-static int s_nRenderTimes = 0;
-static double s_fLastRenderTime = 0;
-static e2d::String s_sFpsText = L"";
-static IDWriteTextFormat * s_pTextFormat = nullptr;
-
 
 
 bool e2d::Renderer::__createDeviceIndependentResources()
@@ -64,6 +59,11 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 			L"",
 			&s_pTextFormat
 		);
+
+		if (s_pTextFormat)
+		{
+			s_pTextFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+		}
 	}
 
 	return SUCCEEDED(hr);
@@ -146,6 +146,10 @@ void e2d::Renderer::__render()
 	// ‰÷»æ FPS
 	if (s_bShowFps)
 	{
+		static int s_nRenderTimes = 0;
+		static double s_fLastRenderTime = 0;
+		static e2d::String s_sFpsText = L"";
+
 		s_nRenderTimes++;
 
 		double fDelay = Time::getTotalTime() - s_fLastRenderTime;
@@ -156,12 +160,9 @@ void e2d::Renderer::__render()
 			s_nRenderTimes = 0;
 		}
 
-		D2D1_SIZE_F renderTargetSize = s_pRenderTarget->GetSize();
-		D2D1_RECT_F rect = D2D1::RectF(0, 0, renderTargetSize.width, renderTargetSize.height);
-
 		s_pSolidBrush->SetColor(D2D1::ColorF(D2D1::ColorF::White));
 		s_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-		s_pRenderTarget->DrawTextW(s_sFpsText, (UINT32)s_sFpsText.getLength(), s_pTextFormat, rect, s_pSolidBrush);
+		s_pRenderTarget->DrawTextW(s_sFpsText, (UINT32)s_sFpsText.getLength(), s_pTextFormat, D2D1::RectF(), s_pSolidBrush);
 	}
 
 	// ÷’÷π‰÷»æ

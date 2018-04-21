@@ -464,13 +464,9 @@ struct Font
 };
 
 
-class ObjectManager;
-
 // 基础对象
 class Object
 {
-	friend ObjectManager;
-
 public:
 	Object();
 
@@ -483,11 +479,13 @@ public:
 	void release();
 
 	// 获取引用计数
-	int getReferenceCount() const;
+	int getRefCount() const;
+
+	// 销毁对象
+	virtual void destroy() {}
 
 private:
 	int m_nRefCount;
-	bool m_bManaged;
 };
 
 
@@ -640,6 +638,9 @@ public:
 	void showCollider(
 		bool visiable = true
 	);
+
+	// 销毁对象
+	virtual void destroy() override;
 
 protected:
 	// 渲染场景画面

@@ -164,14 +164,14 @@ void e2d::Game::destroy()
 	ColliderManager::__uninit();
 	// 删除动画
 	ActionManager::__uninit();
+	// 删除所有对象
+	ObjectManager::__clear();
+	// 清空图片缓存
+	Image::clearCache();
 	// 关闭输入
 	Input::__uninit();
 	// 恢复计时操作
 	Time::__uninit();
-	// 清空图片缓存
-	Image::clearCache();
-	// 刷新内存池
-	ObjectManager::__clear();
 	// 删除渲染相关资源
 	Renderer::__discardResources();
 	// 销毁窗口

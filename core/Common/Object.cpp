@@ -3,9 +3,8 @@
 
 e2d::Object::Object()
 	: m_nRefCount(0)
-	, m_bManaged(false)
 {
-	ObjectManager::add(this);	// 将该对象放入释放池中
+	ObjectManager::__add(this);
 }
 
 e2d::Object::~Object()
@@ -26,7 +25,7 @@ void e2d::Object::release()
 	ObjectManager::flush();
 }
 
-int e2d::Object::getReferenceCount() const
+int e2d::Object::getRefCount() const
 {
 	return m_nRefCount;
 }

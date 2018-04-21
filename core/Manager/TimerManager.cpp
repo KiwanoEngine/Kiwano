@@ -170,7 +170,7 @@ void e2d::TimerManager::__uninit()
 {
 	FOR_LOOP(timer, s_vTimers)
 	{
-		timer->release();
+		SafeRelease(&timer);
 	}
 	s_vTimers.clear();
 }

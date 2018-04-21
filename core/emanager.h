@@ -21,17 +21,18 @@ class CollisionListener;
 class ObjectManager
 {
 	friend Game;
+	friend Object;
 
 public:
-	// 将一个对象放入内存池
-	static void add(
-		Object * nptr
-	);
-
 	// 释放垃圾对象的内存空间
 	static void flush();
 
 private:
+	// 将对象放入内存池进行管理
+	static void __add(
+		Object * pObject
+	);
+
 	// 更新对象管理器
 	static void __update();
 

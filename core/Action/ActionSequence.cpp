@@ -29,10 +29,6 @@ e2d::ActionSequence::ActionSequence(int number, Action * action1, ...) :
 
 e2d::ActionSequence::~ActionSequence()
 {
-	FOR_LOOP(action, m_vActions)
-	{
-		SafeRelease(&action);
-	}
 }
 
 void e2d::ActionSequence::_init()
@@ -48,6 +44,15 @@ void e2d::ActionSequence::_init()
 	}
 	// 初始化第一个动作
 	m_vActions[0]->_init();
+}
+
+void e2d::ActionSequence::destroy()
+{
+	Action::destroy();
+	FOR_LOOP(action, m_vActions)
+	{
+		SafeRelease(&action);
+	}
 }
 
 void e2d::ActionSequence::_update()

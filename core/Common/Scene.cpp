@@ -16,7 +16,6 @@ e2d::Scene::Scene()
 
 e2d::Scene::~Scene()
 {
-	SafeRelease(&m_pRoot);
 }
 
 void e2d::Scene::_render()
@@ -76,4 +75,9 @@ e2d::Node * e2d::Scene::getRoot() const
 void e2d::Scene::showCollider(bool visiable)
 {
 	m_bColliderVisiable = visiable;
+}
+
+void e2d::Scene::destroy()
+{
+	SafeRelease(&m_pRoot);
 }

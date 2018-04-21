@@ -27,7 +27,6 @@ e2d::Sprite::Sprite(String imageFileName, double x, double y, double width, doub
 
 e2d::Sprite::~Sprite()
 {
-	SafeRelease(&m_pImage);
 }
 
 void e2d::Sprite::open(Image * image)
@@ -82,4 +81,10 @@ void e2d::Sprite::onRender()
 			)
 		);
 	}
+}
+
+void e2d::Sprite::destroy()
+{
+	Node::destroy();
+	SafeRelease(&m_pImage);
 }
