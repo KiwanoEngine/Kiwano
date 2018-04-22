@@ -199,8 +199,8 @@ void e2d::Renderer::__render()
 			s_pTextRenderer->SetTextStyle(
 				D2D1::ColorF(D2D1::ColorF::White),
 				TRUE,
-				D2D1::ColorF(D2D1::ColorF::Black),
-				1.0f,
+				D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
+				1.5f,
 				D2D1_LINE_JOIN::D2D1_LINE_JOIN_ROUND
 			);
 

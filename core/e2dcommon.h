@@ -507,7 +507,7 @@ struct TextStyle
 		bool hasUnderline = false,
 		bool hasStrikethrough = false,
 		bool hasOutline = true,
-		Color outlineColor = Color::BLACK,
+		Color outlineColor = Color(Color::BLACK, 0.5),
 		double outlineWidth = 1.0,
 		int outlineJoin = LineJoin::ROUND
 	);

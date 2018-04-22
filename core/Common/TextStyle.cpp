@@ -9,7 +9,7 @@ e2d::TextStyle::TextStyle()
 	, hasUnderline(false)
 	, hasStrikethrough(false)
 	, hasOutline(true)
-	, outlineColor(Color::BLACK)
+	, outlineColor(Color(Color::BLACK, 0.5))
 	, outlineWidth(1.0)
 	, outlineJoin(LineJoin::ROUND)
 {}
