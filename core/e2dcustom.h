@@ -28,7 +28,7 @@ namespace e2d
 
 		STDMETHOD_(void, SetTextStyle)(
 			CONST D2D1_COLOR_F &fillColor,
-			BOOL showOutline,
+			BOOL hasOutline,
 			CONST D2D1_COLOR_F &outlineColor,
 			FLOAT outlineWidth,
 			D2D1_LINE_JOIN outlineJoin

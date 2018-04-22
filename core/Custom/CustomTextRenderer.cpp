@@ -32,14 +32,14 @@ CustomTextRenderer::~CustomTextRenderer()
 
 STDMETHODIMP_(void) CustomTextRenderer::SetTextStyle(
 	CONST D2D1_COLOR_F &fillColor,
-	BOOL showOutline,
+	BOOL hasOutline,
 	CONST D2D1_COLOR_F &outlineColor,
 	FLOAT outlineWidth,
 	D2D1_LINE_JOIN outlineJoin
 )
 {
 	sFillColor_ = fillColor;
-	bShowOutline_ = showOutline;
+	bShowOutline_ = hasOutline;
 	sOutlineColor_ = outlineColor;
 	fOutlineWidth = 2 * outlineWidth;
 	nOutlineJoin_ = outlineJoin;

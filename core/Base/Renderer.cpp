@@ -237,7 +237,7 @@ e2d::Color e2d::Renderer::getBackgroundColor()
 
 void e2d::Renderer::setBackgroundColor(Color color)
 {
-	s_nClearColor = D2D1::ColorF(color.r, color.g, color.b, color.a);
+	s_nClearColor = color.toColorF();
 }
 
 void e2d::Renderer::showFps(bool show)

@@ -569,7 +569,7 @@ public:
 		bool italic = false,					/* 斜体 */
 		bool hasUnderline = false,				/* 下划线 */
 		bool hasStrikethrough = false,			/* 删除线 */
-		bool showOutline = true,				/* 显示描边 */
+		bool hasOutline = true,					/* 显示描边 */
 		UINT32 outlineColor = Color::BLACK,		/* 描边颜色 */
 		UINT32 outlineWidth = 1.0				/* 描边线宽 */
 	);
@@ -609,8 +609,14 @@ public:
 	// 是否是斜体
 	bool isItalic() const;
 
+	// 是否显示删除线
+	bool hasStrikethrough() const;
+
+	// 是否显示下划线
+	bool hasUnderline() const;
+
 	// 是否显示描边
-	bool isShowOutline() const;
+	bool hasOutline() const;
 
 	// 设置文本
 	void setText(
@@ -673,8 +679,8 @@ public:
 	);
 
 	// 设置是否显示描边
-	void showOutline(
-		bool showOutline
+	void setOutline(
+		bool hasOutline
 	);
 
 	// 设置描边颜色

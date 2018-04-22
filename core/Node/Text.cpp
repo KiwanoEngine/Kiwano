@@ -59,7 +59,7 @@ e2d::Text::Text(
 	bool italic, 
 	bool hasUnderline, 
 	bool hasStrikethrough,
-	bool showOutline,
+	bool hasOutline,
 	UINT32 outlineColor,
 	UINT32 outlineWidth
 )
@@ -72,7 +72,7 @@ e2d::Text::Text(
 		italic, 
 		hasUnderline, 
 		hasStrikethrough, 
-		showOutline, 
+		hasOutline, 
 		outlineColor,
 		outlineWidth
 	)
@@ -156,9 +156,19 @@ bool e2d::Text::isItalic() const
 	return m_TextStyle.italic;
 }
 
-bool e2d::Text::isShowOutline() const
+bool e2d::Text::hasStrikethrough() const
 {
-	return m_TextStyle.showOutline;
+	return m_TextStyle.hasStrikethrough;
+}
+
+bool e2d::Text::hasUnderline() const
+{
+	return m_TextStyle.hasUnderline;
+}
+
+bool e2d::Text::hasOutline() const
+{
+	return m_TextStyle.hasOutline;
 }
 
 void e2d::Text::setText(String text)
@@ -232,9 +242,9 @@ void e2d::Text::setAlignment(int nAlign)
 
 void e2d::Text::setUnderline(bool hasUnderline)
 {
-	if (m_TextStyle.underline != hasUnderline)
+	if (m_TextStyle.hasUnderline != hasUnderline)
 	{
-		m_TextStyle.underline = hasUnderline;
+		m_TextStyle.hasUnderline = hasUnderline;
 		if (!m_pDWriteTextFormat)
 			_createFormat();
 		_createLayout();
@@ -243,18 +253,18 @@ void e2d::Text::setUnderline(bool hasUnderline)
 
 void e2d::Text::setStrikethrough(bool hasStrikethrough)
 {
-	if (m_TextStyle.strikethrough != hasStrikethrough)
+	if (m_TextStyle.hasStrikethrough != hasStrikethrough)
 	{
-		m_TextStyle.strikethrough = hasStrikethrough;
+		m_TextStyle.hasStrikethrough = hasStrikethrough;
 		if (!m_pDWriteTextFormat)
 			_createFormat();
 		_createLayout();
 	}
 }
 
-void e2d::Text::showOutline(bool showOutline)
+void e2d::Text::setOutline(bool hasOutline)
 {
-	m_TextStyle.showOutline = showOutline;
+	m_TextStyle.hasOutline = hasOutline;
 }
 
 void e2d::Text::setOutlineColor(Color outlineColor)
@@ -284,7 +294,7 @@ void e2d::Text::onRender()
 		auto pTextRenderer = Renderer::getCustomTextRenderer();
 		pTextRenderer->SetTextStyle(
 			m_TextStyle.color.toColorF(),
-			m_TextStyle.showOutline,
+			m_TextStyle.hasOutline,
 			m_TextStyle.outlineColor.toColorF(),
 			static_cast<FLOAT>(m_TextStyle.outlineWidth),
 			D2D1_LINE_JOIN(m_TextStyle.outlineJoin)
@@ -409,11 +419,11 @@ void e2d::Text::_createLayout()
 
 	// 添加下划线和删除线
 	DWRITE_TEXT_RANGE range = { 0, length };
-	if (m_TextStyle.underline)
+	if (m_TextStyle.hasUnderline)
 	{
 		m_pDWriteTextLayout->SetUnderline(true, range);
 	}
-	if (m_TextStyle.strikethrough)
+	if (m_TextStyle.hasStrikethrough)
 	{
 		m_pDWriteTextLayout->SetStrikethrough(true, range);
 	}

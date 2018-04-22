@@ -34,15 +34,15 @@ e2d::Color::Color(double r, double g, double b, double alpha)
 
 e2d::Color::Color(UINT32 rgb)
 {
-	init(rgb, 1);
+	_init(rgb, 1);
 }
 
 e2d::Color::Color(UINT32 rgb, double alpha)
 {
-	init(rgb, alpha);
+	_init(rgb, alpha);
 }
 
-void e2d::Color::init(UINT32 rgb, double alpha)
+void e2d::Color::_init(UINT32 rgb, double alpha)
 {
 	r = static_cast<float>((rgb & sc_redMask) >> sc_redShift) / 255.f;
 	g = static_cast<float>((rgb & sc_greenMask) >> sc_greenShift) / 255.f;

@@ -6,9 +6,9 @@ e2d::TextStyle::TextStyle()
 	, color(Color::WHITE)
 	, fontWeight(FontWeight::NORMAL)
 	, italic(false)
-	, underline(false)
-	, strikethrough(false)
-	, showOutline(true)
+	, hasUnderline(false)
+	, hasStrikethrough(false)
+	, hasOutline(true)
 	, outlineColor(Color::BLACK)
 	, outlineWidth(1.0)
 	, outlineJoin(LineJoin::ROUND)
@@ -22,7 +22,7 @@ e2d::TextStyle::TextStyle(
 	bool italic, 
 	bool hasUnderline, 
 	bool hasStrikethrough, 
-	bool showOutline,
+	bool hasOutline,
 	Color outlineColor,
 	double outlineWidth,
 	int outlineJoin
@@ -32,9 +32,9 @@ e2d::TextStyle::TextStyle(
 	, color(color)
 	, fontWeight(fontWeight)
 	, italic(italic)
-	, underline(hasUnderline)
-	, strikethrough(hasStrikethrough)
-	, showOutline(showOutline)
+	, hasUnderline(hasUnderline)
+	, hasStrikethrough(hasStrikethrough)
+	, hasOutline(hasOutline)
 	, outlineColor(outlineColor)
 	, outlineWidth(outlineWidth)
 	, outlineJoin(outlineJoin)
