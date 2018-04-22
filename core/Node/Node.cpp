@@ -948,11 +948,6 @@ bool e2d::Node::isPointIn(Point point) const
 		return true;
 	}
 
-	// 判断点是否在子节点内
-	FOR_LOOP(child, m_vChildren)
-		if (child->isPointIn(point))
-			return true;
-
 	return false;
 }
 
@@ -1009,17 +1004,6 @@ bool e2d::Node::isIntersectWith(const Node * pNode) const
 		}
 	}
 
-	// 判断和其子节点是否相交
-	FOR_LOOP(pNodeChild, pNode->m_vChildren)
-		if (this->isIntersectWith(pNodeChild))
-			return true;
-
-	// 判断子节点和其是否相交
-	FOR_LOOP(child, m_vChildren)
-		if (child->isIntersectWith(pNode))
-			return true;
-
-	// 都不相交，返回 false
 	return false;
 }
 

@@ -1,7 +1,7 @@
 #include "..\e2dnode.h"
 #include "..\e2dmanager.h"
 
-#define SAFE_SETTER(pointer, func, ...) if (pointer) { pointer->##func(__VA_ARGS__); }
+#define SAFE_SET(pointer, func, ...) if (pointer) { pointer->##func(__VA_ARGS__); }
 
 
 e2d::Button::Button()
@@ -235,10 +235,10 @@ void e2d::Button::_setState(BTN_STATE state)
 
 void e2d::Button::_updateVisiable()
 {
-	SAFE_SETTER(m_pNormal, setVisiable, false);
-	SAFE_SETTER(m_pMouseover, setVisiable, false);
-	SAFE_SETTER(m_pSelected, setVisiable, false);
-	SAFE_SETTER(m_pDisabled, setVisiable, false);
+	SAFE_SET(m_pNormal, setVisiable, false);
+	SAFE_SET(m_pMouseover, setVisiable, false);
+	SAFE_SET(m_pSelected, setVisiable, false);
+	SAFE_SET(m_pDisabled, setVisiable, false);
 
 	if (m_bEnable)
 	{
