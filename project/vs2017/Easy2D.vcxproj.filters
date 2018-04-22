@@ -228,6 +228,9 @@
     <ClCompile Include="..\..\core\Common\Color.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Common\Function.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />

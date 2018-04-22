@@ -11,17 +11,6 @@ namespace e2d
 {
 
 
-// 函数对象
-typedef std::function<void()> Function;
-
-// 创建函数对象
-template<typename Object, typename Func>
-inline Function CreateFunc(Object&& obj, Func&& func)
-{
-	return std::bind(func, obj);
-}
-
-
 #if HIGHER_THAN_VS2012
 
 // 初始化列表
@@ -541,6 +530,46 @@ struct NodeProperty
 	double rotation;	// 旋转角度
 	double skewAngleX;	// 横向倾斜角度
 	double skewAngleY;	// 纵向倾斜角度
+};
+
+
+// 函数对象
+class Function
+{
+public:
+	Function();
+
+	Function(
+		std::nullptr_t
+	);
+
+	Function(
+		std::function<void()> func
+	);
+
+	template<typename Func>
+	Function(
+		Func func
+	) 
+	: m_func(func) 
+	{
+	}
+
+	template<typename Func, typename Object>
+	Function(
+		Func&& func, 
+		Object&& obj
+	)
+	{
+		m_func = std::bind(func, obj);
+	}
+
+	void operator() (void) const;
+
+	operator bool() const;
+
+protected:
+	std::function<void()> m_func;
 };
 
 
