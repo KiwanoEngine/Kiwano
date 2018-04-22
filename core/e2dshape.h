@@ -18,22 +18,22 @@ public:
 	int getStyle() const;
 
 	// 获取填充颜色
-	UINT32 getFillColor() const;
+	Color getFillColor() const;
 
 	// 获取线条颜色
-	UINT32 getLineColor() const;
+	Color getLineColor() const;
 
 	// 获取线条宽度
 	double getStrokeWidth() const;
 
 	// 设置填充颜色
 	void setFillColor(
-		UINT32 fillColor
+		Color fillColor
 	);
 
 	// 设置线条颜色
 	void setLineColor(
-		UINT32 lineColor
+		Color lineColor
 	);
 
 	// 设置线条宽度
@@ -57,8 +57,8 @@ protected:
 protected:
 	int		m_nStyle;
 	float	m_fStrokeWidth;
-	UINT32	m_nLineColor;
-	UINT32	m_nFillColor;
+	Color	m_nLineColor;
+	Color	m_nFillColor;
 };
 
 

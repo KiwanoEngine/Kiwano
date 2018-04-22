@@ -3,7 +3,7 @@
 e2d::Shape::Shape()
 	: m_nStyle(ShapeStyle::SOLID)
 	, m_nFillColor(Color::WHITE)
-	, m_nLineColor(Color::BLUE)
+	, m_nLineColor(Color::BLUE, 0.5)
 	, m_fStrokeWidth(1)
 {
 }
@@ -14,28 +14,31 @@ e2d::Shape::~Shape()
 
 void e2d::Shape::onRender()
 {
+	auto pBrush = Renderer::getSolidColorBrush();
+	pBrush->SetOpacity(m_fDisplayOpacity);
+
 	switch (m_nStyle)
 	{
 	case ShapeStyle::FILL:
 	{
-		Renderer::getSolidColorBrush()->SetColor(D2D1::ColorF(m_nFillColor, m_fDisplayOpacity));
+		pBrush->SetColor(m_nFillColor.toColorF());
 		this->_renderFill();
 
-		Renderer::getSolidColorBrush()->SetColor(D2D1::ColorF(m_nLineColor, m_fDisplayOpacity));
+		pBrush->SetColor(m_nLineColor.toColorF());
 		this->_renderLine();
 		break;
 	}
 
 	case ShapeStyle::ROUND:
 	{
-		Renderer::getSolidColorBrush()->SetColor(D2D1::ColorF(m_nLineColor, m_fDisplayOpacity));
+		pBrush->SetColor(m_nLineColor.toColorF());
 		this->_renderLine();
 		break;
 	}
 
 	case ShapeStyle::SOLID:
 	{
-		Renderer::getSolidColorBrush()->SetColor(D2D1::ColorF(m_nFillColor, m_fDisplayOpacity));
+		pBrush->SetColor(m_nFillColor.toColorF());
 		this->_renderFill();
 		break;
 	}
@@ -45,12 +48,12 @@ void e2d::Shape::onRender()
 	}
 }
 
-UINT32 e2d::Shape::getFillColor() const
+e2d::Color e2d::Shape::getFillColor() const
 {
 	return m_nFillColor;
 }
 
-UINT32 e2d::Shape::getLineColor() const
+e2d::Color e2d::Shape::getLineColor() const
 {
 	return m_nLineColor;
 }
@@ -65,12 +68,12 @@ int e2d::Shape::getStyle() const
 	return m_nStyle;
 }
 
-void e2d::Shape::setFillColor(UINT32 fillColor)
+void e2d::Shape::setFillColor(Color fillColor)
 {
 	m_nFillColor = fillColor;
 }
 
-void e2d::Shape::setLineColor(UINT32 lineColor)
+void e2d::Shape::setLineColor(Color lineColor)
 {
 	m_nLineColor = lineColor;
 }

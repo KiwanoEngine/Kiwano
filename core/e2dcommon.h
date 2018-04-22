@@ -210,7 +210,13 @@ private:
 class Color
 {
 public:
-	enum : UINT32
+	float r;
+	float g;
+	float b;
+	float a;
+
+public:
+	enum RGB_VALUE : UINT32
 	{
 		ALICE_BLUE = 0xF0F8FF,
 		AQUA = 0x00FFFF,
@@ -275,6 +281,38 @@ public:
 		YELLOW = 0xFFFF00,
 		YELLOW_GREEN = 0x9ACD32
 	};
+
+public:
+	Color();
+
+	Color(
+		double r,
+		double g,
+		double b
+	);
+
+	Color(
+		double r,
+		double g,
+		double b,
+		double alpha
+	);
+
+	Color(
+		UINT32 rgb
+	);
+
+	Color(
+		UINT32 rgb,
+		double alpha
+	);
+
+	void init(
+		UINT32 rgb, 
+		double alpha
+	);
+
+	D2D1_COLOR_F toColorF() const;
 };
 
 
@@ -457,13 +495,13 @@ struct TextStyle
 {
 	String	fontFamily;		// 字体
 	double	fontSize;		// 字号
-	UINT32	color;			// 颜色
-	UINT32	weight;			// 粗细值
+	Color	color;			// 颜色
+	UINT32	fontWeight;		// 粗细值
 	bool	italic;			// 斜体
 	bool	underline;		// 下划线
 	bool	strikethrough;	// 删除线
 	bool	showOutline;	// 显示描边
-	UINT32	outlineColor;	// 描边颜色
+	Color	outlineColor;	// 描边颜色
 	double	outlineWidth;	// 描边线宽
 	int		outlineJoin;	// 描边线相交样式
 
@@ -473,14 +511,14 @@ struct TextStyle
 	TextStyle(
 		String fontFamily,
 		double fontSize = 22,
-		UINT32 color = Color::WHITE,
-		UINT32 textStyleWeight = FontWeight::NORMAL,
+		Color color = Color::WHITE,
+		UINT32 fontWeight = FontWeight::NORMAL,
 		bool italic = false,
 		bool hasUnderline = false,
 		bool hasStrikethrough = false,
 		bool showOutline = true,
-		UINT32 outlineColor = Color::BLACK,
-		UINT32 outlineWidth = 1.0,
+		Color outlineColor = Color::BLACK,
+		double outlineWidth = 1.0,
 		int outlineJoin = LineJoin::ROUND
 	);
 };

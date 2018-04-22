@@ -4,8 +4,7 @@
 
 e2d::Collider::Collider()
 	: m_bIsVisiable(true)
-	, m_nColor(Color::RED)
-	, m_fOpacity(1)
+	, m_nColor(Color::RED, 0.7f)
 	, m_pParentNode(nullptr)
 	, m_pTransformedGeometry(nullptr)
 	, m_bEnable(true)
@@ -23,6 +22,11 @@ e2d::Node * e2d::Collider::getParentNode() const
 	return m_pParentNode;
 }
 
+e2d::Color e2d::Collider::getColor() const
+{
+	return m_nColor;
+}
+
 void e2d::Collider::setEnable(bool bEnable)
 {
 	m_bEnable = bEnable;
@@ -33,14 +37,9 @@ void e2d::Collider::setVisiable(bool bVisiable)
 	m_bIsVisiable = bVisiable;
 }
 
-void e2d::Collider::setColor(UINT32 color)
+void e2d::Collider::setColor(Color color)
 {
 	m_nColor = color;
-}
-
-void e2d::Collider::setOpacity(double opacity)
-{
-	m_fOpacity = min(max(static_cast<float>(opacity), 0), 1);
 }
 
 void e2d::Collider::setAutoResize(bool bEnable)
@@ -55,7 +54,7 @@ void e2d::Collider::_render()
 		// 获取纯色画刷
 		ID2D1SolidColorBrush * pBrush = Renderer::getSolidColorBrush();
 		// 设置画刷颜色和透明度
-		pBrush->SetColor(D2D1::ColorF(m_nColor, m_fOpacity));
+		pBrush->SetColor(m_nColor.toColorF());
 		// 绘制几何碰撞体
 		Renderer::getRenderTarget()->DrawGeometry(m_pTransformedGeometry, pBrush);
 	}

@@ -114,15 +114,15 @@ double e2d::Text::getFontSize() const
 
 UINT32 e2d::Text::getFontWeight() const
 {
-	return m_TextStyle.weight;
+	return m_TextStyle.fontWeight;
 }
 
-UINT32 e2d::Text::getColor() const
+e2d::Color e2d::Text::getColor() const
 {
 	return m_TextStyle.color;
 }
 
-UINT32 e2d::Text::getOutlineColor() const
+e2d::Color e2d::Text::getOutlineColor() const
 {
 	return m_TextStyle.outlineColor;
 }
@@ -185,13 +185,13 @@ void e2d::Text::setFontSize(double fontSize)
 	_reset();
 }
 
-void e2d::Text::setFontWeight(UINT32 textStyleWeight)
+void e2d::Text::setFontWeight(UINT32 fontWeight)
 {
-	m_TextStyle.weight = textStyleWeight;
+	m_TextStyle.fontWeight = fontWeight;
 	_reset();
 }
 
-void e2d::Text::setColor(UINT32 color)
+void e2d::Text::setColor(Color color)
 {
 	m_TextStyle.color = color;
 }
@@ -257,7 +257,7 @@ void e2d::Text::showOutline(bool showOutline)
 	m_TextStyle.showOutline = showOutline;
 }
 
-void e2d::Text::setOutlineColor(UINT32 outlineColor)
+void e2d::Text::setOutlineColor(Color outlineColor)
 {
 	m_TextStyle.outlineColor = outlineColor;
 }
@@ -283,9 +283,9 @@ void e2d::Text::onRender()
 		// 获取文本渲染器
 		auto pTextRenderer = Renderer::getCustomTextRenderer();
 		pTextRenderer->SetTextStyle(
-			D2D1::ColorF(m_TextStyle.color),
+			m_TextStyle.color.toColorF(),
 			m_TextStyle.showOutline,
-			D2D1::ColorF(m_TextStyle.outlineColor),
+			m_TextStyle.outlineColor.toColorF(),
 			static_cast<FLOAT>(m_TextStyle.outlineWidth),
 			D2D1_LINE_JOIN(m_TextStyle.outlineJoin)
 		);
@@ -308,7 +308,7 @@ void e2d::Text::_createFormat()
 	HRESULT hr = Renderer::getIDWriteFactory()->CreateTextFormat(
 		m_TextStyle.fontFamily,
 		NULL,
-		DWRITE_FONT_WEIGHT(m_TextStyle.weight),
+		DWRITE_FONT_WEIGHT(m_TextStyle.fontWeight),
 		m_TextStyle.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
 		static_cast<float>(m_TextStyle.fontSize),

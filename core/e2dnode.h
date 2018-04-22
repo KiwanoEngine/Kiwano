@@ -592,10 +592,10 @@ public:
 	UINT32 getFontWeight() const;
 
 	// 获取文字颜色
-	UINT32 getColor() const;
+	Color getColor() const;
 
 	// 获取描边颜色
-	UINT32 getOutlineColor() const;
+	Color getOutlineColor() const;
 
 	// 获取描边线宽
 	double getOutlineWidth() const;
@@ -634,12 +634,12 @@ public:
 
 	// 设置字体粗细值（默认值为 FontWeight::NORMAL）
 	void setFontWeight(
-		UINT32 textStyleWeight
+		UINT32 fontWeight
 	);
 
 	// 设置文字颜色（默认值为 Color::WHITE）
 	void setColor(
-		UINT32 color
+		Color color
 	);
 
 	// 设置文字斜体（默认值为 false）
@@ -679,7 +679,7 @@ public:
 
 	// 设置描边颜色
 	void setOutlineColor(
-		UINT32 outlineColor
+		Color outlineColor
 	);
 
 	// 设置描边线宽
@@ -709,9 +709,9 @@ protected:
 	String	m_sText;
 	bool	m_bWrappingEnable;
 	float	m_fWrappingWidth;
-	TextStyle	m_TextStyle;
 	float	m_fLineSpacing;
 	int		m_nAlign;
+	TextStyle	m_TextStyle;
 	IDWriteTextFormat * m_pDWriteTextFormat;
 	IDWriteTextLayout * m_pDWriteTextLayout;
 };

@@ -4,7 +4,7 @@ e2d::TextStyle::TextStyle()
 	: fontFamily("")
 	, fontSize(22)
 	, color(Color::WHITE)
-	, weight(FontWeight::NORMAL)
+	, fontWeight(FontWeight::NORMAL)
 	, italic(false)
 	, underline(false)
 	, strikethrough(false)
@@ -17,20 +17,20 @@ e2d::TextStyle::TextStyle()
 e2d::TextStyle::TextStyle(
 	String fontFamily, 
 	double fontSize, 
-	UINT32 color, 
-	UINT32 textStyleWeight, 
+	Color color, 
+	UINT32 fontWeight, 
 	bool italic, 
 	bool hasUnderline, 
 	bool hasStrikethrough, 
 	bool showOutline,
-	UINT32 outlineColor,
-	UINT32 outlineWidth,
+	Color outlineColor,
+	double outlineWidth,
 	int outlineJoin
 )
 	: fontFamily(fontFamily)
 	, fontSize(fontSize)
 	, color(color)
-	, weight(textStyleWeight)
+	, fontWeight(fontWeight)
 	, italic(italic)
 	, underline(hasUnderline)
 	, strikethrough(hasStrikethrough)

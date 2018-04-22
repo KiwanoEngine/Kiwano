@@ -28,6 +28,9 @@ public:
 	// 获取父节点
 	Node * getParentNode() const;
 
+	// 获取绘制颜色
+	Color getColor() const;
+
 	// 启用或关闭该碰撞体
 	virtual void setEnable(
 		bool bEnable
@@ -40,12 +43,7 @@ public:
 
 	// 设置绘制颜色
 	void setColor(
-		UINT32 color
-	);
-
-	// 设置绘制透明度
-	void setOpacity(
-		double opacity
+		Color color
 	);
 
 	// 设置大小跟随
@@ -70,8 +68,7 @@ protected:
 	bool	m_bEnable;
 	bool	m_bIsVisiable;
 	bool	m_bAutoResize;
-	UINT32	m_nColor;
-	float	m_fOpacity;
+	Color	m_nColor;
 	Node *	m_pParentNode;
 	ID2D1TransformedGeometry * m_pTransformedGeometry;
 };

@@ -231,9 +231,12 @@ class Renderer
 	friend Window;
 
 public:
+	// 获取背景色
+	static Color getBackgroundColor();
+
 	// 修改背景色
 	static void setBackgroundColor(
-		UINT32 color
+		Color color
 	);
 
 	// 显示 FPS

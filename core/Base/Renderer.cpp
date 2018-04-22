@@ -230,9 +230,14 @@ void e2d::Renderer::__render()
 }
 
 
-void e2d::Renderer::setBackgroundColor(UINT32 color)
+e2d::Color e2d::Renderer::getBackgroundColor()
 {
-	s_nClearColor = D2D1::ColorF(color);
+	return Color(s_nClearColor.r, s_nClearColor.g, s_nClearColor.b, s_nClearColor.a);
+}
+
+void e2d::Renderer::setBackgroundColor(Color color)
+{
+	s_nClearColor = D2D1::ColorF(color.r, color.g, color.b, color.a);
 }
 
 void e2d::Renderer::showFps(bool show)
