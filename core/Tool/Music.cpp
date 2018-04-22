@@ -59,20 +59,20 @@ bool Music::open(String strFileName)
 {
 	if (m_bOpened)
 	{
-		WARN_IF(true, L"Music can be opened only once!");
+		WARN_IF(true, "Music can be opened only once!");
 		return false;
 	}
 
 	if (strFileName.isEmpty())
 	{
-		WARN_IF(true, L"Music::open Invalid file name.");
+		WARN_IF(true, "Music::open Invalid file name.");
 		return false;
 	}
 
 	IXAudio2 * pXAudio2 = MusicManager::getIXAudio2();
 	if (!pXAudio2)
 	{
-		WARN_IF(true, L"IXAudio2 nullptr pointer error!");
+		WARN_IF(true, "IXAudio2 nullptr pointer error!");
 		return false;
 	}
 
@@ -80,7 +80,7 @@ bool Music::open(String strFileName)
 	wchar_t strFilePath[MAX_PATH];
 	if (!_findMediaFileCch(strFilePath, MAX_PATH, strFileName))
 	{
-		WARN_IF(true, L"Failed to find media file: %s", (const wchar_t*)strFileName);
+		WARN_IF(true, "Failed to find media file: %s", (const wchar_t*)strFileName);
 		return false;
 	}
 
@@ -118,7 +118,7 @@ bool Music::open(String strFileName)
 	HRESULT hr;
 	if (FAILED(hr = pXAudio2->CreateSourceVoice(&m_pSourceVoice, m_pwfx)))
 	{
-		TraceError(L"Error %#X creating source voice", hr);
+		TraceError(L"Create source voice error", hr);
 		SAFE_DELETE_ARRAY(m_pbWaveData);
 		return false;
 	}
@@ -160,7 +160,7 @@ bool Music::play(int nLoopCount)
 	HRESULT hr;
 	if (FAILED(hr = m_pSourceVoice->SubmitSourceBuffer(&buffer)))
 	{
-		TraceError(L"Error %#X submitting source buffer", hr);
+		TraceError(L"Submitting source buffer error", hr);
 		m_pSourceVoice->DestroyVoice();
 		SAFE_DELETE_ARRAY(m_pbWaveData);
 		return false;

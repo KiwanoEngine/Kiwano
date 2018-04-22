@@ -1,14 +1,11 @@
 #pragma once
 
-
-// Modify the following defines if you have to target a platform prior to the ones specified below.
-// Refer to MSDN for the latest info on corresponding values for different platforms.
-#ifndef WINVER              // Allow use of features specific to Windows 7 or later.
-#define WINVER 0x0700       // Change this to the appropriate value to target other versions of Windows.
+#ifndef WINVER
+#define WINVER 0x0700       // Allow use of features specific to Windows 7 or later
 #endif
 
-#ifndef _WIN32_WINNT        // Allow use of features specific to Windows 7 or later.
-#define _WIN32_WINNT 0x0700 // Change this to the appropriate value to target other versions of Windows.
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0700 // Allow use of features specific to Windows 7 or later
 #endif
 
 #ifndef NTDDI_VERSION
@@ -19,7 +16,7 @@
 #define UNICODE
 #endif
 
-// Exclude rarely-used items from Windows headers.
+// Exclude rarely-used items from Windows headers
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -29,6 +26,19 @@
 #endif
 
 #define INITGUID
+
+
+#if _MSC_VER > 1700
+#define HIGHER_THAN_VS2012 1
+#else
+#define HIGHER_THAN_VS2012 0
+#endif
+
+#if _MSC_VER > 1600
+#define HIGHER_THAN_VS2010 1
+#else
+#define HIGHER_THAN_VS2010 0
+#endif
 
 // Windows Header Files
 #include <windows.h>
@@ -49,9 +59,11 @@
 #pragma comment(lib, "windowscodecs.lib")
 #pragma comment(lib, "winmm.lib")
 
-#if _MSC_VER > 1600
+#if HIGHER_THAN_VS2010
 #include <xaudio2.h>
 #pragma comment(lib, "xaudio2.lib")
+#elif
+#define MUSIC_CLASS_NAME L"Easy2DMusicCallbackWnd"
 #endif
 
 
@@ -60,28 +72,13 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
 #endif
 
-#define MUSIC_CLASS_NAME L"Easy2DMusicCallbackWnd"
-
-
-#if _MSC_VER > 1700
-#define HIGHER_THAN_VS2012 1
-#else
-#define HIGHER_THAN_VS2012 0
-#endif
-
-#if _MSC_VER > 1600
-#define HIGHER_THAN_VS2010 1
-#else
-#define HIGHER_THAN_VS2010 0
-#endif
-
 
 #ifndef ASSERT
 #if defined( DEBUG ) || defined( _DEBUG )
 	#define ASSERT(expression, message, ...) do {if (!(expression)) { fwprintf(stderr, L"Assert: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); abort(); }} while(0)
 #else
 	#define ASSERT(expression, message, ...) ((void)0)
-#endif //DEBUG || _DEBUG
+#endif
 #endif
 
 #ifndef WARN_IF
@@ -89,7 +86,7 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 	#define WARN_IF(expression, message, ...) do {if (expression) { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); }} while(0)
 #else
 	#define WARN_IF(expression, message, ...) ((void)0)
-#endif //DEBUG || _DEBUG
+#endif
 #endif
 
 
