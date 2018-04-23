@@ -31,6 +31,9 @@
     <Filter Include="Tool\Listener">
       <UniqueIdentifier>{8c3a8c7b-5406-400f-9ec1-db294632e449}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Custom">
+      <UniqueIdentifier>{7660a3fa-36f9-4b1b-8942-e38e02c0c95b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Action\Action.cpp">
@@ -92,9 +95,6 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Base\Window.cpp">
       <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Common\Font.cpp">
-      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Image.cpp">
       <Filter>Common</Filter>
@@ -219,18 +219,31 @@
     <ClCompile Include="..\..\core\Tool\Listener\Listener.cpp">
       <Filter>Tool\Listener</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Common\Color.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\Function.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\TextStyle.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Custom\CustomTextRenderer.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\core\eaction.h" />
+    <ClInclude Include="..\..\core\e2daction.h" />
+    <ClInclude Include="..\..\core\e2dbase.h" />
+    <ClInclude Include="..\..\core\e2dcollider.h" />
+    <ClInclude Include="..\..\core\e2dcommon.h" />
+    <ClInclude Include="..\..\core\e2dcustom.h" />
+    <ClInclude Include="..\..\core\e2dmacros.h" />
+    <ClInclude Include="..\..\core\e2dmanager.h" />
+    <ClInclude Include="..\..\core\e2dnode.h" />
+    <ClInclude Include="..\..\core\e2dshape.h" />
+    <ClInclude Include="..\..\core\e2dtool.h" />
+    <ClInclude Include="..\..\core\e2dtransition.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
-    <ClInclude Include="..\..\core\ebase.h" />
-    <ClInclude Include="..\..\core\ecollider.h" />
-    <ClInclude Include="..\..\core\ecommon.h" />
-    <ClInclude Include="..\..\core\emacros.h" />
-    <ClInclude Include="..\..\core\emanager.h" />
-    <ClInclude Include="..\..\core\enode.h" />
-    <ClInclude Include="..\..\core\eshape.h" />
-    <ClInclude Include="..\..\core\etool.h" />
-    <ClInclude Include="..\..\core\etransition.h" />
   </ItemGroup>
 </Project>

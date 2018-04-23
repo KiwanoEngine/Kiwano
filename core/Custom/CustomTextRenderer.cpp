@@ -16,7 +16,7 @@ CustomTextRenderer::CustomTextRenderer(
 	, sOutlineColor_()
 	, fOutlineWidth(1)
 	, bShowOutline_(TRUE)
-	, nOutlineJoin_(D2D1_LINE_JOIN::D2D1_LINE_JOIN_MITER)
+	, nOutlineJoin_(D2D1_LINE_JOIN_MITER)
 {
 	pD2DFactory_->AddRef();
 	pRT_->AddRef();

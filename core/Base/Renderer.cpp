@@ -201,7 +201,7 @@ void e2d::Renderer::__render()
 				TRUE,
 				D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
 				1.5f,
-				D2D1_LINE_JOIN::D2D1_LINE_JOIN_ROUND
+				D2D1_LINE_JOIN_ROUND
 			);
 
 			pTextLayout->Draw(NULL, s_pTextRenderer, 10, 0);

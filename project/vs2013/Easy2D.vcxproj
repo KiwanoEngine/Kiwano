@@ -92,9 +92,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -107,9 +108,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -126,8 +128,9 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,8 +149,9 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -182,13 +186,16 @@
     <ClCompile Include="..\..\core\Collider\ColliderCircle.cpp" />
     <ClCompile Include="..\..\core\Collider\ColliderEllipse.cpp" />
     <ClCompile Include="..\..\core\Collider\ColliderRect.cpp" />
-    <ClCompile Include="..\..\core\Common\Font.cpp" />
+    <ClCompile Include="..\..\core\Common\Color.cpp" />
+    <ClCompile Include="..\..\core\Common\Function.cpp" />
     <ClCompile Include="..\..\core\Common\Image.cpp" />
     <ClCompile Include="..\..\core\Common\Object.cpp" />
     <ClCompile Include="..\..\core\Common\Point.cpp" />
     <ClCompile Include="..\..\core\Common\Scene.cpp" />
     <ClCompile Include="..\..\core\Common\Size.cpp" />
     <ClCompile Include="..\..\core\Common\String.cpp" />
+    <ClCompile Include="..\..\core\Common\TextStyle.cpp" />
+    <ClCompile Include="..\..\core\Custom\CustomTextRenderer.cpp" />
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />
     <ClCompile Include="..\..\core\Manager\ColliderManager.cpp" />
     <ClCompile Include="..\..\core\Manager\InputManager.cpp" />
@@ -221,17 +228,18 @@
     <ClCompile Include="..\..\core\Transition\TransitionMove.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\core\eaction.h" />
+    <ClInclude Include="..\..\core\e2daction.h" />
+    <ClInclude Include="..\..\core\e2dbase.h" />
+    <ClInclude Include="..\..\core\e2dcollider.h" />
+    <ClInclude Include="..\..\core\e2dcommon.h" />
+    <ClInclude Include="..\..\core\e2dcustom.h" />
+    <ClInclude Include="..\..\core\e2dmacros.h" />
+    <ClInclude Include="..\..\core\e2dmanager.h" />
+    <ClInclude Include="..\..\core\e2dnode.h" />
+    <ClInclude Include="..\..\core\e2dshape.h" />
+    <ClInclude Include="..\..\core\e2dtool.h" />
+    <ClInclude Include="..\..\core\e2dtransition.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
-    <ClInclude Include="..\..\core\ebase.h" />
-    <ClInclude Include="..\..\core\ecollider.h" />
-    <ClInclude Include="..\..\core\ecommon.h" />
-    <ClInclude Include="..\..\core\emacros.h" />
-    <ClInclude Include="..\..\core\emanager.h" />
-    <ClInclude Include="..\..\core\enode.h" />
-    <ClInclude Include="..\..\core\eshape.h" />
-    <ClInclude Include="..\..\core\etool.h" />
-    <ClInclude Include="..\..\core\etransition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
