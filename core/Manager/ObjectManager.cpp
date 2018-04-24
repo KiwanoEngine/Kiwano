@@ -37,7 +37,7 @@ void e2d::ObjectManager::__update()
 
 void e2d::ObjectManager::__clear()
 {
-	FOR_LOOP(pObj, s_vObjectPool)
+	for (auto pObj : s_vObjectPool)
 	{
 		delete pObj;
 	}

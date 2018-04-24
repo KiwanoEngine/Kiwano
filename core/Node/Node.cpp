@@ -167,7 +167,7 @@ void e2d::Node::_drawCollider()
 	}
 
 	// 绘制所有子节点的几何碰撞体
-	FOR_LOOP(child, m_vChildren)
+	for (auto child : m_vChildren)
 	{
 		child->_drawCollider();
 	}
@@ -180,7 +180,7 @@ void e2d::Node::_onEnter()
 		this->m_bDisplayedInScene = true;
 		this->onEnter();
 
-		FOR_LOOP(child, m_vChildren)
+		for (auto child : m_vChildren)
 		{
 			child->_onEnter();
 		}
@@ -194,7 +194,7 @@ void e2d::Node::_onExit()
 		this->m_bDisplayedInScene = false;
 		this->onExit();
 
-		FOR_LOOP(child, m_vChildren)
+		for (auto child : m_vChildren)
 		{
 			child->_onExit();
 		}
@@ -243,7 +243,7 @@ void e2d::Node::_updateTransform()
 	// 标志已执行过变换
 	m_bTransformNeeded = false;
 	// 遍历子节点下的所有节点
-	FOR_LOOP(child, this->m_vChildren)
+	for (auto child : this->m_vChildren)
 	{
 		child->_updateTransform();
 	}
@@ -255,7 +255,7 @@ void e2d::Node::_updateOpacity()
 	{
 		m_fDisplayOpacity = m_fRealOpacity * m_pParent->m_fDisplayOpacity;
 	}
-	FOR_LOOP(child, m_vChildren)
+	for (auto child : m_vChildren)
 	{
 		child->_updateOpacity();
 	}
@@ -616,7 +616,7 @@ void e2d::Node::addColliableName(String collliderName)
 	m_vColliders.insert(hash);
 }
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 void e2d::Node::addColliableName(const InitList<String>& vCollliderName)
 {
 	for (const auto &name : vCollliderName)
@@ -672,7 +672,7 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 	}
 }
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 void e2d::Node::addChild(const InitList<Node*>& vNodes, int order)
 {
 	for (const auto &node : vNodes)
@@ -697,7 +697,7 @@ std::vector<e2d::Node*> e2d::Node::getChildren(String name) const
 	std::vector<Node*> vChildren;
 	unsigned int hash = name.getHashCode();
 
-	FOR_LOOP(child, m_vChildren)
+	for (auto child : m_vChildren)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
 		if (child->m_nHashName == hash && child->m_sName == name)
@@ -712,7 +712,7 @@ e2d::Node * e2d::Node::getChild(String name) const
 {
 	unsigned int hash = name.getHashCode();
 
-	FOR_LOOP(child, m_vChildren)
+	for (auto child : m_vChildren)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
 		if (child->m_nHashName == hash && child->m_sName == name)
@@ -813,7 +813,7 @@ void e2d::Node::removeChildren(String childName)
 void e2d::Node::clearAllChildren()
 {
 	// 所有节点的引用计数减一
-	FOR_LOOP(child, m_vChildren)
+	for (auto child : m_vChildren)
 	{
 		if (child->m_bDisplayedInScene)
 		{
@@ -849,7 +849,7 @@ void e2d::Node::runAction(Action * action)
 void e2d::Node::resumeAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
-	FOR_LOOP(action, actions)
+	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -861,7 +861,7 @@ void e2d::Node::resumeAction(String strActionName)
 void e2d::Node::pauseAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
-	FOR_LOOP(action, actions)
+	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -873,7 +873,7 @@ void e2d::Node::pauseAction(String strActionName)
 void e2d::Node::stopAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
-	FOR_LOOP(action, actions)
+	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -885,7 +885,7 @@ void e2d::Node::stopAction(String strActionName)
 e2d::Action * e2d::Node::getAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
-	FOR_LOOP(action, actions)
+	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -1031,7 +1031,7 @@ void e2d::Node::destroy()
 {
 	ActionManager::__clearAllBindedWith(this);
 	ColliderManager::__removeCollider(m_pCollider);
-	FOR_LOOP(child, m_vChildren)
+	for (auto child : m_vChildren)
 	{
 		SafeRelease(&child);
 	}
@@ -1073,7 +1073,7 @@ void e2d::Node::setName(String name)
 void e2d::Node::_setParentScene(Scene * scene)
 {
 	m_pParentScene = scene;
-	FOR_LOOP(child, m_vChildren)
+	for (auto child : m_vChildren)
 	{
 		child->_setParentScene(scene);
 	}

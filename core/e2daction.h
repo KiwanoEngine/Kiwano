@@ -406,7 +406,7 @@ public:
 	// 创建顺序动作
 	ActionSequence();
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 	// 创建顺序动作
 	ActionSequence(
 		const InitList<Action*>& vActions	/* 动作数组 */
@@ -427,7 +427,7 @@ public:
 		Action * action
 	);
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 	// 在结尾添加多个动作
 	void add(
 		const InitList<Action*>& vActions	/* 动作数组 */
@@ -545,7 +545,7 @@ public:
 		double interval		/* 帧间隔（秒） */
 	);
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 	// 创建帧动画
 	Animation(
 		const InitList<Image*>& vImages	/* 关键帧数组 */
@@ -580,7 +580,7 @@ public:
 		Image * frame	/* 关键帧 */
 	);
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 	// 添加多个关键帧
 	void add(
 		const InitList<Image*>& vImages	/* 关键帧数组 */
@@ -797,7 +797,7 @@ namespace e2d
 			return new (std::nothrow) ActionFunc(func);
 		}
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 		// 创建顺序动作
 		inline e2d::ActionSequence* Sequence(
 			const InitList<Action*>& vActions	/* 动作数组 */

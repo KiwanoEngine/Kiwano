@@ -11,7 +11,7 @@ namespace e2d
 {
 
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 
 // 初始化列表
 template <typename T>
@@ -727,7 +727,7 @@ public:
 		int zOrder = 0	/* 渲染顺序 */
 	);
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 	// 添加多个节点到场景
 	virtual void add(
 		const InitList<Node*>& vNodes,	/* 节点数组 */

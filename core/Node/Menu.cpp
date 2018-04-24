@@ -5,11 +5,11 @@ e2d::Menu::Menu()
 {
 }
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 e2d::Menu::Menu(const InitList<Button*>& vButtons)
 	: m_bEnable(true)
 {
-	FOR_LOOP(button, vButtons)
+	for (auto button : vButtons)
 	{
 		this->addButton(button);
 	}
@@ -47,7 +47,7 @@ void e2d::Menu::setEnable(bool enable)
 	{
 		m_bEnable = enable;
 
-		FOR_LOOP(button, m_vButtons)
+		for (auto button : m_vButtons)
 		{
 			button->setEnable(enable);
 		}

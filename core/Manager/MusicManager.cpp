@@ -96,34 +96,34 @@ e2d::Music * e2d::MusicManager::get(String strFilePath)
 
 void e2d::MusicManager::pauseAll()
 {
-	for (auto iter = GetMusicList().begin(); iter != GetMusicList().end(); iter++)
+	for (auto pair : GetMusicList())
 	{
-		(*iter).second->pause();
+		pair.second->pause();
 	}
 }
 
 void e2d::MusicManager::resumeAll()
 {
-	for (auto iter = GetMusicList().begin(); iter != GetMusicList().end(); iter++)
+	for (auto pair : GetMusicList())
 	{
-		(*iter).second->resume();
+		pair.second->resume();
 	}
 }
 
 void e2d::MusicManager::stopAll()
 {
-	for (auto iter = GetMusicList().begin(); iter != GetMusicList().end(); iter++)
+	for (auto pair : GetMusicList())
 	{
-		(*iter).second->stop();
+		pair.second->stop();
 	}
 }
 
 void e2d::MusicManager::__uninit()
 {
-	for (auto iter = GetMusicList().begin(); iter != GetMusicList().end(); iter++)
+	for (auto pair : GetMusicList())
 	{
-		(*iter).second->close();
-		(*iter).second->release();
+		pair.second->close();
+		pair.second->release();
 	}
 	GetMusicList().clear();
 }

@@ -84,7 +84,7 @@ void e2d::Timer::startOnce(Function func, double timeOut)
 
 void e2d::Timer::pause(String name)
 {
-	FOR_LOOP(timer, s_vTimers)
+	for (auto timer : s_vTimers)
 	{
 		if (timer->name == name)
 		{
@@ -95,7 +95,7 @@ void e2d::Timer::pause(String name)
 
 void e2d::Timer::resume(String name)
 {
-	FOR_LOOP(timer, s_vTimers)
+	for (auto timer : s_vTimers)
 	{
 		if (timer->name == name)
 		{
@@ -106,7 +106,7 @@ void e2d::Timer::resume(String name)
 
 void e2d::Timer::stop(String name)
 {
-	FOR_LOOP(timer, s_vTimers)
+	for (auto timer : s_vTimers)
 	{
 		if (timer->name == name)
 		{
@@ -117,7 +117,7 @@ void e2d::Timer::stop(String name)
 
 void e2d::Timer::pauseAll()
 {
-	FOR_LOOP(timer, s_vTimers)
+	for (auto timer : s_vTimers)
 	{
 		timer->running = false;
 	}
@@ -125,7 +125,7 @@ void e2d::Timer::pauseAll()
 
 void e2d::Timer::resumeAll()
 {
-	FOR_LOOP(timer, s_vTimers)
+	for (auto timer : s_vTimers)
 	{
 		timer->running = true;
 	}
@@ -133,7 +133,7 @@ void e2d::Timer::resumeAll()
 
 void e2d::Timer::stopAll()
 {
-	FOR_LOOP(timer, s_vTimers)
+	for (auto timer : s_vTimers)
 	{
 		timer->stopped = true;
 	}
@@ -168,7 +168,7 @@ void e2d::Timer::__update()
 
 void e2d::Timer::__resetAll()
 {
-	FOR_LOOP(timer, s_vTimers)
+	for (auto timer : s_vTimers)
 	{
 		timer->lastTime = Time::getTotalTime();
 	}
@@ -176,7 +176,7 @@ void e2d::Timer::__resetAll()
 
 void e2d::Timer::__uninit()
 {
-	FOR_LOOP(timer, s_vTimers)
+	for (auto timer : s_vTimers)
 	{
 		delete timer;
 	}

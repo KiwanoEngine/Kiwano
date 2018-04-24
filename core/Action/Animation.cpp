@@ -12,7 +12,7 @@ e2d::Animation::Animation(double interval)
 {
 }
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 
 e2d::Animation::Animation(const InitList<Image*>& vImages)
 	: m_nFrameIndex(0)
@@ -112,7 +112,7 @@ void e2d::Animation::reset()
 void e2d::Animation::destroy()
 {
 	Action::destroy();
-	FOR_LOOP(frame, m_vFrames)
+	for (auto frame : m_vFrames)
 	{
 		SafeRelease(&frame);
 	}
@@ -127,7 +127,7 @@ void e2d::Animation::add(Image * frame)
 	}
 }
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 void e2d::Animation::add(const InitList<Image*>& vImages)
 {
 	for (const auto &image : vImages)
@@ -153,7 +153,7 @@ void e2d::Animation::add(int number, Image * frame, ...)
 e2d::Animation * e2d::Animation::clone() const
 {
 	auto a = new Animation(m_fInterval);
-	FOR_LOOP(frame, m_vFrames)
+	for (auto frame : m_vFrames)
 	{
 		a->add(frame);
 	}

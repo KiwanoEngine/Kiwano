@@ -108,14 +108,6 @@ public:
 		double fFrequencyRatio	/* 频率比范围为 1/1024.0f ~ 1024.0f，其中 1.0 为正常声调 */
 	);
 
-private:
-	static bool __init();
-
-	static void __uninit();
-
-#if HIGHER_THAN_VS2010
-
-public:
 	// 获取 IXAudio2 对象
 	static IXAudio2 * getIXAudio2();
 
@@ -141,6 +133,11 @@ protected:
 		const wchar_t * strFilename
 	);
 
+private:
+	static bool __init();
+
+	static void __uninit();
+
 protected:
 	bool m_bOpened;
 	mutable bool m_bPlaying;
@@ -152,22 +149,6 @@ protected:
 	MMCKINFO m_ckRiff;
 	WAVEFORMATEX* m_pwfx;
 	IXAudio2SourceVoice* m_pSourceVoice;
-
-#else
-
-protected:
-	void _sendCommand(int nCommand, DWORD_PTR param1 = 0, DWORD_PTR parma2 = 0);
-
-	static LRESULT WINAPI MusicProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-
-protected:
-	MCIDEVICEID m_dev;
-	HWND        m_wnd;
-	UINT		m_nMusicID;
-	bool        m_bPlaying;
-	int			m_nRepeatTimes;
-
-#endif
 };
 
 

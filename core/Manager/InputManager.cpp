@@ -45,7 +45,7 @@ void e2d::InputManager::add(Function func, String name, bool paused)
 
 void e2d::InputManager::pause(String name)
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		if (pListener->name == name)
 		{
@@ -56,7 +56,7 @@ void e2d::InputManager::pause(String name)
 
 void e2d::InputManager::resume(String name)
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		if (pListener->name == name)
 		{
@@ -67,7 +67,7 @@ void e2d::InputManager::resume(String name)
 
 void e2d::InputManager::stop(String name)
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		if (pListener->name == name)
 		{
@@ -78,7 +78,7 @@ void e2d::InputManager::stop(String name)
 
 void e2d::InputManager::pauseAll()
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		pListener->running = false;
 	}
@@ -86,7 +86,7 @@ void e2d::InputManager::pauseAll()
 
 void e2d::InputManager::resumeAll()
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		pListener->running = true;
 	}
@@ -94,7 +94,7 @@ void e2d::InputManager::resumeAll()
 
 void e2d::InputManager::stopAll()
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		pListener->stopped = true;
 	}
@@ -125,7 +125,7 @@ void e2d::InputManager::__update()
 
 void e2d::InputManager::__uninit()
 {
-	FOR_LOOP(listener, s_vListeners)
+	for (auto listener : s_vListeners)
 	{
 		delete listener;
 	}

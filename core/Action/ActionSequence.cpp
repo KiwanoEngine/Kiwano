@@ -5,7 +5,7 @@ e2d::ActionSequence::ActionSequence()
 {
 }
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 e2d::ActionSequence::ActionSequence(const InitList<Action*>& vActions)
 	: m_nActionIndex(0)
 {
@@ -37,7 +37,7 @@ void e2d::ActionSequence::_init()
 	// 将所有动作与目标绑定
 	if (m_pTarget)
 	{
-		FOR_LOOP(action, m_vActions)
+		for (auto action : m_vActions)
 		{
 			action->m_pTarget = m_pTarget;
 		}
@@ -49,7 +49,7 @@ void e2d::ActionSequence::_init()
 void e2d::ActionSequence::destroy()
 {
 	Action::destroy();
-	FOR_LOOP(action, m_vActions)
+	for (auto action : m_vActions)
 	{
 		SafeRelease(&action);
 	}
@@ -79,7 +79,7 @@ void e2d::ActionSequence::_update()
 void e2d::ActionSequence::reset()
 {
 	Action::reset();
-	FOR_LOOP(action, m_vActions)
+	for (auto action : m_vActions)
 	{
 		action->reset();
 	}
@@ -88,7 +88,7 @@ void e2d::ActionSequence::reset()
 
 void e2d::ActionSequence::_resetTime()
 {
-	FOR_LOOP(action, m_vActions)
+	for (auto action : m_vActions)
 	{
 		action->_resetTime();
 	}
@@ -103,7 +103,7 @@ void e2d::ActionSequence::add(Action * action)
 	}
 }
 
-#if HIGHER_THAN_VS2012
+#ifdef HIGHER_THAN_VS2012
 void e2d::ActionSequence::add(const InitList<Action*>& vActions)
 {
 	for (const auto &action : vActions)
@@ -129,7 +129,7 @@ void e2d::ActionSequence::add(int number, Action * action, ...)
 e2d::ActionSequence * e2d::ActionSequence::clone() const
 {
 	auto a = new ActionSequence();
-	FOR_LOOP(action, m_vActions)
+	for (auto action : m_vActions)
 	{
 		a->add(action->clone());
 	}
@@ -139,7 +139,7 @@ e2d::ActionSequence * e2d::ActionSequence::clone() const
 e2d::ActionSequence * e2d::ActionSequence::reverse(bool actionReverse) const
 {
 	auto a = new ActionSequence();
-	FOR_LOOP(action, m_vActions)
+	for (auto action : m_vActions)
 	{
 		if (actionReverse)
 		{

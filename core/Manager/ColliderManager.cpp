@@ -105,7 +105,7 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 				auto IsCollideWith = [](Node * active, Node * passive) -> bool
 				{
 					unsigned int hash = passive->getHashName();
-					FOR_LOOP(collider, active->m_vColliders)
+					for (auto collider : active->m_vColliders)
 						if (collider == hash)
 							return true;
 					return false;
@@ -141,7 +141,7 @@ void e2d::ColliderManager::add(Function func, String name, bool paused)
 
 void e2d::ColliderManager::pause(String name)
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		if (pListener->name == name)
 		{
@@ -152,7 +152,7 @@ void e2d::ColliderManager::pause(String name)
 
 void e2d::ColliderManager::resume(String name)
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		if (pListener->name == name)
 		{
@@ -163,7 +163,7 @@ void e2d::ColliderManager::resume(String name)
 
 void e2d::ColliderManager::stop(String name)
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		if (pListener->name == name)
 		{
@@ -174,7 +174,7 @@ void e2d::ColliderManager::stop(String name)
 
 void e2d::ColliderManager::pauseAll()
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		pListener->running = false;
 	}
@@ -182,7 +182,7 @@ void e2d::ColliderManager::pauseAll()
 
 void e2d::ColliderManager::resumeAll()
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		pListener->running = true;
 	}
@@ -190,7 +190,7 @@ void e2d::ColliderManager::resumeAll()
 
 void e2d::ColliderManager::stopAll()
 {
-	FOR_LOOP(pListener, s_vListeners)
+	for (auto pListener : s_vListeners)
 	{
 		pListener->stopped = true;
 	}
@@ -256,7 +256,7 @@ void e2d::ColliderManager::__removeCollider(Collider * pCollider)
 
 void e2d::ColliderManager::__uninit()
 {
-	FOR_LOOP(listener, s_vListeners)
+	for (auto listener : s_vListeners)
 	{
 		delete listener;
 	}

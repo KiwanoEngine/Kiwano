@@ -37,7 +37,7 @@ void e2d::ActionManager::__add(Action * pAction)
 {
 	if (pAction)
 	{
-		FOR_LOOP(action, s_vActions)
+		for (auto action : s_vActions)
 		{
 			if (action == pAction)
 			{
@@ -76,7 +76,7 @@ void e2d::ActionManager::__resumeAllBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
-		FOR_LOOP(action, s_vRunningActions)
+		for (auto action : s_vRunningActions)
 		{
 			if (action->getTarget() == pTargetNode)
 			{
@@ -90,7 +90,7 @@ void e2d::ActionManager::__pauseAllBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
-		FOR_LOOP(action, s_vRunningActions)
+		for (auto action : s_vRunningActions)
 		{
 			if (action->getTarget() == pTargetNode)
 			{
@@ -104,7 +104,7 @@ void e2d::ActionManager::__stopAllBindedWith(Node * pTargetNode)
 {
 	if (pTargetNode)
 	{
-		FOR_LOOP(action, s_vRunningActions)
+		for (auto action : s_vRunningActions)
 		{
 			if (action->getTarget() == pTargetNode)
 			{
@@ -116,7 +116,7 @@ void e2d::ActionManager::__stopAllBindedWith(Node * pTargetNode)
 
 void e2d::ActionManager::resume(String strActionName)
 {
-	FOR_LOOP(action, s_vRunningActions)
+	for (auto action : s_vRunningActions)
 	{
 		if (action->getName() == strActionName)
 		{
@@ -127,7 +127,7 @@ void e2d::ActionManager::resume(String strActionName)
 
 void e2d::ActionManager::pause(String strActionName)
 {
-	FOR_LOOP(action, s_vRunningActions)
+	for (auto action : s_vRunningActions)
 	{
 		if (action->getName() == strActionName)
 		{
@@ -138,7 +138,7 @@ void e2d::ActionManager::pause(String strActionName)
 
 void e2d::ActionManager::stop(String strActionName)
 {
-	FOR_LOOP(action, s_vRunningActions)
+	for (auto action : s_vRunningActions)
 	{
 		if (action->getName() == strActionName)
 		{
@@ -169,9 +169,9 @@ void e2d::ActionManager::__clearAllBindedWith(Node * pTargetNode)
 
 void e2d::ActionManager::__uninit()
 {
-	FOR_LOOP(child, s_vActions)
+	for (auto action : s_vRunningActions)
 	{
-		SafeRelease(&child);
+		SafeRelease(&action);
 	}
 	s_vActions.clear();
 	s_vRunningActions.clear();
@@ -179,7 +179,7 @@ void e2d::ActionManager::__uninit()
 
 void e2d::ActionManager::resumeAll()
 {
-	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getAllChildren())
+	for (auto child : SceneManager::getCurrentScene()->getRoot()->getAllChildren())
 	{
 		ActionManager::__resumeAllBindedWith(child);
 	}
@@ -187,7 +187,7 @@ void e2d::ActionManager::resumeAll()
 
 void e2d::ActionManager::pauseAll()
 {
-	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getAllChildren())
+	for (auto child : SceneManager::getCurrentScene()->getRoot()->getAllChildren())
 	{
 		ActionManager::__pauseAllBindedWith(child);
 	}
@@ -195,7 +195,7 @@ void e2d::ActionManager::pauseAll()
 
 void e2d::ActionManager::stopAll()
 {
-	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getAllChildren())
+	for (auto child : SceneManager::getCurrentScene()->getRoot()->getAllChildren())
 	{
 		ActionManager::__stopAllBindedWith(child);
 	}
@@ -204,7 +204,7 @@ void e2d::ActionManager::stopAll()
 std::vector<e2d::Action*> e2d::ActionManager::get(String strActionName)
 {
 	std::vector<Action*> vActions;
-	FOR_LOOP(action, s_vActions)
+	for (auto action : s_vActions)
 	{
 		if (action->getName() == strActionName)
 		{
@@ -221,7 +221,7 @@ std::vector<e2d::Action*> e2d::ActionManager::getAll()
 
 void e2d::ActionManager::__resetAll()
 {
-	FOR_LOOP(action, s_vRunningActions)
+	for (auto action : s_vRunningActions)
 	{
 		action->_resetTime();
 	}
