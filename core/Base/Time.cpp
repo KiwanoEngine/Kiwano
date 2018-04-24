@@ -143,7 +143,7 @@ void e2d::Time::__updateLast()
 
 	::QueryPerformanceCounter(&s_tNow);
 	s_nInterval = static_cast<unsigned int>((s_tNow.QuadPart - s_tLastUpdate.QuadPart) * 1000LL / s_tFreq.QuadPart);
-	s_nTotalTime = static_cast<unsigned int>(s_tNow.QuadPart - s_tStart.QuadPart) * 1000LL / s_tFreq.QuadPart;
+	s_nTotalTime = static_cast<unsigned int>((s_tNow.QuadPart - s_tStart.QuadPart) * 1000LL / s_tFreq.QuadPart);
 }
 
 void e2d::Time::__sleep()

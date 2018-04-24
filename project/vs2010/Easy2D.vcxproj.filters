@@ -28,9 +28,6 @@
     <Filter Include="Node\Shape">
       <UniqueIdentifier>{fe2c1cba-f77d-4a33-bc8a-4f40ecd9d618}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tool\Listener">
-      <UniqueIdentifier>{72484ebf-d464-4f37-ad9b-340b378f9701}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Custom">
       <UniqueIdentifier>{6f1847d1-aa22-4b3a-aeed-990b7645081f}</UniqueIdentifier>
     </Filter>
@@ -114,9 +111,6 @@
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\TimerManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Node\Button.cpp">
       <Filter>Node</Filter>
     </ClCompile>
@@ -191,15 +185,6 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Node\Shape\Shape.cpp">
       <Filter>Node\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Listener\CollisionListener.cpp">
-      <Filter>Tool\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Listener\InputListener.cpp">
-      <Filter>Tool\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Listener\Listener.cpp">
-      <Filter>Tool\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Color.cpp">
       <Filter>Common</Filter>

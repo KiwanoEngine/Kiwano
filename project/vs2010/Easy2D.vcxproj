@@ -60,7 +60,6 @@
     <ClCompile Include="..\..\core\Manager\MusicManager.cpp" />
     <ClCompile Include="..\..\core\Manager\ObjectManager.cpp" />
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\TimerManager.cpp" />
     <ClCompile Include="..\..\core\Node\Button.cpp" />
     <ClCompile Include="..\..\core\Node\ButtonToggle.cpp" />
     <ClCompile Include="..\..\core\Node\Menu.cpp" />
@@ -73,9 +72,6 @@
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />
     <ClCompile Include="..\..\core\Node\Text.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
-    <ClCompile Include="..\..\core\Tool\Listener\CollisionListener.cpp" />
-    <ClCompile Include="..\..\core\Tool\Listener\InputListener.cpp" />
-    <ClCompile Include="..\..\core\Tool\Listener\Listener.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
     <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Random.cpp" />

@@ -120,10 +120,10 @@ void e2d::MusicManager::stopAll()
 
 void e2d::MusicManager::__uninit()
 {
-	for (auto iter : GetMusicList())
+	for (auto iter = GetMusicList().begin(); iter != GetMusicList().end(); iter++)
 	{
-		iter.second->close();
-		iter.second->release();
+		(*iter).second->close();
+		(*iter).second->release();
 	}
 	GetMusicList().clear();
 }
