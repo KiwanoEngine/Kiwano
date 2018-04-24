@@ -221,26 +221,8 @@ public:
 	// 停止所有音乐
 	static void stopAll();
 
-#if HIGHER_THAN_VS2010
-
-	// 获取 IXAudio2 对象
-	static IXAudio2 * getIXAudio2();
-
-	// 获取 IXAudio2MasteringVoice 对象
-	static IXAudio2MasteringVoice * getIXAudio2MasteringVoice();
-
-#else
-
-	// 获取 HINSTANCE
-	static HINSTANCE getHInstance();
-
-#endif
-
 private:
-	// 初始化音乐播放器
-	static bool __init();
-
-	// 回收相关资源
+	// 回收音乐资源
 	static void __uninit();
 };
 

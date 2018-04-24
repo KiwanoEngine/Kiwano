@@ -21,52 +21,65 @@ bool e2d::Game::init(String sGameName)
 		return false;
 	}
 
-	do
+	// 初始化 COM 组件
+	CoInitialize(NULL);
+
+	// 创建设备无关资源
+	if (!Renderer::__createDeviceIndependentResources())
 	{
-		// 初始化 COM 组件
-		CoInitializeEx(NULL, COINIT_MULTITHREADED);
+		WARN_IF(true, "Renderer::__createDeviceIndependentResources Failed!");
+		goto dev_ind_res_fail;
+	}
 
-		// 创建设备无关资源
-		if (!Renderer::__createDeviceIndependentResources())
-		{
-			WARN_IF(true, "Renderer::__createDeviceIndependentResources Failed!");
-			break;
-		}
+	// 初始化窗口
+	if (!Window::__init())
+	{
+		WARN_IF(true, "Window::__init Failed!");
+		goto window_fail;
+	}
 
-		// 初始化窗口
-		if (!Window::__init())
-		{
-			WARN_IF(true, "Window::__init Failed!");
-			break;
-		}
+	// 创建设备相关资源
+	if (!Renderer::__createDeviceResources())
+	{
+		WARN_IF(true, "Renderer::__createDeviceResources Failed!");
+		goto dev_res_fail;
+	}
 
-		// 创建设备相关资源
-		if (!Renderer::__createDeviceResources())
-		{
-			WARN_IF(true, "Renderer::__createDeviceResources Failed!");
-			break;
-		}
+	// 初始化 DirectInput
+	if (!Input::__init())
+	{
+		WARN_IF(true, "Input::__init Failed!");
+		goto input_fail;
+	}
 
-		// 初始化 DirectInput
-		if (!Input::__init())
-		{
-			WARN_IF(true, "Input::__init Failed!");
-			break;
-		}
+	// 初始化播放器
+	if (!Music::__init())
+	{
+		WARN_IF(true, "Music::__init Failed!");
+		goto music_fail;
+	}
 
-		// 初始化播放器
-		if (!MusicManager::__init())
-		{
-			WARN_IF(true, "MusicManager::__init Failed!");
-			break;
-		}
-		// 保存游戏名称
-		s_sGameName = sGameName;
-		// 标志初始化成功
-		s_bInitialized = true;
+	// 初始化成功
+	s_sGameName = sGameName;
+	s_bInitialized = true;
+	goto succeeded;
 
-	} while (0);
+music_fail:
+	Music::__uninit();
 
+input_fail:
+	Input::__uninit();
+
+dev_res_fail:
+	Renderer::__discardDeviceResources();
+
+window_fail:
+	Window::__init();
+
+dev_ind_res_fail:
+	Renderer::__discardResources();
+
+succeeded:
 	return s_bInitialized;
 }
 
@@ -156,17 +169,19 @@ void e2d::Game::destroy()
 {
 	// 删除所有场景
 	SceneManager::__uninit();
-	// 关闭播放器
-	MusicManager::__uninit();
 	// 删除监听器
 	InputManager::__uninit();
 	ColliderManager::__uninit();
 	// 删除动画
 	ActionManager::__uninit();
+	// 关闭音乐播放器
+	MusicManager::__uninit();
 	// 删除所有对象
 	ObjectManager::__clear();
 	// 清空图片缓存
 	Image::clearCache();
+	// 回收音乐相关资源
+	Music::__uninit();
 	// 清空定时器
 	Timer::__uninit();
 	// 关闭输入

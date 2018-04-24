@@ -435,19 +435,13 @@ protected:
 	);
 
 	// 对自身进行二维矩阵变换
-	void _updateTransform();
-
-	// 更新所有子节点矩阵
-	void _updateChildrenTransform();
-
-	// 更新所有子节点透明度
-	void _updateChildrenOpacity();
+	void _updateSelfTransform();
 
 	// 更新节点二维矩阵
-	static void _updateTransform(Node * node);
+	void _updateTransform();
 
 	// 更新节点透明度
-	static void _updateOpacity(Node * node);
+	void _updateOpacity();
 
 protected:
 	String		m_sName;

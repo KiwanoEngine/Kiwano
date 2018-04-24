@@ -24,6 +24,39 @@ inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 	return false;
 }
 
+static IXAudio2 * s_pXAudio2 = nullptr;
+static IXAudio2MasteringVoice * s_pMasteringVoice = nullptr;
+
+
+bool e2d::Music::__init()
+{
+	HRESULT hr;
+
+	if (FAILED(hr = XAudio2Create(&s_pXAudio2, 0)))
+	{
+		WARN_IF(true, "Failed to init XAudio2 engine");
+		return false;
+	}
+
+	if (FAILED(hr = s_pXAudio2->CreateMasteringVoice(&s_pMasteringVoice)))
+	{
+		WARN_IF(true, "Failed creating mastering voice");
+		SafeReleaseInterface(&s_pXAudio2);
+		return false;
+	}
+
+	return true;
+}
+
+void e2d::Music::__uninit()
+{
+	if (s_pMasteringVoice)
+	{
+		s_pMasteringVoice->DestroyVoice();
+	}
+
+	SafeReleaseInterface(&s_pXAudio2);
+}
 
 Music::Music()
 	: m_bOpened(false)
@@ -69,8 +102,7 @@ bool Music::open(String strFileName)
 		return false;
 	}
 
-	IXAudio2 * pXAudio2 = MusicManager::getIXAudio2();
-	if (!pXAudio2)
+	if (!s_pXAudio2)
 	{
 		WARN_IF(true, "IXAudio2 nullptr pointer error!");
 		return false;
@@ -116,7 +148,7 @@ bool Music::open(String strFileName)
 
 	// ´´½¨ÒôÔ´
 	HRESULT hr;
-	if (FAILED(hr = pXAudio2->CreateSourceVoice(&m_pSourceVoice, m_pwfx)))
+	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&m_pSourceVoice, m_pwfx)))
 	{
 		TraceError(L"Create source voice error", hr);
 		SAFE_DELETE_ARRAY(m_pbWaveData);
@@ -289,6 +321,16 @@ bool Music::setFrequencyRatio(double fFrequencyRatio)
 		return SUCCEEDED(m_pSourceVoice->SetFrequencyRatio(static_cast<float>(fFrequencyRatio)));
 	}
 	return false;
+}
+
+IXAudio2 * e2d::Music::getIXAudio2()
+{
+	return s_pXAudio2;
+}
+
+IXAudio2MasteringVoice * e2d::Music::getIXAudio2MasteringVoice()
+{
+	return s_pMasteringVoice;
 }
 
 IXAudio2SourceVoice * Music::getIXAudio2SourceVoice() const
@@ -496,6 +538,33 @@ bool Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wchar_t *
 
 #else
 
+#define MUSIC_CLASS_NAME L"Easy2DMusicCallbackWnd"
+
+static HINSTANCE s_hInstance = nullptr;
+
+
+bool e2d::Music::__init()
+{
+	s_hInstance = HINST_THISCOMPONENT;
+
+	WNDCLASS  wc;
+	wc.style = 0;
+	wc.lpfnWndProc = Music::MusicProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = s_hInstance;
+	wc.hIcon = 0;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = NULL;
+	wc.lpszMenuName = NULL;
+	wc.lpszClassName = MUSIC_CLASS_NAME;
+
+	if (!RegisterClass(&wc) && 1410 != GetLastError())
+	{
+		return false;
+	}
+	return true;
+}
 
 e2d::Music::Music()
 	: m_wnd(NULL)
@@ -512,7 +581,7 @@ e2d::Music::Music()
 		0, 0, 0, 0,
 		NULL,
 		NULL,
-		MusicManager::getHInstance(),
+		s_hInstance,
 		NULL);
 
 	if (m_wnd)

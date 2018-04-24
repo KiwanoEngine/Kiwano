@@ -56,7 +56,7 @@ private:
 class Music :
 	public Object
 {
-	friend MusicManager;
+	friend Game;
 
 public:
 	Music();
@@ -108,7 +108,19 @@ public:
 		double fFrequencyRatio	/* 频率比范围为 1/1024.0f ~ 1024.0f，其中 1.0 为正常声调 */
 	);
 
+private:
+	static bool __init();
+
+	static void __uninit();
+
 #if HIGHER_THAN_VS2010
+
+public:
+	// 获取 IXAudio2 对象
+	static IXAudio2 * getIXAudio2();
+
+	// 获取 IXAudio2MasteringVoice 对象
+	static IXAudio2MasteringVoice * getIXAudio2MasteringVoice();
 
 	// 获取 IXAudio2SourceVoice 对象
 	IXAudio2SourceVoice* getIXAudio2SourceVoice() const;

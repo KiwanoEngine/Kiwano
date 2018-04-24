@@ -51,7 +51,7 @@ void e2d::Node::_update()
 {
 	if (m_bTransformNeeded)
 	{
-		_updateTransform(this);
+		_updateTransform();
 	}
 
 	if (!m_vChildren.empty())
@@ -201,7 +201,7 @@ void e2d::Node::_onExit()
 	}
 }
 
-void e2d::Node::_updateTransform()
+void e2d::Node::_updateSelfTransform()
 {
 	// 计算中心点坐标
 	D2D1_POINT_2F pivot = { m_fWidth * m_fPivotX, m_fHeight * m_fPivotY };
@@ -231,44 +231,34 @@ void e2d::Node::_updateTransform()
 	}
 }
 
-void e2d::Node::_updateChildrenTransform()
-{
-	FOR_LOOP(child, m_vChildren)
-	{
-		_updateTransform(child);
-	}
-}
-
-void e2d::Node::_updateTransform(Node * node)
+void e2d::Node::_updateTransform()
 {
 	// 计算自身的转换矩阵
-	node->_updateTransform();
+	_updateSelfTransform();
 	// 绑定于自身的碰撞体也进行相应转换
-	if (node->m_pCollider)
+	if (m_pCollider)
 	{
-		node->m_pCollider->_transform();
+		m_pCollider->_transform();
 	}
-	// 遍历子节点下的所有节点
-	node->_updateChildrenTransform();
 	// 标志已执行过变换
-	node->m_bTransformNeeded = false;
+	m_bTransformNeeded = false;
+	// 遍历子节点下的所有节点
+	FOR_LOOP(child, this->m_vChildren)
+	{
+		child->_updateTransform();
+	}
 }
 
-void e2d::Node::_updateChildrenOpacity()
+void e2d::Node::_updateOpacity()
 {
+	if (m_pParent)
+	{
+		m_fDisplayOpacity = m_fRealOpacity * m_pParent->m_fDisplayOpacity;
+	}
 	FOR_LOOP(child, m_vChildren)
 	{
-		_updateOpacity(child);
+		child->_updateOpacity();
 	}
-}
-
-void e2d::Node::_updateOpacity(Node * node)
-{
-	if (node->m_pParent)
-	{
-		node->m_fDisplayOpacity = node->m_fRealOpacity * node->m_pParent->m_fDisplayOpacity;
-	}
-	node->_updateChildrenOpacity();
 }
 
 bool e2d::Node::isVisiable() const
@@ -511,7 +501,7 @@ void e2d::Node::setOpacity(double opacity)
 
 	m_fDisplayOpacity = m_fRealOpacity = min(max(static_cast<float>(opacity), 0), 1);
 	// 更新节点透明度
-	_updateOpacity(this);
+	_updateOpacity();
 }
 
 void e2d::Node::setPivotX(double pivotX)
@@ -674,7 +664,7 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 		}
 
 		// 更新子节点透明度
-		_updateOpacity(child);
+		child->_updateOpacity();
 		// 更新节点转换
 		child->m_bTransformNeeded = true;
 		// 更新子节点排序

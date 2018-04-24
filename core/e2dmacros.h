@@ -62,8 +62,6 @@
 #if HIGHER_THAN_VS2010
 #include <xaudio2.h>
 #pragma comment(lib, "xaudio2.lib")
-#else
-#define MUSIC_CLASS_NAME L"Easy2DMusicCallbackWnd"
 #endif
 
 
