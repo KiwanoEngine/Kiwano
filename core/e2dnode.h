@@ -326,7 +326,7 @@ public:
 
 	// 设置碰撞体
 	virtual void setCollider(
-		int nColliderType
+		ColliderType nColliderType
 	);
 
 	// 设置碰撞体
@@ -566,6 +566,10 @@ public:
 		UINT32 color = Color::WHITE,			/* 颜色 */
 		UINT32 fontWeight = FontWeight::NORMAL,	/* 粗细值 */
 		bool italic = false,					/* 斜体 */
+		TextAlign alignment = TextAlign::LEFT,	/* 对齐方式 */
+		bool wrapping = false,					/* 打开自动换行 */
+		double wrappingWidth = 0.0,				/* 自动换行宽度 */
+		double lineSpacing = 0.0,				/* 行间距 */
 		bool hasUnderline = false,				/* 下划线 */
 		bool hasStrikethrough = false,			/* 删除线 */
 		bool hasOutline = true,					/* 显示描边 */
@@ -600,7 +604,7 @@ public:
 	double getOutlineWidth() const;
 
 	// 获取描边线相交样式
-	int getOutlineJoin() const;
+	LineJoin getOutlineJoin() const;
 
 	// 获取文本显示行数
 	int getLineCount() const;
@@ -652,7 +656,12 @@ public:
 		bool value
 	);
 
-	// 设置文本自动换行的宽度（设置为 0 时关闭自动换行，默认为 0）
+	// 打开或关闭文本自动换行（默认为关闭）
+	void setWrapping(
+		bool wrapping
+	);
+
+	// 设置文本自动换行的宽度（默认为 0）
 	void setWrappingWidth(
 		double fWrappingWidth
 	);
@@ -664,7 +673,7 @@ public:
 
 	// 设置对齐方式（默认为 TextAlign::LEFT）
 	void setAlignment(
-		int nAlign
+		TextAlign align
 	);
 
 	// 设置下划线（默认值为 false）
@@ -694,7 +703,7 @@ public:
 
 	// 设置描边线相交样式
 	void setOutlineJoin(
-		int outlineJoin
+		LineJoin outlineJoin
 	);
 
 	// 渲染文字
@@ -712,11 +721,7 @@ protected:
 
 protected:
 	String	m_sText;
-	bool	m_bWrappingEnable;
-	float	m_fWrappingWidth;
-	float	m_fLineSpacing;
-	int		m_nAlign;
-	TextStyle	m_TextStyle;
+	TextStyle m_TextStyle;
 	IDWriteTextFormat * m_pDWriteTextFormat;
 	IDWriteTextLayout * m_pDWriteTextLayout;
 };
@@ -797,10 +802,10 @@ public:
 
 protected:
 	// 按钮状态枚举
-	enum BTN_STATE { NORMAL, MOUSEOVER, SELECTED };
+	enum class ButtonState { NORMAL, MOUSEOVER, SELECTED };
 
 	// 设置按钮状态
-	virtual void _setState(BTN_STATE state);
+	virtual void _setState(ButtonState state);
 
 	// 刷新按钮显示
 	virtual void _updateVisiable();
@@ -815,7 +820,7 @@ protected:
 	Node *		m_pDisabled;
 	bool		m_bEnable;
 	bool		m_bIsSelected;
-	BTN_STATE	m_eBtnState;
+	ButtonState	m_eBtnState;
 	Function	m_Callback;
 };
 

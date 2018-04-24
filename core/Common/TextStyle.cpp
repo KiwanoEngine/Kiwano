@@ -6,6 +6,10 @@ e2d::TextStyle::TextStyle()
 	, color(Color::WHITE)
 	, fontWeight(FontWeight::NORMAL)
 	, italic(false)
+	, alignment(TextAlign::LEFT)
+	, wrapping(false)
+	, wrappingWidth(0.0)
+	, lineSpacing(0.0)
 	, hasUnderline(false)
 	, hasStrikethrough(false)
 	, hasOutline(true)
@@ -19,19 +23,27 @@ e2d::TextStyle::TextStyle(
 	double fontSize, 
 	Color color, 
 	UINT32 fontWeight, 
-	bool italic, 
+	bool italic,
+	TextAlign alignment,
+	bool wrapping,
+	double wrappingWidth,
+	double lineSpacing,
 	bool hasUnderline, 
 	bool hasStrikethrough, 
 	bool hasOutline,
 	Color outlineColor,
 	double outlineWidth,
-	int outlineJoin
+	LineJoin outlineJoin
 )
 	: fontFamily(fontFamily)
 	, fontSize(fontSize)
 	, color(color)
 	, fontWeight(fontWeight)
 	, italic(italic)
+	, alignment(alignment)
+	, wrapping(wrapping)
+	, wrappingWidth(wrappingWidth)
+	, lineSpacing(lineSpacing)
 	, hasUnderline(hasUnderline)
 	, hasStrikethrough(hasStrikethrough)
 	, hasOutline(hasOutline)

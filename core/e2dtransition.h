@@ -121,8 +121,8 @@ class TransitionMove :
 public:
 	// 创建移动式的场景切换动画
 	TransitionMove(
-		double moveDuration,		/* 场景移动动画持续时长 */
-		int direct = Direct::LEFT	/* 场景移动方向 */
+		double moveDuration,			/* 场景移动动画持续时长 */
+		Direct direct = Direct::LEFT	/* 场景移动方向 */
 	);
 
 protected:
@@ -137,7 +137,7 @@ protected:
 	virtual void _reset() override;
 
 protected:
-	int m_Direct;
+	Direct m_Direct;
 	Vector m_Vector;
 	Point m_NextPos;
 };

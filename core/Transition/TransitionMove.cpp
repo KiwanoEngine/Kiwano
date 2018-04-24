@@ -1,7 +1,7 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::TransitionMove::TransitionMove(double duration, int direct)
+e2d::TransitionMove::TransitionMove(double duration, Direct direct)
 	: Transition(duration)
 	, m_Direct(direct)
 {

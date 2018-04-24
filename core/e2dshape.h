@@ -15,7 +15,7 @@ public:
 	virtual ~Shape();
 
 	// 获取样式
-	int getStyle() const;
+	ShapeStyle getStyle() const;
 
 	// 获取填充颜色
 	Color getFillColor() const;
@@ -42,7 +42,7 @@ public:
 	);
 
 	// 设置样式
-	void setStyle(int style);
+	void setStyle(ShapeStyle style);
 
 	// 渲染形状
 	virtual void onRender() override;
@@ -55,7 +55,7 @@ protected:
 	virtual void _renderFill() = 0;
 
 protected:
-	int		m_nStyle;
+	ShapeStyle	m_nStyle;
 	float	m_fStrokeWidth;
 	Color	m_nLineColor;
 	Color	m_nFillColor;

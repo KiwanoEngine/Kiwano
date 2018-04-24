@@ -114,7 +114,7 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 				if (IsCollideWith(pActiveNode, pPassiveNode))
 				{
 					// 判断两碰撞体交集情况
-					int relation = pActiveCollider->getRelationWith(pPassiveCollider);
+					Relation relation = pActiveCollider->getRelationWith(pPassiveCollider);
 					// 忽略 UNKNOWN 和 DISJOINT 情况
 					if (relation != Relation::UNKNOWN && relation != Relation::DISJOINT)
 					{

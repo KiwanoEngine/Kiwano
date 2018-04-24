@@ -141,25 +141,25 @@ void Input::__updateDeviceState()
 	ScreenToClient(Window::getHWnd(), &s_MousePosition);
 }
 
-bool Input::isKeyDown(int nKeyCode)
+bool Input::isKeyDown(KeyCode key)
 {
-	if (s_KeyBuffer[static_cast<int>(nKeyCode)] & 0x80)
+	if (s_KeyBuffer[static_cast<int>(key)] & 0x80)
 		return true;
 	return false;
 }
 
-bool Input::isKeyPress(int nKeyCode)
+bool Input::isKeyPress(KeyCode key)
 {
-	if ((s_KeyBuffer[static_cast<int>(nKeyCode)] & 0x80) && 
-		!(s_KeyRecordBuffer[static_cast<int>(nKeyCode)] & 0x80))
+	if ((s_KeyBuffer[static_cast<int>(key)] & 0x80) && 
+		!(s_KeyRecordBuffer[static_cast<int>(key)] & 0x80))
 		return true;
 	return false;
 }
 
-bool Input::isKeyRelease(int nKeyCode)
+bool Input::isKeyRelease(KeyCode key)
 {
-	if (!(s_KeyBuffer[static_cast<int>(nKeyCode)] & 0x80) && 
-		(s_KeyRecordBuffer[static_cast<int>(nKeyCode)] & 0x80))
+	if (!(s_KeyBuffer[static_cast<int>(key)] & 0x80) && 
+		(s_KeyRecordBuffer[static_cast<int>(key)] & 0x80))
 		return true;
 	return false;
 }

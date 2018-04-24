@@ -2,22 +2,14 @@
 
 
 e2d::Text::Text()
-	: m_bWrappingEnable(false)
-	, m_TextStyle()
-	, m_nAlign(TextAlign::LEFT)
-	, m_fLineSpacing(0.0f)
-	, m_fWrappingWidth(0.0f)
+	: m_TextStyle()
 	, m_pDWriteTextLayout(nullptr)
 	, m_pDWriteTextFormat(nullptr)
 {
 }
 
 e2d::Text::Text(String text)
-	: m_bWrappingEnable(false)
-	, m_TextStyle()
-	, m_nAlign(TextAlign::LEFT)
-	, m_fLineSpacing(0.0f)
-	, m_fWrappingWidth(0.0f)
+	: m_TextStyle()
 	, m_pDWriteTextLayout(nullptr)
 	, m_pDWriteTextFormat(nullptr)
 	, m_sText(text)
@@ -26,11 +18,7 @@ e2d::Text::Text(String text)
 }
 
 e2d::Text::Text(TextStyle textStyle)
-	: m_bWrappingEnable(false)
-	, m_TextStyle(textStyle)
-	, m_nAlign(TextAlign::LEFT)
-	, m_fLineSpacing(0.0f)
-	, m_fWrappingWidth(0.0f)
+	: m_TextStyle(textStyle)
 	, m_pDWriteTextLayout(nullptr)
 	, m_pDWriteTextFormat(nullptr)
 {
@@ -38,11 +26,7 @@ e2d::Text::Text(TextStyle textStyle)
 }
 
 e2d::Text::Text(String text, TextStyle textStyle)
-	: m_bWrappingEnable(false)
-	, m_TextStyle(textStyle)
-	, m_nAlign(TextAlign::LEFT)
-	, m_fLineSpacing(0.0f)
-	, m_fWrappingWidth(0.0f)
+	: m_TextStyle(textStyle)
 	, m_pDWriteTextLayout(nullptr)
 	, m_pDWriteTextFormat(nullptr)
 	, m_sText(text)
@@ -57,28 +41,32 @@ e2d::Text::Text(
 	UINT32 color, 
 	UINT32 fontWeight, 
 	bool italic, 
+	TextAlign alignment,
+	bool wrapping,
+	double wrappingWidth,
+	double lineSpacing,
 	bool hasUnderline, 
 	bool hasStrikethrough,
 	bool hasOutline,
 	UINT32 outlineColor,
 	UINT32 outlineWidth
 )
-	: m_bWrappingEnable(false)
-	, m_TextStyle(
+	: m_TextStyle(
 		fontFamily, 
 		fontSize, 
 		color, 
 		fontWeight, 
 		italic, 
+		alignment,
+		wrapping,
+		wrappingWidth,
+		lineSpacing,
 		hasUnderline, 
 		hasStrikethrough, 
 		hasOutline, 
 		outlineColor,
 		outlineWidth
 	)
-	, m_nAlign(TextAlign::LEFT)
-	, m_fLineSpacing(0.0f)
-	, m_fWrappingWidth(0.0f)
 	, m_pDWriteTextLayout(nullptr)
 	, m_pDWriteTextFormat(nullptr)
 	, m_sText(text)
@@ -132,7 +120,7 @@ double e2d::Text::getOutlineWidth() const
 	return m_TextStyle.outlineWidth;
 }
 
-int e2d::Text::getOutlineJoin() const
+e2d::LineJoin e2d::Text::getOutlineJoin() const
 {
 	return m_TextStyle.outlineJoin;
 }
@@ -191,7 +179,7 @@ void e2d::Text::setFontFamily(String fontFamily)
 
 void e2d::Text::setFontSize(double fontSize)
 {
-	m_TextStyle.fontSize = static_cast<float>(fontSize);
+	m_TextStyle.fontSize = fontSize;
 	_reset();
 }
 
@@ -212,30 +200,42 @@ void e2d::Text::setItalic(bool value)
 	_reset();
 }
 
+void e2d::Text::setWrapping(bool wrapping)
+{
+	if (m_TextStyle.wrapping != wrapping)
+	{
+		m_TextStyle.wrapping = wrapping;
+		_reset();
+	}
+}
+
 void e2d::Text::setWrappingWidth(double fWrappingWidth)
 {
-	if (m_fWrappingWidth != fWrappingWidth)
+	if (m_TextStyle.wrappingWidth != fWrappingWidth)
 	{
-		m_fWrappingWidth = max(static_cast<float>(fWrappingWidth), 0);
-		m_bWrappingEnable = (m_fWrappingWidth > FLT_MIN);
-		_reset();
+		m_TextStyle.wrappingWidth = max(fWrappingWidth, 0);
+
+		if (m_TextStyle.wrapping)
+		{
+			_reset();
+		}
 	}
 }
 
 void e2d::Text::setLineSpacing(double fLineSpacing)
 {
-	if (m_fLineSpacing != fLineSpacing)
+	if (m_TextStyle.lineSpacing != fLineSpacing)
 	{
-		m_fLineSpacing = static_cast<float>(fLineSpacing);
+		m_TextStyle.lineSpacing = fLineSpacing;
 		_reset();
 	}
 }
 
-void e2d::Text::setAlignment(int nAlign)
+void e2d::Text::setAlignment(TextAlign align)
 {
-	if (m_nAlign != nAlign)
+	if (m_TextStyle.alignment != align)
 	{
-		m_nAlign = nAlign;
+		m_TextStyle.alignment = align;
 		_reset();
 	}
 }
@@ -277,7 +277,7 @@ void e2d::Text::setOutlineWidth(double outlineWidth)
 	m_TextStyle.outlineWidth = outlineWidth;
 }
 
-void e2d::Text::setOutlineJoin(int outlineJoin)
+void e2d::Text::setOutlineJoin(LineJoin outlineJoin)
 {
 	m_TextStyle.outlineJoin = outlineJoin;
 }
@@ -331,9 +331,9 @@ void e2d::Text::_createFormat()
 	if (m_pDWriteTextFormat)
 	{
 		// 设置文字对齐方式
-		m_pDWriteTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(m_nAlign));
+		m_pDWriteTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(m_TextStyle.alignment));
 		// 设置行间距
-		if (m_fLineSpacing == 0.0f)
+		if (m_TextStyle.lineSpacing == 0.0)
 		{
 			m_pDWriteTextFormat->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
 		}
@@ -341,12 +341,12 @@ void e2d::Text::_createFormat()
 		{
 			m_pDWriteTextFormat->SetLineSpacing(
 				DWRITE_LINE_SPACING_METHOD_UNIFORM,
-				m_fLineSpacing,
-				m_fLineSpacing * 0.8f
+				static_cast<FLOAT>(m_TextStyle.lineSpacing),
+				static_cast<FLOAT>(m_TextStyle.lineSpacing) * 0.8f
 			);
 		}
 		// 打开文本自动换行时，设置换行属性
-		if (m_bWrappingEnable)
+		if (m_TextStyle.wrapping)
 		{
 			m_pDWriteTextFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
 		}
@@ -379,13 +379,13 @@ void e2d::Text::_createLayout()
 	// 创建 TextLayout
 	HRESULT hr;
 	// 对文本自动换行情况下进行处理
-	if (m_bWrappingEnable)
+	if (m_TextStyle.wrapping)
 	{
 		hr = Renderer::getIDWriteFactory()->CreateTextLayout(
 			m_sText,
 			length,
 			m_pDWriteTextFormat,
-			m_fWrappingWidth,
+			static_cast<FLOAT>(m_TextStyle.wrappingWidth),
 			0,
 			&m_pDWriteTextLayout
 		);

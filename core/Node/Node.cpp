@@ -561,7 +561,7 @@ void e2d::Node::setProperty(NodeProperty prop)
 	this->setSkew(prop.skewAngleX, prop.skewAngleY);
 }
 
-void e2d::Node::setCollider(int nColliderType)
+void e2d::Node::setCollider(ColliderType nColliderType)
 {
 	switch (nColliderType)
 	{
@@ -960,7 +960,7 @@ bool e2d::Node::isIntersectWith(const Node * pNode) const
 	// 如果存在碰撞体，用碰撞体判断
 	if (this->m_pCollider && pNode->m_pCollider)
 	{
-		int relation = this->m_pCollider->getRelationWith(pNode->m_pCollider);
+		Relation relation = this->m_pCollider->getRelationWith(pNode->m_pCollider);
 		if ((relation != Relation::UNKNOWN) && 
 			(relation != Relation::DISJOINT))
 		{

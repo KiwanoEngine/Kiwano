@@ -21,7 +21,7 @@ public:
 	virtual ~Collider();
 
 	// 判断两碰撞体的交集关系
-	virtual int getRelationWith(
+	virtual Relation getRelationWith(
 		Collider * pCollider
 	) const;
 

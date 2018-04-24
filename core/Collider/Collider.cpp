@@ -60,7 +60,7 @@ void e2d::Collider::_render()
 	}
 }
 
-int e2d::Collider::getRelationWith(Collider * pCollider) const
+e2d::Relation e2d::Collider::getRelationWith(Collider * pCollider) const
 {
 	if (m_pTransformedGeometry && pCollider->m_pTransformedGeometry)
 	{
@@ -74,7 +74,7 @@ int e2d::Collider::getRelationWith(Collider * pCollider) const
 				&relation
 			);
 
-			return relation;
+			return Relation(relation);
 		}
 	}
 	return Relation::UNKNOWN;

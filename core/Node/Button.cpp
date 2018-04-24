@@ -6,7 +6,7 @@
 
 e2d::Button::Button()
 	: m_Callback(nullptr)
-	, m_eBtnState(Button::NORMAL)
+	, m_eBtnState(ButtonState::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -18,7 +18,7 @@ e2d::Button::Button()
 
 e2d::Button::Button(Node * normal, Function func)
 	: m_Callback(nullptr)
-	, m_eBtnState(Button::NORMAL)
+	, m_eBtnState(ButtonState::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -32,7 +32,7 @@ e2d::Button::Button(Node * normal, Function func)
 
 e2d::Button::Button(Node * normal, Node * selected, Function func)
 	: m_Callback(nullptr)
-	, m_eBtnState(Button::NORMAL)
+	, m_eBtnState(ButtonState::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -47,7 +47,7 @@ e2d::Button::Button(Node * normal, Node * selected, Function func)
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Function func)
 	: m_Callback(nullptr)
-	, m_eBtnState(Button::NORMAL)
+	, m_eBtnState(ButtonState::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -63,7 +63,7 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Function f
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, Function func)
 	: m_Callback(nullptr)
-	, m_eBtnState(Button::NORMAL)
+	, m_eBtnState(ButtonState::NORMAL)
 	, m_bEnable(true)
 	, m_bIsSelected(false)
 	, m_pNormal(nullptr)
@@ -210,21 +210,21 @@ void e2d::Button::onFixedUpdate()
 		{
 			if (m_pNormal->isPointIn(Input::getMousePos()))
 			{
-				_setState(Button::SELECTED);
+				_setState(ButtonState::SELECTED);
 				return;
 			}
 		}
 		else if (m_pNormal->isPointIn(Input::getMousePos()))
 		{
-			_setState(Button::MOUSEOVER);
+			_setState(ButtonState::MOUSEOVER);
 			return;
 		}
 
-		_setState(Button::NORMAL);
+		_setState(ButtonState::NORMAL);
 	}
 }
 
-void e2d::Button::_setState(BTN_STATE state)
+void e2d::Button::_setState(ButtonState state)
 {
 	if (m_eBtnState != state)
 	{
@@ -242,11 +242,11 @@ void e2d::Button::_updateVisiable()
 
 	if (m_bEnable)
 	{
-		if (m_eBtnState == Button::SELECTED && m_pSelected)
+		if (m_eBtnState == ButtonState::SELECTED && m_pSelected)
 		{
 			m_pSelected->setVisiable(true);
 		}
-		else if (m_eBtnState == Button::MOUSEOVER && m_pMouseover)
+		else if (m_eBtnState == ButtonState::MOUSEOVER && m_pMouseover)
 		{
 			m_pMouseover->setVisiable(true);
 		}

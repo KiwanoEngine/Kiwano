@@ -63,7 +63,7 @@ double e2d::Shape::getStrokeWidth() const
 	return m_fStrokeWidth;
 }
 
-int e2d::Shape::getStyle() const
+e2d::ShapeStyle e2d::Shape::getStyle() const
 {
 	return m_nStyle;
 }
@@ -83,7 +83,7 @@ void e2d::Shape::setStrokeWidth(double strokeWidth)
 	m_fStrokeWidth = static_cast<float>(strokeWidth);
 }
 
-void e2d::Shape::setStyle(int style)
+void e2d::Shape::setStyle(ShapeStyle style)
 {
 	m_nStyle = style;
 }
