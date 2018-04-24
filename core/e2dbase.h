@@ -116,11 +116,17 @@ class Time
 	friend Game;
 
 public:
-	// 获取上一帧与当前帧的时间间隔（毫秒）
-	static int getDeltaTime();
+	// 获取上一帧与当前帧的时间间隔（秒）
+	static double getDeltaTime();
 
-	// 获取游戏开始时长（秒）
+	// 获取上一帧与当前帧的时间间隔（毫秒）
+	static unsigned int getDeltaTimeMilliseconds();
+
+	// 获取游戏总时长（秒）
 	static double getTotalTime();
+
+	// 获取游戏总时长（毫秒）
+	static unsigned int getTotalTimeMilliseconds();
 
 private:
 	// 初始化计时操作

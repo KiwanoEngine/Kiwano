@@ -3,10 +3,43 @@
 #include "..\e2dcollider.h"
 #include "..\e2dtool.h"
 
+// 监听器
+class Listener
+{
+public:
+	Listener(
+		e2d::Function func,
+		e2d::String name,
+		bool paused
+	)
+		: name(name)
+		, callback(func)
+		, running(!paused)
+		, stopped(false)
+	{
+	}
+
+	// 更新监听器状态
+	virtual void update()
+	{
+		if (callback)
+		{
+			callback();
+		}
+	}
+
+public:
+	bool running;
+	bool stopped;
+	e2d::String name;
+	e2d::Function callback;
+};
+
+
 // 碰撞体集合
 static std::vector<e2d::Collider*> s_vColliders;
 // 监听器容器
-static std::vector<e2d::CollisionListener*> s_vListeners;
+static std::vector<Listener*> s_vListeners;
 // 碰撞触发状态
 static bool s_bCollisionEnable = false;
 // 发生碰撞的节点
@@ -21,21 +54,23 @@ void e2d::ColliderManager::setEnable(bool bEnable)
 
 void e2d::ColliderManager::__update()
 {
-	if (s_vListeners.size() == 0)
+	if (s_vListeners.empty() || Game::isPaused())
 		return;
 
 	for (size_t i = 0; i < s_vListeners.size(); i++)
 	{
 		auto pListener = s_vListeners[i];
-		// 更新监听器
-		if (pListener->m_bClear)
+		// 清除已停止的监听器
+		if (pListener->stopped)
 		{
-			pListener->release();
+			delete pListener;
 			s_vListeners.erase(s_vListeners.begin() + i);
 		}
-		else if (pListener->isRunning())
+		else
 		{
-			pListener->_update();
+			// 更新监听器
+			pListener->update();
+			++i;
 		}
 	}
 }
@@ -67,15 +102,16 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 				pPassiveNode->getParentScene() == pCurrentScene)
 			{
 				// 判断两物体是否是相互冲突的物体
-				auto IsCollideWith = [](Node * active, unsigned int hash) -> bool
+				auto IsCollideWith = [](Node * active, Node * passive) -> bool
 				{
+					unsigned int hash = passive->getHashName();
 					FOR_LOOP(collider, active->m_vColliders)
 						if (collider == hash)
 							return true;
 					return false;
 				};
 
-				if (IsCollideWith(pActiveNode, pPassiveNode->getHashName()))
+				if (IsCollideWith(pActiveNode, pPassiveNode))
 				{
 					// 判断两碰撞体交集情况
 					int relation = pActiveCollider->getRelationWith(pPassiveCollider);
@@ -97,47 +133,30 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 	s_pPassiveNode = nullptr;
 }
 
-void e2d::ColliderManager::__add(CollisionListener * pListener)
+void e2d::ColliderManager::add(Function func, String name, bool paused)
 {
-	WARN_IF(pListener == nullptr, "CollisionListener NULL pointer exception!");
+	auto listener = new Listener(func, name, paused);
+	s_vListeners.push_back(listener);
+}
 
-	if (pListener)
+void e2d::ColliderManager::pause(String name)
+{
+	FOR_LOOP(pListener, s_vListeners)
 	{
-		auto findListener = [](CollisionListener * pListener) -> bool
+		if (pListener->name == name)
 		{
-			FOR_LOOP(l, s_vListeners)
-			{
-				if (pListener == l)
-				{
-					return true;
-				}
-			}
-			return false;
-		};
-
-		bool bHasListener = findListener(pListener);
-		WARN_IF(bHasListener, "The CollisionListener is already added, cannot be added again!");
-
-		if (!bHasListener)
-		{
-			pListener->retain();
-			s_vListeners.push_back(pListener);
+			pListener->running = false;
 		}
 	}
 }
 
-void e2d::ColliderManager::add(Function func, String name)
-{
-	(new CollisionListener(func, name))->start();
-}
-
-void e2d::ColliderManager::start(String name)
+void e2d::ColliderManager::resume(String name)
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		if (pListener->getName() == name)
+		if (pListener->name == name)
 		{
-			pListener->start();
+			pListener->running = true;
 		}
 	}
 }
@@ -146,29 +165,26 @@ void e2d::ColliderManager::stop(String name)
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		if (pListener->getName() == name)
+		if (pListener->name == name)
 		{
-			pListener->stop();
+			pListener->stopped = true;
 		}
 	}
 }
 
-void e2d::ColliderManager::clear(String name)
+void e2d::ColliderManager::pauseAll()
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		if (pListener->getName() == name)
-		{
-			pListener->stopAndClear();
-		}
+		pListener->running = false;
 	}
 }
 
-void e2d::ColliderManager::startAll()
+void e2d::ColliderManager::resumeAll()
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		pListener->start();
+		pListener->running = true;
 	}
 }
 
@@ -176,34 +192,8 @@ void e2d::ColliderManager::stopAll()
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		pListener->stop();
+		pListener->stopped = true;
 	}
-}
-
-void e2d::ColliderManager::clearAll()
-{
-	FOR_LOOP(pListener, s_vListeners)
-	{
-		pListener->stopAndClear();
-	}
-}
-
-std::vector<e2d::CollisionListener*> e2d::ColliderManager::get(String name)
-{
-	std::vector<CollisionListener*> vListeners;
-	FOR_LOOP(pListener, s_vListeners)
-	{
-		if (pListener->getName() == name)
-		{
-			vListeners.push_back(pListener);
-		}
-	}
-	return std::move(vListeners);
-}
-
-std::vector<e2d::CollisionListener*> e2d::ColliderManager::getAll()
-{
-	return s_vListeners;
 }
 
 e2d::Node * e2d::ColliderManager::getActiveNode()
@@ -268,7 +258,7 @@ void e2d::ColliderManager::__uninit()
 {
 	FOR_LOOP(listener, s_vListeners)
 	{
-		SafeRelease(&listener);
+		delete listener;
 	}
 	s_vListeners.clear();
 }

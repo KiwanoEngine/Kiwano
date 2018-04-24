@@ -179,7 +179,7 @@ void e2d::ActionManager::__uninit()
 
 void e2d::ActionManager::resumeAll()
 {
-	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getChildren())
+	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getAllChildren())
 	{
 		ActionManager::__resumeAllBindedWith(child);
 	}
@@ -187,7 +187,7 @@ void e2d::ActionManager::resumeAll()
 
 void e2d::ActionManager::pauseAll()
 {
-	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getChildren())
+	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getAllChildren())
 	{
 		ActionManager::__pauseAllBindedWith(child);
 	}
@@ -195,7 +195,7 @@ void e2d::ActionManager::pauseAll()
 
 void e2d::ActionManager::stopAll()
 {
-	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getChildren())
+	FOR_LOOP(child, SceneManager::getCurrentScene()->getRoot()->getAllChildren())
 	{
 		ActionManager::__stopAllBindedWith(child);
 	}

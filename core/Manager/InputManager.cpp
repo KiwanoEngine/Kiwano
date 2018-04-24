@@ -1,78 +1,66 @@
 #include "..\e2dmanager.h"
 #include "..\e2dtool.h"
 
+// ¼àÌıÆ÷
+class Listener
+{
+public:
+	Listener(
+		e2d::Function func,
+		e2d::String name,
+		bool paused
+	)
+		: name(name)
+		, callback(func)
+		, running(!paused)
+		, stopped(false)
+	{
+	}
+
+	// ¸üĞÂ¼àÌıÆ÷×´Ì¬
+	virtual void update()
+	{
+		if (callback)
+		{
+			callback();
+		}
+	}
+
+public:
+	bool running;
+	bool stopped;
+	e2d::String name;
+	e2d::Function callback;
+};
+
 // ¼àÌıÆ÷ÈİÆ÷
-static std::vector<e2d::InputListener*> s_vListeners;
+static std::vector<Listener*> s_vListeners;
 
 
-void e2d::InputManager::__update()
+void e2d::InputManager::add(Function func, String name, bool paused)
 {
-	for (size_t i = 0; i < s_vListeners.size(); i++)
-	{
-		auto pListener = s_vListeners[i];
-		// ¸üĞÂ¼àÌıÆ÷
-		if (pListener->m_bClear)
-		{
-			pListener->release();
-			s_vListeners.erase(s_vListeners.begin() + i);
-		}
-		else if (pListener->isRunning())
-		{
-			pListener->_update();
-		}
-	}
+	auto listener = new Listener(func, name, paused);
+	s_vListeners.push_back(listener);
 }
 
-void e2d::InputManager::__uninit()
-{
-	FOR_LOOP(listener, s_vListeners)
-	{
-		SafeRelease(&listener);
-	}
-	s_vListeners.clear();
-}
-
-void e2d::InputManager::__add(InputListener * pListener)
-{
-	WARN_IF(pListener == nullptr, "InputListener NULL pointer exception!");
-
-	if (pListener)
-	{
-		auto findListener = [](InputListener * pListener) -> bool
-		{
-			FOR_LOOP(l, s_vListeners)
-			{
-				if (pListener == l)
-				{
-					return true;
-				}
-			}
-			return false;
-		};
-
-		bool bHasListener = findListener(pListener);
-		WARN_IF(bHasListener, "The InputListener is already added, cannot be added again!");
-
-		if (!bHasListener)
-		{
-			pListener->retain();
-			s_vListeners.push_back(pListener);
-		}
-	}
-}
-
-void e2d::InputManager::add(Function func, String name)
-{
-	(new InputListener(func, name))->start();
-}
-
-void e2d::InputManager::start(String name)
+void e2d::InputManager::pause(String name)
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		if (pListener->getName() == name)
+		if (pListener->name == name)
 		{
-			pListener->start();
+			pListener->running = false;
+		}
+	}
+}
+
+void e2d::InputManager::resume(String name)
+{
+	FOR_LOOP(pListener, s_vListeners)
+	{
+		if (pListener->name == name)
+		{
+			pListener->running = true;
 		}
 	}
 }
@@ -81,29 +69,26 @@ void e2d::InputManager::stop(String name)
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		if (pListener->getName() == name)
+		if (pListener->name == name)
 		{
-			pListener->stop();
+			pListener->stopped = true;
 		}
 	}
 }
 
-void e2d::InputManager::clear(String name)
+void e2d::InputManager::pauseAll()
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		if (pListener->getName() == name)
-		{
-			pListener->stopAndClear();
-		}
+		pListener->running = false;
 	}
 }
 
-void e2d::InputManager::startAll()
+void e2d::InputManager::resumeAll()
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		pListener->start();
+		pListener->running = true;
 	}
 }
 
@@ -111,32 +96,38 @@ void e2d::InputManager::stopAll()
 {
 	FOR_LOOP(pListener, s_vListeners)
 	{
-		pListener->stop();
+		pListener->stopped = true;
 	}
 }
 
-void e2d::InputManager::clearAll()
+void e2d::InputManager::__update()
 {
-	FOR_LOOP(pListener, s_vListeners)
-	{
-		pListener->stopAndClear();
-	}
-}
+	if (s_vListeners.empty() || Game::isPaused())
+		return;
 
-std::vector<e2d::InputListener*> e2d::InputManager::get(String name)
-{
-	std::vector<InputListener*> vListeners;
-	FOR_LOOP(pListener, s_vListeners)
+	for (size_t i = 0; i < s_vListeners.size(); i++)
 	{
-		if (pListener->getName() == name)
+		auto pListener = s_vListeners[i];
+		// Çå³ıÒÑÍ£Ö¹µÄ¼àÌıÆ÷
+		if (pListener->stopped)
 		{
-			vListeners.push_back(pListener);
+			delete pListener;
+			s_vListeners.erase(s_vListeners.begin() + i);
+		}
+		else
+		{
+			// ¸üĞÂ¼àÌıÆ÷
+			pListener->update();
+			++i;
 		}
 	}
-	return std::move(vListeners);
 }
 
-std::vector<e2d::InputListener*> e2d::InputManager::getAll()
+void e2d::InputManager::__uninit()
 {
-	return s_vListeners;
+	FOR_LOOP(listener, s_vListeners)
+	{
+		delete listener;
+	}
+	s_vListeners.clear();
 }

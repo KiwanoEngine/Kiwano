@@ -740,6 +740,19 @@ public:
 		Node * child
 	);
 
+	// 获取所有名称相同的子节点
+	std::vector<Node*> get(
+		String name
+	) const;
+
+	// 获取名称相同的子节点
+	Node* getOne(
+		String name
+	) const;
+
+	// 获取所有子节点
+	std::vector<Node*> getAll() const;
+
 	// 获取根节点
 	Node * getRoot() const;
 
@@ -768,6 +781,13 @@ protected:
 
 
 template<typename Object>
-inline void SafeRelease(Object** p) { if (*p) { (*p)->release(); *p = nullptr; } }
+inline void SafeRelease(Object** p) 
+{ 
+	if (*p) 
+	{ 
+		(*p)->release(); 
+		(*p) = nullptr; 
+	}
+}
 
 }

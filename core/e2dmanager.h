@@ -14,8 +14,6 @@ class Action;
 class Music;
 class Collider;
 class Transition;
-class InputListener;
-class CollisionListener;
 
 // 对象管理器
 class ObjectManager
@@ -232,17 +230,22 @@ class InputManager
 {
 	friend Game;
 	friend Input;
-	friend InputListener;
 
 public:
 	// 添加输入监听
 	static void add(
 		Function func,		/* 监听到用户输入时的执行函数 */
-		String name = L""	/* 监听器名称 */
+		String name = L"",	/* 监听器名称 */
+		bool paused = false	/* 是否暂停 */
 	);
 
-	// 启动输入监听
-	static void start(
+	// 暂停输入监听
+	static void pause(
+		String name
+	);
+
+	// 暂停输入监听
+	static void resume(
 		String name
 	);
 
@@ -251,34 +254,16 @@ public:
 		String name
 	);
 
-	// 清除输入监听
-	static void clear(
-		String name
-	);
+	// 暂停所有监听器
+	static void pauseAll();
 
-	// 启动所有监听器
-	static void startAll();
+	// 继续所有监听器
+	static void resumeAll();
 
 	// 停止所有监听器
 	static void stopAll();
 
-	// 清除所有监听器
-	static void clearAll();
-
-	// 获取监听器
-	static std::vector<InputListener*> get(
-		String name
-	);
-
-	// 获取全部监听器
-	static std::vector<InputListener*> getAll();
-
 private:
-	// 添加输入监听
-	static void __add(
-		InputListener * pListener
-	);
-
 	// 更新监听器
 	static void __update();
 
@@ -293,7 +278,6 @@ class ColliderManager
 	friend Game;
 	friend Node;
 	friend Collider;
-	friend CollisionListener;
 
 public:
 	// 开启或关闭碰撞监听功能（默认关闭）
@@ -304,11 +288,17 @@ public:
 	// 添加碰撞监听
 	static void add(
 		Function func,		/* 监听到碰撞时的执行函数 */
-		String name = L""	/* 监听器名称 */
+		String name = L"",	/* 监听器名称 */
+		bool paused = false	/* 是否暂停 */
 	);
 
-	// 启动碰撞监听
-	static void start(
+	// 暂停碰撞监听
+	static void pause(
+		String name
+	);
+
+	// 暂停碰撞监听
+	static void resume(
 		String name
 	);
 
@@ -317,27 +307,14 @@ public:
 		String name
 	);
 
-	// 清除碰撞监听
-	static void clear(
-		String name
-	);
+	// 暂停所有监听器
+	static void pauseAll();
 
-	// 启动所有监听器
-	static void startAll();
+	// 继续所有监听器
+	static void resumeAll();
 
 	// 停止所有监听器
 	static void stopAll();
-
-	// 清除所有监听器
-	static void clearAll();
-
-	// 获取监听器
-	static std::vector<CollisionListener*> get(
-		String name
-	);
-
-	// 获取全部监听器
-	static std::vector<CollisionListener*> getAll();
 
 	// 获取碰撞发生时的主动体
 	static Node * getActiveNode();
@@ -356,11 +333,6 @@ public:
 	);
 
 private:
-	// 添加碰撞监听
-	static void __add(
-		CollisionListener * pListener
-	);
-
 	// 更新监听器
 	static void __update();
 

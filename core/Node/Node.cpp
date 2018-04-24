@@ -692,7 +692,7 @@ e2d::Scene * e2d::Node::getParentScene() const
 	return m_pParentScene;
 }
 
-std::vector<e2d::Node*> e2d::Node::getChildren(String name)
+std::vector<e2d::Node*> e2d::Node::getChildren(String name) const
 {
 	std::vector<Node*> vChildren;
 	unsigned int hash = name.getHashCode();
@@ -708,7 +708,22 @@ std::vector<e2d::Node*> e2d::Node::getChildren(String name)
 	return std::move(vChildren);
 }
 
-std::vector<e2d::Node*> e2d::Node::getChildren()
+e2d::Node * e2d::Node::getChild(String name) const
+{
+	unsigned int hash = name.getHashCode();
+
+	FOR_LOOP(child, m_vChildren)
+	{
+		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
+		if (child->m_nHashName == hash && child->m_sName == name)
+		{
+			return child;
+		}
+	}
+	return nullptr;
+}
+
+std::vector<e2d::Node*> e2d::Node::getAllChildren() const
 {
 	return m_vChildren;
 }

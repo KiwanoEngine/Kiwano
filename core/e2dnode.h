@@ -131,10 +131,15 @@ public:
 	// 获取所有名称相同的子节点
 	virtual std::vector<Node*> getChildren(
 		String name
-	);
+	) const;
+
+	// 获取名称相同的子节点
+	virtual Node* getChild(
+		String name
+	) const;
 
 	// 获取所有子节点
-	virtual std::vector<Node*> getChildren();
+	virtual std::vector<Node*> getAllChildren() const;
 
 	// 获取子节点数量
 	virtual int getChildrenCount() const;

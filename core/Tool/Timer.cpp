@@ -176,5 +176,9 @@ void e2d::Timer::__resetAll()
 
 void e2d::Timer::__uninit()
 {
+	FOR_LOOP(timer, s_vTimers)
+	{
+		delete timer;
+	}
 	s_vTimers.clear();
 }

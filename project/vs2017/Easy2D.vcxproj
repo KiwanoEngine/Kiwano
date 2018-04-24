@@ -249,9 +249,6 @@
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />
     <ClCompile Include="..\..\core\Node\Text.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
-    <ClCompile Include="..\..\core\Tool\Listener\CollisionListener.cpp" />
-    <ClCompile Include="..\..\core\Tool\Listener\InputListener.cpp" />
-    <ClCompile Include="..\..\core\Tool\Listener\Listener.cpp" />
     <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
     <ClCompile Include="..\..\core\Tool\Random.cpp" />

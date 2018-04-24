@@ -67,6 +67,21 @@ bool e2d::Scene::remove(Node * child)
 	return m_pRoot->removeChild(child);
 }
 
+std::vector<e2d::Node*> e2d::Scene::get(String name) const
+{
+	return m_pRoot->getChildren(name);
+}
+
+e2d::Node * e2d::Scene::getOne(String name) const
+{
+	return m_pRoot->getChild(name);
+}
+
+std::vector<e2d::Node*> e2d::Scene::getAll() const
+{
+	return m_pRoot->getAllChildren();
+}
+
 e2d::Node * e2d::Scene::getRoot() const
 {
 	return m_pRoot;

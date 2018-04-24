@@ -1,17 +1,27 @@
 #include "..\e2dbase.h"
 
 // 上一帧与当前帧的时间间隔
-static int s_nInterval = 0;
+static unsigned int s_nInterval = 0;
 // 游戏开始时长
-static double s_fTotalTime = 0;
+static unsigned int s_nTotalTime = 0;
 
 
 double e2d::Time::getTotalTime()
 {
-	return s_fTotalTime;
+	return s_nTotalTime / 1000.0;
 }
 
-int e2d::Time::getDeltaTime()
+unsigned int e2d::Time::getTotalTimeMilliseconds()
+{
+	return s_nTotalTime;
+}
+
+double e2d::Time::getDeltaTime()
+{
+	return s_nInterval / 1000.0;
+}
+
+unsigned int e2d::Time::getDeltaTimeMilliseconds()
 {
 	return s_nInterval;
 }
@@ -64,8 +74,8 @@ void e2d::Time::__updateLast()
 	s_tLastUpdate = s_tNow;
 
 	s_tNow = steady_clock::now();
-	s_nInterval = static_cast<int>(duration_cast<milliseconds>(s_tNow - s_tLastUpdate).count());
-	s_fTotalTime = static_cast<double>(duration_cast<milliseconds>(s_tNow - s_tStart).count()) / 1000.0;
+	s_nInterval = static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tLastUpdate).count());
+	s_nTotalTime = static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tStart).count());
 }
 
 void e2d::Time::__sleep()
@@ -132,8 +142,8 @@ void e2d::Time::__updateLast()
 	s_tLastUpdate = s_tNow;
 
 	::QueryPerformanceCounter(&s_tNow);
-	s_nInterval = static_cast<int>((s_tNow.QuadPart - s_tLastUpdate.QuadPart) * 1000LL / s_tFreq.QuadPart);
-	s_fTotalTime = static_cast<double>(s_tNow.QuadPart - s_tStart.QuadPart) / s_tFreq.QuadPart;
+	s_nInterval = static_cast<unsigned int>((s_tNow.QuadPart - s_tLastUpdate.QuadPart) * 1000LL / s_tFreq.QuadPart);
+	s_nTotalTime = static_cast<unsigned int>(s_tNow.QuadPart - s_tStart.QuadPart) * 1000LL / s_tFreq.QuadPart;
 }
 
 void e2d::Time::__sleep()
