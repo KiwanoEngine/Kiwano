@@ -237,7 +237,6 @@
     <ClCompile Include="..\..\core\Manager\ObjectManager.cpp" />
     <ClCompile Include="..\..\core\Manager\ColliderManager.cpp" />
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\TimerManager.cpp" />
     <ClCompile Include="..\..\core\Node\Button.cpp" />
     <ClCompile Include="..\..\core\Node\ButtonToggle.cpp" />
     <ClCompile Include="..\..\core\Node\Menu.cpp" />

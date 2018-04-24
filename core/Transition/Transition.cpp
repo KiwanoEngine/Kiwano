@@ -45,7 +45,7 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 
 	if (FAILED(hr))
 	{
-		ASSERT(false, L"Create layer failed!");
+		ASSERT(false, "Create layer failed!");
 	}
 
 	m_fLast = Time::getTotalTime();

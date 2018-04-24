@@ -102,9 +102,6 @@
     <ClCompile Include="..\..\core\Manager\ObjectManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\TimerManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Node\Button.cpp">
       <Filter>Node</Filter>
     </ClCompile>

@@ -219,7 +219,7 @@ std::vector<e2d::Action*> e2d::ActionManager::getAll()
 	return s_vActions;
 }
 
-void e2d::ActionManager::__resetAllActions()
+void e2d::ActionManager::__resetAll()
 {
 	FOR_LOOP(action, s_vRunningActions)
 	{

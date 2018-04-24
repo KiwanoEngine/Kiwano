@@ -9,7 +9,7 @@ static std::stack<e2d::Scene*> s_SceneStack;
 
 void e2d::SceneManager::enter(Scene * scene, Transition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
 {
-	ASSERT(scene != nullptr, "Next scene NULL pointer exception!");
+	ASSERT(scene, "Next scene NULL pointer exception!");
 	scene->retain();
 
 	// 保存下一场景的指针

@@ -6,7 +6,7 @@ e2d::ActionLoop::ActionLoop(Action * action, int times /* = -1 */)
 	, m_nTimes(0)
 	, m_nTotalTimes(times)
 {
-	ASSERT(m_pAction != nullptr, "ActionLoop NULL pointer exception!");
+	ASSERT(m_pAction, "ActionLoop NULL pointer exception!");
 	m_pAction->retain();
 }
 

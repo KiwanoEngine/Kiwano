@@ -1,6 +1,5 @@
 #include "..\e2dnode.h"
 #include "..\e2dmanager.h"
-#include "..\e2dtool.h"
 #include "..\e2daction.h"
 #include "..\e2dcollider.h"
 #include <algorithm>

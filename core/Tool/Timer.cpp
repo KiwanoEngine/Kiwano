@@ -1,128 +1,180 @@
 #include "..\e2dtool.h"
 #include "..\e2dnode.h"
-#include "..\e2dmanager.h"
 
-e2d::Timer::Timer(String name, Function func, double interval /* = 0 */, int updateTimes /* = -1 */, bool atOnce /* = false */, bool autoRelease /* = false */)
-	: m_bRunning(false)
-	, m_nRunTimes(0)
-	, m_Callback(nullptr)
-	, m_fInterval(0)
-	, m_fLast(0)
-	, m_nUpdateTimes(-1)
-	, m_bAtOnce(false)
-	, m_bAutoRelease(false)
-	, m_bClear(false)
+class TimerInfo
 {
-	this->setName(name);
-	this->setFunc(func);
-	this->setUpdateTimes(updateTimes);
-	this->setInterval(interval);
-	m_bAutoRelease = autoRelease;
-	m_bAtOnce = atOnce;
-}
-
-bool e2d::Timer::isRunning() const
-{
-	return m_bRunning;
-}
-
-void e2d::Timer::stop()
-{
-	m_bRunning = false;
-}
-
-void e2d::Timer::stopAndClear()
-{
-	m_bRunning = false;
-	m_bClear = true;
-}
-
-void e2d::Timer::start()
-{
-	if (!m_bRunning)
+public:
+	TimerInfo(
+		e2d::Function func,
+		e2d::String name,
+		double delay,
+		int updateTimes,
+		bool paused
+	)
+		: running(!paused)
+		, stopped(false)
+		, runTimes(0)
+		, totalTimes(updateTimes)
+		, delay(max(delay, 0))
+		, lastTime(e2d::Time::getTotalTime())
+		, callback(func)
+		, name(name)
 	{
-		m_bRunning = true;
-		m_fLast = Time::getTotalTime();
-		m_nRunTimes = 0;
-	}
-}
-
-void e2d::Timer::start(int times)
-{
-	if (!m_bRunning)
-	{
-		m_bRunning = true;
-		m_fLast = Time::getTotalTime();
-		m_nUpdateTimes = times;
-		m_nRunTimes = 0;
-	}
-}
-
-e2d::String e2d::Timer::getName() const
-{
-	return m_sName;
-}
-
-void e2d::Timer::setName(String name)
-{
-	m_sName = name;
-}
-
-void e2d::Timer::setInterval(double interval)
-{
-	m_fInterval = max(interval, 0);
-}
-
-void e2d::Timer::setFunc(Function func)
-{
-	m_Callback = func;
-}
-
-void e2d::Timer::setUpdateTimes(int updateTimes)
-{
-	m_nUpdateTimes = updateTimes;
-}
-
-void e2d::Timer::setRunAtOnce(bool bAtOnce)
-{
-	m_bAtOnce = bAtOnce;
-}
-
-void e2d::Timer::update()
-{
-	if (m_Callback)
-	{
-		m_Callback();
 	}
 
-	m_nRunTimes++;
-	m_fLast += m_fInterval;
-
-	if (m_nRunTimes == m_nUpdateTimes)
+	void update()
 	{
-		if (m_bAutoRelease)
+		if (this->callback)
 		{
-			this->stopAndClear();
+			this->callback();
+		}
+
+		this->runTimes++;
+		this->lastTime += this->delay;
+
+		if (this->runTimes == this->totalTimes)
+		{
+			this->stopped = true;
+		}
+	}
+
+	bool ready()
+	{
+		if (this->running)
+		{
+			if (this->delay == 0)
+				return true;
+
+			if ((e2d::Time::getTotalTime() - this->lastTime) >= this->delay)
+				return true;
+		}
+		return false;
+	}
+
+public:
+	bool	running;
+	bool	stopped;
+	int		runTimes;
+	int		totalTimes;
+	double	delay;
+	double	lastTime;
+	e2d::String		name;
+	e2d::Function	callback;
+};
+
+static std::vector<TimerInfo*> s_vTimers;
+
+
+void e2d::Timer::start(Function func, double delay, int updateTimes, bool paused, String name)
+{
+	auto timer = new TimerInfo(func, name, delay, updateTimes, paused);
+	s_vTimers.push_back(timer);
+}
+
+void e2d::Timer::start(Function func, String name)
+{
+	Timer::start(func, 0, -1, false, name);
+}
+
+void e2d::Timer::startOnce(Function func, double timeOut)
+{
+	auto timer = new TimerInfo(func, L"", timeOut, 1, false);
+	s_vTimers.push_back(timer);
+}
+
+void e2d::Timer::pause(String name)
+{
+	FOR_LOOP(timer, s_vTimers)
+	{
+		if (timer->name == name)
+		{
+			timer->running = false;
+		}
+	}
+}
+
+void e2d::Timer::resume(String name)
+{
+	FOR_LOOP(timer, s_vTimers)
+	{
+		if (timer->name == name)
+		{
+			timer->running = true;
+		}
+	}
+}
+
+void e2d::Timer::stop(String name)
+{
+	FOR_LOOP(timer, s_vTimers)
+	{
+		if (timer->name == name)
+		{
+			timer->stopped = true;
+		}
+	}
+}
+
+void e2d::Timer::pauseAll()
+{
+	FOR_LOOP(timer, s_vTimers)
+	{
+		timer->running = false;
+	}
+}
+
+void e2d::Timer::resumeAll()
+{
+	FOR_LOOP(timer, s_vTimers)
+	{
+		timer->running = true;
+	}
+}
+
+void e2d::Timer::stopAll()
+{
+	FOR_LOOP(timer, s_vTimers)
+	{
+		timer->stopped = true;
+	}
+}
+
+void e2d::Timer::__update()
+{
+	if (s_vTimers.empty() || Game::isPaused())
+		return;
+
+	for (size_t i = 0; i < s_vTimers.size();)
+	{
+		auto timer = s_vTimers[i];
+		// 清除已停止的定时器
+		if (timer->stopped)
+		{
+			delete timer;
+			s_vTimers.erase(s_vTimers.begin() + i);
 		}
 		else
 		{
-			this->stop();
+			// 更新定时器
+			if (timer->ready())
+			{
+				timer->update();
+			}
+
+			++i;
 		}
 	}
 }
 
-bool e2d::Timer::isReady() const
+void e2d::Timer::__resetAll()
 {
-	if (m_bRunning && !m_bClear)
+	FOR_LOOP(timer, s_vTimers)
 	{
-		if (m_bAtOnce && m_nRunTimes == 0)
-			return true;
-
-		if (m_fInterval == 0)
-			return true;
-
-		if ((Time::getTotalTime() - m_fLast) >= m_fInterval)
-			return true;
+		timer->lastTime = Time::getTotalTime();
 	}
-	return false;
+}
+
+void e2d::Timer::__uninit()
+{
+	s_vTimers.clear();
 }

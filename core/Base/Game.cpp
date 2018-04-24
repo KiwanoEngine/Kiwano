@@ -1,5 +1,6 @@
 #include "..\e2dbase.h"
 #include "..\e2dmanager.h"
+#include "..\e2dtool.h"
 
 
 // 控制游戏终止
@@ -98,7 +99,7 @@ int e2d::Game::start(bool bAutoRelease/* true */)
 		// 判断是否达到了刷新状态
 		if (Time::__isReady())
 		{
-			TimerManager::__update();		// 定时器管理器执行程序
+			Timer::__update();				// 定时器管理器执行程序
 			ActionManager::__update();		// 动作管理器执行程序
 			while (Time::__isReady())
 			{
@@ -136,8 +137,8 @@ void e2d::Game::resume()
 		// 刷新当前时间
 		Time::__updateLast();
 		// 重置动画和定时器
-		ActionManager::__resetAllActions();
-		TimerManager::__resetAllTimers();
+		ActionManager::__resetAll();
+		Timer::__resetAll();
 	}
 }
 
@@ -157,8 +158,6 @@ void e2d::Game::destroy()
 	SceneManager::__uninit();
 	// 关闭播放器
 	MusicManager::__uninit();
-	// 清空定时器
-	TimerManager::__uninit();
 	// 删除监听器
 	InputManager::__uninit();
 	ColliderManager::__uninit();
@@ -168,6 +167,8 @@ void e2d::Game::destroy()
 	ObjectManager::__clear();
 	// 清空图片缓存
 	Image::clearCache();
+	// 清空定时器
+	Timer::__uninit();
 	// 关闭输入
 	Input::__uninit();
 	// 恢复计时操作

@@ -87,79 +87,6 @@ private:
 };
 
 
-// 定时器管理器
-class TimerManager
-{
-	friend Game;
-	friend Node;
-	friend Timer;
-
-public:
-	// 启动一个新任务
-	static Timer* start(
-		String name,				/* 任务名称 */
-		Function func,				/* 执行函数 */
-		double interval = 0,		/* 时间间隔（秒） */
-		int times = -1,				/* 执行次数（设 -1 为永久执行） */
-		bool atOnce = false,		/* 是否立即执行 */
-		bool autoRelease = false	/* 自动清除 */
-	);
-
-	// 启动一个新任务：等待一段时间后执行指定函数
-	static Timer* start(
-		double timeOut,	/* 等待的时长（秒） */
-		Function func	/* 执行的函数 */
-	);
-
-	// 启动具有相同名称的定时器
-	static void start(
-		String name
-	);
-
-	// 停止具有相同名称的定时器
-	static void stop(
-		String name
-	);
-
-	// 删除具有相同名称的定时器
-	static void clear(
-		String name
-	);
-
-	// 添加定时器
-	static void add(
-		Timer * pTimer
-	);
-
-	// 获取名称相同的定时器
-	static std::vector<Timer*> get(
-		String name
-	);
-
-	// 启动所有定时器
-	static void startAll();
-
-	// 停止所有定时器
-	static void stopAll();
-
-	// 停止并清除所有定时器
-	static void stopAndClearAll();
-
-	// 获取所有定时器
-	static std::vector<Timer*> getAll();
-
-private:
-	// 更新定时器
-	static void __update();
-
-	// 重置定时器状态
-	static void __resetAllTimers();
-
-	// 清空定时器
-	static void __uninit();
-};
-
-
 // 动作管理器
 class ActionManager
 {
@@ -241,7 +168,7 @@ private:
 	);
 
 	// 重置所有动作状态
-	static void __resetAllActions();
+	static void __resetAll();
 
 	// 回收资源
 	static void __uninit();

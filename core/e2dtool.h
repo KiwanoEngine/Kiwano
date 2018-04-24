@@ -5,7 +5,6 @@
 namespace e2d
 {
 
-class TimerManager;
 class MusicManager;
 class InputManager;
 class ColliderManager;
@@ -161,83 +160,65 @@ protected:
 
 
 // 定时器
-class Timer :
-	public Object
+class Timer
 {
-	friend TimerManager;
+	friend Game;
 
 public:
-	Timer(
-		String name = L"",			/* 任务名称 */
-		Function func = nullptr,	/* 执行函数 */
-		double interval = 0,		/* 时间间隔（秒） */
-		int times = -1,				/* 执行次数（设 -1 为永久执行） */
-		bool atOnce = false,		/* 是否立即执行 */
-		bool autoRelease = false	/* 执行结束时自动清除 */
+	// 启动定时器
+	static void start(
+		Function func,			/* 执行函数 */
+		String name				/* 定时器名称 */
 	);
 
 	// 启动定时器
-	void start();
-
-	// 启动定时器，并执行指定次数
-	void start(
-		int times		/* 执行次数（设 -1 为永久执行） */
+	static void start(
+		Function func,			/* 执行函数 */
+		double delay = 0,		/* 时间间隔（秒） */
+		int times = -1,			/* 执行次数（设 -1 为永久执行） */
+		bool paused = false,	/* 是否暂停 */
+		String name = L""		/* 定时器名称 */
 	);
 
-	// 停止定时器
-	void stop();
+	// 启动仅执行一次的定时器
+	static void startOnce(
+		Function func,		/* 执行的函数 */
+		double timeOut		/* 等待的时长（秒） */
+	);
 
-	// 停止并清除该定时器
-	void stopAndClear();
-
-	// 更新定时器
-	void update();
-
-	// 获取定时器状态
-	bool isRunning() const;
-
-	// 判断是否达到执行状态
-	bool isReady() const;
-
-	// 获取定时器名称
-	String getName() const;
-
-	// 设置定时器名称
-	void setName(
+	// 暂停具有相同名称的定时器
+	static void pause(
 		String name
 	);
 
-	// 设置定时器执行间隔
-	void setInterval(
-		double fInterval	/* 时间间隔（秒） */
+	// 继续具有相同名称的定时器
+	static void resume(
+		String name
 	);
 
-	// 设置定时器的执行函数
-	void setFunc(
-		Function func
+	// 停止具有相同名称的定时器
+	static void stop(
+		String name
 	);
 
-	// 设置定时器执行次数
-	void setUpdateTimes(
-		int nUpdateTimes	/* 执行次数（设 -1 为永久执行） */
-	);
+	// 暂停所有定时器
+	static void pauseAll();
 
-	// 设置定时器在绑定后立即执行一次
-	virtual void setRunAtOnce(
-		bool bAtOnce
-	);
+	// 继续所有定时器
+	static void resumeAll();
 
-protected:
-	String		m_sName;
-	bool		m_bRunning;
-	bool		m_bAtOnce;
-	bool		m_bAutoRelease;
-	bool		m_bClear;
-	int			m_nRunTimes;
-	int			m_nUpdateTimes;
-	double		m_fInterval;
-	double		m_fLast;
-	Function	m_Callback;
+	// 停止所有定时器
+	static void stopAll();
+
+private:
+	// 更新定时器
+	static void __update();
+
+	// 重置定时器状态
+	static void __resetAll();
+
+	// 清空定时器
+	static void __uninit();
 };
 
 
