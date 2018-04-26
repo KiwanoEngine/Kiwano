@@ -292,15 +292,14 @@ public:
 // 路径工具
 class Path
 {
+	friend Game;
+
 public:
-	// 获取系统的 AppData Local 路径
-	static String getLocalAppDataPath();
+	// 获取数据的默认保存路径
+	static String getDefaultSavePath();
 
 	// 获取临时文件目录
 	static String getTempPath();
-
-	// 获取数据的默认保存路径
-	static String getDefaultSavePath();
 
 	// 获取文件扩展名
 	static String getFileExtension(
@@ -317,6 +316,10 @@ public:
 	static bool createFolder(
 		String strDirPath	/* 文件夹路径 */
 	);
+
+private:
+	// 初始化
+	static bool __init();
 };
 
 }

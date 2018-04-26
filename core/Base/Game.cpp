@@ -56,16 +56,21 @@ bool e2d::Game::init(String sGameName)
 	if (!Music::__init())
 	{
 		WARN_IF(true, "Music::__init Failed!");
-		goto music_fail;
+		Music::__uninit();
+	}
+
+	// 保存游戏名称
+	s_sGameName = sGameName;
+
+	// 初始化路径
+	if (!Path::__init())
+	{
+		WARN_IF(true, "Path::__init Failed!");
 	}
 
 	// 初始化成功
-	s_sGameName = sGameName;
 	s_bInitialized = true;
 	goto succeeded;
-
-music_fail:
-	Music::__uninit();
 
 input_fail:
 	Input::__uninit();

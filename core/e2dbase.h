@@ -14,7 +14,7 @@ class Game
 public:
 	// 初始化游戏
 	static bool init(
-		String sGameName = L"E2DGame" /* 游戏英文名称 */
+		String sGameName = L"" /* 游戏英文名称 */
 	);
 
 	// 启动游戏

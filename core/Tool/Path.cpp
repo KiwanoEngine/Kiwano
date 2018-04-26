@@ -9,11 +9,15 @@
 DEFINE_KNOWN_FOLDER(FOLDERID_LocalAppData, 0xF1B32785, 0x6FBA, 0x4FCF, 0x9D, 0x55, 0x7B, 0x8E, 0x7F, 0x15, 0x70, 0x91);
 
 
-e2d::String e2d::Path::getLocalAppDataPath()
+static e2d::String s_sLocalAppDataPath;
+static e2d::String s_sTempPath;
+static e2d::String s_sDefaultSavePath;
+
+bool e2d::Path::__init()
 {
+	// 获取 AppData\Local 文件夹的路径
 	typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
 
-	// 获取 AppData\Local 文件夹的路径
 	PWSTR pszPath = NULL;
 	HMODULE hModule = LoadLibrary(L"shell32.dll");
 	pFunSHGetKnownFolderPath SHGetKnownFolderPath = (pFunSHGetKnownFolderPath)GetProcAddress(hModule, "SHGetKnownFolderPath");
@@ -21,77 +25,108 @@ e2d::String e2d::Path::getLocalAppDataPath()
 
 	if (SUCCEEDED(hr))
 	{
-		String path = pszPath;
+		s_sLocalAppDataPath = pszPath;
 		CoTaskMemFree(pszPath);
-		return path;
 	}
-	return L"";
+	else
+	{
+		WARN_IF(true, "Cannot get local AppData path!");
+	}
+
+	// 获取游戏名称
+	String sGameName = Game::getName();
+	
+	// 获取默认保存路径
+	bool bInitSavePath = false;
+	do
+	{
+		String localAppPath = s_sLocalAppDataPath;
+		if (localAppPath.isEmpty())
+		{
+
+			break;
+		}
+		else
+		{
+			s_sDefaultSavePath = localAppPath;
+		}
+
+		localAppPath << L"\\Easy2DGameData";
+		if (Path::createFolder(localAppPath))
+		{
+			s_sDefaultSavePath = localAppPath;
+		}
+		else
+		{
+			break;
+		}
+
+		if (!sGameName.isEmpty())
+		{
+			localAppPath << L"\\" << sGameName;
+			// 创建文件夹
+			if (Path::createFolder(localAppPath))
+			{
+				s_sDefaultSavePath = localAppPath;
+			}
+		}
+
+		s_sDefaultSavePath << L"\\";
+		bInitSavePath = true;
+	} while (0);
+
+	// 获取临时文件目录
+	bool bInitTempPath = false;
+	do
+	{
+		wchar_t path[_MAX_PATH];
+		if (0 == ::GetTempPath(_MAX_PATH, path))
+		{
+			break;
+		}
+		else
+		{
+			s_sTempPath = path;
+		}
+
+		// 创建临时文件目录
+		String tempPath;
+		tempPath << s_sTempPath << L"\\Easy2DGameTemp";
+		// 创建文件夹
+		if (Path::createFolder(tempPath))
+		{
+			s_sTempPath = path;
+		}
+		else
+		{
+			break;
+		}
+
+		if (!sGameName.isEmpty())
+		{
+			tempPath << L"\\" << sGameName;
+			// 创建文件夹
+			if (Path::createFolder(tempPath))
+			{
+				s_sTempPath = tempPath;
+			}
+		}
+
+		s_sTempPath << L"\\";
+		bInitTempPath = true;
+	} while (0);
+
+	return SUCCEEDED(hr) && bInitSavePath && bInitTempPath;
 }
 
 e2d::String e2d::Path::getTempPath()
 {
-	// 获取临时文件目录
-	wchar_t path[_MAX_PATH];
-	if (0 == ::GetTempPath(_MAX_PATH, path))
-	{
-		return L"";
-	}
-
-	// 创建临时文件目录
-	e2d::String tempFilePath;
-	tempFilePath << path << L"Easy2DGameTemp\\";
-	// 创建文件夹
-	if (!Path::createFolder(tempFilePath))
-	{
-		return path;
-	}
-
-	// 获取游戏名称
-	String sGameName = Game::getName();
-	if (!sGameName.isEmpty())
-	{
-		// 创建文件夹
-		if (!Path::createFolder(tempFilePath + sGameName + L"\\"))
-		{
-			return std::move(tempFilePath);
-		}
-		tempFilePath << sGameName << L"\\";
-	}
-	return std::move(tempFilePath);
+	return s_sTempPath;
 }
 
 e2d::String e2d::Path::getDefaultSavePath()
 {
-	// 获取 AppData 路径
-	String path = Path::getLocalAppDataPath();
-
-	if (path.isEmpty())
-	{
-		WARN_IF(true, "Cannot get local AppData path!");
-		return std::move(path);
-	}
-	
-	// 创建文件夹
-	if (!Path::createFolder(path + L"\\Easy2DGameData"))
-	{
-		return std::move(path);
-	}
-	path << L"\\Easy2DGameData";
-
-	// 获取游戏名称
-	String sGameName = Game::getName();
-	if (!sGameName.isEmpty())
-	{
-		// 创建文件夹
-		if (!Path::createFolder(path + L"\\" + sGameName))
-		{
-			return std::move(path);
-		}
-		path << L"\\" << sGameName;
-	}
-	path << L"\\";
-	
-	return std::move(path);
+	return s_sDefaultSavePath;
 }
 
 e2d::String e2d::Path::getFileExtension(String filePath)
