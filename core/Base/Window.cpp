@@ -45,7 +45,7 @@ bool e2d::Window::__init()
 	nHeight = min(nHeight, screenHeight);
 
 	// 计算窗口大小
-	DWORD dwStyle = WS_OVERLAPPEDWINDOW &~ WS_MAXIMIZEBOX;
+	DWORD dwStyle = WS_OVERLAPPEDWINDOW &~ WS_MAXIMIZEBOX &~ WS_THICKFRAME;
 	RECT wr = { 0, 0, static_cast<LONG>(nWidth), static_cast<LONG>(nHeight) };
 	::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
 	// 获取新的宽高
@@ -188,11 +188,10 @@ void e2d::Window::setTitle(String title)
 	::SetWindowText(s_HWnd, title);
 }
 
-void e2d::Window::setIcon(LPCTSTR pIconID)
+void e2d::Window::setIcon(int pIconID)
 {
-	
 	HINSTANCE hInstance = ::GetModuleHandle(NULL);
-	HICON hIcon = (HICON)::LoadImage(hInstance, pIconID, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+	HICON hIcon = (HICON)::LoadImage(hInstance, MAKEINTRESOURCE(pIconID), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 	// 设置窗口的图标
 	::SendMessage(s_HWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 	::SendMessage(s_HWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);

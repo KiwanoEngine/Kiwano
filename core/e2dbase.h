@@ -67,7 +67,7 @@ public:
 
 	// 设置窗口图标
 	static void setIcon(
-		LPCTSTR pIconID
+		int pIconID
 	);
 
 	// 获取窗口标题

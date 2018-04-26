@@ -487,19 +487,35 @@ public:
 	// 创建一个空精灵
 	Sprite();
 
-	// 从 EImage 对象创建精灵
+	// 从 Image 对象创建精灵
 	Sprite(
 		Image * image
 	);
 
-	// 从文件图片创建精灵
+	// 加载图片文件
 	Sprite(
-		String imageFileName
+		String strFilePath	/* 图片文件路径 */
 	);
 
-	// 创建精灵并裁剪图片
+	// 加载图片资源
 	Sprite(
-		String imageFileName,
+		int resNameId,		/* 图片资源名称 */
+		String resType		/* 图片资源类型 */
+	);
+
+	// 加载图片文件
+	Sprite(
+		String strFilePath,	/* 图片文件路径 */
+		double x,
+		double y,
+		double width,
+		double height
+	);
+
+	// 加载图片资源
+	Sprite(
+		int resNameId,		/* 图片资源名称 */
+		String resType,		/* 图片资源类型 */
 		double x,
 		double y,
 		double width,
@@ -508,25 +524,31 @@ public:
 
 	virtual ~Sprite();
 
-	// 从本地文件加载图片
-	virtual void open(
-		String imageFileName
+	// 加载图片文件
+	bool open(
+		String strFilePath
+	);
+
+	// 加载图片资源
+	bool open(
+		int resNameId,		/* 图片资源名称 */
+		String resType		/* 图片资源类型 */
 	);
 	
 	// 加载图片
-	virtual void open(
+	bool open(
 		Image * image
 	);
 
 	// 将图片裁剪为矩形
-	virtual void crop(
+	void crop(
 		double x,
 		double y,
 		double width,
 		double height
 	);
 
-	// 获取 EImage 对象
+	// 获取 Image 对象
 	virtual Image * getImage() const;
 
 	// 渲染精灵

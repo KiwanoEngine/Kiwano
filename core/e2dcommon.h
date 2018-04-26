@@ -583,15 +583,21 @@ class Image :
 	public Object
 {
 public:
-	// 创建一个空的图片
+	// 创建一个空的图片对象
 	Image();
 
-	// 从本地文件中读取资源
+	// 加载图片文件
 	Image(
 		String strFilePath	/* 图片文件路径 */
 	);
 
-	// 从本地文件中读取资源
+	// 加载图片资源
+	Image(
+		int resNameId,		/* 图片资源名称 */
+		String resType		/* 图片资源类型 */
+	);
+
+	// 加载图片文件并裁剪
 	Image(
 		String strFilePath,	/* 图片文件路径 */
 		double nCropX,		/* 裁剪位置 X 坐标 */
@@ -600,11 +606,27 @@ public:
 		double nCropHeight	/* 裁剪高度 */
 	);
 
+	// 加载图片资源并裁剪
+	Image(
+		int resNameId,		/* 图片资源名称 */
+		String resType,		/* 图片资源类型 */
+		double nCropX,		/* 裁剪位置 X 坐标 */
+		double nCropY,		/* 裁剪位置 Y 坐标 */
+		double nCropWidth,	/* 裁剪宽度 */
+		double nCropHeight	/* 裁剪高度 */
+	);
+
 	virtual ~Image();
 
-	// 从本地文件中读取图片
-	void open(
+	// 加载图片文件
+	bool open(
 		String strFilePath
+	);
+
+	// 加载图片资源
+	bool open(
+		int resNameId,		/* 图片资源名称 */
+		String resType		/* 图片资源类型 */
 	);
 
 	// 将图片裁剪为矩形
@@ -645,9 +667,15 @@ public:
 	// 获取 ID2D1Bitmap 对象
 	ID2D1Bitmap * getBitmap();
 
-	// 预加载资源
+	// 预加载图片文件
 	static bool preload(
 		String strFileName	/* 图片文件路径 */
+	);
+
+	// 预加载图片资源
+	static bool preload(
+		int resNameId,		/* 图片资源名称 */
+		String resType		/* 图片资源类型 */
 	);
 
 	// 清空缓存

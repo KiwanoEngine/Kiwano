@@ -2,6 +2,7 @@
 #include <map>
 
 static std::map<size_t, ID2D1Bitmap*> s_mBitmapsFromFile;
+static std::map<int, ID2D1Bitmap*> s_mBitmapsFromResource;
 
 
 e2d::Image::Image()
@@ -14,13 +15,28 @@ e2d::Image::Image()
 }
 
 e2d::Image::Image(String strFileName)
+	: m_pBitmap(nullptr)
 {
 	this->open(strFileName);
 }
 
+e2d::Image::Image(int resNameId, String resType)
+	: m_pBitmap(nullptr)
+{
+	this->open(resNameId, resType);
+}
+
 e2d::Image::Image(String strFileName, double nCropX, double nCropY, double nCropWidth, double nCropHeight)
+	: m_pBitmap(nullptr)
 {
 	this->open(strFileName);
+	this->crop(nCropX, nCropY, nCropWidth, nCropHeight);
+}
+
+e2d::Image::Image(int resNameId, String resType, double nCropX, double nCropY, double nCropWidth, double nCropHeight)
+	: m_pBitmap(nullptr)
+{
+	this->open(resNameId, resType);
 	this->crop(nCropX, nCropY, nCropWidth, nCropHeight);
 }
 
@@ -28,23 +44,39 @@ e2d::Image::~Image()
 {
 }
 
-void e2d::Image::open(String strFilePath)
+bool e2d::Image::open(String strFilePath)
 {
 	WARN_IF(strFilePath.isEmpty(), "Image cannot load bitmap from NULL file name.");
 
 	if (strFilePath.isEmpty())
-		return;
+		return false;
 
 	if (!Image::preload(strFilePath))
 	{
 		WARN_IF(true, "Load Image from file failed!");
-		return;
+		return false;
 	}
 
 	m_pBitmap = s_mBitmapsFromFile.at(strFilePath.getHashCode());
 	m_fSourceCropX = m_fSourceCropY = 0;
 	m_fSourceCropWidth = m_pBitmap->GetSize().width;
 	m_fSourceCropHeight = m_pBitmap->GetSize().height;
+	return true;
+}
+
+bool e2d::Image::open(int resNameId, String resType)
+{
+	if (!Image::preload(resNameId, resType))
+	{
+		WARN_IF(true, "Load Image from file failed!");
+		return false;
+	}
+
+	m_pBitmap = s_mBitmapsFromResource.at(resNameId);
+	m_fSourceCropX = m_fSourceCropY = 0;
+	m_fSourceCropWidth = m_pBitmap->GetSize().width;
+	m_fSourceCropHeight = m_pBitmap->GetSize().height;
+	return true;
 }
 
 void e2d::Image::crop(double x, double y, double width, double height)
@@ -200,13 +232,146 @@ bool e2d::Image::preload(String fileName)
 	return SUCCEEDED(hr);
 }
 
+bool e2d::Image::preload(int resNameId, String resType)
+{
+	if (s_mBitmapsFromResource.find(resNameId) != s_mBitmapsFromResource.end())
+	{
+		return true;
+	}
+
+	HRESULT hr = S_OK;
+
+	IWICBitmapDecoder *pDecoder = nullptr;
+	IWICBitmapFrameDecode *pSource = nullptr;
+	IWICStream *pStream = nullptr;
+	IWICFormatConverter *pConverter = nullptr;
+	IWICBitmapScaler *pScaler = nullptr;
+	ID2D1Bitmap *pBitmap = nullptr;
+
+	HRSRC imageResHandle = nullptr;
+	HGLOBAL imageResDataHandle = nullptr;
+	void *pImageFile = nullptr;
+	DWORD imageFileSize = 0;
+
+	// 定位资源
+	imageResHandle = ::FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(resNameId), resType);
+
+	hr = imageResHandle ? S_OK : E_FAIL;
+	if (SUCCEEDED(hr))
+	{
+		// 加载资源
+		imageResDataHandle = ::LoadResource(HINST_THISCOMPONENT, imageResHandle);
+
+		hr = imageResDataHandle ? S_OK : E_FAIL;
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 获取文件指针，并锁定资源
+		pImageFile = ::LockResource(imageResDataHandle);
+
+		hr = pImageFile ? S_OK : E_FAIL;
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 计算大小
+		imageFileSize = SizeofResource(HINST_THISCOMPONENT, imageResHandle);
+
+		hr = imageFileSize ? S_OK : E_FAIL;
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 创建 WIC 流
+		hr = Renderer::getIWICImagingFactory()->CreateStream(&pStream);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 初始化流
+		hr = pStream->InitializeFromMemory(
+			reinterpret_cast<BYTE*>(pImageFile),
+			imageFileSize
+		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 创建流的解码器
+		hr = Renderer::getIWICImagingFactory()->CreateDecoderFromStream(
+			pStream,
+			NULL,
+			WICDecodeMetadataCacheOnLoad,
+			&pDecoder
+		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 创建初始化框架
+		hr = pDecoder->GetFrame(0, &pSource);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 创建图片格式转换器
+		// (DXGI_FORMAT_B8G8R8A8_UNORM + D2D1_ALPHA_MODE_PREMULTIPLIED).
+		hr = Renderer::getIWICImagingFactory()->CreateFormatConverter(&pConverter);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 图片格式转换成 32bppPBGRA
+		hr = pConverter->Initialize(
+			pSource,
+			GUID_WICPixelFormat32bppPBGRA,
+			WICBitmapDitherTypeNone,
+			NULL,
+			0.f,
+			WICBitmapPaletteTypeMedianCut
+		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		// 从 WIC 位图创建一个 Direct2D 位图
+		hr = Renderer::getRenderTarget()->CreateBitmapFromWicBitmap(
+			pConverter,
+			NULL,
+			&pBitmap
+		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		s_mBitmapsFromResource.insert(std::pair<int, ID2D1Bitmap*>(resNameId, pBitmap));
+	}
+
+	// 释放相关资源
+	SafeReleaseInterface(&pDecoder);
+	SafeReleaseInterface(&pSource);
+	SafeReleaseInterface(&pStream);
+	SafeReleaseInterface(&pConverter);
+	SafeReleaseInterface(&pScaler);
+
+	return SUCCEEDED(hr);
+}
+
+
 void e2d::Image::clearCache()
 {
-	for (auto child = s_mBitmapsFromFile.begin(); child != s_mBitmapsFromFile.end(); child++)
+	for (auto bitmap : s_mBitmapsFromFile)
 	{
-		SafeReleaseInterface(&(*child).second);
+		SafeReleaseInterface(&bitmap.second);
 	}
 	s_mBitmapsFromFile.clear();
+
+	for (auto bitmap : s_mBitmapsFromResource)
+	{
+		SafeReleaseInterface(&bitmap.second);
+	}
+	s_mBitmapsFromResource.clear();
 }
 
 ID2D1Bitmap * e2d::Image::getBitmap()
