@@ -1,7 +1,7 @@
 #include "..\e2dtool.h"
 #include "..\e2dmanager.h"
+#include <map>
 
-using namespace e2d;
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=nullptr; } }
@@ -12,51 +12,89 @@ using namespace e2d;
 
 inline bool TraceError(wchar_t* sPrompt)
 {
-	WARN_IF(true, "Music error: %s failed!", sPrompt);
+	WARN_IF(true, "MusicInfo error: %s failed!", sPrompt);
 	return false;
 }
 
 inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 {
-	WARN_IF(true, "Music error: %s (%#X)", sPrompt, hr);
+	WARN_IF(true, "MusicInfo error: %s (%#X)", sPrompt, hr);
 	return false;
 }
 
 static IXAudio2 * s_pXAudio2 = nullptr;
 static IXAudio2MasteringVoice * s_pMasteringVoice = nullptr;
+static float s_fMusicVolume = 1.0;
 
 
-bool e2d::Music::__init()
+// ÒôÀÖ²¥·ÅÆ÷
+class MusicPlayer
 {
-	HRESULT hr;
+public:
+	MusicPlayer();
 
-	if (FAILED(hr = XAudio2Create(&s_pXAudio2, 0)))
-	{
-		WARN_IF(true, "Failed to init XAudio2 engine");
-		return false;
-	}
+	virtual ~MusicPlayer();
 
-	if (FAILED(hr = s_pXAudio2->CreateMasteringVoice(&s_pMasteringVoice)))
-	{
-		WARN_IF(true, "Failed creating mastering voice");
-		SafeReleaseInterface(&s_pXAudio2);
-		return false;
-	}
+	bool open(
+		e2d::String strFileName
+	);
 
-	return true;
+	bool play(
+		int nLoopCount = 0
+	);
+
+	void pause();
+
+	void resume();
+
+	void stop();
+
+	void close();
+
+	bool setVolume(
+		float fVolume
+	);
+
+	bool isPlaying() const;
+
+protected:
+	bool _readMMIO();
+
+	bool _resetFile();
+
+	bool _read(
+		BYTE* pBuffer,
+		DWORD dwSizeToRead
+	);
+
+	bool _findMediaFileCch(
+		wchar_t* strDestPath,
+		int cchDest,
+		const wchar_t * strFilename
+	);
+
+protected:
+	bool m_bOpened;
+	mutable bool m_bPlaying;
+	DWORD m_dwSize;
+	CHAR* m_pResourceBuffer;
+	BYTE* m_pbWaveData;
+	HMMIO m_hmmio;
+	MMCKINFO m_ck;
+	MMCKINFO m_ckRiff;
+	WAVEFORMATEX* m_pwfx;
+	IXAudio2SourceVoice* m_pSourceVoice;
+};
+
+typedef std::map<UINT, MusicPlayer *> MusicMap;
+
+static MusicMap& GetMusicList()
+{
+	static MusicMap s_List;
+	return s_List;
 }
 
-void e2d::Music::__uninit()
-{
-	if (s_pMasteringVoice)
-	{
-		s_pMasteringVoice->DestroyVoice();
-	}
-
-	SafeReleaseInterface(&s_pXAudio2);
-}
-
-Music::Music()
+MusicPlayer::MusicPlayer()
 	: m_bOpened(false)
 	, m_bPlaying(false)
 	, m_pwfx(nullptr)
@@ -68,35 +106,22 @@ Music::Music()
 {
 }
 
-e2d::Music::Music(String strFileName)
-	: m_bOpened(false)
-	, m_bPlaying(false)
-	, m_pwfx(nullptr)
-	, m_hmmio(nullptr)
-	, m_pResourceBuffer(nullptr)
-	, m_pbWaveData(nullptr)
-	, m_dwSize(0)
-	, m_pSourceVoice(nullptr)
-{
-	this->open(strFileName);
-}
-
-Music::~Music()
+MusicPlayer::~MusicPlayer()
 {
 	close();
 }
 
-bool Music::open(String strFileName)
+bool MusicPlayer::open(e2d::String strFileName)
 {
 	if (m_bOpened)
 	{
-		WARN_IF(true, "Music can be opened only once!");
+		WARN_IF(true, "MusicInfo can be opened only once!");
 		return false;
 	}
 
 	if (strFileName.isEmpty())
 	{
-		WARN_IF(true, "Music::open Invalid file name.");
+		WARN_IF(true, "MusicInfo::open Invalid file name.");
 		return false;
 	}
 
@@ -158,17 +183,17 @@ bool Music::open(String strFileName)
 	return true;
 }
 
-bool Music::play(int nLoopCount)
+bool MusicPlayer::play(int nLoopCount)
 {
 	if (!m_bOpened)
 	{
-		WARN_IF(true, "Music::play Failed: Music must be opened first!");
+		WARN_IF(true, "MusicInfo::play Failed: MusicInfo must be opened first!");
 		return false;
 	}
 
 	if (m_pSourceVoice == nullptr)
 	{
-		WARN_IF(true, "Music::play Failed: IXAudio2SourceVoice Null pointer exception!");
+		WARN_IF(true, "MusicInfo::play Failed: IXAudio2SourceVoice Null pointer exception!");
 		return false;
 	}
 
@@ -204,7 +229,7 @@ bool Music::play(int nLoopCount)
 	return SUCCEEDED(hr);
 }
 
-void Music::pause()
+void MusicPlayer::pause()
 {
 	if (m_pSourceVoice)
 	{
@@ -215,7 +240,7 @@ void Music::pause()
 	}
 }
 
-void Music::resume()
+void MusicPlayer::resume()
 {
 	if (m_pSourceVoice)
 	{
@@ -226,7 +251,7 @@ void Music::resume()
 	}
 }
 
-void Music::stop()
+void MusicPlayer::stop()
 {
 	if (m_pSourceVoice)
 	{
@@ -239,7 +264,7 @@ void Music::stop()
 	}
 }
 
-void Music::close()
+void MusicPlayer::close()
 {
 	if (m_pSourceVoice)
 	{
@@ -263,7 +288,7 @@ void Music::close()
 	m_bPlaying = false;
 }
 
-bool Music::isPlaying() const
+bool MusicPlayer::isPlaying() const
 {
 	if (m_bOpened && m_pSourceVoice)
 	{
@@ -282,61 +307,16 @@ bool Music::isPlaying() const
 	}
 }
 
-double Music::getVolume() const
-{
-	float fVolume = 0.0f;
-	if (m_pSourceVoice)
-	{
-		m_pSourceVoice->GetVolume(&fVolume);
-	}
-	return static_cast<double>(fVolume);
-}
-
-bool Music::setVolume(double fVolume)
+bool MusicPlayer::setVolume(float fVolume)
 {
 	if (m_pSourceVoice)
 	{
-		return SUCCEEDED(m_pSourceVoice->SetVolume(min(max(static_cast<float>(fVolume), -224), 224)));
+		return SUCCEEDED(m_pSourceVoice->SetVolume(fVolume));
 	}
 	return false;
 }
 
-double Music::getFrequencyRatio() const
-{
-	float fFrequencyRatio = 0.0f;
-	if (m_pSourceVoice)
-	{
-		m_pSourceVoice->GetFrequencyRatio(&fFrequencyRatio);
-	}
-	return static_cast<double>(fFrequencyRatio);
-}
-
-bool Music::setFrequencyRatio(double fFrequencyRatio)
-{
-	if (m_pSourceVoice)
-	{
-		fFrequencyRatio = min(max(fFrequencyRatio, XAUDIO2_MIN_FREQ_RATIO), XAUDIO2_MAX_FREQ_RATIO);
-		return SUCCEEDED(m_pSourceVoice->SetFrequencyRatio(static_cast<float>(fFrequencyRatio)));
-	}
-	return false;
-}
-
-IXAudio2 * e2d::Music::getIXAudio2()
-{
-	return s_pXAudio2;
-}
-
-IXAudio2MasteringVoice * e2d::Music::getIXAudio2MasteringVoice()
-{
-	return s_pMasteringVoice;
-}
-
-IXAudio2SourceVoice * Music::getIXAudio2SourceVoice() const
-{
-	return m_pSourceVoice;
-}
-
-bool Music::_readMMIO()
+bool MusicPlayer::_readMMIO()
 {
 	MMCKINFO ckIn;
 	PCMWAVEFORMAT pcmWaveFormat;
@@ -408,7 +388,7 @@ bool Music::_readMMIO()
 	return true;
 }
 
-bool Music::_resetFile()
+bool MusicPlayer::_resetFile()
 {
 	// Seek to the data
 	if (-1 == mmioSeek(m_hmmio, m_ckRiff.dwDataOffset + sizeof(FOURCC),
@@ -423,7 +403,7 @@ bool Music::_resetFile()
 	return true;
 }
 
-bool Music::_read(BYTE* pBuffer, DWORD dwSizeToRead)
+bool MusicPlayer::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 {
 	MMIOINFO mmioinfoIn; // current status of m_hmmio
 
@@ -459,7 +439,7 @@ bool Music::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 	return true;
 }
 
-bool Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wchar_t * strFilename)
+bool MusicPlayer::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wchar_t * strFilename)
 {
 	bool bFound = false;
 
@@ -534,3 +514,175 @@ bool Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wchar_t *
 }
 
 
+bool e2d::Music::preload(String strFilePath)
+{
+	UINT nRet = strFilePath.getHashCode();
+
+	if (GetMusicList().end() != GetMusicList().find(nRet))
+	{
+		return true;
+	}
+	else
+	{
+		MusicPlayer * pPlayer = new (std::nothrow) MusicPlayer();
+
+		if (pPlayer->open(strFilePath))
+		{
+			pPlayer->setVolume(s_fMusicVolume);
+			GetMusicList().insert(std::pair<UINT, MusicPlayer *>(nRet, pPlayer));
+			return true;
+		}
+		else
+		{
+			delete pPlayer;
+			pPlayer = nullptr;
+		}
+	}
+	return false;
+}
+
+bool e2d::Music::play(String strFilePath, int nLoopCount)
+{
+	if (Music::preload(strFilePath))
+	{
+		UINT nRet = strFilePath.getHashCode();
+		auto pMusic = GetMusicList()[nRet];
+		if (pMusic->play(nLoopCount))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void e2d::Music::pause(String strFilePath)
+{
+	if (strFilePath.isEmpty())
+		return;
+
+	UINT nRet = strFilePath.getHashCode();
+
+	if (GetMusicList().end() != GetMusicList().find(nRet))
+		GetMusicList()[nRet]->pause();
+}
+
+void e2d::Music::resume(String strFilePath)
+{
+	if (strFilePath.isEmpty())
+		return;
+
+	UINT nRet = strFilePath.getHashCode();
+
+	if (GetMusicList().end() != GetMusicList().find(nRet))
+		GetMusicList()[nRet]->resume();
+}
+
+void e2d::Music::stop(String strFilePath)
+{
+	if (strFilePath.isEmpty())
+		return;
+
+	UINT nRet = strFilePath.getHashCode();
+
+	if (GetMusicList().end() != GetMusicList().find(nRet))
+		GetMusicList()[nRet]->stop();
+}
+
+bool e2d::Music::isPlaying(String strFilePath)
+{
+	if (strFilePath.isEmpty())
+		return false;
+
+	UINT nRet = strFilePath.getHashCode();
+
+	if (GetMusicList().end() != GetMusicList().find(nRet))
+		return GetMusicList()[nRet]->isPlaying();
+
+	return false;
+}
+
+double e2d::Music::getVolume()
+{
+	return s_fMusicVolume;
+}
+
+void e2d::Music::setVolume(double fVolume)
+{
+	s_fMusicVolume = min(max(static_cast<float>(fVolume), -224), 224);
+	for (auto pair : GetMusicList())
+	{
+		pair.second->setVolume(s_fMusicVolume);
+	}
+}
+
+void e2d::Music::pauseAll()
+{
+	for (auto pair : GetMusicList())
+	{
+		pair.second->pause();
+	}
+}
+
+void e2d::Music::resumeAll()
+{
+	for (auto pair : GetMusicList())
+	{
+		pair.second->resume();
+	}
+}
+
+void e2d::Music::stopAll()
+{
+	for (auto pair : GetMusicList())
+	{
+		pair.second->stop();
+	}
+}
+
+IXAudio2 * e2d::Music::getIXAudio2()
+{
+	return s_pXAudio2;
+}
+
+IXAudio2MasteringVoice * e2d::Music::getIXAudio2MasteringVoice()
+{
+	return s_pMasteringVoice;
+}
+
+bool e2d::Music::__init()
+{
+	HRESULT hr;
+
+	if (FAILED(hr = XAudio2Create(&s_pXAudio2, 0)))
+	{
+		WARN_IF(true, "Failed to init XAudio2 engine");
+		return false;
+	}
+
+	if (FAILED(hr = s_pXAudio2->CreateMasteringVoice(&s_pMasteringVoice)))
+	{
+		WARN_IF(true, "Failed creating mastering voice");
+		e2d::SafeReleaseInterface(&s_pXAudio2);
+		return false;
+	}
+
+	return true;
+}
+
+void e2d::Music::__uninit()
+{
+	for (auto pair : GetMusicList())
+	{
+		pair.second->close();
+		delete pair.second;
+	}
+
+	GetMusicList().clear();
+
+	if (s_pMasteringVoice)
+	{
+		s_pMasteringVoice->DestroyVoice();
+	}
+
+	e2d::SafeReleaseInterface(&s_pXAudio2);
+}

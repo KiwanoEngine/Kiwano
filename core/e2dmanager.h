@@ -173,58 +173,6 @@ private:
 };
 
 
-// 音乐管理工具
-class MusicManager
-{
-	friend Game;
-
-public:
-	// 预加载音乐资源
-	static bool preload(
-		String strFilePath	/* 音乐文件路径 */
-	);
-
-	// 播放音乐
-	static bool play(
-		String strFilePath,	/* 音乐文件路径 */
-		int nLoopCount = 0	/* 重复播放次数，设置 -1 为循环播放 */
-	);
-
-	// 暂停音乐
-	static void pause(
-		String strFilePath	/* 音乐文件路径 */
-	);
-
-	// 继续播放音乐
-	static void resume(
-		String strFilePath	/* 音乐文件路径 */
-	);
-
-	// 停止音乐
-	static void stop(
-		String strFilePath	/* 音乐文件路径 */
-	);
-
-	// 获取指定音乐的 Music 对象
-	static Music * get(
-		String strFilePath	/* 音乐文件路径 */
-	);
-
-	// 暂停所有音乐
-	static void pauseAll();
-
-	// 继续播放所有音乐
-	static void resumeAll();
-
-	// 停止所有音乐
-	static void stopAll();
-
-private:
-	// 回收音乐资源
-	static void __uninit();
-};
-
-
 // 键盘和鼠标消息管理器
 class InputManager
 {

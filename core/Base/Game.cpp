@@ -179,8 +179,6 @@ void e2d::Game::destroy()
 	ColliderManager::__uninit();
 	// 删除动画
 	ActionManager::__uninit();
-	// 关闭音乐播放器
-	MusicManager::__uninit();
 	// 删除所有对象
 	ObjectManager::__clear();
 	// 清空图片缓存

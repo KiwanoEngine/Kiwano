@@ -5,7 +5,6 @@
 namespace e2d
 {
 
-class MusicManager;
 class InputManager;
 class ColliderManager;
 
@@ -59,54 +58,53 @@ class Music :
 	friend Game;
 
 public:
-	Music();
-
-	Music(
-		String strFileName	/* 音乐文件路径 */
+	// 预加载音乐资源
+	static bool preload(
+		String strFilePath	/* 音乐文件路径 */
 	);
 
-	virtual ~Music();
-
-	// 打开音乐文件
-	bool open(
-		String strFileName	/* 音乐文件路径 */
-	);
-
-	// 播放
-	bool play(
+	// 播放音乐
+	static bool play(
+		String strFilePath,	/* 音乐文件路径 */
 		int nLoopCount = 0	/* 重复播放次数，设置 -1 为循环播放 */
 	);
 
-	// 暂停
-	void pause();
+	// 暂停音乐
+	static void pause(
+		String strFilePath	/* 音乐文件路径 */
+	);
 
-	// 继续
-	void resume();
+	// 继续播放音乐
+	static void resume(
+		String strFilePath	/* 音乐文件路径 */
+	);
 
-	// 停止
-	void stop();
-
-	// 关闭音乐文件
-	void close();
+	// 停止音乐
+	static void stop(
+		String strFilePath	/* 音乐文件路径 */
+	);
 
 	// 获取音乐播放状态
-	bool isPlaying() const;
+	static bool isPlaying(
+		String strFilePath	/* 音乐文件路径 */
+	);
 
 	// 获取音量
-	double getVolume() const;
-
-	// 获取频率比
-	double getFrequencyRatio() const;
+	static double getVolume();
 
 	// 设置音量
-	bool setVolume(
+	static void setVolume(
 		double fVolume			/* 音量范围为 -224 ~ 224，其中 0 是静音，1 是正常音量 */
 	);
 
-	// 设置频率比
-	bool setFrequencyRatio(
-		double fFrequencyRatio	/* 频率比范围为 1/1024.0f ~ 1024.0f，其中 1.0 为正常声调 */
-	);
+	// 暂停所有音乐
+	static void pauseAll();
+
+	// 继续播放所有音乐
+	static void resumeAll();
+
+	// 停止所有音乐
+	static void stopAll();
 
 	// 获取 IXAudio2 对象
 	static IXAudio2 * getIXAudio2();
@@ -114,41 +112,10 @@ public:
 	// 获取 IXAudio2MasteringVoice 对象
 	static IXAudio2MasteringVoice * getIXAudio2MasteringVoice();
 
-	// 获取 IXAudio2SourceVoice 对象
-	IXAudio2SourceVoice* getIXAudio2SourceVoice() const;
-
-protected:
-	bool _readMMIO();
-
-	bool _resetFile();
-
-	bool _read(
-		BYTE* pBuffer,
-		DWORD dwSizeToRead
-	);
-
-	bool _findMediaFileCch(
-		wchar_t* strDestPath,
-		int cchDest,
-		const wchar_t * strFilename
-	);
-
 private:
 	static bool __init();
 
 	static void __uninit();
-
-protected:
-	bool m_bOpened;
-	mutable bool m_bPlaying;
-	DWORD m_dwSize;
-	CHAR* m_pResourceBuffer;
-	BYTE* m_pbWaveData;
-	HMMIO m_hmmio;
-	MMCKINFO m_ck;
-	MMCKINFO m_ckRiff;
-	WAVEFORMATEX* m_pwfx;
-	IXAudio2SourceVoice* m_pSourceVoice;
 };
 
 

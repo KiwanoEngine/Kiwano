@@ -141,9 +141,6 @@
     <ClCompile Include="..\..\core\Tool\Music.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\MusicManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Point.cpp">
       <Filter>Common</Filter>
     </ClCompile>

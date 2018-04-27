@@ -129,9 +129,6 @@
     <ClCompile Include="..\..\core\Node\Text.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\MusicManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Tool\Path.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
