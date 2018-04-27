@@ -63,9 +63,22 @@ public:
 		String strFilePath	/* 音乐文件路径 */
 	);
 
+	// 预加载音乐资源
+	static bool preload(
+		int resNameId,		/* 音乐资源名称 */
+		String resType		/* 音乐资源类型 */
+	);
+
 	// 播放音乐
 	static bool play(
 		String strFilePath,	/* 音乐文件路径 */
+		int nLoopCount = 0	/* 重复播放次数，设置 -1 为循环播放 */
+	);
+
+	// 播放音乐
+	static bool play(
+		int resNameId,		/* 音乐资源名称 */
+		String resType,		/* 音乐资源类型 */
 		int nLoopCount = 0	/* 重复播放次数，设置 -1 为循环播放 */
 	);
 
@@ -74,9 +87,21 @@ public:
 		String strFilePath	/* 音乐文件路径 */
 	);
 
+	// 暂停音乐
+	static void pause(
+		int resNameId,		/* 音乐资源名称 */
+		String resType		/* 音乐资源类型 */
+	);
+
 	// 继续播放音乐
 	static void resume(
 		String strFilePath	/* 音乐文件路径 */
+	);
+
+	// 继续播放音乐
+	static void resume(
+		int resNameId,		/* 音乐资源名称 */
+		String resType		/* 音乐资源类型 */
 	);
 
 	// 停止音乐
@@ -84,9 +109,21 @@ public:
 		String strFilePath	/* 音乐文件路径 */
 	);
 
+	// 停止音乐
+	static void stop(
+		int resNameId,		/* 音乐资源名称 */
+		String resType		/* 音乐资源类型 */
+	);
+
 	// 获取音乐播放状态
 	static bool isPlaying(
 		String strFilePath	/* 音乐文件路径 */
+	);
+
+	// 获取音乐播放状态
+	static bool isPlaying(
+		int resNameId,		/* 音乐资源名称 */
+		String resType		/* 音乐资源类型 */
 	);
 
 	// 获取音量

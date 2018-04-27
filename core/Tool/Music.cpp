@@ -36,7 +36,12 @@ public:
 	virtual ~MusicPlayer();
 
 	bool open(
-		e2d::String strFileName
+		const e2d::String& strFileName
+	);
+
+	bool MusicPlayer::open(
+		int resNameId, 
+		const e2d::String& resType
 	);
 
 	bool play(
@@ -88,10 +93,16 @@ protected:
 
 typedef std::map<UINT, MusicPlayer *> MusicMap;
 
-static MusicMap& GetMusicList()
+static MusicMap& GetMusicFileList()
 {
-	static MusicMap s_List;
-	return s_List;
+	static MusicMap s_MusicFileList;
+	return s_MusicFileList;
+}
+
+static MusicMap& GetMusicResList()
+{
+	static MusicMap s_MusicResList;
+	return s_MusicResList;
 }
 
 MusicPlayer::MusicPlayer()
@@ -111,7 +122,7 @@ MusicPlayer::~MusicPlayer()
 	close();
 }
 
-bool MusicPlayer::open(e2d::String strFileName)
+bool MusicPlayer::open(const e2d::String& strFileName)
 {
 	if (m_bOpened)
 	{
@@ -160,6 +171,86 @@ bool MusicPlayer::open(e2d::String strFileName)
 	m_dwSize = m_ck.cksize;
 
 	// 将样本数据读取到内存中
+	m_pbWaveData = new BYTE[m_dwSize];
+
+	if (!_read(m_pbWaveData, m_dwSize))
+	{
+		TraceError(L"Failed to read WAV data");
+		SAFE_DELETE_ARRAY(m_pbWaveData);
+		return false;
+	}
+
+	// 创建音源
+	HRESULT hr;
+	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&m_pSourceVoice, m_pwfx)))
+	{
+		TraceError(L"Create source voice error", hr);
+		SAFE_DELETE_ARRAY(m_pbWaveData);
+		return false;
+	}
+
+	m_bOpened = true;
+	m_bPlaying = false;
+	return true;
+}
+
+bool MusicPlayer::open(int resNameId, const e2d::String& resType)
+{
+	HRSRC hResInfo;
+	HGLOBAL hResData;
+	DWORD dwSize;
+	void* pvRes;
+
+	if (m_bOpened)
+	{
+		WARN_IF(true, "MusicInfo can be opened only once!");
+		return false;
+	}
+
+	if (!s_pXAudio2)
+	{
+		WARN_IF(true, "IXAudio2 nullptr pointer error!");
+		return false;
+	}
+
+	// Loading it as a file failed, so try it as a resource
+	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(resNameId), resType)))
+		return TraceError(L"FindResource");
+
+	if (nullptr == (hResData = LoadResource(HINST_THISCOMPONENT, hResInfo)))
+		return TraceError(L"LoadResource");
+
+	if (0 == (dwSize = SizeofResource(HINST_THISCOMPONENT, hResInfo)))
+		return TraceError(L"SizeofResource");
+
+	if (nullptr == (pvRes = LockResource(hResData)))
+		return TraceError(L"LockResource");
+
+	m_pResourceBuffer = new CHAR[dwSize];
+	memcpy(m_pResourceBuffer, pvRes, dwSize);
+
+	MMIOINFO mmioInfo;
+	ZeroMemory(&mmioInfo, sizeof(mmioInfo));
+	mmioInfo.fccIOProc = FOURCC_MEM;
+	mmioInfo.cchBuffer = dwSize;
+	mmioInfo.pchBuffer = (CHAR*)m_pResourceBuffer;
+
+	m_hmmio = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
+
+	if (!_readMMIO())
+	{
+		// ReadMMIO will fail if its an not a wave file
+		mmioClose(m_hmmio, 0);
+		return TraceError(L"ReadMMIO");
+	}
+
+	if (!_resetFile())
+		return TraceError(L"ResetFile");
+
+	// After the reset, the size of the wav file is m_ck.cksize so store it now
+	m_dwSize = m_ck.cksize;
+
+	// Read the sample data into memory
 	m_pbWaveData = new BYTE[m_dwSize];
 
 	if (!_read(m_pbWaveData, m_dwSize))
@@ -518,7 +609,7 @@ bool e2d::Music::preload(String strFilePath)
 {
 	UINT nRet = strFilePath.getHashCode();
 
-	if (GetMusicList().end() != GetMusicList().find(nRet))
+	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
 	{
 		return true;
 	}
@@ -529,7 +620,32 @@ bool e2d::Music::preload(String strFilePath)
 		if (pPlayer->open(strFilePath))
 		{
 			pPlayer->setVolume(s_fMusicVolume);
-			GetMusicList().insert(std::pair<UINT, MusicPlayer *>(nRet, pPlayer));
+			GetMusicFileList().insert(std::pair<UINT, MusicPlayer *>(nRet, pPlayer));
+			return true;
+		}
+		else
+		{
+			delete pPlayer;
+			pPlayer = nullptr;
+		}
+	}
+	return false;
+}
+
+bool e2d::Music::preload(int resNameId, String resType)
+{
+	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
+	{
+		return true;
+	}
+	else
+	{
+		MusicPlayer * pPlayer = new (std::nothrow) MusicPlayer();
+
+		if (pPlayer->open(resNameId, resType))
+		{
+			pPlayer->setVolume(s_fMusicVolume);
+			GetMusicResList().insert(std::pair<UINT, MusicPlayer *>(resNameId, pPlayer));
 			return true;
 		}
 		else
@@ -546,7 +662,20 @@ bool e2d::Music::play(String strFilePath, int nLoopCount)
 	if (Music::preload(strFilePath))
 	{
 		UINT nRet = strFilePath.getHashCode();
-		auto pMusic = GetMusicList()[nRet];
+		auto pMusic = GetMusicFileList()[nRet];
+		if (pMusic->play(nLoopCount))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool e2d::Music::play(int resNameId, String resType, int nLoopCount)
+{
+	if (Music::preload(resNameId, resType))
+	{
+		auto pMusic = GetMusicResList()[resNameId];
 		if (pMusic->play(nLoopCount))
 		{
 			return true;
@@ -562,8 +691,14 @@ void e2d::Music::pause(String strFilePath)
 
 	UINT nRet = strFilePath.getHashCode();
 
-	if (GetMusicList().end() != GetMusicList().find(nRet))
-		GetMusicList()[nRet]->pause();
+	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
+		GetMusicFileList()[nRet]->pause();
+}
+
+void e2d::Music::pause(int resNameId, String resType)
+{
+	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
+		GetMusicResList()[resNameId]->pause();
 }
 
 void e2d::Music::resume(String strFilePath)
@@ -573,8 +708,14 @@ void e2d::Music::resume(String strFilePath)
 
 	UINT nRet = strFilePath.getHashCode();
 
-	if (GetMusicList().end() != GetMusicList().find(nRet))
-		GetMusicList()[nRet]->resume();
+	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
+		GetMusicFileList()[nRet]->resume();
+}
+
+void e2d::Music::resume(int resNameId, String resType)
+{
+	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
+		GetMusicResList()[resNameId]->pause();
 }
 
 void e2d::Music::stop(String strFilePath)
@@ -584,8 +725,14 @@ void e2d::Music::stop(String strFilePath)
 
 	UINT nRet = strFilePath.getHashCode();
 
-	if (GetMusicList().end() != GetMusicList().find(nRet))
-		GetMusicList()[nRet]->stop();
+	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
+		GetMusicFileList()[nRet]->stop();
+}
+
+void e2d::Music::stop(int resNameId, String resType)
+{
+	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
+		GetMusicResList()[resNameId]->stop();
 }
 
 bool e2d::Music::isPlaying(String strFilePath)
@@ -595,9 +742,16 @@ bool e2d::Music::isPlaying(String strFilePath)
 
 	UINT nRet = strFilePath.getHashCode();
 
-	if (GetMusicList().end() != GetMusicList().find(nRet))
-		return GetMusicList()[nRet]->isPlaying();
+	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
+		return GetMusicFileList()[nRet]->isPlaying();
 
+	return false;
+}
+
+bool e2d::Music::isPlaying(int resNameId, String resType)
+{
+	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
+		return GetMusicResList()[resNameId]->isPlaying();
 	return false;
 }
 
@@ -609,7 +763,7 @@ double e2d::Music::getVolume()
 void e2d::Music::setVolume(double fVolume)
 {
 	s_fMusicVolume = min(max(static_cast<float>(fVolume), -224), 224);
-	for (auto pair : GetMusicList())
+	for (auto pair : GetMusicFileList())
 	{
 		pair.second->setVolume(s_fMusicVolume);
 	}
@@ -617,7 +771,7 @@ void e2d::Music::setVolume(double fVolume)
 
 void e2d::Music::pauseAll()
 {
-	for (auto pair : GetMusicList())
+	for (auto pair : GetMusicFileList())
 	{
 		pair.second->pause();
 	}
@@ -625,7 +779,7 @@ void e2d::Music::pauseAll()
 
 void e2d::Music::resumeAll()
 {
-	for (auto pair : GetMusicList())
+	for (auto pair : GetMusicFileList())
 	{
 		pair.second->resume();
 	}
@@ -633,7 +787,7 @@ void e2d::Music::resumeAll()
 
 void e2d::Music::stopAll()
 {
-	for (auto pair : GetMusicList())
+	for (auto pair : GetMusicFileList())
 	{
 		pair.second->stop();
 	}
@@ -671,13 +825,13 @@ bool e2d::Music::__init()
 
 void e2d::Music::__uninit()
 {
-	for (auto pair : GetMusicList())
+	for (auto pair : GetMusicFileList())
 	{
 		pair.second->close();
 		delete pair.second;
 	}
 
-	GetMusicList().clear();
+	GetMusicFileList().clear();
 
 	if (s_pMasteringVoice)
 	{
