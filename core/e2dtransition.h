@@ -6,16 +6,49 @@ namespace e2d
 
 
 class SceneManager;
+class TransitionEmerge;
+class TransitionFade;
+class TransitionMove;
 
-class Transition :
+
+// 场景过渡动画生成器
+class Transition
+{
+public:
+	// 创建淡入淡出式的场景切换动画
+	static TransitionFade * Fade(
+		double duration				/* 动画持续时长 */
+	);
+
+	// 创建淡入淡出式的场景切换动画
+	static TransitionFade * Fade(
+		double fadeOutDuration,		/* 前一场景淡出动画持续时长 */
+		double fadeInDuration		/* 后一场景淡入动画持续时长 */
+	);
+
+	// 创建浮现式的场景切换动画
+	static TransitionEmerge * Emerge(
+		double duration				/* 动画持续时长 */
+	);
+
+	// 创建移动式的场景切换动画
+	static TransitionMove * Move(
+		double duration,				/* 动画持续时长 */
+		Direct direct = Direct::LEFT	/* 场景移动方向 */
+	);
+};
+
+
+// 基础过渡动画
+class TransitionBase :
 	public Object
 {
 	friend SceneManager;
 
 public:
-	Transition(double duration);
+	TransitionBase(double duration);
 
-	virtual ~Transition();
+	virtual ~TransitionBase();
 
 	// 场景切换动画是否结束
 	bool isEnding();
@@ -61,7 +94,7 @@ protected:
 
 
 class TransitionFade :
-	public Transition
+	public TransitionBase
 {
 public:
 	// 创建淡入淡出式的场景切换动画
@@ -94,7 +127,7 @@ protected:
 
 
 class TransitionEmerge :
-	public Transition
+	public TransitionBase
 {
 public:
 	// 创建浮现式的场景切换动画
@@ -116,7 +149,7 @@ protected:
 
 
 class TransitionMove :
-	public Transition
+	public TransitionBase
 {
 public:
 	// 创建移动式的场景切换动画

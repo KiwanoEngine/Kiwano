@@ -8,12 +8,12 @@ e2d::ActionGradual::ActionGradual(double duration)
 
 void e2d::ActionGradual::_init()
 {
-	Action::_init();
+	ActionBase::_init();
 }
 
 void e2d::ActionGradual::_update()
 {
-	Action::_update();
+	ActionBase::_update();
 	// 判断时间间隔是否足够
 	if (m_fDuration == 0)
 	{

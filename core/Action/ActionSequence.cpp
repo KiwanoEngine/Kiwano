@@ -6,16 +6,16 @@ e2d::ActionSequence::ActionSequence()
 }
 
 #ifdef HIGHER_THAN_VS2012
-e2d::ActionSequence::ActionSequence(const InitList<Action*>& vActions)
+e2d::ActionSequence::ActionSequence(const InitList<ActionBase*>& vActions)
 	: m_nActionIndex(0)
 {
 	this->add(vActions);
 }
 #else
-e2d::ActionSequence::ActionSequence(int number, Action * action1, ...) :
+e2d::ActionSequence::ActionSequence(int number, ActionBase * action1, ...) :
 	m_nActionIndex(0)
 {
-	Action ** ppAction = &action1;
+	ActionBase ** ppAction = &action1;
 
 	while (number > 0)
 	{
@@ -33,7 +33,7 @@ e2d::ActionSequence::~ActionSequence()
 
 void e2d::ActionSequence::_init()
 {
-	Action::_init();
+	ActionBase::_init();
 	// 将所有动作与目标绑定
 	if (m_pTarget)
 	{
@@ -48,7 +48,7 @@ void e2d::ActionSequence::_init()
 
 void e2d::ActionSequence::destroy()
 {
-	Action::destroy();
+	ActionBase::destroy();
 	for (auto action : m_vActions)
 	{
 		SafeRelease(&action);
@@ -57,7 +57,7 @@ void e2d::ActionSequence::destroy()
 
 void e2d::ActionSequence::_update()
 {
-	Action::_update();
+	ActionBase::_update();
 
 	auto &action = m_vActions[m_nActionIndex];
 	action->_update();
@@ -78,7 +78,7 @@ void e2d::ActionSequence::_update()
 
 void e2d::ActionSequence::reset()
 {
-	Action::reset();
+	ActionBase::reset();
 	for (auto action : m_vActions)
 	{
 		action->reset();
@@ -94,7 +94,7 @@ void e2d::ActionSequence::_resetTime()
 	}
 }
 
-void e2d::ActionSequence::add(Action * action)
+void e2d::ActionSequence::add(ActionBase * action)
 {
 	if (action)
 	{
@@ -104,7 +104,7 @@ void e2d::ActionSequence::add(Action * action)
 }
 
 #ifdef HIGHER_THAN_VS2012
-void e2d::ActionSequence::add(const InitList<Action*>& vActions)
+void e2d::ActionSequence::add(const InitList<ActionBase*>& vActions)
 {
 	for (const auto &action : vActions)
 	{
@@ -112,9 +112,9 @@ void e2d::ActionSequence::add(const InitList<Action*>& vActions)
 	}
 }
 #else
-void e2d::ActionSequence::add(int number, Action * action, ...)
+void e2d::ActionSequence::add(int number, ActionBase * action, ...)
 {
-	Action ** ppAction = &action;
+	ActionBase ** ppAction = &action;
 
 	while (number > 0)
 	{

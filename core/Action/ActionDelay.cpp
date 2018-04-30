@@ -12,12 +12,12 @@ e2d::ActionDelay * e2d::ActionDelay::clone() const
 
 void e2d::ActionDelay::_init()
 {
-	Action::_init();
+	ActionBase::_init();
 }
 
 void e2d::ActionDelay::_update()
 {
-	Action::_update();
+	ActionBase::_update();
 	// 判断时间间隔是否足够
 	if ((Time::getTotalTime() - m_fLast) >= m_fDelayTime)
 	{

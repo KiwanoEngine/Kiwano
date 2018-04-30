@@ -73,12 +73,12 @@ void e2d::Animation::setInterval(double interval)
 
 void e2d::Animation::_init()
 {
-	Action::_init();
+	ActionBase::_init();
 }
 
 void e2d::Animation::_update()
 {
-	Action::_update();
+	ActionBase::_update();
 
 	if (m_pTarget == nullptr)
 	{
@@ -105,13 +105,13 @@ void e2d::Animation::_update()
 
 void e2d::Animation::reset()
 {
-	Action::reset();
+	ActionBase::reset();
 	m_nFrameIndex = 0;
 }
 
 void e2d::Animation::destroy()
 {
-	Action::destroy();
+	ActionBase::destroy();
 	for (auto frame : m_vFrames)
 	{
 		SafeRelease(&frame);

@@ -1,8 +1,8 @@
 #include "..\e2dmanager.h"
 #include "..\e2daction.h"
 
-static std::vector<e2d::Action*> s_vActions;
-static std::vector<e2d::Action*> s_vRunningActions;
+static std::vector<e2d::ActionBase*> s_vActions;
+static std::vector<e2d::ActionBase*> s_vRunningActions;
 
 
 void e2d::ActionManager::__update()
@@ -33,7 +33,7 @@ void e2d::ActionManager::__update()
 	}
 }
 
-void e2d::ActionManager::__add(Action * pAction)
+void e2d::ActionManager::__add(ActionBase * pAction)
 {
 	if (pAction)
 	{
@@ -49,7 +49,7 @@ void e2d::ActionManager::__add(Action * pAction)
 	}
 }
 
-void e2d::ActionManager::__remove(Action * pAction)
+void e2d::ActionManager::__remove(ActionBase * pAction)
 {
 	for (size_t i = 0; i < s_vActions.size(); i++)
 	{
@@ -60,9 +60,9 @@ void e2d::ActionManager::__remove(Action * pAction)
 	}
 }
 
-void e2d::ActionManager::__startAction(Action * pAction, Node * pTargetNode)
+void e2d::ActionManager::__startAction(ActionBase * pAction, Node * pTargetNode)
 {
-	WARN_IF(pAction == nullptr, "Action NULL pointer exception!");
+	WARN_IF(pAction == nullptr, "ActionBase NULL pointer exception!");
 
 	if (pAction)
 	{
@@ -201,9 +201,9 @@ void e2d::ActionManager::stopAll()
 	}
 }
 
-std::vector<e2d::Action*> e2d::ActionManager::get(String strActionName)
+std::vector<e2d::ActionBase*> e2d::ActionManager::get(String strActionName)
 {
-	std::vector<Action*> vActions;
+	std::vector<ActionBase*> vActions;
 	for (auto action : s_vActions)
 	{
 		if (action->getName() == strActionName)
@@ -214,7 +214,7 @@ std::vector<e2d::Action*> e2d::ActionManager::get(String strActionName)
 	return std::move(vActions);
 }
 
-std::vector<e2d::Action*> e2d::ActionManager::getAll()
+std::vector<e2d::ActionBase*> e2d::ActionManager::getAll()
 {
 	return s_vActions;
 }

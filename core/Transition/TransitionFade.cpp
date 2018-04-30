@@ -2,7 +2,7 @@
 #include "..\e2dnode.h"
 
 e2d::TransitionFade::TransitionFade(double duration)
-	: Transition(0)
+	: TransitionBase(0)
 	, m_fFadeOutDuration(max(duration / 2, 0))
 	, m_fFadeInDuration(max(duration / 2, 0))
 	, m_bFadeOutTransioning(true)
@@ -10,7 +10,7 @@ e2d::TransitionFade::TransitionFade(double duration)
 }
 
 e2d::TransitionFade::TransitionFade(double fadeOutDuration, double fadeInDuration)
-	: Transition(0)
+	: TransitionBase(0)
 	, m_fFadeOutDuration(max(fadeOutDuration, 0))
 	, m_fFadeInDuration(max(fadeInDuration, 0))
 	, m_bFadeOutTransioning(true)
@@ -19,7 +19,7 @@ e2d::TransitionFade::TransitionFade(double fadeOutDuration, double fadeInDuratio
 
 void e2d::TransitionFade::_init(Scene * prev, Scene * next)
 {
-	Transition::_init(prev, next);
+	TransitionBase::_init(prev, next);
 	if (m_pPrevScene)
 	{
 		m_bFadeOutTransioning = true;

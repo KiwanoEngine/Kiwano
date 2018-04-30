@@ -2,13 +2,13 @@
 #include "..\e2dnode.h"
 
 e2d::TransitionEmerge::TransitionEmerge(double duration)
-	: Transition(duration)
+	: TransitionBase(duration)
 {
 }
 
 void e2d::TransitionEmerge::_init(Scene * prev, Scene * next)
 {
-	Transition::_init(prev, next);
+	TransitionBase::_init(prev, next);
 	m_sPrevLayerParam.opacity = 1;
 	m_sNextLayerParam.opacity = 0;
 }

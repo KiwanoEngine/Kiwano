@@ -825,7 +825,7 @@ void e2d::Node::clearAllChildren()
 	m_vChildren.clear();
 }
 
-void e2d::Node::runAction(Action * action)
+void e2d::Node::runAction(ActionBase * action)
 {
 	if (this != action->getTarget())
 	{
@@ -882,7 +882,7 @@ void e2d::Node::stopAction(String strActionName)
 	}
 }
 
-e2d::Action * e2d::Node::getAction(String strActionName)
+e2d::ActionBase * e2d::Node::getAction(String strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -895,9 +895,9 @@ e2d::Action * e2d::Node::getAction(String strActionName)
 	return nullptr;
 }
 
-std::vector<e2d::Action*> e2d::Node::getActions(String strActionName)
+std::vector<e2d::ActionBase*> e2d::Node::getActions(String strActionName)
 {
-	std::vector<Action*>::iterator iter;
+	std::vector<ActionBase*>::iterator iter;
 	auto actions = ActionManager::get(strActionName);
 	for (iter = actions.begin(); iter != actions.end();)
 	{

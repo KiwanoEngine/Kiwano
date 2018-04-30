@@ -2,14 +2,14 @@
 #include "..\e2dnode.h"
 
 e2d::TransitionMove::TransitionMove(double duration, Direct direct)
-	: Transition(duration)
+	: TransitionBase(duration)
 	, m_Direct(direct)
 {
 }
 
 void e2d::TransitionMove::_init(Scene * prev, Scene * next)
 {
-	Transition::_init(prev, next);
+	TransitionBase::_init(prev, next);
 
 	double width = m_WindowSize.width;
 	double height = m_WindowSize.height;

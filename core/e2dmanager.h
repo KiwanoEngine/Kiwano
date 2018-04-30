@@ -10,10 +10,10 @@ class Input;
 class Renderer;
 class Node;
 class Timer;
-class Action;
+class ActionBase;
 class Music;
 class Collider;
-class Transition;
+class TransitionBase;
 
 // 对象管理器
 class ObjectManager
@@ -49,13 +49,13 @@ public:
 	// 切换场景
 	static void enter(
 		Scene * scene,						/* 下一个场景的指针 */
-		Transition * transition = nullptr,	/* 场景切换动画 */
+		TransitionBase * transition = nullptr,	/* 场景切换动画 */
 		bool saveCurrentScene = true		/* 是否保存当前场景 */
 	);
 
 	// 返回上一场景
 	static void back(
-		Transition * transition = nullptr	/* 场景切换动画 */
+		TransitionBase * transition = nullptr	/* 场景切换动画 */
 	);
 
 	// 清空保存的所有场景
@@ -90,7 +90,7 @@ class ActionManager
 {
 	friend Game;
 	friend Node;
-	friend Action;
+	friend ActionBase;
 
 public:
 	// 继续名称相同的所有动作
@@ -118,12 +118,12 @@ public:
 	static void stopAll();
 
 	// 获取所有名称相同的动作
-	static std::vector<Action *> get(
+	static std::vector<ActionBase *> get(
 		String strActionName
 	);
 
 	// 获取所有动作
-	static std::vector<Action*> getAll();
+	static std::vector<ActionBase*> getAll();
 
 private:
 	// 更新动画状态
@@ -131,17 +131,17 @@ private:
 
 	// 添加动作
 	static void __add(
-		Action * pAction
+		ActionBase * pAction
 	);
 
 	// 删除动作
 	static void __remove(
-		Action * pAction
+		ActionBase * pAction
 	);
 
 	// 执行动作
 	static void __startAction(
-		Action * pAction,
+		ActionBase * pAction,
 		Node * pTargetNode
 	);
 

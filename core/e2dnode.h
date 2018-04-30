@@ -5,8 +5,8 @@ namespace e2d
 {
 
 
-class Action;
-class Transition;
+class ActionBase;
+class TransitionBase;
 class Collider;
 class ColliderManager;
 
@@ -15,7 +15,7 @@ class Node :
 {
 	friend Scene;
 	friend Collider;
-	friend Transition;
+	friend TransitionBase;
 	friend ColliderManager;
 
 public:
@@ -367,7 +367,7 @@ public:
 
 	// 执行动画
 	virtual void runAction(
-		Action * action
+		ActionBase * action
 	);
 
 	// 继续动画
@@ -386,12 +386,12 @@ public:
 	);
 
 	// 获取名称相同的动画
-	virtual Action * getAction(
+	virtual ActionBase * getAction(
 		String strActionName
 	);
 
 	// 获取所有名称相同的动画
-	virtual std::vector<Action*> getActions(
+	virtual std::vector<ActionBase*> getActions(
 		String strActionName
 	);
 

@@ -1,6 +1,6 @@
 #include "..\e2daction.h"
 
-e2d::ActionTwo::ActionTwo(Action * pActionFirst, Action * pActionSecond, bool bAtSameTime/* = false*/)
+e2d::ActionTwo::ActionTwo(ActionBase * pActionFirst, ActionBase * pActionSecond, bool bAtSameTime/* = false*/)
 	: m_pFirstAction(pActionFirst)
 	, m_pSecondAction(pActionSecond)
 	, m_bAtSameTime(bAtSameTime)
@@ -33,7 +33,7 @@ e2d::ActionTwo * e2d::ActionTwo::reverse(bool actionReverse) const
 
 void e2d::ActionTwo::_init()
 {
-	Action::_init();
+	ActionBase::_init();
 	m_pFirstAction->m_pTarget = m_pTarget;
 	m_pSecondAction->m_pTarget = m_pTarget;
 
@@ -43,7 +43,7 @@ void e2d::ActionTwo::_init()
 
 void e2d::ActionTwo::_update()
 {
-	Action::_update();
+	ActionBase::_update();
 
 	if (!m_pFirstAction->_isEnding())
 	{
@@ -75,7 +75,7 @@ void e2d::ActionTwo::_update()
 
 void e2d::ActionTwo::reset()
 {
-	Action::reset();
+	ActionBase::reset();
 
 	m_pFirstAction->reset();
 	m_pSecondAction->reset();
@@ -83,7 +83,7 @@ void e2d::ActionTwo::reset()
 
 void e2d::ActionTwo::destroy()
 {
-	Action::destroy();
+	ActionBase::destroy();
 	SafeRelease(&m_pFirstAction);
 	SafeRelease(&m_pSecondAction);
 }

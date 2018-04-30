@@ -692,14 +692,14 @@ protected:
 
 class Node;
 class SceneManager;
-class Transition;
+class TransitionBase;
 
 // ³¡¾°
 class Scene :
 	public Object
 {
 	friend SceneManager;
-	friend Transition;
+	friend TransitionBase;
 
 public:
 	Scene();
