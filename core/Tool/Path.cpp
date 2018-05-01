@@ -133,7 +133,7 @@ e2d::String e2d::Path::getFileExtension(String filePath)
 {
 	String fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
-	int pos = filePath.findLastOf(L'.');
+	int pos = filePath.getWString().find_last_of(L'.');
 	// 判断 pos 是否是个有效位置
 	if (pos != -1)
 	{

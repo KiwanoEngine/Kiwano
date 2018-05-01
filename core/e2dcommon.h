@@ -93,20 +93,39 @@ public:
 	// 获取 ANSI 字符串
 	std::string getCString() const;
 
-	// 获取裁剪字符串
-	String subtract(
+	// 比较字符串
+	int compare(
+		const String & str
+	) const;
+
+	// 截取字符串
+	e2d::String subtract(
 		int offset,		/* 偏移量 */
 		int count = -1	/* 截取字符数量 */
 	) const;
 
-	// 获取字符串中第一个特定字符的下标
-	int findFirstOf(
-		const wchar_t ch
-	) const;
+	// 插入字符串
+	void insert(
+		const String & str,
+		int pos
+	);
 
-	// 获取字符串中最后一个特定字符的下标
-	int findLastOf(
-		const wchar_t ch
+	// 替换字符串中的指定内容
+	void replace(
+		const String & from,	/* 需替换内容 */
+		const String & to		/* 替换成内容 */
+	);
+
+	// 删除字符串中的指定内容
+	void erase(
+		int offset,		/* 偏移量 */
+		int count		/* 删除字符数量 */
+	);
+
+	// 搜索字符串
+	int find(
+		const String & str,	/* 查找内容 */
+		int offset = 0		/* 偏移量 */
 	) const;
 
 	// 清空字符串
@@ -136,6 +155,9 @@ public:
 	// 格式化字符串
 	static String format(const char * format, ...);
 	static String format(const wchar_t * format, ...);
+
+	// 交换两字符串
+	static void swap(String &str1, String &str2);
 
 	// 赋值运算符
 	String& operator= (const String &);

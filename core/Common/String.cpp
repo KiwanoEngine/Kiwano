@@ -83,7 +83,7 @@ e2d::String e2d::String::format(const char * format, ...)
 
 	size_t num_of_chars = _vscprintf(format, marker);
 
-	if (num_of_chars > tmp.capacity()) 
+	if (num_of_chars > tmp.capacity())
 	{
 		tmp.resize(num_of_chars + 1);
 	}
@@ -116,6 +116,11 @@ e2d::String e2d::String::format(const wchar_t * format, ...)
 
 	String str = tmp.c_str();
 	return std::move(str);
+}
+
+void e2d::String::swap(String & str1, String & str2)
+{
+	str1.m_str.swap(str2.m_str);
 }
 
 e2d::String & e2d::String::operator=(const String &str)
@@ -359,6 +364,11 @@ std::string e2d::String::getCString() const
 	return std::move(str);
 }
 
+int e2d::String::compare(const String & str) const
+{
+	return m_str.compare(str.m_str);
+}
+
 e2d::String e2d::String::toUpper() const
 {
 	String str(*this);
@@ -385,7 +395,7 @@ int e2d::String::toInt() const
 	{
 		return 0;
 	}
-	return _wtoi(m_str.c_str());
+	return std::stoi(m_str, 0, 10);
 }
 
 double e2d::String::toDouble() const
@@ -394,7 +404,7 @@ double e2d::String::toDouble() const
 	{
 		return 0.0;
 	}
-	return _wtof(m_str.c_str());
+	return std::stod(m_str, 0);
 }
 
 bool e2d::String::toBool() const
@@ -413,39 +423,55 @@ bool e2d::String::toBool() const
 
 e2d::String e2d::String::subtract(int offset, int count) const
 {
-	String temp;
+	String tmp;
 	int length = getLength();
 
 	if (length == 0 || offset >= length)
-		return std::move(temp);
+		return std::move(tmp);
 
 	offset = offset >= 0 ? offset : 0;
 
 	if (count < 0 || (offset + count) > length)
 		count = length - offset;
 
-	temp.m_str = m_str.substr(offset, count);
-	return std::move(temp);
+	tmp.m_str = m_str.substr(offset, count);
+	return std::move(tmp);
 }
 
-int e2d::String::findFirstOf(const wchar_t ch) const
+void e2d::String::insert(const String & str, int pos)
 {
-	for (int i = 0; i < getLength(); i++)
-		if (m_str[i] == ch)
-			return i;
-
-	return -1;
+	m_str.insert(static_cast<size_t>(pos), str.m_str);
 }
 
-int e2d::String::findLastOf(const wchar_t ch) const
+void e2d::String::replace(const String & from, const String & to)
 {
-	int index = -1;
+	if (from.m_str.empty())
+		return;
 
-	for (int i = 0; i < getLength(); i++)
-		if (m_str[i] == ch)
-			index = i;
+	size_t start_pos = 0;
+	while ((start_pos = m_str.find(from, start_pos)) != std::string::npos) 
+	{
+		m_str.replace(start_pos, from.m_str.length(), to);
+		start_pos += to.m_str.length();
+	}
+}
 
-	return index;
+void e2d::String::erase(int offset, int count)
+{
+	m_str.erase(static_cast<size_t>(offset), static_cast<size_t>(count));
+}
+
+int e2d::String::find(const String & str, int offset) const
+{
+	size_t index;
+	if ((index = m_str.find(str.m_str, static_cast<size_t>(offset))) == std::wstring::npos)
+	{
+		return -1;
+	}
+	else
+	{
+		return static_cast<int>(index);
+	}
 }
 
 void e2d::String::clear()
