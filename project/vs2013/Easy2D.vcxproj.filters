@@ -213,6 +213,12 @@
     <ClCompile Include="..\..\core\Custom\CustomTextRenderer.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Action\ActionBase.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\TransitionBase.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\e2daction.h" />

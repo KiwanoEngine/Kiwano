@@ -5,8 +5,6 @@
 
 // 窗口句柄
 static HWND s_HWnd = nullptr;
-// 是否打开控制台
-static bool s_bShowConsole = false;
 
 
 bool e2d::Window::__init()
@@ -72,18 +70,12 @@ bool e2d::Window::__init()
 	{
 		// 禁用输入法
 		Window::setTypewritingEnable(false);
-		// 查找是否存在控制台
-		HWND hwnd = ::GetConsoleWindow();
-		if (hwnd)
+		// 禁用控制台关闭按钮
+		HWND consoleHWnd = ::GetConsoleWindow();
+		if (consoleHWnd)
 		{
-			// 禁用控制台关闭按钮
-			HMENU hmenu = ::GetSystemMenu(hwnd, FALSE);
+			HMENU hmenu = ::GetSystemMenu(consoleHWnd, FALSE);
 			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
-			// 默认隐藏控制台
-			if (!s_bShowConsole)
-			{
-				::ShowWindow(hwnd, SW_HIDE);
-			}
 		}
 	}
 	else
@@ -204,9 +196,8 @@ e2d::String e2d::Window::getTitle()
 	return wszTitle;
 }
 
-void e2d::Window::showConsole(bool show /* = true */)
+void e2d::Window::showConsole(bool show)
 {
-	s_bShowConsole = show;
 	// 查找已存在的控制台句柄
 	HWND hwnd = ::GetConsoleWindow();
 	// 关闭控制台
@@ -271,9 +262,11 @@ void e2d::Window::setTypewritingEnable(bool bEnable)
 LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT result = 0;
+	bool hasHandled = false;
 
 	switch (message)
 	{
+
 	// 处理窗口大小变化消息
 	case WM_SIZE:
 	{
@@ -294,6 +287,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		InvalidateRect(hWnd, NULL, FALSE);
 	}
 	result = 0;
+	hasHandled = true;
 	break;
 
 	// 重绘窗口
@@ -303,6 +297,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		ValidateRect(hWnd, NULL);
 	}
 	result = 0;
+	hasHandled = true;
 	break;
 
 	// 窗口关闭消息
@@ -315,20 +310,23 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		}
 	}
 	result = 0;
+	hasHandled = true;
 	break;
 
+	// 窗口销毁消息
 	case WM_DESTROY:
 	{
 		PostQuitMessage(0);
 	}
 	result = 1;
+	hasHandled = true;
 	break;
 
-	default:
-	{
-		result = DefWindowProc(hWnd, message, wParam, lParam);
 	}
 
+	if (!hasHandled)
+	{
+		result = DefWindowProc(hWnd, message, wParam, lParam);
 	}
 
 	return result;

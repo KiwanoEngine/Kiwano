@@ -200,16 +200,6 @@ public:
 		double radius
 	);
 
-public:
-	// 禁用的函数
-	void setWidth() {}
-
-	// 禁用的函数
-	void setHeight() {}
-
-	// 禁用的函数
-	void setSize() {}
-
 protected:
 	// 渲染轮廓
 	virtual void _renderLine() override;
@@ -264,16 +254,6 @@ public:
 	virtual void setRadiusY(
 		double radiusY
 	);
-
-public:
-	// 禁用的函数
-	void setWidth() {}
-
-	// 禁用的函数
-	void setHeight() {}
-
-	// 禁用的函数
-	void setSize() {}
 
 protected:
 	// 渲染轮廓

@@ -133,12 +133,12 @@ e2d::String e2d::Path::getFileExtension(String filePath)
 {
 	String fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
-	int pos = filePath.getWString().find_last_of(L'.');
-	// 判断 pos 是否是个有效位置
-	if (pos != -1)
+	size_t pos = filePath.getWString().find_last_of(L'.');
+	// 判断 pos 是否是有效位置
+	if (pos != std::wstring::npos)
 	{
 		// 截取扩展名
-		fileExtension = filePath.subtract(pos);
+		fileExtension = filePath.subtract(static_cast<int>(pos));
 		// 转换为小写字母
 		fileExtension = fileExtension.toLower();
 	}

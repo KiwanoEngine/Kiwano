@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Action\Action.cpp" />
+    <ClCompile Include="..\..\core\Action\ActionBase.cpp" />
     <ClCompile Include="..\..\core\Action\ActionDelay.cpp" />
     <ClCompile Include="..\..\core\Action\ActionFunc.cpp" />
     <ClCompile Include="..\..\core\Action\ActionGradual.cpp" />
@@ -76,6 +77,7 @@
     <ClCompile Include="..\..\core\Tool\Random.cpp" />
     <ClCompile Include="..\..\core\Tool\Timer.cpp" />
     <ClCompile Include="..\..\core\Transition\Transition.cpp" />
+    <ClCompile Include="..\..\core\Transition\TransitionBase.cpp" />
     <ClCompile Include="..\..\core\Transition\TransitionEmerge.cpp" />
     <ClCompile Include="..\..\core\Transition\TransitionFade.cpp" />
     <ClCompile Include="..\..\core\Transition\TransitionMove.cpp" />

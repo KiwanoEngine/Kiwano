@@ -87,7 +87,7 @@ public:
 
 	// 打开/隐藏控制台
 	static void showConsole(
-		bool bShow = true
+		bool show
 	);
 
 	// 是否允许响应输入法
