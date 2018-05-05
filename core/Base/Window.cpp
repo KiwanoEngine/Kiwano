@@ -30,25 +30,20 @@ bool e2d::Window::__init()
 	float dpiX = Renderer::getDpiScaleX();
 	float dpiY = Renderer::getDpiScaleY();
 
-	UINT nWidth = static_cast<UINT>(ceil(640 * dpiX / 96.f));
-	UINT nHeight = static_cast<UINT>(ceil(480 * dpiY / 96.f));
-
-	// 获取屏幕分辨率
-	UINT screenWidth = static_cast<UINT>(::GetSystemMetrics(SM_CXSCREEN));
-	UINT screenHeight = static_cast<UINT>(::GetSystemMetrics(SM_CYSCREEN));
-	// 当输入的窗口大小比分辨率大时，给出警告
-	WARN_IF(screenWidth < nWidth || screenHeight < nHeight, "The window is larger than screen!");
-	// 取最小值
-	nWidth = min(nWidth, screenWidth);
-	nHeight = min(nHeight, screenHeight);
+	int nWidth = static_cast<int>(ceil(640 * dpiX / 96.f));
+	int nHeight = static_cast<int>(ceil(480 * dpiY / 96.f));
 
 	// 计算窗口大小
 	DWORD dwStyle = WS_OVERLAPPEDWINDOW &~ WS_MAXIMIZEBOX &~ WS_THICKFRAME;
 	RECT wr = { 0, 0, static_cast<LONG>(nWidth), static_cast<LONG>(nHeight) };
 	::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
 	// 获取新的宽高
-	nWidth = wr.right - wr.left;
-	nHeight = wr.bottom - wr.top;
+	nWidth = static_cast<int>(wr.right - wr.left);
+	nHeight = static_cast<int>(wr.bottom - wr.top);
+
+	// 获取屏幕分辨率
+	int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
+	int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
 
 	// 创建窗口
 	s_HWnd = ::CreateWindowEx(
@@ -158,18 +153,23 @@ HWND e2d::Window::getHWnd()
 	return s_HWnd;
 }
 
-void e2d::Window::setSize(UINT32 width, UINT32 height)
+void e2d::Window::setSize(int width, int height)
 {
 	// 计算窗口大小
-	DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX;
+	DWORD dwStyle = WS_OVERLAPPEDWINDOW &~ WS_MAXIMIZEBOX &~ WS_THICKFRAME;
 	RECT wr = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
 	::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
 	// 获取新的宽高
-	width = wr.right - wr.left;
-	height = wr.bottom - wr.top;
+	width = static_cast<int>(wr.right - wr.left);
+	height = static_cast<int>(wr.bottom - wr.top);
 	// 获取屏幕分辨率
 	int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
 	int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
+	// 当输入的窗口大小比分辨率大时，给出警告
+	WARN_IF(screenWidth < width || screenHeight < height, "The window is larger than screen!");
+	// 取最小值
+	width = min(width, screenWidth);
+	height = min(height, screenHeight);
 	// 修改窗口大小，并设置窗口在屏幕居中
 	::MoveWindow(s_HWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
 }

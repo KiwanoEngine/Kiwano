@@ -56,8 +56,8 @@ class Window
 public:
 	// 修改窗口大小
 	static void setSize(
-		UINT32 nWidth,		/* 窗口宽度 */
-		UINT32 nHeight		/* 窗口高度 */
+		int nWidth,			/* 窗口宽度 */
+		int nHeight			/* 窗口高度 */
 	);
 
 	// 设置窗口标题
