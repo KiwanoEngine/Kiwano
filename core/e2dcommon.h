@@ -426,6 +426,17 @@ enum class KeyCode : int
 };
 
 
+// 鼠标指针样式
+enum class Cursor : int
+{
+	NORMAL,		/* 默认指针样式 */
+	HAND,		/* 手状指针 */
+	NO,			/* 禁止指针 */
+	WAIT,		/* 沙漏指针 */
+	ARROW_WAIT	/* 默认指针和小沙漏 */
+};
+
+
 // 方向
 enum class Direct : int
 {

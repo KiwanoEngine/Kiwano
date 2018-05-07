@@ -70,6 +70,11 @@ public:
 		int iconID
 	);
 
+	// 设置鼠标指针样式
+	static void setCursor(
+		Cursor cursor
+	);
+
 	// 获取窗口标题
 	static String getTitle();
 

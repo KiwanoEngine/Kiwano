@@ -211,16 +211,23 @@ void e2d::Button::onFixedUpdate()
 			if (m_pNormal->isPointIn(Input::getMousePos()))
 			{
 				_setState(ButtonState::SELECTED);
+				Window::setCursor(Cursor::HAND);
 				return;
 			}
 		}
 		else if (m_pNormal->isPointIn(Input::getMousePos()))
 		{
 			_setState(ButtonState::MOUSEOVER);
+			Window::setCursor(Cursor::HAND);
 			return;
 		}
 
 		_setState(ButtonState::NORMAL);
+	}
+
+	if (m_bVisiable && !m_bEnable && m_pNormal && m_pNormal->isPointIn(Input::getMousePos()))
+	{
+		Window::setCursor(Cursor::NO);
 	}
 }
 

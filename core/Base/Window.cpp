@@ -12,6 +12,8 @@ bool e2d::Window::__init()
 	// 注册窗口类
 	WNDCLASSEX wcex = { 0 };
 	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.lpszClassName = L"Easy2DApp";
+	wcex.hIcon = NULL;
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = Window::WndProc;
 	wcex.cbClsExtra = 0;
@@ -19,9 +21,7 @@ bool e2d::Window::__init()
 	wcex.hInstance = HINST_THISCOMPONENT;
 	wcex.hbrBackground = NULL;
 	wcex.lpszMenuName = NULL;
-	wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
-	wcex.lpszClassName = L"Easy2DApp";
-	wcex.hIcon = NULL;
+	wcex.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 
 	RegisterClassEx(&wcex);
 
@@ -187,6 +187,39 @@ void e2d::Window::setIcon(int iconID)
 	// 设置窗口的图标
 	::SendMessage(s_HWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 	::SendMessage(s_HWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+}
+
+void e2d::Window::setCursor(Cursor cursor)
+{
+	LPCWSTR pCursorName = NULL;
+	switch (cursor)
+	{
+	case Cursor::NORMAL:
+		pCursorName = IDC_ARROW;
+		break;
+
+	case Cursor::HAND:
+		pCursorName = IDC_HAND;
+		break;
+
+	case Cursor::NO:
+		pCursorName = IDC_NO;
+		break;
+
+	case Cursor::WAIT:
+		pCursorName = IDC_WAIT;
+		break;
+
+	case Cursor::ARROW_WAIT:
+		pCursorName = IDC_APPSTARTING;
+		break;
+
+	default:
+		break;
+	}
+
+	HCURSOR hCursor = ::LoadCursor(NULL, pCursorName);
+	::SetCursor(hCursor);
 }
 
 e2d::String e2d::Window::getTitle()
