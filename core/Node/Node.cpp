@@ -35,6 +35,7 @@ e2d::Node::Node()
 	, m_bSortChildrenNeeded(false)
 	, m_bTransformNeeded(false)
 	, m_bAutoUpdate(true)
+	, m_bPositionFixed(false)
 {
 	if (s_fDefaultColliderEnabled)
 	{
@@ -224,7 +225,7 @@ void e2d::Node::_updateSelfTransform()
 	// 根据自身中心点变换 Final 矩阵
 	m_MatriFinal = m_MatriInitial * D2D1::Matrix3x2F::Translation(-pivot.x, -pivot.y);
 	// 和父节点矩阵相乘
-	if (m_pParent)
+	if (!m_bPositionFixed && m_pParent)
 	{
 		m_MatriInitial = m_MatriInitial * m_pParent->m_MatriInitial;
 		m_MatriFinal = m_MatriFinal * m_pParent->m_MatriInitial;
@@ -417,6 +418,15 @@ void e2d::Node::setPos(double x, double y)
 
 	m_fPosX = static_cast<float>(x);
 	m_fPosY = static_cast<float>(y);
+	m_bTransformNeeded = true;
+}
+
+void e2d::Node::setPosFixed(bool fixed)
+{
+	if (m_bPositionFixed == fixed)
+		return;
+
+	m_bPositionFixed = fixed;
 	m_bTransformNeeded = true;
 }
 

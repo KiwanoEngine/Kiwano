@@ -196,6 +196,11 @@ public:
 		double y
 	);
 
+	// 节点坐标固定
+	virtual void setPosFixed(
+		bool fixed
+	);
+
 	// 移动节点
 	virtual void movePosX(
 		double x
@@ -470,6 +475,7 @@ protected:
 	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
 	bool		m_bTransformNeeded;
+	bool		m_bPositionFixed;
 	Collider *	m_pCollider;
 	Scene *		m_pParentScene;
 	Node *		m_pParent;
