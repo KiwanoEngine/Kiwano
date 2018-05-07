@@ -33,7 +33,7 @@ public:
 
 	// 启用或关闭该碰撞体
 	virtual void setEnable(
-		bool bEnable
+		bool enable
 	);
 
 	// 设置碰撞体的可见性
@@ -48,7 +48,7 @@ public:
 
 	// 设置大小跟随
 	void setAutoResize(
-		bool bEnable
+		bool enable
 	);
 
 	// 获取 ID2D1Geometry 对象

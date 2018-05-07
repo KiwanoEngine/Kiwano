@@ -9,7 +9,7 @@ class Listener
 public:
 	Listener(
 		e2d::Function func,
-		e2d::String name,
+		const e2d::String& name,
 		bool paused
 	)
 		: name(name)
@@ -47,9 +47,9 @@ static e2d::Node * s_pActiveNode = nullptr;
 static e2d::Node * s_pPassiveNode = nullptr;
 
 
-void e2d::ColliderManager::setEnable(bool bEnable)
+void e2d::ColliderManager::setEnable(bool enable)
 {
-	s_bCollisionEnable = bEnable;
+	s_bCollisionEnable = enable;
 }
 
 void e2d::ColliderManager::__update()
@@ -133,13 +133,13 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 	s_pPassiveNode = nullptr;
 }
 
-void e2d::ColliderManager::add(Function func, String name, bool paused)
+void e2d::ColliderManager::add(Function func, const String& name, bool paused)
 {
 	auto listener = new Listener(func, name, paused);
 	s_vListeners.push_back(listener);
 }
 
-void e2d::ColliderManager::pause(String name)
+void e2d::ColliderManager::pause(const String& name)
 {
 	for (auto pListener : s_vListeners)
 	{
@@ -150,7 +150,7 @@ void e2d::ColliderManager::pause(String name)
 	}
 }
 
-void e2d::ColliderManager::resume(String name)
+void e2d::ColliderManager::resume(const String& name)
 {
 	for (auto pListener : s_vListeners)
 	{
@@ -161,7 +161,7 @@ void e2d::ColliderManager::resume(String name)
 	}
 }
 
-void e2d::ColliderManager::stop(String name)
+void e2d::ColliderManager::stop(const String& name)
 {
 	for (auto pListener : s_vListeners)
 	{
@@ -215,7 +215,7 @@ e2d::Node* e2d::ColliderManager::isCausedBy(Node * pNode)
 	return nullptr;
 }
 
-e2d::Node* e2d::ColliderManager::isCausedBy(String name)
+e2d::Node* e2d::ColliderManager::isCausedBy(const String& name)
 {
 	if (s_pActiveNode->getName() == name)
 		return s_pActiveNode;

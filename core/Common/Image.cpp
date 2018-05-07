@@ -14,57 +14,57 @@ e2d::Image::Image()
 {
 }
 
-e2d::Image::Image(String strFileName)
+e2d::Image::Image(const String& filePath)
 	: m_pBitmap(nullptr)
 {
-	this->open(strFileName);
+	this->open(filePath);
 }
 
-e2d::Image::Image(int resNameId, String resType)
+e2d::Image::Image(int resNameId, const String& resType)
 	: m_pBitmap(nullptr)
 {
 	this->open(resNameId, resType);
 }
 
-e2d::Image::Image(String strFileName, double nCropX, double nCropY, double nCropWidth, double nCropHeight)
+e2d::Image::Image(const String& filePath, double cropX, double cropY, double cropWidth, double cropHeight)
 	: m_pBitmap(nullptr)
 {
-	this->open(strFileName);
-	this->crop(nCropX, nCropY, nCropWidth, nCropHeight);
+	this->open(filePath);
+	this->crop(cropX, cropY, cropWidth, cropHeight);
 }
 
-e2d::Image::Image(int resNameId, String resType, double nCropX, double nCropY, double nCropWidth, double nCropHeight)
+e2d::Image::Image(int resNameId, const String& resType, double cropX, double cropY, double cropWidth, double cropHeight)
 	: m_pBitmap(nullptr)
 {
 	this->open(resNameId, resType);
-	this->crop(nCropX, nCropY, nCropWidth, nCropHeight);
+	this->crop(cropX, cropY, cropWidth, cropHeight);
 }
 
 e2d::Image::~Image()
 {
 }
 
-bool e2d::Image::open(String strFilePath)
+bool e2d::Image::open(const String& filePath)
 {
-	WARN_IF(strFilePath.isEmpty(), "Image cannot load bitmap from NULL file name.");
+	WARN_IF(filePath.isEmpty(), "Image cannot load bitmap from NULL file name.");
 
-	if (strFilePath.isEmpty())
+	if (filePath.isEmpty())
 		return false;
 
-	if (!Image::preload(strFilePath))
+	if (!Image::preload(filePath))
 	{
 		WARN_IF(true, "Load Image from file failed!");
 		return false;
 	}
 
-	m_pBitmap = s_mBitmapsFromFile.at(strFilePath.getHashCode());
+	m_pBitmap = s_mBitmapsFromFile.at(filePath.getHashCode());
 	m_fSourceCropX = m_fSourceCropY = 0;
 	m_fSourceCropWidth = m_pBitmap->GetSize().width;
 	m_fSourceCropHeight = m_pBitmap->GetSize().height;
 	return true;
 }
 
-bool e2d::Image::open(int resNameId, String resType)
+bool e2d::Image::open(int resNameId, const String& resType)
 {
 	if (!Image::preload(resNameId, resType))
 	{
@@ -156,7 +156,7 @@ e2d::Point e2d::Image::getCropPos() const
 	return Point(m_fSourceCropX, m_fSourceCropY);
 }
 
-bool e2d::Image::preload(String fileName)
+bool e2d::Image::preload(const String& fileName)
 {
 	if (s_mBitmapsFromFile.find(fileName.getHashCode()) != s_mBitmapsFromFile.end())
 	{
@@ -232,7 +232,7 @@ bool e2d::Image::preload(String fileName)
 	return SUCCEEDED(hr);
 }
 
-bool e2d::Image::preload(int resNameId, String resType)
+bool e2d::Image::preload(int resNameId, const String& resType)
 {
 	if (s_mBitmapsFromResource.find(resNameId) != s_mBitmapsFromResource.end())
 	{

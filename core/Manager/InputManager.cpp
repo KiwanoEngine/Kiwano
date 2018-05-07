@@ -7,7 +7,7 @@ class Listener
 public:
 	Listener(
 		e2d::Function func,
-		e2d::String name,
+		const e2d::String& name,
 		bool paused
 	)
 		: name(name)
@@ -37,13 +37,13 @@ public:
 static std::vector<Listener*> s_vListeners;
 
 
-void e2d::InputManager::add(Function func, String name, bool paused)
+void e2d::InputManager::add(Function func, const String& name, bool paused)
 {
 	auto listener = new Listener(func, name, paused);
 	s_vListeners.push_back(listener);
 }
 
-void e2d::InputManager::pause(String name)
+void e2d::InputManager::pause(const String& name)
 {
 	for (auto pListener : s_vListeners)
 	{
@@ -54,7 +54,7 @@ void e2d::InputManager::pause(String name)
 	}
 }
 
-void e2d::InputManager::resume(String name)
+void e2d::InputManager::resume(const String& name)
 {
 	for (auto pListener : s_vListeners)
 	{
@@ -65,7 +65,7 @@ void e2d::InputManager::resume(String name)
 	}
 }
 
-void e2d::InputManager::stop(String name)
+void e2d::InputManager::stop(const String& name)
 {
 	for (auto pListener : s_vListeners)
 	{

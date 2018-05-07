@@ -6,7 +6,7 @@ class TimerInfo
 public:
 	TimerInfo(
 		e2d::Function func,
-		e2d::String name,
+		const e2d::String& name,
 		double delay,
 		int updateTimes,
 		bool paused
@@ -65,13 +65,13 @@ public:
 static std::vector<TimerInfo*> s_vTimers;
 
 
-void e2d::Timer::start(Function func, double delay, int updateTimes, bool paused, String name)
+void e2d::Timer::start(Function func, double delay, int updateTimes, bool paused, const String& name)
 {
 	auto timer = new TimerInfo(func, name, delay, updateTimes, paused);
 	s_vTimers.push_back(timer);
 }
 
-void e2d::Timer::start(Function func, String name)
+void e2d::Timer::start(Function func, const String& name)
 {
 	Timer::start(func, 0, -1, false, name);
 }
@@ -82,7 +82,7 @@ void e2d::Timer::startOnce(Function func, double timeOut)
 	s_vTimers.push_back(timer);
 }
 
-void e2d::Timer::pause(String name)
+void e2d::Timer::pause(const String& name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -93,7 +93,7 @@ void e2d::Timer::pause(String name)
 	}
 }
 
-void e2d::Timer::resume(String name)
+void e2d::Timer::resume(const String& name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -104,7 +104,7 @@ void e2d::Timer::resume(String name)
 	}
 }
 
-void e2d::Timer::stop(String name)
+void e2d::Timer::stop(const String& name)
 {
 	for (auto timer : s_vTimers)
 	{

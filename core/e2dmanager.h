@@ -95,17 +95,17 @@ class ActionManager
 public:
 	// 继续名称相同的所有动作
 	static void resume(
-		String strActionName
+		const String& strActionName
 	);
 
 	// 暂停名称相同的所有动作
 	static void pause(
-		String strActionName
+		const String& strActionName
 	);
 
 	// 停止名称相同的所有动作
 	static void stop(
-		String strActionName
+		const String& strActionName
 	);
 
 	// 继续所有动作
@@ -119,7 +119,7 @@ public:
 
 	// 获取所有名称相同的动作
 	static std::vector<ActionBase *> get(
-		String strActionName
+		const String& strActionName
 	);
 
 	// 获取所有动作
@@ -182,24 +182,24 @@ class InputManager
 public:
 	// 添加输入监听
 	static void add(
-		Function func,		/* 监听到用户输入时的执行函数 */
-		String name = L"",	/* 监听器名称 */
-		bool paused = false	/* 是否暂停 */
+		Function func,				/* 监听到用户输入时的执行函数 */
+		const String& name = L"",	/* 监听器名称 */
+		bool paused = false			/* 是否暂停 */
 	);
 
 	// 暂停输入监听
 	static void pause(
-		String name
+		const String& name
 	);
 
 	// 暂停输入监听
 	static void resume(
-		String name
+		const String& name
 	);
 
 	// 停止输入监听
 	static void stop(
-		String name
+		const String& name
 	);
 
 	// 暂停所有监听器
@@ -230,29 +230,29 @@ class ColliderManager
 public:
 	// 开启或关闭碰撞监听功能（默认关闭）
 	static void setEnable(
-		bool bEnable
+		bool enable
 	);
 
 	// 添加碰撞监听
 	static void add(
-		Function func,		/* 监听到碰撞时的执行函数 */
-		String name = L"",	/* 监听器名称 */
-		bool paused = false	/* 是否暂停 */
+		Function func,				/* 监听到碰撞时的执行函数 */
+		const String& name = L"",	/* 监听器名称 */
+		bool paused = false			/* 是否暂停 */
 	);
 
 	// 暂停碰撞监听
 	static void pause(
-		String name
+		const String& name
 	);
 
 	// 暂停碰撞监听
 	static void resume(
-		String name
+		const String& name
 	);
 
 	// 停止碰撞监听
 	static void stop(
-		String name
+		const String& name
 	);
 
 	// 暂停所有监听器
@@ -270,14 +270,16 @@ public:
 	// 获取碰撞发生时的被动体
 	static Node * getPassiveNode();
 
-	// 判断碰撞是否由该节点引发（如果是，返回与其相撞的节点指针，否则返回空）
+	// 判断碰撞是否由该节点引发
+	// 如果是，返回与其相撞的节点指针，否则返回空
 	static Node * isCausedBy(
 		Node * pNode
 	);
 
-	// 判断发生碰撞的节点名称是否相同（若相同返回其指针，否则返回空）
+	// 判断发生碰撞的节点名称是否相同
+	// 若相同，返回其指针，否则返回空
 	static Node * isCausedBy(
-		String name
+		const String& name
 	);
 
 private:

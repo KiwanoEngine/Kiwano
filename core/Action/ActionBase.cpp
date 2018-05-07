@@ -57,7 +57,7 @@ e2d::String e2d::ActionBase::getName() const
 	return m_sName;
 }
 
-void e2d::ActionBase::setName(String name)
+void e2d::ActionBase::setName(const String& name)
 {
 	m_sName = name;
 }

@@ -2,54 +2,54 @@
 
 static e2d::String s_sDataFileName = L"DefaultData.ini";
 
-void e2d::Data::saveInt(String key, int value, String field)
+void e2d::Data::saveInt(const String& key, int value, const String& field)
 {
 	::WritePrivateProfileString(field, key, String::parse(value), Data::getDataFilePath());
 }
 
-void e2d::Data::saveDouble(String key, double value, String field)
+void e2d::Data::saveDouble(const String& key, double value, const String& field)
 {
 	::WritePrivateProfileString(field, key, String::parse(value), Data::getDataFilePath());
 }
 
-void e2d::Data::saveBool(String key, bool value, String field)
+void e2d::Data::saveBool(const String& key, bool value, const String& field)
 {
 	const wchar_t* sValue = value ? L"1" : L"0";
 	::WritePrivateProfileString(field, key, sValue, Data::getDataFilePath());
 }
 
-void e2d::Data::saveString(String key, String value, String field)
+void e2d::Data::saveString(const String& key, const String& value, const String& field)
 {
 	::WritePrivateProfileString(field, key, value, Data::getDataFilePath());
 }
 
-int e2d::Data::getInt(String key, int defaultValue, String field)
+int e2d::Data::getInt(const String& key, int defaultValue, const String& field)
 {
 	return ::GetPrivateProfileInt(field, key, defaultValue, Data::getDataFilePath());
 }
 
-double e2d::Data::getDouble(String key, double defaultValue, String field)
+double e2d::Data::getDouble(const String& key, double defaultValue, const String& field)
 {
 	wchar_t temp[32] = { 0 };
 	::GetPrivateProfileString(field, key, String::parse(defaultValue), temp, 31, Data::getDataFilePath());
 	return std::stof(temp);
 }
 
-bool e2d::Data::getBool(String key, bool defaultValue, String field)
+bool e2d::Data::getBool(const String& key, bool defaultValue, const String& field)
 {
 	int nDefaultValue = defaultValue ? 1 : 0;
 	int nValue = ::GetPrivateProfileInt(field, key, nDefaultValue, Data::getDataFilePath());
 	return nValue != 0;
 }
 
-e2d::String e2d::Data::getString(String key, String defaultValue, String field)
+e2d::String e2d::Data::getString(const String& key, const String& defaultValue, const String& field)
 {
 	wchar_t temp[256] = { 0 };
 	::GetPrivateProfileString(field, key, defaultValue, temp, 255, Data::getDataFilePath());
 	return temp;
 }
 
-void e2d::Data::setDataFileName(String fileName)
+void e2d::Data::setDataFileName(const String& fileName)
 {
 	if (!fileName.isEmpty())
 	{

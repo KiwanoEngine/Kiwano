@@ -12,26 +12,26 @@ e2d::Sprite::Sprite(Image * image)
 	open(image);
 }
 
-e2d::Sprite::Sprite(String strFilePath)
+e2d::Sprite::Sprite(const String& filePath)
 	: m_pImage(nullptr)
 {
-	open(strFilePath);
+	open(filePath);
 }
 
-e2d::Sprite::Sprite(int resNameId, String resType)
+e2d::Sprite::Sprite(int resNameId, const String& resType)
 	: m_pImage(nullptr)
 {
 	open(resNameId, resType);
 }
 
-e2d::Sprite::Sprite(String strFilePath, double x, double y, double width, double height)
+e2d::Sprite::Sprite(const String& filePath, double x, double y, double width, double height)
 	: m_pImage(nullptr)
 {
-	open(strFilePath);
+	open(filePath);
 	crop(x, y, width, height);
 }
 
-e2d::Sprite::Sprite(int resNameId, String resType, double x, double y, double width, double height)
+e2d::Sprite::Sprite(int resNameId, const String& resType, double x, double y, double width, double height)
 	: m_pImage(nullptr)
 {
 	open(resNameId, resType);
@@ -56,7 +56,7 @@ bool e2d::Sprite::open(Image * image)
 	return false;
 }
 
-bool e2d::Sprite::open(String strFilePath)
+bool e2d::Sprite::open(const String& filePath)
 {
 	if (!m_pImage)
 	{
@@ -64,7 +64,7 @@ bool e2d::Sprite::open(String strFilePath)
 		m_pImage->retain();
 	}
 
-	if (m_pImage->open(strFilePath))
+	if (m_pImage->open(filePath))
 	{
 		Node::setSize(m_pImage->getWidth(), m_pImage->getHeight());
 		return true;
@@ -72,7 +72,7 @@ bool e2d::Sprite::open(String strFilePath)
 	return false;
 }
 
-bool e2d::Sprite::open(int resNameId, String resType)
+bool e2d::Sprite::open(int resNameId, const String& resType)
 {
 	if (!m_pImage)
 	{

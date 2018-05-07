@@ -27,9 +27,9 @@ e2d::Color e2d::Collider::getColor() const
 	return m_nColor;
 }
 
-void e2d::Collider::setEnable(bool bEnable)
+void e2d::Collider::setEnable(bool enable)
 {
-	m_bEnable = bEnable;
+	m_bEnable = enable;
 }
 
 void e2d::Collider::setVisiable(bool bVisiable)
@@ -42,9 +42,9 @@ void e2d::Collider::setColor(Color color)
 	m_nColor = color;
 }
 
-void e2d::Collider::setAutoResize(bool bEnable)
+void e2d::Collider::setAutoResize(bool enable)
 {
-	m_bAutoResize = bEnable;
+	m_bAutoResize = enable;
 }
 
 void e2d::Collider::_render()

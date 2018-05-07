@@ -36,7 +36,7 @@ public:
 	virtual ~MusicPlayer();
 
 	bool open(
-		const e2d::String& strFileName
+		const e2d::String& filePath
 	);
 
 	bool MusicPlayer::open(
@@ -122,7 +122,7 @@ MusicPlayer::~MusicPlayer()
 	close();
 }
 
-bool MusicPlayer::open(const e2d::String& strFileName)
+bool MusicPlayer::open(const e2d::String& filePath)
 {
 	if (m_bOpened)
 	{
@@ -130,7 +130,7 @@ bool MusicPlayer::open(const e2d::String& strFileName)
 		return false;
 	}
 
-	if (strFileName.isEmpty())
+	if (filePath.isEmpty())
 	{
 		WARN_IF(true, "MusicInfo::open Invalid file name.");
 		return false;
@@ -143,14 +143,14 @@ bool MusicPlayer::open(const e2d::String& strFileName)
 	}
 
 	// 定位 wave 文件
-	wchar_t strFilePath[MAX_PATH];
-	if (!_findMediaFileCch(strFilePath, MAX_PATH, strFileName))
+	wchar_t pFilePath[MAX_PATH];
+	if (!_findMediaFileCch(pFilePath, MAX_PATH, filePath))
 	{
-		WARN_IF(true, "Failed to find media file: %s", (const wchar_t*)strFileName);
+		WARN_IF(true, "Failed to find media file: %s", pFilePath);
 		return false;
 	}
 
-	m_hmmio = mmioOpen(strFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
+	m_hmmio = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
 
 	if (nullptr == m_hmmio)
 	{
@@ -605,9 +605,9 @@ bool MusicPlayer::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wch
 }
 
 
-bool e2d::Music::preload(String strFilePath)
+bool e2d::Music::preload(const String& filePath)
 {
-	UINT nRet = strFilePath.getHashCode();
+	UINT nRet = filePath.getHashCode();
 
 	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
 	{
@@ -617,7 +617,7 @@ bool e2d::Music::preload(String strFilePath)
 	{
 		MusicPlayer * pPlayer = new (std::nothrow) MusicPlayer();
 
-		if (pPlayer->open(strFilePath))
+		if (pPlayer->open(filePath))
 		{
 			pPlayer->setVolume(s_fMusicVolume);
 			GetMusicFileList().insert(std::pair<UINT, MusicPlayer *>(nRet, pPlayer));
@@ -632,7 +632,7 @@ bool e2d::Music::preload(String strFilePath)
 	return false;
 }
 
-bool e2d::Music::preload(int resNameId, String resType)
+bool e2d::Music::preload(int resNameId, const String& resType)
 {
 	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
 	{
@@ -657,11 +657,11 @@ bool e2d::Music::preload(int resNameId, String resType)
 	return false;
 }
 
-bool e2d::Music::play(String strFilePath, int nLoopCount)
+bool e2d::Music::play(const String& filePath, int nLoopCount)
 {
-	if (Music::preload(strFilePath))
+	if (Music::preload(filePath))
 	{
-		UINT nRet = strFilePath.getHashCode();
+		UINT nRet = filePath.getHashCode();
 		auto pMusic = GetMusicFileList()[nRet];
 		if (pMusic->play(nLoopCount))
 		{
@@ -671,7 +671,7 @@ bool e2d::Music::play(String strFilePath, int nLoopCount)
 	return false;
 }
 
-bool e2d::Music::play(int resNameId, String resType, int nLoopCount)
+bool e2d::Music::play(int resNameId, const String& resType, int nLoopCount)
 {
 	if (Music::preload(resNameId, resType))
 	{
@@ -684,63 +684,63 @@ bool e2d::Music::play(int resNameId, String resType, int nLoopCount)
 	return false;
 }
 
-void e2d::Music::pause(String strFilePath)
+void e2d::Music::pause(const String& filePath)
 {
-	if (strFilePath.isEmpty())
+	if (filePath.isEmpty())
 		return;
 
-	UINT nRet = strFilePath.getHashCode();
+	UINT nRet = filePath.getHashCode();
 
 	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
 		GetMusicFileList()[nRet]->pause();
 }
 
-void e2d::Music::pause(int resNameId, String resType)
+void e2d::Music::pause(int resNameId, const String& resType)
 {
 	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
 		GetMusicResList()[resNameId]->pause();
 }
 
-void e2d::Music::resume(String strFilePath)
+void e2d::Music::resume(const String& filePath)
 {
-	if (strFilePath.isEmpty())
+	if (filePath.isEmpty())
 		return;
 
-	UINT nRet = strFilePath.getHashCode();
+	UINT nRet = filePath.getHashCode();
 
 	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
 		GetMusicFileList()[nRet]->resume();
 }
 
-void e2d::Music::resume(int resNameId, String resType)
+void e2d::Music::resume(int resNameId, const String& resType)
 {
 	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
 		GetMusicResList()[resNameId]->pause();
 }
 
-void e2d::Music::stop(String strFilePath)
+void e2d::Music::stop(const String& filePath)
 {
-	if (strFilePath.isEmpty())
+	if (filePath.isEmpty())
 		return;
 
-	UINT nRet = strFilePath.getHashCode();
+	UINT nRet = filePath.getHashCode();
 
 	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
 		GetMusicFileList()[nRet]->stop();
 }
 
-void e2d::Music::stop(int resNameId, String resType)
+void e2d::Music::stop(int resNameId, const String& resType)
 {
 	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
 		GetMusicResList()[resNameId]->stop();
 }
 
-bool e2d::Music::isPlaying(String strFilePath)
+bool e2d::Music::isPlaying(const String& filePath)
 {
-	if (strFilePath.isEmpty())
+	if (filePath.isEmpty())
 		return false;
 
-	UINT nRet = strFilePath.getHashCode();
+	UINT nRet = filePath.getHashCode();
 
 	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
 		return GetMusicFileList()[nRet]->isPlaying();
@@ -748,7 +748,7 @@ bool e2d::Music::isPlaying(String strFilePath)
 	return false;
 }
 
-bool e2d::Music::isPlaying(int resNameId, String resType)
+bool e2d::Music::isPlaying(int resNameId, const String& resType)
 {
 	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
 		return GetMusicResList()[resNameId]->isPlaying();

@@ -8,7 +8,7 @@ e2d::Text::Text()
 {
 }
 
-e2d::Text::Text(String text)
+e2d::Text::Text(const String& text)
 	: m_TextStyle()
 	, m_pDWriteTextLayout(nullptr)
 	, m_pDWriteTextFormat(nullptr)
@@ -25,7 +25,7 @@ e2d::Text::Text(TextStyle textStyle)
 	_reset();
 }
 
-e2d::Text::Text(String text, TextStyle textStyle)
+e2d::Text::Text(const String& text, TextStyle textStyle)
 	: m_TextStyle(textStyle)
 	, m_pDWriteTextLayout(nullptr)
 	, m_pDWriteTextFormat(nullptr)
@@ -35,8 +35,8 @@ e2d::Text::Text(String text, TextStyle textStyle)
 }
 
 e2d::Text::Text(
-	String text, 
-	String fontFamily, 
+	const String& text, 
+	const String& fontFamily, 
 	double fontSize, 
 	UINT32 color, 
 	UINT32 fontWeight, 
@@ -159,7 +159,7 @@ bool e2d::Text::hasOutline() const
 	return m_TextStyle.hasOutline;
 }
 
-void e2d::Text::setText(String text)
+void e2d::Text::setText(const String& text)
 {
 	m_sText = text;
 	_reset();
@@ -171,7 +171,7 @@ void e2d::Text::setTextStyle(TextStyle textStyle)
 	_reset();
 }
 
-void e2d::Text::setFontFamily(String fontFamily)
+void e2d::Text::setFontFamily(const String& fontFamily)
 {
 	m_TextStyle.fontFamily = fontFamily;
 	_reset();

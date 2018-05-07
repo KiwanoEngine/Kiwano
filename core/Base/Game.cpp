@@ -13,7 +13,7 @@ static bool s_bInitialized = false;
 static e2d::String s_sGameName;
 
 
-bool e2d::Game::init(String sGameName)
+bool e2d::Game::init(const String& name)
 {
 	if (s_bInitialized)
 	{
@@ -60,7 +60,7 @@ bool e2d::Game::init(String sGameName)
 	}
 
 	// 保存游戏名称
-	s_sGameName = sGameName;
+	s_sGameName = name;
 
 	// 初始化路径
 	if (!Path::__init())
@@ -88,7 +88,7 @@ succeeded:
 	return s_bInitialized;
 }
 
-int e2d::Game::start(bool bAutoRelease/* true */)
+int e2d::Game::start(bool autoRelease/* true */)
 {
 	if (!s_bInitialized)
 	{
@@ -134,7 +134,7 @@ int e2d::Game::start(bool bAutoRelease/* true */)
 		}
 	}
 
-	if (bAutoRelease)
+	if (autoRelease)
 	{
 		Game::destroy();
 	}
@@ -201,7 +201,7 @@ void e2d::Game::destroy()
 	s_bInitialized = false;
 }
 
-bool e2d::Game::createMutex(String sMutexName, String sWindowTitle)
+bool e2d::Game::createMutex(const String& sMutexName, const String& sWindowTitle)
 {
 	// 创建进程互斥体
 	HANDLE m_hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + sMutexName);

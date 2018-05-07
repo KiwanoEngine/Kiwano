@@ -19,7 +19,7 @@ e2d::TextStyle::TextStyle()
 {}
 
 e2d::TextStyle::TextStyle(
-	String fontFamily, 
+	const String& fontFamily,
 	double fontSize, 
 	Color color, 
 	UINT32 fontWeight, 

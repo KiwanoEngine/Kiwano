@@ -14,12 +14,12 @@ class Game
 public:
 	// 初始化游戏
 	static bool init(
-		String sGameName = L"" /* 游戏英文名称 */
+		const String& name = L""	/* 游戏英文名称 */
 	);
 
 	// 启动游戏
 	static int start(
-		bool bAutoRelease = true
+		bool autoRelease = true		/* 游戏结束时自动回收资源 */
 	);
 
 	// 暂停游戏
@@ -39,8 +39,8 @@ public:
 
 	// 创建进程互斥体
 	static bool createMutex(
-		String sMutexName,			/* 互斥体名称 */
-		String sWindowTitle = L""	/* 窗口标题 */
+		const String& sMutexName,			/* 互斥体名称 */
+		const String& sWindowTitle = L""	/* 窗口标题 */
 	);
 
 	// 获取游戏名称
@@ -56,18 +56,18 @@ class Window
 public:
 	// 修改窗口大小
 	static void setSize(
-		int nWidth,			/* 窗口宽度 */
-		int nHeight			/* 窗口高度 */
+		int width,			/* 窗口宽度 */
+		int height			/* 窗口高度 */
 	);
 
 	// 设置窗口标题
 	static void setTitle(
-		String sTitle		/* 窗口标题 */
+		const String& title	/* 窗口标题 */
 	);
 
 	// 设置窗口图标
 	static void setIcon(
-		int pIconID
+		int iconID
 	);
 
 	// 获取窗口标题
@@ -92,7 +92,7 @@ public:
 
 	// 是否允许响应输入法
 	static void setTypewritingEnable(
-		bool bEnable
+		bool enable
 	);
 
 private:

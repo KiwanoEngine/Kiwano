@@ -610,7 +610,7 @@ void e2d::Node::setCollider(Collider * pCollider)
 	}
 }
 
-void e2d::Node::addColliableName(String collliderName)
+void e2d::Node::addColliableName(const String& collliderName)
 {
 	unsigned int hash = collliderName.getHashCode();
 	m_vColliders.insert(hash);
@@ -626,7 +626,7 @@ void e2d::Node::addColliableName(const InitList<String>& vCollliderName)
 }
 #endif
 
-void e2d::Node::removeColliableName(String collliderName)
+void e2d::Node::removeColliableName(const String& collliderName)
 {
 	unsigned int hash = collliderName.getHashCode();
 	m_vColliders.erase(hash);
@@ -692,7 +692,7 @@ e2d::Scene * e2d::Node::getParentScene() const
 	return m_pParentScene;
 }
 
-std::vector<e2d::Node*> e2d::Node::getChildren(String name) const
+std::vector<e2d::Node*> e2d::Node::getChildren(const String& name) const
 {
 	std::vector<Node*> vChildren;
 	unsigned int hash = name.getHashCode();
@@ -708,7 +708,7 @@ std::vector<e2d::Node*> e2d::Node::getChildren(String name) const
 	return std::move(vChildren);
 }
 
-e2d::Node * e2d::Node::getChild(String name) const
+e2d::Node * e2d::Node::getChild(const String& name) const
 {
 	unsigned int hash = name.getHashCode();
 
@@ -777,7 +777,7 @@ bool e2d::Node::removeChild(Node * child)
 	return false;
 }
 
-void e2d::Node::removeChildren(String childName)
+void e2d::Node::removeChildren(const String& childName)
 {
 	WARN_IF(childName.isEmpty(), "Invalid Node name.");
 
@@ -846,7 +846,7 @@ void e2d::Node::runAction(ActionBase * action)
 	}
 }
 
-void e2d::Node::resumeAction(String strActionName)
+void e2d::Node::resumeAction(const String& strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -858,7 +858,7 @@ void e2d::Node::resumeAction(String strActionName)
 	}
 }
 
-void e2d::Node::pauseAction(String strActionName)
+void e2d::Node::pauseAction(const String& strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -870,7 +870,7 @@ void e2d::Node::pauseAction(String strActionName)
 	}
 }
 
-void e2d::Node::stopAction(String strActionName)
+void e2d::Node::stopAction(const String& strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -882,7 +882,7 @@ void e2d::Node::stopAction(String strActionName)
 	}
 }
 
-e2d::ActionBase * e2d::Node::getAction(String strActionName)
+e2d::ActionBase * e2d::Node::getAction(const String& strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -895,7 +895,7 @@ e2d::ActionBase * e2d::Node::getAction(String strActionName)
 	return nullptr;
 }
 
-std::vector<e2d::ActionBase*> e2d::Node::getActions(String strActionName)
+std::vector<e2d::ActionBase*> e2d::Node::getActions(const String& strActionName)
 {
 	std::vector<ActionBase*>::iterator iter;
 	auto actions = ActionManager::get(strActionName);
@@ -1022,9 +1022,9 @@ void e2d::Node::setDefaultPiovt(double defaultPiovtX, double defaultPiovtY)
 	s_fDefaultPiovtY = min(max(static_cast<float>(defaultPiovtY), 0), 1);
 }
 
-void e2d::Node::setDefaultColliderEnable(bool bEnable)
+void e2d::Node::setDefaultColliderEnable(bool enable)
 {
-	s_fDefaultColliderEnabled = bEnable;
+	s_fDefaultColliderEnabled = enable;
 }
 
 void e2d::Node::destroy()
@@ -1057,7 +1057,7 @@ void e2d::Node::setVisiable(bool value)
 	m_bVisiable = value;
 }
 
-void e2d::Node::setName(String name)
+void e2d::Node::setName(const String& name)
 {
 	WARN_IF(name.isEmpty(), "Invalid Node name.");
 

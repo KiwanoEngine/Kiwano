@@ -130,12 +130,12 @@ public:
 
 	// 获取所有名称相同的子节点
 	virtual std::vector<Node*> getChildren(
-		String name
+		const String& name
 	) const;
 
 	// 获取名称相同的子节点
 	virtual Node* getChild(
-		String name
+		const String& name
 	) const;
 
 	// 获取所有子节点
@@ -151,7 +151,7 @@ public:
 
 	// 移除所有名称相同的子节点
 	virtual void removeChildren(
-		String childName
+		const String& childName
 	);
 
 	// 从父节点移除
@@ -172,7 +172,7 @@ public:
 
 	// 设置节点名称
 	virtual void setName(
-		String name
+		const String& name
 	);
 
 	// 设置节点横坐标
@@ -336,7 +336,7 @@ public:
 
 	// 添加可碰撞节点的名称
 	virtual void addColliableName(
-		String collliderName
+		const String& collliderName
 	);
 
 #ifdef HIGHER_THAN_VS2012
@@ -348,7 +348,7 @@ public:
 
 	// 移除可碰撞节点的名称
 	virtual void removeColliableName(
-		String collliderName
+		const String& collliderName
 	);
 
 	// 添加子节点
@@ -372,27 +372,27 @@ public:
 
 	// 继续动画
 	virtual void resumeAction(
-		String strActionName
+		const String& strActionName
 	);
 
 	// 暂停动画
 	virtual void pauseAction(
-		String strActionName
+		const String& strActionName
 	);
 
 	// 停止动画
 	virtual void stopAction(
-		String strActionName
+		const String& strActionName
 	);
 
 	// 获取名称相同的动画
 	virtual ActionBase * getAction(
-		String strActionName
+		const String& strActionName
 	);
 
 	// 获取所有名称相同的动画
 	virtual std::vector<ActionBase*> getActions(
-		String strActionName
+		const String& strActionName
 	);
 
 	// 继续所有暂停动画
@@ -412,7 +412,7 @@ public:
 
 	// 设置节点是否包含默认碰撞体（默认打开）
 	static void setDefaultColliderEnable(
-		bool bEnable
+		bool enable
 	);
 
 	// 销毁对象
@@ -494,18 +494,18 @@ public:
 
 	// 加载图片文件
 	Sprite(
-		String strFilePath	/* 图片文件路径 */
+		const String& filePath	/* 图片文件路径 */
 	);
 
 	// 加载图片资源
 	Sprite(
-		int resNameId,		/* 图片资源名称 */
-		String resType		/* 图片资源类型 */
+		int resNameId,			/* 图片资源名称 */
+		const String& resType	/* 图片资源类型 */
 	);
 
 	// 加载图片文件
 	Sprite(
-		String strFilePath,	/* 图片文件路径 */
+		const String& filePath,	/* 图片文件路径 */
 		double x,
 		double y,
 		double width,
@@ -514,8 +514,8 @@ public:
 
 	// 加载图片资源
 	Sprite(
-		int resNameId,		/* 图片资源名称 */
-		String resType,		/* 图片资源类型 */
+		int resNameId,			/* 图片资源名称 */
+		const String& resType,	/* 图片资源类型 */
 		double x,
 		double y,
 		double width,
@@ -526,13 +526,13 @@ public:
 
 	// 加载图片文件
 	bool open(
-		String strFilePath
+		const String& filePath
 	);
 
 	// 加载图片资源
 	bool open(
-		int resNameId,		/* 图片资源名称 */
-		String resType		/* 图片资源类型 */
+		int resNameId,			/* 图片资源名称 */
+		const String& resType	/* 图片资源类型 */
 	);
 	
 	// 加载图片
@@ -569,21 +569,21 @@ public:
 	Text();
 
 	Text(
-		String text			/* 文字内容 */
+		const String& text		/* 文字内容 */
 	);
 
 	Text(
-		TextStyle textStyle	/* 文字样式 */
+		TextStyle textStyle		/* 文字样式 */
 	);
 
 	Text(
-		String text,		/* 文字内容 */
-		TextStyle textStyle	/* 文字样式 */
+		const String& text,		/* 文字内容 */
+		TextStyle textStyle		/* 文字样式 */
 	);
 
 	Text(
-		String text,							/* 文字内容*/
-		String fontFamily,						/* 字体 */
+		const String& text,						/* 文字内容*/
+		const String& fontFamily,				/* 字体 */
 		double fontSize = 22,					/* 字号 */
 		UINT32 color = Color::WHITE,			/* 颜色 */
 		UINT32 fontWeight = FontWeight::NORMAL,	/* 粗细值 */
@@ -645,7 +645,7 @@ public:
 
 	// 设置文本
 	void setText(
-		String text
+		const String& text
 	);
 
 	// 设置文本样式
@@ -655,7 +655,7 @@ public:
 
 	// 设置字体
 	void setFontFamily(
-		String fontFamily
+		const String& fontFamily
 	);
 
 	// 设置字号（默认值为 22）
@@ -791,7 +791,7 @@ public:
 
 	// 设置按钮启用或禁用
 	void setEnable(
-		bool bEnable
+		bool enable
 	);
 
 	// 设置一般情况下显示的按钮

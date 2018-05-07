@@ -174,16 +174,16 @@ void e2d::Window::setSize(int width, int height)
 	::MoveWindow(s_HWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
 }
 
-void e2d::Window::setTitle(String title)
+void e2d::Window::setTitle(const String& title)
 {
 	// 设置窗口标题
 	::SetWindowText(s_HWnd, title);
 }
 
-void e2d::Window::setIcon(int pIconID)
+void e2d::Window::setIcon(int iconID)
 {
 	HINSTANCE hInstance = ::GetModuleHandle(NULL);
-	HICON hIcon = (HICON)::LoadImage(hInstance, MAKEINTRESOURCE(pIconID), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+	HICON hIcon = (HICON)::LoadImage(hInstance, MAKEINTRESOURCE(iconID), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 	// 设置窗口的图标
 	::SendMessage(s_HWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 	::SendMessage(s_HWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
@@ -237,11 +237,11 @@ void e2d::Window::showConsole(bool show)
 	}
 }
 
-void e2d::Window::setTypewritingEnable(bool bEnable)
+void e2d::Window::setTypewritingEnable(bool enable)
 {
 	static HIMC hImc = nullptr;
 
-	if (bEnable)
+	if (enable)
 	{
 		if (hImc != nullptr)
 		{

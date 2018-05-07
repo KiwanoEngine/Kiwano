@@ -129,7 +129,7 @@ e2d::String e2d::Path::getDefaultSavePath()
 	return s_sDefaultSavePath;
 }
 
-e2d::String e2d::Path::getFileExtension(String filePath)
+e2d::String e2d::Path::getFileExtension(const String& filePath)
 {
 	String fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
@@ -146,7 +146,7 @@ e2d::String e2d::Path::getFileExtension(String filePath)
 	return fileExtension;
 }
 
-e2d::String e2d::Path::getSaveFilePath(const String title, const String defExt)
+e2d::String e2d::Path::getSaveFilePath(const String& title, const String& defExt)
 {
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };
@@ -169,17 +169,17 @@ e2d::String e2d::Path::getSaveFilePath(const String title, const String defExt)
 	return L"";
 }
 
-bool e2d::Path::createFolder(String strDirPath)
+bool e2d::Path::createFolder(const String& dirPath)
 {
-	if (strDirPath.isEmpty())
+	if (dirPath.isEmpty())
 	{
 		WARN_IF(true, "Path::createFolder Failed: Invalid directory path!");
 		return false;
 	}
 
-	if (-1 == ::_waccess(strDirPath, 0))
+	if (-1 == ::_waccess(dirPath, 0))
 	{
-		if (0 != ::_wmkdir(strDirPath))
+		if (0 != ::_wmkdir(dirPath))
 		{
 			return false;
 		}

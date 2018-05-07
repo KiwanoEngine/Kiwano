@@ -161,11 +161,11 @@ void e2d::Button::setDisabled(Node * disabled)
 	}
 }
 
-void e2d::Button::setEnable(bool bEnable)
+void e2d::Button::setEnable(bool enable)
 {
-	if (m_bEnable != bEnable)
+	if (m_bEnable != enable)
 	{
-		m_bEnable = bEnable;
+		m_bEnable = enable;
 		_updateVisiable();
 	}
 }

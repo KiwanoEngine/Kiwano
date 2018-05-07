@@ -67,12 +67,12 @@ bool e2d::Scene::remove(Node * child)
 	return m_pRoot->removeChild(child);
 }
 
-std::vector<e2d::Node*> e2d::Scene::get(String name) const
+std::vector<e2d::Node*> e2d::Scene::get(const String& name) const
 {
 	return m_pRoot->getChildren(name);
 }
 
-e2d::Node * e2d::Scene::getOne(String name) const
+e2d::Node * e2d::Scene::getOne(const String& name) const
 {
 	return m_pRoot->getChild(name);
 }

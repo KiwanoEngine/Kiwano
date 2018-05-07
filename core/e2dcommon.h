@@ -497,7 +497,7 @@ struct TextStyle
 	TextStyle();
 
 	TextStyle(
-		String fontFamily,
+		const String& fontFamily,
 		double fontSize = 22,
 		Color color = Color::WHITE,
 		UINT32 fontWeight = FontWeight::NORMAL,
@@ -610,53 +610,53 @@ public:
 
 	// 加载图片文件
 	Image(
-		String strFilePath	/* 图片文件路径 */
+		const String& filePath	/* 图片文件路径 */
 	);
 
 	// 加载图片资源
 	Image(
-		int resNameId,		/* 图片资源名称 */
-		String resType		/* 图片资源类型 */
+		int resNameId,			/* 图片资源名称 */
+		const String& resType	/* 图片资源类型 */
 	);
 
 	// 加载图片文件并裁剪
 	Image(
-		String strFilePath,	/* 图片文件路径 */
-		double nCropX,		/* 裁剪位置 X 坐标 */
-		double nCropY,		/* 裁剪位置 Y 坐标 */
-		double nCropWidth,	/* 裁剪宽度 */
-		double nCropHeight	/* 裁剪高度 */
+		const String& filePath,	/* 图片文件路径 */
+		double cropX,			/* 裁剪位置 X 坐标 */
+		double cropY,			/* 裁剪位置 Y 坐标 */
+		double cropWidth,		/* 裁剪宽度 */
+		double cropHeight		/* 裁剪高度 */
 	);
 
 	// 加载图片资源并裁剪
 	Image(
-		int resNameId,		/* 图片资源名称 */
-		String resType,		/* 图片资源类型 */
-		double nCropX,		/* 裁剪位置 X 坐标 */
-		double nCropY,		/* 裁剪位置 Y 坐标 */
-		double nCropWidth,	/* 裁剪宽度 */
-		double nCropHeight	/* 裁剪高度 */
+		int resNameId,			/* 图片资源名称 */
+		const String& resType,	/* 图片资源类型 */
+		double cropX,			/* 裁剪位置 X 坐标 */
+		double cropY,			/* 裁剪位置 Y 坐标 */
+		double cropWidth,		/* 裁剪宽度 */
+		double cropHeight		/* 裁剪高度 */
 	);
 
 	virtual ~Image();
 
 	// 加载图片文件
 	bool open(
-		String strFilePath
+		const String& filePath
 	);
 
 	// 加载图片资源
 	bool open(
-		int resNameId,		/* 图片资源名称 */
-		String resType		/* 图片资源类型 */
+		int resNameId,			/* 图片资源名称 */
+		const String& resType	/* 图片资源类型 */
 	);
 
 	// 将图片裁剪为矩形
 	void crop(
-		double nCropX,		/* 裁剪位置 X 坐标 */
-		double nCropY,		/* 裁剪位置 Y 坐标 */
-		double nCropWidth,	/* 裁剪宽度 */
-		double nCropHeight	/* 裁剪高度 */
+		double cropX,			/* 裁剪位置 X 坐标 */
+		double cropY,			/* 裁剪位置 Y 坐标 */
+		double cropWidth,		/* 裁剪宽度 */
+		double cropHeight		/* 裁剪高度 */
 	);
 
 	// 获取宽度
@@ -691,13 +691,13 @@ public:
 
 	// 预加载图片文件
 	static bool preload(
-		String strFileName	/* 图片文件路径 */
+		const String& filePath	/* 图片文件路径 */
 	);
 
 	// 预加载图片资源
 	static bool preload(
-		int resNameId,		/* 图片资源名称 */
-		String resType		/* 图片资源类型 */
+		int resNameId,			/* 图片资源名称 */
+		const String& resType	/* 图片资源类型 */
 	);
 
 	// 清空缓存
@@ -772,12 +772,12 @@ public:
 
 	// 获取所有名称相同的子节点
 	std::vector<Node*> get(
-		String name
+		const String& name
 	) const;
 
 	// 获取名称相同的子节点
 	Node* getOne(
-		String name
+		const String& name
 	) const;
 
 	// 获取所有子节点
