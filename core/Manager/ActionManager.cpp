@@ -1,8 +1,8 @@
 #include "..\e2dmanager.h"
 #include "..\e2daction.h"
 
-static std::vector<e2d::ActionBase*> s_vActions;
-static std::vector<e2d::ActionBase*> s_vRunningActions;
+static std::vector<e2d::Action*> s_vActions;
+static std::vector<e2d::Action*> s_vRunningActions;
 
 
 void e2d::ActionManager::__update()
@@ -19,7 +19,7 @@ void e2d::ActionManager::__update()
 		{
 			// 动作已经结束
 			action->release();
-			action->_pTarget = nullptr;
+			action->_target = nullptr;
 			s_vRunningActions.erase(s_vRunningActions.begin() + i);
 		}
 		else
@@ -33,7 +33,7 @@ void e2d::ActionManager::__update()
 	}
 }
 
-void e2d::ActionManager::__add(ActionBase * action)
+void e2d::ActionManager::__add(Action * action)
 {
 	if (action)
 	{
@@ -41,7 +41,7 @@ void e2d::ActionManager::__add(ActionBase * action)
 	}
 }
 
-void e2d::ActionManager::__remove(ActionBase * action)
+void e2d::ActionManager::__remove(Action * action)
 {
 	for (size_t i = 0; i < s_vActions.size();)
 	{
@@ -98,16 +98,28 @@ void e2d::ActionManager::__stopAllBindedWith(Node * target)
 	}
 }
 
-void e2d::ActionManager::start(ActionBase * action, Node * target, bool paused)
+void e2d::ActionManager::start(Action * action, Node * target, bool paused)
 {
-	WARN_IF(action == nullptr, "ActionBase NULL pointer exception!");
+	WARN_IF(action == nullptr, "Action NULL pointer exception!");
 	WARN_IF(target == nullptr, "Target node NULL pointer exception!");
 
 	if (action && target)
 	{
+		ASSERT([](Action * newAction)
+		{
+			for (const auto& action : s_vRunningActions)
+			{
+				if (newAction == action)
+				{
+					return false;
+				}
+			}
+			return true;
+		}(action), "action already be added!");
+
 		action->_startWithTarget(target);
 		action->retain();
-		action->_bRunning = !paused;
+		action->_running = !paused;
 		s_vRunningActions.push_back(action);
 	}
 }
@@ -199,9 +211,9 @@ void e2d::ActionManager::stopAll()
 	}
 }
 
-std::vector<e2d::ActionBase*> e2d::ActionManager::get(const String& strActionName)
+std::vector<e2d::Action*> e2d::ActionManager::get(const String& strActionName)
 {
-	std::vector<ActionBase*> vActions;
+	std::vector<Action*> vActions;
 	for (auto action : s_vActions)
 	{
 		if (action->getName() == strActionName)
@@ -212,7 +224,7 @@ std::vector<e2d::ActionBase*> e2d::ActionManager::get(const String& strActionNam
 	return std::move(vActions);
 }
 
-std::vector<e2d::ActionBase*> e2d::ActionManager::getAll()
+std::vector<e2d::Action*> e2d::ActionManager::getAll()
 {
 	return s_vActions;
 }

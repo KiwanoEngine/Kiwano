@@ -23,12 +23,12 @@ void e2d::TransitionFade::_init(Scene * prev, Scene * next)
 	if (_pPrevScene)
 	{
 		_bFadeOutTransioning = true;
-		_fDuration = _fFadeOutDuration;
+		_duration = _fFadeOutDuration;
 	}
 	else
 	{
 		_bFadeOutTransioning = false;
-		_fDuration = _fFadeInDuration;
+		_duration = _fFadeInDuration;
 	}
 	_sPrevLayerParam.opacity = 1;
 	_sNextLayerParam.opacity = 0;
@@ -38,18 +38,18 @@ void e2d::TransitionFade::_updateCustom()
 {
 	if (_bFadeOutTransioning)
 	{
-		_sPrevLayerParam.opacity = float(1 - _fRateOfProgress);
-		if (_fRateOfProgress >= 1)
+		_sPrevLayerParam.opacity = float(1 - _delta);
+		if (_delta >= 1)
 		{
 			_bFadeOutTransioning = false;
-			_fDuration = _fFadeInDuration;
+			_duration = _fFadeInDuration;
 			_fLast = Time::getTotalTime();
 		}
 	}
 	else
 	{
-		_sNextLayerParam.opacity = float(_fRateOfProgress);
-		if (_fRateOfProgress >= 1)
+		_sNextLayerParam.opacity = float(_delta);
+		if (_delta >= 1)
 		{
 			this->_stop();
 		}

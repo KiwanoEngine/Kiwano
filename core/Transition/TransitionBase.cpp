@@ -5,7 +5,7 @@
 e2d::TransitionBase::TransitionBase(double duration)
 	: _bEnd(false)
 	, _fLast(0)
-	, _fRateOfProgress(0)
+	, _delta(0)
 	, _pPrevScene(nullptr)
 	, _pNextScene(nullptr)
 	, _pPrevLayer(nullptr)
@@ -13,7 +13,7 @@ e2d::TransitionBase::TransitionBase(double duration)
 	, _sPrevLayerParam()
 	, _sNextLayerParam()
 {
-	_fDuration = max(duration, 0);
+	_duration = max(duration, 0);
 }
 
 e2d::TransitionBase::~TransitionBase()
@@ -27,7 +27,7 @@ bool e2d::TransitionBase::isDone()
 	return _bEnd;
 }
 
-void e2d::TransitionBase::destroy()
+void e2d::TransitionBase::onDestroy()
 {
 	SafeRelease(&_pPrevScene);
 	SafeRelease(&_pNextScene);
@@ -61,13 +61,13 @@ void e2d::TransitionBase::_init(Scene * prev, Scene * next)
 void e2d::TransitionBase::_update()
 {
 	// 计算动画进度
-	if (_fDuration == 0)
+	if (_duration == 0)
 	{
-		_fRateOfProgress = 1;
+		_delta = 1;
 	}
 	else
 	{
-		_fRateOfProgress = min((Time::getTotalTime() - _fLast) / _fDuration, 1);
+		_delta = min((Time::getTotalTime() - _fLast) / _duration, 1);
 	}
 
 	this->_updateCustom();

@@ -91,7 +91,7 @@ void e2d::Scene::showCollider(bool visiable)
 	_bColliderVisiable = visiable;
 }
 
-void e2d::Scene::destroy()
+void e2d::Scene::onDestroy()
 {
 	SafeRelease(&_pRoot);
 }

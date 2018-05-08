@@ -5,7 +5,7 @@ namespace e2d
 {
 
 
-class ActionBase;
+class Action;
 class TransitionBase;
 class Collider;
 class ColliderManager;
@@ -366,7 +366,7 @@ public:
 
 	// 执行动画
 	virtual void runAction(
-		ActionBase * action
+		Action * action
 	);
 
 	// 继续动画
@@ -385,12 +385,12 @@ public:
 	);
 
 	// 获取名称相同的动画
-	virtual ActionBase * getAction(
+	virtual Action * getAction(
 		const String& strActionName
 	);
 
 	// 获取所有名称相同的动画
-	virtual std::vector<ActionBase*> getActions(
+	virtual std::vector<Action*> getActions(
 		const String& strActionName
 	);
 
@@ -415,7 +415,7 @@ public:
 	);
 
 	// 销毁对象
-	virtual void destroy() override;
+	virtual void onDestroy() override;
 
 protected:
 	// 更新节点
@@ -442,7 +442,7 @@ protected:
 	void _updateOpacity();
 
 protected:
-	String		_sName;
+	String		_name;
 	unsigned	_nHashName;
 	float		_fPosX;
 	float		_fPosY;
@@ -548,7 +548,7 @@ public:
 	virtual void onRender() override;
 
 	// 销毁对象
-	virtual void destroy() override;
+	virtual void onDestroy() override;
 
 protected:
 	Image * _pImage;
@@ -836,7 +836,7 @@ protected:
 	bool		_bEnable;
 	bool		_bIsSelected;
 	ButtonState	_eBtnState;
-	Function	_Callback;
+	Function	_func;
 };
 
 

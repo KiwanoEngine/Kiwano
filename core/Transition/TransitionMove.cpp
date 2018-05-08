@@ -42,14 +42,14 @@ void e2d::TransitionMove::_updateCustom()
 {
 	if (_pPrevScene)
 	{
-		_pPrevScene->getRoot()->setPos(_Vector * _fRateOfProgress);
+		_pPrevScene->getRoot()->setPos(_Vector * _delta);
 	}
 	if (_pNextScene)
 	{
-		_pNextScene->getRoot()->setPos(_NextPos + _Vector * _fRateOfProgress);
+		_pNextScene->getRoot()->setPos(_NextPos + _Vector * _delta);
 	}
 
-	if (_fRateOfProgress >= 1)
+	if (_delta >= 1)
 	{
 		this->_stop();
 	}

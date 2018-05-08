@@ -54,7 +54,7 @@ public:
 	bool isDone();
 
 	// 销毁对象
-	virtual void destroy() override;
+	virtual void onDestroy() override;
 
 protected:
 	// 初始化场景动画
@@ -81,8 +81,8 @@ protected:
 protected:
 	bool _bEnd;
 	double _fLast;
-	double _fDuration;
-	double _fRateOfProgress;
+	double _duration;
+	double _delta;
 	Size _WindowSize;
 	Scene * _pPrevScene;
 	Scene * _pNextScene;

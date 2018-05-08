@@ -125,8 +125,8 @@ void e2d::Sprite::onRender()
 	}
 }
 
-void e2d::Sprite::destroy()
+void e2d::Sprite::onDestroy()
 {
-	Node::destroy();
+	Node::onDestroy();
 	SafeRelease(&_pImage);
 }

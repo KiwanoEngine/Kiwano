@@ -240,7 +240,7 @@ bool e2d::Node::isVisiable() const
 
 e2d::String e2d::Node::getName() const
 {
-	return _sName;
+	return _name;
 }
 
 unsigned int e2d::Node::getHashName() const
@@ -676,7 +676,7 @@ std::vector<e2d::Node*> e2d::Node::getChildren(const String& name) const
 	for (auto child : _vChildren)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
-		if (child->_nHashName == hash && child->_sName == name)
+		if (child->_nHashName == hash && child->_name == name)
 		{
 			vChildren.push_back(child);
 		}
@@ -691,7 +691,7 @@ e2d::Node * e2d::Node::getChild(const String& name) const
 	for (auto child : _vChildren)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
-		if (child->_nHashName == hash && child->_sName == name)
+		if (child->_nHashName == hash && child->_name == name)
 		{
 			return child;
 		}
@@ -765,7 +765,7 @@ void e2d::Node::removeChildren(const String& childName)
 	for (size_t i = 0; i < size; i++)
 	{
 		auto child = _vChildren[i];
-		if (child->_nHashName == hash && child->_sName == childName)
+		if (child->_nHashName == hash && child->_name == childName)
 		{
 			_vChildren.erase(_vChildren.begin() + i);
 			child->_pParent = nullptr;
@@ -789,7 +789,7 @@ void e2d::Node::clearAllChildren()
 	_vChildren.clear();
 }
 
-void e2d::Node::runAction(ActionBase * action)
+void e2d::Node::runAction(Action * action)
 {
 	if (this != action->getTarget())
 	{
@@ -838,7 +838,7 @@ void e2d::Node::stopAction(const String& strActionName)
 	}
 }
 
-e2d::ActionBase * e2d::Node::getAction(const String& strActionName)
+e2d::Action * e2d::Node::getAction(const String& strActionName)
 {
 	auto actions = ActionManager::get(strActionName);
 	for (auto action : actions)
@@ -851,9 +851,9 @@ e2d::ActionBase * e2d::Node::getAction(const String& strActionName)
 	return nullptr;
 }
 
-std::vector<e2d::ActionBase*> e2d::Node::getActions(const String& strActionName)
+std::vector<e2d::Action*> e2d::Node::getActions(const String& strActionName)
 {
-	std::vector<ActionBase*>::iterator iter;
+	std::vector<Action*>::iterator iter;
 	auto actions = ActionManager::get(strActionName);
 	for (iter = actions.begin(); iter != actions.end();)
 	{
@@ -983,7 +983,7 @@ void e2d::Node::setDefaultColliderEnable(bool enable)
 	s_fDefaultColliderEnabled = enable;
 }
 
-void e2d::Node::destroy()
+void e2d::Node::onDestroy()
 {
 	ActionManager::__clearAllBindedWith(this);
 	ColliderManager::__removeCollider(_pCollider);
@@ -1017,10 +1017,10 @@ void e2d::Node::setName(const String& name)
 {
 	WARN_IF(name.isEmpty(), "Invalid Node name.");
 
-	if (!name.isEmpty() && _sName != name)
+	if (!name.isEmpty() && _name != name)
 	{
 		// 保存节点名
-		_sName = name;
+		_name = name;
 		// 保存节点 Hash 名
 		_nHashName = name.getHashCode();
 	}

@@ -590,7 +590,7 @@ public:
 	int getRefCount() const;
 
 	// 销毁对象
-	virtual void destroy() {}
+	virtual void onDestroy() {}
 
 private:
 	int _nRefCount;
@@ -789,7 +789,7 @@ public:
 	);
 
 	// 销毁对象
-	virtual void destroy() override;
+	virtual void onDestroy() override;
 
 protected:
 	// 渲染场景画面

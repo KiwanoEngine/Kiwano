@@ -36,43 +36,7 @@
     <ClCompile Include="..\..\core\Base\Input.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionDelay.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Action\ActionGradual.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionLoop.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionMoveBy.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionMoveTo.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionOpacityBy.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionOpacityTo.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionRotateBy.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionRotateTo.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionScaleBy.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionScaleTo.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionSequence.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionTwo.cpp">
       <Filter>Action</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Action\Animation.cpp">
@@ -162,9 +126,6 @@
     <ClCompile Include="..\..\core\Manager\InputManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionFunc.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Collider\Collider.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
@@ -207,17 +168,53 @@
     <ClCompile Include="..\..\core\Common\Function.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionBase.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Action\Action.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Transition\TransitionBase.cpp">
       <Filter>Transition</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Transition\Transition.cpp">
       <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\Action.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\Sequence.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\ScaleTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\ScaleBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\RotateTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\RotateBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\OpacityTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\OpacityBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\MoveTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\MoveBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\Loop.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\CallFunc.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\Delay.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\Spawn.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

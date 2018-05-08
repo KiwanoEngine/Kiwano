@@ -21,7 +21,7 @@ void e2d::ObjectManager::__update()
 	{
 		if ((*iter)->getRefCount() <= 0)
 		{
-			(*iter)->destroy();
+			(*iter)->onDestroy();
 			delete (*iter);
 			iter = s_vObjectPool.erase(iter);
 		}

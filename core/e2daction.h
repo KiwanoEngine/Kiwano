@@ -6,166 +6,24 @@ namespace e2d
 
 
 class ActionManager;
-class ActionBase;
-class ActionMoveBy;
-class ActionMoveTo;
-class ActionScaleBy;
-class ActionScaleTo;
-class ActionOpacityBy;
-class ActionOpacityTo;
-class ActionFadeIn;
-class ActionFadeOut;
-class ActionRotateBy;
-class ActionRotateTo;
-class ActionTwo;
-class ActionDelay;
-class ActionLoop;
-class ActionFunc;
-class ActionSequence;
-class Animation;
-
-// 动作生成器
-class Action
-{
-public:
-	// 创建相对位移动画
-	static e2d::ActionMoveBy* MoveBy(
-		double duration,	/* 动画持续时长 */
-		Vector vector		/* 位移向量 */
-	);
-
-	// 创建位移动画
-	static e2d::ActionMoveTo* MoveTo(
-		double duration,	/* 动画持续时长 */
-		Point pos			/* 位移至目标点的坐标 */
-	);
-
-	// 创建相对缩放动画
-	static e2d::ActionScaleBy* ScaleBy(
-		double duration,	/* 动画持续时长 */
-		double scale		/* 缩放比例变化 */
-	);
-
-	// 创建相对缩放动画
-	static e2d::ActionScaleBy* ScaleBy(
-		double duration,	/* 动画持续时长 */
-		double scaleX,		/* 横向缩放比例变化 */
-		double scaleY		/* 纵向缩放比例变化 */
-	);
-
-	// 创建缩放动画
-	static e2d::ActionScaleTo* ScaleTo(
-		double duration,	/* 动画持续时长 */
-		double scale		/* 缩放至目标比例 */
-	);
-
-	// 创建缩放动画
-	static e2d::ActionScaleTo* ScaleTo(
-		double duration,	/* 动画持续时长 */
-		double scaleX,		/* 横向缩放至目标比例 */
-		double scaleY		/* 纵向缩放至目标比例 */
-	);
-
-	// 创建透明度相对渐变动画
-	static e2d::ActionOpacityBy* OpacityBy(
-		double duration,	/* 动画持续时长 */
-		double opacity		/* 透明度相对变化值 */
-	);
-
-	// 创建透明度渐变动画
-	static e2d::ActionOpacityTo* OpacityTo(
-		double duration,	/* 动画持续时长 */
-		double opacity		/* 透明度渐变至目标值 */
-	);
-
-	// 创建淡入动画
-	static e2d::ActionFadeIn* FadeIn(
-		double duration		/* 动画持续时长 */
-	);
-
-	// 创建淡出动画
-	static e2d::ActionFadeOut* FadeOut(
-		double duration		/* 动画持续时长 */
-	);
-
-	// 创建相对旋转动画
-	static e2d::ActionRotateBy* RotateBy(
-		double duration,	/* 动画持续时长 */
-		double rotation		/* 旋转角度变化值 */
-	);
-
-	// 创建旋转动画
-	static e2d::ActionRotateTo* RotateTo(
-		double duration,	/* 动画持续时长 */
-		double rotation		/* 旋转角度至目标值 */
-	);
-
-	// 创建两个动作的连续动作
-	static e2d::ActionTwo* Two(
-		ActionBase * pActionFirst,		/* 第一个动作 */
-		ActionBase * pActionSecond,		/* 第二个动作 */
-		bool bAtSameTime = false		/* 同时开始 */
-	);
-
-	// 创建延时动作
-	static e2d::ActionDelay* Delay(
-		double duration		/* 延迟时长（秒） */
-	);
-
-	// 创建循环动作
-	static e2d::ActionLoop* Loop(
-		ActionBase * action,	/* 执行循环的动作 */
-		int times = -1			/* 循环次数 */
-	);
-
-	// 创建执行函数对象的动作
-	static e2d::ActionFunc* Func(
-		const Function& func		/* 函数对象 */
-	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 创建顺序动作
-	static e2d::ActionSequence* Sequence(
-		const std::initializer_list<ActionBase*>& vActions	/* 动作列表 */
-	);
-
-	// 创建特定帧间隔的帧动画
-	static e2d::Animation* Animation(
-		double interval,									/* 帧间隔（秒） */
-		const std::initializer_list<Image*>& vFrames		/* 关键帧列表 */
-	);
-#else
-	// 创建顺序动作
-	static e2d::ActionSequence* Sequence(
-		int number,			/* 动作数量 */
-		ActionBase * action1,	/* 第一个动作 */
-		...
-	);
-
-	// 创建特定帧间隔的帧动画
-	static e2d::Animation* Animation(
-		double interval,	/* 帧间隔（秒） */
-		int number,			/* 帧数量 */
-		Image * frame,		/* 第一帧 */
-		...
-	);
-#endif
-};
+class Loop;
+class Sequence;
+class Spawn;
 
 
 // 基础动作
-class ActionBase :
+class Action :
 	public Object
 {
 	friend ActionManager;
-	friend ActionTwo;
-	friend ActionLoop;
-	friend ActionSequence;
+	friend Loop;
+	friend Sequence;
+	friend Spawn;
 
 public:
-	ActionBase();
+	Action();
 
-	virtual ~ActionBase();
+	virtual ~Action();
 
 	// 获取动作运行状态
 	virtual bool isRunning();
@@ -188,10 +46,10 @@ public:
 	);
 
 	// 获取动作的拷贝
-	virtual ActionBase * clone() const = 0;
+	virtual Action * clone() const = 0;
 
 	// 获取动作的倒转
-	virtual ActionBase * reverse() const;
+	virtual Action * reverse() const;
 
 	// 重置动作
 	virtual void reset();
@@ -200,7 +58,7 @@ public:
 	virtual Node * getTarget();
 
 	// 销毁对象
-	virtual void destroy() override;
+	virtual void onDestroy() override;
 
 protected:
 	// 初始化动作
@@ -221,19 +79,18 @@ protected:
 	);
 
 protected:
-	String	_sName;
-	bool	_bRunning;
-	bool	_bEnding;
-	bool	_bInit;
-	Node *	_pTarget;
-	Scene * _pParentScene;
+	String	_name;
+	bool	_running;
+	bool	_done;
+	bool	_initialized;
+	Node *	_target;
 	double	_fLast;
 };
 
 
 // 持续动作
 class ActionGradual :
-	public ActionBase
+	public Action
 {
 public:
 	// 创建特定时长的持续动画
@@ -249,27 +106,27 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double _fDuration;
-	double _fRateOfProgress;
+	double _duration;
+	double _delta;
 };
 
 
 // 相对位移动画
-class ActionMoveBy :
+class MoveBy :
 	public ActionGradual
 {
 public:
 	// 创建相对位移动画
-	ActionMoveBy(
+	MoveBy(
 		double duration,	/* 动画持续时长 */
 		Vector vector		/* 位移向量 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual ActionMoveBy * clone() const override;
+	virtual MoveBy * clone() const override;
 
 	// 获取该动画的倒转
-	virtual ActionMoveBy * reverse() const override;
+	virtual MoveBy * reverse() const override;
 
 protected:
 	// 初始化动画
@@ -279,57 +136,57 @@ protected:
 	virtual void _update() override;
 
 protected:
-	Point		_BeginPos;
-	Vector	_MoveVec;
+	Point	_startPos;
+	Vector	_deltaPos;
 };
 
 
 // 位移动画
-class ActionMoveTo :
-	public ActionMoveBy
+class MoveTo :
+	public MoveBy
 {
 public:
 	// 创建位移动画
-	ActionMoveTo(
+	MoveTo(
 		double duration,	/* 动画持续时长 */
 		Point pos			/* 位移至目标点的坐标 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual ActionMoveTo * clone() const override;
+	virtual MoveTo * clone() const override;
 
 protected:
 	// 初始化动画
 	virtual void _init() override;
 
 protected:
-	Point _EndPos;
+	Point _endPos;
 };
 
 
 // 相对缩放动画
-class ActionScaleBy :
+class ScaleBy :
 	public ActionGradual
 {
 public:
 	// 创建相对缩放动画
-	ActionScaleBy(
+	ScaleBy(
 		double duration,	/* 动画持续时长 */
 		double scale		/* 缩放比例变化 */
 	);
 
 	// 创建相对缩放动画
-	ActionScaleBy(
+	ScaleBy(
 		double duration,	/* 动画持续时长 */
 		double scaleX,		/* 横向缩放比例变化 */
 		double scaleY		/* 纵向缩放比例变化 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual ActionScaleBy * clone() const override;
+	virtual ScaleBy * clone() const override;
 
 	// 获取该动画的倒转
-	virtual ActionScaleBy * reverse() const override;
+	virtual ScaleBy * reverse() const override;
 
 protected:
 	// 初始化动画
@@ -339,60 +196,60 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double	_nBeginScaleX;
-	double	_nBeginScaleY;
-	double	_nVariationX;
-	double	_nVariationY;
+	double	_startScaleX;
+	double	_startScaleY;
+	double	_deltaX;
+	double	_deltaY;
 };
 
 
 // 缩放动画
-class ActionScaleTo :
-	public ActionScaleBy
+class ScaleTo :
+	public ScaleBy
 {
 public:
 	// 创建缩放动画
-	ActionScaleTo(
+	ScaleTo(
 		double duration,	/* 动画持续时长 */
 		double scale		/* 缩放至目标比例 */
 	);
 
 	// 创建缩放动画
-	ActionScaleTo(
+	ScaleTo(
 		double duration,	/* 动画持续时长 */
 		double scaleX,		/* 横向缩放至目标比例 */
 		double scaleY		/* 纵向缩放至目标比例 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual ActionScaleTo * clone() const override;
+	virtual ScaleTo * clone() const override;
 
 protected:
 	// 初始化动画
 	virtual void _init() override;
 
 protected:
-	double	_nEndScaleX;
-	double	_nEndScaleY;
+	double	_endScaleX;
+	double	_endScaleY;
 };
 
 
 // 透明度相对渐变动画
-class ActionOpacityBy :
+class OpacityBy :
 	public ActionGradual
 {
 public:
 	// 创建透明度相对渐变动画
-	ActionOpacityBy(
+	OpacityBy(
 		double duration,	/* 动画持续时长 */
 		double opacity		/* 透明度相对变化值 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual ActionOpacityBy * clone() const override;
+	virtual OpacityBy * clone() const override;
 
 	// 获取该动画的倒转
-	virtual ActionOpacityBy * reverse() const override;
+	virtual OpacityBy * reverse() const override;
 
 protected:
 	// 初始化动画
@@ -402,80 +259,80 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double _nBeginVal;
-	double _nVariation;
+	double _startVal;
+	double _deltaVal;
 };
 
 
 // 透明度渐变动画
-class ActionOpacityTo :
-	public ActionOpacityBy
+class OpacityTo :
+	public OpacityBy
 {
 public:
 	// 创建透明度渐变动画
-	ActionOpacityTo(
+	OpacityTo(
 		double duration,	/* 动画持续时长 */
 		double opacity		/* 透明度渐变至目标值 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual ActionOpacityTo * clone() const override;
+	virtual OpacityTo * clone() const override;
 
 protected:
 	// 初始化动画
 	virtual void _init() override;
 
 protected:
-	double _nEndVal;
+	double _endVal;
 };
 
 
 // 淡入动画
-class ActionFadeIn :
-	public ActionOpacityTo
+class FadeIn :
+	public OpacityTo
 {
 public:
 	// 创建淡入动画
-	ActionFadeIn(
+	FadeIn(
 		double duration		/* 动画持续时长 */
-	) 
-		: ActionOpacityTo(duration, 1) 
+	)
+	: OpacityTo(duration, 1) 
 	{
 	}
 };
 
 
 // 淡出动画
-class ActionFadeOut :
-	public ActionOpacityTo
+class FadeOut :
+	public OpacityTo
 {
 public:
 	// 创建淡出动画
-	ActionFadeOut(
+	FadeOut(
 		double duration		/* 动画持续时长 */
-	) 
-		: ActionOpacityTo(duration, 0) 
+	)
+	: OpacityTo(duration, 0) 
 	{
 	}
 };
 
 
 // 相对旋转动作
-class ActionRotateBy :
+class RotateBy :
 	public ActionGradual
 {
 public:
 	// 创建相对旋转动画
-	ActionRotateBy(
+	RotateBy(
 		double duration,	/* 动画持续时长 */
 		double rotation		/* 旋转角度变化值 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual ActionRotateBy * clone() const override;
+	virtual RotateBy * clone() const override;
 
 	// 获取该动画的倒转
-	virtual ActionRotateBy * reverse() const override;
+	virtual RotateBy * reverse() const override;
 
 protected:
 	// 初始化动画
@@ -485,61 +342,80 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double _nBeginVal;
-	double _nVariation;
+	double _startVal;
+	double _deltaVal;
 };
 
 
 // 旋转动作
-class ActionRotateTo :
-	public ActionRotateBy
+class RotateTo :
+	public RotateBy
 {
 public:
 	// 创建旋转动画
-	ActionRotateTo(
+	RotateTo(
 		double duration,	/* 动画持续时长 */
 		double rotation		/* 旋转角度至目标值 */
 	);
 
 	// 获取该动画的拷贝对象
-	virtual ActionRotateTo * clone() const override;
+	virtual RotateTo * clone() const override;
 
 protected:
 	// 初始化动画
 	virtual void _init() override;
 
 protected:
-	double _nEndVal;
+	double _endVal;
 };
 
 
-// 组合动作
-class ActionTwo :
-	public ActionBase
+// 延时动作
+class Delay :
+	public Action
 {
 public:
-	// 创建两个动作的连续动作
-	ActionTwo(
-		ActionBase * pActionFirst,		/* 第一个动作 */
-		ActionBase * pActionSecond,		/* 第二个动作 */
-		bool bAtSameTime = false		/* 同时开始 */
+	// 创建延时动作
+	Delay(
+		double duration	/* 延迟时长（秒） */
 	);
 
-	virtual ~ActionTwo();
+	// 获取该动作的拷贝对象
+	virtual Delay * clone() const override;
+
+protected:
+	// 初始化动作
+	virtual void _init() override;
+
+	// 执行动作
+	virtual void _update() override;
+
+protected:
+	double _delay;
+};
+
+
+// 循环动作
+class Loop :
+	public Action
+{
+public:
+	// 创建循环动作
+	Loop(
+		Action * action,	/* 执行循环的动作 */
+		int times = -1		/* 循环次数 */
+	);
+
+	virtual ~Loop();
 
 	// 获取该动作的拷贝对象
-	virtual ActionTwo * clone() const override;
-
-	// 获取该动作的倒转
-	virtual ActionTwo * reverse(
-		bool actionReverse = true	/* 子动作是否倒转 */
-	) const;
+	virtual Loop * clone() const override;
 
 	// 重置动作
 	virtual void reset() override;
 
 	// 销毁对象
-	virtual void destroy() override;
+	virtual void onDestroy() override;
 
 protected:
 	// 初始化动作
@@ -552,68 +428,91 @@ protected:
 	virtual void _resetTime() override;
 
 protected:
-	ActionBase*	_pFirstAction;
-	ActionBase*	_pSecondAction;
-	bool	_bAtSameTime;
+	Action * _action;
+	int _times;
+	int _totalTimes;
+};
+
+
+// 回调动作
+class CallFunc :
+	public Action
+{
+public:
+	// 创建执行函数对象的动作
+	CallFunc(
+		const Function& func /* 函数对象 */
+	);
+
+	// 获取该动作的拷贝对象
+	virtual CallFunc * clone() const override;
+
+protected:
+	// 初始化动作
+	virtual void _init() override;
+
+	// 执行动作
+	virtual void _update() override;
+
+protected:
+	Function _func;
 };
 
 
 // 顺序动作
-class ActionSequence :
-	public ActionBase
+class Sequence :
+	public Action
 {
 public:
 	// 创建顺序动作
-	ActionSequence();
+	Sequence();
 
 #ifdef HIGHER_THAN_VS2012
 	// 创建顺序动作
-	ActionSequence(
-		const std::initializer_list<ActionBase*>& vActions	/* 动作列表 */
+	Sequence(
+		const std::initializer_list<Action*>& vActions	/* 动作列表 */
 	);
 #else
 	// 创建顺序动作
-	ActionSequence(
+	Sequence(
 		int number,				/* 动作数量 */
-		ActionBase * action,	/* 第一个动作 */
+		Action * action,	/* 第一个动作 */
 		...
 	);
 #endif
 
-	virtual ~ActionSequence();
+	virtual ~Sequence();
 
 	// 在结尾添加动作
 	void add(
-		ActionBase * action
+		Action * action
 	);
 
 #ifdef HIGHER_THAN_VS2012
 	// 在结尾添加多个动作
 	void add(
-		const std::initializer_list<ActionBase*>& vActions	/* 动作列表 */
+		const std::initializer_list<Action*>& vActions	/* 动作列表 */
 	);
 #else
 	// 在结尾添加多个动作
 	void add(
 		int number,			/* 动作数量 */
-		ActionBase * action,	/* 第一个动作 */
+		Action * action,	/* 第一个动作 */
 		...
 	);
 #endif
 
 	// 获取该动作的拷贝对象
-	virtual ActionSequence * clone() const override;
+	virtual Sequence * clone() const override;
 
 	// 获取该动作的倒转
-	virtual ActionSequence * reverse(
-		bool actionReverse = true	/* 子动作是否倒转 */
-	) const;
+	virtual Sequence * reverse() const;
 
 	// 重置动作
 	virtual void reset() override;
 
 	// 销毁对象
-	virtual void destroy() override;
+	virtual void onDestroy() override;
 
 protected:
 	// 初始化动作
@@ -626,57 +525,65 @@ protected:
 	virtual void _resetTime() override;
 
 protected:
-	UINT _nActionIndex;
-	std::vector<ActionBase*> _vActions;
+	UINT _currIndex;
+	std::vector<Action*> _actions;
 };
 
 
-// 延时动作
-class ActionDelay :
-	public ActionBase
+// 同步动作
+class Spawn :
+	public Action
 {
 public:
-	// 创建延时动作
-	ActionDelay(
-		double duration	/* 延迟时长（秒） */
+	// 创建同步动作
+	Spawn();
+
+#ifdef HIGHER_THAN_VS2012
+	// 创建同步动作
+	Spawn(
+		const std::initializer_list<Action*>& vActions	/* 动作列表 */
+	);
+#else
+	// 创建同步动作
+	Spawn(
+		int number,			/* 动作数量 */
+		Action * action,	/* 第一个动作 */
+		...
+	);
+#endif
+
+	virtual ~Spawn();
+
+	// 在结尾添加动作
+	void add(
+		Action * action
 	);
 
-	// 获取该动作的拷贝对象
-	virtual ActionDelay * clone() const override;
-
-protected:
-	// 初始化动作
-	virtual void _init() override;
-
-	// 执行动作
-	virtual void _update() override;
-
-protected:
-	double _fDelayTime;
-};
-
-
-// 循环动作
-class ActionLoop :
-	public ActionBase
-{
-public:
-	// 创建循环动作
-	ActionLoop(
-		ActionBase * action,	/* 执行循环的动作 */
-		int times = -1		/* 循环次数 */
+#ifdef HIGHER_THAN_VS2012
+	// 在结尾添加多个动作
+	void add(
+		const std::initializer_list<Action*>& vActions	/* 动作列表 */
 	);
-
-	virtual ~ActionLoop();
+#else
+	// 在结尾添加多个动作
+	void add(
+		int number,			/* 动作数量 */
+		Action * action,	/* 第一个动作 */
+		...
+	);
+#endif
 
 	// 获取该动作的拷贝对象
-	virtual ActionLoop * clone() const override;
+	virtual Spawn * clone() const override;
+
+	// 获取该动作的倒转
+	virtual Spawn * reverse() const;
 
 	// 重置动作
 	virtual void reset() override;
 
 	// 销毁对象
-	virtual void destroy() override;
+	virtual void onDestroy() override;
 
 protected:
 	// 初始化动作
@@ -689,15 +596,13 @@ protected:
 	virtual void _resetTime() override;
 
 protected:
-	ActionBase * _pAction;
-	int _nTimes;
-	int _nTotalTimes;
+	std::vector<Action*> _actions;
 };
 
 
 // 帧动画
 class Animation :
-	public ActionBase
+	public Action
 {
 public:
 	// 创建帧动画
@@ -772,7 +677,7 @@ public:
 	virtual void reset() override;
 
 	// 销毁对象
-	virtual void destroy() override;
+	virtual void onDestroy() override;
 
 protected:
 	// 初始化动作
@@ -782,34 +687,9 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double	_fInterval;
-	UINT	_nFrameIndex;
-	std::vector<Image*> _vFrames;
-};
-
-
-// 回调动作
-class ActionFunc :
-	public ActionBase
-{
-public:
-	// 创建执行函数对象的动作
-	ActionFunc(
-		const Function& func /* 函数对象 */
-	);
-
-	// 获取该动作的拷贝对象
-	virtual ActionFunc * clone() const override;
-
-protected:
-	// 初始化动作
-	virtual void _init() override;
-
-	// 执行动作
-	virtual void _update() override;
-
-protected:
-	Function _Callback;
+	double	_interval;
+	UINT	_frameIndex;
+	std::vector<Image*> _frames;
 };
 
 

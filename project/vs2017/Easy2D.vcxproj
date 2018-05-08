@@ -197,22 +197,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Action\Action.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionBase.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionFunc.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionDelay.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionMoveBy.cpp" />
+    <ClCompile Include="..\..\core\Action\CallFunc.cpp" />
+    <ClCompile Include="..\..\core\Action\Delay.cpp" />
+    <ClCompile Include="..\..\core\Action\MoveBy.cpp" />
     <ClCompile Include="..\..\core\Action\Animation.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionMoveTo.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionLoop.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionOpacityBy.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionOpacityTo.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionRotateBy.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionRotateTo.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionScaleBy.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionScaleTo.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionSequence.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionTwo.cpp" />
+    <ClCompile Include="..\..\core\Action\MoveTo.cpp" />
+    <ClCompile Include="..\..\core\Action\Loop.cpp" />
+    <ClCompile Include="..\..\core\Action\OpacityBy.cpp" />
+    <ClCompile Include="..\..\core\Action\OpacityTo.cpp" />
+    <ClCompile Include="..\..\core\Action\RotateBy.cpp" />
+    <ClCompile Include="..\..\core\Action\RotateTo.cpp" />
+    <ClCompile Include="..\..\core\Action\ScaleBy.cpp" />
+    <ClCompile Include="..\..\core\Action\ScaleTo.cpp" />
+    <ClCompile Include="..\..\core\Action\Sequence.cpp" />
     <ClCompile Include="..\..\core\Action\ActionGradual.cpp" />
+    <ClCompile Include="..\..\core\Action\Spawn.cpp" />
     <ClCompile Include="..\..\core\Base\Game.cpp" />
     <ClCompile Include="..\..\core\Base\Input.cpp" />
     <ClCompile Include="..\..\core\Base\Renderer.cpp" />

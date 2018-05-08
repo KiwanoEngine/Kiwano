@@ -10,7 +10,7 @@ class Input;
 class Renderer;
 class Node;
 class Timer;
-class ActionBase;
+class Action;
 class Music;
 class Collider;
 class TransitionBase;
@@ -90,12 +90,12 @@ class ActionManager
 {
 	friend Game;
 	friend Node;
-	friend ActionBase;
+	friend Action;
 
 public:
 	// 执行动作
 	static void start(
-		ActionBase * action,
+		Action * action,
 		Node * target,
 		bool paused
 	);
@@ -125,12 +125,12 @@ public:
 	static void stopAll();
 
 	// 获取所有名称相同的动作
-	static std::vector<ActionBase *> get(
+	static std::vector<Action *> get(
 		const String& strActionName
 	);
 
 	// 获取所有动作
-	static std::vector<ActionBase*> getAll();
+	static std::vector<Action*> getAll();
 
 private:
 	// 更新动画状态
@@ -138,12 +138,12 @@ private:
 
 	// 添加动作
 	static void __add(
-		ActionBase * action
+		Action * action
 	);
 
 	// 删除动作
 	static void __remove(
-		ActionBase * action
+		Action * action
 	);
 
 	// 继续绑定在节点上的所有动作

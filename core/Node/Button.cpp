@@ -5,7 +5,7 @@
 
 
 e2d::Button::Button()
-	: _Callback(nullptr)
+	: _func(nullptr)
 	, _eBtnState(ButtonState::NORMAL)
 	, _bEnable(true)
 	, _bIsSelected(false)
@@ -17,7 +17,7 @@ e2d::Button::Button()
 }
 
 e2d::Button::Button(Node * normal, const Function& func)
-	: _Callback(nullptr)
+	: _func(nullptr)
 	, _eBtnState(ButtonState::NORMAL)
 	, _bEnable(true)
 	, _bIsSelected(false)
@@ -31,7 +31,7 @@ e2d::Button::Button(Node * normal, const Function& func)
 }
 
 e2d::Button::Button(Node * normal, Node * selected, const Function& func)
-	: _Callback(nullptr)
+	: _func(nullptr)
 	, _eBtnState(ButtonState::NORMAL)
 	, _bEnable(true)
 	, _bIsSelected(false)
@@ -46,7 +46,7 @@ e2d::Button::Button(Node * normal, Node * selected, const Function& func)
 }
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Function& func)
-	: _Callback(nullptr)
+	: _func(nullptr)
 	, _eBtnState(ButtonState::NORMAL)
 	, _bEnable(true)
 	, _bIsSelected(false)
@@ -62,7 +62,7 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Func
 }
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Function& func)
-	: _Callback(nullptr)
+	: _func(nullptr)
 	, _eBtnState(ButtonState::NORMAL)
 	, _bEnable(true)
 	, _bIsSelected(false)
@@ -174,7 +174,7 @@ void e2d::Button::setClickFunc(const Function& func)
 {
 	WARN_IF(_pNormal == nullptr, "Button cannot work without anything to show. Please set its normal displayed.");
 	
-	_Callback = func;
+	_func = func;
 }
 
 void e2d::Button::onFixedUpdate()
@@ -277,8 +277,8 @@ void e2d::Button::_updateVisiable()
 
 void e2d::Button::_runCallback()
 {
-	if (_Callback)
+	if (_func)
 	{
-		_Callback();
+		_func();
 	}
 }

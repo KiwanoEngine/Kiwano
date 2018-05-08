@@ -311,8 +311,8 @@ void e2d::ButtonToggle::_runCallback()
 	_bState = !_bState;
 	_updateState();
 
-	if (_Callback)
+	if (_func)
 	{
-		_Callback();
+		_func();
 	}
 }

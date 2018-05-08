@@ -15,10 +15,10 @@ void e2d::TransitionEmerge::_init(Scene * prev, Scene * next)
 
 void e2d::TransitionEmerge::_updateCustom()
 {
-	_sPrevLayerParam.opacity = float(1 - _fRateOfProgress);
-	_sNextLayerParam.opacity = float(_fRateOfProgress);
+	_sPrevLayerParam.opacity = float(1 - _delta);
+	_sNextLayerParam.opacity = float(_delta);
 
-	if (_fRateOfProgress >= 1)
+	if (_delta >= 1)
 	{
 		this->_stop();
 	}
