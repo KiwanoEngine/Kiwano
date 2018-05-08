@@ -6,35 +6,35 @@ static std::map<int, ID2D1Bitmap*> s_mBitmapsFromResource;
 
 
 e2d::Image::Image()
-	: _pBitmap(nullptr)
-	, _fSourceCropX(0)
-	, _fSourceCropY(0)
-	, _fSourceCropWidth(0)
-	, _fSourceCropHeight(0)
+	: _bitmap(nullptr)
+	, _cropX(0)
+	, _cropY(0)
+	, _cropWidth(0)
+	, _cropHeight(0)
 {
 }
 
 e2d::Image::Image(const String& filePath)
-	: _pBitmap(nullptr)
+	: _bitmap(nullptr)
 {
 	this->open(filePath);
 }
 
 e2d::Image::Image(int resNameId, const String& resType)
-	: _pBitmap(nullptr)
+	: _bitmap(nullptr)
 {
 	this->open(resNameId, resType);
 }
 
 e2d::Image::Image(const String& filePath, double cropX, double cropY, double cropWidth, double cropHeight)
-	: _pBitmap(nullptr)
+	: _bitmap(nullptr)
 {
 	this->open(filePath);
 	this->crop(cropX, cropY, cropWidth, cropHeight);
 }
 
 e2d::Image::Image(int resNameId, const String& resType, double cropX, double cropY, double cropWidth, double cropHeight)
-	: _pBitmap(nullptr)
+	: _bitmap(nullptr)
 {
 	this->open(resNameId, resType);
 	this->crop(cropX, cropY, cropWidth, cropHeight);
@@ -57,10 +57,10 @@ bool e2d::Image::open(const String& filePath)
 		return false;
 	}
 
-	_pBitmap = s_mBitmapsFromFile.at(filePath.getHashCode());
-	_fSourceCropX = _fSourceCropY = 0;
-	_fSourceCropWidth = _pBitmap->GetSize().width;
-	_fSourceCropHeight = _pBitmap->GetSize().height;
+	_bitmap = s_mBitmapsFromFile.at(filePath.getHashCode());
+	_cropX = _cropY = 0;
+	_cropWidth = _bitmap->GetSize().width;
+	_cropHeight = _bitmap->GetSize().height;
 	return true;
 }
 
@@ -72,44 +72,44 @@ bool e2d::Image::open(int resNameId, const String& resType)
 		return false;
 	}
 
-	_pBitmap = s_mBitmapsFromResource.at(resNameId);
-	_fSourceCropX = _fSourceCropY = 0;
-	_fSourceCropWidth = _pBitmap->GetSize().width;
-	_fSourceCropHeight = _pBitmap->GetSize().height;
+	_bitmap = s_mBitmapsFromResource.at(resNameId);
+	_cropX = _cropY = 0;
+	_cropWidth = _bitmap->GetSize().width;
+	_cropHeight = _bitmap->GetSize().height;
 	return true;
 }
 
 void e2d::Image::crop(double x, double y, double width, double height)
 {
-	if (_pBitmap)
+	if (_bitmap)
 	{
-		_fSourceCropX = min(max(x, 0), this->getSourceWidth());
-		_fSourceCropY = min(max(y, 0), this->getSourceHeight());
-		_fSourceCropWidth = min(max(width, 0), this->getSourceWidth() - _fSourceCropX);
-		_fSourceCropHeight = min(max(height, 0), this->getSourceHeight() - _fSourceCropY);
+		_cropX = min(max(x, 0), this->getSourceWidth());
+		_cropY = min(max(y, 0), this->getSourceHeight());
+		_cropWidth = min(max(width, 0), this->getSourceWidth() - _cropX);
+		_cropHeight = min(max(height, 0), this->getSourceHeight() - _cropY);
 	}
 }
 
 double e2d::Image::getWidth() const
 {
-	return _fSourceCropWidth;
+	return _cropWidth;
 }
 
 double e2d::Image::getHeight() const
 {
-	return _fSourceCropHeight;
+	return _cropHeight;
 }
 
 e2d::Size e2d::Image::getSize() const
 {
-	return Size(_fSourceCropWidth, _fSourceCropHeight);
+	return Size(_cropWidth, _cropHeight);
 }
 
 double e2d::Image::getSourceWidth() const
 {
-	if (_pBitmap)
+	if (_bitmap)
 	{
-		return _pBitmap->GetSize().width;
+		return _bitmap->GetSize().width;
 	}
 	else
 	{
@@ -119,9 +119,9 @@ double e2d::Image::getSourceWidth() const
 
 double e2d::Image::getSourceHeight() const
 {
-	if (_pBitmap)
+	if (_bitmap)
 	{
-		return _pBitmap->GetSize().height;
+		return _bitmap->GetSize().height;
 	}
 	else
 	{
@@ -131,7 +131,7 @@ double e2d::Image::getSourceHeight() const
 
 e2d::Size e2d::Image::getSourceSize() const
 {
-	if (_pBitmap)
+	if (_bitmap)
 	{
 		return Size(getSourceWidth(), getSourceHeight());
 	}
@@ -143,17 +143,17 @@ e2d::Size e2d::Image::getSourceSize() const
 
 double e2d::Image::getCropX() const
 {
-	return _fSourceCropX;
+	return _cropX;
 }
 
 double e2d::Image::getCropY() const
 {
-	return _fSourceCropY;
+	return _cropY;
 }
 
 e2d::Point e2d::Image::getCropPos() const
 {
-	return Point(_fSourceCropX, _fSourceCropY);
+	return Point(_cropX, _cropY);
 }
 
 bool e2d::Image::preload(const String& fileName)
@@ -376,5 +376,5 @@ void e2d::Image::clearCache()
 
 ID2D1Bitmap * e2d::Image::getBitmap()
 {
-	return _pBitmap;
+	return _bitmap;
 }

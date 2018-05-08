@@ -35,16 +35,16 @@ e2d::Rect::~Rect()
 void e2d::Rect::_renderLine()
 {
 	Renderer::getRenderTarget()->DrawRectangle(
-		D2D1::RectF(0, 0, _fWidth, _fHeight),
+		D2D1::RectF(0, 0, _width, _height),
 		Renderer::getSolidColorBrush(),
-		_fStrokeWidth
+		_strokeWidth
 	);
 }
 
 void e2d::Rect::_renderFill()
 {
 	Renderer::getRenderTarget()->FillRectangle(
-		D2D1::RectF(0, 0, _fWidth, _fHeight),
+		D2D1::RectF(0, 0, _width, _height),
 		Renderer::getSolidColorBrush()
 	);
 }

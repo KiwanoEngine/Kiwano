@@ -3,73 +3,73 @@
 #include "..\e2dnode.h"
 
 e2d::Collider::Collider()
-	: _bIsVisiable(true)
-	, _nColor(Color::RED, 0.7f)
-	, _pParentNode(nullptr)
-	, _pTransformedGeometry(nullptr)
-	, _bEnable(true)
-	, _bAutoResize(true)
+	: _visiable(true)
+	, _color(Color::RED, 0.7f)
+	, _parentNode(nullptr)
+	, _transformed(nullptr)
+	, _enable(true)
+	, _autoResize(true)
 {
 }
 
 e2d::Collider::~Collider()
 {
-	SafeReleaseInterface(&_pTransformedGeometry);
+	SafeReleaseInterface(&_transformed);
 }
 
 e2d::Node * e2d::Collider::getParentNode() const
 {
-	return _pParentNode;
+	return _parentNode;
 }
 
 e2d::Color e2d::Collider::getColor() const
 {
-	return _nColor;
+	return _color;
 }
 
 void e2d::Collider::setEnable(bool enable)
 {
-	_bEnable = enable;
+	_enable = enable;
 }
 
 void e2d::Collider::setVisiable(bool bVisiable)
 {
-	_bIsVisiable = bVisiable;
+	_visiable = bVisiable;
 }
 
 void e2d::Collider::setColor(Color color)
 {
-	_nColor = color;
+	_color = color;
 }
 
 void e2d::Collider::setAutoResize(bool enable)
 {
-	_bAutoResize = enable;
+	_autoResize = enable;
 }
 
 void e2d::Collider::_render()
 {
-	if (_pTransformedGeometry && _bEnable)
+	if (_transformed && _enable)
 	{
 		// 获取纯色画刷
 		ID2D1SolidColorBrush * pBrush = Renderer::getSolidColorBrush();
 		// 设置画刷颜色和透明度
-		pBrush->SetColor(_nColor.toColorF());
+		pBrush->SetColor(_color.toColorF());
 		// 绘制几何碰撞体
-		Renderer::getRenderTarget()->DrawGeometry(_pTransformedGeometry, pBrush);
+		Renderer::getRenderTarget()->DrawGeometry(_transformed, pBrush);
 	}
 }
 
 e2d::Relation e2d::Collider::getRelationWith(Collider * pCollider) const
 {
-	if (_pTransformedGeometry && pCollider->_pTransformedGeometry)
+	if (_transformed && pCollider->_transformed)
 	{
-		if (_bEnable && pCollider->_bEnable)
+		if (_enable && pCollider->_enable)
 		{
 			D2D1_GEOMETRY_RELATION relation;
 
-			_pTransformedGeometry->CompareWithGeometry(
-				pCollider->_pTransformedGeometry,
+			_transformed->CompareWithGeometry(
+				pCollider->_transformed,
 				D2D1::Matrix3x2F::Identity(),
 				&relation
 			);
@@ -82,21 +82,21 @@ e2d::Relation e2d::Collider::getRelationWith(Collider * pCollider) const
 
 void e2d::Collider::_transform()
 {
-	if (_pParentNode && _bEnable)
+	if (_parentNode && _enable)
 	{
-		if (_bAutoResize)
+		if (_autoResize)
 		{
 			this->_resize();
 		}
 
 		// 释放原碰撞体
-		SafeReleaseInterface(&_pTransformedGeometry);
+		SafeReleaseInterface(&_transformed);
 
 		// 根据父节点转换几何图形
 		Renderer::getID2D1Factory()->CreateTransformedGeometry(
 			getD2dGeometry(),
-			_pParentNode->_MatriFinal,
-			&_pTransformedGeometry
+			_parentNode->_finalMatri,
+			&_transformed
 		);
 
 		ColliderManager::__updateCollider(this);

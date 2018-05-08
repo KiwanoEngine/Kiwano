@@ -6,49 +6,18 @@ namespace e2d
 
 
 class SceneManager;
-class TransitionEmerge;
-class TransitionFade;
-class TransitionMove;
-
-
-// 场景过渡动画生成器
-class Transition
-{
-public:
-	// 创建淡入淡出式的场景切换动画
-	static TransitionFade * Fade(
-		double duration				/* 动画持续时长 */
-	);
-
-	// 创建淡入淡出式的场景切换动画
-	static TransitionFade * Fade(
-		double fadeOutDuration,		/* 前一场景淡出动画持续时长 */
-		double fadeInDuration		/* 后一场景淡入动画持续时长 */
-	);
-
-	// 创建浮现式的场景切换动画
-	static TransitionEmerge * Emerge(
-		double duration				/* 动画持续时长 */
-	);
-
-	// 创建移动式的场景切换动画
-	static TransitionMove * Move(
-		double duration,				/* 动画持续时长 */
-		Direct direct = Direct::LEFT	/* 场景移动方向 */
-	);
-};
 
 
 // 基础过渡动画
-class TransitionBase :
+class Transition :
 	public Object
 {
 	friend SceneManager;
 
 public:
-	TransitionBase(double duration);
+	Transition(double duration);
 
-	virtual ~TransitionBase();
+	virtual ~Transition();
 
 	// 场景切换动画是否结束
 	bool isDone();
@@ -79,22 +48,22 @@ protected:
 	virtual void _stop();
 
 protected:
-	bool _bEnd;
-	double _fLast;
+	bool _end;
+	double _last;
 	double _duration;
 	double _delta;
-	Size _WindowSize;
-	Scene * _pPrevScene;
-	Scene * _pNextScene;
-	ID2D1Layer * _pPrevLayer;
-	ID2D1Layer * _pNextLayer;
-	D2D1_LAYER_PARAMETERS _sPrevLayerParam;
-	D2D1_LAYER_PARAMETERS _sNextLayerParam;
+	Size _windowSize;
+	Scene * _outScene;
+	Scene * _inScene;
+	ID2D1Layer * _outLayer;
+	ID2D1Layer * _inLayer;
+	D2D1_LAYER_PARAMETERS _outLayerParam;
+	D2D1_LAYER_PARAMETERS _inLayerParam;
 };
 
 
 class TransitionFade :
-	public TransitionBase
+	public Transition
 {
 public:
 	// 创建淡入淡出式的场景切换动画
@@ -120,14 +89,14 @@ protected:
 	virtual void _reset() override;
 
 protected:
-	double _fFadeOutDuration;
-	double _fFadeInDuration;
-	bool _bFadeOutTransioning;
+	double _fadeOutDuration;
+	double _fadeInDuration;
+	bool _fadeOutTransioning;
 };
 
 
 class TransitionEmerge :
-	public TransitionBase
+	public Transition
 {
 public:
 	// 创建浮现式的场景切换动画
@@ -149,13 +118,13 @@ protected:
 
 
 class TransitionMove :
-	public TransitionBase
+	public Transition
 {
 public:
 	// 创建移动式的场景切换动画
 	TransitionMove(
-		double moveDuration,			/* 场景移动动画持续时长 */
-		Direct direct = Direct::LEFT	/* 场景移动方向 */
+		double moveDuration,					/* 场景移动动画持续时长 */
+		Direction direction = Direction::LEFT	/* 场景移动方向 */
 	);
 
 protected:
@@ -170,9 +139,9 @@ protected:
 	virtual void _reset() override;
 
 protected:
-	Direct _Direct;
-	Vector _Vector;
-	Point _NextPos;
+	Direction _direction;
+	Vector _posDelta;
+	Point _startPos;
 };
 
 }

@@ -1,52 +1,52 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::TransitionMove::TransitionMove(double duration, Direct direct)
-	: TransitionBase(duration)
-	, _Direct(direct)
+e2d::TransitionMove::TransitionMove(double duration, Direction direction)
+	: Transition(duration)
+	, _direction(direction)
 {
 }
 
 void e2d::TransitionMove::_init(Scene * prev, Scene * next)
 {
-	TransitionBase::_init(prev, next);
+	Transition::_init(prev, next);
 
-	double width = _WindowSize.width;
-	double height = _WindowSize.height;
-	if (_Direct == Direct::UP)
+	double width = _windowSize.width;
+	double height = _windowSize.height;
+	if (_direction == Direction::UP)
 	{
-		_Vector = Vector(0, -height);
-		_NextPos = Point(0, height);
+		_posDelta = Vector(0, -height);
+		_startPos = Point(0, height);
 	}
-	else if (_Direct == Direct::DOWN)
+	else if (_direction == Direction::DOWN)
 	{
-		_Vector = Vector(0, height);
-		_NextPos = Point(0, -height);
+		_posDelta = Vector(0, height);
+		_startPos = Point(0, -height);
 	}
-	else if (_Direct == Direct::LEFT)
+	else if (_direction == Direction::LEFT)
 	{
-		_Vector = Vector(-width, 0);
-		_NextPos = Point(width, 0);
+		_posDelta = Vector(-width, 0);
+		_startPos = Point(width, 0);
 	}
-	else if (_Direct == Direct::RIGHT)
+	else if (_direction == Direction::RIGHT)
 	{
-		_Vector = Vector(width, 0);
-		_NextPos = Point(-width, 0);
+		_posDelta = Vector(width, 0);
+		_startPos = Point(-width, 0);
 	}
 
-	if (_pPrevScene) _pPrevScene->getRoot()->setPos(0, 0);
-	_pNextScene->getRoot()->setPos(_NextPos);
+	if (_outScene) _outScene->getRoot()->setPos(0, 0);
+	_inScene->getRoot()->setPos(_startPos);
 }
 
 void e2d::TransitionMove::_updateCustom()
 {
-	if (_pPrevScene)
+	if (_outScene)
 	{
-		_pPrevScene->getRoot()->setPos(_Vector * _delta);
+		_outScene->getRoot()->setPos(_posDelta * _delta);
 	}
-	if (_pNextScene)
+	if (_inScene)
 	{
-		_pNextScene->getRoot()->setPos(_NextPos + _Vector * _delta);
+		_inScene->getRoot()->setPos(_startPos + _posDelta * _delta);
 	}
 
 	if (_delta >= 1)
@@ -57,7 +57,7 @@ void e2d::TransitionMove::_updateCustom()
 
 void e2d::TransitionMove::_reset()
 {
-	if (_pPrevScene) _pPrevScene->getRoot()->setPos(0, 0);
-	_pNextScene->getRoot()->setPos(0, 0);
+	if (_outScene) _outScene->getRoot()->setPos(0, 0);
+	_inScene->getRoot()->setPos(0, 0);
 }
 

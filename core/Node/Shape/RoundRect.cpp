@@ -1,28 +1,28 @@
 #include "..\..\e2dshape.h"
 
 e2d::RoundRect::RoundRect()
-	: _fRadiusX(0)
-	, _fRadiusY(0)
+	: _radiusX(0)
+	, _radiusY(0)
 {
 }
 
 e2d::RoundRect::RoundRect(double width, double height, double radiusX, double radiusY)
-	: _fRadiusX(static_cast<float>(radiusX))
-	, _fRadiusY(static_cast<float>(radiusY))
+	: _radiusX(float(radiusX))
+	, _radiusY(float(radiusY))
 {
 	this->setSize(width, height);
 }
 
 e2d::RoundRect::RoundRect(Size size, double radiusX, double radiusY)
-	: _fRadiusX(static_cast<float>(radiusX))
-	, _fRadiusY(static_cast<float>(radiusY))
+	: _radiusX(float(radiusX))
+	, _radiusY(float(radiusY))
 {
 	this->setSize(size);
 }
 
 e2d::RoundRect::RoundRect(double top, double left, double width, double height, double radiusX, double radiusY)
-	: _fRadiusX(static_cast<float>(radiusX))
-	, _fRadiusY(static_cast<float>(radiusY))
+	: _radiusX(float(radiusX))
+	, _radiusY(float(radiusY))
 {
 	this->setPivot(0, 0);
 	this->setPos(top, left);
@@ -30,8 +30,8 @@ e2d::RoundRect::RoundRect(double top, double left, double width, double height, 
 }
 
 e2d::RoundRect::RoundRect(Point topLeft, Size size, double radiusX, double radiusY)
-	: _fRadiusX(static_cast<float>(radiusX))
-	, _fRadiusY(static_cast<float>(radiusY))
+	: _radiusX(float(radiusX))
+	, _radiusY(float(radiusY))
 {
 	this->setPivot(0, 0);
 	this->setPos(topLeft);
@@ -44,37 +44,37 @@ e2d::RoundRect::~RoundRect()
 
 double e2d::RoundRect::getRadiusX() const
 {
-	return _fRadiusX;
+	return _radiusX;
 }
 
 double e2d::RoundRect::getRadiusY() const
 {
-	return _fRadiusY;
+	return _radiusY;
 }
 
 void e2d::RoundRect::setRadiusX(double radiusX)
 {
-	_fRadiusX = static_cast<float>(radiusX);
+	_radiusX = float(radiusX);
 }
 
 void e2d::RoundRect::setRadiusY(double radiusY)
 {
-	_fRadiusY = static_cast<float>(radiusY);
+	_radiusY = float(radiusY);
 }
 
 void e2d::RoundRect::_renderLine()
 {
 	Renderer::getRenderTarget()->DrawRoundedRectangle(
-		D2D1::RoundedRect(D2D1::RectF(0, 0, _fWidth, _fHeight), _fRadiusX, _fRadiusY),
+		D2D1::RoundedRect(D2D1::RectF(0, 0, _width, _height), _radiusX, _radiusY),
 		Renderer::getSolidColorBrush(),
-		_fStrokeWidth
+		_strokeWidth
 	);
 }
 
 void e2d::RoundRect::_renderFill()
 {
 	Renderer::getRenderTarget()->FillRoundedRectangle(
-		D2D1::RoundedRect(D2D1::RectF(0, 0, _fWidth, _fHeight), _fRadiusX, _fRadiusY),
+		D2D1::RoundedRect(D2D1::RectF(0, 0, _width, _height), _radiusX, _radiusY),
 		Renderer::getSolidColorBrush()
 	);
 }

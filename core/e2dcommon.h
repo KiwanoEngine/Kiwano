@@ -11,15 +11,16 @@ namespace e2d
 {
 
 
-struct Size;
+class Size;
 
 // 表示坐标的结构体
-struct Point
+class Point
 {
+public:
 	double x;	// X 坐标
 	double y;	// Y 坐标
 
-	/* 构造函数 */
+public:
 	Point();
 
 	Point(double x, double y);
@@ -37,12 +38,13 @@ struct Point
 typedef Point Vector;
 
 // 表示大小的结构体
-struct Size
+class Size
 {
+public:
 	double width;	// 宽度
 	double height;	// 高度
 
-	/* 构造函数 */
+public:
 	Size();
 
 	Size(double width, double height);
@@ -311,7 +313,7 @@ protected:
 		double alpha
 	);
 
-protected:
+public:
 	float r;
 	float g;
 	float b;
@@ -429,7 +431,7 @@ enum class Cursor : int
 
 
 // 方向
-enum class Direct : int
+enum class Direction : int
 {
 	UP,			/* 上 */
 	DOWN,		/* 下 */
@@ -477,8 +479,9 @@ enum class ColliderType : int
 
 
 // 文本样式
-struct TextStyle
+class TextStyle
 {
+public:
 	String		fontFamily;			// 字体
 	double		fontSize;			// 字号
 	Color		color;				// 颜色
@@ -495,7 +498,7 @@ struct TextStyle
 	double		outlineWidth;		// 描边线宽
 	LineJoin	outlineJoin;		// 描边线相交样式
 
-	/* 构造函数 */
+public:
 	TextStyle();
 
 	TextStyle(
@@ -593,7 +596,7 @@ public:
 	virtual void onDestroy() {}
 
 private:
-	int _nRefCount;
+	int _refCount;
 };
 
 
@@ -701,24 +704,24 @@ public:
 	static void clearCache();
 
 protected:
-	double	_fSourceCropX;
-	double	_fSourceCropY;
-	double	_fSourceCropWidth;
-	double	_fSourceCropHeight;
-	ID2D1Bitmap * _pBitmap;
+	double	_cropX;
+	double	_cropY;
+	double	_cropWidth;
+	double	_cropHeight;
+	ID2D1Bitmap * _bitmap;
 };
 
 
 class Node;
 class SceneManager;
-class TransitionBase;
+class Transition;
 
 // 场景
 class Scene :
 	public Object
 {
 	friend SceneManager;
-	friend TransitionBase;
+	friend Transition;
 
 public:
 	Scene();
@@ -799,11 +802,9 @@ protected:
 	void _update();
 
 protected:
-	bool _bAutoUpdate;
-	bool _bSortNeeded;
-	bool _bWillSave;
-	bool _bColliderVisiable;
-	Node * _pRoot;
+	bool _autoUpdate;
+	bool _colliderVisiable;
+	Node * _root;
 };
 
 

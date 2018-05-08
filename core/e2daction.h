@@ -84,7 +84,7 @@ protected:
 	bool	_done;
 	bool	_initialized;
 	Node *	_target;
-	double	_fLast;
+	double	_last;
 };
 
 

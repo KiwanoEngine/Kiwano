@@ -19,7 +19,7 @@ void e2d::Delay::_update()
 {
 	Action::_update();
 	// 判断时间间隔是否足够
-	if ((Time::getTotalTime() - _fLast) >= _delay)
+	if ((Time::getTotalTime() - _last) >= _delay)
 	{
 		this->stop();
 	}

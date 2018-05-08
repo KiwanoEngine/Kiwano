@@ -191,7 +191,7 @@ bool e2d::String::operator!=(const e2d::String &str)
 
 wchar_t &e2d::String::operator[](int index)
 {
-	return _str[static_cast<size_t>(index)];
+	return _str[size_t(index)];
 }
 
 e2d::String e2d::String::operator+(const wchar_t *str)
@@ -440,7 +440,7 @@ e2d::String e2d::String::subtract(int offset, int count) const
 
 void e2d::String::insert(const String & str, int pos)
 {
-	_str.insert(static_cast<size_t>(pos), str._str);
+	_str.insert(size_t(pos), str._str);
 }
 
 void e2d::String::replace(const String & from, const String & to)
@@ -458,13 +458,13 @@ void e2d::String::replace(const String & from, const String & to)
 
 void e2d::String::erase(int offset, int count)
 {
-	_str.erase(static_cast<size_t>(offset), static_cast<size_t>(count));
+	_str.erase(size_t(offset), size_t(count));
 }
 
 int e2d::String::find(const String & str, int offset) const
 {
 	size_t index;
-	if ((index = _str.find(str._str, static_cast<size_t>(offset))) == std::wstring::npos)
+	if ((index = _str.find(str._str, size_t(offset))) == std::wstring::npos)
 	{
 		return -1;
 	}

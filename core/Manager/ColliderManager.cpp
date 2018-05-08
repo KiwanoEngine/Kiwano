@@ -81,7 +81,7 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 	if (!s_bCollisionEnable)
 		return;
 
-	Node* pActiveNode = pActiveCollider->_pParentNode;
+	Node* pActiveNode = pActiveCollider->_parentNode;
 	if (pActiveNode)
 	{
 		// 获取节点所在场景
@@ -96,7 +96,7 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 				continue;
 
 			// 获取被碰撞节点
-			Node* pPassiveNode = pPassiveCollider->_pParentNode;
+			Node* pPassiveNode = pPassiveCollider->_parentNode;
 			// 判断两节点是否处于同一场景中
 			if (pPassiveNode &&
 				pPassiveNode->getParentScene() == pCurrentScene)
@@ -105,7 +105,7 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 				auto IsCollideWith = [](Node * active, Node * passive) -> bool
 				{
 					unsigned int hash = passive->getHashName();
-					for (auto collider : active->_vColliders)
+					for (auto collider : active->_colliders)
 						if (collider == hash)
 							return true;
 					return false;
@@ -228,7 +228,7 @@ void e2d::ColliderManager::__addCollider(Collider * pCollider)
 {
 	if (pCollider)
 	{
-		if (pCollider->_pParentNode)
+		if (pCollider->_parentNode)
 		{
 			WARN_IF(true, "ColliderManager::__add Failed! The shape is already added.");
 			return;

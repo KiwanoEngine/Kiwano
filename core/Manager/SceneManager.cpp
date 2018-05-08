@@ -2,12 +2,13 @@
 #include "..\e2dbase.h"
 #include "..\e2dtransition.h"
 
+static bool s_bSaveCurrScene = true;
 static e2d::Scene * s_pCurrScene = nullptr;
 static e2d::Scene * s_pNextScene = nullptr;
-static e2d::TransitionBase * s_pTransition = nullptr;
+static e2d::Transition * s_pTransition = nullptr;
 static std::stack<e2d::Scene*> s_SceneStack;
 
-void e2d::SceneManager::enter(Scene * scene, TransitionBase * transition /* = nullptr */, bool saveCurrentScene /* = true */)
+void e2d::SceneManager::enter(Scene * scene, Transition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
 {
 	ASSERT(scene, "Next scene NULL pointer exception!");
 	scene->retain();
@@ -31,11 +32,11 @@ void e2d::SceneManager::enter(Scene * scene, TransitionBase * transition /* = nu
 
 	if (s_pCurrScene)
 	{
-		s_pCurrScene->_bWillSave = saveCurrentScene;
+		s_bSaveCurrScene = saveCurrentScene;
 	}
 }
 
-void e2d::SceneManager::back(TransitionBase * transition /* = nullptr */)
+void e2d::SceneManager::back(Transition * transition /* = nullptr */)
 {
 	// 栈为空时，调用返回场景函数失败
 	WARN_IF(s_SceneStack.size() == 0, "Scene stack is empty!");
@@ -48,7 +49,7 @@ void e2d::SceneManager::back(TransitionBase * transition /* = nullptr */)
 	// 返回上一场景时，不保存当前场景
 	if (s_pCurrScene)
 	{
-		s_pCurrScene->_bWillSave = false;
+		s_bSaveCurrScene = false;
 	}
 
 	// 设置切换场景动画
@@ -120,7 +121,7 @@ void e2d::SceneManager::__update()
 		s_pCurrScene->onExit();
 
 		// 若要保存当前场景，把它放入栈中
-		if (s_pCurrScene->_bWillSave)
+		if (s_bSaveCurrScene)
 		{
 			s_SceneStack.push(s_pCurrScene);
 		}

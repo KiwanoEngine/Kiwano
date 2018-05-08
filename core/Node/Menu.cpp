@@ -1,13 +1,13 @@
 #include "..\e2dnode.h"
 
 e2d::Menu::Menu()
-	: _bEnable(true)
+	: _enable(true)
 {
 }
 
 #ifdef HIGHER_THAN_VS2012
 e2d::Menu::Menu(const std::initializer_list<Button*>& vButtons)
-	: _bEnable(true)
+	: _enable(true)
 {
 	for (auto button : vButtons)
 	{
@@ -18,7 +18,7 @@ e2d::Menu::Menu(const std::initializer_list<Button*>& vButtons)
 #else
 
 e2d::Menu::Menu(int number, Button * button1, ...)
-	: _bEnable(true)
+	: _enable(true)
 {
 	Button ** ppButton = &button1;
 
@@ -33,21 +33,21 @@ e2d::Menu::Menu(int number, Button * button1, ...)
 
 bool e2d::Menu::isEnable() const
 {
-	return _bEnable;
+	return _enable;
 }
 
 size_t e2d::Menu::getButtonCount() const
 {
-	return _vButtons.size();
+	return _buttons.size();
 }
 
 void e2d::Menu::setEnable(bool enable)
 {
-	if (_bEnable != enable)
+	if (_enable != enable)
 	{
-		_bEnable = enable;
+		_enable = enable;
 
-		for (auto button : _vButtons)
+		for (auto button : _buttons)
 		{
 			button->setEnable(enable);
 		}
@@ -59,14 +59,14 @@ void e2d::Menu::addButton(Button * button)
 	if (button)
 	{
 		this->addChild(button);
-		_vButtons.push_back(button);
-		button->setEnable(_bEnable);
+		_buttons.push_back(button);
+		button->setEnable(_enable);
 	}
 }
 
 bool e2d::Menu::removeButton(Button * button)
 {
-	if (_vButtons.empty())
+	if (_buttons.empty())
 	{
 		return false;
 	}
@@ -75,14 +75,14 @@ bool e2d::Menu::removeButton(Button * button)
 
 	if (button)
 	{
-		size_t size = _vButtons.size();
+		size_t size = _buttons.size();
 		for (size_t i = 0; i < size; i++)
 		{
-			if (_vButtons[i] == button)
+			if (_buttons[i] == button)
 			{
 				// 移除按钮前，将它启用
 				button->setEnable(true);
-				_vButtons.erase(_vButtons.begin() + i);
+				_buttons.erase(_buttons.begin() + i);
 				return true;
 			}
 		}

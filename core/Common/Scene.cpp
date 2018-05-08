@@ -3,14 +3,12 @@
 #include "..\e2dmanager.h"
 
 e2d::Scene::Scene()
-	: _bWillSave(true)
-	, _bAutoUpdate(true)
-	, _bSortNeeded(false)
-	, _bColliderVisiable(false)
-	, _pRoot(new Node())
+	: _autoUpdate(true)
+	, _colliderVisiable(false)
+	, _root(new Node())
 {
-	_pRoot->retain();
-	_pRoot->_setParentScene(this);
+	_root->retain();
+	_root->_setParentScene(this);
 }
 
 e2d::Scene::~Scene()
@@ -19,36 +17,36 @@ e2d::Scene::~Scene()
 
 void e2d::Scene::_render()
 {
-	_pRoot->_render();
+	_root->_render();
 
-	if (_bColliderVisiable)
+	if (_colliderVisiable)
 	{
 		// 恢复矩阵转换
 		Renderer::getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 		// 绘制所有几何图形
-		_pRoot->_drawCollider();
+		_root->_drawCollider();
 	}
 }
 
 void e2d::Scene::_update()
 {
 	// 执行 onUpdate 函数
-	if (_bAutoUpdate)
+	if (_autoUpdate)
 	{
 		this->onUpdate();
 	}
 	// 更新根节点
-	_pRoot->_update();
+	_root->_update();
 }
 
 void e2d::Scene::setAutoUpdate(bool bAutoUpdate)
 {
-	_bAutoUpdate = bAutoUpdate;
+	_autoUpdate = bAutoUpdate;
 }
 
 void e2d::Scene::add(Node * child, int order /* = 0 */)
 {
-	_pRoot->addChild(child, order);
+	_root->addChild(child, order);
 }
 
 #ifdef HIGHER_THAN_VS2012
@@ -63,35 +61,35 @@ void e2d::Scene::add(const std::initializer_list<Node*>& vNodes, int order)
 
 bool e2d::Scene::remove(Node * child)
 {
-	return _pRoot->removeChild(child);
+	return _root->removeChild(child);
 }
 
 std::vector<e2d::Node*> e2d::Scene::get(const String& name) const
 {
-	return _pRoot->getChildren(name);
+	return _root->getChildren(name);
 }
 
 e2d::Node * e2d::Scene::getOne(const String& name) const
 {
-	return _pRoot->getChild(name);
+	return _root->getChild(name);
 }
 
 std::vector<e2d::Node*> e2d::Scene::getAll() const
 {
-	return _pRoot->getAllChildren();
+	return _root->getAllChildren();
 }
 
 e2d::Node * e2d::Scene::getRoot() const
 {
-	return _pRoot;
+	return _root;
 }
 
 void e2d::Scene::showCollider(bool visiable)
 {
-	_bColliderVisiable = visiable;
+	_colliderVisiable = visiable;
 }
 
 void e2d::Scene::onDestroy()
 {
-	SafeRelease(&_pRoot);
+	SafeRelease(&_root);
 }

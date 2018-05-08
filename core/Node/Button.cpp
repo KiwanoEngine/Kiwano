@@ -6,25 +6,25 @@
 
 e2d::Button::Button()
 	: _func(nullptr)
-	, _eBtnState(ButtonState::NORMAL)
-	, _bEnable(true)
-	, _bIsSelected(false)
-	, _pNormal(nullptr)
-	, _pMouseover(nullptr)
-	, _pSelected(nullptr)
-	, _pDisabled(nullptr)
+	, _state(ButtonState::NORMAL)
+	, _enable(true)
+	, _isSelected(false)
+	, _normal(nullptr)
+	, _mouseover(nullptr)
+	, _selected(nullptr)
+	, _disabled(nullptr)
 {
 }
 
 e2d::Button::Button(Node * normal, const Function& func)
 	: _func(nullptr)
-	, _eBtnState(ButtonState::NORMAL)
-	, _bEnable(true)
-	, _bIsSelected(false)
-	, _pNormal(nullptr)
-	, _pMouseover(nullptr)
-	, _pSelected(nullptr)
-	, _pDisabled(nullptr)
+	, _state(ButtonState::NORMAL)
+	, _enable(true)
+	, _isSelected(false)
+	, _normal(nullptr)
+	, _mouseover(nullptr)
+	, _selected(nullptr)
+	, _disabled(nullptr)
 {
 	this->setNormal(normal);
 	this->setClickFunc(func);
@@ -32,13 +32,13 @@ e2d::Button::Button(Node * normal, const Function& func)
 
 e2d::Button::Button(Node * normal, Node * selected, const Function& func)
 	: _func(nullptr)
-	, _eBtnState(ButtonState::NORMAL)
-	, _bEnable(true)
-	, _bIsSelected(false)
-	, _pNormal(nullptr)
-	, _pMouseover(nullptr)
-	, _pSelected(nullptr)
-	, _pDisabled(nullptr)
+	, _state(ButtonState::NORMAL)
+	, _enable(true)
+	, _isSelected(false)
+	, _normal(nullptr)
+	, _mouseover(nullptr)
+	, _selected(nullptr)
+	, _disabled(nullptr)
 {
 	this->setNormal(normal);
 	this->setSelected(selected);
@@ -47,13 +47,13 @@ e2d::Button::Button(Node * normal, Node * selected, const Function& func)
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Function& func)
 	: _func(nullptr)
-	, _eBtnState(ButtonState::NORMAL)
-	, _bEnable(true)
-	, _bIsSelected(false)
-	, _pNormal(nullptr)
-	, _pMouseover(nullptr)
-	, _pSelected(nullptr)
-	, _pDisabled(nullptr)
+	, _state(ButtonState::NORMAL)
+	, _enable(true)
+	, _isSelected(false)
+	, _normal(nullptr)
+	, _mouseover(nullptr)
+	, _selected(nullptr)
+	, _disabled(nullptr)
 {
 	this->setNormal(normal);
 	this->setMouseOver(mouseover);
@@ -63,13 +63,13 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Func
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Function& func)
 	: _func(nullptr)
-	, _eBtnState(ButtonState::NORMAL)
-	, _bEnable(true)
-	, _bIsSelected(false)
-	, _pNormal(nullptr)
-	, _pMouseover(nullptr)
-	, _pSelected(nullptr)
-	, _pDisabled(nullptr)
+	, _state(ButtonState::NORMAL)
+	, _enable(true)
+	, _isSelected(false)
+	, _normal(nullptr)
+	, _mouseover(nullptr)
+	, _selected(nullptr)
+	, _disabled(nullptr)
 {
 	this->setNormal(normal);
 	this->setMouseOver(mouseover);
@@ -80,17 +80,17 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * dis
 
 bool e2d::Button::isEnable() const
 {
-	return _bEnable;
+	return _enable;
 }
 
 void e2d::Button::setNormal(Node * normal)
 {
-	if (normal != _pNormal)
+	if (normal != _normal)
 	{
 		// 移除旧的
-		if (_pNormal)
+		if (_normal)
 		{
-			this->removeChild(_pNormal);
+			this->removeChild(_normal);
 		}
 		// 添加新的
 		if (normal)
@@ -98,7 +98,7 @@ void e2d::Button::setNormal(Node * normal)
 			this->addChild(normal);
 			this->setSize(normal->getWidth(), normal->getHeight());
 		}
-		_pNormal = normal;
+		_normal = normal;
 
 		_updateVisiable();
 	}
@@ -106,73 +106,73 @@ void e2d::Button::setNormal(Node * normal)
 
 void e2d::Button::setMouseOver(Node * mouseover)
 {
-	if (mouseover != _pNormal)
+	if (mouseover != _normal)
 	{
 		// 移除旧的
-		if (_pMouseover)
+		if (_mouseover)
 		{
-			this->removeChild(_pMouseover);
+			this->removeChild(_mouseover);
 		}
 		// 添加新的
 		if (mouseover)
 		{
 			this->addChild(mouseover);
 		}
-		_pMouseover = mouseover;
+		_mouseover = mouseover;
 		_updateVisiable();
 	}
 }
 
 void e2d::Button::setSelected(Node * selected)
 {
-	if (selected != _pNormal)
+	if (selected != _normal)
 	{
 		// 移除旧的
-		if (_pSelected)
+		if (_selected)
 		{
-			this->removeChild(_pSelected);
+			this->removeChild(_selected);
 		}
 		// 添加新的
 		if (selected)
 		{
 			this->addChild(selected);
 		}
-		_pSelected = selected;
+		_selected = selected;
 		_updateVisiable();
 	}
 }
 
 void e2d::Button::setDisabled(Node * disabled)
 {
-	if (disabled != _pNormal)
+	if (disabled != _normal)
 	{
 		// 移除旧的
-		if (_pDisabled)
+		if (_disabled)
 		{
-			this->removeChild(_pDisabled);
+			this->removeChild(_disabled);
 		}
 		// 添加新的
 		if (disabled)
 		{
 			this->addChild(disabled);
 		}
-		_pDisabled = disabled;
+		_disabled = disabled;
 		_updateVisiable();
 	}
 }
 
 void e2d::Button::setEnable(bool enable)
 {
-	if (_bEnable != enable)
+	if (_enable != enable)
 	{
-		_bEnable = enable;
+		_enable = enable;
 		_updateVisiable();
 	}
 }
 
 void e2d::Button::setClickFunc(const Function& func)
 {
-	WARN_IF(_pNormal == nullptr, "Button cannot work without anything to show. Please set its normal displayed.");
+	WARN_IF(_normal == nullptr, "Button cannot work without anything to show. Please set its normal displayed.");
 	
 	_func = func;
 }
@@ -182,40 +182,40 @@ void e2d::Button::onFixedUpdate()
 	if (SceneManager::isTransitioning())
 		return;
 
-	if (_bEnable && _bVisiable && _pNormal)
+	if (_enable && _visiable && _normal)
 	{
 		if (Input::isMouseLButtonRelease())
 		{
 			// 鼠标左键抬起时，判断鼠标坐标是否在按钮内部
-			if (_bIsSelected &&
-				_pNormal->isPointIn(Input::getMousePos()))
+			if (_isSelected &&
+				_normal->isPointIn(Input::getMousePos()))
 			{
 				_runCallback();
 			}
-			// 标记 _bIsSelected 为 false
-			_bIsSelected = false;
+			// 标记 _isSelected 为 false
+			_isSelected = false;
 		}
 
 		if (Input::isMouseLButtonPress())
 		{
-			if (_pNormal->isPointIn(Input::getMousePos()))
+			if (_normal->isPointIn(Input::getMousePos()))
 			{
-				// 鼠标左键按下，且位于按钮内时，标记 _bIsSelected 为 true
-				_bIsSelected = true;
+				// 鼠标左键按下，且位于按钮内时，标记 _isSelected 为 true
+				_isSelected = true;
 				return;
 			}
 		}
 
-		if (_bIsSelected && Input::isMouseLButtonDown())
+		if (_isSelected && Input::isMouseLButtonDown())
 		{
-			if (_pNormal->isPointIn(Input::getMousePos()))
+			if (_normal->isPointIn(Input::getMousePos()))
 			{
 				_setState(ButtonState::SELECTED);
 				Window::setCursor(Cursor::HAND);
 				return;
 			}
 		}
-		else if (_pNormal->isPointIn(Input::getMousePos()))
+		else if (_normal->isPointIn(Input::getMousePos()))
 		{
 			_setState(ButtonState::MOUSEOVER);
 			Window::setCursor(Cursor::HAND);
@@ -225,7 +225,7 @@ void e2d::Button::onFixedUpdate()
 		_setState(ButtonState::NORMAL);
 	}
 
-	if (_bVisiable && !_bEnable && _pNormal && _pNormal->isPointIn(Input::getMousePos()))
+	if (_visiable && !_enable && _normal && _normal->isPointIn(Input::getMousePos()))
 	{
 		Window::setCursor(Cursor::NO);
 	}
@@ -233,44 +233,44 @@ void e2d::Button::onFixedUpdate()
 
 void e2d::Button::_setState(ButtonState state)
 {
-	if (_eBtnState != state)
+	if (_state != state)
 	{
-		_eBtnState = state;
+		_state = state;
 		_updateVisiable();
 	}
 }
 
 void e2d::Button::_updateVisiable()
 {
-	SAFE_SET(_pNormal, setVisiable, false);
-	SAFE_SET(_pMouseover, setVisiable, false);
-	SAFE_SET(_pSelected, setVisiable, false);
-	SAFE_SET(_pDisabled, setVisiable, false);
+	SAFE_SET(_normal, setVisiable, false);
+	SAFE_SET(_mouseover, setVisiable, false);
+	SAFE_SET(_selected, setVisiable, false);
+	SAFE_SET(_disabled, setVisiable, false);
 
-	if (_bEnable)
+	if (_enable)
 	{
-		if (_eBtnState == ButtonState::SELECTED && _pSelected)
+		if (_state == ButtonState::SELECTED && _selected)
 		{
-			_pSelected->setVisiable(true);
+			_selected->setVisiable(true);
 		}
-		else if (_eBtnState == ButtonState::MOUSEOVER && _pMouseover)
+		else if (_state == ButtonState::MOUSEOVER && _mouseover)
 		{
-			_pMouseover->setVisiable(true);
+			_mouseover->setVisiable(true);
 		}
 		else
 		{
-			if (_pNormal) _pNormal->setVisiable(true);
+			if (_normal) _normal->setVisiable(true);
 		}
 	}
 	else
 	{
-		if (_pDisabled)
+		if (_disabled)
 		{
-			_pDisabled->setVisiable(true);
+			_disabled->setVisiable(true);
 		}
 		else
 		{
-			if (_pNormal) _pNormal->setVisiable(true);
+			if (_normal) _normal->setVisiable(true);
 		}
 	}
 }

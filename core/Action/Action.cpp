@@ -6,7 +6,7 @@ e2d::Action::Action()
 	, _done(false)
 	, _initialized(false)
 	, _target(nullptr)
-	, _fLast(0)
+	, _last(0)
 {
 	ActionManager::__add(this);
 }
@@ -35,7 +35,7 @@ bool e2d::Action::isRunning()
 void e2d::Action::resume()
 {
 	_running = true;
-	_fLast = Time::getTotalTime();
+	_last = Time::getTotalTime();
 }
 
 void e2d::Action::pause()
@@ -78,7 +78,7 @@ void e2d::Action::_init()
 {
 	_initialized = true;
 	// 记录当前时间
-	_fLast = Time::getTotalTime();
+	_last = Time::getTotalTime();
 }
 
 void e2d::Action::_update()
@@ -93,10 +93,10 @@ void e2d::Action::reset()
 {
 	_initialized = false;
 	_done = false;
-	_fLast = Time::getTotalTime();
+	_last = Time::getTotalTime();
 }
 
 void e2d::Action::_resetTime()
 {
-	_fLast = Time::getTotalTime();
+	_last = Time::getTotalTime();
 }

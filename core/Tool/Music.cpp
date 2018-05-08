@@ -762,7 +762,7 @@ double e2d::Music::getVolume()
 
 void e2d::Music::setVolume(double fVolume)
 {
-	s_fMusicVolume = min(max(static_cast<float>(fVolume), -224), 224);
+	s_fMusicVolume = min(max(float(fVolume), -224), 224);
 	for (auto pair : GetMusicFileList())
 	{
 		pair.second->setVolume(s_fMusicVolume);

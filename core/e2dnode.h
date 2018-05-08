@@ -6,7 +6,7 @@ namespace e2d
 
 
 class Action;
-class TransitionBase;
+class Transition;
 class Collider;
 class ColliderManager;
 
@@ -15,7 +15,7 @@ class Node :
 {
 	friend Scene;
 	friend Collider;
-	friend TransitionBase;
+	friend Transition;
 	friend ColliderManager;
 
 public:
@@ -443,33 +443,33 @@ protected:
 
 protected:
 	String		_name;
-	unsigned	_nHashName;
-	float		_fPosX;
-	float		_fPosY;
-	float		_fWidth;
-	float		_fHeight;
-	float		_fScaleX;
-	float		_fScaleY;
-	float		_fRotation;
-	float		_fSkewAngleX;
-	float		_fSkewAngleY;
-	float		_fDisplayOpacity;
-	float		_fRealOpacity;
-	float		_fPivotX;
-	float		_fPivotY;
+	unsigned	_hashName;
+	float		_posX;
+	float		_posY;
+	float		_width;
+	float		_height;
+	float		_scaleX;
+	float		_scaleY;
+	float		_rotation;
+	float		_skewAngleX;
+	float		_skewAngleY;
+	float		_displayOpacity;
+	float		_realOpacity;
+	float		_pivotX;
+	float		_pivotY;
 	int			_nOrder;
-	bool		_bVisiable;
-	bool		_bAutoUpdate;
-	bool		_bSortChildrenNeeded;
-	bool		_bTransformNeeded;
-	bool		_bPositionFixed;
-	Collider *	_pCollider;
-	Scene *		_pParentScene;
-	Node *		_pParent;
-	D2D1::Matrix3x2F		_MatriInitial;
-	D2D1::Matrix3x2F		_MatriFinal;
-	std::set<unsigned int>	_vColliders;
-	std::vector<Node*>		_vChildren;
+	bool		_visiable;
+	bool		_autoUpdate;
+	bool		_needSort;
+	bool		_needTransform;
+	bool		_positionFixed;
+	Collider *	_collider;
+	Scene *		_parentScene;
+	Node *		_parent;
+	D2D1::Matrix3x2F		_initialMatri;
+	D2D1::Matrix3x2F		_finalMatri;
+	std::set<unsigned int>	_colliders;
+	std::vector<Node*>		_children;
 };
 
 
@@ -551,7 +551,7 @@ public:
 	virtual void onDestroy() override;
 
 protected:
-	Image * _pImage;
+	Image * _image;
 };
 
 
@@ -735,10 +735,10 @@ protected:
 	void _createLayout();
 
 protected:
-	String	_sText;
-	TextStyle _TextStyle;
-	IDWriteTextFormat * _pDWriteTextFormat;
-	IDWriteTextLayout * _pDWriteTextLayout;
+	String	_text;
+	TextStyle _style;
+	IDWriteTextFormat * _textFormat;
+	IDWriteTextLayout * _textLayout;
 };
 
 
@@ -829,13 +829,13 @@ protected:
 	virtual void _runCallback();
 
 protected:
-	Node *		_pNormal;
-	Node *		_pMouseover;
-	Node *		_pSelected;
-	Node *		_pDisabled;
-	bool		_bEnable;
-	bool		_bIsSelected;
-	ButtonState	_eBtnState;
+	Node *		_normal;
+	Node *		_mouseover;
+	Node *		_selected;
+	Node *		_disabled;
+	bool		_enable;
+	bool		_isSelected;
+	ButtonState	_state;
 	Function	_func;
 };
 
@@ -943,15 +943,11 @@ protected:
 	virtual void _runCallback() override;
 
 protected:
-	Node *	_pNormalOn;
-	Node *	_pNormalOff;
-	Node *	_pMouseoverOn;
-	Node *	_pMouseoverOff;
-	Node *	_pSelectedOn;
-	Node *	_pSelectedOff;
-	Node *	_pDisabledOn;
-	Node *	_pDisabledOff;
-	bool	_bState;
+	Node *	_normalOff;
+	Node *	_mouseoverOff;
+	Node *	_selectedOff;
+	Node *	_disabledOff;
+	bool	_toggle;
 };
 
 
@@ -998,8 +994,8 @@ public:
 	);
 
 protected:
-	bool _bEnable;
-	std::vector<Button*> _vButtons;
+	bool _enable;
+	std::vector<Button*> _buttons;
 };
 
 }

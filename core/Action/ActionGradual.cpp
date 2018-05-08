@@ -22,7 +22,7 @@ void e2d::ActionGradual::_update()
 		return;
 	}
 	// 计算动画进度
-	_delta = min((Time::getTotalTime() - _fLast) / _duration, 1);
+	_delta = min((Time::getTotalTime() - _last) / _duration, 1);
 	// 判断动作是否结束
 	if (_delta >= 1)
 	{

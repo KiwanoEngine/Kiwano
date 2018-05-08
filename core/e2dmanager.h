@@ -13,7 +13,7 @@ class Timer;
 class Action;
 class Music;
 class Collider;
-class TransitionBase;
+class Transition;
 
 // 对象管理器
 class ObjectManager
@@ -49,13 +49,13 @@ public:
 	// 切换场景
 	static void enter(
 		Scene * scene,						/* 下一个场景的指针 */
-		TransitionBase * transition = nullptr,	/* 场景切换动画 */
+		Transition * transition = nullptr,	/* 场景切换动画 */
 		bool saveCurrentScene = true		/* 是否保存当前场景 */
 	);
 
 	// 返回上一场景
 	static void back(
-		TransitionBase * transition = nullptr	/* 场景切换动画 */
+		Transition * transition = nullptr	/* 场景切换动画 */
 	);
 
 	// 清空保存的所有场景

@@ -2,37 +2,37 @@
 
 
 e2d::Sprite::Sprite()
-	: _pImage(nullptr)
+	: _image(nullptr)
 {
 }
 
 e2d::Sprite::Sprite(Image * image)
-	: _pImage(nullptr)
+	: _image(nullptr)
 {
 	open(image);
 }
 
 e2d::Sprite::Sprite(const String& filePath)
-	: _pImage(nullptr)
+	: _image(nullptr)
 {
 	open(filePath);
 }
 
 e2d::Sprite::Sprite(int resNameId, const String& resType)
-	: _pImage(nullptr)
+	: _image(nullptr)
 {
 	open(resNameId, resType);
 }
 
 e2d::Sprite::Sprite(const String& filePath, double x, double y, double width, double height)
-	: _pImage(nullptr)
+	: _image(nullptr)
 {
 	open(filePath);
 	crop(x, y, width, height);
 }
 
 e2d::Sprite::Sprite(int resNameId, const String& resType, double x, double y, double width, double height)
-	: _pImage(nullptr)
+	: _image(nullptr)
 {
 	open(resNameId, resType);
 	crop(x, y, width, height);
@@ -46,11 +46,11 @@ bool e2d::Sprite::open(Image * image)
 {
 	if (image)
 	{
-		SafeRelease(&_pImage);
-		_pImage = image;
-		_pImage->retain();
+		SafeRelease(&_image);
+		_image = image;
+		_image->retain();
 
-		Node::setSize(_pImage->getWidth(), _pImage->getHeight());
+		Node::setSize(_image->getWidth(), _image->getHeight());
 		return true;
 	}
 	return false;
@@ -58,15 +58,15 @@ bool e2d::Sprite::open(Image * image)
 
 bool e2d::Sprite::open(const String& filePath)
 {
-	if (!_pImage)
+	if (!_image)
 	{
-		_pImage = new (std::nothrow) Image();
-		_pImage->retain();
+		_image = new (std::nothrow) Image();
+		_image->retain();
 	}
 
-	if (_pImage->open(filePath))
+	if (_image->open(filePath))
 	{
-		Node::setSize(_pImage->getWidth(), _pImage->getHeight());
+		Node::setSize(_image->getWidth(), _image->getHeight());
 		return true;
 	}
 	return false;
@@ -74,15 +74,15 @@ bool e2d::Sprite::open(const String& filePath)
 
 bool e2d::Sprite::open(int resNameId, const String& resType)
 {
-	if (!_pImage)
+	if (!_image)
 	{
-		_pImage = new (std::nothrow) Image();
-		_pImage->retain();
+		_image = new (std::nothrow) Image();
+		_image->retain();
 	}
 
-	if (_pImage->open(resNameId, resType))
+	if (_image->open(resNameId, resType))
 	{
-		Node::setSize(_pImage->getWidth(), _pImage->getHeight());
+		Node::setSize(_image->getWidth(), _image->getHeight());
 		return true;
 	}
 	return false;
@@ -90,36 +90,36 @@ bool e2d::Sprite::open(int resNameId, const String& resType)
 
 void e2d::Sprite::crop(double x, double y, double width, double height)
 {
-	_pImage->crop(x, y, width, height);
+	_image->crop(x, y, width, height);
 	Node::setSize(
-		min(max(width, 0), _pImage->getSourceWidth() - _pImage->getCropX()),
-		min(max(height, 0), _pImage->getSourceHeight() - _pImage->getCropY())
+		min(max(width, 0), _image->getSourceWidth() - _image->getCropX()),
+		min(max(height, 0), _image->getSourceHeight() - _image->getCropY())
 	);
 }
 
 e2d::Image * e2d::Sprite::getImage() const
 {
-	return _pImage;
+	return _image;
 }
 
 void e2d::Sprite::onRender()
 {
-	if (_pImage && _pImage->getBitmap())
+	if (_image && _image->getBitmap())
 	{
 		// ªÒ»°Õº∆¨≤√ºÙŒª÷√
-		float fCropX = static_cast<float>(_pImage->getCropX());
-		float fCropY = static_cast<float>(_pImage->getCropY());
+		float fCropX = float(_image->getCropX());
+		float fCropY = float(_image->getCropY());
 		// ‰÷»æÕº∆¨
 		Renderer::getRenderTarget()->DrawBitmap(
-			_pImage->getBitmap(),
-			D2D1::RectF(0, 0, _fWidth, _fHeight),
-			_fDisplayOpacity,
+			_image->getBitmap(),
+			D2D1::RectF(0, 0, _width, _height),
+			_displayOpacity,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			D2D1::RectF(
 				fCropX,
 				fCropY,
-				fCropX + _fWidth,
-				fCropY + _fHeight
+				fCropX + _width,
+				fCropY + _height
 			)
 		);
 	}
@@ -128,5 +128,5 @@ void e2d::Sprite::onRender()
 void e2d::Sprite::onDestroy()
 {
 	Node::onDestroy();
-	SafeRelease(&_pImage);
+	SafeRelease(&_image);
 }

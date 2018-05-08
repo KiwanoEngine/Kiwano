@@ -168,12 +168,6 @@
     <ClCompile Include="..\..\core\Common\Function.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Transition\TransitionBase.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Transition\Transition.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Action\Action.cpp">
       <Filter>Action</Filter>
     </ClCompile>
@@ -215,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Action\Spawn.cpp">
       <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\Transition.cpp">
+      <Filter>Transition</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

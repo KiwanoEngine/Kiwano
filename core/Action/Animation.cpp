@@ -87,10 +87,10 @@ void e2d::Animation::_update()
 	}
 
 	// 判断时间间隔是否足够
-	while ((Time::getTotalTime() - _fLast) >= _interval)
+	while ((Time::getTotalTime() - _last) >= _interval)
 	{
 		// 重新记录时间
-		_fLast += _interval;
+		_last += _interval;
 		// 加载关键帧
 		static_cast<Sprite*>(_target)->open(_frames[_frameIndex]);
 		_frameIndex++;
