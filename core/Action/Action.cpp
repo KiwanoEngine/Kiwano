@@ -75,19 +75,19 @@ e2d::ActionLoop * e2d::Action::Loop(ActionBase * action, int times)
 	return new (std::nothrow) ActionLoop(action, times);
 }
 
-e2d::ActionFunc * e2d::Action::Func(Function func)
+e2d::ActionFunc * e2d::Action::Func(const Function& func)
 {
 	return new (std::nothrow) ActionFunc(func);
 }
 
 #ifdef HIGHER_THAN_VS2012
 
-e2d::ActionSequence * e2d::Action::Sequence(const InitList<ActionBase*>& vActions)
+e2d::ActionSequence * e2d::Action::Sequence(const std::initializer_list<ActionBase*>& vActions)
 {
 	return new (std::nothrow) ActionSequence(vActions);
 }
 
-e2d::Animation * e2d::Action::Animation(double interval, const InitList<Image*>& vFrames)
+e2d::Animation * e2d::Action::Animation(double interval, const std::initializer_list<Image*>& vFrames)
 {
 	return new (std::nothrow) e2d::Animation(interval, vFrames);
 }

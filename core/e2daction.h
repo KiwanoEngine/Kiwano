@@ -120,19 +120,19 @@ public:
 
 	// 创建执行函数对象的动作
 	static e2d::ActionFunc* Func(
-		Function func		/* 函数对象 */
+		const Function& func		/* 函数对象 */
 	);
 
 #ifdef HIGHER_THAN_VS2012
 	// 创建顺序动作
 	static e2d::ActionSequence* Sequence(
-		const InitList<ActionBase*>& vActions	/* 动作数组 */
+		const std::initializer_list<ActionBase*>& vActions	/* 动作列表 */
 	);
 
 	// 创建特定帧间隔的帧动画
 	static e2d::Animation* Animation(
-		double interval,					/* 帧间隔（秒） */
-		const InitList<Image*>& vFrames		/* 关键帧数组 */
+		double interval,									/* 帧间隔（秒） */
+		const std::initializer_list<Image*>& vFrames		/* 关键帧列表 */
 	);
 #else
 	// 创建顺序动作
@@ -171,8 +171,8 @@ public:
 	virtual bool isRunning();
 
 	// 开始动作
-	virtual void setTarget(
-		Node* pTarget	/* 执行该动作的目标 */
+	virtual void startWithTarget(
+		Node* target	/* 执行该动作的目标 */
 	);
 
 	// 继续动作
@@ -215,7 +215,7 @@ protected:
 	virtual void _update();
 
 	// 获取动作结束状态
-	virtual bool _isEnding();
+	virtual bool _isDone();
 
 	// 重置动画时间
 	virtual void _resetTime();
@@ -231,6 +231,7 @@ protected:
 };
 
 
+// 持续动作
 class ActionGradual :
 	public ActionBase
 {
@@ -253,6 +254,7 @@ protected:
 };
 
 
+// 相对位移动画
 class ActionMoveBy :
 	public ActionGradual
 {
@@ -282,6 +284,7 @@ protected:
 };
 
 
+// 位移动画
 class ActionMoveTo :
 	public ActionMoveBy
 {
@@ -304,6 +307,7 @@ protected:
 };
 
 
+// 相对缩放动画
 class ActionScaleBy :
 	public ActionGradual
 {
@@ -342,6 +346,7 @@ protected:
 };
 
 
+// 缩放动画
 class ActionScaleTo :
 	public ActionScaleBy
 {
@@ -372,6 +377,7 @@ protected:
 };
 
 
+// 透明度相对渐变动画
 class ActionOpacityBy :
 	public ActionGradual
 {
@@ -401,6 +407,7 @@ protected:
 };
 
 
+// 透明度渐变动画
 class ActionOpacityTo :
 	public ActionOpacityBy
 {
@@ -423,6 +430,7 @@ protected:
 };
 
 
+// 淡入动画
 class ActionFadeIn :
 	public ActionOpacityTo
 {
@@ -434,6 +442,7 @@ public:
 };
 
 
+// 淡出动画
 class ActionFadeOut :
 	public ActionOpacityTo
 {
@@ -445,6 +454,7 @@ public:
 };
 
 
+// 相对旋转动作
 class ActionRotateBy :
 	public ActionGradual
 {
@@ -474,6 +484,7 @@ protected:
 };
 
 
+// 旋转动作
 class ActionRotateTo :
 	public ActionRotateBy
 {
@@ -496,6 +507,7 @@ protected:
 };
 
 
+// 组合动作
 class ActionTwo :
 	public ActionBase
 {
@@ -540,6 +552,7 @@ protected:
 };
 
 
+// 顺序动作
 class ActionSequence :
 	public ActionBase
 {
@@ -550,7 +563,7 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 创建顺序动作
 	ActionSequence(
-		const InitList<ActionBase*>& vActions	/* 动作数组 */
+		const std::initializer_list<ActionBase*>& vActions	/* 动作列表 */
 	);
 #else
 	// 创建顺序动作
@@ -571,7 +584,7 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 在结尾添加多个动作
 	void add(
-		const InitList<ActionBase*>& vActions	/* 动作数组 */
+		const std::initializer_list<ActionBase*>& vActions	/* 动作列表 */
 	);
 #else
 	// 在结尾添加多个动作
@@ -612,6 +625,7 @@ protected:
 };
 
 
+// 延时动作
 class ActionDelay :
 	public ActionBase
 {
@@ -636,6 +650,7 @@ protected:
 };
 
 
+// 循环动作
 class ActionLoop :
 	public ActionBase
 {
@@ -674,6 +689,7 @@ protected:
 };
 
 
+// 帧动画
 class Animation :
 	public ActionBase
 {
@@ -689,13 +705,13 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 创建帧动画
 	Animation(
-		const InitList<Image*>& vImages	/* 关键帧数组 */
+		const std::initializer_list<Image*>& vImages	/* 关键帧列表 */
 	);
 
 	// 创建特定帧间隔的帧动画
 	Animation(
-		double interval,				/* 帧间隔（秒） */
-		const InitList<Image*>& vImages	/* 关键帧数组 */
+		double interval,								/* 帧间隔（秒） */
+		const std::initializer_list<Image*>& vImages	/* 关键帧列表 */
 	);
 #else
 	// 创建帧动画
@@ -724,7 +740,7 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 添加多个关键帧
 	void add(
-		const InitList<Image*>& vImages	/* 关键帧数组 */
+		const std::initializer_list<Image*>& vImages	/* 关键帧列表 */
 	);
 #else
 	// 添加多个关键帧
@@ -766,13 +782,14 @@ protected:
 };
 
 
+// 回调动作
 class ActionFunc :
 	public ActionBase
 {
 public:
 	// 创建执行函数对象的动作
 	ActionFunc(
-		Function func /* 函数对象 */
+		const Function& func /* 函数对象 */
 	);
 
 	// 获取该动作的拷贝对象

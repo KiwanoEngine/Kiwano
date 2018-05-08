@@ -182,7 +182,7 @@ class InputManager
 public:
 	// 添加输入监听
 	static void add(
-		Function func,				/* 监听到用户输入时的执行函数 */
+		const Function& func,		/* 监听到用户输入时的执行函数 */
 		const String& name = L"",	/* 监听器名称 */
 		bool paused = false			/* 是否暂停 */
 	);
@@ -235,7 +235,7 @@ public:
 
 	// 添加碰撞监听
 	static void add(
-		Function func,				/* 监听到碰撞时的执行函数 */
+		const Function& func,		/* 监听到碰撞时的执行函数 */
 		const String& name = L"",	/* 监听器名称 */
 		bool paused = false			/* 是否暂停 */
 	);

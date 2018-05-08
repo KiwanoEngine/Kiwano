@@ -15,7 +15,7 @@ void e2d::ActionManager::__update()
 	{
 		auto action = s_vRunningActions[i];
 		// 获取动作运行状态
-		if (action->_isEnding())
+		if (action->_isDone())
 		{
 			// 动作已经结束
 			action->release();
@@ -66,7 +66,7 @@ void e2d::ActionManager::__startAction(ActionBase * pAction, Node * pTargetNode)
 
 	if (pAction)
 	{
-		pAction->setTarget(pTargetNode);
+		pAction->startWithTarget(pTargetNode);
 		pAction->retain();
 		s_vRunningActions.push_back(pAction);
 	}

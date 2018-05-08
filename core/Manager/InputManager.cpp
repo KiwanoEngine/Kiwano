@@ -6,7 +6,7 @@ class Listener
 {
 public:
 	Listener(
-		e2d::Function func,
+		const e2d::Function& func,
 		const e2d::String& name,
 		bool paused
 	)
@@ -37,7 +37,7 @@ public:
 static std::vector<Listener*> s_vListeners;
 
 
-void e2d::InputManager::add(Function func, const String& name, bool paused)
+void e2d::InputManager::add(const Function& func, const String& name, bool paused)
 {
 	auto listener = new Listener(func, name, paused);
 	s_vListeners.push_back(listener);
@@ -45,58 +45,58 @@ void e2d::InputManager::add(Function func, const String& name, bool paused)
 
 void e2d::InputManager::pause(const String& name)
 {
-	for (auto pListener : s_vListeners)
+	for (auto listener : s_vListeners)
 	{
-		if (pListener->name == name)
+		if (listener->name == name)
 		{
-			pListener->running = false;
+			listener->running = false;
 		}
 	}
 }
 
 void e2d::InputManager::resume(const String& name)
 {
-	for (auto pListener : s_vListeners)
+	for (auto listener : s_vListeners)
 	{
-		if (pListener->name == name)
+		if (listener->name == name)
 		{
-			pListener->running = true;
+			listener->running = true;
 		}
 	}
 }
 
 void e2d::InputManager::stop(const String& name)
 {
-	for (auto pListener : s_vListeners)
+	for (auto listener : s_vListeners)
 	{
-		if (pListener->name == name)
+		if (listener->name == name)
 		{
-			pListener->stopped = true;
+			listener->stopped = true;
 		}
 	}
 }
 
 void e2d::InputManager::pauseAll()
 {
-	for (auto pListener : s_vListeners)
+	for (auto listener : s_vListeners)
 	{
-		pListener->running = false;
+		listener->running = false;
 	}
 }
 
 void e2d::InputManager::resumeAll()
 {
-	for (auto pListener : s_vListeners)
+	for (auto listener : s_vListeners)
 	{
-		pListener->running = true;
+		listener->running = true;
 	}
 }
 
 void e2d::InputManager::stopAll()
 {
-	for (auto pListener : s_vListeners)
+	for (auto listener : s_vListeners)
 	{
-		pListener->stopped = true;
+		listener->stopped = true;
 	}
 }
 
@@ -107,17 +107,17 @@ void e2d::InputManager::__update()
 
 	for (size_t i = 0; i < s_vListeners.size(); i++)
 	{
-		auto pListener = s_vListeners[i];
+		auto listener = s_vListeners[i];
 		// Çå³ýÒÑÍ£Ö¹µÄ¼àÌýÆ÷
-		if (pListener->stopped)
+		if (listener->stopped)
 		{
-			delete pListener;
+			delete listener;
 			s_vListeners.erase(s_vListeners.begin() + i);
 		}
 		else
 		{
 			// ¸üÐÂ¼àÌýÆ÷
-			pListener->update();
+			listener->update();
 			++i;
 		}
 	}

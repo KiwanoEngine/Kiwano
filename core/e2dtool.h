@@ -162,16 +162,16 @@ class Timer
 	friend Game;
 
 public:
-	// 启动定时器
+	// 启动定时器（每帧执行一次）
 	static void start(
-		Function func,				/* 执行函数 */
-		const String& name			/* 定时器名称 */
+		const Function& func,		/* 执行函数 */
+		const String& name = L""	/* 定时器名称 */
 	);
 
 	// 启动定时器
 	static void start(
-		Function func,				/* 执行函数 */
-		double delay = 0,			/* 时间间隔（秒） */
+		const Function& func,		/* 执行函数 */
+		double delay,				/* 时间间隔（秒） */
 		int times = -1,				/* 执行次数（设 -1 为永久执行） */
 		bool paused = false,		/* 是否暂停 */
 		const String& name = L""	/* 定时器名称 */
@@ -179,7 +179,7 @@ public:
 
 	// 启动仅执行一次的定时器
 	static void startOnce(
-		Function func,				/* 执行的函数 */
+		const Function& func,		/* 执行的函数 */
 		double timeOut				/* 等待的时长（秒） */
 	);
 

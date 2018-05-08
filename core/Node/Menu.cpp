@@ -6,7 +6,7 @@ e2d::Menu::Menu()
 }
 
 #ifdef HIGHER_THAN_VS2012
-e2d::Menu::Menu(const InitList<Button*>& vButtons)
+e2d::Menu::Menu(const std::initializer_list<Button*>& vButtons)
 	: m_bEnable(true)
 {
 	for (auto button : vButtons)

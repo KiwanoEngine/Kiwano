@@ -23,12 +23,6 @@ public:
 
 	virtual ~Node();
 
-	// 进入场景时执行
-	virtual void onEnter() {}
-
-	// 离开场景时执行
-	virtual void onExit() {}
-
 	// 更新节点
 	virtual void onUpdate() {}
 
@@ -347,7 +341,7 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 添加多个可碰撞节点的名称
 	virtual void addColliableName(
-		const InitList<String>& vCollliderName	/* 名称数组 */
+		const std::initializer_list<String>& vCollliderName	/* 名称列表 */
 	);
 #endif
 
@@ -365,8 +359,8 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 添加多个子节点
 	virtual void addChild(
-		const InitList<Node*>& vNodes,	/* 节点数组 */
-		int order = 0							/* 渲染顺序 */
+		const std::initializer_list<Node*>& vNodes,	/* 节点列表 */
+		int order = 0								/* 渲染顺序 */
 	);
 #endif
 
@@ -433,12 +427,6 @@ protected:
 	// 渲染图形
 	void _drawCollider();
 
-	// 节点被添加到场景时的执行程序
-	void _onEnter();
-
-	// 节点从场景中消失时的执行程序
-	void _onExit();
-
 	// 设置节点所在场景
 	void _setParentScene(
 		Scene * scene
@@ -472,7 +460,6 @@ protected:
 	int			m_nOrder;
 	bool		m_bVisiable;
 	bool		m_bAutoUpdate;
-	bool		m_bDisplayedInScene;
 	bool		m_bSortChildrenNeeded;
 	bool		m_bTransformNeeded;
 	bool		m_bPositionFixed;
@@ -764,32 +751,32 @@ public:
 
 	// 创建按钮
 	Button(
-		Node * normal,			/* 普通状态 */
-		Function func = nullptr	/* 按钮点击后的执行函数 */
+		Node * normal,					/* 普通状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建按钮
 	Button(
-		Node * normal,			/* 普通状态 */
-		Node * selected,		/* 鼠标按下状态 */
-		Function func = nullptr	/* 按钮点击后的执行函数 */
+		Node * normal,					/* 普通状态 */
+		Node * selected,				/* 鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建按钮
 	Button(
-		Node * normal,			/* 普通状态 */
-		Node * mouseover,		/* 鼠标移入状态 */
-		Node * selected,		/* 鼠标按下状态 */
-		Function func = nullptr	/* 按钮点击后的执行函数 */
+		Node * normal,					/* 普通状态 */
+		Node * mouseover,				/* 鼠标移入状态 */
+		Node * selected,				/* 鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建按钮
 	Button(
-		Node * normal,			/* 普通状态 */
-		Node * mouseover,		/* 鼠标移入状态 */
-		Node * selected,		/* 鼠标移入状态 */
-		Node * disabled,		/* 按钮禁用状态 */
-		Function func = nullptr	/* 按钮点击后的执行函数 */
+		Node * normal,					/* 普通状态 */
+		Node * mouseover,				/* 鼠标移入状态 */
+		Node * selected,				/* 鼠标移入状态 */
+		Node * disabled,				/* 按钮禁用状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 获取按钮状态是启用还是禁用
@@ -822,7 +809,7 @@ public:
 
 	// 设置按钮点击后的执行函数
 	void setClickFunc(
-		Function func
+		const Function& func
 	);
 
 	// 更新按钮状态
@@ -862,42 +849,42 @@ public:
 
 	// 创建开关按钮
 	ButtonToggle(
-		Node * onNormal,		/* 按钮打开时，普通状态 */
-		Node * offNormal,		/* 按钮关闭时，普通状态 */
-		Function func = nullptr	/* 按钮点击后的执行函数 */
+		Node * onNormal,				/* 按钮打开时，普通状态 */
+		Node * offNormal,				/* 按钮关闭时，普通状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建开关按钮
 	ButtonToggle(
-		Node * onNormal,		/* 按钮打开时，普通状态 */
-		Node * offNormal,		/* 按钮关闭时，普通状态 */
-		Node * onSelected,		/* 按钮打开时，鼠标按下状态 */
-		Node * offSelected,		/* 按钮关闭时，鼠标按下状态 */
-		Function func = nullptr	/* 按钮点击后的执行函数 */
+		Node * onNormal,				/* 按钮打开时，普通状态 */
+		Node * offNormal,				/* 按钮关闭时，普通状态 */
+		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
+		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建开关按钮
 	ButtonToggle(
-		Node * onNormal,		/* 按钮打开时，普通状态 */
-		Node * offNormal,		/* 按钮关闭时，普通状态 */
-		Node * onMouseOver,		/* 按钮打开时，鼠标移入状态 */
-		Node * offMouseOver,	/* 按钮关闭时，鼠标移入状态 */
-		Node * onSelected,		/* 按钮打开时，鼠标按下状态 */
-		Node * offSelected,		/* 按钮关闭时，鼠标按下状态 */
-		Function func = nullptr	/* 按钮点击后的执行函数 */
+		Node * onNormal,				/* 按钮打开时，普通状态 */
+		Node * offNormal,				/* 按钮关闭时，普通状态 */
+		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
+		Node * offMouseOver,			/* 按钮关闭时，鼠标移入状态 */
+		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
+		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 创建开关按钮
 	ButtonToggle(
-		Node * onNormal,		/* 按钮打开时，普通状态 */
-		Node * offNormal,		/* 按钮关闭时，普通状态 */
-		Node * onMouseOver,		/* 按钮打开时，鼠标移入状态 */
-		Node * offMouseOver,	/* 按钮关闭时，鼠标移入状态 */
-		Node * onSelected,		/* 按钮打开时，鼠标按下状态 */
-		Node * offSelected,		/* 按钮关闭时，鼠标按下状态 */
-		Node * onDisabled,		/* 按钮打开时，禁用状态 */
-		Node * offDisabled,		/* 按钮关闭时，禁用状态 */
-		Function func = nullptr	/* 按钮点击后的执行函数 */
+		Node * onNormal,				/* 按钮打开时，普通状态 */
+		Node * offNormal,				/* 按钮关闭时，普通状态 */
+		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
+		Node * offMouseOver,			/* 按钮关闭时，鼠标移入状态 */
+		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
+		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
+		Node * onDisabled,				/* 按钮打开时，禁用状态 */
+		Node * offDisabled,				/* 按钮关闭时，禁用状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
 	// 获取开关状态（打开或关闭）
@@ -978,7 +965,7 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 创建菜单
 	Menu(
-		const InitList<Button*>& vButtons	/* 按钮数组 */
+		const std::initializer_list<Button*>& vButtons	/* 按钮列表 */
 	);
 #else
 	// 创建菜单

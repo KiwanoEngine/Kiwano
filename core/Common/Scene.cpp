@@ -10,7 +10,6 @@ e2d::Scene::Scene()
 	, m_pRoot(new Node())
 {
 	m_pRoot->retain();
-	m_pRoot->_onEnter();
 	m_pRoot->_setParentScene(this);
 }
 
@@ -53,7 +52,7 @@ void e2d::Scene::add(Node * child, int order /* = 0 */)
 }
 
 #ifdef HIGHER_THAN_VS2012
-void e2d::Scene::add(const InitList<Node*>& vNodes, int order)
+void e2d::Scene::add(const std::initializer_list<Node*>& vNodes, int order)
 {
 	for (const auto &node : vNodes)
 	{

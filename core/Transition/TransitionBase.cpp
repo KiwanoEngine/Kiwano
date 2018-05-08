@@ -22,7 +22,7 @@ e2d::TransitionBase::~TransitionBase()
 	SafeReleaseInterface(&m_pNextLayer);
 }
 
-bool e2d::TransitionBase::isEnding()
+bool e2d::TransitionBase::isDone()
 {
 	return m_bEnd;
 }

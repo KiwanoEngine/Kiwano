@@ -51,7 +51,7 @@ public:
 	virtual ~TransitionBase();
 
 	// 场景切换动画是否结束
-	bool isEnding();
+	bool isDone();
 
 	// 销毁对象
 	virtual void destroy() override;

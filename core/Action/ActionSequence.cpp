@@ -6,7 +6,7 @@ e2d::ActionSequence::ActionSequence()
 }
 
 #ifdef HIGHER_THAN_VS2012
-e2d::ActionSequence::ActionSequence(const InitList<ActionBase*>& vActions)
+e2d::ActionSequence::ActionSequence(const std::initializer_list<ActionBase*>& vActions)
 	: m_nActionIndex(0)
 {
 	this->add(vActions);
@@ -62,7 +62,7 @@ void e2d::ActionSequence::_update()
 	auto &action = m_vActions[m_nActionIndex];
 	action->_update();
 
-	if (action->_isEnding())
+	if (action->_isDone())
 	{
 		m_nActionIndex++;
 		if (m_nActionIndex == m_vActions.size())
@@ -104,7 +104,7 @@ void e2d::ActionSequence::add(ActionBase * action)
 }
 
 #ifdef HIGHER_THAN_VS2012
-void e2d::ActionSequence::add(const InitList<ActionBase*>& vActions)
+void e2d::ActionSequence::add(const std::initializer_list<ActionBase*>& vActions)
 {
 	for (const auto &action : vActions)
 	{

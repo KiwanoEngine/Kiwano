@@ -38,7 +38,7 @@ void e2d::ActionLoop::_update()
 
 	m_pAction->_update();
 
-	if (m_pAction->_isEnding())
+	if (m_pAction->_isDone())
 	{
 		m_nTimes++;
 		

@@ -1,6 +1,6 @@
 #include "..\e2daction.h"
 
-e2d::ActionFunc::ActionFunc(Function func) :
+e2d::ActionFunc::ActionFunc(const Function& func) :
 	m_Callback(func)
 {
 }

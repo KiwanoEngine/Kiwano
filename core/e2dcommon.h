@@ -11,15 +11,6 @@ namespace e2d
 {
 
 
-#ifdef HIGHER_THAN_VS2012
-
-// 初始化列表
-template <typename T>
-using InitList = std::initializer_list<T>;
-
-#endif
-
-
 struct Size;
 
 // 表示坐标的结构体
@@ -561,12 +552,7 @@ public:
 	);
 
 	template<typename Func>
-	Function(
-		Func func
-	) 
-	: m_func(func) 
-	{
-	}
+	Function(Func func) : m_func(func) {}
 
 	template<typename Func, typename Object>
 	Function(
@@ -771,8 +757,8 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 添加多个节点到场景
 	virtual void add(
-		const InitList<Node*>& vNodes,	/* 节点数组 */
-		int order = 0					/* 渲染顺序 */
+		const std::initializer_list<Node*>& vNodes,	/* 节点列表 */
+		int order = 0								/* 渲染顺序 */
 	);
 #endif
 

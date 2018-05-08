@@ -102,7 +102,7 @@ void e2d::SceneManager::__update()
 		// 更新场景动画
 		s_pTransition->_update();
 
-		if (s_pTransition->isEnding())
+		if (s_pTransition->isDone())
 		{
 			s_pTransition->release();
 			s_pTransition = nullptr;

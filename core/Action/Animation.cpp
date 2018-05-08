@@ -14,14 +14,14 @@ e2d::Animation::Animation(double interval)
 
 #ifdef HIGHER_THAN_VS2012
 
-e2d::Animation::Animation(const InitList<Image*>& vImages)
+e2d::Animation::Animation(const std::initializer_list<Image*>& vImages)
 	: m_nFrameIndex(0)
 	, m_fInterval(1)
 {
 	this->add(vImages);
 }
 
-e2d::Animation::Animation(double interval, const InitList<Image*>& vImages)
+e2d::Animation::Animation(double interval, const std::initializer_list<Image*>& vImages)
 	: m_nFrameIndex(0)
 	, m_fInterval(interval)
 {
@@ -128,7 +128,7 @@ void e2d::Animation::add(Image * frame)
 }
 
 #ifdef HIGHER_THAN_VS2012
-void e2d::Animation::add(const InitList<Image*>& vImages)
+void e2d::Animation::add(const std::initializer_list<Image*>& vImages)
 {
 	for (const auto &image : vImages)
 	{

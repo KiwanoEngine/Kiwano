@@ -27,7 +27,6 @@ e2d::Node::Node()
 	, m_MatriInitial(D2D1::Matrix3x2F::Identity())
 	, m_MatriFinal(D2D1::Matrix3x2F::Identity())
 	, m_bVisiable(true)
-	, m_bDisplayedInScene(false)
 	, m_pCollider(nullptr)
 	, m_pParent(nullptr)
 	, m_pParentScene(nullptr)
@@ -171,34 +170,6 @@ void e2d::Node::_drawCollider()
 	for (auto child : m_vChildren)
 	{
 		child->_drawCollider();
-	}
-}
-
-void e2d::Node::_onEnter()
-{
-	if (!this->m_bDisplayedInScene)
-	{
-		this->m_bDisplayedInScene = true;
-		this->onEnter();
-
-		for (auto child : m_vChildren)
-		{
-			child->_onEnter();
-		}
-	}
-}
-
-void e2d::Node::_onExit()
-{
-	if (this->m_bDisplayedInScene)
-	{
-		this->m_bDisplayedInScene = false;
-		this->onExit();
-
-		for (auto child : m_vChildren)
-		{
-			child->_onExit();
-		}
 	}
 }
 
@@ -627,7 +598,7 @@ void e2d::Node::addColliableName(const String& collliderName)
 }
 
 #ifdef HIGHER_THAN_VS2012
-void e2d::Node::addColliableName(const InitList<String>& vCollliderName)
+void e2d::Node::addColliableName(const std::initializer_list<String>& vCollliderName)
 {
 	for (const auto &name : vCollliderName)
 	{
@@ -668,11 +639,6 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 			child->_setParentScene(this->m_pParentScene);
 		}
 
-		if (this->m_bDisplayedInScene)
-		{
-			child->_onEnter();
-		}
-
 		// 更新子节点透明度
 		child->_updateOpacity();
 		// 更新节点转换
@@ -683,7 +649,7 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 }
 
 #ifdef HIGHER_THAN_VS2012
-void e2d::Node::addChild(const InitList<Node*>& vNodes, int order)
+void e2d::Node::addChild(const std::initializer_list<Node*>& vNodes, int order)
 {
 	for (const auto &node : vNodes)
 	{
@@ -774,10 +740,6 @@ bool e2d::Node::removeChild(Node * child)
 				{
 					child->_setParentScene(nullptr);
 				}
-				if (child->m_bDisplayedInScene)
-				{
-					child->_onExit();
-				}
 
 				child->release();
 				return true;
@@ -811,10 +773,6 @@ void e2d::Node::removeChildren(const String& childName)
 			{
 				child->_setParentScene(nullptr);
 			}
-			if (child->m_bDisplayedInScene)
-			{
-				child->_onExit();
-			}
 			child->release();
 		}
 	}
@@ -825,10 +783,6 @@ void e2d::Node::clearAllChildren()
 	// 所有节点的引用计数减一
 	for (auto child : m_vChildren)
 	{
-		if (child->m_bDisplayedInScene)
-		{
-			child->_onExit();
-		}
 		child->release();
 	}
 	// 清空储存节点的容器

@@ -45,11 +45,11 @@ void e2d::ActionTwo::_update()
 {
 	ActionBase::_update();
 
-	if (!m_pFirstAction->_isEnding())
+	if (!m_pFirstAction->_isDone())
 	{
 		m_pFirstAction->_update();
 
-		if (!m_bAtSameTime && m_pFirstAction->_isEnding())
+		if (!m_bAtSameTime && m_pFirstAction->_isDone())
 		{
 			m_pSecondAction->_init();
 		}
@@ -57,17 +57,17 @@ void e2d::ActionTwo::_update()
 
 	if (m_bAtSameTime)
 	{
-		if (!m_pSecondAction->_isEnding())
+		if (!m_pSecondAction->_isDone())
 		{
 			m_pSecondAction->_update();
 		}
 	}
-	else if (m_pFirstAction->_isEnding())
+	else if (m_pFirstAction->_isDone())
 	{
 		m_pSecondAction->_update();
 	}
 
-	if (m_pFirstAction->_isEnding() && m_pSecondAction->_isEnding())
+	if (m_pFirstAction->_isDone() && m_pSecondAction->_isDone())
 	{
 		this->stop();
 	}

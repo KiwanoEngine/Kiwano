@@ -21,17 +21,17 @@ bool e2d::ActionBase::isRunning()
 	return m_bRunning;
 }
 
-bool e2d::ActionBase::_isEnding()
+bool e2d::ActionBase::_isDone()
 {
 	return m_bEnding;
 }
 
-void e2d::ActionBase::setTarget(Node* pTarget)
+void e2d::ActionBase::startWithTarget(Node* target)
 {
-	if (pTarget)
+	if (target)
 	{
 		m_bRunning = true;
-		m_pTarget = pTarget;
+		m_pTarget = target;
 		this->reset();
 	}
 }

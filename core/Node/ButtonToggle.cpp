@@ -14,7 +14,7 @@ e2d::ButtonToggle::ButtonToggle()
 {
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Function func)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, const Function& func)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -31,7 +31,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, F
 	this->setClickFunc(func);
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, Function func)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, const Function& func)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -50,7 +50,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setClickFunc(func);
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Function func)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, const Function& func)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)
@@ -71,7 +71,7 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setClickFunc(func);
 }
 
-e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Node * toggleOnDisabled, Node * toggleOffDisabled, Function func)
+e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Node * toggleOnDisabled, Node * toggleOffDisabled, const Function& func)
 	: Button()
 	, m_bState(true)
 	, m_pNormalOn(nullptr)

@@ -5,7 +5,7 @@ class TimerInfo
 {
 public:
 	TimerInfo(
-		e2d::Function func,
+		const e2d::Function& func,
 		const e2d::String& name,
 		double delay,
 		int updateTimes,
@@ -65,18 +65,18 @@ public:
 static std::vector<TimerInfo*> s_vTimers;
 
 
-void e2d::Timer::start(Function func, double delay, int updateTimes, bool paused, const String& name)
+void e2d::Timer::start(const Function& func, double delay, int updateTimes, bool paused, const String& name)
 {
 	auto timer = new TimerInfo(func, name, delay, updateTimes, paused);
 	s_vTimers.push_back(timer);
 }
 
-void e2d::Timer::start(Function func, const String& name)
+void e2d::Timer::start(const Function& func, const String& name)
 {
 	Timer::start(func, 0, -1, false, name);
 }
 
-void e2d::Timer::startOnce(Function func, double timeOut)
+void e2d::Timer::startOnce(const Function& func, double timeOut)
 {
 	auto timer = new TimerInfo(func, L"", timeOut, 1, false);
 	s_vTimers.push_back(timer);
