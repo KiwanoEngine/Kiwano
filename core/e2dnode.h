@@ -34,7 +34,7 @@ public:
 
 	// 碰撞处理
 	virtual void onCollide(
-		Node* pNode	/* 发生碰撞的节点 */
+		Node* node	/* 发生碰撞的节点 */
 	) {}
 
 	// 获取节点显示状态
@@ -47,7 +47,7 @@ public:
 
 	// 判断两节点是否相交
 	virtual bool isIntersectWith(
-		const Node * pNode
+		const Node * node
 	) const;
 
 	// 获取节点名称
@@ -442,34 +442,34 @@ protected:
 	void _updateOpacity();
 
 protected:
-	String		m_sName;
-	unsigned	m_nHashName;
-	float		m_fPosX;
-	float		m_fPosY;
-	float		m_fWidth;
-	float		m_fHeight;
-	float		m_fScaleX;
-	float		m_fScaleY;
-	float		m_fRotation;
-	float		m_fSkewAngleX;
-	float		m_fSkewAngleY;
-	float		m_fDisplayOpacity;
-	float		m_fRealOpacity;
-	float		m_fPivotX;
-	float		m_fPivotY;
-	int			m_nOrder;
-	bool		m_bVisiable;
-	bool		m_bAutoUpdate;
-	bool		m_bSortChildrenNeeded;
-	bool		m_bTransformNeeded;
-	bool		m_bPositionFixed;
-	Collider *	m_pCollider;
-	Scene *		m_pParentScene;
-	Node *		m_pParent;
-	D2D1::Matrix3x2F		m_MatriInitial;
-	D2D1::Matrix3x2F		m_MatriFinal;
-	std::set<unsigned int>	m_vColliders;
-	std::vector<Node*>		m_vChildren;
+	String		_sName;
+	unsigned	_nHashName;
+	float		_fPosX;
+	float		_fPosY;
+	float		_fWidth;
+	float		_fHeight;
+	float		_fScaleX;
+	float		_fScaleY;
+	float		_fRotation;
+	float		_fSkewAngleX;
+	float		_fSkewAngleY;
+	float		_fDisplayOpacity;
+	float		_fRealOpacity;
+	float		_fPivotX;
+	float		_fPivotY;
+	int			_nOrder;
+	bool		_bVisiable;
+	bool		_bAutoUpdate;
+	bool		_bSortChildrenNeeded;
+	bool		_bTransformNeeded;
+	bool		_bPositionFixed;
+	Collider *	_pCollider;
+	Scene *		_pParentScene;
+	Node *		_pParent;
+	D2D1::Matrix3x2F		_MatriInitial;
+	D2D1::Matrix3x2F		_MatriFinal;
+	std::set<unsigned int>	_vColliders;
+	std::vector<Node*>		_vChildren;
 };
 
 
@@ -551,7 +551,7 @@ public:
 	virtual void destroy() override;
 
 protected:
-	Image * m_pImage;
+	Image * _pImage;
 };
 
 
@@ -735,10 +735,10 @@ protected:
 	void _createLayout();
 
 protected:
-	String	m_sText;
-	TextStyle m_TextStyle;
-	IDWriteTextFormat * m_pDWriteTextFormat;
-	IDWriteTextLayout * m_pDWriteTextLayout;
+	String	_sText;
+	TextStyle _TextStyle;
+	IDWriteTextFormat * _pDWriteTextFormat;
+	IDWriteTextLayout * _pDWriteTextLayout;
 };
 
 
@@ -829,14 +829,14 @@ protected:
 	virtual void _runCallback();
 
 protected:
-	Node *		m_pNormal;
-	Node *		m_pMouseover;
-	Node *		m_pSelected;
-	Node *		m_pDisabled;
-	bool		m_bEnable;
-	bool		m_bIsSelected;
-	ButtonState	m_eBtnState;
-	Function	m_Callback;
+	Node *		_pNormal;
+	Node *		_pMouseover;
+	Node *		_pSelected;
+	Node *		_pDisabled;
+	bool		_bEnable;
+	bool		_bIsSelected;
+	ButtonState	_eBtnState;
+	Function	_Callback;
 };
 
 
@@ -943,15 +943,15 @@ protected:
 	virtual void _runCallback() override;
 
 protected:
-	Node *	m_pNormalOn;
-	Node *	m_pNormalOff;
-	Node *	m_pMouseoverOn;
-	Node *	m_pMouseoverOff;
-	Node *	m_pSelectedOn;
-	Node *	m_pSelectedOff;
-	Node *	m_pDisabledOn;
-	Node *	m_pDisabledOff;
-	bool	m_bState;
+	Node *	_pNormalOn;
+	Node *	_pNormalOff;
+	Node *	_pMouseoverOn;
+	Node *	_pMouseoverOff;
+	Node *	_pSelectedOn;
+	Node *	_pSelectedOff;
+	Node *	_pDisabledOn;
+	Node *	_pDisabledOff;
+	bool	_bState;
 };
 
 
@@ -998,8 +998,8 @@ public:
 	);
 
 protected:
-	bool m_bEnable;
-	std::vector<Button*> m_vButtons;
+	bool _bEnable;
+	std::vector<Button*> _vButtons;
 };
 
 }

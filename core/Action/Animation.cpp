@@ -1,29 +1,29 @@
 #include "..\e2daction.h"
 
 e2d::Animation::Animation() 
-	: m_nFrameIndex(0)
-	, m_fInterval(1)
+	: _nFrameIndex(0)
+	, _fInterval(1)
 {
 }
 
 e2d::Animation::Animation(double interval)
-	: m_nFrameIndex(0)
-	, m_fInterval(interval)
+	: _nFrameIndex(0)
+	, _fInterval(interval)
 {
 }
 
 #ifdef HIGHER_THAN_VS2012
 
 e2d::Animation::Animation(const std::initializer_list<Image*>& vImages)
-	: m_nFrameIndex(0)
-	, m_fInterval(1)
+	: _nFrameIndex(0)
+	, _fInterval(1)
 {
 	this->add(vImages);
 }
 
 e2d::Animation::Animation(double interval, const std::initializer_list<Image*>& vImages)
-	: m_nFrameIndex(0)
-	, m_fInterval(interval)
+	: _nFrameIndex(0)
+	, _fInterval(interval)
 {
 	this->add(vImages);
 }
@@ -31,8 +31,8 @@ e2d::Animation::Animation(double interval, const std::initializer_list<Image*>& 
 #else
 
 e2d::Animation::Animation(int number, Image * frame, ...)
-	: m_nFrameIndex(0)
-	, m_fInterval(1)
+	: _nFrameIndex(0)
+	, _fInterval(1)
 {
 	Image ** ppImage = &frame;
 
@@ -46,8 +46,8 @@ e2d::Animation::Animation(int number, Image * frame, ...)
 }
 
 e2d::Animation::Animation(double interval, int number, Image * frame, ...)
-	: m_nFrameIndex(0)
-	, m_fInterval(interval)
+	: _nFrameIndex(0)
+	, _fInterval(interval)
 {
 	Image ** ppImage = &frame;
 
@@ -68,7 +68,7 @@ e2d::Animation::~Animation()
 
 void e2d::Animation::setInterval(double interval)
 {
-	m_fInterval = max(interval, 0);
+	_fInterval = max(interval, 0);
 }
 
 void e2d::Animation::_init()
@@ -80,22 +80,22 @@ void e2d::Animation::_update()
 {
 	ActionBase::_update();
 
-	if (m_pTarget == nullptr)
+	if (_pTarget == nullptr)
 	{
 		this->stop();
 		return;
 	}
 
 	// 判断时间间隔是否足够
-	while ((Time::getTotalTime() - m_fLast) >= m_fInterval)
+	while ((Time::getTotalTime() - _fLast) >= _fInterval)
 	{
 		// 重新记录时间
-		m_fLast += m_fInterval;
+		_fLast += _fInterval;
 		// 加载关键帧
-		static_cast<Sprite*>(m_pTarget)->open(m_vFrames[m_nFrameIndex]);
-		m_nFrameIndex++;
+		static_cast<Sprite*>(_pTarget)->open(_vFrames[_nFrameIndex]);
+		_nFrameIndex++;
 		// 判断动作是否结束
-		if (m_nFrameIndex == m_vFrames.size())
+		if (_nFrameIndex == _vFrames.size())
 		{
 			this->stop();
 			break;
@@ -106,13 +106,13 @@ void e2d::Animation::_update()
 void e2d::Animation::reset()
 {
 	ActionBase::reset();
-	m_nFrameIndex = 0;
+	_nFrameIndex = 0;
 }
 
 void e2d::Animation::destroy()
 {
 	ActionBase::destroy();
-	for (auto frame : m_vFrames)
+	for (auto frame : _vFrames)
 	{
 		SafeRelease(&frame);
 	}
@@ -122,7 +122,7 @@ void e2d::Animation::add(Image * frame)
 {
 	if (frame)
 	{
-		m_vFrames.push_back(frame);
+		_vFrames.push_back(frame);
 		frame->retain();
 	}
 }
@@ -152,8 +152,8 @@ void e2d::Animation::add(int number, Image * frame, ...)
 
 e2d::Animation * e2d::Animation::clone() const
 {
-	auto a = new Animation(m_fInterval);
-	for (auto frame : m_vFrames)
+	auto a = new Animation(_fInterval);
+	for (auto frame : _vFrames)
 	{
 		a->add(frame);
 	}
@@ -163,6 +163,6 @@ e2d::Animation * e2d::Animation::clone() const
 e2d::Animation * e2d::Animation::reverse() const
 {
 	auto a = this->clone();
-	a->m_vFrames.reserve(m_vFrames.size());
+	a->_vFrames.reserve(_vFrames.size());
 	return a;
 }

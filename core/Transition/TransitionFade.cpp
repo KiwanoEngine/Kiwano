@@ -3,53 +3,53 @@
 
 e2d::TransitionFade::TransitionFade(double duration)
 	: TransitionBase(0)
-	, m_fFadeOutDuration(max(duration / 2, 0))
-	, m_fFadeInDuration(max(duration / 2, 0))
-	, m_bFadeOutTransioning(true)
+	, _fFadeOutDuration(max(duration / 2, 0))
+	, _fFadeInDuration(max(duration / 2, 0))
+	, _bFadeOutTransioning(true)
 {
 }
 
 e2d::TransitionFade::TransitionFade(double fadeOutDuration, double fadeInDuration)
 	: TransitionBase(0)
-	, m_fFadeOutDuration(max(fadeOutDuration, 0))
-	, m_fFadeInDuration(max(fadeInDuration, 0))
-	, m_bFadeOutTransioning(true)
+	, _fFadeOutDuration(max(fadeOutDuration, 0))
+	, _fFadeInDuration(max(fadeInDuration, 0))
+	, _bFadeOutTransioning(true)
 {
 }
 
 void e2d::TransitionFade::_init(Scene * prev, Scene * next)
 {
 	TransitionBase::_init(prev, next);
-	if (m_pPrevScene)
+	if (_pPrevScene)
 	{
-		m_bFadeOutTransioning = true;
-		m_fDuration = m_fFadeOutDuration;
+		_bFadeOutTransioning = true;
+		_fDuration = _fFadeOutDuration;
 	}
 	else
 	{
-		m_bFadeOutTransioning = false;
-		m_fDuration = m_fFadeInDuration;
+		_bFadeOutTransioning = false;
+		_fDuration = _fFadeInDuration;
 	}
-	m_sPrevLayerParam.opacity = 1;
-	m_sNextLayerParam.opacity = 0;
+	_sPrevLayerParam.opacity = 1;
+	_sNextLayerParam.opacity = 0;
 }
 
 void e2d::TransitionFade::_updateCustom()
 {
-	if (m_bFadeOutTransioning)
+	if (_bFadeOutTransioning)
 	{
-		m_sPrevLayerParam.opacity = float(1 - m_fRateOfProgress);
-		if (m_fRateOfProgress >= 1)
+		_sPrevLayerParam.opacity = float(1 - _fRateOfProgress);
+		if (_fRateOfProgress >= 1)
 		{
-			m_bFadeOutTransioning = false;
-			m_fDuration = m_fFadeInDuration;
-			m_fLast = Time::getTotalTime();
+			_bFadeOutTransioning = false;
+			_fDuration = _fFadeInDuration;
+			_fLast = Time::getTotalTime();
 		}
 	}
 	else
 	{
-		m_sNextLayerParam.opacity = float(m_fRateOfProgress);
-		if (m_fRateOfProgress >= 1)
+		_sNextLayerParam.opacity = float(_fRateOfProgress);
+		if (_fRateOfProgress >= 1)
 		{
 			this->_stop();
 		}

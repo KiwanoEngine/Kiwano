@@ -1,10 +1,10 @@
 #include "..\..\e2dshape.h"
 
 e2d::Shape::Shape()
-	: m_nStyle(ShapeStyle::SOLID)
-	, m_nFillColor(Color::WHITE)
-	, m_nLineColor(Color::BLUE, 0.5)
-	, m_fStrokeWidth(1)
+	: _nStyle(ShapeStyle::SOLID)
+	, _nFillColor(Color::WHITE)
+	, _nLineColor(Color::BLUE, 0.5)
+	, _fStrokeWidth(1)
 {
 }
 
@@ -15,30 +15,30 @@ e2d::Shape::~Shape()
 void e2d::Shape::onRender()
 {
 	auto pBrush = Renderer::getSolidColorBrush();
-	pBrush->SetOpacity(m_fDisplayOpacity);
+	pBrush->SetOpacity(_fDisplayOpacity);
 
-	switch (m_nStyle)
+	switch (_nStyle)
 	{
 	case ShapeStyle::FILL:
 	{
-		pBrush->SetColor(m_nFillColor.toColorF());
+		pBrush->SetColor(_nFillColor.toColorF());
 		this->_renderFill();
 
-		pBrush->SetColor(m_nLineColor.toColorF());
+		pBrush->SetColor(_nLineColor.toColorF());
 		this->_renderLine();
 		break;
 	}
 
 	case ShapeStyle::ROUND:
 	{
-		pBrush->SetColor(m_nLineColor.toColorF());
+		pBrush->SetColor(_nLineColor.toColorF());
 		this->_renderLine();
 		break;
 	}
 
 	case ShapeStyle::SOLID:
 	{
-		pBrush->SetColor(m_nFillColor.toColorF());
+		pBrush->SetColor(_nFillColor.toColorF());
 		this->_renderFill();
 		break;
 	}
@@ -50,40 +50,40 @@ void e2d::Shape::onRender()
 
 e2d::Color e2d::Shape::getFillColor() const
 {
-	return m_nFillColor;
+	return _nFillColor;
 }
 
 e2d::Color e2d::Shape::getLineColor() const
 {
-	return m_nLineColor;
+	return _nLineColor;
 }
 
 double e2d::Shape::getStrokeWidth() const
 {
-	return m_fStrokeWidth;
+	return _fStrokeWidth;
 }
 
 e2d::ShapeStyle e2d::Shape::getStyle() const
 {
-	return m_nStyle;
+	return _nStyle;
 }
 
 void e2d::Shape::setFillColor(Color fillColor)
 {
-	m_nFillColor = fillColor;
+	_nFillColor = fillColor;
 }
 
 void e2d::Shape::setLineColor(Color lineColor)
 {
-	m_nLineColor = lineColor;
+	_nLineColor = lineColor;
 }
 
 void e2d::Shape::setStrokeWidth(double strokeWidth)
 {
-	m_fStrokeWidth = static_cast<float>(strokeWidth);
+	_fStrokeWidth = static_cast<float>(strokeWidth);
 }
 
 void e2d::Shape::setStyle(ShapeStyle style)
 {
-	m_nStyle = style;
+	_nStyle = style;
 }

@@ -1,13 +1,13 @@
 #include "..\e2daction.h"
 
 e2d::ActionFunc::ActionFunc(const Function& func) :
-	m_Callback(func)
+	_Callback(func)
 {
 }
 
 e2d::ActionFunc * e2d::ActionFunc::clone() const
 {
-	return new ActionFunc(m_Callback);
+	return new ActionFunc(_Callback);
 }
 
 void e2d::ActionFunc::_init()
@@ -17,6 +17,6 @@ void e2d::ActionFunc::_init()
 
 void e2d::ActionFunc::_update()
 {
-	m_Callback();
+	_Callback();
 	this->stop();
 }

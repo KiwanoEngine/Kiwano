@@ -4,15 +4,15 @@
 e2d::ActionMoveBy::ActionMoveBy(double duration, Vector vector) :
 	ActionGradual(duration)
 {
-	m_MoveVec = vector;
+	_MoveVec = vector;
 }
 
 void e2d::ActionMoveBy::_init()
 {
 	ActionGradual::_init();
-	if (m_pTarget)
+	if (_pTarget)
 	{
-		m_BeginPos = m_pTarget->getPos();
+		_BeginPos = _pTarget->getPos();
 	}
 }
 
@@ -20,22 +20,22 @@ void e2d::ActionMoveBy::_update()
 {
 	ActionGradual::_update();
 
-	if (m_pTarget == nullptr)
+	if (_pTarget == nullptr)
 	{
 		this->stop();
 		return;
 	}
 
 	// ÒÆ¶¯½Úµã
-	m_pTarget->setPos(m_BeginPos + m_MoveVec * m_fRateOfProgress);
+	_pTarget->setPos(_BeginPos + _MoveVec * _fRateOfProgress);
 }
 
 e2d::ActionMoveBy * e2d::ActionMoveBy::clone() const
 {
-	return new ActionMoveBy(m_fDuration, m_MoveVec);
+	return new ActionMoveBy(_fDuration, _MoveVec);
 }
 
 e2d::ActionMoveBy * e2d::ActionMoveBy::reverse() const
 {
-	return new ActionMoveBy(m_fDuration, -m_MoveVec);
+	return new ActionMoveBy(_fDuration, -_MoveVec);
 }

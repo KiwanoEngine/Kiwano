@@ -65,12 +65,12 @@ protected:
 	virtual void _render();
 
 protected:
-	bool	m_bEnable;
-	bool	m_bIsVisiable;
-	bool	m_bAutoResize;
-	Color	m_nColor;
-	Node *	m_pParentNode;
-	ID2D1TransformedGeometry * m_pTransformedGeometry;
+	bool	_bEnable;
+	bool	_bIsVisiable;
+	bool	_bAutoResize;
+	Color	_nColor;
+	Node *	_pParentNode;
+	ID2D1TransformedGeometry * _pTransformedGeometry;
 };
 
 
@@ -113,7 +113,7 @@ protected:
 	virtual void _resize();
 
 protected:
-	ID2D1RectangleGeometry * m_pD2dRectangle;
+	ID2D1RectangleGeometry * _pD2dRectangle;
 };
 
 
@@ -152,7 +152,7 @@ protected:
 	virtual void _resize();
 
 protected:
-	ID2D1EllipseGeometry * m_pD2dCircle;
+	ID2D1EllipseGeometry * _pD2dCircle;
 };
 
 
@@ -193,7 +193,7 @@ protected:
 	virtual void _resize();
 
 protected:
-	ID2D1EllipseGeometry * m_pD2dEllipse;
+	ID2D1EllipseGeometry * _pD2dEllipse;
 };
 
 }

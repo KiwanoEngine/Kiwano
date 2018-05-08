@@ -55,10 +55,10 @@ protected:
 	virtual void _renderFill() = 0;
 
 protected:
-	ShapeStyle	m_nStyle;
-	float	m_fStrokeWidth;
-	Color	m_nLineColor;
-	Color	m_nFillColor;
+	ShapeStyle	_nStyle;
+	float	_fStrokeWidth;
+	Color	_nLineColor;
+	Color	_nFillColor;
 };
 
 
@@ -163,8 +163,8 @@ protected:
 	virtual void _renderFill() override;
 
 protected:
-	float m_fRadiusX;
-	float m_fRadiusY;
+	float _fRadiusX;
+	float _fRadiusY;
 };
 
 
@@ -208,7 +208,7 @@ protected:
 	virtual void _renderFill() override;
 
 protected:
-	float m_fRadius;
+	float _fRadius;
 };
 
 
@@ -263,8 +263,8 @@ protected:
 	virtual void _renderFill() override;
 
 protected:
-	float m_fRadiusX;
-	float m_fRadiusY;
+	float _fRadiusX;
+	float _fRadiusY;
 };
 
 }

@@ -1,13 +1,13 @@
 #include "..\e2daction.h"
 
 e2d::ActionTwo::ActionTwo(ActionBase * pActionFirst, ActionBase * pActionSecond, bool bAtSameTime/* = false*/)
-	: m_pFirstAction(pActionFirst)
-	, m_pSecondAction(pActionSecond)
-	, m_bAtSameTime(bAtSameTime)
+	: _pFirstAction(pActionFirst)
+	, _pSecondAction(pActionSecond)
+	, _bAtSameTime(bAtSameTime)
 {
-	ASSERT(m_pFirstAction && m_pSecondAction, "ActionTwo NULL pointer exception!");
-	m_pFirstAction->retain();
-	m_pSecondAction->retain();
+	ASSERT(_pFirstAction && _pSecondAction, "ActionTwo NULL pointer exception!");
+	_pFirstAction->retain();
+	_pSecondAction->retain();
 }
 
 e2d::ActionTwo::~ActionTwo()
@@ -16,58 +16,58 @@ e2d::ActionTwo::~ActionTwo()
 
 e2d::ActionTwo * e2d::ActionTwo::clone() const
 {
-	return new ActionTwo(m_pFirstAction->clone(), m_pSecondAction->clone());
+	return new ActionTwo(_pFirstAction->clone(), _pSecondAction->clone());
 }
 
 e2d::ActionTwo * e2d::ActionTwo::reverse(bool actionReverse) const
 {
 	if (actionReverse)
 	{
-		return new ActionTwo(m_pSecondAction->reverse(), m_pFirstAction->reverse());
+		return new ActionTwo(_pSecondAction->reverse(), _pFirstAction->reverse());
 	}
 	else
 	{
-		return new ActionTwo(m_pSecondAction->clone(), m_pFirstAction->clone());
+		return new ActionTwo(_pSecondAction->clone(), _pFirstAction->clone());
 	}
 }
 
 void e2d::ActionTwo::_init()
 {
 	ActionBase::_init();
-	m_pFirstAction->m_pTarget = m_pTarget;
-	m_pSecondAction->m_pTarget = m_pTarget;
+	_pFirstAction->_pTarget = _pTarget;
+	_pSecondAction->_pTarget = _pTarget;
 
-	m_pFirstAction->_init();
-	if (m_bAtSameTime) m_pSecondAction->_init();
+	_pFirstAction->_init();
+	if (_bAtSameTime) _pSecondAction->_init();
 }
 
 void e2d::ActionTwo::_update()
 {
 	ActionBase::_update();
 
-	if (!m_pFirstAction->_isDone())
+	if (!_pFirstAction->_isDone())
 	{
-		m_pFirstAction->_update();
+		_pFirstAction->_update();
 
-		if (!m_bAtSameTime && m_pFirstAction->_isDone())
+		if (!_bAtSameTime && _pFirstAction->_isDone())
 		{
-			m_pSecondAction->_init();
+			_pSecondAction->_init();
 		}
 	}
 
-	if (m_bAtSameTime)
+	if (_bAtSameTime)
 	{
-		if (!m_pSecondAction->_isDone())
+		if (!_pSecondAction->_isDone())
 		{
-			m_pSecondAction->_update();
+			_pSecondAction->_update();
 		}
 	}
-	else if (m_pFirstAction->_isDone())
+	else if (_pFirstAction->_isDone())
 	{
-		m_pSecondAction->_update();
+		_pSecondAction->_update();
 	}
 
-	if (m_pFirstAction->_isDone() && m_pSecondAction->_isDone())
+	if (_pFirstAction->_isDone() && _pSecondAction->_isDone())
 	{
 		this->stop();
 	}
@@ -77,19 +77,19 @@ void e2d::ActionTwo::reset()
 {
 	ActionBase::reset();
 
-	m_pFirstAction->reset();
-	m_pSecondAction->reset();
+	_pFirstAction->reset();
+	_pSecondAction->reset();
 }
 
 void e2d::ActionTwo::destroy()
 {
 	ActionBase::destroy();
-	SafeRelease(&m_pFirstAction);
-	SafeRelease(&m_pSecondAction);
+	SafeRelease(&_pFirstAction);
+	SafeRelease(&_pSecondAction);
 }
 
 void e2d::ActionTwo::_resetTime()
 {
-	m_pFirstAction->_resetTime();
-	m_pSecondAction->_resetTime();
+	_pFirstAction->_resetTime();
+	_pSecondAction->_resetTime();
 }

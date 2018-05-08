@@ -3,7 +3,7 @@
 
 e2d::TransitionMove::TransitionMove(double duration, Direct direct)
 	: TransitionBase(duration)
-	, m_Direct(direct)
+	, _Direct(direct)
 {
 }
 
@@ -11,45 +11,45 @@ void e2d::TransitionMove::_init(Scene * prev, Scene * next)
 {
 	TransitionBase::_init(prev, next);
 
-	double width = m_WindowSize.width;
-	double height = m_WindowSize.height;
-	if (m_Direct == Direct::UP)
+	double width = _WindowSize.width;
+	double height = _WindowSize.height;
+	if (_Direct == Direct::UP)
 	{
-		m_Vector = Vector(0, -height);
-		m_NextPos = Point(0, height);
+		_Vector = Vector(0, -height);
+		_NextPos = Point(0, height);
 	}
-	else if (m_Direct == Direct::DOWN)
+	else if (_Direct == Direct::DOWN)
 	{
-		m_Vector = Vector(0, height);
-		m_NextPos = Point(0, -height);
+		_Vector = Vector(0, height);
+		_NextPos = Point(0, -height);
 	}
-	else if (m_Direct == Direct::LEFT)
+	else if (_Direct == Direct::LEFT)
 	{
-		m_Vector = Vector(-width, 0);
-		m_NextPos = Point(width, 0);
+		_Vector = Vector(-width, 0);
+		_NextPos = Point(width, 0);
 	}
-	else if (m_Direct == Direct::RIGHT)
+	else if (_Direct == Direct::RIGHT)
 	{
-		m_Vector = Vector(width, 0);
-		m_NextPos = Point(-width, 0);
+		_Vector = Vector(width, 0);
+		_NextPos = Point(-width, 0);
 	}
 
-	if (m_pPrevScene) m_pPrevScene->getRoot()->setPos(0, 0);
-	m_pNextScene->getRoot()->setPos(m_NextPos);
+	if (_pPrevScene) _pPrevScene->getRoot()->setPos(0, 0);
+	_pNextScene->getRoot()->setPos(_NextPos);
 }
 
 void e2d::TransitionMove::_updateCustom()
 {
-	if (m_pPrevScene)
+	if (_pPrevScene)
 	{
-		m_pPrevScene->getRoot()->setPos(m_Vector * m_fRateOfProgress);
+		_pPrevScene->getRoot()->setPos(_Vector * _fRateOfProgress);
 	}
-	if (m_pNextScene)
+	if (_pNextScene)
 	{
-		m_pNextScene->getRoot()->setPos(m_NextPos + m_Vector * m_fRateOfProgress);
+		_pNextScene->getRoot()->setPos(_NextPos + _Vector * _fRateOfProgress);
 	}
 
-	if (m_fRateOfProgress >= 1)
+	if (_fRateOfProgress >= 1)
 	{
 		this->_stop();
 	}
@@ -57,7 +57,7 @@ void e2d::TransitionMove::_updateCustom()
 
 void e2d::TransitionMove::_reset()
 {
-	if (m_pPrevScene) m_pPrevScene->getRoot()->setPos(0, 0);
-	m_pNextScene->getRoot()->setPos(0, 0);
+	if (_pPrevScene) _pPrevScene->getRoot()->setPos(0, 0);
+	_pNextScene->getRoot()->setPos(0, 0);
 }
 

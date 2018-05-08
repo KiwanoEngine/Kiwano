@@ -2,18 +2,18 @@
 #include "..\e2dnode.h"
 
 e2d::ColliderCircle::ColliderCircle()
-	: m_pD2dCircle(nullptr)
+	: _pD2dCircle(nullptr)
 {
 }
 
 e2d::ColliderCircle::ColliderCircle(Point center, double radius)
-	: m_pD2dCircle(nullptr)
+	: _pD2dCircle(nullptr)
 {
 	this->setCircle(center, radius);
 }
 
 e2d::ColliderCircle::ColliderCircle(Node * node)
-	: m_pD2dCircle(nullptr)
+	: _pD2dCircle(nullptr)
 {
 	double minSide = min(node->getRealWidth(), node->getRealHeight());
 	this->setCircle(
@@ -27,12 +27,12 @@ e2d::ColliderCircle::ColliderCircle(Node * node)
 
 e2d::ColliderCircle::~ColliderCircle()
 {
-	SafeReleaseInterface(&m_pD2dCircle);
+	SafeReleaseInterface(&_pD2dCircle);
 }
 
 void e2d::ColliderCircle::setCircle(Point center, double radius)
 {
-	SafeReleaseInterface(&m_pD2dCircle);
+	SafeReleaseInterface(&_pD2dCircle);
 
 	Renderer::getID2D1Factory()->CreateEllipseGeometry(
 		D2D1::Ellipse(
@@ -41,19 +41,19 @@ void e2d::ColliderCircle::setCircle(Point center, double radius)
 				static_cast<float>(center.y)),
 			static_cast<float>(radius),
 			static_cast<float>(radius)),
-			&m_pD2dCircle
+			&_pD2dCircle
 		);
 }
 
 void e2d::ColliderCircle::_resize()
 {
-	if (m_pParentNode && m_bEnable)
+	if (_pParentNode && _bEnable)
 	{
-		double minSide = min(m_pParentNode->getRealWidth(), m_pParentNode->getRealHeight());
+		double minSide = min(_pParentNode->getRealWidth(), _pParentNode->getRealHeight());
 		this->setCircle(
 			Point(
-				m_pParentNode->getRealWidth() / 2,
-				m_pParentNode->getRealHeight() / 2
+				_pParentNode->getRealWidth() / 2,
+				_pParentNode->getRealHeight() / 2
 			),
 			minSide / 2
 		);
@@ -62,5 +62,5 @@ void e2d::ColliderCircle::_resize()
 
 ID2D1EllipseGeometry * e2d::ColliderCircle::getD2dGeometry() const
 {
-	return m_pD2dCircle;
+	return _pD2dCircle;
 }

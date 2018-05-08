@@ -19,7 +19,7 @@ void e2d::ActionManager::__update()
 		{
 			// 动作已经结束
 			action->release();
-			action->m_pTarget = nullptr;
+			action->_pTarget = nullptr;
 			s_vRunningActions.erase(s_vRunningActions.begin() + i);
 		}
 		else
@@ -33,52 +33,36 @@ void e2d::ActionManager::__update()
 	}
 }
 
-void e2d::ActionManager::__add(ActionBase * pAction)
+void e2d::ActionManager::__add(ActionBase * action)
 {
-	if (pAction)
+	if (action)
 	{
-		for (auto action : s_vActions)
-		{
-			if (action == pAction)
-			{
-				WARN_IF(true, "ActionManager::add Failed!The action is already added.");
-				return;
-			}
-		}
-		s_vActions.push_back(pAction);
+		s_vActions.push_back(action);
 	}
 }
 
-void e2d::ActionManager::__remove(ActionBase * pAction)
+void e2d::ActionManager::__remove(ActionBase * action)
 {
-	for (size_t i = 0; i < s_vActions.size(); i++)
+	for (size_t i = 0; i < s_vActions.size();)
 	{
-		if (s_vActions[i] == pAction)
+		if (s_vActions[i] == action)
 		{
 			s_vActions.erase(s_vActions.begin() + i);
 		}
+		else
+		{
+			i++;
+		}
 	}
 }
 
-void e2d::ActionManager::__startAction(ActionBase * pAction, Node * pTargetNode)
+void e2d::ActionManager::__resumeAllBindedWith(Node * target)
 {
-	WARN_IF(pAction == nullptr, "ActionBase NULL pointer exception!");
-
-	if (pAction)
-	{
-		pAction->startWithTarget(pTargetNode);
-		pAction->retain();
-		s_vRunningActions.push_back(pAction);
-	}
-}
-
-void e2d::ActionManager::__resumeAllBindedWith(Node * pTargetNode)
-{
-	if (pTargetNode)
+	if (target)
 	{
 		for (auto action : s_vRunningActions)
 		{
-			if (action->getTarget() == pTargetNode)
+			if (action->getTarget() == target)
 			{
 				action->resume();
 			}
@@ -86,13 +70,13 @@ void e2d::ActionManager::__resumeAllBindedWith(Node * pTargetNode)
 	}
 }
 
-void e2d::ActionManager::__pauseAllBindedWith(Node * pTargetNode)
+void e2d::ActionManager::__pauseAllBindedWith(Node * target)
 {
-	if (pTargetNode)
+	if (target)
 	{
 		for (auto action : s_vRunningActions)
 		{
-			if (action->getTarget() == pTargetNode)
+			if (action->getTarget() == target)
 			{
 				action->pause();
 			}
@@ -100,17 +84,31 @@ void e2d::ActionManager::__pauseAllBindedWith(Node * pTargetNode)
 	}
 }
 
-void e2d::ActionManager::__stopAllBindedWith(Node * pTargetNode)
+void e2d::ActionManager::__stopAllBindedWith(Node * target)
 {
-	if (pTargetNode)
+	if (target)
 	{
 		for (auto action : s_vRunningActions)
 		{
-			if (action->getTarget() == pTargetNode)
+			if (action->getTarget() == target)
 			{
 				action->stop();
 			}
 		}
+	}
+}
+
+void e2d::ActionManager::start(ActionBase * action, Node * target, bool paused)
+{
+	WARN_IF(action == nullptr, "ActionBase NULL pointer exception!");
+	WARN_IF(target == nullptr, "Target node NULL pointer exception!");
+
+	if (action && target)
+	{
+		action->_startWithTarget(target);
+		action->retain();
+		action->_bRunning = !paused;
+		s_vRunningActions.push_back(action);
 	}
 }
 
@@ -147,14 +145,14 @@ void e2d::ActionManager::stop(const String& strActionName)
 	}
 }
 
-void e2d::ActionManager::__clearAllBindedWith(Node * pTargetNode)
+void e2d::ActionManager::__clearAllBindedWith(Node * target)
 {
-	if (pTargetNode)
+	if (target)
 	{
 		for (size_t i = 0; i < s_vRunningActions.size();)
 		{
 			auto a = s_vRunningActions[i];
-			if (a->getTarget() == pTargetNode)
+			if (a->getTarget() == target)
 			{
 				SafeRelease(&a);
 				s_vRunningActions.erase(s_vRunningActions.begin() + i);

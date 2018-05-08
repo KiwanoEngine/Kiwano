@@ -204,7 +204,7 @@ public:
 	friend std::wistream& operator>> (std::wistream &, String &);
 
 private:
-	std::wstring m_str;
+	std::wstring _str;
 };
 
 
@@ -552,7 +552,7 @@ public:
 	);
 
 	template<typename Func>
-	Function(Func func) : m_func(func) {}
+	Function(Func func) : _func(func) {}
 
 	template<typename Func, typename Object>
 	Function(
@@ -560,7 +560,7 @@ public:
 		Object&& obj
 	)
 	{
-		m_func = std::bind(func, obj);
+		_func = std::bind(func, obj);
 	}
 
 	void operator() (void) const;
@@ -568,7 +568,7 @@ public:
 	operator bool() const;
 
 protected:
-	std::function<void()> m_func;
+	std::function<void()> _func;
 };
 
 
@@ -593,7 +593,7 @@ public:
 	virtual void destroy() {}
 
 private:
-	int m_nRefCount;
+	int _nRefCount;
 };
 
 
@@ -701,11 +701,11 @@ public:
 	static void clearCache();
 
 protected:
-	double	m_fSourceCropX;
-	double	m_fSourceCropY;
-	double	m_fSourceCropWidth;
-	double	m_fSourceCropHeight;
-	ID2D1Bitmap * m_pBitmap;
+	double	_fSourceCropX;
+	double	_fSourceCropY;
+	double	_fSourceCropWidth;
+	double	_fSourceCropHeight;
+	ID2D1Bitmap * _pBitmap;
 };
 
 
@@ -799,11 +799,11 @@ protected:
 	void _update();
 
 protected:
-	bool m_bAutoUpdate;
-	bool m_bSortNeeded;
-	bool m_bWillSave;
-	bool m_bColliderVisiable;
-	Node * m_pRoot;
+	bool _bAutoUpdate;
+	bool _bSortNeeded;
+	bool _bWillSave;
+	bool _bColliderVisiable;
+	Node * _pRoot;
 };
 
 

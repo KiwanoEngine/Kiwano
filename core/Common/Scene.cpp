@@ -3,14 +3,14 @@
 #include "..\e2dmanager.h"
 
 e2d::Scene::Scene()
-	: m_bWillSave(true)
-	, m_bAutoUpdate(true)
-	, m_bSortNeeded(false)
-	, m_bColliderVisiable(false)
-	, m_pRoot(new Node())
+	: _bWillSave(true)
+	, _bAutoUpdate(true)
+	, _bSortNeeded(false)
+	, _bColliderVisiable(false)
+	, _pRoot(new Node())
 {
-	m_pRoot->retain();
-	m_pRoot->_setParentScene(this);
+	_pRoot->retain();
+	_pRoot->_setParentScene(this);
 }
 
 e2d::Scene::~Scene()
@@ -19,36 +19,36 @@ e2d::Scene::~Scene()
 
 void e2d::Scene::_render()
 {
-	m_pRoot->_render();
+	_pRoot->_render();
 
-	if (m_bColliderVisiable)
+	if (_bColliderVisiable)
 	{
 		// 恢复矩阵转换
 		Renderer::getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 		// 绘制所有几何图形
-		m_pRoot->_drawCollider();
+		_pRoot->_drawCollider();
 	}
 }
 
 void e2d::Scene::_update()
 {
 	// 执行 onUpdate 函数
-	if (m_bAutoUpdate)
+	if (_bAutoUpdate)
 	{
 		this->onUpdate();
 	}
 	// 更新根节点
-	m_pRoot->_update();
+	_pRoot->_update();
 }
 
 void e2d::Scene::setAutoUpdate(bool bAutoUpdate)
 {
-	m_bAutoUpdate = bAutoUpdate;
+	_bAutoUpdate = bAutoUpdate;
 }
 
 void e2d::Scene::add(Node * child, int order /* = 0 */)
 {
-	m_pRoot->addChild(child, order);
+	_pRoot->addChild(child, order);
 }
 
 #ifdef HIGHER_THAN_VS2012
@@ -63,35 +63,35 @@ void e2d::Scene::add(const std::initializer_list<Node*>& vNodes, int order)
 
 bool e2d::Scene::remove(Node * child)
 {
-	return m_pRoot->removeChild(child);
+	return _pRoot->removeChild(child);
 }
 
 std::vector<e2d::Node*> e2d::Scene::get(const String& name) const
 {
-	return m_pRoot->getChildren(name);
+	return _pRoot->getChildren(name);
 }
 
 e2d::Node * e2d::Scene::getOne(const String& name) const
 {
-	return m_pRoot->getChild(name);
+	return _pRoot->getChild(name);
 }
 
 std::vector<e2d::Node*> e2d::Scene::getAll() const
 {
-	return m_pRoot->getAllChildren();
+	return _pRoot->getAllChildren();
 }
 
 e2d::Node * e2d::Scene::getRoot() const
 {
-	return m_pRoot;
+	return _pRoot;
 }
 
 void e2d::Scene::showCollider(bool visiable)
 {
-	m_bColliderVisiable = visiable;
+	_bColliderVisiable = visiable;
 }
 
 void e2d::Scene::destroy()
 {
-	SafeRelease(&m_pRoot);
+	SafeRelease(&_pRoot);
 }

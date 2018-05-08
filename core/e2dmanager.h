@@ -93,6 +93,13 @@ class ActionManager
 	friend ActionBase;
 
 public:
+	// 执行动作
+	static void start(
+		ActionBase * action,
+		Node * target,
+		bool paused
+	);
+
 	// 继续名称相同的所有动作
 	static void resume(
 		const String& strActionName
@@ -131,38 +138,32 @@ private:
 
 	// 添加动作
 	static void __add(
-		ActionBase * pAction
+		ActionBase * action
 	);
 
 	// 删除动作
 	static void __remove(
-		ActionBase * pAction
-	);
-
-	// 执行动作
-	static void __startAction(
-		ActionBase * pAction,
-		Node * pTargetNode
+		ActionBase * action
 	);
 
 	// 继续绑定在节点上的所有动作
 	static void __resumeAllBindedWith(
-		Node * pTargetNode
+		Node * target
 	);
 
 	// 暂停绑定在节点上的所有动作
 	static void __pauseAllBindedWith(
-		Node * pTargetNode
+		Node * target
 	);
 
 	// 停止绑定在节点上的所有动作
 	static void __stopAllBindedWith(
-		Node * pTargetNode
+		Node * target
 	);
 
 	// 清空绑定在节点上的所有动作
 	static void __clearAllBindedWith(
-		Node * pTargetNode
+		Node * target
 	);
 
 	// 重置所有动作状态
@@ -273,7 +274,7 @@ public:
 	// 判断碰撞是否由该节点引发
 	// 如果是，返回与其相撞的节点指针，否则返回空
 	static Node * isCausedBy(
-		Node * pNode
+		Node * node
 	);
 
 	// 判断发生碰撞的节点名称是否相同

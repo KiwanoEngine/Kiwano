@@ -2,12 +2,12 @@
 #include "..\e2dmanager.h"
 
 e2d::ActionLoop::ActionLoop(ActionBase * action, int times /* = -1 */)
-	: m_pAction(action)
-	, m_nTimes(0)
-	, m_nTotalTimes(times)
+	: _pAction(action)
+	, _nTimes(0)
+	, _nTotalTimes(times)
 {
-	ASSERT(m_pAction, "ActionLoop NULL pointer exception!");
-	m_pAction->retain();
+	ASSERT(_pAction, "ActionLoop NULL pointer exception!");
+	_pAction->retain();
 }
 
 e2d::ActionLoop::~ActionLoop()
@@ -16,34 +16,34 @@ e2d::ActionLoop::~ActionLoop()
 
 e2d::ActionLoop * e2d::ActionLoop::clone() const
 {
-	return new ActionLoop(m_pAction->clone());
+	return new ActionLoop(_pAction->clone());
 }
 
 void e2d::ActionLoop::_init()
 {
 	ActionBase::_init();
-	m_pAction->m_pTarget = m_pTarget;
-	m_pAction->_init();
+	_pAction->_pTarget = _pTarget;
+	_pAction->_init();
 }
 
 void e2d::ActionLoop::_update()
 {
 	ActionBase::_update();
 
-	if (m_nTimes == m_nTotalTimes)
+	if (_nTimes == _nTotalTimes)
 	{
 		this->stop();
 		return;
 	}
 
-	m_pAction->_update();
+	_pAction->_update();
 
-	if (m_pAction->_isDone())
+	if (_pAction->_isDone())
 	{
-		m_nTimes++;
+		_nTimes++;
 		
 		ActionBase::reset();
-		m_pAction->reset();
+		_pAction->reset();
 	}
 }
 
@@ -51,17 +51,17 @@ void e2d::ActionLoop::reset()
 {
 	ActionBase::reset();
 
-	m_pAction->reset();
-	m_nTimes = 0;
+	_pAction->reset();
+	_nTimes = 0;
 }
 
 void e2d::ActionLoop::destroy()
 {
 	ActionBase::destroy();
-	SafeRelease(&m_pAction);
+	SafeRelease(&_pAction);
 }
 
 void e2d::ActionLoop::_resetTime()
 {
-	m_pAction->_resetTime();
+	_pAction->_resetTime();
 }

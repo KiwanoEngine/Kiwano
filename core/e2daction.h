@@ -170,11 +170,6 @@ public:
 	// 获取动作运行状态
 	virtual bool isRunning();
 
-	// 开始动作
-	virtual void startWithTarget(
-		Node* target	/* 执行该动作的目标 */
-	);
-
 	// 继续动作
 	virtual void resume();
 
@@ -192,11 +187,11 @@ public:
 		const String& name
 	);
 
-	// 获取一个新的逆向动作
-	virtual ActionBase * reverse() const;
-
-	// 获取一个新的拷贝动作
+	// 获取动作的拷贝
 	virtual ActionBase * clone() const = 0;
+
+	// 获取动作的倒转
+	virtual ActionBase * reverse() const;
 
 	// 重置动作
 	virtual void reset();
@@ -220,14 +215,19 @@ protected:
 	// 重置动画时间
 	virtual void _resetTime();
 
+	// 开始动作
+	virtual void _startWithTarget(
+		Node* target
+	);
+
 protected:
-	String	m_sName;
-	bool	m_bRunning;
-	bool	m_bEnding;
-	bool	m_bInit;
-	Node *	m_pTarget;
-	Scene * m_pParentScene;
-	double	m_fLast;
+	String	_sName;
+	bool	_bRunning;
+	bool	_bEnding;
+	bool	_bInit;
+	Node *	_pTarget;
+	Scene * _pParentScene;
+	double	_fLast;
 };
 
 
@@ -249,8 +249,8 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double m_fDuration;
-	double m_fRateOfProgress;
+	double _fDuration;
+	double _fRateOfProgress;
 };
 
 
@@ -268,7 +268,7 @@ public:
 	// 获取该动画的拷贝对象
 	virtual ActionMoveBy * clone() const override;
 
-	// 获取该动画的逆动画
+	// 获取该动画的倒转
 	virtual ActionMoveBy * reverse() const override;
 
 protected:
@@ -279,8 +279,8 @@ protected:
 	virtual void _update() override;
 
 protected:
-	Point		m_BeginPos;
-	Vector	m_MoveVec;
+	Point		_BeginPos;
+	Vector	_MoveVec;
 };
 
 
@@ -303,7 +303,7 @@ protected:
 	virtual void _init() override;
 
 protected:
-	Point m_EndPos;
+	Point _EndPos;
 };
 
 
@@ -328,7 +328,7 @@ public:
 	// 获取该动画的拷贝对象
 	virtual ActionScaleBy * clone() const override;
 
-	// 获取该动画的逆动画
+	// 获取该动画的倒转
 	virtual ActionScaleBy * reverse() const override;
 
 protected:
@@ -339,10 +339,10 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double	m_nBeginScaleX;
-	double	m_nBeginScaleY;
-	double	m_nVariationX;
-	double	m_nVariationY;
+	double	_nBeginScaleX;
+	double	_nBeginScaleY;
+	double	_nVariationX;
+	double	_nVariationY;
 };
 
 
@@ -372,8 +372,8 @@ protected:
 	virtual void _init() override;
 
 protected:
-	double	m_nEndScaleX;
-	double	m_nEndScaleY;
+	double	_nEndScaleX;
+	double	_nEndScaleY;
 };
 
 
@@ -391,7 +391,7 @@ public:
 	// 获取该动画的拷贝对象
 	virtual ActionOpacityBy * clone() const override;
 
-	// 获取该动画的逆动画
+	// 获取该动画的倒转
 	virtual ActionOpacityBy * reverse() const override;
 
 protected:
@@ -402,8 +402,8 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double m_nBeginVal;
-	double m_nVariation;
+	double _nBeginVal;
+	double _nVariation;
 };
 
 
@@ -426,7 +426,7 @@ protected:
 	virtual void _init() override;
 
 protected:
-	double m_nEndVal;
+	double _nEndVal;
 };
 
 
@@ -437,8 +437,11 @@ class ActionFadeIn :
 public:
 	// 创建淡入动画
 	ActionFadeIn(
-		double duration	/* 动画持续时长 */
-	) : ActionOpacityTo(duration, 1) {}
+		double duration		/* 动画持续时长 */
+	) 
+		: ActionOpacityTo(duration, 1) 
+	{
+	}
 };
 
 
@@ -449,8 +452,11 @@ class ActionFadeOut :
 public:
 	// 创建淡出动画
 	ActionFadeOut(
-		double duration	/* 动画持续时长 */
-	) : ActionOpacityTo(duration, 0) {}
+		double duration		/* 动画持续时长 */
+	) 
+		: ActionOpacityTo(duration, 0) 
+	{
+	}
 };
 
 
@@ -468,7 +474,7 @@ public:
 	// 获取该动画的拷贝对象
 	virtual ActionRotateBy * clone() const override;
 
-	// 获取该动画的逆动画
+	// 获取该动画的倒转
 	virtual ActionRotateBy * reverse() const override;
 
 protected:
@@ -479,8 +485,8 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double m_nBeginVal;
-	double m_nVariation;
+	double _nBeginVal;
+	double _nVariation;
 };
 
 
@@ -503,7 +509,7 @@ protected:
 	virtual void _init() override;
 
 protected:
-	double m_nEndVal;
+	double _nEndVal;
 };
 
 
@@ -516,7 +522,7 @@ public:
 	ActionTwo(
 		ActionBase * pActionFirst,		/* 第一个动作 */
 		ActionBase * pActionSecond,		/* 第二个动作 */
-		bool bAtSameTime = false	/* 同时开始 */
+		bool bAtSameTime = false		/* 同时开始 */
 	);
 
 	virtual ~ActionTwo();
@@ -524,9 +530,9 @@ public:
 	// 获取该动作的拷贝对象
 	virtual ActionTwo * clone() const override;
 
-	// 获取该动作的逆动作
+	// 获取该动作的倒转
 	virtual ActionTwo * reverse(
-		bool actionReverse = true	/* 子动作是否执行逆动作 */
+		bool actionReverse = true	/* 子动作是否倒转 */
 	) const;
 
 	// 重置动作
@@ -546,9 +552,9 @@ protected:
 	virtual void _resetTime() override;
 
 protected:
-	ActionBase*	m_pFirstAction;
-	ActionBase*	m_pSecondAction;
-	bool	m_bAtSameTime;
+	ActionBase*	_pFirstAction;
+	ActionBase*	_pSecondAction;
+	bool	_bAtSameTime;
 };
 
 
@@ -568,7 +574,7 @@ public:
 #else
 	// 创建顺序动作
 	ActionSequence(
-		int number,			/* 动作数量 */
+		int number,				/* 动作数量 */
 		ActionBase * action,	/* 第一个动作 */
 		...
 	);
@@ -598,9 +604,9 @@ public:
 	// 获取该动作的拷贝对象
 	virtual ActionSequence * clone() const override;
 
-	// 获取该动作的逆动作
+	// 获取该动作的倒转
 	virtual ActionSequence * reverse(
-		bool actionReverse = true	/* 子动作是否执行逆动作 */
+		bool actionReverse = true	/* 子动作是否倒转 */
 	) const;
 
 	// 重置动作
@@ -620,8 +626,8 @@ protected:
 	virtual void _resetTime() override;
 
 protected:
-	UINT					m_nActionIndex;
-	std::vector<ActionBase*>	m_vActions;
+	UINT _nActionIndex;
+	std::vector<ActionBase*> _vActions;
 };
 
 
@@ -646,7 +652,7 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double m_fDelayTime;
+	double _fDelayTime;
 };
 
 
@@ -683,9 +689,9 @@ protected:
 	virtual void _resetTime() override;
 
 protected:
-	ActionBase * m_pAction;
-	int m_nTimes;
-	int m_nTotalTimes;
+	ActionBase * _pAction;
+	int _nTimes;
+	int _nTotalTimes;
 };
 
 
@@ -759,7 +765,7 @@ public:
 	// 获取该动画的拷贝对象
 	virtual Animation * clone() const override;
 
-	// 获取该动画的逆动画
+	// 获取该动画的倒转
 	virtual Animation * reverse() const override;
 
 	// 重置动作
@@ -776,9 +782,9 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double	m_fInterval;
-	UINT	m_nFrameIndex;
-	std::vector<Image*> m_vFrames;
+	double	_fInterval;
+	UINT	_nFrameIndex;
+	std::vector<Image*> _vFrames;
 };
 
 
@@ -803,7 +809,7 @@ protected:
 	virtual void _update() override;
 
 protected:
-	Function m_Callback;
+	Function _Callback;
 };
 
 

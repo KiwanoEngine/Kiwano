@@ -79,16 +79,16 @@ protected:
 	);
 
 protected:
-	bool m_bOpened;
-	mutable bool m_bPlaying;
-	DWORD m_dwSize;
-	CHAR* m_pResourceBuffer;
-	BYTE* m_pbWaveData;
-	HMMIO m_hmmio;
-	MMCKINFO m_ck;
-	MMCKINFO m_ckRiff;
-	WAVEFORMATEX* m_pwfx;
-	IXAudio2SourceVoice* m_pSourceVoice;
+	bool _bOpened;
+	mutable bool _bPlaying;
+	DWORD _dwSize;
+	CHAR* _pResourceBuffer;
+	BYTE* _pbWaveData;
+	HMMIO _hmmio;
+	MMCKINFO _ck;
+	MMCKINFO _ckRiff;
+	WAVEFORMATEX* _pwfx;
+	IXAudio2SourceVoice* _pSourceVoice;
 };
 
 typedef std::map<UINT, MusicPlayer *> MusicMap;
@@ -106,14 +106,14 @@ static MusicMap& GetMusicResList()
 }
 
 MusicPlayer::MusicPlayer()
-	: m_bOpened(false)
-	, m_bPlaying(false)
-	, m_pwfx(nullptr)
-	, m_hmmio(nullptr)
-	, m_pResourceBuffer(nullptr)
-	, m_pbWaveData(nullptr)
-	, m_dwSize(0)
-	, m_pSourceVoice(nullptr)
+	: _bOpened(false)
+	, _bPlaying(false)
+	, _pwfx(nullptr)
+	, _hmmio(nullptr)
+	, _pResourceBuffer(nullptr)
+	, _pbWaveData(nullptr)
+	, _dwSize(0)
+	, _pSourceVoice(nullptr)
 {
 }
 
@@ -124,7 +124,7 @@ MusicPlayer::~MusicPlayer()
 
 bool MusicPlayer::open(const e2d::String& filePath)
 {
-	if (m_bOpened)
+	if (_bOpened)
 	{
 		WARN_IF(true, "MusicInfo can be opened only once!");
 		return false;
@@ -150,9 +150,9 @@ bool MusicPlayer::open(const e2d::String& filePath)
 		return false;
 	}
 
-	m_hmmio = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
+	_hmmio = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
 
-	if (nullptr == m_hmmio)
+	if (nullptr == _hmmio)
 	{
 		return TraceError(L"mmioOpen");
 	}
@@ -160,37 +160,37 @@ bool MusicPlayer::open(const e2d::String& filePath)
 	if (!_readMMIO())
 	{
 		// 读取非 wave 文件时 ReadMMIO 调用失败
-		mmioClose(m_hmmio, 0);
+		mmioClose(_hmmio, 0);
 		return TraceError(L"_readMMIO");
 	}
 
 	if (!_resetFile())
 		return TraceError(L"_resetFile");
 
-	// 重置文件后，wave 文件的大小是 m_ck.cksize
-	m_dwSize = m_ck.cksize;
+	// 重置文件后，wave 文件的大小是 _ck.cksize
+	_dwSize = _ck.cksize;
 
 	// 将样本数据读取到内存中
-	m_pbWaveData = new BYTE[m_dwSize];
+	_pbWaveData = new BYTE[_dwSize];
 
-	if (!_read(m_pbWaveData, m_dwSize))
+	if (!_read(_pbWaveData, _dwSize))
 	{
 		TraceError(L"Failed to read WAV data");
-		SAFE_DELETE_ARRAY(m_pbWaveData);
+		SAFE_DELETE_ARRAY(_pbWaveData);
 		return false;
 	}
 
 	// 创建音源
 	HRESULT hr;
-	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&m_pSourceVoice, m_pwfx)))
+	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_pSourceVoice, _pwfx)))
 	{
 		TraceError(L"Create source voice error", hr);
-		SAFE_DELETE_ARRAY(m_pbWaveData);
+		SAFE_DELETE_ARRAY(_pbWaveData);
 		return false;
 	}
 
-	m_bOpened = true;
-	m_bPlaying = false;
+	_bOpened = true;
+	_bPlaying = false;
 	return true;
 }
 
@@ -201,7 +201,7 @@ bool MusicPlayer::open(int resNameId, const e2d::String& resType)
 	DWORD dwSize;
 	void* pvRes;
 
-	if (m_bOpened)
+	if (_bOpened)
 	{
 		WARN_IF(true, "MusicInfo can be opened only once!");
 		return false;
@@ -226,69 +226,69 @@ bool MusicPlayer::open(int resNameId, const e2d::String& resType)
 	if (nullptr == (pvRes = LockResource(hResData)))
 		return TraceError(L"LockResource");
 
-	m_pResourceBuffer = new CHAR[dwSize];
-	memcpy(m_pResourceBuffer, pvRes, dwSize);
+	_pResourceBuffer = new CHAR[dwSize];
+	memcpy(_pResourceBuffer, pvRes, dwSize);
 
 	MMIOINFO mmioInfo;
 	ZeroMemory(&mmioInfo, sizeof(mmioInfo));
 	mmioInfo.fccIOProc = FOURCC_MEM;
 	mmioInfo.cchBuffer = dwSize;
-	mmioInfo.pchBuffer = (CHAR*)m_pResourceBuffer;
+	mmioInfo.pchBuffer = (CHAR*)_pResourceBuffer;
 
-	m_hmmio = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
+	_hmmio = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
 
 	if (!_readMMIO())
 	{
 		// ReadMMIO will fail if its an not a wave file
-		mmioClose(m_hmmio, 0);
+		mmioClose(_hmmio, 0);
 		return TraceError(L"ReadMMIO");
 	}
 
 	if (!_resetFile())
 		return TraceError(L"ResetFile");
 
-	// After the reset, the size of the wav file is m_ck.cksize so store it now
-	m_dwSize = m_ck.cksize;
+	// After the reset, the size of the wav file is _ck.cksize so store it now
+	_dwSize = _ck.cksize;
 
 	// Read the sample data into memory
-	m_pbWaveData = new BYTE[m_dwSize];
+	_pbWaveData = new BYTE[_dwSize];
 
-	if (!_read(m_pbWaveData, m_dwSize))
+	if (!_read(_pbWaveData, _dwSize))
 	{
 		TraceError(L"Failed to read WAV data");
-		SAFE_DELETE_ARRAY(m_pbWaveData);
+		SAFE_DELETE_ARRAY(_pbWaveData);
 		return false;
 	}
 
 	// 创建音源
 	HRESULT hr;
-	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&m_pSourceVoice, m_pwfx)))
+	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_pSourceVoice, _pwfx)))
 	{
 		TraceError(L"Create source voice error", hr);
-		SAFE_DELETE_ARRAY(m_pbWaveData);
+		SAFE_DELETE_ARRAY(_pbWaveData);
 		return false;
 	}
 
-	m_bOpened = true;
-	m_bPlaying = false;
+	_bOpened = true;
+	_bPlaying = false;
 	return true;
 }
 
 bool MusicPlayer::play(int nLoopCount)
 {
-	if (!m_bOpened)
+	if (!_bOpened)
 	{
 		WARN_IF(true, "MusicInfo::play Failed: MusicInfo must be opened first!");
 		return false;
 	}
 
-	if (m_pSourceVoice == nullptr)
+	if (_pSourceVoice == nullptr)
 	{
 		WARN_IF(true, "MusicInfo::play Failed: IXAudio2SourceVoice Null pointer exception!");
 		return false;
 	}
 
-	if (m_bPlaying)
+	if (_bPlaying)
 	{
 		stop();
 	}
@@ -298,23 +298,23 @@ bool MusicPlayer::play(int nLoopCount)
 
 	// 提交 wave 样本数据
 	XAUDIO2_BUFFER buffer = { 0 };
-	buffer.pAudioData = m_pbWaveData;
+	buffer.pAudioData = _pbWaveData;
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.AudioBytes = m_dwSize;
+	buffer.AudioBytes = _dwSize;
 	buffer.LoopCount = nLoopCount;
 
 	HRESULT hr;
-	if (FAILED(hr = m_pSourceVoice->SubmitSourceBuffer(&buffer)))
+	if (FAILED(hr = _pSourceVoice->SubmitSourceBuffer(&buffer)))
 	{
 		TraceError(L"Submitting source buffer error", hr);
-		m_pSourceVoice->DestroyVoice();
-		SAFE_DELETE_ARRAY(m_pbWaveData);
+		_pSourceVoice->DestroyVoice();
+		SAFE_DELETE_ARRAY(_pbWaveData);
 		return false;
 	}
 
-	if (SUCCEEDED(hr = m_pSourceVoice->Start(0)))
+	if (SUCCEEDED(hr = _pSourceVoice->Start(0)))
 	{
-		m_bPlaying = true;
+		_bPlaying = true;
 	}
 	
 	return SUCCEEDED(hr);
@@ -322,75 +322,75 @@ bool MusicPlayer::play(int nLoopCount)
 
 void MusicPlayer::pause()
 {
-	if (m_pSourceVoice)
+	if (_pSourceVoice)
 	{
-		if (SUCCEEDED(m_pSourceVoice->Stop()))
+		if (SUCCEEDED(_pSourceVoice->Stop()))
 		{
-			m_bPlaying = false;
+			_bPlaying = false;
 		}
 	}
 }
 
 void MusicPlayer::resume()
 {
-	if (m_pSourceVoice)
+	if (_pSourceVoice)
 	{
-		if (SUCCEEDED(m_pSourceVoice->Start()))
+		if (SUCCEEDED(_pSourceVoice->Start()))
 		{
-			m_bPlaying = true;
+			_bPlaying = true;
 		}
 	}
 }
 
 void MusicPlayer::stop()
 {
-	if (m_pSourceVoice)
+	if (_pSourceVoice)
 	{
-		if (SUCCEEDED(m_pSourceVoice->Stop()))
+		if (SUCCEEDED(_pSourceVoice->Stop()))
 		{
-			m_pSourceVoice->ExitLoop();
-			m_pSourceVoice->FlushSourceBuffers();
-			m_bPlaying = false;
+			_pSourceVoice->ExitLoop();
+			_pSourceVoice->FlushSourceBuffers();
+			_bPlaying = false;
 		}
 	}
 }
 
 void MusicPlayer::close()
 {
-	if (m_pSourceVoice)
+	if (_pSourceVoice)
 	{
-		m_pSourceVoice->Stop();
-		m_pSourceVoice->FlushSourceBuffers();
-		m_pSourceVoice->DestroyVoice();
-		m_pSourceVoice = nullptr;
+		_pSourceVoice->Stop();
+		_pSourceVoice->FlushSourceBuffers();
+		_pSourceVoice->DestroyVoice();
+		_pSourceVoice = nullptr;
 	}
 
-	if (m_hmmio != nullptr)
+	if (_hmmio != nullptr)
 	{
-		mmioClose(m_hmmio, 0);
-		m_hmmio = nullptr;
+		mmioClose(_hmmio, 0);
+		_hmmio = nullptr;
 	}
 
-	SAFE_DELETE_ARRAY(m_pResourceBuffer);
-	SAFE_DELETE_ARRAY(m_pbWaveData);
-	SAFE_DELETE_ARRAY(m_pwfx);
+	SAFE_DELETE_ARRAY(_pResourceBuffer);
+	SAFE_DELETE_ARRAY(_pbWaveData);
+	SAFE_DELETE_ARRAY(_pwfx);
 
-	m_bOpened = false;
-	m_bPlaying = false;
+	_bOpened = false;
+	_bPlaying = false;
 }
 
 bool MusicPlayer::isPlaying() const
 {
-	if (m_bOpened && m_pSourceVoice)
+	if (_bOpened && _pSourceVoice)
 	{
 		XAUDIO2_VOICE_STATE state;
-		m_pSourceVoice->GetState(&state);
+		_pSourceVoice->GetState(&state);
 
 		if (state.BuffersQueued == 0)
 		{
-			m_bPlaying = false;
+			_bPlaying = false;
 		}
-		return m_bPlaying;
+		return _bPlaying;
 	}
 	else
 	{
@@ -400,9 +400,9 @@ bool MusicPlayer::isPlaying() const
 
 bool MusicPlayer::setVolume(float fVolume)
 {
-	if (m_pSourceVoice)
+	if (_pSourceVoice)
 	{
-		return SUCCEEDED(m_pSourceVoice->SetVolume(fVolume));
+		return SUCCEEDED(_pSourceVoice->SetVolume(fVolume));
 	}
 	return false;
 }
@@ -414,19 +414,19 @@ bool MusicPlayer::_readMMIO()
 
 	memset(&ckIn, 0, sizeof(ckIn));
 
-	m_pwfx = nullptr;
+	_pwfx = nullptr;
 
-	if ((0 != mmioDescend(m_hmmio, &m_ckRiff, nullptr, 0)))
+	if ((0 != mmioDescend(_hmmio, &_ckRiff, nullptr, 0)))
 		return TraceError(L"mmioDescend");
 
 	// 确认文件是一个合法的 wave 文件
-	if ((m_ckRiff.ckid != FOURCC_RIFF) ||
-		(m_ckRiff.fccType != mmioFOURCC('W', 'A', 'V', 'E')))
+	if ((_ckRiff.ckid != FOURCC_RIFF) ||
+		(_ckRiff.fccType != mmioFOURCC('W', 'A', 'V', 'E')))
 		return TraceError(L"mmioFOURCC");
 
 	// 在输入文件中查找 'fmt' 块
 	ckIn.ckid = mmioFOURCC('f', 'm', 't', ' ');
-	if (0 != mmioDescend(m_hmmio, &ckIn, &m_ckRiff, MMIO_FINDCHUNK))
+	if (0 != mmioDescend(_hmmio, &ckIn, &_ckRiff, MMIO_FINDCHUNK))
 		return TraceError(L"mmioDescend");
 
 	// 'fmt' 块至少应和 PCMWAVEFORMAT 一样大
@@ -434,7 +434,7 @@ bool MusicPlayer::_readMMIO()
 		return TraceError(L"sizeof(PCMWAVEFORMAT)");
 
 	// 将 'fmt' 块读取到 pcmWaveFormat 中
-	if (mmioRead(m_hmmio, (HPSTR)&pcmWaveFormat,
+	if (mmioRead(_hmmio, (HPSTR)&pcmWaveFormat,
 		sizeof(pcmWaveFormat)) != sizeof(pcmWaveFormat))
 		return TraceError(L"mmioRead");
 
@@ -442,37 +442,37 @@ bool MusicPlayer::_readMMIO()
 	// 的数据，这个数据就是额外分配的大小
 	if (pcmWaveFormat.wf.wFormatTag == WAVE_FORMAT_PCM)
 	{
-		m_pwfx = (WAVEFORMATEX*)new CHAR[sizeof(WAVEFORMATEX)];
+		_pwfx = (WAVEFORMATEX*)new CHAR[sizeof(WAVEFORMATEX)];
 
 		// 拷贝数据
-		memcpy(m_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
-		m_pwfx->cbSize = 0;
+		memcpy(_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
+		_pwfx->cbSize = 0;
 	}
 	else
 	{
 		// 读取额外数据的大小
 		WORD cbExtraBytes = 0L;
-		if (mmioRead(m_hmmio, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD))
+		if (mmioRead(_hmmio, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD))
 			return TraceError(L"mmioRead");
 
-		m_pwfx = (WAVEFORMATEX*)new CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
+		_pwfx = (WAVEFORMATEX*)new CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
 
 		// 拷贝数据
-		memcpy(m_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
-		m_pwfx->cbSize = cbExtraBytes;
+		memcpy(_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
+		_pwfx->cbSize = cbExtraBytes;
 
 		// 读取额外数据
-		if (mmioRead(m_hmmio, (CHAR*)(((BYTE*)&(m_pwfx->cbSize)) + sizeof(WORD)),
+		if (mmioRead(_hmmio, (CHAR*)(((BYTE*)&(_pwfx->cbSize)) + sizeof(WORD)),
 			cbExtraBytes) != cbExtraBytes)
 		{
-			SAFE_DELETE(m_pwfx);
+			SAFE_DELETE(_pwfx);
 			return TraceError(L"mmioRead");
 		}
 	}
 
-	if (0 != mmioAscend(m_hmmio, &ckIn, 0))
+	if (0 != mmioAscend(_hmmio, &ckIn, 0))
 	{
-		SAFE_DELETE(m_pwfx);
+		SAFE_DELETE(_pwfx);
 		return TraceError(L"mmioAscend");
 	}
 
@@ -482,13 +482,13 @@ bool MusicPlayer::_readMMIO()
 bool MusicPlayer::_resetFile()
 {
 	// Seek to the data
-	if (-1 == mmioSeek(m_hmmio, m_ckRiff.dwDataOffset + sizeof(FOURCC),
+	if (-1 == mmioSeek(_hmmio, _ckRiff.dwDataOffset + sizeof(FOURCC),
 		SEEK_SET))
 		return TraceError(L"mmioSeek");
 
 	// Search the input file for the 'data' chunk.
-	m_ck.ckid = mmioFOURCC('d', 'a', 't', 'a');
-	if (0 != mmioDescend(m_hmmio, &m_ck, &m_ckRiff, MMIO_FINDCHUNK))
+	_ck.ckid = mmioFOURCC('d', 'a', 't', 'a');
+	if (0 != mmioDescend(_hmmio, &_ck, &_ckRiff, MMIO_FINDCHUNK))
 		return TraceError(L"mmioDescend");
 
 	return true;
@@ -496,23 +496,23 @@ bool MusicPlayer::_resetFile()
 
 bool MusicPlayer::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 {
-	MMIOINFO mmioinfoIn; // current status of m_hmmio
+	MMIOINFO mmioinfoIn; // current status of _hmmio
 
-	if (0 != mmioGetInfo(m_hmmio, &mmioinfoIn, 0))
+	if (0 != mmioGetInfo(_hmmio, &mmioinfoIn, 0))
 		return TraceError(L"mmioGetInfo");
 
 	UINT cbDataIn = dwSizeToRead;
-	if (cbDataIn > m_ck.cksize)
-		cbDataIn = m_ck.cksize;
+	if (cbDataIn > _ck.cksize)
+		cbDataIn = _ck.cksize;
 
-	m_ck.cksize -= cbDataIn;
+	_ck.cksize -= cbDataIn;
 
 	for (DWORD cT = 0; cT < cbDataIn; cT++)
 	{
 		// Copy the bytes from the io to the buffer.
 		if (mmioinfoIn.pchNext == mmioinfoIn.pchEndRead)
 		{
-			if (0 != mmioAdvance(m_hmmio, &mmioinfoIn, MMIO_READ))
+			if (0 != mmioAdvance(_hmmio, &mmioinfoIn, MMIO_READ))
 				return TraceError(L"mmioAdvance");
 
 			if (mmioinfoIn.pchNext == mmioinfoIn.pchEndRead)
@@ -524,7 +524,7 @@ bool MusicPlayer::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 		mmioinfoIn.pchNext++;
 	}
 
-	if (0 != mmioSetInfo(m_hmmio, &mmioinfoIn, 0))
+	if (0 != mmioSetInfo(_hmmio, &mmioinfoIn, 0))
 		return TraceError(L"mmioSetInfo");
 
 	return true;

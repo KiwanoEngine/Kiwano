@@ -3,25 +3,25 @@
 e2d::ActionScaleTo::ActionScaleTo(double duration, double scale)
 	: ActionScaleBy(duration, 0, 0)
 {
-	m_nEndScaleX = scale;
-	m_nEndScaleY = scale;
+	_nEndScaleX = scale;
+	_nEndScaleY = scale;
 }
 
 e2d::ActionScaleTo::ActionScaleTo(double duration, double scaleX, double scaleY)
 	: ActionScaleBy(duration, 0, 0)
 {
-	m_nEndScaleX = scaleX;
-	m_nEndScaleY = scaleY;
+	_nEndScaleX = scaleX;
+	_nEndScaleY = scaleY;
 }
 
 e2d::ActionScaleTo * e2d::ActionScaleTo::clone() const
 {
-	return new ActionScaleTo(m_fDuration, m_nEndScaleX, m_nEndScaleY);
+	return new ActionScaleTo(_fDuration, _nEndScaleX, _nEndScaleY);
 }
 
 void e2d::ActionScaleTo::_init()
 {
 	ActionScaleBy::_init();
-	m_nVariationX = m_nEndScaleX - m_nBeginScaleX;
-	m_nVariationY = m_nEndScaleY - m_nBeginScaleY;
+	_nVariationX = _nEndScaleX - _nBeginScaleX;
+	_nVariationY = _nEndScaleY - _nBeginScaleY;
 }

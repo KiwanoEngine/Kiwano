@@ -9,16 +9,16 @@ e2d::TransitionEmerge::TransitionEmerge(double duration)
 void e2d::TransitionEmerge::_init(Scene * prev, Scene * next)
 {
 	TransitionBase::_init(prev, next);
-	m_sPrevLayerParam.opacity = 1;
-	m_sNextLayerParam.opacity = 0;
+	_sPrevLayerParam.opacity = 1;
+	_sNextLayerParam.opacity = 0;
 }
 
 void e2d::TransitionEmerge::_updateCustom()
 {
-	m_sPrevLayerParam.opacity = float(1 - m_fRateOfProgress);
-	m_sNextLayerParam.opacity = float(m_fRateOfProgress);
+	_sPrevLayerParam.opacity = float(1 - _fRateOfProgress);
+	_sNextLayerParam.opacity = float(_fRateOfProgress);
 
-	if (m_fRateOfProgress >= 1)
+	if (_fRateOfProgress >= 1)
 	{
 		this->_stop();
 	}

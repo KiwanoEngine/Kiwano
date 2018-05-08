@@ -79,17 +79,17 @@ protected:
 	virtual void _stop();
 
 protected:
-	bool m_bEnd;
-	double m_fLast;
-	double m_fDuration;
-	double m_fRateOfProgress;
-	Size m_WindowSize;
-	Scene * m_pPrevScene;
-	Scene * m_pNextScene;
-	ID2D1Layer * m_pPrevLayer;
-	ID2D1Layer * m_pNextLayer;
-	D2D1_LAYER_PARAMETERS m_sPrevLayerParam;
-	D2D1_LAYER_PARAMETERS m_sNextLayerParam;
+	bool _bEnd;
+	double _fLast;
+	double _fDuration;
+	double _fRateOfProgress;
+	Size _WindowSize;
+	Scene * _pPrevScene;
+	Scene * _pNextScene;
+	ID2D1Layer * _pPrevLayer;
+	ID2D1Layer * _pNextLayer;
+	D2D1_LAYER_PARAMETERS _sPrevLayerParam;
+	D2D1_LAYER_PARAMETERS _sNextLayerParam;
 };
 
 
@@ -120,9 +120,9 @@ protected:
 	virtual void _reset() override;
 
 protected:
-	double m_fFadeOutDuration;
-	double m_fFadeInDuration;
-	bool m_bFadeOutTransioning;
+	double _fFadeOutDuration;
+	double _fFadeInDuration;
+	bool _bFadeOutTransioning;
 };
 
 
@@ -170,9 +170,9 @@ protected:
 	virtual void _reset() override;
 
 protected:
-	Direct m_Direct;
-	Vector m_Vector;
-	Point m_NextPos;
+	Direct _Direct;
+	Vector _Vector;
+	Point _NextPos;
 };
 
 }

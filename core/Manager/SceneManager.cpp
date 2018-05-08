@@ -31,7 +31,7 @@ void e2d::SceneManager::enter(Scene * scene, TransitionBase * transition /* = nu
 
 	if (s_pCurrScene)
 	{
-		s_pCurrScene->m_bWillSave = saveCurrentScene;
+		s_pCurrScene->_bWillSave = saveCurrentScene;
 	}
 }
 
@@ -48,7 +48,7 @@ void e2d::SceneManager::back(TransitionBase * transition /* = nullptr */)
 	// 返回上一场景时，不保存当前场景
 	if (s_pCurrScene)
 	{
-		s_pCurrScene->m_bWillSave = false;
+		s_pCurrScene->_bWillSave = false;
 	}
 
 	// 设置切换场景动画
@@ -120,7 +120,7 @@ void e2d::SceneManager::__update()
 		s_pCurrScene->onExit();
 
 		// 若要保存当前场景，把它放入栈中
-		if (s_pCurrScene->m_bWillSave)
+		if (s_pCurrScene->_bWillSave)
 		{
 			s_SceneStack.push(s_pCurrScene);
 		}

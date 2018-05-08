@@ -126,10 +126,10 @@ int e2d::Game::start(bool autoRelease/* true */)
 				Time::__updateLast();		// 刷新时间信息
 			}
 			Renderer::__render();			// 渲染游戏画面
+			ObjectManager::__update();		// 刷新内存池
 		}
 		else
 		{
-			ObjectManager::__update();		// 刷新内存池
 			Time::__sleep();				// 挂起线程
 		}
 	}
@@ -204,9 +204,9 @@ void e2d::Game::destroy()
 bool e2d::Game::createMutex(const String& sMutexName, const String& sWindowTitle)
 {
 	// 创建进程互斥体
-	HANDLE m_hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + sMutexName);
+	HANDLE _hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + sMutexName);
 
-	if (m_hMutex == nullptr)
+	if (_hMutex == nullptr)
 	{
 		WARN_IF(true, "CreateMutex Failed!");
 		return true;
@@ -216,7 +216,7 @@ bool e2d::Game::createMutex(const String& sMutexName, const String& sWindowTitle
 	if (::GetLastError() == ERROR_ALREADY_EXISTS)
 	{
 		// 关闭进程互斥体
-		::CloseHandle(m_hMutex);
+		::CloseHandle(_hMutex);
 		// 打开指定窗口
 		if (!sWindowTitle.isEmpty())
 		{
