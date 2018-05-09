@@ -5,25 +5,26 @@ e2d::Sequence::Sequence()
 {
 }
 
-#ifdef HIGHER_THAN_VS2012
-e2d::Sequence::Sequence(const std::initializer_list<Action*>& vActions)
-	: _currIndex(0)
-{
-	this->add(vActions);
-}
-#else
-e2d::Sequence::Sequence(int number, Action * action1, ...) :
+e2d::Sequence::Sequence(int number, Action * action, ...) :
 	_currIndex(0)
 {
-	Action ** ppAction = &action1;
+	va_list args;
+	va_start(args, action);
 
-	while (number > 0)
+	this->add(action);
+	for (int i = 1; i < number; i++)
 	{
-		WARN_IF((*ppAction) == nullptr, "Sequence NULL pointer exception!");
-		this->add(*ppAction);
-		ppAction++;
-		number--;
+		this->add(va_arg(args, Action*));
 	}
+
+	va_end(args);
+}
+
+#ifdef HIGHER_THAN_VS2012
+e2d::Sequence::Sequence(const std::initializer_list<Action*>& actions)
+	: _currIndex(0)
+{
+	this->add(actions);
 }
 #endif
 
@@ -103,25 +104,26 @@ void e2d::Sequence::add(Action * action)
 	}
 }
 
-#ifdef HIGHER_THAN_VS2012
-void e2d::Sequence::add(const std::initializer_list<Action*>& vActions)
-{
-	for (const auto &action : vActions)
-	{
-		this->add(action);
-	}
-}
-#else
 void e2d::Sequence::add(int number, Action * action, ...)
 {
-	Action ** ppAction = &action;
+	va_list args;
+	va_start(args, action);
 
-	while (number > 0)
+	this->add(action);
+	for (int i = 1; i < number; i++)
 	{
-		WARN_IF((*ppAction) == nullptr, "Sequence NULL pointer exception!");
-		this->add(*ppAction);
-		ppAction++;
-		number--;
+		this->add(va_arg(args, Action*));
+	}
+
+	va_end(args);
+}
+
+#ifdef HIGHER_THAN_VS2012
+void e2d::Sequence::add(const std::initializer_list<Action*>& actions)
+{
+	for (const auto &action : actions)
+	{
+		this->add(action);
 	}
 }
 #endif

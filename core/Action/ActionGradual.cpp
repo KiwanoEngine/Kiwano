@@ -21,7 +21,7 @@ void e2d::ActionGradual::_update()
 		this->stop();
 		return;
 	}
-	// 计算动画进度
+	// 计算动作进度
 	_delta = min((Time::getTotalTime() - _last) / _duration, 1);
 	// 判断动作是否结束
 	if (_delta >= 1)

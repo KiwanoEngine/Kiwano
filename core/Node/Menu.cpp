@@ -5,6 +5,21 @@ e2d::Menu::Menu()
 {
 }
 
+e2d::Menu::Menu(int number, Button * button1, ...)
+	: _enable(true)
+{
+	va_list args;
+	va_start(args, button1);
+
+	this->addButton(button1);
+	for (int i = 1; i < number; i++)
+	{
+		this->addButton(va_arg(args, Button*));
+	}
+
+	va_end(args);
+}
+
 #ifdef HIGHER_THAN_VS2012
 e2d::Menu::Menu(const std::initializer_list<Button*>& vButtons)
 	: _enable(true)
@@ -12,21 +27,6 @@ e2d::Menu::Menu(const std::initializer_list<Button*>& vButtons)
 	for (auto button : vButtons)
 	{
 		this->addButton(button);
-	}
-}
-
-#else
-
-e2d::Menu::Menu(int number, Button * button1, ...)
-	: _enable(true)
-{
-	Button ** ppButton = &button1;
-
-	while (number > 0)
-	{
-		this->addButton(*ppButton);
-		ppButton++;
-		number--;
 	}
 }
 #endif

@@ -49,13 +49,13 @@ public:
 	// 切换场景
 	static void enter(
 		Scene * scene,						/* 下一个场景的指针 */
-		Transition * transition = nullptr,	/* 场景切换动画 */
+		Transition * transition = nullptr,	/* 场景切换动作 */
 		bool saveCurrentScene = true		/* 是否保存当前场景 */
 	);
 
 	// 返回上一场景
 	static void back(
-		Transition * transition = nullptr	/* 场景切换动画 */
+		Transition * transition = nullptr	/* 场景切换动作 */
 	);
 
 	// 清空保存的所有场景
@@ -67,7 +67,7 @@ public:
 	// 获取场景栈
 	static std::stack<Scene*> getSceneStack();
 
-	// 是否正在进行转场动画
+	// 是否正在进行转场动作
 	static bool isTransitioning();
 
 private:
@@ -133,7 +133,7 @@ public:
 	static std::vector<Action*> getAll();
 
 private:
-	// 更新动画状态
+	// 更新动作状态
 	static void __update();
 
 	// 添加动作

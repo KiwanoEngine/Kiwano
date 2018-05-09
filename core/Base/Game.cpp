@@ -154,7 +154,7 @@ void e2d::Game::resume()
 		s_bPaused = false;
 		// 刷新当前时间
 		Time::__updateLast();
-		// 重置动画和定时器
+		// 重置动作和定时器
 		ActionManager::__resetAll();
 		Timer::__resetAll();
 	}
@@ -177,7 +177,7 @@ void e2d::Game::destroy()
 	// 删除监听器
 	InputManager::__uninit();
 	ColliderManager::__uninit();
-	// 删除动画
+	// 删除动作
 	ActionManager::__uninit();
 	// 删除所有对象
 	ObjectManager::__clear();

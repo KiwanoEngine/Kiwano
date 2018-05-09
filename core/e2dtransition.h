@@ -8,7 +8,7 @@ namespace e2d
 class SceneManager;
 
 
-// 基础过渡动画
+// 基础过渡动作
 class Transition :
 	public Object
 {
@@ -19,32 +19,32 @@ public:
 
 	virtual ~Transition();
 
-	// 场景切换动画是否结束
+	// 场景切换动作是否结束
 	bool isDone();
 
 	// 销毁对象
 	virtual void onDestroy() override;
 
 protected:
-	// 初始化场景动画
+	// 初始化场景动作
 	virtual void _init(
 		Scene * prev,
 		Scene * next
 	);
 
-	// 更新场景动画
+	// 更新场景动作
 	virtual void _update();
 
-	// 更新场景动画
+	// 更新场景动作
 	virtual void _updateCustom() = 0;
 
-	// 渲染场景动画
+	// 渲染场景动作
 	virtual void _render();
 
-	// 重置场景动画
+	// 重置场景动作
 	virtual void _reset() = 0;
 
-	// 停止场景动画
+	// 停止场景动作
 	virtual void _stop();
 
 protected:
@@ -66,19 +66,19 @@ class TransitionFade :
 	public Transition
 {
 public:
-	// 创建淡入淡出式的场景切换动画
+	// 创建淡入淡出式的场景切换动作
 	TransitionFade(
-		double duration	/* 动画持续时长 */
+		double duration	/* 动作持续时长 */
 	);
 
-	// 创建淡入淡出式的场景切换动画
+	// 创建淡入淡出式的场景切换动作
 	TransitionFade(
-		double fadeOutDuration,	/* 前一场景淡出动画持续时长 */
-		double fadeInDuration	/* 后一场景淡入动画持续时长 */
+		double fadeOutDuration,	/* 前一场景淡出动作持续时长 */
+		double fadeInDuration	/* 后一场景淡入动作持续时长 */
 	);
 
 protected:
-	// 更新动画
+	// 更新动作
 	virtual void _updateCustom() override;
 
 	virtual void _init(
@@ -99,13 +99,13 @@ class TransitionEmerge :
 	public Transition
 {
 public:
-	// 创建浮现式的场景切换动画
+	// 创建浮现式的场景切换动作
 	TransitionEmerge(
-		double duration	/* 浮现动画持续时长 */
+		double duration	/* 浮现动作持续时长 */
 	);
 
 protected:
-	// 更新动画
+	// 更新动作
 	virtual void _updateCustom() override;
 
 	virtual void _init(
@@ -121,14 +121,14 @@ class TransitionMove :
 	public Transition
 {
 public:
-	// 创建移动式的场景切换动画
+	// 创建移动式的场景切换动作
 	TransitionMove(
-		double moveDuration,					/* 场景移动动画持续时长 */
+		double moveDuration,					/* 场景移动动作持续时长 */
 		Direction direction = Direction::LEFT	/* 场景移动方向 */
 	);
 
 protected:
-	// 更新动画
+	// 更新动作
 	virtual void _updateCustom() override;
 
 	virtual void _init(

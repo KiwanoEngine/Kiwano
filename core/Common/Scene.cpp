@@ -50,9 +50,9 @@ void e2d::Scene::add(Node * child, int order /* = 0 */)
 }
 
 #ifdef HIGHER_THAN_VS2012
-void e2d::Scene::add(const std::initializer_list<Node*>& vNodes, int order)
+void e2d::Scene::add(const std::initializer_list<Node*>& nodes, int order)
 {
-	for (const auto &node : vNodes)
+	for (const auto &node : nodes)
 	{
 		this->add(node, order);
 	}

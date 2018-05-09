@@ -338,10 +338,17 @@ public:
 		const String& collliderName
 	);
 
+	// 添加多个可碰撞节点的名称
+	virtual void addColliableName(
+		int number,				/* 名称数量 */
+		String collliderName,	/* 第一个名称 */
+		...
+	);
+
 #ifdef HIGHER_THAN_VS2012
 	// 添加多个可碰撞节点的名称
 	virtual void addColliableName(
-		const std::initializer_list<String>& vCollliderName	/* 名称列表 */
+		const std::initializer_list<String>& colliderNames	/* 名称列表 */
 	);
 #endif
 
@@ -359,48 +366,48 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 添加多个子节点
 	virtual void addChild(
-		const std::initializer_list<Node*>& vNodes,	/* 节点列表 */
+		const std::initializer_list<Node*>& nodes,	/* 节点列表 */
 		int order = 0								/* 渲染顺序 */
 	);
 #endif
 
-	// 执行动画
+	// 执行动作
 	virtual void runAction(
 		Action * action
 	);
 
-	// 继续动画
+	// 继续动作
 	virtual void resumeAction(
 		const String& strActionName
 	);
 
-	// 暂停动画
+	// 暂停动作
 	virtual void pauseAction(
 		const String& strActionName
 	);
 
-	// 停止动画
+	// 停止动作
 	virtual void stopAction(
 		const String& strActionName
 	);
 
-	// 获取名称相同的动画
+	// 获取名称相同的动作
 	virtual Action * getAction(
 		const String& strActionName
 	);
 
-	// 获取所有名称相同的动画
+	// 获取所有名称相同的动作
 	virtual std::vector<Action*> getActions(
 		const String& strActionName
 	);
 
-	// 继续所有暂停动画
+	// 继续所有暂停动作
 	virtual void resumeAllActions();
 
-	// 暂停所有动画
+	// 暂停所有动作
 	virtual void pauseAllActions();
 
-	// 停止所有动画
+	// 停止所有动作
 	virtual void stopAllActions();
 
 	// 修改节点的默认中心点位置
@@ -958,17 +965,17 @@ public:
 	// 创建空菜单
 	Menu();
 
-#ifdef HIGHER_THAN_VS2012
-	// 创建菜单
-	Menu(
-		const std::initializer_list<Button*>& vButtons	/* 按钮列表 */
-	);
-#else
 	// 创建菜单
 	Menu(
 		int number,			/* 菜单中按钮的数量 */
 		Button * button1,	/* 第一个按钮 */
 		...
+	);
+
+#ifdef HIGHER_THAN_VS2012
+	// 创建菜单
+	Menu(
+		const std::initializer_list<Button*>& vButtons	/* 按钮列表 */
 	);
 #endif
 

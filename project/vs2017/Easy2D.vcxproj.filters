@@ -39,9 +39,6 @@
     <ClCompile Include="..\..\core\Action\ActionGradual.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\Animation.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Image.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -212,6 +209,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Transition\Transition.cpp">
       <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\Animate.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\Animation.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

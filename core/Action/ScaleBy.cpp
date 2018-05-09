@@ -18,6 +18,7 @@ e2d::ScaleBy::ScaleBy(double duration, double scaleX, double scaleY)
 void e2d::ScaleBy::_init()
 {
 	ActionGradual::_init();
+
 	if (_target)
 	{
 		_startScaleX = _target->getScaleX();
@@ -29,13 +30,10 @@ void e2d::ScaleBy::_update()
 {
 	ActionGradual::_update();
 
-	if (_target == nullptr)
+	if (_target)
 	{
-		this->stop();
-		return;
+		_target->setScale(_startScaleX + _deltaX * _delta, _startScaleY + _deltaY * _delta);
 	}
-
-	_target->setScale(_startScaleX + _deltaX * _delta, _startScaleY + _deltaY * _delta);
 }
 
 e2d::ScaleBy * e2d::ScaleBy::clone() const

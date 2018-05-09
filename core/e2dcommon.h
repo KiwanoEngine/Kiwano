@@ -712,6 +712,97 @@ protected:
 };
 
 
+// 帧动画
+class Animation :
+	public Object
+{
+public:
+	// 创建帧动画
+	Animation();
+
+	// 创建特定间隔的帧动画
+	Animation(
+		double interval		/* 帧间隔（秒） */
+	);
+
+	// 创建特定帧间隔的帧动画
+	Animation(
+		double interval,					/* 帧间隔（秒） */
+		const std::vector<Image*>& frames	/* 关键帧数组 */
+	);
+
+	// 创建帧动画
+	Animation(
+		int number,			/* 帧数量 */
+		Image * frame,		/* 第一帧 */
+		...
+	);
+
+	// 创建特定帧间隔的帧动画
+	Animation(
+		double interval,	/* 帧间隔（秒） */
+		int number,			/* 帧数量 */
+		Image * frame,		/* 第一帧 */
+		...
+	);
+
+#ifdef HIGHER_THAN_VS2012
+	// 创建帧动画
+	Animation(
+		const std::initializer_list<Image*>& frames	/* 关键帧列表 */
+	);
+
+	// 创建特定帧间隔的帧动画
+	Animation(
+		double interval,							/* 帧间隔（秒） */
+		const std::initializer_list<Image*>& frames	/* 关键帧列表 */
+	);
+#endif
+
+	virtual ~Animation();
+
+	// 添加关键帧
+	void add(
+		Image * frame		/* 关键帧 */
+	);
+
+	// 添加多个关键帧
+	void add(
+		int number,			/* 帧数量 */
+		Image * frame,		/* 第一帧 */
+		...
+	);
+
+#ifdef HIGHER_THAN_VS2012
+	// 添加多个关键帧
+	void add(
+		const std::initializer_list<Image*>& frames	/* 关键帧列表 */
+	);
+#endif
+
+	// 获取帧间隔
+	double getInterval() const;
+
+	// 获取关键帧
+	const std::vector<Image*>& getFrames() const;
+
+	// 设置每一帧的时间间隔
+	void setInterval(
+		double interval	/* 帧间隔（秒） */
+	);
+
+	// 获取动画的拷贝对象
+	virtual Animation * clone() const;
+
+	// 销毁对象
+	virtual void onDestroy() override;
+
+protected:
+	double	_interval;
+	std::vector<Image*> _frames;
+};
+
+
 class Node;
 class SceneManager;
 class Transition;
@@ -760,7 +851,7 @@ public:
 #ifdef HIGHER_THAN_VS2012
 	// 添加多个节点到场景
 	virtual void add(
-		const std::initializer_list<Node*>& vNodes,	/* 节点列表 */
+		const std::initializer_list<Node*>& nodes,	/* 节点列表 */
 		int order = 0								/* 渲染顺序 */
 	);
 #endif

@@ -4,24 +4,24 @@ e2d::Spawn::Spawn()
 {
 }
 
-#ifdef HIGHER_THAN_VS2012
-e2d::Spawn::Spawn(const std::initializer_list<Action*>& vActions)
+e2d::Spawn::Spawn(int number, Action * action, ...)
 {
-	this->add(vActions);
-}
-#else
-e2d::Spawn::Spawn(int number, Action * action1, ...) :
-	_currIndex(0)
-{
-	Action ** ppAction = &action1;
+	va_list args;
+	va_start(args, action);
 
-	while (number > 0)
+	this->add(action);
+	for (int i = 1; i < number; i++)
 	{
-		WARN_IF((*ppAction) == nullptr, "Spawn NULL pointer exception!");
-		this->add(*ppAction);
-		ppAction++;
-		number--;
+		this->add(va_arg(args, Action*));
 	}
+
+	va_end(args);
+}
+
+#ifdef HIGHER_THAN_VS2012
+e2d::Spawn::Spawn(const std::initializer_list<Action*>& actions)
+{
+	this->add(actions);
 }
 #endif
 
@@ -101,25 +101,26 @@ void e2d::Spawn::add(Action * action)
 	}
 }
 
-#ifdef HIGHER_THAN_VS2012
-void e2d::Spawn::add(const std::initializer_list<Action*>& vActions)
-{
-	for (const auto &action : vActions)
-	{
-		this->add(action);
-	}
-}
-#else
 void e2d::Spawn::add(int number, Action * action, ...)
 {
-	Action ** ppAction = &action;
+	va_list args;
+	va_start(args, action);
 
-	while (number > 0)
+	this->add(action);
+	for (int i = 1; i < number; i++)
 	{
-		WARN_IF((*ppAction) == nullptr, "Spawn NULL pointer exception!");
-		this->add(*ppAction);
-		ppAction++;
-		number--;
+		this->add(va_arg(args, Action*));
+	}
+
+	va_end(args);
+}
+
+#ifdef HIGHER_THAN_VS2012
+void e2d::Spawn::add(const std::initializer_list<Action*>& actions)
+{
+	for (const auto &action : actions)
+	{
+		this->add(action);
 	}
 }
 #endif

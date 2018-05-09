@@ -213,15 +213,15 @@ void e2d::ActionManager::stopAll()
 
 std::vector<e2d::Action*> e2d::ActionManager::get(const String& strActionName)
 {
-	std::vector<Action*> vActions;
+	std::vector<Action*> actions;
 	for (auto action : s_vActions)
 	{
 		if (action->getName() == strActionName)
 		{
-			vActions.push_back(action);
+			actions.push_back(action);
 		}
 	}
-	return std::move(vActions);
+	return std::move(actions);
 }
 
 std::vector<e2d::Action*> e2d::ActionManager::getAll()

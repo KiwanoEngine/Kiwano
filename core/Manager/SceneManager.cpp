@@ -16,7 +16,7 @@ void e2d::SceneManager::enter(Scene * scene, Transition * transition /* = nullpt
 	// 保存下一场景的指针
 	s_pNextScene = scene;
 	
-	// 设置切换场景动画
+	// 设置切换场景动作
 	if (transition)
 	{
 		if (s_pTransition)
@@ -52,7 +52,7 @@ void e2d::SceneManager::back(Transition * transition /* = nullptr */)
 		s_bSaveCurrScene = false;
 	}
 
-	// 设置切换场景动画
+	// 设置切换场景动作
 	if (transition)
 	{
 		s_pTransition = transition;
@@ -100,7 +100,7 @@ void e2d::SceneManager::__update()
 	}
 	else
 	{
-		// 更新场景动画
+		// 更新场景动作
 		s_pTransition->_update();
 
 		if (s_pTransition->isDone())

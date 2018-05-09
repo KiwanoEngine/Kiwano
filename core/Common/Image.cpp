@@ -192,6 +192,7 @@ bool e2d::Image::preload(const String& fileName)
 		// (DXGI_FORMAT_B8G8R8A8_UNORM + D2D1_ALPHA_MODE_PREMULTIPLIED).
 		hr = Renderer::getIWICImagingFactory()->CreateFormatConverter(&pConverter);
 	}
+
 	if (SUCCEEDED(hr))
 	{
 		// 图片格式转换成 32bbpPBGRA
@@ -204,6 +205,7 @@ bool e2d::Image::preload(const String& fileName)
 			WICBitmapPaletteTypeMedianCut
 		);
 	}
+
 	if (SUCCEEDED(hr))
 	{
 		// 从 WIC 位图创建一个 Direct2D 位图
@@ -213,6 +215,7 @@ bool e2d::Image::preload(const String& fileName)
 			&pBitmap
 		);
 	}
+
 	if (SUCCEEDED(hr))
 	{
 		// 保存图片指针和图片的 Hash 名

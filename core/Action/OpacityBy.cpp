@@ -10,6 +10,7 @@ e2d::OpacityBy::OpacityBy(double duration, double opacity) :
 void e2d::OpacityBy::_init()
 {
 	ActionGradual::_init();
+
 	if (_target)
 	{
 		_startVal = _target->getOpacity();
@@ -20,13 +21,10 @@ void e2d::OpacityBy::_update()
 {
 	ActionGradual::_update();
 
-	if (_target == nullptr)
+	if (_target)
 	{
-		this->stop();
-		return;
+		_target->setOpacity(_startVal + _deltaVal * _delta);
 	}
-
-	_target->setOpacity(_startVal + _deltaVal * _delta);
 }
 
 e2d::OpacityBy * e2d::OpacityBy::clone() const

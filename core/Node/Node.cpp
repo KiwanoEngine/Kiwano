@@ -597,10 +597,24 @@ void e2d::Node::addColliableName(const String& collliderName)
 	_colliders.insert(hash);
 }
 
-#ifdef HIGHER_THAN_VS2012
-void e2d::Node::addColliableName(const std::initializer_list<String>& vCollliderName)
+void e2d::Node::addColliableName(int number, String collliderName, ...)
 {
-	for (const auto &name : vCollliderName)
+	va_list args;
+	va_start(args, collliderName);
+
+	this->addColliableName(collliderName);
+	for (int i = 1; i < number; i++)
+	{
+		this->addColliableName(va_arg(args, String));
+	}
+
+	va_end(args);
+}
+
+#ifdef HIGHER_THAN_VS2012
+void e2d::Node::addColliableName(const std::initializer_list<String>& colliderNames)
+{
+	for (const auto &name : colliderNames)
 	{
 		this->addColliableName(name);
 	}
@@ -649,9 +663,9 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 }
 
 #ifdef HIGHER_THAN_VS2012
-void e2d::Node::addChild(const std::initializer_list<Node*>& vNodes, int order)
+void e2d::Node::addChild(const std::initializer_list<Node*>& nodes, int order)
 {
-	for (const auto &node : vNodes)
+	for (const auto &node : nodes)
 	{
 		this->addChild(node, order);
 	}

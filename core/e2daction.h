@@ -70,7 +70,7 @@ protected:
 	// 获取动作结束状态
 	virtual bool _isDone();
 
-	// 重置动画时间
+	// 重置动作时间
 	virtual void _resetTime();
 
 	// 开始动作
@@ -93,16 +93,16 @@ class ActionGradual :
 	public Action
 {
 public:
-	// 创建特定时长的持续动画
+	// 创建特定时长的持续动作
 	ActionGradual(
 		double duration
 	);
 
 protected:
-	// 初始化动画
+	// 初始化动作
 	virtual void _init() override;
 
-	// 更新动画
+	// 更新动作
 	virtual void _update() override;
 
 protected:
@@ -111,28 +111,28 @@ protected:
 };
 
 
-// 相对位移动画
+// 相对位移动作
 class MoveBy :
 	public ActionGradual
 {
 public:
-	// 创建相对位移动画
+	// 创建相对位移动作
 	MoveBy(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		Vector vector		/* 位移向量 */
 	);
 
-	// 获取该动画的拷贝对象
+	// 获取该动作的拷贝对象
 	virtual MoveBy * clone() const override;
 
-	// 获取该动画的倒转
+	// 获取该动作的倒转
 	virtual MoveBy * reverse() const override;
 
 protected:
-	// 初始化动画
+	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动画
+	// 执行动作
 	virtual void _update() override;
 
 protected:
@@ -141,22 +141,22 @@ protected:
 };
 
 
-// 位移动画
+// 位移动作
 class MoveTo :
 	public MoveBy
 {
 public:
-	// 创建位移动画
+	// 创建位移动作
 	MoveTo(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		Point pos			/* 位移至目标点的坐标 */
 	);
 
-	// 获取该动画的拷贝对象
+	// 获取该动作的拷贝对象
 	virtual MoveTo * clone() const override;
 
 protected:
-	// 初始化动画
+	// 初始化动作
 	virtual void _init() override;
 
 protected:
@@ -164,35 +164,35 @@ protected:
 };
 
 
-// 相对缩放动画
+// 相对缩放动作
 class ScaleBy :
 	public ActionGradual
 {
 public:
-	// 创建相对缩放动画
+	// 创建相对缩放动作
 	ScaleBy(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		double scale		/* 缩放比例变化 */
 	);
 
-	// 创建相对缩放动画
+	// 创建相对缩放动作
 	ScaleBy(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		double scaleX,		/* 横向缩放比例变化 */
 		double scaleY		/* 纵向缩放比例变化 */
 	);
 
-	// 获取该动画的拷贝对象
+	// 获取该动作的拷贝对象
 	virtual ScaleBy * clone() const override;
 
-	// 获取该动画的倒转
+	// 获取该动作的倒转
 	virtual ScaleBy * reverse() const override;
 
 protected:
-	// 初始化动画
+	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动画
+	// 执行动作
 	virtual void _update() override;
 
 protected:
@@ -203,29 +203,29 @@ protected:
 };
 
 
-// 缩放动画
+// 缩放动作
 class ScaleTo :
 	public ScaleBy
 {
 public:
-	// 创建缩放动画
+	// 创建缩放动作
 	ScaleTo(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		double scale		/* 缩放至目标比例 */
 	);
 
-	// 创建缩放动画
+	// 创建缩放动作
 	ScaleTo(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		double scaleX,		/* 横向缩放至目标比例 */
 		double scaleY		/* 纵向缩放至目标比例 */
 	);
 
-	// 获取该动画的拷贝对象
+	// 获取该动作的拷贝对象
 	virtual ScaleTo * clone() const override;
 
 protected:
-	// 初始化动画
+	// 初始化动作
 	virtual void _init() override;
 
 protected:
@@ -234,28 +234,28 @@ protected:
 };
 
 
-// 透明度相对渐变动画
+// 透明度相对渐变动作
 class OpacityBy :
 	public ActionGradual
 {
 public:
-	// 创建透明度相对渐变动画
+	// 创建透明度相对渐变动作
 	OpacityBy(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		double opacity		/* 透明度相对变化值 */
 	);
 
-	// 获取该动画的拷贝对象
+	// 获取该动作的拷贝对象
 	virtual OpacityBy * clone() const override;
 
-	// 获取该动画的倒转
+	// 获取该动作的倒转
 	virtual OpacityBy * reverse() const override;
 
 protected:
-	// 初始化动画
+	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动画
+	// 执行动作
 	virtual void _update() override;
 
 protected:
@@ -264,22 +264,22 @@ protected:
 };
 
 
-// 透明度渐变动画
+// 透明度渐变动作
 class OpacityTo :
 	public OpacityBy
 {
 public:
-	// 创建透明度渐变动画
+	// 创建透明度渐变动作
 	OpacityTo(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		double opacity		/* 透明度渐变至目标值 */
 	);
 
-	// 获取该动画的拷贝对象
+	// 获取该动作的拷贝对象
 	virtual OpacityTo * clone() const override;
 
 protected:
-	// 初始化动画
+	// 初始化动作
 	virtual void _init() override;
 
 protected:
@@ -287,14 +287,14 @@ protected:
 };
 
 
-// 淡入动画
+// 淡入动作
 class FadeIn :
 	public OpacityTo
 {
 public:
-	// 创建淡入动画
+	// 创建淡入动作
 	FadeIn(
-		double duration		/* 动画持续时长 */
+		double duration		/* 动作持续时长 */
 	)
 	: OpacityTo(duration, 1) 
 	{
@@ -302,14 +302,14 @@ public:
 };
 
 
-// 淡出动画
+// 淡出动作
 class FadeOut :
 	public OpacityTo
 {
 public:
-	// 创建淡出动画
+	// 创建淡出动作
 	FadeOut(
-		double duration		/* 动画持续时长 */
+		double duration		/* 动作持续时长 */
 	)
 	: OpacityTo(duration, 0) 
 	{
@@ -322,23 +322,23 @@ class RotateBy :
 	public ActionGradual
 {
 public:
-	// 创建相对旋转动画
+	// 创建相对旋转动作
 	RotateBy(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		double rotation		/* 旋转角度变化值 */
 	);
 
-	// 获取该动画的拷贝对象
+	// 获取该动作的拷贝对象
 	virtual RotateBy * clone() const override;
 
-	// 获取该动画的倒转
+	// 获取该动作的倒转
 	virtual RotateBy * reverse() const override;
 
 protected:
-	// 初始化动画
+	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动画
+	// 执行动作
 	virtual void _update() override;
 
 protected:
@@ -352,17 +352,17 @@ class RotateTo :
 	public RotateBy
 {
 public:
-	// 创建旋转动画
+	// 创建旋转动作
 	RotateTo(
-		double duration,	/* 动画持续时长 */
+		double duration,	/* 动作持续时长 */
 		double rotation		/* 旋转角度至目标值 */
 	);
 
-	// 获取该动画的拷贝对象
+	// 获取该动作的拷贝对象
 	virtual RotateTo * clone() const override;
 
 protected:
-	// 初始化动画
+	// 初始化动作
 	virtual void _init() override;
 
 protected:
@@ -424,7 +424,7 @@ protected:
 	// 执行动作
 	virtual void _update() override;
 
-	// 重置动画时间
+	// 重置动作时间
 	virtual void _resetTime() override;
 
 protected:
@@ -467,17 +467,17 @@ public:
 	// 创建顺序动作
 	Sequence();
 
+	// 创建顺序动作
+	Sequence(
+		int number,			/* 动作数量 */
+		Action * action,	/* 第一个动作 */
+		...
+	);
+
 #ifdef HIGHER_THAN_VS2012
 	// 创建顺序动作
 	Sequence(
-		const std::initializer_list<Action*>& vActions	/* 动作列表 */
-	);
-#else
-	// 创建顺序动作
-	Sequence(
-		int number,				/* 动作数量 */
-		Action * action,	/* 第一个动作 */
-		...
+		const std::initializer_list<Action*>& actions	/* 动作列表 */
 	);
 #endif
 
@@ -488,17 +488,17 @@ public:
 		Action * action
 	);
 
-#ifdef HIGHER_THAN_VS2012
-	// 在结尾添加多个动作
-	void add(
-		const std::initializer_list<Action*>& vActions	/* 动作列表 */
-	);
-#else
 	// 在结尾添加多个动作
 	void add(
 		int number,			/* 动作数量 */
 		Action * action,	/* 第一个动作 */
 		...
+	);
+
+#ifdef HIGHER_THAN_VS2012
+	// 在结尾添加多个动作
+	void add(
+		const std::initializer_list<Action*>& actions	/* 动作列表 */
 	);
 #endif
 
@@ -521,7 +521,7 @@ protected:
 	// 执行动作
 	virtual void _update() override;
 
-	// 重置动画时间
+	// 重置动作时间
 	virtual void _resetTime() override;
 
 protected:
@@ -538,17 +538,17 @@ public:
 	// 创建同步动作
 	Spawn();
 
-#ifdef HIGHER_THAN_VS2012
-	// 创建同步动作
-	Spawn(
-		const std::initializer_list<Action*>& vActions	/* 动作列表 */
-	);
-#else
 	// 创建同步动作
 	Spawn(
 		int number,			/* 动作数量 */
 		Action * action,	/* 第一个动作 */
 		...
+	);
+
+#ifdef HIGHER_THAN_VS2012
+	// 创建同步动作
+	Spawn(
+		const std::initializer_list<Action*>& actions	/* 动作列表 */
 	);
 #endif
 
@@ -559,17 +559,17 @@ public:
 		Action * action
 	);
 
-#ifdef HIGHER_THAN_VS2012
-	// 在结尾添加多个动作
-	void add(
-		const std::initializer_list<Action*>& vActions	/* 动作列表 */
-	);
-#else
 	// 在结尾添加多个动作
 	void add(
 		int number,			/* 动作数量 */
 		Action * action,	/* 第一个动作 */
 		...
+	);
+
+#ifdef HIGHER_THAN_VS2012
+	// 在结尾添加多个动作
+	void add(
+		const std::initializer_list<Action*>& actions	/* 动作列表 */
 	);
 #endif
 
@@ -592,7 +592,7 @@ protected:
 	// 执行动作
 	virtual void _update() override;
 
-	// 重置动画时间
+	// 重置动作时间
 	virtual void _resetTime() override;
 
 protected:
@@ -600,78 +600,34 @@ protected:
 };
 
 
-// 帧动画
-class Animation :
+// 精灵动作
+class Animate :
 	public Action
 {
 public:
-	// 创建帧动画
-	Animation();
+	// 创建精灵动作
+	Animate();
 
-	// 创建特定帧间隔的帧动画
-	Animation(
-		double interval		/* 帧间隔（秒） */
+	// 创建精灵动作
+	Animate(
+		Animation * animation
 	);
 
-#ifdef HIGHER_THAN_VS2012
-	// 创建帧动画
-	Animation(
-		const std::initializer_list<Image*>& vImages	/* 关键帧列表 */
+	virtual ~Animate();
+
+	// 获取动画
+	virtual Animation * getAnimation() const;
+
+	// 设置动画
+	virtual void setAnimation(
+		Animation * animation
 	);
 
-	// 创建特定帧间隔的帧动画
-	Animation(
-		double interval,								/* 帧间隔（秒） */
-		const std::initializer_list<Image*>& vImages	/* 关键帧列表 */
-	);
-#else
-	// 创建帧动画
-	Animation(
-		int number,			/* 帧数量 */
-		Image * frame,		/* 第一帧 */
-		...
-	);
+	// 获取该动作的拷贝对象
+	virtual Animate * clone() const override;
 
-	// 创建特定帧间隔的帧动画
-	Animation(
-		double interval,	/* 帧间隔（秒） */
-		int number,			/* 帧数量 */
-		Image * frame,		/* 第一帧 */
-		...
-	);
-#endif
-
-	virtual ~Animation();
-
-	// 添加关键帧
-	void add(
-		Image * frame	/* 关键帧 */
-	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 添加多个关键帧
-	void add(
-		const std::initializer_list<Image*>& vImages	/* 关键帧列表 */
-	);
-#else
-	// 添加多个关键帧
-	void add(
-		int number,			/* 帧数量 */
-		Image * frame,		/* 第一帧 */
-		...
-	);
-#endif
-
-	// 设置每一帧的时间间隔
-	void setInterval(
-		double interval	/* 帧间隔（秒） */
-	);
-
-	// 获取该动画的拷贝对象
-	virtual Animation * clone() const override;
-
-	// 获取该动画的倒转
-	virtual Animation * reverse() const override;
+	// 获取该动作的倒转
+	virtual Animate * reverse() const override;
 
 	// 重置动作
 	virtual void reset() override;
@@ -687,9 +643,8 @@ protected:
 	virtual void _update() override;
 
 protected:
-	double	_interval;
-	UINT	_frameIndex;
-	std::vector<Image*> _frames;
+	UINT _frameIndex;
+	Animation * _animation;
 };
 
 

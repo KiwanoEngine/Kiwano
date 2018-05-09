@@ -60,7 +60,7 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 
 void e2d::Transition::_update()
 {
-	// 计算动画进度
+	// 计算动作进度
 	if (_duration == 0)
 	{
 		_delta = 1;
