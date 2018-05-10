@@ -816,7 +816,7 @@ bool e2d::Music::__init()
 	if (FAILED(hr = s_pXAudio2->CreateMasteringVoice(&s_pMasteringVoice)))
 	{
 		WARN_IF(true, "Failed creating mastering voice");
-		e2d::SafeReleaseInterface(&s_pXAudio2);
+		e2d::SafeReleaseInterface(s_pXAudio2);
 		return false;
 	}
 
@@ -838,5 +838,5 @@ void e2d::Music::__uninit()
 		s_pMasteringVoice->DestroyVoice();
 	}
 
-	e2d::SafeReleaseInterface(&s_pXAudio2);
+	e2d::SafeReleaseInterface(s_pXAudio2);
 }

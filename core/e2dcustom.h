@@ -4,12 +4,12 @@
 namespace e2d
 {
 	template<class Interface>
-	inline void SafeReleaseInterface(Interface **pp) 
-	{ 
-		if (*pp != nullptr) 
-		{ 
-			(*pp)->Release(); 
-			(*pp) = nullptr; 
+	inline void SafeReleaseInterface(Interface*& p)
+	{
+		if (p != nullptr)
+		{
+			p->Release();
+			p = nullptr;
 		}
 	}
 

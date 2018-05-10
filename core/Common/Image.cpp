@@ -227,10 +227,10 @@ bool e2d::Image::preload(const String& fileName)
 	}
 
 	// 释放相关资源
-	SafeReleaseInterface(&pDecoder);
-	SafeReleaseInterface(&pSource);
-	SafeReleaseInterface(&pStream);
-	SafeReleaseInterface(&pConverter);
+	SafeReleaseInterface(pDecoder);
+	SafeReleaseInterface(pSource);
+	SafeReleaseInterface(pStream);
+	SafeReleaseInterface(pConverter);
 
 	return SUCCEEDED(hr);
 }
@@ -352,11 +352,11 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 	}
 
 	// 释放相关资源
-	SafeReleaseInterface(&pDecoder);
-	SafeReleaseInterface(&pSource);
-	SafeReleaseInterface(&pStream);
-	SafeReleaseInterface(&pConverter);
-	SafeReleaseInterface(&pScaler);
+	SafeReleaseInterface(pDecoder);
+	SafeReleaseInterface(pSource);
+	SafeReleaseInterface(pStream);
+	SafeReleaseInterface(pConverter);
+	SafeReleaseInterface(pScaler);
 
 	return SUCCEEDED(hr);
 }
@@ -366,13 +366,13 @@ void e2d::Image::clearCache()
 {
 	for (auto bitmap : s_mBitmapsFromFile)
 	{
-		SafeReleaseInterface(&bitmap.second);
+		SafeReleaseInterface(bitmap.second);
 	}
 	s_mBitmapsFromFile.clear();
 
 	for (auto bitmap : s_mBitmapsFromResource)
 	{
-		SafeReleaseInterface(&bitmap.second);
+		SafeReleaseInterface(bitmap.second);
 	}
 	s_mBitmapsFromResource.clear();
 }

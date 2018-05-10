@@ -26,7 +26,7 @@ void e2d::Animate::setAnimation(Animation * animation)
 {
 	if (animation && animation != _animation)
 	{
-		SafeRelease(&_animation);
+		SafeRelease(_animation);
 		_animation = animation;
 		_animation->retain();
 	}
@@ -90,7 +90,7 @@ void e2d::Animate::reset()
 void e2d::Animate::onDestroy()
 {
 	Action::onDestroy();
-	SafeRelease(&_animation);
+	SafeRelease(_animation);
 }
 
 e2d::Animate * e2d::Animate::clone() const

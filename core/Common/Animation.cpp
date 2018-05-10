@@ -35,7 +35,7 @@ void e2d::Animation::onDestroy()
 {
 	for (auto frame : _frames)
 	{
-		SafeRelease(&frame);
+		SafeRelease(frame);
 	}
 }
 

@@ -35,7 +35,7 @@ void e2d::Sequence::onDestroy()
 	Action::onDestroy();
 	for (auto action : _actions)
 	{
-		SafeRelease(&action);
+		SafeRelease(action);
 	}
 }
 

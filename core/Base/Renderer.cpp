@@ -133,20 +133,20 @@ bool e2d::Renderer::__createDeviceResources()
 
 void e2d::Renderer::__discardDeviceResources()
 {
-	SafeReleaseInterface(&s_pRenderTarget);
-	SafeReleaseInterface(&s_pSolidBrush);
-	SafeReleaseInterface(&s_pTextRenderer);
+	SafeReleaseInterface(s_pRenderTarget);
+	SafeReleaseInterface(s_pSolidBrush);
+	SafeReleaseInterface(s_pTextRenderer);
 }
 
 void e2d::Renderer::__discardResources()
 {
-	SafeReleaseInterface(&s_pTextFormat);
-	SafeReleaseInterface(&s_pDirect2dFactory);
-	SafeReleaseInterface(&s_pRenderTarget);
-	SafeReleaseInterface(&s_pSolidBrush);
-	SafeReleaseInterface(&s_pTextRenderer);
-	SafeReleaseInterface(&s_pIWICFactory);
-	SafeReleaseInterface(&s_pDWriteFactory);
+	SafeReleaseInterface(s_pTextFormat);
+	SafeReleaseInterface(s_pDirect2dFactory);
+	SafeReleaseInterface(s_pRenderTarget);
+	SafeReleaseInterface(s_pSolidBrush);
+	SafeReleaseInterface(s_pTextRenderer);
+	SafeReleaseInterface(s_pIWICFactory);
+	SafeReleaseInterface(s_pDWriteFactory);
 }
 
 void e2d::Renderer::__render()
@@ -206,7 +206,7 @@ void e2d::Renderer::__render()
 
 			pTextLayout->Draw(NULL, s_pTextRenderer, 10, 0);
 
-			SafeReleaseInterface(&pTextLayout);
+			SafeReleaseInterface(pTextLayout);
 		}
 	}
 

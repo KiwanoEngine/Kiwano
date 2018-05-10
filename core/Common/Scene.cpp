@@ -89,5 +89,5 @@ void e2d::Scene::showCollider(bool visiable)
 
 void e2d::Scene::onDestroy()
 {
-	SafeRelease(&_root);
+	SafeRelease(_root);
 }

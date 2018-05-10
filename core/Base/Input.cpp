@@ -89,9 +89,9 @@ void Input::__uninit()
 	if (s_MouseDevice)
 		s_MouseDevice->Unacquire();
 
-	SafeReleaseInterface(&s_MouseDevice);
-	SafeReleaseInterface(&s_KeyboardDevice);
-	SafeReleaseInterface(&s_pDirectInput);
+	SafeReleaseInterface(s_MouseDevice);
+	SafeReleaseInterface(s_KeyboardDevice);
+	SafeReleaseInterface(s_pDirectInput);
 }
 
 void e2d::Input::__update()

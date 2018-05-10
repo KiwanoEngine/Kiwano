@@ -25,9 +25,9 @@ CustomTextRenderer::CustomTextRenderer(
 
 CustomTextRenderer::~CustomTextRenderer()
 {
-	SafeReleaseInterface(&pD2DFactory_);
-	SafeReleaseInterface(&pRT_);
-	SafeReleaseInterface(&pBrush_);
+	SafeReleaseInterface(pD2DFactory_);
+	SafeReleaseInterface(pRT_);
+	SafeReleaseInterface(pBrush_);
 }
 
 STDMETHODIMP_(void) CustomTextRenderer::SetTextStyle(
@@ -146,9 +146,9 @@ STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
 		);
 	}
 
-	SafeReleaseInterface(&pPathGeometry);
-	SafeReleaseInterface(&pSink);
-	SafeReleaseInterface(&pTransformedGeometry);
+	SafeReleaseInterface(pPathGeometry);
+	SafeReleaseInterface(pSink);
+	SafeReleaseInterface(pTransformedGeometry);
 
 	return hr;
 }
@@ -233,8 +233,8 @@ STDMETHODIMP CustomTextRenderer::DrawUnderline(
 		);
 	}
 
-	SafeReleaseInterface(&pRectangleGeometry);
-	SafeReleaseInterface(&pTransformedGeometry);
+	SafeReleaseInterface(pRectangleGeometry);
+	SafeReleaseInterface(pTransformedGeometry);
 
 	return S_OK;
 }
@@ -319,8 +319,8 @@ STDMETHODIMP CustomTextRenderer::DrawStrikethrough(
 		);
 	}
 
-	SafeReleaseInterface(&pRectangleGeometry);
-	SafeReleaseInterface(&pTransformedGeometry);
+	SafeReleaseInterface(pRectangleGeometry);
+	SafeReleaseInterface(pTransformedGeometry);
 
 	return S_OK;
 }

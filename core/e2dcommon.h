@@ -866,12 +866,12 @@ protected:
 
 
 template<typename Object>
-inline void SafeRelease(Object** p) 
+inline void SafeRelease(Object*& p) 
 { 
-	if (*p) 
+	if (p != nullptr)
 	{ 
-		(*p)->release(); 
-		(*p) = nullptr; 
+		p->release(); 
+		p = nullptr; 
 	}
 }
 

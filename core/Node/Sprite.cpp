@@ -46,7 +46,7 @@ bool e2d::Sprite::open(Image * image)
 {
 	if (image)
 	{
-		SafeRelease(&_image);
+		SafeRelease(_image);
 		_image = image;
 		_image->retain();
 
@@ -128,5 +128,5 @@ void e2d::Sprite::onRender()
 void e2d::Sprite::onDestroy()
 {
 	Node::onDestroy();
-	SafeRelease(&_image);
+	SafeRelease(_image);
 }

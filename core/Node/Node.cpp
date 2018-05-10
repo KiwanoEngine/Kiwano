@@ -896,7 +896,7 @@ bool e2d::Node::isPointIn(Point point) const
 			&ret
 		);
 		// 删除临时创建的碰撞体
-		SafeReleaseInterface(&rect);
+		SafeReleaseInterface(rect);
 	}
 
 	if (ret)
@@ -950,9 +950,9 @@ bool e2d::Node::isIntersectWith(const Node * node) const
 			&relation
 		);
 		// 删除临时创建的碰撞体
-		SafeReleaseInterface(&pRect1);
-		SafeReleaseInterface(&pRect2);
-		SafeReleaseInterface(&pCollider);
+		SafeReleaseInterface(pRect1);
+		SafeReleaseInterface(pRect2);
+		SafeReleaseInterface(pCollider);
 		if ((relation != D2D1_GEOMETRY_RELATION_UNKNOWN) &&
 			(relation != D2D1_GEOMETRY_RELATION_DISJOINT))
 		{
@@ -985,7 +985,7 @@ void e2d::Node::onDestroy()
 	ColliderManager::__removeCollider(_collider);
 	for (auto child : _children)
 	{
-		SafeRelease(&child);
+		SafeRelease(child);
 	}
 }
 

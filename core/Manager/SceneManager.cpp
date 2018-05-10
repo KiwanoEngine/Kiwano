@@ -68,7 +68,7 @@ void e2d::SceneManager::clear()
 	while (s_SceneStack.size())
 	{
 		auto temp = s_SceneStack.top();
-		SafeRelease(&temp);
+		SafeRelease(temp);
 		s_SceneStack.pop();
 	}
 }
@@ -127,7 +127,7 @@ void e2d::SceneManager::__update()
 		}
 		else
 		{
-			SafeRelease(&s_pCurrScene);
+			SafeRelease(s_pCurrScene);
 		}
 
 		// 执行下一场景的 onEnter 函数
@@ -172,8 +172,8 @@ bool e2d::SceneManager::__init()
 
 void e2d::SceneManager::__uninit()
 {
-	SafeRelease(&s_pCurrScene);
-	SafeRelease(&s_pNextScene);
-	SafeRelease(&s_pTransition);
+	SafeRelease(s_pCurrScene);
+	SafeRelease(s_pNextScene);
+	SafeRelease(s_pTransition);
 	SceneManager::clear();
 }

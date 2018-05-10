@@ -18,8 +18,8 @@ e2d::Transition::Transition(double duration)
 
 e2d::Transition::~Transition()
 {
-	SafeReleaseInterface(&_outLayer);
-	SafeReleaseInterface(&_inLayer);
+	SafeReleaseInterface(_outLayer);
+	SafeReleaseInterface(_inLayer);
 }
 
 bool e2d::Transition::isDone()
@@ -29,8 +29,8 @@ bool e2d::Transition::isDone()
 
 void e2d::Transition::onDestroy()
 {
-	SafeRelease(&_outScene);
-	SafeRelease(&_inScene);
+	SafeRelease(_outScene);
+	SafeRelease(_inScene);
 }
 
 void e2d::Transition::_init(Scene * prev, Scene * next)

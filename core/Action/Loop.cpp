@@ -81,7 +81,7 @@ void e2d::Loop::reset()
 void e2d::Loop::onDestroy()
 {
 	Action::onDestroy();
-	SafeRelease(&_action);
+	SafeRelease(_action);
 }
 
 void e2d::Loop::_resetTime()
