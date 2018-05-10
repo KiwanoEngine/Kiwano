@@ -597,29 +597,13 @@ void e2d::Node::addColliableName(const String& collliderName)
 	_colliders.insert(hash);
 }
 
-void e2d::Node::addColliableName(int number, String collliderName, ...)
-{
-	va_list args;
-	va_start(args, collliderName);
-
-	this->addColliableName(collliderName);
-	for (int i = 1; i < number; i++)
-	{
-		this->addColliableName(va_arg(args, String));
-	}
-
-	va_end(args);
-}
-
-#ifdef HIGHER_THAN_VS2012
-void e2d::Node::addColliableName(const std::initializer_list<String>& colliderNames)
+void e2d::Node::addColliableName(const std::vector<String>& colliderNames)
 {
 	for (const auto &name : colliderNames)
 	{
 		this->addColliableName(name);
 	}
 }
-#endif
 
 void e2d::Node::removeColliableName(const String& collliderName)
 {
@@ -662,15 +646,13 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 	}
 }
 
-#ifdef HIGHER_THAN_VS2012
-void e2d::Node::addChild(const std::initializer_list<Node*>& nodes, int order)
+void e2d::Node::addChild(const std::vector<Node*>& nodes, int order)
 {
-	for (const auto &node : nodes)
+	for (auto node : nodes)
 	{
 		this->addChild(node, order);
 	}
 }
-#endif
 
 e2d::Node * e2d::Node::getParent() const
 {

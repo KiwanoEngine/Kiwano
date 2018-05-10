@@ -340,17 +340,8 @@ public:
 
 	// 添加多个可碰撞节点的名称
 	virtual void addColliableName(
-		int number,				/* 名称数量 */
-		String collliderName,	/* 第一个名称 */
-		...
+		const std::vector<String>& colliderNames	/* 名称数组 */
 	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 添加多个可碰撞节点的名称
-	virtual void addColliableName(
-		const std::initializer_list<String>& colliderNames	/* 名称列表 */
-	);
-#endif
 
 	// 移除可碰撞节点的名称
 	virtual void removeColliableName(
@@ -363,13 +354,11 @@ public:
 		int order = 0	/* 渲染顺序 */
 	);
 
-#ifdef HIGHER_THAN_VS2012
 	// 添加多个子节点
 	virtual void addChild(
-		const std::initializer_list<Node*>& nodes,	/* 节点列表 */
-		int order = 0								/* 渲染顺序 */
+		const std::vector<Node*>& nodes,	/* 节点数组 */
+		int order = 0						/* 渲染顺序 */
 	);
-#endif
 
 	// 执行动作
 	virtual void runAction(
@@ -967,17 +956,8 @@ public:
 
 	// 创建菜单
 	Menu(
-		int number,			/* 菜单中按钮的数量 */
-		Button * button1,	/* 第一个按钮 */
-		...
+		const std::vector<Button*>& buttons	/* 按钮数组 */
 	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 创建菜单
-	Menu(
-		const std::initializer_list<Button*>& vButtons	/* 按钮列表 */
-	);
-#endif
 
 	// 获取菜单是否禁用
 	bool isEnable() const;

@@ -4,26 +4,10 @@ e2d::Spawn::Spawn()
 {
 }
 
-e2d::Spawn::Spawn(int number, Action * action, ...)
-{
-	va_list args;
-	va_start(args, action);
-
-	this->add(action);
-	for (int i = 1; i < number; i++)
-	{
-		this->add(va_arg(args, Action*));
-	}
-
-	va_end(args);
-}
-
-#ifdef HIGHER_THAN_VS2012
-e2d::Spawn::Spawn(const std::initializer_list<Action*>& actions)
+e2d::Spawn::Spawn(const std::vector<Action*>& actions)
 {
 	this->add(actions);
 }
-#endif
 
 e2d::Spawn::~Spawn()
 {
@@ -101,29 +85,13 @@ void e2d::Spawn::add(Action * action)
 	}
 }
 
-void e2d::Spawn::add(int number, Action * action, ...)
-{
-	va_list args;
-	va_start(args, action);
-
-	this->add(action);
-	for (int i = 1; i < number; i++)
-	{
-		this->add(va_arg(args, Action*));
-	}
-
-	va_end(args);
-}
-
-#ifdef HIGHER_THAN_VS2012
-void e2d::Spawn::add(const std::initializer_list<Action*>& actions)
+void e2d::Spawn::add(const std::vector<Action*>& actions)
 {
 	for (const auto &action : actions)
 	{
 		this->add(action);
 	}
 }
-#endif
 
 e2d::Spawn * e2d::Spawn::clone() const
 {

@@ -529,17 +529,8 @@ public:
 
 	// 创建顺序动作
 	Sequence(
-		int number,			/* 动作数量 */
-		Action * action,	/* 第一个动作 */
-		...
+		const std::vector<Action*>& actions	/* 动作列表 */
 	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 创建顺序动作
-	Sequence(
-		const std::initializer_list<Action*>& actions	/* 动作列表 */
-	);
-#endif
 
 	virtual ~Sequence();
 
@@ -550,17 +541,8 @@ public:
 
 	// 在结尾添加多个动作
 	void add(
-		int number,			/* 动作数量 */
-		Action * action,	/* 第一个动作 */
-		...
+		const std::vector<Action*>& actions	/* 动作列表 */
 	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 在结尾添加多个动作
-	void add(
-		const std::initializer_list<Action*>& actions	/* 动作列表 */
-	);
-#endif
 
 	// 获取该动作的拷贝对象
 	virtual Sequence * clone() const override;
@@ -600,17 +582,8 @@ public:
 
 	// 创建同步动作
 	Spawn(
-		int number,			/* 动作数量 */
-		Action * action,	/* 第一个动作 */
-		...
+		const std::vector<Action*>& actions	/* 动作列表 */
 	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 创建同步动作
-	Spawn(
-		const std::initializer_list<Action*>& actions	/* 动作列表 */
-	);
-#endif
 
 	virtual ~Spawn();
 
@@ -621,17 +594,8 @@ public:
 
 	// 在结尾添加多个动作
 	void add(
-		int number,			/* 动作数量 */
-		Action * action,	/* 第一个动作 */
-		...
+		const std::vector<Action*>& actions	/* 动作列表 */
 	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 在结尾添加多个动作
-	void add(
-		const std::initializer_list<Action*>& actions	/* 动作列表 */
-	);
-#endif
 
 	// 获取该动作的拷贝对象
 	virtual Spawn * clone() const override;

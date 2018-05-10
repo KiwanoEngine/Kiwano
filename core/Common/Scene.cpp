@@ -49,15 +49,13 @@ void e2d::Scene::add(Node * child, int order /* = 0 */)
 	_root->addChild(child, order);
 }
 
-#ifdef HIGHER_THAN_VS2012
-void e2d::Scene::add(const std::initializer_list<Node*>& nodes, int order)
+void e2d::Scene::add(const std::vector<Node*>& nodes, int order)
 {
-	for (const auto &node : nodes)
+	for (auto node : nodes)
 	{
 		this->add(node, order);
 	}
 }
-#endif
 
 bool e2d::Scene::remove(Node * child)
 {

@@ -559,8 +559,8 @@ public:
 
 	template<typename Func, typename Object>
 	Function(
-		Func&& func, 
-		Object&& obj
+		Func&& func,	/* 对象的成员函数 */
+		Object&& obj	/* 对象指针 */
 	)
 	{
 		_func = std::bind(func, obj);
@@ -733,31 +733,8 @@ public:
 
 	// 创建帧动画
 	Animation(
-		int number,			/* 帧数量 */
-		Image * frame,		/* 第一帧 */
-		...
+		const std::vector<Image*>& frames	/* 关键帧列表 */
 	);
-
-	// 创建特定帧间隔的帧动画
-	Animation(
-		double interval,	/* 帧间隔（秒） */
-		int number,			/* 帧数量 */
-		Image * frame,		/* 第一帧 */
-		...
-	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 创建帧动画
-	Animation(
-		const std::initializer_list<Image*>& frames	/* 关键帧列表 */
-	);
-
-	// 创建特定帧间隔的帧动画
-	Animation(
-		double interval,							/* 帧间隔（秒） */
-		const std::initializer_list<Image*>& frames	/* 关键帧列表 */
-	);
-#endif
 
 	virtual ~Animation();
 
@@ -768,17 +745,8 @@ public:
 
 	// 添加多个关键帧
 	void add(
-		int number,			/* 帧数量 */
-		Image * frame,		/* 第一帧 */
-		...
+		const std::vector<Image*>& frames	/* 关键帧列表 */
 	);
-
-#ifdef HIGHER_THAN_VS2012
-	// 添加多个关键帧
-	void add(
-		const std::initializer_list<Image*>& frames	/* 关键帧列表 */
-	);
-#endif
 
 	// 获取帧间隔
 	double getInterval() const;
@@ -848,13 +816,11 @@ public:
 		int zOrder = 0	/* 渲染顺序 */
 	);
 
-#ifdef HIGHER_THAN_VS2012
 	// 添加多个节点到场景
 	virtual void add(
-		const std::initializer_list<Node*>& nodes,	/* 节点列表 */
-		int order = 0								/* 渲染顺序 */
+		const std::vector<Node*>& nodes,	/* 节点数组 */
+		int order = 0						/* 渲染顺序 */
 	);
-#endif
 
 	// 删除子节点
 	bool remove(

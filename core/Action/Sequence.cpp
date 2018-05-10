@@ -5,28 +5,11 @@ e2d::Sequence::Sequence()
 {
 }
 
-e2d::Sequence::Sequence(int number, Action * action, ...) :
-	_currIndex(0)
-{
-	va_list args;
-	va_start(args, action);
-
-	this->add(action);
-	for (int i = 1; i < number; i++)
-	{
-		this->add(va_arg(args, Action*));
-	}
-
-	va_end(args);
-}
-
-#ifdef HIGHER_THAN_VS2012
-e2d::Sequence::Sequence(const std::initializer_list<Action*>& actions)
+e2d::Sequence::Sequence(const std::vector<Action*>& actions)
 	: _currIndex(0)
 {
 	this->add(actions);
 }
-#endif
 
 e2d::Sequence::~Sequence()
 {
@@ -104,29 +87,13 @@ void e2d::Sequence::add(Action * action)
 	}
 }
 
-void e2d::Sequence::add(int number, Action * action, ...)
-{
-	va_list args;
-	va_start(args, action);
-
-	this->add(action);
-	for (int i = 1; i < number; i++)
-	{
-		this->add(va_arg(args, Action*));
-	}
-
-	va_end(args);
-}
-
-#ifdef HIGHER_THAN_VS2012
-void e2d::Sequence::add(const std::initializer_list<Action*>& actions)
+void e2d::Sequence::add(const std::vector<Action*>& actions)
 {
 	for (const auto &action : actions)
 	{
 		this->add(action);
 	}
 }
-#endif
 
 e2d::Sequence * e2d::Sequence::clone() const
 {
