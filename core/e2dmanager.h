@@ -130,7 +130,7 @@ public:
 	);
 
 	// 获取所有动作
-	static std::vector<Action*> getAll();
+	static const std::vector<Action*>& getAll();
 
 private:
 	// 更新动作状态

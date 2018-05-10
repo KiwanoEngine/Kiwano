@@ -872,7 +872,7 @@ public:
 	) const;
 
 	// 获取所有子节点
-	std::vector<Node*> getAll() const;
+	const std::vector<Node*>& getAll() const;
 
 	// 获取根节点
 	Node * getRoot() const;

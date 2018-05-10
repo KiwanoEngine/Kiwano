@@ -74,7 +74,7 @@ e2d::Node * e2d::Scene::getOne(const String& name) const
 	return _root->getChild(name);
 }
 
-std::vector<e2d::Node*> e2d::Scene::getAll() const
+const std::vector<e2d::Node*>& e2d::Scene::getAll() const
 {
 	return _root->getAllChildren();
 }

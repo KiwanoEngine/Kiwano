@@ -133,7 +133,7 @@ public:
 	) const;
 
 	// 获取所有子节点
-	virtual std::vector<Node*> getAllChildren() const;
+	virtual const std::vector<Node*>& getAllChildren() const;
 
 	// 获取子节点数量
 	virtual int getChildrenCount() const;
@@ -649,8 +649,8 @@ public:
 	);
 
 	// 设置文本样式
-	void setTextStyle(
-		TextStyle pTextStyle
+	void setStyle(
+		const TextStyle& textStyle
 	);
 
 	// 设置字体
@@ -685,12 +685,12 @@ public:
 
 	// 设置文本自动换行的宽度（默认为 0）
 	void setWrappingWidth(
-		double fWrappingWidth
+		double wrappingWidth
 	);
 
 	// 设置行间距（默认为 0）
 	void setLineSpacing(
-		double fLineSpacing
+		double lineSpacing
 	);
 
 	// 设置对齐方式（默认为 TextAlign::LEFT）
@@ -999,6 +999,9 @@ public:
 	bool removeButton(
 		Button * button
 	);
+
+	// 获取所有按钮
+	const std::vector<Button*>& getAllButtons() const;
 
 protected:
 	bool _enable;

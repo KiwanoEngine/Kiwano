@@ -165,7 +165,7 @@ void e2d::Text::setText(const String& text)
 	_reset();
 }
 
-void e2d::Text::setTextStyle(TextStyle textStyle)
+void e2d::Text::setStyle(const TextStyle& textStyle)
 {
 	_style = textStyle;
 	_reset();
@@ -209,11 +209,11 @@ void e2d::Text::setWrapping(bool wrapping)
 	}
 }
 
-void e2d::Text::setWrappingWidth(double fWrappingWidth)
+void e2d::Text::setWrappingWidth(double wrappingWidth)
 {
-	if (_style.wrappingWidth != fWrappingWidth)
+	if (_style.wrappingWidth != wrappingWidth)
 	{
-		_style.wrappingWidth = max(fWrappingWidth, 0);
+		_style.wrappingWidth = max(wrappingWidth, 0);
 
 		if (_style.wrapping)
 		{
@@ -222,11 +222,11 @@ void e2d::Text::setWrappingWidth(double fWrappingWidth)
 	}
 }
 
-void e2d::Text::setLineSpacing(double fLineSpacing)
+void e2d::Text::setLineSpacing(double lineSpacing)
 {
-	if (_style.lineSpacing != fLineSpacing)
+	if (_style.lineSpacing != lineSpacing)
 	{
-		_style.lineSpacing = fLineSpacing;
+		_style.lineSpacing = lineSpacing;
 		_reset();
 	}
 }

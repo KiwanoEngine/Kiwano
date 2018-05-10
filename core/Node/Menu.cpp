@@ -89,3 +89,8 @@ bool e2d::Menu::removeButton(Button * button)
 	}
 	return false;
 }
+
+const std::vector<e2d::Button*>& e2d::Menu::getAllButtons() const
+{
+	return _buttons;
+}

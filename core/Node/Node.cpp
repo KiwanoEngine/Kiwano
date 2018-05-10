@@ -713,7 +713,7 @@ e2d::Node * e2d::Node::getChild(const String& name) const
 	return nullptr;
 }
 
-std::vector<e2d::Node*> e2d::Node::getAllChildren() const
+const std::vector<e2d::Node*>& e2d::Node::getAllChildren() const
 {
 	return _children;
 }

@@ -224,7 +224,7 @@ std::vector<e2d::Action*> e2d::ActionManager::get(const String& strActionName)
 	return std::move(actions);
 }
 
-std::vector<e2d::Action*> e2d::ActionManager::getAll()
+const std::vector<e2d::Action*>& e2d::ActionManager::getAll()
 {
 	return s_vActions;
 }
