@@ -55,8 +55,7 @@ bool Input::__init()
 		}
 		else
 		{
-			MessageBox(nullptr, L"Keyboard not found!", L"Error", MB_ICONERROR | MB_OK);
-			Game::quit();
+			Window::error(L"Keyboard not found!");
 			return false;
 		}
 	}
@@ -75,7 +74,7 @@ bool Input::__init()
 		}
 		else
 		{
-			MessageBox(nullptr, L"Mouse not found!", L"Error", MB_ICONERROR | MB_OK);
+			Window::error(L"Mouse not found!");
 			return false;
 		}
 	}

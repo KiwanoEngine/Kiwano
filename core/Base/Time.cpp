@@ -73,6 +73,13 @@ void e2d::Time::__updateLast()
 	s_nTotalTime = static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tStart).count());
 }
 
+void e2d::Time::__reset()
+{
+	s_tLastUpdate = s_tFixedUpdate = s_tNow = steady_clock::now();
+	s_nInterval = 0;
+	s_nTotalTime = static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tStart).count());
+}
+
 void e2d::Time::__sleep()
 {
 	// 计算挂起时长

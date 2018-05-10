@@ -64,8 +64,8 @@ void e2d::Animate::_update()
 			target->open(frames[_frameIndex]);
 		}
 
-		_last += _animation->getInterval();
 		_frameIndex++;
+		_last += _animation->getInterval();
 		
 		if (_frameIndex == frames.size())
 		{
@@ -73,6 +73,12 @@ void e2d::Animate::_update()
 			break;
 		}
 	}
+}
+
+void e2d::Animate::_resetTime()
+{
+	Action::_resetTime();
+	_last = Time::getTotalTime();
 }
 
 void e2d::Animate::reset()

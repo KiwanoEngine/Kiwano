@@ -80,7 +80,7 @@ bool e2d::Window::__init()
 
 	if (FAILED(hr))
 	{
-		::MessageBox(nullptr, L"Create Window Failed!", L"Error", MB_OK);
+		Window::error(L"Create Window Failed!");
 	}
 
 	return SUCCEEDED(hr);
@@ -257,7 +257,7 @@ void e2d::Window::showConsole(bool show)
 			}
 			else
 			{
-				MessageBox(nullptr, L"Alloc Console Failed!", L"Error", MB_OK);
+				Window::error(L"Alloc Console Failed!");
 			}
 		}
 	}
@@ -289,6 +289,24 @@ void e2d::Window::setTypewritingEnable(bool enable)
 			hImc = ::ImmAssociateContext(Window::getHWnd(), nullptr);
 		}
 	}
+}
+
+void e2d::Window::prompt(const String & text, const String & title)
+{
+	::MessageBox(s_HWnd, text, title, MB_ICONINFORMATION | MB_OK);
+	Game::reset();
+}
+
+void e2d::Window::warning(const String& title, const String& text)
+{
+	::MessageBox(s_HWnd, text, title, MB_ICONWARNING | MB_OK);
+	Game::reset();
+}
+
+void e2d::Window::error(const String & text, const String & title)
+{
+	::MessageBox(s_HWnd, text, title, MB_ICONERROR | MB_OK);
+	Game::reset();
 }
 
 

@@ -15,18 +15,6 @@ e2d::Action::~Action()
 {
 }
 
-bool e2d::Action::_isDone()
-{
-	return _done;
-}
-
-void e2d::Action::_startWithTarget(Node* target)
-{
-	_target = target;
-	_running = true;
-	this->reset();
-}
-
 bool e2d::Action::isRunning()
 {
 	return _running;
@@ -74,10 +62,28 @@ void e2d::Action::onDestroy()
 	ActionManager::__remove(this);
 }
 
+void e2d::Action::reset()
+{
+	_initialized = false;
+	_done = false;
+	_last = Time::getTotalTime();
+}
+
+bool e2d::Action::_isDone()
+{
+	return _done;
+}
+
+void e2d::Action::_startWithTarget(Node* target)
+{
+	_target = target;
+	_running = true;
+	this->reset();
+}
+
 void e2d::Action::_init()
 {
 	_initialized = true;
-	// 记录当前时间
 	_last = Time::getTotalTime();
 }
 
@@ -89,14 +95,6 @@ void e2d::Action::_update()
 	}
 }
 
-void e2d::Action::reset()
-{
-	_initialized = false;
-	_done = false;
-	_last = Time::getTotalTime();
-}
-
 void e2d::Action::_resetTime()
 {
-	_last = Time::getTotalTime();
 }

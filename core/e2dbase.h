@@ -34,6 +34,9 @@ public:
 	// 回收游戏资源
 	static void destroy();
 
+	// 重置游戏内部计时
+	static void reset();
+
 	// 游戏是否暂停
 	static bool isPaused();
 
@@ -100,6 +103,24 @@ public:
 		bool enable
 	);
 
+	// 弹出提示窗口
+	static void prompt(
+		const String& text,					/* 内容 */
+		const String& title = L"Prompt"		/* 窗口标题 */
+	);
+
+	// 弹出警告窗口
+	static void warning(
+		const String& text,					/* 内容 */
+		const String& title = L"Warning"	/* 窗口标题 */
+	);
+
+	// 弹出错误窗口
+	static void error(
+		const String& text,					/* 内容 */
+		const String& title = L"Error"		/* 窗口标题 */
+	);
+
 private:
 	// 初始化窗口
 	static bool __init();
@@ -148,6 +169,9 @@ private:
 
 	// 更新时间信息
 	static void __updateLast();
+
+	// 重置时间信息
+	static void __reset();
 
 	// 挂起线程
 	static void __sleep();

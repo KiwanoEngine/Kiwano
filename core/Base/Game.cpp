@@ -149,15 +149,20 @@ void e2d::Game::pause()
 
 void e2d::Game::resume()
 {
-	if (isPaused())
+	if (s_bInitialized && s_bPaused)
 	{
 		s_bPaused = false;
-		// 刷新当前时间
-		Time::__updateLast();
-		// 重置动作和定时器
-		ActionManager::__resetAll();
-		Timer::__resetAll();
+		Game::reset();
 	}
+}
+
+void e2d::Game::reset()
+{
+	// 刷新当前时间
+	Time::__reset();
+	// 重置动作和定时器
+	ActionManager::__resetAll();
+	Timer::__resetAll();
 }
 
 bool e2d::Game::isPaused()

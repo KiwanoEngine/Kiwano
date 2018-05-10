@@ -98,12 +98,18 @@ public:
 		double duration
 	);
 
+	// 重置动作
+	virtual void reset() override;
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
 
 	// 更新动作
 	virtual void _update() override;
+
+	// 重置动作时间
+	virtual void _resetTime() override;
 
 protected:
 	double _duration;
@@ -443,6 +449,9 @@ public:
 	// 获取该动作的拷贝对象
 	virtual Delay * clone() const override;
 
+	// 重置动作
+	virtual void reset() override;
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -450,8 +459,12 @@ protected:
 	// 更新动作
 	virtual void _update() override;
 
+	// 重置动作时间
+	virtual void _resetTime() override;
+
 protected:
 	double _delay;
+	double _delta;
 };
 
 
@@ -665,6 +678,9 @@ protected:
 
 	// 更新动作
 	virtual void _update() override;
+
+	// 重置动作时间
+	virtual void _resetTime() override;
 
 protected:
 	UINT _frameIndex;
