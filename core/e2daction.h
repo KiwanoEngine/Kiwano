@@ -64,7 +64,7 @@ protected:
 	// 初始化动作
 	virtual void _init();
 
-	// 执行动作
+	// 更新动作
 	virtual void _update();
 
 	// 获取动作结束状态
@@ -118,8 +118,8 @@ class MoveBy :
 public:
 	// 创建相对位移动作
 	MoveBy(
-		double duration,	/* 动作持续时长 */
-		Vector vector		/* 位移向量 */
+		double duration,	/* 持续时长 */
+		Vector vector		/* 移动距离 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -132,7 +132,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 protected:
@@ -148,12 +148,72 @@ class MoveTo :
 public:
 	// 创建位移动作
 	MoveTo(
-		double duration,	/* 动作持续时长 */
-		Point pos			/* 位移至目标点的坐标 */
+		double duration,	/* 持续时长 */
+		Point pos			/* 目的坐标 */
 	);
 
 	// 获取该动作的拷贝对象
 	virtual MoveTo * clone() const override;
+
+protected:
+	// 初始化动作
+	virtual void _init() override;
+
+protected:
+	Point _endPos;
+};
+
+
+// 相对跳跃动作
+class JumpBy :
+	public ActionGradual
+{
+public:
+	// 创建相对跳跃动作
+	JumpBy(
+		double duration,		/* 持续时长 */
+		const Vector& vec,		/* 跳跃距离 */
+		double height,			/* 跳跃高度 */
+		int jumps				/* 跳跃次数 */
+	);
+
+	// 获取该动作的拷贝对象
+	virtual JumpBy * clone() const override;
+
+	// 获取该动作的倒转
+	virtual JumpBy * reverse() const override;
+
+protected:
+	// 初始化动作
+	virtual void _init() override;
+
+	// 更新动作
+	virtual void _update() override;
+
+protected:
+	Point	_startPos;
+	Vector	_deltaPos;
+	double	_height;
+	int		_jumps;
+	Point	_prevPos;
+};
+
+
+// 跳跃动作
+class JumpTo :
+	public JumpBy
+{
+public:
+	// 创建位移动作
+	JumpTo(
+		double duration,		/* 持续时长 */
+		const Point& pos,		/* 目的坐标 */
+		double height,			/* 跳跃高度 */
+		int jumps				/* 跳跃次数 */
+	);
+
+	// 获取该动作的拷贝对象
+	virtual JumpTo * clone() const override;
 
 protected:
 	// 初始化动作
@@ -171,13 +231,13 @@ class ScaleBy :
 public:
 	// 创建相对缩放动作
 	ScaleBy(
-		double duration,	/* 动作持续时长 */
+		double duration,	/* 持续时长 */
 		double scale		/* 缩放比例变化 */
 	);
 
 	// 创建相对缩放动作
 	ScaleBy(
-		double duration,	/* 动作持续时长 */
+		double duration,	/* 持续时长 */
 		double scaleX,		/* 横向缩放比例变化 */
 		double scaleY		/* 纵向缩放比例变化 */
 	);
@@ -192,7 +252,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 protected:
@@ -210,13 +270,13 @@ class ScaleTo :
 public:
 	// 创建缩放动作
 	ScaleTo(
-		double duration,	/* 动作持续时长 */
+		double duration,	/* 持续时长 */
 		double scale		/* 缩放至目标比例 */
 	);
 
 	// 创建缩放动作
 	ScaleTo(
-		double duration,	/* 动作持续时长 */
+		double duration,	/* 持续时长 */
 		double scaleX,		/* 横向缩放至目标比例 */
 		double scaleY		/* 纵向缩放至目标比例 */
 	);
@@ -241,7 +301,7 @@ class OpacityBy :
 public:
 	// 创建透明度相对渐变动作
 	OpacityBy(
-		double duration,	/* 动作持续时长 */
+		double duration,	/* 持续时长 */
 		double opacity		/* 透明度相对变化值 */
 	);
 
@@ -255,7 +315,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 protected:
@@ -271,7 +331,7 @@ class OpacityTo :
 public:
 	// 创建透明度渐变动作
 	OpacityTo(
-		double duration,	/* 动作持续时长 */
+		double duration,	/* 持续时长 */
 		double opacity		/* 透明度渐变至目标值 */
 	);
 
@@ -294,7 +354,7 @@ class FadeIn :
 public:
 	// 创建淡入动作
 	FadeIn(
-		double duration		/* 动作持续时长 */
+		double duration		/* 持续时长 */
 	)
 	: OpacityTo(duration, 1) 
 	{
@@ -309,7 +369,7 @@ class FadeOut :
 public:
 	// 创建淡出动作
 	FadeOut(
-		double duration		/* 动作持续时长 */
+		double duration		/* 持续时长 */
 	)
 	: OpacityTo(duration, 0) 
 	{
@@ -324,7 +384,7 @@ class RotateBy :
 public:
 	// 创建相对旋转动作
 	RotateBy(
-		double duration,	/* 动作持续时长 */
+		double duration,	/* 持续时长 */
 		double rotation		/* 旋转角度变化值 */
 	);
 
@@ -338,7 +398,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 protected:
@@ -354,7 +414,7 @@ class RotateTo :
 public:
 	// 创建旋转动作
 	RotateTo(
-		double duration,	/* 动作持续时长 */
+		double duration,	/* 持续时长 */
 		double rotation		/* 旋转角度至目标值 */
 	);
 
@@ -387,7 +447,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 protected:
@@ -421,7 +481,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 	// 重置动作时间
@@ -451,7 +511,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 protected:
@@ -518,7 +578,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 	// 重置动作时间
@@ -589,7 +649,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 	// 重置动作时间
@@ -639,7 +699,7 @@ protected:
 	// 初始化动作
 	virtual void _init() override;
 
-	// 执行动作
+	// 更新动作
 	virtual void _update() override;
 
 protected:

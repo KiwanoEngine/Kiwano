@@ -1,8 +1,8 @@
 #include "..\e2daction.h"
 
 
-e2d::MoveBy::MoveBy(double duration, Vector vector) :
-	ActionGradual(duration)
+e2d::MoveBy::MoveBy(double duration, Vector vector)
+	: ActionGradual(duration)
 {
 	_deltaPos = vector;
 }
@@ -29,10 +29,10 @@ void e2d::MoveBy::_update()
 
 e2d::MoveBy * e2d::MoveBy::clone() const
 {
-	return new MoveBy(_duration, _deltaPos);
+	return new (std::nothrow) MoveBy(_duration, _deltaPos);
 }
 
 e2d::MoveBy * e2d::MoveBy::reverse() const
 {
-	return new MoveBy(_duration, -_deltaPos);
+	return new (std::nothrow) MoveBy(_duration, -_deltaPos);
 }

@@ -216,6 +216,12 @@
     <ClCompile Include="..\..\core\Common\Animation.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Action\JumpBy.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\JumpTo.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />

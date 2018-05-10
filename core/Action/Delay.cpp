@@ -7,7 +7,7 @@ e2d::Delay::Delay(double duration)
 
 e2d::Delay * e2d::Delay::clone() const
 {
-	return new Delay(_delay);
+	return new (std::nothrow) Delay(_delay);
 }
 
 void e2d::Delay::_init()
@@ -18,7 +18,7 @@ void e2d::Delay::_init()
 void e2d::Delay::_update()
 {
 	Action::_update();
-	// 判断时间间隔是否足够
+
 	if ((Time::getTotalTime() - _last) >= _delay)
 	{
 		this->stop();

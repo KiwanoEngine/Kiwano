@@ -60,7 +60,7 @@ void e2d::Action::setName(const String& name)
 
 e2d::Action * e2d::Action::reverse() const
 {
-	WARN_IF(true, "Action cannot be reversed!");
+	ASSERT(false, "Action cannot be reversed!");
 	return nullptr;
 }
 

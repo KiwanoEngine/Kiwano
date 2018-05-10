@@ -199,6 +199,8 @@
     <ClCompile Include="..\..\core\Action\Action.cpp" />
     <ClCompile Include="..\..\core\Action\CallFunc.cpp" />
     <ClCompile Include="..\..\core\Action\Delay.cpp" />
+    <ClCompile Include="..\..\core\Action\JumpBy.cpp" />
+    <ClCompile Include="..\..\core\Action\JumpTo.cpp" />
     <ClCompile Include="..\..\core\Action\MoveBy.cpp" />
     <ClCompile Include="..\..\core\Action\Animate.cpp" />
     <ClCompile Include="..\..\core\Action\MoveTo.cpp" />

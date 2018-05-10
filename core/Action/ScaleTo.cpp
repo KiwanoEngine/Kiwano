@@ -16,7 +16,7 @@ e2d::ScaleTo::ScaleTo(double duration, double scaleX, double scaleY)
 
 e2d::ScaleTo * e2d::ScaleTo::clone() const
 {
-	return new ScaleTo(_duration, _endScaleX, _endScaleY);
+	return new (std::nothrow) ScaleTo(_duration, _endScaleX, _endScaleY);
 }
 
 void e2d::ScaleTo::_init()

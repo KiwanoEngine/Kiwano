@@ -127,22 +127,27 @@ void e2d::Spawn::add(const std::initializer_list<Action*>& actions)
 
 e2d::Spawn * e2d::Spawn::clone() const
 {
-	auto a = new Spawn();
-	for (auto action : _actions)
+	auto spawn = new (std::nothrow) Spawn();
+	for (const auto& action : _actions)
 	{
-		a->add(action->clone());
+		if (action)
+		{
+			spawn->add(action->clone());
+		}
 	}
-	return a;
+	return spawn;
 }
 
 e2d::Spawn * e2d::Spawn::reverse() const
 {
-	auto a = new Spawn();
-	for (auto action : _actions)
+	auto spawn = new (std::nothrow) Spawn();
+	for (const auto& action : _actions)
 	{
-		a->add(action->reverse());
+		if (action)
+		{
+			spawn->add(action->reverse());
+		}
 	}
-	// 将动作顺序逆序排列
-	a->_actions.reserve(_actions.size());
-	return a;
+	spawn->_actions.reserve(_actions.size());
+	return spawn;
 }

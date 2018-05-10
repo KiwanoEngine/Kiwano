@@ -130,22 +130,27 @@ void e2d::Sequence::add(const std::initializer_list<Action*>& actions)
 
 e2d::Sequence * e2d::Sequence::clone() const
 {
-	auto a = new Sequence();
-	for (auto action : _actions)
+	auto sequence = new (std::nothrow) Sequence();
+	for (const auto& action : _actions)
 	{
-		a->add(action->clone());
+		if (action)
+		{
+			sequence->add(action->clone());
+		}
 	}
-	return a;
+	return sequence;
 }
 
 e2d::Sequence * e2d::Sequence::reverse() const
 {
-	auto a = new Sequence();
-	for (auto action : _actions)
+	auto sequence = new (std::nothrow) Sequence();
+	for (const auto& action : _actions)
 	{
-		a->add(action->reverse());
+		if (action)
+		{
+			sequence->add(action->reverse());
+		}
 	}
-	// 将动作顺序逆序排列
-	a->_actions.reserve(_actions.size());
-	return a;
+	sequence->_actions.reserve(_actions.size());
+	return sequence;
 }

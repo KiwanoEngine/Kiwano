@@ -89,26 +89,40 @@ void e2d::Animate::onDestroy()
 
 e2d::Animate * e2d::Animate::clone() const
 {
-	return new (std::nothrow) Animate(_animation);
+	if (_animation)
+	{
+		return new (std::nothrow) Animate(_animation);
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 e2d::Animate * e2d::Animate::reverse() const
 {
-	auto& oldFrames = _animation->getFrames();
-	std::vector<Image*> frames(oldFrames.size());
-
-	if (!oldFrames.empty())
+	if (_animation)
 	{
-		for (auto iter = oldFrames.crbegin(), iterCrend = oldFrames.crend(); iter != iterCrend; ++iter)
+		auto& oldFrames = _animation->getFrames();
+		std::vector<Image*> frames(oldFrames.size());
+
+		if (!oldFrames.empty())
 		{
-			Image* frame = *iter;
-			if (frame)
+			for (auto iter = oldFrames.crbegin(), iterCrend = oldFrames.crend(); iter != iterCrend; ++iter)
 			{
-				frames.push_back(frame);
+				Image* frame = *iter;
+				if (frame)
+				{
+					frames.push_back(frame);
+				}
 			}
 		}
-	}
 
-	auto animation = new (std::nothrow) Animation(_animation->getInterval(), frames);
-	return new (std::nothrow) Animate(animation);
+		auto animation = new (std::nothrow) Animation(_animation->getInterval(), frames);
+		return new (std::nothrow) Animate(animation);
+	}
+	else
+	{
+		return nullptr;
+	}
 }

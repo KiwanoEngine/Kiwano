@@ -7,7 +7,7 @@ e2d::CallFunc::CallFunc(const Function& func) :
 
 e2d::CallFunc * e2d::CallFunc::clone() const
 {
-	return new CallFunc(_func);
+	return new (std::nothrow) CallFunc(_func);
 }
 
 void e2d::CallFunc::_init()

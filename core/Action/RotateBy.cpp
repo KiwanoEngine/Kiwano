@@ -1,8 +1,8 @@
 #include "..\e2daction.h"
 
 
-e2d::RotateBy::RotateBy(double duration, double rotation) :
-	ActionGradual(duration)
+e2d::RotateBy::RotateBy(double duration, double rotation)
+	: ActionGradual(duration)
 {
 	_deltaVal = rotation;
 }
@@ -29,10 +29,10 @@ void e2d::RotateBy::_update()
 
 e2d::RotateBy * e2d::RotateBy::clone() const
 {
-	return new RotateBy(_duration, _deltaVal);
+	return new (std::nothrow) RotateBy(_duration, _deltaVal);
 }
 
 e2d::RotateBy * e2d::RotateBy::reverse() const
 {
-	return new RotateBy(_duration, -_deltaVal);
+	return new (std::nothrow) RotateBy(_duration, -_deltaVal);
 }
