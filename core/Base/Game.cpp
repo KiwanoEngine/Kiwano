@@ -13,12 +13,31 @@ static bool s_bInitialized = false;
 static e2d::String s_sGameName;
 
 
-bool e2d::Game::init(const String& name)
+bool e2d::Game::init(const String& name, const String& mutexName)
 {
 	if (s_bInitialized)
 	{
 		WARN_IF(true, "The game has been initialized!");
 		return false;
+	}
+
+	if (!mutexName.isEmpty())
+	{
+		// 创建进程互斥体
+		HANDLE hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + mutexName);
+
+		if (hMutex == nullptr)
+		{
+			WARN_IF(true, "CreateMutex Failed!");
+		}
+		else if (::GetLastError() == ERROR_ALREADY_EXISTS)
+		{
+			// 如果程序已经存在并且正在运行，弹窗提示
+			Window::info(L"游戏已在其他窗口中打开！", L"提示");
+			// 关闭进程互斥体
+			::CloseHandle(hMutex);
+			return false;
+		}
 	}
 
 	// 初始化 COM 组件
@@ -204,43 +223,6 @@ void e2d::Game::destroy()
 	CoUninitialize();
 
 	s_bInitialized = false;
-}
-
-bool e2d::Game::createMutex(const String& sMutexName, const String& sWindowTitle)
-{
-	// 创建进程互斥体
-	HANDLE _hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + sMutexName);
-
-	if (_hMutex == nullptr)
-	{
-		WARN_IF(true, "CreateMutex Failed!");
-		return true;
-	}
-
-	// 如果程序已经存在并且正在运行
-	if (::GetLastError() == ERROR_ALREADY_EXISTS)
-	{
-		// 关闭进程互斥体
-		::CloseHandle(_hMutex);
-		// 打开指定窗口
-		if (!sWindowTitle.isEmpty())
-		{
-			// 获取窗口句柄
-			HWND hProgramWnd = ::FindWindow(L"Easy2DApp", sWindowTitle);
-			if (hProgramWnd)
-			{
-				// 获取窗口显示状态
-				WINDOWPLACEMENT wpm;
-				::GetWindowPlacement(hProgramWnd, &wpm);
-				// 将运行的程序窗口还原成正常状态
-				wpm.showCmd = SW_SHOW;
-				::SetWindowPlacement(hProgramWnd, &wpm);
-				::SetWindowPos(hProgramWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-			}
-		}
-		return false;
-	}
-	return true;
 }
 
 e2d::String e2d::Game::getName()

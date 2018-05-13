@@ -14,12 +14,13 @@ class Game
 public:
 	// 初始化游戏
 	static bool init(
-		const String& name = L""	/* 游戏英文名称 */
+		const String& name = L"",		/* 游戏英文名称 */
+		const String& mutexName = L""	/* 进程互斥体名称 */
 	);
 
 	// 启动游戏
 	static int start(
-		bool autoRelease = true		/* 游戏结束时自动回收资源 */
+		bool autoRelease = true			/* 游戏结束时自动回收资源 */
 	);
 
 	// 暂停游戏
@@ -39,12 +40,6 @@ public:
 
 	// 游戏是否暂停
 	static bool isPaused();
-
-	// 创建进程互斥体
-	static bool createMutex(
-		const String& sMutexName,			/* 互斥体名称 */
-		const String& sWindowTitle = L""	/* 窗口标题 */
-	);
 
 	// 获取游戏名称
 	static String getName();
@@ -104,7 +99,7 @@ public:
 	);
 
 	// 弹出提示窗口
-	static void prompt(
+	static void info(
 		const String& text,					/* 内容 */
 		const String& title = L"Prompt"		/* 窗口标题 */
 	);

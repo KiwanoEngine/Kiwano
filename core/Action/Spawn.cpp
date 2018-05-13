@@ -116,7 +116,7 @@ e2d::Spawn * e2d::Spawn::reverse() const
 		{
 			if (*iter)
 			{
-				newActions.push_back(*iter);
+				newActions.push_back((*iter)->reverse());
 			}
 		}
 		spawn->add(newActions);

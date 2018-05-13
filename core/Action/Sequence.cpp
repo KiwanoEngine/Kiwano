@@ -118,7 +118,7 @@ e2d::Sequence * e2d::Sequence::reverse() const
 		{
 			if (*iter)
 			{
-				newActions.push_back(*iter);
+				newActions.push_back((*iter)->reverse());
 			}
 		}
 		sequence->add(newActions);

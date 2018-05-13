@@ -291,7 +291,7 @@ void e2d::Window::setTypewritingEnable(bool enable)
 	}
 }
 
-void e2d::Window::prompt(const String & text, const String & title)
+void e2d::Window::info(const String & text, const String & title)
 {
 	::MessageBox(s_HWnd, text, title, MB_ICONINFORMATION | MB_OK);
 	Game::reset();
