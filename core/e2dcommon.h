@@ -619,6 +619,11 @@ public:
 		const String& resType	/* 图片资源类型 */
 	);
 
+	// 加载位图
+	Image(
+		ID2D1Bitmap * bitmap	/* 位图资源 */
+	);
+
 	// 加载图片文件并裁剪
 	Image(
 		const String& filePath,	/* 图片文件路径 */
@@ -642,13 +647,18 @@ public:
 
 	// 加载图片文件
 	bool open(
-		const String& filePath
+		const String& filePath	/* 图片文件路径 */
 	);
 
 	// 加载图片资源
 	bool open(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType	/* 图片资源类型 */
+	);
+
+	// 加载位图
+	bool open(
+		ID2D1Bitmap * bitmap	/* 位图资源 */
 	);
 
 	// 将图片裁剪为矩形
@@ -704,6 +714,12 @@ public:
 	static void clearCache();
 
 protected:
+	// 设置 Bitmap
+	void _setBitmap(
+		ID2D1Bitmap * bitmap
+	);
+
+protected:
 	double	_cropX;
 	double	_cropY;
 	double	_cropWidth;
@@ -720,9 +736,14 @@ public:
 	// 创建帧动画
 	Animation();
 
-	// 创建特定间隔的帧动画
+	// 创建帧动画
 	Animation(
-		double interval		/* 帧间隔（秒） */
+		const std::vector<Image*>& frames	/* 关键帧数组 */
+	);
+
+	// 创建特定帧间隔的帧动画
+	Animation(
+		double interval						/* 帧间隔（秒） */
 	);
 
 	// 创建特定帧间隔的帧动画
@@ -731,16 +752,11 @@ public:
 		const std::vector<Image*>& frames	/* 关键帧数组 */
 	);
 
-	// 创建帧动画
-	Animation(
-		const std::vector<Image*>& frames	/* 关键帧列表 */
-	);
-
 	virtual ~Animation();
 
 	// 添加关键帧
 	void add(
-		Image * frame		/* 关键帧 */
+		Image * frame	/* 关键帧 */
 	);
 
 	// 添加多个关键帧
@@ -756,7 +772,7 @@ public:
 
 	// 设置每一帧的时间间隔
 	void setInterval(
-		double interval	/* 帧间隔（秒） */
+		double interval		/* 帧间隔（秒） */
 	);
 
 	// 获取动画的拷贝对象

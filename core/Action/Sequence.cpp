@@ -111,13 +111,17 @@ e2d::Sequence * e2d::Sequence::clone() const
 e2d::Sequence * e2d::Sequence::reverse() const
 {
 	auto sequence = new (std::nothrow) Sequence();
-	for (const auto& action : _actions)
+	if (!_actions.empty())
 	{
-		if (action)
+		std::vector<Action*> newActions(_actions.size());
+		for (auto iter = _actions.crbegin(), iterCrend = _actions.crend(); iter != iterCrend; ++iter)
 		{
-			sequence->add(action->reverse());
+			if (*iter)
+			{
+				newActions.push_back(*iter);
+			}
 		}
+		sequence->add(newActions);
 	}
-	sequence->_actions.reserve(_actions.size());
 	return sequence;
 }

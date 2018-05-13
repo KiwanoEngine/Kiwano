@@ -46,12 +46,6 @@ void e2d::Action::setName(const String& name)
 	_name = name;
 }
 
-e2d::Action * e2d::Action::reverse() const
-{
-	ASSERT(false, "Action cannot be reversed!");
-	return nullptr;
-}
-
 e2d::Node * e2d::Action::getTarget()
 {
 	return _target;

@@ -64,9 +64,9 @@ void e2d::Animate::_update()
 			target->open(frames[_frameIndex]);
 		}
 
-		_frameIndex++;
 		_last += _animation->getInterval();
-		
+		_frameIndex++;
+
 		if (_frameIndex == frames.size())
 		{
 			this->stop();
@@ -99,10 +99,7 @@ e2d::Animate * e2d::Animate::clone() const
 	{
 		return new (std::nothrow) Animate(_animation);
 	}
-	else
-	{
-		return nullptr;
-	}
+	return nullptr;
 }
 
 e2d::Animate * e2d::Animate::reverse() const

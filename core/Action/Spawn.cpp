@@ -109,13 +109,17 @@ e2d::Spawn * e2d::Spawn::clone() const
 e2d::Spawn * e2d::Spawn::reverse() const
 {
 	auto spawn = new (std::nothrow) Spawn();
-	for (const auto& action : _actions)
+	if (!_actions.empty())
 	{
-		if (action)
+		std::vector<Action*> newActions(_actions.size());
+		for (auto iter = _actions.crbegin(), iterCrend = _actions.crend(); iter != iterCrend; ++iter)
 		{
-			spawn->add(action->reverse());
+			if (*iter)
+			{
+				newActions.push_back(*iter);
+			}
 		}
+		spawn->add(newActions);
 	}
-	spawn->_actions.reserve(_actions.size());
 	return spawn;
 }

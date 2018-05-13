@@ -68,10 +68,10 @@ const std::vector<e2d::Image*>& e2d::Animation::getFrames() const
 
 e2d::Animation * e2d::Animation::clone() const
 {
-	auto a = new Animation(_interval);
+	auto animation = new (std::nothrow) Animation(_interval);
 	for (auto frame : _frames)
 	{
-		a->add(frame);
+		animation->add(frame);
 	}
-	return a;
+	return animation;
 }

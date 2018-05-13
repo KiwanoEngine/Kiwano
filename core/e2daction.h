@@ -49,7 +49,7 @@ public:
 	virtual Action * clone() const = 0;
 
 	// 获取动作的倒转
-	virtual Action * reverse() const;
+	virtual Action * reverse() const = 0;
 
 	// 重置动作
 	virtual void reset();
@@ -161,6 +161,13 @@ public:
 	// 获取该动作的拷贝对象
 	virtual MoveTo * clone() const override;
 
+	// 获取该动作的倒转
+	virtual MoveTo * reverse() const override
+	{
+		ASSERT(false, "reverse() not supported in MoveTo");
+		return nullptr;
+	}
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -220,6 +227,13 @@ public:
 
 	// 获取该动作的拷贝对象
 	virtual JumpTo * clone() const override;
+
+	// 获取该动作的倒转
+	virtual JumpTo * reverse() const override
+	{
+		ASSERT(false, "reverse() not supported in JumpTo");
+		return nullptr;
+	}
 
 protected:
 	// 初始化动作
@@ -290,6 +304,13 @@ public:
 	// 获取该动作的拷贝对象
 	virtual ScaleTo * clone() const override;
 
+	// 获取该动作的倒转
+	virtual ScaleTo * reverse() const override
+	{
+		ASSERT(false, "reverse() not supported in ScaleTo");
+		return nullptr;
+	}
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -343,6 +364,13 @@ public:
 
 	// 获取该动作的拷贝对象
 	virtual OpacityTo * clone() const override;
+
+	// 获取该动作的倒转
+	virtual OpacityTo * reverse() const override
+	{
+		ASSERT(false, "reverse() not supported in OpacityTo");
+		return nullptr;
+	}
 
 protected:
 	// 初始化动作
@@ -427,6 +455,13 @@ public:
 	// 获取该动作的拷贝对象
 	virtual RotateTo * clone() const override;
 
+	// 获取该动作的倒转
+	virtual RotateTo * reverse() const override
+	{
+		ASSERT(false, "reverse() not supported in RotateTo");
+		return nullptr;
+	}
+
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -448,6 +483,9 @@ public:
 
 	// 获取该动作的拷贝对象
 	virtual Delay * clone() const override;
+
+	// 获取该动作的倒转
+	virtual Delay * reverse() const override;
 
 	// 重置动作
 	virtual void reset() override;
@@ -484,6 +522,9 @@ public:
 	// 获取该动作的拷贝对象
 	virtual Loop * clone() const override;
 
+	// 获取该动作的倒转
+	virtual Loop * reverse() const override;
+
 	// 重置动作
 	virtual void reset() override;
 
@@ -519,6 +560,9 @@ public:
 
 	// 获取该动作的拷贝对象
 	virtual CallFunc * clone() const override;
+
+	// 获取该动作的倒转
+	virtual CallFunc * reverse() const override;
 
 protected:
 	// 初始化动作

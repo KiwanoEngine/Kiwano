@@ -551,6 +551,7 @@ protected:
 };
 
 
+// нд╠╬
 class Text :
 	public Node
 {

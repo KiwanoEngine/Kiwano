@@ -31,6 +31,11 @@ e2d::Loop * e2d::Loop::clone() const
 	}
 }
 
+e2d::Loop * e2d::Loop::reverse() const
+{
+	return new (std::nothrow) Loop(_action);
+}
+
 void e2d::Loop::_init()
 {
 	Action::_init();

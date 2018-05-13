@@ -223,8 +223,7 @@ void e2d::Renderer::__render()
 
 	if (FAILED(hr))
 	{
-		// 渲染时产生了未知的错误，退出游戏
-		ASSERT(false, L"Renderer error: %#X!", hr);
+		Window::error(L"Device loss recovery failed. Exiting game.");
 		Game::quit();
 	}
 }

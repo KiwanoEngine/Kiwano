@@ -1,8 +1,10 @@
-#include "..\e2dnode.h"
+#include "..\e2dcommon.h"
+#include "..\e2dbase.h"
 #include <map>
 
 static std::map<size_t, ID2D1Bitmap*> s_mBitmapsFromFile;
 static std::map<int, ID2D1Bitmap*> s_mBitmapsFromResource;
+static std::set<ID2D1Bitmap*> s_vBitmaps;
 
 
 e2d::Image::Image()
@@ -26,6 +28,12 @@ e2d::Image::Image(int resNameId, const String& resType)
 	this->open(resNameId, resType);
 }
 
+e2d::Image::Image(ID2D1Bitmap * bitmap)
+	: _bitmap(nullptr)
+{
+	this->open(bitmap);
+}
+
 e2d::Image::Image(const String& filePath, double cropX, double cropY, double cropWidth, double cropHeight)
 	: _bitmap(nullptr)
 {
@@ -46,7 +54,7 @@ e2d::Image::~Image()
 
 bool e2d::Image::open(const String& filePath)
 {
-	WARN_IF(filePath.isEmpty(), "Image cannot load bitmap from NULL file name.");
+	WARN_IF(filePath.isEmpty(), "Image open failed! Invalid file name.");
 
 	if (filePath.isEmpty())
 		return false;
@@ -57,10 +65,7 @@ bool e2d::Image::open(const String& filePath)
 		return false;
 	}
 
-	_bitmap = s_mBitmapsFromFile.at(filePath.getHashCode());
-	_cropX = _cropY = 0;
-	_cropWidth = _bitmap->GetSize().width;
-	_cropHeight = _bitmap->GetSize().height;
+	this->_setBitmap(s_mBitmapsFromFile.at(filePath.getHashCode()));
 	return true;
 }
 
@@ -72,11 +77,22 @@ bool e2d::Image::open(int resNameId, const String& resType)
 		return false;
 	}
 
-	_bitmap = s_mBitmapsFromResource.at(resNameId);
-	_cropX = _cropY = 0;
-	_cropWidth = _bitmap->GetSize().width;
-	_cropHeight = _bitmap->GetSize().height;
+	this->_setBitmap(s_mBitmapsFromResource.at(resNameId));
 	return true;
+}
+
+bool e2d::Image::open(ID2D1Bitmap * bitmap)
+{
+	if (bitmap)
+	{
+		if (s_vBitmaps.find(bitmap) != s_vBitmaps.end())
+		{
+			s_vBitmaps.insert(bitmap);
+		}
+		this->_setBitmap(bitmap);
+		return true;
+	}
+	return false;
 }
 
 void e2d::Image::crop(double x, double y, double width, double height)
@@ -156,9 +172,9 @@ e2d::Point e2d::Image::getCropPos() const
 	return Point(_cropX, _cropY);
 }
 
-bool e2d::Image::preload(const String& fileName)
+bool e2d::Image::preload(const String& filePath)
 {
-	if (s_mBitmapsFromFile.find(fileName.getHashCode()) != s_mBitmapsFromFile.end())
+	if (s_mBitmapsFromFile.find(filePath.getHashCode()) != s_mBitmapsFromFile.end())
 	{
 		return true;
 	}
@@ -173,7 +189,7 @@ bool e2d::Image::preload(const String& fileName)
 
 	// 创建解码器
 	hr = Renderer::getIWICImagingFactory()->CreateDecoderFromFilename(
-		fileName,
+		filePath,
 		NULL,
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnLoad,
@@ -221,7 +237,7 @@ bool e2d::Image::preload(const String& fileName)
 		// 保存图片指针和图片的 Hash 名
 		s_mBitmapsFromFile.insert(
 			std::map<size_t, ID2D1Bitmap*>::value_type(
-				fileName.getHashCode(),
+				filePath.getHashCode(),
 				pBitmap)
 		);
 	}
@@ -375,6 +391,23 @@ void e2d::Image::clearCache()
 		SafeReleaseInterface(bitmap.second);
 	}
 	s_mBitmapsFromResource.clear();
+
+	for (auto bitmap : s_vBitmaps)
+	{
+		SafeReleaseInterface(bitmap);
+	}
+	s_vBitmaps.clear();
+}
+
+void e2d::Image::_setBitmap(ID2D1Bitmap * bitmap)
+{
+	if (bitmap)
+	{
+		_bitmap = bitmap;
+		_cropX = _cropY = 0;
+		_cropWidth = _bitmap->GetSize().width;
+		_cropHeight = _bitmap->GetSize().height;
+	}
 }
 
 ID2D1Bitmap * e2d::Image::getBitmap()

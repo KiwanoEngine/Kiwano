@@ -11,6 +11,11 @@ e2d::Delay * e2d::Delay::clone() const
 	return new (std::nothrow) Delay(_delay);
 }
 
+e2d::Delay * e2d::Delay::reverse() const
+{
+	return new (std::nothrow) Delay(_delay);
+}
+
 void e2d::Delay::reset()
 {
 	Action::reset();
