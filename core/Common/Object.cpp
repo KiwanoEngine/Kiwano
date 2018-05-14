@@ -14,7 +14,7 @@ e2d::Object::~Object()
 // 引用计数加一
 void e2d::Object::retain()
 {
-	_refCount++;
+	++_refCount;
 }
 
 // 引用计数减一

@@ -57,7 +57,7 @@ void e2d::ColliderManager::__update()
 	if (s_vListeners.empty() || Game::isPaused())
 		return;
 
-	for (size_t i = 0; i < s_vListeners.size(); i++)
+	for (size_t i = 0; i < s_vListeners.size(); ++i)
 	{
 		auto listener = s_vListeners[i];
 		// 清除已停止的监听器
@@ -88,7 +88,7 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 		Scene* pCurrentScene = pActiveNode->getParentScene();
 
 		// 判断与其他碰撞体的交集情况
-		for (size_t i = 0; i < s_vColliders.size(); i++)
+		for (size_t i = 0; i < s_vColliders.size(); ++i)
 		{
 			auto pPassiveCollider = s_vColliders[i];
 			// 判断两个碰撞体是否是同一个对象
@@ -242,7 +242,7 @@ void e2d::ColliderManager::__removeCollider(Collider * pCollider)
 {
 	if (pCollider)
 	{
-		for (size_t i = 0; i < s_vColliders.size(); i++)
+		for (size_t i = 0; i < s_vColliders.size(); ++i)
 		{
 			if (s_vColliders[i] == pCollider)
 			{

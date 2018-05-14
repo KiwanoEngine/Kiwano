@@ -105,7 +105,7 @@ void e2d::InputManager::__update()
 	if (s_vListeners.empty() || Game::isPaused())
 		return;
 
-	for (size_t i = 0; i < s_vListeners.size(); i++)
+	for (size_t i = 0; i < s_vListeners.size(); ++i)
 	{
 		auto listener = s_vListeners[i];
 		// Çå³ýÒÑÍ£Ö¹µÄ¼àÌýÆ÷

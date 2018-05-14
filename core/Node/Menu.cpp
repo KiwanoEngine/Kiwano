@@ -59,7 +59,7 @@ bool e2d::Menu::removeButton(Button * button)
 	if (button)
 	{
 		size_t size = _buttons.size();
-		for (size_t i = 0; i < size; i++)
+		for (size_t i = 0; i < size; ++i)
 		{
 			if (_buttons[i] == button)
 			{

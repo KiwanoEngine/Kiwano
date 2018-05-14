@@ -45,7 +45,7 @@ void e2d::Spawn::_update()
 	{
 		if (action->_isDone())
 		{
-			doneNum++;
+			++doneNum;
 		}
 		else
 		{

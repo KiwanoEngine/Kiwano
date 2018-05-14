@@ -75,7 +75,7 @@ void e2d::Node::_update()
 		// 遍历子节点
 		size_t size = _children.size();
 		size_t i;
-		for (i = 0; i < size; i++)
+		for (i = 0; i < size; ++i)
 		{
 			auto child = _children[i];
 			// 访问 Order 小于零的节点
@@ -99,7 +99,7 @@ void e2d::Node::_update()
 		}
 
 		// 访问剩余节点
-		for (; i < size; i++)
+		for (; i < size; ++i)
 			_children[i]->_update();
 	}
 	else
@@ -126,7 +126,7 @@ void e2d::Node::_render()
 	{
 		size_t size = _children.size();
 		size_t i;
-		for (i = 0; i < size; i++)
+		for (i = 0; i < size; ++i)
 		{
 			auto child = _children[i];
 			// 访问 Order 小于零的节点
@@ -146,7 +146,7 @@ void e2d::Node::_render()
 		this->onRender();
 
 		// 访问剩余节点
-		for (; i < size; i++)
+		for (; i < size; ++i)
 			_children[i]->_render();
 	}
 	else
@@ -725,7 +725,7 @@ bool e2d::Node::removeChild(Node * child)
 	if (child)
 	{
 		size_t size = _children.size();
-		for (size_t i = 0; i < size; i++)
+		for (size_t i = 0; i < size; ++i)
 		{
 			if (_children[i] == child)
 			{
@@ -758,7 +758,7 @@ void e2d::Node::removeChildren(const String& childName)
 	unsigned int hash = childName.getHashCode();
 
 	size_t size = _children.size();
-	for (size_t i = 0; i < size; i++)
+	for (size_t i = 0; i < size; ++i)
 	{
 		auto child = _children[i];
 		if (child->_hashName == hash && child->_name == childName)
@@ -859,7 +859,7 @@ std::vector<e2d::Action*> e2d::Node::getActions(const String& strActionName)
 		}
 		else
 		{
-			iter++;
+			++iter;
 		}
 	}
 	return std::move(actions);

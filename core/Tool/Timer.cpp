@@ -24,17 +24,17 @@ public:
 
 	void update()
 	{
-		if (this->callback)
+		if (callback)
 		{
-			this->callback();
+			callback();
 		}
 
-		this->runTimes++;
-		this->lastTime += this->delay;
+		++runTimes;
+		lastTime += delay;
 
-		if (this->runTimes == this->totalTimes)
+		if (runTimes == totalTimes)
 		{
-			this->stopped = true;
+			stopped = true;
 		}
 	}
 

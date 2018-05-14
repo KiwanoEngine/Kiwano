@@ -345,7 +345,7 @@ unsigned int e2d::String::getHashCode() const
 {
 	unsigned int hash = 0;
 
-	for (int i = 0; i < getLength(); i++)
+	for (size_t i = 0, length = _str.size(); i < length; ++i)
 	{
 		hash *= 16777619;
 		hash ^= (unsigned int)towupper(_str[i]);
@@ -373,7 +373,7 @@ e2d::String e2d::String::toUpper() const
 {
 	String str(*this);
 
-	for (int i = 0; i < getLength(); i++)
+	for (size_t i = 0, length = _str.size(); i < length; ++i)
 		str[i] = towupper(str[i]);
 
 	return std::move(str);
@@ -383,7 +383,7 @@ e2d::String e2d::String::toLower() const
 {
 	e2d::String str(*this);
 
-	for (int i = 0; i < getLength(); i++)
+	for (size_t i = 0, length = _str.size(); i < length; ++i)
 		str[i] = towlower(str[i]);
 
 	return std::move(str);
@@ -391,7 +391,7 @@ e2d::String e2d::String::toLower() const
 
 int e2d::String::toInt() const
 {
-	if (getLength() == 0)
+	if (_str.empty())
 	{
 		return 0;
 	}
@@ -400,7 +400,7 @@ int e2d::String::toInt() const
 
 double e2d::String::toDouble() const
 {
-	if (getLength() == 0)
+	if (_str.empty())
 	{
 		return 0.0;
 	}
@@ -409,7 +409,7 @@ double e2d::String::toDouble() const
 
 bool e2d::String::toBool() const
 {
-	if (getLength() == 0)
+	if (_str.empty())
 	{
 		return false;
 	}
@@ -424,7 +424,7 @@ bool e2d::String::toBool() const
 e2d::String e2d::String::subtract(int offset, int count) const
 {
 	String tmp;
-	int length = getLength();
+	int length = static_cast<int>(_str.size());
 
 	if (length == 0 || offset >= length)
 		return std::move(tmp);

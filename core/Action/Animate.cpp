@@ -65,7 +65,7 @@ void e2d::Animate::_update()
 		}
 
 		_last += _animation->getInterval();
-		_frameIndex++;
+		++_frameIndex;
 
 		if (_frameIndex == frames.size())
 		{

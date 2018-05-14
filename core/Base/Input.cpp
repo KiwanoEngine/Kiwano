@@ -6,10 +6,12 @@
 
 using namespace e2d;
 
+#define BUFFER_SIZE	256
+
 static IDirectInput8* s_pDirectInput = nullptr;			// DirectInput 接口对象
 static IDirectInputDevice8* s_KeyboardDevice = nullptr;	// 键盘设备接口
-static char s_KeyBuffer[256] = { 0 };					// 用于保存键盘按键信息缓冲区
-static char s_KeyRecordBuffer[256] = { 0 };				// 键盘消息二级缓冲区
+static char s_KeyBuffer[BUFFER_SIZE] = { 0 };					// 用于保存键盘按键信息缓冲区
+static char s_KeyRecordBuffer[BUFFER_SIZE] = { 0 };				// 键盘消息二级缓冲区
 
 static IDirectInputDevice8* s_MouseDevice = nullptr;	// 鼠标设备接口
 static DIMOUSESTATE s_MouseState;						// 鼠标信息存储结构体
@@ -113,7 +115,7 @@ void Input::__updateDeviceState()
 		}
 		else
 		{
-			for (int i = 0; i < 256; i++)
+			for (int i = 0; i < BUFFER_SIZE; ++i)
 				s_KeyRecordBuffer[i] = s_KeyBuffer[i];
 
 			s_KeyboardDevice->GetDeviceState(sizeof(s_KeyBuffer), (void**)&s_KeyBuffer);

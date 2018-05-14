@@ -63,7 +63,7 @@ void e2d::Loop::_update()
 
 		if (_action->_isDone())
 		{
-			_times++;
+			++_times;
 
 			Action::reset();
 			_action->reset();

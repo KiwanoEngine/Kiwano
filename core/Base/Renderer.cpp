@@ -171,7 +171,7 @@ void e2d::Renderer::__render()
 		static double s_fLastRenderTime = 0;
 		static String s_sFpsText;
 
-		s_nRenderTimes++;
+		++s_nRenderTimes;
 
 		double fDelay = Time::getTotalTime() - s_fLastRenderTime;
 		if (fDelay >= 0.3)

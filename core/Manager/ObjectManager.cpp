@@ -27,7 +27,7 @@ void e2d::ObjectManager::__update()
 		}
 		else
 		{
-			iter++;
+			++iter;
 		}
 	}
 }

@@ -507,7 +507,7 @@ bool MusicPlayer::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 
 	_ck.cksize -= cbDataIn;
 
-	for (DWORD cT = 0; cT < cbDataIn; cT++)
+	for (DWORD cT = 0; cT < cbDataIn; ++cT)
 	{
 		// Copy the bytes from the io to the buffer.
 		if (mmioinfoIn.pchNext == mmioinfoIn.pchEndRead)
@@ -521,7 +521,7 @@ bool MusicPlayer::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 
 		// Actual copy.
 		*((BYTE*)pBuffer + cT) = *((BYTE*)mmioinfoIn.pchNext);
-		mmioinfoIn.pchNext++;
+		++mmioinfoIn.pchNext;
 	}
 
 	if (0 != mmioSetInfo(_hmmio, &mmioinfoIn, 0))

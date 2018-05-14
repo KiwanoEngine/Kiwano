@@ -48,7 +48,7 @@ void e2d::Sequence::_update()
 
 	if (action->_isDone())
 	{
-		_currIndex++;
+		++_currIndex;
 		if (_currIndex == _actions.size())
 		{
 			this->stop();

@@ -11,7 +11,7 @@ void e2d::ActionManager::__update()
 		return;
 
 	// 循环遍历所有正在运行的动作
-	for (size_t i = 0; i < s_vRunningActions.size(); i++)
+	for (size_t i = 0; i < s_vRunningActions.size(); ++i)
 	{
 		auto action = s_vRunningActions[i];
 		// 获取动作运行状态
@@ -51,7 +51,7 @@ void e2d::ActionManager::__remove(Action * action)
 		}
 		else
 		{
-			i++;
+			++i;
 		}
 	}
 }
@@ -171,7 +171,7 @@ void e2d::ActionManager::__clearAllBindedWith(Node * target)
 			}
 			else
 			{
-				i++;
+				++i;
 			}
 		}
 	}
