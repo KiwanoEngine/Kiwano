@@ -5,10 +5,18 @@
 e2d::Scene::Scene()
 	: _autoUpdate(true)
 	, _colliderVisiable(false)
-	, _root(new Node())
+	, _root(nullptr)
 {
-	_root->retain();
-	_root->_setParentScene(this);
+	_root = new (std::nothrow) Node();
+	if (_root)
+	{
+		_root->retain();
+		_root->_setParentScene(this);
+	}
+	else
+	{
+		// TODO: 抛出一个异常
+	}
 }
 
 e2d::Scene::~Scene()

@@ -170,9 +170,9 @@ void e2d::Game::resume()
 {
 	if (s_bInitialized && s_bPaused)
 	{
-		s_bPaused = false;
 		Game::reset();
 	}
+	s_bPaused = false;
 }
 
 void e2d::Game::reset()

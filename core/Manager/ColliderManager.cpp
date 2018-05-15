@@ -135,7 +135,7 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 
 void e2d::ColliderManager::add(const Function& func, const String& name, bool paused)
 {
-	auto listener = new Listener(func, name, paused);
+	auto listener = new (std::nothrow) Listener(func, name, paused);
 	s_vListeners.push_back(listener);
 }
 

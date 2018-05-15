@@ -39,7 +39,7 @@ static std::vector<Listener*> s_vListeners;
 
 void e2d::InputManager::add(const Function& func, const String& name, bool paused)
 {
-	auto listener = new Listener(func, name, paused);
+	auto listener = new (std::nothrow) Listener(func, name, paused);
 	s_vListeners.push_back(listener);
 }
 

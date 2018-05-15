@@ -122,10 +122,10 @@ e2d::Animate * e2d::Animate::reverse() const
 		}
 
 		auto animation = new (std::nothrow) Animation(_animation->getInterval(), frames);
-		return new (std::nothrow) Animate(animation);
+		if (animation)
+		{
+			return new (std::nothrow) Animate(animation);
+		}
 	}
-	else
-	{
-		return nullptr;
-	}
+	return nullptr;
 }

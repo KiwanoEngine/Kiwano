@@ -67,7 +67,7 @@ static std::vector<TimerInfo*> s_vTimers;
 
 void e2d::Timer::start(const Function& func, double delay, int updateTimes, bool paused, const String& name)
 {
-	auto timer = new TimerInfo(func, name, delay, updateTimes, paused);
+	auto timer = new (std::nothrow) TimerInfo(func, name, delay, updateTimes, paused);
 	s_vTimers.push_back(timer);
 }
 
@@ -78,7 +78,7 @@ void e2d::Timer::start(const Function& func, const String& name)
 
 void e2d::Timer::startOnce(const Function& func, double timeOut)
 {
-	auto timer = new TimerInfo(func, L"", timeOut, 1, false);
+	auto timer = new (std::nothrow) TimerInfo(func, L"", timeOut, 1, false);
 	s_vTimers.push_back(timer);
 }
 

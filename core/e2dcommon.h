@@ -1,11 +1,6 @@
 #pragma once
 #include "e2dmacros.h"
 #include "e2dcustom.h"
-#include <set>
-#include <stack>
-#include <vector>
-#include <functional>
-#include <sstream>
 
 namespace e2d
 {
@@ -583,6 +578,9 @@ public:
 
 	virtual ~Object();
 
+	// 自动释放
+	void autorelease();
+
 	// 引用计数加一
 	void retain();
 
@@ -881,8 +879,8 @@ protected:
 };
 
 
-template<typename Object>
-inline void SafeRelease(Object*& p) 
+template <class Type>
+inline void SafeRelease(Type*& p)
 { 
 	if (p != nullptr)
 	{ 
@@ -890,5 +888,6 @@ inline void SafeRelease(Object*& p)
 		p = nullptr; 
 	}
 }
+
 
 }

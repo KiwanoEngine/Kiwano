@@ -38,9 +38,14 @@
 #include <d2d1helper.h>
 #include <xaudio2.h>
 
-// C RunTime Header Files
-#include <stdio.h>
-#include <wchar.h>
+// C++ RunTime Header Files
+#include <set>
+#include <stack>
+#include <vector>
+#include <functional>
+#include <sstream>
+#include <random>
+#include <utility>
 
 // Import Libraries
 #pragma comment(lib, "d2d1.lib")
