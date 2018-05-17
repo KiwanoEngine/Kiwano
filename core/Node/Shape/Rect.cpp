@@ -4,21 +4,9 @@ e2d::Rect::Rect()
 {
 }
 
-e2d::Rect::Rect(double width, double height)
-{
-	this->setSize(width, height);
-}
-
 e2d::Rect::Rect(Size size)
 {
 	this->setSize(size);
-}
-
-e2d::Rect::Rect(double top, double left, double width, double height)
-{
-	this->setPivot(0, 0);
-	this->setPos(top, left);
-	this->setSize(width, height);
 }
 
 e2d::Rect::Rect(Point topLeft, Size size)
@@ -26,6 +14,21 @@ e2d::Rect::Rect(Point topLeft, Size size)
 	this->setPivot(0, 0);
 	this->setPos(topLeft);
 	this->setSize(size);
+}
+
+e2d::Rect * e2d::Rect::create()
+{
+	return Create<Rect>();
+}
+
+e2d::Rect * e2d::Rect::create(Size size)
+{
+	return Create<Rect>(size);
+}
+
+e2d::Rect * e2d::Rect::create(Point topLeft, Size size)
+{
+	return Create<Rect>(topLeft, size);
 }
 
 e2d::Rect::~Rect()

@@ -38,8 +38,13 @@ e2d::Node::Node()
 {
 	if (s_fDefaultColliderEnabled)
 	{
-		this->setCollider(new ColliderRect(this));
+		this->setCollider(Create<ColliderRect>(this));
 	}
+}
+
+e2d::Node * e2d::Node::create()
+{
+	return Create<Node>();
 }
 
 e2d::Node::~Node()
@@ -547,19 +552,19 @@ void e2d::Node::setCollider(ColliderType nColliderType)
 	{
 	case ColliderType::RECT:
 	{
-		this->setCollider(new ColliderRect(this));
+		this->setCollider(Create<ColliderRect>(this));
 		break;
 	}
 
 	case ColliderType::CIRCLE:
 	{
-		this->setCollider(new ColliderCircle(this));
+		this->setCollider(Create<ColliderCircle>(this));
 		break;
 	}
 
 	case ColliderType::ELLIPSE:
 	{
-		this->setCollider(new ColliderEllipse(this));
+		this->setCollider(Create<ColliderEllipse>(this));
 		break;
 	}
 

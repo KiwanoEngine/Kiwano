@@ -38,6 +38,36 @@ e2d::Sprite::Sprite(int resNameId, const String& resType, double x, double y, do
 	crop(x, y, width, height);
 }
 
+e2d::Sprite * e2d::Sprite::create()
+{
+	return Create<Sprite>();
+}
+
+e2d::Sprite * e2d::Sprite::create(Image * image)
+{
+	return Create<Sprite>(image);
+}
+
+e2d::Sprite * e2d::Sprite::create(const String & filePath)
+{
+	return Create<Sprite>(filePath);
+}
+
+e2d::Sprite * e2d::Sprite::create(int resNameId, const String & resType)
+{
+	return Create<Sprite>(resNameId, resType);
+}
+
+e2d::Sprite * e2d::Sprite::create(const String & filePath, double x, double y, double width, double height)
+{
+	return Create<Sprite>(filePath, x, y, width, height);
+}
+
+e2d::Sprite * e2d::Sprite::create(int resNameId, const String & resType, double x, double y, double width, double height)
+{
+	return Create<Sprite>(resNameId, resType, x, y, width, height);
+}
+
 e2d::Sprite::~Sprite()
 {
 }
@@ -60,7 +90,7 @@ bool e2d::Sprite::open(const String& filePath)
 {
 	if (!_image)
 	{
-		_image = new (std::nothrow) Image();
+		_image = Create<Image>();
 		_image->retain();
 	}
 
@@ -76,7 +106,7 @@ bool e2d::Sprite::open(int resNameId, const String& resType)
 {
 	if (!_image)
 	{
-		_image = new (std::nothrow) Image();
+		_image = Create<Image>();
 		_image->retain();
 	}
 

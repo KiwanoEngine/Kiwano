@@ -5,6 +5,12 @@ e2d::Animation::Animation()
 {
 }
 
+e2d::Animation::Animation(const std::vector<Image*>& frames)
+	: _interval(1)
+{
+	this->add(frames);
+}
+
 e2d::Animation::Animation(double interval)
 	: _interval(interval)
 {
@@ -16,10 +22,24 @@ e2d::Animation::Animation(double interval, const std::vector<Image*>& frames)
 	this->add(frames);
 }
 
-e2d::Animation::Animation(const std::vector<Image*>& frames)
-	: _interval(1)
+e2d::Animation * e2d::Animation::create()
 {
-	this->add(frames);
+	return Create<Animation>();
+}
+
+e2d::Animation * e2d::Animation::create(const std::vector<Image*>& frames)
+{
+	return Create<Animation>(frames);
+}
+
+e2d::Animation * e2d::Animation::create(double interval)
+{
+	return Create<Animation>(interval);
+}
+
+e2d::Animation * e2d::Animation::create(double interval, const std::vector<Image*>& frames)
+{
+	return Create<Animation>(interval, frames);
 }
 
 e2d::Animation::~Animation()
@@ -68,7 +88,7 @@ const std::vector<e2d::Image*>& e2d::Animation::getFrames() const
 
 e2d::Animation * e2d::Animation::clone() const
 {
-	auto animation = new (std::nothrow) Animation(_interval);
+	auto animation = Create<Animation>(_interval);
 	for (auto frame : _frames)
 	{
 		animation->add(frame);

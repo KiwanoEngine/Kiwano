@@ -19,11 +19,19 @@ e2d::Circle::Circle(Point center, double radius)
 	this->setPivot(0.5, 0.5);
 }
 
-e2d::Circle::Circle(double centerX, double centerY, double radius)
+e2d::Circle * e2d::Circle::create()
 {
-	this->setRadius(radius);
-	this->setPos(centerX, centerY);
-	this->setPivot(0.5, 0.5);
+	return Create<Circle>();
+}
+
+e2d::Circle * e2d::Circle::create(double radius)
+{
+	return Create<Circle>(radius);
+}
+
+e2d::Circle * e2d::Circle::create(Point center, double radius)
+{
+	return Create<Circle>(center, radius);
 }
 
 e2d::Circle::~Circle()

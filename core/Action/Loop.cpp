@@ -15,6 +15,11 @@ e2d::Loop::Loop(Action * action, int times /* = -1 */)
 	}
 }
 
+e2d::Loop * e2d::Loop::create(Action * action, int times)
+{
+	return Create<Loop>(action, times);
+}
+
 e2d::Loop::~Loop()
 {
 }
@@ -23,7 +28,7 @@ e2d::Loop * e2d::Loop::clone() const
 {
 	if (_action)
 	{
-		return new (std::nothrow) Loop(_action->clone());
+		return Create<Loop>(_action->clone());
 	}
 	else
 	{
@@ -33,7 +38,7 @@ e2d::Loop * e2d::Loop::clone() const
 
 e2d::Loop * e2d::Loop::reverse() const
 {
-	return new (std::nothrow) Loop(_action);
+	return Create<Loop>(_action);
 }
 
 void e2d::Loop::_init()

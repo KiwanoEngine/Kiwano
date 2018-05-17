@@ -603,26 +603,17 @@ class Image :
 	public Object
 {
 public:
-	// 创建一个空的图片对象
 	Image();
 
-	// 加载图片文件
 	Image(
 		const String& filePath	/* 图片文件路径 */
 	);
 
-	// 加载图片资源
 	Image(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType	/* 图片资源类型 */
 	);
 
-	// 加载位图
-	Image(
-		ID2D1Bitmap * bitmap	/* 位图资源 */
-	);
-
-	// 加载图片文件并裁剪
 	Image(
 		const String& filePath,	/* 图片文件路径 */
 		double cropX,			/* 裁剪位置 X 坐标 */
@@ -631,8 +622,40 @@ public:
 		double cropHeight		/* 裁剪高度 */
 	);
 
-	// 加载图片资源并裁剪
 	Image(
+		int resNameId,			/* 图片资源名称 */
+		const String& resType,	/* 图片资源类型 */
+		double cropX,			/* 裁剪位置 X 坐标 */
+		double cropY,			/* 裁剪位置 Y 坐标 */
+		double cropWidth,		/* 裁剪宽度 */
+		double cropHeight		/* 裁剪高度 */
+	);
+
+	// 创建一个空的图片对象
+	static Image * create();
+
+	// 加载图片文件
+	static Image * create(
+		const String& filePath	/* 图片文件路径 */
+	);
+
+	// 加载图片资源
+	static Image * create(
+		int resNameId,			/* 图片资源名称 */
+		const String& resType	/* 图片资源类型 */
+	);
+
+	// 加载图片文件并裁剪
+	static Image * create(
+		const String& filePath,	/* 图片文件路径 */
+		double cropX,			/* 裁剪位置 X 坐标 */
+		double cropY,			/* 裁剪位置 Y 坐标 */
+		double cropWidth,		/* 裁剪宽度 */
+		double cropHeight		/* 裁剪高度 */
+	);
+
+	// 加载图片资源并裁剪
+	static Image * create(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType,	/* 图片资源类型 */
 		double cropX,			/* 裁剪位置 X 坐标 */
@@ -652,11 +675,6 @@ public:
 	bool open(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType	/* 图片资源类型 */
-	);
-
-	// 加载位图
-	bool open(
-		ID2D1Bitmap * bitmap	/* 位图资源 */
 	);
 
 	// 将图片裁剪为矩形
@@ -731,21 +749,36 @@ class Animation :
 	public Object
 {
 public:
-	// 创建帧动画
 	Animation();
 
-	// 创建帧动画
 	Animation(
 		const std::vector<Image*>& frames	/* 关键帧数组 */
 	);
 
-	// 创建特定帧间隔的帧动画
 	Animation(
 		double interval						/* 帧间隔（秒） */
 	);
 
-	// 创建特定帧间隔的帧动画
 	Animation(
+		double interval,					/* 帧间隔（秒） */
+		const std::vector<Image*>& frames	/* 关键帧数组 */
+	);
+
+	// 创建帧动画
+	static Animation * create();
+
+	// 创建帧动画
+	static Animation * create(
+		const std::vector<Image*>& frames	/* 关键帧数组 */
+	);
+
+	// 创建特定帧间隔的帧动画
+	static Animation * create(
+		double interval						/* 帧间隔（秒） */
+	);
+
+	// 创建特定帧间隔的帧动画
+	static Animation * create(
 		double interval,					/* 帧间隔（秒） */
 		const std::vector<Image*>& frames	/* 关键帧数组 */
 	);
@@ -798,6 +831,9 @@ class Scene :
 
 public:
 	Scene();
+
+	// 创建场景
+	static Scene * create();
 
 	virtual ~Scene();
 
@@ -879,7 +915,23 @@ protected:
 };
 
 
-template <class Type>
+template <typename Type, typename... Types>
+inline Type * Create(Types&&... args)
+{
+	auto newObj = new (std::nothrow) Type(std::forward<Types>(args)...);
+	if (newObj)
+	{
+		newObj->autorelease();
+		return newObj;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+
+template <typename Type>
 inline void SafeRelease(Type*& p)
 { 
 	if (p != nullptr)

@@ -6,27 +6,11 @@ e2d::RoundRect::RoundRect()
 {
 }
 
-e2d::RoundRect::RoundRect(double width, double height, double radiusX, double radiusY)
-	: _radiusX(float(radiusX))
-	, _radiusY(float(radiusY))
-{
-	this->setSize(width, height);
-}
-
 e2d::RoundRect::RoundRect(Size size, double radiusX, double radiusY)
 	: _radiusX(float(radiusX))
 	, _radiusY(float(radiusY))
 {
 	this->setSize(size);
-}
-
-e2d::RoundRect::RoundRect(double top, double left, double width, double height, double radiusX, double radiusY)
-	: _radiusX(float(radiusX))
-	, _radiusY(float(radiusY))
-{
-	this->setPivot(0, 0);
-	this->setPos(top, left);
-	this->setSize(width, height);
 }
 
 e2d::RoundRect::RoundRect(Point topLeft, Size size, double radiusX, double radiusY)
@@ -36,6 +20,21 @@ e2d::RoundRect::RoundRect(Point topLeft, Size size, double radiusX, double radiu
 	this->setPivot(0, 0);
 	this->setPos(topLeft);
 	this->setSize(size);
+}
+
+e2d::RoundRect * e2d::RoundRect::create()
+{
+	return Create<RoundRect>();
+}
+
+e2d::RoundRect * e2d::RoundRect::create(Size size, double radiusX, double radiusY)
+{
+	return Create<RoundRect>(size, radiusX, radiusY);
+}
+
+e2d::RoundRect * e2d::RoundRect::create(Point topLeft, Size size, double radiusX, double radiusY)
+{
+	return Create<RoundRect>(topLeft, size, radiusX, radiusY);
 }
 
 e2d::RoundRect::~RoundRect()

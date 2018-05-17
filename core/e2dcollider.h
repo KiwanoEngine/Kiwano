@@ -74,15 +74,13 @@ protected:
 };
 
 
-// 矩形
+// 矩形碰撞体
 class ColliderRect :
 	public Collider
 {
 public:
-	// 创建一个默认矩形
 	ColliderRect();
 
-	// 根据左上角坐标和宽高创建矩形
 	ColliderRect(
 		double x,
 		double y,
@@ -90,14 +88,29 @@ public:
 		double height
 	);
 
-	// 创建一个和节点位置大小相同的矩形
 	ColliderRect(
+		Node * node
+	);
+
+	// 创建一个默认矩形碰撞体
+	static ColliderRect * create();
+
+	// 根据左上角坐标和宽高创建矩形碰撞体
+	static ColliderRect * create(
+		double x,
+		double y,
+		double width,
+		double height
+	);
+
+	// 创建一个和节点位置大小相同的矩形碰撞体
+	static ColliderRect * create(
 		Node * node
 	);
 
 	virtual ~ColliderRect();
 
-	// 修改矩形大小
+	// 修改矩形碰撞体大小
 	void setRect(
 		double left,
 		double top,
@@ -117,28 +130,39 @@ protected:
 };
 
 
-// 圆形
+// 圆形碰撞体
 class ColliderCircle :
 	public Collider
 {
 public:
-	// 创建一个默认圆形
 	ColliderCircle();
 
-	// 根据圆心和半径创建圆形
 	ColliderCircle(
 		Point center,
 		double radius
 	);
 
-	// 创建一个和节点位置大小相同的圆形
 	ColliderCircle(
+		Node * node
+	);
+
+	// 创建一个默认圆形碰撞体
+	static ColliderCircle * create();
+
+	// 根据圆心和半径创建圆形碰撞体
+	static ColliderCircle * create(
+		Point center,
+		double radius
+	);
+
+	// 创建一个和节点位置大小相同的圆形碰撞体
+	static ColliderCircle * create(
 		Node * node
 	);
 
 	virtual ~ColliderCircle();
 
-	// 修改圆形大小
+	// 修改圆形碰撞体大小
 	void setCircle(
 		Point center,
 		double radius
@@ -156,29 +180,41 @@ protected:
 };
 
 
-// 椭圆形
+// 椭圆形碰撞体
 class ColliderEllipse :
 	public Collider
 {
 public:
-	// 创建一个默认椭圆
 	ColliderEllipse();
 
-	// 根据圆心和半径创建椭圆
 	ColliderEllipse(
 		Point center,
 		double radiusX,
 		double radiusY
 	);
 
-	// 创建一个和节点位置大小相同的椭圆
 	ColliderEllipse(
+		Node * node
+	);
+
+	// 创建一个默认椭圆碰撞体
+	static ColliderEllipse * create();
+
+	// 根据圆心和半径创建椭圆碰撞体
+	static ColliderEllipse * create(
+		Point center,
+		double radiusX,
+		double radiusY
+	);
+
+	// 创建一个和节点位置大小相同的椭圆碰撞体
+	static ColliderEllipse * create(
 		Node * node
 	);
 
 	virtual ~ColliderEllipse();
 
-	// 修改椭圆大小
+	// 修改椭圆碰撞体大小
 	void setEllipse(
 		Point center,
 		double radiusX,

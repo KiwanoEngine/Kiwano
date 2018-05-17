@@ -7,6 +7,11 @@ e2d::OpacityBy::OpacityBy(double duration, double opacity)
 	_deltaVal = opacity;
 }
 
+e2d::OpacityBy * e2d::OpacityBy::create(double duration, double opacity)
+{
+	return Create<OpacityBy>(duration, opacity);
+}
+
 void e2d::OpacityBy::_init()
 {
 	ActionGradual::_init();
@@ -29,10 +34,10 @@ void e2d::OpacityBy::_update()
 
 e2d::OpacityBy * e2d::OpacityBy::clone() const
 {
-	return new (std::nothrow) OpacityBy(_duration, _deltaVal);
+	return Create<OpacityBy>(_duration, _deltaVal);
 }
 
 e2d::OpacityBy * e2d::OpacityBy::reverse() const
 {
-	return new (std::nothrow) OpacityBy(_duration, -_deltaVal);
+	return Create<OpacityBy>(_duration, -_deltaVal);
 }

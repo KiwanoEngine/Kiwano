@@ -442,7 +442,7 @@ bool MusicPlayer::_readMMIO()
 	// 的数据，这个数据就是额外分配的大小
 	if (pcmWaveFormat.wf.wFormatTag == WAVE_FORMAT_PCM)
 	{
-		_pwfx = (WAVEFORMATEX*)new (std::nothrow) CHAR[sizeof(WAVEFORMATEX)];
+		_pwfx = (WAVEFORMATEX*) new (std::nothrow) CHAR[sizeof(WAVEFORMATEX)];
 
 		// 拷贝数据
 		memcpy(_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
@@ -455,7 +455,7 @@ bool MusicPlayer::_readMMIO()
 		if (mmioRead(_hmmio, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD))
 			return TraceError(L"mmioRead");
 
-		_pwfx = (WAVEFORMATEX*)new (std::nothrow) CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
+		_pwfx = (WAVEFORMATEX*) new (std::nothrow) CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
 
 		// 拷贝数据
 		memcpy(_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));

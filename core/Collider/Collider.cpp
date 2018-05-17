@@ -8,7 +8,7 @@ e2d::Collider::Collider()
 	, _parentNode(nullptr)
 	, _transformed(nullptr)
 	, _enable(true)
-	, _autoResize(true)
+	, _autoResize(false)
 {
 }
 

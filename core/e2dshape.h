@@ -70,22 +70,21 @@ public:
 	Rect();
 
 	Rect(
-		double width,	/* 宽度 */
-		double height	/* 高度 */
-	);
-
-	Rect(
 		Size size		/* 宽度和高度 */
 	);
 
 	Rect(
-		double top,		/* 左上角横坐标 */
-		double left,	/* 左上角纵坐标 */
-		double width,	/* 宽度 */
-		double height	/* 高度 */
+		Point topLeft,	/* 左上角坐标 */
+		Size size		/* 宽度和高度 */
 	);
 
-	Rect(
+	static Rect * create();
+
+	static Rect * create(
+		Size size		/* 宽度和高度 */
+	);
+
+	static Rect * create(
 		Point topLeft,	/* 左上角坐标 */
 		Size size		/* 宽度和高度 */
 	);
@@ -109,28 +108,27 @@ public:
 	RoundRect();
 
 	RoundRect(
-		double width,	/* 宽度 */
-		double height,	/* 高度 */
-		double radiusX,	/* 圆角半径 */
-		double radiusY	/* 圆角半径 */
-	);
-
-	RoundRect(
 		Size size,		/* 宽度和高度 */
 		double radiusX,	/* 圆角半径 */
 		double radiusY	/* 圆角半径 */
 	);
 
 	RoundRect(
-		double top,		/* 左上角横坐标 */
-		double left,	/* 左上角纵坐标 */
-		double width,	/* 宽度 */
-		double height,	/* 高度 */
+		Point topLeft,	/* 左上角坐标 */
+		Size size,		/* 宽度和高度 */
 		double radiusX,	/* 圆角半径 */
 		double radiusY	/* 圆角半径 */
 	);
 
-	RoundRect(
+	static RoundRect * create();
+
+	static RoundRect * create(
+		Size size,		/* 宽度和高度 */
+		double radiusX,	/* 圆角半径 */
+		double radiusY	/* 圆角半径 */
+	);
+
+	static RoundRect * create(
 		Point topLeft,	/* 左上角坐标 */
 		Size size,		/* 宽度和高度 */
 		double radiusX,	/* 圆角半径 */
@@ -184,9 +182,14 @@ public:
 		double radius	/* 半径 */
 	);
 
-	Circle(
-		double centerX,	/* 圆心横坐标 */
-		double centerY,	/* 圆心纵坐标 */
+	static Circle * create();
+
+	static Circle * create(
+		double radius	/* 半径 */
+	);
+
+	static Circle * create(
+		Point center,	/* 圆心坐标 */
 		double radius	/* 半径 */
 	);
 
@@ -230,9 +233,15 @@ public:
 		double radiusY	/* 纵轴半径 */
 	);
 
-	Ellipse(
-		double centerX,	/* 圆心横坐标 */
-		double centerY,	/* 圆心纵坐标 */
+	static Ellipse * create();
+
+	static Ellipse * create(
+		double radiusX,	/* 横轴半径 */
+		double radiusY	/* 纵轴半径 */
+	);
+
+	static Ellipse * create(
+		Point center,	/* 圆心坐标 */
 		double radiusX,	/* 横轴半径 */
 		double radiusY	/* 纵轴半径 */
 	);

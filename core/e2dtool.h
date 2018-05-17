@@ -51,8 +51,7 @@ private:
 
 
 // ÒôÀÖ²¥·ÅÆ÷
-class Music :
-	public Object
+class Music
 {
 	friend Game;
 

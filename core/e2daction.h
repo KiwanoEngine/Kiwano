@@ -122,8 +122,13 @@ class MoveBy :
 	public ActionGradual
 {
 public:
-	// 创建相对位移动作
 	MoveBy(
+		double duration,	/* 持续时长 */
+		Vector vector		/* 移动距离 */
+	);
+
+	// 创建相对位移动作
+	static MoveBy * create(
 		double duration,	/* 持续时长 */
 		Vector vector		/* 移动距离 */
 	);
@@ -152,8 +157,13 @@ class MoveTo :
 	public MoveBy
 {
 public:
-	// 创建位移动作
 	MoveTo(
+		double duration,	/* 持续时长 */
+		Point pos			/* 目的坐标 */
+	);
+
+	// 创建位移动作
+	static MoveTo * create(
 		double duration,	/* 持续时长 */
 		Point pos			/* 目的坐标 */
 	);
@@ -182,8 +192,15 @@ class JumpBy :
 	public ActionGradual
 {
 public:
-	// 创建相对跳跃动作
 	JumpBy(
+		double duration,		/* 持续时长 */
+		const Vector& vec,		/* 跳跃距离 */
+		double height,			/* 跳跃高度 */
+		int jumps				/* 跳跃次数 */
+	);
+
+	// 创建相对跳跃动作
+	static JumpBy * create(
 		double duration,		/* 持续时长 */
 		const Vector& vec,		/* 跳跃距离 */
 		double height,			/* 跳跃高度 */
@@ -217,8 +234,15 @@ class JumpTo :
 	public JumpBy
 {
 public:
-	// 创建位移动作
 	JumpTo(
+		double duration,		/* 持续时长 */
+		const Point& pos,		/* 目的坐标 */
+		double height,			/* 跳跃高度 */
+		int jumps				/* 跳跃次数 */
+	);
+
+	// 创建位移动作
+	static JumpTo * create(
 		double duration,		/* 持续时长 */
 		const Point& pos,		/* 目的坐标 */
 		double height,			/* 跳跃高度 */
@@ -249,14 +273,25 @@ class ScaleBy :
 	public ActionGradual
 {
 public:
-	// 创建相对缩放动作
 	ScaleBy(
 		double duration,	/* 持续时长 */
 		double scale		/* 缩放比例变化 */
 	);
 
-	// 创建相对缩放动作
 	ScaleBy(
+		double duration,	/* 持续时长 */
+		double scaleX,		/* 横向缩放比例变化 */
+		double scaleY		/* 纵向缩放比例变化 */
+	);
+
+	// 创建相对缩放动作
+	static ScaleBy * create(
+		double duration,	/* 持续时长 */
+		double scale		/* 缩放比例变化 */
+	);
+
+	// 创建相对缩放动作
+	static ScaleBy * create(
 		double duration,	/* 持续时长 */
 		double scaleX,		/* 横向缩放比例变化 */
 		double scaleY		/* 纵向缩放比例变化 */
@@ -288,14 +323,25 @@ class ScaleTo :
 	public ScaleBy
 {
 public:
-	// 创建缩放动作
 	ScaleTo(
 		double duration,	/* 持续时长 */
 		double scale		/* 缩放至目标比例 */
 	);
 
-	// 创建缩放动作
 	ScaleTo(
+		double duration,	/* 持续时长 */
+		double scaleX,		/* 横向缩放至目标比例 */
+		double scaleY		/* 纵向缩放至目标比例 */
+	);
+
+	// 创建缩放动作
+	static ScaleTo * create(
+		double duration,	/* 持续时长 */
+		double scale		/* 缩放至目标比例 */
+	);
+
+	// 创建缩放动作
+	static ScaleTo * create(
 		double duration,	/* 持续时长 */
 		double scaleX,		/* 横向缩放至目标比例 */
 		double scaleY		/* 纵向缩放至目标比例 */
@@ -326,8 +372,13 @@ class OpacityBy :
 	public ActionGradual
 {
 public:
-	// 创建透明度相对渐变动作
 	OpacityBy(
+		double duration,	/* 持续时长 */
+		double opacity		/* 透明度相对变化值 */
+	);
+
+	// 创建透明度相对渐变动作
+	static OpacityBy * create(
 		double duration,	/* 持续时长 */
 		double opacity		/* 透明度相对变化值 */
 	);
@@ -356,8 +407,13 @@ class OpacityTo :
 	public OpacityBy
 {
 public:
-	// 创建透明度渐变动作
 	OpacityTo(
+		double duration,	/* 持续时长 */
+		double opacity		/* 透明度渐变至目标值 */
+	);
+
+	// 创建透明度渐变动作
+	static OpacityTo * create(
 		double duration,	/* 持续时长 */
 		double opacity		/* 透明度渐变至目标值 */
 	);
@@ -416,8 +472,13 @@ class RotateBy :
 	public ActionGradual
 {
 public:
-	// 创建相对旋转动作
 	RotateBy(
+		double duration,	/* 持续时长 */
+		double rotation		/* 旋转角度变化值 */
+	);
+
+	// 创建相对旋转动作
+	static RotateBy * create(
 		double duration,	/* 持续时长 */
 		double rotation		/* 旋转角度变化值 */
 	);
@@ -446,8 +507,13 @@ class RotateTo :
 	public RotateBy
 {
 public:
-	// 创建旋转动作
 	RotateTo(
+		double duration,	/* 持续时长 */
+		double rotation		/* 旋转角度至目标值 */
+	);
+
+	// 创建旋转动作
+	static RotateTo * create(
 		double duration,	/* 持续时长 */
 		double rotation		/* 旋转角度至目标值 */
 	);
@@ -476,8 +542,12 @@ class Delay :
 	public Action
 {
 public:
-	// 创建延时动作
 	Delay(
+		double duration	/* 延迟时长（秒） */
+	);
+
+	// 创建延时动作
+	static Delay * create(
 		double duration	/* 延迟时长（秒） */
 	);
 
@@ -511,8 +581,13 @@ class Loop :
 	public Action
 {
 public:
-	// 创建循环动作
 	Loop(
+		Action * action,	/* 执行循环的动作 */
+		int times = -1		/* 循环次数 */
+	);
+
+	// 创建循环动作
+	static Loop * create(
 		Action * action,	/* 执行循环的动作 */
 		int times = -1		/* 循环次数 */
 	);
@@ -553,8 +628,12 @@ class CallFunc :
 	public Action
 {
 public:
-	// 创建执行函数对象的动作
 	CallFunc(
+		const Function& func /* 函数对象 */
+	);
+
+	// 创建执行函数对象的动作
+	static CallFunc * create(
 		const Function& func /* 函数对象 */
 	);
 
@@ -581,11 +660,17 @@ class Sequence :
 	public Action
 {
 public:
-	// 创建顺序动作
 	Sequence();
 
-	// 创建顺序动作
 	Sequence(
+		const std::vector<Action*>& actions	/* 动作列表 */
+	);
+
+	// 创建顺序动作
+	static Sequence * create();
+
+	// 创建顺序动作
+	static Sequence * create(
 		const std::vector<Action*>& actions	/* 动作列表 */
 	);
 
@@ -634,11 +719,17 @@ class Spawn :
 	public Action
 {
 public:
-	// 创建同步动作
 	Spawn();
 
-	// 创建同步动作
 	Spawn(
+		const std::vector<Action*>& actions	/* 动作列表 */
+	);
+
+	// 创建同步动作
+	static Spawn * create();
+
+	// 创建同步动作
+	static Spawn * create(
 		const std::vector<Action*>& actions	/* 动作列表 */
 	);
 
@@ -686,11 +777,17 @@ class Animate :
 	public Action
 {
 public:
-	// 创建精灵动作
 	Animate();
 
-	// 创建精灵动作
 	Animate(
+		Animation * animation
+	);
+
+	// 创建精灵动作
+	static Animate * create();
+
+	// 创建精灵动作
+	static Animate * create(
 		Animation * animation
 	);
 

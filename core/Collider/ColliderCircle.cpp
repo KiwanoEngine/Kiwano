@@ -23,6 +23,22 @@ e2d::ColliderCircle::ColliderCircle(Node * node)
 		),
 		minSide / 2
 	);
+	this->setAutoResize(true);
+}
+
+e2d::ColliderCircle * e2d::ColliderCircle::create()
+{
+	return Create<ColliderCircle>();
+}
+
+e2d::ColliderCircle * e2d::ColliderCircle::create(Point center, double radius)
+{
+	return Create<ColliderCircle>(center, radius);
+}
+
+e2d::ColliderCircle * e2d::ColliderCircle::create(Node * node)
+{
+	return Create<ColliderCircle>(node);
 }
 
 e2d::ColliderCircle::~ColliderCircle()

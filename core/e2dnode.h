@@ -21,6 +21,9 @@ class Node :
 public:
 	Node();
 
+	// 创建空节点
+	static Node * create();
+
 	virtual ~Node();
 
 	// 更新节点
@@ -473,26 +476,21 @@ class Sprite :
 	public Node
 {
 public:
-	// 创建一个空精灵
 	Sprite();
 
-	// 从 Image 对象创建精灵
 	Sprite(
 		Image * image
 	);
 
-	// 加载图片文件
 	Sprite(
 		const String& filePath	/* 图片文件路径 */
 	);
 
-	// 加载图片资源
 	Sprite(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType	/* 图片资源类型 */
 	);
 
-	// 加载图片文件
 	Sprite(
 		const String& filePath,	/* 图片文件路径 */
 		double x,
@@ -501,8 +499,45 @@ public:
 		double height
 	);
 
-	// 加载图片资源
 	Sprite(
+		int resNameId,			/* 图片资源名称 */
+		const String& resType,	/* 图片资源类型 */
+		double x,
+		double y,
+		double width,
+		double height
+	);
+
+	// 创建一个空精灵
+	static Sprite * create();
+
+	// 从 Image 对象创建精灵
+	static Sprite * create(
+		Image * image
+	);
+
+	// 加载图片文件
+	static Sprite * create(
+		const String& filePath	/* 图片文件路径 */
+	);
+
+	// 加载图片资源
+	static Sprite * create(
+		int resNameId,			/* 图片资源名称 */
+		const String& resType	/* 图片资源类型 */
+	);
+
+	// 加载图片文件
+	static Sprite * create(
+		const String& filePath,	/* 图片文件路径 */
+		double x,
+		double y,
+		double width,
+		double height
+	);
+
+	// 加载图片资源
+	static Sprite * create(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType,	/* 图片资源类型 */
 		double x,
@@ -572,6 +607,39 @@ public:
 	);
 
 	Text(
+		const String& text,						/* 文字内容*/
+		const String& fontFamily,				/* 字体 */
+		double fontSize = 22,					/* 字号 */
+		UINT32 color = Color::WHITE,			/* 颜色 */
+		UINT32 fontWeight = FontWeight::NORMAL,	/* 粗细值 */
+		bool italic = false,					/* 斜体 */
+		TextAlign alignment = TextAlign::LEFT,	/* 对齐方式 */
+		bool wrapping = false,					/* 打开自动换行 */
+		double wrappingWidth = 0.0,				/* 自动换行宽度 */
+		double lineSpacing = 0.0,				/* 行间距 */
+		bool hasUnderline = false,				/* 下划线 */
+		bool hasStrikethrough = false,			/* 删除线 */
+		bool hasOutline = true,					/* 显示描边 */
+		UINT32 outlineColor = Color::BLACK,		/* 描边颜色 */
+		UINT32 outlineWidth = 1.0				/* 描边线宽 */
+	);
+
+	static Text * create();
+
+	static Text * create(
+		const String& text		/* 文字内容 */
+	);
+
+	static Text * create(
+		TextStyle textStyle		/* 文字样式 */
+	);
+
+	static Text * create(
+		const String& text,		/* 文字内容 */
+		TextStyle textStyle		/* 文字样式 */
+	);
+
+	static Text * create(
 		const String& text,						/* 文字内容*/
 		const String& fontFamily,				/* 字体 */
 		double fontSize = 22,					/* 字号 */
@@ -743,23 +811,19 @@ class Button :
 	public Node
 {
 public:
-	// 创建一个空按钮
 	Button();
 
-	// 创建按钮
 	Button(
 		Node * normal,					/* 普通状态 */
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	// 创建按钮
 	Button(
 		Node * normal,					/* 普通状态 */
 		Node * selected,				/* 鼠标按下状态 */
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	// 创建按钮
 	Button(
 		Node * normal,					/* 普通状态 */
 		Node * mouseover,				/* 鼠标移入状态 */
@@ -767,8 +831,40 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	// 创建按钮
 	Button(
+		Node * normal,					/* 普通状态 */
+		Node * mouseover,				/* 鼠标移入状态 */
+		Node * selected,				/* 鼠标移入状态 */
+		Node * disabled,				/* 按钮禁用状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+	);
+
+	// 创建一个空按钮
+	static Button * create();
+
+	// 创建按钮
+	static Button * create(
+		Node * normal,					/* 普通状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+	);
+
+	// 创建按钮
+	static Button * create(
+		Node * normal,					/* 普通状态 */
+		Node * selected,				/* 鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+	);
+
+	// 创建按钮
+	static Button * create(
+		Node * normal,					/* 普通状态 */
+		Node * mouseover,				/* 鼠标移入状态 */
+		Node * selected,				/* 鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+	);
+
+	// 创建按钮
+	static Button * create(
 		Node * normal,					/* 普通状态 */
 		Node * mouseover,				/* 鼠标移入状态 */
 		Node * selected,				/* 鼠标移入状态 */
@@ -841,17 +937,14 @@ class ButtonToggle :
 	public Button
 {
 public:
-	// 创建一个空的开关按钮
 	ButtonToggle();
 
-	// 创建开关按钮
 	ButtonToggle(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	// 创建开关按钮
 	ButtonToggle(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
@@ -860,7 +953,6 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	// 创建开关按钮
 	ButtonToggle(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
@@ -871,8 +963,50 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	// 创建开关按钮
 	ButtonToggle(
+		Node * onNormal,				/* 按钮打开时，普通状态 */
+		Node * offNormal,				/* 按钮关闭时，普通状态 */
+		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
+		Node * offMouseOver,			/* 按钮关闭时，鼠标移入状态 */
+		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
+		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
+		Node * onDisabled,				/* 按钮打开时，禁用状态 */
+		Node * offDisabled,				/* 按钮关闭时，禁用状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+	);
+
+	// 创建一个空的开关按钮
+	static ButtonToggle * create();
+
+	// 创建开关按钮
+	static ButtonToggle * create(
+		Node * onNormal,				/* 按钮打开时，普通状态 */
+		Node * offNormal,				/* 按钮关闭时，普通状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+	);
+
+	// 创建开关按钮
+	static ButtonToggle * create(
+		Node * onNormal,				/* 按钮打开时，普通状态 */
+		Node * offNormal,				/* 按钮关闭时，普通状态 */
+		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
+		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+	);
+
+	// 创建开关按钮
+	static ButtonToggle * create(
+		Node * onNormal,				/* 按钮打开时，普通状态 */
+		Node * offNormal,				/* 按钮关闭时，普通状态 */
+		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
+		Node * offMouseOver,			/* 按钮关闭时，鼠标移入状态 */
+		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
+		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+	);
+
+	// 创建开关按钮
+	static ButtonToggle * create(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
@@ -952,11 +1086,17 @@ class Menu :
 	public Node
 {
 public:
-	// 创建空菜单
 	Menu();
 
-	// 创建菜单
 	Menu(
+		const std::vector<Button*>& buttons	/* 按钮数组 */
+	);
+
+	// 创建空菜单
+	static Menu * create();
+
+	// 创建菜单
+	static Menu * create(
 		const std::vector<Button*>& buttons	/* 按钮数组 */
 	);
 

@@ -66,13 +66,22 @@ class TransitionFade :
 	public Transition
 {
 public:
-	// 创建淡入淡出式的场景切换动作
 	TransitionFade(
 		double duration	/* 动作持续时长 */
 	);
 
-	// 创建淡入淡出式的场景切换动作
 	TransitionFade(
+		double fadeOutDuration,	/* 前一场景淡出动作持续时长 */
+		double fadeInDuration	/* 后一场景淡入动作持续时长 */
+	);
+
+	// 创建淡入淡出式的场景切换动作
+	static TransitionFade * create(
+		double duration	/* 动作持续时长 */
+	);
+
+	// 创建淡入淡出式的场景切换动作
+	static TransitionFade * create(
 		double fadeOutDuration,	/* 前一场景淡出动作持续时长 */
 		double fadeInDuration	/* 后一场景淡入动作持续时长 */
 	);
@@ -99,8 +108,12 @@ class TransitionEmerge :
 	public Transition
 {
 public:
-	// 创建浮现式的场景切换动作
 	TransitionEmerge(
+		double duration	/* 浮现动作持续时长 */
+	);
+
+	// 创建浮现式的场景切换动作
+	static TransitionEmerge * create(
 		double duration	/* 浮现动作持续时长 */
 	);
 
@@ -121,8 +134,13 @@ class TransitionMove :
 	public Transition
 {
 public:
-	// 创建移动式的场景切换动作
 	TransitionMove(
+		double moveDuration,					/* 场景移动动作持续时长 */
+		Direction direction = Direction::LEFT	/* 场景移动方向 */
+	);
+
+	// 创建移动式的场景切换动作
+	static TransitionMove * create(
 		double moveDuration,					/* 场景移动动作持续时长 */
 		Direction direction = Direction::LEFT	/* 场景移动方向 */
 	);

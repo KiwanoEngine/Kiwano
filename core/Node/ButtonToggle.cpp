@@ -74,6 +74,31 @@ e2d::ButtonToggle::ButtonToggle(Node * toggleOnNormal, Node * toggleOffNormal, N
 	this->setClickFunc(func);
 }
 
+e2d::ButtonToggle * e2d::ButtonToggle::create()
+{
+	return Create<ButtonToggle>();
+}
+
+e2d::ButtonToggle * e2d::ButtonToggle::create(Node * onNormal, Node * offNormal, const Function & func)
+{
+	return Create<ButtonToggle>(onNormal, offNormal, func);
+}
+
+e2d::ButtonToggle * e2d::ButtonToggle::create(Node * onNormal, Node * offNormal, Node * onSelected, Node * offSelected, const Function & func)
+{
+	return Create<ButtonToggle>(onNormal, offNormal, onSelected, offSelected, func);
+}
+
+e2d::ButtonToggle * e2d::ButtonToggle::create(Node * onNormal, Node * offNormal, Node * onMouseOver, Node * offMouseOver, Node * onSelected, Node * offSelected, const Function & func)
+{
+	return Create<ButtonToggle>(onNormal, offNormal, onMouseOver, offMouseOver, onSelected, offSelected, func);
+}
+
+e2d::ButtonToggle * e2d::ButtonToggle::create(Node * onNormal, Node * offNormal, Node * onMouseOver, Node * offMouseOver, Node * onSelected, Node * offSelected, Node * onDisabled, Node * offDisabled, const Function & func)
+{
+	return Create<ButtonToggle>(onNormal, offNormal, onMouseOver, offMouseOver, onSelected, offSelected, onDisabled, offDisabled, func);
+}
+
 bool e2d::ButtonToggle::getState() const
 {
 	return _toggle;

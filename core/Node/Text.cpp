@@ -74,6 +74,31 @@ e2d::Text::Text(
 	_reset();
 }
 
+e2d::Text * e2d::Text::create()
+{
+	return Create<Text>();
+}
+
+e2d::Text * e2d::Text::create(const String & text)
+{
+	return Create<Text>(text);
+}
+
+e2d::Text * e2d::Text::create(TextStyle textStyle)
+{
+	return Create<Text>(textStyle);
+}
+
+e2d::Text * e2d::Text::create(const String & text, TextStyle textStyle)
+{
+	return Create<Text>(text, textStyle);
+}
+
+e2d::Text * e2d::Text::create(const String & text, const String & fontFamily, double fontSize, UINT32 color, UINT32 fontWeight, bool italic, TextAlign alignment, bool wrapping, double wrappingWidth, double lineSpacing, bool hasUnderline, bool hasStrikethrough, bool hasOutline, UINT32 outlineColor, UINT32 outlineWidth)
+{
+	return Create<Text>(text, fontFamily, fontSize, color, fontWeight, italic, alignment, wrapping, wrappingWidth, lineSpacing, hasUnderline, hasStrikethrough, hasOutline, outlineColor, outlineWidth);
+}
+
 e2d::Text::~Text()
 {
 	SafeReleaseInterface(_textFormat);

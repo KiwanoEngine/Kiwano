@@ -16,6 +16,22 @@ e2d::ColliderRect::ColliderRect(Node * node)
 	: _d2dRectangle(nullptr)
 {
 	this->setRect(0, 0, node->getRealWidth(), node->getRealHeight());
+	this->setAutoResize(true);
+}
+
+e2d::ColliderRect * e2d::ColliderRect::create()
+{
+	return Create<ColliderRect>();
+}
+
+e2d::ColliderRect * e2d::ColliderRect::create(double x, double y, double width, double height)
+{
+	return Create<ColliderRect>(x, y, width, height);
+}
+
+e2d::ColliderRect * e2d::ColliderRect::create(Node * node)
+{
+	return Create<ColliderRect>(node);
 }
 
 e2d::ColliderRect::~ColliderRect()
@@ -41,7 +57,7 @@ void e2d::ColliderRect::_resize()
 {
 	if (_parentNode && _enable)
 	{
-		this->setRect( 0, 0, _parentNode->getRealWidth(), _parentNode->getRealHeight());
+		this->setRect(0, 0, _parentNode->getRealWidth(), _parentNode->getRealHeight());
 	}
 }
 

@@ -28,12 +28,6 @@ e2d::Image::Image(int resNameId, const String& resType)
 	this->open(resNameId, resType);
 }
 
-e2d::Image::Image(ID2D1Bitmap * bitmap)
-	: _bitmap(nullptr)
-{
-	this->open(bitmap);
-}
-
 e2d::Image::Image(const String& filePath, double cropX, double cropY, double cropWidth, double cropHeight)
 	: _bitmap(nullptr)
 {
@@ -46,6 +40,31 @@ e2d::Image::Image(int resNameId, const String& resType, double cropX, double cro
 {
 	this->open(resNameId, resType);
 	this->crop(cropX, cropY, cropWidth, cropHeight);
+}
+
+e2d::Image * e2d::Image::create()
+{
+	return Create<Image>();
+}
+
+e2d::Image * e2d::Image::create(const String & filePath)
+{
+	return Create<Image>(filePath);
+}
+
+e2d::Image * e2d::Image::create(int resNameId, const String & resType)
+{
+	return Create<Image>(resNameId, resType);
+}
+
+e2d::Image * e2d::Image::create(const String & filePath, double cropX, double cropY, double cropWidth, double cropHeight)
+{
+	return Create<Image>(filePath, cropX, cropY, cropWidth, cropHeight);
+}
+
+e2d::Image * e2d::Image::create(int resNameId, const String & resType, double cropX, double cropY, double cropWidth, double cropHeight)
+{
+	return Create<Image>(resNameId, resType, cropX, cropY, cropWidth, cropHeight);
 }
 
 e2d::Image::~Image()
@@ -79,20 +98,6 @@ bool e2d::Image::open(int resNameId, const String& resType)
 
 	this->_setBitmap(s_mBitmapsFromResource.at(resNameId));
 	return true;
-}
-
-bool e2d::Image::open(ID2D1Bitmap * bitmap)
-{
-	if (bitmap)
-	{
-		if (s_vBitmaps.find(bitmap) != s_vBitmaps.end())
-		{
-			s_vBitmaps.insert(bitmap);
-		}
-		this->_setBitmap(bitmap);
-		return true;
-	}
-	return false;
 }
 
 void e2d::Image::crop(double x, double y, double width, double height)

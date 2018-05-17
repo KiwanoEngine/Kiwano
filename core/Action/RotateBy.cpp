@@ -7,6 +7,11 @@ e2d::RotateBy::RotateBy(double duration, double rotation)
 	_deltaVal = rotation;
 }
 
+e2d::RotateBy * e2d::RotateBy::create(double duration, double rotation)
+{
+	return Create<RotateBy>(duration, rotation);
+}
+
 void e2d::RotateBy::_init()
 {
 	ActionGradual::_init();
@@ -29,10 +34,10 @@ void e2d::RotateBy::_update()
 
 e2d::RotateBy * e2d::RotateBy::clone() const
 {
-	return new (std::nothrow) RotateBy(_duration, _deltaVal);
+	return Create<RotateBy>(_duration, _deltaVal);
 }
 
 e2d::RotateBy * e2d::RotateBy::reverse() const
 {
-	return new (std::nothrow) RotateBy(_duration, -_deltaVal);
+	return Create<RotateBy>(_duration, -_deltaVal);
 }

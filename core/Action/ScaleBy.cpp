@@ -15,6 +15,16 @@ e2d::ScaleBy::ScaleBy(double duration, double scaleX, double scaleY)
 	_deltaY = scaleY;
 }
 
+e2d::ScaleBy * e2d::ScaleBy::create(double duration, double scale)
+{
+	return Create<ScaleBy>(duration, scale);
+}
+
+e2d::ScaleBy * e2d::ScaleBy::create(double duration, double scaleX, double scaleY)
+{
+	return Create<ScaleBy>(duration, scaleX, scaleY);
+}
+
 void e2d::ScaleBy::_init()
 {
 	ActionGradual::_init();
@@ -38,10 +48,10 @@ void e2d::ScaleBy::_update()
 
 e2d::ScaleBy * e2d::ScaleBy::clone() const
 {
-	return new (std::nothrow) ScaleBy(_duration, _deltaX, _deltaY);
+	return Create<ScaleBy>(_duration, _deltaX, _deltaY);
 }
 
 e2d::ScaleBy * e2d::ScaleBy::reverse() const
 {
-	return new (std::nothrow) ScaleBy(_duration, -_deltaX, -_deltaY);
+	return Create<ScaleBy>(_duration, -_deltaX, -_deltaY);
 }

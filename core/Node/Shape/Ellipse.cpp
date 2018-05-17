@@ -22,12 +22,19 @@ e2d::Ellipse::Ellipse(Point center, double radiusX, double radiusY)
 	this->setPivot(0.5, 0.5);
 }
 
-e2d::Ellipse::Ellipse(double centerX, double centerY, double radiusX, double radiusY)
+e2d::Ellipse * e2d::Ellipse::create()
 {
-	this->setRadiusX(radiusX);
-	this->setRadiusY(radiusY);
-	this->setPos(centerX, centerY);
-	this->setPivot(0.5, 0.5);
+	return Create<Ellipse>();
+}
+
+e2d::Ellipse * e2d::Ellipse::create(double radiusX, double radiusY)
+{
+	return Create<Ellipse>(radiusX, radiusY);
+}
+
+e2d::Ellipse * e2d::Ellipse::create(Point center, double radiusX, double radiusY)
+{
+	return Create<Ellipse>(center, radiusX, radiusY);
 }
 
 e2d::Ellipse::~Ellipse()

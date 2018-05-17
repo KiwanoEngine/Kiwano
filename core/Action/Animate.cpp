@@ -13,6 +13,16 @@ e2d::Animate::Animate(Animation * animation)
 	this->setAnimation(animation);
 }
 
+e2d::Animate * e2d::Animate::create()
+{
+	return Create<Animate>();
+}
+
+e2d::Animate * e2d::Animate::create(Animation * animation)
+{
+	return Create<Animate>(animation);
+}
+
 e2d::Animate::~Animate()
 {
 }
@@ -97,7 +107,7 @@ e2d::Animate * e2d::Animate::clone() const
 {
 	if (_animation)
 	{
-		return new (std::nothrow) Animate(_animation);
+		return Create<Animate>(_animation);
 	}
 	return nullptr;
 }
@@ -121,10 +131,10 @@ e2d::Animate * e2d::Animate::reverse() const
 			}
 		}
 
-		auto animation = new (std::nothrow) Animation(_animation->getInterval(), frames);
+		auto animation = Create<Animation>(_animation->getInterval(), frames);
 		if (animation)
 		{
-			return new (std::nothrow) Animate(animation);
+			return Create<Animate>(animation);
 		}
 	}
 	return nullptr;

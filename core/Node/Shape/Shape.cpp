@@ -2,7 +2,7 @@
 
 e2d::Shape::Shape()
 	: _style(ShapeStyle::SOLID)
-	, _fillColor(Color::WHITE)
+	, _fillColor(Color::BLUE, 0.3)
 	, _lineColor(Color::BLUE, 0.5)
 	, _strokeWidth(1)
 {

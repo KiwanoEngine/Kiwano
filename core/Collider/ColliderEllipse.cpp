@@ -23,6 +23,22 @@ e2d::ColliderEllipse::ColliderEllipse(Node * node)
 		node->getWidth() / 2,
 		node->getHeight() / 2
 	);
+	this->setAutoResize(true);
+}
+
+e2d::ColliderEllipse * e2d::ColliderEllipse::create()
+{
+	return Create<ColliderEllipse>();
+}
+
+e2d::ColliderEllipse * e2d::ColliderEllipse::create(Point center, double radiusX, double radiusY)
+{
+	return Create<ColliderEllipse>(center, radiusX, radiusY);
+}
+
+e2d::ColliderEllipse * e2d::ColliderEllipse::create(Node * node)
+{
+	return Create<ColliderEllipse>(node);
 }
 
 e2d::ColliderEllipse::~ColliderEllipse()
