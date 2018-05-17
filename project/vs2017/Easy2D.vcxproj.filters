@@ -96,9 +96,6 @@
     <ClCompile Include="..\..\core\Base\Renderer.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Music.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Point.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -218,6 +215,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Action\JumpTo.cpp">
       <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Player.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Music.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

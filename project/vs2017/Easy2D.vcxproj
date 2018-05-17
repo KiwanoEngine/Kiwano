@@ -250,8 +250,9 @@
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />
     <ClCompile Include="..\..\core\Node\Text.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
-    <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
+    <ClCompile Include="..\..\core\Tool\Path.cpp" />
+    <ClCompile Include="..\..\core\Tool\Player.cpp" />
     <ClCompile Include="..\..\core\Tool\Random.cpp" />
     <ClCompile Include="..\..\core\Tool\Timer.cpp" />
     <ClCompile Include="..\..\core\Transition\Transition.cpp" />

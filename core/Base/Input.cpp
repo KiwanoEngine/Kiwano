@@ -10,8 +10,8 @@ using namespace e2d;
 
 static IDirectInput8* s_pDirectInput = nullptr;			// DirectInput 接口对象
 static IDirectInputDevice8* s_KeyboardDevice = nullptr;	// 键盘设备接口
-static char s_KeyBuffer[BUFFER_SIZE] = { 0 };					// 用于保存键盘按键信息缓冲区
-static char s_KeyRecordBuffer[BUFFER_SIZE] = { 0 };				// 键盘消息二级缓冲区
+static char s_KeyBuffer[BUFFER_SIZE] = { 0 };			// 用于保存键盘按键信息缓冲区
+static char s_KeyRecordBuffer[BUFFER_SIZE] = { 0 };		// 键盘消息二级缓冲区
 
 static IDirectInputDevice8* s_MouseDevice = nullptr;	// 鼠标设备接口
 static DIMOUSESTATE s_MouseState;						// 鼠标信息存储结构体

@@ -11,7 +11,7 @@ class Renderer;
 class Node;
 class Timer;
 class Action;
-class Music;
+class Player;
 class Collider;
 class Transition;
 

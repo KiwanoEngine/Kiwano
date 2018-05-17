@@ -164,9 +164,6 @@ private:
 	// 初始化计时操作
 	static bool __init();
 
-	// 重置计时操作
-	static void __uninit();
-
 	// 是否达到更新时间
 	static bool __isReady();
 

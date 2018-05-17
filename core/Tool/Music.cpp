@@ -1,6 +1,4 @@
 #include "..\e2dtool.h"
-#include "..\e2dmanager.h"
-#include <map>
 
 
 #ifndef SAFE_DELETE
@@ -22,109 +20,72 @@ inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 	return false;
 }
 
+
 static IXAudio2 * s_pXAudio2 = nullptr;
 static IXAudio2MasteringVoice * s_pMasteringVoice = nullptr;
-static float s_fMusicVolume = 1.0;
 
 
-// 音乐播放器
-class MusicPlayer
-{
-public:
-	MusicPlayer();
-
-	virtual ~MusicPlayer();
-
-	bool open(
-		const e2d::String& filePath
-	);
-
-	bool MusicPlayer::open(
-		int resNameId, 
-		const e2d::String& resType
-	);
-
-	bool play(
-		int nLoopCount = 0
-	);
-
-	void pause();
-
-	void resume();
-
-	void stop();
-
-	void close();
-
-	bool setVolume(
-		float fVolume
-	);
-
-	bool isPlaying() const;
-
-protected:
-	bool _readMMIO();
-
-	bool _resetFile();
-
-	bool _read(
-		BYTE* pBuffer,
-		DWORD dwSizeToRead
-	);
-
-	bool _findMediaFileCch(
-		wchar_t* strDestPath,
-		int cchDest,
-		const wchar_t * strFilename
-	);
-
-protected:
-	bool _bOpened;
-	mutable bool _bPlaying;
-	DWORD _dwSize;
-	CHAR* _pResourceBuffer;
-	BYTE* _pbWaveData;
-	HMMIO _hmmio;
-	MMCKINFO _ck;
-	MMCKINFO _ckRiff;
-	WAVEFORMATEX* _pwfx;
-	IXAudio2SourceVoice* _pSourceVoice;
-};
-
-typedef std::map<UINT, MusicPlayer *> MusicMap;
-
-static MusicMap& GetMusicFileList()
-{
-	static MusicMap s_MusicFileList;
-	return s_MusicFileList;
-}
-
-static MusicMap& GetMusicResList()
-{
-	static MusicMap s_MusicResList;
-	return s_MusicResList;
-}
-
-MusicPlayer::MusicPlayer()
-	: _bOpened(false)
-	, _bPlaying(false)
-	, _pwfx(nullptr)
+e2d::Music::Music()
+	: _opened(false)
+	, _playing(false)
+	, _wfx(nullptr)
 	, _hmmio(nullptr)
-	, _pResourceBuffer(nullptr)
-	, _pbWaveData(nullptr)
+	, _resBuffer(nullptr)
+	, _waveData(nullptr)
 	, _dwSize(0)
-	, _pSourceVoice(nullptr)
+	, _voice(nullptr)
 {
 }
 
-MusicPlayer::~MusicPlayer()
+e2d::Music::Music(const e2d::String & filePath)
+	: _opened(false)
+	, _playing(false)
+	, _wfx(nullptr)
+	, _hmmio(nullptr)
+	, _resBuffer(nullptr)
+	, _waveData(nullptr)
+	, _dwSize(0)
+	, _voice(nullptr)
+{
+	this->open(filePath);
+}
+
+e2d::Music::Music(int resNameId, const String & resType)
+	: _opened(false)
+	, _playing(false)
+	, _wfx(nullptr)
+	, _hmmio(nullptr)
+	, _resBuffer(nullptr)
+	, _waveData(nullptr)
+	, _dwSize(0)
+	, _voice(nullptr)
+{
+	this->open(resNameId, resType);
+}
+
+e2d::Music::~Music()
 {
 	close();
 }
 
-bool MusicPlayer::open(const e2d::String& filePath)
+e2d::Music * e2d::Music::create()
 {
-	if (_bOpened)
+	return Create<Music>();
+}
+
+e2d::Music * e2d::Music::create(const e2d::String & filePath)
+{
+	return Create<Music>(filePath);
+}
+
+e2d::Music * e2d::Music::create(int resNameId, const String & resType)
+{
+	return Create<Music>(resNameId, resType);
+}
+
+bool e2d::Music::open(const e2d::String& filePath)
+{
+	if (_opened)
 	{
 		WARN_IF(true, "MusicInfo can be opened only once!");
 		return false;
@@ -171,37 +132,37 @@ bool MusicPlayer::open(const e2d::String& filePath)
 	_dwSize = _ck.cksize;
 
 	// 将样本数据读取到内存中
-	_pbWaveData = new (std::nothrow) BYTE[_dwSize];
+	_waveData = new (std::nothrow) BYTE[_dwSize];
 
-	if (!_read(_pbWaveData, _dwSize))
+	if (!_read(_waveData, _dwSize))
 	{
 		TraceError(L"Failed to read WAV data");
-		SAFE_DELETE_ARRAY(_pbWaveData);
+		SAFE_DELETE_ARRAY(_waveData);
 		return false;
 	}
 
 	// 创建音源
 	HRESULT hr;
-	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_pSourceVoice, _pwfx)))
+	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_voice, _wfx)))
 	{
 		TraceError(L"Create source voice error", hr);
-		SAFE_DELETE_ARRAY(_pbWaveData);
+		SAFE_DELETE_ARRAY(_waveData);
 		return false;
 	}
 
-	_bOpened = true;
-	_bPlaying = false;
+	_opened = true;
+	_playing = false;
 	return true;
 }
 
-bool MusicPlayer::open(int resNameId, const e2d::String& resType)
+bool e2d::Music::open(int resNameId, const e2d::String& resType)
 {
 	HRSRC hResInfo;
 	HGLOBAL hResData;
 	DWORD dwSize;
 	void* pvRes;
 
-	if (_bOpened)
+	if (_opened)
 	{
 		WARN_IF(true, "MusicInfo can be opened only once!");
 		return false;
@@ -213,7 +174,6 @@ bool MusicPlayer::open(int resNameId, const e2d::String& resType)
 		return false;
 	}
 
-	// Loading it as a file failed, so try it as a resource
 	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(resNameId), resType)))
 		return TraceError(L"FindResource");
 
@@ -226,20 +186,20 @@ bool MusicPlayer::open(int resNameId, const e2d::String& resType)
 	if (nullptr == (pvRes = LockResource(hResData)))
 		return TraceError(L"LockResource");
 
-	_pResourceBuffer = new (std::nothrow) CHAR[dwSize];
-	memcpy(_pResourceBuffer, pvRes, dwSize);
+	_resBuffer = new (std::nothrow) CHAR[dwSize];
+	memcpy(_resBuffer, pvRes, dwSize);
 
 	MMIOINFO mmioInfo;
 	ZeroMemory(&mmioInfo, sizeof(mmioInfo));
 	mmioInfo.fccIOProc = FOURCC_MEM;
 	mmioInfo.cchBuffer = dwSize;
-	mmioInfo.pchBuffer = (CHAR*)_pResourceBuffer;
+	mmioInfo.pchBuffer = (CHAR*)_resBuffer;
 
 	_hmmio = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
 
 	if (!_readMMIO())
 	{
-		// ReadMMIO will fail if its an not a wave file
+		// 读取非 wave 文件时 ReadMMIO 调用失败
 		mmioClose(_hmmio, 0);
 		return TraceError(L"ReadMMIO");
 	}
@@ -247,48 +207,48 @@ bool MusicPlayer::open(int resNameId, const e2d::String& resType)
 	if (!_resetFile())
 		return TraceError(L"ResetFile");
 
-	// After the reset, the size of the wav file is _ck.cksize so store it now
+	// 重置文件后，wave 文件的大小是 _ck.cksize
 	_dwSize = _ck.cksize;
 
-	// Read the sample data into memory
-	_pbWaveData = new (std::nothrow) BYTE[_dwSize];
+	// 将样本数据读取到内存中
+	_waveData = new (std::nothrow) BYTE[_dwSize];
 
-	if (!_read(_pbWaveData, _dwSize))
+	if (!_read(_waveData, _dwSize))
 	{
 		TraceError(L"Failed to read WAV data");
-		SAFE_DELETE_ARRAY(_pbWaveData);
+		SAFE_DELETE_ARRAY(_waveData);
 		return false;
 	}
 
 	// 创建音源
 	HRESULT hr;
-	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_pSourceVoice, _pwfx)))
+	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_voice, _wfx)))
 	{
 		TraceError(L"Create source voice error", hr);
-		SAFE_DELETE_ARRAY(_pbWaveData);
+		SAFE_DELETE_ARRAY(_waveData);
 		return false;
 	}
 
-	_bOpened = true;
-	_bPlaying = false;
+	_opened = true;
+	_playing = false;
 	return true;
 }
 
-bool MusicPlayer::play(int nLoopCount)
+bool e2d::Music::play(int nLoopCount)
 {
-	if (!_bOpened)
+	if (!_opened)
 	{
 		WARN_IF(true, "MusicInfo::play Failed: MusicInfo must be opened first!");
 		return false;
 	}
 
-	if (_pSourceVoice == nullptr)
+	if (_voice == nullptr)
 	{
 		WARN_IF(true, "MusicInfo::play Failed: IXAudio2SourceVoice Null pointer exception!");
 		return false;
 	}
 
-	if (_bPlaying)
+	if (_playing)
 	{
 		stop();
 	}
@@ -298,71 +258,72 @@ bool MusicPlayer::play(int nLoopCount)
 
 	// 提交 wave 样本数据
 	XAUDIO2_BUFFER buffer = { 0 };
-	buffer.pAudioData = _pbWaveData;
+	buffer.pAudioData = _waveData;
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 	buffer.AudioBytes = _dwSize;
 	buffer.LoopCount = nLoopCount;
 
 	HRESULT hr;
-	if (FAILED(hr = _pSourceVoice->SubmitSourceBuffer(&buffer)))
+	if (FAILED(hr = _voice->SubmitSourceBuffer(&buffer)))
 	{
 		TraceError(L"Submitting source buffer error", hr);
-		_pSourceVoice->DestroyVoice();
-		SAFE_DELETE_ARRAY(_pbWaveData);
+		_voice->DestroyVoice();
+		SAFE_DELETE_ARRAY(_waveData);
 		return false;
 	}
 
-	if (SUCCEEDED(hr = _pSourceVoice->Start(0)))
+	if (SUCCEEDED(hr = _voice->Start(0)))
 	{
-		_bPlaying = true;
+		// 播放成功，保留这个对象
+		_playing = true;
 	}
-	
+
 	return SUCCEEDED(hr);
 }
 
-void MusicPlayer::pause()
+void e2d::Music::pause()
 {
-	if (_pSourceVoice)
+	if (_voice)
 	{
-		if (SUCCEEDED(_pSourceVoice->Stop()))
+		if (SUCCEEDED(_voice->Stop()))
 		{
-			_bPlaying = false;
+			_playing = false;
 		}
 	}
 }
 
-void MusicPlayer::resume()
+void e2d::Music::resume()
 {
-	if (_pSourceVoice)
+	if (_voice)
 	{
-		if (SUCCEEDED(_pSourceVoice->Start()))
+		if (SUCCEEDED(_voice->Start()))
 		{
-			_bPlaying = true;
+			_playing = true;
 		}
 	}
 }
 
-void MusicPlayer::stop()
+void e2d::Music::stop()
 {
-	if (_pSourceVoice)
+	if (_voice)
 	{
-		if (SUCCEEDED(_pSourceVoice->Stop()))
+		if (SUCCEEDED(_voice->Stop()))
 		{
-			_pSourceVoice->ExitLoop();
-			_pSourceVoice->FlushSourceBuffers();
-			_bPlaying = false;
+			_voice->ExitLoop();
+			_voice->FlushSourceBuffers();
+			_playing = false;
 		}
 	}
 }
 
-void MusicPlayer::close()
+void e2d::Music::close()
 {
-	if (_pSourceVoice)
+	if (_voice)
 	{
-		_pSourceVoice->Stop();
-		_pSourceVoice->FlushSourceBuffers();
-		_pSourceVoice->DestroyVoice();
-		_pSourceVoice = nullptr;
+		_voice->Stop();
+		_voice->FlushSourceBuffers();
+		_voice->DestroyVoice();
+		_voice = nullptr;
 	}
 
 	if (_hmmio != nullptr)
@@ -371,26 +332,26 @@ void MusicPlayer::close()
 		_hmmio = nullptr;
 	}
 
-	SAFE_DELETE_ARRAY(_pResourceBuffer);
-	SAFE_DELETE_ARRAY(_pbWaveData);
-	SAFE_DELETE_ARRAY(_pwfx);
+	SAFE_DELETE_ARRAY(_resBuffer);
+	SAFE_DELETE_ARRAY(_waveData);
+	SAFE_DELETE_ARRAY(_wfx);
 
-	_bOpened = false;
-	_bPlaying = false;
+	_opened = false;
+	_playing = false;
 }
 
-bool MusicPlayer::isPlaying() const
+bool e2d::Music::isPlaying() const
 {
-	if (_bOpened && _pSourceVoice)
+	if (_opened && _voice)
 	{
 		XAUDIO2_VOICE_STATE state;
-		_pSourceVoice->GetState(&state);
+		_voice->GetState(&state);
 
 		if (state.BuffersQueued == 0)
 		{
-			_bPlaying = false;
+			_playing = false;
 		}
-		return _bPlaying;
+		return _playing;
 	}
 	else
 	{
@@ -398,23 +359,28 @@ bool MusicPlayer::isPlaying() const
 	}
 }
 
-bool MusicPlayer::setVolume(float fVolume)
+IXAudio2SourceVoice * e2d::Music::getIXAudio2SourceVoice() const
 {
-	if (_pSourceVoice)
+	return _voice;
+}
+
+bool e2d::Music::setVolume(double volume)
+{
+	if (_voice)
 	{
-		return SUCCEEDED(_pSourceVoice->SetVolume(fVolume));
+		return SUCCEEDED(_voice->SetVolume(float(volume)));
 	}
 	return false;
 }
 
-bool MusicPlayer::_readMMIO()
+bool e2d::Music::_readMMIO()
 {
 	MMCKINFO ckIn;
 	PCMWAVEFORMAT pcmWaveFormat;
 
 	memset(&ckIn, 0, sizeof(ckIn));
 
-	_pwfx = nullptr;
+	_wfx = nullptr;
 
 	if ((0 != mmioDescend(_hmmio, &_ckRiff, nullptr, 0)))
 		return TraceError(L"mmioDescend");
@@ -442,11 +408,11 @@ bool MusicPlayer::_readMMIO()
 	// 的数据，这个数据就是额外分配的大小
 	if (pcmWaveFormat.wf.wFormatTag == WAVE_FORMAT_PCM)
 	{
-		_pwfx = (WAVEFORMATEX*) new (std::nothrow) CHAR[sizeof(WAVEFORMATEX)];
+		_wfx = (WAVEFORMATEX*) new (std::nothrow) CHAR[sizeof(WAVEFORMATEX)];
 
 		// 拷贝数据
-		memcpy(_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
-		_pwfx->cbSize = 0;
+		memcpy(_wfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
+		_wfx->cbSize = 0;
 	}
 	else
 	{
@@ -455,31 +421,31 @@ bool MusicPlayer::_readMMIO()
 		if (mmioRead(_hmmio, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD))
 			return TraceError(L"mmioRead");
 
-		_pwfx = (WAVEFORMATEX*) new (std::nothrow) CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
+		_wfx = (WAVEFORMATEX*) new (std::nothrow) CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
 
 		// 拷贝数据
-		memcpy(_pwfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
-		_pwfx->cbSize = cbExtraBytes;
+		memcpy(_wfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
+		_wfx->cbSize = cbExtraBytes;
 
 		// 读取额外数据
-		if (mmioRead(_hmmio, (CHAR*)(((BYTE*)&(_pwfx->cbSize)) + sizeof(WORD)),
+		if (mmioRead(_hmmio, (CHAR*)(((BYTE*)&(_wfx->cbSize)) + sizeof(WORD)),
 			cbExtraBytes) != cbExtraBytes)
 		{
-			SAFE_DELETE(_pwfx);
+			SAFE_DELETE(_wfx);
 			return TraceError(L"mmioRead");
 		}
 	}
 
 	if (0 != mmioAscend(_hmmio, &ckIn, 0))
 	{
-		SAFE_DELETE(_pwfx);
+		SAFE_DELETE(_wfx);
 		return TraceError(L"mmioAscend");
 	}
 
 	return true;
 }
 
-bool MusicPlayer::_resetFile()
+bool e2d::Music::_resetFile()
 {
 	// Seek to the data
 	if (-1 == mmioSeek(_hmmio, _ckRiff.dwDataOffset + sizeof(FOURCC),
@@ -494,7 +460,7 @@ bool MusicPlayer::_resetFile()
 	return true;
 }
 
-bool MusicPlayer::_read(BYTE* pBuffer, DWORD dwSizeToRead)
+bool e2d::Music::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 {
 	MMIOINFO mmioinfoIn; // current status of _hmmio
 
@@ -530,7 +496,7 @@ bool MusicPlayer::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 	return true;
 }
 
-bool MusicPlayer::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wchar_t * strFilename)
+bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wchar_t * strFilename)
 {
 	bool bFound = false;
 
@@ -604,195 +570,6 @@ bool MusicPlayer::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wch
 	return false;
 }
 
-
-bool e2d::Music::preload(const String& filePath)
-{
-	UINT nRet = filePath.getHashCode();
-
-	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
-	{
-		return true;
-	}
-	else
-	{
-		MusicPlayer * pPlayer = new (std::nothrow) MusicPlayer();
-
-		if (pPlayer->open(filePath))
-		{
-			pPlayer->setVolume(s_fMusicVolume);
-			GetMusicFileList().insert(std::pair<UINT, MusicPlayer *>(nRet, pPlayer));
-			return true;
-		}
-		else
-		{
-			delete pPlayer;
-			pPlayer = nullptr;
-		}
-	}
-	return false;
-}
-
-bool e2d::Music::preload(int resNameId, const String& resType)
-{
-	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
-	{
-		return true;
-	}
-	else
-	{
-		MusicPlayer * pPlayer = new (std::nothrow) MusicPlayer();
-
-		if (pPlayer->open(resNameId, resType))
-		{
-			pPlayer->setVolume(s_fMusicVolume);
-			GetMusicResList().insert(std::pair<UINT, MusicPlayer *>(resNameId, pPlayer));
-			return true;
-		}
-		else
-		{
-			delete pPlayer;
-			pPlayer = nullptr;
-		}
-	}
-	return false;
-}
-
-bool e2d::Music::play(const String& filePath, int nLoopCount)
-{
-	if (Music::preload(filePath))
-	{
-		UINT nRet = filePath.getHashCode();
-		auto pMusic = GetMusicFileList()[nRet];
-		if (pMusic->play(nLoopCount))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-bool e2d::Music::play(int resNameId, const String& resType, int nLoopCount)
-{
-	if (Music::preload(resNameId, resType))
-	{
-		auto pMusic = GetMusicResList()[resNameId];
-		if (pMusic->play(nLoopCount))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-void e2d::Music::pause(const String& filePath)
-{
-	if (filePath.isEmpty())
-		return;
-
-	UINT nRet = filePath.getHashCode();
-
-	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
-		GetMusicFileList()[nRet]->pause();
-}
-
-void e2d::Music::pause(int resNameId, const String& resType)
-{
-	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
-		GetMusicResList()[resNameId]->pause();
-}
-
-void e2d::Music::resume(const String& filePath)
-{
-	if (filePath.isEmpty())
-		return;
-
-	UINT nRet = filePath.getHashCode();
-
-	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
-		GetMusicFileList()[nRet]->resume();
-}
-
-void e2d::Music::resume(int resNameId, const String& resType)
-{
-	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
-		GetMusicResList()[resNameId]->pause();
-}
-
-void e2d::Music::stop(const String& filePath)
-{
-	if (filePath.isEmpty())
-		return;
-
-	UINT nRet = filePath.getHashCode();
-
-	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
-		GetMusicFileList()[nRet]->stop();
-}
-
-void e2d::Music::stop(int resNameId, const String& resType)
-{
-	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
-		GetMusicResList()[resNameId]->stop();
-}
-
-bool e2d::Music::isPlaying(const String& filePath)
-{
-	if (filePath.isEmpty())
-		return false;
-
-	UINT nRet = filePath.getHashCode();
-
-	if (GetMusicFileList().end() != GetMusicFileList().find(nRet))
-		return GetMusicFileList()[nRet]->isPlaying();
-
-	return false;
-}
-
-bool e2d::Music::isPlaying(int resNameId, const String& resType)
-{
-	if (GetMusicResList().end() != GetMusicResList().find(resNameId))
-		return GetMusicResList()[resNameId]->isPlaying();
-	return false;
-}
-
-double e2d::Music::getVolume()
-{
-	return s_fMusicVolume;
-}
-
-void e2d::Music::setVolume(double fVolume)
-{
-	s_fMusicVolume = min(max(float(fVolume), -224), 224);
-	for (auto pair : GetMusicFileList())
-	{
-		pair.second->setVolume(s_fMusicVolume);
-	}
-}
-
-void e2d::Music::pauseAll()
-{
-	for (auto pair : GetMusicFileList())
-	{
-		pair.second->pause();
-	}
-}
-
-void e2d::Music::resumeAll()
-{
-	for (auto pair : GetMusicFileList())
-	{
-		pair.second->resume();
-	}
-}
-
-void e2d::Music::stopAll()
-{
-	for (auto pair : GetMusicFileList())
-	{
-		pair.second->stop();
-	}
-}
-
 IXAudio2 * e2d::Music::getIXAudio2()
 {
 	return s_pXAudio2;
@@ -825,14 +602,6 @@ bool e2d::Music::__init()
 
 void e2d::Music::__uninit()
 {
-	for (auto pair : GetMusicFileList())
-	{
-		pair.second->close();
-		delete pair.second;
-	}
-
-	GetMusicFileList().clear();
-
 	if (s_pMasteringVoice)
 	{
 		s_pMasteringVoice->DestroyVoice();

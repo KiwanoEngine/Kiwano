@@ -203,6 +203,8 @@ void e2d::Game::destroy()
 	ColliderManager::__uninit();
 	// 删除动作
 	ActionManager::__uninit();
+	// 回收音乐播放器资源
+	Player::__uninit();
 	// 删除所有对象
 	ObjectManager::__clear();
 	// 清空图片缓存
@@ -213,9 +215,7 @@ void e2d::Game::destroy()
 	Timer::__uninit();
 	// 关闭输入
 	Input::__uninit();
-	// 恢复计时操作
-	Time::__uninit();
-	// 删除渲染相关资源
+	// 回收渲染相关资源
 	Renderer::__discardResources();
 	// 销毁窗口
 	Window::__uninit();

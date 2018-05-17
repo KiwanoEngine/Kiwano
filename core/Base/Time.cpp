@@ -48,10 +48,6 @@ bool e2d::Time::__init()
 	return true;
 }
 
-void e2d::Time::__uninit()
-{
-}
-
 bool e2d::Time::__isReady()
 {
 	return s_tExceptedInvertal < duration_cast<milliseconds>(s_tNow - s_tFixedUpdate);

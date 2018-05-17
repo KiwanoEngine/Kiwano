@@ -50,8 +50,122 @@ private:
 };
 
 
+// 音乐
+class Music :
+	public Object
+{
+	friend Game;
+
+public:
+	Music();
+
+	Music(
+		const e2d::String& filePath	/* 音乐文件路径 */
+	);
+
+	Music(
+		int resNameId,				/* 音乐资源名称 */
+		const String& resType		/* 音乐资源类型 */
+	);
+
+	virtual ~Music();
+
+	// 创建音乐对象
+	static Music * create();
+
+	// 创建音乐对象
+	static Music * create(
+		const e2d::String& filePath	/* 音乐文件路径 */
+	);
+
+	// 创建音乐对象
+	static Music * create(
+		int resNameId,				/* 音乐资源名称 */
+		const String& resType		/* 音乐资源类型 */
+	);
+
+	// 打开音乐文件
+	bool open(
+		const e2d::String& filePath	/* 音乐文件路径 */
+	);
+
+	// 打开音乐资源
+	bool open(
+		int resNameId,				/* 音乐资源名称 */
+		const String& resType		/* 音乐资源类型 */
+	);
+
+	// 播放
+	bool play(
+		int nLoopCount = 0
+	);
+
+	// 暂停
+	void pause();
+
+	// 继续
+	void resume();
+
+	// 停止
+	void stop();
+
+	// 关闭并回收资源
+	void close();
+
+	// 设置音量
+	bool setVolume(
+		double volume
+	);
+
+	// 是否正在播放
+	bool isPlaying() const;
+
+	// 获取 IXAudio2SourceVoice 对象
+	IXAudio2SourceVoice * getIXAudio2SourceVoice() const;
+
+	// 获取 IXAudio2 对象
+	static IXAudio2 * getIXAudio2();
+
+	// 获取 IXAudio2MasteringVoice 对象
+	static IXAudio2MasteringVoice * getIXAudio2MasteringVoice();
+
+protected:
+	bool _readMMIO();
+
+	bool _resetFile();
+
+	bool _read(
+		BYTE* pBuffer,
+		DWORD dwSizeToRead
+	);
+
+	bool _findMediaFileCch(
+		wchar_t* strDestPath,
+		int cchDest,
+		const wchar_t * strFilename
+	);
+
+private:
+	static bool __init();
+
+	static void __uninit();
+
+protected:
+	bool _opened;
+	mutable bool _playing;
+	DWORD _dwSize;
+	CHAR* _resBuffer;
+	BYTE* _waveData;
+	HMMIO _hmmio;
+	MMCKINFO _ck;
+	MMCKINFO _ckRiff;
+	WAVEFORMATEX* _wfx;
+	IXAudio2SourceVoice* _voice;
+};
+
+
 // 音乐播放器
-class Music
+class Player
 {
 	friend Game;
 
@@ -61,16 +175,36 @@ public:
 		const String& filePath	/* 音乐文件路径 */
 	);
 
-	// 预加载音乐资源
-	static bool preload(
-		int resNameId,			/* 音乐资源名称 */
-		const String& resType	/* 音乐资源类型 */
-	);
-
 	// 播放音乐
 	static bool play(
 		const String& filePath,	/* 音乐文件路径 */
 		int nLoopCount = 0		/* 重复播放次数，设置 -1 为循环播放 */
+	);
+
+	// 暂停音乐
+	static void pause(
+		const String& filePath	/* 音乐文件路径 */
+	);
+
+	// 继续播放音乐
+	static void resume(
+		const String& filePath	/* 音乐文件路径 */
+	);
+
+	// 停止音乐
+	static void stop(
+		const String& filePath	/* 音乐文件路径 */
+	);
+
+	// 获取音乐播放状态
+	static bool isPlaying(
+		const String& filePath	/* 音乐文件路径 */
+	);
+
+	// 预加载音乐资源
+	static bool preload(
+		int resNameId,			/* 音乐资源名称 */
+		const String& resType	/* 音乐资源类型 */
 	);
 
 	// 播放音乐
@@ -82,18 +216,8 @@ public:
 
 	// 暂停音乐
 	static void pause(
-		const String& filePath	/* 音乐文件路径 */
-	);
-
-	// 暂停音乐
-	static void pause(
 		int resNameId,			/* 音乐资源名称 */
 		const String& resType	/* 音乐资源类型 */
-	);
-
-	// 继续播放音乐
-	static void resume(
-		const String& filePath	/* 音乐文件路径 */
 	);
 
 	// 继续播放音乐
@@ -104,18 +228,8 @@ public:
 
 	// 停止音乐
 	static void stop(
-		const String& filePath	/* 音乐文件路径 */
-	);
-
-	// 停止音乐
-	static void stop(
 		int resNameId,			/* 音乐资源名称 */
 		const String& resType	/* 音乐资源类型 */
-	);
-
-	// 获取音乐播放状态
-	static bool isPlaying(
-		const String& filePath	/* 音乐文件路径 */
 	);
 
 	// 获取音乐播放状态
@@ -129,7 +243,7 @@ public:
 
 	// 设置音量
 	static void setVolume(
-		double fVolume			/* 音量范围为 -224 ~ 224，0 是静音，1 是正常音量 */
+		double volume			/* 音量范围为 -224 ~ 224，0 是静音，1 是正常音量 */
 	);
 
 	// 暂停所有音乐
@@ -141,15 +255,7 @@ public:
 	// 停止所有音乐
 	static void stopAll();
 
-	// 获取 IXAudio2 对象
-	static IXAudio2 * getIXAudio2();
-
-	// 获取 IXAudio2MasteringVoice 对象
-	static IXAudio2MasteringVoice * getIXAudio2MasteringVoice();
-
 private:
-	static bool __init();
-
 	static void __uninit();
 };
 
