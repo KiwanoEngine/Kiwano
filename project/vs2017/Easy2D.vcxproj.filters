@@ -156,9 +156,6 @@
     <ClCompile Include="..\..\core\Custom\CustomTextRenderer.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\TextStyle.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Color.cpp">
       <Filter>Common</Filter>
     </ClCompile>

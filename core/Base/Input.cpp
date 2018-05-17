@@ -165,65 +165,25 @@ bool Input::isKeyRelease(KeyCode key)
 	return false;
 }
 
-bool Input::isMouseLButtonDown()
+bool e2d::Input::isMouseDown(MouseCode code)
 {
-	if (s_MouseState.rgbButtons[0] & 0x80)
+	if (s_MouseState.rgbButtons[static_cast<int>(code)] & 0x80)
 		return true;
 	return false;
 }
 
-bool Input::isMouseRButtonDown()
+bool e2d::Input::isMousePress(MouseCode code)
 {
-	if (s_MouseState.rgbButtons[1] & 0x80)
+	if ((s_MouseState.rgbButtons[static_cast<int>(code)] & 0x80) && 
+		!(s_MouseRecordState.rgbButtons[static_cast<int>(code)] & 0x80))
 		return true;
 	return false;
 }
 
-bool Input::isMouseMButtonDown()
+bool e2d::Input::isMouseRelease(MouseCode code)
 {
-	if (s_MouseState.rgbButtons[2] & 0x80)
-		return true;
-	return false;
-}
-
-bool Input::isMouseLButtonPress()
-{
-	if ((s_MouseState.rgbButtons[0] & 0x80) && !(s_MouseRecordState.rgbButtons[0] & 0x80))
-		return true;
-	return false;
-}
-
-bool Input::isMouseRButtonPress()
-{
-	if ((s_MouseState.rgbButtons[1] & 0x80) && !(s_MouseRecordState.rgbButtons[1] & 0x80))
-		return true;
-	return false;
-}
-
-bool Input::isMouseMButtonPress()
-{
-	if ((s_MouseState.rgbButtons[2] & 0x80) && !(s_MouseRecordState.rgbButtons[2] & 0x80))
-		return true;
-	return false;
-}
-
-bool Input::isMouseLButtonRelease()
-{
-	if (!(s_MouseState.rgbButtons[0] & 0x80) && (s_MouseRecordState.rgbButtons[0] & 0x80))
-		return true;
-	return false;
-}
-
-bool Input::isMouseRButtonRelease()
-{
-	if (!(s_MouseState.rgbButtons[1] & 0x80) && (s_MouseRecordState.rgbButtons[1] & 0x80))
-		return true;
-	return false;
-}
-
-bool Input::isMouseMButtonRelease()
-{
-	if (!(s_MouseState.rgbButtons[2] & 0x80) && (s_MouseRecordState.rgbButtons[2] & 0x80))
+	if (!(s_MouseState.rgbButtons[static_cast<int>(code)] & 0x80) && 
+		(s_MouseRecordState.rgbButtons[static_cast<int>(code)] & 0x80))
 		return true;
 	return false;
 }

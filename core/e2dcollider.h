@@ -16,6 +16,25 @@ class Collider :
 	friend Node;
 
 public:
+	// 碰撞体类别
+	enum class Type : int
+	{
+		RECT,		/* 矩形 */
+		CIRCLE,		/* 圆形 */
+		ELLIPSE		/* 椭圆形 */
+	};
+
+	// 碰撞体交集关系
+	enum class Relation : int
+	{
+		UNKNOWN = 0,		/* 关系不确定 */
+		DISJOINT = 1,		/* 没有交集 */
+		IS_CONTAINED = 2,	/* 完全被包含 */
+		CONTAINS = 3,		/* 完全包含 */
+		OVERLAP = 4			/* 部分重叠 */
+	};
+
+public:
 	Collider();
 
 	virtual ~Collider();

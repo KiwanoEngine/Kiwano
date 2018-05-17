@@ -1,5 +1,6 @@
 #pragma once
 #include "e2dbase.h"
+#include "e2dcollider.h"
 
 namespace e2d 
 {
@@ -7,7 +8,6 @@ namespace e2d
 
 class Action;
 class Transition;
-class Collider;
 class ColliderManager;
 
 class Node :
@@ -17,6 +17,25 @@ class Node :
 	friend Collider;
 	friend Transition;
 	friend ColliderManager;
+
+public:
+	// 节点属性
+	struct Property
+	{
+		bool visable;		// 可见性
+		double posX;		// X 坐标
+		double posY;		// Y 坐标
+		double width;		// 宽度
+		double height;		// 高度
+		double opacity;		// 透明度
+		double pivotX;		// 中心点 X 坐标
+		double pivotY;		// 中心点 Y 坐标
+		double scaleX;		// 横向缩放
+		double scaleY;		// 纵向缩放
+		double rotation;	// 旋转角度
+		double skewAngleX;	// 横向倾斜角度
+		double skewAngleY;	// 纵向倾斜角度
+	};
 
 public:
 	Node();
@@ -114,7 +133,7 @@ public:
 	virtual double getOpacity() const;
 
 	// 获取节点属性
-	virtual NodeProperty getProperty() const;
+	virtual Property getProperty() const;
 
 	// 获取节点碰撞体
 	virtual Collider * getCollider() const;
@@ -323,12 +342,12 @@ public:
 
 	// 设置节点属性
 	virtual void setProperty(
-		NodeProperty prop
+		Property prop
 	);
 
 	// 设置碰撞体
 	virtual void setCollider(
-		ColliderType nColliderType
+		Collider::Type type
 	);
 
 	// 设置碰撞体
@@ -591,70 +610,100 @@ class Text :
 	public Node
 {
 public:
+	// 字体
+	class Font
+	{
+	public:
+		String	family;			// 字体族
+		double	size;			// 字号
+		UINT	weight;			// 粗细值
+		bool	italic;			// 斜体
+
+	public:
+		// 字体粗细值
+		enum Weight : UINT
+		{
+			THIN = 100,
+			EXTRA_LIGHT = 200,
+			LIGHT = 300,
+			SEMI_LIGHT = 350,
+			NORMAL = 400,
+			MEDIUM = 500,
+			DEMI_BOLD = 600,
+			BOLD = 700,
+			EXTRA_BOLD = 800,
+			BLACK = 900,
+			EXTRA_BLACK = 950
+		};
+
+	public:
+		Font();
+
+		Font(
+			const String& family,
+			double size = 22,
+			UINT weight = Font::Weight::NORMAL,
+			bool italic = false
+		);
+	};
+
+	// 文本对齐方式
+	enum class Align : int
+	{
+		LEFT,		/* 左对齐 */
+		RIGHT,		/* 右对齐 */
+		CENTER		/* 居中对齐 */
+	};
+
+	// 文本样式
+	class Style
+	{
+	public:
+		Color		color;				// 颜色
+		Align		alignment;			// 对齐方式
+		bool		wrapping;			// 打开自动换行
+		double		wrappingWidth;		// 自动换行宽度
+		double		lineSpacing;		// 行间距
+		bool		hasUnderline;		// 下划线
+		bool		hasStrikethrough;	// 删除线
+		bool		hasOutline;			// 显示描边
+		Color		outlineColor;		// 描边颜色
+		double		outlineWidth;		// 描边线宽
+		LineJoin	outlineJoin;		// 描边线相交样式
+
+	public:
+		Style();
+
+		Style(
+			Color color,
+			Align alignment = Align::LEFT,
+			bool wrapping = false,
+			double wrappingWidth = 0.0,
+			double lineSpacing = 0.0,
+			bool hasUnderline = false,
+			bool hasStrikethrough = false,
+			bool hasOutline = true,
+			Color outlineColor = Color(Color::BLACK, 0.5),
+			double outlineWidth = 1.0,
+			LineJoin outlineJoin = LineJoin::ROUND
+		);
+	};
+
+public:
 	Text();
 
 	Text(
-		const String& text		/* 文字内容 */
-	);
-
-	Text(
-		TextStyle textStyle		/* 文字样式 */
-	);
-
-	Text(
-		const String& text,		/* 文字内容 */
-		TextStyle textStyle		/* 文字样式 */
-	);
-
-	Text(
-		const String& text,						/* 文字内容*/
-		const String& fontFamily,				/* 字体 */
-		double fontSize = 22,					/* 字号 */
-		UINT32 color = Color::WHITE,			/* 颜色 */
-		UINT32 fontWeight = FontWeight::NORMAL,	/* 粗细值 */
-		bool italic = false,					/* 斜体 */
-		TextAlign alignment = TextAlign::LEFT,	/* 对齐方式 */
-		bool wrapping = false,					/* 打开自动换行 */
-		double wrappingWidth = 0.0,				/* 自动换行宽度 */
-		double lineSpacing = 0.0,				/* 行间距 */
-		bool hasUnderline = false,				/* 下划线 */
-		bool hasStrikethrough = false,			/* 删除线 */
-		bool hasOutline = true,					/* 显示描边 */
-		UINT32 outlineColor = Color::BLACK,		/* 描边颜色 */
-		UINT32 outlineWidth = 1.0				/* 描边线宽 */
+		const String& text,						/* 文字内容 */
+		const Font& font = Font(),				/* 字体 */
+		const Style& style = Style()			/* 文本样式 */
 	);
 
 	static Text * create();
 
 	static Text * create(
-		const String& text		/* 文字内容 */
-	);
-
-	static Text * create(
-		TextStyle textStyle		/* 文字样式 */
-	);
-
-	static Text * create(
-		const String& text,		/* 文字内容 */
-		TextStyle textStyle		/* 文字样式 */
-	);
-
-	static Text * create(
-		const String& text,						/* 文字内容*/
-		const String& fontFamily,				/* 字体 */
-		double fontSize = 22,					/* 字号 */
-		UINT32 color = Color::WHITE,			/* 颜色 */
-		UINT32 fontWeight = FontWeight::NORMAL,	/* 粗细值 */
-		bool italic = false,					/* 斜体 */
-		TextAlign alignment = TextAlign::LEFT,	/* 对齐方式 */
-		bool wrapping = false,					/* 打开自动换行 */
-		double wrappingWidth = 0.0,				/* 自动换行宽度 */
-		double lineSpacing = 0.0,				/* 行间距 */
-		bool hasUnderline = false,				/* 下划线 */
-		bool hasStrikethrough = false,			/* 删除线 */
-		bool hasOutline = true,					/* 显示描边 */
-		UINT32 outlineColor = Color::BLACK,		/* 描边颜色 */
-		UINT32 outlineWidth = 1.0				/* 描边线宽 */
+		const String& text,						/* 文字内容 */
+		const Font& font = Font(),				/* 字体 */
+		const Style& style = Style()			/* 文本样式 */
 	);
 
 	virtual ~Text();
@@ -662,17 +711,20 @@ public:
 	// 获取文本
 	String getText() const;
 
-	// 获取文本样式
-	TextStyle getTextStyle() const;
-
 	// 获取字体
+	Font getFont() const;
+
+	// 获取文本样式
+	Style getStyle() const;
+
+	// 获取字体族
 	String getFontFamily() const;
 
 	// 获取当前字号
 	double getFontSize() const;
 
 	// 获取当前字体粗细值
-	UINT32 getFontWeight() const;
+	UINT getFontWeight() const;
 
 	// 获取文字颜色
 	Color getColor() const;
@@ -708,22 +760,27 @@ public:
 
 	// 设置文本样式
 	void setStyle(
-		const TextStyle& textStyle
+		const Style& style
 	);
 
 	// 设置字体
+	void setFont(
+		const Font& font
+	);
+
+	// 设置字体族
 	void setFontFamily(
-		const String& fontFamily
+		const String& family
 	);
 
 	// 设置字号（默认值为 22）
 	void setFontSize(
-		double fontSize
+		double size
 	);
 
-	// 设置字体粗细值（默认值为 FontWeight::NORMAL）
+	// 设置字体粗细值（默认值为 Text::Font::Weight::NORMAL）
 	void setFontWeight(
-		UINT32 fontWeight
+		UINT weight
 	);
 
 	// 设置文字颜色（默认值为 Color::WHITE）
@@ -751,9 +808,9 @@ public:
 		double lineSpacing
 	);
 
-	// 设置对齐方式（默认为 TextAlign::LEFT）
+	// 设置对齐方式（默认为 Align::LEFT）
 	void setAlignment(
-		TextAlign align
+		Align align
 	);
 
 	// 设置下划线（默认值为 false）
@@ -801,7 +858,8 @@ protected:
 
 protected:
 	String	_text;
-	TextStyle _style;
+	Font	_font;
+	Style	_style;
 	IDWriteTextFormat * _textFormat;
 	IDWriteTextLayout * _textLayout;
 };

@@ -54,13 +54,13 @@ void e2d::Collider::_render()
 		// 获取纯色画刷
 		ID2D1SolidColorBrush * pBrush = Renderer::getSolidColorBrush();
 		// 设置画刷颜色和透明度
-		pBrush->SetColor(_color.toColorF());
+		pBrush->SetColor(_color.toD2DColorF());
 		// 绘制几何碰撞体
 		Renderer::getRenderTarget()->DrawGeometry(_transformed, pBrush);
 	}
 }
 
-e2d::Relation e2d::Collider::getRelationWith(Collider * pCollider) const
+e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * pCollider) const
 {
 	if (_transformed && pCollider->_transformed)
 	{

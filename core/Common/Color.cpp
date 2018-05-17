@@ -1,12 +1,12 @@
 #include "..\e2dcommon.h"
 
-static const UINT32 sc_redShift = 16;
-static const UINT32 sc_greenShift = 8;
-static const UINT32 sc_blueShift = 0;
+static const UINT sc_redShift = 16;
+static const UINT sc_greenShift = 8;
+static const UINT sc_blueShift = 0;
 
-static const UINT32 sc_redMask = 0xff << sc_redShift;
-static const UINT32 sc_greenMask = 0xff << sc_greenShift;
-static const UINT32 sc_blueMask = 0xff << sc_blueShift;
+static const UINT sc_redMask = 0xff << sc_redShift;
+static const UINT sc_greenMask = 0xff << sc_greenShift;
+static const UINT sc_blueMask = 0xff << sc_blueShift;
 
 e2d::Color::Color()
 	: r(0)
@@ -32,17 +32,17 @@ e2d::Color::Color(double r, double g, double b, double alpha)
 {
 }
 
-e2d::Color::Color(UINT32 rgb)
+e2d::Color::Color(UINT rgb)
 {
 	_init(rgb, 1);
 }
 
-e2d::Color::Color(UINT32 rgb, double alpha)
+e2d::Color::Color(UINT rgb, double alpha)
 {
 	_init(rgb, alpha);
 }
 
-void e2d::Color::_init(UINT32 rgb, double alpha)
+void e2d::Color::_init(UINT rgb, double alpha)
 {
 	r = float((rgb & sc_redMask) >> sc_redShift) / 255.f;
 	g = float((rgb & sc_greenMask) >> sc_greenShift) / 255.f;
@@ -50,7 +50,7 @@ void e2d::Color::_init(UINT32 rgb, double alpha)
 	a = float(alpha);
 }
 
-D2D1_COLOR_F e2d::Color::toColorF() const
+D2D1_COLOR_F e2d::Color::toD2DColorF() const
 {
 	return D2D1::ColorF(r, g, b, a);
 }

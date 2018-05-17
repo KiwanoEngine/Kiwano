@@ -24,7 +24,7 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 	if (!mutexName.isEmpty())
 	{
 		// 创建进程互斥体
-		HANDLE hMutex = ::CreateMutex(NULL, TRUE, L"Easy2DApp-" + mutexName);
+		HANDLE hMutex = ::CreateMutex(nullptr, TRUE, L"Easy2DApp-" + mutexName);
 
 		if (hMutex == nullptr)
 		{
@@ -41,7 +41,7 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 	}
 
 	// 初始化 COM 组件
-	CoInitialize(NULL);
+	CoInitialize(nullptr);
 
 	// 创建设备无关资源
 	if (!Renderer::__createDeviceIndependentResources())

@@ -1,7 +1,6 @@
 #include "..\e2dnode.h"
 #include "..\e2dmanager.h"
 #include "..\e2daction.h"
-#include "..\e2dcollider.h"
 #include <algorithm>
 
 // 默认中心点位置
@@ -337,9 +336,9 @@ double e2d::Node::getOpacity() const
 	return _realOpacity;
 }
 
-e2d::NodeProperty e2d::Node::getProperty() const
+e2d::Node::Property e2d::Node::getProperty() const
 {
-	NodeProperty prop;
+	Property prop;
 	prop.visable = _visiable;
 	prop.posX = _posX;
 	prop.posY = _posY;
@@ -534,7 +533,7 @@ void e2d::Node::setSize(Size size)
 	this->setSize(size.width, size.height);
 }
 
-void e2d::Node::setProperty(NodeProperty prop)
+void e2d::Node::setProperty(Property prop)
 {
 	this->setVisiable(prop.visable);
 	this->setPos(prop.posX, prop.posY);
@@ -546,23 +545,23 @@ void e2d::Node::setProperty(NodeProperty prop)
 	this->setSkew(prop.skewAngleX, prop.skewAngleY);
 }
 
-void e2d::Node::setCollider(ColliderType nColliderType)
+void e2d::Node::setCollider(Collider::Type type)
 {
-	switch (nColliderType)
+	switch (type)
 	{
-	case ColliderType::RECT:
+	case Collider::Type::RECT:
 	{
 		this->setCollider(Create<ColliderRect>(this));
 		break;
 	}
 
-	case ColliderType::CIRCLE:
+	case Collider::Type::CIRCLE:
 	{
 		this->setCollider(Create<ColliderCircle>(this));
 		break;
 	}
 
-	case ColliderType::ELLIPSE:
+	case Collider::Type::ELLIPSE:
 	{
 		this->setCollider(Create<ColliderEllipse>(this));
 		break;
@@ -913,9 +912,9 @@ bool e2d::Node::isIntersectWith(const Node * node) const
 	// 如果存在碰撞体，用碰撞体判断
 	if (this->_collider && node->_collider)
 	{
-		Relation relation = this->_collider->getRelationWith(node->_collider);
-		if ((relation != Relation::UNKNOWN) && 
-			(relation != Relation::DISJOINT))
+		Collider::Relation relation = this->_collider->getRelationWith(node->_collider);
+		if ((relation != Collider::Relation::UNKNOWN) &&
+			(relation != Collider::Relation::DISJOINT))
 		{
 			return true;
 		}

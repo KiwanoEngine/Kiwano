@@ -57,12 +57,12 @@ STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
 {
 	HRESULT hr = S_OK;
 
-	ID2D1PathGeometry* pPathGeometry = NULL;
+	ID2D1PathGeometry* pPathGeometry = nullptr;
 	hr = pD2DFactory_->CreatePathGeometry(
 		&pPathGeometry
 	);
 
-	ID2D1GeometrySink* pSink = NULL;
+	ID2D1GeometrySink* pSink = nullptr;
 	if (SUCCEEDED(hr))
 	{
 		hr = pPathGeometry->Open(
@@ -95,7 +95,7 @@ STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
 		baselineOriginX, baselineOriginY
 	);
 
-	ID2D1TransformedGeometry* pTransformedGeometry = NULL;
+	ID2D1TransformedGeometry* pTransformedGeometry = nullptr;
 	if (SUCCEEDED(hr))
 	{
 		hr = pD2DFactory_->CreateTransformedGeometry(
@@ -105,10 +105,9 @@ STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
 		);
 	}
 
-	ID2D1StrokeStyle * pStrokeStyle = NULL;
-
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED(hr) && bShowOutline_)
 	{
+		ID2D1StrokeStyle * pStrokeStyle = nullptr;
 		hr = Renderer::getID2D1Factory()->CreateStrokeStyle(
 			D2D1::StrokeStyleProperties(
 				D2D1_CAP_STYLE_FLAT,
@@ -118,15 +117,12 @@ STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
 				2.0f,
 				D2D1_DASH_STYLE_SOLID,
 				0.0f),
-			NULL,
+			nullptr,
 			0,
 			&pStrokeStyle
 		);
-	}
 
-	if (SUCCEEDED(hr))
-	{
-		if (bShowOutline_)
+		if (SUCCEEDED(hr))
 		{
 			pBrush_->SetColor(sOutlineColor_);
 
@@ -137,7 +133,10 @@ STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
 				pStrokeStyle
 			);
 		}
+	}
 
+	if (SUCCEEDED(hr))
+	{
 		pBrush_->SetColor(sFillColor_);
 
 		pRT_->FillGeometry(
@@ -170,7 +169,7 @@ STDMETHODIMP CustomTextRenderer::DrawUnderline(
 		underline->offset + underline->thickness
 	);
 
-	ID2D1RectangleGeometry* pRectangleGeometry = NULL;
+	ID2D1RectangleGeometry* pRectangleGeometry = nullptr;
 	hr = pD2DFactory_->CreateRectangleGeometry(
 		&rect,
 		&pRectangleGeometry
@@ -182,7 +181,7 @@ STDMETHODIMP CustomTextRenderer::DrawUnderline(
 		baselineOriginX, baselineOriginY
 	);
 
-	ID2D1TransformedGeometry* pTransformedGeometry = NULL;
+	ID2D1TransformedGeometry* pTransformedGeometry = nullptr;
 	if (SUCCEEDED(hr))
 	{
 		hr = pD2DFactory_->CreateTransformedGeometry(
@@ -192,10 +191,9 @@ STDMETHODIMP CustomTextRenderer::DrawUnderline(
 		);
 	}
 
-	ID2D1StrokeStyle * pStrokeStyle = NULL;
-
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED(hr) && bShowOutline_)
 	{
+		ID2D1StrokeStyle * pStrokeStyle = nullptr;
 		hr = Renderer::getID2D1Factory()->CreateStrokeStyle(
 			D2D1::StrokeStyleProperties(
 				D2D1_CAP_STYLE_FLAT,
@@ -205,15 +203,12 @@ STDMETHODIMP CustomTextRenderer::DrawUnderline(
 				2.0f,
 				D2D1_DASH_STYLE_SOLID,
 				0.0f),
-			NULL,
+			nullptr,
 			0,
 			&pStrokeStyle
 		);
-	}
 
-	if (SUCCEEDED(hr))
-	{
-		if (bShowOutline_)
+		if (SUCCEEDED(hr))
 		{
 			pBrush_->SetColor(sOutlineColor_);
 
@@ -224,7 +219,10 @@ STDMETHODIMP CustomTextRenderer::DrawUnderline(
 				pStrokeStyle
 			);
 		}
+	}
 
+	if (SUCCEEDED(hr))
+	{
 		pBrush_->SetColor(sFillColor_);
 
 		pRT_->FillGeometry(
@@ -256,7 +254,7 @@ STDMETHODIMP CustomTextRenderer::DrawStrikethrough(
 		strikethrough->offset + strikethrough->thickness
 	);
 
-	ID2D1RectangleGeometry* pRectangleGeometry = NULL;
+	ID2D1RectangleGeometry* pRectangleGeometry = nullptr;
 	hr = pD2DFactory_->CreateRectangleGeometry(
 		&rect,
 		&pRectangleGeometry
@@ -268,7 +266,7 @@ STDMETHODIMP CustomTextRenderer::DrawStrikethrough(
 		baselineOriginX, baselineOriginY
 	);
 
-	ID2D1TransformedGeometry* pTransformedGeometry = NULL;
+	ID2D1TransformedGeometry* pTransformedGeometry = nullptr;
 	if (SUCCEEDED(hr))
 	{
 		hr = pD2DFactory_->CreateTransformedGeometry(
@@ -278,10 +276,9 @@ STDMETHODIMP CustomTextRenderer::DrawStrikethrough(
 		);
 	}
 
-	ID2D1StrokeStyle * pStrokeStyle = NULL;
-
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED(hr) && bShowOutline_)
 	{
+		ID2D1StrokeStyle * pStrokeStyle = nullptr;
 		hr = Renderer::getID2D1Factory()->CreateStrokeStyle(
 			D2D1::StrokeStyleProperties(
 				D2D1_CAP_STYLE_FLAT,
@@ -291,15 +288,12 @@ STDMETHODIMP CustomTextRenderer::DrawStrikethrough(
 				2.0f,
 				D2D1_DASH_STYLE_SOLID,
 				0.0f),
-			NULL,
+			nullptr,
 			0,
 			&pStrokeStyle
 		);
-	}
 
-	if (SUCCEEDED(hr))
-	{
-		if (bShowOutline_)
+		if (SUCCEEDED(hr))
 		{
 			pBrush_->SetColor(sOutlineColor_);
 
@@ -310,7 +304,10 @@ STDMETHODIMP CustomTextRenderer::DrawStrikethrough(
 				pStrokeStyle
 			);
 		}
+	}
 
+	if (SUCCEEDED(hr))
+	{
 		pBrush_->SetColor(sFillColor_);
 
 		pRT_->FillGeometry(
@@ -406,7 +403,7 @@ STDMETHODIMP CustomTextRenderer::QueryInterface(
 	}
 	else
 	{
-		*ppvObject = NULL;
+		*ppvObject = nullptr;
 		return E_FAIL;
 	}
 

@@ -13,15 +13,15 @@ bool e2d::Window::__init()
 	WNDCLASSEX wcex = { 0 };
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.lpszClassName = L"Easy2DApp";
-	wcex.hIcon = NULL;
+	wcex.hIcon = nullptr;
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = Window::WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = sizeof(LONG_PTR);
 	wcex.hInstance = HINST_THISCOMPONENT;
-	wcex.hbrBackground = NULL;
-	wcex.lpszMenuName = NULL;
-	wcex.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+	wcex.hbrBackground = nullptr;
+	wcex.lpszMenuName = nullptr;
+	wcex.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
 
 	RegisterClassEx(&wcex);
 
@@ -53,10 +53,10 @@ bool e2d::Window::__init()
 		dwStyle,
 		(screenWidth - nWidth) / 2, (screenHeight - nHeight) / 2, 
 		nWidth, nHeight,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		HINST_THISCOMPONENT,
-		NULL
+		nullptr
 	);
 
 	HRESULT hr = s_HWnd ? S_OK : E_FAIL;
@@ -105,7 +105,7 @@ void e2d::Window::__poll()
 {
 	static MSG msg;
 
-	while (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	while (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		::TranslateMessage(&msg);
 		::DispatchMessage(&msg);
@@ -182,7 +182,7 @@ void e2d::Window::setTitle(const String& title)
 
 void e2d::Window::setIcon(int iconID)
 {
-	HINSTANCE hInstance = ::GetModuleHandle(NULL);
+	HINSTANCE hInstance = ::GetModuleHandle(nullptr);
 	HICON hIcon = (HICON)::LoadImage(hInstance, MAKEINTRESOURCE(iconID), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 	// 设置窗口的图标
 	::SendMessage(s_HWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
@@ -191,7 +191,7 @@ void e2d::Window::setIcon(int iconID)
 
 void e2d::Window::setCursor(Cursor cursor)
 {
-	LPCWSTR pCursorName = NULL;
+	LPCWSTR pCursorName = nullptr;
 	switch (cursor)
 	{
 	case Cursor::NORMAL:
@@ -218,7 +218,7 @@ void e2d::Window::setCursor(Cursor cursor)
 		break;
 	}
 
-	HCURSOR hCursor = ::LoadCursor(NULL, pCursorName);
+	HCURSOR hCursor = ::LoadCursor(nullptr, pCursorName);
 	::SetCursor(hCursor);
 }
 
@@ -335,7 +335,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	case WM_DISPLAYCHANGE:
 	{
 		// 重绘客户区
-		InvalidateRect(hWnd, NULL, FALSE);
+		InvalidateRect(hWnd, nullptr, FALSE);
 	}
 	result = 0;
 	hasHandled = true;
@@ -345,7 +345,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	case WM_PAINT:
 	{
 		e2d::Renderer::__render();
-		ValidateRect(hWnd, NULL);
+		ValidateRect(hWnd, nullptr);
 	}
 	result = 0;
 	hasHandled = true;

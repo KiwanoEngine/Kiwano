@@ -1,72 +1,88 @@
 #include "..\e2dnode.h"
 
 
-e2d::Text::Text()
-	: _style()
-	, _textLayout(nullptr)
-	, _textFormat(nullptr)
+//-------------------------------------------------------
+// Font
+//-------------------------------------------------------
+
+e2d::Text::Font::Font()
+	: family("")
+	, size(22)
+	, weight(Font::Weight::NORMAL)
+	, italic(false)
 {
 }
 
-e2d::Text::Text(const String& text)
-	: _style()
-	, _textLayout(nullptr)
-	, _textFormat(nullptr)
-	, _text(text)
+e2d::Text::Font::Font(const String & family, double size, UINT weight, bool italic)
+	: family(family)
+	, size(size)
+	, weight(weight)
+	, italic(italic)
 {
-	_reset();
 }
 
-e2d::Text::Text(TextStyle textStyle)
-	: _style(textStyle)
-	, _textLayout(nullptr)
-	, _textFormat(nullptr)
-{
-	_reset();
-}
 
-e2d::Text::Text(const String& text, TextStyle textStyle)
-	: _style(textStyle)
-	, _textLayout(nullptr)
-	, _textFormat(nullptr)
-	, _text(text)
-{
-	_reset();
-}
+//-------------------------------------------------------
+// Style
+//-------------------------------------------------------
 
-e2d::Text::Text(
-	const String& text, 
-	const String& fontFamily, 
-	double fontSize, 
-	UINT32 color, 
-	UINT32 fontWeight, 
-	bool italic, 
-	TextAlign alignment,
+e2d::Text::Style::Style()
+	: color(Color::WHITE)
+	, alignment(Align::LEFT)
+	, wrapping(false)
+	, wrappingWidth(0.0)
+	, lineSpacing(0.0)
+	, hasUnderline(false)
+	, hasStrikethrough(false)
+	, hasOutline(true)
+	, outlineColor(Color(Color::BLACK, 0.5))
+	, outlineWidth(1.0)
+	, outlineJoin(LineJoin::ROUND)
+{}
+
+e2d::Text::Style::Style(
+	Color color,
+	Align alignment,
 	bool wrapping,
 	double wrappingWidth,
 	double lineSpacing,
-	bool hasUnderline, 
+	bool hasUnderline,
 	bool hasStrikethrough,
 	bool hasOutline,
-	UINT32 outlineColor,
-	UINT32 outlineWidth
+	Color outlineColor,
+	double outlineWidth,
+	LineJoin outlineJoin
 )
-	: _style(
-		fontFamily, 
-		fontSize, 
-		color, 
-		fontWeight, 
-		italic, 
-		alignment,
-		wrapping,
-		wrappingWidth,
-		lineSpacing,
-		hasUnderline, 
-		hasStrikethrough, 
-		hasOutline, 
-		outlineColor,
-		outlineWidth
-	)
+	: color(color)
+	, alignment(alignment)
+	, wrapping(wrapping)
+	, wrappingWidth(wrappingWidth)
+	, lineSpacing(lineSpacing)
+	, hasUnderline(hasUnderline)
+	, hasStrikethrough(hasStrikethrough)
+	, hasOutline(hasOutline)
+	, outlineColor(outlineColor)
+	, outlineWidth(outlineWidth)
+	, outlineJoin(outlineJoin)
+{}
+
+
+
+//-------------------------------------------------------
+// Text
+//-------------------------------------------------------
+
+e2d::Text::Text()
+	: _font()
+	, _style()
+	, _textLayout(nullptr)
+	, _textFormat(nullptr)
+{
+}
+
+e2d::Text::Text(const String & text, const Font & font, const Style & style)
+	: _font(font)
+	, _style(style)
 	, _textLayout(nullptr)
 	, _textFormat(nullptr)
 	, _text(text)
@@ -79,24 +95,9 @@ e2d::Text * e2d::Text::create()
 	return Create<Text>();
 }
 
-e2d::Text * e2d::Text::create(const String & text)
+e2d::Text * e2d::Text::create(const String & text, const Font & font, const Style & style)
 {
-	return Create<Text>(text);
-}
-
-e2d::Text * e2d::Text::create(TextStyle textStyle)
-{
-	return Create<Text>(textStyle);
-}
-
-e2d::Text * e2d::Text::create(const String & text, TextStyle textStyle)
-{
-	return Create<Text>(text, textStyle);
-}
-
-e2d::Text * e2d::Text::create(const String & text, const String & fontFamily, double fontSize, UINT32 color, UINT32 fontWeight, bool italic, TextAlign alignment, bool wrapping, double wrappingWidth, double lineSpacing, bool hasUnderline, bool hasStrikethrough, bool hasOutline, UINT32 outlineColor, UINT32 outlineWidth)
-{
-	return Create<Text>(text, fontFamily, fontSize, color, fontWeight, italic, alignment, wrapping, wrappingWidth, lineSpacing, hasUnderline, hasStrikethrough, hasOutline, outlineColor, outlineWidth);
+	return Create<Text>(text, font, style);
 }
 
 e2d::Text::~Text()
@@ -110,24 +111,29 @@ e2d::String e2d::Text::getText() const
 	return _text;
 }
 
-e2d::TextStyle e2d::Text::getTextStyle() const
+e2d::Text::Font e2d::Text::getFont() const
+{
+	return _font;
+}
+
+e2d::Text::Style e2d::Text::getStyle() const
 {
 	return _style;
 }
 
 e2d::String e2d::Text::getFontFamily() const
 {
-	return _style.fontFamily;
+	return _font.family;
 }
 
 double e2d::Text::getFontSize() const
 {
-	return _style.fontSize;
+	return _font.size;
 }
 
-UINT32 e2d::Text::getFontWeight() const
+UINT e2d::Text::getFontWeight() const
 {
-	return _style.fontWeight;
+	return _font.weight;
 }
 
 e2d::Color e2d::Text::getColor() const
@@ -166,7 +172,7 @@ int e2d::Text::getLineCount() const
 
 bool e2d::Text::isItalic() const
 {
-	return _style.italic;
+	return _font.italic;
 }
 
 bool e2d::Text::hasStrikethrough() const
@@ -190,27 +196,33 @@ void e2d::Text::setText(const String& text)
 	_reset();
 }
 
-void e2d::Text::setStyle(const TextStyle& textStyle)
+void e2d::Text::setStyle(const Style& style)
 {
-	_style = textStyle;
+	_style = style;
 	_reset();
 }
 
-void e2d::Text::setFontFamily(const String& fontFamily)
+void e2d::Text::setFont(const Font & font)
 {
-	_style.fontFamily = fontFamily;
+	_font = font;
 	_reset();
 }
 
-void e2d::Text::setFontSize(double fontSize)
+void e2d::Text::setFontFamily(const String& family)
 {
-	_style.fontSize = fontSize;
+	_font.family = family;
 	_reset();
 }
 
-void e2d::Text::setFontWeight(UINT32 fontWeight)
+void e2d::Text::setFontSize(double size)
 {
-	_style.fontWeight = fontWeight;
+	_font.size = size;
+	_reset();
+}
+
+void e2d::Text::setFontWeight(UINT weight)
+{
+	_font.weight = weight;
 	_reset();
 }
 
@@ -221,7 +233,7 @@ void e2d::Text::setColor(Color color)
 
 void e2d::Text::setItalic(bool value)
 {
-	_style.italic = value;
+	_font.italic = value;
 	_reset();
 }
 
@@ -256,7 +268,7 @@ void e2d::Text::setLineSpacing(double lineSpacing)
 	}
 }
 
-void e2d::Text::setAlignment(TextAlign align)
+void e2d::Text::setAlignment(Align align)
 {
 	if (_style.alignment != align)
 	{
@@ -318,13 +330,13 @@ void e2d::Text::onRender()
 		// 获取文本渲染器
 		auto pTextRenderer = Renderer::getCustomTextRenderer();
 		pTextRenderer->SetTextStyle(
-			_style.color.toColorF(),
+			_style.color.toD2DColorF(),
 			_style.hasOutline,
-			_style.outlineColor.toColorF(),
+			_style.outlineColor.toD2DColorF(),
 			float(_style.outlineWidth),
 			D2D1_LINE_JOIN(_style.outlineJoin)
 		);
-		_textLayout->Draw(NULL, pTextRenderer, 0, 0);
+		_textLayout->Draw(nullptr, pTextRenderer, 0, 0);
 	}
 }
 
@@ -341,12 +353,12 @@ void e2d::Text::_createFormat()
 	SafeReleaseInterface(_textFormat);
 
 	HRESULT hr = Renderer::getIDWriteFactory()->CreateTextFormat(
-		_style.fontFamily,
-		NULL,
-		DWRITE_FONT_WEIGHT(_style.fontWeight),
-		_style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
+		_font.family,
+		nullptr,
+		DWRITE_FONT_WEIGHT(_font.weight),
+		_font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
-		float(_style.fontSize),
+		float(_font.size),
 		L"",
 		&_textFormat
 	);
@@ -399,7 +411,7 @@ void e2d::Text::_createLayout()
 		return;
 	}
 	
-	UINT32 length = UINT32(_text.getLength());
+	UINT32 length = (UINT32)_text.getLength();
 
 	// 创建 TextLayout
 	HRESULT hr;

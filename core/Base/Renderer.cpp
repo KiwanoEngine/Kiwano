@@ -30,7 +30,7 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 		// 创建 WIC 绘图工厂，用于统一处理各种格式的图片
 		hr = CoCreateInstance(
 			CLSID_WICImagingFactory,
-			NULL,
+			nullptr,
 			CLSCTX_INPROC_SERVER,
 			IID_IWICImagingFactory,
 			reinterpret_cast<void**>(&s_pIWICFactory)
@@ -60,7 +60,7 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 		// 创建文本格式化对象
 		hr = s_pDWriteFactory->CreateTextFormat(
 			L"",
-			NULL,
+			nullptr,
 			DWRITE_FONT_WEIGHT_NORMAL,
 			DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
@@ -204,7 +204,7 @@ void e2d::Renderer::__render()
 				D2D1_LINE_JOIN_ROUND
 			);
 
-			pTextLayout->Draw(NULL, s_pTextRenderer, 10, 0);
+			pTextLayout->Draw(nullptr, s_pTextRenderer, 10, 0);
 
 			SafeReleaseInterface(pTextLayout);
 		}
@@ -236,7 +236,7 @@ e2d::Color e2d::Renderer::getBackgroundColor()
 
 void e2d::Renderer::setBackgroundColor(Color color)
 {
-	s_nClearColor = color.toColorF();
+	s_nClearColor = color.toD2DColorF();
 }
 
 void e2d::Renderer::showFps(bool show)

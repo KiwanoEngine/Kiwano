@@ -1,7 +1,7 @@
 #include "..\..\e2dshape.h"
 
 e2d::Shape::Shape()
-	: _style(ShapeStyle::SOLID)
+	: _style(Style::SOLID)
 	, _fillColor(Color::BLUE, 0.3)
 	, _lineColor(Color::BLUE, 0.5)
 	, _strokeWidth(1)
@@ -19,26 +19,26 @@ void e2d::Shape::onRender()
 
 	switch (_style)
 	{
-	case ShapeStyle::FILL:
+	case Style::FILL:
 	{
-		pBrush->SetColor(_fillColor.toColorF());
+		pBrush->SetColor(_fillColor.toD2DColorF());
 		this->_renderFill();
 
-		pBrush->SetColor(_lineColor.toColorF());
+		pBrush->SetColor(_lineColor.toD2DColorF());
 		this->_renderLine();
 		break;
 	}
 
-	case ShapeStyle::ROUND:
+	case Style::ROUND:
 	{
-		pBrush->SetColor(_lineColor.toColorF());
+		pBrush->SetColor(_lineColor.toD2DColorF());
 		this->_renderLine();
 		break;
 	}
 
-	case ShapeStyle::SOLID:
+	case Style::SOLID:
 	{
-		pBrush->SetColor(_fillColor.toColorF());
+		pBrush->SetColor(_fillColor.toD2DColorF());
 		this->_renderFill();
 		break;
 	}
@@ -63,7 +63,7 @@ double e2d::Shape::getStrokeWidth() const
 	return _strokeWidth;
 }
 
-e2d::ShapeStyle e2d::Shape::getStyle() const
+e2d::Shape::Style e2d::Shape::getStyle() const
 {
 	return _style;
 }
@@ -83,7 +83,7 @@ void e2d::Shape::setStrokeWidth(double strokeWidth)
 	_strokeWidth = float(strokeWidth);
 }
 
-void e2d::Shape::setStyle(ShapeStyle style)
+void e2d::Shape::setStyle(Style style)
 {
 	_style = style;
 }

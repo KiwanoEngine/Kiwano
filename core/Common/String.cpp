@@ -78,7 +78,7 @@ e2d::String e2d::String::format(const char * format, ...)
 {
 	std::string tmp;
 
-	va_list marker = NULL;
+	va_list marker = nullptr;
 	va_start(marker, format);
 
 	size_t nu_of_chars = _vscprintf(format, marker);
@@ -100,7 +100,7 @@ e2d::String e2d::String::format(const wchar_t * format, ...)
 {
 	std::wstring tmp;
 
-	va_list marker = NULL;
+	va_list marker = nullptr;
 	va_start(marker, format);
 
 	size_t nu_of_chars = _vscwprintf(format, marker);

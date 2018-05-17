@@ -52,6 +52,17 @@ class Window
 	friend Game;
 
 public:
+	// 鼠标指针样式
+	enum class Cursor : int
+	{
+		NORMAL,		/* 默认指针样式 */
+		HAND,		/* 手状指针 */
+		NO,			/* 禁止指针 */
+		WAIT,		/* 沙漏指针 */
+		ARROW_WAIT	/* 默认指针和小沙漏 */
+	};
+
+public:
 	// 修改窗口大小
 	static void setSize(
 		int width,			/* 窗口宽度 */
@@ -179,6 +190,76 @@ class Input
 	friend Game;
 
 public:
+	// 鼠标键值
+	enum class MouseCode : int
+	{
+		LEFT,		/* 鼠标左键 */
+		RIGHT,		/* 鼠标右键 */
+		MIDDLE		/* 鼠标中键 */
+	};
+
+	// 键盘键值
+	enum class KeyCode : int
+	{
+		UP = 0xC8,
+		LEFT = 0xCB,
+		RIGHT = 0xCD,
+		DOWN = 0xD0,
+		ENTER = 0x1C,
+		SPACE = 0x39,
+		ESC = 0x01,
+		BACK = 0x0E,
+		TAB = 0x0F,
+		PAUSE = 0xC5,
+		Q = 0x10,
+		W = 0x11,
+		E = 0x12,
+		R = 0x13,
+		T = 0x14,
+		Y = 0x15,
+		U = 0x16,
+		I = 0x17,
+		O = 0x18,
+		P = 0x19,
+		A = 0x1E,
+		S = 0x1F,
+		D = 0x20,
+		F = 0x21,
+		G = 0x22,
+		H = 0x23,
+		J = 0x24,
+		K = 0x25,
+		L = 0x26,
+		Z = 0x2C,
+		X = 0x2D,
+		C = 0x2E,
+		V = 0x2F,
+		B = 0x30,
+		N = 0x31,
+		M = 0x32,
+		NUM1 = 0x02,
+		NUM2 = 0x03,
+		NUM3 = 0x04,
+		NUM4 = 0x05,
+		NUM5 = 0x06,
+		NUM6 = 0x07,
+		NUM7 = 0x08,
+		NUM8 = 0x09,
+		NUM9 = 0x0A,
+		NUM0 = 0x0B,
+		NUMPAD7 = 0x47,
+		NUMPAD8 = 0x48,
+		NUMPAD9 = 0x49,
+		NUMPAD4 = 0x4B,
+		NUMPAD5 = 0x4C,
+		NUMPAD6 = 0x4D,
+		NUMPAD1 = 0x4F,
+		NUMPAD2 = 0x50,
+		NUMPAD3 = 0x51,
+		NUMPAD0 = 0x52
+	};
+
+public:
 	// 检测键盘某按键是否正被按下
 	static bool isKeyDown(
 		KeyCode key
@@ -194,32 +275,20 @@ public:
 		KeyCode key
 	);
 
-	// 检测鼠标左键是否正被按下
-	static bool isMouseLButtonDown();
+	// 检测鼠标按键是否正被按下
+	static bool isMouseDown(
+		MouseCode code
+	);
 
-	// 检测鼠标右键是否正被按下
-	static bool isMouseRButtonDown();
+	// 检测鼠标按键是否被点击
+	static bool isMousePress(
+		MouseCode code
+	);
 
-	// 检测鼠标中键是否正被按下
-	static bool isMouseMButtonDown();
-
-	// 检测鼠标左键是否被点击
-	static bool isMouseLButtonPress();
-
-	// 检测鼠标右键是否被点击
-	static bool isMouseRButtonPress();
-
-	// 检测鼠标中键是否被点击
-	static bool isMouseMButtonPress();
-
-	// 检测鼠标左键是否正在松开
-	static bool isMouseLButtonRelease();
-
-	// 检测鼠标右键是否正在松开
-	static bool isMouseRButtonRelease();
-
-	// 检测鼠标中键是否正在松开
-	static bool isMouseMButtonRelease();
+	// 检测鼠标按键是否正在松开
+	static bool isMouseRelease(
+		MouseCode code
+	);
 
 	// 获得鼠标X轴坐标值
 	static double getMouseX();

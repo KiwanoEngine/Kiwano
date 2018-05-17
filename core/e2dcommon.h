@@ -225,43 +225,32 @@ public:
 	);
 
 	Color(
-		UINT32 rgb
+		UINT rgb
 	);
 
 	Color(
-		UINT32 rgb,
+		UINT rgb,
 		double alpha
 	);
 
-	D2D1_COLOR_F toColorF() const;
+	D2D1_COLOR_F toD2DColorF() const;
 
 public:
-	enum RGB_VALUE : UINT32
+	enum RGB_VALUE : UINT
 	{
-		ALICE_BLUE = 0xF0F8FF,
-		AQUA = 0x00FFFF,
-		AZURE = 0xF0FFFF,
-		BEIGE = 0xF5F5DC,
 		BLACK = 0x000000,
 		BLUE = 0x0000FF,
 		BLUE_VIOLET = 0x8A2BE2,
 		BROWN = 0xA52A2A,
 		CHOCOLATE = 0xD2691E,
-		CYAN = 0x00FFFF,
 		DARK_BLUE = 0x00008B,
-		DARK_CYAN = 0x008B8B,
-		DARK_GOLDENROD = 0xB8860B,
 		DARK_GRAY = 0xA9A9A9,
 		DARK_GREEN = 0x006400,
 		DARK_ORANGE = 0xFF8C00,
 		DARK_RED = 0x8B0000,
-		DARK_SEA_GREEN = 0x8FBC8F,
 		DARK_VIOLET = 0x9400D3,
-		DEEP_PINK = 0xFF1493,
-		DEEP_SKY_BLUE = 0x00BFFF,
 		FOREST_GREEN = 0x228B22,
 		GOLD = 0xFFD700,
-		GOLDENROD = 0xDAA520,
 		GRAY = 0x808080,
 		GREEN = 0x008000,
 		GREEN_YELLOW = 0xADFF2F,
@@ -275,24 +264,14 @@ public:
 		LIGHT_SKY_BLUE = 0x87CEFA,
 		LIGHT_SLATE_GRAY = 0x778899,
 		LIGHT_YELLOW = 0xFFFFE0,
-		MEDIUM_BLUE = 0x0000CD,
-		MEDIUM_PURPLE = 0x9370DB,
-		MEDIUM_SEA_GREEN = 0x3CB371,
-		MEDIUM_SPRING_GREEN = 0x00FA9A,
-		MEDUIM_VIOLET_RED = 0xC71585,
-		MIDNIGHT_BLUE = 0x191970,
 		ORANGE = 0xFFA500,
 		ORANGE_RED = 0xFF4500,
 		PINK = 0xFFC0CB,
 		PURPLE = 0x800080,
 		RED = 0xFF0000,
-		SEA_GREEN = 0x2E8B57,
-		SEA_SHELL = 0xFFF5EE,
 		SILVER = 0xC0C0C0,
 		SKY_BLUE = 0x87CEEB,
 		SNOW = 0xFFFAFA,
-		SPRING_GREEN = 0x00FF7F,
-		TOMATO = 0xFF6347,
 		VIOLET = 0xEE82EE,
 		WHEAT = 0xF5DEB3,
 		WHITE = 0xFFFFFF,
@@ -304,7 +283,7 @@ public:
 
 protected:
 	void _init(
-		UINT32 rgb,
+		UINT rgb,
 		double alpha
 	);
 
@@ -313,115 +292,6 @@ public:
 	float g;
 	float b;
 	float a;
-};
-
-
-// 字体粗细值
-class FontWeight
-{
-public:
-	enum : UINT32
-	{
-		THIN = 100,
-		EXTRA_LIGHT = 200,
-		ULTRA_LIGHT = 200,
-		LIGHT = 300,
-		SEMI_LIGHT = 350,
-		NORMAL = 400,
-		REGULAR = 400,
-		MEDIUM = 500,
-		DEMI_BOLD = 600,
-		SEMI_BOLD = 600,
-		BOLD = 700,
-		EXTRA_BOLD = 800,
-		ULTRA_BOLD = 800,
-		BLACK = 900,
-		HEAVY = 900,
-		EXTRA_BLACK = 950,
-		ULTRA_BLACK = 950
-	};
-};
-
-
-// 文本对齐方式
-enum class TextAlign : int
-{
-	LEFT,		/* 左对齐 */
-	RIGHT,		/* 右对齐 */
-	CENTER		/* 居中对齐 */
-};
-
-
-// 键值集合
-enum class KeyCode : int
-{
-	UP = 0xC8,
-	LEFT = 0xCB,
-	RIGHT = 0xCD,
-	DOWN = 0xD0,
-	ENTER = 0x1C,
-	SPACE = 0x39,
-	ESC = 0x01,
-	BACK = 0x0E,
-	TAB = 0x0F,
-	PAUSE = 0xC5,
-	Q = 0x10,
-	W = 0x11,
-	E = 0x12,
-	R = 0x13,
-	T = 0x14,
-	Y = 0x15,
-	U = 0x16,
-	I = 0x17,
-	O = 0x18,
-	P = 0x19,
-	A = 0x1E,
-	S = 0x1F,
-	D = 0x20,
-	F = 0x21,
-	G = 0x22,
-	H = 0x23,
-	J = 0x24,
-	K = 0x25,
-	L = 0x26,
-	Z = 0x2C,
-	X = 0x2D,
-	C = 0x2E,
-	V = 0x2F,
-	B = 0x30,
-	N = 0x31,
-	M = 0x32,
-	NUM1 = 0x02,
-	NUM2 = 0x03,
-	NUM3 = 0x04,
-	NUM4 = 0x05,
-	NUM5 = 0x06,
-	NUM6 = 0x07,
-	NUM7 = 0x08,
-	NUM8 = 0x09,
-	NUM9 = 0x0A,
-	NUM0 = 0x0B,
-	NUMPAD7 = 0x47,
-	NUMPAD8 = 0x48,
-	NUMPAD9 = 0x49,
-	NUMPAD4 = 0x4B,
-	NUMPAD5 = 0x4C,
-	NUMPAD6 = 0x4D,
-	NUMPAD1 = 0x4F,
-	NUMPAD2 = 0x50,
-	NUMPAD3 = 0x51,
-	NUMPAD0 = 0x52
-};
-
-
-// 鼠标指针样式
-enum class Cursor : int
-{
-	NORMAL,		/* 默认指针样式 */
-	HAND,		/* 手状指针 */
-	NO,			/* 禁止指针 */
-	WAIT,		/* 沙漏指针 */
-	ARROW_WAIT	/* 默认指针和小沙漏 */
 };
 
 
@@ -435,103 +305,12 @@ enum class Direction : int
 };
 
 
-// 物体交集关系
-enum class Relation : int
-{
-	UNKNOWN = 0,		/* 关系不确定 */
-	DISJOINT = 1,		/* 没有交集 */
-	IS_CONTAINED = 2,	/* 完全被包含 */
-	CONTAINS = 3,		/* 完全包含 */
-	OVERLAP = 4			/* 部分重叠 */
-};
-
-
 // 线条相交样式
 enum class LineJoin : int
 {
 	MITER = 0,
 	BEVEL = 1,
 	ROUND = 2
-};
-
-
-// 形状样式
-enum class ShapeStyle : int
-{
-	SOLID,		/* 填充 */
-	ROUND,		/* 轮廓 */
-	FILL,		/* 轮廓 + 填充 */
-};
-
-
-// 碰撞体类别
-enum class ColliderType : int
-{
-	RECT,		/* 矩形 */
-	CIRCLE,		/* 圆形 */
-	ELLIPSE		/* 椭圆形 */
-};
-
-
-// 文本样式
-class TextStyle
-{
-public:
-	String		fontFamily;			// 字体
-	double		fontSize;			// 字号
-	Color		color;				// 颜色
-	UINT32		fontWeight;			// 粗细值
-	bool		italic;				// 斜体
-	TextAlign	alignment;			// 对齐方式
-	bool		wrapping;			// 打开自动换行
-	double		wrappingWidth;		// 自动换行宽度
-	double		lineSpacing;		// 行间距
-	bool		hasUnderline;		// 下划线
-	bool		hasStrikethrough;	// 删除线
-	bool		hasOutline;			// 显示描边
-	Color		outlineColor;		// 描边颜色
-	double		outlineWidth;		// 描边线宽
-	LineJoin	outlineJoin;		// 描边线相交样式
-
-public:
-	TextStyle();
-
-	TextStyle(
-		const String& fontFamily,
-		double fontSize = 22,
-		Color color = Color::WHITE,
-		UINT32 fontWeight = FontWeight::NORMAL,
-		bool italic = false,
-		TextAlign alignment = TextAlign::LEFT,
-		bool wrapping = false,
-		double wrappingWidth = 0.0,
-		double lineSpacing = 0.0,
-		bool hasUnderline = false,
-		bool hasStrikethrough = false,
-		bool hasOutline = true,
-		Color outlineColor = Color(Color::BLACK, 0.5),
-		double outlineWidth = 1.0,
-		LineJoin outlineJoin = LineJoin::ROUND
-	);
-};
-
-
-// 节点属性
-struct NodeProperty
-{
-	bool visable;		// 可见性
-	double posX;		// X 坐标
-	double posY;		// Y 坐标
-	double width;		// 宽度
-	double height;		// 高度
-	double opacity;		// 透明度
-	double pivotX;		// 中心点 X 坐标
-	double pivotY;		// 中心点 Y 坐标
-	double scaleX;		// 横向缩放
-	double scaleY;		// 纵向缩放
-	double rotation;	// 旋转角度
-	double skewAngleX;	// 横向倾斜角度
-	double skewAngleY;	// 纵向倾斜角度
 };
 
 

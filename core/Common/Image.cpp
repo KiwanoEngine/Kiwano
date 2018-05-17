@@ -195,7 +195,7 @@ bool e2d::Image::preload(const String& filePath)
 	// 创建解码器
 	hr = Renderer::getIWICImagingFactory()->CreateDecoderFromFilename(
 		filePath,
-		NULL,
+		nullptr,
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnLoad,
 		&pDecoder
@@ -221,7 +221,7 @@ bool e2d::Image::preload(const String& filePath)
 			pSource,
 			GUID_WICPixelFormat32bppPBGRA,
 			WICBitmapDitherTypeNone,
-			NULL,
+			nullptr,
 			0.f,
 			WICBitmapPaletteTypeMedianCut
 		);
@@ -232,7 +232,7 @@ bool e2d::Image::preload(const String& filePath)
 		// 从 WIC 位图创建一个 Direct2D 位图
 		hr = Renderer::getRenderTarget()->CreateBitmapFromWicBitmap(
 			pConverter,
-			NULL,
+			nullptr,
 			&pBitmap
 		);
 	}
@@ -325,7 +325,7 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 		// 创建流的解码器
 		hr = Renderer::getIWICImagingFactory()->CreateDecoderFromStream(
 			pStream,
-			NULL,
+			nullptr,
 			WICDecodeMetadataCacheOnLoad,
 			&pDecoder
 		);
@@ -351,7 +351,7 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 			pSource,
 			GUID_WICPixelFormat32bppPBGRA,
 			WICBitmapDitherTypeNone,
-			NULL,
+			nullptr,
 			0.f,
 			WICBitmapPaletteTypeMedianCut
 		);
@@ -362,7 +362,7 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 		// 从 WIC 位图创建一个 Direct2D 位图
 		hr = Renderer::getRenderTarget()->CreateBitmapFromWicBitmap(
 			pConverter,
-			NULL,
+			nullptr,
 			&pBitmap
 		);
 	}

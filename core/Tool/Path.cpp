@@ -18,10 +18,10 @@ bool e2d::Path::__init()
 	// 获取 AppData\Local 文件夹的路径
 	typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
 
-	PWSTR pszPath = NULL;
+	PWSTR pszPath = nullptr;
 	HMODULE hModule = LoadLibrary(L"shell32.dll");
 	pFunSHGetKnownFolderPath SHGetKnownFolderPath = (pFunSHGetKnownFolderPath)GetProcAddress(hModule, "SHGetKnownFolderPath");
-	HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &pszPath);
+	HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &pszPath);
 
 	if (SUCCEEDED(hr))
 	{
@@ -157,7 +157,7 @@ e2d::String e2d::Path::getSaveFilePath(const String& title, const String& defExt
 	ofn.nFilterIndex = 1;								// 过滤器索引
 	ofn.lpstrFile = strFilename;						// 接收返回的文件路径和文件名
 	ofn.nMaxFile = sizeof(strFilename);					// 缓冲区长度
-	ofn.lpstrInitialDir = NULL;							// 初始目录为默认
+	ofn.lpstrInitialDir = nullptr;						// 初始目录为默认
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 	ofn.lpstrTitle = title;								// 标题
 	ofn.lpstrDefExt = defExt;							// 默认追加的扩展名

@@ -10,12 +10,21 @@ class Shape :
 	public Node
 {
 public:
+	// 形状样式
+	enum class Style : int
+	{
+		SOLID,		/* 填充 */
+		ROUND,		/* 轮廓 */
+		FILL,		/* 轮廓 + 填充 */
+	};
+
+public:
 	Shape();
 
 	virtual ~Shape();
 
 	// 获取样式
-	ShapeStyle getStyle() const;
+	Style getStyle() const;
 
 	// 获取填充颜色
 	Color getFillColor() const;
@@ -42,7 +51,7 @@ public:
 	);
 
 	// 设置样式
-	void setStyle(ShapeStyle style);
+	void setStyle(Style style);
 
 	// 渲染形状
 	virtual void onRender() override;
@@ -55,7 +64,7 @@ protected:
 	virtual void _renderFill() = 0;
 
 protected:
-	ShapeStyle	_style;
+	Style	_style;
 	float	_strokeWidth;
 	Color	_lineColor;
 	Color	_fillColor;
