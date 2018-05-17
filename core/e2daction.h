@@ -275,26 +275,26 @@ class ScaleBy :
 public:
 	ScaleBy(
 		double duration,	/* 持续时长 */
-		double scale		/* 缩放比例变化 */
+		double scale		/* 相对变化值 */
 	);
 
 	ScaleBy(
 		double duration,	/* 持续时长 */
-		double scaleX,		/* 横向缩放比例变化 */
-		double scaleY		/* 纵向缩放比例变化 */
+		double scaleX,		/* 横向缩放相对变化值 */
+		double scaleY		/* 纵向缩放相对变化值 */
 	);
 
 	// 创建相对缩放动作
 	static ScaleBy * create(
 		double duration,	/* 持续时长 */
-		double scale		/* 缩放比例变化 */
+		double scale		/* 相对变化值 */
 	);
 
 	// 创建相对缩放动作
 	static ScaleBy * create(
 		double duration,	/* 持续时长 */
-		double scaleX,		/* 横向缩放比例变化 */
-		double scaleY		/* 纵向缩放比例变化 */
+		double scaleX,		/* 横向缩放相对变化值 */
+		double scaleY		/* 纵向缩放相对变化值 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -325,26 +325,26 @@ class ScaleTo :
 public:
 	ScaleTo(
 		double duration,	/* 持续时长 */
-		double scale		/* 缩放至目标比例 */
+		double scale		/* 目标值 */
 	);
 
 	ScaleTo(
 		double duration,	/* 持续时长 */
-		double scaleX,		/* 横向缩放至目标比例 */
-		double scaleY		/* 纵向缩放至目标比例 */
+		double scaleX,		/* 横向缩放目标值 */
+		double scaleY		/* 纵向缩放目标值 */
 	);
 
 	// 创建缩放动作
 	static ScaleTo * create(
 		double duration,	/* 持续时长 */
-		double scale		/* 缩放至目标比例 */
+		double scale		/* 目标值 */
 	);
 
 	// 创建缩放动作
 	static ScaleTo * create(
 		double duration,	/* 持续时长 */
-		double scaleX,		/* 横向缩放至目标比例 */
-		double scaleY		/* 纵向缩放至目标比例 */
+		double scaleX,		/* 横向缩放目标值 */
+		double scaleY		/* 纵向缩放目标值 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -374,13 +374,13 @@ class OpacityBy :
 public:
 	OpacityBy(
 		double duration,	/* 持续时长 */
-		double opacity		/* 透明度相对变化值 */
+		double opacity		/* 相对变化值 */
 	);
 
 	// 创建透明度相对渐变动作
 	static OpacityBy * create(
 		double duration,	/* 持续时长 */
-		double opacity		/* 透明度相对变化值 */
+		double opacity		/* 相对变化值 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -409,13 +409,13 @@ class OpacityTo :
 public:
 	OpacityTo(
 		double duration,	/* 持续时长 */
-		double opacity		/* 透明度渐变至目标值 */
+		double opacity		/* 目标值 */
 	);
 
 	// 创建透明度渐变动作
 	static OpacityTo * create(
 		double duration,	/* 持续时长 */
-		double opacity		/* 透明度渐变至目标值 */
+		double opacity		/* 目标值 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -474,13 +474,13 @@ class RotateBy :
 public:
 	RotateBy(
 		double duration,	/* 持续时长 */
-		double rotation		/* 旋转角度变化值 */
+		double rotation		/* 相对变化值 */
 	);
 
 	// 创建相对旋转动作
 	static RotateBy * create(
 		double duration,	/* 持续时长 */
-		double rotation		/* 旋转角度变化值 */
+		double rotation		/* 相对变化值 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -509,13 +509,13 @@ class RotateTo :
 public:
 	RotateTo(
 		double duration,	/* 持续时长 */
-		double rotation		/* 旋转角度至目标值 */
+		double rotation		/* 目标值 */
 	);
 
 	// 创建旋转动作
 	static RotateTo * create(
 		double duration,	/* 持续时长 */
-		double rotation		/* 旋转角度至目标值 */
+		double rotation		/* 目标值 */
 	);
 
 	// 获取该动作的拷贝对象
