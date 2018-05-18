@@ -222,6 +222,9 @@
     <ClCompile Include="..\..\core\Tool\Music.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Collider\Collision.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />

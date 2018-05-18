@@ -6,6 +6,37 @@ namespace e2d
 {
 
 
+
+// 碰撞事件
+class Collision
+{
+	friend ColliderManager;
+
+public:
+	// 获取碰撞发生时的主动体
+	static Node * getActiveNode();
+
+	// 获取碰撞发生时的被动体
+	static Node * getPassiveNode();
+
+	// 判断碰撞是否由该节点引发
+	// 如果是，返回与其相撞的节点指针，否则返回空
+	static Node * isCausedBy(
+		Node * node
+	);
+
+	// 判断发生碰撞的节点名称是否相同
+	// 若相同，返回其指针，否则返回空
+	static Node * isCausedBy(
+		const String& name
+	);
+
+private:
+	static Node * __activeNode;
+	static Node * __passiveNode;
+};
+
+
 class ColliderManager;
 
 // 碰撞体
@@ -28,7 +59,7 @@ public:
 	enum class Relation : int
 	{
 		UNKNOWN = 0,		/* 关系不确定 */
-		DISJOINT = 1,		/* 没有交集 */
+		DISJOIN = 1,		/* 没有交集 */
 		IS_CONTAINED = 2,	/* 完全被包含 */
 		CONTAINS = 3,		/* 完全包含 */
 		OVERLAP = 4			/* 部分重叠 */

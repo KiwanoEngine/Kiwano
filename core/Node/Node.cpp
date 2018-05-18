@@ -905,14 +905,14 @@ bool e2d::Node::isPointIn(Point point) const
 	return false;
 }
 
-bool e2d::Node::isIntersectWith(const Node * node) const
+bool e2d::Node::isOverlappedWith(const Node * node) const
 {
 	// 如果存在碰撞体，用碰撞体判断
 	if (this->_collider && node->_collider)
 	{
 		Collider::Relation relation = this->_collider->getRelationWith(node->_collider);
 		if ((relation != Collider::Relation::UNKNOWN) &&
-			(relation != Collider::Relation::DISJOINT))
+			(relation != Collider::Relation::DISJOIN))
 		{
 			return true;
 		}

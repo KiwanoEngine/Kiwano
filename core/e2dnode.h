@@ -51,11 +51,6 @@ public:
 	// 渲染节点
 	virtual void onRender() {}
 
-	// 碰撞处理
-	virtual void onCollide(
-		Node* node	/* 发生碰撞的节点 */
-	) {}
-
 	// 获取节点显示状态
 	virtual bool isVisiable() const;
 
@@ -64,8 +59,8 @@ public:
 		Point point
 	) const;
 
-	// 判断两节点是否相交
-	virtual bool isIntersectWith(
+	// 判断两节点是否重叠
+	virtual bool isOverlappedWith(
 		const Node * node
 	) const;
 

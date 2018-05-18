@@ -42,9 +42,6 @@ static std::vector<e2d::Collider*> s_vColliders;
 static std::vector<Listener*> s_vListeners;
 // 碰撞触发状态
 static bool s_bCollisionEnable = false;
-// 发生碰撞的节点
-static e2d::Node * s_pActiveNode = nullptr;
-static e2d::Node * s_pPassiveNode = nullptr;
 
 
 void e2d::ColliderManager::setEnable(bool enable)
@@ -84,6 +81,16 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 	Node* pActiveNode = pActiveCollider->_parentNode;
 	if (pActiveNode)
 	{
+		// 判断两物体是否是相互冲突的物体
+		auto IsCollideWith = [](Node * active, Node * passive) -> bool
+		{
+			unsigned int hash = passive->getHashName();
+			for (auto collider : active->_colliders)
+				if (collider == hash)
+					return true;
+			return false;
+		};
+
 		// 获取节点所在场景
 		Scene* pCurrentScene = pActiveNode->getParentScene();
 
@@ -101,36 +108,23 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 			if (pPassiveNode &&
 				pPassiveNode->getParentScene() == pCurrentScene)
 			{
-				// 判断两物体是否是相互冲突的物体
-				auto IsCollideWith = [](Node * active, Node * passive) -> bool
-				{
-					unsigned int hash = passive->getHashName();
-					for (auto collider : active->_colliders)
-						if (collider == hash)
-							return true;
-					return false;
-				};
-
 				if (IsCollideWith(pActiveNode, pPassiveNode))
 				{
 					// 判断两碰撞体交集情况
 					Collider::Relation relation = pActiveCollider->getRelationWith(pPassiveCollider);
-					// 忽略 UNKNOWN 和 DISJOINT 情况
-					if (relation != Collider::Relation::UNKNOWN && relation != Collider::Relation::DISJOINT)
+					// 忽略 UNKNOWN 和 DISJOIN 情况
+					if (relation != Collider::Relation::UNKNOWN && relation != Collider::Relation::DISJOIN)
 					{
-						s_pActiveNode = pActiveNode;
-						s_pPassiveNode = pPassiveNode;
-						pActiveNode->onCollide(pPassiveNode);
-						pPassiveNode->onCollide(pActiveNode);
-						pCurrentScene->onCollide(pActiveNode, pPassiveNode);
+						Collision::__activeNode = pActiveNode;
+						Collision::__passiveNode = pPassiveNode;
 						ColliderManager::__update();
 					}
+					Collision::__activeNode = nullptr;
+					Collision::__passiveNode = nullptr;
 				}
 			}
 		}
 	}
-	s_pActiveNode = nullptr;
-	s_pPassiveNode = nullptr;
 }
 
 void e2d::ColliderManager::add(const Function& func, const String& name, bool paused)
@@ -194,34 +188,6 @@ void e2d::ColliderManager::stopAll()
 	{
 		listener->stopped = true;
 	}
-}
-
-e2d::Node * e2d::ColliderManager::getActiveNode()
-{
-	return s_pActiveNode;
-}
-
-e2d::Node * e2d::ColliderManager::getPassiveNode()
-{
-	return s_pPassiveNode;
-}
-
-e2d::Node* e2d::ColliderManager::isCausedBy(Node * node)
-{
-	if (s_pActiveNode == node)
-		return s_pPassiveNode;
-	if (s_pPassiveNode == node)
-		return s_pActiveNode;
-	return nullptr;
-}
-
-e2d::Node* e2d::ColliderManager::isCausedBy(const String& name)
-{
-	if (s_pActiveNode->getName() == name)
-		return s_pActiveNode;
-	if (s_pPassiveNode->getName() == name)
-		return s_pPassiveNode;
-	return nullptr;
 }
 
 void e2d::ColliderManager::__addCollider(Collider * pCollider)

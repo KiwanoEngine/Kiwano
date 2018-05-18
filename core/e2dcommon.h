@@ -6,9 +6,28 @@ namespace e2d
 {
 
 
+
+// 方向
+enum class Direction : int
+{
+	UP,			/* 上 */
+	DOWN,		/* 下 */
+	LEFT,		/* 左 */
+	RIGHT		/* 右 */
+};
+
+
+// 线条相交样式
+enum class LineJoin : int
+{
+	MITER = 0,	/* 斜切 */
+	BEVEL = 1,	/* 斜角 */
+	ROUND = 2	/* 圆角 */
+};
+
 class Size;
 
-// 表示坐标的结构体
+// 坐标
 class Point
 {
 public:
@@ -32,7 +51,7 @@ public:
 // 二维向量
 typedef Point Vector;
 
-// 表示大小的结构体
+// 大小
 class Size
 {
 public:
@@ -292,25 +311,6 @@ public:
 	float g;
 	float b;
 	float a;
-};
-
-
-// 方向
-enum class Direction : int
-{
-	UP,			/* 上 */
-	DOWN,		/* 下 */
-	LEFT,		/* 左 */
-	RIGHT		/* 右 */
-};
-
-
-// 线条相交样式
-enum class LineJoin : int
-{
-	MITER = 0,
-	BEVEL = 1,
-	ROUND = 2
 };
 
 
@@ -621,12 +621,6 @@ public:
 
 	// 重写这个函数，它将在离开这个场景时自动执行
 	virtual void onExit() {}
-
-	// 重写这个函数，它将在碰撞发生时自动执行
-	virtual void onCollide(
-		Node* pActiveNode,	/* 碰撞发生时的主动体 */
-		Node* pPassiveNode	/* 碰撞发生时的被动体 */
-	) {}
 
 	// 重写这个函数，它将在关闭窗口时执行（返回 false 将阻止窗口关闭）
 	virtual bool onCloseWindow() { return true; }

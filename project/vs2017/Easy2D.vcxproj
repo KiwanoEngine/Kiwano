@@ -223,6 +223,7 @@
     <ClCompile Include="..\..\core\Collider\ColliderCircle.cpp" />
     <ClCompile Include="..\..\core\Collider\ColliderEllipse.cpp" />
     <ClCompile Include="..\..\core\Collider\ColliderRect.cpp" />
+    <ClCompile Include="..\..\core\Collider\Collision.cpp" />
     <ClCompile Include="..\..\core\Common\Animation.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
     <ClCompile Include="..\..\core\Common\Function.cpp" />
