@@ -202,7 +202,7 @@ void e2d::Button::setClickFunc(const Function& func)
 	_func = func;
 }
 
-void e2d::Button::onFixedUpdate()
+void e2d::Button::_fixedUpdate()
 {
 	if (SceneManager::isTransitioning())
 		return;

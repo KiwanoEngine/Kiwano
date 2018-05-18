@@ -92,14 +92,11 @@ void e2d::Node::_update()
 			}
 		}
 
-		if (_autoUpdate)
+		if (_autoUpdate && !Game::isPaused())
 		{
-			if (!Game::isPaused())
-			{
-				this->onUpdate();
-			}
-			this->onFixedUpdate();
+			this->onUpdate();
 		}
+		this->_fixedUpdate();
 
 		// ∑√Œ  £”‡Ω⁄µ„
 		for (; i < size; ++i)
@@ -107,14 +104,11 @@ void e2d::Node::_update()
 	}
 	else
 	{
-		if (_autoUpdate)
+		if (_autoUpdate && !Game::isPaused())
 		{
-			if (!Game::isPaused())
-			{
-				this->onUpdate();
-			}
-			this->onFixedUpdate();
+			this->onUpdate();
 		}
+		this->_fixedUpdate();
 	}
 }
 
@@ -234,6 +228,10 @@ void e2d::Node::_updateOpacity()
 	{
 		child->_updateOpacity();
 	}
+}
+
+void e2d::Node::_fixedUpdate()
+{
 }
 
 bool e2d::Node::isVisiable() const

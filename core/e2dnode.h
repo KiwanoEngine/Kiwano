@@ -48,9 +48,6 @@ public:
 	// 更新节点
 	virtual void onUpdate() {}
 
-	// 固定地更新（游戏暂停时仍然运行）
-	virtual void onFixedUpdate() {}
-
 	// 渲染节点
 	virtual void onRender() {}
 
@@ -458,6 +455,9 @@ protected:
 
 	// 更新节点透明度
 	void _updateOpacity();
+
+	// 固定更新
+	virtual void _fixedUpdate();
 
 protected:
 	String		_name;
@@ -963,9 +963,6 @@ public:
 		const Function& func
 	);
 
-	// 更新按钮状态
-	virtual void onFixedUpdate() override;
-
 protected:
 	// 按钮状态枚举
 	enum class ButtonState { NORMAL, MOUSEOVER, SELECTED };
@@ -978,6 +975,9 @@ protected:
 
 	// 执行按钮函数对象
 	virtual void _runCallback();
+
+	// 更新按钮状态
+	virtual void _fixedUpdate() override;
 
 protected:
 	Node *		_normal;
