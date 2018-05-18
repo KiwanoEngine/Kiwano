@@ -8,12 +8,12 @@ e2d::JumpTo::JumpTo(double duration, const Point & pos, double height, int jumps
 
 e2d::JumpTo * e2d::JumpTo::create(double duration, const Point & pos, double height, int jumps)
 {
-	return Create<JumpTo>(duration, pos, height, jumps);
+	return GC::create<JumpTo>(duration, pos, height, jumps);
 }
 
 e2d::JumpTo * e2d::JumpTo::clone() const
 {
-	return Create<JumpTo>(_duration, _endPos, _height, _jumps);
+	return GC::create<JumpTo>(_duration, _endPos, _height, _jumps);
 }
 
 void e2d::JumpTo::_init()

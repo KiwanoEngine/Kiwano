@@ -28,17 +28,17 @@ e2d::ColliderCircle::ColliderCircle(Node * node)
 
 e2d::ColliderCircle * e2d::ColliderCircle::create()
 {
-	return Create<ColliderCircle>();
+	return GC::create<ColliderCircle>();
 }
 
 e2d::ColliderCircle * e2d::ColliderCircle::create(Point center, double radius)
 {
-	return Create<ColliderCircle>(center, radius);
+	return GC::create<ColliderCircle>(center, radius);
 }
 
 e2d::ColliderCircle * e2d::ColliderCircle::create(Node * node)
 {
-	return Create<ColliderCircle>(node);
+	return GC::create<ColliderCircle>(node);
 }
 
 e2d::ColliderCircle::~ColliderCircle()

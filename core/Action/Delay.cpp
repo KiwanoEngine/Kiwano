@@ -8,17 +8,17 @@ e2d::Delay::Delay(double duration)
 
 e2d::Delay * e2d::Delay::create(double duration)
 {
-	return Create<Delay>(duration);
+	return GC::create<Delay>(duration);
 }
 
 e2d::Delay * e2d::Delay::clone() const
 {
-	return Create<Delay>(_delay);
+	return GC::create<Delay>(_delay);
 }
 
 e2d::Delay * e2d::Delay::reverse() const
 {
-	return Create<Delay>(_delay);
+	return GC::create<Delay>(_delay);
 }
 
 void e2d::Delay::reset()

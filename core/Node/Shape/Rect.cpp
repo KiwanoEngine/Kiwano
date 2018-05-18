@@ -18,17 +18,17 @@ e2d::Rect::Rect(Point topLeft, Size size)
 
 e2d::Rect * e2d::Rect::create()
 {
-	return Create<Rect>();
+	return GC::create<Rect>();
 }
 
 e2d::Rect * e2d::Rect::create(Size size)
 {
-	return Create<Rect>(size);
+	return GC::create<Rect>(size);
 }
 
 e2d::Rect * e2d::Rect::create(Point topLeft, Size size)
 {
-	return Create<Rect>(topLeft, size);
+	return GC::create<Rect>(topLeft, size);
 }
 
 e2d::Rect::~Rect()

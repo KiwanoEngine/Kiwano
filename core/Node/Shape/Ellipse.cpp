@@ -24,17 +24,17 @@ e2d::Ellipse::Ellipse(Point center, double radiusX, double radiusY)
 
 e2d::Ellipse * e2d::Ellipse::create()
 {
-	return Create<Ellipse>();
+	return GC::create<Ellipse>();
 }
 
 e2d::Ellipse * e2d::Ellipse::create(double radiusX, double radiusY)
 {
-	return Create<Ellipse>(radiusX, radiusY);
+	return GC::create<Ellipse>(radiusX, radiusY);
 }
 
 e2d::Ellipse * e2d::Ellipse::create(Point center, double radiusX, double radiusY)
 {
-	return Create<Ellipse>(center, radiusX, radiusY);
+	return GC::create<Ellipse>(center, radiusX, radiusY);
 }
 
 e2d::Ellipse::~Ellipse()

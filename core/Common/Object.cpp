@@ -13,7 +13,7 @@ e2d::Object::~Object()
 
 void e2d::Object::autorelease()
 {
-	ObjectManager::__add(this);
+	GC::__add(this);
 }
 
 void e2d::Object::retain()
@@ -24,7 +24,7 @@ void e2d::Object::retain()
 void e2d::Object::release()
 {
 	_refCount--;
-	ObjectManager::flush();
+	GC::notify();
 }
 
 int e2d::Object::getRefCount() const

@@ -1,4 +1,4 @@
-#include "..\e2dcommon.h"
+#include "..\e2daction.h"
 
 e2d::Animation::Animation()
 	: _interval(1)
@@ -24,22 +24,22 @@ e2d::Animation::Animation(double interval, const std::vector<Image*>& frames)
 
 e2d::Animation * e2d::Animation::create()
 {
-	return Create<Animation>();
+	return GC::create<Animation>();
 }
 
 e2d::Animation * e2d::Animation::create(const std::vector<Image*>& frames)
 {
-	return Create<Animation>(frames);
+	return GC::create<Animation>(frames);
 }
 
 e2d::Animation * e2d::Animation::create(double interval)
 {
-	return Create<Animation>(interval);
+	return GC::create<Animation>(interval);
 }
 
 e2d::Animation * e2d::Animation::create(double interval, const std::vector<Image*>& frames)
 {
-	return Create<Animation>(interval, frames);
+	return GC::create<Animation>(interval, frames);
 }
 
 e2d::Animation::~Animation()
@@ -55,7 +55,7 @@ void e2d::Animation::onDestroy()
 {
 	for (auto frame : _frames)
 	{
-		SafeRelease(frame);
+		GC::release(frame);
 	}
 }
 
@@ -88,7 +88,7 @@ const std::vector<e2d::Image*>& e2d::Animation::getFrames() const
 
 e2d::Animation * e2d::Animation::clone() const
 {
-	auto animation = Create<Animation>(_interval);
+	auto animation = GC::create<Animation>(_interval);
 	for (auto frame : _frames)
 	{
 		animation->add(frame);

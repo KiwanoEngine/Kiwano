@@ -11,12 +11,12 @@ e2d::Spawn::Spawn(const std::vector<Action*>& actions)
 
 e2d::Spawn * e2d::Spawn::create()
 {
-	return Create<Spawn>();
+	return GC::create<Spawn>();
 }
 
 e2d::Spawn * e2d::Spawn::create(const std::vector<Action*>& actions)
 {
-	return Create<Spawn>(actions);
+	return GC::create<Spawn>(actions);
 }
 
 e2d::Spawn::~Spawn()
@@ -42,7 +42,7 @@ void e2d::Spawn::onDestroy()
 	Action::onDestroy();
 	for (auto action : _actions)
 	{
-		SafeRelease(action);
+		GC::release(action);
 	}
 }
 
@@ -105,7 +105,7 @@ void e2d::Spawn::add(const std::vector<Action*>& actions)
 
 e2d::Spawn * e2d::Spawn::clone() const
 {
-	auto spawn = Create<Spawn>();
+	auto spawn = GC::create<Spawn>();
 	for (const auto& action : _actions)
 	{
 		if (action)
@@ -118,7 +118,7 @@ e2d::Spawn * e2d::Spawn::clone() const
 
 e2d::Spawn * e2d::Spawn::reverse() const
 {
-	auto spawn = Create<Spawn>();
+	auto spawn = GC::create<Spawn>();
 	if (!_actions.empty())
 	{
 		std::vector<Action*> newActions(_actions.size());

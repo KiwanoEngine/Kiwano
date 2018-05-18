@@ -44,27 +44,27 @@ e2d::Image::Image(int resNameId, const String& resType, double cropX, double cro
 
 e2d::Image * e2d::Image::create()
 {
-	return Create<Image>();
+	return GC::create<Image>();
 }
 
 e2d::Image * e2d::Image::create(const String & filePath)
 {
-	return Create<Image>(filePath);
+	return GC::create<Image>(filePath);
 }
 
 e2d::Image * e2d::Image::create(int resNameId, const String & resType)
 {
-	return Create<Image>(resNameId, resType);
+	return GC::create<Image>(resNameId, resType);
 }
 
 e2d::Image * e2d::Image::create(const String & filePath, double cropX, double cropY, double cropWidth, double cropHeight)
 {
-	return Create<Image>(filePath, cropX, cropY, cropWidth, cropHeight);
+	return GC::create<Image>(filePath, cropX, cropY, cropWidth, cropHeight);
 }
 
 e2d::Image * e2d::Image::create(int resNameId, const String & resType, double cropX, double cropY, double cropWidth, double cropHeight)
 {
-	return Create<Image>(resNameId, resType, cropX, cropY, cropWidth, cropHeight);
+	return GC::create<Image>(resNameId, resType, cropX, cropY, cropWidth, cropHeight);
 }
 
 e2d::Image::~Image()

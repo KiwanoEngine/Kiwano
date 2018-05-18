@@ -92,12 +92,12 @@ e2d::Text::Text(const String & text, const Font & font, const Style & style)
 
 e2d::Text * e2d::Text::create()
 {
-	return Create<Text>();
+	return GC::create<Text>();
 }
 
 e2d::Text * e2d::Text::create(const String & text, const Font & font, const Style & style)
 {
-	return Create<Text>(text, font, style);
+	return GC::create<Text>(text, font, style);
 }
 
 e2d::Text::~Text()

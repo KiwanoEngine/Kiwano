@@ -8,12 +8,12 @@ e2d::MoveTo::MoveTo(double duration, Point pos)
 
 e2d::MoveTo * e2d::MoveTo::create(double duration, Point pos)
 {
-	return Create<MoveTo>(duration, pos);
+	return GC::create<MoveTo>(duration, pos);
 }
 
 e2d::MoveTo * e2d::MoveTo::clone() const
 {
-	return Create<MoveTo>(_duration, _endPos);
+	return GC::create<MoveTo>(_duration, _endPos);
 }
 
 void e2d::MoveTo::_init()

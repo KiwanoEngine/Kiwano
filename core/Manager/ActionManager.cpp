@@ -166,7 +166,7 @@ void e2d::ActionManager::__clearAllBindedWith(Node * target)
 			auto a = s_vRunningActions[i];
 			if (a->getTarget() == target)
 			{
-				SafeRelease(a);
+				GC::release(a);
 				s_vRunningActions.erase(s_vRunningActions.begin() + i);
 			}
 			else
@@ -181,7 +181,7 @@ void e2d::ActionManager::__uninit()
 {
 	for (auto action : s_vRunningActions)
 	{
-		SafeRelease(action);
+		GC::release(action);
 	}
 	s_vActions.clear();
 	s_vRunningActions.clear();

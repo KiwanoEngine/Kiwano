@@ -37,13 +37,13 @@ e2d::Node::Node()
 {
 	if (s_fDefaultColliderEnabled)
 	{
-		this->setCollider(Create<ColliderRect>(this));
+		this->setCollider(GC::create<ColliderRect>(this));
 	}
 }
 
 e2d::Node * e2d::Node::create()
 {
-	return Create<Node>();
+	return GC::create<Node>();
 }
 
 e2d::Node::~Node()
@@ -549,19 +549,19 @@ void e2d::Node::setCollider(Collider::Type type)
 	{
 	case Collider::Type::RECT:
 	{
-		this->setCollider(Create<ColliderRect>(this));
+		this->setCollider(GC::create<ColliderRect>(this));
 		break;
 	}
 
 	case Collider::Type::CIRCLE:
 	{
-		this->setCollider(Create<ColliderCircle>(this));
+		this->setCollider(GC::create<ColliderCircle>(this));
 		break;
 	}
 
 	case Collider::Type::ELLIPSE:
 	{
-		this->setCollider(Create<ColliderEllipse>(this));
+		this->setCollider(GC::create<ColliderEllipse>(this));
 		break;
 	}
 
@@ -983,7 +983,7 @@ void e2d::Node::onDestroy()
 	ColliderManager::__removeCollider(_collider);
 	for (auto child : _children)
 	{
-		SafeRelease(child);
+		GC::release(child);
 	}
 }
 

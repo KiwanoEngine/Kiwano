@@ -9,12 +9,12 @@ e2d::RotateTo::RotateTo(double duration, double rotation)
 
 e2d::RotateTo * e2d::RotateTo::create(double duration, double rotation)
 {
-	return Create<RotateTo>(duration, rotation);
+	return GC::create<RotateTo>(duration, rotation);
 }
 
 e2d::RotateTo * e2d::RotateTo::clone() const
 {
-	return Create<RotateTo>(_duration, _endVal);
+	return GC::create<RotateTo>(_duration, _endVal);
 }
 
 void e2d::RotateTo::_init()

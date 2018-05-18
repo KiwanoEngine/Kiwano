@@ -21,7 +21,7 @@ e2d::Scene::Scene()
 
 e2d::Scene * e2d::Scene::create()
 {
-	return Create<Scene>();
+	return GC::create<Scene>();
 }
 
 e2d::Scene::~Scene()
@@ -102,5 +102,5 @@ void e2d::Scene::showCollider(bool visiable)
 
 void e2d::Scene::onDestroy()
 {
-	SafeRelease(_root);
+	GC::release(_root);
 }

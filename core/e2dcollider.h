@@ -7,6 +7,8 @@ namespace e2d
 
 
 
+class ColliderManager;
+
 // Åö×²ÊÂ¼ş
 class Collision
 {
@@ -36,8 +38,6 @@ private:
 	static Node * __passiveNode;
 };
 
-
-class ColliderManager;
 
 // Åö×²Ìå
 class Collider :

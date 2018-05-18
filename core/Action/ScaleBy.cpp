@@ -17,12 +17,12 @@ e2d::ScaleBy::ScaleBy(double duration, double scaleX, double scaleY)
 
 e2d::ScaleBy * e2d::ScaleBy::create(double duration, double scale)
 {
-	return Create<ScaleBy>(duration, scale);
+	return GC::create<ScaleBy>(duration, scale);
 }
 
 e2d::ScaleBy * e2d::ScaleBy::create(double duration, double scaleX, double scaleY)
 {
-	return Create<ScaleBy>(duration, scaleX, scaleY);
+	return GC::create<ScaleBy>(duration, scaleX, scaleY);
 }
 
 void e2d::ScaleBy::_init()
@@ -48,10 +48,10 @@ void e2d::ScaleBy::_update()
 
 e2d::ScaleBy * e2d::ScaleBy::clone() const
 {
-	return Create<ScaleBy>(_duration, _deltaX, _deltaY);
+	return GC::create<ScaleBy>(_duration, _deltaX, _deltaY);
 }
 
 e2d::ScaleBy * e2d::ScaleBy::reverse() const
 {
-	return Create<ScaleBy>(_duration, -_deltaX, -_deltaY);
+	return GC::create<ScaleBy>(_duration, -_deltaX, -_deltaY);
 }

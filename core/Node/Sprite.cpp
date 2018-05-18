@@ -40,32 +40,32 @@ e2d::Sprite::Sprite(int resNameId, const String& resType, double x, double y, do
 
 e2d::Sprite * e2d::Sprite::create()
 {
-	return Create<Sprite>();
+	return GC::create<Sprite>();
 }
 
 e2d::Sprite * e2d::Sprite::create(Image * image)
 {
-	return Create<Sprite>(image);
+	return GC::create<Sprite>(image);
 }
 
 e2d::Sprite * e2d::Sprite::create(const String & filePath)
 {
-	return Create<Sprite>(filePath);
+	return GC::create<Sprite>(filePath);
 }
 
 e2d::Sprite * e2d::Sprite::create(int resNameId, const String & resType)
 {
-	return Create<Sprite>(resNameId, resType);
+	return GC::create<Sprite>(resNameId, resType);
 }
 
 e2d::Sprite * e2d::Sprite::create(const String & filePath, double x, double y, double width, double height)
 {
-	return Create<Sprite>(filePath, x, y, width, height);
+	return GC::create<Sprite>(filePath, x, y, width, height);
 }
 
 e2d::Sprite * e2d::Sprite::create(int resNameId, const String & resType, double x, double y, double width, double height)
 {
-	return Create<Sprite>(resNameId, resType, x, y, width, height);
+	return GC::create<Sprite>(resNameId, resType, x, y, width, height);
 }
 
 e2d::Sprite::~Sprite()
@@ -76,7 +76,7 @@ bool e2d::Sprite::open(Image * image)
 {
 	if (image)
 	{
-		SafeRelease(_image);
+		GC::release(_image);
 		_image = image;
 		_image->retain();
 
@@ -90,7 +90,7 @@ bool e2d::Sprite::open(const String& filePath)
 {
 	if (!_image)
 	{
-		_image = Create<Image>();
+		_image = GC::create<Image>();
 		_image->retain();
 	}
 
@@ -106,7 +106,7 @@ bool e2d::Sprite::open(int resNameId, const String& resType)
 {
 	if (!_image)
 	{
-		_image = Create<Image>();
+		_image = GC::create<Image>();
 		_image->retain();
 	}
 
@@ -158,5 +158,5 @@ void e2d::Sprite::onRender()
 void e2d::Sprite::onDestroy()
 {
 	Node::onDestroy();
-	SafeRelease(_image);
+	GC::release(_image);
 }

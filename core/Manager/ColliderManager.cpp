@@ -212,7 +212,7 @@ void e2d::ColliderManager::__removeCollider(Collider * pCollider)
 		{
 			if (s_vColliders[i] == pCollider)
 			{
-				SafeRelease(pCollider);
+				GC::release(pCollider);
 				s_vColliders.erase(s_vColliders.begin() + i);
 				return;
 			}

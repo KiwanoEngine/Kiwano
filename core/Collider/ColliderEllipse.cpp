@@ -28,17 +28,17 @@ e2d::ColliderEllipse::ColliderEllipse(Node * node)
 
 e2d::ColliderEllipse * e2d::ColliderEllipse::create()
 {
-	return Create<ColliderEllipse>();
+	return GC::create<ColliderEllipse>();
 }
 
 e2d::ColliderEllipse * e2d::ColliderEllipse::create(Point center, double radiusX, double radiusY)
 {
-	return Create<ColliderEllipse>(center, radiusX, radiusY);
+	return GC::create<ColliderEllipse>(center, radiusX, radiusY);
 }
 
 e2d::ColliderEllipse * e2d::ColliderEllipse::create(Node * node)
 {
-	return Create<ColliderEllipse>(node);
+	return GC::create<ColliderEllipse>(node);
 }
 
 e2d::ColliderEllipse::~ColliderEllipse()

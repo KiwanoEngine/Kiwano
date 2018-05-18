@@ -21,17 +21,17 @@ e2d::Circle::Circle(Point center, double radius)
 
 e2d::Circle * e2d::Circle::create()
 {
-	return Create<Circle>();
+	return GC::create<Circle>();
 }
 
 e2d::Circle * e2d::Circle::create(double radius)
 {
-	return Create<Circle>(radius);
+	return GC::create<Circle>(radius);
 }
 
 e2d::Circle * e2d::Circle::create(Point center, double radius)
 {
-	return Create<Circle>(center, radius);
+	return GC::create<Circle>(center, radius);
 }
 
 e2d::Circle::~Circle()

@@ -13,12 +13,12 @@ e2d::Sequence::Sequence(const std::vector<Action*>& actions)
 
 e2d::Sequence * e2d::Sequence::create()
 {
-	return Create<Sequence>();
+	return GC::create<Sequence>();
 }
 
 e2d::Sequence * e2d::Sequence::create(const std::vector<Action*>& actions)
 {
-	return Create<Sequence>(actions);
+	return GC::create<Sequence>(actions);
 }
 
 e2d::Sequence::~Sequence()
@@ -45,7 +45,7 @@ void e2d::Sequence::onDestroy()
 	Action::onDestroy();
 	for (auto action : _actions)
 	{
-		SafeRelease(action);
+		GC::release(action);
 	}
 }
 
@@ -107,7 +107,7 @@ void e2d::Sequence::add(const std::vector<Action*>& actions)
 
 e2d::Sequence * e2d::Sequence::clone() const
 {
-	auto sequence = Create<Sequence>();
+	auto sequence = GC::create<Sequence>();
 	for (const auto& action : _actions)
 	{
 		if (action)
@@ -120,7 +120,7 @@ e2d::Sequence * e2d::Sequence::clone() const
 
 e2d::Sequence * e2d::Sequence::reverse() const
 {
-	auto sequence = Create<Sequence>();
+	auto sequence = GC::create<Sequence>();
 	if (!_actions.empty())
 	{
 		std::vector<Action*> newActions(_actions.size());

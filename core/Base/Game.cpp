@@ -145,7 +145,7 @@ int e2d::Game::start(bool autoRelease/* true */)
 				Time::__updateLast();		// 刷新时间信息
 			}
 			Renderer::__render();			// 渲染游戏画面
-			ObjectManager::__update();		// 刷新内存池
+			GC::__update();		// 刷新内存池
 		}
 		else
 		{
@@ -206,7 +206,7 @@ void e2d::Game::destroy()
 	// 回收音乐播放器资源
 	Player::__uninit();
 	// 删除所有对象
-	ObjectManager::__clear();
+	GC::__clear();
 	// 清空图片缓存
 	Image::clearCache();
 	// 回收音乐相关资源

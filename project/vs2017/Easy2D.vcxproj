@@ -197,6 +197,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Action\Action.cpp" />
+    <ClCompile Include="..\..\core\Action\Animation.cpp" />
     <ClCompile Include="..\..\core\Action\CallFunc.cpp" />
     <ClCompile Include="..\..\core\Action\Delay.cpp" />
     <ClCompile Include="..\..\core\Action\JumpBy.cpp" />
@@ -215,6 +216,7 @@
     <ClCompile Include="..\..\core\Action\ActionGradual.cpp" />
     <ClCompile Include="..\..\core\Action\Spawn.cpp" />
     <ClCompile Include="..\..\core\Base\Game.cpp" />
+    <ClCompile Include="..\..\core\Base\GC.cpp" />
     <ClCompile Include="..\..\core\Base\Input.cpp" />
     <ClCompile Include="..\..\core\Base\Renderer.cpp" />
     <ClCompile Include="..\..\core\Base\Time.cpp" />
@@ -224,7 +226,6 @@
     <ClCompile Include="..\..\core\Collider\ColliderEllipse.cpp" />
     <ClCompile Include="..\..\core\Collider\ColliderRect.cpp" />
     <ClCompile Include="..\..\core\Collider\Collision.cpp" />
-    <ClCompile Include="..\..\core\Common\Animation.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
     <ClCompile Include="..\..\core\Common\Function.cpp" />
     <ClCompile Include="..\..\core\Common\Object.cpp" />
@@ -236,7 +237,6 @@
     <ClCompile Include="..\..\core\Custom\CustomTextRenderer.cpp" />
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />
     <ClCompile Include="..\..\core\Manager\InputManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\ObjectManager.cpp" />
     <ClCompile Include="..\..\core\Manager\ColliderManager.cpp" />
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
     <ClCompile Include="..\..\core\Node\Button.cpp" />

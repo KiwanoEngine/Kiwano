@@ -24,17 +24,17 @@ e2d::RoundRect::RoundRect(Point topLeft, Size size, double radiusX, double radiu
 
 e2d::RoundRect * e2d::RoundRect::create()
 {
-	return Create<RoundRect>();
+	return GC::create<RoundRect>();
 }
 
 e2d::RoundRect * e2d::RoundRect::create(Size size, double radiusX, double radiusY)
 {
-	return Create<RoundRect>(size, radiusX, radiusY);
+	return GC::create<RoundRect>(size, radiusX, radiusY);
 }
 
 e2d::RoundRect * e2d::RoundRect::create(Point topLeft, Size size, double radiusX, double radiusY)
 {
-	return Create<RoundRect>(topLeft, size, radiusX, radiusY);
+	return GC::create<RoundRect>(topLeft, size, radiusX, radiusY);
 }
 
 e2d::RoundRect::~RoundRect()

@@ -382,4 +382,65 @@ private:
 	static void __discardResources();
 };
 
+
+// 垃圾回收装置
+class GC
+{
+	friend Game;
+	friend Object;
+
+public:
+	// 创建可自动回收内存的对象
+	template <typename Type, typename... Args>
+	static inline Type * create(Args&&... args)
+	{
+		auto newObj = new (std::nothrow) Type(std::forward<Args>(args)...);
+		if (newObj)
+		{
+			newObj->autorelease();
+			return newObj;
+		}
+		return nullptr;
+	}
+
+	// 保留对象
+	template <typename Type>
+	static inline void retain(Type*& p)
+	{
+		if (p != nullptr)
+		{
+			p->retain();
+		}
+	}
+
+	// 释放对象
+	template <typename Type>
+	static inline void release(Type*& p)
+	{
+		if (p != nullptr)
+		{
+			p->release();
+			p = nullptr;
+		}
+	}
+
+	// 通知 GC 回收垃圾内存
+	static void notify();
+
+	// 手动回收垃圾内存
+	static void flush();
+
+private:
+	// 将对象放入 GC
+	static void __add(
+		Object * pObject
+	);
+
+	// 更新 GC
+	static void __update();
+
+	// 清空所有对象
+	static void __clear();
+};
+
 }

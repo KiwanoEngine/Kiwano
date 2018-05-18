@@ -9,7 +9,7 @@ e2d::OpacityBy::OpacityBy(double duration, double opacity)
 
 e2d::OpacityBy * e2d::OpacityBy::create(double duration, double opacity)
 {
-	return Create<OpacityBy>(duration, opacity);
+	return GC::create<OpacityBy>(duration, opacity);
 }
 
 void e2d::OpacityBy::_init()
@@ -34,10 +34,10 @@ void e2d::OpacityBy::_update()
 
 e2d::OpacityBy * e2d::OpacityBy::clone() const
 {
-	return Create<OpacityBy>(_duration, _deltaVal);
+	return GC::create<OpacityBy>(_duration, _deltaVal);
 }
 
 e2d::OpacityBy * e2d::OpacityBy::reverse() const
 {
-	return Create<OpacityBy>(_duration, -_deltaVal);
+	return GC::create<OpacityBy>(_duration, -_deltaVal);
 }

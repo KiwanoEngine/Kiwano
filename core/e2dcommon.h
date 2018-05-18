@@ -523,80 +523,6 @@ protected:
 };
 
 
-// 帧动画
-class Animation :
-	public Object
-{
-public:
-	Animation();
-
-	Animation(
-		const std::vector<Image*>& frames	/* 关键帧数组 */
-	);
-
-	Animation(
-		double interval						/* 帧间隔（秒） */
-	);
-
-	Animation(
-		double interval,					/* 帧间隔（秒） */
-		const std::vector<Image*>& frames	/* 关键帧数组 */
-	);
-
-	// 创建帧动画
-	static Animation * create();
-
-	// 创建帧动画
-	static Animation * create(
-		const std::vector<Image*>& frames	/* 关键帧数组 */
-	);
-
-	// 创建特定帧间隔的帧动画
-	static Animation * create(
-		double interval						/* 帧间隔（秒） */
-	);
-
-	// 创建特定帧间隔的帧动画
-	static Animation * create(
-		double interval,					/* 帧间隔（秒） */
-		const std::vector<Image*>& frames	/* 关键帧数组 */
-	);
-
-	virtual ~Animation();
-
-	// 添加关键帧
-	void add(
-		Image * frame	/* 关键帧 */
-	);
-
-	// 添加多个关键帧
-	void add(
-		const std::vector<Image*>& frames	/* 关键帧列表 */
-	);
-
-	// 获取帧间隔
-	double getInterval() const;
-
-	// 获取关键帧
-	const std::vector<Image*>& getFrames() const;
-
-	// 设置每一帧的时间间隔
-	void setInterval(
-		double interval		/* 帧间隔（秒） */
-	);
-
-	// 获取动画的拷贝对象
-	virtual Animation * clone() const;
-
-	// 销毁对象
-	virtual void onDestroy() override;
-
-protected:
-	double	_interval;
-	std::vector<Image*> _frames;
-};
-
-
 class Node;
 class SceneManager;
 class Transition;
@@ -686,33 +612,6 @@ protected:
 	bool _colliderVisiable;
 	Node * _root;
 };
-
-
-template <typename Type, typename... Types>
-inline Type * Create(Types&&... args)
-{
-	auto newObj = new (std::nothrow) Type(std::forward<Types>(args)...);
-	if (newObj)
-	{
-		newObj->autorelease();
-		return newObj;
-	}
-	else
-	{
-		return nullptr;
-	}
-}
-
-
-template <typename Type>
-inline void SafeRelease(Type*& p)
-{ 
-	if (p != nullptr)
-	{ 
-		p->release(); 
-		p = nullptr; 
-	}
-}
 
 
 }

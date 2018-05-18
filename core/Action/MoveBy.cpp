@@ -9,7 +9,7 @@ e2d::MoveBy::MoveBy(double duration, Vector vector)
 
 e2d::MoveBy * e2d::MoveBy::create(double duration, Vector vector)
 {
-	return Create<MoveBy>(duration, vector);
+	return GC::create<MoveBy>(duration, vector);
 }
 
 void e2d::MoveBy::_init()
@@ -34,10 +34,10 @@ void e2d::MoveBy::_update()
 
 e2d::MoveBy * e2d::MoveBy::clone() const
 {
-	return Create<MoveBy>(_duration, _deltaPos);
+	return GC::create<MoveBy>(_duration, _deltaPos);
 }
 
 e2d::MoveBy * e2d::MoveBy::reverse() const
 {
-	return Create<MoveBy>(_duration, -_deltaPos);
+	return GC::create<MoveBy>(_duration, -_deltaPos);
 }

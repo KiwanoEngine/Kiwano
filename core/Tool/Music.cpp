@@ -70,17 +70,17 @@ e2d::Music::~Music()
 
 e2d::Music * e2d::Music::create()
 {
-	return Create<Music>();
+	return GC::create<Music>();
 }
 
 e2d::Music * e2d::Music::create(const e2d::String & filePath)
 {
-	return Create<Music>(filePath);
+	return GC::create<Music>(filePath);
 }
 
 e2d::Music * e2d::Music::create(int resNameId, const String & resType)
 {
-	return Create<Music>(resNameId, resType);
+	return GC::create<Music>(resNameId, resType);
 }
 
 bool e2d::Music::open(const e2d::String& filePath)

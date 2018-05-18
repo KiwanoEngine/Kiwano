@@ -19,12 +19,12 @@ e2d::TransitionFade::TransitionFade(double fadeOutDuration, double fadeInDuratio
 
 e2d::TransitionFade * e2d::TransitionFade::create(double duration)
 {
-	return Create<TransitionFade>(duration);
+	return GC::create<TransitionFade>(duration);
 }
 
 e2d::TransitionFade * e2d::TransitionFade::create(double fadeOutDuration, double fadeInDuration)
 {
-	return Create<TransitionFade>(fadeOutDuration, fadeInDuration);
+	return GC::create<TransitionFade>(fadeOutDuration, fadeInDuration);
 }
 
 void e2d::TransitionFade::_init(Scene * prev, Scene * next)

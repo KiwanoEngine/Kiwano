@@ -54,9 +54,6 @@
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\ObjectManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Node\Button.cpp">
       <Filter>Node</Filter>
     </ClCompile>
@@ -207,9 +204,6 @@
     <ClCompile Include="..\..\core\Action\Animate.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Animation.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Action\JumpBy.cpp">
       <Filter>Action</Filter>
     </ClCompile>
@@ -224,6 +218,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Collider\Collision.cpp">
       <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\Animation.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Base\GC.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

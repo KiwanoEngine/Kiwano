@@ -15,29 +15,6 @@ class Player;
 class Collider;
 class Transition;
 
-// 对象管理器
-class ObjectManager
-{
-	friend Game;
-	friend Object;
-
-public:
-	// 释放垃圾对象的内存空间
-	static void flush();
-
-private:
-	// 将对象放入内存池进行管理
-	static void __add(
-		Object * pObject
-	);
-
-	// 更新对象管理器
-	static void __update();
-
-	// 清空所有对象
-	static void __clear();
-};
-
 
 // 场景管理器
 class SceneManager
