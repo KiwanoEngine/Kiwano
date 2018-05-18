@@ -40,9 +40,6 @@ public:
 public:
 	Node();
 
-	// 创建空节点
-	static Node * create();
-
 	virtual ~Node();
 
 	// 更新节点
@@ -522,44 +519,6 @@ public:
 		double height
 	);
 
-	// 创建一个空精灵
-	static Sprite * create();
-
-	// 从 Image 对象创建精灵
-	static Sprite * create(
-		Image * image
-	);
-
-	// 加载图片文件
-	static Sprite * create(
-		const String& filePath	/* 图片文件路径 */
-	);
-
-	// 加载图片资源
-	static Sprite * create(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType	/* 图片资源类型 */
-	);
-
-	// 加载图片文件
-	static Sprite * create(
-		const String& filePath,	/* 图片文件路径 */
-		double x,
-		double y,
-		double width,
-		double height
-	);
-
-	// 加载图片资源
-	static Sprite * create(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType,	/* 图片资源类型 */
-		double x,
-		double y,
-		double width,
-		double height
-	);
-
 	virtual ~Sprite();
 
 	// 加载图片文件
@@ -688,14 +647,6 @@ public:
 	Text();
 
 	Text(
-		const String& text,						/* 文字内容 */
-		const Font& font = Font(),				/* 字体 */
-		const Style& style = Style()			/* 文本样式 */
-	);
-
-	static Text * create();
-
-	static Text * create(
 		const String& text,						/* 文字内容 */
 		const Font& font = Font(),				/* 字体 */
 		const Style& style = Style()			/* 文本样式 */
@@ -892,39 +843,6 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	// 创建一个空按钮
-	static Button * create();
-
-	// 创建按钮
-	static Button * create(
-		Node * normal,					/* 普通状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
-	);
-
-	// 创建按钮
-	static Button * create(
-		Node * normal,					/* 普通状态 */
-		Node * selected,				/* 鼠标按下状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
-	);
-
-	// 创建按钮
-	static Button * create(
-		Node * normal,					/* 普通状态 */
-		Node * mouseover,				/* 鼠标移入状态 */
-		Node * selected,				/* 鼠标按下状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
-	);
-
-	// 创建按钮
-	static Button * create(
-		Node * normal,					/* 普通状态 */
-		Node * mouseover,				/* 鼠标移入状态 */
-		Node * selected,				/* 鼠标移入状态 */
-		Node * disabled,				/* 按钮禁用状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
-	);
-
 	// 获取按钮状态是启用还是禁用
 	bool isEnable() const;
 
@@ -1028,49 +946,6 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	// 创建一个空的开关按钮
-	static ButtonToggle * create();
-
-	// 创建开关按钮
-	static ButtonToggle * create(
-		Node * onNormal,				/* 按钮打开时，普通状态 */
-		Node * offNormal,				/* 按钮关闭时，普通状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
-	);
-
-	// 创建开关按钮
-	static ButtonToggle * create(
-		Node * onNormal,				/* 按钮打开时，普通状态 */
-		Node * offNormal,				/* 按钮关闭时，普通状态 */
-		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
-		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
-	);
-
-	// 创建开关按钮
-	static ButtonToggle * create(
-		Node * onNormal,				/* 按钮打开时，普通状态 */
-		Node * offNormal,				/* 按钮关闭时，普通状态 */
-		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
-		Node * offMouseOver,			/* 按钮关闭时，鼠标移入状态 */
-		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
-		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
-	);
-
-	// 创建开关按钮
-	static ButtonToggle * create(
-		Node * onNormal,				/* 按钮打开时，普通状态 */
-		Node * offNormal,				/* 按钮关闭时，普通状态 */
-		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
-		Node * offMouseOver,			/* 按钮关闭时，鼠标移入状态 */
-		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
-		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
-		Node * onDisabled,				/* 按钮打开时，禁用状态 */
-		Node * offDisabled,				/* 按钮关闭时，禁用状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
-	);
-
 	// 获取开关状态（打开或关闭）
 	bool getState() const;
 
@@ -1142,14 +1017,6 @@ public:
 	Menu();
 
 	Menu(
-		const std::vector<Button*>& buttons	/* 按钮数组 */
-	);
-
-	// 创建空菜单
-	static Menu * create();
-
-	// 创建菜单
-	static Menu * create(
 		const std::vector<Button*>& buttons	/* 按钮数组 */
 	);
 

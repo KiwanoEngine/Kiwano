@@ -15,11 +15,6 @@ e2d::Loop::Loop(Action * action, int times /* = -1 */)
 	}
 }
 
-e2d::Loop * e2d::Loop::create(Action * action, int times)
-{
-	return GC::create<Loop>(action, times);
-}
-
 e2d::Loop::~Loop()
 {
 }

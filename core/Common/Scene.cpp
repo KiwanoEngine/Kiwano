@@ -7,7 +7,7 @@ e2d::Scene::Scene()
 	, _colliderVisiable(false)
 	, _root(nullptr)
 {
-	_root = Node::create();
+	_root = GC::create<Node>();
 	if (_root)
 	{
 		_root->retain();
@@ -17,11 +17,6 @@ e2d::Scene::Scene()
 	{
 		// TODO: 抛出一个异常
 	}
-}
-
-e2d::Scene * e2d::Scene::create()
-{
-	return GC::create<Scene>();
 }
 
 e2d::Scene::~Scene()

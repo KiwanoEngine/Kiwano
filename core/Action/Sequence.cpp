@@ -11,16 +11,6 @@ e2d::Sequence::Sequence(const std::vector<Action*>& actions)
 	this->add(actions);
 }
 
-e2d::Sequence * e2d::Sequence::create()
-{
-	return GC::create<Sequence>();
-}
-
-e2d::Sequence * e2d::Sequence::create(const std::vector<Action*>& actions)
-{
-	return GC::create<Sequence>(actions);
-}
-
 e2d::Sequence::~Sequence()
 {
 }

@@ -26,21 +26,6 @@ e2d::ColliderEllipse::ColliderEllipse(Node * node)
 	this->setAutoResize(true);
 }
 
-e2d::ColliderEllipse * e2d::ColliderEllipse::create()
-{
-	return GC::create<ColliderEllipse>();
-}
-
-e2d::ColliderEllipse * e2d::ColliderEllipse::create(Point center, double radiusX, double radiusY)
-{
-	return GC::create<ColliderEllipse>(center, radiusX, radiusY);
-}
-
-e2d::ColliderEllipse * e2d::ColliderEllipse::create(Node * node)
-{
-	return GC::create<ColliderEllipse>(node);
-}
-
 e2d::ColliderEllipse::~ColliderEllipse()
 {
 	SafeReleaseInterface(_d2dEllipse);

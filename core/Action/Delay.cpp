@@ -6,11 +6,6 @@ e2d::Delay::Delay(double duration)
 {
 }
 
-e2d::Delay * e2d::Delay::create(double duration)
-{
-	return GC::create<Delay>(duration);
-}
-
 e2d::Delay * e2d::Delay::clone() const
 {
 	return GC::create<Delay>(_delay);

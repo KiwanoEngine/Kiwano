@@ -6,11 +6,6 @@ e2d::TransitionEmerge::TransitionEmerge(double duration)
 {
 }
 
-e2d::TransitionEmerge * e2d::TransitionEmerge::create(double duration)
-{
-	return GC::create<TransitionEmerge>(duration);
-}
-
 void e2d::TransitionEmerge::_init(Scene * prev, Scene * next)
 {
 	Transition::_init(prev, next);

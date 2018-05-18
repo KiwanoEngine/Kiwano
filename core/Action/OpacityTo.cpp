@@ -7,11 +7,6 @@ e2d::OpacityTo::OpacityTo(double duration, double opacity)
 	_endVal = opacity;
 }
 
-e2d::OpacityTo * e2d::OpacityTo::create(double duration, double opacity)
-{
-	return GC::create<OpacityTo>(duration, opacity);
-}
-
 e2d::OpacityTo * e2d::OpacityTo::clone() const
 {
 	return GC::create<OpacityTo>(_duration, _endVal);

@@ -7,11 +7,6 @@ e2d::OpacityBy::OpacityBy(double duration, double opacity)
 	_deltaVal = opacity;
 }
 
-e2d::OpacityBy * e2d::OpacityBy::create(double duration, double opacity)
-{
-	return GC::create<OpacityBy>(duration, opacity);
-}
-
 void e2d::OpacityBy::_init()
 {
 	ActionGradual::_init();

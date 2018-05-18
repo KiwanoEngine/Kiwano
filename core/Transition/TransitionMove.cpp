@@ -7,11 +7,6 @@ e2d::TransitionMove::TransitionMove(double duration, Direction direction)
 {
 }
 
-e2d::TransitionMove * e2d::TransitionMove::create(double moveDuration, Direction direction)
-{
-	return GC::create<TransitionMove>(moveDuration, direction);
-}
-
 void e2d::TransitionMove::_init(Scene * prev, Scene * next)
 {
 	Transition::_init(prev, next);

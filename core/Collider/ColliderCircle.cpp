@@ -26,21 +26,6 @@ e2d::ColliderCircle::ColliderCircle(Node * node)
 	this->setAutoResize(true);
 }
 
-e2d::ColliderCircle * e2d::ColliderCircle::create()
-{
-	return GC::create<ColliderCircle>();
-}
-
-e2d::ColliderCircle * e2d::ColliderCircle::create(Point center, double radius)
-{
-	return GC::create<ColliderCircle>(center, radius);
-}
-
-e2d::ColliderCircle * e2d::ColliderCircle::create(Node * node)
-{
-	return GC::create<ColliderCircle>(node);
-}
-
 e2d::ColliderCircle::~ColliderCircle()
 {
 	SafeReleaseInterface(_d2dCircle);

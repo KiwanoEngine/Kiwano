@@ -38,36 +38,6 @@ e2d::Sprite::Sprite(int resNameId, const String& resType, double x, double y, do
 	crop(x, y, width, height);
 }
 
-e2d::Sprite * e2d::Sprite::create()
-{
-	return GC::create<Sprite>();
-}
-
-e2d::Sprite * e2d::Sprite::create(Image * image)
-{
-	return GC::create<Sprite>(image);
-}
-
-e2d::Sprite * e2d::Sprite::create(const String & filePath)
-{
-	return GC::create<Sprite>(filePath);
-}
-
-e2d::Sprite * e2d::Sprite::create(int resNameId, const String & resType)
-{
-	return GC::create<Sprite>(resNameId, resType);
-}
-
-e2d::Sprite * e2d::Sprite::create(const String & filePath, double x, double y, double width, double height)
-{
-	return GC::create<Sprite>(filePath, x, y, width, height);
-}
-
-e2d::Sprite * e2d::Sprite::create(int resNameId, const String & resType, double x, double y, double width, double height)
-{
-	return GC::create<Sprite>(resNameId, resType, x, y, width, height);
-}
-
 e2d::Sprite::~Sprite()
 {
 }

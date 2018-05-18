@@ -6,11 +6,6 @@ e2d::MoveTo::MoveTo(double duration, Point pos)
 	_endPos = pos;
 }
 
-e2d::MoveTo * e2d::MoveTo::create(double duration, Point pos)
-{
-	return GC::create<MoveTo>(duration, pos);
-}
-
 e2d::MoveTo * e2d::MoveTo::clone() const
 {
 	return GC::create<MoveTo>(_duration, _endPos);

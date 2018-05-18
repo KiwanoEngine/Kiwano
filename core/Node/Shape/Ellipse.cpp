@@ -22,21 +22,6 @@ e2d::Ellipse::Ellipse(Point center, double radiusX, double radiusY)
 	this->setPivot(0.5, 0.5);
 }
 
-e2d::Ellipse * e2d::Ellipse::create()
-{
-	return GC::create<Ellipse>();
-}
-
-e2d::Ellipse * e2d::Ellipse::create(double radiusX, double radiusY)
-{
-	return GC::create<Ellipse>(radiusX, radiusY);
-}
-
-e2d::Ellipse * e2d::Ellipse::create(Point center, double radiusX, double radiusY)
-{
-	return GC::create<Ellipse>(center, radiusX, radiusY);
-}
-
 e2d::Ellipse::~Ellipse()
 {
 }

@@ -41,11 +41,6 @@ e2d::Node::Node()
 	}
 }
 
-e2d::Node * e2d::Node::create()
-{
-	return GC::create<Node>();
-}
-
 e2d::Node::~Node()
 {
 }

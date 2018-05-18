@@ -70,20 +70,6 @@ public:
 
 	virtual ~Music();
 
-	// 创建音乐对象
-	static Music * create();
-
-	// 创建音乐对象
-	static Music * create(
-		const e2d::String& filePath	/* 音乐文件路径 */
-	);
-
-	// 创建音乐对象
-	static Music * create(
-		int resNameId,				/* 音乐资源名称 */
-		const String& resType		/* 音乐资源类型 */
-	);
-
 	// 打开音乐文件
 	bool open(
 		const e2d::String& filePath	/* 音乐文件路径 */

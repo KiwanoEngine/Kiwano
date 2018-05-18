@@ -142,22 +142,6 @@ public:
 		Node * node
 	);
 
-	// 创建一个默认矩形碰撞体
-	static ColliderRect * create();
-
-	// 根据左上角坐标和宽高创建矩形碰撞体
-	static ColliderRect * create(
-		double x,
-		double y,
-		double width,
-		double height
-	);
-
-	// 创建一个和节点位置大小相同的矩形碰撞体
-	static ColliderRect * create(
-		Node * node
-	);
-
 	virtual ~ColliderRect();
 
 	// 修改矩形碰撞体大小
@@ -196,20 +180,6 @@ public:
 		Node * node
 	);
 
-	// 创建一个默认圆形碰撞体
-	static ColliderCircle * create();
-
-	// 根据圆心和半径创建圆形碰撞体
-	static ColliderCircle * create(
-		Point center,
-		double radius
-	);
-
-	// 创建一个和节点位置大小相同的圆形碰撞体
-	static ColliderCircle * create(
-		Node * node
-	);
-
 	virtual ~ColliderCircle();
 
 	// 修改圆形碰撞体大小
@@ -244,21 +214,6 @@ public:
 	);
 
 	ColliderEllipse(
-		Node * node
-	);
-
-	// 创建一个默认椭圆碰撞体
-	static ColliderEllipse * create();
-
-	// 根据圆心和半径创建椭圆碰撞体
-	static ColliderEllipse * create(
-		Point center,
-		double radiusX,
-		double radiusY
-	);
-
-	// 创建一个和节点位置大小相同的椭圆碰撞体
-	static ColliderEllipse * create(
 		Node * node
 	);
 

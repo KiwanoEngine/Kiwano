@@ -78,31 +78,6 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * dis
 	this->setClickFunc(func);
 }
 
-e2d::Button * e2d::Button::create()
-{
-	return GC::create<Button>();
-}
-
-e2d::Button * e2d::Button::create(Node * normal, const Function & func)
-{
-	return GC::create<Button>(normal, func);
-}
-
-e2d::Button * e2d::Button::create(Node * normal, Node * selected, const Function & func)
-{
-	return GC::create<Button>(normal, selected, func);
-}
-
-e2d::Button * e2d::Button::create(Node * normal, Node * mouseover, Node * selected, const Function & func)
-{
-	return GC::create<Button>(normal, mouseover, selected, func);
-}
-
-e2d::Button * e2d::Button::create(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Function & func)
-{
-	return GC::create<Button>(normal, mouseover, selected, disabled, func);
-}
-
 bool e2d::Button::isEnable() const
 {
 	return _enable;

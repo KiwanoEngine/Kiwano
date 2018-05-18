@@ -14,16 +14,6 @@ e2d::Menu::Menu(const std::vector<Button*>& buttons)
 	}
 }
 
-e2d::Menu * e2d::Menu::create()
-{
-	return GC::create<Menu>();
-}
-
-e2d::Menu * e2d::Menu::create(const std::vector<Button*>& buttons)
-{
-	return GC::create<Menu>(buttons);
-}
-
 bool e2d::Menu::isEnable() const
 {
 	return _enable;

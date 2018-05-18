@@ -9,6 +9,7 @@ namespace e2d
 {
 
 
+// 游戏控制
 class Game
 {
 public:
@@ -46,7 +47,7 @@ public:
 };
 
 
-// 控制窗口属性
+// 窗口控制
 class Window
 {
 	friend Game;
@@ -142,7 +143,7 @@ private:
 };
 
 
-// 控制游戏时间
+// 时间控制
 class Time
 {
 	friend Game;
@@ -181,7 +182,7 @@ private:
 };
 
 
-// 控制键盘和鼠标的输入
+// 输入控制
 class Input
 {
 	friend Game;

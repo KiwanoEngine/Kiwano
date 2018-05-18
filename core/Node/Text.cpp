@@ -90,16 +90,6 @@ e2d::Text::Text(const String & text, const Font & font, const Style & style)
 	_reset();
 }
 
-e2d::Text * e2d::Text::create()
-{
-	return GC::create<Text>();
-}
-
-e2d::Text * e2d::Text::create(const String & text, const Font & font, const Style & style)
-{
-	return GC::create<Text>(text, font, style);
-}
-
 e2d::Text::~Text()
 {
 	SafeReleaseInterface(_textFormat);

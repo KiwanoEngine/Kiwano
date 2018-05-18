@@ -9,16 +9,6 @@ e2d::Spawn::Spawn(const std::vector<Action*>& actions)
 	this->add(actions);
 }
 
-e2d::Spawn * e2d::Spawn::create()
-{
-	return GC::create<Spawn>();
-}
-
-e2d::Spawn * e2d::Spawn::create(const std::vector<Action*>& actions)
-{
-	return GC::create<Spawn>(actions);
-}
-
 e2d::Spawn::~Spawn()
 {
 }

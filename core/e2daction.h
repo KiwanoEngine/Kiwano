@@ -127,12 +127,6 @@ public:
 		Vector vector		/* 移动距离 */
 	);
 
-	// 创建相对位移动作
-	static MoveBy * create(
-		double duration,	/* 持续时长 */
-		Vector vector		/* 移动距离 */
-	);
-
 	// 获取该动作的拷贝对象
 	virtual MoveBy * clone() const override;
 
@@ -162,12 +156,6 @@ public:
 		Point pos			/* 目的坐标 */
 	);
 
-	// 创建位移动作
-	static MoveTo * create(
-		double duration,	/* 持续时长 */
-		Point pos			/* 目的坐标 */
-	);
-
 	// 获取该动作的拷贝对象
 	virtual MoveTo * clone() const override;
 
@@ -193,14 +181,6 @@ class JumpBy :
 {
 public:
 	JumpBy(
-		double duration,		/* 持续时长 */
-		const Vector& vec,		/* 跳跃距离 */
-		double height,			/* 跳跃高度 */
-		int jumps				/* 跳跃次数 */
-	);
-
-	// 创建相对跳跃动作
-	static JumpBy * create(
 		double duration,		/* 持续时长 */
 		const Vector& vec,		/* 跳跃距离 */
 		double height,			/* 跳跃高度 */
@@ -241,14 +221,6 @@ public:
 		int jumps				/* 跳跃次数 */
 	);
 
-	// 创建位移动作
-	static JumpTo * create(
-		double duration,		/* 持续时长 */
-		const Point& pos,		/* 目的坐标 */
-		double height,			/* 跳跃高度 */
-		int jumps				/* 跳跃次数 */
-	);
-
 	// 获取该动作的拷贝对象
 	virtual JumpTo * clone() const override;
 
@@ -279,19 +251,6 @@ public:
 	);
 
 	ScaleBy(
-		double duration,	/* 持续时长 */
-		double scaleX,		/* 横向缩放相对变化值 */
-		double scaleY		/* 纵向缩放相对变化值 */
-	);
-
-	// 创建相对缩放动作
-	static ScaleBy * create(
-		double duration,	/* 持续时长 */
-		double scale		/* 相对变化值 */
-	);
-
-	// 创建相对缩放动作
-	static ScaleBy * create(
 		double duration,	/* 持续时长 */
 		double scaleX,		/* 横向缩放相对变化值 */
 		double scaleY		/* 纵向缩放相对变化值 */
@@ -334,19 +293,6 @@ public:
 		double scaleY		/* 纵向缩放目标值 */
 	);
 
-	// 创建缩放动作
-	static ScaleTo * create(
-		double duration,	/* 持续时长 */
-		double scale		/* 目标值 */
-	);
-
-	// 创建缩放动作
-	static ScaleTo * create(
-		double duration,	/* 持续时长 */
-		double scaleX,		/* 横向缩放目标值 */
-		double scaleY		/* 纵向缩放目标值 */
-	);
-
 	// 获取该动作的拷贝对象
 	virtual ScaleTo * clone() const override;
 
@@ -377,12 +323,6 @@ public:
 		double opacity		/* 相对变化值 */
 	);
 
-	// 创建透明度相对渐变动作
-	static OpacityBy * create(
-		double duration,	/* 持续时长 */
-		double opacity		/* 相对变化值 */
-	);
-
 	// 获取该动作的拷贝对象
 	virtual OpacityBy * clone() const override;
 
@@ -408,12 +348,6 @@ class OpacityTo :
 {
 public:
 	OpacityTo(
-		double duration,	/* 持续时长 */
-		double opacity		/* 目标值 */
-	);
-
-	// 创建透明度渐变动作
-	static OpacityTo * create(
 		double duration,	/* 持续时长 */
 		double opacity		/* 目标值 */
 	);
@@ -477,12 +411,6 @@ public:
 		double rotation		/* 相对变化值 */
 	);
 
-	// 创建相对旋转动作
-	static RotateBy * create(
-		double duration,	/* 持续时长 */
-		double rotation		/* 相对变化值 */
-	);
-
 	// 获取该动作的拷贝对象
 	virtual RotateBy * clone() const override;
 
@@ -512,12 +440,6 @@ public:
 		double rotation		/* 目标值 */
 	);
 
-	// 创建旋转动作
-	static RotateTo * create(
-		double duration,	/* 持续时长 */
-		double rotation		/* 目标值 */
-	);
-
 	// 获取该动作的拷贝对象
 	virtual RotateTo * clone() const override;
 
@@ -543,11 +465,6 @@ class Delay :
 {
 public:
 	Delay(
-		double duration	/* 延迟时长（秒） */
-	);
-
-	// 创建延时动作
-	static Delay * create(
 		double duration	/* 延迟时长（秒） */
 	);
 
@@ -582,12 +499,6 @@ class Loop :
 {
 public:
 	Loop(
-		Action * action,	/* 执行循环的动作 */
-		int times = -1		/* 循环次数 */
-	);
-
-	// 创建循环动作
-	static Loop * create(
 		Action * action,	/* 执行循环的动作 */
 		int times = -1		/* 循环次数 */
 	);
@@ -632,11 +543,6 @@ public:
 		const Function& func /* 函数对象 */
 	);
 
-	// 创建执行函数对象的动作
-	static CallFunc * create(
-		const Function& func /* 函数对象 */
-	);
-
 	// 获取该动作的拷贝对象
 	virtual CallFunc * clone() const override;
 
@@ -663,14 +569,6 @@ public:
 	Sequence();
 
 	Sequence(
-		const std::vector<Action*>& actions	/* 动作列表 */
-	);
-
-	// 创建顺序动作
-	static Sequence * create();
-
-	// 创建顺序动作
-	static Sequence * create(
 		const std::vector<Action*>& actions	/* 动作列表 */
 	);
 
@@ -722,14 +620,6 @@ public:
 	Spawn();
 
 	Spawn(
-		const std::vector<Action*>& actions	/* 动作列表 */
-	);
-
-	// 创建同步动作
-	static Spawn * create();
-
-	// 创建同步动作
-	static Spawn * create(
 		const std::vector<Action*>& actions	/* 动作列表 */
 	);
 
@@ -792,25 +682,6 @@ public:
 		const std::vector<Image*>& frames	/* 关键帧数组 */
 	);
 
-	// 创建帧动画
-	static Animation * create();
-
-	// 创建帧动画
-	static Animation * create(
-		const std::vector<Image*>& frames	/* 关键帧数组 */
-	);
-
-	// 创建特定帧间隔的帧动画
-	static Animation * create(
-		double interval						/* 帧间隔（秒） */
-	);
-
-	// 创建特定帧间隔的帧动画
-	static Animation * create(
-		double interval,					/* 帧间隔（秒） */
-		const std::vector<Image*>& frames	/* 关键帧数组 */
-	);
-
 	virtual ~Animation();
 
 	// 添加关键帧
@@ -854,14 +725,6 @@ public:
 	Animate();
 
 	Animate(
-		Animation * animation
-	);
-
-	// 创建精灵动作
-	static Animate * create();
-
-	// 创建精灵动作
-	static Animate * create(
 		Animation * animation
 	);
 

@@ -13,16 +13,6 @@ e2d::Animate::Animate(Animation * animation)
 	this->setAnimation(animation);
 }
 
-e2d::Animate * e2d::Animate::create()
-{
-	return GC::create<Animate>();
-}
-
-e2d::Animate * e2d::Animate::create(Animation * animation)
-{
-	return GC::create<Animate>(animation);
-}
-
 e2d::Animate::~Animate()
 {
 }

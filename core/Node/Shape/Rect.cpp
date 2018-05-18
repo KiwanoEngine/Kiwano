@@ -16,21 +16,6 @@ e2d::Rect::Rect(Point topLeft, Size size)
 	this->setSize(size);
 }
 
-e2d::Rect * e2d::Rect::create()
-{
-	return GC::create<Rect>();
-}
-
-e2d::Rect * e2d::Rect::create(Size size)
-{
-	return GC::create<Rect>(size);
-}
-
-e2d::Rect * e2d::Rect::create(Point topLeft, Size size)
-{
-	return GC::create<Rect>(topLeft, size);
-}
-
 e2d::Rect::~Rect()
 {
 }

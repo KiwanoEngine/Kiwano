@@ -22,26 +22,6 @@ e2d::Animation::Animation(double interval, const std::vector<Image*>& frames)
 	this->add(frames);
 }
 
-e2d::Animation * e2d::Animation::create()
-{
-	return GC::create<Animation>();
-}
-
-e2d::Animation * e2d::Animation::create(const std::vector<Image*>& frames)
-{
-	return GC::create<Animation>(frames);
-}
-
-e2d::Animation * e2d::Animation::create(double interval)
-{
-	return GC::create<Animation>(interval);
-}
-
-e2d::Animation * e2d::Animation::create(double interval, const std::vector<Image*>& frames)
-{
-	return GC::create<Animation>(interval, frames);
-}
-
 e2d::Animation::~Animation()
 {
 }

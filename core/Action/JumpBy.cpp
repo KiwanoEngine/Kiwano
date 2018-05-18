@@ -8,11 +8,6 @@ e2d::JumpBy::JumpBy(double duration, const Vector & vec, double height, int jump
 {
 }
 
-e2d::JumpBy * e2d::JumpBy::create(double duration, const Vector & vec, double height, int jumps)
-{
-	return GC::create<JumpBy>(duration, vec, height, jumps);
-}
-
 e2d::JumpBy * e2d::JumpBy::clone() const
 {
 	return GC::create<JumpBy>(_duration, _deltaPos, _height, _jumps);

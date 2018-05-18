@@ -410,39 +410,6 @@ public:
 		double cropHeight		/* 裁剪高度 */
 	);
 
-	// 创建一个空的图片对象
-	static Image * create();
-
-	// 加载图片文件
-	static Image * create(
-		const String& filePath	/* 图片文件路径 */
-	);
-
-	// 加载图片资源
-	static Image * create(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType	/* 图片资源类型 */
-	);
-
-	// 加载图片文件并裁剪
-	static Image * create(
-		const String& filePath,	/* 图片文件路径 */
-		double cropX,			/* 裁剪位置 X 坐标 */
-		double cropY,			/* 裁剪位置 Y 坐标 */
-		double cropWidth,		/* 裁剪宽度 */
-		double cropHeight		/* 裁剪高度 */
-	);
-
-	// 加载图片资源并裁剪
-	static Image * create(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType,	/* 图片资源类型 */
-		double cropX,			/* 裁剪位置 X 坐标 */
-		double cropY,			/* 裁剪位置 Y 坐标 */
-		double cropWidth,		/* 裁剪宽度 */
-		double cropHeight		/* 裁剪高度 */
-	);
-
 	virtual ~Image();
 
 	// 加载图片文件
@@ -536,9 +503,6 @@ class Scene :
 
 public:
 	Scene();
-
-	// 创建场景
-	static Scene * create();
 
 	virtual ~Scene();
 

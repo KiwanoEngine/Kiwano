@@ -19,21 +19,6 @@ e2d::ColliderRect::ColliderRect(Node * node)
 	this->setAutoResize(true);
 }
 
-e2d::ColliderRect * e2d::ColliderRect::create()
-{
-	return GC::create<ColliderRect>();
-}
-
-e2d::ColliderRect * e2d::ColliderRect::create(double x, double y, double width, double height)
-{
-	return GC::create<ColliderRect>(x, y, width, height);
-}
-
-e2d::ColliderRect * e2d::ColliderRect::create(Node * node)
-{
-	return GC::create<ColliderRect>(node);
-}
-
 e2d::ColliderRect::~ColliderRect()
 {
 	SafeReleaseInterface(_d2dRectangle);

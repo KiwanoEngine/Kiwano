@@ -7,11 +7,6 @@ e2d::MoveBy::MoveBy(double duration, Vector vector)
 	_deltaPos = vector;
 }
 
-e2d::MoveBy * e2d::MoveBy::create(double duration, Vector vector)
-{
-	return GC::create<MoveBy>(duration, vector);
-}
-
 void e2d::MoveBy::_init()
 {
 	ActionGradual::_init();

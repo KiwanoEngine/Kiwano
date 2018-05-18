@@ -22,21 +22,6 @@ e2d::RoundRect::RoundRect(Point topLeft, Size size, double radiusX, double radiu
 	this->setSize(size);
 }
 
-e2d::RoundRect * e2d::RoundRect::create()
-{
-	return GC::create<RoundRect>();
-}
-
-e2d::RoundRect * e2d::RoundRect::create(Size size, double radiusX, double radiusY)
-{
-	return GC::create<RoundRect>(size, radiusX, radiusY);
-}
-
-e2d::RoundRect * e2d::RoundRect::create(Point topLeft, Size size, double radiusX, double radiusY)
-{
-	return GC::create<RoundRect>(topLeft, size, radiusX, radiusY);
-}
-
 e2d::RoundRect::~RoundRect()
 {
 }

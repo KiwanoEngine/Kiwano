@@ -7,11 +7,6 @@ e2d::RotateBy::RotateBy(double duration, double rotation)
 	_deltaVal = rotation;
 }
 
-e2d::RotateBy * e2d::RotateBy::create(double duration, double rotation)
-{
-	return GC::create<RotateBy>(duration, rotation);
-}
-
 void e2d::RotateBy::_init()
 {
 	ActionGradual::_init();
