@@ -188,15 +188,16 @@ class Input
 
 public:
 	// 鼠标键值
-	enum class MouseCode : int
+	enum class Mouse : int
 	{
 		LEFT,		/* 鼠标左键 */
 		RIGHT,		/* 鼠标右键 */
 		MIDDLE		/* 鼠标中键 */
 	};
 
+
 	// 键盘键值
-	enum class KeyCode : int
+	enum class Key : int
 	{
 		UP = 0xC8,
 		LEFT = 0xCB,
@@ -258,33 +259,33 @@ public:
 
 public:
 	// 检测键盘某按键是否正被按下
-	static bool isKeyDown(
-		KeyCode key
+	static bool isDown(
+		Key key
 	);
 
 	// 检测键盘某按键是否被点击
-	static bool isKeyPress(
-		KeyCode key
+	static bool isPress(
+		Key key
 	);
 
 	// 检测键盘某按键是否正在松开
-	static bool isKeyRelease(
-		KeyCode key
+	static bool isRelease(
+		Key key
 	);
 
 	// 检测鼠标按键是否正被按下
-	static bool isMouseDown(
-		MouseCode code
+	static bool isDown(
+		Mouse code
 	);
 
 	// 检测鼠标按键是否被点击
-	static bool isMousePress(
-		MouseCode code
+	static bool isPress(
+		Mouse code
 	);
 
 	// 检测鼠标按键是否正在松开
-	static bool isMouseRelease(
-		MouseCode code
+	static bool isRelease(
+		Mouse code
 	);
 
 	// 获得鼠标X轴坐标值
