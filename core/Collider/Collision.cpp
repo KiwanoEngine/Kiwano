@@ -3,6 +3,10 @@
 
 typedef std::pair<UINT, UINT> HashPair;
 
+// ¼àÌýÆ÷ÈÝÆ÷
+static std::vector<e2d::Listener*> s_vListeners;
+// Åö×²´¥·¢×´Ì¬
+static bool s_bCollisionEnable = false;
 static e2d::Node * s_pActiveNode = nullptr;
 static e2d::Node * s_pPassiveNode = nullptr;
 static std::set<HashPair> s_sCollisionList;
@@ -75,45 +79,6 @@ e2d::Node* e2d::Collision::isCausedBy(const String& name)
 }
 
 
-// ¼àÌýÆ÷
-class Listener
-{
-public:
-	Listener(
-		const e2d::Function& func,
-		const e2d::String& name,
-		bool paused
-	)
-		: name(name)
-		, callback(func)
-		, running(!paused)
-		, stopped(false)
-	{
-	}
-
-	// ¸üÐÂ¼àÌýÆ÷×´Ì¬
-	virtual void update()
-	{
-		if (callback)
-		{
-			callback();
-		}
-	}
-
-public:
-	bool running;
-	bool stopped;
-	e2d::String name;
-	e2d::Function callback;
-};
-
-
-// ¼àÌýÆ÷ÈÝÆ÷
-static std::vector<Listener*> s_vListeners;
-// Åö×²´¥·¢×´Ì¬
-static bool s_bCollisionEnable = false;
-
-
 void e2d::Collision::setEnable(bool enable)
 {
 	s_bCollisionEnable = enable;
@@ -136,7 +101,7 @@ void e2d::Collision::__update(Node * active, Node * passive)
 	{
 		auto listener = s_vListeners[i];
 		// Çå³ýÒÑÍ£Ö¹µÄ¼àÌýÆ÷
-		if (listener->stopped)
+		if (listener->_stopped)
 		{
 			delete listener;
 			s_vListeners.erase(s_vListeners.begin() + i);
@@ -159,73 +124,73 @@ void e2d::Collision::addListener(const Function& func, const String& name, bool 
 	s_vListeners.push_back(listener);
 }
 
-void e2d::Collision::pause(const String& name)
+void e2d::Collision::pauseListener(const String& name)
 {
 	if (s_vListeners.empty() || name.isEmpty())
 		return;
 
 	for (auto listener : s_vListeners)
 	{
-		if (listener->name == name)
+		if (listener->_name == name)
 		{
-			listener->running = false;
+			listener->_running = false;
 		}
 	}
 }
 
-void e2d::Collision::resume(const String& name)
+void e2d::Collision::resumeListener(const String& name)
 {
 	if (s_vListeners.empty() || name.isEmpty())
 		return;
 
 	for (auto listener : s_vListeners)
 	{
-		if (listener->name == name)
+		if (listener->_name == name)
 		{
-			listener->running = true;
+			listener->_running = true;
 		}
 	}
 }
 
-void e2d::Collision::stop(const String& name)
+void e2d::Collision::stopListener(const String& name)
 {
 	if (s_vListeners.empty() || name.isEmpty())
 		return;
 
 	for (auto listener : s_vListeners)
 	{
-		if (listener->name == name)
+		if (listener->_name == name)
 		{
-			listener->stopped = true;
+			listener->_stopped = true;
 		}
 	}
 }
 
-void e2d::Collision::pauseAll()
+void e2d::Collision::pauseAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
-		listener->running = false;
+		listener->_running = false;
 	}
 }
 
-void e2d::Collision::resumeAll()
+void e2d::Collision::resumeAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
-		listener->running = true;
+		listener->_running = true;
 	}
 }
 
-void e2d::Collision::stopAll()
+void e2d::Collision::stopAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
-		listener->stopped = true;
+		listener->_stopped = true;
 	}
 }
 
-void e2d::Collision::__uninit()
+void e2d::Collision::__clearListeners()
 {
 	for (auto listener : s_vListeners)
 	{

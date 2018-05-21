@@ -4,8 +4,6 @@
 namespace e2d
 {
 
-class InputManager;
-class ColliderManager;
 
 // 随机数产生器
 class Random

@@ -73,28 +73,28 @@ public:
 	);
 
 	// ÔİÍ£Åö×²¼àÌı
-	static void pause(
+	static void pauseListener(
 		const String& name
 	);
 
 	// ÔİÍ£Åö×²¼àÌı
-	static void resume(
+	static void resumeListener(
 		const String& name
 	);
 
 	// Í£Ö¹Åö×²¼àÌı
-	static void stop(
+	static void stopListener(
 		const String& name
 	);
 
 	// ÔİÍ£ËùÓĞ¼àÌıÆ÷
-	static void pauseAll();
+	static void pauseAllListeners();
 
 	// ¼ÌĞøËùÓĞ¼àÌıÆ÷
-	static void resumeAll();
+	static void resumeAllListeners();
 
 	// Í£Ö¹ËùÓĞ¼àÌıÆ÷
-	static void stopAll();
+	static void stopAllListeners();
 
 private:
 	// ¸üĞÂ¼àÌıÆ÷
@@ -103,8 +103,8 @@ private:
 		Node * passive
 	);
 
-	// »ØÊÕ×ÊÔ´
-	static void __uninit();
+	// Çå¿Õ¼àÌıÆ÷
+	static void __clearListeners();
 };
 
 

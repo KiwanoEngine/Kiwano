@@ -307,6 +307,37 @@ public:
 	// 获得鼠标Z轴（鼠标滚轮）坐标增量
 	static double getMouseDeltaZ();
 
+	// 添加输入监听
+	static void addListener(
+		const Function& func,		/* 监听到用户输入时的执行函数 */
+		const String& name = L"",	/* 监听器名称 */
+		bool paused = false			/* 是否暂停 */
+	);
+
+	// 暂停输入监听
+	static void pauseListener(
+		const String& name
+	);
+
+	// 暂停输入监听
+	static void resumeListener(
+		const String& name
+	);
+
+	// 停止输入监听
+	static void stopListener(
+		const String& name
+	);
+
+	// 暂停所有监听器
+	static void pauseAllListeners();
+
+	// 继续所有监听器
+	static void resumeAllListeners();
+
+	// 停止所有监听器
+	static void stopAllListeners();
+
 private:
 	// 初始化 DirectInput 以及键盘鼠标设备
 	static bool __init();
@@ -317,8 +348,14 @@ private:
 	// 刷新设备状态
 	static void __updateDeviceState();
 
+	// 更新监听器
+	static void __updateListeners();
+
 	// 卸载 DirectInput
 	static void __uninit();
+
+	// 清空监听器
+	static void __clearListeners();
 };
 
 

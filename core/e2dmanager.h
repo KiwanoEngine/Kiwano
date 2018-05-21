@@ -151,54 +151,7 @@ private:
 };
 
 
-// 键盘和鼠标消息管理器
-class InputManager
-{
-	friend Game;
-	friend Input;
-
-public:
-	// 添加输入监听
-	static void add(
-		const Function& func,		/* 监听到用户输入时的执行函数 */
-		const String& name = L"",	/* 监听器名称 */
-		bool paused = false			/* 是否暂停 */
-	);
-
-	// 暂停输入监听
-	static void pause(
-		const String& name
-	);
-
-	// 暂停输入监听
-	static void resume(
-		const String& name
-	);
-
-	// 停止输入监听
-	static void stop(
-		const String& name
-	);
-
-	// 暂停所有监听器
-	static void pauseAll();
-
-	// 继续所有监听器
-	static void resumeAll();
-
-	// 停止所有监听器
-	static void stopAll();
-
-private:
-	// 更新监听器
-	static void __update();
-
-	// 回收资源
-	static void __uninit();
-};
-
-
-// 碰撞管理器
+// 碰撞体管理器
 class ColliderManager
 {
 	friend Node;

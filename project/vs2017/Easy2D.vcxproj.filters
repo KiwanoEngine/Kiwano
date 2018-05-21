@@ -114,9 +114,6 @@
     <ClCompile Include="..\..\core\Tool\Path.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\InputManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Collider\Collider.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
@@ -224,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Base\GC.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\Listener.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

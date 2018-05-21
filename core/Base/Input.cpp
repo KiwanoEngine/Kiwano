@@ -18,6 +18,8 @@ static DIMOUSESTATE s_MouseState;						// 鼠标信息存储结构体
 static DIMOUSESTATE s_MouseRecordState;					// 鼠标信息二级缓冲
 static POINT s_MousePosition;							// 鼠标位置存储结构体
 
+static std::vector<e2d::Listener*> s_vListeners;		// 监听器容器
+
 
 bool Input::__init()
 {
@@ -99,7 +101,7 @@ void Input::__uninit()
 void e2d::Input::__update()
 {
 	Input::__updateDeviceState();
-	InputManager::__update();
+	Input::__updateListeners();
 }
 
 void Input::__updateDeviceState()
@@ -216,4 +218,109 @@ double Input::getMouseDeltaY()
 double Input::getMouseDeltaZ()
 {
 	return (double)s_MouseState.lZ;
+}
+
+
+void e2d::Input::addListener(const Function& func, const String& name, bool paused)
+{
+	auto listener = new (std::nothrow) Listener(func, name, paused);
+	s_vListeners.push_back(listener);
+}
+
+void e2d::Input::pauseListener(const String& name)
+{
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
+	for (auto listener : s_vListeners)
+	{
+		if (listener->_name == name)
+		{
+			listener->_running = false;
+		}
+	}
+}
+
+void e2d::Input::resumeListener(const String& name)
+{
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
+	for (auto listener : s_vListeners)
+	{
+		if (listener->_name == name)
+		{
+			listener->_running = true;
+		}
+	}
+}
+
+void e2d::Input::stopListener(const String& name)
+{
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
+	for (auto listener : s_vListeners)
+	{
+		if (listener->_name == name)
+		{
+			listener->_stopped = true;
+		}
+	}
+}
+
+void e2d::Input::pauseAllListeners()
+{
+	for (auto listener : s_vListeners)
+	{
+		listener->_running = false;
+	}
+}
+
+void e2d::Input::resumeAllListeners()
+{
+	for (auto listener : s_vListeners)
+	{
+		listener->_running = true;
+	}
+}
+
+void e2d::Input::stopAllListeners()
+{
+	for (auto listener : s_vListeners)
+	{
+		listener->_stopped = true;
+	}
+}
+
+void e2d::Input::__updateListeners()
+{
+	if (s_vListeners.empty() || Game::isPaused())
+		return;
+
+	for (size_t i = 0; i < s_vListeners.size(); ++i)
+	{
+		auto listener = s_vListeners[i];
+		// 清除已停止的监听器
+		if (listener->_stopped)
+		{
+			delete listener;
+			s_vListeners.erase(s_vListeners.begin() + i);
+		}
+		else
+		{
+			// 更新监听器
+			listener->update();
+			++i;
+		}
+	}
+}
+
+void e2d::Input::__clearListeners()
+{
+	for (auto listener : s_vListeners)
+	{
+		delete listener;
+	}
+	s_vListeners.clear();
 }
