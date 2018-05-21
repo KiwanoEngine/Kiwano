@@ -6,7 +6,7 @@
 // 默认中心点位置
 static float s_fDefaultPiovtX = 0;
 static float s_fDefaultPiovtY = 0;
-static bool s_fDefaultColliderEnabled = true;
+static bool s_fDefaultColliderEnabled = false;
 
 e2d::Node::Node()
 	: _nOrder(0)
@@ -584,36 +584,18 @@ void e2d::Node::setCollider(Collider * pCollider)
 	}
 }
 
-void e2d::Node::addColliableName(const String& collliderName)
-{
-	unsigned int hash = collliderName.getHashCode();
-	_colliders.insert(hash);
-}
-
-void e2d::Node::addColliableName(const std::vector<String>& colliderNames)
-{
-	for (const auto &name : colliderNames)
-	{
-		this->addColliableName(name);
-	}
-}
-
-void e2d::Node::removeColliableName(const String& collliderName)
-{
-	unsigned int hash = collliderName.getHashCode();
-	_colliders.erase(hash);
-}
-
 void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 {
 	WARN_IF(child == nullptr, "Node::addChild NULL pointer exception.");
 
 	if (child)
 	{
+		// TODO: 抛出一个异常
 		ASSERT(child->_parent == nullptr, "Node already added. It can't be added again!");
 
 		for (Node * parent = this; parent != nullptr; parent = parent->getParent())
 		{
+			// TODO: 抛出一个异常
 			ASSERT(child != parent, "A Node cannot be the child of his own children!");
 		}
 
@@ -717,22 +699,19 @@ bool e2d::Node::removeChild(Node * child)
 
 	if (child)
 	{
-		size_t size = _children.size();
-		for (size_t i = 0; i < size; ++i)
+		auto iter = std::find(_children.begin(), _children.end(), child);
+		if (iter != _children.end())
 		{
-			if (_children[i] == child)
+			_children.erase(iter);
+			child->_parent = nullptr;
+
+			if (child->_parentScene)
 			{
-				_children.erase(_children.begin() + i);
-				child->_parent = nullptr;
-
-				if (child->_parentScene)
-				{
-					child->_setParentScene(nullptr);
-				}
-
-				child->release();
-				return true;
+				child->_setParentScene(nullptr);
 			}
+
+			child->release();
+			return true;
 		}
 	}
 	return false;
@@ -793,7 +772,7 @@ void e2d::Node::runAction(Action * action)
 
 void e2d::Node::resumeAction(const String& strActionName)
 {
-	auto actions = ActionManager::get(strActionName);
+	auto& actions = ActionManager::get(strActionName);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -805,7 +784,7 @@ void e2d::Node::resumeAction(const String& strActionName)
 
 void e2d::Node::pauseAction(const String& strActionName)
 {
-	auto actions = ActionManager::get(strActionName);
+	auto& actions = ActionManager::get(strActionName);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -817,7 +796,7 @@ void e2d::Node::pauseAction(const String& strActionName)
 
 void e2d::Node::stopAction(const String& strActionName)
 {
-	auto actions = ActionManager::get(strActionName);
+	auto& actions = ActionManager::get(strActionName);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -829,7 +808,7 @@ void e2d::Node::stopAction(const String& strActionName)
 
 e2d::Action * e2d::Node::getAction(const String& strActionName)
 {
-	auto actions = ActionManager::get(strActionName);
+	auto& actions = ActionManager::get(strActionName);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -838,24 +817,6 @@ e2d::Action * e2d::Node::getAction(const String& strActionName)
 		}
 	}
 	return nullptr;
-}
-
-std::vector<e2d::Action*> e2d::Node::getActions(const String& strActionName)
-{
-	std::vector<Action*>::iterator iter;
-	auto actions = ActionManager::get(strActionName);
-	for (iter = actions.begin(); iter != actions.end();)
-	{
-		if ((*iter)->getTarget() != this)
-		{
-			iter = actions.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-	return std::move(actions);
 }
 
 bool e2d::Node::isPointIn(Point point) const

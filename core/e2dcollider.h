@@ -15,6 +15,29 @@ class Collision
 	friend ColliderManager;
 
 public:
+	// 添加可互相碰撞物体的名称
+	static void addName(
+		const String& name1,
+		const String& name2
+	);
+
+	// 添加可互相碰撞物体的名称
+	static void addName(
+		const std::vector<std::pair<String, String> >& names
+	);
+
+	// 判断两个物体是否是可碰撞的
+	static bool isCollidable(
+		Node * node1,
+		Node * node2
+	);
+
+	// 判断两个物体是否是可碰撞的
+	static bool isCollidable(
+		const String& name1,
+		const String& name2
+	);
+
 	// 获取碰撞发生时的主动体
 	static Node * getActiveNode();
 

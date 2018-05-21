@@ -344,21 +344,6 @@ public:
 		Collider * pCollider
 	);
 
-	// 添加可碰撞节点的名称
-	virtual void addColliableName(
-		const String& collliderName
-	);
-
-	// 添加多个可碰撞节点的名称
-	virtual void addColliableName(
-		const std::vector<String>& colliderNames	/* 名称数组 */
-	);
-
-	// 移除可碰撞节点的名称
-	virtual void removeColliableName(
-		const String& collliderName
-	);
-
 	// 添加子节点
 	virtual void addChild(
 		Node * child,
@@ -391,13 +376,8 @@ public:
 		const String& strActionName
 	);
 
-	// 获取名称相同的动作
+	// 获取动作
 	virtual Action * getAction(
-		const String& strActionName
-	);
-
-	// 获取所有名称相同的动作
-	virtual std::vector<Action*> getActions(
 		const String& strActionName
 	);
 
@@ -416,7 +396,7 @@ public:
 		double defaultPiovtY
 	);
 
-	// 设置节点是否包含默认碰撞体（默认打开）
+	// 设置节点是否包含默认碰撞体（默认关闭）
 	static void setDefaultColliderEnable(
 		bool enable
 	);
@@ -476,10 +456,9 @@ protected:
 	Collider *	_collider;
 	Scene *		_parentScene;
 	Node *		_parent;
-	D2D1::Matrix3x2F		_initialMatri;
-	D2D1::Matrix3x2F		_finalMatri;
-	std::set<unsigned int>	_colliders;
-	std::vector<Node*>		_children;
+	D2D1::Matrix3x2F	_initialMatri;
+	D2D1::Matrix3x2F	_finalMatri;
+	std::vector<Node*>	_children;
 };
 
 

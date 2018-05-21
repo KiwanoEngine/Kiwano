@@ -43,16 +43,10 @@ void e2d::ActionManager::__add(Action * action)
 
 void e2d::ActionManager::__remove(Action * action)
 {
-	for (size_t i = 0; i < s_vActions.size();)
+	auto iter = std::find(s_vActions.begin(), s_vActions.end(), action);
+	if (iter != s_vActions.end())
 	{
-		if (s_vActions[i] == action)
-		{
-			s_vActions.erase(s_vActions.begin() + i);
-		}
-		else
-		{
-			++i;
-		}
+		s_vActions.erase(iter);
 	}
 }
 
@@ -105,17 +99,8 @@ void e2d::ActionManager::start(Action * action, Node * target, bool paused)
 
 	if (action && target)
 	{
-		ASSERT([](Action * newAction)
-		{
-			for (const auto& action : s_vRunningActions)
-			{
-				if (newAction == action)
-				{
-					return false;
-				}
-			}
-			return true;
-		}(action), "action already be added!");
+		auto iter = std::find(s_vRunningActions.begin(), s_vRunningActions.end(), action);
+		ASSERT(iter == s_vRunningActions.end(), "Action has begun!");
 
 		action->_startWithTarget(target);
 		action->retain();

@@ -81,16 +81,6 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 	Node* pActiveNode = pActiveCollider->_parentNode;
 	if (pActiveNode)
 	{
-		// 判断两物体是否是相互冲突的物体
-		auto IsCollideWith = [](Node * active, Node * passive) -> bool
-		{
-			unsigned int hash = passive->getHashName();
-			for (auto collider : active->_colliders)
-				if (collider == hash)
-					return true;
-			return false;
-		};
-
 		// 获取节点所在场景
 		Scene* pCurrentScene = pActiveNode->getParentScene();
 
@@ -108,7 +98,8 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 			if (pPassiveNode &&
 				pPassiveNode->getParentScene() == pCurrentScene)
 			{
-				if (IsCollideWith(pActiveNode, pPassiveNode))
+				// 判断两物体是否是相互冲突的物体
+				if (Collision::isCollidable(pActiveNode, pPassiveNode))
 				{
 					// 判断两碰撞体交集情况
 					Collider::Relation relation = pActiveCollider->getRelationWith(pPassiveCollider);

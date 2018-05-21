@@ -113,7 +113,7 @@ public:
 	// 弹出提示窗口
 	static void info(
 		const String& text,					/* 内容 */
-		const String& title = L"Prompt"		/* 窗口标题 */
+		const String& title = L"Infomation"	/* 窗口标题 */
 	);
 
 	// 弹出警告窗口
