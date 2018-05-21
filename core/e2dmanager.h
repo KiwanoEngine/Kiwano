@@ -79,17 +79,17 @@ public:
 
 	// 继续名称相同的所有动作
 	static void resume(
-		const String& strActionName
+		const String& name
 	);
 
 	// 暂停名称相同的所有动作
 	static void pause(
-		const String& strActionName
+		const String& name
 	);
 
 	// 停止名称相同的所有动作
 	static void stop(
-		const String& strActionName
+		const String& name
 	);
 
 	// 继续所有动作
@@ -103,7 +103,7 @@ public:
 
 	// 获取所有名称相同的动作
 	static std::vector<Action *> get(
-		const String& strActionName
+		const String& name
 	);
 
 	// 获取所有动作
@@ -201,51 +201,10 @@ private:
 // 碰撞管理器
 class ColliderManager
 {
-	friend Game;
 	friend Node;
 	friend Collider;
 
-public:
-	// 开启或关闭碰撞监听功能（默认关闭）
-	static void setEnable(
-		bool enable
-	);
-
-	// 添加碰撞监听
-	static void add(
-		const Function& func,		/* 监听到碰撞时的执行函数 */
-		const String& name = L"",	/* 监听器名称 */
-		bool paused = false			/* 是否暂停 */
-	);
-
-	// 暂停碰撞监听
-	static void pause(
-		const String& name
-	);
-
-	// 暂停碰撞监听
-	static void resume(
-		const String& name
-	);
-
-	// 停止碰撞监听
-	static void stop(
-		const String& name
-	);
-
-	// 暂停所有监听器
-	static void pauseAll();
-
-	// 继续所有监听器
-	static void resumeAll();
-
-	// 停止所有监听器
-	static void stopAll();
-
 private:
-	// 更新监听器
-	static void __update();
-
 	// 更新碰撞体
 	static void __updateCollider(
 		Collider * pActiveCollider
@@ -260,9 +219,6 @@ private:
 	static void __removeCollider(
 		Collider * pCollider
 	);
-
-	// 回收资源
-	static void __uninit();
 };
 
 }

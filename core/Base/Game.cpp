@@ -1,6 +1,7 @@
 #include "..\e2dbase.h"
 #include "..\e2dmanager.h"
 #include "..\e2dtool.h"
+#include "..\e2dcollider.h"
 
 
 // ¿ØÖÆÓÎÏ·ÖÕÖ¹
@@ -198,9 +199,10 @@ void e2d::Game::destroy()
 {
 	// É¾³ıËùÓĞ³¡¾°
 	SceneManager::__uninit();
-	// É¾³ı¼àÌıÆ÷
+	// É¾³ıÊäÈë¼àÌıÆ÷
 	InputManager::__uninit();
-	ColliderManager::__uninit();
+	// É¾³ıÅö×²¼àÌıÆ÷
+	Collision::__uninit();
 	// É¾³ı¶¯×÷
 	ActionManager::__uninit();
 	// »ØÊÕÒôÀÖ²¥·ÅÆ÷×ÊÔ´

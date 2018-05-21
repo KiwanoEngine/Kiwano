@@ -45,6 +45,9 @@ void e2d::InputManager::add(const Function& func, const String& name, bool pause
 
 void e2d::InputManager::pause(const String& name)
 {
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
 	for (auto listener : s_vListeners)
 	{
 		if (listener->name == name)
@@ -56,6 +59,9 @@ void e2d::InputManager::pause(const String& name)
 
 void e2d::InputManager::resume(const String& name)
 {
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
 	for (auto listener : s_vListeners)
 	{
 		if (listener->name == name)
@@ -67,6 +73,9 @@ void e2d::InputManager::resume(const String& name)
 
 void e2d::InputManager::stop(const String& name)
 {
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
 	for (auto listener : s_vListeners)
 	{
 		if (listener->name == name)

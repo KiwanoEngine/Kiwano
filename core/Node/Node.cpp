@@ -6,7 +6,7 @@
 // 默认中心点位置
 static float s_fDefaultPiovtX = 0;
 static float s_fDefaultPiovtY = 0;
-static bool s_fDefaultColliderEnabled = false;
+static e2d::Collider::Type s_fDefaultColliderType = e2d::Collider::Type::NONE;
 
 e2d::Node::Node()
 	: _nOrder(0)
@@ -35,9 +35,9 @@ e2d::Node::Node()
 	, _autoUpdate(true)
 	, _positionFixed(false)
 {
-	if (s_fDefaultColliderEnabled)
+	if (s_fDefaultColliderType != Collider::Type::NONE)
 	{
-		this->setCollider(GC::create<ColliderRect>(this));
+		this->setCollider(s_fDefaultColliderType);
 	}
 }
 
@@ -560,6 +560,12 @@ void e2d::Node::setCollider(Collider::Type type)
 		break;
 	}
 
+	case Collider::Type::NONE:
+	{
+		this->setCollider(nullptr);
+		break;
+	}
+
 	default:
 		break;
 	}
@@ -770,9 +776,9 @@ void e2d::Node::runAction(Action * action)
 	}
 }
 
-void e2d::Node::resumeAction(const String& strActionName)
+void e2d::Node::resumeAction(const String& name)
 {
-	auto& actions = ActionManager::get(strActionName);
+	auto& actions = ActionManager::get(name);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -782,9 +788,9 @@ void e2d::Node::resumeAction(const String& strActionName)
 	}
 }
 
-void e2d::Node::pauseAction(const String& strActionName)
+void e2d::Node::pauseAction(const String& name)
 {
-	auto& actions = ActionManager::get(strActionName);
+	auto& actions = ActionManager::get(name);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -794,9 +800,9 @@ void e2d::Node::pauseAction(const String& strActionName)
 	}
 }
 
-void e2d::Node::stopAction(const String& strActionName)
+void e2d::Node::stopAction(const String& name)
 {
-	auto& actions = ActionManager::get(strActionName);
+	auto& actions = ActionManager::get(name);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -806,9 +812,9 @@ void e2d::Node::stopAction(const String& strActionName)
 	}
 }
 
-e2d::Action * e2d::Node::getAction(const String& strActionName)
+e2d::Action * e2d::Node::getAction(const String& name)
 {
-	auto& actions = ActionManager::get(strActionName);
+	auto& actions = ActionManager::get(name);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -928,9 +934,9 @@ void e2d::Node::setDefaultPiovt(double defaultPiovtX, double defaultPiovtY)
 	s_fDefaultPiovtY = min(max(float(defaultPiovtY), 0), 1);
 }
 
-void e2d::Node::setDefaultColliderEnable(bool enable)
+void e2d::Node::setDefaultCollider(Collider::Type type)
 {
-	s_fDefaultColliderEnabled = enable;
+	s_fDefaultColliderType = type;
 }
 
 void e2d::Node::onDestroy()

@@ -43,6 +43,9 @@ void e2d::ActionManager::__add(Action * action)
 
 void e2d::ActionManager::__remove(Action * action)
 {
+	if (s_vActions.empty() || action == nullptr)
+		return;
+
 	auto iter = std::find(s_vActions.begin(), s_vActions.end(), action);
 	if (iter != s_vActions.end())
 	{
@@ -52,42 +55,42 @@ void e2d::ActionManager::__remove(Action * action)
 
 void e2d::ActionManager::__resumeAllBindedWith(Node * target)
 {
-	if (target)
+	if (s_vRunningActions.empty() || target == nullptr)
+		return;
+
+	for (auto action : s_vRunningActions)
 	{
-		for (auto action : s_vRunningActions)
+		if (action->getTarget() == target)
 		{
-			if (action->getTarget() == target)
-			{
-				action->resume();
-			}
+			action->resume();
 		}
 	}
 }
 
 void e2d::ActionManager::__pauseAllBindedWith(Node * target)
 {
-	if (target)
+	if (s_vRunningActions.empty() || target == nullptr)
+		return;
+
+	for (auto action : s_vRunningActions)
 	{
-		for (auto action : s_vRunningActions)
+		if (action->getTarget() == target)
 		{
-			if (action->getTarget() == target)
-			{
-				action->pause();
-			}
+			action->pause();
 		}
 	}
 }
 
 void e2d::ActionManager::__stopAllBindedWith(Node * target)
 {
-	if (target)
+	if (s_vRunningActions.empty() || target == nullptr)
+		return;
+
+	for (auto action : s_vRunningActions)
 	{
-		for (auto action : s_vRunningActions)
+		if (action->getTarget() == target)
 		{
-			if (action->getTarget() == target)
-			{
-				action->stop();
-			}
+			action->stop();
 		}
 	}
 }
@@ -109,33 +112,42 @@ void e2d::ActionManager::start(Action * action, Node * target, bool paused)
 	}
 }
 
-void e2d::ActionManager::resume(const String& strActionName)
+void e2d::ActionManager::resume(const String& name)
 {
+	if (s_vRunningActions.empty() || name.isEmpty())
+		return;
+
 	for (auto action : s_vRunningActions)
 	{
-		if (action->getName() == strActionName)
+		if (action->getName() == name)
 		{
 			action->resume();
 		}
 	}
 }
 
-void e2d::ActionManager::pause(const String& strActionName)
+void e2d::ActionManager::pause(const String& name)
 {
+	if (s_vRunningActions.empty() || name.isEmpty())
+		return;
+
 	for (auto action : s_vRunningActions)
 	{
-		if (action->getName() == strActionName)
+		if (action->getName() == name)
 		{
 			action->pause();
 		}
 	}
 }
 
-void e2d::ActionManager::stop(const String& strActionName)
+void e2d::ActionManager::stop(const String& name)
 {
+	if (s_vRunningActions.empty() || name.isEmpty())
+		return;
+
 	for (auto action : s_vRunningActions)
 	{
-		if (action->getName() == strActionName)
+		if (action->getName() == name)
 		{
 			action->stop();
 		}
@@ -196,12 +208,12 @@ void e2d::ActionManager::stopAll()
 	}
 }
 
-std::vector<e2d::Action*> e2d::ActionManager::get(const String& strActionName)
+std::vector<e2d::Action*> e2d::ActionManager::get(const String& name)
 {
 	std::vector<Action*> actions;
 	for (auto action : s_vActions)
 	{
-		if (action->getName() == strActionName)
+		if (action->getName() == name)
 		{
 			actions.push_back(action);
 		}

@@ -363,22 +363,22 @@ public:
 
 	// 继续动作
 	virtual void resumeAction(
-		const String& strActionName
+		const String& name
 	);
 
 	// 暂停动作
 	virtual void pauseAction(
-		const String& strActionName
+		const String& name
 	);
 
 	// 停止动作
 	virtual void stopAction(
-		const String& strActionName
+		const String& name
 	);
 
 	// 获取动作
 	virtual Action * getAction(
-		const String& strActionName
+		const String& name
 	);
 
 	// 继续所有暂停动作
@@ -396,9 +396,9 @@ public:
 		double defaultPiovtY
 	);
 
-	// 设置节点是否包含默认碰撞体（默认关闭）
-	static void setDefaultColliderEnable(
-		bool enable
+	// 设置节点的默认碰撞体类型（默认无）
+	static void setDefaultCollider(
+		Collider::Type type
 	);
 
 	// 销毁对象

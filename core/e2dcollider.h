@@ -12,6 +12,7 @@ class ColliderManager;
 // 碰撞事件
 class Collision
 {
+	friend Game;
 	friend ColliderManager;
 
 public:
@@ -56,9 +57,54 @@ public:
 		const String& name
 	);
 
+	// 开启或关闭物体碰撞监听功能（默认关闭）
+	static void setEnable(
+		bool enable
+	);
+
+	// 是否打开了物体碰撞监听
+	static bool isEnable();
+
+	// 添加碰撞监听
+	static void addListener(
+		const Function& func,		/* 监听到碰撞时的执行函数 */
+		const String& name = L"",	/* 监听器名称 */
+		bool paused = false			/* 是否暂停 */
+	);
+
+	// 暂停碰撞监听
+	static void pause(
+		const String& name
+	);
+
+	// 暂停碰撞监听
+	static void resume(
+		const String& name
+	);
+
+	// 停止碰撞监听
+	static void stop(
+		const String& name
+	);
+
+	// 暂停所有监听器
+	static void pauseAll();
+
+	// 继续所有监听器
+	static void resumeAll();
+
+	// 停止所有监听器
+	static void stopAll();
+
 private:
-	static Node * __activeNode;
-	static Node * __passiveNode;
+	// 更新监听器
+	static void __update(
+		Node * active,
+		Node * passive
+	);
+
+	// 回收资源
+	static void __uninit();
 };
 
 
@@ -73,6 +119,7 @@ public:
 	// 碰撞体类别
 	enum class Type : int
 	{
+		NONE,		/* 无 */
 		RECT,		/* 矩形 */
 		CIRCLE,		/* 圆形 */
 		ELLIPSE		/* 椭圆形 */

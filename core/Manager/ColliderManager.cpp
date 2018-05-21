@@ -3,79 +3,14 @@
 #include "..\e2dcollider.h"
 #include "..\e2dtool.h"
 
-// ¼àÌıÆ÷
-class Listener
-{
-public:
-	Listener(
-		const e2d::Function& func,
-		const e2d::String& name,
-		bool paused
-	)
-		: name(name)
-		, callback(func)
-		, running(!paused)
-		, stopped(false)
-	{
-	}
-
-	// ¸üĞÂ¼àÌıÆ÷×´Ì¬
-	virtual void update()
-	{
-		if (callback)
-		{
-			callback();
-		}
-	}
-
-public:
-	bool running;
-	bool stopped;
-	e2d::String name;
-	e2d::Function callback;
-};
-
 
 // Åö×²Ìå¼¯ºÏ
 static std::vector<e2d::Collider*> s_vColliders;
-// ¼àÌıÆ÷ÈİÆ÷
-static std::vector<Listener*> s_vListeners;
-// Åö×²´¥·¢×´Ì¬
-static bool s_bCollisionEnable = false;
-
-
-void e2d::ColliderManager::setEnable(bool enable)
-{
-	s_bCollisionEnable = enable;
-}
-
-void e2d::ColliderManager::__update()
-{
-	if (s_vListeners.empty() || Game::isPaused())
-		return;
-
-	for (size_t i = 0; i < s_vListeners.size(); ++i)
-	{
-		auto listener = s_vListeners[i];
-		// Çå³ıÒÑÍ£Ö¹µÄ¼àÌıÆ÷
-		if (listener->stopped)
-		{
-			delete listener;
-			s_vListeners.erase(s_vListeners.begin() + i);
-		}
-		else
-		{
-			// ¸üĞÂ¼àÌıÆ÷
-			listener->update();
-			++i;
-		}
-	}
-}
 
 void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 {
 	// ÅĞ¶ÏÅö×²´¥·¢ÊÇ·ñ´ò¿ª
-	if (!s_bCollisionEnable)
+	if (!Collision::isEnable())
 		return;
 
 	Node* pActiveNode = pActiveCollider->_parentNode;
@@ -106,78 +41,12 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 					// ºöÂÔ UNKNOWN ºÍ DISJOIN Çé¿ö
 					if (relation != Collider::Relation::UNKNOWN && relation != Collider::Relation::DISJOIN)
 					{
-						Collision::__activeNode = pActiveNode;
-						Collision::__passiveNode = pPassiveNode;
-						ColliderManager::__update();
+						// ¸üĞÂÅö×²¼àÌıÆ÷
+						Collision::__update(pActiveNode, pPassiveNode);
 					}
-					Collision::__activeNode = nullptr;
-					Collision::__passiveNode = nullptr;
 				}
 			}
 		}
-	}
-}
-
-void e2d::ColliderManager::add(const Function& func, const String& name, bool paused)
-{
-	auto listener = new (std::nothrow) Listener(func, name, paused);
-	s_vListeners.push_back(listener);
-}
-
-void e2d::ColliderManager::pause(const String& name)
-{
-	for (auto listener : s_vListeners)
-	{
-		if (listener->name == name)
-		{
-			listener->running = false;
-		}
-	}
-}
-
-void e2d::ColliderManager::resume(const String& name)
-{
-	for (auto listener : s_vListeners)
-	{
-		if (listener->name == name)
-		{
-			listener->running = true;
-		}
-	}
-}
-
-void e2d::ColliderManager::stop(const String& name)
-{
-	for (auto listener : s_vListeners)
-	{
-		if (listener->name == name)
-		{
-			listener->stopped = true;
-		}
-	}
-}
-
-void e2d::ColliderManager::pauseAll()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->running = false;
-	}
-}
-
-void e2d::ColliderManager::resumeAll()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->running = true;
-	}
-}
-
-void e2d::ColliderManager::stopAll()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->stopped = true;
 	}
 }
 
@@ -209,13 +78,4 @@ void e2d::ColliderManager::__removeCollider(Collider * pCollider)
 			}
 		}
 	}
-}
-
-void e2d::ColliderManager::__uninit()
-{
-	for (auto listener : s_vListeners)
-	{
-		delete listener;
-	}
-	s_vListeners.clear();
 }
