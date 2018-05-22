@@ -183,6 +183,8 @@ private:
 };
 
 
+class Listener;
+
 // 输入控制
 class Input
 {
@@ -309,10 +311,20 @@ public:
 	static double getMouseDeltaZ();
 
 	// 添加输入监听
-	static void addListener(
+	static Listener * addListener(
 		const Function& func,		/* 监听到用户输入时的执行函数 */
 		const String& name = L"",	/* 监听器名称 */
 		bool paused = false			/* 是否暂停 */
+	);
+
+	// 添加碰撞监听
+	static void addListener(
+		Listener * listener			/* 监听器 */
+	);
+
+	// 移除监听器
+	static void removeListener(
+		Listener * listener			/* 监听器 */
 	);
 
 	// 启动输入监听
@@ -325,8 +337,8 @@ public:
 		const String& name
 	);
 
-	// 清除输入监听
-	static void clearListener(
+	// 移除输入监听
+	static void removeListener(
 		const String& name
 	);
 
@@ -336,8 +348,8 @@ public:
 	// 停止所有监听器
 	static void stopAllListeners();
 
-	// 清除所有监听器
-	static void clearAllListeners();
+	// 移除所有监听器
+	static void removeAllListeners();
 
 private:
 	// 初始化 DirectInput 以及键盘鼠标设备

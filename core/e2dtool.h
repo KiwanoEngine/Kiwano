@@ -322,6 +322,7 @@ class Collision;
 
 // ¼àÌıÆ÷
 class Listener
+	: public Object
 {
 	friend Input;
 	friend Collision;

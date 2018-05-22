@@ -220,11 +220,38 @@ double Input::getMouseDeltaZ()
 	return (double)s_MouseState.lZ;
 }
 
-
-void e2d::Input::addListener(const Function& func, const String& name, bool paused)
+e2d::Listener * e2d::Input::addListener(const Function& func, const String& name, bool paused)
 {
-	auto listener = new (std::nothrow) Listener(func, name, paused);
+	auto listener = GC::create<Listener>(func, name, paused);
+	GC::retain(listener);
 	s_vListeners.push_back(listener);
+	return listener;
+}
+
+void e2d::Input::addListener(Listener * listener)
+{
+	if (listener)
+	{
+		auto iter = std::find(s_vListeners.begin(), s_vListeners.end(), listener);
+		if (iter == s_vListeners.end())
+		{
+			GC::retain(listener);
+			s_vListeners.push_back(listener);
+		}
+	}
+}
+
+void e2d::Input::removeListener(Listener * listener)
+{
+	if (listener)
+	{
+		auto iter = std::find(s_vListeners.begin(), s_vListeners.end(), listener);
+		if (iter != s_vListeners.end())
+		{
+			GC::release(listener);
+			s_vListeners.erase(iter);
+		}
+	}
 }
 
 void e2d::Input::stopListener(const String& name)
@@ -255,7 +282,7 @@ void e2d::Input::startListener(const String& name)
 	}
 }
 
-void e2d::Input::clearListener(const String& name)
+void e2d::Input::removeListener(const String& name)
 {
 	if (s_vListeners.empty() || name.isEmpty())
 		return;
@@ -285,7 +312,7 @@ void e2d::Input::startAllListeners()
 	}
 }
 
-void e2d::Input::clearAllListeners()
+void e2d::Input::removeAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
@@ -304,7 +331,7 @@ void e2d::Input::__updateListeners()
 		// Çå³ıÒÑÍ£Ö¹µÄ¼àÌıÆ÷
 		if (listener->_stopped)
 		{
-			delete listener;
+			GC::release(listener);
 			s_vListeners.erase(s_vListeners.begin() + i);
 		}
 		else
@@ -320,7 +347,7 @@ void e2d::Input::__clearListeners()
 {
 	for (auto listener : s_vListeners)
 	{
-		delete listener;
+		GC::release(listener);
 	}
 	s_vListeners.clear();
 }

@@ -7,6 +7,7 @@ namespace e2d
 
 
 
+class Listener;
 class ColliderManager;
 
 // Åö×²ÊÂ¼ş
@@ -66,10 +67,20 @@ public:
 	static bool isEnable();
 
 	// Ìí¼ÓÅö×²¼àÌı
-	static void addListener(
+	static Listener * addListener(
 		const Function& func,		/* ¼àÌıµ½Åö×²Ê±µÄÖ´ĞĞº¯Êı */
 		const String& name = L"",	/* ¼àÌıÆ÷Ãû³Æ */
 		bool paused = false			/* ÊÇ·ñÔİÍ£ */
+	);
+
+	// Ìí¼ÓÅö×²¼àÌı
+	static void addListener(
+		Listener * listener			/* ¼àÌıÆ÷ */
+	);
+
+	// ÒÆ³ı¼àÌıÆ÷
+	static void removeListener(
+		Listener * listener			/* ¼àÌıÆ÷ */
 	);
 
 	// Æô¶¯Åö×²¼àÌı
@@ -82,8 +93,8 @@ public:
 		const String& name
 	);
 
-	// Çå³ıÅö×²¼àÌı
-	static void clearListener(
+	// ÒÆ³ıÅö×²¼àÌı
+	static void removeListener(
 		const String& name
 	);
 
@@ -93,8 +104,8 @@ public:
 	// Í£Ö¹ËùÓĞ¼àÌıÆ÷
 	static void stopAllListeners();
 
-	// Çå³ıËùÓĞ¼àÌıÆ÷
-	static void clearAllListeners();
+	// ÒÆ³ıËùÓĞ¼àÌıÆ÷
+	static void removeAllListeners();
 
 private:
 	// ¸üĞÂ¼àÌıÆ÷

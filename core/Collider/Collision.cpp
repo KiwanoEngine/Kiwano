@@ -104,7 +104,7 @@ void e2d::Collision::__update(Node * active, Node * passive)
 		// Çå³ýÒÑÍ£Ö¹µÄ¼àÌýÆ÷
 		if (listener->_stopped)
 		{
-			delete listener;
+			GC::release(listener);
 			s_vListeners.erase(s_vListeners.begin() + i);
 		}
 		else
@@ -119,10 +119,38 @@ void e2d::Collision::__update(Node * active, Node * passive)
 	s_pPassiveNode = nullptr;
 }
 
-void e2d::Collision::addListener(const Function& func, const String& name, bool paused)
+e2d::Listener * e2d::Collision::addListener(const Function& func, const String& name, bool paused)
 {
-	auto listener = new (std::nothrow) Listener(func, name, paused);
+	auto listener = GC::create<Listener>(func, name, paused);
+	GC::retain(listener);
 	s_vListeners.push_back(listener);
+	return listener;
+}
+
+void e2d::Collision::addListener(Listener * listener)
+{
+	if (listener)
+	{
+		auto iter = std::find(s_vListeners.begin(), s_vListeners.end(), listener);
+		if (iter == s_vListeners.end())
+		{
+			GC::retain(listener);
+			s_vListeners.push_back(listener);
+		}
+	}
+}
+
+void e2d::Collision::removeListener(Listener * listener)
+{
+	if (listener)
+	{
+		auto iter = std::find(s_vListeners.begin(), s_vListeners.end(), listener);
+		if (iter != s_vListeners.end())
+		{
+			GC::release(listener);
+			s_vListeners.erase(iter);
+		}
+	}
 }
 
 void e2d::Collision::stopListener(const String& name)
@@ -153,7 +181,7 @@ void e2d::Collision::startListener(const String& name)
 	}
 }
 
-void e2d::Collision::clearListener(const String& name)
+void e2d::Collision::removeListener(const String& name)
 {
 	if (s_vListeners.empty() || name.isEmpty())
 		return;
@@ -183,7 +211,7 @@ void e2d::Collision::startAllListeners()
 	}
 }
 
-void e2d::Collision::clearAllListeners()
+void e2d::Collision::removeAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
@@ -195,7 +223,7 @@ void e2d::Collision::__clearListeners()
 {
 	for (auto listener : s_vListeners)
 	{
-		delete listener;
+		GC::release(listener);
 	}
 	s_vListeners.clear();
 }
