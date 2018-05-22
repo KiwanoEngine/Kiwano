@@ -825,7 +825,7 @@ e2d::Action * e2d::Node::getAction(const String& name)
 	return nullptr;
 }
 
-bool e2d::Node::isPointIn(Point point) const
+bool e2d::Node::containsPoint(const Point& point) const
 {
 	BOOL ret = 0;
 	// 如果存在碰撞体，用碰撞体判断
@@ -867,7 +867,7 @@ bool e2d::Node::isPointIn(Point point) const
 	return false;
 }
 
-bool e2d::Node::isOverlappedWith(const Node * node) const
+bool e2d::Node::intersects(Node * node) const
 {
 	// 如果存在碰撞体，用碰撞体判断
 	if (this->_collider && node->_collider)

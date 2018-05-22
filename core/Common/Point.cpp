@@ -42,3 +42,8 @@ e2d::Point e2d::Point::operator-() const
 {
 	return Point(-x, -y);
 }
+
+bool e2d::Point::operator==(const Point & point) const
+{
+	return (x == point.x) && (y == point.y);
+}

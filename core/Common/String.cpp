@@ -129,7 +129,7 @@ e2d::String & e2d::String::operator=(const String &str)
 	return (*this);
 }
 
-bool e2d::String::operator==(const wchar_t *str)
+bool e2d::String::operator==(const wchar_t *str) const
 {
 	if (str)
 	{
@@ -141,7 +141,7 @@ bool e2d::String::operator==(const wchar_t *str)
 	}
 }
 
-bool e2d::String::operator==(const char *str)
+bool e2d::String::operator==(const char *str) const
 {
 	if (str)
 	{
@@ -154,12 +154,12 @@ bool e2d::String::operator==(const char *str)
 	}
 }
 
-bool e2d::String::operator ==(const e2d::String &str)
+bool e2d::String::operator ==(const e2d::String &str) const
 {
 	return _str == str._str;
 }
 
-bool e2d::String::operator!=(const wchar_t *str)
+bool e2d::String::operator!=(const wchar_t *str) const
 {
 	if (str)
 	{
@@ -171,7 +171,7 @@ bool e2d::String::operator!=(const wchar_t *str)
 	}
 }
 
-bool e2d::String::operator!=(const char *str)
+bool e2d::String::operator!=(const char *str) const
 {
 	if (str)
 	{
@@ -184,7 +184,7 @@ bool e2d::String::operator!=(const char *str)
 	}
 }
 
-bool e2d::String::operator!=(const e2d::String &str)
+bool e2d::String::operator!=(const e2d::String &str) const
 {
 	return _str != str._str;
 }

@@ -188,7 +188,7 @@ void e2d::Button::_fixedUpdate()
 		{
 			// 鼠标左键抬起时，判断鼠标坐标是否在按钮内部
 			if (_isSelected &&
-				_normal->isPointIn(Input::getMousePos()))
+				_normal->containsPoint(Input::getMousePos()))
 			{
 				_runCallback();
 			}
@@ -198,7 +198,7 @@ void e2d::Button::_fixedUpdate()
 
 		if (Input::isPress(Input::Mouse::LEFT))
 		{
-			if (_normal->isPointIn(Input::getMousePos()))
+			if (_normal->containsPoint(Input::getMousePos()))
 			{
 				// 鼠标左键按下，且位于按钮内时，标记 _isSelected 为 true
 				_isSelected = true;
@@ -208,14 +208,14 @@ void e2d::Button::_fixedUpdate()
 
 		if (_isSelected && Input::isDown(Input::Mouse::LEFT))
 		{
-			if (_normal->isPointIn(Input::getMousePos()))
+			if (_normal->containsPoint(Input::getMousePos()))
 			{
 				_setState(ButtonState::SELECTED);
 				Window::setCursor(Window::Cursor::HAND);
 				return;
 			}
 		}
-		else if (_normal->isPointIn(Input::getMousePos()))
+		else if (_normal->containsPoint(Input::getMousePos()))
 		{
 			_setState(ButtonState::MOUSEOVER);
 			Window::setCursor(Window::Cursor::HAND);
@@ -225,7 +225,7 @@ void e2d::Button::_fixedUpdate()
 		_setState(ButtonState::NORMAL);
 	}
 
-	if (_visiable && !_enable && _normal && _normal->isPointIn(Input::getMousePos()))
+	if (_visiable && !_enable && _normal && _normal->containsPoint(Input::getMousePos()))
 	{
 		Window::setCursor(Window::Cursor::NO);
 	}

@@ -231,6 +231,7 @@
     <ClCompile Include="..\..\core\Common\Function.cpp" />
     <ClCompile Include="..\..\core\Common\Object.cpp" />
     <ClCompile Include="..\..\core\Common\Point.cpp" />
+    <ClCompile Include="..\..\core\Common\Rect.cpp" />
     <ClCompile Include="..\..\core\Common\Scene.cpp" />
     <ClCompile Include="..\..\core\Common\Size.cpp" />
     <ClCompile Include="..\..\core\Common\String.cpp" />

@@ -52,13 +52,13 @@ public:
 	virtual bool isVisiable() const;
 
 	// 判断点是否在节点内
-	virtual bool isPointIn(
-		Point point
+	virtual bool containsPoint(
+		const Point& point
 	) const;
 
-	// 判断两节点是否重叠
-	virtual bool isOverlappedWith(
-		const Node * node
+	// 判断两物体是否相交
+	virtual bool intersects(
+		Node * node
 	) const;
 
 	// 获取节点名称

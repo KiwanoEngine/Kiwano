@@ -234,6 +234,9 @@
     <ClCompile Include="..\..\core\Node\ToggleButton.cpp">
       <Filter>Node</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Common\Rect.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />

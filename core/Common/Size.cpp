@@ -41,3 +41,8 @@ e2d::Size e2d::Size::operator-() const
 {
 	return Size(-width, -height);
 }
+
+bool e2d::Size::operator==(const Size & size) const
+{
+	return (width == size.width) && (height == size.height);
+}

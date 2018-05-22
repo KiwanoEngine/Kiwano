@@ -23,6 +23,7 @@ enum class LineJoin : int
 	ROUND = 2	/* 圆角 */
 };
 
+
 class Size;
 
 // 坐标
@@ -37,17 +38,20 @@ public:
 
 	Point(double x, double y);
 
-	Point operator + (Point const & p) const;
-	Point operator - (Point const & p) const;
-	Point operator * (double const & value) const;
-	Point operator / (double const & value) const;
+	Point operator + (Point const & point) const;
+	Point operator - (Point const & point) const;
+	Point operator * (double const & point) const;
+	Point operator / (double const & point) const;
 	Point operator - () const;
+	bool operator== (const Point& point) const;
 
 	operator e2d::Size() const;
 };
 
+
 // 二维向量
 typedef Point Vector;
+
 
 // 大小
 class Size
@@ -63,11 +67,66 @@ public:
 
 	Size operator + (Size const & size) const;
 	Size operator - (Size const & size) const;
-	Size operator * (double const & value) const;
-	Size operator / (double const & value) const;
+	Size operator * (double const & size) const;
+	Size operator / (double const & size) const;
 	Size operator - () const;
+	bool operator== (const Size& size) const;
 
 	operator e2d::Point() const;
+};
+
+
+// 矩形
+class Rect
+{
+public:
+	Point origin;	// 原点坐标
+	Size  size;		// 宽度和高度
+
+public:
+	Rect();
+	
+	Rect(
+		double x, 
+		double y, 
+		double width, 
+		double height
+	);
+	
+	Rect(
+		const Point& pos, 
+		const Size& size
+	);
+	
+	Rect(
+		const Rect& other
+	);
+	
+	Rect& operator= (
+		const Rect& other
+	);
+
+	bool operator== (
+		const Rect& rect
+	) const;
+	
+	// 设置矩形
+	void setRect(
+		double x, 
+		double y, 
+		double width, 
+		double height
+	);
+	
+	// 判断点是否在矩形内
+	bool containsPoint(
+		const Point& point
+	) const;
+	
+	// 判断两矩形是否相交
+	bool intersects(
+		const Rect& rect
+	) const;
 };
 
 
@@ -186,12 +245,12 @@ public:
 	operator wchar_t* () const;
 
 	// 比较运算符
-	bool operator== (const String &);
-	bool operator== (const char *);
-	bool operator== (const wchar_t *);
-	bool operator!= (const String &);
-	bool operator!= (const char *);
-	bool operator!= (const wchar_t *);
+	bool operator== (const String &) const;
+	bool operator== (const char *) const;
+	bool operator== (const wchar_t *) const;
+	bool operator!= (const String &) const;
+	bool operator!= (const char *) const;
+	bool operator!= (const wchar_t *) const;
 	bool operator> (const String &) const;
 	bool operator>= (const String &) const;
 	bool operator< (const String &) const;
