@@ -1,18 +1,18 @@
 #include "..\e2dcollider.h"
 #include "..\e2dnode.h"
 
-e2d::ColliderEllipse::ColliderEllipse()
+e2d::EllipseCollider::EllipseCollider()
 	: _d2dEllipse(nullptr)
 {
 }
 
-e2d::ColliderEllipse::ColliderEllipse(Point center, double radiusX, double radiusY)
+e2d::EllipseCollider::EllipseCollider(Point center, double radiusX, double radiusY)
 	: _d2dEllipse(nullptr)
 {
 	this->setEllipse(center, radiusX, radiusY);
 }
 
-e2d::ColliderEllipse::ColliderEllipse(Node * node)
+e2d::EllipseCollider::EllipseCollider(Node * node)
 	: _d2dEllipse(nullptr)
 {
 	this->setEllipse(
@@ -26,12 +26,12 @@ e2d::ColliderEllipse::ColliderEllipse(Node * node)
 	this->setAutoResize(true);
 }
 
-e2d::ColliderEllipse::~ColliderEllipse()
+e2d::EllipseCollider::~EllipseCollider()
 {
 	SafeRelease(_d2dEllipse);
 }
 
-void e2d::ColliderEllipse::setEllipse(Point center, double radiusX, double radiusY)
+void e2d::EllipseCollider::setEllipse(Point center, double radiusX, double radiusY)
 {
 	SafeRelease(_d2dEllipse);
 
@@ -46,7 +46,7 @@ void e2d::ColliderEllipse::setEllipse(Point center, double radiusX, double radiu
 	);
 }
 
-void e2d::ColliderEllipse::_resize()
+void e2d::EllipseCollider::_resize()
 {
 	if (_parentNode && _enable)
 	{
@@ -61,7 +61,7 @@ void e2d::ColliderEllipse::_resize()
 	}
 }
 
-ID2D1EllipseGeometry * e2d::ColliderEllipse::getD2dGeometry() const
+ID2D1EllipseGeometry * e2d::EllipseCollider::getD2dGeometry() const
 {
 	return _d2dEllipse;
 }

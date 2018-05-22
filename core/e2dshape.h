@@ -11,7 +11,7 @@ class Shape :
 {
 public:
 	// 形状样式
-	enum class Style : int
+	enum Style : int
 	{
 		SOLID,		/* 填充 */
 		ROUND,		/* 轮廓 */
@@ -72,22 +72,22 @@ protected:
 
 
 // 矩形
-class Rect :
+class RectShape :
 	public Shape
 {
 public:
-	Rect();
+	RectShape();
 
-	Rect(
+	RectShape(
 		Size size		/* 宽度和高度 */
 	);
 
-	Rect(
+	RectShape(
 		Point topLeft,	/* 左上角坐标 */
 		Size size		/* 宽度和高度 */
 	);
 
-	virtual ~Rect();
+	virtual ~RectShape();
 
 protected:
 	// 渲染轮廓
@@ -99,26 +99,26 @@ protected:
 
 
 // 圆角矩形
-class RoundRect :
+class RoundRectShape :
 	public Shape
 {
 public:
-	RoundRect();
+	RoundRectShape();
 
-	RoundRect(
+	RoundRectShape(
 		Size size,		/* 宽度和高度 */
 		double radiusX,	/* 圆角半径 */
 		double radiusY	/* 圆角半径 */
 	);
 
-	RoundRect(
+	RoundRectShape(
 		Point topLeft,	/* 左上角坐标 */
 		Size size,		/* 宽度和高度 */
 		double radiusX,	/* 圆角半径 */
 		double radiusY	/* 圆角半径 */
 	);
 
-	virtual ~RoundRect();
+	virtual ~RoundRectShape();
 
 	// 获取圆角半径
 	double getRadiusX() const;
@@ -150,22 +150,22 @@ protected:
 
 
 // 圆形
-class Circle :
+class CircleShape :
 	public Shape
 {
 public:
-	Circle();
+	CircleShape();
 
-	Circle(
+	CircleShape(
 		double radius	/* 半径 */
 	);
 
-	Circle(
+	CircleShape(
 		Point center,	/* 圆心坐标 */
 		double radius	/* 半径 */
 	);
 
-	virtual ~Circle();
+	virtual ~CircleShape();
 
 	// 获取半径
 	double getRadius() const;
@@ -188,24 +188,24 @@ protected:
 
 
 // 椭圆形
-class Ellipse :
+class EllipseShape :
 	public Shape
 {
 public:
-	Ellipse();
+	EllipseShape();
 
-	Ellipse(
+	EllipseShape(
 		double radiusX,	/* 横轴半径 */
 		double radiusY	/* 纵轴半径 */
 	);
 
-	Ellipse(
+	EllipseShape(
 		Point center,	/* 圆心坐标 */
 		double radiusX,	/* 横轴半径 */
 		double radiusY	/* 纵轴半径 */
 	);
 
-	virtual ~Ellipse();
+	virtual ~EllipseShape();
 
 	// 获取横轴半径
 	double getRadiusX() const;

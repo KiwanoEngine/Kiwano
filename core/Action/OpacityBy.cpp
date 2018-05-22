@@ -2,14 +2,14 @@
 
 
 e2d::OpacityBy::OpacityBy(double duration, double opacity)
-	: ActionGradual(duration)
+	: FiniteTimeAction(duration)
 {
 	_deltaVal = opacity;
 }
 
 void e2d::OpacityBy::_init()
 {
-	ActionGradual::_init();
+	FiniteTimeAction::_init();
 
 	if (_target)
 	{
@@ -19,7 +19,7 @@ void e2d::OpacityBy::_init()
 
 void e2d::OpacityBy::_update()
 {
-	ActionGradual::_update();
+	FiniteTimeAction::_update();
 
 	if (_target)
 	{

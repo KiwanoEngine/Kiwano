@@ -2,14 +2,14 @@
 
 
 e2d::ScaleBy::ScaleBy(double duration, double scale)
-	: ActionGradual(duration)
+	: FiniteTimeAction(duration)
 {
 	_deltaX = scale;
 	_deltaY = scale;
 }
 
 e2d::ScaleBy::ScaleBy(double duration, double scaleX, double scaleY)
-	: ActionGradual(duration)
+	: FiniteTimeAction(duration)
 {
 	_deltaX = scaleX;
 	_deltaY = scaleY;
@@ -17,7 +17,7 @@ e2d::ScaleBy::ScaleBy(double duration, double scaleX, double scaleY)
 
 void e2d::ScaleBy::_init()
 {
-	ActionGradual::_init();
+	FiniteTimeAction::_init();
 
 	if (_target)
 	{
@@ -28,7 +28,7 @@ void e2d::ScaleBy::_init()
 
 void e2d::ScaleBy::_update()
 {
-	ActionGradual::_update();
+	FiniteTimeAction::_update();
 
 	if (_target)
 	{

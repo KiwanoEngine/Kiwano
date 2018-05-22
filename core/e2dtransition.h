@@ -63,11 +63,11 @@ protected:
 
 
 // 淡入淡出过渡
-class TransitionFade :
+class FadeTransition :
 	public Transition
 {
 public:
-	TransitionFade(
+	FadeTransition(
 		double duration	/* 动画持续时长 */
 	);
 
@@ -85,11 +85,11 @@ protected:
 
 
 // 渐变过渡
-class TransitionEmerge :
+class EmergeTransition :
 	public Transition
 {
 public:
-	TransitionEmerge(
+	EmergeTransition(
 		double duration	/* 浮现动画持续时长 */
 	);
 
@@ -107,11 +107,11 @@ protected:
 
 
 // 盒状过渡
-class TransitionBox :
+class BoxTransition :
 	public Transition
 {
 public:
-	TransitionBox(
+	BoxTransition(
 		double duration	/* 动画持续时长 */
 	);
 
@@ -129,11 +129,11 @@ protected:
 
 
 // 移入过渡
-class TransitionMove :
+class MoveTransition :
 	public Transition
 {
 public:
-	TransitionMove(
+	MoveTransition(
 		double moveDuration,					/* 场景移动动画持续时长 */
 		Direction direction = Direction::LEFT	/* 场景移动方向 */
 	);

@@ -213,7 +213,7 @@
     <ClCompile Include="..\..\core\Action\ScaleBy.cpp" />
     <ClCompile Include="..\..\core\Action\ScaleTo.cpp" />
     <ClCompile Include="..\..\core\Action\Sequence.cpp" />
-    <ClCompile Include="..\..\core\Action\ActionGradual.cpp" />
+    <ClCompile Include="..\..\core\Action\FiniteTimeAction.cpp" />
     <ClCompile Include="..\..\core\Action\Spawn.cpp" />
     <ClCompile Include="..\..\core\Base\Game.cpp" />
     <ClCompile Include="..\..\core\Base\GC.cpp" />
@@ -222,9 +222,9 @@
     <ClCompile Include="..\..\core\Base\Time.cpp" />
     <ClCompile Include="..\..\core\Base\Window.cpp" />
     <ClCompile Include="..\..\core\Collider\Collider.cpp" />
-    <ClCompile Include="..\..\core\Collider\ColliderCircle.cpp" />
-    <ClCompile Include="..\..\core\Collider\ColliderEllipse.cpp" />
-    <ClCompile Include="..\..\core\Collider\ColliderRect.cpp" />
+    <ClCompile Include="..\..\core\Collider\CircleCollider.cpp" />
+    <ClCompile Include="..\..\core\Collider\EllipseCollider.cpp" />
+    <ClCompile Include="..\..\core\Collider\RectCollider.cpp" />
     <ClCompile Include="..\..\core\Collider\Collision.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />
@@ -241,13 +241,13 @@
     <ClCompile Include="..\..\core\Manager\ColliderManager.cpp" />
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
     <ClCompile Include="..\..\core\Node\Button.cpp" />
-    <ClCompile Include="..\..\core\Node\ButtonToggle.cpp" />
+    <ClCompile Include="..\..\core\Node\ToggleButton.cpp" />
     <ClCompile Include="..\..\core\Node\Menu.cpp" />
     <ClCompile Include="..\..\core\Node\Node.cpp" />
-    <ClCompile Include="..\..\core\Node\Shape\Circle.cpp" />
-    <ClCompile Include="..\..\core\Node\Shape\Ellipse.cpp" />
-    <ClCompile Include="..\..\core\Node\Shape\Rect.cpp" />
-    <ClCompile Include="..\..\core\Node\Shape\RoundRect.cpp" />
+    <ClCompile Include="..\..\core\Node\Shape\CircleShape.cpp" />
+    <ClCompile Include="..\..\core\Node\Shape\EllipseShape.cpp" />
+    <ClCompile Include="..\..\core\Node\Shape\RectShape.cpp" />
+    <ClCompile Include="..\..\core\Node\Shape\RoundRectShape.cpp" />
     <ClCompile Include="..\..\core\Node\Shape\Shape.cpp" />
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />
     <ClCompile Include="..\..\core\Node\Text.cpp" />
@@ -259,10 +259,10 @@
     <ClCompile Include="..\..\core\Tool\Random.cpp" />
     <ClCompile Include="..\..\core\Tool\Timer.cpp" />
     <ClCompile Include="..\..\core\Transition\Transition.cpp" />
-    <ClCompile Include="..\..\core\Transition\TransitionBox.cpp" />
-    <ClCompile Include="..\..\core\Transition\TransitionEmerge.cpp" />
-    <ClCompile Include="..\..\core\Transition\TransitionFade.cpp" />
-    <ClCompile Include="..\..\core\Transition\TransitionMove.cpp" />
+    <ClCompile Include="..\..\core\Transition\BoxTransition.cpp" />
+    <ClCompile Include="..\..\core\Transition\EmergeTransition.cpp" />
+    <ClCompile Include="..\..\core\Transition\FadeTransition.cpp" />
+    <ClCompile Include="..\..\core\Transition\MoveTransition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\e2daction.h" />

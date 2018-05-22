@@ -1,7 +1,7 @@
 #include "..\e2daction.h"
 
 e2d::JumpBy::JumpBy(double duration, const Vector & vec, double height, int jumps)
-	: ActionGradual(duration)
+	: FiniteTimeAction(duration)
 	, _deltaPos(vec)
 	, _height(height)
 	, _jumps(jumps)
@@ -20,7 +20,7 @@ e2d::JumpBy * e2d::JumpBy::reverse() const
 
 void e2d::JumpBy::_init()
 {
-	ActionGradual::_init();
+	FiniteTimeAction::_init();
 
 	if (_target)
 	{
@@ -30,7 +30,7 @@ void e2d::JumpBy::_init()
 
 void e2d::JumpBy::_update()
 {
-	ActionGradual::_update();
+	FiniteTimeAction::_update();
 
 	if (_target)
 	{

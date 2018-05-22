@@ -1,13 +1,13 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::TransitionMove::TransitionMove(double duration, Direction direction)
+e2d::MoveTransition::MoveTransition(double duration, Direction direction)
 	: Transition(duration)
 	, _direction(direction)
 {
 }
 
-void e2d::TransitionMove::_init(Scene * prev, Scene * next)
+void e2d::MoveTransition::_init(Scene * prev, Scene * next)
 {
 	Transition::_init(prev, next);
 
@@ -38,7 +38,7 @@ void e2d::TransitionMove::_init(Scene * prev, Scene * next)
 	_inScene->getRoot()->setPos(_startPos);
 }
 
-void e2d::TransitionMove::_updateCustom()
+void e2d::MoveTransition::_updateCustom()
 {
 	if (_outScene)
 	{
@@ -55,7 +55,7 @@ void e2d::TransitionMove::_updateCustom()
 	}
 }
 
-void e2d::TransitionMove::_reset()
+void e2d::MoveTransition::_reset()
 {
 	if (_outScene) _outScene->getRoot()->setPos(0, 0);
 	_inScene->getRoot()->setPos(0, 0);

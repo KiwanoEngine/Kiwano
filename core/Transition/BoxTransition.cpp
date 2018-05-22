@@ -1,18 +1,18 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::TransitionBox::TransitionBox(double duration)
+e2d::BoxTransition::BoxTransition(double duration)
 	: Transition(duration)
 {
 }
 
-void e2d::TransitionBox::_init(Scene * prev, Scene * next)
+void e2d::BoxTransition::_init(Scene * prev, Scene * next)
 {
 	Transition::_init(prev, next);
 	_inLayerParam.opacity = 0;
 }
 
-void e2d::TransitionBox::_updateCustom()
+void e2d::BoxTransition::_updateCustom()
 {
 	if (_delta <= 0.5)
 	{
@@ -40,6 +40,6 @@ void e2d::TransitionBox::_updateCustom()
 	}
 }
 
-void e2d::TransitionBox::_reset()
+void e2d::BoxTransition::_reset()
 {
 }

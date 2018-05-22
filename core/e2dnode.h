@@ -846,19 +846,19 @@ protected:
 };
 
 
-class ButtonToggle :
+class ToggleButton :
 	public Button
 {
 public:
-	ButtonToggle();
+	ToggleButton();
 
-	ButtonToggle(
+	ToggleButton(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	ButtonToggle(
+	ToggleButton(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
@@ -866,7 +866,7 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	ButtonToggle(
+	ToggleButton(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
@@ -876,7 +876,7 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	ButtonToggle(
+	ToggleButton(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */

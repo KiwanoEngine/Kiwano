@@ -36,9 +36,6 @@
     <ClCompile Include="..\..\core\Base\Input.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\ActionGradual.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Image.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -55,9 +52,6 @@
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Node\Button.cpp">
-      <Filter>Node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\ButtonToggle.cpp">
       <Filter>Node</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Node\Menu.cpp">
@@ -99,15 +93,6 @@
     <ClCompile Include="..\..\core\Common\Size.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Transition\TransitionEmerge.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Transition\TransitionFade.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Transition\TransitionMove.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Tool\Data.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
@@ -117,31 +102,10 @@
     <ClCompile Include="..\..\core\Collider\Collider.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Collider\ColliderCircle.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Collider\ColliderEllipse.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Collider\ColliderRect.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\ColliderManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Node\Shape\Shape.cpp">
-      <Filter>Node\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Shape\Circle.cpp">
-      <Filter>Node\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Shape\Rect.cpp">
-      <Filter>Node\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Shape\RoundRect.cpp">
-      <Filter>Node\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Shape\Ellipse.cpp">
       <Filter>Node\Shape</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Color.cpp">
@@ -225,14 +189,50 @@
     <ClCompile Include="..\..\core\Custom\TextRenderer.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Transition\TransitionBox.cpp">
-      <Filter>Transition</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Tool\Listener.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Font.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Shape\CircleShape.cpp">
+      <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Shape\EllipseShape.cpp">
+      <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Shape\RectShape.cpp">
+      <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Shape\RoundRectShape.cpp">
+      <Filter>Node\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\BoxTransition.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\EmergeTransition.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\FadeTransition.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Transition\MoveTransition.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Collider\CircleCollider.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Collider\EllipseCollider.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Collider\RectCollider.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\FiniteTimeAction.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\ToggleButton.cpp">
+      <Filter>Node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

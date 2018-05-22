@@ -1,40 +1,40 @@
 #include "..\..\e2dshape.h"
 
-e2d::Circle::Circle()
+e2d::CircleShape::CircleShape()
 	: _radius(0)
 {
 	this->setPivot(0.5, 0.5);
 }
 
-e2d::Circle::Circle(double radius)
+e2d::CircleShape::CircleShape(double radius)
 {
 	this->setRadius(radius);
 	this->setPivot(0.5, 0.5);
 }
 
-e2d::Circle::Circle(Point center, double radius)
+e2d::CircleShape::CircleShape(Point center, double radius)
 {
 	this->setRadius(radius);
 	this->setPos(center);
 	this->setPivot(0.5, 0.5);
 }
 
-e2d::Circle::~Circle()
+e2d::CircleShape::~CircleShape()
 {
 }
 
-double e2d::Circle::getRadius() const
+double e2d::CircleShape::getRadius() const
 {
 	return _radius;
 }
 
-void e2d::Circle::setRadius(double radius)
+void e2d::CircleShape::setRadius(double radius)
 {
 	_radius = float(radius);
 	Node::setSize(radius * 2, radius * 2);
 }
 
-void e2d::Circle::_renderLine()
+void e2d::CircleShape::_renderLine()
 {
 	Renderer::getRenderTarget()->DrawEllipse(
 		D2D1::Ellipse(D2D1::Point2F(_radius, _radius), _radius, _radius),
@@ -43,7 +43,7 @@ void e2d::Circle::_renderLine()
 	);
 }
 
-void e2d::Circle::_renderFill()
+void e2d::CircleShape::_renderFill()
 {
 	Renderer::getRenderTarget()->FillEllipse(
 		D2D1::Ellipse(D2D1::Point2F(_radius, _radius), _radius, _radius),

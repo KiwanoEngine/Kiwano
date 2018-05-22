@@ -2,14 +2,14 @@
 
 
 e2d::RotateBy::RotateBy(double duration, double rotation)
-	: ActionGradual(duration)
+	: FiniteTimeAction(duration)
 {
 	_deltaVal = rotation;
 }
 
 void e2d::RotateBy::_init()
 {
-	ActionGradual::_init();
+	FiniteTimeAction::_init();
 
 	if (_target)
 	{
@@ -19,7 +19,7 @@ void e2d::RotateBy::_init()
 
 void e2d::RotateBy::_update()
 {
-	ActionGradual::_update();
+	FiniteTimeAction::_update();
 
 	if (_target)
 	{

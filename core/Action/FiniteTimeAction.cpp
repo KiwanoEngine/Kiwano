@@ -1,23 +1,23 @@
 #include "..\e2daction.h"
 
-e2d::ActionGradual::ActionGradual(double duration)
+e2d::FiniteTimeAction::FiniteTimeAction(double duration)
 	: _delta(0)
 	, _duration(max(duration, 0))
 {
 }
 
-void e2d::ActionGradual::reset()
+void e2d::FiniteTimeAction::reset()
 {
 	Action::reset();
 	_delta = 0;
 }
 
-void e2d::ActionGradual::_init()
+void e2d::FiniteTimeAction::_init()
 {
 	Action::_init();
 }
 
-void e2d::ActionGradual::_update()
+void e2d::FiniteTimeAction::_update()
 {
 	Action::_update();
 
@@ -37,7 +37,7 @@ void e2d::ActionGradual::_update()
 	}
 }
 
-void e2d::ActionGradual::_resetTime()
+void e2d::FiniteTimeAction::_resetTime()
 {
 	Action::_resetTime();
 	_last = Time::getTotalTime() - _delta * _duration;

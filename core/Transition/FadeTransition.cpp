@@ -1,19 +1,19 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::TransitionFade::TransitionFade(double duration)
+e2d::FadeTransition::FadeTransition(double duration)
 	: Transition(duration)
 {
 }
 
-void e2d::TransitionFade::_init(Scene * prev, Scene * next)
+void e2d::FadeTransition::_init(Scene * prev, Scene * next)
 {
 	Transition::_init(prev, next);
 	_outLayerParam.opacity = 1;
 	_inLayerParam.opacity = 0;
 }
 
-void e2d::TransitionFade::_updateCustom()
+void e2d::FadeTransition::_updateCustom()
 {
 	if (_delta < 0.5)
 	{
@@ -31,6 +31,6 @@ void e2d::TransitionFade::_updateCustom()
 	}
 }
 
-void e2d::TransitionFade::_reset()
+void e2d::FadeTransition::_reset()
 {
 }

@@ -1,26 +1,26 @@
 #include "..\..\e2dshape.h"
 
-e2d::Rect::Rect()
+e2d::RectShape::RectShape()
 {
 }
 
-e2d::Rect::Rect(Size size)
+e2d::RectShape::RectShape(Size size)
 {
 	this->setSize(size);
 }
 
-e2d::Rect::Rect(Point topLeft, Size size)
+e2d::RectShape::RectShape(Point topLeft, Size size)
 {
 	this->setPivot(0, 0);
 	this->setPos(topLeft);
 	this->setSize(size);
 }
 
-e2d::Rect::~Rect()
+e2d::RectShape::~RectShape()
 {
 }
 
-void e2d::Rect::_renderLine()
+void e2d::RectShape::_renderLine()
 {
 	Renderer::getRenderTarget()->DrawRectangle(
 		D2D1::RectF(0, 0, _width, _height),
@@ -29,7 +29,7 @@ void e2d::Rect::_renderLine()
 	);
 }
 
-void e2d::Rect::_renderFill()
+void e2d::RectShape::_renderFill()
 {
 	Renderer::getRenderTarget()->FillRectangle(
 		D2D1::RectF(0, 0, _width, _height),

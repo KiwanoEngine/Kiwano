@@ -89,12 +89,12 @@ protected:
 
 
 // 持续动作
-class ActionGradual :
+class FiniteTimeAction :
 	public Action
 {
 public:
 	// 创建特定时长的持续动作
-	ActionGradual(
+	FiniteTimeAction(
 		double duration
 	);
 
@@ -119,7 +119,7 @@ protected:
 
 // 相对位移动作
 class MoveBy :
-	public ActionGradual
+	public FiniteTimeAction
 {
 public:
 	MoveBy(
@@ -177,7 +177,7 @@ protected:
 
 // 相对跳跃动作
 class JumpBy :
-	public ActionGradual
+	public FiniteTimeAction
 {
 public:
 	JumpBy(
@@ -242,7 +242,7 @@ protected:
 
 // 相对缩放动作
 class ScaleBy :
-	public ActionGradual
+	public FiniteTimeAction
 {
 public:
 	ScaleBy(
@@ -315,7 +315,7 @@ protected:
 
 // 透明度相对渐变动作
 class OpacityBy :
-	public ActionGradual
+	public FiniteTimeAction
 {
 public:
 	OpacityBy(
@@ -403,7 +403,7 @@ public:
 
 // 相对旋转动作
 class RotateBy :
-	public ActionGradual
+	public FiniteTimeAction
 {
 public:
 	RotateBy(

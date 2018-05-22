@@ -128,7 +128,7 @@ class Collider :
 
 public:
 	// 碰撞体类别
-	enum class Type : int
+	enum Type : int
 	{
 		NONE,		/* 无 */
 		RECT,		/* 矩形 */
@@ -206,24 +206,24 @@ protected:
 
 
 // 矩形碰撞体
-class ColliderRect :
+class RectCollider :
 	public Collider
 {
 public:
-	ColliderRect();
+	RectCollider();
 
-	ColliderRect(
+	RectCollider(
 		double x,
 		double y,
 		double width,
 		double height
 	);
 
-	ColliderRect(
+	RectCollider(
 		Node * node
 	);
 
-	virtual ~ColliderRect();
+	virtual ~RectCollider();
 
 	// 修改矩形碰撞体大小
 	void setRect(
@@ -246,22 +246,22 @@ protected:
 
 
 // 圆形碰撞体
-class ColliderCircle :
+class CircleCollider :
 	public Collider
 {
 public:
-	ColliderCircle();
+	CircleCollider();
 
-	ColliderCircle(
+	CircleCollider(
 		Point center,
 		double radius
 	);
 
-	ColliderCircle(
+	CircleCollider(
 		Node * node
 	);
 
-	virtual ~ColliderCircle();
+	virtual ~CircleCollider();
 
 	// 修改圆形碰撞体大小
 	void setCircle(
@@ -282,23 +282,23 @@ protected:
 
 
 // 椭圆形碰撞体
-class ColliderEllipse :
+class EllipseCollider :
 	public Collider
 {
 public:
-	ColliderEllipse();
+	EllipseCollider();
 
-	ColliderEllipse(
+	EllipseCollider(
 		Point center,
 		double radiusX,
 		double radiusY
 	);
 
-	ColliderEllipse(
+	EllipseCollider(
 		Node * node
 	);
 
-	virtual ~ColliderEllipse();
+	virtual ~EllipseCollider();
 
 	// 修改椭圆碰撞体大小
 	void setEllipse(

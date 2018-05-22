@@ -544,19 +544,19 @@ void e2d::Node::setCollider(Collider::Type type)
 	{
 	case Collider::Type::RECT:
 	{
-		this->setCollider(GC::create<ColliderRect>(this));
+		this->setCollider(GC::create<RectCollider>(this));
 		break;
 	}
 
 	case Collider::Type::CIRCLE:
 	{
-		this->setCollider(GC::create<ColliderCircle>(this));
+		this->setCollider(GC::create<CircleCollider>(this));
 		break;
 	}
 
 	case Collider::Type::ELLIPSE:
 	{
-		this->setCollider(GC::create<ColliderEllipse>(this));
+		this->setCollider(GC::create<EllipseCollider>(this));
 		break;
 	}
 

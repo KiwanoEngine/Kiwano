@@ -2,14 +2,14 @@
 
 
 e2d::MoveBy::MoveBy(double duration, Vector vector)
-	: ActionGradual(duration)
+	: FiniteTimeAction(duration)
 {
 	_deltaPos = vector;
 }
 
 void e2d::MoveBy::_init()
 {
-	ActionGradual::_init();
+	FiniteTimeAction::_init();
 
 	if (_target)
 	{
@@ -19,7 +19,7 @@ void e2d::MoveBy::_init()
 
 void e2d::MoveBy::_update()
 {
-	ActionGradual::_update();
+	FiniteTimeAction::_update();
 
 	if (_target)
 	{
