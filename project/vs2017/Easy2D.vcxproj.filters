@@ -144,9 +144,6 @@
     <ClCompile Include="..\..\core\Node\Shape\Ellipse.cpp">
       <Filter>Node\Shape</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Custom\CustomTextRenderer.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Color.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -224,6 +221,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Listener.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Custom\VoiceCallback.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Custom\TextRenderer.cpp">
+      <Filter>Custom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

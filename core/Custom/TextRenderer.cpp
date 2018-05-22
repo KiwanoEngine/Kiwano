@@ -3,7 +3,7 @@
 
 using namespace e2d;
 
-CustomTextRenderer::CustomTextRenderer(
+TextRenderer::TextRenderer(
 	ID2D1Factory* pD2DFactory,
 	ID2D1HwndRenderTarget* pRT,
 	ID2D1SolidColorBrush* pBrush
@@ -23,14 +23,14 @@ CustomTextRenderer::CustomTextRenderer(
 	pBrush_->AddRef();
 }
 
-CustomTextRenderer::~CustomTextRenderer()
+TextRenderer::~TextRenderer()
 {
 	SafeReleaseInterface(pD2DFactory_);
 	SafeReleaseInterface(pRT_);
 	SafeReleaseInterface(pBrush_);
 }
 
-STDMETHODIMP_(void) CustomTextRenderer::SetTextStyle(
+STDMETHODIMP_(void) TextRenderer::SetTextStyle(
 	CONST D2D1_COLOR_F &fillColor,
 	BOOL hasOutline,
 	CONST D2D1_COLOR_F &outlineColor,
@@ -45,7 +45,7 @@ STDMETHODIMP_(void) CustomTextRenderer::SetTextStyle(
 	nOutlineJoin_ = outlineJoin;
 }
 
-STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
+STDMETHODIMP TextRenderer::DrawGlyphRun(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -152,7 +152,7 @@ STDMETHODIMP CustomTextRenderer::DrawGlyphRun(
 	return hr;
 }
 
-STDMETHODIMP CustomTextRenderer::DrawUnderline(
+STDMETHODIMP TextRenderer::DrawUnderline(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -237,7 +237,7 @@ STDMETHODIMP CustomTextRenderer::DrawUnderline(
 	return S_OK;
 }
 
-STDMETHODIMP CustomTextRenderer::DrawStrikethrough(
+STDMETHODIMP TextRenderer::DrawStrikethrough(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -322,7 +322,7 @@ STDMETHODIMP CustomTextRenderer::DrawStrikethrough(
 	return S_OK;
 }
 
-STDMETHODIMP CustomTextRenderer::DrawInlineObject(
+STDMETHODIMP TextRenderer::DrawInlineObject(
 	__maybenull void* clientDrawingContext,
 	FLOAT originX,
 	FLOAT originY,
@@ -335,12 +335,12 @@ STDMETHODIMP CustomTextRenderer::DrawInlineObject(
 	return E_NOTIMPL;
 }
 
-STDMETHODIMP_(unsigned long) CustomTextRenderer::AddRef()
+STDMETHODIMP_(unsigned long) TextRenderer::AddRef()
 {
 	return InterlockedIncrement(&cRefCount_);
 }
 
-STDMETHODIMP_(unsigned long) CustomTextRenderer::Release()
+STDMETHODIMP_(unsigned long) TextRenderer::Release()
 {
 	unsigned long newCount = InterlockedDecrement(&cRefCount_);
 
@@ -353,7 +353,7 @@ STDMETHODIMP_(unsigned long) CustomTextRenderer::Release()
 	return newCount;
 }
 
-STDMETHODIMP CustomTextRenderer::IsPixelSnappingDisabled(
+STDMETHODIMP TextRenderer::IsPixelSnappingDisabled(
 	__maybenull void* clientDrawingContext,
 	__out BOOL* isDisabled
 )
@@ -362,7 +362,7 @@ STDMETHODIMP CustomTextRenderer::IsPixelSnappingDisabled(
 	return S_OK;
 }
 
-STDMETHODIMP CustomTextRenderer::GetCurrentTransform(
+STDMETHODIMP TextRenderer::GetCurrentTransform(
 	__maybenull void* clientDrawingContext,
 	__out DWRITE_MATRIX* transform
 )
@@ -371,7 +371,7 @@ STDMETHODIMP CustomTextRenderer::GetCurrentTransform(
 	return S_OK;
 }
 
-STDMETHODIMP CustomTextRenderer::GetPixelsPerDip(
+STDMETHODIMP TextRenderer::GetPixelsPerDip(
 	__maybenull void* clientDrawingContext,
 	__out FLOAT* pixelsPerDip
 )
@@ -384,7 +384,7 @@ STDMETHODIMP CustomTextRenderer::GetPixelsPerDip(
 	return S_OK;
 }
 
-STDMETHODIMP CustomTextRenderer::QueryInterface(
+STDMETHODIMP TextRenderer::QueryInterface(
 	IID const& riid,
 	void** ppvObject
 )

@@ -34,6 +34,7 @@ e2d::Music::Music()
 	, _waveData(nullptr)
 	, _dwSize(0)
 	, _voice(nullptr)
+	, _voiceCallback(this)
 {
 }
 
@@ -46,6 +47,7 @@ e2d::Music::Music(const e2d::String & filePath)
 	, _waveData(nullptr)
 	, _dwSize(0)
 	, _voice(nullptr)
+	, _voiceCallback(this)
 {
 	this->open(filePath);
 }
@@ -59,6 +61,7 @@ e2d::Music::Music(int resNameId, const String & resType)
 	, _waveData(nullptr)
 	, _dwSize(0)
 	, _voice(nullptr)
+	, _voiceCallback(this)
 {
 	this->open(resNameId, resType);
 }
@@ -128,7 +131,7 @@ bool e2d::Music::open(const e2d::String& filePath)
 
 	// 创建音源
 	HRESULT hr;
-	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_voice, _wfx)))
+	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &this->_voiceCallback)))
 	{
 		TraceError(L"Create source voice error", hr);
 		SAFE_DELETE_ARRAY(_waveData);
@@ -207,7 +210,7 @@ bool e2d::Music::open(int resNameId, const e2d::String& resType)
 
 	// 创建音源
 	HRESULT hr;
-	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_voice, _wfx)))
+	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &this->_voiceCallback)))
 	{
 		TraceError(L"Create source voice error", hr);
 		SAFE_DELETE_ARRAY(_waveData);
@@ -356,6 +359,16 @@ bool e2d::Music::setVolume(double volume)
 		return SUCCEEDED(_voice->SetVolume(float(volume)));
 	}
 	return false;
+}
+
+void e2d::Music::setFuncOnEnd(const Function & func)
+{
+	_voiceCallback.SetFuncOnStreamEnd(func);
+}
+
+void e2d::Music::setFuncOnLoopEnd(const Function & func)
+{
+	_voiceCallback.SetFuncOnLoopEnd(func);
 }
 
 bool e2d::Music::_readMMIO()

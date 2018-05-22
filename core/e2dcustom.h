@@ -1,5 +1,6 @@
 #pragma once
 #include "e2dmacros.h"
+#include "e2dcommon.h"
 
 namespace e2d
 {
@@ -13,18 +14,68 @@ namespace e2d
 		}
 	}
 
-	// 自定义的文字渲染器
-	class CustomTextRenderer 
+	class Music;
+
+	// 音源回调
+	class VoiceCallback 
+		: public IXAudio2VoiceCallback
+	{
+	public:
+		VoiceCallback(Music * music);
+		~VoiceCallback();
+
+		void __stdcall OnStreamEnd();
+
+		void __stdcall OnBufferEnd(
+			void * pBufferContext
+		);
+
+		void __stdcall OnBufferStart(
+			void * pBufferContext
+		);
+
+		void __stdcall OnLoopEnd(
+			void * pBufferContext
+		);
+
+		void __stdcall OnVoiceProcessingPassEnd();
+
+		void __stdcall OnVoiceProcessingPassStart(
+			UINT32 SamplesRequired
+		);
+
+		void __stdcall OnVoiceError(
+			void * pBufferContext,
+			HRESULT Error
+		);
+
+		void SetFuncOnStreamEnd(
+			const Function& func
+		);
+
+		void SetFuncOnLoopEnd(
+			const Function& func
+		);
+
+	protected:
+		Music * _music;
+		Function _loopEndFunc;
+		Function _streamEndFunc;
+	};
+
+
+	// 文字渲染器
+	class TextRenderer 
 		: public IDWriteTextRenderer
 	{
 	public:
-		CustomTextRenderer(
+		TextRenderer(
 			ID2D1Factory* pD2DFactory,
 			ID2D1HwndRenderTarget* pRT,
 			ID2D1SolidColorBrush* pBrush
 		);
 
-		~CustomTextRenderer();
+		~TextRenderer();
 
 		STDMETHOD_(void, SetTextStyle)(
 			CONST D2D1_COLOR_F &fillColor,

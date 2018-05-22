@@ -197,6 +197,9 @@ void e2d::Game::quit()
 
 void e2d::Game::destroy()
 {
+	if (!s_bInitialized)
+		return;
+
 	// 删除所有场景
 	SceneManager::__uninit();
 	// 删除输入监听器

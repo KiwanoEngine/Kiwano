@@ -1,10 +1,8 @@
 #pragma once
 #include "e2dmacros.h"
-#include "e2dcustom.h"
 
 namespace e2d
 {
-
 
 
 // ·½Ïò

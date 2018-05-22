@@ -11,7 +11,7 @@ static ID2D1HwndRenderTarget * s_pRenderTarget = nullptr;
 static ID2D1SolidColorBrush * s_pSolidBrush = nullptr;
 static IWICImagingFactory * s_pIWICFactory = nullptr;
 static IDWriteFactory * s_pDWriteFactory = nullptr;
-static e2d::CustomTextRenderer * s_pTextRenderer = nullptr;
+static e2d::TextRenderer * s_pTextRenderer = nullptr;
 static D2D1_COLOR_F s_nClearColor = D2D1::ColorF(D2D1::ColorF::Black);
 
 
@@ -120,7 +120,7 @@ bool e2d::Renderer::__createDeviceResources()
 		if (SUCCEEDED(hr))
 		{
 			// 创建自定义的文字渲染器
-			s_pTextRenderer = new (std::nothrow) CustomTextRenderer(
+			s_pTextRenderer = new (std::nothrow) TextRenderer(
 				s_pDirect2dFactory,
 				s_pRenderTarget,
 				s_pSolidBrush
@@ -279,7 +279,7 @@ IDWriteFactory * e2d::Renderer::getIDWriteFactory()
 	return s_pDWriteFactory;
 }
 
-e2d::CustomTextRenderer * e2d::Renderer::getCustomTextRenderer()
+e2d::TextRenderer * e2d::Renderer::getTextRenderer()
 {
 	return s_pTextRenderer;
 }

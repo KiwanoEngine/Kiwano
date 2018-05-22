@@ -1,6 +1,7 @@
 #pragma once
 #include "e2dmacros.h"
 #include "e2dcommon.h"
+#include "e2dcustom.h"
 
 
 // Base Classes
@@ -400,8 +401,8 @@ public:
 	// 获取 IDWriteFactory 对象
 	static IDWriteFactory * getIDWriteFactory();
 
-	// 获取自定义的文字渲染器
-	static CustomTextRenderer * getCustomTextRenderer();
+	// 获取文字渲染器
+	static TextRenderer * getTextRenderer();
 
 private:
 	// 渲染游戏画面

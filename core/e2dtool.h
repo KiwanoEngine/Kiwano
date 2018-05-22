@@ -96,13 +96,23 @@ public:
 	// 关闭并回收资源
 	void close();
 
+	// 是否正在播放
+	bool isPlaying() const;
+
 	// 设置音量
 	bool setVolume(
 		double volume
 	);
 
-	// 是否正在播放
-	bool isPlaying() const;
+	// 设置播放结束时的执行函数
+	void setFuncOnEnd(
+		const Function& func
+	);
+
+	// 设置循环播放中每一次播放结束时的执行函数
+	void setFuncOnLoopEnd(
+		const Function& func
+	);
 
 	// 获取 IXAudio2SourceVoice 对象
 	IXAudio2SourceVoice * getIXAudio2SourceVoice() const;
@@ -144,6 +154,7 @@ protected:
 	MMCKINFO _ck;
 	MMCKINFO _ckRiff;
 	WAVEFORMATEX* _wfx;
+	VoiceCallback _voiceCallback;
 	IXAudio2SourceVoice* _voice;
 };
 

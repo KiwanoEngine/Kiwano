@@ -318,7 +318,7 @@ void e2d::Text::onRender()
 		// 设置画刷颜色和透明度
 		Renderer::getSolidColorBrush()->SetOpacity(_displayOpacity);
 		// 获取文本渲染器
-		auto pTextRenderer = Renderer::getCustomTextRenderer();
+		auto pTextRenderer = Renderer::getTextRenderer();
 		pTextRenderer->SetTextStyle(
 			_style.color.toD2DColorF(),
 			_style.hasOutline,
