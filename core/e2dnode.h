@@ -543,43 +543,6 @@ class Text :
 	public Node
 {
 public:
-	// 字体
-	class Font
-	{
-	public:
-		String	family;			// 字体族
-		double	size;			// 字号
-		UINT	weight;			// 粗细值
-		bool	italic;			// 斜体
-
-	public:
-		// 字体粗细值
-		enum Weight : UINT
-		{
-			THIN = 100,
-			EXTRA_LIGHT = 200,
-			LIGHT = 300,
-			SEMI_LIGHT = 350,
-			NORMAL = 400,
-			MEDIUM = 500,
-			DEMI_BOLD = 600,
-			BOLD = 700,
-			EXTRA_BOLD = 800,
-			BLACK = 900,
-			EXTRA_BLACK = 950
-		};
-
-	public:
-		Font();
-
-		Font(
-			const String& family,
-			double size = 22,
-			UINT weight = Font::Weight::NORMAL,
-			bool italic = false
-		);
-	};
-
 	// 文本对齐方式
 	enum class Align : int
 	{

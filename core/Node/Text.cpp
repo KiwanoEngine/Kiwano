@@ -1,27 +1,5 @@
 #include "..\e2dnode.h"
 
-
-//-------------------------------------------------------
-// Font
-//-------------------------------------------------------
-
-e2d::Text::Font::Font()
-	: family("")
-	, size(22)
-	, weight(Font::Weight::NORMAL)
-	, italic(false)
-{
-}
-
-e2d::Text::Font::Font(const String & family, double size, UINT weight, bool italic)
-	: family(family)
-	, size(size)
-	, weight(weight)
-	, italic(italic)
-{
-}
-
-
 //-------------------------------------------------------
 // Style
 //-------------------------------------------------------
@@ -101,7 +79,7 @@ e2d::String e2d::Text::getText() const
 	return _text;
 }
 
-e2d::Text::Font e2d::Text::getFont() const
+e2d::Font e2d::Text::getFont() const
 {
 	return _font;
 }
