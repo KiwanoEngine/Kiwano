@@ -28,12 +28,12 @@ e2d::ColliderEllipse::ColliderEllipse(Node * node)
 
 e2d::ColliderEllipse::~ColliderEllipse()
 {
-	SafeReleaseInterface(_d2dEllipse);
+	SafeRelease(_d2dEllipse);
 }
 
 void e2d::ColliderEllipse::setEllipse(Point center, double radiusX, double radiusY)
 {
-	SafeReleaseInterface(_d2dEllipse);
+	SafeRelease(_d2dEllipse);
 
 	Renderer::getID2D1Factory()->CreateEllipseGeometry(
 		D2D1::Ellipse(

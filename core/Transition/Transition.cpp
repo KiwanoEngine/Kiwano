@@ -18,8 +18,8 @@ e2d::Transition::Transition(double duration)
 
 e2d::Transition::~Transition()
 {
-	SafeReleaseInterface(_outLayer);
-	SafeReleaseInterface(_inLayer);
+	SafeRelease(_outLayer);
+	SafeRelease(_inLayer);
 }
 
 bool e2d::Transition::isDone()

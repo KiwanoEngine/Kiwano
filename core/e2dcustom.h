@@ -5,7 +5,7 @@
 namespace e2d
 {
 	template<class Interface>
-	inline void SafeReleaseInterface(Interface*& p)
+	inline void SafeRelease(Interface*& p)
 	{
 		if (p != nullptr)
 		{

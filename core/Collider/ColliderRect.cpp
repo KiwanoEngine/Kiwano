@@ -21,12 +21,12 @@ e2d::ColliderRect::ColliderRect(Node * node)
 
 e2d::ColliderRect::~ColliderRect()
 {
-	SafeReleaseInterface(_d2dRectangle);
+	SafeRelease(_d2dRectangle);
 }
 
 void e2d::ColliderRect::setRect(double left, double top, double right, double bottom)
 {
-	SafeReleaseInterface(_d2dRectangle);
+	SafeRelease(_d2dRectangle);
 
 	Renderer::getID2D1Factory()->CreateRectangleGeometry(
 		D2D1::RectF(

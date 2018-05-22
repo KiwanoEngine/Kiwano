@@ -92,8 +92,8 @@ e2d::Text::Text(const String & text, const Font & font, const Style & style)
 
 e2d::Text::~Text()
 {
-	SafeReleaseInterface(_textFormat);
-	SafeReleaseInterface(_textLayout);
+	SafeRelease(_textFormat);
+	SafeRelease(_textLayout);
 }
 
 e2d::String e2d::Text::getText() const
@@ -340,7 +340,7 @@ void e2d::Text::_reset()
 
 void e2d::Text::_createFormat()
 {
-	SafeReleaseInterface(_textFormat);
+	SafeRelease(_textFormat);
 
 	HRESULT hr = Renderer::getIDWriteFactory()->CreateTextFormat(
 		_font.family,
@@ -386,7 +386,7 @@ void e2d::Text::_createFormat()
 
 void e2d::Text::_createLayout()
 {
-	SafeReleaseInterface(_textLayout);
+	SafeRelease(_textLayout);
 
 	// 文本为空字符串时，重置属性
 	if (_text.isEmpty())
@@ -437,7 +437,7 @@ void e2d::Text::_createLayout()
 			// 重设文本宽高
 			this->setSize(metrics.width, metrics.height);
 			// 重新创建 layout
-			SafeReleaseInterface(_textLayout);
+			SafeRelease(_textLayout);
 			hr = Renderer::getIDWriteFactory()->CreateTextLayout(_text, length, _textFormat, _width, 0, &_textLayout);
 		}
 	}

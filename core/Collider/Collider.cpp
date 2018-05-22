@@ -14,7 +14,7 @@ e2d::Collider::Collider()
 
 e2d::Collider::~Collider()
 {
-	SafeReleaseInterface(_transformed);
+	SafeRelease(_transformed);
 }
 
 e2d::Node * e2d::Collider::getParentNode() const
@@ -90,7 +90,7 @@ void e2d::Collider::_transform()
 		}
 
 		// 释放原碰撞体
-		SafeReleaseInterface(_transformed);
+		SafeRelease(_transformed);
 
 		// 根据父节点转换几何图形
 		Renderer::getID2D1Factory()->CreateTransformedGeometry(

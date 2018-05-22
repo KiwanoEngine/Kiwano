@@ -28,12 +28,12 @@ e2d::ColliderCircle::ColliderCircle(Node * node)
 
 e2d::ColliderCircle::~ColliderCircle()
 {
-	SafeReleaseInterface(_d2dCircle);
+	SafeRelease(_d2dCircle);
 }
 
 void e2d::ColliderCircle::setCircle(Point center, double radius)
 {
-	SafeReleaseInterface(_d2dCircle);
+	SafeRelease(_d2dCircle);
 
 	Renderer::getID2D1Factory()->CreateEllipseGeometry(
 		D2D1::Ellipse(

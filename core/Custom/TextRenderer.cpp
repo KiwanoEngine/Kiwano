@@ -25,9 +25,9 @@ TextRenderer::TextRenderer(
 
 TextRenderer::~TextRenderer()
 {
-	SafeReleaseInterface(pD2DFactory_);
-	SafeReleaseInterface(pRT_);
-	SafeReleaseInterface(pBrush_);
+	SafeRelease(pD2DFactory_);
+	SafeRelease(pRT_);
+	SafeRelease(pBrush_);
 }
 
 STDMETHODIMP_(void) TextRenderer::SetTextStyle(
@@ -145,9 +145,9 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(
 		);
 	}
 
-	SafeReleaseInterface(pPathGeometry);
-	SafeReleaseInterface(pSink);
-	SafeReleaseInterface(pTransformedGeometry);
+	SafeRelease(pPathGeometry);
+	SafeRelease(pSink);
+	SafeRelease(pTransformedGeometry);
 
 	return hr;
 }
@@ -231,8 +231,8 @@ STDMETHODIMP TextRenderer::DrawUnderline(
 		);
 	}
 
-	SafeReleaseInterface(pRectangleGeometry);
-	SafeReleaseInterface(pTransformedGeometry);
+	SafeRelease(pRectangleGeometry);
+	SafeRelease(pTransformedGeometry);
 
 	return S_OK;
 }
@@ -316,8 +316,8 @@ STDMETHODIMP TextRenderer::DrawStrikethrough(
 		);
 	}
 
-	SafeReleaseInterface(pRectangleGeometry);
-	SafeReleaseInterface(pTransformedGeometry);
+	SafeRelease(pRectangleGeometry);
+	SafeRelease(pTransformedGeometry);
 
 	return S_OK;
 }

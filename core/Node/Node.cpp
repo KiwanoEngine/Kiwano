@@ -856,7 +856,7 @@ bool e2d::Node::isPointIn(Point point) const
 			&ret
 		);
 		// 删除临时创建的碰撞体
-		SafeReleaseInterface(rect);
+		SafeRelease(rect);
 	}
 
 	if (ret)
@@ -910,9 +910,9 @@ bool e2d::Node::isOverlappedWith(const Node * node) const
 			&relation
 		);
 		// 删除临时创建的碰撞体
-		SafeReleaseInterface(pRect1);
-		SafeReleaseInterface(pRect2);
-		SafeReleaseInterface(pCollider);
+		SafeRelease(pRect1);
+		SafeRelease(pRect2);
+		SafeRelease(pCollider);
 		if ((relation != D2D1_GEOMETRY_RELATION_UNKNOWN) &&
 			(relation != D2D1_GEOMETRY_RELATION_DISJOINT))
 		{
