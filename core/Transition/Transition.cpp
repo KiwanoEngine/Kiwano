@@ -100,7 +100,6 @@ void e2d::Transition::_render()
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(_outLayerParam, _outLayer);
 
-		// äÖÈ¾³¡¾°
 		_outScene->_render();
 
 		pRT->PopLayer();
@@ -120,7 +119,6 @@ void e2d::Transition::_render()
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(_inLayerParam, _inLayer);
 
-		// äÖÈ¾³¡¾°
 		_inScene->_render();
 
 		pRT->PopLayer();

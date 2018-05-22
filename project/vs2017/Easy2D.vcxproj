@@ -258,6 +258,7 @@
     <ClCompile Include="..\..\core\Tool\Random.cpp" />
     <ClCompile Include="..\..\core\Tool\Timer.cpp" />
     <ClCompile Include="..\..\core\Transition\Transition.cpp" />
+    <ClCompile Include="..\..\core\Transition\TransitionBox.cpp" />
     <ClCompile Include="..\..\core\Transition\TransitionEmerge.cpp" />
     <ClCompile Include="..\..\core\Transition\TransitionFade.cpp" />
     <ClCompile Include="..\..\core\Transition\TransitionMove.cpp" />

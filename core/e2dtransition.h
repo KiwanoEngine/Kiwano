@@ -62,7 +62,7 @@ protected:
 };
 
 
-// 渐变过渡
+// 淡入淡出过渡
 class TransitionFade :
 	public Transition
 {
@@ -84,6 +84,7 @@ protected:
 };
 
 
+// 渐变过渡
 class TransitionEmerge :
 	public Transition
 {
@@ -105,6 +106,29 @@ protected:
 };
 
 
+// 盒状过渡
+class TransitionBox :
+	public Transition
+{
+public:
+	TransitionBox(
+		double duration	/* 动画持续时长 */
+	);
+
+protected:
+	// 更新动画
+	virtual void _updateCustom() override;
+
+	virtual void _init(
+		Scene * prev,
+		Scene * next
+	) override;
+
+	virtual void _reset() override;
+};
+
+
+// 移入过渡
 class TransitionMove :
 	public Transition
 {
