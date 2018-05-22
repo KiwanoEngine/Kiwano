@@ -1,73 +1,76 @@
 #include "..\e2dtool.h"
 #include "..\e2dnode.h"
 
-class TimerInfo
+namespace e2d
 {
-public:
-	TimerInfo(
-		const e2d::Function& func,
-		const e2d::String& name,
-		double delay,
-		int updateTimes,
-		bool paused
-	)
-		: running(!paused)
-		, stopped(false)
-		, runTimes(0)
-		, totalTimes(updateTimes)
-		, delay(max(delay, 0))
-		, lastTime(e2d::Time::getTotalTime())
-		, callback(func)
-		, name(name)
+	class TimerEntity
 	{
-	}
-
-	void update()
-	{
-		if (callback)
+	public:
+		TimerEntity(
+			const e2d::Function& func,
+			const e2d::String& name,
+			double delay,
+			int updateTimes,
+			bool paused
+		)
+			: running(!paused)
+			, stopped(false)
+			, runTimes(0)
+			, totalTimes(updateTimes)
+			, delay(max(delay, 0))
+			, lastTime(e2d::Time::getTotalTime())
+			, callback(func)
+			, name(name)
 		{
-			callback();
 		}
 
-		++runTimes;
-		lastTime += delay;
-
-		if (runTimes == totalTimes)
+		void update()
 		{
-			stopped = true;
-		}
-	}
+			if (callback)
+			{
+				callback();
+			}
 
-	bool ready()
-	{
-		if (this->running)
+			++runTimes;
+			lastTime += delay;
+
+			if (runTimes == totalTimes)
+			{
+				stopped = true;
+			}
+		}
+
+		bool ready()
 		{
-			if (this->delay == 0)
-				return true;
+			if (this->running)
+			{
+				if (this->delay == 0)
+					return true;
 
-			if ((e2d::Time::getTotalTime() - this->lastTime) >= this->delay)
-				return true;
+				if ((e2d::Time::getTotalTime() - this->lastTime) >= this->delay)
+					return true;
+			}
+			return false;
 		}
-		return false;
-	}
 
-public:
-	bool	running;
-	bool	stopped;
-	int		runTimes;
-	int		totalTimes;
-	double	delay;
-	double	lastTime;
-	e2d::String		name;
-	e2d::Function	callback;
-};
+	public:
+		bool	running;
+		bool	stopped;
+		int		runTimes;
+		int		totalTimes;
+		double	delay;
+		double	lastTime;
+		e2d::String		name;
+		e2d::Function	callback;
+	};
+}
 
-static std::vector<TimerInfo*> s_vTimers;
+static std::vector<e2d::TimerEntity*> s_vTimers;
 
 
 void e2d::Timer::start(const Function& func, double delay, int updateTimes, bool paused, const String& name)
 {
-	auto timer = new (std::nothrow) TimerInfo(func, name, delay, updateTimes, paused);
+	auto timer = new (std::nothrow) TimerEntity(func, name, delay, updateTimes, paused);
 	s_vTimers.push_back(timer);
 }
 
@@ -78,7 +81,7 @@ void e2d::Timer::start(const Function& func, const String& name)
 
 void e2d::Timer::startOnce(const Function& func, double timeOut)
 {
-	auto timer = new (std::nothrow) TimerInfo(func, L"", timeOut, 1, false);
+	auto timer = new (std::nothrow) TimerEntity(func, L"", timeOut, 1, false);
 	s_vTimers.push_back(timer);
 }
 
