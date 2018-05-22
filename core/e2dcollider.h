@@ -128,7 +128,7 @@ class Collider :
 
 public:
 	// 碰撞体类别
-	enum Type : int
+	enum class Type
 	{
 		NONE,		/* 无 */
 		RECT,		/* 矩形 */

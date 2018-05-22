@@ -11,7 +11,7 @@ class Shape :
 {
 public:
 	// ĞÎ×´ÑùÊ½
-	enum Style : int
+	enum class Style
 	{
 		SOLID,		/* Ìî³ä */
 		ROUND,		/* ÂÖÀª */
