@@ -24,18 +24,18 @@ e2d::Sprite::Sprite(int resNameId, const String& resType)
 	open(resNameId, resType);
 }
 
-e2d::Sprite::Sprite(const String& filePath, double x, double y, double width, double height)
+e2d::Sprite::Sprite(const String& filePath, const Rect& cropRect)
 	: _image(nullptr)
 {
 	open(filePath);
-	crop(x, y, width, height);
+	crop(cropRect);
 }
 
-e2d::Sprite::Sprite(int resNameId, const String& resType, double x, double y, double width, double height)
+e2d::Sprite::Sprite(int resNameId, const String& resType, const Rect& cropRect)
 	: _image(nullptr)
 {
 	open(resNameId, resType);
-	crop(x, y, width, height);
+	crop(cropRect);
 }
 
 e2d::Sprite::~Sprite()
@@ -88,12 +88,12 @@ bool e2d::Sprite::open(int resNameId, const String& resType)
 	return false;
 }
 
-void e2d::Sprite::crop(double x, double y, double width, double height)
+void e2d::Sprite::crop(const Rect& cropRect)
 {
-	_image->crop(x, y, width, height);
+	_image->crop(cropRect);
 	Node::setSize(
-		min(max(width, 0), _image->getSourceWidth() - _image->getCropX()),
-		min(max(height, 0), _image->getSourceHeight() - _image->getCropY())
+		min(max(cropRect.size.width, 0), _image->getSourceWidth() - _image->getCropX()),
+		min(max(cropRect.size.height, 0), _image->getSourceHeight() - _image->getCropY())
 	);
 }
 

@@ -483,19 +483,13 @@ public:
 
 	Sprite(
 		const String& filePath,	/* 图片文件路径 */
-		double x,
-		double y,
-		double width,
-		double height
+		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	Sprite(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType,	/* 图片资源类型 */
-		double x,
-		double y,
-		double width,
-		double height
+		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	virtual ~Sprite();
@@ -518,10 +512,7 @@ public:
 
 	// 将图片裁剪为矩形
 	void crop(
-		double x,
-		double y,
-		double width,
-		double height
+		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	// 获取 Image 对象

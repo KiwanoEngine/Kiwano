@@ -12,6 +12,12 @@ e2d::Size::Size(double width, double height)
 	this->height = height;
 }
 
+e2d::Size::Size(const Size & other)
+{
+	width = other.width;
+	height = other.height;
+}
+
 e2d::Size e2d::Size::operator+(Size const & size) const
 {
 	return Size(width + size.width, height + size.height);

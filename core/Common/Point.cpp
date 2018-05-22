@@ -13,6 +13,12 @@ e2d::Point::Point(double x, double y)
 	this->y = y;
 }
 
+e2d::Point::Point(const Point & other)
+{
+	x = other.x;
+	y = other.y;
+}
+
 e2d::Point e2d::Point::operator+(Point const & p) const
 {
 	return Point(x + p.x, y + p.y);

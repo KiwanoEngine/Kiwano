@@ -38,6 +38,8 @@ public:
 
 	Point(double x, double y);
 
+	Point(const Point& other);
+
 	Point operator + (Point const & point) const;
 	Point operator - (Point const & point) const;
 	Point operator * (double const & point) const;
@@ -65,6 +67,8 @@ public:
 
 	Size(double width, double height);
 
+	Size(const Size& other);
+
 	Size operator + (Size const & size) const;
 	Size operator - (Size const & size) const;
 	Size operator * (double const & size) const;
@@ -86,29 +90,15 @@ public:
 public:
 	Rect();
 	
-	Rect(
-		double x, 
-		double y, 
-		double width, 
-		double height
-	);
+	Rect(double x, double y, double width, double height);
 	
-	Rect(
-		const Point& pos, 
-		const Size& size
-	);
+	Rect(const Point& pos, const Size& size);
 	
-	Rect(
-		const Rect& other
-	);
+	Rect(const Rect& other);
 	
-	Rect& operator= (
-		const Rect& other
-	);
+	Rect& operator= (const Rect& other);
 
-	bool operator== (
-		const Rect& rect
-	) const;
+	bool operator== (const Rect& rect) const;
 	
 	// 设置矩形
 	void setRect(
@@ -490,19 +480,13 @@ public:
 
 	Image(
 		const String& filePath,	/* 图片文件路径 */
-		double cropX,			/* 裁剪位置 X 坐标 */
-		double cropY,			/* 裁剪位置 Y 坐标 */
-		double cropWidth,		/* 裁剪宽度 */
-		double cropHeight		/* 裁剪高度 */
+		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	Image(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType,	/* 图片资源类型 */
-		double cropX,			/* 裁剪位置 X 坐标 */
-		double cropY,			/* 裁剪位置 Y 坐标 */
-		double cropWidth,		/* 裁剪宽度 */
-		double cropHeight		/* 裁剪高度 */
+		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	virtual ~Image();
@@ -520,10 +504,7 @@ public:
 
 	// 将图片裁剪为矩形
 	void crop(
-		double cropX,			/* 裁剪位置 X 坐标 */
-		double cropY,			/* 裁剪位置 Y 坐标 */
-		double cropWidth,		/* 裁剪宽度 */
-		double cropHeight		/* 裁剪高度 */
+		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	// 获取宽度
@@ -577,10 +558,7 @@ protected:
 	);
 
 protected:
-	double	_cropX;
-	double	_cropY;
-	double	_cropWidth;
-	double	_cropHeight;
+	Rect _cropRect;
 	ID2D1Bitmap * _bitmap;
 };
 

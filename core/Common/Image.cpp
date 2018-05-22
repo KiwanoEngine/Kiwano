@@ -9,37 +9,38 @@ static std::set<ID2D1Bitmap*> s_vBitmaps;
 
 e2d::Image::Image()
 	: _bitmap(nullptr)
-	, _cropX(0)
-	, _cropY(0)
-	, _cropWidth(0)
-	, _cropHeight(0)
+	, _cropRect()
 {
 }
 
 e2d::Image::Image(const String& filePath)
 	: _bitmap(nullptr)
+	, _cropRect()
 {
 	this->open(filePath);
 }
 
 e2d::Image::Image(int resNameId, const String& resType)
 	: _bitmap(nullptr)
+	, _cropRect()
 {
 	this->open(resNameId, resType);
 }
 
-e2d::Image::Image(const String& filePath, double cropX, double cropY, double cropWidth, double cropHeight)
+e2d::Image::Image(const String& filePath, const Rect& cropRect)
 	: _bitmap(nullptr)
+	, _cropRect()
 {
 	this->open(filePath);
-	this->crop(cropX, cropY, cropWidth, cropHeight);
+	this->crop(cropRect);
 }
 
-e2d::Image::Image(int resNameId, const String& resType, double cropX, double cropY, double cropWidth, double cropHeight)
+e2d::Image::Image(int resNameId, const String& resType, const Rect& cropRect)
 	: _bitmap(nullptr)
+	, _cropRect()
 {
 	this->open(resNameId, resType);
-	this->crop(cropX, cropY, cropWidth, cropHeight);
+	this->crop(cropRect);
 }
 
 e2d::Image::~Image()
@@ -75,30 +76,30 @@ bool e2d::Image::open(int resNameId, const String& resType)
 	return true;
 }
 
-void e2d::Image::crop(double x, double y, double width, double height)
+void e2d::Image::crop(const Rect& cropRect)
 {
 	if (_bitmap)
 	{
-		_cropX = min(max(x, 0), this->getSourceWidth());
-		_cropY = min(max(y, 0), this->getSourceHeight());
-		_cropWidth = min(max(width, 0), this->getSourceWidth() - _cropX);
-		_cropHeight = min(max(height, 0), this->getSourceHeight() - _cropY);
+		_cropRect.origin.x = min(max(cropRect.origin.x, 0), this->getSourceWidth());
+		_cropRect.origin.y = min(max(cropRect.origin.y, 0), this->getSourceHeight());
+		_cropRect.size.width = min(max(cropRect.size.width, 0), this->getSourceWidth() - cropRect.origin.x);
+		_cropRect.size.height = min(max(cropRect.size.height, 0), this->getSourceHeight() - cropRect.origin.y);
 	}
 }
 
 double e2d::Image::getWidth() const
 {
-	return _cropWidth;
+	return _cropRect.size.width;
 }
 
 double e2d::Image::getHeight() const
 {
-	return _cropHeight;
+	return _cropRect.size.height;
 }
 
 e2d::Size e2d::Image::getSize() const
 {
-	return Size(_cropWidth, _cropHeight);
+	return _cropRect.size;
 }
 
 double e2d::Image::getSourceWidth() const
@@ -139,17 +140,17 @@ e2d::Size e2d::Image::getSourceSize() const
 
 double e2d::Image::getCropX() const
 {
-	return _cropX;
+	return _cropRect.origin.x;
 }
 
 double e2d::Image::getCropY() const
 {
-	return _cropY;
+	return _cropRect.origin.y;
 }
 
 e2d::Point e2d::Image::getCropPos() const
 {
-	return Point(_cropX, _cropY);
+	return _cropRect.origin;
 }
 
 bool e2d::Image::preload(const String& filePath)
@@ -384,9 +385,9 @@ void e2d::Image::_setBitmap(ID2D1Bitmap * bitmap)
 	if (bitmap)
 	{
 		_bitmap = bitmap;
-		_cropX = _cropY = 0;
-		_cropWidth = _bitmap->GetSize().width;
-		_cropHeight = _bitmap->GetSize().height;
+		_cropRect.origin.x = _cropRect.origin.y = 0;
+		_cropRect.size.width = _bitmap->GetSize().width;
+		_cropRect.size.height = _bitmap->GetSize().height;
 	}
 }
 
