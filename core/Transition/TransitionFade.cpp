@@ -2,53 +2,28 @@
 #include "..\e2dnode.h"
 
 e2d::TransitionFade::TransitionFade(double duration)
-	: Transition(0)
-	, _fadeOutDuration(max(duration / 2, 0))
-	, _fadeInDuration(max(duration / 2, 0))
-	, _fadeOutTransioning(true)
-{
-}
-
-e2d::TransitionFade::TransitionFade(double fadeOutDuration, double fadeInDuration)
-	: Transition(0)
-	, _fadeOutDuration(max(fadeOutDuration, 0))
-	, _fadeInDuration(max(fadeInDuration, 0))
-	, _fadeOutTransioning(true)
+	: Transition(duration)
 {
 }
 
 void e2d::TransitionFade::_init(Scene * prev, Scene * next)
 {
 	Transition::_init(prev, next);
-	if (_outScene)
-	{
-		_fadeOutTransioning = true;
-		_duration = _fadeOutDuration;
-	}
-	else
-	{
-		_fadeOutTransioning = false;
-		_duration = _fadeInDuration;
-	}
 	_outLayerParam.opacity = 1;
 	_inLayerParam.opacity = 0;
 }
 
 void e2d::TransitionFade::_updateCustom()
 {
-	if (_fadeOutTransioning)
+	if (_delta < 0.5)
 	{
-		_outLayerParam.opacity = float(1 - _delta);
-		if (_delta >= 1)
-		{
-			_fadeOutTransioning = false;
-			_duration = _fadeInDuration;
-			_last = Time::getTotalTime();
-		}
+		_outLayerParam.opacity = 1 - float(_delta) * 2;
+		_inLayerParam.opacity = 0;
 	}
 	else
 	{
-		_inLayerParam.opacity = float(_delta);
+		_outLayerParam.opacity = 0;
+		_inLayerParam.opacity = float(_delta - 0.5) * 2;
 		if (_delta >= 1)
 		{
 			this->_stop();
