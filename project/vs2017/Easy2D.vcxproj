@@ -228,7 +228,6 @@
     <ClCompile Include="..\..\core\Collider\Collision.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
     <ClCompile Include="..\..\core\Common\Function.cpp" />
-    <ClCompile Include="..\..\core\Common\Listener.cpp" />
     <ClCompile Include="..\..\core\Common\Object.cpp" />
     <ClCompile Include="..\..\core\Common\Point.cpp" />
     <ClCompile Include="..\..\core\Common\Scene.cpp" />
@@ -252,6 +251,7 @@
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />
     <ClCompile Include="..\..\core\Node\Text.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
+    <ClCompile Include="..\..\core\Tool\Listener.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
     <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Player.cpp" />

@@ -315,13 +315,8 @@ public:
 		bool paused = false			/* 是否暂停 */
 	);
 
-	// 暂停输入监听
-	static void pauseListener(
-		const String& name
-	);
-
-	// 暂停输入监听
-	static void resumeListener(
+	// 启动输入监听
+	static void startListener(
 		const String& name
 	);
 
@@ -330,14 +325,19 @@ public:
 		const String& name
 	);
 
-	// 暂停所有监听器
-	static void pauseAllListeners();
+	// 清除输入监听
+	static void clearListener(
+		const String& name
+	);
 
-	// 继续所有监听器
-	static void resumeAllListeners();
+	// 启动所有监听器
+	static void startAllListeners();
 
 	// 停止所有监听器
 	static void stopAllListeners();
+
+	// 清除所有监听器
+	static void clearAllListeners();
 
 private:
 	// 初始化 DirectInput 以及键盘鼠标设备

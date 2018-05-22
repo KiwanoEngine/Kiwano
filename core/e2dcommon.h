@@ -576,42 +576,4 @@ protected:
 };
 
 
-class Input;
-class Collision;
-
-// 监听器
-class Listener
-{
-	friend Input;
-	friend Collision;
-
-public:
-	Listener(
-		const Function& func,
-		const String& name,
-		bool paused
-	);
-
-	// 更新监听器状态
-	virtual void update();
-
-	// 获取监听器运行状态
-	bool isRunning() const;
-
-	// 获取名称
-	String getName() const;
-
-	// 设置名称
-	void setName(
-		const String& name
-	);
-
-protected:
-	bool _running;
-	bool _stopped;
-	String _name;
-	Function _callback;
-};
-
-
 }

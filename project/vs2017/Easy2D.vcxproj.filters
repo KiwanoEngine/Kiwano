@@ -219,9 +219,6 @@
     <ClCompile Include="..\..\core\Base\GC.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Listener.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Custom\VoiceCallback.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -230,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Transition\TransitionBox.cpp">
       <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Listener.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -72,13 +72,8 @@ public:
 		bool paused = false			/* ÊÇ·ñÔİÍ£ */
 	);
 
-	// ÔİÍ£Åö×²¼àÌı
-	static void pauseListener(
-		const String& name
-	);
-
-	// ÔİÍ£Åö×²¼àÌı
-	static void resumeListener(
+	// Æô¶¯Åö×²¼àÌı
+	static void startListener(
 		const String& name
 	);
 
@@ -87,14 +82,19 @@ public:
 		const String& name
 	);
 
-	// ÔİÍ£ËùÓĞ¼àÌıÆ÷
-	static void pauseAllListeners();
+	// Çå³ıÅö×²¼àÌı
+	static void clearListener(
+		const String& name
+	);
 
-	// ¼ÌĞøËùÓĞ¼àÌıÆ÷
-	static void resumeAllListeners();
+	// Æô¶¯ËùÓĞ¼àÌıÆ÷
+	static void startAllListeners();
 
 	// Í£Ö¹ËùÓĞ¼àÌıÆ÷
 	static void stopAllListeners();
+
+	// Çå³ıËùÓĞ¼àÌıÆ÷
+	static void clearAllListeners();
 
 private:
 	// ¸üĞÂ¼àÌıÆ÷

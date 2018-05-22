@@ -1,5 +1,6 @@
 #include "..\e2dcollider.h"
 #include "..\e2dnode.h"
+#include "..\e2dtool.h"
 
 typedef std::pair<UINT, UINT> HashPair;
 
@@ -109,7 +110,7 @@ void e2d::Collision::__update(Node * active, Node * passive)
 		else
 		{
 			// ¸üÐÂ¼àÌýÆ÷
-			listener->update();
+			listener->_update();
 			++i;
 		}
 	}
@@ -124,35 +125,35 @@ void e2d::Collision::addListener(const Function& func, const String& name, bool 
 	s_vListeners.push_back(listener);
 }
 
-void e2d::Collision::pauseListener(const String& name)
-{
-	if (s_vListeners.empty() || name.isEmpty())
-		return;
-
-	for (auto listener : s_vListeners)
-	{
-		if (listener->_name == name)
-		{
-			listener->_running = false;
-		}
-	}
-}
-
-void e2d::Collision::resumeListener(const String& name)
-{
-	if (s_vListeners.empty() || name.isEmpty())
-		return;
-
-	for (auto listener : s_vListeners)
-	{
-		if (listener->_name == name)
-		{
-			listener->_running = true;
-		}
-	}
-}
-
 void e2d::Collision::stopListener(const String& name)
+{
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
+	for (auto listener : s_vListeners)
+	{
+		if (listener->_name == name)
+		{
+			listener->stop();
+		}
+	}
+}
+
+void e2d::Collision::startListener(const String& name)
+{
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
+	for (auto listener : s_vListeners)
+	{
+		if (listener->_name == name)
+		{
+			listener->start();
+		}
+	}
+}
+
+void e2d::Collision::clearListener(const String& name)
 {
 	if (s_vListeners.empty() || name.isEmpty())
 		return;
@@ -166,23 +167,23 @@ void e2d::Collision::stopListener(const String& name)
 	}
 }
 
-void e2d::Collision::pauseAllListeners()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->_running = false;
-	}
-}
-
-void e2d::Collision::resumeAllListeners()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->_running = true;
-	}
-}
-
 void e2d::Collision::stopAllListeners()
+{
+	for (auto listener : s_vListeners)
+	{
+		listener->stop();
+	}
+}
+
+void e2d::Collision::startAllListeners()
+{
+	for (auto listener : s_vListeners)
+	{
+		listener->start();
+	}
+}
+
+void e2d::Collision::clearAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{

@@ -227,35 +227,35 @@ void e2d::Input::addListener(const Function& func, const String& name, bool paus
 	s_vListeners.push_back(listener);
 }
 
-void e2d::Input::pauseListener(const String& name)
-{
-	if (s_vListeners.empty() || name.isEmpty())
-		return;
-
-	for (auto listener : s_vListeners)
-	{
-		if (listener->_name == name)
-		{
-			listener->_running = false;
-		}
-	}
-}
-
-void e2d::Input::resumeListener(const String& name)
-{
-	if (s_vListeners.empty() || name.isEmpty())
-		return;
-
-	for (auto listener : s_vListeners)
-	{
-		if (listener->_name == name)
-		{
-			listener->_running = true;
-		}
-	}
-}
-
 void e2d::Input::stopListener(const String& name)
+{
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
+	for (auto listener : s_vListeners)
+	{
+		if (listener->_name == name)
+		{
+			listener->stop();
+		}
+	}
+}
+
+void e2d::Input::startListener(const String& name)
+{
+	if (s_vListeners.empty() || name.isEmpty())
+		return;
+
+	for (auto listener : s_vListeners)
+	{
+		if (listener->_name == name)
+		{
+			listener->start();
+		}
+	}
+}
+
+void e2d::Input::clearListener(const String& name)
 {
 	if (s_vListeners.empty() || name.isEmpty())
 		return;
@@ -269,23 +269,23 @@ void e2d::Input::stopListener(const String& name)
 	}
 }
 
-void e2d::Input::pauseAllListeners()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->_running = false;
-	}
-}
-
-void e2d::Input::resumeAllListeners()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->_running = true;
-	}
-}
-
 void e2d::Input::stopAllListeners()
+{
+	for (auto listener : s_vListeners)
+	{
+		listener->stop();
+	}
+}
+
+void e2d::Input::startAllListeners()
+{
+	for (auto listener : s_vListeners)
+	{
+		listener->start();
+	}
+}
+
+void e2d::Input::clearAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
@@ -310,7 +310,7 @@ void e2d::Input::__updateListeners()
 		else
 		{
 			// ¸üĞÂ¼àÌıÆ÷
-			listener->update();
+			listener->_update();
 			++i;
 		}
 	}

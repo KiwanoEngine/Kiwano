@@ -318,6 +318,57 @@ private:
 };
 
 
+class Collision;
+
+// 监听器
+class Listener
+{
+	friend Input;
+	friend Collision;
+
+public:
+	Listener();
+
+	Listener(
+		const Function& func,
+		const String& name,
+		bool paused
+	);
+
+	// 启动监听
+	void start();
+
+	// 停止监听
+	void stop();
+
+	// 获取监听器运行状态
+	bool isRunning() const;
+
+	// 获取名称
+	String getName() const;
+
+	// 设置名称
+	void setName(
+		const String& name
+	);
+
+	// 设置监听回调函数
+	void setFunc(
+		const Function& func
+	);
+
+protected:
+	// 更新监听器状态
+	virtual void _update();
+
+protected:
+	bool _running;
+	bool _stopped;
+	String _name;
+	Function _callback;
+};
+
+
 // 数据管理工具
 class Data
 {
