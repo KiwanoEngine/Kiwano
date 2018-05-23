@@ -15,7 +15,7 @@ e2d::Scene::Scene()
 	}
 	else
 	{
-		// TODO: 抛出一个异常
+		throw Exception(L"场景根节点构造失败！");
 	}
 }
 

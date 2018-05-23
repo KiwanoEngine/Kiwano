@@ -596,13 +596,17 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 
 	if (child)
 	{
-		// TODO: 抛出一个异常
-		ASSERT(child->_parent == nullptr, "Node already added. It can't be added again!");
+		if (child->_parent != nullptr)
+		{
+			throw Exception(L"节点已有父节点, 不能再添加到其他节点！");
+		}
 
 		for (Node * parent = this; parent != nullptr; parent = parent->getParent())
 		{
-			// TODO: 抛出一个异常
-			ASSERT(child != parent, "A Node cannot be the child of his own children!");
+			if (child == parent)
+			{
+				throw Exception(L"一个节点不能同时是另一个节点的父节点和子节点！");
+			}
 		}
 
 		_children.push_back(child);

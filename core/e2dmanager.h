@@ -19,8 +19,8 @@ class Transition;
 // 场景管理器
 class SceneManager
 {
-	friend Game;
-	friend Renderer;
+	friend class Game;
+	friend class Renderer;
 
 public:
 	// 切换场景
@@ -65,9 +65,9 @@ private:
 // 动作管理器
 class ActionManager
 {
-	friend Game;
-	friend Node;
-	friend Action;
+	friend class Game;
+	friend class Node;
+	friend class Action;
 
 public:
 	// 执行动作
@@ -154,8 +154,8 @@ private:
 // 碰撞体管理器
 class ColliderManager
 {
-	friend Node;
-	friend Collider;
+	friend class Node;
+	friend class Collider;
 
 private:
 	// 更新碰撞体

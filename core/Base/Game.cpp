@@ -5,7 +5,7 @@
 
 
 // 控制游戏终止
-static bool s_bEndGame = false;
+static bool s_bEndGame = true;
 // 控制游戏暂停
 static bool s_bPaused = false;
 // 是否进行过初始化
@@ -127,6 +127,8 @@ int e2d::Game::start(bool autoRelease/* true */)
 	// 初始化计时
 	Time::__init();
 
+	s_bEndGame = false;
+
 	while (!s_bEndGame)
 	{
 		// 处理窗口消息
@@ -154,6 +156,8 @@ int e2d::Game::start(bool autoRelease/* true */)
 		}
 	}
 
+	s_bEndGame = true;
+
 	if (autoRelease)
 	{
 		Game::destroy();
@@ -178,11 +182,12 @@ void e2d::Game::resume()
 
 void e2d::Game::reset()
 {
-	// 刷新当前时间
-	Time::__reset();
-	// 重置动作和定时器
-	ActionManager::__resetAll();
-	Timer::__resetAll();
+	if (s_bInitialized && !s_bEndGame)
+	{
+		Time::__reset();
+		ActionManager::__resetAll();
+		Timer::__resetAll();
+	}
 }
 
 bool e2d::Game::isPaused()

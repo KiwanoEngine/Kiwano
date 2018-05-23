@@ -13,10 +13,10 @@ class ColliderManager;
 class Node :
 	public Object
 {
-	friend Scene;
-	friend Collider;
-	friend Transition;
-	friend ColliderManager;
+	friend class Scene;
+	friend class Collider;
+	friend class Transition;
+	friend class ColliderManager;
 
 public:
 	// ½ÚµãÊôĞÔ

@@ -1,24 +1,26 @@
 #pragma once
-#include "e2dnode.h"
+#include "e2dcommon.h"
+#include "e2dbase.h"
 
 namespace e2d
 {
 
 
-class ActionManager;
+class Node;
 class Loop;
 class Sequence;
 class Spawn;
+class ActionManager;
 
 
 // »ù´¡¶¯×÷
 class Action :
 	public Object
 {
-	friend ActionManager;
-	friend Loop;
-	friend Sequence;
-	friend Spawn;
+	friend class ActionManager;
+	friend class Loop;
+	friend class Sequence;
+	friend class Spawn;
 
 public:
 	Action();

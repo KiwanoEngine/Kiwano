@@ -51,7 +51,7 @@ public:
 // 窗口控制
 class Window
 {
-	friend Game;
+	friend class Game;
 
 public:
 	// 鼠标指针样式
@@ -147,7 +147,7 @@ private:
 // 时间控制
 class Time
 {
-	friend Game;
+	friend class Game;
 
 public:
 	// 获取上一帧与当前帧的时间间隔（秒）
@@ -188,7 +188,7 @@ class Listener;
 // 输入控制
 class Input
 {
-	friend Game;
+	friend class Game;
 
 public:
 	// 鼠标键值
@@ -375,8 +375,8 @@ private:
 // 渲染器
 class Renderer
 {
-	friend Game;
-	friend Window;
+	friend class Game;
+	friend class Window;
 
 public:
 	// 获取背景色
@@ -437,8 +437,8 @@ private:
 // 垃圾回收装置
 class GC
 {
-	friend Game;
-	friend Object;
+	friend class Game;
+	friend class Object;
 
 public:
 	// 创建可自动回收内存的对象

@@ -13,8 +13,8 @@ class ColliderManager;
 // 碰撞事件
 class Collision
 {
-	friend Game;
-	friend ColliderManager;
+	friend class Game;
+	friend class ColliderManager;
 
 public:
 	// 添加可互相碰撞物体的名称
@@ -123,8 +123,8 @@ private:
 class Collider :
 	public Object
 {
-	friend ColliderManager;
-	friend Node;
+	friend class ColliderManager;
+	friend class Node;
 
 public:
 	// 碰撞体类别

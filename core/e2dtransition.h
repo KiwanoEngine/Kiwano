@@ -12,7 +12,7 @@ class SceneManager;
 class Transition :
 	public Object
 {
-	friend SceneManager;
+	friend class SceneManager;
 
 public:
 	Transition(double duration);

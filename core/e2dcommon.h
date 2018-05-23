@@ -227,8 +227,8 @@ public:
 	String operator+ (const wchar_t *);
 
 	// 友元运算符
-	friend String operator+ (const char *, const String &);
-	friend String operator+ (const wchar_t*, const String &);
+	friend class String operator+ (const char *, const String &);
+	friend class String operator+ (const wchar_t*, const String &);
 
 	// 类型转换操作符
 	operator const wchar_t* () const;
@@ -260,11 +260,11 @@ public:
 	// 其他运算符
 	wchar_t& operator[] (int);
 
-	friend std::ostream& operator<< (std::ostream &, const String &);
-	friend std::wostream& operator<< (std::wostream &, const String &);
+	friend class std::ostream& operator<< (std::ostream &, const String &);
+	friend class std::wostream& operator<< (std::wostream &, const String &);
 
-	friend std::istream& operator>> (std::istream &, String &);
-	friend std::wistream& operator>> (std::wistream &, String &);
+	friend class std::istream& operator>> (std::istream &, String &);
+	friend class std::wistream& operator>> (std::wistream &, String &);
 
 private:
 	std::wstring _str;
@@ -571,8 +571,8 @@ class Transition;
 class Scene :
 	public Object
 {
-	friend SceneManager;
-	friend Transition;
+	friend class SceneManager;
+	friend class Transition;
 
 public:
 	Scene();

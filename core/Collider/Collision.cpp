@@ -4,13 +4,11 @@
 
 typedef std::pair<UINT, UINT> HashPair;
 
-// ¼àÌıÆ÷ÈİÆ÷
-static std::vector<e2d::Listener*> s_vListeners;
-// Åö×²´¥·¢×´Ì¬
-static bool s_bCollisionEnable = false;
-static e2d::Node * s_pActiveNode = nullptr;
-static e2d::Node * s_pPassiveNode = nullptr;
-static std::set<HashPair> s_sCollisionList;
+static std::vector<e2d::Listener*> s_vListeners;	// ¼àÌıÆ÷ÈİÆ÷
+static bool s_bCollisionEnable = false;				// Åö×²´¥·¢×´Ì¬
+static e2d::Node * s_pActiveNode = nullptr;			// Ö÷¶¯Åö×²Ìå
+static e2d::Node * s_pPassiveNode = nullptr;		// ±»¶¯Åö×²Ìå
+static std::set<HashPair> s_sCollisionList;			// Åö×²Ó³Éä
 
 
 void e2d::Collision::addName(const String & name1, const String & name2)

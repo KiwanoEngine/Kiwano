@@ -52,7 +52,7 @@ private:
 class Music :
 	public Object
 {
-	friend Game;
+	friend class Game;
 
 public:
 	Music();
@@ -162,7 +162,7 @@ protected:
 // 音乐播放器
 class Player
 {
-	friend Game;
+	friend class Game;
 
 public:
 	// 预加载音乐资源
@@ -258,7 +258,7 @@ private:
 // 定时器
 class Timer
 {
-	friend Game;
+	friend class Game;
 
 public:
 	// 启动定时器（每帧执行一次）
@@ -324,8 +324,8 @@ class Collision;
 class Listener
 	: public Object
 {
-	friend Input;
-	friend Collision;
+	friend class Input;
+	friend class Collision;
 
 public:
 	Listener();
@@ -447,7 +447,7 @@ public:
 // 路径工具
 class Path
 {
-	friend Game;
+	friend class Game;
 
 public:
 	// 获取数据的默认保存路径
