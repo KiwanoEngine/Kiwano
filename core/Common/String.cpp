@@ -1,5 +1,6 @@
 #include "..\e2dcommon.h"
 #include <iomanip>
+#include <cwctype>
 #include <comutil.h>
 #pragma comment(lib, "comsuppw.lib")
 
@@ -377,20 +378,14 @@ int e2d::String::compare(const String & str) const
 e2d::String e2d::String::toUpper() const
 {
 	String str(*this);
-
-	for (size_t i = 0, length = _str.size(); i < length; ++i)
-		str[i] = towupper(str[i]);
-
+	std::transform(str._str.begin(), str._str.end(), str._str.begin(), std::towupper);
 	return std::move(str);
 }
 
 e2d::String e2d::String::toLower() const
 {
 	e2d::String str(*this);
-
-	for (size_t i = 0, length = _str.size(); i < length; ++i)
-		str[i] = towlower(str[i]);
-
+	std::transform(str._str.begin(), str._str.end(), str._str.begin(), std::towlower);
 	return std::move(str);
 }
 

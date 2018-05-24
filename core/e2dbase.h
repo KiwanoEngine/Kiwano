@@ -416,6 +416,15 @@ public:
 	// 获取文字渲染器
 	static TextRenderer * getTextRenderer();
 
+	// 获取 Miter 样式的 ID2D1StrokeStyle
+	static ID2D1StrokeStyle * getMiterID2D1StrokeStyle();
+
+	// 获取 Bevel 样式的 ID2D1StrokeStyle
+	static ID2D1StrokeStyle * getBevelID2D1StrokeStyle();
+
+	// 获取 Round 样式的 ID2D1StrokeStyle
+	static ID2D1StrokeStyle * getRoundID2D1StrokeStyle();
+
 private:
 	// 渲染游戏画面
 	static void __render();

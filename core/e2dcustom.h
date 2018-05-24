@@ -71,14 +71,17 @@ protected:
 class TextRenderer 
 	: public IDWriteTextRenderer
 {
+private:
+	TextRenderer();
+
+	~TextRenderer();
+
 public:
-	TextRenderer(
+	static TextRenderer * Create(
 		ID2D1Factory* pD2DFactory,
 		ID2D1HwndRenderTarget* pRT,
 		ID2D1SolidColorBrush* pBrush
 	);
-
-	~TextRenderer();
 
 	STDMETHOD_(void, SetTextStyle)(
 		CONST D2D1_COLOR_F &fillColor,
@@ -153,10 +156,10 @@ private:
 	D2D1_COLOR_F sOutlineColor_;
 	FLOAT fOutlineWidth;
 	BOOL bShowOutline_;
-	D2D1_LINE_JOIN nOutlineJoin_;
 	ID2D1Factory* pD2DFactory_;
 	ID2D1HwndRenderTarget* pRT_;
 	ID2D1SolidColorBrush* pBrush_;
+	ID2D1StrokeStyle * pCurrStrokeStyle_;
 };
 
 

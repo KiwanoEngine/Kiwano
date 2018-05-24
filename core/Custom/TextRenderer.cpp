@@ -3,24 +3,17 @@
 
 using namespace e2d;
 
-TextRenderer::TextRenderer(
-	ID2D1Factory* pD2DFactory,
-	ID2D1HwndRenderTarget* pRT,
-	ID2D1SolidColorBrush* pBrush
-)
+TextRenderer::TextRenderer()
 	: cRefCount_(0)
-	, pD2DFactory_(pD2DFactory)
-	, pRT_(pRT)
-	, pBrush_(pBrush)
+	, pD2DFactory_(nullptr)
+	, pRT_(nullptr)
+	, pBrush_(nullptr)
 	, sFillColor_()
 	, sOutlineColor_()
 	, fOutlineWidth(1)
 	, bShowOutline_(TRUE)
-	, nOutlineJoin_(D2D1_LINE_JOIN_MITER)
+	, pCurrStrokeStyle_(nullptr)
 {
-	pD2DFactory_->AddRef();
-	pRT_->AddRef();
-	pBrush_->AddRef();
 }
 
 TextRenderer::~TextRenderer()
@@ -28,6 +21,26 @@ TextRenderer::~TextRenderer()
 	SafeRelease(pD2DFactory_);
 	SafeRelease(pRT_);
 	SafeRelease(pBrush_);
+}
+
+TextRenderer * TextRenderer::Create(
+	ID2D1Factory* pD2DFactory,
+	ID2D1HwndRenderTarget* pRT,
+	ID2D1SolidColorBrush* pBrush
+)
+{
+	TextRenderer * pTextRenderer = new (std::nothrow) TextRenderer();
+	if (pTextRenderer)
+	{
+		pD2DFactory->AddRef();
+		pRT->AddRef();
+		pBrush->AddRef();
+
+		pTextRenderer->pD2DFactory_ = pD2DFactory;
+		pTextRenderer->pRT_ = pRT;
+		pTextRenderer->pBrush_ = pBrush;
+	}
+	return pTextRenderer;
 }
 
 STDMETHODIMP_(void) TextRenderer::SetTextStyle(
@@ -42,7 +55,22 @@ STDMETHODIMP_(void) TextRenderer::SetTextStyle(
 	bShowOutline_ = hasOutline;
 	sOutlineColor_ = outlineColor;
 	fOutlineWidth = 2 * outlineWidth;
-	nOutlineJoin_ = outlineJoin;
+
+	switch (outlineJoin)
+	{
+	case D2D1_LINE_JOIN_MITER:
+		pCurrStrokeStyle_ = Renderer::getMiterID2D1StrokeStyle();
+		break;
+	case D2D1_LINE_JOIN_BEVEL:
+		pCurrStrokeStyle_ = Renderer::getBevelID2D1StrokeStyle();
+		break;
+	case D2D1_LINE_JOIN_ROUND:
+		pCurrStrokeStyle_ = Renderer::getRoundID2D1StrokeStyle();
+		break;
+	default:
+		pCurrStrokeStyle_ = nullptr;
+		break;
+	}
 }
 
 STDMETHODIMP TextRenderer::DrawGlyphRun(
@@ -107,32 +135,14 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(
 
 	if (SUCCEEDED(hr) && bShowOutline_)
 	{
-		ID2D1StrokeStyle * pStrokeStyle = nullptr;
-		hr = Renderer::getID2D1Factory()->CreateStrokeStyle(
-			D2D1::StrokeStyleProperties(
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				nOutlineJoin_,
-				2.0f,
-				D2D1_DASH_STYLE_SOLID,
-				0.0f),
-			nullptr,
-			0,
-			&pStrokeStyle
+		pBrush_->SetColor(sOutlineColor_);
+
+		pRT_->DrawGeometry(
+			pTransformedGeometry,
+			pBrush_,
+			fOutlineWidth,
+			pCurrStrokeStyle_
 		);
-
-		if (SUCCEEDED(hr))
-		{
-			pBrush_->SetColor(sOutlineColor_);
-
-			pRT_->DrawGeometry(
-				pTransformedGeometry,
-				pBrush_,
-				fOutlineWidth,
-				pStrokeStyle
-			);
-		}
 	}
 
 	if (SUCCEEDED(hr))
@@ -193,32 +203,14 @@ STDMETHODIMP TextRenderer::DrawUnderline(
 
 	if (SUCCEEDED(hr) && bShowOutline_)
 	{
-		ID2D1StrokeStyle * pStrokeStyle = nullptr;
-		hr = Renderer::getID2D1Factory()->CreateStrokeStyle(
-			D2D1::StrokeStyleProperties(
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				nOutlineJoin_,
-				2.0f,
-				D2D1_DASH_STYLE_SOLID,
-				0.0f),
-			nullptr,
-			0,
-			&pStrokeStyle
+		pBrush_->SetColor(sOutlineColor_);
+
+		pRT_->DrawGeometry(
+			pTransformedGeometry,
+			pBrush_,
+			fOutlineWidth,
+			pCurrStrokeStyle_
 		);
-
-		if (SUCCEEDED(hr))
-		{
-			pBrush_->SetColor(sOutlineColor_);
-
-			pRT_->DrawGeometry(
-				pTransformedGeometry,
-				pBrush_,
-				fOutlineWidth,
-				pStrokeStyle
-			);
-		}
 	}
 
 	if (SUCCEEDED(hr))
@@ -278,32 +270,14 @@ STDMETHODIMP TextRenderer::DrawStrikethrough(
 
 	if (SUCCEEDED(hr) && bShowOutline_)
 	{
-		ID2D1StrokeStyle * pStrokeStyle = nullptr;
-		hr = Renderer::getID2D1Factory()->CreateStrokeStyle(
-			D2D1::StrokeStyleProperties(
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				nOutlineJoin_,
-				2.0f,
-				D2D1_DASH_STYLE_SOLID,
-				0.0f),
-			nullptr,
-			0,
-			&pStrokeStyle
+		pBrush_->SetColor(sOutlineColor_);
+
+		pRT_->DrawGeometry(
+			pTransformedGeometry,
+			pBrush_,
+			fOutlineWidth,
+			pCurrStrokeStyle_
 		);
-
-		if (SUCCEEDED(hr))
-		{
-			pBrush_->SetColor(sOutlineColor_);
-
-			pRT_->DrawGeometry(
-				pTransformedGeometry,
-				pBrush_,
-				fOutlineWidth,
-				pStrokeStyle
-			);
-		}
 	}
 
 	if (SUCCEEDED(hr))

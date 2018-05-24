@@ -12,6 +12,9 @@ static ID2D1SolidColorBrush * s_pSolidBrush = nullptr;
 static IWICImagingFactory * s_pIWICFactory = nullptr;
 static IDWriteFactory * s_pDWriteFactory = nullptr;
 static e2d::TextRenderer * s_pTextRenderer = nullptr;
+static ID2D1StrokeStyle * s_pMiterStrokeStyle = nullptr;
+static ID2D1StrokeStyle * s_pBevelStrokeStyle = nullptr;
+static ID2D1StrokeStyle * s_pRoundStrokeStyle = nullptr;
 static D2D1_COLOR_F s_nClearColor = D2D1::ColorF(D2D1::ColorF::Black);
 
 
@@ -23,9 +26,78 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 		&s_pDirect2dFactory
 	);
 
+	// 工厂将返回当前的系统 DPI，这个值也将用来创建窗口
+	if (SUCCEEDED(hr))
+	{
+		s_pDirect2dFactory->GetDesktopDpi(&s_fDpiScaleX, &s_fDpiScaleY);
+	}
+
 	if (FAILED(hr))
 	{
 		throw SystemException(L"Create ID2D1Factory failed");
+	}
+	else
+	{
+		hr = s_pDirect2dFactory->CreateStrokeStyle(
+			D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_LINE_JOIN_MITER,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f),
+			nullptr,
+			0,
+			&s_pMiterStrokeStyle
+		);
+	}
+
+	if (FAILED(hr))
+	{
+		throw SystemException(L"Create ID2D1StrokeStyle failed");
+	}
+	else
+	{
+		hr = s_pDirect2dFactory->CreateStrokeStyle(
+			D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_LINE_JOIN_BEVEL,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f),
+			nullptr,
+			0,
+			&s_pBevelStrokeStyle
+		);
+	}
+
+	if (FAILED(hr))
+	{
+		throw SystemException(L"Create ID2D1StrokeStyle failed");
+	}
+	else
+	{
+		hr = s_pDirect2dFactory->CreateStrokeStyle(
+			D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_LINE_JOIN_ROUND,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f),
+			nullptr,
+			0,
+			&s_pRoundStrokeStyle
+		);
+	}
+
+	if (FAILED(hr))
+	{
+		throw SystemException(L"Create ID2D1StrokeStyle failed");
 	}
 	else
 	{
@@ -59,9 +131,6 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 	}
 	else
 	{
-		// 工厂将返回当前的系统 DPI，这个值也将用来创建窗口
-		Renderer::getID2D1Factory()->GetDesktopDpi(&s_fDpiScaleX, &s_fDpiScaleY);
-
 		// 创建文本格式化对象
 		hr = s_pDWriteFactory->CreateTextFormat(
 			L"",
@@ -130,7 +199,7 @@ bool e2d::Renderer::__createDeviceResources()
 		else
 		{
 			// 创建自定义的文字渲染器
-			s_pTextRenderer = new (std::nothrow) TextRenderer(
+			s_pTextRenderer = TextRenderer::Create(
 				s_pDirect2dFactory,
 				s_pRenderTarget,
 				s_pSolidBrush
@@ -146,6 +215,9 @@ void e2d::Renderer::__discardDeviceResources()
 	SafeRelease(s_pRenderTarget);
 	SafeRelease(s_pSolidBrush);
 	SafeRelease(s_pTextRenderer);
+	SafeRelease(s_pMiterStrokeStyle);
+	SafeRelease(s_pBevelStrokeStyle);
+	SafeRelease(s_pRoundStrokeStyle);
 }
 
 void e2d::Renderer::__discardResources()
@@ -155,6 +227,9 @@ void e2d::Renderer::__discardResources()
 	SafeRelease(s_pRenderTarget);
 	SafeRelease(s_pSolidBrush);
 	SafeRelease(s_pTextRenderer);
+	SafeRelease(s_pMiterStrokeStyle);
+	SafeRelease(s_pBevelStrokeStyle);
+	SafeRelease(s_pRoundStrokeStyle);
 	SafeRelease(s_pIWICFactory);
 	SafeRelease(s_pDWriteFactory);
 }
@@ -291,4 +366,19 @@ IDWriteFactory * e2d::Renderer::getIDWriteFactory()
 e2d::TextRenderer * e2d::Renderer::getTextRenderer()
 {
 	return s_pTextRenderer;
+}
+
+ID2D1StrokeStyle * e2d::Renderer::getMiterID2D1StrokeStyle()
+{
+	return s_pMiterStrokeStyle;
+}
+
+ID2D1StrokeStyle * e2d::Renderer::getBevelID2D1StrokeStyle()
+{
+	return s_pBevelStrokeStyle;
+}
+
+ID2D1StrokeStyle * e2d::Renderer::getRoundID2D1StrokeStyle()
+{
+	return s_pRoundStrokeStyle;
 }
