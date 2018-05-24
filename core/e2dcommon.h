@@ -265,11 +265,11 @@ public:
 	// ÆäËûÔËËã·û
 	wchar_t& operator[] (int);
 
-	friend class std::ostream& operator<< (std::ostream &, const String &);
-	friend class std::wostream& operator<< (std::wostream &, const String &);
+	friend std::ostream& operator<< (std::ostream &, const String &);
+	friend std::wostream& operator<< (std::wostream &, const String &);
 
-	friend class std::istream& operator>> (std::istream &, String &);
-	friend class std::wistream& operator>> (std::wistream &, String &);
+	friend std::istream& operator>> (std::istream &, String &);
+	friend std::wistream& operator>> (std::wistream &, String &);
 
 private:
 	std::wstring _str;
