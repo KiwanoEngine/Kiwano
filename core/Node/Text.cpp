@@ -321,7 +321,7 @@ void e2d::Text::_createFormat()
 	SafeRelease(_textFormat);
 
 	HRESULT hr = Renderer::getIDWriteFactory()->CreateTextFormat(
-		_font.family,
+		(const WCHAR *)_font.family,
 		nullptr,
 		DWRITE_FONT_WEIGHT(_font.weight),
 		_font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
@@ -391,7 +391,7 @@ void e2d::Text::_createLayout()
 	if (_style.wrapping)
 	{
 		hr = Renderer::getIDWriteFactory()->CreateTextLayout(
-			_text,
+			(const WCHAR *)_text,
 			length,
 			_textFormat,
 			float(_style.wrappingWidth),
@@ -409,7 +409,7 @@ void e2d::Text::_createLayout()
 	}
 	else
 	{
-		hr = Renderer::getIDWriteFactory()->CreateTextLayout(_text, length, _textFormat, 0, 0, &_textLayout);
+		hr = Renderer::getIDWriteFactory()->CreateTextLayout((const WCHAR *)_text, length, _textFormat, 0, 0, &_textLayout);
 		// 为防止文本对齐问题，根据刚才创建的 layout 宽度重新创建它
 		if (_textLayout)
 		{
@@ -420,7 +420,7 @@ void e2d::Text::_createLayout()
 			this->setSize(metrics.width, metrics.height);
 			// 重新创建 layout
 			SafeRelease(_textLayout);
-			hr = Renderer::getIDWriteFactory()->CreateTextLayout(_text, length, _textFormat, _width, 0, &_textLayout);
+			hr = Renderer::getIDWriteFactory()->CreateTextLayout((const WCHAR *)_text, length, _textFormat, _width, 0, &_textLayout);
 		}
 	}
 

@@ -11,9 +11,9 @@ DEFINE_KNOWN_FOLDER(FOLDERID_LocalAppData, 0xF1B32785, 0x6FBA, 0x4FCF, 0x9D, 0x5
 
 static e2d::String s_sLocalAppDataPath;
 static e2d::String s_sTempPath;
-static e2d::String s_sDefaultSavePath;
+static e2d::String s_sDataSavePath;
 
-bool e2d::Path::__init()
+bool e2d::Path::__init(const String& gameName)
 {
 	// 获取 AppData\Local 文件夹的路径
 	typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
@@ -30,93 +30,47 @@ bool e2d::Path::__init()
 	}
 	else
 	{
-		WARN("Cannot get local AppData path!");
+		WARN("Get local AppData path failed!");
+		return false;
 	}
-
-	// 获取游戏名称
-	String sGameName = Game::getName();
 	
-	// 获取默认保存路径
-	bool bInitSavePath = false;
-	do
+	// 获取数据的默认保存路径
+	s_sDataSavePath = s_sLocalAppDataPath + L"\\Easy2DGameData\\";
+	if (!gameName.isEmpty())
 	{
-		String localAppPath = s_sLocalAppDataPath;
-		if (localAppPath.isEmpty())
+		s_sDataSavePath << gameName << L"\\";
+	}
+	if (!Path::existsFolder(s_sDataSavePath))
+	{
+		if (!Path::createFolder(s_sDataSavePath))
 		{
-
-			break;
+			s_sDataSavePath = L"";
 		}
-		else
-		{
-			s_sDefaultSavePath = localAppPath;
-		}
-
-		localAppPath << L"\\Easy2DGameData";
-		if (Path::createFolder(localAppPath))
-		{
-			s_sDefaultSavePath = localAppPath;
-		}
-		else
-		{
-			break;
-		}
-
-		if (!sGameName.isEmpty())
-		{
-			localAppPath << L"\\" << sGameName;
-			// 创建文件夹
-			if (Path::createFolder(localAppPath))
-			{
-				s_sDefaultSavePath = localAppPath;
-			}
-		}
-
-		s_sDefaultSavePath << L"\\";
-		bInitSavePath = true;
-	} while (0);
+	}
+	s_sDataSavePath << L"Data.ini";
 
 	// 获取临时文件目录
-	bool bInitTempPath = false;
-	do
+	wchar_t path[_MAX_PATH];
+	if (0 == ::GetTempPath(_MAX_PATH, path))
 	{
-		wchar_t path[_MAX_PATH];
-		if (0 == ::GetTempPath(_MAX_PATH, path))
-		{
-			break;
-		}
-		else
-		{
-			s_sTempPath = path;
-		}
+		return false;
+	}
 
-		// 创建临时文件目录
-		String tempPath;
-		tempPath << s_sTempPath << L"\\Easy2DGameTemp";
-		// 创建文件夹
-		if (Path::createFolder(tempPath))
-		{
-			s_sTempPath = path;
-		}
-		else
-		{
-			break;
-		}
+	s_sTempPath << path << L"\\Easy2DGameTemp\\";
+	if (!gameName.isEmpty())
+	{
+		s_sTempPath << gameName << L"\\";
+	}
 
-		if (!sGameName.isEmpty())
+	if (!Path::existsFolder(s_sTempPath))
+	{
+		if (!Path::createFolder(s_sTempPath))
 		{
-			tempPath << L"\\" << sGameName;
-			// 创建文件夹
-			if (Path::createFolder(tempPath))
-			{
-				s_sTempPath = tempPath;
-			}
+			s_sTempPath = L"";
 		}
+	}
 
-		s_sTempPath << L"\\";
-		bInitTempPath = true;
-	} while (0);
-
-	return SUCCEEDED(hr) && bInitSavePath && bInitTempPath;
+	return true;
 }
 
 e2d::String e2d::Path::getTempPath()
@@ -124,9 +78,9 @@ e2d::String e2d::Path::getTempPath()
 	return s_sTempPath;
 }
 
-e2d::String e2d::Path::getDefaultSavePath()
+e2d::String e2d::Path::getDataSavePath()
 {
-	return s_sDefaultSavePath;
+	return s_sDataSavePath;
 }
 
 e2d::String e2d::Path::getFileExtension(const String& filePath)
@@ -159,8 +113,8 @@ e2d::String e2d::Path::getSaveFilePath(const String& title, const String& defExt
 	ofn.nMaxFile = sizeof(strFilename);					// 缓冲区长度
 	ofn.lpstrInitialDir = nullptr;						// 初始目录为默认
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-	ofn.lpstrTitle = title;								// 标题
-	ofn.lpstrDefExt = defExt;							// 默认追加的扩展名
+	ofn.lpstrTitle = (LPCWSTR)title;								// 标题
+	ofn.lpstrDefExt = (LPCWSTR)defExt;							// 默认追加的扩展名
 
 	if (GetSaveFileName(&ofn))
 	{
@@ -171,18 +125,32 @@ e2d::String e2d::Path::getSaveFilePath(const String& title, const String& defExt
 
 bool e2d::Path::createFolder(const String& dirPath)
 {
-	if (dirPath.isEmpty())
+	if (dirPath.isEmpty() || dirPath.getLength() >= MAX_PATH)
 	{
-		WARN("Path::createFolder Failed: Invalid directory path!");
 		return false;
 	}
 
-	if (-1 == ::_waccess(dirPath, 0))
+	wchar_t tmpDirPath[_MAX_PATH] = { 0 };
+	int length = dirPath.getLength();
+
+	for (int i = 0; i < length; ++i)
 	{
-		if (0 != ::_wmkdir(dirPath))
+		tmpDirPath[i] = dirPath.at(i);
+		if (tmpDirPath[i] == L'\\' || tmpDirPath[i] == L'/' || i == (length - 1))
 		{
-			return false;
+			if (::_waccess(tmpDirPath, 0) != 0)
+			{
+				if (::_wmkdir(tmpDirPath) != 0)
+				{
+					return false;
+				}
+			}
 		}
 	}
 	return true;
+}
+
+bool e2d::Path::existsFolder(const String & dirPath)
+{
+	return ::_waccess((const wchar_t *)dirPath, 0) == 0;
 }

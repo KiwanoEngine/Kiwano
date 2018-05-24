@@ -25,7 +25,8 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 	if (!mutexName.isEmpty())
 	{
 		// 创建进程互斥体
-		HANDLE hMutex = ::CreateMutex(nullptr, TRUE, L"Easy2DApp-" + mutexName);
+		String fullMutexName = L"Easy2DApp-" + mutexName;
+		HANDLE hMutex = ::CreateMutex(nullptr, TRUE, (LPCWSTR)fullMutexName);
 
 		if (hMutex == nullptr)
 		{
@@ -114,14 +115,14 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 		throw SystemException(L"初始化 XAudio2 失败");
 	}
 
-	// 保存游戏名称
-	s_sGameName = name;
-
 	// 初始化路径
-	if (!Path::__init())
+	if (!Path::__init(name))
 	{
 		WARN("Path::__init failed!");
 	}
+
+	// 保存游戏名称
+	s_sGameName = name;
 
 	// 初始化成功
 	s_bInitialized = true;

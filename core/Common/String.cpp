@@ -364,6 +364,11 @@ std::string e2d::String::getCString() const
 	return std::move(str);
 }
 
+wchar_t e2d::String::at(int index) const
+{
+	return _str[size_t(index)];
+}
+
 int e2d::String::compare(const String & str) const
 {
 	return _str.compare(str._str);
@@ -449,9 +454,9 @@ void e2d::String::replace(const String & from, const String & to)
 		return;
 
 	size_t start_pos = 0;
-	while ((start_pos = _str.find(from, start_pos)) != std::string::npos) 
+	while ((start_pos = _str.find((const wchar_t *)from, start_pos)) != std::string::npos) 
 	{
-		_str.replace(start_pos, from._str.length(), to);
+		_str.replace(start_pos, from._str.length(), (const wchar_t *)to);
 		start_pos += to._str.length();
 	}
 }

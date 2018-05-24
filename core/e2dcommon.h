@@ -147,6 +147,11 @@ public:
 	// 获取 ANSI 字符串
 	std::string getCString() const;
 
+	// 获取指定位置字符
+	wchar_t at(
+		int index
+	) const;
+
 	// 比较字符串
 	int compare(
 		const String & str
@@ -231,8 +236,8 @@ public:
 	friend class String operator+ (const wchar_t*, const String &);
 
 	// 类型转换操作符
-	operator const wchar_t* () const;
-	operator wchar_t* () const;
+	explicit operator const wchar_t* () const;
+	explicit operator wchar_t* () const;
 
 	// 比较运算符
 	bool operator== (const String &) const;

@@ -93,7 +93,7 @@ bool e2d::Music::open(const e2d::String& filePath)
 
 	// 定位 wave 文件
 	wchar_t pFilePath[MAX_PATH];
-	if (!_findMediaFileCch(pFilePath, MAX_PATH, filePath))
+	if (!_findMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)filePath))
 	{
 		WARN("Failed to find media file: %s", pFilePath);
 		return false;
@@ -162,7 +162,7 @@ bool e2d::Music::open(int resNameId, const e2d::String& resType)
 		return false;
 	}
 
-	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(resNameId), resType)))
+	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(resNameId), (LPCWSTR)resType)))
 		return TraceError(L"FindResource");
 
 	if (nullptr == (hResData = LoadResource(HINST_THISCOMPONENT, hResInfo)))

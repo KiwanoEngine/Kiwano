@@ -170,7 +170,7 @@ bool e2d::Image::preload(const String& filePath)
 
 	// 创建解码器
 	hr = Renderer::getIWICImagingFactory()->CreateDecoderFromFilename(
-		filePath,
+		(LPCWSTR)filePath,
 		nullptr,
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnLoad,
@@ -254,7 +254,7 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 	DWORD imageFileSize = 0;
 
 	// 定位资源
-	imageResHandle = ::FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(resNameId), resType);
+	imageResHandle = ::FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(resNameId), (LPCWSTR)resType);
 
 	hr = imageResHandle ? S_OK : E_FAIL;
 	if (SUCCEEDED(hr))

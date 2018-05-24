@@ -433,14 +433,6 @@ public:
 		const String& defaultValue,			/* 默认值 */
 		const String& field = L"Defalut"	/* 字段名称 */
 	);
-
-	// 修改数据文件的名称
-	static void setDataFileName(
-		const String& filePath				/* 文件名称 */
-	);
-
-	// 获取数据文件的完整路径
-	static String getDataFilePath();
 };
 
 
@@ -451,7 +443,7 @@ class Path
 
 public:
 	// 获取数据的默认保存路径
-	static String getDefaultSavePath();
+	static String getDataSavePath();
 
 	// 获取临时文件目录
 	static String getTempPath();
@@ -472,9 +464,16 @@ public:
 		const String& dirPath	/* 文件夹路径 */
 	);
 
+	// 判断文件夹是否存在
+	static bool existsFolder(
+		const String& dirPath	/* 文件夹路径 */
+	);
+
 private:
 	// 初始化
-	static bool __init();
+	static bool __init(
+		const String& gameName
+	);
 };
 
 }

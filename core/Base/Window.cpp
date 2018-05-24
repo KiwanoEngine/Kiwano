@@ -177,7 +177,7 @@ void e2d::Window::setSize(int width, int height)
 void e2d::Window::setTitle(const String& title)
 {
 	// 设置窗口标题
-	::SetWindowText(s_HWnd, title);
+	::SetWindowText(s_HWnd, (LPCWSTR)title);
 }
 
 void e2d::Window::setIcon(int iconID)
@@ -293,19 +293,19 @@ void e2d::Window::setTypewritingEnable(bool enable)
 
 void e2d::Window::info(const String & text, const String & title)
 {
-	::MessageBox(s_HWnd, text, title, MB_ICONINFORMATION | MB_OK);
+	::MessageBox(s_HWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONINFORMATION | MB_OK);
 	Game::reset();
 }
 
 void e2d::Window::warning(const String& title, const String& text)
 {
-	::MessageBox(s_HWnd, text, title, MB_ICONWARNING | MB_OK);
+	::MessageBox(s_HWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONWARNING | MB_OK);
 	Game::reset();
 }
 
 void e2d::Window::error(const String & text, const String & title)
 {
-	::MessageBox(s_HWnd, text, title, MB_ICONERROR | MB_OK);
+	::MessageBox(s_HWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONERROR | MB_OK);
 	Game::reset();
 }
 

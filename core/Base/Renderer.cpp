@@ -194,7 +194,7 @@ void e2d::Renderer::__render()
 		IDWriteTextLayout * pTextLayout = nullptr;
 
 		hr = s_pDWriteFactory->CreateTextLayout(
-			s_sFpsText,
+			(const WCHAR *)s_sFpsText,
 			(UINT32)s_sFpsText.getLength(),
 			s_pTextFormat,
 			0,
