@@ -85,6 +85,13 @@ bool e2d::Music::open(const e2d::String& filePath)
 		return false;
 	}
 
+	String actualFilePath = Path::checkFilePath(filePath);
+	if (actualFilePath.isEmpty())
+	{
+		WARN("MusicInfo::open File not found.");
+		return false;
+	}
+
 	if (!s_pXAudio2)
 	{
 		WARN("IXAudio2 nullptr pointer error!");
@@ -93,7 +100,7 @@ bool e2d::Music::open(const e2d::String& filePath)
 
 	// 定位 wave 文件
 	wchar_t pFilePath[MAX_PATH];
-	if (!_findMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)filePath))
+	if (!_findMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)actualFilePath))
 	{
 		WARN("Failed to find media file: %s", pFilePath);
 		return false;

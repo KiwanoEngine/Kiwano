@@ -442,11 +442,24 @@ class Path
 	friend class Game;
 
 public:
+	// 添加搜索路径
+	static void add(
+		String path
+	);
+
+	// 检查文件路径
+	static String checkFilePath(
+		const String& path
+	);
+
 	// 获取数据的默认保存路径
 	static String getDataSavePath();
 
 	// 获取临时文件目录
 	static String getTempPath();
+
+	// 获取执行程序的绝对路径
+	static String getExecutableFilePath();
 
 	// 获取文件扩展名
 	static String getFileExtension(
@@ -464,8 +477,8 @@ public:
 		const String& dirPath	/* 文件夹路径 */
 	);
 
-	// 判断文件夹是否存在
-	static bool existsFolder(
+	// 判断文件或文件夹是否存在
+	static bool exists(
 		const String& dirPath	/* 文件夹路径 */
 	);
 

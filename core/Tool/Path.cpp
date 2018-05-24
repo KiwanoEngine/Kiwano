@@ -1,5 +1,6 @@
 #include "..\e2dtool.h"
 #include <algorithm>
+#include <list>
 #include <commdlg.h>
 
 #define DEFINE_KNOWN_FOLDER(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
@@ -12,6 +13,7 @@ DEFINE_KNOWN_FOLDER(FOLDERID_LocalAppData, 0xF1B32785, 0x6FBA, 0x4FCF, 0x9D, 0x5
 static e2d::String s_sLocalAppDataPath;
 static e2d::String s_sTempPath;
 static e2d::String s_sDataSavePath;
+static std::list<e2d::String> s_vPathList;
 
 bool e2d::Path::__init(const String& gameName)
 {
@@ -40,7 +42,7 @@ bool e2d::Path::__init(const String& gameName)
 	{
 		s_sDataSavePath << gameName << L"\\";
 	}
-	if (!Path::existsFolder(s_sDataSavePath))
+	if (!Path::exists(s_sDataSavePath))
 	{
 		if (!Path::createFolder(s_sDataSavePath))
 		{
@@ -62,7 +64,7 @@ bool e2d::Path::__init(const String& gameName)
 		s_sTempPath << gameName << L"\\";
 	}
 
-	if (!Path::existsFolder(s_sTempPath))
+	if (!Path::exists(s_sTempPath))
 	{
 		if (!Path::createFolder(s_sTempPath))
 		{
@@ -73,9 +75,52 @@ bool e2d::Path::__init(const String& gameName)
 	return true;
 }
 
+void e2d::Path::add(String path)
+{
+	path.replace(L"/", L"\\");
+	if (path[path.getLength() - 1] != L'\\')
+	{
+		path << L"\\";
+	}
+	auto iter = std::find(s_vPathList.cbegin(), s_vPathList.cend(), path);
+	if (iter == s_vPathList.cend())
+	{
+		s_vPathList.push_front(path);
+	}
+}
+
 e2d::String e2d::Path::getTempPath()
 {
 	return s_sTempPath;
+}
+
+e2d::String e2d::Path::getExecutableFilePath()
+{
+	TCHAR szPath[_MAX_PATH] = { 0 };
+	if (::GetModuleFileName(nullptr, szPath, _MAX_PATH) != 0)
+	{
+		return String(szPath);
+	}
+	return String();
+}
+
+e2d::String e2d::Path::checkFilePath(const String& path)
+{
+	if (Path::exists(path))
+	{
+		return path;
+	}
+	else
+	{
+		for (auto& resPath : s_vPathList)
+		{
+			if (Path::exists(resPath + path))
+			{
+				return resPath + path;
+			}
+		}
+	}
+	return String();
 }
 
 e2d::String e2d::Path::getDataSavePath()
@@ -150,7 +195,11 @@ bool e2d::Path::createFolder(const String& dirPath)
 	return true;
 }
 
-bool e2d::Path::existsFolder(const String & dirPath)
+bool e2d::Path::exists(const String & path)
 {
-	return ::_waccess((const wchar_t *)dirPath, 0) == 0;
+	if (path.isEmpty() || path.getLength() >= MAX_PATH)
+	{
+		return false;
+	}
+	return ::_waccess((const wchar_t *)path, 0) == 0;
 }

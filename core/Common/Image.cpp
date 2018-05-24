@@ -1,5 +1,6 @@
 #include "..\e2dcommon.h"
 #include "..\e2dbase.h"
+#include "..\e2dtool.h"
 #include <map>
 
 static std::map<size_t, ID2D1Bitmap*> s_mBitmapsFromFile;
@@ -160,6 +161,12 @@ bool e2d::Image::preload(const String& filePath)
 		return true;
 	}
 
+	String actualFilePath = Path::checkFilePath(filePath);
+	if (actualFilePath.isEmpty())
+	{
+		return false;
+	}
+
 	HRESULT hr = S_OK;
 
 	IWICBitmapDecoder *pDecoder = nullptr;
@@ -170,7 +177,7 @@ bool e2d::Image::preload(const String& filePath)
 
 	// 创建解码器
 	hr = Renderer::getIWICImagingFactory()->CreateDecoderFromFilename(
-		(LPCWSTR)filePath,
+		(LPCWSTR)actualFilePath,
 		nullptr,
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnLoad,
@@ -218,7 +225,7 @@ bool e2d::Image::preload(const String& filePath)
 		// 保存图片指针和图片的 Hash 名
 		s_mBitmapsFromFile.insert(
 			std::map<size_t, ID2D1Bitmap*>::value_type(
-				filePath.getHashCode(),
+				actualFilePath.getHashCode(),
 				pBitmap)
 		);
 	}
