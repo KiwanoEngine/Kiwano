@@ -468,25 +468,25 @@ class Sprite :
 public:
 	Sprite();
 
-	Sprite(
+	explicit Sprite(
 		Image * image
 	);
 
-	Sprite(
+	explicit Sprite(
 		const String& filePath	/* 图片文件路径 */
 	);
 
-	Sprite(
+	explicit Sprite(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType	/* 图片资源类型 */
 	);
 
-	Sprite(
+	explicit Sprite(
 		const String& filePath,	/* 图片文件路径 */
 		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
-	Sprite(
+	explicit Sprite(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType,	/* 图片资源类型 */
 		const Rect& cropRect	/* 裁剪矩形 */
@@ -579,7 +579,7 @@ public:
 public:
 	Text();
 
-	Text(
+	explicit Text(
 		const String& text,						/* 文字内容 */
 		const Font& font = Font(),				/* 字体 */
 		const Style& style = Style()			/* 文本样式 */
@@ -750,25 +750,25 @@ class Button :
 public:
 	Button();
 
-	Button(
+	explicit Button(
 		Node * normal,					/* 普通状态 */
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	Button(
+	explicit Button(
 		Node * normal,					/* 普通状态 */
 		Node * selected,				/* 鼠标按下状态 */
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	Button(
+	explicit Button(
 		Node * normal,					/* 普通状态 */
 		Node * mouseover,				/* 鼠标移入状态 */
 		Node * selected,				/* 鼠标按下状态 */
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	Button(
+	explicit Button(
 		Node * normal,					/* 普通状态 */
 		Node * mouseover,				/* 鼠标移入状态 */
 		Node * selected,				/* 鼠标移入状态 */
@@ -843,13 +843,13 @@ class ToggleButton :
 public:
 	ToggleButton();
 
-	ToggleButton(
+	explicit ToggleButton(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	ToggleButton(
+	explicit ToggleButton(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
@@ -857,7 +857,7 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	ToggleButton(
+	explicit ToggleButton(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
@@ -867,7 +867,7 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	ToggleButton(
+	explicit ToggleButton(
 		Node * onNormal,				/* 按钮打开时，普通状态 */
 		Node * offNormal,				/* 按钮关闭时，普通状态 */
 		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
@@ -949,7 +949,7 @@ class Menu :
 public:
 	Menu();
 
-	Menu(
+	explicit Menu(
 		const std::vector<Button*>& buttons	/* 按钮数组 */
 	);
 

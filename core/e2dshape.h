@@ -78,11 +78,11 @@ class RectShape :
 public:
 	RectShape();
 
-	RectShape(
+	explicit RectShape(
 		Size size		/* ¿í¶ÈºÍ¸ß¶È */
 	);
 
-	RectShape(
+	explicit RectShape(
 		Point topLeft,	/* ×óÉÏ½Ç×ø±ê */
 		Size size		/* ¿í¶ÈºÍ¸ß¶È */
 	);
@@ -105,13 +105,13 @@ class RoundRectShape :
 public:
 	RoundRectShape();
 
-	RoundRectShape(
+	explicit RoundRectShape(
 		Size size,		/* ¿í¶ÈºÍ¸ß¶È */
 		double radiusX,	/* Ô²½Ç°ë¾¶ */
 		double radiusY	/* Ô²½Ç°ë¾¶ */
 	);
 
-	RoundRectShape(
+	explicit RoundRectShape(
 		Point topLeft,	/* ×óÉÏ½Ç×ø±ê */
 		Size size,		/* ¿í¶ÈºÍ¸ß¶È */
 		double radiusX,	/* Ô²½Ç°ë¾¶ */
@@ -156,11 +156,11 @@ class CircleShape :
 public:
 	CircleShape();
 
-	CircleShape(
+	explicit CircleShape(
 		double radius	/* °ë¾¶ */
 	);
 
-	CircleShape(
+	explicit CircleShape(
 		Point center,	/* Ô²ÐÄ×ø±ê */
 		double radius	/* °ë¾¶ */
 	);
@@ -194,12 +194,12 @@ class EllipseShape :
 public:
 	EllipseShape();
 
-	EllipseShape(
+	explicit EllipseShape(
 		double radiusX,	/* ºáÖá°ë¾¶ */
 		double radiusY	/* ×ÝÖá°ë¾¶ */
 	);
 
-	EllipseShape(
+	explicit EllipseShape(
 		Point center,	/* Ô²ÐÄ×ø±ê */
 		double radiusX,	/* ºáÖá°ë¾¶ */
 		double radiusY	/* ×ÝÖá°ë¾¶ */

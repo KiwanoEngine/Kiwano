@@ -57,11 +57,11 @@ class Music :
 public:
 	Music();
 
-	Music(
+	explicit Music(
 		const e2d::String& filePath	/* 音乐文件路径 */
 	);
 
-	Music(
+	explicit Music(
 		int resNameId,				/* 音乐资源名称 */
 		const String& resType		/* 音乐资源类型 */
 	);
@@ -330,7 +330,7 @@ class Listener
 public:
 	Listener();
 
-	Listener(
+	explicit Listener(
 		const Function& func,
 		const String& name,
 		bool paused

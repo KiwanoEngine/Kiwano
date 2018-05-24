@@ -15,7 +15,7 @@ class Transition :
 	friend class SceneManager;
 
 public:
-	Transition(double duration);
+	explicit Transition(double duration);
 
 	virtual ~Transition();
 
@@ -67,7 +67,7 @@ class FadeTransition :
 	public Transition
 {
 public:
-	FadeTransition(
+	explicit FadeTransition(
 		double duration	/* 动画持续时长 */
 	);
 
@@ -89,7 +89,7 @@ class EmergeTransition :
 	public Transition
 {
 public:
-	EmergeTransition(
+	explicit EmergeTransition(
 		double duration	/* 浮现动画持续时长 */
 	);
 
@@ -111,7 +111,7 @@ class BoxTransition :
 	public Transition
 {
 public:
-	BoxTransition(
+	explicit BoxTransition(
 		double duration	/* 动画持续时长 */
 	);
 
@@ -133,7 +133,7 @@ class MoveTransition :
 	public Transition
 {
 public:
-	MoveTransition(
+	explicit MoveTransition(
 		double moveDuration,					/* 场景移动动画持续时长 */
 		Direction direction = Direction::LEFT	/* 场景移动方向 */
 	);

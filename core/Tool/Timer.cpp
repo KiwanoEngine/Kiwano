@@ -6,7 +6,7 @@ namespace e2d
 	class TimerEntity
 	{
 	public:
-		TimerEntity(
+		explicit TimerEntity(
 			const e2d::Function& func,
 			const e2d::String& name,
 			double delay,

@@ -96,7 +96,7 @@ class FiniteTimeAction :
 {
 public:
 	// 创建特定时长的持续动作
-	FiniteTimeAction(
+	explicit FiniteTimeAction(
 		double duration
 	);
 
@@ -124,7 +124,7 @@ class MoveBy :
 	public FiniteTimeAction
 {
 public:
-	MoveBy(
+	explicit MoveBy(
 		double duration,	/* 持续时长 */
 		Vector vector		/* 移动距离 */
 	);
@@ -153,7 +153,7 @@ class MoveTo :
 	public MoveBy
 {
 public:
-	MoveTo(
+	explicit MoveTo(
 		double duration,	/* 持续时长 */
 		Point pos			/* 目的坐标 */
 	);
@@ -182,7 +182,7 @@ class JumpBy :
 	public FiniteTimeAction
 {
 public:
-	JumpBy(
+	explicit JumpBy(
 		double duration,		/* 持续时长 */
 		const Vector& vec,		/* 跳跃距离 */
 		double height,			/* 跳跃高度 */
@@ -216,7 +216,7 @@ class JumpTo :
 	public JumpBy
 {
 public:
-	JumpTo(
+	explicit JumpTo(
 		double duration,		/* 持续时长 */
 		const Point& pos,		/* 目的坐标 */
 		double height,			/* 跳跃高度 */
@@ -247,12 +247,12 @@ class ScaleBy :
 	public FiniteTimeAction
 {
 public:
-	ScaleBy(
+	explicit ScaleBy(
 		double duration,	/* 持续时长 */
 		double scale		/* 相对变化值 */
 	);
 
-	ScaleBy(
+	explicit ScaleBy(
 		double duration,	/* 持续时长 */
 		double scaleX,		/* 横向缩放相对变化值 */
 		double scaleY		/* 纵向缩放相对变化值 */
@@ -284,12 +284,12 @@ class ScaleTo :
 	public ScaleBy
 {
 public:
-	ScaleTo(
+	explicit ScaleTo(
 		double duration,	/* 持续时长 */
 		double scale		/* 目标值 */
 	);
 
-	ScaleTo(
+	explicit ScaleTo(
 		double duration,	/* 持续时长 */
 		double scaleX,		/* 横向缩放目标值 */
 		double scaleY		/* 纵向缩放目标值 */
@@ -320,7 +320,7 @@ class OpacityBy :
 	public FiniteTimeAction
 {
 public:
-	OpacityBy(
+	explicit OpacityBy(
 		double duration,	/* 持续时长 */
 		double opacity		/* 相对变化值 */
 	);
@@ -349,7 +349,7 @@ class OpacityTo :
 	public OpacityBy
 {
 public:
-	OpacityTo(
+	explicit OpacityTo(
 		double duration,	/* 持续时长 */
 		double opacity		/* 目标值 */
 	);
@@ -379,7 +379,7 @@ class FadeIn :
 {
 public:
 	// 创建淡入动作
-	FadeIn(
+	explicit FadeIn(
 		double duration		/* 持续时长 */
 	)
 	: OpacityTo(duration, 1) 
@@ -394,7 +394,7 @@ class FadeOut :
 {
 public:
 	// 创建淡出动作
-	FadeOut(
+	explicit FadeOut(
 		double duration		/* 持续时长 */
 	)
 	: OpacityTo(duration, 0) 
@@ -408,7 +408,7 @@ class RotateBy :
 	public FiniteTimeAction
 {
 public:
-	RotateBy(
+	explicit RotateBy(
 		double duration,	/* 持续时长 */
 		double rotation		/* 相对变化值 */
 	);
@@ -437,7 +437,7 @@ class RotateTo :
 	public RotateBy
 {
 public:
-	RotateTo(
+	explicit RotateTo(
 		double duration,	/* 持续时长 */
 		double rotation		/* 目标值 */
 	);
@@ -466,7 +466,7 @@ class Delay :
 	public Action
 {
 public:
-	Delay(
+	explicit Delay(
 		double duration	/* 延迟时长（秒） */
 	);
 
@@ -500,7 +500,7 @@ class Loop :
 	public Action
 {
 public:
-	Loop(
+	explicit Loop(
 		Action * action,	/* 执行循环的动作 */
 		int times = -1		/* 循环次数 */
 	);
@@ -541,7 +541,7 @@ class CallFunc :
 	public Action
 {
 public:
-	CallFunc(
+	explicit CallFunc(
 		const Function& func /* 函数对象 */
 	);
 
@@ -570,7 +570,7 @@ class Sequence :
 public:
 	Sequence();
 
-	Sequence(
+	explicit Sequence(
 		const std::vector<Action*>& actions	/* 动作列表 */
 	);
 
@@ -621,7 +621,7 @@ class Spawn :
 public:
 	Spawn();
 
-	Spawn(
+	explicit Spawn(
 		const std::vector<Action*>& actions	/* 动作列表 */
 	);
 
@@ -671,15 +671,15 @@ class Animation :
 public:
 	Animation();
 
-	Animation(
+	explicit Animation(
 		const std::vector<Image*>& frames	/* 关键帧数组 */
 	);
 
-	Animation(
+	explicit Animation(
 		double interval						/* 帧间隔（秒） */
 	);
 
-	Animation(
+	explicit Animation(
 		double interval,					/* 帧间隔（秒） */
 		const std::vector<Image*>& frames	/* 关键帧数组 */
 	);
@@ -729,7 +729,7 @@ class Animate :
 public:
 	Animate();
 
-	Animate(
+	explicit Animate(
 		Animation * animation
 	);
 

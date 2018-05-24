@@ -212,14 +212,14 @@ class RectCollider :
 public:
 	RectCollider();
 
-	RectCollider(
+	explicit RectCollider(
 		double x,
 		double y,
 		double width,
 		double height
 	);
 
-	RectCollider(
+	explicit RectCollider(
 		Node * node
 	);
 
@@ -252,12 +252,12 @@ class CircleCollider :
 public:
 	CircleCollider();
 
-	CircleCollider(
+	explicit CircleCollider(
 		Point center,
 		double radius
 	);
 
-	CircleCollider(
+	explicit CircleCollider(
 		Node * node
 	);
 
@@ -288,13 +288,13 @@ class EllipseCollider :
 public:
 	EllipseCollider();
 
-	EllipseCollider(
+	explicit EllipseCollider(
 		Point center,
 		double radiusX,
 		double radiusY
 	);
 
-	EllipseCollider(
+	explicit EllipseCollider(
 		Node * node
 	);
 

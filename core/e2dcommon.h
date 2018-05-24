@@ -430,7 +430,7 @@ public:
 public:
 	Font();
 
-	Font(
+	explicit Font(
 		const String& family,
 		double size = 22,
 		UINT weight = Font::Weight::NORMAL,
@@ -474,21 +474,21 @@ class Image :
 public:
 	Image();
 
-	Image(
+	explicit Image(
 		const String& filePath	/* 图片文件路径 */
 	);
 
-	Image(
+	explicit Image(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType	/* 图片资源类型 */
 	);
 
-	Image(
+	explicit Image(
 		const String& filePath,	/* 图片文件路径 */
 		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
-	Image(
+	explicit Image(
 		int resNameId,			/* 图片资源名称 */
 		const String& resType,	/* 图片资源类型 */
 		const Rect& cropRect	/* 裁剪矩形 */
