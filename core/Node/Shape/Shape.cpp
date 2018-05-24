@@ -2,9 +2,10 @@
 
 e2d::Shape::Shape()
 	: _style(Style::SOLID)
-	, _fillColor(Color::BLUE, 0.3)
-	, _lineColor(Color::BLUE, 0.5)
-	, _strokeWidth(1)
+	, _fillColor(0x6090A0U)
+	, _lineColor(0x78B7D0U)
+	, _strokeWidth(2)
+	, _strokeStyle(nullptr)
 {
 }
 
@@ -80,10 +81,29 @@ void e2d::Shape::setLineColor(Color lineColor)
 
 void e2d::Shape::setStrokeWidth(double strokeWidth)
 {
-	_strokeWidth = float(strokeWidth);
+	_strokeWidth = float(strokeWidth) * 2;
 }
 
 void e2d::Shape::setStyle(Style style)
 {
 	_style = style;
+}
+
+void e2d::Shape::setLineJoin(LineJoin lineJoin)
+{
+	switch (lineJoin)
+	{
+	case LineJoin::MITER:
+		_strokeStyle = Renderer::getMiterID2D1StrokeStyle();
+		break;
+	case LineJoin::BEVEL:
+		_strokeStyle = Renderer::getBevelID2D1StrokeStyle();
+		break;
+	case LineJoin::ROUND:
+		_strokeStyle = Renderer::getRoundID2D1StrokeStyle();
+		break;
+	default:
+		_strokeStyle = nullptr;
+		break;
+	}
 }

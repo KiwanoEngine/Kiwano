@@ -25,7 +25,8 @@ void e2d::RectShape::_renderLine()
 	Renderer::getRenderTarget()->DrawRectangle(
 		D2D1::RectF(0, 0, _width, _height),
 		Renderer::getSolidColorBrush(),
-		_strokeWidth
+		_strokeWidth,
+		_strokeStyle
 	);
 }
 

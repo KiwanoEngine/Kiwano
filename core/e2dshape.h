@@ -53,6 +53,11 @@ public:
 	// 设置样式
 	void setStyle(Style style);
 
+	// 设置线条相交样式
+	void setLineJoin(
+		LineJoin lineJoin
+	);
+
 	// 渲染形状
 	virtual void onRender() override;
 
@@ -68,6 +73,7 @@ protected:
 	float	_strokeWidth;
 	Color	_lineColor;
 	Color	_fillColor;
+	ID2D1StrokeStyle * _strokeStyle;
 };
 
 

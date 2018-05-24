@@ -39,7 +39,8 @@ void e2d::CircleShape::_renderLine()
 	Renderer::getRenderTarget()->DrawEllipse(
 		D2D1::Ellipse(D2D1::Point2F(_radius, _radius), _radius, _radius),
 		Renderer::getSolidColorBrush(),
-		_strokeWidth
+		_strokeWidth,
+		_strokeStyle
 	);
 }
 

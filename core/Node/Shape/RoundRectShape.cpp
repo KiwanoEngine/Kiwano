@@ -51,7 +51,8 @@ void e2d::RoundRectShape::_renderLine()
 	Renderer::getRenderTarget()->DrawRoundedRectangle(
 		D2D1::RoundedRect(D2D1::RectF(0, 0, _width, _height), _radiusX, _radiusY),
 		Renderer::getSolidColorBrush(),
-		_strokeWidth
+		_strokeWidth,
+		_strokeStyle
 	);
 }
 

@@ -53,7 +53,8 @@ void e2d::EllipseShape::_renderLine()
 	Renderer::getRenderTarget()->DrawEllipse(
 		D2D1::Ellipse(D2D1::Point2F(_radiusX, _radiusY), _radiusX, _radiusY),
 		Renderer::getSolidColorBrush(),
-		_strokeWidth
+		_strokeWidth,
+		_strokeStyle
 	);
 }
 
