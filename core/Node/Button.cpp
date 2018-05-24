@@ -6,7 +6,7 @@
 
 e2d::Button::Button()
 	: _func(nullptr)
-	, _state(ButtonState::NORMAL)
+	, _state(ButtonState::Normal)
 	, _enable(true)
 	, _isSelected(false)
 	, _normal(nullptr)
@@ -18,7 +18,7 @@ e2d::Button::Button()
 
 e2d::Button::Button(Node * normal, const Function& func)
 	: _func(nullptr)
-	, _state(ButtonState::NORMAL)
+	, _state(ButtonState::Normal)
 	, _enable(true)
 	, _isSelected(false)
 	, _normal(nullptr)
@@ -32,7 +32,7 @@ e2d::Button::Button(Node * normal, const Function& func)
 
 e2d::Button::Button(Node * normal, Node * selected, const Function& func)
 	: _func(nullptr)
-	, _state(ButtonState::NORMAL)
+	, _state(ButtonState::Normal)
 	, _enable(true)
 	, _isSelected(false)
 	, _normal(nullptr)
@@ -47,7 +47,7 @@ e2d::Button::Button(Node * normal, Node * selected, const Function& func)
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Function& func)
 	: _func(nullptr)
-	, _state(ButtonState::NORMAL)
+	, _state(ButtonState::Normal)
 	, _enable(true)
 	, _isSelected(false)
 	, _normal(nullptr)
@@ -63,7 +63,7 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Func
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Function& func)
 	: _func(nullptr)
-	, _state(ButtonState::NORMAL)
+	, _state(ButtonState::Normal)
 	, _enable(true)
 	, _isSelected(false)
 	, _normal(nullptr)
@@ -184,7 +184,7 @@ void e2d::Button::_fixedUpdate()
 
 	if (_enable && _visiable && _normal)
 	{
-		if (Input::isRelease(Input::Mouse::LEFT))
+		if (Input::isRelease(Input::Mouse::Left))
 		{
 			// 鼠标左键抬起时，判断鼠标坐标是否在按钮内部
 			if (_isSelected &&
@@ -196,7 +196,7 @@ void e2d::Button::_fixedUpdate()
 			_isSelected = false;
 		}
 
-		if (Input::isPress(Input::Mouse::LEFT))
+		if (Input::isPress(Input::Mouse::Left))
 		{
 			if (_normal->containsPoint(Input::getMousePos()))
 			{
@@ -206,28 +206,28 @@ void e2d::Button::_fixedUpdate()
 			}
 		}
 
-		if (_isSelected && Input::isDown(Input::Mouse::LEFT))
+		if (_isSelected && Input::isDown(Input::Mouse::Left))
 		{
 			if (_normal->containsPoint(Input::getMousePos()))
 			{
-				_setState(ButtonState::SELECTED);
-				Window::setCursor(Window::Cursor::HAND);
+				_setState(ButtonState::Selected);
+				Window::setCursor(Window::Cursor::Hand);
 				return;
 			}
 		}
 		else if (_normal->containsPoint(Input::getMousePos()))
 		{
-			_setState(ButtonState::MOUSEOVER);
-			Window::setCursor(Window::Cursor::HAND);
+			_setState(ButtonState::Mouseover);
+			Window::setCursor(Window::Cursor::Hand);
 			return;
 		}
 
-		_setState(ButtonState::NORMAL);
+		_setState(ButtonState::Normal);
 	}
 
 	if (_visiable && !_enable && _normal && _normal->containsPoint(Input::getMousePos()))
 	{
-		Window::setCursor(Window::Cursor::NO);
+		Window::setCursor(Window::Cursor::No);
 	}
 }
 
@@ -249,11 +249,11 @@ void e2d::Button::_updateVisiable()
 
 	if (_enable)
 	{
-		if (_state == ButtonState::SELECTED && _selected)
+		if (_state == ButtonState::Selected && _selected)
 		{
 			_selected->setVisiable(true);
 		}
-		else if (_state == ButtonState::MOUSEOVER && _mouseover)
+		else if (_state == ButtonState::Mouseover && _mouseover)
 		{
 			_mouseover->setVisiable(true);
 		}

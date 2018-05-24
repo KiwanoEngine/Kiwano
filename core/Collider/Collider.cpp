@@ -4,7 +4,7 @@
 
 e2d::Collider::Collider()
 	: _visiable(true)
-	, _color(Color::RED, 0.7f)
+	, _color(Color::Red, 0.7)
 	, _parentNode(nullptr)
 	, _transformed(nullptr)
 	, _enable(true)
@@ -77,7 +77,7 @@ e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * pCollider) con
 			return Relation(relation);
 		}
 	}
-	return Relation::UNKNOWN;
+	return Relation::Unknown;
 }
 
 void e2d::Collider::_transform()

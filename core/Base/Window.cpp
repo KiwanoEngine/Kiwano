@@ -194,23 +194,23 @@ void e2d::Window::setCursor(Cursor cursor)
 	LPCWSTR pCursorName = nullptr;
 	switch (cursor)
 	{
-	case Cursor::NORMAL:
+	case Cursor::Normal:
 		pCursorName = IDC_ARROW;
 		break;
 
-	case Cursor::HAND:
+	case Cursor::Hand:
 		pCursorName = IDC_HAND;
 		break;
 
-	case Cursor::NO:
+	case Cursor::No:
 		pCursorName = IDC_NO;
 		break;
 
-	case Cursor::WAIT:
+	case Cursor::Wait:
 		pCursorName = IDC_WAIT;
 		break;
 
-	case Cursor::ARROW_WAIT:
+	case Cursor::ArrowWait:
 		pCursorName = IDC_APPSTARTING;
 		break;
 

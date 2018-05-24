@@ -3,7 +3,7 @@
 e2d::Font::Font()
 	: family("")
 	, size(22)
-	, weight(Font::Weight::NORMAL)
+	, weight(Font::Weight::Normal)
 	, italic(false)
 {
 }

@@ -5,17 +5,17 @@
 //-------------------------------------------------------
 
 e2d::Text::Style::Style()
-	: color(Color::WHITE)
-	, alignment(Align::LEFT)
+	: color(Color::White)
+	, alignment(Align::Left)
 	, wrapping(false)
 	, wrappingWidth(0.0)
 	, lineSpacing(0.0)
 	, hasUnderline(false)
 	, hasStrikethrough(false)
 	, hasOutline(true)
-	, outlineColor(Color(Color::BLACK, 0.5))
+	, outlineColor(Color(Color::Black, 0.5))
 	, outlineWidth(1.0)
-	, outlineJoin(LineJoin::ROUND)
+	, outlineJoin(LineJoin::Round)
 {}
 
 e2d::Text::Style::Style(

@@ -130,20 +130,20 @@ public:
 	// 碰撞体类别
 	enum class Type
 	{
-		NONE,		/* 无 */
-		RECT,		/* 矩形 */
-		CIRCLE,		/* 圆形 */
-		ELLIPSE		/* 椭圆形 */
+		None,		/* 无 */
+		Rect,		/* 矩形 */
+		Circle,		/* 圆形 */
+		Ellipse		/* 椭圆形 */
 	};
 
 	// 碰撞体交集关系
 	enum class Relation : int
 	{
-		UNKNOWN = 0,		/* 关系不确定 */
-		DISJOIN = 1,		/* 没有交集 */
-		IS_CONTAINED = 2,	/* 完全被包含 */
-		CONTAINS = 3,		/* 完全包含 */
-		OVERLAP = 4			/* 部分重叠 */
+		Unknown = 0,		/* 关系不确定 */
+		Disjoin = 1,		/* 没有交集 */
+		IsContained = 2,	/* 完全被包含 */
+		Contains = 3,		/* 完全包含 */
+		Overlap = 4			/* 部分重叠 */
 	};
 
 public:

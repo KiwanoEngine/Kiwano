@@ -57,11 +57,11 @@ public:
 	// 鼠标指针样式
 	enum class Cursor : int
 	{
-		NORMAL,		/* 默认指针样式 */
-		HAND,		/* 手状指针 */
-		NO,			/* 禁止指针 */
-		WAIT,		/* 沙漏指针 */
-		ARROW_WAIT	/* 默认指针和小沙漏 */
+		Normal,		/* 默认指针样式 */
+		Hand,		/* 手状指针 */
+		No,			/* 禁止指针 */
+		Wait,		/* 沙漏指针 */
+		ArrowWait	/* 默认指针和小沙漏 */
 	};
 
 public:
@@ -103,7 +103,7 @@ public:
 
 	// 打开/隐藏控制台
 	static void showConsole(
-		bool show
+		bool show = true
 	);
 
 	// 是否允许响应输入法
@@ -194,25 +194,22 @@ public:
 	// 鼠标键值
 	enum class Mouse : int
 	{
-		LEFT,		/* 鼠标左键 */
-		RIGHT,		/* 鼠标右键 */
-		MIDDLE		/* 鼠标中键 */
+		Left,		/* 鼠标左键 */
+		Right,		/* 鼠标右键 */
+		Middle		/* 鼠标中键 */
 	};
 
 
 	// 键盘键值
 	enum class Key : int
 	{
-		UP = 0xC8,
-		LEFT = 0xCB,
-		RIGHT = 0xCD,
-		DOWN = 0xD0,
-		ENTER = 0x1C,
-		SPACE = 0x39,
-		ESC = 0x01,
-		BACK = 0x0E,
-		TAB = 0x0F,
-		PAUSE = 0xC5,
+		Up = 0xC8,
+		Left = 0xCB,
+		Right = 0xCD,
+		Down = 0xD0,
+		Enter = 0x1C,
+		Space = 0x39,
+		Esc = 0x01,
 		Q = 0x10,
 		W = 0x11,
 		E = 0x12,
@@ -239,26 +236,26 @@ public:
 		B = 0x30,
 		N = 0x31,
 		M = 0x32,
-		NUM1 = 0x02,
-		NUM2 = 0x03,
-		NUM3 = 0x04,
-		NUM4 = 0x05,
-		NUM5 = 0x06,
-		NUM6 = 0x07,
-		NUM7 = 0x08,
-		NUM8 = 0x09,
-		NUM9 = 0x0A,
-		NUM0 = 0x0B,
-		NUMPAD7 = 0x47,
-		NUMPAD8 = 0x48,
-		NUMPAD9 = 0x49,
-		NUMPAD4 = 0x4B,
-		NUMPAD5 = 0x4C,
-		NUMPAD6 = 0x4D,
-		NUMPAD1 = 0x4F,
-		NUMPAD2 = 0x50,
-		NUMPAD3 = 0x51,
-		NUMPAD0 = 0x52
+		Num1 = 0x02,
+		Num2 = 0x03,
+		Num3 = 0x04,
+		Num4 = 0x05,
+		Num5 = 0x06,
+		Num6 = 0x07,
+		Num7 = 0x08,
+		Num8 = 0x09,
+		Num9 = 0x0A,
+		Num0 = 0x0B,
+		Numpad7 = 0x47,
+		Numpad8 = 0x48,
+		Numpad9 = 0x49,
+		Numpad4 = 0x4B,
+		Numpad5 = 0x4C,
+		Numpad6 = 0x4D,
+		Numpad1 = 0x4F,
+		Numpad2 = 0x50,
+		Numpad3 = 0x51,
+		Numpad0 = 0x52
 	};
 
 public:

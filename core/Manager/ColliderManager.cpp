@@ -39,7 +39,7 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 					// 判断两碰撞体交集情况
 					Collider::Relation relation = pActiveCollider->getRelationWith(pPassiveCollider);
 					// 忽略 UNKNOWN 和 DISJOIN 情况
-					if (relation != Collider::Relation::UNKNOWN && relation != Collider::Relation::DISJOIN)
+					if (relation != Collider::Relation::Unknown && relation != Collider::Relation::Disjoin)
 					{
 						// 更新碰撞监听器
 						Collision::__update(pActiveNode, pPassiveNode);

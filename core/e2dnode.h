@@ -535,11 +535,11 @@ class Text :
 {
 public:
 	// 文本对齐方式
-	enum class Align : int
+	enum class Align
 	{
-		LEFT,		/* 左对齐 */
-		RIGHT,		/* 右对齐 */
-		CENTER		/* 居中对齐 */
+		Left,		/* 左对齐 */
+		Right,		/* 右对齐 */
+		Center		/* 居中对齐 */
 	};
 
 	// 文本样式
@@ -563,16 +563,16 @@ public:
 
 		Style(
 			Color color,
-			Align alignment = Align::LEFT,
+			Align alignment = Align::Left,
 			bool wrapping = false,
 			double wrappingWidth = 0.0,
 			double lineSpacing = 0.0,
 			bool hasUnderline = false,
 			bool hasStrikethrough = false,
 			bool hasOutline = true,
-			Color outlineColor = Color(Color::BLACK, 0.5),
+			Color outlineColor = Color(Color::Black, 0.5),
 			double outlineWidth = 1.0,
-			LineJoin outlineJoin = LineJoin::ROUND
+			LineJoin outlineJoin = LineJoin::Round
 		);
 	};
 
@@ -657,7 +657,7 @@ public:
 		double size
 	);
 
-	// 设置字体粗细值（默认值为 Text::Font::Weight::NORMAL）
+	// 设置字体粗细值（默认值为 Text::Font::Weight::Normal）
 	void setFontWeight(
 		UINT weight
 	);
@@ -687,7 +687,7 @@ public:
 		double lineSpacing
 	);
 
-	// 设置对齐方式（默认为 Align::LEFT）
+	// 设置对齐方式（默认为 Align::Left）
 	void setAlignment(
 		Align align
 	);
@@ -811,7 +811,7 @@ public:
 
 protected:
 	// 按钮状态枚举
-	enum class ButtonState { NORMAL, MOUSEOVER, SELECTED };
+	enum class ButtonState { Normal, Mouseover, Selected };
 
 	// 设置按钮状态
 	virtual void _setState(ButtonState state);

@@ -1,7 +1,7 @@
 #include "..\..\e2dshape.h"
 
 e2d::Shape::Shape()
-	: _style(Style::SOLID)
+	: _style(Style::Solid)
 	, _fillColor(0x6090A0U)
 	, _lineColor(0x78B7D0U)
 	, _strokeWidth(2)
@@ -20,7 +20,7 @@ void e2d::Shape::onRender()
 
 	switch (_style)
 	{
-	case Style::FILL:
+	case Style::Fill:
 	{
 		pBrush->SetColor(_fillColor.toD2DColorF());
 		this->_renderFill();
@@ -30,14 +30,14 @@ void e2d::Shape::onRender()
 		break;
 	}
 
-	case Style::ROUND:
+	case Style::Round:
 	{
 		pBrush->SetColor(_lineColor.toD2DColorF());
 		this->_renderLine();
 		break;
 	}
 
-	case Style::SOLID:
+	case Style::Solid:
 	{
 		pBrush->SetColor(_fillColor.toD2DColorF());
 		this->_renderFill();
@@ -93,13 +93,13 @@ void e2d::Shape::setLineJoin(LineJoin lineJoin)
 {
 	switch (lineJoin)
 	{
-	case LineJoin::MITER:
+	case LineJoin::Miter:
 		_strokeStyle = Renderer::getMiterID2D1StrokeStyle();
 		break;
-	case LineJoin::BEVEL:
+	case LineJoin::Bevel:
 		_strokeStyle = Renderer::getBevelID2D1StrokeStyle();
 		break;
-	case LineJoin::ROUND:
+	case LineJoin::Round:
 		_strokeStyle = Renderer::getRoundID2D1StrokeStyle();
 		break;
 	default:

@@ -8,19 +8,19 @@ namespace e2d
 // 方向
 enum class Direction : int
 {
-	UP,			/* 上 */
-	DOWN,		/* 下 */
-	LEFT,		/* 左 */
-	RIGHT		/* 右 */
+	Up,			/* 上 */
+	Down,		/* 下 */
+	Left,		/* 左 */
+	Right		/* 右 */
 };
 
 
 // 线条相交样式
 enum class LineJoin : int
 {
-	MITER = 0,	/* 斜切 */
-	BEVEL = 1,	/* 斜角 */
-	ROUND = 2	/* 圆角 */
+	Miter = 0,	/* 斜切 */
+	Bevel = 1,	/* 斜角 */
+	Round = 2	/* 圆角 */
 };
 
 
@@ -307,58 +307,56 @@ public:
 	D2D1_COLOR_F toD2DColorF() const;
 
 public:
-	enum RGB_VALUE : UINT
+	enum Value : UINT
 	{
-		BLACK = 0x000000,
-		BLUE = 0x0000FF,
-		BLUE_VIOLET = 0x8A2BE2,
-		BROWN = 0xA52A2A,
-		CHOCOLATE = 0xD2691E,
-		DARK_BLUE = 0x00008B,
-		DARK_GRAY = 0xA9A9A9,
-		DARK_GREEN = 0x006400,
-		DARK_ORANGE = 0xFF8C00,
-		DARK_RED = 0x8B0000,
-		DARK_VIOLET = 0x9400D3,
-		FOREST_GREEN = 0x228B22,
-		GOLD = 0xFFD700,
-		GRAY = 0x808080,
-		GREEN = 0x008000,
-		GREEN_YELLOW = 0xADFF2F,
-		LIGHT_BLUE = 0xADD8E6,
-		LIGHT_CYAN = 0xE0FFFF,
-		LIGHT_GOLDENROD_YELLOW = 0xFAFAD2,
-		LIGHT_GREEN = 0x90EE90,
-		LIGHT_GRAY = 0xD3D3D3,
-		LIGHT_PINK = 0xFFB6C1,
-		LIGHT_SEA_GREEN = 0x20B2AA,
-		LIGHT_SKY_BLUE = 0x87CEFA,
-		LIGHT_SLATE_GRAY = 0x778899,
-		LIGHT_YELLOW = 0xFFFFE0,
-		ORANGE = 0xFFA500,
-		ORANGE_RED = 0xFF4500,
-		PINK = 0xFFC0CB,
-		PURPLE = 0x800080,
-		RED = 0xFF0000,
-		SILVER = 0xC0C0C0,
-		SKY_BLUE = 0x87CEEB,
-		SNOW = 0xFFFAFA,
-		VIOLET = 0xEE82EE,
-		WHEAT = 0xF5DEB3,
-		WHITE = 0xFFFFFF,
-		WHITE_SMOKE = 0xF5F5F5,
-		WOOD = 0xDEB887,
-		YELLOW = 0xFFFF00,
-		YELLOW_GREEN = 0x9ACD32
+		Black = 0x000000,
+		Blue = 0x0000FF,
+		BlueViolet = 0x8A2BE2,
+		Brown = 0xA52A2A,
+		Chocolate = 0xD2691E,
+		DarkBlue = 0x00008B,
+		DarkGray = 0xA9A9A9,
+		DarkGreen = 0x006400,
+		DarkOrange = 0xFF8C00,
+		DarkRed = 0x8B0000,
+		DarkViolet = 0x9400D3,
+		ForestGreen = 0x228B22,
+		Gold = 0xFFD700,
+		Gray = 0x808080,
+		Green = 0x008000,
+		GreenYellow = 0xADFF2F,
+		LightBlue = 0xADD8E6,
+		LightCyan = 0xE0FFFF,
+		LightGreen = 0x90EE90,
+		LightGray = 0xD3D3D3,
+		LightPink = 0xFFB6C1,
+		LightSeaGreen = 0x20B2AA,
+		LightSkyBlue = 0x87CEFA,
+		LightYellow = 0xFFFFE0,
+		Orange = 0xFFA500,
+		OrangeRed = 0xFF4500,
+		Pink = 0xFFC0CB,
+		Purple = 0x800080,
+		Red = 0xFF0000,
+		Silver = 0xC0C0C0,
+		SkyBlue = 0x87CEEB,
+		Snow = 0xFFFAFA,
+		Violet = 0xEE82EE,
+		Wheat = 0xF5DEB3,
+		White = 0xFFFFFF,
+		WhiteSmoke = 0xF5F5F5,
+		Wood = 0xDEB887,
+		Yellow = 0xFFFF00,
+		Yellow_Green = 0x9ACD32
 	};
 
-protected:
+private:
 	void _init(
 		UINT rgb,
 		double alpha
 	);
 
-public:
+private:
 	float r;
 	float g;
 	float b;
@@ -414,17 +412,15 @@ public:
 	// 字体粗细值
 	enum Weight : UINT
 	{
-		THIN = 100,
-		EXTRA_LIGHT = 200,
-		LIGHT = 300,
-		SEMI_LIGHT = 350,
-		NORMAL = 400,
-		MEDIUM = 500,
-		DEMI_BOLD = 600,
-		BOLD = 700,
-		EXTRA_BOLD = 800,
-		BLACK = 900,
-		EXTRA_BLACK = 950
+		Thin = 100,
+		ExtraLight = 200,
+		Light = 300,
+		Normal = 400,
+		Medium = 500,
+		Bold = 700,
+		ExtraBold = 800,
+		Black = 900,
+		ExtraBlack = 950
 	};
 
 public:
@@ -433,7 +429,7 @@ public:
 	explicit Font(
 		const String& family,
 		double size = 22,
-		UINT weight = Font::Weight::NORMAL,
+		UINT weight = Font::Weight::Normal,
 		bool italic = false
 	);
 };

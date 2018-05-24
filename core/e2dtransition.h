@@ -135,7 +135,7 @@ class MoveTransition :
 public:
 	explicit MoveTransition(
 		double moveDuration,					/* 场景移动动画持续时长 */
-		Direction direction = Direction::LEFT	/* 场景移动方向 */
+		Direction direction = Direction::Left	/* 场景移动方向 */
 	);
 
 protected:

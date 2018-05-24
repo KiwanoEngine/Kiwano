@@ -6,7 +6,7 @@
 // 默认中心点位置
 static float s_fDefaultPiovtX = 0;
 static float s_fDefaultPiovtY = 0;
-static e2d::Collider::Type s_fDefaultColliderType = e2d::Collider::Type::NONE;
+static e2d::Collider::Type s_fDefaultColliderType = e2d::Collider::Type::None;
 
 e2d::Node::Node()
 	: _nOrder(0)
@@ -35,7 +35,7 @@ e2d::Node::Node()
 	, _autoUpdate(true)
 	, _positionFixed(false)
 {
-	if (s_fDefaultColliderType != Collider::Type::NONE)
+	if (s_fDefaultColliderType != Collider::Type::None)
 	{
 		this->setCollider(s_fDefaultColliderType);
 	}
@@ -542,25 +542,25 @@ void e2d::Node::setCollider(Collider::Type type)
 {
 	switch (type)
 	{
-	case Collider::Type::RECT:
+	case Collider::Type::Rect:
 	{
 		this->setCollider(GC::create<RectCollider>(this));
 		break;
 	}
 
-	case Collider::Type::CIRCLE:
+	case Collider::Type::Circle:
 	{
 		this->setCollider(GC::create<CircleCollider>(this));
 		break;
 	}
 
-	case Collider::Type::ELLIPSE:
+	case Collider::Type::Ellipse:
 	{
 		this->setCollider(GC::create<EllipseCollider>(this));
 		break;
 	}
 
-	case Collider::Type::NONE:
+	case Collider::Type::None:
 	{
 		this->setCollider(nullptr);
 		break;
@@ -869,8 +869,8 @@ bool e2d::Node::intersects(Node * node) const
 	if (this->_collider && node->_collider)
 	{
 		Collider::Relation relation = this->_collider->getRelationWith(node->_collider);
-		if ((relation != Collider::Relation::UNKNOWN) &&
-			(relation != Collider::Relation::DISJOIN))
+		if ((relation != Collider::Relation::Unknown) &&
+			(relation != Collider::Relation::Disjoin))
 		{
 			return true;
 		}

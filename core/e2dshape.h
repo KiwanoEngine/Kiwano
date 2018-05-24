@@ -13,9 +13,9 @@ public:
 	// 侘彜劔塀
 	enum class Style
 	{
-		SOLID,		/* 野割 */
-		ROUND,		/* 態勢 */
-		FILL,		/* 態勢 + 野割 */
+		Solid,		/* 野割 */
+		Round,		/* 態勢 */
+		Fill,		/* 態勢 + 野割 */
 	};
 
 public:
