@@ -447,19 +447,6 @@ class GC
 	friend class Object;
 
 public:
-	// 创建可自动回收内存的对象
-	template <typename Type, typename... Args>
-	static inline Type * create(Args&&... args)
-	{
-		auto newObj = new (std::nothrow) Type(std::forward<Args>(args)...);
-		if (newObj)
-		{
-			newObj->autorelease();
-			return newObj;
-		}
-		return nullptr;
-	}
-
 	// 保留对象
 	template <typename Type>
 	static inline void retain(Type*& p)

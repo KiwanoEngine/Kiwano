@@ -222,7 +222,7 @@ double Input::getMouseDeltaZ()
 
 e2d::Listener * e2d::Input::addListener(const Function& func, const String& name, bool paused)
 {
-	auto listener = GC::create<Listener>(func, name, paused);
+	auto listener = Create<Listener>(func, name, paused);
 	GC::retain(listener);
 	s_vListeners.push_back(listener);
 	return listener;

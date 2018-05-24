@@ -97,7 +97,7 @@ void e2d::Sequence::add(const std::vector<Action*>& actions)
 
 e2d::Sequence * e2d::Sequence::clone() const
 {
-	auto sequence = GC::create<Sequence>();
+	auto sequence = Create<Sequence>();
 	for (const auto& action : _actions)
 	{
 		if (action)
@@ -110,7 +110,7 @@ e2d::Sequence * e2d::Sequence::clone() const
 
 e2d::Sequence * e2d::Sequence::reverse() const
 {
-	auto sequence = GC::create<Sequence>();
+	auto sequence = Create<Sequence>();
 	if (sequence && !_actions.empty())
 	{
 		std::vector<Action*> newActions(_actions.size());

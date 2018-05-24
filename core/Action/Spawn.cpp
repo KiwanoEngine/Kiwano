@@ -95,7 +95,7 @@ void e2d::Spawn::add(const std::vector<Action*>& actions)
 
 e2d::Spawn * e2d::Spawn::clone() const
 {
-	auto spawn = GC::create<Spawn>();
+	auto spawn = Create<Spawn>();
 	for (const auto& action : _actions)
 	{
 		if (action)
@@ -108,7 +108,7 @@ e2d::Spawn * e2d::Spawn::clone() const
 
 e2d::Spawn * e2d::Spawn::reverse() const
 {
-	auto spawn = GC::create<Spawn>();
+	auto spawn = Create<Spawn>();
 	if (spawn && !_actions.empty())
 	{
 		std::vector<Action*> newActions(_actions.size());

@@ -23,7 +23,7 @@ e2d::Loop * e2d::Loop::clone() const
 {
 	if (_action)
 	{
-		return GC::create<Loop>(_action->clone());
+		return Create<Loop>(_action->clone());
 	}
 	else
 	{
@@ -35,7 +35,7 @@ e2d::Loop * e2d::Loop::reverse() const
 {
 	if (_action)
 	{
-		return GC::create<Loop>(_action->clone());
+		return Create<Loop>(_action->clone());
 	}
 	else
 	{

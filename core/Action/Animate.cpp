@@ -98,7 +98,7 @@ e2d::Animate * e2d::Animate::clone() const
 {
 	if (_animation)
 	{
-		return GC::create<Animate>(_animation);
+		return Create<Animate>(_animation);
 	}
 	return nullptr;
 }
@@ -110,7 +110,7 @@ e2d::Animate * e2d::Animate::reverse() const
 		auto animation = _animation->reverse();
 		if (animation)
 		{
-			return GC::create<Animate>(animation);
+			return Create<Animate>(animation);
 		}
 	}
 	return nullptr;

@@ -68,7 +68,7 @@ const std::vector<e2d::Image*>& e2d::Animation::getFrames() const
 
 e2d::Animation * e2d::Animation::clone() const
 {
-	auto animation = GC::create<Animation>(_interval);
+	auto animation = Create<Animation>(_interval);
 	if (animation)
 	{
 		for (auto frame : _frames)
@@ -99,5 +99,5 @@ e2d::Animation * e2d::Animation::reverse() const
 		}
 	}
 
-	return GC::create<Animation>(this->getInterval(), frames);
+	return Create<Animation>(this->getInterval(), frames);
 }

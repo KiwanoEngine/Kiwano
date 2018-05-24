@@ -7,7 +7,7 @@ e2d::Scene::Scene()
 	, _colliderVisiable(false)
 	, _root(nullptr)
 {
-	_root = GC::create<Node>();
+	_root = Create<Node>();
 	if (_root)
 	{
 		_root->retain();

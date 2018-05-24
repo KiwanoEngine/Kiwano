@@ -8,12 +8,12 @@ e2d::Delay::Delay(double duration)
 
 e2d::Delay * e2d::Delay::clone() const
 {
-	return GC::create<Delay>(_delay);
+	return Create<Delay>(_delay);
 }
 
 e2d::Delay * e2d::Delay::reverse() const
 {
-	return GC::create<Delay>(_delay);
+	return Create<Delay>(_delay);
 }
 
 void e2d::Delay::reset()

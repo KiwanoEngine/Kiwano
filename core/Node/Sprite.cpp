@@ -60,7 +60,7 @@ bool e2d::Sprite::open(const String& filePath)
 {
 	if (!_image)
 	{
-		_image = GC::create<Image>();
+		_image = Create<Image>();
 		_image->retain();
 	}
 
@@ -76,7 +76,7 @@ bool e2d::Sprite::open(int resNameId, const String& resType)
 {
 	if (!_image)
 	{
-		_image = GC::create<Image>();
+		_image = Create<Image>();
 		_image->retain();
 	}
 

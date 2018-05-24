@@ -652,4 +652,150 @@ protected:
 };
 
 
+#if _MSC_VER > 1700
+
+// 创建可自动回收内存的对象
+template <typename Type, typename... Args>
+inline Type * Create(Args&&... args)
+{
+	auto newObj = new (std::nothrow) Type(std::forward<Args>(args)...);
+	if (newObj)
+	{
+		newObj->autorelease();
+		return newObj;
+	}
+	return nullptr;
+}
+
+#else
+
+template <typename Type>
+inline Type * Create()
+{
+	auto newObj = new (std::nothrow) Type();
+	if (newObj) { newObj->autorelease(); return newObj; }
+	return nullptr;
+}
+
+template <typename Type, typename Arg1>
+inline Type * Create(Arg1&& arg1)
+{
+	auto newObj = new (std::nothrow) Type(std::forward<Arg1>(arg1));
+	if (newObj) { newObj->autorelease(); return newObj; }
+	return nullptr;
+}
+
+template <typename Type,
+	typename Arg1,
+	typename Arg2>
+	inline Type * Create(
+		Arg1&& arg1, 
+		Arg2&& arg2
+	)
+{
+	auto newObj = new (std::nothrow) Type(
+		std::forward<Arg1>(arg1),
+		std::forward<Arg2>(arg2)
+	);
+	if (newObj) { newObj->autorelease(); return newObj; }
+	return nullptr;
+}
+
+template <typename Type,
+	typename Arg1,
+	typename Arg2,
+	typename Arg3>
+	inline Type * Create(
+		Arg1&& arg1,
+		Arg2&& arg2,
+		Arg3&& arg3
+	)
+{
+	auto newObj = new (std::nothrow) Type(
+		std::forward<Arg1>(arg1),
+		std::forward<Arg2>(arg2),
+		std::forward<Arg3>(arg3)
+	);
+	if (newObj) { newObj->autorelease(); return newObj; }
+	return nullptr;
+}
+
+template <typename Type,
+	typename Arg1,
+	typename Arg2,
+	typename Arg3,
+	typename Arg4>
+	inline Type * Create(
+		Arg1&& arg1,
+		Arg2&& arg2,
+		Arg3&& arg3,
+		Arg4&& arg4
+	)
+{
+	auto newObj = new (std::nothrow) Type(
+		std::forward<Arg1>(arg1),
+		std::forward<Arg2>(arg2),
+		std::forward<Arg3>(arg3),
+		std::forward<Arg4>(arg4)
+	);
+	if (newObj) { newObj->autorelease(); return newObj; }
+	return nullptr;
+}
+
+template <typename Type,
+	typename Arg1,
+	typename Arg2,
+	typename Arg3,
+	typename Arg4,
+	typename Arg5>
+	inline Type * Create(
+		Arg1&& arg1,
+		Arg2&& arg2,
+		Arg3&& arg3,
+		Arg4&& arg4,
+		Arg5&& arg5
+	)
+{
+	auto newObj = new (std::nothrow) Type(
+		std::forward<Arg1>(arg1),
+		std::forward<Arg2>(arg2),
+		std::forward<Arg3>(arg3),
+		std::forward<Arg4>(arg4),
+		std::forward<Arg5>(arg5)
+	);
+	if (newObj) { newObj->autorelease(); return newObj; }
+	return nullptr;
+}
+
+template <typename Type,
+	typename Arg1,
+	typename Arg2,
+	typename Arg3,
+	typename Arg4,
+	typename Arg5,
+	typename Arg6>
+	inline Type * Create(
+		Arg1&& arg1,
+		Arg2&& arg2,
+		Arg3&& arg3,
+		Arg4&& arg4,
+		Arg5&& arg5,
+		Arg6&& arg6
+	)
+{
+	auto newObj = new (std::nothrow) Type(
+		std::forward<Arg1>(arg1),
+		std::forward<Arg2>(arg2),
+		std::forward<Arg3>(arg3),
+		std::forward<Arg4>(arg4),
+		std::forward<Arg5>(arg5),
+		std::forward<Arg6>(arg6)
+	);
+	if (newObj) { newObj->autorelease(); return newObj; }
+	return nullptr;
+}
+
+#endif
+
+
 }

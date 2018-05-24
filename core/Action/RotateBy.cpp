@@ -30,10 +30,10 @@ void e2d::RotateBy::_update()
 
 e2d::RotateBy * e2d::RotateBy::clone() const
 {
-	return GC::create<RotateBy>(_duration, _deltaVal);
+	return Create<RotateBy>(_duration, _deltaVal);
 }
 
 e2d::RotateBy * e2d::RotateBy::reverse() const
 {
-	return GC::create<RotateBy>(_duration, -_deltaVal);
+	return Create<RotateBy>(_duration, -_deltaVal);
 }

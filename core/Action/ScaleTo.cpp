@@ -17,7 +17,7 @@ e2d::ScaleTo::ScaleTo(double duration, double scaleX, double scaleY)
 
 e2d::ScaleTo * e2d::ScaleTo::clone() const
 {
-	return GC::create<ScaleTo>(_duration, _endScaleX, _endScaleY);
+	return Create<ScaleTo>(_duration, _endScaleX, _endScaleY);
 }
 
 void e2d::ScaleTo::_init()

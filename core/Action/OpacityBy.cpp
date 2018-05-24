@@ -30,10 +30,10 @@ void e2d::OpacityBy::_update()
 
 e2d::OpacityBy * e2d::OpacityBy::clone() const
 {
-	return GC::create<OpacityBy>(_duration, _deltaVal);
+	return Create<OpacityBy>(_duration, _deltaVal);
 }
 
 e2d::OpacityBy * e2d::OpacityBy::reverse() const
 {
-	return GC::create<OpacityBy>(_duration, -_deltaVal);
+	return Create<OpacityBy>(_duration, -_deltaVal);
 }
