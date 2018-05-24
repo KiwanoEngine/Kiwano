@@ -1,28 +1,28 @@
 #pragma once
 
 #ifndef WINVER
-#define WINVER 0x0700       // Allow use of features specific to Windows 7 or later
+#	define WINVER 0x0700       // Allow use of features specific to Windows 7 or later
 #endif
 
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0700 // Allow use of features specific to Windows 7 or later
+#	define _WIN32_WINNT 0x0700 // Allow use of features specific to Windows 7 or later
 #endif
 
 #ifndef NTDDI_VERSION
-#define NTDDI_VERSION NTDDI_WIN7
+#	define NTDDI_VERSION NTDDI_WIN7
 #endif
 
 #ifndef UNICODE
-#define UNICODE
+#	define UNICODE
 #endif
 
 // Exclude rarely-used items from Windows headers
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+#	define WIN32_LEAN_AND_MEAN
 #endif
 
 #ifndef DIRECTINPUT_VERSION
-#define DIRECTINPUT_VERSION 0x0800
+#	define DIRECTINPUT_VERSION 0x0800
 #endif
 
 #define INITGUID
@@ -56,25 +56,30 @@
 
 
 #ifndef HINST_THISCOMPONENT
-EXTERN_C IMAGE_DOS_HEADER __ImageBase;
-#define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
+	EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+#	define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
 #endif
 
 
 #ifndef WARN
-#if defined( DEBUG ) || defined( _DEBUG )
-#define WARN(message, ...) do { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); } while(0)
-#else
-#define WARN(message, ...) ((void)0)
-#endif
+#	if defined( DEBUG ) || defined( _DEBUG )
+#		define WARN(message, ...) do { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); } while(0)
+#	else
+#		define WARN(message, ...) ((void)0)
+#	endif
 #endif
 
 
 #ifndef WARN_IF
-#if defined( DEBUG ) || defined( _DEBUG )
-	#define WARN_IF(expression, message, ...) do { if (expression) { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); } } while(0)
-#else
-	#define WARN_IF(expression, message, ...) ((void)0)
-#endif
+#	if defined( DEBUG ) || defined( _DEBUG )
+#		define WARN_IF(expression, message, ...) do { if (expression) { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); } } while(0)
+#	else
+#		define WARN_IF(expression, message, ...) ((void)0)
+#	endif
 #endif
 
+#if _MSC_VER >= 1800
+#	define E2D_EXPLICIT explicit
+#else
+#	define E2D_EXPLICIT 
+#endif

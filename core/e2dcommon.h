@@ -232,12 +232,12 @@ public:
 	String operator+ (const wchar_t *);
 
 	// 友元运算符
-	friend class String operator+ (const char *, const String &);
-	friend class String operator+ (const wchar_t*, const String &);
+	friend String operator+ (const char *, const String &);
+	friend String operator+ (const wchar_t*, const String &);
 
 	// 类型转换操作符
-	explicit operator const wchar_t* () const;
-	explicit operator wchar_t* () const;
+	E2D_EXPLICIT operator const wchar_t* () const;
+	E2D_EXPLICIT operator wchar_t* () const;
 
 	// 比较运算符
 	bool operator== (const String &) const;

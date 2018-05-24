@@ -1,6 +1,7 @@
 #include "..\e2dcommon.h"
 #include <iomanip>
 #include <cwctype>
+#include <algorithm>
 #include <comutil.h>
 #pragma comment(lib, "comsuppw.lib")
 
