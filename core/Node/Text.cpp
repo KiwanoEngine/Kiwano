@@ -331,9 +331,13 @@ void e2d::Text::_createFormat()
 		&_textFormat
 	);
 
-	ASSERT(SUCCEEDED(hr), "Create IDWriteTextFormat Failed!");
-
-	if (_textFormat)
+	if (FAILED(hr))
+	{
+		WARN("Text::_createFormat error : Create IDWriteTextFormat failed!");
+		_textFormat = nullptr;
+		return;
+	}
+	else
 	{
 		// 设置文字对齐方式
 		_textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(_style.alignment));
@@ -375,7 +379,7 @@ void e2d::Text::_createLayout()
 
 	if (_textFormat == nullptr)
 	{
-		WARN_IF(true, "Text::_createLayout failed! _textFormat NULL pointer exception.");
+		WARN("Text::_createLayout failed! _textFormat NULL pointer exception.");
 		return;
 	}
 	
@@ -420,7 +424,12 @@ void e2d::Text::_createLayout()
 		}
 	}
 
-	ASSERT(SUCCEEDED(hr), "Create IDWriteTextFormat Failed!");
+	if (FAILED(hr))
+	{
+		WARN("Text::_createLayout error : Create IDWriteTextLayout failed!");
+		_textLayout = nullptr;
+		return;
+	}
 
 	// 添加下划线和删除线
 	DWRITE_TEXT_RANGE range = { 0, length };

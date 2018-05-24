@@ -30,7 +30,7 @@ bool e2d::Path::__init()
 	}
 	else
 	{
-		WARN_IF(true, "Cannot get local AppData path!");
+		WARN("Cannot get local AppData path!");
 	}
 
 	// 获取游戏名称
@@ -173,7 +173,7 @@ bool e2d::Path::createFolder(const String& dirPath)
 {
 	if (dirPath.isEmpty())
 	{
-		WARN_IF(true, "Path::createFolder Failed: Invalid directory path!");
+		WARN("Path::createFolder Failed: Invalid directory path!");
 		return false;
 	}
 

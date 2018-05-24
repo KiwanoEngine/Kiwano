@@ -15,7 +15,7 @@ e2d::Scene::Scene()
 	}
 	else
 	{
-		throw Exception(L"场景根节点构造失败！");
+		throw Exception(L"场景根节点构造失败");
 	}
 }
 

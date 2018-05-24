@@ -164,10 +164,9 @@ private:
 class Exception
 {
 public:
-
 	Exception() throw();
 
-	explicit Exception(String message) throw();
+	explicit Exception(const String& message) throw();
 
 	Exception(Exception const& other) throw();
 
@@ -180,6 +179,17 @@ public:
 
 private:
 	String _message;
+};
+
+
+// ϵͳ�쳣
+class SystemException
+	: public Exception
+{
+public:
+	SystemException() throw();
+
+	explicit SystemException(const String& message) throw();
 };
 
 }

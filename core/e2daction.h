@@ -164,7 +164,7 @@ public:
 	// 获取该动作的倒转
 	virtual MoveTo * reverse() const override
 	{
-		ASSERT(false, "reverse() not supported in MoveTo");
+		WARN("reverse() not supported in MoveTo");
 		return nullptr;
 	}
 
@@ -229,7 +229,7 @@ public:
 	// 获取该动作的倒转
 	virtual JumpTo * reverse() const override
 	{
-		ASSERT(false, "reverse() not supported in JumpTo");
+		WARN("reverse() not supported in JumpTo");
 		return nullptr;
 	}
 
@@ -301,7 +301,7 @@ public:
 	// 获取该动作的倒转
 	virtual ScaleTo * reverse() const override
 	{
-		ASSERT(false, "reverse() not supported in ScaleTo");
+		WARN("reverse() not supported in ScaleTo");
 		return nullptr;
 	}
 
@@ -360,7 +360,7 @@ public:
 	// 获取该动作的倒转
 	virtual OpacityTo * reverse() const override
 	{
-		ASSERT(false, "reverse() not supported in OpacityTo");
+		WARN("reverse() not supported in OpacityTo");
 		return nullptr;
 	}
 
@@ -448,7 +448,7 @@ public:
 	// 获取该动作的倒转
 	virtual RotateTo * reverse() const override
 	{
-		ASSERT(false, "reverse() not supported in RotateTo");
+		WARN("reverse() not supported in RotateTo");
 		return nullptr;
 	}
 
@@ -707,8 +707,11 @@ public:
 		double interval		/* 帧间隔（秒） */
 	);
 
-	// 获取动画的拷贝对象
-	virtual Animation * clone() const;
+	// 获取帧动画的拷贝对象
+	Animation * clone() const;
+
+	// 获取帧动画的倒转
+	Animation * reverse() const;
 
 	// 销毁对象
 	virtual void onDestroy() override;

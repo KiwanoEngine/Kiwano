@@ -103,13 +103,21 @@ void e2d::ActionManager::start(Action * action, Node * target, bool paused)
 
 	if (action && target)
 	{
-		auto iter = std::find(s_vRunningActions.begin(), s_vRunningActions.end(), action);
-		ASSERT(iter == s_vRunningActions.end(), "Action has begun!");
-
-		action->_startWithTarget(target);
-		action->retain();
-		action->_running = !paused;
-		s_vRunningActions.push_back(action);
+		if (action->_target == nullptr)
+		{
+			auto iter = std::find(s_vRunningActions.begin(), s_vRunningActions.end(), action);
+			if (iter == s_vRunningActions.end())
+			{
+				action->_startWithTarget(target);
+				action->retain();
+				action->_running = !paused;
+				s_vRunningActions.push_back(action);
+			}
+		}
+		else
+		{
+			throw Exception(L"该 Action 已有执行目标");
+		}
 	}
 }
 

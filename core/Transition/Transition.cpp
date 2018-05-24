@@ -45,7 +45,7 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 
 	if (FAILED(hr))
 	{
-		ASSERT(false, "Create layer failed!");
+		throw SystemException(L"场景过渡动画图层创建失败");
 	}
 
 	_last = Time::getTotalTime();

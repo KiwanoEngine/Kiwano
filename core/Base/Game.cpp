@@ -18,7 +18,7 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 {
 	if (s_bInitialized)
 	{
-		WARN_IF(true, "The game has been initialized!");
+		WARN("The game has been initialized!");
 		return false;
 	}
 
@@ -29,7 +29,7 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 
 		if (hMutex == nullptr)
 		{
-			WARN_IF(true, "CreateMutex Failed!");
+			WARN("CreateMutex Failed!");
 		}
 		else if (::GetLastError() == ERROR_ALREADY_EXISTS)
 		{
@@ -44,39 +44,74 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 	// 初始化 COM 组件
 	CoInitialize(nullptr);
 
-	// 创建设备无关资源
-	if (!Renderer::__createDeviceIndependentResources())
+	bool bRendererDevIndResInit = false,
+		bWindowInit = false,
+		bRendererDevResInit = false,
+		bInputInit = false,
+		bMusicInit = false;
+
+	auto DestroyResources = [&]()
 	{
-		WARN_IF(true, "Renderer::__createDeviceIndependentResources Failed!");
-		goto dev_ind_res_fail;
+		if (bRendererDevIndResInit) Renderer::__discardResources();
+		if (bWindowInit) Window::__init();
+		if (bRendererDevResInit) Renderer::__discardDeviceResources();
+		if (bInputInit) Input::__uninit();
+		if (bMusicInit) Music::__uninit();
+	};
+
+	// 创建设备无关资源
+	if (Renderer::__createDeviceIndependentResources())
+	{
+		bRendererDevIndResInit = true;
+	}
+	else
+	{
+		DestroyResources();
+		throw SystemException(L"渲染器设备无关资源创建失败");
 	}
 
 	// 初始化窗口
-	if (!Window::__init())
+	if (Window::__init())
 	{
-		WARN_IF(true, "Window::__init Failed!");
-		goto window_fail;
+		bWindowInit = true;
+	}
+	else
+	{
+		DestroyResources();
+		throw SystemException(L"初始化窗口失败");
 	}
 
 	// 创建设备相关资源
-	if (!Renderer::__createDeviceResources())
+	if (Renderer::__createDeviceResources())
 	{
-		WARN_IF(true, "Renderer::__createDeviceResources Failed!");
-		goto dev_res_fail;
+		bRendererDevResInit = true;
+	}
+	else
+	{
+		DestroyResources();
+		throw SystemException(L"渲染器设备相关资源创建失败");
 	}
 
 	// 初始化 DirectInput
-	if (!Input::__init())
+	if (Input::__init())
 	{
-		WARN_IF(true, "Input::__init Failed!");
-		goto input_fail;
+		bInputInit = true;
+	}
+	else
+	{
+		DestroyResources();
+		throw SystemException(L"初始化 DirectInput 失败");
 	}
 
 	// 初始化播放器
-	if (!Music::__init())
+	if (Music::__init())
 	{
-		WARN_IF(true, "Music::__init Failed!");
-		Music::__uninit();
+		bMusicInit = true;
+	}
+	else
+	{
+		DestroyResources();
+		throw SystemException(L"初始化 XAudio2 失败");
 	}
 
 	// 保存游戏名称
@@ -85,35 +120,20 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 	// 初始化路径
 	if (!Path::__init())
 	{
-		WARN_IF(true, "Path::__init Failed!");
+		WARN("Path::__init failed!");
 	}
 
 	// 初始化成功
 	s_bInitialized = true;
-	goto succeeded;
 
-input_fail:
-	Input::__uninit();
-
-dev_res_fail:
-	Renderer::__discardDeviceResources();
-
-window_fail:
-	Window::__init();
-
-dev_ind_res_fail:
-	Renderer::__discardResources();
-
-succeeded:
 	return s_bInitialized;
 }
 
-int e2d::Game::start(bool autoRelease/* true */)
+void e2d::Game::start(bool autoRelease/* true */)
 {
 	if (!s_bInitialized)
 	{
-		ASSERT(false, "You must initialize Game first!");
-		return -1;
+		throw Exception(L"开始游戏前未进行初始化");
 	}
 
 	// 初始化场景管理器
@@ -162,8 +182,6 @@ int e2d::Game::start(bool autoRelease/* true */)
 	{
 		Game::destroy();
 	}
-
-	return 0;
 }
 
 void e2d::Game::pause()

@@ -598,14 +598,14 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 	{
 		if (child->_parent != nullptr)
 		{
-			throw Exception(L"节点已有父节点, 不能再添加到其他节点！");
+			throw Exception(L"节点已有父节点, 不能再添加到其他节点");
 		}
 
 		for (Node * parent = this; parent != nullptr; parent = parent->getParent())
 		{
 			if (child == parent)
 			{
-				throw Exception(L"一个节点不能同时是另一个节点的父节点和子节点！");
+				throw Exception(L"一个节点不能同时是另一个节点的父节点和子节点");
 			}
 		}
 
@@ -769,15 +769,7 @@ void e2d::Node::clearAllChildren()
 
 void e2d::Node::runAction(Action * action)
 {
-	if (this != action->getTarget())
-	{
-		ASSERT(action->getTarget() == nullptr, "The action has already got a target!");
-		ActionManager::start(action, this, false);
-	}
-	else
-	{
-		action->reset();
-	}
+	ActionManager::start(action, this, false);
 }
 
 void e2d::Node::resumeAction(const String& name)

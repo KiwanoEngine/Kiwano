@@ -111,7 +111,7 @@ e2d::Sequence * e2d::Sequence::clone() const
 e2d::Sequence * e2d::Sequence::reverse() const
 {
 	auto sequence = GC::create<Sequence>();
-	if (!_actions.empty())
+	if (sequence && !_actions.empty())
 	{
 		std::vector<Action*> newActions(_actions.size());
 		for (auto iter = _actions.crbegin(), iterCrend = _actions.crend(); iter != iterCrend; ++iter)

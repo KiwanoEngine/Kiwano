@@ -56,7 +56,7 @@ bool e2d::Image::open(const String& filePath)
 
 	if (!Image::preload(filePath))
 	{
-		WARN_IF(true, "Load Image from file failed!");
+		WARN("Load Image from file failed!");
 		return false;
 	}
 
@@ -68,7 +68,7 @@ bool e2d::Image::open(int resNameId, const String& resType)
 {
 	if (!Image::preload(resNameId, resType))
 	{
-		WARN_IF(true, "Load Image from file failed!");
+		WARN("Load Image from file failed!");
 		return false;
 	}
 

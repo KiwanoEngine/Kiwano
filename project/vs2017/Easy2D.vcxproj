@@ -237,6 +237,7 @@
     <ClCompile Include="..\..\core\Common\String.cpp" />
     <ClCompile Include="..\..\core\Common\Image.cpp" />
     <ClCompile Include="..\..\core\Custom\Exception.cpp" />
+    <ClCompile Include="..\..\core\Custom\SystemException.cpp" />
     <ClCompile Include="..\..\core\Custom\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\Custom\VoiceCallback.cpp" />
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />

@@ -6,7 +6,7 @@ e2d::Loop::Loop(Action * action, int times /* = -1 */)
 	, _times(0)
 	, _totalTimes(times)
 {
-	ASSERT(action, "Loop NULL pointer exception!");
+	WARN_IF(action == nullptr, "Loop NULL pointer exception!");
 
 	if (action)
 	{
@@ -33,7 +33,14 @@ e2d::Loop * e2d::Loop::clone() const
 
 e2d::Loop * e2d::Loop::reverse() const
 {
-	return GC::create<Loop>(_action);
+	if (_action)
+	{
+		return GC::create<Loop>(_action->clone());
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 void e2d::Loop::_init()

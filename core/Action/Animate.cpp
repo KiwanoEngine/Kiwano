@@ -107,22 +107,7 @@ e2d::Animate * e2d::Animate::reverse() const
 {
 	if (_animation)
 	{
-		auto& oldFrames = _animation->getFrames();
-		std::vector<Image*> frames(oldFrames.size());
-
-		if (!oldFrames.empty())
-		{
-			for (auto iter = oldFrames.crbegin(), iterCrend = oldFrames.crend(); iter != iterCrend; ++iter)
-			{
-				Image* frame = *iter;
-				if (frame)
-				{
-					frames.push_back(frame);
-				}
-			}
-		}
-
-		auto animation = GC::create<Animation>(_animation->getInterval(), frames);
+		auto animation = _animation->reverse();
 		if (animation)
 		{
 			return GC::create<Animate>(animation);

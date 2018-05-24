@@ -109,7 +109,7 @@ e2d::Spawn * e2d::Spawn::clone() const
 e2d::Spawn * e2d::Spawn::reverse() const
 {
 	auto spawn = GC::create<Spawn>();
-	if (!_actions.empty())
+	if (spawn && !_actions.empty())
 	{
 		std::vector<Action*> newActions(_actions.size());
 		for (auto iter = _actions.crbegin(), iterCrend = _actions.crend(); iter != iterCrend; ++iter)

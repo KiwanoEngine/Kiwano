@@ -21,7 +21,7 @@ public:
 	);
 
 	// 启动游戏
-	static int start(
+	static void start(
 		bool autoRelease = true			/* 游戏结束时自动回收资源 */
 	);
 

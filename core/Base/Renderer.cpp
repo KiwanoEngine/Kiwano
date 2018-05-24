@@ -23,9 +23,11 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 		&s_pDirect2dFactory
 	);
 
-	ASSERT(SUCCEEDED(hr), "Create ID2D1Factory Failed!");
-
-	if (SUCCEEDED(hr))
+	if (FAILED(hr))
+	{
+		throw SystemException(L"Create ID2D1Factory failed");
+	}
+	else
 	{
 		// 创建 WIC 绘图工厂，用于统一处理各种格式的图片
 		hr = CoCreateInstance(
@@ -35,10 +37,13 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 			IID_IWICImagingFactory,
 			reinterpret_cast<void**>(&s_pIWICFactory)
 		);
-		ASSERT(SUCCEEDED(hr), "Create IWICImagingFactory Failed!");
 	}
 
-	if (SUCCEEDED(hr))
+	if (FAILED(hr))
+	{
+		throw SystemException(L"Create IWICImagingFactory failed");
+	}
+	else
 	{
 		// 创建 DirectWrite 工厂
 		hr = DWriteCreateFactory(
@@ -46,17 +51,17 @@ bool e2d::Renderer::__createDeviceIndependentResources()
 			__uuidof(IDWriteFactory),
 			reinterpret_cast<IUnknown**>(&s_pDWriteFactory)
 		);
-		ASSERT(SUCCEEDED(hr), "Create IDWriteFactory Failed!");
 	}
 
-	if (SUCCEEDED(hr))
+	if (FAILED(hr))
+	{
+		throw SystemException(L"Create IDWriteFactory failed");
+	}
+	else
 	{
 		// 工厂将返回当前的系统 DPI，这个值也将用来创建窗口
 		Renderer::getID2D1Factory()->GetDesktopDpi(&s_fDpiScaleX, &s_fDpiScaleY);
-	}
 
-	if (SUCCEEDED(hr))
-	{
 		// 创建文本格式化对象
 		hr = s_pDWriteFactory->CreateTextFormat(
 			L"",
@@ -105,19 +110,24 @@ bool e2d::Renderer::__createDeviceResources()
 			&s_pRenderTarget
 		);
 
-		ASSERT(SUCCEEDED(hr), "Create ID2D1HwndRenderTarget Failed!");
-
-		if (SUCCEEDED(hr))
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create ID2D1HwndRenderTarget failed");
+		}
+		else
 		{
 			// 创建画刷
 			hr = s_pRenderTarget->CreateSolidColorBrush(
 				D2D1::ColorF(D2D1::ColorF::White),
 				&s_pSolidBrush
 			);
-			ASSERT(SUCCEEDED(hr), "Create ID2D1SolidColorBrush Failed!");
 		}
 
-		if (SUCCEEDED(hr))
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create ID2D1SolidColorBrush failed");
+		}
+		else
 		{
 			// 创建自定义的文字渲染器
 			s_pTextRenderer = new (std::nothrow) TextRenderer(
@@ -165,7 +175,7 @@ void e2d::Renderer::__render()
 	SceneManager::__render();
 
 	// 渲染 FPS
-	if (s_bShowFps)
+	if (s_bShowFps && s_pTextFormat)
 	{
 		static int s_nRenderTimes = 0;
 		static double s_fLastRenderTime = 0;
@@ -223,8 +233,7 @@ void e2d::Renderer::__render()
 
 	if (FAILED(hr))
 	{
-		Window::error(L"Device loss recovery failed. Exiting game.");
-		Game::quit();
+		throw SystemException(L"Device loss recovery failed");
 	}
 }
 

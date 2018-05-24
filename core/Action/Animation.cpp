@@ -69,9 +69,35 @@ const std::vector<e2d::Image*>& e2d::Animation::getFrames() const
 e2d::Animation * e2d::Animation::clone() const
 {
 	auto animation = GC::create<Animation>(_interval);
-	for (auto frame : _frames)
+	if (animation)
 	{
-		animation->add(frame);
+		for (auto frame : _frames)
+		{
+			animation->add(frame);
+		}
 	}
 	return animation;
+}
+
+e2d::Animation * e2d::Animation::reverse() const
+{
+	auto& oldFrames = this->getFrames();
+	std::vector<Image*> frames(oldFrames.size());
+
+	if (!oldFrames.empty())
+	{
+		for (auto iter = oldFrames.crbegin(),
+			iterCrend = oldFrames.crend();
+			iter != iterCrend;
+			++iter)
+		{
+			Image* frame = *iter;
+			if (frame)
+			{
+				frames.push_back(frame);
+			}
+		}
+	}
+
+	return GC::create<Animation>(this->getInterval(), frames);
 }

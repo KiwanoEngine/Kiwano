@@ -61,17 +61,18 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #endif
 
 
-#ifndef ASSERT
+#ifndef WARN
 #if defined( DEBUG ) || defined( _DEBUG )
-	#define ASSERT(expression, message, ...) do {if (!(expression)) { fwprintf(stderr, L"Assert: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); abort(); }} while(0)
+#define WARN(message, ...) do { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); } while(0)
 #else
-	#define ASSERT(expression, message, ...) ((void)0)
+#define WARN(message, ...) ((void)0)
 #endif
 #endif
 
+
 #ifndef WARN_IF
 #if defined( DEBUG ) || defined( _DEBUG )
-	#define WARN_IF(expression, message, ...) do {if (expression) { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); }} while(0)
+	#define WARN_IF(expression, message, ...) do { if (expression) { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); } } while(0)
 #else
 	#define WARN_IF(expression, message, ...) ((void)0)
 #endif

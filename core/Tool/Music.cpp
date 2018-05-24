@@ -10,13 +10,13 @@
 
 inline bool TraceError(wchar_t* sPrompt)
 {
-	WARN_IF(true, "MusicInfo error: %s failed!", sPrompt);
+	WARN("MusicInfo error: %s failed!", sPrompt);
 	return false;
 }
 
 inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 {
-	WARN_IF(true, "MusicInfo error: %s (%#X)", sPrompt, hr);
+	WARN("MusicInfo error: %s (%#X)", sPrompt, hr);
 	return false;
 }
 
@@ -75,19 +75,19 @@ bool e2d::Music::open(const e2d::String& filePath)
 {
 	if (_opened)
 	{
-		WARN_IF(true, "MusicInfo can be opened only once!");
+		WARN("MusicInfo can be opened only once!");
 		return false;
 	}
 
 	if (filePath.isEmpty())
 	{
-		WARN_IF(true, "MusicInfo::open Invalid file name.");
+		WARN("MusicInfo::open Invalid file name.");
 		return false;
 	}
 
 	if (!s_pXAudio2)
 	{
-		WARN_IF(true, "IXAudio2 nullptr pointer error!");
+		WARN("IXAudio2 nullptr pointer error!");
 		return false;
 	}
 
@@ -95,7 +95,7 @@ bool e2d::Music::open(const e2d::String& filePath)
 	wchar_t pFilePath[MAX_PATH];
 	if (!_findMediaFileCch(pFilePath, MAX_PATH, filePath))
 	{
-		WARN_IF(true, "Failed to find media file: %s", pFilePath);
+		WARN("Failed to find media file: %s", pFilePath);
 		return false;
 	}
 
@@ -152,13 +152,13 @@ bool e2d::Music::open(int resNameId, const e2d::String& resType)
 
 	if (_opened)
 	{
-		WARN_IF(true, "MusicInfo can be opened only once!");
+		WARN("MusicInfo can be opened only once!");
 		return false;
 	}
 
 	if (!s_pXAudio2)
 	{
-		WARN_IF(true, "IXAudio2 nullptr pointer error!");
+		WARN("IXAudio2 nullptr pointer error!");
 		return false;
 	}
 
@@ -226,13 +226,13 @@ bool e2d::Music::play(int nLoopCount)
 {
 	if (!_opened)
 	{
-		WARN_IF(true, "MusicInfo::play Failed: MusicInfo must be opened first!");
+		WARN("MusicInfo::play Failed: MusicInfo must be opened first!");
 		return false;
 	}
 
 	if (_voice == nullptr)
 	{
-		WARN_IF(true, "MusicInfo::play Failed: IXAudio2SourceVoice Null pointer exception!");
+		WARN("MusicInfo::play Failed: IXAudio2SourceVoice Null pointer exception!");
 		return false;
 	}
 
@@ -584,13 +584,13 @@ bool e2d::Music::__init()
 
 	if (FAILED(hr = XAudio2Create(&s_pXAudio2, 0)))
 	{
-		WARN_IF(true, "Failed to init XAudio2 engine");
+		WARN("Failed to init XAudio2 engine");
 		return false;
 	}
 
 	if (FAILED(hr = s_pXAudio2->CreateMasteringVoice(&s_pMasteringVoice)))
 	{
-		WARN_IF(true, "Failed creating mastering voice");
+		WARN("Failed creating mastering voice");
 		e2d::SafeRelease(s_pXAudio2);
 		return false;
 	}
