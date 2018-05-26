@@ -59,6 +59,20 @@ e2d::Node * e2d::Collision::getPassiveNode()
 	return s_pPassiveNode;
 }
 
+bool e2d::Collision::isCausedBy(const String & name1, const String & name2)
+{
+	String activeName = s_pActiveNode->getName();
+	String passiveName = s_pPassiveNode->getName();
+	return (activeName == name1 && passiveName == name2) ||
+		(activeName == name2 && passiveName == name1);
+}
+
+bool e2d::Collision::isCausedBy(Node * node1, Node * node2)
+{
+	return (s_pActiveNode == node1 && s_pPassiveNode == node2) ||
+		(s_pActiveNode == node2 && s_pPassiveNode == node1);
+}
+
 e2d::Node* e2d::Collision::isCausedBy(Node * node)
 {
 	if (s_pActiveNode == node)

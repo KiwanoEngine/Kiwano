@@ -46,16 +46,28 @@ public:
 	// 获取碰撞发生时的被动体
 	static Node * getPassiveNode();
 
-	// 判断碰撞是否由该节点引发
-	// 如果是，返回与其相撞的节点指针，否则返回空
-	static Node * isCausedBy(
-		Node * node
+	// 判断发生碰撞的节点名称是否相同
+	static bool isCausedBy(
+		const String& name1,
+		const String& name2
 	);
 
-	// 判断发生碰撞的节点名称是否相同
+	// 判断两物体是否发生碰撞
+	static bool isCausedBy(
+		Node * node1,
+		Node * node2
+	);
+
+	// 判断发生碰撞的任意一方名称是否相同
 	// 若相同，返回其指针，否则返回空
 	static Node * isCausedBy(
 		const String& name
+	);
+
+	// 判断物体是否发生碰撞
+	// 如果是，返回与其相撞的节点指针，否则返回空
+	static Node * isCausedBy(
+		Node * node
 	);
 
 	// 开启或关闭物体碰撞监听功能（默认关闭）
