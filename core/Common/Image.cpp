@@ -283,7 +283,7 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 	if (SUCCEEDED(hr))
 	{
 		// º∆À„¥Û–°
-		imageFileSize = SizeofResource(HINST_THISCOMPONENT, imageResHandle);
+		imageFileSize = ::SizeofResource(HINST_THISCOMPONENT, imageResHandle);
 
 		hr = imageFileSize ? S_OK : E_FAIL;
 	}

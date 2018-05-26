@@ -136,11 +136,20 @@ e2d::String e2d::Path::extractResource(int resNameId, const String & resType, co
 	HGLOBAL hMem = ::LoadResource(NULL, hRes);
 	DWORD dwSize = ::SizeofResource(NULL, hRes);
 
-	// 写入文件
-	DWORD dwWrite = 0;
-	::WriteFile(hFile, hMem, dwSize, &dwWrite, NULL);
-	::CloseHandle(hFile);
-	return destFilePath;
+	if (hRes && hMem && dwSize)
+	{
+		// 写入文件
+		DWORD dwWrite = 0;
+		::WriteFile(hFile, hMem, dwSize, &dwWrite, NULL);
+		::CloseHandle(hFile);
+		return destFilePath;
+	}
+	else
+	{
+		::CloseHandle(hFile);
+		::DeleteFile((LPCWSTR)destFilePath);
+		return String();
+	}
 }
 
 e2d::String e2d::Path::getDataSavePath()
