@@ -261,14 +261,14 @@ class Timer
 	friend class Game;
 
 public:
-	// 启动定时器（每帧执行一次）
-	static void start(
+	// 添加定时器（每帧执行一次）
+	static void add(
 		const Function& func,		/* 执行函数 */
 		const String& name = L""	/* 定时器名称 */
 	);
 
-	// 启动定时器
-	static void start(
+	// 添加定时器
+	static void add(
 		const Function& func,		/* 执行函数 */
 		double delay,				/* 时间间隔（秒） */
 		int times = -1,				/* 执行次数（设 -1 为永久执行） */
@@ -276,19 +276,14 @@ public:
 		const String& name = L""	/* 定时器名称 */
 	);
 
-	// 启动仅执行一次的定时器
-	static void startOnce(
-		const Function& func,		/* 执行的函数 */
-		double timeOut				/* 等待的时长（秒） */
+	// 在足够延迟后执行指定函数
+	static void start(
+		double timeout,				/* 等待的时长（秒） */
+		const Function& func		/* 执行的函数 */
 	);
 
-	// 暂停具有相同名称的定时器
-	static void pause(
-		const String& name
-	);
-
-	// 继续具有相同名称的定时器
-	static void resume(
+	// 启动具有相同名称的定时器
+	static void start(
 		const String& name
 	);
 
@@ -297,14 +292,19 @@ public:
 		const String& name
 	);
 
-	// 暂停所有定时器
-	static void pauseAll();
+	// 移除具有相同名称的定时器
+	static void remove(
+		const String& name
+	);
 
-	// 继续所有定时器
-	static void resumeAll();
+	// 启动所有定时器
+	static void startAll();
 
 	// 停止所有定时器
 	static void stopAll();
+
+	// 移除所有定时器
+	static void removeAll();
 
 private:
 	// 更新定时器

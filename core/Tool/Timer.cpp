@@ -68,24 +68,24 @@ namespace e2d
 static std::vector<e2d::TimerEntity*> s_vTimers;
 
 
-void e2d::Timer::start(const Function& func, double delay, int updateTimes, bool paused, const String& name)
+void e2d::Timer::add(const Function& func, double delay, int updateTimes, bool paused, const String& name)
 {
 	auto timer = new (std::nothrow) TimerEntity(func, name, delay, updateTimes, paused);
 	s_vTimers.push_back(timer);
 }
 
-void e2d::Timer::start(const Function& func, const String& name)
+void e2d::Timer::add(const Function& func, const String& name)
 {
-	Timer::start(func, 0, -1, false, name);
+	Timer::add(func, 0, -1, false, name);
 }
 
-void e2d::Timer::startOnce(const Function& func, double timeOut)
+void e2d::Timer::start(double timeout, const Function& func)
 {
-	auto timer = new (std::nothrow) TimerEntity(func, L"", timeOut, 1, false);
+	auto timer = new (std::nothrow) TimerEntity(func, L"", timeout, 1, false);
 	s_vTimers.push_back(timer);
 }
 
-void e2d::Timer::pause(const String& name)
+void e2d::Timer::stop(const String& name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -96,7 +96,7 @@ void e2d::Timer::pause(const String& name)
 	}
 }
 
-void e2d::Timer::resume(const String& name)
+void e2d::Timer::start(const String& name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -107,7 +107,7 @@ void e2d::Timer::resume(const String& name)
 	}
 }
 
-void e2d::Timer::stop(const String& name)
+void e2d::Timer::remove(const String& name)
 {
 	for (auto timer : s_vTimers)
 	{
@@ -118,7 +118,7 @@ void e2d::Timer::stop(const String& name)
 	}
 }
 
-void e2d::Timer::pauseAll()
+void e2d::Timer::stopAll()
 {
 	for (auto timer : s_vTimers)
 	{
@@ -126,7 +126,7 @@ void e2d::Timer::pauseAll()
 	}
 }
 
-void e2d::Timer::resumeAll()
+void e2d::Timer::startAll()
 {
 	for (auto timer : s_vTimers)
 	{
@@ -134,7 +134,7 @@ void e2d::Timer::resumeAll()
 	}
 }
 
-void e2d::Timer::stopAll()
+void e2d::Timer::removeAll()
 {
 	for (auto timer : s_vTimers)
 	{
