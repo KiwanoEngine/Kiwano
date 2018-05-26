@@ -333,6 +333,20 @@ e2d::String::operator wchar_t*() const
 	return const_cast<wchar_t*>(_str.c_str());
 }
 
+e2d::String::operator const char*() const
+{
+	static std::string strTmp;
+	strTmp = static_cast<char*>(_bstr_t(_str.c_str()));
+	return strTmp.c_str();
+}
+
+e2d::String::operator char*() const
+{
+	static std::string strTmp;
+	strTmp = static_cast<char*>(_bstr_t(_str.c_str()));
+	return const_cast<char*>(strTmp.c_str());
+}
+
 bool e2d::String::isEmpty() const
 {
 	return _str.empty();
@@ -450,7 +464,7 @@ void e2d::String::replace(const String & from, const String & to)
 		return;
 
 	size_t start_pos = 0;
-	while ((start_pos = _str.find((const wchar_t *)from, start_pos)) != std::string::npos) 
+	while ((start_pos = _str.find((const wchar_t *)from, start_pos)) != std::wstring::npos) 
 	{
 		_str.replace(start_pos, from._str.length(), (const wchar_t *)to);
 		start_pos += to._str.length();

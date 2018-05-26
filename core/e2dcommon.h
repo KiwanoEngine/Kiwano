@@ -238,6 +238,8 @@ public:
 	// 类型转换操作符
 	E2D_OP_EXPLICIT operator const wchar_t* () const;
 	E2D_OP_EXPLICIT operator wchar_t* () const;
+	E2D_OP_EXPLICIT operator const char* () const;
+	E2D_OP_EXPLICIT operator char* () const;
 
 	// 比较运算符
 	bool operator== (const String &) const;
