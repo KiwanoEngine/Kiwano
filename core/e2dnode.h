@@ -376,11 +376,6 @@ public:
 		const String& name
 	);
 
-	// 获取动作
-	virtual Action * getAction(
-		const String& name
-	);
-
 	// 继续所有暂停动作
 	virtual void resumeAllActions();
 

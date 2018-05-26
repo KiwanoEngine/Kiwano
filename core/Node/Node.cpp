@@ -808,19 +808,6 @@ void e2d::Node::stopAction(const String& name)
 	}
 }
 
-e2d::Action * e2d::Node::getAction(const String& name)
-{
-	auto& actions = ActionManager::get(name);
-	for (auto action : actions)
-	{
-		if (action->getTarget() == this)
-		{
-			return action;
-		}
-	}
-	return nullptr;
-}
-
 bool e2d::Node::containsPoint(const Point& point) const
 {
 	BOOL ret = 0;
