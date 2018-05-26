@@ -447,9 +447,16 @@ public:
 		String path
 	);
 
-	// 检查文件路径
-	static String checkFilePath(
+	// 检索文件路径
+	static String searchForFile(
 		const String& path
+	);
+
+	// 提取资源文件，返回提取后的文件路径
+	static String extractResource(
+		int resNameId,				/* 资源名称 */
+		const String& resType,		/* 资源类型 */
+		const String& destFileName	/* 目标文件名 */
 	);
 
 	// 获取数据的默认保存路径

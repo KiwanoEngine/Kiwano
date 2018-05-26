@@ -79,7 +79,7 @@
 #endif
 
 #if _MSC_VER >= 1800
-#	define E2D_EXPLICIT explicit
+#	define E2D_OP_EXPLICIT explicit
 #else
-#	define E2D_EXPLICIT 
+#	define E2D_OP_EXPLICIT 
 #endif

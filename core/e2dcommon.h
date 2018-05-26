@@ -236,8 +236,8 @@ public:
 	friend String operator+ (const wchar_t*, const String &);
 
 	// 类型转换操作符
-	E2D_EXPLICIT operator const wchar_t* () const;
-	E2D_EXPLICIT operator wchar_t* () const;
+	E2D_OP_EXPLICIT operator const wchar_t* () const;
+	E2D_OP_EXPLICIT operator wchar_t* () const;
 
 	// 比较运算符
 	bool operator== (const String &) const;
@@ -392,7 +392,7 @@ public:
 
 	void operator() (void) const;
 
-	operator bool() const;
+	E2D_OP_EXPLICIT operator bool() const;
 
 protected:
 	std::function<void()> _func;

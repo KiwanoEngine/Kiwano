@@ -161,7 +161,7 @@ bool e2d::Image::preload(const String& filePath)
 		return true;
 	}
 
-	String actualFilePath = Path::checkFilePath(filePath);
+	String actualFilePath = Path::searchForFile(filePath);
 	if (actualFilePath.isEmpty())
 	{
 		return false;

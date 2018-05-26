@@ -104,7 +104,7 @@ e2d::String e2d::Path::getExecutableFilePath()
 	return String();
 }
 
-e2d::String e2d::Path::checkFilePath(const String& path)
+e2d::String e2d::Path::searchForFile(const String& path)
 {
 	if (Path::exists(path))
 	{
@@ -121,6 +121,26 @@ e2d::String e2d::Path::checkFilePath(const String& path)
 		}
 	}
 	return String();
+}
+
+e2d::String e2d::Path::extractResource(int resNameId, const String & resType, const String & destFileName)
+{
+	String destFilePath = s_sTempPath + destFileName;
+	// 创建文件
+	HANDLE hFile = ::CreateFile((LPCWSTR)destFilePath, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return String();
+
+	// 查找资源文件中、加载资源到内存、得到资源大小
+	HRSRC hRes = ::FindResource(NULL, MAKEINTRESOURCE(resNameId), (LPCWSTR)resType);
+	HGLOBAL hMem = ::LoadResource(NULL, hRes);
+	DWORD dwSize = ::SizeofResource(NULL, hRes);
+
+	// 写入文件
+	DWORD dwWrite = 0;
+	::WriteFile(hFile, hMem, dwSize, &dwWrite, NULL);
+	::CloseHandle(hFile);
+	return destFilePath;
 }
 
 e2d::String e2d::Path::getDataSavePath()
