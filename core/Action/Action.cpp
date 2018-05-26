@@ -13,6 +13,7 @@ e2d::Action::Action()
 
 e2d::Action::~Action()
 {
+	ActionManager::__remove(this);
 }
 
 bool e2d::Action::isRunning()
@@ -53,7 +54,6 @@ e2d::Node * e2d::Action::getTarget()
 
 void e2d::Action::onDestroy()
 {
-	ActionManager::__remove(this);
 }
 
 void e2d::Action::reset()
