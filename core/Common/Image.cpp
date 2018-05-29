@@ -225,7 +225,7 @@ bool e2d::Image::preload(const String& filePath)
 		// 保存图片指针和图片的 Hash 名
 		s_mBitmapsFromFile.insert(
 			std::map<size_t, ID2D1Bitmap*>::value_type(
-				actualFilePath.getHashCode(),
+				filePath.getHashCode(),
 				pBitmap)
 		);
 	}
