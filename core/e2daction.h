@@ -144,6 +144,7 @@ protected:
 
 protected:
 	Point	_startPos;
+	Point	_prevPos;
 	Vector	_deltaPos;
 };
 
