@@ -9,14 +9,10 @@ static steady_clock::time_point s_tStart;
 // 当前时间
 static steady_clock::time_point s_tNow;
 // 上一帧刷新时间
-static steady_clock::time_point s_tFixedUpdate;
-// 上一次更新时间
 static steady_clock::time_point s_tLastUpdate;
 // 每一帧间隔
 static milliseconds s_tExceptedInvertal;
 
-// 上一帧与当前帧的时间间隔
-static unsigned int s_nInterval = 0;
 // 游戏开始时长
 static unsigned int s_nTotalTime = 0;
 
@@ -33,24 +29,24 @@ unsigned int e2d::Time::getTotalTimeMilliseconds()
 
 double e2d::Time::getDeltaTime()
 {
-	return s_nInterval / 1000.0;
+	return s_tExceptedInvertal.count() / 1000.0;
 }
 
 unsigned int e2d::Time::getDeltaTimeMilliseconds()
 {
-	return s_nInterval;
+	return static_cast<unsigned int>(s_tExceptedInvertal.count());
 }
 
 bool e2d::Time::__init()
 {
-	s_tStart = s_tLastUpdate = s_tFixedUpdate = s_tNow = steady_clock::now();
+	s_tStart = s_tLastUpdate = s_tNow = steady_clock::now();
 	s_tExceptedInvertal = milliseconds(15);
 	return true;
 }
 
 bool e2d::Time::__isReady()
 {
-	return s_tExceptedInvertal < duration_cast<milliseconds>(s_tNow - s_tFixedUpdate);
+	return s_tExceptedInvertal < duration_cast<milliseconds>(s_tNow - s_tLastUpdate);
 }
 
 void e2d::Time::__updateNow()
@@ -61,25 +57,22 @@ void e2d::Time::__updateNow()
 
 void e2d::Time::__updateLast()
 {
-	s_tFixedUpdate += s_tExceptedInvertal;
-	s_tLastUpdate = s_tNow;
+	s_tLastUpdate += s_tExceptedInvertal;
 
 	s_tNow = steady_clock::now();
-	s_nInterval = static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tLastUpdate).count());
 	s_nTotalTime = static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tStart).count());
 }
 
 void e2d::Time::__reset()
 {
-	s_tLastUpdate = s_tFixedUpdate = s_tNow = steady_clock::now();
-	s_nInterval = 0;
+	s_tLastUpdate = s_tNow = steady_clock::now();
 	s_nTotalTime = static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tStart).count());
 }
 
 void e2d::Time::__sleep()
 {
 	// 计算挂起时长
-	int nWaitMS = 16 - static_cast<int>(duration_cast<milliseconds>(s_tNow - s_tFixedUpdate).count());
+	int nWaitMS = 16 - static_cast<int>(duration_cast<milliseconds>(s_tNow - s_tLastUpdate).count());
 	
 	if (nWaitMS > 1)
 	{

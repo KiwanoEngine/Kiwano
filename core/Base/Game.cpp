@@ -160,20 +160,18 @@ void e2d::Game::start(bool autoRelease/* true */)
 		// 判断是否达到了刷新状态
 		if (Time::__isReady())
 		{
-			Timer::__update();				// 定时器管理器执行程序
-			ActionManager::__update();		// 动作管理器执行程序
-			while (Time::__isReady())
-			{
-				Input::__update();			// 获取用户输入
-				SceneManager::__update();	// 更新场景内容
-				Time::__updateLast();		// 刷新时间信息
-			}
-			Renderer::__render();			// 渲染游戏画面
-			GC::__update();		// 刷新内存池
+			Input::__update();			// 获取用户输入
+			Timer::__update();			// 更新定时器
+			ActionManager::__update();	// 更新动作管理器
+			SceneManager::__update();	// 更新场景内容
+			Renderer::__render();		// 渲染游戏画面
+
+			Time::__updateLast();		// 刷新时间信息
 		}
 		else
 		{
-			Time::__sleep();				// 挂起线程
+			Time::__sleep();			// 挂起线程
+			GC::__update();				// 刷新内存池
 		}
 	}
 
