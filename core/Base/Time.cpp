@@ -9,44 +9,43 @@ static steady_clock::time_point s_tStart;
 // 当前时间
 static steady_clock::time_point s_tNow;
 // 上一帧刷新时间
-static steady_clock::time_point s_tLastUpdate;
+static steady_clock::time_point s_tLast;
+// 固定的刷新时间
+static steady_clock::time_point s_tFixed;
 // 每一帧间隔
 static milliseconds s_tExceptedInvertal;
-
-// 游戏开始时长
-static unsigned int s_nTotalTime = 0;
 
 
 double e2d::Time::getTotalTime()
 {
-	return s_nTotalTime / 1000.0;
+	return duration_cast<microseconds>(s_tNow - s_tStart).count() / 1000.0 / 1000.0;
 }
 
 unsigned int e2d::Time::getTotalTimeMilliseconds()
 {
-	return s_nTotalTime;
+	return static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tStart).count());
 }
 
 double e2d::Time::getDeltaTime()
 {
-	return s_tExceptedInvertal.count() / 1000.0;
+	return duration_cast<microseconds>(s_tNow - s_tLast).count() / 1000.0 / 1000.0;
 }
 
 unsigned int e2d::Time::getDeltaTimeMilliseconds()
 {
-	return static_cast<unsigned int>(s_tExceptedInvertal.count());
+	return static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tLast).count());
 }
 
 bool e2d::Time::__init()
 {
-	s_tStart = s_tLastUpdate = s_tNow = steady_clock::now();
+	s_tStart = s_tFixed = s_tLast = s_tNow = steady_clock::now();
 	s_tExceptedInvertal = milliseconds(15);
 	return true;
 }
 
 bool e2d::Time::__isReady()
 {
-	return s_tExceptedInvertal < duration_cast<milliseconds>(s_tNow - s_tLastUpdate);
+	return s_tExceptedInvertal < duration_cast<milliseconds>(s_tNow - s_tFixed);
 }
 
 void e2d::Time::__updateNow()
@@ -57,22 +56,21 @@ void e2d::Time::__updateNow()
 
 void e2d::Time::__updateLast()
 {
-	s_tLastUpdate += s_tExceptedInvertal;
+	s_tFixed += s_tExceptedInvertal;
 
+	s_tLast = s_tNow;
 	s_tNow = steady_clock::now();
-	s_nTotalTime = static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tStart).count());
 }
 
 void e2d::Time::__reset()
 {
-	s_tLastUpdate = s_tNow = steady_clock::now();
-	s_nTotalTime = static_cast<unsigned int>(duration_cast<milliseconds>(s_tNow - s_tStart).count());
+	s_tLast = s_tFixed = s_tNow = steady_clock::now();
 }
 
 void e2d::Time::__sleep()
 {
 	// 计算挂起时长
-	int nWaitMS = 16 - static_cast<int>(duration_cast<milliseconds>(s_tNow - s_tLastUpdate).count());
+	int nWaitMS = 16 - static_cast<int>(duration_cast<milliseconds>(s_tNow - s_tFixed).count());
 	
 	if (nWaitMS > 1)
 	{
