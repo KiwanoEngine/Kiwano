@@ -172,8 +172,6 @@ void e2d::Button::setEnable(bool enable)
 
 void e2d::Button::setClickFunc(const Function& func)
 {
-	WARN_IF(_normal == nullptr, "Button cannot work without anything to show. Please set its normal displayed.");
-	
 	_func = func;
 }
 

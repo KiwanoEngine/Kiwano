@@ -47,28 +47,21 @@ e2d::Node::~Node()
 
 void e2d::Node::_update()
 {
-	if (_needTransform)
-	{
-		_updateTransform();
-	}
+	// 更新转换矩阵
+	_updateTransform();
 
-	if (!_children.empty())
+	if (_children.empty())
 	{
-		if (_needSort)
+		if (_autoUpdate && !Game::isPaused())
 		{
-			// 子节点排序
-			auto sortFunc = [](Node * n1, Node * n2) {
-				return n1->getOrder() < n2->getOrder();
-			};
-
-			std::sort(
-				std::begin(_children),
-				std::end(_children),
-				sortFunc
-			);
-
-			_needSort = false;
+			this->onUpdate();
 		}
+		this->_fixedUpdate();
+	}
+	else
+	{
+		// 子节点排序
+		_sortChildren();
 
 		// 遍历子节点
 		size_t size = _children.size();
@@ -93,17 +86,9 @@ void e2d::Node::_update()
 		}
 		this->_fixedUpdate();
 
-		// 访问剩余节点
+		// 访问其他节点
 		for (; i < size; ++i)
 			_children[i]->_update();
-	}
-	else
-	{
-		if (_autoUpdate && !Game::isPaused())
-		{
-			this->onUpdate();
-		}
-		this->_fixedUpdate();
 	}
 }
 
@@ -114,8 +99,21 @@ void e2d::Node::_render()
 		return;
 	}
 
-	if (!_children.empty())
+	// 更新转换矩阵
+	_updateTransform();
+
+	if (_children.empty())
 	{
+		// 转换渲染器的二维矩阵
+		Renderer::getRenderTarget()->SetTransform(_finalMatri);
+		// 渲染自身
+		this->onRender();
+	}
+	else
+	{
+		// 子节点排序
+		_sortChildren();
+
 		size_t size = _children.size();
 		size_t i;
 		for (i = 0; i < size; ++i)
@@ -141,13 +139,6 @@ void e2d::Node::_render()
 		for (; i < size; ++i)
 			_children[i]->_render();
 	}
-	else
-	{
-		// 转换渲染器的二维矩阵
-		Renderer::getRenderTarget()->SetTransform(_finalMatri);
-		// 渲染自身
-		this->onRender();
-	}
 }
 
 void e2d::Node::_drawCollider()
@@ -165,8 +156,11 @@ void e2d::Node::_drawCollider()
 	}
 }
 
-void e2d::Node::_updateSelfTransform()
+void e2d::Node::_updateTransform()
 {
+	if (!_needTransform)
+		return;
+
 	// 计算中心点坐标
 	D2D1_POINT_2F pivot = { _width * _pivotX, _height * _pivotY };
 	// 变换 Initial 矩阵，子节点将根据这个矩阵进行变换
@@ -193,12 +187,7 @@ void e2d::Node::_updateSelfTransform()
 		_initialMatri = _initialMatri * _parent->_initialMatri;
 		_finalMatri = _finalMatri * _parent->_initialMatri;
 	}
-}
 
-void e2d::Node::_updateTransform()
-{
-	// 计算自身的转换矩阵
-	_updateSelfTransform();
 	// 绑定于自身的碰撞体也进行相应转换
 	if (_collider)
 	{
@@ -206,10 +195,25 @@ void e2d::Node::_updateTransform()
 	}
 	// 标志已执行过变换
 	_needTransform = false;
-	// 遍历子节点下的所有节点
-	for (auto child : this->_children)
+
+	// 通知子节点进行转换
+	for (auto& child : _children)
 	{
-		child->_updateTransform();
+		child->_needTransform = true;
+	}
+}
+
+void e2d::Node::_sortChildren()
+{
+	if (_needSort)
+	{
+		std::sort(
+			std::begin(_children),
+			std::end(_children),
+			[](Node * n1, Node * n2) { return n1->getOrder() < n2->getOrder(); }
+		);
+
+		_needSort = false;
 	}
 }
 
@@ -223,10 +227,6 @@ void e2d::Node::_updateOpacity()
 	{
 		child->_updateOpacity();
 	}
-}
-
-void e2d::Node::_fixedUpdate()
-{
 }
 
 bool e2d::Node::isVisiable() const

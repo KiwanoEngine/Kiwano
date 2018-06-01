@@ -414,17 +414,17 @@ protected:
 		Scene * scene
 	);
 
-	// 对自身进行二维矩阵变换
-	void _updateSelfTransform();
-
 	// 更新节点二维矩阵
 	void _updateTransform();
+
+	// 子节点排序
+	void _sortChildren();
 
 	// 更新节点透明度
 	void _updateOpacity();
 
-	// 固定更新
-	virtual void _fixedUpdate();
+	// 提供给子类的更新函数
+	virtual void _fixedUpdate() {}
 
 protected:
 	String		_name;
@@ -814,11 +814,11 @@ protected:
 	// 刷新按钮显示
 	virtual void _updateVisiable();
 
-	// 执行按钮函数对象
-	virtual void _runCallback();
-
 	// 更新按钮状态
 	virtual void _fixedUpdate() override;
+
+	// 执行按钮函数对象
+	virtual void _runCallback();
 
 protected:
 	Node *		_normal;
