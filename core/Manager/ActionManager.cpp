@@ -16,9 +16,8 @@ void e2d::ActionManager::__update()
 	{
 		auto action = s_vRunningActions[i];
 		// 获取动作运行状态
-		if (action->_isDone())
+		if (action->_isDone() || action->_target->getRefCount() == 0)
 		{
-			// 动作已经结束
 			action->release();
 			action->_target = nullptr;
 			s_vRunningActions.erase(s_vRunningActions.begin() + i);
