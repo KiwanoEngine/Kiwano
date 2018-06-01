@@ -187,7 +187,7 @@ public:
 		double duration,		/* 持续时长 */
 		const Vector& vec,		/* 跳跃距离 */
 		double height,			/* 跳跃高度 */
-		int jumps				/* 跳跃次数 */
+		int jumps = 1			/* 跳跃次数 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -221,7 +221,7 @@ public:
 		double duration,		/* 持续时长 */
 		const Point& pos,		/* 目的坐标 */
 		double height,			/* 跳跃高度 */
-		int jumps				/* 跳跃次数 */
+		int jumps = 1			/* 跳跃次数 */
 	);
 
 	// 获取该动作的拷贝对象
