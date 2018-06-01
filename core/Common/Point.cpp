@@ -1,4 +1,5 @@
 #include "..\e2dcommon.h"
+#include <cmath>
 
 
 e2d::Point::Point()
@@ -42,6 +43,14 @@ e2d::Point e2d::Point::operator/(double const & value) const
 e2d::Point::operator e2d::Size() const
 {
 	return Size(x, y);
+}
+
+double e2d::Point::distance(const Point &p1, const Point &p2)
+{
+	return sqrt(
+		(p1.x - p2.x) * (p1.x - p2.x) + 
+		(p1.y - p2.y) * (p1.y - p2.y)
+	);
 }
 
 e2d::Point e2d::Point::operator-() const

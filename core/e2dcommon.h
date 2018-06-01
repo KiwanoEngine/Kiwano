@@ -48,6 +48,9 @@ public:
 	bool operator== (const Point& point) const;
 
 	operator e2d::Size() const;
+
+	// ≈–∂œ¡Ωµ„º‰æ‡¿Î
+	static double distance(const Point&, const Point&);
 };
 
 
