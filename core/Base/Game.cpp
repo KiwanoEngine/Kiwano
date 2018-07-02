@@ -4,19 +4,25 @@
 #include "..\e2dcollider.h"
 
 
-// 控制游戏终止
-static bool s_bEndGame = true;
-// 控制游戏暂停
-static bool s_bPaused = false;
-// 是否进行过初始化
-static bool s_bInitialized = false;
-// 游戏名称
-static e2d::String s_sGameName;
+e2d::Game * e2d::Game::_instance = nullptr;
 
-
-bool e2d::Game::init(const String& name, const String& mutexName)
+e2d::Game::Game()
+	: _ended(false)
+	, _paused(false)
+	, _initialized(false)
 {
-	if (s_bInitialized)
+}
+
+e2d::Game * e2d::Game::getInstance()
+{
+	if (!_instance)
+		_instance = new (std::nothrow) Game;
+	return _instance;
+}
+
+bool e2d::Game::init(const String& mutexName)
+{
+	if (_initialized)
 	{
 		WARN("The game has been initialized!");
 		return false;
@@ -101,7 +107,7 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 	else
 	{
 		DestroyResources();
-		throw SystemException(L"初始化 DirectInput 失败");
+		throw SystemException(L"初始化 DirectInput 组件失败");
 	}
 
 	// 初始化播放器
@@ -112,27 +118,25 @@ bool e2d::Game::init(const String& name, const String& mutexName)
 	else
 	{
 		DestroyResources();
-		throw SystemException(L"初始化 XAudio2 失败");
+		throw SystemException(L"初始化 XAudio2 组件失败");
 	}
 
 	// 初始化路径
-	if (!Path::__init(name))
+	if (!Path::__init())
 	{
-		WARN("Path::__init failed!");
+		DestroyResources();
+		throw SystemException(L"必要系统路径访问失败");
 	}
 
-	// 保存游戏名称
-	s_sGameName = name;
-
 	// 初始化成功
-	s_bInitialized = true;
+	_initialized = true;
 
-	return s_bInitialized;
+	return _initialized;
 }
 
-void e2d::Game::start(bool autoRelease/* true */)
+void e2d::Game::start(bool cleanup)
 {
-	if (!s_bInitialized)
+	if (!_initialized)
 	{
 		throw Exception(L"开始游戏前未进行初始化");
 	}
@@ -148,9 +152,9 @@ void e2d::Game::start(bool autoRelease/* true */)
 	// 初始化计时
 	Time::__init();
 
-	s_bEndGame = false;
+	_ended = false;
 
-	while (!s_bEndGame)
+	while (!_ended)
 	{
 		// 处理窗口消息
 		Window::__poll();
@@ -175,31 +179,31 @@ void e2d::Game::start(bool autoRelease/* true */)
 		}
 	}
 
-	s_bEndGame = true;
+	_ended = true;
 
-	if (autoRelease)
+	if (cleanup)
 	{
-		Game::destroy();
+		Game::cleanup();
 	}
 }
 
 void e2d::Game::pause()
 {
-	s_bPaused = true;
+	_paused = true;
 }
 
 void e2d::Game::resume()
 {
-	if (s_bInitialized && s_bPaused)
+	if (_initialized && _paused)
 	{
 		Game::reset();
 	}
-	s_bPaused = false;
+	_paused = false;
 }
 
 void e2d::Game::reset()
 {
-	if (s_bInitialized && !s_bEndGame)
+	if (_initialized && !_ended)
 	{
 		Time::__reset();
 		ActionManager::__resetAll();
@@ -209,17 +213,17 @@ void e2d::Game::reset()
 
 bool e2d::Game::isPaused()
 {
-	return s_bPaused;
+	return _paused;
 }
 
 void e2d::Game::quit()
 {
-	s_bEndGame = true;	// 这个变量将控制游戏是否结束
+	_ended = true;	// 这个变量将控制游戏是否结束
 }
 
-void e2d::Game::destroy()
+void e2d::Game::cleanup()
 {
-	if (!s_bInitialized)
+	if (!_initialized)
 		return;
 
 	// 删除所有场景
@@ -249,10 +253,14 @@ void e2d::Game::destroy()
 
 	CoUninitialize();
 
-	s_bInitialized = false;
+	_initialized = false;
 }
 
-e2d::String e2d::Game::getName()
+void e2d::Game::destroy()
 {
-	return s_sGameName;
+	if (_instance)
+	{
+		delete _instance;
+		_instance = nullptr;
+	}
 }

@@ -52,7 +52,7 @@ void e2d::Node::_update()
 
 	if (_children.empty())
 	{
-		if (_autoUpdate && !Game::isPaused())
+		if (_autoUpdate && !Game::getInstance()->isPaused())
 		{
 			this->onUpdate();
 		}
@@ -80,7 +80,7 @@ void e2d::Node::_update()
 			}
 		}
 
-		if (_autoUpdate && !Game::isPaused())
+		if (_autoUpdate && !Game::getInstance()->isPaused())
 		{
 			this->onUpdate();
 		}

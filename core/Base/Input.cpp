@@ -322,7 +322,7 @@ void e2d::Input::removeAllListeners()
 
 void e2d::Input::__updateListeners()
 {
-	if (s_vListeners.empty() || Game::isPaused())
+	if (s_vListeners.empty() || Game::getInstance()->isPaused())
 		return;
 
 	for (size_t i = 0; i < s_vListeners.size(); ++i)

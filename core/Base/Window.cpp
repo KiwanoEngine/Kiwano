@@ -294,19 +294,19 @@ void e2d::Window::setTypewritingEnable(bool enable)
 void e2d::Window::info(const String & text, const String & title)
 {
 	::MessageBox(s_HWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONINFORMATION | MB_OK);
-	Game::reset();
+	Game::getInstance()->reset();
 }
 
 void e2d::Window::warning(const String& title, const String& text)
 {
 	::MessageBox(s_HWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONWARNING | MB_OK);
-	Game::reset();
+	Game::getInstance()->reset();
 }
 
 void e2d::Window::error(const String & text, const String & title)
 {
 	::MessageBox(s_HWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONERROR | MB_OK);
-	Game::reset();
+	Game::getInstance()->reset();
 }
 
 
@@ -357,7 +357,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		e2d::Scene * pCurrentScene = e2d::SceneManager::getCurrentScene();
 		if (!pCurrentScene || pCurrentScene->onCloseWindow())
 		{
-			e2d::Game::quit();
+			e2d::Game::getInstance()->quit();
 		}
 	}
 	result = 0;

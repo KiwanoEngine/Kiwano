@@ -8,7 +8,7 @@ static std::vector<e2d::Action*> s_vRunningActions;
 
 void e2d::ActionManager::__update()
 {
-	if (s_vRunningActions.empty() || Game::isPaused())
+	if (s_vRunningActions.empty() || Game::getInstance()->isPaused())
 		return;
 
 	// 循环遍历所有正在运行的动作

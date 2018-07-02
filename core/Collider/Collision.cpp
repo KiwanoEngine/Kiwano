@@ -104,7 +104,7 @@ bool e2d::Collision::isEnable()
 
 void e2d::Collision::__update(Node * active, Node * passive)
 {
-	if (s_vListeners.empty() || Game::isPaused())
+	if (s_vListeners.empty() || Game::getInstance()->isPaused())
 		return;
 
 	s_pActiveNode = active;

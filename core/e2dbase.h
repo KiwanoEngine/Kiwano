@@ -14,37 +14,50 @@ namespace e2d
 class Game
 {
 public:
+	// 获取游戏单例
+	static Game * getInstance();
+
 	// 初始化游戏
-	static bool init(
-		const String& name = L"",		/* 游戏英文名称 */
+	bool init(
 		const String& mutexName = L""	/* 进程互斥体名称 */
 	);
 
 	// 启动游戏
-	static void start(
-		bool autoRelease = true			/* 游戏结束时自动回收资源 */
+	void start(
+		bool cleanup = true				/* 自动清理资源 */
 	);
 
 	// 暂停游戏
-	static void pause();
+	void pause();
 
 	// 继续游戏
-	static void resume();
+	void resume();
 
 	// 结束游戏
-	static void quit();
+	void quit();
 
-	// 回收游戏资源
-	static void destroy();
+	// 清理资源
+	void cleanup();
+
+	// 销毁实例
+	void destroy();
 
 	// 重置游戏内部计时
-	static void reset();
+	void reset();
 
 	// 游戏是否暂停
-	static bool isPaused();
+	bool isPaused();
 
-	// 获取游戏名称
-	static String getName();
+private:
+	Game();
+
+	E2D_DISABLE_COPY(Game);
+
+private:
+	bool	_ended;
+	bool	_paused;
+	bool	_initialized;
+	static Game * _instance;
 };
 
 

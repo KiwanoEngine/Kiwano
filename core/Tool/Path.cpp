@@ -15,7 +15,7 @@ static e2d::String s_sTempPath;
 static e2d::String s_sDataSavePath;
 static std::list<e2d::String> s_vPathList;
 
-bool e2d::Path::__init(const String& gameName)
+bool e2d::Path::__init()
 {
 	// 获取 AppData\Local 文件夹的路径
 	typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
@@ -35,44 +35,38 @@ bool e2d::Path::__init(const String& gameName)
 		WARN("Get local AppData path failed!");
 		return false;
 	}
-	
+
+	return true;
+}
+
+void e2d::Path::setGameFolderName(const String & name)
+{
+	if (name.isEmpty())
+		return;
+
 	// 获取数据的默认保存路径
-	s_sDataSavePath = s_sLocalAppDataPath + L"\\Easy2DGameData\\";
-	if (!gameName.isEmpty())
+	if (!s_sLocalAppDataPath.isEmpty())
 	{
-		s_sDataSavePath << gameName << L"\\";
-	}
-	if (!Path::exists(s_sDataSavePath))
-	{
-		if (!Path::createFolder(s_sDataSavePath))
+		s_sDataSavePath = s_sLocalAppDataPath + L"\\Easy2DGameData\\" << name << L"\\";
+		
+		if (!Path::exists(s_sDataSavePath) && !Path::createFolder(s_sDataSavePath))
 		{
 			s_sDataSavePath = L"";
 		}
+		s_sDataSavePath << L"Data.ini";
 	}
-	s_sDataSavePath << L"Data.ini";
 
 	// 获取临时文件目录
 	wchar_t path[_MAX_PATH];
-	if (0 == ::GetTempPath(_MAX_PATH, path))
+	if (0 != ::GetTempPath(_MAX_PATH, path))
 	{
-		return false;
-	}
+		s_sTempPath << path << L"\\Easy2DGameTemp\\" << name << L"\\";
 
-	s_sTempPath << path << L"\\Easy2DGameTemp\\";
-	if (!gameName.isEmpty())
-	{
-		s_sTempPath << gameName << L"\\";
-	}
-
-	if (!Path::exists(s_sTempPath))
-	{
-		if (!Path::createFolder(s_sTempPath))
+		if (!Path::exists(s_sTempPath) && !Path::createFolder(s_sTempPath))
 		{
 			s_sTempPath = L"";
 		}
 	}
-
-	return true;
 }
 
 void e2d::Path::add(String path)
@@ -99,9 +93,9 @@ e2d::String e2d::Path::getExecutableFilePath()
 	TCHAR szPath[_MAX_PATH] = { 0 };
 	if (::GetModuleFileName(nullptr, szPath, _MAX_PATH) != 0)
 	{
-		return String(szPath);
+		return std::move(String(szPath));
 	}
-	return String();
+	return std::move(String());
 }
 
 e2d::String e2d::Path::searchForFile(const String& path)
@@ -120,7 +114,7 @@ e2d::String e2d::Path::searchForFile(const String& path)
 			}
 		}
 	}
-	return String();
+	return std::move(String());
 }
 
 e2d::String e2d::Path::extractResource(int resNameId, const String & resType, const String & destFileName)
@@ -129,7 +123,7 @@ e2d::String e2d::Path::extractResource(int resNameId, const String & resType, co
 	// 创建文件
 	HANDLE hFile = ::CreateFile((LPCWSTR)destFilePath, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
-		return String();
+		return std::move(String());
 
 	// 查找资源文件中、加载资源到内存、得到资源大小
 	HRSRC hRes = ::FindResource(NULL, MAKEINTRESOURCE(resNameId), (LPCWSTR)resType);
@@ -148,7 +142,7 @@ e2d::String e2d::Path::extractResource(int resNameId, const String & resType, co
 	{
 		::CloseHandle(hFile);
 		::DeleteFile((LPCWSTR)destFilePath);
-		return String();
+		return std::move(String());
 	}
 }
 
@@ -194,7 +188,7 @@ e2d::String e2d::Path::getSaveFilePath(const String& title, const String& defExt
 	{
 		return strFilename;
 	}
-	return L"";
+	return std::move(String());
 }
 
 bool e2d::Path::createFolder(const String& dirPath)
