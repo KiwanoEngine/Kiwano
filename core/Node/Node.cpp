@@ -412,7 +412,7 @@ void e2d::Node::movePos(double x, double y)
 	this->setPos(_posX + x, _posY + y);
 }
 
-void e2d::Node::movePos(const Vector & v)
+void e2d::Node::movePos(const Vector2 & v)
 {
 	this->movePos(v.x, v.y);
 }

@@ -2,7 +2,7 @@
 #include "..\e2dnode.h"
 
 
-e2d::MoveBy::MoveBy(double duration, Vector vector)
+e2d::MoveBy::MoveBy(double duration, Vector2 vector)
 	: FiniteTimeAction(duration)
 {
 	_deltaPos = vector;
@@ -25,7 +25,7 @@ void e2d::MoveBy::_update()
 	if (_target)
 	{
 		Point currentPos = _target->getPos();
-		Vector diff = currentPos - _prevPos;
+		Vector2 diff = currentPos - _prevPos;
 		_startPos = _startPos + diff;
 
 		Point newPos = _startPos + (_deltaPos * _delta);

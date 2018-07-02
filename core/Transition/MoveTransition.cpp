@@ -15,22 +15,22 @@ void e2d::MoveTransition::_init(Scene * prev, Scene * next)
 	double height = _windowSize.height;
 	if (_direction == Direction::Up)
 	{
-		_posDelta = Vector(0, -height);
+		_posDelta = Vector2(0, -height);
 		_startPos = Point(0, height);
 	}
 	else if (_direction == Direction::Down)
 	{
-		_posDelta = Vector(0, height);
+		_posDelta = Vector2(0, height);
 		_startPos = Point(0, -height);
 	}
 	else if (_direction == Direction::Left)
 	{
-		_posDelta = Vector(-width, 0);
+		_posDelta = Vector2(-width, 0);
 		_startPos = Point(width, 0);
 	}
 	else if (_direction == Direction::Right)
 	{
-		_posDelta = Vector(width, 0);
+		_posDelta = Vector2(width, 0);
 		_startPos = Point(-width, 0);
 	}
 

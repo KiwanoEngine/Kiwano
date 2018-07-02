@@ -2,7 +2,7 @@
 #include "..\e2dnode.h"
 
 e2d::MoveTo::MoveTo(double duration, Point pos)
-	: MoveBy(duration, Vector())
+	: MoveBy(duration, Vector2())
 {
 	_endPos = pos;
 }

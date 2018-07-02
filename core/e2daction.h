@@ -126,7 +126,7 @@ class MoveBy :
 public:
 	explicit MoveBy(
 		double duration,	/* 持续时长 */
-		Vector vector		/* 移动距离 */
+		Vector2 vector		/* 移动距离 */
 	);
 
 	// 获取该动作的拷贝对象
@@ -145,7 +145,7 @@ protected:
 protected:
 	Point	_startPos;
 	Point	_prevPos;
-	Vector	_deltaPos;
+	Vector2	_deltaPos;
 };
 
 
@@ -185,7 +185,7 @@ class JumpBy :
 public:
 	explicit JumpBy(
 		double duration,		/* 持续时长 */
-		const Vector& vec,		/* 跳跃距离 */
+		const Vector2& vec,		/* 跳跃距离 */
 		double height,			/* 跳跃高度 */
 		int jumps = 1			/* 跳跃次数 */
 	);
@@ -205,7 +205,7 @@ protected:
 
 protected:
 	Point	_startPos;
-	Vector	_deltaPos;
+	Vector2	_deltaPos;
 	double	_height;
 	int		_jumps;
 	Point	_prevPos;

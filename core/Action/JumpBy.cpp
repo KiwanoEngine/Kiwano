@@ -1,7 +1,7 @@
 #include "..\e2daction.h"
 #include "..\e2dnode.h"
 
-e2d::JumpBy::JumpBy(double duration, const Vector & vec, double height, int jumps)
+e2d::JumpBy::JumpBy(double duration, const Vector2 & vec, double height, int jumps)
 	: FiniteTimeAction(duration)
 	, _deltaPos(vec)
 	, _height(height)
@@ -42,10 +42,10 @@ void e2d::JumpBy::_update()
 
 		Point currentPos = _target->getPos();
 
-		Vector diff = currentPos - _prevPos;
+		Vector2 diff = currentPos - _prevPos;
 		_startPos = diff + _startPos;
 
-		Point newPos = _startPos + Vector(x, y);
+		Point newPos = _startPos + Vector2(x, y);
 		_target->setPos(newPos);
 
 		_prevPos = newPos;

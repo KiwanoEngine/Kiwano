@@ -55,7 +55,7 @@ public:
 
 
 // 二维向量
-typedef Point Vector;
+typedef Point Vector2;
 
 
 // 大小

@@ -224,7 +224,7 @@ public:
 
 	// 移动节点
 	virtual void movePos(
-		const Vector & v
+		const Vector2 & v
 	);
 
 	// 设置节点绘图顺序

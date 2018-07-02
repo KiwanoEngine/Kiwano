@@ -151,7 +151,7 @@ protected:
 
 protected:
 	Direction _direction;
-	Vector _posDelta;
+	Vector2 _posDelta;
 	Point _startPos;
 };
 
