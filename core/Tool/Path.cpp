@@ -69,7 +69,7 @@ void e2d::Path::setGameFolderName(const String & name)
 	}
 }
 
-void e2d::Path::add(String path)
+void e2d::Path::addSearchPath(String path)
 {
 	path.replace(L"/", L"\\");
 	if (path[path.getLength() - 1] != L'\\')
@@ -98,7 +98,7 @@ e2d::String e2d::Path::getExecutableFilePath()
 	return std::move(String());
 }
 
-e2d::String e2d::Path::searchForFile(const String& path)
+e2d::String e2d::Path::findFile(const String& path)
 {
 	if (Path::exists(path))
 	{

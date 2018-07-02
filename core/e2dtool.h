@@ -447,13 +447,13 @@ public:
 		const String& name
 	);
 
-	// 添加搜索路径
-	static void add(
+	// 添加资源搜索路径
+	static void addSearchPath(
 		String path
 	);
 
 	// 检索文件路径
-	static String searchForFile(
+	static String findFile(
 		const String& path
 	);
 

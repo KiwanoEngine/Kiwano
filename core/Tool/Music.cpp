@@ -85,7 +85,7 @@ bool e2d::Music::open(const e2d::String& filePath)
 		return false;
 	}
 
-	String actualFilePath = Path::searchForFile(filePath);
+	String actualFilePath = Path::findFile(filePath);
 	if (actualFilePath.isEmpty())
 	{
 		WARN("MusicInfo::open File not found.");
