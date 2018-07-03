@@ -64,13 +64,11 @@ bool e2d::Game::init(const String& mutexName)
 	// 初始化 COM 组件
 	CoInitialize(nullptr);
 
-	bool bInputInit = false,
-		bMusicInit = false;
+	bool bInputInit = false;
 
 	auto DestroyResources = [&]()
 	{
 		if (bInputInit) Input::__uninit();
-		if (bMusicInit) Music::__uninit();
 	};
 
 	// 初始化 DirectInput
@@ -82,17 +80,6 @@ bool e2d::Game::init(const String& mutexName)
 	{
 		DestroyResources();
 		throw SystemException(L"初始化 DirectInput 组件失败");
-	}
-
-	// 初始化播放器
-	if (Music::__init())
-	{
-		bMusicInit = true;
-	}
-	else
-	{
-		DestroyResources();
-		throw SystemException(L"初始化 XAudio2 组件失败");
 	}
 
 	// 初始化路径
@@ -211,12 +198,8 @@ void e2d::Game::cleanup()
 	Collision::__clearListeners();
 	// 删除动作
 	ActionManager::__uninit();
-	// 回收音乐播放器资源
-	Player::__uninit();
 	// 清空图片缓存
 	Image::clearCache();
-	// 回收音乐相关资源
-	Music::__uninit();
 	// 清空定时器
 	Timer::__uninit();
 	// 关闭输入

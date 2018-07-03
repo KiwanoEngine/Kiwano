@@ -2,10 +2,11 @@
 
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=nullptr; } }
+#define SAFE_DELETE(p)       { if (p) { delete (p); (p)=nullptr; } }
 #endif
+
 #ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p);   (p)=nullptr; } }
+#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p); (p)=nullptr; } }
 #endif
 
 inline bool TraceError(wchar_t* sPrompt)
@@ -19,10 +20,6 @@ inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 	WARN("MusicInfo error: %s (%#X)", sPrompt, hr);
 	return false;
 }
-
-
-static IXAudio2 * s_pXAudio2 = nullptr;
-static IXAudio2MasteringVoice * s_pMasteringVoice = nullptr;
 
 
 e2d::Music::Music()
@@ -92,12 +89,6 @@ bool e2d::Music::open(const e2d::String& filePath)
 		return false;
 	}
 
-	if (!s_pXAudio2)
-	{
-		WARN("IXAudio2 nullptr pointer error!");
-		return false;
-	}
-
 	// 定位 wave 文件
 	wchar_t pFilePath[MAX_PATH];
 	if (!_findMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)actualFilePath))
@@ -137,8 +128,15 @@ bool e2d::Music::open(const e2d::String& filePath)
 	}
 
 	// 创建音源
-	HRESULT hr;
-	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &this->_voiceCallback)))
+	HRESULT hr = Player::getInstance()->getIXAudio2()->CreateSourceVoice(
+		&_voice, 
+		_wfx, 
+		0, 
+		XAUDIO2_DEFAULT_FREQ_RATIO, 
+		&this->_voiceCallback
+	);
+
+	if (FAILED(hr))
 	{
 		TraceError(L"Create source voice error", hr);
 		SAFE_DELETE_ARRAY(_waveData);
@@ -160,12 +158,6 @@ bool e2d::Music::open(int resNameId, const e2d::String& resType)
 	if (_opened)
 	{
 		WARN("MusicInfo can be opened only once!");
-		return false;
-	}
-
-	if (!s_pXAudio2)
-	{
-		WARN("IXAudio2 nullptr pointer error!");
 		return false;
 	}
 
@@ -216,8 +208,15 @@ bool e2d::Music::open(int resNameId, const e2d::String& resType)
 	}
 
 	// 创建音源
-	HRESULT hr;
-	if (FAILED(hr = s_pXAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &this->_voiceCallback)))
+	HRESULT hr = Player::getInstance()->getIXAudio2()->CreateSourceVoice(
+		&_voice, 
+		_wfx, 
+		0, 
+		XAUDIO2_DEFAULT_FREQ_RATIO, 
+		&this->_voiceCallback
+	);
+
+	if (FAILED(hr))
 	{
 		TraceError(L"Create source voice error", hr);
 		SAFE_DELETE_ARRAY(_waveData);
@@ -573,44 +572,4 @@ bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wcha
 	wcscpy_s(strDestPath, cchDest, strFilename);
 
 	return false;
-}
-
-IXAudio2 * e2d::Music::getIXAudio2()
-{
-	return s_pXAudio2;
-}
-
-IXAudio2MasteringVoice * e2d::Music::getIXAudio2MasteringVoice()
-{
-	return s_pMasteringVoice;
-}
-
-bool e2d::Music::__init()
-{
-	HRESULT hr;
-
-	if (FAILED(hr = XAudio2Create(&s_pXAudio2, 0)))
-	{
-		WARN("Failed to init XAudio2 engine");
-		return false;
-	}
-
-	if (FAILED(hr = s_pXAudio2->CreateMasteringVoice(&s_pMasteringVoice)))
-	{
-		WARN("Failed creating mastering voice");
-		e2d::SafeRelease(s_pXAudio2);
-		return false;
-	}
-
-	return true;
-}
-
-void e2d::Music::__uninit()
-{
-	if (s_pMasteringVoice)
-	{
-		s_pMasteringVoice->DestroyVoice();
-	}
-
-	e2d::SafeRelease(s_pXAudio2);
 }

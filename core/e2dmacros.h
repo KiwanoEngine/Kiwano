@@ -39,6 +39,7 @@
 #include <xaudio2.h>
 
 // C++ RunTime Header Files
+#include <map>
 #include <set>
 #include <stack>
 #include <vector>
