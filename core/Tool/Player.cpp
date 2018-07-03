@@ -36,7 +36,7 @@ e2d::Player * e2d::Player::getInstance()
 		if (FAILED(hr = XAudio2Create(&_instance->_xAudio2, 0)) ||
 			FAILED(hr = _instance->_xAudio2->CreateMasteringVoice(&_instance->_masteringVoice)))
 		{
-			throw SystemException("初始化 XAudio2 组件失败");
+			throw SystemException(L"初始化 XAudio2 组件失败");
 		}
 	}
 	return _instance;

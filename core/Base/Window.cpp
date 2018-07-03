@@ -8,8 +8,9 @@ e2d::Window * e2d::Window::_instance = nullptr;
 
 e2d::Window::Window()
 	: _hWnd(nullptr)
-	, _size()
-	, _title()
+	, _size(640, 480)
+	, _title(L"Easy2D Game")
+	, _iconID(0)
 {
 }
 
@@ -44,13 +45,12 @@ void e2d::Window::destroyInstance()
 	}
 }
 
-bool e2d::Window::create(const String& title, int width, int height)
+HWND e2d::Window::__create()
 {
 	// 注册窗口类
 	WNDCLASSEX wcex = { 0 };
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.lpszClassName = L"Easy2DApp";
-	wcex.hIcon = nullptr;
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = Window::WndProc;
 	wcex.cbClsExtra = 0;
@@ -60,6 +60,22 @@ bool e2d::Window::create(const String& title, int width, int height)
 	wcex.lpszMenuName = nullptr;
 	wcex.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
 
+	if (this->_iconID != 0)
+	{
+		wcex.hIcon = (HICON)::LoadImage(
+			HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(this->_iconID),
+			IMAGE_ICON,
+			0,
+			0,
+			LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
+		);
+	}
+	else
+	{
+		wcex.hIcon = nullptr;
+	}
+
 	RegisterClassEx(&wcex);
 
 	// 因为 CreateWindow 函数使用的是像素大小，获取系统的 DPI 以使它
@@ -67,11 +83,11 @@ bool e2d::Window::create(const String& title, int width, int height)
 	float dpiScaleX = 0.f, dpiScaleY = 0.f;
 	Renderer::getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
 
-	int nWidth = static_cast<int>(ceil(width * dpiScaleX / 96.f));
-	int nHeight = static_cast<int>(ceil(height * dpiScaleY / 96.f));
+	int nWidth = static_cast<int>(ceil(this->_size.width * dpiScaleX / 96.f));
+	int nHeight = static_cast<int>(ceil(this->_size.height * dpiScaleY / 96.f));
 
 	// 计算窗口大小
-	DWORD dwStyle = WS_OVERLAPPEDWINDOW &~ WS_MAXIMIZEBOX &~ WS_THICKFRAME;
+	DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX &~WS_THICKFRAME;
 	RECT wr = { 0, 0, static_cast<LONG>(nWidth), static_cast<LONG>(nHeight) };
 	::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
 	// 获取新的宽高
@@ -83,12 +99,12 @@ bool e2d::Window::create(const String& title, int width, int height)
 	int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
 
 	// 创建窗口
-	_hWnd = ::CreateWindowEx(
+	HWND hWnd = ::CreateWindowEx(
 		NULL,
 		L"Easy2DApp",
-		(LPCTSTR)title,
+		(LPCTSTR)this->_title,
 		dwStyle,
-		(screenWidth - nWidth) / 2, (screenHeight - nHeight) / 2, 
+		(screenWidth - nWidth) / 2, (screenHeight - nHeight) / 2,
 		nWidth, nHeight,
 		nullptr,
 		nullptr,
@@ -96,7 +112,7 @@ bool e2d::Window::create(const String& title, int width, int height)
 		nullptr
 	);
 
-	HRESULT hr = _hWnd ? S_OK : E_FAIL;
+	HRESULT hr = hWnd ? S_OK : E_FAIL;
 
 	if (SUCCEEDED(hr))
 	{
@@ -109,16 +125,12 @@ bool e2d::Window::create(const String& title, int width, int height)
 			HMENU hmenu = ::GetSystemMenu(consoleHWnd, FALSE);
 			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
-		this->_size = Size(width, height);
-		this->_title = title;
-		return true;
 	}
 	else
 	{
 		::UnregisterClass(L"Easy2DApp", HINST_THISCOMPONENT);
-		this->error(L"Create Window Failed!");
-		return false;
 	}
+	return hWnd;
 }
 
 void e2d::Window::__poll()
@@ -154,43 +166,61 @@ e2d::String e2d::Window::getTitle()
 
 HWND e2d::Window::getHWnd()
 {
+	if (!_hWnd)
+	{
+		_hWnd = this->__create();
+		if (_hWnd == nullptr)
+		{
+			throw SystemException(L"注册窗口失败");
+		}
+	}
 	return _hWnd;
 }
 
 void e2d::Window::setSize(int width, int height)
 {
-	// 计算窗口大小
-	DWORD dwStyle = WS_OVERLAPPEDWINDOW &~ WS_MAXIMIZEBOX &~ WS_THICKFRAME;
-	RECT wr = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
-	::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
-	// 获取新的宽高
-	width = static_cast<int>(wr.right - wr.left);
-	height = static_cast<int>(wr.bottom - wr.top);
-	// 获取屏幕分辨率
-	int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
-	// 当输入的窗口大小比分辨率大时，给出警告
-	WARN_IF(screenWidth < width || screenHeight < height, "The window is larger than screen!");
-	// 取最小值
-	width = min(width, screenWidth);
-	height = min(height, screenHeight);
-	// 修改窗口大小，并设置窗口在屏幕居中
-	::MoveWindow(_hWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
+	this->_size = Size(width, height);
+	if (_hWnd)
+	{
+		// 计算窗口大小
+		DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX &~WS_THICKFRAME;
+		RECT wr = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
+		::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
+		// 获取新的宽高
+		width = static_cast<int>(wr.right - wr.left);
+		height = static_cast<int>(wr.bottom - wr.top);
+		// 获取屏幕分辨率
+		int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
+		int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
+		// 当输入的窗口大小比分辨率大时，给出警告
+		WARN_IF(screenWidth < width || screenHeight < height, "The window is larger than screen!");
+		// 取最小值
+		width = min(width, screenWidth);
+		height = min(height, screenHeight);
+		// 修改窗口大小，并设置窗口在屏幕居中
+		::MoveWindow(_hWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
+	}
 }
 
 void e2d::Window::setTitle(const String& title)
 {
-	// 设置窗口标题
-	::SetWindowText(_hWnd, (LPCWSTR)title);
+	this->_title = title;
+	if (_hWnd)
+	{
+		::SetWindowText(_hWnd, (LPCWSTR)title);
+	}
 }
 
 void e2d::Window::setIcon(int iconID)
 {
-	HINSTANCE hInstance = ::GetModuleHandle(nullptr);
-	HICON hIcon = (HICON)::LoadImage(hInstance, MAKEINTRESOURCE(iconID), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
-	// 设置窗口的图标
-	::SendMessage(_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
-	::SendMessage(_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+	this->_iconID = iconID;
+	if (_hWnd)
+	{
+		HICON hIcon = (HICON)::LoadImage(HINST_THISCOMPONENT, MAKEINTRESOURCE(iconID), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+		// 设置窗口的图标
+		::SendMessage(_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+		::SendMessage(_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+	}
 }
 
 void e2d::Window::setCursor(Cursor cursor)

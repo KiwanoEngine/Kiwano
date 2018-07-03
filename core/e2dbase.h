@@ -86,13 +86,6 @@ public:
 	// 销毁窗口实例
 	static void destroyInstance();
 
-	// 创建新窗口
-	bool create(
-		const String& title,
-		int width,
-		int height
-	);
-
 	// 修改窗口大小
 	void setSize(
 		int width,			/* 窗口宽度 */
@@ -164,6 +157,9 @@ private:
 
 	E2D_DISABLE_COPY(Window);
 
+	// 注册窗口
+	HWND __create();
+
 	// 处理窗口消息
 	void __poll();
 
@@ -179,6 +175,7 @@ private:
 	HWND	_hWnd;
 	Size	_size;
 	String	_title;
+	int		_iconID;
 
 	static Window * _instance;
 };
