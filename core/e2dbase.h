@@ -21,9 +21,7 @@ public:
 	static void destroyInstance();
 
 	// 初始化游戏
-	bool init(
-		const String& mutexName = L""	/* 进程互斥体名称 */
-	);
+	bool init();
 
 	// 启动游戏
 	void start(
@@ -85,6 +83,11 @@ public:
 
 	// 销毁窗口实例
 	static void destroyInstance();
+
+	// 创建窗口互斥体
+	bool createMutex(
+		const String& mutex = L""	/* 进程互斥体名称 */
+	);
 
 	// 修改窗口大小
 	void setSize(

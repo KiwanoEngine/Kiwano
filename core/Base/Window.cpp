@@ -45,6 +45,45 @@ void e2d::Window::destroyInstance()
 	}
 }
 
+bool e2d::Window::createMutex(const String & mutex)
+{
+	if (mutex.isEmpty())
+		return false;
+
+	// 创建进程互斥体
+	String fullMutexName = L"Easy2DApp-" + mutex;
+	HANDLE hMutex = ::CreateMutex(nullptr, TRUE, (LPCWSTR)fullMutexName);
+
+	if (hMutex == nullptr)
+	{
+		WARN("CreateMutex Failed!");
+		return false;
+	}
+	else if (::GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		// 关闭进程互斥体
+		::CloseHandle(hMutex);
+		// 打开游戏窗口
+		if (!this->_title.isEmpty())
+		{
+			// 获取窗口句柄
+			HWND hProgramWnd = ::FindWindow(L"Easy2DApp", (LPCTSTR)this->_title);
+			if (hProgramWnd)
+			{
+				// 获取窗口显示状态
+				WINDOWPLACEMENT wpm;
+				::GetWindowPlacement(hProgramWnd, &wpm);
+				// 将运行的程序窗口还原成正常状态
+				wpm.showCmd = SW_SHOW;
+				::SetWindowPlacement(hProgramWnd, &wpm);
+				::SetWindowPos(hProgramWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+			}
+		}
+		return false;
+	}
+	return true;
+}
+
 HWND e2d::Window::__create()
 {
 	// 注册窗口类
@@ -350,14 +389,20 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	{
 		UINT width = LOWORD(lParam);
 		UINT height = HIWORD(lParam);
-		Window::getInstance()->_size = Size(width, height);
+
+		if (wParam == SIZE_RESTORED)
+		{
+			Window::getInstance()->_size = Size(width, height);
+		}
 
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 		// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
 		// 错误，因为这个错误将在下一次调用 EndDraw 时产生
 		auto pRT = Renderer::getInstance()->getRenderTarget();
 		if (pRT)
+		{
 			pRT->Resize(D2D1::SizeU(width, height));
+		}
 	}
 	break;
 

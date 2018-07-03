@@ -33,32 +33,12 @@ void e2d::Game::destroyInstance()
 	}
 }
 
-bool e2d::Game::init(const String& mutexName)
+bool e2d::Game::init()
 {
 	if (_initialized)
 	{
 		WARN("The game has been initialized!");
 		return false;
-	}
-
-	if (!mutexName.isEmpty())
-	{
-		// 创建进程互斥体
-		String fullMutexName = L"Easy2DApp-" + mutexName;
-		HANDLE hMutex = ::CreateMutex(nullptr, TRUE, (LPCWSTR)fullMutexName);
-
-		if (hMutex == nullptr)
-		{
-			WARN("CreateMutex Failed!");
-		}
-		else if (::GetLastError() == ERROR_ALREADY_EXISTS)
-		{
-			// 如果程序已经存在并且正在运行，弹窗提示
-			Window::getInstance()->info(L"游戏已在其他窗口中打开！", L"提示");
-			// 关闭进程互斥体
-			::CloseHandle(hMutex);
-			return false;
-		}
 	}
 
 	// 初始化 COM 组件
