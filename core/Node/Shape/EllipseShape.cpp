@@ -50,9 +50,10 @@ void e2d::EllipseShape::setRadiusY(double radiusY)
 
 void e2d::EllipseShape::_renderLine()
 {
-	Renderer::getRenderTarget()->DrawEllipse(
+	auto renderer = Renderer::getInstance();
+	renderer->getRenderTarget()->DrawEllipse(
 		D2D1::Ellipse(D2D1::Point2F(_radiusX, _radiusY), _radiusX, _radiusY),
-		Renderer::getSolidColorBrush(),
+		renderer->getSolidColorBrush(),
 		_strokeWidth,
 		_strokeStyle
 	);
@@ -60,8 +61,9 @@ void e2d::EllipseShape::_renderLine()
 
 void e2d::EllipseShape::_renderFill()
 {
-	Renderer::getRenderTarget()->FillEllipse(
+	auto renderer = Renderer::getInstance();
+	renderer->getRenderTarget()->FillEllipse(
 		D2D1::Ellipse(D2D1::Point2F(_radiusX, _radiusY), _radiusX, _radiusY),
-		Renderer::getSolidColorBrush()
+		renderer->getSolidColorBrush()
 	);
 }

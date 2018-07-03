@@ -37,6 +37,8 @@ bool Input::__init()
 		nullptr
 	);
 
+	auto window = Window::getInstance();
+
 	if (SUCCEEDED(hr))
 	{
 		// 初始化键盘设备
@@ -49,7 +51,7 @@ bool Input::__init()
 		if (SUCCEEDED(hr))
 		{
 			s_KeyboardDevice->SetCooperativeLevel(
-				Window::getHWnd(),
+				window->getHWnd(),
 				DISCL_FOREGROUND | DISCL_NONEXCLUSIVE
 			);
 			s_KeyboardDevice->SetDataFormat(
@@ -59,7 +61,7 @@ bool Input::__init()
 		}
 		else
 		{
-			Window::error(L"Keyboard not found!");
+			window->error(L"Keyboard not found!");
 			return false;
 		}
 	}
@@ -71,14 +73,14 @@ bool Input::__init()
 
 		if (SUCCEEDED(hr))
 		{
-			s_MouseDevice->SetCooperativeLevel(Window::getHWnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+			s_MouseDevice->SetCooperativeLevel(window->getHWnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 			s_MouseDevice->SetDataFormat(&c_dfDIMouse);
 			s_MouseDevice->Acquire();
 			s_MouseDevice->Poll();
 		}
 		else
 		{
-			Window::error(L"Mouse not found!");
+			window->error(L"Mouse not found!");
 			return false;
 		}
 	}
@@ -141,7 +143,7 @@ void Input::__updateDeviceState()
 	}
 
 	GetCursorPos(&s_MousePosition);
-	ScreenToClient(Window::getHWnd(), &s_MousePosition);
+	ScreenToClient(Window::getInstance()->getHWnd(), &s_MousePosition);
 }
 
 bool Input::isDown(Key key)

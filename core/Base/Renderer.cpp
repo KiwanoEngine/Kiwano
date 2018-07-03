@@ -2,163 +2,66 @@
 #include "..\e2dmanager.h"
 #include "..\e2dnode.h"
 
-static bool s_bShowFps = false;
-static float s_fDpiScaleX = 0;
-static float s_fDpiScaleY = 0;
-static IDWriteTextFormat * s_pTextFormat = nullptr;
-static ID2D1Factory * s_pDirect2dFactory = nullptr;
-static ID2D1HwndRenderTarget * s_pRenderTarget = nullptr;
-static ID2D1SolidColorBrush * s_pSolidBrush = nullptr;
-static IWICImagingFactory * s_pIWICFactory = nullptr;
-static IDWriteFactory * s_pDWriteFactory = nullptr;
-static e2d::TextRenderer * s_pTextRenderer = nullptr;
-static ID2D1StrokeStyle * s_pMiterStrokeStyle = nullptr;
-static ID2D1StrokeStyle * s_pBevelStrokeStyle = nullptr;
-static ID2D1StrokeStyle * s_pRoundStrokeStyle = nullptr;
-static D2D1_COLOR_F s_nClearColor = D2D1::ColorF(D2D1::ColorF::Black);
 
+e2d::Renderer*		e2d::Renderer::_instance = nullptr;
+ID2D1Factory*		e2d::Renderer::_d2dFactory = nullptr;
+IWICImagingFactory*	e2d::Renderer::_imagingFactory = nullptr;
+IDWriteFactory*		e2d::Renderer::_writeFactory = nullptr;
+IDWriteTextFormat*	e2d::Renderer::_textFormat = nullptr;
+ID2D1StrokeStyle*	e2d::Renderer::_miterStrokeStyle = nullptr;
+ID2D1StrokeStyle*	e2d::Renderer::_bevelStrokeStyle = nullptr;
+ID2D1StrokeStyle*	e2d::Renderer::_roundStrokeStyle = nullptr;
 
-bool e2d::Renderer::__createDeviceIndependentResources()
+e2d::Renderer * e2d::Renderer::getInstance()
 {
-	// 创建设备无关资源，它们的生命周期和程序的时长相同
-	HRESULT hr = D2D1CreateFactory(
-		D2D1_FACTORY_TYPE_SINGLE_THREADED,
-		&s_pDirect2dFactory
-	);
+	if (!_instance)
+	{
+		_instance = new (std::nothrow) Renderer;
+	}
+	return _instance;
+}
 
-	// 工厂将返回当前的系统 DPI，这个值也将用来创建窗口
-	if (SUCCEEDED(hr))
+void e2d::Renderer::destroyInstance()
+{
+	if (_instance)
 	{
-		s_pDirect2dFactory->GetDesktopDpi(&s_fDpiScaleX, &s_fDpiScaleY);
-	}
+		delete _instance;
+		_instance = nullptr;
 
-	if (FAILED(hr))
-	{
-		throw SystemException(L"Create ID2D1Factory failed");
+		SafeRelease(_textFormat);
+		SafeRelease(_d2dFactory);
+		SafeRelease(_miterStrokeStyle);
+		SafeRelease(_bevelStrokeStyle);
+		SafeRelease(_roundStrokeStyle);
+		SafeRelease(_imagingFactory);
+		SafeRelease(_writeFactory);
 	}
-	else
-	{
-		hr = s_pDirect2dFactory->CreateStrokeStyle(
-			D2D1::StrokeStyleProperties(
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_LINE_JOIN_MITER,
-				2.0f,
-				D2D1_DASH_STYLE_SOLID,
-				0.0f),
-			nullptr,
-			0,
-			&s_pMiterStrokeStyle
-		);
-	}
+}
 
-	if (FAILED(hr))
-	{
-		throw SystemException(L"Create ID2D1StrokeStyle failed");
-	}
-	else
-	{
-		hr = s_pDirect2dFactory->CreateStrokeStyle(
-			D2D1::StrokeStyleProperties(
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_LINE_JOIN_BEVEL,
-				2.0f,
-				D2D1_DASH_STYLE_SOLID,
-				0.0f),
-			nullptr,
-			0,
-			&s_pBevelStrokeStyle
-		);
-	}
+e2d::Renderer::Renderer()
+	: _showFps(false)
+	, _renderTarget(nullptr)
+	, _solidBrush(nullptr)
+	, _textRenderer(nullptr)
+	, _clearColor(D2D1::ColorF(D2D1::ColorF::Black))
+{
+	this->__createDeviceResources();
+}
 
-	if (FAILED(hr))
-	{
-		throw SystemException(L"Create ID2D1StrokeStyle failed");
-	}
-	else
-	{
-		hr = s_pDirect2dFactory->CreateStrokeStyle(
-			D2D1::StrokeStyleProperties(
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_LINE_JOIN_ROUND,
-				2.0f,
-				D2D1_DASH_STYLE_SOLID,
-				0.0f),
-			nullptr,
-			0,
-			&s_pRoundStrokeStyle
-		);
-	}
-
-	if (FAILED(hr))
-	{
-		throw SystemException(L"Create ID2D1StrokeStyle failed");
-	}
-	else
-	{
-		// 创建 WIC 绘图工厂，用于统一处理各种格式的图片
-		hr = CoCreateInstance(
-			CLSID_WICImagingFactory,
-			nullptr,
-			CLSCTX_INPROC_SERVER,
-			IID_IWICImagingFactory,
-			reinterpret_cast<void**>(&s_pIWICFactory)
-		);
-	}
-
-	if (FAILED(hr))
-	{
-		throw SystemException(L"Create IWICImagingFactory failed");
-	}
-	else
-	{
-		// 创建 DirectWrite 工厂
-		hr = DWriteCreateFactory(
-			DWRITE_FACTORY_TYPE_SHARED,
-			__uuidof(IDWriteFactory),
-			reinterpret_cast<IUnknown**>(&s_pDWriteFactory)
-		);
-	}
-
-	if (FAILED(hr))
-	{
-		throw SystemException(L"Create IDWriteFactory failed");
-	}
-	else
-	{
-		// 创建文本格式化对象
-		hr = s_pDWriteFactory->CreateTextFormat(
-			L"",
-			nullptr,
-			DWRITE_FONT_WEIGHT_NORMAL,
-			DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL,
-			20,
-			L"",
-			&s_pTextFormat
-		);
-
-		if (SUCCEEDED(hr))
-		{
-			s_pTextFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-		}
-	}
-
-	return SUCCEEDED(hr);
+e2d::Renderer::~Renderer()
+{
+	SafeRelease(_renderTarget);
+	SafeRelease(_solidBrush);
+	SafeRelease(_textRenderer);
 }
 
 bool e2d::Renderer::__createDeviceResources()
 {
 	HRESULT hr = S_OK;
 
-	if (!s_pRenderTarget)
+	if (!_renderTarget)
 	{
-		HWND hWnd = Window::getHWnd();
+		HWND hWnd = Window::getInstance()->getHWnd();
 
 		// 创建设备相关资源。这些资源应在 Direct3D 设备消失时重建，
 		// 比如当 isVisiable 被修改，等等
@@ -171,12 +74,12 @@ bool e2d::Renderer::__createDeviceResources()
 		);
 
 		// 创建一个 Direct2D 渲染目标
-		hr = s_pDirect2dFactory->CreateHwndRenderTarget(
+		hr = Renderer::getFactory()->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(
 				hWnd,
 				size),
-			&s_pRenderTarget
+			&_renderTarget
 		);
 
 		if (FAILED(hr))
@@ -186,24 +89,15 @@ bool e2d::Renderer::__createDeviceResources()
 		else
 		{
 			// 创建画刷
-			hr = s_pRenderTarget->CreateSolidColorBrush(
+			hr = _renderTarget->CreateSolidColorBrush(
 				D2D1::ColorF(D2D1::ColorF::White),
-				&s_pSolidBrush
+				&_solidBrush
 			);
 		}
 
 		if (FAILED(hr))
 		{
 			throw SystemException(L"Create ID2D1SolidColorBrush failed");
-		}
-		else
-		{
-			// 创建自定义的文字渲染器
-			s_pTextRenderer = TextRenderer::Create(
-				s_pDirect2dFactory,
-				s_pRenderTarget,
-				s_pSolidBrush
-			);
 		}
 	}
 
@@ -212,26 +106,12 @@ bool e2d::Renderer::__createDeviceResources()
 
 void e2d::Renderer::__discardDeviceResources()
 {
-	SafeRelease(s_pRenderTarget);
-	SafeRelease(s_pSolidBrush);
-	SafeRelease(s_pTextRenderer);
-	SafeRelease(s_pMiterStrokeStyle);
-	SafeRelease(s_pBevelStrokeStyle);
-	SafeRelease(s_pRoundStrokeStyle);
-}
-
-void e2d::Renderer::__discardResources()
-{
-	SafeRelease(s_pTextFormat);
-	SafeRelease(s_pDirect2dFactory);
-	SafeRelease(s_pRenderTarget);
-	SafeRelease(s_pSolidBrush);
-	SafeRelease(s_pTextRenderer);
-	SafeRelease(s_pMiterStrokeStyle);
-	SafeRelease(s_pBevelStrokeStyle);
-	SafeRelease(s_pRoundStrokeStyle);
-	SafeRelease(s_pIWICFactory);
-	SafeRelease(s_pDWriteFactory);
+	SafeRelease(_renderTarget);
+	SafeRelease(_solidBrush);
+	SafeRelease(_textRenderer);
+	SafeRelease(_miterStrokeStyle);
+	SafeRelease(_bevelStrokeStyle);
+	SafeRelease(_roundStrokeStyle);
 }
 
 void e2d::Renderer::__render()
@@ -242,15 +122,15 @@ void e2d::Renderer::__render()
 	Renderer::__createDeviceResources();
 
 	// 开始渲染
-	s_pRenderTarget->BeginDraw();
+	_renderTarget->BeginDraw();
 	// 使用背景色清空屏幕
-	s_pRenderTarget->Clear(s_nClearColor);
+	_renderTarget->Clear(_clearColor);
 
 	// 渲染场景
 	SceneManager::__render();
 
 	// 渲染 FPS
-	if (s_bShowFps && s_pTextFormat)
+	if (_showFps)
 	{
 		static int s_nRenderTimes = 0;
 		static double s_fLastRenderTime = 0;
@@ -267,11 +147,12 @@ void e2d::Renderer::__render()
 		}
 
 		IDWriteTextLayout * pTextLayout = nullptr;
+		IDWriteTextFormat * pTextFormat = Renderer::getFpsTextFormat();
 
-		hr = s_pDWriteFactory->CreateTextLayout(
+		hr = _writeFactory->CreateTextLayout(
 			(const WCHAR *)s_sFpsText,
 			(UINT32)s_sFpsText.getLength(),
-			s_pTextFormat,
+			pTextFormat,
 			0,
 			0,
 			&pTextLayout
@@ -279,9 +160,9 @@ void e2d::Renderer::__render()
 
 		if (SUCCEEDED(hr))
 		{
-			s_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-			s_pSolidBrush->SetOpacity(1.0f);
-			s_pTextRenderer->SetTextStyle(
+			_renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+			_solidBrush->SetOpacity(1.0f);
+			_textRenderer->SetTextStyle(
 				D2D1::ColorF(D2D1::ColorF::White),
 				TRUE,
 				D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
@@ -289,21 +170,21 @@ void e2d::Renderer::__render()
 				D2D1_LINE_JOIN_ROUND
 			);
 
-			pTextLayout->Draw(nullptr, s_pTextRenderer, 10, 0);
+			pTextLayout->Draw(nullptr, _textRenderer, 10, 0);
 
 			SafeRelease(pTextLayout);
 		}
 	}
 
 	// 终止渲染
-	hr = s_pRenderTarget->EndDraw();
+	hr = _renderTarget->EndDraw();
 
 	if (hr == D2DERR_RECREATE_TARGET)
 	{
 		// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
 		// 并在下一次调用时重建资源
 		hr = S_OK;
-		Renderer::__discardDeviceResources();
+		this->__discardDeviceResources();
 	}
 
 	if (FAILED(hr))
@@ -312,73 +193,200 @@ void e2d::Renderer::__render()
 	}
 }
 
-
 e2d::Color e2d::Renderer::getBackgroundColor()
 {
-	return Color(s_nClearColor.r, s_nClearColor.g, s_nClearColor.b, s_nClearColor.a);
+	return Color(_clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a);
 }
 
 void e2d::Renderer::setBackgroundColor(Color color)
 {
-	s_nClearColor = color.toD2DColorF();
+	_clearColor = color.toD2DColorF();
 }
 
 void e2d::Renderer::showFps(bool show)
 {
-	s_bShowFps = show;
-}
-
-float e2d::Renderer::getDpiScaleX()
-{
-	return s_fDpiScaleX;
-}
-
-float e2d::Renderer::getDpiScaleY()
-{
-	return s_fDpiScaleY;
-}
-
-ID2D1Factory * e2d::Renderer::getID2D1Factory()
-{
-	return s_pDirect2dFactory;
+	_showFps = show;
 }
 
 ID2D1HwndRenderTarget * e2d::Renderer::getRenderTarget()
 {
-	return s_pRenderTarget;
+	return _renderTarget;
 }
 
 ID2D1SolidColorBrush * e2d::Renderer::getSolidColorBrush()
 {
-	return s_pSolidBrush;
-}
-
-IWICImagingFactory * e2d::Renderer::getIWICImagingFactory()
-{
-	return s_pIWICFactory;
-}
-
-IDWriteFactory * e2d::Renderer::getIDWriteFactory()
-{
-	return s_pDWriteFactory;
+	return _solidBrush;
 }
 
 e2d::TextRenderer * e2d::Renderer::getTextRenderer()
 {
-	return s_pTextRenderer;
+	if (!_textRenderer)
+	{
+		// 创建自定义的文字渲染器
+		_textRenderer = TextRenderer::Create(
+			Renderer::getFactory(),
+			this->getRenderTarget(),
+			this->getSolidColorBrush()
+		);
+	}
+	return _textRenderer;
 }
 
-ID2D1StrokeStyle * e2d::Renderer::getMiterID2D1StrokeStyle()
+ID2D1Factory * e2d::Renderer::getFactory()
 {
-	return s_pMiterStrokeStyle;
+	if (!_d2dFactory)
+	{
+		HRESULT hr = D2D1CreateFactory(
+			D2D1_FACTORY_TYPE_SINGLE_THREADED,
+			&_d2dFactory
+		);
+
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create ID2D1Factory failed");
+		}
+	}
+	return _d2dFactory;
 }
 
-ID2D1StrokeStyle * e2d::Renderer::getBevelID2D1StrokeStyle()
+IWICImagingFactory * e2d::Renderer::getImagingFactory()
 {
-	return s_pBevelStrokeStyle;
+	if (!_imagingFactory)
+	{
+		// 创建 WIC 绘图工厂，用于统一处理各种格式的图片
+		HRESULT hr = CoCreateInstance(
+			CLSID_WICImagingFactory,
+			nullptr,
+			CLSCTX_INPROC_SERVER,
+			IID_IWICImagingFactory,
+			reinterpret_cast<void**>(&_imagingFactory)
+		);
+
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create IWICImagingFactory failed");
+		}
+	}
+	return _imagingFactory;
 }
 
-ID2D1StrokeStyle * e2d::Renderer::getRoundID2D1StrokeStyle()
+IDWriteFactory * e2d::Renderer::getWriteFactory()
 {
-	return s_pRoundStrokeStyle;
+	if (!_writeFactory)
+	{
+		// 创建 DirectWrite 工厂
+		HRESULT hr = DWriteCreateFactory(
+			DWRITE_FACTORY_TYPE_SHARED,
+			__uuidof(IDWriteFactory),
+			reinterpret_cast<IUnknown**>(&_writeFactory)
+		);
+
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create IDWriteFactory failed");
+		}
+	}
+	return _writeFactory;
+}
+
+IDWriteTextFormat * e2d::Renderer::getFpsTextFormat()
+{
+	if (!_textFormat)
+	{
+		// 创建 FPS 文本格式化对象
+		HRESULT hr = Renderer::getWriteFactory()->CreateTextFormat(
+			L"",
+			nullptr,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			20,
+			L"",
+			&_textFormat
+		);
+
+		if (SUCCEEDED(hr))
+		{
+			_textFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+		}
+	}
+	return _textFormat;
+}
+
+ID2D1StrokeStyle * e2d::Renderer::getMiterStrokeStyle()
+{
+	if (!_miterStrokeStyle)
+	{
+		HRESULT hr = Renderer::getFactory()->CreateStrokeStyle(
+			D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_LINE_JOIN_MITER,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f),
+			nullptr,
+			0,
+			&_miterStrokeStyle
+		);
+
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create ID2D1StrokeStyle failed");
+		}
+	}
+	return _miterStrokeStyle;
+}
+
+ID2D1StrokeStyle * e2d::Renderer::getBevelStrokeStyle()
+{
+	if (!_bevelStrokeStyle)
+	{
+		HRESULT hr = Renderer::getFactory()->CreateStrokeStyle(
+			D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_LINE_JOIN_BEVEL,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f),
+			nullptr,
+			0,
+			&_bevelStrokeStyle
+		);
+
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create ID2D1StrokeStyle failed");
+		}
+	}
+	return _bevelStrokeStyle;
+}
+
+ID2D1StrokeStyle * e2d::Renderer::getRoundStrokeStyle()
+{
+	if (!_roundStrokeStyle)
+	{
+		HRESULT hr = Renderer::getFactory()->CreateStrokeStyle(
+			D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_LINE_JOIN_ROUND,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f),
+			nullptr,
+			0,
+			&_roundStrokeStyle
+		);
+
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create ID2D1StrokeStyle failed");
+		}
+	}
+	return _roundStrokeStyle;
 }

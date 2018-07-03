@@ -174,15 +174,15 @@ e2d::String e2d::Path::getSaveFilePath(const String& title, const String& defExt
 	OPENFILENAME ofn = { 0 };
 	wchar_t strFilename[MAX_PATH] = { 0 };				// 用于接收文件名
 	ofn.lStructSize = sizeof(OPENFILENAME);				// 结构体大小
-	ofn.hwndOwner = Window::getHWnd();					// 窗口句柄
+	ofn.hwndOwner = Window::getInstance()->getHWnd();	// 窗口句柄
 	ofn.lpstrFilter = L"所有文件\0*.*\0\0";				// 设置过滤
 	ofn.nFilterIndex = 1;								// 过滤器索引
 	ofn.lpstrFile = strFilename;						// 接收返回的文件路径和文件名
 	ofn.nMaxFile = sizeof(strFilename);					// 缓冲区长度
 	ofn.lpstrInitialDir = nullptr;						// 初始目录为默认
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-	ofn.lpstrTitle = (LPCWSTR)title;								// 标题
-	ofn.lpstrDefExt = (LPCWSTR)defExt;							// 默认追加的扩展名
+	ofn.lpstrTitle = (LPCWSTR)title;					// 标题
+	ofn.lpstrDefExt = (LPCWSTR)defExt;					// 默认追加的扩展名
 
 	if (GetSaveFileName(&ofn))
 	{

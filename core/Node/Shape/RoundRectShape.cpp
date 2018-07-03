@@ -48,9 +48,10 @@ void e2d::RoundRectShape::setRadiusY(double radiusY)
 
 void e2d::RoundRectShape::_renderLine()
 {
-	Renderer::getRenderTarget()->DrawRoundedRectangle(
+	auto renderer = Renderer::getInstance();
+	renderer->getRenderTarget()->DrawRoundedRectangle(
 		D2D1::RoundedRect(D2D1::RectF(0, 0, _width, _height), _radiusX, _radiusY),
-		Renderer::getSolidColorBrush(),
+		renderer->getSolidColorBrush(),
 		_strokeWidth,
 		_strokeStyle
 	);
@@ -58,8 +59,9 @@ void e2d::RoundRectShape::_renderLine()
 
 void e2d::RoundRectShape::_renderFill()
 {
-	Renderer::getRenderTarget()->FillRoundedRectangle(
+	auto renderer = Renderer::getInstance();
+	renderer->getRenderTarget()->FillRoundedRectangle(
 		D2D1::RoundedRect(D2D1::RectF(0, 0, _width, _height), _radiusX, _radiusY),
-		Renderer::getSolidColorBrush()
+		renderer->getSolidColorBrush()
 	);
 }

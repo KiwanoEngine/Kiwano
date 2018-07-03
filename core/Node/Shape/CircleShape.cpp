@@ -36,9 +36,10 @@ void e2d::CircleShape::setRadius(double radius)
 
 void e2d::CircleShape::_renderLine()
 {
-	Renderer::getRenderTarget()->DrawEllipse(
+	auto renderer = Renderer::getInstance();
+	renderer->getRenderTarget()->DrawEllipse(
 		D2D1::Ellipse(D2D1::Point2F(_radius, _radius), _radius, _radius),
-		Renderer::getSolidColorBrush(),
+		renderer->getSolidColorBrush(),
 		_strokeWidth,
 		_strokeStyle
 	);
@@ -46,8 +47,9 @@ void e2d::CircleShape::_renderLine()
 
 void e2d::CircleShape::_renderFill()
 {
-	Renderer::getRenderTarget()->FillEllipse(
+	auto renderer = Renderer::getInstance();
+	renderer->getRenderTarget()->FillEllipse(
 		D2D1::Ellipse(D2D1::Point2F(_radius, _radius), _radius, _radius),
-		Renderer::getSolidColorBrush()
+		renderer->getSolidColorBrush()
 	);
 }

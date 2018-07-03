@@ -35,7 +35,7 @@ void e2d::EllipseCollider::setEllipse(Point center, double radiusX, double radiu
 {
 	SafeRelease(_d2dEllipse);
 
-	Renderer::getID2D1Factory()->CreateEllipseGeometry(
+	Renderer::getFactory()->CreateEllipseGeometry(
 		D2D1::Ellipse(
 			D2D1::Point2F(
 				float(center.x),

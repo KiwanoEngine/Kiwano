@@ -14,8 +14,11 @@ namespace e2d
 class Game
 {
 public:
-	// 获取游戏单例
+	// 获取游戏实例
 	static Game * getInstance();
+
+	// 销毁实例
+	static void destroyInstance();
 
 	// 初始化游戏
 	bool init(
@@ -39,9 +42,6 @@ public:
 	// 清理资源
 	void cleanup();
 
-	// 销毁实例
-	void destroy();
-
 	// 重置游戏内部计时
 	void reset();
 
@@ -50,6 +50,8 @@ public:
 
 private:
 	Game();
+
+	~Game();
 
 	E2D_DISABLE_COPY(Game);
 
@@ -78,82 +80,101 @@ public:
 	};
 
 public:
+	// 获取窗口实例
+	static Window * getInstance();
+
+	// 销毁窗口实例
+	static void destroyInstance();
+
+	// 创建新窗口
+	bool create(
+		const String& title,
+		int width,
+		int height
+	);
+
 	// 修改窗口大小
-	static void setSize(
+	void setSize(
 		int width,			/* 窗口宽度 */
 		int height			/* 窗口高度 */
 	);
 
 	// 设置窗口标题
-	static void setTitle(
+	void setTitle(
 		const String& title	/* 窗口标题 */
 	);
 
 	// 设置窗口图标
-	static void setIcon(
+	void setIcon(
 		int iconID
 	);
 
 	// 设置鼠标指针样式
-	static void setCursor(
+	void setCursor(
 		Cursor cursor
 	);
 
 	// 获取窗口标题
-	static String getTitle();
+	String getTitle();
 
 	// 获取窗口宽度
-	static double getWidth();
+	double getWidth();
 
 	// 获取窗口高度
-	static double getHeight();
+	double getHeight();
 
 	// 获取窗口大小
-	static Size getSize();
+	Size getSize();
 
 	// 获取窗口句柄
-	static HWND getHWnd();
+	HWND getHWnd();
 
 	// 打开/隐藏控制台
-	static void showConsole(
+	void showConsole(
 		bool show = true
 	);
 
 	// 是否允许响应输入法
-	static void setTypewritingEnable(
+	void setTypewritingEnable(
 		bool enable
 	);
 
 	// 弹出提示窗口
-	static void info(
+	void info(
 		const String& text,					/* 内容 */
 		const String& title = L"Infomation"	/* 窗口标题 */
 	);
 
 	// 弹出警告窗口
-	static void warning(
+	void warning(
 		const String& text,					/* 内容 */
 		const String& title = L"Warning"	/* 窗口标题 */
 	);
 
 	// 弹出错误窗口
-	static void error(
+	void error(
 		const String& text,					/* 内容 */
 		const String& title = L"Error"		/* 窗口标题 */
 	);
 
 private:
-	// 初始化窗口
-	static bool __init();
+	Window();
 
-	// 重置窗口属性
-	static void __uninit();
+	~Window();
+
+	E2D_DISABLE_COPY(Window);
 
 	// 处理窗口消息
-	static void __poll();
+	void __poll();
 
 	// Win32 窗口消息回调程序
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+private:
+	HWND	_hWnd;
+	Size	_size;
+	String	_title;
+	static Window * _instance;
 };
 
 
@@ -389,67 +410,86 @@ class Renderer
 	friend class Window;
 
 public:
+	// 获取渲染器实例
+	static Renderer * getInstance();
+
+	// 销毁实例
+	static void destroyInstance();
+
 	// 获取背景色
-	static Color getBackgroundColor();
+	Color getBackgroundColor();
 
 	// 修改背景色
-	static void setBackgroundColor(
+	void setBackgroundColor(
 		Color color
 	);
 
 	// 显示 FPS
-	static void showFps(
+	void showFps(
 		bool show = true
 	);
 
-	// 获取系统 DPI 缩放
-	static float getDpiScaleX();
-
-	// 获取系统 DPI 缩放
-	static float getDpiScaleY();
-
-	// 获取 ID2D1Factory 对象
-	static ID2D1Factory * getID2D1Factory();
+	// 获取文字渲染器
+	TextRenderer * getTextRenderer();
 
 	// 获取 ID2D1HwndRenderTarget 对象
-	static ID2D1HwndRenderTarget * getRenderTarget();
+	ID2D1HwndRenderTarget * getRenderTarget();
 
 	// 获取 ID2D1SolidColorBrush 对象
-	static ID2D1SolidColorBrush * getSolidColorBrush();
+	ID2D1SolidColorBrush * getSolidColorBrush();
+
+	// 获取 ID2D1Factory 对象
+	static ID2D1Factory * getFactory();
 
 	// 获取 IWICImagingFactory 对象
-	static IWICImagingFactory * getIWICImagingFactory();
+	static IWICImagingFactory * getImagingFactory();
 
 	// 获取 IDWriteFactory 对象
-	static IDWriteFactory * getIDWriteFactory();
+	static IDWriteFactory * getWriteFactory();
 
-	// 获取文字渲染器
-	static TextRenderer * getTextRenderer();
+	// 获取 FPS 文本格式化对象
+	static IDWriteTextFormat * getFpsTextFormat();
 
 	// 获取 Miter 样式的 ID2D1StrokeStyle
-	static ID2D1StrokeStyle * getMiterID2D1StrokeStyle();
+	static ID2D1StrokeStyle * getMiterStrokeStyle();
 
 	// 获取 Bevel 样式的 ID2D1StrokeStyle
-	static ID2D1StrokeStyle * getBevelID2D1StrokeStyle();
+	static ID2D1StrokeStyle * getBevelStrokeStyle();
 
 	// 获取 Round 样式的 ID2D1StrokeStyle
-	static ID2D1StrokeStyle * getRoundID2D1StrokeStyle();
+	static ID2D1StrokeStyle * getRoundStrokeStyle();
 
 private:
-	// 渲染游戏画面
-	static void __render();
+	Renderer();
 
-	// 创建设备无关资源
-	static bool __createDeviceIndependentResources();
+	~Renderer();
+
+	E2D_DISABLE_COPY(Renderer);
+
+	// 渲染游戏画面
+	void __render();
 
 	// 创建设备相关资源
-	static bool __createDeviceResources();
+	bool __createDeviceResources();
 
 	// 删除设备相关资源
-	static void __discardDeviceResources();
+	void __discardDeviceResources();
 
-	// 删除所有渲染相关资源
-	static void __discardResources();
+private:
+	bool					_showFps;
+	D2D1_COLOR_F			_clearColor;
+	ID2D1HwndRenderTarget*	_renderTarget;
+	ID2D1SolidColorBrush*	_solidBrush;
+	TextRenderer*			_textRenderer;
+
+	static ID2D1Factory*		_d2dFactory;
+	static IWICImagingFactory*	_imagingFactory;
+	static IDWriteFactory*		_writeFactory;
+	static IDWriteTextFormat*	_textFormat;
+	static ID2D1StrokeStyle*	_miterStrokeStyle;
+	static ID2D1StrokeStyle*	_bevelStrokeStyle;
+	static ID2D1StrokeStyle*	_roundStrokeStyle;
+	static Renderer *			_instance;
 };
 
 
@@ -457,9 +497,11 @@ private:
 class GC
 {
 	friend class Game;
-	friend class Object;
 
 public:
+	//  获取 GC 实例
+	static GC* getInstance();
+
 	// 保留对象
 	template <typename Type>
 	static inline void retain(Type*& p)
@@ -482,22 +524,34 @@ public:
 	}
 
 	// 通知 GC 回收垃圾内存
-	static void notify();
+	void notify();
 
 	// 手动回收垃圾内存
-	static void flush();
+	void flush();
 
-private:
 	// 将对象放入 GC
-	static void __add(
+	void addObject(
 		Object * pObject
 	);
 
-	// 更新 GC
-	static void __update();
-
 	// 清空所有对象
-	static void __clear();
+	void clear();
+
+private:
+	GC() {}
+
+	~GC();
+
+	E2D_DISABLE_COPY(GC);
+
+	// 更新 GC
+	void __update();
+
+private:
+	bool				_notifyed;
+	std::set<Object*>	_pool;
+
+	static GC _instance;
 };
 
 }

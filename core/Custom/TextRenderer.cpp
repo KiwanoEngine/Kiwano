@@ -59,13 +59,13 @@ STDMETHODIMP_(void) TextRenderer::SetTextStyle(
 	switch (outlineJoin)
 	{
 	case D2D1_LINE_JOIN_MITER:
-		pCurrStrokeStyle_ = Renderer::getMiterID2D1StrokeStyle();
+		pCurrStrokeStyle_ = Renderer::getMiterStrokeStyle();
 		break;
 	case D2D1_LINE_JOIN_BEVEL:
-		pCurrStrokeStyle_ = Renderer::getBevelID2D1StrokeStyle();
+		pCurrStrokeStyle_ = Renderer::getBevelStrokeStyle();
 		break;
 	case D2D1_LINE_JOIN_ROUND:
-		pCurrStrokeStyle_ = Renderer::getRoundID2D1StrokeStyle();
+		pCurrStrokeStyle_ = Renderer::getRoundStrokeStyle();
 		break;
 	default:
 		pCurrStrokeStyle_ = nullptr;

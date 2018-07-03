@@ -35,12 +35,13 @@ void e2d::Transition::onDestroy()
 
 void e2d::Transition::_init(Scene * prev, Scene * next)
 {
+	auto renderer = Renderer::getInstance();
 	// ´´½¨Í¼²ã
-	HRESULT hr = Renderer::getRenderTarget()->CreateLayer(&_inLayer);
+	HRESULT hr = renderer->getRenderTarget()->CreateLayer(&_inLayer);
 
 	if (SUCCEEDED(hr))
 	{
-		hr = Renderer::getRenderTarget()->CreateLayer(&_outLayer);
+		hr = renderer->getRenderTarget()->CreateLayer(&_outLayer);
 	}
 
 	if (FAILED(hr))
@@ -54,7 +55,7 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 	if (_outScene) _outScene->retain();
 	if (_inScene) _inScene->retain();
 
-	_windowSize = Window::getSize();
+	_windowSize = Window::getInstance()->getSize();
 	_outLayerParam = _inLayerParam = D2D1::LayerParameters();
 }
 
@@ -85,7 +86,7 @@ void e2d::Transition::_update()
 
 void e2d::Transition::_render()
 {
-	auto pRT = Renderer::getRenderTarget();
+	auto pRT = Renderer::getInstance()->getRenderTarget();
 
 	if (_outScene)
 	{

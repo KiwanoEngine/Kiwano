@@ -176,7 +176,7 @@ bool e2d::Image::preload(const String& filePath)
 	ID2D1Bitmap *pBitmap = nullptr;
 
 	// 创建解码器
-	hr = Renderer::getIWICImagingFactory()->CreateDecoderFromFilename(
+	hr = Renderer::getImagingFactory()->CreateDecoderFromFilename(
 		(LPCWSTR)actualFilePath,
 		nullptr,
 		GENERIC_READ,
@@ -194,7 +194,7 @@ bool e2d::Image::preload(const String& filePath)
 	{
 		// 创建图片格式转换器
 		// (DXGI_FORMAT_B8G8R8A8_UNORM + D2D1_ALPHA_MODE_PREMULTIPLIED).
-		hr = Renderer::getIWICImagingFactory()->CreateFormatConverter(&pConverter);
+		hr = Renderer::getImagingFactory()->CreateFormatConverter(&pConverter);
 	}
 
 	if (SUCCEEDED(hr))
@@ -213,7 +213,7 @@ bool e2d::Image::preload(const String& filePath)
 	if (SUCCEEDED(hr))
 	{
 		// 从 WIC 位图创建一个 Direct2D 位图
-		hr = Renderer::getRenderTarget()->CreateBitmapFromWicBitmap(
+		hr = Renderer::getInstance()->getRenderTarget()->CreateBitmapFromWicBitmap(
 			pConverter,
 			nullptr,
 			&pBitmap
@@ -291,7 +291,7 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 	if (SUCCEEDED(hr))
 	{
 		// 创建 WIC 流
-		hr = Renderer::getIWICImagingFactory()->CreateStream(&pStream);
+		hr = Renderer::getImagingFactory()->CreateStream(&pStream);
 	}
 
 	if (SUCCEEDED(hr))
@@ -306,7 +306,7 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 	if (SUCCEEDED(hr))
 	{
 		// 创建流的解码器
-		hr = Renderer::getIWICImagingFactory()->CreateDecoderFromStream(
+		hr = Renderer::getImagingFactory()->CreateDecoderFromStream(
 			pStream,
 			nullptr,
 			WICDecodeMetadataCacheOnLoad,
@@ -324,7 +324,7 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 	{
 		// 创建图片格式转换器
 		// (DXGI_FORMAT_B8G8R8A8_UNORM + D2D1_ALPHA_MODE_PREMULTIPLIED).
-		hr = Renderer::getIWICImagingFactory()->CreateFormatConverter(&pConverter);
+		hr = Renderer::getImagingFactory()->CreateFormatConverter(&pConverter);
 	}
 
 	if (SUCCEEDED(hr))
@@ -343,7 +343,7 @@ bool e2d::Image::preload(int resNameId, const String& resType)
 	if (SUCCEEDED(hr))
 	{
 		// 从 WIC 位图创建一个 Direct2D 位图
-		hr = Renderer::getRenderTarget()->CreateBitmapFromWicBitmap(
+		hr = Renderer::getInstance()->getRenderTarget()->CreateBitmapFromWicBitmap(
 			pConverter,
 			nullptr,
 			&pBitmap

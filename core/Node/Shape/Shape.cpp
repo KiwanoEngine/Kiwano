@@ -15,7 +15,7 @@ e2d::Shape::~Shape()
 
 void e2d::Shape::onRender()
 {
-	auto pBrush = Renderer::getSolidColorBrush();
+	auto pBrush = Renderer::getInstance()->getSolidColorBrush();
 	pBrush->SetOpacity(_displayOpacity);
 
 	switch (_style)
@@ -94,13 +94,13 @@ void e2d::Shape::setLineJoin(LineJoin lineJoin)
 	switch (lineJoin)
 	{
 	case LineJoin::Miter:
-		_strokeStyle = Renderer::getMiterID2D1StrokeStyle();
+		_strokeStyle = Renderer::getMiterStrokeStyle();
 		break;
 	case LineJoin::Bevel:
-		_strokeStyle = Renderer::getBevelID2D1StrokeStyle();
+		_strokeStyle = Renderer::getBevelStrokeStyle();
 		break;
 	case LineJoin::Round:
-		_strokeStyle = Renderer::getRoundID2D1StrokeStyle();
+		_strokeStyle = Renderer::getRoundStrokeStyle();
 		break;
 	default:
 		_strokeStyle = nullptr;

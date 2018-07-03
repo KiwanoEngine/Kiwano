@@ -22,9 +22,10 @@ e2d::RectShape::~RectShape()
 
 void e2d::RectShape::_renderLine()
 {
-	Renderer::getRenderTarget()->DrawRectangle(
+	auto renderer = Renderer::getInstance();
+	renderer->getRenderTarget()->DrawRectangle(
 		D2D1::RectF(0, 0, _width, _height),
-		Renderer::getSolidColorBrush(),
+		renderer->getSolidColorBrush(),
 		_strokeWidth,
 		_strokeStyle
 	);
@@ -32,8 +33,9 @@ void e2d::RectShape::_renderLine()
 
 void e2d::RectShape::_renderFill()
 {
-	Renderer::getRenderTarget()->FillRectangle(
+	auto renderer = Renderer::getInstance();
+	renderer->getRenderTarget()->FillRectangle(
 		D2D1::RectF(0, 0, _width, _height),
-		Renderer::getSolidColorBrush()
+		renderer->getSolidColorBrush()
 	);
 }

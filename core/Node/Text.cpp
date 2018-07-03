@@ -291,12 +291,13 @@ void e2d::Text::onRender()
 {
 	if (_textLayout)
 	{
+		auto renderer = Renderer::getInstance();
 		// 创建文本区域
 		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, _width, _height);
 		// 设置画刷颜色和透明度
-		Renderer::getSolidColorBrush()->SetOpacity(_displayOpacity);
+		renderer->getSolidColorBrush()->SetOpacity(_displayOpacity);
 		// 获取文本渲染器
-		auto pTextRenderer = Renderer::getTextRenderer();
+		auto pTextRenderer = renderer->getTextRenderer();
 		pTextRenderer->SetTextStyle(
 			_style.color.toD2DColorF(),
 			_style.hasOutline,
@@ -320,7 +321,7 @@ void e2d::Text::_createFormat()
 {
 	SafeRelease(_textFormat);
 
-	HRESULT hr = Renderer::getIDWriteFactory()->CreateTextFormat(
+	HRESULT hr = Renderer::getWriteFactory()->CreateTextFormat(
 		(const WCHAR *)_font.family,
 		nullptr,
 		DWRITE_FONT_WEIGHT(_font.weight),
@@ -390,7 +391,7 @@ void e2d::Text::_createLayout()
 	// 对文本自动换行情况下进行处理
 	if (_style.wrapping)
 	{
-		hr = Renderer::getIDWriteFactory()->CreateTextLayout(
+		hr = Renderer::getWriteFactory()->CreateTextLayout(
 			(const WCHAR *)_text,
 			length,
 			_textFormat,
@@ -409,7 +410,7 @@ void e2d::Text::_createLayout()
 	}
 	else
 	{
-		hr = Renderer::getIDWriteFactory()->CreateTextLayout((const WCHAR *)_text, length, _textFormat, 0, 0, &_textLayout);
+		hr = Renderer::getWriteFactory()->CreateTextLayout((const WCHAR *)_text, length, _textFormat, 0, 0, &_textLayout);
 		// 为防止文本对齐问题，根据刚才创建的 layout 宽度重新创建它
 		if (_textLayout)
 		{
@@ -420,7 +421,7 @@ void e2d::Text::_createLayout()
 			this->setSize(metrics.width, metrics.height);
 			// 重新创建 layout
 			SafeRelease(_textLayout);
-			hr = Renderer::getIDWriteFactory()->CreateTextLayout((const WCHAR *)_text, length, _textFormat, _width, 0, &_textLayout);
+			hr = Renderer::getWriteFactory()->CreateTextLayout((const WCHAR *)_text, length, _textFormat, _width, 0, &_textLayout);
 		}
 	}
 

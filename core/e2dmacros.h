@@ -81,13 +81,17 @@
 
 #if _MSC_VER >= 1800
 #	define E2D_OP_EXPLICIT explicit
-#	define E2D_DELETE = delete
 #else
 #	define E2D_OP_EXPLICIT
-#	define E2D_DELETE
 #endif
 
 
-#define E2D_DISABLE_COPY(ClassName)\
-	ClassName(const ClassName &); \
-	ClassName & operator= (const ClassName &) E2D_DELETE
+#if _MSC_VER >= 1800
+#	define E2D_DISABLE_COPY(Class) \
+	Class(const Class &) = delete; \
+	Class & operator= (const Class &) = delete
+#else
+#	define E2D_DISABLE_COPY(Class) \
+	Class(const Class &); \
+	Class & operator= (const Class &)
+#endif

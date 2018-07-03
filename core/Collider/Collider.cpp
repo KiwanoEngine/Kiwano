@@ -51,12 +51,13 @@ void e2d::Collider::_render()
 {
 	if (_transformed && _enable)
 	{
+		auto renderer = Renderer::getInstance();
 		// 获取纯色画刷
-		ID2D1SolidColorBrush * pBrush = Renderer::getSolidColorBrush();
+		ID2D1SolidColorBrush * pBrush = renderer->getSolidColorBrush();
 		// 设置画刷颜色和透明度
 		pBrush->SetColor(_color.toD2DColorF());
 		// 绘制几何碰撞体
-		Renderer::getRenderTarget()->DrawGeometry(_transformed, pBrush);
+		renderer->getRenderTarget()->DrawGeometry(_transformed, pBrush);
 	}
 }
 
@@ -93,7 +94,7 @@ void e2d::Collider::_transform()
 		SafeRelease(_transformed);
 
 		// 根据父节点转换几何图形
-		Renderer::getID2D1Factory()->CreateTransformedGeometry(
+		Renderer::getFactory()->CreateTransformedGeometry(
 			getD2dGeometry(),
 			_parentNode->_finalMatri,
 			&_transformed

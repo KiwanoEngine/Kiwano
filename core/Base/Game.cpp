@@ -13,11 +13,24 @@ e2d::Game::Game()
 {
 }
 
+e2d::Game::~Game()
+{
+}
+
 e2d::Game * e2d::Game::getInstance()
 {
 	if (!_instance)
 		_instance = new (std::nothrow) Game;
 	return _instance;
+}
+
+void e2d::Game::destroyInstance()
+{
+	if (_instance)
+	{
+		delete _instance;
+		_instance = nullptr;
+	}
 }
 
 bool e2d::Game::init(const String& mutexName)
@@ -41,7 +54,7 @@ bool e2d::Game::init(const String& mutexName)
 		else if (::GetLastError() == ERROR_ALREADY_EXISTS)
 		{
 			// 如果程序已经存在并且正在运行，弹窗提示
-			Window::info(L"游戏已在其他窗口中打开！", L"提示");
+			Window::getInstance()->info(L"游戏已在其他窗口中打开！", L"提示");
 			// 关闭进程互斥体
 			::CloseHandle(hMutex);
 			return false;
@@ -51,53 +64,14 @@ bool e2d::Game::init(const String& mutexName)
 	// 初始化 COM 组件
 	CoInitialize(nullptr);
 
-	bool bRendererDevIndResInit = false,
-		bWindowInit = false,
-		bRendererDevResInit = false,
-		bInputInit = false,
+	bool bInputInit = false,
 		bMusicInit = false;
 
 	auto DestroyResources = [&]()
 	{
-		if (bRendererDevIndResInit) Renderer::__discardResources();
-		if (bWindowInit) Window::__init();
-		if (bRendererDevResInit) Renderer::__discardDeviceResources();
 		if (bInputInit) Input::__uninit();
 		if (bMusicInit) Music::__uninit();
 	};
-
-	// 创建设备无关资源
-	if (Renderer::__createDeviceIndependentResources())
-	{
-		bRendererDevIndResInit = true;
-	}
-	else
-	{
-		DestroyResources();
-		throw SystemException(L"渲染器设备无关资源创建失败");
-	}
-
-	// 初始化窗口
-	if (Window::__init())
-	{
-		bWindowInit = true;
-	}
-	else
-	{
-		DestroyResources();
-		throw SystemException(L"初始化窗口失败");
-	}
-
-	// 创建设备相关资源
-	if (Renderer::__createDeviceResources())
-	{
-		bRendererDevResInit = true;
-	}
-	else
-	{
-		DestroyResources();
-		throw SystemException(L"渲染器设备相关资源创建失败");
-	}
 
 	// 初始化 DirectInput
 	if (Input::__init())
@@ -141,14 +115,17 @@ void e2d::Game::start(bool cleanup)
 		throw Exception(L"开始游戏前未进行初始化");
 	}
 
+	auto window = Window::getInstance();
+	auto renderer = Renderer::getInstance();
+
 	// 初始化场景管理器
 	SceneManager::__init();
 	// 显示窗口
-	::ShowWindow(Window::getHWnd(), SW_SHOWNORMAL);
+	::ShowWindow(window->getHWnd(), SW_SHOWNORMAL);
 	// 刷新窗口内容
-	::UpdateWindow(Window::getHWnd());
+	::UpdateWindow(window->getHWnd());
 	// 处理窗口消息
-	Window::__poll();
+	window->__poll();
 	// 初始化计时
 	Time::__init();
 
@@ -157,7 +134,7 @@ void e2d::Game::start(bool cleanup)
 	while (!_ended)
 	{
 		// 处理窗口消息
-		Window::__poll();
+		window->__poll();
 		// 刷新时间
 		Time::__updateNow();
 
@@ -168,14 +145,14 @@ void e2d::Game::start(bool cleanup)
 			Timer::__update();			// 更新定时器
 			ActionManager::__update();	// 更新动作管理器
 			SceneManager::__update();	// 更新场景内容
-			Renderer::__render();		// 渲染游戏画面
+			renderer->__render();		// 渲染游戏画面
 
 			Time::__updateLast();		// 刷新时间信息
 		}
 		else
 		{
-			Time::__sleep();			// 挂起线程
-			GC::__update();				// 刷新内存池
+			Time::__sleep();				// 挂起线程
+			GC::getInstance()->__update();	// 刷新内存池
 		}
 	}
 
@@ -236,8 +213,6 @@ void e2d::Game::cleanup()
 	ActionManager::__uninit();
 	// 回收音乐播放器资源
 	Player::__uninit();
-	// 删除所有对象
-	GC::__clear();
 	// 清空图片缓存
 	Image::clearCache();
 	// 回收音乐相关资源
@@ -246,21 +221,10 @@ void e2d::Game::cleanup()
 	Timer::__uninit();
 	// 关闭输入
 	Input::__uninit();
-	// 回收渲染相关资源
-	Renderer::__discardResources();
-	// 销毁窗口
-	Window::__uninit();
+	// 删除所有对象
+	GC::getInstance()->clear();
 
 	CoUninitialize();
 
 	_initialized = false;
-}
-
-void e2d::Game::destroy()
-{
-	if (_instance)
-	{
-		delete _instance;
-		_instance = nullptr;
-	}
 }

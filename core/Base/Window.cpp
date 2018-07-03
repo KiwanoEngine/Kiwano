@@ -3,11 +3,48 @@
 #include <imm.h>
 #pragma comment (lib ,"imm32.lib")
 
-// 窗口句柄
-static HWND s_HWnd = nullptr;
 
+e2d::Window * e2d::Window::_instance = nullptr;
 
-bool e2d::Window::__init()
+e2d::Window::Window()
+	: _hWnd(nullptr)
+	, _size()
+	, _title()
+{
+}
+
+e2d::Window::~Window()
+{
+	// 关闭控制台
+	if (::GetConsoleWindow())
+	{
+		::FreeConsole();
+	}
+	// 关闭窗口
+	if (_hWnd)
+	{
+		::DestroyWindow(_hWnd);
+		_hWnd = nullptr;
+	}
+}
+
+e2d::Window * e2d::Window::getInstance()
+{
+	if (!_instance)
+		_instance = new (std::nothrow) Window;
+	return _instance;
+}
+
+void e2d::Window::destroyInstance()
+{
+	if (_instance)
+	{
+		delete _instance;
+		_instance = nullptr;
+	}
+}
+
+bool e2d::Window::create(const String& title, int width, int height)
 {
 	// 注册窗口类
 	WNDCLASSEX wcex = { 0 };
@@ -27,11 +64,11 @@ bool e2d::Window::__init()
 
 	// 因为 CreateWindow 函数使用的是像素大小，获取系统的 DPI 以使它
 	// 适应窗口缩放
-	float dpiX = Renderer::getDpiScaleX();
-	float dpiY = Renderer::getDpiScaleY();
+	float dpiScaleX = 0.f, dpiScaleY = 0.f;
+	Renderer::getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
 
-	int nWidth = static_cast<int>(ceil(640 * dpiX / 96.f));
-	int nHeight = static_cast<int>(ceil(480 * dpiY / 96.f));
+	int nWidth = static_cast<int>(ceil(width * dpiScaleX / 96.f));
+	int nHeight = static_cast<int>(ceil(height * dpiScaleY / 96.f));
 
 	// 计算窗口大小
 	DWORD dwStyle = WS_OVERLAPPEDWINDOW &~ WS_MAXIMIZEBOX &~ WS_THICKFRAME;
@@ -46,10 +83,10 @@ bool e2d::Window::__init()
 	int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
 
 	// 创建窗口
-	s_HWnd = ::CreateWindowEx(
+	_hWnd = ::CreateWindowEx(
 		NULL,
 		L"Easy2DApp",
-		L"Easy2D Game",
+		(LPCTSTR)title,
 		dwStyle,
 		(screenWidth - nWidth) / 2, (screenHeight - nHeight) / 2, 
 		nWidth, nHeight,
@@ -59,12 +96,12 @@ bool e2d::Window::__init()
 		nullptr
 	);
 
-	HRESULT hr = s_HWnd ? S_OK : E_FAIL;
+	HRESULT hr = _hWnd ? S_OK : E_FAIL;
 
 	if (SUCCEEDED(hr))
 	{
 		// 禁用输入法
-		Window::setTypewritingEnable(false);
+		this->setTypewritingEnable(false);
 		// 禁用控制台关闭按钮
 		HWND consoleHWnd = ::GetConsoleWindow();
 		if (consoleHWnd)
@@ -72,32 +109,15 @@ bool e2d::Window::__init()
 			HMENU hmenu = ::GetSystemMenu(consoleHWnd, FALSE);
 			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
+		this->_size = Size(width, height);
+		this->_title = title;
+		return true;
 	}
 	else
 	{
 		::UnregisterClass(L"Easy2DApp", HINST_THISCOMPONENT);
-	}
-
-	if (FAILED(hr))
-	{
-		Window::error(L"Create Window Failed!");
-	}
-
-	return SUCCEEDED(hr);
-}
-
-void e2d::Window::__uninit()
-{
-	// 关闭控制台
-	if (::GetConsoleWindow())
-	{
-		::FreeConsole();
-	}
-	// 关闭窗口
-	if (s_HWnd)
-	{
-		::DestroyWindow(s_HWnd);
-		s_HWnd = nullptr;
+		this->error(L"Create Window Failed!");
+		return false;
 	}
 }
 
@@ -114,43 +134,27 @@ void e2d::Window::__poll()
 
 double e2d::Window::getWidth()
 {
-	if (s_HWnd)
-	{
-		// 获取客户区大小
-		tagRECT rcClient;
-		::GetClientRect(s_HWnd, &rcClient);
-		return rcClient.right - rcClient.left;
-	}
-	return 0;
+	return _size.width;
 }
 
 double e2d::Window::getHeight()
 {
-	if (s_HWnd)
-	{
-		// 获取客户区大小
-		tagRECT rcClient;
-		::GetClientRect(s_HWnd, &rcClient);
-		return rcClient.bottom - rcClient.top;
-	}
-	return 0;
+	return _size.height;
 }
 
 e2d::Size e2d::Window::getSize()
 {
-	if (s_HWnd)
-	{
-		// 获取客户区大小
-		tagRECT rcClient;
-		::GetClientRect(s_HWnd, &rcClient);
-		return Size(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
-	}
-	return Size();
+	return _size;
+}
+
+e2d::String e2d::Window::getTitle()
+{
+	return _title;
 }
 
 HWND e2d::Window::getHWnd()
 {
-	return s_HWnd;
+	return _hWnd;
 }
 
 void e2d::Window::setSize(int width, int height)
@@ -171,13 +175,13 @@ void e2d::Window::setSize(int width, int height)
 	width = min(width, screenWidth);
 	height = min(height, screenHeight);
 	// 修改窗口大小，并设置窗口在屏幕居中
-	::MoveWindow(s_HWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
+	::MoveWindow(_hWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
 }
 
 void e2d::Window::setTitle(const String& title)
 {
 	// 设置窗口标题
-	::SetWindowText(s_HWnd, (LPCWSTR)title);
+	::SetWindowText(_hWnd, (LPCWSTR)title);
 }
 
 void e2d::Window::setIcon(int iconID)
@@ -185,8 +189,8 @@ void e2d::Window::setIcon(int iconID)
 	HINSTANCE hInstance = ::GetModuleHandle(nullptr);
 	HICON hIcon = (HICON)::LoadImage(hInstance, MAKEINTRESOURCE(iconID), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 	// 设置窗口的图标
-	::SendMessage(s_HWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
-	::SendMessage(s_HWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+	::SendMessage(_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+	::SendMessage(_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 }
 
 void e2d::Window::setCursor(Cursor cursor)
@@ -222,13 +226,6 @@ void e2d::Window::setCursor(Cursor cursor)
 	::SetCursor(hCursor);
 }
 
-e2d::String e2d::Window::getTitle()
-{
-	wchar_t wszTitle[MAX_PATH] = { 0 };
-	::GetWindowText(s_HWnd, wszTitle, MAX_PATH);
-	return wszTitle;
-}
-
 void e2d::Window::showConsole(bool show)
 {
 	// 查找已存在的控制台句柄
@@ -257,7 +254,7 @@ void e2d::Window::showConsole(bool show)
 			}
 			else
 			{
-				Window::error(L"Alloc Console Failed!");
+				this->error(L"Alloc Console Failed!");
 			}
 		}
 	}
@@ -278,7 +275,7 @@ void e2d::Window::setTypewritingEnable(bool enable)
 	{
 		if (hImc != nullptr)
 		{
-			::ImmAssociateContext(Window::getHWnd(), hImc);
+			::ImmAssociateContext(_hWnd, hImc);
 			hImc = nullptr;
 		}
 	}
@@ -286,26 +283,26 @@ void e2d::Window::setTypewritingEnable(bool enable)
 	{
 		if (hImc == nullptr)
 		{
-			hImc = ::ImmAssociateContext(Window::getHWnd(), nullptr);
+			hImc = ::ImmAssociateContext(_hWnd, nullptr);
 		}
 	}
 }
 
 void e2d::Window::info(const String & text, const String & title)
 {
-	::MessageBox(s_HWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONINFORMATION | MB_OK);
+	::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONINFORMATION | MB_OK);
 	Game::getInstance()->reset();
 }
 
 void e2d::Window::warning(const String& title, const String& text)
 {
-	::MessageBox(s_HWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONWARNING | MB_OK);
+	::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONWARNING | MB_OK);
 	Game::getInstance()->reset();
 }
 
 void e2d::Window::error(const String & text, const String & title)
 {
-	::MessageBox(s_HWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONERROR | MB_OK);
+	::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONERROR | MB_OK);
 	Game::getInstance()->reset();
 }
 
@@ -323,11 +320,25 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	{
 		UINT width = LOWORD(lParam);
 		UINT height = HIWORD(lParam);
+
+		auto instance = Window::getInstance();
+		if (instance)
+			instance->_size = Size(width, height);
+
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 		// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
 		// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-		auto pRT = Renderer::getRenderTarget();
-		if (pRT) pRT->Resize(D2D1::SizeU(width, height));
+		auto pRT = Renderer::getInstance()->getRenderTarget();
+		if (pRT)
+			pRT->Resize(D2D1::SizeU(width, height));
+	}
+	break;
+
+	// 处理窗口标题变化消息
+	case WM_SETTEXT:
+	{
+		auto instance = Window::getInstance();
+		instance->_title = (const wchar_t*)lParam;
 	}
 	break;
 
@@ -344,7 +355,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	// 重绘窗口
 	case WM_PAINT:
 	{
-		e2d::Renderer::__render();
+		e2d::Renderer::getInstance()->__render();
 		ValidateRect(hWnd, nullptr);
 	}
 	result = 0;

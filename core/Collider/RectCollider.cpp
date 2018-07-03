@@ -28,7 +28,7 @@ void e2d::RectCollider::setRect(double left, double top, double right, double bo
 {
 	SafeRelease(_d2dRectangle);
 
-	Renderer::getID2D1Factory()->CreateRectangleGeometry(
+	Renderer::getFactory()->CreateRectangleGeometry(
 		D2D1::RectF(
 			float(left), 
 			float(top), 

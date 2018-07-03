@@ -35,7 +35,7 @@ void e2d::CircleCollider::setCircle(Point center, double radius)
 {
 	SafeRelease(_d2dCircle);
 
-	Renderer::getID2D1Factory()->CreateEllipseGeometry(
+	Renderer::getFactory()->CreateEllipseGeometry(
 		D2D1::Ellipse(
 			D2D1::Point2F(
 				float(center.x), 

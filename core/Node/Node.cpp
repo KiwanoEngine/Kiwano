@@ -105,7 +105,7 @@ void e2d::Node::_render()
 	if (_children.empty())
 	{
 		// 转换渲染器的二维矩阵
-		Renderer::getRenderTarget()->SetTransform(_finalMatri);
+		Renderer::getInstance()->getRenderTarget()->SetTransform(_finalMatri);
 		// 渲染自身
 		this->onRender();
 	}
@@ -131,7 +131,7 @@ void e2d::Node::_render()
 		}
 
 		// 转换渲染器的二维矩阵
-		Renderer::getRenderTarget()->SetTransform(_finalMatri);
+		Renderer::getInstance()->getRenderTarget()->SetTransform(_finalMatri);
 		// 渲染自身
 		this->onRender();
 
@@ -826,7 +826,7 @@ bool e2d::Node::containsPoint(const Point& point) const
 	{
 		// 为节点创建一个临时碰撞体
 		ID2D1RectangleGeometry * rect;
-		Renderer::getID2D1Factory()->CreateRectangleGeometry(
+		Renderer::getFactory()->CreateRectangleGeometry(
 			D2D1::RectF(0, 0, _width, _height),
 			&rect
 		);
@@ -871,18 +871,18 @@ bool e2d::Node::intersects(Node * node) const
 		D2D1_GEOMETRY_RELATION relation;
 
 		// 根据自身大小位置创建矩形
-		Renderer::getID2D1Factory()->CreateRectangleGeometry(
+		Renderer::getFactory()->CreateRectangleGeometry(
 			D2D1::RectF(0, 0, _width, _height),
 			&pRect1
 		);
 		// 根据二维矩阵进行转换
-		Renderer::getID2D1Factory()->CreateTransformedGeometry(
+		Renderer::getFactory()->CreateTransformedGeometry(
 			pRect1,
 			_finalMatri,
 			&pCollider
 		);
 		// 根据相比较节点的大小位置创建矩形
-		Renderer::getID2D1Factory()->CreateRectangleGeometry(
+		Renderer::getFactory()->CreateRectangleGeometry(
 			D2D1::RectF(0, 0, node->_width, node->_height),
 			&pRect2
 		);

@@ -209,14 +209,14 @@ void e2d::Button::_fixedUpdate()
 			if (_normal->containsPoint(Input::getMousePos()))
 			{
 				_setState(ButtonState::Selected);
-				Window::setCursor(Window::Cursor::Hand);
+				Window::getInstance()->setCursor(Window::Cursor::Hand);
 				return;
 			}
 		}
 		else if (_normal->containsPoint(Input::getMousePos()))
 		{
 			_setState(ButtonState::Mouseover);
-			Window::setCursor(Window::Cursor::Hand);
+			Window::getInstance()->setCursor(Window::Cursor::Hand);
 			return;
 		}
 
@@ -225,7 +225,7 @@ void e2d::Button::_fixedUpdate()
 
 	if (_visiable && !_enable && _normal && _normal->containsPoint(Input::getMousePos()))
 	{
-		Window::setCursor(Window::Cursor::No);
+		Window::getInstance()->setCursor(Window::Cursor::No);
 	}
 }
 

@@ -110,7 +110,7 @@ void e2d::Sprite::onRender()
 		float fCropX = float(_image->getCropX());
 		float fCropY = float(_image->getCropY());
 		// äÖÈ¾Í¼Æ¬
-		Renderer::getRenderTarget()->DrawBitmap(
+		Renderer::getInstance()->getRenderTarget()->DrawBitmap(
 			_image->getBitmap(),
 			D2D1::RectF(0, 0, _width, _height),
 			_displayOpacity,
