@@ -21,7 +21,11 @@ void e2d::VoiceCallback::OnLoopEnd(void * pBufferContext)
 
 void e2d::VoiceCallback::OnStreamEnd()
 {
-	_music->_playing = false;
+	if (_music)
+	{
+		_music->_playing = false;
+	}
+	
 	if (_streamEndFunc)
 	{
 		_streamEndFunc();
@@ -34,12 +38,19 @@ void e2d::VoiceCallback::OnBufferEnd(void * pBufferContext)
 	{
 		_loopEndFunc();
 	}
-	e2d::GC::release(_music);
+
+	if (_music)
+	{
+		_music->release();
+	}
 }
 
 void e2d::VoiceCallback::OnBufferStart(void * pBufferContext)
 {
-	e2d::GC::retain(_music);
+	if (_music)
+	{
+		_music->retain();
+	}
 }
 
 void e2d::VoiceCallback::OnVoiceProcessingPassEnd()
