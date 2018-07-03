@@ -320,10 +320,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	{
 		UINT width = LOWORD(lParam);
 		UINT height = HIWORD(lParam);
-
-		auto instance = Window::getInstance();
-		if (instance)
-			instance->_size = Size(width, height);
+		Window::getInstance()->_size = Size(width, height);
 
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 		// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
@@ -337,8 +334,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	// 处理窗口标题变化消息
 	case WM_SETTEXT:
 	{
-		auto instance = Window::getInstance();
-		instance->_title = (const wchar_t*)lParam;
+		Window::getInstance()->_title = (const wchar_t*)lParam;
 	}
 	break;
 

@@ -42,10 +42,11 @@
 #include <set>
 #include <stack>
 #include <vector>
-#include <functional>
-#include <sstream>
 #include <random>
 #include <utility>
+#include <chrono>
+#include <sstream>
+#include <functional>
 
 // Import Libraries
 #pragma comment(lib, "d2d1.lib")

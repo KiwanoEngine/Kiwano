@@ -168,12 +168,18 @@ private:
 	void __poll();
 
 	// Win32 窗口消息回调程序
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK WndProc(
+		HWND hWnd, 
+		UINT message, 
+		WPARAM wParam, 
+		LPARAM lParam
+	);
 
 private:
 	HWND	_hWnd;
 	Size	_size;
 	String	_title;
+
 	static Window * _instance;
 };
 
@@ -184,17 +190,11 @@ class Time
 	friend class Game;
 
 public:
-	// 获取上一帧与当前帧的时间间隔（秒）
+	// 获取上一帧的时间间隔（秒）
 	static double getDeltaTime();
-
-	// 获取上一帧与当前帧的时间间隔（毫秒）
-	static unsigned int getDeltaTimeMilliseconds();
 
 	// 获取游戏总时长（秒）
 	static double getTotalTime();
-
-	// 获取游戏总时长（毫秒）
-	static unsigned int getTotalTimeMilliseconds();
 
 private:
 	// 初始化计时操作
@@ -214,6 +214,13 @@ private:
 
 	// 挂起线程
 	static void __sleep();
+
+private:
+	static std::chrono::steady_clock::time_point _start;
+	static std::chrono::steady_clock::time_point _now;
+	static std::chrono::steady_clock::time_point _last;
+	static std::chrono::steady_clock::time_point _fixedLast;
+	static std::chrono::milliseconds _interval;
 };
 
 
