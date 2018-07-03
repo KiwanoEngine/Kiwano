@@ -52,7 +52,7 @@ private:
 class Music :
 	public Object
 {
-	friend class Game;
+	friend class VoiceCallback;
 
 public:
 	Music();
@@ -135,7 +135,7 @@ protected:
 
 protected:
 	bool					_opened;
-	mutable bool			_playing;
+	bool					_playing;
 	DWORD					_dwSize;
 	CHAR*					_resBuffer;
 	BYTE*					_waveData;

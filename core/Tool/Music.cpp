@@ -268,7 +268,6 @@ bool e2d::Music::play(int nLoopCount)
 
 	if (SUCCEEDED(hr = _voice->Start(0)))
 	{
-		// 播放成功，保留这个对象
 		_playing = true;
 	}
 
@@ -338,13 +337,6 @@ bool e2d::Music::isPlaying() const
 {
 	if (_opened && _voice)
 	{
-		XAUDIO2_VOICE_STATE state;
-		_voice->GetState(&state);
-
-		if (state.BuffersQueued == 0)
-		{
-			_playing = false;
-		}
 		return _playing;
 	}
 	else

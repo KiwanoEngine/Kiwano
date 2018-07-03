@@ -21,6 +21,7 @@ void e2d::VoiceCallback::OnLoopEnd(void * pBufferContext)
 
 void e2d::VoiceCallback::OnStreamEnd()
 {
+	_music->_playing = false;
 	if (_streamEndFunc)
 	{
 		_streamEndFunc();
