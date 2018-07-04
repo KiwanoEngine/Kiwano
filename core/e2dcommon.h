@@ -635,11 +635,6 @@ public:
 	// 获取根节点
 	Node * getRoot() const;
 
-	// 开启或关闭节点轮廓渲染
-	void showCollider(
-		bool visiable = true
-	);
-
 	// 销毁对象
 	virtual void onDestroy() override;
 
@@ -745,10 +740,14 @@ protected:
 };
 
 
+class Game;
+
 // 游戏配置
 class Config :
 	public Object
 {
+	friend class Game;
+
 public:
 	Config();
 
@@ -758,6 +757,12 @@ public:
 	// 默认：空
 	void setGameName(
 		const String& name
+	);
+
+	// 打开或关闭声音
+	// 默认：打开
+	void setSoundEnabled(
+		bool enabled
 	);
 
 	// 打开或关闭碰撞监听
@@ -787,6 +792,9 @@ public:
 	// 获取游戏名称
 	String getGameName() const;
 
+	// 获取声音打开状态
+	bool isSoundEnabled() const;
+
 	// 获取碰撞监听状态
 	bool isCollisionEnabled() const;
 
@@ -800,6 +808,11 @@ public:
 	bool isColliderVisiable() const;
 
 protected:
+	virtual void _update();
+
+protected:
+	bool			_unconfigured;
+	bool			_soundEnabled;
 	bool			_collisionEnabled;
 	bool			_colliderVisiable;
 	String			_gameName;

@@ -1,12 +1,14 @@
 #include "..\e2dbase.h"
-
+#include "..\e2dtool.h"
 
 e2d::Config::Config()
 	: _gameName()
 	, _nodeDefPivot()
+	, _soundEnabled(true)
 	, _collisionEnabled(false)
 	, _colliderVisiable(false)
 	, _nodeDefColliderType(Collider::Type::None)
+	, _unconfigured(true)
 {
 }
 
@@ -17,6 +19,15 @@ e2d::Config::~Config()
 void e2d::Config::setGameName(const String & name)
 {
 	_gameName = name;
+}
+
+void e2d::Config::setSoundEnabled(bool enabled)
+{
+	if (_soundEnabled != enabled)
+	{
+		_soundEnabled = enabled;
+		_unconfigured = true;
+	}
 }
 
 void e2d::Config::setCollisionEnabled(bool enabled)
@@ -47,6 +58,11 @@ e2d::String e2d::Config::getGameName() const
 	return _gameName;
 }
 
+bool e2d::Config::isSoundEnabled() const
+{
+	return _soundEnabled;
+}
+
 bool e2d::Config::isCollisionEnabled() const
 {
 	return _collisionEnabled;
@@ -65,4 +81,18 @@ e2d::Collider::Type e2d::Config::getDefaultColliderType() const
 bool e2d::Config::isColliderVisiable() const
 {
 	return _colliderVisiable;
+}
+
+void e2d::Config::_update()
+{
+	_unconfigured = false;
+
+	if (_soundEnabled)
+	{
+		Player::getInstance()->getXAudio2()->StartEngine();
+	}
+	else
+	{
+		Player::getInstance()->getXAudio2()->StopEngine();
+	}
 }

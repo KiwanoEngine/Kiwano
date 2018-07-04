@@ -54,7 +54,7 @@ void e2d::Player::destroyInstance()
 	}
 }
 
-IXAudio2 * e2d::Player::getIXAudio2()
+IXAudio2 * e2d::Player::getXAudio2()
 {
 	return _xAudio2;
 }

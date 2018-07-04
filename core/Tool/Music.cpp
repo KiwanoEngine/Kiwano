@@ -128,7 +128,7 @@ bool e2d::Music::open(const e2d::String& filePath)
 	}
 
 	// 创建音源
-	HRESULT hr = Player::getInstance()->getIXAudio2()->CreateSourceVoice(
+	HRESULT hr = Player::getInstance()->getXAudio2()->CreateSourceVoice(
 		&_voice, 
 		_wfx, 
 		0, 
@@ -208,7 +208,7 @@ bool e2d::Music::open(int resNameId, const e2d::String& resType)
 	}
 
 	// 创建音源
-	HRESULT hr = Player::getInstance()->getIXAudio2()->CreateSourceVoice(
+	HRESULT hr = Player::getInstance()->getXAudio2()->CreateSourceVoice(
 		&_voice, 
 		_wfx, 
 		0, 

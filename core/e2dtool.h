@@ -247,7 +247,7 @@ public:
 	void stopAll();
 
 	// 获取 IXAudio2 对象
-	IXAudio2 * getIXAudio2();
+	IXAudio2 * getXAudio2();
 
 private:
 	Player();

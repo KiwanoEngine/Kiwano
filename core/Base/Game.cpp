@@ -68,6 +68,12 @@ void e2d::Game::start(bool cleanup)
 		// 判断是否达到了刷新状态
 		if (Time::__isReady())
 		{
+			// 更新配置
+			if (_config && _config->_unconfigured)
+			{
+				_config->_update();
+			}
+
 			input->__update();			// 获取用户输入
 			Timer::__update();			// 更新定时器
 			actionManager->__update();	// 更新动作管理器
@@ -122,9 +128,13 @@ bool e2d::Game::isPaused()
 
 void e2d::Game::setConfig(Config * config)
 {
-	GC::release(_config);
-	_config = config;
-	GC::retain(_config);
+	if (_config != config && config)
+	{
+		GC::release(_config);
+		_config = config;
+		_config->_unconfigured = true;
+		GC::retain(_config);
+	}
 }
 
 e2d::Config * e2d::Game::getConfig()
