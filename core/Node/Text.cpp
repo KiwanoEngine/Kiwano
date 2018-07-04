@@ -218,7 +218,7 @@ void e2d::Text::setWrappingWidth(double wrappingWidth)
 {
 	if (_style.wrappingWidth != wrappingWidth)
 	{
-		_style.wrappingWidth = max(wrappingWidth, 0);
+		_style.wrappingWidth = std::max(wrappingWidth, 0.0);
 
 		if (_style.wrapping)
 		{

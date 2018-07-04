@@ -41,6 +41,7 @@
 // C++ RunTime Header Files
 #include <map>
 #include <set>
+#include <list>
 #include <stack>
 #include <vector>
 #include <random>
@@ -96,4 +97,13 @@
 #	define E2D_DISABLE_COPY(Class) \
 	Class(const Class &); \
 	Class & operator= (const Class &)
+#endif
+
+
+#ifdef max
+#	undef max
+#endif
+
+#ifdef min
+#	undef min
 #endif

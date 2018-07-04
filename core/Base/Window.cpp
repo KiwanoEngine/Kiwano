@@ -234,8 +234,8 @@ void e2d::Window::setSize(int width, int height)
 		// 当输入的窗口大小比分辨率大时，给出警告
 		WARN_IF(screenWidth < width || screenHeight < height, "The window is larger than screen!");
 		// 取最小值
-		width = min(width, screenWidth);
-		height = min(height, screenHeight);
+		width = std::min(width, screenWidth);
+		height = std::min(height, screenHeight);
 		// 修改窗口大小，并设置窗口在屏幕居中
 		::MoveWindow(_hWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
 	}

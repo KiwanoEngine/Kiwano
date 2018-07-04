@@ -2,7 +2,7 @@
 
 e2d::Delay::Delay(double duration)
 	: _delta(0)
-	, _delay(max(duration, 0))
+	, _delay(std::max(duration, 0.0))
 {
 }
 

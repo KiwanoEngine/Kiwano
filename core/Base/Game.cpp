@@ -62,13 +62,6 @@ bool e2d::Game::init()
 		throw SystemException(L"初始化 DirectInput 组件失败");
 	}
 
-	// 初始化路径
-	if (!Path::__init())
-	{
-		DestroyResources();
-		throw SystemException(L"必要系统路径访问失败");
-	}
-
 	// 初始化成功
 	_initialized = true;
 

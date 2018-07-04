@@ -92,8 +92,8 @@ void e2d::Sprite::crop(const Rect& cropRect)
 {
 	_image->crop(cropRect);
 	Node::setSize(
-		min(max(cropRect.size.width, 0), _image->getSourceWidth() - _image->getCropX()),
-		min(max(cropRect.size.height, 0), _image->getSourceHeight() - _image->getCropY())
+		std::min(std::max(cropRect.size.width, 0.0), _image->getSourceWidth() - _image->getCropX()),
+		std::min(std::max(cropRect.size.height, 0.0), _image->getSourceHeight() - _image->getCropY())
 	);
 }
 

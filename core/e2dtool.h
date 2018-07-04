@@ -477,13 +477,16 @@ public:
 	);
 
 	// 获取数据的默认保存路径
-	static String getDataSavePath();
+	static String getDataPath();
 
 	// 获取临时文件目录
 	static String getTempPath();
 
-	// 获取执行程序的绝对路径
-	static String getExecutableFilePath();
+	// 获取 LocalAppData 目录
+	static String getLocalAppDataPath();
+
+	// 获取当前程序的运行路径
+	static String getCurrentFilePath();
 
 	// 获取文件扩展名
 	static String getFileExtension(
@@ -507,8 +510,9 @@ public:
 	);
 
 private:
-	// 初始化
-	static bool __init();
+	static String _tempPath;
+	static String _dataPath;
+	static std::list<String> _paths;
 };
 
 }

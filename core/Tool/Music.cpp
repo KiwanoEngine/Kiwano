@@ -247,7 +247,7 @@ bool e2d::Music::play(int nLoopCount)
 		stop();
 	}
 
-	nLoopCount = min(nLoopCount, XAUDIO2_LOOP_INFINITE - 1);
+	nLoopCount = std::min(nLoopCount, XAUDIO2_LOOP_INFINITE - 1);
 	nLoopCount = (nLoopCount < 0) ? XAUDIO2_LOOP_INFINITE : nLoopCount;
 
 	// 提交 wave 样本数据

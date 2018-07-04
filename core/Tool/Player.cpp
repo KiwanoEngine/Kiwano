@@ -213,7 +213,7 @@ double e2d::Player::getVolume()
 
 void e2d::Player::setVolume(double volume)
 {
-	_volume = min(max(float(volume), -224), 224);
+	_volume = std::min(std::max(float(volume), -224.f), 224.f);
 	for (auto pair : _fileList)
 	{
 		pair.second->setVolume(_volume);

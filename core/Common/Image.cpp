@@ -81,10 +81,10 @@ void e2d::Image::crop(const Rect& cropRect)
 {
 	if (_bitmap)
 	{
-		_cropRect.origin.x = min(max(cropRect.origin.x, 0), this->getSourceWidth());
-		_cropRect.origin.y = min(max(cropRect.origin.y, 0), this->getSourceHeight());
-		_cropRect.size.width = min(max(cropRect.size.width, 0), this->getSourceWidth() - cropRect.origin.x);
-		_cropRect.size.height = min(max(cropRect.size.height, 0), this->getSourceHeight() - cropRect.origin.y);
+		_cropRect.origin.x = std::min(std::max(cropRect.origin.x, 0.0), this->getSourceWidth());
+		_cropRect.origin.y = std::min(std::max(cropRect.origin.y, 0.0), this->getSourceHeight());
+		_cropRect.size.width = std::min(std::max(cropRect.size.width, 0.0), this->getSourceWidth() - cropRect.origin.x);
+		_cropRect.size.height = std::min(std::max(cropRect.size.height, 0.0), this->getSourceHeight() - cropRect.origin.y);
 	}
 }
 

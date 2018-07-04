@@ -28,7 +28,7 @@ e2d::Animation::~Animation()
 
 void e2d::Animation::setInterval(double interval)
 {
-	_interval = max(interval, 0);
+	_interval = std::max(interval, 0.0);
 }
 
 void e2d::Animation::onDestroy()

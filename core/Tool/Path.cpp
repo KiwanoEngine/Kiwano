@@ -1,70 +1,45 @@
 #include "..\e2dtool.h"
 #include <algorithm>
-#include <list>
 #include <commdlg.h>
 
-#define DEFINE_KNOWN_FOLDER(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
-	EXTERN_C const GUID DECLSPEC_SELECTANY name \
-	= { l, w1, w2,{ b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }
 
-DEFINE_KNOWN_FOLDER(FOLDERID_LocalAppData, 0xF1B32785, 0x6FBA, 0x4FCF, 0x9D, 0x55, 0x7B, 0x8E, 0x7F, 0x15, 0x70, 0x91);
+extern "C" const GUID DECLSPEC_SELECTANY FOLDERID_LocalAppData = { 
+	0xF1B32785, 0x6FBA, 0x4FCF, { 0x9D, 0x55, 0x7B, 0x8E, 0x7F, 0x15, 0x70, 0x91 }
+};
 
 
-static e2d::String s_sLocalAppDataPath;
-static e2d::String s_sTempPath;
-static e2d::String s_sDataSavePath;
-static std::list<e2d::String> s_vPathList;
+e2d::String				e2d::Path::_tempPath;
+e2d::String				e2d::Path::_dataPath;
+std::list<e2d::String>	e2d::Path::_paths;
 
-bool e2d::Path::__init()
-{
-	// 获取 AppData\Local 文件夹的路径
-	typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
-
-	PWSTR pszPath = nullptr;
-	HMODULE hModule = LoadLibrary(L"shell32.dll");
-	pFunSHGetKnownFolderPath SHGetKnownFolderPath = (pFunSHGetKnownFolderPath)GetProcAddress(hModule, "SHGetKnownFolderPath");
-	HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &pszPath);
-
-	if (SUCCEEDED(hr))
-	{
-		s_sLocalAppDataPath = pszPath;
-		CoTaskMemFree(pszPath);
-	}
-	else
-	{
-		WARN("Get local AppData path failed!");
-		return false;
-	}
-
-	return true;
-}
 
 void e2d::Path::setGameFolderName(const String & name)
 {
 	if (name.isEmpty())
 		return;
 
-	// 获取数据的默认保存路径
-	if (!s_sLocalAppDataPath.isEmpty())
+	// 设置数据的默认保存路径
+	String localAppDataPath = Path::getLocalAppDataPath();
+	if (!localAppDataPath.isEmpty())
 	{
-		s_sDataSavePath = s_sLocalAppDataPath + L"\\Easy2DGameData\\" << name << L"\\";
+		_dataPath = localAppDataPath + L"\\Easy2DGameData\\" << name << L"\\";
 		
-		if (!Path::exists(s_sDataSavePath) && !Path::createFolder(s_sDataSavePath))
+		if (!Path::exists(_dataPath) && !Path::createFolder(_dataPath))
 		{
-			s_sDataSavePath = L"";
+			_dataPath = L"";
 		}
-		s_sDataSavePath << L"Data.ini";
+		_dataPath << L"Data.ini";
 	}
 
-	// 获取临时文件目录
+	// 设置临时文件保存路径
 	wchar_t path[_MAX_PATH];
 	if (0 != ::GetTempPath(_MAX_PATH, path))
 	{
-		s_sTempPath << path << L"\\Easy2DGameTemp\\" << name << L"\\";
+		_tempPath << path << L"\\Easy2DGameTemp\\" << name << L"\\";
 
-		if (!Path::exists(s_sTempPath) && !Path::createFolder(s_sTempPath))
+		if (!Path::exists(_tempPath) && !Path::createFolder(_tempPath))
 		{
-			s_sTempPath = L"";
+			_tempPath = L"";
 		}
 	}
 }
@@ -76,19 +51,42 @@ void e2d::Path::addSearchPath(String path)
 	{
 		path << L"\\";
 	}
-	auto iter = std::find(s_vPathList.cbegin(), s_vPathList.cend(), path);
-	if (iter == s_vPathList.cend())
+	auto iter = std::find(_paths.cbegin(), _paths.cend(), path);
+	if (iter == _paths.cend())
 	{
-		s_vPathList.push_front(path);
+		_paths.push_front(path);
 	}
 }
 
 e2d::String e2d::Path::getTempPath()
 {
-	return s_sTempPath;
+	return _tempPath;
 }
 
-e2d::String e2d::Path::getExecutableFilePath()
+e2d::String e2d::Path::getLocalAppDataPath()
+{
+	static String localAppDataPath;
+	if (localAppDataPath.isEmpty())
+	{
+		// 获取 AppData/Local 文件夹的路径
+		typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
+
+		PWSTR pszPath = nullptr;
+		HMODULE hModule = LoadLibrary(L"shell32.dll");
+		pFunSHGetKnownFolderPath SHGetKnownFolderPath = (pFunSHGetKnownFolderPath)GetProcAddress(hModule, "SHGetKnownFolderPath");
+		HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &pszPath);
+
+		if (SUCCEEDED(hr))
+		{
+			localAppDataPath = pszPath;
+			CoTaskMemFree(pszPath);
+		}
+	}
+
+	return localAppDataPath;
+}
+
+e2d::String e2d::Path::getCurrentFilePath()
 {
 	TCHAR szPath[_MAX_PATH] = { 0 };
 	if (::GetModuleFileName(nullptr, szPath, _MAX_PATH) != 0)
@@ -106,7 +104,7 @@ e2d::String e2d::Path::findFile(const String& path)
 	}
 	else
 	{
-		for (auto& resPath : s_vPathList)
+		for (auto& resPath : _paths)
 		{
 			if (Path::exists(resPath + path))
 			{
@@ -119,7 +117,7 @@ e2d::String e2d::Path::findFile(const String& path)
 
 e2d::String e2d::Path::extractResource(int resNameId, const String & resType, const String & destFileName)
 {
-	String destFilePath = s_sTempPath + destFileName;
+	String destFilePath = _tempPath + destFileName;
 	// 创建文件
 	HANDLE hFile = ::CreateFile((LPCWSTR)destFilePath, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -146,9 +144,9 @@ e2d::String e2d::Path::extractResource(int resNameId, const String & resType, co
 	}
 }
 
-e2d::String e2d::Path::getDataSavePath()
+e2d::String e2d::Path::getDataPath()
 {
-	return s_sDataSavePath;
+	return _dataPath;
 }
 
 e2d::String e2d::Path::getFileExtension(const String& filePath)

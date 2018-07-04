@@ -15,7 +15,7 @@ e2d::CircleCollider::CircleCollider(Point center, double radius)
 e2d::CircleCollider::CircleCollider(Node * node)
 	: _d2dCircle(nullptr)
 {
-	double minSide = min(node->getRealWidth(), node->getRealHeight());
+	double minSide = std::min(node->getRealWidth(), node->getRealHeight());
 	this->setCircle(
 		Point(
 			node->getRealWidth() / 2,
@@ -50,7 +50,7 @@ void e2d::CircleCollider::_resize()
 {
 	if (_parentNode && _enable)
 	{
-		double minSide = min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
+		double minSide = std::min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
 		this->setCircle(
 			Point(
 				_parentNode->getRealWidth() / 2,

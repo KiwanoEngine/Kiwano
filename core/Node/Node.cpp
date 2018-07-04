@@ -476,7 +476,7 @@ void e2d::Node::setOpacity(double opacity)
 	if (_realOpacity == opacity)
 		return;
 
-	_displayOpacity = _realOpacity = min(max(float(opacity), 0), 1);
+	_displayOpacity = _realOpacity = std::min(std::max(float(opacity), 0.f), 1.f);
 	// 更新节点透明度
 	_updateOpacity();
 }
@@ -496,8 +496,8 @@ void e2d::Node::setPivot(double pivotX, double pivotY)
 	if (_pivotX == pivotX && _pivotY == pivotY)
 		return;
 
-	_pivotX = min(max(float(pivotX), 0), 1);
-	_pivotY = min(max(float(pivotY), 0), 1);
+	_pivotX = std::min(std::max(float(pivotX), 0.f), 1.f);
+	_pivotY = std::min(std::max(float(pivotY), 0.f), 1.f);
 	_needTransform = true;
 }
 
@@ -913,8 +913,8 @@ void e2d::Node::setAutoUpdate(bool bAutoUpdate)
 
 void e2d::Node::setDefaultPiovt(double defaultPiovtX, double defaultPiovtY)
 {
-	s_fDefaultPiovtX = min(max(float(defaultPiovtX), 0), 1);
-	s_fDefaultPiovtY = min(max(float(defaultPiovtY), 0), 1);
+	s_fDefaultPiovtX = std::min(std::max(float(defaultPiovtX), 0.f), 1.f);
+	s_fDefaultPiovtY = std::min(std::max(float(defaultPiovtY), 0.f), 1.f);
 }
 
 void e2d::Node::setDefaultCollider(Collider::Type type)

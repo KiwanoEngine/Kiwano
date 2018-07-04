@@ -17,7 +17,7 @@ namespace e2d
 			, stopped(false)
 			, runTimes(0)
 			, totalTimes(updateTimes)
-			, delay(max(delay, 0))
+			, delay(std::max(delay, 0.0))
 			, lastTime(e2d::Time::getTotalTime())
 			, callback(func)
 			, name(name)
