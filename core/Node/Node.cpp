@@ -3,7 +3,6 @@
 #include "..\e2daction.h"
 #include <algorithm>
 
-static e2d::Collider::Type s_fDefaultColliderType = e2d::Collider::Type::None;
 
 e2d::Node::Node()
 	: _nOrder(0)
@@ -33,11 +32,13 @@ e2d::Node::Node()
 	, _positionFixed(false)
 	, _colliderType(Collider::Type::None)
 {
-	Point defPivot = Game::getInstance()->getConfig()->getNodeDefaultPivot();
+	auto config = Game::getInstance()->getConfig();
+	// 设置默认中心点位置
+	Point defPivot = config->getNodeDefaultPivot();
 	this->_pivotX = float(defPivot.x);
 	this->_pivotY = float(defPivot.y);
-
-	this->setColliderType(s_fDefaultColliderType);
+	// 设置默认碰撞体类型
+	this->setColliderType(config->getDefaultColliderType());
 }
 
 e2d::Node::~Node()
@@ -905,11 +906,6 @@ bool e2d::Node::intersects(Node * node) const
 void e2d::Node::setAutoUpdate(bool bAutoUpdate)
 {
 	_autoUpdate = bAutoUpdate;
-}
-
-void e2d::Node::setDefaultCollider(Collider::Type type)
-{
-	s_fDefaultColliderType = type;
 }
 
 void e2d::Node::onDestroy()

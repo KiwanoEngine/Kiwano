@@ -5,6 +5,8 @@ e2d::Config::Config()
 	: _gameName()
 	, _nodeDefPivot()
 	, _collisionEnabled(false)
+	, _colliderVisiable(false)
+	, _nodeDefColliderType(Collider::Type::None)
 {
 }
 
@@ -30,6 +32,16 @@ void e2d::Config::setNodeDefaultPivot(Point pivot)
 	);
 }
 
+void e2d::Config::setDefaultColliderType(Collider::Type type)
+{
+	_nodeDefColliderType = type;
+}
+
+void e2d::Config::setColliderVisiable(bool visiable)
+{
+	_colliderVisiable = visiable;
+}
+
 e2d::String e2d::Config::getGameName() const
 {
 	return _gameName;
@@ -43,4 +55,14 @@ bool e2d::Config::isCollisionEnabled() const
 e2d::Point e2d::Config::getNodeDefaultPivot() const
 {
 	return _nodeDefPivot;
+}
+
+e2d::Collider::Type e2d::Config::getDefaultColliderType() const
+{
+	return _nodeDefColliderType;
+}
+
+bool e2d::Config::isColliderVisiable() const
+{
+	return _colliderVisiable;
 }

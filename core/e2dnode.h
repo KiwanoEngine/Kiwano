@@ -377,11 +377,6 @@ public:
 	// 停止所有动作
 	virtual void stopAllActions();
 
-	// 设置节点的默认碰撞体类型（默认 None）
-	static void setDefaultCollider(
-		Collider::Type type
-	);
-
 	// 销毁对象
 	virtual void onDestroy() override;
 

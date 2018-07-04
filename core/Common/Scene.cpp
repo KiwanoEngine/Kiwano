@@ -4,7 +4,6 @@
 
 e2d::Scene::Scene()
 	: _autoUpdate(true)
-	, _colliderVisiable(false)
 	, _root(nullptr)
 {
 	_root = Create<Node>();
@@ -27,7 +26,7 @@ void e2d::Scene::_render()
 {
 	_root->_render();
 
-	if (_colliderVisiable)
+	if (Game::getInstance()->getConfig()->isColliderVisiable())
 	{
 		// »Ö¸´¾ØÕó×ª»»
 		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
@@ -88,11 +87,6 @@ const std::vector<e2d::Node*>& e2d::Scene::getAll() const
 e2d::Node * e2d::Scene::getRoot() const
 {
 	return _root;
-}
-
-void e2d::Scene::showCollider(bool visiable)
-{
-	_colliderVisiable = visiable;
 }
 
 void e2d::Scene::onDestroy()
