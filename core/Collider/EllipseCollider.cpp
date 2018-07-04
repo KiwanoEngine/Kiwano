@@ -2,18 +2,15 @@
 #include "..\e2dnode.h"
 
 e2d::EllipseCollider::EllipseCollider()
-	: _d2dEllipse(nullptr)
 {
 }
 
 e2d::EllipseCollider::EllipseCollider(Point center, double radiusX, double radiusY)
-	: _d2dEllipse(nullptr)
 {
 	this->setEllipse(center, radiusX, radiusY);
 }
 
 e2d::EllipseCollider::EllipseCollider(Node * node)
-	: _d2dEllipse(nullptr)
 {
 	this->setEllipse(
 		Point(
@@ -28,13 +25,13 @@ e2d::EllipseCollider::EllipseCollider(Node * node)
 
 e2d::EllipseCollider::~EllipseCollider()
 {
-	SafeRelease(_d2dEllipse);
 }
 
 void e2d::EllipseCollider::setEllipse(Point center, double radiusX, double radiusY)
 {
-	SafeRelease(_d2dEllipse);
+	SafeRelease(_geometry);
 
+	ID2D1EllipseGeometry* ellipse = nullptr;
 	Renderer::getFactory()->CreateEllipseGeometry(
 		D2D1::Ellipse(
 			D2D1::Point2F(
@@ -42,8 +39,9 @@ void e2d::EllipseCollider::setEllipse(Point center, double radiusX, double radiu
 				float(center.y)),
 			float(radiusX),
 			float(radiusY)),
-		&_d2dEllipse
+		&ellipse
 	);
+	_geometry = ellipse;
 }
 
 void e2d::EllipseCollider::_resize()
@@ -59,9 +57,4 @@ void e2d::EllipseCollider::_resize()
 			_parentNode->getHeight() / 2
 		);
 	}
-}
-
-ID2D1EllipseGeometry * e2d::EllipseCollider::getD2dGeometry() const
-{
-	return _d2dEllipse;
 }

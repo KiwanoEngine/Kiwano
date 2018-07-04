@@ -7,6 +7,7 @@ e2d::Collider::Collider()
 	, _color(Color::Red, 0.7)
 	, _parentNode(nullptr)
 	, _transformed(nullptr)
+	, _geometry(nullptr)
 	, _enabled(true)
 	, _autoResize(false)
 {
@@ -15,6 +16,7 @@ e2d::Collider::Collider()
 e2d::Collider::~Collider()
 {
 	SafeRelease(_transformed);
+	SafeRelease(_geometry);
 }
 
 e2d::Node * e2d::Collider::getParentNode() const
@@ -83,7 +85,7 @@ e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * pCollider) con
 
 void e2d::Collider::_transform()
 {
-	if (_parentNode && _enabled)
+	if (_parentNode && _enabled && _geometry)
 	{
 		if (_autoResize)
 		{
@@ -95,11 +97,15 @@ void e2d::Collider::_transform()
 
 		// 根据父节点转换几何图形
 		Renderer::getFactory()->CreateTransformedGeometry(
-			getD2dGeometry(),
+			_geometry,
 			_parentNode->_finalMatri,
 			&_transformed
 		);
 
 		ColliderManager::__updateCollider(this);
+	}
+	else
+	{
+		SafeRelease(_transformed);
 	}
 }

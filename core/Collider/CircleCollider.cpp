@@ -2,18 +2,15 @@
 #include "..\e2dnode.h"
 
 e2d::CircleCollider::CircleCollider()
-	: _d2dCircle(nullptr)
 {
 }
 
 e2d::CircleCollider::CircleCollider(Point center, double radius)
-	: _d2dCircle(nullptr)
 {
 	this->setCircle(center, radius);
 }
 
 e2d::CircleCollider::CircleCollider(Node * node)
-	: _d2dCircle(nullptr)
 {
 	double minSide = std::min(node->getRealWidth(), node->getRealHeight());
 	this->setCircle(
@@ -28,22 +25,26 @@ e2d::CircleCollider::CircleCollider(Node * node)
 
 e2d::CircleCollider::~CircleCollider()
 {
-	SafeRelease(_d2dCircle);
 }
 
 void e2d::CircleCollider::setCircle(Point center, double radius)
 {
-	SafeRelease(_d2dCircle);
+	SafeRelease(_geometry);
 
+	ID2D1EllipseGeometry* circle = nullptr;
 	Renderer::getFactory()->CreateEllipseGeometry(
 		D2D1::Ellipse(
 			D2D1::Point2F(
 				float(center.x), 
-				float(center.y)),
+				float(center.y)
+			),
 			float(radius),
-			float(radius)),
-			&_d2dCircle
-		);
+			float(radius)
+		),
+		&circle
+	);
+
+	_geometry = circle;
 }
 
 void e2d::CircleCollider::_resize()
@@ -59,9 +60,4 @@ void e2d::CircleCollider::_resize()
 			minSide / 2
 		);
 	}
-}
-
-ID2D1EllipseGeometry * e2d::CircleCollider::getD2dGeometry() const
-{
-	return _d2dCircle;
 }

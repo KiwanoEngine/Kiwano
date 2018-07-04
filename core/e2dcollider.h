@@ -186,9 +186,6 @@ public:
 		bool enabled
 	);
 
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1Geometry * getD2dGeometry() const = 0;
-
 protected:
 	// 转换碰撞体
 	virtual void _transform();
@@ -205,7 +202,8 @@ protected:
 	bool	_autoResize;
 	Color	_color;
 	Node *	_parentNode;
-	ID2D1TransformedGeometry * _transformed;
+	ID2D1Geometry* _geometry;
+	ID2D1TransformedGeometry* _transformed;
 };
 
 
@@ -237,15 +235,9 @@ public:
 		double bottom
 	);
 
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1RectangleGeometry * getD2dGeometry() const override;
-
 protected:
 	// 重设大小
 	virtual void _resize();
-
-protected:
-	ID2D1RectangleGeometry * _d2dRectangle;
 };
 
 
@@ -273,15 +265,9 @@ public:
 		double radius
 	);
 
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1EllipseGeometry * getD2dGeometry() const override;
-
 protected:
 	// 重设大小
 	virtual void _resize();
-
-protected:
-	ID2D1EllipseGeometry * _d2dCircle;
 };
 
 
@@ -311,15 +297,9 @@ public:
 		double radiusY
 	);
 
-	// 获取 ID2D1Geometry 对象
-	virtual ID2D1EllipseGeometry * getD2dGeometry() const override;
-
 protected:
 	// 重设大小
 	virtual void _resize();
-
-protected:
-	ID2D1EllipseGeometry * _d2dEllipse;
 };
 
 }
