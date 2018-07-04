@@ -468,6 +468,46 @@ private:
 };
 
 
+// 游戏配置
+class Config :
+	public Object
+{
+public:
+	Config();
+
+	virtual ~Config();
+
+	// 修改游戏名称
+	void setGameName(
+		const String& name
+	);
+
+	// 打开或关闭碰撞监听（默认关闭）
+	void setCollisionEnabled(
+		bool enabled
+	);
+
+	// 设置节点的默认中心点位置
+	void setNodeDefaultPivot(
+		Point pivot
+	);
+
+	// 获取游戏名称
+	String getGameName() const;
+
+	// 获取碰撞监听状态
+	bool isCollisionEnabled() const;
+
+	// 获取节点的默认中心点位置
+	Point getNodeDefaultPivot() const;
+
+protected:
+	String _gameName;
+	Point _nodeDefPivot;
+	bool _collisionEnabled;
+};
+
+
 // 图片
 class Image :
 	public Object

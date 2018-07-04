@@ -5,7 +5,6 @@
 typedef std::pair<UINT, UINT> HashPair;
 
 static std::vector<e2d::Listener*> s_vListeners;	// ¼àÌýÆ÷ÈÝÆ÷
-static bool s_bCollisionEnable = false;				// Åö×²´¥·¢×´Ì¬
 static e2d::Node * s_pActiveNode = nullptr;			// Ö÷¶¯Åö×²Ìå
 static e2d::Node * s_pPassiveNode = nullptr;		// ±»¶¯Åö×²Ìå
 static std::set<HashPair> s_sCollisionList;			// Åö×²Ó³Éä
@@ -89,17 +88,6 @@ e2d::Node* e2d::Collision::isCausedBy(const String& name)
 	if (s_pPassiveNode->getName() == name)
 		return s_pPassiveNode;
 	return nullptr;
-}
-
-
-void e2d::Collision::setEnable(bool enable)
-{
-	s_bCollisionEnable = enable;
-}
-
-bool e2d::Collision::isEnable()
-{
-	return s_bCollisionEnable;
 }
 
 void e2d::Collision::__update(Node * active, Node * passive)

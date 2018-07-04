@@ -70,14 +70,6 @@ public:
 		Node * node
 	);
 
-	// 开启或关闭物体碰撞监听功能（默认关闭）
-	static void setEnable(
-		bool enable
-	);
-
-	// 是否打开了物体碰撞监听
-	static bool isEnable();
-
 	// 添加碰撞监听
 	static Listener * addListener(
 		const Function& func,		/* 监听到碰撞时的执行函数 */
@@ -175,8 +167,8 @@ public:
 	Color getColor() const;
 
 	// 启用或关闭该碰撞体
-	virtual void setEnable(
-		bool enable
+	virtual void setEnabled(
+		bool enabled
 	);
 
 	// 设置碰撞体的可见性
@@ -191,7 +183,7 @@ public:
 
 	// 设置大小跟随
 	void setAutoResize(
-		bool enable
+		bool enabled
 	);
 
 	// 获取 ID2D1Geometry 对象
@@ -208,7 +200,7 @@ protected:
 	virtual void _render();
 
 protected:
-	bool	_enable;
+	bool	_enabled;
 	bool	_visiable;
 	bool	_autoResize;
 	Color	_color;

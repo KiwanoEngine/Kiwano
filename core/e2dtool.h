@@ -454,11 +454,6 @@ class Path
 	friend class Game;
 
 public:
-	// 设置游戏数据和临时文件保存路径名称
-	static void setGameFolderName(
-		const String& name
-	);
-
 	// 添加资源搜索路径
 	static void addSearchPath(
 		String path

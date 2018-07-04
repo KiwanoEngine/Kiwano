@@ -3,9 +3,6 @@
 #include "..\e2daction.h"
 #include <algorithm>
 
-// 默认中心点位置
-static float s_fDefaultPiovtX = 0;
-static float s_fDefaultPiovtY = 0;
 static e2d::Collider::Type s_fDefaultColliderType = e2d::Collider::Type::None;
 
 e2d::Node::Node()
@@ -19,10 +16,10 @@ e2d::Node::Node()
 	, _rotation(0)
 	, _skewAngleX(0)
 	, _skewAngleY(0)
-	, _displayOpacity(1.0f)
-	, _realOpacity(1.0f)
-	, _pivotX(s_fDefaultPiovtX)
-	, _pivotY(s_fDefaultPiovtY)
+	, _displayOpacity(1.f)
+	, _realOpacity(1.f)
+	, _pivotX(0.f)
+	, _pivotY(0.f)
 	, _initialMatri(D2D1::Matrix3x2F::Identity())
 	, _finalMatri(D2D1::Matrix3x2F::Identity())
 	, _visiable(true)
@@ -35,6 +32,10 @@ e2d::Node::Node()
 	, _autoUpdate(true)
 	, _positionFixed(false)
 {
+	Point defPivot = Game::getInstance()->getConfig()->getNodeDefaultPivot();
+	_pivotX = float(defPivot.x);
+	_pivotY = float(defPivot.y);
+
 	if (s_fDefaultColliderType != Collider::Type::None)
 	{
 		this->setCollider(s_fDefaultColliderType);
@@ -909,12 +910,6 @@ bool e2d::Node::intersects(Node * node) const
 void e2d::Node::setAutoUpdate(bool bAutoUpdate)
 {
 	_autoUpdate = bAutoUpdate;
-}
-
-void e2d::Node::setDefaultPiovt(double defaultPiovtX, double defaultPiovtY)
-{
-	s_fDefaultPiovtX = std::min(std::max(float(defaultPiovtX), 0.f), 1.f);
-	s_fDefaultPiovtY = std::min(std::max(float(defaultPiovtY), 0.f), 1.f);
 }
 
 void e2d::Node::setDefaultCollider(Collider::Type type)

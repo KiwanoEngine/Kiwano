@@ -40,7 +40,7 @@ void e2d::RectCollider::setRect(double left, double top, double right, double bo
 
 void e2d::RectCollider::_resize()
 {
-	if (_parentNode && _enable)
+	if (_parentNode && _enabled)
 	{
 		this->setRect(0, 0, _parentNode->getRealWidth(), _parentNode->getRealHeight());
 	}

@@ -9,13 +9,15 @@ e2d::Game * e2d::Game::_instance = nullptr;
 e2d::Game::Game()
 	: _ended(false)
 	, _paused(false)
-	, _initialized(false)
+	, _config(nullptr)
 {
 	CoInitialize(nullptr);
 }
 
 e2d::Game::~Game()
 {
+	GC::release(_config);
+
 	CoUninitialize();
 }
 
@@ -37,16 +39,10 @@ void e2d::Game::destroyInstance()
 
 void e2d::Game::start(bool cleanup)
 {
-	if (!_initialized)
-	{
-		throw Exception(L"开始游戏前未进行初始化");
-	}
-
 	auto gc = GC::getInstance();
 	auto input = Input::getInstance();
 	auto window = Window::getInstance();
 	auto renderer = Renderer::getInstance();
-	
 
 	// 初始化场景管理器
 	SceneManager::__init();
@@ -101,7 +97,7 @@ void e2d::Game::pause()
 
 void e2d::Game::resume()
 {
-	if (_initialized && _paused)
+	if (_paused)
 	{
 		Game::reset();
 	}
@@ -110,7 +106,7 @@ void e2d::Game::resume()
 
 void e2d::Game::reset()
 {
-	if (_initialized && !_ended)
+	if (!_ended)
 	{
 		Time::__reset();
 		ActionManager::__resetAll();
@@ -121,6 +117,23 @@ void e2d::Game::reset()
 bool e2d::Game::isPaused()
 {
 	return _paused;
+}
+
+void e2d::Game::setConfig(Config * config)
+{
+	GC::release(_config);
+	_config = config;
+	GC::retain(_config);
+}
+
+e2d::Config * e2d::Game::getConfig()
+{
+	if (!_config)
+	{
+		_config = Create<Config>();
+		GC::retain(_config);
+	}
+	return _config;
 }
 
 void e2d::Game::quit()

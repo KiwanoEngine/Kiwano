@@ -156,7 +156,7 @@ HWND e2d::Window::__create()
 	if (SUCCEEDED(hr))
 	{
 		// 禁用输入法
-		this->setTypewritingEnable(false);
+		this->setTypewritingEnabled(false);
 		// 禁用控制台关闭按钮
 		HWND consoleHWnd = ::GetConsoleWindow();
 		if (consoleHWnd)
@@ -336,11 +336,11 @@ void e2d::Window::showConsole(bool show)
 	}
 }
 
-void e2d::Window::setTypewritingEnable(bool enable)
+void e2d::Window::setTypewritingEnabled(bool enabled)
 {
 	static HIMC hImc = nullptr;
 
-	if (enable)
+	if (enabled)
 	{
 		if (hImc != nullptr)
 		{

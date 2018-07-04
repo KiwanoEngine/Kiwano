@@ -243,6 +243,9 @@
     <ClCompile Include="..\..\core\Custom\SystemException.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Common\Config.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />

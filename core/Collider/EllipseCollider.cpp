@@ -48,7 +48,7 @@ void e2d::EllipseCollider::setEllipse(Point center, double radiusX, double radiu
 
 void e2d::EllipseCollider::_resize()
 {
-	if (_parentNode && _enable)
+	if (_parentNode && _enabled)
 	{
 		this->setEllipse(
 			Point(

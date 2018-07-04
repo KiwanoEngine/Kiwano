@@ -43,6 +43,14 @@ public:
 	// 游戏是否暂停
 	bool isPaused();
 
+	// 修改游戏配置
+	void setConfig(
+		Config * config
+	);
+
+	// 获取游戏配置
+	Config * getConfig();
+
 private:
 	Game();
 
@@ -53,7 +61,8 @@ private:
 private:
 	bool	_ended;
 	bool	_paused;
-	bool	_initialized;
+	Config*	_config;
+
 	static Game * _instance;
 };
 
@@ -128,8 +137,8 @@ public:
 	);
 
 	// 是否允许响应输入法
-	void setTypewritingEnable(
-		bool enable
+	void setTypewritingEnabled(
+		bool enabled
 	);
 
 	// 弹出提示窗口

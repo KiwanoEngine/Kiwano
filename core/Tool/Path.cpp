@@ -13,37 +13,6 @@ e2d::String				e2d::Path::_dataPath;
 std::list<e2d::String>	e2d::Path::_paths;
 
 
-void e2d::Path::setGameFolderName(const String & name)
-{
-	if (name.isEmpty())
-		return;
-
-	// 设置数据的默认保存路径
-	String localAppDataPath = Path::getLocalAppDataPath();
-	if (!localAppDataPath.isEmpty())
-	{
-		_dataPath = localAppDataPath + L"\\Easy2DGameData\\" << name << L"\\";
-		
-		if (!Path::exists(_dataPath) && !Path::createFolder(_dataPath))
-		{
-			_dataPath = L"";
-		}
-		_dataPath << L"Data.ini";
-	}
-
-	// 设置临时文件保存路径
-	wchar_t path[_MAX_PATH];
-	if (0 != ::GetTempPath(_MAX_PATH, path))
-	{
-		_tempPath << path << L"\\Easy2DGameTemp\\" << name << L"\\";
-
-		if (!Path::exists(_tempPath) && !Path::createFolder(_tempPath))
-		{
-			_tempPath = L"";
-		}
-	}
-}
-
 void e2d::Path::addSearchPath(String path)
 {
 	path.replace(L"/", L"\\");
@@ -58,8 +27,45 @@ void e2d::Path::addSearchPath(String path)
 	}
 }
 
+e2d::String e2d::Path::getDataPath()
+{
+	if (_dataPath.isEmpty())
+	{
+		// 设置数据的保存路径
+		String localAppDataPath = Path::getLocalAppDataPath();
+		String gameName = Game::getInstance()->getConfig()->getGameName();
+		if (!localAppDataPath.isEmpty() && !gameName.isEmpty())
+		{
+			_dataPath = localAppDataPath + L"\\Easy2DGameData\\" << gameName << L"\\";
+
+			if (!Path::exists(_dataPath) && !Path::createFolder(_dataPath))
+			{
+				_dataPath = L"";
+			}
+		}
+		_dataPath << L"Data.ini";
+	}
+	return _dataPath;
+}
+
 e2d::String e2d::Path::getTempPath()
 {
+	if (_tempPath.isEmpty())
+	{
+		// 设置临时文件保存路径
+		wchar_t path[_MAX_PATH];
+		String gameName = Game::getInstance()->getConfig()->getGameName();
+
+		if (0 != ::GetTempPath(_MAX_PATH, path) && !gameName.isEmpty())
+		{
+			_tempPath << path << L"\\Easy2DGameTemp\\" << gameName << L"\\";
+
+			if (!Path::exists(_tempPath) && !Path::createFolder(_tempPath))
+			{
+				_tempPath = L"";
+			}
+		}
+	}
 	return _tempPath;
 }
 
@@ -142,11 +148,6 @@ e2d::String e2d::Path::extractResource(int resNameId, const String & resType, co
 		::DeleteFile((LPCWSTR)destFilePath);
 		return std::move(String());
 	}
-}
-
-e2d::String e2d::Path::getDataPath()
-{
-	return _dataPath;
 }
 
 e2d::String e2d::Path::getFileExtension(const String& filePath)

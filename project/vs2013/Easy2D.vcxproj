@@ -208,6 +208,7 @@
     <ClCompile Include="..\..\core\Collider\EllipseCollider.cpp" />
     <ClCompile Include="..\..\core\Collider\RectCollider.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
+    <ClCompile Include="..\..\core\Common\Config.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />
     <ClCompile Include="..\..\core\Common\Function.cpp" />
     <ClCompile Include="..\..\core\Common\Image.cpp" />

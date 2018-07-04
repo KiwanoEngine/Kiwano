@@ -7,7 +7,7 @@
 e2d::Button::Button()
 	: _func(nullptr)
 	, _state(ButtonState::Normal)
-	, _enable(true)
+	, _enabled(true)
 	, _isSelected(false)
 	, _normal(nullptr)
 	, _mouseover(nullptr)
@@ -19,7 +19,7 @@ e2d::Button::Button()
 e2d::Button::Button(Node * normal, const Function& func)
 	: _func(nullptr)
 	, _state(ButtonState::Normal)
-	, _enable(true)
+	, _enabled(true)
 	, _isSelected(false)
 	, _normal(nullptr)
 	, _mouseover(nullptr)
@@ -33,7 +33,7 @@ e2d::Button::Button(Node * normal, const Function& func)
 e2d::Button::Button(Node * normal, Node * selected, const Function& func)
 	: _func(nullptr)
 	, _state(ButtonState::Normal)
-	, _enable(true)
+	, _enabled(true)
 	, _isSelected(false)
 	, _normal(nullptr)
 	, _mouseover(nullptr)
@@ -48,7 +48,7 @@ e2d::Button::Button(Node * normal, Node * selected, const Function& func)
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Function& func)
 	: _func(nullptr)
 	, _state(ButtonState::Normal)
-	, _enable(true)
+	, _enabled(true)
 	, _isSelected(false)
 	, _normal(nullptr)
 	, _mouseover(nullptr)
@@ -64,7 +64,7 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Func
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Function& func)
 	: _func(nullptr)
 	, _state(ButtonState::Normal)
-	, _enable(true)
+	, _enabled(true)
 	, _isSelected(false)
 	, _normal(nullptr)
 	, _mouseover(nullptr)
@@ -80,7 +80,7 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * dis
 
 bool e2d::Button::isEnable() const
 {
-	return _enable;
+	return _enabled;
 }
 
 void e2d::Button::setNormal(Node * normal)
@@ -161,11 +161,11 @@ void e2d::Button::setDisabled(Node * disabled)
 	}
 }
 
-void e2d::Button::setEnable(bool enable)
+void e2d::Button::setEnabled(bool enabled)
 {
-	if (_enable != enable)
+	if (_enabled != enabled)
 	{
-		_enable = enable;
+		_enabled = enabled;
 		_updateVisiable();
 	}
 }
@@ -183,7 +183,7 @@ void e2d::Button::_fixedUpdate()
 	auto input = Input::getInstance();
 	auto window = Window::getInstance();
 
-	if (_enable && _visiable && _normal)
+	if (_enabled && _visiable && _normal)
 	{
 		if (input->isRelease(Input::Mouse::Left))
 		{
@@ -226,7 +226,7 @@ void e2d::Button::_fixedUpdate()
 		_setState(ButtonState::Normal);
 	}
 
-	if (_visiable && !_enable && _normal && _normal->containsPoint(input->getMousePos()))
+	if (_visiable && !_enabled && _normal && _normal->containsPoint(input->getMousePos()))
 	{
 		window->setCursor(Window::Cursor::No);
 	}
@@ -248,7 +248,7 @@ void e2d::Button::_updateVisiable()
 	SAFE_SET(_selected, setVisiable, false);
 	SAFE_SET(_disabled, setVisiable, false);
 
-	if (_enable)
+	if (_enabled)
 	{
 		if (_state == ButtonState::Selected && _selected)
 		{

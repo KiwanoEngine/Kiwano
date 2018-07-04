@@ -385,13 +385,7 @@ public:
 	// 停止所有动作
 	virtual void stopAllActions();
 
-	// 修改节点的默认中心点位置
-	static void setDefaultPiovt(
-		double defaultPiovtX,
-		double defaultPiovtY
-	);
-
-	// 设置节点的默认碰撞体类型（默认无）
+	// 设置节点的默认碰撞体类型（默认 None）
 	static void setDefaultCollider(
 		Collider::Type type
 	);
@@ -775,8 +769,8 @@ public:
 	bool isEnable() const;
 
 	// 设置按钮启用或禁用
-	void setEnable(
-		bool enable
+	void setEnabled(
+		bool enabled
 	);
 
 	// 设置一般情况下显示的按钮
@@ -825,7 +819,7 @@ protected:
 	Node *		_mouseover;
 	Node *		_selected;
 	Node *		_disabled;
-	bool		_enable;
+	bool		_enabled;
 	bool		_isSelected;
 	ButtonState	_state;
 	Function	_func;
@@ -955,8 +949,8 @@ public:
 	size_t getButtonCount() const;
 
 	// 设置菜单启用或禁用
-	void setEnable(
-		bool enable
+	void setEnabled(
+		bool enabled
 	);
 
 	// 添加按钮
@@ -973,7 +967,7 @@ public:
 	const std::vector<Button*>& getAllButtons() const;
 
 protected:
-	bool _enable;
+	bool _enabled;
 	std::vector<Button*> _buttons;
 };
 

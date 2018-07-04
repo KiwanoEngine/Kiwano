@@ -7,7 +7,7 @@ e2d::Collider::Collider()
 	, _color(Color::Red, 0.7)
 	, _parentNode(nullptr)
 	, _transformed(nullptr)
-	, _enable(true)
+	, _enabled(true)
 	, _autoResize(false)
 {
 }
@@ -27,9 +27,9 @@ e2d::Color e2d::Collider::getColor() const
 	return _color;
 }
 
-void e2d::Collider::setEnable(bool enable)
+void e2d::Collider::setEnabled(bool enabled)
 {
-	_enable = enable;
+	_enabled = enabled;
 }
 
 void e2d::Collider::setVisiable(bool bVisiable)
@@ -42,14 +42,14 @@ void e2d::Collider::setColor(Color color)
 	_color = color;
 }
 
-void e2d::Collider::setAutoResize(bool enable)
+void e2d::Collider::setAutoResize(bool enabled)
 {
-	_autoResize = enable;
+	_autoResize = enabled;
 }
 
 void e2d::Collider::_render()
 {
-	if (_transformed && _enable)
+	if (_transformed && _enabled)
 	{
 		auto renderer = Renderer::getInstance();
 		// »ñÈ¡´¿É«»­Ë¢
@@ -65,7 +65,7 @@ e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * pCollider) con
 {
 	if (_transformed && pCollider->_transformed)
 	{
-		if (_enable && pCollider->_enable)
+		if (_enabled && pCollider->_enabled)
 		{
 			D2D1_GEOMETRY_RELATION relation;
 
@@ -83,7 +83,7 @@ e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * pCollider) con
 
 void e2d::Collider::_transform()
 {
-	if (_parentNode && _enable)
+	if (_parentNode && _enabled)
 	{
 		if (_autoResize)
 		{

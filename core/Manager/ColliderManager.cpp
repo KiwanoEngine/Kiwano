@@ -9,8 +9,8 @@ static std::vector<e2d::Collider*> s_vColliders;
 
 void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 {
-	// ÅÐ¶ÏÅö×²´¥·¢ÊÇ·ñ´ò¿ª
-	if (!Collision::isEnable())
+	// ÅÐ¶ÏÅö×²¼àÌýÊÇ·ñ´ò¿ª
+	if (!Game::getInstance()->getConfig()->isCollisionEnabled())
 		return;
 
 	Node* pActiveNode = pActiveCollider->_parentNode;
