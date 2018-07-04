@@ -559,7 +559,7 @@ void e2d::Node::setColliderType(Collider::Type type)
 		default:
 		{
 			// 删除碰撞体
-			ColliderManager::__removeCollider(_collider);
+			ColliderManager::__remove(_collider);
 			_collider = nullptr;
 		}
 		break;
@@ -577,7 +577,7 @@ void e2d::Node::setColliderType(Collider::Type type)
 			this->_collider->_parentNode = this;
 			this->_collider->_recreate(type);
 			// 添加新的碰撞体
-			ColliderManager::__addCollider(this->_collider);
+			ColliderManager::__add(this->_collider);
 		}
 		break;
 
@@ -766,12 +766,12 @@ void e2d::Node::clearAllChildren()
 
 void e2d::Node::runAction(Action * action)
 {
-	ActionManager::start(action, this, false);
+	ActionManager::getInstance()->start(action, this, false);
 }
 
 void e2d::Node::resumeAction(const String& name)
 {
-	auto& actions = ActionManager::get(name);
+	auto& actions = ActionManager::getInstance()->get(name);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -783,7 +783,7 @@ void e2d::Node::resumeAction(const String& name)
 
 void e2d::Node::pauseAction(const String& name)
 {
-	auto& actions = ActionManager::get(name);
+	auto& actions = ActionManager::getInstance()->get(name);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -795,7 +795,7 @@ void e2d::Node::pauseAction(const String& name)
 
 void e2d::Node::stopAction(const String& name)
 {
-	auto& actions = ActionManager::get(name);
+	auto& actions = ActionManager::getInstance()->get(name);
 	for (auto action : actions)
 	{
 		if (action->getTarget() == this)
@@ -910,8 +910,8 @@ void e2d::Node::setAutoUpdate(bool bAutoUpdate)
 
 void e2d::Node::onDestroy()
 {
-	ActionManager::__clearAllBindedWith(this);
-	ColliderManager::__removeCollider(_collider);
+	ActionManager::getInstance()->clearAllBindedWith(this);
+	ColliderManager::__remove(_collider);
 	for (auto child : _children)
 	{
 		GC::release(child);
@@ -920,17 +920,17 @@ void e2d::Node::onDestroy()
 
 void e2d::Node::resumeAllActions()
 {
-	ActionManager::__resumeAllBindedWith(this);
+	ActionManager::getInstance()->resumeAllBindedWith(this);
 }
 
 void e2d::Node::pauseAllActions()
 {
-	ActionManager::__pauseAllBindedWith(this);
+	ActionManager::getInstance()->pauseAllBindedWith(this);
 }
 
 void e2d::Node::stopAllActions()
 {
-	ActionManager::__stopAllBindedWith(this);
+	ActionManager::getInstance()->stopAllBindedWith(this);
 }
 
 void e2d::Node::setVisiable(bool value)

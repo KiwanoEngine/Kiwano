@@ -66,88 +66,102 @@ private:
 class ActionManager
 {
 	friend class Game;
-	friend class Node;
 	friend class Action;
 
 public:
+	// 获取动作管理器实例
+	static ActionManager * getInstance();
+
+	// 销毁实例
+	static void destroyInstance();
+
+	// 获取所有名称相同的动作
+	std::vector<Action *> get(
+		const String& name
+	);
+
+	// 获取所有动作
+	const std::vector<Action*>& getAll();
+
 	// 执行动作
-	static void start(
+	void start(
 		Action * action,
 		Node * target,
 		bool paused
 	);
 
 	// 继续名称相同的所有动作
-	static void resume(
+	void resume(
 		const String& name
 	);
 
 	// 暂停名称相同的所有动作
-	static void pause(
+	void pause(
 		const String& name
 	);
 
 	// 停止名称相同的所有动作
-	static void stop(
+	void stop(
 		const String& name
 	);
 
 	// 继续所有动作
-	static void resumeAll();
+	void resumeAll();
 
 	// 暂停所有动作
-	static void pauseAll();
+	void pauseAll();
 
 	// 停止所有动作
-	static void stopAll();
-
-	// 获取所有名称相同的动作
-	static std::vector<Action *> get(
-		const String& name
-	);
-
-	// 获取所有动作
-	static const std::vector<Action*>& getAll();
-
-private:
-	// 更新动作状态
-	static void __update();
-
-	// 添加动作
-	static void __add(
-		Action * action
-	);
-
-	// 删除动作
-	static void __remove(
-		Action * action
-	);
+	void stopAll();
 
 	// 继续绑定在节点上的所有动作
-	static void __resumeAllBindedWith(
+	void resumeAllBindedWith(
 		Node * target
 	);
 
 	// 暂停绑定在节点上的所有动作
-	static void __pauseAllBindedWith(
+	void pauseAllBindedWith(
 		Node * target
 	);
 
 	// 停止绑定在节点上的所有动作
-	static void __stopAllBindedWith(
+	void stopAllBindedWith(
 		Node * target
 	);
 
 	// 清空绑定在节点上的所有动作
-	static void __clearAllBindedWith(
+	void clearAllBindedWith(
 		Node * target
 	);
 
-	// 重置所有动作状态
-	static void __resetAll();
+private:
+	ActionManager();
 
-	// 回收资源
-	static void __uninit();
+	~ActionManager();
+
+	E2D_DISABLE_COPY(ActionManager);
+
+	// 更新动作状态
+	void __update();
+
+	// 添加动作
+	void __add(
+		Action * action
+	);
+
+	// 删除动作
+	void __remove(
+		Action * action
+	);
+
+	// 重置所有动作状态
+	void __resetAll();
+
+private:
+	std::vector<Action*> _actions;
+	std::vector<Action*> _runningActions;
+
+	static ActionManager * _instance;
 };
 
 
@@ -164,12 +178,12 @@ private:
 	);
 
 	// 添加碰撞体
-	static void __addCollider(
+	static void __add(
 		Collider * pCollider
 	);
 
 	// 删除已绑定的碰撞体
-	static void __removeCollider(
+	static void __remove(
 		Collider * pCollider
 	);
 };

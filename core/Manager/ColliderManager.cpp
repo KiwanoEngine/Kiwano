@@ -50,7 +50,7 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 	}
 }
 
-void e2d::ColliderManager::__addCollider(Collider * pCollider)
+void e2d::ColliderManager::__add(Collider * pCollider)
 {
 	if (pCollider)
 	{
@@ -59,7 +59,7 @@ void e2d::ColliderManager::__addCollider(Collider * pCollider)
 	}
 }
 
-void e2d::ColliderManager::__removeCollider(Collider * pCollider)
+void e2d::ColliderManager::__remove(Collider * pCollider)
 {
 	if (pCollider)
 	{

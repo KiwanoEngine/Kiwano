@@ -8,12 +8,12 @@ e2d::Action::Action()
 	, _target(nullptr)
 	, _last(0)
 {
-	ActionManager::__add(this);
+	ActionManager::getInstance()->__add(this);
 }
 
 e2d::Action::~Action()
 {
-	ActionManager::__remove(this);
+	ActionManager::getInstance()->__remove(this);
 }
 
 bool e2d::Action::isRunning()

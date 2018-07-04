@@ -43,6 +43,7 @@ void e2d::Game::start(bool cleanup)
 	auto input = Input::getInstance();
 	auto window = Window::getInstance();
 	auto renderer = Renderer::getInstance();
+	auto actionManager = ActionManager::getInstance();
 
 	// 初始化场景管理器
 	SceneManager::__init();
@@ -69,7 +70,7 @@ void e2d::Game::start(bool cleanup)
 		{
 			input->__update();			// 获取用户输入
 			Timer::__update();			// 更新定时器
-			ActionManager::__update();	// 更新动作管理器
+			actionManager->__update();	// 更新动作管理器
 			SceneManager::__update();	// 更新场景内容
 			renderer->__render();		// 渲染游戏画面
 
@@ -109,7 +110,7 @@ void e2d::Game::reset()
 	if (!_ended)
 	{
 		Time::__reset();
-		ActionManager::__resetAll();
+		ActionManager::getInstance()->__resetAll();
 		Timer::__resetAll();
 	}
 }
@@ -149,8 +150,6 @@ void e2d::Game::cleanup()
 	Input::__clearListeners();
 	// 删除碰撞监听器
 	Collision::__clearListeners();
-	// 删除动作
-	ActionManager::__uninit();
 	// 清空图片缓存
 	Image::clearCache();
 	// 清空定时器

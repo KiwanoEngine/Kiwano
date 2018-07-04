@@ -1,5 +1,6 @@
 #include "..\e2dbase.h"
 #include "..\e2dtool.h"
+#include "..\e2dmanager.h"
 
 // GC 机制，用于自动销毁单例
 e2d::GC e2d::GC::_instance;
@@ -12,6 +13,7 @@ e2d::GC::~GC()
 	Input::destroyInstance();
 	Window::destroyInstance();
 	Player::destroyInstance();
+	ActionManager::destroyInstance();
 }
 
 
