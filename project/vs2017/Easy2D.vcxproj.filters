@@ -99,9 +99,6 @@
     <ClCompile Include="..\..\core\Tool\Path.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Collider\Collider.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\ColliderManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -219,15 +216,6 @@
     <ClCompile Include="..\..\core\Transition\MoveTransition.cpp">
       <Filter>Transition</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Collider\CircleCollider.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Collider\EllipseCollider.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Collider\RectCollider.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Action\FiniteTimeAction.cpp">
       <Filter>Action</Filter>
     </ClCompile>
@@ -244,6 +232,9 @@
       <Filter>Custom</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Config.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\Collider.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>

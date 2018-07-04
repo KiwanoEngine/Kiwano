@@ -122,20 +122,11 @@
     <ClCompile Include="..\..\core\Base\Window.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Collider\CircleCollider.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Collider\Collider.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Collider\Collision.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Collider\EllipseCollider.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Collider\RectCollider.cpp">
-      <Filter>Collider</Filter>
+    <ClCompile Include="..\..\core\Common\Collider.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Color.cpp">
       <Filter>Common</Filter>

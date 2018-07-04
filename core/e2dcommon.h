@@ -697,6 +697,95 @@ protected:
 };
 
 
+class ColliderManager;
+
+// 碰撞体
+class Collider :
+	public Object
+{
+	friend class Node;
+	friend class ColliderManager;
+
+public:
+	// 碰撞体类别
+	enum class Type
+	{
+		None,		/* 无 */
+		Rect,		/* 矩形 */
+		Circle,		/* 圆形 */
+		Ellipse		/* 椭圆形 */
+	};
+
+	// 碰撞体交集关系
+	enum class Relation : int
+	{
+		Unknown = 0,		/* 关系不确定 */
+		Disjoin = 1,		/* 没有交集 */
+		IsContained = 2,	/* 完全被包含 */
+		Contains = 3,		/* 完全包含 */
+		Overlap = 4			/* 部分重叠 */
+	};
+
+public:
+	Collider();
+
+	virtual ~Collider();
+
+	// 启用或关闭该碰撞体
+	virtual void setEnabled(
+		bool enabled
+	);
+
+	// 设置碰撞体的可见性
+	void setVisiable(
+		bool bVisiable
+	);
+
+	// 设置绘制颜色
+	void setColor(
+		Color color
+	);
+
+	// 判断两碰撞体的交集关系
+	virtual Relation getRelationWith(
+		Collider * pCollider
+	) const;
+
+	// 获取父节点
+	Node * getParentNode() const;
+
+	// 获取绘制颜色
+	Color getColor() const;
+
+	// 获取 ID2D1Geometry* 对象
+	ID2D1Geometry* getGeometry() const;
+
+	// 获取 ID2D1TransformedGeometry* 对象
+	ID2D1TransformedGeometry* getTransformedGeometry() const;
+
+protected:
+	// 重新生成
+	void _recreate(
+		Collider::Type type
+	);
+
+	// 二维变换
+	void _transform();
+
+	// 渲染碰撞体
+	void _render();
+
+protected:
+	bool	_enabled;
+	bool	_visiable;
+	Color	_color;
+	Node *	_parentNode;
+	Type	_type;
+	ID2D1Geometry* _geometry;
+	ID2D1TransformedGeometry* _transformed;
+};
+
+
 #if _MSC_VER > 1700
 
 // 创建可自动回收内存的对象

@@ -54,11 +54,6 @@ void e2d::ColliderManager::__addCollider(Collider * pCollider)
 {
 	if (pCollider)
 	{
-		if (pCollider->_parentNode)
-		{
-			WARN("ColliderManager::__add Failed! The shape is already added.");
-			return;
-		}
 		pCollider->retain();
 		s_vColliders.push_back(pCollider);
 	}

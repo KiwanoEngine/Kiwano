@@ -221,11 +221,8 @@
     <ClCompile Include="..\..\core\Base\Renderer.cpp" />
     <ClCompile Include="..\..\core\Base\Time.cpp" />
     <ClCompile Include="..\..\core\Base\Window.cpp" />
-    <ClCompile Include="..\..\core\Collider\Collider.cpp" />
-    <ClCompile Include="..\..\core\Collider\CircleCollider.cpp" />
-    <ClCompile Include="..\..\core\Collider\EllipseCollider.cpp" />
-    <ClCompile Include="..\..\core\Collider\RectCollider.cpp" />
     <ClCompile Include="..\..\core\Collider\Collision.cpp" />
+    <ClCompile Include="..\..\core\Common\Collider.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
     <ClCompile Include="..\..\core\Common\Config.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />

@@ -1,6 +1,5 @@
 #pragma once
 #include "e2dbase.h"
-#include "e2dcollider.h"
 
 namespace e2d 
 {
@@ -8,7 +7,6 @@ namespace e2d
 
 class Action;
 class Transition;
-class ColliderManager;
 
 class Node :
 	public Object
@@ -16,7 +14,6 @@ class Node :
 	friend class Scene;
 	friend class Collider;
 	friend class Transition;
-	friend class ColliderManager;
 
 public:
 	// 节点属性
@@ -334,14 +331,9 @@ public:
 		Property prop
 	);
 
-	// 设置碰撞体
-	virtual void setCollider(
+	// 设置碰撞体类型
+	virtual void setColliderType(
 		Collider::Type type
-	);
-
-	// 设置碰撞体
-	virtual void setCollider(
-		Collider * pCollider
 	);
 
 	// 添加子节点
@@ -445,6 +437,7 @@ protected:
 	Collider *	_collider;
 	Scene *		_parentScene;
 	Node *		_parent;
+	Collider::Type		_colliderType;
 	D2D1::Matrix3x2F	_initialMatri;
 	D2D1::Matrix3x2F	_finalMatri;
 	std::vector<Node*>	_children;
