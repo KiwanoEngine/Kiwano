@@ -11,10 +11,12 @@ e2d::Game::Game()
 	, _paused(false)
 	, _initialized(false)
 {
+	CoInitialize(nullptr);
 }
 
 e2d::Game::~Game()
 {
+	CoUninitialize();
 }
 
 e2d::Game * e2d::Game::getInstance()
@@ -33,41 +35,6 @@ void e2d::Game::destroyInstance()
 	}
 }
 
-bool e2d::Game::init()
-{
-	if (_initialized)
-	{
-		WARN("The game has been initialized!");
-		return false;
-	}
-
-	// 初始化 COM 组件
-	CoInitialize(nullptr);
-
-	bool bInputInit = false;
-
-	auto DestroyResources = [&]()
-	{
-		if (bInputInit) Input::__uninit();
-	};
-
-	// 初始化 DirectInput
-	if (Input::__init())
-	{
-		bInputInit = true;
-	}
-	else
-	{
-		DestroyResources();
-		throw SystemException(L"初始化 DirectInput 组件失败");
-	}
-
-	// 初始化成功
-	_initialized = true;
-
-	return _initialized;
-}
-
 void e2d::Game::start(bool cleanup)
 {
 	if (!_initialized)
@@ -75,8 +42,11 @@ void e2d::Game::start(bool cleanup)
 		throw Exception(L"开始游戏前未进行初始化");
 	}
 
+	auto gc = GC::getInstance();
+	auto input = Input::getInstance();
 	auto window = Window::getInstance();
 	auto renderer = Renderer::getInstance();
+	
 
 	// 初始化场景管理器
 	SceneManager::__init();
@@ -101,7 +71,7 @@ void e2d::Game::start(bool cleanup)
 		// 判断是否达到了刷新状态
 		if (Time::__isReady())
 		{
-			Input::__update();			// 获取用户输入
+			input->__update();			// 获取用户输入
 			Timer::__update();			// 更新定时器
 			ActionManager::__update();	// 更新动作管理器
 			SceneManager::__update();	// 更新场景内容
@@ -111,8 +81,8 @@ void e2d::Game::start(bool cleanup)
 		}
 		else
 		{
-			Time::__sleep();				// 挂起线程
-			GC::getInstance()->__update();	// 刷新内存池
+			Time::__sleep();			// 挂起线程
+			gc->__update();				// 刷新内存池
 		}
 	}
 
@@ -160,9 +130,6 @@ void e2d::Game::quit()
 
 void e2d::Game::cleanup()
 {
-	if (!_initialized)
-		return;
-
 	// 删除所有场景
 	SceneManager::__uninit();
 	// 删除输入监听器
@@ -175,12 +142,6 @@ void e2d::Game::cleanup()
 	Image::clearCache();
 	// 清空定时器
 	Timer::__uninit();
-	// 关闭输入
-	Input::__uninit();
 	// 删除所有对象
 	GC::getInstance()->clear();
-
-	CoUninitialize();
-
-	_initialized = false;
 }

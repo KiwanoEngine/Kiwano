@@ -8,6 +8,7 @@ e2d::Player::Player()
 	, _xAudio2(nullptr)
 	, _masteringVoice(nullptr)
 {
+	CoInitialize(nullptr);
 }
 
 e2d::Player::~Player()
@@ -24,6 +25,8 @@ e2d::Player::~Player()
 		_masteringVoice->DestroyVoice();
 
 	SafeRelease(_xAudio2);
+
+	CoUninitialize();
 }
 
 e2d::Player * e2d::Player::getInstance()

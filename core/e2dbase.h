@@ -20,12 +20,9 @@ public:
 	// 销毁实例
 	static void destroyInstance();
 
-	// 初始化游戏
-	bool init();
-
 	// 启动游戏
 	void start(
-		bool cleanup = true				/* 自动清理资源 */
+		bool cleanup = true		/* 自动清理资源 */
 	);
 
 	// 暂停游戏
@@ -226,7 +223,7 @@ private:
 
 class Listener;
 
-// 输入控制
+// 输入设备
 class Input
 {
 	friend class Game;
@@ -300,53 +297,59 @@ public:
 	};
 
 public:
+	// 获取输入设备实例
+	static Input * getInstance();
+
+	// 销毁输入设备实例
+	static void destroyInstance();
+
 	// 检测键盘某按键是否正被按下
-	static bool isDown(
+	bool isDown(
 		Key key
 	);
 
 	// 检测键盘某按键是否被点击
-	static bool isPress(
+	bool isPress(
 		Key key
 	);
 
 	// 检测键盘某按键是否正在松开
-	static bool isRelease(
+	bool isRelease(
 		Key key
 	);
 
 	// 检测鼠标按键是否正被按下
-	static bool isDown(
+	bool isDown(
 		Mouse code
 	);
 
 	// 检测鼠标按键是否被点击
-	static bool isPress(
+	bool isPress(
 		Mouse code
 	);
 
 	// 检测鼠标按键是否正在松开
-	static bool isRelease(
+	bool isRelease(
 		Mouse code
 	);
 
 	// 获得鼠标X轴坐标值
-	static double getMouseX();
+	double getMouseX();
 
 	// 获得鼠标Y轴坐标值
-	static double getMouseY();
+	double getMouseY();
 
 	// 获得鼠标坐标值
-	static Point getMousePos();
+	Point getMousePos();
 
 	// 获得鼠标X轴坐标增量
-	static double getMouseDeltaX();
+	double getMouseDeltaX();
 
 	// 获得鼠标Y轴坐标增量
-	static double getMouseDeltaY();
+	double getMouseDeltaY();
 
 	// 获得鼠标Z轴（鼠标滚轮）坐标增量
-	static double getMouseDeltaZ();
+	double getMouseDeltaZ();
 
 	// 添加输入监听
 	static Listener * addListener(
@@ -390,23 +393,33 @@ public:
 	static void removeAllListeners();
 
 private:
-	// 初始化 DirectInput 以及键盘鼠标设备
-	static bool __init();
+	Input();
+
+	~Input();
+
+	E2D_DISABLE_COPY(Input);
 
 	// 刷新输入信息
-	static void __update();
+	void __update();
 
 	// 刷新设备状态
-	static void __updateDeviceState();
+	void __updateDeviceState();
 
 	// 更新监听器
 	static void __updateListeners();
 
-	// 卸载 DirectInput
-	static void __uninit();
-
 	// 清空监听器
 	static void __clearListeners();
+
+private:
+	IDirectInput8* _directInput;
+	IDirectInputDevice8* _keyboardDevice;
+	IDirectInputDevice8* _mouseDevice;
+	DIMOUSESTATE _mouseState;
+	DIMOUSESTATE _mouseStateRecord;
+	POINT _mousePos;
+
+	static Input * _instance;
 };
 
 

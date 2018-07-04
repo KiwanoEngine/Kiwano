@@ -45,6 +45,8 @@ e2d::Renderer::Renderer()
 	, _textRenderer(nullptr)
 	, _clearColor(D2D1::ColorF(D2D1::ColorF::Black))
 {
+	CoInitialize(nullptr);
+
 	this->__createDeviceResources();
 }
 
@@ -53,6 +55,8 @@ e2d::Renderer::~Renderer()
 	SafeRelease(_renderTarget);
 	SafeRelease(_solidBrush);
 	SafeRelease(_textRenderer);
+
+	CoUninitialize();
 }
 
 bool e2d::Renderer::__createDeviceResources()
