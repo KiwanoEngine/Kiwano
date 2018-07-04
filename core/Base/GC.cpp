@@ -9,6 +9,7 @@ e2d::GC::~GC()
 	// É¾³ıËùÓĞµ¥Àı
 	Game::destroyInstance();
 	Renderer::destroyInstance();
+	Input::destroyInstance();
 	Window::destroyInstance();
 	Player::destroyInstance();
 }
