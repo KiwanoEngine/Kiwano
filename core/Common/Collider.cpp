@@ -60,11 +60,12 @@ void e2d::Collider::_render()
 	{
 		auto renderer = Renderer::getInstance();
 		// 获取纯色画刷
-		ID2D1SolidColorBrush * pBrush = renderer->getSolidColorBrush();
+		ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
 		// 设置画刷颜色和透明度
-		pBrush->SetColor(_color.toD2DColorF());
+		brush->SetColor(_color.toD2DColorF());
+		brush->SetOpacity(1.f);
 		// 绘制几何碰撞体
-		renderer->getRenderTarget()->DrawGeometry(_transformed, pBrush);
+		renderer->getRenderTarget()->DrawGeometry(_transformed, brush);
 	}
 }
 
