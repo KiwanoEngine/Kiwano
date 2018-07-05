@@ -42,11 +42,11 @@ public:
 
 	// 修改游戏配置
 	void setConfig(
-		Config * config
+		const Config& config
 	);
 
 	// 获取游戏配置
-	Config * getConfig();
+	Config getConfig() const;
 
 private:
 	Game();
@@ -58,7 +58,7 @@ private:
 private:
 	bool	_ended;
 	bool	_paused;
-	Config*	_config;
+	Config	_config;
 
 	static Game * _instance;
 };
@@ -521,19 +521,9 @@ public:
 	//  获取 GC 实例
 	static GC* getInstance();
 
-	// 保留对象
-	template <typename Type>
-	static inline void retain(Type*& p)
-	{
-		if (p != nullptr)
-		{
-			p->retain();
-		}
-	}
-
 	// 释放对象
 	template <typename Type>
-	static inline void release(Type*& p)
+	static inline void safeRelease(Type*& p)
 	{
 		if (p != nullptr)
 		{
@@ -557,7 +547,7 @@ public:
 	void clear();
 
 private:
-	GC() {}
+	GC();
 
 	~GC();
 

@@ -46,7 +46,7 @@ bool e2d::Sprite::open(Image * image)
 {
 	if (image)
 	{
-		GC::release(_image);
+		GC::safeRelease(_image);
 		_image = image;
 		_image->retain();
 
@@ -60,7 +60,8 @@ bool e2d::Sprite::open(const String& filePath)
 {
 	if (!_image)
 	{
-		_image = Create<Image>();
+		_image = new (std::nothrow) Image();
+		_image->autorelease();
 		_image->retain();
 	}
 
@@ -76,7 +77,8 @@ bool e2d::Sprite::open(int resNameId, const String& resType)
 {
 	if (!_image)
 	{
-		_image = Create<Image>();
+		_image = new (std::nothrow) Image();
+		_image->autorelease();
 		_image->retain();
 	}
 
@@ -128,5 +130,5 @@ void e2d::Sprite::onRender()
 void e2d::Sprite::onDestroy()
 {
 	Node::onDestroy();
-	GC::release(_image);
+	GC::safeRelease(_image);
 }

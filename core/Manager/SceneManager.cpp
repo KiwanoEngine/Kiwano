@@ -95,7 +95,7 @@ void e2d::SceneManager::clear()
 	while (_scenes.size())
 	{
 		auto temp = _scenes.top();
-		GC::release(temp);
+		GC::safeRelease(temp);
 		_scenes.pop();
 	}
 }

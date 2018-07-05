@@ -11,12 +11,12 @@ e2d::JumpBy::JumpBy(double duration, const Vector2 & vec, double height, int jum
 
 e2d::JumpBy * e2d::JumpBy::clone() const
 {
-	return Create<JumpBy>(_duration, _deltaPos, _height, _jumps);
+	return new (std::nothrow) JumpBy(_duration, _deltaPos, _height, _jumps);
 }
 
 e2d::JumpBy * e2d::JumpBy::reverse() const
 {
-	return Create<JumpBy>(_duration, -_deltaPos, _height, _jumps);
+	return new (std::nothrow) JumpBy(_duration, -_deltaPos, _height, _jumps);
 }
 
 void e2d::JumpBy::_init()

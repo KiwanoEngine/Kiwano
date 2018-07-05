@@ -7,6 +7,7 @@ e2d::Config::Config()
 	, _soundEnabled(true)
 	, _collisionEnabled(false)
 	, _colliderVisiable(false)
+	, _objectsAutoRelease(false)
 	, _nodeDefColliderType(Collider::Type::None)
 	, _unconfigured(true)
 {
@@ -28,6 +29,11 @@ void e2d::Config::setSoundEnabled(bool enabled)
 		_soundEnabled = enabled;
 		_unconfigured = true;
 	}
+}
+
+void e2d::Config::setObjectsAutoReleaseEnabled(bool enabled)
+{
+	_objectsAutoRelease = enabled;
 }
 
 void e2d::Config::setCollisionEnabled(bool enabled)
@@ -61,6 +67,11 @@ e2d::String e2d::Config::getGameName() const
 bool e2d::Config::isSoundEnabled() const
 {
 	return _soundEnabled;
+}
+
+bool e2d::Config::isObjectsAutoReleaseEnabled() const
+{
+	return _objectsAutoRelease;
 }
 
 bool e2d::Config::isCollisionEnabled() const

@@ -43,7 +43,7 @@ void e2d::ColliderManager::clearAll()
 void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 {
 	// ÅÐ¶ÏÅö×²¼àÌýÊÇ·ñ´ò¿ª
-	if (!Game::getInstance()->getConfig()->isCollisionEnabled())
+	if (!Game::getInstance()->getConfig().isCollisionEnabled())
 		return;
 
 	Node* pActiveNode = pActiveCollider->_parentNode;
@@ -100,7 +100,7 @@ void e2d::ColliderManager::__remove(Collider * pCollider)
 		{
 			if (_colliders[i] == pCollider)
 			{
-				GC::release(pCollider);
+				GC::safeRelease(pCollider);
 				_colliders.erase(_colliders.begin() + i);
 				return;
 			}

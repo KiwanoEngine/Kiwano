@@ -23,7 +23,7 @@ e2d::Loop * e2d::Loop::clone() const
 {
 	if (_action)
 	{
-		return Create<Loop>(_action->clone());
+		return new (std::nothrow) Loop(_action->clone());
 	}
 	else
 	{
@@ -35,7 +35,7 @@ e2d::Loop * e2d::Loop::reverse() const
 {
 	if (_action)
 	{
-		return Create<Loop>(_action->clone());
+		return new (std::nothrow) Loop(_action->clone());
 	}
 	else
 	{
@@ -93,7 +93,7 @@ void e2d::Loop::reset()
 void e2d::Loop::onDestroy()
 {
 	Action::onDestroy();
-	GC::release(_action);
+	GC::safeRelease(_action);
 }
 
 void e2d::Loop::_resetTime()

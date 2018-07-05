@@ -239,6 +239,7 @@
     <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Player.cpp" />
     <ClCompile Include="..\..\core\Tool\Random.cpp" />
+    <ClCompile Include="..\..\core\Tool\Task.cpp" />
     <ClCompile Include="..\..\core\Tool\Timer.cpp" />
     <ClCompile Include="..\..\core\Transition\BoxTransition.cpp" />
     <ClCompile Include="..\..\core\Transition\EmergeTransition.cpp" />

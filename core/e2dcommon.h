@@ -743,8 +743,7 @@ protected:
 class Game;
 
 // 游戏配置
-class Config :
-	public Object
+class Config
 {
 	friend class Game;
 
@@ -762,6 +761,12 @@ public:
 	// 打开或关闭声音
 	// 默认：打开
 	void setSoundEnabled(
+		bool enabled
+	);
+
+	// 打开或关闭自动回收 Easy2D 对象功能
+	// 默认：关闭
+	void setObjectsAutoReleaseEnabled(
 		bool enabled
 	);
 
@@ -795,6 +800,9 @@ public:
 	// 获取声音打开状态
 	bool isSoundEnabled() const;
 
+	// 获取 Easy2D 对象自动释放状态
+	bool isObjectsAutoReleaseEnabled() const;
+
 	// 获取碰撞监听状态
 	bool isCollisionEnabled() const;
 
@@ -812,6 +820,7 @@ protected:
 
 protected:
 	bool			_unconfigured;
+	bool			_objectsAutoRelease;
 	bool			_soundEnabled;
 	bool			_collisionEnabled;
 	bool			_colliderVisiable;
@@ -819,152 +828,6 @@ protected:
 	Point			_nodeDefPivot;
 	Collider::Type	_nodeDefColliderType;
 };
-
-
-#if _MSC_VER > 1700
-
-// 创建可自动回收内存的对象
-template <typename Type, typename... Args>
-inline Type * Create(Args&&... args)
-{
-	auto newObj = new (std::nothrow) Type(std::forward<Args>(args)...);
-	if (newObj)
-	{
-		newObj->autorelease();
-		return newObj;
-	}
-	return nullptr;
-}
-
-#else
-
-template <typename Type>
-inline Type * Create()
-{
-	auto newObj = new (std::nothrow) Type();
-	if (newObj) { newObj->autorelease(); return newObj; }
-	return nullptr;
-}
-
-template <typename Type, typename Arg1>
-inline Type * Create(Arg1&& arg1)
-{
-	auto newObj = new (std::nothrow) Type(std::forward<Arg1>(arg1));
-	if (newObj) { newObj->autorelease(); return newObj; }
-	return nullptr;
-}
-
-template <typename Type,
-	typename Arg1,
-	typename Arg2>
-	inline Type * Create(
-		Arg1&& arg1, 
-		Arg2&& arg2
-	)
-{
-	auto newObj = new (std::nothrow) Type(
-		std::forward<Arg1>(arg1),
-		std::forward<Arg2>(arg2)
-	);
-	if (newObj) { newObj->autorelease(); return newObj; }
-	return nullptr;
-}
-
-template <typename Type,
-	typename Arg1,
-	typename Arg2,
-	typename Arg3>
-	inline Type * Create(
-		Arg1&& arg1,
-		Arg2&& arg2,
-		Arg3&& arg3
-	)
-{
-	auto newObj = new (std::nothrow) Type(
-		std::forward<Arg1>(arg1),
-		std::forward<Arg2>(arg2),
-		std::forward<Arg3>(arg3)
-	);
-	if (newObj) { newObj->autorelease(); return newObj; }
-	return nullptr;
-}
-
-template <typename Type,
-	typename Arg1,
-	typename Arg2,
-	typename Arg3,
-	typename Arg4>
-	inline Type * Create(
-		Arg1&& arg1,
-		Arg2&& arg2,
-		Arg3&& arg3,
-		Arg4&& arg4
-	)
-{
-	auto newObj = new (std::nothrow) Type(
-		std::forward<Arg1>(arg1),
-		std::forward<Arg2>(arg2),
-		std::forward<Arg3>(arg3),
-		std::forward<Arg4>(arg4)
-	);
-	if (newObj) { newObj->autorelease(); return newObj; }
-	return nullptr;
-}
-
-template <typename Type,
-	typename Arg1,
-	typename Arg2,
-	typename Arg3,
-	typename Arg4,
-	typename Arg5>
-	inline Type * Create(
-		Arg1&& arg1,
-		Arg2&& arg2,
-		Arg3&& arg3,
-		Arg4&& arg4,
-		Arg5&& arg5
-	)
-{
-	auto newObj = new (std::nothrow) Type(
-		std::forward<Arg1>(arg1),
-		std::forward<Arg2>(arg2),
-		std::forward<Arg3>(arg3),
-		std::forward<Arg4>(arg4),
-		std::forward<Arg5>(arg5)
-	);
-	if (newObj) { newObj->autorelease(); return newObj; }
-	return nullptr;
-}
-
-template <typename Type,
-	typename Arg1,
-	typename Arg2,
-	typename Arg3,
-	typename Arg4,
-	typename Arg5,
-	typename Arg6>
-	inline Type * Create(
-		Arg1&& arg1,
-		Arg2&& arg2,
-		Arg3&& arg3,
-		Arg4&& arg4,
-		Arg5&& arg5,
-		Arg6&& arg6
-	)
-{
-	auto newObj = new (std::nothrow) Type(
-		std::forward<Arg1>(arg1),
-		std::forward<Arg2>(arg2),
-		std::forward<Arg3>(arg3),
-		std::forward<Arg4>(arg4),
-		std::forward<Arg5>(arg5),
-		std::forward<Arg6>(arg6)
-	);
-	if (newObj) { newObj->autorelease(); return newObj; }
-	return nullptr;
-}
-
-#endif
 
 
 }

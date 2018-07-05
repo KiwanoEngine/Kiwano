@@ -236,6 +236,9 @@
     <ClCompile Include="..\..\core\Tool\Timer.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Tool\Task.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\core\Transition\BoxTransition.cpp">
       <Filter>Transition</Filter>
     </ClCompile>

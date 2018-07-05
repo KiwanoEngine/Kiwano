@@ -9,15 +9,13 @@ e2d::Game * e2d::Game::_instance = nullptr;
 e2d::Game::Game()
 	: _ended(false)
 	, _paused(false)
-	, _config(nullptr)
+	, _config()
 {
 	CoInitialize(nullptr);
 }
 
 e2d::Game::~Game()
 {
-	GC::release(_config);
-
 	CoUninitialize();
 }
 
@@ -69,9 +67,9 @@ void e2d::Game::start(bool cleanup)
 		if (Time::__isReady())
 		{
 			// 更新配置
-			if (_config && _config->_unconfigured)
+			if (_config._unconfigured)
 			{
-				_config->_update();
+				_config._update();
 			}
 
 			input->update();			// 获取用户输入
@@ -79,13 +77,13 @@ void e2d::Game::start(bool cleanup)
 			actionManager->update();	// 更新动作管理器
 			sceneManager->update();		// 更新场景内容
 			renderer->render();			// 渲染游戏画面
+			gc->update();				// 刷新内存池
 
 			Time::__updateLast();		// 刷新时间信息
 		}
 		else
 		{
 			Time::__sleep();			// 挂起线程
-			gc->update();				// 刷新内存池
 		}
 	}
 
@@ -118,24 +116,14 @@ bool e2d::Game::isPaused()
 	return _paused;
 }
 
-void e2d::Game::setConfig(Config * config)
+void e2d::Game::setConfig(const Config& config)
 {
-	if (_config != config && config)
-	{
-		GC::release(_config);
-		_config = config;
-		_config->_unconfigured = true;
-		GC::retain(_config);
-	}
+	_config = config;
+	_config._unconfigured = true;
 }
 
-e2d::Config * e2d::Game::getConfig()
+e2d::Config e2d::Game::getConfig() const
 {
-	if (!_config)
-	{
-		_config = Create<Config>();
-		GC::retain(_config);
-	}
 	return _config;
 }
 

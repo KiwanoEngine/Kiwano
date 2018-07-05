@@ -29,8 +29,8 @@ bool e2d::Transition::isDone()
 
 void e2d::Transition::onDestroy()
 {
-	GC::release(_outScene);
-	GC::release(_inScene);
+	GC::safeRelease(_outScene);
+	GC::safeRelease(_inScene);
 }
 
 void e2d::Transition::_init(Scene * prev, Scene * next)

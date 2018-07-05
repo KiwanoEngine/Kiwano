@@ -6,16 +6,10 @@ e2d::Scene::Scene()
 	: _autoUpdate(true)
 	, _root(nullptr)
 {
-	_root = Create<Node>();
-	if (_root)
-	{
-		_root->retain();
-		_root->_setParentScene(this);
-	}
-	else
-	{
-		throw Exception(L"场景根节点构造失败");
-	}
+	_root = new (std::nothrow) Node();
+	_root->autorelease();
+	_root->retain();
+	_root->_setParentScene(this);
 }
 
 e2d::Scene::~Scene()
@@ -26,7 +20,7 @@ void e2d::Scene::_render()
 {
 	_root->_render();
 
-	if (Game::getInstance()->getConfig()->isColliderVisiable())
+	if (Game::getInstance()->getConfig().isColliderVisiable())
 	{
 		// 恢复矩阵转换
 		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
@@ -91,5 +85,5 @@ e2d::Node * e2d::Scene::getRoot() const
 
 void e2d::Scene::onDestroy()
 {
-	GC::release(_root);
+	GC::safeRelease(_root);
 }

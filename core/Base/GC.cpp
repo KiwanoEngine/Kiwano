@@ -5,6 +5,12 @@
 // GC 机制，用于自动销毁单例
 e2d::GC e2d::GC::_instance;
 
+e2d::GC::GC()
+	: _notifyed(false)
+	, _pool()
+{
+}
+
 e2d::GC::~GC()
 {
 	// 删除所有单例
@@ -27,7 +33,8 @@ e2d::GC::~GC()
 // 调用 retain 函数保证该对象不被删除，并在不再使用时调用 release 函数
 void e2d::GC::update()
 {
-	if (!_notifyed) return;
+	if (!_notifyed)
+		return;
 
 	_notifyed = false;
 	for (auto iter = _pool.begin(); iter != _pool.end();)

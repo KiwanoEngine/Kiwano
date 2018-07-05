@@ -236,8 +236,9 @@ double e2d::Input::getMouseDeltaZ()
 
 e2d::Listener * e2d::Input::addListener(const Function& func, const String& name, bool paused)
 {
-	auto listener = Create<Listener>(func, name, paused);
-	GC::retain(listener);
+	auto listener = new (std::nothrow) Listener(func, name, paused);
+	listener->autorelease();
+	listener->retain();
 	s_vListeners.push_back(listener);
 	return listener;
 }
@@ -249,7 +250,7 @@ void e2d::Input::addListener(Listener * listener)
 		auto iter = std::find(s_vListeners.begin(), s_vListeners.end(), listener);
 		if (iter == s_vListeners.end())
 		{
-			GC::retain(listener);
+			listener->retain();
 			s_vListeners.push_back(listener);
 		}
 	}
@@ -262,7 +263,7 @@ void e2d::Input::removeListener(Listener * listener)
 		auto iter = std::find(s_vListeners.begin(), s_vListeners.end(), listener);
 		if (iter != s_vListeners.end())
 		{
-			GC::release(listener);
+			GC::safeRelease(listener);
 			s_vListeners.erase(iter);
 		}
 	}
@@ -354,7 +355,7 @@ void e2d::Input::__updateListeners()
 		// Çå³ıÒÑÍ£Ö¹µÄ¼àÌıÆ÷
 		if (listener->_stopped)
 		{
-			GC::release(listener);
+			GC::safeRelease(listener);
 			s_vListeners.erase(s_vListeners.begin() + i);
 		}
 		else

@@ -27,7 +27,7 @@ void e2d::Animate::setAnimation(Animation * animation)
 {
 	if (animation && animation != _animation)
 	{
-		GC::release(_animation);
+		GC::safeRelease(_animation);
 		_animation = animation;
 		_animation->retain();
 	}
@@ -91,14 +91,14 @@ void e2d::Animate::reset()
 void e2d::Animate::onDestroy()
 {
 	Action::onDestroy();
-	GC::release(_animation);
+	GC::safeRelease(_animation);
 }
 
 e2d::Animate * e2d::Animate::clone() const
 {
 	if (_animation)
 	{
-		return Create<Animate>(_animation);
+		return new (std::nothrow) Animate(_animation);
 	}
 	return nullptr;
 }
@@ -110,7 +110,7 @@ e2d::Animate * e2d::Animate::reverse() const
 		auto animation = _animation->reverse();
 		if (animation)
 		{
-			return Create<Animate>(animation);
+			return new (std::nothrow) Animate(animation);
 		}
 	}
 	return nullptr;

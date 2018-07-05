@@ -32,13 +32,13 @@ e2d::Node::Node()
 	, _positionFixed(false)
 	, _colliderType(Collider::Type::None)
 {
-	auto config = Game::getInstance()->getConfig();
+	auto& config = Game::getInstance()->getConfig();
 	// 设置默认中心点位置
-	Point defPivot = config->getNodeDefaultPivot();
+	Point defPivot = config.getNodeDefaultPivot();
 	this->_pivotX = float(defPivot.x);
 	this->_pivotY = float(defPivot.y);
 	// 设置默认碰撞体类型
-	this->setColliderType(config->getDefaultColliderType());
+	this->setColliderType(config.getDefaultColliderType());
 }
 
 e2d::Node::~Node()
@@ -573,11 +573,12 @@ void e2d::Node::setColliderType(Collider::Type type)
 		case Collider::Type::Circle:
 		case Collider::Type::Ellipse:
 		{
-			this->_collider = Create<Collider>();
-			this->_collider->_parentNode = this;
-			this->_collider->_recreate(type);
+			_collider = new (std::nothrow) Collider();
+			_collider->autorelease();
+			_collider->_parentNode = this;
+			_collider->_recreate(type);
 			// 添加新的碰撞体
-			ColliderManager::getInstance()->__add(this->_collider);
+			ColliderManager::getInstance()->__add(_collider);
 		}
 		break;
 
@@ -914,7 +915,7 @@ void e2d::Node::onDestroy()
 	ColliderManager::getInstance()->__remove(_collider);
 	for (auto child : _children)
 	{
-		GC::release(child);
+		GC::safeRelease(child);
 	}
 }
 

@@ -5,6 +5,10 @@
 e2d::Object::Object()
 	: _refCount(0)
 {
+	if (Game::getInstance()->getConfig().isObjectsAutoReleaseEnabled())
+	{
+		this->autorelease();
+	}
 }
 
 e2d::Object::~Object()

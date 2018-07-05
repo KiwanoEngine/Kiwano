@@ -35,7 +35,7 @@ void e2d::Animation::onDestroy()
 {
 	for (auto frame : _frames)
 	{
-		GC::release(frame);
+		GC::safeRelease(frame);
 	}
 }
 
@@ -68,7 +68,7 @@ const std::vector<e2d::Image*>& e2d::Animation::getFrames() const
 
 e2d::Animation * e2d::Animation::clone() const
 {
-	auto animation = Create<Animation>(_interval);
+	auto animation = new (std::nothrow) Animation(_interval);
 	if (animation)
 	{
 		for (auto frame : _frames)
@@ -99,5 +99,5 @@ e2d::Animation * e2d::Animation::reverse() const
 		}
 	}
 
-	return Create<Animation>(this->getInterval(), frames);
+	return new (std::nothrow) Animation(this->getInterval(), frames);
 }

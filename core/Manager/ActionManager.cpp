@@ -200,7 +200,7 @@ void e2d::ActionManager::clearAllBindedWith(Node * target)
 			auto a = _runningActions[i];
 			if (a->getTarget() == target)
 			{
-				GC::release(a);
+				GC::safeRelease(a);
 				_runningActions.erase(_runningActions.begin() + i);
 			}
 			else

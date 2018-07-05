@@ -14,11 +14,11 @@ e2d::Player::Player()
 e2d::Player::~Player()
 {
 	for (auto pair : _fileList)
-		delete pair.second;
+		pair.second->release();
 	_fileList.clear();
 
 	for (auto pair : _resList)
-		delete pair.second;
+		pair.second->release();
 	_resList.clear();
 
 	if (_masteringVoice)
@@ -70,17 +70,14 @@ bool e2d::Player::preload(const String& filePath)
 	else
 	{
 		Music * music = new (std::nothrow) Music();
+		music->autorelease();
 
 		if (music->open(filePath))
 		{
+			music->retain();
 			music->setVolume(_volume);
 			_fileList.insert(std::pair<UINT, Music *>(hash, music));
 			return true;
-		}
-		else
-		{
-			delete music;
-			music = nullptr;
 		}
 	}
 	return false;
@@ -95,17 +92,14 @@ bool e2d::Player::preload(int resNameId, const String& resType)
 	else
 	{
 		Music * music = new (std::nothrow) Music();
+		music->autorelease();
 
 		if (music->open(resNameId, resType))
 		{
+			music->retain();
 			music->setVolume(_volume);
 			_resList.insert(std::pair<UINT, Music *>(resNameId, music));
 			return true;
-		}
-		else
-		{
-			delete music;
-			music = nullptr;
 		}
 	}
 	return false;
@@ -271,13 +265,13 @@ void e2d::Player::clearCache()
 {
 	for (auto pair : _fileList)
 	{
-		delete pair.second;
+		pair.second->release();
 	}
 	_fileList.clear();
 
 	for (auto pair : _resList)
 	{
-		delete pair.second;
+		pair.second->release();
 	}
 	_resList.clear();
 }

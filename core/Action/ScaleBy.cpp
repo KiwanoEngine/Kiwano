@@ -39,10 +39,10 @@ void e2d::ScaleBy::_update()
 
 e2d::ScaleBy * e2d::ScaleBy::clone() const
 {
-	return Create<ScaleBy>(_duration, _deltaX, _deltaY);
+	return new (std::nothrow) ScaleBy(_duration, _deltaX, _deltaY);
 }
 
 e2d::ScaleBy * e2d::ScaleBy::reverse() const
 {
-	return Create<ScaleBy>(_duration, -_deltaX, -_deltaY);
+	return new (std::nothrow) ScaleBy(_duration, -_deltaX, -_deltaY);
 }
