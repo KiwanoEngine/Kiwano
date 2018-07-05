@@ -359,20 +359,23 @@ void e2d::Window::setTypewritingEnabled(bool enabled)
 
 void e2d::Window::info(const String & text, const String & title)
 {
+	Game::getInstance()->pause();
 	::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONINFORMATION | MB_OK);
-	Game::getInstance()->reset();
+	Game::getInstance()->resume();
 }
 
 void e2d::Window::warning(const String& title, const String& text)
 {
+	Game::getInstance()->pause();
 	::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONWARNING | MB_OK);
-	Game::getInstance()->reset();
+	Game::getInstance()->resume();
 }
 
 void e2d::Window::error(const String & text, const String & title)
 {
+	Game::getInstance()->pause();
 	::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONERROR | MB_OK);
-	Game::getInstance()->reset();
+	Game::getInstance()->resume();
 }
 
 

@@ -37,9 +37,6 @@ public:
 	// 清理资源
 	void cleanup();
 
-	// 重置游戏内部计时
-	void reset();
-
 	// 游戏是否暂停
 	bool isPaused();
 

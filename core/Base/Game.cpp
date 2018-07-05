@@ -103,21 +103,13 @@ void e2d::Game::pause()
 
 void e2d::Game::resume()
 {
-	if (_paused)
-	{
-		Game::reset();
-	}
-	_paused = false;
-}
-
-void e2d::Game::reset()
-{
-	if (!_ended)
+	if (_paused && !_ended)
 	{
 		Time::__reset();
 		Timer::__resetAll();
 		ActionManager::getInstance()->__resetAll();
 	}
+	_paused = false;
 }
 
 bool e2d::Game::isPaused()
