@@ -13,7 +13,9 @@ e2d::GC::~GC()
 	Input::destroyInstance();
 	Window::destroyInstance();
 	Player::destroyInstance();
+	SceneManager::destroyInstance();
 	ActionManager::destroyInstance();
+	ColliderManager::destroyInstance();
 }
 
 

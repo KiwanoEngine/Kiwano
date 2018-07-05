@@ -172,6 +172,6 @@ void e2d::Collider::_transform()
 			&_transformed
 		);
 		// 通知碰撞体管理器
-		ColliderManager::__updateCollider(this);
+		ColliderManager::getInstance()->__updateCollider(this);
 	}
 }

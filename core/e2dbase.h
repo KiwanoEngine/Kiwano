@@ -417,9 +417,6 @@ private:
 	// ¸üĞÂ¼àÌıÆ÷
 	static void __updateListeners();
 
-	// Çå¿Õ¼àÌıÆ÷
-	static void __clearListeners();
-
 private:
 	IDirectInput8* _directInput;
 	IDirectInputDevice8* _keyboardDevice;

@@ -131,7 +131,7 @@ void e2d::Renderer::__render()
 	_renderTarget->Clear(_clearColor);
 
 	// ‰÷»æ≥°æ∞
-	SceneManager::__render();
+	SceneManager::getInstance()->__render();
 
 	// ‰÷»æ FPS
 	if (_showFps)

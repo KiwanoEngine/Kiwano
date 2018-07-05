@@ -23,42 +23,57 @@ class SceneManager
 	friend class Renderer;
 
 public:
+	// 获取场景管理器实例
+	static SceneManager * getInstance();
+
+	// 销毁实例
+	static void destroyInstance();
+
 	// 切换场景
-	static void enter(
+	void enter(
 		Scene * scene,						/* 下一个场景的指针 */
 		Transition * transition = nullptr,	/* 场景切换动作 */
 		bool saveCurrentScene = true		/* 是否保存当前场景 */
 	);
 
 	// 返回上一场景
-	static void back(
+	void back(
 		Transition * transition = nullptr	/* 场景切换动作 */
 	);
 
 	// 清空保存的所有场景
-	static void clear();
+	void clear();
 
 	// 获取当前场景
-	static Scene * getCurrentScene();
+	Scene * getCurrentScene();
 
 	// 获取场景栈
-	static std::stack<Scene*> getSceneStack();
+	std::stack<Scene*> getSceneStack();
 
 	// 是否正在进行转场动作
-	static bool isTransitioning();
+	bool isTransitioning();
 
 private:
+	SceneManager();
+
+	~SceneManager();
+
+	E2D_DISABLE_COPY(SceneManager);
+
 	// 更新场景内容
-	static void __update();
+	void __update();
 
 	// 渲染场景画面
-	static void __render();
+	void __render();
 
-	// 初始化场景
-	static bool __init();
+private:
+	bool				_saveCurrScene;
+	Scene *				_currScene;
+	Scene *				_nextScene;
+	Transition *		_transition;
+	std::stack<Scene*>	_scenes;
 
-	// 回收场景资源
-	static void __uninit();
+	static SceneManager * _instance;
 };
 
 
@@ -171,21 +186,39 @@ class ColliderManager
 	friend class Node;
 	friend class Collider;
 
+public:
+	// 获取碰撞体管理器实例
+	static ColliderManager * getInstance();
+
+	// 销毁实例
+	static void destroyInstance();
+
 private:
+	ColliderManager();
+
+	~ColliderManager();
+
+	E2D_DISABLE_COPY(ColliderManager);
+
 	// 更新碰撞体
-	static void __updateCollider(
+	void __updateCollider(
 		Collider * pActiveCollider
 	);
 
 	// 添加碰撞体
-	static void __add(
+	void __add(
 		Collider * pCollider
 	);
 
 	// 删除已绑定的碰撞体
-	static void __remove(
+	void __remove(
 		Collider * pCollider
 	);
+
+private:
+	std::vector<Collider*> _colliders;
+
+	static ColliderManager * _instance;
 };
 
 }

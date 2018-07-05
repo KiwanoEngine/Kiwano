@@ -5,15 +5,13 @@
 namespace e2d
 {
 
-
-
+class Node;
 class Listener;
 class ColliderManager;
 
 // Åö×²ÊÂ¼ş
 class Collision
 {
-	friend class Game;
 	friend class ColliderManager;
 
 public:
@@ -117,9 +115,6 @@ private:
 		Node * active,
 		Node * passive
 	);
-
-	// Çå¿Õ¼àÌıÆ÷
-	static void __clearListeners();
 };
 
 }

@@ -177,7 +177,7 @@ void e2d::Button::setClickFunc(const Function& func)
 
 void e2d::Button::_fixedUpdate()
 {
-	if (SceneManager::isTransitioning())
+	if (SceneManager::getInstance()->isTransitioning())
 		return;
 
 	auto input = Input::getInstance();

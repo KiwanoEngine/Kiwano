@@ -44,9 +44,8 @@ void e2d::Game::start(bool cleanup)
 	auto window = Window::getInstance();
 	auto renderer = Renderer::getInstance();
 	auto actionManager = ActionManager::getInstance();
+	auto sceneManager = SceneManager::getInstance();
 
-	// 初始化场景管理器
-	SceneManager::__init();
 	// 显示窗口
 	::ShowWindow(window->getHWnd(), SW_SHOWNORMAL);
 	// 刷新窗口内容
@@ -77,7 +76,7 @@ void e2d::Game::start(bool cleanup)
 			input->__update();			// 获取用户输入
 			Timer::__update();			// 更新定时器
 			actionManager->__update();	// 更新动作管理器
-			SceneManager::__update();	// 更新场景内容
+			sceneManager->__update();	// 更新场景内容
 			renderer->__render();		// 渲染游戏画面
 
 			Time::__updateLast();		// 刷新时间信息
@@ -116,8 +115,8 @@ void e2d::Game::reset()
 	if (!_ended)
 	{
 		Time::__reset();
-		ActionManager::getInstance()->__resetAll();
 		Timer::__resetAll();
+		ActionManager::getInstance()->__resetAll();
 	}
 }
 
@@ -155,15 +154,15 @@ void e2d::Game::quit()
 void e2d::Game::cleanup()
 {
 	// 删除所有场景
-	SceneManager::__uninit();
-	// 删除输入监听器
-	Input::__clearListeners();
+	SceneManager::getInstance()->clear();
 	// 删除碰撞监听器
-	Collision::__clearListeners();
+	Collision::removeAllListeners();
+	// 删除输入监听器
+	Input::removeAllListeners();
 	// 清空图片缓存
 	Image::clearCache();
 	// 清空定时器
-	Timer::__uninit();
+	Timer::removeAll();
 	// 删除所有对象
 	GC::getInstance()->clear();
 }

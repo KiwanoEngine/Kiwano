@@ -324,9 +324,6 @@ private:
 
 	// 重置定时器状态
 	static void __resetAll();
-
-	// 清空定时器
-	static void __uninit();
 };
 
 

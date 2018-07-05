@@ -436,7 +436,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	// 窗口关闭消息
 	case WM_CLOSE:
 	{
-		e2d::Scene * pCurrentScene = e2d::SceneManager::getCurrentScene();
+		e2d::Scene * pCurrentScene = e2d::SceneManager::getInstance()->getCurrentScene();
 		if (!pCurrentScene || pCurrentScene->onCloseWindow())
 		{
 			e2d::Game::getInstance()->quit();

@@ -4,8 +4,32 @@
 #include "..\e2dtool.h"
 
 
-// 碰撞体集合
-static std::vector<e2d::Collider*> s_vColliders;
+e2d::ColliderManager * e2d::ColliderManager::_instance = nullptr;
+
+e2d::ColliderManager * e2d::ColliderManager::getInstance()
+{
+	if (!_instance)
+		_instance = new (std::nothrow) ColliderManager;
+	return _instance;
+}
+
+void e2d::ColliderManager::destroyInstance()
+{
+	if (_instance)
+	{
+		delete _instance;
+		_instance = nullptr;
+	}
+}
+
+e2d::ColliderManager::ColliderManager()
+	: _colliders()
+{
+}
+
+e2d::ColliderManager::~ColliderManager()
+{
+}
 
 void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 {
@@ -20,9 +44,9 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 		Scene* pCurrentScene = pActiveNode->getParentScene();
 
 		// 判断与其他碰撞体的交集情况
-		for (size_t i = 0; i < s_vColliders.size(); ++i)
+		for (size_t i = 0; i < _colliders.size(); ++i)
 		{
-			auto pPassiveCollider = s_vColliders[i];
+			auto pPassiveCollider = _colliders[i];
 			// 判断两个碰撞体是否是同一个对象
 			if (pActiveCollider == pPassiveCollider)
 				continue;
@@ -55,7 +79,7 @@ void e2d::ColliderManager::__add(Collider * pCollider)
 	if (pCollider)
 	{
 		pCollider->retain();
-		s_vColliders.push_back(pCollider);
+		_colliders.push_back(pCollider);
 	}
 }
 
@@ -63,12 +87,12 @@ void e2d::ColliderManager::__remove(Collider * pCollider)
 {
 	if (pCollider)
 	{
-		for (size_t i = 0; i < s_vColliders.size(); ++i)
+		for (size_t i = 0; i < _colliders.size(); ++i)
 		{
-			if (s_vColliders[i] == pCollider)
+			if (_colliders[i] == pCollider)
 			{
 				GC::release(pCollider);
-				s_vColliders.erase(s_vColliders.begin() + i);
+				_colliders.erase(_colliders.begin() + i);
 				return;
 			}
 		}

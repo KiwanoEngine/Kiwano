@@ -559,7 +559,7 @@ void e2d::Node::setColliderType(Collider::Type type)
 		default:
 		{
 			// 删除碰撞体
-			ColliderManager::__remove(_collider);
+			ColliderManager::getInstance()->__remove(_collider);
 			_collider = nullptr;
 		}
 		break;
@@ -577,7 +577,7 @@ void e2d::Node::setColliderType(Collider::Type type)
 			this->_collider->_parentNode = this;
 			this->_collider->_recreate(type);
 			// 添加新的碰撞体
-			ColliderManager::__add(this->_collider);
+			ColliderManager::getInstance()->__add(this->_collider);
 		}
 		break;
 
@@ -911,7 +911,7 @@ void e2d::Node::setAutoUpdate(bool bAutoUpdate)
 void e2d::Node::onDestroy()
 {
 	ActionManager::getInstance()->clearAllBindedWith(this);
-	ColliderManager::__remove(_collider);
+	ColliderManager::getInstance()->__remove(_collider);
 	for (auto child : _children)
 	{
 		GC::release(child);

@@ -138,8 +138,9 @@ void e2d::Timer::removeAll()
 {
 	for (auto timer : s_vTimers)
 	{
-		timer->stopped = true;
+		delete timer;
 	}
+	s_vTimers.clear();
 }
 
 void e2d::Timer::__update()
@@ -175,13 +176,4 @@ void e2d::Timer::__resetAll()
 	{
 		timer->lastTime = Time::getTotalTime();
 	}
-}
-
-void e2d::Timer::__uninit()
-{
-	for (auto timer : s_vTimers)
-	{
-		delete timer;
-	}
-	s_vTimers.clear();
 }

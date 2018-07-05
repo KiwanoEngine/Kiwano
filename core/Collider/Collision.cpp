@@ -215,14 +215,6 @@ void e2d::Collision::removeAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
-		listener->_stopped = true;
-	}
-}
-
-void e2d::Collision::__clearListeners()
-{
-	for (auto listener : s_vListeners)
-	{
 		GC::release(listener);
 	}
 	s_vListeners.clear();

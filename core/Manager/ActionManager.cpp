@@ -215,25 +215,37 @@ void e2d::ActionManager::clearAllBindedWith(Node * target)
 
 void e2d::ActionManager::resumeAll()
 {
-	for (auto child : SceneManager::getCurrentScene()->getRoot()->getAllChildren())
+	auto scene = SceneManager::getInstance()->getCurrentScene();
+	if (scene)
 	{
-		ActionManager::resumeAllBindedWith(child);
+		for (auto child : scene->getRoot()->getAllChildren())
+		{
+			ActionManager::resumeAllBindedWith(child);
+		}
 	}
 }
 
 void e2d::ActionManager::pauseAll()
 {
-	for (auto child : SceneManager::getCurrentScene()->getRoot()->getAllChildren())
+	auto scene = SceneManager::getInstance()->getCurrentScene();
+	if (scene)
 	{
-		ActionManager::pauseAllBindedWith(child);
+		for (auto child : scene->getRoot()->getAllChildren())
+		{
+			ActionManager::pauseAllBindedWith(child);
+		}
 	}
 }
 
 void e2d::ActionManager::stopAll()
 {
-	for (auto child : SceneManager::getCurrentScene()->getRoot()->getAllChildren())
+	auto scene = SceneManager::getInstance()->getCurrentScene();
+	if (scene)
 	{
-		ActionManager::stopAllBindedWith(child);
+		for (auto child : scene->getRoot()->getAllChildren())
+		{
+			ActionManager::stopAllBindedWith(child);
+		}
 	}
 }
 

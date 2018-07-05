@@ -330,8 +330,9 @@ void e2d::Input::removeAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
-		listener->_stopped = true;
+		GC::release(listener);
 	}
+	s_vListeners.clear();
 }
 
 void e2d::Input::__updateListeners()
@@ -355,13 +356,4 @@ void e2d::Input::__updateListeners()
 			++i;
 		}
 	}
-}
-
-void e2d::Input::__clearListeners()
-{
-	for (auto listener : s_vListeners)
-	{
-		GC::release(listener);
-	}
-	s_vListeners.clear();
 }
