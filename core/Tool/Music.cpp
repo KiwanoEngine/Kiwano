@@ -499,7 +499,7 @@ bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wcha
 	if (nullptr == strFilename || nullptr == strDestPath || cchDest < 10)
 		return false;
 
-	// Get the exe name, and exe path
+	// Get the exe _name, and exe path
 	wchar_t strExePath[MAX_PATH] = { 0 };
 	wchar_t strExeName[MAX_PATH] = { 0 };
 	wchar_t* strLastSlash = nullptr;
@@ -510,10 +510,10 @@ bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wcha
 	{
 		wcscpy_s(strExeName, MAX_PATH, &strLastSlash[1]);
 
-		// Chop the exe name from the exe path
+		// Chop the exe _name from the exe path
 		*strLastSlash = 0;
 
-		// Chop the .exe from the exe name
+		// Chop the .exe from the exe _name
 		strLastSlash = wcsrchr(strExeName, TEXT('.'));
 		if (strLastSlash)
 			*strLastSlash = 0;
@@ -523,7 +523,7 @@ bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wcha
 	if (GetFileAttributes(strDestPath) != 0xFFFFFFFF)
 		return true;
 
-	// Search all parent directories starting at .\ and using strFilename as the leaf name
+	// Search all parent directories starting at .\ and using strFilename as the leaf _name
 	wchar_t strLeafName[MAX_PATH] = { 0 };
 	wcscpy_s(strLeafName, MAX_PATH, strFilename);
 

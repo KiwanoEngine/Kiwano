@@ -221,11 +221,21 @@ void e2d::Player::setVolume(double volume)
 	{
 		pair.second->setVolume(_volume);
 	}
+
+	for (auto pair : _resList)
+	{
+		pair.second->setVolume(_volume);
+	}
 }
 
 void e2d::Player::pauseAll()
 {
 	for (auto pair : _fileList)
+	{
+		pair.second->pause();
+	}
+
+	for (auto pair : _resList)
 	{
 		pair.second->pause();
 	}
@@ -237,6 +247,11 @@ void e2d::Player::resumeAll()
 	{
 		pair.second->resume();
 	}
+
+	for (auto pair : _resList)
+	{
+		pair.second->resume();
+	}
 }
 
 void e2d::Player::stopAll()
@@ -245,4 +260,24 @@ void e2d::Player::stopAll()
 	{
 		pair.second->stop();
 	}
+
+	for (auto pair : _resList)
+	{
+		pair.second->stop();
+	}
+}
+
+void e2d::Player::clearCache()
+{
+	for (auto pair : _fileList)
+	{
+		delete pair.second;
+	}
+	_fileList.clear();
+
+	for (auto pair : _resList)
+	{
+		delete pair.second;
+	}
+	_resList.clear();
 }

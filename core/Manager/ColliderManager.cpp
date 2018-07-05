@@ -31,6 +31,15 @@ e2d::ColliderManager::~ColliderManager()
 {
 }
 
+void e2d::ColliderManager::clearAll()
+{
+	for (auto collder : _colliders)
+	{
+		collder->release();
+	}
+	_colliders.clear();
+}
+
 void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 {
 	// ÅĞ¶ÏÅö×²¼àÌıÊÇ·ñ´ò¿ª

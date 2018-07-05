@@ -109,6 +109,9 @@ public:
 	// 移除所有监听器
 	static void removeAllListeners();
 
+	// 强制清除所有监听器
+	static void clearAllListeners();
+
 private:
 	// 更新监听器
 	static void __update(

@@ -29,11 +29,9 @@ e2d::ActionManager::ActionManager()
 
 e2d::ActionManager::~ActionManager()
 {
-	_actions.clear();
-	_runningActions.clear();
 }
 
-void e2d::ActionManager::__update()
+void e2d::ActionManager::update()
 {
 	if (_runningActions.empty() || Game::getInstance()->isPaused())
 		return;
@@ -213,40 +211,14 @@ void e2d::ActionManager::clearAllBindedWith(Node * target)
 	}
 }
 
-void e2d::ActionManager::resumeAll()
+void e2d::ActionManager::clearAll()
 {
-	auto scene = SceneManager::getInstance()->getCurrentScene();
-	if (scene)
+	for (auto action : _runningActions)
 	{
-		for (auto child : scene->getRoot()->getAllChildren())
-		{
-			ActionManager::resumeAllBindedWith(child);
-		}
+		action->release();
 	}
-}
-
-void e2d::ActionManager::pauseAll()
-{
-	auto scene = SceneManager::getInstance()->getCurrentScene();
-	if (scene)
-	{
-		for (auto child : scene->getRoot()->getAllChildren())
-		{
-			ActionManager::pauseAllBindedWith(child);
-		}
-	}
-}
-
-void e2d::ActionManager::stopAll()
-{
-	auto scene = SceneManager::getInstance()->getCurrentScene();
-	if (scene)
-	{
-		for (auto child : scene->getRoot()->getAllChildren())
-		{
-			ActionManager::stopAllBindedWith(child);
-		}
-	}
+	_actions.clear();
+	_runningActions.clear();
 }
 
 std::vector<e2d::Action*> e2d::ActionManager::get(const String& name)
@@ -267,7 +239,7 @@ const std::vector<e2d::Action*>& e2d::ActionManager::getAll()
 	return _actions;
 }
 
-void e2d::ActionManager::__resetAll()
+void e2d::ActionManager::updateTime()
 {
 	for (auto action : _runningActions)
 	{

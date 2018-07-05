@@ -12,6 +12,7 @@ e2d::GC::~GC()
 	Renderer::destroyInstance();
 	Input::destroyInstance();
 	Window::destroyInstance();
+	Timer::destroyInstance();
 	Player::destroyInstance();
 	SceneManager::destroyInstance();
 	ActionManager::destroyInstance();
@@ -24,7 +25,7 @@ e2d::GC::~GC()
 // 它记录了对象被使用的次数，当计数为 0 时，GC 会自动释放这个对象
 // 所有的 Object 对象都应在被使用时（例如 Text 添加到了场景中）
 // 调用 retain 函数保证该对象不被删除，并在不再使用时调用 release 函数
-void e2d::GC::__update()
+void e2d::GC::update()
 {
 	if (!_notifyed) return;
 
@@ -53,11 +54,11 @@ void e2d::GC::clear()
 	_pool.clear();
 }
 
-void e2d::GC::addObject(e2d::Object * pObject)
+void e2d::GC::addObject(e2d::Object * object)
 {
-	if (pObject)
+	if (object)
 	{
-		_pool.insert(pObject);
+		_pool.insert(object);
 	}
 }
 
@@ -69,10 +70,4 @@ e2d::GC * e2d::GC::getInstance()
 void e2d::GC::notify()
 {
 	_notifyed = true;
-}
-
-void e2d::GC::flush()
-{
-	GC::notify();
-	GC::__update();
 }

@@ -172,14 +172,12 @@ HWND e2d::Window::__create()
 	return hWnd;
 }
 
-void e2d::Window::__poll()
+void e2d::Window::poll()
 {
-	static MSG msg;
-
-	while (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+	while (::PeekMessage(&_msg, nullptr, 0, 0, PM_REMOVE))
 	{
-		::TranslateMessage(&msg);
-		::DispatchMessage(&msg);
+		::TranslateMessage(&_msg);
+		::DispatchMessage(&_msg);
 	}
 }
 
@@ -429,7 +427,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	// ÖØ»æ´°¿Ú
 	case WM_PAINT:
 	{
-		e2d::Renderer::getInstance()->__render();
+		e2d::Renderer::getInstance()->render();
 		ValidateRect(hWnd, nullptr);
 	}
 	result = 0;

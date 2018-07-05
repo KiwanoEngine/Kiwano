@@ -118,7 +118,7 @@ void e2d::Renderer::__discardDeviceResources()
 	SafeRelease(_roundStrokeStyle);
 }
 
-void e2d::Renderer::__render()
+void e2d::Renderer::render()
 {
 	HRESULT hr = S_OK;
 
@@ -131,7 +131,7 @@ void e2d::Renderer::__render()
 	_renderTarget->Clear(_clearColor);
 
 	// ‰÷»æ≥°æ∞
-	SceneManager::getInstance()->__render();
+	SceneManager::getInstance()->render();
 
 	// ‰÷»æ FPS
 	if (_showFps)

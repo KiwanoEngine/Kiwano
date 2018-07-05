@@ -115,7 +115,7 @@ bool e2d::SceneManager::isTransitioning()
 	return _transition != nullptr;
 }
 
-void e2d::SceneManager::__update()
+void e2d::SceneManager::update()
 {
 	if (_transition == nullptr)
 	{
@@ -168,7 +168,7 @@ void e2d::SceneManager::__update()
 	}
 }
 
-void e2d::SceneManager::__render()
+void e2d::SceneManager::render()
 {
 	if (_transition)
 	{

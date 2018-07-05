@@ -67,8 +67,6 @@ private:
 // 窗口控制
 class Window
 {
-	friend class Game;
-
 public:
 	// 鼠标指针样式
 	enum class Cursor : int
@@ -156,6 +154,9 @@ public:
 		const String& title = L"Error"		/* 窗口标题 */
 	);
 
+	// 处理窗口消息
+	void poll();
+
 private:
 	Window();
 
@@ -165,9 +166,6 @@ private:
 
 	// 注册窗口
 	HWND __create();
-
-	// 处理窗口消息
-	void __poll();
 
 	// Win32 窗口消息回调程序
 	static LRESULT CALLBACK WndProc(
@@ -179,6 +177,7 @@ private:
 
 private:
 	HWND	_hWnd;
+	MSG		_msg;
 	Size	_size;
 	String	_title;
 	int		_iconID;
@@ -232,8 +231,6 @@ class Listener;
 // 输入设备
 class Input
 {
-	friend class Game;
-
 public:
 	// 鼠标键值
 	enum class Mouse : int
@@ -242,7 +239,6 @@ public:
 		Right,		/* 鼠标右键 */
 		Middle		/* 鼠标中键 */
 	};
-
 
 	// 键盘键值
 	enum class Key : int
@@ -357,6 +353,9 @@ public:
 	// 获得鼠标Z轴（鼠标滚轮）坐标增量
 	double getMouseDeltaZ();
 
+	// 刷新输入设备状态
+	void update();
+
 	// 添加输入监听
 	static Listener * addListener(
 		const Function& func,		/* 监听到用户输入时的执行函数 */
@@ -398,15 +397,15 @@ public:
 	// 移除所有监听器
 	static void removeAllListeners();
 
+	// 强制清空所有监听器
+	static void clearAllListeners();
+
 private:
 	Input();
 
 	~Input();
 
 	E2D_DISABLE_COPY(Input);
-
-	// 刷新输入信息
-	void __update();
 
 	// 刷新设备状态
 	void __updateDeviceState();
@@ -429,9 +428,6 @@ private:
 // 渲染器
 class Renderer
 {
-	friend class Game;
-	friend class Window;
-
 public:
 	// 获取渲染器实例
 	static Renderer * getInstance();
@@ -451,6 +447,9 @@ public:
 	void showFps(
 		bool show = true
 	);
+
+	// 渲染游戏画面
+	void render();
 
 	// 获取文字渲染器
 	TextRenderer * getTextRenderer();
@@ -489,9 +488,6 @@ private:
 
 	E2D_DISABLE_COPY(Renderer);
 
-	// 渲染游戏画面
-	void __render();
-
 	// 创建设备相关资源
 	bool __createDeviceResources();
 
@@ -516,7 +512,7 @@ private:
 };
 
 
-// 垃圾回收装置
+// 垃圾回收器
 class GC
 {
 	friend class Game;
@@ -549,13 +545,13 @@ public:
 	// 通知 GC 回收垃圾内存
 	void notify();
 
-	// 手动回收垃圾内存
-	void flush();
-
-	// 将对象放入 GC
+	// 将对象放入释放池
 	void addObject(
-		Object * pObject
+		Object * object
 	);
+
+	// 更新垃圾回收器状态
+	void update();
 
 	// 清空所有对象
 	void clear();
@@ -566,9 +562,6 @@ private:
 	~GC();
 
 	E2D_DISABLE_COPY(GC);
-
-	// 更新 GC
-	void __update();
 
 private:
 	bool				_notifyed;

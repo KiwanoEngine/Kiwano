@@ -9,7 +9,7 @@ class Game;
 class Input;
 class Renderer;
 class Node;
-class Timer;
+class Task;
 class Action;
 class Player;
 class Collider;
@@ -19,9 +19,6 @@ class Transition;
 // 场景管理器
 class SceneManager
 {
-	friend class Game;
-	friend class Renderer;
-
 public:
 	// 获取场景管理器实例
 	static SceneManager * getInstance();
@@ -53,18 +50,18 @@ public:
 	// 是否正在进行转场动作
 	bool isTransitioning();
 
+	// 更新场景内容
+	void update();
+
+	// 渲染场景画面
+	void render();
+
 private:
 	SceneManager();
 
 	~SceneManager();
 
 	E2D_DISABLE_COPY(SceneManager);
-
-	// 更新场景内容
-	void __update();
-
-	// 渲染场景画面
-	void __render();
 
 private:
 	bool				_saveCurrScene;
@@ -80,7 +77,6 @@ private:
 // 动作管理器
 class ActionManager
 {
-	friend class Game;
 	friend class Action;
 
 public:
@@ -120,15 +116,6 @@ public:
 		const String& name
 	);
 
-	// 继续所有动作
-	void resumeAll();
-
-	// 暂停所有动作
-	void pauseAll();
-
-	// 停止所有动作
-	void stopAll();
-
 	// 继续绑定在节点上的所有动作
 	void resumeAllBindedWith(
 		Node * target
@@ -144,10 +131,19 @@ public:
 		Node * target
 	);
 
-	// 清空绑定在节点上的所有动作
+	// 强制清除绑定在节点上的所有动作
 	void clearAllBindedWith(
 		Node * target
 	);
+
+	// 强制清除所有动作
+	void clearAll();
+
+	// 更新动作管理器状态
+	void update();
+
+	// 刷新所有动作计时
+	void updateTime();
 
 private:
 	ActionManager();
@@ -155,9 +151,6 @@ private:
 	~ActionManager();
 
 	E2D_DISABLE_COPY(ActionManager);
-
-	// 更新动作状态
-	void __update();
 
 	// 添加动作
 	void __add(
@@ -168,9 +161,6 @@ private:
 	void __remove(
 		Action * action
 	);
-
-	// 重置所有动作状态
-	void __resetAll();
 
 private:
 	std::vector<Action*> _actions;
@@ -192,6 +182,9 @@ public:
 
 	// 销毁实例
 	static void destroyInstance();
+
+	// 强制清除所有碰撞体
+	void clearAll();
 
 private:
 	ColliderManager();

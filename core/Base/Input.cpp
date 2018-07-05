@@ -112,7 +112,7 @@ void e2d::Input::destroyInstance()
 	}
 }
 
-void e2d::Input::__update()
+void e2d::Input::update()
 {
 	Input::__updateDeviceState();
 	Input::__updateListeners();
@@ -330,7 +330,15 @@ void e2d::Input::removeAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
-		GC::release(listener);
+		listener->_stopped = true;
+	}
+}
+
+void e2d::Input::clearAllListeners()
+{
+	for (auto listener : s_vListeners)
+	{
+		listener->release();
 	}
 	s_vListeners.clear();
 }

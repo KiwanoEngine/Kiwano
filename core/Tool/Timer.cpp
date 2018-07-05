@@ -1,168 +1,132 @@
 #include "..\e2dtool.h"
-#include "..\e2dnode.h"
 
-namespace e2d
+e2d::Timer * e2d::Timer::_instance = nullptr;
+
+e2d::Timer * e2d::Timer::getInstance()
 {
-	class TimerEntity
+	if (!_instance)
+		_instance = new (std::nothrow) Timer;
+	return _instance;
+}
+
+void e2d::Timer::destroyInstance()
+{
+	if (_instance)
 	{
-	public:
-		explicit TimerEntity(
-			const e2d::Function& func,
-			const e2d::String& name,
-			double delay,
-			int updateTimes,
-			bool paused
-		)
-			: running(!paused)
-			, stopped(false)
-			, runTimes(0)
-			, totalTimes(updateTimes)
-			, delay(std::max(delay, 0.0))
-			, lastTime(e2d::Time::getTotalTime())
-			, callback(func)
-			, name(name)
-		{
-		}
-
-		void update()
-		{
-			if (callback)
-			{
-				callback();
-			}
-
-			++runTimes;
-			lastTime += delay;
-
-			if (runTimes == totalTimes)
-			{
-				stopped = true;
-			}
-		}
-
-		bool ready()
-		{
-			if (this->running)
-			{
-				if (this->delay == 0)
-					return true;
-
-				if ((e2d::Time::getTotalTime() - this->lastTime) >= this->delay)
-					return true;
-			}
-			return false;
-		}
-
-	public:
-		bool	running;
-		bool	stopped;
-		int		runTimes;
-		int		totalTimes;
-		double	delay;
-		double	lastTime;
-		e2d::String		name;
-		e2d::Function	callback;
-	};
+		delete _instance;
+		_instance = nullptr;
+	}
 }
 
-static std::vector<e2d::TimerEntity*> s_vTimers;
-
-
-void e2d::Timer::add(const Function& func, double delay, int updateTimes, bool paused, const String& name)
+e2d::Timer::Timer()
+	: _tasks()
 {
-	auto timer = new (std::nothrow) TimerEntity(func, name, delay, updateTimes, paused);
-	s_vTimers.push_back(timer);
 }
 
-void e2d::Timer::add(const Function& func, const String& name)
+e2d::Timer::~Timer()
 {
-	Timer::add(func, 0, -1, false, name);
 }
 
-void e2d::Timer::start(double timeout, const Function& func)
+void e2d::Timer::addTask(Task * task)
 {
-	auto timer = new (std::nothrow) TimerEntity(func, L"", timeout, 1, false);
-	s_vTimers.push_back(timer);
-}
-
-void e2d::Timer::stop(const String& name)
-{
-	for (auto timer : s_vTimers)
+	if (task)
 	{
-		if (timer->name == name)
+		auto iter = std::find(_tasks.begin(), _tasks.end(), task);
+		if (iter == _tasks.end())
 		{
-			timer->running = false;
+			task->retain();
+			task->updateTime();
+			_tasks.push_back(task);
 		}
 	}
 }
 
-void e2d::Timer::start(const String& name)
+void e2d::Timer::pauseTasks(const String& name)
 {
-	for (auto timer : s_vTimers)
+	for (auto task : _tasks)
 	{
-		if (timer->name == name)
+		if (task->getName() == name)
 		{
-			timer->running = true;
+			task->pause();
 		}
 	}
 }
 
-void e2d::Timer::remove(const String& name)
+void e2d::Timer::resumeTasks(const String& name)
 {
-	for (auto timer : s_vTimers)
+	for (auto task : _tasks)
 	{
-		if (timer->name == name)
+		if (task->getName() == name)
 		{
-			timer->stopped = true;
+			task->resume();
 		}
 	}
 }
 
-void e2d::Timer::stopAll()
+void e2d::Timer::removeTasks(const String& name)
 {
-	for (auto timer : s_vTimers)
+	for (auto task : _tasks)
 	{
-		timer->running = false;
+		if (task->getName() == name)
+		{
+			task->_stopped = true;
+		}
 	}
 }
 
-void e2d::Timer::startAll()
+void e2d::Timer::pauseAllTasks()
 {
-	for (auto timer : s_vTimers)
+	for (auto task : _tasks)
 	{
-		timer->running = true;
+		task->pause();
 	}
 }
 
-void e2d::Timer::removeAll()
+void e2d::Timer::resumeAllTasks()
 {
-	for (auto timer : s_vTimers)
+	for (auto task : _tasks)
 	{
-		delete timer;
+		task->resume();
 	}
-	s_vTimers.clear();
 }
 
-void e2d::Timer::__update()
+void e2d::Timer::removeAllTasks()
 {
-	if (s_vTimers.empty() || Game::getInstance()->isPaused())
+	for (auto task : _tasks)
+	{
+		task->_stopped = true;
+	}
+}
+
+void e2d::Timer::clearAllTasks()
+{
+	for (auto task : _tasks)
+	{
+		task->release();
+	}
+	_tasks.clear();
+}
+
+void e2d::Timer::update()
+{
+	if (_tasks.empty() || Game::getInstance()->isPaused())
 		return;
 
-	for (size_t i = 0; i < s_vTimers.size();)
+	for (size_t i = 0; i < _tasks.size();)
 	{
-		auto timer = s_vTimers[i];
-		// 清除已停止的定时器
-		if (timer->stopped)
+		auto task = _tasks[i];
+		// 清除已停止的任务
+		if (task->_stopped)
 		{
-			delete timer;
-			s_vTimers.erase(s_vTimers.begin() + i);
+			task->release();
+			_tasks.erase(_tasks.begin() + i);
 		}
 		else
 		{
 			// 更新定时器
-			if (timer->ready())
+			if (task->isReady())
 			{
-				timer->update();
+				task->update();
 			}
 
 			++i;
@@ -170,10 +134,10 @@ void e2d::Timer::__update()
 	}
 }
 
-void e2d::Timer::__resetAll()
+void e2d::Timer::updateTime()
 {
-	for (auto timer : s_vTimers)
+	for (auto task : _tasks)
 	{
-		timer->lastTime = Time::getTotalTime();
+		task->updateTime();
 	}
 }

@@ -246,6 +246,9 @@ public:
 	// 停止所有音乐
 	void stopAll();
 
+	// 清空音乐缓存
+	void clearCache();
+
 	// 获取 IXAudio2 对象
 	IXAudio2 * getXAudio2();
 
@@ -267,63 +270,119 @@ private:
 };
 
 
-// 定时器
-class Timer
+class Timer;
+
+// 定时任务
+class Task :
+	public Object
 {
-	friend class Game;
+	friend class Timer;
 
 public:
-	// 添加定时器（每帧执行一次）
-	static void add(
+	explicit Task(
 		const Function& func,		/* 执行函数 */
 		const String& name = L""	/* 定时器名称 */
 	);
 
-	// 添加定时器
-	static void add(
+	explicit Task(
 		const Function& func,		/* 执行函数 */
 		double delay,				/* 时间间隔（秒） */
 		int times = -1,				/* 执行次数（设 -1 为永久执行） */
-		bool paused = false,		/* 是否暂停 */
 		const String& name = L""	/* 定时器名称 */
 	);
 
-	// 在足够延迟后执行指定函数
-	static void start(
-		double timeout,				/* 等待的时长（秒） */
-		const Function& func		/* 执行的函数 */
-	);
+	// 暂停任务
+	void pause();
 
-	// 启动具有相同名称的定时器
-	static void start(
-		const String& name
-	);
+	// 继续任务
+	void resume();
 
-	// 停止具有相同名称的定时器
-	static void stop(
-		const String& name
-	);
+	// 任务是否就绪
+	bool isReady() const;
 
-	// 移除具有相同名称的定时器
-	static void remove(
-		const String& name
-	);
+	// 任务是否正在执行
+	bool isRunning() const;
 
-	// 启动所有定时器
-	static void startAll();
+	// 获取任务名称
+	String getName() const;
 
-	// 停止所有定时器
-	static void stopAll();
+	// 执行任务
+	void update();
 
-	// 移除所有定时器
-	static void removeAll();
+	// 刷新任务计时
+	void updateTime();
 
 private:
-	// 更新定时器
-	static void __update();
+	bool		_running;
+	bool		_stopped;
+	int			_runTimes;
+	int			_totalTimes;
+	double		_delay;
+	double		_lastTime;
+	String		_name;
+	Function	_callback;
+};
 
-	// 重置定时器状态
-	static void __resetAll();
+
+// 定时器
+class Timer
+{
+public:
+	// 获取定时器实例
+	static Timer * getInstance();
+
+	// 销毁实例
+	static void destroyInstance();
+
+	// 添加任务
+	void addTask(
+		Task * task
+	);
+
+	// 继续具有相同名称的任务
+	void resumeTasks(
+		const String& name
+	);
+
+	// 暂停具有相同名称的任务
+	void pauseTasks(
+		const String& name
+	);
+
+	// 移除具有相同名称的任务
+	void removeTasks(
+		const String& name
+	);
+
+	// 继续所有任务
+	void resumeAllTasks();
+
+	// 暂停所有任务
+	void pauseAllTasks();
+
+	// 移除所有任务
+	void removeAllTasks();
+
+	// 强制清空所有任务
+	void clearAllTasks();
+
+	// 更新定时器
+	void update();
+
+	// 刷新所有任务计时
+	void updateTime();
+
+private:
+	Timer();
+
+	~Timer();
+
+	E2D_DISABLE_COPY(Timer);
+
+private:
+	std::vector<Task*> _tasks;
+
+	static Timer * _instance;
 };
 
 
