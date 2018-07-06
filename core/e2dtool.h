@@ -50,7 +50,7 @@ private:
 
 // 音乐
 class Music :
-	public Object
+	public Ref
 {
 	friend class VoiceCallback;
 
@@ -274,7 +274,7 @@ class Timer;
 
 // 定时任务
 class Task :
-	public Object
+	public Ref
 {
 	friend class Timer;
 
@@ -389,8 +389,8 @@ private:
 class Collision;
 
 // 监听器
-class Listener
-	: public Object
+class Listener :
+	public Ref
 {
 	friend class Input;
 	friend class Collision;

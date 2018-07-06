@@ -43,6 +43,12 @@ e2d::Node::Node()
 
 e2d::Node::~Node()
 {
+	ActionManager::getInstance()->clearAllBindedWith(this);
+	ColliderManager::getInstance()->__remove(_collider);
+	for (auto child : _children)
+	{
+		GC::release(child);
+	}
 }
 
 void e2d::Node::_update()
@@ -606,14 +612,10 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 			}
 		}
 
+		GC::retain(child);
 		_children.push_back(child);
-
 		child->setOrder(order);
-
-		child->retain();
-
 		child->_parent = this;
-
 		if (this->_parentScene)
 		{
 			child->_setParentScene(this->_parentScene);
@@ -717,7 +719,7 @@ bool e2d::Node::removeChild(Node * child)
 				child->_setParentScene(nullptr);
 			}
 
-			child->release();
+			GC::release(child);
 			return true;
 		}
 	}
@@ -748,7 +750,7 @@ void e2d::Node::removeChildren(const String& childName)
 			{
 				child->_setParentScene(nullptr);
 			}
-			child->release();
+			GC::release(child);
 		}
 	}
 }
@@ -758,7 +760,7 @@ void e2d::Node::clearAllChildren()
 	// 所有节点的引用计数减一
 	for (auto child : _children)
 	{
-		child->release();
+		GC::release(child);
 	}
 	// 清空储存节点的容器
 	_children.clear();
@@ -906,16 +908,6 @@ bool e2d::Node::intersects(Node * node) const
 void e2d::Node::setAutoUpdate(bool bAutoUpdate)
 {
 	_autoUpdate = bAutoUpdate;
-}
-
-void e2d::Node::onDestroy()
-{
-	ActionManager::getInstance()->clearAllBindedWith(this);
-	ColliderManager::getInstance()->__remove(_collider);
-	for (auto child : _children)
-	{
-		GC::safeRelease(child);
-	}
 }
 
 void e2d::Node::resumeAllActions()

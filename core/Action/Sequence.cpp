@@ -13,6 +13,10 @@ e2d::Sequence::Sequence(const std::vector<Action*>& actions)
 
 e2d::Sequence::~Sequence()
 {
+	for (auto action : _actions)
+	{
+		GC::safeRelease(action);
+	}
 }
 
 void e2d::Sequence::_init()
@@ -28,15 +32,6 @@ void e2d::Sequence::_init()
 	}
 	// 初始化第一个动作
 	_actions[0]->_init();
-}
-
-void e2d::Sequence::onDestroy()
-{
-	Action::onDestroy();
-	for (auto action : _actions)
-	{
-		GC::safeRelease(action);
-	}
 }
 
 void e2d::Sequence::_update()
@@ -83,7 +78,7 @@ void e2d::Sequence::add(Action * action)
 	if (action)
 	{
 		_actions.push_back(action);
-		action->retain();
+		GC::retain(action);
 	}
 }
 

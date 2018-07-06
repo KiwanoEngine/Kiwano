@@ -40,15 +40,16 @@ e2d::Sprite::Sprite(int resNameId, const String& resType, const Rect& cropRect)
 
 e2d::Sprite::~Sprite()
 {
+	GC::safeRelease(_image);
 }
 
 bool e2d::Sprite::open(Image * image)
 {
 	if (image)
 	{
-		GC::safeRelease(_image);
+		GC::release(_image);
 		_image = image;
-		_image->retain();
+		GC::retain(_image);
 
 		Node::setSize(_image->getWidth(), _image->getHeight());
 		return true;
@@ -61,7 +62,7 @@ bool e2d::Sprite::open(const String& filePath)
 	if (!_image)
 	{
 		_image = new (e2d::autorelease) Image();
-		_image->retain();
+		GC::retain(_image);
 	}
 
 	if (_image->open(filePath))
@@ -77,7 +78,7 @@ bool e2d::Sprite::open(int resNameId, const String& resType)
 	if (!_image)
 	{
 		_image = new (e2d::autorelease) Image();
-		_image->retain();
+		GC::retain(_image);
 	}
 
 	if (_image->open(resNameId, resType))
@@ -123,10 +124,4 @@ void e2d::Sprite::onRender()
 			)
 		);
 	}
-}
-
-void e2d::Sprite::onDestroy()
-{
-	Node::onDestroy();
-	GC::safeRelease(_image);
 }

@@ -143,7 +143,7 @@
     <ClCompile Include="..\..\core\Common\Image.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Object.cpp">
+    <ClCompile Include="..\..\core\Common\Ref.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Point.cpp">

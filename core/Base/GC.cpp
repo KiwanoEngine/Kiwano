@@ -2,8 +2,43 @@
 #include "..\e2dtool.h"
 #include "..\e2dmanager.h"
 
-// GC 机制，用于自动销毁单例
-e2d::GC e2d::GC::_instance;
+using namespace e2d;
+
+e2d::autorelease_t const e2d::autorelease = e2d::autorelease_t();
+
+void * operator new(size_t size, e2d::autorelease_t const &) E2D_NOEXCEPT
+{
+	void* p = ::operator new(size, std::nothrow);
+	if (p)
+	{
+		GC::autorelease(static_cast<Ref*>(p));
+	}
+	return p;
+}
+
+void* operator new[](size_t size, e2d::autorelease_t const&) E2D_NOEXCEPT
+{
+	void* p = ::operator new[](size, std::nothrow);
+	if (p)
+	{
+		GC::autoreleaseArray(static_cast<Ref*>(p));
+	}
+	return p;
+}
+
+void operator delete(void * block, e2d::autorelease_t const &) E2D_NOEXCEPT
+{
+	::operator delete (block, std::nothrow);
+}
+
+void operator delete[](void* block, e2d::autorelease_t const&) E2D_NOEXCEPT
+{
+	::operator delete[](block, std::nothrow);
+}
+
+
+// GC 机制，用于销毁所有单例
+GC GC::_instance;
 
 e2d::GC::GC()
 	: _notifyed(false)
@@ -26,24 +61,25 @@ e2d::GC::~GC()
 }
 
 
-// GC 释放池的实现机制：
-// Object 类中的引用计数（_refCount）在一定程度上防止了内存泄漏
-// 它记录了对象被使用的次数，当计数为 0 时，GC 会自动释放这个对象
-// 所有的 Object 对象都应在被使用时（例如 Text 添加到了场景中）
-// 调用 retain 函数保证该对象不被删除，并在不再使用时调用 release 函数
 void e2d::GC::update()
 {
-	if (!_notifyed)
+	if (!_instance._notifyed)
 		return;
 
-	_notifyed = false;
-	for (auto iter = _pool.begin(); iter != _pool.end();)
+	_instance._notifyed = false;
+	for (auto iter = _instance._pool.begin(); iter != _instance._pool.end();)
 	{
-		if ((*iter)->getRefCount() <= 0)
+		if ((*iter).first->getRefCount() <= 0)
 		{
-			(*iter)->onDestroy();
-			delete (*iter);
-			iter = _pool.erase(iter);
+			if ((*iter).second)
+			{
+				delete[] (*iter).first;
+			}
+			else
+			{
+				delete (*iter).first;
+			}
+			iter = _instance._pool.erase(iter);
 		}
 		else
 		{
@@ -54,27 +90,58 @@ void e2d::GC::update()
 
 void e2d::GC::clear()
 {
-	for (auto pObj : _pool)
+	for (auto pair : _instance._pool)
 	{
-		delete pObj;
+		delete pair.first;
 	}
-	_pool.clear();
+	_instance._pool.clear();
 }
 
-void e2d::GC::addObject(e2d::Object * object)
+void e2d::GC::autorelease(Ref * ref)
 {
-	if (object)
+	if (ref)
 	{
-		_pool.insert(object);
+		auto iter = _instance._pool.find(ref);
+		if (iter == _instance._pool.end())
+		{
+			_instance._pool.insert(std::make_pair(ref, false));
+		}
 	}
 }
 
-e2d::GC * e2d::GC::getInstance()
+void e2d::GC::autoreleaseArray(Ref * ref)
 {
-	return &_instance;
+	if (ref)
+	{
+		auto iter = _instance._pool.find(ref);
+		if (iter == _instance._pool.end())
+		{
+			_instance._pool.insert(std::make_pair(ref, true));
+		}
+	}
 }
 
-void e2d::GC::notify()
+void e2d::GC::retain(Ref * ref)
 {
-	_notifyed = true;
+	if (ref)
+	{
+		auto iter = _instance._pool.find(ref);
+		if (iter != _instance._pool.end())
+		{
+			(*iter).first->retain();
+		}
+	}
+}
+
+void e2d::GC::release(Ref * ref)
+{
+	if (ref)
+	{
+		auto iter = _instance._pool.find(ref);
+		if (iter != _instance._pool.end())
+		{
+			(*iter).first->release();
+			_instance._notifyed = true;
+		}
+	}
 }

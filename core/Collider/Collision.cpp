@@ -122,7 +122,7 @@ void e2d::Collision::__update(Node * active, Node * passive)
 e2d::Listener * e2d::Collision::addListener(const Function& func, const String& name, bool paused)
 {
 	auto listener = new (e2d::autorelease) Listener(func, name, paused);
-	listener->retain();
+	GC::retain(listener);
 	s_vListeners.push_back(listener);
 	return listener;
 }
@@ -134,7 +134,7 @@ void e2d::Collision::addListener(Listener * listener)
 		auto iter = std::find(s_vListeners.begin(), s_vListeners.end(), listener);
 		if (iter == s_vListeners.end())
 		{
-			listener->retain();
+			GC::retain(listener);
 			s_vListeners.push_back(listener);
 		}
 	}
@@ -223,7 +223,7 @@ void e2d::Collision::clearAllListeners()
 {
 	for (auto listener : s_vListeners)
 	{
-		listener->release();
+		GC::release(listener);
 	}
 	s_vListeners.clear();
 }

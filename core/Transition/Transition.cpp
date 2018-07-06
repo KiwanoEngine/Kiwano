@@ -20,17 +20,13 @@ e2d::Transition::~Transition()
 {
 	SafeRelease(_outLayer);
 	SafeRelease(_inLayer);
+	GC::safeRelease(_outScene);
+	GC::safeRelease(_inScene);
 }
 
 bool e2d::Transition::isDone()
 {
 	return _end;
-}
-
-void e2d::Transition::onDestroy()
-{
-	GC::safeRelease(_outScene);
-	GC::safeRelease(_inScene);
 }
 
 void e2d::Transition::_init(Scene * prev, Scene * next)
@@ -52,8 +48,8 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 	_last = Time::getTotalTime();
 	_outScene = prev;
 	_inScene = next;
-	if (_outScene) _outScene->retain();
-	if (_inScene) _inScene->retain();
+	GC::retain(_outScene);
+	GC::retain(_inScene);
 
 	_windowSize = Window::getInstance()->getSize();
 	_outLayerParam = _inLayerParam = D2D1::LayerParameters();

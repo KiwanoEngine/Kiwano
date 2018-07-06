@@ -16,6 +16,7 @@ e2d::Animate::Animate(Animation * animation)
 
 e2d::Animate::~Animate()
 {
+	GC::safeRelease(_animation);
 }
 
 e2d::Animation * e2d::Animate::getAnimation() const
@@ -29,7 +30,7 @@ void e2d::Animate::setAnimation(Animation * animation)
 	{
 		GC::safeRelease(_animation);
 		_animation = animation;
-		_animation->retain();
+		GC::retain(_animation);
 	}
 }
 
@@ -86,12 +87,6 @@ void e2d::Animate::reset()
 {
 	Action::reset();
 	_frameIndex = 0;
-}
-
-void e2d::Animate::onDestroy()
-{
-	Action::onDestroy();
-	GC::safeRelease(_animation);
 }
 
 e2d::Animate * e2d::Animate::clone() const

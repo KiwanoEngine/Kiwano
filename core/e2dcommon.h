@@ -440,28 +440,22 @@ public:
 };
 
 
-// 基础对象
-class Object
+// 引用计数对象
+class Ref
 {
 public:
-	Object();
+	Ref();
 
-	virtual ~Object();
+	virtual ~Ref();
 
-	// 自动释放
-	void autorelease();
-
-	// 引用计数加一
+	// 增加引用计数
 	void retain();
 
-	// 引用计数减一
+	// 减少引用计数
 	void release();
 
 	// 获取引用计数
 	int getRefCount() const;
-
-	// 销毁对象
-	virtual void onDestroy() {}
 
 private:
 	int _refCount;
@@ -470,7 +464,7 @@ private:
 
 // 图片
 class Image :
-	public Object
+	public Ref
 {
 public:
 	Image();
@@ -575,7 +569,7 @@ class Transition;
 
 // 场景
 class Scene :
-	public Object
+	public Ref
 {
 	friend class SceneManager;
 	friend class Transition;
@@ -635,9 +629,6 @@ public:
 	// 获取根节点
 	Node * getRoot() const;
 
-	// 销毁对象
-	virtual void onDestroy() override;
-
 protected:
 	// 渲染场景画面
 	void _render();
@@ -655,7 +646,7 @@ class ColliderManager;
 
 // 碰撞体
 class Collider :
-	public Object
+	public Ref
 {
 	friend class Node;
 	friend class ColliderManager;
@@ -833,12 +824,22 @@ namespace e2d
 }
 
 void* operator new(
-	size_t _Size,
+	size_t size,
+	e2d::autorelease_t const&
+	) E2D_NOEXCEPT;
+
+void* operator new[](
+	size_t size,
 	e2d::autorelease_t const&
 	) E2D_NOEXCEPT;
 
 void operator delete(
-	void* _Block,
+	void* block,
+	e2d::autorelease_t const&
+	) E2D_NOEXCEPT;
+
+void operator delete[](
+	void* block,
 	e2d::autorelease_t const&
 	) E2D_NOEXCEPT;
 #endif

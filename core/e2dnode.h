@@ -9,7 +9,7 @@ class Action;
 class Transition;
 
 class Node :
-	public Object
+	public Ref
 {
 	friend class Scene;
 	friend class Collider;
@@ -377,9 +377,6 @@ public:
 	// 停止所有动作
 	virtual void stopAllActions();
 
-	// 销毁对象
-	virtual void onDestroy() override;
-
 protected:
 	// 更新节点
 	void _update();
@@ -497,9 +494,6 @@ public:
 
 	// 渲染精灵
 	virtual void onRender() override;
-
-	// 销毁对象
-	virtual void onDestroy() override;
 
 protected:
 	Image * _image;

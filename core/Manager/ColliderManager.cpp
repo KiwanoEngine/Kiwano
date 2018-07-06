@@ -35,7 +35,7 @@ void e2d::ColliderManager::clearAll()
 {
 	for (auto collder : _colliders)
 	{
-		collder->release();
+		GC::release(collder);
 	}
 	_colliders.clear();
 }
@@ -83,24 +83,24 @@ void e2d::ColliderManager::__updateCollider(e2d::Collider * pActiveCollider)
 	}
 }
 
-void e2d::ColliderManager::__add(Collider * pCollider)
+void e2d::ColliderManager::__add(Collider * collider)
 {
-	if (pCollider)
+	if (collider)
 	{
-		pCollider->retain();
-		_colliders.push_back(pCollider);
+		GC::retain(collider);
+		_colliders.push_back(collider);
 	}
 }
 
-void e2d::ColliderManager::__remove(Collider * pCollider)
+void e2d::ColliderManager::__remove(Collider * collider)
 {
-	if (pCollider)
+	if (collider)
 	{
 		for (size_t i = 0; i < _colliders.size(); ++i)
 		{
-			if (_colliders[i] == pCollider)
+			if (_colliders[i] == collider)
 			{
-				GC::safeRelease(pCollider);
+				GC::release(collider);
 				_colliders.erase(_colliders.begin() + i);
 				return;
 			}

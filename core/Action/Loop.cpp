@@ -11,12 +11,13 @@ e2d::Loop::Loop(Action * action, int times /* = -1 */)
 	if (action)
 	{
 		_action = action;
-		_action->retain();
+		GC::retain(_action);
 	}
 }
 
 e2d::Loop::~Loop()
 {
+	GC::safeRelease(_action);
 }
 
 e2d::Loop * e2d::Loop::clone() const
@@ -88,12 +89,6 @@ void e2d::Loop::reset()
 
 	if (_action) _action->reset();
 	_times = 0;
-}
-
-void e2d::Loop::onDestroy()
-{
-	Action::onDestroy();
-	GC::safeRelease(_action);
 }
 
 void e2d::Loop::_resetTime()

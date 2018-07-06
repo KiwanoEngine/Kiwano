@@ -7,12 +7,13 @@ e2d::Scene::Scene()
 	, _root(nullptr)
 {
 	_root = new (e2d::autorelease) Node();
-	_root->retain();
+	GC::retain(_root);
 	_root->_setParentScene(this);
 }
 
 e2d::Scene::~Scene()
 {
+	GC::safeRelease(_root);
 }
 
 void e2d::Scene::_render()
@@ -80,9 +81,4 @@ const std::vector<e2d::Node*>& e2d::Scene::getAll() const
 e2d::Node * e2d::Scene::getRoot() const
 {
 	return _root;
-}
-
-void e2d::Scene::onDestroy()
-{
-	GC::safeRelease(_root);
 }

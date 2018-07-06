@@ -37,7 +37,6 @@ void e2d::Game::destroyInstance()
 
 void e2d::Game::start(bool cleanup)
 {
-	auto gc = GC::getInstance();
 	auto input = Input::getInstance();
 	auto window = Window::getInstance();
 	auto renderer = Renderer::getInstance();
@@ -77,7 +76,7 @@ void e2d::Game::start(bool cleanup)
 			actionManager->update();	// 更新动作管理器
 			sceneManager->update();		// 更新场景内容
 			renderer->render();			// 渲染游戏画面
-			gc->update();				// 刷新内存池
+			GC::update();				// 刷新内存池
 
 			Time::__updateLast();		// 刷新时间信息
 		}
@@ -151,5 +150,5 @@ void e2d::Game::cleanup()
 	// 清空音乐缓存
 	Player::getInstance()->clearCache();
 	// 删除所有对象
-	GC::getInstance()->clear();
+	GC::clear();
 }

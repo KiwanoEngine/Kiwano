@@ -52,10 +52,6 @@ e2d::Node * e2d::Action::getTarget()
 	return _target;
 }
 
-void e2d::Action::onDestroy()
-{
-}
-
 void e2d::Action::reset()
 {
 	_initialized = false;

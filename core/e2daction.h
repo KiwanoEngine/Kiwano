@@ -15,7 +15,7 @@ class ActionManager;
 
 // 基础动作
 class Action :
-	public Object
+	public Ref
 {
 	friend class ActionManager;
 	friend class Loop;
@@ -58,9 +58,6 @@ public:
 
 	// 获取该动作的执行目标
 	virtual Node * getTarget();
-
-	// 销毁对象
-	virtual void onDestroy() override;
 
 protected:
 	// 初始化动作
@@ -517,9 +514,6 @@ public:
 	// 重置动作
 	virtual void reset() override;
 
-	// 销毁对象
-	virtual void onDestroy() override;
-
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -596,9 +590,6 @@ public:
 	// 重置动作
 	virtual void reset() override;
 
-	// 销毁对象
-	virtual void onDestroy() override;
-
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -647,9 +638,6 @@ public:
 	// 重置动作
 	virtual void reset() override;
 
-	// 销毁对象
-	virtual void onDestroy() override;
-
 protected:
 	// 初始化动作
 	virtual void _init() override;
@@ -667,7 +655,7 @@ protected:
 
 // 帧动画
 class Animation :
-	public Object
+	public Ref
 {
 public:
 	Animation();
@@ -714,9 +702,6 @@ public:
 	// 获取帧动画的倒转
 	Animation * reverse() const;
 
-	// 销毁对象
-	virtual void onDestroy() override;
-
 protected:
 	double	_interval;
 	std::vector<Image*> _frames;
@@ -752,9 +737,6 @@ public:
 
 	// 重置动作
 	virtual void reset() override;
-
-	// 销毁对象
-	virtual void onDestroy() override;
 
 protected:
 	// 初始化动作

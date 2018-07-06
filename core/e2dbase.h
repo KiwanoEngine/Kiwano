@@ -518,33 +518,42 @@ class GC
 	friend class Game;
 
 public:
-	//  获取 GC 实例
-	static GC* getInstance();
+	// 自动释放
+	static void autorelease(
+		Ref* ref
+	);
 
-	// 释放对象
+	// 自动释放数组
+	static void autoreleaseArray(
+		Ref* ref
+	);
+
+	// 保留
+	static void retain(
+		Ref* ref
+	);
+
+	// 释放
+	static void release(
+		Ref* ref
+	);
+
+	// 安全地释放对象
 	template <typename Type>
 	static inline void safeRelease(Type*& p)
 	{
 		if (p != nullptr)
 		{
-			p->release();
+			GC::release(p);
 			p = nullptr;
 		}
 	}
 
-	// 通知 GC 回收垃圾内存
-	void notify();
-
-	// 将对象放入释放池
-	void addObject(
-		Object * object
-	);
-
 	// 更新垃圾回收器状态
-	void update();
+	static void update();
 
 	// 清空所有对象
-	void clear();
+	static void clear();
 
 private:
 	GC();
@@ -554,8 +563,8 @@ private:
 	E2D_DISABLE_COPY(GC);
 
 private:
-	bool				_notifyed;
-	std::set<Object*>	_pool;
+	bool _notifyed;
+	std::map<Ref*, bool> _pool;
 
 	static GC _instance;
 };

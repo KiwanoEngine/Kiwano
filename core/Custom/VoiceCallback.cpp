@@ -41,7 +41,7 @@ void e2d::VoiceCallback::OnBufferEnd(void * pBufferContext)
 
 	if (_music)
 	{
-		_music->release();
+		GC::release(_music);
 	}
 }
 
@@ -49,7 +49,7 @@ void e2d::VoiceCallback::OnBufferStart(void * pBufferContext)
 {
 	if (_music)
 	{
-		_music->retain();
+		GC::retain(_music);
 	}
 }
 

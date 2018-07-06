@@ -10,7 +10,7 @@ class SceneManager;
 
 // 场景过渡
 class Transition :
-	public Object
+	public Ref
 {
 	friend class SceneManager;
 
@@ -21,9 +21,6 @@ public:
 
 	// 场景过渡动画是否结束
 	bool isDone();
-
-	// 销毁对象
-	virtual void onDestroy() override;
 
 protected:
 	// 初始化场景过渡动画

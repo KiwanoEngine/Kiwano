@@ -24,6 +24,10 @@ e2d::Animation::Animation(double interval, const std::vector<Image*>& frames)
 
 e2d::Animation::~Animation()
 {
+	for (auto frame : _frames)
+	{
+		GC::safeRelease(frame);
+	}
 }
 
 void e2d::Animation::setInterval(double interval)
@@ -31,20 +35,12 @@ void e2d::Animation::setInterval(double interval)
 	_interval = std::max(interval, 0.0);
 }
 
-void e2d::Animation::onDestroy()
-{
-	for (auto frame : _frames)
-	{
-		GC::safeRelease(frame);
-	}
-}
-
 void e2d::Animation::add(Image * frame)
 {
 	if (frame)
 	{
 		_frames.push_back(frame);
-		frame->retain();
+		GC::retain(frame);
 	}
 }
 

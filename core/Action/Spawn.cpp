@@ -11,6 +11,10 @@ e2d::Spawn::Spawn(const std::vector<Action*>& actions)
 
 e2d::Spawn::~Spawn()
 {
+	for (auto action : _actions)
+	{
+		GC::safeRelease(action);
+	}
 }
 
 void e2d::Spawn::_init()
@@ -24,15 +28,6 @@ void e2d::Spawn::_init()
 			action->_target = _target;
 			action->_init();
 		}
-	}
-}
-
-void e2d::Spawn::onDestroy()
-{
-	Action::onDestroy();
-	for (auto action : _actions)
-	{
-		GC::safeRelease(action);
 	}
 }
 
@@ -81,7 +76,7 @@ void e2d::Spawn::add(Action * action)
 	if (action)
 	{
 		_actions.push_back(action);
-		action->retain();
+		GC::retain(action);
 	}
 }
 
