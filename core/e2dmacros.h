@@ -89,6 +89,13 @@
 #endif
 
 
+#if _MSC_VER >= 1900
+#	define E2D_NOEXCEPT noexcept
+#else
+#	define E2D_NOEXCEPT throw()
+#endif
+
+
 #if _MSC_VER >= 1800
 #	define E2D_DISABLE_COPY(Class) \
 	Class(const Class &) = delete; \

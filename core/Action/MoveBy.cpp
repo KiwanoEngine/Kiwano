@@ -37,10 +37,10 @@ void e2d::MoveBy::_update()
 
 e2d::MoveBy * e2d::MoveBy::clone() const
 {
-	return new (std::nothrow) MoveBy(_duration, _deltaPos);
+	return new (e2d::autorelease) MoveBy(_duration, _deltaPos);
 }
 
 e2d::MoveBy * e2d::MoveBy::reverse() const
 {
-	return new (std::nothrow) MoveBy(_duration, -_deltaPos);
+	return new (e2d::autorelease) MoveBy(_duration, -_deltaPos);
 }

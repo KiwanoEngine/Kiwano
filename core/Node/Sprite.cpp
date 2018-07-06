@@ -60,8 +60,7 @@ bool e2d::Sprite::open(const String& filePath)
 {
 	if (!_image)
 	{
-		_image = new (std::nothrow) Image();
-		_image->autorelease();
+		_image = new (e2d::autorelease) Image();
 		_image->retain();
 	}
 
@@ -77,8 +76,7 @@ bool e2d::Sprite::open(int resNameId, const String& resType)
 {
 	if (!_image)
 	{
-		_image = new (std::nothrow) Image();
-		_image->autorelease();
+		_image = new (e2d::autorelease) Image();
 		_image->retain();
 	}
 

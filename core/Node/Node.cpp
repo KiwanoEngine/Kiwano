@@ -573,8 +573,7 @@ void e2d::Node::setColliderType(Collider::Type type)
 		case Collider::Type::Circle:
 		case Collider::Type::Ellipse:
 		{
-			_collider = new (std::nothrow) Collider();
-			_collider->autorelease();
+			_collider = new (e2d::autorelease) Collider();
 			_collider->_parentNode = this;
 			_collider->_recreate(type);
 			// 添加新的碰撞体

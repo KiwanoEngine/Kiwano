@@ -764,12 +764,6 @@ public:
 		bool enabled
 	);
 
-	// 打开或关闭自动回收 Easy2D 对象功能
-	// 默认：关闭
-	void setObjectsAutoReleaseEnabled(
-		bool enabled
-	);
-
 	// 打开或关闭碰撞监听
 	// 默认：关闭
 	void setCollisionEnabled(
@@ -800,9 +794,6 @@ public:
 	// 获取声音打开状态
 	bool isSoundEnabled() const;
 
-	// 获取 Easy2D 对象自动释放状态
-	bool isObjectsAutoReleaseEnabled() const;
-
 	// 获取碰撞监听状态
 	bool isCollisionEnabled() const;
 
@@ -820,7 +811,6 @@ protected:
 
 protected:
 	bool			_unconfigured;
-	bool			_objectsAutoRelease;
 	bool			_soundEnabled;
 	bool			_collisionEnabled;
 	bool			_colliderVisiable;
@@ -831,3 +821,24 @@ protected:
 
 
 }
+
+
+#ifndef __AUTORELEASE_T_DEFINED
+#define __AUTORELEASE_T_DEFINED
+namespace e2d
+{
+	struct autorelease_t { };
+
+	extern autorelease_t const autorelease;
+}
+
+void* operator new(
+	size_t _Size,
+	e2d::autorelease_t const&
+	) E2D_NOEXCEPT;
+
+void operator delete(
+	void* _Block,
+	e2d::autorelease_t const&
+	) E2D_NOEXCEPT;
+#endif

@@ -8,12 +8,12 @@ e2d::Delay::Delay(double duration)
 
 e2d::Delay * e2d::Delay::clone() const
 {
-	return new (std::nothrow) Delay(_delay);
+	return new (e2d::autorelease) Delay(_delay);
 }
 
 e2d::Delay * e2d::Delay::reverse() const
 {
-	return new (std::nothrow) Delay(_delay);
+	return new (e2d::autorelease) Delay(_delay);
 }
 
 void e2d::Delay::reset()

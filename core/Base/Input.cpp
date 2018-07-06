@@ -236,8 +236,7 @@ double e2d::Input::getMouseDeltaZ()
 
 e2d::Listener * e2d::Input::addListener(const Function& func, const String& name, bool paused)
 {
-	auto listener = new (std::nothrow) Listener(func, name, paused);
-	listener->autorelease();
+	auto listener = new (e2d::autorelease) Listener(func, name, paused);
 	listener->retain();
 	s_vListeners.push_back(listener);
 	return listener;

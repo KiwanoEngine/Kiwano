@@ -10,7 +10,7 @@ e2d::OpacityTo::OpacityTo(double duration, double opacity)
 
 e2d::OpacityTo * e2d::OpacityTo::clone() const
 {
-	return new (std::nothrow) OpacityTo(_duration, _endVal);
+	return new (e2d::autorelease) OpacityTo(_duration, _endVal);
 }
 
 void e2d::OpacityTo::_init()

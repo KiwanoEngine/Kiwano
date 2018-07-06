@@ -6,8 +6,7 @@ e2d::Scene::Scene()
 	: _autoUpdate(true)
 	, _root(nullptr)
 {
-	_root = new (std::nothrow) Node();
-	_root->autorelease();
+	_root = new (e2d::autorelease) Node();
 	_root->retain();
 	_root->_setParentScene(this);
 }

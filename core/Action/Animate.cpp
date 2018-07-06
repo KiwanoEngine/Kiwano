@@ -98,7 +98,7 @@ e2d::Animate * e2d::Animate::clone() const
 {
 	if (_animation)
 	{
-		return new (std::nothrow) Animate(_animation);
+		return new (e2d::autorelease) Animate(_animation);
 	}
 	return nullptr;
 }
@@ -110,7 +110,7 @@ e2d::Animate * e2d::Animate::reverse() const
 		auto animation = _animation->reverse();
 		if (animation)
 		{
-			return new (std::nothrow) Animate(animation);
+			return new (e2d::autorelease) Animate(animation);
 		}
 	}
 	return nullptr;

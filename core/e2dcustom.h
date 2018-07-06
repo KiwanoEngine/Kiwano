@@ -167,15 +167,15 @@ private:
 class Exception
 {
 public:
-	Exception() throw();
+	Exception() E2D_NOEXCEPT;
 
-	explicit Exception(const String& message) throw();
+	explicit Exception(const String& message) E2D_NOEXCEPT;
 
-	Exception(Exception const& other) throw();
+	Exception(Exception const& other) E2D_NOEXCEPT;
 
-	virtual ~Exception() throw();
+	virtual ~Exception() E2D_NOEXCEPT;
 
-	Exception& operator=(Exception const& other) throw();
+	Exception& operator=(Exception const& other) E2D_NOEXCEPT;
 
 	// 获取异常信息
 	virtual String msg() const;
@@ -190,9 +190,9 @@ class SystemException
 	: public Exception
 {
 public:
-	SystemException() throw();
+	SystemException() E2D_NOEXCEPT;
 
-	explicit SystemException(const String& message) throw();
+	explicit SystemException(const String& message) E2D_NOEXCEPT;
 };
 
 }

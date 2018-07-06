@@ -23,7 +23,7 @@ e2d::Loop * e2d::Loop::clone() const
 {
 	if (_action)
 	{
-		return new (std::nothrow) Loop(_action->clone());
+		return new (e2d::autorelease) Loop(_action->clone());
 	}
 	else
 	{
@@ -35,7 +35,7 @@ e2d::Loop * e2d::Loop::reverse() const
 {
 	if (_action)
 	{
-		return new (std::nothrow) Loop(_action->clone());
+		return new (e2d::autorelease) Loop(_action->clone());
 	}
 	else
 	{

@@ -118,7 +118,7 @@ bool e2d::Music::open(const e2d::String& filePath)
 	_dwSize = _ck.cksize;
 
 	// 将样本数据读取到内存中
-	_waveData = new (std::nothrow) BYTE[_dwSize];
+	_waveData = new BYTE[_dwSize];
 
 	if (!_read(_waveData, _dwSize))
 	{
@@ -173,7 +173,7 @@ bool e2d::Music::open(int resNameId, const e2d::String& resType)
 	if (nullptr == (pvRes = LockResource(hResData)))
 		return TraceError(L"LockResource");
 
-	_resBuffer = new (std::nothrow) CHAR[dwSize];
+	_resBuffer = new CHAR[dwSize];
 	memcpy(_resBuffer, pvRes, dwSize);
 
 	MMIOINFO mmioInfo;
@@ -198,7 +198,7 @@ bool e2d::Music::open(int resNameId, const e2d::String& resType)
 	_dwSize = _ck.cksize;
 
 	// 将样本数据读取到内存中
-	_waveData = new (std::nothrow) BYTE[_dwSize];
+	_waveData = new BYTE[_dwSize];
 
 	if (!_read(_waveData, _dwSize))
 	{
@@ -404,7 +404,7 @@ bool e2d::Music::_readMMIO()
 	// 的数据，这个数据就是额外分配的大小
 	if (pcmWaveFormat.wf.wFormatTag == WAVE_FORMAT_PCM)
 	{
-		_wfx = (WAVEFORMATEX*) new (std::nothrow) CHAR[sizeof(WAVEFORMATEX)];
+		_wfx = (WAVEFORMATEX*) new CHAR[sizeof(WAVEFORMATEX)];
 
 		// 拷贝数据
 		memcpy(_wfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
@@ -417,7 +417,7 @@ bool e2d::Music::_readMMIO()
 		if (mmioRead(_hmmio, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD))
 			return TraceError(L"mmioRead");
 
-		_wfx = (WAVEFORMATEX*) new (std::nothrow) CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
+		_wfx = (WAVEFORMATEX*) new CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
 
 		// 拷贝数据
 		memcpy(_wfx, &pcmWaveFormat, sizeof(pcmWaveFormat));

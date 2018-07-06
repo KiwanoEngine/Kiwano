@@ -1,22 +1,22 @@
 #include "..\e2dcustom.h"
 
 
-e2d::Exception::Exception() throw()
+e2d::Exception::Exception() E2D_NOEXCEPT
 	: _message()
 {
 }
 
-e2d::Exception::Exception(const String& message) throw()
+e2d::Exception::Exception(const String& message) E2D_NOEXCEPT
 	: _message(message)
 {
 }
 
-e2d::Exception::Exception(Exception const& other) throw()
+e2d::Exception::Exception(Exception const& other) E2D_NOEXCEPT
 	: _message(other._message)
 {
 }
 
-e2d::Exception& e2d::Exception::operator=(Exception const& other) throw()
+e2d::Exception& e2d::Exception::operator=(Exception const& other) E2D_NOEXCEPT
 {
 	if (this == &other)
 	{
@@ -27,7 +27,7 @@ e2d::Exception& e2d::Exception::operator=(Exception const& other) throw()
 	return *this;
 }
 
-e2d::Exception::~Exception() throw()
+e2d::Exception::~Exception() E2D_NOEXCEPT
 {
 }
 

@@ -69,8 +69,7 @@ bool e2d::Player::preload(const String& filePath)
 	}
 	else
 	{
-		Music * music = new (std::nothrow) Music();
-		music->autorelease();
+		Music * music = new (e2d::autorelease) Music();
 
 		if (music->open(filePath))
 		{
@@ -91,8 +90,7 @@ bool e2d::Player::preload(int resNameId, const String& resType)
 	}
 	else
 	{
-		Music * music = new (std::nothrow) Music();
-		music->autorelease();
+		Music * music = new (e2d::autorelease) Music();
 
 		if (music->open(resNameId, resType))
 		{
