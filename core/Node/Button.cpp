@@ -100,7 +100,7 @@ void e2d::Button::setNormal(Node * normal)
 		}
 		_normal = normal;
 
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -119,7 +119,7 @@ void e2d::Button::setMouseOver(Node * mouseover)
 			this->addChild(mouseover);
 		}
 		_mouseover = mouseover;
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -138,7 +138,7 @@ void e2d::Button::setSelected(Node * selected)
 			this->addChild(selected);
 		}
 		_selected = selected;
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -157,7 +157,7 @@ void e2d::Button::setDisabled(Node * disabled)
 			this->addChild(disabled);
 		}
 		_disabled = disabled;
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -166,7 +166,7 @@ void e2d::Button::setEnabled(bool enabled)
 	if (_enabled != enabled)
 	{
 		_enabled = enabled;
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -183,7 +183,7 @@ void e2d::Button::_fixedUpdate()
 	auto input = Input::getInstance();
 	auto window = Window::getInstance();
 
-	if (_enabled && _visiable && _normal)
+	if (_enabled && _visible && _normal)
 	{
 		if (input->isRelease(Input::Mouse::Left))
 		{
@@ -226,7 +226,7 @@ void e2d::Button::_fixedUpdate()
 		_setState(ButtonState::Normal);
 	}
 
-	if (_visiable && !_enabled && _normal && _normal->containsPoint(input->getMousePos()))
+	if (_visible && !_enabled && _normal && _normal->containsPoint(input->getMousePos()))
 	{
 		window->setCursor(Window::Cursor::No);
 	}
@@ -237,41 +237,41 @@ void e2d::Button::_setState(ButtonState state)
 	if (_state != state)
 	{
 		_state = state;
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
-void e2d::Button::_updateVisiable()
+void e2d::Button::_updateVisible()
 {
-	SAFE_SET(_normal, setVisiable, false);
-	SAFE_SET(_mouseover, setVisiable, false);
-	SAFE_SET(_selected, setVisiable, false);
-	SAFE_SET(_disabled, setVisiable, false);
+	SAFE_SET(_normal, setVisible, false);
+	SAFE_SET(_mouseover, setVisible, false);
+	SAFE_SET(_selected, setVisible, false);
+	SAFE_SET(_disabled, setVisible, false);
 
 	if (_enabled)
 	{
 		if (_state == ButtonState::Selected && _selected)
 		{
-			_selected->setVisiable(true);
+			_selected->setVisible(true);
 		}
 		else if (_state == ButtonState::Mouseover && _mouseover)
 		{
-			_mouseover->setVisiable(true);
+			_mouseover->setVisible(true);
 		}
 		else
 		{
-			if (_normal) _normal->setVisiable(true);
+			if (_normal) _normal->setVisible(true);
 		}
 	}
 	else
 	{
 		if (_disabled)
 		{
-			_disabled->setVisiable(true);
+			_disabled->setVisible(true);
 		}
 		else
 		{
-			if (_normal) _normal->setVisiable(true);
+			if (_normal) _normal->setVisible(true);
 		}
 	}
 }

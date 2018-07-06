@@ -6,7 +6,7 @@ e2d::Config::Config()
 	, _nodeDefPivot()
 	, _soundEnabled(true)
 	, _collisionEnabled(false)
-	, _colliderVisiable(false)
+	, _colliderVisible(false)
 	, _nodeDefColliderType(Collider::Type::None)
 	, _unconfigured(true)
 {
@@ -48,9 +48,9 @@ void e2d::Config::setDefaultColliderType(Collider::Type type)
 	_nodeDefColliderType = type;
 }
 
-void e2d::Config::setColliderVisiable(bool visiable)
+void e2d::Config::setColliderVisible(bool visible)
 {
-	_colliderVisiable = visiable;
+	_colliderVisible = visible;
 }
 
 e2d::String e2d::Config::getGameName() const
@@ -78,9 +78,9 @@ e2d::Collider::Type e2d::Config::getDefaultColliderType() const
 	return _nodeDefColliderType;
 }
 
-bool e2d::Config::isColliderVisiable() const
+bool e2d::Config::isColliderVisible() const
 {
-	return _colliderVisiable;
+	return _colliderVisible;
 }
 
 void e2d::Config::_update()

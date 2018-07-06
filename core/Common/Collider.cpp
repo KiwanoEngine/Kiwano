@@ -3,7 +3,7 @@
 #include "..\e2dnode.h"
 
 e2d::Collider::Collider()
-	: _visiable(true)
+	: _visible(true)
 	, _color(Color::Red, 0.7)
 	, _parentNode(nullptr)
 	, _transformed(nullptr)
@@ -44,9 +44,9 @@ void e2d::Collider::setEnabled(bool enabled)
 	_enabled = enabled;
 }
 
-void e2d::Collider::setVisiable(bool bVisiable)
+void e2d::Collider::setVisible(bool visible)
 {
-	_visiable = bVisiable;
+	_visible = visible;
 }
 
 void e2d::Collider::setColor(Color color)

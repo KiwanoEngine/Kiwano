@@ -19,7 +19,7 @@ public:
 	// 节点属性
 	struct Property
 	{
-		bool visable;		// 可见性
+		bool visible;		// 可见性
 		double posX;		// X 坐标
 		double posY;		// Y 坐标
 		double width;		// 宽度
@@ -46,7 +46,7 @@ public:
 	virtual void onRender() {}
 
 	// 获取节点显示状态
-	virtual bool isVisiable() const;
+	virtual bool isVisible() const;
 
 	// 判断点是否在节点内
 	virtual bool containsPoint(
@@ -163,7 +163,7 @@ public:
 	virtual void clearAllChildren();
 
 	// 设置节点是否显示
-	virtual void setVisiable(
+	virtual void setVisible(
 		bool value
 	);
 
@@ -421,7 +421,7 @@ protected:
 	float		_pivotX;
 	float		_pivotY;
 	int			_nOrder;
-	bool		_visiable;
+	bool		_visible;
 	bool		_autoUpdate;
 	bool		_needSort;
 	bool		_needTransform;
@@ -788,7 +788,7 @@ protected:
 	virtual void _setState(ButtonState state);
 
 	// 刷新按钮显示
-	virtual void _updateVisiable();
+	virtual void _updateVisible();
 
 	// 更新按钮状态
 	virtual void _fixedUpdate() override;

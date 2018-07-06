@@ -682,8 +682,8 @@ public:
 	);
 
 	// 设置碰撞体的可见性
-	void setVisiable(
-		bool bVisiable
+	void setVisible(
+		bool visible
 	);
 
 	// 设置绘制颜色
@@ -722,7 +722,7 @@ protected:
 
 protected:
 	bool	_enabled;
-	bool	_visiable;
+	bool	_visible;
 	Color	_color;
 	Node *	_parentNode;
 	Type	_type;
@@ -775,8 +775,8 @@ public:
 
 	// 打开或关闭碰撞体可视化
 	// 默认：关闭
-	void setColliderVisiable(
-		bool visiable
+	void setColliderVisible(
+		bool visible
 	);
 
 	// 获取游戏名称
@@ -795,7 +795,7 @@ public:
 	Collider::Type getDefaultColliderType() const;
 
 	// 获取碰撞体可视化状态
-	bool isColliderVisiable() const;
+	bool isColliderVisible() const;
 
 protected:
 	virtual void _update();
@@ -804,7 +804,7 @@ protected:
 	bool			_unconfigured;
 	bool			_soundEnabled;
 	bool			_collisionEnabled;
-	bool			_colliderVisiable;
+	bool			_colliderVisible;
 	String			_gameName;
 	Point			_nodeDefPivot;
 	Collider::Type	_nodeDefColliderType;

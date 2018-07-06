@@ -85,7 +85,7 @@ void e2d::ToggleButton::setState(bool bState)
 	{
 		_toggle = bState;
 		_updateState();
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -107,7 +107,7 @@ void e2d::ToggleButton::setNormal(Node * normal)
 		_normal = normal;
 
 		_updateState();
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -128,7 +128,7 @@ void e2d::ToggleButton::setMouseOver(Node * mouseover)
 		_mouseover = mouseover;
 
 		_updateState();
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -149,7 +149,7 @@ void e2d::ToggleButton::setSelected(Node * selected)
 		_selected = selected;
 
 		_updateState();
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -170,7 +170,7 @@ void e2d::ToggleButton::setDisabled(Node * disabled)
 		_disabled = disabled;
 
 		_updateState();
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -191,7 +191,7 @@ void e2d::ToggleButton::setNormalOff(Node * normal)
 		_normalOff = normal;
 
 		_updateState();
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -212,7 +212,7 @@ void e2d::ToggleButton::setMouseOverOff(Node * mouseover)
 		_mouseoverOff = mouseover;
 
 		_updateState();
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -233,7 +233,7 @@ void e2d::ToggleButton::setSelectedOff(Node * selected)
 		_selectedOff = selected;
 
 		_updateState();
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -254,7 +254,7 @@ void e2d::ToggleButton::setDisabledOff(Node * disabled)
 		_disabledOff = disabled;
 
 		_updateState();
-		_updateVisiable();
+		_updateVisible();
 	}
 }
 
@@ -267,10 +267,10 @@ void e2d::ToggleButton::_updateState()
 		_selected = _selected;
 		_disabled = _disabled;
 
-		if (_normalOff) _normalOff->setVisiable(false);
-		if (_mouseoverOff) _mouseoverOff->setVisiable(false);
-		if (_selectedOff) _selectedOff->setVisiable(false);
-		if (_disabledOff) _disabledOff->setVisiable(false);
+		if (_normalOff) _normalOff->setVisible(false);
+		if (_mouseoverOff) _mouseoverOff->setVisible(false);
+		if (_selectedOff) _selectedOff->setVisible(false);
+		if (_disabledOff) _disabledOff->setVisible(false);
 	}
 	else
 	{
@@ -279,10 +279,10 @@ void e2d::ToggleButton::_updateState()
 		_selected = _selectedOff;
 		_disabled = _disabledOff;
 
-		if (_normal) _normal->setVisiable(false);
-		if (_mouseover) _mouseover->setVisiable(false);
-		if (_selected) _selected->setVisiable(false);
-		if (_disabled) _disabled->setVisiable(false);
+		if (_normal) _normal->setVisible(false);
+		if (_mouseover) _mouseover->setVisible(false);
+		if (_selected) _selected->setVisible(false);
+		if (_disabled) _disabled->setVisible(false);
 	}
 }
 

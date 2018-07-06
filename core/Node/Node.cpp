@@ -21,7 +21,7 @@ e2d::Node::Node()
 	, _pivotY(0.f)
 	, _initialMatri(D2D1::Matrix3x2F::Identity())
 	, _finalMatri(D2D1::Matrix3x2F::Identity())
-	, _visiable(true)
+	, _visible(true)
 	, _collider(nullptr)
 	, _parent(nullptr)
 	, _parentScene(nullptr)
@@ -100,7 +100,7 @@ void e2d::Node::_update()
 
 void e2d::Node::_render()
 {
-	if (!_visiable)
+	if (!_visible)
 	{
 		return;
 	}
@@ -150,7 +150,7 @@ void e2d::Node::_render()
 void e2d::Node::_drawCollider()
 {
 	// 绘制自身的几何碰撞体
-	if (_collider && _collider->_visiable)
+	if (_collider && _collider->_visible)
 	{
 		_collider->_render();
 	}
@@ -235,9 +235,9 @@ void e2d::Node::_updateOpacity()
 	}
 }
 
-bool e2d::Node::isVisiable() const
+bool e2d::Node::isVisible() const
 {
-	return _visiable;
+	return _visible;
 }
 
 e2d::String e2d::Node::getName() const
@@ -338,7 +338,7 @@ double e2d::Node::getOpacity() const
 e2d::Node::Property e2d::Node::getProperty() const
 {
 	Property prop;
-	prop.visable = _visiable;
+	prop.visible = _visible;
 	prop.posX = _posX;
 	prop.posY = _posY;
 	prop.width = _width;
@@ -534,7 +534,7 @@ void e2d::Node::setSize(Size size)
 
 void e2d::Node::setProperty(Property prop)
 {
-	this->setVisiable(prop.visable);
+	this->setVisible(prop.visible);
 	this->setPos(prop.posX, prop.posY);
 	this->setSize(prop.width, prop.height);
 	this->setOpacity(prop.opacity);
@@ -925,9 +925,9 @@ void e2d::Node::stopAllActions()
 	ActionManager::getInstance()->stopAllBindedWith(this);
 }
 
-void e2d::Node::setVisiable(bool value)
+void e2d::Node::setVisible(bool value)
 {
-	_visiable = value;
+	_visible = value;
 }
 
 void e2d::Node::setName(const String& name)

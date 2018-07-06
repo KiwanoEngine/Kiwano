@@ -67,8 +67,7 @@ bool e2d::Renderer::__createDeviceResources()
 	{
 		HWND hWnd = Window::getInstance()->getHWnd();
 
-		// 创建设备相关资源。这些资源应在 Direct3D 设备消失时重建，
-		// 比如当 isVisiable 被修改，等等
+		// 创建设备相关资源。这些资源应在 Direct3D 设备消失时重建
 		RECT rc;
 		GetClientRect(hWnd, &rc);
 
