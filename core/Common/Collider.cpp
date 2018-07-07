@@ -2,26 +2,22 @@
 #include "..\e2dmanager.h"
 #include "..\e2dnode.h"
 
-e2d::Collider::Collider()
+e2d::Collider::Collider(Node * parent)
 	: _visible(true)
 	, _color(Color::Red, 0.7)
-	, _parentNode(nullptr)
+	, _parentNode(parent)
 	, _transformed(nullptr)
 	, _geometry(nullptr)
 	, _enabled(true)
 	, _type(Collider::Type::None)
 {
+	_type = Game::getInstance()->getConfig()->getDefaultColliderType();
 }
 
 e2d::Collider::~Collider()
 {
 	SafeRelease(_transformed);
 	SafeRelease(_geometry);
-}
-
-e2d::Node * e2d::Collider::getParentNode() const
-{
-	return _parentNode;
 }
 
 e2d::Color e2d::Collider::getColor() const
@@ -93,76 +89,73 @@ void e2d::Collider::_recreate(Collider::Type type)
 {
 	_type = type;
 
-	if (_parentNode)
+	SafeRelease(_geometry);
+	SafeRelease(_transformed);
+
+	switch (type)
 	{
-		SafeRelease(_geometry);
-		SafeRelease(_transformed);
+	case Type::Rect:
+	{
+		ID2D1RectangleGeometry* rectangle = nullptr;
+		Renderer::getFactory()->CreateRectangleGeometry(
+			D2D1::RectF(
+				0,
+				0,
+				float(_parentNode->getRealWidth()),
+				float(_parentNode->getRealHeight())),
+			&rectangle
+		);
+		_geometry = rectangle;
+	}
+	break;
 
-		switch (type)
-		{
-		case Type::Rect:
-		{
-			ID2D1RectangleGeometry* rectangle = nullptr;
-			Renderer::getFactory()->CreateRectangleGeometry(
-				D2D1::RectF(
-					0,
-					0,
-					float(_parentNode->getRealWidth()),
-					float(_parentNode->getRealHeight())),
-				&rectangle
-			);
-			_geometry = rectangle;
-		}
-		break;
+	case Type::Circle:
+	{
+		double minSide = std::min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
 
-		case Type::Circle:
-		{
-			double minSide = std::min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
-
-			ID2D1EllipseGeometry* circle = nullptr;
-			Renderer::getFactory()->CreateEllipseGeometry(
-				D2D1::Ellipse(
-					D2D1::Point2F(
-						float(_parentNode->getRealWidth() / 2),
-						float(_parentNode->getRealHeight() / 2)
-					),
-					float(minSide / 2),
-					float(minSide / 2)
+		ID2D1EllipseGeometry* circle = nullptr;
+		Renderer::getFactory()->CreateEllipseGeometry(
+			D2D1::Ellipse(
+				D2D1::Point2F(
+					float(_parentNode->getRealWidth() / 2),
+					float(_parentNode->getRealHeight() / 2)
 				),
-				&circle
-			);
-			_geometry = circle;
-		}
+				float(minSide / 2),
+				float(minSide / 2)
+			),
+			&circle
+		);
+		_geometry = circle;
+	}
+	break;
+
+	case Type::Ellipse:
+	{
+		float halfWidth = float(_parentNode->getWidth() / 2),
+			halfHeight = float(_parentNode->getHeight() / 2);
+
+		ID2D1EllipseGeometry* ellipse = nullptr;
+		Renderer::getFactory()->CreateEllipseGeometry(
+			D2D1::Ellipse(
+				D2D1::Point2F(
+					halfWidth,
+					halfHeight),
+				halfWidth,
+				halfHeight),
+			&ellipse
+		);
+		_geometry = ellipse;
+	}
+	break;
+
+	default:
 		break;
-
-		case Type::Ellipse:
-		{
-			float halfWidth = float(_parentNode->getWidth() / 2),
-				halfHeight = float(_parentNode->getHeight() / 2);
-
-				ID2D1EllipseGeometry* ellipse = nullptr;
-				Renderer::getFactory()->CreateEllipseGeometry(
-					D2D1::Ellipse(
-						D2D1::Point2F(
-							halfWidth,
-							halfHeight),
-						halfWidth,
-						halfHeight),
-					&ellipse
-				);
-				_geometry = ellipse;
-		}
-		break;
-
-		default:
-			break;
-		}
 	}
 }
 
 void e2d::Collider::_transform()
 {
-	if (_parentNode && _enabled)
+	if (_enabled && _type != Type::None)
 	{
 		// 重新生成碰撞体
 		_recreate(_type);
@@ -172,7 +165,5 @@ void e2d::Collider::_transform()
 			_parentNode->_finalMatri,
 			&_transformed
 		);
-		// 通知碰撞体管理器
-		ColliderManager::getInstance()->__updateCollider(this);
 	}
 }

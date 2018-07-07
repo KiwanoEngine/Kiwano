@@ -60,6 +60,8 @@ public:
 	virtual Node * getTarget();
 
 protected:
+	E2D_DISABLE_COPY(Action);
+
 	// 初始化动作
 	virtual void _init();
 
@@ -101,6 +103,8 @@ public:
 	virtual void reset() override;
 
 protected:
+	E2D_DISABLE_COPY(FiniteTimeAction);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -133,6 +137,8 @@ public:
 	virtual MoveBy * reverse() const override;
 
 protected:
+	E2D_DISABLE_COPY(MoveBy);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -167,6 +173,8 @@ public:
 	}
 
 protected:
+	E2D_DISABLE_COPY(MoveTo);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -194,6 +202,8 @@ public:
 	virtual JumpBy * reverse() const override;
 
 protected:
+	E2D_DISABLE_COPY(JumpBy);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -232,6 +242,8 @@ public:
 	}
 
 protected:
+	E2D_DISABLE_COPY(JumpTo);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -263,6 +275,8 @@ public:
 	virtual ScaleBy * reverse() const override;
 
 protected:
+	E2D_DISABLE_COPY(ScaleBy);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -304,6 +318,8 @@ public:
 	}
 
 protected:
+	E2D_DISABLE_COPY(ScaleTo);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -330,6 +346,8 @@ public:
 	virtual OpacityBy * reverse() const override;
 
 protected:
+	E2D_DISABLE_COPY(OpacityBy);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -363,6 +381,8 @@ public:
 	}
 
 protected:
+	E2D_DISABLE_COPY(OpacityTo);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -383,6 +403,9 @@ public:
 	: OpacityTo(duration, 1) 
 	{
 	}
+
+protected:
+	E2D_DISABLE_COPY(FadeIn);
 };
 
 
@@ -398,6 +421,9 @@ public:
 	: OpacityTo(duration, 0) 
 	{
 	}
+
+protected:
+	E2D_DISABLE_COPY(FadeOut);
 };
 
 
@@ -418,6 +444,8 @@ public:
 	virtual RotateBy * reverse() const override;
 
 protected:
+	E2D_DISABLE_COPY(RotateBy);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -451,6 +479,8 @@ public:
 	}
 
 protected:
+	E2D_DISABLE_COPY(RotateTo);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -478,6 +508,8 @@ public:
 	virtual void reset() override;
 
 protected:
+	E2D_DISABLE_COPY(Delay);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -515,6 +547,8 @@ public:
 	virtual void reset() override;
 
 protected:
+	E2D_DISABLE_COPY(Loop);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -547,6 +581,8 @@ public:
 	virtual CallFunc * reverse() const override;
 
 protected:
+	E2D_DISABLE_COPY(CallFunc);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -591,6 +627,8 @@ public:
 	virtual void reset() override;
 
 protected:
+	E2D_DISABLE_COPY(Sequence);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -639,6 +677,8 @@ public:
 	virtual void reset() override;
 
 protected:
+	E2D_DISABLE_COPY(Spawn);
+
 	// 初始化动作
 	virtual void _init() override;
 
@@ -703,6 +743,9 @@ public:
 	Animation * reverse() const;
 
 protected:
+	E2D_DISABLE_COPY(Animation);
+
+protected:
 	double	_interval;
 	std::vector<Image*> _frames;
 };
@@ -739,6 +782,8 @@ public:
 	virtual void reset() override;
 
 protected:
+	E2D_DISABLE_COPY(Animate);
+
 	// 初始化动作
 	virtual void _init() override;
 

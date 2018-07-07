@@ -62,6 +62,8 @@ public:
 	virtual void onRender() override;
 
 protected:
+	E2D_DISABLE_COPY(Shape);
+
 	// äÖÈ¾ÂÖÀª
 	virtual void _renderLine() = 0;
 
@@ -96,6 +98,8 @@ public:
 	virtual ~RectShape();
 
 protected:
+	E2D_DISABLE_COPY(RectShape);
+
 	// äÖÈ¾ÂÖÀª
 	virtual void _renderLine() override;
 
@@ -143,6 +147,8 @@ public:
 	);
 
 protected:
+	E2D_DISABLE_COPY(RoundRectShape);
+
 	// äÖÈ¾ÂÖÀª
 	virtual void _renderLine() override;
 
@@ -182,6 +188,8 @@ public:
 	);
 
 protected:
+	E2D_DISABLE_COPY(CircleShape);
+
 	// äÖÈ¾ÂÖÀª
 	virtual void _renderLine() override;
 
@@ -230,6 +238,8 @@ public:
 	);
 
 protected:
+	E2D_DISABLE_COPY(EllipseShape);
+
 	// äÖÈ¾ÂÖÀª
 	virtual void _renderLine() override;
 

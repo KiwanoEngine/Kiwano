@@ -122,7 +122,7 @@ public:
 	virtual Property getProperty() const;
 
 	// 获取节点碰撞体
-	virtual Collider * getCollider() const;
+	virtual Collider * getCollider();
 
 	// 获取父节点
 	virtual Node * getParent() const;
@@ -378,14 +378,16 @@ public:
 	virtual void stopAllActions();
 
 protected:
+	E2D_DISABLE_COPY(Node);
+
 	// 更新节点
 	void _update();
 
 	// 渲染节点
 	void _render();
 
-	// 渲染图形
-	void _drawCollider();
+	// 渲染碰撞体轮廓
+	void _renderCollider();
 
 	// 设置节点所在场景
 	void _setParentScene(
@@ -426,10 +428,9 @@ protected:
 	bool		_needSort;
 	bool		_needTransform;
 	bool		_positionFixed;
-	Collider *	_collider;
+	Collider	_collider;
 	Scene *		_parentScene;
 	Node *		_parent;
-	Collider::Type		_colliderType;
 	D2D1::Matrix3x2F	_initialMatri;
 	D2D1::Matrix3x2F	_finalMatri;
 	std::vector<Node*>	_children;
@@ -494,6 +495,9 @@ public:
 
 	// 渲染精灵
 	virtual void onRender() override;
+
+protected:
+	E2D_DISABLE_COPY(Sprite);
 
 protected:
 	Image * _image;
@@ -697,6 +701,8 @@ public:
 	virtual void onRender() override;
 
 protected:
+	E2D_DISABLE_COPY(Text);
+
 	// 重新排版文字
 	void _reset();
 
@@ -781,6 +787,8 @@ public:
 	);
 
 protected:
+	E2D_DISABLE_COPY(Button);
+
 	// 按钮状态枚举
 	enum class ButtonState { Normal, Mouseover, Selected };
 
@@ -899,6 +907,8 @@ public:
 	);
 
 protected:
+	E2D_DISABLE_COPY(ToggleButton);
+
 	// 刷新按钮开关
 	virtual void _updateState();
 
@@ -947,6 +957,9 @@ public:
 
 	// 获取所有按钮
 	const std::vector<Button*>& getAllButtons() const;
+
+protected:
+	E2D_DISABLE_COPY(Menu);
 
 protected:
 	bool _enabled;

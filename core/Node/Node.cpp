@@ -22,7 +22,7 @@ e2d::Node::Node()
 	, _initialMatri(D2D1::Matrix3x2F::Identity())
 	, _finalMatri(D2D1::Matrix3x2F::Identity())
 	, _visible(true)
-	, _collider(nullptr)
+	, _collider(this)
 	, _parent(nullptr)
 	, _parentScene(nullptr)
 	, _hashName(0)
@@ -30,21 +30,17 @@ e2d::Node::Node()
 	, _needTransform(false)
 	, _autoUpdate(true)
 	, _positionFixed(false)
-	, _colliderType(Collider::Type::None)
 {
-	auto& config = Game::getInstance()->getConfig();
 	// 设置默认中心点位置
-	Point defPivot = config.getNodeDefaultPivot();
+	Point defPivot = Game::getInstance()->getConfig()->getNodeDefaultPivot();
 	this->_pivotX = float(defPivot.x);
 	this->_pivotY = float(defPivot.y);
-	// 设置默认碰撞体类型
-	this->setColliderType(config.getDefaultColliderType());
 }
 
 e2d::Node::~Node()
 {
 	ActionManager::getInstance()->clearAllBindedWith(this);
-	ColliderManager::getInstance()->__remove(_collider);
+	ColliderManager::getInstance()->__remove(this);
 	for (auto child : _children)
 	{
 		GC::release(child);
@@ -147,18 +143,18 @@ void e2d::Node::_render()
 	}
 }
 
-void e2d::Node::_drawCollider()
+void e2d::Node::_renderCollider()
 {
 	// 绘制自身的几何碰撞体
-	if (_collider && _collider->_visible)
+	if (_collider._visible)
 	{
-		_collider->_render();
+		_collider._render();
 	}
 
 	// 绘制所有子节点的几何碰撞体
 	for (auto child : _children)
 	{
-		child->_drawCollider();
+		child->_renderCollider();
 	}
 }
 
@@ -194,11 +190,8 @@ void e2d::Node::_updateTransform()
 		_finalMatri = _finalMatri * _parent->_initialMatri;
 	}
 
-	// 重新生成碰撞体
-	if (_collider)
-	{
-		_collider->_transform();
-	}
+	// 更新碰撞体
+	ColliderManager::getInstance()->updateCollider(this);
 	// 标志已执行过变换
 	_needTransform = false;
 
@@ -354,9 +347,9 @@ e2d::Node::Property e2d::Node::getProperty() const
 	return prop;
 }
 
-e2d::Collider * e2d::Node::getCollider() const
+e2d::Collider* e2d::Node::getCollider()
 {
-	return _collider;
+	return &_collider;
 }
 
 int e2d::Node::getOrder() const
@@ -546,50 +539,10 @@ void e2d::Node::setProperty(Property prop)
 
 void e2d::Node::setColliderType(Collider::Type type)
 {
-	if (_colliderType == type)
-		return;
-
-	_colliderType = type;
-	if (_collider)
+	if (_collider._type != type)
 	{
-		switch (type)
-		{
-		case Collider::Type::Rect:
-		case Collider::Type::Circle:
-		case Collider::Type::Ellipse:
-		{
-			this->_collider->_recreate(type);
-		}
-		break;
-
-		default:
-		{
-			// 删除碰撞体
-			ColliderManager::getInstance()->__remove(_collider);
-			_collider = nullptr;
-		}
-		break;
-		}
-	}
-	else
-	{
-		switch (type)
-		{
-		case Collider::Type::Rect:
-		case Collider::Type::Circle:
-		case Collider::Type::Ellipse:
-		{
-			_collider = new (e2d::autorelease) Collider();
-			_collider->_parentNode = this;
-			_collider->_recreate(type);
-			// 添加新的碰撞体
-			ColliderManager::getInstance()->__add(_collider);
-		}
-		break;
-
-		default:
-		break;
-		}
+		_collider._recreate(type);
+		_needTransform = true;
 	}
 }
 
@@ -811,9 +764,9 @@ bool e2d::Node::containsPoint(const Point& point) const
 {
 	BOOL ret = 0;
 	// 如果存在碰撞体，用碰撞体判断
-	if (_collider && _collider->getGeometry())
+	if (_collider.getGeometry())
 	{
-		_collider->getGeometry()->FillContainsPoint(
+		_collider.getGeometry()->FillContainsPoint(
 			D2D1::Point2F(
 				float(point.x),
 				float(point.y)),
@@ -852,9 +805,9 @@ bool e2d::Node::containsPoint(const Point& point) const
 bool e2d::Node::intersects(Node * node) const
 {
 	// 如果存在碰撞体，用碰撞体判断
-	if (this->_collider && node->_collider)
+	if (this->_collider.getGeometry() && node->_collider.getGeometry())
 	{
-		Collider::Relation relation = this->_collider->getRelationWith(node->_collider);
+		Collider::Relation relation = this->_collider.getRelationWith(&node->_collider);
 		if ((relation != Collider::Relation::Unknown) &&
 			(relation != Collider::Relation::Disjoin))
 		{

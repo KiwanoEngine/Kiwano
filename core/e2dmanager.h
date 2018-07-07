@@ -174,7 +174,6 @@ private:
 class ColliderManager
 {
 	friend class Node;
-	friend class Collider;
 
 public:
 	// 获取碰撞体管理器实例
@@ -183,8 +182,13 @@ public:
 	// 销毁实例
 	static void destroyInstance();
 
-	// 强制清除所有碰撞体
-	void clearAll();
+	// 更新碰撞体
+	void updateCollider(
+		Node * node
+	);
+
+	// 更新碰撞体管理器
+	void update();
 
 private:
 	ColliderManager();
@@ -193,23 +197,12 @@ private:
 
 	E2D_DISABLE_COPY(ColliderManager);
 
-	// 更新碰撞体
-	void __updateCollider(
-		Collider * pActiveCollider
-	);
-
-	// 添加碰撞体
-	void __add(
-		Collider * pCollider
-	);
-
-	// 删除已绑定的碰撞体
 	void __remove(
-		Collider * pCollider
+		Node* node
 	);
 
 private:
-	std::vector<Collider*> _colliders;
+	std::set<Node*> _nodes;
 
 	static ColliderManager * _instance;
 };

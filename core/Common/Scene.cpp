@@ -25,7 +25,7 @@ void e2d::Scene::_render()
 		// 恢复矩阵转换
 		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 		// 绘制所有几何图形
-		_root->_drawCollider();
+		_root->_renderCollider();
 	}
 }
 
