@@ -51,12 +51,12 @@ public:
 	// 判断点是否在节点内
 	virtual bool containsPoint(
 		const Point& point
-	) const;
+	);
 
 	// 判断两物体是否相交
 	virtual bool intersects(
 		Node * node
-	) const;
+	);
 
 	// 获取节点名称
 	virtual String getName() const;
@@ -386,6 +386,9 @@ protected:
 	// 渲染节点
 	void _render();
 
+	// 渲染节点轮廓
+	void _renderOutline();
+
 	// 渲染碰撞体轮廓
 	void _renderCollider();
 
@@ -431,6 +434,7 @@ protected:
 	Collider	_collider;
 	Scene *		_parentScene;
 	Node *		_parent;
+	ID2D1Geometry*		_outline;
 	D2D1::Matrix3x2F	_initialMatri;
 	D2D1::Matrix3x2F	_finalMatri;
 	std::vector<Node*>	_children;

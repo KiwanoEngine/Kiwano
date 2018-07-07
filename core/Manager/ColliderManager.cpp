@@ -47,7 +47,7 @@ void e2d::ColliderManager::updateCollider(Node * node)
 	{
 		if (node->getCollider()->_type != Collider::Type::None)
 		{
-			node->getCollider()->_transform();
+			node->getCollider()->_recreate();
 			_nodes.insert(node);
 		}
 	}
@@ -79,7 +79,8 @@ void e2d::ColliderManager::update()
 				// 判断两碰撞体交集情况
 				Collider::Relation relation = node1->getCollider()->getRelationWith(node2->getCollider());
 				// 忽略 UNKNOWN 和 DISJOIN 情况
-				if (relation != Collider::Relation::Unknown && relation != Collider::Relation::Disjoin)
+				if (relation != Collider::Relation::Unknown && 
+					relation != Collider::Relation::Disjoin)
 				{
 					// 更新碰撞监听器
 					Collision::__update(node1, node2);

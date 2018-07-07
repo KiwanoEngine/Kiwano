@@ -4,9 +4,8 @@
 
 e2d::Collider::Collider(Node * parent)
 	: _visible(true)
-	, _color(Color::Red, 0.7)
+	, _color(Color::Blue, 0.7)
 	, _parentNode(parent)
-	, _transformed(nullptr)
 	, _geometry(nullptr)
 	, _enabled(true)
 	, _type(Collider::Type::None)
@@ -16,7 +15,6 @@ e2d::Collider::Collider(Node * parent)
 
 e2d::Collider::~Collider()
 {
-	SafeRelease(_transformed);
 	SafeRelease(_geometry);
 }
 
@@ -28,11 +26,6 @@ e2d::Color e2d::Collider::getColor() const
 ID2D1Geometry * e2d::Collider::getGeometry() const
 {
 	return _geometry;
-}
-
-ID2D1TransformedGeometry * e2d::Collider::getTransformedGeometry() const
-{
-	return _transformed;
 }
 
 void e2d::Collider::setEnabled(bool enabled)
@@ -52,7 +45,7 @@ void e2d::Collider::setColor(Color color)
 
 void e2d::Collider::_render()
 {
-	if (_transformed && _enabled)
+	if (_geometry && _enabled)
 	{
 		auto renderer = Renderer::getInstance();
 		// 获取纯色画刷
@@ -61,20 +54,19 @@ void e2d::Collider::_render()
 		brush->SetColor(_color.toD2DColorF());
 		brush->SetOpacity(1.f);
 		// 绘制几何碰撞体
-		renderer->getRenderTarget()->DrawGeometry(_transformed, brush);
+		renderer->getRenderTarget()->DrawGeometry(_geometry, brush);
 	}
 }
 
-e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * pCollider) const
+e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * collider) const
 {
-	if (_transformed && pCollider->_transformed)
+	if (_geometry && collider->_geometry)
 	{
-		if (_enabled && pCollider->_enabled)
+		if (_enabled && collider->_enabled)
 		{
 			D2D1_GEOMETRY_RELATION relation;
-
-			_transformed->CompareWithGeometry(
-				pCollider->_transformed,
+			_geometry->CompareWithGeometry(
+				collider->_geometry,
 				D2D1::Matrix3x2F::Identity(),
 				&relation
 			);
@@ -85,14 +77,14 @@ e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * pCollider) con
 	return Relation::Unknown;
 }
 
-void e2d::Collider::_recreate(Collider::Type type)
+void e2d::Collider::_recreate()
 {
-	_type = type;
-
 	SafeRelease(_geometry);
-	SafeRelease(_transformed);
 
-	switch (type)
+	if (_type == Type::None)
+		return;
+
+	switch (_type)
 	{
 	case Type::Rect:
 	{
@@ -147,23 +139,14 @@ void e2d::Collider::_recreate(Collider::Type type)
 		_geometry = ellipse;
 	}
 	break;
-
-	default:
-		break;
 	}
-}
 
-void e2d::Collider::_transform()
-{
-	if (_enabled && _type != Type::None)
-	{
-		// 重新生成碰撞体
-		_recreate(_type);
-		// 二维变换
-		Renderer::getFactory()->CreateTransformedGeometry(
-			_geometry,
-			_parentNode->_finalMatri,
-			&_transformed
-		);
-	}
+	ID2D1TransformedGeometry * _transformed;
+	Renderer::getFactory()->CreateTransformedGeometry(
+		_geometry,
+		_parentNode->_finalMatri,
+		&_transformed
+	);
+	SafeRelease(_geometry);
+	_geometry = _transformed;
 }

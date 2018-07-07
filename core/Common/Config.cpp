@@ -5,6 +5,7 @@ e2d::Config::Config()
 	: _gameName()
 	, _nodeDefPivot()
 	, _soundEnabled(true)
+	, _outlineVisible(false)
 	, _collisionEnabled(false)
 	, _colliderVisible(false)
 	, _nodeDefColliderType(Collider::Type::None)
@@ -19,6 +20,11 @@ e2d::Config::~Config()
 void e2d::Config::setGameName(const String & name)
 {
 	_gameName = name;
+}
+
+void e2d::Config::setOutlineVisible(bool visible)
+{
+	_outlineVisible = visible;
 }
 
 void e2d::Config::setSoundEnabled(bool enabled)
@@ -61,6 +67,11 @@ e2d::String e2d::Config::getGameName() const
 bool e2d::Config::isSoundEnabled() const
 {
 	return _soundEnabled;
+}
+
+bool e2d::Config::isOutlineVisible() const
+{
+	return _outlineVisible;
 }
 
 bool e2d::Config::isCollisionEnabled() const

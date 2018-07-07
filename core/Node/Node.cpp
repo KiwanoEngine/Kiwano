@@ -22,7 +22,6 @@ e2d::Node::Node()
 	, _initialMatri(D2D1::Matrix3x2F::Identity())
 	, _finalMatri(D2D1::Matrix3x2F::Identity())
 	, _visible(true)
-	, _collider(this)
 	, _parent(nullptr)
 	, _parentScene(nullptr)
 	, _hashName(0)
@@ -30,6 +29,8 @@ e2d::Node::Node()
 	, _needTransform(false)
 	, _autoUpdate(true)
 	, _positionFixed(false)
+	, _outline(nullptr)
+	, _collider(this)
 {
 	// 设置默认中心点位置
 	Point defPivot = Game::getInstance()->getConfig()->getNodeDefaultPivot();
@@ -39,6 +40,8 @@ e2d::Node::Node()
 
 e2d::Node::~Node()
 {
+	SafeRelease(_outline);
+
 	ActionManager::getInstance()->clearAllBindedWith(this);
 	ColliderManager::getInstance()->__remove(this);
 	for (auto child : _children)
@@ -143,6 +146,27 @@ void e2d::Node::_render()
 	}
 }
 
+void e2d::Node::_renderOutline()
+{
+	if (_outline)
+	{
+		auto renderer = Renderer::getInstance();
+		// 获取纯色画刷
+		ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
+		// 设置画刷颜色和透明度
+		brush->SetColor(D2D1::ColorF(D2D1::ColorF::Red, 0.7f));
+		brush->SetOpacity(1.f);
+		// 渲染轮廓
+		renderer->getRenderTarget()->DrawGeometry(_outline, brush);
+	}
+
+	// 渲染所有子节点的轮廓
+	for (auto child : _children)
+	{
+		child->_renderOutline();
+	}
+}
+
 void e2d::Node::_renderCollider()
 {
 	// 绘制自身的几何碰撞体
@@ -189,6 +213,25 @@ void e2d::Node::_updateTransform()
 		_initialMatri = _initialMatri * _parent->_initialMatri;
 		_finalMatri = _finalMatri * _parent->_initialMatri;
 	}
+
+	// 为节点创建一个轮廓
+	ID2D1RectangleGeometry * rectGeo;
+	ID2D1TransformedGeometry * transformedGeo;
+
+	auto factory = Renderer::getFactory();
+	factory->CreateRectangleGeometry(
+		D2D1::RectF(0, 0, _width, _height),
+		&rectGeo
+	);
+	factory->CreateTransformedGeometry(
+		rectGeo,
+		_finalMatri,
+		&transformedGeo
+	);
+
+	SafeRelease(rectGeo);
+	SafeRelease(_outline);
+	_outline = transformedGeo;
 
 	// 更新碰撞体
 	ColliderManager::getInstance()->updateCollider(this);
@@ -541,7 +584,7 @@ void e2d::Node::setColliderType(Collider::Type type)
 {
 	if (_collider._type != type)
 	{
-		_collider._recreate(type);
+		_collider._type = type;
 		_needTransform = true;
 	}
 }
@@ -760,101 +803,44 @@ void e2d::Node::stopAction(const String& name)
 	}
 }
 
-bool e2d::Node::containsPoint(const Point& point) const
+bool e2d::Node::containsPoint(const Point& point)
 {
-	BOOL ret = 0;
-	// 如果存在碰撞体，用碰撞体判断
-	if (_collider.getGeometry())
+	_updateTransform();
+	if (_outline)
 	{
-		_collider.getGeometry()->FillContainsPoint(
-			D2D1::Point2F(
-				float(point.x),
-				float(point.y)),
-			_finalMatri,
+		BOOL ret = 0;
+		_outline->FillContainsPoint(
+			D2D1::Point2F(float(point.x), float(point.y)),
+			D2D1::Matrix3x2F::Identity(),
 			&ret
 		);
-	}
-	else
-	{
-		// 为节点创建一个临时碰撞体
-		ID2D1RectangleGeometry * rect;
-		Renderer::getFactory()->CreateRectangleGeometry(
-			D2D1::RectF(0, 0, _width, _height),
-			&rect
-		);
-		// 判断点是否在碰撞体内
-		rect->FillContainsPoint(
-			D2D1::Point2F(
-				float(point.x),
-				float(point.y)),
-			_finalMatri,
-			&ret
-		);
-		// 删除临时创建的碰撞体
-		SafeRelease(rect);
-	}
-
-	if (ret)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool e2d::Node::intersects(Node * node) const
-{
-	// 如果存在碰撞体，用碰撞体判断
-	if (this->_collider.getGeometry() && node->_collider.getGeometry())
-	{
-		Collider::Relation relation = this->_collider.getRelationWith(&node->_collider);
-		if ((relation != Collider::Relation::Unknown) &&
-			(relation != Collider::Relation::Disjoin))
+		if (ret)
 		{
 			return true;
 		}
 	}
-	else
-	{
-		// 为节点创建一个临时碰撞体
-		ID2D1RectangleGeometry * pRect1;
-		ID2D1RectangleGeometry * pRect2;
-		ID2D1TransformedGeometry * pCollider;
-		D2D1_GEOMETRY_RELATION relation;
+	return false;
+}
 
-		// 根据自身大小位置创建矩形
-		Renderer::getFactory()->CreateRectangleGeometry(
-			D2D1::RectF(0, 0, _width, _height),
-			&pRect1
-		);
-		// 根据二维矩阵进行转换
-		Renderer::getFactory()->CreateTransformedGeometry(
-			pRect1,
-			_finalMatri,
-			&pCollider
-		);
-		// 根据相比较节点的大小位置创建矩形
-		Renderer::getFactory()->CreateRectangleGeometry(
-			D2D1::RectF(0, 0, node->_width, node->_height),
-			&pRect2
-		);
+bool e2d::Node::intersects(Node * node)
+{
+	_updateTransform();
+	node->_updateTransform();
+	if (_outline)
+	{
+		D2D1_GEOMETRY_RELATION relation;
 		// 获取相交状态
-		pCollider->CompareWithGeometry(
-			pRect2,
-			node->_finalMatri,
+		_outline->CompareWithGeometry(
+			node->_outline,
+			D2D1::Matrix3x2F::Identity(),
 			&relation
 		);
-		// 删除临时创建的碰撞体
-		SafeRelease(pRect1);
-		SafeRelease(pRect2);
-		SafeRelease(pCollider);
 		if ((relation != D2D1_GEOMETRY_RELATION_UNKNOWN) &&
 			(relation != D2D1_GEOMETRY_RELATION_DISJOINT))
 		{
 			return true;
 		}
 	}
-
 	return false;
 }
 

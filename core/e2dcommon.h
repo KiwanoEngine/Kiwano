@@ -496,9 +496,6 @@ public:
 	// 获取 ID2D1Geometry* 对象
 	ID2D1Geometry* getGeometry() const;
 
-	// 获取 ID2D1TransformedGeometry* 对象
-	ID2D1TransformedGeometry* getTransformedGeometry() const;
-
 protected:
 	Collider(
 		Node * parent
@@ -509,12 +506,7 @@ protected:
 	E2D_DISABLE_COPY(Collider);
 
 	// 重新生成
-	void _recreate(
-		Collider::Type type
-	);
-
-	// 二维变换
-	void _transform();
+	void _recreate();
 
 	// 渲染碰撞体
 	void _render();
@@ -526,7 +518,6 @@ protected:
 	Node *	_parentNode;
 	Type	_type;
 	ID2D1Geometry* _geometry;
-	ID2D1TransformedGeometry* _transformed;
 };
 
 
@@ -757,6 +748,12 @@ public:
 		const String& name
 	);
 
+	// 显示或隐藏节点轮廓
+	// 默认：隐藏
+	void setOutlineVisible(
+		bool visible
+	);
+
 	// 打开或关闭声音
 	// 默认：打开
 	void setSoundEnabled(
@@ -793,6 +790,9 @@ public:
 	// 获取声音打开状态
 	bool isSoundEnabled() const;
 
+	// 获取节点轮廓显示状态
+	bool isOutlineVisible() const;
+
 	// 获取碰撞监听状态
 	bool isCollisionEnabled() const;
 
@@ -811,6 +811,7 @@ protected:
 protected:
 	bool			_unconfigured;
 	bool			_soundEnabled;
+	bool			_outlineVisible;
 	bool			_collisionEnabled;
 	bool			_colliderVisible;
 	String			_gameName;
