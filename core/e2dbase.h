@@ -549,10 +549,10 @@ public:
 		}
 	}
 
-	// 更新垃圾回收器状态
-	static void update();
+	// 刷新内存池
+	static void flush();
 
-	// 清空所有对象
+	// 回收内存池中的所有对象
 	static void clear();
 
 private:

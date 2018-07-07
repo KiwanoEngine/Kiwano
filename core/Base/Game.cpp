@@ -77,7 +77,7 @@ void e2d::Game::start(bool cleanup)
 			actionManager->update();	// 更新动作管理器
 			sceneManager->update();		// 更新场景内容
 			renderer->render();			// 渲染游戏画面
-			GC::update();				// 刷新内存池
+			GC::flush();				// 刷新内存池
 
 			Time::__updateLast();		// 刷新时间信息
 		}
@@ -86,8 +86,6 @@ void e2d::Game::start(bool cleanup)
 			Time::__sleep();			// 挂起线程
 		}
 	}
-
-	_ended = true;
 
 	if (cleanup)
 	{

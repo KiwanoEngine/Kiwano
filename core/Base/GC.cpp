@@ -61,7 +61,7 @@ e2d::GC::~GC()
 }
 
 
-void e2d::GC::update()
+void e2d::GC::flush()
 {
 	if (!_instance._notifyed)
 		return;
