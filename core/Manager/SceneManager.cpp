@@ -122,7 +122,7 @@ void e2d::SceneManager::update()
 		// 更新场景内容
 		if (_currScene)
 		{
-			_currScene->_update();
+			_currScene->update();
 		}
 	}
 	else
@@ -179,7 +179,7 @@ void e2d::SceneManager::render()
 		// 绘制当前场景
 		if (_currScene)
 		{
-			_currScene->_render();
+			_currScene->render();
 		}
 	}
 }

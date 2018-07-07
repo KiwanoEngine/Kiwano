@@ -649,16 +649,10 @@ protected:
 };
 
 
-class SceneManager;
-class Transition;
-
 // 场景
 class Scene :
 	public Ref
 {
-	friend class SceneManager;
-	friend class Transition;
-
 public:
 	Scene();
 
@@ -698,30 +692,30 @@ public:
 		Node * child
 	);
 
-	// 获取所有名称相同的子节点
-	std::vector<Node*> get(
+	// 获取名称相同的子节点
+	Node* getChild(
 		const String& name
 	) const;
 
-	// 获取名称相同的子节点
-	Node* getOne(
+	// 获取所有名称相同的子节点
+	std::vector<Node*> getChildren(
 		const String& name
 	) const;
 
 	// 获取所有子节点
-	const std::vector<Node*>& getAll() const;
+	const std::vector<Node*>& getAllChildren() const;
 
 	// 获取根节点
 	Node * getRoot() const;
 
-protected:
-	E2D_DISABLE_COPY(Scene);
-
 	// 渲染场景画面
-	void _render();
+	void render();
 
 	// 更新场景内容
-	void _update();
+	void update();
+
+protected:
+	E2D_DISABLE_COPY(Scene);
 
 protected:
 	bool _autoUpdate;

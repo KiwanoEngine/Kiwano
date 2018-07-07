@@ -72,11 +72,11 @@ void e2d::Transition::_update()
 	// 更新场景内容
 	if (_outScene)
 	{
-		_outScene->_update();
+		_outScene->update();
 	}
 	if (_inScene)
 	{
-		_inScene->_update();
+		_inScene->update();
 	}
 }
 
@@ -97,7 +97,7 @@ void e2d::Transition::_render()
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(_outLayerParam, _outLayer);
 
-		_outScene->_render();
+		_outScene->render();
 
 		pRT->PopLayer();
 		pRT->PopAxisAlignedClip();
@@ -116,7 +116,7 @@ void e2d::Transition::_render()
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(_inLayerParam, _inLayer);
 
-		_inScene->_render();
+		_inScene->render();
 
 		pRT->PopLayer();
 		pRT->PopAxisAlignedClip();

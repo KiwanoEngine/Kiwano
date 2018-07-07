@@ -16,7 +16,7 @@ e2d::Scene::~Scene()
 	GC::safeRelease(_root);
 }
 
-void e2d::Scene::_render()
+void e2d::Scene::render()
 {
 	_root->_render();
 
@@ -33,7 +33,7 @@ void e2d::Scene::_render()
 	}
 }
 
-void e2d::Scene::_update()
+void e2d::Scene::update()
 {
 	// Ö´ÐÐ onUpdate º¯Êý
 	if (_autoUpdate)
@@ -67,17 +67,17 @@ bool e2d::Scene::remove(Node * child)
 	return _root->removeChild(child);
 }
 
-std::vector<e2d::Node*> e2d::Scene::get(const String& name) const
+std::vector<e2d::Node*> e2d::Scene::getChildren(const String& name) const
 {
 	return _root->getChildren(name);
 }
 
-e2d::Node * e2d::Scene::getOne(const String& name) const
+e2d::Node * e2d::Scene::getChild(const String& name) const
 {
 	return _root->getChild(name);
 }
 
-const std::vector<e2d::Node*>& e2d::Scene::getAll() const
+const std::vector<e2d::Node*>& e2d::Scene::getAllChildren() const
 {
 	return _root->getAllChildren();
 }
