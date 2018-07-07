@@ -452,22 +452,20 @@ public:
 	);
 
 	explicit Sprite(
-		const String& filePath	/* 图片文件路径 */
+		const Resource& res
 	);
 
 	explicit Sprite(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType	/* 图片资源类型 */
-	);
-
-	explicit Sprite(
-		const String& filePath,	/* 图片文件路径 */
+		const Resource& res,
 		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	explicit Sprite(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType,	/* 图片资源类型 */
+		const String& fileName
+	);
+
+	explicit Sprite(
+		const String& fileName,
 		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
@@ -475,13 +473,12 @@ public:
 
 	// 加载图片文件
 	bool open(
-		const String& filePath
+		const Resource& res
 	);
 
-	// 加载图片资源
+	// 加载图片文件
 	bool open(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType	/* 图片资源类型 */
+		const String& fileName
 	);
 	
 	// 加载图片

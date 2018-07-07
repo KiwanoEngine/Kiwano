@@ -49,7 +49,7 @@ e2d::Music::Music(const e2d::String & filePath)
 	this->open(filePath);
 }
 
-e2d::Music::Music(int resNameId, const String & resType)
+e2d::Music::Music(const Resource& res)
 	: _opened(false)
 	, _playing(false)
 	, _wfx(nullptr)
@@ -60,7 +60,7 @@ e2d::Music::Music(int resNameId, const String & resType)
 	, _voice(nullptr)
 	, _voiceCallback(this)
 {
-	this->open(resNameId, resType);
+	this->open(res);
 }
 
 e2d::Music::~Music()
@@ -70,119 +70,78 @@ e2d::Music::~Music()
 
 bool e2d::Music::open(const e2d::String& filePath)
 {
+	return open(Resource(filePath));
+}
+
+bool e2d::Music::open(const Resource& res)
+{
 	if (_opened)
 	{
 		WARN("MusicInfo can be opened only once!");
 		return false;
 	}
 
-	if (filePath.isEmpty())
+	if (res.isResource())
 	{
-		WARN("MusicInfo::open Invalid file name.");
-		return false;
-	}
+		HRSRC hResInfo;
+		HGLOBAL hResData;
+		DWORD dwSize;
+		void* pvRes;
 
-	String actualFilePath = Path::findFile(filePath);
-	if (actualFilePath.isEmpty())
+		if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(res.getResNameId()), (LPCWSTR)res.getResType())))
+			return TraceError(L"FindResource");
+
+		if (nullptr == (hResData = LoadResource(HINST_THISCOMPONENT, hResInfo)))
+			return TraceError(L"LoadResource");
+
+		if (0 == (dwSize = SizeofResource(HINST_THISCOMPONENT, hResInfo)))
+			return TraceError(L"SizeofResource");
+
+		if (nullptr == (pvRes = LockResource(hResData)))
+			return TraceError(L"LockResource");
+
+		_resBuffer = new CHAR[dwSize];
+		memcpy(_resBuffer, pvRes, dwSize);
+
+		MMIOINFO mmioInfo;
+		ZeroMemory(&mmioInfo, sizeof(mmioInfo));
+		mmioInfo.fccIOProc = FOURCC_MEM;
+		mmioInfo.cchBuffer = dwSize;
+		mmioInfo.pchBuffer = (CHAR*)_resBuffer;
+
+		_hmmio = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
+	}
+	else
 	{
-		WARN("MusicInfo::open File not found.");
-		return false;
-	}
+		String filePath = res.getFileName();
+		if (filePath.isEmpty())
+		{
+			WARN("MusicInfo::open Invalid file name.");
+			return false;
+		}
 
-	// 定位 wave 文件
-	wchar_t pFilePath[MAX_PATH];
-	if (!_findMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)actualFilePath))
-	{
-		WARN("Failed to find media file: %s", pFilePath);
-		return false;
-	}
+		String actualFilePath = File(filePath).getFilePath();
+		if (actualFilePath.isEmpty())
+		{
+			WARN("MusicInfo::open File not found.");
+			return false;
+		}
 
-	_hmmio = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
+		// 定位 wave 文件
+		wchar_t pFilePath[MAX_PATH];
+		if (!_findMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)actualFilePath))
+		{
+			WARN("Failed to find media file: %s", pFilePath);
+			return false;
+		}
+
+		_hmmio = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
+	}
 
 	if (nullptr == _hmmio)
 	{
 		return TraceError(L"mmioOpen");
 	}
-
-	if (!_readMMIO())
-	{
-		// 读取非 wave 文件时 ReadMMIO 调用失败
-		mmioClose(_hmmio, 0);
-		return TraceError(L"_readMMIO");
-	}
-
-	if (!_resetFile())
-		return TraceError(L"_resetFile");
-
-	// 重置文件后，wave 文件的大小是 _ck.cksize
-	_dwSize = _ck.cksize;
-
-	// 将样本数据读取到内存中
-	_waveData = new BYTE[_dwSize];
-
-	if (!_read(_waveData, _dwSize))
-	{
-		TraceError(L"Failed to read WAV data");
-		SAFE_DELETE_ARRAY(_waveData);
-		return false;
-	}
-
-	// 创建音源
-	HRESULT hr = Player::getInstance()->getXAudio2()->CreateSourceVoice(
-		&_voice, 
-		_wfx, 
-		0, 
-		XAUDIO2_DEFAULT_FREQ_RATIO, 
-		&this->_voiceCallback
-	);
-
-	if (FAILED(hr))
-	{
-		TraceError(L"Create source voice error", hr);
-		SAFE_DELETE_ARRAY(_waveData);
-		return false;
-	}
-
-	_opened = true;
-	_playing = false;
-	return true;
-}
-
-bool e2d::Music::open(int resNameId, const e2d::String& resType)
-{
-	HRSRC hResInfo;
-	HGLOBAL hResData;
-	DWORD dwSize;
-	void* pvRes;
-
-	if (_opened)
-	{
-		WARN("MusicInfo can be opened only once!");
-		return false;
-	}
-
-	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(resNameId), (LPCWSTR)resType)))
-		return TraceError(L"FindResource");
-
-	if (nullptr == (hResData = LoadResource(HINST_THISCOMPONENT, hResInfo)))
-		return TraceError(L"LoadResource");
-
-	if (0 == (dwSize = SizeofResource(HINST_THISCOMPONENT, hResInfo)))
-		return TraceError(L"SizeofResource");
-
-	if (nullptr == (pvRes = LockResource(hResData)))
-		return TraceError(L"LockResource");
-
-	_resBuffer = new CHAR[dwSize];
-	memcpy(_resBuffer, pvRes, dwSize);
-
-	MMIOINFO mmioInfo;
-	ZeroMemory(&mmioInfo, sizeof(mmioInfo));
-	mmioInfo.fccIOProc = FOURCC_MEM;
-	mmioInfo.cchBuffer = dwSize;
-	mmioInfo.pchBuffer = (CHAR*)_resBuffer;
-
-	_hmmio = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
 
 	if (!_readMMIO())
 	{

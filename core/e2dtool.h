@@ -62,8 +62,7 @@ public:
 	);
 
 	explicit Music(
-		int resNameId,				/* 音乐资源名称 */
-		const String& resType		/* 音乐资源类型 */
+		const Resource& res
 	);
 
 	virtual ~Music();
@@ -75,8 +74,7 @@ public:
 
 	// 打开音乐资源
 	bool open(
-		int resNameId,				/* 音乐资源名称 */
-		const String& resType		/* 音乐资源类型 */
+		const Resource& res
 	);
 
 	// 播放
@@ -152,7 +150,7 @@ protected:
 class Player
 {
 	friend class Game;
-	typedef std::map<UINT, Music*> MusicMap;
+	typedef std::map<Resource, Music*> MusicMap;
 
 public:
 	// 获取播放器实例
@@ -194,39 +192,33 @@ public:
 
 	// 预加载音乐资源
 	bool preload(
-		int resNameId,			/* 音乐资源名称 */
-		const String& resType	/* 音乐资源类型 */
+		const Resource& res		/* 音乐资源 */
 	);
 
 	// 播放音乐
 	bool play(
-		int resNameId,			/* 音乐资源名称 */
-		const String& resType,	/* 音乐资源类型 */
+		const Resource& res,	/* 音乐资源 */
 		int nLoopCount = 0		/* 重复播放次数，设置 -1 为循环播放 */
 	);
 
 	// 暂停音乐
 	void pause(
-		int resNameId,			/* 音乐资源名称 */
-		const String& resType	/* 音乐资源类型 */
+		const Resource& res		/* 音乐资源 */
 	);
 
 	// 继续播放音乐
 	void resume(
-		int resNameId,			/* 音乐资源名称 */
-		const String& resType	/* 音乐资源类型 */
+		const Resource& res		/* 音乐资源 */
 	);
 
 	// 停止音乐
 	void stop(
-		int resNameId,			/* 音乐资源名称 */
-		const String& resType	/* 音乐资源类型 */
+		const Resource& res		/* 音乐资源 */
 	);
 
 	// 获取音乐播放状态
 	bool isPlaying(
-		int resNameId,			/* 音乐资源名称 */
-		const String& resType	/* 音乐资源类型 */
+		const Resource& res		/* 音乐资源 */
 	);
 
 	// 获取音量
@@ -261,7 +253,6 @@ private:
 
 private:
 	float					_volume;
-	MusicMap				_fileList;
 	MusicMap				_resList;
 	IXAudio2*				_xAudio2;
 	IXAudio2MasteringVoice*	_masteringVoice;
@@ -504,29 +495,75 @@ public:
 };
 
 
-// 路径工具
-class Path
+// 文件
+class File
 {
-	friend class Game;
-
 public:
-	// 添加资源搜索路径
-	static void addSearchPath(
-		String path
+	File();
+
+	File(
+		const String& fileName
 	);
 
-	// 检索文件路径
-	static String findFile(
-		const String& path
+	virtual ~File();
+
+	// 打开文件
+	bool open(
+		const String& fileName
 	);
 
-	// 提取资源文件，返回提取后的文件路径
-	static String extractResource(
+	// 文件或文件夹是否存在
+	bool exists() const;
+
+	// 是否是文件夹
+	bool isFolder() const;
+
+	// 删除文件
+	bool deleteFile();
+
+	// 获取文件路径
+	String getFilePath() const;
+
+	// 获取文件扩展名
+	String getExtension() const;
+
+	// 释放资源到临时文件目录
+	static File extract(
 		int resNameId,				/* 资源名称 */
 		const String& resType,		/* 资源类型 */
 		const String& destFileName	/* 目标文件名 */
 	);
 
+	// 添加文件搜索路径
+	static void addSearchPath(
+		const String& path
+	);
+
+	// 创建文件夹
+	static bool createFolder(
+		const String& dirPath	/* 文件夹路径 */
+	);
+
+	// 打开保存文件对话框
+	static String getSaveFilePath(
+		const String& title = L"保存到",		/* 对话框标题 */
+		const String& defExt = L""			/* 默认扩展名 */
+	);
+
+protected:
+	DWORD _attributes;
+	String _fileName;
+
+	static std::list<String> _searchPaths;
+};
+
+
+// 路径
+class Path
+{
+	friend class Game;
+
+public:
 	// 获取数据的默认保存路径
 	static String getDataPath();
 
@@ -538,32 +575,6 @@ public:
 
 	// 获取当前程序的运行路径
 	static String getCurrentFilePath();
-
-	// 获取文件扩展名
-	static String getFileExtension(
-		const String& filePath
-	);
-
-	// 打开保存文件对话框
-	static String getSaveFilePath(
-		const String& title = L"保存到",		/* 对话框标题 */
-		const String& defExt = L""			/* 默认扩展名 */
-	);
-
-	// 创建文件夹
-	static bool createFolder(
-		const String& dirPath	/* 文件夹路径 */
-	);
-
-	// 判断文件或文件夹是否存在
-	static bool exists(
-		const String& dirPath	/* 文件夹路径 */
-	);
-
-private:
-	static String _tempPath;
-	static String _dataPath;
-	static std::list<String> _paths;
 };
 
 }

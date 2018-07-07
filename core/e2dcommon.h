@@ -521,6 +521,44 @@ protected:
 };
 
 
+// 资源
+class Resource
+{
+public:
+	Resource(
+		const String& fileName		/* 文件路径 */
+	);
+
+	Resource(
+		int resNameId,				/* 资源名称 */
+		const String& resType		/* 资源类型 */
+	);
+
+	// 是否是资源类型
+	bool isResource() const;
+
+	const String& getFileName() const;
+
+	int getResNameId() const;
+
+	const String& getResType() const;
+
+	int getKey() const;
+
+	// 比较运算符
+	bool operator> (const Resource &) const;
+	bool operator>= (const Resource &) const;
+	bool operator< (const Resource &) const;
+	bool operator<= (const Resource &) const;
+
+protected:
+	bool _isResource;
+	String _fileName;
+	int _resNameId;
+	String _resType;
+};
+
+
 // 引用计数对象
 class Ref
 {
@@ -554,36 +592,33 @@ public:
 	Image();
 
 	explicit Image(
-		const String& filePath	/* 图片文件路径 */
+		const Resource& res
 	);
 
 	explicit Image(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType	/* 图片资源类型 */
-	);
-
-	explicit Image(
-		const String& filePath,	/* 图片文件路径 */
+		const Resource& res,
 		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	explicit Image(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType,	/* 图片资源类型 */
+		const String& fileName
+	);
+
+	explicit Image(
+		const String& fileName,
 		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	virtual ~Image();
 
-	// 加载图片文件
+	// 加载图片资源
 	bool open(
-		const String& filePath	/* 图片文件路径 */
+		const Resource& res
 	);
 
 	// 加载图片资源
 	bool open(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType	/* 图片资源类型 */
+		const String& fileName
 	);
 
 	// 将图片裁剪为矩形
@@ -621,15 +656,9 @@ public:
 	// 获取 ID2D1Bitmap 对象
 	ID2D1Bitmap * getBitmap();
 
-	// 预加载图片文件
-	static bool preload(
-		const String& filePath	/* 图片文件路径 */
-	);
-
 	// 预加载图片资源
 	static bool preload(
-		int resNameId,			/* 图片资源名称 */
-		const String& resType	/* 图片资源类型 */
+		const Resource& res
 	);
 
 	// 清空缓存

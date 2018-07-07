@@ -1,6 +1,5 @@
 #include "..\e2dtool.h"
 #include <algorithm>
-#include <commdlg.h>
 
 
 extern "C" const GUID DECLSPEC_SELECTANY FOLDERID_LocalAppData = { 
@@ -8,49 +7,33 @@ extern "C" const GUID DECLSPEC_SELECTANY FOLDERID_LocalAppData = {
 };
 
 
-e2d::String				e2d::Path::_tempPath;
-e2d::String				e2d::Path::_dataPath;
-std::list<e2d::String>	e2d::Path::_paths;
-
-
-void e2d::Path::addSearchPath(String path)
-{
-	path.replace(L"/", L"\\");
-	if (path[path.getLength() - 1] != L'\\')
-	{
-		path << L"\\";
-	}
-	auto iter = std::find(_paths.cbegin(), _paths.cend(), path);
-	if (iter == _paths.cend())
-	{
-		_paths.push_front(path);
-	}
-}
-
 e2d::String e2d::Path::getDataPath()
 {
-	if (_dataPath.isEmpty())
+	static String dataPath;
+	if (dataPath.isEmpty())
 	{
 		// 设置数据的保存路径
 		String localAppDataPath = Path::getLocalAppDataPath();
 		String gameName = Game::getInstance()->getConfig()->getGameName();
 		if (!localAppDataPath.isEmpty() && !gameName.isEmpty())
 		{
-			_dataPath = localAppDataPath + L"\\Easy2DGameData\\" << gameName << L"\\";
+			dataPath = localAppDataPath + L"\\Easy2DGameData\\" << gameName << L"\\";
 
-			if (!Path::exists(_dataPath) && !Path::createFolder(_dataPath))
+			File file(dataPath);
+			if (!file.exists() && !File::createFolder(dataPath))
 			{
-				_dataPath = L"";
+				dataPath = L"";
 			}
 		}
-		_dataPath << L"Data.ini";
+		dataPath << L"Data.ini";
 	}
-	return _dataPath;
+	return dataPath;
 }
 
 e2d::String e2d::Path::getTempPath()
 {
-	if (_tempPath.isEmpty())
+	static String tempPath;
+	if (tempPath.isEmpty())
 	{
 		// 设置临时文件保存路径
 		wchar_t path[_MAX_PATH];
@@ -58,15 +41,16 @@ e2d::String e2d::Path::getTempPath()
 
 		if (0 != ::GetTempPath(_MAX_PATH, path) && !gameName.isEmpty())
 		{
-			_tempPath << path << L"\\Easy2DGameTemp\\" << gameName << L"\\";
+			tempPath << path << L"\\Easy2DGameTemp\\" << gameName << L"\\";
 
-			if (!Path::exists(_tempPath) && !Path::createFolder(_tempPath))
+			File file(tempPath);
+			if (!file.exists() && !File::createFolder(tempPath))
 			{
-				_tempPath = L"";
+				tempPath = L"";
 			}
 		}
 	}
-	return _tempPath;
+	return tempPath;
 }
 
 e2d::String e2d::Path::getLocalAppDataPath()
@@ -94,134 +78,14 @@ e2d::String e2d::Path::getLocalAppDataPath()
 
 e2d::String e2d::Path::getCurrentFilePath()
 {
-	TCHAR szPath[_MAX_PATH] = { 0 };
-	if (::GetModuleFileName(nullptr, szPath, _MAX_PATH) != 0)
+	static String currFilePath;
+	if (currFilePath.isEmpty())
 	{
-		return std::move(String(szPath));
-	}
-	return std::move(String());
-}
-
-e2d::String e2d::Path::findFile(const String& path)
-{
-	if (Path::exists(path))
-	{
-		return path;
-	}
-	else
-	{
-		for (auto& resPath : _paths)
+		TCHAR szPath[_MAX_PATH] = { 0 };
+		if (::GetModuleFileName(nullptr, szPath, _MAX_PATH) != 0)
 		{
-			if (Path::exists(resPath + path))
-			{
-				return resPath + path;
-			}
+			currFilePath = szPath;
 		}
 	}
-	return std::move(String());
-}
-
-e2d::String e2d::Path::extractResource(int resNameId, const String & resType, const String & destFileName)
-{
-	String destFilePath = _tempPath + destFileName;
-	// 创建文件
-	HANDLE hFile = ::CreateFile((LPCWSTR)destFilePath, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
-	if (hFile == INVALID_HANDLE_VALUE)
-		return std::move(String());
-
-	// 查找资源文件中、加载资源到内存、得到资源大小
-	HRSRC hRes = ::FindResource(NULL, MAKEINTRESOURCE(resNameId), (LPCWSTR)resType);
-	HGLOBAL hMem = ::LoadResource(NULL, hRes);
-	DWORD dwSize = ::SizeofResource(NULL, hRes);
-
-	if (hRes && hMem && dwSize)
-	{
-		// 写入文件
-		DWORD dwWrite = 0;
-		::WriteFile(hFile, hMem, dwSize, &dwWrite, NULL);
-		::CloseHandle(hFile);
-		return destFilePath;
-	}
-	else
-	{
-		::CloseHandle(hFile);
-		::DeleteFile((LPCWSTR)destFilePath);
-		return std::move(String());
-	}
-}
-
-e2d::String e2d::Path::getFileExtension(const String& filePath)
-{
-	String fileExtension;
-	// 找到文件名中的最后一个 '.' 的位置
-	size_t pos = filePath.getWString().find_last_of(L'.');
-	// 判断 pos 是否是有效位置
-	if (pos != std::wstring::npos)
-	{
-		// 截取扩展名
-		fileExtension = filePath.subtract(static_cast<int>(pos));
-		// 转换为小写字母
-		fileExtension = fileExtension.toLower();
-	}
-
-	return fileExtension;
-}
-
-e2d::String e2d::Path::getSaveFilePath(const String& title, const String& defExt)
-{
-	// 弹出保存对话框
-	OPENFILENAME ofn = { 0 };
-	wchar_t strFilename[MAX_PATH] = { 0 };				// 用于接收文件名
-	ofn.lStructSize = sizeof(OPENFILENAME);				// 结构体大小
-	ofn.hwndOwner = Window::getInstance()->getHWnd();	// 窗口句柄
-	ofn.lpstrFilter = L"所有文件\0*.*\0\0";				// 设置过滤
-	ofn.nFilterIndex = 1;								// 过滤器索引
-	ofn.lpstrFile = strFilename;						// 接收返回的文件路径和文件名
-	ofn.nMaxFile = sizeof(strFilename);					// 缓冲区长度
-	ofn.lpstrInitialDir = nullptr;						// 初始目录为默认
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-	ofn.lpstrTitle = (LPCWSTR)title;					// 标题
-	ofn.lpstrDefExt = (LPCWSTR)defExt;					// 默认追加的扩展名
-
-	if (GetSaveFileName(&ofn))
-	{
-		return strFilename;
-	}
-	return std::move(String());
-}
-
-bool e2d::Path::createFolder(const String& dirPath)
-{
-	if (dirPath.isEmpty() || dirPath.getLength() >= MAX_PATH)
-	{
-		return false;
-	}
-
-	wchar_t tmpDirPath[_MAX_PATH] = { 0 };
-	int length = dirPath.getLength();
-
-	for (int i = 0; i < length; ++i)
-	{
-		tmpDirPath[i] = dirPath.at(i);
-		if (tmpDirPath[i] == L'\\' || tmpDirPath[i] == L'/' || i == (length - 1))
-		{
-			if (::_waccess(tmpDirPath, 0) != 0)
-			{
-				if (::_wmkdir(tmpDirPath) != 0)
-				{
-					return false;
-				}
-			}
-		}
-	}
-	return true;
-}
-
-bool e2d::Path::exists(const String & path)
-{
-	if (path.isEmpty() || path.getLength() >= MAX_PATH)
-	{
-		return false;
-	}
-	return ::_waccess((const wchar_t *)path, 0) == 0;
+	return currFilePath;
 }
