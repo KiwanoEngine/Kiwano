@@ -1,10 +1,8 @@
 #include "..\e2dcommon.h"
 #include "..\e2dbase.h"
 #include "..\e2dtool.h"
-#include <map>
 
-static std::map<e2d::Resource, ID2D1Bitmap*> s_mBitmapsFromResource;
-
+std::map<e2d::Resource, ID2D1Bitmap*> e2d::Image::_bitmapCache;
 
 e2d::Image::Image()
 	: _bitmap(nullptr)
@@ -62,7 +60,7 @@ bool e2d::Image::open(const Resource& res)
 		return false;
 	}
 
-	this->_setBitmap(s_mBitmapsFromResource.at(res));
+	this->_setBitmap(_bitmapCache.at(res));
 	return true;
 }
 
@@ -150,7 +148,7 @@ e2d::Point e2d::Image::getCropPos() const
 
 bool e2d::Image::preload(const Resource& res)
 {
-	if (s_mBitmapsFromResource.find(res) != s_mBitmapsFromResource.end())
+	if (_bitmapCache.find(res) != _bitmapCache.end())
 	{
 		return true;
 	}
@@ -284,7 +282,7 @@ bool e2d::Image::preload(const Resource& res)
 
 	if (SUCCEEDED(hr))
 	{
-		s_mBitmapsFromResource.insert(std::make_pair(res, pBitmap));
+		_bitmapCache.insert(std::make_pair(res, pBitmap));
 	}
 
 	// 释放相关资源
@@ -298,11 +296,11 @@ bool e2d::Image::preload(const Resource& res)
 
 void e2d::Image::clearCache()
 {
-	for (auto bitmap : s_mBitmapsFromResource)
+	for (auto bitmap : _bitmapCache)
 	{
 		SafeRelease(bitmap.second);
 	}
-	s_mBitmapsFromResource.clear();
+	_bitmapCache.clear();
 }
 
 void e2d::Image::_setBitmap(ID2D1Bitmap * bitmap)

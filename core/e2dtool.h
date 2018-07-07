@@ -253,7 +253,7 @@ private:
 
 private:
 	float					_volume;
-	MusicMap				_resList;
+	MusicMap				_musicList;
 	IXAudio2*				_xAudio2;
 	IXAudio2MasteringVoice*	_masteringVoice;
 

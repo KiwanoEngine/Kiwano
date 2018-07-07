@@ -552,10 +552,10 @@ public:
 	bool operator<= (const Resource &) const;
 
 protected:
-	bool _isResource;
-	String _fileName;
-	int _resNameId;
-	String _resType;
+	bool	_isResource;
+	int		_resNameId;
+	String	_resType;
+	String	_fileName;
 };
 
 
@@ -675,6 +675,8 @@ protected:
 protected:
 	Rect _cropRect;
 	ID2D1Bitmap * _bitmap;
+
+	static std::map<Resource, ID2D1Bitmap*> _bitmapCache;
 };
 
 

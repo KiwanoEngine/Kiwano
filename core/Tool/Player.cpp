@@ -13,9 +13,9 @@ e2d::Player::Player()
 
 e2d::Player::~Player()
 {
-	for (auto pair : _resList)
+	for (auto pair : _musicList)
 		GC::release(pair.second);
-	_resList.clear();
+	_musicList.clear();
 
 	if (_masteringVoice)
 		_masteringVoice->DestroyVoice();
@@ -65,7 +65,7 @@ bool e2d::Player::preload(const String& filePath)
 
 bool e2d::Player::preload(const Resource& res)
 {
-	if (_resList.end() != _resList.find(res))
+	if (_musicList.end() != _musicList.find(res))
 		return true;
 
 	Music * music = new (e2d::autorelease) Music();
@@ -74,7 +74,7 @@ bool e2d::Player::preload(const Resource& res)
 	{
 		GC::retain(music);
 		music->setVolume(_volume);
-		_resList.insert(std::make_pair(res, music));
+		_musicList.insert(std::make_pair(res, music));
 		return true;
 	}
 	return false;
@@ -92,7 +92,7 @@ bool e2d::Player::play(const Resource& res, int nLoopCount)
 {
 	if (Player::preload(res))
 	{
-		auto music = _resList[res];
+		auto music = _musicList[res];
 		if (music->play(nLoopCount))
 		{
 			return true;
@@ -111,8 +111,8 @@ void e2d::Player::pause(const String& filePath)
 
 void e2d::Player::pause(const Resource& res)
 {
-	if (_resList.end() != _resList.find(res))
-		_resList[res]->pause();
+	if (_musicList.end() != _musicList.find(res))
+		_musicList[res]->pause();
 }
 
 void e2d::Player::resume(const String& filePath)
@@ -125,8 +125,8 @@ void e2d::Player::resume(const String& filePath)
 
 void e2d::Player::resume(const Resource& res)
 {
-	if (_resList.end() != _resList.find(res))
-		_resList[res]->pause();
+	if (_musicList.end() != _musicList.find(res))
+		_musicList[res]->pause();
 }
 
 void e2d::Player::stop(const String& filePath)
@@ -143,8 +143,8 @@ void e2d::Player::stop(const Resource& res)
 	{
 
 	}
-	if (_resList.end() != _resList.find(res))
-		_resList[res]->stop();
+	if (_musicList.end() != _musicList.find(res))
+		_musicList[res]->stop();
 }
 
 bool e2d::Player::isPlaying(const String& filePath)
@@ -157,8 +157,8 @@ bool e2d::Player::isPlaying(const String& filePath)
 
 bool e2d::Player::isPlaying(const Resource& res)
 {
-	if (_resList.end() != _resList.find(res))
-		return _resList[res]->isPlaying();
+	if (_musicList.end() != _musicList.find(res))
+		return _musicList[res]->isPlaying();
 	return false;
 }
 
@@ -170,7 +170,7 @@ double e2d::Player::getVolume()
 void e2d::Player::setVolume(double volume)
 {
 	_volume = std::min(std::max(float(volume), -224.f), 224.f);
-	for (auto pair : _resList)
+	for (auto pair : _musicList)
 	{
 		pair.second->setVolume(_volume);
 	}
@@ -178,7 +178,7 @@ void e2d::Player::setVolume(double volume)
 
 void e2d::Player::pauseAll()
 {
-	for (auto pair : _resList)
+	for (auto pair : _musicList)
 	{
 		pair.second->pause();
 	}
@@ -186,7 +186,7 @@ void e2d::Player::pauseAll()
 
 void e2d::Player::resumeAll()
 {
-	for (auto pair : _resList)
+	for (auto pair : _musicList)
 	{
 		pair.second->resume();
 	}
@@ -194,7 +194,7 @@ void e2d::Player::resumeAll()
 
 void e2d::Player::stopAll()
 {
-	for (auto pair : _resList)
+	for (auto pair : _musicList)
 	{
 		pair.second->stop();
 	}
@@ -202,9 +202,9 @@ void e2d::Player::stopAll()
 
 void e2d::Player::clearCache()
 {
-	for (auto pair : _resList)
+	for (auto pair : _musicList)
 	{
 		GC::release(pair.second);
 	}
-	_resList.clear();
+	_musicList.clear();
 }
