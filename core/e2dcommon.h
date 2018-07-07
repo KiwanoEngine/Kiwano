@@ -734,7 +734,8 @@ protected:
 class Game;
 
 // ”Œœ∑≈‰÷√
-class Config
+class Config :
+	public Ref
 {
 	friend class Game;
 

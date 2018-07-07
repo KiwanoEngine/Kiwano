@@ -42,11 +42,11 @@ public:
 
 	// 修改游戏配置
 	void setConfig(
-		const Config& config
+		Config* config
 	);
 
 	// 获取游戏配置
-	Config getConfig() const;
+	Config* getConfig();
 
 private:
 	Game();
@@ -58,7 +58,7 @@ private:
 private:
 	bool	_ended;
 	bool	_paused;
-	Config	_config;
+	Config*	_config;
 
 	static Game * _instance;
 };

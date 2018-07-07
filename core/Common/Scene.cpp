@@ -20,7 +20,7 @@ void e2d::Scene::_render()
 {
 	_root->_render();
 
-	if (Game::getInstance()->getConfig().isColliderVisible())
+	if (Game::getInstance()->getConfig()->isColliderVisible())
 	{
 		// »Ö¸´¾ØÕó×ª»»
 		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());

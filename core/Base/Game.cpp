@@ -9,13 +9,15 @@ e2d::Game * e2d::Game::_instance = nullptr;
 e2d::Game::Game()
 	: _ended(false)
 	, _paused(false)
-	, _config()
+	, _config(nullptr)
 {
 	CoInitialize(nullptr);
 }
 
 e2d::Game::~Game()
 {
+	GC::safeRelease(_config);
+
 	CoUninitialize();
 }
 
@@ -65,10 +67,9 @@ void e2d::Game::start(bool cleanup)
 		// 判断是否达到了刷新状态
 		if (Time::__isReady())
 		{
-			// 更新配置
-			if (_config._unconfigured)
+			if (_config->_unconfigured)
 			{
-				_config._update();
+				_config->_update();
 			}
 
 			input->update();			// 获取用户输入
@@ -115,14 +116,21 @@ bool e2d::Game::isPaused()
 	return _paused;
 }
 
-void e2d::Game::setConfig(const Config& config)
+void e2d::Game::setConfig(Config* config)
 {
-	_config = config;
-	_config._unconfigured = true;
+	if (config && _config != config)
+	{
+		GC::release(_config);
+		_config = config;
+		_config->_unconfigured = true;
+		GC::retain(_config);
+	}
 }
 
-e2d::Config e2d::Game::getConfig() const
+e2d::Config* e2d::Game::getConfig()
 {
+	if (!_config)
+		_config = new (e2d::autorelease) Config();
 	return _config;
 }
 
