@@ -170,17 +170,116 @@ private:
 };
 
 
+class Listener;
+
 // 碰撞体管理器
-class ColliderManager
+class CollisionManager
 {
 	friend class Node;
 
 public:
 	// 获取碰撞体管理器实例
-	static ColliderManager * getInstance();
+	static CollisionManager * getInstance();
 
 	// 销毁实例
 	static void destroyInstance();
+
+	// 添加可互相碰撞物体的名称
+	void addName(
+		const String& name1,
+		const String& name2
+	);
+
+	// 添加可互相碰撞物体的名称
+	void addName(
+		const std::vector<std::pair<String, String> >& names
+	);
+
+	// 判断两个物体是否是可碰撞的
+	bool isCollidable(
+		Node * node1,
+		Node * node2
+	);
+
+	// 判断两个物体是否是可碰撞的
+	bool isCollidable(
+		const String& name1,
+		const String& name2
+	);
+
+	// 获取碰撞发生时的主动体
+	Node * getActiveNode();
+
+	// 获取碰撞发生时的被动体
+	Node * getPassiveNode();
+
+	// 判断发生碰撞的节点名称是否相同
+	bool isCausedBy(
+		const String& name1,
+		const String& name2
+	);
+
+	// 判断两物体是否发生碰撞
+	bool isCausedBy(
+		Node * node1,
+		Node * node2
+	);
+
+	// 判断发生碰撞的任意一方名称是否相同
+	// 若相同，返回其指针，否则返回空
+	Node * isCausedBy(
+		const String& name
+	);
+
+	// 判断物体是否发生碰撞
+	// 如果是，返回与其相撞的节点指针，否则返回空
+	Node * isCausedBy(
+		Node * node
+	);
+
+	// 添加碰撞监听
+	Listener * addListener(
+		const Function& func,		/* 监听到碰撞时的执行函数 */
+		const String& name = L"",	/* 监听器名称 */
+		bool paused = false			/* 是否暂停 */
+	);
+
+	// 添加碰撞监听
+	void addListener(
+		Listener * listener			/* 监听器 */
+	);
+
+	// 移除监听器
+	void removeListener(
+		Listener * listener			/* 监听器 */
+	);
+
+	// 启动碰撞监听
+	void startListener(
+		const String& name
+	);
+
+	// 停止碰撞监听
+	void stopListener(
+		const String& name
+	);
+
+	// 移除碰撞监听
+	void removeListener(
+		const String& name
+	);
+
+	// 启动所有监听器
+	void startAllListeners();
+
+	// 停止所有监听器
+	void stopAllListeners();
+
+	// 移除所有监听器
+	void removeAllListeners();
+
+	// 强制清除所有监听器
+	void clearAllListeners();
 
 	// 更新碰撞体
 	void updateCollider(
@@ -191,20 +290,32 @@ public:
 	void update();
 
 private:
-	ColliderManager();
+	CollisionManager();
 
-	~ColliderManager();
+	~CollisionManager();
 
-	E2D_DISABLE_COPY(ColliderManager);
+	E2D_DISABLE_COPY(CollisionManager);
 
 	void __remove(
 		Node* node
 	);
 
-private:
-	std::set<Node*> _nodes;
+	// 更新监听器
+	void __update(
+		Node * active,
+		Node * passive
+	);
 
-	static ColliderManager * _instance;
+private:
+	typedef std::pair<UINT, UINT> HashPair;
+	
+	e2d::Node * _activeNode;
+	e2d::Node * _passiveNode;
+	std::set<Node*> _collisionNodes;
+	std::set<HashPair> _collisionList;
+	std::vector<Listener*> _listeners;
+
+	static CollisionManager * _instance;
 };
 
 }

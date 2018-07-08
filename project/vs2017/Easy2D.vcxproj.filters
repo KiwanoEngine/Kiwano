@@ -22,9 +22,6 @@
     <Filter Include="Common">
       <UniqueIdentifier>{be5d9314-b00a-4f11-bd2a-1f720dc32407}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Collider">
-      <UniqueIdentifier>{765a2a00-5764-40f9-a15d-17b0640c6b53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Node\Shape">
       <UniqueIdentifier>{eb72b49a-5b2f-4fc0-9ad2-8f5e02efac6f}</UniqueIdentifier>
     </Filter>
@@ -96,9 +93,6 @@
     <ClCompile Include="..\..\core\Tool\Path.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\ColliderManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Node\Shape\Shape.cpp">
       <Filter>Node\Shape</Filter>
     </ClCompile>
@@ -167,9 +161,6 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Tool\Music.cpp">
       <Filter>Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Collider\Collision.cpp">
-      <Filter>Collider</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Action\Animation.cpp">
       <Filter>Action</Filter>
@@ -246,12 +237,14 @@
     <ClCompile Include="..\..\core\Common\Resource.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Manager\CollisionManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\e2daction.h" />
     <ClInclude Include="..\..\core\e2dbase.h" />
-    <ClInclude Include="..\..\core\e2dcollider.h" />
     <ClInclude Include="..\..\core\e2dcommon.h" />
     <ClInclude Include="..\..\core\e2dmacros.h" />
     <ClInclude Include="..\..\core\e2dmanager.h" />

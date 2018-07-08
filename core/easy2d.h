@@ -26,7 +26,6 @@
 #include "e2dtool.h"
 #include "e2daction.h"
 #include "e2dtransition.h"
-#include "e2dcollider.h"
 
 
 #if defined(DEBUG) || defined(_DEBUG)

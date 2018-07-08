@@ -1,7 +1,6 @@
 #include "..\e2dbase.h"
 #include "..\e2dmanager.h"
 #include "..\e2dtool.h"
-#include "..\e2dcollider.h"
 
 
 e2d::Game * e2d::Game::_instance = nullptr;
@@ -45,7 +44,7 @@ void e2d::Game::start(bool cleanup)
 	auto timer = Timer::getInstance();
 	auto sceneManager = SceneManager::getInstance();
 	auto actionManager = ActionManager::getInstance();
-	auto colliderManager = ColliderManager::getInstance();
+	auto collisionManager = CollisionManager::getInstance();
 
 	// 显示窗口
 	::ShowWindow(window->getHWnd(), SW_SHOWNORMAL);
@@ -77,7 +76,7 @@ void e2d::Game::start(bool cleanup)
 			timer->update();			// 更新定时器
 			actionManager->update();	// 更新动作管理器
 			sceneManager->update();		// 更新场景内容
-			colliderManager->update();	// 更新碰撞体
+			collisionManager->update();	// 更新碰撞体
 			renderer->render();			// 渲染游戏画面
 			GC::flush();				// 刷新内存池
 
@@ -148,7 +147,7 @@ void e2d::Game::cleanup()
 	// 清除所有动作
 	ActionManager::getInstance()->clearAll();
 	// 删除碰撞监听器
-	Collision::clearAllListeners();
+	CollisionManager::getInstance()->clearAllListeners();
 	// 删除输入监听器
 	Input::clearAllListeners();
 	// 清空图片缓存

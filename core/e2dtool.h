@@ -377,14 +377,14 @@ private:
 };
 
 
-class Collision;
+class CollisionManager;
 
 // ¼àÌıÆ÷
 class Listener :
 	public Ref
 {
 	friend class Input;
-	friend class Collision;
+	friend class CollisionManager;
 
 public:
 	Listener();

@@ -43,7 +43,7 @@ e2d::Node::~Node()
 	SafeRelease(_outline);
 
 	ActionManager::getInstance()->clearAllBindedWith(this);
-	ColliderManager::getInstance()->__remove(this);
+	CollisionManager::getInstance()->__remove(this);
 	for (auto child : _children)
 	{
 		GC::release(child);
@@ -234,7 +234,7 @@ void e2d::Node::_updateTransform()
 	_outline = transformedGeo;
 
 	// 更新碰撞体
-	ColliderManager::getInstance()->updateCollider(this);
+	CollisionManager::getInstance()->updateCollider(this);
 	// 标志已执行过变换
 	_needTransform = false;
 

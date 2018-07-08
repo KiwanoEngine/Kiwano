@@ -441,13 +441,13 @@ public:
 
 
 class Node;
-class ColliderManager;
+class CollisionManager;
 
 // 碰撞体
 class Collider
 {
 	friend class Node;
-	friend class ColliderManager;
+	friend class CollisionManager;
 
 public:
 	// 碰撞体类别

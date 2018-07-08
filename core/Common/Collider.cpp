@@ -1,4 +1,4 @@
-#include "..\e2dcollider.h"
+#include "..\e2dcommon.h"
 #include "..\e2dmanager.h"
 #include "..\e2dnode.h"
 
