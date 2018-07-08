@@ -66,6 +66,7 @@
     <ClCompile Include="..\..\core\Common\Function.cpp" />
     <ClCompile Include="..\..\core\Common\Image.cpp" />
     <ClCompile Include="..\..\core\Common\Ref.cpp" />
+    <ClCompile Include="..\..\core\Common\Resource.cpp" />
     <ClCompile Include="..\..\core\Common\Point.cpp" />
     <ClCompile Include="..\..\core\Common\Rect.cpp" />
     <ClCompile Include="..\..\core\Common\Scene.cpp" />
@@ -90,6 +91,7 @@
     <ClCompile Include="..\..\core\Node\Text.cpp" />
     <ClCompile Include="..\..\core\Node\ToggleButton.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
+    <ClCompile Include="..\..\core\Tool\File.cpp" />
     <ClCompile Include="..\..\core\Tool\Listener.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
     <ClCompile Include="..\..\core\Tool\Path.cpp" />
