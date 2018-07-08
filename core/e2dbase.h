@@ -226,8 +226,6 @@ private:
 };
 
 
-class Listener;
-
 // 输入设备
 class Input
 {
@@ -356,62 +354,12 @@ public:
 	// 刷新输入设备状态
 	void update();
 
-	// 添加输入监听
-	static Listener * addListener(
-		const Function& func,		/* 监听到用户输入时的执行函数 */
-		const String& name = L"",	/* 监听器名称 */
-		bool paused = false			/* 是否暂停 */
-	);
-
-	// 添加碰撞监听
-	static void addListener(
-		Listener * listener			/* 监听器 */
-	);
-
-	// 移除监听器
-	static void removeListener(
-		Listener * listener			/* 监听器 */
-	);
-
-	// 启动输入监听
-	static void startListener(
-		const String& name
-	);
-
-	// 停止输入监听
-	static void stopListener(
-		const String& name
-	);
-
-	// 移除输入监听
-	static void removeListener(
-		const String& name
-	);
-
-	// 启动所有监听器
-	static void startAllListeners();
-
-	// 停止所有监听器
-	static void stopAllListeners();
-
-	// 移除所有监听器
-	static void removeAllListeners();
-
-	// 强制清空所有监听器
-	static void clearAllListeners();
-
 private:
 	Input();
 
 	~Input();
 
 	E2D_DISABLE_COPY(Input);
-
-	// 刷新设备状态
-	void __updateDeviceState();
-
-	// 更新监听器
-	static void __updateListeners();
 
 private:
 	IDirectInput8* _directInput;

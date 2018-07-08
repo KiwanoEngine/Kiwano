@@ -122,9 +122,6 @@
     <ClCompile Include="..\..\core\Base\Window.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Collider\Collision.cpp">
-      <Filter>Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Collider.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -174,9 +171,6 @@
       <Filter>Custom</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Manager\ColliderManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp">
@@ -259,6 +253,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Resource.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\CollisionManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Manager\InputManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

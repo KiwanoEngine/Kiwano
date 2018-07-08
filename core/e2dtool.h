@@ -377,13 +377,14 @@ private:
 };
 
 
+class InputManager;
 class CollisionManager;
 
 // ¼àÌıÆ÷
 class Listener :
 	public Ref
 {
-	friend class Input;
+	friend class InputManager;
 	friend class CollisionManager;
 
 public:

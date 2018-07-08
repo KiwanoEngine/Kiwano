@@ -7,7 +7,6 @@
 
 static char s_KeyBuffer[BUFFER_SIZE] = { 0 };			// 用于保存键盘按键信息缓冲区
 static char s_KeyRecordBuffer[BUFFER_SIZE] = { 0 };		// 键盘消息二级缓冲区
-static std::vector<e2d::Listener*> s_vListeners;		// 监听器容器
 
 e2d::Input * e2d::Input::_instance = nullptr;
 
@@ -113,12 +112,6 @@ void e2d::Input::destroyInstance()
 }
 
 void e2d::Input::update()
-{
-	Input::__updateDeviceState();
-	Input::__updateListeners();
-}
-
-void e2d::Input::__updateDeviceState()
 {
 	if (_keyboardDevice)
 	{
@@ -232,136 +225,4 @@ double e2d::Input::getMouseDeltaY()
 double e2d::Input::getMouseDeltaZ()
 {
 	return (double)_mouseState.lZ;
-}
-
-e2d::Listener * e2d::Input::addListener(const Function& func, const String& name, bool paused)
-{
-	auto listener = new (e2d::autorelease) Listener(func, name, paused);
-	GC::retain(listener);
-	s_vListeners.push_back(listener);
-	return listener;
-}
-
-void e2d::Input::addListener(Listener * listener)
-{
-	if (listener)
-	{
-		auto iter = std::find(s_vListeners.begin(), s_vListeners.end(), listener);
-		if (iter == s_vListeners.end())
-		{
-			GC::retain(listener);
-			s_vListeners.push_back(listener);
-		}
-	}
-}
-
-void e2d::Input::removeListener(Listener * listener)
-{
-	if (listener)
-	{
-		auto iter = std::find(s_vListeners.begin(), s_vListeners.end(), listener);
-		if (iter != s_vListeners.end())
-		{
-			GC::safeRelease(listener);
-			s_vListeners.erase(iter);
-		}
-	}
-}
-
-void e2d::Input::stopListener(const String& name)
-{
-	if (s_vListeners.empty() || name.isEmpty())
-		return;
-
-	for (auto listener : s_vListeners)
-	{
-		if (listener->_name == name)
-		{
-			listener->stop();
-		}
-	}
-}
-
-void e2d::Input::startListener(const String& name)
-{
-	if (s_vListeners.empty() || name.isEmpty())
-		return;
-
-	for (auto listener : s_vListeners)
-	{
-		if (listener->_name == name)
-		{
-			listener->start();
-		}
-	}
-}
-
-void e2d::Input::removeListener(const String& name)
-{
-	if (s_vListeners.empty() || name.isEmpty())
-		return;
-
-	for (auto listener : s_vListeners)
-	{
-		if (listener->_name == name)
-		{
-			listener->_stopped = true;
-		}
-	}
-}
-
-void e2d::Input::stopAllListeners()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->stop();
-	}
-}
-
-void e2d::Input::startAllListeners()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->start();
-	}
-}
-
-void e2d::Input::removeAllListeners()
-{
-	for (auto listener : s_vListeners)
-	{
-		listener->_stopped = true;
-	}
-}
-
-void e2d::Input::clearAllListeners()
-{
-	for (auto listener : s_vListeners)
-	{
-		GC::release(listener);
-	}
-	s_vListeners.clear();
-}
-
-void e2d::Input::__updateListeners()
-{
-	if (s_vListeners.empty() || Game::getInstance()->isPaused())
-		return;
-
-	for (size_t i = 0; i < s_vListeners.size(); ++i)
-	{
-		auto listener = s_vListeners[i];
-		// 清除已停止的监听器
-		if (listener->_stopped)
-		{
-			GC::safeRelease(listener);
-			s_vListeners.erase(s_vListeners.begin() + i);
-		}
-		else
-		{
-			// 更新监听器
-			listener->_update();
-			++i;
-		}
-	}
 }
