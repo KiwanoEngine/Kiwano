@@ -359,14 +359,8 @@ int e2d::String::getLength() const
 
 unsigned int e2d::String::getHashCode() const
 {
-	unsigned int hash = 0;
-
-	for (size_t i = 0, length = _str.size(); i < length; ++i)
-	{
-		hash *= 16777619;
-		hash ^= (unsigned int)towupper(_str[i]);
-	}
-	return hash;
+	std::hash<std::wstring> hash;
+	return hash(_str);
 }
 
 std::wstring e2d::String::getWString() const
