@@ -450,8 +450,8 @@ class Collider
 	friend class CollisionManager;
 
 public:
-	// 碰撞体类别
-	enum class Type
+	// 碰撞体形状
+	enum class Shape
 	{
 		None,		/* 无 */
 		Rect,		/* 矩形 */
@@ -470,6 +470,11 @@ public:
 	};
 
 public:
+	// 设置碰撞体形状
+	virtual void setShape(
+		Shape shape
+	);
+
 	// 启用或关闭该碰撞体
 	virtual void setEnabled(
 		bool enabled
@@ -492,6 +497,9 @@ public:
 
 	// 获取绘制颜色
 	Color getColor() const;
+
+	// 获取形状
+	Shape getShape() const;
 
 	// 获取 ID2D1Geometry* 对象
 	ID2D1Geometry* getGeometry() const;
@@ -516,7 +524,7 @@ protected:
 	bool	_visible;
 	Color	_color;
 	Node *	_parentNode;
-	Type	_type;
+	Shape	_shape;
 	ID2D1Geometry* _geometry;
 };
 
@@ -797,10 +805,10 @@ public:
 		Point pivot
 	);
 
-	// 设置节点的默认碰撞体类型
-	// 默认：Collider::Type::None
-	void setDefaultColliderType(
-		Collider::Type type
+	// 设置节点的默认碰撞体形状
+	// 默认：Collider::Shape::None
+	void setDefaultColliderShape(
+		Collider::Shape shape
 	);
 
 	// 打开或关闭碰撞体可视化
@@ -825,7 +833,7 @@ public:
 	Point getNodeDefaultPivot() const;
 
 	// 获取节点的默认碰撞体类型
-	Collider::Type getDefaultColliderType() const;
+	Collider::Shape getDefaultColliderShape() const;
 
 	// 获取碰撞体可视化状态
 	bool isColliderVisible() const;
@@ -840,8 +848,8 @@ protected:
 	bool			_collisionEnabled;
 	bool			_colliderVisible;
 	String			_gameName;
-	Point			_nodeDefPivot;
-	Collider::Type	_nodeDefColliderType;
+	Point			_defaultNodePivot;
+	Collider::Shape	_defaultColliderShape;
 };
 
 

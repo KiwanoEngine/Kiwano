@@ -19,12 +19,10 @@ public:
 	// 节点属性
 	struct Property
 	{
-		bool visible;		// 可见性
 		double posX;		// X 坐标
 		double posY;		// Y 坐标
 		double width;		// 宽度
 		double height;		// 高度
-		double opacity;		// 透明度
 		double pivotX;		// 中心点 X 坐标
 		double pivotY;		// 中心点 Y 坐标
 		double scaleX;		// 横向缩放
@@ -32,6 +30,11 @@ public:
 		double rotation;	// 旋转角度
 		double skewAngleX;	// 横向倾斜角度
 		double skewAngleY;	// 纵向倾斜角度
+
+		Property operator+ (Property const & prop) const;
+		Property operator- (Property const & prop) const;
+
+		static const Property Origin;
 	};
 
 public:
@@ -331,11 +334,6 @@ public:
 		Property prop
 	);
 
-	// 设置碰撞体类型
-	virtual void setColliderType(
-		Collider::Type type
-	);
-
 	// 添加子节点
 	virtual void addChild(
 		Node * child,
@@ -425,7 +423,7 @@ protected:
 	float		_realOpacity;
 	float		_pivotX;
 	float		_pivotY;
-	int			_nOrder;
+	int			_order;
 	bool		_visible;
 	bool		_autoUpdate;
 	bool		_needSort;
@@ -434,6 +432,7 @@ protected:
 	Collider	_collider;
 	Scene *		_parentScene;
 	Node *		_parent;
+	Property	_extrapolate;
 	ID2D1Geometry*		_outline;
 	D2D1::Matrix3x2F	_initialMatri;
 	D2D1::Matrix3x2F	_finalMatri;

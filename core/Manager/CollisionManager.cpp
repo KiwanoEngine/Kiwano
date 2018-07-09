@@ -47,7 +47,7 @@ void e2d::CollisionManager::updateCollider(Node * node)
 {
 	if (node)
 	{
-		if (node->getCollider()->_type != Collider::Type::None)
+		if (node->getCollider()->_shape != Collider::Shape::None)
 		{
 			node->getCollider()->_recreate();
 			_collisionNodes.insert(node);

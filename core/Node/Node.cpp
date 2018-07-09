@@ -3,9 +3,45 @@
 #include "..\e2daction.h"
 #include <algorithm>
 
+const e2d::Node::Property e2d::Node::Property::Origin = { 0 };
+
+e2d::Node::Property e2d::Node::Property::operator+(Property const & prop) const
+{
+	Property result;
+	result.posX = this->posX + prop.posX;
+	result.posY = this->posY + prop.posY;
+	result.width = this->width + prop.width;
+	result.height = this->height + prop.height;
+	result.pivotX = this->pivotX + prop.pivotX;
+	result.pivotY = this->pivotY + prop.pivotY;
+	result.scaleX = this->scaleX + prop.scaleX;
+	result.scaleY = this->scaleY + prop.scaleY;
+	result.rotation = this->rotation + prop.rotation;
+	result.skewAngleX = this->skewAngleX + prop.skewAngleX;
+	result.skewAngleY = this->skewAngleY + prop.skewAngleY;
+	return std::move(result);
+}
+
+e2d::Node::Property e2d::Node::Property::operator-(Property const & prop) const
+{
+	Property result;
+	result.posX = this->posX - prop.posX;
+	result.posY = this->posY - prop.posY;
+	result.width = this->width - prop.width;
+	result.height = this->height - prop.height;
+	result.pivotX = this->pivotX - prop.pivotX;
+	result.pivotY = this->pivotY - prop.pivotY;
+	result.scaleX = this->scaleX - prop.scaleX;
+	result.scaleY = this->scaleY - prop.scaleY;
+	result.rotation = this->rotation - prop.rotation;
+	result.skewAngleX = this->skewAngleX - prop.skewAngleX;
+	result.skewAngleY = this->skewAngleY - prop.skewAngleY;
+	return std::move(result);
+}
+
 
 e2d::Node::Node()
-	: _nOrder(0)
+	: _order(0)
 	, _posX(0)
 	, _posY(0)
 	, _width(0)
@@ -31,6 +67,7 @@ e2d::Node::Node()
 	, _positionFixed(false)
 	, _outline(nullptr)
 	, _collider(this)
+	, _extrapolate(Property::Origin)
 {
 	// 设置默认中心点位置
 	Point defPivot = Game::getInstance()->getConfig()->getNodeDefaultPivot();
@@ -374,12 +411,10 @@ double e2d::Node::getOpacity() const
 e2d::Node::Property e2d::Node::getProperty() const
 {
 	Property prop;
-	prop.visible = _visible;
 	prop.posX = _posX;
 	prop.posY = _posY;
 	prop.width = _width;
 	prop.height = _height;
-	prop.opacity = _realOpacity;
 	prop.pivotX = _pivotX;
 	prop.pivotY = _pivotY;
 	prop.scaleX = _scaleX;
@@ -387,7 +422,7 @@ e2d::Node::Property e2d::Node::getProperty() const
 	prop.rotation = _rotation;
 	prop.skewAngleX = _skewAngleX;
 	prop.skewAngleY = _skewAngleY;
-	return prop;
+	return std::move(prop);
 }
 
 e2d::Collider* e2d::Node::getCollider()
@@ -397,12 +432,12 @@ e2d::Collider* e2d::Node::getCollider()
 
 int e2d::Node::getOrder() const
 {
-	return _nOrder;
+	return _order;
 }
 
 void e2d::Node::setOrder(int order)
 {
-	_nOrder = order;
+	_order = order;
 }
 
 void e2d::Node::setPosX(double x)
@@ -427,6 +462,8 @@ void e2d::Node::setPos(double x, double y)
 
 	_posX = float(x);
 	_posY = float(y);
+	_extrapolate.posX += x;
+	_extrapolate.posY += y;
 	_needTransform = true;
 }
 
@@ -481,6 +518,8 @@ void e2d::Node::setScale(double scaleX, double scaleY)
 
 	_scaleX = float(scaleX);
 	_scaleY = float(scaleY);
+	_extrapolate.scaleX += scaleX;
+	_extrapolate.scaleY += scaleY;
 	_needTransform = true;
 }
 
@@ -501,6 +540,8 @@ void e2d::Node::setSkew(double angleX, double angleY)
 
 	_skewAngleX = float(angleX);
 	_skewAngleY = float(angleY);
+	_extrapolate.skewAngleX += angleX;
+	_extrapolate.skewAngleY += angleY;
 	_needTransform = true;
 }
 
@@ -510,6 +551,7 @@ void e2d::Node::setRotation(double angle)
 		return;
 
 	_rotation = float(angle);
+	_extrapolate.rotation += angle;
 	_needTransform = true;
 }
 
@@ -540,6 +582,8 @@ void e2d::Node::setPivot(double pivotX, double pivotY)
 
 	_pivotX = std::min(std::max(float(pivotX), 0.f), 1.f);
 	_pivotY = std::min(std::max(float(pivotY), 0.f), 1.f);
+	_extrapolate.pivotX += pivotX;
+	_extrapolate.pivotY += pivotY;
 	_needTransform = true;
 }
 
@@ -560,6 +604,8 @@ void e2d::Node::setSize(double width, double height)
 
 	_width = float(width);
 	_height = float(height);
+	_extrapolate.width += width;
+	_extrapolate.height += height;
 	_needTransform = true;
 }
 
@@ -570,23 +616,12 @@ void e2d::Node::setSize(Size size)
 
 void e2d::Node::setProperty(Property prop)
 {
-	this->setVisible(prop.visible);
 	this->setPos(prop.posX, prop.posY);
 	this->setSize(prop.width, prop.height);
-	this->setOpacity(prop.opacity);
 	this->setPivot(prop.pivotX, prop.pivotY);
 	this->setScale(prop.scaleX, prop.scaleY);
 	this->setRotation(prop.rotation);
 	this->setSkew(prop.skewAngleX, prop.skewAngleY);
-}
-
-void e2d::Node::setColliderType(Collider::Type type)
-{
-	if (_collider._type != type)
-	{
-		_collider._type = type;
-		_needTransform = true;
-	}
 }
 
 void e2d::Node::addChild(Node * child, int order  /* = 0 */)

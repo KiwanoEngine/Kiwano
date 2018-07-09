@@ -8,9 +8,9 @@ e2d::Collider::Collider(Node * parent)
 	, _parentNode(parent)
 	, _geometry(nullptr)
 	, _enabled(true)
-	, _type(Collider::Type::None)
+	, _shape(Collider::Shape::None)
 {
-	_type = Game::getInstance()->getConfig()->getDefaultColliderType();
+	_shape = Game::getInstance()->getConfig()->getDefaultColliderShape();
 }
 
 e2d::Collider::~Collider()
@@ -23,9 +23,20 @@ e2d::Color e2d::Collider::getColor() const
 	return _color;
 }
 
+e2d::Collider::Shape e2d::Collider::getShape() const
+{
+	return _shape;
+}
+
 ID2D1Geometry * e2d::Collider::getGeometry() const
 {
 	return _geometry;
+}
+
+void e2d::Collider::setShape(Shape shape)
+{
+	_shape = shape;
+	this->_recreate();
 }
 
 void e2d::Collider::setEnabled(bool enabled)
@@ -81,12 +92,12 @@ void e2d::Collider::_recreate()
 {
 	SafeRelease(_geometry);
 
-	if (_type == Type::None)
+	if (!_enabled || _shape == Shape::None)
 		return;
 
-	switch (_type)
+	switch (_shape)
 	{
-	case Type::Rect:
+	case Shape::Rect:
 	{
 		ID2D1RectangleGeometry* rectangle = nullptr;
 		Renderer::getFactory()->CreateRectangleGeometry(
@@ -101,7 +112,7 @@ void e2d::Collider::_recreate()
 	}
 	break;
 
-	case Type::Circle:
+	case Shape::Circle:
 	{
 		double minSide = std::min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
 
@@ -121,7 +132,7 @@ void e2d::Collider::_recreate()
 	}
 	break;
 
-	case Type::Ellipse:
+	case Shape::Ellipse:
 	{
 		float halfWidth = float(_parentNode->getWidth() / 2),
 			halfHeight = float(_parentNode->getHeight() / 2);
