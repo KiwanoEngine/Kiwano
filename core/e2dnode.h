@@ -394,6 +394,9 @@ protected:
 	// 更新节点
 	void _update();
 
+	// 更新自身
+	void _updateSelf();
+
 	// 渲染节点
 	void _render();
 
@@ -407,9 +410,6 @@ protected:
 	void _setParentScene(
 		Scene * scene
 	);
-
-	// 更新自身转换矩阵
-	void _updateSelfTransform();
 
 	// 子节点排序
 	void _sortChildren();

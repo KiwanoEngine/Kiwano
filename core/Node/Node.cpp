@@ -90,11 +90,7 @@ void e2d::Node::_update()
 {
 	if (_children.empty())
 	{
-		if (_autoUpdate && !Game::getInstance()->isPaused())
-		{
-			this->onUpdate();
-		}
-		this->_fixedUpdate();
+		_updateSelf();
 	}
 	else
 	{
@@ -117,21 +113,27 @@ void e2d::Node::_update()
 			}
 		}
 
-		if (_autoUpdate && !Game::getInstance()->isPaused())
-		{
-			this->onUpdate();
-		}
-		this->_fixedUpdate();
+		_updateSelf();
 
 		// 访问其他节点
 		for (; i < _children.size(); ++i)
 			_children[i]->_update();
 	}
+}
 
-	// 更新转换矩阵
-	updateTransform();
-	// 保留差别属性
-	_extrapolate = this->getProperty();
+void e2d::Node::_updateSelf()
+{
+	if (_needTransform)
+	{
+		updateTransform();
+		CollisionManager::getInstance()->__updateCollider(&_collider);
+	}
+
+	if (_autoUpdate && !Game::getInstance()->isPaused())
+	{
+		this->onUpdate();
+	}
+	this->_fixedUpdate();
 }
 
 void e2d::Node::_render()
@@ -140,6 +142,11 @@ void e2d::Node::_render()
 	{
 		return;
 	}
+
+	// 更新转换矩阵
+	updateTransform();
+	// 保留差别属性
+	_extrapolate = this->getProperty();
 
 	if (_children.empty())
 	{
@@ -217,46 +224,6 @@ void e2d::Node::updateTransform()
 	if (!_needTransform)
 		return;
 
-	_updateSelfTransform();
-	CollisionManager::getInstance()->__updateCollider(&_collider);
-
-	if (_needTransform)
-	{
-		_updateSelfTransform();
-	}
-
-	// 为节点创建一个轮廓
-	ID2D1RectangleGeometry * rectGeo = nullptr;
-	ID2D1TransformedGeometry * transformedGeo = nullptr;
-
-	auto factory = Renderer::getFactory();
-	HRESULT hr = factory->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, _width, _height),
-		&rectGeo
-	);
-
-	if (SUCCEEDED(hr))
-	{
-		factory->CreateTransformedGeometry(
-			rectGeo,
-			_finalMatri,
-			&transformedGeo
-		);
-	}
-
-	SafeRelease(rectGeo);
-	SafeRelease(_outline);
-	_outline = transformedGeo;
-
-	// 通知子节点进行转换
-	for (auto& child : _children)
-	{
-		child->_needTransform = true;
-	}
-}
-
-void e2d::Node::_updateSelfTransform()
-{
 	_needTransform = false;
 
 	// 计算中心点坐标
@@ -288,6 +255,35 @@ void e2d::Node::_updateSelfTransform()
 
 	// 更新碰撞体
 	_collider.recreate();
+
+	// 为节点创建一个轮廓
+	ID2D1RectangleGeometry * rectGeo = nullptr;
+	ID2D1TransformedGeometry * transformedGeo = nullptr;
+
+	auto factory = Renderer::getFactory();
+	HRESULT hr = factory->CreateRectangleGeometry(
+		D2D1::RectF(0, 0, _width, _height),
+		&rectGeo
+	);
+
+	if (SUCCEEDED(hr))
+	{
+		factory->CreateTransformedGeometry(
+			rectGeo,
+			_finalMatri,
+			&transformedGeo
+		);
+	}
+
+	SafeRelease(rectGeo);
+	SafeRelease(_outline);
+	_outline = transformedGeo;
+
+	// 通知子节点进行转换
+	for (auto& child : _children)
+	{
+		child->_needTransform = true;
+	}
 }
 
 void e2d::Node::_sortChildren()
