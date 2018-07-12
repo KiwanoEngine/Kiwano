@@ -293,12 +293,12 @@ void e2d::Window::setCursor(Cursor cursor)
 	::SetCursor(hCursor);
 }
 
-void e2d::Window::showConsole(bool show)
+void e2d::Window::setConsoleEnabled(bool enabled)
 {
 	// 查找已存在的控制台句柄
 	HWND hwnd = ::GetConsoleWindow();
 	// 关闭控制台
-	if (show)
+	if (enabled)
 	{
 		if (hwnd)
 		{

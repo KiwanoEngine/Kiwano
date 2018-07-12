@@ -64,7 +64,7 @@ private:
 };
 
 
-// 窗口控制
+// 窗体
 class Window
 {
 public:
@@ -79,29 +79,29 @@ public:
 	};
 
 public:
-	// 获取窗口实例
+	// 获取窗体实例
 	static Window * getInstance();
 
-	// 销毁窗口实例
+	// 销毁窗体实例
 	static void destroyInstance();
 
-	// 创建窗口互斥体
+	// 创建窗体互斥体
 	bool createMutex(
 		const String& mutex = L""	/* 进程互斥体名称 */
 	);
 
-	// 修改窗口大小
+	// 修改窗体大小
 	void setSize(
-		int width,			/* 窗口宽度 */
-		int height			/* 窗口高度 */
+		int width,			/* 窗体宽度 */
+		int height			/* 窗体高度 */
 	);
 
-	// 设置窗口标题
+	// 设置窗体标题
 	void setTitle(
-		const String& title	/* 窗口标题 */
+		const String& title	/* 窗体标题 */
 	);
 
-	// 设置窗口图标
+	// 设置窗体图标
 	void setIcon(
 		int iconID
 	);
@@ -111,24 +111,24 @@ public:
 		Cursor cursor
 	);
 
-	// 获取窗口标题
+	// 获取窗体标题
 	String getTitle();
 
-	// 获取窗口宽度
+	// 获取窗体宽度
 	double getWidth();
 
-	// 获取窗口高度
+	// 获取窗体高度
 	double getHeight();
 
-	// 获取窗口大小
+	// 获取窗体大小
 	Size getSize();
 
 	// 获取窗口句柄
 	HWND getHWnd();
 
-	// 打开/隐藏控制台
-	void showConsole(
-		bool show = true
+	// 打开或隐藏控制台
+	void setConsoleEnabled(
+		bool enabled
 	);
 
 	// 是否允许响应输入法
@@ -154,7 +154,7 @@ public:
 		const String& title = L"Error"		/* 窗口标题 */
 	);
 
-	// 处理窗口消息
+	// 处理窗体消息
 	void poll();
 
 private:
