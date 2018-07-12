@@ -42,6 +42,7 @@ GC GC::_instance;
 
 e2d::GC::GC()
 	: _notifyed(false)
+	, _cleanup(false)
 	, _pool()
 {
 }
@@ -91,11 +92,20 @@ void e2d::GC::flush()
 
 void e2d::GC::clear()
 {
+	_instance._cleanup = true;
 	for (auto pair : _instance._pool)
 	{
-		delete pair.first;
+		if (pair.second)
+		{
+			delete[] pair.first;
+		}
+		else
+		{
+			delete pair.first;
+		}
 	}
 	_instance._pool.clear();
+	_instance._cleanup = false;
 }
 
 void e2d::GC::autorelease(Ref * ref)
@@ -124,7 +134,7 @@ void e2d::GC::autoreleaseArray(Ref * ref)
 
 void e2d::GC::retain(Ref * ref)
 {
-	if (ref)
+	if (ref && !_instance._cleanup)
 	{
 		auto iter = _instance._pool.find(ref);
 		if (iter != _instance._pool.end())
@@ -136,7 +146,7 @@ void e2d::GC::retain(Ref * ref)
 
 void e2d::GC::release(Ref * ref)
 {
-	if (ref)
+	if (ref && !_instance._cleanup)
 	{
 		auto iter = _instance._pool.find(ref);
 		if (iter != _instance._pool.end())

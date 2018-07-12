@@ -512,6 +512,7 @@ private:
 
 private:
 	bool _notifyed;
+	bool _cleanup;
 	std::map<Ref*, bool> _pool;
 
 	static GC _instance;
