@@ -441,14 +441,10 @@ public:
 
 
 class Node;
-class CollisionManager;
 
 // 碰撞体
 class Collider
 {
-	friend class Node;
-	friend class CollisionManager;
-
 public:
 	// 碰撞体形状
 	enum class Shape
@@ -470,13 +466,24 @@ public:
 	};
 
 public:
+	Collider(
+		Node * parent
+	);
+
+	virtual ~Collider();
+
 	// 设置碰撞体形状
-	virtual void setShape(
+	void setShape(
 		Shape shape
 	);
 
+	// 是否触发碰撞事件
+	void setCollisionNotify(
+		bool notify
+	);
+
 	// 启用或关闭该碰撞体
-	virtual void setEnabled(
+	void setEnabled(
 		bool enabled
 	);
 
@@ -491,9 +498,18 @@ public:
 	);
 
 	// 判断两碰撞体的交集关系
-	virtual Relation getRelationWith(
+	Relation getRelationWith(
 		Collider * pCollider
 	) const;
+
+	// 是否启用碰撞体
+	bool isEnabled() const;
+
+	// 是否可见
+	bool isVisible() const;
+
+	// 是否触发碰撞事件
+	bool isCollisionNotify() const;
 
 	// 获取绘制颜色
 	Color getColor() const;
@@ -501,31 +517,59 @@ public:
 	// 获取形状
 	Shape getShape() const;
 
+	// 获取绑定节点
+	Node* getNode() const;
+
 	// 获取 ID2D1Geometry* 对象
 	ID2D1Geometry* getGeometry() const;
 
-protected:
-	Collider(
-		Node * parent
-	);
-
-	virtual ~Collider();
-
-	E2D_DISABLE_COPY(Collider);
-
 	// 重新生成
-	void _recreate();
+	void recreate();
 
 	// 渲染碰撞体
-	void _render();
+	void render();
+
+protected:
+	E2D_DISABLE_COPY(Collider);
 
 protected:
 	bool	_enabled;
 	bool	_visible;
+	bool	_notify;
 	Color	_color;
 	Node *	_parentNode;
 	Shape	_shape;
 	ID2D1Geometry* _geometry;
+};
+
+
+// 碰撞事件
+class Collision
+{
+public:
+	Collision();
+
+	Collision(
+		Node* active,
+		Node* passive,
+		Collider::Relation relation
+	);
+
+	~Collision();
+
+	// 获取发生碰撞的主动方
+	Node* getActive() const;
+
+	// 获取发生碰撞的被动方
+	Node* getPassive() const;
+
+	// 获取交集关系
+	Collider::Relation getRelation() const;
+
+protected:
+	Node * _active;
+	Node* _passive;
+	Collider::Relation _relation;
 };
 
 

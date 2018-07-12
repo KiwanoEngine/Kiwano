@@ -9,13 +9,16 @@ e2d::Collider::Collider(Node * parent)
 	, _geometry(nullptr)
 	, _enabled(true)
 	, _shape(Collider::Shape::None)
+	, _notify(true)
 {
 	_shape = Game::getInstance()->getConfig()->getDefaultColliderShape();
+	CollisionManager::getInstance()->__addCollider(this);
 }
 
 e2d::Collider::~Collider()
 {
 	SafeRelease(_geometry);
+	CollisionManager::getInstance()->__removeCollider(this);
 }
 
 e2d::Color e2d::Collider::getColor() const
@@ -28,6 +31,11 @@ e2d::Collider::Shape e2d::Collider::getShape() const
 	return _shape;
 }
 
+e2d::Node * e2d::Collider::getNode() const
+{
+	return _parentNode;
+}
+
 ID2D1Geometry * e2d::Collider::getGeometry() const
 {
 	return _geometry;
@@ -36,7 +44,12 @@ ID2D1Geometry * e2d::Collider::getGeometry() const
 void e2d::Collider::setShape(Shape shape)
 {
 	_shape = shape;
-	this->_recreate();
+	this->recreate();
+}
+
+void e2d::Collider::setCollisionNotify(bool notify)
+{
+	_notify = notify;
 }
 
 void e2d::Collider::setEnabled(bool enabled)
@@ -54,9 +67,9 @@ void e2d::Collider::setColor(Color color)
 	_color = color;
 }
 
-void e2d::Collider::_render()
+void e2d::Collider::render()
 {
-	if (_geometry && _enabled)
+	if (_geometry && _enabled && _visible)
 	{
 		auto renderer = Renderer::getInstance();
 		// »ñÈ¡´¿É«»­Ë¢
@@ -88,7 +101,22 @@ e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * collider) cons
 	return Relation::Unknown;
 }
 
-void e2d::Collider::_recreate()
+bool e2d::Collider::isEnabled() const
+{
+	return _enabled;
+}
+
+bool e2d::Collider::isVisible() const
+{
+	return _visible;
+}
+
+bool e2d::Collider::isCollisionNotify() const
+{
+	return _notify;
+}
+
+void e2d::Collider::recreate()
 {
 	SafeRelease(_geometry);
 

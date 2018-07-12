@@ -7,6 +7,7 @@ namespace e2d
 
 class Action;
 class Transition;
+class CollisionManager;
 
 class Node :
 	public Ref
@@ -14,6 +15,7 @@ class Node :
 	friend class Scene;
 	friend class Collider;
 	friend class Transition;
+	friend class CollisionManager;
 
 public:
 	// 节点属性
@@ -47,6 +49,11 @@ public:
 
 	// 渲染节点
 	virtual void onRender() {}
+
+	// 节点发生碰撞
+	virtual void onCollision(
+		Collision other
+	) {}
 
 	// 获取节点显示状态
 	virtual bool isVisible() const;
@@ -124,6 +131,9 @@ public:
 	// 获取节点属性
 	virtual Property getProperty() const;
 
+	// 获取差别属性
+	virtual Property getExtrapolate() const;
+
 	// 获取节点碰撞体
 	virtual Collider * getCollider();
 
@@ -159,11 +169,11 @@ public:
 		const String& childName
 	);
 
+	// 移除所有节点
+	virtual void removeAllChildren();
+
 	// 从父节点移除
 	virtual void removeFromParent();
-
-	// 移除所有节点
-	virtual void clearAllChildren();
 
 	// 设置节点是否显示
 	virtual void setVisible(
@@ -375,6 +385,9 @@ public:
 	// 停止所有动作
 	virtual void stopAllActions();
 
+	// 更新转换矩阵
+	void updateTransform();
+
 protected:
 	E2D_DISABLE_COPY(Node);
 
@@ -395,8 +408,8 @@ protected:
 		Scene * scene
 	);
 
-	// 更新节点二维矩阵
-	void _updateTransform();
+	// 更新自身转换矩阵
+	void _updateSelfTransform();
 
 	// 子节点排序
 	void _sortChildren();

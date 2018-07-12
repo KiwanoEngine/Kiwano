@@ -22,8 +22,6 @@ void e2d::CollisionManager::destroyInstance()
 }
 
 e2d::CollisionManager::CollisionManager()
-	: _activeNode(nullptr)
-	, _passiveNode(nullptr)
 {
 }
 
@@ -31,73 +29,61 @@ e2d::CollisionManager::~CollisionManager()
 {
 }
 
-void e2d::CollisionManager::__remove(Node * node)
+void e2d::CollisionManager::__addCollider(Collider * collider)
 {
-	if (node)
+	_colliders.push_back(collider);
+}
+
+void e2d::CollisionManager::__removeCollider(Collider * collider)
+{
+	auto iter = std::find(_colliders.begin(), _colliders.end(), collider);
+	if (iter != _colliders.end())
 	{
-		auto iter = std::find(_collisionNodes.begin(), _collisionNodes.end(), node);
-		if (iter != _collisionNodes.end())
-		{
-			_collisionNodes.erase(iter);
-		}
+		_colliders.erase(iter);
 	}
 }
 
-void e2d::CollisionManager::updateCollider(Node * node)
+void e2d::CollisionManager::__updateCollider(Collider* collider)
 {
-	if (node)
-	{
-		if (node->getCollider()->_shape != Collider::Shape::None)
-		{
-			node->getCollider()->_recreate();
-			_collisionNodes.insert(node);
-		}
-	}
-}
-
-void e2d::CollisionManager::update()
-{
-	// 判断碰撞监听是否打开
 	if (Game::getInstance()->isPaused() ||
 		!Game::getInstance()->getConfig()->isCollisionEnabled() ||
-		SceneManager::getInstance()->isTransitioning())
-	{
-		_collisionNodes.clear();
+		SceneManager::getInstance()->isTransitioning() ||
+		!collider->isCollisionNotify())
 		return;
-	}
 
-	for (auto iter1 = _collisionNodes.begin(); iter1 != _collisionNodes.end(); iter1++)
+	for (size_t i = 0; i < _colliders.size(); i++)
 	{
-		auto node1 = (*iter1);
 		// 判断与其他碰撞体的交集情况
-		auto iter2 = iter1;
-		iter2++;
-		for (; iter2 != _collisionNodes.end(); iter2++)
+		auto active = collider->getNode();
+		auto passive = _colliders[i]->getNode();
+		// 判断两物体是否是相互冲突的物体
+		if (active == passive ||
+			active->getParentScene() != passive->getParentScene() ||
+			!CollisionManager::isCollidable(active, passive))
 		{
-			auto node2 = (*iter2);
-			// 判断两物体是否是相互冲突的物体
-			if (CollisionManager::isCollidable(node1, node2))
-			{
-				// 判断两碰撞体交集情况
-				Collider::Relation relation = node1->getCollider()->getRelationWith(node2->getCollider());
-				// 忽略 UNKNOWN 和 DISJOIN 情况
-				if (relation != Collider::Relation::Unknown && 
-					relation != Collider::Relation::Disjoin)
-				{
-					// 更新碰撞监听器
-					CollisionManager::__update(node1, node2);
-				}
-			}
+			continue;
+		}
+
+		// 判断两碰撞体交集情况
+		Collider::Relation relation = active->getCollider()->getRelationWith(passive->getCollider());
+		// 忽略 UNKNOWN 和 DISJOIN 情况
+		if (relation != Collider::Relation::Unknown &&
+			relation != Collider::Relation::Disjoin)
+		{
+			_collision = Collision(active, passive, relation);
+			active->onCollision(_collision);
+			// 更新碰撞监听器
+			CollisionManager::__updateListeners();
 		}
 	}
-	_collisionNodes.clear();
+	_collision = Collision();
 }
 
 void e2d::CollisionManager::addName(const String & name1, const String & name2)
 {
 	if (!name1.isEmpty() && !name2.isEmpty())
 	{
-		_collisionList.insert(HashPair(name1.getHashCode(), name2.getHashCode()));
+		_collisionList.insert(std::make_pair(name1.getHashCode(), name2.getHashCode()));
 	}
 }
 
@@ -107,7 +93,7 @@ void e2d::CollisionManager::addName(const std::vector<std::pair<String, String> 
 	{
 		if (!name.first.isEmpty() && !name.second.isEmpty())
 		{
-			_collisionList.insert(HashPair(name.first.getHashCode(), name.second.getHashCode()));
+			_collisionList.insert(std::make_pair(name.first.getHashCode(), name.second.getHashCode()));
 		}
 	}
 }
@@ -119,8 +105,10 @@ bool e2d::CollisionManager::isCollidable(Node * node1, Node * node2)
 
 bool e2d::CollisionManager::isCollidable(const String & name1, const String & name2)
 {
-	UINT hashName1 = name1.getHashCode(), hashName2 = name2.getHashCode();
-	HashPair pair1 = HashPair(hashName1, hashName2), pair2 = HashPair(hashName2, hashName1);
+	UINT hashName1 = name1.getHashCode(), 
+		hashName2 = name2.getHashCode();
+	auto pair1 = std::make_pair(hashName1, hashName2), 
+		pair2 = std::make_pair(hashName2, hashName1);
 	for (auto& pair : _collisionList)
 	{
 		if (pair == pair1 || pair == pair2)
@@ -131,55 +119,15 @@ bool e2d::CollisionManager::isCollidable(const String & name1, const String & na
 	return false;
 }
 
-e2d::Node * e2d::CollisionManager::getActiveNode()
+e2d::Collision e2d::CollisionManager::getCollision() const
 {
-	return _activeNode;
+	return _collision;
 }
 
-e2d::Node * e2d::CollisionManager::getPassiveNode()
-{
-	return _passiveNode;
-}
-
-bool e2d::CollisionManager::isCausedBy(const String & name1, const String & name2)
-{
-	String activeName = _activeNode->getName();
-	String passiveName = _passiveNode->getName();
-	return (activeName == name1 && passiveName == name2) ||
-		(activeName == name2 && passiveName == name1);
-}
-
-bool e2d::CollisionManager::isCausedBy(Node * node1, Node * node2)
-{
-	return (_activeNode == node1 && _passiveNode == node2) ||
-		(_activeNode == node2 && _passiveNode == node1);
-}
-
-e2d::Node* e2d::CollisionManager::isCausedBy(Node * node)
-{
-	if (_activeNode == node)
-		return _passiveNode;
-	if (_passiveNode == node)
-		return _activeNode;
-	return nullptr;
-}
-
-e2d::Node* e2d::CollisionManager::isCausedBy(const String& name)
-{
-	if (_activeNode->getName() == name)
-		return _activeNode;
-	if (_passiveNode->getName() == name)
-		return _passiveNode;
-	return nullptr;
-}
-
-void e2d::CollisionManager::__update(Node * active, Node * passive)
+void e2d::CollisionManager::__updateListeners()
 {
 	if (_listeners.empty() || Game::getInstance()->isPaused())
 		return;
-
-	_activeNode = active;
-	_passiveNode = passive;
 
 	for (size_t i = 0; i < _listeners.size(); ++i)
 	{
@@ -197,9 +145,6 @@ void e2d::CollisionManager::__update(Node * active, Node * passive)
 			++i;
 		}
 	}
-
-	_activeNode = nullptr;
-	_passiveNode = nullptr;
 }
 
 e2d::Listener * e2d::CollisionManager::addListener(const Function& func, const String& name, bool paused)

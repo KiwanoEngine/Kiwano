@@ -222,6 +222,7 @@
     <ClCompile Include="..\..\core\Base\Time.cpp" />
     <ClCompile Include="..\..\core\Base\Window.cpp" />
     <ClCompile Include="..\..\core\Common\Collider.cpp" />
+    <ClCompile Include="..\..\core\Common\Collision.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
     <ClCompile Include="..\..\core\Common\Config.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />

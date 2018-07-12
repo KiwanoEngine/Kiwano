@@ -5,13 +5,9 @@
 namespace e2d
 {
 
-class Game;
-class Input;
-class Renderer;
+
 class Node;
-class Task;
 class Action;
-class Player;
 class Collider;
 class Transition;
 
@@ -249,6 +245,7 @@ private:
 class CollisionManager
 {
 	friend class Node;
+	friend class Collider;
 
 public:
 	// 获取碰撞体管理器实例
@@ -265,7 +262,7 @@ public:
 
 	// 添加可互相碰撞物体的名称
 	void addName(
-		const std::vector<std::pair<String, String> >& names
+		const std::vector<std::pair<String, String>>& names
 	);
 
 	// 判断两个物体是否是可碰撞的
@@ -280,35 +277,8 @@ public:
 		const String& name2
 	);
 
-	// 获取碰撞发生时的主动体
-	Node * getActiveNode();
-
-	// 获取碰撞发生时的被动体
-	Node * getPassiveNode();
-
-	// 判断发生碰撞的节点名称是否相同
-	bool isCausedBy(
-		const String& name1,
-		const String& name2
-	);
-
-	// 判断两物体是否发生碰撞
-	bool isCausedBy(
-		Node * node1,
-		Node * node2
-	);
-
-	// 判断发生碰撞的任意一方名称是否相同
-	// 若相同，返回其指针，否则返回空
-	Node * isCausedBy(
-		const String& name
-	);
-
-	// 判断物体是否发生碰撞
-	// 如果是，返回与其相撞的节点指针，否则返回空
-	Node * isCausedBy(
-		Node * node
-	);
+	// 获取碰撞事件
+	Collision getCollision() const;
 
 	// 添加碰撞监听
 	Listener * addListener(
@@ -354,14 +324,6 @@ public:
 	// 强制清除所有监听器
 	void clearAllListeners();
 
-	// 更新碰撞体
-	void updateCollider(
-		Node * node
-	);
-
-	// 更新碰撞体管理器
-	void update();
-
 private:
 	CollisionManager();
 
@@ -369,24 +331,29 @@ private:
 
 	E2D_DISABLE_COPY(CollisionManager);
 
-	void __remove(
-		Node* node
+	// 添加碰撞体
+	void __addCollider(
+		Collider* collider
+	);
+
+	// 移除碰撞体
+	void __removeCollider(
+		Collider* collider
+	);
+
+	// 更新碰撞体
+	void __updateCollider(
+		Collider* collider
 	);
 
 	// 更新监听器
-	void __update(
-		Node * active,
-		Node * passive
-	);
+	void __updateListeners();
 
 private:
-	typedef std::pair<UINT, UINT> HashPair;
-	
-	e2d::Node * _activeNode;
-	e2d::Node * _passiveNode;
-	std::set<Node*> _collisionNodes;
-	std::set<HashPair> _collisionList;
+	Collision _collision;
+	std::vector<Collider*> _colliders;
 	std::vector<Listener*> _listeners;
+	std::set<std::pair<UINT, UINT>> _collisionList;
 
 	static CollisionManager * _instance;
 };

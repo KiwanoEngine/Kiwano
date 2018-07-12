@@ -260,5 +260,8 @@
     <ClCompile Include="..\..\core\Manager\InputManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Common\Collision.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

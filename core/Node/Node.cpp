@@ -80,7 +80,6 @@ e2d::Node::~Node()
 	SafeRelease(_outline);
 
 	ActionManager::getInstance()->clearAllBindedWith(this);
-	CollisionManager::getInstance()->__remove(this);
 	for (auto child : _children)
 	{
 		GC::release(child);
@@ -89,9 +88,6 @@ e2d::Node::~Node()
 
 void e2d::Node::_update()
 {
-	// 更新转换矩阵
-	_updateTransform();
-
 	if (_children.empty())
 	{
 		if (_autoUpdate && !Game::getInstance()->isPaused())
@@ -106,9 +102,8 @@ void e2d::Node::_update()
 		_sortChildren();
 
 		// 遍历子节点
-		size_t size = _children.size();
 		size_t i;
-		for (i = 0; i < size; ++i)
+		for (i = 0; i < _children.size(); ++i)
 		{
 			auto child = _children[i];
 			// 访问 Order 小于零的节点
@@ -129,9 +124,14 @@ void e2d::Node::_update()
 		this->_fixedUpdate();
 
 		// 访问其他节点
-		for (; i < size; ++i)
+		for (; i < _children.size(); ++i)
 			_children[i]->_update();
 	}
+
+	// 更新转换矩阵
+	updateTransform();
+	// 保留差别属性
+	_extrapolate = this->getProperty();
 }
 
 void e2d::Node::_render()
@@ -140,9 +140,6 @@ void e2d::Node::_render()
 	{
 		return;
 	}
-
-	// 更新转换矩阵
-	_updateTransform();
 
 	if (_children.empty())
 	{
@@ -156,9 +153,8 @@ void e2d::Node::_render()
 		// 子节点排序
 		_sortChildren();
 
-		size_t size = _children.size();
 		size_t i;
-		for (i = 0; i < size; ++i)
+		for (i = 0; i < _children.size(); ++i)
 		{
 			auto child = _children[i];
 			// 访问 Order 小于零的节点
@@ -178,7 +174,7 @@ void e2d::Node::_render()
 		this->onRender();
 
 		// 访问剩余节点
-		for (; i < size; ++i)
+		for (; i < _children.size(); ++i)
 			_children[i]->_render();
 	}
 }
@@ -207,10 +203,7 @@ void e2d::Node::_renderOutline()
 void e2d::Node::_renderCollider()
 {
 	// 绘制自身的几何碰撞体
-	if (_collider._visible)
-	{
-		_collider._render();
-	}
+	_collider.render();
 
 	// 绘制所有子节点的几何碰撞体
 	for (auto child : _children)
@@ -219,10 +212,52 @@ void e2d::Node::_renderCollider()
 	}
 }
 
-void e2d::Node::_updateTransform()
+void e2d::Node::updateTransform()
 {
 	if (!_needTransform)
 		return;
+
+	_updateSelfTransform();
+	CollisionManager::getInstance()->__updateCollider(&_collider);
+
+	if (_needTransform)
+	{
+		_updateSelfTransform();
+	}
+
+	// 为节点创建一个轮廓
+	ID2D1RectangleGeometry * rectGeo = nullptr;
+	ID2D1TransformedGeometry * transformedGeo = nullptr;
+
+	auto factory = Renderer::getFactory();
+	HRESULT hr = factory->CreateRectangleGeometry(
+		D2D1::RectF(0, 0, _width, _height),
+		&rectGeo
+	);
+
+	if (SUCCEEDED(hr))
+	{
+		factory->CreateTransformedGeometry(
+			rectGeo,
+			_finalMatri,
+			&transformedGeo
+		);
+	}
+
+	SafeRelease(rectGeo);
+	SafeRelease(_outline);
+	_outline = transformedGeo;
+
+	// 通知子节点进行转换
+	for (auto& child : _children)
+	{
+		child->_needTransform = true;
+	}
+}
+
+void e2d::Node::_updateSelfTransform()
+{
+	_needTransform = false;
 
 	// 计算中心点坐标
 	D2D1_POINT_2F pivot = { _width * _pivotX, _height * _pivotY };
@@ -251,35 +286,8 @@ void e2d::Node::_updateTransform()
 		_finalMatri = _finalMatri * _parent->_initialMatri;
 	}
 
-	// 为节点创建一个轮廓
-	ID2D1RectangleGeometry * rectGeo;
-	ID2D1TransformedGeometry * transformedGeo;
-
-	auto factory = Renderer::getFactory();
-	factory->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, _width, _height),
-		&rectGeo
-	);
-	factory->CreateTransformedGeometry(
-		rectGeo,
-		_finalMatri,
-		&transformedGeo
-	);
-
-	SafeRelease(rectGeo);
-	SafeRelease(_outline);
-	_outline = transformedGeo;
-
 	// 更新碰撞体
-	CollisionManager::getInstance()->updateCollider(this);
-	// 标志已执行过变换
-	_needTransform = false;
-
-	// 通知子节点进行转换
-	for (auto& child : _children)
-	{
-		child->_needTransform = true;
-	}
+	_collider.recreate();
 }
 
 void e2d::Node::_sortChildren()
@@ -425,6 +433,11 @@ e2d::Node::Property e2d::Node::getProperty() const
 	return std::move(prop);
 }
 
+e2d::Node::Property e2d::Node::getExtrapolate() const
+{
+	return this->getProperty() - _extrapolate;
+}
+
 e2d::Collider* e2d::Node::getCollider()
 {
 	return &_collider;
@@ -462,8 +475,6 @@ void e2d::Node::setPos(double x, double y)
 
 	_posX = float(x);
 	_posY = float(y);
-	_extrapolate.posX += x;
-	_extrapolate.posY += y;
 	_needTransform = true;
 }
 
@@ -518,8 +529,6 @@ void e2d::Node::setScale(double scaleX, double scaleY)
 
 	_scaleX = float(scaleX);
 	_scaleY = float(scaleY);
-	_extrapolate.scaleX += scaleX;
-	_extrapolate.scaleY += scaleY;
 	_needTransform = true;
 }
 
@@ -540,8 +549,6 @@ void e2d::Node::setSkew(double angleX, double angleY)
 
 	_skewAngleX = float(angleX);
 	_skewAngleY = float(angleY);
-	_extrapolate.skewAngleX += angleX;
-	_extrapolate.skewAngleY += angleY;
 	_needTransform = true;
 }
 
@@ -551,7 +558,6 @@ void e2d::Node::setRotation(double angle)
 		return;
 
 	_rotation = float(angle);
-	_extrapolate.rotation += angle;
 	_needTransform = true;
 }
 
@@ -582,8 +588,6 @@ void e2d::Node::setPivot(double pivotX, double pivotY)
 
 	_pivotX = std::min(std::max(float(pivotX), 0.f), 1.f);
 	_pivotY = std::min(std::max(float(pivotY), 0.f), 1.f);
-	_extrapolate.pivotX += pivotX;
-	_extrapolate.pivotY += pivotY;
 	_needTransform = true;
 }
 
@@ -604,8 +608,6 @@ void e2d::Node::setSize(double width, double height)
 
 	_width = float(width);
 	_height = float(height);
-	_extrapolate.width += width;
-	_extrapolate.height += height;
 	_needTransform = true;
 }
 
@@ -786,7 +788,7 @@ void e2d::Node::removeChildren(const String& childName)
 	}
 }
 
-void e2d::Node::clearAllChildren()
+void e2d::Node::removeAllChildren()
 {
 	// 所有节点的引用计数减一
 	for (auto child : _children)
@@ -840,7 +842,7 @@ void e2d::Node::stopAction(const String& name)
 
 bool e2d::Node::containsPoint(const Point& point)
 {
-	_updateTransform();
+	updateTransform();
 	if (_outline)
 	{
 		BOOL ret = 0;
@@ -859,8 +861,8 @@ bool e2d::Node::containsPoint(const Point& point)
 
 bool e2d::Node::intersects(Node * node)
 {
-	_updateTransform();
-	node->_updateTransform();
+	updateTransform();
+	node->updateTransform();
 	if (_outline)
 	{
 		D2D1_GEOMETRY_RELATION relation;
