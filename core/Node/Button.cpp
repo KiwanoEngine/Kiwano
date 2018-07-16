@@ -185,7 +185,7 @@ void e2d::Button::_fixedUpdate()
 
 	if (_enabled && _visible && _normal)
 	{
-		if (input->isRelease(Input::Mouse::Left))
+		if (input->isRelease(MouseCode::Left))
 		{
 			// 鼠标左键抬起时，判断鼠标坐标是否在按钮内部
 			if (_isSelected &&
@@ -197,7 +197,7 @@ void e2d::Button::_fixedUpdate()
 			_isSelected = false;
 		}
 
-		if (input->isPress(Input::Mouse::Left))
+		if (input->isPress(MouseCode::Left))
 		{
 			if (_normal->containsPoint(input->getMousePos()))
 			{
@@ -207,7 +207,7 @@ void e2d::Button::_fixedUpdate()
 			}
 		}
 
-		if (_isSelected && input->isDown(Input::Mouse::Left))
+		if (_isSelected && input->isDown(MouseCode::Left))
 		{
 			if (_normal->containsPoint(input->getMousePos()))
 			{

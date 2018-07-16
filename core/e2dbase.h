@@ -230,73 +230,6 @@ private:
 class Input
 {
 public:
-	// 鼠标键值
-	enum class Mouse : int
-	{
-		Left,		/* 鼠标左键 */
-		Right,		/* 鼠标右键 */
-		Middle		/* 鼠标中键 */
-	};
-
-	// 键盘键值
-	enum class Key : int
-	{
-		Up = 0xC8,
-		Left = 0xCB,
-		Right = 0xCD,
-		Down = 0xD0,
-		Enter = 0x1C,
-		Space = 0x39,
-		Esc = 0x01,
-		Q = 0x10,
-		W = 0x11,
-		E = 0x12,
-		R = 0x13,
-		T = 0x14,
-		Y = 0x15,
-		U = 0x16,
-		I = 0x17,
-		O = 0x18,
-		P = 0x19,
-		A = 0x1E,
-		S = 0x1F,
-		D = 0x20,
-		F = 0x21,
-		G = 0x22,
-		H = 0x23,
-		J = 0x24,
-		K = 0x25,
-		L = 0x26,
-		Z = 0x2C,
-		X = 0x2D,
-		C = 0x2E,
-		V = 0x2F,
-		B = 0x30,
-		N = 0x31,
-		M = 0x32,
-		Num1 = 0x02,
-		Num2 = 0x03,
-		Num3 = 0x04,
-		Num4 = 0x05,
-		Num5 = 0x06,
-		Num6 = 0x07,
-		Num7 = 0x08,
-		Num8 = 0x09,
-		Num9 = 0x0A,
-		Num0 = 0x0B,
-		Numpad7 = 0x47,
-		Numpad8 = 0x48,
-		Numpad9 = 0x49,
-		Numpad4 = 0x4B,
-		Numpad5 = 0x4C,
-		Numpad6 = 0x4D,
-		Numpad1 = 0x4F,
-		Numpad2 = 0x50,
-		Numpad3 = 0x51,
-		Numpad0 = 0x52
-	};
-
-public:
 	// 获取输入设备实例
 	static Input * getInstance();
 
@@ -305,32 +238,32 @@ public:
 
 	// 检测键盘某按键是否正被按下
 	bool isDown(
-		Key key
+		KeyCode key
 	);
 
 	// 检测键盘某按键是否被点击
 	bool isPress(
-		Key key
+		KeyCode key
 	);
 
 	// 检测键盘某按键是否正在松开
 	bool isRelease(
-		Key key
+		KeyCode key
 	);
 
 	// 检测鼠标按键是否正被按下
 	bool isDown(
-		Mouse code
+		MouseCode code
 	);
 
 	// 检测鼠标按键是否被点击
 	bool isPress(
-		Mouse code
+		MouseCode code
 	);
 
 	// 检测鼠标按键是否正在松开
 	bool isRelease(
-		Mouse code
+		MouseCode code
 	);
 
 	// 获得鼠标X轴坐标值

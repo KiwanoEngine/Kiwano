@@ -44,7 +44,6 @@ void e2d::Game::start(bool cleanup)
 	auto timer = Timer::getInstance();
 	auto sceneManager = SceneManager::getInstance();
 	auto actionManager = ActionManager::getInstance();
-	auto inputManager = InputManager::getInstance();
 
 	// 显示窗口
 	::ShowWindow(window->getHWnd(), SW_SHOWNORMAL);
@@ -75,7 +74,6 @@ void e2d::Game::start(bool cleanup)
 			input->update();			// 获取用户输入
 			timer->update();			// 更新定时器
 			actionManager->update();	// 更新动作管理器
-			inputManager->update();		// 更新输入监听器
 			sceneManager->update();		// 更新场景内容
 			renderer->render();			// 渲染游戏画面
 			GC::flush();				// 刷新内存池
@@ -146,10 +144,6 @@ void e2d::Game::cleanup()
 	Timer::getInstance()->clearAllTasks();
 	// 清除所有动作
 	ActionManager::getInstance()->clearAll();
-	// 删除碰撞监听器
-	CollisionManager::getInstance()->clearAllListeners();
-	// 删除输入监听器
-	InputManager::getInstance()->clearAllListeners();
 	// 清空图片缓存
 	Image::clearCache();
 	// 清空音乐缓存

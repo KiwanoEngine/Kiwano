@@ -50,10 +50,16 @@ public:
 	// 渲染节点
 	virtual void onRender() {}
 
-	// 节点发生碰撞
-	virtual void onCollision(
-		Collision other
-	) {}
+	// 按键消息
+	// 说明：返回 false 将阻止消息继续传递
+	virtual bool onKeyEvent(KeyEvent e) { return true; }
+
+	// 鼠标消息
+	// 说明：返回 false 将阻止消息继续传递
+	virtual bool onMouseEvent(MouseEvent e) { return true; }
+
+	// 碰撞消息
+	virtual void onCollision(Collision collision) { }
 
 	// 获取节点显示状态
 	virtual bool isVisible() const;
@@ -72,7 +78,7 @@ public:
 	virtual String getName() const;
 
 	// 获取节点名称的 Hash 值
-	virtual unsigned int getHashName() const;
+	virtual size_t getHashName() const;
 
 	// 获取节点绘图顺序
 	virtual int getOrder() const;
@@ -388,6 +394,16 @@ public:
 	// 更新转换矩阵
 	void updateTransform();
 
+	// 分发鼠标消息
+	bool dispatch(
+		const MouseEvent& e
+	);
+
+	// 分发按键消息
+	bool dispatch(
+		const KeyEvent& e
+	);
+
 protected:
 	E2D_DISABLE_COPY(Node);
 
@@ -422,7 +438,7 @@ protected:
 
 protected:
 	String		_name;
-	unsigned	_hashName;
+	size_t		_hashName;
 	float		_posX;
 	float		_posY;
 	float		_width;

@@ -52,6 +52,16 @@ public:
 	// 渲染场景画面
 	void render();
 
+	// 分发鼠标消息
+	void dispatch(
+		const MouseEvent& e
+	);
+
+	// 分发按键消息
+	void dispatch(
+		const KeyEvent& e
+	);
+
 private:
 	SceneManager();
 
@@ -166,81 +176,6 @@ private:
 };
 
 
-class Listener;
-
-// 用户输入管理器
-class InputManager
-{
-	friend class Node;
-
-public:
-	// 获取碰撞体管理器实例
-	static InputManager * getInstance();
-
-	// 销毁实例
-	static void destroyInstance();
-
-	// 添加输入监听
-	Listener * addListener(
-		const Function& func,		/* 监听到用户输入时的执行函数 */
-		const String& name = L"",	/* 监听器名称 */
-		bool paused = false			/* 是否暂停 */
-	);
-
-	// 添加碰撞监听
-	void addListener(
-		Listener * listener			/* 监听器 */
-	);
-
-	// 移除监听器
-	void removeListener(
-		Listener * listener			/* 监听器 */
-	);
-
-	// 启动输入监听
-	void startListener(
-		const String& name
-	);
-
-	// 停止输入监听
-	void stopListener(
-		const String& name
-	);
-
-	// 移除输入监听
-	void removeListener(
-		const String& name
-	);
-
-	// 启动所有监听器
-	void startAllListeners();
-
-	// 停止所有监听器
-	void stopAllListeners();
-
-	// 移除所有监听器
-	void removeAllListeners();
-
-	// 强制清空所有监听器
-	void clearAllListeners();
-
-	// 更新监听器
-	void update();
-
-private:
-	InputManager();
-
-	~InputManager();
-
-	E2D_DISABLE_COPY(InputManager);
-
-private:
-	std::vector<Listener*> _listeners;
-
-	static InputManager * _instance;
-};
-
-
 // 碰撞体管理器
 class CollisionManager
 {
@@ -277,53 +212,6 @@ public:
 		const String& name2
 	);
 
-	// 获取碰撞事件
-	Collision getCollision() const;
-
-	// 添加碰撞监听
-	Listener * addListener(
-		const Function& func,		/* 监听到碰撞时的执行函数 */
-		const String& name = L"",	/* 监听器名称 */
-		bool paused = false			/* 是否暂停 */
-	);
-
-	// 添加碰撞监听
-	void addListener(
-		Listener * listener			/* 监听器 */
-	);
-
-	// 移除监听器
-	void removeListener(
-		Listener * listener			/* 监听器 */
-	);
-
-	// 启动碰撞监听
-	void startListener(
-		const String& name
-	);
-
-	// 停止碰撞监听
-	void stopListener(
-		const String& name
-	);
-
-	// 移除碰撞监听
-	void removeListener(
-		const String& name
-	);
-
-	// 启动所有监听器
-	void startAllListeners();
-
-	// 停止所有监听器
-	void stopAllListeners();
-
-	// 移除所有监听器
-	void removeAllListeners();
-
-	// 强制清除所有监听器
-	void clearAllListeners();
-
 private:
 	CollisionManager();
 
@@ -346,14 +234,9 @@ private:
 		Collider* collider
 	);
 
-	// 更新监听器
-	void __updateListeners();
-
 private:
-	Collision _collision;
 	std::vector<Collider*> _colliders;
-	std::vector<Listener*> _listeners;
-	std::set<std::pair<UINT, UINT>> _collisionList;
+	std::set<std::pair<size_t, size_t>> _collisionList;
 
 	static CollisionManager * _instance;
 };

@@ -237,7 +237,6 @@
     <ClCompile Include="..\..\core\Node\ToggleButton.cpp" />
     <ClCompile Include="..\..\core\Tool\Data.cpp" />
     <ClCompile Include="..\..\core\Tool\File.cpp" />
-    <ClCompile Include="..\..\core\Tool\Listener.cpp" />
     <ClCompile Include="..\..\core\Tool\Music.cpp" />
     <ClCompile Include="..\..\core\Tool\Path.cpp" />
     <ClCompile Include="..\..\core\Tool\Player.cpp" />

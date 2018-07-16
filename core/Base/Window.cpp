@@ -90,7 +90,7 @@ HWND e2d::Window::__create()
 	WNDCLASSEX wcex = { 0 };
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.lpszClassName = L"Easy2DApp";
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
 	wcex.lpfnWndProc = Window::WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = sizeof(LONG_PTR);
@@ -384,6 +384,35 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 	switch (message)
 	{
+
+	// 处理鼠标消息
+	case WM_LBUTTONUP:
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONDBLCLK:
+	case WM_MBUTTONUP:
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONDBLCLK:
+	case WM_RBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONDBLCLK:
+	case WM_MOUSEMOVE:
+	case WM_MOUSEWHEEL:
+	{
+		SceneManager::getInstance()->dispatch(MouseEvent(message, wParam, lParam));
+	}
+	result = 0;
+	hasHandled = true;
+	break;
+
+	// 处理按键消息
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+	{
+		SceneManager::getInstance()->dispatch(KeyEvent(message, wParam, lParam));
+	}
+	result = 0;
+	hasHandled = true;
+	break;
 
 	// 处理窗口大小变化消息
 	case WM_SIZE:

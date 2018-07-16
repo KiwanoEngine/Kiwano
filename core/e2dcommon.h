@@ -142,7 +142,7 @@ public:
 	int getLength() const;
 
 	// 获取该字符串的散列值
-	unsigned int getHashCode() const;
+	size_t getHashCode() const;
 
 	// 获取 Unicode 字符串
 	std::wstring getWString() const;
@@ -440,6 +440,167 @@ public:
 };
 
 
+// 鼠标键值
+enum class MouseCode : int
+{
+	Left,		/* 鼠标左键 */
+	Right,		/* 鼠标右键 */
+	Middle		/* 鼠标中键 */
+};
+
+
+// 键盘键值
+enum class KeyCode : int
+{
+	Unknown = 0,
+	Up = 0xC8,
+	Left = 0xCB,
+	Right = 0xCD,
+	Down = 0xD0,
+	Enter = 0x1C,
+	Space = 0x39,
+	Esc = 0x01,
+	Q = 0x10,
+	W = 0x11,
+	E = 0x12,
+	R = 0x13,
+	T = 0x14,
+	Y = 0x15,
+	U = 0x16,
+	I = 0x17,
+	O = 0x18,
+	P = 0x19,
+	A = 0x1E,
+	S = 0x1F,
+	D = 0x20,
+	F = 0x21,
+	G = 0x22,
+	H = 0x23,
+	J = 0x24,
+	K = 0x25,
+	L = 0x26,
+	Z = 0x2C,
+	X = 0x2D,
+	C = 0x2E,
+	V = 0x2F,
+	B = 0x30,
+	N = 0x31,
+	M = 0x32,
+	Num1 = 0x02,
+	Num2 = 0x03,
+	Num3 = 0x04,
+	Num4 = 0x05,
+	Num5 = 0x06,
+	Num6 = 0x07,
+	Num7 = 0x08,
+	Num8 = 0x09,
+	Num9 = 0x0A,
+	Num0 = 0x0B,
+	Numpad7 = 0x47,
+	Numpad8 = 0x48,
+	Numpad9 = 0x49,
+	Numpad4 = 0x4B,
+	Numpad5 = 0x4C,
+	Numpad6 = 0x4D,
+	Numpad1 = 0x4F,
+	Numpad2 = 0x50,
+	Numpad3 = 0x51,
+	Numpad0 = 0x52,
+};
+
+
+// 按键消息
+class KeyEvent
+{
+public:
+	// 按键消息类型
+	enum class Type : int
+	{
+		Down = 0x0100,	// 按下
+		Up				// 抬起
+	};
+
+public:
+	explicit KeyEvent(
+		UINT message,
+		WPARAM wParam,
+		LPARAM lParam
+	);
+
+	// 获取按键键值
+	KeyCode getCode() const;
+
+	// 获取按键次数
+	int getCount() const;
+
+	// 获取事件类型
+	KeyEvent::Type getType() const;
+
+	// VK 键值转换
+	static KeyCode convertKeyCode(
+		WPARAM wParam
+	);
+
+protected:
+	int _count;
+	KeyCode _code;
+	KeyEvent::Type _type;
+};
+
+
+// 鼠标消息
+class MouseEvent
+{
+public:
+	// 鼠标消息类型
+	enum class Type : int
+	{
+		Move = 0x0200,		// 鼠标移动
+		LeftDown,			// 鼠标左键按下
+		LeftUp,				// 鼠标左键抬起
+		LeftDoubleClick,	// 鼠标左键双击
+		RightDown,			// 鼠标右键按下
+		RightUp,			// 鼠标右键抬起
+		RightDoubleClick,	// 鼠标右键双击
+		MiddleDown,			// 鼠标中键按下
+		MiddleUp,			// 鼠标中键抬起
+		MiddleDoubleClick,	// 鼠标中键双击
+		Wheel				// 滑动滚轮
+	};
+
+public:
+	explicit MouseEvent(
+		UINT message,
+		WPARAM wParam,
+		LPARAM lParam
+	);
+
+	double getX() const;
+
+	double getY() const;
+
+	Point getPos() const;
+
+	// 获取事件类型
+	MouseEvent::Type getType() const;
+
+	double getWheelDelta() const;
+
+	// Shift 键是否按下
+	bool isShiftDown() const;
+
+	// Ctrl 键是否按下
+	bool isCtrlDown() const;
+
+protected:
+	bool _shiftDown;
+	bool _ctrlDown;
+	double _wheelDelta;
+	Point _pos;
+	MouseEvent::Type _type;
+};
+
+
 class Node;
 
 // 碰撞体
@@ -466,7 +627,7 @@ public:
 	};
 
 public:
-	Collider(
+	explicit Collider(
 		Node * parent
 	);
 
@@ -549,26 +710,21 @@ class Collision
 public:
 	Collision();
 
-	Collision(
-		Node* active,
-		Node* passive,
+	explicit Collision(
+		Node* node,
 		Collider::Relation relation
 	);
 
 	~Collision();
 
-	// 获取发生碰撞的主动方
-	Node* getActive() const;
-
-	// 获取发生碰撞的被动方
-	Node* getPassive() const;
+	// 获取发生碰撞节点
+	Node* getNode() const;
 
 	// 获取交集关系
 	Collider::Relation getRelation() const;
 
 protected:
-	Node * _active;
-	Node* _passive;
+	Node* _node;
 	Collider::Relation _relation;
 };
 
@@ -582,7 +738,7 @@ public:
 	);
 
 	Resource(
-		int resNameId,				/* 资源名称 */
+		size_t resNameId,			/* 资源名称 */
 		const String& resType		/* 资源类型 */
 	);
 
@@ -591,11 +747,11 @@ public:
 
 	const String& getFileName() const;
 
-	int getResNameId() const;
+	size_t getResNameId() const;
 
 	const String& getResType() const;
 
-	int getKey() const;
+	size_t getKey() const;
 
 	// 比较运算符
 	bool operator> (const Resource &) const;
@@ -605,7 +761,7 @@ public:
 
 protected:
 	bool	_isResource;
-	int		_resNameId;
+	size_t	_resNameId;
 	String	_resType;
 	String	_fileName;
 };
@@ -741,13 +897,25 @@ public:
 
 	virtual ~Scene();
 
-	// 重写这个函数，它将在进入这个场景时自动执行
+	// 进入场景
 	virtual void onEnter() {}
 
-	// 重写这个函数，它将在离开这个场景时自动执行
+	// 退出场景
 	virtual void onExit() {}
 
-	// 重写这个函数，它将在关闭窗口时执行（返回 false 将阻止窗口关闭）
+	// 按键消息
+	// 说明：返回 false 将阻止消息继续传递
+	virtual bool onKeyEvent(KeyEvent e) { return true; }
+
+	// 鼠标消息
+	// 说明：返回 false 将阻止消息继续传递
+	virtual bool onMouseEvent(MouseEvent e) { return true; }
+
+	// 碰撞消息
+	virtual void onCollision(Collision collision) { }
+
+	// 关闭窗口
+	// 说明：返回 false 将阻止窗口关闭
 	virtual bool onCloseWindow() { return true; }
 
 	// 重写这个函数，它将在每一帧画面刷新时执行
@@ -796,6 +964,16 @@ public:
 
 	// 更新场景内容
 	void update();
+
+	// 分发鼠标消息
+	void dispatch(
+		const MouseEvent& e
+	);
+
+	// 分发按键消息
+	void dispatch(
+		const KeyEvent& e
+	);
 
 protected:
 	E2D_DISABLE_COPY(Scene);

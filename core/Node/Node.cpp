@@ -94,9 +94,6 @@ void e2d::Node::_update()
 	}
 	else
 	{
-		// 子节点排序
-		_sortChildren();
-
 		// 遍历子节点
 		size_t i;
 		for (i = 0; i < _children.size(); ++i)
@@ -286,6 +283,82 @@ void e2d::Node::updateTransform()
 	}
 }
 
+bool e2d::Node::dispatch(const MouseEvent & e)
+{
+	if (_children.empty())
+	{
+		return onMouseEvent(e);
+	}
+	else
+	{
+		size_t i;
+		for (i = 0; i < _children.size(); ++i)
+		{
+			auto child = _children[i];
+			if (child->getOrder() < 0)
+			{
+				if (!child->dispatch(e))
+				{
+					return false;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		if (!onMouseEvent(e))
+		{
+			return false;
+		}
+
+		for (; i < _children.size(); ++i)
+			if (!_children[i]->dispatch(e))
+				return false;
+
+		return true;
+	}
+}
+
+bool e2d::Node::dispatch(const KeyEvent & e)
+{
+	if (_children.empty())
+	{
+		return onKeyEvent(e);
+	}
+	else
+	{
+		size_t i;
+		for (i = 0; i < _children.size(); ++i)
+		{
+			auto child = _children[i];
+			if (child->getOrder() < 0)
+			{
+				if (!child->dispatch(e))
+				{
+					return false;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		if (!onKeyEvent(e))
+		{
+			return false;
+		}
+
+		for (; i < _children.size(); ++i)
+			if (!_children[i]->dispatch(e))
+				return false;
+
+		return true;
+	}
+}
+
 void e2d::Node::_sortChildren()
 {
 	if (_needSort)
@@ -322,7 +395,7 @@ e2d::String e2d::Node::getName() const
 	return _name;
 }
 
-unsigned int e2d::Node::getHashName() const
+size_t e2d::Node::getHashName() const
 {
 	return _hashName;
 }
@@ -680,7 +753,7 @@ e2d::Scene * e2d::Node::getParentScene() const
 std::vector<e2d::Node*> e2d::Node::getChildren(const String& name) const
 {
 	std::vector<Node*> vChildren;
-	unsigned int hash = name.getHashCode();
+	size_t hash = name.getHashCode();
 
 	for (auto child : _children)
 	{
@@ -695,7 +768,7 @@ std::vector<e2d::Node*> e2d::Node::getChildren(const String& name) const
 
 e2d::Node * e2d::Node::getChild(const String& name) const
 {
-	unsigned int hash = name.getHashCode();
+	size_t hash = name.getHashCode();
 
 	for (auto child : _children)
 	{
@@ -765,7 +838,7 @@ void e2d::Node::removeChildren(const String& childName)
 	}
 
 	// 计算名称 Hash 值
-	unsigned int hash = childName.getHashCode();
+	size_t hash = childName.getHashCode();
 
 	size_t size = _children.size();
 	for (size_t i = 0; i < size; ++i)

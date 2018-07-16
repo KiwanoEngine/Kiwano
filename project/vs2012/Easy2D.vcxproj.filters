@@ -212,9 +212,6 @@
     <ClCompile Include="..\..\core\Tool\Data.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Listener.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Tool\Music.cpp">
       <Filter>Tool</Filter>
     </ClCompile>

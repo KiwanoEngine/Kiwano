@@ -183,3 +183,25 @@ void e2d::SceneManager::render()
 		}
 	}
 }
+
+void e2d::SceneManager::dispatch(const MouseEvent & e)
+{
+	if (_transition != nullptr)
+		return;
+
+	if (_currScene)
+	{
+		_currScene->dispatch(e);
+	}
+}
+
+void e2d::SceneManager::dispatch(const KeyEvent & e)
+{
+	if (_transition != nullptr)
+		return;
+
+	if (_currScene)
+	{
+		_currScene->dispatch(e);
+	}
+}

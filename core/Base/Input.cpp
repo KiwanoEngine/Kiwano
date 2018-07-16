@@ -151,14 +151,14 @@ void e2d::Input::update()
 	ScreenToClient(Window::getInstance()->getHWnd(), &_mousePos);
 }
 
-bool e2d::Input::isDown(Key key)
+bool e2d::Input::isDown(KeyCode key)
 {
 	if (s_KeyBuffer[static_cast<int>(key)] & 0x80)
 		return true;
 	return false;
 }
 
-bool e2d::Input::isPress(Key key)
+bool e2d::Input::isPress(KeyCode key)
 {
 	if ((s_KeyBuffer[static_cast<int>(key)] & 0x80) && 
 		!(s_KeyRecordBuffer[static_cast<int>(key)] & 0x80))
@@ -166,7 +166,7 @@ bool e2d::Input::isPress(Key key)
 	return false;
 }
 
-bool e2d::Input::isRelease(Key key)
+bool e2d::Input::isRelease(KeyCode key)
 {
 	if (!(s_KeyBuffer[static_cast<int>(key)] & 0x80) && 
 		(s_KeyRecordBuffer[static_cast<int>(key)] & 0x80))
@@ -174,14 +174,14 @@ bool e2d::Input::isRelease(Key key)
 	return false;
 }
 
-bool e2d::Input::isDown(Mouse code)
+bool e2d::Input::isDown(MouseCode code)
 {
 	if (_mouseState.rgbButtons[static_cast<int>(code)] & 0x80)
 		return true;
 	return false;
 }
 
-bool e2d::Input::isPress(Mouse code)
+bool e2d::Input::isPress(MouseCode code)
 {
 	if ((_mouseState.rgbButtons[static_cast<int>(code)] & 0x80) && 
 		!(_mouseStateRecord.rgbButtons[static_cast<int>(code)] & 0x80))
@@ -189,7 +189,7 @@ bool e2d::Input::isPress(Mouse code)
 	return false;
 }
 
-bool e2d::Input::isRelease(Mouse code)
+bool e2d::Input::isRelease(MouseCode code)
 {
 	if (!(_mouseState.rgbButtons[static_cast<int>(code)] & 0x80) && 
 		(_mouseStateRecord.rgbButtons[static_cast<int>(code)] & 0x80))

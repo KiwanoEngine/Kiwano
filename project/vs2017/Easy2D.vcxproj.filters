@@ -28,6 +28,9 @@
     <Filter Include="Custom">
       <UniqueIdentifier>{3475b59d-d50c-43b1-8334-bcb9e1703ed2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{6c9657de-02d5-4d3b-9e1d-bc921eb5aea3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Base\Input.cpp">
@@ -174,9 +177,6 @@
     <ClCompile Include="..\..\core\Custom\TextRenderer.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Tool\Listener.cpp">
-      <Filter>Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Font.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -240,11 +240,14 @@
     <ClCompile Include="..\..\core\Manager\CollisionManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\InputManager.cpp">
-      <Filter>Manager</Filter>
+    <ClCompile Include="..\..\core\Event\MouseEvent.cpp">
+      <Filter>Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Collision.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="..\..\core\Event\KeyEvent.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Event\Collision.cpp">
+      <Filter>Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

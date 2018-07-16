@@ -44,6 +44,22 @@ void e2d::Scene::update()
 	_root->_update();
 }
 
+void e2d::Scene::dispatch(const MouseEvent & e)
+{
+	if (this->onMouseEvent(e))
+	{
+		_root->dispatch(e);
+	}
+}
+
+void e2d::Scene::dispatch(const KeyEvent & e)
+{
+	if (this->onKeyEvent(e))
+	{
+		_root->dispatch(e);
+	}
+}
+
 void e2d::Scene::setAutoUpdate(bool bAutoUpdate)
 {
 	_autoUpdate = bAutoUpdate;

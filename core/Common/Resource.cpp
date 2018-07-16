@@ -8,7 +8,7 @@ e2d::Resource::Resource(const String & fileName)
 {
 }
 
-e2d::Resource::Resource(int resNameId, const String & resType)
+e2d::Resource::Resource(size_t resNameId, const String & resType)
 	: _isResource(true)
 	, _fileName()
 	, _resNameId(resNameId)
@@ -26,7 +26,7 @@ const e2d::String & e2d::Resource::getFileName() const
 	return _fileName;
 }
 
-int e2d::Resource::getResNameId() const
+size_t e2d::Resource::getResNameId() const
 {
 	return _resNameId;
 }
@@ -36,16 +36,9 @@ const e2d::String & e2d::Resource::getResType() const
 	return _resType;
 }
 
-int e2d::Resource::getKey() const
+size_t e2d::Resource::getKey() const
 {
-	if (_isResource)
-	{
-		return _resNameId;
-	}
-	else
-	{
-		return _fileName.getHashCode();
-	}
+	return _isResource ? _resNameId : _fileName.getHashCode();
 }
 
 bool e2d::Resource::operator>(const Resource &res) const
