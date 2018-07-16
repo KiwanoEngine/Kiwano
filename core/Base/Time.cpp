@@ -1,4 +1,6 @@
 #include "..\e2dbase.h"
+#include "..\e2dtool.h"
+#include "..\e2dmanager.h"
 #include <thread>
 
 using namespace std::chrono;
@@ -40,7 +42,6 @@ bool e2d::Time::__isReady()
 
 void e2d::Time::__updateNow()
 {
-	// Ë¢ÐÂÊ±¼ä
 	_now = steady_clock::now();
 }
 
@@ -55,6 +56,8 @@ void e2d::Time::__updateLast()
 void e2d::Time::__reset()
 {
 	_last = _fixedLast = _now = steady_clock::now();
+	Timer::getInstance()->updateTime();
+	ActionManager::getInstance()->updateTime();
 }
 
 void e2d::Time::__sleep()

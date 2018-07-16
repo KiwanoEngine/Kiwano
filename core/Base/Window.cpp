@@ -319,10 +319,6 @@ void e2d::Window::setConsoleEnabled(bool enabled)
 				HMENU hmenu = ::GetSystemMenu(hwnd, FALSE);
 				::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 			}
-			else
-			{
-				this->error(L"Alloc Console Failed!");
-			}
 		}
 	}
 	else 
@@ -355,25 +351,33 @@ void e2d::Window::setTypewritingEnabled(bool enabled)
 	}
 }
 
-void e2d::Window::info(const String & text, const String & title)
+bool e2d::Window::popup(const String & text, const String & title, PopupStyle style, bool hasCancel)
 {
-	Game::getInstance()->pause();
-	::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONINFORMATION | MB_OK);
-	Game::getInstance()->resume();
-}
+	UINT type = 0;
+	switch (style)
+	{
+	case e2d::Window::PopupStyle::Information:
+		type = MB_ICONINFORMATION;
+		break;
+	case e2d::Window::PopupStyle::Warning:
+		type = MB_ICONWARNING;
+		break;
+	case e2d::Window::PopupStyle::Error:
+		type = MB_ICONERROR;
+		break;
+	default:
+		break;
+	}
 
-void e2d::Window::warning(const String& title, const String& text)
-{
-	Game::getInstance()->pause();
-	::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONWARNING | MB_OK);
-	Game::getInstance()->resume();
-}
+	if (hasCancel)
+	{
+		type |= MB_OKCANCEL;
+	}
 
-void e2d::Window::error(const String & text, const String & title)
-{
 	Game::getInstance()->pause();
-	::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, MB_ICONERROR | MB_OK);
+	int ret = ::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, type);
 	Game::getInstance()->resume();
+	return ret == IDOK;
 }
 
 

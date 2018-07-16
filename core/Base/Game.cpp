@@ -102,8 +102,6 @@ void e2d::Game::resume()
 	if (_paused && !_ended)
 	{
 		Time::__reset();
-		Timer::getInstance()->updateTime();
-		ActionManager::getInstance()->updateTime();
 	}
 	_paused = false;
 }

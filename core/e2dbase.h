@@ -78,6 +78,14 @@ public:
 		ArrowWait	/* 默认指针和小沙漏 */
 	};
 
+	// 弹窗样式
+	enum class PopupStyle : int
+	{
+		Information,	/* 信息 */
+		Warning,		/* 警告 */
+		Error			/* 错误 */
+	};
+
 public:
 	// 获取窗体实例
 	static Window * getInstance();
@@ -136,22 +144,12 @@ public:
 		bool enabled
 	);
 
-	// 弹出提示窗口
-	void info(
-		const String& text,					/* 内容 */
-		const String& title = L"Infomation"	/* 窗口标题 */
-	);
-
-	// 弹出警告窗口
-	void warning(
-		const String& text,					/* 内容 */
-		const String& title = L"Warning"	/* 窗口标题 */
-	);
-
-	// 弹出错误窗口
-	void error(
-		const String& text,					/* 内容 */
-		const String& title = L"Error"		/* 窗口标题 */
+	// 弹窗
+	bool popup(
+		const String& text,							/* 窗口内容 */
+		const String& title,						/* 窗口标题 */
+		PopupStyle style = PopupStyle::Information,	/* 弹窗样式 */
+		bool hasCancel = false						/* 包含取消按钮 */
 	);
 
 	// 处理窗体消息
