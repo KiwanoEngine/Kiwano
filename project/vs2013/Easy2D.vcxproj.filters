@@ -25,17 +25,16 @@
     <Filter Include="Node\Shape">
       <UniqueIdentifier>{47b7c15b-ac05-4773-a9ee-7aa352830f02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Collider">
-      <UniqueIdentifier>{2092de23-7fdd-430a-9936-1038c55b504b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Custom">
       <UniqueIdentifier>{7660a3fa-36f9-4b1b-8942-e38e02c0c95b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{c597916e-c162-41a4-849a-c568513f6d14}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\e2daction.h" />
     <ClInclude Include="..\..\core\e2dbase.h" />
-    <ClInclude Include="..\..\core\e2dcollider.h" />
     <ClInclude Include="..\..\core\e2dcommon.h" />
     <ClInclude Include="..\..\core\e2dcustom.h" />
     <ClInclude Include="..\..\core\e2dmacros.h" />
@@ -254,11 +253,14 @@
     <ClCompile Include="..\..\core\Manager\CollisionManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\InputManager.cpp">
-      <Filter>Manager</Filter>
+    <ClCompile Include="..\..\core\Event\Collision.cpp">
+      <Filter>Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Collision.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="..\..\core\Event\KeyEvent.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Event\MouseEvent.cpp">
+      <Filter>Event</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

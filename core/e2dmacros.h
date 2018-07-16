@@ -49,6 +49,7 @@
 #include <chrono>
 #include <sstream>
 #include <functional>
+#include <algorithm>
 
 // Import Libraries
 #pragma comment(lib, "d2d1.lib")

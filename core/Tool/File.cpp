@@ -58,7 +58,7 @@ bool e2d::File::exists() const
 
 bool e2d::File::isFolder() const
 {
-	return _attributes & FILE_ATTRIBUTE_DIRECTORY;
+	return (_attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
 e2d::String e2d::File::getFilePath() const

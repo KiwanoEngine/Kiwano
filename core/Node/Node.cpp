@@ -1,7 +1,6 @@
 #include "..\e2dnode.h"
 #include "..\e2dmanager.h"
 #include "..\e2daction.h"
-#include <algorithm>
 
 const e2d::Node::Property e2d::Node::Property::Origin = { 0 };
 

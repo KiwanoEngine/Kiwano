@@ -165,7 +165,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\core\e2daction.h" />
     <ClInclude Include="..\..\core\e2dbase.h" />
-    <ClInclude Include="..\..\core\e2dcollider.h" />
     <ClInclude Include="..\..\core\e2dcommon.h" />
     <ClInclude Include="..\..\core\e2dcustom.h" />
     <ClInclude Include="..\..\core\e2dmacros.h" />
@@ -203,7 +202,6 @@
     <ClCompile Include="..\..\core\Base\Time.cpp" />
     <ClCompile Include="..\..\core\Base\Window.cpp" />
     <ClCompile Include="..\..\core\Common\Collider.cpp" />
-    <ClCompile Include="..\..\core\Common\Collision.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
     <ClCompile Include="..\..\core\Common\Config.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />
@@ -220,9 +218,11 @@
     <ClCompile Include="..\..\core\Custom\SystemException.cpp" />
     <ClCompile Include="..\..\core\Custom\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\Custom\VoiceCallback.cpp" />
+    <ClCompile Include="..\..\core\Event\Collision.cpp" />
+    <ClCompile Include="..\..\core\Event\KeyEvent.cpp" />
+    <ClCompile Include="..\..\core\Event\MouseEvent.cpp" />
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />
     <ClCompile Include="..\..\core\Manager\CollisionManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\InputManager.cpp" />
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
     <ClCompile Include="..\..\core\Node\Button.cpp" />
     <ClCompile Include="..\..\core\Node\Menu.cpp" />
