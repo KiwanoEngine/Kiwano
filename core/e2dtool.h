@@ -381,65 +381,59 @@ private:
 class Data
 {
 public:
-	// 保存 int 类型的值
-	static void saveInt(
+	Data(
 		const String& key,					/* 键值 */
-		int value,							/* 数据 */
 		const String& field = L"Defalut"	/* 字段名称 */
+	);
+
+	// 保存 int 类型的值
+	void saveInt(
+		int value							/* 数据 */
 	);
 
 	// 保存 double 类型的值
-	static void saveDouble(
-		const String& key,					/* 键值 */
-		double value,						/* 数据 */
-		const String& field = L"Defalut"	/* 字段名称 */
+	void saveDouble(
+		double value						/* 数据 */
 	);
 
 	// 保存 bool 类型的值
-	static void saveBool(
-		const String& key,					/* 键值 */
-		bool value,							/* 数据 */
-		const String& field = L"Defalut"	/* 字段名称 */
+	void saveBool(
+		bool value							/* 数据 */
 	);
 
 	// 保存 字符串 类型的值
-	static void saveString(
-		const String& key,					/* 键值 */
-		const String& value,				/* 数据 */
-		const String& field = L"Defalut"	/* 字段名称 */
+	void saveString(
+		const String& value				/* 数据 */
 	);
 
 	// 获取 int 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	static int getInt(
-		const String& key,					/* 键值 */
-		int defaultValue,					/* 默认值 */
-		const String& field = L"Defalut"	/* 字段名称 */
+	int getInt(
+		int defaultValue					/* 默认值 */
 	);
 
 	// 获取 double 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	static double getDouble(
-		const String& key,					/* 键值 */
-		double defaultValue,				/* 默认值 */
-		const String& field = L"Defalut"	/* 字段名称 */
+	double getDouble(
+		double defaultValue				/* 默认值 */
 	);
 
 	// 获取 bool 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	static bool getBool(
-		const String& key,					/* 键值 */
-		bool defaultValue,					/* 默认值 */
-		const String& field = L"Defalut"	/* 字段名称 */
+	bool getBool(
+		bool defaultValue					/* 默认值 */
 	);
 
 	// 获取 字符串 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	static String getString(
-		const String& key,					/* 键值 */
-		const String& defaultValue,			/* 默认值 */
-		const String& field = L"Defalut"	/* 字段名称 */
+	String getString(
+		const String& defaultValue			/* 默认值 */
 	);
+
+protected:
+	String _key;
+	String _field;
+	const String _dataPath;
 };
 
 

@@ -65,134 +65,134 @@ public:
 	virtual bool isVisible() const;
 
 	// 判断点是否在节点内
-	virtual bool containsPoint(
+	bool containsPoint(
 		const Point& point
 	);
 
 	// 判断两物体是否相交
-	virtual bool intersects(
+	bool intersects(
 		Node * node
 	);
 
 	// 获取节点名称
-	virtual String getName() const;
+	String getName() const;
 
 	// 获取节点名称的 Hash 值
-	virtual size_t getHashName() const;
+	size_t getHashName() const;
 
 	// 获取节点绘图顺序
-	virtual int getOrder() const;
+	int getOrder() const;
 
 	// 获取节点横坐标
-	virtual double getPosX() const;
+	double getPosX() const;
 
 	// 获取节点纵坐标
-	virtual double getPosY() const;
+	double getPosY() const;
 
 	// 获取节点坐标
-	virtual Point getPos() const;
+	Point getPos() const;
 
 	// 获取节点宽度
-	virtual double getWidth() const;
+	double getWidth() const;
 
 	// 获取节点高度
-	virtual double getHeight() const;
+	double getHeight() const;
 
 	// 获取节点宽度（不考虑缩放）
-	virtual double getRealWidth() const;
+	double getRealWidth() const;
 
 	// 获取节点高度（不考虑缩放）
-	virtual double getRealHeight() const;
+	double getRealHeight() const;
 
 	// 获取节点大小（不考虑缩放）
-	virtual Size getRealSize() const;
+	Size getRealSize() const;
 
 	// 获取节点的中心点
-	virtual double getPivotX() const;
+	double getPivotX() const;
 
 	// 获取节点的中心点
-	virtual double getPivotY() const;
+	double getPivotY() const;
 
 	// 获取节点大小
-	virtual Size getSize() const;
+	Size getSize() const;
 
 	// 获取节点横向缩放比例
-	virtual double getScaleX() const;
+	double getScaleX() const;
 
 	// 获取节点纵向缩放比例
-	virtual double getScaleY() const;
+	double getScaleY() const;
 
 	// 获取节点横向倾斜角度
-	virtual double getSkewX() const;
+	double getSkewX() const;
 
 	// 获取节点纵向倾斜角度
-	virtual double getSkewY() const;
+	double getSkewY() const;
 
 	// 获取节点旋转角度
-	virtual double getRotation() const;
+	double getRotation() const;
 
 	// 获取节点透明度
-	virtual double getOpacity() const;
+	double getOpacity() const;
 
 	// 获取节点属性
-	virtual Property getProperty() const;
+	Property getProperty() const;
 
 	// 获取差别属性
-	virtual Property getExtrapolate() const;
+	Property getExtrapolate() const;
 
 	// 获取节点碰撞体
-	virtual Collider * getCollider();
+	Collider * getCollider();
 
 	// 获取父节点
-	virtual Node * getParent() const;
+	Node * getParent() const;
 
 	// 获取节点所在场景
-	virtual Scene * getParentScene() const;
+	Scene * getParentScene() const;
 
 	// 获取所有名称相同的子节点
-	virtual std::vector<Node*> getChildren(
+	std::vector<Node*> getChildren(
 		const String& name
 	) const;
 
 	// 获取名称相同的子节点
-	virtual Node* getChild(
+	Node* getChild(
 		const String& name
 	) const;
 
 	// 获取所有子节点
-	virtual const std::vector<Node*>& getAllChildren() const;
+	const std::vector<Node*>& getAllChildren() const;
 
 	// 获取子节点数量
-	virtual int getChildrenCount() const;
+	int getChildrenCount() const;
 
 	// 移除子节点
-	virtual bool removeChild(
+	bool removeChild(
 		Node * child
 	);
 
 	// 移除所有名称相同的子节点
-	virtual void removeChildren(
+	void removeChildren(
 		const String& childName
 	);
 
 	// 移除所有节点
-	virtual void removeAllChildren();
+	void removeAllChildren();
 
 	// 从父节点移除
-	virtual void removeFromParent();
+	void removeFromParent();
 
 	// 设置节点是否显示
-	virtual void setVisible(
+	void setVisible(
 		bool value
 	);
 
 	// 开启或禁用 onUpdate 函数
-	virtual void setAutoUpdate(
+	void setAutoUpdate(
 		bool bAutoUpdate
 	);
 
 	// 设置节点名称
-	virtual void setName(
+	void setName(
 		const String& name
 	);
 
@@ -351,45 +351,45 @@ public:
 	);
 
 	// 添加子节点
-	virtual void addChild(
+	void addChild(
 		Node * child,
 		int order = 0	/* 渲染顺序 */
 	);
 
 	// 添加多个子节点
-	virtual void addChild(
+	void addChild(
 		const std::vector<Node*>& nodes,	/* 节点数组 */
 		int order = 0						/* 渲染顺序 */
 	);
 
 	// 执行动作
-	virtual void runAction(
+	void runAction(
 		Action * action
 	);
 
 	// 继续动作
-	virtual void resumeAction(
+	void resumeAction(
 		const String& name
 	);
 
 	// 暂停动作
-	virtual void pauseAction(
+	void pauseAction(
 		const String& name
 	);
 
 	// 停止动作
-	virtual void stopAction(
+	void stopAction(
 		const String& name
 	);
 
 	// 继续所有暂停动作
-	virtual void resumeAllActions();
+	void resumeAllActions();
 
 	// 暂停所有动作
-	virtual void pauseAllActions();
+	void pauseAllActions();
 
 	// 停止所有动作
-	virtual void stopAllActions();
+	void stopAllActions();
 
 	// 更新转换矩阵
 	void updateTransform();

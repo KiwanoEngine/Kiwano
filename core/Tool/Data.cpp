@@ -1,48 +1,90 @@
 #include "..\e2dtool.h"
 
 
-void e2d::Data::saveInt(const String& key, int value, const String& field)
+e2d::Data::Data(const String & key, const String & field)
+	: _key(key)
+	, _field(field)
+	, _dataPath(Path::getDataPath())
 {
-	::WritePrivateProfileString((LPCWSTR)field, (LPCWSTR)key, (LPCWSTR)String::parse(value), (LPCWSTR)Path::getDataPath());
 }
 
-void e2d::Data::saveDouble(const String& key, double value, const String& field)
+void e2d::Data::saveInt(int value)
 {
-	::WritePrivateProfileString((LPCWSTR)field, (LPCWSTR)key, (LPCWSTR)String::parse(value), (LPCWSTR)Path::getDataPath());
+	::WritePrivateProfileString(
+		(LPCWSTR)_field,
+		(LPCWSTR)_key,
+		(LPCWSTR)String::parse(value),
+		(LPCWSTR)_dataPath
+	);
 }
 
-void e2d::Data::saveBool(const String& key, bool value, const String& field)
+void e2d::Data::saveDouble(double value)
 {
-	::WritePrivateProfileString((LPCWSTR)field, (LPCWSTR)key, (value ? L"1" : L"0"), (LPCWSTR)Path::getDataPath());
+	::WritePrivateProfileString(
+		(LPCWSTR)_field,
+		(LPCWSTR)_key,
+		(LPCWSTR)String::parse(value),
+		(LPCWSTR)_dataPath
+	);
 }
 
-void e2d::Data::saveString(const String& key, const String& value, const String& field)
+void e2d::Data::saveBool(bool value)
 {
-	::WritePrivateProfileString((LPCWSTR)field, (LPCWSTR)key, (LPCWSTR)value, (LPCWSTR)Path::getDataPath());
+	::WritePrivateProfileString(
+		(LPCWSTR)_field,
+		(LPCWSTR)_key,
+		(value ? L"1" : L"0"),
+		(LPCWSTR)_dataPath
+	);
 }
 
-int e2d::Data::getInt(const String& key, int defaultValue, const String& field)
+void e2d::Data::saveString(const String& value)
 {
-	return ::GetPrivateProfileInt((LPCWSTR)field, (LPCWSTR)key, defaultValue, (LPCWSTR)Path::getDataPath());
+	::WritePrivateProfileString(
+		(LPCWSTR)_field,
+		(LPCWSTR)_key,
+		(LPCWSTR)value,
+		(LPCWSTR)_dataPath
+	);
 }
 
-double e2d::Data::getDouble(const String& key, double defaultValue, const String& field)
+int e2d::Data::getInt(int defaultValue)
+{
+	return ::GetPrivateProfileInt(
+		(LPCWSTR)_field,
+		(LPCWSTR)_key,
+		defaultValue,
+		(LPCWSTR)_dataPath
+	);
+}
+
+double e2d::Data::getDouble(double defaultValue)
 {
 	wchar_t temp[32] = { 0 };
-	::GetPrivateProfileString((LPCWSTR)field, (LPCWSTR)key, (LPCWSTR)String::parse(defaultValue), temp, 31, (LPCWSTR)Path::getDataPath());
+	::GetPrivateProfileString((LPCWSTR)_field, (LPCWSTR)_key, (LPCWSTR)String::parse(defaultValue), temp, 31, (LPCWSTR)_dataPath);
 	return std::stof(temp);
 }
 
-bool e2d::Data::getBool(const String& key, bool defaultValue, const String& field)
+bool e2d::Data::getBool(bool defaultValue)
 {
-	int nDefaultValue = defaultValue ? 1 : 0;
-	int nValue = ::GetPrivateProfileInt((LPCWSTR)field, (LPCWSTR)key, nDefaultValue, (LPCWSTR)Path::getDataPath());
+	int nValue = ::GetPrivateProfileInt(
+		(LPCWSTR)_field,
+		(LPCWSTR)_key,
+		defaultValue ? 1 : 0,
+		(LPCWSTR)_dataPath);
 	return nValue != 0;
 }
 
-e2d::String e2d::Data::getString(const String& key, const String& defaultValue, const String& field)
+e2d::String e2d::Data::getString(const String& defaultValue)
 {
 	wchar_t temp[256] = { 0 };
-	::GetPrivateProfileString((LPCWSTR)field, (LPCWSTR)key, (LPCWSTR)defaultValue, temp, 255, (LPCWSTR)Path::getDataPath());
+	::GetPrivateProfileString(
+		(LPCWSTR)_field,
+		(LPCWSTR)_key,
+		(LPCWSTR)defaultValue,
+		temp,
+		255,
+		(LPCWSTR)_dataPath
+	);
 	return temp;
 }
