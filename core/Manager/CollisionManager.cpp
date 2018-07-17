@@ -71,7 +71,7 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 			relation != Collider::Relation::Disjoin)
 		{
 			Collision collision(passive, relation);
-			SceneManager::getInstance()->getCurrentScene()->onCollision(collision);
+			active->getParentScene()->onCollision(collision);
 			active->onCollision(collision);
 		}
 	}

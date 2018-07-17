@@ -1003,6 +1003,12 @@ public:
 		const String& name
 	);
 
+	// 显示或隐藏 FPS
+	// 默认：隐藏
+	void showFps(
+		bool show
+	);
+
 	// 显示或隐藏节点轮廓
 	// 默认：隐藏
 	void setOutlineVisible(
@@ -1045,6 +1051,9 @@ public:
 	// 获取声音打开状态
 	bool isSoundEnabled() const;
 
+	// 获取 FPS 显示状态
+	bool isFpsShow() const;
+
 	// 获取节点轮廓显示状态
 	bool isOutlineVisible() const;
 
@@ -1065,6 +1074,7 @@ protected:
 
 protected:
 	bool			_unconfigured;
+	bool			_showFps;
 	bool			_soundEnabled;
 	bool			_outlineVisible;
 	bool			_collisionEnabled;

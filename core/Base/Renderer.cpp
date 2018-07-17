@@ -39,7 +39,9 @@ void e2d::Renderer::destroyInstance()
 }
 
 e2d::Renderer::Renderer()
-	: _showFps(false)
+	: _renderTimes(0)
+	, _lastRenderTime(0)
+	, _fpsText()
 	, _renderTarget(nullptr)
 	, _solidBrush(nullptr)
 	, _textRenderer(nullptr)
@@ -133,50 +135,9 @@ void e2d::Renderer::render()
 	SceneManager::getInstance()->render();
 
 	// äÖÈ¾ FPS
-	if (_showFps)
+	if (Game::getInstance()->getConfig()->isFpsShow())
 	{
-		static int s_nRenderTimes = 0;
-		static double s_fLastRenderTime = 0;
-		static String s_sFpsText;
-
-		++s_nRenderTimes;
-
-		double fDelay = Time::getTotalTime() - s_fLastRenderTime;
-		if (fDelay >= 0.3)
-		{
-			s_sFpsText = String::format(L"FPS: %.1lf", (1 / fDelay) * s_nRenderTimes);
-			s_fLastRenderTime = Time::getTotalTime();
-			s_nRenderTimes = 0;
-		}
-
-		IDWriteTextLayout * pTextLayout = nullptr;
-		IDWriteTextFormat * pTextFormat = Renderer::getFpsTextFormat();
-
-		hr = _writeFactory->CreateTextLayout(
-			(const WCHAR *)s_sFpsText,
-			(UINT32)s_sFpsText.getLength(),
-			pTextFormat,
-			0,
-			0,
-			&pTextLayout
-		);
-
-		if (SUCCEEDED(hr))
-		{
-			_renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-			_solidBrush->SetOpacity(1.0f);
-			_textRenderer->SetTextStyle(
-				D2D1::ColorF(D2D1::ColorF::White),
-				TRUE,
-				D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
-				1.5f,
-				D2D1_LINE_JOIN_ROUND
-			);
-
-			pTextLayout->Draw(nullptr, _textRenderer, 10, 0);
-
-			SafeRelease(pTextLayout);
-		}
+		_renderFps();
 	}
 
 	// ÖÕÖ¹äÖÈ¾
@@ -196,6 +157,50 @@ void e2d::Renderer::render()
 	}
 }
 
+void e2d::Renderer::_renderFps()
+{
+	++_renderTimes;
+
+	double fDelay = Time::getTotalTime() - _lastRenderTime;
+	if (fDelay >= 0.1)
+	{
+		_fpsText = String::format(L"FPS: %.1lf", (1 / fDelay) * _renderTimes);
+		_lastRenderTime = Time::getTotalTime();
+		_renderTimes = 0;
+	}
+
+	IDWriteTextLayout * pTextLayout = nullptr;
+	IDWriteTextFormat * pTextFormat = Renderer::getFpsTextFormat();
+
+	HRESULT hr = _writeFactory->CreateTextLayout(
+		(const WCHAR *)_fpsText,
+		(UINT32)_fpsText.getLength(),
+		pTextFormat,
+		0,
+		0,
+		&pTextLayout
+	);
+
+	if (SUCCEEDED(hr))
+	{
+		_renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+		_solidBrush->SetOpacity(1.0f);
+
+		auto textRenderer = this->getTextRenderer();
+		textRenderer->SetTextStyle(
+			D2D1::ColorF(D2D1::ColorF::White),
+			TRUE,
+			D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
+			1.5f,
+			D2D1_LINE_JOIN_ROUND
+		);
+
+		pTextLayout->Draw(nullptr, textRenderer, 10, 0);
+
+		SafeRelease(pTextLayout);
+	}
+}
+
 e2d::Color e2d::Renderer::getBackgroundColor()
 {
 	return Color(_clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a);
@@ -204,11 +209,6 @@ e2d::Color e2d::Renderer::getBackgroundColor()
 void e2d::Renderer::setBackgroundColor(Color color)
 {
 	_clearColor = color.toD2DColorF();
-}
-
-void e2d::Renderer::showFps(bool show)
-{
-	_showFps = show;
 }
 
 ID2D1HwndRenderTarget * e2d::Renderer::getRenderTarget()

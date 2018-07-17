@@ -149,7 +149,7 @@ void e2d::Node::_render()
 		// 转换渲染器的二维矩阵
 		Renderer::getInstance()->getRenderTarget()->SetTransform(_finalMatri);
 		// 渲染自身
-		this->onRender();
+		//this->onRender();
 	}
 	else
 	{
@@ -174,7 +174,7 @@ void e2d::Node::_render()
 		// 转换渲染器的二维矩阵
 		Renderer::getInstance()->getRenderTarget()->SetTransform(_finalMatri);
 		// 渲染自身
-		this->onRender();
+		//this->onRender();
 
 		// 访问剩余节点
 		for (; i < _children.size(); ++i)

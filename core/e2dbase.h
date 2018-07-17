@@ -323,11 +323,6 @@ public:
 		Color color
 	);
 
-	// 显示 FPS
-	void showFps(
-		bool show = true
-	);
-
 	// 渲染游戏画面
 	void render();
 
@@ -374,8 +369,13 @@ private:
 	// 删除设备相关资源
 	void __discardDeviceResources();
 
+	// 渲染 FPS
+	void _renderFps();
+
 private:
-	bool					_showFps;
+	int						_renderTimes;
+	double					_lastRenderTime;
+	String					_fpsText;
 	D2D1_COLOR_F			_clearColor;
 	ID2D1HwndRenderTarget*	_renderTarget;
 	ID2D1SolidColorBrush*	_solidBrush;
