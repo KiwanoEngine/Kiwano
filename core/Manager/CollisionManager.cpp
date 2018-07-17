@@ -70,8 +70,14 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 		if (relation != Collider::Relation::Unknown &&
 			relation != Collider::Relation::Disjoin)
 		{
-			active->onCollision(Collision(passive, relation));
-			passive->onCollision(Collision(active, relation));
+			// 触发两次碰撞事件
+			Collision activeCollision(passive, relation);
+			active->getParentScene()->onCollision(activeCollision);
+			active->onCollision(activeCollision);
+
+			Collision passiveCollision(active, passive->getCollider()->getRelationWith(active->getCollider()));
+			passive->getParentScene()->onCollision(passiveCollision);
+			passive->onCollision(passiveCollision);
 		}
 	}
 }

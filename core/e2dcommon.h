@@ -911,6 +911,9 @@ public:
 	// 说明：返回 false 将阻止消息继续传递
 	virtual bool onMouseEvent(MouseEvent e) { return true; }
 
+	// 碰撞消息
+	virtual void onCollision(Collision collision) { }
+
 	// 关闭窗口
 	// 说明：返回 false 将阻止窗口关闭
 	virtual bool onCloseWindow() { return true; }
