@@ -351,18 +351,18 @@ void e2d::Window::setTypewritingEnabled(bool enabled)
 	}
 }
 
-bool e2d::Window::popup(const String & text, const String & title, PopupStyle style, bool hasCancel)
+bool e2d::Window::popup(const String & text, const String & title, Popup style, bool hasCancel)
 {
 	UINT type = 0;
 	switch (style)
 	{
-	case e2d::Window::PopupStyle::Information:
+	case e2d::Window::Popup::Information:
 		type = MB_ICONINFORMATION;
 		break;
-	case e2d::Window::PopupStyle::Warning:
+	case e2d::Window::Popup::Warning:
 		type = MB_ICONWARNING;
 		break;
-	case e2d::Window::PopupStyle::Error:
+	case e2d::Window::Popup::Error:
 		type = MB_ICONERROR;
 		break;
 	default:

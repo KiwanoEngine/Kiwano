@@ -79,7 +79,7 @@ public:
 	};
 
 	// 弹窗样式
-	enum class PopupStyle : int
+	enum class Popup : int
 	{
 		Information,	/* 信息 */
 		Warning,		/* 警告 */
@@ -144,12 +144,13 @@ public:
 		bool enabled
 	);
 
-	// 弹窗
+	// 弹出窗口
+	// 返回值：当窗口包含取消按钮时，返回值表示用户是否点击确认按钮
 	bool popup(
-		const String& text,							/* 窗口内容 */
-		const String& title,						/* 窗口标题 */
-		PopupStyle style = PopupStyle::Information,	/* 弹窗样式 */
-		bool hasCancel = false						/* 包含取消按钮 */
+		const String& text,					/* 窗口内容 */
+		const String& title,				/* 窗口标题 */
+		Popup style = Popup::Information,	/* 弹窗样式 */
+		bool hasCancel = false				/* 包含取消按钮 */
 	);
 
 	// 处理窗体消息
