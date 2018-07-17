@@ -426,7 +426,9 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 		if (wParam == SIZE_RESTORED)
 		{
-			_instance->_size = Size(width, height);
+			float dpiScaleX = 0.f, dpiScaleY = 0.f;
+			Renderer::getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
+			_instance->_size = Size(width * 96.f / dpiScaleX, height * 96.f / dpiScaleY);
 		}
 
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
