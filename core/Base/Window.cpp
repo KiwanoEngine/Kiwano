@@ -122,11 +122,11 @@ HWND e2d::Window::__create()
 	float dpiScaleX = 0.f, dpiScaleY = 0.f;
 	Renderer::getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
 
-	int nWidth = static_cast<int>(ceil(this->_size.width * dpiScaleX / 96.f));
-	int nHeight = static_cast<int>(ceil(this->_size.height * dpiScaleY / 96.f));
+	int nWidth = static_cast<int>(ceil(_size.width * dpiScaleX / 96.f));
+	int nHeight = static_cast<int>(ceil(_size.height * dpiScaleY / 96.f));
 
 	// 计算窗口大小
-	DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX &~WS_THICKFRAME;
+	DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME;
 	RECT wr = { 0, 0, static_cast<LONG>(nWidth), static_cast<LONG>(nHeight) };
 	::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
 	// 获取新的宽高
@@ -141,7 +141,7 @@ HWND e2d::Window::__create()
 	HWND hWnd = ::CreateWindowEx(
 		NULL,
 		L"Easy2DApp",
-		(LPCTSTR)this->_title,
+		(LPCTSTR)_title,
 		dwStyle,
 		(screenWidth - nWidth) / 2, (screenHeight - nHeight) / 2,
 		nWidth, nHeight,
@@ -426,7 +426,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 		if (wParam == SIZE_RESTORED)
 		{
-			Window::getInstance()->_size = Size(width, height);
+			_instance->_size = Size(width, height);
 		}
 
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
@@ -443,7 +443,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	// 处理窗口标题变化消息
 	case WM_SETTEXT:
 	{
-		Window::getInstance()->_title = (const wchar_t*)lParam;
+		_instance->_title = (const wchar_t*)lParam;
 	}
 	break;
 

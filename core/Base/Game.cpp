@@ -6,7 +6,7 @@
 e2d::Game * e2d::Game::_instance = nullptr;
 
 e2d::Game::Game()
-	: _ended(false)
+	: _ended(true)
 	, _paused(false)
 	, _config(nullptr)
 {
