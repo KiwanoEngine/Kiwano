@@ -34,7 +34,7 @@ e2d::SceneManager::~SceneManager()
 {
 }
 
-void e2d::SceneManager::enter(Scene * scene, Transition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
+void e2d::SceneManager::push(Scene * scene, Transition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
 {
 	if (!scene)
 		return;
@@ -63,11 +63,14 @@ void e2d::SceneManager::enter(Scene * scene, Transition * transition /* = nullpt
 	}
 }
 
-void e2d::SceneManager::back(Transition * transition /* = nullptr */)
+void e2d::SceneManager::pop(Transition * transition /* = nullptr */)
 {
 	// 栈为空时，调用返回场景函数失败
-	WARN_IF(_scenes.size() == 0, "Scene stack is empty!");
-	if (_scenes.size() == 0) return;
+	if (_scenes.size() == 0)
+	{
+		WARN("Scene stack is empty!");
+		return;
+	}
 
 	// 从栈顶取出场景指针，作为下一场景
 	_nextScene = _scenes.top();

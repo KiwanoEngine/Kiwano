@@ -22,15 +22,15 @@ public:
 	// 销毁实例
 	static void destroyInstance();
 
-	// 切换场景
-	void enter(
+	// 场景入栈
+	void push(
 		Scene * scene,						/* 下一个场景的指针 */
 		Transition * transition = nullptr,	/* 场景切换动作 */
 		bool saveCurrentScene = true		/* 是否保存当前场景 */
 	);
 
-	// 返回上一场景
-	void back(
+	// 场景出栈
+	void pop(
 		Transition * transition = nullptr	/* 场景切换动作 */
 	);
 
