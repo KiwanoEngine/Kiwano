@@ -3,27 +3,19 @@
 #include "..\e2dmanager.h"
 #pragma comment(lib, "dinput8.lib")
 
-#define BUFFER_SIZE	256
-
-static char s_KeyBuffer[BUFFER_SIZE] = { 0 };			// 用于保存键盘按键信息缓冲区
-static char s_KeyRecordBuffer[BUFFER_SIZE] = { 0 };		// 键盘消息二级缓冲区
-
 e2d::Input * e2d::Input::_instance = nullptr;
 
 e2d::Input::Input()
 	: _directInput(false)
 	, _keyboardDevice(false)
 	, _mouseDevice(false)
-	, _mouseState()
-	, _mouseStateRecord()
-	, _mousePos()
 {
 	CoInitialize(nullptr);
 
-	ZeroMemory(s_KeyBuffer, sizeof(s_KeyBuffer));
-	ZeroMemory(s_KeyRecordBuffer, sizeof(s_KeyRecordBuffer));
+	ZeroMemory(_keyBuffer, sizeof(_keyBuffer));
+	ZeroMemory(_keyRecordBuffer, sizeof(_keyRecordBuffer));
 	ZeroMemory(&_mouseState, sizeof(_mouseState));
-	ZeroMemory(&_mouseStateRecord, sizeof(_mouseStateRecord));
+	ZeroMemory(&_mouseRecordState, sizeof(_mouseRecordState));
 
 	// 初始化接口对象
 	HRESULT hr = DirectInput8Create(
@@ -124,10 +116,8 @@ void e2d::Input::update()
 		}
 		else
 		{
-			for (int i = 0; i < BUFFER_SIZE; ++i)
-				s_KeyRecordBuffer[i] = s_KeyBuffer[i];
-
-			_keyboardDevice->GetDeviceState(sizeof(s_KeyBuffer), (void**)&s_KeyBuffer);
+			strcpy_s(_keyRecordBuffer, 256, _keyBuffer);
+			_keyboardDevice->GetDeviceState(sizeof(_keyBuffer), (void**)&_keyBuffer);
 		}
 	}
 
@@ -142,34 +132,31 @@ void e2d::Input::update()
 		}
 		else
 		{
-			_mouseStateRecord = _mouseState;
+			_mouseRecordState = _mouseState;
 			_mouseDevice->GetDeviceState(sizeof(_mouseState), (void**)&_mouseState);
 		}
 	}
-
-	GetCursorPos(&_mousePos);
-	ScreenToClient(Window::getInstance()->getHWnd(), &_mousePos);
 }
 
 bool e2d::Input::isDown(KeyCode key)
 {
-	if (s_KeyBuffer[static_cast<int>(key)] & 0x80)
+	if (_keyBuffer[static_cast<int>(key)] & 0x80)
 		return true;
 	return false;
 }
 
 bool e2d::Input::isPress(KeyCode key)
 {
-	if ((s_KeyBuffer[static_cast<int>(key)] & 0x80) && 
-		!(s_KeyRecordBuffer[static_cast<int>(key)] & 0x80))
+	if ((_keyBuffer[static_cast<int>(key)] & 0x80) && 
+		!(_keyRecordBuffer[static_cast<int>(key)] & 0x80))
 		return true;
 	return false;
 }
 
 bool e2d::Input::isRelease(KeyCode key)
 {
-	if (!(s_KeyBuffer[static_cast<int>(key)] & 0x80) && 
-		(s_KeyRecordBuffer[static_cast<int>(key)] & 0x80))
+	if (!(_keyBuffer[static_cast<int>(key)] & 0x80) && 
+		(_keyRecordBuffer[static_cast<int>(key)] & 0x80))
 		return true;
 	return false;
 }
@@ -184,7 +171,7 @@ bool e2d::Input::isDown(MouseCode code)
 bool e2d::Input::isPress(MouseCode code)
 {
 	if ((_mouseState.rgbButtons[static_cast<int>(code)] & 0x80) && 
-		!(_mouseStateRecord.rgbButtons[static_cast<int>(code)] & 0x80))
+		!(_mouseRecordState.rgbButtons[static_cast<int>(code)] & 0x80))
 		return true;
 	return false;
 }
@@ -192,24 +179,27 @@ bool e2d::Input::isPress(MouseCode code)
 bool e2d::Input::isRelease(MouseCode code)
 {
 	if (!(_mouseState.rgbButtons[static_cast<int>(code)] & 0x80) && 
-		(_mouseStateRecord.rgbButtons[static_cast<int>(code)] & 0x80))
+		(_mouseRecordState.rgbButtons[static_cast<int>(code)] & 0x80))
 		return true;
 	return false;
 }
 
 double e2d::Input::getMouseX()
 {
-	return (double)_mousePos.x;
+	return getMousePos().x;
 }
 
 double e2d::Input::getMouseY()
 {
-	return (double)_mousePos.y;
+	return getMousePos().y;
 }
 
 e2d::Point e2d::Input::getMousePos()
 {
-	return Point((double)_mousePos.x, (double)_mousePos.y);
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	ScreenToClient(Window::getInstance()->getHWnd(), &mousePos);
+	return Point((double)mousePos.x, (double)mousePos.y);
 }
 
 double e2d::Input::getMouseDeltaX()

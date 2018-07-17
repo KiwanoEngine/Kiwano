@@ -294,12 +294,13 @@ private:
 	E2D_DISABLE_COPY(Input);
 
 private:
-	IDirectInput8* _directInput;
-	IDirectInputDevice8* _keyboardDevice;
-	IDirectInputDevice8* _mouseDevice;
+	IDirectInput8W* _directInput;
+	IDirectInputDevice8W* _keyboardDevice;
+	IDirectInputDevice8W* _mouseDevice;
 	DIMOUSESTATE _mouseState;
-	DIMOUSESTATE _mouseStateRecord;
-	POINT _mousePos;
+	DIMOUSESTATE _mouseRecordState;
+	char _keyBuffer[256];
+	char _keyRecordBuffer[256];
 
 	static Input * _instance;
 };
@@ -395,8 +396,6 @@ private:
 // 垃圾回收器
 class GC
 {
-	friend class Game;
-
 public:
 	// 自动释放
 	static void autorelease(
