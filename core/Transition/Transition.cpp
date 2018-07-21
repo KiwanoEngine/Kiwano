@@ -4,7 +4,7 @@
 
 e2d::Transition::Transition(double duration)
 	: _end(false)
-	, _last(0)
+	, _last()
 	, _delta(0)
 	, _outScene(nullptr)
 	, _inScene(nullptr)
@@ -45,7 +45,7 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 		throw SystemException(L"场景过渡动画图层创建失败");
 	}
 
-	_last = Game::getInstance()->getTotalTime();
+	_last = Game::getInstance()->getTotalDuration();
 	_outScene = prev;
 	_inScene = next;
 	GC::retain(_outScene);
@@ -64,7 +64,8 @@ void e2d::Transition::_update()
 	}
 	else
 	{
-		_delta = std::min((Game::getInstance()->getTotalTime() - _last) / _duration, 1.0);
+		_delta = (Game::getInstance()->getTotalDuration() - _last).seconds() / _duration;
+		_delta = std::min(_delta, 1.0);
 	}
 
 	this->_updateCustom();

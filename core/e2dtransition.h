@@ -46,9 +46,9 @@ protected:
 
 protected:
 	bool _end;
-	double _last;
 	double _duration;
 	double _delta;
+	Duration _last;
 	Size _windowSize;
 	Scene * _outScene;
 	Scene * _inScene;

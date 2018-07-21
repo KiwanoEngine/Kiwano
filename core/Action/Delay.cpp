@@ -31,7 +31,7 @@ void e2d::Delay::_update()
 {
 	Action::_update();
 
-	_delta = Game::getInstance()->getTotalTime() - _last;
+	_delta = Game::getInstance()->getTotalDuration().seconds() - _last;
 
 	if (_delta >= _delay)
 	{
@@ -42,5 +42,5 @@ void e2d::Delay::_update()
 void e2d::Delay::_resetTime()
 {
 	Action::_resetTime();
-	_last = Game::getInstance()->getTotalTime() - _delta;
+	_last = Game::getInstance()->getTotalDuration().seconds() - _delta;
 }

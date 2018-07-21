@@ -46,7 +46,8 @@ public:
 	// 获取游戏配置
 	Config* getConfig();
 
-	double getTotalTime() const;
+	// 获取游戏总时长
+	Duration getTotalDuration() const;
 
 private:
 	Game();
@@ -56,12 +57,12 @@ private:
 	E2D_DISABLE_COPY(Game);
 
 private:
-	bool	_ended;
-	bool	_paused;
-	Config*	_config;
-	std::chrono::steady_clock::time_point _start;
-	std::chrono::steady_clock::time_point _now;
-	std::chrono::steady_clock::time_point _last;
+	bool		_ended;
+	bool		_paused;
+	Config*		_config;
+	Time		_start;
+	Time		_now;
+	Time		_last;
 
 	static Game * _instance;
 };

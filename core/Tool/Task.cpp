@@ -60,7 +60,7 @@ bool e2d::Task::isReady() const
 		{
 			return true;
 		}
-		if ((Game::getInstance()->getTotalTime() - _lastTime) >= _delay)
+		if ((Game::getInstance()->getTotalDuration().seconds() - _lastTime) >= _delay)
 		{
 			return true;
 		}
@@ -80,5 +80,5 @@ e2d::String e2d::Task::getName() const
 
 void e2d::Task::updateTime()
 {
-	_lastTime = Game::getInstance()->getTotalTime();
+	_lastTime = Game::getInstance()->getTotalDuration().seconds();
 }

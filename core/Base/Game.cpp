@@ -15,7 +15,7 @@ e2d::Game::Game()
 {
 	CoInitialize(nullptr);
 
-	_start = _last = _now = steady_clock::now();
+	_start = _last = _now = Time::now();
 }
 
 e2d::Game::~Game()
@@ -67,16 +67,16 @@ void e2d::Game::start()
 	window->poll();
 
 	// ¿ªÊ¼ÓÎÏ·
-	const milliseconds frameInterval(15LL);
-	milliseconds wait, interval;
+	Duration frameInterval(15), interval;
+	int wait = 0;
 	
 	_ended = false;
-	_last = _now = steady_clock::now();
+	_last = _now = Time::now();
 
 	while (!_ended)
 	{
-		_now = steady_clock::now();
-		interval = duration_cast<milliseconds>(_now - _last);
+		_now = Time::now();
+		interval = _now - _last;
 
 		if (frameInterval < interval)
 		{
@@ -93,10 +93,10 @@ void e2d::Game::start()
 		}
 		else
 		{
-			wait = frameInterval - interval;
-			if (wait.count() > 1LL)
+			wait = (frameInterval - interval).milliseconds() - 1;
+			if (wait > 1)
 			{
-				std::this_thread::sleep_for(wait - milliseconds(1LL));
+				std::this_thread::sleep_for(milliseconds(wait));
 			}
 		}
 	}
@@ -111,7 +111,7 @@ void e2d::Game::resume()
 {
 	if (_paused && !_ended)
 	{
-		_last = _now = steady_clock::now();
+		_last = _now = Time::now();
 		Timer::getInstance()->updateTime();
 		ActionManager::getInstance()->updateTime();
 	}
@@ -141,9 +141,9 @@ e2d::Config* e2d::Game::getConfig()
 	return _config;
 }
 
-double e2d::Game::getTotalTime() const
+e2d::Duration e2d::Game::getTotalDuration() const
 {
-	return duration_cast<microseconds>(steady_clock::now() - _start).count() / 1000.0 / 1000.0;
+	return std::move(_now - _start);
 }
 
 void e2d::Game::quit()

@@ -410,11 +410,31 @@ class Duration
 public:
 	Duration();
 
-	Duration operator + (Duration const & size) const;
-	Duration operator - (Duration const & size) const;
+	explicit Duration(
+		int ms
+	);
 
-protected:
-	std::chrono::milliseconds _duration;
+	// 获取毫秒数
+	int milliseconds() const;
+
+	// 获取秒数
+	double seconds() const;
+
+	// 获取分钟数
+	double minutes() const;
+
+	bool operator== (const Duration &) const;
+	bool operator!= (const Duration &) const;
+	bool operator> (const Duration &) const;
+	bool operator>= (const Duration &) const;
+	bool operator< (const Duration &) const;
+	bool operator<= (const Duration &) const;
+
+	Duration operator + (Duration const & other) const;
+	Duration operator - (Duration const & other) const;
+
+public:
+	std::chrono::milliseconds ms;
 };
 
 
@@ -424,11 +444,19 @@ class Time
 public:
 	Time();
 
-	Time operator + (Duration const & size) const;
-	Duration operator - (Time const & size) const;
+	// 获取时间戳
+	time_t getTimeStamp() const;
 
-protected:
-	std::chrono::steady_clock::time_point _time;
+	// 计算时间间隔后的时间点
+	Time operator + (Duration const & other) const;
+	// 计算两时间点的时间间隔
+	Duration operator - (Time const & other) const;
+
+	// 获取当前时间
+	static Time now();
+
+public:
+	std::chrono::steady_clock::time_point time;
 };
 
 
