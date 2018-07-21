@@ -45,7 +45,7 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 		throw SystemException(L"场景过渡动画图层创建失败");
 	}
 
-	_last = Time::getTotalTime();
+	_last = Game::getInstance()->getTotalTime();
 	_outScene = prev;
 	_inScene = next;
 	GC::retain(_outScene);
@@ -64,7 +64,7 @@ void e2d::Transition::_update()
 	}
 	else
 	{
-		_delta = std::min((Time::getTotalTime() - _last) / _duration, 1.0);
+		_delta = std::min((Game::getInstance()->getTotalTime() - _last) / _duration, 1.0);
 	}
 
 	this->_updateCustom();

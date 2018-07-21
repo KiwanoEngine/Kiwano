@@ -115,9 +115,6 @@
     <ClCompile Include="..\..\core\Base\Renderer.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Base\Time.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Base\Window.cpp">
       <Filter>Base</Filter>
     </ClCompile>

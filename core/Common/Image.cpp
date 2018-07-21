@@ -296,9 +296,12 @@ bool e2d::Image::preload(const Resource& res)
 
 void e2d::Image::clearCache()
 {
+	if (_bitmapCache.empty())
+		return;
+
 	for (auto bitmap : _bitmapCache)
 	{
-		SafeRelease(bitmap.second);
+		bitmap.second->Release();
 	}
 	_bitmapCache.clear();
 }

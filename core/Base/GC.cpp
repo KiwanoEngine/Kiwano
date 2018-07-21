@@ -49,6 +49,10 @@ e2d::GC::GC()
 
 e2d::GC::~GC()
 {
+	// 删除所有对象
+	GC::clear();
+	// 清除图片缓存
+	Image::clearCache();
 	// 删除所有单例
 	Game::destroyInstance();
 	Renderer::destroyInstance();
@@ -92,6 +96,11 @@ void e2d::GC::flush()
 void e2d::GC::clear()
 {
 	_instance._cleanup = true;
+
+	SceneManager::getInstance()->clear();
+	Timer::getInstance()->clearAllTasks();
+	ActionManager::getInstance()->clearAll();
+
 	for (auto pair : _instance._pool)
 	{
 		if (pair.second)

@@ -78,9 +78,6 @@
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Base\Time.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Base\Renderer.cpp">
       <Filter>Base</Filter>
     </ClCompile>
@@ -248,6 +245,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Event\Collision.cpp">
       <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\Time.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Common\Duration.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

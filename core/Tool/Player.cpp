@@ -13,9 +13,13 @@ e2d::Player::Player()
 
 e2d::Player::~Player()
 {
-	for (auto pair : _musicList)
-		GC::release(pair.second);
-	_musicList.clear();
+	if (!_musicList.empty())
+	{
+		for (auto pair : _musicList)
+		{
+			delete pair.second;
+		}
+	}
 
 	if (_masteringVoice)
 		_masteringVoice->DestroyVoice();
@@ -31,9 +35,8 @@ e2d::Player * e2d::Player::getInstance()
 	{
 		_instance = new (std::nothrow) Player;
 
-		HRESULT hr;
-		if (FAILED(hr = XAudio2Create(&_instance->_xAudio2, 0)) ||
-			FAILED(hr = _instance->_xAudio2->CreateMasteringVoice(&_instance->_masteringVoice)))
+		if (FAILED(XAudio2Create(&_instance->_xAudio2, 0)) ||
+			FAILED(_instance->_xAudio2->CreateMasteringVoice(&_instance->_masteringVoice)))
 		{
 			throw SystemException(L"初始化 XAudio2 组件失败");
 		}
@@ -68,11 +71,10 @@ bool e2d::Player::preload(const Resource& res)
 	if (_musicList.end() != _musicList.find(res))
 		return true;
 
-	Music * music = new (e2d::autorelease) Music();
+	Music * music = new Music();
 
 	if (music->open(res))
 	{
-		GC::retain(music);
 		music->setVolume(_volume);
 		_musicList.insert(std::make_pair(res, music));
 		return true;
@@ -139,10 +141,6 @@ void e2d::Player::stop(const String& filePath)
 
 void e2d::Player::stop(const Resource& res)
 {
-	if (res.isResource())
-	{
-
-	}
 	if (_musicList.end() != _musicList.find(res))
 		_musicList[res]->stop();
 }
@@ -204,7 +202,7 @@ void e2d::Player::clearCache()
 {
 	for (auto pair : _musicList)
 	{
-		GC::release(pair.second);
+		delete pair.second;
 	}
 	_musicList.clear();
 }

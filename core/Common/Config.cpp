@@ -107,6 +107,9 @@ bool e2d::Config::isColliderVisible() const
 
 void e2d::Config::_update()
 {
+	if (!_unconfigured)
+		return;
+
 	_unconfigured = false;
 
 	if (_soundEnabled)

@@ -21,9 +21,7 @@ public:
 	static void destroyInstance();
 
 	// 启动游戏
-	void start(
-		bool cleanup = true		/* 自动清理资源 */
-	);
+	void start();
 
 	// 暂停游戏
 	void pause();
@@ -48,6 +46,8 @@ public:
 	// 获取游戏配置
 	Config* getConfig();
 
+	double getTotalTime() const;
+
 private:
 	Game();
 
@@ -59,6 +59,9 @@ private:
 	bool	_ended;
 	bool	_paused;
 	Config*	_config;
+	std::chrono::steady_clock::time_point _start;
+	std::chrono::steady_clock::time_point _now;
+	std::chrono::steady_clock::time_point _last;
 
 	static Game * _instance;
 };
@@ -182,46 +185,6 @@ private:
 	int		_iconID;
 
 	static Window * _instance;
-};
-
-
-// 时间控制
-class Time
-{
-	friend class Game;
-
-public:
-	// 获取上一帧的时间间隔（秒）
-	static double getDeltaTime();
-
-	// 获取游戏总时长（秒）
-	static double getTotalTime();
-
-private:
-	// 初始化计时操作
-	static bool __init();
-
-	// 是否达到更新时间
-	static bool __isReady();
-
-	// 更新当前时间
-	static void __updateNow();
-
-	// 更新时间信息
-	static void __updateLast();
-
-	// 重置时间信息
-	static void __reset();
-
-	// 挂起线程
-	static void __sleep();
-
-private:
-	static std::chrono::steady_clock::time_point _start;
-	static std::chrono::steady_clock::time_point _now;
-	static std::chrono::steady_clock::time_point _last;
-	static std::chrono::steady_clock::time_point _fixedLast;
-	static std::chrono::milliseconds _interval;
 };
 
 

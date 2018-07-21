@@ -404,6 +404,34 @@ protected:
 };
 
 
+// 时间段
+class Duration
+{
+public:
+	Duration();
+
+	Duration operator + (Duration const & size) const;
+	Duration operator - (Duration const & size) const;
+
+protected:
+	std::chrono::milliseconds _duration;
+};
+
+
+// 时间点
+class Time
+{
+public:
+	Time();
+
+	Time operator + (Duration const & size) const;
+	Duration operator - (Time const & size) const;
+
+protected:
+	std::chrono::steady_clock::time_point _time;
+};
+
+
 // 字体
 class Font
 {

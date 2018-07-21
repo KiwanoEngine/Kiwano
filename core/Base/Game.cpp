@@ -1,6 +1,9 @@
 #include "..\e2dbase.h"
 #include "..\e2dmanager.h"
 #include "..\e2dtool.h"
+#include <thread>
+
+using namespace std::chrono;
 
 
 e2d::Game * e2d::Game::_instance = nullptr;
@@ -11,6 +14,8 @@ e2d::Game::Game()
 	, _config(nullptr)
 {
 	CoInitialize(nullptr);
+
+	_start = _last = _now = steady_clock::now();
 }
 
 e2d::Game::~Game()
@@ -36,7 +41,7 @@ void e2d::Game::destroyInstance()
 	}
 }
 
-void e2d::Game::start(bool cleanup)
+void e2d::Game::start()
 {
 	auto input = Input::getInstance();
 	auto window = Window::getInstance();
@@ -45,50 +50,55 @@ void e2d::Game::start(bool cleanup)
 	auto sceneManager = SceneManager::getInstance();
 	auto actionManager = ActionManager::getInstance();
 
-	// 显示窗口
-	::ShowWindow(window->getHWnd(), SW_SHOWNORMAL);
-	// 刷新窗口内容
-	::UpdateWindow(window->getHWnd());
-	// 处理窗口消息
-	window->poll();
-	// 初始化计时
-	Time::__init();
+	if (!input || !window || !renderer || !timer || !sceneManager || !actionManager)
+	{
+		throw SystemException(L"初始化失败");
+	}
 
+	HWND hWnd = window->getHWnd();
+	if (hWnd == nullptr)
+	{
+		throw SystemException(L"无法创建窗口");
+	}
+
+	// 显示窗口
+	::ShowWindow(hWnd, SW_SHOWNORMAL);
+	::UpdateWindow(hWnd);
+	window->poll();
+
+	// 开始游戏
+	const milliseconds frameInterval(15LL);
+	milliseconds wait, interval;
+	
 	_ended = false;
+	_last = _now = steady_clock::now();
 
 	while (!_ended)
 	{
-		// 处理窗口消息
-		window->poll();
-		// 刷新时间
-		Time::__updateNow();
+		_now = steady_clock::now();
+		interval = duration_cast<milliseconds>(_now - _last);
 
-		// 判断是否达到了刷新状态
-		if (Time::__isReady())
+		if (frameInterval < interval)
 		{
-			if (_config->_unconfigured)
-			{
-				_config->_update();
-			}
+			_last = _now;
 
 			input->update();			// 获取用户输入
 			timer->update();			// 更新定时器
 			actionManager->update();	// 更新动作管理器
 			sceneManager->update();		// 更新场景内容
+			_config->_update();			// 更新游戏配置
 			renderer->render();			// 渲染游戏画面
+			window->poll();				// 处理窗口消息
 			GC::flush();				// 刷新内存池
-
-			Time::__updateLast();		// 刷新时间信息
 		}
 		else
 		{
-			Time::__sleep();			// 挂起线程
+			wait = frameInterval - interval;
+			if (wait.count() > 1LL)
+			{
+				std::this_thread::sleep_for(wait - milliseconds(1LL));
+			}
 		}
-	}
-
-	if (cleanup)
-	{
-		Game::cleanup();
 	}
 }
 
@@ -101,7 +111,9 @@ void e2d::Game::resume()
 {
 	if (_paused && !_ended)
 	{
-		Time::__reset();
+		_last = _now = steady_clock::now();
+		Timer::getInstance()->updateTime();
+		ActionManager::getInstance()->updateTime();
 	}
 	_paused = false;
 }
@@ -129,6 +141,11 @@ e2d::Config* e2d::Game::getConfig()
 	return _config;
 }
 
+double e2d::Game::getTotalTime() const
+{
+	return duration_cast<microseconds>(steady_clock::now() - _start).count() / 1000.0 / 1000.0;
+}
+
 void e2d::Game::quit()
 {
 	_ended = true;	// 这个变量将控制游戏是否结束
@@ -136,16 +153,7 @@ void e2d::Game::quit()
 
 void e2d::Game::cleanup()
 {
-	// 删除所有场景
-	SceneManager::getInstance()->clear();
-	// 清空定时器
-	Timer::getInstance()->clearAllTasks();
-	// 清除所有动作
-	ActionManager::getInstance()->clearAll();
-	// 清空图片缓存
-	Image::clearCache();
-	// 清空音乐缓存
-	Player::getInstance()->clearCache();
-	// 删除所有对象
 	GC::clear();
+	Image::clearCache();
+	Player::getInstance()->clearCache();
 }

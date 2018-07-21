@@ -24,7 +24,7 @@ bool e2d::Action::isRunning()
 void e2d::Action::resume()
 {
 	_running = true;
-	_last = Time::getTotalTime();
+	_last = Game::getInstance()->getTotalTime();
 }
 
 void e2d::Action::pause()
@@ -56,7 +56,7 @@ void e2d::Action::reset()
 {
 	_initialized = false;
 	_done = false;
-	_last = Time::getTotalTime();
+	_last = Game::getInstance()->getTotalTime();
 }
 
 bool e2d::Action::_isDone()
@@ -74,7 +74,7 @@ void e2d::Action::_startWithTarget(Node* target)
 void e2d::Action::_init()
 {
 	_initialized = true;
-	_last = Time::getTotalTime();
+	_last = Game::getInstance()->getTotalTime();
 }
 
 void e2d::Action::_update()

@@ -55,11 +55,11 @@
     <ClCompile Include="..\..\core\Base\GC.cpp" />
     <ClCompile Include="..\..\core\Base\Input.cpp" />
     <ClCompile Include="..\..\core\Base\Renderer.cpp" />
-    <ClCompile Include="..\..\core\Base\Time.cpp" />
     <ClCompile Include="..\..\core\Base\Window.cpp" />
     <ClCompile Include="..\..\core\Common\Collider.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
     <ClCompile Include="..\..\core\Common\Config.cpp" />
+    <ClCompile Include="..\..\core\Common\Duration.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />
     <ClCompile Include="..\..\core\Common\Function.cpp" />
     <ClCompile Include="..\..\core\Common\Image.cpp" />
@@ -70,6 +70,7 @@
     <ClCompile Include="..\..\core\Common\Scene.cpp" />
     <ClCompile Include="..\..\core\Common\Size.cpp" />
     <ClCompile Include="..\..\core\Common\String.cpp" />
+    <ClCompile Include="..\..\core\Common\Time.cpp" />
     <ClCompile Include="..\..\core\Custom\Exception.cpp" />
     <ClCompile Include="..\..\core\Custom\SystemException.cpp" />
     <ClCompile Include="..\..\core\Custom\TextRenderer.cpp" />

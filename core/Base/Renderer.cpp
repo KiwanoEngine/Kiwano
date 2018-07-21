@@ -161,11 +161,11 @@ void e2d::Renderer::_renderFps()
 {
 	++_renderTimes;
 
-	double fDelay = Time::getTotalTime() - _lastRenderTime;
+	double fDelay = Game::getInstance()->getTotalTime() - _lastRenderTime;
 	if (fDelay >= 0.1)
 	{
 		_fpsText = String::format(L"FPS: %.1lf", (1 / fDelay) * _renderTimes);
-		_lastRenderTime = Time::getTotalTime();
+		_lastRenderTime = Game::getInstance()->getTotalTime();
 		_renderTimes = 0;
 	}
 

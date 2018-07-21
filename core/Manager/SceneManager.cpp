@@ -85,20 +85,19 @@ void e2d::SceneManager::pop(Transition * transition /* = nullptr */)
 	// 设置切换场景动作
 	if (transition)
 	{
-		_transition = transition;
 		GC::retain(transition);
 		transition->_init(_currScene, _nextScene);
 		transition->_update();
+		_transition = transition;
 	}
 }
 
 void e2d::SceneManager::clear()
 {
 	// 清空场景栈
-	while (_scenes.size())
+	while (!_scenes.empty())
 	{
-		auto temp = _scenes.top();
-		GC::safeRelease(temp);
+		_scenes.top()->release();
 		_scenes.pop();
 	}
 }

@@ -100,6 +100,9 @@ void e2d::Timer::removeAllTasks()
 
 void e2d::Timer::clearAllTasks()
 {
+	if (_tasks.empty())
+		return;
+
 	for (auto task : _tasks)
 	{
 		GC::release(task);

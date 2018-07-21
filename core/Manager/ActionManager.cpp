@@ -213,12 +213,16 @@ void e2d::ActionManager::clearAllBindedWith(Node * target)
 
 void e2d::ActionManager::clearAll()
 {
-	for (auto action : _runningActions)
+	if (!_runningActions.empty())
 	{
-		GC::release(action);
+		for (auto action : _runningActions)
+		{
+			GC::release(action);
+		}
+		_runningActions.clear();
 	}
+	
 	_actions.clear();
-	_runningActions.clear();
 }
 
 std::vector<e2d::Action*> e2d::ActionManager::get(const String& name)
