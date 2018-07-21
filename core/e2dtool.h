@@ -272,14 +272,14 @@ class Task :
 public:
 	explicit Task(
 		const Function& func,		/* 执行函数 */
-		const String& name = L""	/* 定时器名称 */
+		const String& name = L""	/* 任务名称 */
 	);
 
 	explicit Task(
 		const Function& func,		/* 执行函数 */
 		double delay,				/* 时间间隔（秒） */
 		int times = -1,				/* 执行次数（设 -1 为永久执行） */
-		const String& name = L""	/* 定时器名称 */
+		const String& name = L""	/* 任务名称 */
 	);
 
 	// 暂停任务
@@ -330,19 +330,19 @@ public:
 		Task * task
 	);
 
-	// 继续具有相同名称的任务
+	// 继续任务
 	void resumeTasks(
-		const String& name
+		const String& taskName
 	);
 
-	// 暂停具有相同名称的任务
+	// 暂停任务
 	void pauseTasks(
-		const String& name
+		const String& taskName
 	);
 
-	// 移除具有相同名称的任务
+	// 移除任务
 	void removeTasks(
-		const String& name
+		const String& taskName
 	);
 
 	// 继续所有任务
