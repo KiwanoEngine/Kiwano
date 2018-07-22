@@ -40,6 +40,7 @@ void e2d::SceneManager::push(Scene * scene, Transition * transition /* = nullptr
 		return;
 
 	// 保存下一场景的指针
+	if (_nextScene) _nextScene->release();
 	_nextScene = scene;
 	_nextScene->retain();
 	

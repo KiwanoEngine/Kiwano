@@ -46,7 +46,7 @@ e2d::Image::~Image()
 
 bool e2d::Image::open(const Resource& res)
 {
-	if (!res.isResource())
+	if (res.isFile())
 	{
 		WARN_IF(res.getFileName().isEmpty(), "Image open failed! Invalid file name.");
 
@@ -162,7 +162,7 @@ bool e2d::Image::preload(const Resource& res)
 	ID2D1Bitmap *pBitmap = nullptr;
 	IWICImagingFactory *pImagingFactory = Renderer::getImagingFactory();
 
-	if (res.isResource())
+	if (!res.isFile())
 	{
 		HRSRC imageResHandle = nullptr;
 		HGLOBAL imageResDataHandle = nullptr;

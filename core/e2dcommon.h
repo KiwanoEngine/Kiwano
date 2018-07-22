@@ -803,8 +803,8 @@ public:
 		const String& resType		/* 资源类型 */
 	);
 
-	// 是否是资源类型
-	bool isResource() const;
+	// 是否是本地文件
+	bool isFile() const;
 
 	const String& getFileName() const;
 
@@ -821,7 +821,7 @@ public:
 	bool operator<= (const Resource &) const;
 
 protected:
-	bool	_isResource;
+	bool	_isFile;
 	size_t	_resNameId;
 	String	_resType;
 	String	_fileName;

@@ -1,7 +1,7 @@
 #include "..\e2dtool.h"
 
 e2d::Resource::Resource(const String & fileName)
-	: _isResource(false)
+	: _isFile(true)
 	, _fileName(fileName)
 	, _resNameId(0)
 	, _resType()
@@ -9,16 +9,16 @@ e2d::Resource::Resource(const String & fileName)
 }
 
 e2d::Resource::Resource(size_t resNameId, const String & resType)
-	: _isResource(true)
+	: _isFile(false)
 	, _fileName()
 	, _resNameId(resNameId)
 	, _resType(resType)
 {
 }
 
-bool e2d::Resource::isResource() const
+bool e2d::Resource::isFile() const
 {
-	return _isResource;
+	return _isFile;
 }
 
 const e2d::String & e2d::Resource::getFileName() const
@@ -38,7 +38,7 @@ const e2d::String & e2d::Resource::getResType() const
 
 size_t e2d::Resource::getKey() const
 {
-	return _isResource ? _resNameId : _fileName.getHashCode();
+	return _isFile ? _fileName.getHashCode() : _resNameId;
 }
 
 bool e2d::Resource::operator>(const Resource &res) const

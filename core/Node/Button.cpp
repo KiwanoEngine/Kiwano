@@ -191,10 +191,9 @@ void e2d::Button::_fixedUpdate()
 			if (_isSelected &&
 				_normal->containsPoint(input->getMousePos()))
 			{
+				_isSelected = false;
 				_runCallback();
 			}
-			// ±ê¼Ç _isSelected Îª false
-			_isSelected = false;
 		}
 
 		if (input->isPress(MouseCode::Left))

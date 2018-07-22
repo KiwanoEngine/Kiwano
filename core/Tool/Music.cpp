@@ -81,7 +81,7 @@ bool e2d::Music::open(const Resource& res)
 		return false;
 	}
 
-	if (res.isResource())
+	if (!res.isFile())
 	{
 		HRSRC hResInfo;
 		HGLOBAL hResData;
