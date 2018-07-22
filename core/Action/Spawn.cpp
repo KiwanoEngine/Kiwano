@@ -13,7 +13,7 @@ e2d::Spawn::~Spawn()
 {
 	for (auto action : _actions)
 	{
-		GC::safeRelease(action);
+		GC::getInstance()->safeRelease(action);
 	}
 }
 
@@ -76,7 +76,7 @@ void e2d::Spawn::add(Action * action)
 	if (action)
 	{
 		_actions.push_back(action);
-		GC::retain(action);
+		action->retain();
 	}
 }
 

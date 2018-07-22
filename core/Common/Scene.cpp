@@ -7,13 +7,13 @@ e2d::Scene::Scene()
 	, _root(nullptr)
 {
 	_root = new (e2d::autorelease) Node();
-	GC::retain(_root);
+	_root->retain();
 	_root->_setParentScene(this);
 }
 
 e2d::Scene::~Scene()
 {
-	GC::safeRelease(_root);
+	GC::getInstance()->safeRelease(_root);
 }
 
 void e2d::Scene::render()

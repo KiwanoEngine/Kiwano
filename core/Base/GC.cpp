@@ -11,17 +11,7 @@ void * operator new(size_t size, e2d::autorelease_t const &) E2D_NOEXCEPT
 	void* p = ::operator new(size, std::nothrow);
 	if (p)
 	{
-		GC::autorelease(static_cast<Ref*>(p));
-	}
-	return p;
-}
-
-void* operator new[](size_t size, e2d::autorelease_t const&) E2D_NOEXCEPT
-{
-	void* p = ::operator new[](size, std::nothrow);
-	if (p)
-	{
-		GC::autoreleaseArray(static_cast<Ref*>(p));
+		GC::getInstance()->autorelease(static_cast<Ref*>(p));
 	}
 	return p;
 }
@@ -29,11 +19,6 @@ void* operator new[](size_t size, e2d::autorelease_t const&) E2D_NOEXCEPT
 void operator delete(void * block, e2d::autorelease_t const &) E2D_NOEXCEPT
 {
 	::operator delete (block, std::nothrow);
-}
-
-void operator delete[](void* block, e2d::autorelease_t const&) E2D_NOEXCEPT
-{
-	::operator delete[](block, std::nothrow);
 }
 
 
@@ -50,7 +35,7 @@ e2d::GC::GC()
 e2d::GC::~GC()
 {
 	// 删除所有对象
-	GC::clear();
+	this->clear();
 	// 清除图片缓存
 	Image::clearCache();
 	// 删除所有单例
@@ -68,23 +53,16 @@ e2d::GC::~GC()
 
 void e2d::GC::flush()
 {
-	if (!_instance._notifyed)
+	if (!_notifyed)
 		return;
 
-	_instance._notifyed = false;
-	for (auto iter = _instance._pool.begin(); iter != _instance._pool.end();)
+	_notifyed = false;
+	for (auto iter = _pool.begin(); iter != _pool.end();)
 	{
-		if ((*iter).first->getRefCount() <= 0)
+		if ((*iter)->getRefCount() <= 0)
 		{
-			if ((*iter).second)
-			{
-				delete[] (*iter).first;
-			}
-			else
-			{
-				delete (*iter).first;
-			}
-			iter = _instance._pool.erase(iter);
+			delete (*iter);
+			iter = _pool.erase(iter);
 		}
 		else
 		{
@@ -95,72 +73,45 @@ void e2d::GC::flush()
 
 void e2d::GC::clear()
 {
-	_instance._cleanup = true;
+	_cleanup = true;
 
 	SceneManager::getInstance()->clear();
 	Timer::getInstance()->clearAllTasks();
 	ActionManager::getInstance()->clearAll();
 
-	for (auto pair : _instance._pool)
+	for (auto ref : _pool)
 	{
-		if (pair.second)
-		{
-			delete[] pair.first;
-		}
-		else
-		{
-			delete pair.first;
-		}
+		delete ref;
 	}
-	_instance._pool.clear();
-	_instance._cleanup = false;
+	_pool.clear();
+	_cleanup = false;
+}
+
+e2d::GC * e2d::GC::getInstance()
+{
+	return &_instance;
 }
 
 void e2d::GC::autorelease(Ref * ref)
 {
 	if (ref)
 	{
-		auto iter = _instance._pool.find(ref);
-		if (iter == _instance._pool.end())
-		{
-			_instance._pool.insert(std::make_pair(ref, false));
-		}
+		_pool.insert(ref);
 	}
 }
 
-void e2d::GC::autoreleaseArray(Ref * ref)
+void e2d::GC::safeRelease(Ref* ref)
 {
+	if (_cleanup)
+		return;
+
 	if (ref)
 	{
-		auto iter = _instance._pool.find(ref);
-		if (iter == _instance._pool.end())
+		auto iter = _pool.find(ref);
+		if (iter != _pool.end())
 		{
-			_instance._pool.insert(std::make_pair(ref, true));
-		}
-	}
-}
-
-void e2d::GC::retain(Ref * ref)
-{
-	if (ref && !_instance._cleanup)
-	{
-		auto iter = _instance._pool.find(ref);
-		if (iter != _instance._pool.end())
-		{
-			(*iter).first->retain();
-		}
-	}
-}
-
-void e2d::GC::release(Ref * ref)
-{
-	if (ref && !_instance._cleanup)
-	{
-		auto iter = _instance._pool.find(ref);
-		if (iter != _instance._pool.end())
-		{
-			(*iter).first->release();
-			_instance._notifyed = true;
+			(*iter)->release();
+			_notifyed = true;
 		}
 	}
 }

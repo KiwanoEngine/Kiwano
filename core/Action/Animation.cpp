@@ -26,7 +26,7 @@ e2d::Animation::~Animation()
 {
 	for (auto frame : _frames)
 	{
-		GC::safeRelease(frame);
+		GC::getInstance()->safeRelease(frame);
 	}
 }
 
@@ -40,7 +40,7 @@ void e2d::Animation::add(Image * frame)
 	if (frame)
 	{
 		_frames.push_back(frame);
-		GC::retain(frame);
+		frame->retain();
 	}
 }
 

@@ -11,13 +11,13 @@ e2d::Loop::Loop(Action * action, int times /* = -1 */)
 	if (action)
 	{
 		_action = action;
-		GC::retain(_action);
+		_action->retain();
 	}
 }
 
 e2d::Loop::~Loop()
 {
-	GC::safeRelease(_action);
+	GC::getInstance()->safeRelease(_action);
 }
 
 e2d::Loop * e2d::Loop::clone() const

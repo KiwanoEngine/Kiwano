@@ -15,7 +15,7 @@ e2d::Sequence::~Sequence()
 {
 	for (auto action : _actions)
 	{
-		GC::safeRelease(action);
+		GC::getInstance()->safeRelease(action);
 	}
 }
 
@@ -78,7 +78,7 @@ void e2d::Sequence::add(Action * action)
 	if (action)
 	{
 		_actions.push_back(action);
-		GC::retain(action);
+		action->retain();
 	}
 }
 

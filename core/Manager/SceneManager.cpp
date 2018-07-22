@@ -41,7 +41,7 @@ void e2d::SceneManager::push(Scene * scene, Transition * transition /* = nullptr
 
 	// 保存下一场景的指针
 	_nextScene = scene;
-	GC::retain(_nextScene);
+	_nextScene->retain();
 	
 	// 设置切换场景动作
 	if (transition)
@@ -49,10 +49,10 @@ void e2d::SceneManager::push(Scene * scene, Transition * transition /* = nullptr
 		if (_transition)
 		{
 			_transition->_stop();
-			GC::release(_transition);
+			_transition->release();
 		}
 		_transition = transition;
-		GC::retain(transition);
+		transition->retain();
 		transition->_init(_currScene, _nextScene);
 		transition->_update();
 	}
@@ -85,7 +85,7 @@ void e2d::SceneManager::pop(Transition * transition /* = nullptr */)
 	// 设置切换场景动作
 	if (transition)
 	{
-		GC::retain(transition);
+		transition->retain();
 		transition->_init(_currScene, _nextScene);
 		transition->_update();
 		_transition = transition;
@@ -134,7 +134,7 @@ void e2d::SceneManager::update()
 
 		if (_transition->isDone())
 		{
-			GC::release(_transition);
+			_transition->release();
 			_transition = nullptr;
 		}
 		else
@@ -158,15 +158,15 @@ void e2d::SceneManager::update()
 			}
 			else
 			{
-				GC::release(_currScene);
+				_currScene->release();
 			}
 		}
 
 		// 执行下一场景的 onEnter 函数
 		_nextScene->onEnter();
 
-		_currScene = _nextScene;		// 切换场景
-		_nextScene = nullptr;				// 下一场景置空
+		_currScene = _nextScene;
+		_nextScene = nullptr;
 	}
 }
 

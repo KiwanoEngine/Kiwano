@@ -43,7 +43,7 @@ void e2d::ActionManager::update()
 		// 获取动作运行状态
 		if (action->_isDone())
 		{
-			GC::release(action);
+			action->release();
 			action->_target = nullptr;
 			_runningActions.erase(_runningActions.begin() + i);
 		}
@@ -136,7 +136,7 @@ void e2d::ActionManager::start(Action * action, Node * target, bool paused)
 			auto iter = std::find(_runningActions.begin(), _runningActions.end(), action);
 			if (iter == _runningActions.end())
 			{
-				GC::retain(action);
+				action->retain();
 				action->_startWithTarget(target);
 				action->_running = !paused;
 				_runningActions.push_back(action);
@@ -197,10 +197,10 @@ void e2d::ActionManager::clearAllBindedWith(Node * target)
 	{
 		for (size_t i = 0; i < _runningActions.size();)
 		{
-			auto a = _runningActions[i];
-			if (a->getTarget() == target)
+			auto action = _runningActions[i];
+			if (action->getTarget() == target)
 			{
-				GC::safeRelease(a);
+				action->release();
 				_runningActions.erase(_runningActions.begin() + i);
 			}
 			else
@@ -217,7 +217,7 @@ void e2d::ActionManager::clearAll()
 	{
 		for (auto action : _runningActions)
 		{
-			GC::release(action);
+			action->release();
 		}
 		_runningActions.clear();
 	}

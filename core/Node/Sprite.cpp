@@ -40,16 +40,16 @@ e2d::Sprite::Sprite(const String & fileName, const Rect & cropRect)
 
 e2d::Sprite::~Sprite()
 {
-	GC::safeRelease(_image);
+	GC::getInstance()->safeRelease(_image);
 }
 
 bool e2d::Sprite::open(Image * image)
 {
 	if (image)
 	{
-		GC::release(_image);
+		if (_image) _image->release();
 		_image = image;
-		GC::retain(_image);
+		_image->retain();
 
 		Node::setSize(_image->getWidth(), _image->getHeight());
 		return true;
@@ -62,7 +62,7 @@ bool e2d::Sprite::open(const Resource& res)
 	if (!_image)
 	{
 		_image = new (e2d::autorelease) Image();
-		GC::retain(_image);
+		_image->retain();
 	}
 
 	if (_image->open(res))

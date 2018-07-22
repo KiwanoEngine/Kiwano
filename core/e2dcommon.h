@@ -452,9 +452,9 @@ public:
 	// 获取时间戳
 	time_t getTimeStamp() const;
 
-	// 计算时间间隔后的时间点
 	Time operator + (Duration const & other) const;
-	// 计算两时间点的时间间隔
+	Time& operator += (Duration const &);
+	
 	Duration operator - (Time const & other) const;
 
 	// 获取当前时间
@@ -1161,17 +1161,7 @@ void* operator new(
 	e2d::autorelease_t const&
 	) E2D_NOEXCEPT;
 
-void* operator new[](
-	size_t size,
-	e2d::autorelease_t const&
-	) E2D_NOEXCEPT;
-
 void operator delete(
-	void* block,
-	e2d::autorelease_t const&
-	) E2D_NOEXCEPT;
-
-void operator delete[](
 	void* block,
 	e2d::autorelease_t const&
 	) E2D_NOEXCEPT;

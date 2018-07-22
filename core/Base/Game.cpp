@@ -20,7 +20,7 @@ e2d::Game::Game()
 
 e2d::Game::~Game()
 {
-	GC::safeRelease(_config);
+	GC::getInstance()->safeRelease(_config);
 
 	CoUninitialize();
 }
@@ -43,6 +43,7 @@ void e2d::Game::destroyInstance()
 
 void e2d::Game::start()
 {
+	auto gc = GC::getInstance();
 	auto input = Input::getInstance();
 	auto window = Window::getInstance();
 	auto renderer = Renderer::getInstance();
@@ -80,7 +81,7 @@ void e2d::Game::start()
 
 		if (frameInterval < interval)
 		{
-			_last = _now;
+			_last += interval;
 
 			input->update();
 			timer->update();
@@ -89,7 +90,7 @@ void e2d::Game::start()
 			_config->_update();
 			renderer->render();
 			window->poll();
-			GC::flush();
+			gc->flush();
 		}
 		else
 		{
@@ -127,10 +128,10 @@ void e2d::Game::setConfig(Config* config)
 {
 	if (config && _config != config)
 	{
-		GC::release(_config);
+		if (_config) _config->release();
 		_config = config;
 		_config->_unconfigured = true;
-		GC::retain(_config);
+		_config->retain();
 	}
 }
 
@@ -153,7 +154,7 @@ void e2d::Game::quit()
 
 void e2d::Game::cleanup()
 {
-	GC::clear();
+	GC::getInstance()->clear();
 	Image::clearCache();
 	Player::getInstance()->clearCache();
 }

@@ -20,7 +20,13 @@ time_t e2d::Time::getTimeStamp() const
 
 e2d::Time e2d::Time::operator+(Duration const & other) const
 {
-	return std::move(Time(_timePoint - milliseconds(other.milliseconds())));
+	return std::move(Time(_timePoint + milliseconds(other.milliseconds())));
+}
+
+e2d::Time & e2d::Time::operator+=(Duration const & other)
+{
+	_timePoint += milliseconds(other.milliseconds());
+	return (*this);
 }
 
 e2d::Duration e2d::Time::operator-(Time const & other) const

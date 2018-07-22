@@ -16,7 +16,7 @@ e2d::Animate::Animate(Animation * animation)
 
 e2d::Animate::~Animate()
 {
-	GC::safeRelease(_animation);
+	GC::getInstance()->safeRelease(_animation);
 }
 
 e2d::Animation * e2d::Animate::getAnimation() const
@@ -28,9 +28,9 @@ void e2d::Animate::setAnimation(Animation * animation)
 {
 	if (animation && animation != _animation)
 	{
-		GC::safeRelease(_animation);
+		if (_animation) _animation->release();
 		_animation = animation;
-		GC::retain(_animation);
+		_animation->retain();
 	}
 }
 

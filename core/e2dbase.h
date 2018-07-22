@@ -361,42 +361,24 @@ private:
 class GC
 {
 public:
+	// 获取 GC 实例
+	static GC * getInstance();
+
 	// 自动释放
-	static void autorelease(
-		Ref* ref
-	);
-
-	// 自动释放数组
-	static void autoreleaseArray(
-		Ref* ref
-	);
-
-	// 保留
-	static void retain(
-		Ref* ref
-	);
-
-	// 释放
-	static void release(
+	void autorelease(
 		Ref* ref
 	);
 
 	// 安全地释放对象
-	template <typename Type>
-	static inline void safeRelease(Type*& p)
-	{
-		if (p != nullptr)
-		{
-			GC::release(p);
-			p = nullptr;
-		}
-	}
+	void safeRelease(
+		Ref* ref
+	);
 
 	// 刷新内存池
-	static void flush();
+	void flush();
 
 	// 回收内存池中的所有对象
-	static void clear();
+	void clear();
 
 private:
 	GC();
@@ -408,7 +390,7 @@ private:
 private:
 	bool _notifyed;
 	bool _cleanup;
-	std::map<Ref*, bool> _pool;
+	std::set<Ref*> _pool;
 
 	static GC _instance;
 };

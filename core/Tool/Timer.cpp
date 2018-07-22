@@ -34,7 +34,7 @@ void e2d::Timer::addTask(Task * task)
 		auto iter = std::find(_tasks.begin(), _tasks.end(), task);
 		if (iter == _tasks.end())
 		{
-			GC::retain(task);
+			task->retain();
 			task->updateTime();
 			_tasks.push_back(task);
 		}
@@ -105,7 +105,7 @@ void e2d::Timer::clearAllTasks()
 
 	for (auto task : _tasks)
 	{
-		GC::release(task);
+		task->release();
 	}
 	_tasks.clear();
 }
@@ -121,7 +121,7 @@ void e2d::Timer::update()
 		// 清除已停止的任务
 		if (task->_stopped)
 		{
-			GC::release(task);
+			task->release();
 			_tasks.erase(_tasks.begin() + i);
 		}
 		else

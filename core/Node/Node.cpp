@@ -81,7 +81,7 @@ e2d::Node::~Node()
 	ActionManager::getInstance()->clearAllBindedWith(this);
 	for (auto child : _children)
 	{
-		GC::release(child);
+		GC::getInstance()->safeRelease(child);
 	}
 }
 
@@ -713,7 +713,7 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 			}
 		}
 
-		GC::retain(child);
+		child->retain();
 		_children.push_back(child);
 		child->setOrder(order);
 		child->_parent = this;
@@ -820,7 +820,7 @@ bool e2d::Node::removeChild(Node * child)
 				child->_setParentScene(nullptr);
 			}
 
-			GC::release(child);
+			child->release();
 			return true;
 		}
 	}
@@ -851,7 +851,7 @@ void e2d::Node::removeChildren(const String& childName)
 			{
 				child->_setParentScene(nullptr);
 			}
-			GC::release(child);
+			child->release();
 		}
 	}
 }
@@ -861,7 +861,7 @@ void e2d::Node::removeAllChildren()
 	// 所有节点的引用计数减一
 	for (auto child : _children)
 	{
-		GC::release(child);
+		child->release();
 	}
 	// 清空储存节点的容器
 	_children.clear();
