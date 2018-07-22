@@ -82,14 +82,14 @@ void e2d::Game::start()
 		{
 			_last = _now;
 
-			input->update();			// 获取用户输入
-			timer->update();			// 更新定时器
-			actionManager->update();	// 更新动作管理器
-			sceneManager->update();		// 更新场景内容
-			_config->_update();			// 更新游戏配置
-			renderer->render();			// 渲染游戏画面
-			window->poll();				// 处理窗口消息
-			GC::flush();				// 刷新内存池
+			input->update();
+			timer->update();
+			actionManager->update();
+			sceneManager->update();
+			_config->_update();
+			renderer->render();
+			window->poll();
+			GC::flush();
 		}
 		else
 		{
