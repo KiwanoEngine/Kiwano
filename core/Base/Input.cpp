@@ -196,15 +196,14 @@ double e2d::Input::getMouseY()
 
 e2d::Point e2d::Input::getMousePos()
 {
+	HWND hWnd = Window::getInstance()->getHWnd();
+
 	POINT mousePos;
 	GetCursorPos(&mousePos);
-	ScreenToClient(Window::getInstance()->getHWnd(), &mousePos);
+	ScreenToClient(hWnd, &mousePos);
 
-	float dpiScaleX = 0.f, dpiScaleY = 0.f;
-	Renderer::getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
-
-	return Point(static_cast<double>(mousePos.x * 96.f / dpiScaleX), 
-		static_cast<double>(mousePos.y * 96.f / dpiScaleX));
+	UINT ret = ::GetDpiForWindow(hWnd);
+	return Point(mousePos.x * 96.0 / ret, mousePos.y * 96.0 / ret);
 }
 
 double e2d::Input::getMouseDeltaX()

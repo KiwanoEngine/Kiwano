@@ -23,24 +23,27 @@ TextRenderer::~TextRenderer()
 	SafeRelease(pBrush_);
 }
 
-TextRenderer * TextRenderer::Create(
+HRESULT TextRenderer::Create(
+	TextRenderer** ppTextRenderer,
 	ID2D1Factory* pD2DFactory,
 	ID2D1HwndRenderTarget* pRT,
 	ID2D1SolidColorBrush* pBrush
 )
 {
-	TextRenderer * pTextRenderer = new (std::nothrow) TextRenderer();
-	if (pTextRenderer)
+	*ppTextRenderer = new (std::nothrow) TextRenderer();
+	if (*ppTextRenderer)
 	{
 		pD2DFactory->AddRef();
 		pRT->AddRef();
 		pBrush->AddRef();
 
-		pTextRenderer->pD2DFactory_ = pD2DFactory;
-		pTextRenderer->pRT_ = pRT;
-		pTextRenderer->pBrush_ = pBrush;
+		(*ppTextRenderer)->pD2DFactory_ = pD2DFactory;
+		(*ppTextRenderer)->pRT_ = pRT;
+		(*ppTextRenderer)->pBrush_ = pBrush;
+		(*ppTextRenderer)->AddRef();
+		return S_OK;
 	}
-	return pTextRenderer;
+	return E_FAIL;
 }
 
 STDMETHODIMP_(void) TextRenderer::SetTextStyle(

@@ -52,7 +52,15 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 	if (_inScene) _inScene->retain();
 
 	_windowSize = Window::getInstance()->getSize();
-	_outLayerParam = _inLayerParam = D2D1::LayerParameters();
+	_outLayerParam = _inLayerParam = D2D1::LayerParameters(
+		D2D1::InfiniteRect(),
+		nullptr,
+		D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+		D2D1::Matrix3x2F::Identity(),
+		1.0,
+		renderer->getSolidColorBrush(),
+		D2D1_LAYER_OPTIONS_NONE
+	);
 }
 
 void e2d::Transition::_update()

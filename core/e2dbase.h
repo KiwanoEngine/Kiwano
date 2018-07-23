@@ -309,9 +309,6 @@ public:
 	// 获取 IDWriteFactory 对象
 	static IDWriteFactory * getWriteFactory();
 
-	// 获取 FPS 文本格式化对象
-	static IDWriteTextFormat * getFpsTextFormat();
-
 	// 获取 Miter 样式的 ID2D1StrokeStyle
 	static ID2D1StrokeStyle * getMiterStrokeStyle();
 
@@ -340,16 +337,16 @@ private:
 private:
 	int						_renderTimes;
 	double					_lastRenderTime;
-	String					_fpsText;
 	D2D1_COLOR_F			_clearColor;
-	ID2D1HwndRenderTarget*	_renderTarget;
-	ID2D1SolidColorBrush*	_solidBrush;
 	TextRenderer*			_textRenderer;
+	IDWriteTextFormat*		_fpsFormat;
+	IDWriteTextLayout*		_fpsLayout;
+	ID2D1SolidColorBrush*	_solidBrush;
+	ID2D1HwndRenderTarget*	_renderTarget;
 
 	static ID2D1Factory*		_d2dFactory;
 	static IWICImagingFactory*	_imagingFactory;
 	static IDWriteFactory*		_writeFactory;
-	static IDWriteTextFormat*	_textFormat;
 	static ID2D1StrokeStyle*	_miterStrokeStyle;
 	static ID2D1StrokeStyle*	_bevelStrokeStyle;
 	static ID2D1StrokeStyle*	_roundStrokeStyle;

@@ -184,7 +184,7 @@ void e2d::Node::_render()
 
 void e2d::Node::_renderOutline()
 {
-	if (_outline)
+	if (_outline && _visible)
 	{
 		auto renderer = Renderer::getInstance();
 		// 获取纯色画刷
@@ -206,7 +206,10 @@ void e2d::Node::_renderOutline()
 void e2d::Node::_renderCollider()
 {
 	// 绘制自身的几何碰撞体
-	_collider.render();
+	if (_visible)
+	{
+		_collider.render();
+	}
 
 	// 绘制所有子节点的几何碰撞体
 	for (auto child : _children)

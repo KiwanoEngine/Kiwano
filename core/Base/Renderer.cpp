@@ -7,7 +7,6 @@ e2d::Renderer*		e2d::Renderer::_instance = nullptr;
 ID2D1Factory*		e2d::Renderer::_d2dFactory = nullptr;
 IWICImagingFactory*	e2d::Renderer::_imagingFactory = nullptr;
 IDWriteFactory*		e2d::Renderer::_writeFactory = nullptr;
-IDWriteTextFormat*	e2d::Renderer::_textFormat = nullptr;
 ID2D1StrokeStyle*	e2d::Renderer::_miterStrokeStyle = nullptr;
 ID2D1StrokeStyle*	e2d::Renderer::_bevelStrokeStyle = nullptr;
 ID2D1StrokeStyle*	e2d::Renderer::_roundStrokeStyle = nullptr;
@@ -28,11 +27,10 @@ void e2d::Renderer::destroyInstance()
 		delete _instance;
 		_instance = nullptr;
 
-		SafeRelease(_textFormat);
-		SafeRelease(_d2dFactory);
 		SafeRelease(_miterStrokeStyle);
 		SafeRelease(_bevelStrokeStyle);
 		SafeRelease(_roundStrokeStyle);
+		SafeRelease(_d2dFactory);
 		SafeRelease(_imagingFactory);
 		SafeRelease(_writeFactory);
 	}
@@ -41,7 +39,8 @@ void e2d::Renderer::destroyInstance()
 e2d::Renderer::Renderer()
 	: _renderTimes(0)
 	, _lastRenderTime(0)
-	, _fpsText()
+	, _fpsFormat(nullptr)
+	, _fpsLayout(nullptr)
 	, _renderTarget(nullptr)
 	, _solidBrush(nullptr)
 	, _textRenderer(nullptr)
@@ -54,9 +53,11 @@ e2d::Renderer::Renderer()
 
 e2d::Renderer::~Renderer()
 {
-	SafeRelease(_renderTarget);
-	SafeRelease(_solidBrush);
+	SafeRelease(_fpsFormat);
+	SafeRelease(_fpsLayout);
 	SafeRelease(_textRenderer);
+	SafeRelease(_solidBrush);
+	SafeRelease(_renderTarget);
 
 	CoUninitialize();
 }
@@ -114,9 +115,6 @@ void e2d::Renderer::__discardDeviceResources()
 	SafeRelease(_renderTarget);
 	SafeRelease(_solidBrush);
 	SafeRelease(_textRenderer);
-	SafeRelease(_miterStrokeStyle);
-	SafeRelease(_bevelStrokeStyle);
-	SafeRelease(_roundStrokeStyle);
 }
 
 void e2d::Renderer::render()
@@ -162,27 +160,45 @@ void e2d::Renderer::_renderFps()
 	++_renderTimes;
 
 	double duration = Game::getInstance()->getTotalDuration().seconds();
-	double fDelay = duration - _lastRenderTime;
-	if (fDelay >= 0.1)
+	double delay = duration - _lastRenderTime;
+	if (delay >= 0.1)
 	{
-		_fpsText = String::format(L"FPS: %.1lf", (1 / fDelay) * _renderTimes);
+		String fpsText = String::format(L"FPS: %.1lf", (1 / delay) * _renderTimes);
 		_lastRenderTime = duration;
 		_renderTimes = 0;
+
+		auto writeFactory = Renderer::getWriteFactory();
+		if (!_fpsFormat)
+		{
+			writeFactory->CreateTextFormat(
+				L"",
+				nullptr,
+				DWRITE_FONT_WEIGHT_NORMAL,
+				DWRITE_FONT_STYLE_NORMAL,
+				DWRITE_FONT_STRETCH_NORMAL,
+				20,
+				L"",
+				&_fpsFormat
+			);
+		}
+
+		if (_fpsFormat)
+		{
+			_fpsFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+
+			SafeRelease(_fpsLayout);
+			writeFactory->CreateTextLayout(
+				(const WCHAR *)fpsText,
+				(UINT32)fpsText.getLength(),
+				_fpsFormat,
+				0,
+				0,
+				&_fpsLayout
+			);
+		}
 	}
 
-	IDWriteTextLayout * pTextLayout = nullptr;
-	IDWriteTextFormat * pTextFormat = Renderer::getFpsTextFormat();
-
-	HRESULT hr = _writeFactory->CreateTextLayout(
-		(const WCHAR *)_fpsText,
-		(UINT32)_fpsText.getLength(),
-		pTextFormat,
-		0,
-		0,
-		&pTextLayout
-	);
-
-	if (SUCCEEDED(hr))
+	if (_fpsLayout)
 	{
 		_renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 		_solidBrush->SetOpacity(1.0f);
@@ -196,9 +212,7 @@ void e2d::Renderer::_renderFps()
 			D2D1_LINE_JOIN_ROUND
 		);
 
-		pTextLayout->Draw(nullptr, textRenderer, 10, 0);
-
-		SafeRelease(pTextLayout);
+		_fpsLayout->Draw(nullptr, textRenderer, 10, 0);
 	}
 }
 
@@ -227,11 +241,17 @@ e2d::TextRenderer * e2d::Renderer::getTextRenderer()
 	if (!_textRenderer)
 	{
 		// 创建自定义的文字渲染器
-		_textRenderer = TextRenderer::Create(
+		HRESULT hr = TextRenderer::Create(
+			&_textRenderer,
 			Renderer::getFactory(),
 			this->getRenderTarget(),
 			this->getSolidColorBrush()
 		);
+
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create TextRenderer failed");
+		}
 	}
 	return _textRenderer;
 }
@@ -291,30 +311,6 @@ IDWriteFactory * e2d::Renderer::getWriteFactory()
 		}
 	}
 	return _writeFactory;
-}
-
-IDWriteTextFormat * e2d::Renderer::getFpsTextFormat()
-{
-	if (!_textFormat)
-	{
-		// 创建 FPS 文本格式化对象
-		HRESULT hr = Renderer::getWriteFactory()->CreateTextFormat(
-			L"",
-			nullptr,
-			DWRITE_FONT_WEIGHT_NORMAL,
-			DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL,
-			20,
-			L"",
-			&_textFormat
-		);
-
-		if (SUCCEEDED(hr))
-		{
-			_textFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-		}
-	}
-	return _textFormat;
 }
 
 ID2D1StrokeStyle * e2d::Renderer::getMiterStrokeStyle()

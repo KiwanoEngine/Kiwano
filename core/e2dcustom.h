@@ -77,7 +77,8 @@ private:
 	~TextRenderer();
 
 public:
-	static TextRenderer * Create(
+	static HRESULT Create(
+		TextRenderer** ppTextRenderer,
 		ID2D1Factory* pD2DFactory,
 		ID2D1HwndRenderTarget* pRT,
 		ID2D1SolidColorBrush* pBrush

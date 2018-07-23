@@ -35,12 +35,10 @@ void e2d::Scene::render()
 
 void e2d::Scene::update()
 {
-	// 执行 onUpdate 函数
 	if (_autoUpdate)
 	{
 		this->onUpdate();
 	}
-	// 更新根节点
 	_root->_update();
 }
 
