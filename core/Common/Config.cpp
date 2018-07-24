@@ -5,12 +5,12 @@ e2d::Config::Config()
 	: _gameName()
 	, _defaultNodePivot()
 	, _soundEnabled(true)
+	, _frameInterval(15)
 	, _showFps(false)
 	, _outlineVisible(false)
 	, _collisionEnabled(false)
 	, _colliderVisible(false)
 	, _defaultColliderShape(Collider::Shape::None)
-	, _unconfigured(true)
 {
 }
 
@@ -28,6 +28,11 @@ void e2d::Config::showFps(bool show)
 	_showFps = show;
 }
 
+void e2d::Config::setFrameInterval(int interval)
+{
+	_frameInterval = interval;
+}
+
 void e2d::Config::setOutlineVisible(bool visible)
 {
 	_outlineVisible = visible;
@@ -35,11 +40,7 @@ void e2d::Config::setOutlineVisible(bool visible)
 
 void e2d::Config::setSoundEnabled(bool enabled)
 {
-	if (_soundEnabled != enabled)
-	{
-		_soundEnabled = enabled;
-		_unconfigured = true;
-	}
+	_soundEnabled = enabled;
 }
 
 void e2d::Config::setCollisionEnabled(bool enabled)
@@ -80,6 +81,11 @@ bool e2d::Config::isFpsShow() const
 	return _showFps;
 }
 
+int e2d::Config::getFrameInterval() const
+{
+	return _frameInterval;
+}
+
 bool e2d::Config::isOutlineVisible() const
 {
 	return _outlineVisible;
@@ -103,21 +109,4 @@ e2d::Collider::Shape e2d::Config::getDefaultColliderShape() const
 bool e2d::Config::isColliderVisible() const
 {
 	return _colliderVisible;
-}
-
-void e2d::Config::_update()
-{
-	if (!_unconfigured)
-		return;
-
-	_unconfigured = false;
-
-	if (_soundEnabled)
-	{
-		Player::getInstance()->getXAudio2()->StartEngine();
-	}
-	else
-	{
-		Player::getInstance()->getXAudio2()->StopEngine();
-	}
 }

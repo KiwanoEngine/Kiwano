@@ -69,7 +69,7 @@ e2d::Node::Node()
 	, _extrapolate(Property::Origin)
 {
 	// 设置默认中心点位置
-	Point defPivot = Game::getInstance()->getConfig()->getNodeDefaultPivot();
+	Point defPivot = Game::getInstance()->getConfig().getNodeDefaultPivot();
 	this->_pivotX = float(defPivot.x);
 	this->_pivotY = float(defPivot.y);
 }

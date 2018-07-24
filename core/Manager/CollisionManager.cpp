@@ -46,7 +46,7 @@ void e2d::CollisionManager::__removeCollider(Collider * collider)
 void e2d::CollisionManager::__updateCollider(Collider* collider)
 {
 	if (Game::getInstance()->isPaused() ||
-		!Game::getInstance()->getConfig()->isCollisionEnabled() ||
+		!Game::getInstance()->getConfig().isCollisionEnabled() ||
 		SceneManager::getInstance()->isTransitioning() ||
 		!collider->isCollisionNotify())
 		return;

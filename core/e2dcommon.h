@@ -1045,14 +1045,9 @@ protected:
 };
 
 
-class Game;
-
 // 游戏配置
-class Config :
-	public Ref
+class Config
 {
-	friend class Game;
-
 public:
 	Config();
 
@@ -1068,6 +1063,12 @@ public:
 	// 默认：隐藏
 	void showFps(
 		bool show
+	);
+
+	// 设置帧率刷新间隔
+	// 默认：15
+	void setFrameInterval(
+		int interval
 	);
 
 	// 显示或隐藏节点轮廓
@@ -1115,6 +1116,9 @@ public:
 	// 获取 FPS 显示状态
 	bool isFpsShow() const;
 
+	// 获取帧率刷新间隔
+	int getFrameInterval() const;
+
 	// 获取节点轮廓显示状态
 	bool isOutlineVisible() const;
 
@@ -1131,15 +1135,12 @@ public:
 	bool isColliderVisible() const;
 
 protected:
-	virtual void _update();
-
-protected:
-	bool			_unconfigured;
 	bool			_showFps;
 	bool			_soundEnabled;
 	bool			_outlineVisible;
 	bool			_collisionEnabled;
 	bool			_colliderVisible;
+	int				_frameInterval;
 	String			_gameName;
 	Point			_defaultNodePivot;
 	Collider::Shape	_defaultColliderShape;

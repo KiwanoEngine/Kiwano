@@ -11,7 +11,7 @@ e2d::Collider::Collider(Node * parent)
 	, _shape(Collider::Shape::None)
 	, _notify(true)
 {
-	_shape = Game::getInstance()->getConfig()->getDefaultColliderShape();
+	_shape = Game::getInstance()->getConfig().getDefaultColliderShape();
 	CollisionManager::getInstance()->__addCollider(this);
 }
 

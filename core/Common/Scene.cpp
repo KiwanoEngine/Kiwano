@@ -20,13 +20,13 @@ void e2d::Scene::render()
 {
 	_root->_render();
 
-	if (Game::getInstance()->getConfig()->isOutlineVisible())
+	if (Game::getInstance()->getConfig().isOutlineVisible())
 	{
 		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 		_root->_renderOutline();
 	}
 
-	if (Game::getInstance()->getConfig()->isColliderVisible())
+	if (Game::getInstance()->getConfig().isColliderVisible())
 	{
 		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 		_root->_renderCollider();

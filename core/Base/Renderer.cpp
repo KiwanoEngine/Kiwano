@@ -37,10 +37,8 @@ void e2d::Renderer::destroyInstance()
 }
 
 e2d::Renderer::Renderer()
-	: _renderTimes(0)
-	, _lastRenderTime(0)
+	: _lastRenderTime(0)
 	, _fpsFormat(nullptr)
-	, _fpsLayout(nullptr)
 	, _renderTarget(nullptr)
 	, _solidBrush(nullptr)
 	, _textRenderer(nullptr)
@@ -54,7 +52,6 @@ e2d::Renderer::Renderer()
 e2d::Renderer::~Renderer()
 {
 	SafeRelease(_fpsFormat);
-	SafeRelease(_fpsLayout);
 	SafeRelease(_textRenderer);
 	SafeRelease(_solidBrush);
 	SafeRelease(_renderTarget);
@@ -131,7 +128,7 @@ void e2d::Renderer::render()
 	SceneManager::getInstance()->render();
 
 	// äÖÈ¾ FPS
-	if (Game::getInstance()->getConfig()->isFpsShow())
+	if (Game::getInstance()->getConfig().isFpsShow())
 	{
 		_renderFps();
 	}
@@ -155,48 +152,48 @@ void e2d::Renderer::render()
 
 void e2d::Renderer::_renderFps()
 {
-	++_renderTimes;
-
 	double duration = Game::getInstance()->getTotalDuration().seconds();
-	double delay = duration - _lastRenderTime;
-	if (delay >= 0.1)
+	if (duration == _lastRenderTime)
+		return;
+
+	String fpsText = String::format(L"FPS: %.1lf", (1.0 / (duration - _lastRenderTime)));
+	_lastRenderTime = duration;
+
+	auto writeFactory = Renderer::getWriteFactory();
+	if (!_fpsFormat)
 	{
-		String fpsText = String::format(L"FPS: %.1lf", (1 / delay) * _renderTimes);
-		_lastRenderTime = duration;
-		_renderTimes = 0;
+		HRESULT hr = writeFactory->CreateTextFormat(
+			L"",
+			nullptr,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			20,
+			L"",
+			&_fpsFormat
+		);
 
-		auto writeFactory = Renderer::getWriteFactory();
-		if (!_fpsFormat)
-		{
-			writeFactory->CreateTextFormat(
-				L"",
-				nullptr,
-				DWRITE_FONT_WEIGHT_NORMAL,
-				DWRITE_FONT_STYLE_NORMAL,
-				DWRITE_FONT_STRETCH_NORMAL,
-				20,
-				L"",
-				&_fpsFormat
-			);
-		}
-
-		if (_fpsFormat)
+		if (SUCCEEDED(hr))
 		{
 			_fpsFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-
-			SafeRelease(_fpsLayout);
-			writeFactory->CreateTextLayout(
-				(const WCHAR *)fpsText,
-				(UINT32)fpsText.getLength(),
-				_fpsFormat,
-				0,
-				0,
-				&_fpsLayout
-			);
+		}
+		else
+		{
+			return;
 		}
 	}
 
-	if (_fpsLayout)
+	IDWriteTextLayout * fpsLayout = nullptr;
+	HRESULT hr = writeFactory->CreateTextLayout(
+		(const WCHAR *)fpsText,
+		(UINT32)fpsText.getLength(),
+		_fpsFormat,
+		0,
+		0,
+		&fpsLayout
+	);
+
+	if (SUCCEEDED(hr))
 	{
 		_renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 		_solidBrush->SetOpacity(1.0f);
@@ -210,8 +207,10 @@ void e2d::Renderer::_renderFps()
 			D2D1_LINE_JOIN_ROUND
 		);
 
-		_fpsLayout->Draw(nullptr, textRenderer, 10, 0);
+		fpsLayout->Draw(nullptr, textRenderer, 10, 0);
 	}
+
+	SafeRelease(fpsLayout);
 }
 
 e2d::Color e2d::Renderer::getBackgroundColor()

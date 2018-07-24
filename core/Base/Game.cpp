@@ -9,9 +9,10 @@ using namespace std::chrono;
 e2d::Game * e2d::Game::_instance = nullptr;
 
 e2d::Game::Game()
-	: _ended(true)
+	: _quit(true)
 	, _paused(false)
-	, _config(nullptr)
+	, _config()
+	, _frameInterval(_config.getFrameInterval())
 {
 	CoInitialize(nullptr);
 
@@ -20,8 +21,6 @@ e2d::Game::Game()
 
 e2d::Game::~Game()
 {
-	GC::getInstance()->safeRelease(_config);
-
 	CoUninitialize();
 }
 
@@ -68,25 +67,21 @@ void e2d::Game::start()
 	window->poll();
 
 	// 开始游戏
-	Duration frameInterval(15), interval;
+	Duration interval;
 	int wait = 0;
 	
-	_ended = false;
+	_quit = false;
 	_last = _now = Time::now();
 
-	while (!_ended)
+	while (!_quit)
 	{
 		_now = Time::now();
 		interval = _now - _last;
 
-		if (frameInterval < interval)
+		if (_frameInterval < interval)
 		{
-			_last += interval;
+			_last = _now;
 
-			if (_config)
-			{
-				_config->_update();
-			}
 			input->update();
 			timer->update();
 			actionManager->update();
@@ -97,7 +92,7 @@ void e2d::Game::start()
 		}
 		else
 		{
-			wait = (frameInterval - interval).milliseconds() - 1;
+			wait = (_frameInterval - interval).milliseconds() - 1;
 			if (wait > 1)
 			{
 				std::this_thread::sleep_for(milliseconds(wait));
@@ -113,7 +108,7 @@ void e2d::Game::pause()
 
 void e2d::Game::resume()
 {
-	if (_paused && !_ended)
+	if (_paused && !_quit)
 	{
 		_last = _now = Time::now();
 		Timer::getInstance()->updateTime();
@@ -127,21 +122,24 @@ bool e2d::Game::isPaused()
 	return _paused;
 }
 
-void e2d::Game::setConfig(Config* config)
+void e2d::Game::setConfig(const Config& config)
 {
-	if (config && _config != config)
+	_config = config;
+	
+	if (_config.isSoundEnabled())
 	{
-		if (_config) _config->release();
-		_config = config;
-		_config->_unconfigured = true;
-		_config->retain();
+		Player::getInstance()->getXAudio2()->StartEngine();
 	}
+	else
+	{
+		Player::getInstance()->getXAudio2()->StopEngine();
+	}
+
+	_frameInterval = Duration(_config.getFrameInterval());
 }
 
-e2d::Config* e2d::Game::getConfig()
+const e2d::Config& e2d::Game::getConfig()
 {
-	if (!_config)
-		_config = new (e2d::autorelease) Config();
 	return _config;
 }
 
@@ -152,7 +150,7 @@ e2d::Duration e2d::Game::getTotalDuration() const
 
 void e2d::Game::quit()
 {
-	_ended = true;	// 这个变量将控制游戏是否结束
+	_quit = true;
 }
 
 void e2d::Game::cleanup()

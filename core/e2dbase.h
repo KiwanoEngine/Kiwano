@@ -40,11 +40,11 @@ public:
 
 	// 修改游戏配置
 	void setConfig(
-		Config* config
+		const Config& config
 	);
 
 	// 获取游戏配置
-	Config* getConfig();
+	const Config& getConfig();
 
 	// 获取游戏总时长
 	Duration getTotalDuration() const;
@@ -57,12 +57,13 @@ private:
 	E2D_DISABLE_COPY(Game);
 
 private:
-	bool		_ended;
+	bool		_quit;
 	bool		_paused;
-	Config*		_config;
+	Config		_config;
 	Time		_start;
 	Time		_now;
 	Time		_last;
+	Duration	_frameInterval;
 
 	static Game * _instance;
 };
@@ -335,12 +336,10 @@ private:
 	void _renderFps();
 
 private:
-	int						_renderTimes;
 	double					_lastRenderTime;
 	D2D1_COLOR_F			_clearColor;
 	TextRenderer*			_textRenderer;
 	IDWriteTextFormat*		_fpsFormat;
-	IDWriteTextLayout*		_fpsLayout;
 	ID2D1SolidColorBrush*	_solidBrush;
 	ID2D1HwndRenderTarget*	_renderTarget;
 
