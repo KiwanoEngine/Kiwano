@@ -83,11 +83,14 @@ void e2d::Game::start()
 		{
 			_last += interval;
 
+			if (_config)
+			{
+				_config->_update();
+			}
 			input->update();
 			timer->update();
 			actionManager->update();
 			sceneManager->update();
-			_config->_update();
 			renderer->render();
 			window->poll();
 			gc->flush();

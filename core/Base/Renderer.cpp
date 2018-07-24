@@ -82,9 +82,7 @@ bool e2d::Renderer::__createDeviceResources()
 		// 创建一个 Direct2D 渲染目标
 		hr = Renderer::getFactory()->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
-			D2D1::HwndRenderTargetProperties(
-				hWnd,
-				size),
+			D2D1::HwndRenderTargetProperties(hWnd, size, D2D1_PRESENT_OPTIONS_IMMEDIATELY),
 			&_renderTarget
 		);
 
