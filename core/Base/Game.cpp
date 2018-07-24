@@ -51,6 +51,8 @@ void e2d::Game::start()
 	// 显示窗口
 	::ShowWindow(hWnd, SW_SHOWNORMAL);
 	::UpdateWindow(hWnd);
+
+	SceneManager::getInstance()->update();
 	Window::getInstance()->poll();
 
 	// 开始游戏

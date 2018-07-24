@@ -147,8 +147,8 @@ void e2d::Renderer::_renderFps()
 
 	if (SUCCEEDED(hr))
 	{
-		_renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-		_solidBrush->SetOpacity(1.0f);
+		this->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+		this->getSolidColorBrush()->SetOpacity(1.0f);
 
 		auto textRenderer = this->getTextRenderer();
 		textRenderer->SetTextStyle(
