@@ -335,10 +335,12 @@ private:
 	void _renderFps();
 
 private:
-	double					_lastRenderTime;
+	int						_renderTimes;
+	Time					_lastRenderTime;
 	D2D1_COLOR_F			_clearColor;
 	TextRenderer*			_textRenderer;
 	IDWriteTextFormat*		_fpsFormat;
+	IDWriteTextLayout*		_fpsLayout;
 	ID2D1SolidColorBrush*	_solidBrush;
 	ID2D1HwndRenderTarget*	_renderTarget;
 
