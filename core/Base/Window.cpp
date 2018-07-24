@@ -219,6 +219,11 @@ void e2d::Window::setSize(int width, int height)
 	this->_size = Size(width, height);
 	if (_hWnd)
 	{
+		float dpiScaleX = 0.f, dpiScaleY = 0.f;
+		Renderer::getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
+
+		width = static_cast<int>(ceil(width * dpiScaleX / 96.f));
+		height = static_cast<int>(ceil(height * dpiScaleY / 96.f));
 		// 计算窗口大小
 		DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX &~WS_THICKFRAME;
 		RECT wr = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
@@ -426,8 +431,8 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 		if (wParam == SIZE_RESTORED)
 		{
-			UINT ret = ::GetDpiForWindow(hWnd);
-			_instance->_size = Size(width * 96.0 / ret, height * 96.0 / ret);
+			UINT dpi = ::GetDpiForWindow(hWnd);
+			_instance->_size = Size(width * 96.0 / dpi, height * 96.0 / dpi);
 		}
 
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染

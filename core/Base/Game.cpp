@@ -54,36 +54,28 @@ void e2d::Game::start()
 	Window::getInstance()->poll();
 
 	// ¿ªÊ¼ÓÎÏ·
-	Duration interval;
 	int wait = 0;
-	
+	Duration interval;
+
 	_quit = false;
 	_last = _now = Time::now();
 
 	while (!_quit)
 	{
 		_now = Time::now();
+		interval = _now - _last;
 
-		if (_config.isVSyncEnabled())
+		if (_config.isVSyncEnabled() || _frameInterval < interval)
 		{
+			_last += _frameInterval;
 			__update();
 		}
 		else
 		{
-			interval = _now - _last;
-
-			if (_frameInterval < interval)
+			wait = (_frameInterval - interval).milliseconds() - 1;
+			if (wait > 1)
 			{
-				_last = _now;
-				__update();
-			}
-			else
-			{
-				wait = (_frameInterval - interval).milliseconds() - 1;
-				if (wait > 1)
-				{
-					std::this_thread::sleep_for(milliseconds(wait));
-				}
+				std::this_thread::sleep_for(milliseconds(wait));
 			}
 		}
 	}
@@ -139,6 +131,7 @@ void e2d::Game::setConfig(const Config& config)
 	if (_config.isVSyncEnabled() != config.isVSyncEnabled())
 	{
 		Renderer::getInstance()->discardDeviceResources();
+		_last = _now;
 	}
 
 	_config = config;
