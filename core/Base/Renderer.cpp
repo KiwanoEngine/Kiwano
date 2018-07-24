@@ -45,8 +45,6 @@ e2d::Renderer::Renderer()
 	, _clearColor(D2D1::ColorF(D2D1::ColorF::Black))
 {
 	CoInitialize(nullptr);
-
-	this->__createDeviceResources();
 }
 
 e2d::Renderer::~Renderer()
@@ -59,53 +57,7 @@ e2d::Renderer::~Renderer()
 	CoUninitialize();
 }
 
-bool e2d::Renderer::__createDeviceResources()
-{
-	HRESULT hr = S_OK;
-
-	if (!_renderTarget)
-	{
-		HWND hWnd = Window::getInstance()->getHWnd();
-
-		// 创建设备相关资源。这些资源应在 Direct3D 设备消失时重建
-		RECT rc;
-		GetClientRect(hWnd, &rc);
-
-		D2D1_SIZE_U size = D2D1::SizeU(
-			rc.right - rc.left,
-			rc.bottom - rc.top
-		);
-
-		// 创建一个 Direct2D 渲染目标
-		hr = Renderer::getFactory()->CreateHwndRenderTarget(
-			D2D1::RenderTargetProperties(),
-			D2D1::HwndRenderTargetProperties(hWnd, size, D2D1_PRESENT_OPTIONS_IMMEDIATELY),
-			&_renderTarget
-		);
-
-		if (FAILED(hr))
-		{
-			throw SystemException(L"Create ID2D1HwndRenderTarget failed");
-		}
-		else
-		{
-			// 创建画刷
-			hr = _renderTarget->CreateSolidColorBrush(
-				D2D1::ColorF(D2D1::ColorF::White),
-				&_solidBrush
-			);
-		}
-
-		if (FAILED(hr))
-		{
-			throw SystemException(L"Create ID2D1SolidColorBrush failed");
-		}
-	}
-
-	return SUCCEEDED(hr);
-}
-
-void e2d::Renderer::__discardDeviceResources()
+void e2d::Renderer::discardDeviceResources()
 {
 	SafeRelease(_renderTarget);
 	SafeRelease(_solidBrush);
@@ -117,12 +69,12 @@ void e2d::Renderer::render()
 	HRESULT hr = S_OK;
 
 	// 创建设备相关资源
-	Renderer::__createDeviceResources();
+	auto renderTarget = this->getRenderTarget();
 
 	// 开始渲染
-	_renderTarget->BeginDraw();
+	renderTarget->BeginDraw();
 	// 使用背景色清空屏幕
-	_renderTarget->Clear(_clearColor);
+	renderTarget->Clear(_clearColor);
 
 	// 渲染场景
 	SceneManager::getInstance()->render();
@@ -134,14 +86,14 @@ void e2d::Renderer::render()
 	}
 
 	// 终止渲染
-	hr = _renderTarget->EndDraw();
+	hr = renderTarget->EndDraw();
 
 	if (hr == D2DERR_RECREATE_TARGET)
 	{
 		// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
 		// 并在下一次调用时重建资源
 		hr = S_OK;
-		this->__discardDeviceResources();
+		this->discardDeviceResources();
 	}
 
 	if (FAILED(hr))
@@ -225,11 +177,54 @@ void e2d::Renderer::setBackgroundColor(Color color)
 
 ID2D1HwndRenderTarget * e2d::Renderer::getRenderTarget()
 {
+	if (!_renderTarget)
+	{
+		HWND hWnd = Window::getInstance()->getHWnd();
+
+		// 创建设备相关资源。这些资源应在 Direct3D 设备消失时重建
+		RECT rc;
+		GetClientRect(hWnd, &rc);
+
+		D2D1_SIZE_U size = D2D1::SizeU(
+			rc.right - rc.left,
+			rc.bottom - rc.top
+		);
+
+		bool VSyncEnabled = Game::getInstance()->getConfig().isVSyncEnabled();
+
+		// 创建一个 Direct2D 渲染目标
+		HRESULT hr = Renderer::getFactory()->CreateHwndRenderTarget(
+			D2D1::RenderTargetProperties(),
+			D2D1::HwndRenderTargetProperties(
+				hWnd,
+				size,
+				VSyncEnabled ? D2D1_PRESENT_OPTIONS_NONE : D2D1_PRESENT_OPTIONS_IMMEDIATELY),
+			&_renderTarget
+		);
+
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create ID2D1HwndRenderTarget failed");
+		}
+	}
 	return _renderTarget;
 }
 
 ID2D1SolidColorBrush * e2d::Renderer::getSolidColorBrush()
 {
+	if (!_solidBrush)
+	{
+		// 创建画刷
+		HRESULT hr = this->getRenderTarget()->CreateSolidColorBrush(
+			D2D1::ColorF(D2D1::ColorF::White),
+			&_solidBrush
+		);
+
+		if (FAILED(hr))
+		{
+			throw SystemException(L"Create ID2D1SolidColorBrush failed");
+		}
+	}
 	return _solidBrush;
 }
 

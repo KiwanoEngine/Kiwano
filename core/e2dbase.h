@@ -56,6 +56,8 @@ private:
 
 	E2D_DISABLE_COPY(Game);
 
+	void __update();
+
 private:
 	bool		_quit;
 	bool		_paused;
@@ -292,6 +294,9 @@ public:
 	// 渲染游戏画面
 	void render();
 
+	// 删除设备相关资源
+	void discardDeviceResources();
+
 	// 获取文字渲染器
 	TextRenderer * getTextRenderer();
 
@@ -325,12 +330,6 @@ private:
 	~Renderer();
 
 	E2D_DISABLE_COPY(Renderer);
-
-	// 创建设备相关资源
-	bool __createDeviceResources();
-
-	// 删除设备相关资源
-	void __discardDeviceResources();
 
 	// 渲染 FPS
 	void _renderFps();

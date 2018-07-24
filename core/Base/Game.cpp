@@ -42,20 +42,7 @@ void e2d::Game::destroyInstance()
 
 void e2d::Game::start()
 {
-	auto gc = GC::getInstance();
-	auto input = Input::getInstance();
-	auto window = Window::getInstance();
-	auto renderer = Renderer::getInstance();
-	auto timer = Timer::getInstance();
-	auto sceneManager = SceneManager::getInstance();
-	auto actionManager = ActionManager::getInstance();
-
-	if (!input || !window || !renderer || !timer || !sceneManager || !actionManager)
-	{
-		throw SystemException(L"初始化失败");
-	}
-
-	HWND hWnd = window->getHWnd();
+	HWND hWnd = Window::getInstance()->getHWnd();
 	if (hWnd == nullptr)
 	{
 		throw SystemException(L"无法创建窗口");
@@ -64,7 +51,7 @@ void e2d::Game::start()
 	// 显示窗口
 	::ShowWindow(hWnd, SW_SHOWNORMAL);
 	::UpdateWindow(hWnd);
-	window->poll();
+	Window::getInstance()->poll();
 
 	// 开始游戏
 	Duration interval;
@@ -76,29 +63,41 @@ void e2d::Game::start()
 	while (!_quit)
 	{
 		_now = Time::now();
-		interval = _now - _last;
 
-		if (_frameInterval < interval)
+		if (_config.isVSyncEnabled())
 		{
-			_last = _now;
-
-			input->update();
-			timer->update();
-			actionManager->update();
-			sceneManager->update();
-			renderer->render();
-			window->poll();
-			gc->flush();
+			__update();
 		}
 		else
 		{
-			wait = (_frameInterval - interval).milliseconds() - 1;
-			if (wait > 1)
+			interval = _now - _last;
+
+			if (_frameInterval < interval)
 			{
-				std::this_thread::sleep_for(milliseconds(wait));
+				_last = _now;
+				__update();
+			}
+			else
+			{
+				wait = (_frameInterval - interval).milliseconds() - 1;
+				if (wait > 1)
+				{
+					std::this_thread::sleep_for(milliseconds(wait));
+				}
 			}
 		}
 	}
+}
+
+void e2d::Game::__update()
+{
+	Input::getInstance()->update();
+	Timer::getInstance()->update();
+	ActionManager::getInstance()->update();
+	SceneManager::getInstance()->update();
+	Renderer::getInstance()->render();
+	Window::getInstance()->poll();
+	GC::getInstance()->flush();
 }
 
 void e2d::Game::pause()
@@ -124,18 +123,25 @@ bool e2d::Game::isPaused()
 
 void e2d::Game::setConfig(const Config& config)
 {
-	_config = config;
-	
-	if (_config.isSoundEnabled())
+	if (_config.isSoundEnabled() != config.isSoundEnabled())
 	{
-		Player::getInstance()->getXAudio2()->StartEngine();
-	}
-	else
-	{
-		Player::getInstance()->getXAudio2()->StopEngine();
+		if (config.isSoundEnabled())
+			Player::getInstance()->getXAudio2()->StartEngine();
+		else
+			Player::getInstance()->getXAudio2()->StopEngine();
 	}
 
-	_frameInterval = Duration(_config.getFrameInterval());
+	if (_config.getFrameInterval() != config.getFrameInterval())
+	{
+		_frameInterval = Duration(config.getFrameInterval());
+	}
+
+	if (_config.isVSyncEnabled() != config.isVSyncEnabled())
+	{
+		Renderer::getInstance()->discardDeviceResources();
+	}
+
+	_config = config;
 }
 
 const e2d::Config& e2d::Game::getConfig()

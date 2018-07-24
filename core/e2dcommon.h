@@ -1065,6 +1065,12 @@ public:
 		bool show
 	);
 
+	// 打开或关闭垂直同步
+	// 默认：关闭
+	void setVSyncEnabled(
+		bool enabled
+	);
+
 	// 设置帧率刷新间隔
 	// 默认：15
 	void setFrameInterval(
@@ -1113,6 +1119,9 @@ public:
 	// 获取声音打开状态
 	bool isSoundEnabled() const;
 
+	// 获取垂直同步打开状态
+	bool isVSyncEnabled() const;
+
 	// 获取 FPS 显示状态
 	bool isFpsShow() const;
 
@@ -1136,6 +1145,7 @@ public:
 
 protected:
 	bool			_showFps;
+	bool			_vSyncEnabled;
 	bool			_soundEnabled;
 	bool			_outlineVisible;
 	bool			_collisionEnabled;
