@@ -461,10 +461,10 @@ bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wcha
 	// Get the exe _name, and exe path
 	wchar_t strExePath[MAX_PATH] = { 0 };
 	wchar_t strExeName[MAX_PATH] = { 0 };
-	wchar_t* strLastSlash = nullptr;
 	GetModuleFileName(HINST_THISCOMPONENT, strExePath, MAX_PATH);
 	strExePath[MAX_PATH - 1] = 0;
-	strLastSlash = wcsrchr(strExePath, TEXT('\\'));
+
+	wchar_t* strLastSlash = wcsrchr(strExePath, TEXT('\\'));
 	if (strLastSlash)
 	{
 		wcscpy_s(strExeName, MAX_PATH, &strLastSlash[1]);

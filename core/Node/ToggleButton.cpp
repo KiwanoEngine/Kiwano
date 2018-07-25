@@ -1,8 +1,29 @@
 #include "..\e2dnode.h"
 
+#define SAFE_SET(pointer, func, ...) if (pointer) { pointer->##func(__VA_ARGS__); }
+
+#define SET_BUTTON_NODE(Old, New)								\
+	if (New != Old)												\
+	{															\
+		if (Old) this->removeChild(Old);						\
+		if (New)												\
+		{														\
+			this->addChild(New);								\
+			this->setSize(New->getWidth(), New->getHeight());	\
+		}														\
+		Old = New;												\
+		_updateState();											\
+		_updateVisible();										\
+	}															\
+
+
 e2d::ToggleButton::ToggleButton()
 	: Button()
 	, _toggle(true)
+	, _normalOn(nullptr)
+	, _mouseoverOn(nullptr)
+	, _selectedOn(nullptr)
+	, _disabledOn(nullptr)
 	, _normalOff(nullptr)
 	, _mouseoverOff(nullptr)
 	, _selectedOff(nullptr)
@@ -13,6 +34,10 @@ e2d::ToggleButton::ToggleButton()
 e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, const Function& func)
 	: Button()
 	, _toggle(true)
+	, _normalOn(nullptr)
+	, _mouseoverOn(nullptr)
+	, _selectedOn(nullptr)
+	, _disabledOn(nullptr)
 	, _normalOff(nullptr)
 	, _mouseoverOff(nullptr)
 	, _selectedOff(nullptr)
@@ -26,6 +51,10 @@ e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, c
 e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, const Function& func)
 	: Button()
 	, _toggle(true)
+	, _normalOn(nullptr)
+	, _mouseoverOn(nullptr)
+	, _selectedOn(nullptr)
+	, _disabledOn(nullptr)
 	, _normalOff(nullptr)
 	, _mouseoverOff(nullptr)
 	, _selectedOff(nullptr)
@@ -41,6 +70,10 @@ e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, N
 e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, const Function& func)
 	: Button()
 	, _toggle(true)
+	, _normalOn(nullptr)
+	, _mouseoverOn(nullptr)
+	, _selectedOn(nullptr)
+	, _disabledOn(nullptr)
 	, _normalOff(nullptr)
 	, _mouseoverOff(nullptr)
 	, _selectedOff(nullptr)
@@ -91,186 +124,57 @@ void e2d::ToggleButton::setState(bool bState)
 
 void e2d::ToggleButton::setNormal(Node * normal)
 {
-	if (normal != _normal)
-	{
-		// 移除旧的
-		if (_normal)
-		{
-			this->removeChild(_normal);
-		}
-		// 添加新的
-		if (normal)
-		{
-			this->addChild(normal);
-			this->setSize(normal->getWidth(), normal->getHeight());
-		}
-		_normal = normal;
-
-		_updateState();
-		_updateVisible();
-	}
+	SET_BUTTON_NODE(_normalOn, normal);
 }
 
 void e2d::ToggleButton::setMouseOver(Node * mouseover)
 {
-	if (mouseover != _mouseover)
-	{
-		// 移除旧的
-		if (_mouseover)
-		{
-			this->removeChild(_mouseover);
-		}
-		// 添加新的
-		if (mouseover)
-		{
-			this->addChild(mouseover);
-		}
-		_mouseover = mouseover;
-
-		_updateState();
-		_updateVisible();
-	}
+	SET_BUTTON_NODE(_mouseoverOn, mouseover);
 }
 
 void e2d::ToggleButton::setSelected(Node * selected)
 {
-	if (selected != _selected)
-	{
-		// 移除旧的
-		if (_selected)
-		{
-			this->removeChild(_selected);
-		}
-		// 添加新的
-		if (selected)
-		{
-			this->addChild(selected);
-		}
-		_selected = selected;
-
-		_updateState();
-		_updateVisible();
-	}
+	SET_BUTTON_NODE(_selectedOn, selected);
 }
 
 void e2d::ToggleButton::setDisabled(Node * disabled)
 {
-	if (disabled != _disabled)
-	{
-		// 移除旧的
-		if (_disabled)
-		{
-			this->removeChild(_disabled);
-		}
-		// 添加新的
-		if (disabled)
-		{
-			this->addChild(disabled);
-		}
-		_disabled = disabled;
-
-		_updateState();
-		_updateVisible();
-	}
+	SET_BUTTON_NODE(_disabledOn, disabled);
 }
 
 void e2d::ToggleButton::setNormalOff(Node * normal)
 {
-	if (normal != _normalOff)
-	{
-		// 移除旧的
-		if (_normalOff)
-		{
-			this->removeChild(_normalOff);
-		}
-		// 添加新的
-		if (normal)
-		{
-			this->addChild(normal);
-		}
-		_normalOff = normal;
-
-		_updateState();
-		_updateVisible();
-	}
+	SET_BUTTON_NODE(_normalOff, normal);
 }
 
 void e2d::ToggleButton::setMouseOverOff(Node * mouseover)
 {
-	if (mouseover != _mouseoverOff)
-	{
-		// 移除旧的
-		if (_mouseoverOff)
-		{
-			this->removeChild(_mouseoverOff);
-		}
-		// 添加新的
-		if (mouseover)
-		{
-			this->addChild(mouseover);
-		}
-		_mouseoverOff = mouseover;
-
-		_updateState();
-		_updateVisible();
-	}
+	SET_BUTTON_NODE(_mouseoverOff, mouseover);
 }
 
 void e2d::ToggleButton::setSelectedOff(Node * selected)
 {
-	if (selected != _selectedOff)
-	{
-		// 移除旧的
-		if (_selectedOff)
-		{
-			this->removeChild(_selectedOff);
-		}
-		// 添加新的
-		if (selected)
-		{
-			this->addChild(selected);
-		}
-		_selectedOff = selected;
-
-		_updateState();
-		_updateVisible();
-	}
+	SET_BUTTON_NODE(_selectedOff, selected);
 }
 
 void e2d::ToggleButton::setDisabledOff(Node * disabled)
 {
-	if (disabled != _disabledOff)
-	{
-		// 移除旧的
-		if (_disabledOff)
-		{
-			this->removeChild(_disabledOff);
-		}
-		// 添加新的
-		if (disabled)
-		{
-			this->addChild(disabled);
-		}
-		_disabledOff = disabled;
-
-		_updateState();
-		_updateVisible();
-	}
+	SET_BUTTON_NODE(_disabledOff, disabled);
 }
 
 void e2d::ToggleButton::_updateState()
 {
 	if (_toggle)
 	{
-		_normal = _normal;
-		_mouseover = _mouseover;
-		_selected = _selected;
-		_disabled = _disabled;
+		_normal = _normalOn;
+		_mouseover = _mouseoverOn;
+		_selected = _selectedOn;
+		_disabled = _disabledOn;
 
-		if (_normalOff) _normalOff->setVisible(false);
-		if (_mouseoverOff) _mouseoverOff->setVisible(false);
-		if (_selectedOff) _selectedOff->setVisible(false);
-		if (_disabledOff) _disabledOff->setVisible(false);
+		SAFE_SET(_normalOff, setVisible, false);
+		SAFE_SET(_mouseoverOff, setVisible, false);
+		SAFE_SET(_selectedOff, setVisible, false);
+		SAFE_SET(_disabledOff, setVisible, false);
 	}
 	else
 	{
@@ -279,10 +183,10 @@ void e2d::ToggleButton::_updateState()
 		_selected = _selectedOff;
 		_disabled = _disabledOff;
 
-		if (_normal) _normal->setVisible(false);
-		if (_mouseover) _mouseover->setVisible(false);
-		if (_selected) _selected->setVisible(false);
-		if (_disabled) _disabled->setVisible(false);
+		SAFE_SET(_normalOn, setVisible, false);
+		SAFE_SET(_mouseoverOn, setVisible, false);
+		SAFE_SET(_selectedOn, setVisible, false);
+		SAFE_SET(_disabledOn, setVisible, false);
 	}
 }
 

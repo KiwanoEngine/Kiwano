@@ -317,9 +317,9 @@ void e2d::Window::setConsoleEnabled(bool enabled)
 				hwnd = ::GetConsoleWindow();
 				// 重定向输入输出
 				FILE * stdoutStream, * stdinStream, * stderrStream;
-				freopen_s(&stdoutStream, "conout$", "w+t", stdout);
-				freopen_s(&stdinStream, "conin$", "r+t", stdin);
-				freopen_s(&stderrStream, "conout$", "w+t", stderr);
+				WARN_IF(freopen_s(&stdoutStream, "conout$", "w+t", stdout) != 0, "freopen stdout failed!");
+				WARN_IF(freopen_s(&stdinStream, "conin$", "r+t", stdin) != 0, "freopen stdin failed!");
+				WARN_IF(freopen_s(&stderrStream, "conout$", "w+t", stderr) != 0, "freopen stderr failed!");
 				// 禁用控制台关闭按钮
 				HMENU hmenu = ::GetSystemMenu(hwnd, FALSE);
 				::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);

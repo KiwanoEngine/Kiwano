@@ -945,10 +945,14 @@ protected:
 	virtual void _runCallback() override;
 
 protected:
-	Node *	_normalOff;
-	Node *	_mouseoverOff;
-	Node *	_selectedOff;
-	Node *	_disabledOff;
+	Node*	_normalOn;
+	Node*	_mouseoverOn;
+	Node*	_selectedOn;
+	Node*	_disabledOn;
+	Node*	_normalOff;
+	Node*	_mouseoverOff;
+	Node*	_selectedOff;
+	Node*	_disabledOff;
 	bool	_toggle;
 };
 
