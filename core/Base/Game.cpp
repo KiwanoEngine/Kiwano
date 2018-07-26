@@ -69,7 +69,7 @@ void e2d::Game::start()
 
 		if (_config.isVSyncEnabled() || _frameInterval < interval)
 		{
-			_last += _frameInterval;
+			_last = _now;
 			__update();
 		}
 		else

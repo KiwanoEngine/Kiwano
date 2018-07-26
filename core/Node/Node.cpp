@@ -122,14 +122,18 @@ void e2d::Node::_updateSelf()
 	if (_needTransform)
 	{
 		updateTransform();
-		CollisionManager::getInstance()->__updateCollider(&_collider);
+		if (_collider.isEnabled() &&
+			_collider.isCollisionNotify() &&
+			_collider.getShape() != Collider::Shape::None)
+		{
+			CollisionManager::getInstance()->__updateCollider(&_collider);
+		}
 	}
 
 	if (_autoUpdate && !Game::getInstance()->isPaused())
 	{
 		this->onUpdate();
 	}
-	this->_fixedUpdate();
 }
 
 void e2d::Node::_render()

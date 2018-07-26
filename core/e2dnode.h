@@ -408,33 +408,30 @@ protected:
 	E2D_DISABLE_COPY(Node);
 
 	// 更新节点
-	void _update();
+	virtual void _update();
 
 	// 更新自身
-	void _updateSelf();
+	virtual void _updateSelf();
 
 	// 渲染节点
-	void _render();
+	virtual void _render();
 
 	// 渲染节点轮廓
-	void _renderOutline();
+	virtual void _renderOutline();
 
 	// 渲染碰撞体轮廓
-	void _renderCollider();
+	virtual void _renderCollider();
 
 	// 设置节点所在场景
-	void _setParentScene(
+	virtual void _setParentScene(
 		Scene * scene
 	);
 
 	// 子节点排序
-	void _sortChildren();
+	virtual void _sortChildren();
 
 	// 更新节点透明度
-	void _updateOpacity();
-
-	// 提供给子类的更新函数
-	virtual void _fixedUpdate() {}
+	virtual void _updateOpacity();
 
 protected:
 	String		_name;
@@ -821,14 +818,14 @@ protected:
 	// 按钮状态枚举
 	enum class ButtonState { Normal, Mouseover, Selected };
 
+	// 更新节点
+	virtual void _update() override;
+
 	// 设置按钮状态
 	virtual void _setState(ButtonState state);
 
 	// 刷新按钮显示
 	virtual void _updateVisible();
-
-	// 更新按钮状态
-	virtual void _fixedUpdate() override;
 
 	// 执行按钮函数对象
 	virtual void _runCallback();

@@ -47,8 +47,7 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 {
 	if (Game::getInstance()->isPaused() ||
 		!Game::getInstance()->getConfig().isCollisionEnabled() ||
-		SceneManager::getInstance()->isTransitioning() ||
-		!collider->isCollisionNotify())
+		SceneManager::getInstance()->isTransitioning())
 		return;
 
 	for (size_t i = 0; i < _colliders.size(); i++)
