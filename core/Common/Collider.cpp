@@ -84,7 +84,7 @@ void e2d::Collider::render()
 		// 获取纯色画刷
 		ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
 		// 设置画刷颜色和透明度
-		brush->SetColor(_color.toD2DColorF());
+		brush->SetColor((D2D1_COLOR_F)_color);
 		brush->SetOpacity(1.f);
 		// 绘制几何碰撞体
 		renderer->getRenderTarget()->DrawGeometry(_geometry, brush, 1.5f);

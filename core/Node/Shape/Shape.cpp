@@ -22,24 +22,24 @@ void e2d::Shape::onRender() const
 	{
 	case Style::Fill:
 	{
-		pBrush->SetColor(_fillColor.toD2DColorF());
+		pBrush->SetColor((D2D1_COLOR_F)_fillColor);
 		this->_renderFill();
 
-		pBrush->SetColor(_lineColor.toD2DColorF());
+		pBrush->SetColor((D2D1_COLOR_F)_lineColor);
 		this->_renderLine();
 		break;
 	}
 
 	case Style::Round:
 	{
-		pBrush->SetColor(_lineColor.toD2DColorF());
+		pBrush->SetColor((D2D1_COLOR_F)_lineColor);
 		this->_renderLine();
 		break;
 	}
 
 	case Style::Solid:
 	{
-		pBrush->SetColor(_fillColor.toD2DColorF());
+		pBrush->SetColor((D2D1_COLOR_F)_fillColor);
 		this->_renderFill();
 		break;
 	}

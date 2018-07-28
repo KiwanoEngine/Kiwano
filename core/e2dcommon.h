@@ -312,7 +312,7 @@ public:
 		float alpha
 	);
 
-	D2D1_COLOR_F toD2DColorF() const;
+	E2D_OP_EXPLICIT operator D2D1_COLOR_F() const;
 
 public:
 	enum Value : UINT

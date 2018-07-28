@@ -177,7 +177,7 @@ e2d::Color e2d::Renderer::getBackgroundColor()
 
 void e2d::Renderer::setBackgroundColor(Color color)
 {
-	_clearColor = color.toD2DColorF();
+	_clearColor = (D2D1_COLOR_F)color;
 }
 
 ID2D1HwndRenderTarget * e2d::Renderer::getRenderTarget()

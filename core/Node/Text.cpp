@@ -299,9 +299,9 @@ void e2d::Text::onRender() const
 		// 获取文本渲染器
 		auto pTextRenderer = renderer->getTextRenderer();
 		pTextRenderer->SetTextStyle(
-			_style.color.toD2DColorF(),
+			(D2D1_COLOR_F)_style.color,
 			_style.hasOutline,
-			_style.outlineColor.toD2DColorF(),
+			(D2D1_COLOR_F)_style.outlineColor,
 			_style.outlineWidth,
 			D2D1_LINE_JOIN(_style.outlineJoin)
 		);
