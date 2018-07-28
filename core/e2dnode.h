@@ -5,6 +5,7 @@ namespace e2d
 {
 
 
+class Layer;
 class Action;
 class Transition;
 class CollisionManager;
@@ -13,6 +14,7 @@ class Node :
 	public Ref
 {
 	friend class Scene;
+	friend class Layer;
 	friend class Collider;
 	friend class Transition;
 	friend class CollisionManager;
@@ -48,7 +50,7 @@ public:
 	virtual void onUpdate() {}
 
 	// 渲染节点
-	virtual void onRender() {}
+	virtual void onRender() const {}
 
 	// 按键消息
 	// 说明：返回 false 将阻止消息继续传递
@@ -250,26 +252,26 @@ public:
 	);
 
 	// 设置横向缩放比例
-	// 默认为 1.0f
+	// 默认为 1.0
 	virtual void setScaleX(
 		double scaleX
 	);
 
 	// 设置纵向缩放比例
-	// 默认为 1.0f
+	// 默认为 1.0
 	virtual void setScaleY(
 		double scaleY
 	);
 
 	// 设置缩放比例
-	// 默认为 (1.0f, 1.0f)
+	// 默认为 (1.0, 1.0)
 	virtual void setScale(
 		double scaleX,
 		double scaleY
 	);
 
 	// 设置缩放比例
-	// 默认为 1.0f
+	// 默认为 1.0
 	virtual void setScale(
 		double scale
 	);
@@ -300,7 +302,7 @@ public:
 	);
 
 	// 设置透明度
-	// 默认为 1.0f, 范围 [0, 1]
+	// 默认为 1.0, 范围 [0, 1]
 	virtual void setOpacity(
 		double opacity
 	);
@@ -348,6 +350,11 @@ public:
 	// 设置节点属性
 	virtual void setProperty(
 		Property prop
+	);
+
+	// 启用或关闭渲染区域裁剪
+	virtual void setClipEnabled(
+		bool enabled
 	);
 
 	// 添加子节点
@@ -452,6 +459,7 @@ protected:
 	int			_order;
 	bool		_visible;
 	bool		_autoUpdate;
+	bool		_clipEnabled;
 	bool		_needSort;
 	bool		_needTransform;
 	bool		_positionFixed;
@@ -520,7 +528,7 @@ public:
 	virtual Image * getImage() const;
 
 	// 渲染精灵
-	virtual void onRender() override;
+	virtual void onRender() const override;
 
 protected:
 	E2D_DISABLE_COPY(Sprite);
@@ -724,7 +732,7 @@ public:
 	);
 
 	// 渲染文字
-	virtual void onRender() override;
+	virtual void onRender() const override;
 
 protected:
 	E2D_DISABLE_COPY(Text);

@@ -48,7 +48,7 @@ void e2d::EllipseShape::setRadiusY(double radiusY)
 	Node::setHeight(radiusY * 2);
 }
 
-void e2d::EllipseShape::_renderLine()
+void e2d::EllipseShape::_renderLine() const
 {
 	auto renderer = Renderer::getInstance();
 	renderer->getRenderTarget()->DrawEllipse(
@@ -59,7 +59,7 @@ void e2d::EllipseShape::_renderLine()
 	);
 }
 
-void e2d::EllipseShape::_renderFill()
+void e2d::EllipseShape::_renderFill() const
 {
 	auto renderer = Renderer::getInstance();
 	renderer->getRenderTarget()->FillEllipse(

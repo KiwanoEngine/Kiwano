@@ -1066,12 +1066,12 @@ public:
 	);
 
 	// 打开或关闭垂直同步
-	// 默认：关闭
+	// 默认：打开
 	void setVSyncEnabled(
 		bool enabled
 	);
 
-	// 设置帧率刷新间隔
+	// 设置帧率刷新间隔（关闭垂直同步时生效）
 	// 默认：15
 	void setFrameInterval(
 		int interval

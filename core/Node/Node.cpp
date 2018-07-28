@@ -60,6 +60,7 @@ e2d::Node::Node()
 	, _parent(nullptr)
 	, _parentScene(nullptr)
 	, _hashName(0)
+	, _clipEnabled(false)
 	, _needSort(false)
 	, _needTransform(false)
 	, _autoUpdate(true)
@@ -68,10 +69,10 @@ e2d::Node::Node()
 	, _collider(this)
 	, _extrapolate(Property::Origin)
 {
-	// 设置默认中心点位置
 	Point defPivot = Game::getInstance()->getConfig().getNodeDefaultPivot();
-	this->_pivotX = float(defPivot.x);
-	this->_pivotY = float(defPivot.y);
+	_pivotX = float(defPivot.x);
+	_pivotY = float(defPivot.y);
+	_collider.setShape(Game::getInstance()->getConfig().getDefaultColliderShape());
 }
 
 e2d::Node::~Node()
@@ -87,6 +88,9 @@ e2d::Node::~Node()
 
 void e2d::Node::_update()
 {
+	if (!_visible)
+		return;
+
 	if (_children.empty())
 	{
 		_updateSelf();
@@ -139,19 +143,27 @@ void e2d::Node::_updateSelf()
 void e2d::Node::_render()
 {
 	if (!_visible)
-	{
 		return;
-	}
 
 	// 更新转换矩阵
 	updateTransform();
 	// 保留差别属性
 	_extrapolate = this->getProperty();
 
+	auto pRT = Renderer::getInstance()->getRenderTarget();
+	if (_clipEnabled)
+	{
+		pRT->SetTransform(_finalMatri);
+		pRT->PushAxisAlignedClip(
+			D2D1::RectF(0, 0, _width, _height),
+			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
+		);
+	}
+
 	if (_children.empty())
 	{
 		// 转换渲染器的二维矩阵
-		Renderer::getInstance()->getRenderTarget()->SetTransform(_finalMatri);
+		pRT->SetTransform(_finalMatri);
 		// 渲染自身
 		this->onRender();
 	}
@@ -176,7 +188,7 @@ void e2d::Node::_render()
 		}
 
 		// 转换渲染器的二维矩阵
-		Renderer::getInstance()->getRenderTarget()->SetTransform(_finalMatri);
+		pRT->SetTransform(_finalMatri);
 		// 渲染自身
 		this->onRender();
 
@@ -184,41 +196,48 @@ void e2d::Node::_render()
 		for (; i < _children.size(); ++i)
 			_children[i]->_render();
 	}
+
+	if (_clipEnabled)
+	{
+		pRT->PopAxisAlignedClip();
+	}
 }
 
 void e2d::Node::_renderOutline()
 {
-	if (_outline && _visible)
+	if (_visible)
 	{
-		auto renderer = Renderer::getInstance();
-		// 获取纯色画刷
-		ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
-		// 设置画刷颜色和透明度
-		brush->SetColor(D2D1::ColorF(D2D1::ColorF::Red, 0.7f));
-		brush->SetOpacity(1.f);
-		// 渲染轮廓
-		renderer->getRenderTarget()->DrawGeometry(_outline, brush);
-	}
+		if (_outline)
+		{
+			auto renderer = Renderer::getInstance();
+			// 获取纯色画刷
+			ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
+			// 设置画刷颜色和透明度
+			brush->SetColor(D2D1::ColorF(D2D1::ColorF::Red, 0.6f));
+			brush->SetOpacity(1.f);
+			// 渲染轮廓
+			renderer->getRenderTarget()->DrawGeometry(_outline, brush, 1.5f);
+		}
 
-	// 渲染所有子节点的轮廓
-	for (auto child : _children)
-	{
-		child->_renderOutline();
+		// 渲染所有子节点的轮廓
+		for (auto child : _children)
+		{
+			child->_renderOutline();
+		}
 	}
 }
 
 void e2d::Node::_renderCollider()
 {
-	// 绘制自身的几何碰撞体
 	if (_visible)
 	{
 		_collider.render();
-	}
 
-	// 绘制所有子节点的几何碰撞体
-	for (auto child : _children)
-	{
-		child->_renderCollider();
+		// 绘制所有子节点的几何碰撞体
+		for (auto child : _children)
+		{
+			child->_renderCollider();
+		}
 	}
 }
 
@@ -525,7 +544,14 @@ int e2d::Node::getOrder() const
 
 void e2d::Node::setOrder(int order)
 {
+	if (_order == order)
+		return;
+
 	_order = order;
+	if (_parent)
+	{
+		_parent->_needSort = true;
+	}
 }
 
 void e2d::Node::setPosX(double x)
@@ -699,6 +725,11 @@ void e2d::Node::setProperty(Property prop)
 	this->setScale(prop.scaleX, prop.scaleY);
 	this->setRotation(prop.rotation);
 	this->setSkew(prop.skewAngleX, prop.skewAngleY);
+}
+
+void e2d::Node::setClipEnabled(bool enabled)
+{
+	_clipEnabled = enabled;
 }
 
 void e2d::Node::addChild(Node * child, int order  /* = 0 */)

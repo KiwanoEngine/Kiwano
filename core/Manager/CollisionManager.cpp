@@ -57,6 +57,7 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 		auto passive = _colliders[i]->getNode();
 		// 判断两物体是否是相互冲突的物体
 		if (active == passive ||
+			!passive->isVisible() ||
 			active->getParentScene() != passive->getParentScene() ||
 			!CollisionManager::isCollidable(active, passive))
 		{

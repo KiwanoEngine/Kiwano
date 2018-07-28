@@ -4,21 +4,19 @@
 
 e2d::Collider::Collider(Node * parent)
 	: _visible(true)
-	, _color(Color::Blue, 0.7)
+	, _color(Color::Blue, 0.6)
 	, _parentNode(parent)
 	, _geometry(nullptr)
 	, _enabled(true)
 	, _shape(Collider::Shape::None)
 	, _notify(true)
 {
-	_shape = Game::getInstance()->getConfig().getDefaultColliderShape();
-	CollisionManager::getInstance()->__addCollider(this);
 }
 
 e2d::Collider::~Collider()
 {
 	SafeRelease(_geometry);
-	CollisionManager::getInstance()->__removeCollider(this);
+	
 }
 
 e2d::Color e2d::Collider::getColor() const
@@ -43,8 +41,20 @@ ID2D1Geometry * e2d::Collider::getGeometry() const
 
 void e2d::Collider::setShape(Shape shape)
 {
+	if (_shape == shape)
+		return;
+
 	_shape = shape;
-	this->recreate();
+	if (shape == Shape::None)
+	{
+		SafeRelease(_geometry);
+		CollisionManager::getInstance()->__removeCollider(this);
+	}
+	else
+	{
+		this->recreate();
+		CollisionManager::getInstance()->__addCollider(this);
+	}
 }
 
 void e2d::Collider::setCollisionNotify(bool notify)
@@ -78,7 +88,7 @@ void e2d::Collider::render()
 		brush->SetColor(_color.toD2DColorF());
 		brush->SetOpacity(1.f);
 		// 绘制几何碰撞体
-		renderer->getRenderTarget()->DrawGeometry(_geometry, brush);
+		renderer->getRenderTarget()->DrawGeometry(_geometry, brush, 1.5f);
 	}
 }
 
@@ -118,10 +128,10 @@ bool e2d::Collider::isCollisionNotify() const
 
 void e2d::Collider::recreate()
 {
-	SafeRelease(_geometry);
-
 	if (!_enabled || _shape == Shape::None)
 		return;
+
+	SafeRelease(_geometry);
 
 	switch (_shape)
 	{

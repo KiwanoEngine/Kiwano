@@ -20,7 +20,7 @@ e2d::RectShape::~RectShape()
 {
 }
 
-void e2d::RectShape::_renderLine()
+void e2d::RectShape::_renderLine() const
 {
 	auto renderer = Renderer::getInstance();
 	renderer->getRenderTarget()->DrawRectangle(
@@ -31,7 +31,7 @@ void e2d::RectShape::_renderLine()
 	);
 }
 
-void e2d::RectShape::_renderFill()
+void e2d::RectShape::_renderFill() const
 {
 	auto renderer = Renderer::getInstance();
 	renderer->getRenderTarget()->FillRectangle(

@@ -34,7 +34,7 @@ void e2d::CircleShape::setRadius(double radius)
 	Node::setSize(radius * 2, radius * 2);
 }
 
-void e2d::CircleShape::_renderLine()
+void e2d::CircleShape::_renderLine() const
 {
 	auto renderer = Renderer::getInstance();
 	renderer->getRenderTarget()->DrawEllipse(
@@ -45,7 +45,7 @@ void e2d::CircleShape::_renderLine()
 	);
 }
 
-void e2d::CircleShape::_renderFill()
+void e2d::CircleShape::_renderFill() const
 {
 	auto renderer = Renderer::getInstance();
 	renderer->getRenderTarget()->FillEllipse(

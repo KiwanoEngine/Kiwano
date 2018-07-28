@@ -46,7 +46,7 @@ void e2d::RoundRectShape::setRadiusY(double radiusY)
 	_radiusY = float(radiusY);
 }
 
-void e2d::RoundRectShape::_renderLine()
+void e2d::RoundRectShape::_renderLine() const
 {
 	auto renderer = Renderer::getInstance();
 	renderer->getRenderTarget()->DrawRoundedRectangle(
@@ -57,7 +57,7 @@ void e2d::RoundRectShape::_renderLine()
 	);
 }
 
-void e2d::RoundRectShape::_renderFill()
+void e2d::RoundRectShape::_renderFill() const
 {
 	auto renderer = Renderer::getInstance();
 	renderer->getRenderTarget()->FillRoundedRectangle(

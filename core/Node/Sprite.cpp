@@ -92,7 +92,7 @@ e2d::Image * e2d::Sprite::getImage() const
 	return _image;
 }
 
-void e2d::Sprite::onRender()
+void e2d::Sprite::onRender() const
 {
 	if (_image && _image->getBitmap())
 	{

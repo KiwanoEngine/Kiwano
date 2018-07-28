@@ -59,16 +59,16 @@ public:
 	);
 
 	// äÖÈ¾ĞÎ×´
-	virtual void onRender() override;
+	virtual void onRender() const override;
 
 protected:
 	E2D_DISABLE_COPY(Shape);
 
 	// äÖÈ¾ÂÖÀª
-	virtual void _renderLine() = 0;
+	virtual void _renderLine() const = 0;
 
 	// äÖÈ¾Ìî³äÉ«
-	virtual void _renderFill() = 0;
+	virtual void _renderFill() const = 0;
 
 protected:
 	Style	_style;
@@ -101,10 +101,10 @@ protected:
 	E2D_DISABLE_COPY(RectShape);
 
 	// äÖÈ¾ÂÖÀª
-	virtual void _renderLine() override;
+	virtual void _renderLine() const override;
 
 	// äÖÈ¾Ìî³äÉ«
-	virtual void _renderFill() override;
+	virtual void _renderFill() const override;
 };
 
 
@@ -150,10 +150,10 @@ protected:
 	E2D_DISABLE_COPY(RoundRectShape);
 
 	// äÖÈ¾ÂÖÀª
-	virtual void _renderLine() override;
+	virtual void _renderLine() const override;
 
 	// äÖÈ¾Ìî³äÉ«
-	virtual void _renderFill() override;
+	virtual void _renderFill() const override;
 
 protected:
 	float _radiusX;
@@ -191,10 +191,10 @@ protected:
 	E2D_DISABLE_COPY(CircleShape);
 
 	// äÖÈ¾ÂÖÀª
-	virtual void _renderLine() override;
+	virtual void _renderLine() const override;
 
 	// äÖÈ¾Ìî³äÉ«
-	virtual void _renderFill() override;
+	virtual void _renderFill() const override;
 
 protected:
 	float _radius;
@@ -241,10 +241,10 @@ protected:
 	E2D_DISABLE_COPY(EllipseShape);
 
 	// äÖÈ¾ÂÖÀª
-	virtual void _renderLine() override;
+	virtual void _renderLine() const override;
 
 	// äÖÈ¾Ìî³äÉ«
-	virtual void _renderFill() override;
+	virtual void _renderFill() const override;
 
 protected:
 	float _radiusX;

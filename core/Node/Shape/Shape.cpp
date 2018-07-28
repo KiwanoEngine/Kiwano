@@ -13,7 +13,7 @@ e2d::Shape::~Shape()
 {
 }
 
-void e2d::Shape::onRender()
+void e2d::Shape::onRender() const
 {
 	auto pBrush = Renderer::getInstance()->getSolidColorBrush();
 	pBrush->SetOpacity(_displayOpacity);
