@@ -402,12 +402,12 @@ public:
 	void updateTransform();
 
 	// 分发鼠标消息
-	bool dispatch(
+	virtual void dispatch(
 		const MouseEvent& e
 	);
 
 	// 分发按键消息
-	bool dispatch(
+	virtual void dispatch(
 		const KeyEvent& e
 	);
 
@@ -827,17 +827,22 @@ public:
 		float pivotY
 	) override;
 
+	// 分发鼠标消息
+	virtual void dispatch(
+		const MouseEvent& e
+	) override;
+
 protected:
 	E2D_DISABLE_COPY(Button);
 
 	// 按钮状态枚举
-	enum class ButtonState { Normal, Mouseover, Selected };
+	enum class Status { Normal, Mouseover, Selected };
 
-	// 更新节点
-	virtual void _update() override;
+	// 渲染节点
+	virtual void _render() override;
 
 	// 设置按钮状态
-	virtual void _setState(ButtonState state);
+	virtual void _setStatus(Status status);
 
 	// 刷新按钮显示
 	virtual void _updateVisible();
@@ -852,7 +857,7 @@ protected:
 	Node *		_disabled;
 	bool		_enabled;
 	bool		_isSelected;
-	ButtonState	_state;
+	Status		_status;
 	Function	_func;
 };
 
@@ -958,7 +963,7 @@ protected:
 	E2D_DISABLE_COPY(ToggleButton);
 
 	// 刷新按钮开关
-	virtual void _updateState();
+	virtual void _updateStatus();
 
 	// 执行按钮函数对象
 	virtual void _runCallback() override;

@@ -13,9 +13,7 @@ e2d::Input::Input()
 	CoInitialize(nullptr);
 
 	ZeroMemory(_keyBuffer, sizeof(_keyBuffer));
-	ZeroMemory(_keyRecordBuffer, sizeof(_keyRecordBuffer));
 	ZeroMemory(&_mouseState, sizeof(_mouseState));
-	ZeroMemory(&_mouseRecordState, sizeof(_mouseRecordState));
 
 	// 初始化接口对象
 	HRESULT hr = DirectInput8Create(
@@ -116,7 +114,6 @@ void e2d::Input::update()
 		}
 		else
 		{
-			strcpy_s(_keyRecordBuffer, 256, _keyBuffer);
 			_keyboardDevice->GetDeviceState(sizeof(_keyBuffer), (void**)&_keyBuffer);
 		}
 	}
@@ -132,7 +129,6 @@ void e2d::Input::update()
 		}
 		else
 		{
-			_mouseRecordState = _mouseState;
 			_mouseDevice->GetDeviceState(sizeof(_mouseState), (void**)&_mouseState);
 		}
 	}
@@ -145,41 +141,9 @@ bool e2d::Input::isDown(KeyCode key)
 	return false;
 }
 
-bool e2d::Input::isPress(KeyCode key)
-{
-	if ((_keyBuffer[static_cast<int>(key)] & 0x80) && 
-		!(_keyRecordBuffer[static_cast<int>(key)] & 0x80))
-		return true;
-	return false;
-}
-
-bool e2d::Input::isRelease(KeyCode key)
-{
-	if (!(_keyBuffer[static_cast<int>(key)] & 0x80) && 
-		(_keyRecordBuffer[static_cast<int>(key)] & 0x80))
-		return true;
-	return false;
-}
-
 bool e2d::Input::isDown(MouseCode code)
 {
 	if (_mouseState.rgbButtons[static_cast<int>(code)] & 0x80)
-		return true;
-	return false;
-}
-
-bool e2d::Input::isPress(MouseCode code)
-{
-	if ((_mouseState.rgbButtons[static_cast<int>(code)] & 0x80) && 
-		!(_mouseRecordState.rgbButtons[static_cast<int>(code)] & 0x80))
-		return true;
-	return false;
-}
-
-bool e2d::Input::isRelease(MouseCode code)
-{
-	if (!(_mouseState.rgbButtons[static_cast<int>(code)] & 0x80) && 
-		(_mouseRecordState.rgbButtons[static_cast<int>(code)] & 0x80))
 		return true;
 	return false;
 }
@@ -196,14 +160,14 @@ float e2d::Input::getMouseY()
 
 e2d::Point e2d::Input::getMousePos()
 {
-	HWND hWnd = Window::getInstance()->getHWnd();
+	auto window = Window::getInstance();
 
 	POINT mousePos;
-	GetCursorPos(&mousePos);
-	ScreenToClient(hWnd, &mousePos);
+	::GetCursorPos(&mousePos);
+	::ScreenToClient(window->getHWnd(), &mousePos);
 
-	UINT ret = ::GetDpiForWindow(hWnd);
-	return Point(mousePos.x * 96.f / ret, mousePos.y * 96.f / ret);
+	float dpi = window->getDpi();
+	return Point(mousePos.x * 96.f / dpi, mousePos.y * 96.f / dpi);
 }
 
 float e2d::Input::getMouseDeltaX()

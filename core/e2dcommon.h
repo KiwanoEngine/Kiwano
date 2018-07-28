@@ -586,6 +586,7 @@ public:
 
 public:
 	explicit KeyEvent(
+		HWND hWnd,
 		UINT message,
 		WPARAM wParam,
 		LPARAM lParam
@@ -634,21 +635,34 @@ public:
 
 public:
 	explicit MouseEvent(
+		HWND hWnd,
 		UINT message,
 		WPARAM wParam,
 		LPARAM lParam
 	);
 
+	// 获取鼠标横坐标
 	float getX() const;
 
+	// 获取鼠标纵坐标
 	float getY() const;
 
+	// 获取鼠标坐标
 	Point getPos() const;
 
 	// 获取事件类型
 	MouseEvent::Type getType() const;
 
 	float getWheelDelta() const;
+
+	// 鼠标左键是否按下
+	bool isLButtonDown() const;
+
+	// 鼠标右键是否按下
+	bool isRButtonDown() const;
+
+	// 鼠标中键是否按下
+	bool isMButtonDown() const;
 
 	// Shift 键是否按下
 	bool isShiftDown() const;
@@ -657,9 +671,9 @@ public:
 	bool isCtrlDown() const;
 
 protected:
-	bool _shiftDown;
-	bool _ctrlDown;
-	float _wheelDelta;
+	UINT _message;
+	WPARAM _wParam;
+	LPARAM _lParam;
 	Point _pos;
 	MouseEvent::Type _type;
 };

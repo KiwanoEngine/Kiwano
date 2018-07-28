@@ -37,14 +37,14 @@ void e2d::Scene::update()
 {
 	if (_autoUpdate)
 	{
-		this->onUpdate();
+		onUpdate();
 	}
 	_root->_update();
 }
 
 void e2d::Scene::dispatch(const MouseEvent & e)
 {
-	if (this->onMouseEvent(e))
+	if (onMouseEvent(e))
 	{
 		_root->dispatch(e);
 	}
@@ -52,7 +52,7 @@ void e2d::Scene::dispatch(const MouseEvent & e)
 
 void e2d::Scene::dispatch(const KeyEvent & e)
 {
-	if (this->onKeyEvent(e))
+	if (onKeyEvent(e))
 	{
 		_root->dispatch(e);
 	}

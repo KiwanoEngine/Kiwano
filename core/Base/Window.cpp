@@ -11,6 +11,7 @@ e2d::Window::Window()
 	, _size(640, 480)
 	, _title(L"Easy2D Game")
 	, _iconID(0)
+	, _dpi(0.f)
 {
 }
 
@@ -164,6 +165,8 @@ HWND e2d::Window::__create()
 			HMENU hmenu = ::GetSystemMenu(consoleHWnd, FALSE);
 			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
+		// 获取 DPI
+		_dpi = static_cast<float>(::GetDpiForWindow(hWnd));
 	}
 	else
 	{
@@ -194,6 +197,11 @@ float e2d::Window::getHeight()
 e2d::Size e2d::Window::getSize()
 {
 	return _size;
+}
+
+float e2d::Window::getDpi()
+{
+	return _dpi;
 }
 
 e2d::String e2d::Window::getTitle()
@@ -410,7 +418,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	case WM_MOUSEMOVE:
 	case WM_MOUSEWHEEL:
 	{
-		SceneManager::getInstance()->dispatch(MouseEvent(message, wParam, lParam));
+		SceneManager::getInstance()->dispatch(MouseEvent(hWnd, message, wParam, lParam));
 	}
 	result = 0;
 	hasHandled = true;
@@ -420,7 +428,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	case WM_KEYDOWN:
 	case WM_KEYUP:
 	{
-		SceneManager::getInstance()->dispatch(KeyEvent(message, wParam, lParam));
+		SceneManager::getInstance()->dispatch(KeyEvent(hWnd, message, wParam, lParam));
 	}
 	result = 0;
 	hasHandled = true;
@@ -434,8 +442,8 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 		if (wParam == SIZE_RESTORED)
 		{
-			UINT dpi = ::GetDpiForWindow(hWnd);
-			_instance->_size = Size(width * 96.f / dpi, height * 96.f / dpi);
+			_instance->_size.width = width * 96.f / _instance->_dpi;
+			_instance->_size.height = height * 96.f / _instance->_dpi;
 		}
 
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染

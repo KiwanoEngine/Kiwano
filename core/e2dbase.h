@@ -230,6 +230,9 @@ public:
 	// 获取窗体大小
 	Size getSize();
 
+	// 获取窗口 DPI
+	float getDpi();
+
 	// 获取窗口句柄
 	HWND getHWnd();
 
@@ -279,6 +282,7 @@ private:
 	Size	_size;
 	String	_title;
 	int		_iconID;
+	float	_dpi;
 
 	static Window * _instance;
 };
@@ -299,28 +303,8 @@ public:
 		KeyCode key
 	);
 
-	// 检测键盘某按键是否被点击
-	bool isPress(
-		KeyCode key
-	);
-
-	// 检测键盘某按键是否正在松开
-	bool isRelease(
-		KeyCode key
-	);
-
 	// 检测鼠标按键是否正被按下
 	bool isDown(
-		MouseCode code
-	);
-
-	// 检测鼠标按键是否被点击
-	bool isPress(
-		MouseCode code
-	);
-
-	// 检测鼠标按键是否正在松开
-	bool isRelease(
 		MouseCode code
 	);
 
@@ -357,9 +341,7 @@ private:
 	IDirectInputDevice8W* _keyboardDevice;
 	IDirectInputDevice8W* _mouseDevice;
 	DIMOUSESTATE _mouseState;
-	DIMOUSESTATE _mouseRecordState;
 	char _keyBuffer[256];
-	char _keyRecordBuffer[256];
 
 	static Input * _instance;
 };

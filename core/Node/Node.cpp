@@ -304,79 +304,31 @@ void e2d::Node::updateTransform()
 	}
 }
 
-bool e2d::Node::dispatch(const MouseEvent & e)
+void e2d::Node::dispatch(const MouseEvent & e)
 {
-	if (_children.empty())
+	if (!onMouseEvent(e))
+		return;
+
+	if (!_children.empty())
 	{
-		return onMouseEvent(e);
-	}
-	else
-	{
-		size_t i;
-		for (i = 0; i < _children.size(); ++i)
+		for (auto child : _children)
 		{
-			auto child = _children[i];
-			if (child->getOrder() < 0)
-			{
-				if (!child->dispatch(e))
-				{
-					return false;
-				}
-			}
-			else
-			{
-				break;
-			}
+			child->dispatch(e);
 		}
-
-		if (!onMouseEvent(e))
-		{
-			return false;
-		}
-
-		for (; i < _children.size(); ++i)
-			if (!_children[i]->dispatch(e))
-				return false;
-
-		return true;
 	}
 }
 
-bool e2d::Node::dispatch(const KeyEvent & e)
+void e2d::Node::dispatch(const KeyEvent & e)
 {
-	if (_children.empty())
+	if (!onKeyEvent(e))
+		return;
+
+	if (!_children.empty())
 	{
-		return onKeyEvent(e);
-	}
-	else
-	{
-		size_t i;
-		for (i = 0; i < _children.size(); ++i)
+		for (auto child : _children)
 		{
-			auto child = _children[i];
-			if (child->getOrder() < 0)
-			{
-				if (!child->dispatch(e))
-				{
-					return false;
-				}
-			}
-			else
-			{
-				break;
-			}
+			child->dispatch(e);
 		}
-
-		if (!onKeyEvent(e))
-		{
-			return false;
-		}
-
-		for (; i < _children.size(); ++i)
-			if (!_children[i]->dispatch(e))
-				return false;
-
-		return true;
 	}
 }
 

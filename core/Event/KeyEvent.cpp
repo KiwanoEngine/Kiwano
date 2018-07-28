@@ -1,7 +1,7 @@
 #include "..\e2dcommon.h"
 
 
-e2d::KeyEvent::KeyEvent(UINT message, WPARAM wParam, LPARAM lParam)
+e2d::KeyEvent::KeyEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	: _code(KeyCode(wParam))
 	, _type(Type(message))
 	, _count(static_cast<int>((DWORD)lParam & 0x0000FFFF))

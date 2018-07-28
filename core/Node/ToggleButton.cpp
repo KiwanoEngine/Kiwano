@@ -12,7 +12,7 @@
 			this->addChild(New);								\
 		}														\
 		Old = New;												\
-		_updateState();											\
+		_updateStatus();											\
 		_updateVisible();										\
 	}															\
 
@@ -117,7 +117,7 @@ void e2d::ToggleButton::setChecked(bool checked)
 	if (_checked != checked)
 	{
 		_checked = checked;
-		_updateState();
+		_updateStatus();
 		_updateVisible();
 	}
 }
@@ -176,7 +176,7 @@ void e2d::ToggleButton::setPivot(float pivotX, float pivotY)
 	SAFE_SET(_disabledOff, setPivot, pivotX, pivotY);
 }
 
-void e2d::ToggleButton::_updateState()
+void e2d::ToggleButton::_updateStatus()
 {
 	if (_checked)
 	{
@@ -207,7 +207,7 @@ void e2d::ToggleButton::_updateState()
 void e2d::ToggleButton::_runCallback()
 {
 	_checked = !_checked;
-	_updateState();
+	_updateStatus();
 
 	if (_func)
 	{
