@@ -216,9 +216,6 @@
     <ClCompile Include="..\..\core\Custom\SystemException.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Config.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Collider.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -251,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Duration.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Base\Config.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

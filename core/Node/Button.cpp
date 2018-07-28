@@ -95,6 +95,7 @@ void e2d::Button::setNormal(Node * normal)
 		// 添加新的
 		if (normal)
 		{
+			normal->setPivot(_pivotX, _pivotY);
 			this->addChild(normal);
 			this->setSize(normal->getWidth(), normal->getHeight());
 		}
@@ -116,6 +117,7 @@ void e2d::Button::setMouseOver(Node * mouseover)
 		// 添加新的
 		if (mouseover)
 		{
+			mouseover->setPivot(_pivotX, _pivotY);
 			this->addChild(mouseover);
 		}
 		_mouseover = mouseover;
@@ -135,6 +137,7 @@ void e2d::Button::setSelected(Node * selected)
 		// 添加新的
 		if (selected)
 		{
+			selected->setPivot(_pivotX, _pivotY);
 			this->addChild(selected);
 		}
 		_selected = selected;
@@ -154,6 +157,7 @@ void e2d::Button::setDisabled(Node * disabled)
 		// 添加新的
 		if (disabled)
 		{
+			disabled->setPivot(_pivotX, _pivotY);
 			this->addChild(disabled);
 		}
 		_disabled = disabled;
@@ -173,6 +177,15 @@ void e2d::Button::setEnabled(bool enabled)
 void e2d::Button::setClickFunc(const Function& func)
 {
 	_func = func;
+}
+
+void e2d::Button::setPivot(float pivotX, float pivotY)
+{
+	Node::setPivot(pivotX, pivotY);
+	SAFE_SET(_normal, setPivot, pivotX, pivotY);
+	SAFE_SET(_mouseover, setPivot, pivotX, pivotY);
+	SAFE_SET(_selected, setPivot, pivotX, pivotY);
+	SAFE_SET(_disabled, setPivot, pivotX, pivotY);
 }
 
 void e2d::Button::_update()

@@ -12,7 +12,7 @@ e2d::Duration::Duration(int ms)
 {
 }
 
-e2d::Duration::Duration(std::chrono::milliseconds ms)
+e2d::Duration::Duration(const std::chrono::milliseconds& ms)
 	: _ms(ms)
 {
 }

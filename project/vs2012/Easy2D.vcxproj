@@ -51,6 +51,7 @@
     <ClCompile Include="..\..\core\Action\ScaleTo.cpp" />
     <ClCompile Include="..\..\core\Action\Sequence.cpp" />
     <ClCompile Include="..\..\core\Action\Spawn.cpp" />
+    <ClCompile Include="..\..\core\Base\Config.cpp" />
     <ClCompile Include="..\..\core\Base\Game.cpp" />
     <ClCompile Include="..\..\core\Base\GC.cpp" />
     <ClCompile Include="..\..\core\Base\Input.cpp" />
@@ -58,7 +59,6 @@
     <ClCompile Include="..\..\core\Base\Window.cpp" />
     <ClCompile Include="..\..\core\Common\Collider.cpp" />
     <ClCompile Include="..\..\core\Common\Color.cpp" />
-    <ClCompile Include="..\..\core\Common\Config.cpp" />
     <ClCompile Include="..\..\core\Common\Duration.cpp" />
     <ClCompile Include="..\..\core\Common\Font.cpp" />
     <ClCompile Include="..\..\core\Common\Function.cpp" />

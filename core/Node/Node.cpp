@@ -69,10 +69,6 @@ e2d::Node::Node()
 	, _collider(this)
 	, _extrapolate(Property::Origin)
 {
-	Point defPivot = Game::getInstance()->getConfig().getNodeDefaultPivot();
-	_pivotX = defPivot.x;
-	_pivotY = defPivot.y;
-	_collider.setShape(Game::getInstance()->getConfig().getDefaultColliderShape());
 }
 
 e2d::Node::~Node()

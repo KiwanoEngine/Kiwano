@@ -124,9 +124,6 @@
     <ClCompile Include="..\..\core\Common\Color.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Config.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Font.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -258,6 +255,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Event\MouseEvent.cpp">
       <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Base\Config.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

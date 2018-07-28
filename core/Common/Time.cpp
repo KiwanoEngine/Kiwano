@@ -7,7 +7,7 @@ e2d::Time::Time()
 {
 }
 
-e2d::Time::Time(std::chrono::steady_clock::time_point time)
+e2d::Time::Time(const std::chrono::steady_clock::time_point& time)
 	: _timePoint(time)
 {
 }

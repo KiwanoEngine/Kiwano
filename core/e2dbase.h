@@ -10,7 +10,99 @@ namespace e2d
 {
 
 
-// 游戏控制
+// 配置
+class Config
+{
+public:
+	Config();
+
+	virtual ~Config();
+
+	// 修改游戏名称
+	// 默认：空
+	void setGameName(
+		const String& name
+	);
+
+	// 显示或隐藏 FPS
+	// 默认：隐藏
+	void showFps(
+		bool show
+	);
+
+	// 打开或关闭垂直同步
+	// 默认：打开
+	void setVSyncEnabled(
+		bool enabled
+	);
+
+	// 设置帧率刷新间隔（关闭垂直同步时生效）
+	// 默认：15
+	void setFrameInterval(
+		int interval
+	);
+
+	// 显示或隐藏节点轮廓
+	// 默认：隐藏
+	void setOutlineVisible(
+		bool visible
+	);
+
+	// 打开或关闭声音
+	// 默认：打开
+	void setSoundEnabled(
+		bool enabled
+	);
+
+	// 打开或关闭碰撞监听
+	// 默认：关闭
+	void setCollisionEnabled(
+		bool enabled
+	);
+
+	// 打开或关闭碰撞体可视化
+	// 默认：关闭
+	void setColliderVisible(
+		bool visible
+	);
+
+	// 获取游戏名称
+	String getGameName() const;
+
+	// 获取声音打开状态
+	bool isSoundEnabled() const;
+
+	// 获取垂直同步打开状态
+	bool isVSyncEnabled() const;
+
+	// 获取 FPS 显示状态
+	bool isFpsShow() const;
+
+	// 获取帧率刷新间隔
+	int getFrameInterval() const;
+
+	// 获取节点轮廓显示状态
+	bool isOutlineVisible() const;
+
+	// 获取碰撞监听状态
+	bool isCollisionEnabled() const;
+
+	// 获取碰撞体可视化状态
+	bool isColliderVisible() const;
+
+protected:
+	bool			_showFps;
+	bool			_vSyncEnabled;
+	bool			_soundEnabled;
+	bool			_outlineVisible;
+	bool			_collisionEnabled;
+	bool			_colliderVisible;
+	int				_frameInterval;
+	String			_gameName;
+};
+
+
+// 游戏主体
 class Game
 {
 public:

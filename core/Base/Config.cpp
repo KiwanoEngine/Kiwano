@@ -3,7 +3,6 @@
 
 e2d::Config::Config()
 	: _gameName()
-	, _defaultNodePivot()
 	, _soundEnabled(true)
 	, _frameInterval(15)
 	, _showFps(false)
@@ -11,7 +10,6 @@ e2d::Config::Config()
 	, _outlineVisible(false)
 	, _collisionEnabled(false)
 	, _colliderVisible(false)
-	, _defaultColliderShape(Collider::Shape::None)
 {
 }
 
@@ -54,19 +52,6 @@ void e2d::Config::setCollisionEnabled(bool enabled)
 	_collisionEnabled = enabled;
 }
 
-void e2d::Config::setNodeDefaultPivot(Point pivot)
-{
-	_defaultNodePivot = Point(
-		std::min(std::max(pivot.x, 0.f), 1.f),
-		std::min(std::max(pivot.y, 0.f), 1.f)
-	);
-}
-
-void e2d::Config::setDefaultColliderShape(Collider::Shape shape)
-{
-	_defaultColliderShape = shape;
-}
-
 void e2d::Config::setColliderVisible(bool visible)
 {
 	_colliderVisible = visible;
@@ -105,16 +90,6 @@ bool e2d::Config::isOutlineVisible() const
 bool e2d::Config::isCollisionEnabled() const
 {
 	return _collisionEnabled;
-}
-
-e2d::Point e2d::Config::getNodeDefaultPivot() const
-{
-	return _defaultNodePivot;
-}
-
-e2d::Collider::Shape e2d::Config::getDefaultColliderShape() const
-{
-	return _defaultColliderShape;
 }
 
 bool e2d::Config::isColliderVisible() const

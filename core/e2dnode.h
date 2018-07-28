@@ -820,6 +820,13 @@ public:
 		const Function& func
 	);
 
+	// 设置中心点位置
+	// 默认为 (0, 0), 范围 [0, 1]
+	virtual void setPivot(
+		float pivotX,
+		float pivotY
+	) override;
+
 protected:
 	E2D_DISABLE_COPY(Button);
 
@@ -892,12 +899,12 @@ public:
 		const Function& func = nullptr	/* 按钮点击后的执行函数 */
 	);
 
-	// 获取开关状态（打开或关闭）
-	bool getState() const;
+	// 获取开关状态
+	bool isChecked() const;
 
-	// 设置开关按钮的状态（打开或关闭）
-	void setState(
-		bool bState
+	// 设置开关按钮的状态
+	void setChecked(
+		bool checked
 	);
 
 	// 设置按钮打开状态下显示的按钮
@@ -940,6 +947,13 @@ public:
 		Node * disabled
 	);
 
+	// 设置中心点位置
+	// 默认为 (0, 0), 范围 [0, 1]
+	virtual void setPivot(
+		float pivotX,
+		float pivotY
+	) override;
+
 protected:
 	E2D_DISABLE_COPY(ToggleButton);
 
@@ -958,7 +972,7 @@ protected:
 	Node*	_mouseoverOff;
 	Node*	_selectedOff;
 	Node*	_disabledOff;
-	bool	_toggle;
+	bool	_checked;
 };
 
 
