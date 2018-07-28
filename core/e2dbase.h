@@ -148,8 +148,6 @@ private:
 
 	E2D_DISABLE_COPY(Game);
 
-	void __update();
-
 private:
 	bool		_quit;
 	bool		_paused;

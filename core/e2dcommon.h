@@ -434,8 +434,11 @@ public:
 	bool operator< (const Duration &) const;
 	bool operator<= (const Duration &) const;
 
-	Duration operator + (Duration const & other) const;
-	Duration operator - (Duration const & other) const;
+	Duration operator + (Duration const &) const;
+	Duration operator - (Duration const &) const;
+
+	Duration& operator += (Duration const &);
+	Duration& operator -= (Duration const &);
 
 protected:
 	std::chrono::milliseconds _ms;
@@ -455,10 +458,16 @@ public:
 	// 获取时间戳
 	time_t getTimeStamp() const;
 
-	Time operator + (Duration const & other) const;
+	// 是否是
+	bool isZero() const;
+
+	Time operator + (Duration const &) const;
+	Time operator - (Duration const &) const;
+
 	Time& operator += (Duration const &);
+	Time& operator -= (Duration const &);
 	
-	Duration operator - (Time const & other) const;
+	Duration operator - (Time const &) const;
 
 	// 获取当前时间
 	static Time now();

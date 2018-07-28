@@ -66,3 +66,15 @@ e2d::Duration e2d::Duration::operator-(Duration const & other) const
 {
 	return std::move(Duration(_ms - other._ms));
 }
+
+e2d::Duration & e2d::Duration::operator+=(Duration const &other)
+{
+	_ms += other._ms;
+	return (*this);
+}
+
+e2d::Duration & e2d::Duration::operator-=(Duration const &other)
+{
+	_ms -= other._ms;
+	return (*this);
+}

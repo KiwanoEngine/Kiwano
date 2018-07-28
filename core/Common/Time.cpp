@@ -7,15 +7,20 @@ e2d::Time::Time()
 {
 }
 
-e2d::Time::Time(const std::chrono::steady_clock::time_point& time)
+e2d::Time::Time(const steady_clock::time_point& time)
 	: _timePoint(time)
 {
 }
 
 time_t e2d::Time::getTimeStamp() const
 {
-	auto& now = time_point_cast<milliseconds>(_timePoint).time_since_epoch();
-	return static_cast<time_t>(now.count());
+	auto& duration = time_point_cast<milliseconds>(_timePoint).time_since_epoch();
+	return static_cast<time_t>(duration.count());
+}
+
+bool e2d::Time::isZero() const
+{
+	return _timePoint.time_since_epoch().count() == 0LL;
 }
 
 e2d::Time e2d::Time::operator+(Duration const & other) const
@@ -26,6 +31,17 @@ e2d::Time e2d::Time::operator+(Duration const & other) const
 e2d::Time & e2d::Time::operator+=(Duration const & other)
 {
 	_timePoint += milliseconds(other.milliseconds());
+	return (*this);
+}
+
+e2d::Time e2d::Time::operator-(Duration const & other) const
+{
+	return std::move(Time(_timePoint - milliseconds(other.milliseconds())));
+}
+
+e2d::Time & e2d::Time::operator-=(Duration const &other)
+{
+	_timePoint -= milliseconds(other.milliseconds());
 	return (*this);
 }
 

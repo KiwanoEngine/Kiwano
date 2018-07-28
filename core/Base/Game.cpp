@@ -3,8 +3,6 @@
 #include "..\e2dtool.h"
 #include <thread>
 
-using namespace std::chrono;
-
 
 e2d::Game * e2d::Game::_instance = nullptr;
 
@@ -42,13 +40,8 @@ void e2d::Game::destroyInstance()
 
 void e2d::Game::start()
 {
-	HWND hWnd = Window::getInstance()->getHWnd();
-	if (hWnd == nullptr)
-	{
-		throw SystemException(L"无法创建窗口");
-	}
-
 	// 显示窗口
+	HWND hWnd = Window::getInstance()->getHWnd();
 	::ShowWindow(hWnd, SW_SHOWNORMAL);
 	::UpdateWindow(hWnd);
 
@@ -61,7 +54,7 @@ void e2d::Game::start()
 
 	_quit = false;
 	_last = _now = Time::now();
-
+	
 	while (!_quit)
 	{
 		_now = Time::now();
@@ -70,28 +63,19 @@ void e2d::Game::start()
 		if (_config.isVSyncEnabled() || _frameInterval < interval)
 		{
 			_last = _now;
-			__update();
+			Input::getInstance()->update();
+			Timer::getInstance()->update();
+			ActionManager::getInstance()->update();
+			SceneManager::getInstance()->update();
+			Renderer::getInstance()->render();
+			Window::getInstance()->poll();
+			GC::getInstance()->flush();
 		}
 		else
 		{
-			wait = (_frameInterval - interval).milliseconds() - 1;
-			if (wait > 1)
-			{
-				std::this_thread::sleep_for(milliseconds(wait));
-			}
+			std::this_thread::yield();
 		}
 	}
-}
-
-void e2d::Game::__update()
-{
-	Input::getInstance()->update();
-	Timer::getInstance()->update();
-	ActionManager::getInstance()->update();
-	SceneManager::getInstance()->update();
-	Renderer::getInstance()->render();
-	Window::getInstance()->poll();
-	GC::getInstance()->flush();
 }
 
 void e2d::Game::pause()
@@ -133,7 +117,6 @@ void e2d::Game::setConfig(const Config& config)
 	if (_config.isVSyncEnabled() != config.isVSyncEnabled())
 	{
 		Renderer::getInstance()->discardDeviceResources();
-		_last = _now;
 	}
 
 	_config = config;
