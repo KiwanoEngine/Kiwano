@@ -181,12 +181,12 @@ void e2d::Window::poll()
 	}
 }
 
-double e2d::Window::getWidth()
+float e2d::Window::getWidth()
 {
 	return _size.width;
 }
 
-double e2d::Window::getHeight()
+float e2d::Window::getHeight()
 {
 	return _size.height;
 }
@@ -216,7 +216,7 @@ HWND e2d::Window::getHWnd()
 
 void e2d::Window::setSize(int width, int height)
 {
-	this->_size = Size(width, height);
+	this->_size = Size(static_cast<float>(width), static_cast<float>(height));
 	if (_hWnd)
 	{
 		float dpiScaleX = 0.f, dpiScaleY = 0.f;
@@ -225,7 +225,7 @@ void e2d::Window::setSize(int width, int height)
 		width = static_cast<int>(ceil(width * dpiScaleX / 96.f));
 		height = static_cast<int>(ceil(height * dpiScaleY / 96.f));
 		// 计算窗口大小
-		DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX &~WS_THICKFRAME;
+		DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME;
 		RECT wr = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
 		::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
 		// 获取新的宽高
@@ -435,7 +435,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		if (wParam == SIZE_RESTORED)
 		{
 			UINT dpi = ::GetDpiForWindow(hWnd);
-			_instance->_size = Size(width * 96.0 / dpi, height * 96.0 / dpi);
+			_instance->_size = Size(width * 96.f / dpi, height * 96.f / dpi);
 		}
 
 		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染

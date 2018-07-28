@@ -57,8 +57,8 @@ void e2d::Config::setCollisionEnabled(bool enabled)
 void e2d::Config::setNodeDefaultPivot(Point pivot)
 {
 	_defaultNodePivot = Point(
-		std::min(std::max(pivot.x, 0.0), 1.0),
-		std::min(std::max(pivot.y, 0.0), 1.0)
+		std::min(std::max(pivot.x, 0.f), 1.f),
+		std::min(std::max(pivot.y, 0.f), 1.f)
 	);
 }
 

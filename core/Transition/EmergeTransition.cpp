@@ -1,7 +1,7 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::EmergeTransition::EmergeTransition(double duration)
+e2d::EmergeTransition::EmergeTransition(float duration)
 	: Transition(duration)
 {
 }
@@ -15,8 +15,8 @@ void e2d::EmergeTransition::_init(Scene * prev, Scene * next)
 
 void e2d::EmergeTransition::_updateCustom()
 {
-	_outLayerParam.opacity = float(1 - _delta);
-	_inLayerParam.opacity = float(_delta);
+	_outLayerParam.opacity = 1 - _delta;
+	_inLayerParam.opacity = _delta;
 
 	if (_delta >= 1)
 	{

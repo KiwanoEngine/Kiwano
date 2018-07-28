@@ -70,8 +70,8 @@ e2d::Node::Node()
 	, _extrapolate(Property::Origin)
 {
 	Point defPivot = Game::getInstance()->getConfig().getNodeDefaultPivot();
-	_pivotX = float(defPivot.x);
-	_pivotY = float(defPivot.y);
+	_pivotX = defPivot.x;
+	_pivotY = defPivot.y;
 	_collider.setShape(Game::getInstance()->getConfig().getDefaultColliderShape());
 }
 
@@ -425,12 +425,12 @@ size_t e2d::Node::getHashName() const
 	return _hashName;
 }
 
-double e2d::Node::getPosX() const
+float e2d::Node::getPosX() const
 {
 	return _posX;
 }
 
-double e2d::Node::getPosY() const
+float e2d::Node::getPosY() const
 {
 	return _posY;
 }
@@ -440,22 +440,22 @@ e2d::Point e2d::Node::getPos() const
 	return Point(_posX, _posY);
 }
 
-double e2d::Node::getWidth() const
+float e2d::Node::getWidth() const
 {
 	return _width * _scaleX;
 }
 
-double e2d::Node::getHeight() const
+float e2d::Node::getHeight() const
 {
 	return _height * _scaleY;
 }
 
-double e2d::Node::getRealWidth() const
+float e2d::Node::getRealWidth() const
 {
 	return _width;
 }
 
-double e2d::Node::getRealHeight() const
+float e2d::Node::getRealHeight() const
 {
 	return _height;
 }
@@ -465,12 +465,12 @@ e2d::Size e2d::Node::getRealSize() const
 	return Size(_width, _height);
 }
 
-double e2d::Node::getPivotX() const
+float e2d::Node::getPivotX() const
 {
 	return _pivotX;
 }
 
-double e2d::Node::getPivotY() const
+float e2d::Node::getPivotY() const
 {
 	return _pivotY;
 }
@@ -480,32 +480,32 @@ e2d::Size e2d::Node::getSize() const
 	return Size(getWidth(), getHeight());
 }
 
-double e2d::Node::getScaleX() const
+float e2d::Node::getScaleX() const
 {
 	return _scaleX;
 }
 
-double e2d::Node::getScaleY() const
+float e2d::Node::getScaleY() const
 {
 	return _scaleY;
 }
 
-double e2d::Node::getSkewX() const
+float e2d::Node::getSkewX() const
 {
 	return _skewAngleX;
 }
 
-double e2d::Node::getSkewY() const
+float e2d::Node::getSkewY() const
 {
 	return _skewAngleY;
 }
 
-double e2d::Node::getRotation() const
+float e2d::Node::getRotation() const
 {
 	return _rotation;
 }
 
-double e2d::Node::getOpacity() const
+float e2d::Node::getOpacity() const
 {
 	return _realOpacity;
 }
@@ -554,12 +554,12 @@ void e2d::Node::setOrder(int order)
 	}
 }
 
-void e2d::Node::setPosX(double x)
+void e2d::Node::setPosX(float x)
 {
 	this->setPos(x, _posY);
 }
 
-void e2d::Node::setPosY(double y)
+void e2d::Node::setPosY(float y)
 {
 	this->setPos(_posX, y);
 }
@@ -569,13 +569,13 @@ void e2d::Node::setPos(const Point & p)
 	this->setPos(p.x, p.y);
 }
 
-void e2d::Node::setPos(double x, double y)
+void e2d::Node::setPos(float x, float y)
 {
 	if (_posX == x && _posY == y)
 		return;
 
-	_posX = float(x);
-	_posY = float(y);
+	_posX = x;
+	_posY = y;
 	_needTransform = true;
 }
 
@@ -588,17 +588,17 @@ void e2d::Node::setPosFixed(bool fixed)
 	_needTransform = true;
 }
 
-void e2d::Node::movePosX(double x)
+void e2d::Node::movePosX(float x)
 {
 	this->movePos(x, 0);
 }
 
-void e2d::Node::movePosY(double y)
+void e2d::Node::movePosY(float y)
 {
 	this->movePos(0, y);
 }
 
-void e2d::Node::movePos(double x, double y)
+void e2d::Node::movePos(float x, float y)
 {
 	this->setPos(_posX + x, _posY + y);
 }
@@ -608,107 +608,107 @@ void e2d::Node::movePos(const Vector2 & v)
 	this->movePos(v.x, v.y);
 }
 
-void e2d::Node::setScaleX(double scaleX)
+void e2d::Node::setScaleX(float scaleX)
 {
 	this->setScale(scaleX, _scaleY);
 }
 
-void e2d::Node::setScaleY(double scaleY)
+void e2d::Node::setScaleY(float scaleY)
 {
 	this->setScale(_scaleX, scaleY);
 }
 
-void e2d::Node::setScale(double scale)
+void e2d::Node::setScale(float scale)
 {
 	this->setScale(scale, scale);
 }
 
-void e2d::Node::setScale(double scaleX, double scaleY)
+void e2d::Node::setScale(float scaleX, float scaleY)
 {
 	if (_scaleX == scaleX && _scaleY == scaleY)
 		return;
 
-	_scaleX = float(scaleX);
-	_scaleY = float(scaleY);
+	_scaleX = scaleX;
+	_scaleY = scaleY;
 	_needTransform = true;
 }
 
-void e2d::Node::setSkewX(double angleX)
+void e2d::Node::setSkewX(float angleX)
 {
 	this->setSkew(angleX, _skewAngleY);
 }
 
-void e2d::Node::setSkewY(double angleY)
+void e2d::Node::setSkewY(float angleY)
 {
 	this->setSkew(_skewAngleX, angleY);
 }
 
-void e2d::Node::setSkew(double angleX, double angleY)
+void e2d::Node::setSkew(float angleX, float angleY)
 {
 	if (_skewAngleX == angleX && _skewAngleY == angleY)
 		return;
 
-	_skewAngleX = float(angleX);
-	_skewAngleY = float(angleY);
+	_skewAngleX = angleX;
+	_skewAngleY = angleY;
 	_needTransform = true;
 }
 
-void e2d::Node::setRotation(double angle)
+void e2d::Node::setRotation(float angle)
 {
 	if (_rotation == angle)
 		return;
 
-	_rotation = float(angle);
+	_rotation = angle;
 	_needTransform = true;
 }
 
-void e2d::Node::setOpacity(double opacity)
+void e2d::Node::setOpacity(float opacity)
 {
 	if (_realOpacity == opacity)
 		return;
 
-	_displayOpacity = _realOpacity = std::min(std::max(float(opacity), 0.f), 1.f);
+	_displayOpacity = _realOpacity = std::min(std::max(opacity, 0.f), 1.f);
 	// 更新节点透明度
 	_updateOpacity();
 }
 
-void e2d::Node::setPivotX(double pivotX)
+void e2d::Node::setPivotX(float pivotX)
 {
 	this->setPivot(pivotX, _pivotY);
 }
 
-void e2d::Node::setPivotY(double pivotY)
+void e2d::Node::setPivotY(float pivotY)
 {
 	this->setPivot(_pivotX, pivotY);
 }
 
-void e2d::Node::setPivot(double pivotX, double pivotY)
+void e2d::Node::setPivot(float pivotX, float pivotY)
 {
 	if (_pivotX == pivotX && _pivotY == pivotY)
 		return;
 
-	_pivotX = std::min(std::max(float(pivotX), 0.f), 1.f);
-	_pivotY = std::min(std::max(float(pivotY), 0.f), 1.f);
+	_pivotX = std::min(std::max(pivotX, 0.f), 1.f);
+	_pivotY = std::min(std::max(pivotY, 0.f), 1.f);
 	_needTransform = true;
 }
 
-void e2d::Node::setWidth(double width)
+void e2d::Node::setWidth(float width)
 {
 	this->setSize(width, _height);
 }
 
-void e2d::Node::setHeight(double height)
+void e2d::Node::setHeight(float height)
 {
 	this->setSize(_width, height);
 }
 
-void e2d::Node::setSize(double width, double height)
+void e2d::Node::setSize(float width, float height)
 {
 	if (_width == width && _height == height)
 		return;
 
-	_width = float(width);
-	_height = float(height);
+	_width = width;
+	_height = height;
 	_needTransform = true;
 }
 
@@ -953,7 +953,7 @@ bool e2d::Node::containsPoint(const Point& point)
 	{
 		BOOL ret = 0;
 		_outline->FillContainsPoint(
-			D2D1::Point2F(float(point.x), float(point.y)),
+			D2D1::Point2F(point.x, point.y),
 			D2D1::Matrix3x2F::Identity(),
 			&ret
 		);

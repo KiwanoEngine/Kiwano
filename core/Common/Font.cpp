@@ -8,7 +8,7 @@ e2d::Font::Font()
 {
 }
 
-e2d::Font::Font(const String & family, double size, UINT weight, bool italic)
+e2d::Font::Font(const String & family, float size, UINT weight, bool italic)
 	: family(family)
 	, size(size)
 	, weight(weight)

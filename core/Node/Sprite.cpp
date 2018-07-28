@@ -82,8 +82,8 @@ void e2d::Sprite::crop(const Rect& cropRect)
 {
 	_image->crop(cropRect);
 	Node::setSize(
-		std::min(std::max(cropRect.size.width, 0.0), _image->getSourceWidth() - _image->getCropX()),
-		std::min(std::max(cropRect.size.height, 0.0), _image->getSourceHeight() - _image->getCropY())
+		std::min(std::max(cropRect.size.width, 0.f), _image->getSourceWidth() - _image->getCropX()),
+		std::min(std::max(cropRect.size.height, 0.f), _image->getSourceHeight() - _image->getCropY())
 	);
 }
 
@@ -97,8 +97,8 @@ void e2d::Sprite::onRender() const
 	if (_image && _image->getBitmap())
 	{
 		// »ñÈ¡Í¼Æ¬²Ã¼ôÎ»ÖÃ
-		float fCropX = float(_image->getCropX());
-		float fCropY = float(_image->getCropY());
+		float fCropX = _image->getCropX();
+		float fCropY = _image->getCropY();
 		// äÖÈ¾Í¼Æ¬
 		Renderer::getInstance()->getRenderTarget()->DrawBitmap(
 			_image->getBitmap(),

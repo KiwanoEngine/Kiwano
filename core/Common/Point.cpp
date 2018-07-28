@@ -8,7 +8,7 @@ e2d::Point::Point()
 	y = 0;
 }
 
-e2d::Point::Point(double x, double y)
+e2d::Point::Point(float x, float y)
 {
 	this->x = x;
 	this->y = y;
@@ -30,12 +30,12 @@ e2d::Point e2d::Point::operator-(Point const & p) const
 	return Point(x - p.x, y - p.y);
 }
 
-e2d::Point e2d::Point::operator*(double const & value) const
+e2d::Point e2d::Point::operator*(float const & value) const
 {
 	return Point(x * value, y * value);
 }
 
-e2d::Point e2d::Point::operator/(double const & value) const
+e2d::Point e2d::Point::operator/(float const & value) const
 {
 	return Point(x / value, y / value);
 }
@@ -45,7 +45,7 @@ e2d::Point::operator e2d::Size() const
 	return Size(x, y);
 }
 
-double e2d::Point::distance(const Point &p1, const Point &p2)
+float e2d::Point::distance(const Point &p1, const Point &p2)
 {
 	return sqrt(
 		(p1.x - p2.x) * (p1.x - p2.x) + 

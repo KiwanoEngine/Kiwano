@@ -406,6 +406,15 @@ int e2d::String::toInt() const
 	return std::stoi(_str, 0, 10);
 }
 
+float e2d::String::toFloat() const
+{
+	if (_str.empty())
+	{
+		return 0.f;
+	}
+	return std::stof(_str, 0);
+}
+
 double e2d::String::toDouble() const
 {
 	if (_str.empty())

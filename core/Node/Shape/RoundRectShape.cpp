@@ -6,16 +6,16 @@ e2d::RoundRectShape::RoundRectShape()
 {
 }
 
-e2d::RoundRectShape::RoundRectShape(Size size, double radiusX, double radiusY)
-	: _radiusX(float(radiusX))
-	, _radiusY(float(radiusY))
+e2d::RoundRectShape::RoundRectShape(Size size, float radiusX, float radiusY)
+	: _radiusX(radiusX)
+	, _radiusY(radiusY)
 {
 	this->setSize(size);
 }
 
-e2d::RoundRectShape::RoundRectShape(Point topLeft, Size size, double radiusX, double radiusY)
-	: _radiusX(float(radiusX))
-	, _radiusY(float(radiusY))
+e2d::RoundRectShape::RoundRectShape(Point topLeft, Size size, float radiusX, float radiusY)
+	: _radiusX(radiusX)
+	, _radiusY(radiusY)
 {
 	this->setPivot(0, 0);
 	this->setPos(topLeft);
@@ -26,24 +26,24 @@ e2d::RoundRectShape::~RoundRectShape()
 {
 }
 
-double e2d::RoundRectShape::getRadiusX() const
+float e2d::RoundRectShape::getRadiusX() const
 {
 	return _radiusX;
 }
 
-double e2d::RoundRectShape::getRadiusY() const
+float e2d::RoundRectShape::getRadiusY() const
 {
 	return _radiusY;
 }
 
-void e2d::RoundRectShape::setRadiusX(double radiusX)
+void e2d::RoundRectShape::setRadiusX(float radiusX)
 {
-	_radiusX = float(radiusX);
+	_radiusX = radiusX;
 }
 
-void e2d::RoundRectShape::setRadiusY(double radiusY)
+void e2d::RoundRectShape::setRadiusY(float radiusY)
 {
-	_radiusY = float(radiusY);
+	_radiusY = radiusY;
 }
 
 void e2d::RoundRectShape::_renderLine() const

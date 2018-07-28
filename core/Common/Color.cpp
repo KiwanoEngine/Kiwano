@@ -12,23 +12,23 @@ e2d::Color::Color()
 	: r(0)
 	, g(0)
 	, b(0)
-	, a(1)
+	, a(1.f)
 {
 }
 
-e2d::Color::Color(double r, double g, double b)
-	: r(float(r))
-	, g(float(g))
-	, b(float(b))
-	, a(float(1))
+e2d::Color::Color(float r, float g, float b)
+	: r(r)
+	, g(g)
+	, b(b)
+	, a(1.f)
 {
 }
 
-e2d::Color::Color(double r, double g, double b, double alpha)
-	: r(float(r))
-	, g(float(g))
-	, b(float(b))
-	, a(float(alpha))
+e2d::Color::Color(float r, float g, float b, float alpha)
+	: r(r)
+	, g(g)
+	, b(b)
+	, a(alpha)
 {
 }
 
@@ -37,17 +37,17 @@ e2d::Color::Color(UINT rgb)
 	_init(rgb, 1);
 }
 
-e2d::Color::Color(UINT rgb, double alpha)
+e2d::Color::Color(UINT rgb, float alpha)
 {
 	_init(rgb, alpha);
 }
 
-void e2d::Color::_init(UINT rgb, double alpha)
+void e2d::Color::_init(UINT rgb, float alpha)
 {
-	r = float((rgb & sc_redMask) >> sc_redShift) / 255.f;
-	g = float((rgb & sc_greenMask) >> sc_greenShift) / 255.f;
-	b = float((rgb & sc_blueMask) >> sc_blueShift) / 255.f;
-	a = float(alpha);
+	r = ((rgb & sc_redMask) >> sc_redShift) / 255.f;
+	g = ((rgb & sc_greenMask) >> sc_greenShift) / 255.f;
+	b = ((rgb & sc_blueMask) >> sc_blueShift) / 255.f;
+	a = alpha;
 }
 
 D2D1_COLOR_F e2d::Color::toD2DColorF() const

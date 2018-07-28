@@ -107,11 +107,7 @@ void e2d::GC::safeRelease(Ref* ref)
 
 	if (ref)
 	{
-		auto iter = _pool.find(ref);
-		if (iter != _pool.end())
-		{
-			(*iter)->release();
-			_notifyed = true;
-		}
+		ref->release();
+		_notifyed = true;
 	}
 }

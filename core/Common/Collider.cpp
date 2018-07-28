@@ -4,7 +4,7 @@
 
 e2d::Collider::Collider(Node * parent)
 	: _visible(true)
-	, _color(Color::Blue, 0.6)
+	, _color(Color::Blue, 0.6f)
 	, _parentNode(parent)
 	, _geometry(nullptr)
 	, _enabled(true)
@@ -16,7 +16,6 @@ e2d::Collider::Collider(Node * parent)
 e2d::Collider::~Collider()
 {
 	SafeRelease(_geometry);
-	
 }
 
 e2d::Color e2d::Collider::getColor() const
@@ -139,11 +138,7 @@ void e2d::Collider::recreate()
 	{
 		ID2D1RectangleGeometry* rectangle = nullptr;
 		Renderer::getFactory()->CreateRectangleGeometry(
-			D2D1::RectF(
-				0,
-				0,
-				float(_parentNode->getRealWidth()),
-				float(_parentNode->getRealHeight())),
+			D2D1::RectF(0, 0, _parentNode->getRealWidth(), _parentNode->getRealHeight()),
 			&rectangle
 		);
 		_geometry = rectangle;
@@ -152,17 +147,17 @@ void e2d::Collider::recreate()
 
 	case Shape::Circle:
 	{
-		double minSide = std::min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
+		float minSide = std::min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
 
 		ID2D1EllipseGeometry* circle = nullptr;
 		Renderer::getFactory()->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
-					float(_parentNode->getRealWidth() / 2),
-					float(_parentNode->getRealHeight() / 2)
+					_parentNode->getRealWidth() / 2,
+					_parentNode->getRealHeight() / 2
 				),
-				float(minSide / 2),
-				float(minSide / 2)
+				minSide / 2,
+				minSide / 2
 			),
 			&circle
 		);
@@ -172,8 +167,8 @@ void e2d::Collider::recreate()
 
 	case Shape::Ellipse:
 	{
-		float halfWidth = float(_parentNode->getWidth() / 2),
-			halfHeight = float(_parentNode->getHeight() / 2);
+		float halfWidth = _parentNode->getWidth() / 2,
+			halfHeight = _parentNode->getHeight() / 2;
 
 		ID2D1EllipseGeometry* ellipse = nullptr;
 		Renderer::getFactory()->CreateEllipseGeometry(

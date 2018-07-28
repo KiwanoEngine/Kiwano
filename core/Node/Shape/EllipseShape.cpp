@@ -7,14 +7,14 @@ e2d::EllipseShape::EllipseShape()
 	this->setPivot(0.5, 0.5);
 }
 
-e2d::EllipseShape::EllipseShape(double radiusX, double radiusY)
+e2d::EllipseShape::EllipseShape(float radiusX, float radiusY)
 {
 	this->setRadiusX(radiusX);
 	this->setRadiusY(radiusY);
 	this->setPivot(0.5, 0.5);
 }
 
-e2d::EllipseShape::EllipseShape(Point center, double radiusX, double radiusY)
+e2d::EllipseShape::EllipseShape(Point center, float radiusX, float radiusY)
 {
 	this->setRadiusX(radiusX);
 	this->setRadiusY(radiusY);
@@ -26,25 +26,25 @@ e2d::EllipseShape::~EllipseShape()
 {
 }
 
-double e2d::EllipseShape::getRadiusX() const
+float e2d::EllipseShape::getRadiusX() const
 {
 	return _radiusX;
 }
 
-double e2d::EllipseShape::getRadiusY() const
+float e2d::EllipseShape::getRadiusY() const
 {
 	return _radiusY;
 }
 
-void e2d::EllipseShape::setRadiusX(double radiusX)
+void e2d::EllipseShape::setRadiusX(float radiusX)
 {
-	_radiusX = float(radiusX);
+	_radiusX = radiusX;
 	Node::setWidth(radiusX * 2);
 }
 
-void e2d::EllipseShape::setRadiusY(double radiusY)
+void e2d::EllipseShape::setRadiusY(float radiusY)
 {
-	_radiusY = float(radiusY);
+	_radiusY = radiusY;
 	Node::setHeight(radiusY * 2);
 }
 

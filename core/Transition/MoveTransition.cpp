@@ -1,7 +1,7 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::MoveTransition::MoveTransition(double duration, Direction direction)
+e2d::MoveTransition::MoveTransition(float duration, Direction direction)
 	: Transition(duration)
 	, _direction(direction)
 {
@@ -11,8 +11,8 @@ void e2d::MoveTransition::_init(Scene * prev, Scene * next)
 {
 	Transition::_init(prev, next);
 
-	double width = _windowSize.width;
-	double height = _windowSize.height;
+	float width = _windowSize.width;
+	float height = _windowSize.height;
 	if (_direction == Direction::Up)
 	{
 		_posDelta = Vector2(0, -height);

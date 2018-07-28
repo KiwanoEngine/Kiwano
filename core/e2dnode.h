@@ -23,17 +23,17 @@ public:
 	// 节点属性
 	struct Property
 	{
-		double posX;		// X 坐标
-		double posY;		// Y 坐标
-		double width;		// 宽度
-		double height;		// 高度
-		double pivotX;		// 中心点 X 坐标
-		double pivotY;		// 中心点 Y 坐标
-		double scaleX;		// 横向缩放
-		double scaleY;		// 纵向缩放
-		double rotation;	// 旋转角度
-		double skewAngleX;	// 横向倾斜角度
-		double skewAngleY;	// 纵向倾斜角度
+		float posX;		// X 坐标
+		float posY;		// Y 坐标
+		float width;		// 宽度
+		float height;		// 高度
+		float pivotX;		// 中心点 X 坐标
+		float pivotY;		// 中心点 Y 坐标
+		float scaleX;		// 横向缩放
+		float scaleY;		// 纵向缩放
+		float rotation;	// 旋转角度
+		float skewAngleX;	// 横向倾斜角度
+		float skewAngleY;	// 纵向倾斜角度
 
 		Property operator+ (Property const & prop) const;
 		Property operator- (Property const & prop) const;
@@ -86,55 +86,55 @@ public:
 	int getOrder() const;
 
 	// 获取节点横坐标
-	double getPosX() const;
+	float getPosX() const;
 
 	// 获取节点纵坐标
-	double getPosY() const;
+	float getPosY() const;
 
 	// 获取节点坐标
 	Point getPos() const;
 
 	// 获取节点宽度
-	double getWidth() const;
+	float getWidth() const;
 
 	// 获取节点高度
-	double getHeight() const;
+	float getHeight() const;
 
 	// 获取节点宽度（不考虑缩放）
-	double getRealWidth() const;
+	float getRealWidth() const;
 
 	// 获取节点高度（不考虑缩放）
-	double getRealHeight() const;
+	float getRealHeight() const;
 
 	// 获取节点大小（不考虑缩放）
 	Size getRealSize() const;
 
 	// 获取节点的中心点
-	double getPivotX() const;
+	float getPivotX() const;
 
 	// 获取节点的中心点
-	double getPivotY() const;
+	float getPivotY() const;
 
 	// 获取节点大小
 	Size getSize() const;
 
 	// 获取节点横向缩放比例
-	double getScaleX() const;
+	float getScaleX() const;
 
 	// 获取节点纵向缩放比例
-	double getScaleY() const;
+	float getScaleY() const;
 
 	// 获取节点横向倾斜角度
-	double getSkewX() const;
+	float getSkewX() const;
 
 	// 获取节点纵向倾斜角度
-	double getSkewY() const;
+	float getSkewY() const;
 
 	// 获取节点旋转角度
-	double getRotation() const;
+	float getRotation() const;
 
 	// 获取节点透明度
-	double getOpacity() const;
+	float getOpacity() const;
 
 	// 获取节点属性
 	Property getProperty() const;
@@ -200,12 +200,12 @@ public:
 
 	// 设置节点横坐标
 	virtual void setPosX(
-		double x
+		float x
 	);
 
 	// 设置节点纵坐标
 	virtual void setPosY(
-		double y
+		float y
 	);
 
 	// 设置节点坐标
@@ -215,8 +215,8 @@ public:
 
 	// 设置节点坐标
 	virtual void setPos(
-		double x,
-		double y
+		float x,
+		float y
 	);
 
 	// 节点坐标固定
@@ -226,18 +226,18 @@ public:
 
 	// 移动节点
 	virtual void movePosX(
-		double x
+		float x
 	);
 
 	// 移动节点
 	virtual void movePosY(
-		double y
+		float y
 	);
 
 	// 移动节点
 	virtual void movePos(
-		double x,
-		double y
+		float x,
+		float y
 	);
 
 	// 移动节点
@@ -254,92 +254,92 @@ public:
 	// 设置横向缩放比例
 	// 默认为 1.0
 	virtual void setScaleX(
-		double scaleX
+		float scaleX
 	);
 
 	// 设置纵向缩放比例
 	// 默认为 1.0
 	virtual void setScaleY(
-		double scaleY
+		float scaleY
 	);
 
 	// 设置缩放比例
 	// 默认为 (1.0, 1.0)
 	virtual void setScale(
-		double scaleX,
-		double scaleY
+		float scaleX,
+		float scaleY
 	);
 
 	// 设置缩放比例
 	// 默认为 1.0
 	virtual void setScale(
-		double scale
+		float scale
 	);
 
 	// 设置横向倾斜角度
 	// 默认为 0
 	virtual void setSkewX(
-		double angleX
+		float angleX
 	);
 
 	// 设置纵向倾斜角度
 	// 默认为 0
 	virtual void setSkewY(
-		double angleY
+		float angleY
 	);
 
 	// 设置倾斜角度
 	// 默认为 (0, 0)
 	virtual void setSkew(
-		double angleX,
-		double angleY
+		float angleX,
+		float angleY
 	);
 
 	// 设置旋转角度
 	// 默认为 0
 	virtual void setRotation(
-		double rotation
+		float rotation
 	);
 
 	// 设置透明度
 	// 默认为 1.0, 范围 [0, 1]
 	virtual void setOpacity(
-		double opacity
+		float opacity
 	);
 
 	// 设置中心点的横向位置
 	// 默认为 0, 范围 [0, 1]
 	virtual void setPivotX(
-		double pivotX
+		float pivotX
 	);
 
 	// 设置中心点的纵向位置
 	// 默认为 0, 范围 [0, 1]
 	virtual void setPivotY(
-		double pivotY
+		float pivotY
 	);
 
 	// 设置中心点位置
 	// 默认为 (0, 0), 范围 [0, 1]
 	virtual void setPivot(
-		double pivotX,
-		double pivotY
+		float pivotX,
+		float pivotY
 	);
 
 	// 修改节点宽度
 	virtual void setWidth(
-		double width
+		float width
 	);
 
 	// 修改节点高度
 	virtual void setHeight(
-		double height
+		float height
 	);
 
 	// 修改节点大小
 	virtual void setSize(
-		double width,
-		double height
+		float width,
+		float height
 	);
 
 	// 修改节点大小
@@ -558,13 +558,13 @@ public:
 		Color		color;				// 颜色
 		Align		alignment;			// 对齐方式
 		bool		wrapping;			// 打开自动换行
-		double		wrappingWidth;		// 自动换行宽度
-		double		lineSpacing;		// 行间距
+		float		wrappingWidth;		// 自动换行宽度
+		float		lineSpacing;		// 行间距
 		bool		hasUnderline;		// 下划线
 		bool		hasStrikethrough;	// 删除线
 		bool		hasOutline;			// 显示描边
 		Color		outlineColor;		// 描边颜色
-		double		outlineWidth;		// 描边线宽
+		float		outlineWidth;		// 描边线宽
 		LineJoin	outlineJoin;		// 描边线相交样式
 
 	public:
@@ -574,13 +574,13 @@ public:
 			Color color,
 			Align alignment = Align::Left,
 			bool wrapping = false,
-			double wrappingWidth = 0.0,
-			double lineSpacing = 0.0,
+			float wrappingWidth = 0.f,
+			float lineSpacing = 0.f,
 			bool hasUnderline = false,
 			bool hasStrikethrough = false,
 			bool hasOutline = true,
 			Color outlineColor = Color(Color::Black, 0.5),
-			double outlineWidth = 1.0,
+			float outlineWidth = 1.f,
 			LineJoin outlineJoin = LineJoin::Round
 		);
 	};
@@ -609,7 +609,7 @@ public:
 	String getFontFamily() const;
 
 	// 获取当前字号
-	double getFontSize() const;
+	float getFontSize() const;
 
 	// 获取当前字体粗细值
 	UINT getFontWeight() const;
@@ -621,7 +621,7 @@ public:
 	Color getOutlineColor() const;
 
 	// 获取描边线宽
-	double getOutlineWidth() const;
+	float getOutlineWidth() const;
 
 	// 获取描边线相交样式
 	LineJoin getOutlineJoin() const;
@@ -663,7 +663,7 @@ public:
 
 	// 设置字号（默认值为 22）
 	void setFontSize(
-		double size
+		float size
 	);
 
 	// 设置字体粗细值（默认值为 Text::Font::Weight::Normal）
@@ -688,12 +688,12 @@ public:
 
 	// 设置文本自动换行的宽度（默认为 0）
 	void setWrappingWidth(
-		double wrappingWidth
+		float wrappingWidth
 	);
 
 	// 设置行间距（默认为 0）
 	void setLineSpacing(
-		double lineSpacing
+		float lineSpacing
 	);
 
 	// 设置对齐方式（默认为 Align::Left）
@@ -723,7 +723,7 @@ public:
 
 	// 设置描边线宽
 	void setOutlineWidth(
-		double outlineWidth
+		float outlineWidth
 	);
 
 	// 设置描边线相交样式

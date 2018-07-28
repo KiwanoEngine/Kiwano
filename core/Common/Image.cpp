@@ -73,19 +73,19 @@ void e2d::Image::crop(const Rect& cropRect)
 {
 	if (_bitmap)
 	{
-		_cropRect.origin.x = std::min(std::max(cropRect.origin.x, 0.0), this->getSourceWidth());
-		_cropRect.origin.y = std::min(std::max(cropRect.origin.y, 0.0), this->getSourceHeight());
-		_cropRect.size.width = std::min(std::max(cropRect.size.width, 0.0), this->getSourceWidth() - cropRect.origin.x);
-		_cropRect.size.height = std::min(std::max(cropRect.size.height, 0.0), this->getSourceHeight() - cropRect.origin.y);
+		_cropRect.origin.x = std::min(std::max(cropRect.origin.x, 0.f), this->getSourceWidth());
+		_cropRect.origin.y = std::min(std::max(cropRect.origin.y, 0.f), this->getSourceHeight());
+		_cropRect.size.width = std::min(std::max(cropRect.size.width, 0.f), this->getSourceWidth() - cropRect.origin.x);
+		_cropRect.size.height = std::min(std::max(cropRect.size.height, 0.f), this->getSourceHeight() - cropRect.origin.y);
 	}
 }
 
-double e2d::Image::getWidth() const
+float e2d::Image::getWidth() const
 {
 	return _cropRect.size.width;
 }
 
-double e2d::Image::getHeight() const
+float e2d::Image::getHeight() const
 {
 	return _cropRect.size.height;
 }
@@ -95,7 +95,7 @@ e2d::Size e2d::Image::getSize() const
 	return _cropRect.size;
 }
 
-double e2d::Image::getSourceWidth() const
+float e2d::Image::getSourceWidth() const
 {
 	if (_bitmap)
 	{
@@ -107,7 +107,7 @@ double e2d::Image::getSourceWidth() const
 	}
 }
 
-double e2d::Image::getSourceHeight() const
+float e2d::Image::getSourceHeight() const
 {
 	if (_bitmap)
 	{
@@ -131,12 +131,12 @@ e2d::Size e2d::Image::getSourceSize() const
 	}
 }
 
-double e2d::Image::getCropX() const
+float e2d::Image::getCropX() const
 {
 	return _cropRect.origin.x;
 }
 
-double e2d::Image::getCropY() const
+float e2d::Image::getCropY() const
 {
 	return _cropRect.origin.y;
 }

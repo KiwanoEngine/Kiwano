@@ -10,12 +10,12 @@ e2d::MouseEvent::MouseEvent(UINT message, WPARAM wParam, LPARAM lParam)
 {
 }
 
-double e2d::MouseEvent::getX() const
+float e2d::MouseEvent::getX() const
 {
 	return _pos.x;
 }
 
-double e2d::MouseEvent::getY() const
+float e2d::MouseEvent::getY() const
 {
 	return _pos.y;
 }
@@ -35,7 +35,7 @@ bool e2d::MouseEvent::isCtrlDown() const
 	return _ctrlDown;
 }
 
-double e2d::MouseEvent::getWheelDelta() const
+float e2d::MouseEvent::getWheelDelta() const
 {
 	return _wheelDelta;
 }

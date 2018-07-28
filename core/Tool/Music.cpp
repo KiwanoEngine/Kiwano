@@ -309,11 +309,11 @@ IXAudio2SourceVoice * e2d::Music::getIXAudio2SourceVoice() const
 	return _voice;
 }
 
-bool e2d::Music::setVolume(double volume)
+bool e2d::Music::setVolume(float volume)
 {
 	if (_voice)
 	{
-		return SUCCEEDED(_voice->SetVolume(float(volume)));
+		return SUCCEEDED(_voice->SetVolume(volume));
 	}
 	return false;
 }

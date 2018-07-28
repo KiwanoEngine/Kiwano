@@ -2,7 +2,7 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::Transition::Transition(double duration)
+e2d::Transition::Transition(float duration)
 	: _end(false)
 	, _last()
 	, _delta(0)
@@ -13,7 +13,7 @@ e2d::Transition::Transition(double duration)
 	, _outLayerParam()
 	, _inLayerParam()
 {
-	_duration = std::max(duration, 0.0);
+	_duration = std::max(duration, 0.f);
 }
 
 e2d::Transition::~Transition()
@@ -57,7 +57,7 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 		nullptr,
 		D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 		D2D1::Matrix3x2F::Identity(),
-		1.0,
+		1.f,
 		renderer->getSolidColorBrush(),
 		D2D1_LAYER_OPTIONS_NONE
 	);
@@ -73,7 +73,7 @@ void e2d::Transition::_update()
 	else
 	{
 		_delta = (Game::getInstance()->getTotalDuration() - _last).seconds() / _duration;
-		_delta = std::min(_delta, 1.0);
+		_delta = std::min(_delta, 1.f);
 	}
 
 	this->_updateCustom();
@@ -97,10 +97,10 @@ void e2d::Transition::_render()
 	{
 		Point rootPos = _outScene->getRoot()->getPos();
 		auto clipRect = D2D1::RectF(
-			float(std::max(rootPos.x, 0.0)),
-			float(std::max(rootPos.y, 0.0)),
-			float(std::min(rootPos.x + _windowSize.width, _windowSize.width)),
-			float(std::min(rootPos.y + _windowSize.height, _windowSize.height))
+			std::max(rootPos.x, 0.f),
+			std::max(rootPos.y, 0.f),
+			std::min(rootPos.x + _windowSize.width, _windowSize.width),
+			std::min(rootPos.y + _windowSize.height, _windowSize.height)
 		);
 		pRT->SetTransform(D2D1::Matrix3x2F::Identity());
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
@@ -116,10 +116,10 @@ void e2d::Transition::_render()
 	{
 		Point rootPos = _inScene->getRoot()->getPos();
 		auto clipRect = D2D1::RectF(
-			float(std::max(rootPos.x, 0.0)),
-			float(std::max(rootPos.y, 0.0)),
-			float(std::min(rootPos.x + _windowSize.width, _windowSize.width)),
-			float(std::min(rootPos.y + _windowSize.height, _windowSize.height))
+			std::max(rootPos.x, 0.f),
+			std::max(rootPos.y, 0.f),
+			std::min(rootPos.x + _windowSize.width, _windowSize.width),
+			std::min(rootPos.y + _windowSize.height, _windowSize.height)
 		);
 		pRT->SetTransform(D2D1::Matrix3x2F::Identity());
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);

@@ -2,7 +2,7 @@
 #include "..\e2dnode.h"
 
 
-e2d::OpacityTo::OpacityTo(double duration, double opacity)
+e2d::OpacityTo::OpacityTo(float duration, float opacity)
 	: OpacityBy(duration, 0)
 {
 	_endVal = opacity;

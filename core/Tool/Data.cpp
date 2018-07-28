@@ -18,7 +18,7 @@ void e2d::Data::saveInt(int value)
 	);
 }
 
-void e2d::Data::saveDouble(double value)
+void e2d::Data::saveDouble(float value)
 {
 	::WritePrivateProfileString(
 		(LPCWSTR)_field,
@@ -58,7 +58,7 @@ int e2d::Data::getInt(int defaultValue)
 	);
 }
 
-double e2d::Data::getDouble(double defaultValue)
+float e2d::Data::getDouble(float defaultValue)
 {
 	wchar_t temp[32] = { 0 };
 	::GetPrivateProfileString((LPCWSTR)_field, (LPCWSTR)_key, (LPCWSTR)String::parse(defaultValue), temp, 31, (LPCWSTR)_dataPath);

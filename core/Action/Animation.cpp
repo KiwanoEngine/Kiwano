@@ -11,12 +11,12 @@ e2d::Animation::Animation(const std::vector<Image*>& frames)
 	this->add(frames);
 }
 
-e2d::Animation::Animation(double interval)
+e2d::Animation::Animation(float interval)
 	: _interval(interval)
 {
 }
 
-e2d::Animation::Animation(double interval, const std::vector<Image*>& frames)
+e2d::Animation::Animation(float interval, const std::vector<Image*>& frames)
 	: _interval(interval)
 {
 	this->add(frames);
@@ -30,9 +30,9 @@ e2d::Animation::~Animation()
 	}
 }
 
-void e2d::Animation::setInterval(double interval)
+void e2d::Animation::setInterval(float interval)
 {
-	_interval = std::max(interval, 0.0);
+	_interval = std::max(interval, 0.f);
 }
 
 void e2d::Animation::add(Image * frame)
@@ -52,7 +52,7 @@ void e2d::Animation::add(const std::vector<Image*>& frames)
 	}
 }
 
-double e2d::Animation::getInterval() const
+float e2d::Animation::getInterval() const
 {
 	return _interval;
 }

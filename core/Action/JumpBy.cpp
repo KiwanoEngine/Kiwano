@@ -1,7 +1,7 @@
 #include "..\e2daction.h"
 #include "..\e2dnode.h"
 
-e2d::JumpBy::JumpBy(double duration, const Vector2 & vec, double height, int jumps)
+e2d::JumpBy::JumpBy(float duration, const Vector2 & vec, float height, int jumps)
 	: FiniteTimeAction(duration)
 	, _deltaPos(vec)
 	, _height(height)
@@ -35,9 +35,9 @@ void e2d::JumpBy::_update()
 
 	if (_target)
 	{
-		double frac = fmod(_delta * _jumps, 1.0);
-		double x = _deltaPos.x * _delta;
-		double y = _height * 4 * frac * (1 - frac);
+		float frac = fmod(_delta * _jumps, 1.f);
+		float x = _deltaPos.x * _delta;
+		float y = _height * 4 * frac * (1 - frac);
 		y += _deltaPos.y * _delta;
 
 		Point currentPos = _target->getPos();

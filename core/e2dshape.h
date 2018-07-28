@@ -33,7 +33,7 @@ public:
 	Color getLineColor() const;
 
 	// »ñÈ¡ÏßÌõ¿í¶È
-	double getStrokeWidth() const;
+	float getStrokeWidth() const;
 
 	// ÉèÖÃÌî³äÑÕÉ«
 	void setFillColor(
@@ -47,7 +47,7 @@ public:
 
 	// ÉèÖÃÏßÌõ¿í¶È
 	void setStrokeWidth(
-		double strokeWidth
+		float strokeWidth
 	);
 
 	// ÉèÖÃÑùÊ½
@@ -117,33 +117,33 @@ public:
 
 	explicit RoundRectShape(
 		Size size,		/* ¿í¶ÈºÍ¸ß¶È */
-		double radiusX,	/* Ô²½Ç°ë¾¶ */
-		double radiusY	/* Ô²½Ç°ë¾¶ */
+		float radiusX,	/* Ô²½Ç°ë¾¶ */
+		float radiusY	/* Ô²½Ç°ë¾¶ */
 	);
 
 	explicit RoundRectShape(
 		Point topLeft,	/* ×óÉÏ½Ç×ø±ê */
 		Size size,		/* ¿í¶ÈºÍ¸ß¶È */
-		double radiusX,	/* Ô²½Ç°ë¾¶ */
-		double radiusY	/* Ô²½Ç°ë¾¶ */
+		float radiusX,	/* Ô²½Ç°ë¾¶ */
+		float radiusY	/* Ô²½Ç°ë¾¶ */
 	);
 
 	virtual ~RoundRectShape();
 
 	// »ñÈ¡Ô²½Ç°ë¾¶
-	double getRadiusX() const;
+	float getRadiusX() const;
 
 	// »ñÈ¡Ô²½Ç°ë¾¶
-	double getRadiusY() const;
+	float getRadiusY() const;
 
 	// ÉèÖÃÔ²½Ç°ë¾¶
 	virtual void setRadiusX(
-		double radiusX
+		float radiusX
 	);
 
 	// ÉèÖÃÔ²½Ç°ë¾¶
 	virtual void setRadiusY(
-		double radiusY
+		float radiusY
 	);
 
 protected:
@@ -169,22 +169,22 @@ public:
 	CircleShape();
 
 	explicit CircleShape(
-		double radius	/* °ë¾¶ */
+		float radius	/* °ë¾¶ */
 	);
 
 	explicit CircleShape(
 		Point center,	/* Ô²ĞÄ×ø±ê */
-		double radius	/* °ë¾¶ */
+		float radius	/* °ë¾¶ */
 	);
 
 	virtual ~CircleShape();
 
 	// »ñÈ¡°ë¾¶
-	double getRadius() const;
+	float getRadius() const;
 
 	// ÉèÖÃ°ë¾¶
 	virtual void setRadius(
-		double radius
+		float radius
 	);
 
 protected:
@@ -209,32 +209,32 @@ public:
 	EllipseShape();
 
 	explicit EllipseShape(
-		double radiusX,	/* ºáÖá°ë¾¶ */
-		double radiusY	/* ×İÖá°ë¾¶ */
+		float radiusX,	/* ºáÖá°ë¾¶ */
+		float radiusY	/* ×İÖá°ë¾¶ */
 	);
 
 	explicit EllipseShape(
 		Point center,	/* Ô²ĞÄ×ø±ê */
-		double radiusX,	/* ºáÖá°ë¾¶ */
-		double radiusY	/* ×İÖá°ë¾¶ */
+		float radiusX,	/* ºáÖá°ë¾¶ */
+		float radiusY	/* ×İÖá°ë¾¶ */
 	);
 
 	virtual ~EllipseShape();
 
 	// »ñÈ¡ºáÖá°ë¾¶
-	double getRadiusX() const;
+	float getRadiusX() const;
 
 	// »ñÈ¡×İÖá°ë¾¶
-	double getRadiusY() const;
+	float getRadiusY() const;
 
 	// ÉèÖÃºáÖá°ë¾¶
 	virtual void setRadiusX(
-		double radiusX
+		float radiusX
 	);
 
 	// ÉèÖÃ×İÖá°ë¾¶
 	virtual void setRadiusY(
-		double radiusY
+		float radiusY
 	);
 
 protected:

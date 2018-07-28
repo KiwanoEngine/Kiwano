@@ -22,9 +22,9 @@ int e2d::Duration::milliseconds() const
 	return static_cast<int>(_ms.count());
 }
 
-double e2d::Duration::seconds() const
+float e2d::Duration::seconds() const
 {
-	return _ms.count() / 1000.0;
+	return _ms.count() / 1000.f;
 }
 
 bool e2d::Duration::operator==(const Duration & other) const

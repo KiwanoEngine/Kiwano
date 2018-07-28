@@ -2,7 +2,7 @@
 #include "..\e2dnode.h"
 
 
-e2d::MoveBy::MoveBy(double duration, Vector2 vector)
+e2d::MoveBy::MoveBy(float duration, Vector2 vector)
 	: FiniteTimeAction(duration)
 {
 	_deltaPos = vector;

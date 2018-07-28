@@ -2,7 +2,7 @@
 #include "..\e2dnode.h"
 
 
-e2d::RotateBy::RotateBy(double duration, double rotation)
+e2d::RotateBy::RotateBy(float duration, float rotation)
 	: FiniteTimeAction(duration)
 {
 	_deltaVal = rotation;

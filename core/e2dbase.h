@@ -130,10 +130,10 @@ public:
 	String getTitle();
 
 	// 获取窗体宽度
-	double getWidth();
+	float getWidth();
 
 	// 获取窗体高度
-	double getHeight();
+	float getHeight();
 
 	// 获取窗体大小
 	Size getSize();
@@ -233,22 +233,22 @@ public:
 	);
 
 	// 获得鼠标X轴坐标值
-	double getMouseX();
+	float getMouseX();
 
 	// 获得鼠标Y轴坐标值
-	double getMouseY();
+	float getMouseY();
 
 	// 获得鼠标坐标值
 	Point getMousePos();
 
 	// 获得鼠标X轴坐标增量
-	double getMouseDeltaX();
+	float getMouseDeltaX();
 
 	// 获得鼠标Y轴坐标增量
-	double getMouseDeltaY();
+	float getMouseDeltaY();
 
 	// 获得鼠标Z轴（鼠标滚轮）坐标增量
-	double getMouseDeltaZ();
+	float getMouseDeltaZ();
 
 	// 刷新输入设备状态
 	void update();

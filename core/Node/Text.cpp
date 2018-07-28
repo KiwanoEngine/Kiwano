@@ -8,13 +8,13 @@ e2d::Text::Style::Style()
 	: color(Color::White)
 	, alignment(Align::Left)
 	, wrapping(false)
-	, wrappingWidth(0.0)
-	, lineSpacing(0.0)
+	, wrappingWidth(0.f)
+	, lineSpacing(0.f)
 	, hasUnderline(false)
 	, hasStrikethrough(false)
 	, hasOutline(true)
 	, outlineColor(Color(Color::Black, 0.5))
-	, outlineWidth(1.0)
+	, outlineWidth(1.f)
 	, outlineJoin(LineJoin::Round)
 {}
 
@@ -22,13 +22,13 @@ e2d::Text::Style::Style(
 	Color color,
 	Align alignment,
 	bool wrapping,
-	double wrappingWidth,
-	double lineSpacing,
+	float wrappingWidth,
+	float lineSpacing,
 	bool hasUnderline,
 	bool hasStrikethrough,
 	bool hasOutline,
 	Color outlineColor,
-	double outlineWidth,
+	float outlineWidth,
 	LineJoin outlineJoin
 )
 	: color(color)
@@ -94,7 +94,7 @@ e2d::String e2d::Text::getFontFamily() const
 	return _font.family;
 }
 
-double e2d::Text::getFontSize() const
+float e2d::Text::getFontSize() const
 {
 	return _font.size;
 }
@@ -114,7 +114,7 @@ e2d::Color e2d::Text::getOutlineColor() const
 	return _style.outlineColor;
 }
 
-double e2d::Text::getOutlineWidth() const
+float e2d::Text::getOutlineWidth() const
 {
 	return _style.outlineWidth;
 }
@@ -182,7 +182,7 @@ void e2d::Text::setFontFamily(const String& family)
 	_reset();
 }
 
-void e2d::Text::setFontSize(double size)
+void e2d::Text::setFontSize(float size)
 {
 	_font.size = size;
 	_reset();
@@ -214,11 +214,11 @@ void e2d::Text::setWrapping(bool wrapping)
 	}
 }
 
-void e2d::Text::setWrappingWidth(double wrappingWidth)
+void e2d::Text::setWrappingWidth(float wrappingWidth)
 {
 	if (_style.wrappingWidth != wrappingWidth)
 	{
-		_style.wrappingWidth = std::max(wrappingWidth, 0.0);
+		_style.wrappingWidth = std::max(wrappingWidth, 0.f);
 
 		if (_style.wrapping)
 		{
@@ -227,7 +227,7 @@ void e2d::Text::setWrappingWidth(double wrappingWidth)
 	}
 }
 
-void e2d::Text::setLineSpacing(double lineSpacing)
+void e2d::Text::setLineSpacing(float lineSpacing)
 {
 	if (_style.lineSpacing != lineSpacing)
 	{
@@ -277,7 +277,7 @@ void e2d::Text::setOutlineColor(Color outlineColor)
 	_style.outlineColor = outlineColor;
 }
 
-void e2d::Text::setOutlineWidth(double outlineWidth)
+void e2d::Text::setOutlineWidth(float outlineWidth)
 {
 	_style.outlineWidth = outlineWidth;
 }
@@ -302,7 +302,7 @@ void e2d::Text::onRender() const
 			_style.color.toD2DColorF(),
 			_style.hasOutline,
 			_style.outlineColor.toD2DColorF(),
-			float(_style.outlineWidth),
+			_style.outlineWidth,
 			D2D1_LINE_JOIN(_style.outlineJoin)
 		);
 		_textLayout->Draw(nullptr, pTextRenderer, 0, 0);
@@ -327,7 +327,7 @@ void e2d::Text::_createFormat()
 		DWRITE_FONT_WEIGHT(_font.weight),
 		_font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
-		float(_font.size),
+		_font.size,
 		L"",
 		&_textFormat
 	);
@@ -343,7 +343,7 @@ void e2d::Text::_createFormat()
 		// 设置文字对齐方式
 		_textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(_style.alignment));
 		// 设置行间距
-		if (_style.lineSpacing == 0.0)
+		if (_style.lineSpacing == 0.f)
 		{
 			_textFormat->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
 		}
@@ -351,8 +351,8 @@ void e2d::Text::_createFormat()
 		{
 			_textFormat->SetLineSpacing(
 				DWRITE_LINE_SPACING_METHOD_UNIFORM,
-				float(_style.lineSpacing),
-				float(_style.lineSpacing) * 0.8f
+				_style.lineSpacing,
+				_style.lineSpacing * 0.8f
 			);
 		}
 		// 打开文本自动换行时，设置换行属性
@@ -395,7 +395,7 @@ void e2d::Text::_createLayout()
 			(const WCHAR *)_text,
 			length,
 			_textFormat,
-			float(_style.wrappingWidth),
+			_style.wrappingWidth,
 			0,
 			&_textLayout
 		);

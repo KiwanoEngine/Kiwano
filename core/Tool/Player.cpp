@@ -160,14 +160,14 @@ bool e2d::Player::isPlaying(const Resource& res)
 	return false;
 }
 
-double e2d::Player::getVolume()
+float e2d::Player::getVolume()
 {
 	return _volume;
 }
 
-void e2d::Player::setVolume(double volume)
+void e2d::Player::setVolume(float volume)
 {
-	_volume = std::min(std::max(float(volume), -224.f), 224.f);
+	_volume = std::min(std::max(volume, -224.f), 224.f);
 	for (auto pair : _musicList)
 	{
 		pair.second->setVolume(_volume);

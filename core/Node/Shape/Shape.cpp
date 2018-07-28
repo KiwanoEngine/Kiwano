@@ -59,7 +59,7 @@ e2d::Color e2d::Shape::getLineColor() const
 	return _lineColor;
 }
 
-double e2d::Shape::getStrokeWidth() const
+float e2d::Shape::getStrokeWidth() const
 {
 	return _strokeWidth;
 }
@@ -79,9 +79,9 @@ void e2d::Shape::setLineColor(Color lineColor)
 	_lineColor = lineColor;
 }
 
-void e2d::Shape::setStrokeWidth(double strokeWidth)
+void e2d::Shape::setStrokeWidth(float strokeWidth)
 {
-	_strokeWidth = float(strokeWidth) * 2;
+	_strokeWidth = strokeWidth * 2;
 }
 
 void e2d::Shape::setStyle(Style style)

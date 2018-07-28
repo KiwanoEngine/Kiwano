@@ -17,13 +17,13 @@ public:
 	}
 
 	// 取得范围内的一个浮点数随机数
-	static inline double range(float min, float max) 
+	static inline float range(float min, float max) 
 	{ 
 		return e2d::Random::__randomReal(min, max); 
 	}
 
 	// 取得范围内的一个浮点数随机数
-	static inline double range(double min, double max) 
+	static inline double range(double min, double max)
 	{ 
 		return e2d::Random::__randomReal(min, max); 
 	}
@@ -99,7 +99,7 @@ public:
 
 	// 设置音量
 	bool setVolume(
-		double volume
+		float volume
 	);
 
 	// 设置播放结束时的执行函数
@@ -222,11 +222,11 @@ public:
 	);
 
 	// 获取音量
-	double getVolume();
+	float getVolume();
 
 	// 设置音量
 	void setVolume(
-		double volume			/* 音量范围为 -224 ~ 224，0 是静音，1 是正常音量 */
+		float volume			/* 音量范围为 -224 ~ 224，0 是静音，1 是正常音量 */
 	);
 
 	// 暂停所有音乐
@@ -277,7 +277,7 @@ public:
 
 	explicit Task(
 		const Function& func,		/* 执行函数 */
-		double delay,				/* 时间间隔（秒） */
+		float delay,				/* 时间间隔（秒） */
 		int times = -1,				/* 执行次数（设 -1 为永久执行） */
 		const String& name = L""	/* 任务名称 */
 	);
@@ -308,8 +308,8 @@ private:
 	bool		_stopped;
 	int			_runTimes;
 	int			_totalTimes;
-	double		_delay;
-	double		_lastTime;
+	float		_delay;
+	float		_lastTime;
 	String		_name;
 	Function	_callback;
 };
@@ -391,9 +391,9 @@ public:
 		int value							/* 数据 */
 	);
 
-	// 保存 double 类型的值
+	// 保存 float 类型的值
 	void saveDouble(
-		double value						/* 数据 */
+		float value						/* 数据 */
 	);
 
 	// 保存 bool 类型的值
@@ -412,10 +412,10 @@ public:
 		int defaultValue					/* 默认值 */
 	);
 
-	// 获取 double 类型的值
+	// 获取 float 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	double getDouble(
-		double defaultValue				/* 默认值 */
+	float getDouble(
+		float defaultValue				/* 默认值 */
 	);
 
 	// 获取 bool 类型的值

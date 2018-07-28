@@ -1,8 +1,8 @@
 #include "..\e2daction.h"
 
-e2d::Delay::Delay(double duration)
+e2d::Delay::Delay(float duration)
 	: _delta(0)
-	, _delay(std::max(duration, 0.0))
+	, _delay(std::max(duration, 0.f))
 {
 }
 

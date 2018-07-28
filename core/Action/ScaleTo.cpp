@@ -1,14 +1,14 @@
 #include "..\e2daction.h"
 #include "..\e2dnode.h"
 
-e2d::ScaleTo::ScaleTo(double duration, double scale)
+e2d::ScaleTo::ScaleTo(float duration, float scale)
 	: ScaleBy(duration, 0, 0)
 {
 	_endScaleX = scale;
 	_endScaleY = scale;
 }
 
-e2d::ScaleTo::ScaleTo(double duration, double scaleX, double scaleY)
+e2d::ScaleTo::ScaleTo(float duration, float scaleX, float scaleY)
 	: ScaleBy(duration, 0, 0)
 {
 	_endScaleX = scaleX;

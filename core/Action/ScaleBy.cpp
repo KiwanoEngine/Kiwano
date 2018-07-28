@@ -2,14 +2,14 @@
 #include "..\e2dnode.h"
 
 
-e2d::ScaleBy::ScaleBy(double duration, double scale)
+e2d::ScaleBy::ScaleBy(float duration, float scale)
 	: FiniteTimeAction(duration)
 {
 	_deltaX = scale;
 	_deltaY = scale;
 }
 
-e2d::ScaleBy::ScaleBy(double duration, double scaleX, double scaleY)
+e2d::ScaleBy::ScaleBy(float duration, float scaleX, float scaleY)
 	: FiniteTimeAction(duration)
 {
 	_deltaX = scaleX;

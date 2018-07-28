@@ -30,27 +30,27 @@ class Size;
 class Point
 {
 public:
-	double x;	// X 坐标
-	double y;	// Y 坐标
+	float x;	// X 坐标
+	float y;	// Y 坐标
 
 public:
 	Point();
 
-	Point(double x, double y);
+	Point(float x, float y);
 
 	Point(const Point& other);
 
 	Point operator + (Point const & point) const;
 	Point operator - (Point const & point) const;
-	Point operator * (double const & point) const;
-	Point operator / (double const & point) const;
+	Point operator * (float const & point) const;
+	Point operator / (float const & point) const;
 	Point operator - () const;
 	bool operator== (const Point& point) const;
 
 	operator e2d::Size() const;
 
 	// 判断两点间距离
-	static double distance(const Point&, const Point&);
+	static float distance(const Point&, const Point&);
 };
 
 
@@ -62,20 +62,20 @@ typedef Point Vector2;
 class Size
 {
 public:
-	double width;	// 宽度
-	double height;	// 高度
+	float width;	// 宽度
+	float height;	// 高度
 
 public:
 	Size();
 
-	Size(double width, double height);
+	Size(float width, float height);
 
 	Size(const Size& other);
 
 	Size operator + (Size const & size) const;
 	Size operator - (Size const & size) const;
-	Size operator * (double const & size) const;
-	Size operator / (double const & size) const;
+	Size operator * (float const & size) const;
+	Size operator / (float const & size) const;
 	Size operator - () const;
 	bool operator== (const Size& size) const;
 
@@ -93,7 +93,7 @@ public:
 public:
 	Rect();
 	
-	Rect(double x, double y, double width, double height);
+	Rect(float x, float y, float width, float height);
 	
 	Rect(const Point& pos, const Size& size);
 	
@@ -105,10 +105,10 @@ public:
 	
 	// 设置矩形
 	void setRect(
-		double x, 
-		double y, 
-		double width, 
-		double height
+		float x, 
+		float y, 
+		float width, 
+		float height
 	);
 	
 	// 判断点是否在矩形内
@@ -202,6 +202,9 @@ public:
 	// 将字符串转化为 int 型
 	int toInt() const;
 
+	// 将字符串转化为 float 型
+	float toFloat() const;
+
 	// 将字符串转化为 double 型
 	double toDouble() const;
 
@@ -288,16 +291,16 @@ public:
 	Color();
 
 	Color(
-		double r,
-		double g,
-		double b
+		float r,
+		float g,
+		float b
 	);
 
 	Color(
-		double r,
-		double g,
-		double b,
-		double alpha
+		float r,
+		float g,
+		float b,
+		float alpha
 	);
 
 	Color(
@@ -306,7 +309,7 @@ public:
 
 	Color(
 		UINT rgb,
-		double alpha
+		float alpha
 	);
 
 	D2D1_COLOR_F toD2DColorF() const;
@@ -358,7 +361,7 @@ public:
 private:
 	void _init(
 		UINT rgb,
-		double alpha
+		float alpha
 	);
 
 private:
@@ -422,7 +425,7 @@ public:
 	int milliseconds() const;
 
 	// 获取秒数
-	double seconds() const;
+	float seconds() const;
 
 	bool operator== (const Duration &) const;
 	bool operator!= (const Duration &) const;
@@ -470,7 +473,7 @@ class Font
 {
 public:
 	String	family;			// 字体族
-	double	size;			// 字号
+	float	size;			// 字号
 	UINT	weight;			// 粗细值
 	bool	italic;			// 斜体
 
@@ -494,7 +497,7 @@ public:
 
 	explicit Font(
 		const String& family,
-		double size = 22,
+		float size = 22,
 		UINT weight = Font::Weight::Normal,
 		bool italic = false
 	);
@@ -636,16 +639,16 @@ public:
 		LPARAM lParam
 	);
 
-	double getX() const;
+	float getX() const;
 
-	double getY() const;
+	float getY() const;
 
 	Point getPos() const;
 
 	// 获取事件类型
 	MouseEvent::Type getType() const;
 
-	double getWheelDelta() const;
+	float getWheelDelta() const;
 
 	// Shift 键是否按下
 	bool isShiftDown() const;
@@ -656,7 +659,7 @@ public:
 protected:
 	bool _shiftDown;
 	bool _ctrlDown;
-	double _wheelDelta;
+	float _wheelDelta;
 	Point _pos;
 	MouseEvent::Type _type;
 };
@@ -896,28 +899,28 @@ public:
 	);
 
 	// 获取宽度
-	virtual double getWidth() const;
+	virtual float getWidth() const;
 
 	// 获取高度
-	virtual double getHeight() const;
+	virtual float getHeight() const;
 
 	// 获取大小
 	virtual Size getSize() const;
 
 	// 获取源图片宽度
-	virtual double getSourceWidth() const;
+	virtual float getSourceWidth() const;
 
 	// 获取源图片高度
-	virtual double getSourceHeight() const;
+	virtual float getSourceHeight() const;
 
 	// 获取源图片大小
 	virtual Size getSourceSize() const;
 	
 	// 获取裁剪位置 X 坐标
-	virtual double getCropX() const;
+	virtual float getCropX() const;
 
 	// 获取裁剪位置 Y 坐标
-	virtual double getCropY() const;
+	virtual float getCropY() const;
 
 	// 获取裁剪位置
 	virtual Point getCropPos() const;

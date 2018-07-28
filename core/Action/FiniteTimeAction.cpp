@@ -1,8 +1,8 @@
 #include "..\e2daction.h"
 
-e2d::FiniteTimeAction::FiniteTimeAction(double duration)
+e2d::FiniteTimeAction::FiniteTimeAction(float duration)
 	: _delta(0)
-	, _duration(std::max(duration, 0.0))
+	, _duration(std::max(duration, 0.f))
 {
 }
 
@@ -28,7 +28,7 @@ void e2d::FiniteTimeAction::_update()
 	}
 	else
 	{
-		_delta = std::min((Game::getInstance()->getTotalDuration().seconds() - _last) / _duration, 1.0);
+		_delta = std::min((Game::getInstance()->getTotalDuration().seconds() - _last) / _duration, 1.f);
 
 		if (_delta >= 1)
 		{

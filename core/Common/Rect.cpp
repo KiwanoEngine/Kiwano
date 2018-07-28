@@ -2,10 +2,10 @@
 
 e2d::Rect::Rect(void)
 {
-	setRect(0.0, 0.0, 0.0, 0.0);
+	setRect(0.f, 0.f, 0.f, 0.f);
 }
 
-e2d::Rect::Rect(double x, double y, double width, double height)
+e2d::Rect::Rect(float x, float y, float width, float height)
 {
 	setRect(x, y, width, height);
 }
@@ -31,7 +31,7 @@ bool e2d::Rect::operator==(const Rect & rect) const
 	return (origin == rect.origin) && (size == rect.size);
 }
 
-void e2d::Rect::setRect(double x, double y, double width, double height)
+void e2d::Rect::setRect(float x, float y, float width, float height)
 {
 	origin.x = x;
 	origin.y = y;

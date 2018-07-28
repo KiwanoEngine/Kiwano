@@ -184,12 +184,12 @@ bool e2d::Input::isRelease(MouseCode code)
 	return false;
 }
 
-double e2d::Input::getMouseX()
+float e2d::Input::getMouseX()
 {
 	return getMousePos().x;
 }
 
-double e2d::Input::getMouseY()
+float e2d::Input::getMouseY()
 {
 	return getMousePos().y;
 }
@@ -203,20 +203,20 @@ e2d::Point e2d::Input::getMousePos()
 	ScreenToClient(hWnd, &mousePos);
 
 	UINT ret = ::GetDpiForWindow(hWnd);
-	return Point(mousePos.x * 96.0 / ret, mousePos.y * 96.0 / ret);
+	return Point(mousePos.x * 96.f / ret, mousePos.y * 96.f / ret);
 }
 
-double e2d::Input::getMouseDeltaX()
+float e2d::Input::getMouseDeltaX()
 {
-	return (double)_mouseState.lX;
+	return (float)_mouseState.lX;
 }
 
-double e2d::Input::getMouseDeltaY()
+float e2d::Input::getMouseDeltaY()
 {
-	return (double)_mouseState.lY;
+	return (float)_mouseState.lY;
 }
 
-double e2d::Input::getMouseDeltaZ()
+float e2d::Input::getMouseDeltaZ()
 {
-	return (double)_mouseState.lZ;
+	return (float)_mouseState.lZ;
 }
