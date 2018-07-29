@@ -65,7 +65,6 @@ e2d::Node::Node()
 	, _needTransform(false)
 	, _autoUpdate(true)
 	, _positionFixed(false)
-	, _outline(nullptr)
 	, _collider(this)
 	, _extrapolate(Property::Origin)
 {
@@ -73,8 +72,6 @@ e2d::Node::Node()
 
 e2d::Node::~Node()
 {
-	SafeRelease(_outline);
-
 	ActionManager::getInstance()->clearAllBindedWith(this);
 	for (auto child : _children)
 	{
@@ -158,7 +155,7 @@ void e2d::Node::_render()
 
 	if (_children.empty())
 	{
-		// 转换渲染器的二维矩阵
+		// 转换渲染器的转换矩阵
 		pRT->SetTransform(_finalMatri);
 		// 渲染自身
 		this->onRender();
@@ -183,7 +180,7 @@ void e2d::Node::_render()
 			}
 		}
 
-		// 转换渲染器的二维矩阵
+		// 转换渲染器的转换矩阵
 		pRT->SetTransform(_finalMatri);
 		// 渲染自身
 		this->onRender();
@@ -203,17 +200,13 @@ void e2d::Node::_renderOutline()
 {
 	if (_visible)
 	{
-		if (_outline)
-		{
-			auto renderer = Renderer::getInstance();
-			// 获取纯色画刷
-			ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
-			// 设置画刷颜色和透明度
-			brush->SetColor(D2D1::ColorF(D2D1::ColorF::Red, 0.6f));
-			brush->SetOpacity(1.f);
-			// 渲染轮廓
-			renderer->getRenderTarget()->DrawGeometry(_outline, brush, 1.5f);
-		}
+		auto renderer = Renderer::getInstance();
+		renderer->getRenderTarget()->SetTransform(_finalMatri);
+		renderer->getRenderTarget()->DrawRectangle(
+			D2D1::RectF(0, 0, _width, _height),
+			renderer->getSolidColorBrush(),
+			1.5f
+		);
 
 		// 渲染所有子节点的轮廓
 		for (auto child : _children)
@@ -273,29 +266,6 @@ void e2d::Node::updateTransform()
 
 	// 更新碰撞体
 	_collider.recreate();
-
-	// 为节点创建一个轮廓
-	ID2D1RectangleGeometry * rectGeo = nullptr;
-	ID2D1TransformedGeometry * transformedGeo = nullptr;
-
-	auto factory = Renderer::getFactory();
-	HRESULT hr = factory->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, _width, _height),
-		&rectGeo
-	);
-
-	if (SUCCEEDED(hr))
-	{
-		factory->CreateTransformedGeometry(
-			rectGeo,
-			_finalMatri,
-			&transformedGeo
-		);
-	}
-
-	SafeRelease(rectGeo);
-	SafeRelease(_outline);
-	_outline = transformedGeo;
 
 	// 通知子节点进行转换
 	for (auto& child : _children)
@@ -896,43 +866,92 @@ void e2d::Node::stopAction(const String& name)
 
 bool e2d::Node::containsPoint(const Point& point)
 {
+	// 更新转换矩阵
 	updateTransform();
-	if (_outline)
+
+	// 为节点创建一个轮廓
+	BOOL ret = 0;
+	ID2D1RectangleGeometry * rectGeo = nullptr;
+	auto factory = Renderer::getFactory();
+
+	HRESULT hr = factory->CreateRectangleGeometry(
+		D2D1::RectF(0, 0, _width, _height),
+		&rectGeo
+	);
+
+	if (SUCCEEDED(hr))
 	{
-		BOOL ret = 0;
-		_outline->FillContainsPoint(
+		rectGeo->FillContainsPoint(
 			D2D1::Point2F(point.x, point.y),
-			D2D1::Matrix3x2F::Identity(),
+			_finalMatri,
 			&ret
 		);
-		if (ret)
-		{
-			return true;
-		}
 	}
-	return false;
+	SafeRelease(rectGeo);
+
+	return ret != 0;
 }
 
 bool e2d::Node::intersects(Node * node)
 {
+	// 更新转换矩阵
 	updateTransform();
 	node->updateTransform();
-	if (_outline)
+
+	// 为节点创建轮廓
+	D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
+	ID2D1RectangleGeometry *rectGeo = nullptr, *rectGeo2 = nullptr;
+	ID2D1TransformedGeometry *transGeo = nullptr, *transGeo2 = nullptr;
+	auto factory = Renderer::getFactory();
+
+	HRESULT hr = factory->CreateRectangleGeometry(
+		D2D1::RectF(0, 0, _width, _height),
+		&rectGeo
+	);
+
+	if (SUCCEEDED(hr))
 	{
-		D2D1_GEOMETRY_RELATION relation;
+		hr = factory->CreateRectangleGeometry(
+			D2D1::RectF(0, 0, node->_width, node->_height),
+			&rectGeo2
+		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		hr = factory->CreateTransformedGeometry(
+			rectGeo,
+			_finalMatri,
+			&transGeo
+		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		hr = factory->CreateTransformedGeometry(
+			rectGeo2,
+			node->_finalMatri,
+			&transGeo2
+		);
+	}
+
+	if (SUCCEEDED(hr))
+	{
 		// 获取相交状态
-		_outline->CompareWithGeometry(
-			node->_outline,
+		transGeo->CompareWithGeometry(
+			transGeo2,
 			D2D1::Matrix3x2F::Identity(),
 			&relation
 		);
-		if ((relation != D2D1_GEOMETRY_RELATION_UNKNOWN) &&
-			(relation != D2D1_GEOMETRY_RELATION_DISJOINT))
-		{
-			return true;
-		}
 	}
-	return false;
+
+	SafeRelease(rectGeo);
+	SafeRelease(rectGeo2);
+	SafeRelease(transGeo);
+	SafeRelease(transGeo2);
+
+	return relation != D2D1_GEOMETRY_RELATION_UNKNOWN &&
+		relation != D2D1_GEOMETRY_RELATION_DISJOINT;
 }
 
 void e2d::Node::setAutoUpdate(bool bAutoUpdate)

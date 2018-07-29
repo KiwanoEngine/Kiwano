@@ -44,7 +44,7 @@ e2d::Color::Color(UINT rgb, float alpha)
 
 e2d::Color::operator D2D1_COLOR_F() const
 {
-	return D2D1::ColorF(r, g, b, a);
+	return std::move(D2D1::ColorF(r, g, b, a));
 }
 
 void e2d::Color::_init(UINT rgb, float alpha)

@@ -30,18 +30,6 @@ public:
 		bool show
 	);
 
-	// 打开或关闭垂直同步
-	// 默认：打开
-	void setVSyncEnabled(
-		bool enabled
-	);
-
-	// 设置帧率刷新间隔（关闭垂直同步时生效）
-	// 默认：15
-	void setFrameInterval(
-		int interval
-	);
-
 	// 显示或隐藏节点轮廓
 	// 默认：隐藏
 	void setOutlineVisible(
@@ -72,14 +60,8 @@ public:
 	// 获取声音打开状态
 	bool isSoundEnabled() const;
 
-	// 获取垂直同步打开状态
-	bool isVSyncEnabled() const;
-
 	// 获取 FPS 显示状态
 	bool isFpsShow() const;
-
-	// 获取帧率刷新间隔
-	int getFrameInterval() const;
 
 	// 获取节点轮廓显示状态
 	bool isOutlineVisible() const;
@@ -92,12 +74,10 @@ public:
 
 protected:
 	bool			_showFps;
-	bool			_vSyncEnabled;
 	bool			_soundEnabled;
 	bool			_outlineVisible;
 	bool			_collisionEnabled;
 	bool			_colliderVisible;
-	int				_frameInterval;
 	String			_gameName;
 };
 
@@ -155,7 +135,6 @@ private:
 	Time		_start;
 	Time		_now;
 	Time		_last;
-	Duration	_frameInterval;
 
 	static Game * _instance;
 };

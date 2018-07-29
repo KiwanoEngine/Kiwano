@@ -4,9 +4,7 @@
 e2d::Config::Config()
 	: _gameName()
 	, _soundEnabled(true)
-	, _frameInterval(15)
 	, _showFps(false)
-	, _vSyncEnabled(true)
 	, _outlineVisible(false)
 	, _collisionEnabled(false)
 	, _colliderVisible(false)
@@ -25,16 +23,6 @@ void e2d::Config::setGameName(const String & name)
 void e2d::Config::showFps(bool show)
 {
 	_showFps = show;
-}
-
-void e2d::Config::setVSyncEnabled(bool enabled)
-{
-	_vSyncEnabled = enabled;
-}
-
-void e2d::Config::setFrameInterval(int interval)
-{
-	_frameInterval = interval;
 }
 
 void e2d::Config::setOutlineVisible(bool visible)
@@ -67,19 +55,9 @@ bool e2d::Config::isSoundEnabled() const
 	return _soundEnabled;
 }
 
-bool e2d::Config::isVSyncEnabled() const
-{
-	return _vSyncEnabled;
-}
-
 bool e2d::Config::isFpsShow() const
 {
 	return _showFps;
-}
-
-int e2d::Config::getFrameInterval() const
-{
-	return _frameInterval;
 }
 
 bool e2d::Config::isOutlineVisible() const

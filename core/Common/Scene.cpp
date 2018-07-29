@@ -22,7 +22,9 @@ void e2d::Scene::render()
 
 	if (Game::getInstance()->getConfig().isOutlineVisible())
 	{
-		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+		auto brush = Renderer::getInstance()->getSolidColorBrush();
+		brush->SetColor(D2D1::ColorF(D2D1::ColorF::Red, 0.6f));
+		brush->SetOpacity(1.f);
 		_root->_renderOutline();
 	}
 

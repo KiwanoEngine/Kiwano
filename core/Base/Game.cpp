@@ -10,7 +10,6 @@ e2d::Game::Game()
 	: _quit(true)
 	, _paused(false)
 	, _config()
-	, _frameInterval(_config.getFrameInterval())
 {
 	CoInitialize(nullptr);
 
@@ -40,27 +39,24 @@ void e2d::Game::destroyInstance()
 
 void e2d::Game::start()
 {
-	// 显示窗口
+	SceneManager::getInstance()->update();
+
 	HWND hWnd = Window::getInstance()->getHWnd();
 	::ShowWindow(hWnd, SW_SHOWNORMAL);
 	::UpdateWindow(hWnd);
-
-	SceneManager::getInstance()->update();
 	Window::getInstance()->poll();
-
-	// 开始游戏
-	int wait = 0;
-	Duration interval;
 
 	_quit = false;
 	_last = _now = Time::now();
+
+	const Duration minInterval(15);
 	
 	while (!_quit)
 	{
 		_now = Time::now();
-		interval = _now - _last;
+		Duration interval = _now - _last;
 
-		if (_config.isVSyncEnabled() || _frameInterval < interval)
+		if (minInterval < interval)
 		{
 			_last = _now;
 			Input::getInstance()->update();
@@ -73,7 +69,14 @@ void e2d::Game::start()
 		}
 		else
 		{
-			std::this_thread::yield();
+			// ID2D1HwndRenderTarget 在渲染时会等待显示器刷新，即开启了垂直同步，
+			// 它起到了非常稳定的延时作用，所以大部分时候不需要手动挂起线程进行延时。
+			// 下面的代码仅在一些情况下（例如窗口最小化时）挂起线程，防止占用过高 CPU 。
+			int wait = (minInterval - interval).milliseconds();
+			if (wait > 1)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(wait));
+			}
 		}
 	}
 }
@@ -107,16 +110,6 @@ void e2d::Game::setConfig(const Config& config)
 			Player::getInstance()->getXAudio2()->StartEngine();
 		else
 			Player::getInstance()->getXAudio2()->StopEngine();
-	}
-
-	if (_config.getFrameInterval() != config.getFrameInterval())
-	{
-		_frameInterval = Duration(config.getFrameInterval());
-	}
-
-	if (_config.isVSyncEnabled() != config.isVSyncEnabled())
-	{
-		Renderer::getInstance()->discardDeviceResources();
 	}
 
 	_config = config;

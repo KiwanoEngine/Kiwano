@@ -467,7 +467,6 @@ protected:
 	Scene *		_parentScene;
 	Node *		_parent;
 	Property	_extrapolate;
-	ID2D1Geometry*		_outline;
 	D2D1::Matrix3x2F	_initialMatri;
 	D2D1::Matrix3x2F	_finalMatri;
 	std::vector<Node*>	_children;

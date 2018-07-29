@@ -69,10 +69,10 @@ void e2d::Renderer::discardDeviceResources()
 
 void e2d::Renderer::render()
 {
-	HRESULT hr = S_OK;
-
-	// 创建设备相关资源
 	auto renderTarget = this->getRenderTarget();
+	// 仅当窗口没有被遮挡时进行渲染
+	if (renderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED)
+		return;
 
 	// 开始渲染
 	renderTarget->BeginDraw();
@@ -89,7 +89,7 @@ void e2d::Renderer::render()
 	}
 
 	// 终止渲染
-	hr = renderTarget->EndDraw();
+	HRESULT hr = renderTarget->EndDraw();
 
 	if (hr == D2DERR_RECREATE_TARGET)
 	{
@@ -195,15 +195,13 @@ ID2D1HwndRenderTarget * e2d::Renderer::getRenderTarget()
 			rc.bottom - rc.top
 		);
 
-		bool VSyncEnabled = Game::getInstance()->getConfig().isVSyncEnabled();
-
 		// 创建一个 Direct2D 渲染目标
 		HRESULT hr = Renderer::getFactory()->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(
 				hWnd,
 				size,
-				VSyncEnabled ? D2D1_PRESENT_OPTIONS_NONE : D2D1_PRESENT_OPTIONS_IMMEDIATELY),
+				D2D1_PRESENT_OPTIONS_NONE),
 			&_renderTarget
 		);
 
