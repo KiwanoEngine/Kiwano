@@ -6,14 +6,20 @@ e2d::BoxTransition::BoxTransition(float duration)
 {
 }
 
-void e2d::BoxTransition::_init(Scene * prev, Scene * next)
+bool e2d::BoxTransition::init(Scene * prev, Scene * next)
 {
-	Transition::_init(prev, next);
-	_inLayerParam.opacity = 0;
+	if (Transition::init(prev, next))
+	{
+		_inLayerParam.opacity = 0;
+		return true;
+	}
+	return false;
 }
 
-void e2d::BoxTransition::_updateCustom()
+void e2d::BoxTransition::update()
 {
+	Transition::update();
+
 	if (_delta <= 0.5)
 	{
 		_outLayerParam.contentBounds = D2D1::RectF(
@@ -35,11 +41,11 @@ void e2d::BoxTransition::_updateCustom()
 		);
 		if (_delta >= 1)
 		{
-			this->_stop();
+			this->stop();
 		}
 	}
 }
 
-void e2d::BoxTransition::_reset()
+void e2d::BoxTransition::reset()
 {
 }

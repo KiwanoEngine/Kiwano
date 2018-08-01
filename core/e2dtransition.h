@@ -5,15 +5,10 @@ namespace e2d
 {
 
 
-class SceneManager;
-
-
 // 场景过渡
 class Transition :
 	public Ref
 {
-	friend class SceneManager;
-
 public:
 	explicit Transition(float duration);
 
@@ -22,36 +17,32 @@ public:
 	// 场景过渡动画是否结束
 	bool isDone();
 
-protected:
 	// 初始化场景过渡动画
-	virtual void _init(
+	virtual bool init(
 		Scene * prev,
 		Scene * next
 	);
 
 	// 更新场景过渡动画
-	virtual void _update();
-
-	// 更新场景过渡动画
-	virtual void _updateCustom() = 0;
+	virtual void update();
 
 	// 渲染场景过渡动画
-	virtual void _render();
-
-	// 重置场景过渡动画
-	virtual void _reset() = 0;
+	virtual void render();
 
 	// 停止场景过渡动画
-	virtual void _stop();
+	virtual void stop();
+
+	// 重置场景过渡动画
+	virtual void reset() = 0;
 
 protected:
-	bool _end;
-	float _duration;
-	float _delta;
-	Duration _last;
-	Size _windowSize;
-	Scene * _outScene;
-	Scene * _inScene;
+	bool	_end;
+	float	_duration;
+	float	_delta;
+	Time	_started;
+	Size	_windowSize;
+	Scene*	_outScene;
+	Scene*	_inScene;
 	ID2D1Layer * _outLayer;
 	ID2D1Layer * _inLayer;
 	D2D1_LAYER_PARAMETERS _outLayerParam;
@@ -68,16 +59,15 @@ public:
 		float duration	/* 动画持续时长 */
 	);
 
-protected:
 	// 更新动画
-	virtual void _updateCustom() override;
+	virtual void update() override;
 
-	virtual void _init(
+	virtual bool init(
 		Scene * prev,
 		Scene * next
 	) override;
 
-	virtual void _reset() override;
+	virtual void reset() override;
 };
 
 
@@ -90,16 +80,15 @@ public:
 		float duration	/* 浮现动画持续时长 */
 	);
 
-protected:
 	// 更新动画
-	virtual void _updateCustom() override;
+	virtual void update() override;
 
-	virtual void _init(
+	virtual bool init(
 		Scene * prev,
 		Scene * next
 	) override;
 
-	virtual void _reset() override;
+	virtual void reset() override;
 };
 
 
@@ -112,16 +101,15 @@ public:
 		float duration	/* 动画持续时长 */
 	);
 
-protected:
 	// 更新动画
-	virtual void _updateCustom() override;
+	virtual void update() override;
 
-	virtual void _init(
+	virtual bool init(
 		Scene * prev,
 		Scene * next
 	) override;
 
-	virtual void _reset() override;
+	virtual void reset() override;
 };
 
 
@@ -135,16 +123,15 @@ public:
 		Direction direction = Direction::Left	/* 场景移动方向 */
 	);
 
-protected:
 	// 更新动画
-	virtual void _updateCustom() override;
+	virtual void update() override;
 
-	virtual void _init(
+	virtual bool init(
 		Scene * prev,
 		Scene * next
 	) override;
 
-	virtual void _reset() override;
+	virtual void reset() override;
 
 protected:
 	Direction _direction;

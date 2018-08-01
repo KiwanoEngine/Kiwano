@@ -3,6 +3,9 @@
 #include <imm.h>
 #pragma comment (lib ,"imm32.lib")
 
+#define WINDOW_STYLE	WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME
+#define REGISTER_CLASS	L"Easy2DApp"
+
 
 e2d::Window * e2d::Window::_instance = nullptr;
 
@@ -51,9 +54,7 @@ bool e2d::Window::createMutex(const String & mutex)
 	if (mutex.isEmpty())
 		return false;
 
-	// 创建进程互斥体
-	String fullMutexName = L"Easy2DApp-" + mutex;
-	HANDLE hMutex = ::CreateMutex(nullptr, TRUE, (LPCWSTR)fullMutexName);
+	HANDLE hMutex = ::CreateMutex(nullptr, TRUE, LPCWSTR(L"Easy2DApp-" + mutex));
 
 	if (hMutex == nullptr)
 	{
@@ -68,7 +69,7 @@ bool e2d::Window::createMutex(const String & mutex)
 		if (!this->_title.isEmpty())
 		{
 			// 获取窗口句柄
-			HWND hProgramWnd = ::FindWindow(L"Easy2DApp", (LPCTSTR)this->_title);
+			HWND hProgramWnd = ::FindWindow(REGISTER_CLASS, (LPCTSTR)_title);
 			if (hProgramWnd)
 			{
 				// 获取窗口显示状态
@@ -85,79 +86,59 @@ bool e2d::Window::createMutex(const String & mutex)
 	return true;
 }
 
-HWND e2d::Window::__create()
+HWND e2d::Window::__registerWindow()
 {
-	// 注册窗口类
 	WNDCLASSEX wcex = { 0 };
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.lpszClassName = L"Easy2DApp";
-	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-	wcex.lpfnWndProc = Window::WndProc;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = sizeof(LONG_PTR);
-	wcex.hInstance = HINST_THISCOMPONENT;
-	wcex.hbrBackground = nullptr;
-	wcex.lpszMenuName = nullptr;
-	wcex.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
+	wcex.cbSize			= sizeof(WNDCLASSEX);
+	wcex.lpszClassName	= REGISTER_CLASS;
+	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	wcex.lpfnWndProc	= Window::WndProc;
+	wcex.hIcon			= nullptr;
+	wcex.cbClsExtra		= 0;
+	wcex.cbWndExtra		= sizeof(LONG_PTR);
+	wcex.hInstance		= HINST_THISCOMPONENT;
+	wcex.hbrBackground	= nullptr;
+	wcex.lpszMenuName	= nullptr;
+	wcex.hCursor		= ::LoadCursor(nullptr, IDC_ARROW);
 
-	if (this->_iconID != 0)
+	if (_iconID != 0)
 	{
 		wcex.hIcon = (HICON)::LoadImage(
 			HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(this->_iconID),
+			MAKEINTRESOURCE(_iconID),
 			IMAGE_ICON,
 			0,
 			0,
 			LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
 		);
 	}
-	else
-	{
-		wcex.hIcon = nullptr;
-	}
 
+	// 注册窗口类
 	RegisterClassEx(&wcex);
 
-	// 因为 CreateWindow 函数使用的是像素大小，获取系统的 DPI 以使它
-	// 适应窗口缩放
-	float dpiScaleX = 0.f, dpiScaleY = 0.f;
-	Renderer::getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
-
-	int nWidth = static_cast<int>(ceil(_size.width * dpiScaleX / 96.f));
-	int nHeight = static_cast<int>(ceil(_size.height * dpiScaleY / 96.f));
-
 	// 计算窗口大小
-	DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME;
-	RECT wr = { 0, 0, static_cast<LONG>(nWidth), static_cast<LONG>(nHeight) };
-	::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
-	// 获取新的宽高
-	nWidth = static_cast<int>(wr.right - wr.left);
-	nHeight = static_cast<int>(wr.bottom - wr.top);
-
-	// 获取屏幕分辨率
-	int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
+	Rect wRect = __adjustWindow(int(_size.width), int(_size.height));
 
 	// 创建窗口
 	HWND hWnd = ::CreateWindowEx(
 		NULL,
-		L"Easy2DApp",
+		REGISTER_CLASS,
 		(LPCTSTR)_title,
-		dwStyle,
-		(screenWidth - nWidth) / 2, (screenHeight - nHeight) / 2,
-		nWidth, nHeight,
+		WINDOW_STYLE,
+		int(wRect.origin.x),
+		int(wRect.origin.y),
+		int(wRect.size.width),
+		int(wRect.size.height),
 		nullptr,
 		nullptr,
 		HINST_THISCOMPONENT,
 		nullptr
 	);
 
-	HRESULT hr = hWnd ? S_OK : E_FAIL;
-
-	if (SUCCEEDED(hr))
+	if (hWnd)
 	{
 		// 禁用输入法
-		this->setTypewritingEnabled(false);
+		setTypewritingEnabled(false);
 		// 禁用控制台关闭按钮
 		HWND consoleHWnd = ::GetConsoleWindow();
 		if (consoleHWnd)
@@ -170,9 +151,33 @@ HWND e2d::Window::__create()
 	}
 	else
 	{
-		::UnregisterClass(L"Easy2DApp", HINST_THISCOMPONENT);
+		::UnregisterClass(REGISTER_CLASS, HINST_THISCOMPONENT);
 	}
 	return hWnd;
+}
+
+e2d::Rect e2d::Window::__adjustWindow(int width, int height)
+{
+	float dpiScaleX = 0.f, dpiScaleY = 0.f;
+	Renderer::getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
+
+	Rect result;
+	RECT wRECT		= { 0, 0, LONG(ceil(width * dpiScaleX / 96.f)), LONG(ceil(height * dpiScaleY / 96.f)) };
+	int maxWidth	= ::GetSystemMetrics(SM_CXSCREEN);
+	int maxHeight	= ::GetSystemMetrics(SM_CYSCREEN);
+
+	// 计算合适的窗口大小
+	::AdjustWindowRectEx(&wRECT, WINDOW_STYLE, FALSE, NULL);
+	width = static_cast<int>(wRECT.right - wRECT.left);
+	height = static_cast<int>(wRECT.bottom - wRECT.top);
+
+	// 当输入的窗口大小比分辨率大时，给出警告
+	WARN_IF(maxWidth < width || maxHeight < height, "The window is larger than screen!");
+	width = std::min(width, maxWidth);
+	height = std::min(height, maxHeight);
+
+	float x = float((maxWidth - width) / 2), y = float((maxHeight - height) / 2);
+	return std::move(Rect(x, y, float(width), float(height)));
 }
 
 void e2d::Window::poll()
@@ -213,7 +218,7 @@ HWND e2d::Window::getHWnd()
 {
 	if (!_hWnd)
 	{
-		_hWnd = this->__create();
+		_hWnd = __registerWindow();
 		if (_hWnd == nullptr)
 		{
 			throw SystemException(L"注册窗口失败");
@@ -224,37 +229,24 @@ HWND e2d::Window::getHWnd()
 
 void e2d::Window::setSize(int width, int height)
 {
-	this->_size = Size(static_cast<float>(width), static_cast<float>(height));
+	_size = Size(static_cast<float>(width), static_cast<float>(height));
 	if (_hWnd)
 	{
-		float dpiScaleX = 0.f, dpiScaleY = 0.f;
-		Renderer::getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
-
-		width = static_cast<int>(ceil(width * dpiScaleX / 96.f));
-		height = static_cast<int>(ceil(height * dpiScaleY / 96.f));
-		// 计算窗口大小
-		DWORD dwStyle = WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME;
-		RECT wr = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
-		::AdjustWindowRectEx(&wr, dwStyle, FALSE, NULL);
-		// 获取新的宽高
-		width = static_cast<int>(wr.right - wr.left);
-		height = static_cast<int>(wr.bottom - wr.top);
-		// 获取屏幕分辨率
-		int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
-		int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
-		// 当输入的窗口大小比分辨率大时，给出警告
-		WARN_IF(screenWidth < width || screenHeight < height, "The window is larger than screen!");
-		// 取最小值
-		width = std::min(width, screenWidth);
-		height = std::min(height, screenHeight);
-		// 修改窗口大小，并设置窗口在屏幕居中
-		::MoveWindow(_hWnd, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, TRUE);
+		Rect wRect = __adjustWindow(width, height);
+		::MoveWindow(
+			_hWnd,
+			int(wRect.origin.x),
+			int(wRect.origin.y),
+			int(wRect.size.width),
+			int(wRect.size.height),
+			TRUE
+		);
 	}
 }
 
 void e2d::Window::setTitle(const String& title)
 {
-	this->_title = title;
+	_title = title;
 	if (_hWnd)
 	{
 		::SetWindowText(_hWnd, (LPCWSTR)title);

@@ -56,8 +56,7 @@ void e2d::Animate::_update()
 		return;
 	}
 
-	auto game = Game::getInstance();
-	while ((game->getTotalDuration().seconds() - _last) >= _animation->getInterval())
+	while ((Time::now() - _started).seconds() >= _animation->getInterval())
 	{
 		auto& frames = _animation->getFrames();
 		auto target = dynamic_cast<Sprite*>(_target);
@@ -67,7 +66,7 @@ void e2d::Animate::_update()
 			target->open(frames[_frameIndex]);
 		}
 
-		_last += _animation->getInterval();
+		_started += Duration(_animation->getInterval());
 		++_frameIndex;
 
 		if (_frameIndex == frames.size())
@@ -81,7 +80,6 @@ void e2d::Animate::_update()
 void e2d::Animate::_resetTime()
 {
 	Action::_resetTime();
-	_last = Game::getInstance()->getTotalDuration().seconds();
 }
 
 void e2d::Animate::reset()

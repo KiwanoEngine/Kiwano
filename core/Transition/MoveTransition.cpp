@@ -7,39 +7,44 @@ e2d::MoveTransition::MoveTransition(float duration, Direction direction)
 {
 }
 
-void e2d::MoveTransition::_init(Scene * prev, Scene * next)
+bool e2d::MoveTransition::init(Scene * prev, Scene * next)
 {
-	Transition::_init(prev, next);
+	if (Transition::init(prev, next))
+	{
+		float width = _windowSize.width;
+		float height = _windowSize.height;
+		if (_direction == Direction::Up)
+		{
+			_posDelta = Vector2(0, -height);
+			_startPos = Point(0, height);
+		}
+		else if (_direction == Direction::Down)
+		{
+			_posDelta = Vector2(0, height);
+			_startPos = Point(0, -height);
+		}
+		else if (_direction == Direction::Left)
+		{
+			_posDelta = Vector2(-width, 0);
+			_startPos = Point(width, 0);
+		}
+		else if (_direction == Direction::Right)
+		{
+			_posDelta = Vector2(width, 0);
+			_startPos = Point(-width, 0);
+		}
 
-	float width = _windowSize.width;
-	float height = _windowSize.height;
-	if (_direction == Direction::Up)
-	{
-		_posDelta = Vector2(0, -height);
-		_startPos = Point(0, height);
+		if (_outScene) _outScene->getRoot()->setPos(0, 0);
+		_inScene->getRoot()->setPos(_startPos);
+		return true;
 	}
-	else if (_direction == Direction::Down)
-	{
-		_posDelta = Vector2(0, height);
-		_startPos = Point(0, -height);
-	}
-	else if (_direction == Direction::Left)
-	{
-		_posDelta = Vector2(-width, 0);
-		_startPos = Point(width, 0);
-	}
-	else if (_direction == Direction::Right)
-	{
-		_posDelta = Vector2(width, 0);
-		_startPos = Point(-width, 0);
-	}
-
-	if (_outScene) _outScene->getRoot()->setPos(0, 0);
-	_inScene->getRoot()->setPos(_startPos);
+	return false;
 }
 
-void e2d::MoveTransition::_updateCustom()
+void e2d::MoveTransition::update()
 {
+	Transition::update();
+
 	if (_outScene)
 	{
 		_outScene->getRoot()->setPos(_posDelta * _delta);
@@ -51,11 +56,11 @@ void e2d::MoveTransition::_updateCustom()
 
 	if (_delta >= 1)
 	{
-		this->_stop();
+		this->stop();
 	}
 }
 
-void e2d::MoveTransition::_reset()
+void e2d::MoveTransition::reset()
 {
 	if (_outScene) _outScene->getRoot()->setPos(0, 0);
 	_inScene->getRoot()->setPos(0, 0);

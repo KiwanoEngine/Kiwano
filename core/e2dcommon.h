@@ -414,11 +414,7 @@ public:
 	Duration();
 
 	explicit Duration(
-		int ms
-	);
-
-	explicit Duration(
-		const std::chrono::milliseconds& ms
+		float seconds
 	);
 
 	// 获取毫秒数
@@ -450,10 +446,6 @@ class Time
 {
 public:
 	Time();
-
-	explicit Time(
-		const std::chrono::steady_clock::time_point& time
-	);
 
 	// 获取时间戳
 	time_t getTimeStamp() const;

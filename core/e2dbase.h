@@ -118,9 +118,6 @@ public:
 	// 获取游戏配置
 	const Config& getConfig();
 
-	// 获取游戏总时长
-	Duration getTotalDuration() const;
-
 private:
 	Game();
 
@@ -132,9 +129,6 @@ private:
 	bool		_quit;
 	bool		_paused;
 	Config		_config;
-	Time		_start;
-	Time		_now;
-	Time		_last;
 
 	static Game * _instance;
 };
@@ -243,7 +237,13 @@ private:
 	E2D_DISABLE_COPY(Window);
 
 	// 注册窗口
-	HWND __create();
+	HWND __registerWindow();
+
+	// 根据客户区大小计算合适的窗口区域
+	Rect __adjustWindow(
+		int width,
+		int height
+	);
 
 	// Win32 窗口消息回调程序
 	static LRESULT CALLBACK WndProc(
@@ -342,12 +342,6 @@ public:
 		Color color
 	);
 
-	// 渲染游戏画面
-	void render();
-
-	// 删除设备相关资源
-	void discardDeviceResources();
-
 	// 获取文字渲染器
 	TextRenderer * getTextRenderer();
 
@@ -356,6 +350,12 @@ public:
 
 	// 获取 ID2D1SolidColorBrush 对象
 	ID2D1SolidColorBrush * getSolidColorBrush();
+
+	// 渲染游戏画面
+	void render();
+
+	// 删除设备相关资源
+	void discardDeviceResources();
 
 	// 获取 ID2D1Factory 对象
 	static ID2D1Factory * getFactory();

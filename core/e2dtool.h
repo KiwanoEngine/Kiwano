@@ -308,8 +308,8 @@ private:
 	bool		_stopped;
 	int			_runTimes;
 	int			_totalTimes;
-	float		_delay;
-	float		_lastTime;
+	Duration	_delay;
+	Time		_lastTime;
 	String		_name;
 	Function	_callback;
 };

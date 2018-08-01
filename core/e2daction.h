@@ -85,7 +85,7 @@ protected:
 	bool	_done;
 	bool	_initialized;
 	Node *	_target;
-	float	_last;
+	Time	_started;
 };
 
 

@@ -6,15 +6,21 @@ e2d::FadeTransition::FadeTransition(float duration)
 {
 }
 
-void e2d::FadeTransition::_init(Scene * prev, Scene * next)
+bool e2d::FadeTransition::init(Scene * prev, Scene * next)
 {
-	Transition::_init(prev, next);
-	_outLayerParam.opacity = 1;
-	_inLayerParam.opacity = 0;
+	if (Transition::init(prev, next))
+	{
+		_outLayerParam.opacity = 1;
+		_inLayerParam.opacity = 0;
+		return true;
+	}
+	return false;
 }
 
-void e2d::FadeTransition::_updateCustom()
+void e2d::FadeTransition::update()
 {
+	Transition::update();
+
 	if (_delta < 0.5)
 	{
 		_outLayerParam.opacity = 1 - _delta * 2;
@@ -26,11 +32,11 @@ void e2d::FadeTransition::_updateCustom()
 		_inLayerParam.opacity = (_delta - 0.5f) * 2;
 		if (_delta >= 1)
 		{
-			this->_stop();
+			this->stop();
 		}
 	}
 }
 
-void e2d::FadeTransition::_reset()
+void e2d::FadeTransition::reset()
 {
 }

@@ -12,8 +12,6 @@ e2d::Game::Game()
 	, _config()
 {
 	CoInitialize(nullptr);
-
-	_start = _last = _now = Time::now();
 }
 
 e2d::Game::~Game()
@@ -39,26 +37,25 @@ void e2d::Game::destroyInstance()
 
 void e2d::Game::start()
 {
-	SceneManager::getInstance()->update();
+	_quit = false;
 
+	const int minInterval = 5;
+	Time last = Time::now();
 	HWND hWnd = Window::getInstance()->getHWnd();
+	
 	::ShowWindow(hWnd, SW_SHOWNORMAL);
 	::UpdateWindow(hWnd);
 	Window::getInstance()->poll();
-
-	_quit = false;
-	_last = _now = Time::now();
-
-	const Duration minInterval(15);
+	SceneManager::getInstance()->update();
 	
 	while (!_quit)
 	{
-		_now = Time::now();
-		Duration interval = _now - _last;
+		auto now = Time::now();
+		auto dur = now - last;
 
-		if (minInterval < interval)
+		if (dur.milliseconds() > minInterval)
 		{
-			_last = _now;
+			last = now;
 			Input::getInstance()->update();
 			Timer::getInstance()->update();
 			ActionManager::getInstance()->update();
@@ -72,7 +69,7 @@ void e2d::Game::start()
 			// ID2D1HwndRenderTarget 在渲染时会等待显示器刷新，即开启了垂直同步，
 			// 它起到了非常稳定的延时作用，所以大部分时候不需要手动挂起线程进行延时。
 			// 下面的代码仅在一些情况下（例如窗口最小化时）挂起线程，防止占用过高 CPU 。
-			int wait = (minInterval - interval).milliseconds();
+			int wait = minInterval - dur.milliseconds();
 			if (wait > 1)
 			{
 				std::this_thread::sleep_for(std::chrono::milliseconds(wait));
@@ -90,7 +87,6 @@ void e2d::Game::resume()
 {
 	if (_paused && !_quit)
 	{
-		_last = _now = Time::now();
 		Timer::getInstance()->updateTime();
 		ActionManager::getInstance()->updateTime();
 	}
@@ -118,11 +114,6 @@ void e2d::Game::setConfig(const Config& config)
 const e2d::Config& e2d::Game::getConfig()
 {
 	return _config;
-}
-
-e2d::Duration e2d::Game::getTotalDuration() const
-{
-	return std::move(_now - _start);
 }
 
 void e2d::Game::quit()

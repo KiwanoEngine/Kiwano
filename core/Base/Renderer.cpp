@@ -107,15 +107,14 @@ void e2d::Renderer::render()
 
 void e2d::Renderer::_renderFps()
 {
-	++_renderTimes;
+	int duration = (Time::now() - _lastRenderTime).milliseconds();
 
-	auto& now = Time::now();
-	int duration = (now - _lastRenderTime).milliseconds();
+	++_renderTimes;
 	if (duration >= 100)
 	{
-		String fpsText = String::format(L"FPS: %.1f", (1000.f / duration * _renderTimes));
-		_renderTimes = 0;
-		_lastRenderTime = now;
+		String fpsText	= String::format(L"FPS: %.1f", (1000.f / duration * _renderTimes));
+		_lastRenderTime = Time::now();
+		_renderTimes	= 0;
 
 		auto writeFactory = Renderer::getWriteFactory();
 		if (!_fpsFormat)

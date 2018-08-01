@@ -6,8 +6,7 @@ e2d::Task::Task(const Function & func, const String & name)
 	, _stopped(false)
 	, _runTimes(0)
 	, _totalTimes(-1)
-	, _delay(0.f)
-	, _lastTime(0.f)
+	, _delay()
 	, _callback(func)
 	, _name(name)
 {
@@ -17,9 +16,8 @@ e2d::Task::Task(const Function & func, float delay, int times, const String & na
 	: _running(true)
 	, _stopped(false)
 	, _runTimes(0)
-	, _totalTimes(times)
 	, _delay(std::max(delay, 0.f))
-	, _lastTime(0.f)
+	, _totalTimes(times)
 	, _callback(func)
 	, _name(name)
 {
@@ -38,17 +36,24 @@ void e2d::Task::resume()
 
 void e2d::Task::update()
 {
-	if (_callback)
+	if (_totalTimes == 0)
 	{
-		_callback();
+		_stopped = true;
+		return;
 	}
 
 	++_runTimes;
 	_lastTime += _delay;
 
+	if (_callback)
+	{
+		_callback();
+	}
+
 	if (_runTimes == _totalTimes)
 	{
 		_stopped = true;
+		return;
 	}
 }
 
@@ -56,11 +61,11 @@ bool e2d::Task::isReady() const
 {
 	if (_running)
 	{
-		if (_delay == 0)
+		if (_delay.milliseconds() == 0)
 		{
 			return true;
 		}
-		if ((Game::getInstance()->getTotalDuration().seconds() - _lastTime) >= _delay)
+		if (Time::now() - _lastTime >= _delay)
 		{
 			return true;
 		}
@@ -80,5 +85,5 @@ e2d::String e2d::Task::getName() const
 
 void e2d::Task::updateTime()
 {
-	_lastTime = Game::getInstance()->getTotalDuration().seconds();
+	_lastTime = Time::now();
 }

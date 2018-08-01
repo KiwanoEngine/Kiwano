@@ -6,24 +6,30 @@ e2d::EmergeTransition::EmergeTransition(float duration)
 {
 }
 
-void e2d::EmergeTransition::_init(Scene * prev, Scene * next)
+bool e2d::EmergeTransition::init(Scene * prev, Scene * next)
 {
-	Transition::_init(prev, next);
-	_outLayerParam.opacity = 1;
-	_inLayerParam.opacity = 0;
+	if (Transition::init(prev, next))
+	{
+		_outLayerParam.opacity = 1;
+		_inLayerParam.opacity = 0;
+		return true;
+	}
+	return false;
 }
 
-void e2d::EmergeTransition::_updateCustom()
+void e2d::EmergeTransition::update()
 {
+	Transition::update();
+
 	_outLayerParam.opacity = 1 - _delta;
 	_inLayerParam.opacity = _delta;
 
 	if (_delta >= 1)
 	{
-		this->_stop();
+		this->stop();
 	}
 }
 
-void e2d::EmergeTransition::_reset()
+void e2d::EmergeTransition::reset()
 {
 }

@@ -4,7 +4,7 @@
 
 e2d::Transition::Transition(float duration)
 	: _end(false)
-	, _last()
+	, _started()
 	, _delta(0)
 	, _outScene(nullptr)
 	, _inScene(nullptr)
@@ -29,7 +29,7 @@ bool e2d::Transition::isDone()
 	return _end;
 }
 
-void e2d::Transition::_init(Scene * prev, Scene * next)
+bool e2d::Transition::init(Scene * prev, Scene * next)
 {
 	auto renderer = Renderer::getInstance();
 	// 创建图层
@@ -42,10 +42,10 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 
 	if (FAILED(hr))
 	{
-		throw SystemException(L"场景过渡动画图层创建失败");
+		return false;
 	}
 
-	_last = Game::getInstance()->getTotalDuration();
+	_started = Time::now();
 	_outScene = prev;
 	_inScene = next;
 	if (_outScene) _outScene->retain();
@@ -61,35 +61,24 @@ void e2d::Transition::_init(Scene * prev, Scene * next)
 		renderer->getSolidColorBrush(),
 		D2D1_LAYER_OPTIONS_NONE
 	);
+
+	return true;
 }
 
-void e2d::Transition::_update()
+void e2d::Transition::update()
 {
-	// 计算动作进度
 	if (_duration == 0)
 	{
 		_delta = 1;
 	}
 	else
 	{
-		_delta = (Game::getInstance()->getTotalDuration() - _last).seconds() / _duration;
+		_delta = (Time::now() - _started).seconds() / _duration;
 		_delta = std::min(_delta, 1.f);
-	}
-
-	this->_updateCustom();
-
-	// 更新场景内容
-	if (_outScene)
-	{
-		_outScene->update();
-	}
-	if (_inScene)
-	{
-		_inScene->update();
 	}
 }
 
-void e2d::Transition::_render()
+void e2d::Transition::render()
 {
 	auto pRT = Renderer::getInstance()->getRenderTarget();
 
@@ -132,8 +121,8 @@ void e2d::Transition::_render()
 	}
 }
 
-void e2d::Transition::_stop()
+void e2d::Transition::stop()
 {
 	_end = true;
-	_reset();
+	reset();
 }

@@ -22,8 +22,7 @@ void e2d::SceneManager::destroyInstance()
 }
 
 e2d::SceneManager::SceneManager()
-	: _saveCurrScene(true)
-	, _currScene(nullptr)
+	: _currScene(nullptr)
 	, _nextScene(nullptr)
 	, _transition(nullptr)
 	, _scenes()
@@ -34,7 +33,7 @@ e2d::SceneManager::~SceneManager()
 {
 }
 
-void e2d::SceneManager::push(Scene * scene, Transition * transition /* = nullptr */, bool saveCurrentScene /* = true */)
+void e2d::SceneManager::push(Scene * scene, bool saveCurrentScene)
 {
 	if (!scene)
 		return;
@@ -44,58 +43,59 @@ void e2d::SceneManager::push(Scene * scene, Transition * transition /* = nullptr
 	_nextScene = scene;
 	_nextScene->retain();
 	
-	// 设置切换场景动作
-	if (transition)
+	// 初始化场景切换动画
+	if (_transition && !_transition->init(_currScene, _nextScene))
 	{
-		if (_transition)
-		{
-			_transition->_stop();
-			_transition->release();
-		}
-		_transition = transition;
-		transition->retain();
-		transition->_init(_currScene, _nextScene);
-		transition->_update();
+		WARN("Transition initialize failed!");
+		_transition->release();
+		_transition = nullptr;
 	}
 
-	if (_currScene)
+	if (saveCurrentScene && _currScene)
 	{
-		_saveCurrScene = saveCurrentScene;
+		_scenes.push(_currScene);
 	}
 }
 
-void e2d::SceneManager::pop(Transition * transition /* = nullptr */)
+e2d::Scene* e2d::SceneManager::pop()
 {
 	// 栈为空时，调用返回场景函数失败
 	if (_scenes.size() == 0)
 	{
 		WARN("Scene stack is empty!");
-		return;
+		return nullptr;
 	}
 
-	// 从栈顶取出场景指针，作为下一场景
 	_nextScene = _scenes.top();
 	_scenes.pop();
 
-	// 返回上一场景时，不保存当前场景
-	if (_currScene)
+	// 初始化场景切换动画
+	if (_transition && !_transition->init(_currScene, _nextScene))
 	{
-		_saveCurrScene = false;
+		WARN("Transition initialize failed!");
+		_transition->release();
+		_transition = nullptr;
 	}
 
-	// 设置切换场景动作
+	return _nextScene;
+}
+
+void e2d::SceneManager::setTransition(Transition * transition)
+{
 	if (transition)
 	{
-		transition->retain();
-		transition->_init(_currScene, _nextScene);
-		transition->_update();
+		if (_transition)
+		{
+			_transition->stop();
+			_transition->release();
+		}
 		_transition = transition;
+		_transition->retain();
 	}
 }
 
 void e2d::SceneManager::clear()
 {
-	// 清空场景栈
 	while (!_scenes.empty())
 	{
 		_scenes.top()->release();
@@ -108,7 +108,7 @@ e2d::Scene * e2d::SceneManager::getCurrentScene()
 	return _currScene;
 }
 
-std::stack<e2d::Scene*> e2d::SceneManager::getSceneStack()
+const std::stack<e2d::Scene*>& e2d::SceneManager::getSceneStack()
 {
 	return _scenes;
 }
@@ -120,19 +120,13 @@ bool e2d::SceneManager::isTransitioning()
 
 void e2d::SceneManager::update()
 {
-	if (_transition == nullptr)
-	{
-		// 更新场景内容
-		if (_currScene)
-		{
-			_currScene->update();
-		}
-	}
-	else
-	{
-		// 更新场景动作
-		_transition->_update();
+	if (_currScene) _currScene->update();
+	if (_nextScene) _nextScene->update();
 
+	if (_transition)
+	{
+		_transition->update();
+		
 		if (_transition->isDone())
 		{
 			_transition->release();
@@ -144,26 +138,17 @@ void e2d::SceneManager::update()
 		}
 	}
 
-	// 下一场景指针不为空时，切换场景
 	if (_nextScene)
 	{
 		if (_currScene)
 		{
-			// 执行当前场景的 onExit 函数
 			_currScene->onExit();
-
-			// 若要保存当前场景，把它放入栈中
-			if (_saveCurrScene)
-			{
-				_scenes.push(_currScene);
-			}
-			else
+			if (_scenes.empty() || _scenes.top() != _currScene)
 			{
 				_currScene->release();
 			}
 		}
 
-		// 执行下一场景的 onEnter 函数
 		_nextScene->onEnter();
 
 		_currScene = _nextScene;
@@ -175,15 +160,11 @@ void e2d::SceneManager::render()
 {
 	if (_transition)
 	{
-		_transition->_render();
+		_transition->render();
 	}
-	else
+	else if (_currScene)
 	{
-		// 绘制当前场景
-		if (_currScene)
-		{
-			_currScene->render();
-		}
+		_currScene->render();
 	}
 }
 

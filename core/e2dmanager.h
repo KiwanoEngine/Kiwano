@@ -25,13 +25,15 @@ public:
 	// 场景入栈
 	void push(
 		Scene * scene,						/* 下一个场景的指针 */
-		Transition * transition = nullptr,	/* 场景切换动作 */
 		bool saveCurrentScene = true		/* 是否保存当前场景 */
 	);
 
 	// 场景出栈
-	void pop(
-		Transition * transition = nullptr	/* 场景切换动作 */
+	Scene* pop();
+
+	// 设置场景切换动作
+	void setTransition(
+		Transition * transition	/* 场景切换动作 */
 	);
 
 	// 清空保存的所有场景
@@ -41,7 +43,7 @@ public:
 	Scene * getCurrentScene();
 
 	// 获取场景栈
-	std::stack<Scene*> getSceneStack();
+	const std::stack<Scene*>& getSceneStack();
 
 	// 是否正在进行转场动作
 	bool isTransitioning();
@@ -70,7 +72,6 @@ private:
 	E2D_DISABLE_COPY(SceneManager);
 
 private:
-	bool				_saveCurrScene;
 	Scene *				_currScene;
 	Scene *				_nextScene;
 	Transition *		_transition;

@@ -28,7 +28,7 @@ void e2d::FiniteTimeAction::_update()
 	}
 	else
 	{
-		_delta = std::min((Game::getInstance()->getTotalDuration().seconds() - _last) / _duration, 1.f);
+		_delta = std::min((Time::now() - _started).seconds() / _duration, 1.f);
 
 		if (_delta >= 1)
 		{
@@ -40,5 +40,5 @@ void e2d::FiniteTimeAction::_update()
 void e2d::FiniteTimeAction::_resetTime()
 {
 	Action::_resetTime();
-	_last = Game::getInstance()->getTotalDuration().seconds() - _delta * _duration;
+	_started = Time::now() - Duration(_delta * _duration);
 }

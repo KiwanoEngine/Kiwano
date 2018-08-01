@@ -6,7 +6,6 @@ e2d::Action::Action()
 	, _done(false)
 	, _initialized(false)
 	, _target(nullptr)
-	, _last(0)
 {
 	ActionManager::getInstance()->__add(this);
 }
@@ -24,7 +23,6 @@ bool e2d::Action::isRunning()
 void e2d::Action::resume()
 {
 	_running = true;
-	_last = Game::getInstance()->getTotalDuration().seconds();
 }
 
 void e2d::Action::pause()
@@ -56,7 +54,7 @@ void e2d::Action::reset()
 {
 	_initialized = false;
 	_done = false;
-	_last = Game::getInstance()->getTotalDuration().seconds();
+	_started = Time::now();
 }
 
 bool e2d::Action::_isDone()
@@ -74,7 +72,7 @@ void e2d::Action::_startWithTarget(Node* target)
 void e2d::Action::_init()
 {
 	_initialized = true;
-	_last = Game::getInstance()->getTotalDuration().seconds();
+	_started = Time::now();
 }
 
 void e2d::Action::_update()

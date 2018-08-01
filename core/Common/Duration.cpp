@@ -7,13 +7,8 @@ e2d::Duration::Duration()
 {
 }
 
-e2d::Duration::Duration(int ms)
-	: _ms(ms)
-{
-}
-
-e2d::Duration::Duration(const std::chrono::milliseconds& ms)
-	: _ms(ms)
+e2d::Duration::Duration(float seconds)
+	: _ms(static_cast<long long>(seconds * 1000.f))
 {
 }
 
@@ -59,12 +54,16 @@ bool e2d::Duration::operator<=(const Duration & other) const
 
 e2d::Duration e2d::Duration::operator+(Duration const & other) const
 {
-	return std::move(Duration(_ms + other._ms));
+	Duration d;
+	d._ms = _ms + other._ms;
+	return std::move(d);
 }
 
 e2d::Duration e2d::Duration::operator-(Duration const & other) const
 {
-	return std::move(Duration(_ms - other._ms));
+	Duration d;
+	d._ms = _ms - other._ms;
+	return std::move(d);
 }
 
 e2d::Duration & e2d::Duration::operator+=(Duration const &other)
