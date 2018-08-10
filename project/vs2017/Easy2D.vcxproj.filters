@@ -22,9 +22,6 @@
     <Filter Include="Common">
       <UniqueIdentifier>{be5d9314-b00a-4f11-bd2a-1f720dc32407}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Node\Shape">
-      <UniqueIdentifier>{eb72b49a-5b2f-4fc0-9ad2-8f5e02efac6f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Custom">
       <UniqueIdentifier>{3475b59d-d50c-43b1-8334-bcb9e1703ed2}</UniqueIdentifier>
     </Filter>
@@ -92,9 +89,6 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Tool\Path.cpp">
       <Filter>Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Shape\Shape.cpp">
-      <Filter>Node\Shape</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Common\Color.cpp">
       <Filter>Common</Filter>
@@ -177,18 +171,6 @@
     <ClCompile Include="..\..\core\Common\Font.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Node\Shape\CircleShape.cpp">
-      <Filter>Node\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Shape\EllipseShape.cpp">
-      <Filter>Node\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Shape\RectShape.cpp">
-      <Filter>Node\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Shape\RoundRectShape.cpp">
-      <Filter>Node\Shape</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Transition\BoxTransition.cpp">
       <Filter>Transition</Filter>
     </ClCompile>
@@ -261,7 +243,6 @@
     <ClInclude Include="..\..\core\e2dmacros.h" />
     <ClInclude Include="..\..\core\e2dmanager.h" />
     <ClInclude Include="..\..\core\e2dnode.h" />
-    <ClInclude Include="..\..\core\e2dshape.h" />
     <ClInclude Include="..\..\core\e2dtool.h" />
     <ClInclude Include="..\..\core\e2dtransition.h" />
     <ClInclude Include="..\..\core\e2dcustom.h" />

@@ -26,7 +26,6 @@
     <ClInclude Include="..\..\core\e2dmacros.h" />
     <ClInclude Include="..\..\core\e2dmanager.h" />
     <ClInclude Include="..\..\core\e2dnode.h" />
-    <ClInclude Include="..\..\core\e2dshape.h" />
     <ClInclude Include="..\..\core\e2dtool.h" />
     <ClInclude Include="..\..\core\e2dtransition.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
@@ -84,11 +83,6 @@
     <ClCompile Include="..\..\core\Node\Button.cpp" />
     <ClCompile Include="..\..\core\Node\Menu.cpp" />
     <ClCompile Include="..\..\core\Node\Node.cpp" />
-    <ClCompile Include="..\..\core\Node\Shape\CircleShape.cpp" />
-    <ClCompile Include="..\..\core\Node\Shape\EllipseShape.cpp" />
-    <ClCompile Include="..\..\core\Node\Shape\RectShape.cpp" />
-    <ClCompile Include="..\..\core\Node\Shape\RoundRectShape.cpp" />
-    <ClCompile Include="..\..\core\Node\Shape\Shape.cpp" />
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />
     <ClCompile Include="..\..\core\Node\Text.cpp" />
     <ClCompile Include="..\..\core\Node\ToggleButton.cpp" />
