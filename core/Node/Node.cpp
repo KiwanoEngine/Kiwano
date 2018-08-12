@@ -274,32 +274,28 @@ void e2d::Node::updateTransform()
 	}
 }
 
-void e2d::Node::dispatch(const MouseEvent & e)
+bool e2d::Node::dispatch(const MouseEvent & e)
 {
-	if (!onMouseEvent(e))
-		return;
+	if (onMouseEvent(e))
+		return true;
 
-	if (!_children.empty())
-	{
-		for (auto child : _children)
-		{
-			child->dispatch(e);
-		}
-	}
+	for (auto iter = _children.rbegin(); iter != _children.rend(); ++iter)
+		if ((*iter)->dispatch(e))
+			return true;
+
+	return false;
 }
 
-void e2d::Node::dispatch(const KeyEvent & e)
+bool e2d::Node::dispatch(const KeyEvent & e)
 {
-	if (!onKeyEvent(e))
-		return;
+	if (onKeyEvent(e))
+		return true;
 
-	if (!_children.empty())
-	{
-		for (auto child : _children)
-		{
-			child->dispatch(e);
-		}
-	}
+	for (auto iter = _children.rbegin(); iter != _children.rend(); ++iter)
+		if ((*iter)->dispatch(e))
+			return true;
+
+	return false;
 }
 
 void e2d::Node::_sortChildren()

@@ -12,7 +12,7 @@
 			this->addChild(New);								\
 		}														\
 		Old = New;												\
-		_updateStatus();											\
+		_updateStatus();										\
 		_updateVisible();										\
 	}															\
 
@@ -125,7 +125,10 @@ void e2d::ToggleButton::setChecked(bool checked)
 void e2d::ToggleButton::setNormal(Node * normal)
 {
 	SET_BUTTON_NODE(_normalOn, normal);
-	this->setSize(_normalOn->getWidth(), _normalOn->getHeight());
+	if (normal)
+	{
+		this->setSize(normal->getWidth(), normal->getHeight());
+	}
 }
 
 void e2d::ToggleButton::setMouseOver(Node * mouseover)

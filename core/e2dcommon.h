@@ -983,12 +983,12 @@ public:
 	virtual void onExit() {}
 
 	// 按键消息
-	// 说明：返回 false 将阻止消息继续传递
-	virtual bool onKeyEvent(KeyEvent e) { return true; }
+	// 说明：返回 true 将阻止消息继续传递
+	virtual bool onKeyEvent(KeyEvent e) { return false; }
 
 	// 鼠标消息
-	// 说明：返回 false 将阻止消息继续传递
-	virtual bool onMouseEvent(MouseEvent e) { return true; }
+	// 说明：返回 true 将阻止消息继续传递
+	virtual bool onMouseEvent(MouseEvent e) { return false; }
 
 	// 碰撞消息
 	virtual void onCollision(Collision collision) { }
