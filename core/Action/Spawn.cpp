@@ -109,10 +109,7 @@ e2d::Spawn * e2d::Spawn::reverse() const
 		std::vector<Action*> newActions(_actions.size());
 		for (auto iter = _actions.crbegin(), iterCrend = _actions.crend(); iter != iterCrend; ++iter)
 		{
-			if (*iter)
-			{
-				newActions.push_back((*iter)->reverse());
-			}
+			newActions.push_back((*iter)->reverse());
 		}
 		spawn->add(newActions);
 	}

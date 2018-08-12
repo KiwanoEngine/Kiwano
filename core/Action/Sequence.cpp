@@ -111,10 +111,7 @@ e2d::Sequence * e2d::Sequence::reverse() const
 		std::vector<Action*> newActions(_actions.size());
 		for (auto iter = _actions.crbegin(), iterCrend = _actions.crend(); iter != iterCrend; ++iter)
 		{
-			if (*iter)
-			{
-				newActions.push_back((*iter)->reverse());
-			}
+			newActions.push_back((*iter)->reverse());
 		}
 		sequence->add(newActions);
 	}

@@ -116,6 +116,7 @@ void e2d::Timer::update()
 		return;
 
 	std::vector<Task*> currTasks;
+	currTasks.reserve(_tasks.size());
 	std::copy_if(
 		_tasks.begin(),
 		_tasks.end(),

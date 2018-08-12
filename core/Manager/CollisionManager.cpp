@@ -51,6 +51,7 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 		return;
 
 	std::vector<Collider*> currColliders;
+	currColliders.reserve(_colliders.size());
 	std::copy_if(
 		_colliders.begin(),
 		_colliders.end(),

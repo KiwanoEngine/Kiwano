@@ -37,6 +37,7 @@ void e2d::ActionManager::update()
 		return;
 
 	std::vector<Action*> currActions;
+	currActions.reserve(_runningActions.size());
 	std::copy_if(
 		_runningActions.begin(),
 		_runningActions.end(),
