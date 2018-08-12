@@ -115,24 +115,29 @@ void e2d::Timer::update()
 	if (_tasks.empty() || Game::getInstance()->isPaused())
 		return;
 
-	for (size_t i = 0; i < _tasks.size();)
+	std::vector<Task*> currTasks;
+	std::copy_if(
+		_tasks.begin(),
+		_tasks.end(),
+		std::back_inserter(currTasks),
+		[](Task* task) { return task->_isReady() && !task->_stopped; }
+	);
+
+	// 遍历就绪的任务
+	for (const auto& task : currTasks)
+		task->_update();
+
+	// 清除结束的任务
+	for (auto iter = _tasks.begin(); iter != _tasks.end();)
 	{
-		auto task = _tasks[i];
-		// 清除已停止的任务
-		if (task->_stopped)
+		if ((*iter)->_stopped)
 		{
-			task->release();
-			_tasks.erase(_tasks.begin() + i);
+			(*iter)->release();
+			iter = _tasks.erase(iter);
 		}
 		else
 		{
-			++i;
-
-			// 更新定时器
-			if (task->_isReady())
-			{
-				task->_update();
-			}
+			++iter;
 		}
 	}
 }

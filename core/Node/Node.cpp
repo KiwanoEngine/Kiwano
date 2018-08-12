@@ -797,20 +797,21 @@ void e2d::Node::removeChildren(const String& childName)
 	// ¼ÆËãÃû³Æ Hash Öµ
 	size_t hash = childName.getHashCode();
 
-	size_t size = _children.size();
-	for (size_t i = 0; i < size; ++i)
+	auto iter = std::find_if(
+		_children.begin(),
+		_children.end(),
+		[childName, hash](Node* child) ->bool { return child->_hashName == hash && child->_name == childName; }
+	);
+
+	if (iter != _children.end())
 	{
-		auto child = _children[i];
-		if (child->_hashName == hash && child->_name == childName)
+		(*iter)->_parent = nullptr;
+		if ((*iter)->_parentScene)
 		{
-			_children.erase(_children.begin() + i);
-			child->_parent = nullptr;
-			if (child->_parentScene)
-			{
-				child->_setParentScene(nullptr);
-			}
-			child->release();
+			(*iter)->_setParentScene(nullptr);
 		}
+		(*iter)->release();
+		_children.erase(iter);
 	}
 }
 

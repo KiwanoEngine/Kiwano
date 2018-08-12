@@ -36,24 +36,30 @@ void e2d::ActionManager::update()
 	if (_runningActions.empty() || Game::getInstance()->isPaused())
 		return;
 
-	// 循环遍历所有正在运行的动作
-	for (size_t i = 0; i < _runningActions.size(); ++i)
+	std::vector<Action*> currActions;
+	std::copy_if(
+		_runningActions.begin(),
+		_runningActions.end(),
+		std::back_inserter(currActions),
+		[](Action* action) { return action->isRunning() && !action->_isDone(); }
+	);
+
+	// 遍历所有正在运行的动作
+	for (const auto& action : currActions)
+		action->_update();
+
+	// 清除完成的动作
+	for (auto iter = _runningActions.begin(); iter != _runningActions.end();)
 	{
-		auto action = _runningActions[i];
-		// 获取动作运行状态
-		if (action->_isDone())
+		if ((*iter)->_isDone())
 		{
-			action->release();
-			action->_target = nullptr;
-			_runningActions.erase(_runningActions.begin() + i);
+			(*iter)->release();
+			(*iter)->_target = nullptr;
+			iter = _runningActions.erase(iter);
 		}
 		else
 		{
-			if (action->isRunning())
-			{
-				// 执行动作
-				action->_update();
-			}
+			++iter;
 		}
 	}
 }
@@ -195,18 +201,16 @@ void e2d::ActionManager::clearAllBindedWith(Node * target)
 {
 	if (target)
 	{
-		for (size_t i = 0; i < _runningActions.size();)
+		auto iter = std::find_if(
+			_runningActions.begin(),
+			_runningActions.end(),
+			[target](Action* action) ->bool { return action->getTarget() == target; }
+		);
+
+		if (iter != _runningActions.end())
 		{
-			auto action = _runningActions[i];
-			if (action->getTarget() == target)
-			{
-				action->release();
-				_runningActions.erase(_runningActions.begin() + i);
-			}
-			else
-			{
-				++i;
-			}
+			(*iter)->release();
+			_runningActions.erase(iter);
 		}
 	}
 }

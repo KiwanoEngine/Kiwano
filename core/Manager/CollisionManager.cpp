@@ -50,34 +50,38 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 		SceneManager::getInstance()->isTransitioning())
 		return;
 
-	for (size_t i = 0; i < _colliders.size(); i++)
-	{
-		// 判断与其他碰撞体的交集情况
-		auto active = collider->getNode();
-		auto passive = _colliders[i]->getNode();
-		// 判断两物体是否是相互冲突的物体
-		if (active == passive ||
-			!passive->isVisible() ||
-			active->getParentScene() != passive->getParentScene() ||
-			!CollisionManager::isCollidable(active, passive))
+	std::vector<Collider*> currColliders;
+	std::copy_if(
+		_colliders.begin(),
+		_colliders.end(),
+		std::back_inserter(currColliders),
+		[this, collider](Collider* passive) -> bool
 		{
-			continue;
+			return collider != passive &&
+				passive->getNode()->isVisible() &&
+				collider->getNode()->getParentScene() == passive->getNode()->getParentScene() &&
+				this->isCollidable(collider->getNode(), passive->getNode());
 		}
+	);
 
+	for (const auto& passive : currColliders)
+	{
 		// 判断两碰撞体交集情况
-		Collider::Relation relation = active->getCollider()->getRelationWith(passive->getCollider());
+		Collider::Relation relation = collider->getRelationWith(passive);
 		// 忽略 UNKNOWN 和 DISJOIN 情况
 		if (relation != Collider::Relation::Unknown &&
 			relation != Collider::Relation::Disjoin)
 		{
+			auto activeNode = collider->getNode();
+			auto passiveNode = passive->getNode();
 			// 触发两次碰撞事件
-			Collision activeCollision(passive, relation);
-			active->getParentScene()->onCollision(activeCollision);
-			active->onCollision(activeCollision);
+			Collision activeCollision(passiveNode, relation);
+			activeNode->getParentScene()->onCollision(activeCollision);
+			activeNode->onCollision(activeCollision);
 
-			Collision passiveCollision(active, passive->getCollider()->getRelationWith(active->getCollider()));
-			passive->getParentScene()->onCollision(passiveCollision);
-			passive->onCollision(passiveCollision);
+			Collision passiveCollision(activeNode, passive->getRelationWith(collider));
+			passiveNode->getParentScene()->onCollision(passiveCollision);
+			passiveNode->onCollision(passiveCollision);
 		}
 	}
 }

@@ -58,16 +58,13 @@ bool e2d::Menu::removeButton(Button * button)
 
 	if (button)
 	{
-		size_t size = _buttons.size();
-		for (size_t i = 0; i < size; ++i)
+		auto iter = std::find(_buttons.begin(), _buttons.end(), button);
+		if (iter != _buttons.end())
 		{
-			if (_buttons[i] == button)
-			{
-				// 移除按钮前，将它启用
-				button->setEnabled(true);
-				_buttons.erase(_buttons.begin() + i);
-				return true;
-			}
+			// 移除按钮前，将它启用
+			button->setEnabled(true);
+			_buttons.erase(iter);
+			return true;
 		}
 	}
 	return false;
