@@ -77,12 +77,12 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 			auto passiveNode = passive->getNode();
 			// 触发两次碰撞事件
 			Collision activeCollision(passiveNode, relation);
-			activeNode->getParentScene()->onCollision(activeCollision);
-			activeNode->onCollision(activeCollision);
+			activeNode->getParentScene()->onEvent(activeCollision);
+			activeNode->onEvent(activeCollision);
 
 			Collision passiveCollision(activeNode, passive->getRelationWith(collider));
-			passiveNode->getParentScene()->onCollision(passiveCollision);
-			passiveNode->onCollision(passiveCollision);
+			passiveNode->getParentScene()->onEvent(passiveCollision);
+			passiveNode->onEvent(passiveCollision);
 		}
 	}
 }

@@ -984,14 +984,14 @@ public:
 
 	// 按键消息
 	// 说明：返回 true 将阻止消息继续传递
-	virtual bool onKeyEvent(KeyEvent e) { return false; }
+	virtual bool onEvent(KeyEvent e) { return false; }
 
 	// 鼠标消息
 	// 说明：返回 true 将阻止消息继续传递
-	virtual bool onMouseEvent(MouseEvent e) { return false; }
+	virtual bool onEvent(MouseEvent e) { return false; }
 
 	// 碰撞消息
-	virtual void onCollision(Collision collision) { }
+	virtual void onEvent(Collision collision) { }
 
 	// 关闭窗口
 	// 说明：返回 false 将阻止窗口关闭
@@ -999,11 +999,6 @@ public:
 
 	// 重写这个函数，它将在每一帧画面刷新时执行
 	virtual void onUpdate() {}
-
-	// 开启或禁用 onUpdate 函数
-	void setAutoUpdate(
-		bool bAutoUpdate
-	);
 
 	// 添加节点到场景
 	void add(
@@ -1058,7 +1053,6 @@ protected:
 	E2D_DISABLE_COPY(Scene);
 
 protected:
-	bool _autoUpdate;
 	Node * _root;
 };
 

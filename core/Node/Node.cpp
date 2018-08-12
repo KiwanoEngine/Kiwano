@@ -63,7 +63,6 @@ e2d::Node::Node()
 	, _clipEnabled(false)
 	, _needSort(false)
 	, _needTransform(false)
-	, _autoUpdate(true)
 	, _positionFixed(false)
 	, _collider(this)
 	, _extrapolate(Property::Origin)
@@ -127,7 +126,7 @@ void e2d::Node::_updateSelf()
 		}
 	}
 
-	if (_autoUpdate && !Game::getInstance()->isPaused())
+	if (!Game::getInstance()->isPaused())
 	{
 		this->onUpdate();
 	}
@@ -278,12 +277,17 @@ bool e2d::Node::dispatch(const MouseEvent & e)
 {
 	if (_visible)
 	{
-		if (onMouseEvent(e))
+		if (onEvent(e))
 			return true;
 
-		for (auto iter = _children.rbegin(); iter != _children.rend(); ++iter)
-			if ((*iter)->dispatch(e))
+		for (size_t i = _children.size(); i >= 0 && i < _children.size(); --i)
+		{
+			if (_children[i]->dispatch(e))
 				return true;
+
+			if (i == 0)
+				break;
+		}
 	}
 
 	return false;
@@ -293,12 +297,17 @@ bool e2d::Node::dispatch(const KeyEvent & e)
 {
 	if (_visible)
 	{
-		if (onKeyEvent(e))
+		if (onEvent(e))
 			return true;
 
-		for (auto iter = _children.rbegin(); iter != _children.rend(); ++iter)
-			if ((*iter)->dispatch(e))
+		for (size_t i = _children.size(); i >= 0 && i < _children.size(); --i)
+		{
+			if (_children[i]->dispatch(e))
 				return true;
+
+			if (i == 0)
+				break;
+		}
 	}
 
 	return false;
@@ -955,11 +964,6 @@ bool e2d::Node::intersects(Node * node)
 
 	return relation != D2D1_GEOMETRY_RELATION_UNKNOWN &&
 		relation != D2D1_GEOMETRY_RELATION_DISJOINT;
-}
-
-void e2d::Node::setAutoUpdate(bool bAutoUpdate)
-{
-	_autoUpdate = bAutoUpdate;
 }
 
 void e2d::Node::resumeAllActions()

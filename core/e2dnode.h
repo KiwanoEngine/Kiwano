@@ -54,14 +54,14 @@ public:
 
 	// 按键消息
 	// 说明：返回 true 将阻止消息向下传递
-	virtual bool onKeyEvent(KeyEvent e) { return false; }
+	virtual bool onEvent(KeyEvent e) { return false; }
 
 	// 鼠标消息
 	// 说明：返回 true 将阻止消息向下传递
-	virtual bool onMouseEvent(MouseEvent e) { return false; }
+	virtual bool onEvent(MouseEvent e) { return false; }
 
 	// 碰撞消息
-	virtual void onCollision(Collision collision) { }
+	virtual void onEvent(Collision collision) { }
 
 	// 获取节点显示状态
 	virtual bool isVisible() const;
@@ -186,11 +186,6 @@ public:
 	// 设置节点是否显示
 	void setVisible(
 		bool value
-	);
-
-	// 开启或禁用 onUpdate 函数
-	void setAutoUpdate(
-		bool bAutoUpdate
 	);
 
 	// 设置节点名称
@@ -458,7 +453,6 @@ protected:
 	float		_pivotY;
 	int			_order;
 	bool		_visible;
-	bool		_autoUpdate;
 	bool		_clipEnabled;
 	bool		_needSort;
 	bool		_needTransform;

@@ -3,8 +3,7 @@
 #include "..\e2dmanager.h"
 
 e2d::Scene::Scene()
-	: _autoUpdate(true)
-	, _root(nullptr)
+	: _root(nullptr)
 {
 	_root = new (e2d::autorelease) Node();
 	_root->retain();
@@ -37,16 +36,13 @@ void e2d::Scene::render()
 
 void e2d::Scene::update()
 {
-	if (_autoUpdate)
-	{
-		onUpdate();
-	}
+	this->onUpdate();
 	_root->_update();
 }
 
 void e2d::Scene::dispatch(const MouseEvent & e)
 {
-	if (onMouseEvent(e))
+	if (onEvent(e))
 		return;
 
 	_root->dispatch(e);
@@ -54,15 +50,10 @@ void e2d::Scene::dispatch(const MouseEvent & e)
 
 void e2d::Scene::dispatch(const KeyEvent & e)
 {
-	if (onKeyEvent(e))
+	if (onEvent(e))
 		return;
 
 	_root->dispatch(e);
-}
-
-void e2d::Scene::setAutoUpdate(bool bAutoUpdate)
-{
-	_autoUpdate = bAutoUpdate;
 }
 
 void e2d::Scene::add(Node * child, int order /* = 0 */)
