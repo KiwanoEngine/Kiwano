@@ -32,21 +32,10 @@ e2d::Music::Music()
 	, _dwSize(0)
 	, _voice(nullptr)
 	, _voiceCallback(this)
+	, _xAudio2(nullptr)
+	, _masteringVoice(nullptr)
 {
-}
-
-e2d::Music::Music(const e2d::String & filePath)
-	: _opened(false)
-	, _playing(false)
-	, _wfx(nullptr)
-	, _hmmio(nullptr)
-	, _resBuffer(nullptr)
-	, _waveData(nullptr)
-	, _dwSize(0)
-	, _voice(nullptr)
-	, _voiceCallback(this)
-{
-	this->open(filePath);
+	CoInitialize(nullptr);
 }
 
 e2d::Music::Music(const Resource& res)
@@ -59,26 +48,70 @@ e2d::Music::Music(const Resource& res)
 	, _dwSize(0)
 	, _voice(nullptr)
 	, _voiceCallback(this)
+	, _xAudio2(nullptr)
+	, _masteringVoice(nullptr)
 {
+	CoInitialize(nullptr);
+
 	this->open(res);
+}
+
+e2d::Music::Music(IXAudio2 * xAudio2)
+	: _opened(false)
+	, _playing(false)
+	, _wfx(nullptr)
+	, _hmmio(nullptr)
+	, _resBuffer(nullptr)
+	, _waveData(nullptr)
+	, _dwSize(0)
+	, _voice(nullptr)
+	, _voiceCallback(this)
+	, _xAudio2(xAudio2)
+	, _masteringVoice(nullptr)
+{
+	CoInitialize(nullptr);
+
+	if (_xAudio2)
+	{
+		_xAudio2->AddRef();
+	}
 }
 
 e2d::Music::~Music()
 {
 	close();
-}
 
-bool e2d::Music::open(const e2d::String& filePath)
-{
-	return open(Resource(filePath));
+	if (_masteringVoice)
+	{
+		_masteringVoice->DestroyVoice();
+		_masteringVoice = nullptr;
+	}
+
+	SafeRelease(_xAudio2);
+
+	CoUninitialize();
 }
 
 bool e2d::Music::open(const Resource& res)
 {
 	if (_opened)
 	{
-		WARN("MusicInfo can be opened only once!");
-		return false;
+		close();
+	}
+
+	if (!_xAudio2)
+	{
+		if (FAILED(XAudio2Create(&_xAudio2, 0)))
+		{
+			TraceError(L"Create IXAudio2 error");
+			return false;
+		}
+
+		if (FAILED(_xAudio2->CreateMasteringVoice(&_masteringVoice)))
+		{
+			TraceError(L"Create IXAudio2MasteringVoice error");
+			return false;
+		}
 	}
 
 	if (!res.isFile())
@@ -167,13 +200,7 @@ bool e2d::Music::open(const Resource& res)
 	}
 
 	// ´´½¨ÒôÔ´
-	HRESULT hr = Player::getInstance()->getXAudio2()->CreateSourceVoice(
-		&_voice, 
-		_wfx, 
-		0, 
-		XAUDIO2_DEFAULT_FREQ_RATIO, 
-		&this->_voiceCallback
-	);
+	HRESULT hr = _xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
 
 	if (FAILED(hr))
 	{
@@ -191,13 +218,13 @@ bool e2d::Music::play(int nLoopCount)
 {
 	if (!_opened)
 	{
-		WARN("MusicInfo::play Failed: MusicInfo must be opened first!");
+		WARN("Music::play Failed: Music must be opened first!");
 		return false;
 	}
 
 	if (_voice == nullptr)
 	{
-		WARN("MusicInfo::play Failed: IXAudio2SourceVoice Null pointer exception!");
+		WARN("Music::play Failed: IXAudio2SourceVoice Null pointer exception!");
 		return false;
 	}
 

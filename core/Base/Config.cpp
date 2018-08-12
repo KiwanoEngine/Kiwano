@@ -3,7 +3,6 @@
 
 e2d::Config::Config()
 	: _gameName()
-	, _soundEnabled(true)
 	, _showFps(false)
 	, _outlineVisible(false)
 	, _collisionEnabled(false)
@@ -30,11 +29,6 @@ void e2d::Config::setOutlineVisible(bool visible)
 	_outlineVisible = visible;
 }
 
-void e2d::Config::setSoundEnabled(bool enabled)
-{
-	_soundEnabled = enabled;
-}
-
 void e2d::Config::setCollisionEnabled(bool enabled)
 {
 	_collisionEnabled = enabled;
@@ -48,11 +42,6 @@ void e2d::Config::setColliderVisible(bool visible)
 e2d::String e2d::Config::getGameName() const
 {
 	return _gameName;
-}
-
-bool e2d::Config::isSoundEnabled() const
-{
-	return _soundEnabled;
 }
 
 bool e2d::Config::isFpsShow() const

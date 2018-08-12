@@ -24,7 +24,10 @@ class VoiceCallback
 	: public IXAudio2VoiceCallback
 {
 public:
-	VoiceCallback(Music * music);
+	explicit VoiceCallback(
+		Music * music
+	);
+
 	~VoiceCallback();
 
 	void __stdcall OnStreamEnd();

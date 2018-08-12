@@ -36,12 +36,6 @@ public:
 		bool visible
 	);
 
-	// 打开或关闭声音
-	// 默认：打开
-	void setSoundEnabled(
-		bool enabled
-	);
-
 	// 打开或关闭碰撞监听
 	// 默认：关闭
 	void setCollisionEnabled(
@@ -57,9 +51,6 @@ public:
 	// 获取游戏名称
 	String getGameName() const;
 
-	// 获取声音打开状态
-	bool isSoundEnabled() const;
-
 	// 获取 FPS 显示状态
 	bool isFpsShow() const;
 
@@ -74,7 +65,6 @@ public:
 
 protected:
 	bool			_showFps;
-	bool			_soundEnabled;
 	bool			_outlineVisible;
 	bool			_collisionEnabled;
 	bool			_colliderVisible;

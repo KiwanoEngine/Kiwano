@@ -100,14 +100,6 @@ bool e2d::Game::isPaused()
 
 void e2d::Game::setConfig(const Config& config)
 {
-	if (_config.isSoundEnabled() != config.isSoundEnabled())
-	{
-		if (config.isSoundEnabled())
-			Player::getInstance()->getXAudio2()->StartEngine();
-		else
-			Player::getInstance()->getXAudio2()->StopEngine();
-	}
-
 	_config = config;
 }
 
@@ -125,5 +117,4 @@ void e2d::Game::cleanup()
 {
 	GC::getInstance()->clear();
 	Image::clearCache();
-	Player::getInstance()->clearCache();
 }

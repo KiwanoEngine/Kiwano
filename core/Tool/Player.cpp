@@ -1,14 +1,23 @@
 #include "..\e2dtool.h"
 
 
-e2d::Player * e2d::Player::_instance = nullptr;
-
 e2d::Player::Player()
 	: _volume(1.f)
+	, _enabled(true)
 	, _xAudio2(nullptr)
 	, _masteringVoice(nullptr)
 {
 	CoInitialize(nullptr);
+
+	if (FAILED(XAudio2Create(&_xAudio2, 0)))
+	{
+		WARN("初始化 XAudio2 组件失败");
+	}
+
+	if (FAILED(_xAudio2->CreateMasteringVoice(&_masteringVoice)))
+	{
+		WARN("初始化 MasteringVoice 组件失败");
+	}
 }
 
 e2d::Player::~Player()
@@ -22,35 +31,14 @@ e2d::Player::~Player()
 	}
 
 	if (_masteringVoice)
+	{
 		_masteringVoice->DestroyVoice();
+		_masteringVoice = nullptr;
+	}
 
 	SafeRelease(_xAudio2);
 
 	CoUninitialize();
-}
-
-e2d::Player * e2d::Player::getInstance()
-{
-	if (!_instance)
-	{
-		_instance = new (std::nothrow) Player;
-
-		if (FAILED(XAudio2Create(&_instance->_xAudio2, 0)) ||
-			FAILED(_instance->_xAudio2->CreateMasteringVoice(&_instance->_masteringVoice)))
-		{
-			throw SystemException(L"初始化 XAudio2 组件失败");
-		}
-	}
-	return _instance;
-}
-
-void e2d::Player::destroyInstance()
-{
-	if (_instance)
-	{
-		delete _instance;
-		_instance = nullptr;
-	}
 }
 
 IXAudio2 * e2d::Player::getXAudio2()
@@ -58,12 +46,9 @@ IXAudio2 * e2d::Player::getXAudio2()
 	return _xAudio2;
 }
 
-bool e2d::Player::preload(const String& filePath)
+IXAudio2MasteringVoice * e2d::Player::getMasteringVoice()
 {
-	if (filePath.isEmpty())
-		return false;
-
-	return preload(Resource(filePath));
+	return _masteringVoice;
 }
 
 bool e2d::Player::preload(const Resource& res)
@@ -71,23 +56,15 @@ bool e2d::Player::preload(const Resource& res)
 	if (_musicList.end() != _musicList.find(res))
 		return true;
 
-	Music * music = new Music();
+	Music * music = new (std::nothrow) Music();
 
-	if (music->open(res))
+	if (music && music->open(res))
 	{
 		music->setVolume(_volume);
 		_musicList.insert(std::make_pair(res, music));
 		return true;
 	}
 	return false;
-}
-
-bool e2d::Player::play(const String& filePath, int nLoopCount)
-{
-	if (filePath.isEmpty())
-		return false;
-
-	return play(Resource(filePath), nLoopCount);
 }
 
 bool e2d::Player::play(const Resource& res, int nLoopCount)
@@ -103,26 +80,10 @@ bool e2d::Player::play(const Resource& res, int nLoopCount)
 	return false;
 }
 
-void e2d::Player::pause(const String& filePath)
-{
-	if (filePath.isEmpty())
-		return;
-
-	pause(Resource(filePath));
-}
-
 void e2d::Player::pause(const Resource& res)
 {
 	if (_musicList.end() != _musicList.find(res))
 		_musicList[res]->pause();
-}
-
-void e2d::Player::resume(const String& filePath)
-{
-	if (filePath.isEmpty())
-		return;
-
-	resume(Resource(filePath));
 }
 
 void e2d::Player::resume(const Resource& res)
@@ -131,26 +92,10 @@ void e2d::Player::resume(const Resource& res)
 		_musicList[res]->pause();
 }
 
-void e2d::Player::stop(const String& filePath)
-{
-	if (filePath.isEmpty())
-		return;
-
-	stop(Resource(filePath));
-}
-
 void e2d::Player::stop(const Resource& res)
 {
 	if (_musicList.end() != _musicList.find(res))
 		_musicList[res]->stop();
-}
-
-bool e2d::Player::isPlaying(const String& filePath)
-{
-	if (filePath.isEmpty())
-		return false;
-
-	return isPlaying(Resource(filePath));
 }
 
 bool e2d::Player::isPlaying(const Resource& res)
@@ -196,6 +141,15 @@ void e2d::Player::stopAll()
 	{
 		pair.second->stop();
 	}
+}
+
+void e2d::Player::setEnabled(bool enabled)
+{
+	if (_enabled == enabled)
+		return;
+
+	_enabled = enabled;
+	_enabled ? _xAudio2->StartEngine() : _xAudio2->StopEngine();
 }
 
 void e2d::Player::clearCache()

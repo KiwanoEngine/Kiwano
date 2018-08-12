@@ -22,7 +22,6 @@
 #include "e2dbase.h"
 #include "e2dmanager.h"
 #include "e2dnode.h"
-#include "e2dshape.h"
 #include "e2dtool.h"
 #include "e2daction.h"
 #include "e2dtransition.h"

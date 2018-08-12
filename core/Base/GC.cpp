@@ -36,15 +36,16 @@ e2d::GC::~GC()
 {
 	// 删除所有对象
 	this->clear();
+
 	// 清除图片缓存
 	Image::clearCache();
+
 	// 删除所有单例
 	Game::destroyInstance();
 	Renderer::destroyInstance();
 	Input::destroyInstance();
 	Window::destroyInstance();
 	Timer::destroyInstance();
-	Player::destroyInstance();
 	SceneManager::destroyInstance();
 	ActionManager::destroyInstance();
 	CollisionManager::destroyInstance();

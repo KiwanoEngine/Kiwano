@@ -58,19 +58,14 @@ public:
 	Music();
 
 	explicit Music(
-		const e2d::String& filePath	/* 音乐文件路径 */
+		const Resource& res		/* 音乐资源 */
 	);
 
 	explicit Music(
-		const Resource& res
+		IXAudio2* xAudio2
 	);
 
 	virtual ~Music();
-
-	// 打开音乐文件
-	bool open(
-		const e2d::String& filePath	/* 音乐文件路径 */
-	);
 
 	// 打开音乐资源
 	bool open(
@@ -142,7 +137,9 @@ protected:
 	MMCKINFO				_ckRiff;
 	WAVEFORMATEX*			_wfx;
 	VoiceCallback			_voiceCallback;
+	IXAudio2*				_xAudio2;
 	IXAudio2SourceVoice*	_voice;
+	IXAudio2MasteringVoice*	_masteringVoice;
 };
 
 
@@ -150,45 +147,11 @@ protected:
 class Player
 {
 	friend class Game;
-	typedef std::map<Resource, Music*> MusicMap;
 
 public:
-	// 获取播放器实例
-	static Player * getInstance();
+	Player();
 
-	// 销毁实例
-	static void destroyInstance();
-
-	// 预加载音乐资源
-	bool preload(
-		const String& filePath	/* 音乐文件路径 */
-	);
-
-	// 播放音乐
-	bool play(
-		const String& filePath,	/* 音乐文件路径 */
-		int nLoopCount = 0		/* 重复播放次数，设置 -1 为循环播放 */
-	);
-
-	// 暂停音乐
-	void pause(
-		const String& filePath	/* 音乐文件路径 */
-	);
-
-	// 继续播放音乐
-	void resume(
-		const String& filePath	/* 音乐文件路径 */
-	);
-
-	// 停止音乐
-	void stop(
-		const String& filePath	/* 音乐文件路径 */
-	);
-
-	// 获取音乐播放状态
-	bool isPlaying(
-		const String& filePath	/* 音乐文件路径 */
-	);
+	~Player();
 
 	// 预加载音乐资源
 	bool preload(
@@ -226,7 +189,7 @@ public:
 
 	// 设置音量
 	void setVolume(
-		float volume			/* 音量范围为 -224 ~ 224，0 是静音，1 是正常音量 */
+		float volume	/* 音量范围为 -224 ~ 224，0 是静音，1 是正常音量 */
 	);
 
 	// 暂停所有音乐
@@ -238,26 +201,26 @@ public:
 	// 停止所有音乐
 	void stopAll();
 
+	// 打开或关闭播放器
+	void setEnabled(
+		bool enabled
+	);
+
 	// 清空音乐缓存
 	void clearCache();
 
-	// 获取 IXAudio2 对象
+	// 获取 XAudio2 实例对象
 	IXAudio2 * getXAudio2();
 
-private:
-	Player();
-
-	~Player();
-
-	E2D_DISABLE_COPY(Player);
+	// 获取 MasteringVoice 实例对象
+	IXAudio2MasteringVoice* getMasteringVoice();
 
 private:
-	float					_volume;
-	MusicMap				_musicList;
-	IXAudio2*				_xAudio2;
-	IXAudio2MasteringVoice*	_masteringVoice;
-
-	static Player * _instance;
+	bool _enabled;
+	float _volume;
+	IXAudio2*					_xAudio2;
+	IXAudio2MasteringVoice*		_masteringVoice;
+	std::map<Resource, Music*>	_musicList;
 };
 
 
