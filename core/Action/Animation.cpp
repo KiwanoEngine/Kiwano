@@ -24,7 +24,7 @@ e2d::Animation::Animation(float interval, const std::vector<Image*>& frames)
 
 e2d::Animation::~Animation()
 {
-	for (auto frame : _frames)
+	for (const auto& frame : _frames)
 	{
 		GC::getInstance()->safeRelease(frame);
 	}
@@ -67,7 +67,7 @@ e2d::Animation * e2d::Animation::clone() const
 	auto animation = new (e2d::autorelease) Animation(_interval);
 	if (animation)
 	{
-		for (auto frame : _frames)
+		for (const auto& frame : _frames)
 		{
 			animation->add(frame);
 		}

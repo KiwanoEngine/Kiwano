@@ -72,7 +72,7 @@ void e2d::Scene::add(Node * child, int order /* = 0 */)
 
 void e2d::Scene::add(const std::vector<Node*>& nodes, int order)
 {
-	for (auto node : nodes)
+	for (const auto& node : nodes)
 	{
 		this->add(node, order);
 	}

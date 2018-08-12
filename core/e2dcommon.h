@@ -233,9 +233,9 @@ public:
 	String& operator+= (const String &);
 	String& operator+= (const char *);
 	String& operator+= (const wchar_t *);
-	String operator+ (const String &);
-	String operator+ (const char *);
-	String operator+ (const wchar_t *);
+	String operator+ (const String &) const;
+	String operator+ (const char *) const;
+	String operator+ (const wchar_t *) const;
 
 	// ÓÑÔªÔËËã·û
 	friend String operator+ (const char *, const String &);

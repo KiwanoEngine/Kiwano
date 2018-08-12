@@ -24,7 +24,7 @@ e2d::Player::~Player()
 {
 	if (!_musicList.empty())
 	{
-		for (auto pair : _musicList)
+		for (const auto& pair : _musicList)
 		{
 			delete pair.second;
 		}
@@ -113,7 +113,7 @@ float e2d::Player::getVolume()
 void e2d::Player::setVolume(float volume)
 {
 	_volume = std::min(std::max(volume, -224.f), 224.f);
-	for (auto pair : _musicList)
+	for (const auto& pair : _musicList)
 	{
 		pair.second->setVolume(_volume);
 	}
@@ -121,7 +121,7 @@ void e2d::Player::setVolume(float volume)
 
 void e2d::Player::pauseAll()
 {
-	for (auto pair : _musicList)
+	for (const auto& pair : _musicList)
 	{
 		pair.second->pause();
 	}
@@ -129,7 +129,7 @@ void e2d::Player::pauseAll()
 
 void e2d::Player::resumeAll()
 {
-	for (auto pair : _musicList)
+	for (const auto& pair : _musicList)
 	{
 		pair.second->resume();
 	}
@@ -137,7 +137,7 @@ void e2d::Player::resumeAll()
 
 void e2d::Player::stopAll()
 {
-	for (auto pair : _musicList)
+	for (const auto& pair : _musicList)
 	{
 		pair.second->stop();
 	}
@@ -154,7 +154,7 @@ void e2d::Player::setEnabled(bool enabled)
 
 void e2d::Player::clearCache()
 {
-	for (auto pair : _musicList)
+	for (const auto& pair : _musicList)
 	{
 		delete pair.second;
 	}

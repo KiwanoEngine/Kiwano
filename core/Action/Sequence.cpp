@@ -13,7 +13,7 @@ e2d::Sequence::Sequence(const std::vector<Action*>& actions)
 
 e2d::Sequence::~Sequence()
 {
-	for (auto action : _actions)
+	for (const auto& action : _actions)
 	{
 		GC::getInstance()->safeRelease(action);
 	}
@@ -25,7 +25,7 @@ void e2d::Sequence::_init()
 	// 将所有动作与目标绑定
 	if (_target)
 	{
-		for (auto action : _actions)
+		for (const auto& action : _actions)
 		{
 			action->_target = _target;
 		}
@@ -58,7 +58,7 @@ void e2d::Sequence::_update()
 void e2d::Sequence::reset()
 {
 	Action::reset();
-	for (auto action : _actions)
+	for (const auto& action : _actions)
 	{
 		action->reset();
 	}
@@ -67,7 +67,7 @@ void e2d::Sequence::reset()
 
 void e2d::Sequence::_resetTime()
 {
-	for (auto action : _actions)
+	for (const auto& action : _actions)
 	{
 		action->_resetTime();
 	}

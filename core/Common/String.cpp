@@ -195,21 +195,21 @@ wchar_t &e2d::String::operator[](int index)
 	return _str[size_t(index)];
 }
 
-e2d::String e2d::String::operator+(const wchar_t *str)
+e2d::String e2d::String::operator+(const wchar_t *str) const
 {
 	String temp;
 	temp._str = _str + str;
 	return std::move(temp);
 }
 
-e2d::String e2d::String::operator+(const char *str)
+e2d::String e2d::String::operator+(const char *str) const
 {
 	String temp;
 	temp._str = _str + static_cast<wchar_t*>(_bstr_t(str));
 	return std::move(temp);
 }
 
-e2d::String e2d::String::operator+(const e2d::String &str)
+e2d::String e2d::String::operator+(const e2d::String &str) const
 {
 	String temp;
 	temp._str = _str + str._str;

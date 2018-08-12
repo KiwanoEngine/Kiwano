@@ -92,7 +92,7 @@ void e2d::CollisionManager::addName(const String & name1, const String & name2)
 
 void e2d::CollisionManager::addName(const std::vector<std::pair<String, String> >& names)
 {
-	for (auto& name : names)
+	for (const auto& name : names)
 	{
 		if (!name.first.isEmpty() && !name.second.isEmpty())
 		{
@@ -112,7 +112,7 @@ bool e2d::CollisionManager::isCollidable(const String & name1, const String & na
 		hashName2 = name2.getHashCode();
 	auto pair1 = std::make_pair(hashName1, hashName2), 
 		pair2 = std::make_pair(hashName2, hashName1);
-	for (auto& pair : _collisionList)
+	for (const auto& pair : _collisionList)
 	{
 		if (pair == pair1 || pair == pair2)
 		{

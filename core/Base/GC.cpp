@@ -80,7 +80,7 @@ void e2d::GC::clear()
 	Timer::getInstance()->clearAllTasks();
 	ActionManager::getInstance()->clearAll();
 
-	for (auto ref : _pool)
+	for (const auto& ref : _pool)
 	{
 		delete ref;
 	}

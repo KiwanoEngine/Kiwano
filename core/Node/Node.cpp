@@ -73,7 +73,7 @@ e2d::Node::Node()
 e2d::Node::~Node()
 {
 	ActionManager::getInstance()->clearAllBindedWith(this);
-	for (auto child : _children)
+	for (const auto& child : _children)
 	{
 		GC::getInstance()->safeRelease(child);
 	}
@@ -209,7 +209,7 @@ void e2d::Node::_renderOutline()
 		);
 
 		// 渲染所有子节点的轮廓
-		for (auto child : _children)
+		for (const auto& child : _children)
 		{
 			child->_renderOutline();
 		}
@@ -223,7 +223,7 @@ void e2d::Node::_renderCollider()
 		_collider.render();
 
 		// 绘制所有子节点的几何碰撞体
-		for (auto child : _children)
+		for (const auto& child : _children)
 		{
 			child->_renderCollider();
 		}
@@ -268,7 +268,7 @@ void e2d::Node::updateTransform()
 	_collider.recreate();
 
 	// 通知子节点进行转换
-	for (auto& child : _children)
+	for (const auto& child : _children)
 	{
 		child->_needTransform = true;
 	}
@@ -276,24 +276,30 @@ void e2d::Node::updateTransform()
 
 bool e2d::Node::dispatch(const MouseEvent & e)
 {
-	if (onMouseEvent(e))
-		return true;
-
-	for (auto iter = _children.rbegin(); iter != _children.rend(); ++iter)
-		if ((*iter)->dispatch(e))
+	if (_visible)
+	{
+		if (onMouseEvent(e))
 			return true;
+
+		for (auto iter = _children.rbegin(); iter != _children.rend(); ++iter)
+			if ((*iter)->dispatch(e))
+				return true;
+	}
 
 	return false;
 }
 
 bool e2d::Node::dispatch(const KeyEvent & e)
 {
-	if (onKeyEvent(e))
-		return true;
-
-	for (auto iter = _children.rbegin(); iter != _children.rend(); ++iter)
-		if ((*iter)->dispatch(e))
+	if (_visible)
+	{
+		if (onKeyEvent(e))
 			return true;
+
+		for (auto iter = _children.rbegin(); iter != _children.rend(); ++iter)
+			if ((*iter)->dispatch(e))
+				return true;
+	}
 
 	return false;
 }
@@ -318,7 +324,7 @@ void e2d::Node::_updateOpacity()
 	{
 		_displayOpacity = _realOpacity * _parent->_displayOpacity;
 	}
-	for (auto child : _children)
+	for (const auto& child : _children)
 	{
 		child->_updateOpacity();
 	}
@@ -685,7 +691,7 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 
 void e2d::Node::addChild(const std::vector<Node*>& nodes, int order)
 {
-	for (auto node : nodes)
+	for (const auto& node : nodes)
 	{
 		this->addChild(node, order);
 	}
@@ -706,7 +712,7 @@ std::vector<e2d::Node*> e2d::Node::getChildren(const String& name) const
 	std::vector<Node*> vChildren;
 	size_t hash = name.getHashCode();
 
-	for (auto child : _children)
+	for (const auto& child : _children)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
 		if (child->_hashName == hash && child->_name == name)
@@ -721,7 +727,7 @@ e2d::Node * e2d::Node::getChild(const String& name) const
 {
 	size_t hash = name.getHashCode();
 
-	for (auto child : _children)
+	for (const auto& child : _children)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
 		if (child->_hashName == hash && child->_name == name)
@@ -811,7 +817,7 @@ void e2d::Node::removeChildren(const String& childName)
 void e2d::Node::removeAllChildren()
 {
 	// 所有节点的引用计数减一
-	for (auto child : _children)
+	for (const auto& child : _children)
 	{
 		child->release();
 	}
@@ -827,7 +833,7 @@ void e2d::Node::runAction(Action * action)
 void e2d::Node::resumeAction(const String& name)
 {
 	auto& actions = ActionManager::getInstance()->get(name);
-	for (auto action : actions)
+	for (const auto& action : actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -839,7 +845,7 @@ void e2d::Node::resumeAction(const String& name)
 void e2d::Node::pauseAction(const String& name)
 {
 	auto& actions = ActionManager::getInstance()->get(name);
-	for (auto action : actions)
+	for (const auto& action : actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -851,7 +857,7 @@ void e2d::Node::pauseAction(const String& name)
 void e2d::Node::stopAction(const String& name)
 {
 	auto& actions = ActionManager::getInstance()->get(name);
-	for (auto action : actions)
+	for (const auto& action : actions)
 	{
 		if (action->getTarget() == this)
 		{
@@ -991,7 +997,7 @@ void e2d::Node::setName(const String& name)
 void e2d::Node::_setParentScene(Scene * scene)
 {
 	_parentScene = scene;
-	for (auto child : _children)
+	for (const auto& child : _children)
 	{
 		child->_setParentScene(scene);
 	}

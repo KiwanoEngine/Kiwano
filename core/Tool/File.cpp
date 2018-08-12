@@ -39,7 +39,7 @@ bool e2d::File::open(const String & fileName)
 	}
 	else
 	{
-		for (auto& resPath : _searchPaths)
+		for (const auto& resPath : _searchPaths)
 		{
 			if (FindFile(resPath + fileName))
 			{

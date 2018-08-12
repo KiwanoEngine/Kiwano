@@ -87,7 +87,7 @@ void e2d::ActionManager::resumeAllBindedWith(Node * target)
 	if (_runningActions.empty() || target == nullptr)
 		return;
 
-	for (auto action : _runningActions)
+	for (const auto& action : _runningActions)
 	{
 		if (action->getTarget() == target)
 		{
@@ -101,7 +101,7 @@ void e2d::ActionManager::pauseAllBindedWith(Node * target)
 	if (_runningActions.empty() || target == nullptr)
 		return;
 
-	for (auto action : _runningActions)
+	for (const auto& action : _runningActions)
 	{
 		if (action->getTarget() == target)
 		{
@@ -115,7 +115,7 @@ void e2d::ActionManager::stopAllBindedWith(Node * target)
 	if (_runningActions.empty() || target == nullptr)
 		return;
 
-	for (auto action : _runningActions)
+	for (const auto& action : _runningActions)
 	{
 		if (action->getTarget() == target)
 		{
@@ -154,7 +154,7 @@ void e2d::ActionManager::resume(const String& name)
 	if (_runningActions.empty() || name.isEmpty())
 		return;
 
-	for (auto action : _runningActions)
+	for (const auto& action : _runningActions)
 	{
 		if (action->getName() == name)
 		{
@@ -168,7 +168,7 @@ void e2d::ActionManager::pause(const String& name)
 	if (_runningActions.empty() || name.isEmpty())
 		return;
 
-	for (auto action : _runningActions)
+	for (const auto& action : _runningActions)
 	{
 		if (action->getName() == name)
 		{
@@ -182,7 +182,7 @@ void e2d::ActionManager::stop(const String& name)
 	if (_runningActions.empty() || name.isEmpty())
 		return;
 
-	for (auto action : _runningActions)
+	for (const auto& action : _runningActions)
 	{
 		if (action->getName() == name)
 		{
@@ -215,7 +215,7 @@ void e2d::ActionManager::clearAll()
 {
 	if (!_runningActions.empty())
 	{
-		for (auto action : _runningActions)
+		for (const auto& action : _runningActions)
 		{
 			action->release();
 		}
@@ -228,7 +228,7 @@ void e2d::ActionManager::clearAll()
 std::vector<e2d::Action*> e2d::ActionManager::get(const String& name)
 {
 	std::vector<Action*> actions;
-	for (auto action : _actions)
+	for (const auto& action : _actions)
 	{
 		if (action->getName() == name)
 		{
@@ -245,7 +245,7 @@ const std::vector<e2d::Action*>& e2d::ActionManager::getAll()
 
 void e2d::ActionManager::updateTime()
 {
-	for (auto action : _runningActions)
+	for (const auto& action : _runningActions)
 	{
 		action->_resetTime();
 	}

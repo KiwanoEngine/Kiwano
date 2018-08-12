@@ -299,7 +299,7 @@ void e2d::Image::clearCache()
 	if (_bitmapCache.empty())
 		return;
 
-	for (auto bitmap : _bitmapCache)
+	for (const auto& bitmap : _bitmapCache)
 	{
 		bitmap.second->Release();
 	}

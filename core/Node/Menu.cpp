@@ -8,7 +8,7 @@ e2d::Menu::Menu()
 e2d::Menu::Menu(const std::vector<Button*>& buttons)
 	: _enabled(true)
 {
-	for (auto button : buttons)
+	for (const auto& button : buttons)
 	{
 		this->addButton(button);
 	}
@@ -30,7 +30,7 @@ void e2d::Menu::setEnabled(bool enabled)
 	{
 		_enabled = enabled;
 
-		for (auto button : _buttons)
+		for (const auto& button : _buttons)
 		{
 			button->setEnabled(enabled);
 		}

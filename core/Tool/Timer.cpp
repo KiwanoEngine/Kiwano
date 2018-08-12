@@ -43,7 +43,7 @@ void e2d::Timer::addTask(Task * task)
 
 void e2d::Timer::stopTasks(const String& name)
 {
-	for (auto task : _tasks)
+	for (const auto& task : _tasks)
 	{
 		if (task->getName() == name)
 		{
@@ -54,7 +54,7 @@ void e2d::Timer::stopTasks(const String& name)
 
 void e2d::Timer::startTasks(const String& name)
 {
-	for (auto task : _tasks)
+	for (const auto& task : _tasks)
 	{
 		if (task->getName() == name)
 		{
@@ -65,7 +65,7 @@ void e2d::Timer::startTasks(const String& name)
 
 void e2d::Timer::removeTasks(const String& name)
 {
-	for (auto task : _tasks)
+	for (const auto& task : _tasks)
 	{
 		if (task->getName() == name)
 		{
@@ -76,7 +76,7 @@ void e2d::Timer::removeTasks(const String& name)
 
 void e2d::Timer::stopAllTasks()
 {
-	for (auto task : _tasks)
+	for (const auto& task : _tasks)
 	{
 		task->stop();
 	}
@@ -84,7 +84,7 @@ void e2d::Timer::stopAllTasks()
 
 void e2d::Timer::startAllTasks()
 {
-	for (auto task : _tasks)
+	for (const auto& task : _tasks)
 	{
 		task->start();
 	}
@@ -92,7 +92,7 @@ void e2d::Timer::startAllTasks()
 
 void e2d::Timer::removeAllTasks()
 {
-	for (auto task : _tasks)
+	for (const auto& task : _tasks)
 	{
 		task->_stopped = true;
 	}
@@ -103,7 +103,7 @@ void e2d::Timer::clearAllTasks()
 	if (_tasks.empty())
 		return;
 
-	for (auto task : _tasks)
+	for (const auto& task : _tasks)
 	{
 		task->release();
 	}
@@ -139,7 +139,7 @@ void e2d::Timer::update()
 
 void e2d::Timer::updateTime()
 {
-	for (auto task : _tasks)
+	for (const auto& task : _tasks)
 	{
 		task->_lastTime = Time::now();
 	}

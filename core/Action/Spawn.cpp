@@ -11,7 +11,7 @@ e2d::Spawn::Spawn(const std::vector<Action*>& actions)
 
 e2d::Spawn::~Spawn()
 {
-	for (auto action : _actions)
+	for (const auto& action : _actions)
 	{
 		GC::getInstance()->safeRelease(action);
 	}
@@ -23,7 +23,7 @@ void e2d::Spawn::_init()
 
 	if (_target)
 	{
-		for (auto action : _actions)
+		for (const auto& action : _actions)
 		{
 			action->_target = _target;
 			action->_init();
@@ -36,7 +36,7 @@ void e2d::Spawn::_update()
 	Action::_update();
 
 	size_t doneNum = 0;
-	for (auto action : _actions)
+	for (const auto& action : _actions)
 	{
 		if (action->_isDone())
 		{
@@ -57,7 +57,7 @@ void e2d::Spawn::_update()
 void e2d::Spawn::reset()
 {
 	Action::reset();
-	for (auto action : _actions)
+	for (const auto& action : _actions)
 	{
 		action->reset();
 	}
@@ -65,7 +65,7 @@ void e2d::Spawn::reset()
 
 void e2d::Spawn::_resetTime()
 {
-	for (auto action : _actions)
+	for (const auto& action : _actions)
 	{
 		action->_resetTime();
 	}
