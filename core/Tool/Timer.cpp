@@ -35,30 +35,30 @@ void e2d::Timer::addTask(Task * task)
 		if (iter == _tasks.end())
 		{
 			task->retain();
-			task->updateTime();
+			task->_lastTime = Time::now();
 			_tasks.push_back(task);
 		}
 	}
 }
 
-void e2d::Timer::pauseTasks(const String& name)
+void e2d::Timer::stopTasks(const String& name)
 {
 	for (auto task : _tasks)
 	{
 		if (task->getName() == name)
 		{
-			task->pause();
+			task->stop();
 		}
 	}
 }
 
-void e2d::Timer::resumeTasks(const String& name)
+void e2d::Timer::startTasks(const String& name)
 {
 	for (auto task : _tasks)
 	{
 		if (task->getName() == name)
 		{
-			task->resume();
+			task->start();
 		}
 	}
 }
@@ -74,19 +74,19 @@ void e2d::Timer::removeTasks(const String& name)
 	}
 }
 
-void e2d::Timer::pauseAllTasks()
+void e2d::Timer::stopAllTasks()
 {
 	for (auto task : _tasks)
 	{
-		task->pause();
+		task->stop();
 	}
 }
 
-void e2d::Timer::resumeAllTasks()
+void e2d::Timer::startAllTasks()
 {
 	for (auto task : _tasks)
 	{
-		task->resume();
+		task->start();
 	}
 }
 
@@ -126,13 +126,13 @@ void e2d::Timer::update()
 		}
 		else
 		{
-			// 更新定时器
-			if (task->isReady())
-			{
-				task->update();
-			}
-
 			++i;
+
+			// 更新定时器
+			if (task->_isReady())
+			{
+				task->_update();
+			}
 		}
 	}
 }
@@ -141,6 +141,6 @@ void e2d::Timer::updateTime()
 {
 	for (auto task : _tasks)
 	{
-		task->updateTime();
+		task->_lastTime = Time::now();
 	}
 }

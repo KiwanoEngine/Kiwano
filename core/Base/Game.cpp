@@ -66,7 +66,7 @@ void e2d::Game::start()
 		}
 		else
 		{
-			// ID2D1HwndRenderTarget 在渲染时会等待显示器刷新，即开启了垂直同步，
+			// ID2D1HwndRenderTarget 开启了垂直同步,在渲染时会等待显示器刷新，
 			// 它起到了非常稳定的延时作用，所以大部分时候不需要手动挂起线程进行延时。
 			// 下面的代码仅在一些情况下（例如窗口最小化时）挂起线程，防止占用过高 CPU 。
 			int wait = minInterval - dur.milliseconds();

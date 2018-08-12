@@ -245,14 +245,11 @@ public:
 		const String& name = L""	/* 任务名称 */
 	);
 
-	// 暂停任务
-	void pause();
+	// 启动任务
+	void start();
 
-	// 继续任务
-	void resume();
-
-	// 任务是否就绪
-	bool isReady() const;
+	// 停止任务
+	void stop();
 
 	// 任务是否正在执行
 	bool isRunning() const;
@@ -260,11 +257,12 @@ public:
 	// 获取任务名称
 	String getName() const;
 
+protected:
 	// 执行任务
-	void update();
+	void _update();
 
-	// 刷新任务计时
-	void updateTime();
+	// 任务是否就绪
+	bool _isReady() const;
 
 private:
 	bool		_running;
@@ -293,13 +291,13 @@ public:
 		Task * task
 	);
 
-	// 继续任务
-	void resumeTasks(
+	// 启动任务
+	void startTasks(
 		const String& taskName
 	);
 
-	// 暂停任务
-	void pauseTasks(
+	// 停止任务
+	void stopTasks(
 		const String& taskName
 	);
 
@@ -308,11 +306,11 @@ public:
 		const String& taskName
 	);
 
-	// 继续所有任务
-	void resumeAllTasks();
+	// 启动所有任务
+	void startAllTasks();
 
-	// 暂停所有任务
-	void pauseAllTasks();
+	// 停止所有任务
+	void stopAllTasks();
 
 	// 移除所有任务
 	void removeAllTasks();

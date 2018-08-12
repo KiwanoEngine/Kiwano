@@ -23,18 +23,18 @@ e2d::Task::Task(const Function & func, float delay, int times, const String & na
 {
 }
 
-void e2d::Task::pause()
+void e2d::Task::start()
+{
+	_running = true;
+	_lastTime = Time::now();
+}
+
+void e2d::Task::stop()
 {
 	_running = false;
 }
 
-void e2d::Task::resume()
-{
-	_running = true;
-	updateTime();
-}
-
-void e2d::Task::update()
+void e2d::Task::_update()
 {
 	if (_totalTimes == 0)
 	{
@@ -57,7 +57,7 @@ void e2d::Task::update()
 	}
 }
 
-bool e2d::Task::isReady() const
+bool e2d::Task::_isReady() const
 {
 	if (_running)
 	{
@@ -81,9 +81,4 @@ bool e2d::Task::isRunning() const
 e2d::String e2d::Task::getName() const
 {
 	return _name;
-}
-
-void e2d::Task::updateTime()
-{
-	_lastTime = Time::now();
 }
