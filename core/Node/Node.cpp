@@ -78,7 +78,7 @@ e2d::Node::~Node()
 	}
 }
 
-void e2d::Node::_render()
+void e2d::Node::visit()
 {
 	if (!_visible)
 		return;
@@ -116,7 +116,7 @@ void e2d::Node::_render()
 			// 访问 Order 小于零的节点
 			if (child->getOrder() < 0)
 			{
-				child->_render();
+				child->visit();
 			}
 			else
 			{
@@ -129,7 +129,7 @@ void e2d::Node::_render()
 
 		// 访问剩余节点
 		for (; i < _children.size(); ++i)
-			_children[i]->_render();
+			_children[i]->visit();
 	}
 
 	if (_clipEnabled)

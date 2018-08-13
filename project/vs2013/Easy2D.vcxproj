@@ -210,7 +210,6 @@
     <ClCompile Include="..\..\core\Common\Resource.cpp" />
     <ClCompile Include="..\..\core\Common\Point.cpp" />
     <ClCompile Include="..\..\core\Common\Rect.cpp" />
-    <ClCompile Include="..\..\core\Common\Scene.cpp" />
     <ClCompile Include="..\..\core\Common\Size.cpp" />
     <ClCompile Include="..\..\core\Common\String.cpp" />
     <ClCompile Include="..\..\core\Common\Time.cpp" />
@@ -225,6 +224,7 @@
     <ClCompile Include="..\..\core\Manager\CollisionManager.cpp" />
     <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
     <ClCompile Include="..\..\core\Node\Button.cpp" />
+    <ClCompile Include="..\..\core\Node\Scene.cpp" />
     <ClCompile Include="..\..\core\Node\Menu.cpp" />
     <ClCompile Include="..\..\core\Node\Node.cpp" />
     <ClCompile Include="..\..\core\Node\Sprite.cpp" />

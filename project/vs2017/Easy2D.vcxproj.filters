@@ -39,9 +39,6 @@
     <ClCompile Include="..\..\core\Common\String.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Scene.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -233,6 +230,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Base\Config.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Scene.cpp">
+      <Filter>Node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,8 @@ namespace e2d
 {
 
 
+class Scene;
+
 // ³¡¾°¹ý¶É
 class Transition :
 	public Ref

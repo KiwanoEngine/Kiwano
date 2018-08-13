@@ -394,11 +394,11 @@ public:
 		bool handled
 	);
 
+	// 遍历节点
+	virtual void visit();
+
 protected:
 	E2D_DISABLE_COPY(Node);
-
-	// 渲染节点
-	virtual void _render();
 
 	// 渲染节点轮廓
 	virtual void _renderOutline();
@@ -449,6 +449,34 @@ protected:
 };
 
 
+// 场景
+class Scene :
+	public Node
+{
+public:
+	Scene();
+
+	virtual ~Scene();
+
+	// 进入场景
+	virtual void onEnter() {}
+
+	// 退出场景
+	virtual void onExit() {}
+
+	// 关闭窗口
+	// 说明：返回 false 将阻止窗口关闭
+	virtual bool onCloseWindow() { return true; }
+
+	// 渲染场景
+	virtual void visit() override;
+
+protected:
+	E2D_DISABLE_COPY(Scene);
+};
+
+
+// 精灵
 class Sprite :
 	public Node
 {
@@ -808,14 +836,14 @@ public:
 		bool handled
 	) override;
 
+	// 渲染节点
+	virtual void visit() override;
+
 protected:
 	E2D_DISABLE_COPY(Button);
 
 	// 按钮状态枚举
 	enum class Status { Normal, Mouseover, Selected };
-
-	// 渲染节点
-	virtual void _render() override;
 
 	// 设置按钮状态
 	virtual void _setStatus(Status status);

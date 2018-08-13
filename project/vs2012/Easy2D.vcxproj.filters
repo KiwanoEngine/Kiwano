@@ -138,9 +138,6 @@
     <ClCompile Include="..\..\core\Common\Rect.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Common\Scene.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Size.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -239,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Base\Config.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Node\Scene.cpp">
+      <Filter>Node</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,8 +7,8 @@ namespace e2d
 
 
 class Node;
+class Scene;
 class Action;
-class Collider;
 class Transition;
 
 

@@ -189,9 +189,9 @@ bool e2d::Button::dispatch(const MouseEvent & e, bool handled)
 	return Node::dispatch(e, handled);
 }
 
-void e2d::Button::_render()
+void e2d::Button::visit()
 {
-	Node::_render();
+	Node::visit();
 
 	if (_visible &&
 		!_enabled &&

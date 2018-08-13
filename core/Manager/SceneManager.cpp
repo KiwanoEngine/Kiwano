@@ -1,5 +1,5 @@
 #include "..\e2dmanager.h"
-#include "..\e2dbase.h"
+#include "..\e2dnode.h"
 #include "..\e2dtransition.h"
 
 
@@ -161,7 +161,7 @@ void e2d::SceneManager::render()
 	}
 	else if (_currScene)
 	{
-		_currScene->render();
+		_currScene->visit();
 	}
 }
 
@@ -172,7 +172,7 @@ void e2d::SceneManager::dispatch(const MouseEvent & e)
 
 	if (_currScene)
 	{
-		_currScene->dispatch(e);
+		_currScene->dispatch(e, false);
 	}
 }
 
@@ -183,6 +183,6 @@ void e2d::SceneManager::dispatch(const KeyEvent & e)
 
 	if (_currScene)
 	{
-		_currScene->dispatch(e);
+		_currScene->dispatch(e, false);
 	}
 }

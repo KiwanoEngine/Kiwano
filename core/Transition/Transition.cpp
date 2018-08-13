@@ -84,7 +84,7 @@ void e2d::Transition::render()
 
 	if (_outScene)
 	{
-		Point rootPos = _outScene->getRoot()->getPos();
+		Point rootPos = _outScene->getPos();
 		auto clipRect = D2D1::RectF(
 			std::max(rootPos.x, 0.f),
 			std::max(rootPos.y, 0.f),
@@ -95,7 +95,7 @@ void e2d::Transition::render()
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(_outLayerParam, _outLayer);
 
-		_outScene->render();
+		_outScene->visit();
 
 		pRT->PopLayer();
 		pRT->PopAxisAlignedClip();
@@ -103,7 +103,7 @@ void e2d::Transition::render()
 
 	if (_inScene)
 	{
-		Point rootPos = _inScene->getRoot()->getPos();
+		Point rootPos = _inScene->getPos();
 		auto clipRect = D2D1::RectF(
 			std::max(rootPos.x, 0.f),
 			std::max(rootPos.y, 0.f),
@@ -114,7 +114,7 @@ void e2d::Transition::render()
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(_inLayerParam, _inLayer);
 
-		_inScene->render();
+		_inScene->visit();
 
 		pRT->PopLayer();
 		pRT->PopAxisAlignedClip();
