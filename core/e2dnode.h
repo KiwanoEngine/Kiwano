@@ -46,22 +46,8 @@ public:
 
 	virtual ~Node();
 
-	// 更新节点
-	virtual void onUpdate() {}
-
 	// 渲染节点
-	virtual void onRender() const {}
-
-	// 按键消息
-	// 说明：返回 true 将阻止消息向下传递
-	virtual bool onEvent(KeyEvent e) { return false; }
-
-	// 鼠标消息
-	// 说明：返回 true 将阻止消息向下传递
-	virtual bool onEvent(MouseEvent e) { return false; }
-
-	// 碰撞消息
-	virtual void onEvent(Collision collision) { }
+	virtual void draw() const {}
 
 	// 获取节点显示状态
 	virtual bool isVisible() const;
@@ -398,22 +384,18 @@ public:
 
 	// 分发鼠标消息
 	virtual bool dispatch(
-		const MouseEvent& e
+		const MouseEvent& e,
+		bool handled
 	);
 
 	// 分发按键消息
 	virtual bool dispatch(
-		const KeyEvent& e
+		const KeyEvent& e,
+		bool handled
 	);
 
 protected:
 	E2D_DISABLE_COPY(Node);
-
-	// 更新节点
-	virtual void _update();
-
-	// 更新自身
-	virtual void _updateSelf();
 
 	// 渲染节点
 	virtual void _render();
@@ -461,9 +443,9 @@ protected:
 	Scene *		_parentScene;
 	Node *		_parent;
 	Property	_extrapolate;
+	std::vector<Node*>	_children;
 	D2D1::Matrix3x2F	_initialMatri;
 	D2D1::Matrix3x2F	_finalMatri;
-	std::vector<Node*>	_children;
 };
 
 
@@ -521,7 +503,7 @@ public:
 	virtual Image * getImage() const;
 
 	// 渲染精灵
-	virtual void onRender() const override;
+	virtual void draw() const override;
 
 protected:
 	E2D_DISABLE_COPY(Sprite);
@@ -725,7 +707,7 @@ public:
 	);
 
 	// 渲染文字
-	virtual void onRender() const override;
+	virtual void draw() const override;
 
 protected:
 	E2D_DISABLE_COPY(Text);
@@ -822,7 +804,8 @@ public:
 
 	// 分发鼠标消息
 	virtual bool dispatch(
-		const MouseEvent& e
+		const MouseEvent& e,
+		bool handled
 	) override;
 
 protected:

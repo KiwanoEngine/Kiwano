@@ -808,6 +808,21 @@ protected:
 };
 
 
+// 消息处理
+class EventHandler
+{
+public:
+	// 处理按键消息
+	virtual void handle(KeyEvent e) { }
+
+	// 处理鼠标消息
+	virtual void handle(MouseEvent e) { }
+
+	// 处理碰撞消息
+	virtual void handle(Collision collision) { }
+};
+
+
 // 资源
 class Resource
 {
@@ -982,23 +997,9 @@ public:
 	// 退出场景
 	virtual void onExit() {}
 
-	// 按键消息
-	// 说明：返回 true 将阻止消息继续传递
-	virtual bool onEvent(KeyEvent e) { return false; }
-
-	// 鼠标消息
-	// 说明：返回 true 将阻止消息继续传递
-	virtual bool onEvent(MouseEvent e) { return false; }
-
-	// 碰撞消息
-	virtual void onEvent(Collision collision) { }
-
 	// 关闭窗口
 	// 说明：返回 false 将阻止窗口关闭
 	virtual bool onCloseWindow() { return true; }
-
-	// 重写这个函数，它将在每一帧画面刷新时执行
-	virtual void onUpdate() {}
 
 	// 添加节点到场景
 	void add(
@@ -1035,9 +1036,6 @@ public:
 
 	// 渲染场景画面
 	void render();
-
-	// 更新场景内容
-	void update();
 
 	// 分发鼠标消息
 	void dispatch(

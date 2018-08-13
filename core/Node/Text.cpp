@@ -287,7 +287,7 @@ void e2d::Text::setOutlineJoin(LineJoin outlineJoin)
 	_style.outlineJoin = outlineJoin;
 }
 
-void e2d::Text::onRender() const
+void e2d::Text::draw() const
 {
 	if (_textLayout)
 	{

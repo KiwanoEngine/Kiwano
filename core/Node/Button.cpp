@@ -143,9 +143,9 @@ void e2d::Button::setPivot(float pivotX, float pivotY)
 	SAFE_SET(_disabled, setPivot, pivotX, pivotY);
 }
 
-bool e2d::Button::dispatch(const MouseEvent & e)
+bool e2d::Button::dispatch(const MouseEvent & e, bool handled)
 {
-	if (_enabled && _visible && _normal)
+	if (!handled && _enabled && _visible && _normal)
 	{
 		bool contains = _normal->containsPoint(e.getPos());
 		if (e.getType() == MouseEvent::Type::LeftUp && _isSelected && contains)
@@ -186,7 +186,7 @@ bool e2d::Button::dispatch(const MouseEvent & e)
 		}
 	}
 
-	return Node::dispatch(e);
+	return Node::dispatch(e, handled);
 }
 
 void e2d::Button::_render()

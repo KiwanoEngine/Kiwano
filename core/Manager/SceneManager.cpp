@@ -120,9 +120,6 @@ bool e2d::SceneManager::isTransitioning()
 
 void e2d::SceneManager::update()
 {
-	if (_currScene) _currScene->update();
-	if (_nextScene) _nextScene->update();
-
 	if (_transition)
 	{
 		_transition->update();

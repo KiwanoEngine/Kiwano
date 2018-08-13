@@ -34,26 +34,22 @@ void e2d::Scene::render()
 	}
 }
 
-void e2d::Scene::update()
-{
-	this->onUpdate();
-	_root->_update();
-}
-
 void e2d::Scene::dispatch(const MouseEvent & e)
 {
-	if (onEvent(e))
-		return;
+	auto dispatcher = dynamic_cast<EventHandler*>(this);
+	if (dispatcher)
+		dispatcher->handle(e);
 
-	_root->dispatch(e);
+	_root->dispatch(e, false);
 }
 
 void e2d::Scene::dispatch(const KeyEvent & e)
 {
-	if (onEvent(e))
-		return;
+	auto dispatcher = dynamic_cast<EventHandler*>(this);
+	if (dispatcher)
+		dispatcher->handle(e);
 
-	_root->dispatch(e);
+	_root->dispatch(e, false);
 }
 
 void e2d::Scene::add(Node * child, int order /* = 0 */)

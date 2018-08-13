@@ -78,60 +78,6 @@ e2d::Node::~Node()
 	}
 }
 
-void e2d::Node::_update()
-{
-	if (!_visible)
-		return;
-
-	if (_children.empty())
-	{
-		_updateSelf();
-	}
-	else
-	{
-		// 遍历子节点
-		size_t i;
-		for (i = 0; i < _children.size(); ++i)
-		{
-			auto child = _children[i];
-			// 访问 Order 小于零的节点
-			if (child->getOrder() < 0)
-			{
-				child->_update();
-			}
-			else
-			{
-				break;
-			}
-		}
-
-		_updateSelf();
-
-		// 访问其他节点
-		for (; i < _children.size(); ++i)
-			_children[i]->_update();
-	}
-}
-
-void e2d::Node::_updateSelf()
-{
-	if (_needTransform)
-	{
-		updateTransform();
-		if (_collider.isEnabled() &&
-			_collider.isCollisionNotify() &&
-			_collider.getShape() != Collider::Shape::None)
-		{
-			CollisionManager::getInstance()->__updateCollider(&_collider);
-		}
-	}
-
-	if (!Game::getInstance()->isPaused())
-	{
-		this->onUpdate();
-	}
-}
-
 void e2d::Node::_render()
 {
 	if (!_visible)
@@ -139,6 +85,7 @@ void e2d::Node::_render()
 
 	// 更新转换矩阵
 	updateTransform();
+
 	// 保留差别属性
 	_extrapolate = this->getProperty();
 
@@ -154,10 +101,8 @@ void e2d::Node::_render()
 
 	if (_children.empty())
 	{
-		// 转换渲染器的转换矩阵
 		pRT->SetTransform(_finalMatri);
-		// 渲染自身
-		this->onRender();
+		this->draw();
 	}
 	else
 	{
@@ -179,10 +124,8 @@ void e2d::Node::_render()
 			}
 		}
 
-		// 转换渲染器的转换矩阵
 		pRT->SetTransform(_finalMatri);
-		// 渲染自身
-		this->onRender();
+		this->draw();
 
 		// 访问剩余节点
 		for (; i < _children.size(); ++i)
@@ -263,54 +206,51 @@ void e2d::Node::updateTransform()
 		_finalMatri = _finalMatri * _parent->_initialMatri;
 	}
 
-	// 更新碰撞体
-	_collider.recreate();
-
 	// 通知子节点进行转换
 	for (const auto& child : _children)
 	{
 		child->_needTransform = true;
 	}
+
+	// 更新碰撞体
+	_collider.recreate();
+
+	if (_collider.isEnabled() &&
+		_collider.isCollisionNotify() &&
+		_collider.getShape() != Collider::Shape::None)
+	{
+		CollisionManager::getInstance()->__updateCollider(&_collider);
+	}
 }
 
-bool e2d::Node::dispatch(const MouseEvent & e)
+bool e2d::Node::dispatch(const MouseEvent & e, bool handled)
 {
 	if (_visible)
 	{
-		if (onEvent(e))
-			return true;
+		auto dispatcher = dynamic_cast<EventHandler*>(this);
+		if (dispatcher)
+			dispatcher->handle(e);
 
-		for (size_t i = _children.size(); i >= 0 && i < _children.size(); --i)
-		{
-			if (_children[i]->dispatch(e))
-				return true;
-
-			if (i == 0)
-				break;
-		}
+		for (auto riter = _children.crbegin(); riter != _children.crend(); ++riter)
+			handled = (*riter)->dispatch(e, handled);
 	}
 
-	return false;
+	return handled;
 }
 
-bool e2d::Node::dispatch(const KeyEvent & e)
+bool e2d::Node::dispatch(const KeyEvent & e, bool handled)
 {
 	if (_visible)
 	{
-		if (onEvent(e))
-			return true;
+		auto dispatcher = dynamic_cast<EventHandler*>(this);
+		if (dispatcher)
+			dispatcher->handle(e);
 
-		for (size_t i = _children.size(); i >= 0 && i < _children.size(); --i)
-		{
-			if (_children[i]->dispatch(e))
-				return true;
-
-			if (i == 0)
-				break;
-		}
+		for (auto riter = _children.crbegin(); riter != _children.crend(); ++riter)
+			handled = (*riter)->dispatch(e, handled);
 	}
 
-	return false;
+	return handled;
 }
 
 void e2d::Node::_sortChildren()
