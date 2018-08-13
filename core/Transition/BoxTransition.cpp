@@ -1,14 +1,14 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::BoxTransition::BoxTransition(float duration)
-	: Transition(duration)
+e2d::BoxTransition::BoxTransition(Scene* scene, float duration)
+	: Transition(scene, duration)
 {
 }
 
-bool e2d::BoxTransition::init(Scene * prev, Scene * next)
+bool e2d::BoxTransition::_init(Scene * prev)
 {
-	if (Transition::init(prev, next))
+	if (Transition::_init(prev))
 	{
 		_inLayerParam.opacity = 0;
 		return true;
@@ -16,9 +16,9 @@ bool e2d::BoxTransition::init(Scene * prev, Scene * next)
 	return false;
 }
 
-void e2d::BoxTransition::update()
+void e2d::BoxTransition::_update()
 {
-	Transition::update();
+	Transition::_update();
 
 	if (_delta <= 0.5)
 	{
@@ -41,11 +41,7 @@ void e2d::BoxTransition::update()
 		);
 		if (_delta >= 1)
 		{
-			this->stop();
+			this->_stop();
 		}
 	}
-}
-
-void e2d::BoxTransition::reset()
-{
 }

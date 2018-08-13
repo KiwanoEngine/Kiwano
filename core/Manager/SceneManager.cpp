@@ -42,18 +42,34 @@ void e2d::SceneManager::push(Scene * scene, bool saveCurrentScene)
 	if (_nextScene) _nextScene->release();
 	_nextScene = scene;
 	_nextScene->retain();
-	
-	// 初始化场景切换动画
-	if (_transition && !_transition->init(_currScene, _nextScene))
-	{
-		WARN("Transition initialize failed!");
-		_transition->release();
-		_transition = nullptr;
-	}
 
 	if (saveCurrentScene && _currScene)
 	{
 		_scenes.push(_currScene);
+	}
+}
+
+void e2d::SceneManager::push(Transition * transition, bool saveCurrentScene)
+{
+	if (!transition)
+		return;
+
+	SceneManager::push(transition->_inScene, saveCurrentScene);
+
+	if (_transition)
+	{
+		_transition->_stop();
+		_transition->release();
+	}
+	_transition = transition;
+	_transition->retain();
+
+	// 初始化场景切换动画
+	if (!_transition->_init(_currScene))
+	{
+		WARN("Transition initialize failed!");
+		_transition->release();
+		_transition = nullptr;
 	}
 }
 
@@ -67,31 +83,41 @@ e2d::Scene* e2d::SceneManager::pop()
 	}
 
 	_nextScene = _scenes.top();
+	_nextScene->release();
 	_scenes.pop();
-
-	// 初始化场景切换动画
-	if (_transition && !_transition->init(_currScene, _nextScene))
-	{
-		WARN("Transition initialize failed!");
-		_transition->release();
-		_transition = nullptr;
-	}
 
 	return _nextScene;
 }
 
-void e2d::SceneManager::setTransition(Transition * transition)
+e2d::Scene * e2d::SceneManager::pop(Transition * transition)
 {
-	if (transition)
+	if (!transition)
+		return nullptr;
+
+	auto scene = SceneManager::pop();
+	if (scene)
 	{
 		if (_transition)
 		{
-			_transition->stop();
+			_transition->_stop();
 			_transition->release();
 		}
 		_transition = transition;
 		_transition->retain();
+
+		_transition->_inScene = scene;
+		_transition->_inScene->retain();
+
+		// 初始化场景切换动画
+		if (!_transition->_init(_currScene))
+		{
+			WARN("Transition initialize failed!");
+			_transition->release();
+			_transition = nullptr;
+		}
 	}
+
+	return scene;
 }
 
 void e2d::SceneManager::clear()
@@ -122,7 +148,7 @@ void e2d::SceneManager::update()
 {
 	if (_transition)
 	{
-		_transition->update();
+		_transition->_update();
 		
 		if (_transition->isDone())
 		{
@@ -157,7 +183,7 @@ void e2d::SceneManager::render()
 {
 	if (_transition)
 	{
-		_transition->render();
+		_transition->_render();
 	}
 	else if (_currScene)
 	{

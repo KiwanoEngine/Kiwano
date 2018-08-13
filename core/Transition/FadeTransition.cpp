@@ -1,14 +1,14 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::FadeTransition::FadeTransition(float duration)
-	: Transition(duration)
+e2d::FadeTransition::FadeTransition(Scene* scene, float duration)
+	: Transition(scene, duration)
 {
 }
 
-bool e2d::FadeTransition::init(Scene * prev, Scene * next)
+bool e2d::FadeTransition::_init(Scene * prev)
 {
-	if (Transition::init(prev, next))
+	if (Transition::_init(prev))
 	{
 		_outLayerParam.opacity = 1;
 		_inLayerParam.opacity = 0;
@@ -17,9 +17,9 @@ bool e2d::FadeTransition::init(Scene * prev, Scene * next)
 	return false;
 }
 
-void e2d::FadeTransition::update()
+void e2d::FadeTransition::_update()
 {
-	Transition::update();
+	Transition::_update();
 
 	if (_delta < 0.5)
 	{
@@ -32,11 +32,7 @@ void e2d::FadeTransition::update()
 		_inLayerParam.opacity = (_delta - 0.5f) * 2;
 		if (_delta >= 1)
 		{
-			this->stop();
+			this->_stop();
 		}
 	}
-}
-
-void e2d::FadeTransition::reset()
-{
 }

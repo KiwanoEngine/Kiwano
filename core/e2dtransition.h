@@ -6,36 +6,42 @@ namespace e2d
 
 
 class Scene;
+class SceneManager;
 
 // 场景过渡
 class Transition :
 	public Ref
 {
+	friend class SceneManager;
+
 public:
-	explicit Transition(float duration);
+	explicit Transition(
+		Scene* scene,
+		float duration
+	);
 
 	virtual ~Transition();
 
 	// 场景过渡动画是否结束
 	bool isDone();
 
+protected:
 	// 初始化场景过渡动画
-	virtual bool init(
-		Scene * prev,
-		Scene * next
+	virtual bool _init(
+		Scene * prev
 	);
 
 	// 更新场景过渡动画
-	virtual void update();
+	virtual void _update();
 
 	// 渲染场景过渡动画
-	virtual void render();
+	virtual void _render();
 
 	// 停止场景过渡动画
-	virtual void stop();
+	virtual void _stop();
 
 	// 重置场景过渡动画
-	virtual void reset() = 0;
+	virtual void _reset() { };
 
 protected:
 	bool	_end;
@@ -58,18 +64,17 @@ class FadeTransition :
 {
 public:
 	explicit FadeTransition(
-		float duration	/* 动画持续时长 */
+		Scene* scene,		/* 切换的场景 */
+		float duration		/* 动画持续时长 */
 	);
 
+protected:
 	// 更新动画
-	virtual void update() override;
+	virtual void _update() override;
 
-	virtual bool init(
-		Scene * prev,
-		Scene * next
+	virtual bool _init(
+		Scene * prev
 	) override;
-
-	virtual void reset() override;
 };
 
 
@@ -79,18 +84,16 @@ class EmergeTransition :
 {
 public:
 	explicit EmergeTransition(
-		float duration	/* 浮现动画持续时长 */
+		Scene* scene,		/* 切换的场景 */
+		float duration		/* 浮现动画持续时长 */
 	);
 
-	// 更新动画
-	virtual void update() override;
+protected:
+	virtual void _update() override;
 
-	virtual bool init(
-		Scene * prev,
-		Scene * next
+	virtual bool _init(
+		Scene * prev
 	) override;
-
-	virtual void reset() override;
 };
 
 
@@ -100,18 +103,16 @@ class BoxTransition :
 {
 public:
 	explicit BoxTransition(
-		float duration	/* 动画持续时长 */
+		Scene* scene,		/* 切换的场景 */
+		float duration		/* 动画持续时长 */
 	);
 
-	// 更新动画
-	virtual void update() override;
+protected:
+	virtual void _update() override;
 
-	virtual bool init(
-		Scene * prev,
-		Scene * next
+	virtual bool _init(
+		Scene * prev
 	) override;
-
-	virtual void reset() override;
 };
 
 
@@ -121,19 +122,19 @@ class MoveTransition :
 {
 public:
 	explicit MoveTransition(
-		float moveDuration,					/* 场景移动动画持续时长 */
+		Scene* scene,							/* 切换的场景 */
+		float moveDuration,						/* 场景移动动画持续时长 */
 		Direction direction = Direction::Left	/* 场景移动方向 */
 	);
 
-	// 更新动画
-	virtual void update() override;
+protected:
+	virtual void _update() override;
 
-	virtual bool init(
-		Scene * prev,
-		Scene * next
+	virtual bool _init(
+		Scene * prev
 	) override;
 
-	virtual void reset() override;
+	virtual void _reset() override;
 
 protected:
 	Direction _direction;

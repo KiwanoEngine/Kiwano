@@ -2,18 +2,20 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::Transition::Transition(float duration)
+e2d::Transition::Transition(Scene* scene, float duration)
 	: _end(false)
 	, _started()
 	, _delta(0)
 	, _outScene(nullptr)
-	, _inScene(nullptr)
+	, _inScene(scene)
 	, _outLayer(nullptr)
 	, _inLayer(nullptr)
 	, _outLayerParam()
 	, _inLayerParam()
 {
 	_duration = std::max(duration, 0.f);
+	if (_inScene)
+		_inScene->retain();
 }
 
 e2d::Transition::~Transition()
@@ -29,13 +31,23 @@ bool e2d::Transition::isDone()
 	return _end;
 }
 
-bool e2d::Transition::init(Scene * prev, Scene * next)
+bool e2d::Transition::_init(Scene * prev)
 {
-	auto renderer = Renderer::getInstance();
-	// 创建图层
-	HRESULT hr = renderer->getRenderTarget()->CreateLayer(&_inLayer);
+	_started = Time::now();
+	_outScene = prev;
 
-	if (SUCCEEDED(hr))
+	if (_outScene)
+		_outScene->retain();
+	
+	// 创建图层
+	HRESULT hr = S_OK;
+	auto renderer = Renderer::getInstance();
+	if (_inScene)
+	{
+		hr = renderer->getRenderTarget()->CreateLayer(&_inLayer);
+	}
+
+	if (SUCCEEDED(hr) && _outScene)
 	{
 		hr = renderer->getRenderTarget()->CreateLayer(&_outLayer);
 	}
@@ -44,12 +56,6 @@ bool e2d::Transition::init(Scene * prev, Scene * next)
 	{
 		return false;
 	}
-
-	_started = Time::now();
-	_outScene = prev;
-	_inScene = next;
-	if (_outScene) _outScene->retain();
-	if (_inScene) _inScene->retain();
 
 	_windowSize = Window::getInstance()->getSize();
 	_outLayerParam = _inLayerParam = D2D1::LayerParameters(
@@ -65,7 +71,7 @@ bool e2d::Transition::init(Scene * prev, Scene * next)
 	return true;
 }
 
-void e2d::Transition::update()
+void e2d::Transition::_update()
 {
 	if (_duration == 0)
 	{
@@ -78,7 +84,7 @@ void e2d::Transition::update()
 	}
 }
 
-void e2d::Transition::render()
+void e2d::Transition::_render()
 {
 	auto pRT = Renderer::getInstance()->getRenderTarget();
 
@@ -121,8 +127,8 @@ void e2d::Transition::render()
 	}
 }
 
-void e2d::Transition::stop()
+void e2d::Transition::_stop()
 {
 	_end = true;
-	reset();
+	_reset();
 }

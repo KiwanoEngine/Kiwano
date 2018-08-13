@@ -24,16 +24,22 @@ public:
 
 	// 场景入栈
 	void push(
-		Scene * scene,						/* 下一个场景的指针 */
-		bool saveCurrentScene = true		/* 是否保存当前场景 */
+		Scene * scene,					/* 下一个场景的指针 */
+		bool saveCurrentScene = true	/* 是否保存当前场景 */
+	);
+
+	// 场景入栈
+	void push(
+		Transition * transition,		/* 场景动画 */
+		bool saveCurrentScene = true	/* 是否保存当前场景 */
 	);
 
 	// 场景出栈
 	Scene* pop();
 
-	// 设置场景切换动作
-	void setTransition(
-		Transition * transition	/* 场景切换动作 */
+	// 场景出栈
+	Scene* pop(
+		Transition * transition			/* 场景动画 */
 	);
 
 	// 清空保存的所有场景

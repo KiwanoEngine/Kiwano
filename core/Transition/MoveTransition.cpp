@@ -1,15 +1,15 @@
 #include "..\e2dtransition.h"
 #include "..\e2dnode.h"
 
-e2d::MoveTransition::MoveTransition(float duration, Direction direction)
-	: Transition(duration)
+e2d::MoveTransition::MoveTransition(Scene* scene, float duration, Direction direction)
+	: Transition(scene, duration)
 	, _direction(direction)
 {
 }
 
-bool e2d::MoveTransition::init(Scene * prev, Scene * next)
+bool e2d::MoveTransition::_init(Scene * prev)
 {
-	if (Transition::init(prev, next))
+	if (Transition::_init(prev))
 	{
 		float width = _windowSize.width;
 		float height = _windowSize.height;
@@ -41,9 +41,9 @@ bool e2d::MoveTransition::init(Scene * prev, Scene * next)
 	return false;
 }
 
-void e2d::MoveTransition::update()
+void e2d::MoveTransition::_update()
 {
-	Transition::update();
+	Transition::_update();
 
 	if (_outScene)
 	{
@@ -56,11 +56,11 @@ void e2d::MoveTransition::update()
 
 	if (_delta >= 1)
 	{
-		this->stop();
+		this->_stop();
 	}
 }
 
-void e2d::MoveTransition::reset()
+void e2d::MoveTransition::_reset()
 {
 	if (_outScene) _outScene->setPos(0, 0);
 	_inScene->setPos(0, 0);

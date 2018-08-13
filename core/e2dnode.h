@@ -5,7 +5,7 @@ namespace e2d
 {
 
 
-class Layer;
+class Scene;
 class Action;
 class Transition;
 class CollisionManager;
@@ -14,7 +14,6 @@ class Node :
 	public Ref
 {
 	friend class Scene;
-	friend class Layer;
 	friend class Collider;
 	friend class Transition;
 	friend class CollisionManager;
