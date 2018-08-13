@@ -372,6 +372,75 @@ private:
 };
 
 
+// 键盘键值
+enum class KeyCode : int
+{
+	Unknown = 0,
+	Up = 0xC8,
+	Left = 0xCB,
+	Right = 0xCD,
+	Down = 0xD0,
+	Enter = 0x1C,
+	Space = 0x39,
+	Esc = 0x01,
+	Q = 0x10,
+	W = 0x11,
+	E = 0x12,
+	R = 0x13,
+	T = 0x14,
+	Y = 0x15,
+	U = 0x16,
+	I = 0x17,
+	O = 0x18,
+	P = 0x19,
+	A = 0x1E,
+	S = 0x1F,
+	D = 0x20,
+	F = 0x21,
+	G = 0x22,
+	H = 0x23,
+	J = 0x24,
+	K = 0x25,
+	L = 0x26,
+	Z = 0x2C,
+	X = 0x2D,
+	C = 0x2E,
+	V = 0x2F,
+	B = 0x30,
+	N = 0x31,
+	M = 0x32,
+	Num1 = 0x02,
+	Num2 = 0x03,
+	Num3 = 0x04,
+	Num4 = 0x05,
+	Num5 = 0x06,
+	Num6 = 0x07,
+	Num7 = 0x08,
+	Num8 = 0x09,
+	Num9 = 0x0A,
+	Num0 = 0x0B,
+	Numpad7 = 0x47,
+	Numpad8 = 0x48,
+	Numpad9 = 0x49,
+	Numpad4 = 0x4B,
+	Numpad5 = 0x4C,
+	Numpad6 = 0x4D,
+	Numpad1 = 0x4F,
+	Numpad2 = 0x50,
+	Numpad3 = 0x51,
+	Numpad0 = 0x52,
+};
+
+
+// 鼠标键值
+enum class MouseCode : int
+{
+	Left,		/* 鼠标左键 */
+	Right,		/* 鼠标右键 */
+	Middle		/* 鼠标中键 */
+};
+
+
 // 函数对象
 class Function
 {
@@ -505,181 +574,6 @@ public:
 };
 
 
-// 鼠标键值
-enum class MouseCode : int
-{
-	Left,		/* 鼠标左键 */
-	Right,		/* 鼠标右键 */
-	Middle		/* 鼠标中键 */
-};
-
-
-// 键盘键值
-enum class KeyCode : int
-{
-	Unknown = 0,
-	Up = 0xC8,
-	Left = 0xCB,
-	Right = 0xCD,
-	Down = 0xD0,
-	Enter = 0x1C,
-	Space = 0x39,
-	Esc = 0x01,
-	Q = 0x10,
-	W = 0x11,
-	E = 0x12,
-	R = 0x13,
-	T = 0x14,
-	Y = 0x15,
-	U = 0x16,
-	I = 0x17,
-	O = 0x18,
-	P = 0x19,
-	A = 0x1E,
-	S = 0x1F,
-	D = 0x20,
-	F = 0x21,
-	G = 0x22,
-	H = 0x23,
-	J = 0x24,
-	K = 0x25,
-	L = 0x26,
-	Z = 0x2C,
-	X = 0x2D,
-	C = 0x2E,
-	V = 0x2F,
-	B = 0x30,
-	N = 0x31,
-	M = 0x32,
-	Num1 = 0x02,
-	Num2 = 0x03,
-	Num3 = 0x04,
-	Num4 = 0x05,
-	Num5 = 0x06,
-	Num6 = 0x07,
-	Num7 = 0x08,
-	Num8 = 0x09,
-	Num9 = 0x0A,
-	Num0 = 0x0B,
-	Numpad7 = 0x47,
-	Numpad8 = 0x48,
-	Numpad9 = 0x49,
-	Numpad4 = 0x4B,
-	Numpad5 = 0x4C,
-	Numpad6 = 0x4D,
-	Numpad1 = 0x4F,
-	Numpad2 = 0x50,
-	Numpad3 = 0x51,
-	Numpad0 = 0x52,
-};
-
-
-// 按键消息
-class KeyEvent
-{
-public:
-	// 按键消息类型
-	enum class Type : int
-	{
-		Down = 0x0100,	// 按下
-		Up				// 抬起
-	};
-
-public:
-	explicit KeyEvent(
-		HWND hWnd,
-		UINT message,
-		WPARAM wParam,
-		LPARAM lParam
-	);
-
-	// 获取按键键值
-	KeyCode getCode() const;
-
-	// 获取按键次数
-	int getCount() const;
-
-	// 获取事件类型
-	KeyEvent::Type getType() const;
-
-	// VK 键值转换
-	static KeyCode convertKeyCode(
-		WPARAM wParam
-	);
-
-protected:
-	int _count;
-	KeyCode _code;
-	KeyEvent::Type _type;
-};
-
-
-// 鼠标消息
-class MouseEvent
-{
-public:
-	// 鼠标消息类型
-	enum class Type : int
-	{
-		Move = 0x0200,		// 鼠标移动
-		LeftDown,			// 鼠标左键按下
-		LeftUp,				// 鼠标左键抬起
-		LeftDoubleClick,	// 鼠标左键双击
-		RightDown,			// 鼠标右键按下
-		RightUp,			// 鼠标右键抬起
-		RightDoubleClick,	// 鼠标右键双击
-		MiddleDown,			// 鼠标中键按下
-		MiddleUp,			// 鼠标中键抬起
-		MiddleDoubleClick,	// 鼠标中键双击
-		Wheel				// 滑动滚轮
-	};
-
-public:
-	explicit MouseEvent(
-		HWND hWnd,
-		UINT message,
-		WPARAM wParam,
-		LPARAM lParam
-	);
-
-	// 获取鼠标横坐标
-	float getX() const;
-
-	// 获取鼠标纵坐标
-	float getY() const;
-
-	// 获取鼠标坐标
-	Point getPos() const;
-
-	// 获取事件类型
-	MouseEvent::Type getType() const;
-
-	float getWheelDelta() const;
-
-	// 鼠标左键是否按下
-	bool isLButtonDown() const;
-
-	// 鼠标右键是否按下
-	bool isRButtonDown() const;
-
-	// 鼠标中键是否按下
-	bool isMButtonDown() const;
-
-	// Shift 键是否按下
-	bool isShiftDown() const;
-
-	// Ctrl 键是否按下
-	bool isCtrlDown() const;
-
-protected:
-	UINT _message;
-	WPARAM _wParam;
-	LPARAM _lParam;
-	Point _pos;
-	MouseEvent::Type _type;
-};
-
-
 class Node;
 
 // 碰撞体
@@ -780,46 +674,6 @@ protected:
 	Node *	_parentNode;
 	Shape	_shape;
 	ID2D1Geometry* _geometry;
-};
-
-
-// 碰撞事件
-class Collision
-{
-public:
-	Collision();
-
-	explicit Collision(
-		Node* node,
-		Collider::Relation relation
-	);
-
-	~Collision();
-
-	// 获取发生碰撞节点
-	Node* getNode() const;
-
-	// 获取交集关系
-	Collider::Relation getRelation() const;
-
-protected:
-	Node* _node;
-	Collider::Relation _relation;
-};
-
-
-// 消息处理
-class EventHandler
-{
-public:
-	// 处理按键消息
-	virtual void handle(KeyEvent e) { }
-
-	// 处理鼠标消息
-	virtual void handle(MouseEvent e) { }
-
-	// 处理碰撞消息
-	virtual void handle(Collision collision) { }
 };
 
 

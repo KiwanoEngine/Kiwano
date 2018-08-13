@@ -1,4 +1,4 @@
-#include "..\e2dcommon.h"
+#include "..\e2devent.h"
 
 
 e2d::KeyEvent::KeyEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

@@ -1,5 +1,6 @@
 #pragma once
 #include "e2dbase.h"
+#include "e2devent.h"
 
 namespace e2d 
 {

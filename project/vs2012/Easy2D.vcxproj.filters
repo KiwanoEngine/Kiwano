@@ -34,6 +34,7 @@
     <ClInclude Include="..\..\core\e2dbase.h" />
     <ClInclude Include="..\..\core\e2dcommon.h" />
     <ClInclude Include="..\..\core\e2dcustom.h" />
+    <ClInclude Include="..\..\core\e2devent.h" />
     <ClInclude Include="..\..\core\e2dmacros.h" />
     <ClInclude Include="..\..\core\e2dmanager.h" />
     <ClInclude Include="..\..\core\e2dnode.h" />

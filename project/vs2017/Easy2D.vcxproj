@@ -268,6 +268,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\core\e2daction.h" />
     <ClInclude Include="..\..\core\e2dcustom.h" />
+    <ClInclude Include="..\..\core\e2devent.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\e2dbase.h" />
     <ClInclude Include="..\..\core\e2dcommon.h" />

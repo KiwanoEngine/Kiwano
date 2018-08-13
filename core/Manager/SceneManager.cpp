@@ -1,4 +1,5 @@
 #include "..\e2dmanager.h"
+#include "..\e2devent.h"
 #include "..\e2dnode.h"
 #include "..\e2dtransition.h"
 

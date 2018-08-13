@@ -1,4 +1,4 @@
-#include "..\e2dcommon.h"
+#include "..\e2devent.h"
 #include "..\e2dbase.h"
 
 e2d::MouseEvent::MouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

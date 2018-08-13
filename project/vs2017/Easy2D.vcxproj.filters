@@ -246,5 +246,6 @@
     <ClInclude Include="..\..\core\e2dtool.h" />
     <ClInclude Include="..\..\core\e2dtransition.h" />
     <ClInclude Include="..\..\core\e2dcustom.h" />
+    <ClInclude Include="..\..\core\e2devent.h" />
   </ItemGroup>
 </Project>
