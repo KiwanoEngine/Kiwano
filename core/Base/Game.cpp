@@ -4,35 +4,38 @@
 #include <thread>
 
 
-e2d::Game * e2d::Game::_instance = nullptr;
-
 e2d::Game::Game()
 	: _quit(true)
 	, _paused(false)
 	, _config()
+	, _window(nullptr)
+	, _input(nullptr)
+	, _renderer(nullptr)
 {
 	CoInitialize(nullptr);
+
+	_input = new (std::nothrow) Input;
+	_renderer = new (std::nothrow) Renderer;
 }
 
 e2d::Game::~Game()
 {
+	if (_renderer)
+		delete _renderer;
+
+	if (_input)
+		delete _input;
+
+	if (_window)
+		delete _window;
+
 	CoUninitialize();
 }
 
 e2d::Game * e2d::Game::getInstance()
 {
-	if (!_instance)
-		_instance = new (std::nothrow) Game;
-	return _instance;
-}
-
-void e2d::Game::destroyInstance()
-{
-	if (_instance)
-	{
-		delete _instance;
-		_instance = nullptr;
-	}
+	static Game instance;
+	return &instance;
 }
 
 void e2d::Game::start()
@@ -41,11 +44,11 @@ void e2d::Game::start()
 
 	const int minInterval = 5;
 	Time last = Time::now();
-	HWND hWnd = Window::getInstance()->getHWnd();
+	HWND hWnd = _window->getHWnd();
 	
 	::ShowWindow(hWnd, SW_SHOWNORMAL);
 	::UpdateWindow(hWnd);
-	Window::getInstance()->poll();
+	_window->poll();
 	SceneManager::getInstance()->update();
 	
 	while (!_quit)
@@ -56,12 +59,12 @@ void e2d::Game::start()
 		if (dur.milliseconds() > minInterval)
 		{
 			last = now;
-			Input::getInstance()->update();
+			_input->update();
 			Timer::getInstance()->update();
 			ActionManager::getInstance()->update();
 			SceneManager::getInstance()->update();
-			Renderer::getInstance()->render();
-			Window::getInstance()->poll();
+			_renderer->render();
+			_window->poll();
 			GC::getInstance()->flush();
 		}
 		else
@@ -103,9 +106,16 @@ void e2d::Game::setConfig(const Config& config)
 	_config = config;
 }
 
-const e2d::Config& e2d::Game::getConfig()
+const e2d::Config& e2d::Game::getConfig() const
 {
 	return _config;
+}
+
+void e2d::Game::setWindow(Window * window)
+{
+	_window = window;
+	_renderer->init(_window);
+	_input->init(_window);
 }
 
 void e2d::Game::quit()

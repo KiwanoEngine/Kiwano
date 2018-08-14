@@ -70,7 +70,8 @@ public:
 		HWND hWnd,
 		UINT message,
 		WPARAM wParam,
-		LPARAM lParam
+		LPARAM lParam,
+		float dpi
 	);
 
 	// 获取鼠标横坐标

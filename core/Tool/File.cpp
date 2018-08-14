@@ -160,11 +160,14 @@ bool e2d::File::createFolder(const String & dirPath)
 
 e2d::String e2d::File::getSaveFilePath(const String& title, const String& defExt)
 {
+	auto window = Game::getInstance()->getWindow();
+	HWND hwnd = window->getHWnd();
+
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };
 	wchar_t strFilename[MAX_PATH] = { 0 };				// 用于接收文件名
 	ofn.lStructSize = sizeof(OPENFILENAME);				// 结构体大小
-	ofn.hwndOwner = Window::getInstance()->getHWnd();	// 窗口句柄
+	ofn.hwndOwner = hwnd;								// 窗口句柄
 	ofn.lpstrFilter = L"所有文件\0*.*\0\0";				// 设置过滤
 	ofn.nFilterIndex = 1;								// 过滤器索引
 	ofn.lpstrFile = strFilename;						// 接收返回的文件路径和文件名

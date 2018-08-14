@@ -1,13 +1,12 @@
 #include "..\e2devent.h"
 #include "..\e2dbase.h"
 
-e2d::MouseEvent::MouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+e2d::MouseEvent::MouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, float dpi)
 	: _message(message)
 	, _wParam(wParam)
 	, _lParam(lParam)
 	, _type(Type(message))
 {
-	float dpi = Window::getInstance()->getDpi();
 	_pos.x = ((float)(short)LOWORD(lParam)) * 96.f / dpi;
 	_pos.y = ((float)(short)HIWORD(lParam)) * 96.f / dpi;
 }

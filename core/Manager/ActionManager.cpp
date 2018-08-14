@@ -151,7 +151,7 @@ void e2d::ActionManager::start(Action * action, Node * target, bool paused)
 		}
 		else
 		{
-			throw Exception(L"该 Action 已有执行目标");
+			throw Exception("该 Action 已有执行目标");
 		}
 	}
 }

@@ -189,20 +189,20 @@ bool e2d::Button::dispatch(const MouseEvent & e, bool handled)
 	return Node::dispatch(e, handled);
 }
 
-void e2d::Button::visit()
+void e2d::Button::visit(Renderer* renderer)
 {
-	Node::visit();
+	Node::visit(renderer);
 
 	if (_visible &&
 		!_enabled &&
 		_normal &&
-		_normal->containsPoint(Input::getInstance()->getMousePos()))
+		_normal->containsPoint(Game::getInstance()->getInput()->getMousePos()))
 	{
-		Window::getInstance()->setCursor(Window::Cursor::No);
+		Game::getInstance()->getWindow()->setCursor(Window::Cursor::No);
 	}
 	else if (_status == Status::Mouseover || _status == Status::Selected)
 	{
-		Window::getInstance()->setCursor(Window::Cursor::Hand);
+		Game::getInstance()->getWindow()->setCursor(Window::Cursor::Hand);
 	}
 }
 

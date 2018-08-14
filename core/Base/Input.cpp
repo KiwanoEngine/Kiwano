@@ -3,7 +3,6 @@
 #include "..\e2dmanager.h"
 #pragma comment(lib, "dinput8.lib")
 
-e2d::Input * e2d::Input::_instance = nullptr;
 
 e2d::Input::Input()
 	: _directInput(false)
@@ -23,52 +22,6 @@ e2d::Input::Input()
 		(void**)&_directInput,
 		nullptr
 	);
-
-	auto window = Window::getInstance();
-
-	if (SUCCEEDED(hr))
-	{
-		// 初始化键盘设备
-		hr = _directInput->CreateDevice(
-			GUID_SysKeyboard,
-			&_keyboardDevice,
-			nullptr
-		);
-
-		if (SUCCEEDED(hr))
-		{
-			_keyboardDevice->SetCooperativeLevel(
-				window->getHWnd(),
-				DISCL_FOREGROUND | DISCL_NONEXCLUSIVE
-			);
-			_keyboardDevice->SetDataFormat(
-				&c_dfDIKeyboard);
-			_keyboardDevice->Acquire();
-			_keyboardDevice->Poll();
-		}
-		else
-		{
-			throw SystemException(L"Keyboard not found!");
-		}
-	}
-
-	if (SUCCEEDED(hr))
-	{
-		// 初始化鼠标设备
-		hr = _directInput->CreateDevice(GUID_SysMouse, &_mouseDevice, nullptr);
-
-		if (SUCCEEDED(hr))
-		{
-			_mouseDevice->SetCooperativeLevel(window->getHWnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-			_mouseDevice->SetDataFormat(&c_dfDIMouse);
-			_mouseDevice->Acquire();
-			_mouseDevice->Poll();
-		}
-		else
-		{
-			throw SystemException(L"Mouse not found!");
-		}
-	}
 }
 
 e2d::Input::~Input()
@@ -85,20 +38,37 @@ e2d::Input::~Input()
 	CoUninitialize();
 }
 
-e2d::Input * e2d::Input::getInstance()
+void e2d::Input::init(Window * window)
 {
-	if (!_instance)
-		_instance = new (std::nothrow) Input;
-	return _instance;
-}
+	HWND hwnd = window->getHWnd();
 
-void e2d::Input::destroyInstance()
-{
-	if (_instance)
-	{
-		delete _instance;
-		_instance = nullptr;
-	}
+	// 初始化键盘设备
+	ThrowIfFailed(
+		_directInput->CreateDevice(
+			GUID_SysKeyboard,
+			&_keyboardDevice,
+			nullptr
+		)
+	);
+
+	_keyboardDevice->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	_keyboardDevice->SetDataFormat(&c_dfDIKeyboard);
+	_keyboardDevice->Acquire();
+	_keyboardDevice->Poll();
+
+	// 初始化鼠标设备
+	ThrowIfFailed(
+		_directInput->CreateDevice(
+			GUID_SysMouse,
+			&_mouseDevice,
+			nullptr
+		)
+	);
+
+	_mouseDevice->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	_mouseDevice->SetDataFormat(&c_dfDIMouse);
+	_mouseDevice->Acquire();
+	_mouseDevice->Poll();
 }
 
 void e2d::Input::update()
@@ -160,7 +130,7 @@ float e2d::Input::getMouseY()
 
 e2d::Point e2d::Input::getMousePos()
 {
-	auto window = Window::getInstance();
+	auto window = Game::getInstance()->getWindow();
 
 	POINT mousePos;
 	::GetCursorPos(&mousePos);

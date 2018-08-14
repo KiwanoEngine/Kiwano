@@ -80,7 +80,7 @@ void e2d::Collider::render()
 {
 	if (_geometry && _enabled && _visible)
 	{
-		auto renderer = Renderer::getInstance();
+		auto renderer = Game::getInstance()->getRenderer();
 		// 获取纯色画刷
 		ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
 		// 设置画刷颜色和透明度
@@ -131,13 +131,14 @@ void e2d::Collider::recreate()
 		return;
 
 	SafeRelease(_geometry);
+	auto factory = Game::getInstance()->getRenderer()->getFactory();
 
 	switch (_shape)
 	{
 	case Shape::Rect:
 	{
 		ID2D1RectangleGeometry* rectangle = nullptr;
-		Renderer::getFactory()->CreateRectangleGeometry(
+		factory->CreateRectangleGeometry(
 			D2D1::RectF(0, 0, _parentNode->getRealWidth(), _parentNode->getRealHeight()),
 			&rectangle
 		);
@@ -150,7 +151,7 @@ void e2d::Collider::recreate()
 		float minSide = std::min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
 
 		ID2D1EllipseGeometry* circle = nullptr;
-		Renderer::getFactory()->CreateEllipseGeometry(
+		factory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
 					_parentNode->getRealWidth() / 2,
@@ -171,7 +172,7 @@ void e2d::Collider::recreate()
 			halfHeight = _parentNode->getHeight() / 2;
 
 		ID2D1EllipseGeometry* ellipse = nullptr;
-		Renderer::getFactory()->CreateEllipseGeometry(
+		factory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
 					halfWidth,
@@ -186,7 +187,7 @@ void e2d::Collider::recreate()
 	}
 
 	ID2D1TransformedGeometry * _transformed;
-	Renderer::getFactory()->CreateTransformedGeometry(
+	factory->CreateTransformedGeometry(
 		_geometry,
 		_parentNode->_finalMatri,
 		&_transformed

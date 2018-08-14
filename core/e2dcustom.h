@@ -6,17 +6,6 @@ namespace e2d
 {
 
 
-template<class Interface>
-inline void SafeRelease(Interface*& p)
-{
-	if (p != nullptr)
-	{
-		p->Release();
-		p = nullptr;
-	}
-}
-
-
 class Music;
 
 // 音源回调
@@ -173,7 +162,7 @@ class Exception
 public:
 	Exception() E2D_NOEXCEPT;
 
-	explicit Exception(const String& message) E2D_NOEXCEPT;
+	explicit Exception(const char * message) E2D_NOEXCEPT;
 
 	Exception(Exception const& other) E2D_NOEXCEPT;
 
@@ -182,10 +171,10 @@ public:
 	Exception& operator=(Exception const& other) E2D_NOEXCEPT;
 
 	// 获取异常信息
-	virtual String msg() const;
+	virtual const char * msg() const;
 
 private:
-	String _message;
+	const char * _message;
 };
 
 
@@ -196,7 +185,30 @@ class SystemException
 public:
 	SystemException() E2D_NOEXCEPT;
 
-	explicit SystemException(const String& message) E2D_NOEXCEPT;
+	explicit SystemException(const char * message) E2D_NOEXCEPT;
 };
+
+
+template<class Interface>
+inline void SafeRelease(Interface*& p)
+{
+	if (p != nullptr)
+	{
+		p->Release();
+		p = nullptr;
+	}
+}
+
+
+inline void ThrowIfFailed(HRESULT hr)
+{
+	if (FAILED(hr))
+	{
+		// 在此处设置断点以捕获 D2D API 异常.
+		static char s_str[64] = {};
+		sprintf_s(s_str, "Failure with HRESULT of %08X", static_cast<unsigned int>(hr));
+		throw SystemException(s_str);
+	}
+}
 
 }

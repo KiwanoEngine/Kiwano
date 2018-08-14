@@ -79,7 +79,7 @@ e2d::Node::~Node()
 	}
 }
 
-void e2d::Node::visit()
+void e2d::Node::visit(Renderer * renderer)
 {
 	if (!_visible)
 		return;
@@ -90,7 +90,7 @@ void e2d::Node::visit()
 	// 保留差别属性
 	_extrapolate = this->getProperty();
 
-	auto pRT = Renderer::getInstance()->getRenderTarget();
+	auto pRT = renderer->getRenderTarget();
 	if (_clipEnabled)
 	{
 		pRT->SetTransform(_finalMatri);
@@ -103,7 +103,7 @@ void e2d::Node::visit()
 	if (_children.empty())
 	{
 		pRT->SetTransform(_finalMatri);
-		this->draw();
+		this->draw(renderer);
 	}
 	else
 	{
@@ -117,7 +117,7 @@ void e2d::Node::visit()
 			// 访问 Order 小于零的节点
 			if (child->getOrder() < 0)
 			{
-				child->visit();
+				child->visit(renderer);
 			}
 			else
 			{
@@ -126,11 +126,11 @@ void e2d::Node::visit()
 		}
 
 		pRT->SetTransform(_finalMatri);
-		this->draw();
+		this->draw(renderer);
 
 		// 访问剩余节点
 		for (; i < _children.size(); ++i)
-			_children[i]->visit();
+			_children[i]->visit(renderer);
 	}
 
 	if (_clipEnabled)
@@ -139,11 +139,10 @@ void e2d::Node::visit()
 	}
 }
 
-void e2d::Node::_renderOutline()
+void e2d::Node::drawOutline(Renderer * renderer)
 {
 	if (_visible)
 	{
-		auto renderer = Renderer::getInstance();
 		renderer->getRenderTarget()->SetTransform(_finalMatri);
 		renderer->getRenderTarget()->DrawRectangle(
 			D2D1::RectF(0, 0, _width, _height),
@@ -154,12 +153,12 @@ void e2d::Node::_renderOutline()
 		// 渲染所有子节点的轮廓
 		for (const auto& child : _children)
 		{
-			child->_renderOutline();
+			child->drawOutline(renderer);
 		}
 	}
 }
 
-void e2d::Node::_renderCollider()
+void e2d::Node::drawCollider()
 {
 	if (_visible)
 	{
@@ -168,7 +167,7 @@ void e2d::Node::_renderCollider()
 		// 绘制所有子节点的几何碰撞体
 		for (const auto& child : _children)
 		{
-			child->_renderCollider();
+			child->drawCollider();
 		}
 	}
 }
@@ -610,14 +609,14 @@ void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 	{
 		if (child->_parent != nullptr)
 		{
-			throw Exception(L"节点已有父节点, 不能再添加到其他节点");
+			throw Exception("节点已有父节点, 不能再添加到其他节点");
 		}
 
 		for (Node * parent = this; parent != nullptr; parent = parent->getParent())
 		{
 			if (child == parent)
 			{
-				throw Exception(L"一个节点不能同时是另一个节点的父节点和子节点");
+				throw Exception("一个节点不能同时是另一个节点的父节点和子节点");
 			}
 		}
 
@@ -825,21 +824,23 @@ bool e2d::Node::containsPoint(const Point& point)
 	// 为节点创建一个轮廓
 	BOOL ret = 0;
 	ID2D1RectangleGeometry * rectGeo = nullptr;
-	auto factory = Renderer::getFactory();
+	auto factory = Game::getInstance()->getRenderer()->getFactory();
 
-	HRESULT hr = factory->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, _width, _height),
-		&rectGeo
+	ThrowIfFailed(
+		factory->CreateRectangleGeometry(
+			D2D1::RectF(0, 0, _width, _height),
+			&rectGeo
+		)
 	);
 
-	if (SUCCEEDED(hr))
-	{
+	ThrowIfFailed(
 		rectGeo->FillContainsPoint(
 			D2D1::Point2F(point.x, point.y),
 			_finalMatri,
 			&ret
-		);
-	}
+		)
+	);
+
 	SafeRelease(rectGeo);
 
 	return ret != 0;
@@ -855,48 +856,46 @@ bool e2d::Node::intersects(Node * node)
 	D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
 	ID2D1RectangleGeometry *rectGeo = nullptr, *rectGeo2 = nullptr;
 	ID2D1TransformedGeometry *transGeo = nullptr, *transGeo2 = nullptr;
-	auto factory = Renderer::getFactory();
+	auto factory = Game::getInstance()->getRenderer()->getFactory();
 
-	HRESULT hr = factory->CreateRectangleGeometry(
-		D2D1::RectF(0, 0, _width, _height),
-		&rectGeo
+	ThrowIfFailed(
+		factory->CreateRectangleGeometry(
+			D2D1::RectF(0, 0, _width, _height),
+			&rectGeo
+		)
 	);
 
-	if (SUCCEEDED(hr))
-	{
-		hr = factory->CreateRectangleGeometry(
+	ThrowIfFailed(
+		factory->CreateRectangleGeometry(
 			D2D1::RectF(0, 0, node->_width, node->_height),
 			&rectGeo2
-		);
-	}
+		)
+	);
 
-	if (SUCCEEDED(hr))
-	{
-		hr = factory->CreateTransformedGeometry(
+	ThrowIfFailed(
+		factory->CreateTransformedGeometry(
 			rectGeo,
 			_finalMatri,
 			&transGeo
-		);
-	}
+		)
+	);
 
-	if (SUCCEEDED(hr))
-	{
-		hr = factory->CreateTransformedGeometry(
+	ThrowIfFailed(
+		factory->CreateTransformedGeometry(
 			rectGeo2,
 			node->_finalMatri,
 			&transGeo2
-		);
-	}
+		)
+	);
 
-	if (SUCCEEDED(hr))
-	{
+	ThrowIfFailed(
 		// 获取相交状态
 		transGeo->CompareWithGeometry(
 			transGeo2,
 			D2D1::Matrix3x2F::Identity(),
 			&relation
-		);
-	}
+		)
+	);
 
 	SafeRelease(rectGeo);
 	SafeRelease(rectGeo2);

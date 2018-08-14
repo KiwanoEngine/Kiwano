@@ -6,7 +6,7 @@ e2d::Exception::Exception() E2D_NOEXCEPT
 {
 }
 
-e2d::Exception::Exception(const String& message) E2D_NOEXCEPT
+e2d::Exception::Exception(const char * message) E2D_NOEXCEPT
 	: _message(message)
 {
 }
@@ -31,7 +31,7 @@ e2d::Exception::~Exception() E2D_NOEXCEPT
 {
 }
 
-e2d::String e2d::Exception::msg() const
+const char * e2d::Exception::msg() const
 {
 	return _message;
 }

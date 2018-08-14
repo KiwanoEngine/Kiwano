@@ -41,10 +41,6 @@ e2d::GC::~GC()
 	Image::clearCache();
 
 	// É¾³ıËùÓĞµ¥Àı
-	Game::destroyInstance();
-	Renderer::destroyInstance();
-	Input::destroyInstance();
-	Window::destroyInstance();
 	Timer::destroyInstance();
 	SceneManager::destroyInstance();
 	ActionManager::destroyInstance();

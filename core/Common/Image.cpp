@@ -160,7 +160,7 @@ bool e2d::Image::preload(const Resource& res)
 	IWICStream *pStream = nullptr;
 	IWICFormatConverter *pConverter = nullptr;
 	ID2D1Bitmap *pBitmap = nullptr;
-	IWICImagingFactory *pImagingFactory = Renderer::getImagingFactory();
+	IWICImagingFactory *pImagingFactory = Game::getInstance()->getRenderer()->getImagingFactory();
 
 	if (!res.isFile())
 	{
@@ -273,7 +273,7 @@ bool e2d::Image::preload(const Resource& res)
 	if (SUCCEEDED(hr))
 	{
 		// 从 WIC 位图创建一个 Direct2D 位图
-		hr = Renderer::getInstance()->getRenderTarget()->CreateBitmapFromWicBitmap(
+		hr = Game::getInstance()->getRenderer()->getRenderTarget()->CreateBitmapFromWicBitmap(
 			pConverter,
 			nullptr,
 			&pBitmap

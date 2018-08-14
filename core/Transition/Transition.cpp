@@ -41,7 +41,7 @@ bool e2d::Transition::_init(Scene * prev)
 	
 	// ´´½¨Í¼²ã
 	HRESULT hr = S_OK;
-	auto renderer = Renderer::getInstance();
+	auto renderer = Game::getInstance()->getRenderer();
 	if (_inScene)
 	{
 		hr = renderer->getRenderTarget()->CreateLayer(&_inLayer);
@@ -57,7 +57,7 @@ bool e2d::Transition::_init(Scene * prev)
 		return false;
 	}
 
-	_windowSize = Window::getInstance()->getSize();
+	_windowSize = Game::getInstance()->getWindow()->getSize();
 	_outLayerParam = _inLayerParam = D2D1::LayerParameters(
 		D2D1::InfiniteRect(),
 		nullptr,
@@ -86,7 +86,8 @@ void e2d::Transition::_update()
 
 void e2d::Transition::_render()
 {
-	auto pRT = Renderer::getInstance()->getRenderTarget();
+	auto renderer = Game::getInstance()->getRenderer();
+	auto pRT = renderer->getRenderTarget();
 
 	if (_outScene)
 	{
@@ -101,7 +102,7 @@ void e2d::Transition::_render()
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(_outLayerParam, _outLayer);
 
-		_outScene->visit();
+		_outScene->visit(renderer);
 
 		pRT->PopLayer();
 		pRT->PopAxisAlignedClip();
@@ -120,7 +121,7 @@ void e2d::Transition::_render()
 		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		pRT->PushLayer(_inLayerParam, _inLayer);
 
-		_inScene->visit();
+		_inScene->visit(renderer);
 
 		pRT->PopLayer();
 		pRT->PopAxisAlignedClip();

@@ -188,7 +188,22 @@ void e2d::SceneManager::render()
 	}
 	else if (_currScene)
 	{
-		_currScene->visit();
+		auto renderer = Game::getInstance()->getRenderer();
+		_currScene->visit(renderer);
+
+		auto& config = Game::getInstance()->getConfig();
+		if (config.isOutlineVisible())
+		{
+			auto brush = renderer->getSolidColorBrush();
+			brush->SetColor(D2D1::ColorF(D2D1::ColorF::Red, 0.6f));
+			brush->SetOpacity(1.f);
+			_currScene->drawOutline(renderer);
+		}
+		if (config.isColliderVisible())
+		{
+			renderer->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+			_currScene->drawCollider();
+		}
 	}
 }
 

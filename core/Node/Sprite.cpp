@@ -92,7 +92,7 @@ e2d::Image * e2d::Sprite::getImage() const
 	return _image;
 }
 
-void e2d::Sprite::draw() const
+void e2d::Sprite::draw(Renderer * renderer) const
 {
 	if (_image && _image->getBitmap())
 	{
@@ -100,7 +100,7 @@ void e2d::Sprite::draw() const
 		float fCropX = _image->getCropX();
 		float fCropY = _image->getCropY();
 		// äÖÈ¾Í¼Æ¬
-		Renderer::getInstance()->getRenderTarget()->DrawBitmap(
+		renderer->getRenderTarget()->DrawBitmap(
 			_image->getBitmap(),
 			D2D1::RectF(0, 0, _width, _height),
 			_displayOpacity,

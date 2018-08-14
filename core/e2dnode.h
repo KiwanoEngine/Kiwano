@@ -47,7 +47,9 @@ public:
 	virtual ~Node();
 
 	// 渲染节点
-	virtual void draw() const {}
+	virtual void draw(
+		Renderer * renderer
+	) const {}
 
 	// 获取节点显示状态
 	virtual bool isVisible() const;
@@ -395,16 +397,20 @@ public:
 	);
 
 	// 遍历节点
-	virtual void visit();
+	virtual void visit(
+		Renderer * renderer
+	);
+
+	// 渲染节点轮廓
+	virtual void drawOutline(
+		Renderer * renderer
+	);
+
+	// 渲染碰撞体轮廓
+	virtual void drawCollider();
 
 protected:
 	E2D_DISABLE_COPY(Node);
-
-	// 渲染节点轮廓
-	virtual void _renderOutline();
-
-	// 渲染碰撞体轮廓
-	virtual void _renderCollider();
 
 	// 设置节点所在场景
 	virtual void _setParentScene(
@@ -468,9 +474,6 @@ public:
 	// 说明：返回 false 将阻止窗口关闭
 	virtual bool onCloseWindow() { return true; }
 
-	// 渲染场景
-	virtual void visit() override;
-
 protected:
 	E2D_DISABLE_COPY(Scene);
 };
@@ -531,7 +534,9 @@ public:
 	virtual Image * getImage() const;
 
 	// 渲染精灵
-	virtual void draw() const override;
+	virtual void draw(
+		Renderer * renderer
+	) const override;
 
 protected:
 	E2D_DISABLE_COPY(Sprite);
@@ -735,7 +740,9 @@ public:
 	);
 
 	// 渲染文字
-	virtual void draw() const override;
+	virtual void draw(
+		Renderer * renderer
+	) const override;
 
 protected:
 	E2D_DISABLE_COPY(Text);
@@ -837,7 +844,9 @@ public:
 	) override;
 
 	// 渲染节点
-	virtual void visit() override;
+	virtual void visit(
+		Renderer * renderer
+	) override;
 
 protected:
 	E2D_DISABLE_COPY(Button);

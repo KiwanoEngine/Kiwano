@@ -287,11 +287,10 @@ void e2d::Text::setOutlineJoin(LineJoin outlineJoin)
 	_style.outlineJoin = outlineJoin;
 }
 
-void e2d::Text::draw() const
+void e2d::Text::draw(Renderer * renderer) const
 {
 	if (_textLayout)
 	{
-		auto renderer = Renderer::getInstance();
 		// 创建文本区域
 		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, _width, _height);
 		// 设置画刷颜色和透明度
@@ -321,7 +320,7 @@ void e2d::Text::_createFormat()
 {
 	SafeRelease(_textFormat);
 
-	HRESULT hr = Renderer::getWriteFactory()->CreateTextFormat(
+	HRESULT hr = Game::getInstance()->getRenderer()->getWriteFactory()->CreateTextFormat(
 		(const WCHAR *)_font.family,
 		nullptr,
 		DWRITE_FONT_WEIGHT(_font.weight),
@@ -384,14 +383,14 @@ void e2d::Text::_createLayout()
 		return;
 	}
 	
-	UINT32 length = (UINT32)_text.getLength();
-
-	// 创建 TextLayout
 	HRESULT hr;
+	UINT32 length = (UINT32)_text.getLength();
+	auto writeFactory = Game::getInstance()->getRenderer()->getWriteFactory();
+
 	// 对文本自动换行情况下进行处理
 	if (_style.wrapping)
 	{
-		hr = Renderer::getWriteFactory()->CreateTextLayout(
+		hr = writeFactory->CreateTextLayout(
 			(const WCHAR *)_text,
 			length,
 			_textFormat,
@@ -410,7 +409,7 @@ void e2d::Text::_createLayout()
 	}
 	else
 	{
-		hr = Renderer::getWriteFactory()->CreateTextLayout((const WCHAR *)_text, length, _textFormat, 0, 0, &_textLayout);
+		hr = writeFactory->CreateTextLayout((const WCHAR *)_text, length, _textFormat, 0, 0, &_textLayout);
 		// 为防止文本对齐问题，根据刚才创建的 layout 宽度重新创建它
 		if (_textLayout)
 		{
@@ -421,7 +420,7 @@ void e2d::Text::_createLayout()
 			this->setSize(metrics.width, metrics.height);
 			// 重新创建 layout
 			SafeRelease(_textLayout);
-			hr = Renderer::getWriteFactory()->CreateTextLayout((const WCHAR *)_text, length, _textFormat, _width, 0, &_textLayout);
+			hr = writeFactory->CreateTextLayout((const WCHAR *)_text, length, _textFormat, _width, 0, &_textLayout);
 		}
 	}
 
