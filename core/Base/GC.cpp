@@ -42,7 +42,6 @@ e2d::GC::~GC()
 
 	// É¾³ýËùÓÐµ¥Àý
 	Timer::destroyInstance();
-	SceneManager::destroyInstance();
 	ActionManager::destroyInstance();
 	CollisionManager::destroyInstance();
 }
@@ -72,7 +71,7 @@ void e2d::GC::clear()
 {
 	_cleanup = true;
 
-	SceneManager::getInstance()->clear();
+	Game::getInstance()->clearAllScenes();
 	Timer::getInstance()->clearAllTasks();
 	ActionManager::getInstance()->clearAll();
 

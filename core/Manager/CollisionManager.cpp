@@ -45,9 +45,10 @@ void e2d::CollisionManager::__removeCollider(Collider * collider)
 
 void e2d::CollisionManager::__updateCollider(Collider* collider)
 {
-	if (Game::getInstance()->isPaused() ||
-		!Game::getInstance()->getConfig().isCollisionEnabled() ||
-		SceneManager::getInstance()->isTransitioning())
+	auto game = Game::getInstance();
+	if (game->isPaused() ||
+		!game->getConfig().isCollisionEnabled() ||
+		game->isTransitioning())
 		return;
 
 	std::vector<Collider*> currColliders;

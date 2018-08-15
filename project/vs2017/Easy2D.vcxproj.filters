@@ -69,9 +69,6 @@
     <ClCompile Include="..\..\core\Base\Window.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\SceneManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Base\Renderer.cpp">
       <Filter>Base</Filter>
     </ClCompile>

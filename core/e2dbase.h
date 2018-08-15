@@ -265,9 +265,6 @@ public:
 		Color color
 	);
 
-	// 渲染游戏画面
-	void render();
-
 	// 获取文字渲染器
 	TextRenderer * getTextRenderer() const { return _textRenderer; }
 
@@ -300,9 +297,14 @@ public:
 		Window * window
 	);
 
-private:
+	// 开始渲染
+	void beginDraw();
+
+	// 结束渲染
+	void endDraw();
+
 	// 渲染 FPS
-	void _renderFps();
+	void drawFps();
 
 private:
 	int						_renderTimes;
@@ -322,12 +324,37 @@ private:
 };
 
 
+class Scene;
+class Transition;
+
 // 游戏
 class Game
 {
 public:
 	// 获取 Game 实例
 	static Game * getInstance();
+
+	// 获取窗体
+	Window * getWindow() const { return _window; }
+
+	// 获取输入设备
+	Input * getInput() const { return _input; }
+
+	// 获取图形设备
+	Renderer * getRenderer() const { return _renderer; }
+
+	// 获取游戏配置
+	const Config& getConfig() const;
+
+	// 设置窗体
+	void setWindow(
+		Window * window
+	);
+
+	// 修改游戏配置
+	void setConfig(
+		const Config& config
+	);
 
 	// 启动游戏
 	void start();
@@ -341,33 +368,46 @@ public:
 	// 结束游戏
 	void quit();
 
-	// 清理资源
-	void cleanup();
-
 	// 游戏是否暂停
 	bool isPaused();
 
-	// 修改游戏配置
-	void setConfig(
-		const Config& config
+	// 场景入栈
+	void pushScene(
+		Scene * scene,					/* 下一个场景的指针 */
+		bool saveCurrentScene = true	/* 是否保存当前场景 */
 	);
 
-	// 获取游戏配置
-	const Config& getConfig() const;
-
-	// 设置窗体
-	void setWindow(
-		Window * window
+	// 场景入栈
+	void pushScene(
+		Transition * transition,		/* 场景动画 */
+		bool saveCurrentScene = true	/* 是否保存当前场景 */
 	);
 
-	// 获取窗体
-	Window * getWindow() const { return _window; }
+	// 场景出栈
+	Scene* popScene();
 
-	// 获取输入设备
-	Input * getInput() const { return _input; }
+	// 场景出栈
+	Scene* popScene(
+		Transition * transition			/* 场景动画 */
+	);
 
-	// 获取图形设备
-	Renderer * getRenderer() const { return _renderer; }
+	// 清空保存的所有场景
+	void clearAllScenes();
+
+	// 获取当前场景
+	Scene * getCurrentScene();
+
+	// 获取场景栈
+	const std::stack<Scene*>& getSceneStack();
+
+	// 是否正在进行场景动画
+	bool isTransitioning() const;
+
+	// 更新场景内容
+	void updateScene();
+
+	// 渲染场景画面
+	void drawScene();
 
 protected:
 	Game();
@@ -380,10 +420,13 @@ private:
 	bool		_quit;
 	bool		_paused;
 	Config		_config;
-	Window *	_window;
-	Input *		_input;
-	Renderer *	_renderer;
-	
+	Window*		_window;
+	Input*		_input;
+	Renderer*	_renderer;
+	Scene*		_currScene;
+	Scene*		_nextScene;
+	Transition*	_transition;
+	std::stack<Scene*>	_scenes;
 };
 
 

@@ -50,7 +50,7 @@ e2d::Window::Window(const String & title, int width, int height, int iconID)
 	Rect clientRect = __adjustWindow(_width, _height);
 
 	// 创建窗口
-	HWND hWnd = ::CreateWindowEx(
+	_hWnd = ::CreateWindowEx(
 		NULL,
 		REGISTER_CLASS,
 		(LPCTSTR)_title,
@@ -65,7 +65,7 @@ e2d::Window::Window(const String & title, int width, int height, int iconID)
 		this
 	);
 
-	if (hWnd)
+	if (_hWnd)
 	{
 		// 禁用输入法
 		setTypewritingEnabled(false);
@@ -77,7 +77,7 @@ e2d::Window::Window(const String & title, int width, int height, int iconID)
 			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
 		// 获取 DPI
-		_dpi = static_cast<float>(::GetDpiForWindow(hWnd));
+		_dpi = static_cast<float>(::GetDpiForWindow(_hWnd));
 	}
 	else
 	{
@@ -409,7 +409,14 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
-			SceneManager::getInstance()->dispatch(MouseEvent(hWnd, uMsg, wParam, lParam, window->_dpi));
+			auto game = Game::getInstance();
+			if (game->isTransitioning())
+				break;
+
+			if (game->getCurrentScene())
+			{
+				game->getCurrentScene()->dispatch(MouseEvent(hWnd, uMsg, wParam, lParam, window->_dpi), false);
+			}
 		}
 		result = 0;
 		hasHandled = true;
@@ -419,7 +426,14 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 		{
-			SceneManager::getInstance()->dispatch(KeyEvent(hWnd, uMsg, wParam, lParam));
+			auto game = Game::getInstance();
+			if (game->isTransitioning())
+				break;
+
+			if (game->getCurrentScene())
+			{
+				game->getCurrentScene()->dispatch(KeyEvent(hWnd, uMsg, wParam, lParam), false);
+			}
 		}
 		result = 0;
 		hasHandled = true;
@@ -469,8 +483,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// 重绘窗口
 		case WM_PAINT:
 		{
-			auto renderer = Game::getInstance()->getRenderer();
-			renderer->render();
+			Game::getInstance()->drawScene();
 			ValidateRect(hWnd, nullptr);
 		}
 		result = 0;
@@ -480,10 +493,11 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// 窗口关闭消息
 		case WM_CLOSE:
 		{
-			e2d::Scene * pCurrentScene = e2d::SceneManager::getInstance()->getCurrentScene();
-			if (!pCurrentScene || pCurrentScene->onCloseWindow())
+			auto game = Game::getInstance();
+			auto currScene = game->getCurrentScene();
+			if (!currScene || currScene->onCloseWindow())
 			{
-				e2d::Game::getInstance()->quit();
+				game->quit();
 			}
 		}
 		result = 0;

@@ -79,7 +79,6 @@
     <ClCompile Include="..\..\core\Event\MouseEvent.cpp" />
     <ClCompile Include="..\..\core\Manager\ActionManager.cpp" />
     <ClCompile Include="..\..\core\Manager\CollisionManager.cpp" />
-    <ClCompile Include="..\..\core\Manager\SceneManager.cpp" />
     <ClCompile Include="..\..\core\Node\Button.cpp" />
     <ClCompile Include="..\..\core\Node\Scene.cpp" />
     <ClCompile Include="..\..\core\Node\Menu.cpp" />

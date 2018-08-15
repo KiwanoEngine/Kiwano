@@ -5,14 +5,14 @@ namespace e2d
 {
 
 
+class Game;
 class Scene;
-class SceneManager;
 
 // ³¡¾°¹ý¶É
 class Transition :
 	public Ref
 {
-	friend class SceneManager;
+	friend class Game;
 
 public:
 	explicit Transition(

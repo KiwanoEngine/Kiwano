@@ -112,22 +112,16 @@ void e2d::Renderer::init(Window * window)
 	);
 }
 
-void e2d::Renderer::render()
+void e2d::Renderer::beginDraw()
 {
 	// ¿ªÊ¼äÖÈ¾
 	_renderTarget->BeginDraw();
 	// Ê¹ÓÃ±³¾°É«Çå¿ÕÆÁÄ»
 	_renderTarget->Clear(_clearColor);
+}
 
-	// äÖÈ¾³¡¾°
-	SceneManager::getInstance()->render();
-
-	// äÖÈ¾ FPS
-	if (Game::getInstance()->getConfig().isFpsShow())
-	{
-		_renderFps();
-	}
-
+void e2d::Renderer::endDraw()
+{
 	// ÖÕÖ¹äÖÈ¾
 	HRESULT hr = _renderTarget->EndDraw();
 
@@ -150,7 +144,7 @@ void e2d::Renderer::render()
 	}
 }
 
-void e2d::Renderer::_renderFps()
+void e2d::Renderer::drawFps()
 {
 	int duration = (Time::now() - _lastRenderTime).milliseconds();
 
