@@ -28,6 +28,7 @@ public:
 protected:
 	// 初始化场景过渡动画
 	virtual bool _init(
+		Game * game,
 		Scene * prev
 	);
 
@@ -35,7 +36,9 @@ protected:
 	virtual void _update();
 
 	// 渲染场景过渡动画
-	virtual void _render();
+	virtual void _render(
+		Game * game
+	);
 
 	// 停止场景过渡动画
 	virtual void _stop();
@@ -73,6 +76,7 @@ protected:
 	virtual void _update() override;
 
 	virtual bool _init(
+		Game * game,
 		Scene * prev
 	) override;
 };
@@ -92,6 +96,7 @@ protected:
 	virtual void _update() override;
 
 	virtual bool _init(
+		Game * game,
 		Scene * prev
 	) override;
 };
@@ -111,6 +116,7 @@ protected:
 	virtual void _update() override;
 
 	virtual bool _init(
+		Game * game,
 		Scene * prev
 	) override;
 };
@@ -131,6 +137,7 @@ protected:
 	virtual void _update() override;
 
 	virtual bool _init(
+		Game * game,
 		Scene * prev
 	) override;
 

@@ -22,9 +22,6 @@ void operator delete(void * block, e2d::autorelease_t const &) E2D_NOEXCEPT
 }
 
 
-// GC 机制，用于销毁所有单例
-GC GC::_instance;
-
 e2d::GC::GC()
 	: _notifyed(false)
 	, _cleanup(false)
@@ -39,11 +36,6 @@ e2d::GC::~GC()
 
 	// 清除图片缓存
 	Image::clearCache();
-
-	// 删除所有单例
-	Timer::destroyInstance();
-	ActionManager::destroyInstance();
-	CollisionManager::destroyInstance();
 }
 
 
@@ -85,6 +77,7 @@ void e2d::GC::clear()
 
 e2d::GC * e2d::GC::getInstance()
 {
+	static GC _instance;
 	return &_instance;
 }
 

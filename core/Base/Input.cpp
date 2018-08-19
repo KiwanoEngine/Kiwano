@@ -38,7 +38,7 @@ e2d::Input::~Input()
 	CoUninitialize();
 }
 
-void e2d::Input::init(Window * window)
+void e2d::Input::initWithWindow(Window * window)
 {
 	HWND hwnd = window->getHWnd();
 

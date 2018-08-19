@@ -122,7 +122,7 @@ void e2d::File::addSearchPath(const String & path)
 {
 	String tmp = path;
 	tmp.replace(L"/", L"\\");
-	if (tmp[tmp.getLength() - 1] != L'\\')
+	if (tmp[tmp.length() - 1] != L'\\')
 	{
 		tmp << L"\\";
 	}
@@ -135,11 +135,11 @@ void e2d::File::addSearchPath(const String & path)
 
 bool e2d::File::createFolder(const String & dirPath)
 {
-	if (dirPath.isEmpty() || dirPath.getLength() >= MAX_PATH)
+	if (dirPath.isEmpty() || dirPath.length() >= MAX_PATH)
 		return false;
 
 	wchar_t tmpDirPath[_MAX_PATH] = { 0 };
-	int length = dirPath.getLength();
+	int length = dirPath.length();
 
 	for (int i = 0; i < length; ++i)
 	{
@@ -177,7 +177,7 @@ e2d::String e2d::File::getSaveFilePath(const String& title, const String& defExt
 	ofn.lpstrTitle = (LPCWSTR)title;					// 标题
 	ofn.lpstrDefExt = (LPCWSTR)defExt;					// 默认追加的扩展名
 
-	if (GetSaveFileName(&ofn))
+	if (::GetSaveFileName(&ofn))
 	{
 		return strFilename;
 	}

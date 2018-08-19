@@ -6,9 +6,9 @@ e2d::EmergeTransition::EmergeTransition(Scene* scene, float duration)
 {
 }
 
-bool e2d::EmergeTransition::_init(Scene * prev)
+bool e2d::EmergeTransition::_init(Game * game, Scene * prev)
 {
-	if (Transition::_init(prev))
+	if (Transition::_init(game, prev))
 	{
 		_outLayerParam.opacity = 1;
 		_inLayerParam.opacity = 0;

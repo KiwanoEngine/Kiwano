@@ -18,6 +18,9 @@ e2d::Window::Window(const String & title, int width, int height, int iconID)
 {
 	CoInitialize(nullptr);
 
+	// 获取系统 DPI
+	_dpi = static_cast<float>(::GetDpiForSystem());
+
 	WNDCLASSEX wcex = { 0 };
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.lpszClassName = REGISTER_CLASS;
@@ -47,7 +50,7 @@ e2d::Window::Window(const String & title, int width, int height, int iconID)
 	RegisterClassEx(&wcex);
 
 	// 计算窗口大小
-	Rect clientRect = __adjustWindow(_width, _height);
+	Rect clientRect = _locate(_width, _height);
 
 	// 创建窗口
 	_hWnd = ::CreateWindowEx(
@@ -76,8 +79,6 @@ e2d::Window::Window(const String & title, int width, int height, int iconID)
 			HMENU hmenu = ::GetSystemMenu(consoleHWnd, FALSE);
 			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
-		// 获取 DPI
-		_dpi = static_cast<float>(::GetDpiForWindow(_hWnd));
 	}
 	else
 	{
@@ -136,14 +137,10 @@ bool e2d::Window::createMutex(const String & mutex)
 	return true;
 }
 
-e2d::Rect e2d::Window::__adjustWindow(int width, int height)
+e2d::Rect e2d::Window::_locate(int width, int height)
 {
-	float dpiScaleX = 0.f, dpiScaleY = 0.f;
-	auto renderer = Game::getInstance()->getRenderer();
-	renderer->getFactory()->GetDesktopDpi(&dpiScaleX, &dpiScaleY);
-
 	Rect result;
-	RECT wRECT		= { 0, 0, LONG(ceil(width * dpiScaleX / 96.f)), LONG(ceil(height * dpiScaleY / 96.f)) };
+	RECT wRECT		= { 0, 0, LONG(ceil(width * _dpi / 96.f)), LONG(ceil(height * _dpi / 96.f)) };
 	int maxWidth	= ::GetSystemMetrics(SM_CXSCREEN);
 	int maxHeight	= ::GetSystemMetrics(SM_CYSCREEN);
 
@@ -210,7 +207,7 @@ void e2d::Window::setSize(int width, int height)
 
 	if (_hWnd)
 	{
-		Rect wRect = __adjustWindow(width, height);
+		Rect wRect = _locate(width, height);
 		::MoveWindow(
 			_hWnd,
 			int(wRect.origin.x),
@@ -295,12 +292,9 @@ void e2d::Window::setConsoleEnabled(bool enabled)
 				hwnd = ::GetConsoleWindow();
 				// 重定向输入输出
 				FILE * stdoutStream, * stdinStream, * stderrStream;
-				errno_t err = freopen_s(&stdoutStream, "conout$", "w+t", stdout);
-				WARN_IF(err != 0, "freopen stdout failed!");
-				err = freopen_s(&stdinStream, "conin$", "r+t", stdin);
-				WARN_IF(err != 0, "freopen stdin failed!");
-				err = freopen_s(&stderrStream, "conout$", "w+t", stderr);
-				WARN_IF(err != 0, "freopen stderr failed!");
+				freopen_s(&stdoutStream, "conout$", "w+t", stdout);
+				freopen_s(&stdinStream, "conin$", "r+t", stdin);
+				freopen_s(&stderrStream, "conout$", "w+t", stderr);
 				// 禁用控制台关闭按钮
 				HMENU hmenu = ::GetSystemMenu(hwnd, FALSE);
 				::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);

@@ -9,7 +9,6 @@
 e2d::Game::Game()
 	: _quit(true)
 	, _paused(false)
-	, _config()
 	, _window(nullptr)
 	, _input(nullptr)
 	, _renderer(nullptr)
@@ -22,6 +21,8 @@ e2d::Game::Game()
 
 	_input = new (std::nothrow) Input;
 	_renderer = new (std::nothrow) Renderer;
+	_timer = Timer::getInstance();
+	_actionManager = ActionManager::getInstance();
 }
 
 e2d::Game::~Game()
@@ -32,9 +33,6 @@ e2d::Game::~Game()
 	if (_input)
 		delete _input;
 
-	if (_window)
-		delete _window;
-
 	CoUninitialize();
 }
 
@@ -42,6 +40,13 @@ e2d::Game * e2d::Game::getInstance()
 {
 	static Game instance;
 	return &instance;
+}
+
+void e2d::Game::initWithWindow(Window * window)
+{
+	_window = window;
+	_renderer->initWithWindow(_window);
+	_input->initWithWindow(_window);
 }
 
 void e2d::Game::start()
@@ -66,9 +71,14 @@ void e2d::Game::start()
 		{
 			last = now;
 			_input->update();
-			Timer::getInstance()->update();
-			ActionManager::getInstance()->update();
-			updateScene();
+
+			if (!_paused)
+			{
+				_timer->update();
+				_actionManager->update();
+				updateScene();
+			}
+			
 			drawScene();
 			_window->poll();
 			GC::getInstance()->flush();
@@ -96,8 +106,8 @@ void e2d::Game::resume()
 {
 	if (_paused && !_quit)
 	{
-		Timer::getInstance()->updateTime();
-		ActionManager::getInstance()->updateTime();
+		_timer->updateTime();
+		_actionManager->updateTime();
 	}
 	_paused = false;
 }
@@ -105,23 +115,6 @@ void e2d::Game::resume()
 bool e2d::Game::isPaused()
 {
 	return _paused;
-}
-
-void e2d::Game::setConfig(const Config& config)
-{
-	_config = config;
-}
-
-const e2d::Config& e2d::Game::getConfig() const
-{
-	return _config;
-}
-
-void e2d::Game::setWindow(Window * window)
-{
-	_window = window;
-	_renderer->init(_window);
-	_input->init(_window);
 }
 
 void e2d::Game::quit()
@@ -161,7 +154,7 @@ void e2d::Game::pushScene(Transition * transition, bool saveCurrentScene)
 	_transition->retain();
 
 	// 初始化场景切换动画
-	if (!_transition->_init(_currScene))
+	if (!_transition->_init(this, _currScene))
 	{
 		WARN("Transition initialize failed!");
 		_transition->release();
@@ -205,7 +198,7 @@ e2d::Scene * e2d::Game::popScene(Transition * transition)
 		_transition->_inScene->retain();
 
 		// 初始化场景切换动画
-		if (!_transition->_init(_currScene))
+		if (!_transition->_init(this, _currScene))
 		{
 			WARN("Transition initialize failed!");
 			_transition->release();
@@ -277,34 +270,15 @@ void e2d::Game::updateScene()
 
 void e2d::Game::drawScene()
 {
-	// 渲染画面
 	_renderer->beginDraw();
 	{
 		if (_transition)
 		{
-			_transition->_render();
+			_transition->_render(this);
 		}
 		else if (_currScene)
 		{
-			_currScene->visit(_renderer);
-
-			if (_config.isOutlineVisible())
-			{
-				auto brush = _renderer->getSolidColorBrush();
-				brush->SetColor(D2D1::ColorF(D2D1::ColorF::Red, 0.6f));
-				brush->SetOpacity(1.f);
-				_currScene->drawOutline(_renderer);
-			}
-			if (_config.isColliderVisible())
-			{
-				_renderer->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-				_currScene->drawCollider();
-			}
-		}
-
-		if (_config.isFpsShow())
-		{
-			_renderer->drawFps();
+			_currScene->visit(this);
 		}
 	}
 	_renderer->endDraw();

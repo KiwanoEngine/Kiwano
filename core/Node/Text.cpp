@@ -384,7 +384,7 @@ void e2d::Text::_createLayout()
 	}
 	
 	HRESULT hr;
-	UINT32 length = (UINT32)_text.getLength();
+	UINT32 length = (UINT32)_text.length();
 	auto writeFactory = Game::getInstance()->getRenderer()->getWriteFactory();
 
 	// 对文本自动换行情况下进行处理

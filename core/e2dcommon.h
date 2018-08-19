@@ -135,14 +135,14 @@ public:
 
 	~String();
 
-	// 判断字符串是否为空
-	bool isEmpty() const;
-
 	// 获取字符串长度
-	int getLength() const;
+	int length() const;
 
 	// 获取该字符串的散列值
-	size_t getHashCode() const;
+	size_t hash() const;
+
+	// 判断字符串是否为空
+	bool isEmpty() const;
 
 	// 获取 Unicode 字符串
 	std::wstring getWString() const;
@@ -244,8 +244,6 @@ public:
 	// 类型转换操作符
 	E2D_OP_EXPLICIT operator const wchar_t* () const;
 	E2D_OP_EXPLICIT operator wchar_t* () const;
-	E2D_OP_EXPLICIT operator const char* () const;
-	E2D_OP_EXPLICIT operator char* () const;
 
 	// 比较运算符
 	bool operator== (const String &) const;

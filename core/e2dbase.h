@@ -10,68 +10,6 @@ namespace e2d
 {
 
 
-// 配置
-class Config
-{
-public:
-	Config();
-
-	virtual ~Config();
-
-	// 修改游戏名称
-	// 默认：空
-	void setGameName(
-		const String& name
-	);
-
-	// 显示或隐藏 FPS
-	// 默认：隐藏
-	void showFps(
-		bool show
-	);
-
-	// 显示或隐藏节点轮廓
-	// 默认：隐藏
-	void setOutlineVisible(
-		bool visible
-	);
-
-	// 打开或关闭碰撞监听
-	// 默认：关闭
-	void setCollisionEnabled(
-		bool enabled
-	);
-
-	// 打开或关闭碰撞体可视化
-	// 默认：关闭
-	void setColliderVisible(
-		bool visible
-	);
-
-	// 获取游戏名称
-	String getGameName() const;
-
-	// 获取 FPS 显示状态
-	bool isFpsShow() const;
-
-	// 获取节点轮廓显示状态
-	bool isOutlineVisible() const;
-
-	// 获取碰撞监听状态
-	bool isCollisionEnabled() const;
-
-	// 获取碰撞体可视化状态
-	bool isColliderVisible() const;
-
-protected:
-	bool			_showFps;
-	bool			_outlineVisible;
-	bool			_collisionEnabled;
-	bool			_colliderVisible;
-	String			_gameName;
-};
-
-
 // 窗体
 class Window
 {
@@ -171,8 +109,8 @@ public:
 	void poll();
 
 private:
-	// 根据客户区大小计算合适的窗口区域
-	Rect __adjustWindow(
+	// 根据客户区大小定位窗口
+	Rect _locate(
 		int width,
 		int height
 	);
@@ -232,13 +170,13 @@ public:
 	// 获得鼠标Z轴（鼠标滚轮）坐标增量
 	float getMouseDeltaZ();
 
-	// 刷新输入设备状态
-	void update();
-
-	// 初始化渲染器（不应手动调用该函数）
-	void init(
+	// 初始化输入设备
+	void initWithWindow(
 		Window * window
 	);
+
+	// 刷新输入设备状态
+	void update();
 
 private:
 	IDirectInput8W* _directInput;
@@ -249,7 +187,7 @@ private:
 };
 
 
-// 图形设备
+// 渲染器
 class Renderer
 {
 public:
@@ -263,6 +201,12 @@ public:
 	// 修改背景色
 	void setBackgroundColor(
 		Color color
+	);
+
+	// 显示或隐藏 FPS
+	// 默认：隐藏
+	void showFps(
+		bool show
 	);
 
 	// 获取文字渲染器
@@ -292,8 +236,8 @@ public:
 	// 获取 Round 样式的 ID2D1StrokeStyle
 	ID2D1StrokeStyle * getRoundStrokeStyle();
 
-	// 初始化渲染器（不应手动调用该函数）
-	void init(
+	// 初始化渲染器
+	void initWithWindow(
 		Window * window
 	);
 
@@ -303,10 +247,8 @@ public:
 	// 结束渲染
 	void endDraw();
 
-	// 渲染 FPS
-	void drawFps();
-
 private:
+	bool					_showFps;
 	int						_renderTimes;
 	Time					_lastRenderTime;
 	D2D1_COLOR_F			_clearColor;
@@ -324,6 +266,8 @@ private:
 };
 
 
+class Timer;
+class ActionManager;
 class Scene;
 class Transition;
 
@@ -334,6 +278,11 @@ public:
 	// 获取 Game 实例
 	static Game * getInstance();
 
+	// 初始化
+	void initWithWindow(
+		Window * window
+	);
+
 	// 获取窗体
 	Window * getWindow() const { return _window; }
 
@@ -342,19 +291,6 @@ public:
 
 	// 获取图形设备
 	Renderer * getRenderer() const { return _renderer; }
-
-	// 获取游戏配置
-	const Config& getConfig() const;
-
-	// 设置窗体
-	void setWindow(
-		Window * window
-	);
-
-	// 修改游戏配置
-	void setConfig(
-		const Config& config
-	);
 
 	// 启动游戏
 	void start();
@@ -419,18 +355,19 @@ protected:
 private:
 	bool		_quit;
 	bool		_paused;
-	Config		_config;
 	Window*		_window;
 	Input*		_input;
 	Renderer*	_renderer;
+	Timer*		_timer;
 	Scene*		_currScene;
 	Scene*		_nextScene;
 	Transition*	_transition;
+	ActionManager*		_actionManager;
 	std::stack<Scene*>	_scenes;
 };
 
 
-// 垃圾回收器
+// 垃圾回收池
 class GC
 {
 public:
@@ -464,8 +401,6 @@ private:
 	bool _notifyed;
 	bool _cleanup;
 	std::set<Ref*> _pool;
-
-	static GC _instance;
 };
 
 }

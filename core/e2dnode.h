@@ -398,7 +398,7 @@ public:
 
 	// 遍历节点
 	virtual void visit(
-		Renderer * renderer
+		Game * game
 	);
 
 	// 渲染节点轮廓
@@ -474,8 +474,29 @@ public:
 	// 说明：返回 false 将阻止窗口关闭
 	virtual bool onCloseWindow() { return true; }
 
+	// 显示或隐藏节点轮廓
+	// 默认：隐藏
+	void setOutlineVisible(
+		bool visible
+	);
+
+	// 打开或关闭碰撞体可视化
+	// 默认：关闭
+	void setColliderVisible(
+		bool visible
+	);
+
+	// 遍历节点
+	virtual void visit(
+		Game * game
+	) override;
+
 protected:
 	E2D_DISABLE_COPY(Scene);
+
+protected:
+	bool _outlineVisible;
+	bool _colliderVisible;
 };
 
 
@@ -843,9 +864,9 @@ public:
 		bool handled
 	) override;
 
-	// 渲染节点
+	// 遍历节点
 	virtual void visit(
-		Renderer * renderer
+		Game * game
 	) override;
 
 protected:

@@ -7,9 +7,9 @@ e2d::MoveTransition::MoveTransition(Scene* scene, float duration, Direction dire
 {
 }
 
-bool e2d::MoveTransition::_init(Scene * prev)
+bool e2d::MoveTransition::_init(Game * game, Scene * prev)
 {
-	if (Transition::_init(prev))
+	if (Transition::_init(game, prev))
 	{
 		float width = _windowSize.width;
 		float height = _windowSize.height;

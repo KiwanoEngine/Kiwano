@@ -3,22 +3,10 @@
 #include "..\e2dnode.h"
 
 
-e2d::ActionManager * e2d::ActionManager::_instance = nullptr;
-
 e2d::ActionManager * e2d::ActionManager::getInstance()
 {
-	if (!_instance)
-		_instance = new (std::nothrow) ActionManager;
-	return _instance;
-}
-
-void e2d::ActionManager::destroyInstance()
-{
-	if (_instance)
-	{
-		delete _instance;
-		_instance = nullptr;
-	}
+	static ActionManager instance;
+	return &instance;
 }
 
 e2d::ActionManager::ActionManager()
@@ -33,7 +21,7 @@ e2d::ActionManager::~ActionManager()
 
 void e2d::ActionManager::update()
 {
-	if (_runningActions.empty() || Game::getInstance()->isPaused())
+	if (_runningActions.empty())
 		return;
 
 	std::vector<Action*> currActions;

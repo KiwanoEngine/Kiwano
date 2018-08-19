@@ -332,31 +332,17 @@ e2d::String::operator wchar_t*() const
 	return const_cast<wchar_t*>(_str.c_str());
 }
 
-e2d::String::operator const char*() const
-{
-	static std::string strTmp;
-	strTmp = static_cast<char*>(_bstr_t(_str.c_str()));
-	return strTmp.c_str();
-}
-
-e2d::String::operator char*() const
-{
-	static std::string strTmp;
-	strTmp = static_cast<char*>(_bstr_t(_str.c_str()));
-	return const_cast<char*>(strTmp.c_str());
-}
-
 bool e2d::String::isEmpty() const
 {
 	return _str.empty();
 }
 
-int e2d::String::getLength() const
+int e2d::String::length() const
 {
 	return static_cast<int>(_str.size());
 }
 
-size_t e2d::String::getHashCode() const
+size_t e2d::String::hash() const
 {
 	std::hash<std::wstring> hash;
 	return hash(_str);

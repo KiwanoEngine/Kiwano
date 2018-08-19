@@ -1,21 +1,10 @@
 #include "..\e2dtool.h"
 
-e2d::Timer * e2d::Timer::_instance = nullptr;
 
 e2d::Timer * e2d::Timer::getInstance()
 {
-	if (!_instance)
-		_instance = new (std::nothrow) Timer;
-	return _instance;
-}
-
-void e2d::Timer::destroyInstance()
-{
-	if (_instance)
-	{
-		delete _instance;
-		_instance = nullptr;
-	}
+	static Timer instance;
+	return &instance;
 }
 
 e2d::Timer::Timer()
@@ -112,7 +101,7 @@ void e2d::Timer::clearAllTasks()
 
 void e2d::Timer::update()
 {
-	if (_tasks.empty() || Game::getInstance()->isPaused())
+	if (_tasks.empty())
 		return;
 
 	std::vector<Task*> currTasks;

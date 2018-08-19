@@ -26,7 +26,7 @@ e2d::Animation * e2d::Animate::getAnimation() const
 
 void e2d::Animate::setAnimation(Animation * animation)
 {
-	if (animation && animation != _animation)
+	if (animation && animation != _animation && !animation->getFrames().empty())
 	{
 		if (_animation) _animation->release();
 		_animation = animation;

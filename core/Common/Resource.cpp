@@ -38,7 +38,7 @@ const e2d::String & e2d::Resource::getResType() const
 
 size_t e2d::Resource::getKey() const
 {
-	return _isFile ? _fileName.getHashCode() : _resNameId;
+	return _isFile ? _fileName.hash() : _resNameId;
 }
 
 bool e2d::Resource::operator>(const Resource &res) const

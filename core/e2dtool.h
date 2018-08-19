@@ -283,9 +283,6 @@ public:
 	// 获取定时器实例
 	static Timer * getInstance();
 
-	// 销毁实例
-	static void destroyInstance();
-
 	// 添加任务
 	void addTask(
 		Task * task
@@ -333,8 +330,6 @@ private:
 
 private:
 	std::vector<Task*> _tasks;
-
-	static Timer * _instance;
 };
 
 

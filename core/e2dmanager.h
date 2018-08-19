@@ -18,9 +18,6 @@ public:
 	// 获取动作管理器实例
 	static ActionManager * getInstance();
 
-	// 销毁实例
-	static void destroyInstance();
-
 	// 获取所有名称相同的动作
 	std::vector<Action *> get(
 		const String& name
@@ -100,8 +97,6 @@ private:
 private:
 	std::vector<Action*> _actions;
 	std::vector<Action*> _runningActions;
-
-	static ActionManager * _instance;
 };
 
 
@@ -115,8 +110,11 @@ public:
 	// 获取碰撞体管理器实例
 	static CollisionManager * getInstance();
 
-	// 销毁实例
-	static void destroyInstance();
+	// 打开或关闭碰撞监听
+	// 默认：关闭
+	void setCollisionEnabled(
+		bool enabled
+	);
 
 	// 添加可互相碰撞物体的名称
 	void addName(
@@ -164,10 +162,9 @@ private:
 	);
 
 private:
+	bool _collisionEnabled;
 	std::vector<Collider*> _colliders;
 	std::set<std::pair<size_t, size_t>> _collisionList;
-
-	static CollisionManager * _instance;
 };
 
 }

@@ -6,9 +6,9 @@ e2d::BoxTransition::BoxTransition(Scene* scene, float duration)
 {
 }
 
-bool e2d::BoxTransition::_init(Scene * prev)
+bool e2d::BoxTransition::_init(Game * game, Scene * prev)
 {
-	if (Transition::_init(prev))
+	if (Transition::_init(game, prev))
 	{
 		_inLayerParam.opacity = 0;
 		return true;

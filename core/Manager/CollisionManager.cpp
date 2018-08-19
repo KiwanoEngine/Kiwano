@@ -3,25 +3,14 @@
 #include "..\e2dtool.h"
 
 
-e2d::CollisionManager * e2d::CollisionManager::_instance = nullptr;
-
 e2d::CollisionManager * e2d::CollisionManager::getInstance()
 {
-	if (!_instance)
-		_instance = new (std::nothrow) CollisionManager;
-	return _instance;
-}
-
-void e2d::CollisionManager::destroyInstance()
-{
-	if (_instance)
-	{
-		delete _instance;
-		_instance = nullptr;
-	}
+	static CollisionManager instance;
+	return &instance;
 }
 
 e2d::CollisionManager::CollisionManager()
+	: _collisionEnabled(false)
 {
 }
 
@@ -45,10 +34,7 @@ void e2d::CollisionManager::__removeCollider(Collider * collider)
 
 void e2d::CollisionManager::__updateCollider(Collider* collider)
 {
-	auto game = Game::getInstance();
-	if (game->isPaused() ||
-		!game->getConfig().isCollisionEnabled() ||
-		game->isTransitioning())
+	if (!_collisionEnabled)
 		return;
 
 	std::vector<Collider*> currColliders;
@@ -92,11 +78,16 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 	}
 }
 
+void e2d::CollisionManager::setCollisionEnabled(bool enabled)
+{
+	_collisionEnabled = enabled;
+}
+
 void e2d::CollisionManager::addName(const String & name1, const String & name2)
 {
 	if (!name1.isEmpty() && !name2.isEmpty())
 	{
-		_collisionList.insert(std::make_pair(name1.getHashCode(), name2.getHashCode()));
+		_collisionList.insert(std::make_pair(name1.hash(), name2.hash()));
 	}
 }
 
@@ -106,7 +97,7 @@ void e2d::CollisionManager::addName(const std::vector<std::pair<String, String> 
 	{
 		if (!name.first.isEmpty() && !name.second.isEmpty())
 		{
-			_collisionList.insert(std::make_pair(name.first.getHashCode(), name.second.getHashCode()));
+			_collisionList.insert(std::make_pair(name.first.hash(), name.second.hash()));
 		}
 	}
 }
@@ -118,8 +109,8 @@ bool e2d::CollisionManager::isCollidable(Node * node1, Node * node2)
 
 bool e2d::CollisionManager::isCollidable(const String & name1, const String & name2)
 {
-	size_t hashName1 = name1.getHashCode(), 
-		hashName2 = name2.getHashCode();
+	size_t hashName1 = name1.hash(), 
+		hashName2 = name2.hash();
 	auto pair1 = std::make_pair(hashName1, hashName2), 
 		pair2 = std::make_pair(hashName2, hashName1);
 	for (const auto& pair : _collisionList)

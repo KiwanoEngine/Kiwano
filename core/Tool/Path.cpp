@@ -12,10 +12,12 @@ e2d::String e2d::Path::getDataPath()
 	{
 		// 设置数据的保存路径
 		String localAppDataPath = Path::getLocalAppDataPath();
-		String gameName = Game::getInstance()->getConfig().getGameName();
-		if (!localAppDataPath.isEmpty() && !gameName.isEmpty())
+		String title = Game::getInstance()->getWindow()->getTitle();
+		String folderName = String::parse(title.hash());
+
+		if (!localAppDataPath.isEmpty())
 		{
-			dataPath = localAppDataPath + L"\\Easy2DGameData\\" << gameName << L"\\";
+			dataPath = localAppDataPath + L"\\Easy2DGameData\\" << folderName << L"\\";
 
 			File file(dataPath);
 			if (!file.exists() && !File::createFolder(dataPath))
@@ -35,11 +37,12 @@ e2d::String e2d::Path::getTempPath()
 	{
 		// 设置临时文件保存路径
 		wchar_t path[_MAX_PATH];
-		String gameName = Game::getInstance()->getConfig().getGameName();
+		String title = Game::getInstance()->getWindow()->getTitle();
+		String folderName = String::parse(title.hash());
 
-		if (0 != ::GetTempPath(_MAX_PATH, path) && !gameName.isEmpty())
+		if (0 != ::GetTempPath(_MAX_PATH, path))
 		{
-			tempPath << path << L"\\Easy2DGameTemp\\" << gameName << L"\\";
+			tempPath << path << L"\\Easy2DGameTemp\\" << folderName << L"\\";
 
 			File file(tempPath);
 			if (!file.exists() && !File::createFolder(tempPath))

@@ -31,7 +31,7 @@ bool e2d::Transition::isDone()
 	return _end;
 }
 
-bool e2d::Transition::_init(Scene * prev)
+bool e2d::Transition::_init(Game * game, Scene * prev)
 {
 	_started = Time::now();
 	_outScene = prev;
@@ -39,9 +39,8 @@ bool e2d::Transition::_init(Scene * prev)
 	if (_outScene)
 		_outScene->retain();
 	
-	// ´´½¨Í¼²ã
 	HRESULT hr = S_OK;
-	auto renderer = Game::getInstance()->getRenderer();
+	auto renderer = game->getRenderer();
 	if (_inScene)
 	{
 		hr = renderer->getRenderTarget()->CreateLayer(&_inLayer);
@@ -57,7 +56,7 @@ bool e2d::Transition::_init(Scene * prev)
 		return false;
 	}
 
-	_windowSize = Game::getInstance()->getWindow()->getSize();
+	_windowSize = game->getWindow()->getSize();
 	_outLayerParam = _inLayerParam = D2D1::LayerParameters(
 		D2D1::InfiniteRect(),
 		nullptr,
@@ -84,10 +83,9 @@ void e2d::Transition::_update()
 	}
 }
 
-void e2d::Transition::_render()
+void e2d::Transition::_render(Game * game)
 {
-	auto renderer = Game::getInstance()->getRenderer();
-	auto pRT = renderer->getRenderTarget();
+	auto renderTarget = game->getRenderer()->getRenderTarget();
 
 	if (_outScene)
 	{
@@ -98,14 +96,14 @@ void e2d::Transition::_render()
 			std::min(rootPos.x + _windowSize.width, _windowSize.width),
 			std::min(rootPos.y + _windowSize.height, _windowSize.height)
 		);
-		pRT->SetTransform(D2D1::Matrix3x2F::Identity());
-		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-		pRT->PushLayer(_outLayerParam, _outLayer);
+		renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+		renderTarget->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+		renderTarget->PushLayer(_outLayerParam, _outLayer);
 
-		_outScene->visit(renderer);
+		_outScene->visit(game);
 
-		pRT->PopLayer();
-		pRT->PopAxisAlignedClip();
+		renderTarget->PopLayer();
+		renderTarget->PopAxisAlignedClip();
 	}
 
 	if (_inScene)
@@ -117,14 +115,14 @@ void e2d::Transition::_render()
 			std::min(rootPos.x + _windowSize.width, _windowSize.width),
 			std::min(rootPos.y + _windowSize.height, _windowSize.height)
 		);
-		pRT->SetTransform(D2D1::Matrix3x2F::Identity());
-		pRT->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-		pRT->PushLayer(_inLayerParam, _inLayer);
+		renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+		renderTarget->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+		renderTarget->PushLayer(_inLayerParam, _inLayer);
 
-		_inScene->visit(renderer);
+		_inScene->visit(game);
 
-		pRT->PopLayer();
-		pRT->PopAxisAlignedClip();
+		renderTarget->PopLayer();
+		renderTarget->PopAxisAlignedClip();
 	}
 }
 

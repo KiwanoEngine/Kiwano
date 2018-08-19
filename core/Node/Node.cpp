@@ -79,7 +79,7 @@ e2d::Node::~Node()
 	}
 }
 
-void e2d::Node::visit(Renderer * renderer)
+void e2d::Node::visit(Game * game)
 {
 	if (!_visible)
 		return;
@@ -90,11 +90,12 @@ void e2d::Node::visit(Renderer * renderer)
 	// 保留差别属性
 	_extrapolate = this->getProperty();
 
-	auto pRT = renderer->getRenderTarget();
+	auto renderer = game->getRenderer();
+	auto renderTarget = renderer->getRenderTarget();
 	if (_clipEnabled)
 	{
-		pRT->SetTransform(_finalMatri);
-		pRT->PushAxisAlignedClip(
+		renderTarget->SetTransform(_finalMatri);
+		renderTarget->PushAxisAlignedClip(
 			D2D1::RectF(0, 0, _width, _height),
 			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
 		);
@@ -102,7 +103,7 @@ void e2d::Node::visit(Renderer * renderer)
 
 	if (_children.empty())
 	{
-		pRT->SetTransform(_finalMatri);
+		renderTarget->SetTransform(_finalMatri);
 		this->draw(renderer);
 	}
 	else
@@ -117,7 +118,7 @@ void e2d::Node::visit(Renderer * renderer)
 			// 访问 Order 小于零的节点
 			if (child->getOrder() < 0)
 			{
-				child->visit(renderer);
+				child->visit(game);
 			}
 			else
 			{
@@ -125,17 +126,17 @@ void e2d::Node::visit(Renderer * renderer)
 			}
 		}
 
-		pRT->SetTransform(_finalMatri);
+		renderTarget->SetTransform(_finalMatri);
 		this->draw(renderer);
 
 		// 访问剩余节点
 		for (; i < _children.size(); ++i)
-			_children[i]->visit(renderer);
+			_children[i]->visit(game);
 	}
 
 	if (_clipEnabled)
 	{
-		pRT->PopAxisAlignedClip();
+		renderTarget->PopAxisAlignedClip();
 	}
 }
 
@@ -659,7 +660,7 @@ e2d::Scene * e2d::Node::getParentScene() const
 std::vector<e2d::Node*> e2d::Node::getChildren(const String& name) const
 {
 	std::vector<Node*> vChildren;
-	size_t hash = name.getHashCode();
+	size_t hash = name.hash();
 
 	for (const auto& child : _children)
 	{
@@ -674,7 +675,7 @@ std::vector<e2d::Node*> e2d::Node::getChildren(const String& name) const
 
 e2d::Node * e2d::Node::getChild(const String& name) const
 {
-	size_t hash = name.getHashCode();
+	size_t hash = name.hash();
 
 	for (const auto& child : _children)
 	{
@@ -744,7 +745,7 @@ void e2d::Node::removeChildren(const String& childName)
 	}
 
 	// 计算名称 Hash 值
-	size_t hash = childName.getHashCode();
+	size_t hash = childName.hash();
 
 	auto iter = std::find_if(
 		_children.begin(),
@@ -935,7 +936,7 @@ void e2d::Node::setName(const String& name)
 		// 保存节点名
 		_name = name;
 		// 保存节点 Hash 名
-		_hashName = name.getHashCode();
+		_hashName = name.hash();
 	}
 }
 
