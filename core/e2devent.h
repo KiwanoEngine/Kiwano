@@ -136,19 +136,4 @@ protected:
 	Collider::Relation _relation;
 };
 
-
-// 消息处理
-class EventHandler
-{
-public:
-	// 处理按键消息
-	virtual void handle(KeyEvent e) { }
-
-	// 处理鼠标消息
-	virtual void handle(MouseEvent e) { }
-
-	// 处理碰撞消息
-	virtual void handle(Collision collision) { }
-};
-
 }

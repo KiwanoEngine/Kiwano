@@ -84,11 +84,20 @@ void e2d::Node::visit(Game * game)
 	if (!_visible)
 		return;
 
-	// 更新转换矩阵
-	updateTransform();
+	if (!game->isPaused())
+	{
+		auto updatableNode = dynamic_cast<Updatable*>(this);
+		if (updatableNode)
+		{
+			updatableNode->update();
+		}
 
-	// 保留差别属性
-	_extrapolate = this->getProperty();
+		// 更新转换矩阵
+		_updateTransform();
+
+		// 保留差别属性
+		_extrapolate = this->getProperty();
+	}
 
 	auto renderer = game->getRenderer();
 	auto renderTarget = renderer->getRenderTarget();
@@ -103,8 +112,12 @@ void e2d::Node::visit(Game * game)
 
 	if (_children.empty())
 	{
-		renderTarget->SetTransform(_finalMatri);
-		this->draw(renderer);
+		auto drawableNode = dynamic_cast<Drawable*>(this);
+		if (drawableNode)
+		{
+			renderTarget->SetTransform(_finalMatri);
+			drawableNode->draw(renderer);
+		}
 	}
 	else
 	{
@@ -125,9 +138,13 @@ void e2d::Node::visit(Game * game)
 				break;
 			}
 		}
-
-		renderTarget->SetTransform(_finalMatri);
-		this->draw(renderer);
+		
+		auto drawableNode = dynamic_cast<Drawable*>(this);
+		if (drawableNode)
+		{
+			renderTarget->SetTransform(_finalMatri);
+			drawableNode->draw(renderer);
+		}
 
 		// 访问剩余节点
 		for (; i < _children.size(); ++i)
@@ -173,7 +190,7 @@ void e2d::Node::drawCollider()
 	}
 }
 
-void e2d::Node::updateTransform()
+void e2d::Node::_updateTransform()
 {
 	if (!_needTransform)
 		return;
@@ -228,12 +245,12 @@ bool e2d::Node::dispatch(const MouseEvent & e, bool handled)
 {
 	if (_visible)
 	{
-		auto dispatcher = dynamic_cast<EventHandler*>(this);
-		if (dispatcher)
-			dispatcher->handle(e);
-
 		for (auto riter = _children.crbegin(); riter != _children.crend(); ++riter)
 			handled = (*riter)->dispatch(e, handled);
+
+		auto handler = dynamic_cast<MouseEventHandler*>(this);
+		if (handler)
+			handler->handle(e);
 	}
 
 	return handled;
@@ -243,12 +260,12 @@ bool e2d::Node::dispatch(const KeyEvent & e, bool handled)
 {
 	if (_visible)
 	{
-		auto dispatcher = dynamic_cast<EventHandler*>(this);
-		if (dispatcher)
-			dispatcher->handle(e);
-
 		for (auto riter = _children.crbegin(); riter != _children.crend(); ++riter)
 			handled = (*riter)->dispatch(e, handled);
+
+		auto handler = dynamic_cast<KeyEventHandler*>(this);
+		if (handler)
+			handler->handle(e);
 	}
 
 	return handled;
@@ -820,7 +837,7 @@ void e2d::Node::stopAction(const String& name)
 bool e2d::Node::containsPoint(const Point& point)
 {
 	// 更新转换矩阵
-	updateTransform();
+	_updateTransform();
 
 	// 为节点创建一个轮廓
 	BOOL ret = 0;
@@ -850,8 +867,8 @@ bool e2d::Node::containsPoint(const Point& point)
 bool e2d::Node::intersects(Node * node)
 {
 	// 更新转换矩阵
-	updateTransform();
-	node->updateTransform();
+	_updateTransform();
+	node->_updateTransform();
 
 	// 为节点创建轮廓
 	D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;

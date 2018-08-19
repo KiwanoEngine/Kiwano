@@ -34,7 +34,8 @@ void e2d::CollisionManager::__removeCollider(Collider * collider)
 
 void e2d::CollisionManager::__updateCollider(Collider* collider)
 {
-	if (!_collisionEnabled)
+	if (!_collisionEnabled ||
+		Game::getInstance()->isTransitioning())
 		return;
 
 	std::vector<Collider*> currColliders;
@@ -64,16 +65,16 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 			auto passiveNode = passive->getNode();
 			// 触发两次碰撞事件
 			Collision activeCollision(passiveNode, relation);
-			if (dynamic_cast<EventHandler*>(activeNode->getParentScene()))
-				dynamic_cast<EventHandler*>(activeNode->getParentScene())->handle(activeCollision);
-			if (dynamic_cast<EventHandler*>(activeNode))
-				dynamic_cast<EventHandler*>(activeNode)->handle(activeCollision);
+			if (dynamic_cast<CollisionHandler*>(activeNode->getParentScene()))
+				dynamic_cast<CollisionHandler*>(activeNode->getParentScene())->handle(activeCollision);
+			if (dynamic_cast<CollisionHandler*>(activeNode))
+				dynamic_cast<CollisionHandler*>(activeNode)->handle(activeCollision);
 
 			Collision passiveCollision(activeNode, passive->getRelationWith(collider));
-			if (dynamic_cast<EventHandler*>(passiveNode->getParentScene()))
-				dynamic_cast<EventHandler*>(passiveNode->getParentScene())->handle(passiveCollision);
-			if (dynamic_cast<EventHandler*>(passiveNode))
-				dynamic_cast<EventHandler*>(passiveNode)->handle(passiveCollision);
+			if (dynamic_cast<CollisionHandler*>(passiveNode->getParentScene()))
+				dynamic_cast<CollisionHandler*>(passiveNode->getParentScene())->handle(passiveCollision);
+			if (dynamic_cast<CollisionHandler*>(passiveNode))
+				dynamic_cast<CollisionHandler*>(passiveNode)->handle(passiveCollision);
 		}
 	}
 }

@@ -6,32 +6,73 @@ namespace e2d
 {
 
 
-class Scene;
 class Action;
-class Transition;
-class CollisionManager;
 
+
+// 绘图接口
+class Drawable
+{
+public:
+	// 渲染图形
+	virtual void draw(Renderer * renderer) const = 0;
+};
+
+
+// 更新接口
+class Updatable
+{
+public:
+	// 渲染图形
+	virtual void update() = 0;
+};
+
+
+// 按键消息处理接口
+class KeyEventHandler
+{
+public:
+	// 处理按键消息
+	virtual void handle(KeyEvent e) = 0;
+};
+
+
+// 鼠标消息处理接口
+class MouseEventHandler
+{
+public:
+	// 处理鼠标消息
+	virtual void handle(MouseEvent e) = 0;
+};
+
+
+// 碰撞消息处理接口
+class CollisionHandler
+{
+public:
+	// 处理碰撞消息
+	virtual void handle(Collision collision) = 0;
+};
+
+
+// 节点
 class Node :
 	public Ref
 {
-	friend class Scene;
 	friend class Collider;
-	friend class Transition;
-	friend class CollisionManager;
 
 public:
 	// 节点属性
 	struct Property
 	{
-		float posX;		// X 坐标
-		float posY;		// Y 坐标
+		float posX;			// X 坐标
+		float posY;			// Y 坐标
 		float width;		// 宽度
 		float height;		// 高度
 		float pivotX;		// 中心点 X 坐标
 		float pivotY;		// 中心点 Y 坐标
 		float scaleX;		// 横向缩放
 		float scaleY;		// 纵向缩放
-		float rotation;	// 旋转角度
+		float rotation;		// 旋转角度
 		float skewAngleX;	// 横向倾斜角度
 		float skewAngleY;	// 纵向倾斜角度
 
@@ -45,11 +86,6 @@ public:
 	Node();
 
 	virtual ~Node();
-
-	// 渲染节点
-	virtual void draw(
-		Renderer * renderer
-	) const {}
 
 	// 获取节点显示状态
 	virtual bool isVisible() const;
@@ -381,9 +417,6 @@ public:
 	// 停止所有动作
 	void stopAllActions();
 
-	// 更新转换矩阵
-	void updateTransform();
-
 	// 分发鼠标消息
 	virtual bool dispatch(
 		const MouseEvent& e,
@@ -419,6 +452,9 @@ protected:
 
 	// 子节点排序
 	virtual void _sortChildren();
+
+	// 更新转换矩阵
+	void _updateTransform();
 
 	// 更新节点透明度
 	virtual void _updateOpacity();
@@ -502,7 +538,8 @@ protected:
 
 // 精灵
 class Sprite :
-	public Node
+	public Node,
+	public Drawable
 {
 public:
 	Sprite();
@@ -569,7 +606,8 @@ protected:
 
 // 文本
 class Text :
-	public Node
+	public Node,
+	public Drawable
 {
 public:
 	// 文本对齐方式
