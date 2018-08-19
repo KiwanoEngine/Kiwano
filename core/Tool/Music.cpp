@@ -22,6 +22,44 @@ inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 }
 
 
+e2d::Music::XAudio2Tool::XAudio2Tool()
+{
+	CoInitialize(nullptr);
+
+	ThrowIfFailed(
+		XAudio2Create(&_xAudio2, 0)
+	);
+
+	ThrowIfFailed(
+		_xAudio2->CreateMasteringVoice(&_masteringVoice)
+	);
+}
+
+e2d::Music::XAudio2Tool::~XAudio2Tool()
+{
+	_masteringVoice->DestroyVoice();
+	_xAudio2->Release();
+
+	CoUninitialize();
+}
+
+e2d::Music::XAudio2Tool* e2d::Music::XAudio2Tool::getInstance()
+{
+	static XAudio2Tool instance;
+	return &instance;
+}
+
+IXAudio2 * e2d::Music::XAudio2Tool::getXAudio2()
+{
+	return _xAudio2;
+}
+
+IXAudio2MasteringVoice * e2d::Music::XAudio2Tool::getMasteringVoice()
+{
+	return _masteringVoice;
+}
+
+
 e2d::Music::Music()
 	: _opened(false)
 	, _playing(false)
@@ -32,10 +70,26 @@ e2d::Music::Music()
 	, _dwSize(0)
 	, _voice(nullptr)
 	, _voiceCallback(this)
-	, _xAudio2(nullptr)
-	, _masteringVoice(nullptr)
 {
-	CoInitialize(nullptr);
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
+	xAudio2->AddRef();
+}
+
+e2d::Music::Music(const e2d::String & filePath)
+	: _opened(false)
+	, _playing(false)
+	, _wfx(nullptr)
+	, _hmmio(nullptr)
+	, _resBuffer(nullptr)
+	, _waveData(nullptr)
+	, _dwSize(0)
+	, _voice(nullptr)
+	, _voiceCallback(this)
+{
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
+	xAudio2->AddRef();
+
+	this->open(filePath);
 }
 
 e2d::Music::Music(const Resource& res)
@@ -48,128 +102,50 @@ e2d::Music::Music(const Resource& res)
 	, _dwSize(0)
 	, _voice(nullptr)
 	, _voiceCallback(this)
-	, _xAudio2(nullptr)
-	, _masteringVoice(nullptr)
 {
-	CoInitialize(nullptr);
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
+	xAudio2->AddRef();
 
 	this->open(res);
-}
-
-e2d::Music::Music(IXAudio2 * xAudio2)
-	: _opened(false)
-	, _playing(false)
-	, _wfx(nullptr)
-	, _hmmio(nullptr)
-	, _resBuffer(nullptr)
-	, _waveData(nullptr)
-	, _dwSize(0)
-	, _voice(nullptr)
-	, _voiceCallback(this)
-	, _xAudio2(xAudio2)
-	, _masteringVoice(nullptr)
-{
-	CoInitialize(nullptr);
-
-	if (_xAudio2)
-	{
-		_xAudio2->AddRef();
-	}
 }
 
 e2d::Music::~Music()
 {
 	close();
 
-	if (_masteringVoice)
-	{
-		_masteringVoice->DestroyVoice();
-		_masteringVoice = nullptr;
-	}
-
-	SafeRelease(_xAudio2);
-
-	CoUninitialize();
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
+	xAudio2->Release();
 }
 
-bool e2d::Music::open(const Resource& res)
+bool e2d::Music::open(const e2d::String & filePath)
 {
 	if (_opened)
 	{
 		close();
 	}
 
-	if (!_xAudio2)
+	if (filePath.isEmpty())
 	{
-		if (FAILED(XAudio2Create(&_xAudio2, 0)))
-		{
-			TraceError(L"Create IXAudio2 error");
-			return false;
-		}
-
-		if (FAILED(_xAudio2->CreateMasteringVoice(&_masteringVoice)))
-		{
-			TraceError(L"Create IXAudio2MasteringVoice error");
-			return false;
-		}
+		WARN("MusicInfo::open Invalid file name.");
+		return false;
 	}
 
-	if (!res.isFile())
+	String actualFilePath = File(filePath).getFilePath();
+	if (actualFilePath.isEmpty())
 	{
-		HRSRC hResInfo;
-		HGLOBAL hResData;
-		DWORD dwSize;
-		void* pvRes;
-
-		if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(res.getResNameId()), (LPCWSTR)res.getResType())))
-			return TraceError(L"FindResource");
-
-		if (nullptr == (hResData = LoadResource(HINST_THISCOMPONENT, hResInfo)))
-			return TraceError(L"LoadResource");
-
-		if (0 == (dwSize = SizeofResource(HINST_THISCOMPONENT, hResInfo)))
-			return TraceError(L"SizeofResource");
-
-		if (nullptr == (pvRes = LockResource(hResData)))
-			return TraceError(L"LockResource");
-
-		_resBuffer = new CHAR[dwSize];
-		memcpy(_resBuffer, pvRes, dwSize);
-
-		MMIOINFO mmioInfo;
-		ZeroMemory(&mmioInfo, sizeof(mmioInfo));
-		mmioInfo.fccIOProc = FOURCC_MEM;
-		mmioInfo.cchBuffer = dwSize;
-		mmioInfo.pchBuffer = (CHAR*)_resBuffer;
-
-		_hmmio = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
+		WARN("MusicInfo::open File not found.");
+		return false;
 	}
-	else
+
+	// 定位 wave 文件
+	wchar_t pFilePath[MAX_PATH];
+	if (!_findMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)actualFilePath))
 	{
-		String filePath = res.getFileName();
-		if (filePath.isEmpty())
-		{
-			WARN("MusicInfo::open Invalid file name.");
-			return false;
-		}
-
-		String actualFilePath = File(filePath).getFilePath();
-		if (actualFilePath.isEmpty())
-		{
-			WARN("MusicInfo::open File not found.");
-			return false;
-		}
-
-		// 定位 wave 文件
-		wchar_t pFilePath[MAX_PATH];
-		if (!_findMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)actualFilePath))
-		{
-			WARN("Failed to find media file: %s", pFilePath);
-			return false;
-		}
-
-		_hmmio = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
+		WARN("Failed to find media file: %s", pFilePath);
+		return false;
 	}
+
+	_hmmio = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
 
 	if (nullptr == _hmmio)
 	{
@@ -200,7 +176,87 @@ bool e2d::Music::open(const Resource& res)
 	}
 
 	// 创建音源
-	HRESULT hr = _xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
+	HRESULT hr = xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
+
+	if (FAILED(hr))
+	{
+		TraceError(L"Create source voice error", hr);
+		SAFE_DELETE_ARRAY(_waveData);
+		return false;
+	}
+
+	_opened = true;
+	_playing = false;
+	return true;
+}
+
+bool e2d::Music::open(const Resource& res)
+{
+	if (_opened)
+	{
+		close();
+	}
+
+	HRSRC hResInfo;
+	HGLOBAL hResData;
+	DWORD dwSize;
+	void* pvRes;
+
+	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(res.resNameId), (LPCWSTR)res.resType)))
+		return TraceError(L"FindResource");
+
+	if (nullptr == (hResData = LoadResource(HINST_THISCOMPONENT, hResInfo)))
+		return TraceError(L"LoadResource");
+
+	if (0 == (dwSize = SizeofResource(HINST_THISCOMPONENT, hResInfo)))
+		return TraceError(L"SizeofResource");
+
+	if (nullptr == (pvRes = LockResource(hResData)))
+		return TraceError(L"LockResource");
+
+	_resBuffer = new CHAR[dwSize];
+	memcpy(_resBuffer, pvRes, dwSize);
+
+	MMIOINFO mmioInfo;
+	ZeroMemory(&mmioInfo, sizeof(mmioInfo));
+	mmioInfo.fccIOProc = FOURCC_MEM;
+	mmioInfo.cchBuffer = dwSize;
+	mmioInfo.pchBuffer = (CHAR*)_resBuffer;
+
+	_hmmio = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
+
+	if (nullptr == _hmmio)
+	{
+		return TraceError(L"mmioOpen");
+	}
+
+	if (!_readMMIO())
+	{
+		// 读取非 wave 文件时 ReadMMIO 调用失败
+		mmioClose(_hmmio, 0);
+		return TraceError(L"ReadMMIO");
+	}
+
+	if (!_resetFile())
+		return TraceError(L"ResetFile");
+
+	// 重置文件后，wave 文件的大小是 _ck.cksize
+	_dwSize = _ck.cksize;
+
+	// 将样本数据读取到内存中
+	_waveData = new BYTE[_dwSize];
+
+	if (!_read(_waveData, _dwSize))
+	{
+		TraceError(L"Failed to read WAV data");
+		SAFE_DELETE_ARRAY(_waveData);
+		return false;
+	}
+
+	// 创建音源
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
+	HRESULT hr = xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
 
 	if (FAILED(hr))
 	{

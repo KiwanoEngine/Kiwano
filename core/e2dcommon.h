@@ -680,36 +680,13 @@ class Resource
 {
 public:
 	Resource(
-		const String& fileName		/* 文件路径 */
-	);
-
-	Resource(
 		size_t resNameId,			/* 资源名称 */
 		const String& resType		/* 资源类型 */
 	);
 
-	// 是否是本地文件
-	bool isFile() const;
-
-	const String& getFileName() const;
-
-	size_t getResNameId() const;
-
-	const String& getResType() const;
-
-	size_t getKey() const;
-
-	// 比较运算符
-	bool operator> (const Resource &) const;
-	bool operator>= (const Resource &) const;
-	bool operator< (const Resource &) const;
-	bool operator<= (const Resource &) const;
-
-protected:
-	bool	_isFile;
-	size_t	_resNameId;
-	String	_resType;
-	String	_fileName;
+public:
+	size_t	resNameId;
+	String	resType;
 };
 
 
@@ -812,6 +789,11 @@ public:
 
 	// 预加载图片资源
 	static bool preload(
+		const String& fileName
+	);
+
+	// 预加载图片资源
+	static bool preload(
 		const Resource& res
 	);
 
@@ -830,7 +812,7 @@ protected:
 	Rect _cropRect;
 	ID2D1Bitmap * _bitmap;
 
-	static std::map<Resource, ID2D1Bitmap*> _bitmapCache;
+	static std::map<size_t, ID2D1Bitmap*> _bitmapCache;
 };
 
 

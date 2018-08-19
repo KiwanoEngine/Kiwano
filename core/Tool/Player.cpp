@@ -3,21 +3,7 @@
 
 e2d::Player::Player()
 	: _volume(1.f)
-	, _enabled(true)
-	, _xAudio2(nullptr)
-	, _masteringVoice(nullptr)
 {
-	CoInitialize(nullptr);
-
-	if (FAILED(XAudio2Create(&_xAudio2, 0)))
-	{
-		WARN("初始化 XAudio2 组件失败");
-	}
-
-	if (FAILED(_xAudio2->CreateMasteringVoice(&_masteringVoice)))
-	{
-		WARN("初始化 MasteringVoice 组件失败");
-	}
 }
 
 e2d::Player::~Player()
@@ -30,30 +16,85 @@ e2d::Player::~Player()
 		}
 	}
 
-	if (_masteringVoice)
-	{
-		_masteringVoice->DestroyVoice();
-		_masteringVoice = nullptr;
-	}
-
-	SafeRelease(_xAudio2);
-
 	CoUninitialize();
 }
 
-IXAudio2 * e2d::Player::getXAudio2()
+bool e2d::Player::preload(const String & filePath)
 {
-	return _xAudio2;
+	if (filePath.isEmpty())
+		return false;
+
+	Music * music = new (std::nothrow) Music();
+
+	if (music && music->open(filePath))
+	{
+		music->setVolume(_volume);
+		_musicList.insert(std::make_pair(filePath.hash(), music));
+		return true;
+	}
+	return false;
 }
 
-IXAudio2MasteringVoice * e2d::Player::getMasteringVoice()
+bool e2d::Player::play(const String & filePath, int nLoopCount)
 {
-	return _masteringVoice;
+	if (filePath.isEmpty())
+		return false;
+
+	if (Player::preload(filePath))
+	{
+		auto music = _musicList[filePath.hash()];
+		if (music->play(nLoopCount))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void e2d::Player::pause(const String & filePath)
+{
+	if (filePath.isEmpty())
+		return;
+
+	size_t hash = filePath.hash();
+	if (_musicList.end() != _musicList.find(hash))
+		_musicList[hash]->pause();
+}
+
+void e2d::Player::resume(const String & filePath)
+{
+	if (filePath.isEmpty())
+		return;
+
+	size_t hash = filePath.hash();
+	if (_musicList.end() != _musicList.find(hash))
+		_musicList[hash]->resume();
+}
+
+void e2d::Player::stop(const String & filePath)
+{
+	if (filePath.isEmpty())
+		return;
+
+	size_t hash = filePath.hash();
+	if (_musicList.end() != _musicList.find(hash))
+		_musicList[hash]->stop();
+}
+
+bool e2d::Player::isPlaying(const String & filePath)
+{
+	if (filePath.isEmpty())
+		return false;
+
+	size_t hash = filePath.hash();
+	if (_musicList.end() != _musicList.find(hash))
+		return _musicList[hash]->isPlaying();
+	return false;
 }
 
 bool e2d::Player::preload(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res))
+	if (_musicList.end() != _musicList.find(res.resNameId))
 		return true;
 
 	Music * music = new (std::nothrow) Music();
@@ -61,7 +102,7 @@ bool e2d::Player::preload(const Resource& res)
 	if (music && music->open(res))
 	{
 		music->setVolume(_volume);
-		_musicList.insert(std::make_pair(res, music));
+		_musicList.insert(std::make_pair(res.resNameId, music));
 		return true;
 	}
 	return false;
@@ -71,7 +112,7 @@ bool e2d::Player::play(const Resource& res, int nLoopCount)
 {
 	if (Player::preload(res))
 	{
-		auto music = _musicList[res];
+		auto music = _musicList[res.resNameId];
 		if (music->play(nLoopCount))
 		{
 			return true;
@@ -82,26 +123,26 @@ bool e2d::Player::play(const Resource& res, int nLoopCount)
 
 void e2d::Player::pause(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res))
-		_musicList[res]->pause();
+	if (_musicList.end() != _musicList.find(res.resNameId))
+		_musicList[res.resNameId]->pause();
 }
 
 void e2d::Player::resume(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res))
-		_musicList[res]->pause();
+	if (_musicList.end() != _musicList.find(res.resNameId))
+		_musicList[res.resNameId]->resume();
 }
 
 void e2d::Player::stop(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res))
-		_musicList[res]->stop();
+	if (_musicList.end() != _musicList.find(res.resNameId))
+		_musicList[res.resNameId]->stop();
 }
 
 bool e2d::Player::isPlaying(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res))
-		return _musicList[res]->isPlaying();
+	if (_musicList.end() != _musicList.find(res.resNameId))
+		return _musicList[res.resNameId]->isPlaying();
 	return false;
 }
 
@@ -141,15 +182,6 @@ void e2d::Player::stopAll()
 	{
 		pair.second->stop();
 	}
-}
-
-void e2d::Player::setEnabled(bool enabled)
-{
-	if (_enabled == enabled)
-		return;
-
-	_enabled = enabled;
-	_enabled ? _xAudio2->StartEngine() : _xAudio2->StopEngine();
 }
 
 void e2d::Player::clearCache()

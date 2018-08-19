@@ -75,7 +75,18 @@ bool e2d::Sprite::open(const Resource& res)
 
 bool e2d::Sprite::open(const String & fileName)
 {
-	return open(Resource(fileName));
+	if (!_image)
+	{
+		_image = new (e2d::autorelease) Image();
+		_image->retain();
+	}
+
+	if (_image->open(fileName))
+	{
+		Node::setSize(_image->getWidth(), _image->getHeight());
+		return true;
+	}
+	return false;
 }
 
 void e2d::Sprite::crop(const Rect& cropRect)

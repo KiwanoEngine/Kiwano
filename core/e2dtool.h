@@ -58,14 +58,19 @@ public:
 	Music();
 
 	explicit Music(
-		const Resource& res		/* 音乐资源 */
+		const e2d::String& filePath	/* 音乐文件路径 */
 	);
 
 	explicit Music(
-		IXAudio2* xAudio2
+		const Resource& res		/* 音乐资源 */
 	);
 
 	virtual ~Music();
+
+	// 打开音乐文件
+	bool open(
+		const e2d::String& filePath	/* 音乐文件路径 */
+	);
 
 	// 打开音乐资源
 	bool open(
@@ -110,6 +115,27 @@ public:
 	// 获取 IXAudio2SourceVoice 对象
 	IXAudio2SourceVoice * getIXAudio2SourceVoice() const;
 
+public:
+	class XAudio2Tool
+	{
+	public:
+		XAudio2Tool();
+
+		~XAudio2Tool();
+
+		static XAudio2Tool* getInstance();
+
+		// 获取 XAudio2 实例对象
+		IXAudio2 * getXAudio2();
+
+		// 获取 MasteringVoice 实例对象
+		IXAudio2MasteringVoice* getMasteringVoice();
+
+	protected:
+		IXAudio2 * _xAudio2;
+		IXAudio2MasteringVoice* _masteringVoice;
+	};
+
 protected:
 	bool _readMMIO();
 
@@ -137,9 +163,7 @@ protected:
 	MMCKINFO				_ckRiff;
 	WAVEFORMATEX*			_wfx;
 	VoiceCallback			_voiceCallback;
-	IXAudio2*				_xAudio2;
 	IXAudio2SourceVoice*	_voice;
-	IXAudio2MasteringVoice*	_masteringVoice;
 };
 
 
@@ -152,6 +176,37 @@ public:
 	Player();
 
 	~Player();
+
+	// 预加载音乐资源
+	bool preload(
+		const String& filePath	/* 音乐文件路径 */
+	);
+
+	// 播放音乐
+	bool play(
+		const String& filePath,	/* 音乐文件路径 */
+		int nLoopCount = 0		/* 重复播放次数，设置 -1 为循环播放 */
+	);
+
+	// 暂停音乐
+	void pause(
+		const String& filePath	/* 音乐文件路径 */
+	);
+
+	// 继续播放音乐
+	void resume(
+		const String& filePath	/* 音乐文件路径 */
+	);
+
+	// 停止音乐
+	void stop(
+		const String& filePath	/* 音乐文件路径 */
+	);
+
+	// 获取音乐播放状态
+	bool isPlaying(
+		const String& filePath	/* 音乐文件路径 */
+	);
 
 	// 预加载音乐资源
 	bool preload(
@@ -201,26 +256,12 @@ public:
 	// 停止所有音乐
 	void stopAll();
 
-	// 打开或关闭播放器
-	void setEnabled(
-		bool enabled
-	);
-
 	// 清空音乐缓存
 	void clearCache();
 
-	// 获取 XAudio2 实例对象
-	IXAudio2 * getXAudio2();
-
-	// 获取 MasteringVoice 实例对象
-	IXAudio2MasteringVoice* getMasteringVoice();
-
 private:
-	bool _enabled;
 	float _volume;
-	IXAudio2*					_xAudio2;
-	IXAudio2MasteringVoice*		_masteringVoice;
-	std::map<Resource, Music*>	_musicList;
+	std::map<size_t, Music*> _musicList;
 };
 
 
