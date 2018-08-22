@@ -235,5 +235,8 @@
     <ClCompile Include="..\..\core\Node\Scene.cpp">
       <Filter>Node</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Node\Canvas.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

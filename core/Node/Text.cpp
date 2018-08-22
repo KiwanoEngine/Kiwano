@@ -15,7 +15,7 @@ e2d::Text::Style::Style()
 	, hasOutline(true)
 	, outlineColor(Color(Color::Black, 0.5))
 	, outlineWidth(1.f)
-	, outlineJoin(LineJoin::Round)
+	, outlineStroke(Stroke::Round)
 {}
 
 e2d::Text::Style::Style(
@@ -29,7 +29,7 @@ e2d::Text::Style::Style(
 	bool hasOutline,
 	Color outlineColor,
 	float outlineWidth,
-	LineJoin outlineJoin
+	Stroke outlineStroke
 )
 	: color(color)
 	, alignment(alignment)
@@ -41,7 +41,7 @@ e2d::Text::Style::Style(
 	, hasOutline(hasOutline)
 	, outlineColor(outlineColor)
 	, outlineWidth(outlineWidth)
-	, outlineJoin(outlineJoin)
+	, outlineStroke(outlineStroke)
 {}
 
 
@@ -119,9 +119,9 @@ float e2d::Text::getOutlineWidth() const
 	return _style.outlineWidth;
 }
 
-e2d::LineJoin e2d::Text::getOutlineJoin() const
+e2d::Stroke e2d::Text::getOutlineStroke() const
 {
-	return _style.outlineJoin;
+	return _style.outlineStroke;
 }
 
 int e2d::Text::getLineCount() const
@@ -282,9 +282,9 @@ void e2d::Text::setOutlineWidth(float outlineWidth)
 	_style.outlineWidth = outlineWidth;
 }
 
-void e2d::Text::setOutlineJoin(LineJoin outlineJoin)
+void e2d::Text::setOutlineStroke(Stroke outlineStroke)
 {
-	_style.outlineJoin = outlineJoin;
+	_style.outlineStroke = outlineStroke;
 }
 
 void e2d::Text::draw(Renderer * renderer) const
@@ -302,7 +302,7 @@ void e2d::Text::draw(Renderer * renderer) const
 			_style.hasOutline,
 			(D2D1_COLOR_F)_style.outlineColor,
 			_style.outlineWidth,
-			D2D1_LINE_JOIN(_style.outlineJoin)
+			D2D1_LINE_JOIN(_style.outlineStroke)
 		);
 		_textLayout->Draw(nullptr, pTextRenderer, 0, 0);
 	}

@@ -16,7 +16,7 @@ enum class Direction : int
 
 
 // 线条相交样式
-enum class LineJoin : int
+enum class Stroke : int
 {
 	Miter = 0,	/* 斜切 */
 	Bevel = 1,	/* 斜角 */

@@ -446,18 +446,18 @@ protected:
 	E2D_DISABLE_COPY(Node);
 
 	// 设置节点所在场景
-	virtual void _setParentScene(
+	void _setParentScene(
 		Scene * scene
 	);
 
 	// 子节点排序
-	virtual void _sortChildren();
+	void _sortChildren();
 
 	// 更新转换矩阵
 	void _updateTransform();
 
 	// 更新节点透明度
-	virtual void _updateOpacity();
+	void _updateOpacity();
 
 protected:
 	String		_name;
@@ -632,7 +632,7 @@ public:
 		bool		hasOutline;			// 显示描边
 		Color		outlineColor;		// 描边颜色
 		float		outlineWidth;		// 描边线宽
-		LineJoin	outlineJoin;		// 描边线相交样式
+		Stroke	outlineStroke;		// 描边线相交样式
 
 	public:
 		Style();
@@ -648,7 +648,7 @@ public:
 			bool hasOutline = true,
 			Color outlineColor = Color(Color::Black, 0.5),
 			float outlineWidth = 1.f,
-			LineJoin outlineJoin = LineJoin::Round
+			Stroke outlineStroke = Stroke::Round
 		);
 	};
 
@@ -691,7 +691,7 @@ public:
 	float getOutlineWidth() const;
 
 	// 获取描边线相交样式
-	LineJoin getOutlineJoin() const;
+	Stroke getOutlineStroke() const;
 
 	// 获取文本显示行数
 	int getLineCount() const;
@@ -794,8 +794,8 @@ public:
 	);
 
 	// 设置描边线相交样式
-	void setOutlineJoin(
-		LineJoin outlineJoin
+	void setOutlineStroke(
+		Stroke outlineStroke
 	);
 
 	// 渲染文字
@@ -1093,6 +1093,94 @@ protected:
 protected:
 	bool _enabled;
 	std::vector<Button*> _buttons;
+};
+
+
+// 画布
+class Canvas :
+	public Node
+{
+public:
+	Canvas();
+
+	virtual ~Canvas();
+
+	// 设置线条颜色
+	void setLineColor(
+		const Color& color
+	);
+
+	// 设置填充颜色
+	void setFillColor(
+		const Color& color
+	);
+
+	// 设置线条宽度
+	void setStrokeWidth(
+		float width
+	);
+
+	// 设置线条相交样式
+	void setStrokeStyle(
+		Stroke strokeStyle
+	);
+
+	// 画直线
+	void drawLine(
+		const Point& begin,
+		const Point& end
+	);
+
+	// 画矩形边框
+	void drawRect(
+		const Rect& rect
+	);
+
+	// 画圆角矩形边框
+	void drawRoundedRect(
+		const Rect& rect,
+		float radiusX,
+		float radiusY
+	);
+
+	// 填充矩形
+	void fillRect(
+		const Rect& rect
+	);
+
+	// 填充圆角矩形
+	void fillRoundedRect(
+		const Rect& rect,
+		float radiusX,
+		float radiusY
+	);
+
+	// 开启路径
+	void beginPath();
+
+	// 添加点
+	void addPoint(
+		const Point& p
+	);
+
+	// 结束路径
+	void endPath();
+
+	// 遍历节点
+	virtual void visit(
+		Game * game
+	) override;
+
+protected:
+	E2D_DISABLE_COPY(Canvas);
+
+protected:
+	float _strokeWidth;
+	Renderer * _renderer;
+	ID2D1RenderTarget * _renderTarget;
+	ID2D1SolidColorBrush * _fillBrush;
+	ID2D1SolidColorBrush * _lineBrush;
+	ID2D1StrokeStyle * _strokeStyle;
 };
 
 }
