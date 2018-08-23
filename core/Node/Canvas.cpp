@@ -1,12 +1,13 @@
 #include "..\e2dnode.h"
 
-e2d::Canvas::Canvas()
+e2d::Canvas::Canvas(float width, float height)
 	: _renderer(nullptr)
 	, _renderTarget(nullptr)
 	, _fillBrush(nullptr)
 	, _lineBrush(nullptr)
 	, _strokeStyle(nullptr)
 	, _strokeWidth(1.0f)
+	, _stroke(Stroke::Miter)
 {
 	_renderer = Game::getInstance()->getRenderer();
 	_renderTarget = _renderer->getRenderTarget();
@@ -25,10 +26,11 @@ e2d::Canvas::Canvas()
 			&_lineBrush
 		)
 	);
-
-	_strokeStyle = _renderer->getMiterStrokeStyle();
-
+	
 	this->setClipEnabled(true);
+	this->setWidth(width);
+	this->setHeight(height);
+	this->setStrokeStyle(_stroke);
 }
 
 e2d::Canvas::~Canvas()
@@ -69,11 +71,65 @@ void e2d::Canvas::setStrokeStyle(Stroke strokeStyle)
 	}
 }
 
+const e2d::Color & e2d::Canvas::getLineColor() const
+{
+	return Color(_lineBrush->GetColor());
+}
+
+const e2d::Color & e2d::Canvas::getFillColor() const
+{
+	return Color(_fillBrush->GetColor());
+}
+
+float e2d::Canvas::getStrokeWidth() const
+{
+	return _strokeWidth;
+}
+
+e2d::Stroke e2d::Canvas::getStrokeStyle() const
+{
+	return _stroke;
+}
+
 void e2d::Canvas::drawLine(const Point & begin, const Point & end)
 {
 	_renderTarget->DrawLine(
 		D2D1::Point2F(begin.x, begin.y),
 		D2D1::Point2F(end.x, end.y),
+		_lineBrush,
+		_strokeWidth,
+		_strokeStyle
+	);
+}
+
+void e2d::Canvas::drawCircle(const Point & center, float radius)
+{
+	_renderTarget->DrawEllipse(
+		D2D1::Ellipse(
+			D2D1::Point2F(
+				center.x,
+				center.y
+			),
+			radius,
+			radius
+		),
+		_lineBrush,
+		_strokeWidth,
+		_strokeStyle
+	);
+}
+
+void e2d::Canvas::drawEllipse(const Point & center, float radiusX, float radiusY)
+{
+	_renderTarget->DrawEllipse(
+		D2D1::Ellipse(
+			D2D1::Point2F(
+				center.x,
+				center.y
+			),
+			radiusX,
+			radiusY
+		),
 		_lineBrush,
 		_strokeWidth,
 		_strokeStyle
@@ -114,6 +170,36 @@ void e2d::Canvas::drawRoundedRect(const Rect & rect, float radiusX, float radius
 	);
 }
 
+void e2d::Canvas::fillCircle(const Point & center, float radius)
+{
+	_renderTarget->FillEllipse(
+		D2D1::Ellipse(
+			D2D1::Point2F(
+				center.x,
+				center.y
+			),
+			radius,
+			radius
+		),
+		_fillBrush
+	);
+}
+
+void e2d::Canvas::fillEllipse(const Point & center, float radiusX, float radiusY)
+{
+	_renderTarget->FillEllipse(
+		D2D1::Ellipse(
+			D2D1::Point2F(
+				center.x,
+				center.y
+			),
+			radiusX,
+			radiusY
+		),
+		_fillBrush
+	);
+}
+
 void e2d::Canvas::fillRect(const Rect & rect)
 {
 	_renderTarget->FillRectangle(
@@ -142,8 +228,4 @@ void e2d::Canvas::fillRoundedRect(const Rect & rect, float radiusX, float radius
 		),
 		_fillBrush
 	);
-}
-
-void e2d::Canvas::visit(Game * game)
-{
 }

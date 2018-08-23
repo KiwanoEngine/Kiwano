@@ -310,6 +310,10 @@ public:
 		float alpha
 	);
 
+	Color(
+		const D2D1_COLOR_F& color
+	);
+
 	E2D_OP_EXPLICIT operator D2D1_COLOR_F() const;
 
 public:

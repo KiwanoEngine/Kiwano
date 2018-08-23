@@ -1098,10 +1098,14 @@ protected:
 
 // 画布
 class Canvas :
-	public Node
+	public Node,
+	public Drawable
 {
 public:
-	Canvas();
+	Canvas(
+		float width,
+		float height
+	);
 
 	virtual ~Canvas();
 
@@ -1125,10 +1129,35 @@ public:
 		Stroke strokeStyle
 	);
 
+	// 获取线条颜色
+	const Color& getLineColor() const;
+
+	// 获取填充颜色
+	const Color& getFillColor() const;
+
+	// 获取线条宽度
+	float getStrokeWidth() const;
+
+	// 获取线条相交样式
+	Stroke getStrokeStyle() const;
+
 	// 画直线
 	void drawLine(
 		const Point& begin,
 		const Point& end
+	);
+
+	// 画圆形边框
+	void drawCircle(
+		const Point& center,
+		float radius
+	);
+
+	// 画椭圆形边框
+	void drawEllipse(
+		const Point& center,
+		float radiusX,
+		float radiusY
 	);
 
 	// 画矩形边框
@@ -1139,6 +1168,19 @@ public:
 	// 画圆角矩形边框
 	void drawRoundedRect(
 		const Rect& rect,
+		float radiusX,
+		float radiusY
+	);
+
+	// 填充圆形
+	void fillCircle(
+		const Point& center,
+		float radius
+	);
+
+	// 填充椭圆形
+	void fillEllipse(
+		const Point& center,
 		float radiusX,
 		float radiusY
 	);
@@ -1155,27 +1197,12 @@ public:
 		float radiusY
 	);
 
-	// 开启路径
-	void beginPath();
-
-	// 添加点
-	void addPoint(
-		const Point& p
-	);
-
-	// 结束路径
-	void endPath();
-
-	// 遍历节点
-	virtual void visit(
-		Game * game
-	) override;
-
 protected:
 	E2D_DISABLE_COPY(Canvas);
 
 protected:
 	float _strokeWidth;
+	Stroke _stroke;
 	Renderer * _renderer;
 	ID2D1RenderTarget * _renderTarget;
 	ID2D1SolidColorBrush * _fillBrush;
