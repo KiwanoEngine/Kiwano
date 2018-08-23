@@ -78,7 +78,7 @@ bool e2d::Task::isRunning() const
 	return _running;
 }
 
-e2d::String e2d::Task::getName() const
+e2d::String e2d::Task::name() const
 {
 	return _name;
 }

@@ -40,10 +40,10 @@ public:
 	virtual void stop();
 
 	// 获取动作名称
-	virtual String getName() const;
+	virtual const String& name() const;
 
 	// 设置动作名称
-	virtual void setName(
+	virtual void name(
 		const String& name
 	);
 
@@ -57,7 +57,7 @@ public:
 	virtual void reset();
 
 	// 获取该动作的执行目标
-	virtual Node * getTarget();
+	virtual Node * target();
 
 protected:
 	E2D_DISABLE_COPY(Action);
@@ -716,25 +716,25 @@ public:
 	virtual ~Animation();
 
 	// 添加关键帧
-	void add(
+	Animation& add(
 		Image * frame	/* 关键帧 */
 	);
 
 	// 添加多个关键帧
-	void add(
+	Animation& add(
 		const std::vector<Image*>& frames	/* 关键帧列表 */
 	);
 
-	// 获取帧间隔
-	float getInterval() const;
-
-	// 获取关键帧
-	const std::vector<Image*>& getFrames() const;
-
 	// 设置每一帧的时间间隔
-	void setInterval(
+	Animation& interval(
 		float interval		/* 帧间隔（秒） */
 	);
+
+	// 获取帧间隔
+	float interval() const;
+
+	// 获取关键帧
+	const std::vector<Image*>& frames() const;
 
 	// 获取帧动画的拷贝对象
 	Animation * clone() const;
@@ -765,10 +765,10 @@ public:
 	virtual ~Animate();
 
 	// 获取动画
-	virtual Animation * getAnimation() const;
+	Animation * animation() const;
 
 	// 设置动画
-	virtual void setAnimation(
+	void animation(
 		Animation * animation
 	);
 

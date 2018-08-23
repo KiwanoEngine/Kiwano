@@ -14,7 +14,7 @@ void e2d::OpacityBy::_init()
 
 	if (_target)
 	{
-		_startVal = _target->getOpacity();
+		_startVal = _target->opacity();
 	}
 }
 
@@ -24,7 +24,7 @@ void e2d::OpacityBy::_update()
 
 	if (_target)
 	{
-		_target->setOpacity(_startVal + _deltaVal * _delta);
+		_target->opacity(_startVal + _deltaVal * _delta);
 	}
 }
 

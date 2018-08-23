@@ -22,11 +22,11 @@ e2d::Transition::~Transition()
 {
 	SafeRelease(_outLayer);
 	SafeRelease(_inLayer);
-	GC::getInstance()->safeRelease(_outScene);
-	GC::getInstance()->safeRelease(_inScene);
+	GC::instance()->safeRelease(_outScene);
+	GC::instance()->safeRelease(_inScene);
 }
 
-bool e2d::Transition::isDone()
+bool e2d::Transition::done()
 {
 	return _end;
 }
@@ -40,15 +40,15 @@ bool e2d::Transition::_init(Game * game, Scene * prev)
 		_outScene->retain();
 	
 	HRESULT hr = S_OK;
-	auto renderer = game->getRenderer();
+	auto renderer = game->renderer();
 	if (_inScene)
 	{
-		hr = renderer->getRenderTarget()->CreateLayer(&_inLayer);
+		hr = renderer->renderTarget()->CreateLayer(&_inLayer);
 	}
 
 	if (SUCCEEDED(hr) && _outScene)
 	{
-		hr = renderer->getRenderTarget()->CreateLayer(&_outLayer);
+		hr = renderer->renderTarget()->CreateLayer(&_outLayer);
 	}
 
 	if (FAILED(hr))
@@ -56,14 +56,14 @@ bool e2d::Transition::_init(Game * game, Scene * prev)
 		return false;
 	}
 
-	_windowSize = game->getWindow()->getSize();
+	_windowSize = game->window()->size();
 	_outLayerParam = _inLayerParam = D2D1::LayerParameters(
 		D2D1::InfiniteRect(),
 		nullptr,
 		D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 		D2D1::Matrix3x2F::Identity(),
 		1.f,
-		renderer->getSolidColorBrush(),
+		renderer->solidBrush(),
 		D2D1_LAYER_OPTIONS_NONE
 	);
 
@@ -85,11 +85,11 @@ void e2d::Transition::_update()
 
 void e2d::Transition::_render(Game * game)
 {
-	auto renderTarget = game->getRenderer()->getRenderTarget();
+	auto renderTarget = game->renderer()->renderTarget();
 
 	if (_outScene)
 	{
-		Point rootPos = _outScene->getPos();
+		Point rootPos = _outScene->position();
 		auto clipRect = D2D1::RectF(
 			std::max(rootPos.x, 0.f),
 			std::max(rootPos.y, 0.f),
@@ -108,7 +108,7 @@ void e2d::Transition::_render(Game * game)
 
 	if (_inScene)
 	{
-		Point rootPos = _inScene->getPos();
+		Point rootPos = _inScene->position();
 		auto clipRect = D2D1::RectF(
 			std::max(rootPos.x, 0.f),
 			std::max(rootPos.y, 0.f),

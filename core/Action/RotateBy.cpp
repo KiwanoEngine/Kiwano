@@ -14,7 +14,7 @@ void e2d::RotateBy::_init()
 
 	if (_target)
 	{
-		_startVal = _target->getRotation();
+		_startVal = _target->rotation();
 	}
 }
 
@@ -24,7 +24,7 @@ void e2d::RotateBy::_update()
 
 	if (_target)
 	{
-		_target->setRotation(_startVal + _deltaVal * _delta);
+		_target->rotation(_startVal + _deltaVal * _delta);
 	}
 }
 

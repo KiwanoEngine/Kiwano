@@ -103,14 +103,6 @@ public:
 
 	bool operator== (const Rect& rect) const;
 	
-	// 设置矩形
-	void setRect(
-		float x, 
-		float y, 
-		float width, 
-		float height
-	);
-	
 	// 判断点是否在矩形内
 	bool containsPoint(
 		const Point& point
@@ -142,13 +134,7 @@ public:
 	size_t hash() const;
 
 	// 判断字符串是否为空
-	bool isEmpty() const;
-
-	// 获取 Unicode 字符串
-	std::wstring getWString() const;
-
-	// 获取 ANSI 字符串
-	std::string getCString() const;
+	bool empty() const;
 
 	// 获取指定位置字符
 	wchar_t at(
@@ -244,6 +230,8 @@ public:
 	// 类型转换操作符
 	E2D_OP_EXPLICIT operator const wchar_t* () const;
 	E2D_OP_EXPLICIT operator wchar_t* () const;
+	E2D_OP_EXPLICIT operator std::wstring () const;
+	E2D_OP_EXPLICIT operator std::string () const;
 
 	// 比较运算符
 	bool operator== (const String &) const;
@@ -519,10 +507,10 @@ public:
 	Time();
 
 	// 获取时间戳
-	time_t getTimeStamp() const;
+	time_t stamp() const;
 
-	// 是否是
-	bool isZero() const;
+	// 是否是零点
+	bool zero() const;
 
 	Time operator + (Duration const &) const;
 	Time operator - (Duration const &) const;
@@ -609,55 +597,55 @@ public:
 	virtual ~Collider();
 
 	// 设置碰撞体形状
-	void setShape(
+	Collider& shape(
 		Shape shape
 	);
 
 	// 是否触发碰撞事件
-	void setCollisionNotify(
+	Collider& notify(
 		bool notify
 	);
 
 	// 启用或关闭该碰撞体
-	void setEnabled(
+	Collider& enabled(
 		bool enabled
 	);
 
 	// 设置碰撞体的可见性
-	void setVisible(
+	Collider& visible(
 		bool visible
 	);
 
 	// 设置绘制颜色
-	void setColor(
+	Collider& color(
 		Color color
 	);
 
 	// 判断两碰撞体的交集关系
-	Relation getRelationWith(
+	Relation relationWith(
 		Collider * pCollider
 	) const;
 
 	// 是否启用碰撞体
-	bool isEnabled() const;
+	bool enabled() const;
 
 	// 是否可见
-	bool isVisible() const;
+	bool visible() const;
 
 	// 是否触发碰撞事件
-	bool isCollisionNotify() const;
+	bool notify() const;
 
 	// 获取绘制颜色
-	Color getColor() const;
+	Color color() const;
 
 	// 获取形状
-	Shape getShape() const;
+	Shape shape() const;
 
 	// 获取绑定节点
-	Node* getNode() const;
+	Node* node() const;
 
 	// 获取 ID2D1Geometry* 对象
-	ID2D1Geometry* getGeometry() const;
+	ID2D1Geometry* geometry() const;
 
 	// 重新生成
 	void recreate();
@@ -709,7 +697,7 @@ public:
 	void release();
 
 	// 获取引用计数
-	int getRefCount() const;
+	int refCount() const;
 
 protected:
 	E2D_DISABLE_COPY(Ref);
@@ -762,34 +750,34 @@ public:
 	);
 
 	// 获取宽度
-	virtual float getWidth() const;
+	float width() const;
 
 	// 获取高度
-	virtual float getHeight() const;
+	float height() const;
 
 	// 获取大小
-	virtual Size getSize() const;
+	const Size& size() const;
 
-	// 获取源图片宽度
-	virtual float getSourceWidth() const;
+	// 获取图片实际宽度
+	float realWidth() const;
 
-	// 获取源图片高度
-	virtual float getSourceHeight() const;
+	// 获取图片实际高度
+	float realHeight() const;
 
-	// 获取源图片大小
-	virtual Size getSourceSize() const;
+	// 获取图片实际大小
+	Size realSize() const;
 	
 	// 获取裁剪位置 X 坐标
-	virtual float getCropX() const;
+	float cropX() const;
 
 	// 获取裁剪位置 Y 坐标
-	virtual float getCropY() const;
+	float cropY() const;
 
 	// 获取裁剪位置
-	virtual Point getCropPos() const;
+	const Point& cropPosition() const;
 
 	// 获取 ID2D1Bitmap 对象
-	ID2D1Bitmap * getBitmap();
+	ID2D1Bitmap * bitmap();
 
 	// 预加载图片资源
 	static bool preload(

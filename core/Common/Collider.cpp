@@ -18,80 +18,85 @@ e2d::Collider::~Collider()
 	SafeRelease(_geometry);
 }
 
-e2d::Color e2d::Collider::getColor() const
+e2d::Color e2d::Collider::color() const
 {
 	return _color;
 }
 
-e2d::Collider::Shape e2d::Collider::getShape() const
+e2d::Collider::Shape e2d::Collider::shape() const
 {
 	return _shape;
 }
 
-e2d::Node * e2d::Collider::getNode() const
+e2d::Node * e2d::Collider::node() const
 {
 	return _parentNode;
 }
 
-ID2D1Geometry * e2d::Collider::getGeometry() const
+ID2D1Geometry * e2d::Collider::geometry() const
 {
 	return _geometry;
 }
 
-void e2d::Collider::setShape(Shape shape)
+e2d::Collider& e2d::Collider::shape(Shape shape)
 {
 	if (_shape == shape)
-		return;
+		return *this;
 
 	_shape = shape;
 	if (shape == Shape::None)
 	{
 		SafeRelease(_geometry);
-		CollisionManager::getInstance()->__removeCollider(this);
+		CollisionManager::instance()->__removeCollider(this);
 	}
 	else
 	{
 		this->recreate();
-		CollisionManager::getInstance()->__addCollider(this);
+		CollisionManager::instance()->__addCollider(this);
 	}
+	return *this;
 }
 
-void e2d::Collider::setCollisionNotify(bool notify)
+e2d::Collider& e2d::Collider::notify(bool notify)
 {
 	_notify = notify;
+	return *this;
 }
 
-void e2d::Collider::setEnabled(bool enabled)
+e2d::Collider& e2d::Collider::enabled(bool enabled)
 {
 	_enabled = enabled;
+	return *this;
 }
 
-void e2d::Collider::setVisible(bool visible)
+e2d::Collider& e2d::Collider::visible(bool visible)
 {
 	_visible = visible;
+	return *this;
 }
 
-void e2d::Collider::setColor(Color color)
+e2d::Collider& e2d::Collider::color(Color color)
 {
 	_color = color;
+	return *this;
 }
 
 void e2d::Collider::render()
 {
 	if (_geometry && _enabled && _visible)
 	{
-		auto renderer = Game::getInstance()->getRenderer();
+		auto renderer = Game::instance()->renderer();
 		// 获取纯色画刷
-		ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
+		ID2D1SolidColorBrush * brush = renderer->solidBrush();
 		// 设置画刷颜色和透明度
 		brush->SetColor((D2D1_COLOR_F)_color);
 		brush->SetOpacity(1.f);
 		// 绘制几何碰撞体
-		renderer->getRenderTarget()->DrawGeometry(_geometry, brush, 1.5f);
+		renderer->renderTarget()->DrawGeometry(_geometry, brush, 1.5f);
 	}
 }
 
-e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * collider) const
+e2d::Collider::Relation e2d::Collider::relationWith(Collider * collider) const
 {
 	if (_geometry && collider->_geometry)
 	{
@@ -110,17 +115,17 @@ e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * collider) cons
 	return Relation::Unknown;
 }
 
-bool e2d::Collider::isEnabled() const
+bool e2d::Collider::enabled() const
 {
 	return _enabled;
 }
 
-bool e2d::Collider::isVisible() const
+bool e2d::Collider::visible() const
 {
 	return _visible;
 }
 
-bool e2d::Collider::isCollisionNotify() const
+bool e2d::Collider::notify() const
 {
 	return _notify;
 }
@@ -131,7 +136,7 @@ void e2d::Collider::recreate()
 		return;
 
 	SafeRelease(_geometry);
-	auto factory = Game::getInstance()->getRenderer()->getFactory();
+	auto factory = Game::instance()->renderer()->factory();
 
 	switch (_shape)
 	{
@@ -139,7 +144,7 @@ void e2d::Collider::recreate()
 	{
 		ID2D1RectangleGeometry* rectangle = nullptr;
 		factory->CreateRectangleGeometry(
-			D2D1::RectF(0, 0, _parentNode->getRealWidth(), _parentNode->getRealHeight()),
+			D2D1::RectF(0, 0, _parentNode->realWidth(), _parentNode->realHeight()),
 			&rectangle
 		);
 		_geometry = rectangle;
@@ -148,14 +153,14 @@ void e2d::Collider::recreate()
 
 	case Shape::Circle:
 	{
-		float minSide = std::min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
+		float minSide = std::min(_parentNode->realWidth(), _parentNode->realHeight());
 
 		ID2D1EllipseGeometry* circle = nullptr;
 		factory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
-					_parentNode->getRealWidth() / 2,
-					_parentNode->getRealHeight() / 2
+					_parentNode->realWidth() / 2,
+					_parentNode->realHeight() / 2
 				),
 				minSide / 2,
 				minSide / 2
@@ -168,8 +173,8 @@ void e2d::Collider::recreate()
 
 	case Shape::Ellipse:
 	{
-		float halfWidth = _parentNode->getWidth() / 2,
-			halfHeight = _parentNode->getHeight() / 2;
+		float halfWidth = _parentNode->width() / 2,
+			halfHeight = _parentNode->height() / 2;
 
 		ID2D1EllipseGeometry* ellipse = nullptr;
 		factory->CreateEllipseGeometry(

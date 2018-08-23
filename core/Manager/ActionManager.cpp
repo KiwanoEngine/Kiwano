@@ -3,7 +3,7 @@
 #include "..\e2dnode.h"
 
 
-e2d::ActionManager * e2d::ActionManager::getInstance()
+e2d::ActionManager * e2d::ActionManager::instance()
 {
 	static ActionManager instance;
 	return &instance;
@@ -84,7 +84,7 @@ void e2d::ActionManager::resumeAllBindedWith(Node * target)
 
 	for (const auto& action : _runningActions)
 	{
-		if (action->getTarget() == target)
+		if (action->target() == target)
 		{
 			action->resume();
 		}
@@ -98,7 +98,7 @@ void e2d::ActionManager::pauseAllBindedWith(Node * target)
 
 	for (const auto& action : _runningActions)
 	{
-		if (action->getTarget() == target)
+		if (action->target() == target)
 		{
 			action->pause();
 		}
@@ -112,7 +112,7 @@ void e2d::ActionManager::stopAllBindedWith(Node * target)
 
 	for (const auto& action : _runningActions)
 	{
-		if (action->getTarget() == target)
+		if (action->target() == target)
 		{
 			action->stop();
 		}
@@ -146,12 +146,12 @@ void e2d::ActionManager::start(Action * action, Node * target, bool paused)
 
 void e2d::ActionManager::resume(const String& name)
 {
-	if (_runningActions.empty() || name.isEmpty())
+	if (_runningActions.empty() || name.empty())
 		return;
 
 	for (const auto& action : _runningActions)
 	{
-		if (action->getName() == name)
+		if (action->name() == name)
 		{
 			action->resume();
 		}
@@ -160,12 +160,12 @@ void e2d::ActionManager::resume(const String& name)
 
 void e2d::ActionManager::pause(const String& name)
 {
-	if (_runningActions.empty() || name.isEmpty())
+	if (_runningActions.empty() || name.empty())
 		return;
 
 	for (const auto& action : _runningActions)
 	{
-		if (action->getName() == name)
+		if (action->name() == name)
 		{
 			action->pause();
 		}
@@ -174,12 +174,12 @@ void e2d::ActionManager::pause(const String& name)
 
 void e2d::ActionManager::stop(const String& name)
 {
-	if (_runningActions.empty() || name.isEmpty())
+	if (_runningActions.empty() || name.empty())
 		return;
 
 	for (const auto& action : _runningActions)
 	{
-		if (action->getName() == name)
+		if (action->name() == name)
 		{
 			action->stop();
 		}
@@ -193,7 +193,7 @@ void e2d::ActionManager::clearAllBindedWith(Node * target)
 		auto iter = std::find_if(
 			_runningActions.begin(),
 			_runningActions.end(),
-			[target](Action* action) ->bool { return action->getTarget() == target; }
+			[target](Action* action) ->bool { return action->target() == target; }
 		);
 
 		if (iter != _runningActions.end())
@@ -218,12 +218,12 @@ void e2d::ActionManager::clearAll()
 	_actions.clear();
 }
 
-std::vector<e2d::Action*> e2d::ActionManager::get(const String& name)
+std::vector<e2d::Action*> e2d::ActionManager::actions(const String& name)
 {
 	std::vector<Action*> actions;
 	for (const auto& action : _actions)
 	{
-		if (action->getName() == name)
+		if (action->name() == name)
 		{
 			actions.push_back(action);
 		}
@@ -231,7 +231,7 @@ std::vector<e2d::Action*> e2d::ActionManager::get(const String& name)
 	return std::move(actions);
 }
 
-const std::vector<e2d::Action*>& e2d::ActionManager::getAll()
+const std::vector<e2d::Action*>& e2d::ActionManager::actions()
 {
 	return _actions;
 }

@@ -1,6 +1,6 @@
 #include "..\e2dtool.h"
 
-std::default_random_engine &e2d::Random::__getEngine()
+std::default_random_engine &e2d::Random::__engine()
 {
 	static std::random_device device;
 	static std::default_random_engine engine(device());

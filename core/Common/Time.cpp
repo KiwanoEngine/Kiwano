@@ -7,13 +7,13 @@ e2d::Time::Time()
 {
 }
 
-time_t e2d::Time::getTimeStamp() const
+time_t e2d::Time::stamp() const
 {
 	auto& duration = time_point_cast<milliseconds>(_timePoint).time_since_epoch();
 	return static_cast<time_t>(duration.count());
 }
 
-bool e2d::Time::isZero() const
+bool e2d::Time::zero() const
 {
 	return _timePoint.time_since_epoch().count() == 0LL;
 }

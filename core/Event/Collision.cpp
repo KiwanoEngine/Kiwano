@@ -16,12 +16,12 @@ e2d::Collision::~Collision()
 {
 }
 
-e2d::Node * e2d::Collision::getNode() const
+e2d::Node * e2d::Collision::node() const
 {
 	return _node;
 }
 
-e2d::Collider::Relation e2d::Collision::getRelation() const
+e2d::Collider::Relation e2d::Collision::relation() const
 {
 	return _relation;
 }

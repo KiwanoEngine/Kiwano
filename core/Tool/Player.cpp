@@ -21,14 +21,14 @@ e2d::Player::~Player()
 
 bool e2d::Player::preload(const String & filePath)
 {
-	if (filePath.isEmpty())
+	if (filePath.empty())
 		return false;
 
 	Music * music = new (std::nothrow) Music();
 
 	if (music && music->open(filePath))
 	{
-		music->setVolume(_volume);
+		music->volume(_volume);
 		_musicList.insert(std::make_pair(filePath.hash(), music));
 		return true;
 	}
@@ -37,7 +37,7 @@ bool e2d::Player::preload(const String & filePath)
 
 bool e2d::Player::play(const String & filePath, int nLoopCount)
 {
-	if (filePath.isEmpty())
+	if (filePath.empty())
 		return false;
 
 	if (Player::preload(filePath))
@@ -53,7 +53,7 @@ bool e2d::Player::play(const String & filePath, int nLoopCount)
 
 void e2d::Player::pause(const String & filePath)
 {
-	if (filePath.isEmpty())
+	if (filePath.empty())
 		return;
 
 	size_t hash = filePath.hash();
@@ -63,7 +63,7 @@ void e2d::Player::pause(const String & filePath)
 
 void e2d::Player::resume(const String & filePath)
 {
-	if (filePath.isEmpty())
+	if (filePath.empty())
 		return;
 
 	size_t hash = filePath.hash();
@@ -73,7 +73,7 @@ void e2d::Player::resume(const String & filePath)
 
 void e2d::Player::stop(const String & filePath)
 {
-	if (filePath.isEmpty())
+	if (filePath.empty())
 		return;
 
 	size_t hash = filePath.hash();
@@ -81,14 +81,14 @@ void e2d::Player::stop(const String & filePath)
 		_musicList[hash]->stop();
 }
 
-bool e2d::Player::isPlaying(const String & filePath)
+bool e2d::Player::playing(const String & filePath)
 {
-	if (filePath.isEmpty())
+	if (filePath.empty())
 		return false;
 
 	size_t hash = filePath.hash();
 	if (_musicList.end() != _musicList.find(hash))
-		return _musicList[hash]->isPlaying();
+		return _musicList[hash]->playing();
 	return false;
 }
 
@@ -101,7 +101,7 @@ bool e2d::Player::preload(const Resource& res)
 
 	if (music && music->open(res))
 	{
-		music->setVolume(_volume);
+		music->volume(_volume);
 		_musicList.insert(std::make_pair(res.resNameId, music));
 		return true;
 	}
@@ -139,24 +139,24 @@ void e2d::Player::stop(const Resource& res)
 		_musicList[res.resNameId]->stop();
 }
 
-bool e2d::Player::isPlaying(const Resource& res)
+bool e2d::Player::playing(const Resource& res) const
 {
 	if (_musicList.end() != _musicList.find(res.resNameId))
-		return _musicList[res.resNameId]->isPlaying();
+		return _musicList.at(res.resNameId)->playing();
 	return false;
 }
 
-float e2d::Player::getVolume()
+float e2d::Player::volume() const
 {
 	return _volume;
 }
 
-void e2d::Player::setVolume(float volume)
+void e2d::Player::volume(float volume)
 {
 	_volume = std::min(std::max(volume, -224.f), 224.f);
 	for (const auto& pair : _musicList)
 	{
-		pair.second->setVolume(_volume);
+		pair.second->volume(_volume);
 	}
 }
 

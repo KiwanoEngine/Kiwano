@@ -59,18 +59,18 @@ STDMETHODIMP_(void) TextRenderer::SetTextStyle(
 	sOutlineColor_ = outlineColor;
 	fOutlineWidth = 2 * outlineWidth;
 
-	auto pRenderer = Game::getInstance()->getRenderer();
+	auto pRenderer = Game::instance()->renderer();
 
 	switch (outlineJoin)
 	{
 	case D2D1_LINE_JOIN_MITER:
-		pCurrStrokeStyle_ = pRenderer->getMiterStrokeStyle();
+		pCurrStrokeStyle_ = pRenderer->miterStrokeStyle();
 		break;
 	case D2D1_LINE_JOIN_BEVEL:
-		pCurrStrokeStyle_ = pRenderer->getBevelStrokeStyle();
+		pCurrStrokeStyle_ = pRenderer->bevelStrokeStyle();
 		break;
 	case D2D1_LINE_JOIN_ROUND:
-		pCurrStrokeStyle_ = pRenderer->getRoundStrokeStyle();
+		pCurrStrokeStyle_ = pRenderer->roundStrokeStyle();
 		break;
 	default:
 		pCurrStrokeStyle_ = nullptr;

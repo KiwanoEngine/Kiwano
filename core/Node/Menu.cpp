@@ -14,17 +14,17 @@ e2d::Menu::Menu(const std::vector<Button*>& buttons)
 	}
 }
 
-bool e2d::Menu::isEnable() const
+bool e2d::Menu::enabled() const
 {
 	return _enabled;
 }
 
-size_t e2d::Menu::getButtonCount() const
+int e2d::Menu::buttonCount() const
 {
-	return _buttons.size();
+	return static_cast<int>(_buttons.size());
 }
 
-void e2d::Menu::setEnabled(bool enabled)
+e2d::Menu& e2d::Menu::enabled(bool enabled)
 {
 	if (_enabled != enabled)
 	{
@@ -32,19 +32,21 @@ void e2d::Menu::setEnabled(bool enabled)
 
 		for (const auto& button : _buttons)
 		{
-			button->setEnabled(enabled);
+			button->enabled(enabled);
 		}
 	}
+	return *this;
 }
 
-void e2d::Menu::addButton(Button * button)
+e2d::Menu& e2d::Menu::addButton(Button * button)
 {
 	if (button)
 	{
 		this->addChild(button);
 		_buttons.push_back(button);
-		button->setEnabled(_enabled);
+		button->enabled(_enabled);
 	}
+	return *this;
 }
 
 bool e2d::Menu::removeButton(Button * button)
@@ -62,7 +64,7 @@ bool e2d::Menu::removeButton(Button * button)
 		if (iter != _buttons.end())
 		{
 			// 移除按钮前，将它启用
-			button->setEnabled(true);
+			button->enabled(true);
 			_buttons.erase(iter);
 			return true;
 		}
@@ -70,7 +72,7 @@ bool e2d::Menu::removeButton(Button * button)
 	return false;
 }
 
-const std::vector<e2d::Button*>& e2d::Menu::getAllButtons() const
+const std::vector<e2d::Button*>& e2d::Menu::buttons() const
 {
 	return _buttons;
 }

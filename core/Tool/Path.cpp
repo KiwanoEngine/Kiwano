@@ -5,17 +5,17 @@ extern "C" const GUID DECLSPEC_SELECTANY FOLDERID_LocalAppData = {
 };
 
 
-e2d::String e2d::Path::getDataPath()
+const e2d::String& e2d::Path::dataPath()
 {
 	static String dataPath;
-	if (dataPath.isEmpty())
+	if (dataPath.empty())
 	{
 		// 设置数据的保存路径
-		String localAppDataPath = Path::getLocalAppDataPath();
-		String title = Game::getInstance()->getWindow()->getTitle();
+		String localAppDataPath = Path::localAppDataPath();
+		String title = Game::instance()->window()->title();
 		String folderName = String::parse(title.hash());
 
-		if (!localAppDataPath.isEmpty())
+		if (!localAppDataPath.empty())
 		{
 			dataPath = localAppDataPath + L"\\Easy2DGameData\\" << folderName << L"\\";
 
@@ -30,14 +30,14 @@ e2d::String e2d::Path::getDataPath()
 	return dataPath;
 }
 
-e2d::String e2d::Path::getTempPath()
+const e2d::String& e2d::Path::tempPath()
 {
 	static String tempPath;
-	if (tempPath.isEmpty())
+	if (tempPath.empty())
 	{
 		// 设置临时文件保存路径
 		wchar_t path[_MAX_PATH];
-		String title = Game::getInstance()->getWindow()->getTitle();
+		String title = Game::instance()->window()->title();
 		String folderName = String::parse(title.hash());
 
 		if (0 != ::GetTempPath(_MAX_PATH, path))
@@ -54,10 +54,10 @@ e2d::String e2d::Path::getTempPath()
 	return tempPath;
 }
 
-e2d::String e2d::Path::getLocalAppDataPath()
+const e2d::String& e2d::Path::localAppDataPath()
 {
 	static String localAppDataPath;
-	if (localAppDataPath.isEmpty())
+	if (localAppDataPath.empty())
 	{
 		// 获取 AppData/Local 文件夹的路径
 		typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
@@ -77,10 +77,10 @@ e2d::String e2d::Path::getLocalAppDataPath()
 	return localAppDataPath;
 }
 
-e2d::String e2d::Path::getCurrentFilePath()
+const e2d::String& e2d::Path::currentFilePath()
 {
 	static String currFilePath;
-	if (currFilePath.isEmpty())
+	if (currFilePath.empty())
 	{
 		TCHAR szPath[_MAX_PATH] = { 0 };
 		if (::GetModuleFileName(nullptr, szPath, _MAX_PATH) != 0)

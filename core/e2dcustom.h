@@ -44,11 +44,11 @@ public:
 		HRESULT Error
 	);
 
-	void SetFuncOnStreamEnd(
+	void SetCallbackOnStreamEnd(
 		const Function& func
 	);
 
-	void SetFuncOnLoopEnd(
+	void SetCallbackOnLoopEnd(
 		const Function& func
 	);
 

@@ -11,22 +11,22 @@ e2d::Animate::Animate(Animation * animation)
 	: _frameIndex(0)
 	, _animation(nullptr)
 {
-	this->setAnimation(animation);
+	this->animation(animation);
 }
 
 e2d::Animate::~Animate()
 {
-	GC::getInstance()->safeRelease(_animation);
+	GC::instance()->safeRelease(_animation);
 }
 
-e2d::Animation * e2d::Animate::getAnimation() const
+e2d::Animation * e2d::Animate::animation() const
 {
 	return _animation;
 }
 
-void e2d::Animate::setAnimation(Animation * animation)
+void e2d::Animate::animation(Animation * animation)
 {
-	if (animation && animation != _animation && !animation->getFrames().empty())
+	if (animation && animation != _animation && !animation->frames().empty())
 	{
 		if (_animation) _animation->release();
 		_animation = animation;
@@ -41,7 +41,7 @@ void e2d::Animate::_init()
 	auto target = dynamic_cast<Sprite*>(_target);
 	if (target && _animation)
 	{
-		target->open(_animation->getFrames()[_frameIndex]);
+		target->open(_animation->frames()[_frameIndex]);
 		++_frameIndex;
 	}
 }
@@ -56,9 +56,9 @@ void e2d::Animate::_update()
 		return;
 	}
 
-	while ((Time::now() - _started).seconds() >= _animation->getInterval())
+	while ((Time::now() - _started).seconds() >= _animation->interval())
 	{
-		auto& frames = _animation->getFrames();
+		auto& frames = _animation->frames();
 		auto target = dynamic_cast<Sprite*>(_target);
 
 		if (target)
@@ -66,7 +66,7 @@ void e2d::Animate::_update()
 			target->open(frames[_frameIndex]);
 		}
 
-		_started += Duration(_animation->getInterval());
+		_started += Duration(_animation->interval());
 		++_frameIndex;
 
 		if (_frameIndex == frames.size())

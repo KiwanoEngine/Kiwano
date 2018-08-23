@@ -15,7 +15,7 @@ e2d::Sequence::~Sequence()
 {
 	for (const auto& action : _actions)
 	{
-		GC::getInstance()->safeRelease(action);
+		GC::instance()->safeRelease(action);
 	}
 }
 

@@ -8,17 +8,17 @@ e2d::KeyEvent::KeyEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 }
 
-e2d::KeyCode e2d::KeyEvent::getCode() const
+e2d::KeyCode e2d::KeyEvent::code() const
 {
 	return _code;
 }
 
-int e2d::KeyEvent::getCount() const
+int e2d::KeyEvent::count() const
 {
 	return _count;
 }
 
-e2d::KeyEvent::Type e2d::KeyEvent::getType() const
+e2d::KeyEvent::Type e2d::KeyEvent::type() const
 {
 	return _type;
 }

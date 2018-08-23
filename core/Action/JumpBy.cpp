@@ -25,7 +25,7 @@ void e2d::JumpBy::_init()
 
 	if (_target)
 	{
-		_prevPos = _startPos = _target->getPos();
+		_prevPos = _startPos = _target->position();
 	}
 }
 
@@ -40,13 +40,13 @@ void e2d::JumpBy::_update()
 		float y = _height * 4 * frac * (1 - frac);
 		y += _deltaPos.y * _delta;
 
-		Point currentPos = _target->getPos();
+		Point currentPos = _target->position();
 
 		Vector2 diff = currentPos - _prevPos;
 		_startPos = diff + _startPos;
 
 		Point newPos = _startPos + Vector2(x, y);
-		_target->setPos(newPos);
+		_target->position(newPos);
 
 		_prevPos = newPos;
 	}

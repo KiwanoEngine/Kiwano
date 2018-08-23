@@ -58,9 +58,9 @@ bool e2d::Image::open(const Resource& res)
 
 bool e2d::Image::open(const String & fileName)
 {
-	WARN_IF(fileName.isEmpty(), "Image open failed! Invalid file name.");
+	WARN_IF(fileName.empty(), "Image open failed! Invalid file name.");
 
-	if (fileName.isEmpty())
+	if (fileName.empty())
 		return false;
 
 	if (!Image::preload(fileName))
@@ -77,29 +77,29 @@ void e2d::Image::crop(const Rect& cropRect)
 {
 	if (_bitmap)
 	{
-		_cropRect.origin.x = std::min(std::max(cropRect.origin.x, 0.f), this->getSourceWidth());
-		_cropRect.origin.y = std::min(std::max(cropRect.origin.y, 0.f), this->getSourceHeight());
-		_cropRect.size.width = std::min(std::max(cropRect.size.width, 0.f), this->getSourceWidth() - cropRect.origin.x);
-		_cropRect.size.height = std::min(std::max(cropRect.size.height, 0.f), this->getSourceHeight() - cropRect.origin.y);
+		_cropRect.origin.x = std::min(std::max(cropRect.origin.x, 0.f), this->realWidth());
+		_cropRect.origin.y = std::min(std::max(cropRect.origin.y, 0.f), this->realHeight());
+		_cropRect.size.width = std::min(std::max(cropRect.size.width, 0.f), this->realWidth() - cropRect.origin.x);
+		_cropRect.size.height = std::min(std::max(cropRect.size.height, 0.f), this->realHeight() - cropRect.origin.y);
 	}
 }
 
-float e2d::Image::getWidth() const
+float e2d::Image::width() const
 {
 	return _cropRect.size.width;
 }
 
-float e2d::Image::getHeight() const
+float e2d::Image::height() const
 {
 	return _cropRect.size.height;
 }
 
-e2d::Size e2d::Image::getSize() const
+const e2d::Size& e2d::Image::size() const
 {
 	return _cropRect.size;
 }
 
-float e2d::Image::getSourceWidth() const
+float e2d::Image::realWidth() const
 {
 	if (_bitmap)
 	{
@@ -111,7 +111,7 @@ float e2d::Image::getSourceWidth() const
 	}
 }
 
-float e2d::Image::getSourceHeight() const
+float e2d::Image::realHeight() const
 {
 	if (_bitmap)
 	{
@@ -123,11 +123,11 @@ float e2d::Image::getSourceHeight() const
 	}
 }
 
-e2d::Size e2d::Image::getSourceSize() const
+e2d::Size e2d::Image::realSize() const
 {
 	if (_bitmap)
 	{
-		return Size(getSourceWidth(), getSourceHeight());
+		return Size(realWidth(), realHeight());
 	}
 	else
 	{
@@ -135,17 +135,17 @@ e2d::Size e2d::Image::getSourceSize() const
 	}
 }
 
-float e2d::Image::getCropX() const
+float e2d::Image::cropX() const
 {
 	return _cropRect.origin.x;
 }
 
-float e2d::Image::getCropY() const
+float e2d::Image::cropY() const
 {
 	return _cropRect.origin.y;
 }
 
-e2d::Point e2d::Image::getCropPos() const
+const e2d::Point& e2d::Image::cropPosition() const
 {
 	return _cropRect.origin;
 }
@@ -157,9 +157,9 @@ bool e2d::Image::preload(const Resource& res)
 		return true;
 	}
 
-	Renderer* renderer = Game::getInstance()->getRenderer();
-	ID2D1HwndRenderTarget* pRenderTarget = renderer->getRenderTarget();
-	IWICImagingFactory *pImagingFactory = renderer->getImagingFactory();
+	Renderer* renderer = Game::instance()->renderer();
+	ID2D1HwndRenderTarget* pRenderTarget = renderer->renderTarget();
+	IWICImagingFactory *pImagingFactory = renderer->imagingFactory();
 	IWICBitmapDecoder *pDecoder = nullptr;
 	IWICBitmapFrameDecode *pSource = nullptr;
 	IWICStream *pStream = nullptr;
@@ -279,17 +279,17 @@ bool e2d::Image::preload(const Resource& res)
 
 bool e2d::Image::preload(const String & fileName)
 {
-	String actualFilePath = File(fileName).getFilePath();
-	if (actualFilePath.isEmpty())
+	String actualFilePath = File(fileName).path();
+	if (actualFilePath.empty())
 		return false;
 
 	size_t hash = actualFilePath.hash();
 	if (_bitmapCache.find(hash) != _bitmapCache.end())
 		return true;
 
-	Renderer* renderer = Game::getInstance()->getRenderer();
-	ID2D1HwndRenderTarget* pRenderTarget = renderer->getRenderTarget();
-	IWICImagingFactory *pImagingFactory = renderer->getImagingFactory();
+	Renderer* renderer = Game::instance()->renderer();
+	ID2D1HwndRenderTarget* pRenderTarget = renderer->renderTarget();
+	IWICImagingFactory *pImagingFactory = renderer->imagingFactory();
 	IWICBitmapDecoder *pDecoder = nullptr;
 	IWICBitmapFrameDecode *pSource = nullptr;
 	IWICStream *pStream = nullptr;
@@ -377,7 +377,7 @@ void e2d::Image::_setBitmap(ID2D1Bitmap * bitmap)
 	}
 }
 
-ID2D1Bitmap * e2d::Image::getBitmap()
+ID2D1Bitmap * e2d::Image::bitmap()
 {
 	return _bitmap;
 }
