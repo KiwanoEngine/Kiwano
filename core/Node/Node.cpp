@@ -12,8 +12,8 @@ e2d::Node::Property e2d::Node::Property::operator+(Property const & prop) const
 	result.posY = this->posY + prop.posY;
 	result.width = this->width + prop.width;
 	result.height = this->height + prop.height;
-	result.pivotX = this->pivotX + prop.pivotX;
-	result.pivotY = this->pivotY + prop.pivotY;
+	result.anchorX = this->anchorX + prop.anchorX;
+	result.anchorY = this->anchorY + prop.anchorY;
 	result.scaleX = this->scaleX + prop.scaleX;
 	result.scaleY = this->scaleY + prop.scaleY;
 	result.rotation = this->rotation + prop.rotation;
@@ -29,8 +29,8 @@ e2d::Node::Property e2d::Node::Property::operator-(Property const & prop) const
 	result.posY = this->posY - prop.posY;
 	result.width = this->width - prop.width;
 	result.height = this->height - prop.height;
-	result.pivotX = this->pivotX - prop.pivotX;
-	result.pivotY = this->pivotY - prop.pivotY;
+	result.anchorX = this->anchorX - prop.anchorX;
+	result.anchorY = this->anchorY - prop.anchorY;
 	result.scaleX = this->scaleX - prop.scaleX;
 	result.scaleY = this->scaleY - prop.scaleY;
 	result.rotation = this->rotation - prop.rotation;
@@ -53,8 +53,8 @@ e2d::Node::Node()
 	, _skewAngleY(0)
 	, _displayOpacity(1.f)
 	, _realOpacity(1.f)
-	, _pivotX(0.f)
-	, _pivotY(0.f)
+	, _anchorX(0.f)
+	, _anchorY(0.f)
 	, _initialMatri(D2D1::Matrix3x2F::Identity())
 	, _finalMatri(D2D1::Matrix3x2F::Identity())
 	, _visible(true)
@@ -197,26 +197,26 @@ void e2d::Node::_updateTransform()
 
 	_needTransform = false;
 
-	// 计算中心点坐标
-	D2D1_POINT_2F pivot = { _width * _pivotX, _height * _pivotY };
+	// 计算锚点坐标
+	D2D1_POINT_2F anchor = { _width * _anchorX, _height * _anchorY };
 	// 变换 Initial 矩阵，子节点将根据这个矩阵进行变换
 	_initialMatri = D2D1::Matrix3x2F::Scale(
 		_scaleX,
 		_scaleY,
-		pivot
+		anchor
 	) * D2D1::Matrix3x2F::Skew(
 		_skewAngleX,
 		_skewAngleY,
-		pivot
+		anchor
 	) * D2D1::Matrix3x2F::Rotation(
 		_rotation,
-		pivot
+		anchor
 	) * D2D1::Matrix3x2F::Translation(
 		_posX,
 		_posY
 	);
-	// 根据自身中心点变换 Final 矩阵
-	_finalMatri = _initialMatri * D2D1::Matrix3x2F::Translation(-pivot.x, -pivot.y);
+	// 根据自身锚点变换 Final 矩阵
+	_finalMatri = _initialMatri * D2D1::Matrix3x2F::Translation(-anchor.x, -anchor.y);
 	// 和父节点矩阵相乘
 	if (!_positionFixed && _parent)
 	{
@@ -302,7 +302,7 @@ bool e2d::Node::isVisible() const
 	return _visible;
 }
 
-e2d::String e2d::Node::getName() const
+const e2d::String& e2d::Node::getName() const
 {
 	return _name;
 }
@@ -352,14 +352,14 @@ e2d::Size e2d::Node::getRealSize() const
 	return Size(_width, _height);
 }
 
-float e2d::Node::getPivotX() const
+float e2d::Node::getAnchorX() const
 {
-	return _pivotX;
+	return _anchorX;
 }
 
-float e2d::Node::getPivotY() const
+float e2d::Node::getAnchorY() const
 {
-	return _pivotY;
+	return _anchorY;
 }
 
 e2d::Size e2d::Node::getSize() const
@@ -404,8 +404,8 @@ e2d::Node::Property e2d::Node::getProperty() const
 	prop.posY = _posY;
 	prop.width = _width;
 	prop.height = _height;
-	prop.pivotX = _pivotX;
-	prop.pivotY = _pivotY;
+	prop.anchorX = _anchorX;
+	prop.anchorY = _anchorY;
 	prop.scaleX = _scaleX;
 	prop.scaleY = _scaleY;
 	prop.rotation = _rotation;
@@ -559,23 +559,23 @@ void e2d::Node::setOpacity(float opacity)
 	_updateOpacity();
 }
 
-void e2d::Node::setPivotX(float pivotX)
+void e2d::Node::setAnchorX(float anchorX)
 {
-	this->setPivot(pivotX, _pivotY);
+	this->setAnchor(anchorX, _anchorY);
 }
 
-void e2d::Node::setPivotY(float pivotY)
+void e2d::Node::setAnchorY(float anchorY)
 {
-	this->setPivot(_pivotX, pivotY);
+	this->setAnchor(_anchorX, anchorY);
 }
 
-void e2d::Node::setPivot(float pivotX, float pivotY)
+void e2d::Node::setAnchor(float anchorX, float anchorY)
 {
-	if (_pivotX == pivotX && _pivotY == pivotY)
+	if (_anchorX == anchorX && _anchorY == anchorY)
 		return;
 
-	_pivotX = std::min(std::max(pivotX, 0.f), 1.f);
-	_pivotY = std::min(std::max(pivotY, 0.f), 1.f);
+	_anchorX = std::min(std::max(anchorX, 0.f), 1.f);
+	_anchorY = std::min(std::max(anchorY, 0.f), 1.f);
 	_needTransform = true;
 }
 
@@ -608,7 +608,7 @@ void e2d::Node::setProperty(Property prop)
 {
 	this->setPos(prop.posX, prop.posY);
 	this->setSize(prop.width, prop.height);
-	this->setPivot(prop.pivotX, prop.pivotY);
+	this->setAnchor(prop.anchorX, prop.anchorY);
 	this->setScale(prop.scaleX, prop.scaleY);
 	this->setRotation(prop.rotation);
 	this->setSkew(prop.skewAngleX, prop.skewAngleY);

@@ -74,22 +74,22 @@ e2d::Text::~Text()
 	SafeRelease(_textLayout);
 }
 
-e2d::String e2d::Text::getText() const
+const e2d::String& e2d::Text::getText() const
 {
 	return _text;
 }
 
-e2d::Font e2d::Text::getFont() const
+const e2d::Font& e2d::Text::getFont() const
 {
 	return _font;
 }
 
-e2d::Text::Style e2d::Text::getStyle() const
+const e2d::Text::Style& e2d::Text::getStyle() const
 {
 	return _style;
 }
 
-e2d::String e2d::Text::getFontFamily() const
+const e2d::String& e2d::Text::getFontFamily() const
 {
 	return _font.family;
 }
@@ -104,12 +104,12 @@ UINT e2d::Text::getFontWeight() const
 	return _font.weight;
 }
 
-e2d::Color e2d::Text::getColor() const
+const e2d::Color& e2d::Text::getColor() const
 {
 	return _style.color;
 }
 
-e2d::Color e2d::Text::getOutlineColor() const
+const e2d::Color& e2d::Text::getOutlineColor() const
 {
 	return _style.outlineColor;
 }

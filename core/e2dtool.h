@@ -458,10 +458,10 @@ public:
 	bool isFolder() const;
 
 	// 删除文件
-	bool deleteFile();
+	bool del();
 
 	// 获取文件路径
-	String getFilePath() const;
+	const String& getPath() const;
 
 	// 获取文件扩展名
 	String getExtension() const;

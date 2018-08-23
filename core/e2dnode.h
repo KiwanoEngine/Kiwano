@@ -68,8 +68,8 @@ public:
 		float posY;			// Y 坐标
 		float width;		// 宽度
 		float height;		// 高度
-		float pivotX;		// 中心点 X 坐标
-		float pivotY;		// 中心点 Y 坐标
+		float anchorX;		// 锚点 X 坐标
+		float anchorY;		// 锚点 Y 坐标
 		float scaleX;		// 横向缩放
 		float scaleY;		// 纵向缩放
 		float rotation;		// 旋转角度
@@ -88,20 +88,10 @@ public:
 	virtual ~Node();
 
 	// 获取节点显示状态
-	virtual bool isVisible() const;
-
-	// 判断点是否在节点内
-	bool containsPoint(
-		const Point& point
-	);
-
-	// 判断两物体是否相交
-	bool intersects(
-		Node * node
-	);
+	bool isVisible() const;
 
 	// 获取节点名称
-	String getName() const;
+	const String& getName() const;
 
 	// 获取节点名称的 Hash 值
 	size_t getHashName() const;
@@ -133,11 +123,11 @@ public:
 	// 获取节点大小（不考虑缩放）
 	Size getRealSize() const;
 
-	// 获取节点的中心点
-	float getPivotX() const;
+	// 获取节点的锚点
+	float getAnchorX() const;
 
-	// 获取节点的中心点
-	float getPivotY() const;
+	// 获取节点的锚点
+	float getAnchorY() const;
 
 	// 获取节点大小
 	Size getSize() const;
@@ -174,38 +164,6 @@ public:
 
 	// 获取节点所在场景
 	Scene * getParentScene() const;
-
-	// 获取所有名称相同的子节点
-	std::vector<Node*> getChildren(
-		const String& name
-	) const;
-
-	// 获取名称相同的子节点
-	Node* getChild(
-		const String& name
-	) const;
-
-	// 获取所有子节点
-	const std::vector<Node*>& getAllChildren() const;
-
-	// 获取子节点数量
-	int getChildrenCount() const;
-
-	// 移除子节点
-	bool removeChild(
-		Node * child
-	);
-
-	// 移除所有名称相同的子节点
-	void removeChildren(
-		const String& childName
-	);
-
-	// 移除所有节点
-	void removeAllChildren();
-
-	// 从父节点移除
-	void removeFromParent();
 
 	// 设置节点是否显示
 	void setVisible(
@@ -326,23 +284,23 @@ public:
 		float opacity
 	);
 
-	// 设置中心点的横向位置
+	// 设置锚点的横向位置
 	// 默认为 0, 范围 [0, 1]
-	virtual void setPivotX(
-		float pivotX
+	virtual void setAnchorX(
+		float anchorX
 	);
 
-	// 设置中心点的纵向位置
+	// 设置锚点的纵向位置
 	// 默认为 0, 范围 [0, 1]
-	virtual void setPivotY(
-		float pivotY
+	virtual void setAnchorY(
+		float anchorY
 	);
 
-	// 设置中心点位置
+	// 设置锚点位置
 	// 默认为 (0, 0), 范围 [0, 1]
-	virtual void setPivot(
-		float pivotX,
-		float pivotY
+	virtual void setAnchor(
+		float anchorX,
+		float anchorY
 	);
 
 	// 修改节点宽度
@@ -376,6 +334,16 @@ public:
 		bool enabled
 	);
 
+	// 判断点是否在节点内
+	bool containsPoint(
+		const Point& point
+	);
+
+	// 判断两物体是否相交
+	bool intersects(
+		Node * node
+	);
+
 	// 添加子节点
 	void addChild(
 		Node * child,
@@ -387,6 +355,38 @@ public:
 		const std::vector<Node*>& nodes,	/* 节点数组 */
 		int order = 0						/* 渲染顺序 */
 	);
+
+	// 获取所有名称相同的子节点
+	std::vector<Node*> getChildren(
+		const String& name
+	) const;
+
+	// 获取名称相同的子节点
+	Node* getChild(
+		const String& name
+	) const;
+
+	// 获取所有子节点
+	const std::vector<Node*>& getAllChildren() const;
+
+	// 获取子节点数量
+	int getChildrenCount() const;
+
+	// 移除子节点
+	bool removeChild(
+		Node * child
+	);
+
+	// 移除所有名称相同的子节点
+	void removeChildren(
+		const String& childName
+	);
+
+	// 移除所有节点
+	void removeAllChildren();
+
+	// 从父节点移除
+	void removeFromParent();
 
 	// 执行动作
 	void runAction(
@@ -473,8 +473,8 @@ protected:
 	float		_skewAngleY;
 	float		_displayOpacity;
 	float		_realOpacity;
-	float		_pivotX;
-	float		_pivotY;
+	float		_anchorX;
+	float		_anchorY;
 	int			_order;
 	bool		_visible;
 	bool		_clipEnabled;
@@ -589,7 +589,7 @@ public:
 	);
 
 	// 获取 Image 对象
-	virtual Image * getImage() const;
+	Image * getImage() const;
 
 	// 渲染精灵
 	virtual void draw(
@@ -664,16 +664,16 @@ public:
 	virtual ~Text();
 
 	// 获取文本
-	String getText() const;
+	const String& getText() const;
 
 	// 获取字体
-	Font getFont() const;
+	const Font& getFont() const;
 
 	// 获取文本样式
-	Style getStyle() const;
+	const Style& getStyle() const;
 
 	// 获取字体族
-	String getFontFamily() const;
+	const String& getFontFamily() const;
 
 	// 获取当前字号
 	float getFontSize() const;
@@ -682,10 +682,10 @@ public:
 	UINT getFontWeight() const;
 
 	// 获取文字颜色
-	Color getColor() const;
+	const Color& getColor() const;
 
 	// 获取描边颜色
-	Color getOutlineColor() const;
+	const Color& getOutlineColor() const;
 
 	// 获取描边线宽
 	float getOutlineWidth() const;
@@ -889,11 +889,11 @@ public:
 		const Function& func
 	);
 
-	// 设置中心点位置
+	// 设置锚点位置
 	// 默认为 (0, 0), 范围 [0, 1]
-	virtual void setPivot(
-		float pivotX,
-		float pivotY
+	virtual void setAnchor(
+		float anchorX,
+		float anchorY
 	) override;
 
 	// 分发鼠标消息
@@ -1024,11 +1024,11 @@ public:
 		Node * disabled
 	);
 
-	// 设置中心点位置
+	// 设置锚点位置
 	// 默认为 (0, 0), 范围 [0, 1]
-	virtual void setPivot(
-		float pivotX,
-		float pivotY
+	virtual void setAnchor(
+		float anchorX,
+		float anchorY
 	) override;
 
 protected:
@@ -1130,10 +1130,10 @@ public:
 	);
 
 	// 获取线条颜色
-	const Color& getLineColor() const;
+	Color getLineColor() const;
 
 	// 获取填充颜色
-	const Color& getFillColor() const;
+	Color getFillColor() const;
 
 	// 获取线条宽度
 	float getStrokeWidth() const;

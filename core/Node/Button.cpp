@@ -9,7 +9,7 @@
 		if (Old) this->removeChild(Old);						\
 		if (New)												\
 		{														\
-			New->setPivot(_pivotX, _pivotY);					\
+			New->setAnchor(_anchorX, _anchorY);					\
 			this->addChild(New);								\
 		}														\
 		Old = New;												\
@@ -134,13 +134,13 @@ void e2d::Button::setClickFunc(const Function& func)
 	_func = func;
 }
 
-void e2d::Button::setPivot(float pivotX, float pivotY)
+void e2d::Button::setAnchor(float anchorX, float anchorY)
 {
-	Node::setPivot(pivotX, pivotY);
-	SAFE_SET(_normal, setPivot, pivotX, pivotY);
-	SAFE_SET(_mouseover, setPivot, pivotX, pivotY);
-	SAFE_SET(_selected, setPivot, pivotX, pivotY);
-	SAFE_SET(_disabled, setPivot, pivotX, pivotY);
+	Node::setAnchor(anchorX, anchorY);
+	SAFE_SET(_normal, setAnchor, anchorX, anchorY);
+	SAFE_SET(_mouseover, setAnchor, anchorX, anchorY);
+	SAFE_SET(_selected, setAnchor, anchorX, anchorY);
+	SAFE_SET(_disabled, setAnchor, anchorX, anchorY);
 }
 
 bool e2d::Button::dispatch(const MouseEvent & e, bool handled)

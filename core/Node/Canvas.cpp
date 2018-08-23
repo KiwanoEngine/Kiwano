@@ -71,14 +71,14 @@ void e2d::Canvas::setStrokeStyle(Stroke strokeStyle)
 	}
 }
 
-const e2d::Color & e2d::Canvas::getLineColor() const
+e2d::Color e2d::Canvas::getLineColor() const
 {
-	return Color(_lineBrush->GetColor());
+	return _lineBrush->GetColor();
 }
 
-const e2d::Color & e2d::Canvas::getFillColor() const
+e2d::Color e2d::Canvas::getFillColor() const
 {
-	return Color(_fillBrush->GetColor());
+	return _fillBrush->GetColor();
 }
 
 float e2d::Canvas::getStrokeWidth() const

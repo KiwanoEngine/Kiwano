@@ -279,7 +279,7 @@ bool e2d::Image::preload(const Resource& res)
 
 bool e2d::Image::preload(const String & fileName)
 {
-	String actualFilePath = File(fileName).getFilePath();
+	String actualFilePath = File(fileName).getPath();
 	if (actualFilePath.isEmpty())
 		return false;
 

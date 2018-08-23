@@ -207,7 +207,7 @@ void e2d::Renderer::endDraw()
 
 e2d::Color e2d::Renderer::getBackgroundColor()
 {
-	return Color(_clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a);
+	return _clearColor;
 }
 
 void e2d::Renderer::setBackgroundColor(Color color)

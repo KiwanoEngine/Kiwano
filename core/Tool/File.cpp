@@ -61,7 +61,7 @@ bool e2d::File::isFolder() const
 	return (_attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-e2d::String e2d::File::getFilePath() const
+const e2d::String& e2d::File::getPath() const
 {
 	return _fileName;
 }
@@ -82,7 +82,7 @@ e2d::String e2d::File::getExtension() const
 	return fileExtension;
 }
 
-bool e2d::File::deleteFile()
+bool e2d::File::del()
 {
 	if (::DeleteFile((LPCWSTR)_fileName))
 		return true;

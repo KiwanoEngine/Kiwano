@@ -8,7 +8,7 @@
 		if (Old) this->removeChild(Old);						\
 		if (New)												\
 		{														\
-			New->setPivot(_pivotX, _pivotY);					\
+			New->setAnchor(_anchorX, _anchorY);					\
 			this->addChild(New);								\
 		}														\
 		Old = New;												\
@@ -166,17 +166,17 @@ void e2d::ToggleButton::setDisabledOff(Node * disabled)
 	SET_BUTTON_NODE(_disabledOff, disabled);
 }
 
-void e2d::ToggleButton::setPivot(float pivotX, float pivotY)
+void e2d::ToggleButton::setAnchor(float anchorX, float anchorY)
 {
-	Node::setPivot(pivotX, pivotY);
-	SAFE_SET(_normalOn, setPivot, pivotX, pivotY);
-	SAFE_SET(_mouseoverOn, setPivot, pivotX, pivotY);
-	SAFE_SET(_selectedOn, setPivot, pivotX, pivotY);
-	SAFE_SET(_disabledOn, setPivot, pivotX, pivotY);
-	SAFE_SET(_normalOff, setPivot, pivotX, pivotY);
-	SAFE_SET(_mouseoverOff, setPivot, pivotX, pivotY);
-	SAFE_SET(_selectedOff, setPivot, pivotX, pivotY);
-	SAFE_SET(_disabledOff, setPivot, pivotX, pivotY);
+	Node::setAnchor(anchorX, anchorY);
+	SAFE_SET(_normalOn, setAnchor, anchorX, anchorY);
+	SAFE_SET(_mouseoverOn, setAnchor, anchorX, anchorY);
+	SAFE_SET(_selectedOn, setAnchor, anchorX, anchorY);
+	SAFE_SET(_disabledOn, setAnchor, anchorX, anchorY);
+	SAFE_SET(_normalOff, setAnchor, anchorX, anchorY);
+	SAFE_SET(_mouseoverOff, setAnchor, anchorX, anchorY);
+	SAFE_SET(_selectedOff, setAnchor, anchorX, anchorY);
+	SAFE_SET(_disabledOff, setAnchor, anchorX, anchorY);
 }
 
 void e2d::ToggleButton::_updateStatus()
