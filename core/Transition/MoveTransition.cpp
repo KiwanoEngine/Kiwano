@@ -34,8 +34,8 @@ bool e2d::MoveTransition::_init(Game * game, Scene * prev)
 			_startPos = Point(-width, 0);
 		}
 
-		if (_outScene) _outScene->position(0, 0);
-		_inScene->position(_startPos);
+		if (_outScene) _outScene->setPos(0, 0);
+		_inScene->setPos(_startPos);
 		return true;
 	}
 	return false;
@@ -47,11 +47,11 @@ void e2d::MoveTransition::_update()
 
 	if (_outScene)
 	{
-		_outScene->position(_posDelta * _delta);
+		_outScene->setPos(_posDelta * _delta);
 	}
 	if (_inScene)
 	{
-		_inScene->position(_startPos + _posDelta * _delta);
+		_inScene->setPos(_startPos + _posDelta * _delta);
 	}
 
 	if (_delta >= 1)
@@ -62,6 +62,6 @@ void e2d::MoveTransition::_update()
 
 void e2d::MoveTransition::_reset()
 {
-	if (_outScene) _outScene->position(0, 0);
-	_inScene->position(0, 0);
+	if (_outScene) _outScene->setPos(0, 0);
+	_inScene->setPos(0, 0);
 }

@@ -4,7 +4,7 @@
 e2d::Data::Data(const String & key, const String & field)
 	: _key(key)
 	, _field(field)
-	, _dataPath(Path::dataPath())
+	, _dataPath(Path::getDataPath())
 {
 }
 
@@ -48,7 +48,7 @@ void e2d::Data::saveString(const String& value)
 	);
 }
 
-int e2d::Data::toInt(int defaultValue)
+int e2d::Data::getInt(int defaultValue)
 {
 	return ::GetPrivateProfileInt(
 		(LPCWSTR)_field,
@@ -58,14 +58,14 @@ int e2d::Data::toInt(int defaultValue)
 	);
 }
 
-float e2d::Data::toDouble(float defaultValue)
+float e2d::Data::getDouble(float defaultValue)
 {
 	wchar_t temp[32] = { 0 };
 	::GetPrivateProfileString((LPCWSTR)_field, (LPCWSTR)_key, (LPCWSTR)String::parse(defaultValue), temp, 31, (LPCWSTR)_dataPath);
 	return std::stof(temp);
 }
 
-bool e2d::Data::toBool(bool defaultValue)
+bool e2d::Data::getBool(bool defaultValue)
 {
 	int nValue = ::GetPrivateProfileInt(
 		(LPCWSTR)_field,
@@ -75,7 +75,7 @@ bool e2d::Data::toBool(bool defaultValue)
 	return nValue != 0;
 }
 
-e2d::String e2d::Data::toString(const String& defaultValue)
+e2d::String e2d::Data::getString(const String& defaultValue)
 {
 	wchar_t temp[256] = { 0 };
 	::GetPrivateProfileString(

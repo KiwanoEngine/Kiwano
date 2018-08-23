@@ -71,7 +71,7 @@ e2d::Window::Window(const String & title, int width, int height, int iconID)
 	if (_hWnd)
 	{
 		// 禁用输入法
-		typewritingEnabled(false);
+		setTypewritingEnabled(false);
 		// 禁用控制台关闭按钮
 		HWND consoleHWnd = ::GetConsoleWindow();
 		if (consoleHWnd)
@@ -102,7 +102,7 @@ e2d::Window::~Window()
 
 bool e2d::Window::createMutex(const String & mutex)
 {
-	if (mutex.empty())
+	if (mutex.isEmpty())
 		return false;
 
 	HANDLE hMutex = ::CreateMutex(nullptr, TRUE, LPCWSTR(L"Easy2DApp-" + mutex));
@@ -117,7 +117,7 @@ bool e2d::Window::createMutex(const String & mutex)
 		// 关闭进程互斥体
 		::CloseHandle(hMutex);
 		// 打开游戏窗口
-		if (!this->_title.empty())
+		if (!this->_title.isEmpty())
 		{
 			// 获取窗口句柄
 			HWND hProgramWnd = ::FindWindow(REGISTER_CLASS, (LPCTSTR)_title);
@@ -167,40 +167,40 @@ void e2d::Window::poll()
 	}
 }
 
-int e2d::Window::width() const
+int e2d::Window::getWidth() const
 {
 	return _width;
 }
 
-int e2d::Window::height() const
+int e2d::Window::getHeight() const
 {
 	return _height;
 }
 
-e2d::Size e2d::Window::size() const
+e2d::Size e2d::Window::getSize() const
 {
 	return Size(float(_width), float(_height));
 }
 
-float e2d::Window::dpi() const
+float e2d::Window::getDpi() const
 {
 	return _dpi;
 }
 
-const e2d::String& e2d::Window::title() const
+e2d::String e2d::Window::getTitle() const
 {
 	return _title;
 }
 
-HWND e2d::Window::hWnd() const
+HWND e2d::Window::getHWnd() const
 {
 	return _hWnd;
 }
 
-e2d::Window& e2d::Window::size(int width, int height)
+void e2d::Window::setSize(int width, int height)
 {
 	if (_width == width && _height == height)
-		return *this;
+		return;
 
 	_width = width;
 	_height = height;
@@ -217,20 +217,18 @@ e2d::Window& e2d::Window::size(int width, int height)
 			TRUE
 		);
 	}
-	return *this;
 }
 
-e2d::Window& e2d::Window::title(const String& title)
+void e2d::Window::setTitle(const String& title)
 {
 	_title = title;
 	if (_hWnd)
 	{
 		::SetWindowText(_hWnd, (LPCWSTR)title);
 	}
-	return *this;
 }
 
-e2d::Window& e2d::Window::icon(int iconID)
+void e2d::Window::setIcon(int iconID)
 {
 	this->_iconID = iconID;
 	if (_hWnd)
@@ -240,10 +238,9 @@ e2d::Window& e2d::Window::icon(int iconID)
 		::SendMessage(_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 		::SendMessage(_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 	}
-	return *this;
 }
 
-e2d::Window& e2d::Window::cursor(Cursor cursor)
+void e2d::Window::setCursor(Cursor cursor)
 {
 	LPCWSTR pCursorName = nullptr;
 	switch (cursor)
@@ -274,10 +271,9 @@ e2d::Window& e2d::Window::cursor(Cursor cursor)
 
 	HCURSOR hCursor = ::LoadCursor(nullptr, pCursorName);
 	::SetCursor(hCursor);
-	return *this;
 }
 
-e2d::Window& e2d::Window::showConsole(bool enabled)
+void e2d::Window::setConsoleEnabled(bool enabled)
 {
 	// 查找已存在的控制台句柄
 	HWND hwnd = ::GetConsoleWindow();
@@ -312,10 +308,9 @@ e2d::Window& e2d::Window::showConsole(bool enabled)
 			::ShowWindow(hwnd, SW_HIDE);
 		}
 	}
-	return *this;
 }
 
-e2d::Window& e2d::Window::typewritingEnabled(bool enabled)
+void e2d::Window::setTypewritingEnabled(bool enabled)
 {
 	static HIMC hImc = nullptr;
 
@@ -334,7 +329,6 @@ e2d::Window& e2d::Window::typewritingEnabled(bool enabled)
 			hImc = ::ImmAssociateContext(_hWnd, nullptr);
 		}
 	}
-	return *this;
 }
 
 bool e2d::Window::popup(const String & text, const String & title, Popup style, bool hasCancel)
@@ -360,9 +354,9 @@ bool e2d::Window::popup(const String & text, const String & title, Popup style, 
 		type |= MB_OKCANCEL;
 	}
 
-	Game::instance()->pause();
+	Game::getInstance()->pause();
 	int ret = ::MessageBox(_hWnd, (LPCWSTR)text, (LPCWSTR)title, type);
-	Game::instance()->resume();
+	Game::getInstance()->resume();
 	return ret == IDOK;
 }
 
@@ -409,13 +403,13 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
-			auto game = Game::instance();
-			if (game->transitioning())
+			auto game = Game::getInstance();
+			if (game->isTransitioning())
 				break;
 
-			if (game->currentScene())
+			if (game->getCurrentScene())
 			{
-				game->currentScene()->dispatch(MouseEvent(hWnd, uMsg, wParam, lParam, window->_dpi), false);
+				game->getCurrentScene()->dispatch(MouseEvent(hWnd, uMsg, wParam, lParam, window->_dpi), false);
 			}
 		}
 		result = 0;
@@ -426,13 +420,13 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 		{
-			auto game = Game::instance();
-			if (game->transitioning())
+			auto game = Game::getInstance();
+			if (game->isTransitioning())
 				break;
 
-			if (game->currentScene())
+			if (game->getCurrentScene())
 			{
-				game->currentScene()->dispatch(KeyEvent(hWnd, uMsg, wParam, lParam), false);
+				game->getCurrentScene()->dispatch(KeyEvent(hWnd, uMsg, wParam, lParam), false);
 			}
 		}
 		result = 0;
@@ -454,8 +448,8 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 			// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
 			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-			auto renderer = Game::instance()->renderer();
-			auto pRT = renderer->renderTarget();
+			auto renderer = Game::getInstance()->getRenderer();
+			auto pRT = renderer->getRenderTarget();
 			if (pRT)
 			{
 				pRT->Resize(D2D1::SizeU(width, height));
@@ -483,7 +477,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// 重绘窗口
 		case WM_PAINT:
 		{
-			Game::instance()->drawScene();
+			Game::getInstance()->drawScene();
 			ValidateRect(hWnd, nullptr);
 		}
 		result = 0;
@@ -493,8 +487,8 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// 窗口关闭消息
 		case WM_CLOSE:
 		{
-			auto game = Game::instance();
-			auto currScene = game->currentScene();
+			auto game = Game::getInstance();
+			auto currScene = game->getCurrentScene();
 			if (!currScene || currScene->onCloseWindow())
 			{
 				game->quit();

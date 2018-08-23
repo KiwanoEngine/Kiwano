@@ -48,51 +48,51 @@ public:
 	);
 
 	// 修改窗体大小
-	Window& size(
+	void setSize(
 		int width,			/* 窗体宽度 */
 		int height			/* 窗体高度 */
 	);
 
 	// 设置窗体标题
-	Window& title(
+	void setTitle(
 		const String& title	/* 窗体标题 */
 	);
 
 	// 设置窗体图标
-	Window& icon(
+	void setIcon(
 		int iconID
 	);
 
 	// 设置鼠标指针样式
-	Window& cursor(
-		Cursor c
+	void setCursor(
+		Cursor cursor
 	);
 
 	// 获取窗体标题
-	const String& title() const;
+	String getTitle() const;
 
 	// 获取窗体宽度
-	int width() const;
+	int getWidth() const;
 
 	// 获取窗体高度
-	int height() const;
+	int getHeight() const;
 
 	// 获取窗体大小
-	Size size() const;
+	Size getSize() const;
 
 	// 获取窗口 DPI
-	float dpi() const;
+	float getDpi() const;
 
 	// 获取窗口句柄
-	HWND hWnd() const;
+	HWND getHWnd() const;
 
 	// 打开或隐藏控制台
-	Window& showConsole(
+	void setConsoleEnabled(
 		bool enabled
 	);
 
 	// 是否允许响应输入法
-	Window& typewritingEnabled(
+	void setTypewritingEnabled(
 		bool enabled
 	);
 
@@ -153,22 +153,22 @@ public:
 	);
 
 	// 获得鼠标X轴坐标值
-	float mouseX();
+	float getMouseX();
 
 	// 获得鼠标Y轴坐标值
-	float mouseY();
+	float getMouseY();
 
 	// 获得鼠标坐标值
-	Point mousePos();
+	Point getMousePos();
 
 	// 获得鼠标X轴坐标增量
-	float mouseDeltaX();
+	float getMouseDeltaX();
 
 	// 获得鼠标Y轴坐标增量
-	float mouseDeltaY();
+	float getMouseDeltaY();
 
 	// 获得鼠标Z轴（鼠标滚轮）坐标增量
-	float mouseDeltaZ();
+	float getMouseDeltaZ();
 
 	// 初始化输入设备
 	void initWithWindow(
@@ -196,11 +196,11 @@ public:
 	~Renderer();
 
 	// 获取背景色
-	Color backgroundColor();
+	Color getBackgroundColor();
 
 	// 修改背景色
-	void backgroundColor(
-		const Color& color
+	void setBackgroundColor(
+		Color color
 	);
 
 	// 显示或隐藏 FPS
@@ -210,31 +210,31 @@ public:
 	);
 
 	// 获取文字渲染器
-	TextRenderer * textRenderer() const { return _textRenderer; }
+	TextRenderer * getTextRenderer() const { return _textRenderer; }
 
 	// 获取 ID2D1HwndRenderTarget 对象
-	ID2D1HwndRenderTarget * renderTarget() const { return _renderTarget; }
+	ID2D1HwndRenderTarget * getRenderTarget() const { return _renderTarget; }
 
 	// 获取 ID2D1SolidColorBrush 对象
-	ID2D1SolidColorBrush * solidBrush() const { return _solidBrush; }
+	ID2D1SolidColorBrush * getSolidColorBrush() const { return _solidBrush; }
 
 	// 获取 ID2D1Factory 对象
-	ID2D1Factory * factory() const { return _factory; }
+	ID2D1Factory * getFactory() const { return _factory; }
 
 	// 获取 IWICImagingFactory 对象
-	IWICImagingFactory * imagingFactory() const { return _imagingFactory; }
+	IWICImagingFactory * getImagingFactory() const { return _imagingFactory; }
 
 	// 获取 IDWriteFactory 对象
-	IDWriteFactory * writeFactory() const { return _writeFactory; }
+	IDWriteFactory * getWriteFactory() const { return _writeFactory; }
 
 	// 获取 Miter 样式的 ID2D1StrokeStyle
-	ID2D1StrokeStyle * miterStrokeStyle();
+	ID2D1StrokeStyle * getMiterStrokeStyle();
 
 	// 获取 Bevel 样式的 ID2D1StrokeStyle
-	ID2D1StrokeStyle * bevelStrokeStyle();
+	ID2D1StrokeStyle * getBevelStrokeStyle();
 
 	// 获取 Round 样式的 ID2D1StrokeStyle
-	ID2D1StrokeStyle * roundStrokeStyle();
+	ID2D1StrokeStyle * getRoundStrokeStyle();
 
 	// 初始化渲染器
 	void initWithWindow(
@@ -276,7 +276,7 @@ class Game
 {
 public:
 	// 获取 Game 实例
-	static Game * instance();
+	static Game * getInstance();
 
 	// 初始化
 	void initWithWindow(
@@ -284,13 +284,13 @@ public:
 	);
 
 	// 获取窗体
-	Window * window() const { return _window; }
+	Window * getWindow() const { return _window; }
 
 	// 获取输入设备
-	Input * input() const { return _input; }
+	Input * getInput() const { return _input; }
 
 	// 获取图形设备
-	Renderer * renderer() const { return _renderer; }
+	Renderer * getRenderer() const { return _renderer; }
 
 	// 启动游戏
 	void start();
@@ -305,7 +305,7 @@ public:
 	void quit();
 
 	// 游戏是否暂停
-	bool paused();
+	bool isPaused();
 
 	// 场景入栈
 	void pushScene(
@@ -331,13 +331,13 @@ public:
 	void clearAllScenes();
 
 	// 获取当前场景
-	Scene * currentScene();
+	Scene * getCurrentScene();
 
 	// 获取场景栈
-	const std::stack<Scene*>& sceneStack();
+	const std::stack<Scene*>& getSceneStack();
 
 	// 是否正在进行场景动画
-	bool transitioning() const;
+	bool isTransitioning() const;
 
 	// 更新场景内容
 	void updateScene();
@@ -372,7 +372,7 @@ class GC
 {
 public:
 	// 获取 GC 实例
-	static GC * instance();
+	static GC * getInstance();
 
 	// 自动释放
 	void autorelease(

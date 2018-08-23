@@ -26,17 +26,16 @@ e2d::Animation::~Animation()
 {
 	for (const auto& frame : _frames)
 	{
-		GC::instance()->safeRelease(frame);
+		GC::getInstance()->safeRelease(frame);
 	}
 }
 
-e2d::Animation& e2d::Animation::interval(float interval)
+void e2d::Animation::setInterval(float interval)
 {
 	_interval = std::max(interval, 0.f);
-	return *this;
 }
 
-e2d::Animation& e2d::Animation::add(Image * frame)
+void e2d::Animation::add(Image * frame)
 {
 	WARN_IF(frame == nullptr, "Animation::add failed, frame is nullptr.");
 	if (frame)
@@ -44,24 +43,22 @@ e2d::Animation& e2d::Animation::add(Image * frame)
 		_frames.push_back(frame);
 		frame->retain();
 	}
-	return *this;
 }
 
-e2d::Animation& e2d::Animation::add(const std::vector<Image*>& frames)
+void e2d::Animation::add(const std::vector<Image*>& frames)
 {
 	for (const auto &image : frames)
 	{
 		this->add(image);
 	}
-	return *this;
 }
 
-float e2d::Animation::interval() const
+float e2d::Animation::getInterval() const
 {
 	return _interval;
 }
 
-const std::vector<e2d::Image*>& e2d::Animation::frames() const
+const std::vector<e2d::Image*>& e2d::Animation::getFrames() const
 {
 	return _frames;
 }
@@ -81,7 +78,7 @@ e2d::Animation * e2d::Animation::clone() const
 
 e2d::Animation * e2d::Animation::reverse() const
 {
-	auto& oldFrames = this->frames();
+	auto& oldFrames = this->getFrames();
 	std::vector<Image*> frames(oldFrames.size());
 
 	if (!oldFrames.empty())
@@ -99,5 +96,5 @@ e2d::Animation * e2d::Animation::reverse() const
 		}
 	}
 
-	return new (e2d::autorelease) Animation(this->interval(), frames);
+	return new (e2d::autorelease) Animation(this->getInterval(), frames);
 }

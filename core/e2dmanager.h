@@ -16,15 +16,15 @@ class ActionManager
 
 public:
 	// 获取动作管理器实例
-	static ActionManager * instance();
+	static ActionManager * getInstance();
 
 	// 获取所有名称相同的动作
-	std::vector<Action*> actions(
+	std::vector<Action *> get(
 		const String& name
 	);
 
 	// 获取所有动作
-	const std::vector<Action*>& actions();
+	const std::vector<Action*>& getAll();
 
 	// 执行动作
 	void start(
@@ -108,11 +108,11 @@ class CollisionManager
 
 public:
 	// 获取碰撞体管理器实例
-	static CollisionManager * instance();
+	static CollisionManager * getInstance();
 
 	// 打开或关闭碰撞监听
 	// 默认：关闭
-	void enabled(
+	void setCollisionEnabled(
 		bool enabled
 	);
 

@@ -9,7 +9,7 @@
 		if (Old) this->removeChild(Old);						\
 		if (New)												\
 		{														\
-			New->anchor(_anchorX, _anchorY);					\
+			New->setPivot(_pivotX, _pivotY);					\
 			this->addChild(New);								\
 		}														\
 		Old = New;												\
@@ -39,8 +39,8 @@ e2d::Button::Button(Node * normal, const Function& func)
 	, _selected(nullptr)
 	, _disabled(nullptr)
 {
-	this->normal(normal);
-	this->clickCallback(func);
+	this->setNormal(normal);
+	this->setClickFunc(func);
 }
 
 e2d::Button::Button(Node * normal, Node * selected, const Function& func)
@@ -53,9 +53,9 @@ e2d::Button::Button(Node * normal, Node * selected, const Function& func)
 	, _selected(nullptr)
 	, _disabled(nullptr)
 {
-	this->normal(normal);
-	this->selected(selected);
-	this->clickCallback(func);
+	this->setNormal(normal);
+	this->setSelected(selected);
+	this->setClickFunc(func);
 }
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Function& func)
@@ -68,10 +68,10 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Func
 	, _selected(nullptr)
 	, _disabled(nullptr)
 {
-	this->normal(normal);
-	this->mouseover(mouseover);
-	this->selected(selected);
-	this->clickCallback(func);
+	this->setNormal(normal);
+	this->setMouseOver(mouseover);
+	this->setSelected(selected);
+	this->setClickFunc(func);
 }
 
 e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Function& func)
@@ -84,85 +84,78 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * dis
 	, _selected(nullptr)
 	, _disabled(nullptr)
 {
-	this->normal(normal);
-	this->mouseover(mouseover);
-	this->selected(selected);
-	this->disabled(disabled);
-	this->clickCallback(func);
+	this->setNormal(normal);
+	this->setMouseOver(mouseover);
+	this->setSelected(selected);
+	this->setDisabled(disabled);
+	this->setClickFunc(func);
 }
 
-bool e2d::Button::enabled() const
+bool e2d::Button::isEnable() const
 {
 	return _enabled;
 }
 
-e2d::Button& e2d::Button::normal(Node * normal)
+void e2d::Button::setNormal(Node * normal)
 {
 	SET_BUTTON_NODE(_normal, normal);
 	if (normal)
 	{
-		this->size(normal->width(), normal->height());
+		this->setSize(normal->getWidth(), normal->getHeight());
 	}
-	return *this;
 }
 
-e2d::Button& e2d::Button::mouseover(Node * mouseover)
+void e2d::Button::setMouseOver(Node * mouseover)
 {
 	SET_BUTTON_NODE(_mouseover, mouseover);
-	return *this;
 }
 
-e2d::Button& e2d::Button::selected(Node * selected)
+void e2d::Button::setSelected(Node * selected)
 {
 	SET_BUTTON_NODE(_selected, selected);
-	return *this;
 }
 
-e2d::Button& e2d::Button::disabled(Node * disabled)
+void e2d::Button::setDisabled(Node * disabled)
 {
 	SET_BUTTON_NODE(_disabled, disabled);
-	return *this;
 }
 
-e2d::Button& e2d::Button::enabled(bool enabled)
+void e2d::Button::setEnabled(bool enabled)
 {
 	if (_enabled != enabled)
 	{
 		_enabled = enabled;
 		_updateVisible();
 	}
-	return *this;
 }
 
-e2d::Button& e2d::Button::clickCallback(const Function& func)
+void e2d::Button::setClickFunc(const Function& func)
 {
 	_func = func;
-	return *this;
 }
 
-e2d::Button& e2d::Button::anchor(float anchorX, float anchorY)
+void e2d::Button::setPivot(float pivotX, float pivotY)
 {
-	Node::anchor(anchorX, anchorY);
-	SAFE_SET(_normal, anchor, anchorX, anchorY);
-	SAFE_SET(_mouseover, anchor, anchorX, anchorY);
-	SAFE_SET(_selected, anchor, anchorX, anchorY);
-	SAFE_SET(_disabled, anchor, anchorX, anchorY);
-	return *this;
+	Node::setPivot(pivotX, pivotY);
+	SAFE_SET(_normal, setPivot, pivotX, pivotY);
+	SAFE_SET(_mouseover, setPivot, pivotX, pivotY);
+	SAFE_SET(_selected, setPivot, pivotX, pivotY);
+	SAFE_SET(_disabled, setPivot, pivotX, pivotY);
 }
 
 bool e2d::Button::dispatch(const MouseEvent & e, bool handled)
 {
 	if (!handled && _enabled && _visible && _normal)
 	{
-		bool contains = _normal->containsPoint(e.position());
-		if (e.type() == MouseEvent::Type::LeftUp && _isSelected && contains)
+		bool contains = _normal->containsPoint(e.getPos());
+		if (e.getType() == MouseEvent::Type::LeftUp && _isSelected && contains)
 		{
 			_runCallback();
 			_isSelected = false;
 			_setStatus(Status::Normal);
 			return true;
 		}
-		else if (e.type() == MouseEvent::Type::LeftDown)
+		else if (e.getType() == MouseEvent::Type::LeftDown)
 		{
 			_isSelected = contains;
 			_setStatus(contains ? Status::Selected : Status::Normal);
@@ -170,11 +163,11 @@ bool e2d::Button::dispatch(const MouseEvent & e, bool handled)
 			if (contains)
 				return true;
 		}
-		else if (e.type() == MouseEvent::Type::LeftUp)
+		else if (e.getType() == MouseEvent::Type::LeftUp)
 		{
 			_isSelected = false;
 		}
-		else if (e.type() == MouseEvent::Type::Move && _isSelected && contains)
+		else if (e.getType() == MouseEvent::Type::Move && _isSelected && contains)
 		{
 			_setStatus(Status::Selected);
 			return true;
@@ -203,13 +196,13 @@ void e2d::Button::visit(Game * game)
 	if (_visible &&
 		!_enabled &&
 		_normal &&
-		_normal->containsPoint(game->input()->mousePos()))
+		_normal->containsPoint(game->getInput()->getMousePos()))
 	{
-		game->window()->cursor(Window::Cursor::No);
+		game->getWindow()->setCursor(Window::Cursor::No);
 	}
 	else if (_status == Status::Mouseover || _status == Status::Selected)
 	{
-		game->window()->cursor(Window::Cursor::Hand);
+		game->getWindow()->setCursor(Window::Cursor::Hand);
 	}
 }
 
@@ -224,35 +217,35 @@ void e2d::Button::_setStatus(Status status)
 
 void e2d::Button::_updateVisible()
 {
-	SAFE_SET(_normal, visible, false);
-	SAFE_SET(_mouseover, visible, false);
-	SAFE_SET(_selected, visible, false);
-	SAFE_SET(_disabled, visible, false);
+	SAFE_SET(_normal, setVisible, false);
+	SAFE_SET(_mouseover, setVisible, false);
+	SAFE_SET(_selected, setVisible, false);
+	SAFE_SET(_disabled, setVisible, false);
 
 	if (_enabled)
 	{
 		if (_status == Status::Selected && _selected)
 		{
-			_selected->visible(true);
+			_selected->setVisible(true);
 		}
 		else if (_status == Status::Mouseover && _mouseover)
 		{
-			_mouseover->visible(true);
+			_mouseover->setVisible(true);
 		}
 		else
 		{
-			if (_normal) _normal->visible(true);
+			if (_normal) _normal->setVisible(true);
 		}
 	}
 	else
 	{
 		if (_disabled)
 		{
-			_disabled->visible(true);
+			_disabled->setVisible(true);
 		}
 		else
 		{
-			if (_normal) _normal->visible(true);
+			if (_normal) _normal->setVisible(true);
 		}
 	}
 }

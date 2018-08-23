@@ -3,7 +3,7 @@
 #include "..\e2dtool.h"
 
 
-e2d::CollisionManager * e2d::CollisionManager::instance()
+e2d::CollisionManager * e2d::CollisionManager::getInstance()
 {
 	static CollisionManager instance;
 	return &instance;
@@ -35,7 +35,7 @@ void e2d::CollisionManager::__removeCollider(Collider * collider)
 void e2d::CollisionManager::__updateCollider(Collider* collider)
 {
 	if (!_collisionEnabled ||
-		Game::instance()->transitioning())
+		Game::getInstance()->isTransitioning())
 		return;
 
 	std::vector<Collider*> currColliders;
@@ -47,46 +47,46 @@ void e2d::CollisionManager::__updateCollider(Collider* collider)
 		[this, collider](Collider* passive) -> bool
 		{
 			return collider != passive &&
-				passive->node()->visible() &&
-				collider->node()->parentScene() == passive->node()->parentScene() &&
-				this->isCollidable(collider->node(), passive->node());
+				passive->getNode()->isVisible() &&
+				collider->getNode()->getParentScene() == passive->getNode()->getParentScene() &&
+				this->isCollidable(collider->getNode(), passive->getNode());
 		}
 	);
 
 	for (const auto& passive : currColliders)
 	{
 		// 判断两碰撞体交集情况
-		Collider::Relation relation = collider->relationWith(passive);
+		Collider::Relation relation = collider->getRelationWith(passive);
 		// 忽略 UNKNOWN 和 DISJOIN 情况
 		if (relation != Collider::Relation::Unknown &&
 			relation != Collider::Relation::Disjoin)
 		{
-			auto activeNode = collider->node();
-			auto passiveNode = passive->node();
+			auto activeNode = collider->getNode();
+			auto passiveNode = passive->getNode();
 			// 触发两次碰撞事件
 			Collision activeCollision(passiveNode, relation);
-			if (dynamic_cast<CollisionHandler*>(activeNode->parentScene()))
-				dynamic_cast<CollisionHandler*>(activeNode->parentScene())->handle(activeCollision);
+			if (dynamic_cast<CollisionHandler*>(activeNode->getParentScene()))
+				dynamic_cast<CollisionHandler*>(activeNode->getParentScene())->handle(activeCollision);
 			if (dynamic_cast<CollisionHandler*>(activeNode))
 				dynamic_cast<CollisionHandler*>(activeNode)->handle(activeCollision);
 
-			Collision passiveCollision(activeNode, passive->relationWith(collider));
-			if (dynamic_cast<CollisionHandler*>(passiveNode->parentScene()))
-				dynamic_cast<CollisionHandler*>(passiveNode->parentScene())->handle(passiveCollision);
+			Collision passiveCollision(activeNode, passive->getRelationWith(collider));
+			if (dynamic_cast<CollisionHandler*>(passiveNode->getParentScene()))
+				dynamic_cast<CollisionHandler*>(passiveNode->getParentScene())->handle(passiveCollision);
 			if (dynamic_cast<CollisionHandler*>(passiveNode))
 				dynamic_cast<CollisionHandler*>(passiveNode)->handle(passiveCollision);
 		}
 	}
 }
 
-void e2d::CollisionManager::enabled(bool enabled)
+void e2d::CollisionManager::setCollisionEnabled(bool enabled)
 {
 	_collisionEnabled = enabled;
 }
 
 void e2d::CollisionManager::addName(const String & name1, const String & name2)
 {
-	if (!name1.empty() && !name2.empty())
+	if (!name1.isEmpty() && !name2.isEmpty())
 	{
 		_collisionList.insert(std::make_pair(name1.hash(), name2.hash()));
 	}
@@ -96,7 +96,7 @@ void e2d::CollisionManager::addName(const std::vector<std::pair<String, String> 
 {
 	for (const auto& name : names)
 	{
-		if (!name.first.empty() && !name.second.empty())
+		if (!name.first.isEmpty() && !name.second.isEmpty())
 		{
 			_collisionList.insert(std::make_pair(name.first.hash(), name.second.hash()));
 		}
@@ -105,7 +105,7 @@ void e2d::CollisionManager::addName(const std::vector<std::pair<String, String> 
 
 bool e2d::CollisionManager::isCollidable(Node * node1, Node * node2)
 {
-	return CollisionManager::isCollidable(node1->name(), node2->name());
+	return CollisionManager::isCollidable(node1->getName(), node2->getName());
 }
 
 bool e2d::CollisionManager::isCollidable(const String & name1, const String & name2)

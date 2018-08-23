@@ -74,57 +74,57 @@ e2d::Text::~Text()
 	SafeRelease(_textLayout);
 }
 
-const e2d::String& e2d::Text::text() const
+e2d::String e2d::Text::getText() const
 {
 	return _text;
 }
 
-const e2d::Font& e2d::Text::font() const
+e2d::Font e2d::Text::getFont() const
 {
 	return _font;
 }
 
-const e2d::Text::Style& e2d::Text::style() const
+e2d::Text::Style e2d::Text::getStyle() const
 {
 	return _style;
 }
 
-const e2d::String& e2d::Text::fontFamily() const
+e2d::String e2d::Text::getFontFamily() const
 {
 	return _font.family;
 }
 
-float e2d::Text::fontSize() const
+float e2d::Text::getFontSize() const
 {
 	return _font.size;
 }
 
-UINT e2d::Text::fontWeight() const
+UINT e2d::Text::getFontWeight() const
 {
 	return _font.weight;
 }
 
-const e2d::Color& e2d::Text::color() const
+e2d::Color e2d::Text::getColor() const
 {
 	return _style.color;
 }
 
-const e2d::Color& e2d::Text::outlineColor() const
+e2d::Color e2d::Text::getOutlineColor() const
 {
 	return _style.outlineColor;
 }
 
-float e2d::Text::outlineWidth() const
+float e2d::Text::getOutlineWidth() const
 {
 	return _style.outlineWidth;
 }
 
-e2d::Stroke e2d::Text::outlineStroke() const
+e2d::Stroke e2d::Text::getOutlineStroke() const
 {
 	return _style.outlineStroke;
 }
 
-int e2d::Text::lineCount() const
+int e2d::Text::getLineCount() const
 {
 	if (_textLayout)
 	{
@@ -138,7 +138,7 @@ int e2d::Text::lineCount() const
 	}
 }
 
-bool e2d::Text::italic() const
+bool e2d::Text::isItalic() const
 {
 	return _font.italic;
 }
@@ -158,72 +158,63 @@ bool e2d::Text::hasOutline() const
 	return _style.hasOutline;
 }
 
-e2d::Text& e2d::Text::text(const String& text)
+void e2d::Text::setText(const String& text)
 {
 	_text = text;
 	_reset();
-	return *this;
 }
 
-e2d::Text& e2d::Text::style(const Style& style)
+void e2d::Text::setStyle(const Style& style)
 {
 	_style = style;
 	_reset();
-	return *this;
 }
 
-e2d::Text& e2d::Text::font(const Font & font)
+void e2d::Text::setFont(const Font & font)
 {
 	_font = font;
 	_reset();
-	return *this;
 }
 
-e2d::Text& e2d::Text::fontFamily(const String& family)
+void e2d::Text::setFontFamily(const String& family)
 {
 	_font.family = family;
 	_reset();
-	return *this;
 }
 
-e2d::Text& e2d::Text::fontSize(float size)
+void e2d::Text::setFontSize(float size)
 {
 	_font.size = size;
 	_reset();
-	return *this;
 }
 
-e2d::Text& e2d::Text::fontWeight(UINT weight)
+void e2d::Text::setFontWeight(UINT weight)
 {
 	_font.weight = weight;
 	_reset();
-	return *this;
 }
 
-e2d::Text& e2d::Text::color(Color color)
+void e2d::Text::setColor(Color color)
 {
 	_style.color = color;
-	return *this;
 }
 
-e2d::Text& e2d::Text::italic(bool value)
+void e2d::Text::setItalic(bool value)
 {
 	_font.italic = value;
 	_reset();
-	return *this;
 }
 
-e2d::Text& e2d::Text::wrapping(bool wrapping)
+void e2d::Text::setWrapping(bool wrapping)
 {
 	if (_style.wrapping != wrapping)
 	{
 		_style.wrapping = wrapping;
 		_reset();
 	}
-	return *this;
 }
 
-e2d::Text& e2d::Text::wrappingWidth(float wrappingWidth)
+void e2d::Text::setWrappingWidth(float wrappingWidth)
 {
 	if (_style.wrappingWidth != wrappingWidth)
 	{
@@ -234,30 +225,27 @@ e2d::Text& e2d::Text::wrappingWidth(float wrappingWidth)
 			_reset();
 		}
 	}
-	return *this;
 }
 
-e2d::Text& e2d::Text::lineSpacing(float lineSpacing)
+void e2d::Text::setLineSpacing(float lineSpacing)
 {
 	if (_style.lineSpacing != lineSpacing)
 	{
 		_style.lineSpacing = lineSpacing;
 		_reset();
 	}
-	return *this;
 }
 
-e2d::Text& e2d::Text::alignment(Align align)
+void e2d::Text::setAlignment(Align align)
 {
 	if (_style.alignment != align)
 	{
 		_style.alignment = align;
 		_reset();
 	}
-	return *this;
 }
 
-e2d::Text& e2d::Text::underline(bool hasUnderline)
+void e2d::Text::setUnderline(bool hasUnderline)
 {
 	if (_style.hasUnderline != hasUnderline)
 	{
@@ -266,10 +254,9 @@ e2d::Text& e2d::Text::underline(bool hasUnderline)
 			_createFormat();
 		_createLayout();
 	}
-	return *this;
 }
 
-e2d::Text& e2d::Text::strikethrough(bool hasStrikethrough)
+void e2d::Text::setStrikethrough(bool hasStrikethrough)
 {
 	if (_style.hasStrikethrough != hasStrikethrough)
 	{
@@ -278,31 +265,26 @@ e2d::Text& e2d::Text::strikethrough(bool hasStrikethrough)
 			_createFormat();
 		_createLayout();
 	}
-	return *this;
 }
 
-e2d::Text& e2d::Text::outline(bool hasOutline)
+void e2d::Text::setOutline(bool hasOutline)
 {
 	_style.hasOutline = hasOutline;
-	return *this;
 }
 
-e2d::Text& e2d::Text::outlineColor(Color outlineColor)
+void e2d::Text::setOutlineColor(Color outlineColor)
 {
 	_style.outlineColor = outlineColor;
-	return *this;
 }
 
-e2d::Text& e2d::Text::outlineWidth(float outlineWidth)
+void e2d::Text::setOutlineWidth(float outlineWidth)
 {
 	_style.outlineWidth = outlineWidth;
-	return *this;
 }
 
-e2d::Text& e2d::Text::outlineStroke(Stroke outlineStroke)
+void e2d::Text::setOutlineStroke(Stroke outlineStroke)
 {
 	_style.outlineStroke = outlineStroke;
-	return *this;
 }
 
 void e2d::Text::draw(Renderer * renderer) const
@@ -310,11 +292,11 @@ void e2d::Text::draw(Renderer * renderer) const
 	if (_textLayout)
 	{
 		// 创建文本区域
-		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, _size.width, _size.height);
+		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, _width, _height);
 		// 设置画刷颜色和透明度
-		renderer->solidBrush()->SetOpacity(_displayOpacity);
+		renderer->getSolidColorBrush()->SetOpacity(_displayOpacity);
 		// 获取文本渲染器
-		auto pTextRenderer = renderer->textRenderer();
+		auto pTextRenderer = renderer->getTextRenderer();
 		pTextRenderer->SetTextStyle(
 			(D2D1_COLOR_F)_style.color,
 			_style.hasOutline,
@@ -338,7 +320,7 @@ void e2d::Text::_createFormat()
 {
 	SafeRelease(_textFormat);
 
-	HRESULT hr = Game::instance()->renderer()->writeFactory()->CreateTextFormat(
+	HRESULT hr = Game::getInstance()->getRenderer()->getWriteFactory()->CreateTextFormat(
 		(const WCHAR *)_font.family,
 		nullptr,
 		DWRITE_FONT_WEIGHT(_font.weight),
@@ -389,9 +371,9 @@ void e2d::Text::_createLayout()
 	SafeRelease(_textLayout);
 
 	// 文本为空字符串时，重置属性
-	if (_text.empty())
+	if (_text.isEmpty())
 	{
-		this->size(0, 0);
+		this->setSize(0, 0);
 		return;
 	}
 
@@ -403,7 +385,7 @@ void e2d::Text::_createLayout()
 	
 	HRESULT hr;
 	UINT32 length = (UINT32)_text.length();
-	auto writeFactory = Game::instance()->renderer()->writeFactory();
+	auto writeFactory = Game::getInstance()->getRenderer()->getWriteFactory();
 
 	// 对文本自动换行情况下进行处理
 	if (_style.wrapping)
@@ -422,7 +404,7 @@ void e2d::Text::_createLayout()
 			DWRITE_TEXT_METRICS metrics;
 			_textLayout->GetMetrics(&metrics);
 			// 重设文本宽高
-			this->size(metrics.layoutWidth, metrics.height);
+			this->setSize(metrics.layoutWidth, metrics.height);
 		}
 	}
 	else
@@ -435,10 +417,10 @@ void e2d::Text::_createLayout()
 			DWRITE_TEXT_METRICS metrics;
 			_textLayout->GetMetrics(&metrics);
 			// 重设文本宽高
-			this->size(metrics.width, metrics.height);
+			this->setSize(metrics.width, metrics.height);
 			// 重新创建 layout
 			SafeRelease(_textLayout);
-			hr = writeFactory->CreateTextLayout((const WCHAR *)_text, length, _textFormat, _size.width, 0, &_textLayout);
+			hr = writeFactory->CreateTextLayout((const WCHAR *)_text, length, _textFormat, _width, 0, &_textLayout);
 		}
 	}
 

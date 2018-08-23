@@ -40,7 +40,7 @@ e2d::Input::~Input()
 
 void e2d::Input::initWithWindow(Window * window)
 {
-	HWND hwnd = window->hWnd();
+	HWND hwnd = window->getHWnd();
 
 	// 初始化键盘设备
 	ThrowIfFailed(
@@ -118,39 +118,39 @@ bool e2d::Input::isDown(MouseCode code)
 	return false;
 }
 
-float e2d::Input::mouseX()
+float e2d::Input::getMouseX()
 {
-	return mousePos().x;
+	return getMousePos().x;
 }
 
-float e2d::Input::mouseY()
+float e2d::Input::getMouseY()
 {
-	return mousePos().y;
+	return getMousePos().y;
 }
 
-e2d::Point e2d::Input::mousePos()
+e2d::Point e2d::Input::getMousePos()
 {
-	auto window = Game::instance()->window();
+	auto window = Game::getInstance()->getWindow();
 
 	POINT mousePos;
 	::GetCursorPos(&mousePos);
-	::ScreenToClient(window->hWnd(), &mousePos);
+	::ScreenToClient(window->getHWnd(), &mousePos);
 
-	float dpi = window->dpi();
+	float dpi = window->getDpi();
 	return Point(mousePos.x * 96.f / dpi, mousePos.y * 96.f / dpi);
 }
 
-float e2d::Input::mouseDeltaX()
+float e2d::Input::getMouseDeltaX()
 {
 	return (float)_mouseState.lX;
 }
 
-float e2d::Input::mouseDeltaY()
+float e2d::Input::getMouseDeltaY()
 {
 	return (float)_mouseState.lY;
 }
 
-float e2d::Input::mouseDeltaZ()
+float e2d::Input::getMouseDeltaZ()
 {
 	return (float)_mouseState.lZ;
 }

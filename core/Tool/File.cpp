@@ -61,16 +61,16 @@ bool e2d::File::isFolder() const
 	return (_attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-const e2d::String& e2d::File::path() const
+e2d::String e2d::File::getFilePath() const
 {
 	return _fileName;
 }
 
-e2d::String e2d::File::ext() const
+e2d::String e2d::File::getExtension() const
 {
 	String fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
-	size_t pos = std::wstring(_fileName).find_last_of(L'.');
+	size_t pos = _fileName.getWString().find_last_of(L'.');
 	// 判断 pos 是否是有效位置
 	if (pos != std::wstring::npos)
 	{
@@ -79,10 +79,10 @@ e2d::String e2d::File::ext() const
 		// 转换为小写字母
 		fileExtension = fileExtension.toLower();
 	}
-	return std::move(fileExtension);
+	return fileExtension;
 }
 
-bool e2d::File::del()
+bool e2d::File::deleteFile()
 {
 	if (::DeleteFile((LPCWSTR)_fileName))
 		return true;
@@ -91,7 +91,7 @@ bool e2d::File::del()
 
 e2d::File e2d::File::extract(int resNameId, const String & resType, const String& destFileName)
 {
-	String destFilePath = Path::tempPath() + destFileName;
+	String destFilePath = Path::getTempPath() + destFileName;
 	// 创建文件
 	HANDLE hFile = ::CreateFile((LPCWSTR)destFilePath, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -135,7 +135,7 @@ void e2d::File::addSearchPath(const String & path)
 
 bool e2d::File::createFolder(const String & dirPath)
 {
-	if (dirPath.empty() || dirPath.length() >= MAX_PATH)
+	if (dirPath.isEmpty() || dirPath.length() >= MAX_PATH)
 		return false;
 
 	wchar_t tmpDirPath[_MAX_PATH] = { 0 };
@@ -158,10 +158,10 @@ bool e2d::File::createFolder(const String & dirPath)
 	return true;
 }
 
-e2d::String e2d::File::openSaveDialog(const String& title, const String& defExt)
+e2d::String e2d::File::getSaveFilePath(const String& title, const String& defExt)
 {
-	auto window = Game::instance()->window();
-	HWND hwnd = window->hWnd();
+	auto window = Game::getInstance()->getWindow();
+	HWND hwnd = window->getHWnd();
 
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };

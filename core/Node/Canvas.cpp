@@ -9,8 +9,8 @@ e2d::Canvas::Canvas(float width, float height)
 	, _strokeWidth(1.0f)
 	, _stroke(Stroke::Miter)
 {
-	_renderer = Game::instance()->renderer();
-	_renderTarget = _renderer->renderTarget();
+	_renderer = Game::getInstance()->getRenderer();
+	_renderTarget = _renderer->getRenderTarget();
 	_renderTarget->AddRef();
 
 	ThrowIfFailed(
@@ -27,10 +27,10 @@ e2d::Canvas::Canvas(float width, float height)
 		)
 	);
 	
-	this->clipEnabled(true);
-	this->width(width);
-	this->height(height);
-	this->strokeStyle(_stroke);
+	this->setClipEnabled(true);
+	this->setWidth(width);
+	this->setHeight(height);
+	this->setStrokeStyle(_stroke);
 }
 
 e2d::Canvas::~Canvas()
@@ -40,62 +40,58 @@ e2d::Canvas::~Canvas()
 	SafeRelease(_renderTarget);
 }
 
-e2d::Canvas& e2d::Canvas::lineColor(const Color & color)
+void e2d::Canvas::setLineColor(const Color & color)
 {
 	_lineBrush->SetColor(D2D_COLOR_F(color));
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::fillColor(const Color & color)
+void e2d::Canvas::setFillColor(const Color & color)
 {
 	_fillBrush->SetColor(D2D_COLOR_F(color));
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::strokeWidth(float width)
+void e2d::Canvas::setStrokeWidth(float width)
 {
 	_strokeWidth = std::max(width, 0.f);
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::strokeStyle(Stroke strokeStyle)
+void e2d::Canvas::setStrokeStyle(Stroke strokeStyle)
 {
 	switch (strokeStyle)
 	{
 	case e2d::Stroke::Miter:
-		_strokeStyle = _renderer->miterStrokeStyle();
+		_strokeStyle = _renderer->getMiterStrokeStyle();
 		break;
 	case e2d::Stroke::Bevel:
-		_strokeStyle = _renderer->bevelStrokeStyle();
+		_strokeStyle = _renderer->getBevelStrokeStyle();
 		break;
 	case e2d::Stroke::Round:
-		_strokeStyle = _renderer->roundStrokeStyle();
+		_strokeStyle = _renderer->getRoundStrokeStyle();
 		break;
 	}
-	return *this;
 }
 
-e2d::Color e2d::Canvas::lineColor() const
+const e2d::Color & e2d::Canvas::getLineColor() const
 {
-	return _lineBrush->GetColor();
+	return Color(_lineBrush->GetColor());
 }
 
-e2d::Color e2d::Canvas::fillColor() const
+const e2d::Color & e2d::Canvas::getFillColor() const
 {
-	return _fillBrush->GetColor();
+	return Color(_fillBrush->GetColor());
 }
 
-float e2d::Canvas::strokeWidth() const
+float e2d::Canvas::getStrokeWidth() const
 {
 	return _strokeWidth;
 }
 
-e2d::Stroke e2d::Canvas::strokeStyle() const
+e2d::Stroke e2d::Canvas::getStrokeStyle() const
 {
 	return _stroke;
 }
 
-e2d::Canvas& e2d::Canvas::drawLine(const Point & begin, const Point & end)
+void e2d::Canvas::drawLine(const Point & begin, const Point & end)
 {
 	_renderTarget->DrawLine(
 		D2D1::Point2F(begin.x, begin.y),
@@ -104,10 +100,9 @@ e2d::Canvas& e2d::Canvas::drawLine(const Point & begin, const Point & end)
 		_strokeWidth,
 		_strokeStyle
 	);
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::drawCircle(const Point & center, float radius)
+void e2d::Canvas::drawCircle(const Point & center, float radius)
 {
 	_renderTarget->DrawEllipse(
 		D2D1::Ellipse(
@@ -122,10 +117,9 @@ e2d::Canvas& e2d::Canvas::drawCircle(const Point & center, float radius)
 		_strokeWidth,
 		_strokeStyle
 	);
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::drawEllipse(const Point & center, float radiusX, float radiusY)
+void e2d::Canvas::drawEllipse(const Point & center, float radiusX, float radiusY)
 {
 	_renderTarget->DrawEllipse(
 		D2D1::Ellipse(
@@ -140,10 +134,9 @@ e2d::Canvas& e2d::Canvas::drawEllipse(const Point & center, float radiusX, float
 		_strokeWidth,
 		_strokeStyle
 	);
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::drawRect(const Rect & rect)
+void e2d::Canvas::drawRect(const Rect & rect)
 {
 	_renderTarget->DrawRectangle(
 		D2D1::RectF(
@@ -156,10 +149,9 @@ e2d::Canvas& e2d::Canvas::drawRect(const Rect & rect)
 		_strokeWidth,
 		_strokeStyle
 	);
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::drawRoundedRect(const Rect & rect, float radiusX, float radiusY)
+void e2d::Canvas::drawRoundedRect(const Rect & rect, float radiusX, float radiusY)
 {
 	_renderTarget->DrawRoundedRectangle(
 		D2D1::RoundedRect(
@@ -176,10 +168,9 @@ e2d::Canvas& e2d::Canvas::drawRoundedRect(const Rect & rect, float radiusX, floa
 		_strokeWidth,
 		_strokeStyle
 	);
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::fillCircle(const Point & center, float radius)
+void e2d::Canvas::fillCircle(const Point & center, float radius)
 {
 	_renderTarget->FillEllipse(
 		D2D1::Ellipse(
@@ -192,10 +183,9 @@ e2d::Canvas& e2d::Canvas::fillCircle(const Point & center, float radius)
 		),
 		_fillBrush
 	);
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::fillEllipse(const Point & center, float radiusX, float radiusY)
+void e2d::Canvas::fillEllipse(const Point & center, float radiusX, float radiusY)
 {
 	_renderTarget->FillEllipse(
 		D2D1::Ellipse(
@@ -208,10 +198,9 @@ e2d::Canvas& e2d::Canvas::fillEllipse(const Point & center, float radiusX, float
 		),
 		_fillBrush
 	);
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::fillRect(const Rect & rect)
+void e2d::Canvas::fillRect(const Rect & rect)
 {
 	_renderTarget->FillRectangle(
 		D2D1::RectF(
@@ -222,10 +211,9 @@ e2d::Canvas& e2d::Canvas::fillRect(const Rect & rect)
 		),
 		_fillBrush
 	);
-	return *this;
 }
 
-e2d::Canvas& e2d::Canvas::fillRoundedRect(const Rect & rect, float radiusX, float radiusY)
+void e2d::Canvas::fillRoundedRect(const Rect & rect, float radiusX, float radiusY)
 {
 	_renderTarget->FillRoundedRectangle(
 		D2D1::RoundedRect(
@@ -240,5 +228,4 @@ e2d::Canvas& e2d::Canvas::fillRoundedRect(const Rect & rect, float radiusX, floa
 		),
 		_fillBrush
 	);
-	return *this;
 }

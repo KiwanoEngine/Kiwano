@@ -43,18 +43,18 @@ e2d::Music::XAudio2Tool::~XAudio2Tool()
 	CoUninitialize();
 }
 
-e2d::Music::XAudio2Tool* e2d::Music::XAudio2Tool::instance()
+e2d::Music::XAudio2Tool* e2d::Music::XAudio2Tool::getInstance()
 {
 	static XAudio2Tool instance;
 	return &instance;
 }
 
-IXAudio2 * e2d::Music::XAudio2Tool::xAudio2()
+IXAudio2 * e2d::Music::XAudio2Tool::getXAudio2()
 {
 	return _xAudio2;
 }
 
-IXAudio2MasteringVoice * e2d::Music::XAudio2Tool::masteringVoice()
+IXAudio2MasteringVoice * e2d::Music::XAudio2Tool::getMasteringVoice()
 {
 	return _masteringVoice;
 }
@@ -70,9 +70,8 @@ e2d::Music::Music()
 	, _dwSize(0)
 	, _voice(nullptr)
 	, _voiceCallback(this)
-	, _volume(1.f)
 {
-	auto xAudio2 = XAudio2Tool::instance()->xAudio2();
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
 	xAudio2->AddRef();
 }
 
@@ -86,9 +85,8 @@ e2d::Music::Music(const e2d::String & filePath)
 	, _dwSize(0)
 	, _voice(nullptr)
 	, _voiceCallback(this)
-	, _volume(1.f)
 {
-	auto xAudio2 = XAudio2Tool::instance()->xAudio2();
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
 	xAudio2->AddRef();
 
 	this->open(filePath);
@@ -104,9 +102,8 @@ e2d::Music::Music(const Resource& res)
 	, _dwSize(0)
 	, _voice(nullptr)
 	, _voiceCallback(this)
-	, _volume(1.f)
 {
-	auto xAudio2 = XAudio2Tool::instance()->xAudio2();
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
 	xAudio2->AddRef();
 
 	this->open(res);
@@ -116,7 +113,7 @@ e2d::Music::~Music()
 {
 	close();
 
-	auto xAudio2 = XAudio2Tool::instance()->xAudio2();
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
 	xAudio2->Release();
 }
 
@@ -127,14 +124,14 @@ bool e2d::Music::open(const e2d::String & filePath)
 		close();
 	}
 
-	if (filePath.empty())
+	if (filePath.isEmpty())
 	{
 		WARN("MusicInfo::open Invalid file name.");
 		return false;
 	}
 
-	String actualFilePath = File(filePath).path();
-	if (actualFilePath.empty())
+	String actualFilePath = File(filePath).getFilePath();
+	if (actualFilePath.isEmpty())
 	{
 		WARN("MusicInfo::open File not found.");
 		return false;
@@ -179,7 +176,7 @@ bool e2d::Music::open(const e2d::String & filePath)
 	}
 
 	// 创建音源
-	auto xAudio2 = XAudio2Tool::instance()->xAudio2();
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
 	HRESULT hr = xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
 
 	if (FAILED(hr))
@@ -258,7 +255,7 @@ bool e2d::Music::open(const Resource& res)
 	}
 
 	// 创建音源
-	auto xAudio2 = XAudio2Tool::instance()->xAudio2();
+	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
 	HRESULT hr = xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
 
 	if (FAILED(hr))
@@ -378,7 +375,7 @@ void e2d::Music::close()
 	_playing = false;
 }
 
-bool e2d::Music::playing() const
+bool e2d::Music::isPlaying() const
 {
 	if (_opened && _voice)
 	{
@@ -390,19 +387,13 @@ bool e2d::Music::playing() const
 	}
 }
 
-float e2d::Music::volume() const
-{
-	return _volume;
-}
-
-IXAudio2SourceVoice * e2d::Music::sourceVoice() const
+IXAudio2SourceVoice * e2d::Music::getIXAudio2SourceVoice() const
 {
 	return _voice;
 }
 
-bool e2d::Music::volume(float volume)
+bool e2d::Music::setVolume(float volume)
 {
-	_volume = volume;
 	if (_voice)
 	{
 		return SUCCEEDED(_voice->SetVolume(volume));
@@ -410,14 +401,14 @@ bool e2d::Music::volume(float volume)
 	return false;
 }
 
-void e2d::Music::callbackOnEnd(const Function & func)
+void e2d::Music::setFuncOnEnd(const Function & func)
 {
-	_voiceCallback.SetCallbackOnStreamEnd(func);
+	_voiceCallback.SetFuncOnStreamEnd(func);
 }
 
-void e2d::Music::callbackOnLoopEnd(const Function & func)
+void e2d::Music::setFuncOnLoopEnd(const Function & func)
 {
-	_voiceCallback.SetCallbackOnLoopEnd(func);
+	_voiceCallback.SetFuncOnLoopEnd(func);
 }
 
 bool e2d::Music::_readMMIO()

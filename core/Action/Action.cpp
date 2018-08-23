@@ -7,12 +7,12 @@ e2d::Action::Action()
 	, _initialized(false)
 	, _target(nullptr)
 {
-	ActionManager::instance()->__add(this);
+	ActionManager::getInstance()->__add(this);
 }
 
 e2d::Action::~Action()
 {
-	ActionManager::instance()->__remove(this);
+	ActionManager::getInstance()->__remove(this);
 }
 
 bool e2d::Action::isRunning()
@@ -35,17 +35,17 @@ void e2d::Action::stop()
 	_done = true;
 }
 
-const e2d::String& e2d::Action::name() const
+e2d::String e2d::Action::getName() const
 {
 	return _name;
 }
 
-void e2d::Action::name(const String& name)
+void e2d::Action::setName(const String& name)
 {
 	_name = name;
 }
 
-e2d::Node * e2d::Action::target()
+e2d::Node * e2d::Action::getTarget()
 {
 	return _target;
 }

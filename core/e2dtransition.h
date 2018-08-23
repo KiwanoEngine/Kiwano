@@ -23,7 +23,7 @@ public:
 	virtual ~Transition();
 
 	// 场景过渡动画是否结束
-	bool done();
+	bool isDone();
 
 protected:
 	// 初始化场景过渡动画

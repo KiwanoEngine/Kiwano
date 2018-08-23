@@ -21,8 +21,8 @@ e2d::Game::Game()
 
 	_input = new (std::nothrow) Input;
 	_renderer = new (std::nothrow) Renderer;
-	_timer = Timer::instance();
-	_actionManager = ActionManager::instance();
+	_timer = Timer::getInstance();
+	_actionManager = ActionManager::getInstance();
 }
 
 e2d::Game::~Game()
@@ -36,7 +36,7 @@ e2d::Game::~Game()
 	CoUninitialize();
 }
 
-e2d::Game * e2d::Game::instance()
+e2d::Game * e2d::Game::getInstance()
 {
 	static Game instance;
 	return &instance;
@@ -55,7 +55,7 @@ void e2d::Game::start()
 
 	const int minInterval = 5;
 	Time last = Time::now();
-	HWND hWnd = _window->hWnd();
+	HWND hWnd = _window->getHWnd();
 	
 	::ShowWindow(hWnd, SW_SHOWNORMAL);
 	::UpdateWindow(hWnd);
@@ -81,7 +81,7 @@ void e2d::Game::start()
 			
 			drawScene();
 			_window->poll();
-			GC::instance()->flush();
+			GC::getInstance()->flush();
 		}
 		else
 		{
@@ -112,7 +112,7 @@ void e2d::Game::resume()
 	_paused = false;
 }
 
-bool e2d::Game::paused()
+bool e2d::Game::isPaused()
 {
 	return _paused;
 }
@@ -218,17 +218,17 @@ void e2d::Game::clearAllScenes()
 	}
 }
 
-e2d::Scene * e2d::Game::currentScene()
+e2d::Scene * e2d::Game::getCurrentScene()
 {
 	return _currScene;
 }
 
-const std::stack<e2d::Scene*>& e2d::Game::sceneStack()
+const std::stack<e2d::Scene*>& e2d::Game::getSceneStack()
 {
 	return _scenes;
 }
 
-bool e2d::Game::transitioning() const
+bool e2d::Game::isTransitioning() const
 {
 	return _transition != nullptr;
 }
@@ -239,7 +239,7 @@ void e2d::Game::updateScene()
 	{
 		_transition->_update();
 
-		if (_transition->done())
+		if (_transition->isDone())
 		{
 			_transition->release();
 			_transition = nullptr;

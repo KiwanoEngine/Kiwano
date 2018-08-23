@@ -19,7 +19,7 @@ void e2d::Ref::release()
 	_refCount--;
 }
 
-int e2d::Ref::refCount() const
+int e2d::Ref::getRefCount() const
 {
 	return _refCount;
 }

@@ -33,18 +33,18 @@ private:
 	static T __randomInt(T min, T max)
 	{
 		std::uniform_int_distribution<T> dist(min, max);
-		return dist(Random::__engine());
+		return dist(Random::__getEngine());
 	}
 
 	template<typename T>
 	static T __randomReal(T min, T max)
 	{
 		std::uniform_real_distribution<T> dist(min, max);
-		return dist(Random::__engine());
+		return dist(Random::__getEngine());
 	}
 
 	// 获取随机数产生器
-	static std::default_random_engine &__engine();
+	static std::default_random_engine &__getEngine();
 };
 
 
@@ -95,28 +95,25 @@ public:
 	void close();
 
 	// 是否正在播放
-	bool playing() const;
-
-	// 获取音量
-	float volume() const;
+	bool isPlaying() const;
 
 	// 设置音量
-	bool volume(
-		float volume	/* 音量范围为 -224 ~ 224，0 是静音，1 是正常音量 */
+	bool setVolume(
+		float volume
 	);
 
-	// 设置播放结束回调函数
-	void callbackOnEnd(
+	// 设置播放结束时的执行函数
+	void setFuncOnEnd(
 		const Function& func
 	);
 
-	// 设置循环播放中每一次播放结束时的回调函数
-	void callbackOnLoopEnd(
+	// 设置循环播放中每一次播放结束时的执行函数
+	void setFuncOnLoopEnd(
 		const Function& func
 	);
 
 	// 获取 IXAudio2SourceVoice 对象
-	IXAudio2SourceVoice * sourceVoice() const;
+	IXAudio2SourceVoice * getIXAudio2SourceVoice() const;
 
 public:
 	class XAudio2Tool
@@ -126,13 +123,13 @@ public:
 
 		~XAudio2Tool();
 
-		static XAudio2Tool* instance();
+		static XAudio2Tool* getInstance();
 
 		// 获取 XAudio2 实例对象
-		IXAudio2 * xAudio2();
+		IXAudio2 * getXAudio2();
 
 		// 获取 MasteringVoice 实例对象
-		IXAudio2MasteringVoice* masteringVoice();
+		IXAudio2MasteringVoice* getMasteringVoice();
 
 	protected:
 		IXAudio2 * _xAudio2;
@@ -158,7 +155,6 @@ protected:
 protected:
 	bool					_opened;
 	bool					_playing;
-	float					_volume;
 	DWORD					_dwSize;
 	CHAR*					_resBuffer;
 	BYTE*					_waveData;
@@ -208,7 +204,7 @@ public:
 	);
 
 	// 获取音乐播放状态
-	bool playing(
+	bool isPlaying(
 		const String& filePath	/* 音乐文件路径 */
 	);
 
@@ -239,15 +235,15 @@ public:
 	);
 
 	// 获取音乐播放状态
-	bool playing(
+	bool isPlaying(
 		const Resource& res		/* 音乐资源 */
-	) const;
+	);
 
 	// 获取音量
-	float volume() const;
+	float getVolume();
 
 	// 设置音量
-	void volume(
+	void setVolume(
 		float volume	/* 音量范围为 -224 ~ 224，0 是静音，1 是正常音量 */
 	);
 
@@ -300,7 +296,7 @@ public:
 	bool isRunning() const;
 
 	// 获取任务名称
-	String name() const;
+	String getName() const;
 
 protected:
 	// 执行任务
@@ -326,7 +322,7 @@ class Timer
 {
 public:
 	// 获取定时器实例
-	static Timer * instance();
+	static Timer * getInstance();
 
 	// 添加任务
 	void addTask(
@@ -389,46 +385,46 @@ public:
 
 	// 保存 int 类型的值
 	void saveInt(
-		int value		/* 数据 */
+		int value							/* 数据 */
 	);
 
 	// 保存 float 类型的值
 	void saveDouble(
-		float value		/* 数据 */
+		float value						/* 数据 */
 	);
 
 	// 保存 bool 类型的值
 	void saveBool(
-		bool value		/* 数据 */
+		bool value							/* 数据 */
 	);
 
 	// 保存 字符串 类型的值
 	void saveString(
-		const String& value	/* 数据 */
+		const String& value				/* 数据 */
 	);
 
 	// 获取 int 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	int toInt(
-		int defaultValue	/* 默认值 */
+	int getInt(
+		int defaultValue					/* 默认值 */
 	);
 
 	// 获取 float 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	float toDouble(
-		float defaultValue	/* 默认值 */
+	float getDouble(
+		float defaultValue				/* 默认值 */
 	);
 
 	// 获取 bool 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	bool toBool(
-		bool defaultValue	/* 默认值 */
+	bool getBool(
+		bool defaultValue					/* 默认值 */
 	);
 
 	// 获取 字符串 类型的值
 	// （若不存在则返回 defaultValue 参数的值）
-	String toString(
-		const String& defaultValue		/* 默认值 */
+	String getString(
+		const String& defaultValue			/* 默认值 */
 	);
 
 protected:
@@ -462,13 +458,13 @@ public:
 	bool isFolder() const;
 
 	// 删除文件
-	bool del();
+	bool deleteFile();
 
 	// 获取文件路径
-	const String& path() const;
+	String getFilePath() const;
 
 	// 获取文件扩展名
-	String ext() const;
+	String getExtension() const;
 
 	// 释放资源到临时文件目录
 	static File extract(
@@ -488,7 +484,7 @@ public:
 	);
 
 	// 打开保存文件对话框
-	static String openSaveDialog(
+	static String getSaveFilePath(
 		const String& title = L"保存到",		/* 对话框标题 */
 		const String& defExt = L""			/* 默认扩展名 */
 	);
@@ -508,16 +504,16 @@ class Path
 
 public:
 	// 获取数据的默认保存路径
-	static const String& dataPath();
+	static String getDataPath();
 
 	// 获取临时文件目录
-	static const String& tempPath();
+	static String getTempPath();
 
 	// 获取 LocalAppData 目录
-	static const String& localAppDataPath();
+	static String getLocalAppDataPath();
 
 	// 获取当前程序的运行路径
-	static const String& currentFilePath();
+	static String getCurrentFilePath();
 };
 
 }

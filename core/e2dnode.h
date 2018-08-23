@@ -32,7 +32,7 @@ class KeyEventHandler
 {
 public:
 	// 处理按键消息
-	virtual void handle(const KeyEvent& e) = 0;
+	virtual void handle(KeyEvent e) = 0;
 };
 
 
@@ -41,7 +41,7 @@ class MouseEventHandler
 {
 public:
 	// 处理鼠标消息
-	virtual void handle(const MouseEvent& e) = 0;
+	virtual void handle(MouseEvent e) = 0;
 };
 
 
@@ -50,7 +50,7 @@ class CollisionHandler
 {
 public:
 	// 处理碰撞消息
-	virtual void handle(const Collision& collision) = 0;
+	virtual void handle(Collision collision) = 0;
 };
 
 
@@ -64,10 +64,12 @@ public:
 	// 节点属性
 	struct Property
 	{
-		Point position;		// 坐标
-		Size size;			// 大小
-		float anchorX;		// 锚点 X 坐标
-		float anchorY;		// 锚点 Y 坐标
+		float posX;			// X 坐标
+		float posY;			// Y 坐标
+		float width;		// 宽度
+		float height;		// 高度
+		float pivotX;		// 中心点 X 坐标
+		float pivotY;		// 中心点 Y 坐标
 		float scaleX;		// 横向缩放
 		float scaleY;		// 纵向缩放
 		float rotation;		// 旋转角度
@@ -86,285 +88,7 @@ public:
 	virtual ~Node();
 
 	// 获取节点显示状态
-	virtual bool visible() const;
-
-	// 获取节点名称
-	const String& name() const;
-
-	// 获取节点名称的 Hash 值
-	size_t hashName() const;
-
-	// 获取节点绘图顺序
-	int order() const;
-
-	// 获取节点横坐标
-	float positionX() const;
-
-	// 获取节点纵坐标
-	float positionY() const;
-
-	// 获取节点坐标
-	const Point& position() const;
-
-	// 获取节点宽度
-	float width() const;
-
-	// 获取节点高度
-	float height() const;
-
-	// 获取节点大小
-	Size size() const;
-
-	// 获取节点实际宽度（不考虑缩放）
-	float realWidth() const;
-
-	// 获取节点实际高度（不考虑缩放）
-	float realHeight() const;
-
-	// 获取节点实际大小（不考虑缩放）
-	const Size& realSize() const;
-
-	// 获取节点的锚点
-	float anchorX() const;
-
-	// 获取节点的锚点
-	float anchorY() const;
-
-	// 获取节点横向缩放比例
-	float scaleX() const;
-
-	// 获取节点纵向缩放比例
-	float scaleY() const;
-
-	// 获取节点横向倾斜角度
-	float skewX() const;
-
-	// 获取节点纵向倾斜角度
-	float skewY() const;
-
-	// 获取节点旋转角度
-	float rotation() const;
-
-	// 获取节点透明度
-	float opacity() const;
-
-	// 获取节点属性
-	Property properties() const;
-
-	// 获取差别属性
-	Property extrapolate() const;
-
-	// 设置节点是否显示
-	Node& visible(
-		bool value
-	);
-
-	// 设置节点名称
-	Node& name(
-		const String& name
-	);
-
-	// 设置节点横坐标
-	virtual Node& positionX(
-		float x
-	);
-
-	// 设置节点纵坐标
-	virtual Node& positionY(
-		float y
-	);
-
-	// 设置节点坐标
-	virtual Node& position(
-		const Point & point
-	);
-
-	// 设置节点坐标
-	virtual Node& position(
-		float x,
-		float y
-	);
-
-	// 节点坐标固定
-	virtual Node& positionFixed(
-		bool fixed
-	);
-
-	// 移动节点
-	virtual Node& move(
-		float x,
-		float y
-	);
-
-	// 移动节点
-	virtual Node& move(
-		const Vector2 & v
-	);
-
-	// 设置节点绘图顺序
-	// 默认为 0
-	virtual Node& order(
-		int order
-	);
-
-	// 设置横向缩放比例
-	// 默认为 1.0
-	virtual Node& scaleX(
-		float scaleX
-	);
-
-	// 设置纵向缩放比例
-	// 默认为 1.0
-	virtual Node& scaleY(
-		float scaleY
-	);
-
-	// 设置缩放比例
-	// 默认为 (1.0, 1.0)
-	virtual Node& scale(
-		float scaleX,
-		float scaleY
-	);
-
-	// 设置缩放比例
-	// 默认为 1.0
-	virtual Node& scale(
-		float scale
-	);
-
-	// 设置横向倾斜角度
-	// 默认为 0
-	virtual Node& skewX(
-		float angleX
-	);
-
-	// 设置纵向倾斜角度
-	// 默认为 0
-	virtual Node& skewY(
-		float angleY
-	);
-
-	// 设置倾斜角度
-	// 默认为 (0, 0)
-	virtual Node& skew(
-		float angleX,
-		float angleY
-	);
-
-	// 设置旋转角度
-	// 默认为 0
-	virtual Node& rotation(
-		float rotation
-	);
-
-	// 设置透明度
-	// 默认为 1.0, 范围 [0, 1]
-	virtual Node& opacity(
-		float opacity
-	);
-
-	// 设置锚点的横向位置
-	// 默认为 0, 范围 [0, 1]
-	virtual Node& anchorX(
-		float anchorX
-	);
-
-	// 设置锚点的纵向位置
-	// 默认为 0, 范围 [0, 1]
-	virtual Node& anchorY(
-		float anchorY
-	);
-
-	// 设置锚点位置
-	// 默认为 (0, 0), 范围 [0, 1]
-	virtual Node& anchor(
-		float anchorX,
-		float anchorY
-	);
-
-	// 修改节点宽度
-	virtual Node& width(
-		float width
-	);
-
-	// 修改节点高度
-	virtual Node& height(
-		float height
-	);
-
-	// 修改节点大小
-	virtual Node& size(
-		float width,
-		float height
-	);
-
-	// 修改节点大小
-	virtual Node& size(
-		Size size
-	);
-
-	// 设置节点属性
-	virtual Node& properties(
-		Property prop
-	);
-
-	// 启用或关闭渲染区域裁剪
-	virtual Node& clipEnabled(
-		bool enabled
-	);
-
-	// 添加子节点
-	Node& addChild(
-		Node * child,
-		int order = 0	/* 渲染顺序 */
-	);
-
-	// 添加多个子节点
-	Node& addChild(
-		const std::vector<Node*>& nodes,	/* 节点数组 */
-		int order = 0						/* 渲染顺序 */
-	);
-
-	// 获取节点碰撞体
-	Collider * collider();
-
-	// 获取父节点
-	Node * parent() const;
-
-	// 获取节点所在场景
-	Scene * parentScene() const;
-
-	// 获取名称相同的子节点
-	Node* child(
-		const String& name
-	) const;
-
-	// 获取所有子节点
-	const std::vector<Node*>& children() const;
-
-	// 获取所有名称相同的子节点
-	std::vector<Node*> children(
-		const String& name
-	) const;
-
-	// 获取子节点数量
-	int childrenCount() const;
-
-	// 移除子节点
-	Node& removeChild(
-		Node * child
-	);
-
-	// 移除所有名称相同的子节点
-	Node& removeChildren(
-		const String& childName
-	);
-
-	// 移除所有节点
-	Node& removeAllChildren();
-
-	// 从父节点移除
-	Node& removeFromParent();
+	virtual bool isVisible() const;
 
 	// 判断点是否在节点内
 	bool containsPoint(
@@ -376,34 +100,322 @@ public:
 		Node * node
 	);
 
+	// 获取节点名称
+	String getName() const;
+
+	// 获取节点名称的 Hash 值
+	size_t getHashName() const;
+
+	// 获取节点绘图顺序
+	int getOrder() const;
+
+	// 获取节点横坐标
+	float getPosX() const;
+
+	// 获取节点纵坐标
+	float getPosY() const;
+
+	// 获取节点坐标
+	Point getPos() const;
+
+	// 获取节点宽度
+	float getWidth() const;
+
+	// 获取节点高度
+	float getHeight() const;
+
+	// 获取节点宽度（不考虑缩放）
+	float getRealWidth() const;
+
+	// 获取节点高度（不考虑缩放）
+	float getRealHeight() const;
+
+	// 获取节点大小（不考虑缩放）
+	Size getRealSize() const;
+
+	// 获取节点的中心点
+	float getPivotX() const;
+
+	// 获取节点的中心点
+	float getPivotY() const;
+
+	// 获取节点大小
+	Size getSize() const;
+
+	// 获取节点横向缩放比例
+	float getScaleX() const;
+
+	// 获取节点纵向缩放比例
+	float getScaleY() const;
+
+	// 获取节点横向倾斜角度
+	float getSkewX() const;
+
+	// 获取节点纵向倾斜角度
+	float getSkewY() const;
+
+	// 获取节点旋转角度
+	float getRotation() const;
+
+	// 获取节点透明度
+	float getOpacity() const;
+
+	// 获取节点属性
+	Property getProperty() const;
+
+	// 获取差别属性
+	Property getExtrapolate() const;
+
+	// 获取节点碰撞体
+	Collider * getCollider();
+
+	// 获取父节点
+	Node * getParent() const;
+
+	// 获取节点所在场景
+	Scene * getParentScene() const;
+
+	// 获取所有名称相同的子节点
+	std::vector<Node*> getChildren(
+		const String& name
+	) const;
+
+	// 获取名称相同的子节点
+	Node* getChild(
+		const String& name
+	) const;
+
+	// 获取所有子节点
+	const std::vector<Node*>& getAllChildren() const;
+
+	// 获取子节点数量
+	int getChildrenCount() const;
+
+	// 移除子节点
+	bool removeChild(
+		Node * child
+	);
+
+	// 移除所有名称相同的子节点
+	void removeChildren(
+		const String& childName
+	);
+
+	// 移除所有节点
+	void removeAllChildren();
+
+	// 从父节点移除
+	void removeFromParent();
+
+	// 设置节点是否显示
+	void setVisible(
+		bool value
+	);
+
+	// 设置节点名称
+	void setName(
+		const String& name
+	);
+
+	// 设置节点横坐标
+	virtual void setPosX(
+		float x
+	);
+
+	// 设置节点纵坐标
+	virtual void setPosY(
+		float y
+	);
+
+	// 设置节点坐标
+	virtual void setPos(
+		const Point & point
+	);
+
+	// 设置节点坐标
+	virtual void setPos(
+		float x,
+		float y
+	);
+
+	// 节点坐标固定
+	virtual void setPosFixed(
+		bool fixed
+	);
+
+	// 移动节点
+	virtual void movePosX(
+		float x
+	);
+
+	// 移动节点
+	virtual void movePosY(
+		float y
+	);
+
+	// 移动节点
+	virtual void movePos(
+		float x,
+		float y
+	);
+
+	// 移动节点
+	virtual void movePos(
+		const Vector2 & v
+	);
+
+	// 设置节点绘图顺序
+	// 默认为 0
+	virtual void setOrder(
+		int order
+	);
+
+	// 设置横向缩放比例
+	// 默认为 1.0
+	virtual void setScaleX(
+		float scaleX
+	);
+
+	// 设置纵向缩放比例
+	// 默认为 1.0
+	virtual void setScaleY(
+		float scaleY
+	);
+
+	// 设置缩放比例
+	// 默认为 (1.0, 1.0)
+	virtual void setScale(
+		float scaleX,
+		float scaleY
+	);
+
+	// 设置缩放比例
+	// 默认为 1.0
+	virtual void setScale(
+		float scale
+	);
+
+	// 设置横向倾斜角度
+	// 默认为 0
+	virtual void setSkewX(
+		float angleX
+	);
+
+	// 设置纵向倾斜角度
+	// 默认为 0
+	virtual void setSkewY(
+		float angleY
+	);
+
+	// 设置倾斜角度
+	// 默认为 (0, 0)
+	virtual void setSkew(
+		float angleX,
+		float angleY
+	);
+
+	// 设置旋转角度
+	// 默认为 0
+	virtual void setRotation(
+		float rotation
+	);
+
+	// 设置透明度
+	// 默认为 1.0, 范围 [0, 1]
+	virtual void setOpacity(
+		float opacity
+	);
+
+	// 设置中心点的横向位置
+	// 默认为 0, 范围 [0, 1]
+	virtual void setPivotX(
+		float pivotX
+	);
+
+	// 设置中心点的纵向位置
+	// 默认为 0, 范围 [0, 1]
+	virtual void setPivotY(
+		float pivotY
+	);
+
+	// 设置中心点位置
+	// 默认为 (0, 0), 范围 [0, 1]
+	virtual void setPivot(
+		float pivotX,
+		float pivotY
+	);
+
+	// 修改节点宽度
+	virtual void setWidth(
+		float width
+	);
+
+	// 修改节点高度
+	virtual void setHeight(
+		float height
+	);
+
+	// 修改节点大小
+	virtual void setSize(
+		float width,
+		float height
+	);
+
+	// 修改节点大小
+	virtual void setSize(
+		Size size
+	);
+
+	// 设置节点属性
+	virtual void setProperty(
+		Property prop
+	);
+
+	// 启用或关闭渲染区域裁剪
+	virtual void setClipEnabled(
+		bool enabled
+	);
+
+	// 添加子节点
+	void addChild(
+		Node * child,
+		int order = 0	/* 渲染顺序 */
+	);
+
+	// 添加多个子节点
+	void addChild(
+		const std::vector<Node*>& nodes,	/* 节点数组 */
+		int order = 0						/* 渲染顺序 */
+	);
+
 	// 执行动作
-	Node& runAction(
+	void runAction(
 		Action * action
 	);
 
 	// 继续动作
-	Node& resumeAction(
+	void resumeAction(
 		const String& name
 	);
 
 	// 暂停动作
-	Node& pauseAction(
+	void pauseAction(
 		const String& name
 	);
 
 	// 停止动作
-	Node& stopAction(
+	void stopAction(
 		const String& name
 	);
 
 	// 继续所有暂停动作
-	Node& resumeAllActions();
+	void resumeAllActions();
 
 	// 暂停所有动作
-	Node& pauseAllActions();
+	void pauseAllActions();
 
 	// 停止所有动作
-	Node& stopAllActions();
+	void stopAllActions();
 
 	// 分发鼠标消息
 	virtual bool dispatch(
@@ -450,8 +462,10 @@ protected:
 protected:
 	String		_name;
 	size_t		_hashName;
-	Point		_position;
-	Size		_size;
+	float		_posX;
+	float		_posY;
+	float		_width;
+	float		_height;
 	float		_scaleX;
 	float		_scaleY;
 	float		_rotation;
@@ -459,8 +473,8 @@ protected:
 	float		_skewAngleY;
 	float		_displayOpacity;
 	float		_realOpacity;
-	float		_anchorX;
-	float		_anchorY;
+	float		_pivotX;
+	float		_pivotY;
 	int			_order;
 	bool		_visible;
 	bool		_clipEnabled;
@@ -498,13 +512,13 @@ public:
 
 	// 显示或隐藏节点轮廓
 	// 默认：隐藏
-	Scene& outlineVisible(
+	void setOutlineVisible(
 		bool visible
 	);
 
 	// 打开或关闭碰撞体可视化
 	// 默认：关闭
-	Scene& colliderVisible(
+	void setColliderVisible(
 		bool visible
 	);
 
@@ -570,12 +584,12 @@ public:
 	);
 
 	// 将图片裁剪为矩形
-	Sprite& crop(
+	void crop(
 		const Rect& cropRect	/* 裁剪矩形 */
 	);
 
 	// 获取 Image 对象
-	Image * image() const;
+	virtual Image * getImage() const;
 
 	// 渲染精灵
 	virtual void draw(
@@ -650,40 +664,40 @@ public:
 	virtual ~Text();
 
 	// 获取文本
-	const String& text() const;
+	String getText() const;
 
 	// 获取字体
-	const Font& font() const;
+	Font getFont() const;
 
 	// 获取文本样式
-	const Style& style() const;
+	Style getStyle() const;
 
 	// 获取字体族
-	const String& fontFamily() const;
+	String getFontFamily() const;
 
 	// 获取当前字号
-	float fontSize() const;
+	float getFontSize() const;
 
 	// 获取当前字体粗细值
-	UINT fontWeight() const;
+	UINT getFontWeight() const;
 
 	// 获取文字颜色
-	const Color& color() const;
+	Color getColor() const;
 
 	// 获取描边颜色
-	const Color& outlineColor() const;
+	Color getOutlineColor() const;
 
 	// 获取描边线宽
-	float outlineWidth() const;
+	float getOutlineWidth() const;
 
 	// 获取描边线相交样式
-	Stroke outlineStroke() const;
+	Stroke getOutlineStroke() const;
 
 	// 获取文本显示行数
-	int lineCount() const;
+	int getLineCount() const;
 
 	// 是否是斜体
-	bool italic() const;
+	bool isItalic() const;
 
 	// 是否显示删除线
 	bool hasStrikethrough() const;
@@ -695,92 +709,92 @@ public:
 	bool hasOutline() const;
 
 	// 设置文本
-	Text& text(
+	void setText(
 		const String& text
 	);
 
 	// 设置文本样式
-	Text& style(
+	void setStyle(
 		const Style& style
 	);
 
 	// 设置字体
-	Text& font(
+	void setFont(
 		const Font& font
 	);
 
 	// 设置字体族
-	Text& fontFamily(
+	void setFontFamily(
 		const String& family
 	);
 
 	// 设置字号（默认值为 22）
-	Text& fontSize(
+	void setFontSize(
 		float size
 	);
 
 	// 设置字体粗细值（默认值为 Text::Font::Weight::Normal）
-	Text& fontWeight(
+	void setFontWeight(
 		UINT weight
 	);
 
 	// 设置文字颜色（默认值为 Color::WHITE）
-	Text& color(
+	void setColor(
 		Color color
 	);
 
 	// 设置文字斜体（默认值为 false）
-	Text& italic(
+	void setItalic(
 		bool value
 	);
 
 	// 打开或关闭文本自动换行（默认为关闭）
-	Text& wrapping(
+	void setWrapping(
 		bool wrapping
 	);
 
 	// 设置文本自动换行的宽度（默认为 0）
-	Text& wrappingWidth(
+	void setWrappingWidth(
 		float wrappingWidth
 	);
 
 	// 设置行间距（默认为 0）
-	Text& lineSpacing(
+	void setLineSpacing(
 		float lineSpacing
 	);
 
 	// 设置对齐方式（默认为 Align::Left）
-	Text& alignment(
+	void setAlignment(
 		Align align
 	);
 
 	// 设置下划线（默认值为 false）
-	Text& underline(
+	void setUnderline(
 		bool hasUnderline
 	);
 
 	// 设置删除线（默认值为 false）
-	Text& strikethrough(
+	void setStrikethrough(
 		bool hasStrikethrough
 	);
 
 	// 设置是否显示描边
-	Text& outline(
+	void setOutline(
 		bool hasOutline
 	);
 
 	// 设置描边颜色
-	Text& outlineColor(
+	void setOutlineColor(
 		Color outlineColor
 	);
 
 	// 设置描边线宽
-	Text& outlineWidth(
+	void setOutlineWidth(
 		float outlineWidth
 	);
 
 	// 设置描边线相交样式
-	Text& outlineStroke(
+	void setOutlineStroke(
 		Stroke outlineStroke
 	);
 
@@ -843,43 +857,43 @@ public:
 	);
 
 	// 获取按钮状态是启用还是禁用
-	bool enabled() const;
+	bool isEnable() const;
 
 	// 设置按钮启用或禁用
-	Button& enabled(
+	void setEnabled(
 		bool enabled
 	);
 
 	// 设置一般情况下显示的按钮
-	virtual Button& normal(
+	virtual void setNormal(
 		Node * normal
 	);
 
 	// 设置鼠标移入按钮时显示的按钮
-	virtual Button& mouseover(
+	virtual void setMouseOver(
 		Node * mouseover
 	);
 
 	// 设置鼠标按下按钮时显示的按钮
-	virtual Button& selected(
+	virtual void setSelected(
 		Node * selected
 	);
 
 	// 设置按钮被禁用时显示的按钮
-	virtual Button& disabled(
+	virtual void setDisabled(
 		Node * disabled
 	);
 
-	// 设置点击回调函数
-	Button& clickCallback(
+	// 设置按钮点击后的执行函数
+	void setClickFunc(
 		const Function& func
 	);
 
-	// 设置锚点位置
+	// 设置中心点位置
 	// 默认为 (0, 0), 范围 [0, 1]
-	virtual Button& anchor(
-		float anchorX,
-		float anchorY
+	virtual void setPivot(
+		float pivotX,
+		float pivotY
 	) override;
 
 	// 分发鼠标消息
@@ -963,58 +977,58 @@ public:
 	);
 
 	// 获取开关状态
-	bool checked() const;
+	bool isChecked() const;
 
 	// 设置开关按钮的状态
-	ToggleButton& checked(
+	void setChecked(
 		bool checked
 	);
 
 	// 设置按钮打开状态下显示的按钮
-	virtual ToggleButton& normal(
+	virtual void setNormal(
 		Node * normal
 	) override;
 
 	// 设置按钮打开状态下，鼠标移入按钮时显示的按钮
-	virtual ToggleButton& mouseover(
+	virtual void setMouseOver(
 		Node * mouseover
 	) override;
 
 	// 设置按钮打开状态下，鼠标按下按钮时显示的按钮
-	virtual ToggleButton& selected(
+	virtual void setSelected(
 		Node * selected
 	) override;
 
 	// 设置按钮打开状态下，被禁用时显示的按钮
-	virtual ToggleButton& disabled(
+	virtual void setDisabled(
 		Node * disabled
 	) override;
 
 	// 设置按钮关闭状态下显示的按钮
-	ToggleButton& normalOff(
+	void setNormalOff(
 		Node * normal
 	);
 
 	// 设置按钮关闭状态下，鼠标移入按钮时显示的按钮
-	ToggleButton& mouseOverOff(
+	void setMouseOverOff(
 		Node * mouseover
 	);
 
 	// 设置按钮关闭状态下，鼠标按下按钮时显示的按钮
-	ToggleButton& selectedOff(
+	void setSelectedOff(
 		Node * selected
 	);
 
 	// 设置按钮关闭状态下，按钮被禁用时显示的按钮
-	ToggleButton& disabledOff(
+	void setDisabledOff(
 		Node * disabled
 	);
 
-	// 设置锚点位置
+	// 设置中心点位置
 	// 默认为 (0, 0), 范围 [0, 1]
-	virtual ToggleButton& anchor(
-		float anchorX,
-		float anchorY
+	virtual void setPivot(
+		float pivotX,
+		float pivotY
 	) override;
 
 protected:
@@ -1050,18 +1064,18 @@ public:
 	);
 
 	// 获取菜单是否禁用
-	bool enabled() const;
+	bool isEnable() const;
 
 	// 获取菜单中的按钮数量
-	int buttonCount() const;
+	size_t getButtonCount() const;
 
 	// 设置菜单启用或禁用
-	Menu& enabled(
+	void setEnabled(
 		bool enabled
 	);
 
 	// 添加按钮
-	Menu& addButton(
+	void addButton(
 		Button * button
 	);
 
@@ -1071,7 +1085,7 @@ public:
 	);
 
 	// 获取所有按钮
-	const std::vector<Button*>& buttons() const;
+	const std::vector<Button*>& getAllButtons() const;
 
 protected:
 	E2D_DISABLE_COPY(Menu);
@@ -1096,88 +1110,88 @@ public:
 	virtual ~Canvas();
 
 	// 设置线条颜色
-	Canvas& lineColor(
+	void setLineColor(
 		const Color& color
 	);
 
 	// 设置填充颜色
-	Canvas& fillColor(
+	void setFillColor(
 		const Color& color
 	);
 
 	// 设置线条宽度
-	Canvas& strokeWidth(
+	void setStrokeWidth(
 		float width
 	);
 
 	// 设置线条相交样式
-	Canvas& strokeStyle(
+	void setStrokeStyle(
 		Stroke strokeStyle
 	);
 
 	// 获取线条颜色
-	Color lineColor() const;
+	const Color& getLineColor() const;
 
 	// 获取填充颜色
-	Color fillColor() const;
+	const Color& getFillColor() const;
 
 	// 获取线条宽度
-	float strokeWidth() const;
+	float getStrokeWidth() const;
 
 	// 获取线条相交样式
-	Stroke strokeStyle() const;
+	Stroke getStrokeStyle() const;
 
 	// 画直线
-	Canvas& drawLine(
+	void drawLine(
 		const Point& begin,
 		const Point& end
 	);
 
 	// 画圆形边框
-	Canvas& drawCircle(
+	void drawCircle(
 		const Point& center,
 		float radius
 	);
 
 	// 画椭圆形边框
-	Canvas& drawEllipse(
+	void drawEllipse(
 		const Point& center,
 		float radiusX,
 		float radiusY
 	);
 
 	// 画矩形边框
-	Canvas& drawRect(
+	void drawRect(
 		const Rect& rect
 	);
 
 	// 画圆角矩形边框
-	Canvas& drawRoundedRect(
+	void drawRoundedRect(
 		const Rect& rect,
 		float radiusX,
 		float radiusY
 	);
 
 	// 填充圆形
-	Canvas& fillCircle(
+	void fillCircle(
 		const Point& center,
 		float radius
 	);
 
 	// 填充椭圆形
-	Canvas& fillEllipse(
+	void fillEllipse(
 		const Point& center,
 		float radiusX,
 		float radiusY
 	);
 
 	// 填充矩形
-	Canvas& fillRect(
+	void fillRect(
 		const Rect& rect
 	);
 
 	// 填充圆角矩形
-	Canvas& fillRoundedRect(
+	void fillRoundedRect(
 		const Rect& rect,
 		float radiusX,
 		float radiusY

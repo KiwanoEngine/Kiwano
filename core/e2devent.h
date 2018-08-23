@@ -25,13 +25,13 @@ public:
 	);
 
 	// 获取按键键值
-	KeyCode code() const;
+	KeyCode getCode() const;
 
 	// 获取按键次数
-	int count() const;
+	int getCount() const;
 
 	// 获取事件类型
-	KeyEvent::Type type() const;
+	KeyEvent::Type getType() const;
 
 	// VK 键值转换
 	static KeyCode convertKeyCode(
@@ -75,18 +75,18 @@ public:
 	);
 
 	// 获取鼠标横坐标
-	float positionX() const;
+	float getX() const;
 
 	// 获取鼠标纵坐标
-	float positionY() const;
+	float getY() const;
 
 	// 获取鼠标坐标
-	Point position() const;
+	Point getPos() const;
 
 	// 获取事件类型
-	MouseEvent::Type type() const;
+	MouseEvent::Type getType() const;
 
-	float wheelDelta() const;
+	float getWheelDelta() const;
 
 	// 鼠标左键是否按下
 	bool isLButtonDown() const;
@@ -126,10 +126,10 @@ public:
 	~Collision();
 
 	// 获取发生碰撞节点
-	Node* node() const;
+	Node* getNode() const;
 
 	// 获取交集关系
-	Collider::Relation relation() const;
+	Collider::Relation getRelation() const;
 
 protected:
 	Node * _node;

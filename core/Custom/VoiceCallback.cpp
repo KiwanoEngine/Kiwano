@@ -65,12 +65,12 @@ void e2d::VoiceCallback::OnVoiceError(void * pBufferContext, HRESULT Error)
 {
 }
 
-void e2d::VoiceCallback::SetCallbackOnStreamEnd(const Function & func)
+void e2d::VoiceCallback::SetFuncOnStreamEnd(const Function & func)
 {
 	_streamEndFunc = func;
 }
 
-void e2d::VoiceCallback::SetCallbackOnLoopEnd(const Function & func)
+void e2d::VoiceCallback::SetFuncOnLoopEnd(const Function & func)
 {
 	_loopEndFunc = func;
 }

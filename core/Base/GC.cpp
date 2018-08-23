@@ -11,7 +11,7 @@ void * operator new(size_t size, e2d::autorelease_t const &) E2D_NOEXCEPT
 	void* p = ::operator new(size, std::nothrow);
 	if (p)
 	{
-		GC::instance()->autorelease(static_cast<Ref*>(p));
+		GC::getInstance()->autorelease(static_cast<Ref*>(p));
 	}
 	return p;
 }
@@ -47,7 +47,7 @@ void e2d::GC::flush()
 	_notifyed = false;
 	for (auto iter = _pool.begin(); iter != _pool.end();)
 	{
-		if ((*iter)->refCount() <= 0)
+		if ((*iter)->getRefCount() <= 0)
 		{
 			delete (*iter);
 			iter = _pool.erase(iter);
@@ -63,9 +63,9 @@ void e2d::GC::clear()
 {
 	_cleanup = true;
 
-	Game::instance()->clearAllScenes();
-	Timer::instance()->clearAllTasks();
-	ActionManager::instance()->clearAll();
+	Game::getInstance()->clearAllScenes();
+	Timer::getInstance()->clearAllTasks();
+	ActionManager::getInstance()->clearAll();
 
 	for (const auto& ref : _pool)
 	{
@@ -75,7 +75,7 @@ void e2d::GC::clear()
 	_cleanup = false;
 }
 
-e2d::GC * e2d::GC::instance()
+e2d::GC * e2d::GC::getInstance()
 {
 	static GC _instance;
 	return &_instance;

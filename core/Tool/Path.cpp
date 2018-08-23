@@ -5,17 +5,17 @@ extern "C" const GUID DECLSPEC_SELECTANY FOLDERID_LocalAppData = {
 };
 
 
-const e2d::String& e2d::Path::dataPath()
+e2d::String e2d::Path::getDataPath()
 {
 	static String dataPath;
-	if (dataPath.empty())
+	if (dataPath.isEmpty())
 	{
 		// 设置数据的保存路径
-		String localAppDataPath = Path::localAppDataPath();
-		String title = Game::instance()->window()->title();
+		String localAppDataPath = Path::getLocalAppDataPath();
+		String title = Game::getInstance()->getWindow()->getTitle();
 		String folderName = String::parse(title.hash());
 
-		if (!localAppDataPath.empty())
+		if (!localAppDataPath.isEmpty())
 		{
 			dataPath = localAppDataPath + L"\\Easy2DGameData\\" << folderName << L"\\";
 
@@ -30,14 +30,14 @@ const e2d::String& e2d::Path::dataPath()
 	return dataPath;
 }
 
-const e2d::String& e2d::Path::tempPath()
+e2d::String e2d::Path::getTempPath()
 {
 	static String tempPath;
-	if (tempPath.empty())
+	if (tempPath.isEmpty())
 	{
 		// 设置临时文件保存路径
 		wchar_t path[_MAX_PATH];
-		String title = Game::instance()->window()->title();
+		String title = Game::getInstance()->getWindow()->getTitle();
 		String folderName = String::parse(title.hash());
 
 		if (0 != ::GetTempPath(_MAX_PATH, path))
@@ -54,10 +54,10 @@ const e2d::String& e2d::Path::tempPath()
 	return tempPath;
 }
 
-const e2d::String& e2d::Path::localAppDataPath()
+e2d::String e2d::Path::getLocalAppDataPath()
 {
 	static String localAppDataPath;
-	if (localAppDataPath.empty())
+	if (localAppDataPath.isEmpty())
 	{
 		// 获取 AppData/Local 文件夹的路径
 		typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
@@ -77,10 +77,10 @@ const e2d::String& e2d::Path::localAppDataPath()
 	return localAppDataPath;
 }
 
-const e2d::String& e2d::Path::currentFilePath()
+e2d::String e2d::Path::getCurrentFilePath()
 {
 	static String currFilePath;
-	if (currFilePath.empty())
+	if (currFilePath.isEmpty())
 	{
 		TCHAR szPath[_MAX_PATH] = { 0 };
 		if (::GetModuleFileName(nullptr, szPath, _MAX_PATH) != 0)

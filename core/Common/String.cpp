@@ -332,18 +332,7 @@ e2d::String::operator wchar_t*() const
 	return const_cast<wchar_t*>(_str.c_str());
 }
 
-e2d::String::operator std::wstring() const
-{
-	return _str;
-}
-
-e2d::String::operator std::string() const
-{
-	std::string str = static_cast<const char *>(_bstr_t(_str.c_str()));
-	return std::move(str);
-}
-
-bool e2d::String::empty() const
+bool e2d::String::isEmpty() const
 {
 	return _str.empty();
 }
@@ -357,6 +346,17 @@ size_t e2d::String::hash() const
 {
 	std::hash<std::wstring> hash;
 	return hash(_str);
+}
+
+std::wstring e2d::String::getWString() const
+{
+	return _str;
+}
+
+std::string e2d::String::getCString() const
+{
+	std::string str = static_cast<const char *>(_bstr_t(_str.c_str()));
+	return std::move(str);
 }
 
 wchar_t e2d::String::at(int index) const

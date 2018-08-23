@@ -1,7 +1,7 @@
 #include "..\e2dtool.h"
 
 
-e2d::Timer * e2d::Timer::instance()
+e2d::Timer * e2d::Timer::getInstance()
 {
 	static Timer instance;
 	return &instance;
@@ -34,7 +34,7 @@ void e2d::Timer::stopTasks(const String& name)
 {
 	for (const auto& task : _tasks)
 	{
-		if (task->name() == name)
+		if (task->getName() == name)
 		{
 			task->stop();
 		}
@@ -45,7 +45,7 @@ void e2d::Timer::startTasks(const String& name)
 {
 	for (const auto& task : _tasks)
 	{
-		if (task->name() == name)
+		if (task->getName() == name)
 		{
 			task->start();
 		}
@@ -56,7 +56,7 @@ void e2d::Timer::removeTasks(const String& name)
 {
 	for (const auto& task : _tasks)
 	{
-		if (task->name() == name)
+		if (task->getName() == name)
 		{
 			task->_stopped = true;
 		}

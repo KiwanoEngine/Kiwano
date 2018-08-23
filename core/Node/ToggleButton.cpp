@@ -8,7 +8,7 @@
 		if (Old) this->removeChild(Old);						\
 		if (New)												\
 		{														\
-			New->anchor(_anchorX, _anchorY);					\
+			New->setPivot(_pivotX, _pivotY);					\
 			this->addChild(New);								\
 		}														\
 		Old = New;												\
@@ -43,9 +43,9 @@ e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, c
 	, _selectedOff(nullptr)
 	, _disabledOff(nullptr)
 {
-	this->normal(toggleOnNormal);
-	this->normalOff(toggleOffNormal);
-	this->clickCallback(func);
+	this->setNormal(toggleOnNormal);
+	this->setNormalOff(toggleOffNormal);
+	this->setClickFunc(func);
 }
 
 e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnSelected, Node * toggleOffSelected, const Function& func)
@@ -60,11 +60,11 @@ e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, N
 	, _selectedOff(nullptr)
 	, _disabledOff(nullptr)
 {
-	this->normal(toggleOnNormal);
-	this->normalOff(toggleOffNormal);
-	this->selected(toggleOnSelected);
-	this->selectedOff(toggleOffSelected);
-	this->clickCallback(func);
+	this->setNormal(toggleOnNormal);
+	this->setNormalOff(toggleOffNormal);
+	this->setSelected(toggleOnSelected);
+	this->setSelectedOff(toggleOffSelected);
+	this->setClickFunc(func);
 }
 
 e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, const Function& func)
@@ -79,13 +79,13 @@ e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, N
 	, _selectedOff(nullptr)
 	, _disabledOff(nullptr)
 {
-	this->normal(toggleOnNormal);
-	this->normalOff(toggleOffNormal);
-	this->mouseover(toggleOnMouseOver);
-	this->mouseOverOff(toggleOffMouseOver);
-	this->selected(toggleOnSelected);
-	this->selectedOff(toggleOffSelected);
-	this->clickCallback(func);
+	this->setNormal(toggleOnNormal);
+	this->setNormalOff(toggleOffNormal);
+	this->setMouseOver(toggleOnMouseOver);
+	this->setMouseOverOff(toggleOffMouseOver);
+	this->setSelected(toggleOnSelected);
+	this->setSelectedOff(toggleOffSelected);
+	this->setClickFunc(func);
 }
 
 e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, Node * toggleOnMouseOver, Node * toggleOffMouseOver, Node * toggleOnSelected, Node * toggleOffSelected, Node * toggleOnDisabled, Node * toggleOffDisabled, const Function& func)
@@ -96,23 +96,23 @@ e2d::ToggleButton::ToggleButton(Node * toggleOnNormal, Node * toggleOffNormal, N
 	, _selectedOff(nullptr)
 	, _disabledOff(nullptr)
 {
-	this->normal(toggleOnNormal);
-	this->normalOff(toggleOffNormal);
-	this->mouseover(toggleOnMouseOver);
-	this->mouseOverOff(toggleOffMouseOver);
-	this->selected(toggleOnSelected);
-	this->selectedOff(toggleOffSelected);
-	this->disabled(toggleOnDisabled);
-	this->disabledOff(toggleOffDisabled);
-	this->clickCallback(func);
+	this->setNormal(toggleOnNormal);
+	this->setNormalOff(toggleOffNormal);
+	this->setMouseOver(toggleOnMouseOver);
+	this->setMouseOverOff(toggleOffMouseOver);
+	this->setSelected(toggleOnSelected);
+	this->setSelectedOff(toggleOffSelected);
+	this->setDisabled(toggleOnDisabled);
+	this->setDisabledOff(toggleOffDisabled);
+	this->setClickFunc(func);
 }
 
-bool e2d::ToggleButton::checked() const
+bool e2d::ToggleButton::isChecked() const
 {
 	return _checked;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::checked(bool checked)
+void e2d::ToggleButton::setChecked(bool checked)
 {
 	if (_checked != checked)
 	{
@@ -120,73 +120,63 @@ e2d::ToggleButton& e2d::ToggleButton::checked(bool checked)
 		_updateStatus();
 		_updateVisible();
 	}
-	return *this;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::normal(Node * normal)
+void e2d::ToggleButton::setNormal(Node * normal)
 {
 	SET_BUTTON_NODE(_normalOn, normal);
 	if (normal)
 	{
-		this->size(normal->width(), normal->height());
+		this->setSize(normal->getWidth(), normal->getHeight());
 	}
-	return *this;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::mouseover(Node * mouseover)
+void e2d::ToggleButton::setMouseOver(Node * mouseover)
 {
 	SET_BUTTON_NODE(_mouseoverOn, mouseover);
-	return *this;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::selected(Node * selected)
+void e2d::ToggleButton::setSelected(Node * selected)
 {
 	SET_BUTTON_NODE(_selectedOn, selected);
-	return *this;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::disabled(Node * disabled)
+void e2d::ToggleButton::setDisabled(Node * disabled)
 {
 	SET_BUTTON_NODE(_disabledOn, disabled);
-	return *this;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::normalOff(Node * normal)
+void e2d::ToggleButton::setNormalOff(Node * normal)
 {
 	SET_BUTTON_NODE(_normalOff, normal);
-	return *this;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::mouseOverOff(Node * mouseover)
+void e2d::ToggleButton::setMouseOverOff(Node * mouseover)
 {
 	SET_BUTTON_NODE(_mouseoverOff, mouseover);
-	return *this;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::selectedOff(Node * selected)
+void e2d::ToggleButton::setSelectedOff(Node * selected)
 {
 	SET_BUTTON_NODE(_selectedOff, selected);
-	return *this;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::disabledOff(Node * disabled)
+void e2d::ToggleButton::setDisabledOff(Node * disabled)
 {
 	SET_BUTTON_NODE(_disabledOff, disabled);
-	return *this;
 }
 
-e2d::ToggleButton& e2d::ToggleButton::anchor(float anchorX, float anchorY)
+void e2d::ToggleButton::setPivot(float pivotX, float pivotY)
 {
-	Node::anchor(anchorX, anchorY);
-	SAFE_SET(_normalOn, anchor, anchorX, anchorY);
-	SAFE_SET(_mouseoverOn, anchor, anchorX, anchorY);
-	SAFE_SET(_selectedOn, anchor, anchorX, anchorY);
-	SAFE_SET(_disabledOn, anchor, anchorX, anchorY);
-	SAFE_SET(_normalOff, anchor, anchorX, anchorY);
-	SAFE_SET(_mouseoverOff, anchor, anchorX, anchorY);
-	SAFE_SET(_selectedOff, anchor, anchorX, anchorY);
-	SAFE_SET(_disabledOff, anchor, anchorX, anchorY);
-	return *this;
+	Node::setPivot(pivotX, pivotY);
+	SAFE_SET(_normalOn, setPivot, pivotX, pivotY);
+	SAFE_SET(_mouseoverOn, setPivot, pivotX, pivotY);
+	SAFE_SET(_selectedOn, setPivot, pivotX, pivotY);
+	SAFE_SET(_disabledOn, setPivot, pivotX, pivotY);
+	SAFE_SET(_normalOff, setPivot, pivotX, pivotY);
+	SAFE_SET(_mouseoverOff, setPivot, pivotX, pivotY);
+	SAFE_SET(_selectedOff, setPivot, pivotX, pivotY);
+	SAFE_SET(_disabledOff, setPivot, pivotX, pivotY);
 }
 
 void e2d::ToggleButton::_updateStatus()
@@ -198,10 +188,10 @@ void e2d::ToggleButton::_updateStatus()
 		_selected = _selectedOn;
 		_disabled = _disabledOn;
 
-		SAFE_SET(_normalOff, visible, false);
-		SAFE_SET(_mouseoverOff, visible, false);
-		SAFE_SET(_selectedOff, visible, false);
-		SAFE_SET(_disabledOff, visible, false);
+		SAFE_SET(_normalOff, setVisible, false);
+		SAFE_SET(_mouseoverOff, setVisible, false);
+		SAFE_SET(_selectedOff, setVisible, false);
+		SAFE_SET(_disabledOff, setVisible, false);
 	}
 	else
 	{
@@ -210,10 +200,10 @@ void e2d::ToggleButton::_updateStatus()
 		_selected = _selectedOff;
 		_disabled = _disabledOff;
 
-		SAFE_SET(_normalOn, visible, false);
-		SAFE_SET(_mouseoverOn, visible, false);
-		SAFE_SET(_selectedOn, visible, false);
-		SAFE_SET(_disabledOn, visible, false);
+		SAFE_SET(_normalOn, setVisible, false);
+		SAFE_SET(_mouseoverOn, setVisible, false);
+		SAFE_SET(_selectedOn, setVisible, false);
+		SAFE_SET(_disabledOn, setVisible, false);
 	}
 }
 

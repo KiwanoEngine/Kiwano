@@ -22,8 +22,8 @@ void e2d::ScaleBy::_init()
 
 	if (_target)
 	{
-		_startScaleX = _target->scaleX();
-		_startScaleY = _target->scaleY();
+		_startScaleX = _target->getScaleX();
+		_startScaleY = _target->getScaleY();
 	}
 }
 
@@ -33,7 +33,7 @@ void e2d::ScaleBy::_update()
 
 	if (_target)
 	{
-		_target->scale(_startScaleX + _deltaX * _delta, _startScaleY + _deltaY * _delta);
+		_target->setScale(_startScaleX + _deltaX * _delta, _startScaleY + _deltaY * _delta);
 	}
 }
 

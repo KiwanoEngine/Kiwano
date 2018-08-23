@@ -68,7 +68,7 @@ e2d::Renderer::~Renderer()
 
 void e2d::Renderer::initWithWindow(Window * window)
 {
-	HWND hWnd = window->hWnd();
+	HWND hWnd = window->getHWnd();
 
 	RECT rc;
 	GetClientRect(hWnd, &rc);
@@ -205,12 +205,12 @@ void e2d::Renderer::endDraw()
 	}
 }
 
-e2d::Color e2d::Renderer::backgroundColor()
+e2d::Color e2d::Renderer::getBackgroundColor()
 {
-	return _clearColor;
+	return Color(_clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a);
 }
 
-void e2d::Renderer::backgroundColor(const Color& color)
+void e2d::Renderer::setBackgroundColor(Color color)
 {
 	_clearColor = (D2D1_COLOR_F)color;
 }
@@ -220,7 +220,7 @@ void e2d::Renderer::showFps(bool show)
 	_showFps = show;
 }
 
-ID2D1StrokeStyle * e2d::Renderer::miterStrokeStyle()
+ID2D1StrokeStyle * e2d::Renderer::getMiterStrokeStyle()
 {
 	if (!_miterStrokeStyle)
 	{
@@ -243,7 +243,7 @@ ID2D1StrokeStyle * e2d::Renderer::miterStrokeStyle()
 	return _miterStrokeStyle;
 }
 
-ID2D1StrokeStyle * e2d::Renderer::bevelStrokeStyle()
+ID2D1StrokeStyle * e2d::Renderer::getBevelStrokeStyle()
 {
 	if (!_bevelStrokeStyle)
 	{
@@ -266,7 +266,7 @@ ID2D1StrokeStyle * e2d::Renderer::bevelStrokeStyle()
 	return _bevelStrokeStyle;
 }
 
-ID2D1StrokeStyle * e2d::Renderer::roundStrokeStyle()
+ID2D1StrokeStyle * e2d::Renderer::getRoundStrokeStyle()
 {
 	if (!_roundStrokeStyle)
 	{
