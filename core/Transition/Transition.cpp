@@ -40,7 +40,7 @@ bool e2d::Transition::_init(Game * game, Scene * prev)
 		_outScene->retain();
 	
 	HRESULT hr = S_OK;
-	auto renderer = game->getRenderer();
+	auto renderer = Renderer::getInstance();
 	if (_inScene)
 	{
 		hr = renderer->getRenderTarget()->CreateLayer(&_inLayer);
@@ -56,7 +56,6 @@ bool e2d::Transition::_init(Game * game, Scene * prev)
 		return false;
 	}
 
-	_windowSize = game->getWindow()->getSize();
 	_outLayerParam = _inLayerParam = D2D1::LayerParameters(
 		D2D1::InfiniteRect(),
 		nullptr,
@@ -83,24 +82,25 @@ void e2d::Transition::_update()
 	}
 }
 
-void e2d::Transition::_render(Game * game)
+void e2d::Transition::_render()
 {
-	auto renderTarget = game->getRenderer()->getRenderTarget();
+	auto renderTarget = Renderer::getInstance()->getRenderTarget();
+	auto size = Window::getInstance()->getSize();
 
 	if (_outScene)
 	{
-		Point rootPos = _outScene->getPos();
+		auto rootPos = _outScene->getPos();
 		auto clipRect = D2D1::RectF(
 			std::max(rootPos.x, 0.f),
 			std::max(rootPos.y, 0.f),
-			std::min(rootPos.x + _windowSize.width, _windowSize.width),
-			std::min(rootPos.y + _windowSize.height, _windowSize.height)
+			std::min(rootPos.x + size.width, size.width),
+			std::min(rootPos.y + size.height, size.height)
 		);
 		renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 		renderTarget->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		renderTarget->PushLayer(_outLayerParam, _outLayer);
 
-		_outScene->visit(game);
+		_outScene->visit();
 
 		renderTarget->PopLayer();
 		renderTarget->PopAxisAlignedClip();
@@ -112,14 +112,14 @@ void e2d::Transition::_render(Game * game)
 		auto clipRect = D2D1::RectF(
 			std::max(rootPos.x, 0.f),
 			std::max(rootPos.y, 0.f),
-			std::min(rootPos.x + _windowSize.width, _windowSize.width),
-			std::min(rootPos.y + _windowSize.height, _windowSize.height)
+			std::min(rootPos.x + size.width, size.width),
+			std::min(rootPos.y + size.height, size.height)
 		);
 		renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 		renderTarget->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		renderTarget->PushLayer(_inLayerParam, _inLayer);
 
-		_inScene->visit(game);
+		_inScene->visit();
 
 		renderTarget->PopLayer();
 		renderTarget->PopAxisAlignedClip();

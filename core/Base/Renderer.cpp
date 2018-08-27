@@ -3,6 +3,39 @@
 #include "..\e2dnode.h"
 
 
+e2d::Renderer*		e2d::Renderer::_instance = nullptr;
+ID2D1Factory*		e2d::Renderer::_factory = nullptr;
+IWICImagingFactory*	e2d::Renderer::_imagingFactory = nullptr;
+IDWriteFactory*		e2d::Renderer::_writeFactory = nullptr;
+ID2D1StrokeStyle*	e2d::Renderer::_miterStrokeStyle = nullptr;
+ID2D1StrokeStyle*	e2d::Renderer::_bevelStrokeStyle = nullptr;
+ID2D1StrokeStyle*	e2d::Renderer::_roundStrokeStyle = nullptr;
+
+e2d::Renderer * e2d::Renderer::getInstance()
+{
+	if (!_instance)
+	{
+		_instance = new (std::nothrow) Renderer;
+	}
+	return _instance;
+}
+
+void e2d::Renderer::destroyInstance()
+{
+	if (_instance)
+	{
+		delete _instance;
+		_instance = nullptr;
+
+		SafeRelease(_miterStrokeStyle);
+		SafeRelease(_bevelStrokeStyle);
+		SafeRelease(_roundStrokeStyle);
+		SafeRelease(_factory);
+		SafeRelease(_imagingFactory);
+		SafeRelease(_writeFactory);
+	}
+}
+
 e2d::Renderer::Renderer()
 	: _showFps(false)
 	, _lastRenderTime(Time::now())
@@ -12,63 +45,11 @@ e2d::Renderer::Renderer()
 	, _renderTarget(nullptr)
 	, _solidBrush(nullptr)
 	, _textRenderer(nullptr)
-	, _factory(nullptr)
-	, _imagingFactory(nullptr)
-	, _writeFactory(nullptr)
-	, _miterStrokeStyle(nullptr)
-	, _bevelStrokeStyle(nullptr)
-	, _roundStrokeStyle(nullptr)
 	, _clearColor(D2D1::ColorF(D2D1::ColorF::Black))
 {
 	CoInitialize(nullptr);
 
-	ThrowIfFailed(
-		D2D1CreateFactory(
-			D2D1_FACTORY_TYPE_SINGLE_THREADED,
-			&_factory
-		)
-	);
-
-	ThrowIfFailed(
-		CoCreateInstance(
-			CLSID_WICImagingFactory,
-			nullptr,
-			CLSCTX_INPROC_SERVER,
-			IID_IWICImagingFactory,
-			reinterpret_cast<void**>(&_imagingFactory)
-		)
-	);
-
-	ThrowIfFailed(
-		DWriteCreateFactory(
-			DWRITE_FACTORY_TYPE_SHARED,
-			__uuidof(IDWriteFactory),
-			reinterpret_cast<IUnknown**>(&_writeFactory)
-		)
-	);
-}
-
-e2d::Renderer::~Renderer()
-{
-	SafeRelease(_fpsFormat);
-	SafeRelease(_fpsLayout);
-	SafeRelease(_textRenderer);
-	SafeRelease(_solidBrush);
-	SafeRelease(_renderTarget);
-
-	SafeRelease(_miterStrokeStyle);
-	SafeRelease(_bevelStrokeStyle);
-	SafeRelease(_roundStrokeStyle);
-	SafeRelease(_factory);
-	SafeRelease(_imagingFactory);
-	SafeRelease(_writeFactory);
-
-	CoUninitialize();
-}
-
-void e2d::Renderer::initWithWindow(Window * window)
-{
-	HWND hWnd = window->getHWnd();
+	HWND hWnd = Window::getInstance()->getHWnd();
 
 	RECT rc;
 	GetClientRect(hWnd, &rc);
@@ -81,7 +62,7 @@ void e2d::Renderer::initWithWindow(Window * window)
 	// 创建设备相关资源。这些资源应在 Direct2D 设备消失时重建
 	// 创建一个 Direct2D 渲染目标
 	ThrowIfFailed(
-		_factory->CreateHwndRenderTarget(
+		getFactory()->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(
 				hWnd,
@@ -103,11 +84,22 @@ void e2d::Renderer::initWithWindow(Window * window)
 	ThrowIfFailed(
 		TextRenderer::Create(
 			&_textRenderer,
-			_factory,
+			getFactory(),
 			_renderTarget,
 			_solidBrush
 		)
 	);
+}
+
+e2d::Renderer::~Renderer()
+{
+	SafeRelease(_fpsFormat);
+	SafeRelease(_fpsLayout);
+	SafeRelease(_textRenderer);
+	SafeRelease(_solidBrush);
+	SafeRelease(_renderTarget);
+
+	CoUninitialize();
 }
 
 void e2d::Renderer::beginDraw()
@@ -134,7 +126,7 @@ void e2d::Renderer::endDraw()
 			if (!_fpsFormat)
 			{
 				ThrowIfFailed(
-					_writeFactory->CreateTextFormat(
+					getWriteFactory()->CreateTextFormat(
 						L"",
 						nullptr,
 						DWRITE_FONT_WEIGHT_NORMAL,
@@ -154,7 +146,7 @@ void e2d::Renderer::endDraw()
 			SafeRelease(_fpsLayout);
 
 			ThrowIfFailed(
-				_writeFactory->CreateTextLayout(
+				getWriteFactory()->CreateTextLayout(
 				(const WCHAR *)fpsText,
 					(UINT32)fpsText.length(),
 					_fpsFormat,
@@ -220,12 +212,58 @@ void e2d::Renderer::showFps(bool show)
 	_showFps = show;
 }
 
+ID2D1Factory * e2d::Renderer::getFactory()
+{
+	if (!_factory)
+	{
+		ThrowIfFailed(
+			D2D1CreateFactory(
+				D2D1_FACTORY_TYPE_SINGLE_THREADED,
+				&_factory
+			)
+		);
+	}
+	return _factory;
+}
+
+IWICImagingFactory * e2d::Renderer::getImagingFactory()
+{
+	if (!_imagingFactory)
+	{
+		ThrowIfFailed(
+			CoCreateInstance(
+				CLSID_WICImagingFactory,
+				nullptr,
+				CLSCTX_INPROC_SERVER,
+				IID_IWICImagingFactory,
+				reinterpret_cast<void**>(&_imagingFactory)
+			)
+		);
+	}
+	return _imagingFactory;
+}
+
+IDWriteFactory * e2d::Renderer::getWriteFactory()
+{
+	if (!_writeFactory)
+	{
+		ThrowIfFailed(
+			DWriteCreateFactory(
+				DWRITE_FACTORY_TYPE_SHARED,
+				__uuidof(IDWriteFactory),
+				reinterpret_cast<IUnknown**>(&_writeFactory)
+			)
+		);
+	}
+	return _writeFactory;
+}
+
 ID2D1StrokeStyle * e2d::Renderer::getMiterStrokeStyle()
 {
 	if (!_miterStrokeStyle)
 	{
 		ThrowIfFailed(
-			_factory->CreateStrokeStyle(
+			getFactory()->CreateStrokeStyle(
 				D2D1::StrokeStyleProperties(
 					D2D1_CAP_STYLE_FLAT,
 					D2D1_CAP_STYLE_FLAT,
@@ -248,7 +286,7 @@ ID2D1StrokeStyle * e2d::Renderer::getBevelStrokeStyle()
 	if (!_bevelStrokeStyle)
 	{
 		ThrowIfFailed(
-			_factory->CreateStrokeStyle(
+			getFactory()->CreateStrokeStyle(
 				D2D1::StrokeStyleProperties(
 					D2D1_CAP_STYLE_FLAT,
 					D2D1_CAP_STYLE_FLAT,
@@ -271,7 +309,7 @@ ID2D1StrokeStyle * e2d::Renderer::getRoundStrokeStyle()
 	if (!_roundStrokeStyle)
 	{
 		ThrowIfFailed(
-			_factory->CreateStrokeStyle(
+			getFactory()->CreateStrokeStyle(
 				D2D1::StrokeStyleProperties(
 					D2D1_CAP_STYLE_FLAT,
 					D2D1_CAP_STYLE_FLAT,

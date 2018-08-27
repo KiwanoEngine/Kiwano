@@ -1,16 +1,14 @@
 #include "..\e2dnode.h"
 
 e2d::Canvas::Canvas(float width, float height)
-	: _renderer(nullptr)
-	, _renderTarget(nullptr)
+	: _renderTarget(nullptr)
 	, _fillBrush(nullptr)
 	, _lineBrush(nullptr)
 	, _strokeStyle(nullptr)
 	, _strokeWidth(1.0f)
 	, _stroke(Stroke::Miter)
 {
-	_renderer = Game::getInstance()->getRenderer();
-	_renderTarget = _renderer->getRenderTarget();
+	_renderTarget = Renderer::getInstance()->getRenderTarget();
 	_renderTarget->AddRef();
 
 	ThrowIfFailed(
@@ -60,13 +58,13 @@ void e2d::Canvas::setStrokeStyle(Stroke strokeStyle)
 	switch (strokeStyle)
 	{
 	case e2d::Stroke::Miter:
-		_strokeStyle = _renderer->getMiterStrokeStyle();
+		_strokeStyle = Renderer::getMiterStrokeStyle();
 		break;
 	case e2d::Stroke::Bevel:
-		_strokeStyle = _renderer->getBevelStrokeStyle();
+		_strokeStyle = Renderer::getBevelStrokeStyle();
 		break;
 	case e2d::Stroke::Round:
-		_strokeStyle = _renderer->getRoundStrokeStyle();
+		_strokeStyle = Renderer::getRoundStrokeStyle();
 		break;
 	}
 }

@@ -80,7 +80,7 @@ void e2d::Collider::render()
 {
 	if (_geometry && _enabled && _visible)
 	{
-		auto renderer = Game::getInstance()->getRenderer();
+		auto renderer = Renderer::getInstance();
 		// 获取纯色画刷
 		ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
 		// 设置画刷颜色和透明度
@@ -131,7 +131,7 @@ void e2d::Collider::recreate()
 		return;
 
 	SafeRelease(_geometry);
-	auto factory = Game::getInstance()->getRenderer()->getFactory();
+	auto factory = Renderer::getFactory();
 
 	switch (_shape)
 	{

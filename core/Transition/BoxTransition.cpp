@@ -20,13 +20,14 @@ void e2d::BoxTransition::_update()
 {
 	Transition::_update();
 
+	auto size = Window::getInstance()->getSize();
 	if (_delta <= 0.5)
 	{
 		_outLayerParam.contentBounds = D2D1::RectF(
-			_windowSize.width * _delta,
-			_windowSize.height * _delta,
-			_windowSize.width * (1 - _delta),
-			_windowSize.height * (1 - _delta)
+			size.width * _delta,
+			size.height * _delta,
+			size.width * (1 - _delta),
+			size.height * (1 - _delta)
 		);
 	}
 	else
@@ -34,10 +35,10 @@ void e2d::BoxTransition::_update()
 		_outLayerParam.opacity = 0;
 		_inLayerParam.opacity = 1;
 		_inLayerParam.contentBounds = D2D1::RectF(
-			_windowSize.width * (1 - _delta),
-			_windowSize.height * (1 - _delta),
-			_windowSize.width * _delta,
-			_windowSize.height * _delta
+			size.width * (1 - _delta),
+			size.height * (1 - _delta),
+			size.width * _delta,
+			size.height * _delta
 		);
 		if (_delta >= 1)
 		{

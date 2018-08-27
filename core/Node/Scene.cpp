@@ -6,6 +6,7 @@ e2d::Scene::Scene()
 	: _outlineVisible(false)
 	, _colliderVisible(false)
 {
+	_parentScene = this;
 }
 
 e2d::Scene::~Scene()
@@ -22,20 +23,21 @@ void e2d::Scene::setColliderVisible(bool visible)
 	_colliderVisible = visible;
 }
 
-void e2d::Scene::visit(Game * game)
+void e2d::Scene::visit()
 {
-	Node::visit(game);
+	Node::visit();
 
 	if (_outlineVisible)
 	{
-		auto brush = game->getRenderer()->getSolidColorBrush();
+		auto brush = Renderer::getInstance()->getSolidColorBrush();
 		brush->SetColor(D2D1::ColorF(D2D1::ColorF::Red, 0.6f));
 		brush->SetOpacity(1.f);
-		this->drawOutline(game->getRenderer());
+		this->drawOutline();
 	}
+
 	if (_colliderVisible)
 	{
-		game->getRenderer()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 		this->drawCollider();
 	}
 }

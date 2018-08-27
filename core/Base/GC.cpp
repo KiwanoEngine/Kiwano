@@ -73,6 +73,15 @@ void e2d::GC::clear()
 	}
 	_pool.clear();
 	_cleanup = false;
+
+	// Çå³ý»º´æ
+	Image::clearCache();
+
+	// Çå³ýµ¥Àý
+	Game::destroyInstance();
+	Renderer::destroyInstance();
+	Input::destroyInstance();
+	Window::destroyInstance();
 }
 
 e2d::GC * e2d::GC::getInstance()

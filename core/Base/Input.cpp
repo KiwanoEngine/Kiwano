@@ -4,6 +4,24 @@
 #pragma comment(lib, "dinput8.lib")
 
 
+e2d::Input * e2d::Input::_instance = nullptr;
+
+e2d::Input * e2d::Input::getInstance()
+{
+	if (!_instance)
+		_instance = new (std::nothrow) Input;
+	return _instance;
+}
+
+void e2d::Input::destroyInstance()
+{
+	if (_instance)
+	{
+		delete _instance;
+		_instance = nullptr;
+	}
+}
+
 e2d::Input::Input()
 	: _directInput(false)
 	, _keyboardDevice(false)
@@ -15,32 +33,17 @@ e2d::Input::Input()
 	ZeroMemory(&_mouseState, sizeof(_mouseState));
 
 	// 初始化接口对象
-	HRESULT hr = DirectInput8Create(
-		HINST_THISCOMPONENT,
-		DIRECTINPUT_VERSION,
-		IID_IDirectInput8,
-		(void**)&_directInput,
-		nullptr
+	ThrowIfFailed(
+		DirectInput8Create(
+			HINST_THISCOMPONENT,
+			DIRECTINPUT_VERSION,
+			IID_IDirectInput8,
+			(void**)&_directInput,
+			nullptr
+		)
 	);
-}
 
-e2d::Input::~Input()
-{
-	if (_keyboardDevice)
-		_keyboardDevice->Unacquire();
-	if (_mouseDevice)
-		_mouseDevice->Unacquire();
-
-	SafeRelease(_mouseDevice);
-	SafeRelease(_keyboardDevice);
-	SafeRelease(_directInput);
-
-	CoUninitialize();
-}
-
-void e2d::Input::initWithWindow(Window * window)
-{
-	HWND hwnd = window->getHWnd();
+	HWND hwnd = Window::getInstance()->getHWnd();
 
 	// 初始化键盘设备
 	ThrowIfFailed(
@@ -69,6 +72,20 @@ void e2d::Input::initWithWindow(Window * window)
 	_mouseDevice->SetDataFormat(&c_dfDIMouse);
 	_mouseDevice->Acquire();
 	_mouseDevice->Poll();
+}
+
+e2d::Input::~Input()
+{
+	if (_keyboardDevice)
+		_keyboardDevice->Unacquire();
+	if (_mouseDevice)
+		_mouseDevice->Unacquire();
+
+	SafeRelease(_mouseDevice);
+	SafeRelease(_keyboardDevice);
+	SafeRelease(_directInput);
+
+	CoUninitialize();
 }
 
 void e2d::Input::update()
@@ -130,13 +147,12 @@ float e2d::Input::getMouseY()
 
 e2d::Point e2d::Input::getMousePos()
 {
-	auto window = Game::getInstance()->getWindow();
+	auto window = Window::getInstance();
+	float dpi = window->getDpi();
 
 	POINT mousePos;
 	::GetCursorPos(&mousePos);
 	::ScreenToClient(window->getHWnd(), &mousePos);
-
-	float dpi = window->getDpi();
 	return Point(mousePos.x * 96.f / dpi, mousePos.y * 96.f / dpi);
 }
 

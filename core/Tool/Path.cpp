@@ -12,7 +12,7 @@ e2d::String e2d::Path::getDataPath()
 	{
 		// 设置数据的保存路径
 		String localAppDataPath = Path::getLocalAppDataPath();
-		String title = Game::getInstance()->getWindow()->getTitle();
+		String title = Window::getInstance()->getTitle();
 		String folderName = String::parse(title.hash());
 
 		if (!localAppDataPath.isEmpty())
@@ -37,7 +37,7 @@ e2d::String e2d::Path::getTempPath()
 	{
 		// 设置临时文件保存路径
 		wchar_t path[_MAX_PATH];
-		String title = Game::getInstance()->getWindow()->getTitle();
+		String title = Window::getInstance()->getTitle();
 		String folderName = String::parse(title.hash());
 
 		if (0 != ::GetTempPath(_MAX_PATH, path))

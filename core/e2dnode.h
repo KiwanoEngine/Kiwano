@@ -14,7 +14,7 @@ class Drawable
 {
 public:
 	// 渲染图形
-	virtual void draw(Renderer * renderer) const = 0;
+	virtual void draw() const = 0;
 };
 
 
@@ -430,14 +430,10 @@ public:
 	);
 
 	// 遍历节点
-	virtual void visit(
-		Game * game
-	);
+	virtual void visit();
 
 	// 渲染节点轮廓
-	virtual void drawOutline(
-		Renderer * renderer
-	);
+	virtual void drawOutline();
 
 	// 渲染碰撞体轮廓
 	virtual void drawCollider();
@@ -523,9 +519,7 @@ public:
 	);
 
 	// 遍历节点
-	virtual void visit(
-		Game * game
-	) override;
+	virtual void visit() override;
 
 protected:
 	E2D_DISABLE_COPY(Scene);
@@ -592,9 +586,7 @@ public:
 	Image * getImage() const;
 
 	// 渲染精灵
-	virtual void draw(
-		Renderer * renderer
-	) const override;
+	virtual void draw() const override;
 
 protected:
 	E2D_DISABLE_COPY(Sprite);
@@ -799,9 +791,7 @@ public:
 	);
 
 	// 渲染文字
-	virtual void draw(
-		Renderer * renderer
-	) const override;
+	virtual void draw() const override;
 
 protected:
 	E2D_DISABLE_COPY(Text);
@@ -903,9 +893,7 @@ public:
 	) override;
 
 	// 遍历节点
-	virtual void visit(
-		Game * game
-	) override;
+	virtual void visit() override;
 
 protected:
 	E2D_DISABLE_COPY(Button);
@@ -1203,7 +1191,6 @@ protected:
 protected:
 	float _strokeWidth;
 	Stroke _stroke;
-	Renderer * _renderer;
 	ID2D1RenderTarget * _renderTarget;
 	ID2D1SolidColorBrush * _fillBrush;
 	ID2D1SolidColorBrush * _lineBrush;

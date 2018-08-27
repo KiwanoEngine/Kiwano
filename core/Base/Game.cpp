@@ -6,12 +6,27 @@
 #include <thread>
 
 
+e2d::Game * e2d::Game::_instance = nullptr;
+
+e2d::Game * e2d::Game::getInstance()
+{
+	if (!_instance)
+		_instance = new (std::nothrow) Game;
+	return _instance;
+}
+
+void e2d::Game::destroyInstance()
+{
+	if (_instance)
+	{
+		delete _instance;
+		_instance = nullptr;
+	}
+}
+
 e2d::Game::Game()
 	: _quit(true)
 	, _paused(false)
-	, _window(nullptr)
-	, _input(nullptr)
-	, _renderer(nullptr)
 	, _currScene(nullptr)
 	, _nextScene(nullptr)
 	, _transition(nullptr)
@@ -19,34 +34,16 @@ e2d::Game::Game()
 {
 	CoInitialize(nullptr);
 
-	_input = new (std::nothrow) Input;
-	_renderer = new (std::nothrow) Renderer;
+	_window = Window::getInstance();
+	_input = Input::getInstance();
+	_renderer = Renderer::getInstance();
 	_timer = Timer::getInstance();
 	_actionManager = ActionManager::getInstance();
 }
 
 e2d::Game::~Game()
 {
-	if (_renderer)
-		delete _renderer;
-
-	if (_input)
-		delete _input;
-
 	CoUninitialize();
-}
-
-e2d::Game * e2d::Game::getInstance()
-{
-	static Game instance;
-	return &instance;
-}
-
-void e2d::Game::initWithWindow(Window * window)
-{
-	_window = window;
-	_renderer->initWithWindow(_window);
-	_input->initWithWindow(_window);
 }
 
 void e2d::Game::start()
@@ -274,11 +271,11 @@ void e2d::Game::drawScene()
 	{
 		if (_transition)
 		{
-			_transition->_render(this);
+			_transition->_render();
 		}
 		else if (_currScene)
 		{
-			_currScene->visit(this);
+			_currScene->visit();
 		}
 	}
 	_renderer->endDraw();

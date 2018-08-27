@@ -144,12 +144,6 @@ public:
 	// 判断字符串是否为空
 	bool isEmpty() const;
 
-	// 获取 Unicode 字符串
-	std::wstring getWString() const;
-
-	// 获取 ANSI 字符串
-	std::string getCString() const;
-
 	// 获取指定位置字符
 	wchar_t at(
 		int index
@@ -244,6 +238,8 @@ public:
 	// 类型转换操作符
 	E2D_OP_EXPLICIT operator const wchar_t* () const;
 	E2D_OP_EXPLICIT operator wchar_t* () const;
+	E2D_OP_EXPLICIT operator std::wstring () const;
+	E2D_OP_EXPLICIT operator std::string () const;
 
 	// 比较运算符
 	bool operator== (const String &) const;

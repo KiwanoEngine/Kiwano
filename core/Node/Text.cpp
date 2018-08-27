@@ -287,24 +287,25 @@ void e2d::Text::setOutlineStroke(Stroke outlineStroke)
 	_style.outlineStroke = outlineStroke;
 }
 
-void e2d::Text::draw(Renderer * renderer) const
+void e2d::Text::draw() const
 {
 	if (_textLayout)
 	{
+		auto renderer = Renderer::getInstance();
 		// 创建文本区域
 		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, _width, _height);
 		// 设置画刷颜色和透明度
 		renderer->getSolidColorBrush()->SetOpacity(_displayOpacity);
 		// 获取文本渲染器
-		auto pTextRenderer = renderer->getTextRenderer();
-		pTextRenderer->SetTextStyle(
+		auto textRenderer = renderer->getTextRenderer();
+		textRenderer->SetTextStyle(
 			(D2D1_COLOR_F)_style.color,
 			_style.hasOutline,
 			(D2D1_COLOR_F)_style.outlineColor,
 			_style.outlineWidth,
 			D2D1_LINE_JOIN(_style.outlineStroke)
 		);
-		_textLayout->Draw(nullptr, pTextRenderer, 0, 0);
+		_textLayout->Draw(nullptr, textRenderer, 0, 0);
 	}
 }
 
@@ -320,49 +321,44 @@ void e2d::Text::_createFormat()
 {
 	SafeRelease(_textFormat);
 
-	HRESULT hr = Game::getInstance()->getRenderer()->getWriteFactory()->CreateTextFormat(
-		(const WCHAR *)_font.family,
-		nullptr,
-		DWRITE_FONT_WEIGHT(_font.weight),
-		_font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
-		DWRITE_FONT_STRETCH_NORMAL,
-		_font.size,
-		L"",
-		&_textFormat
+	ThrowIfFailed(
+		Renderer::getWriteFactory()->CreateTextFormat(
+			(const WCHAR *)_font.family,
+			nullptr,
+			DWRITE_FONT_WEIGHT(_font.weight),
+			_font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			_font.size,
+			L"",
+			&_textFormat
+		)
 	);
 
-	if (FAILED(hr))
+	// 设置文字对齐方式
+	_textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(_style.alignment));
+
+	// 设置行间距
+	if (_style.lineSpacing == 0.f)
 	{
-		WARN("Text::_createFormat error : Create IDWriteTextFormat failed!");
-		_textFormat = nullptr;
-		return;
+		_textFormat->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
 	}
 	else
 	{
-		// 设置文字对齐方式
-		_textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(_style.alignment));
-		// 设置行间距
-		if (_style.lineSpacing == 0.f)
-		{
-			_textFormat->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
-		}
-		else
-		{
-			_textFormat->SetLineSpacing(
-				DWRITE_LINE_SPACING_METHOD_UNIFORM,
-				_style.lineSpacing,
-				_style.lineSpacing * 0.8f
-			);
-		}
-		// 打开文本自动换行时，设置换行属性
-		if (_style.wrapping)
-		{
-			_textFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
-		}
-		else
-		{
-			_textFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-		}
+		_textFormat->SetLineSpacing(
+			DWRITE_LINE_SPACING_METHOD_UNIFORM,
+			_style.lineSpacing,
+			_style.lineSpacing * 0.8f
+		);
+	}
+
+	// 打开文本自动换行时，设置换行属性
+	if (_style.wrapping)
+	{
+		_textFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
+	}
+	else
+	{
+		_textFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
 	}
 }
 
@@ -383,52 +379,60 @@ void e2d::Text::_createLayout()
 		return;
 	}
 	
-	HRESULT hr;
 	UINT32 length = (UINT32)_text.length();
-	auto writeFactory = Game::getInstance()->getRenderer()->getWriteFactory();
+	auto writeFactory = Renderer::getWriteFactory();
 
 	// 对文本自动换行情况下进行处理
 	if (_style.wrapping)
 	{
-		hr = writeFactory->CreateTextLayout(
-			(const WCHAR *)_text,
-			length,
-			_textFormat,
-			_style.wrappingWidth,
-			0,
-			&_textLayout
+		ThrowIfFailed(
+			writeFactory->CreateTextLayout(
+				(const WCHAR *)_text,
+				length,
+				_textFormat,
+				_style.wrappingWidth,
+				0,
+				&_textLayout
+			)
 		);
-		if (_textLayout)
-		{
-			// 获取文本布局的宽度和高度
-			DWRITE_TEXT_METRICS metrics;
-			_textLayout->GetMetrics(&metrics);
-			// 重设文本宽高
-			this->setSize(metrics.layoutWidth, metrics.height);
-		}
+		// 获取文本布局的宽度和高度
+		DWRITE_TEXT_METRICS metrics;
+		_textLayout->GetMetrics(&metrics);
+		// 重设文本宽高
+		this->setSize(metrics.layoutWidth, metrics.height);
 	}
 	else
 	{
-		hr = writeFactory->CreateTextLayout((const WCHAR *)_text, length, _textFormat, 0, 0, &_textLayout);
-		// 为防止文本对齐问题，根据刚才创建的 layout 宽度重新创建它
-		if (_textLayout)
-		{
-			// 获取文本布局的宽度和高度
-			DWRITE_TEXT_METRICS metrics;
-			_textLayout->GetMetrics(&metrics);
-			// 重设文本宽高
-			this->setSize(metrics.width, metrics.height);
-			// 重新创建 layout
-			SafeRelease(_textLayout);
-			hr = writeFactory->CreateTextLayout((const WCHAR *)_text, length, _textFormat, _width, 0, &_textLayout);
-		}
-	}
+		// 为防止文本对齐问题，根据先创建 layout 以获取宽度
+		ThrowIfFailed(
+			writeFactory->CreateTextLayout(
+				(const WCHAR *)_text,
+				length,
+				_textFormat,
+				0,
+				0,
+				&_textLayout
+			)
+		);
 
-	if (FAILED(hr))
-	{
-		WARN("Text::_createLayout error : Create IDWriteTextLayout failed!");
-		_textLayout = nullptr;
-		return;
+		// 获取文本布局的宽度和高度
+		DWRITE_TEXT_METRICS metrics;
+		_textLayout->GetMetrics(&metrics);
+		// 重设文本宽高
+		this->setSize(metrics.width, metrics.height);
+
+		// 重新创建 layout
+		SafeRelease(_textLayout);
+		ThrowIfFailed(
+			writeFactory->CreateTextLayout(
+				(const WCHAR *)_text,
+				length,
+				_textFormat,
+				_width,
+				0,
+				&_textLayout
+			)
+		);
 	}
 
 	// 添加下划线和删除线

@@ -70,7 +70,7 @@ e2d::String e2d::File::getExtension() const
 {
 	String fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
-	size_t pos = _fileName.getWString().find_last_of(L'.');
+	size_t pos = std::wstring(_fileName).find_last_of(L'.');
 	// 判断 pos 是否是有效位置
 	if (pos != std::wstring::npos)
 	{
@@ -79,7 +79,7 @@ e2d::String e2d::File::getExtension() const
 		// 转换为小写字母
 		fileExtension = fileExtension.toLower();
 	}
-	return fileExtension;
+	return std::move(fileExtension);
 }
 
 bool e2d::File::del()
@@ -160,8 +160,7 @@ bool e2d::File::createFolder(const String & dirPath)
 
 e2d::String e2d::File::getSaveFilePath(const String& title, const String& defExt)
 {
-	auto window = Game::getInstance()->getWindow();
-	HWND hwnd = window->getHWnd();
+	HWND hwnd = Window::getInstance()->getHWnd();
 
 	// 弹出保存对话框
 	OPENFILENAME ofn = { 0 };

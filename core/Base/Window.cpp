@@ -8,83 +8,36 @@
 #define REGISTER_CLASS	L"Easy2DApp"
 
 
-e2d::Window::Window(const String & title, int width, int height, int iconID)
+e2d::Window * e2d::Window::_instance = nullptr;
+
+e2d::Window * e2d::Window::getInstance()
+{
+	if (!_instance)
+		_instance = new (std::nothrow) Window;
+	return _instance;
+}
+
+void e2d::Window::destroyInstance()
+{
+	if (_instance)
+	{
+		delete _instance;
+		_instance = nullptr;
+	}
+}
+
+e2d::Window::Window()
 	: _hWnd(nullptr)
-	, _width(width)
-	, _height(height)
-	, _title(title)
-	, _iconID(iconID)
+	, _width(640)
+	, _height(480)
+	, _title(L"Easy2D Game")
+	, _iconID(0)
 	, _dpi(0.f)
 {
 	CoInitialize(nullptr);
 
 	// 获取系统 DPI
 	_dpi = static_cast<float>(::GetDpiForSystem());
-
-	WNDCLASSEX wcex = { 0 };
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.lpszClassName = REGISTER_CLASS;
-	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-	wcex.lpfnWndProc = Window::WndProc;
-	wcex.hIcon = nullptr;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = sizeof(LONG_PTR);
-	wcex.hInstance = HINST_THISCOMPONENT;
-	wcex.hbrBackground = nullptr;
-	wcex.lpszMenuName = nullptr;
-	wcex.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
-
-	if (_iconID != 0)
-	{
-		wcex.hIcon = (HICON)::LoadImage(
-			HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(_iconID),
-			IMAGE_ICON,
-			0,
-			0,
-			LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
-		);
-	}
-
-	// 注册窗口类
-	RegisterClassEx(&wcex);
-
-	// 计算窗口大小
-	Rect clientRect = _locate(_width, _height);
-
-	// 创建窗口
-	_hWnd = ::CreateWindowEx(
-		NULL,
-		REGISTER_CLASS,
-		(LPCTSTR)_title,
-		WINDOW_STYLE,
-		int(clientRect.origin.x),
-		int(clientRect.origin.y),
-		int(clientRect.size.width),
-		int(clientRect.size.height),
-		nullptr,
-		nullptr,
-		HINST_THISCOMPONENT,
-		this
-	);
-
-	if (_hWnd)
-	{
-		// 禁用输入法
-		setTypewritingEnabled(false);
-		// 禁用控制台关闭按钮
-		HWND consoleHWnd = ::GetConsoleWindow();
-		if (consoleHWnd)
-		{
-			HMENU hmenu = ::GetSystemMenu(consoleHWnd, FALSE);
-			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
-		}
-	}
-	else
-	{
-		::UnregisterClass(REGISTER_CLASS, HINST_THISCOMPONENT);
-		throw SystemException("Create window failed");
-	}
 }
 
 e2d::Window::~Window()
@@ -192,8 +145,75 @@ e2d::String e2d::Window::getTitle() const
 	return _title;
 }
 
-HWND e2d::Window::getHWnd() const
+HWND e2d::Window::getHWnd()
 {
+	if (!_hWnd)
+	{
+		WNDCLASSEX wcex = { 0 };
+		wcex.cbSize = sizeof(WNDCLASSEX);
+		wcex.lpszClassName = REGISTER_CLASS;
+		wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+		wcex.lpfnWndProc = Window::WndProc;
+		wcex.hIcon = nullptr;
+		wcex.cbClsExtra = 0;
+		wcex.cbWndExtra = sizeof(LONG_PTR);
+		wcex.hInstance = HINST_THISCOMPONENT;
+		wcex.hbrBackground = nullptr;
+		wcex.lpszMenuName = nullptr;
+		wcex.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
+
+		if (_iconID != 0)
+		{
+			wcex.hIcon = (HICON)::LoadImage(
+				HINST_THISCOMPONENT,
+				MAKEINTRESOURCE(_iconID),
+				IMAGE_ICON,
+				0,
+				0,
+				LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
+			);
+		}
+
+		// 注册窗口类
+		RegisterClassEx(&wcex);
+
+		// 计算窗口大小
+		Rect clientRect = _locate(_width, _height);
+
+		// 创建窗口
+		_hWnd = ::CreateWindowEx(
+			NULL,
+			REGISTER_CLASS,
+			(LPCTSTR)_title,
+			WINDOW_STYLE,
+			int(clientRect.origin.x),
+			int(clientRect.origin.y),
+			int(clientRect.size.width),
+			int(clientRect.size.height),
+			nullptr,
+			nullptr,
+			HINST_THISCOMPONENT,
+			this
+		);
+
+		if (_hWnd)
+		{
+			// 禁用输入法
+			setTypewritingEnabled(false);
+			// 禁用控制台关闭按钮
+			HWND consoleHWnd = ::GetConsoleWindow();
+			if (consoleHWnd)
+			{
+				HMENU hmenu = ::GetSystemMenu(consoleHWnd, FALSE);
+				::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+			}
+		}
+		else
+		{
+			::UnregisterClass(REGISTER_CLASS, HINST_THISCOMPONENT);
+			throw SystemException("Create window failed");
+		}
+	}
 	return _hWnd;
 }
 
@@ -318,7 +338,7 @@ void e2d::Window::setTypewritingEnabled(bool enabled)
 	{
 		if (hImc != nullptr)
 		{
-			::ImmAssociateContext(_hWnd, hImc);
+			::ImmAssociateContext(getHWnd(), hImc);
 			hImc = nullptr;
 		}
 	}
@@ -326,7 +346,7 @@ void e2d::Window::setTypewritingEnabled(bool enabled)
 	{
 		if (hImc == nullptr)
 		{
-			hImc = ::ImmAssociateContext(_hWnd, nullptr);
+			hImc = ::ImmAssociateContext(getHWnd(), nullptr);
 		}
 	}
 }
@@ -448,8 +468,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 			// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
 			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-			auto renderer = Game::getInstance()->getRenderer();
-			auto pRT = renderer->getRenderTarget();
+			auto pRT = Renderer::getInstance()->getRenderTarget();
 			if (pRT)
 			{
 				pRT->Resize(D2D1::SizeU(width, height));

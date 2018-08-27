@@ -157,9 +157,8 @@ bool e2d::Image::preload(const Resource& res)
 		return true;
 	}
 
-	Renderer* renderer = Game::getInstance()->getRenderer();
-	ID2D1HwndRenderTarget* pRenderTarget = renderer->getRenderTarget();
-	IWICImagingFactory *pImagingFactory = renderer->getImagingFactory();
+	IWICImagingFactory *pImagingFactory = Renderer::getImagingFactory();
+	ID2D1HwndRenderTarget* pRenderTarget = Renderer::getInstance()->getRenderTarget();
 	IWICBitmapDecoder *pDecoder = nullptr;
 	IWICBitmapFrameDecode *pSource = nullptr;
 	IWICStream *pStream = nullptr;
@@ -287,9 +286,8 @@ bool e2d::Image::preload(const String & fileName)
 	if (_bitmapCache.find(hash) != _bitmapCache.end())
 		return true;
 
-	Renderer* renderer = Game::getInstance()->getRenderer();
-	ID2D1HwndRenderTarget* pRenderTarget = renderer->getRenderTarget();
-	IWICImagingFactory *pImagingFactory = renderer->getImagingFactory();
+	IWICImagingFactory *pImagingFactory = Renderer::getImagingFactory();
+	ID2D1HwndRenderTarget* pRenderTarget = Renderer::getInstance()->getRenderTarget();
 	IWICBitmapDecoder *pDecoder = nullptr;
 	IWICBitmapFrameDecode *pSource = nullptr;
 	IWICStream *pStream = nullptr;

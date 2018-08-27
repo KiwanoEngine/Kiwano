@@ -11,27 +11,26 @@ bool e2d::MoveTransition::_init(Game * game, Scene * prev)
 {
 	if (Transition::_init(game, prev))
 	{
-		float width = _windowSize.width;
-		float height = _windowSize.height;
+		auto size = Window::getInstance()->getSize();
 		if (_direction == Direction::Up)
 		{
-			_posDelta = Vector2(0, -height);
-			_startPos = Point(0, height);
+			_posDelta = Vector2(0, -size.height);
+			_startPos = Point(0, size.height);
 		}
 		else if (_direction == Direction::Down)
 		{
-			_posDelta = Vector2(0, height);
-			_startPos = Point(0, -height);
+			_posDelta = Vector2(0, size.height);
+			_startPos = Point(0, -size.height);
 		}
 		else if (_direction == Direction::Left)
 		{
-			_posDelta = Vector2(-width, 0);
-			_startPos = Point(width, 0);
+			_posDelta = Vector2(-size.width, 0);
+			_startPos = Point(size.width, 0);
 		}
 		else if (_direction == Direction::Right)
 		{
-			_posDelta = Vector2(width, 0);
-			_startPos = Point(-width, 0);
+			_posDelta = Vector2(size.width, 0);
+			_startPos = Point(-size.width, 0);
 		}
 
 		if (_outScene) _outScene->setPos(0, 0);

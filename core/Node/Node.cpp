@@ -79,11 +79,12 @@ e2d::Node::~Node()
 	}
 }
 
-void e2d::Node::visit(Game * game)
+void e2d::Node::visit()
 {
 	if (!_visible)
 		return;
 
+	auto game = Game::getInstance();
 	if (!game->isPaused())
 	{
 		auto updatableNode = dynamic_cast<Updatable*>(this);
@@ -99,8 +100,7 @@ void e2d::Node::visit(Game * game)
 		_extrapolate = this->getProperty();
 	}
 
-	auto renderer = game->getRenderer();
-	auto renderTarget = renderer->getRenderTarget();
+	auto renderTarget = Renderer::getInstance()->getRenderTarget();
 	if (_clipEnabled)
 	{
 		renderTarget->SetTransform(_finalMatri);
@@ -116,7 +116,7 @@ void e2d::Node::visit(Game * game)
 		if (drawableNode)
 		{
 			renderTarget->SetTransform(_finalMatri);
-			drawableNode->draw(renderer);
+			drawableNode->draw();
 		}
 	}
 	else
@@ -131,7 +131,7 @@ void e2d::Node::visit(Game * game)
 			// 访问 Order 小于零的节点
 			if (child->getOrder() < 0)
 			{
-				child->visit(game);
+				child->visit();
 			}
 			else
 			{
@@ -143,12 +143,12 @@ void e2d::Node::visit(Game * game)
 		if (drawableNode)
 		{
 			renderTarget->SetTransform(_finalMatri);
-			drawableNode->draw(renderer);
+			drawableNode->draw();
 		}
 
 		// 访问剩余节点
 		for (; i < _children.size(); ++i)
-			_children[i]->visit(game);
+			_children[i]->visit();
 	}
 
 	if (_clipEnabled)
@@ -157,10 +157,11 @@ void e2d::Node::visit(Game * game)
 	}
 }
 
-void e2d::Node::drawOutline(Renderer * renderer)
+void e2d::Node::drawOutline()
 {
 	if (_visible)
 	{
+		auto renderer = Renderer::getInstance();
 		renderer->getRenderTarget()->SetTransform(_finalMatri);
 		renderer->getRenderTarget()->DrawRectangle(
 			D2D1::RectF(0, 0, _width, _height),
@@ -171,7 +172,7 @@ void e2d::Node::drawOutline(Renderer * renderer)
 		// 渲染所有子节点的轮廓
 		for (const auto& child : _children)
 		{
-			child->drawOutline(renderer);
+			child->drawOutline();
 		}
 	}
 }
@@ -842,7 +843,7 @@ bool e2d::Node::containsPoint(const Point& point)
 	// 为节点创建一个轮廓
 	BOOL ret = 0;
 	ID2D1RectangleGeometry * rectGeo = nullptr;
-	auto factory = Game::getInstance()->getRenderer()->getFactory();
+	auto factory = Renderer::getFactory();
 
 	ThrowIfFailed(
 		factory->CreateRectangleGeometry(
@@ -874,7 +875,7 @@ bool e2d::Node::intersects(Node * node)
 	D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
 	ID2D1RectangleGeometry *rectGeo = nullptr, *rectGeo2 = nullptr;
 	ID2D1TransformedGeometry *transGeo = nullptr, *transGeo2 = nullptr;
-	auto factory = Game::getInstance()->getRenderer()->getFactory();
+	auto factory = Renderer::getFactory();
 
 	ThrowIfFailed(
 		factory->CreateRectangleGeometry(

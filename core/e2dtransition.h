@@ -36,9 +36,7 @@ protected:
 	virtual void _update();
 
 	// 渲染场景过渡动画
-	virtual void _render(
-		Game * game
-	);
+	virtual void _render();
 
 	// 停止场景过渡动画
 	virtual void _stop();
@@ -51,7 +49,6 @@ protected:
 	float	_duration;
 	float	_delta;
 	Time	_started;
-	Size	_windowSize;
 	Scene*	_outScene;
 	Scene*	_inScene;
 	ID2D1Layer * _outLayer;

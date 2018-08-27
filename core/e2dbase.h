@@ -33,14 +33,11 @@ public:
 	};
 
 public:
-	Window(
-		const String& title,	/* 窗体标题 */
-		int width,				/* 窗体宽度 */
-		int height,				/* 窗体高度 */
-		int iconID = 0			/* 窗体图标 */
-	);
+	// 获取窗体实例
+	static Window * getInstance();
 
-	~Window();
+	// 销毁窗体实例
+	static void destroyInstance();
 
 	// 创建窗体互斥体
 	bool createMutex(
@@ -84,7 +81,7 @@ public:
 	float getDpi() const;
 
 	// 获取窗口句柄
-	HWND getHWnd() const;
+	HWND getHWnd();
 
 	// 打开或隐藏控制台
 	void setConsoleEnabled(
@@ -109,6 +106,12 @@ public:
 	void poll();
 
 private:
+	Window();
+
+	~Window();
+
+	E2D_DISABLE_COPY(Window);
+
 	// 根据客户区大小定位窗口
 	Rect _locate(
 		int width,
@@ -131,6 +134,8 @@ private:
 	String	_title;
 	int		_iconID;
 	float	_dpi;
+
+	static Window * _instance;
 };
 
 
@@ -138,9 +143,11 @@ private:
 class Input
 {
 public:
-	Input();
+	// 获取输入设备实例
+	static Input * getInstance();
 
-	~Input();
+	// 销毁输入设备实例
+	static void destroyInstance();
 
 	// 检测键盘某按键是否正被按下
 	bool isDown(
@@ -170,20 +177,24 @@ public:
 	// 获得鼠标Z轴（鼠标滚轮）坐标增量
 	float getMouseDeltaZ();
 
-	// 初始化输入设备
-	void initWithWindow(
-		Window * window
-	);
-
 	// 刷新输入设备状态
 	void update();
 
-private:
+protected:
+	Input();
+
+	~Input();
+
+	E2D_DISABLE_COPY(Input);
+
+protected:
 	IDirectInput8W* _directInput;
 	IDirectInputDevice8W* _keyboardDevice;
 	IDirectInputDevice8W* _mouseDevice;
 	DIMOUSESTATE _mouseState;
 	char _keyBuffer[256];
+
+	static Input * _instance;
 };
 
 
@@ -191,9 +202,11 @@ private:
 class Renderer
 {
 public:
-	Renderer();
+	// 获取渲染器实例
+	static Renderer * getInstance();
 
-	~Renderer();
+	// 销毁实例
+	static void destroyInstance();
 
 	// 获取背景色
 	Color getBackgroundColor();
@@ -209,6 +222,12 @@ public:
 		bool show
 	);
 
+	// 开始渲染
+	void beginDraw();
+
+	// 结束渲染
+	void endDraw();
+
 	// 获取文字渲染器
 	TextRenderer * getTextRenderer() const { return _textRenderer; }
 
@@ -219,35 +238,31 @@ public:
 	ID2D1SolidColorBrush * getSolidColorBrush() const { return _solidBrush; }
 
 	// 获取 ID2D1Factory 对象
-	ID2D1Factory * getFactory() const { return _factory; }
+	static ID2D1Factory * getFactory();
 
 	// 获取 IWICImagingFactory 对象
-	IWICImagingFactory * getImagingFactory() const { return _imagingFactory; }
+	static IWICImagingFactory * getImagingFactory();
 
 	// 获取 IDWriteFactory 对象
-	IDWriteFactory * getWriteFactory() const { return _writeFactory; }
+	static IDWriteFactory * getWriteFactory();
 
 	// 获取 Miter 样式的 ID2D1StrokeStyle
-	ID2D1StrokeStyle * getMiterStrokeStyle();
+	static ID2D1StrokeStyle * getMiterStrokeStyle();
 
 	// 获取 Bevel 样式的 ID2D1StrokeStyle
-	ID2D1StrokeStyle * getBevelStrokeStyle();
+	static ID2D1StrokeStyle * getBevelStrokeStyle();
 
 	// 获取 Round 样式的 ID2D1StrokeStyle
-	ID2D1StrokeStyle * getRoundStrokeStyle();
+	static ID2D1StrokeStyle * getRoundStrokeStyle();
 
-	// 初始化渲染器
-	void initWithWindow(
-		Window * window
-	);
+protected:
+	Renderer();
 
-	// 开始渲染
-	void beginDraw();
+	~Renderer();
 
-	// 结束渲染
-	void endDraw();
+	E2D_DISABLE_COPY(Renderer);
 
-private:
+protected:
 	bool					_showFps;
 	int						_renderTimes;
 	Time					_lastRenderTime;
@@ -257,12 +272,14 @@ private:
 	IDWriteTextLayout*		_fpsLayout;
 	ID2D1SolidColorBrush*	_solidBrush;
 	ID2D1HwndRenderTarget*	_renderTarget;
-	ID2D1Factory*			_factory;
-	IWICImagingFactory*		_imagingFactory;
-	IDWriteFactory*			_writeFactory;
-	ID2D1StrokeStyle*		_miterStrokeStyle;
-	ID2D1StrokeStyle*		_bevelStrokeStyle;
-	ID2D1StrokeStyle*		_roundStrokeStyle;
+
+	static ID2D1Factory*		_factory;
+	static IWICImagingFactory*	_imagingFactory;
+	static IDWriteFactory*		_writeFactory;
+	static ID2D1StrokeStyle*	_miterStrokeStyle;
+	static ID2D1StrokeStyle*	_bevelStrokeStyle;
+	static ID2D1StrokeStyle*	_roundStrokeStyle;
+	static Renderer *			_instance;
 };
 
 
@@ -278,19 +295,8 @@ public:
 	// 获取 Game 实例
 	static Game * getInstance();
 
-	// 初始化
-	void initWithWindow(
-		Window * window
-	);
-
-	// 获取窗体
-	Window * getWindow() const { return _window; }
-
-	// 获取输入设备
-	Input * getInput() const { return _input; }
-
-	// 获取图形设备
-	Renderer * getRenderer() const { return _renderer; }
+	// 销毁实例
+	static void destroyInstance();
 
 	// 启动游戏
 	void start();
@@ -355,15 +361,17 @@ protected:
 private:
 	bool		_quit;
 	bool		_paused;
-	Window*		_window;
-	Input*		_input;
-	Renderer*	_renderer;
 	Timer*		_timer;
 	Scene*		_currScene;
 	Scene*		_nextScene;
 	Transition*	_transition;
-	ActionManager*		_actionManager;
-	std::stack<Scene*>	_scenes;
+	Window*		_window;
+	Input*		_input;
+	Renderer*	_renderer;
+	ActionManager* _actionManager;
+	std::stack<Scene*> _scenes;
+
+	static Game * _instance;
 };
 
 
