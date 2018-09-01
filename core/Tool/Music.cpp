@@ -62,7 +62,6 @@ IXAudio2MasteringVoice * e2d::Music::XAudio2Tool::getMasteringVoice()
 
 e2d::Music::Music()
 	: _opened(false)
-	, _playing(false)
 	, _wfx(nullptr)
 	, _hmmio(nullptr)
 	, _resBuffer(nullptr)
@@ -77,7 +76,6 @@ e2d::Music::Music()
 
 e2d::Music::Music(const e2d::String & filePath)
 	: _opened(false)
-	, _playing(false)
 	, _wfx(nullptr)
 	, _hmmio(nullptr)
 	, _resBuffer(nullptr)
@@ -94,7 +92,6 @@ e2d::Music::Music(const e2d::String & filePath)
 
 e2d::Music::Music(const Resource& res)
 	: _opened(false)
-	, _playing(false)
 	, _wfx(nullptr)
 	, _hmmio(nullptr)
 	, _resBuffer(nullptr)
@@ -187,7 +184,6 @@ bool e2d::Music::open(const e2d::String & filePath)
 	}
 
 	_opened = true;
-	_playing = false;
 	return true;
 }
 
@@ -266,7 +262,6 @@ bool e2d::Music::open(const Resource& res)
 	}
 
 	_opened = true;
-	_playing = false;
 	return true;
 }
 
@@ -284,7 +279,9 @@ bool e2d::Music::play(int nLoopCount)
 		return false;
 	}
 
-	if (_playing)
+	XAUDIO2_VOICE_STATE state;
+	_voice->GetState(&state);
+	if (state.BuffersQueued)
 	{
 		stop();
 	}
@@ -308,10 +305,7 @@ bool e2d::Music::play(int nLoopCount)
 		return false;
 	}
 
-	if (SUCCEEDED(hr = _voice->Start(0)))
-	{
-		_playing = true;
-	}
+	hr = _voice->Start(0);
 
 	return SUCCEEDED(hr);
 }
@@ -320,10 +314,7 @@ void e2d::Music::pause()
 {
 	if (_voice)
 	{
-		if (SUCCEEDED(_voice->Stop()))
-		{
-			_playing = false;
-		}
+		_voice->Stop();
 	}
 }
 
@@ -331,10 +322,7 @@ void e2d::Music::resume()
 {
 	if (_voice)
 	{
-		if (SUCCEEDED(_voice->Start()))
-		{
-			_playing = true;
-		}
+		_voice->Start();
 	}
 }
 
@@ -346,7 +334,6 @@ void e2d::Music::stop()
 		{
 			_voice->ExitLoop();
 			_voice->FlushSourceBuffers();
-			_playing = false;
 		}
 	}
 }
@@ -372,19 +359,18 @@ void e2d::Music::close()
 	SAFE_DELETE_ARRAY(_wfx);
 
 	_opened = false;
-	_playing = false;
 }
 
 bool e2d::Music::isPlaying() const
 {
 	if (_opened && _voice)
 	{
-		return _playing;
+		XAUDIO2_VOICE_STATE state;
+		_voice->GetState(&state);
+		if (state.BuffersQueued)
+			return true;
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 IXAudio2SourceVoice * e2d::Music::getIXAudio2SourceVoice() const

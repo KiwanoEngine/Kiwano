@@ -154,7 +154,6 @@ protected:
 
 protected:
 	bool					_opened;
-	bool					_playing;
 	DWORD					_dwSize;
 	CHAR*					_resBuffer;
 	BYTE*					_waveData;
