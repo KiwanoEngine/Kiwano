@@ -13,36 +13,23 @@ class VoiceCallback
 	: public IXAudio2VoiceCallback
 {
 public:
-	explicit VoiceCallback(
-		Music * music
-	);
+	VoiceCallback();
 
 	~VoiceCallback();
 
-	void __stdcall OnStreamEnd();
+	STDMETHOD_(void, OnVoiceProcessingPassStart) (THIS_ UINT32 BytesRequired) {}
 
-	void __stdcall OnBufferEnd(
-		void * pBufferContext
-	);
+	STDMETHOD_(void, OnVoiceProcessingPassEnd) (THIS) {}
 
-	void __stdcall OnBufferStart(
-		void * pBufferContext
-	);
+	STDMETHOD_(void, OnStreamEnd) (THIS);
 
-	void __stdcall OnLoopEnd(
-		void * pBufferContext
-	);
+	STDMETHOD_(void, OnBufferStart) (THIS_ void* pBufferContext) {}
 
-	void __stdcall OnVoiceProcessingPassEnd();
+	STDMETHOD_(void, OnBufferEnd) (THIS_ void* pBufferContext);
 
-	void __stdcall OnVoiceProcessingPassStart(
-		UINT32 SamplesRequired
-	);
+	STDMETHOD_(void, OnLoopEnd) (THIS_ void* pBufferContext);
 
-	void __stdcall OnVoiceError(
-		void * pBufferContext,
-		HRESULT Error
-	);
+	STDMETHOD_(void, OnVoiceError) (THIS_ void* pBufferContext, HRESULT Error) {}
 
 	void SetFuncOnStreamEnd(
 		const Function& func
@@ -53,7 +40,6 @@ public:
 	);
 
 protected:
-	Music * _music;
 	Function _loopEndFunc;
 	Function _streamEndFunc;
 };

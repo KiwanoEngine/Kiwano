@@ -69,7 +69,7 @@ e2d::Music::Music()
 	, _waveData(nullptr)
 	, _dwSize(0)
 	, _voice(nullptr)
-	, _voiceCallback(this)
+	, _voiceCallback()
 {
 	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
 	xAudio2->AddRef();
@@ -84,7 +84,7 @@ e2d::Music::Music(const e2d::String & filePath)
 	, _waveData(nullptr)
 	, _dwSize(0)
 	, _voice(nullptr)
-	, _voiceCallback(this)
+	, _voiceCallback()
 {
 	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
 	xAudio2->AddRef();
@@ -101,7 +101,7 @@ e2d::Music::Music(const Resource& res)
 	, _waveData(nullptr)
 	, _dwSize(0)
 	, _voice(nullptr)
-	, _voiceCallback(this)
+	, _voiceCallback()
 {
 	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
 	xAudio2->AddRef();
