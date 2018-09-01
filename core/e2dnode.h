@@ -334,6 +334,11 @@ public:
 		bool enabled
 	);
 
+	// 设置节点边缘颜色
+	virtual void setBorderColor(
+		const Color& color
+	);
+
 	// 判断点是否在节点内
 	bool containsPoint(
 		const Point& point
@@ -432,14 +437,14 @@ public:
 	// 遍历节点
 	virtual void visit();
 
-	// 渲染节点轮廓
-	virtual void drawOutline();
-
-	// 渲染碰撞体轮廓
-	virtual void drawCollider();
-
 protected:
 	E2D_DISABLE_COPY(Node);
+
+	// 渲染节点边缘
+	void _drawBorder();
+
+	// 渲染碰撞体轮廓
+	void _drawCollider();
 
 	// 设置节点所在场景
 	void _setParentScene(
@@ -481,6 +486,8 @@ protected:
 	Scene *		_parentScene;
 	Node *		_parent;
 	Property	_extrapolate;
+	Color		_borderColor;
+	ID2D1Geometry*		_border;
 	std::vector<Node*>	_children;
 	D2D1::Matrix3x2F	_initialMatri;
 	D2D1::Matrix3x2F	_finalMatri;
@@ -506,15 +513,15 @@ public:
 	// 说明：返回 false 将阻止窗口关闭
 	virtual bool onCloseWindow() { return true; }
 
-	// 显示或隐藏节点轮廓
+	// 显示或隐藏节点边缘
 	// 默认：隐藏
-	void setOutlineVisible(
+	void showBorder(
 		bool visible
 	);
 
-	// 打开或关闭碰撞体可视化
-	// 默认：关闭
-	void setColliderVisible(
+	// 显示或隐藏碰撞体
+	// 默认：隐藏
+	void showCollider(
 		bool visible
 	);
 
@@ -525,7 +532,7 @@ protected:
 	E2D_DISABLE_COPY(Scene);
 
 protected:
-	bool _outlineVisible;
+	bool _borderVisible;
 	bool _colliderVisible;
 };
 

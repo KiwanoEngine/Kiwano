@@ -186,12 +186,12 @@ void e2d::Collider::recreate()
 	break;
 	}
 
-	ID2D1TransformedGeometry * _transformed;
+	ID2D1TransformedGeometry * transformed;
 	factory->CreateTransformedGeometry(
 		_geometry,
 		_parentNode->_finalMatri,
-		&_transformed
+		&transformed
 	);
 	SafeRelease(_geometry);
-	_geometry = _transformed;
+	_geometry = transformed;
 }

@@ -66,12 +66,16 @@ e2d::Node::Node()
 	, _needTransform(false)
 	, _positionFixed(false)
 	, _collider(this)
+	, _border(nullptr)
+	, _borderColor(Color::Red, 0.6f)
 	, _extrapolate(Property::Origin)
 {
 }
 
 e2d::Node::~Node()
 {
+	SafeRelease(_border);
+
 	ActionManager::getInstance()->clearAllBindedWith(this);
 	for (const auto& child : _children)
 	{
@@ -84,21 +88,17 @@ void e2d::Node::visit()
 	if (!_visible)
 		return;
 
-	auto game = Game::getInstance();
-	if (!game->isPaused())
+	if (!Game::getInstance()->isPaused())
 	{
 		auto updatableNode = dynamic_cast<Updatable*>(this);
 		if (updatableNode)
 		{
 			updatableNode->update();
 		}
-
-		// 更新转换矩阵
-		_updateTransform();
-
-		// 保留差别属性
-		_extrapolate = this->getProperty();
 	}
+
+	_updateTransform();
+	_extrapolate = this->getProperty();
 
 	auto renderTarget = Renderer::getInstance()->getRenderTarget();
 	if (_clipEnabled)
@@ -157,36 +157,38 @@ void e2d::Node::visit()
 	}
 }
 
-void e2d::Node::drawOutline()
+void e2d::Node::_drawBorder()
 {
 	if (_visible)
 	{
-		auto renderer = Renderer::getInstance();
-		renderer->getRenderTarget()->SetTransform(_finalMatri);
-		renderer->getRenderTarget()->DrawRectangle(
-			D2D1::RectF(0, 0, _width, _height),
-			renderer->getSolidColorBrush(),
-			1.5f
-		);
+		if (_border)
+		{
+			auto renderer = Renderer::getInstance();
+			auto brush = renderer->getSolidColorBrush();
+			brush->SetColor(D2D1_COLOR_F(_borderColor));
+			renderer->getRenderTarget()->DrawGeometry(
+				_border,
+				brush,
+				1.5f
+			);
+		}
 
-		// 渲染所有子节点的轮廓
 		for (const auto& child : _children)
 		{
-			child->drawOutline();
+			child->_drawBorder();
 		}
 	}
 }
 
-void e2d::Node::drawCollider()
+void e2d::Node::_drawCollider()
 {
 	if (_visible)
 	{
 		_collider.render();
 
-		// 绘制所有子节点的几何碰撞体
 		for (const auto& child : _children)
 		{
-			child->drawCollider();
+			child->_drawCollider();
 		}
 	}
 }
@@ -224,6 +226,29 @@ void e2d::Node::_updateTransform()
 		_initialMatri = _initialMatri * _parent->_initialMatri;
 		_finalMatri = _finalMatri * _parent->_initialMatri;
 	}
+
+	// 重新构造轮廓
+	SafeRelease(_border);
+
+	ID2D1Factory * factory = Renderer::getFactory();
+	ID2D1RectangleGeometry * rectangle = nullptr;
+	ID2D1TransformedGeometry * transformed = nullptr;
+	ThrowIfFailed(
+		factory->CreateRectangleGeometry(
+			D2D1::RectF(0, 0, _width, _height),
+			&rectangle
+		)
+	);
+	ThrowIfFailed(
+		factory->CreateTransformedGeometry(
+			rectangle,
+			_finalMatri,
+			&transformed
+		)
+	);
+	_border = transformed;
+
+	SafeRelease(rectangle);
 
 	// 通知子节点进行转换
 	for (const auto& child : _children)
@@ -620,6 +645,11 @@ void e2d::Node::setClipEnabled(bool enabled)
 	_clipEnabled = enabled;
 }
 
+void e2d::Node::setBorderColor(const Color & color)
+{
+	_borderColor = color;
+}
+
 void e2d::Node::addChild(Node * child, int order  /* = 0 */)
 {
 	WARN_IF(child == nullptr, "Node::addChild NULL pointer exception.");
@@ -837,90 +867,40 @@ void e2d::Node::stopAction(const String& name)
 
 bool e2d::Node::containsPoint(const Point& point)
 {
-	// 更新转换矩阵
+	if (_width == 0.f || _height == 0.f)
+		return false;
+
 	_updateTransform();
 
-	// 为节点创建一个轮廓
 	BOOL ret = 0;
-	ID2D1RectangleGeometry * rectGeo = nullptr;
-	auto factory = Renderer::getFactory();
-
 	ThrowIfFailed(
-		factory->CreateRectangleGeometry(
-			D2D1::RectF(0, 0, _width, _height),
-			&rectGeo
-		)
-	);
-
-	ThrowIfFailed(
-		rectGeo->FillContainsPoint(
+		_border->FillContainsPoint(
 			D2D1::Point2F(point.x, point.y),
-			_finalMatri,
+			D2D1::Matrix3x2F::Identity(),
 			&ret
 		)
 	);
-
-	SafeRelease(rectGeo);
-
 	return ret != 0;
 }
 
 bool e2d::Node::intersects(Node * node)
 {
+	if (_width == 0.f || _height == 0.f || node->_width == 0.f || node->_height == 0.f)
+		return false;
+
 	// 更新转换矩阵
 	_updateTransform();
 	node->_updateTransform();
 
-	// 为节点创建轮廓
+	// 获取相交状态
 	D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
-	ID2D1RectangleGeometry *rectGeo = nullptr, *rectGeo2 = nullptr;
-	ID2D1TransformedGeometry *transGeo = nullptr, *transGeo2 = nullptr;
-	auto factory = Renderer::getFactory();
-
 	ThrowIfFailed(
-		factory->CreateRectangleGeometry(
-			D2D1::RectF(0, 0, _width, _height),
-			&rectGeo
-		)
-	);
-
-	ThrowIfFailed(
-		factory->CreateRectangleGeometry(
-			D2D1::RectF(0, 0, node->_width, node->_height),
-			&rectGeo2
-		)
-	);
-
-	ThrowIfFailed(
-		factory->CreateTransformedGeometry(
-			rectGeo,
-			_finalMatri,
-			&transGeo
-		)
-	);
-
-	ThrowIfFailed(
-		factory->CreateTransformedGeometry(
-			rectGeo2,
-			node->_finalMatri,
-			&transGeo2
-		)
-	);
-
-	ThrowIfFailed(
-		// 获取相交状态
-		transGeo->CompareWithGeometry(
-			transGeo2,
+		_border->CompareWithGeometry(
+			node->_border,
 			D2D1::Matrix3x2F::Identity(),
 			&relation
 		)
 	);
-
-	SafeRelease(rectGeo);
-	SafeRelease(rectGeo2);
-	SafeRelease(transGeo);
-	SafeRelease(transGeo2);
-
 	return relation != D2D1_GEOMETRY_RELATION_UNKNOWN &&
 		relation != D2D1_GEOMETRY_RELATION_DISJOINT;
 }
