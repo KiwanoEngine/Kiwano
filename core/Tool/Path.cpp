@@ -1,9 +1,5 @@
 #include "..\e2dtool.h"
-
-extern "C" const GUID DECLSPEC_SELECTANY FOLDERID_LocalAppData = { 
-	0xF1B32785, 0x6FBA, 0x4FCF, { 0x9D, 0x55, 0x7B, 0x8E, 0x7F, 0x15, 0x70, 0x91 }
-};
-
+#include <shlobj.h>
 
 e2d::String e2d::Path::getDataPath()
 {
@@ -60,18 +56,9 @@ e2d::String e2d::Path::getLocalAppDataPath()
 	if (localAppDataPath.isEmpty())
 	{
 		// 获取 AppData/Local 文件夹的路径
-		typedef HRESULT(WINAPI* pFunSHGetKnownFolderPath)(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
-
-		PWSTR pszPath = nullptr;
-		HMODULE hModule = LoadLibrary(L"shell32.dll");
-		pFunSHGetKnownFolderPath SHGetKnownFolderPath = (pFunSHGetKnownFolderPath)GetProcAddress(hModule, "SHGetKnownFolderPath");
-		HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &pszPath);
-
-		if (SUCCEEDED(hr))
-		{
-			localAppDataPath = pszPath;
-			CoTaskMemFree(pszPath);
-		}
+		WCHAR strPath[MAX_PATH] = { 0 };
+		::SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, strPath);
+		localAppDataPath = strPath;
 	}
 
 	return localAppDataPath;

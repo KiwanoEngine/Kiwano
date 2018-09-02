@@ -34,7 +34,7 @@ e2d::Window::Window()
 	, _iconID(0)
 	, _dpi(0.f)
 {
-	CoInitialize(nullptr);
+	::CoInitialize(nullptr);
 
 	// 获取系统 DPI
 	_dpi = static_cast<float>(::GetDpiForSystem());
@@ -50,7 +50,7 @@ e2d::Window::~Window()
 	if (_hWnd)
 		::DestroyWindow(_hWnd);
 
-	CoUninitialize();
+	::CoUninitialize();
 }
 
 bool e2d::Window::createMutex(const String & mutex)

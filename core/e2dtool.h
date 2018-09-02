@@ -482,10 +482,17 @@ public:
 		const String& dirPath	/* 文件夹路径 */
 	);
 
-	// 打开保存文件对话框
-	static String getSaveFilePath(
-		const String& title = L"保存到",		/* 对话框标题 */
-		const String& defExt = L""			/* 默认扩展名 */
+	// 弹出打开文件对话框
+	static File showOpenDialog(
+		const String& title = L"打开",	/* 对话框标题 */
+		const String& filter = L""		/* 筛选扩展名，例如 "*.jpg;*.jpeg" */
+	);
+
+	// 弹出保存文件对话框
+	static File showSaveDialog(
+		const String& title = L"保存",	/* 对话框标题 */
+		const String& defFile = L"",	/* 默认保存的文件名 */
+		const String& defExt = L""		/* 默认追加的扩展名，例如 "txt" */
 	);
 
 protected:

@@ -27,7 +27,7 @@ e2d::Input::Input()
 	, _keyboardDevice(false)
 	, _mouseDevice(false)
 {
-	CoInitialize(nullptr);
+	::CoInitialize(nullptr);
 
 	ZeroMemory(_keyBuffer, sizeof(_keyBuffer));
 	ZeroMemory(&_mouseState, sizeof(_mouseState));
@@ -85,7 +85,7 @@ e2d::Input::~Input()
 	SafeRelease(_keyboardDevice);
 	SafeRelease(_directInput);
 
-	CoUninitialize();
+	::CoUninitialize();
 }
 
 void e2d::Input::update()

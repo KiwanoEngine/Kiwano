@@ -1,5 +1,5 @@
 #include "..\e2dtool.h"
-#include <commdlg.h>
+#include <shobjidl.h> 
 
 std::list<e2d::String>	e2d::File::_searchPaths;
 
@@ -158,27 +158,144 @@ bool e2d::File::createFolder(const String & dirPath)
 	return true;
 }
 
-e2d::String e2d::File::getSaveFilePath(const String& title, const String& defExt)
+e2d::File e2d::File::showOpenDialog(const String & title, const String & filter)
 {
-	HWND hwnd = Window::getInstance()->getHWnd();
+	String filePath;
+	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 
-	// 弹出保存对话框
-	OPENFILENAME ofn = { 0 };
-	wchar_t strFilename[MAX_PATH] = { 0 };				// 用于接收文件名
-	ofn.lStructSize = sizeof(OPENFILENAME);				// 结构体大小
-	ofn.hwndOwner = hwnd;								// 窗口句柄
-	ofn.lpstrFilter = L"所有文件\0*.*\0\0";				// 设置过滤
-	ofn.nFilterIndex = 1;								// 过滤器索引
-	ofn.lpstrFile = strFilename;						// 接收返回的文件路径和文件名
-	ofn.nMaxFile = sizeof(strFilename);					// 缓冲区长度
-	ofn.lpstrInitialDir = nullptr;						// 初始目录为默认
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-	ofn.lpstrTitle = (LPCWSTR)title;					// 标题
-	ofn.lpstrDefExt = (LPCWSTR)defExt;					// 默认追加的扩展名
-
-	if (::GetSaveFileName(&ofn))
+	if (SUCCEEDED(hr))
 	{
-		return strFilename;
+		IFileOpenDialog *pFileOpen;
+
+		hr = ::CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+			IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+		if (SUCCEEDED(hr))
+		{
+			if (!title.isEmpty())
+			{
+				pFileOpen->SetTitle(LPCWSTR(title));
+			}
+
+			if (!filter.isEmpty())
+			{
+				COMDLG_FILTERSPEC rgSpec[] =
+				{
+					{ L"", LPCWSTR(filter) }
+				};
+				pFileOpen->SetFileTypes(1, rgSpec);
+			}
+			else
+			{
+				COMDLG_FILTERSPEC rgSpec[] =
+				{
+					{ L"所有文件", L"*.*" }
+				};
+				pFileOpen->SetFileTypes(1, rgSpec);
+			}
+
+			Game::getInstance()->pause();
+			{
+				HWND hWnd = Window::getInstance()->getHWnd();
+				hr = pFileOpen->Show(hWnd);
+			}
+			Game::getInstance()->resume();
+
+			if (SUCCEEDED(hr))
+			{
+				IShellItem *pItem;
+				hr = pFileOpen->GetResult(&pItem);
+				if (SUCCEEDED(hr))
+				{
+					PWSTR pszFilePath;
+					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+					if (SUCCEEDED(hr))
+					{
+						filePath = pszFilePath;
+						::CoTaskMemFree(pszFilePath);
+					}
+					pItem->Release();
+				}
+			}
+			pFileOpen->Release();
+		}
+		::CoUninitialize();
 	}
-	return std::move(String());
+	return std::move(File(filePath));
+}
+
+e2d::File e2d::File::showSaveDialog(const String & title, const String& defFile, const String & defExt)
+{
+	String filePath;
+	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+	
+	if (SUCCEEDED(hr))
+	{
+		IFileSaveDialog *pFileSave;
+
+		hr = ::CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
+			IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileSave));
+
+		if (SUCCEEDED(hr))
+		{
+			if (!title.isEmpty())
+			{
+				pFileSave->SetTitle(LPCWSTR(title));
+			}
+
+			if (!defFile.isEmpty())
+			{
+				pFileSave->SetFileName(LPCWSTR(defFile));
+			}
+
+			if (!defExt.isEmpty())
+			{
+				pFileSave->SetDefaultExtension(LPCWSTR(defExt));
+
+				String spec = L"*." + defExt;
+				COMDLG_FILTERSPEC rgSpec[] =
+				{
+					{ L"", LPCWSTR(spec) }
+				};
+				pFileSave->SetFileTypes(1, rgSpec);
+			}
+			else
+			{
+				COMDLG_FILTERSPEC rgSpec[] =
+				{
+					{ L"所有文件", L"*.*" }
+				};
+				pFileSave->SetFileTypes(1, rgSpec);
+			}
+
+			Game::getInstance()->pause();
+			{
+				HWND hWnd = Window::getInstance()->getHWnd();
+				hr = pFileSave->Show(hWnd);
+			}
+			Game::getInstance()->resume();
+
+			if (SUCCEEDED(hr))
+			{
+				IShellItem *pItem;
+				hr = pFileSave->GetResult(&pItem);
+				if (SUCCEEDED(hr))
+				{
+					PWSTR pszFilePath;
+					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+					if (SUCCEEDED(hr))
+					{
+						filePath = pszFilePath;
+						::CoTaskMemFree(pszFilePath);
+					}
+					pItem->Release();
+				}
+			}
+			pFileSave->Release();
+		}
+		::CoUninitialize();
+	}
+	return std::move(File(filePath));
 }

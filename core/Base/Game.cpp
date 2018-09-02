@@ -32,7 +32,7 @@ e2d::Game::Game()
 	, _transition(nullptr)
 	, _scenes()
 {
-	CoInitialize(nullptr);
+	::CoInitialize(nullptr);
 
 	_window = Window::getInstance();
 	_input = Input::getInstance();
@@ -43,7 +43,7 @@ e2d::Game::Game()
 
 e2d::Game::~Game()
 {
-	CoUninitialize();
+	::CoUninitialize();
 }
 
 void e2d::Game::start()

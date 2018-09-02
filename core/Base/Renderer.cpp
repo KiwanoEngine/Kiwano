@@ -47,7 +47,7 @@ e2d::Renderer::Renderer()
 	, _textRenderer(nullptr)
 	, _clearColor(D2D1::ColorF(D2D1::ColorF::Black))
 {
-	CoInitialize(nullptr);
+	::CoInitialize(nullptr);
 
 	HWND hWnd = Window::getInstance()->getHWnd();
 
@@ -99,7 +99,7 @@ e2d::Renderer::~Renderer()
 	SafeRelease(_solidBrush);
 	SafeRelease(_renderTarget);
 
-	CoUninitialize();
+	::CoUninitialize();
 }
 
 void e2d::Renderer::beginDraw()
@@ -216,12 +216,16 @@ ID2D1Factory * e2d::Renderer::getFactory()
 {
 	if (!_factory)
 	{
+		::CoInitialize(nullptr);
+
 		ThrowIfFailed(
 			D2D1CreateFactory(
 				D2D1_FACTORY_TYPE_SINGLE_THREADED,
 				&_factory
 			)
 		);
+
+		::CoUninitialize();
 	}
 	return _factory;
 }
@@ -230,6 +234,8 @@ IWICImagingFactory * e2d::Renderer::getImagingFactory()
 {
 	if (!_imagingFactory)
 	{
+		::CoInitialize(nullptr);
+
 		ThrowIfFailed(
 			CoCreateInstance(
 				CLSID_WICImagingFactory,
@@ -239,6 +245,8 @@ IWICImagingFactory * e2d::Renderer::getImagingFactory()
 				reinterpret_cast<void**>(&_imagingFactory)
 			)
 		);
+
+		::CoUninitialize();
 	}
 	return _imagingFactory;
 }
@@ -247,6 +255,8 @@ IDWriteFactory * e2d::Renderer::getWriteFactory()
 {
 	if (!_writeFactory)
 	{
+		::CoInitialize(nullptr);
+
 		ThrowIfFailed(
 			DWriteCreateFactory(
 				DWRITE_FACTORY_TYPE_SHARED,
@@ -254,6 +264,8 @@ IDWriteFactory * e2d::Renderer::getWriteFactory()
 				reinterpret_cast<IUnknown**>(&_writeFactory)
 			)
 		);
+
+		::CoUninitialize();
 	}
 	return _writeFactory;
 }

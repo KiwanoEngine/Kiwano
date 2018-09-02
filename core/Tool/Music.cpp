@@ -24,7 +24,7 @@ inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 
 e2d::Music::XAudio2Tool::XAudio2Tool()
 {
-	CoInitialize(nullptr);
+	::CoInitialize(nullptr);
 
 	ThrowIfFailed(
 		XAudio2Create(&_xAudio2, 0)
@@ -40,7 +40,7 @@ e2d::Music::XAudio2Tool::~XAudio2Tool()
 	_masteringVoice->DestroyVoice();
 	_xAudio2->Release();
 
-	CoUninitialize();
+	::CoUninitialize();
 }
 
 e2d::Music::XAudio2Tool* e2d::Music::XAudio2Tool::getInstance()
