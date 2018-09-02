@@ -139,65 +139,6 @@ private:
 };
 
 
-// 输入设备
-class Input
-{
-public:
-	// 获取输入设备实例
-	static Input * getInstance();
-
-	// 销毁输入设备实例
-	static void destroyInstance();
-
-	// 检测键盘某按键是否正被按下
-	bool isDown(
-		KeyCode key
-	);
-
-	// 检测鼠标按键是否正被按下
-	bool isDown(
-		MouseCode code
-	);
-
-	// 获得鼠标X轴坐标值
-	float getMouseX();
-
-	// 获得鼠标Y轴坐标值
-	float getMouseY();
-
-	// 获得鼠标坐标值
-	Point getMousePos();
-
-	// 获得鼠标X轴坐标增量
-	float getMouseDeltaX();
-
-	// 获得鼠标Y轴坐标增量
-	float getMouseDeltaY();
-
-	// 获得鼠标Z轴（鼠标滚轮）坐标增量
-	float getMouseDeltaZ();
-
-	// 刷新输入设备状态
-	void update();
-
-protected:
-	Input();
-
-	~Input();
-
-	E2D_DISABLE_COPY(Input);
-
-protected:
-	IDirectInput8W* _directInput;
-	IDirectInputDevice8W* _keyboardDevice;
-	IDirectInputDevice8W* _mouseDevice;
-	DIMOUSESTATE _mouseState;
-	char _keyBuffer[256];
-
-	static Input * _instance;
-};
-
-
 // 渲染器
 class Renderer
 {
@@ -280,6 +221,96 @@ protected:
 	static ID2D1StrokeStyle*	_bevelStrokeStyle;
 	static ID2D1StrokeStyle*	_roundStrokeStyle;
 	static Renderer *			_instance;
+};
+
+
+// 输入设备
+class Input
+{
+public:
+	// 获取输入设备实例
+	static Input * getInstance();
+
+	// 销毁输入设备实例
+	static void destroyInstance();
+
+	// 检测键盘某按键是否正被按下
+	bool isDown(
+		KeyCode key
+	);
+
+	// 检测鼠标按键是否正被按下
+	bool isDown(
+		MouseCode code
+	);
+
+	// 获得鼠标X轴坐标值
+	float getMouseX();
+
+	// 获得鼠标Y轴坐标值
+	float getMouseY();
+
+	// 获得鼠标坐标值
+	Point getMousePos();
+
+	// 获得鼠标X轴坐标增量
+	float getMouseDeltaX();
+
+	// 获得鼠标Y轴坐标增量
+	float getMouseDeltaY();
+
+	// 获得鼠标Z轴（鼠标滚轮）坐标增量
+	float getMouseDeltaZ();
+
+	// 刷新输入设备状态
+	void update();
+
+protected:
+	Input();
+
+	~Input();
+
+	E2D_DISABLE_COPY(Input);
+
+protected:
+	IDirectInput8W * _directInput;
+	IDirectInputDevice8W* _keyboardDevice;
+	IDirectInputDevice8W* _mouseDevice;
+	DIMOUSESTATE _mouseState;
+	char _keyBuffer[256];
+
+	static Input * _instance;
+};
+
+
+// 音频设备
+class Audio
+{
+public:
+	// 获取音频设备实例
+	static Audio * getInstance();
+
+	// 销毁实例
+	static void destroyInstance();
+
+	// 获取 XAudio2 实例对象
+	IXAudio2 * getXAudio2();
+
+	// 获取 MasteringVoice 实例对象
+	IXAudio2MasteringVoice* getMasteringVoice();
+
+protected:
+	Audio();
+
+	virtual ~Audio();
+
+	E2D_DISABLE_COPY(Audio);
+
+protected:
+	IXAudio2 * _xAudio2;
+	IXAudio2MasteringVoice* _masteringVoice;
+
+	static Audio * _instance;
 };
 
 
@@ -394,9 +425,6 @@ public:
 
 	// 刷新内存池
 	void flush();
-
-	// 回收内存池中的所有对象
-	void clear();
 
 private:
 	GC();

@@ -22,44 +22,6 @@ inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 }
 
 
-e2d::Music::XAudio2Tool::XAudio2Tool()
-{
-	::CoInitialize(nullptr);
-
-	ThrowIfFailed(
-		XAudio2Create(&_xAudio2, 0)
-	);
-
-	ThrowIfFailed(
-		_xAudio2->CreateMasteringVoice(&_masteringVoice)
-	);
-}
-
-e2d::Music::XAudio2Tool::~XAudio2Tool()
-{
-	_masteringVoice->DestroyVoice();
-	_xAudio2->Release();
-
-	::CoUninitialize();
-}
-
-e2d::Music::XAudio2Tool* e2d::Music::XAudio2Tool::getInstance()
-{
-	static XAudio2Tool instance;
-	return &instance;
-}
-
-IXAudio2 * e2d::Music::XAudio2Tool::getXAudio2()
-{
-	return _xAudio2;
-}
-
-IXAudio2MasteringVoice * e2d::Music::XAudio2Tool::getMasteringVoice()
-{
-	return _masteringVoice;
-}
-
-
 e2d::Music::Music()
 	: _opened(false)
 	, _wfx(nullptr)
@@ -70,8 +32,6 @@ e2d::Music::Music()
 	, _voice(nullptr)
 	, _voiceCallback()
 {
-	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
-	xAudio2->AddRef();
 }
 
 e2d::Music::Music(const e2d::String & filePath)
@@ -84,9 +44,6 @@ e2d::Music::Music(const e2d::String & filePath)
 	, _voice(nullptr)
 	, _voiceCallback()
 {
-	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
-	xAudio2->AddRef();
-
 	this->open(filePath);
 }
 
@@ -100,18 +57,12 @@ e2d::Music::Music(const Resource& res)
 	, _voice(nullptr)
 	, _voiceCallback()
 {
-	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
-	xAudio2->AddRef();
-
 	this->open(res);
 }
 
 e2d::Music::~Music()
 {
 	close();
-
-	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
-	xAudio2->Release();
 }
 
 bool e2d::Music::open(const e2d::String & filePath)
@@ -173,7 +124,7 @@ bool e2d::Music::open(const e2d::String & filePath)
 	}
 
 	// 创建音源
-	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
+	auto xAudio2 = Audio::getInstance()->getXAudio2();
 	HRESULT hr = xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
 
 	if (FAILED(hr))
@@ -251,7 +202,7 @@ bool e2d::Music::open(const Resource& res)
 	}
 
 	// 创建音源
-	auto xAudio2 = XAudio2Tool::getInstance()->getXAudio2();
+	auto xAudio2 = Audio::getInstance()->getXAudio2();
 	HRESULT hr = xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
 
 	if (FAILED(hr))

@@ -1,6 +1,26 @@
 #include "..\e2dtool.h"
 
 
+e2d::Player * e2d::Player::_instance = nullptr;
+
+e2d::Player * e2d::Player::getInstance()
+{
+	if (!_instance)
+	{
+		_instance = new (std::nothrow) Player;
+	}
+	return _instance;
+}
+
+void e2d::Player::destroyInstance()
+{
+	if (_instance)
+	{
+		delete _instance;
+		_instance = nullptr;
+	}
+}
+
 e2d::Player::Player()
 	: _volume(1.f)
 {
@@ -15,8 +35,6 @@ e2d::Player::~Player()
 			delete pair.second;
 		}
 	}
-
-	CoUninitialize();
 }
 
 bool e2d::Player::preload(const String & filePath)

@@ -231,6 +231,9 @@
     <ClCompile Include="..\..\core\Node\Canvas.cpp">
       <Filter>Node</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Base\Audio.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />

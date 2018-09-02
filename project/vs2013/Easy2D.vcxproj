@@ -195,6 +195,7 @@
     <ClCompile Include="..\..\core\Action\ScaleTo.cpp" />
     <ClCompile Include="..\..\core\Action\Sequence.cpp" />
     <ClCompile Include="..\..\core\Action\Spawn.cpp" />
+    <ClCompile Include="..\..\core\Base\Audio.cpp" />
     <ClCompile Include="..\..\core\Base\Game.cpp" />
     <ClCompile Include="..\..\core\Base\GC.cpp" />
     <ClCompile Include="..\..\core\Base\Input.cpp" />

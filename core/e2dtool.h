@@ -115,27 +115,6 @@ public:
 	// 获取 IXAudio2SourceVoice 对象
 	IXAudio2SourceVoice * getIXAudio2SourceVoice() const;
 
-public:
-	class XAudio2Tool
-	{
-	public:
-		XAudio2Tool();
-
-		~XAudio2Tool();
-
-		static XAudio2Tool* getInstance();
-
-		// 获取 XAudio2 实例对象
-		IXAudio2 * getXAudio2();
-
-		// 获取 MasteringVoice 实例对象
-		IXAudio2MasteringVoice* getMasteringVoice();
-
-	protected:
-		IXAudio2 * _xAudio2;
-		IXAudio2MasteringVoice* _masteringVoice;
-	};
-
 protected:
 	bool _readMMIO();
 
@@ -169,12 +148,12 @@ protected:
 // 音乐播放器
 class Player
 {
-	friend class Game;
-
 public:
-	Player();
+	// 获取播放器实例
+	static Player * getInstance();
 
-	~Player();
+	// 销毁实例
+	static void destroyInstance();
 
 	// 预加载音乐资源
 	bool preload(
@@ -258,9 +237,18 @@ public:
 	// 清空音乐缓存
 	void clearCache();
 
-private:
+protected:
+	Player();
+
+	~Player();
+
+	E2D_DISABLE_COPY(Player);
+
+protected:
 	float _volume;
 	std::map<size_t, Music*> _musicList;
+
+	static Player * _instance;
 };
 
 

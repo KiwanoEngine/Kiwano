@@ -22,6 +22,12 @@ void operator delete(void * block, e2d::autorelease_t const &) E2D_NOEXCEPT
 }
 
 
+e2d::GC * e2d::GC::getInstance()
+{
+	static GC _instance;
+	return &_instance;
+}
+
 e2d::GC::GC()
 	: _notifyed(false)
 	, _cleanup(false)
@@ -32,12 +38,29 @@ e2d::GC::GC()
 e2d::GC::~GC()
 {
 	// É¾³ýËùÓÐ¶ÔÏó
-	this->clear();
+	Game::getInstance()->clearAllScenes();
+	Timer::getInstance()->clearAllTasks();
+	ActionManager::getInstance()->clearAll();
 
-	// Çå³ýÍ¼Æ¬»º´æ
+	_cleanup = true;
+	for (const auto& ref : _pool)
+	{
+		delete ref;
+	}
+	_pool.clear();
+	_cleanup = false;
+
+	// Çå³ý»º´æ
 	Image::clearCache();
-}
 
+	// Çå³ýµ¥Àý
+	Player::destroyInstance();
+	Audio::destroyInstance();
+	Renderer::destroyInstance();
+	Input::destroyInstance();
+	Window::destroyInstance();
+	Game::destroyInstance();
+}
 
 void e2d::GC::flush()
 {
@@ -57,37 +80,6 @@ void e2d::GC::flush()
 			++iter;
 		}
 	}
-}
-
-void e2d::GC::clear()
-{
-	_cleanup = true;
-
-	Game::getInstance()->clearAllScenes();
-	Timer::getInstance()->clearAllTasks();
-	ActionManager::getInstance()->clearAll();
-
-	for (const auto& ref : _pool)
-	{
-		delete ref;
-	}
-	_pool.clear();
-	_cleanup = false;
-
-	// Çå³ý»º´æ
-	Image::clearCache();
-
-	// Çå³ýµ¥Àý
-	Game::destroyInstance();
-	Renderer::destroyInstance();
-	Input::destroyInstance();
-	Window::destroyInstance();
-}
-
-e2d::GC * e2d::GC::getInstance()
-{
-	static GC _instance;
-	return &_instance;
 }
 
 void e2d::GC::autorelease(Ref * ref)
