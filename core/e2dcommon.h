@@ -36,26 +36,30 @@ public:
 public:
 	Point();
 
-	Point(float x, float y);
+	Point(
+		float x,
+		float y
+	);
 
-	Point(const Point& other);
+	Point(
+		const Point& other
+	);
 
-	Point operator + (Point const & point) const;
-	Point operator - (Point const & point) const;
-	Point operator * (float const & point) const;
-	Point operator / (float const & point) const;
+	Point operator + (const Point & other) const;
+	Point operator - (const Point & other) const;
+	Point operator * (float value) const;
+	Point operator / (float value) const;
 	Point operator - () const;
-	bool operator== (const Point& point) const;
+	bool operator== (const Point& other) const;
 
-	operator e2d::Size() const;
+	E2D_OP_EXPLICIT operator e2d::Size() const;
 
 	// 判断两点间距离
-	static float distance(const Point&, const Point&);
+	static float Distance(
+		const Point& p1,
+		const Point& p2
+	);
 };
-
-
-// 二维向量
-typedef Point Vector2;
 
 
 // 大小
@@ -68,18 +72,23 @@ public:
 public:
 	Size();
 
-	Size(float width, float height);
+	Size(
+		float width,
+		float height
+	);
 
-	Size(const Size& other);
+	Size(
+		const Size& other
+	);
 
-	Size operator + (Size const & size) const;
-	Size operator - (Size const & size) const;
-	Size operator * (float const & size) const;
-	Size operator / (float const & size) const;
+	Size operator + (const Size & other) const;
+	Size operator - (const Size & other) const;
+	Size operator * (float value) const;
+	Size operator / (float value) const;
 	Size operator - () const;
-	bool operator== (const Size& size) const;
+	bool operator== (const Size& other) const;
 
-	operator e2d::Point() const;
+	E2D_OP_EXPLICIT operator e2d::Point() const;
 };
 
 
@@ -93,31 +102,33 @@ public:
 public:
 	Rect();
 	
-	Rect(float x, float y, float width, float height);
+	Rect(
+		float x,
+		float y,
+		float width,
+		float height
+	);
 	
-	Rect(const Point& pos, const Size& size);
+	Rect(
+		const Point& pos,
+		const Size& size
+	);
 	
-	Rect(const Rect& other);
+	Rect(
+		const Rect& other
+	);
 	
 	Rect& operator= (const Rect& other);
 
 	bool operator== (const Rect& rect) const;
 	
-	// 设置矩形
-	void setRect(
-		float x, 
-		float y, 
-		float width, 
-		float height
-	);
-	
 	// 判断点是否在矩形内
-	bool containsPoint(
+	bool ContainsPoint(
 		const Point& point
 	) const;
 	
 	// 判断两矩形是否相交
-	bool intersects(
+	bool Intersects(
 		const Rect& rect
 	) const;
 };
@@ -128,95 +139,104 @@ class String
 {
 public:
 	String();
-	String(const String &);
-	String(const char *);
-	String(const wchar_t *);
-	String(String &&);
+
+	String(
+		const String &
+	);
+
+	String(
+		const char *
+	);
+
+	String(
+		const wchar_t *
+	);
+
+	String(
+		String &&
+	);
 
 	~String();
 
 	// 获取字符串长度
-	int length() const;
+	int GetLength() const;
 
-	// 获取该字符串的散列值
-	size_t hash() const;
+	// 获取该字符串的 Hash 值
+	size_t GetHash() const;
 
 	// 判断字符串是否为空
-	bool isEmpty() const;
+	bool IsEmpty() const;
 
 	// 获取指定位置字符
-	wchar_t at(
-		int index
+	const wchar_t& At(
+		size_t index
 	) const;
 
 	// 比较字符串
-	int compare(
+	int Compare(
 		const String & str
 	) const;
 
 	// 截取字符串
-	e2d::String subtract(
+	String Subtract(
 		int offset,		/* 偏移量 */
 		int count = -1	/* 截取字符数量 */
 	) const;
 
 	// 插入字符串
-	void insert(
+	void Insert(
 		const String & str,
 		int pos
 	);
 
 	// 替换字符串中的指定内容
-	void replace(
+	void Replace(
 		const String & from,	/* 需替换内容 */
 		const String & to		/* 替换成内容 */
 	);
 
 	// 删除字符串中的指定内容
-	void erase(
+	void Erase(
 		int offset,		/* 偏移量 */
 		int count		/* 删除字符数量 */
 	);
 
 	// 搜索字符串
-	int find(
+	int Find(
 		const String & str,	/* 查找内容 */
 		int offset = 0		/* 偏移量 */
 	) const;
 
 	// 清空字符串
-	void clear();
+	void Clear();
 
 	// 获取大写字符串
-	String toUpper() const;
+	String ToUpper() const;
 
 	// 获取小写字符串
-	String toLower() const;
+	String ToLower() const;
 
 	// 将字符串转化为 int 型
-	int toInt() const;
+	int ToInt() const;
 
 	// 将字符串转化为 float 型
-	float toFloat() const;
+	float ToFloat() const;
 
 	// 将字符串转化为 double 型
-	double toDouble() const;
+	double ToDouble() const;
 
 	// 将字符串转化为 bool 型
-	bool toBool() const;
+	bool ToBool() const;
 
 	// 数字类型转字符串
-	static String parse(int value);
-	static String parse(unsigned int value);
-	static String parse(float value);
-	static String parse(double value);
+	static String Parse(int value);
+	static String Parse(unsigned int value);
+	static String Parse(float value);
+	static String Parse(double value);
 
 	// 格式化字符串
-	static String format(const char * format, ...);
-	static String format(const wchar_t * format, ...);
-
-	// 交换两字符串
-	static void swap(String &str1, String &str2);
+	static String Format(const char * format, ...);
+	static String Format(const wchar_t * format, ...);
 
 	// 赋值运算符
 	String& operator= (const String &);
@@ -265,7 +285,7 @@ public:
 	String& operator<< (double value);
 
 	// 其他运算符
-	wchar_t& operator[] (int);
+	wchar_t& operator[] (size_t);
 
 	friend std::ostream& operator<< (std::ostream &, const String &);
 	friend std::wostream& operator<< (std::wostream &, const String &);
@@ -274,7 +294,7 @@ public:
 	friend std::wistream& operator>> (std::wistream &, String &);
 
 private:
-	std::wstring _str;
+	std::wstring string_;
 };
 
 
@@ -356,13 +376,7 @@ public:
 		Yellow_Green = 0x9ACD32
 	};
 
-private:
-	void _init(
-		UINT rgb,
-		float alpha
-	);
-
-private:
+public:
 	float r;
 	float g;
 	float b;
@@ -454,7 +468,7 @@ public:
 	);
 
 	template<typename Func>
-	Function(Func func) : _func(func) {}
+	Function(Func func) : func_(func) {}
 
 	template<typename Func, typename Object>
 	Function(
@@ -462,7 +476,7 @@ public:
 		Object&& obj	/* 对象指针 */
 	)
 	{
-		_func = std::bind(func, obj);
+		func_ = std::bind(func, obj);
 	}
 
 	void operator() (void) const;
@@ -470,7 +484,7 @@ public:
 	E2D_OP_EXPLICIT operator bool() const;
 
 protected:
-	std::function<void()> _func;
+	std::function<void()> func_;
 };
 
 
@@ -485,10 +499,10 @@ public:
 	);
 
 	// 获取毫秒数
-	int milliseconds() const;
+	int Milliseconds() const;
 
 	// 获取秒数
-	float seconds() const;
+	float Seconds() const;
 
 	bool operator== (const Duration &) const;
 	bool operator!= (const Duration &) const;
@@ -504,7 +518,7 @@ public:
 	Duration& operator -= (Duration const &);
 
 protected:
-	std::chrono::milliseconds _ms;
+	std::chrono::milliseconds duration_ms_;
 };
 
 
@@ -515,10 +529,10 @@ public:
 	Time();
 
 	// 获取时间戳
-	time_t getTimeStamp() const;
+	time_t GetTimeStamp() const;
 
 	// 是否是
-	bool isZero() const;
+	bool IsZero() const;
 
 	Time operator + (Duration const &) const;
 	Time operator - (Duration const &) const;
@@ -529,10 +543,10 @@ public:
 	Duration operator - (Time const &) const;
 
 	// 获取当前时间
-	static Time now();
+	static Time Now();
 
 protected:
-	std::chrono::steady_clock::time_point _timePoint;
+	std::chrono::steady_clock::time_point time_;
 };
 
 
@@ -543,7 +557,7 @@ public:
 	String	family;			// 字体族
 	float	size;			// 字号
 	UINT	weight;			// 粗细值
-	bool	italic;			// 斜体
+	bool	italic;			// 是否斜体
 
 public:
 	// 字体粗细值
@@ -605,73 +619,73 @@ public:
 	virtual ~Collider();
 
 	// 设置碰撞体形状
-	void setShape(
+	void SetShape(
 		Shape shape
 	);
 
 	// 是否触发碰撞事件
-	void setCollisionNotify(
+	void SetCollisionNotify(
 		bool notify
 	);
 
 	// 启用或关闭该碰撞体
-	void setEnabled(
+	void SetEnabled(
 		bool enabled
 	);
 
 	// 设置碰撞体的可见性
-	void setVisible(
+	void SetVisible(
 		bool visible
 	);
 
 	// 设置绘制颜色
-	void setColor(
-		Color color
+	void SetBorderColor(
+		const Color& color
 	);
 
 	// 判断两碰撞体的交集关系
-	Relation getRelationWith(
-		Collider * pCollider
+	Relation GetRelationWith(
+		Collider * collider
 	) const;
 
 	// 是否启用碰撞体
-	bool isEnabled() const;
+	bool IsEnabled() const;
 
 	// 是否可见
-	bool isVisible() const;
+	bool IsVisible() const;
 
 	// 是否触发碰撞事件
-	bool isCollisionNotify() const;
+	bool IsCollisionNotify() const;
 
 	// 获取绘制颜色
-	Color getColor() const;
+	const Color& GetBorderColor() const;
 
 	// 获取形状
-	Shape getShape() const;
+	Shape GetShape() const;
 
 	// 获取绑定节点
-	Node* getNode() const;
+	Node* GetNode() const;
 
 	// 获取 ID2D1Geometry* 对象
-	ID2D1Geometry* getGeometry() const;
+	ID2D1Geometry* GetGeometry() const;
 
 	// 重新生成
-	void recreate();
+	void Recreate();
 
 	// 渲染碰撞体
-	void render();
+	void Draw();
 
 protected:
 	E2D_DISABLE_COPY(Collider);
 
 protected:
-	bool	_enabled;
-	bool	_visible;
-	bool	_notify;
-	Color	_color;
-	Node *	_parentNode;
-	Shape	_shape;
-	ID2D1Geometry* _geometry;
+	bool	enabled_;
+	bool	visible_;
+	bool	notify_;
+	Color	border_color_;
+	Node *	parent_node_;
+	Shape	shape_;
+	ID2D1Geometry* geometry_;
 };
 
 
@@ -680,13 +694,13 @@ class Resource
 {
 public:
 	Resource(
-		size_t resNameId,			/* 资源名称 */
-		const String& resType		/* 资源类型 */
+		size_t resource_name,			/* 资源名称 */
+		const String& resource_type		/* 资源类型 */
 	);
 
 public:
-	size_t	resNameId;
-	String	resType;
+	size_t	name;
+	String	type;
 };
 
 
@@ -699,19 +713,19 @@ public:
 	virtual ~Ref();
 
 	// 增加引用计数
-	void retain();
+	void Retain();
 
 	// 减少引用计数
-	void release();
+	void Release();
 
 	// 获取引用计数
-	int getRefCount() const;
+	int GetRefCount() const;
 
 protected:
 	E2D_DISABLE_COPY(Ref);
 
 private:
-	int _refCount;
+	int ref_count_;
 };
 
 
@@ -728,91 +742,91 @@ public:
 
 	explicit Image(
 		const Resource& res,
-		const Rect& cropRect	/* 裁剪矩形 */
+		const Rect& crop_rect	/* 裁剪矩形 */
 	);
 
 	explicit Image(
-		const String& fileName
+		const String& file_name
 	);
 
 	explicit Image(
-		const String& fileName,
-		const Rect& cropRect	/* 裁剪矩形 */
+		const String& file_name,
+		const Rect& crop_rect	/* 裁剪矩形 */
 	);
 
 	virtual ~Image();
 
 	// 加载图片资源
-	bool open(
+	bool Open(
 		const Resource& res
 	);
 
 	// 加载图片资源
-	bool open(
-		const String& fileName
+	bool Open(
+		const String& file_name
 	);
 
 	// 将图片裁剪为矩形
-	void crop(
-		const Rect& cropRect	/* 裁剪矩形 */
+	void Crop(
+		const Rect& crop_rect	/* 裁剪矩形 */
 	);
 
 	// 获取宽度
-	virtual float getWidth() const;
+	virtual float GetWidth() const;
 
 	// 获取高度
-	virtual float getHeight() const;
+	virtual float GetHeight() const;
 
 	// 获取大小
-	virtual Size getSize() const;
+	virtual Size GetSize() const;
 
 	// 获取源图片宽度
-	virtual float getSourceWidth() const;
+	virtual float GetSourceWidth() const;
 
 	// 获取源图片高度
-	virtual float getSourceHeight() const;
+	virtual float GetSourceHeight() const;
 
 	// 获取源图片大小
-	virtual Size getSourceSize() const;
+	virtual Size GetSourceSize() const;
 	
 	// 获取裁剪位置 X 坐标
-	virtual float getCropX() const;
+	virtual float GetCropX() const;
 
 	// 获取裁剪位置 Y 坐标
-	virtual float getCropY() const;
+	virtual float GetCropY() const;
 
 	// 获取裁剪位置
-	virtual Point getCropPos() const;
+	virtual Point GetCropPos() const;
 
 	// 获取 ID2D1Bitmap 对象
-	ID2D1Bitmap * getBitmap();
+	ID2D1Bitmap * GetBitmap();
 
 	// 预加载图片资源
-	static bool preload(
-		const String& fileName
+	static bool Preload(
+		const String& file_name
 	);
 
 	// 预加载图片资源
-	static bool preload(
+	static bool Preload(
 		const Resource& res
 	);
 
 	// 清空缓存
-	static void clearCache();
+	static void ClearCache();
 
 protected:
 	E2D_DISABLE_COPY(Image);
 
 	// 设置 Bitmap
-	void _setBitmap(
+	void SetBitmap(
 		ID2D1Bitmap * bitmap
 	);
 
 protected:
-	Rect _cropRect;
-	ID2D1Bitmap * _bitmap;
+	Rect crop_rect_;
+	ID2D1Bitmap * bitmap_;
 
-	static std::map<size_t, ID2D1Bitmap*> _bitmapCache;
+	static std::map<size_t, ID2D1Bitmap*> bitmap_cache_;
 };
 
 

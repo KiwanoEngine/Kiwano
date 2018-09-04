@@ -5,16 +5,16 @@
 e2d::OpacityTo::OpacityTo(float duration, float opacity)
 	: OpacityBy(duration, 0)
 {
-	_endVal = opacity;
+	end_val_ = opacity;
 }
 
-e2d::OpacityTo * e2d::OpacityTo::clone() const
+e2d::OpacityTo * e2d::OpacityTo::Clone() const
 {
-	return new (e2d::autorelease) OpacityTo(_duration, _endVal);
+	return new (e2d::autorelease) OpacityTo(duration_, end_val_);
 }
 
-void e2d::OpacityTo::_init()
+void e2d::OpacityTo::Init()
 {
-	OpacityBy::_init();
-	_deltaVal = _endVal - _startVal;
+	OpacityBy::Init();
+	delta_val_ = end_val_ - start_val_;
 }

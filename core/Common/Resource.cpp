@@ -1,8 +1,8 @@
 #include "..\e2dtool.h"
 
 
-e2d::Resource::Resource(size_t resNameId, const String & resType)
-	: resNameId(resNameId)
-	, resType(resType)
+e2d::Resource::Resource(size_t resource_name, const String & resource_type)
+	: name(resource_name)
+	, type(resource_type)
 {
 }

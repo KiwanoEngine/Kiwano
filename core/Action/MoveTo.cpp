@@ -2,18 +2,18 @@
 #include "..\e2dnode.h"
 
 e2d::MoveTo::MoveTo(float duration, Point pos)
-	: MoveBy(duration, Vector2())
+	: MoveBy(duration, Point())
 {
-	_endPos = pos;
+	end_pos_ = pos;
 }
 
-e2d::MoveTo * e2d::MoveTo::clone() const
+e2d::MoveTo * e2d::MoveTo::Clone() const
 {
-	return new (e2d::autorelease) MoveTo(_duration, _endPos);
+	return new (e2d::autorelease) MoveTo(duration_, end_pos_);
 }
 
-void e2d::MoveTo::_init()
+void e2d::MoveTo::Init()
 {
-	MoveBy::_init();
-	_deltaPos = _endPos - _startPos;
+	MoveBy::Init();
+	delta_pos_ = end_pos_ - start_pos_;
 }

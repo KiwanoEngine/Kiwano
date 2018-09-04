@@ -179,8 +179,10 @@
     <ClCompile Include="..\..\core\Action\Action.cpp" />
     <ClCompile Include="..\..\core\Action\Animate.cpp" />
     <ClCompile Include="..\..\core\Action\Animation.cpp" />
-    <ClCompile Include="..\..\core\Action\CallFunc.cpp" />
+    <ClCompile Include="..\..\core\Action\Callback.cpp" />
     <ClCompile Include="..\..\core\Action\Delay.cpp" />
+    <ClCompile Include="..\..\core\Action\FadeIn.cpp" />
+    <ClCompile Include="..\..\core\Action\FadeOut.cpp" />
     <ClCompile Include="..\..\core\Action\FiniteTimeAction.cpp" />
     <ClCompile Include="..\..\core\Action\JumpBy.cpp" />
     <ClCompile Include="..\..\core\Action\JumpTo.cpp" />

@@ -1,79 +1,79 @@
 #include "..\e2dtool.h"
 #include <shlobj.h>
 
-e2d::String e2d::Path::getDataPath()
+const e2d::String& e2d::Path::GetDataPath()
 {
-	static String dataPath;
-	if (dataPath.isEmpty())
+	static String data_path;
+	if (data_path.IsEmpty())
 	{
 		// 设置数据的保存路径
-		String localAppDataPath = Path::getLocalAppDataPath();
-		String title = Window::getInstance()->getTitle();
-		String folderName = String::parse(title.hash());
+		String local_app_data_path = Path::GetLocalAppDataPath();
+		String title = Window::GetInstance()->GetTitle();
+		String folder_name = String::Parse(title.GetHash());
 
-		if (!localAppDataPath.isEmpty())
+		if (!local_app_data_path.IsEmpty())
 		{
-			dataPath = localAppDataPath + L"\\Easy2DGameData\\" << folderName << L"\\";
+			data_path = local_app_data_path + L"\\Easy2DGameData\\" << folder_name << L"\\";
 
-			File file(dataPath);
-			if (!file.exists() && !File::createFolder(dataPath))
+			File file(data_path);
+			if (!file.Exists() && !File::CreateFolder(data_path))
 			{
-				dataPath = L"";
+				data_path = L"";
 			}
 		}
-		dataPath << L"Data.ini";
+		data_path << L"Data.ini";
 	}
-	return dataPath;
+	return data_path;
 }
 
-e2d::String e2d::Path::getTempPath()
+const e2d::String& e2d::Path::GetTemporaryPath()
 {
-	static String tempPath;
-	if (tempPath.isEmpty())
+	static String temp_path;
+	if (temp_path.IsEmpty())
 	{
 		// 设置临时文件保存路径
 		wchar_t path[_MAX_PATH];
-		String title = Window::getInstance()->getTitle();
-		String folderName = String::parse(title.hash());
+		String title = Window::GetInstance()->GetTitle();
+		String folder_name = String::Parse(title.GetHash());
 
 		if (0 != ::GetTempPath(_MAX_PATH, path))
 		{
-			tempPath << path << L"\\Easy2DGameTemp\\" << folderName << L"\\";
+			temp_path << path << L"\\Easy2DGameTemp\\" << folder_name << L"\\";
 
-			File file(tempPath);
-			if (!file.exists() && !File::createFolder(tempPath))
+			File file(temp_path);
+			if (!file.Exists() && !File::CreateFolder(temp_path))
 			{
-				tempPath = L"";
+				temp_path = L"";
 			}
 		}
 	}
-	return tempPath;
+	return temp_path;
 }
 
-e2d::String e2d::Path::getLocalAppDataPath()
+const e2d::String& e2d::Path::GetLocalAppDataPath()
 {
-	static String localAppDataPath;
-	if (localAppDataPath.isEmpty())
+	static String local_app_data_path;
+	if (local_app_data_path.IsEmpty())
 	{
 		// 获取 AppData/Local 文件夹的路径
-		WCHAR strPath[MAX_PATH] = { 0 };
-		::SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, strPath);
-		localAppDataPath = strPath;
+		WCHAR path[MAX_PATH] = { 0 };
+		::SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
+		local_app_data_path = path;
 	}
 
-	return localAppDataPath;
+	return local_app_data_path;
 }
 
-e2d::String e2d::Path::getCurrentFilePath()
+const e2d::String& e2d::Path::GetExeFilePath()
 {
-	static String currFilePath;
-	if (currFilePath.isEmpty())
+	static String exe_file_path;
+	if (exe_file_path.IsEmpty())
 	{
-		TCHAR szPath[_MAX_PATH] = { 0 };
-		if (::GetModuleFileName(nullptr, szPath, _MAX_PATH) != 0)
+		TCHAR path[_MAX_PATH] = { 0 };
+		if (::GetModuleFileName(nullptr, path, _MAX_PATH) != 0)
 		{
-			currFilePath = szPath;
+			exe_file_path = path;
 		}
 	}
-	return currFilePath;
+	return exe_file_path;
 }

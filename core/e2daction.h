@@ -28,64 +28,64 @@ public:
 	virtual ~Action();
 
 	// 获取动作运行状态
-	virtual bool isRunning();
+	virtual bool IsRunning();
 
 	// 继续动作
-	virtual void resume();
+	virtual void Resume();
 
 	// 暂停动作
-	virtual void pause();
+	virtual void Pause();
 
 	// 停止动作
-	virtual void stop();
+	virtual void Stop();
 
 	// 获取动作名称
-	virtual String getName() const;
+	virtual const String& GetName() const;
 
 	// 设置动作名称
-	virtual void setName(
+	virtual void SetName(
 		const String& name
 	);
 
 	// 获取动作的拷贝
-	virtual Action * clone() const = 0;
+	virtual Action * Clone() const = 0;
 
 	// 获取动作的倒转
-	virtual Action * reverse() const = 0;
+	virtual Action * Reverse() const = 0;
 
 	// 重置动作
-	virtual void reset();
+	virtual void Reset();
 
 	// 获取该动作的执行目标
-	virtual Node * getTarget();
+	virtual Node * GetTarget();
 
 protected:
 	E2D_DISABLE_COPY(Action);
 
 	// 初始化动作
-	virtual void _init();
+	virtual void Init();
 
 	// 更新动作
-	virtual void _update();
+	virtual void Update();
 
 	// 获取动作结束状态
-	virtual bool _isDone();
+	virtual bool IsDone();
 
 	// 重置动作时间
-	virtual void _resetTime();
+	virtual void ResetTime();
 
 	// 开始动作
-	virtual void _startWithTarget(
+	virtual void StartWithTarget(
 		Node* target
 	);
 
 protected:
-	String	_name;
-	bool	_running;
-	bool	_done;
-	bool	_initialized;
-	Node *	_target;
-	Time	_started;
+	String	name_;
+	bool	running_;
+	bool	done_;
+	bool	initialized_;
+	Node *	target_;
+	Time	started_;
 };
 
 
@@ -100,23 +100,23 @@ public:
 	);
 
 	// 重置动作
-	virtual void reset() override;
+	virtual void Reset() override;
 
 protected:
 	E2D_DISABLE_COPY(FiniteTimeAction);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 	// 重置动作时间
-	virtual void _resetTime() override;
+	virtual void ResetTime() override;
 
 protected:
-	float _duration;
-	float _delta;
+	float duration_;
+	float delta_;
 };
 
 
@@ -127,28 +127,28 @@ class MoveBy :
 public:
 	explicit MoveBy(
 		float duration,		/* 持续时长 */
-		Vector2 vector		/* 移动距离 */
+		Point vector		/* 移动距离 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual MoveBy * clone() const override;
+	virtual MoveBy * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual MoveBy * reverse() const override;
+	virtual MoveBy * Reverse() const override;
 
 protected:
 	E2D_DISABLE_COPY(MoveBy);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 protected:
-	Point	_startPos;
-	Point	_prevPos;
-	Vector2	_deltaPos;
+	Point	start_pos_;
+	Point	prev_pos_;
+	Point	delta_pos_;
 };
 
 
@@ -163,12 +163,12 @@ public:
 	);
 
 	// 获取该动作的拷贝对象
-	virtual MoveTo * clone() const override;
+	virtual MoveTo * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual MoveTo * reverse() const override
+	virtual MoveTo * Reverse() const override
 	{
-		WARN("reverse() not supported in MoveTo");
+		WARN("Reverse() not supported in MoveTo");
 		return nullptr;
 	}
 
@@ -176,10 +176,10 @@ protected:
 	E2D_DISABLE_COPY(MoveTo);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 protected:
-	Point _endPos;
+	Point end_pos_;
 };
 
 
@@ -189,33 +189,33 @@ class JumpBy :
 {
 public:
 	explicit JumpBy(
-		float duration,		/* 持续时长 */
-		const Vector2& vec,		/* 跳跃距离 */
+		float duration,			/* 持续时长 */
+		const Point& vec,		/* 跳跃距离 */
 		float height,			/* 跳跃高度 */
 		int jumps = 1			/* 跳跃次数 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual JumpBy * clone() const override;
+	virtual JumpBy * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual JumpBy * reverse() const override;
+	virtual JumpBy * Reverse() const override;
 
 protected:
 	E2D_DISABLE_COPY(JumpBy);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 protected:
-	Point	_startPos;
-	Vector2	_deltaPos;
-	float	_height;
-	int		_jumps;
-	Point	_prevPos;
+	Point	start_pos_;
+	Point	delta_pos_;
+	float	height_;
+	int		jumps_;
+	Point	prev_pos_;
 };
 
 
@@ -225,19 +225,19 @@ class JumpTo :
 {
 public:
 	explicit JumpTo(
-		float duration,		/* 持续时长 */
+		float duration,			/* 持续时长 */
 		const Point& pos,		/* 目的坐标 */
 		float height,			/* 跳跃高度 */
 		int jumps = 1			/* 跳跃次数 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual JumpTo * clone() const override;
+	virtual JumpTo * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual JumpTo * reverse() const override
+	virtual JumpTo * Reverse() const override
 	{
-		WARN("reverse() not supported in JumpTo");
+		WARN("Reverse() not supported in JumpTo");
 		return nullptr;
 	}
 
@@ -245,10 +245,10 @@ protected:
 	E2D_DISABLE_COPY(JumpTo);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 protected:
-	Point _endPos;
+	Point end_pos_;
 };
 
 
@@ -264,30 +264,30 @@ public:
 
 	explicit ScaleBy(
 		float duration,		/* 持续时长 */
-		float scaleX,		/* 横向缩放相对变化值 */
-		float scaleY		/* 纵向缩放相对变化值 */
+		float scale_x,		/* 横向缩放相对变化值 */
+		float scale_y		/* 纵向缩放相对变化值 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual ScaleBy * clone() const override;
+	virtual ScaleBy * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual ScaleBy * reverse() const override;
+	virtual ScaleBy * Reverse() const override;
 
 protected:
 	E2D_DISABLE_COPY(ScaleBy);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 protected:
-	float	_startScaleX;
-	float	_startScaleY;
-	float	_deltaX;
-	float	_deltaY;
+	float	start_scale_x_;
+	float	start_scale_y_;
+	float	delta_x_;
+	float	delta_y_;
 };
 
 
@@ -303,17 +303,17 @@ public:
 
 	explicit ScaleTo(
 		float duration,		/* 持续时长 */
-		float scaleX,		/* 横向缩放目标值 */
-		float scaleY		/* 纵向缩放目标值 */
+		float scale_x,		/* 横向缩放目标值 */
+		float scale_y		/* 纵向缩放目标值 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual ScaleTo * clone() const override;
+	virtual ScaleTo * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual ScaleTo * reverse() const override
+	virtual ScaleTo * Reverse() const override
 	{
-		WARN("reverse() not supported in ScaleTo");
+		WARN("Reverse() not supported in ScaleTo");
 		return nullptr;
 	}
 
@@ -321,11 +321,11 @@ protected:
 	E2D_DISABLE_COPY(ScaleTo);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 protected:
-	float	_endScaleX;
-	float	_endScaleY;
+	float	end_scale_x_;
+	float	end_scale_y_;
 };
 
 
@@ -340,23 +340,23 @@ public:
 	);
 
 	// 获取该动作的拷贝对象
-	virtual OpacityBy * clone() const override;
+	virtual OpacityBy * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual OpacityBy * reverse() const override;
+	virtual OpacityBy * Reverse() const override;
 
 protected:
 	E2D_DISABLE_COPY(OpacityBy);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 protected:
-	float _startVal;
-	float _deltaVal;
+	float start_val_;
+	float delta_val_;
 };
 
 
@@ -371,12 +371,12 @@ public:
 	);
 
 	// 获取该动作的拷贝对象
-	virtual OpacityTo * clone() const override;
+	virtual OpacityTo * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual OpacityTo * reverse() const override
+	virtual OpacityTo * Reverse() const override
 	{
-		WARN("reverse() not supported in OpacityTo");
+		WARN("Reverse() not supported in OpacityTo");
 		return nullptr;
 	}
 
@@ -384,10 +384,10 @@ protected:
 	E2D_DISABLE_COPY(OpacityTo);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 protected:
-	float _endVal;
+	float end_val_;
 };
 
 
@@ -399,10 +399,7 @@ public:
 	// 创建淡入动作
 	explicit FadeIn(
 		float duration		/* 持续时长 */
-	)
-	: OpacityTo(duration, 1) 
-	{
-	}
+	);
 
 protected:
 	E2D_DISABLE_COPY(FadeIn);
@@ -417,10 +414,7 @@ public:
 	// 创建淡出动作
 	explicit FadeOut(
 		float duration		/* 持续时长 */
-	)
-	: OpacityTo(duration, 0) 
-	{
-	}
+	);
 
 protected:
 	E2D_DISABLE_COPY(FadeOut);
@@ -438,23 +432,23 @@ public:
 	);
 
 	// 获取该动作的拷贝对象
-	virtual RotateBy * clone() const override;
+	virtual RotateBy * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual RotateBy * reverse() const override;
+	virtual RotateBy * Reverse() const override;
 
 protected:
 	E2D_DISABLE_COPY(RotateBy);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 protected:
-	float _startVal;
-	float _deltaVal;
+	float start_val_;
+	float delta_val_;
 };
 
 
@@ -469,12 +463,12 @@ public:
 	);
 
 	// 获取该动作的拷贝对象
-	virtual RotateTo * clone() const override;
+	virtual RotateTo * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual RotateTo * reverse() const override
+	virtual RotateTo * Reverse() const override
 	{
-		WARN("reverse() not supported in RotateTo");
+		WARN("Reverse() not supported in RotateTo");
 		return nullptr;
 	}
 
@@ -482,10 +476,10 @@ protected:
 	E2D_DISABLE_COPY(RotateTo);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 protected:
-	float _endVal;
+	float end_val_;
 };
 
 
@@ -499,29 +493,29 @@ public:
 	);
 
 	// 获取该动作的拷贝对象
-	virtual Delay * clone() const override;
+	virtual Delay * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual Delay * reverse() const override;
+	virtual Delay * Reverse() const override;
 
 	// 重置动作
-	virtual void reset() override;
+	virtual void Reset() override;
 
 protected:
 	E2D_DISABLE_COPY(Delay);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 	// 重置动作时间
-	virtual void _resetTime() override;
+	virtual void ResetTime() override;
 
 protected:
-	float _delay;
-	float _delta;
+	float delay_;
+	float delta_;
 };
 
 
@@ -538,59 +532,59 @@ public:
 	virtual ~Loop();
 
 	// 获取该动作的拷贝对象
-	virtual Loop * clone() const override;
+	virtual Loop * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual Loop * reverse() const override;
+	virtual Loop * Reverse() const override;
 
 	// 重置动作
-	virtual void reset() override;
+	virtual void Reset() override;
 
 protected:
 	E2D_DISABLE_COPY(Loop);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 	// 重置动作时间
-	virtual void _resetTime() override;
+	virtual void ResetTime() override;
 
 protected:
-	Action * _action;
-	int _times;
-	int _totalTimes;
+	Action * action_;
+	int times_;
+	int total_times_;
 };
 
 
 // 回调动作
-class CallFunc :
+class Callback :
 	public Action
 {
 public:
-	explicit CallFunc(
+	explicit Callback(
 		const Function& func /* 函数对象 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual CallFunc * clone() const override;
+	virtual Callback * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual CallFunc * reverse() const override;
+	virtual Callback * Reverse() const override;
 
 protected:
-	E2D_DISABLE_COPY(CallFunc);
+	E2D_DISABLE_COPY(Callback);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 protected:
-	Function _func;
+	Function callback_;
 };
 
 
@@ -599,48 +593,50 @@ class Sequence :
 	public Action
 {
 public:
+	typedef std::vector<Action*> Actions;
+
 	Sequence();
 
 	explicit Sequence(
-		const std::vector<Action*>& actions	/* 动作列表 */
+		const Actions& actions	/* 动作列表 */
 	);
 
 	virtual ~Sequence();
 
 	// 在结尾添加动作
-	void add(
+	void Add(
 		Action * action
 	);
 
 	// 在结尾添加多个动作
-	void add(
-		const std::vector<Action*>& actions	/* 动作列表 */
+	void Add(
+		const Actions& actions	/* 动作列表 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual Sequence * clone() const override;
+	virtual Sequence * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual Sequence * reverse() const;
+	virtual Sequence * Reverse() const;
 
 	// 重置动作
-	virtual void reset() override;
+	virtual void Reset() override;
 
 protected:
 	E2D_DISABLE_COPY(Sequence);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 	// 重置动作时间
-	virtual void _resetTime() override;
+	virtual void ResetTime() override;
 
 protected:
-	UINT _currIndex;
-	std::vector<Action*> _actions;
+	UINT action_index_;
+	Actions actions_;
 };
 
 
@@ -649,47 +645,49 @@ class Spawn :
 	public Action
 {
 public:
+	typedef std::vector<Action*> Actions;
+
 	Spawn();
 
 	explicit Spawn(
-		const std::vector<Action*>& actions	/* 动作列表 */
+		const Actions& actions	/* 动作列表 */
 	);
 
 	virtual ~Spawn();
 
 	// 在结尾添加动作
-	void add(
+	void Add(
 		Action * action
 	);
 
 	// 在结尾添加多个动作
-	void add(
-		const std::vector<Action*>& actions	/* 动作列表 */
+	void Add(
+		const Actions& actions	/* 动作列表 */
 	);
 
 	// 获取该动作的拷贝对象
-	virtual Spawn * clone() const override;
+	virtual Spawn * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual Spawn * reverse() const;
+	virtual Spawn * Reverse() const;
 
 	// 重置动作
-	virtual void reset() override;
+	virtual void Reset() override;
 
 protected:
 	E2D_DISABLE_COPY(Spawn);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 	// 重置动作时间
-	virtual void _resetTime() override;
+	virtual void ResetTime() override;
 
 protected:
-	std::vector<Action*> _actions;
+	Actions actions_;
 };
 
 
@@ -698,56 +696,58 @@ class Animation :
 	public Ref
 {
 public:
+	typedef std::vector<Image*> Images;
+
 	Animation();
 
 	explicit Animation(
-		const std::vector<Image*>& frames	/* 关键帧数组 */
+		const Images& frames	/* 关键帧数组 */
 	);
 
 	explicit Animation(
-		float interval						/* 帧间隔（秒） */
+		float interval			/* 帧间隔（秒） */
 	);
 
 	explicit Animation(
-		float interval,						/* 帧间隔（秒） */
-		const std::vector<Image*>& frames	/* 关键帧数组 */
+		float interval,			/* 帧间隔（秒） */
+		const Images& frames	/* 关键帧数组 */
 	);
 
 	virtual ~Animation();
 
 	// 添加关键帧
-	void add(
-		Image * frame	/* 关键帧 */
+	void Add(
+		Image * frame			/* 关键帧 */
 	);
 
 	// 添加多个关键帧
-	void add(
-		const std::vector<Image*>& frames	/* 关键帧列表 */
+	void Add(
+		const Images& frames	/* 关键帧数组 */
 	);
 
 	// 获取帧间隔
-	float getInterval() const;
+	float GetInterval() const;
 
 	// 获取关键帧
-	const std::vector<Image*>& getFrames() const;
+	const Images& GetFrames() const;
 
 	// 设置每一帧的时间间隔
-	void setInterval(
+	void SetInterval(
 		float interval		/* 帧间隔（秒） */
 	);
 
 	// 获取帧动画的拷贝对象
-	Animation * clone() const;
+	Animation * Clone() const;
 
 	// 获取帧动画的倒转
-	Animation * reverse() const;
+	Animation * Reverse() const;
 
 protected:
 	E2D_DISABLE_COPY(Animation);
 
 protected:
-	float	_interval;
-	std::vector<Image*> _frames;
+	float	interval_;
+	Images	frames_;
 };
 
 
@@ -765,37 +765,37 @@ public:
 	virtual ~Animate();
 
 	// 获取动画
-	virtual Animation * getAnimation() const;
+	virtual Animation * GetAnimation() const;
 
 	// 设置动画
-	virtual void setAnimation(
+	virtual void SetAnimation(
 		Animation * animation
 	);
 
 	// 获取该动作的拷贝对象
-	virtual Animate * clone() const override;
+	virtual Animate * Clone() const override;
 
 	// 获取该动作的倒转
-	virtual Animate * reverse() const override;
+	virtual Animate * Reverse() const override;
 
 	// 重置动作
-	virtual void reset() override;
+	virtual void Reset() override;
 
 protected:
 	E2D_DISABLE_COPY(Animate);
 
 	// 初始化动作
-	virtual void _init() override;
+	virtual void Init() override;
 
 	// 更新动作
-	virtual void _update() override;
+	virtual void Update() override;
 
 	// 重置动作时间
-	virtual void _resetTime() override;
+	virtual void ResetTime() override;
 
 protected:
-	UINT _frameIndex;
-	Animation * _animation;
+	UINT frame_index_;
+	Animation * animation_;
 };
 
 

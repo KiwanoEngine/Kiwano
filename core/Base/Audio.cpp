@@ -1,60 +1,60 @@
 #include "..\e2dbase.h"
 
 
-e2d::Audio * e2d::Audio::_instance = nullptr;
+e2d::Audio * e2d::Audio::instance_ = nullptr;
 
-e2d::Audio * e2d::Audio::getInstance()
+e2d::Audio * e2d::Audio::GetInstance()
 {
-	if (!_instance)
+	if (!instance_)
 	{
-		_instance = new (std::nothrow) Audio;
+		instance_ = new (std::nothrow) Audio;
 	}
-	return _instance;
+	return instance_;
 }
 
-void e2d::Audio::destroyInstance()
+void e2d::Audio::DestroyInstance()
 {
-	if (_instance)
+	if (instance_)
 	{
-		delete _instance;
-		_instance = nullptr;
+		delete instance_;
+		instance_ = nullptr;
 	}
-}
-
-IXAudio2 * e2d::Audio::getXAudio2()
-{
-	return _xAudio2;
-}
-
-IXAudio2MasteringVoice * e2d::Audio::getMasteringVoice()
-{
-	return _masteringVoice;
 }
 
 e2d::Audio::Audio()
-	: _xAudio2(nullptr)
-	, _masteringVoice(nullptr)
+	: x_audio2_(nullptr)
+	, mastering_voice_(nullptr)
 {
 	::CoInitialize(nullptr);
 
 	ThrowIfFailed(
-		XAudio2Create(&_xAudio2, 0)
+		XAudio2Create(&x_audio2_, 0)
 	);
 
 	ThrowIfFailed(
-		_xAudio2->CreateMasteringVoice(&_masteringVoice)
+		x_audio2_->CreateMasteringVoice(&mastering_voice_)
 	);
 }
 
 e2d::Audio::~Audio()
 {
-	if (_masteringVoice)
+	if (mastering_voice_)
 	{
-		_masteringVoice->DestroyVoice();
-		_masteringVoice = nullptr;
+		mastering_voice_->DestroyVoice();
+		mastering_voice_ = nullptr;
 	}
 
-	SafeRelease(_xAudio2);
+	SafeRelease(x_audio2_);
 
 	::CoUninitialize();
+}
+
+IXAudio2 * e2d::Audio::GetXAudio2()
+{
+	return x_audio2_;
+}
+
+IXAudio2MasteringVoice * e2d::Audio::GetMasteringVoice()
+{
+	return mastering_voice_;
 }

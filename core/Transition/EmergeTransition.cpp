@@ -6,26 +6,26 @@ e2d::EmergeTransition::EmergeTransition(Scene* scene, float duration)
 {
 }
 
-bool e2d::EmergeTransition::_init(Game * game, Scene * prev)
+bool e2d::EmergeTransition::Init(Game * game, Scene * prev)
 {
-	if (Transition::_init(game, prev))
+	if (Transition::Init(game, prev))
 	{
-		_outLayerParam.opacity = 1;
-		_inLayerParam.opacity = 0;
+		out_layer_param_.opacity = 1;
+		in_layer_param_.opacity = 0;
 		return true;
 	}
 	return false;
 }
 
-void e2d::EmergeTransition::_update()
+void e2d::EmergeTransition::Update()
 {
-	Transition::_update();
+	Transition::Update();
 
-	_outLayerParam.opacity = 1 - _delta;
-	_inLayerParam.opacity = _delta;
+	out_layer_param_.opacity = 1 - delta_;
+	in_layer_param_.opacity = delta_;
 
-	if (_delta >= 1)
+	if (delta_ >= 1)
 	{
-		this->_stop();
+		this->Stop();
 	}
 }

@@ -1,46 +1,46 @@
 #include "..\e2daction.h"
 
 e2d::Delay::Delay(float duration)
-	: _delta(0)
-	, _delay(std::max(duration, 0.f))
+	: delta_(0)
+	, delay_(std::max(duration, 0.f))
 {
 }
 
-e2d::Delay * e2d::Delay::clone() const
+e2d::Delay * e2d::Delay::Clone() const
 {
-	return new (e2d::autorelease) Delay(_delay);
+	return new (e2d::autorelease) Delay(delay_);
 }
 
-e2d::Delay * e2d::Delay::reverse() const
+e2d::Delay * e2d::Delay::Reverse() const
 {
-	return new (e2d::autorelease) Delay(_delay);
+	return new (e2d::autorelease) Delay(delay_);
 }
 
-void e2d::Delay::reset()
+void e2d::Delay::Reset()
 {
-	Action::reset();
-	_delta = 0;
+	Action::Reset();
+	delta_ = 0;
 }
 
-void e2d::Delay::_init()
+void e2d::Delay::Init()
 {
-	Action::_init();
+	Action::Init();
 }
 
-void e2d::Delay::_update()
+void e2d::Delay::Update()
 {
-	Action::_update();
+	Action::Update();
 
-	_delta = (Time::now() - _started).seconds();
+	delta_ = (Time::Now() - started_).Seconds();
 
-	if (_delta >= _delay)
+	if (delta_ >= delay_)
 	{
-		this->stop();
+		this->Stop();
 	}
 }
 
-void e2d::Delay::_resetTime()
+void e2d::Delay::ResetTime()
 {
-	Action::_resetTime();
-	_started = Time::now() - Duration(_delta);
+	Action::ResetTime();
+	started_ = Time::Now() - Duration(delta_);
 }

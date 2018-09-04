@@ -16,66 +16,66 @@ class ActionManager
 
 public:
 	// 获取动作管理器实例
-	static ActionManager * getInstance();
+	static ActionManager * GetInstance();
 
 	// 获取所有名称相同的动作
-	std::vector<Action *> get(
+	std::vector<Action *> Get(
 		const String& name
 	);
 
 	// 获取所有动作
-	const std::vector<Action*>& getAll();
+	const std::vector<Action*>& GetAll();
 
 	// 执行动作
-	void start(
+	void Start(
 		Action * action,
 		Node * target,
 		bool paused
 	);
 
 	// 继续名称相同的所有动作
-	void resume(
+	void Resume(
 		const String& name
 	);
 
 	// 暂停名称相同的所有动作
-	void pause(
+	void Pause(
 		const String& name
 	);
 
 	// 停止名称相同的所有动作
-	void stop(
+	void Stop(
 		const String& name
 	);
 
 	// 继续绑定在节点上的所有动作
-	void resumeAllBindedWith(
+	void ResumeAllBindedWith(
 		Node * target
 	);
 
 	// 暂停绑定在节点上的所有动作
-	void pauseAllBindedWith(
+	void PauseAllBindedWith(
 		Node * target
 	);
 
 	// 停止绑定在节点上的所有动作
-	void stopAllBindedWith(
+	void StopAllBindedWith(
 		Node * target
 	);
 
 	// 强制清除绑定在节点上的所有动作
-	void clearAllBindedWith(
+	void ClearAllBindedWith(
 		Node * target
 	);
 
 	// 强制清除所有动作
-	void clearAll();
+	void ClearAll();
 
 	// 更新动作管理器状态
-	void update();
+	void Update();
 
 	// 刷新所有动作计时
-	void updateTime();
+	void UpdateTime();
 
 private:
 	ActionManager();
@@ -85,18 +85,18 @@ private:
 	E2D_DISABLE_COPY(ActionManager);
 
 	// 添加动作
-	void __add(
+	void Add(
 		Action * action
 	);
 
 	// 删除动作
-	void __remove(
+	void Remove(
 		Action * action
 	);
 
 private:
-	std::vector<Action*> _actions;
-	std::vector<Action*> _runningActions;
+	std::vector<Action*> actions_;
+	std::vector<Action*> running_actions_;
 };
 
 
@@ -108,33 +108,33 @@ class CollisionManager
 
 public:
 	// 获取碰撞体管理器实例
-	static CollisionManager * getInstance();
+	static CollisionManager * GetInstance();
 
 	// 打开或关闭碰撞监听
 	// 默认：关闭
-	void setCollisionEnabled(
+	void SetCollisionEnabled(
 		bool enabled
 	);
 
 	// 添加可互相碰撞物体的名称
-	void addName(
+	void AddName(
 		const String& name1,
 		const String& name2
 	);
 
 	// 添加可互相碰撞物体的名称
-	void addName(
+	void AddName(
 		const std::vector<std::pair<String, String>>& names
 	);
 
 	// 判断两个物体是否是可碰撞的
-	bool isCollidable(
+	bool IsCollidable(
 		Node * node1,
 		Node * node2
 	);
 
 	// 判断两个物体是否是可碰撞的
-	bool isCollidable(
+	bool IsCollidable(
 		const String& name1,
 		const String& name2
 	);
@@ -147,24 +147,24 @@ private:
 	E2D_DISABLE_COPY(CollisionManager);
 
 	// 添加碰撞体
-	void __addCollider(
+	void AddCollider(
 		Collider* collider
 	);
 
 	// 移除碰撞体
-	void __removeCollider(
+	void RemoveCollider(
 		Collider* collider
 	);
 
 	// 更新碰撞体
-	void __updateCollider(
+	void UpdateCollider(
 		Collider* collider
 	);
 
 private:
-	bool _collisionEnabled;
-	std::vector<Collider*> _colliders;
-	std::set<std::pair<size_t, size_t>> _collisionList;
+	bool collision_enabled_;
+	std::vector<Collider*> colliders_;
+	std::set<std::pair<size_t, size_t>> collision_list_;
 };
 
 }

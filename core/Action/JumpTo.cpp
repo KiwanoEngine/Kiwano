@@ -3,17 +3,17 @@
 
 e2d::JumpTo::JumpTo(float duration, const Point & pos, float height, int jumps)
 	: JumpBy(duration, Point(), height, jumps)
-	, _endPos(pos)
+	, end_pos_(pos)
 {
 }
 
-e2d::JumpTo * e2d::JumpTo::clone() const
+e2d::JumpTo * e2d::JumpTo::Clone() const
 {
-	return new (e2d::autorelease) JumpTo(_duration, _endPos, _height, _jumps);
+	return new (e2d::autorelease) JumpTo(duration_, end_pos_, height_, jumps_);
 }
 
-void e2d::JumpTo::_init()
+void e2d::JumpTo::Init()
 {
-	JumpBy::_init();
-	_deltaPos = _endPos - _startPos;
+	JumpBy::Init();
+	delta_pos_ = end_pos_ - start_pos_;
 }

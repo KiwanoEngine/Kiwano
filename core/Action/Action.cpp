@@ -2,87 +2,87 @@
 #include "..\e2dmanager.h"
 
 e2d::Action::Action() 
-	: _running(false)
-	, _done(false)
-	, _initialized(false)
-	, _target(nullptr)
+	: running_(false)
+	, done_(false)
+	, initialized_(false)
+	, target_(nullptr)
 {
-	ActionManager::getInstance()->__add(this);
+	ActionManager::GetInstance()->Add(this);
 }
 
 e2d::Action::~Action()
 {
-	ActionManager::getInstance()->__remove(this);
+	ActionManager::GetInstance()->Remove(this);
 }
 
-bool e2d::Action::isRunning()
+bool e2d::Action::IsRunning()
 {
-	return _running;
+	return running_;
 }
 
-void e2d::Action::resume()
+void e2d::Action::Resume()
 {
-	_running = true;
+	running_ = true;
 }
 
-void e2d::Action::pause()
+void e2d::Action::Pause()
 {
-	_running = false;
+	running_ = false;
 }
 
-void e2d::Action::stop()
+void e2d::Action::Stop()
 {
-	_done = true;
+	done_ = true;
 }
 
-e2d::String e2d::Action::getName() const
+const e2d::String& e2d::Action::GetName() const
 {
-	return _name;
+	return name_;
 }
 
-void e2d::Action::setName(const String& name)
+void e2d::Action::SetName(const String& name)
 {
-	_name = name;
+	name_ = name;
 }
 
-e2d::Node * e2d::Action::getTarget()
+e2d::Node * e2d::Action::GetTarget()
 {
-	return _target;
+	return target_;
 }
 
-void e2d::Action::reset()
+void e2d::Action::Reset()
 {
-	_initialized = false;
-	_done = false;
-	_started = Time::now();
+	initialized_ = false;
+	done_ = false;
+	started_ = Time::Now();
 }
 
-bool e2d::Action::_isDone()
+bool e2d::Action::IsDone()
 {
-	return _done;
+	return done_;
 }
 
-void e2d::Action::_startWithTarget(Node* target)
+void e2d::Action::StartWithTarget(Node* target)
 {
-	_target = target;
-	_running = true;
-	this->reset();
+	target_ = target;
+	running_ = true;
+	this->Reset();
 }
 
-void e2d::Action::_init()
+void e2d::Action::Init()
 {
-	_initialized = true;
-	_started = Time::now();
+	initialized_ = true;
+	started_ = Time::Now();
 }
 
-void e2d::Action::_update()
+void e2d::Action::Update()
 {
-	if (!_initialized)
+	if (!initialized_)
 	{
-		_init();
+		Init();
 	}
 }
 
-void e2d::Action::_resetTime()
+void e2d::Action::ResetTime()
 {
 }

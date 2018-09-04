@@ -5,35 +5,35 @@
 e2d::RotateBy::RotateBy(float duration, float rotation)
 	: FiniteTimeAction(duration)
 {
-	_deltaVal = rotation;
+	delta_val_ = rotation;
 }
 
-void e2d::RotateBy::_init()
+void e2d::RotateBy::Init()
 {
-	FiniteTimeAction::_init();
+	FiniteTimeAction::Init();
 
-	if (_target)
+	if (target_)
 	{
-		_startVal = _target->getRotation();
+		start_val_ = target_->GetRotation();
 	}
 }
 
-void e2d::RotateBy::_update()
+void e2d::RotateBy::Update()
 {
-	FiniteTimeAction::_update();
+	FiniteTimeAction::Update();
 
-	if (_target)
+	if (target_)
 	{
-		_target->setRotation(_startVal + _deltaVal * _delta);
+		target_->SetRotation(start_val_ + delta_val_ * delta_);
 	}
 }
 
-e2d::RotateBy * e2d::RotateBy::clone() const
+e2d::RotateBy * e2d::RotateBy::Clone() const
 {
-	return new (e2d::autorelease) RotateBy(_duration, _deltaVal);
+	return new (e2d::autorelease) RotateBy(duration_, delta_val_);
 }
 
-e2d::RotateBy * e2d::RotateBy::reverse() const
+e2d::RotateBy * e2d::RotateBy::Reverse() const
 {
-	return new (e2d::autorelease) RotateBy(_duration, -_deltaVal);
+	return new (e2d::autorelease) RotateBy(duration_, -delta_val_);
 }

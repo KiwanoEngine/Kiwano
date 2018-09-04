@@ -3,7 +3,7 @@
 
 using namespace e2d;
 
-TextRenderer::TextRenderer()
+E2DTextRenderer::E2DTextRenderer()
 	: cRefCount_(0)
 	, pD2DFactory_(nullptr)
 	, pRT_(nullptr)
@@ -16,21 +16,21 @@ TextRenderer::TextRenderer()
 {
 }
 
-TextRenderer::~TextRenderer()
+E2DTextRenderer::~E2DTextRenderer()
 {
 	SafeRelease(pD2DFactory_);
 	SafeRelease(pRT_);
 	SafeRelease(pBrush_);
 }
 
-HRESULT TextRenderer::Create(
-	TextRenderer** ppTextRenderer,
+HRESULT E2DTextRenderer::Create(
+	E2DTextRenderer** ppTextRenderer,
 	ID2D1Factory* pD2DFactory,
 	ID2D1HwndRenderTarget* pRT,
 	ID2D1SolidColorBrush* pBrush
 )
 {
-	*ppTextRenderer = new (std::nothrow) TextRenderer();
+	*ppTextRenderer = new (std::nothrow) E2DTextRenderer();
 	if (*ppTextRenderer)
 	{
 		pD2DFactory->AddRef();
@@ -46,29 +46,29 @@ HRESULT TextRenderer::Create(
 	return E_FAIL;
 }
 
-STDMETHODIMP_(void) TextRenderer::SetTextStyle(
+STDMETHODIMP_(void) E2DTextRenderer::SetTextStyle(
 	CONST D2D1_COLOR_F &fillColor,
-	BOOL hasOutline,
-	CONST D2D1_COLOR_F &outlineColor,
-	FLOAT outlineWidth,
+	BOOL outline,
+	CONST D2D1_COLOR_F &outline_color,
+	FLOAT outline_width,
 	D2D1_LINE_JOIN outlineJoin
 )
 {
 	sFillColor_ = fillColor;
-	bShowOutline_ = hasOutline;
-	sOutlineColor_ = outlineColor;
-	fOutlineWidth = 2 * outlineWidth;
+	bShowOutline_ = outline;
+	sOutlineColor_ = outline_color;
+	fOutlineWidth = 2 * outline_width;
 
 	switch (outlineJoin)
 	{
 	case D2D1_LINE_JOIN_MITER:
-		pCurrStrokeStyle_ = Renderer::getMiterStrokeStyle();
+		pCurrStrokeStyle_ = Renderer::GetMiterStrokeStyle();
 		break;
 	case D2D1_LINE_JOIN_BEVEL:
-		pCurrStrokeStyle_ = Renderer::getBevelStrokeStyle();
+		pCurrStrokeStyle_ = Renderer::GetBevelStrokeStyle();
 		break;
 	case D2D1_LINE_JOIN_ROUND:
-		pCurrStrokeStyle_ = Renderer::getRoundStrokeStyle();
+		pCurrStrokeStyle_ = Renderer::GetRoundStrokeStyle();
 		break;
 	default:
 		pCurrStrokeStyle_ = nullptr;
@@ -76,7 +76,7 @@ STDMETHODIMP_(void) TextRenderer::SetTextStyle(
 	}
 }
 
-STDMETHODIMP TextRenderer::DrawGlyphRun(
+STDMETHODIMP E2DTextRenderer::DrawGlyphRun(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -165,7 +165,7 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(
 	return hr;
 }
 
-STDMETHODIMP TextRenderer::DrawUnderline(
+STDMETHODIMP E2DTextRenderer::DrawUnderline(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -232,7 +232,7 @@ STDMETHODIMP TextRenderer::DrawUnderline(
 	return S_OK;
 }
 
-STDMETHODIMP TextRenderer::DrawStrikethrough(
+STDMETHODIMP E2DTextRenderer::DrawStrikethrough(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -299,25 +299,25 @@ STDMETHODIMP TextRenderer::DrawStrikethrough(
 	return S_OK;
 }
 
-STDMETHODIMP TextRenderer::DrawInlineObject(
+STDMETHODIMP E2DTextRenderer::DrawInlineObject(
 	__maybenull void* clientDrawingContext,
 	FLOAT originX,
 	FLOAT originY,
 	IDWriteInlineObject* inlineObject,
-	BOOL isSideways,
-	BOOL isRightToLeft,
+	BOOL IsSideways,
+	BOOL IsRightToLeft,
 	IUnknown* clientDrawingEffect
 )
 {
 	return E_NOTIMPL;
 }
 
-STDMETHODIMP_(unsigned long) TextRenderer::AddRef()
+STDMETHODIMP_(unsigned long) E2DTextRenderer::AddRef()
 {
 	return InterlockedIncrement(&cRefCount_);
 }
 
-STDMETHODIMP_(unsigned long) TextRenderer::Release()
+STDMETHODIMP_(unsigned long) E2DTextRenderer::Release()
 {
 	unsigned long newCount = InterlockedDecrement(&cRefCount_);
 
@@ -330,7 +330,7 @@ STDMETHODIMP_(unsigned long) TextRenderer::Release()
 	return newCount;
 }
 
-STDMETHODIMP TextRenderer::IsPixelSnappingDisabled(
+STDMETHODIMP E2DTextRenderer::IsPixelSnappingDisabled(
 	__maybenull void* clientDrawingContext,
 	__out BOOL* isDisabled
 )
@@ -339,7 +339,7 @@ STDMETHODIMP TextRenderer::IsPixelSnappingDisabled(
 	return S_OK;
 }
 
-STDMETHODIMP TextRenderer::GetCurrentTransform(
+STDMETHODIMP E2DTextRenderer::GetCurrentTransform(
 	__maybenull void* clientDrawingContext,
 	__out DWRITE_MATRIX* transform
 )
@@ -348,7 +348,7 @@ STDMETHODIMP TextRenderer::GetCurrentTransform(
 	return S_OK;
 }
 
-STDMETHODIMP TextRenderer::GetPixelsPerDip(
+STDMETHODIMP E2DTextRenderer::GetPixelsPerDip(
 	__maybenull void* clientDrawingContext,
 	__out FLOAT* pixelsPerDip
 )
@@ -361,7 +361,7 @@ STDMETHODIMP TextRenderer::GetPixelsPerDip(
 	return S_OK;
 }
 
-STDMETHODIMP TextRenderer::QueryInterface(
+STDMETHODIMP E2DTextRenderer::QueryInterface(
 	IID const& riid,
 	void** ppvObject
 )

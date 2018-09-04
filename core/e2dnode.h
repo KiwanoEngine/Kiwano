@@ -14,7 +14,7 @@ class Drawable
 {
 public:
 	// 渲染图形
-	virtual void draw() const = 0;
+	virtual void Draw() const = 0;
 };
 
 
@@ -23,7 +23,7 @@ class Updatable
 {
 public:
 	// 渲染图形
-	virtual void update() = 0;
+	virtual void Update() = 0;
 };
 
 
@@ -32,7 +32,7 @@ class KeyEventHandler
 {
 public:
 	// 处理按键消息
-	virtual void handle(KeyEvent e) = 0;
+	virtual void Handle(KeyEvent e) = 0;
 };
 
 
@@ -41,7 +41,7 @@ class MouseEventHandler
 {
 public:
 	// 处理鼠标消息
-	virtual void handle(MouseEvent e) = 0;
+	virtual void Handle(MouseEvent e) = 0;
 };
 
 
@@ -50,7 +50,7 @@ class CollisionHandler
 {
 public:
 	// 处理碰撞消息
-	virtual void handle(Collision collision) = 0;
+	virtual void Handle(Collision collision) = 0;
 };
 
 
@@ -64,17 +64,12 @@ public:
 	// 节点属性
 	struct Property
 	{
-		float posX;			// X 坐标
-		float posY;			// Y 坐标
-		float width;		// 宽度
-		float height;		// 高度
-		float anchorX;		// 锚点 X 坐标
-		float anchorY;		// 锚点 Y 坐标
-		float scaleX;		// 横向缩放
-		float scaleY;		// 纵向缩放
+		Point pos;			// 坐标
+		Size size;			// 大小
+		Point anchor;		// 锚点坐标
+		Point scale;		// 缩放
+		Point skew;			// 倾斜角度
 		float rotation;		// 旋转角度
-		float skewAngleX;	// 横向倾斜角度
-		float skewAngleY;	// 纵向倾斜角度
 
 		Property operator+ (Property const & prop) const;
 		Property operator- (Property const & prop) const;
@@ -83,414 +78,401 @@ public:
 	};
 
 public:
+	typedef std::vector<Node*> Nodes;
+
 	Node();
 
 	virtual ~Node();
 
 	// 获取节点显示状态
-	bool isVisible() const;
+	bool IsVisible() const;
 
 	// 获取节点名称
-	const String& getName() const;
+	const String& GetName() const;
 
 	// 获取节点名称的 Hash 值
-	size_t getHashName() const;
+	size_t GetHashName() const;
 
 	// 获取节点绘图顺序
-	int getOrder() const;
+	int GetOrder() const;
 
 	// 获取节点横坐标
-	float getPosX() const;
+	float GetPosX() const;
 
 	// 获取节点纵坐标
-	float getPosY() const;
+	float GetPosY() const;
 
 	// 获取节点坐标
-	Point getPos() const;
+	Point GetPos() const;
 
 	// 获取节点宽度
-	float getWidth() const;
+	float GetWidth() const;
 
 	// 获取节点高度
-	float getHeight() const;
+	float GetHeight() const;
 
 	// 获取节点宽度（不考虑缩放）
-	float getRealWidth() const;
+	float GetRealWidth() const;
 
 	// 获取节点高度（不考虑缩放）
-	float getRealHeight() const;
+	float GetRealHeight() const;
 
 	// 获取节点大小（不考虑缩放）
-	Size getRealSize() const;
+	Size GetRealSize() const;
 
 	// 获取节点的锚点
-	float getAnchorX() const;
+	float GetAnchorX() const;
 
 	// 获取节点的锚点
-	float getAnchorY() const;
+	float GetAnchorY() const;
 
 	// 获取节点大小
-	Size getSize() const;
+	Size GetSize() const;
 
 	// 获取节点横向缩放比例
-	float getScaleX() const;
+	float GetScaleX() const;
 
 	// 获取节点纵向缩放比例
-	float getScaleY() const;
+	float GetScaleY() const;
 
 	// 获取节点横向倾斜角度
-	float getSkewX() const;
+	float GetSkewX() const;
 
 	// 获取节点纵向倾斜角度
-	float getSkewY() const;
+	float GetSkewY() const;
 
 	// 获取节点旋转角度
-	float getRotation() const;
+	float GetRotation() const;
 
 	// 获取节点透明度
-	float getOpacity() const;
+	float GetOpacity() const;
 
 	// 获取节点属性
-	Property getProperty() const;
+	Property GetProperty() const;
 
 	// 获取差别属性
-	Property getExtrapolate() const;
+	Property GetExtrapolate() const;
 
 	// 获取节点碰撞体
-	Collider * getCollider();
+	Collider * GetCollider();
 
 	// 获取父节点
-	Node * getParent() const;
+	Node * GetParent() const;
 
 	// 获取节点所在场景
-	Scene * getParentScene() const;
+	Scene * GetParentScene() const;
 
 	// 设置节点是否显示
-	void setVisible(
+	void SetVisible(
 		bool value
 	);
 
 	// 设置节点名称
-	void setName(
+	void SetName(
 		const String& name
 	);
 
 	// 设置节点横坐标
-	virtual void setPosX(
+	virtual void SetPosX(
 		float x
 	);
 
 	// 设置节点纵坐标
-	virtual void setPosY(
+	virtual void SetPosY(
 		float y
 	);
 
 	// 设置节点坐标
-	virtual void setPos(
+	virtual void SetPos(
 		const Point & point
 	);
 
 	// 设置节点坐标
-	virtual void setPos(
+	virtual void SetPos(
 		float x,
 		float y
 	);
 
 	// 节点坐标固定
-	virtual void setPosFixed(
+	virtual void SetPosFixed(
 		bool fixed
 	);
 
 	// 移动节点
-	virtual void movePosX(
-		float x
-	);
-
-	// 移动节点
-	virtual void movePosY(
-		float y
-	);
-
-	// 移动节点
-	virtual void movePos(
+	virtual void Move(
 		float x,
 		float y
 	);
 
 	// 移动节点
-	virtual void movePos(
-		const Vector2 & v
+	virtual void Move(
+		const Point & v
 	);
 
 	// 设置节点绘图顺序
 	// 默认为 0
-	virtual void setOrder(
+	virtual void SetOrder(
 		int order
 	);
 
 	// 设置横向缩放比例
 	// 默认为 1.0
-	virtual void setScaleX(
-		float scaleX
+	virtual void SetScaleX(
+		float scale_x
 	);
 
 	// 设置纵向缩放比例
 	// 默认为 1.0
-	virtual void setScaleY(
-		float scaleY
+	virtual void SetScaleY(
+		float scale_y
 	);
 
 	// 设置缩放比例
 	// 默认为 (1.0, 1.0)
-	virtual void setScale(
-		float scaleX,
-		float scaleY
+	virtual void SetScale(
+		float scale_x,
+		float scale_y
 	);
 
 	// 设置缩放比例
 	// 默认为 1.0
-	virtual void setScale(
+	virtual void SetScale(
 		float scale
 	);
 
 	// 设置横向倾斜角度
 	// 默认为 0
-	virtual void setSkewX(
-		float angleX
+	virtual void SetSkewX(
+		float skew_x
 	);
 
 	// 设置纵向倾斜角度
 	// 默认为 0
-	virtual void setSkewY(
-		float angleY
+	virtual void SetSkewY(
+		float skew_y
 	);
 
 	// 设置倾斜角度
 	// 默认为 (0, 0)
-	virtual void setSkew(
-		float angleX,
-		float angleY
+	virtual void SetSkew(
+		float skew_x,
+		float skew_y
 	);
 
 	// 设置旋转角度
 	// 默认为 0
-	virtual void setRotation(
+	virtual void SetRotation(
 		float rotation
 	);
 
 	// 设置透明度
 	// 默认为 1.0, 范围 [0, 1]
-	virtual void setOpacity(
+	virtual void SetOpacity(
 		float opacity
 	);
 
 	// 设置锚点的横向位置
 	// 默认为 0, 范围 [0, 1]
-	virtual void setAnchorX(
-		float anchorX
+	virtual void SetAnchorX(
+		float anchor_x
 	);
 
 	// 设置锚点的纵向位置
 	// 默认为 0, 范围 [0, 1]
-	virtual void setAnchorY(
-		float anchorY
+	virtual void SetAnchorY(
+		float anchor_y
 	);
 
 	// 设置锚点位置
 	// 默认为 (0, 0), 范围 [0, 1]
-	virtual void setAnchor(
-		float anchorX,
-		float anchorY
+	virtual void SetAnchor(
+		float anchor_x,
+		float anchor_y
 	);
 
 	// 修改节点宽度
-	virtual void setWidth(
+	virtual void SetWidth(
 		float width
 	);
 
 	// 修改节点高度
-	virtual void setHeight(
+	virtual void SetHeight(
 		float height
 	);
 
 	// 修改节点大小
-	virtual void setSize(
+	virtual void SetSize(
 		float width,
 		float height
 	);
 
 	// 修改节点大小
-	virtual void setSize(
+	virtual void SetSize(
 		Size size
 	);
 
 	// 设置节点属性
-	virtual void setProperty(
+	virtual void SetProperty(
 		Property prop
 	);
 
 	// 启用或关闭渲染区域裁剪
-	virtual void setClipEnabled(
+	virtual void SetClipEnabled(
 		bool enabled
 	);
 
 	// 设置节点边缘颜色
-	virtual void setBorderColor(
+	virtual void SetBorderColor(
 		const Color& color
 	);
 
 	// 判断点是否在节点内
-	bool containsPoint(
+	bool ContainsPoint(
 		const Point& point
 	);
 
 	// 判断两物体是否相交
-	bool intersects(
+	bool Intersects(
 		Node * node
 	);
 
 	// 添加子节点
-	void addChild(
+	void AddChild(
 		Node * child,
-		int order = 0	/* 渲染顺序 */
+		int order = 0		/* 渲染顺序 */
 	);
 
 	// 添加多个子节点
-	void addChild(
-		const std::vector<Node*>& nodes,	/* 节点数组 */
-		int order = 0						/* 渲染顺序 */
+	void AddChild(
+		const Nodes& nodes,	/* 节点数组 */
+		int order = 0		/* 渲染顺序 */
 	);
 
 	// 获取所有名称相同的子节点
-	std::vector<Node*> getChildren(
+	Nodes GetChildren(
 		const String& name
 	) const;
 
 	// 获取名称相同的子节点
-	Node* getChild(
+	Node* GetChild(
 		const String& name
 	) const;
 
 	// 获取所有子节点
-	const std::vector<Node*>& getAllChildren() const;
+	const Nodes& GetAllChildren() const;
 
 	// 获取子节点数量
-	int getChildrenCount() const;
+	int GetChildrenCount() const;
 
 	// 移除子节点
-	bool removeChild(
+	bool RemoveChild(
 		Node * child
 	);
 
 	// 移除所有名称相同的子节点
-	void removeChildren(
-		const String& childName
+	void RemoveChildren(
+		const String& child_name
 	);
 
 	// 移除所有节点
-	void removeAllChildren();
+	void RemoveAllChildren();
 
 	// 从父节点移除
-	void removeFromParent();
+	void RemoveFromParent();
 
 	// 执行动作
-	void runAction(
+	void RunAction(
 		Action * action
 	);
 
 	// 继续动作
-	void resumeAction(
+	void ResumeAction(
 		const String& name
 	);
 
 	// 暂停动作
-	void pauseAction(
+	void PauseAction(
 		const String& name
 	);
 
 	// 停止动作
-	void stopAction(
+	void StopAction(
 		const String& name
 	);
 
 	// 继续所有暂停动作
-	void resumeAllActions();
+	void ResumeAllActions();
 
 	// 暂停所有动作
-	void pauseAllActions();
+	void PauseAllActions();
 
 	// 停止所有动作
-	void stopAllActions();
+	void StopAllActions();
 
 	// 分发鼠标消息
-	virtual bool dispatch(
+	virtual bool Dispatch(
 		const MouseEvent& e,
 		bool handled
 	);
 
 	// 分发按键消息
-	virtual bool dispatch(
+	virtual bool Dispatch(
 		const KeyEvent& e,
 		bool handled
 	);
 
 	// 遍历节点
-	virtual void visit();
+	virtual void Visit();
 
 protected:
 	E2D_DISABLE_COPY(Node);
 
 	// 渲染节点边缘
-	void _drawBorder();
+	void DrawBorder();
 
 	// 渲染碰撞体轮廓
-	void _drawCollider();
+	void DrawCollider();
 
 	// 设置节点所在场景
-	void _setParentScene(
+	void SetParentScene(
 		Scene * scene
 	);
 
 	// 子节点排序
-	void _sortChildren();
+	void SortChildren();
 
 	// 更新转换矩阵
-	void _updateTransform();
+	void UpdateTransform();
 
 	// 更新节点透明度
-	void _updateOpacity();
+	void UpdateOpacity();
 
 protected:
-	String		_name;
-	size_t		_hashName;
-	float		_posX;
-	float		_posY;
-	float		_width;
-	float		_height;
-	float		_scaleX;
-	float		_scaleY;
-	float		_rotation;
-	float		_skewAngleX;
-	float		_skewAngleY;
-	float		_displayOpacity;
-	float		_realOpacity;
-	float		_anchorX;
-	float		_anchorY;
-	int			_order;
-	bool		_visible;
-	bool		_clipEnabled;
-	bool		_needSort;
-	bool		_needTransform;
-	bool		_positionFixed;
-	Collider	_collider;
-	Scene *		_parentScene;
-	Node *		_parent;
-	Property	_extrapolate;
-	Color		_borderColor;
-	ID2D1Geometry*		_border;
-	std::vector<Node*>	_children;
-	D2D1::Matrix3x2F	_initialMatri;
-	D2D1::Matrix3x2F	_finalMatri;
+	String		name_;
+	size_t		hash_name_;
+	Point		pos_;
+	Size		size_;
+	Point		scale_;
+	Point		anchor_;
+	Point		skew_;
+	float		rotation_;
+	float		display_opacity_;
+	float		real_opacity_;
+	int			order_;
+	bool		visible_;
+	bool		clip_enabled_;
+	bool		need_sort_;
+	bool		need_transform_;
+	bool		fixed_position_;
+	Collider	collider_;
+	Scene *		parent_scene_;
+	Node *		parent_;
+	Property	extrapolate_;
+	Color		border_color_;
+	Nodes		children_;
+	ID2D1Geometry*		border_;
+	D2D1::Matrix3x2F	initial_matrix_;
+	D2D1::Matrix3x2F	final_matrix_;
 };
 
 
@@ -504,36 +486,36 @@ public:
 	virtual ~Scene();
 
 	// 进入场景
-	virtual void onEnter() {}
+	virtual void OnEnter() {}
 
 	// 退出场景
-	virtual void onExit() {}
+	virtual void OnExit() {}
 
 	// 关闭窗口
 	// 说明：返回 false 将阻止窗口关闭
-	virtual bool onCloseWindow() { return true; }
+	virtual bool OnCloseWindow() { return true; }
 
 	// 显示或隐藏节点边缘
 	// 默认：隐藏
-	void showBorder(
+	void ShowBorder(
 		bool visible
 	);
 
 	// 显示或隐藏碰撞体
 	// 默认：隐藏
-	void showCollider(
+	void ShowCollider(
 		bool visible
 	);
 
 	// 遍历节点
-	virtual void visit() override;
+	virtual void Visit() override;
 
 protected:
 	E2D_DISABLE_COPY(Scene);
 
 protected:
-	bool _borderVisible;
-	bool _colliderVisible;
+	bool border_visible_;
+	bool collider_visible_;
 };
 
 
@@ -555,51 +537,51 @@ public:
 
 	explicit Sprite(
 		const Resource& res,
-		const Rect& cropRect	/* 裁剪矩形 */
+		const Rect& crop_rect	/* 裁剪矩形 */
 	);
 
 	explicit Sprite(
-		const String& fileName
+		const String& file_name
 	);
 
 	explicit Sprite(
-		const String& fileName,
-		const Rect& cropRect	/* 裁剪矩形 */
+		const String& file_name,
+		const Rect& crop_rect	/* 裁剪矩形 */
 	);
 
 	virtual ~Sprite();
 
 	// 加载图片文件
-	bool open(
+	bool Open(
 		const Resource& res
 	);
 
 	// 加载图片文件
-	bool open(
-		const String& fileName
+	bool Open(
+		const String& file_name
 	);
 	
 	// 加载图片
-	bool open(
+	bool Open(
 		Image * image
 	);
 
 	// 将图片裁剪为矩形
-	void crop(
-		const Rect& cropRect	/* 裁剪矩形 */
+	void Crop(
+		const Rect& crop_rect	/* 裁剪矩形 */
 	);
 
 	// 获取 Image 对象
-	Image * getImage() const;
+	Image * GetImage() const;
 
 	// 渲染精灵
-	virtual void draw() const override;
+	virtual void Draw() const override;
 
 protected:
 	E2D_DISABLE_COPY(Sprite);
 
 protected:
-	Image * _image;
+	Image * image_;
 };
 
 
@@ -623,15 +605,15 @@ public:
 	public:
 		Color		color;				// 颜色
 		Align		alignment;			// 对齐方式
-		bool		wrapping;			// 打开自动换行
-		float		wrappingWidth;		// 自动换行宽度
-		float		lineSpacing;		// 行间距
-		bool		hasUnderline;		// 下划线
-		bool		hasStrikethrough;	// 删除线
-		bool		hasOutline;			// 显示描边
-		Color		outlineColor;		// 描边颜色
-		float		outlineWidth;		// 描边线宽
-		Stroke	outlineStroke;		// 描边线相交样式
+		bool		wrap;				// 打开自动换行
+		float		wrap_width;			// 自动换行宽度
+		float		line_spacing;		// 行间距
+		bool		underline;			// 下划线
+		bool		strikethrough;		// 删除线
+		bool		outline;			// 显示描边
+		Color		outline_color;		// 描边颜色
+		float		outline_width;		// 描边线宽
+		Stroke		outline_stroke;		// 描边线相交样式
 
 	public:
 		Style();
@@ -639,15 +621,15 @@ public:
 		Style(
 			Color color,
 			Align alignment = Align::Left,
-			bool wrapping = false,
-			float wrappingWidth = 0.f,
-			float lineSpacing = 0.f,
-			bool hasUnderline = false,
-			bool hasStrikethrough = false,
-			bool hasOutline = true,
-			Color outlineColor = Color(Color::Black, 0.5),
-			float outlineWidth = 1.f,
-			Stroke outlineStroke = Stroke::Round
+			bool wrap = false,
+			float wrap_width = 0.f,
+			float line_spacing = 0.f,
+			bool underline = false,
+			bool strikethrough = false,
+			bool outline = true,
+			Color outline_color = Color(Color::Black, 0.5),
+			float outline_width = 1.f,
+			Stroke outline_stroke = Stroke::Round
 		);
 	};
 
@@ -663,161 +645,161 @@ public:
 	virtual ~Text();
 
 	// 获取文本
-	const String& getText() const;
+	const String& GetText() const;
 
 	// 获取字体
-	const Font& getFont() const;
+	const Font& GetFont() const;
 
 	// 获取文本样式
-	const Style& getStyle() const;
+	const Style& GetStyle() const;
 
 	// 获取字体族
-	const String& getFontFamily() const;
+	const String& GetFontFamily() const;
 
 	// 获取当前字号
-	float getFontSize() const;
+	float GetFontSize() const;
 
 	// 获取当前字体粗细值
-	UINT getFontWeight() const;
+	UINT GetFontWeight() const;
 
 	// 获取文字颜色
-	const Color& getColor() const;
+	const Color& GetColor() const;
 
 	// 获取描边颜色
-	const Color& getOutlineColor() const;
+	const Color& GetOutlineColor() const;
 
 	// 获取描边线宽
-	float getOutlineWidth() const;
+	float GetOutlineWidth() const;
 
 	// 获取描边线相交样式
-	Stroke getOutlineStroke() const;
+	Stroke GetOutlineStroke() const;
 
 	// 获取文本显示行数
-	int getLineCount() const;
+	int GetLineCount() const;
 
 	// 是否是斜体
-	bool isItalic() const;
+	bool IsItalic() const;
 
 	// 是否显示删除线
-	bool hasStrikethrough() const;
+	bool strikethrough() const;
 
 	// 是否显示下划线
-	bool hasUnderline() const;
+	bool underline() const;
 
 	// 是否显示描边
-	bool hasOutline() const;
+	bool outline() const;
 
 	// 设置文本
-	void setText(
+	void SetText(
 		const String& text
 	);
 
 	// 设置文本样式
-	void setStyle(
+	void SetStyle(
 		const Style& style
 	);
 
 	// 设置字体
-	void setFont(
+	void SetFont(
 		const Font& font
 	);
 
 	// 设置字体族
-	void setFontFamily(
+	void SetFontFamily(
 		const String& family
 	);
 
 	// 设置字号（默认值为 22）
-	void setFontSize(
+	void SetFontSize(
 		float size
 	);
 
 	// 设置字体粗细值（默认值为 Text::Font::Weight::Normal）
-	void setFontWeight(
+	void SetFontWeight(
 		UINT weight
 	);
 
 	// 设置文字颜色（默认值为 Color::WHITE）
-	void setColor(
+	void SetColor(
 		Color color
 	);
 
 	// 设置文字斜体（默认值为 false）
-	void setItalic(
+	void SetItalic(
 		bool value
 	);
 
 	// 打开或关闭文本自动换行（默认为关闭）
-	void setWrapping(
-		bool wrapping
+	void SetWrapEnabled(
+		bool wrap
 	);
 
 	// 设置文本自动换行的宽度（默认为 0）
-	void setWrappingWidth(
-		float wrappingWidth
+	void SetWrapWidth(
+		float wrap_width
 	);
 
 	// 设置行间距（默认为 0）
-	void setLineSpacing(
-		float lineSpacing
+	void SetLineSpacing(
+		float line_spacing
 	);
 
 	// 设置对齐方式（默认为 Align::Left）
-	void setAlignment(
+	void SetAlignment(
 		Align align
 	);
 
 	// 设置下划线（默认值为 false）
-	void setUnderline(
-		bool hasUnderline
+	void SetUnderline(
+		bool underline
 	);
 
 	// 设置删除线（默认值为 false）
-	void setStrikethrough(
-		bool hasStrikethrough
+	void SetStrikethrough(
+		bool strikethrough
 	);
 
 	// 设置是否显示描边
-	void setOutline(
-		bool hasOutline
+	void SetOutline(
+		bool outline
 	);
 
 	// 设置描边颜色
-	void setOutlineColor(
-		Color outlineColor
+	void SetOutlineColor(
+		Color outline_color
 	);
 
 	// 设置描边线宽
-	void setOutlineWidth(
-		float outlineWidth
+	void SetOutlineWidth(
+		float outline_width
 	);
 
 	// 设置描边线相交样式
-	void setOutlineStroke(
-		Stroke outlineStroke
+	void SetOutlineStroke(
+		Stroke outline_stroke
 	);
 
 	// 渲染文字
-	virtual void draw() const override;
+	virtual void Draw() const override;
 
 protected:
 	E2D_DISABLE_COPY(Text);
 
 	// 重新排版文字
-	void _reset();
+	void Reset();
 
 	// 创建文字格式化
-	void _createFormat();
+	void CreateFormat();
 
 	// 创建文字布局
-	void _createLayout();
+	void CreateLayout();
 
 protected:
-	String	_text;
-	Font	_font;
-	Style	_style;
-	IDWriteTextFormat * _textFormat;
-	IDWriteTextLayout * _textLayout;
+	String	text_;
+	Font	font_;
+	Style	style_;
+	IDWriteTextFormat * text_format_;
+	IDWriteTextLayout * text_layout_;
 };
 
 
@@ -829,20 +811,20 @@ public:
 
 	explicit Button(
 		Node * normal,					/* 普通状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+		const Function& func = nullptr	/* 按钮点击后的回调函数 */
 	);
 
 	explicit Button(
 		Node * normal,					/* 普通状态 */
 		Node * selected,				/* 鼠标按下状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+		const Function& func = nullptr	/* 按钮点击后的回调函数 */
 	);
 
 	explicit Button(
 		Node * normal,					/* 普通状态 */
 		Node * mouseover,				/* 鼠标移入状态 */
 		Node * selected,				/* 鼠标按下状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+		const Function& func = nullptr	/* 按钮点击后的回调函数 */
 	);
 
 	explicit Button(
@@ -850,57 +832,57 @@ public:
 		Node * mouseover,				/* 鼠标移入状态 */
 		Node * selected,				/* 鼠标移入状态 */
 		Node * disabled,				/* 按钮禁用状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+		const Function& func = nullptr	/* 按钮点击后的回调函数 */
 	);
 
 	// 获取按钮状态是启用还是禁用
-	bool isEnable() const;
+	bool IsEnable() const;
 
 	// 设置按钮启用或禁用
-	void setEnabled(
+	void SetEnabled(
 		bool enabled
 	);
 
 	// 设置一般情况下显示的按钮
-	virtual void setNormal(
+	virtual void SetNormal(
 		Node * normal
 	);
 
 	// 设置鼠标移入按钮时显示的按钮
-	virtual void setMouseOver(
+	virtual void SetMouseOver(
 		Node * mouseover
 	);
 
 	// 设置鼠标按下按钮时显示的按钮
-	virtual void setSelected(
+	virtual void SetSelected(
 		Node * selected
 	);
 
 	// 设置按钮被禁用时显示的按钮
-	virtual void setDisabled(
+	virtual void SetDisabled(
 		Node * disabled
 	);
 
-	// 设置按钮点击后的执行函数
-	void setClickFunc(
+	// 设置按钮点击后的回调函数
+	void SetCallbackOnClick(
 		const Function& func
 	);
 
 	// 设置锚点位置
 	// 默认为 (0, 0), 范围 [0, 1]
-	virtual void setAnchor(
-		float anchorX,
-		float anchorY
+	virtual void SetAnchor(
+		float anchor_x,
+		float anchor_y
 	) override;
 
 	// 分发鼠标消息
-	virtual bool dispatch(
+	virtual bool Dispatch(
 		const MouseEvent& e,
 		bool handled
 	) override;
 
 	// 遍历节点
-	virtual void visit() override;
+	virtual void Visit() override;
 
 protected:
 	E2D_DISABLE_COPY(Button);
@@ -909,23 +891,25 @@ protected:
 	enum class Status { Normal, Mouseover, Selected };
 
 	// 设置按钮状态
-	virtual void _setStatus(Status status);
+	virtual void SetStatus(
+		Status status
+	);
 
 	// 刷新按钮显示
-	virtual void _updateVisible();
+	virtual void UpdateVisible();
 
-	// 执行按钮函数对象
-	virtual void _runCallback();
+	// 点击回调
+	virtual void OnClick();
 
 protected:
-	Node *		_normal;
-	Node *		_mouseover;
-	Node *		_selected;
-	Node *		_disabled;
-	bool		_enabled;
-	bool		_isSelected;
-	Status		_status;
-	Function	_func;
+	Node *		normal_;
+	Node *		mouseover_;
+	Node *		selected_;
+	Node *		disabled_;
+	bool		enabled_;
+	bool		is_selected_;
+	Status		status_;
+	Function	callback_;
 };
 
 
@@ -936,115 +920,115 @@ public:
 	ToggleButton();
 
 	explicit ToggleButton(
-		Node * onNormal,				/* 按钮打开时，普通状态 */
-		Node * offNormal,				/* 按钮关闭时，普通状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+		Node * normal_on,				/* 按钮打开时，普通状态 */
+		Node * normal_off,				/* 按钮关闭时，普通状态 */
+		const Function& func = nullptr	/* 按钮点击后的回调函数 */
 	);
 
 	explicit ToggleButton(
-		Node * onNormal,				/* 按钮打开时，普通状态 */
-		Node * offNormal,				/* 按钮关闭时，普通状态 */
-		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
-		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+		Node * normal_on,				/* 按钮打开时，普通状态 */
+		Node * normal_off,				/* 按钮关闭时，普通状态 */
+		Node * selected_on,				/* 按钮打开时，鼠标按下状态 */
+		Node * selected_off,			/* 按钮关闭时，鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的回调函数 */
 	);
 
 	explicit ToggleButton(
-		Node * onNormal,				/* 按钮打开时，普通状态 */
-		Node * offNormal,				/* 按钮关闭时，普通状态 */
-		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
-		Node * offMouseOver,			/* 按钮关闭时，鼠标移入状态 */
-		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
-		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+		Node * normal_on,				/* 按钮打开时，普通状态 */
+		Node * normal_off,				/* 按钮关闭时，普通状态 */
+		Node * mouseover_on,			/* 按钮打开时，鼠标移入状态 */
+		Node * mouseover_off,			/* 按钮关闭时，鼠标移入状态 */
+		Node * selected_on,				/* 按钮打开时，鼠标按下状态 */
+		Node * selected_off,			/* 按钮关闭时，鼠标按下状态 */
+		const Function& func = nullptr	/* 按钮点击后的回调函数 */
 	);
 
 	explicit ToggleButton(
-		Node * onNormal,				/* 按钮打开时，普通状态 */
-		Node * offNormal,				/* 按钮关闭时，普通状态 */
-		Node * onMouseOver,				/* 按钮打开时，鼠标移入状态 */
-		Node * offMouseOver,			/* 按钮关闭时，鼠标移入状态 */
-		Node * onSelected,				/* 按钮打开时，鼠标按下状态 */
-		Node * offSelected,				/* 按钮关闭时，鼠标按下状态 */
-		Node * onDisabled,				/* 按钮打开时，禁用状态 */
-		Node * offDisabled,				/* 按钮关闭时，禁用状态 */
-		const Function& func = nullptr	/* 按钮点击后的执行函数 */
+		Node * normal_on,				/* 按钮打开时，普通状态 */
+		Node * normal_off,				/* 按钮关闭时，普通状态 */
+		Node * mouseover_on,			/* 按钮打开时，鼠标移入状态 */
+		Node * mouseover_off,			/* 按钮关闭时，鼠标移入状态 */
+		Node * selected_on,				/* 按钮打开时，鼠标按下状态 */
+		Node * selected_off,			/* 按钮关闭时，鼠标按下状态 */
+		Node * disabled_on,				/* 按钮打开时，禁用状态 */
+		Node * disabled_off,			/* 按钮关闭时，禁用状态 */
+		const Function& func = nullptr	/* 按钮点击后的回调函数 */
 	);
 
 	// 获取开关状态
-	bool isChecked() const;
+	bool IsChecked() const;
 
 	// 设置开关按钮的状态
-	void setChecked(
+	void SetChecked(
 		bool checked
 	);
 
 	// 设置按钮打开状态下显示的按钮
-	virtual void setNormal(
+	virtual void SetNormal(
 		Node * normal
 	) override;
 
 	// 设置按钮打开状态下，鼠标移入按钮时显示的按钮
-	virtual void setMouseOver(
+	virtual void SetMouseOver(
 		Node * mouseover
 	) override;
 
 	// 设置按钮打开状态下，鼠标按下按钮时显示的按钮
-	virtual void setSelected(
+	virtual void SetSelected(
 		Node * selected
 	) override;
 
 	// 设置按钮打开状态下，被禁用时显示的按钮
-	virtual void setDisabled(
+	virtual void SetDisabled(
 		Node * disabled
 	) override;
 
 	// 设置按钮关闭状态下显示的按钮
-	void setNormalOff(
+	void SetNormalOff(
 		Node * normal
 	);
 
 	// 设置按钮关闭状态下，鼠标移入按钮时显示的按钮
-	void setMouseOverOff(
+	void SetMouseOverOff(
 		Node * mouseover
 	);
 
 	// 设置按钮关闭状态下，鼠标按下按钮时显示的按钮
-	void setSelectedOff(
+	void SetSelectedOff(
 		Node * selected
 	);
 
 	// 设置按钮关闭状态下，按钮被禁用时显示的按钮
-	void setDisabledOff(
+	void SetDisabledOff(
 		Node * disabled
 	);
 
 	// 设置锚点位置
 	// 默认为 (0, 0), 范围 [0, 1]
-	virtual void setAnchor(
-		float anchorX,
-		float anchorY
+	virtual void SetAnchor(
+		float anchor_x,
+		float anchor_y
 	) override;
 
 protected:
 	E2D_DISABLE_COPY(ToggleButton);
 
 	// 刷新按钮开关
-	virtual void _updateStatus();
+	virtual void UpdateStatus();
 
 	// 执行按钮函数对象
-	virtual void _runCallback() override;
+	virtual void OnClick() override;
 
 protected:
-	Node*	_normalOn;
-	Node*	_mouseoverOn;
-	Node*	_selectedOn;
-	Node*	_disabledOn;
-	Node*	_normalOff;
-	Node*	_mouseoverOff;
-	Node*	_selectedOff;
-	Node*	_disabledOff;
-	bool	_checked;
+	Node*	normal_on_;
+	Node*	mouseover_on_;
+	Node*	selected_on_;
+	Node*	disabled_on_;
+	Node*	normal_off_;
+	Node*	mouseover_off_;
+	Node*	selected_off_;
+	Node*	disabled_off_;
+	bool	checked_;
 };
 
 
@@ -1059,35 +1043,35 @@ public:
 	);
 
 	// 获取菜单是否禁用
-	bool isEnable() const;
+	bool IsEnable() const;
 
 	// 获取菜单中的按钮数量
-	size_t getButtonCount() const;
+	size_t GetButtonCount() const;
 
 	// 设置菜单启用或禁用
-	void setEnabled(
+	void SetEnabled(
 		bool enabled
 	);
 
 	// 添加按钮
-	void addButton(
+	void AddButton(
 		Button * button
 	);
 
 	// 移除按钮
-	bool removeButton(
+	bool RemoveButton(
 		Button * button
 	);
 
 	// 获取所有按钮
-	const std::vector<Button*>& getAllButtons() const;
+	const std::vector<Button*>& GetAllButtons() const;
 
 protected:
 	E2D_DISABLE_COPY(Menu);
 
 protected:
-	bool _enabled;
-	std::vector<Button*> _buttons;
+	bool enabled_;
+	std::vector<Button*> buttons_;
 };
 
 
@@ -1105,103 +1089,103 @@ public:
 	virtual ~Canvas();
 
 	// 设置线条颜色
-	void setLineColor(
+	void SetLineColor(
 		const Color& color
 	);
 
 	// 设置填充颜色
-	void setFillColor(
+	void SetFillColor(
 		const Color& color
 	);
 
 	// 设置线条宽度
-	void setStrokeWidth(
+	void SetStrokeWidth(
 		float width
 	);
 
 	// 设置线条相交样式
-	void setStrokeStyle(
+	void SetStrokeStyle(
 		Stroke strokeStyle
 	);
 
 	// 获取线条颜色
-	Color getLineColor() const;
+	Color GetLineColor() const;
 
 	// 获取填充颜色
-	Color getFillColor() const;
+	Color GetFillColor() const;
 
 	// 获取线条宽度
-	float getStrokeWidth() const;
+	float GetStrokeWidth() const;
 
 	// 获取线条相交样式
-	Stroke getStrokeStyle() const;
+	Stroke GetStrokeStyle() const;
 
 	// 画直线
-	void drawLine(
+	void DrawLine(
 		const Point& begin,
 		const Point& end
 	);
 
 	// 画圆形边框
-	void drawCircle(
+	void DrawCircle(
 		const Point& center,
 		float radius
 	);
 
 	// 画椭圆形边框
-	void drawEllipse(
+	void DrawEllipse(
 		const Point& center,
-		float radiusX,
-		float radiusY
+		float radius_x,
+		float radius_y
 	);
 
 	// 画矩形边框
-	void drawRect(
+	void DrawRect(
 		const Rect& rect
 	);
 
 	// 画圆角矩形边框
-	void drawRoundedRect(
+	void DrawRoundedRect(
 		const Rect& rect,
-		float radiusX,
-		float radiusY
+		float radius_x,
+		float radius_y
 	);
 
 	// 填充圆形
-	void fillCircle(
+	void FillCircle(
 		const Point& center,
 		float radius
 	);
 
 	// 填充椭圆形
-	void fillEllipse(
+	void FillEllipse(
 		const Point& center,
-		float radiusX,
-		float radiusY
+		float radius_x,
+		float radius_y
 	);
 
 	// 填充矩形
-	void fillRect(
+	void FillRect(
 		const Rect& rect
 	);
 
 	// 填充圆角矩形
-	void fillRoundedRect(
+	void FillRoundedRect(
 		const Rect& rect,
-		float radiusX,
-		float radiusY
+		float radius_x,
+		float radius_y
 	);
 
 protected:
 	E2D_DISABLE_COPY(Canvas);
 
 protected:
-	float _strokeWidth;
-	Stroke _stroke;
-	ID2D1RenderTarget * _renderTarget;
-	ID2D1SolidColorBrush * _fillBrush;
-	ID2D1SolidColorBrush * _lineBrush;
-	ID2D1StrokeStyle * _strokeStyle;
+	float	stroke_width_;
+	Stroke	stroke_;
+	ID2D1RenderTarget * render_target_;
+	ID2D1SolidColorBrush * fill_brush_;
+	ID2D1SolidColorBrush * line_brush_;
+	ID2D1StrokeStyle * stroke_style_;
 };
 
 }

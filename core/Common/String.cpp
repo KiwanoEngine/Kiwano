@@ -6,76 +6,76 @@
 
 
 e2d::String::String()
-	: _str(L"")
+	: string_(L"")
 {
 }
 
 e2d::String::String(const wchar_t *str)
-	: _str(str)
+	: string_(str)
 {
 }
 
 e2d::String::String(const char *cstr)
-	: _str(static_cast<wchar_t*>(_bstr_t(cstr)))
+	: string_(static_cast<wchar_t*>(_bstr_t(cstr)))
 {
 }
 
 e2d::String::String(e2d::String && str)
 {
-	_str = std::move(str._str);
+	string_ = std::move(str.string_);
 }
 
 e2d::String::String(const e2d::String &str)
-	: _str(str._str)
+	: string_(str.string_)
 {
 }
 
 e2d::String::~String()
 {
-	_str.clear();
+	string_.clear();
 }
 
 e2d::String &e2d::String::operator=(const wchar_t *str)
 {
-	_str = str;
+	string_ = str;
 	return (*this);
 }
 
 e2d::String & e2d::String::operator=(const char *cstr)
 {
-	_str = static_cast<wchar_t*>(_bstr_t(cstr));
+	string_ = static_cast<wchar_t*>(_bstr_t(cstr));
 	return (*this);
 }
 
-e2d::String e2d::String::parse(int value)
+e2d::String e2d::String::Parse(int value)
 {
 	String tmp;
-	tmp._str = std::to_wstring(value);
+	tmp.string_ = std::to_wstring(value);
 	return std::move(tmp);
 }
 
-e2d::String e2d::String::parse(unsigned int value)
+e2d::String e2d::String::Parse(unsigned int value)
 {
 	String tmp;
-	tmp._str = std::to_wstring(value);
+	tmp.string_ = std::to_wstring(value);
 	return std::move(tmp);
 }
 
-e2d::String e2d::String::parse(float value)
+e2d::String e2d::String::Parse(float value)
 {
 	String tmp;
-	tmp._str = std::to_wstring(value);
+	tmp.string_ = std::to_wstring(value);
 	return std::move(tmp);
 }
 
-e2d::String e2d::String::parse(double value)
+e2d::String e2d::String::Parse(double value)
 {
 	String tmp;
-	tmp._str = std::to_wstring(value);
+	tmp.string_ = std::to_wstring(value);
 	return std::move(tmp);
 }
 
-e2d::String e2d::String::format(const char * format, ...)
+e2d::String e2d::String::Format(const char * format, ...)
 {
 	std::string tmp;
 
@@ -97,7 +97,7 @@ e2d::String e2d::String::format(const char * format, ...)
 	return std::move(str);
 }
 
-e2d::String e2d::String::format(const wchar_t * format, ...)
+e2d::String e2d::String::Format(const wchar_t * format, ...)
 {
 	std::wstring tmp;
 
@@ -119,14 +119,9 @@ e2d::String e2d::String::format(const wchar_t * format, ...)
 	return std::move(str);
 }
 
-void e2d::String::swap(String & str1, String & str2)
-{
-	str1._str.swap(str2._str);
-}
-
 e2d::String & e2d::String::operator=(const String &str)
 {
-	_str = str._str;
+	string_ = str.string_;
 	return (*this);
 }
 
@@ -134,7 +129,7 @@ bool e2d::String::operator==(const wchar_t *str) const
 {
 	if (str)
 	{
-		return (_str.compare(str) == 0);
+		return (string_.compare(str) == 0);
 	}
 	else
 	{
@@ -147,7 +142,7 @@ bool e2d::String::operator==(const char *str) const
 	if (str)
 	{
 		String temp(str);
-		return (_str == temp._str);
+		return (string_ == temp.string_);
 	}
 	else
 	{
@@ -157,14 +152,14 @@ bool e2d::String::operator==(const char *str) const
 
 bool e2d::String::operator ==(const e2d::String &str) const
 {
-	return _str == str._str;
+	return string_ == str.string_;
 }
 
 bool e2d::String::operator!=(const wchar_t *str) const
 {
 	if (str)
 	{
-		return (_str.compare(str) != 0);
+		return (string_.compare(str) != 0);
 	}
 	else
 	{
@@ -177,7 +172,7 @@ bool e2d::String::operator!=(const char *str) const
 	if (str)
 	{
 		String temp(str);
-		return (_str != temp._str);
+		return (string_ != temp.string_);
 	}
 	else
 	{
@@ -187,247 +182,247 @@ bool e2d::String::operator!=(const char *str) const
 
 bool e2d::String::operator!=(const e2d::String &str) const
 {
-	return _str != str._str;
+	return string_ != str.string_;
 }
 
-wchar_t &e2d::String::operator[](int index)
+wchar_t &e2d::String::operator[](size_t index)
 {
-	return _str[size_t(index)];
+	return string_[index];
 }
 
 e2d::String e2d::String::operator+(const wchar_t *str) const
 {
 	String temp;
-	temp._str = _str + str;
+	temp.string_ = string_ + str;
 	return std::move(temp);
 }
 
 e2d::String e2d::String::operator+(const char *str) const
 {
 	String temp;
-	temp._str = _str + static_cast<wchar_t*>(_bstr_t(str));
+	temp.string_ = string_ + static_cast<wchar_t*>(_bstr_t(str));
 	return std::move(temp);
 }
 
 e2d::String e2d::String::operator+(const e2d::String &str) const
 {
 	String temp;
-	temp._str = _str + str._str;
+	temp.string_ = string_ + str.string_;
 	return std::move(temp);
 }
 
 e2d::String e2d::operator+(const wchar_t *str1, const e2d::String &str2)
 {
 	String temp;
-	temp._str = str1 + str2._str;
+	temp.string_ = str1 + str2.string_;
 	return std::move(temp);
 }
 
 e2d::String e2d::operator+(const char *str1, const String &str2)
 {
 	String temp;
-	temp._str = static_cast<wchar_t*>(_bstr_t(str1)) + str2._str;
+	temp.string_ = static_cast<wchar_t*>(_bstr_t(str1)) + str2.string_;
 	return std::move(temp);
 }
 
 e2d::String & e2d::String::operator+=(const wchar_t *str)
 {
-	_str += str;
+	string_ += str;
 	return (*this);
 }
 
 e2d::String & e2d::String::operator+=(const char *str)
 {
-	_str += static_cast<wchar_t*>(_bstr_t(str));
+	string_ += static_cast<wchar_t*>(_bstr_t(str));
 	return (*this);
 }
 
 e2d::String & e2d::String::operator+=(const String &str)
 {
-	_str += str._str;
+	string_ += str.string_;
 	return (*this);
 }
 
 bool e2d::String::operator>(const String &str) const
 {
-	return _str > str._str;
+	return string_ > str.string_;
 }
 
 bool e2d::String::operator>=(const String &str) const
 {
-	return _str >= str._str;
+	return string_ >= str.string_;
 }
 
 bool e2d::String::operator<(const String &str) const
 {
-	return _str < str._str;
+	return string_ < str.string_;
 }
 
 bool e2d::String::operator<=(const String &str) const
 {
-	return _str <= str._str;
+	return string_ <= str.string_;
 }
 
 e2d::String & e2d::String::operator<<(const String &str)
 {
-	_str += str._str;
+	string_ += str.string_;
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(const wchar_t *str)
 {
-	_str += str;
+	string_ += str;
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(wchar_t *str)
 {
-	_str += str;
+	string_ += str;
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(const char * cstr)
 {
-	_str += static_cast<wchar_t*>(_bstr_t(cstr));
+	string_ += static_cast<wchar_t*>(_bstr_t(cstr));
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(char * cstr)
 {
-	_str += static_cast<wchar_t*>(_bstr_t(cstr));
+	string_ += static_cast<wchar_t*>(_bstr_t(cstr));
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(int value)
 {
-	(*this) += String::parse(value);
+	(*this) += String::Parse(value);
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(unsigned int value)
 {
-	(*this) += String::parse(value);
+	(*this) += String::Parse(value);
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(float value)
 {
-	(*this) += String::parse(value);
+	(*this) += String::Parse(value);
 	return (*this);
 }
 
 e2d::String & e2d::String::operator<<(double value)
 {
-	(*this) += String::parse(value);
+	(*this) += String::Parse(value);
 	return (*this);
 }
 
 e2d::String::operator const wchar_t*() const
 {
-	return _str.c_str();
+	return string_.c_str();
 }
 
 e2d::String::operator wchar_t*() const
 {
-	return const_cast<wchar_t*>(_str.c_str());
+	return const_cast<wchar_t*>(string_.c_str());
 }
 
 e2d::String::operator std::wstring() const
 {
-	return _str;
+	return string_;
 }
 
 e2d::String::operator std::string() const
 {
-	std::string str = static_cast<const char *>(_bstr_t(_str.c_str()));
+	std::string str = static_cast<const char *>(_bstr_t(string_.c_str()));
 	return std::move(str);
 }
 
-bool e2d::String::isEmpty() const
+bool e2d::String::IsEmpty() const
 {
-	return _str.empty();
+	return string_.empty();
 }
 
-int e2d::String::length() const
+int e2d::String::GetLength() const
 {
-	return static_cast<int>(_str.size());
+	return static_cast<int>(string_.size());
 }
 
-size_t e2d::String::hash() const
+size_t e2d::String::GetHash() const
 {
 	std::hash<std::wstring> hash;
-	return hash(_str);
+	return hash(string_);
 }
 
-wchar_t e2d::String::at(int index) const
+const wchar_t& e2d::String::At(size_t index) const
 {
-	return _str[size_t(index)];
+	return string_.at(index);
 }
 
-int e2d::String::compare(const String & str) const
+int e2d::String::Compare(const String & str) const
 {
-	return _str.compare(str._str);
+	return string_.compare(str.string_);
 }
 
-e2d::String e2d::String::toUpper() const
+e2d::String e2d::String::ToUpper() const
 {
 	String str(*this);
-	std::transform(str._str.begin(), str._str.end(), str._str.begin(), std::towupper);
+	std::transform(str.string_.begin(), str.string_.end(), str.string_.begin(), std::towupper);
 	return std::move(str);
 }
 
-e2d::String e2d::String::toLower() const
+e2d::String e2d::String::ToLower() const
 {
 	e2d::String str(*this);
-	std::transform(str._str.begin(), str._str.end(), str._str.begin(), std::towlower);
+	std::transform(str.string_.begin(), str.string_.end(), str.string_.begin(), std::towlower);
 	return std::move(str);
 }
 
-int e2d::String::toInt() const
+int e2d::String::ToInt() const
 {
-	if (_str.empty())
+	if (string_.empty())
 	{
 		return 0;
 	}
-	return std::stoi(_str, 0, 10);
+	return std::stoi(string_, 0, 10);
 }
 
-float e2d::String::toFloat() const
+float e2d::String::ToFloat() const
 {
-	if (_str.empty())
+	if (string_.empty())
 	{
 		return 0.f;
 	}
-	return std::stof(_str, 0);
+	return std::stof(string_, 0);
 }
 
-double e2d::String::toDouble() const
+double e2d::String::ToDouble() const
 {
-	if (_str.empty())
+	if (string_.empty())
 	{
 		return 0.0;
 	}
-	return std::stod(_str, 0);
+	return std::stod(string_, 0);
 }
 
-bool e2d::String::toBool() const
+bool e2d::String::ToBool() const
 {
-	if (_str.empty())
+	if (string_.empty())
 	{
 		return false;
 	}
 
-	if (_str.compare(L"0") == 0 || _str.compare(L"false") == 0)
+	if (string_.compare(L"0") == 0 || string_.compare(L"false") == 0)
 	{
 		return false;
 	}
 	return true;
 }
 
-e2d::String e2d::String::subtract(int offset, int count) const
+e2d::String e2d::String::Subtract(int offset, int count) const
 {
 	String tmp;
-	int length = static_cast<int>(_str.size());
+	int length = static_cast<int>(string_.size());
 
 	if (length == 0 || offset >= length)
 		return std::move(tmp);
@@ -437,37 +432,37 @@ e2d::String e2d::String::subtract(int offset, int count) const
 	if (count < 0 || (offset + count) > length)
 		count = length - offset;
 
-	tmp._str = _str.substr(offset, count);
+	tmp.string_ = string_.substr(offset, count);
 	return std::move(tmp);
 }
 
-void e2d::String::insert(const String & str, int pos)
+void e2d::String::Insert(const String & str, int pos)
 {
-	_str.insert(size_t(pos), str._str);
+	string_.insert(size_t(pos), str.string_);
 }
 
-void e2d::String::replace(const String & from, const String & to)
+void e2d::String::Replace(const String & from, const String & to)
 {
-	if (from._str.empty())
+	if (from.string_.empty())
 		return;
 
 	size_t start_pos = 0;
-	while ((start_pos = _str.find((const wchar_t *)from, start_pos)) != std::wstring::npos) 
+	while ((start_pos = string_.find((const wchar_t *)from, start_pos)) != std::wstring::npos) 
 	{
-		_str.replace(start_pos, from._str.length(), (const wchar_t *)to);
-		start_pos += to._str.length();
+		string_.replace(start_pos, from.string_.length(), (const wchar_t *)to);
+		start_pos += to.string_.length();
 	}
 }
 
-void e2d::String::erase(int offset, int count)
+void e2d::String::Erase(int offset, int count)
 {
-	_str.erase(size_t(offset), size_t(count));
+	string_.erase(size_t(offset), size_t(count));
 }
 
-int e2d::String::find(const String & str, int offset) const
+int e2d::String::Find(const String & str, int offset) const
 {
 	size_t index;
-	if ((index = _str.find(str._str, size_t(offset))) == std::wstring::npos)
+	if ((index = string_.find(str.string_, size_t(offset))) == std::wstring::npos)
 	{
 		return -1;
 	}
@@ -477,26 +472,26 @@ int e2d::String::find(const String & str, int offset) const
 	}
 }
 
-void e2d::String::clear()
+void e2d::String::Clear()
 {
-	_str.clear();
+	string_.clear();
 }
 
 std::wostream & e2d::operator<<(std::wostream &cout, const String &str)
 {
-	cout << str._str;
+	cout << str.string_;
 	return cout;
 }
 
 std::wistream & e2d::operator>>(std::wistream &cin, String &str)
 {
-	cin >> str._str;
+	cin >> str.string_;
 	return cin;
 }
 
 std::ostream & e2d::operator<<(std::ostream &cout, const String &str)
 {
-	std::string cstr = static_cast<char*>(_bstr_t(str._str.c_str()));
+	std::string cstr = static_cast<char*>(_bstr_t(str.string_.c_str()));
 	cout << cstr;
 	return cout;
 }
@@ -505,6 +500,6 @@ std::istream & e2d::operator>>(std::istream &cin, String &str)
 {
 	std::string temp;
 	cin >> temp;
-	str._str = static_cast<wchar_t*>(_bstr_t(temp.c_str()));
+	str.string_ = static_cast<wchar_t*>(_bstr_t(temp.c_str()));
 	return cin;
 }

@@ -7,41 +7,41 @@
 e2d::Text::Style::Style()
 	: color(Color::White)
 	, alignment(Align::Left)
-	, wrapping(false)
-	, wrappingWidth(0.f)
-	, lineSpacing(0.f)
-	, hasUnderline(false)
-	, hasStrikethrough(false)
-	, hasOutline(true)
-	, outlineColor(Color(Color::Black, 0.5))
-	, outlineWidth(1.f)
-	, outlineStroke(Stroke::Round)
+	, wrap(false)
+	, wrap_width(0.f)
+	, line_spacing(0.f)
+	, underline(false)
+	, strikethrough(false)
+	, outline(true)
+	, outline_color(Color(Color::Black, 0.5))
+	, outline_width(1.f)
+	, outline_stroke(Stroke::Round)
 {}
 
 e2d::Text::Style::Style(
 	Color color,
 	Align alignment,
-	bool wrapping,
-	float wrappingWidth,
-	float lineSpacing,
-	bool hasUnderline,
-	bool hasStrikethrough,
-	bool hasOutline,
-	Color outlineColor,
-	float outlineWidth,
-	Stroke outlineStroke
+	bool wrap,
+	float wrap_width,
+	float line_spacing,
+	bool underline,
+	bool strikethrough,
+	bool outline,
+	Color outline_color,
+	float outline_width,
+	Stroke outline_stroke
 )
 	: color(color)
 	, alignment(alignment)
-	, wrapping(wrapping)
-	, wrappingWidth(wrappingWidth)
-	, lineSpacing(lineSpacing)
-	, hasUnderline(hasUnderline)
-	, hasStrikethrough(hasStrikethrough)
-	, hasOutline(hasOutline)
-	, outlineColor(outlineColor)
-	, outlineWidth(outlineWidth)
-	, outlineStroke(outlineStroke)
+	, wrap(wrap)
+	, wrap_width(wrap_width)
+	, line_spacing(line_spacing)
+	, underline(underline)
+	, strikethrough(strikethrough)
+	, outline(outline)
+	, outline_color(outline_color)
+	, outline_width(outline_width)
+	, outline_stroke(outline_stroke)
 {}
 
 
@@ -51,85 +51,85 @@ e2d::Text::Style::Style(
 //-------------------------------------------------------
 
 e2d::Text::Text()
-	: _font()
-	, _style()
-	, _textLayout(nullptr)
-	, _textFormat(nullptr)
+	: font_()
+	, style_()
+	, text_layout_(nullptr)
+	, text_format_(nullptr)
 {
 }
 
 e2d::Text::Text(const String & text, const Font & font, const Style & style)
-	: _font(font)
-	, _style(style)
-	, _textLayout(nullptr)
-	, _textFormat(nullptr)
-	, _text(text)
+	: font_(font)
+	, style_(style)
+	, text_layout_(nullptr)
+	, text_format_(nullptr)
+	, text_(text)
 {
-	_reset();
+	Reset();
 }
 
 e2d::Text::~Text()
 {
-	SafeRelease(_textFormat);
-	SafeRelease(_textLayout);
+	SafeRelease(text_format_);
+	SafeRelease(text_layout_);
 }
 
-const e2d::String& e2d::Text::getText() const
+const e2d::String& e2d::Text::GetText() const
 {
-	return _text;
+	return text_;
 }
 
-const e2d::Font& e2d::Text::getFont() const
+const e2d::Font& e2d::Text::GetFont() const
 {
-	return _font;
+	return font_;
 }
 
-const e2d::Text::Style& e2d::Text::getStyle() const
+const e2d::Text::Style& e2d::Text::GetStyle() const
 {
-	return _style;
+	return style_;
 }
 
-const e2d::String& e2d::Text::getFontFamily() const
+const e2d::String& e2d::Text::GetFontFamily() const
 {
-	return _font.family;
+	return font_.family;
 }
 
-float e2d::Text::getFontSize() const
+float e2d::Text::GetFontSize() const
 {
-	return _font.size;
+	return font_.size;
 }
 
-UINT e2d::Text::getFontWeight() const
+UINT e2d::Text::GetFontWeight() const
 {
-	return _font.weight;
+	return font_.weight;
 }
 
-const e2d::Color& e2d::Text::getColor() const
+const e2d::Color& e2d::Text::GetColor() const
 {
-	return _style.color;
+	return style_.color;
 }
 
-const e2d::Color& e2d::Text::getOutlineColor() const
+const e2d::Color& e2d::Text::GetOutlineColor() const
 {
-	return _style.outlineColor;
+	return style_.outline_color;
 }
 
-float e2d::Text::getOutlineWidth() const
+float e2d::Text::GetOutlineWidth() const
 {
-	return _style.outlineWidth;
+	return style_.outline_width;
 }
 
-e2d::Stroke e2d::Text::getOutlineStroke() const
+e2d::Stroke e2d::Text::GetOutlineStroke() const
 {
-	return _style.outlineStroke;
+	return style_.outline_stroke;
 }
 
-int e2d::Text::getLineCount() const
+int e2d::Text::GetLineCount() const
 {
-	if (_textLayout)
+	if (text_layout_)
 	{
 		DWRITE_TEXT_METRICS metrics;
-		_textLayout->GetMetrics(&metrics);
+		text_layout_->GetMetrics(&metrics);
 		return static_cast<int>(metrics.lineCount);
 	}
 	else
@@ -138,311 +138,311 @@ int e2d::Text::getLineCount() const
 	}
 }
 
-bool e2d::Text::isItalic() const
+bool e2d::Text::IsItalic() const
 {
-	return _font.italic;
+	return font_.italic;
 }
 
-bool e2d::Text::hasStrikethrough() const
+bool e2d::Text::strikethrough() const
 {
-	return _style.hasStrikethrough;
+	return style_.strikethrough;
 }
 
-bool e2d::Text::hasUnderline() const
+bool e2d::Text::underline() const
 {
-	return _style.hasUnderline;
+	return style_.underline;
 }
 
-bool e2d::Text::hasOutline() const
+bool e2d::Text::outline() const
 {
-	return _style.hasOutline;
+	return style_.outline;
 }
 
-void e2d::Text::setText(const String& text)
+void e2d::Text::SetText(const String& text)
 {
-	_text = text;
-	_reset();
+	text_ = text;
+	Reset();
 }
 
-void e2d::Text::setStyle(const Style& style)
+void e2d::Text::SetStyle(const Style& style)
 {
-	_style = style;
-	_reset();
+	style_ = style;
+	Reset();
 }
 
-void e2d::Text::setFont(const Font & font)
+void e2d::Text::SetFont(const Font & font)
 {
-	_font = font;
-	_reset();
+	font_ = font;
+	Reset();
 }
 
-void e2d::Text::setFontFamily(const String& family)
+void e2d::Text::SetFontFamily(const String& family)
 {
-	_font.family = family;
-	_reset();
+	font_.family = family;
+	Reset();
 }
 
-void e2d::Text::setFontSize(float size)
+void e2d::Text::SetFontSize(float size)
 {
-	_font.size = size;
-	_reset();
+	font_.size = size;
+	Reset();
 }
 
-void e2d::Text::setFontWeight(UINT weight)
+void e2d::Text::SetFontWeight(UINT weight)
 {
-	_font.weight = weight;
-	_reset();
+	font_.weight = weight;
+	Reset();
 }
 
-void e2d::Text::setColor(Color color)
+void e2d::Text::SetColor(Color color)
 {
-	_style.color = color;
+	style_.color = color;
 }
 
-void e2d::Text::setItalic(bool value)
+void e2d::Text::SetItalic(bool value)
 {
-	_font.italic = value;
-	_reset();
+	font_.italic = value;
+	Reset();
 }
 
-void e2d::Text::setWrapping(bool wrapping)
+void e2d::Text::SetWrapEnabled(bool wrap)
 {
-	if (_style.wrapping != wrapping)
+	if (style_.wrap != wrap)
 	{
-		_style.wrapping = wrapping;
-		_reset();
+		style_.wrap = wrap;
+		Reset();
 	}
 }
 
-void e2d::Text::setWrappingWidth(float wrappingWidth)
+void e2d::Text::SetWrapWidth(float wrap_width)
 {
-	if (_style.wrappingWidth != wrappingWidth)
+	if (style_.wrap_width != wrap_width)
 	{
-		_style.wrappingWidth = std::max(wrappingWidth, 0.f);
+		style_.wrap_width = std::max(wrap_width, 0.f);
 
-		if (_style.wrapping)
+		if (style_.wrap)
 		{
-			_reset();
+			Reset();
 		}
 	}
 }
 
-void e2d::Text::setLineSpacing(float lineSpacing)
+void e2d::Text::SetLineSpacing(float line_spacing)
 {
-	if (_style.lineSpacing != lineSpacing)
+	if (style_.line_spacing != line_spacing)
 	{
-		_style.lineSpacing = lineSpacing;
-		_reset();
+		style_.line_spacing = line_spacing;
+		Reset();
 	}
 }
 
-void e2d::Text::setAlignment(Align align)
+void e2d::Text::SetAlignment(Align align)
 {
-	if (_style.alignment != align)
+	if (style_.alignment != align)
 	{
-		_style.alignment = align;
-		_reset();
+		style_.alignment = align;
+		Reset();
 	}
 }
 
-void e2d::Text::setUnderline(bool hasUnderline)
+void e2d::Text::SetUnderline(bool underline)
 {
-	if (_style.hasUnderline != hasUnderline)
+	if (style_.underline != underline)
 	{
-		_style.hasUnderline = hasUnderline;
-		if (!_textFormat)
-			_createFormat();
-		_createLayout();
+		style_.underline = underline;
+		if (!text_format_)
+			CreateFormat();
+		CreateLayout();
 	}
 }
 
-void e2d::Text::setStrikethrough(bool hasStrikethrough)
+void e2d::Text::SetStrikethrough(bool strikethrough)
 {
-	if (_style.hasStrikethrough != hasStrikethrough)
+	if (style_.strikethrough != strikethrough)
 	{
-		_style.hasStrikethrough = hasStrikethrough;
-		if (!_textFormat)
-			_createFormat();
-		_createLayout();
+		style_.strikethrough = strikethrough;
+		if (!text_format_)
+			CreateFormat();
+		CreateLayout();
 	}
 }
 
-void e2d::Text::setOutline(bool hasOutline)
+void e2d::Text::SetOutline(bool outline)
 {
-	_style.hasOutline = hasOutline;
+	style_.outline = outline;
 }
 
-void e2d::Text::setOutlineColor(Color outlineColor)
+void e2d::Text::SetOutlineColor(Color outline_color)
 {
-	_style.outlineColor = outlineColor;
+	style_.outline_color = outline_color;
 }
 
-void e2d::Text::setOutlineWidth(float outlineWidth)
+void e2d::Text::SetOutlineWidth(float outline_width)
 {
-	_style.outlineWidth = outlineWidth;
+	style_.outline_width = outline_width;
 }
 
-void e2d::Text::setOutlineStroke(Stroke outlineStroke)
+void e2d::Text::SetOutlineStroke(Stroke outline_stroke)
 {
-	_style.outlineStroke = outlineStroke;
+	style_.outline_stroke = outline_stroke;
 }
 
-void e2d::Text::draw() const
+void e2d::Text::Draw() const
 {
-	if (_textLayout)
+	if (text_layout_)
 	{
-		auto renderer = Renderer::getInstance();
+		auto renderer = Renderer::GetInstance();
 		// 创建文本区域
-		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, _width, _height);
+		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, size_.width, size_.height);
 		// 设置画刷颜色和透明度
-		renderer->getSolidColorBrush()->SetOpacity(_displayOpacity);
+		renderer->GetSolidBrush()->SetOpacity(display_opacity_);
 		// 获取文本渲染器
-		auto textRenderer = renderer->getTextRenderer();
+		auto textRenderer = renderer->GetTextRenderer();
 		textRenderer->SetTextStyle(
-			(D2D1_COLOR_F)_style.color,
-			_style.hasOutline,
-			(D2D1_COLOR_F)_style.outlineColor,
-			_style.outlineWidth,
-			D2D1_LINE_JOIN(_style.outlineStroke)
+			(D2D1_COLOR_F)style_.color,
+			style_.outline,
+			(D2D1_COLOR_F)style_.outline_color,
+			style_.outline_width,
+			D2D1_LINE_JOIN(style_.outline_stroke)
 		);
-		_textLayout->Draw(nullptr, textRenderer, 0, 0);
+		text_layout_->Draw(nullptr, textRenderer, 0, 0);
 	}
 }
 
-void e2d::Text::_reset()
+void e2d::Text::Reset()
 {
 	// 创建文字格式化
-	_createFormat();
+	CreateFormat();
 	// 创建文字布局
-	_createLayout();
+	CreateLayout();
 }
 
-void e2d::Text::_createFormat()
+void e2d::Text::CreateFormat()
 {
-	SafeRelease(_textFormat);
+	SafeRelease(text_format_);
 
 	ThrowIfFailed(
-		Renderer::getWriteFactory()->CreateTextFormat(
-			(const WCHAR *)_font.family,
+		Renderer::GetWriteFactory()->CreateTextFormat(
+			(const WCHAR *)font_.family,
 			nullptr,
-			DWRITE_FONT_WEIGHT(_font.weight),
-			_font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_WEIGHT(font_.weight),
+			font_.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
-			_font.size,
+			font_.size,
 			L"",
-			&_textFormat
+			&text_format_
 		)
 	);
 
 	// 设置文字对齐方式
-	_textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(_style.alignment));
+	text_format_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(style_.alignment));
 
 	// 设置行间距
-	if (_style.lineSpacing == 0.f)
+	if (style_.line_spacing == 0.f)
 	{
-		_textFormat->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
+		text_format_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
 	}
 	else
 	{
-		_textFormat->SetLineSpacing(
+		text_format_->SetLineSpacing(
 			DWRITE_LINE_SPACING_METHOD_UNIFORM,
-			_style.lineSpacing,
-			_style.lineSpacing * 0.8f
+			style_.line_spacing,
+			style_.line_spacing * 0.8f
 		);
 	}
 
 	// 打开文本自动换行时，设置换行属性
-	if (_style.wrapping)
+	if (style_.wrap)
 	{
-		_textFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
+		text_format_->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
 	}
 	else
 	{
-		_textFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+		text_format_->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
 	}
 }
 
-void e2d::Text::_createLayout()
+void e2d::Text::CreateLayout()
 {
-	SafeRelease(_textLayout);
+	SafeRelease(text_layout_);
 
 	// 文本为空字符串时，重置属性
-	if (_text.isEmpty())
+	if (text_.IsEmpty())
 	{
-		this->setSize(0, 0);
+		this->SetSize(0, 0);
 		return;
 	}
 
-	if (_textFormat == nullptr)
+	if (text_format_ == nullptr)
 	{
-		WARN("Text::_createLayout failed! _textFormat NULL pointer exception.");
+		WARN("Text::CreateLayout failed! text_format_ NULL pointer exception.");
 		return;
 	}
 	
-	UINT32 length = (UINT32)_text.length();
-	auto writeFactory = Renderer::getWriteFactory();
+	UINT32 length = (UINT32)text_.GetLength();
+	auto writeFactory = Renderer::GetWriteFactory();
 
 	// 对文本自动换行情况下进行处理
-	if (_style.wrapping)
+	if (style_.wrap)
 	{
 		ThrowIfFailed(
 			writeFactory->CreateTextLayout(
-				(const WCHAR *)_text,
+				(const WCHAR *)text_,
 				length,
-				_textFormat,
-				_style.wrappingWidth,
+				text_format_,
+				style_.wrap_width,
 				0,
-				&_textLayout
+				&text_layout_
 			)
 		);
 		// 获取文本布局的宽度和高度
 		DWRITE_TEXT_METRICS metrics;
-		_textLayout->GetMetrics(&metrics);
+		text_layout_->GetMetrics(&metrics);
 		// 重设文本宽高
-		this->setSize(metrics.layoutWidth, metrics.height);
+		this->SetSize(metrics.layoutWidth, metrics.height);
 	}
 	else
 	{
 		// 为防止文本对齐问题，根据先创建 layout 以获取宽度
 		ThrowIfFailed(
 			writeFactory->CreateTextLayout(
-				(const WCHAR *)_text,
+				(const WCHAR *)text_,
 				length,
-				_textFormat,
+				text_format_,
 				0,
 				0,
-				&_textLayout
+				&text_layout_
 			)
 		);
 
 		// 获取文本布局的宽度和高度
 		DWRITE_TEXT_METRICS metrics;
-		_textLayout->GetMetrics(&metrics);
+		text_layout_->GetMetrics(&metrics);
 		// 重设文本宽高
-		this->setSize(metrics.width, metrics.height);
+		this->SetSize(metrics.width, metrics.height);
 
 		// 重新创建 layout
-		SafeRelease(_textLayout);
+		SafeRelease(text_layout_);
 		ThrowIfFailed(
 			writeFactory->CreateTextLayout(
-				(const WCHAR *)_text,
+				(const WCHAR *)text_,
 				length,
-				_textFormat,
-				_width,
+				text_format_,
+				size_.width,
 				0,
-				&_textLayout
+				&text_layout_
 			)
 		);
 	}
 
 	// 添加下划线和删除线
-	DWRITE_TEXT_RANGE range = { 0, length };
-	if (_style.hasUnderline)
+	DWRITE_TEXT_RANGE Range = { 0, length };
+	if (style_.underline)
 	{
-		_textLayout->SetUnderline(true, range);
+		text_layout_->SetUnderline(true, Range);
 	}
-	if (_style.hasStrikethrough)
+	if (style_.strikethrough)
 	{
-		_textLayout->SetStrikethrough(true, range);
+		text_layout_->SetStrikethrough(true, Range);
 	}
 }

@@ -1,7 +1,7 @@
 #include "..\e2dcommon.h"
 
 e2d::Ref::Ref()
-	: _refCount(0)
+	: ref_count_(0)
 {
 }
 
@@ -9,17 +9,17 @@ e2d::Ref::~Ref()
 {
 }
 
-void e2d::Ref::retain()
+void e2d::Ref::Retain()
 {
-	_refCount++;
+	ref_count_++;
 }
 
-void e2d::Ref::release()
+void e2d::Ref::Release()
 {
-	_refCount--;
+	ref_count_--;
 }
 
-int e2d::Ref::getRefCount() const
+int e2d::Ref::GetRefCount() const
 {
-	return _refCount;
+	return ref_count_;
 }

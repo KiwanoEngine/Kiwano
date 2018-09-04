@@ -1,28 +1,28 @@
 #include "..\e2dcommon.h"
 
 e2d::Function::Function()
-	: _func(nullptr) 
+	: func_(nullptr)
 {}
 
 e2d::Function::Function(std::nullptr_t)
-	: _func(nullptr)
+	: func_(nullptr)
 {
 }
 
 e2d::Function::Function(std::function<void()> func)
-	: _func(func)
+	: func_(func)
 {
 }
 
 void e2d::Function::operator()(void) const
 {
-	if (_func)
+	if (func_)
 	{
-		_func();
+		func_();
 	}
 }
 
 e2d::Function::operator bool() const
 {
-	return static_cast<bool>(_func);
+	return static_cast<bool>(func_);
 }

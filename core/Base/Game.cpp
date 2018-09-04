@@ -6,39 +6,33 @@
 #include <thread>
 
 
-e2d::Game * e2d::Game::_instance = nullptr;
+e2d::Game * e2d::Game::instance_ = nullptr;
 
-e2d::Game * e2d::Game::getInstance()
+e2d::Game * e2d::Game::GetInstance()
 {
-	if (!_instance)
-		_instance = new (std::nothrow) Game;
-	return _instance;
+	if (!instance_)
+		instance_ = new (std::nothrow) Game;
+	return instance_;
 }
 
-void e2d::Game::destroyInstance()
+void e2d::Game::DestroyInstance()
 {
-	if (_instance)
+	if (instance_)
 	{
-		delete _instance;
-		_instance = nullptr;
+		delete instance_;
+		instance_ = nullptr;
 	}
 }
 
 e2d::Game::Game()
-	: _quit(true)
-	, _paused(false)
-	, _currScene(nullptr)
-	, _nextScene(nullptr)
-	, _transition(nullptr)
-	, _scenes()
+	: quit_(true)
+	, paused_(false)
+	, curr_scene_(nullptr)
+	, next_scene_(nullptr)
+	, transition_(nullptr)
+	, scenes_()
 {
 	::CoInitialize(nullptr);
-
-	_window = Window::getInstance();
-	_input = Input::getInstance();
-	_renderer = Renderer::getInstance();
-	_timer = Timer::getInstance();
-	_actionManager = ActionManager::getInstance();
 }
 
 e2d::Game::~Game()
@@ -46,46 +40,52 @@ e2d::Game::~Game()
 	::CoUninitialize();
 }
 
-void e2d::Game::start()
+void e2d::Game::Start()
 {
-	_quit = false;
+	quit_ = false;
+
+	auto window = Window::GetInstance();
+	auto input = Input::GetInstance();
+	auto renderer = Renderer::GetInstance();
+	auto timer = Timer::GetInstance();
+	auto action_manager = ActionManager::GetInstance();
 
 	const int minInterval = 5;
-	Time last = Time::now();
-	HWND hWnd = _window->getHWnd();
+	Time last = Time::Now();
+	HWND hWnd = window->GetHWnd();
 	
 	::ShowWindow(hWnd, SW_SHOWNORMAL);
 	::UpdateWindow(hWnd);
-	_window->poll();
-	updateScene();
+	window->Poll();
+	UpdateScene();
 	
-	while (!_quit)
+	while (!quit_)
 	{
-		auto now = Time::now();
+		auto now = Time::Now();
 		auto dur = now - last;
 
-		if (dur.milliseconds() > minInterval)
+		if (dur.Milliseconds() > minInterval)
 		{
 			last = now;
-			_input->update();
+			input->Update();
 
-			if (!_paused)
+			if (!paused_)
 			{
-				_timer->update();
-				_actionManager->update();
-				updateScene();
+				timer->Update();
+				action_manager->Update();
+				UpdateScene();
 			}
 			
-			drawScene();
-			_window->poll();
-			GC::getInstance()->flush();
+			DrawScene();
+			window->Poll();
+			GC::GetInstance()->Flush();
 		}
 		else
 		{
 			// ID2D1HwndRenderTarget 开启了垂直同步，在渲染时会等待显示器刷新，
 			// 它起到了非常稳定的延时作用，所以大部分时候不需要手动挂起线程进行延时。
 			// 下面的代码仅在一些情况下（例如窗口最小化时）挂起线程，防止占用过高 CPU 。
-			int wait = minInterval - dur.milliseconds();
+			int wait = minInterval - dur.Milliseconds();
 			if (wait > 1)
 			{
 				std::this_thread::sleep_for(std::chrono::milliseconds(wait));
@@ -94,152 +94,152 @@ void e2d::Game::start()
 	}
 }
 
-void e2d::Game::pause()
+void e2d::Game::Pause()
 {
-	_paused = true;
+	paused_ = true;
 }
 
-void e2d::Game::resume()
+void e2d::Game::Resume()
 {
-	if (_paused && !_quit)
+	if (paused_ && !quit_)
 	{
-		_timer->updateTime();
-		_actionManager->updateTime();
+		Timer::GetInstance()->UpdateTime();
+		ActionManager::GetInstance()->UpdateTime();
 	}
-	_paused = false;
+	paused_ = false;
 }
 
-bool e2d::Game::isPaused()
+bool e2d::Game::IsPaused()
 {
-	return _paused;
+	return paused_;
 }
 
-void e2d::Game::quit()
+void e2d::Game::Quit()
 {
-	_quit = true;
+	quit_ = true;
 }
 
-void e2d::Game::pushScene(Scene * scene, bool saveCurrentScene)
+void e2d::Game::PushScene(Scene * scene, bool save_current_scene)
 {
 	if (!scene)
 		return;
 
 	// 保存下一场景的指针
-	if (_nextScene) _nextScene->release();
-	_nextScene = scene;
-	_nextScene->retain();
+	if (next_scene_) next_scene_->Release();
+	next_scene_ = scene;
+	next_scene_->Retain();
 
-	if (saveCurrentScene && _currScene)
+	if (save_current_scene && curr_scene_)
 	{
-		_scenes.push(_currScene);
+		scenes_.push(curr_scene_);
 	}
 }
 
-void e2d::Game::pushScene(Transition * transition, bool saveCurrentScene)
+void e2d::Game::PushScene(Transition * transition, bool save_current_scene)
 {
 	if (!transition)
 		return;
 
-	pushScene(transition->_inScene, saveCurrentScene);
+	PushScene(transition->in_scene_, save_current_scene);
 
-	if (_transition)
+	if (transition_)
 	{
-		_transition->_stop();
-		_transition->release();
+		transition_->Stop();
+		transition_->Release();
 	}
-	_transition = transition;
-	_transition->retain();
+	transition_ = transition;
+	transition_->Retain();
 
 	// 初始化场景切换动画
-	if (!_transition->_init(this, _currScene))
+	if (!transition_->Init(this, curr_scene_))
 	{
 		WARN("Transition initialize failed!");
-		_transition->release();
-		_transition = nullptr;
+		transition_->Release();
+		transition_ = nullptr;
 	}
 }
 
-e2d::Scene* e2d::Game::popScene()
+e2d::Scene* e2d::Game::PopScene()
 {
 	// 栈为空时，调用返回场景函数失败
-	if (_scenes.size() == 0)
+	if (scenes_.size() == 0)
 	{
-		WARN("Scene stack is empty!");
+		WARN("Scene stack Is empty!");
 		return nullptr;
 	}
 
-	_nextScene = _scenes.top();
-	_nextScene->release();
-	_scenes.pop();
+	next_scene_ = scenes_.top();
+	next_scene_->Release();
+	scenes_.pop();
 
-	return _nextScene;
+	return next_scene_;
 }
 
-e2d::Scene * e2d::Game::popScene(Transition * transition)
+e2d::Scene * e2d::Game::PopScene(Transition * transition)
 {
 	if (!transition)
 		return nullptr;
 
-	auto scene = popScene();
+	auto scene = PopScene();
 	if (scene)
 	{
-		if (_transition)
+		if (transition_)
 		{
-			_transition->_stop();
-			_transition->release();
+			transition_->Stop();
+			transition_->Release();
 		}
-		_transition = transition;
-		_transition->retain();
+		transition_ = transition;
+		transition_->Retain();
 
-		_transition->_inScene = scene;
-		_transition->_inScene->retain();
+		transition_->in_scene_ = scene;
+		transition_->in_scene_->Retain();
 
 		// 初始化场景切换动画
-		if (!_transition->_init(this, _currScene))
+		if (!transition_->Init(this, curr_scene_))
 		{
 			WARN("Transition initialize failed!");
-			_transition->release();
-			_transition = nullptr;
+			transition_->Release();
+			transition_ = nullptr;
 		}
 	}
 
 	return scene;
 }
 
-void e2d::Game::clearAllScenes()
+void e2d::Game::ClearAllScenes()
 {
-	while (!_scenes.empty())
+	while (!scenes_.empty())
 	{
-		_scenes.top()->release();
-		_scenes.pop();
+		scenes_.top()->Release();
+		scenes_.pop();
 	}
 }
 
-e2d::Scene * e2d::Game::getCurrentScene()
+e2d::Scene * e2d::Game::GetCurrentScene()
 {
-	return _currScene;
+	return curr_scene_;
 }
 
-const std::stack<e2d::Scene*>& e2d::Game::getSceneStack()
+const std::stack<e2d::Scene*>& e2d::Game::GetSceneStack()
 {
-	return _scenes;
+	return scenes_;
 }
 
-bool e2d::Game::isTransitioning() const
+bool e2d::Game::IsTransitioning() const
 {
-	return _transition != nullptr;
+	return transition_ != nullptr;
 }
 
-void e2d::Game::updateScene()
+void e2d::Game::UpdateScene()
 {
-	if (_transition)
+	if (transition_)
 	{
-		_transition->_update();
+		transition_->Update();
 
-		if (_transition->isDone())
+		if (transition_->IsDone())
 		{
-			_transition->release();
-			_transition = nullptr;
+			transition_->Release();
+			transition_ = nullptr;
 		}
 		else
 		{
@@ -247,36 +247,36 @@ void e2d::Game::updateScene()
 		}
 	}
 
-	if (_nextScene)
+	if (next_scene_)
 	{
-		if (_currScene)
+		if (curr_scene_)
 		{
-			_currScene->onExit();
-			if (_scenes.empty() || _scenes.top() != _currScene)
+			curr_scene_->OnExit();
+			if (scenes_.empty() || scenes_.top() != curr_scene_)
 			{
-				_currScene->release();
+				curr_scene_->Release();
 			}
 		}
 
-		_nextScene->onEnter();
+		next_scene_->OnEnter();
 
-		_currScene = _nextScene;
-		_nextScene = nullptr;
+		curr_scene_ = next_scene_;
+		next_scene_ = nullptr;
 	}
 }
 
-void e2d::Game::drawScene()
+void e2d::Game::DrawScene()
 {
-	_renderer->beginDraw();
+	Renderer::GetInstance()->BeginDraw();
 	{
-		if (_transition)
+		if (transition_)
 		{
-			_transition->_render();
+			transition_->Draw();
 		}
-		else if (_currScene)
+		else if (curr_scene_)
 		{
-			_currScene->visit();
+			curr_scene_->Visit();
 		}
 	}
-	_renderer->endDraw();
+	Renderer::GetInstance()->EndDraw();
 }

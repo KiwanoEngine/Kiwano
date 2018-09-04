@@ -1,49 +1,49 @@
 #include "..\e2dtool.h"
 #include <shobjidl.h> 
 
-std::list<e2d::String>	e2d::File::_searchPaths;
+std::list<e2d::String>	e2d::File::search_paths_;
 
 e2d::File::File()
-	: _fileName()
-	, _attributes(0)
+	: file_path_()
+	, attributes_(0)
 {
 }
 
-e2d::File::File(const String & fileName)
-	: _fileName(fileName)
-	, _attributes(0)
+e2d::File::File(const String & file_name)
+	: file_path_(file_name)
+	, attributes_(0)
 {
-	this->open(fileName);
+	this->Open(file_name);
 }
 
 e2d::File::~File()
 {
 }
 
-bool e2d::File::open(const String & fileName)
+bool e2d::File::Open(const String & file_name)
 {
 	auto FindFile = [=](const String & path) -> bool
 	{
 		if (::_waccess((const wchar_t*)path, 0) == 0)
 		{
-			_attributes = ::GetFileAttributes((LPCTSTR)path);
+			attributes_ = ::GetFileAttributes((LPCTSTR)path);
 			return true;
 		}
 		return false;
 	};
 
-	if (FindFile(fileName))
+	if (FindFile(file_name))
 	{
-		_fileName = fileName;
+		file_path_ = file_name;
 		return true;
 	}
 	else
 	{
-		for (const auto& resPath : _searchPaths)
+		for (const auto& resPath : search_paths_)
 		{
-			if (FindFile(resPath + fileName))
+			if (FindFile(resPath + file_name))
 			{
-				_fileName = resPath + fileName;
+				file_path_ = resPath + file_name;
 				return true;
 			}
 		}
@@ -51,54 +51,62 @@ bool e2d::File::open(const String & fileName)
 	return false;
 }
 
-bool e2d::File::exists() const
+bool e2d::File::Exists() const
 {
-	return ::_waccess((const wchar_t*)_fileName, 0) == 0;
+	return ::_waccess((const wchar_t*)file_path_, 0) == 0;
 }
 
-bool e2d::File::isFolder() const
+bool e2d::File::IsFolder() const
 {
-	return (_attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+	return (attributes_ & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-const e2d::String& e2d::File::getPath() const
+const e2d::String& e2d::File::GetPath() const
 {
-	return _fileName;
+	return file_path_;
 }
 
-e2d::String e2d::File::getExtension() const
+e2d::String e2d::File::GetExtension() const
 {
 	String fileExtension;
 	// 找到文件名中的最后一个 '.' 的位置
-	size_t pos = std::wstring(_fileName).find_last_of(L'.');
+	size_t pos = std::wstring(file_path_).find_last_of(L'.');
 	// 判断 pos 是否是有效位置
 	if (pos != std::wstring::npos)
 	{
 		// 截取扩展名
-		fileExtension = _fileName.subtract(static_cast<int>(pos));
+		fileExtension = file_path_.Subtract(static_cast<int>(pos));
 		// 转换为小写字母
-		fileExtension = fileExtension.toLower();
+		fileExtension = fileExtension.ToLower();
 	}
 	return std::move(fileExtension);
 }
 
-bool e2d::File::del()
+bool e2d::File::Delete()
 {
-	if (::DeleteFile((LPCWSTR)_fileName))
+	if (::DeleteFile((LPCWSTR)file_path_))
 		return true;
 	return false;
 }
 
-e2d::File e2d::File::extract(int resNameId, const String & resType, const String& destFileName)
+e2d::File e2d::File::Extract(int resource_name, const String & resource_type, const String& dest_file_name)
 {
-	String destFilePath = Path::getTempPath() + destFileName;
 	// 创建文件
-	HANDLE hFile = ::CreateFile((LPCWSTR)destFilePath, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
+	HANDLE hFile = ::CreateFile(
+		static_cast<LPCWSTR>(dest_file_name),
+		GENERIC_WRITE,
+		NULL,
+		NULL,
+		CREATE_ALWAYS,
+		FILE_ATTRIBUTE_TEMPORARY,
+		NULL
+	);
+
 	if (hFile == INVALID_HANDLE_VALUE)
 		return std::move(File());
 
 	// 查找资源文件中、加载资源到内存、得到资源大小
-	HRSRC hRes = ::FindResource(NULL, MAKEINTRESOURCE(resNameId), (LPCWSTR)resType);
+	HRSRC hRes = ::FindResource(NULL, MAKEINTRESOURCE(resource_name), (LPCWSTR)resource_type);
 	HGLOBAL hMem = ::LoadResource(NULL, hRes);
 	DWORD dwSize = ::SizeofResource(NULL, hRes);
 
@@ -108,42 +116,42 @@ e2d::File e2d::File::extract(int resNameId, const String & resType, const String
 		DWORD dwWrite = 0;
 		::WriteFile(hFile, hMem, dwSize, &dwWrite, NULL);
 		::CloseHandle(hFile);
-		return File(destFilePath);
+		return File(dest_file_name);
 	}
 	else
 	{
 		::CloseHandle(hFile);
-		::DeleteFile((LPCWSTR)destFilePath);
+		::DeleteFile(static_cast<LPCWSTR>(dest_file_name));
 		return std::move(File());
 	}
 }
 
-void e2d::File::addSearchPath(const String & path)
+void e2d::File::AddSearchPath(const String & path)
 {
 	String tmp = path;
-	tmp.replace(L"/", L"\\");
-	if (tmp[tmp.length() - 1] != L'\\')
+	tmp.Replace(L"/", L"\\");
+	if (tmp[tmp.GetLength() - 1] != L'\\')
 	{
 		tmp << L"\\";
 	}
-	auto iter = std::find(_searchPaths.cbegin(), _searchPaths.cend(), tmp);
-	if (iter == _searchPaths.cend())
+	auto iter = std::find(search_paths_.cbegin(), search_paths_.cend(), tmp);
+	if (iter == search_paths_.cend())
 	{
-		_searchPaths.push_front(path);
+		search_paths_.push_front(path);
 	}
 }
 
-bool e2d::File::createFolder(const String & dirPath)
+bool e2d::File::CreateFolder(const String & dir_path)
 {
-	if (dirPath.isEmpty() || dirPath.length() >= MAX_PATH)
+	if (dir_path.IsEmpty() || dir_path.GetLength() >= MAX_PATH)
 		return false;
 
 	wchar_t tmpDirPath[_MAX_PATH] = { 0 };
-	int length = dirPath.length();
+	int length = dir_path.GetLength();
 
 	for (int i = 0; i < length; ++i)
 	{
-		tmpDirPath[i] = dirPath.at(i);
+		tmpDirPath[i] = dir_path.At(i);
 		if (tmpDirPath[i] == L'\\' || tmpDirPath[i] == L'/' || i == (length - 1))
 		{
 			if (::_waccess(tmpDirPath, 0) != 0)
@@ -158,9 +166,9 @@ bool e2d::File::createFolder(const String & dirPath)
 	return true;
 }
 
-e2d::File e2d::File::showOpenDialog(const String & title, const String & filter)
+e2d::File e2d::File::ShowOpenDialog(const String & title, const String & filter)
 {
-	String filePath;
+	String file_path;
 	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 
 	if (SUCCEEDED(hr))
@@ -172,12 +180,12 @@ e2d::File e2d::File::showOpenDialog(const String & title, const String & filter)
 
 		if (SUCCEEDED(hr))
 		{
-			if (!title.isEmpty())
+			if (!title.IsEmpty())
 			{
 				pFileOpen->SetTitle(LPCWSTR(title));
 			}
 
-			if (!filter.isEmpty())
+			if (!filter.IsEmpty())
 			{
 				COMDLG_FILTERSPEC rgSpec[] =
 				{
@@ -194,12 +202,12 @@ e2d::File e2d::File::showOpenDialog(const String & title, const String & filter)
 				pFileOpen->SetFileTypes(1, rgSpec);
 			}
 
-			Game::getInstance()->pause();
+			Game::GetInstance()->Pause();
 			{
-				HWND hWnd = Window::getInstance()->getHWnd();
+				HWND hWnd = Window::GetInstance()->GetHWnd();
 				hr = pFileOpen->Show(hWnd);
 			}
-			Game::getInstance()->resume();
+			Game::GetInstance()->Resume();
 
 			if (SUCCEEDED(hr))
 			{
@@ -212,7 +220,7 @@ e2d::File e2d::File::showOpenDialog(const String & title, const String & filter)
 
 					if (SUCCEEDED(hr))
 					{
-						filePath = pszFilePath;
+						file_path = pszFilePath;
 						::CoTaskMemFree(pszFilePath);
 					}
 					pItem->Release();
@@ -222,12 +230,12 @@ e2d::File e2d::File::showOpenDialog(const String & title, const String & filter)
 		}
 		::CoUninitialize();
 	}
-	return std::move(File(filePath));
+	return std::move(File(file_path));
 }
 
-e2d::File e2d::File::showSaveDialog(const String & title, const String& defFile, const String & defExt)
+e2d::File e2d::File::ShowSaveDialog(const String & title, const String& def_file, const String & def_ext)
 {
-	String filePath;
+	String file_path;
 	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	
 	if (SUCCEEDED(hr))
@@ -239,21 +247,21 @@ e2d::File e2d::File::showSaveDialog(const String & title, const String& defFile,
 
 		if (SUCCEEDED(hr))
 		{
-			if (!title.isEmpty())
+			if (!title.IsEmpty())
 			{
 				pFileSave->SetTitle(LPCWSTR(title));
 			}
 
-			if (!defFile.isEmpty())
+			if (!def_file.IsEmpty())
 			{
-				pFileSave->SetFileName(LPCWSTR(defFile));
+				pFileSave->SetFileName(LPCWSTR(def_file));
 			}
 
-			if (!defExt.isEmpty())
+			if (!def_ext.IsEmpty())
 			{
-				pFileSave->SetDefaultExtension(LPCWSTR(defExt));
+				pFileSave->SetDefaultExtension(LPCWSTR(def_ext));
 
-				String spec = L"*." + defExt;
+				String spec = L"*." + def_ext;
 				COMDLG_FILTERSPEC rgSpec[] =
 				{
 					{ L"", LPCWSTR(spec) }
@@ -269,12 +277,12 @@ e2d::File e2d::File::showSaveDialog(const String & title, const String& defFile,
 				pFileSave->SetFileTypes(1, rgSpec);
 			}
 
-			Game::getInstance()->pause();
+			Game::GetInstance()->Pause();
 			{
-				HWND hWnd = Window::getInstance()->getHWnd();
+				HWND hWnd = Window::GetInstance()->GetHWnd();
 				hr = pFileSave->Show(hWnd);
 			}
-			Game::getInstance()->resume();
+			Game::GetInstance()->Resume();
 
 			if (SUCCEEDED(hr))
 			{
@@ -287,7 +295,7 @@ e2d::File e2d::File::showSaveDialog(const String & title, const String& defFile,
 
 					if (SUCCEEDED(hr))
 					{
-						filePath = pszFilePath;
+						file_path = pszFilePath;
 						::CoTaskMemFree(pszFilePath);
 					}
 					pItem->Release();
@@ -297,5 +305,5 @@ e2d::File e2d::File::showSaveDialog(const String & title, const String& defFile,
 		}
 		::CoUninitialize();
 	}
-	return std::move(File(filePath));
+	return std::move(File(file_path));
 }

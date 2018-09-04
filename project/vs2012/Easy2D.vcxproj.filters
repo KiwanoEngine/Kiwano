@@ -52,9 +52,6 @@
     <ClCompile Include="..\..\core\Action\Animation.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Action\CallFunc.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Action\Delay.cpp">
       <Filter>Action</Filter>
     </ClCompile>
@@ -240,6 +237,15 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Base\Audio.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\FadeIn.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\FadeOut.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Action\Callback.cpp">
+      <Filter>Action</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

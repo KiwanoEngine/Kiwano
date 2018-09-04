@@ -1,85 +1,85 @@
 #include "..\e2daction.h"
 
 e2d::Animation::Animation()
-	: _interval(1)
+	: interval_(1)
 {
 }
 
-e2d::Animation::Animation(const std::vector<Image*>& frames)
-	: _interval(1)
+e2d::Animation::Animation(const Images& frames)
+	: interval_(1)
 {
-	this->add(frames);
+	this->Add(frames);
 }
 
 e2d::Animation::Animation(float interval)
-	: _interval(interval)
+	: interval_(interval)
 {
 }
 
-e2d::Animation::Animation(float interval, const std::vector<Image*>& frames)
-	: _interval(interval)
+e2d::Animation::Animation(float interval, const Images& frames)
+	: interval_(interval)
 {
-	this->add(frames);
+	this->Add(frames);
 }
 
 e2d::Animation::~Animation()
 {
-	for (const auto& frame : _frames)
+	for (const auto& frame : frames_)
 	{
-		GC::getInstance()->safeRelease(frame);
+		GC::GetInstance()->SafeRelease(frame);
 	}
 }
 
-void e2d::Animation::setInterval(float interval)
+void e2d::Animation::SetInterval(float interval)
 {
-	_interval = std::max(interval, 0.f);
+	interval_ = std::max(interval, 0.f);
 }
 
-void e2d::Animation::add(Image * frame)
+void e2d::Animation::Add(Image * frame)
 {
-	WARN_IF(frame == nullptr, "Animation::add failed, frame is nullptr.");
+	WARN_IF(frame == nullptr, "Animation::Add failed, frame Is nullptr.");
 	if (frame)
 	{
-		_frames.push_back(frame);
-		frame->retain();
+		frames_.push_back(frame);
+		frame->Retain();
 	}
 }
 
-void e2d::Animation::add(const std::vector<Image*>& frames)
+void e2d::Animation::Add(const Images& frames)
 {
 	for (const auto &image : frames)
 	{
-		this->add(image);
+		this->Add(image);
 	}
 }
 
-float e2d::Animation::getInterval() const
+float e2d::Animation::GetInterval() const
 {
-	return _interval;
+	return interval_;
 }
 
-const std::vector<e2d::Image*>& e2d::Animation::getFrames() const
+const e2d::Animation::Images& e2d::Animation::GetFrames() const
 {
-	return _frames;
+	return frames_;
 }
 
-e2d::Animation * e2d::Animation::clone() const
+e2d::Animation * e2d::Animation::Clone() const
 {
-	auto animation = new (e2d::autorelease) Animation(_interval);
+	auto animation = new (e2d::autorelease) Animation(interval_);
 	if (animation)
 	{
-		for (const auto& frame : _frames)
+		for (const auto& frame : frames_)
 		{
-			animation->add(frame);
+			animation->Add(frame);
 		}
 	}
 	return animation;
 }
 
-e2d::Animation * e2d::Animation::reverse() const
+e2d::Animation * e2d::Animation::Reverse() const
 {
-	auto& oldFrames = this->getFrames();
-	std::vector<Image*> frames(oldFrames.size());
+	auto& oldFrames = this->GetFrames();
+	Images frames(oldFrames.size());
 
 	if (!oldFrames.empty())
 	{
@@ -96,5 +96,5 @@ e2d::Animation * e2d::Animation::reverse() const
 		}
 	}
 
-	return new (e2d::autorelease) Animation(this->getInterval(), frames);
+	return new (e2d::autorelease) Animation(this->GetInterval(), frames);
 }

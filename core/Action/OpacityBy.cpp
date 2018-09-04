@@ -5,35 +5,35 @@
 e2d::OpacityBy::OpacityBy(float duration, float opacity)
 	: FiniteTimeAction(duration)
 {
-	_deltaVal = opacity;
+	delta_val_ = opacity;
 }
 
-void e2d::OpacityBy::_init()
+void e2d::OpacityBy::Init()
 {
-	FiniteTimeAction::_init();
+	FiniteTimeAction::Init();
 
-	if (_target)
+	if (target_)
 	{
-		_startVal = _target->getOpacity();
+		start_val_ = target_->GetOpacity();
 	}
 }
 
-void e2d::OpacityBy::_update()
+void e2d::OpacityBy::Update()
 {
-	FiniteTimeAction::_update();
+	FiniteTimeAction::Update();
 
-	if (_target)
+	if (target_)
 	{
-		_target->setOpacity(_startVal + _deltaVal * _delta);
+		target_->SetOpacity(start_val_ + delta_val_ * delta_);
 	}
 }
 
-e2d::OpacityBy * e2d::OpacityBy::clone() const
+e2d::OpacityBy * e2d::OpacityBy::Clone() const
 {
-	return new (e2d::autorelease) OpacityBy(_duration, _deltaVal);
+	return new (e2d::autorelease) OpacityBy(duration_, delta_val_);
 }
 
-e2d::OpacityBy * e2d::OpacityBy::reverse() const
+e2d::OpacityBy * e2d::OpacityBy::Reverse() const
 {
-	return new (e2d::autorelease) OpacityBy(_duration, -_deltaVal);
+	return new (e2d::autorelease) OpacityBy(duration_, -delta_val_);
 }

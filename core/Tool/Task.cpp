@@ -2,70 +2,70 @@
 
 
 e2d::Task::Task(const Function & func, const String & name)
-	: _running(true)
-	, _stopped(false)
-	, _runTimes(0)
-	, _totalTimes(-1)
-	, _delay()
-	, _callback(func)
-	, _name(name)
+	: running_(true)
+	, stopped_(false)
+	, run_times_(0)
+	, total_times_(-1)
+	, delay_()
+	, callback_(func)
+	, name_(name)
 {
 }
 
 e2d::Task::Task(const Function & func, float delay, int times, const String & name)
-	: _running(true)
-	, _stopped(false)
-	, _runTimes(0)
-	, _delay(std::max(delay, 0.f))
-	, _totalTimes(times)
-	, _callback(func)
-	, _name(name)
+	: running_(true)
+	, stopped_(false)
+	, run_times_(0)
+	, delay_(std::max(delay, 0.f))
+	, total_times_(times)
+	, callback_(func)
+	, name_(name)
 {
 }
 
-void e2d::Task::start()
+void e2d::Task::Start()
 {
-	_running = true;
-	_lastTime = Time::now();
+	running_ = true;
+	last_time_ = Time::Now();
 }
 
-void e2d::Task::stop()
+void e2d::Task::Stop()
 {
-	_running = false;
+	running_ = false;
 }
 
-void e2d::Task::_update()
+void e2d::Task::Update()
 {
-	if (_totalTimes == 0)
+	if (total_times_ == 0)
 	{
-		_stopped = true;
+		stopped_ = true;
 		return;
 	}
 
-	++_runTimes;
-	_lastTime += _delay;
+	++run_times_;
+	last_time_ += delay_;
 
-	if (_callback)
+	if (callback_)
 	{
-		_callback();
+		callback_();
 	}
 
-	if (_runTimes == _totalTimes)
+	if (run_times_ == total_times_)
 	{
-		_stopped = true;
+		stopped_ = true;
 		return;
 	}
 }
 
-bool e2d::Task::_isReady() const
+bool e2d::Task::IsReady() const
 {
-	if (_running)
+	if (running_)
 	{
-		if (_delay.milliseconds() == 0)
+		if (delay_.Milliseconds() == 0)
 		{
 			return true;
 		}
-		if (Time::now() - _lastTime >= _delay)
+		if (Time::Now() - last_time_ >= delay_)
 		{
 			return true;
 		}
@@ -73,12 +73,12 @@ bool e2d::Task::_isReady() const
 	return false;
 }
 
-bool e2d::Task::isRunning() const
+bool e2d::Task::IsRunning() const
 {
-	return _running;
+	return running_;
 }
 
-e2d::String e2d::Task::getName() const
+const e2d::String& e2d::Task::GetName() const
 {
-	return _name;
+	return name_;
 }

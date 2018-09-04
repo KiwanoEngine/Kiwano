@@ -1,67 +1,67 @@
 #include "..\e2dtool.h"
 
 
-e2d::Player * e2d::Player::_instance = nullptr;
+e2d::Player * e2d::Player::instance_ = nullptr;
 
-e2d::Player * e2d::Player::getInstance()
+e2d::Player * e2d::Player::GetInstance()
 {
-	if (!_instance)
+	if (!instance_)
 	{
-		_instance = new (std::nothrow) Player;
+		instance_ = new (std::nothrow) Player;
 	}
-	return _instance;
+	return instance_;
 }
 
-void e2d::Player::destroyInstance()
+void e2d::Player::DestroyInstance()
 {
-	if (_instance)
+	if (instance_)
 	{
-		delete _instance;
-		_instance = nullptr;
+		delete instance_;
+		instance_ = nullptr;
 	}
 }
 
 e2d::Player::Player()
-	: _volume(1.f)
+	: volume_(1.f)
 {
 }
 
 e2d::Player::~Player()
 {
-	if (!_musicList.empty())
+	if (!musics_.empty())
 	{
-		for (const auto& pair : _musicList)
+		for (const auto& pair : musics_)
 		{
 			delete pair.second;
 		}
 	}
 }
 
-bool e2d::Player::preload(const String & filePath)
+bool e2d::Player::Preload(const String & file_path)
 {
-	if (filePath.isEmpty())
+	if (file_path.IsEmpty())
 		return false;
 
 	Music * music = new (std::nothrow) Music();
 
-	if (music && music->open(filePath))
+	if (music && music->Open(file_path))
 	{
-		music->setVolume(_volume);
-		_musicList.insert(std::make_pair(filePath.hash(), music));
+		music->SetVolume(volume_);
+		musics_.insert(std::make_pair(file_path.GetHash(), music));
 		return true;
 	}
 	return false;
 }
 
-bool e2d::Player::play(const String & filePath, int nLoopCount)
+bool e2d::Player::Play(const String & file_path, int loop_count)
 {
-	if (filePath.isEmpty())
+	if (file_path.IsEmpty())
 		return false;
 
-	if (Player::preload(filePath))
+	if (Player::Preload(file_path))
 	{
-		auto music = _musicList[filePath.hash()];
-		if (music->play(nLoopCount))
+		auto music = musics_[file_path.GetHash()];
+		if (music->Play(loop_count))
 		{
 			return true;
 		}
@@ -69,69 +69,69 @@ bool e2d::Player::play(const String & filePath, int nLoopCount)
 	return false;
 }
 
-void e2d::Player::pause(const String & filePath)
+void e2d::Player::Pause(const String & file_path)
 {
-	if (filePath.isEmpty())
+	if (file_path.IsEmpty())
 		return;
 
-	size_t hash = filePath.hash();
-	if (_musicList.end() != _musicList.find(hash))
-		_musicList[hash]->pause();
+	size_t hash = file_path.GetHash();
+	if (musics_.end() != musics_.find(hash))
+		musics_[hash]->Pause();
 }
 
-void e2d::Player::resume(const String & filePath)
+void e2d::Player::Resume(const String & file_path)
 {
-	if (filePath.isEmpty())
+	if (file_path.IsEmpty())
 		return;
 
-	size_t hash = filePath.hash();
-	if (_musicList.end() != _musicList.find(hash))
-		_musicList[hash]->resume();
+	size_t hash = file_path.GetHash();
+	if (musics_.end() != musics_.find(hash))
+		musics_[hash]->Resume();
 }
 
-void e2d::Player::stop(const String & filePath)
+void e2d::Player::Stop(const String & file_path)
 {
-	if (filePath.isEmpty())
+	if (file_path.IsEmpty())
 		return;
 
-	size_t hash = filePath.hash();
-	if (_musicList.end() != _musicList.find(hash))
-		_musicList[hash]->stop();
+	size_t hash = file_path.GetHash();
+	if (musics_.end() != musics_.find(hash))
+		musics_[hash]->Stop();
 }
 
-bool e2d::Player::isPlaying(const String & filePath)
+bool e2d::Player::IsPlaying(const String & file_path)
 {
-	if (filePath.isEmpty())
+	if (file_path.IsEmpty())
 		return false;
 
-	size_t hash = filePath.hash();
-	if (_musicList.end() != _musicList.find(hash))
-		return _musicList[hash]->isPlaying();
+	size_t hash = file_path.GetHash();
+	if (musics_.end() != musics_.find(hash))
+		return musics_[hash]->IsPlaying();
 	return false;
 }
 
-bool e2d::Player::preload(const Resource& res)
+bool e2d::Player::Preload(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res.resNameId))
+	if (musics_.end() != musics_.find(res.name))
 		return true;
 
 	Music * music = new (std::nothrow) Music();
 
-	if (music && music->open(res))
+	if (music && music->Open(res))
 	{
-		music->setVolume(_volume);
-		_musicList.insert(std::make_pair(res.resNameId, music));
+		music->SetVolume(volume_);
+		musics_.insert(std::make_pair(res.name, music));
 		return true;
 	}
 	return false;
 }
 
-bool e2d::Player::play(const Resource& res, int nLoopCount)
+bool e2d::Player::Play(const Resource& res, int loop_count)
 {
-	if (Player::preload(res))
+	if (Player::Preload(res))
 	{
-		auto music = _musicList[res.resNameId];
-		if (music->play(nLoopCount))
+		auto music = musics_[res.name];
+		if (music->Play(loop_count))
 		{
 			return true;
 		}
@@ -139,74 +139,74 @@ bool e2d::Player::play(const Resource& res, int nLoopCount)
 	return false;
 }
 
-void e2d::Player::pause(const Resource& res)
+void e2d::Player::Pause(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res.resNameId))
-		_musicList[res.resNameId]->pause();
+	if (musics_.end() != musics_.find(res.name))
+		musics_[res.name]->Pause();
 }
 
-void e2d::Player::resume(const Resource& res)
+void e2d::Player::Resume(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res.resNameId))
-		_musicList[res.resNameId]->resume();
+	if (musics_.end() != musics_.find(res.name))
+		musics_[res.name]->Resume();
 }
 
-void e2d::Player::stop(const Resource& res)
+void e2d::Player::Stop(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res.resNameId))
-		_musicList[res.resNameId]->stop();
+	if (musics_.end() != musics_.find(res.name))
+		musics_[res.name]->Stop();
 }
 
-bool e2d::Player::isPlaying(const Resource& res)
+bool e2d::Player::IsPlaying(const Resource& res)
 {
-	if (_musicList.end() != _musicList.find(res.resNameId))
-		return _musicList[res.resNameId]->isPlaying();
+	if (musics_.end() != musics_.find(res.name))
+		return musics_[res.name]->IsPlaying();
 	return false;
 }
 
-float e2d::Player::getVolume()
+float e2d::Player::GetVolume()
 {
-	return _volume;
+	return volume_;
 }
 
-void e2d::Player::setVolume(float volume)
+void e2d::Player::SetVolume(float volume)
 {
-	_volume = std::min(std::max(volume, -224.f), 224.f);
-	for (const auto& pair : _musicList)
+	volume_ = std::min(std::max(volume, -224.f), 224.f);
+	for (const auto& pair : musics_)
 	{
-		pair.second->setVolume(_volume);
+		pair.second->SetVolume(volume_);
 	}
 }
 
-void e2d::Player::pauseAll()
+void e2d::Player::PauseAll()
 {
-	for (const auto& pair : _musicList)
+	for (const auto& pair : musics_)
 	{
-		pair.second->pause();
+		pair.second->Pause();
 	}
 }
 
-void e2d::Player::resumeAll()
+void e2d::Player::ResumeAll()
 {
-	for (const auto& pair : _musicList)
+	for (const auto& pair : musics_)
 	{
-		pair.second->resume();
+		pair.second->Resume();
 	}
 }
 
-void e2d::Player::stopAll()
+void e2d::Player::StopAll()
 {
-	for (const auto& pair : _musicList)
+	for (const auto& pair : musics_)
 	{
-		pair.second->stop();
+		pair.second->Stop();
 	}
 }
 
-void e2d::Player::clearCache()
+void e2d::Player::ClearCache()
 {
-	for (const auto& pair : _musicList)
+	for (const auto& pair : musics_)
 	{
 		delete pair.second;
 	}
-	_musicList.clear();
+	musics_.clear();
 }

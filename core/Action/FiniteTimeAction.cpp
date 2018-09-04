@@ -1,44 +1,44 @@
 #include "..\e2daction.h"
 
 e2d::FiniteTimeAction::FiniteTimeAction(float duration)
-	: _delta(0)
-	, _duration(std::max(duration, 0.f))
+	: delta_(0)
+	, duration_(std::max(duration, 0.f))
 {
 }
 
-void e2d::FiniteTimeAction::reset()
+void e2d::FiniteTimeAction::Reset()
 {
-	Action::reset();
-	_delta = 0;
+	Action::Reset();
+	delta_ = 0;
 }
 
-void e2d::FiniteTimeAction::_init()
+void e2d::FiniteTimeAction::Init()
 {
-	Action::_init();
+	Action::Init();
 }
 
-void e2d::FiniteTimeAction::_update()
+void e2d::FiniteTimeAction::Update()
 {
-	Action::_update();
+	Action::Update();
 
-	if (_duration == 0)
+	if (duration_ == 0)
 	{
-		_delta = 1;
-		this->stop();
+		delta_ = 1;
+		this->Stop();
 	}
 	else
 	{
-		_delta = std::min((Time::now() - _started).seconds() / _duration, 1.f);
+		delta_ = std::min((Time::Now() - started_).Seconds() / duration_, 1.f);
 
-		if (_delta >= 1)
+		if (delta_ >= 1)
 		{
-			this->stop();
+			this->Stop();
 		}
 	}
 }
 
-void e2d::FiniteTimeAction::_resetTime()
+void e2d::FiniteTimeAction::ResetTime()
 {
-	Action::_resetTime();
-	_started = Time::now() - Duration(_delta * _duration);
+	Action::ResetTime();
+	started_ = Time::Now() - Duration(delta_ * duration_);
 }

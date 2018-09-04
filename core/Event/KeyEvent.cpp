@@ -1,31 +1,31 @@
 #include "..\e2devent.h"
 
 
-e2d::KeyEvent::KeyEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-	: _code(KeyCode(wParam))
-	, _type(Type(message))
-	, _count(static_cast<int>((DWORD)lParam & 0x0000FFFF))
+e2d::KeyEvent::KeyEvent(HWND hWnd, UINT message, WPARAM w_param, LPARAM l_param)
+	: code_(KeyCode(w_param))
+	, type_(Type(message))
+	, count_(static_cast<int>((DWORD)l_param & 0x0000FFFF))
 {
 }
 
-e2d::KeyCode e2d::KeyEvent::getCode() const
+e2d::KeyCode e2d::KeyEvent::GetCode() const
 {
-	return _code;
+	return code_;
 }
 
-int e2d::KeyEvent::getCount() const
+int e2d::KeyEvent::GetCount() const
 {
-	return _count;
+	return count_;
 }
 
-e2d::KeyEvent::Type e2d::KeyEvent::getType() const
+e2d::KeyEvent::Type e2d::KeyEvent::GetType() const
 {
-	return _type;
+	return type_;
 }
 
-e2d::KeyCode e2d::KeyEvent::convertKeyCode(WPARAM wParam)
+e2d::KeyCode e2d::KeyEvent::ToKeyCode(WPARAM w_param)
 {
-	switch (wParam)
+	switch (w_param)
 	{
 	case 'A': return KeyCode::A;
 	case 'B': return KeyCode::B;

@@ -4,114 +4,114 @@ e2d::Spawn::Spawn()
 {
 }
 
-e2d::Spawn::Spawn(const std::vector<Action*>& actions)
+e2d::Spawn::Spawn(const Actions& actions)
 {
-	this->add(actions);
+	this->Add(actions);
 }
 
 e2d::Spawn::~Spawn()
 {
-	for (const auto& action : _actions)
+	for (const auto& action : actions_)
 	{
-		GC::getInstance()->safeRelease(action);
+		GC::GetInstance()->SafeRelease(action);
 	}
 }
 
-void e2d::Spawn::_init()
+void e2d::Spawn::Init()
 {
-	Action::_init();
+	Action::Init();
 
-	if (_target)
+	if (target_)
 	{
-		for (const auto& action : _actions)
+		for (const auto& action : actions_)
 		{
-			action->_target = _target;
-			action->_init();
+			action->target_ = target_;
+			action->Init();
 		}
 	}
 }
 
-void e2d::Spawn::_update()
+void e2d::Spawn::Update()
 {
-	Action::_update();
+	Action::Update();
 
 	size_t doneNum = 0;
-	for (const auto& action : _actions)
+	for (const auto& action : actions_)
 	{
-		if (action->_isDone())
+		if (action->IsDone())
 		{
 			++doneNum;
 		}
 		else
 		{
-			action->_update();
+			action->Update();
 		}
 	}
 
-	if (doneNum == _actions.size())
+	if (doneNum == actions_.size())
 	{
-		this->stop();
+		this->Stop();
 	}
 }
 
-void e2d::Spawn::reset()
+void e2d::Spawn::Reset()
 {
-	Action::reset();
-	for (const auto& action : _actions)
+	Action::Reset();
+	for (const auto& action : actions_)
 	{
-		action->reset();
+		action->Reset();
 	}
 }
 
-void e2d::Spawn::_resetTime()
+void e2d::Spawn::ResetTime()
 {
-	for (const auto& action : _actions)
+	for (const auto& action : actions_)
 	{
-		action->_resetTime();
+		action->ResetTime();
 	}
 }
 
-void e2d::Spawn::add(Action * action)
+void e2d::Spawn::Add(Action * action)
 {
 	if (action)
 	{
-		_actions.push_back(action);
-		action->retain();
+		actions_.push_back(action);
+		action->Retain();
 	}
 }
 
-void e2d::Spawn::add(const std::vector<Action*>& actions)
+void e2d::Spawn::Add(const Actions& actions)
 {
 	for (const auto &action : actions)
 	{
-		this->add(action);
+		this->Add(action);
 	}
 }
 
-e2d::Spawn * e2d::Spawn::clone() const
+e2d::Spawn * e2d::Spawn::Clone() const
 {
 	auto spawn = new (e2d::autorelease) Spawn();
-	for (const auto& action : _actions)
+	for (const auto& action : actions_)
 	{
 		if (action)
 		{
-			spawn->add(action->clone());
+			spawn->Add(action->Clone());
 		}
 	}
 	return spawn;
 }
 
-e2d::Spawn * e2d::Spawn::reverse() const
+e2d::Spawn * e2d::Spawn::Reverse() const
 {
 	auto spawn = new (e2d::autorelease) Spawn();
-	if (spawn && !_actions.empty())
+	if (spawn && !actions_.empty())
 	{
-		std::vector<Action*> newActions(_actions.size());
-		for (auto iter = _actions.crbegin(), iterCrend = _actions.crend(); iter != iterCrend; ++iter)
+		std::vector<Action*> newActions(actions_.size());
+		for (auto iter = actions_.crbegin(), iterCrend = actions_.crend(); iter != iterCrend; ++iter)
 		{
-			newActions.push_back((*iter)->reverse());
+			newActions.push_back((*iter)->Reverse());
 		}
-		spawn->add(newActions);
+		spawn->Add(newActions);
 	}
 	return spawn;
 }

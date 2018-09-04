@@ -3,77 +3,77 @@
 using namespace std::chrono;
 
 e2d::Duration::Duration()
-	: _ms()
+	: duration_ms_()
 {
 }
 
 e2d::Duration::Duration(float seconds)
-	: _ms(static_cast<long long>(seconds * 1000.f))
+	: duration_ms_(static_cast<long long>(seconds * 1000.f))
 {
 }
 
-int e2d::Duration::milliseconds() const
+int e2d::Duration::Milliseconds() const
 {
-	return static_cast<int>(_ms.count());
+	return static_cast<int>(duration_ms_.count());
 }
 
-float e2d::Duration::seconds() const
+float e2d::Duration::Seconds() const
 {
-	return _ms.count() / 1000.f;
+	return duration_ms_.count() / 1000.f;
 }
 
 bool e2d::Duration::operator==(const Duration & other) const
 {
-	return _ms == other._ms;
+	return duration_ms_ == other.duration_ms_;
 }
 
 bool e2d::Duration::operator!=(const Duration & other) const
 {
-	return _ms != other._ms;
+	return duration_ms_ != other.duration_ms_;
 }
 
 bool e2d::Duration::operator>(const Duration & other) const
 {
-	return _ms > other._ms;
+	return duration_ms_ > other.duration_ms_;
 }
 
 bool e2d::Duration::operator>=(const Duration & other) const
 {
-	return _ms >= other._ms;
+	return duration_ms_ >= other.duration_ms_;
 }
 
 bool e2d::Duration::operator<(const Duration & other) const
 {
-	return _ms < other._ms;
+	return duration_ms_ < other.duration_ms_;
 }
 
 bool e2d::Duration::operator<=(const Duration & other) const
 {
-	return _ms <= other._ms;
+	return duration_ms_ <= other.duration_ms_;
 }
 
 e2d::Duration e2d::Duration::operator+(Duration const & other) const
 {
 	Duration d;
-	d._ms = _ms + other._ms;
+	d.duration_ms_ = duration_ms_ + other.duration_ms_;
 	return std::move(d);
 }
 
 e2d::Duration e2d::Duration::operator-(Duration const & other) const
 {
 	Duration d;
-	d._ms = _ms - other._ms;
+	d.duration_ms_ = duration_ms_ - other.duration_ms_;
 	return std::move(d);
 }
 
 e2d::Duration & e2d::Duration::operator+=(Duration const &other)
 {
-	_ms += other._ms;
+	duration_ms_ += other.duration_ms_;
 	return (*this);
 }
 
 e2d::Duration & e2d::Duration::operator-=(Duration const &other)
 {
-	_ms -= other._ms;
+	duration_ms_ -= other.duration_ms_;
 	return (*this);
 }

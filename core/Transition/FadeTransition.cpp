@@ -6,33 +6,33 @@ e2d::FadeTransition::FadeTransition(Scene* scene, float duration)
 {
 }
 
-bool e2d::FadeTransition::_init(Game * game, Scene * prev)
+bool e2d::FadeTransition::Init(Game * game, Scene * prev)
 {
-	if (Transition::_init(game, prev))
+	if (Transition::Init(game, prev))
 	{
-		_outLayerParam.opacity = 1;
-		_inLayerParam.opacity = 0;
+		out_layer_param_.opacity = 1;
+		in_layer_param_.opacity = 0;
 		return true;
 	}
 	return false;
 }
 
-void e2d::FadeTransition::_update()
+void e2d::FadeTransition::Update()
 {
-	Transition::_update();
+	Transition::Update();
 
-	if (_delta < 0.5)
+	if (delta_ < 0.5)
 	{
-		_outLayerParam.opacity = 1 - _delta * 2;
-		_inLayerParam.opacity = 0;
+		out_layer_param_.opacity = 1 - delta_ * 2;
+		in_layer_param_.opacity = 0;
 	}
 	else
 	{
-		_outLayerParam.opacity = 0;
-		_inLayerParam.opacity = (_delta - 0.5f) * 2;
-		if (_delta >= 1)
+		out_layer_param_.opacity = 0;
+		in_layer_param_.opacity = (delta_ - 0.5f) * 2;
+		if (delta_ >= 1)
 		{
-			this->_stop();
+			this->Stop();
 		}
 	}
 }

@@ -31,32 +31,28 @@ public:
 
 	STDMETHOD_(void, OnVoiceError) (THIS_ void* pBufferContext, HRESULT Error) {}
 
-	void SetFuncOnStreamEnd(
-		const Function& func
-	);
+	STDMETHOD_(void, SetCallbackOnStreamEnd) (THIS_ const Function& func);
 
-	void SetFuncOnLoopEnd(
-		const Function& func
-	);
+	STDMETHOD_(void, SetCallbackOnLoopEnd) (THIS_ const Function& func);
 
 protected:
-	Function _loopEndFunc;
-	Function _streamEndFunc;
+	Function loop_end_callback_;
+	Function stream_end_callback_;
 };
 
 
 // 文字渲染器
-class TextRenderer 
+class E2DTextRenderer 
 	: public IDWriteTextRenderer
 {
 private:
-	TextRenderer();
+	E2DTextRenderer();
 
-	~TextRenderer();
+	~E2DTextRenderer();
 
 public:
 	static HRESULT Create(
-		TextRenderer** ppTextRenderer,
+		E2DTextRenderer** ppTextRenderer,
 		ID2D1Factory* pD2DFactory,
 		ID2D1HwndRenderTarget* pRT,
 		ID2D1SolidColorBrush* pBrush
@@ -64,9 +60,9 @@ public:
 
 	STDMETHOD_(void, SetTextStyle)(
 		CONST D2D1_COLOR_F &fillColor,
-		BOOL hasOutline,
-		CONST D2D1_COLOR_F &outlineColor,
-		FLOAT outlineWidth,
+		BOOL outline,
+		CONST D2D1_COLOR_F &outline_color,
+		FLOAT outline_width,
 		D2D1_LINE_JOIN outlineJoin
 	);
 
@@ -101,8 +97,8 @@ public:
 		FLOAT originX,
 		FLOAT originY,
 		IDWriteInlineObject* inlineObject,
-		BOOL isSideways,
-		BOOL isRightToLeft,
+		BOOL IsSideways,
+		BOOL IsRightToLeft,
 		IUnknown* clientDrawingEffect
 	);
 
@@ -157,10 +153,10 @@ public:
 	Exception& operator=(Exception const& other) E2D_NOEXCEPT;
 
 	// 获取异常信息
-	virtual const char * msg() const;
+	virtual const char * GetMsg() const;
 
 private:
-	const char * _message;
+	const char * message_;
 };
 
 

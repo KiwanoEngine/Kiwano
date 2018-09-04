@@ -20,28 +20,28 @@ public:
 	explicit KeyEvent(
 		HWND hWnd,
 		UINT message,
-		WPARAM wParam,
-		LPARAM lParam
+		WPARAM w_param,
+		LPARAM l_param
 	);
 
 	// 获取按键键值
-	KeyCode getCode() const;
+	KeyCode GetCode() const;
 
 	// 获取按键次数
-	int getCount() const;
+	int GetCount() const;
 
 	// 获取事件类型
-	KeyEvent::Type getType() const;
+	KeyEvent::Type GetType() const;
 
 	// VK 键值转换
-	static KeyCode convertKeyCode(
-		WPARAM wParam
+	static KeyCode ToKeyCode(
+		WPARAM w_param
 	);
 
 protected:
-	int _count;
-	KeyCode _code;
-	KeyEvent::Type _type;
+	int				count_;
+	KeyCode			code_;
+	KeyEvent::Type	type_;
 };
 
 
@@ -69,46 +69,46 @@ public:
 	explicit MouseEvent(
 		HWND hWnd,
 		UINT message,
-		WPARAM wParam,
-		LPARAM lParam,
+		WPARAM w_param,
+		LPARAM l_param,
 		float dpi
 	);
 
 	// 获取鼠标横坐标
-	float getX() const;
+	float GetX() const;
 
 	// 获取鼠标纵坐标
-	float getY() const;
+	float GetY() const;
 
 	// 获取鼠标坐标
-	Point getPos() const;
+	Point GetPos() const;
 
 	// 获取事件类型
-	MouseEvent::Type getType() const;
+	MouseEvent::Type GetType() const;
 
-	float getWheelDelta() const;
+	float GetWheelDelta() const;
 
 	// 鼠标左键是否按下
-	bool isLButtonDown() const;
+	bool IsLButtonDown() const;
 
 	// 鼠标右键是否按下
-	bool isRButtonDown() const;
+	bool IsRButtonDown() const;
 
 	// 鼠标中键是否按下
-	bool isMButtonDown() const;
+	bool IsMButtonDown() const;
 
 	// Shift 键是否按下
-	bool isShiftDown() const;
+	bool IsShiftDown() const;
 
 	// Ctrl 键是否按下
-	bool isCtrlDown() const;
+	bool IsCtrlDown() const;
 
 protected:
-	UINT _message;
-	WPARAM _wParam;
-	LPARAM _lParam;
-	Point _pos;
-	MouseEvent::Type _type;
+	UINT	message_;
+	WPARAM	w_param_;
+	LPARAM	l_param_;
+	Point	pos_;
+	MouseEvent::Type type_;
 };
 
 
@@ -126,14 +126,14 @@ public:
 	~Collision();
 
 	// 获取发生碰撞节点
-	Node* getNode() const;
+	Node* GetNode() const;
 
 	// 获取交集关系
-	Collider::Relation getRelation() const;
+	Collider::Relation GetRelation() const;
 
 protected:
-	Node * _node;
-	Collider::Relation _relation;
+	Node * node_;
+	Collider::Relation relation_;
 };
 
 }

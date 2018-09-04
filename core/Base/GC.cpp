@@ -11,7 +11,7 @@ void * operator new(size_t size, e2d::autorelease_t const &) E2D_NOEXCEPT
 	void* p = ::operator new(size, std::nothrow);
 	if (p)
 	{
-		GC::getInstance()->autorelease(static_cast<Ref*>(p));
+		GC::GetInstance()->AutoRelease(static_cast<Ref*>(p));
 	}
 	return p;
 }
@@ -22,58 +22,58 @@ void operator delete(void * block, e2d::autorelease_t const &) E2D_NOEXCEPT
 }
 
 
-e2d::GC * e2d::GC::getInstance()
+e2d::GC * e2d::GC::GetInstance()
 {
-	static GC _instance;
-	return &_instance;
+	static GC instance_;
+	return &instance_;
 }
 
 e2d::GC::GC()
-	: _notifyed(false)
-	, _cleanup(false)
-	, _pool()
+	: notifyed_(false)
+	, cleanup_(false)
+	, pool_()
 {
 }
 
 e2d::GC::~GC()
 {
 	// 删除所有对象
-	Game::getInstance()->clearAllScenes();
-	Timer::getInstance()->clearAllTasks();
-	ActionManager::getInstance()->clearAll();
+	Game::GetInstance()->ClearAllScenes();
+	Timer::GetInstance()->ClearAllTasks();
+	ActionManager::GetInstance()->ClearAll();
 
-	_cleanup = true;
-	for (const auto& ref : _pool)
+	cleanup_ = true;
+	for (const auto& ref : pool_)
 	{
 		delete ref;
 	}
-	_pool.clear();
-	_cleanup = false;
+	pool_.clear();
+	cleanup_ = false;
 
 	// 清除缓存
-	Image::clearCache();
+	Image::ClearCache();
 
 	// 清除单例
-	Player::destroyInstance();
-	Audio::destroyInstance();
-	Renderer::destroyInstance();
-	Input::destroyInstance();
-	Window::destroyInstance();
-	Game::destroyInstance();
+	Player::DestroyInstance();
+	Audio::DestroyInstance();
+	Renderer::DestroyInstance();
+	Input::DestroyInstance();
+	Window::DestroyInstance();
+	Game::DestroyInstance();
 }
 
-void e2d::GC::flush()
+void e2d::GC::Flush()
 {
-	if (!_notifyed)
+	if (!notifyed_)
 		return;
 
-	_notifyed = false;
-	for (auto iter = _pool.begin(); iter != _pool.end();)
+	notifyed_ = false;
+	for (auto iter = pool_.begin(); iter != pool_.end();)
 	{
-		if ((*iter)->getRefCount() <= 0)
+		if ((*iter)->GetRefCount() <= 0)
 		{
 			delete (*iter);
-			iter = _pool.erase(iter);
+			iter = pool_.erase(iter);
 		}
 		else
 		{
@@ -82,22 +82,22 @@ void e2d::GC::flush()
 	}
 }
 
-void e2d::GC::autorelease(Ref * ref)
+void e2d::GC::AutoRelease(Ref * ref)
 {
 	if (ref)
 	{
-		_pool.insert(ref);
+		pool_.insert(ref);
 	}
 }
 
-void e2d::GC::safeRelease(Ref* ref)
+void e2d::GC::SafeRelease(Ref* ref)
 {
-	if (_cleanup)
+	if (cleanup_)
 		return;
 
 	if (ref)
 	{
-		ref->release();
-		_notifyed = true;
+		ref->Release();
+		notifyed_ = true;
 	}
 }

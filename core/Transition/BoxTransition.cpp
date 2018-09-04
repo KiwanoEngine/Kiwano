@@ -6,43 +6,43 @@ e2d::BoxTransition::BoxTransition(Scene* scene, float duration)
 {
 }
 
-bool e2d::BoxTransition::_init(Game * game, Scene * prev)
+bool e2d::BoxTransition::Init(Game * game, Scene * prev)
 {
-	if (Transition::_init(game, prev))
+	if (Transition::Init(game, prev))
 	{
-		_inLayerParam.opacity = 0;
+		in_layer_param_.opacity = 0;
 		return true;
 	}
 	return false;
 }
 
-void e2d::BoxTransition::_update()
+void e2d::BoxTransition::Update()
 {
-	Transition::_update();
+	Transition::Update();
 
-	auto size = Window::getInstance()->getSize();
-	if (_delta <= 0.5)
+	auto size = Window::GetInstance()->GetSize();
+	if (delta_ <= 0.5)
 	{
-		_outLayerParam.contentBounds = D2D1::RectF(
-			size.width * _delta,
-			size.height * _delta,
-			size.width * (1 - _delta),
-			size.height * (1 - _delta)
+		out_layer_param_.contentBounds = D2D1::RectF(
+			size.width * delta_,
+			size.height * delta_,
+			size.width * (1 - delta_),
+			size.height * (1 - delta_)
 		);
 	}
 	else
 	{
-		_outLayerParam.opacity = 0;
-		_inLayerParam.opacity = 1;
-		_inLayerParam.contentBounds = D2D1::RectF(
-			size.width * (1 - _delta),
-			size.height * (1 - _delta),
-			size.width * _delta,
-			size.height * _delta
+		out_layer_param_.opacity = 0;
+		in_layer_param_.opacity = 1;
+		in_layer_param_.contentBounds = D2D1::RectF(
+			size.width * (1 - delta_),
+			size.height * (1 - delta_),
+			size.width * delta_,
+			size.height * delta_
 		);
-		if (_delta >= 1)
+		if (delta_ >= 1)
 		{
-			this->_stop();
+			this->Stop();
 		}
 	}
 }

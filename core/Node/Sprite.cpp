@@ -2,125 +2,125 @@
 
 
 e2d::Sprite::Sprite()
-	: _image(nullptr)
+	: image_(nullptr)
 {
 }
 
 e2d::Sprite::Sprite(Image * image)
-	: _image(nullptr)
+	: image_(nullptr)
 {
-	open(image);
+	Open(image);
 }
 
 e2d::Sprite::Sprite(const Resource& res)
-	: _image(nullptr)
+	: image_(nullptr)
 {
-	open(res);
+	Open(res);
 }
 
-e2d::Sprite::Sprite(const Resource& res, const Rect& cropRect)
-	: _image(nullptr)
+e2d::Sprite::Sprite(const Resource& res, const Rect& crop_rect)
+	: image_(nullptr)
 {
-	open(res);
-	crop(cropRect);
+	Open(res);
+	Crop(crop_rect);
 }
 
-e2d::Sprite::Sprite(const String & fileName)
-	: _image(nullptr)
+e2d::Sprite::Sprite(const String & file_name)
+	: image_(nullptr)
 {
-	open(fileName);
+	Open(file_name);
 }
 
-e2d::Sprite::Sprite(const String & fileName, const Rect & cropRect)
-	: _image(nullptr)
+e2d::Sprite::Sprite(const String & file_name, const Rect & crop_rect)
+	: image_(nullptr)
 {
-	open(fileName);
-	crop(cropRect);
+	Open(file_name);
+	Crop(crop_rect);
 }
 
 e2d::Sprite::~Sprite()
 {
-	GC::getInstance()->safeRelease(_image);
+	GC::GetInstance()->SafeRelease(image_);
 }
 
-bool e2d::Sprite::open(Image * image)
+bool e2d::Sprite::Open(Image * image)
 {
 	if (image)
 	{
-		if (_image) _image->release();
-		_image = image;
-		_image->retain();
+		if (image_) image_->Release();
+		image_ = image;
+		image_->Retain();
 
-		Node::setSize(_image->getWidth(), _image->getHeight());
+		Node::SetSize(image_->GetWidth(), image_->GetHeight());
 		return true;
 	}
 	return false;
 }
 
-bool e2d::Sprite::open(const Resource& res)
+bool e2d::Sprite::Open(const Resource& res)
 {
-	if (!_image)
+	if (!image_)
 	{
-		_image = new (e2d::autorelease) Image();
-		_image->retain();
+		image_ = new (e2d::autorelease) Image();
+		image_->Retain();
 	}
 
-	if (_image->open(res))
+	if (image_->Open(res))
 	{
-		Node::setSize(_image->getWidth(), _image->getHeight());
+		Node::SetSize(image_->GetWidth(), image_->GetHeight());
 		return true;
 	}
 	return false;
 }
 
-bool e2d::Sprite::open(const String & fileName)
+bool e2d::Sprite::Open(const String & file_name)
 {
-	if (!_image)
+	if (!image_)
 	{
-		_image = new (e2d::autorelease) Image();
-		_image->retain();
+		image_ = new (e2d::autorelease) Image();
+		image_->Retain();
 	}
 
-	if (_image->open(fileName))
+	if (image_->Open(file_name))
 	{
-		Node::setSize(_image->getWidth(), _image->getHeight());
+		Node::SetSize(image_->GetWidth(), image_->GetHeight());
 		return true;
 	}
 	return false;
 }
 
-void e2d::Sprite::crop(const Rect& cropRect)
+void e2d::Sprite::Crop(const Rect& crop_rect)
 {
-	_image->crop(cropRect);
-	Node::setSize(
-		std::min(std::max(cropRect.size.width, 0.f), _image->getSourceWidth() - _image->getCropX()),
-		std::min(std::max(cropRect.size.height, 0.f), _image->getSourceHeight() - _image->getCropY())
+	image_->Crop(crop_rect);
+	Node::SetSize(
+		std::min(std::max(crop_rect.size.width, 0.f), image_->GetSourceWidth() - image_->GetCropX()),
+		std::min(std::max(crop_rect.size.height, 0.f), image_->GetSourceHeight() - image_->GetCropY())
 	);
 }
 
-e2d::Image * e2d::Sprite::getImage() const
+e2d::Image * e2d::Sprite::GetImage() const
 {
-	return _image;
+	return image_;
 }
 
-void e2d::Sprite::draw() const
+void e2d::Sprite::Draw() const
 {
-	if (_image && _image->getBitmap())
+	if (image_ && image_->GetBitmap())
 	{
 		// »ñÈ¡Í¼Æ¬²Ã¼ôÎ»ÖÃ
-		float fCropX = _image->getCropX();
-		float fCropY = _image->getCropY();
+		float fCropX = image_->GetCropX();
+		float fCropY = image_->GetCropY();
 		// äÖÈ¾Í¼Æ¬
-		Renderer::getInstance()->getRenderTarget()->DrawBitmap(
-			_image->getBitmap(),
-			D2D1::RectF(0, 0, _width, _height),
-			_displayOpacity,
+		Renderer::GetInstance()->GetRenderTarget()->DrawBitmap(
+			image_->GetBitmap(),
+			D2D1::RectF(0, 0, size_.width, size_.height),
+			display_opacity_,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			D2D1::RectF(
 				fCropX,
 				fCropY,
-				fCropX + _width,
-				fCropY + _height
+				fCropX + size_.width,
+				fCropY + size_.height
 			)
 		);
 	}

@@ -11,34 +11,34 @@ e2d::VoiceCallback::~VoiceCallback()
 
 void e2d::VoiceCallback::OnLoopEnd(void * pBufferContext)
 {
-	if (_loopEndFunc)
+	if (loop_end_callback_)
 	{
-		_loopEndFunc();
+		loop_end_callback_();
 	}
 }
 
 void e2d::VoiceCallback::OnStreamEnd()
 {
-	if (_streamEndFunc)
+	if (stream_end_callback_)
 	{
-		_streamEndFunc();
+		stream_end_callback_();
 	}
 }
 
 void e2d::VoiceCallback::OnBufferEnd(void * pBufferContext)
 {
-	if (_loopEndFunc)
+	if (loop_end_callback_)
 	{
-		_loopEndFunc();
+		loop_end_callback_();
 	}
 }
 
-void e2d::VoiceCallback::SetFuncOnStreamEnd(const Function & func)
+void e2d::VoiceCallback::SetCallbackOnStreamEnd(const Function & func)
 {
-	_streamEndFunc = func;
+	stream_end_callback_ = func;
 }
 
-void e2d::VoiceCallback::SetFuncOnLoopEnd(const Function & func)
+void e2d::VoiceCallback::SetCallbackOnLoopEnd(const Function & func)
 {
-	_loopEndFunc = func;
+	loop_end_callback_ = func;
 }

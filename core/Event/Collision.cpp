@@ -1,14 +1,14 @@
 #include "..\e2devent.h"
 
 e2d::Collision::Collision()
-	: _node(nullptr)
-	, _relation(Collider::Relation::Unknown)
+	: node_(nullptr)
+	, relation_(Collider::Relation::Unknown)
 {
 }
 
 e2d::Collision::Collision(Node* node, Collider::Relation relation)
-	: _node(node)
-	, _relation(relation)
+	: node_(node)
+	, relation_(relation)
 {
 }
 
@@ -16,12 +16,12 @@ e2d::Collision::~Collision()
 {
 }
 
-e2d::Node * e2d::Collision::getNode() const
+e2d::Node * e2d::Collision::GetNode() const
 {
-	return _node;
+	return node_;
 }
 
-e2d::Collider::Relation e2d::Collision::getRelation() const
+e2d::Collider::Relation e2d::Collision::GetRelation() const
 {
-	return _relation;
+	return relation_;
 }

@@ -1,14 +1,14 @@
 #include "..\e2dtool.h"
 
 
-e2d::Timer * e2d::Timer::getInstance()
+e2d::Timer * e2d::Timer::GetInstance()
 {
 	static Timer instance;
 	return &instance;
 }
 
 e2d::Timer::Timer()
-	: _tasks()
+	: tasks_()
 {
 }
 
@@ -16,114 +16,114 @@ e2d::Timer::~Timer()
 {
 }
 
-void e2d::Timer::addTask(Task * task)
+void e2d::Timer::AddTask(Task * task)
 {
 	if (task)
 	{
-		auto iter = std::find(_tasks.begin(), _tasks.end(), task);
-		if (iter == _tasks.end())
+		auto iter = std::find(tasks_.begin(), tasks_.end(), task);
+		if (iter == tasks_.end())
 		{
-			task->retain();
-			task->_lastTime = Time::now();
-			_tasks.push_back(task);
+			task->Retain();
+			task->last_time_ = Time::Now();
+			tasks_.push_back(task);
 		}
 	}
 }
 
-void e2d::Timer::stopTasks(const String& name)
+void e2d::Timer::StopTasks(const String& name)
 {
-	for (const auto& task : _tasks)
+	for (const auto& task : tasks_)
 	{
-		if (task->getName() == name)
+		if (task->GetName() == name)
 		{
-			task->stop();
+			task->Stop();
 		}
 	}
 }
 
-void e2d::Timer::startTasks(const String& name)
+void e2d::Timer::StartTasks(const String& name)
 {
-	for (const auto& task : _tasks)
+	for (const auto& task : tasks_)
 	{
-		if (task->getName() == name)
+		if (task->GetName() == name)
 		{
-			task->start();
+			task->Start();
 		}
 	}
 }
 
-void e2d::Timer::removeTasks(const String& name)
+void e2d::Timer::RemoveTasks(const String& name)
 {
-	for (const auto& task : _tasks)
+	for (const auto& task : tasks_)
 	{
-		if (task->getName() == name)
+		if (task->GetName() == name)
 		{
-			task->_stopped = true;
+			task->stopped_ = true;
 		}
 	}
 }
 
-void e2d::Timer::stopAllTasks()
+void e2d::Timer::StopAllTasks()
 {
-	for (const auto& task : _tasks)
+	for (const auto& task : tasks_)
 	{
-		task->stop();
+		task->Stop();
 	}
 }
 
-void e2d::Timer::startAllTasks()
+void e2d::Timer::StartAllTasks()
 {
-	for (const auto& task : _tasks)
+	for (const auto& task : tasks_)
 	{
-		task->start();
+		task->Start();
 	}
 }
 
-void e2d::Timer::removeAllTasks()
+void e2d::Timer::RemoveAllTasks()
 {
-	for (const auto& task : _tasks)
+	for (const auto& task : tasks_)
 	{
-		task->_stopped = true;
+		task->stopped_ = true;
 	}
 }
 
-void e2d::Timer::clearAllTasks()
+void e2d::Timer::ClearAllTasks()
 {
-	if (_tasks.empty())
+	if (tasks_.empty())
 		return;
 
-	for (const auto& task : _tasks)
+	for (const auto& task : tasks_)
 	{
-		task->release();
+		task->Release();
 	}
-	_tasks.clear();
+	tasks_.clear();
 }
 
-void e2d::Timer::update()
+void e2d::Timer::Update()
 {
-	if (_tasks.empty())
+	if (tasks_.empty())
 		return;
 
 	std::vector<Task*> currTasks;
-	currTasks.reserve(_tasks.size());
+	currTasks.reserve(tasks_.size());
 	std::copy_if(
-		_tasks.begin(),
-		_tasks.end(),
+		tasks_.begin(),
+		tasks_.end(),
 		std::back_inserter(currTasks),
-		[](Task* task) { return task->_isReady() && !task->_stopped; }
+		[](Task* task) { return task->IsReady() && !task->stopped_; }
 	);
 
 	// 遍历就绪的任务
 	for (const auto& task : currTasks)
-		task->_update();
+		task->Update();
 
 	// 清除结束的任务
-	for (auto iter = _tasks.begin(); iter != _tasks.end();)
+	for (auto iter = tasks_.begin(); iter != tasks_.end();)
 	{
-		if ((*iter)->_stopped)
+		if ((*iter)->stopped_)
 		{
-			(*iter)->release();
-			iter = _tasks.erase(iter);
+			(*iter)->Release();
+			iter = tasks_.erase(iter);
 		}
 		else
 		{
@@ -132,10 +132,10 @@ void e2d::Timer::update()
 	}
 }
 
-void e2d::Timer::updateTime()
+void e2d::Timer::UpdateTime()
 {
-	for (const auto& task : _tasks)
+	for (const auto& task : tasks_)
 	{
-		task->_lastTime = Time::now();
+		task->last_time_ = Time::Now();
 	}
 }

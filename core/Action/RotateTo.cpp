@@ -5,16 +5,16 @@
 e2d::RotateTo::RotateTo(float duration, float rotation)
 	: RotateBy(duration, 0)
 {
-	_endVal = rotation;
+	end_val_ = rotation;
 }
 
-e2d::RotateTo * e2d::RotateTo::clone() const
+e2d::RotateTo * e2d::RotateTo::Clone() const
 {
-	return new (e2d::autorelease) RotateTo(_duration, _endVal);
+	return new (e2d::autorelease) RotateTo(duration_, end_val_);
 }
 
-void e2d::RotateTo::_init()
+void e2d::RotateTo::Init()
 {
-	RotateBy::_init();
-	_deltaVal = _endVal - _startVal;
+	RotateBy::Init();
+	delta_val_ = end_val_ - start_val_;
 }

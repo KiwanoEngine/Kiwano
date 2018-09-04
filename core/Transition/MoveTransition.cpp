@@ -3,64 +3,64 @@
 
 e2d::MoveTransition::MoveTransition(Scene* scene, float duration, Direction direction)
 	: Transition(scene, duration)
-	, _direction(direction)
+	, direction_(direction)
 {
 }
 
-bool e2d::MoveTransition::_init(Game * game, Scene * prev)
+bool e2d::MoveTransition::Init(Game * game, Scene * prev)
 {
-	if (Transition::_init(game, prev))
+	if (Transition::Init(game, prev))
 	{
-		auto size = Window::getInstance()->getSize();
-		if (_direction == Direction::Up)
+		auto size = Window::GetInstance()->GetSize();
+		if (direction_ == Direction::Up)
 		{
-			_posDelta = Vector2(0, -size.height);
-			_startPos = Point(0, size.height);
+			pos_delta_ = Point(0, -size.height);
+			start_pos_ = Point(0, size.height);
 		}
-		else if (_direction == Direction::Down)
+		else if (direction_ == Direction::Down)
 		{
-			_posDelta = Vector2(0, size.height);
-			_startPos = Point(0, -size.height);
+			pos_delta_ = Point(0, size.height);
+			start_pos_ = Point(0, -size.height);
 		}
-		else if (_direction == Direction::Left)
+		else if (direction_ == Direction::Left)
 		{
-			_posDelta = Vector2(-size.width, 0);
-			_startPos = Point(size.width, 0);
+			pos_delta_ = Point(-size.width, 0);
+			start_pos_ = Point(size.width, 0);
 		}
-		else if (_direction == Direction::Right)
+		else if (direction_ == Direction::Right)
 		{
-			_posDelta = Vector2(size.width, 0);
-			_startPos = Point(-size.width, 0);
+			pos_delta_ = Point(size.width, 0);
+			start_pos_ = Point(-size.width, 0);
 		}
 
-		if (_outScene) _outScene->setPos(0, 0);
-		_inScene->setPos(_startPos);
+		if (out_scene_) out_scene_->SetPos(0, 0);
+		in_scene_->SetPos(start_pos_);
 		return true;
 	}
 	return false;
 }
 
-void e2d::MoveTransition::_update()
+void e2d::MoveTransition::Update()
 {
-	Transition::_update();
+	Transition::Update();
 
-	if (_outScene)
+	if (out_scene_)
 	{
-		_outScene->setPos(_posDelta * _delta);
+		out_scene_->SetPos(pos_delta_ * delta_);
 	}
-	if (_inScene)
+	if (in_scene_)
 	{
-		_inScene->setPos(_startPos + _posDelta * _delta);
+		in_scene_->SetPos(start_pos_ + pos_delta_ * delta_);
 	}
 
-	if (_delta >= 1)
+	if (delta_ >= 1)
 	{
-		this->_stop();
+		this->Stop();
 	}
 }
 
-void e2d::MoveTransition::_reset()
+void e2d::MoveTransition::Reset()
 {
-	if (_outScene) _outScene->setPos(0, 0);
-	_inScene->setPos(0, 0);
+	if (out_scene_) out_scene_->SetPos(0, 0);
+	in_scene_->SetPos(0, 0);
 }

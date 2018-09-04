@@ -4,33 +4,33 @@
 #pragma comment(lib, "dinput8.lib")
 
 
-e2d::Input * e2d::Input::_instance = nullptr;
+e2d::Input * e2d::Input::instance_ = nullptr;
 
-e2d::Input * e2d::Input::getInstance()
+e2d::Input * e2d::Input::GetInstance()
 {
-	if (!_instance)
-		_instance = new (std::nothrow) Input;
-	return _instance;
+	if (!instance_)
+		instance_ = new (std::nothrow) Input;
+	return instance_;
 }
 
-void e2d::Input::destroyInstance()
+void e2d::Input::DestroyInstance()
 {
-	if (_instance)
+	if (instance_)
 	{
-		delete _instance;
-		_instance = nullptr;
+		delete instance_;
+		instance_ = nullptr;
 	}
 }
 
 e2d::Input::Input()
-	: _directInput(false)
-	, _keyboardDevice(false)
-	, _mouseDevice(false)
+	: direct_input_(false)
+	, keyboard_device_(false)
+	, mouse_device_(false)
 {
 	::CoInitialize(nullptr);
 
-	ZeroMemory(_keyBuffer, sizeof(_keyBuffer));
-	ZeroMemory(&_mouseState, sizeof(_mouseState));
+	ZeroMemory(key_buffer_, sizeof(key_buffer_));
+	ZeroMemory(&mouse_state_, sizeof(mouse_state_));
 
 	// 初始化接口对象
 	ThrowIfFailed(
@@ -38,135 +38,135 @@ e2d::Input::Input()
 			HINST_THISCOMPONENT,
 			DIRECTINPUT_VERSION,
 			IID_IDirectInput8,
-			(void**)&_directInput,
+			(void**)&direct_input_,
 			nullptr
 		)
 	);
 
-	HWND hwnd = Window::getInstance()->getHWnd();
+	HWND hwnd = Window::GetInstance()->GetHWnd();
 
 	// 初始化键盘设备
 	ThrowIfFailed(
-		_directInput->CreateDevice(
+		direct_input_->CreateDevice(
 			GUID_SysKeyboard,
-			&_keyboardDevice,
+			&keyboard_device_,
 			nullptr
 		)
 	);
 
-	_keyboardDevice->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-	_keyboardDevice->SetDataFormat(&c_dfDIKeyboard);
-	_keyboardDevice->Acquire();
-	_keyboardDevice->Poll();
+	keyboard_device_->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	keyboard_device_->SetDataFormat(&c_dfDIKeyboard);
+	keyboard_device_->Acquire();
+	keyboard_device_->Poll();
 
 	// 初始化鼠标设备
 	ThrowIfFailed(
-		_directInput->CreateDevice(
+		direct_input_->CreateDevice(
 			GUID_SysMouse,
-			&_mouseDevice,
+			&mouse_device_,
 			nullptr
 		)
 	);
 
-	_mouseDevice->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-	_mouseDevice->SetDataFormat(&c_dfDIMouse);
-	_mouseDevice->Acquire();
-	_mouseDevice->Poll();
+	mouse_device_->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	mouse_device_->SetDataFormat(&c_dfDIMouse);
+	mouse_device_->Acquire();
+	mouse_device_->Poll();
 }
 
 e2d::Input::~Input()
 {
-	if (_keyboardDevice)
-		_keyboardDevice->Unacquire();
-	if (_mouseDevice)
-		_mouseDevice->Unacquire();
+	if (keyboard_device_)
+		keyboard_device_->Unacquire();
+	if (mouse_device_)
+		mouse_device_->Unacquire();
 
-	SafeRelease(_mouseDevice);
-	SafeRelease(_keyboardDevice);
-	SafeRelease(_directInput);
+	SafeRelease(mouse_device_);
+	SafeRelease(keyboard_device_);
+	SafeRelease(direct_input_);
 
 	::CoUninitialize();
 }
 
-void e2d::Input::update()
+void e2d::Input::Update()
 {
-	if (_keyboardDevice)
+	if (keyboard_device_)
 	{
-		HRESULT hr = _keyboardDevice->Poll();
+		HRESULT hr = keyboard_device_->Poll();
 		if (FAILED(hr))
 		{
-			hr = _keyboardDevice->Acquire();
+			hr = keyboard_device_->Acquire();
 			while (hr == DIERR_INPUTLOST)
-				hr = _keyboardDevice->Acquire();
+				hr = keyboard_device_->Acquire();
 		}
 		else
 		{
-			_keyboardDevice->GetDeviceState(sizeof(_keyBuffer), (void**)&_keyBuffer);
+			keyboard_device_->GetDeviceState(sizeof(key_buffer_), (void**)&key_buffer_);
 		}
 	}
 
-	if (_mouseDevice)
+	if (mouse_device_)
 	{
-		HRESULT hr = _mouseDevice->Poll();
+		HRESULT hr = mouse_device_->Poll();
 		if (FAILED(hr))
 		{
-			hr = _mouseDevice->Acquire();
+			hr = mouse_device_->Acquire();
 			while (hr == DIERR_INPUTLOST)
-				hr = _mouseDevice->Acquire();
+				hr = mouse_device_->Acquire();
 		}
 		else
 		{
-			_mouseDevice->GetDeviceState(sizeof(_mouseState), (void**)&_mouseState);
+			mouse_device_->GetDeviceState(sizeof(mouse_state_), (void**)&mouse_state_);
 		}
 	}
 }
 
-bool e2d::Input::isDown(KeyCode key)
+bool e2d::Input::IsDown(KeyCode key)
 {
-	if (_keyBuffer[static_cast<int>(key)] & 0x80)
+	if (key_buffer_[static_cast<int>(key)] & 0x80)
 		return true;
 	return false;
 }
 
-bool e2d::Input::isDown(MouseCode code)
+bool e2d::Input::IsDown(MouseCode code)
 {
-	if (_mouseState.rgbButtons[static_cast<int>(code)] & 0x80)
+	if (mouse_state_.rgbButtons[static_cast<int>(code)] & 0x80)
 		return true;
 	return false;
 }
 
-float e2d::Input::getMouseX()
+float e2d::Input::GetMouseX()
 {
-	return getMousePos().x;
+	return GetMousePos().x;
 }
 
-float e2d::Input::getMouseY()
+float e2d::Input::GetMouseY()
 {
-	return getMousePos().y;
+	return GetMousePos().y;
 }
 
-e2d::Point e2d::Input::getMousePos()
+e2d::Point e2d::Input::GetMousePos()
 {
-	auto window = Window::getInstance();
-	float dpi = window->getDpi();
+	auto window = Window::GetInstance();
+	float dpi = window->GetDpi();
 
 	POINT mousePos;
 	::GetCursorPos(&mousePos);
-	::ScreenToClient(window->getHWnd(), &mousePos);
+	::ScreenToClient(window->GetHWnd(), &mousePos);
 	return Point(mousePos.x * 96.f / dpi, mousePos.y * 96.f / dpi);
 }
 
-float e2d::Input::getMouseDeltaX()
+float e2d::Input::GetMouseDeltaX()
 {
-	return (float)_mouseState.lX;
+	return (float)mouse_state_.lX;
 }
 
-float e2d::Input::getMouseDeltaY()
+float e2d::Input::GetMouseDeltaY()
 {
-	return (float)_mouseState.lY;
+	return (float)mouse_state_.lY;
 }
 
-float e2d::Input::getMouseDeltaZ()
+float e2d::Input::GetMouseDeltaZ()
 {
-	return (float)_mouseState.lZ;
+	return (float)mouse_state_.lZ;
 }

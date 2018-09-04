@@ -1,119 +1,119 @@
 #include "..\e2daction.h"
 
 e2d::Sequence::Sequence()
-	: _currIndex(0)
+	: action_index_(0)
 {
 }
 
-e2d::Sequence::Sequence(const std::vector<Action*>& actions)
-	: _currIndex(0)
+e2d::Sequence::Sequence(const Actions& actions)
+	: action_index_(0)
 {
-	this->add(actions);
+	this->Add(actions);
 }
 
 e2d::Sequence::~Sequence()
 {
-	for (const auto& action : _actions)
+	for (const auto& action : actions_)
 	{
-		GC::getInstance()->safeRelease(action);
+		GC::GetInstance()->SafeRelease(action);
 	}
 }
 
-void e2d::Sequence::_init()
+void e2d::Sequence::Init()
 {
-	Action::_init();
+	Action::Init();
 	// 将所有动作与目标绑定
-	if (_target)
+	if (target_)
 	{
-		for (const auto& action : _actions)
+		for (const auto& action : actions_)
 		{
-			action->_target = _target;
+			action->target_ = target_;
 		}
 	}
 	// 初始化第一个动作
-	_actions[0]->_init();
+	actions_[0]->Init();
 }
 
-void e2d::Sequence::_update()
+void e2d::Sequence::Update()
 {
-	Action::_update();
+	Action::Update();
 
-	auto &action = _actions[_currIndex];
-	action->_update();
+	auto &action = actions_[action_index_];
+	action->Update();
 
-	if (action->_isDone())
+	if (action->IsDone())
 	{
-		++_currIndex;
-		if (_currIndex == _actions.size())
+		++action_index_;
+		if (action_index_ == actions_.size())
 		{
-			this->stop();
+			this->Stop();
 		}
 		else
 		{
-			_actions[_currIndex]->_init();
+			actions_[action_index_]->Init();
 		}
 	}
 }
 
-void e2d::Sequence::reset()
+void e2d::Sequence::Reset()
 {
-	Action::reset();
-	for (const auto& action : _actions)
+	Action::Reset();
+	for (const auto& action : actions_)
 	{
-		action->reset();
+		action->Reset();
 	}
-	_currIndex = 0;
+	action_index_ = 0;
 }
 
-void e2d::Sequence::_resetTime()
+void e2d::Sequence::ResetTime()
 {
-	for (const auto& action : _actions)
+	for (const auto& action : actions_)
 	{
-		action->_resetTime();
+		action->ResetTime();
 	}
 }
 
-void e2d::Sequence::add(Action * action)
+void e2d::Sequence::Add(Action * action)
 {
 	if (action)
 	{
-		_actions.push_back(action);
-		action->retain();
+		actions_.push_back(action);
+		action->Retain();
 	}
 }
 
-void e2d::Sequence::add(const std::vector<Action*>& actions)
+void e2d::Sequence::Add(const Actions& actions)
 {
 	for (const auto &action : actions)
 	{
-		this->add(action);
+		this->Add(action);
 	}
 }
 
-e2d::Sequence * e2d::Sequence::clone() const
+e2d::Sequence * e2d::Sequence::Clone() const
 {
 	auto sequence = new (e2d::autorelease) Sequence();
-	for (const auto& action : _actions)
+	for (const auto& action : actions_)
 	{
 		if (action)
 		{
-			sequence->add(action->clone());
+			sequence->Add(action->Clone());
 		}
 	}
 	return sequence;
 }
 
-e2d::Sequence * e2d::Sequence::reverse() const
+e2d::Sequence * e2d::Sequence::Reverse() const
 {
 	auto sequence = new (e2d::autorelease) Sequence();
-	if (sequence && !_actions.empty())
+	if (sequence && !actions_.empty())
 	{
-		std::vector<Action*> newActions(_actions.size());
-		for (auto iter = _actions.crbegin(), iterCrend = _actions.crend(); iter != iterCrend; ++iter)
+		std::vector<Action*> newActions(actions_.size());
+		for (auto iter = actions_.crbegin(), iterCrend = actions_.crend(); iter != iterCrend; ++iter)
 		{
-			newActions.push_back((*iter)->reverse());
+			newActions.push_back((*iter)->Reverse());
 		}
-		sequence->add(newActions);
+		sequence->Add(newActions);
 	}
 	return sequence;
 }

@@ -1,62 +1,62 @@
 #include "..\e2devent.h"
 #include "..\e2dbase.h"
 
-e2d::MouseEvent::MouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, float dpi)
-	: _message(message)
-	, _wParam(wParam)
-	, _lParam(lParam)
-	, _type(Type(message))
+e2d::MouseEvent::MouseEvent(HWND hWnd, UINT message, WPARAM w_param, LPARAM l_param, float dpi)
+	: message_(message)
+	, w_param_(w_param)
+	, l_param_(l_param)
+	, type_(Type(message))
 {
-	_pos.x = ((float)(short)LOWORD(lParam)) * 96.f / dpi;
-	_pos.y = ((float)(short)HIWORD(lParam)) * 96.f / dpi;
+	pos_.x = ((float)(short)LOWORD(l_param)) * 96.f / dpi;
+	pos_.y = ((float)(short)HIWORD(l_param)) * 96.f / dpi;
 }
 
-float e2d::MouseEvent::getX() const
+float e2d::MouseEvent::GetX() const
 {
-	return _pos.x;
+	return pos_.x;
 }
 
-float e2d::MouseEvent::getY() const
+float e2d::MouseEvent::GetY() const
 {
-	return _pos.y;
+	return pos_.y;
 }
 
-e2d::Point e2d::MouseEvent::getPos() const
+e2d::Point e2d::MouseEvent::GetPos() const
 {
-	return _pos;
+	return pos_;
 }
 
-bool e2d::MouseEvent::isShiftDown() const
+bool e2d::MouseEvent::IsShiftDown() const
 {
-	return GET_KEYSTATE_WPARAM(_wParam) == MK_SHIFT;
+	return GET_KEYSTATE_WPARAM(w_param_) == MK_SHIFT;
 }
 
-bool e2d::MouseEvent::isCtrlDown() const
+bool e2d::MouseEvent::IsCtrlDown() const
 {
-	return GET_KEYSTATE_WPARAM(_wParam) == MK_CONTROL;
+	return GET_KEYSTATE_WPARAM(w_param_) == MK_CONTROL;
 }
 
-float e2d::MouseEvent::getWheelDelta() const
+float e2d::MouseEvent::GetWheelDelta() const
 {
-	return static_cast<float>(GET_WHEEL_DELTA_WPARAM(_wParam));
+	return static_cast<float>(GET_WHEEL_DELTA_WPARAM(w_param_));
 }
 
-bool e2d::MouseEvent::isLButtonDown() const
+bool e2d::MouseEvent::IsLButtonDown() const
 {
-	return GET_KEYSTATE_WPARAM(_wParam) == MK_LBUTTON;
+	return GET_KEYSTATE_WPARAM(w_param_) == MK_LBUTTON;
 }
 
-bool e2d::MouseEvent::isRButtonDown() const
+bool e2d::MouseEvent::IsRButtonDown() const
 {
-	return GET_KEYSTATE_WPARAM(_wParam) == MK_RBUTTON;
+	return GET_KEYSTATE_WPARAM(w_param_) == MK_RBUTTON;
 }
 
-bool e2d::MouseEvent::isMButtonDown() const
+bool e2d::MouseEvent::IsMButtonDown() const
 {
-	return GET_KEYSTATE_WPARAM(_wParam) == MK_MBUTTON;
+	return GET_KEYSTATE_WPARAM(w_param_) == MK_MBUTTON;
 }
 
-e2d::MouseEvent::Type e2d::MouseEvent::getType() const
+e2d::MouseEvent::Type e2d::MouseEvent::GetType() const
 {
-	return _type;
+	return type_;
 }

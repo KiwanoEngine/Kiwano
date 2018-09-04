@@ -23,38 +23,38 @@ public:
 	virtual ~Transition();
 
 	// 场景过渡动画是否结束
-	bool isDone();
+	bool IsDone();
 
 protected:
 	// 初始化场景过渡动画
-	virtual bool _init(
+	virtual bool Init(
 		Game * game,
 		Scene * prev
 	);
 
 	// 更新场景过渡动画
-	virtual void _update();
+	virtual void Update();
 
 	// 渲染场景过渡动画
-	virtual void _render();
+	virtual void Draw();
 
 	// 停止场景过渡动画
-	virtual void _stop();
+	virtual void Stop();
 
 	// 重置场景过渡动画
-	virtual void _reset() { };
+	virtual void Reset() { };
 
 protected:
-	bool	_end;
-	float	_duration;
-	float	_delta;
-	Time	_started;
-	Scene*	_outScene;
-	Scene*	_inScene;
-	ID2D1Layer * _outLayer;
-	ID2D1Layer * _inLayer;
-	D2D1_LAYER_PARAMETERS _outLayerParam;
-	D2D1_LAYER_PARAMETERS _inLayerParam;
+	bool	done_;
+	float	duration_;
+	float	delta_;
+	Time	started_;
+	Scene*	out_scene_;
+	Scene*	in_scene_;
+	ID2D1Layer * out_layer_;
+	ID2D1Layer * in_layer_;
+	D2D1_LAYER_PARAMETERS out_layer_param_;
+	D2D1_LAYER_PARAMETERS in_layer_param_;
 };
 
 
@@ -70,9 +70,9 @@ public:
 
 protected:
 	// 更新动画
-	virtual void _update() override;
+	virtual void Update() override;
 
-	virtual bool _init(
+	virtual bool Init(
 		Game * game,
 		Scene * prev
 	) override;
@@ -90,9 +90,9 @@ public:
 	);
 
 protected:
-	virtual void _update() override;
+	virtual void Update() override;
 
-	virtual bool _init(
+	virtual bool Init(
 		Game * game,
 		Scene * prev
 	) override;
@@ -110,9 +110,9 @@ public:
 	);
 
 protected:
-	virtual void _update() override;
+	virtual void Update() override;
 
-	virtual bool _init(
+	virtual bool Init(
 		Game * game,
 		Scene * prev
 	) override;
@@ -131,19 +131,19 @@ public:
 	);
 
 protected:
-	virtual void _update() override;
+	virtual void Update() override;
 
-	virtual bool _init(
+	virtual bool Init(
 		Game * game,
 		Scene * prev
 	) override;
 
-	virtual void _reset() override;
+	virtual void Reset() override;
 
 protected:
-	Direction _direction;
-	Vector2 _posDelta;
-	Point _startPos;
+	Direction	direction_;
+	Point		pos_delta_;
+	Point		start_pos_;
 };
 
 }

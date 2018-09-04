@@ -33,13 +33,19 @@ e2d::Color::Color(float r, float g, float b, float alpha)
 }
 
 e2d::Color::Color(UINT rgb)
+	: r(((rgb & sc_redMask) >> sc_redShift) / 255.f)
+	, g(((rgb & sc_greenMask) >> sc_greenShift) / 255.f)
+	, b(((rgb & sc_blueMask) >> sc_blueShift) / 255.f)
+	, a(1.f)
 {
-	_init(rgb, 1);
 }
 
 e2d::Color::Color(UINT rgb, float alpha)
+	: r(((rgb & sc_redMask) >> sc_redShift) / 255.f)
+	, g(((rgb & sc_greenMask) >> sc_greenShift) / 255.f)
+	, b(((rgb & sc_blueMask) >> sc_blueShift) / 255.f)
+	, a(alpha)
 {
-	_init(rgb, alpha);
 }
 
 e2d::Color::Color(const D2D1_COLOR_F& color)
@@ -53,12 +59,4 @@ e2d::Color::Color(const D2D1_COLOR_F& color)
 e2d::Color::operator D2D1_COLOR_F() const
 {
 	return std::move(D2D1::ColorF(r, g, b, a));
-}
-
-void e2d::Color::_init(UINT rgb, float alpha)
-{
-	r = ((rgb & sc_redMask) >> sc_redShift) / 255.f;
-	g = ((rgb & sc_greenMask) >> sc_greenShift) / 255.f;
-	b = ((rgb & sc_blueMask) >> sc_blueShift) / 255.f;
-	a = alpha;
 }

@@ -2,45 +2,45 @@
 #include "..\e2dnode.h"
 
 
-e2d::MoveBy::MoveBy(float duration, Vector2 vector)
+e2d::MoveBy::MoveBy(float duration, Point vector)
 	: FiniteTimeAction(duration)
 {
-	_deltaPos = vector;
+	delta_pos_ = vector;
 }
 
-void e2d::MoveBy::_init()
+void e2d::MoveBy::Init()
 {
-	FiniteTimeAction::_init();
+	FiniteTimeAction::Init();
 
-	if (_target)
+	if (target_)
 	{
-		_prevPos = _startPos = _target->getPos();
+		prev_pos_ = start_pos_ = target_->GetPos();
 	}
 }
 
-void e2d::MoveBy::_update()
+void e2d::MoveBy::Update()
 {
-	FiniteTimeAction::_update();
+	FiniteTimeAction::Update();
 
-	if (_target)
+	if (target_)
 	{
-		Point currentPos = _target->getPos();
-		Vector2 diff = currentPos - _prevPos;
-		_startPos = _startPos + diff;
+		Point currentPos = target_->GetPos();
+		Point diff = currentPos - prev_pos_;
+		start_pos_ = start_pos_ + diff;
 
-		Point newPos = _startPos + (_deltaPos * _delta);
-		_target->setPos(newPos);
+		Point newPos = start_pos_ + (delta_pos_ * delta_);
+		target_->SetPos(newPos);
 
-		_prevPos = newPos;
+		prev_pos_ = newPos;
 	}
 }
 
-e2d::MoveBy * e2d::MoveBy::clone() const
+e2d::MoveBy * e2d::MoveBy::Clone() const
 {
-	return new (e2d::autorelease) MoveBy(_duration, _deltaPos);
+	return new (e2d::autorelease) MoveBy(duration_, delta_pos_);
 }
 
-e2d::MoveBy * e2d::MoveBy::reverse() const
+e2d::MoveBy * e2d::MoveBy::Reverse() const
 {
-	return new (e2d::autorelease) MoveBy(_duration, -_deltaPos);
+	return new (e2d::autorelease) MoveBy(duration_, -delta_pos_);
 }

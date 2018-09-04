@@ -3,52 +3,52 @@
 #include "..\e2dnode.h"
 
 e2d::Transition::Transition(Scene* scene, float duration)
-	: _end(false)
-	, _started()
-	, _delta(0)
-	, _outScene(nullptr)
-	, _inScene(scene)
-	, _outLayer(nullptr)
-	, _inLayer(nullptr)
-	, _outLayerParam()
-	, _inLayerParam()
+	: done_(false)
+	, started_()
+	, delta_(0)
+	, out_scene_(nullptr)
+	, in_scene_(scene)
+	, out_layer_(nullptr)
+	, in_layer_(nullptr)
+	, out_layer_param_()
+	, in_layer_param_()
 {
-	_duration = std::max(duration, 0.f);
-	if (_inScene)
-		_inScene->retain();
+	duration_ = std::max(duration, 0.f);
+	if (in_scene_)
+		in_scene_->Retain();
 }
 
 e2d::Transition::~Transition()
 {
-	SafeRelease(_outLayer);
-	SafeRelease(_inLayer);
-	GC::getInstance()->safeRelease(_outScene);
-	GC::getInstance()->safeRelease(_inScene);
+	SafeRelease(out_layer_);
+	SafeRelease(in_layer_);
+	GC::GetInstance()->SafeRelease(out_scene_);
+	GC::GetInstance()->SafeRelease(in_scene_);
 }
 
-bool e2d::Transition::isDone()
+bool e2d::Transition::IsDone()
 {
-	return _end;
+	return done_;
 }
 
-bool e2d::Transition::_init(Game * game, Scene * prev)
+bool e2d::Transition::Init(Game * game, Scene * prev)
 {
-	_started = Time::now();
-	_outScene = prev;
+	started_ = Time::Now();
+	out_scene_ = prev;
 
-	if (_outScene)
-		_outScene->retain();
+	if (out_scene_)
+		out_scene_->Retain();
 	
 	HRESULT hr = S_OK;
-	auto renderer = Renderer::getInstance();
-	if (_inScene)
+	auto renderer = Renderer::GetInstance();
+	if (in_scene_)
 	{
-		hr = renderer->getRenderTarget()->CreateLayer(&_inLayer);
+		hr = renderer->GetRenderTarget()->CreateLayer(&in_layer_);
 	}
 
-	if (SUCCEEDED(hr) && _outScene)
+	if (SUCCEEDED(hr) && out_scene_)
 	{
-		hr = renderer->getRenderTarget()->CreateLayer(&_outLayer);
+		hr = renderer->GetRenderTarget()->CreateLayer(&out_layer_);
 	}
 
 	if (FAILED(hr))
@@ -56,40 +56,40 @@ bool e2d::Transition::_init(Game * game, Scene * prev)
 		return false;
 	}
 
-	_outLayerParam = _inLayerParam = D2D1::LayerParameters(
+	out_layer_param_ = in_layer_param_ = D2D1::LayerParameters(
 		D2D1::InfiniteRect(),
 		nullptr,
 		D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 		D2D1::Matrix3x2F::Identity(),
 		1.f,
-		renderer->getSolidColorBrush(),
+		renderer->GetSolidBrush(),
 		D2D1_LAYER_OPTIONS_NONE
 	);
 
 	return true;
 }
 
-void e2d::Transition::_update()
+void e2d::Transition::Update()
 {
-	if (_duration == 0)
+	if (duration_ == 0)
 	{
-		_delta = 1;
+		delta_ = 1;
 	}
 	else
 	{
-		_delta = (Time::now() - _started).seconds() / _duration;
-		_delta = std::min(_delta, 1.f);
+		delta_ = (Time::Now() - started_).Seconds() / duration_;
+		delta_ = std::min(delta_, 1.f);
 	}
 }
 
-void e2d::Transition::_render()
+void e2d::Transition::Draw()
 {
-	auto renderTarget = Renderer::getInstance()->getRenderTarget();
-	auto size = Window::getInstance()->getSize();
+	auto renderTarget = Renderer::GetInstance()->GetRenderTarget();
+	auto size = Window::GetInstance()->GetSize();
 
-	if (_outScene)
+	if (out_scene_)
 	{
-		auto rootPos = _outScene->getPos();
+		auto rootPos = out_scene_->GetPos();
 		auto clipRect = D2D1::RectF(
 			std::max(rootPos.x, 0.f),
 			std::max(rootPos.y, 0.f),
@@ -98,17 +98,17 @@ void e2d::Transition::_render()
 		);
 		renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 		renderTarget->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-		renderTarget->PushLayer(_outLayerParam, _outLayer);
+		renderTarget->PushLayer(out_layer_param_, out_layer_);
 
-		_outScene->visit();
+		out_scene_->Visit();
 
 		renderTarget->PopLayer();
 		renderTarget->PopAxisAlignedClip();
 	}
 
-	if (_inScene)
+	if (in_scene_)
 	{
-		Point rootPos = _inScene->getPos();
+		Point rootPos = in_scene_->GetPos();
 		auto clipRect = D2D1::RectF(
 			std::max(rootPos.x, 0.f),
 			std::max(rootPos.y, 0.f),
@@ -117,17 +117,17 @@ void e2d::Transition::_render()
 		);
 		renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 		renderTarget->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-		renderTarget->PushLayer(_inLayerParam, _inLayer);
+		renderTarget->PushLayer(in_layer_param_, in_layer_);
 
-		_inScene->visit();
+		in_scene_->Visit();
 
 		renderTarget->PopLayer();
 		renderTarget->PopAxisAlignedClip();
 	}
 }
 
-void e2d::Transition::_stop()
+void e2d::Transition::Stop()
 {
-	_end = true;
-	_reset();
+	done_ = true;
+	Reset();
 }

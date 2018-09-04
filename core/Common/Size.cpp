@@ -18,22 +18,22 @@ e2d::Size::Size(const Size & other)
 	height = other.height;
 }
 
-e2d::Size e2d::Size::operator+(Size const & size) const
+e2d::Size e2d::Size::operator+(const Size & other) const
 {
-	return Size(width + size.width, height + size.height);
+	return Size(width + other.width, height + other.height);
 }
 
-e2d::Size e2d::Size::operator-(Size const & size) const
+e2d::Size e2d::Size::operator-(const Size & other) const
 {
-	return Size(width - size.width, height - size.height);
+	return Size(width - other.width, height - other.height);
 }
 
-e2d::Size e2d::Size::operator*(float const & value) const
+e2d::Size e2d::Size::operator*(float value) const
 {
 	return Size(width * value, height * value);
 }
 
-e2d::Size e2d::Size::operator/(float const & value) const
+e2d::Size e2d::Size::operator/(float value) const
 {
 	return Size(width / value, height / value);
 }
@@ -48,7 +48,7 @@ e2d::Size e2d::Size::operator-() const
 	return Size(-width, -height);
 }
 
-bool e2d::Size::operator==(const Size & size) const
+bool e2d::Size::operator==(const Size & other) const
 {
-	return (width == size.width) && (height == size.height);
+	return (width == other.width) && (height == other.height);
 }

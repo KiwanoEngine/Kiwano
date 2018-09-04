@@ -3,103 +3,103 @@
 #include "..\e2dnode.h"
 
 e2d::Collider::Collider(Node * parent)
-	: _visible(true)
-	, _color(Color::Blue, 0.6f)
-	, _parentNode(parent)
-	, _geometry(nullptr)
-	, _enabled(true)
-	, _shape(Collider::Shape::None)
-	, _notify(true)
+	: visible_(true)
+	, border_color_(Color::Blue, 0.6f)
+	, parent_node_(parent)
+	, geometry_(nullptr)
+	, enabled_(true)
+	, shape_(Collider::Shape::None)
+	, notify_(true)
 {
 }
 
 e2d::Collider::~Collider()
 {
-	SafeRelease(_geometry);
+	SafeRelease(geometry_);
 }
 
-e2d::Color e2d::Collider::getColor() const
+const e2d::Color& e2d::Collider::GetBorderColor() const
 {
-	return _color;
+	return border_color_;
 }
 
-e2d::Collider::Shape e2d::Collider::getShape() const
+e2d::Collider::Shape e2d::Collider::GetShape() const
 {
-	return _shape;
+	return shape_;
 }
 
-e2d::Node * e2d::Collider::getNode() const
+e2d::Node * e2d::Collider::GetNode() const
 {
-	return _parentNode;
+	return parent_node_;
 }
 
-ID2D1Geometry * e2d::Collider::getGeometry() const
+ID2D1Geometry * e2d::Collider::GetGeometry() const
 {
-	return _geometry;
+	return geometry_;
 }
 
-void e2d::Collider::setShape(Shape shape)
+void e2d::Collider::SetShape(Shape shape)
 {
-	if (_shape == shape)
+	if (shape_ == shape)
 		return;
 
-	_shape = shape;
+	shape_ = shape;
 	if (shape == Shape::None)
 	{
-		SafeRelease(_geometry);
-		CollisionManager::getInstance()->__removeCollider(this);
+		SafeRelease(geometry_);
+		CollisionManager::GetInstance()->RemoveCollider(this);
 	}
 	else
 	{
-		this->recreate();
-		CollisionManager::getInstance()->__addCollider(this);
+		this->Recreate();
+		CollisionManager::GetInstance()->AddCollider(this);
 	}
 }
 
-void e2d::Collider::setCollisionNotify(bool notify)
+void e2d::Collider::SetCollisionNotify(bool notify)
 {
-	_notify = notify;
+	notify_ = notify;
 }
 
-void e2d::Collider::setEnabled(bool enabled)
+void e2d::Collider::SetEnabled(bool enabled)
 {
-	_enabled = enabled;
+	enabled_ = enabled;
 }
 
-void e2d::Collider::setVisible(bool visible)
+void e2d::Collider::SetVisible(bool visible)
 {
-	_visible = visible;
+	visible_ = visible;
 }
 
-void e2d::Collider::setColor(Color color)
+void e2d::Collider::SetBorderColor(const Color& color)
 {
-	_color = color;
+	border_color_ = color;
 }
 
-void e2d::Collider::render()
+void e2d::Collider::Draw()
 {
-	if (_geometry && _enabled && _visible)
+	if (geometry_ && enabled_ && visible_)
 	{
-		auto renderer = Renderer::getInstance();
+		auto renderer = Renderer::GetInstance();
 		// 获取纯色画刷
-		ID2D1SolidColorBrush * brush = renderer->getSolidColorBrush();
+		ID2D1SolidColorBrush * brush = renderer->GetSolidBrush();
 		// 设置画刷颜色和透明度
-		brush->SetColor((D2D1_COLOR_F)_color);
+		brush->SetColor((D2D1_COLOR_F)border_color_);
 		brush->SetOpacity(1.f);
 		// 绘制几何碰撞体
-		renderer->getRenderTarget()->DrawGeometry(_geometry, brush, 1.5f);
+		renderer->GetRenderTarget()->DrawGeometry(geometry_, brush, 1.5f);
 	}
 }
 
-e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * collider) const
+e2d::Collider::Relation e2d::Collider::GetRelationWith(Collider * collider) const
 {
-	if (_geometry && collider->_geometry)
+	if (geometry_ && collider->geometry_)
 	{
-		if (_enabled && collider->_enabled)
+		if (enabled_ && collider->enabled_)
 		{
 			D2D1_GEOMETRY_RELATION relation;
-			_geometry->CompareWithGeometry(
-				collider->_geometry,
+			geometry_->CompareWithGeometry(
+				collider->geometry_,
 				D2D1::Matrix3x2F::Identity(),
 				&relation
 			);
@@ -110,66 +110,66 @@ e2d::Collider::Relation e2d::Collider::getRelationWith(Collider * collider) cons
 	return Relation::Unknown;
 }
 
-bool e2d::Collider::isEnabled() const
+bool e2d::Collider::IsEnabled() const
 {
-	return _enabled;
+	return enabled_;
 }
 
-bool e2d::Collider::isVisible() const
+bool e2d::Collider::IsVisible() const
 {
-	return _visible;
+	return visible_;
 }
 
-bool e2d::Collider::isCollisionNotify() const
+bool e2d::Collider::IsCollisionNotify() const
 {
-	return _notify;
+	return notify_;
 }
 
-void e2d::Collider::recreate()
+void e2d::Collider::Recreate()
 {
-	if (!_enabled || _shape == Shape::None)
+	if (!enabled_ || shape_ == Shape::None)
 		return;
 
-	SafeRelease(_geometry);
-	auto factory = Renderer::getFactory();
+	SafeRelease(geometry_);
+	auto factory = Renderer::GetFactory();
 
-	switch (_shape)
+	switch (shape_)
 	{
 	case Shape::Rect:
 	{
 		ID2D1RectangleGeometry* rectangle = nullptr;
 		factory->CreateRectangleGeometry(
-			D2D1::RectF(0, 0, _parentNode->getRealWidth(), _parentNode->getRealHeight()),
+			D2D1::RectF(0, 0, parent_node_->GetRealWidth(), parent_node_->GetRealHeight()),
 			&rectangle
 		);
-		_geometry = rectangle;
+		geometry_ = rectangle;
 	}
 	break;
 
 	case Shape::Circle:
 	{
-		float minSide = std::min(_parentNode->getRealWidth(), _parentNode->getRealHeight());
+		float minSide = std::min(parent_node_->GetRealWidth(), parent_node_->GetRealHeight());
 
 		ID2D1EllipseGeometry* circle = nullptr;
 		factory->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				D2D1::Point2F(
-					_parentNode->getRealWidth() / 2,
-					_parentNode->getRealHeight() / 2
+					parent_node_->GetRealWidth() / 2,
+					parent_node_->GetRealHeight() / 2
 				),
 				minSide / 2,
 				minSide / 2
 			),
 			&circle
 		);
-		_geometry = circle;
+		geometry_ = circle;
 	}
 	break;
 
 	case Shape::Ellipse:
 	{
-		float halfWidth = _parentNode->getWidth() / 2,
-			halfHeight = _parentNode->getHeight() / 2;
+		float halfWidth = parent_node_->GetWidth() / 2,
+			halfHeight = parent_node_->GetHeight() / 2;
 
 		ID2D1EllipseGeometry* ellipse = nullptr;
 		factory->CreateEllipseGeometry(
@@ -181,17 +181,17 @@ void e2d::Collider::recreate()
 				halfHeight),
 			&ellipse
 		);
-		_geometry = ellipse;
+		geometry_ = ellipse;
 	}
 	break;
 	}
 
 	ID2D1TransformedGeometry * transformed;
 	factory->CreateTransformedGeometry(
-		_geometry,
-		_parentNode->_finalMatri,
+		geometry_,
+		parent_node_->final_matrix_,
 		&transformed
 	);
-	SafeRelease(_geometry);
-	_geometry = transformed;
+	SafeRelease(geometry_);
+	geometry_ = transformed;
 }

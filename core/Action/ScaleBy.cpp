@@ -5,44 +5,44 @@
 e2d::ScaleBy::ScaleBy(float duration, float scale)
 	: FiniteTimeAction(duration)
 {
-	_deltaX = scale;
-	_deltaY = scale;
+	delta_x_ = scale;
+	delta_y_ = scale;
 }
 
-e2d::ScaleBy::ScaleBy(float duration, float scaleX, float scaleY)
+e2d::ScaleBy::ScaleBy(float duration, float scale_x, float scale_y)
 	: FiniteTimeAction(duration)
 {
-	_deltaX = scaleX;
-	_deltaY = scaleY;
+	delta_x_ = scale_x;
+	delta_y_ = scale_y;
 }
 
-void e2d::ScaleBy::_init()
+void e2d::ScaleBy::Init()
 {
-	FiniteTimeAction::_init();
+	FiniteTimeAction::Init();
 
-	if (_target)
+	if (target_)
 	{
-		_startScaleX = _target->getScaleX();
-		_startScaleY = _target->getScaleY();
+		start_scale_x_ = target_->GetScaleX();
+		start_scale_y_ = target_->GetScaleY();
 	}
 }
 
-void e2d::ScaleBy::_update()
+void e2d::ScaleBy::Update()
 {
-	FiniteTimeAction::_update();
+	FiniteTimeAction::Update();
 
-	if (_target)
+	if (target_)
 	{
-		_target->setScale(_startScaleX + _deltaX * _delta, _startScaleY + _deltaY * _delta);
+		target_->SetScale(start_scale_x_ + delta_x_ * delta_, start_scale_y_ + delta_y_ * delta_);
 	}
 }
 
-e2d::ScaleBy * e2d::ScaleBy::clone() const
+e2d::ScaleBy * e2d::ScaleBy::Clone() const
 {
-	return new (e2d::autorelease) ScaleBy(_duration, _deltaX, _deltaY);
+	return new (e2d::autorelease) ScaleBy(duration_, delta_x_, delta_y_);
 }
 
-e2d::ScaleBy * e2d::ScaleBy::reverse() const
+e2d::ScaleBy * e2d::ScaleBy::Reverse() const
 {
-	return new (e2d::autorelease) ScaleBy(_duration, -_deltaX, -_deltaY);
+	return new (e2d::autorelease) ScaleBy(duration_, -delta_x_, -delta_y_);
 }

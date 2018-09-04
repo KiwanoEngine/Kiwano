@@ -2,17 +2,17 @@
 
 
 e2d::Exception::Exception() E2D_NOEXCEPT
-	: _message()
+	: message_()
 {
 }
 
 e2d::Exception::Exception(const char * message) E2D_NOEXCEPT
-	: _message(message)
+	: message_(message)
 {
 }
 
 e2d::Exception::Exception(Exception const& other) E2D_NOEXCEPT
-	: _message(other._message)
+	: message_(other.message_)
 {
 }
 
@@ -23,7 +23,7 @@ e2d::Exception& e2d::Exception::operator=(Exception const& other) E2D_NOEXCEPT
 		return *this;
 	}
 
-	_message = other._message;
+	message_ = other.message_;
 	return *this;
 }
 
@@ -31,7 +31,7 @@ e2d::Exception::~Exception() E2D_NOEXCEPT
 {
 }
 
-const char * e2d::Exception::msg() const
+const char * e2d::Exception::GetMsg() const
 {
-	return _message;
+	return message_;
 }

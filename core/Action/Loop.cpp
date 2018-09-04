@@ -2,29 +2,29 @@
 #include "..\e2dmanager.h"
 
 e2d::Loop::Loop(Action * action, int times /* = -1 */)
-	: _action(action)
-	, _times(0)
-	, _totalTimes(times)
+	: action_(action)
+	, times_(0)
+	, total_times_(times)
 {
 	WARN_IF(action == nullptr, "Loop NULL pointer exception!");
 
 	if (action)
 	{
-		_action = action;
-		_action->retain();
+		action_ = action;
+		action_->Retain();
 	}
 }
 
 e2d::Loop::~Loop()
 {
-	GC::getInstance()->safeRelease(_action);
+	GC::GetInstance()->SafeRelease(action_);
 }
 
-e2d::Loop * e2d::Loop::clone() const
+e2d::Loop * e2d::Loop::Clone() const
 {
-	if (_action)
+	if (action_)
 	{
-		return new (e2d::autorelease) Loop(_action->clone());
+		return new (e2d::autorelease) Loop(action_->Clone());
 	}
 	else
 	{
@@ -32,11 +32,11 @@ e2d::Loop * e2d::Loop::clone() const
 	}
 }
 
-e2d::Loop * e2d::Loop::reverse() const
+e2d::Loop * e2d::Loop::Reverse() const
 {
-	if (_action)
+	if (action_)
 	{
-		return new (e2d::autorelease) Loop(_action->clone());
+		return new (e2d::autorelease) Loop(action_->Clone());
 	}
 	else
 	{
@@ -44,54 +44,54 @@ e2d::Loop * e2d::Loop::reverse() const
 	}
 }
 
-void e2d::Loop::_init()
+void e2d::Loop::Init()
 {
-	Action::_init();
+	Action::Init();
 
-	if (_action)
+	if (action_)
 	{
-		_action->_target = _target;
-		_action->_init();
+		action_->target_ = target_;
+		action_->Init();
 	}
 }
 
-void e2d::Loop::_update()
+void e2d::Loop::Update()
 {
-	Action::_update();
+	Action::Update();
 
-	if (_times == _totalTimes)
+	if (times_ == total_times_)
 	{
-		this->stop();
+		this->Stop();
 		return;
 	}
 
-	if (_action)
+	if (action_)
 	{
-		_action->_update();
+		action_->Update();
 
-		if (_action->_isDone())
+		if (action_->IsDone())
 		{
-			++_times;
+			++times_;
 
-			Action::reset();
-			_action->reset();
+			Action::Reset();
+			action_->Reset();
 		}
 	}
 	else
 	{
-		this->stop();
+		this->Stop();
 	}
 }
 
-void e2d::Loop::reset()
+void e2d::Loop::Reset()
 {
-	Action::reset();
+	Action::Reset();
 
-	if (_action) _action->reset();
-	_times = 0;
+	if (action_) action_->Reset();
+	times_ = 0;
 }
 
-void e2d::Loop::_resetTime()
+void e2d::Loop::ResetTime()
 {
-	if (_action) _action->_resetTime();
+	if (action_) action_->ResetTime();
 }

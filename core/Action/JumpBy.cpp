@@ -1,53 +1,53 @@
 #include "..\e2daction.h"
 #include "..\e2dnode.h"
 
-e2d::JumpBy::JumpBy(float duration, const Vector2 & vec, float height, int jumps)
+e2d::JumpBy::JumpBy(float duration, const Point & vec, float height, int jumps)
 	: FiniteTimeAction(duration)
-	, _deltaPos(vec)
-	, _height(height)
-	, _jumps(jumps)
+	, delta_pos_(vec)
+	, height_(height)
+	, jumps_(jumps)
 {
 }
 
-e2d::JumpBy * e2d::JumpBy::clone() const
+e2d::JumpBy * e2d::JumpBy::Clone() const
 {
-	return new (e2d::autorelease) JumpBy(_duration, _deltaPos, _height, _jumps);
+	return new (e2d::autorelease) JumpBy(duration_, delta_pos_, height_, jumps_);
 }
 
-e2d::JumpBy * e2d::JumpBy::reverse() const
+e2d::JumpBy * e2d::JumpBy::Reverse() const
 {
-	return new (e2d::autorelease) JumpBy(_duration, -_deltaPos, _height, _jumps);
+	return new (e2d::autorelease) JumpBy(duration_, -delta_pos_, height_, jumps_);
 }
 
-void e2d::JumpBy::_init()
+void e2d::JumpBy::Init()
 {
-	FiniteTimeAction::_init();
+	FiniteTimeAction::Init();
 
-	if (_target)
+	if (target_)
 	{
-		_prevPos = _startPos = _target->getPos();
+		prev_pos_ = start_pos_ = target_->GetPos();
 	}
 }
 
-void e2d::JumpBy::_update()
+void e2d::JumpBy::Update()
 {
-	FiniteTimeAction::_update();
+	FiniteTimeAction::Update();
 
-	if (_target)
+	if (target_)
 	{
-		float frac = fmod(_delta * _jumps, 1.f);
-		float x = _deltaPos.x * _delta;
-		float y = _height * 4 * frac * (1 - frac);
-		y += _deltaPos.y * _delta;
+		float frac = fmod(delta_ * jumps_, 1.f);
+		float x = delta_pos_.x * delta_;
+		float y = height_ * 4 * frac * (1 - frac);
+		y += delta_pos_.y * delta_;
 
-		Point currentPos = _target->getPos();
+		Point currentPos = target_->GetPos();
 
-		Vector2 diff = currentPos - _prevPos;
-		_startPos = diff + _startPos;
+		Point diff = currentPos - prev_pos_;
+		start_pos_ = diff + start_pos_;
 
-		Point newPos = _startPos + Vector2(x, y);
-		_target->setPos(newPos);
+		Point newPos = start_pos_ + Point(x, y);
+		target_->SetPos(newPos);
 
-		_prevPos = newPos;
+		prev_pos_ = newPos;
 	}
 }

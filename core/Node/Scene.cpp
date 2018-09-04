@@ -3,40 +3,40 @@
 #include "..\e2dmanager.h"
 
 e2d::Scene::Scene()
-	: _borderVisible(false)
-	, _colliderVisible(false)
+	: border_visible_(false)
+	, collider_visible_(false)
 {
-	_parentScene = this;
+	parent_scene_ = this;
 }
 
 e2d::Scene::~Scene()
 {
 }
 
-void e2d::Scene::showBorder(bool visible)
+void e2d::Scene::ShowBorder(bool visible)
 {
-	_borderVisible = visible;
+	border_visible_ = visible;
 }
 
-void e2d::Scene::showCollider(bool visible)
+void e2d::Scene::ShowCollider(bool visible)
 {
-	_colliderVisible = visible;
+	collider_visible_ = visible;
 }
 
-void e2d::Scene::visit()
+void e2d::Scene::Visit()
 {
-	Node::visit();
+	Node::Visit();
 
-	if (_borderVisible)
+	if (border_visible_)
 	{
-		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-		Renderer::getInstance()->getSolidColorBrush()->SetOpacity(1.f);
-		this->_drawBorder();
+		Renderer::GetInstance()->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+		Renderer::GetInstance()->GetSolidBrush()->SetOpacity(1.f);
+		this->DrawBorder();
 	}
 
-	if (_colliderVisible)
+	if (collider_visible_)
 	{
-		Renderer::getInstance()->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-		this->_drawCollider();
+		Renderer::GetInstance()->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+		this->DrawCollider();
 	}
 }

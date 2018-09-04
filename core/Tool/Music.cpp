@@ -23,65 +23,65 @@ inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
 
 
 e2d::Music::Music()
-	: _opened(false)
-	, _wfx(nullptr)
-	, _hmmio(nullptr)
-	, _resBuffer(nullptr)
-	, _waveData(nullptr)
-	, _dwSize(0)
-	, _voice(nullptr)
-	, _voiceCallback()
+	: opened_(false)
+	, wfx_(nullptr)
+	, hmmio_(nullptr)
+	, buffer_(nullptr)
+	, wave_data_(nullptr)
+	, size_(0)
+	, voice_(nullptr)
+	, callback_()
 {
 }
 
-e2d::Music::Music(const e2d::String & filePath)
-	: _opened(false)
-	, _wfx(nullptr)
-	, _hmmio(nullptr)
-	, _resBuffer(nullptr)
-	, _waveData(nullptr)
-	, _dwSize(0)
-	, _voice(nullptr)
-	, _voiceCallback()
+e2d::Music::Music(const e2d::String & file_path)
+	: opened_(false)
+	, wfx_(nullptr)
+	, hmmio_(nullptr)
+	, buffer_(nullptr)
+	, wave_data_(nullptr)
+	, size_(0)
+	, voice_(nullptr)
+	, callback_()
 {
-	this->open(filePath);
+	this->Open(file_path);
 }
 
 e2d::Music::Music(const Resource& res)
-	: _opened(false)
-	, _wfx(nullptr)
-	, _hmmio(nullptr)
-	, _resBuffer(nullptr)
-	, _waveData(nullptr)
-	, _dwSize(0)
-	, _voice(nullptr)
-	, _voiceCallback()
+	: opened_(false)
+	, wfx_(nullptr)
+	, hmmio_(nullptr)
+	, buffer_(nullptr)
+	, wave_data_(nullptr)
+	, size_(0)
+	, voice_(nullptr)
+	, callback_()
 {
-	this->open(res);
+	this->Open(res);
 }
 
 e2d::Music::~Music()
 {
-	close();
+	Close();
 }
 
-bool e2d::Music::open(const e2d::String & filePath)
+bool e2d::Music::Open(const e2d::String & file_path)
 {
-	if (_opened)
+	if (opened_)
 	{
-		close();
+		Close();
 	}
 
-	if (filePath.isEmpty())
+	if (file_path.IsEmpty())
 	{
-		WARN("MusicInfo::open Invalid file name.");
+		WARN("MusicInfo::Open Invalid file name.");
 		return false;
 	}
 
-	String actualFilePath = File(filePath).getPath();
-	if (actualFilePath.isEmpty())
+	String actualFilePath = File(file_path).GetPath();
+	if (actualFilePath.IsEmpty())
 	{
-		WARN("MusicInfo::open File not found.");
+		WARN("MusicInfo::Open File not found.");
 		return false;
 	}
 
@@ -89,13 +89,13 @@ bool e2d::Music::open(const e2d::String & filePath)
 	wchar_t pFilePath[MAX_PATH];
 	if (!_findMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)actualFilePath))
 	{
-		WARN("Failed to find media file: %s", pFilePath);
+		WARN("Failed to Find media file: %s", pFilePath);
 		return false;
 	}
 
-	_hmmio = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
+	hmmio_ = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
 
-	if (nullptr == _hmmio)
+	if (nullptr == hmmio_)
 	{
 		return TraceError(L"mmioOpen");
 	}
@@ -103,46 +103,46 @@ bool e2d::Music::open(const e2d::String & filePath)
 	if (!_readMMIO())
 	{
 		// 读取非 wave 文件时 ReadMMIO 调用失败
-		mmioClose(_hmmio, 0);
+		mmioClose(hmmio_, 0);
 		return TraceError(L"ReadMMIO");
 	}
 
 	if (!_resetFile())
 		return TraceError(L"ResetFile");
 
-	// 重置文件后，wave 文件的大小是 _ck.cksize
-	_dwSize = _ck.cksize;
+	// 重置文件后，wave 文件的大小是 ck_.cksize
+	size_ = ck_.cksize;
 
 	// 将样本数据读取到内存中
-	_waveData = new BYTE[_dwSize];
+	wave_data_ = new BYTE[size_];
 
-	if (!_read(_waveData, _dwSize))
+	if (!_read(wave_data_, size_))
 	{
 		TraceError(L"Failed to read WAV data");
-		SAFE_DELETE_ARRAY(_waveData);
+		SAFE_DELETE_ARRAY(wave_data_);
 		return false;
 	}
 
 	// 创建音源
-	auto xAudio2 = Audio::getInstance()->getXAudio2();
-	HRESULT hr = xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
+	auto xAudio2 = Audio::GetInstance()->GetXAudio2();
+	HRESULT hr = xAudio2->CreateSourceVoice(&voice_, wfx_, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &callback_);
 
 	if (FAILED(hr))
 	{
 		TraceError(L"Create source voice error", hr);
-		SAFE_DELETE_ARRAY(_waveData);
+		SAFE_DELETE_ARRAY(wave_data_);
 		return false;
 	}
 
-	_opened = true;
+	opened_ = true;
 	return true;
 }
 
-bool e2d::Music::open(const Resource& res)
+bool e2d::Music::Open(const Resource& res)
 {
-	if (_opened)
+	if (opened_)
 	{
-		close();
+		Close();
 	}
 
 	HRSRC hResInfo;
@@ -150,7 +150,7 @@ bool e2d::Music::open(const Resource& res)
 	DWORD dwSize;
 	void* pvRes;
 
-	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(res.resNameId), (LPCWSTR)res.resType)))
+	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(res.name), (LPCWSTR)res.type)))
 		return TraceError(L"FindResource");
 
 	if (nullptr == (hResData = LoadResource(HINST_THISCOMPONENT, hResInfo)))
@@ -162,18 +162,18 @@ bool e2d::Music::open(const Resource& res)
 	if (nullptr == (pvRes = LockResource(hResData)))
 		return TraceError(L"LockResource");
 
-	_resBuffer = new CHAR[dwSize];
-	memcpy(_resBuffer, pvRes, dwSize);
+	buffer_ = new CHAR[dwSize];
+	memcpy(buffer_, pvRes, dwSize);
 
 	MMIOINFO mmioInfo;
 	ZeroMemory(&mmioInfo, sizeof(mmioInfo));
 	mmioInfo.fccIOProc = FOURCC_MEM;
 	mmioInfo.cchBuffer = dwSize;
-	mmioInfo.pchBuffer = (CHAR*)_resBuffer;
+	mmioInfo.pchBuffer = (CHAR*)buffer_;
 
-	_hmmio = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
+	hmmio_ = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
 
-	if (nullptr == _hmmio)
+	if (nullptr == hmmio_)
 	{
 		return TraceError(L"mmioOpen");
 	}
@@ -181,171 +181,171 @@ bool e2d::Music::open(const Resource& res)
 	if (!_readMMIO())
 	{
 		// 读取非 wave 文件时 ReadMMIO 调用失败
-		mmioClose(_hmmio, 0);
+		mmioClose(hmmio_, 0);
 		return TraceError(L"ReadMMIO");
 	}
 
 	if (!_resetFile())
 		return TraceError(L"ResetFile");
 
-	// 重置文件后，wave 文件的大小是 _ck.cksize
-	_dwSize = _ck.cksize;
+	// 重置文件后，wave 文件的大小是 ck_.cksize
+	size_ = ck_.cksize;
 
 	// 将样本数据读取到内存中
-	_waveData = new BYTE[_dwSize];
+	wave_data_ = new BYTE[size_];
 
-	if (!_read(_waveData, _dwSize))
+	if (!_read(wave_data_, size_))
 	{
 		TraceError(L"Failed to read WAV data");
-		SAFE_DELETE_ARRAY(_waveData);
+		SAFE_DELETE_ARRAY(wave_data_);
 		return false;
 	}
 
 	// 创建音源
-	auto xAudio2 = Audio::getInstance()->getXAudio2();
-	HRESULT hr = xAudio2->CreateSourceVoice(&_voice, _wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &_voiceCallback);
+	auto xAudio2 = Audio::GetInstance()->GetXAudio2();
+	HRESULT hr = xAudio2->CreateSourceVoice(&voice_, wfx_, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &callback_);
 
 	if (FAILED(hr))
 	{
 		TraceError(L"Create source voice error", hr);
-		SAFE_DELETE_ARRAY(_waveData);
+		SAFE_DELETE_ARRAY(wave_data_);
 		return false;
 	}
 
-	_opened = true;
+	opened_ = true;
 	return true;
 }
 
-bool e2d::Music::play(int nLoopCount)
+bool e2d::Music::Play(int loop_count)
 {
-	if (!_opened)
+	if (!opened_)
 	{
-		WARN("Music::play Failed: Music must be opened first!");
+		WARN("Music::Play Failed: Music must be opened first!");
 		return false;
 	}
 
-	if (_voice == nullptr)
+	if (voice_ == nullptr)
 	{
-		WARN("Music::play Failed: IXAudio2SourceVoice Null pointer exception!");
+		WARN("Music::Play Failed: IXAudio2SourceVoice Null pointer exception!");
 		return false;
 	}
 
 	XAUDIO2_VOICE_STATE state;
-	_voice->GetState(&state);
+	voice_->GetState(&state);
 	if (state.BuffersQueued)
 	{
-		stop();
+		Stop();
 	}
 
-	nLoopCount = std::min(nLoopCount, XAUDIO2_LOOP_INFINITE - 1);
-	nLoopCount = (nLoopCount < 0) ? XAUDIO2_LOOP_INFINITE : nLoopCount;
+	loop_count = std::min(loop_count, XAUDIO2_LOOP_INFINITE - 1);
+	loop_count = (loop_count < 0) ? XAUDIO2_LOOP_INFINITE : loop_count;
 
 	// 提交 wave 样本数据
 	XAUDIO2_BUFFER buffer = { 0 };
-	buffer.pAudioData = _waveData;
+	buffer.pAudioData = wave_data_;
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.AudioBytes = _dwSize;
-	buffer.LoopCount = nLoopCount;
+	buffer.AudioBytes = size_;
+	buffer.LoopCount = loop_count;
 
 	HRESULT hr;
-	if (FAILED(hr = _voice->SubmitSourceBuffer(&buffer)))
+	if (FAILED(hr = voice_->SubmitSourceBuffer(&buffer)))
 	{
 		TraceError(L"Submitting source buffer error", hr);
-		_voice->DestroyVoice();
-		SAFE_DELETE_ARRAY(_waveData);
+		voice_->DestroyVoice();
+		SAFE_DELETE_ARRAY(wave_data_);
 		return false;
 	}
 
-	hr = _voice->Start(0);
+	hr = voice_->Start(0);
 
 	return SUCCEEDED(hr);
 }
 
-void e2d::Music::pause()
+void e2d::Music::Pause()
 {
-	if (_voice)
+	if (voice_)
 	{
-		_voice->Stop();
+		voice_->Stop();
 	}
 }
 
-void e2d::Music::resume()
+void e2d::Music::Resume()
 {
-	if (_voice)
+	if (voice_)
 	{
-		_voice->Start();
+		voice_->Start();
 	}
 }
 
-void e2d::Music::stop()
+void e2d::Music::Stop()
 {
-	if (_voice)
+	if (voice_)
 	{
-		if (SUCCEEDED(_voice->Stop()))
+		if (SUCCEEDED(voice_->Stop()))
 		{
-			_voice->ExitLoop();
-			_voice->FlushSourceBuffers();
+			voice_->ExitLoop();
+			voice_->FlushSourceBuffers();
 		}
 	}
 }
 
-void e2d::Music::close()
+void e2d::Music::Close()
 {
-	if (_voice)
+	if (voice_)
 	{
-		_voice->Stop();
-		_voice->FlushSourceBuffers();
-		_voice->DestroyVoice();
-		_voice = nullptr;
+		voice_->Stop();
+		voice_->FlushSourceBuffers();
+		voice_->DestroyVoice();
+		voice_ = nullptr;
 	}
 
-	if (_hmmio != nullptr)
+	if (hmmio_ != nullptr)
 	{
-		mmioClose(_hmmio, 0);
-		_hmmio = nullptr;
+		mmioClose(hmmio_, 0);
+		hmmio_ = nullptr;
 	}
 
-	SAFE_DELETE_ARRAY(_resBuffer);
-	SAFE_DELETE_ARRAY(_waveData);
-	SAFE_DELETE_ARRAY(_wfx);
+	SAFE_DELETE_ARRAY(buffer_);
+	SAFE_DELETE_ARRAY(wave_data_);
+	SAFE_DELETE_ARRAY(wfx_);
 
-	_opened = false;
+	opened_ = false;
 }
 
-bool e2d::Music::isPlaying() const
+bool e2d::Music::IsPlaying() const
 {
-	if (_opened && _voice)
+	if (opened_ && voice_)
 	{
 		XAUDIO2_VOICE_STATE state;
-		_voice->GetState(&state);
+		voice_->GetState(&state);
 		if (state.BuffersQueued)
 			return true;
 	}
 	return false;
 }
 
-IXAudio2SourceVoice * e2d::Music::getIXAudio2SourceVoice() const
+IXAudio2SourceVoice * e2d::Music::GetSourceVoice() const
 {
-	return _voice;
+	return voice_;
 }
 
-bool e2d::Music::setVolume(float volume)
+bool e2d::Music::SetVolume(float volume)
 {
-	if (_voice)
+	if (voice_)
 	{
-		return SUCCEEDED(_voice->SetVolume(volume));
+		return SUCCEEDED(voice_->SetVolume(volume));
 	}
 	return false;
 }
 
-void e2d::Music::setFuncOnEnd(const Function & func)
+void e2d::Music::SetCallbackOnEnd(const Function & func)
 {
-	_voiceCallback.SetFuncOnStreamEnd(func);
+	callback_.SetCallbackOnStreamEnd(func);
 }
 
-void e2d::Music::setFuncOnLoopEnd(const Function & func)
+void e2d::Music::SetCallbackOnLoopEnd(const Function & func)
 {
-	_voiceCallback.SetFuncOnLoopEnd(func);
+	callback_.SetCallbackOnLoopEnd(func);
 }
 
 bool e2d::Music::_readMMIO()
@@ -355,19 +355,19 @@ bool e2d::Music::_readMMIO()
 
 	memset(&ckIn, 0, sizeof(ckIn));
 
-	_wfx = nullptr;
+	wfx_ = nullptr;
 
-	if ((0 != mmioDescend(_hmmio, &_ckRiff, nullptr, 0)))
+	if ((0 != mmioDescend(hmmio_, &ck_riff_, nullptr, 0)))
 		return TraceError(L"mmioDescend");
 
 	// 确认文件是一个合法的 wave 文件
-	if ((_ckRiff.ckid != FOURCC_RIFF) ||
-		(_ckRiff.fccType != mmioFOURCC('W', 'A', 'V', 'E')))
+	if ((ck_riff_.ckid != FOURCC_RIFF) ||
+		(ck_riff_.fccType != mmioFOURCC('W', 'A', 'V', 'E')))
 		return TraceError(L"mmioFOURCC");
 
 	// 在输入文件中查找 'fmt' 块
 	ckIn.ckid = mmioFOURCC('f', 'm', 't', ' ');
-	if (0 != mmioDescend(_hmmio, &ckIn, &_ckRiff, MMIO_FINDCHUNK))
+	if (0 != mmioDescend(hmmio_, &ckIn, &ck_riff_, MMIO_FINDCHUNK))
 		return TraceError(L"mmioDescend");
 
 	// 'fmt' 块至少应和 PCMWAVEFORMAT 一样大
@@ -375,7 +375,7 @@ bool e2d::Music::_readMMIO()
 		return TraceError(L"sizeof(PCMWAVEFORMAT)");
 
 	// 将 'fmt' 块读取到 pcmWaveFormat 中
-	if (mmioRead(_hmmio, (HPSTR)&pcmWaveFormat,
+	if (mmioRead(hmmio_, (HPSTR)&pcmWaveFormat,
 		sizeof(pcmWaveFormat)) != sizeof(pcmWaveFormat))
 		return TraceError(L"mmioRead");
 
@@ -383,37 +383,37 @@ bool e2d::Music::_readMMIO()
 	// 的数据，这个数据就是额外分配的大小
 	if (pcmWaveFormat.wf.wFormatTag == WAVE_FORMAT_PCM)
 	{
-		_wfx = (WAVEFORMATEX*) new CHAR[sizeof(WAVEFORMATEX)];
+		wfx_ = (WAVEFORMATEX*) new CHAR[sizeof(WAVEFORMATEX)];
 
 		// 拷贝数据
-		memcpy(_wfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
-		_wfx->cbSize = 0;
+		memcpy(wfx_, &pcmWaveFormat, sizeof(pcmWaveFormat));
+		wfx_->cbSize = 0;
 	}
 	else
 	{
 		// 读取额外数据的大小
 		WORD cbExtraBytes = 0L;
-		if (mmioRead(_hmmio, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD))
+		if (mmioRead(hmmio_, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD))
 			return TraceError(L"mmioRead");
 
-		_wfx = (WAVEFORMATEX*) new CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
+		wfx_ = (WAVEFORMATEX*) new CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
 
 		// 拷贝数据
-		memcpy(_wfx, &pcmWaveFormat, sizeof(pcmWaveFormat));
-		_wfx->cbSize = cbExtraBytes;
+		memcpy(wfx_, &pcmWaveFormat, sizeof(pcmWaveFormat));
+		wfx_->cbSize = cbExtraBytes;
 
 		// 读取额外数据
-		if (mmioRead(_hmmio, (CHAR*)(((BYTE*)&(_wfx->cbSize)) + sizeof(WORD)),
+		if (mmioRead(hmmio_, (CHAR*)(((BYTE*)&(wfx_->cbSize)) + sizeof(WORD)),
 			cbExtraBytes) != cbExtraBytes)
 		{
-			SAFE_DELETE(_wfx);
+			SAFE_DELETE(wfx_);
 			return TraceError(L"mmioRead");
 		}
 	}
 
-	if (0 != mmioAscend(_hmmio, &ckIn, 0))
+	if (0 != mmioAscend(hmmio_, &ckIn, 0))
 	{
-		SAFE_DELETE(_wfx);
+		SAFE_DELETE(wfx_);
 		return TraceError(L"mmioAscend");
 	}
 
@@ -423,37 +423,37 @@ bool e2d::Music::_readMMIO()
 bool e2d::Music::_resetFile()
 {
 	// Seek to the data
-	if (-1 == mmioSeek(_hmmio, _ckRiff.dwDataOffset + sizeof(FOURCC),
+	if (-1 == mmioSeek(hmmio_, ck_riff_.dwDataOffset + sizeof(FOURCC),
 		SEEK_SET))
 		return TraceError(L"mmioSeek");
 
 	// Search the input file for the 'data' chunk.
-	_ck.ckid = mmioFOURCC('d', 'a', 't', 'a');
-	if (0 != mmioDescend(_hmmio, &_ck, &_ckRiff, MMIO_FINDCHUNK))
+	ck_.ckid = mmioFOURCC('d', 'a', 't', 'a');
+	if (0 != mmioDescend(hmmio_, &ck_, &ck_riff_, MMIO_FINDCHUNK))
 		return TraceError(L"mmioDescend");
 
 	return true;
 }
 
-bool e2d::Music::_read(BYTE* pBuffer, DWORD dwSizeToRead)
+bool e2d::Music::_read(BYTE* buffer, DWORD size_to_read)
 {
-	MMIOINFO mmioinfoIn; // current status of _hmmio
+	MMIOINFO mmioinfoIn; // current status of hmmio_
 
-	if (0 != mmioGetInfo(_hmmio, &mmioinfoIn, 0))
+	if (0 != mmioGetInfo(hmmio_, &mmioinfoIn, 0))
 		return TraceError(L"mmioGetInfo");
 
-	UINT cbDataIn = dwSizeToRead;
-	if (cbDataIn > _ck.cksize)
-		cbDataIn = _ck.cksize;
+	UINT cbDataIn = size_to_read;
+	if (cbDataIn > ck_.cksize)
+		cbDataIn = ck_.cksize;
 
-	_ck.cksize -= cbDataIn;
+	ck_.cksize -= cbDataIn;
 
 	for (DWORD cT = 0; cT < cbDataIn; ++cT)
 	{
 		// Copy the bytes from the io to the buffer.
 		if (mmioinfoIn.pchNext == mmioinfoIn.pchEndRead)
 		{
-			if (0 != mmioAdvance(_hmmio, &mmioinfoIn, MMIO_READ))
+			if (0 != mmioAdvance(hmmio_, &mmioinfoIn, MMIO_READ))
 				return TraceError(L"mmioAdvance");
 
 			if (mmioinfoIn.pchNext == mmioinfoIn.pchEndRead)
@@ -461,24 +461,24 @@ bool e2d::Music::_read(BYTE* pBuffer, DWORD dwSizeToRead)
 		}
 
 		// Actual copy.
-		*((BYTE*)pBuffer + cT) = *((BYTE*)mmioinfoIn.pchNext);
+		*((BYTE*)buffer + cT) = *((BYTE*)mmioinfoIn.pchNext);
 		++mmioinfoIn.pchNext;
 	}
 
-	if (0 != mmioSetInfo(_hmmio, &mmioinfoIn, 0))
+	if (0 != mmioSetInfo(hmmio_, &mmioinfoIn, 0))
 		return TraceError(L"mmioSetInfo");
 
 	return true;
 }
 
-bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wchar_t * strFilename)
+bool e2d::Music::_findMediaFileCch(wchar_t* dest_path, int cch_dest, const wchar_t * file_name)
 {
 	bool bFound = false;
 
-	if (nullptr == strFilename || nullptr == strDestPath || cchDest < 10)
+	if (nullptr == file_name || nullptr == dest_path || cch_dest < 10)
 		return false;
 
-	// Get the exe _name, and exe path
+	// Get the exe name, and exe path
 	wchar_t strExePath[MAX_PATH] = { 0 };
 	wchar_t strExeName[MAX_PATH] = { 0 };
 	GetModuleFileName(HINST_THISCOMPONENT, strExePath, MAX_PATH);
@@ -489,22 +489,22 @@ bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wcha
 	{
 		wcscpy_s(strExeName, MAX_PATH, &strLastSlash[1]);
 
-		// Chop the exe _name from the exe path
+		// Chop the exe name from the exe path
 		*strLastSlash = 0;
 
-		// Chop the .exe from the exe _name
+		// Chop the .exe from the exe name
 		strLastSlash = wcsrchr(strExeName, TEXT('.'));
 		if (strLastSlash)
 			*strLastSlash = 0;
 	}
 
-	wcscpy_s(strDestPath, cchDest, strFilename);
-	if (GetFileAttributes(strDestPath) != 0xFFFFFFFF)
+	wcscpy_s(dest_path, cch_dest, file_name);
+	if (GetFileAttributes(dest_path) != 0xFFFFFFFF)
 		return true;
 
-	// Search all parent directories starting at .\ and using strFilename as the leaf _name
+	// Search all parent directories starting At .\ and using file_name as the leaf name
 	wchar_t strLeafName[MAX_PATH] = { 0 };
-	wcscpy_s(strLeafName, MAX_PATH, strFilename);
+	wcscpy_s(strLeafName, MAX_PATH, file_name);
 
 	wchar_t strFullPath[MAX_PATH] = { 0 };
 	wchar_t strFullFileName[MAX_PATH] = { 0 };
@@ -520,7 +520,7 @@ bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wcha
 		swprintf_s(strFullFileName, MAX_PATH, L"%s\\%s", strFullPath, strLeafName);
 		if (GetFileAttributes(strFullFileName) != 0xFFFFFFFF)
 		{
-			wcscpy_s(strDestPath, cchDest, strFullFileName);
+			wcscpy_s(dest_path, cch_dest, strFullFileName);
 			bFound = true;
 			break;
 		}
@@ -528,7 +528,7 @@ bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wcha
 		swprintf_s(strFullFileName, MAX_PATH, L"%s\\%s\\%s", strFullPath, strExeName, strLeafName);
 		if (GetFileAttributes(strFullFileName) != 0xFFFFFFFF)
 		{
-			wcscpy_s(strDestPath, cchDest, strFullFileName);
+			wcscpy_s(dest_path, cch_dest, strFullFileName);
 			bFound = true;
 			break;
 		}
@@ -540,7 +540,7 @@ bool e2d::Music::_findMediaFileCch(wchar_t* strDestPath, int cchDest, const wcha
 		return true;
 
 	// 失败时，将文件作为路径返回，同时也返回错误代码
-	wcscpy_s(strDestPath, cchDest, strFilename);
+	wcscpy_s(dest_path, cch_dest, file_name);
 
 	return false;
 }
