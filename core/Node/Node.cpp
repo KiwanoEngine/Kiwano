@@ -31,18 +31,7 @@ e2d::Node::Property e2d::Node::Property::operator-(Property const & prop) const
 
 
 e2d::Node::Node()
-	: order_(0)
-	, pos_()
-	, size_()
-	, scale_(1.f, 1.f)
-	, rotation_(0)
-	, skew_(0, 0)
-	, display_opacity_(1.f)
-	, real_opacity_(1.f)
-	, anchor_()
-	, initial_matrix_(D2D1::Matrix3x2F::Identity())
-	, final_matrix_(D2D1::Matrix3x2F::Identity())
-	, visible_(true)
+	: visible_(true)
 	, parent_(nullptr)
 	, parent_scene_(nullptr)
 	, hash_name_(0)
@@ -52,6 +41,19 @@ e2d::Node::Node()
 	, fixed_position_(false)
 	, collider_(this)
 	, border_(nullptr)
+	, order_(0)
+	, pos_()
+	, size_()
+	, scale_(1.f, 1.f)
+	, rotation_(0)
+	, skew_(0, 0)
+	, display_opacity_(1.f)
+	, real_opacity_(1.f)
+	, anchor_()
+	, children_()
+	, actions_()
+	, initial_matrix_(D2D1::Matrix3x2F::Identity())
+	, final_matrix_(D2D1::Matrix3x2F::Identity())
 	, border_color_(Color::Red, 0.6f)
 	, extrapolate_(Property::Origin)
 {
@@ -61,7 +63,11 @@ e2d::Node::~Node()
 {
 	SafeRelease(border_);
 
-	ActionManager::GetInstance()->ClearAllBindedWith(this);
+	for (const auto& action : actions_)
+	{
+		GC::GetInstance()->SafeRelease(action);
+	}
+
 	for (const auto& child : children_)
 	{
 		GC::GetInstance()->SafeRelease(child);
@@ -75,6 +81,8 @@ void e2d::Node::Visit()
 
 	if (!Game::GetInstance()->IsPaused())
 	{
+		UpdateActions();
+
 		auto updatableNode = dynamic_cast<Updatable*>(this);
 		if (updatableNode)
 		{
@@ -305,6 +313,39 @@ void e2d::Node::UpdateOpacity()
 	for (const auto& child : children_)
 	{
 		child->UpdateOpacity();
+	}
+}
+
+void e2d::Node::UpdateActions()
+{
+	if (actions_.empty())
+		return;
+
+	std::vector<Action*> currActions;
+	currActions.reserve(actions_.size());
+	std::copy_if(
+		actions_.begin(),
+		actions_.end(),
+		std::back_inserter(currActions),
+		[](Action* action) { return action->IsRunning() && !action->IsDone(); }
+	);
+
+	// 遍历所有正在运行的动作
+	for (const auto& action : currActions)
+		action->Update();
+
+	// 清除完成的动作
+	for (auto iter = actions_.begin(); iter != actions_.end();)
+	{
+		if ((*iter)->IsDone())
+		{
+			(*iter)->Release();
+			iter = actions_.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
 	}
 }
 
@@ -796,15 +837,35 @@ void e2d::Node::RemoveAllChildren()
 
 void e2d::Node::RunAction(Action * action)
 {
-	ActionManager::GetInstance()->Start(action, this, false);
+	WARN_IF(action == nullptr, "Action NULL pointer exception!");
+
+	if (action)
+	{
+		if (action->GetTarget() == nullptr)
+		{
+			auto iter = std::find(actions_.begin(), actions_.end(), action);
+			if (iter == actions_.end())
+			{
+				action->Retain();
+				action->StartWithTarget(this);
+				actions_.push_back(action);
+			}
+		}
+		else
+		{
+			throw Exception("该 Action 已有执行目标");
+		}
+	}
 }
 
 void e2d::Node::ResumeAction(const String& name)
 {
-	auto& actions = ActionManager::GetInstance()->Get(name);
-	for (const auto& action : actions)
+	if (actions_.empty())
+		return;
+
+	for (const auto& action : actions_)
 	{
-		if (action->GetTarget() == this)
+		if (action->GetName() == name)
 		{
 			action->Resume();
 		}
@@ -813,10 +874,12 @@ void e2d::Node::ResumeAction(const String& name)
 
 void e2d::Node::PauseAction(const String& name)
 {
-	auto& actions = ActionManager::GetInstance()->Get(name);
-	for (const auto& action : actions)
+	if (actions_.empty())
+		return;
+
+	for (const auto& action : actions_)
 	{
-		if (action->GetTarget() == this)
+		if (action->GetName() == name)
 		{
 			action->Pause();
 		}
@@ -825,10 +888,12 @@ void e2d::Node::PauseAction(const String& name)
 
 void e2d::Node::StopAction(const String& name)
 {
-	auto& actions = ActionManager::GetInstance()->Get(name);
-	for (const auto& action : actions)
+	if (actions_.empty())
+		return;
+
+	for (const auto& action : actions_)
 	{
-		if (action->GetTarget() == this)
+		if (action->GetName() == name)
 		{
 			action->Stop();
 		}
@@ -877,17 +942,53 @@ bool e2d::Node::Intersects(Node * node)
 
 void e2d::Node::ResumeAllActions()
 {
-	ActionManager::GetInstance()->ResumeAllBindedWith(this);
+	if (actions_.empty())
+		return;
+
+	for (const auto& action : actions_)
+	{
+		action->Resume();
+	}
 }
 
 void e2d::Node::PauseAllActions()
 {
-	ActionManager::GetInstance()->PauseAllBindedWith(this);
+	if (actions_.empty())
+		return;
+
+	for (const auto& action : actions_)
+	{
+		action->Pause();
+	}
 }
 
 void e2d::Node::StopAllActions()
 {
-	ActionManager::GetInstance()->StopAllBindedWith(this);
+	if (actions_.empty())
+		return;
+
+	for (const auto& action : actions_)
+	{
+		action->Stop();
+	}
+}
+
+const e2d::Node::Actions & e2d::Node::GetAllActions() const
+{
+	return actions_;
+}
+
+void e2d::Node::UpdateActionsTime()
+{
+	for (const auto& action : actions_)
+	{
+		action->ResetTime();
+	}
+
+	for (const auto& child : children_)
+	{
+		child->UpdateActionsTime();
+	}
 }
 
 void e2d::Node::SetVisible(bool value)

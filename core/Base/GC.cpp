@@ -39,7 +39,6 @@ e2d::GC::~GC()
 {
 	// 删除所有对象
 	Timer::GetInstance()->ClearAllTasks();
-	ActionManager::GetInstance()->ClearAll();
 
 	cleanup_ = true;
 	for (const auto& ref : pool_)

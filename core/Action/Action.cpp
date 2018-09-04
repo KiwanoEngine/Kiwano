@@ -7,12 +7,10 @@ e2d::Action::Action()
 	, initialized_(false)
 	, target_(nullptr)
 {
-	ActionManager::GetInstance()->Add(this);
 }
 
 e2d::Action::~Action()
 {
-	ActionManager::GetInstance()->Remove(this);
 }
 
 bool e2d::Action::IsRunning()
@@ -57,7 +55,7 @@ void e2d::Action::Reset()
 	started_ = Time::Now();
 }
 
-bool e2d::Action::IsDone()
+bool e2d::Action::IsDone() const
 {
 	return done_;
 }

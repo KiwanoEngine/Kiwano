@@ -314,8 +314,6 @@ protected:
 };
 
 
-class Timer;
-class ActionManager;
 class Scene;
 class Transition;
 

@@ -59,8 +59,10 @@ public:
 	// 获取该动作的执行目标
 	virtual Node * GetTarget();
 
-protected:
-	E2D_DISABLE_COPY(Action);
+	// 开始动作
+	virtual void StartWithTarget(
+		Node* target
+	);
 
 	// 初始化动作
 	virtual void Init();
@@ -68,16 +70,14 @@ protected:
 	// 更新动作
 	virtual void Update();
 
-	// 获取动作结束状态
-	virtual bool IsDone();
-
 	// 重置动作时间
 	virtual void ResetTime();
 
-	// 开始动作
-	virtual void StartWithTarget(
-		Node* target
-	);
+	// 获取动作结束状态
+	virtual bool IsDone() const;
+
+protected:
+	E2D_DISABLE_COPY(Action);
 
 protected:
 	String	name_;

@@ -47,7 +47,6 @@ void e2d::Game::Start()
 	auto input = Input::GetInstance();
 	auto renderer = Renderer::GetInstance();
 	auto timer = Timer::GetInstance();
-	auto action_manager = ActionManager::GetInstance();
 
 	const int minInterval = 5;
 	Time last = Time::Now();
@@ -71,7 +70,6 @@ void e2d::Game::Start()
 			if (!paused_)
 			{
 				timer->Update();
-				action_manager->Update();
 				UpdateScene();
 			}
 			
@@ -103,7 +101,8 @@ void e2d::Game::Resume()
 	if (paused_ && !quit_)
 	{
 		Timer::GetInstance()->UpdateTime();
-		ActionManager::GetInstance()->UpdateTime();
+		if (curr_scene_)
+			curr_scene_->UpdateActionsTime();
 	}
 	paused_ = false;
 }

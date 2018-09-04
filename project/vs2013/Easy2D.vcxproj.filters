@@ -154,9 +154,6 @@
     <ClCompile Include="..\..\core\Custom\VoiceCallback.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Manager\ActionManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Node\Button.cpp">
       <Filter>Node</Filter>
     </ClCompile>

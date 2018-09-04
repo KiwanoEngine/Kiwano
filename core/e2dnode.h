@@ -79,6 +79,7 @@ public:
 
 public:
 	typedef std::vector<Node*> Nodes;
+	typedef std::vector<Action*> Actions;
 
 	Node();
 
@@ -409,6 +410,12 @@ public:
 	// 停止所有动作
 	void StopAllActions();
 
+	// 获取所有动作
+	const Actions& GetAllActions() const;
+
+	// 刷新动作进度
+	void UpdateActionsTime();
+
 	// 分发鼠标消息
 	virtual bool Dispatch(
 		const MouseEvent& e,
@@ -447,6 +454,9 @@ protected:
 	// 更新节点透明度
 	void UpdateOpacity();
 
+	// 更新动作
+	void UpdateActions();
+
 protected:
 	String		name_;
 	size_t		hash_name_;
@@ -469,6 +479,7 @@ protected:
 	Node *		parent_;
 	Property	extrapolate_;
 	Color		border_color_;
+	Actions		actions_;
 	Nodes		children_;
 	ID2D1Geometry*		border_;
 	D2D1::Matrix3x2F	initial_matrix_;
