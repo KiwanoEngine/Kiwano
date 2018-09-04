@@ -84,7 +84,7 @@ void e2d::Transition::Update()
 
 void e2d::Transition::Draw()
 {
-	auto renderTarget = Renderer::GetInstance()->GetRenderTarget();
+	auto render_target = Renderer::GetInstance()->GetRenderTarget();
 	auto size = Window::GetInstance()->GetSize();
 
 	if (out_scene_)
@@ -96,14 +96,14 @@ void e2d::Transition::Draw()
 			std::min(rootPos.x + size.width, size.width),
 			std::min(rootPos.y + size.height, size.height)
 		);
-		renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-		renderTarget->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-		renderTarget->PushLayer(out_layer_param_, out_layer_);
+		render_target->SetTransform(D2D1::Matrix3x2F::Identity());
+		render_target->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+		render_target->PushLayer(out_layer_param_, out_layer_);
 
 		out_scene_->Visit();
 
-		renderTarget->PopLayer();
-		renderTarget->PopAxisAlignedClip();
+		render_target->PopLayer();
+		render_target->PopAxisAlignedClip();
 	}
 
 	if (in_scene_)
@@ -115,14 +115,14 @@ void e2d::Transition::Draw()
 			std::min(rootPos.x + size.width, size.width),
 			std::min(rootPos.y + size.height, size.height)
 		);
-		renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-		renderTarget->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-		renderTarget->PushLayer(in_layer_param_, in_layer_);
+		render_target->SetTransform(D2D1::Matrix3x2F::Identity());
+		render_target->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+		render_target->PushLayer(in_layer_param_, in_layer_);
 
 		in_scene_->Visit();
 
-		renderTarget->PopLayer();
-		renderTarget->PopAxisAlignedClip();
+		render_target->PopLayer();
+		render_target->PopAxisAlignedClip();
 	}
 }
 

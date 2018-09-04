@@ -93,11 +93,11 @@ void e2d::Node::Visit()
 	UpdateTransform();
 	extrapolate_ = this->GetProperty();
 
-	auto renderTarget = Renderer::GetInstance()->GetRenderTarget();
+	auto render_target = Renderer::GetInstance()->GetRenderTarget();
 	if (clip_enabled_)
 	{
-		renderTarget->SetTransform(final_matrix_);
-		renderTarget->PushAxisAlignedClip(
+		render_target->SetTransform(final_matrix_);
+		render_target->PushAxisAlignedClip(
 			D2D1::RectF(0, 0, size_.width, size_.height),
 			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
 		);
@@ -108,7 +108,7 @@ void e2d::Node::Visit()
 		auto drawableNode = dynamic_cast<Drawable*>(this);
 		if (drawableNode)
 		{
-			renderTarget->SetTransform(final_matrix_);
+			render_target->SetTransform(final_matrix_);
 			drawableNode->Draw();
 		}
 	}
@@ -135,7 +135,7 @@ void e2d::Node::Visit()
 		auto drawableNode = dynamic_cast<Drawable*>(this);
 		if (drawableNode)
 		{
-			renderTarget->SetTransform(final_matrix_);
+			render_target->SetTransform(final_matrix_);
 			drawableNode->Draw();
 		}
 
@@ -146,7 +146,7 @@ void e2d::Node::Visit()
 
 	if (clip_enabled_)
 	{
-		renderTarget->PopAxisAlignedClip();
+		render_target->PopAxisAlignedClip();
 	}
 }
 
