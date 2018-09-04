@@ -106,7 +106,7 @@ void e2d::Renderer::EndDraw()
 
 			ThrowIfFailed(
 				GetWriteFactory()->CreateTextLayout(
-				(const WCHAR *)fpsText,
+				(const wchar_t *)fpsText,
 					(UINT32)fpsText.GetLength(),
 					fps_text_format_,
 					0,

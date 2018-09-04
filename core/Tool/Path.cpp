@@ -56,7 +56,7 @@ const e2d::String& e2d::Path::GetLocalAppDataPath()
 	if (local_app_data_path.IsEmpty())
 	{
 		// 获取 AppData/Local 文件夹的路径
-		WCHAR path[MAX_PATH] = { 0 };
+		wchar_t path[MAX_PATH] = { 0 };
 		::SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
 		local_app_data_path = path;
 	}

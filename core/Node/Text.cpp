@@ -323,7 +323,7 @@ void e2d::Text::CreateFormat()
 
 	ThrowIfFailed(
 		Renderer::GetWriteFactory()->CreateTextFormat(
-			(const WCHAR *)font_.family,
+			(const wchar_t *)font_.family,
 			nullptr,
 			DWRITE_FONT_WEIGHT(font_.weight),
 			font_.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
@@ -387,7 +387,7 @@ void e2d::Text::CreateLayout()
 	{
 		ThrowIfFailed(
 			writeFactory->CreateTextLayout(
-				(const WCHAR *)text_,
+				(const wchar_t *)text_,
 				length,
 				text_format_,
 				style_.wrap_width,
@@ -406,7 +406,7 @@ void e2d::Text::CreateLayout()
 		// 为防止文本对齐问题，根据先创建 layout 以获取宽度
 		ThrowIfFailed(
 			writeFactory->CreateTextLayout(
-				(const WCHAR *)text_,
+				(const wchar_t *)text_,
 				length,
 				text_format_,
 				0,
@@ -425,7 +425,7 @@ void e2d::Text::CreateLayout()
 		SafeRelease(text_layout_);
 		ThrowIfFailed(
 			writeFactory->CreateTextLayout(
-				(const WCHAR *)text_,
+				(const wchar_t *)text_,
 				length,
 				text_format_,
 				size_.width,

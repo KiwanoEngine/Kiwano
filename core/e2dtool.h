@@ -370,49 +370,48 @@ public:
 		const String& field = L"Defalut"	/* 字段名称 */
 	);
 
+	// 该数据是否存在
+	bool Exists() const;
+
 	// 保存 int 类型的值
-	void SaveInt(
-		int value							/* 数据 */
+	bool SaveInt(
+		int value
 	);
 
 	// 保存 float 类型的值
-	void SaveDouble(
-		float value						/* 数据 */
+	bool SaveFloat(
+		float value
+	);
+
+	// 保存 double 类型的值
+	bool SaveDouble(
+		double value
 	);
 
 	// 保存 bool 类型的值
-	void SaveBool(
-		bool value							/* 数据 */
+	bool SaveBool(
+		bool value
 	);
 
-	// 保存 字符串 类型的值
-	void SaveString(
-		const String& value				/* 数据 */
+	// 保存 String 类型的值
+	bool SaveString(
+		const String& value
 	);
 
 	// 获取 int 类型的值
-	// （若不存在则返回 default_value 参数的值）
-	int GetInt(
-		int default_value					/* 默认值 */
-	);
+	int GetInt() const;
 
 	// 获取 float 类型的值
-	// （若不存在则返回 default_value 参数的值）
-	float GetDouble(
-		float default_value				/* 默认值 */
-	);
+	float GetFloat() const;
+
+	// 获取 double 类型的值
+	double GetDouble() const;
 
 	// 获取 bool 类型的值
-	// （若不存在则返回 default_value 参数的值）
-	bool GetBool(
-		bool default_value					/* 默认值 */
-	);
+	bool GetBool() const;
 
 	// 获取 字符串 类型的值
-	// （若不存在则返回 default_value 参数的值）
-	String GetString(
-		const String& default_value			/* 默认值 */
-	);
+	String GetString();
 
 protected:
 	String key_;
