@@ -345,33 +345,17 @@ public:
 	bool IsPaused();
 
 	// 场景入栈
-	void PushScene(
-		Scene * scene,					/* 下一个场景的指针 */
-		bool save_current_scene = true	/* 是否保存当前场景 */
+	void EnterScene(
+		Scene * scene			/* 下一个场景的指针 */
 	);
 
 	// 场景入栈
-	void PushScene(
-		Transition * transition,		/* 场景动画 */
-		bool save_current_scene = true	/* 是否保存当前场景 */
+	void EnterScene(
+		Transition * transition	/* 场景动画 */
 	);
-
-	// 场景出栈
-	Scene* PopScene();
-
-	// 场景出栈
-	Scene* PopScene(
-		Transition * transition			/* 场景动画 */
-	);
-
-	// 清空保存的所有场景
-	void ClearAllScenes();
 
 	// 获取当前场景
 	Scene * GetCurrentScene();
-
-	// 获取场景栈
-	const std::stack<Scene*>& GetSceneStack();
 
 	// 是否正在进行场景动画
 	bool IsTransitioning() const;
@@ -395,7 +379,6 @@ private:
 	Scene*			curr_scene_;
 	Scene*			next_scene_;
 	Transition*		transition_;
-	std::stack<Scene*> scenes_;
 
 	static Game * instance_;
 };

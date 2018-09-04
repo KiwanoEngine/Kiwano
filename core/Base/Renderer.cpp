@@ -118,9 +118,9 @@ void e2d::Renderer::EndDraw()
 
 		if (fps_text_layout_)
 		{
-			render_target_->SetTransform(D2D1::Matrix3x2F::Identity());
-			solid_brush_->SetOpacity(1.0f);
-			text_renderer_->SetTextStyle(
+			GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+			GetSolidBrush()->SetOpacity(1.0f);
+			GetTextRenderer()->SetTextStyle(
 				D2D1::ColorF(D2D1::ColorF::White),
 				TRUE,
 				D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
@@ -134,7 +134,6 @@ void e2d::Renderer::EndDraw()
 		}
 	}
 
-	// ÖÕÖ¹äÖÈ¾
 	HRESULT hr = render_target_->EndDraw();
 
 	if (hr == D2DERR_RECREATE_TARGET)
@@ -150,10 +149,7 @@ void e2d::Renderer::EndDraw()
 		SafeRelease(render_target_);
 	}
 
-	if (FAILED(hr))
-	{
-		throw SystemException("Device loss recovery failed");
-	}
+	ThrowIfFailed(hr);
 }
 
 e2d::E2DTextRenderer * e2d::Renderer::GetTextRenderer()

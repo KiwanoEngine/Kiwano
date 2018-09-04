@@ -30,7 +30,6 @@ e2d::Game::Game()
 	, curr_scene_(nullptr)
 	, next_scene_(nullptr)
 	, transition_(nullptr)
-	, scenes_()
 {
 	::CoInitialize(nullptr);
 }
@@ -119,7 +118,7 @@ void e2d::Game::Quit()
 	quit_ = true;
 }
 
-void e2d::Game::PushScene(Scene * scene, bool save_current_scene)
+void e2d::Game::EnterScene(Scene * scene)
 {
 	if (!scene)
 		return;
@@ -128,19 +127,14 @@ void e2d::Game::PushScene(Scene * scene, bool save_current_scene)
 	if (next_scene_) next_scene_->Release();
 	next_scene_ = scene;
 	next_scene_->Retain();
-
-	if (save_current_scene && curr_scene_)
-	{
-		scenes_.push(curr_scene_);
-	}
 }
 
-void e2d::Game::PushScene(Transition * transition, bool save_current_scene)
+void e2d::Game::EnterScene(Transition * transition)
 {
 	if (!transition)
 		return;
 
-	PushScene(transition->in_scene_, save_current_scene);
+	EnterScene(transition->in_scene_);
 
 	if (transition_)
 	{
@@ -159,70 +153,9 @@ void e2d::Game::PushScene(Transition * transition, bool save_current_scene)
 	}
 }
 
-e2d::Scene* e2d::Game::PopScene()
-{
-	// 栈为空时，调用返回场景函数失败
-	if (scenes_.size() == 0)
-	{
-		WARN("Scene stack Is empty!");
-		return nullptr;
-	}
-
-	next_scene_ = scenes_.top();
-	next_scene_->Release();
-	scenes_.pop();
-
-	return next_scene_;
-}
-
-e2d::Scene * e2d::Game::PopScene(Transition * transition)
-{
-	if (!transition)
-		return nullptr;
-
-	auto scene = PopScene();
-	if (scene)
-	{
-		if (transition_)
-		{
-			transition_->Stop();
-			transition_->Release();
-		}
-		transition_ = transition;
-		transition_->Retain();
-
-		transition_->in_scene_ = scene;
-		transition_->in_scene_->Retain();
-
-		// 初始化场景切换动画
-		if (!transition_->Init(this, curr_scene_))
-		{
-			WARN("Transition initialize failed!");
-			transition_->Release();
-			transition_ = nullptr;
-		}
-	}
-
-	return scene;
-}
-
-void e2d::Game::ClearAllScenes()
-{
-	while (!scenes_.empty())
-	{
-		scenes_.top()->Release();
-		scenes_.pop();
-	}
-}
-
 e2d::Scene * e2d::Game::GetCurrentScene()
 {
 	return curr_scene_;
-}
-
-const std::stack<e2d::Scene*>& e2d::Game::GetSceneStack()
-{
-	return scenes_;
 }
 
 bool e2d::Game::IsTransitioning() const
@@ -252,10 +185,7 @@ void e2d::Game::UpdateScene()
 		if (curr_scene_)
 		{
 			curr_scene_->OnExit();
-			if (scenes_.empty() || scenes_.top() != curr_scene_)
-			{
-				curr_scene_->Release();
-			}
+			curr_scene_->Release();
 		}
 
 		next_scene_->OnEnter();

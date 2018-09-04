@@ -38,7 +38,6 @@ e2d::GC::GC()
 e2d::GC::~GC()
 {
 	// 删除所有对象
-	Game::GetInstance()->ClearAllScenes();
 	Timer::GetInstance()->ClearAllTasks();
 	ActionManager::GetInstance()->ClearAll();
 
