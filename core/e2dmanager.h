@@ -6,74 +6,74 @@ namespace e2d
 {
 
 
-class Node;
+	class Node;
 
 
-// 碰撞体管理器
-class CollisionManager
-{
-	friend class Node;
-	friend class Collider;
+	// 碰撞体管理器
+	class CollisionManager
+	{
+		friend class Node;
+		friend class Collider;
 
-public:
-	// 获取碰撞体管理器实例
-	static CollisionManager * GetInstance();
+	public:
+		// 获取碰撞体管理器实例
+		static CollisionManager * GetInstance();
 
-	// 打开或关闭碰撞监听
-	// 默认：关闭
-	void SetCollisionEnabled(
-		bool enabled
-	);
+		// 打开或关闭碰撞监听
+		// 默认：关闭
+		void SetCollisionEnabled(
+			bool enabled
+		);
 
-	// 添加可互相碰撞物体的名称
-	void AddName(
-		const String& name1,
-		const String& name2
-	);
+		// 添加可互相碰撞物体的名称
+		void AddName(
+			const String& name1,
+			const String& name2
+		);
 
-	// 添加可互相碰撞物体的名称
-	void AddName(
-		const std::vector<std::pair<String, String>>& names
-	);
+		// 添加可互相碰撞物体的名称
+		void AddName(
+			const std::vector<std::pair<String, String>>& names
+		);
 
-	// 判断两个物体是否是可碰撞的
-	bool IsCollidable(
-		Node * node1,
-		Node * node2
-	);
+		// 判断两个物体是否是可碰撞的
+		bool IsCollidable(
+			Node * node1,
+			Node * node2
+		);
 
-	// 判断两个物体是否是可碰撞的
-	bool IsCollidable(
-		const String& name1,
-		const String& name2
-	);
+		// 判断两个物体是否是可碰撞的
+		bool IsCollidable(
+			const String& name1,
+			const String& name2
+		);
 
-private:
-	CollisionManager();
+	private:
+		CollisionManager();
 
-	~CollisionManager();
+		~CollisionManager();
 
-	E2D_DISABLE_COPY(CollisionManager);
+		E2D_DISABLE_COPY(CollisionManager);
 
-	// 添加碰撞体
-	void AddCollider(
-		Collider* collider
-	);
+		// 添加碰撞体
+		void AddCollider(
+			Collider* collider
+		);
 
-	// 移除碰撞体
-	void RemoveCollider(
-		Collider* collider
-	);
+		// 移除碰撞体
+		void RemoveCollider(
+			Collider* collider
+		);
 
-	// 更新碰撞体
-	void UpdateCollider(
-		Collider* collider
-	);
+		// 更新碰撞体
+		void UpdateCollider(
+			Collider* collider
+		);
 
-private:
-	bool collision_enabled_;
-	std::vector<Collider*> colliders_;
-	std::set<std::pair<size_t, size_t>> collision_list_;
-};
+	private:
+		bool collision_enabled_;
+		std::vector<Collider*> colliders_;
+		std::set<std::pair<size_t, size_t>> collision_list_;
+	};
 
 }
