@@ -1,6 +1,6 @@
 #include "..\e2dmanager.h"
-#include "..\e2dcomponent.h"
-#include "..\e2dutil.h"
+#include "..\e2dnode.h"
+#include "..\e2dtool.h"
 #include "..\e2dmodule.h"
 
 

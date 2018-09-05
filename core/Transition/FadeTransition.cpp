@@ -1,5 +1,5 @@
 #include "..\e2dtransition.h"
-#include "..\e2dcomponent.h"
+#include "..\e2dnode.h"
 
 e2d::FadeTransition::FadeTransition(Scene* scene, float duration)
 	: Transition(scene, duration)

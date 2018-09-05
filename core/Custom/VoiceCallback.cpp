@@ -1,5 +1,5 @@
 #include "..\e2dimpl.h"
-#include "..\e2dcommon.h"
+#include "..\e2dutil.h"
 
 e2d::VoiceCallback::VoiceCallback()
 {

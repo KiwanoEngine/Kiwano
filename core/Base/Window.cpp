@@ -1,6 +1,6 @@
 #include "..\e2dmodule.h"
 #include "..\e2dmanager.h"
-#include "..\e2dcomponent.h"
+#include "..\e2dnode.h"
 #include <imm.h>
 #pragma comment (lib ,"imm32.lib")
 

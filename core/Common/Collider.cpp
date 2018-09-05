@@ -1,8 +1,8 @@
-#include "..\e2dcommon.h"
+#include "..\e2dutil.h"
 #include "..\e2dimpl.h"
 #include "..\e2dmodule.h"
 #include "..\e2dmanager.h"
-#include "..\e2dcomponent.h"
+#include "..\e2dnode.h"
 
 e2d::Collider::Collider(Node * parent)
 	: visible_(true)

@@ -1,5 +1,5 @@
 #include "..\e2dtransition.h"
-#include "..\e2dcomponent.h"
+#include "..\e2dnode.h"
 #include "..\e2dmodule.h"
 
 e2d::MoveTransition::MoveTransition(Scene* scene, float duration, Direction direction)

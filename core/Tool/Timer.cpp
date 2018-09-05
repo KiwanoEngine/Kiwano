@@ -1,4 +1,4 @@
-#include "..\e2dutil.h"
+#include "..\e2dtool.h"
 
 
 e2d::Timer * e2d::Timer::GetInstance()

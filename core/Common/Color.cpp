@@ -1,4 +1,4 @@
-#include "..\e2dcommon.h"
+#include "..\e2dutil.h"
 
 static const UINT sc_redShift = 16;
 static const UINT sc_greenShift = 8;

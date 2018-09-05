@@ -1,6 +1,6 @@
-#include "..\e2dcommon.h"
-#include "..\e2dmodule.h"
 #include "..\e2dutil.h"
+#include "..\e2dmodule.h"
+#include "..\e2dtool.h"
 
 std::map<size_t, ID2D1Bitmap*> e2d::Image::bitmap_cache_;
 

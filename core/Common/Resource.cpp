@@ -1,4 +1,4 @@
-#include "..\e2dutil.h"
+#include "..\e2dtool.h"
 
 
 e2d::Resource::Resource(size_t resource_name, const String & resource_type)

@@ -1,4 +1,4 @@
-#include "..\e2dcomponent.h"
+#include "..\e2dnode.h"
 #include "..\e2dmodule.h"
 
 //-------------------------------------------------------

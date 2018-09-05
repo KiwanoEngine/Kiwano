@@ -1,6 +1,6 @@
 #pragma once
 #include "e2dimpl.h"
-#include "e2dcomponent.h"
+#include "e2dnode.h"
 #include "e2dtransition.h"
 
 

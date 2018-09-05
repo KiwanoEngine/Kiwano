@@ -28,6 +28,9 @@
     <Filter Include="Event">
       <UniqueIdentifier>{6c9657de-02d5-4d3b-9e1d-bc921eb5aea3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{7ffdcb87-b6a2-4815-be96-5598f74155ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\Base\Input.cpp">
@@ -38,12 +41,6 @@
     </ClCompile>
     <ClCompile Include="..\..\core\Common\String.cpp">
       <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Button.cpp">
-      <Filter>Node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\Node\Menu.cpp">
-      <Filter>Node</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\Node\Node.cpp">
       <Filter>Node</Filter>
@@ -174,9 +171,6 @@
     <ClCompile Include="..\..\core\Action\FiniteTimeAction.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\Node\ToggleButton.cpp">
-      <Filter>Node</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\Common\Rect.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -237,18 +231,28 @@
     <ClCompile Include="..\..\core\Action\Callback.cpp">
       <Filter>Action</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\Component\Button.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Component\Menu.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Component\ToggleButton.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\e2daction.h" />
-    <ClInclude Include="..\..\core\e2dcommon.h" />
     <ClInclude Include="..\..\core\e2dmacros.h" />
     <ClInclude Include="..\..\core\e2dmanager.h" />
     <ClInclude Include="..\..\core\e2dtransition.h" />
     <ClInclude Include="..\..\core\e2devent.h" />
-    <ClInclude Include="..\..\core\e2dutil.h" />
     <ClInclude Include="..\..\core\e2dmodule.h" />
     <ClInclude Include="..\..\core\e2dcomponent.h" />
     <ClInclude Include="..\..\core\e2dimpl.h" />
+    <ClInclude Include="..\..\core\e2dnode.h" />
+    <ClInclude Include="..\..\core\e2dtool.h" />
+    <ClInclude Include="..\..\core\e2dutil.h" />
   </ItemGroup>
 </Project>

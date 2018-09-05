@@ -1,4 +1,4 @@
-#include "..\e2dcommon.h"
+#include "..\e2dutil.h"
 #include <iomanip>
 #include <cwctype>
 #include <comutil.h>
