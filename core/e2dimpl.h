@@ -1,5 +1,4 @@
 #pragma once
-#include "e2dmacros.h"
 #include "e2dcommon.h"
 
 namespace e2d

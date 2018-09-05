@@ -1,4 +1,5 @@
-#include "..\e2dtool.h"
+#include "..\e2dutil.h"
+#include "..\e2dmodule.h"
 #include <shlobj.h>
 
 const e2d::String& e2d::Path::GetDataPath()

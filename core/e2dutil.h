@@ -1,5 +1,6 @@
 #pragma once
-#include "e2dbase.h"
+#include "e2dcommon.h"
+#include "e2dimpl.h"
 
 namespace e2d
 {
@@ -292,7 +293,7 @@ protected:
 	// 任务是否就绪
 	bool IsReady() const;
 
-private:
+protected:
 	bool		running_;
 	bool		stopped_;
 	int			run_times_;
@@ -339,9 +340,6 @@ public:
 
 	// 移除所有任务
 	void RemoveAllTasks();
-
-	// 强制清空所有任务
-	void ClearAllTasks();
 
 	// 更新定时器
 	void Update();

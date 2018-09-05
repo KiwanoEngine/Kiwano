@@ -1,5 +1,5 @@
-#include "..\e2dbase.h"
-#include "..\e2dtool.h"
+#include "..\e2dmodule.h"
+#include "..\e2dutil.h"
 #include "..\e2dmanager.h"
 
 using namespace e2d;
@@ -38,8 +38,6 @@ e2d::GC::GC()
 e2d::GC::~GC()
 {
 	// 删除所有对象
-	Timer::GetInstance()->ClearAllTasks();
-
 	cleanup_ = true;
 	for (const auto& ref : pool_)
 	{

@@ -1,4 +1,4 @@
-#include "..\e2dcustom.h"
+#include "..\e2dimpl.h"
 
 
 e2d::Exception::Exception() E2D_NOEXCEPT

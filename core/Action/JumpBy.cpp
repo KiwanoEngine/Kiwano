@@ -1,5 +1,5 @@
 #include "..\e2daction.h"
-#include "..\e2dnode.h"
+#include "..\e2dcomponent.h"
 
 e2d::JumpBy::JumpBy(float duration, const Point & vec, float height, int jumps)
 	: FiniteTimeAction(duration)

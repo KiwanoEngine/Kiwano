@@ -1,4 +1,4 @@
-#include "..\e2dcustom.h"
+#include "..\e2dimpl.h"
 #include "..\e2dcommon.h"
 
 e2d::VoiceCallback::VoiceCallback()

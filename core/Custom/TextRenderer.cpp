@@ -1,5 +1,5 @@
-#include "..\e2dcustom.h"
-#include "..\e2dbase.h"
+#include "..\e2dimpl.h"
+#include "..\e2dmodule.h"
 
 using namespace e2d;
 

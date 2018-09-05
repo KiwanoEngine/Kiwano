@@ -1,5 +1,5 @@
 #pragma once
-#include "e2dbase.h"
+#include "e2dcommon.h"
 #include "e2devent.h"
 
 namespace e2d 
@@ -7,6 +7,7 @@ namespace e2d
 
 
 class Action;
+class Scene;
 
 
 // »æÍ¼½Ó¿Ú

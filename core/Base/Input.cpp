@@ -1,5 +1,5 @@
-#include "..\e2dbase.h"
-#include "..\e2dtool.h"
+#include "..\e2dmodule.h"
+#include "..\e2dutil.h"
 #include "..\e2dmanager.h"
 #pragma comment(lib, "dinput8.lib")
 

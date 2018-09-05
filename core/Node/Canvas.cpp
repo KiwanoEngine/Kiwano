@@ -1,4 +1,5 @@
-#include "..\e2dnode.h"
+#include "..\e2dcomponent.h"
+#include "..\e2dmodule.h"
 
 e2d::Canvas::Canvas(float width, float height)
 	: render_target_(nullptr)

@@ -1,4 +1,4 @@
-#include "..\e2dtool.h"
+#include "..\e2dutil.h"
 
 
 e2d::Timer * e2d::Timer::GetInstance()
@@ -85,18 +85,6 @@ void e2d::Timer::RemoveAllTasks()
 	{
 		task->stopped_ = true;
 	}
-}
-
-void e2d::Timer::ClearAllTasks()
-{
-	if (tasks_.empty())
-		return;
-
-	for (const auto& task : tasks_)
-	{
-		task->Release();
-	}
-	tasks_.clear();
 }
 
 void e2d::Timer::Update()

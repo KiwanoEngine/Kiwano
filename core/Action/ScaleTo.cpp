@@ -1,5 +1,5 @@
 #include "..\e2daction.h"
-#include "..\e2dnode.h"
+#include "..\e2dcomponent.h"
 
 e2d::ScaleTo::ScaleTo(float duration, float scale)
 	: ScaleBy(duration, 0, 0)

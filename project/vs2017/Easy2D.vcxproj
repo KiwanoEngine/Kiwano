@@ -268,15 +268,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\e2daction.h" />
-    <ClInclude Include="..\..\core\e2dcustom.h" />
+    <ClInclude Include="..\..\core\e2dimpl.h" />
     <ClInclude Include="..\..\core\e2devent.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
-    <ClInclude Include="..\..\core\e2dbase.h" />
+    <ClInclude Include="..\..\core\e2dmodule.h" />
     <ClInclude Include="..\..\core\e2dcommon.h" />
     <ClInclude Include="..\..\core\e2dmacros.h" />
     <ClInclude Include="..\..\core\e2dmanager.h" />
-    <ClInclude Include="..\..\core\e2dnode.h" />
-    <ClInclude Include="..\..\core\e2dtool.h" />
+    <ClInclude Include="..\..\core\e2dcomponent.h" />
+    <ClInclude Include="..\..\core\e2dutil.h" />
     <ClInclude Include="..\..\core\e2dtransition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

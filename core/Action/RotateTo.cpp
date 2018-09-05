@@ -1,5 +1,5 @@
 #include "..\e2daction.h"
-#include "..\e2dnode.h"
+#include "..\e2dcomponent.h"
 
 
 e2d::RotateTo::RotateTo(float duration, float rotation)

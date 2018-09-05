@@ -19,12 +19,12 @@
 
 #include "e2dmacros.h"
 #include "e2dcommon.h"
-#include "e2dbase.h"
 #include "e2dmanager.h"
-#include "e2dnode.h"
-#include "e2dtool.h"
+#include "e2dcomponent.h"
+#include "e2dutil.h"
 #include "e2daction.h"
 #include "e2dtransition.h"
+#include "e2dmodule.h"
 
 
 #if defined(DEBUG) || defined(_DEBUG)

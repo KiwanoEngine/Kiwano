@@ -1,4 +1,4 @@
-#include "..\e2dnode.h"
+#include "..\e2dcomponent.h"
 
 e2d::Menu::Menu()
 	: enabled_(true)

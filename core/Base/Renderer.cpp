@@ -1,6 +1,6 @@
-#include "..\e2dbase.h"
+#include "..\e2dmodule.h"
 #include "..\e2dmanager.h"
-#include "..\e2dnode.h"
+#include "..\e2dcomponent.h"
 
 
 e2d::Renderer*		e2d::Renderer::instance_ = nullptr;

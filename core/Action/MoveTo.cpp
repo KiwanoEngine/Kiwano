@@ -1,5 +1,5 @@
 #include "..\e2daction.h"
-#include "..\e2dnode.h"
+#include "..\e2dcomponent.h"
 
 e2d::MoveTo::MoveTo(float duration, Point pos)
 	: MoveBy(duration, Point())

@@ -1,10 +1,8 @@
 #pragma once
-#include "e2dmacros.h"
-#include "e2dcommon.h"
-#include "e2dcustom.h"
+#include "e2dimpl.h"
+#include "e2dcomponent.h"
+#include "e2dtransition.h"
 
-
-// Base Classes
 
 namespace e2d
 {
@@ -313,9 +311,6 @@ protected:
 	static Audio * instance_;
 };
 
-
-class Scene;
-class Transition;
 
 // сно╥
 class Game

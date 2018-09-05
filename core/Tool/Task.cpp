@@ -1,4 +1,4 @@
-#include "..\e2dtool.h"
+#include "..\e2dutil.h"
 
 
 e2d::Task::Task(const Function & func, const String & name)

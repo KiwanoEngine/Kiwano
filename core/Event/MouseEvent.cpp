@@ -1,5 +1,5 @@
 #include "..\e2devent.h"
-#include "..\e2dbase.h"
+#include "..\e2dmodule.h"
 
 e2d::MouseEvent::MouseEvent(HWND hWnd, UINT message, WPARAM w_param, LPARAM l_param, float dpi)
 	: message_(message)

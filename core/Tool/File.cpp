@@ -1,4 +1,5 @@
-#include "..\e2dtool.h"
+#include "..\e2dutil.h"
+#include "..\e2dmodule.h"
 #include <shobjidl.h> 
 
 std::list<e2d::String>	e2d::File::search_paths_;

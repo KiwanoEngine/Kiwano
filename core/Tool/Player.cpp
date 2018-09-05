@@ -1,4 +1,4 @@
-#include "..\e2dtool.h"
+#include "..\e2dutil.h"
 
 
 e2d::Player * e2d::Player::instance_ = nullptr;

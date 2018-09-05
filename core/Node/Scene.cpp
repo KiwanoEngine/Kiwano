@@ -1,5 +1,5 @@
-#include "..\e2dbase.h"
-#include "..\e2dnode.h"
+#include "..\e2dmodule.h"
+#include "..\e2dcomponent.h"
 #include "..\e2dmanager.h"
 
 e2d::Scene::Scene()

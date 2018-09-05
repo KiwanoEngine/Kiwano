@@ -1,5 +1,5 @@
 #include "..\e2daction.h"
-#include "..\e2dnode.h"
+#include "..\e2dcomponent.h"
 
 e2d::JumpTo::JumpTo(float duration, const Point & pos, float height, int jumps)
 	: JumpBy(duration, Point(), height, jumps)
