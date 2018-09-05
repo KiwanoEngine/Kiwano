@@ -37,11 +37,6 @@ namespace e2d
 		// 销毁窗体实例
 		static void DestroyInstance();
 
-		// 创建窗体互斥体
-		bool CheckMutex(
-			const String& mutex = L""	/* 进程互斥体名称 */
-		);
-
 		// 获取窗体标题
 		const String& GetTitle() const;
 
@@ -90,6 +85,10 @@ namespace e2d
 		void SetTypewritingEnabled(
 			bool enabled
 		);
+
+		// 检测窗口是否唯一
+		// 返回值：返回 false 说明游戏已经正在进行，可以防止用户同时打开多个游戏窗口
+		bool CheckUnique();
 
 		// 弹出窗口
 		// 返回值：当窗口包含取消按钮时，返回值表示用户是否点击确认按钮

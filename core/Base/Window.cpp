@@ -53,38 +53,18 @@ e2d::Window::~Window()
 	::CoUninitialize();
 }
 
-bool e2d::Window::CheckMutex(const String & mutex)
+bool e2d::Window::CheckUnique()
 {
-	if (mutex.IsEmpty())
-		return false;
+	HANDLE mutex = ::CreateMutex(nullptr, TRUE, LPCWSTR(L"Easy2DApp-" + title_));
 
-	HANDLE hMutex = ::CreateMutex(nullptr, TRUE, LPCWSTR(L"Easy2DApp-" + mutex));
-
-	if (hMutex == nullptr)
+	if (mutex == nullptr)
 	{
 		WARN("CreateMutex Failed!");
 		return false;
 	}
 	else if (::GetLastError() == ERROR_ALREADY_EXISTS)
 	{
-		// 关闭进程互斥体
-		::CloseHandle(hMutex);
-		// 打开游戏窗口
-		if (!this->title_.IsEmpty())
-		{
-			// 获取窗口句柄
-			HWND hProgramWnd = ::FindWindow(REGISTER_CLASS, (LPCTSTR)title_);
-			if (hProgramWnd)
-			{
-				// 获取窗口显示状态
-				WINDOWPLACEMENT wpm;
-				::GetWindowPlacement(hProgramWnd, &wpm);
-				// 将运行的程序窗口还原成正常状态
-				wpm.showCmd = SW_SHOW;
-				::SetWindowPlacement(hProgramWnd, &wpm);
-				::SetWindowPos(hProgramWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-			}
-		}
+		::CloseHandle(mutex);
 		return false;
 	}
 	return true;
