@@ -22,8 +22,8 @@ e2d::Transition::~Transition()
 {
 	SafeRelease(out_layer_);
 	SafeRelease(in_layer_);
-	GC::GetInstance()->SafeRelease(out_scene_);
-	GC::GetInstance()->SafeRelease(in_scene_);
+	SafeRelease(out_scene_);
+	SafeRelease(in_scene_);
 }
 
 bool e2d::Transition::IsDone()

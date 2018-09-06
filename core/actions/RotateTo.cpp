@@ -10,7 +10,7 @@ e2d::RotateTo::RotateTo(float duration, float rotation)
 
 e2d::RotateTo * e2d::RotateTo::Clone() const
 {
-	return new (e2d::autorelease) RotateTo(duration_, end_val_);
+	return new RotateTo(duration_, end_val_);
 }
 
 void e2d::RotateTo::Init()

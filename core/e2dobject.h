@@ -79,6 +79,11 @@ namespace e2d
 		// 获取 ID2D1Bitmap 对象
 		ID2D1Bitmap * GetBitmap();
 
+		// 设置 Bitmap
+		void SetBitmap(
+			ID2D1Bitmap * bitmap
+		);
+
 		// 预加载图片资源
 		static bool Preload(
 			const String& file_name
@@ -94,11 +99,6 @@ namespace e2d
 
 	protected:
 		E2D_DISABLE_COPY(Image);
-
-		// 设置 Bitmap
-		void SetBitmap(
-			ID2D1Bitmap * bitmap
-		);
 
 	protected:
 		Rect crop_rect_;

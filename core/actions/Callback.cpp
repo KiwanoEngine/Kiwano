@@ -7,12 +7,12 @@ e2d::Callback::Callback(const Function& func) :
 
 e2d::Callback * e2d::Callback::Clone() const
 {
-	return new (e2d::autorelease) Callback(callback_);
+	return new Callback(callback_);
 }
 
 e2d::Callback * e2d::Callback::Reverse() const
 {
-	return new (e2d::autorelease) Callback(callback_);
+	return new Callback(callback_);
 }
 
 void e2d::Callback::Init()

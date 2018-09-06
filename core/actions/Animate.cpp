@@ -16,7 +16,7 @@ e2d::Animate::Animate(Animation * animation)
 
 e2d::Animate::~Animate()
 {
-	GC::GetInstance()->SafeRelease(animation_);
+	SafeRelease(animation_);
 }
 
 e2d::Animation * e2d::Animate::GetAnimation() const
@@ -26,11 +26,15 @@ e2d::Animation * e2d::Animate::GetAnimation() const
 
 void e2d::Animate::SetAnimation(Animation * animation)
 {
-	if (animation && animation != animation_ && !animation->GetFrames().empty())
+	if (animation && animation != animation_)
 	{
-		if (animation_) animation_->Release();
+		if (animation_)
+		{
+			animation_->Release();
+		}
 		animation_ = animation;
 		animation_->Retain();
+		frame_index_ = 0;
 	}
 }
 
@@ -92,7 +96,7 @@ e2d::Animate * e2d::Animate::Clone() const
 {
 	if (animation_)
 	{
-		return new (e2d::autorelease) Animate(animation_);
+		return new Animate(animation_);
 	}
 	return nullptr;
 }
@@ -104,7 +108,7 @@ e2d::Animate * e2d::Animate::Reverse() const
 		auto animation = animation_->Reverse();
 		if (animation)
 		{
-			return new (e2d::autorelease) Animate(animation);
+			return new Animate(animation);
 		}
 	}
 	return nullptr;

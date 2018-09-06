@@ -8,12 +8,12 @@ e2d::Delay::Delay(float duration)
 
 e2d::Delay * e2d::Delay::Clone() const
 {
-	return new (e2d::autorelease) Delay(delay_);
+	return new Delay(delay_);
 }
 
 e2d::Delay * e2d::Delay::Reverse() const
 {
-	return new (e2d::autorelease) Delay(delay_);
+	return new Delay(delay_);
 }
 
 void e2d::Delay::Reset()

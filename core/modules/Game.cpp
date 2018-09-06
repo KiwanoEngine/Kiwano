@@ -36,6 +36,10 @@ e2d::Game::Game()
 
 e2d::Game::~Game()
 {
+	SafeRelease(transition_);
+	SafeRelease(curr_scene_);
+	SafeRelease(next_scene_);
+
 	::CoUninitialize();
 }
 
@@ -75,7 +79,6 @@ void e2d::Game::Start()
 			
 			DrawScene();
 			window->Poll();
-			GC::GetInstance()->Flush();
 		}
 		else
 		{
@@ -122,8 +125,10 @@ void e2d::Game::EnterScene(Scene * scene)
 	if (!scene)
 		return;
 
-	// 保存下一场景的指针
-	if (next_scene_) next_scene_->Release();
+	if (next_scene_)
+	{
+		next_scene_->Release();
+	}
 	next_scene_ = scene;
 	next_scene_->Retain();
 }

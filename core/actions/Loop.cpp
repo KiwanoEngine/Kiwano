@@ -17,14 +17,14 @@ e2d::Loop::Loop(Action * action, int times /* = -1 */)
 
 e2d::Loop::~Loop()
 {
-	GC::GetInstance()->SafeRelease(action_);
+	SafeRelease(action_);
 }
 
 e2d::Loop * e2d::Loop::Clone() const
 {
 	if (action_)
 	{
-		return new (e2d::autorelease) Loop(action_->Clone());
+		return new Loop(action_->Clone());
 	}
 	else
 	{
@@ -36,7 +36,7 @@ e2d::Loop * e2d::Loop::Reverse() const
 {
 	if (action_)
 	{
-		return new (e2d::autorelease) Loop(action_->Clone());
+		return new Loop(action_->Clone());
 	}
 	else
 	{

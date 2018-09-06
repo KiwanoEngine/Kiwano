@@ -24,9 +24,9 @@ e2d::Animation::Animation(float interval, const Images& frames)
 
 e2d::Animation::~Animation()
 {
-	for (const auto& frame : frames_)
+	for (auto frame : frames_)
 	{
-		GC::GetInstance()->SafeRelease(frame);
+		SafeRelease(frame);
 	}
 }
 
@@ -65,7 +65,7 @@ const e2d::Animation::Images& e2d::Animation::GetFrames() const
 
 e2d::Animation * e2d::Animation::Clone() const
 {
-	auto animation = new (e2d::autorelease) Animation(interval_);
+	auto animation = new Animation(interval_);
 	if (animation)
 	{
 		for (const auto& frame : frames_)
@@ -96,5 +96,5 @@ e2d::Animation * e2d::Animation::Reverse() const
 		}
 	}
 
-	return new (e2d::autorelease) Animation(this->GetInterval(), frames);
+	return new Animation(this->GetInterval(), frames);
 }

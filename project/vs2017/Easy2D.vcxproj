@@ -238,7 +238,6 @@
     <ClCompile Include="..\..\core\objects\Collider.cpp" />
     <ClCompile Include="..\..\core\objects\Image.cpp" />
     <ClCompile Include="..\..\core\objects\Node.cpp" />
-    <ClCompile Include="..\..\core\objects\Object.cpp" />
     <ClCompile Include="..\..\core\objects\Scene.cpp" />
     <ClCompile Include="..\..\core\objects\Sprite.cpp" />
     <ClCompile Include="..\..\core\objects\Text.cpp" />
@@ -261,6 +260,7 @@
     <ClCompile Include="..\..\core\utils\Function.cpp" />
     <ClCompile Include="..\..\core\utils\Point.cpp" />
     <ClCompile Include="..\..\core\utils\Rect.cpp" />
+    <ClCompile Include="..\..\core\utils\Ref.cpp" />
     <ClCompile Include="..\..\core\utils\Resource.cpp" />
     <ClCompile Include="..\..\core\utils\Size.cpp" />
     <ClCompile Include="..\..\core\utils\String.cpp" />

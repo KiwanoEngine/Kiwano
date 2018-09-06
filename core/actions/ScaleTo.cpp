@@ -17,7 +17,7 @@ e2d::ScaleTo::ScaleTo(float duration, float scale_x, float scale_y)
 
 e2d::ScaleTo * e2d::ScaleTo::Clone() const
 {
-	return new (e2d::autorelease) ScaleTo(duration_, end_scale_x_, end_scale_y_);
+	return new ScaleTo(duration_, end_scale_x_, end_scale_y_);
 }
 
 void e2d::ScaleTo::Init()

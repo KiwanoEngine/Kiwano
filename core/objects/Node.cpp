@@ -63,14 +63,14 @@ e2d::Node::~Node()
 {
 	SafeRelease(border_);
 
-	for (const auto& action : actions_)
+	for (auto action : actions_)
 	{
-		GC::GetInstance()->SafeRelease(action);
+		SafeRelease(action);
 	}
 
-	for (const auto& child : children_)
+	for (auto child : children_)
 	{
-		GC::GetInstance()->SafeRelease(child);
+		SafeRelease(child);
 	}
 }
 

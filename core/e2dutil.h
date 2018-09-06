@@ -610,38 +610,31 @@ namespace e2d
 		virtual ~Ref();
 
 		// 增加引用计数
-		void Retain();
+		LONG Retain();
 
 		// 减少引用计数
-		void Release();
+		LONG Release();
 
 		// 获取引用计数
-		int GetRefCount() const;
+		LONG GetRefCount() const;
 
 	protected:
 		E2D_DISABLE_COPY(Ref);
 
-	private:
-		int ref_count_;
+	protected:
+		LONG ref_count_;
 	};
 
 
+	template<class Interface>
+	inline void SafeRelease(Interface*& p)
+	{
+		if (p != nullptr)
+		{
+			p->Release();
+			p = nullptr;
+		}
+	}
+
+
 }
-
-
-namespace e2d
-{
-	struct autorelease_t { };
-
-	extern autorelease_t const autorelease;
-}
-
-void* operator new(
-	size_t size,
-	e2d::autorelease_t const&
-	) E2D_NOEXCEPT;
-
-void operator delete(
-	void* block,
-	e2d::autorelease_t const&
-	) E2D_NOEXCEPT;

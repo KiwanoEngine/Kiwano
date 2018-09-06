@@ -376,26 +376,9 @@ namespace e2d
 	};
 
 
-	// 垃圾回收池
+	// 垃圾回收
 	class GC
 	{
-	public:
-		// 获取 GC 实例
-		static GC * GetInstance();
-
-		// 自动释放
-		void AutoRelease(
-			Ref* ref
-		);
-
-		// 安全地释放对象
-		void SafeRelease(
-			Ref* ref
-		);
-
-		// 刷新内存池
-		void Flush();
-
 	private:
 		GC();
 
@@ -403,10 +386,7 @@ namespace e2d
 
 		E2D_DISABLE_COPY(GC);
 
-	private:
-		bool notifyed_;
-		bool cleanup_;
-		std::set<Ref*> pool_;
+		static GC instance_;
 	};
 
 }

@@ -9,7 +9,7 @@ e2d::JumpTo::JumpTo(float duration, const Point & pos, float height, int jumps)
 
 e2d::JumpTo * e2d::JumpTo::Clone() const
 {
-	return new (e2d::autorelease) JumpTo(duration_, end_pos_, height_, jumps_);
+	return new JumpTo(duration_, end_pos_, height_, jumps_);
 }
 
 void e2d::JumpTo::Init()

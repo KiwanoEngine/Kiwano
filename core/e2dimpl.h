@@ -170,17 +170,6 @@ namespace e2d
 	};
 
 
-	template<class Interface>
-	inline void SafeRelease(Interface*& p)
-	{
-		if (p != nullptr)
-		{
-			p->Release();
-			p = nullptr;
-		}
-	}
-
-
 	inline void ThrowIfFailed(HRESULT hr)
 	{
 		if (FAILED(hr))

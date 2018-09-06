@@ -42,6 +42,7 @@ e2d::Image::Image(const String & file_name, const Rect & crop_rect)
 
 e2d::Image::~Image()
 {
+	SafeRelease(bitmap_);
 }
 
 bool e2d::Image::Open(const Resource& res)
@@ -366,8 +367,18 @@ void e2d::Image::ClearCache()
 
 void e2d::Image::SetBitmap(ID2D1Bitmap * bitmap)
 {
+	if (bitmap_ == bitmap)
+		return;
+
+	if (bitmap_)
+	{
+		bitmap_->Release();
+	}
+
 	if (bitmap)
 	{
+		bitmap->AddRef();
+
 		bitmap_ = bitmap;
 		crop_rect_.origin.x = crop_rect_.origin.y = 0;
 		crop_rect_.size.width = bitmap_->GetSize().width;

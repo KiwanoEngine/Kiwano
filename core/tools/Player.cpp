@@ -32,7 +32,7 @@ e2d::Player::~Player()
 	{
 		for (const auto& pair : musics_)
 		{
-			delete pair.second;
+			pair.second->Release();
 		}
 	}
 }
@@ -44,11 +44,20 @@ bool e2d::Player::Preload(const String & file_path)
 
 	Music * music = new (std::nothrow) Music();
 
-	if (music && music->Open(file_path))
+	if (music)
 	{
-		music->SetVolume(volume_);
-		musics_.insert(std::make_pair(file_path.GetHash(), music));
-		return true;
+		music->Retain();
+
+		if (music->Open(file_path))
+		{
+			music->SetVolume(volume_);
+			musics_.insert(std::make_pair(file_path.GetHash(), music));
+			return true;
+		}
+		else
+		{
+			music->Release();
+		}
 	}
 	return false;
 }
@@ -117,11 +126,20 @@ bool e2d::Player::Preload(const Resource& res)
 
 	Music * music = new (std::nothrow) Music();
 
-	if (music && music->Open(res))
+	if (music)
 	{
-		music->SetVolume(volume_);
-		musics_.insert(std::make_pair(res.name, music));
-		return true;
+		music->Retain();
+
+		if (music->Open(res))
+		{
+			music->SetVolume(volume_);
+			musics_.insert(std::make_pair(res.name, music));
+			return true;
+		}
+		else
+		{
+			music->Release();
+		}
 	}
 	return false;
 }

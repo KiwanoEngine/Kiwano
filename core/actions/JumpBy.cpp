@@ -11,12 +11,12 @@ e2d::JumpBy::JumpBy(float duration, const Point & vec, float height, int jumps)
 
 e2d::JumpBy * e2d::JumpBy::Clone() const
 {
-	return new (e2d::autorelease) JumpBy(duration_, delta_pos_, height_, jumps_);
+	return new JumpBy(duration_, delta_pos_, height_, jumps_);
 }
 
 e2d::JumpBy * e2d::JumpBy::Reverse() const
 {
-	return new (e2d::autorelease) JumpBy(duration_, -delta_pos_, height_, jumps_);
+	return new JumpBy(duration_, -delta_pos_, height_, jumps_);
 }
 
 void e2d::JumpBy::Init()

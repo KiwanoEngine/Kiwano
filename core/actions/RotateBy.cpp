@@ -30,10 +30,10 @@ void e2d::RotateBy::Update()
 
 e2d::RotateBy * e2d::RotateBy::Clone() const
 {
-	return new (e2d::autorelease) RotateBy(duration_, delta_val_);
+	return new RotateBy(duration_, delta_val_);
 }
 
 e2d::RotateBy * e2d::RotateBy::Reverse() const
 {
-	return new (e2d::autorelease) RotateBy(duration_, -delta_val_);
+	return new RotateBy(duration_, -delta_val_);
 }

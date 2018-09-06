@@ -9,7 +9,7 @@ e2d::MoveTo::MoveTo(float duration, Point pos)
 
 e2d::MoveTo * e2d::MoveTo::Clone() const
 {
-	return new (e2d::autorelease) MoveTo(duration_, end_pos_);
+	return new MoveTo(duration_, end_pos_);
 }
 
 void e2d::MoveTo::Init()

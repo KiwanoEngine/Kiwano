@@ -11,9 +11,9 @@ e2d::Spawn::Spawn(const Actions& actions)
 
 e2d::Spawn::~Spawn()
 {
-	for (const auto& action : actions_)
+	for (auto action : actions_)
 	{
-		GC::GetInstance()->SafeRelease(action);
+		SafeRelease(action);
 	}
 }
 
@@ -90,7 +90,7 @@ void e2d::Spawn::Add(const Actions& actions)
 
 e2d::Spawn * e2d::Spawn::Clone() const
 {
-	auto spawn = new (e2d::autorelease) Spawn();
+	auto spawn = new Spawn();
 	for (const auto& action : actions_)
 	{
 		if (action)
@@ -103,7 +103,7 @@ e2d::Spawn * e2d::Spawn::Clone() const
 
 e2d::Spawn * e2d::Spawn::Reverse() const
 {
-	auto spawn = new (e2d::autorelease) Spawn();
+	auto spawn = new Spawn();
 	if (spawn && !actions_.empty())
 	{
 		std::vector<Action*> newActions(actions_.size());

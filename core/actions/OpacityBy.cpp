@@ -30,10 +30,10 @@ void e2d::OpacityBy::Update()
 
 e2d::OpacityBy * e2d::OpacityBy::Clone() const
 {
-	return new (e2d::autorelease) OpacityBy(duration_, delta_val_);
+	return new OpacityBy(duration_, delta_val_);
 }
 
 e2d::OpacityBy * e2d::OpacityBy::Reverse() const
 {
-	return new (e2d::autorelease) OpacityBy(duration_, -delta_val_);
+	return new OpacityBy(duration_, -delta_val_);
 }

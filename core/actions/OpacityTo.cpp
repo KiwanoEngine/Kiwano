@@ -10,7 +10,7 @@ e2d::OpacityTo::OpacityTo(float duration, float opacity)
 
 e2d::OpacityTo * e2d::OpacityTo::Clone() const
 {
-	return new (e2d::autorelease) OpacityTo(duration_, end_val_);
+	return new OpacityTo(duration_, end_val_);
 }
 
 void e2d::OpacityTo::Init()

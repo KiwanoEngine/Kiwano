@@ -18,6 +18,8 @@ e2d::Collider::Collider(Node * parent)
 e2d::Collider::~Collider()
 {
 	SafeRelease(geometry_);
+
+	CollisionManager::GetInstance()->RemoveCollider(this);
 }
 
 const e2d::Color& e2d::Collider::GetBorderColor() const

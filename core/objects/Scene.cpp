@@ -20,8 +20,8 @@ e2d::Scene::~Scene()
 {
 	if (root_)
 	{
-		root_->Release();
 		root_->SetParentScene(nullptr);
+		root_->Release();
 	}
 }
 
@@ -32,8 +32,8 @@ void e2d::Scene::SetRoot(Node * root)
 
 	if (root_)
 	{
-		root_->Release();
 		root_->SetParentScene(nullptr);
+		root_->Release();
 	}
 
 	if (root)

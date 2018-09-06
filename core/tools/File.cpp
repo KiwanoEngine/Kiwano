@@ -174,60 +174,60 @@ e2d::File e2d::File::ShowOpenDialog(const String & title, const String & filter)
 
 	if (SUCCEEDED(hr))
 	{
-		IFileOpenDialog *pFileOpen;
+		IFileOpenDialog *file_open;
 
 		hr = ::CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
-			IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+			IID_IFileOpenDialog, reinterpret_cast<void**>(&file_open));
 
 		if (SUCCEEDED(hr))
 		{
 			if (!title.IsEmpty())
 			{
-				pFileOpen->SetTitle(LPCWSTR(title));
+				file_open->SetTitle(LPCWSTR(title));
 			}
 
 			if (!filter.IsEmpty())
 			{
-				COMDLG_FILTERSPEC rgSpec[] =
+				COMDLG_FILTERSPEC spec[] =
 				{
 					{ L"", LPCWSTR(filter) }
 				};
-				pFileOpen->SetFileTypes(1, rgSpec);
+				file_open->SetFileTypes(1, spec);
 			}
 			else
 			{
-				COMDLG_FILTERSPEC rgSpec[] =
+				COMDLG_FILTERSPEC spec[] =
 				{
 					{ L"所有文件", L"*.*" }
 				};
-				pFileOpen->SetFileTypes(1, rgSpec);
+				file_open->SetFileTypes(1, spec);
 			}
 
 			Game::GetInstance()->Pause();
 			{
 				HWND hWnd = Window::GetInstance()->GetHWnd();
-				hr = pFileOpen->Show(hWnd);
+				hr = file_open->Show(hWnd);
 			}
 			Game::GetInstance()->Resume();
 
 			if (SUCCEEDED(hr))
 			{
-				IShellItem *pItem;
-				hr = pFileOpen->GetResult(&pItem);
+				IShellItem *item;
+				hr = file_open->GetResult(&item);
 				if (SUCCEEDED(hr))
 				{
-					PWSTR pszFilePath;
-					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+					PWSTR str_file_path;
+					hr = item->GetDisplayName(SIGDN_FILESYSPATH, &str_file_path);
 
 					if (SUCCEEDED(hr))
 					{
-						file_path = pszFilePath;
-						::CoTaskMemFree(pszFilePath);
+						file_path = str_file_path;
+						::CoTaskMemFree(str_file_path);
 					}
-					pItem->Release();
+					item->Release();
 				}
 			}
-			pFileOpen->Release();
+			file_open->Release();
 		}
 		::CoUninitialize();
 	}
@@ -241,68 +241,68 @@ e2d::File e2d::File::ShowSaveDialog(const String & title, const String& def_file
 	
 	if (SUCCEEDED(hr))
 	{
-		IFileSaveDialog *pFileSave;
+		IFileSaveDialog *file_save;
 
 		hr = ::CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
-			IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileSave));
+			IID_IFileSaveDialog, reinterpret_cast<void**>(&file_save));
 
 		if (SUCCEEDED(hr))
 		{
 			if (!title.IsEmpty())
 			{
-				pFileSave->SetTitle(LPCWSTR(title));
+				file_save->SetTitle(LPCWSTR(title));
 			}
 
 			if (!def_file.IsEmpty())
 			{
-				pFileSave->SetFileName(LPCWSTR(def_file));
+				file_save->SetFileName(LPCWSTR(def_file));
 			}
 
 			if (!def_ext.IsEmpty())
 			{
-				pFileSave->SetDefaultExtension(LPCWSTR(def_ext));
+				file_save->SetDefaultExtension(LPCWSTR(def_ext));
 
-				String spec = L"*." + def_ext;
-				COMDLG_FILTERSPEC rgSpec[] =
+				String ext = L"*." + def_ext;
+				COMDLG_FILTERSPEC spec[] =
 				{
-					{ L"", LPCWSTR(spec) }
+					{ L"", LPCWSTR(ext) }
 				};
-				pFileSave->SetFileTypes(1, rgSpec);
+				file_save->SetFileTypes(1, spec);
 			}
 			else
 			{
-				COMDLG_FILTERSPEC rgSpec[] =
+				COMDLG_FILTERSPEC spec[] =
 				{
 					{ L"所有文件", L"*.*" }
 				};
-				pFileSave->SetFileTypes(1, rgSpec);
+				file_save->SetFileTypes(1, spec);
 			}
 
 			Game::GetInstance()->Pause();
 			{
 				HWND hWnd = Window::GetInstance()->GetHWnd();
-				hr = pFileSave->Show(hWnd);
+				hr = file_save->Show(hWnd);
 			}
 			Game::GetInstance()->Resume();
 
 			if (SUCCEEDED(hr))
 			{
-				IShellItem *pItem;
-				hr = pFileSave->GetResult(&pItem);
+				IShellItem *item;
+				hr = file_save->GetResult(&item);
 				if (SUCCEEDED(hr))
 				{
-					PWSTR pszFilePath;
-					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+					PWSTR str_file_path;
+					hr = item->GetDisplayName(SIGDN_FILESYSPATH, &str_file_path);
 
 					if (SUCCEEDED(hr))
 					{
-						file_path = pszFilePath;
-						::CoTaskMemFree(pszFilePath);
+						file_path = str_file_path;
+						::CoTaskMemFree(str_file_path);
 					}
-					pItem->Release();
+					item->Release();
 				}
 			}
-			pFileSave->Release();
+			file_save->Release();
 		}
 		::CoUninitialize();
 	}
