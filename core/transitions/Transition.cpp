@@ -89,15 +89,15 @@ void e2d::Transition::Draw()
 
 	if (out_scene_ && out_scene_->GetRoot())
 	{
-		auto rootPos = out_scene_->GetRoot()->GetPos();
-		auto clipRect = D2D1::RectF(
-			std::max(rootPos.x, 0.f),
-			std::max(rootPos.y, 0.f),
-			std::min(rootPos.x + size.width, size.width),
-			std::min(rootPos.y + size.height, size.height)
+		auto root_pos = out_scene_->GetRoot()->GetPos();
+		auto clip_rect = D2D1::RectF(
+			std::max(root_pos.x, 0.f),
+			std::max(root_pos.y, 0.f),
+			std::min(root_pos.x + size.width, size.width),
+			std::min(root_pos.y + size.height, size.height)
 		);
 		render_target->SetTransform(D2D1::Matrix3x2F::Identity());
-		render_target->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+		render_target->PushAxisAlignedClip(clip_rect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		render_target->PushLayer(out_layer_param_, out_layer_);
 
 		out_scene_->Draw();
@@ -108,15 +108,15 @@ void e2d::Transition::Draw()
 
 	if (in_scene_ && in_scene_->GetRoot())
 	{
-		Point rootPos = in_scene_->GetRoot()->GetPos();
-		auto clipRect = D2D1::RectF(
-			std::max(rootPos.x, 0.f),
-			std::max(rootPos.y, 0.f),
-			std::min(rootPos.x + size.width, size.width),
-			std::min(rootPos.y + size.height, size.height)
+		Point root_pos = in_scene_->GetRoot()->GetPos();
+		auto clip_rect = D2D1::RectF(
+			std::max(root_pos.x, 0.f),
+			std::max(root_pos.y, 0.f),
+			std::min(root_pos.x + size.width, size.width),
+			std::min(root_pos.y + size.height, size.height)
 		);
 		render_target->SetTransform(D2D1::Matrix3x2F::Identity());
-		render_target->PushAxisAlignedClip(clipRect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+		render_target->PushAxisAlignedClip(clip_rect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 		render_target->PushLayer(in_layer_param_, in_layer_);
 
 		in_scene_->Draw();
