@@ -1,12 +1,8 @@
 #pragma once
-#include "e2dmacros.h"
-#include "e2dutil.h"
+#include "e2dobject.h"
 
 namespace e2d
 {
-
-
-	class Node;
 
 
 	// Åö×²Ìå¹ÜÀíÆ÷

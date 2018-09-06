@@ -112,28 +112,21 @@ namespace e2d
 	};
 
 
-	// 碰撞事件
-	class Collision
+	// 事件接收目标
+	class EventTarget
 	{
 	public:
-		Collision();
+		// 分发鼠标消息
+		virtual bool Dispatch(
+			const MouseEvent& e,
+			bool handled
+		) = 0;
 
-		explicit Collision(
-			Node* node,
-			Collider::Relation relation
-		);
-
-		~Collision();
-
-		// 获取发生碰撞节点
-		Node* GetNode() const;
-
-		// 获取交集关系
-		Collider::Relation GetRelation() const;
-
-	protected:
-		Node * node_;
-		Collider::Relation relation_;
+		// 分发按键消息
+		virtual bool Dispatch(
+			const KeyEvent& e,
+			bool handled
+		) = 0;
 	};
 
 }

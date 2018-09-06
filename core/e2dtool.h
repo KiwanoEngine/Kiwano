@@ -50,11 +50,8 @@ namespace e2d
 
 
 	// “Ù¿÷
-	class Music :
-		public Ref
+	class Music
 	{
-		friend class VoiceCallback;
-
 	public:
 		Music();
 
@@ -117,16 +114,16 @@ namespace e2d
 		IXAudio2SourceVoice * GetSourceVoice() const;
 
 	protected:
-		bool _readMMIO();
+		bool ReadMMIO();
 
-		bool _resetFile();
+		bool ResetFile();
 
-		bool _read(
+		bool Read(
 			BYTE* buffer,
 			DWORD size_to_read
 		);
 
-		bool _findMediaFileCch(
+		bool FindMediaFileCch(
 			wchar_t* dest_path,
 			int cch_dest,
 			const wchar_t * file_name

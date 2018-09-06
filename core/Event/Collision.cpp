@@ -1,4 +1,4 @@
-#include "..\e2devent.h"
+#include "..\e2dobject.h"
 
 e2d::Collision::Collision()
 	: node_(nullptr)
