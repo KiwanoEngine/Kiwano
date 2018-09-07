@@ -53,7 +53,7 @@ bool e2d::Image::Open(const Resource& res)
 		return false;
 	}
 
-	this->SetBitmap(bitmap_cache_.at(res.name));
+	this->SetBitmap(bitmap_cache_.at(res.id));
 	return true;
 }
 
@@ -153,98 +153,98 @@ e2d::Point e2d::Image::GetCropPos() const
 
 bool e2d::Image::Preload(const Resource& res)
 {
-	if (bitmap_cache_.find(res.name) != bitmap_cache_.end())
+	if (bitmap_cache_.find(res.id) != bitmap_cache_.end())
 	{
 		return true;
 	}
 
-	IWICImagingFactory *pImagingFactory = Renderer::GetImagingFactory();
-	ID2D1HwndRenderTarget* pRenderTarget = Renderer::GetInstance()->GetRenderTarget();
-	IWICBitmapDecoder *pDecoder = nullptr;
-	IWICBitmapFrameDecode *pSource = nullptr;
-	IWICStream *pStream = nullptr;
-	IWICFormatConverter *pConverter = nullptr;
-	ID2D1Bitmap *pBitmap = nullptr;
-	HRSRC imageResHandle = nullptr;
-	HGLOBAL imageResDataHandle = nullptr;
-	void *pImageFile = nullptr;
-	DWORD imageFileSize = 0;
+	IWICImagingFactory *imaging_factory = Renderer::GetImagingFactory();
+	ID2D1HwndRenderTarget* render_target = Renderer::GetInstance()->GetRenderTarget();
+	IWICBitmadecoder *decoder = nullptr;
+	IWICBitmapFrameDecode *source = nullptr;
+	IWICStream *stream = nullptr;
+	IWICFormatConverter *converter = nullptr;
+	ID2D1Bitmap *bitmap = nullptr;
+	HRSRC res_handle = nullptr;
+	HGLOBAL res_data_handle = nullptr;
+	void *image_file = nullptr;
+	DWORD image_file_size = 0;
 
 	// 定位资源
-	imageResHandle = ::FindResourceW(
+	res_handle = ::FindResourceW(
 		HINST_THISCOMPONENT, 
-		MAKEINTRESOURCE(res.name), 
+		MAKEINTRESOURCE(res.id), 
 		(LPCWSTR)res.type
 	);
 
-	HRESULT hr = imageResHandle ? S_OK : E_FAIL;
+	HRESULT hr = res_handle ? S_OK : E_FAIL;
 	if (SUCCEEDED(hr))
 	{
 		// 加载资源
-		imageResDataHandle = ::LoadResource(HINST_THISCOMPONENT, imageResHandle);
+		res_data_handle = ::LoadResource(HINST_THISCOMPONENT, res_handle);
 
-		hr = imageResDataHandle ? S_OK : E_FAIL;
+		hr = res_data_handle ? S_OK : E_FAIL;
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 获取文件指针，并锁定资源
-		pImageFile = ::LockResource(imageResDataHandle);
+		image_file = ::LockResource(res_data_handle);
 
-		hr = pImageFile ? S_OK : E_FAIL;
+		hr = image_file ? S_OK : E_FAIL;
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 计算大小
-		imageFileSize = ::SizeofResource(HINST_THISCOMPONENT, imageResHandle);
+		image_file_size = ::SizeofResource(HINST_THISCOMPONENT, res_handle);
 
-		hr = imageFileSize ? S_OK : E_FAIL;
+		hr = image_file_size ? S_OK : E_FAIL;
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 创建 WIC 流
-		hr = pImagingFactory->CreateStream(&pStream);
+		hr = imaging_factory->CreateStream(&stream);
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 初始化流
-		hr = pStream->InitializeFromMemory(
-			reinterpret_cast<BYTE*>(pImageFile),
-			imageFileSize
+		hr = stream->InitializeFromMemory(
+			reinterpret_cast<BYTE*>(image_file),
+			image_file_size
 		);
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 创建流的解码器
-		hr = pImagingFactory->CreateDecoderFromStream(
-			pStream,
+		hr = imaging_factory->CreateDecoderFromStream(
+			stream,
 			nullptr,
 			WICDecodeMetadataCacheOnLoad,
-			&pDecoder
+			&decoder
 		);
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 创建初始化框架
-		hr = pDecoder->GetFrame(0, &pSource);
+		hr = decoder->GetFrame(0, &source);
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 创建图片格式转换器
-		hr = pImagingFactory->CreateFormatConverter(&pConverter);
+		hr = imaging_factory->CreateFormatConverter(&converter);
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 图片格式转换成 32bppPBGRA
-		hr = pConverter->Initialize(
-			pSource,
+		hr = converter->Initialize(
+			source,
 			GUID_WICPixelFormat32bppPBGRA,
 			WICBitmapDitherTypeNone,
 			nullptr,
@@ -256,71 +256,74 @@ bool e2d::Image::Preload(const Resource& res)
 	if (SUCCEEDED(hr))
 	{
 		// 从 WIC 位图创建一个 Direct2D 位图
-		hr = pRenderTarget->CreateBitmapFromWicBitmap(
-			pConverter,
+		hr = render_target->CreateBitmapFromWicBitmap(
+			converter,
 			nullptr,
-			&pBitmap
+			&bitmap
 		);
 	}
 
 	if (SUCCEEDED(hr))
 	{
-		bitmap_cache_.insert(std::make_pair(res.name, pBitmap));
+		bitmap_cache_.insert(std::make_pair(res.id, bitmap));
 	}
 
 	// 释放相关资源
-	SafeRelease(pDecoder);
-	SafeRelease(pSource);
-	SafeRelease(pStream);
-	SafeRelease(pConverter);
+	SafeRelease(decoder);
+	SafeRelease(source);
+	SafeRelease(stream);
+	SafeRelease(converter);
 
 	return SUCCEEDED(hr);
 }
 
 bool e2d::Image::Preload(const String & file_name)
 {
-	String actualFilePath = File(file_name).GetPath();
-	if (actualFilePath.IsEmpty())
+	File image_file;
+	if (!image_file.Open(file_name))
 		return false;
 
-	size_t hash = actualFilePath.GetHash();
+	// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
+	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
+	String image_file_path = image_file.GetPath();
+	size_t hash = image_file_path.GetHash();
 	if (bitmap_cache_.find(hash) != bitmap_cache_.end())
 		return true;
 
-	IWICImagingFactory *pImagingFactory = Renderer::GetImagingFactory();
-	ID2D1HwndRenderTarget* pRenderTarget = Renderer::GetInstance()->GetRenderTarget();
-	IWICBitmapDecoder *pDecoder = nullptr;
-	IWICBitmapFrameDecode *pSource = nullptr;
-	IWICStream *pStream = nullptr;
-	IWICFormatConverter *pConverter = nullptr;
-	ID2D1Bitmap *pBitmap = nullptr;
+	IWICImagingFactory *imaging_factory = Renderer::GetImagingFactory();
+	ID2D1HwndRenderTarget* render_target = Renderer::GetInstance()->GetRenderTarget();
+	IWICBitmadecoder *decoder = nullptr;
+	IWICBitmapFrameDecode *source = nullptr;
+	IWICStream *stream = nullptr;
+	IWICFormatConverter *converter = nullptr;
+	ID2D1Bitmap *bitmap = nullptr;
 
 	// 创建解码器
-	HRESULT hr = pImagingFactory->CreateDecoderFromFilename(
-		(LPCWSTR)actualFilePath,
+	HRESULT hr = imaging_factory->CreateDecoderFromFilename(
+		(LPCWSTR)image_file_path,
 		nullptr,
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnLoad,
-		&pDecoder
+		&decoder
 	);
 
 	if (SUCCEEDED(hr))
 	{
 		// 创建初始化框架
-		hr = pDecoder->GetFrame(0, &pSource);
+		hr = decoder->GetFrame(0, &source);
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 创建图片格式转换器
-		hr = pImagingFactory->CreateFormatConverter(&pConverter);
+		hr = imaging_factory->CreateFormatConverter(&converter);
 	}
 
 	if (SUCCEEDED(hr))
 	{
 		// 图片格式转换成 32bppPBGRA
-		hr = pConverter->Initialize(
-			pSource,
+		hr = converter->Initialize(
+			source,
 			GUID_WICPixelFormat32bppPBGRA,
 			WICBitmapDitherTypeNone,
 			nullptr,
@@ -332,23 +335,23 @@ bool e2d::Image::Preload(const String & file_name)
 	if (SUCCEEDED(hr))
 	{
 		// 从 WIC 位图创建一个 Direct2D 位图
-		hr = pRenderTarget->CreateBitmapFromWicBitmap(
-			pConverter,
+		hr = render_target->CreateBitmapFromWicBitmap(
+			converter,
 			nullptr,
-			&pBitmap
+			&bitmap
 		);
 	}
 
 	if (SUCCEEDED(hr))
 	{
-		bitmap_cache_.insert(std::make_pair(hash, pBitmap));
+		bitmap_cache_.insert(std::make_pair(hash, bitmap));
 	}
 
 	// 释放相关资源
-	SafeRelease(pDecoder);
-	SafeRelease(pSource);
-	SafeRelease(pStream);
-	SafeRelease(pConverter);
+	SafeRelease(decoder);
+	SafeRelease(source);
+	SafeRelease(stream);
+	SafeRelease(converter);
 
 	return SUCCEEDED(hr);
 }

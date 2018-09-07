@@ -40,11 +40,11 @@ bool e2d::File::Open(const String & file_name)
 	}
 	else
 	{
-		for (const auto& resPath : search_paths_)
+		for (const auto& path : search_paths_)
 		{
-			if (FindFile(resPath + file_name))
+			if (FindFile(path + file_name))
 			{
-				file_path_ = resPath + file_name;
+				file_path_ = path + file_name;
 				return true;
 			}
 		}

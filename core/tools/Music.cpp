@@ -10,15 +10,15 @@
 #define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p); (p)=nullptr; } }
 #endif
 
-inline bool TraceError(wchar_t* sPrompt)
+inline bool TraceError(wchar_t* prompt)
 {
-	WARN("MusicInfo error: %s failed!", sPrompt);
+	WARN("Music error: %s failed!", prompt);
 	return false;
 }
 
-inline bool TraceError(wchar_t* sPrompt, HRESULT hr)
+inline bool TraceError(wchar_t* prompt, HRESULT hr)
 {
-	WARN("MusicInfo error: %s (%#X)", sPrompt, hr);
+	WARN("Music error: %s (%#X)", prompt, hr);
 	return false;
 }
 
@@ -75,20 +75,24 @@ bool e2d::Music::Open(const e2d::String & file_path)
 
 	if (file_path.IsEmpty())
 	{
-		WARN("MusicInfo::Open Invalid file name.");
+		WARN("Music::Open error: Invalid file name.");
 		return false;
 	}
 
-	String actualFilePath = File(file_path).GetPath();
-	if (actualFilePath.IsEmpty())
+	File music_file;
+	if (!music_file.Open(file_name))
 	{
-		WARN("MusicInfo::Open File not found.");
+		WARN("Music::Open error: File not found.");
 		return false;
 	}
+
+	// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
+	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
+	String music_file_path = music_file.GetPath();
 
 	// 定位 wave 文件
 	wchar_t pFilePath[MAX_PATH];
-	if (!FindMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)actualFilePath))
+	if (!FindMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)music_file_path))
 	{
 		WARN("Failed to Find media file: %s", pFilePath);
 		return false;
@@ -151,7 +155,7 @@ bool e2d::Music::Open(const Resource& res)
 	DWORD dwSize;
 	void* pvRes;
 
-	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(res.name), (LPCWSTR)res.type)))
+	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(res.id), (LPCWSTR)res.type)))
 		return TraceError(L"FindResource");
 
 	if (nullptr == (hResData = LoadResource(HINST_THISCOMPONENT, hResInfo)))

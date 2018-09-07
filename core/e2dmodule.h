@@ -71,7 +71,7 @@ namespace e2d
 
 		// 设置窗体图标
 		void SetIcon(
-			int icon_id
+			int icon_id			/* 图标资源 ID */
 		);
 
 		// 设置鼠标指针样式
@@ -131,9 +131,9 @@ namespace e2d
 		MSG		msg_;
 		int		width_;
 		int		height_;
-		String	title_;
 		int		icon_id_;
 		float	dpi_;
+		String	title_;
 
 		static Window * instance_;
 	};
@@ -273,7 +273,7 @@ namespace e2d
 		E2D_DISABLE_COPY(Input);
 
 	protected:
-		IDirectInput8W * direct_input_;
+		IDirectInput8W *		direct_input_;
 		IDirectInputDevice8W*	keyboard_device_;
 		IDirectInputDevice8W*	mouse_device_;
 		DIMOUSESTATE			mouse_state_;

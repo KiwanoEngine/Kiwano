@@ -121,7 +121,7 @@ bool e2d::Player::IsPlaying(const String & file_path)
 
 bool e2d::Player::Preload(const Resource& res)
 {
-	if (musics_.end() != musics_.find(res.name))
+	if (musics_.end() != musics_.find(res.id))
 		return true;
 
 	Music * music = new (std::nothrow) Music();
@@ -133,7 +133,7 @@ bool e2d::Player::Preload(const Resource& res)
 		if (music->Open(res))
 		{
 			music->SetVolume(volume_);
-			musics_.insert(std::make_pair(res.name, music));
+			musics_.insert(std::make_pair(res.id, music));
 			return true;
 		}
 		else
@@ -148,7 +148,7 @@ bool e2d::Player::Play(const Resource& res, int loop_count)
 {
 	if (Player::Preload(res))
 	{
-		auto music = musics_[res.name];
+		auto music = musics_[res.id];
 		if (music->Play(loop_count))
 		{
 			return true;
@@ -159,26 +159,26 @@ bool e2d::Player::Play(const Resource& res, int loop_count)
 
 void e2d::Player::Pause(const Resource& res)
 {
-	if (musics_.end() != musics_.find(res.name))
-		musics_[res.name]->Pause();
+	if (musics_.end() != musics_.find(res.id))
+		musics_[res.id]->Pause();
 }
 
 void e2d::Player::Resume(const Resource& res)
 {
-	if (musics_.end() != musics_.find(res.name))
-		musics_[res.name]->Resume();
+	if (musics_.end() != musics_.find(res.id))
+		musics_[res.id]->Resume();
 }
 
 void e2d::Player::Stop(const Resource& res)
 {
-	if (musics_.end() != musics_.find(res.name))
-		musics_[res.name]->Stop();
+	if (musics_.end() != musics_.find(res.id))
+		musics_[res.id]->Stop();
 }
 
 bool e2d::Player::IsPlaying(const Resource& res)
 {
-	if (musics_.end() != musics_.find(res.name))
-		return musics_[res.name]->IsPlaying();
+	if (musics_.end() != musics_.find(res.id))
+		return musics_[res.id]->IsPlaying();
 	return false;
 }
 

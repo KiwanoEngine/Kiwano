@@ -591,12 +591,12 @@ namespace e2d
 	{
 	public:
 		Resource(
-			size_t resource_name,			/* 资源名称 */
+			int resource_id,				/* 资源名称 */
 			const String& resource_type		/* 资源类型 */
 		);
 
 	public:
-		size_t	name;
+		int		id;
 		String	type;
 	};
 
