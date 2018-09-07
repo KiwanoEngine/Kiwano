@@ -2,7 +2,6 @@
 #include "..\e2dobject.h"
 #include "..\e2dtransition.h"
 #include "..\e2dmanager.h"
-#include "..\e2dtool.h"
 #include <thread>
 
 
@@ -50,7 +49,6 @@ void e2d::Game::Start()
 	auto window = Window::GetInstance();
 	auto input = Input::GetInstance();
 	auto renderer = Renderer::GetInstance();
-	auto timer = Timer::GetInstance();
 
 	const int minInterval = 5;
 	Time last = Time::Now();
@@ -103,9 +101,10 @@ void e2d::Game::Resume()
 {
 	if (paused_ && !quit_)
 	{
-		Timer::GetInstance()->UpdateTime();
 		if (curr_scene_)
-			curr_scene_->GetRoot()->UpdateActionsTime();
+		{
+			curr_scene_->GetRoot()->UpdateTime();
+		}
 	}
 	paused_ = false;
 }

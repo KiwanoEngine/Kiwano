@@ -52,6 +52,7 @@ e2d::Node::Node()
 	, anchor_()
 	, children_()
 	, actions_()
+	, tasks_()
 	, initial_matrix_(D2D1::Matrix3x2F::Identity())
 	, final_matrix_(D2D1::Matrix3x2F::Identity())
 	, border_color_(Color::Red, 0.6f)
@@ -82,6 +83,7 @@ void e2d::Node::Visit()
 	if (!Game::GetInstance()->IsPaused())
 	{
 		UpdateActions();
+		UpdateTasks();
 
 		auto updatableNode = dynamic_cast<Updatable*>(this);
 		if (updatableNode)
@@ -978,16 +980,125 @@ const e2d::Node::Actions & e2d::Node::GetAllActions() const
 	return actions_;
 }
 
-void e2d::Node::UpdateActionsTime()
+void e2d::Node::AddTask(Task * task)
+{
+	if (task)
+	{
+		auto iter = std::find(tasks_.begin(), tasks_.end(), task);
+		if (iter == tasks_.end())
+		{
+			task->Retain();
+			task->last_time_ = Time::Now();
+			tasks_.push_back(task);
+		}
+	}
+}
+
+void e2d::Node::StopTasks(const String& name)
+{
+	for (const auto& task : tasks_)
+	{
+		if (task->GetName() == name)
+		{
+			task->Stop();
+		}
+	}
+}
+
+void e2d::Node::StartTasks(const String& name)
+{
+	for (const auto& task : tasks_)
+	{
+		if (task->GetName() == name)
+		{
+			task->Start();
+		}
+	}
+}
+
+void e2d::Node::RemoveTasks(const String& name)
+{
+	for (const auto& task : tasks_)
+	{
+		if (task->GetName() == name)
+		{
+			task->stopped_ = true;
+		}
+	}
+}
+
+void e2d::Node::StopAllTasks()
+{
+	for (const auto& task : tasks_)
+	{
+		task->Stop();
+	}
+}
+
+void e2d::Node::StartAllTasks()
+{
+	for (const auto& task : tasks_)
+	{
+		task->Start();
+	}
+}
+
+void e2d::Node::RemoveAllTasks()
+{
+	for (const auto& task : tasks_)
+	{
+		task->stopped_ = true;
+	}
+}
+
+void e2d::Node::UpdateTasks()
+{
+	if (tasks_.empty())
+		return;
+
+	std::vector<Task*> currTasks;
+	currTasks.reserve(tasks_.size());
+	std::copy_if(
+		tasks_.begin(),
+		tasks_.end(),
+		std::back_inserter(currTasks),
+		[](Task* task) { return task->IsReady() && !task->stopped_; }
+	);
+
+	// 遍历就绪的任务
+	for (const auto& task : currTasks)
+		task->Update();
+
+	// 清除结束的任务
+	for (auto iter = tasks_.begin(); iter != tasks_.end();)
+	{
+		if ((*iter)->stopped_)
+		{
+			(*iter)->Release();
+			iter = tasks_.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
+}
+
+void e2d::Node::UpdateTime()
 {
 	for (const auto& action : actions_)
 	{
 		action->ResetTime();
 	}
 
+	for (const auto& task : tasks_)
+	{
+		task->ResetTime();
+	}
+
 	for (const auto& child : children_)
 	{
-		child->UpdateActionsTime();
+		child->UpdateTime();
 	}
 }
 

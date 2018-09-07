@@ -195,12 +195,6 @@
     <ClCompile Include="..\..\core\tools\Random.cpp">
       <Filter>tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\tools\Task.cpp">
-      <Filter>tools</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\tools\Timer.cpp">
-      <Filter>tools</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\transitions\BoxTransition.cpp">
       <Filter>transitions</Filter>
     </ClCompile>
@@ -235,6 +229,9 @@
       <Filter>objects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\objects\Text.cpp">
+      <Filter>objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\objects\Task.cpp">
       <Filter>objects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\utils\Ref.cpp">

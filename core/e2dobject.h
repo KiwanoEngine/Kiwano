@@ -305,6 +305,59 @@ namespace e2d
 	};
 
 
+	// 定时任务
+	class Task :
+		public Ref
+	{
+		friend class Node;
+
+	public:
+		explicit Task(
+			const Function& func,		/* 执行函数 */
+			const String& name = L""	/* 任务名称 */
+		);
+
+		explicit Task(
+			const Function& func,		/* 执行函数 */
+			float delay,				/* 时间间隔（秒） */
+			int times = -1,				/* 执行次数（设 -1 为永久执行） */
+			const String& name = L""	/* 任务名称 */
+		);
+
+		// 启动任务
+		void Start();
+
+		// 停止任务
+		void Stop();
+
+		// 任务是否正在执行
+		bool IsRunning() const;
+
+		// 获取任务名称
+		const String& GetName() const;
+
+		// 任务是否就绪
+		bool IsReady() const;
+
+		// 执行任务
+		void Update();
+
+		// 重置计时
+		void ResetTime();
+
+	protected:
+		bool		running_;
+		bool		stopped_;
+		int			run_times_;
+		int			total_times_;
+		String		name_;
+		Duration	delay_;
+		Time		last_time_;
+		Function	callback_;
+		Node *		target_;
+	};
+
+
 	// 绘图接口
 	class Drawable
 	{
@@ -380,6 +433,7 @@ namespace e2d
 	public:
 		typedef std::vector<Node*> Nodes;
 		typedef std::vector<Action*> Actions;
+		typedef std::vector<Task*> Tasks;
 
 		Node();
 
@@ -713,8 +767,40 @@ namespace e2d
 		// 获取所有动作
 		const Actions& GetAllActions() const;
 
-		// 刷新动作进度
-		void UpdateActionsTime();
+		// 添加任务
+		void AddTask(
+			Task * task
+		);
+
+		// 启动任务
+		void StartTasks(
+			const String& task_name
+		);
+
+		// 停止任务
+		void StopTasks(
+			const String& task_name
+		);
+
+		// 移除任务
+		void RemoveTasks(
+			const String& task_name
+		);
+
+		// 启动所有任务
+		void StartAllTasks();
+
+		// 停止所有任务
+		void StopAllTasks();
+
+		// 移除所有任务
+		void RemoveAllTasks();
+
+		// 获取所有任务
+		const Tasks& GetAllTasks() const;
+
+		// 更新节点时间
+		void UpdateTime();
 
 		// 分发鼠标消息
 		virtual bool Dispatch(
@@ -757,6 +843,9 @@ namespace e2d
 		// 更新动作
 		void UpdateActions();
 
+		// 更新任务
+		void UpdateTasks();
+
 	protected:
 		String		name_;
 		size_t		hash_name_;
@@ -780,6 +869,7 @@ namespace e2d
 		Property	extrapolate_;
 		Color		border_color_;
 		Actions		actions_;
+		Tasks		tasks_;
 		Nodes		children_;
 		ID2D1Geometry*		border_;
 		D2D1::Matrix3x2F	initial_matrix_;

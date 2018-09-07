@@ -1,4 +1,4 @@
-#include "..\e2dtool.h"
+#include "..\e2dobject.h"
 
 
 e2d::Task::Task(const Function & func, const String & name)
@@ -55,6 +55,11 @@ void e2d::Task::Update()
 		stopped_ = true;
 		return;
 	}
+}
+
+void e2d::Task::ResetTime()
+{
+	last_time_ = Time::Now();
 }
 
 bool e2d::Task::IsReady() const

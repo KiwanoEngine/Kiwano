@@ -241,14 +241,13 @@
     <ClCompile Include="..\..\core\objects\Scene.cpp" />
     <ClCompile Include="..\..\core\objects\Sprite.cpp" />
     <ClCompile Include="..\..\core\objects\Text.cpp" />
+    <ClCompile Include="..\..\core\objects\Task.cpp" />
     <ClCompile Include="..\..\core\tools\Data.cpp" />
     <ClCompile Include="..\..\core\tools\File.cpp" />
     <ClCompile Include="..\..\core\tools\Music.cpp" />
     <ClCompile Include="..\..\core\tools\Path.cpp" />
     <ClCompile Include="..\..\core\tools\Player.cpp" />
     <ClCompile Include="..\..\core\tools\Random.cpp" />
-    <ClCompile Include="..\..\core\tools\Task.cpp" />
-    <ClCompile Include="..\..\core\tools\Timer.cpp" />
     <ClCompile Include="..\..\core\transitions\BoxTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\EmergeTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\FadeTransition.cpp" />
