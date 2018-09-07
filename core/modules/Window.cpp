@@ -237,15 +237,22 @@ void e2d::Window::SetTitle(const String& title)
 	}
 }
 
-void e2d::Window::SetIcon(int icon_id)
+void e2d::Window::SetIcon(int resource_id)
 {
-	this->icon_id_ = icon_id;
+	this->icon_id_ = resource_id;
 	if (hWnd_)
 	{
-		HICON hIcon = (HICON)::LoadImage(HINST_THISCOMPONENT, MAKEINTRESOURCE(icon_id), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+		HICON icon = (HICON)::LoadImage(
+			HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(resource_id),
+			IMAGE_ICON,
+			0,
+			0,
+			LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
+		);
 		// 设置窗口的图标
-		::SendMessage(hWnd_, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
-		::SendMessage(hWnd_, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+		::SendMessage(hWnd_, WM_SETICON, ICON_BIG, (LPARAM)icon);
+		::SendMessage(hWnd_, WM_SETICON, ICON_SMALL, (LPARAM)icon);
 	}
 }
 

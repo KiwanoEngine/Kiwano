@@ -71,7 +71,7 @@ namespace e2d
 
 		// 设置窗体图标
 		void SetIcon(
-			int icon_id			/* 图标资源 ID */
+			int resource_id		/* 图标资源 ID */
 		);
 
 		// 设置鼠标指针样式
