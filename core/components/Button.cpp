@@ -151,7 +151,10 @@ bool e2d::Button::Dispatch(const MouseEvent & e, bool handled)
 		bool contains = normal_->ContainsPoint(e.GetPos());
 		if (e.GetType() == MouseEvent::Type::LeftUp && is_selected_ && contains)
 		{
-			OnClick();
+			if (callback_)
+			{
+				callback_();
+			}
 			is_selected_ = false;
 			SetStatus(Status::Normal);
 			return true;
@@ -248,13 +251,5 @@ void e2d::Button::UpdateVisible()
 		{
 			if (normal_) normal_->SetVisible(true);
 		}
-	}
-}
-
-void e2d::Button::OnClick()
-{
-	if (callback_)
-	{
-		callback_();
 	}
 }

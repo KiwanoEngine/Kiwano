@@ -186,7 +186,6 @@
     <ClCompile Include="..\..\core\actions\Spawn.cpp" />
     <ClCompile Include="..\..\core\components\Button.cpp" />
     <ClCompile Include="..\..\core\components\Menu.cpp" />
-    <ClCompile Include="..\..\core\components\ToggleButton.cpp" />
     <ClCompile Include="..\..\core\event\Collision.cpp" />
     <ClCompile Include="..\..\core\event\KeyEvent.cpp" />
     <ClCompile Include="..\..\core\event\MouseEvent.cpp" />
