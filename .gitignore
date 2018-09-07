@@ -12,3 +12,4 @@ ipch/
 *.user
 *.lnk
 .vs
+.vscode

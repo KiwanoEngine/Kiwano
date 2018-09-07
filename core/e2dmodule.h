@@ -37,6 +37,9 @@ namespace e2d
 		// 销毁窗体实例
 		static void DestroyInstance();
 
+		// 获取屏幕大小
+		static Size GetScreenSize();
+
 		// 获取窗体标题
 		const String& GetTitle() const;
 
@@ -146,6 +149,33 @@ namespace e2d
 		// 销毁实例
 		static void DestroyInstance();
 
+		// 获取 ID2D1Factory 对象
+		static ID2D1Factory * GetFactory();
+
+		// 获取 IWICImagingFactory 对象
+		static IWICImagingFactory * GetImagingFactory();
+
+		// 获取 IDWriteFactory 对象
+		static IDWriteFactory * GetWriteFactory();
+
+		// 获取 Miter 样式的 ID2D1StrokeStyle
+		static ID2D1StrokeStyle * GetMiterStrokeStyle();
+
+		// 获取 Bevel 样式的 ID2D1StrokeStyle
+		static ID2D1StrokeStyle * GetBevelStrokeStyle();
+
+		// 获取 Round 样式的 ID2D1StrokeStyle
+		static ID2D1StrokeStyle * GetRoundStrokeStyle();
+
+		// 获取文字渲染器
+		E2DTextRenderer * GetTextRenderer();
+
+		// 获取 ID2D1HwndRenderTarget 对象
+		ID2D1HwndRenderTarget * GetRenderTarget();
+
+		// 获取 ID2D1SolidColorBrush 对象
+		ID2D1SolidColorBrush * GetSolidBrush();
+
 		// 获取背景色
 		Color GetBackgroundColor();
 
@@ -165,33 +195,6 @@ namespace e2d
 
 		// 结束渲染
 		void EndDraw();
-
-		// 获取文字渲染器
-		E2DTextRenderer * GetTextRenderer();
-
-		// 获取 ID2D1HwndRenderTarget 对象
-		ID2D1HwndRenderTarget * GetRenderTarget();
-
-		// 获取 ID2D1SolidColorBrush 对象
-		ID2D1SolidColorBrush * GetSolidBrush();
-
-		// 获取 ID2D1Factory 对象
-		static ID2D1Factory * GetFactory();
-
-		// 获取 IWICImagingFactory 对象
-		static IWICImagingFactory * GetImagingFactory();
-
-		// 获取 IDWriteFactory 对象
-		static IDWriteFactory * GetWriteFactory();
-
-		// 获取 Miter 样式的 ID2D1StrokeStyle
-		static ID2D1StrokeStyle * GetMiterStrokeStyle();
-
-		// 获取 Bevel 样式的 ID2D1StrokeStyle
-		static ID2D1StrokeStyle * GetBevelStrokeStyle();
-
-		// 获取 Round 样式的 ID2D1StrokeStyle
-		static ID2D1StrokeStyle * GetRoundStrokeStyle();
 
 	protected:
 		Renderer();

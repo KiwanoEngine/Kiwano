@@ -26,6 +26,17 @@ void e2d::Window::DestroyInstance()
 	}
 }
 
+e2d::Size e2d::Window::GetScreenSize()
+{
+	int screen_width = ::GetSystemMetrics(SM_CXSCREEN);
+	int screen_height = ::GetSystemMetrics(SM_CYSCREEN);
+	Size screen_size(
+		static_cast<float>(screen_width),
+		static_cast<float>(screen_height)
+	);
+	return std::move(screen_size);
+}
+
 e2d::Window::Window()
 	: hWnd_(nullptr)
 	, width_(640)
@@ -42,11 +53,9 @@ e2d::Window::Window()
 
 e2d::Window::~Window()
 {
-	// 关闭控制台
 	if (::GetConsoleWindow())
 		::FreeConsole();
 
-	// 关闭窗口
 	if (hWnd_)
 		::DestroyWindow(hWnd_);
 
@@ -74,8 +83,8 @@ e2d::Rect e2d::Window::Locate(int width, int height)
 {
 	Rect result;
 	RECT wRECT		= { 0, 0, LONG(ceil(width * dpi_ / 96.f)), LONG(ceil(height * dpi_ / 96.f)) };
-	int maxWidth	= ::GetSystemMetrics(SM_CXSCREEN);
-	int maxHeight	= ::GetSystemMetrics(SM_CYSCREEN);
+	int max_width	= ::GetSystemMetrics(SM_CXSCREEN);
+	int max_height	= ::GetSystemMetrics(SM_CYSCREEN);
 
 	// 计算合适的窗口大小
 	::AdjustWindowRectEx(&wRECT, WINDOW_STYLE, FALSE, NULL);
@@ -83,11 +92,11 @@ e2d::Rect e2d::Window::Locate(int width, int height)
 	height = static_cast<int>(wRECT.bottom - wRECT.top);
 
 	// 当输入的窗口大小比分辨率大时，给出警告
-	WARN_IF(maxWidth < width || maxHeight < height, "The window Is larger than screen!");
-	width = std::min(width, maxWidth);
-	height = std::min(height, maxHeight);
+	WARN_IF(max_width < width || max_height < height, "The window Is larger than screen!");
+	width = std::min(width, max_width);
+	height = std::min(height, max_height);
 
-	float x = float((maxWidth - width) / 2), y = float((maxHeight - height) / 2);
+	float x = float((max_width - width) / 2), y = float((max_height - height) / 2);
 	return std::move(Rect(x, y, float(width), float(height)));
 }
 
@@ -448,10 +457,10 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT msg, WPARAM w_param, LPARAM l_param
 			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 			// 目标适当。它可能会调用失败，但是这里可以忽略有可能的
 			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-			auto pRT = Renderer::GetInstance()->GetRenderTarget();
-			if (pRT)
+			auto render_target = Renderer::GetInstance()->GetRenderTarget();
+			if (render_target)
 			{
-				pRT->Resize(D2D1::SizeU(width, height));
+				render_target->Resize(D2D1::SizeU(width, height));
 			}
 		}
 		break;
@@ -467,7 +476,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT msg, WPARAM w_param, LPARAM l_param
 		case WM_DISPLAYCHANGE:
 		{
 			// 重绘客户区
-			InvalidateRect(hWnd, nullptr, FALSE);
+			::InvalidateRect(hWnd, nullptr, FALSE);
 		}
 		result = 0;
 		hasHandled = true;
@@ -477,7 +486,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT msg, WPARAM w_param, LPARAM l_param
 		case WM_PAINT:
 		{
 			Game::GetInstance()->DrawScene();
-			ValidateRect(hWnd, nullptr);
+			::ValidateRect(hWnd, nullptr);
 		}
 		result = 0;
 		hasHandled = true;
@@ -500,7 +509,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT msg, WPARAM w_param, LPARAM l_param
 		// 窗口销毁消息
 		case WM_DESTROY:
 		{
-			PostQuitMessage(0);
+			::PostQuitMessage(0);
 		}
 		result = 1;
 		hasHandled = true;
@@ -510,7 +519,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT msg, WPARAM w_param, LPARAM l_param
 
 		if (!hasHandled)
 		{
-			result = DefWindowProc(hWnd, msg, w_param, l_param);
+			result = ::DefWindowProc(hWnd, msg, w_param, l_param);
 		}
 	}
 	return result;
