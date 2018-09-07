@@ -80,7 +80,7 @@ bool e2d::Music::Open(const e2d::String & file_path)
 	}
 
 	File music_file;
-	if (!music_file.Open(file_name))
+	if (!music_file.Open(file_path))
 	{
 		WARN("Music::Open error: File not found.");
 		return false;

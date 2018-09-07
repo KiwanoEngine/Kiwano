@@ -69,6 +69,11 @@ e2d::Node::~Node()
 		SafeRelease(action);
 	}
 
+	for (auto task : tasks_)
+	{
+		SafeRelease(task);
+	}
+
 	for (auto child : children_)
 	{
 		SafeRelease(child);

@@ -23,6 +23,9 @@ e2d::File::~File()
 
 bool e2d::File::Open(const String & file_name)
 {
+	if (file_name.IsEmpty())
+		return false;
+
 	auto FindFile = [=](const String & path) -> bool
 	{
 		if (::_waccess((const wchar_t*)path, 0) == 0)

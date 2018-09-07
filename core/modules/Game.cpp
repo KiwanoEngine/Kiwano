@@ -69,13 +69,9 @@ void e2d::Game::Start()
 			last = now;
 			input->Update();
 
-			if (!paused_)
-			{
-				timer->Update();
-				UpdateScene();
-			}
-			
+			UpdateScene();
 			DrawScene();
+
 			window->Poll();
 		}
 		else
@@ -168,6 +164,9 @@ bool e2d::Game::IsTransitioning() const
 
 void e2d::Game::UpdateScene()
 {
+	if (paused_)
+		return;
+
 	if (transition_)
 	{
 		transition_->Update();

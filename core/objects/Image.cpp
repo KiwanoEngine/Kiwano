@@ -160,7 +160,7 @@ bool e2d::Image::Preload(const Resource& res)
 
 	IWICImagingFactory *imaging_factory = Renderer::GetImagingFactory();
 	ID2D1HwndRenderTarget* render_target = Renderer::GetInstance()->GetRenderTarget();
-	IWICBitmadecoder *decoder = nullptr;
+	IWICBitmapDecoder *decoder = nullptr;
 	IWICBitmapFrameDecode *source = nullptr;
 	IWICStream *stream = nullptr;
 	IWICFormatConverter *converter = nullptr;
@@ -172,8 +172,8 @@ bool e2d::Image::Preload(const Resource& res)
 
 	// 定位资源
 	res_handle = ::FindResourceW(
-		HINST_THISCOMPONENT, 
-		MAKEINTRESOURCE(res.id), 
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(res.id),
 		(LPCWSTR)res.type
 	);
 
@@ -292,7 +292,7 @@ bool e2d::Image::Preload(const String & file_name)
 
 	IWICImagingFactory *imaging_factory = Renderer::GetImagingFactory();
 	ID2D1HwndRenderTarget* render_target = Renderer::GetInstance()->GetRenderTarget();
-	IWICBitmadecoder *decoder = nullptr;
+	IWICBitmapDecoder *decoder = nullptr;
 	IWICBitmapFrameDecode *source = nullptr;
 	IWICStream *stream = nullptr;
 	IWICFormatConverter *converter = nullptr;
