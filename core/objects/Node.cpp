@@ -381,9 +381,9 @@ float e2d::Node::GetPosY() const
 	return pos_.y;
 }
 
-e2d::Point e2d::Node::GetPos() const
+const e2d::Point& e2d::Node::GetPos() const
 {
-	return Point(pos_.x, pos_.y);
+	return pos_;
 }
 
 float e2d::Node::GetWidth() const
@@ -406,9 +406,9 @@ float e2d::Node::GetRealHeight() const
 	return size_.height;
 }
 
-e2d::Size e2d::Node::GetRealSize() const
+const e2d::Size& e2d::Node::GetRealSize() const
 {
-	return Size(size_.width, size_.height);
+	return size_;
 }
 
 float e2d::Node::GetAnchorX() const

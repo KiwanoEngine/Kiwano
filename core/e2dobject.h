@@ -458,7 +458,7 @@ namespace e2d
 		float GetPosY() const;
 
 		// 获取节点坐标
-		Point GetPos() const;
+		const Point& GetPos() const;
 
 		// 获取节点宽度
 		float GetWidth() const;
@@ -473,7 +473,7 @@ namespace e2d
 		float GetRealHeight() const;
 
 		// 获取节点大小（不考虑缩放）
-		Size GetRealSize() const;
+		const Size& GetRealSize() const;
 
 		// 获取节点的锚点
 		float GetAnchorX() const;

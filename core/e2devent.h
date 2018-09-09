@@ -18,7 +18,6 @@ namespace e2d
 
 	public:
 		explicit KeyEvent(
-			HWND hWnd,
 			UINT message,
 			WPARAM w_param,
 			LPARAM l_param
@@ -67,11 +66,9 @@ namespace e2d
 
 	public:
 		explicit MouseEvent(
-			HWND hWnd,
 			UINT message,
 			WPARAM w_param,
-			LPARAM l_param,
-			float dpi
+			LPARAM l_param
 		);
 
 		// 获取鼠标横坐标
@@ -107,8 +104,6 @@ namespace e2d
 		UINT	message_;
 		WPARAM	w_param_;
 		LPARAM	l_param_;
-		Point	pos_;
-		MouseEvent::Type type_;
 	};
 
 

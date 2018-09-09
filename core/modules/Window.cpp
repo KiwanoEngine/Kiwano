@@ -425,7 +425,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT msg, WPARAM w_param, LPARAM l_param
 
 			if (game->GetCurrentScene())
 			{
-				game->GetCurrentScene()->Dispatch(MouseEvent(hWnd, msg, w_param, l_param, window->dpi_), false);
+				game->GetCurrentScene()->Dispatch(MouseEvent(msg, w_param, l_param), false);
 			}
 		}
 		result = 0;
@@ -442,7 +442,7 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT msg, WPARAM w_param, LPARAM l_param
 
 			if (game->GetCurrentScene())
 			{
-				game->GetCurrentScene()->Dispatch(KeyEvent(hWnd, msg, w_param, l_param), false);
+				game->GetCurrentScene()->Dispatch(KeyEvent(msg, w_param, l_param), false);
 			}
 		}
 		result = 0;
