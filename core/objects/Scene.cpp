@@ -5,6 +5,7 @@ e2d::Scene::Scene()
 	: root_(nullptr)
 	, border_visible_(false)
 	, collider_visible_(false)
+	, transform_(D2D1::Matrix3x2F::Identity())
 {
 }
 
@@ -12,6 +13,7 @@ e2d::Scene::Scene(Node * root)
 	: root_(nullptr)
 	, border_visible_(false)
 	, collider_visible_(false)
+	, transform_(D2D1::Matrix3x2F::Identity())
 {
 	this->SetRoot(root);
 }
@@ -97,4 +99,19 @@ bool e2d::Scene::Dispatch(const KeyEvent & e, bool handled)
 		return root_->Dispatch(e, handled);
 	}
 	return false;
+}
+
+void e2d::Scene::SetTransform(const D2D1::Matrix3x2F& matrix)
+{
+	transform_ = matrix;
+
+	if (root_)
+	{
+		root_->dirty_transform_ = true;
+	}
+}
+
+const D2D1::Matrix3x2F & e2d::Scene::GetTransform() const
+{
+	return transform_;
 }

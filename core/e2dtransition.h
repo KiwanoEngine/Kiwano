@@ -48,6 +48,7 @@ namespace e2d
 		float	duration_;
 		float	delta_;
 		Time	started_;
+		Size	window_size_;
 		Scene*	out_scene_;
 		Scene*	in_scene_;
 		ID2D1Layer * out_layer_;

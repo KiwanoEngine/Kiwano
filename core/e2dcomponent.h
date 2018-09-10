@@ -77,15 +77,6 @@ namespace e2d
 			float anchor_y
 		) override;
 
-		// 分发鼠标消息
-		virtual bool Dispatch(
-			const MouseEvent& e,
-			bool handled
-		) override;
-
-		// 遍历节点
-		virtual void Visit() override;
-
 	protected:
 		E2D_DISABLE_COPY(Button);
 
@@ -99,6 +90,15 @@ namespace e2d
 
 		// 刷新按钮显示
 		virtual void UpdateVisible();
+
+		// 分发鼠标消息
+		virtual bool Dispatch(
+			const MouseEvent& e,
+			bool handled
+		) override;
+
+		// 遍历节点
+		virtual void Visit() override;
 
 	protected:
 		Node * normal_;

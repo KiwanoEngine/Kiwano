@@ -169,13 +169,22 @@ namespace e2d
 			bool handled
 		) override;
 
+		// 设置转换矩阵
+		void SetTransform(
+			const D2D1::Matrix3x2F& matrix
+		);
+
+		// 获取转换矩阵
+		const D2D1::Matrix3x2F& GetTransform() const;
+
 	protected:
 		E2D_DISABLE_COPY(Scene);
 
 	protected:
-		Node * root_;
+		Node*	root_;
 		bool	border_visible_;
 		bool	collider_visible_;
+		D2D1::Matrix3x2F transform_;
 	};
 
 
@@ -410,6 +419,7 @@ namespace e2d
 		: public Ref
 		, public EventTarget
 	{
+		friend class Game;
 		friend class Scene;
 		friend class Collider;
 
@@ -799,9 +809,6 @@ namespace e2d
 		// 获取所有任务
 		const Tasks& GetAllTasks() const;
 
-		// 更新节点时间
-		void UpdateTime();
-
 		// 分发鼠标消息
 		virtual bool Dispatch(
 			const MouseEvent& e,
@@ -814,11 +821,11 @@ namespace e2d
 			bool handled
 		) override;
 
-		// 遍历节点
-		virtual void Visit();
-
 	protected:
 		E2D_DISABLE_COPY(Node);
+
+		// 遍历节点
+		virtual void Visit();
 
 		// 渲染节点边缘
 		void DrawBorder();
@@ -842,6 +849,9 @@ namespace e2d
 
 		// 更新任务
 		void UpdateTasks();
+
+		// 更新节点时间
+		void UpdateTime();
 
 	protected:
 		String		name_;

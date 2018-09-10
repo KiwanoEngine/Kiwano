@@ -90,10 +90,10 @@ void e2d::Node::Visit()
 		UpdateActions();
 		UpdateTasks();
 
-		auto updatableNode = dynamic_cast<Updatable*>(this);
-		if (updatableNode)
+		auto updatable_node = dynamic_cast<Updatable*>(this);
+		if (updatable_node)
 		{
-			updatableNode->Update();
+			updatable_node->Update();
 		}
 	}
 
@@ -112,11 +112,11 @@ void e2d::Node::Visit()
 
 	if (children_.empty())
 	{
-		auto drawableNode = dynamic_cast<Drawable*>(this);
-		if (drawableNode)
+		auto drawable_node = dynamic_cast<Drawable*>(this);
+		if (drawable_node)
 		{
 			render_target->SetTransform(final_matrix_);
-			drawableNode->Draw();
+			drawable_node->Draw();
 		}
 	}
 	else
@@ -148,11 +148,11 @@ void e2d::Node::Visit()
 			}
 		}
 		
-		auto drawableNode = dynamic_cast<Drawable*>(this);
-		if (drawableNode)
+		auto drawable_node = dynamic_cast<Drawable*>(this);
+		if (drawable_node)
 		{
 			render_target->SetTransform(final_matrix_);
-			drawableNode->Draw();
+			drawable_node->Draw();
 		}
 
 		// 访问剩余节点
@@ -229,11 +229,19 @@ void e2d::Node::UpdateTransform()
 	);
 	// 根据自身锚点变换 Final 矩阵
 	final_matrix_ = initial_matrix_ * D2D1::Matrix3x2F::Translation(-anchor.x, -anchor.y);
-	// 和父节点矩阵相乘
-	if (!fixed_position_ && parent_)
+
+	if (parent_)
 	{
-		initial_matrix_ = initial_matrix_ * parent_->initial_matrix_;
-		final_matrix_ = final_matrix_ * parent_->initial_matrix_;
+		if (!fixed_position_)
+		{
+			initial_matrix_ = initial_matrix_ * parent_->initial_matrix_;
+			final_matrix_ = final_matrix_ * parent_->initial_matrix_;
+		}
+	}
+	else if (parent_scene_)
+	{
+		initial_matrix_ = initial_matrix_ * parent_scene_->GetTransform();
+		final_matrix_ = final_matrix_ * parent_scene_->GetTransform();
 	}
 
 	// 重新构造轮廓
@@ -613,8 +621,8 @@ void e2d::Node::SetAnchor(float anchor_x, float anchor_y)
 	if (anchor_.x == anchor_x && anchor_.y == anchor_y)
 		return;
 
-	anchor_.x = std::min(std::max(anchor_x, 0.f), 1.f);
-	anchor_.y = std::min(std::max(anchor_y, 0.f), 1.f);
+	anchor_.x = anchor_x;
+	anchor_.y = anchor_y;
 	dirty_transform_ = true;
 }
 
