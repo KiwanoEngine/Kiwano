@@ -146,7 +146,7 @@ void e2d::Game::EnterScene(Scene * scene, Transition * transition)
 		transition_ = transition;
 		transition_->Retain();
 
-		transition_->Init(curr_scene_, next_scene_)
+		transition_->Init(curr_scene_, next_scene_);
 	}
 }
 

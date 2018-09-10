@@ -7,7 +7,7 @@ e2d::Transition::Transition(float duration)
 	, started_()
 	, delta_(0)
 	, out_scene_(nullptr)
-	, in_scene_(scene)
+	, in_scene_(nullptr)
 	, out_layer_(nullptr)
 	, in_layer_(nullptr)
 	, out_layer_param_()
@@ -65,8 +65,6 @@ void e2d::Transition::Init(Scene * prev, Scene * next)
 		renderer->GetSolidBrush(),
 		D2D1_LAYER_OPTIONS_NONE
 	);
-
-	return true;
 }
 
 void e2d::Transition::Update()

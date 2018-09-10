@@ -8,37 +8,34 @@ e2d::MoveTransition::MoveTransition(float duration, Direction direction)
 {
 }
 
-bool e2d::MoveTransition::Init(Scene * prev, Scene * next)
+void e2d::MoveTransition::Init(Scene * prev, Scene * next)
 {
-	if (Transition::Init(prev, next))
+	Transition::Init(prev, next);
+	
+	auto size = Window::GetInstance()->GetSize();
+	if (direction_ == Direction::Up)
 	{
-		auto size = Window::GetInstance()->GetSize();
-		if (direction_ == Direction::Up)
-		{
-			pos_delta_ = Point(0, -size.height);
-			start_pos_ = Point(0, size.height);
-		}
-		else if (direction_ == Direction::Down)
-		{
-			pos_delta_ = Point(0, size.height);
-			start_pos_ = Point(0, -size.height);
-		}
-		else if (direction_ == Direction::Left)
-		{
-			pos_delta_ = Point(-size.width, 0);
-			start_pos_ = Point(size.width, 0);
-		}
-		else if (direction_ == Direction::Right)
-		{
-			pos_delta_ = Point(size.width, 0);
-			start_pos_ = Point(-size.width, 0);
-		}
-
-		if (out_scene_ && out_scene_->GetRoot()) out_scene_->GetRoot()->SetPos(0, 0);
-		if (in_scene_->GetRoot()) in_scene_->GetRoot()->SetPos(start_pos_);
-		return true;
+		pos_delta_ = Point(0, -size.height);
+		start_pos_ = Point(0, size.height);
 	}
-	return false;
+	else if (direction_ == Direction::Down)
+	{
+		pos_delta_ = Point(0, size.height);
+		start_pos_ = Point(0, -size.height);
+	}
+	else if (direction_ == Direction::Left)
+	{
+		pos_delta_ = Point(-size.width, 0);
+		start_pos_ = Point(size.width, 0);
+	}
+	else if (direction_ == Direction::Right)
+	{
+		pos_delta_ = Point(size.width, 0);
+		start_pos_ = Point(-size.width, 0);
+	}
+
+	if (out_scene_ && out_scene_->GetRoot()) out_scene_->GetRoot()->SetPos(0, 0);
+	if (in_scene_->GetRoot()) in_scene_->GetRoot()->SetPos(start_pos_);
 }
 
 void e2d::MoveTransition::Update()

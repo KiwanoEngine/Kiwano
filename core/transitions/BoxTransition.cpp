@@ -7,14 +7,11 @@ e2d::BoxTransition::BoxTransition(float duration)
 {
 }
 
-bool e2d::BoxTransition::Init(Scene * prev, Scene * next)
+void e2d::BoxTransition::Init(Scene * prev, Scene * next)
 {
-	if (Transition::Init(prev, next))
-	{
-		in_layer_param_.opacity = 0;
-		return true;
-	}
-	return false;
+	Transition::Init(prev, next);
+
+	in_layer_param_.opacity = 0;
 }
 
 void e2d::BoxTransition::Update()
