@@ -831,9 +831,6 @@ namespace e2d
 			Scene * scene
 		);
 
-		// 子节点排序
-		void SortChildren();
-
 		// 更新转换矩阵
 		void UpdateTransform();
 
@@ -860,8 +857,8 @@ namespace e2d
 		int			order_;
 		bool		visible_;
 		bool		clip_enabled_;
-		bool		need_sort_;
-		bool		need_transform_;
+		bool		dirty_sort_;
+		bool		dirty_transform_;
 		bool		fixed_position_;
 		Collider	collider_;
 		Scene *		parent_scene_;

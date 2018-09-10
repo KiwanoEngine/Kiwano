@@ -36,8 +36,8 @@ e2d::Node::Node()
 	, parent_scene_(nullptr)
 	, hash_name_(0)
 	, clip_enabled_(false)
-	, need_sort_(false)
-	, need_transform_(false)
+	, dirty_sort_(false)
+	, dirty_transform_(false)
 	, fixed_position_(false)
 	, collider_(this)
 	, border_(nullptr)
@@ -122,7 +122,16 @@ void e2d::Node::Visit()
 	else
 	{
 		// 子节点排序
-		SortChildren();
+		if (dirty_sort_)
+		{
+			std::sort(
+				std::begin(children_),
+				std::end(children_),
+				[](Node * n1, Node * n2) { return n1->GetOrder() < n2->GetOrder(); }
+			);
+
+			dirty_sort_ = false;
+		}
 
 		size_t i;
 		for (i = 0; i < children_.size(); ++i)
@@ -195,10 +204,10 @@ void e2d::Node::DrawCollider()
 
 void e2d::Node::UpdateTransform()
 {
-	if (!need_transform_)
+	if (!dirty_transform_)
 		return;
 
-	need_transform_ = false;
+	dirty_transform_ = false;
 
 	// 计算锚点坐标
 	D2D1_POINT_2F anchor = { size_.width * anchor_.x, size_.height * anchor_.y };
@@ -253,7 +262,7 @@ void e2d::Node::UpdateTransform()
 	// 通知子节点进行转换
 	for (const auto& child : children_)
 	{
-		child->need_transform_ = true;
+		child->dirty_transform_ = true;
 	}
 
 	// 更新碰撞体
@@ -295,20 +304,6 @@ bool e2d::Node::Dispatch(const KeyEvent & e, bool handled)
 	}
 
 	return handled;
-}
-
-void e2d::Node::SortChildren()
-{
-	if (need_sort_)
-	{
-		std::sort(
-			std::begin(children_),
-			std::end(children_),
-			[](Node * n1, Node * n2) { return n1->GetOrder() < n2->GetOrder(); }
-		);
-
-		need_sort_ = false;
-	}
 }
 
 void e2d::Node::UpdateOpacity()
@@ -491,7 +486,7 @@ void e2d::Node::SetOrder(int order)
 	order_ = order;
 	if (parent_)
 	{
-		parent_->need_sort_ = true;
+		parent_->dirty_sort_ = true;
 	}
 }
 
@@ -517,7 +512,7 @@ void e2d::Node::SetPos(float x, float y)
 
 	pos_.x = x;
 	pos_.y = y;
-	need_transform_ = true;
+	dirty_transform_ = true;
 }
 
 void e2d::Node::SetPosFixed(bool fixed)
@@ -526,7 +521,7 @@ void e2d::Node::SetPosFixed(bool fixed)
 		return;
 
 	fixed_position_ = fixed;
-	need_transform_ = true;
+	dirty_transform_ = true;
 }
 
 void e2d::Node::Move(float x, float y)
@@ -561,7 +556,7 @@ void e2d::Node::SetScale(float scale_x, float scale_y)
 
 	scale_.x = scale_x;
 	scale_.y = scale_y;
-	need_transform_ = true;
+	dirty_transform_ = true;
 }
 
 void e2d::Node::SetSkewX(float skew_x)
@@ -581,7 +576,7 @@ void e2d::Node::SetSkew(float skew_x, float skew_y)
 
 	skew_.x = skew_x;
 	skew_.y = skew_y;
-	need_transform_ = true;
+	dirty_transform_ = true;
 }
 
 void e2d::Node::SetRotation(float angle)
@@ -590,7 +585,7 @@ void e2d::Node::SetRotation(float angle)
 		return;
 
 	rotation_ = angle;
-	need_transform_ = true;
+	dirty_transform_ = true;
 }
 
 void e2d::Node::SetOpacity(float opacity)
@@ -620,7 +615,7 @@ void e2d::Node::SetAnchor(float anchor_x, float anchor_y)
 
 	anchor_.x = std::min(std::max(anchor_x, 0.f), 1.f);
 	anchor_.y = std::min(std::max(anchor_y, 0.f), 1.f);
-	need_transform_ = true;
+	dirty_transform_ = true;
 }
 
 void e2d::Node::SetWidth(float width)
@@ -640,7 +635,7 @@ void e2d::Node::SetSize(float width, float height)
 
 	size_.width = width;
 	size_.height = height;
-	need_transform_ = true;
+	dirty_transform_ = true;
 }
 
 void e2d::Node::SetSize(Size size)
@@ -699,9 +694,9 @@ void e2d::Node::AddChild(Node * child, int order  /* = 0 */)
 		// 更新子节点透明度
 		child->UpdateOpacity();
 		// 更新节点转换
-		child->need_transform_ = true;
+		child->dirty_transform_ = true;
 		// 更新子节点排序
-		need_sort_ = true;
+		dirty_sort_ = true;
 	}
 }
 

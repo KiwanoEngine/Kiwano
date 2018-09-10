@@ -383,8 +383,6 @@ namespace e2d
 	// 路径
 	class Path
 	{
-		friend class Game;
-
 	public:
 		// 获取数据的默认保存路径
 		static const String& GetDataPath();
