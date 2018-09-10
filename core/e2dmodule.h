@@ -339,14 +339,10 @@ namespace e2d
 		// 游戏是否暂停
 		bool IsPaused();
 
-		// 场景入栈
+		// 切换场景
 		void EnterScene(
-			Scene * scene			/* 下一个场景的指针 */
-		);
-
-		// 场景入栈
-		void EnterScene(
-			Transition * transition	/* 场景动画 */
+			Scene * scene,						/* 场景 */
+			Transition * transition	= nullptr	/* 场景动画 */
 		);
 
 		// 获取当前场景

@@ -2,7 +2,7 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 
-e2d::Transition::Transition(Scene* scene, float duration)
+e2d::Transition::Transition(float duration)
 	: done_(false)
 	, started_()
 	, delta_(0)
@@ -14,8 +14,6 @@ e2d::Transition::Transition(Scene* scene, float duration)
 	, in_layer_param_()
 {
 	duration_ = std::max(duration, 0.f);
-	if (in_scene_)
-		in_scene_->Retain();
 }
 
 e2d::Transition::~Transition()
@@ -31,29 +29,31 @@ bool e2d::Transition::IsDone()
 	return done_;
 }
 
-bool e2d::Transition::Init(Game * game, Scene * prev)
+void e2d::Transition::Init(Scene * prev, Scene * next)
 {
 	started_ = Time::Now();
 	out_scene_ = prev;
+	in_scene_ = next;
 
 	if (out_scene_)
 		out_scene_->Retain();
+
+	if (in_scene_)
+		in_scene_->Retain();
 	
-	HRESULT hr = S_OK;
 	auto renderer = Renderer::GetInstance();
 	if (in_scene_)
 	{
-		hr = renderer->GetRenderTarget()->CreateLayer(&in_layer_);
+		ThrowIfFailed(
+			renderer->GetRenderTarget()->CreateLayer(&in_layer_)
+		);
 	}
 
-	if (SUCCEEDED(hr) && out_scene_)
+	if (out_scene_)
 	{
-		hr = renderer->GetRenderTarget()->CreateLayer(&out_layer_);
-	}
-
-	if (FAILED(hr))
-	{
-		return false;
+		ThrowIfFailed(
+			renderer->GetRenderTarget()->CreateLayer(&out_layer_)
+		);
 	}
 
 	out_layer_param_ = in_layer_param_ = D2D1::LayerParameters(

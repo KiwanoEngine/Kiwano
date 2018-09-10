@@ -16,7 +16,6 @@ namespace e2d
 
 	public:
 		explicit Transition(
-			Scene* scene,
 			float duration
 		);
 
@@ -27,9 +26,9 @@ namespace e2d
 
 	protected:
 		// 初始化场景过渡动画
-		virtual bool Init(
-			Game * game,
-			Scene * prev
+		virtual void Init(
+			Scene * prev,
+			Scene * next
 		);
 
 		// 更新场景过渡动画
@@ -64,7 +63,6 @@ namespace e2d
 	{
 	public:
 		explicit FadeTransition(
-			Scene* scene,		/* 切换的场景 */
 			float duration		/* 动画持续时长 */
 		);
 
@@ -72,9 +70,9 @@ namespace e2d
 		// 更新动画
 		virtual void Update() override;
 
-		virtual bool Init(
-			Game * game,
-			Scene * prev
+		virtual void Init(
+			Scene * prev,
+			Scene * next
 		) override;
 	};
 
@@ -85,16 +83,15 @@ namespace e2d
 	{
 	public:
 		explicit EmergeTransition(
-			Scene* scene,		/* 切换的场景 */
 			float duration		/* 浮现动画持续时长 */
 		);
 
 	protected:
 		virtual void Update() override;
 
-		virtual bool Init(
-			Game * game,
-			Scene * prev
+		virtual void Init(
+			Scene * prev,
+			Scene * next
 		) override;
 	};
 
@@ -105,16 +102,15 @@ namespace e2d
 	{
 	public:
 		explicit BoxTransition(
-			Scene* scene,		/* 切换的场景 */
 			float duration		/* 动画持续时长 */
 		);
 
 	protected:
 		virtual void Update() override;
 
-		virtual bool Init(
-			Game * game,
-			Scene * prev
+		virtual void Init(
+			Scene * prev,
+			Scene * next
 		) override;
 	};
 
@@ -125,7 +121,6 @@ namespace e2d
 	{
 	public:
 		explicit MoveTransition(
-			Scene* scene,							/* 切换的场景 */
 			float moveDuration,						/* 场景移动动画持续时长 */
 			Direction direction = Direction::Left	/* 场景移动方向 */
 		);
@@ -133,9 +128,9 @@ namespace e2d
 	protected:
 		virtual void Update() override;
 
-		virtual bool Init(
-			Game * game,
-			Scene * prev
+		virtual void Init(
+			Scene * prev,
+			Scene * next
 		) override;
 
 		virtual void Reset() override;

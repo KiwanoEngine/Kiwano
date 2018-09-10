@@ -115,10 +115,19 @@ void e2d::Game::Quit()
 	quit_ = true;
 }
 
-void e2d::Game::EnterScene(Scene * scene)
+void e2d::Game::EnterScene(Scene * scene, Transition * transition)
 {
-	if (!scene)
+	if (scene == nullptr)
+	{
+		WARN("Next scene is null pointer!");
 		return;
+	}
+
+	if (next_scene_ != nullptr)
+	{
+		WARN("Scene is transitioning...");
+		return;
+	}
 
 	if (next_scene_)
 	{
@@ -126,29 +135,18 @@ void e2d::Game::EnterScene(Scene * scene)
 	}
 	next_scene_ = scene;
 	next_scene_->Retain();
-}
 
-void e2d::Game::EnterScene(Transition * transition)
-{
-	if (!transition)
-		return;
-
-	EnterScene(transition->in_scene_);
-
-	if (transition_)
+	if (transition)
 	{
-		transition_->Stop();
-		transition_->Release();
-	}
-	transition_ = transition;
-	transition_->Retain();
+		if (transition_)
+		{
+			transition_->Stop();
+			transition_->Release();
+		}
+		transition_ = transition;
+		transition_->Retain();
 
-	// 初始化场景切换动画
-	if (!transition_->Init(this, curr_scene_))
-	{
-		WARN("Transition initialize failed!");
-		transition_->Release();
-		transition_ = nullptr;
+		transition_->Init(curr_scene_, next_scene_)
 	}
 }
 

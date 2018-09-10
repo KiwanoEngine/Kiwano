@@ -1,14 +1,14 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 
-e2d::EmergeTransition::EmergeTransition(Scene* scene, float duration)
-	: Transition(scene, duration)
+e2d::EmergeTransition::EmergeTransition(float duration)
+	: Transition(duration)
 {
 }
 
-bool e2d::EmergeTransition::Init(Game * game, Scene * prev)
+bool e2d::EmergeTransition::Init(Scene * prev, Scene * next)
 {
-	if (Transition::Init(game, prev))
+	if (Transition::Init(prev, next))
 	{
 		out_layer_param_.opacity = 1;
 		in_layer_param_.opacity = 0;

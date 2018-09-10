@@ -2,15 +2,15 @@
 #include "..\e2dobject.h"
 #include "..\e2dmodule.h"
 
-e2d::MoveTransition::MoveTransition(Scene* scene, float duration, Direction direction)
-	: Transition(scene, duration)
+e2d::MoveTransition::MoveTransition(float duration, Direction direction)
+	: Transition(duration)
 	, direction_(direction)
 {
 }
 
-bool e2d::MoveTransition::Init(Game * game, Scene * prev)
+bool e2d::MoveTransition::Init(Scene * prev, Scene * next)
 {
-	if (Transition::Init(game, prev))
+	if (Transition::Init(prev, next))
 	{
 		auto size = Window::GetInstance()->GetSize();
 		if (direction_ == Direction::Up)

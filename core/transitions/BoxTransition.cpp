@@ -2,14 +2,14 @@
 #include "..\e2dobject.h"
 #include "..\e2dmodule.h"
 
-e2d::BoxTransition::BoxTransition(Scene* scene, float duration)
-	: Transition(scene, duration)
+e2d::BoxTransition::BoxTransition(float duration)
+	: Transition(duration)
 {
 }
 
-bool e2d::BoxTransition::Init(Game * game, Scene * prev)
+bool e2d::BoxTransition::Init(Scene * prev, Scene * next)
 {
-	if (Transition::Init(game, prev))
+	if (Transition::Init(prev, next))
 	{
 		in_layer_param_.opacity = 0;
 		return true;
