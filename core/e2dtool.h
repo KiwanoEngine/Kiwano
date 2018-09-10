@@ -50,8 +50,8 @@ namespace e2d
 
 
 	// “Ù¿÷
-	class Music :
-		public Ref
+	class Music
+		: public Ref
 	{
 	public:
 		Music();

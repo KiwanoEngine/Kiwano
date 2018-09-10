@@ -8,8 +8,8 @@ namespace e2d
 
 
 	// 图片
-	class Image :
-		public Ref
+	class Image
+		: public Ref
 	{
 	public:
 		Image();
@@ -111,9 +111,9 @@ namespace e2d
 	class Node;
 
 	// 场景
-	class Scene :
-		public Ref,
-		public EventTarget
+	class Scene
+		: public Ref
+		, public EventTarget
 	{
 	public:
 		Scene();
@@ -306,8 +306,8 @@ namespace e2d
 
 
 	// 定时任务
-	class Task :
-		public Ref
+	class Task
+		: public Ref
 	{
 		friend class Node;
 
@@ -406,9 +406,9 @@ namespace e2d
 	class Action;
 
 	// 节点
-	class Node :
-		public Ref,
-		public EventTarget
+	class Node
+		: public Ref
+		, public EventTarget
 	{
 		friend class Scene;
 		friend class Collider;
@@ -875,9 +875,9 @@ namespace e2d
 
 
 	// 精灵
-	class Sprite :
-		public Node,
-		public Drawable
+	class Sprite
+		: public Node
+		, public Drawable
 	{
 	public:
 		Sprite();
@@ -941,9 +941,9 @@ namespace e2d
 
 
 	// 文本
-	class Text :
-		public Node,
-		public Drawable
+	class Text
+		: public Node
+		, public Drawable
 	{
 	public:
 		// 文本对齐方式
@@ -1159,9 +1159,9 @@ namespace e2d
 
 
 	// 画布
-	class Canvas :
-		public Node,
-		public Drawable
+	class Canvas
+		: public Node
+		, public Drawable
 	{
 	public:
 		Canvas(

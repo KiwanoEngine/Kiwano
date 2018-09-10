@@ -14,8 +14,8 @@ namespace e2d
 
 
 	// 基础动作
-	class Action :
-		public Ref
+	class Action
+		: public Ref
 	{
 		friend class ActionManager;
 		friend class Loop;
@@ -90,8 +90,8 @@ namespace e2d
 
 
 	// 持续动作
-	class FiniteTimeAction :
-		public Action
+	class FiniteTimeAction
+		: public Action
 	{
 	public:
 		// 创建特定时长的持续动作
@@ -121,8 +121,8 @@ namespace e2d
 
 
 	// 相对位移动作
-	class MoveBy :
-		public FiniteTimeAction
+	class MoveBy
+		: public FiniteTimeAction
 	{
 	public:
 		explicit MoveBy(
@@ -153,8 +153,8 @@ namespace e2d
 
 
 	// 位移动作
-	class MoveTo :
-		public MoveBy
+	class MoveTo
+		: public MoveBy
 	{
 	public:
 		explicit MoveTo(
@@ -184,8 +184,8 @@ namespace e2d
 
 
 	// 相对跳跃动作
-	class JumpBy :
-		public FiniteTimeAction
+	class JumpBy
+		: public FiniteTimeAction
 	{
 	public:
 		explicit JumpBy(
@@ -220,8 +220,8 @@ namespace e2d
 
 
 	// 跳跃动作
-	class JumpTo :
-		public JumpBy
+	class JumpTo
+		: public JumpBy
 	{
 	public:
 		explicit JumpTo(
@@ -253,8 +253,8 @@ namespace e2d
 
 
 	// 相对缩放动作
-	class ScaleBy :
-		public FiniteTimeAction
+	class ScaleBy
+		: public FiniteTimeAction
 	{
 	public:
 		explicit ScaleBy(
@@ -292,8 +292,8 @@ namespace e2d
 
 
 	// 缩放动作
-	class ScaleTo :
-		public ScaleBy
+	class ScaleTo
+		: public ScaleBy
 	{
 	public:
 		explicit ScaleTo(
@@ -330,8 +330,8 @@ namespace e2d
 
 
 	// 透明度相对渐变动作
-	class OpacityBy :
-		public FiniteTimeAction
+	class OpacityBy
+		: public FiniteTimeAction
 	{
 	public:
 		explicit OpacityBy(
@@ -361,8 +361,8 @@ namespace e2d
 
 
 	// 透明度渐变动作
-	class OpacityTo :
-		public OpacityBy
+	class OpacityTo
+		: public OpacityBy
 	{
 	public:
 		explicit OpacityTo(
@@ -392,8 +392,8 @@ namespace e2d
 
 
 	// 淡入动作
-	class FadeIn :
-		public OpacityTo
+	class FadeIn
+		: public OpacityTo
 	{
 	public:
 		// 创建淡入动作
@@ -407,8 +407,8 @@ namespace e2d
 
 
 	// 淡出动作
-	class FadeOut :
-		public OpacityTo
+	class FadeOut
+		: public OpacityTo
 	{
 	public:
 		// 创建淡出动作
@@ -422,8 +422,8 @@ namespace e2d
 
 
 	// 相对旋转动作
-	class RotateBy :
-		public FiniteTimeAction
+	class RotateBy
+		: public FiniteTimeAction
 	{
 	public:
 		explicit RotateBy(
@@ -453,8 +453,8 @@ namespace e2d
 
 
 	// 旋转动作
-	class RotateTo :
-		public RotateBy
+	class RotateTo
+		: public RotateBy
 	{
 	public:
 		explicit RotateTo(
@@ -484,8 +484,8 @@ namespace e2d
 
 
 	// 延时动作
-	class Delay :
-		public Action
+	class Delay
+		: public Action
 	{
 	public:
 		explicit Delay(
@@ -520,8 +520,8 @@ namespace e2d
 
 
 	// 循环动作
-	class Loop :
-		public Action
+	class Loop
+		: public Action
 	{
 	public:
 		explicit Loop(
@@ -560,8 +560,8 @@ namespace e2d
 
 
 	// 回调动作
-	class Callback :
-		public Action
+	class Callback
+		: public Action
 	{
 	public:
 		explicit Callback(
@@ -589,8 +589,8 @@ namespace e2d
 
 
 	// 顺序动作
-	class Sequence :
-		public Action
+	class Sequence
+		: public Action
 	{
 	public:
 		typedef std::vector<Action*> Actions;
@@ -641,8 +641,8 @@ namespace e2d
 
 
 	// 同步动作
-	class Spawn :
-		public Action
+	class Spawn
+		: public Action
 	{
 	public:
 		typedef std::vector<Action*> Actions;
@@ -692,8 +692,8 @@ namespace e2d
 
 
 	// 帧动画
-	class Animation :
-		public Ref
+	class Animation
+		: public Ref
 	{
 	public:
 		typedef std::vector<Image*> Images;
@@ -752,8 +752,8 @@ namespace e2d
 
 
 	// 精灵动作
-	class Animate :
-		public Action
+	class Animate
+		: public Action
 	{
 	public:
 		Animate();

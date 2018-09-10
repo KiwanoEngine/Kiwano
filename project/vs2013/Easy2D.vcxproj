@@ -189,8 +189,6 @@
     <ClCompile Include="..\..\core\event\Collision.cpp" />
     <ClCompile Include="..\..\core\event\KeyEvent.cpp" />
     <ClCompile Include="..\..\core\event\MouseEvent.cpp" />
-    <ClCompile Include="..\..\core\impl\Exception.cpp" />
-    <ClCompile Include="..\..\core\impl\SystemException.cpp" />
     <ClCompile Include="..\..\core\impl\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\impl\VoiceCallback.cpp" />
     <ClCompile Include="..\..\core\manager\CollisionManager.cpp" />

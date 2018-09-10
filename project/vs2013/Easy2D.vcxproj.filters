@@ -150,12 +150,6 @@
     <ClCompile Include="..\..\core\components\Menu.cpp">
       <Filter>components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\impl\Exception.cpp">
-      <Filter>impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\impl\SystemException.cpp">
-      <Filter>impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\impl\TextRenderer.cpp">
       <Filter>impl</Filter>
     </ClCompile>

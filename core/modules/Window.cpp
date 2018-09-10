@@ -200,7 +200,7 @@ HWND e2d::Window::GetHWnd()
 		else
 		{
 			::UnregisterClass(REGISTER_CLASS, HINST_THISCOMPONENT);
-			throw SystemException("Create window failed");
+			throw RuntimeException("Create window failed");
 		}
 	}
 	return hWnd_;

@@ -468,15 +468,15 @@ namespace e2d
 		);
 
 		template<typename Func>
-		Function(Func func) : func_(func) {}
+		Function(Func func)
+			: func_(func)
+		{
+		}
 
 		template<typename Func, typename Object>
-		Function(
-			Func&& func,	/* 对象的成员函数 */
-			Object&& obj	/* 对象指针 */
-		)
+		Function(Func&& func, Object&& obj)
+			: func_(std::bind(func, obj))
 		{
-			func_ = std::bind(func, obj);
 		}
 
 		void operator() (void) const;

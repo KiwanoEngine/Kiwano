@@ -5,8 +5,8 @@ namespace e2d
 {
 
 
-	class Button :
-		public Node
+	class Button
+		: public Node
 	{
 	public:
 		Button();
@@ -113,8 +113,8 @@ namespace e2d
 
 
 	// ²Ëµ¥
-	class Menu :
-		public Node
+	class Menu
+		: public Node
 	{
 	public:
 		Menu();

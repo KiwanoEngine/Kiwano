@@ -137,36 +137,22 @@ namespace e2d
 	};
 
 
-	// 异常
-	class Exception
+	// 运行时异常
+	class RuntimeException
+		: public std::exception
 	{
 	public:
-		Exception() E2D_NOEXCEPT;
+		RuntimeException() E2D_NOEXCEPT
+			: exception("unknown runtime exception", 1)
+		{
+		}
 
-		explicit Exception(const char * message) E2D_NOEXCEPT;
-
-		Exception(Exception const& other) E2D_NOEXCEPT;
-
-		virtual ~Exception() E2D_NOEXCEPT;
-
-		Exception& operator=(Exception const& other) E2D_NOEXCEPT;
-
-		// 获取异常信息
-		virtual const char * GetMsg() const;
-
-	private:
-		const char * message_;
-	};
-
-
-	// 系统异常
-	class SystemException
-		: public Exception
-	{
-	public:
-		SystemException() E2D_NOEXCEPT;
-
-		explicit SystemException(const char * message) E2D_NOEXCEPT;
+		explicit RuntimeException(
+			char const* const message
+		) E2D_NOEXCEPT
+			: exception(message, 1)
+		{
+		}
 	};
 
 
@@ -177,7 +163,7 @@ namespace e2d
 			// 在此处设置断点以捕获 D2D API 异常.
 			static char s_str[64] = {};
 			sprintf_s(s_str, "Failure with HRESULT of %08X", static_cast<unsigned int>(hr));
-			throw SystemException(s_str);
+			throw RuntimeException(s_str);
 		}
 	}
 

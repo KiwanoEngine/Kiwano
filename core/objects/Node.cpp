@@ -671,14 +671,14 @@ void e2d::Node::AddChild(Node * child, int order  /* = 0 */)
 	{
 		if (child->parent_ != nullptr)
 		{
-			throw Exception("节点已有父节点, 不能再添加到其他节点");
+			throw RuntimeException("节点已有父节点, 不能再添加到其他节点");
 		}
 
 		for (Node * parent = this; parent != nullptr; parent = parent->GetParent())
 		{
 			if (child == parent)
 			{
-				throw Exception("一个节点不能同时是另一个节点的父节点和子节点");
+				throw RuntimeException("一个节点不能同时是另一个节点的父节点和子节点");
 			}
 		}
 
@@ -855,7 +855,7 @@ void e2d::Node::RunAction(Action * action)
 		}
 		else
 		{
-			throw Exception("该 Action 已有执行目标");
+			throw RuntimeException("该 Action 已有执行目标");
 		}
 	}
 }

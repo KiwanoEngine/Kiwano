@@ -9,8 +9,8 @@ namespace e2d
 	class Scene;
 
 	// 场景过渡
-	class Transition :
-		public Ref
+	class Transition
+		: public Ref
 	{
 		friend class Game;
 
@@ -58,8 +58,8 @@ namespace e2d
 
 
 	// 淡入淡出过渡
-	class FadeTransition :
-		public Transition
+	class FadeTransition
+		: public Transition
 	{
 	public:
 		explicit FadeTransition(
@@ -78,8 +78,8 @@ namespace e2d
 
 
 	// 渐变过渡
-	class EmergeTransition :
-		public Transition
+	class EmergeTransition
+		: public Transition
 	{
 	public:
 		explicit EmergeTransition(
@@ -97,8 +97,8 @@ namespace e2d
 
 
 	// 盒状过渡
-	class BoxTransition :
-		public Transition
+	class BoxTransition
+		: public Transition
 	{
 	public:
 		explicit BoxTransition(
@@ -116,8 +116,8 @@ namespace e2d
 
 
 	// 移入过渡
-	class MoveTransition :
-		public Transition
+	class MoveTransition
+		: public Transition
 	{
 	public:
 		explicit MoveTransition(
