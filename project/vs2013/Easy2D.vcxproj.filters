@@ -16,10 +16,10 @@
     <Filter Include="impl">
       <UniqueIdentifier>{3475b59d-d50c-43b1-8334-bcb9e1703ed2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="event">
+    <Filter Include="events">
       <UniqueIdentifier>{6c9657de-02d5-4d3b-9e1d-bc921eb5aea3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="manager">
+    <Filter Include="managers">
       <UniqueIdentifier>{9031e36b-fa85-4b4e-8e80-657c7e68f283}</UniqueIdentifier>
     </Filter>
     <Filter Include="transitions">
@@ -156,17 +156,17 @@
     <ClCompile Include="..\..\core\impl\VoiceCallback.cpp">
       <Filter>impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\event\Collision.cpp">
-      <Filter>event</Filter>
+    <ClCompile Include="..\..\core\events\Collision.cpp">
+      <Filter>events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\event\KeyEvent.cpp">
-      <Filter>event</Filter>
+    <ClCompile Include="..\..\core\events\KeyEvent.cpp">
+      <Filter>events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\event\MouseEvent.cpp">
-      <Filter>event</Filter>
+    <ClCompile Include="..\..\core\events\MouseEvent.cpp">
+      <Filter>events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\manager\CollisionManager.cpp">
-      <Filter>manager</Filter>
+    <ClCompile Include="..\..\core\managers\CollisionManager.cpp">
+      <Filter>managers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\tools\Data.cpp">
       <Filter>tools</Filter>

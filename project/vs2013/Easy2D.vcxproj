@@ -186,12 +186,12 @@
     <ClCompile Include="..\..\core\actions\Spawn.cpp" />
     <ClCompile Include="..\..\core\components\Button.cpp" />
     <ClCompile Include="..\..\core\components\Menu.cpp" />
-    <ClCompile Include="..\..\core\event\Collision.cpp" />
-    <ClCompile Include="..\..\core\event\KeyEvent.cpp" />
-    <ClCompile Include="..\..\core\event\MouseEvent.cpp" />
+    <ClCompile Include="..\..\core\events\Collision.cpp" />
+    <ClCompile Include="..\..\core\events\KeyEvent.cpp" />
+    <ClCompile Include="..\..\core\events\MouseEvent.cpp" />
     <ClCompile Include="..\..\core\impl\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\impl\VoiceCallback.cpp" />
-    <ClCompile Include="..\..\core\manager\CollisionManager.cpp" />
+    <ClCompile Include="..\..\core\managers\CollisionManager.cpp" />
     <ClCompile Include="..\..\core\modules\Audio.cpp" />
     <ClCompile Include="..\..\core\modules\Game.cpp" />
     <ClCompile Include="..\..\core\modules\GC.cpp" />
