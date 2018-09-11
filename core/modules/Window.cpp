@@ -48,7 +48,7 @@ e2d::Window::Window()
 	::CoInitialize(nullptr);
 
 	// 获取系统 DPI
-	dpi_ = static_cast<float>(::GetDpiForSystem());
+	Renderer::GetFactory()->GetDesktopDpi(&dpi_, &dpi_);
 }
 
 e2d::Window::~Window()

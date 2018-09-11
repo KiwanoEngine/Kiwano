@@ -1,4 +1,5 @@
 #include "..\e2dtransition.h"
+#include "..\e2dobject.h"
 
 e2d::RotationTransition::RotationTransition(float duration, float rotation)
 	: Transition(duration)
@@ -42,8 +43,8 @@ void e2d::RotationTransition::Update()
 					(.5f - process_) * 2,
 					center_pos
 				) * D2D1::Matrix3x2F::Rotation(
-					rotation * (.5f - process_) * 2,
-					center_pos,
+					rotation_ * (.5f - process_) * 2,
+					center_pos
 				)
 			);
 		}
@@ -61,8 +62,8 @@ void e2d::RotationTransition::Update()
 					(process_ - .5f) * 2,
 					center_pos
 				) * D2D1::Matrix3x2F::Rotation(
-					rotation * (process_ - .5f) * 2,
-					center_pos,
+					rotation_ * (process_ - .5f) * 2,
+					center_pos
 				)
 			);
 		}

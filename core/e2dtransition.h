@@ -46,7 +46,7 @@ namespace e2d
 	protected:
 		bool	done_;
 		float	duration_;
-		float	delta_;
+		float	process_;
 		Time	started_;
 		Size	window_size_;
 		Scene*	out_scene_;
@@ -148,7 +148,7 @@ namespace e2d
 		: public Transition
 	{
 	public:
-		explicit MoveTransition(
+		explicit RotationTransition(
 			float moveDuration,		/* 动画持续时长 */
 			float rotation = 360	/* 旋转度数 */
 		);
@@ -165,6 +165,6 @@ namespace e2d
 
 	protected:
 		float	rotation_;
-	}
+	};
 
 }

@@ -1,4 +1,5 @@
 #include "..\e2dtransition.h"
+#include "..\e2dobject.h"
 
 e2d::MoveTransition::MoveTransition(float duration, Direction direction)
 	: Transition(duration)

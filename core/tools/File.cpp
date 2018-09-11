@@ -72,18 +72,18 @@ const e2d::String& e2d::File::GetPath() const
 
 e2d::String e2d::File::GetExtension() const
 {
-	String fileExtension;
+	String file_ext;
 	// 找到文件名中的最后一个 '.' 的位置
-	size_t pos = std::wstring(file_path_).find_last_of(L'.');
+	size_t pos = file_path_.operator std::wstring().find_last_of(L'.');
 	// 判断 pos 是否是有效位置
 	if (pos != std::wstring::npos)
 	{
 		// 截取扩展名
-		fileExtension = file_path_.Subtract(static_cast<int>(pos));
+		file_ext = file_path_.Subtract(static_cast<int>(pos));
 		// 转换为小写字母
-		fileExtension = fileExtension.ToLower();
+		file_ext = file_ext.ToLower();
 	}
-	return std::move(fileExtension);
+	return std::move(file_ext);
 }
 
 bool e2d::File::Delete()
@@ -96,7 +96,7 @@ bool e2d::File::Delete()
 e2d::File e2d::File::Extract(int resource_name, const String & resource_type, const String& dest_file_name)
 {
 	// 创建文件
-	HANDLE hFile = ::CreateFile(
+	HANDLE file = ::CreateFile(
 		static_cast<LPCWSTR>(dest_file_name),
 		GENERIC_WRITE,
 		NULL,
@@ -106,25 +106,25 @@ e2d::File e2d::File::Extract(int resource_name, const String & resource_type, co
 		NULL
 	);
 
-	if (hFile == INVALID_HANDLE_VALUE)
+	if (file == INVALID_HANDLE_VALUE)
 		return std::move(File());
 
 	// 查找资源文件中、加载资源到内存、得到资源大小
-	HRSRC hRes = ::FindResource(NULL, MAKEINTRESOURCE(resource_name), (LPCWSTR)resource_type);
-	HGLOBAL hMem = ::LoadResource(NULL, hRes);
-	DWORD dwSize = ::SizeofResource(NULL, hRes);
+	HRSRC res = ::FindResource(NULL, MAKEINTRESOURCE(resource_name), (LPCWSTR)resource_type);
+	HGLOBAL res_data = ::LoadResource(NULL, res);
+	DWORD res_size = ::SizeofResource(NULL, res);
 
-	if (hRes && hMem && dwSize)
+	if (res && res_data && res_size)
 	{
 		// 写入文件
-		DWORD dwWrite = 0;
-		::WriteFile(hFile, hMem, dwSize, &dwWrite, NULL);
-		::CloseHandle(hFile);
+		DWORD written_bytes = 0;
+		::WriteFile(file, res_data, res_size, &written_bytes, NULL);
+		::CloseHandle(file);
 		return File(dest_file_name);
 	}
 	else
 	{
-		::CloseHandle(hFile);
+		::CloseHandle(file);
 		::DeleteFile(static_cast<LPCWSTR>(dest_file_name));
 		return std::move(File());
 	}
@@ -134,7 +134,7 @@ void e2d::File::AddSearchPath(const String & path)
 {
 	String tmp = path;
 	tmp.Replace(L"/", L"\\");
-	if (tmp[tmp.GetLength() - 1] != L'\\')
+	if (tmp.At(tmp.GetLength() - 1) != L'\\')
 	{
 		tmp << L"\\";
 	}
@@ -150,17 +150,17 @@ bool e2d::File::CreateFolder(const String & dir_path)
 	if (dir_path.IsEmpty() || dir_path.GetLength() >= MAX_PATH)
 		return false;
 
-	wchar_t tmpDirPath[_MAX_PATH] = { 0 };
+	wchar_t tmp_dir_path[MAX_PATH] = { 0 };
 	int length = dir_path.GetLength();
 
 	for (int i = 0; i < length; ++i)
 	{
-		tmpDirPath[i] = dir_path.At(i);
-		if (tmpDirPath[i] == L'\\' || tmpDirPath[i] == L'/' || i == (length - 1))
+		tmp_dir_path[i] = dir_path.At(i);
+		if (tmp_dir_path[i] == L'\\' || tmp_dir_path[i] == L'/' || i == (length - 1))
 		{
-			if (::_waccess(tmpDirPath, 0) != 0)
+			if (::_waccess(tmp_dir_path, 0) != 0)
 			{
-				if (::_wmkdir(tmpDirPath) != 0)
+				if (::_wmkdir(tmp_dir_path) != 0)
 				{
 					return false;
 				}

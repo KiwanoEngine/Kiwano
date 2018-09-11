@@ -1,4 +1,5 @@
 #include "..\e2dtransition.h"
+#include "..\e2dobject.h"
 
 e2d::BoxTransition::BoxTransition(float duration)
 	: Transition(duration)

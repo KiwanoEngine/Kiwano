@@ -1,6 +1,6 @@
-#include "..\e2dmodule.h"
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
+#include "..\e2dmodule.h"
 
 e2d::Transition::Transition(float duration)
 	: done_(false)
