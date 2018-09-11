@@ -2,30 +2,15 @@
 
 
 e2d::KeyEvent::KeyEvent(UINT message, WPARAM w_param, LPARAM l_param)
-	: code_(KeyCode(w_param))
-	, type_(Type(message))
-	, count_(static_cast<int>((DWORD)l_param & 0x0000FFFF))
+	: message_(message)
+	, w_param_(w_param)
+	, l_param_(l_param)
 {
 }
 
 e2d::KeyCode e2d::KeyEvent::GetCode() const
 {
-	return code_;
-}
-
-int e2d::KeyEvent::GetCount() const
-{
-	return count_;
-}
-
-e2d::KeyEvent::Type e2d::KeyEvent::GetType() const
-{
-	return type_;
-}
-
-e2d::KeyCode e2d::KeyEvent::ToKeyCode(WPARAM w_param)
-{
-	switch (w_param)
+	switch (w_param_)
 	{
 	case 'A': return KeyCode::A;
 	case 'B': return KeyCode::B;
@@ -82,4 +67,14 @@ e2d::KeyCode e2d::KeyEvent::ToKeyCode(WPARAM w_param)
 	case VK_ESCAPE: return KeyCode::Esc;
 	default: return KeyCode::Unknown;
 	}
+}
+
+int e2d::KeyEvent::GetCount() const
+{
+	return static_cast<int>((DWORD)l_param_ & 0x0000FFFF);
+}
+
+e2d::KeyEvent::Type e2d::KeyEvent::GetType() const
+{
+	return Type(message_);
 }

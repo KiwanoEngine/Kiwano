@@ -83,22 +83,20 @@ void e2d::Scene::Draw()
 	}
 }
 
-bool e2d::Scene::Dispatch(const MouseEvent & e, bool handled)
+void e2d::Scene::Dispatch(const MouseEvent & e)
 {
 	if (root_)
 	{
-		return root_->Dispatch(e, handled);
+		root_->Dispatch(e, false);
 	}
-	return false;
 }
 
-bool e2d::Scene::Dispatch(const KeyEvent & e, bool handled)
+void e2d::Scene::Dispatch(const KeyEvent & e)
 {
 	if (root_)
 	{
-		return root_->Dispatch(e, handled);
+		root_->Dispatch(e, false);
 	}
-	return false;
 }
 
 void e2d::Scene::SetTransform(const D2D1::Matrix3x2F& matrix)

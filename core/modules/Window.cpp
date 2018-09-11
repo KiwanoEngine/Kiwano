@@ -423,9 +423,10 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT msg, WPARAM w_param, LPARAM l_param
 			if (game->IsTransitioning())
 				break;
 
-			if (game->GetCurrentScene())
+			auto curr_scene = game->GetCurrentScene();
+			if (curr_scene)
 			{
-				game->GetCurrentScene()->Dispatch(MouseEvent(msg, w_param, l_param), false);
+				curr_scene->Dispatch(MouseEvent(msg, w_param, l_param));
 			}
 		}
 		result = 0;
@@ -440,9 +441,10 @@ LRESULT e2d::Window::WndProc(HWND hWnd, UINT msg, WPARAM w_param, LPARAM l_param
 			if (game->IsTransitioning())
 				break;
 
-			if (game->GetCurrentScene())
+			auto curr_scene = game->GetCurrentScene();
+			if (curr_scene)
 			{
-				game->GetCurrentScene()->Dispatch(KeyEvent(msg, w_param, l_param), false);
+				curr_scene->Dispatch(KeyEvent(msg, w_param, l_param));
 			}
 		}
 		result = 0;

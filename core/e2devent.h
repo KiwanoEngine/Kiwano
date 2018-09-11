@@ -23,24 +23,19 @@ namespace e2d
 			LPARAM l_param
 		);
 
+		// 获取事件类型
+		KeyEvent::Type GetType() const;
+
 		// 获取按键键值
 		KeyCode GetCode() const;
 
 		// 获取按键次数
 		int GetCount() const;
 
-		// 获取事件类型
-		KeyEvent::Type GetType() const;
-
-		// VK 键值转换
-		static KeyCode ToKeyCode(
-			WPARAM w_param
-		);
-
 	protected:
-		int				count_;
-		KeyCode			code_;
-		KeyEvent::Type	type_;
+		UINT	message_;
+		WPARAM	w_param_;
+		LPARAM	l_param_;
 	};
 
 
@@ -104,24 +99,6 @@ namespace e2d
 		UINT	message_;
 		WPARAM	w_param_;
 		LPARAM	l_param_;
-	};
-
-
-	// 事件接收目标
-	class EventTarget
-	{
-	public:
-		// 分发鼠标消息
-		virtual bool Dispatch(
-			const MouseEvent& e,
-			bool handled
-		) = 0;
-
-		// 分发按键消息
-		virtual bool Dispatch(
-			const KeyEvent& e,
-			bool handled
-		) = 0;
 	};
 
 }

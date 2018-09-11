@@ -113,7 +113,6 @@ namespace e2d
 	// 场景
 	class Scene
 		: public Ref
-		, public EventTarget
 	{
 	public:
 		Scene();
@@ -158,16 +157,14 @@ namespace e2d
 		void Draw();
 
 		// 分发鼠标消息
-		virtual bool Dispatch(
-			const MouseEvent& e,
-			bool handled
-		) override;
+		virtual void Dispatch(
+			const MouseEvent& e
+		);
 
 		// 分发按键消息
-		virtual bool Dispatch(
-			const KeyEvent& e,
-			bool handled
-		) override;
+		virtual void Dispatch(
+			const KeyEvent& e
+		);
 
 		// 设置转换矩阵
 		void SetTransform(
@@ -417,7 +414,6 @@ namespace e2d
 	// 节点
 	class Node
 		: public Ref
-		, public EventTarget
 	{
 		friend class Game;
 		friend class Scene;
@@ -813,13 +809,13 @@ namespace e2d
 		virtual bool Dispatch(
 			const MouseEvent& e,
 			bool handled
-		) override;
+		);
 
 		// 分发按键消息
 		virtual bool Dispatch(
 			const KeyEvent& e,
 			bool handled
-		) override;
+		);
 
 	protected:
 		E2D_DISABLE_COPY(Node);
