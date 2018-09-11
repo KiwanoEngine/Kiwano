@@ -208,8 +208,8 @@ e2d::File e2d::File::ShowOpenDialog(const String & title, const String & filter)
 
 			Game::GetInstance()->Pause();
 			{
-				HWND hWnd = Window::GetInstance()->GetHWnd();
-				hr = file_open->Show(hWnd);
+				HWND hwnd = Window::GetInstance()->GetHWnd();
+				hr = file_open->Show(hwnd);
 			}
 			Game::GetInstance()->Resume();
 
@@ -283,8 +283,8 @@ e2d::File e2d::File::ShowSaveDialog(const String & title, const String& def_file
 
 			Game::GetInstance()->Pause();
 			{
-				HWND hWnd = Window::GetInstance()->GetHWnd();
-				hr = file_save->Show(hWnd);
+				HWND hwnd = Window::GetInstance()->GetHWnd();
+				hr = file_save->Show(hwnd);
 			}
 			Game::GetInstance()->Resume();
 

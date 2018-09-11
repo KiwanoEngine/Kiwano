@@ -52,10 +52,10 @@ void e2d::Game::Start()
 
 	const int minInterval = 5;
 	Time last = Time::Now();
-	HWND hWnd = window->GetHWnd();
+	HWND hwnd = window->GetHWnd();
 	
-	::ShowWindow(hWnd, SW_SHOWNORMAL);
-	::UpdateWindow(hWnd);
+	::ShowWindow(hwnd, SW_SHOWNORMAL);
+	::UpdateWindow(hwnd);
 	window->Poll();
 	UpdateScene();
 	

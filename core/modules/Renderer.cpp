@@ -173,10 +173,10 @@ ID2D1HwndRenderTarget * e2d::Renderer::GetRenderTarget()
 {
 	if (!render_target_)
 	{
-		HWND hWnd = Window::GetInstance()->GetHWnd();
+		HWND hwnd = Window::GetInstance()->GetHWnd();
 
 		RECT rc;
-		GetClientRect(hWnd, &rc);
+		GetClientRect(hwnd, &rc);
 
 		D2D1_SIZE_U size = D2D1::SizeU(
 			rc.right - rc.left,
@@ -189,7 +189,7 @@ ID2D1HwndRenderTarget * e2d::Renderer::GetRenderTarget()
 			GetFactory()->CreateHwndRenderTarget(
 				D2D1::RenderTargetProperties(),
 				D2D1::HwndRenderTargetProperties(
-					hWnd,
+					hwnd,
 					size,
 					D2D1_PRESENT_OPTIONS_NONE),
 				&render_target_

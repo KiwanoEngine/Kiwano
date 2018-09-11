@@ -120,14 +120,14 @@ namespace e2d
 
 		// Win32 窗口消息回调程序
 		static LRESULT CALLBACK WndProc(
-			HWND hWnd,
+			HWND hwnd,
 			UINT msg,
 			WPARAM w_param,
 			LPARAM l_param
 		);
 
 	private:
-		HWND	hWnd_;
+		HWND	hwnd_;
 		MSG		msg_;
 		int		width_;
 		int		height_;
