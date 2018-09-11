@@ -198,6 +198,9 @@
     <ClCompile Include="..\..\core\transitions\MoveTransition.cpp">
       <Filter>transitions</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\transitions\RotationTransition.cpp">
+      <Filter>transitions</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\core\transitions\Transition.cpp">
       <Filter>transitions</Filter>
     </ClCompile>

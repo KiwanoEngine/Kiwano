@@ -84,7 +84,7 @@ namespace e2d
 	{
 	public:
 		explicit EmergeTransition(
-			float duration		/* 浮现动画持续时长 */
+			float duration		/* 动画持续时长 */
 		);
 
 	protected:
@@ -116,14 +116,14 @@ namespace e2d
 	};
 
 
-	// 移入过渡
+	// 位移过渡
 	class MoveTransition
 		: public Transition
 	{
 	public:
 		explicit MoveTransition(
-			float moveDuration,						/* 场景移动动画持续时长 */
-			Direction direction = Direction::Left	/* 场景移动方向 */
+			float moveDuration,						/* 动画持续时长 */
+			Direction direction = Direction::Left	/* 移动方向 */
 		);
 
 	protected:
@@ -141,5 +141,30 @@ namespace e2d
 		Point		pos_delta_;
 		Point		start_pos_;
 	};
+
+
+	// 旋转过渡
+	class RotationTransition
+		: public Transition
+	{
+	public:
+		explicit MoveTransition(
+			float moveDuration,		/* 动画持续时长 */
+			float rotation = 360	/* 旋转度数 */
+		);
+
+	protected:
+		virtual void Update() override;
+
+		virtual void Init(
+			Scene * prev,
+			Scene * next
+		) override;
+
+		virtual void Reset() override;
+
+	protected:
+		float	rotation_;
+	}
 
 }

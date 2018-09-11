@@ -18,11 +18,6 @@ void e2d::EmergeTransition::Update()
 {
 	Transition::Update();
 
-	out_layer_param_.opacity = 1 - delta_;
-	in_layer_param_.opacity = delta_;
-
-	if (delta_ >= 1)
-	{
-		this->Stop();
-	}
+	out_layer_param_.opacity = 1 - process_;
+	in_layer_param_.opacity = process_;
 }

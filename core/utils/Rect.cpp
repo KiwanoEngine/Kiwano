@@ -49,7 +49,7 @@ bool e2d::Rect::ContainsPoint(const Point& point) const
 bool e2d::Rect::Intersects(const Rect& rect) const
 {
 	return !((origin.x + size.width)			< rect.origin.x ||
-			(rect.origin.x + rect.size.width)	<      origin.x ||
+			(rect.origin.x + rect.size.width)	<	  origin.x ||
 			(origin.y + size.height)			< rect.origin.y ||
-			(rect.origin.y + rect.size.height)	<      origin.y);
+			(rect.origin.y + rect.size.height)	<	  origin.y);
 }

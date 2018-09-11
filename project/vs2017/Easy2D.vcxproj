@@ -249,6 +249,7 @@
     <ClCompile Include="..\..\core\transitions\EmergeTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\FadeTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\MoveTransition.cpp" />
+    <ClCompile Include="..\..\core\transitions\RotationTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\Transition.cpp" />
     <ClCompile Include="..\..\core\utils\Color.cpp" />
     <ClCompile Include="..\..\core\utils\Duration.cpp" />

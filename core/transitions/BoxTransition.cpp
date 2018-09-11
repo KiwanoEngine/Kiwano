@@ -1,6 +1,4 @@
 #include "..\e2dtransition.h"
-#include "..\e2dobject.h"
-#include "..\e2dmodule.h"
 
 e2d::BoxTransition::BoxTransition(float duration)
 	: Transition(duration)
@@ -18,14 +16,13 @@ void e2d::BoxTransition::Update()
 {
 	Transition::Update();
 
-	auto size = Window::GetInstance()->GetSize();
-	if (delta_ <= 0.5)
+	if (process_ < .5f)
 	{
 		out_layer_param_.contentBounds = D2D1::RectF(
-			size.width * delta_,
-			size.height * delta_,
-			size.width * (1 - delta_),
-			size.height * (1 - delta_)
+			window_size_.width * process_,
+			window_size_.height * process_,
+			window_size_.width * (1 - process_),
+			window_size_.height * (1 - process_)
 		);
 	}
 	else
@@ -33,14 +30,10 @@ void e2d::BoxTransition::Update()
 		out_layer_param_.opacity = 0;
 		in_layer_param_.opacity = 1;
 		in_layer_param_.contentBounds = D2D1::RectF(
-			size.width * (1 - delta_),
-			size.height * (1 - delta_),
-			size.width * delta_,
-			size.height * delta_
+			window_size_.width * (1 - process_),
+			window_size_.height * (1 - process_),
+			window_size_.width * process_,
+			window_size_.height * process_
 		);
-		if (delta_ >= 1)
-		{
-			this->Stop();
-		}
 	}
 }

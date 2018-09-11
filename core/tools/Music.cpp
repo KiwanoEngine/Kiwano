@@ -3,7 +3,7 @@
 
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p)       { if (p) { delete (p); (p)=nullptr; } }
+#define SAFE_DELETE(p)	   { if (p) { delete (p); (p)=nullptr; } }
 #endif
 
 #ifndef SAFE_DELETE_ARRAY

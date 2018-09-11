@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef WINVER
-#	define WINVER 0x0700       // Allow use of features specific to Windows 7 or later
+#	define WINVER 0x0700	   // Allow use of features specific to Windows 7 or later
 #endif
 
 #ifndef _WIN32_WINNT

@@ -5,7 +5,7 @@
 e2d::Transition::Transition(float duration)
 	: done_(false)
 	, started_()
-	, delta_(0)
+	, process_(0)
 	, window_size_()
 	, out_scene_(nullptr)
 	, in_scene_(nullptr)
@@ -78,12 +78,17 @@ void e2d::Transition::Update()
 {
 	if (duration_ == 0)
 	{
-		delta_ = 1;
+		process_ = 1;
 	}
 	else
 	{
-		delta_ = (Time::Now() - started_).Seconds() / duration_;
-		delta_ = std::min(delta_, 1.f);
+		process_ = (Time::Now() - started_).Seconds() / duration_;
+		process_ = std::min(process_, 1.f);
+	}
+
+	if (process_ >= 1)
+	{
+		this->Stop();
 	}
 }
 
