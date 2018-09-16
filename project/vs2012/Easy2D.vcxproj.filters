@@ -231,6 +231,9 @@
     <ClCompile Include="..\..\core\utils\Ref.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\utils\Transform.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />

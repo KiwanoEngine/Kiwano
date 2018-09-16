@@ -46,7 +46,7 @@ void e2d::JumpBy::Update()
 		start_pos_ = diff + start_pos_;
 
 		Point newPos = start_pos_ + Point(x, y);
-		target_->SetPos(newPos);
+		target_->SetPosition(newPos);
 
 		prev_pos_ = newPos;
 	}

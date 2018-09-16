@@ -29,7 +29,7 @@ void e2d::MoveBy::Update()
 		start_pos_ = start_pos_ + diff;
 
 		Point newPos = start_pos_ + (delta_pos_ * delta_);
-		target_->SetPos(newPos);
+		target_->SetPosition(newPos);
 
 		prev_pos_ = newPos;
 	}

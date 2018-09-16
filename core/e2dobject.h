@@ -50,31 +50,34 @@ namespace e2d
 		);
 
 		// 获取宽度
-		virtual float GetWidth() const;
+		float GetWidth() const;
 
 		// 获取高度
-		virtual float GetHeight() const;
+		float GetHeight() const;
 
 		// 获取大小
-		virtual Size GetSize() const;
+		Size GetSize() const;
 
 		// 获取源图片宽度
-		virtual float GetSourceWidth() const;
+		float GetSourceWidth() const;
 
 		// 获取源图片高度
-		virtual float GetSourceHeight() const;
+		float GetSourceHeight() const;
 
 		// 获取源图片大小
-		virtual Size GetSourceSize() const;
+		Size GetSourceSize() const;
 
 		// 获取裁剪位置 X 坐标
-		virtual float GetCropX() const;
+		float GetCropX() const;
 
 		// 获取裁剪位置 Y 坐标
-		virtual float GetCropY() const;
+		float GetCropY() const;
 
 		// 获取裁剪位置
-		virtual Point GetCropPos() const;
+		Point GetCropPos() const;
+
+		// 获取裁剪矩形
+		const Rect& GetCropRect() const;
 
 		// 获取 ID2D1Bitmap 对象
 		ID2D1Bitmap * GetBitmap();
@@ -420,23 +423,6 @@ namespace e2d
 		friend class Collider;
 
 	public:
-		// 节点属性
-		struct Property
-		{
-			Point pos;			// 坐标
-			Size size;			// 大小
-			Point anchor;		// 锚点坐标
-			Point scale;		// 缩放
-			Point skew;			// 倾斜角度
-			float rotation;		// 旋转角度
-
-			Property operator+ (Property const & prop) const;
-			Property operator- (Property const & prop) const;
-
-			static const Property Origin;
-		};
-
-	public:
 		typedef std::vector<Node*> Nodes;
 		typedef std::vector<Action*> Actions;
 		typedef std::vector<Task*> Tasks;
@@ -481,10 +467,10 @@ namespace e2d
 		// 获取节点大小（不考虑缩放）
 		const Size& GetRealSize() const;
 
-		// 获取节点的锚点
+		// 获取节点的支点
 		float GetAnchorX() const;
 
-		// 获取节点的锚点
+		// 获取节点的支点
 		float GetAnchorY() const;
 
 		// 获取节点大小
@@ -505,14 +491,11 @@ namespace e2d
 		// 获取节点旋转角度
 		float GetRotation() const;
 
+		// 获取二维转换
+		const Transform& GetTransform() const;
+
 		// 获取节点透明度
 		float GetOpacity() const;
-
-		// 获取节点属性
-		Property GetProperty() const;
-
-		// 获取差别属性
-		Property GetExtrapolate() const;
 
 		// 获取节点碰撞体
 		Collider * GetCollider();
@@ -534,40 +517,35 @@ namespace e2d
 		);
 
 		// 设置节点横坐标
-		virtual void SetPosX(
+		virtual void SetPositionX(
 			float x
 		);
 
 		// 设置节点纵坐标
-		virtual void SetPosY(
+		virtual void SetPositionY(
 			float y
 		);
 
 		// 设置节点坐标
-		virtual void SetPos(
+		virtual void SetPosition(
 			const Point & point
 		);
 
 		// 设置节点坐标
-		virtual void SetPos(
-			float x,
-			float y
-		);
-
-		// 节点坐标固定
-		virtual void SetPosFixed(
-			bool fixed
-		);
-
-		// 移动节点
-		virtual void Move(
+		virtual void SetPosition(
 			float x,
 			float y
 		);
 
 		// 移动节点
-		virtual void Move(
-			const Point & v
+		virtual void MoveBy(
+			float x,
+			float y
+		);
+
+		// 移动节点
+		virtual void MoveBy(
+			const Point & vector
 		);
 
 		// 设置节点绘图顺序
@@ -632,19 +610,19 @@ namespace e2d
 			float opacity
 		);
 
-		// 设置锚点的横向位置
+		// 设置支点的横向位置
 		// 默认为 0, 范围 [0, 1]
 		virtual void SetAnchorX(
 			float anchor_x
 		);
 
-		// 设置锚点的纵向位置
+		// 设置支点的纵向位置
 		// 默认为 0, 范围 [0, 1]
 		virtual void SetAnchorY(
 			float anchor_y
 		);
 
-		// 设置锚点位置
+		// 设置支点位置
 		// 默认为 (0, 0), 范围 [0, 1]
 		virtual void SetAnchor(
 			float anchor_x,
@@ -669,12 +647,12 @@ namespace e2d
 
 		// 修改节点大小
 		virtual void SetSize(
-			Size size
+			const Size & size
 		);
 
-		// 设置节点属性
-		virtual void SetProperty(
-			Property prop
+		// 设置二维转换
+		virtual void SetTransform(
+			const Transform& transform
 		);
 
 		// 启用或关闭渲染区域裁剪
@@ -852,12 +830,7 @@ namespace e2d
 	protected:
 		String		name_;
 		size_t		hash_name_;
-		Point		pos_;
-		Size		size_;
-		Point		scale_;
-		Point		anchor_;
-		Point		skew_;
-		float		rotation_;
+		Transform	transform_;
 		float		display_opacity_;
 		float		real_opacity_;
 		int			order_;
@@ -865,11 +838,9 @@ namespace e2d
 		bool		clip_enabled_;
 		bool		dirty_sort_;
 		bool		dirty_transform_;
-		bool		fixed_position_;
 		Collider	collider_;
 		Scene *		parent_scene_;
 		Node *		parent_;
-		Property	extrapolate_;
 		Color		border_color_;
 		Actions		actions_;
 		Tasks		tasks_;

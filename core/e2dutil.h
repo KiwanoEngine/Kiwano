@@ -601,6 +601,29 @@ namespace e2d
 	};
 
 
+	// 二维转换
+	class Transform
+	{
+	public:
+		Transform();
+
+		E2D_OP_EXPLICIT operator D2D1::Matrix3x2F() const;
+
+		bool operator== (const Transform& other) const;
+
+	public:
+		Point position;		// 坐标
+		Size size;			// 大小
+		float scale_x;		// 横向缩放
+		float scale_y;		// 纵向缩放
+		float rotation;		// 旋转
+		float skew_x;		// 横向倾斜角度
+		float skew_y;		// 纵向倾斜角度
+		float pivot_x;		// 支点横坐标
+		float pivot_y;		// 支点纵坐标
+	};
+
+
 	// 引用计数对象
 	class Ref
 	{

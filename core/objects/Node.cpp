@@ -3,32 +3,6 @@
 #include "..\e2dmanager.h"
 #include "..\e2daction.h"
 
-const e2d::Node::Property e2d::Node::Property::Origin = { };
-
-e2d::Node::Property e2d::Node::Property::operator+(Property const & prop) const
-{
-	Property result;
-	result.pos = this->pos + prop.pos;
-	result.size = this->size + prop.size;
-	result.anchor = this->anchor + prop.anchor;
-	result.scale = this->scale + prop.scale;
-	result.skew = this->skew + prop.skew;
-	result.rotation = this->rotation + prop.rotation;
-	return std::move(result);
-}
-
-e2d::Node::Property e2d::Node::Property::operator-(Property const & prop) const
-{
-	Property result;
-	result.pos = this->pos - prop.pos;
-	result.size = this->size - prop.size;
-	result.anchor = this->anchor - prop.anchor;
-	result.scale = this->scale - prop.scale;
-	result.skew = this->skew - prop.skew;
-	result.rotation = this->rotation - prop.rotation;
-	return std::move(result);
-}
-
 
 e2d::Node::Node()
 	: visible_(true)
@@ -38,25 +12,18 @@ e2d::Node::Node()
 	, clip_enabled_(false)
 	, dirty_sort_(false)
 	, dirty_transform_(false)
-	, fixed_position_(false)
 	, collider_(this)
 	, border_(nullptr)
 	, order_(0)
-	, pos_()
-	, size_()
-	, scale_(1.f, 1.f)
-	, rotation_(0)
-	, skew_(0, 0)
+	, transform_()
 	, display_opacity_(1.f)
 	, real_opacity_(1.f)
-	, anchor_()
 	, children_()
 	, actions_()
 	, tasks_()
 	, initial_matrix_(D2D1::Matrix3x2F::Identity())
 	, final_matrix_(D2D1::Matrix3x2F::Identity())
 	, border_color_(Color::Red, 0.6f)
-	, extrapolate_(Property::Origin)
 {
 }
 
@@ -98,14 +65,13 @@ void e2d::Node::Visit()
 	}
 
 	UpdateTransform();
-	extrapolate_ = this->GetProperty();
 
 	auto render_target = Renderer::GetInstance()->GetRenderTarget();
 	if (clip_enabled_)
 	{
 		render_target->SetTransform(final_matrix_);
 		render_target->PushAxisAlignedClip(
-			D2D1::RectF(0, 0, size_.width, size_.height),
+			D2D1::RectF(0, 0, transform_.size.width, transform_.size.height),
 			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
 		);
 	}
@@ -209,34 +175,19 @@ void e2d::Node::UpdateTransform()
 
 	dirty_transform_ = false;
 
-	// 计算锚点坐标
-	D2D1_POINT_2F anchor = { size_.width * anchor_.x, size_.height * anchor_.y };
-	// 变换 Initial 矩阵，子节点将根据这个矩阵进行变换
-	initial_matrix_ = D2D1::Matrix3x2F::Scale(
-		scale_.x,
-		scale_.y,
-		anchor
-	) * D2D1::Matrix3x2F::Skew(
-		skew_.x,
-		skew_.y,
-		anchor
-	) * D2D1::Matrix3x2F::Rotation(
-		rotation_,
-		anchor
-	) * D2D1::Matrix3x2F::Translation(
-		pos_.x,
-		pos_.y
+	final_matrix_ = static_cast<D2D1::Matrix3x2F>(transform_);
+
+	// 根据自身支点计算 Initial 矩阵，子节点将根据这个矩阵进行变换
+	auto pivot = Point(
+		transform_.size.width * transform_.pivot_x,
+		transform_.size.height * transform_.pivot_y
 	);
-	// 根据自身锚点变换 Final 矩阵
-	final_matrix_ = initial_matrix_ * D2D1::Matrix3x2F::Translation(-anchor.x, -anchor.y);
+	initial_matrix_ = final_matrix_ * D2D1::Matrix3x2F::Translation(pivot.x, pivot.y);
 
 	if (parent_)
 	{
-		if (!fixed_position_)
-		{
-			initial_matrix_ = initial_matrix_ * parent_->initial_matrix_;
-			final_matrix_ = final_matrix_ * parent_->initial_matrix_;
-		}
+		initial_matrix_ = initial_matrix_ * parent_->initial_matrix_;
+		final_matrix_ = final_matrix_ * parent_->initial_matrix_;
 	}
 	else if (parent_scene_)
 	{
@@ -252,7 +203,7 @@ void e2d::Node::UpdateTransform()
 	ID2D1TransformedGeometry * transformed = nullptr;
 	ThrowIfFailed(
 		factory->CreateRectangleGeometry(
-			D2D1::RectF(0, 0, size_.width, size_.height),
+			D2D1::RectF(0, 0, transform_.size.width, transform_.size.height),
 			&rectangle
 		)
 	);
@@ -376,104 +327,92 @@ size_t e2d::Node::GetHashName() const
 
 float e2d::Node::GetPosX() const
 {
-	return pos_.x;
+	return transform_.position.x;
 }
 
 float e2d::Node::GetPosY() const
 {
-	return pos_.y;
+	return transform_.position.y;
 }
 
 const e2d::Point& e2d::Node::GetPos() const
 {
-	return pos_;
+	return transform_.position;
 }
 
 float e2d::Node::GetWidth() const
 {
-	return size_.width * scale_.x;
+	return transform_.size.width * transform_.scale_x;
 }
 
 float e2d::Node::GetHeight() const
 {
-	return size_.height * scale_.y;
+	return transform_.size.height * transform_.scale_y;
 }
 
 float e2d::Node::GetRealWidth() const
 {
-	return size_.width;
+	return transform_.size.width;
 }
 
 float e2d::Node::GetRealHeight() const
 {
-	return size_.height;
+	return transform_.size.height;
 }
 
 const e2d::Size& e2d::Node::GetRealSize() const
 {
-	return size_;
+	return transform_.size;
 }
 
 float e2d::Node::GetAnchorX() const
 {
-	return anchor_.x;
+	return transform_.pivot_x;
 }
 
 float e2d::Node::GetAnchorY() const
 {
-	return anchor_.y;
+	return transform_.pivot_y;
 }
 
 e2d::Size e2d::Node::GetSize() const
 {
-	return Size(GetWidth(), GetHeight());
+	return std::move(Size(GetWidth(), GetHeight()));
 }
 
 float e2d::Node::GetScaleX() const
 {
-	return scale_.x;
+	return transform_.scale_x;
 }
 
 float e2d::Node::GetScaleY() const
 {
-	return scale_.y;
+	return transform_.scale_y;
 }
 
 float e2d::Node::GetSkewX() const
 {
-	return skew_.x;
+	return transform_.skew_x;
 }
 
 float e2d::Node::GetSkewY() const
 {
-	return skew_.y;
+	return transform_.skew_y;
 }
 
 float e2d::Node::GetRotation() const
 {
-	return rotation_;
+	return transform_.rotation;
+}
+
+const e2d::Transform & e2d::Node::GetTransform() const
+{
+	return transform_;
 }
 
 float e2d::Node::GetOpacity() const
 {
 	return real_opacity_;
-}
-
-e2d::Node::Property e2d::Node::GetProperty() const
-{
-	Property prop;
-	prop.pos = pos_;
-	prop.size = size_;
-	prop.anchor = anchor_;
-	prop.scale = scale_;
-	prop.rotation = rotation_;
-	prop.skew = skew_;
-	return std::move(prop);
-}
-
-e2d::Node::Property e2d::Node::GetExtrapolate() const
-{
-	return this->GetProperty() - extrapolate_;
 }
 
 e2d::Collider* e2d::Node::GetCollider()
@@ -498,58 +437,49 @@ void e2d::Node::SetOrder(int order)
 	}
 }
 
-void e2d::Node::SetPosX(float x)
+void e2d::Node::SetPositionX(float x)
 {
-	this->SetPos(x, pos_.y);
+	this->SetPosition(x, transform_.position.y);
 }
 
-void e2d::Node::SetPosY(float y)
+void e2d::Node::SetPositionY(float y)
 {
-	this->SetPos(pos_.x, y);
+	this->SetPosition(transform_.position.x, y);
 }
 
-void e2d::Node::SetPos(const Point & p)
+void e2d::Node::SetPosition(const Point & p)
 {
-	this->SetPos(p.x, p.y);
+	this->SetPosition(p.x, p.y);
 }
 
-void e2d::Node::SetPos(float x, float y)
+void e2d::Node::SetPosition(float x, float y)
 {
-	if (pos_.x == x && pos_.y == y)
+	if (transform_.position.x == x && transform_.position.y == y)
 		return;
 
-	pos_.x = x;
-	pos_.y = y;
+	transform_.position.x = x;
+	transform_.position.y = y;
 	dirty_transform_ = true;
 }
 
-void e2d::Node::SetPosFixed(bool fixed)
+void e2d::Node::MoveBy(float x, float y)
 {
-	if (fixed_position_ == fixed)
-		return;
-
-	fixed_position_ = fixed;
-	dirty_transform_ = true;
+	this->SetPosition(transform_.position.x + x, transform_.position.y + y);
 }
 
-void e2d::Node::Move(float x, float y)
+void e2d::Node::MoveBy(const Point & v)
 {
-	this->SetPos(pos_.x + x, pos_.y + y);
-}
-
-void e2d::Node::Move(const Point & v)
-{
-	this->Move(v.x, v.y);
+	this->MoveBy(v.x, v.y);
 }
 
 void e2d::Node::SetScaleX(float scale_x)
 {
-	this->SetScale(scale_x, scale_.y);
+	this->SetScale(scale_x, transform_.scale_y);
 }
 
 void e2d::Node::SetScaleY(float scale_y)
 {
-	this->SetScale(scale_.x, scale_y);
+	this->SetScale(transform_.scale_x, scale_y);
 }
 
 void e2d::Node::SetScale(float scale)
@@ -559,40 +489,40 @@ void e2d::Node::SetScale(float scale)
 
 void e2d::Node::SetScale(float scale_x, float scale_y)
 {
-	if (scale_.x == scale_x && scale_.y == scale_y)
+	if (transform_.scale_x == scale_x && transform_.scale_y == scale_y)
 		return;
 
-	scale_.x = scale_x;
-	scale_.y = scale_y;
+	transform_.scale_x = scale_x;
+	transform_.scale_y = scale_y;
 	dirty_transform_ = true;
 }
 
 void e2d::Node::SetSkewX(float skew_x)
 {
-	this->SetSkew(skew_x, skew_.y);
+	this->SetSkew(skew_x, transform_.skew_y);
 }
 
 void e2d::Node::SetSkewY(float skew_y)
 {
-	this->SetSkew(skew_.x, skew_y);
+	this->SetSkew(transform_.skew_x, skew_y);
 }
 
 void e2d::Node::SetSkew(float skew_x, float skew_y)
 {
-	if (skew_.x == skew_x && skew_.y == skew_y)
+	if (transform_.skew_x == skew_x && transform_.skew_y == skew_y)
 		return;
 
-	skew_.x = skew_x;
-	skew_.y = skew_y;
+	transform_.skew_x = skew_x;
+	transform_.skew_y = skew_y;
 	dirty_transform_ = true;
 }
 
 void e2d::Node::SetRotation(float angle)
 {
-	if (rotation_ == angle)
+	if (transform_.rotation == angle)
 		return;
 
-	rotation_ = angle;
+	transform_.rotation = angle;
 	dirty_transform_ = true;
 }
 
@@ -608,57 +538,53 @@ void e2d::Node::SetOpacity(float opacity)
 
 void e2d::Node::SetAnchorX(float anchor_x)
 {
-	this->SetAnchor(anchor_x, anchor_.y);
+	this->SetAnchor(anchor_x, transform_.pivot_y);
 }
 
 void e2d::Node::SetAnchorY(float anchor_y)
 {
-	this->SetAnchor(anchor_.x, anchor_y);
+	this->SetAnchor(transform_.pivot_x, anchor_y);
 }
 
 void e2d::Node::SetAnchor(float anchor_x, float anchor_y)
 {
-	if (anchor_.x == anchor_x && anchor_.y == anchor_y)
+	if (transform_.pivot_x == anchor_x && transform_.pivot_y == anchor_y)
 		return;
 
-	anchor_.x = anchor_x;
-	anchor_.y = anchor_y;
+	transform_.pivot_x = anchor_x;
+	transform_.pivot_y = anchor_y;
 	dirty_transform_ = true;
 }
 
 void e2d::Node::SetWidth(float width)
 {
-	this->SetSize(width, size_.height);
+	this->SetSize(width, transform_.size.height);
 }
 
 void e2d::Node::SetHeight(float height)
 {
-	this->SetSize(size_.width, height);
+	this->SetSize(transform_.size.width, height);
 }
 
 void e2d::Node::SetSize(float width, float height)
 {
-	if (size_.width == width && size_.height == height)
+	if (transform_.size.width == width && transform_.size.height == height)
 		return;
 
-	size_.width = width;
-	size_.height = height;
+	transform_.size.width = width;
+	transform_.size.height = height;
 	dirty_transform_ = true;
 }
 
-void e2d::Node::SetSize(Size size)
+void e2d::Node::SetSize(const Size& size)
 {
 	this->SetSize(size.width, size.height);
 }
 
-void e2d::Node::SetProperty(Property prop)
+void e2d::Node::SetTransform(const Transform & transform)
 {
-	this->SetPos(prop.pos.x, prop.pos.y);
-	this->SetSize(prop.size.width, prop.size.height);
-	this->SetAnchor(prop.anchor.x, prop.anchor.y);
-	this->SetScale(prop.scale.x, prop.scale.y);
-	this->SetRotation(prop.rotation);
-	this->SetSkew(prop.skew.x, prop.skew.y);
+	transform_ = transform;
+	dirty_transform_ = true;
 }
 
 void e2d::Node::SetClipEnabled(bool enabled)
@@ -671,7 +597,7 @@ void e2d::Node::SetBorderColor(const Color & color)
 	border_color_ = color;
 }
 
-void e2d::Node::AddChild(Node * child, int order  /* = 0 */)
+void e2d::Node::AddChild(Node * child, int order)
 {
 	WARN_IF(child == nullptr, "Node::AddChild NULL pointer exception.");
 
@@ -806,31 +732,28 @@ bool e2d::Node::RemoveChild(Node * child)
 
 void e2d::Node::RemoveChildren(const String& child_name)
 {
-	WARN_IF(child_name.IsEmpty(), "Invalid Node name.");
-
 	if (children_.empty())
 	{
 		return;
 	}
 
-	// 计算名称 Hash 值
 	size_t hash = child_name.GetHash();
-
-	auto iter = std::find_if(
-		children_.begin(),
-		children_.end(),
-		[child_name, hash](Node* child) ->bool { return child->hash_name_ == hash && child->name_ == child_name; }
-	);
-
-	if (iter != children_.end())
+	for (auto iter = children_.begin(); iter != children_.end();)
 	{
-		(*iter)->parent_ = nullptr;
-		if ((*iter)->parent_scene_)
+		if ((*iter)->hash_name_ == hash && (*iter)->name_ == child_name)
 		{
-			(*iter)->SetParentScene(nullptr);
+			(*iter)->parent_ = nullptr;
+			if ((*iter)->parent_scene_)
+			{
+				(*iter)->SetParentScene(nullptr);
+			}
+			(*iter)->Release();
+			iter = children_.erase(iter);
 		}
-		(*iter)->Release();
-		children_.erase(iter);
+		else
+		{
+			++iter;
+		}
 	}
 }
 
@@ -912,7 +835,7 @@ void e2d::Node::StopAction(const String& name)
 
 bool e2d::Node::ContainsPoint(const Point& point)
 {
-	if (size_.width == 0.f || size_.height == 0.f)
+	if (transform_.size.width == 0.f || transform_.size.height == 0.f)
 		return false;
 
 	UpdateTransform();
@@ -930,7 +853,7 @@ bool e2d::Node::ContainsPoint(const Point& point)
 
 bool e2d::Node::Intersects(Node * node)
 {
-	if (size_.width == 0.f || size_.height == 0.f || node->size_.width == 0.f || node->size_.height == 0.f)
+	if (transform_.size.width == 0.f || transform_.size.height == 0.f || node->transform_.size.width == 0.f || node->transform_.size.height == 0.f)
 		return false;
 
 	// 更新转换矩阵
@@ -1057,6 +980,11 @@ void e2d::Node::RemoveAllTasks()
 	{
 		task->stopped_ = true;
 	}
+}
+
+const e2d::Node::Tasks & e2d::Node::GetAllTasks() const
+{
+	return tasks_;
 }
 
 void e2d::Node::UpdateTasks()

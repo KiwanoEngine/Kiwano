@@ -78,10 +78,11 @@ void e2d::Image::Crop(const Rect& crop_rect)
 {
 	if (bitmap_)
 	{
-		crop_rect_.origin.x = std::min(std::max(crop_rect.origin.x, 0.f), this->GetSourceWidth());
-		crop_rect_.origin.y = std::min(std::max(crop_rect.origin.y, 0.f), this->GetSourceHeight());
-		crop_rect_.size.width = std::min(std::max(crop_rect.size.width, 0.f), this->GetSourceWidth() - crop_rect.origin.x);
-		crop_rect_.size.height = std::min(std::max(crop_rect.size.height, 0.f), this->GetSourceHeight() - crop_rect.origin.y);
+		auto bitmap_size = bitmap_->GetSize();
+		crop_rect_.origin.x = std::min(std::max(crop_rect.origin.x, 0.f), bitmap_size.width);
+		crop_rect_.origin.y = std::min(std::max(crop_rect.origin.y, 0.f), bitmap_size.height);
+		crop_rect_.size.width = std::min(std::max(crop_rect.size.width, 0.f), bitmap_size.width - crop_rect.origin.x);
+		crop_rect_.size.height = std::min(std::max(crop_rect.size.height, 0.f), bitmap_size.height - crop_rect.origin.y);
 	}
 }
 
@@ -126,14 +127,14 @@ float e2d::Image::GetSourceHeight() const
 
 e2d::Size e2d::Image::GetSourceSize() const
 {
+	Size source_size;
 	if (bitmap_)
 	{
-		return Size(GetSourceWidth(), GetSourceHeight());
+		auto bitmap_size = bitmap_->GetSize();
+		source_size.width = bitmap_size.width;
+		source_size.height = bitmap_size.height;
 	}
-	else
-	{
-		return Size();
-	}
+	return std::move(source_size);
 }
 
 float e2d::Image::GetCropX() const
@@ -149,6 +150,11 @@ float e2d::Image::GetCropY() const
 e2d::Point e2d::Image::GetCropPos() const
 {
 	return crop_rect_.origin;
+}
+
+const e2d::Rect & e2d::Image::GetCropRect() const
+{
+	return crop_rect_;
 }
 
 bool e2d::Image::Preload(const Resource& res)

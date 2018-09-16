@@ -70,7 +70,7 @@ namespace e2d
 			const Function& func
 		);
 
-		// 设置锚点位置
+		// 设置支点位置
 		// 默认为 (0, 0), 范围 [0, 1]
 		virtual void SetAnchor(
 			float anchor_x,
