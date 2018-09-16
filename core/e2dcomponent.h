@@ -72,9 +72,9 @@ namespace e2d
 
 		// 设置支点位置
 		// 默认为 (0, 0), 范围 [0, 1]
-		virtual void SetAnchor(
-			float anchor_x,
-			float anchor_y
+		virtual void SetPivot(
+			float pivot_x,
+			float pivot_y
 		) override;
 
 	protected:

@@ -365,12 +365,12 @@ const e2d::Size& e2d::Node::GetRealSize() const
 	return transform_.size;
 }
 
-float e2d::Node::GetAnchorX() const
+float e2d::Node::GetPivotX() const
 {
 	return transform_.pivot_x;
 }
 
-float e2d::Node::GetAnchorY() const
+float e2d::Node::GetPivotY() const
 {
 	return transform_.pivot_y;
 }
@@ -536,23 +536,23 @@ void e2d::Node::SetOpacity(float opacity)
 	UpdateOpacity();
 }
 
-void e2d::Node::SetAnchorX(float anchor_x)
+void e2d::Node::SetPivotX(float pivot_x)
 {
-	this->SetAnchor(anchor_x, transform_.pivot_y);
+	this->SetPivot(pivot_x, transform_.pivot_y);
 }
 
-void e2d::Node::SetAnchorY(float anchor_y)
+void e2d::Node::SetPivotY(float pivot_y)
 {
-	this->SetAnchor(transform_.pivot_x, anchor_y);
+	this->SetPivot(transform_.pivot_x, pivot_y);
 }
 
-void e2d::Node::SetAnchor(float anchor_x, float anchor_y)
+void e2d::Node::SetPivot(float pivot_x, float pivot_y)
 {
-	if (transform_.pivot_x == anchor_x && transform_.pivot_y == anchor_y)
+	if (transform_.pivot_x == pivot_x && transform_.pivot_y == pivot_y)
 		return;
 
-	transform_.pivot_x = anchor_x;
-	transform_.pivot_y = anchor_y;
+	transform_.pivot_x = pivot_x;
+	transform_.pivot_y = pivot_y;
 	dirty_transform_ = true;
 }
 

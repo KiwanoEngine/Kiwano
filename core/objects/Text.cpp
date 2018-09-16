@@ -294,7 +294,7 @@ void e2d::Text::Draw() const
 	{
 		auto renderer = Renderer::GetInstance();
 		// 创建文本区域
-		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, size_.width, size_.height);
+		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, transform_.size.width, transform_.size.height);
 		// 设置画刷颜色和透明度
 		renderer->GetSolidBrush()->SetOpacity(display_opacity_);
 		// 获取文本渲染器
@@ -429,7 +429,7 @@ void e2d::Text::CreateLayout()
 				(const wchar_t *)text_,
 				length,
 				text_format_,
-				size_.width,
+				transform_.size.width,
 				0,
 				&text_layout_
 			)

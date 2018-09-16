@@ -285,6 +285,10 @@ bool e2d::Image::Preload(const Resource& res)
 
 bool e2d::Image::Preload(const String & file_name)
 {
+	size_t hash = file_name.GetHash();
+	if (bitmap_cache_.find(hash) != bitmap_cache_.end())
+		return true;
+
 	File image_file;
 	if (!image_file.Open(file_name))
 		return false;
@@ -292,9 +296,6 @@ bool e2d::Image::Preload(const String & file_name)
 	// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
 	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
 	String image_file_path = image_file.GetPath();
-	size_t hash = image_file_path.GetHash();
-	if (bitmap_cache_.find(hash) != bitmap_cache_.end())
-		return true;
 
 	IWICImagingFactory *imaging_factory = Renderer::GetImagingFactory();
 	ID2D1HwndRenderTarget* render_target = Renderer::GetInstance()->GetRenderTarget();

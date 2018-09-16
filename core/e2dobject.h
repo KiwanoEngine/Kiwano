@@ -468,10 +468,10 @@ namespace e2d
 		const Size& GetRealSize() const;
 
 		// 获取节点的支点
-		float GetAnchorX() const;
+		float GetPivotX() const;
 
 		// 获取节点的支点
-		float GetAnchorY() const;
+		float GetPivotY() const;
 
 		// 获取节点大小
 		Size GetSize() const;
@@ -612,21 +612,21 @@ namespace e2d
 
 		// 设置支点的横向位置
 		// 默认为 0, 范围 [0, 1]
-		virtual void SetAnchorX(
-			float anchor_x
+		virtual void SetPivotX(
+			float pivot_x
 		);
 
 		// 设置支点的纵向位置
 		// 默认为 0, 范围 [0, 1]
-		virtual void SetAnchorY(
-			float anchor_y
+		virtual void SetPivotY(
+			float pivot_y
 		);
 
 		// 设置支点位置
 		// 默认为 (0, 0), 范围 [0, 1]
-		virtual void SetAnchor(
-			float anchor_x,
-			float anchor_y
+		virtual void SetPivot(
+			float pivot_x,
+			float pivot_y
 		);
 
 		// 修改节点宽度
