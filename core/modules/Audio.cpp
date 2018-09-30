@@ -1,24 +1,10 @@
 #include "..\e2dmodule.h"
 
 
-e2d::Audio * e2d::Audio::instance_ = nullptr;
-
-e2d::Audio * e2d::Audio::GetInstance()
+e2d::Audio * e2d::Audio::Get()
 {
-	if (!instance_)
-	{
-		instance_ = new (std::nothrow) Audio;
-	}
-	return instance_;
-}
-
-void e2d::Audio::DestroyInstance()
-{
-	if (instance_)
-	{
-		delete instance_;
-		instance_ = nullptr;
-	}
+	static Audio audio;
+	return &audio;
 }
 
 e2d::Audio::Audio()
@@ -49,12 +35,12 @@ e2d::Audio::~Audio()
 	::CoUninitialize();
 }
 
-IXAudio2 * e2d::Audio::GetXAudio2()
+IXAudio2 * e2d::Audio::GetXAudio2() const
 {
 	return x_audio2_;
 }
 
-IXAudio2MasteringVoice * e2d::Audio::GetMasteringVoice()
+IXAudio2MasteringVoice * e2d::Audio::GetMasteringVoice() const
 {
 	return mastering_voice_;
 }

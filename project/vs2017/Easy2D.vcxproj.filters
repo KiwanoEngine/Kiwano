@@ -108,9 +108,6 @@
     <ClCompile Include="..\..\core\modules\Input.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\modules\Renderer.cpp">
-      <Filter>modules</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\modules\Window.cpp">
       <Filter>modules</Filter>
     </ClCompile>
@@ -233,6 +230,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\utils\Transform.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\modules\Graphics.cpp">
+      <Filter>modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

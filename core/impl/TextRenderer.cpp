@@ -62,13 +62,13 @@ STDMETHODIMP_(void) E2DTextRenderer::SetTextStyle(
 	switch (outlineJoin)
 	{
 	case D2D1_LINE_JOIN_MITER:
-		pCurrStrokeStyle_ = Renderer::GetMiterStrokeStyle();
+		pCurrStrokeStyle_ = Graphics::GetMiterStrokeStyle();
 		break;
 	case D2D1_LINE_JOIN_BEVEL:
-		pCurrStrokeStyle_ = Renderer::GetBevelStrokeStyle();
+		pCurrStrokeStyle_ = Graphics::GetBevelStrokeStyle();
 		break;
 	case D2D1_LINE_JOIN_ROUND:
-		pCurrStrokeStyle_ = Renderer::GetRoundStrokeStyle();
+		pCurrStrokeStyle_ = Graphics::GetRoundStrokeStyle();
 		break;
 	default:
 		pCurrStrokeStyle_ = nullptr;

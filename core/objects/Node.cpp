@@ -52,21 +52,18 @@ void e2d::Node::Visit()
 	if (!visible_)
 		return;
 
-	if (!Game::GetInstance()->IsPaused())
-	{
-		UpdateActions();
-		UpdateTasks();
+	UpdateActions();
+	UpdateTasks();
 
-		auto updatable_node = dynamic_cast<Updatable*>(this);
-		if (updatable_node)
-		{
-			updatable_node->Update();
-		}
+	auto updatable_node = dynamic_cast<Updatable*>(this);
+	if (updatable_node)
+	{
+		updatable_node->Update();
 	}
 
 	UpdateTransform();
 
-	auto render_target = Renderer::GetInstance()->GetRenderTarget();
+	auto render_target = Graphics::Get()->GetRenderTarget();
 	if (clip_enabled_)
 	{
 		render_target->SetTransform(final_matrix_);
@@ -138,10 +135,10 @@ void e2d::Node::DrawBorder()
 	{
 		if (border_)
 		{
-			auto renderer = Renderer::GetInstance();
-			auto brush = renderer->GetSolidBrush();
+			auto graphics = Graphics::Get();
+			auto brush = graphics->GetSolidBrush();
 			brush->SetColor(D2D1_COLOR_F(border_color_));
-			renderer->GetRenderTarget()->DrawGeometry(
+			graphics->GetRenderTarget()->DrawGeometry(
 				border_,
 				brush,
 				1.5f
@@ -198,7 +195,7 @@ void e2d::Node::UpdateTransform()
 	// 重新构造轮廓
 	SafeRelease(border_);
 
-	ID2D1Factory * factory = Renderer::GetFactory();
+	ID2D1Factory * factory = Graphics::GetFactory();
 	ID2D1RectangleGeometry * rectangle = nullptr;
 	ID2D1TransformedGeometry * transformed = nullptr;
 	ThrowIfFailed(

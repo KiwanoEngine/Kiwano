@@ -84,14 +84,14 @@ void e2d::Collider::Draw()
 {
 	if (geometry_ && enabled_ && visible_)
 	{
-		auto renderer = Renderer::GetInstance();
+		auto graphics = Graphics::GetInstance();
 		// 获取纯色画刷
-		ID2D1SolidColorBrush * brush = renderer->GetSolidBrush();
+		ID2D1SolidColorBrush * brush = graphics->GetSolidBrush();
 		// 设置画刷颜色和透明度
 		brush->SetColor((D2D1_COLOR_F)border_color_);
 		brush->SetOpacity(1.f);
 		// 绘制几何碰撞体
-		renderer->GetRenderTarget()->DrawGeometry(geometry_, brush, 1.5f);
+		graphics->GetRenderTarget()->DrawGeometry(geometry_, brush, 1.5f);
 	}
 }
 
@@ -135,7 +135,7 @@ void e2d::Collider::Recreate()
 		return;
 
 	SafeRelease(geometry_);
-	auto factory = Renderer::GetFactory();
+	auto factory = Graphics::GetFactory();
 
 	switch (shape_)
 	{

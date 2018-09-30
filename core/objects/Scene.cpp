@@ -3,16 +3,12 @@
 
 e2d::Scene::Scene()
 	: root_(nullptr)
-	, border_visible_(false)
-	, collider_visible_(false)
 	, transform_(D2D1::Matrix3x2F::Identity())
 {
 }
 
 e2d::Scene::Scene(Node * root)
 	: root_(nullptr)
-	, border_visible_(false)
-	, collider_visible_(false)
 	, transform_(D2D1::Matrix3x2F::Identity())
 {
 	this->SetRoot(root);
@@ -52,34 +48,11 @@ e2d::Node * e2d::Scene::GetRoot() const
 	return root_;
 }
 
-void e2d::Scene::ShowBorder(bool visible)
-{
-	border_visible_ = visible;
-}
-
-void e2d::Scene::ShowCollider(bool visible)
-{
-	collider_visible_ = visible;
-}
-
 void e2d::Scene::Draw()
 {
 	if (root_)
 	{
 		root_->Visit();
-
-		if (border_visible_)
-		{
-			Renderer::GetInstance()->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-			Renderer::GetInstance()->GetSolidBrush()->SetOpacity(1.f);
-			root_->DrawBorder();
-		}
-
-		if (collider_visible_)
-		{
-			Renderer::GetInstance()->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-			root_->DrawCollider();
-		}
 	}
 }
 

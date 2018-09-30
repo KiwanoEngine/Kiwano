@@ -3,29 +3,18 @@
 #include "..\e2dtransition.h"
 #include "..\e2dmanager.h"
 #include <thread>
+#include <imm.h>
+#pragma comment (lib ,"imm32.lib")
+
+#define WINDOW_STYLE	WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME
+#define REGISTER_CLASS	L"Easy2DApp"
 
 
 e2d::Game * e2d::Game::instance_ = nullptr;
 
-e2d::Game * e2d::Game::GetInstance()
-{
-	if (!instance_)
-		instance_ = new (std::nothrow) Game;
-	return instance_;
-}
-
-void e2d::Game::DestroyInstance()
-{
-	if (instance_)
-	{
-		delete instance_;
-		instance_ = nullptr;
-	}
-}
-
 e2d::Game::Game()
-	: quit_(true)
-	, paused_(false)
+	: hwnd_(nullptr)
+	, quit_(true)
 	, curr_scene_(nullptr)
 	, next_scene_(nullptr)
 	, transition_(nullptr)
@@ -39,24 +28,47 @@ e2d::Game::~Game()
 	SafeRelease(curr_scene_);
 	SafeRelease(next_scene_);
 
+	if (hwnd_)
+	{
+		::DestroyWindow(hwnd_);
+	}
+
 	::CoUninitialize();
 }
 
-void e2d::Game::Start()
+e2d::Game * e2d::Game::New(const Option & option)
+{
+	static Game game;
+	game.title_ = option.title;
+	game.width_ = option.width;
+	game.height_ = option.height;
+	game.icon_ = option.icon;
+	game.debug_mode_ = option.debug_mode;
+
+	game.Init();
+
+	instance_ = &game;
+	return instance_;
+}
+
+e2d::Game * e2d::Game::Get()
+{
+	return instance_;
+}
+
+void e2d::Game::Run()
 {
 	quit_ = false;
 
-	auto window = Window::GetInstance();
 	auto input = Input::GetInstance();
-	auto renderer = Renderer::GetInstance();
+	auto graphics = Graphics::Get();
 
-	const int minInterval = 5;
+	const int min_interval = 5;
 	Time last = Time::Now();
-	HWND hwnd = window->GetHWnd();
+	MSG msg = { 0 };
 	
-	::ShowWindow(hwnd, SW_SHOWNORMAL);
-	::UpdateWindow(hwnd);
-	window->Poll();
+	::ShowWindow(hwnd_, SW_SHOWNORMAL);
+	::UpdateWindow(hwnd_);
 	UpdateScene();
 	
 	while (!quit_)
@@ -64,7 +76,7 @@ void e2d::Game::Start()
 		auto now = Time::Now();
 		auto dur = now - last;
 
-		if (dur.Milliseconds() > minInterval)
+		if (dur.Milliseconds() > min_interval)
 		{
 			last = now;
 			input->Update();
@@ -72,42 +84,24 @@ void e2d::Game::Start()
 			UpdateScene();
 			DrawScene();
 
-			window->Poll();
+			while (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+			{
+				::TranslateMessage(&msg);
+				::DispatchMessage(&msg);
+			}
 		}
 		else
 		{
 			// ID2D1HwndRenderTarget 开启了垂直同步，在渲染时会等待显示器刷新，
 			// 它起到了非常稳定的延时作用，所以大部分时候不需要手动挂起线程进行延时。
 			// 下面的代码仅在一些情况下（例如窗口最小化时）挂起线程，防止占用过高 CPU 。
-			int wait = minInterval - dur.Milliseconds();
+			int wait = min_interval - dur.Milliseconds();
 			if (wait > 1)
 			{
 				std::this_thread::sleep_for(std::chrono::milliseconds(wait));
 			}
 		}
 	}
-}
-
-void e2d::Game::Pause()
-{
-	paused_ = true;
-}
-
-void e2d::Game::Resume()
-{
-	if (paused_ && !quit_)
-	{
-		if (curr_scene_)
-		{
-			curr_scene_->GetRoot()->UpdateTime();
-		}
-	}
-	paused_ = false;
-}
-
-bool e2d::Game::IsPaused()
-{
-	return paused_;
 }
 
 void e2d::Game::Quit()
@@ -162,9 +156,6 @@ bool e2d::Game::IsTransitioning() const
 
 void e2d::Game::UpdateScene()
 {
-	if (paused_)
-		return;
-
 	if (transition_)
 	{
 		transition_->Update();
@@ -197,16 +188,360 @@ void e2d::Game::UpdateScene()
 
 void e2d::Game::DrawScene()
 {
-	Renderer::GetInstance()->BeginDraw();
+	auto graphics = Graphics::Get();
+	graphics->BeginDraw();
+
+	if (transition_)
 	{
-		if (transition_)
+		transition_->Draw();
+	}
+	else if (curr_scene_)
+	{
+		curr_scene_->Draw();
+	}
+
+	// TODO @Nomango if debug_mode_
+	/*
+	{
+		graphics->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+		graphics->GetSolidBrush()->SetOpacity(1.f);
+		root_->DrawBorder();
+	}
+
+	{
+		graphics->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+		root_->DrawCollider();
+	}
+	*/
+
+	if (debug_mode_)
+	{
+		graphics->DrawDebugInfo();
+	}
+	graphics->EndDraw();
+}
+
+void e2d::Game::Init()
+{
+	WNDCLASSEX wcex = { 0 };
+	wcex.cbSize			= sizeof(WNDCLASSEX);
+	wcex.lpszClassName	= REGISTER_CLASS;
+	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	wcex.lpfnWndProc	= Game::WndProc;
+	wcex.hIcon			= nullptr;
+	wcex.cbClsExtra		= 0;
+	wcex.cbWndExtra		= sizeof(LONG_PTR);
+	wcex.hInstance		= HINST_THISCOMPONENT;
+	wcex.hbrBackground	= nullptr;
+	wcex.lpszMenuName	= nullptr;
+	wcex.hCursor		= ::LoadCursor(nullptr, IDC_ARROW);
+
+	if (icon_ != 0)
+	{
+		wcex.hIcon = (HICON)::LoadImage(
+			HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(icon_),
+			IMAGE_ICON,
+			0,
+			0,
+			LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
+		);
+	}
+
+	// 注册窗口类
+	RegisterClassEx(&wcex);
+
+	// 计算窗口大小
+	Rect client_rect = Locate(width_, height_);
+
+	// 创建窗口
+	hwnd_ = ::CreateWindowEx(
+		NULL,
+		REGISTER_CLASS,
+		(LPCTSTR)title_,
+		WINDOW_STYLE,
+		int(client_rect.origin.x),
+		int(client_rect.origin.y),
+		int(client_rect.size.width),
+		int(client_rect.size.height),
+		nullptr,
+		nullptr,
+		HINST_THISCOMPONENT,
+		this
+	);
+
+	if (hwnd_)
+	{
+		// 禁用输入法
+		::ImmAssociateContext(hwnd_, nullptr);
+		// 禁用控制台关闭按钮
+		HWND console_hwnd = ::GetConsoleWindow();
+		if (console_hwnd)
 		{
-			transition_->Draw();
-		}
-		else if (curr_scene_)
-		{
-			curr_scene_->Draw();
+			HMENU hmenu = ::GetSystemMenu(console_hwnd, FALSE);
+			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
 	}
-	Renderer::GetInstance()->EndDraw();
+	else
+	{
+		::UnregisterClass(REGISTER_CLASS, HINST_THISCOMPONENT);
+		throw RuntimeException("Create window failed");
+	}
+}
+
+e2d::Rect e2d::Game::Locate(int width, int height)
+{
+	int max_width = ::GetSystemMetrics(SM_CXSCREEN);
+	int max_height = ::GetSystemMetrics(SM_CYSCREEN);
+
+	float dpi_x, dpi_y;
+	Graphics::GetFactory()->GetDesktopDpi(&dpi_x, &dpi_y);
+	RECT rect = { 0, 0, LONG(ceil(width * dpi_x / 96.f)), LONG(ceil(height * dpi_y / 96.f)) };
+
+	// 计算合适的窗口大小
+	::AdjustWindowRectEx(&rect, WINDOW_STYLE, FALSE, NULL);
+	width = static_cast<int>(rect.right - rect.left);
+	height = static_cast<int>(rect.bottom - rect.top);
+
+	// 当输入的窗口大小比分辨率大时，给出警告
+	WARN_IF(max_width < width || max_height < height, "The window Is larger than screen!");
+	width = std::min(width, max_width);
+	height = std::min(height, max_height);
+
+	Rect client_rect(
+		static_cast<float>((max_width - width) / 2),
+		static_cast<float>((max_height - height) / 2),
+		static_cast<float>(width),
+		static_cast<float>(height)
+	);
+	return std::move(client_rect);
+}
+
+int e2d::Game::GetWidth() const
+{
+	return width_;
+}
+
+int e2d::Game::GetHeight() const
+{
+	return height_;
+}
+
+e2d::Size e2d::Game::GetSize() const
+{
+	e2d::Size size(
+		static_cast<float>(width_),
+		static_cast<float>(height_)
+	);
+	return std::move(size);
+}
+
+HWND e2d::Game::GetHWnd() const
+{
+	return hwnd_;
+}
+
+const e2d::String& e2d::Game::GetTitle() const
+{
+	return title_;
+}
+
+void e2d::Game::SetSize(int width, int height)
+{
+	if (width_ == width && height_ == height)
+		return;
+
+	width_ = width;
+	height_ = height;
+
+	Rect rect = Locate(width, height);
+	::MoveWindow(
+		hwnd_,
+		int(rect.origin.x),
+		int(rect.origin.y),
+		int(rect.size.width),
+		int(rect.size.height),
+		TRUE
+	);
+}
+
+void e2d::Game::SetTitle(const String& title)
+{
+	title_ = title;
+	
+	::SetWindowText(hwnd_, (LPCWSTR)title);
+}
+
+void e2d::Game::SetIcon(int resource_id)
+{
+	icon_ = resource_id;
+	
+	HICON icon = (HICON)::LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(resource_id),
+		IMAGE_ICON,
+		0,
+		0,
+		LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
+	);
+
+	::SendMessage(hwnd_, WM_SETICON, ICON_BIG, (LPARAM)icon);
+	::SendMessage(hwnd_, WM_SETICON, ICON_SMALL, (LPARAM)icon);
+}
+
+
+LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
+{
+	LRESULT result = 0;
+
+	if (msg == WM_CREATE)
+	{
+		LPCREATESTRUCT pcs = (LPCREATESTRUCT)l_param;
+		Game * game = (Game *)pcs->lpCreateParams;
+
+		::SetWindowLongPtrW(
+			hwnd,
+			GWLP_USERDATA,
+			PtrToUlong(game)
+		);
+
+		result = 1;
+	}
+	else
+	{
+		bool has_handled = false;
+		Game * game = reinterpret_cast<Game*>(
+			static_cast<LONG_PTR>(
+				::GetWindowLongPtrW(hwnd, GWLP_USERDATA)
+				)
+			);
+
+		switch (msg)
+		{
+
+			// 处理鼠标消息
+		case WM_LBUTTONUP:
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONDBLCLK:
+		case WM_MBUTTONUP:
+		case WM_MBUTTONDOWN:
+		case WM_MBUTTONDBLCLK:
+		case WM_RBUTTONUP:
+		case WM_RBUTTONDOWN:
+		case WM_RBUTTONDBLCLK:
+		case WM_MOUSEMOVE:
+		case WM_MOUSEWHEEL:
+		{
+			if (game->IsTransitioning())
+				break;
+
+			auto curr_scene = game->GetCurrentScene();
+			if (curr_scene)
+			{
+				curr_scene->Dispatch(MouseEvent(msg, w_param, l_param));
+			}
+		}
+		result = 0;
+		has_handled = true;
+		break;
+
+		// 处理按键消息
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		{
+			if (game->IsTransitioning())
+				break;
+
+			auto curr_scene = game->GetCurrentScene();
+			if (curr_scene)
+			{
+				curr_scene->Dispatch(KeyEvent(msg, w_param, l_param));
+			}
+		}
+		result = 0;
+		has_handled = true;
+		break;
+
+		// 处理窗口大小变化消息
+		case WM_SIZE:
+		{
+			UINT width = LOWORD(l_param);
+			UINT height = HIWORD(l_param);
+
+			if (w_param == SIZE_RESTORED)
+			{
+				float dpi_x, dpi_y;
+				Graphics::GetFactory()->GetDesktopDpi(&dpi_x, &dpi_y);
+				game->width_ = static_cast<int>(width * 96.f / dpi_x);
+				game->height_ = static_cast<int>(height * 96.f / dpi_y);
+			}
+
+			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
+			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
+			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
+			auto render_target = Graphics::Get()->GetRenderTarget();
+			if (render_target)
+			{
+				render_target->Resize(D2D1::SizeU(width, height));
+			}
+		}
+		break;
+
+		// 处理窗口标题变化消息
+		case WM_SETTEXT:
+		{
+			game->title_ = (const wchar_t*)l_param;
+		}
+		break;
+
+		// 处理分辨率变化消息
+		case WM_DISPLAYCHANGE:
+		{
+			// 重绘客户区
+			::InvalidateRect(hwnd, nullptr, FALSE);
+		}
+		result = 0;
+		has_handled = true;
+		break;
+
+		// 重绘窗口
+		case WM_PAINT:
+		{
+			game->DrawScene();
+			::ValidateRect(hwnd, nullptr);
+		}
+		result = 0;
+		has_handled = true;
+		break;
+
+		// 窗口关闭消息
+		case WM_CLOSE:
+		{
+			auto currScene = game->GetCurrentScene();
+			if (!currScene || currScene->OnCloseWindow())
+			{
+				game->Quit();
+			}
+		}
+		result = 0;
+		has_handled = true;
+		break;
+
+		// 窗口销毁消息
+		case WM_DESTROY:
+		{
+			::PostQuitMessage(0);
+		}
+		result = 1;
+		has_handled = true;
+		break;
+
+		}
+
+		if (!has_handled)
+		{
+			result = ::DefWindowProc(hwnd, msg, w_param, l_param);
+		}
+	}
+	return result;
 }

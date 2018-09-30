@@ -144,18 +144,6 @@ namespace e2d
 		// 获取根节点
 		Node* GetRoot() const;
 
-		// 显示或隐藏节点边缘
-		// 默认：隐藏
-		void ShowBorder(
-			bool visible
-		);
-
-		// 显示或隐藏碰撞体
-		// 默认：隐藏
-		void ShowCollider(
-			bool visible
-		);
-
 		// 渲染场景
 		void Draw();
 
@@ -182,8 +170,6 @@ namespace e2d
 
 	protected:
 		Node*	root_;
-		bool	border_visible_;
-		bool	collider_visible_;
 		D2D1::Matrix3x2F transform_;
 	};
 

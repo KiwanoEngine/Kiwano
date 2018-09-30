@@ -164,8 +164,8 @@ bool e2d::Image::Preload(const Resource& res)
 		return true;
 	}
 
-	IWICImagingFactory *imaging_factory = Renderer::GetImagingFactory();
-	ID2D1HwndRenderTarget* render_target = Renderer::GetInstance()->GetRenderTarget();
+	IWICImagingFactory *imaging_factory = Graphics::GetImagingFactory();
+	ID2D1HwndRenderTarget* render_target = Graphics::GetInstance()->GetRenderTarget();
 	IWICBitmapDecoder *decoder = nullptr;
 	IWICBitmapFrameDecode *source = nullptr;
 	IWICStream *stream = nullptr;
@@ -297,8 +297,8 @@ bool e2d::Image::Preload(const String & file_name)
 	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
 	String image_file_path = image_file.GetPath();
 
-	IWICImagingFactory *imaging_factory = Renderer::GetImagingFactory();
-	ID2D1HwndRenderTarget* render_target = Renderer::GetInstance()->GetRenderTarget();
+	IWICImagingFactory *imaging_factory = Graphics::GetImagingFactory();
+	ID2D1HwndRenderTarget* render_target = Graphics::GetInstance()->GetRenderTarget();
 	IWICBitmapDecoder *decoder = nullptr;
 	IWICBitmapFrameDecode *source = nullptr;
 	IWICStream *stream = nullptr;

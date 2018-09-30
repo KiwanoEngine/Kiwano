@@ -42,18 +42,18 @@ void e2d::Transition::Init(Scene * prev, Scene * next)
 	if (in_scene_)
 		in_scene_->Retain();
 	
-	auto renderer = Renderer::GetInstance();
+	auto graphics = Graphics::GetInstance();
 	if (in_scene_)
 	{
 		ThrowIfFailed(
-			renderer->GetRenderTarget()->CreateLayer(&in_layer_)
+			graphics->GetRenderTarget()->CreateLayer(&in_layer_)
 		);
 	}
 
 	if (out_scene_)
 	{
 		ThrowIfFailed(
-			renderer->GetRenderTarget()->CreateLayer(&out_layer_)
+			graphics->GetRenderTarget()->CreateLayer(&out_layer_)
 		);
 	}
 
@@ -69,7 +69,7 @@ void e2d::Transition::Init(Scene * prev, Scene * next)
 		D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 		D2D1::Matrix3x2F::Identity(),
 		1.f,
-		renderer->GetSolidBrush(),
+		graphics->GetSolidBrush(),
 		D2D1_LAYER_OPTIONS_NONE
 	);
 }
@@ -94,7 +94,7 @@ void e2d::Transition::Update()
 
 void e2d::Transition::Draw()
 {
-	auto render_target = Renderer::GetInstance()->GetRenderTarget();
+	auto render_target = Graphics::GetInstance()->GetRenderTarget();
 
 	if (out_scene_)
 	{

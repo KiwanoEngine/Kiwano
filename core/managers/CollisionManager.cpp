@@ -36,10 +36,10 @@ void e2d::CollisionManager::RemoveCollider(Collider * collider)
 void e2d::CollisionManager::UpdateCollider(Collider* active)
 {
 	if (!collision_enabled_ ||
-		Game::GetInstance()->IsTransitioning())
+		Game::Get()->IsTransitioning())
 		return;
 
-	auto currScene = Game::GetInstance()->GetCurrentScene();
+	auto currScene = Game::Get()->GetCurrentScene();
 	if (active->GetNode()->GetParentScene() != currScene)
 		return;
 

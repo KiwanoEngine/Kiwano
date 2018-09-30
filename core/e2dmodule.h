@@ -8,7 +8,7 @@ namespace e2d
 {
 
 
-	// 窗体
+	// 窗口
 	class Window
 	{
 	public:
@@ -31,123 +31,36 @@ namespace e2d
 		};
 
 	public:
-		// 获取窗体实例
-		static Window * GetInstance();
-
-		// 销毁窗体实例
-		static void DestroyInstance();
-
-		// 获取屏幕大小
-		static Size GetScreenSize();
-
-		// 获取窗体标题
-		const String& GetTitle() const;
-
-		// 获取窗体宽度
-		int GetWidth() const;
-
-		// 获取窗体高度
-		int GetHeight() const;
-
-		// 获取窗体大小
-		Size GetSize() const;
-
-		// 获取窗口 DPI
-		float GetDpi() const;
-
-		// 获取窗口句柄
-		HWND GetHWnd();
-
-		// 修改窗体大小
-		void SetSize(
-			int width,			/* 窗体宽度 */
-			int height			/* 窗体高度 */
-		);
-
-		// 设置窗体标题
-		void SetTitle(
-			const String& title	/* 窗体标题 */
-		);
-
-		// 设置窗体图标
-		void SetIcon(
-			int resource_id		/* 图标资源 ID */
-		);
-
 		// 设置鼠标指针样式
-		void SetCursor(
+		static void SetCursor(
 			Cursor cursor
 		);
 
 		// 打开或隐藏控制台
-		void SetConsoleEnabled(
+		static void ShowConsole(
 			bool enabled
 		);
-
-		// 是否允许响应输入法
-		void SetTypewritingEnabled(
-			bool enabled
-		);
-
-		// 检测窗口是否唯一
-		// 返回值：返回 false 说明游戏已经正在进行，可以防止用户同时打开多个游戏窗口
-		bool CheckUnique();
 
 		// 弹出窗口
 		// 返回值：当窗口包含取消按钮时，返回值表示用户是否点击确认按钮
-		bool Popup(
+		static bool Popup(
 			const String& text,					/* 窗口内容 */
 			const String& title,				/* 窗口标题 */
 			PopupStyle style = PopupStyle::Info,/* 弹窗样式 */
 			bool has_cancel = false				/* 包含取消按钮 */
 		);
 
-		// 处理窗体消息
-		void Poll();
-
-	private:
-		Window();
-
-		~Window();
-
-		E2D_DISABLE_COPY(Window);
-
-		// 根据客户区大小定位窗口
-		Rect Locate(
-			int width,
-			int height
-		);
-
-		// Win32 窗口消息回调程序
-		static LRESULT CALLBACK WndProc(
-			HWND hwnd,
-			UINT msg,
-			WPARAM w_param,
-			LPARAM l_param
-		);
-
-	private:
-		HWND	hwnd_;
-		MSG		msg_;
-		int		width_;
-		int		height_;
-		int		icon_id_;
-		float	dpi_;
-		String	title_;
-
-		static Window * instance_;
+		// 获取屏幕大小
+		static Size GetScreenSize();
 	};
 
 
 	// 渲染器
-	class Renderer
+	class Graphics
 	{
 	public:
 		// 获取渲染器实例
-		static Renderer * GetInstance();
-
-		// 销毁实例
-		static void DestroyInstance();
+		static Graphics * Get();
 
 		// 获取 ID2D1Factory 对象
 		static ID2D1Factory * GetFactory();
@@ -176,14 +89,6 @@ namespace e2d
 		// 获取 ID2D1SolidColorBrush 对象
 		ID2D1SolidColorBrush * GetSolidBrush();
 
-		// 获取背景色
-		Color GetBackgroundColor();
-
-		// 修改背景色
-		void SetBackgroundColor(
-			const Color& color
-		);
-
 		// 显示或隐藏 FPS
 		// 默认：隐藏
 		void ShowFps(
@@ -196,12 +101,15 @@ namespace e2d
 		// 结束渲染
 		void EndDraw();
 
+		// 渲染调试信息
+		void DrawDebugInfo();
+
 	protected:
-		Renderer();
+		Graphics();
 
-		~Renderer();
+		~Graphics();
 
-		E2D_DISABLE_COPY(Renderer);
+		E2D_DISABLE_COPY(Graphics);
 
 	protected:
 		bool					show_fps_;
@@ -220,7 +128,7 @@ namespace e2d
 		static ID2D1StrokeStyle*	miter_stroke_style_;
 		static ID2D1StrokeStyle*	bevel_stroke_style_;
 		static ID2D1StrokeStyle*	round_stroke_style_;
-		static Renderer *			instance_;
+		static Graphics *			instance_;
 	};
 
 
@@ -288,16 +196,13 @@ namespace e2d
 	{
 	public:
 		// 获取音频设备实例
-		static Audio * GetInstance();
-
-		// 销毁实例
-		static void DestroyInstance();
+		static Audio * Get();
 
 		// 获取 XAudio2 实例对象
-		IXAudio2 * GetXAudio2();
+		IXAudio2 * GetXAudio2() const;
 
 		// 获取 MasteringVoice 实例对象
-		IXAudio2MasteringVoice* GetMasteringVoice();
+		IXAudio2MasteringVoice* GetMasteringVoice() const;
 
 	protected:
 		Audio();
@@ -309,35 +214,78 @@ namespace e2d
 	protected:
 		IXAudio2 * x_audio2_;
 		IXAudio2MasteringVoice*	mastering_voice_;
-
-		static Audio * instance_;
 	};
 
 
-	// 游戏
+	// 选项
+	struct Option
+	{
+		String	title;				// 窗口标题
+		int		width;				// 窗口宽度
+		int		height;				// 窗口高度
+		int		icon;				// 窗口图标
+		Color	background_color;	// 背景色
+		bool	debug_mode;			// Debug 模式
+
+		Option()
+			: title(L"Easy2D Game")
+			, width(640)
+			, height(480)
+			, icon(0)
+			, background_color(Color::Black)
+			, debug_mode(false)
+		{
+		}
+	};
+
+
+	// 游戏控制器
 	class Game
 	{
 	public:
-		// 获取 Game 实例
-		static Game * GetInstance();
+		static Game * New(
+			const Option& option
+		);
 
-		// 销毁实例
-		static void DestroyInstance();
+		// 获取控制器
+		static Game * Get();
 
 		// 启动游戏
-		void Start();
-
-		// 暂停游戏
-		void Pause();
-
-		// 继续游戏
-		void Resume();
+		void Run();
 
 		// 结束游戏
 		void Quit();
 
-		// 游戏是否暂停
-		bool IsPaused();
+		// 获取窗体标题
+		const String& GetTitle() const;
+
+		// 获取窗体宽度
+		int GetWidth() const;
+
+		// 获取窗体高度
+		int GetHeight() const;
+
+		// 获取窗体大小
+		Size GetSize() const;
+
+		// 获取窗口句柄
+		HWND GetHWnd() const;
+
+		// 修改窗体大小
+		void SetSize(
+			int width,			/* 窗体宽度 */
+			int height			/* 窗体高度 */
+		);
+
+		// 设置窗体标题
+		void SetTitle(
+			const String& title	/* 窗体标题 */
+		);
+
+		// 设置窗体图标
+		void SetIcon(
+			int resource_id		/* 图标资源 ID */
+		);
 
 		// 切换场景
 		void EnterScene(
@@ -364,12 +312,34 @@ namespace e2d
 
 		E2D_DISABLE_COPY(Game);
 
+		// 初始化
+		void Init();
+
+		// 根据客户区大小定位窗口
+		Rect Locate(
+			int width,
+			int height
+		);
+
+		// Win32 窗口消息回调程序
+		static LRESULT CALLBACK WndProc(
+			HWND hwnd,
+			UINT msg,
+			WPARAM w_param,
+			LPARAM l_param
+		);
+
 	private:
-		bool			quit_;
-		bool			paused_;
-		Scene*			curr_scene_;
-		Scene*			next_scene_;
-		Transition*		transition_;
+		HWND		hwnd_;
+		String		title_;
+		int			width_;
+		int			height_;
+		int			icon_;
+		bool		debug_mode_;
+		bool		quit_;
+		Scene*		curr_scene_;
+		Scene*		next_scene_;
+		Transition*	transition_;
 
 		static Game * instance_;
 	};

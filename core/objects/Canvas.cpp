@@ -9,7 +9,7 @@ e2d::Canvas::Canvas(float width, float height)
 	, stroke_width_(1.0f)
 	, stroke_(Stroke::Miter)
 {
-	render_target_ = Renderer::GetInstance()->GetRenderTarget();
+	render_target_ = Graphics::Get()->GetRenderTarget();
 	render_target_->AddRef();
 
 	ThrowIfFailed(
@@ -59,13 +59,13 @@ void e2d::Canvas::SetStrokeStyle(Stroke strokeStyle)
 	switch (strokeStyle)
 	{
 	case e2d::Stroke::Miter:
-		stroke_style_ = Renderer::GetMiterStrokeStyle();
+		stroke_style_ = Graphics::GetMiterStrokeStyle();
 		break;
 	case e2d::Stroke::Bevel:
-		stroke_style_ = Renderer::GetBevelStrokeStyle();
+		stroke_style_ = Graphics::GetBevelStrokeStyle();
 		break;
 	case e2d::Stroke::Round:
-		stroke_style_ = Renderer::GetRoundStrokeStyle();
+		stroke_style_ = Graphics::GetRoundStrokeStyle();
 		break;
 	}
 }

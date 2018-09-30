@@ -292,13 +292,13 @@ void e2d::Text::Draw() const
 {
 	if (text_layout_)
 	{
-		auto renderer = Renderer::GetInstance();
+		auto graphics = Graphics::GetInstance();
 		// 创建文本区域
 		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, transform_.size.width, transform_.size.height);
 		// 设置画刷颜色和透明度
-		renderer->GetSolidBrush()->SetOpacity(display_opacity_);
+		graphics->GetSolidBrush()->SetOpacity(display_opacity_);
 		// 获取文本渲染器
-		auto textRenderer = renderer->GetTextRenderer();
+		auto textRenderer = graphics->GetTextRenderer();
 		textRenderer->SetTextStyle(
 			(D2D1_COLOR_F)style_.color,
 			style_.outline,
@@ -323,7 +323,7 @@ void e2d::Text::CreateFormat()
 	SafeRelease(text_format_);
 
 	ThrowIfFailed(
-		Renderer::GetWriteFactory()->CreateTextFormat(
+		Graphics::GetWriteFactory()->CreateTextFormat(
 			(const wchar_t *)font_.family,
 			nullptr,
 			DWRITE_FONT_WEIGHT(font_.weight),
@@ -381,7 +381,7 @@ void e2d::Text::CreateLayout()
 	}
 	
 	UINT32 length = (UINT32)text_.GetLength();
-	auto writeFactory = Renderer::GetWriteFactory();
+	auto writeFactory = Graphics::GetWriteFactory();
 
 	// 对文本自动换行情况下进行处理
 	if (style_.wrap)

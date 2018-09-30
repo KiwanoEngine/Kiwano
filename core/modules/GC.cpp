@@ -14,7 +14,7 @@ e2d::GC::~GC()
 
 	Player::DestroyInstance();
 	Audio::DestroyInstance();
-	Renderer::DestroyInstance();
+	Graphics::DestroyInstance();
 	Input::DestroyInstance();
 	Window::DestroyInstance();
 	Game::DestroyInstance();

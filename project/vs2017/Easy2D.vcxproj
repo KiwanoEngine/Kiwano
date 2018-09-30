@@ -229,7 +229,7 @@
     <ClCompile Include="..\..\core\modules\Game.cpp" />
     <ClCompile Include="..\..\core\modules\GC.cpp" />
     <ClCompile Include="..\..\core\modules\Input.cpp" />
-    <ClCompile Include="..\..\core\modules\Renderer.cpp" />
+    <ClCompile Include="..\..\core\modules\Graphics.cpp" />
     <ClCompile Include="..\..\core\modules\Window.cpp" />
     <ClCompile Include="..\..\core\objects\Canvas.cpp" />
     <ClCompile Include="..\..\core\objects\Collider.cpp" />

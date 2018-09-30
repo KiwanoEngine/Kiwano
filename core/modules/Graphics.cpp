@@ -3,24 +3,24 @@
 #include "..\e2dobject.h"
 
 
-e2d::Renderer*		e2d::Renderer::instance_ = nullptr;
-ID2D1Factory*		e2d::Renderer::factory_ = nullptr;
-IWICImagingFactory*	e2d::Renderer::imaging_factory_ = nullptr;
-IDWriteFactory*		e2d::Renderer::write_factory_ = nullptr;
-ID2D1StrokeStyle*	e2d::Renderer::miter_stroke_style_ = nullptr;
-ID2D1StrokeStyle*	e2d::Renderer::bevel_stroke_style_ = nullptr;
-ID2D1StrokeStyle*	e2d::Renderer::round_stroke_style_ = nullptr;
+e2d::Graphics*		e2d::Graphics::instance_ = nullptr;
+ID2D1Factory*		e2d::Graphics::factory_ = nullptr;
+IWICImagingFactory*	e2d::Graphics::imaging_factory_ = nullptr;
+IDWriteFactory*		e2d::Graphics::write_factory_ = nullptr;
+ID2D1StrokeStyle*	e2d::Graphics::miter_stroke_style_ = nullptr;
+ID2D1StrokeStyle*	e2d::Graphics::bevel_stroke_style_ = nullptr;
+ID2D1StrokeStyle*	e2d::Graphics::round_stroke_style_ = nullptr;
 
-e2d::Renderer * e2d::Renderer::GetInstance()
+e2d::Graphics * e2d::Graphics::GetInstance()
 {
 	if (!instance_)
 	{
-		instance_ = new (std::nothrow) Renderer;
+		instance_ = new (std::nothrow) Graphics;
 	}
 	return instance_;
 }
 
-void e2d::Renderer::DestroyInstance()
+void e2d::Graphics::DestroyInstance()
 {
 	if (instance_)
 	{
@@ -36,7 +36,7 @@ void e2d::Renderer::DestroyInstance()
 	}
 }
 
-e2d::Renderer::Renderer()
+e2d::Graphics::Graphics()
 	: show_fps_(false)
 	, last_render_time_(Time::Now())
 	, render_times_(0)
@@ -50,7 +50,7 @@ e2d::Renderer::Renderer()
 	::CoInitialize(nullptr);
 }
 
-e2d::Renderer::~Renderer()
+e2d::Graphics::~Graphics()
 {
 	SafeRelease(fps_text_format_);
 	SafeRelease(fps_text_layout_);
@@ -61,7 +61,7 @@ e2d::Renderer::~Renderer()
 	::CoUninitialize();
 }
 
-void e2d::Renderer::BeginDraw()
+void e2d::Graphics::BeginDraw()
 {
 	auto render_target = GetRenderTarget();
 	render_target->BeginDraw();
@@ -69,71 +69,8 @@ void e2d::Renderer::BeginDraw()
 	render_target->Clear(clear_color_);
 }
 
-void e2d::Renderer::EndDraw()
+void e2d::Graphics::EndDraw()
 {
-	if (show_fps_)
-	{
-		int duration = (Time::Now() - last_render_time_).Milliseconds();
-
-		++render_times_;
-		if (duration >= 100)
-		{
-			String fpsText = String::Format(L"FPS: %.1f", (1000.f / duration * render_times_));
-			last_render_time_ = Time::Now();
-			render_times_ = 0;
-
-			if (!fps_text_format_)
-			{
-				ThrowIfFailed(
-					GetWriteFactory()->CreateTextFormat(
-						L"",
-						nullptr,
-						DWRITE_FONT_WEIGHT_NORMAL,
-						DWRITE_FONT_STYLE_NORMAL,
-						DWRITE_FONT_STRETCH_NORMAL,
-						20,
-						L"",
-						&fps_text_format_
-					)
-				);
-
-				ThrowIfFailed(
-					fps_text_format_->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP)
-				);
-			}
-
-			SafeRelease(fps_text_layout_);
-
-			ThrowIfFailed(
-				GetWriteFactory()->CreateTextLayout(
-				(const wchar_t *)fpsText,
-					(UINT32)fpsText.GetLength(),
-					fps_text_format_,
-					0,
-					0,
-					&fps_text_layout_
-				)
-			);
-		}
-
-		if (fps_text_layout_)
-		{
-			GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-			GetSolidBrush()->SetOpacity(1.0f);
-			GetTextRenderer()->SetTextStyle(
-				D2D1::ColorF(D2D1::ColorF::White),
-				TRUE,
-				D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
-				1.5f,
-				D2D1_LINE_JOIN_ROUND
-			);
-
-			ThrowIfFailed(
-				fps_text_layout_->Draw(nullptr, text_renderer_, 10, 0)
-			);
-		}
-	}
-
 	HRESULT hr = render_target_->EndDraw();
 
 	if (hr == D2DERR_RECREATE_TARGET)
@@ -152,7 +89,70 @@ void e2d::Renderer::EndDraw()
 	ThrowIfFailed(hr);
 }
 
-e2d::E2DTextRenderer * e2d::Renderer::GetTextRenderer()
+void e2d::Graphics::DrawDebugInfo()
+{
+	int duration = (Time::Now() - last_render_time_).Milliseconds();
+
+	++render_times_;
+	if (duration >= 100)
+	{
+		String fpsText = String::Format(L"FPS: %.1f", (1000.f / duration * render_times_));
+		last_render_time_ = Time::Now();
+		render_times_ = 0;
+
+		if (!fps_text_format_)
+		{
+			ThrowIfFailed(
+				GetWriteFactory()->CreateTextFormat(
+					L"",
+					nullptr,
+					DWRITE_FONT_WEIGHT_NORMAL,
+					DWRITE_FONT_STYLE_NORMAL,
+					DWRITE_FONT_STRETCH_NORMAL,
+					20,
+					L"",
+					&fps_text_format_
+				)
+			);
+
+			ThrowIfFailed(
+				fps_text_format_->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP)
+			);
+		}
+
+		SafeRelease(fps_text_layout_);
+
+		ThrowIfFailed(
+			GetWriteFactory()->CreateTextLayout(
+			(const wchar_t *)fpsText,
+				(UINT32)fpsText.GetLength(),
+				fps_text_format_,
+				0,
+				0,
+				&fps_text_layout_
+			)
+		);
+	}
+
+	if (fps_text_layout_)
+	{
+		GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+		GetSolidBrush()->SetOpacity(1.0f);
+		GetTextRenderer()->SetTextStyle(
+			D2D1::ColorF(D2D1::ColorF::White),
+			TRUE,
+			D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
+			1.5f,
+			D2D1_LINE_JOIN_ROUND
+		);
+
+		ThrowIfFailed(
+			fps_text_layout_->Draw(nullptr, text_renderer_, 10, 0)
+		);
+	}
+}
+
+e2d::E2DTextRenderer * e2d::Graphics::GetTextRenderer()
 {
 	if (!text_renderer_)
 	{
@@ -169,11 +169,11 @@ e2d::E2DTextRenderer * e2d::Renderer::GetTextRenderer()
 	return text_renderer_;
 }
 
-ID2D1HwndRenderTarget * e2d::Renderer::GetRenderTarget()
+ID2D1HwndRenderTarget * e2d::Graphics::GetRenderTarget()
 {
 	if (!render_target_)
 	{
-		HWND hwnd = Window::GetInstance()->GetHWnd();
+		HWND hwnd = Game::Get()->GetHWnd();
 
 		RECT rc;
 		GetClientRect(hwnd, &rc);
@@ -199,7 +199,7 @@ ID2D1HwndRenderTarget * e2d::Renderer::GetRenderTarget()
 	return render_target_;
 }
 
-ID2D1SolidColorBrush * e2d::Renderer::GetSolidBrush()
+ID2D1SolidColorBrush * e2d::Graphics::GetSolidBrush()
 {
 	if (!solid_brush_)
 	{
@@ -213,22 +213,12 @@ ID2D1SolidColorBrush * e2d::Renderer::GetSolidBrush()
 	return solid_brush_;
 }
 
-e2d::Color e2d::Renderer::GetBackgroundColor()
-{
-	return clear_color_;
-}
-
-void e2d::Renderer::SetBackgroundColor(const Color& color)
-{
-	clear_color_ = (D2D1_COLOR_F)color;
-}
-
-void e2d::Renderer::ShowFps(bool show)
+void e2d::Graphics::ShowFps(bool show)
 {
 	show_fps_ = show;
 }
 
-ID2D1Factory * e2d::Renderer::GetFactory()
+ID2D1Factory * e2d::Graphics::GetFactory()
 {
 	if (!factory_)
 	{
@@ -246,7 +236,7 @@ ID2D1Factory * e2d::Renderer::GetFactory()
 	return factory_;
 }
 
-IWICImagingFactory * e2d::Renderer::GetImagingFactory()
+IWICImagingFactory * e2d::Graphics::GetImagingFactory()
 {
 	if (!imaging_factory_)
 	{
@@ -267,7 +257,7 @@ IWICImagingFactory * e2d::Renderer::GetImagingFactory()
 	return imaging_factory_;
 }
 
-IDWriteFactory * e2d::Renderer::GetWriteFactory()
+IDWriteFactory * e2d::Graphics::GetWriteFactory()
 {
 	if (!write_factory_)
 	{
@@ -286,7 +276,7 @@ IDWriteFactory * e2d::Renderer::GetWriteFactory()
 	return write_factory_;
 }
 
-ID2D1StrokeStyle * e2d::Renderer::GetMiterStrokeStyle()
+ID2D1StrokeStyle * e2d::Graphics::GetMiterStrokeStyle()
 {
 	if (!miter_stroke_style_)
 	{
@@ -309,7 +299,7 @@ ID2D1StrokeStyle * e2d::Renderer::GetMiterStrokeStyle()
 	return miter_stroke_style_;
 }
 
-ID2D1StrokeStyle * e2d::Renderer::GetBevelStrokeStyle()
+ID2D1StrokeStyle * e2d::Graphics::GetBevelStrokeStyle()
 {
 	if (!bevel_stroke_style_)
 	{
@@ -332,7 +322,7 @@ ID2D1StrokeStyle * e2d::Renderer::GetBevelStrokeStyle()
 	return bevel_stroke_style_;
 }
 
-ID2D1StrokeStyle * e2d::Renderer::GetRoundStrokeStyle()
+ID2D1StrokeStyle * e2d::Graphics::GetRoundStrokeStyle()
 {
 	if (!round_stroke_style_)
 	{

@@ -93,6 +93,15 @@ bool e2d::Sprite::Open(const String & file_name)
 	return false;
 }
 
+void e2d::Sprite::Crop(const Rect& crop_rect)
+{
+	image_->Crop(crop_rect);
+	Node::SetSize(
+		std::min(std::max(crop_rect.size.width, 0.f), image_->GetSourceWidth() - image_->GetCropX()),
+		std::min(std::max(crop_rect.size.height, 0.f), image_->GetSourceHeight() - image_->GetCropY())
+	);
+}
+
 e2d::Image * e2d::Sprite::GetImage() const
 {
 	return image_;
@@ -105,7 +114,7 @@ void e2d::Sprite::Draw() const
 		// »ñÈ¡Í¼Æ¬²Ã¼ôÎ»ÖÃ
 		auto crop_pos = image_->GetCropPos();
 		// äÖÈ¾Í¼Æ¬
-		Renderer::GetInstance()->GetRenderTarget()->DrawBitmap(
+		Graphics::Get()->GetRenderTarget()->DrawBitmap(
 			image_->GetBitmap(),
 			D2D1::RectF(0, 0, transform_.size.width, transform_.size.height),
 			display_opacity_,
