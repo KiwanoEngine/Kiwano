@@ -209,6 +209,16 @@ void e2d::Game::UpdateScene()
 		curr_scene_ = next_scene_;
 		next_scene_ = nullptr;
 	}
+
+	if (curr_scene_)
+	{
+		curr_scene_->Update();
+	}
+
+	if (next_scene_)
+	{
+		next_scene_->Update();
+	}
 }
 
 void e2d::Game::DrawScene()
@@ -357,6 +367,7 @@ e2d::Rect e2d::Game::Locate(int width, int height)
 	HDC hdc = ::GetDC(0);
 	int dpi_x = GetDeviceCaps(hdc, LOGPIXELSX);
 	int dpi_y = GetDeviceCaps(hdc, LOGPIXELSY);
+	::ReleaseDC(0, hdc);
 	RECT rect = { 0, 0, LONG(ceil(width * dpi_x / 96.f)), LONG(ceil(height * dpi_y / 96.f)) };
 
 	// 计算合适的窗口大小
@@ -543,6 +554,7 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 				HDC hdc = ::GetDC(0);
 				int dpi_x = GetDeviceCaps(hdc, LOGPIXELSX);
 				int dpi_y = GetDeviceCaps(hdc, LOGPIXELSY);
+				::ReleaseDC(0, hdc);
 				game->width_ = static_cast<int>(width * 96.f / dpi_x);
 				game->height_ = static_cast<int>(height * 96.f / dpi_y);
 			}
@@ -588,8 +600,7 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 		// 窗口关闭消息
 		case WM_CLOSE:
 		{
-			auto currScene = game->GetCurrentScene();
-			if (!currScene || currScene->OnCloseWindow())
+			if (game->OnExit())
 			{
 				game->Quit();
 			}

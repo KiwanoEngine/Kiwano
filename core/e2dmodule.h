@@ -223,6 +223,10 @@ namespace e2d
 		// 结束
 		void Quit();
 
+		// 关闭窗口时触发
+		// 返回值：返回 false 将阻止窗口关闭
+		virtual bool OnExit() { return true; }
+
 		// 修改窗体大小
 		void SetSize(
 			int width,			/* 窗体宽度 */

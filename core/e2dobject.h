@@ -152,9 +152,8 @@ namespace e2d
 		// 退出场景
 		virtual void OnExit() {}
 
-		// 关闭窗口
-		// 说明：返回 false 将阻止窗口关闭
-		virtual bool OnCloseWindow() { return true; }
+		// 更新场景
+		virtual void Update() {}
 
 		// 设置根节点
 		void SetRoot(
