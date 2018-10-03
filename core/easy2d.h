@@ -19,7 +19,6 @@
 
 #include "e2dmacros.h"
 #include "e2dutil.h"
-#include "e2dmanager.h"
 #include "e2dobject.h"
 #include "e2dcomponent.h"
 #include "e2dtool.h"

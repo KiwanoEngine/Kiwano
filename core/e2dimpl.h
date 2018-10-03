@@ -41,17 +41,17 @@ namespace e2d
 
 
 	// ÎÄ×ÖäÖÈ¾Æ÷
-	class E2DTextRenderer
+	class E2DTextRender
 		: public IDWriteTextRenderer
 	{
 	private:
-		E2DTextRenderer();
+		E2DTextRender();
 
-		~E2DTextRenderer();
+		~E2DTextRender();
 
 	public:
 		static HRESULT Create(
-			E2DTextRenderer** ppTextRenderer,
+			E2DTextRender** ppTextRenderer,
 			ID2D1Factory* pD2DFactory,
 			ID2D1HwndRenderTarget* pRT,
 			ID2D1SolidColorBrush* pBrush

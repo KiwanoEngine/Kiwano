@@ -1,34 +1,12 @@
 #include "..\e2dmodule.h"
 #include "..\e2dtool.h"
-#include "..\e2dmanager.h"
-#pragma comment(lib, "dinput8.lib")
 
 
-e2d::Input * e2d::Input::instance_ = nullptr;
-
-e2d::Input * e2d::Input::GetInstance()
+e2d::Input::Input(HWND hwnd)
+	: direct_input_(nullptr)
+	, keyboard_device_(nullptr)
+	, mouse_device_(nullptr)
 {
-	if (!instance_)
-		instance_ = new (std::nothrow) Input;
-	return instance_;
-}
-
-void e2d::Input::DestroyInstance()
-{
-	if (instance_)
-	{
-		delete instance_;
-		instance_ = nullptr;
-	}
-}
-
-e2d::Input::Input()
-	: direct_input_(false)
-	, keyboard_device_(false)
-	, mouse_device_(false)
-{
-	::CoInitialize(nullptr);
-
 	ZeroMemory(key_buffer_, sizeof(key_buffer_));
 	ZeroMemory(&mouse_state_, sizeof(mouse_state_));
 
@@ -42,8 +20,6 @@ e2d::Input::Input()
 			nullptr
 		)
 	);
-
-	HWND hwnd = Window::GetInstance()->GetHWnd();
 
 	// 初始化键盘设备
 	ThrowIfFailed(
@@ -84,11 +60,9 @@ e2d::Input::~Input()
 	SafeRelease(mouse_device_);
 	SafeRelease(keyboard_device_);
 	SafeRelease(direct_input_);
-
-	::CoUninitialize();
 }
 
-void e2d::Input::Update()
+void e2d::Input::Flush()
 {
 	if (keyboard_device_)
 	{
@@ -101,7 +75,10 @@ void e2d::Input::Update()
 		}
 		else
 		{
-			keyboard_device_->GetDeviceState(sizeof(key_buffer_), (void**)&key_buffer_);
+			keyboard_device_->GetDeviceState(
+				sizeof(key_buffer_),
+				(void**)&key_buffer_
+			);
 		}
 	}
 
@@ -116,7 +93,10 @@ void e2d::Input::Update()
 		}
 		else
 		{
-			mouse_device_->GetDeviceState(sizeof(mouse_state_), (void**)&mouse_state_);
+			mouse_device_->GetDeviceState(
+				sizeof(mouse_state_),
+				(void**)&mouse_state_
+			);
 		}
 	}
 }
@@ -147,13 +127,14 @@ float e2d::Input::GetMouseY()
 
 e2d::Point e2d::Input::GetMousePos()
 {
-	auto window = Window::GetInstance();
-	float dpi = window->GetDpi();
+	HDC hdc = ::GetDC(0);
+	int dpi_x = GetDeviceCaps(hdc, LOGPIXELSX);
+	int dpi_y = GetDeviceCaps(hdc, LOGPIXELSY);
 
 	POINT mousePos;
 	::GetCursorPos(&mousePos);
-	::ScreenToClient(window->GetHWnd(), &mousePos);
-	return Point(mousePos.x * 96.f / dpi, mousePos.y * 96.f / dpi);
+	::ScreenToClient(Game::GetInstance()->GetHWnd(), &mousePos);
+	return Point(mousePos.x * 96.f / dpi_x, mousePos.y * 96.f / dpi_y);
 }
 
 float e2d::Input::GetMouseDeltaX()

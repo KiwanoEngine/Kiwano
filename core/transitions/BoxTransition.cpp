@@ -6,9 +6,9 @@ e2d::BoxTransition::BoxTransition(float duration)
 {
 }
 
-void e2d::BoxTransition::Init(Scene * prev, Scene * next)
+void e2d::BoxTransition::Init(Scene * prev, Scene * next, Game * game)
 {
-	Transition::Init(prev, next);
+	Transition::Init(prev, next, game);
 
 	in_layer_param_.opacity = 0;
 }

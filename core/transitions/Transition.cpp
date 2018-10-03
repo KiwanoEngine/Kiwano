@@ -30,7 +30,7 @@ bool e2d::Transition::IsDone()
 	return done_;
 }
 
-void e2d::Transition::Init(Scene * prev, Scene * next)
+void e2d::Transition::Init(Scene * prev, Scene * next, Game * game)
 {
 	started_ = Time::Now();
 	out_scene_ = prev;
@@ -42,7 +42,7 @@ void e2d::Transition::Init(Scene * prev, Scene * next)
 	if (in_scene_)
 		in_scene_->Retain();
 	
-	auto graphics = Graphics::GetInstance();
+	auto graphics = Device::GetGraphics();
 	if (in_scene_)
 	{
 		ThrowIfFailed(
@@ -57,7 +57,7 @@ void e2d::Transition::Init(Scene * prev, Scene * next)
 		);
 	}
 
-	window_size_ = Window::GetInstance()->GetSize();
+	window_size_ = game->GetSize();
 	out_layer_param_ = in_layer_param_ = D2D1::LayerParameters(
 		D2D1::RectF(
 			0.f,
@@ -94,7 +94,7 @@ void e2d::Transition::Update()
 
 void e2d::Transition::Draw()
 {
-	auto render_target = Graphics::GetInstance()->GetRenderTarget();
+	auto render_target = Device::GetGraphics()->GetRenderTarget();
 
 	if (out_scene_)
 	{

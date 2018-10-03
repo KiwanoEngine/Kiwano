@@ -1,5 +1,4 @@
 #include "..\e2daction.h"
-#include "..\e2dmanager.h"
 
 e2d::Action::Action() 
 	: running_(false)

@@ -19,9 +19,6 @@
     <Filter Include="events">
       <UniqueIdentifier>{6c9657de-02d5-4d3b-9e1d-bc921eb5aea3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="managers">
-      <UniqueIdentifier>{9031e36b-fa85-4b4e-8e80-657c7e68f283}</UniqueIdentifier>
-    </Filter>
     <Filter Include="transitions">
       <UniqueIdentifier>{563b19f2-4c5e-4362-983a-94d2ae724550}</UniqueIdentifier>
     </Filter>
@@ -102,13 +99,7 @@
     <ClCompile Include="..\..\core\modules\Game.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\modules\GC.cpp">
-      <Filter>modules</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\modules\Input.cpp">
-      <Filter>modules</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\modules\Window.cpp">
       <Filter>modules</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\utils\Color.cpp">
@@ -153,17 +144,11 @@
     <ClCompile Include="..\..\core\impl\VoiceCallback.cpp">
       <Filter>impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\events\Collision.cpp">
-      <Filter>events</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\events\KeyEvent.cpp">
       <Filter>events</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\events\MouseEvent.cpp">
       <Filter>events</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\managers\CollisionManager.cpp">
-      <Filter>managers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\tools\Data.cpp">
       <Filter>tools</Filter>
@@ -175,9 +160,6 @@
       <Filter>tools</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\tools\Path.cpp">
-      <Filter>tools</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\tools\Player.cpp">
       <Filter>tools</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\tools\Random.cpp">
@@ -202,9 +184,6 @@
       <Filter>transitions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\objects\Canvas.cpp">
-      <Filter>objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\objects\Collider.cpp">
       <Filter>objects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\objects\Image.cpp">
@@ -234,12 +213,14 @@
     <ClCompile Include="..\..\core\modules\Graphics.cpp">
       <Filter>modules</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\modules\Device.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\e2daction.h" />
     <ClInclude Include="..\..\core\e2dmacros.h" />
-    <ClInclude Include="..\..\core\e2dmanager.h" />
     <ClInclude Include="..\..\core\e2dtransition.h" />
     <ClInclude Include="..\..\core\e2devent.h" />
     <ClInclude Include="..\..\core\e2dmodule.h" />

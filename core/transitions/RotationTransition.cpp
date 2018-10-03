@@ -7,9 +7,9 @@ e2d::RotationTransition::RotationTransition(float duration, float rotation)
 {
 }
 
-void e2d::RotationTransition::Init(Scene * prev, Scene * next)
+void e2d::RotationTransition::Init(Scene * prev, Scene * next, Game * game)
 {
-	Transition::Init(prev, next);
+	Transition::Init(prev, next, game);
 
 	if (out_scene_)
 	{

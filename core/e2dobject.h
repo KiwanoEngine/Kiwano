@@ -80,28 +80,28 @@ namespace e2d
 		const Rect& GetCropRect() const;
 
 		// 获取 ID2D1Bitmap 对象
-		ID2D1Bitmap * GetBitmap();
-
-		// 设置 Bitmap
-		void SetBitmap(
-			ID2D1Bitmap * bitmap
-		);
-
-		// 预加载图片资源
-		static bool Preload(
-			const String& file_name
-		);
-
-		// 预加载图片资源
-		static bool Preload(
-			const Resource& res
-		);
+		ID2D1Bitmap * GetBitmap() const;
 
 		// 清空缓存
 		static void ClearCache();
 
 	protected:
 		E2D_DISABLE_COPY(Image);
+
+		// 加载图片资源
+		bool Load(
+			const String& file_name
+		);
+
+		// 加载图片资源
+		bool Load(
+			const Resource& res
+		);
+
+		// 设置 Bitmap
+		void SetBitmap(
+			ID2D1Bitmap * bitmap
+		);
 
 	protected:
 		Rect crop_rect_;
@@ -174,132 +174,6 @@ namespace e2d
 	};
 
 
-	// 碰撞体
-	class Collider
-	{
-	public:
-		// 碰撞体形状
-		enum class Shape
-		{
-			None,		/* 无 */
-			Rect,		/* 矩形 */
-			Circle,		/* 圆形 */
-			Ellipse		/* 椭圆形 */
-		};
-
-		// 碰撞体交集关系
-		enum class Relation : int
-		{
-			Unknown = 0,		/* 关系不确定 */
-			Disjoin = 1,		/* 没有交集 */
-			IsContained = 2,	/* 完全被包含 */
-			Contains = 3,		/* 完全包含 */
-			Overlap = 4			/* 部分重叠 */
-		};
-
-	public:
-		explicit Collider(
-			Node * parent
-		);
-
-		virtual ~Collider();
-
-		// 设置碰撞体形状
-		void SetShape(
-			Shape shape
-		);
-
-		// 是否触发碰撞事件
-		void SetCollisionNotify(
-			bool notify
-		);
-
-		// 启用或关闭该碰撞体
-		void SetEnabled(
-			bool enabled
-		);
-
-		// 设置碰撞体的可见性
-		void SetVisible(
-			bool visible
-		);
-
-		// 设置绘制颜色
-		void SetBorderColor(
-			const Color& color
-		);
-
-		// 判断两碰撞体的交集关系
-		Relation GetRelationWith(
-			Collider * collider
-		) const;
-
-		// 是否启用碰撞体
-		bool IsEnabled() const;
-
-		// 是否可见
-		bool IsVisible() const;
-
-		// 是否触发碰撞事件
-		bool IsCollisionNotify() const;
-
-		// 获取绘制颜色
-		const Color& GetBorderColor() const;
-
-		// 获取形状
-		Shape GetShape() const;
-
-		// 获取绑定节点
-		Node* GetNode() const;
-
-		// 获取 ID2D1Geometry* 对象
-		ID2D1Geometry* GetGeometry() const;
-
-		// 重新生成
-		void Recreate();
-
-		// 渲染碰撞体
-		void Draw();
-
-	protected:
-		E2D_DISABLE_COPY(Collider);
-
-	protected:
-		bool	enabled_;
-		bool	visible_;
-		bool	notify_;
-		Color	border_color_;
-		Node *	parent_node_;
-		Shape	shape_;
-		ID2D1Geometry* geometry_;
-	};
-
-
-	// 碰撞事件
-	class Collision
-	{
-	public:
-		Collision();
-
-		explicit Collision(
-			Node* node,
-			Collider::Relation relation
-		);
-
-		~Collision();
-
-		// 获取发生碰撞节点
-		Node* GetNode() const;
-
-		// 获取交集关系
-		Collider::Relation GetRelation() const;
-
-	protected:
-		Node * node_;
-		Collider::Relation relation_;
-	};
-
-
 	// 定时任务
 	class Task
 		: public Ref
@@ -353,24 +227,6 @@ namespace e2d
 	};
 
 
-	// 绘图接口
-	class Drawable
-	{
-	public:
-		// 渲染图形
-		virtual void Draw() const = 0;
-	};
-
-
-	// 更新接口
-	class Updatable
-	{
-	public:
-		// 渲染图形
-		virtual void Update() = 0;
-	};
-
-
 	// 按键消息处理接口
 	class KeyEventHandler
 	{
@@ -389,15 +245,6 @@ namespace e2d
 	};
 
 
-	// 碰撞消息处理接口
-	class CollisionHandler
-	{
-	public:
-		// 处理碰撞消息
-		virtual void Handle(Collision collision) = 0;
-	};
-
-
 	class Action;
 
 	// 节点
@@ -406,7 +253,6 @@ namespace e2d
 	{
 		friend class Game;
 		friend class Scene;
-		friend class Collider;
 
 	public:
 		typedef std::vector<Node*> Nodes;
@@ -429,14 +275,8 @@ namespace e2d
 		// 获取节点绘图顺序
 		int GetOrder() const;
 
-		// 获取节点横坐标
-		float GetPosX() const;
-
-		// 获取节点纵坐标
-		float GetPosY() const;
-
 		// 获取节点坐标
-		const Point& GetPos() const;
+		const Point& GetPosition() const;
 
 		// 获取节点宽度
 		float GetWidth() const;
@@ -482,9 +322,6 @@ namespace e2d
 
 		// 获取节点透明度
 		float GetOpacity() const;
-
-		// 获取节点碰撞体
-		Collider * GetCollider();
 
 		// 获取父节点
 		Node * GetParent() const;
@@ -769,6 +606,15 @@ namespace e2d
 		// 获取所有任务
 		const Tasks& GetAllTasks() const;
 
+		// 渲染节点
+		virtual void Draw() const {}
+
+		// 更新节点
+		virtual void Update() {}
+
+		// 渲染节点边缘
+		void DrawBorder();
+
 		// 分发鼠标消息
 		virtual bool Dispatch(
 			const MouseEvent& e,
@@ -786,12 +632,6 @@ namespace e2d
 
 		// 遍历节点
 		virtual void Visit();
-
-		// 渲染节点边缘
-		void DrawBorder();
-
-		// 渲染碰撞体轮廓
-		void DrawCollider();
 
 		// 设置节点所在场景
 		void SetParentScene(
@@ -824,7 +664,6 @@ namespace e2d
 		bool		clip_enabled_;
 		bool		dirty_sort_;
 		bool		dirty_transform_;
-		Collider	collider_;
 		Scene *		parent_scene_;
 		Node *		parent_;
 		Color		border_color_;
@@ -840,7 +679,6 @@ namespace e2d
 	// 精灵
 	class Sprite
 		: public Node
-		, public Drawable
 	{
 	public:
 		Sprite();
@@ -906,7 +744,6 @@ namespace e2d
 	// 文本
 	class Text
 		: public Node
-		, public Drawable
 	{
 	public:
 		// 文本对齐方式
@@ -1124,7 +961,6 @@ namespace e2d
 	// 画布
 	class Canvas
 		: public Node
-		, public Drawable
 	{
 	public:
 		Canvas(

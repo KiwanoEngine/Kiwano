@@ -206,12 +206,7 @@ e2d::File e2d::File::ShowOpenDialog(const String & title, const String & filter)
 				file_open->SetFileTypes(1, spec);
 			}
 
-			Game::GetInstance()->Pause();
-			{
-				HWND hwnd = Window::GetInstance()->GetHWnd();
-				hr = file_open->Show(hwnd);
-			}
-			Game::GetInstance()->Resume();
+			hr = file_open->Show(nullptr);
 
 			if (SUCCEEDED(hr))
 			{
@@ -281,12 +276,7 @@ e2d::File e2d::File::ShowSaveDialog(const String & title, const String& def_file
 				file_save->SetFileTypes(1, spec);
 			}
 
-			Game::GetInstance()->Pause();
-			{
-				HWND hwnd = Window::GetInstance()->GetHWnd();
-				hr = file_save->Show(hwnd);
-			}
-			Game::GetInstance()->Resume();
+			hr = file_save->Show(nullptr);
 
 			if (SUCCEEDED(hr))
 			{

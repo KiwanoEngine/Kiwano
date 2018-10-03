@@ -1,45 +1,14 @@
 #include "..\e2dmodule.h"
-#include "..\e2dmanager.h"
 #include "..\e2dobject.h"
 
 
-e2d::Graphics*		e2d::Graphics::instance_ = nullptr;
-ID2D1Factory*		e2d::Graphics::factory_ = nullptr;
-IWICImagingFactory*	e2d::Graphics::imaging_factory_ = nullptr;
-IDWriteFactory*		e2d::Graphics::write_factory_ = nullptr;
-ID2D1StrokeStyle*	e2d::Graphics::miter_stroke_style_ = nullptr;
-ID2D1StrokeStyle*	e2d::Graphics::bevel_stroke_style_ = nullptr;
-ID2D1StrokeStyle*	e2d::Graphics::round_stroke_style_ = nullptr;
-
-e2d::Graphics * e2d::Graphics::GetInstance()
-{
-	if (!instance_)
-	{
-		instance_ = new (std::nothrow) Graphics;
-	}
-	return instance_;
-}
-
-void e2d::Graphics::DestroyInstance()
-{
-	if (instance_)
-	{
-		delete instance_;
-		instance_ = nullptr;
-
-		SafeRelease(miter_stroke_style_);
-		SafeRelease(bevel_stroke_style_);
-		SafeRelease(round_stroke_style_);
-		SafeRelease(factory_);
-		SafeRelease(imaging_factory_);
-		SafeRelease(write_factory_);
-	}
-}
-
-e2d::Graphics::Graphics()
-	: show_fps_(false)
-	, last_render_time_(Time::Now())
-	, render_times_(0)
+e2d::Graphics::Graphics(HWND hwnd)
+	: factory_(nullptr)
+	, imaging_factory_(nullptr)
+	, write_factory_(nullptr)
+	, miter_stroke_style_(nullptr)
+	, bevel_stroke_style_(nullptr)
+	, round_stroke_style_(nullptr)
 	, fps_text_format_(nullptr)
 	, fps_text_layout_(nullptr)
 	, render_target_(nullptr)
@@ -47,7 +16,69 @@ e2d::Graphics::Graphics()
 	, text_renderer_(nullptr)
 	, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
 {
-	::CoInitialize(nullptr);
+	ThrowIfFailed(
+		D2D1CreateFactory(
+			D2D1_FACTORY_TYPE_SINGLE_THREADED,
+			&factory_
+		)
+	);
+
+	ThrowIfFailed(
+		CoCreateInstance(
+			CLSID_WICImagingFactory,
+			nullptr,
+			CLSCTX_INPROC_SERVER,
+			IID_IWICImagingFactory,
+			reinterpret_cast<void**>(&imaging_factory_)
+		)
+	);
+
+	ThrowIfFailed(
+		DWriteCreateFactory(
+			DWRITE_FACTORY_TYPE_SHARED,
+			__uuidof(IDWriteFactory),
+			reinterpret_cast<IUnknown**>(&write_factory_)
+		)
+	);
+
+	RECT rc;
+	::GetClientRect(hwnd, &rc);
+
+	D2D1_SIZE_U size = D2D1::SizeU(
+		rc.right - rc.left,
+		rc.bottom - rc.top
+	);
+
+	// 创建设备相关资源。这些资源应在 Direct2D 设备消失时重建
+	// 创建一个 Direct2D 渲染目标
+	ThrowIfFailed(
+		factory_->CreateHwndRenderTarget(
+			D2D1::RenderTargetProperties(),
+			D2D1::HwndRenderTargetProperties(
+				hwnd,
+				size,
+				D2D1_PRESENT_OPTIONS_NONE),
+			&render_target_
+		)
+	);
+
+	// 创建画刷
+	ThrowIfFailed(
+		render_target_->CreateSolidColorBrush(
+			D2D1::ColorF(D2D1::ColorF::White),
+			&solid_brush_
+		)
+	);
+
+	// 创建自定义的文字渲染器
+	ThrowIfFailed(
+		E2DTextRender::Create(
+			&text_renderer_,
+			factory_,
+			render_target_,
+			solid_brush_
+		)
+	);
 }
 
 e2d::Graphics::~Graphics()
@@ -58,15 +89,18 @@ e2d::Graphics::~Graphics()
 	SafeRelease(solid_brush_);
 	SafeRelease(render_target_);
 
-	::CoUninitialize();
+	SafeRelease(miter_stroke_style_);
+	SafeRelease(bevel_stroke_style_);
+	SafeRelease(round_stroke_style_);
+	SafeRelease(factory_);
+	SafeRelease(imaging_factory_);
+	SafeRelease(write_factory_);
 }
 
 void e2d::Graphics::BeginDraw()
 {
-	auto render_target = GetRenderTarget();
-	render_target->BeginDraw();
-	// 使用背景色清空屏幕
-	render_target->Clear(clear_color_);
+	render_target_->BeginDraw();
+	render_target_->Clear(clear_color_);
 }
 
 void e2d::Graphics::EndDraw()
@@ -91,41 +125,45 @@ void e2d::Graphics::EndDraw()
 
 void e2d::Graphics::DrawDebugInfo()
 {
+	static int render_times_ = 0;
+	static Time last_render_time_ = Time::Now();
 	int duration = (Time::Now() - last_render_time_).Milliseconds();
+
+	if (!fps_text_format_)
+	{
+		ThrowIfFailed(
+			write_factory_->CreateTextFormat(
+				L"",
+				nullptr,
+				DWRITE_FONT_WEIGHT_NORMAL,
+				DWRITE_FONT_STYLE_NORMAL,
+				DWRITE_FONT_STRETCH_NORMAL,
+				20,
+				L"",
+				&fps_text_format_
+			)
+		);
+
+		ThrowIfFailed(
+			fps_text_format_->SetWordWrapping(
+				DWRITE_WORD_WRAPPING_NO_WRAP
+			)
+		);
+	}
 
 	++render_times_;
 	if (duration >= 100)
 	{
-		String fpsText = String::Format(L"FPS: %.1f", (1000.f / duration * render_times_));
+		String fps_text = String::Format(L"FPS: %.1f", (1000.f / duration * render_times_));
 		last_render_time_ = Time::Now();
 		render_times_ = 0;
-
-		if (!fps_text_format_)
-		{
-			ThrowIfFailed(
-				GetWriteFactory()->CreateTextFormat(
-					L"",
-					nullptr,
-					DWRITE_FONT_WEIGHT_NORMAL,
-					DWRITE_FONT_STYLE_NORMAL,
-					DWRITE_FONT_STRETCH_NORMAL,
-					20,
-					L"",
-					&fps_text_format_
-				)
-			);
-
-			ThrowIfFailed(
-				fps_text_format_->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP)
-			);
-		}
 
 		SafeRelease(fps_text_layout_);
 
 		ThrowIfFailed(
-			GetWriteFactory()->CreateTextLayout(
-			(const wchar_t *)fpsText,
-				(UINT32)fpsText.GetLength(),
+			write_factory_->CreateTextLayout(
+			(const wchar_t *)fps_text,
+				(UINT32)fps_text.GetLength(),
 				fps_text_format_,
 				0,
 				0,
@@ -136,9 +174,9 @@ void e2d::Graphics::DrawDebugInfo()
 
 	if (fps_text_layout_)
 	{
-		GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-		GetSolidBrush()->SetOpacity(1.0f);
-		GetTextRenderer()->SetTextStyle(
+		render_target_->SetTransform(D2D1::Matrix3x2F::Identity());
+		solid_brush_->SetOpacity(1.0f);
+		text_renderer_->SetTextStyle(
 			D2D1::ColorF(D2D1::ColorF::White),
 			TRUE,
 			D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
@@ -146,133 +184,42 @@ void e2d::Graphics::DrawDebugInfo()
 			D2D1_LINE_JOIN_ROUND
 		);
 
-		ThrowIfFailed(
-			fps_text_layout_->Draw(nullptr, text_renderer_, 10, 0)
+		fps_text_layout_->Draw(
+			nullptr,
+			text_renderer_,
+			10,
+			0
 		);
 	}
 }
 
-e2d::E2DTextRenderer * e2d::Graphics::GetTextRenderer()
+ID2D1HwndRenderTarget * e2d::Graphics::GetRenderTarget() const
 {
-	if (!text_renderer_)
-	{
-		// 创建自定义的文字渲染器
-		ThrowIfFailed(
-			E2DTextRenderer::Create(
-				&text_renderer_,
-				GetFactory(),
-				GetRenderTarget(),
-				GetSolidBrush()
-			)
-		);
-	}
-	return text_renderer_;
-}
-
-ID2D1HwndRenderTarget * e2d::Graphics::GetRenderTarget()
-{
-	if (!render_target_)
-	{
-		HWND hwnd = Game::Get()->GetHWnd();
-
-		RECT rc;
-		GetClientRect(hwnd, &rc);
-
-		D2D1_SIZE_U size = D2D1::SizeU(
-			rc.right - rc.left,
-			rc.bottom - rc.top
-		);
-
-		// 创建设备相关资源。这些资源应在 Direct2D 设备消失时重建
-		// 创建一个 Direct2D 渲染目标
-		ThrowIfFailed(
-			GetFactory()->CreateHwndRenderTarget(
-				D2D1::RenderTargetProperties(),
-				D2D1::HwndRenderTargetProperties(
-					hwnd,
-					size,
-					D2D1_PRESENT_OPTIONS_NONE),
-				&render_target_
-			)
-		);
-	}
 	return render_target_;
 }
 
-ID2D1SolidColorBrush * e2d::Graphics::GetSolidBrush()
+ID2D1SolidColorBrush * e2d::Graphics::GetSolidBrush() const
 {
-	if (!solid_brush_)
-	{
-		ThrowIfFailed(
-			GetRenderTarget()->CreateSolidColorBrush(
-				D2D1::ColorF(D2D1::ColorF::White),
-				&solid_brush_
-			)
-		);
-	}
 	return solid_brush_;
 }
 
-void e2d::Graphics::ShowFps(bool show)
+e2d::E2DTextRender * e2d::Graphics::GetTextRender() const
 {
-	show_fps_ = show;
+	return text_renderer_;
 }
 
-ID2D1Factory * e2d::Graphics::GetFactory()
+ID2D1Factory * e2d::Graphics::GetFactory() const
 {
-	if (!factory_)
-	{
-		::CoInitialize(nullptr);
-
-		ThrowIfFailed(
-			D2D1CreateFactory(
-				D2D1_FACTORY_TYPE_SINGLE_THREADED,
-				&factory_
-			)
-		);
-
-		::CoUninitialize();
-	}
 	return factory_;
 }
 
-IWICImagingFactory * e2d::Graphics::GetImagingFactory()
+IWICImagingFactory * e2d::Graphics::GetImagingFactory() const
 {
-	if (!imaging_factory_)
-	{
-		::CoInitialize(nullptr);
-
-		ThrowIfFailed(
-			CoCreateInstance(
-				CLSID_WICImagingFactory,
-				nullptr,
-				CLSCTX_INPROC_SERVER,
-				IID_IWICImagingFactory,
-				reinterpret_cast<void**>(&imaging_factory_)
-			)
-		);
-
-		::CoUninitialize();
-	}
 	return imaging_factory_;
 }
 
-IDWriteFactory * e2d::Graphics::GetWriteFactory()
+IDWriteFactory * e2d::Graphics::GetWriteFactory() const
 {
-	if (!write_factory_)
-	{
-		::CoInitialize(nullptr);
-
-		ThrowIfFailed(
-			DWriteCreateFactory(
-				DWRITE_FACTORY_TYPE_SHARED,
-				__uuidof(IDWriteFactory),
-				reinterpret_cast<IUnknown**>(&write_factory_)
-			)
-		);
-
-		::CoUninitialize();
-	}
 	return write_factory_;
 }
 
@@ -281,7 +228,7 @@ ID2D1StrokeStyle * e2d::Graphics::GetMiterStrokeStyle()
 	if (!miter_stroke_style_)
 	{
 		ThrowIfFailed(
-			GetFactory()->CreateStrokeStyle(
+			factory_->CreateStrokeStyle(
 				D2D1::StrokeStyleProperties(
 					D2D1_CAP_STYLE_FLAT,
 					D2D1_CAP_STYLE_FLAT,
@@ -304,7 +251,7 @@ ID2D1StrokeStyle * e2d::Graphics::GetBevelStrokeStyle()
 	if (!bevel_stroke_style_)
 	{
 		ThrowIfFailed(
-			GetFactory()->CreateStrokeStyle(
+			factory_->CreateStrokeStyle(
 				D2D1::StrokeStyleProperties(
 					D2D1_CAP_STYLE_FLAT,
 					D2D1_CAP_STYLE_FLAT,
@@ -327,7 +274,7 @@ ID2D1StrokeStyle * e2d::Graphics::GetRoundStrokeStyle()
 	if (!round_stroke_style_)
 	{
 		ThrowIfFailed(
-			GetFactory()->CreateStrokeStyle(
+			factory_->CreateStrokeStyle(
 				D2D1::StrokeStyleProperties(
 					D2D1_CAP_STYLE_FLAT,
 					D2D1_CAP_STYLE_FLAT,

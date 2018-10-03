@@ -3,11 +3,11 @@
 
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p)	   { if (p) { delete (p); (p)=nullptr; } }
+#define SAFE_DELETE(p)			{ if (p) { delete (p); (p)=nullptr; } }
 #endif
 
 #ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p); (p)=nullptr; } }
+#define SAFE_DELETE_ARRAY(p)	{ if (p) { delete[] (p); (p)=nullptr; } }
 #endif
 
 inline bool TraceError(wchar_t* prompt)
@@ -128,10 +128,7 @@ bool e2d::Music::Open(const e2d::String & file_path)
 		return false;
 	}
 
-	// 创建音源
-	auto xAudio2 = Audio::GetInstance()->GetXAudio2();
-	HRESULT hr = xAudio2->CreateSourceVoice(&voice_, wfx_, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &callback_);
-
+	HRESULT hr = Device::GetAudio()->CreateVoice(&voice_, wfx_, &callback_);
 	if (FAILED(hr))
 	{
 		TraceError(L"Create source voice error", hr);
@@ -206,10 +203,7 @@ bool e2d::Music::Open(const Resource& res)
 		return false;
 	}
 
-	// 创建音源
-	auto xAudio2 = Audio::GetInstance()->GetXAudio2();
-	HRESULT hr = xAudio2->CreateSourceVoice(&voice_, wfx_, 0, XAUDIO2_DEFAULT_FREQ_RATIO, &callback_);
-
+	HRESULT hr = Device::GetAudio()->CreateVoice(&voice_, wfx_, &callback_);
 	if (FAILED(hr))
 	{
 		TraceError(L"Create source voice error", hr);

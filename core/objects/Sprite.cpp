@@ -111,10 +111,8 @@ void e2d::Sprite::Draw() const
 {
 	if (image_ && image_->GetBitmap())
 	{
-		// »ñÈ¡Í¼Æ¬²Ã¼ôÎ»ÖÃ
 		auto crop_pos = image_->GetCropPos();
-		// äÖÈ¾Í¼Æ¬
-		Graphics::Get()->GetRenderTarget()->DrawBitmap(
+		Device::GetGraphics()->GetRenderTarget()->DrawBitmap(
 			image_->GetBitmap(),
 			D2D1::RectF(0, 0, transform_.size.width, transform_.size.height),
 			display_opacity_,

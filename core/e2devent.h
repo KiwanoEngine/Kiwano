@@ -73,7 +73,7 @@ namespace e2d
 		float GetY() const;
 
 		// 获取鼠标坐标
-		Point GetPos() const;
+		Point GetPosition() const;
 
 		// 获取事件类型
 		MouseEvent::Type GetType() const;

@@ -57,6 +57,7 @@
 #pragma comment(lib, "windowscodecs.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "xaudio2.lib")
+#pragma comment(lib, "dinput8.lib")
 
 
 #ifndef HINST_THISCOMPONENT

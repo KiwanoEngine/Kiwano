@@ -1,12 +1,6 @@
 #include "..\e2dmodule.h"
 
 
-e2d::Audio * e2d::Audio::Get()
-{
-	static Audio audio;
-	return &audio;
-}
-
 e2d::Audio::Audio()
 	: x_audio2_(nullptr)
 	, mastering_voice_(nullptr)
@@ -35,12 +29,17 @@ e2d::Audio::~Audio()
 	::CoUninitialize();
 }
 
-IXAudio2 * e2d::Audio::GetXAudio2() const
+HRESULT e2d::Audio::CreateVoice(IXAudio2SourceVoice ** voice, WAVEFORMATEX * wfx, VoiceCallback * callback)
 {
-	return x_audio2_;
+	return x_audio2_->CreateSourceVoice(voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, callback);;
 }
 
-IXAudio2MasteringVoice * e2d::Audio::GetMasteringVoice() const
+void e2d::Audio::Open()
 {
-	return mastering_voice_;
+	x_audio2_->StartEngine();
+}
+
+void e2d::Audio::Close()
+{
+	x_audio2_->StopEngine();
 }

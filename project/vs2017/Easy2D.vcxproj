@@ -219,20 +219,16 @@
     <ClCompile Include="..\..\core\actions\Spawn.cpp" />
     <ClCompile Include="..\..\core\components\Button.cpp" />
     <ClCompile Include="..\..\core\components\Menu.cpp" />
-    <ClCompile Include="..\..\core\events\Collision.cpp" />
     <ClCompile Include="..\..\core\events\KeyEvent.cpp" />
     <ClCompile Include="..\..\core\events\MouseEvent.cpp" />
     <ClCompile Include="..\..\core\impl\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\impl\VoiceCallback.cpp" />
-    <ClCompile Include="..\..\core\managers\CollisionManager.cpp" />
     <ClCompile Include="..\..\core\modules\Audio.cpp" />
+    <ClCompile Include="..\..\core\modules\Device.cpp" />
     <ClCompile Include="..\..\core\modules\Game.cpp" />
-    <ClCompile Include="..\..\core\modules\GC.cpp" />
     <ClCompile Include="..\..\core\modules\Input.cpp" />
     <ClCompile Include="..\..\core\modules\Graphics.cpp" />
-    <ClCompile Include="..\..\core\modules\Window.cpp" />
     <ClCompile Include="..\..\core\objects\Canvas.cpp" />
-    <ClCompile Include="..\..\core\objects\Collider.cpp" />
     <ClCompile Include="..\..\core\objects\Image.cpp" />
     <ClCompile Include="..\..\core\objects\Node.cpp" />
     <ClCompile Include="..\..\core\objects\Scene.cpp" />
@@ -243,7 +239,6 @@
     <ClCompile Include="..\..\core\tools\File.cpp" />
     <ClCompile Include="..\..\core\tools\Music.cpp" />
     <ClCompile Include="..\..\core\tools\Path.cpp" />
-    <ClCompile Include="..\..\core\tools\Player.cpp" />
     <ClCompile Include="..\..\core\tools\Random.cpp" />
     <ClCompile Include="..\..\core\transitions\BoxTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\EmergeTransition.cpp" />
@@ -274,7 +269,6 @@
     <ClInclude Include="..\..\core\e2dimpl.h" />
     <ClInclude Include="..\..\core\e2dmodule.h" />
     <ClInclude Include="..\..\core\e2dmacros.h" />
-    <ClInclude Include="..\..\core\e2dmanager.h" />
     <ClInclude Include="..\..\core\e2dtool.h" />
     <ClInclude Include="..\..\core\e2dtransition.h" />
   </ItemGroup>

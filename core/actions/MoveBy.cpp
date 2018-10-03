@@ -14,7 +14,7 @@ void e2d::MoveBy::Init()
 
 	if (target_)
 	{
-		prev_pos_ = start_pos_ = target_->GetPos();
+		prev_pos_ = start_pos_ = target_->GetPosition();
 	}
 }
 
@@ -24,7 +24,7 @@ void e2d::MoveBy::Update()
 
 	if (target_)
 	{
-		Point currentPos = target_->GetPos();
+		Point currentPos = target_->GetPosition();
 		Point diff = currentPos - prev_pos_;
 		start_pos_ = start_pos_ + diff;
 

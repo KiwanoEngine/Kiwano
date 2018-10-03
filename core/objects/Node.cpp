@@ -1,7 +1,7 @@
 #include "..\e2dobject.h"
 #include "..\e2devent.h"
-#include "..\e2dmanager.h"
 #include "..\e2daction.h"
+#include "..\e2dmodule.h"
 
 
 e2d::Node::Node()
@@ -12,7 +12,6 @@ e2d::Node::Node()
 	, clip_enabled_(false)
 	, dirty_sort_(false)
 	, dirty_transform_(false)
-	, collider_(this)
 	, border_(nullptr)
 	, order_(0)
 	, transform_()
@@ -52,18 +51,12 @@ void e2d::Node::Visit()
 	if (!visible_)
 		return;
 
+	Update();
 	UpdateActions();
 	UpdateTasks();
-
-	auto updatable_node = dynamic_cast<Updatable*>(this);
-	if (updatable_node)
-	{
-		updatable_node->Update();
-	}
-
 	UpdateTransform();
 
-	auto render_target = Graphics::Get()->GetRenderTarget();
+	auto render_target = Device::GetGraphics()->GetRenderTarget();
 	if (clip_enabled_)
 	{
 		render_target->SetTransform(final_matrix_);
@@ -75,12 +68,8 @@ void e2d::Node::Visit()
 
 	if (children_.empty())
 	{
-		auto drawable_node = dynamic_cast<Drawable*>(this);
-		if (drawable_node)
-		{
-			render_target->SetTransform(final_matrix_);
-			drawable_node->Draw();
-		}
+		render_target->SetTransform(final_matrix_);
+		Draw();
 	}
 	else
 	{
@@ -111,12 +100,8 @@ void e2d::Node::Visit()
 			}
 		}
 		
-		auto drawable_node = dynamic_cast<Drawable*>(this);
-		if (drawable_node)
-		{
-			render_target->SetTransform(final_matrix_);
-			drawable_node->Draw();
-		}
+		render_target->SetTransform(final_matrix_);
+		Draw();
 
 		// 访问剩余节点
 		for (; i < children_.size(); ++i)
@@ -135,7 +120,7 @@ void e2d::Node::DrawBorder()
 	{
 		if (border_)
 		{
-			auto graphics = Graphics::Get();
+			auto graphics = Device::GetGraphics();
 			auto brush = graphics->GetSolidBrush();
 			brush->SetColor(D2D1_COLOR_F(border_color_));
 			graphics->GetRenderTarget()->DrawGeometry(
@@ -148,19 +133,6 @@ void e2d::Node::DrawBorder()
 		for (const auto& child : children_)
 		{
 			child->DrawBorder();
-		}
-	}
-}
-
-void e2d::Node::DrawCollider()
-{
-	if (visible_)
-	{
-		collider_.Draw();
-
-		for (const auto& child : children_)
-		{
-			child->DrawCollider();
 		}
 	}
 }
@@ -195,7 +167,7 @@ void e2d::Node::UpdateTransform()
 	// 重新构造轮廓
 	SafeRelease(border_);
 
-	ID2D1Factory * factory = Graphics::GetFactory();
+	ID2D1Factory * factory = Device::GetGraphics()->GetFactory();
 	ID2D1RectangleGeometry * rectangle = nullptr;
 	ID2D1TransformedGeometry * transformed = nullptr;
 	ThrowIfFailed(
@@ -219,16 +191,6 @@ void e2d::Node::UpdateTransform()
 	for (const auto& child : children_)
 	{
 		child->dirty_transform_ = true;
-	}
-
-	// 更新碰撞体
-	collider_.Recreate();
-
-	if (collider_.IsEnabled() &&
-		collider_.IsCollisionNotify() &&
-		collider_.GetShape() != Collider::Shape::None)
-	{
-		CollisionManager::GetInstance()->UpdateCollider(&collider_);
 	}
 }
 
@@ -322,17 +284,7 @@ size_t e2d::Node::GetHashName() const
 	return hash_name_;
 }
 
-float e2d::Node::GetPosX() const
-{
-	return transform_.position.x;
-}
-
-float e2d::Node::GetPosY() const
-{
-	return transform_.position.y;
-}
-
-const e2d::Point& e2d::Node::GetPos() const
+const e2d::Point& e2d::Node::GetPosition() const
 {
 	return transform_.position;
 }
@@ -410,11 +362,6 @@ const e2d::Transform & e2d::Node::GetTransform() const
 float e2d::Node::GetOpacity() const
 {
 	return real_opacity_;
-}
-
-e2d::Collider* e2d::Node::GetCollider()
-{
-	return &collider_;
 }
 
 int e2d::Node::GetOrder() const

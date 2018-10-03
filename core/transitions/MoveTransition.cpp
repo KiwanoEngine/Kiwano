@@ -7,9 +7,9 @@ e2d::MoveTransition::MoveTransition(float duration, Direction direction)
 {
 }
 
-void e2d::MoveTransition::Init(Scene * prev, Scene * next)
+void e2d::MoveTransition::Init(Scene * prev, Scene * next, Game * game)
 {
-	Transition::Init(prev, next);
+	Transition::Init(prev, next, game);
 	
 	switch (direction_)
 	{

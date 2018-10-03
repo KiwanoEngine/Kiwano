@@ -28,7 +28,8 @@ namespace e2d
 		// 初始化场景过渡动画
 		virtual void Init(
 			Scene * prev,
-			Scene * next
+			Scene * next,
+			Game * game
 		);
 
 		// 更新场景过渡动画
@@ -73,7 +74,8 @@ namespace e2d
 
 		virtual void Init(
 			Scene * prev,
-			Scene * next
+			Scene * next,
+			Game * game
 		) override;
 	};
 
@@ -92,7 +94,8 @@ namespace e2d
 
 		virtual void Init(
 			Scene * prev,
-			Scene * next
+			Scene * next,
+			Game * game
 		) override;
 	};
 
@@ -111,7 +114,8 @@ namespace e2d
 
 		virtual void Init(
 			Scene * prev,
-			Scene * next
+			Scene * next,
+			Game * game
 		) override;
 	};
 
@@ -131,7 +135,8 @@ namespace e2d
 
 		virtual void Init(
 			Scene * prev,
-			Scene * next
+			Scene * next,
+			Game * game
 		) override;
 
 		virtual void Reset() override;
@@ -158,7 +163,8 @@ namespace e2d
 
 		virtual void Init(
 			Scene * prev,
-			Scene * next
+			Scene * next,
+			Game * game
 		) override;
 
 		virtual void Reset() override;

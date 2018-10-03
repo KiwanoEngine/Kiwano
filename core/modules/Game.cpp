@@ -1,7 +1,7 @@
 #include "..\e2dmodule.h"
 #include "..\e2dobject.h"
+#include "..\e2dtool.h"
 #include "..\e2dtransition.h"
-#include "..\e2dmanager.h"
 #include <thread>
 #include <imm.h>
 #pragma comment (lib ,"imm32.lib")
@@ -10,7 +10,7 @@
 #define REGISTER_CLASS	L"Easy2DApp"
 
 
-e2d::Game * e2d::Game::instance_ = nullptr;
+static e2d::Game * instance = nullptr;
 
 e2d::Game::Game()
 	: hwnd_(nullptr)
@@ -18,7 +18,18 @@ e2d::Game::Game()
 	, curr_scene_(nullptr)
 	, next_scene_(nullptr)
 	, transition_(nullptr)
+	, title_(L"Easy2D Game")
+	, width_(640)
+	, height_(480)
+	, icon_(0)
+	, debug_mode_(false)
 {
+	if (instance)
+	{
+		throw RuntimeException("同时只能存在一个游戏实例");
+	}
+	instance = this;
+
 	::CoInitialize(nullptr);
 }
 
@@ -28,48 +39,42 @@ e2d::Game::~Game()
 	SafeRelease(curr_scene_);
 	SafeRelease(next_scene_);
 
+	Image::ClearCache();
+	Device::Destroy();
+
 	if (hwnd_)
 	{
 		::DestroyWindow(hwnd_);
 	}
 
+	instance = nullptr;
+
 	::CoUninitialize();
 }
 
-e2d::Game * e2d::Game::New(const Option & option)
+void e2d::Game::Run(const Options& options)
 {
-	static Game game;
-	game.title_ = option.title;
-	game.width_ = option.width;
-	game.height_ = option.height;
-	game.icon_ = option.icon;
-	game.debug_mode_ = option.debug_mode;
+	title_ = options.title;
+	width_ = options.width;
+	height_ = options.height;
+	icon_ = options.icon;
+	debug_mode_ = options.debug_mode;
 
-	game.Init();
+	// 初始化
+	Init();
 
-	instance_ = &game;
-	return instance_;
-}
+	// 开始
+	Start();
 
-e2d::Game * e2d::Game::Get()
-{
-	return instance_;
-}
-
-void e2d::Game::Run()
-{
-	quit_ = false;
-
-	auto input = Input::GetInstance();
-	auto graphics = Graphics::Get();
-
-	const int min_interval = 5;
-	Time last = Time::Now();
-	MSG msg = { 0 };
-	
+	// 刷新场景
 	::ShowWindow(hwnd_, SW_SHOWNORMAL);
 	::UpdateWindow(hwnd_);
 	UpdateScene();
+
+	// 运行
+	const int min_interval = 5;
+	Time last = Time::Now();
+	MSG msg = { 0 };
 	
 	while (!quit_)
 	{
@@ -79,7 +84,7 @@ void e2d::Game::Run()
 		if (dur.Milliseconds() > min_interval)
 		{
 			last = now;
-			input->Update();
+			Device::GetInput()->Flush();
 
 			UpdateScene();
 			DrawScene();
@@ -140,7 +145,7 @@ void e2d::Game::EnterScene(Scene * scene, Transition * transition)
 		transition_ = transition;
 		transition_->Retain();
 
-		transition_->Init(curr_scene_, next_scene_);
+		transition_->Init(curr_scene_, next_scene_, this);
 	}
 }
 
@@ -188,7 +193,7 @@ void e2d::Game::UpdateScene()
 
 void e2d::Game::DrawScene()
 {
-	auto graphics = Graphics::Get();
+	auto graphics = Device::GetGraphics();
 	graphics->BeginDraw();
 
 	if (transition_)
@@ -200,25 +205,29 @@ void e2d::Game::DrawScene()
 		curr_scene_->Draw();
 	}
 
-	// TODO @Nomango if debug_mode_
-	/*
-	{
-		graphics->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-		graphics->GetSolidBrush()->SetOpacity(1.f);
-		root_->DrawBorder();
-	}
-
-	{
-		graphics->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-		root_->DrawCollider();
-	}
-	*/
-
 	if (debug_mode_)
 	{
+		if (curr_scene_ && curr_scene_->GetRoot())
+		{
+			graphics->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+			graphics->GetSolidBrush()->SetOpacity(1.f);
+			curr_scene_->GetRoot()->DrawBorder();
+		}
+		if (next_scene_ && next_scene_->GetRoot())
+		{
+			graphics->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+			graphics->GetSolidBrush()->SetOpacity(1.f);
+			next_scene_->GetRoot()->DrawBorder();
+		}
+
 		graphics->DrawDebugInfo();
 	}
 	graphics->EndDraw();
+}
+
+e2d::Game * e2d::Game::GetInstance()
+{
+	return instance;
 }
 
 void e2d::Game::Init()
@@ -270,23 +279,54 @@ void e2d::Game::Init()
 		this
 	);
 
-	if (hwnd_)
+	if (hwnd_ == nullptr)
 	{
-		// 禁用输入法
-		::ImmAssociateContext(hwnd_, nullptr);
-		// 禁用控制台关闭按钮
-		HWND console_hwnd = ::GetConsoleWindow();
-		if (console_hwnd)
+		::UnregisterClass(REGISTER_CLASS, HINST_THISCOMPONENT);
+		throw RuntimeException("Create window failed");
+		return;
+	}
+
+	// 初始化设备
+	Device::Init(hwnd_);
+
+	// 禁用输入法
+	::ImmAssociateContext(hwnd_, nullptr);
+
+	// 若开启了调试模式，打开控制台
+	HWND console = ::GetConsoleWindow();
+	// 关闭控制台
+	if (debug_mode_)
+	{
+		if (console)
 		{
-			HMENU hmenu = ::GetSystemMenu(console_hwnd, FALSE);
-			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+			::ShowWindow(console, SW_SHOWNORMAL);
+		}
+		else
+		{
+			// 显示一个新控制台
+			if (::AllocConsole())
+			{
+				console = ::GetConsoleWindow();
+				// 重定向输入输出
+				FILE * stdoutStream, *stdinStream, *stderrStream;
+				freopen_s(&stdoutStream, "conout$", "w+t", stdout);
+				freopen_s(&stdinStream, "conin$", "r+t", stdin);
+				freopen_s(&stderrStream, "conout$", "w+t", stderr);
+				// 禁用控制台关闭按钮
+				HMENU hmenu = ::GetSystemMenu(console, FALSE);
+				::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+			}
 		}
 	}
 	else
 	{
-		::UnregisterClass(REGISTER_CLASS, HINST_THISCOMPONENT);
-		throw RuntimeException("Create window failed");
+		if (console)
+		{
+			::ShowWindow(console, SW_HIDE);
+		}
 	}
+
+	quit_ = false;
 }
 
 e2d::Rect e2d::Game::Locate(int width, int height)
@@ -294,8 +334,9 @@ e2d::Rect e2d::Game::Locate(int width, int height)
 	int max_width = ::GetSystemMetrics(SM_CXSCREEN);
 	int max_height = ::GetSystemMetrics(SM_CYSCREEN);
 
-	float dpi_x, dpi_y;
-	Graphics::GetFactory()->GetDesktopDpi(&dpi_x, &dpi_y);
+	HDC hdc = ::GetDC(0);
+	int dpi_x = GetDeviceCaps(hdc, LOGPIXELSX);
+	int dpi_y = GetDeviceCaps(hdc, LOGPIXELSY);
 	RECT rect = { 0, 0, LONG(ceil(width * dpi_x / 96.f)), LONG(ceil(height * dpi_y / 96.f)) };
 
 	// 计算合适的窗口大小
@@ -354,39 +395,48 @@ void e2d::Game::SetSize(int width, int height)
 	width_ = width;
 	height_ = height;
 
-	Rect rect = Locate(width, height);
-	::MoveWindow(
-		hwnd_,
-		int(rect.origin.x),
-		int(rect.origin.y),
-		int(rect.size.width),
-		int(rect.size.height),
-		TRUE
-	);
+	if (hwnd_)
+	{
+		Rect rect = Locate(width, height);
+		::MoveWindow(
+			hwnd_,
+			int(rect.origin.x),
+			int(rect.origin.y),
+			int(rect.size.width),
+			int(rect.size.height),
+			TRUE
+		);
+	}
 }
 
 void e2d::Game::SetTitle(const String& title)
 {
 	title_ = title;
 	
-	::SetWindowText(hwnd_, (LPCWSTR)title);
+	if (hwnd_)
+	{
+		::SetWindowText(hwnd_, (LPCWSTR)title);
+	}
 }
 
 void e2d::Game::SetIcon(int resource_id)
 {
 	icon_ = resource_id;
-	
-	HICON icon = (HICON)::LoadImage(
-		HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(resource_id),
-		IMAGE_ICON,
-		0,
-		0,
-		LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
-	);
 
-	::SendMessage(hwnd_, WM_SETICON, ICON_BIG, (LPARAM)icon);
-	::SendMessage(hwnd_, WM_SETICON, ICON_SMALL, (LPARAM)icon);
+	if (hwnd_)
+	{
+		HICON icon = (HICON)::LoadImage(
+			HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(resource_id),
+			IMAGE_ICON,
+			0,
+			0,
+			LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
+		);
+
+		::SendMessage(hwnd_, WM_SETICON, ICON_BIG, (LPARAM)icon);
+		::SendMessage(hwnd_, WM_SETICON, ICON_SMALL, (LPARAM)icon);
+	}
 }
 
 
@@ -470,8 +520,9 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 
 			if (w_param == SIZE_RESTORED)
 			{
-				float dpi_x, dpi_y;
-				Graphics::GetFactory()->GetDesktopDpi(&dpi_x, &dpi_y);
+				HDC hdc = ::GetDC(0);
+				int dpi_x = GetDeviceCaps(hdc, LOGPIXELSX);
+				int dpi_y = GetDeviceCaps(hdc, LOGPIXELSY);
 				game->width_ = static_cast<int>(width * 96.f / dpi_x);
 				game->height_ = static_cast<int>(height * 96.f / dpi_y);
 			}
@@ -479,10 +530,10 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
 			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-			auto render_target = Graphics::Get()->GetRenderTarget();
+			auto render_target = Device::GetGraphics()->GetRenderTarget();
 			if (render_target)
 			{
-				render_target->Resize(D2D1::SizeU(width, height));
+				render_target->Resize(D2D1::SizeU(game->width_, game->height_));
 			}
 		}
 		break;

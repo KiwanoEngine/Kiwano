@@ -1,5 +1,4 @@
 #include "..\e2dcomponent.h"
-#include "..\e2dmanager.h"
 #include "..\e2dmodule.h"
 
 #define SAFE_SET(pointer, func, ...) if (pointer) { pointer->##func(__VA_ARGS__); }
@@ -148,7 +147,7 @@ bool e2d::Button::Dispatch(const MouseEvent & e, bool handled)
 {
 	if (!handled && enabled_ && visible_ && normal_)
 	{
-		bool contains = normal_->ContainsPoint(e.GetPos());
+		bool contains = normal_->ContainsPoint(e.GetPosition());
 		if (e.GetType() == MouseEvent::Type::LeftUp && is_selected_ && contains)
 		{
 			if (callback_)
@@ -200,13 +199,21 @@ void e2d::Button::Visit()
 	if (visible_ &&
 		!enabled_ &&
 		normal_ &&
-		normal_->ContainsPoint(Input::GetInstance()->GetMousePos()))
+		normal_->ContainsPoint(Device::GetInput()->GetMousePos()))
 	{
-		Window::GetInstance()->SetCursor(Window::Cursor::No);
+		HCURSOR hcursor = ::LoadCursor(nullptr, IDC_NO);
+		if (hcursor)
+		{
+			::SetCursor(hcursor);
+		}
 	}
 	else if (status_ == Status::Mouseover || status_ == Status::Selected)
 	{
-		Window::GetInstance()->SetCursor(Window::Cursor::Hand);
+		HCURSOR hcursor = ::LoadCursor(nullptr, IDC_HAND);
+		if (hcursor)
+		{
+			::SetCursor(hcursor);
+		}
 	}
 }
 

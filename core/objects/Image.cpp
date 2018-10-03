@@ -47,7 +47,7 @@ e2d::Image::~Image()
 
 bool e2d::Image::Open(const Resource& res)
 {
-	if (!Image::Preload(res))
+	if (!Image::Load(res))
 	{
 		WARN("Load Image from file failed!");
 		return false;
@@ -64,7 +64,7 @@ bool e2d::Image::Open(const String & file_name)
 	if (file_name.IsEmpty())
 		return false;
 
-	if (!Image::Preload(file_name))
+	if (!Image::Load(file_name))
 	{
 		WARN("Load Image from file failed!");
 		return false;
@@ -157,15 +157,20 @@ const e2d::Rect & e2d::Image::GetCropRect() const
 	return crop_rect_;
 }
 
-bool e2d::Image::Preload(const Resource& res)
+ID2D1Bitmap * e2d::Image::GetBitmap() const
+{
+	return bitmap_;
+}
+
+bool e2d::Image::Load(const Resource& res)
 {
 	if (bitmap_cache_.find(res.id) != bitmap_cache_.end())
 	{
 		return true;
 	}
 
-	IWICImagingFactory *imaging_factory = Graphics::GetImagingFactory();
-	ID2D1HwndRenderTarget* render_target = Graphics::GetInstance()->GetRenderTarget();
+	IWICImagingFactory *imaging_factory = Device::GetGraphics()->GetImagingFactory();
+	ID2D1HwndRenderTarget* render_target = Device::GetGraphics()->GetRenderTarget();
 	IWICBitmapDecoder *decoder = nullptr;
 	IWICBitmapFrameDecode *source = nullptr;
 	IWICStream *stream = nullptr;
@@ -283,7 +288,7 @@ bool e2d::Image::Preload(const Resource& res)
 	return SUCCEEDED(hr);
 }
 
-bool e2d::Image::Preload(const String & file_name)
+bool e2d::Image::Load(const String & file_name)
 {
 	size_t hash = file_name.GetHash();
 	if (bitmap_cache_.find(hash) != bitmap_cache_.end())
@@ -297,8 +302,8 @@ bool e2d::Image::Preload(const String & file_name)
 	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
 	String image_file_path = image_file.GetPath();
 
-	IWICImagingFactory *imaging_factory = Graphics::GetImagingFactory();
-	ID2D1HwndRenderTarget* render_target = Graphics::GetInstance()->GetRenderTarget();
+	IWICImagingFactory *imaging_factory = Device::GetGraphics()->GetImagingFactory();
+	ID2D1HwndRenderTarget* render_target = Device::GetGraphics()->GetRenderTarget();
 	IWICBitmapDecoder *decoder = nullptr;
 	IWICBitmapFrameDecode *source = nullptr;
 	IWICStream *stream = nullptr;
@@ -394,9 +399,4 @@ void e2d::Image::SetBitmap(ID2D1Bitmap * bitmap)
 		crop_rect_.size.width = bitmap_->GetSize().width;
 		crop_rect_.size.height = bitmap_->GetSize().height;
 	}
-}
-
-ID2D1Bitmap * e2d::Image::GetBitmap()
-{
-	return bitmap_;
 }
