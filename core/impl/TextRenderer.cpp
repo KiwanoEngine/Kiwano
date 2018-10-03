@@ -1,9 +1,29 @@
+// Copyright (c) 2016-2018 Easy2D - Nomango
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 #include "..\e2dimpl.h"
 #include "..\e2dmodule.h"
 
 using namespace e2d;
 
-E2DTextRender::E2DTextRender()
+E2DTextRenderer::E2DTextRenderer()
 	: cRefCount_(0)
 	, pD2DFactory_(nullptr)
 	, pRT_(nullptr)
@@ -16,21 +36,21 @@ E2DTextRender::E2DTextRender()
 {
 }
 
-E2DTextRender::~E2DTextRender()
+E2DTextRenderer::~E2DTextRenderer()
 {
 	SafeRelease(pD2DFactory_);
 	SafeRelease(pRT_);
 	SafeRelease(pBrush_);
 }
 
-HRESULT E2DTextRender::Create(
-	E2DTextRender** ppTextRenderer,
+HRESULT E2DTextRenderer::Create(
+	E2DTextRenderer** ppTextRenderer,
 	ID2D1Factory* pD2DFactory,
 	ID2D1HwndRenderTarget* pRT,
 	ID2D1SolidColorBrush* pBrush
 )
 {
-	*ppTextRenderer = new (std::nothrow) E2DTextRender();
+	*ppTextRenderer = new (std::nothrow) E2DTextRenderer();
 	if (*ppTextRenderer)
 	{
 		pD2DFactory->AddRef();
@@ -46,7 +66,7 @@ HRESULT E2DTextRender::Create(
 	return E_FAIL;
 }
 
-STDMETHODIMP_(void) E2DTextRender::SetTextStyle(
+STDMETHODIMP_(void) E2DTextRenderer::SetTextStyle(
 	CONST D2D1_COLOR_F &fillColor,
 	BOOL outline,
 	CONST D2D1_COLOR_F &outline_color,
@@ -76,7 +96,7 @@ STDMETHODIMP_(void) E2DTextRender::SetTextStyle(
 	}
 }
 
-STDMETHODIMP E2DTextRender::DrawGlyphRun(
+STDMETHODIMP E2DTextRenderer::DrawGlyphRun(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -165,7 +185,7 @@ STDMETHODIMP E2DTextRender::DrawGlyphRun(
 	return hr;
 }
 
-STDMETHODIMP E2DTextRender::DrawUnderline(
+STDMETHODIMP E2DTextRenderer::DrawUnderline(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -232,7 +252,7 @@ STDMETHODIMP E2DTextRender::DrawUnderline(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRender::DrawStrikethrough(
+STDMETHODIMP E2DTextRenderer::DrawStrikethrough(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -299,7 +319,7 @@ STDMETHODIMP E2DTextRender::DrawStrikethrough(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRender::DrawInlineObject(
+STDMETHODIMP E2DTextRenderer::DrawInlineObject(
 	__maybenull void* clientDrawingContext,
 	FLOAT originX,
 	FLOAT originY,
@@ -312,12 +332,12 @@ STDMETHODIMP E2DTextRender::DrawInlineObject(
 	return E_NOTIMPL;
 }
 
-STDMETHODIMP_(unsigned long) E2DTextRender::AddRef()
+STDMETHODIMP_(unsigned long) E2DTextRenderer::AddRef()
 {
 	return InterlockedIncrement(&cRefCount_);
 }
 
-STDMETHODIMP_(unsigned long) E2DTextRender::Release()
+STDMETHODIMP_(unsigned long) E2DTextRenderer::Release()
 {
 	unsigned long newCount = InterlockedDecrement(&cRefCount_);
 
@@ -330,7 +350,7 @@ STDMETHODIMP_(unsigned long) E2DTextRender::Release()
 	return newCount;
 }
 
-STDMETHODIMP E2DTextRender::IsPixelSnappingDisabled(
+STDMETHODIMP E2DTextRenderer::IsPixelSnappingDisabled(
 	__maybenull void* clientDrawingContext,
 	__out BOOL* isDisabled
 )
@@ -339,7 +359,7 @@ STDMETHODIMP E2DTextRender::IsPixelSnappingDisabled(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRender::GetCurrentTransform(
+STDMETHODIMP E2DTextRenderer::GetCurrentTransform(
 	__maybenull void* clientDrawingContext,
 	__out DWRITE_MATRIX* transform
 )
@@ -348,7 +368,7 @@ STDMETHODIMP E2DTextRender::GetCurrentTransform(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRender::GetPixelsPerDip(
+STDMETHODIMP E2DTextRenderer::GetPixelsPerDip(
 	__maybenull void* clientDrawingContext,
 	__out FLOAT* pixelsPerDip
 )
@@ -361,7 +381,7 @@ STDMETHODIMP E2DTextRender::GetPixelsPerDip(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRender::QueryInterface(
+STDMETHODIMP E2DTextRenderer::QueryInterface(
 	IID const& riid,
 	void** ppvObject
 )
