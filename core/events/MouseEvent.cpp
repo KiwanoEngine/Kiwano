@@ -30,29 +30,22 @@ e2d::MouseEvent::MouseEvent(UINT message, WPARAM w_param, LPARAM l_param)
 
 float e2d::MouseEvent::GetX() const
 {
-	HDC hdc = ::GetDC(0);
-	int dpi_x = ::GetDeviceCaps(hdc, LOGPIXELSX);
-	::ReleaseDC(0, hdc);
-	return ((float)(short)LOWORD(l_param_)) * 96.f / dpi_x;
+	float dpi = Graphics::GetDpi();
+	return ((float)(short)LOWORD(l_param_)) * 96.f / dpi;
 }
 
 float e2d::MouseEvent::GetY() const
 {
-	HDC hdc = ::GetDC(0);
-	int dpi_y = ::GetDeviceCaps(hdc, LOGPIXELSY);
-	::ReleaseDC(0, hdc);
-	return ((float)(short)HIWORD(l_param_)) * 96.f / dpi_y;
+	float dpi = Graphics::GetDpi();
+	return ((float)(short)HIWORD(l_param_)) * 96.f / dpi;
 }
 
 e2d::Point e2d::MouseEvent::GetPosition() const
 {
-	HDC hdc = ::GetDC(0);
-	int dpi_x = ::GetDeviceCaps(hdc, LOGPIXELSX);
-	int dpi_y = ::GetDeviceCaps(hdc, LOGPIXELSY);
-	::ReleaseDC(0, hdc);
+	float dpi = Graphics::GetDpi();
 	return Point(
-		((float)(short)LOWORD(l_param_)) * 96.f / dpi_x,
-		((float)(short)HIWORD(l_param_)) * 96.f / dpi_y
+		((float)(short)LOWORD(l_param_)) * 96.f / dpi,
+		((float)(short)HIWORD(l_param_)) * 96.f / dpi
 	);
 }
 

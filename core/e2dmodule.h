@@ -73,6 +73,9 @@ namespace e2d
 		// 获取 Round 样式的 ID2D1StrokeStyle
 		ID2D1StrokeStyle * GetRoundStrokeStyle();
 
+		// 获取 DPI
+		static float GetDpi();
+
 	protected:
 		D2D1_COLOR_F			clear_color_;
 		ID2D1Factory*			factory_;
@@ -297,6 +300,9 @@ namespace e2d
 			int width,
 			int height
 		);
+
+		// 进入下一场景
+		void EnterNextScene();
 
 		// Win32 窗口消息回调程序
 		static LRESULT CALLBACK WndProc(

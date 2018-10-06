@@ -270,6 +270,7 @@ namespace e2d
 	class Node
 		: public Ref
 	{
+		friend class Game;
 		friend class Scene;
 
 	public:
@@ -280,6 +281,12 @@ namespace e2d
 		Node();
 
 		virtual ~Node();
+
+		// 渲染节点
+		virtual void Draw() const {}
+
+		// 更新节点
+		virtual void Update(float dt) {}
 
 		// 获取节点显示状态
 		bool IsVisible() const;
@@ -624,17 +631,19 @@ namespace e2d
 		// 获取所有任务
 		const Tasks& GetAllTasks() const;
 
-		// 渲染节点
-		virtual void Draw() const {}
+	protected:
+		E2D_DISABLE_COPY(Node);
 
-		// 更新节点
-		virtual void Update(float dt) {}
+		// 遍历节点
+		virtual void Visit();
 
 		// 渲染节点边缘
 		void DrawBorder();
 
-		// 更新子节点
-		void UpdateChildren(float dt);
+		// 设置节点所在场景
+		void SetParentScene(
+			Scene * scene
+		);
 
 		// 分发鼠标消息
 		virtual bool Dispatch(
@@ -648,16 +657,8 @@ namespace e2d
 			bool handled
 		);
 
-	protected:
-		E2D_DISABLE_COPY(Node);
-
-		// 遍历节点
-		virtual void Visit();
-
-		// 设置节点所在场景
-		void SetParentScene(
-			Scene * scene
-		);
+		// 更新子节点
+		void UpdateChildren(float dt);
 
 		// 更新转换矩阵
 		void UpdateTransform();

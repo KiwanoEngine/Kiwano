@@ -311,3 +311,11 @@ ID2D1StrokeStyle * e2d::Graphics::GetRoundStrokeStyle()
 	}
 	return round_stroke_style_;
 }
+
+float e2d::Graphics::GetDpi()
+{
+	HDC hdc = ::GetDC(0);
+	int dpi = ::GetDeviceCaps(hdc, LOGPIXELSX);
+	::ReleaseDC(0, hdc);
+	return static_cast<float>(dpi);
+}

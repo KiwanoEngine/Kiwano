@@ -32,6 +32,11 @@
 
 static e2d::Game * instance = nullptr;
 
+e2d::Game * e2d::Game::GetInstance()
+{
+	return instance;
+}
+
 e2d::Game::Game()
 	: hwnd_(nullptr)
 	, quit_(true)
@@ -88,9 +93,9 @@ void e2d::Game::Run(const Options& options)
 	Start();
 
 	// 刷新场景
+	EnterNextScene();
 	::ShowWindow(hwnd_, SW_SHOWNORMAL);
 	::UpdateWindow(hwnd_);
-	UpdateScene(0);
 
 	// 运行
 	const int min_interval = 5;
@@ -211,19 +216,7 @@ void e2d::Game::UpdateScene(float dt)
 		}
 	}
 
-	if (next_scene_)
-	{
-		if (curr_scene_)
-		{
-			curr_scene_->OnExit();
-			curr_scene_->Release();
-		}
-
-		next_scene_->OnEnter();
-
-		curr_scene_ = next_scene_;
-		next_scene_ = nullptr;
-	}
+	EnterNextScene();
 }
 
 void e2d::Game::DrawScene()
@@ -258,11 +251,6 @@ void e2d::Game::DrawScene()
 		graphics->DrawDebugInfo();
 	}
 	graphics->EndDraw();
-}
-
-e2d::Game * e2d::Game::GetInstance()
-{
-	return instance;
 }
 
 void e2d::Game::Init()
@@ -369,11 +357,8 @@ e2d::Rect e2d::Game::Locate(int width, int height)
 	int max_width = ::GetSystemMetrics(SM_CXSCREEN);
 	int max_height = ::GetSystemMetrics(SM_CYSCREEN);
 
-	HDC hdc = ::GetDC(0);
-	int dpi_x = GetDeviceCaps(hdc, LOGPIXELSX);
-	int dpi_y = GetDeviceCaps(hdc, LOGPIXELSY);
-	::ReleaseDC(0, hdc);
-	RECT rect = { 0, 0, LONG(ceil(width * dpi_x / 96.f)), LONG(ceil(height * dpi_y / 96.f)) };
+	float dpi = Graphics::GetDpi();
+	RECT rect = { 0, 0, LONG(ceil(width * dpi / 96.f)), LONG(ceil(height * dpi / 96.f)) };
 
 	// 计算合适的窗口大小
 	::AdjustWindowRectEx(&rect, WINDOW_STYLE, FALSE, NULL);
@@ -392,6 +377,23 @@ e2d::Rect e2d::Game::Locate(int width, int height)
 		static_cast<float>(height)
 	);
 	return std::move(client_rect);
+}
+
+void e2d::Game::EnterNextScene()
+{
+	if (next_scene_)
+	{
+		if (curr_scene_)
+		{
+			curr_scene_->OnExit();
+			curr_scene_->Release();
+		}
+
+		next_scene_->OnEnter();
+
+		curr_scene_ = next_scene_;
+		next_scene_ = nullptr;
+	}
 }
 
 int e2d::Game::GetWidth() const
@@ -556,12 +558,9 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 
 			if (w_param == SIZE_RESTORED)
 			{
-				HDC hdc = ::GetDC(0);
-				int dpi_x = GetDeviceCaps(hdc, LOGPIXELSX);
-				int dpi_y = GetDeviceCaps(hdc, LOGPIXELSY);
-				::ReleaseDC(0, hdc);
-				game->width_ = static_cast<int>(width * 96.f / dpi_x);
-				game->height_ = static_cast<int>(height * 96.f / dpi_y);
+				float dpi = Graphics::GetDpi();
+				game->width_ = static_cast<int>(width * 96.f / dpi);
+				game->height_ = static_cast<int>(height * 96.f / dpi);
 			}
 
 			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
@@ -570,7 +569,7 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 			auto render_target = Device::GetGraphics()->GetRenderTarget();
 			if (render_target)
 			{
-				render_target->Resize(D2D1::SizeU(game->width_, game->height_));
+				render_target->Resize(D2D1::SizeU(width, height));
 			}
 		}
 		break;

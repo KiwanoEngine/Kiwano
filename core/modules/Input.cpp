@@ -147,15 +147,11 @@ float e2d::Input::GetMouseY()
 
 e2d::Point e2d::Input::GetMousePos()
 {
-	HDC hdc = ::GetDC(0);
-	int dpi_x = GetDeviceCaps(hdc, LOGPIXELSX);
-	int dpi_y = GetDeviceCaps(hdc, LOGPIXELSY);
-	::ReleaseDC(0, hdc);
-
 	POINT mousePos;
 	::GetCursorPos(&mousePos);
 	::ScreenToClient(Game::GetInstance()->GetHWnd(), &mousePos);
-	return Point(mousePos.x * 96.f / dpi_x, mousePos.y * 96.f / dpi_y);
+	float dpi = Graphics::GetDpi();
+	return Point(mousePos.x * 96.f / dpi, mousePos.y * 96.f / dpi);
 }
 
 float e2d::Input::GetMouseDeltaX()
