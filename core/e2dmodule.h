@@ -215,6 +215,9 @@ namespace e2d
 		// 开始
 		virtual void Start() = 0;
 
+		// 更新
+		virtual void Update(float dt) {}
+
 		// 运行
 		void Run(
 			const Options& options = Options()
@@ -271,7 +274,9 @@ namespace e2d
 		bool IsTransitioning() const;
 
 		// 更新场景内容
-		void UpdateScene();
+		void UpdateScene(
+			float dt
+		);
 
 		// 渲染场景画面
 		void DrawScene();

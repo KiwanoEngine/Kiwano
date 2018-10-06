@@ -153,7 +153,7 @@ namespace e2d
 		virtual void OnExit() {}
 
 		// 更新场景
-		virtual void Update() {}
+		virtual void Update(float dt) {}
 
 		// 设置根节点
 		void SetRoot(
@@ -270,7 +270,6 @@ namespace e2d
 	class Node
 		: public Ref
 	{
-		friend class Game;
 		friend class Scene;
 
 	public:
@@ -629,10 +628,13 @@ namespace e2d
 		virtual void Draw() const {}
 
 		// 更新节点
-		virtual void Update() {}
+		virtual void Update(float dt) {}
 
 		// 渲染节点边缘
 		void DrawBorder();
+
+		// 更新子节点
+		void UpdateChildren(float dt);
 
 		// 分发鼠标消息
 		virtual bool Dispatch(

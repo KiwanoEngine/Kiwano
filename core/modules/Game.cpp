@@ -89,7 +89,7 @@ void e2d::Game::Run(const Options& options)
 	// 刷新场景
 	::ShowWindow(hwnd_, SW_SHOWNORMAL);
 	::UpdateWindow(hwnd_);
-	UpdateScene();
+	UpdateScene(0);
 
 	// 运行
 	const int min_interval = 5;
@@ -103,10 +103,12 @@ void e2d::Game::Run(const Options& options)
 
 		if (dur.Milliseconds() > min_interval)
 		{
+			float dt = (now - last).Seconds();
 			last = now;
-			Device::GetInput()->Flush();
 
-			UpdateScene();
+			Device::GetInput()->Flush();
+			Update(dt);
+			UpdateScene(dt);
 			DrawScene();
 
 			while (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -179,8 +181,20 @@ bool e2d::Game::IsTransitioning() const
 	return transition_ != nullptr;
 }
 
-void e2d::Game::UpdateScene()
+void e2d::Game::UpdateScene(float dt)
 {
+	if (curr_scene_)
+	{
+		curr_scene_->Update(dt);
+		curr_scene_->GetRoot()->UpdateChildren(dt);
+	}
+
+	if (next_scene_)
+	{
+		next_scene_->Update(dt);
+		next_scene_->GetRoot()->UpdateChildren(dt);
+	}
+
 	if (transition_)
 	{
 		transition_->Update();
@@ -208,16 +222,6 @@ void e2d::Game::UpdateScene()
 
 		curr_scene_ = next_scene_;
 		next_scene_ = nullptr;
-	}
-
-	if (curr_scene_)
-	{
-		curr_scene_->Update();
-	}
-
-	if (next_scene_)
-	{
-		next_scene_->Update();
 	}
 }
 
@@ -490,7 +494,7 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 	}
 	else
 	{
-		bool has_handled = false;
+		bool was_handled = false;
 		Game * game = reinterpret_cast<Game*>(
 			static_cast<LONG_PTR>(
 				::GetWindowLongPtrW(hwnd, GWLP_USERDATA)
@@ -523,7 +527,7 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 			}
 		}
 		result = 0;
-		has_handled = true;
+		was_handled = true;
 		break;
 
 		// 处理按键消息
@@ -540,7 +544,7 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 			}
 		}
 		result = 0;
-		has_handled = true;
+		was_handled = true;
 		break;
 
 		// 处理窗口大小变化消息
@@ -584,7 +588,7 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 			::InvalidateRect(hwnd, nullptr, FALSE);
 		}
 		result = 0;
-		has_handled = true;
+		was_handled = true;
 		break;
 
 		// 重绘窗口
@@ -594,7 +598,7 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 			::ValidateRect(hwnd, nullptr);
 		}
 		result = 0;
-		has_handled = true;
+		was_handled = true;
 		break;
 
 		// 窗口关闭消息
@@ -606,7 +610,7 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 			}
 		}
 		result = 0;
-		has_handled = true;
+		was_handled = true;
 		break;
 
 		// 窗口销毁消息
@@ -615,12 +619,12 @@ LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 			::PostQuitMessage(0);
 		}
 		result = 1;
-		has_handled = true;
+		was_handled = true;
 		break;
 
 		}
 
-		if (!has_handled)
+		if (!was_handled)
 		{
 			result = ::DefWindowProc(hwnd, msg, w_param, l_param);
 		}

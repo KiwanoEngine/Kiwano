@@ -71,11 +71,6 @@ void e2d::Node::Visit()
 	if (!visible_)
 		return;
 
-	Update();
-	UpdateActions();
-	UpdateTasks();
-	UpdateTransform();
-
 	auto render_target = Device::GetGraphics()->GetRenderTarget();
 	if (clip_enabled_)
 	{
@@ -131,6 +126,43 @@ void e2d::Node::Visit()
 	if (clip_enabled_)
 	{
 		render_target->PopAxisAlignedClip();
+	}
+}
+
+void e2d::Node::UpdateChildren(float dt)
+{
+	if (children_.empty())
+	{
+		Update(dt);
+		UpdateActions();
+		UpdateTasks();
+		UpdateTransform();
+	}
+	else
+	{
+		size_t i;
+		for (i = 0; i < children_.size(); ++i)
+		{
+			auto child = children_[i];
+			// 访问 Order 小于零的节点
+			if (child->GetOrder() < 0)
+			{
+				child->UpdateChildren(dt);
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		Update(dt);
+		UpdateActions();
+		UpdateTasks();
+		UpdateTransform();
+
+		// 访问剩余节点
+		for (; i < children_.size(); ++i)
+			children_[i]->UpdateChildren(dt);
 	}
 }
 
