@@ -162,6 +162,9 @@
     <ClCompile Include="..\..\core\tools\Path.cpp">
       <Filter>tools</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\tools\Player.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\core\tools\Random.cpp">
       <Filter>tools</Filter>
     </ClCompile>

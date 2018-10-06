@@ -65,7 +65,7 @@ void e2d::Animate::Init()
 	auto target = dynamic_cast<Sprite*>(target_);
 	if (target && animation_)
 	{
-		target->Open(animation_->GetFrames()[frame_index_]);
+		target->Load(animation_->GetFrames()[frame_index_]);
 		++frame_index_;
 	}
 }
@@ -87,7 +87,7 @@ void e2d::Animate::Update()
 
 		if (target)
 		{
-			target->Open(frames[frame_index_]);
+			target->Load(frames[frame_index_]);
 		}
 
 		started_ += Duration(animation_->GetInterval());

@@ -29,32 +29,32 @@ e2d::Sprite::Sprite()
 e2d::Sprite::Sprite(Image * image)
 	: image_(nullptr)
 {
-	Open(image);
+	Load(image);
 }
 
 e2d::Sprite::Sprite(const Resource& res)
 	: image_(nullptr)
 {
-	Open(res);
+	Load(res);
 }
 
 e2d::Sprite::Sprite(const Resource& res, const Rect& crop_rect)
 	: image_(nullptr)
 {
-	Open(res);
+	Load(res);
 	Crop(crop_rect);
 }
 
 e2d::Sprite::Sprite(const String & file_name)
 	: image_(nullptr)
 {
-	Open(file_name);
+	Load(file_name);
 }
 
 e2d::Sprite::Sprite(const String & file_name, const Rect & crop_rect)
 	: image_(nullptr)
 {
-	Open(file_name);
+	Load(file_name);
 	Crop(crop_rect);
 }
 
@@ -63,7 +63,7 @@ e2d::Sprite::~Sprite()
 	SafeRelease(image_);
 }
 
-bool e2d::Sprite::Open(Image * image)
+bool e2d::Sprite::Load(Image * image)
 {
 	if (image)
 	{
@@ -81,7 +81,7 @@ bool e2d::Sprite::Open(Image * image)
 	return false;
 }
 
-bool e2d::Sprite::Open(const Resource& res)
+bool e2d::Sprite::Load(const Resource& res)
 {
 	if (!image_)
 	{
@@ -89,7 +89,7 @@ bool e2d::Sprite::Open(const Resource& res)
 		image_->Retain();
 	}
 
-	if (image_->Open(res))
+	if (image_->Load(res))
 	{
 		Node::SetSize(image_->GetWidth(), image_->GetHeight());
 		return true;
@@ -97,7 +97,7 @@ bool e2d::Sprite::Open(const Resource& res)
 	return false;
 }
 
-bool e2d::Sprite::Open(const String & file_name)
+bool e2d::Sprite::Load(const String & file_name)
 {
 	if (!image_)
 	{
@@ -105,7 +105,7 @@ bool e2d::Sprite::Open(const String & file_name)
 		image_->Retain();
 	}
 
-	if (image_->Open(file_name))
+	if (image_->Load(file_name))
 	{
 		Node::SetSize(image_->GetWidth(), image_->GetHeight());
 		return true;

@@ -60,6 +60,7 @@ e2d::Game::~Game()
 	SafeRelease(next_scene_);
 
 	Image::ClearCache();
+	Player::ClearCache();
 	Device::Destroy();
 
 	if (hwnd_)

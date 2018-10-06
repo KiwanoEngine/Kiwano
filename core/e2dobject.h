@@ -55,12 +55,12 @@ namespace e2d
 		virtual ~Image();
 
 		// 加载图片资源
-		bool Open(
+		bool Load(
 			const Resource& res
 		);
 
 		// 加载图片资源
-		bool Open(
+		bool Load(
 			const String& file_name
 		);
 
@@ -108,13 +108,13 @@ namespace e2d
 	protected:
 		E2D_DISABLE_COPY(Image);
 
-		// 加载图片资源
-		bool Load(
+		// 缓存 Bitmap 资源
+		static bool CacheBitmap(
 			const String& file_name
 		);
 
-		// 加载图片资源
-		bool Load(
+		// 缓存 Bitmap 资源
+		static bool CacheBitmap(
 			const Resource& res
 		);
 
@@ -729,17 +729,17 @@ namespace e2d
 		virtual ~Sprite();
 
 		// 加载图片文件
-		bool Open(
+		bool Load(
 			const Resource& res
 		);
 
 		// 加载图片文件
-		bool Open(
+		bool Load(
 			const String& file_name
 		);
 
 		// 加载图片
-		bool Open(
+		bool Load(
 			Image * image
 		);
 

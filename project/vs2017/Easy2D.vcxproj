@@ -239,6 +239,7 @@
     <ClCompile Include="..\..\core\tools\File.cpp" />
     <ClCompile Include="..\..\core\tools\Music.cpp" />
     <ClCompile Include="..\..\core\tools\Path.cpp" />
+    <ClCompile Include="..\..\core\tools\Player.cpp" />
     <ClCompile Include="..\..\core\tools\Random.cpp" />
     <ClCompile Include="..\..\core\transitions\BoxTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\EmergeTransition.cpp" />

@@ -86,12 +86,12 @@ namespace e2d
 		virtual ~Music();
 
 		// 打开音乐文件
-		bool Open(
+		bool Load(
 			const e2d::String& file_path	/* 音乐文件路径 */
 		);
 
 		// 打开音乐资源
-		bool Open(
+		bool Load(
 			const Resource& res
 		);
 
@@ -134,6 +134,8 @@ namespace e2d
 		IXAudio2SourceVoice * GetSourceVoice() const;
 
 	protected:
+		E2D_DISABLE_COPY(Music);
+
 		bool ReadMMIO();
 
 		bool ResetFile();
@@ -160,6 +162,106 @@ namespace e2d
 		WAVEFORMATEX*			wfx_;
 		VoiceCallback			callback_;
 		IXAudio2SourceVoice*	voice_;
+	};
+
+
+	// 音乐播放器
+	class Player
+	{
+	public:
+		Player();
+
+		~Player();
+
+		// 预加载音乐资源
+		bool Load(
+			const String& file_path	/* 音乐文件路径 */
+		);
+
+		// 播放音乐
+		bool Play(
+			const String& file_path,	/* 音乐文件路径 */
+			int loop_count = 0		/* 重复播放次数，设置 -1 为循环播放 */
+		);
+
+		// 暂停音乐
+		void Pause(
+			const String& file_path	/* 音乐文件路径 */
+		);
+
+		// 继续播放音乐
+		void Resume(
+			const String& file_path	/* 音乐文件路径 */
+		);
+
+		// 停止音乐
+		void Stop(
+			const String& file_path	/* 音乐文件路径 */
+		);
+
+		// 获取音乐播放状态
+		bool IsPlaying(
+			const String& file_path	/* 音乐文件路径 */
+		);
+
+		// 预加载音乐资源
+		bool Load(
+			const Resource& res		/* 音乐资源 */
+		);
+
+		// 播放音乐
+		bool Play(
+			const Resource& res,	/* 音乐资源 */
+			int loop_count = 0		/* 重复播放次数，设置 -1 为循环播放 */
+		);
+
+		// 暂停音乐
+		void Pause(
+			const Resource& res		/* 音乐资源 */
+		);
+
+		// 继续播放音乐
+		void Resume(
+			const Resource& res		/* 音乐资源 */
+		);
+
+		// 停止音乐
+		void Stop(
+			const Resource& res		/* 音乐资源 */
+		);
+
+		// 获取音乐播放状态
+		bool IsPlaying(
+			const Resource& res		/* 音乐资源 */
+		);
+
+		// 获取音量
+		float GetVolume();
+
+		// 设置音量
+		void SetVolume(
+			float volume	/* 音量范围为 -224 ~ 224，0 是静音，1 是正常音量 */
+		);
+
+		// 暂停所有音乐
+		void PauseAll();
+
+		// 继续播放所有音乐
+		void ResumeAll();
+
+		// 停止所有音乐
+		void StopAll();
+
+		// 清除缓存
+		static void ClearCache();
+
+	protected:
+		E2D_DISABLE_COPY(Player);
+
+	protected:
+		float volume_;
+
+		static std::map<size_t, Music*> musics_;
 	};
 
 

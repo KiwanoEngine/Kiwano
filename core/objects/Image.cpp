@@ -34,14 +34,14 @@ e2d::Image::Image(const Resource& res)
 	: bitmap_(nullptr)
 	, crop_rect_()
 {
-	this->Open(res);
+	this->Load(res);
 }
 
 e2d::Image::Image(const Resource& res, const Rect& crop_rect)
 	: bitmap_(nullptr)
 	, crop_rect_()
 {
-	this->Open(res);
+	this->Load(res);
 	this->Crop(crop_rect);
 }
 
@@ -49,14 +49,14 @@ e2d::Image::Image(const String & file_name)
 	: bitmap_(nullptr)
 	, crop_rect_()
 {
-	this->Open(file_name);
+	this->Load(file_name);
 }
 
 e2d::Image::Image(const String & file_name, const Rect & crop_rect)
 	: bitmap_(nullptr)
 	, crop_rect_()
 {
-	this->Open(file_name);
+	this->Load(file_name);
 	this->Crop(crop_rect);
 }
 
@@ -65,9 +65,9 @@ e2d::Image::~Image()
 	SafeRelease(bitmap_);
 }
 
-bool e2d::Image::Open(const Resource& res)
+bool e2d::Image::Load(const Resource& res)
 {
-	if (!Image::Load(res))
+	if (!Image::CacheBitmap(res))
 	{
 		WARN("Load Image from file failed!");
 		return false;
@@ -77,14 +77,14 @@ bool e2d::Image::Open(const Resource& res)
 	return true;
 }
 
-bool e2d::Image::Open(const String & file_name)
+bool e2d::Image::Load(const String & file_name)
 {
-	WARN_IF(file_name.IsEmpty(), "Image Open failed! Invalid file name.");
+	WARN_IF(file_name.IsEmpty(), "Image Load failed! Invalid file name.");
 
 	if (file_name.IsEmpty())
 		return false;
 
-	if (!Image::Load(file_name))
+	if (!Image::CacheBitmap(file_name))
 	{
 		WARN("Load Image from file failed!");
 		return false;
@@ -182,7 +182,7 @@ ID2D1Bitmap * e2d::Image::GetBitmap() const
 	return bitmap_;
 }
 
-bool e2d::Image::Load(const Resource& res)
+bool e2d::Image::CacheBitmap(const Resource& res)
 {
 	if (bitmap_cache_.find(res.id) != bitmap_cache_.end())
 	{
@@ -308,7 +308,7 @@ bool e2d::Image::Load(const Resource& res)
 	return SUCCEEDED(hr);
 }
 
-bool e2d::Image::Load(const String & file_name)
+bool e2d::Image::CacheBitmap(const String & file_name)
 {
 	size_t hash = file_name.GetHash();
 	if (bitmap_cache_.find(hash) != bitmap_cache_.end())
@@ -322,8 +322,9 @@ bool e2d::Image::Load(const String & file_name)
 	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
 	String image_file_path = image_file.GetPath();
 
-	IWICImagingFactory *imaging_factory = Device::GetGraphics()->GetImagingFactory();
-	ID2D1HwndRenderTarget* render_target = Device::GetGraphics()->GetRenderTarget();
+	Graphics * graphics_device = Device::GetGraphics();
+	IWICImagingFactory *imaging_factory = graphics_device->GetImagingFactory();
+	ID2D1HwndRenderTarget* render_target = graphics_device->GetRenderTarget();
 	IWICBitmapDecoder *decoder = nullptr;
 	IWICBitmapFrameDecode *source = nullptr;
 	IWICStream *stream = nullptr;

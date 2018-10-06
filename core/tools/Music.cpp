@@ -65,7 +65,7 @@ e2d::Music::Music(const e2d::String & file_path)
 	, voice_(nullptr)
 	, callback_()
 {
-	this->Open(file_path);
+	this->Load(file_path);
 }
 
 e2d::Music::Music(const Resource& res)
@@ -78,7 +78,7 @@ e2d::Music::Music(const Resource& res)
 	, voice_(nullptr)
 	, callback_()
 {
-	this->Open(res);
+	this->Load(res);
 }
 
 e2d::Music::~Music()
@@ -86,7 +86,7 @@ e2d::Music::~Music()
 	Close();
 }
 
-bool e2d::Music::Open(const e2d::String & file_path)
+bool e2d::Music::Load(const e2d::String & file_path)
 {
 	if (opened_)
 	{
@@ -95,14 +95,14 @@ bool e2d::Music::Open(const e2d::String & file_path)
 
 	if (file_path.IsEmpty())
 	{
-		WARN("Music::Open error: Invalid file name.");
+		WARN("Music::Load error: Invalid file name.");
 		return false;
 	}
 
 	File music_file;
 	if (!music_file.Open(file_path))
 	{
-		WARN("Music::Open error: File not found.");
+		WARN("Music::Load error: File not found.");
 		return false;
 	}
 
@@ -160,7 +160,7 @@ bool e2d::Music::Open(const e2d::String & file_path)
 	return true;
 }
 
-bool e2d::Music::Open(const Resource& res)
+bool e2d::Music::Load(const Resource& res)
 {
 	if (opened_)
 	{
