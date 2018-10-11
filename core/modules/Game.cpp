@@ -93,7 +93,12 @@ void e2d::Game::Run(const Options& options)
 	Start();
 
 	// 刷新场景
-	EnterNextScene();
+	if (next_scene_)
+	{
+		next_scene_->OnEnter();
+		curr_scene_ = next_scene_;
+		next_scene_ = nullptr;
+	}
 	::ShowWindow(hwnd_, SW_SHOWNORMAL);
 	::UpdateWindow(hwnd_);
 
@@ -189,17 +194,21 @@ bool e2d::Game::IsTransitioning() const
 
 void e2d::Game::UpdateScene(float dt)
 {
-	if (curr_scene_)
+	auto update = [&](Scene * scene) -> void
 	{
-		curr_scene_->Update(dt);
-		curr_scene_->GetRoot()->UpdateChildren(dt);
-	}
+		if (scene)
+		{
+			scene->Update(dt);
+			Node * root = scene->GetRoot();
+			if (root)
+			{
+				root->UpdateChildren(dt);
+			}
+		}
+	};
 
-	if (next_scene_)
-	{
-		next_scene_->Update(dt);
-		next_scene_->GetRoot()->UpdateChildren(dt);
-	}
+	update(curr_scene_);
+	update(next_scene_);
 
 	if (transition_)
 	{
@@ -216,7 +225,19 @@ void e2d::Game::UpdateScene(float dt)
 		}
 	}
 
-	EnterNextScene();
+	if (next_scene_)
+	{
+		if (curr_scene_)
+		{
+			curr_scene_->OnExit();
+			curr_scene_->Release();
+		}
+
+		next_scene_->OnEnter();
+
+		curr_scene_ = next_scene_;
+		next_scene_ = nullptr;
+	}
 }
 
 void e2d::Game::DrawScene()
@@ -281,7 +302,7 @@ void e2d::Game::Init()
 	}
 
 	// 注册窗口类
-	RegisterClassEx(&wcex);
+	::RegisterClassEx(&wcex);
 
 	// 计算窗口大小
 	Rect client_rect = Locate(width_, height_);
@@ -308,6 +329,12 @@ void e2d::Game::Init()
 		throw RuntimeException("Create window failed");
 		return;
 	}
+
+	::SetWindowLongPtrW(
+		hwnd_,
+		GWLP_USERDATA,
+		PtrToUlong(this)
+	);
 
 	// 初始化设备
 	Device::Init(hwnd_);
@@ -377,23 +404,6 @@ e2d::Rect e2d::Game::Locate(int width, int height)
 		static_cast<float>(height)
 	);
 	return std::move(client_rect);
-}
-
-void e2d::Game::EnterNextScene()
-{
-	if (next_scene_)
-	{
-		if (curr_scene_)
-		{
-			curr_scene_->OnExit();
-			curr_scene_->Release();
-		}
-
-		next_scene_->OnEnter();
-
-		curr_scene_ = next_scene_;
-		next_scene_ = nullptr;
-	}
 }
 
 int e2d::Game::GetWidth() const
@@ -481,153 +491,134 @@ void e2d::Game::SetIcon(int resource_id)
 LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 {
 	LRESULT result = 0;
+	bool was_handled = false;
+	Game * game = reinterpret_cast<Game*>(
+		static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA))
+	);
 
-	if (msg == WM_CREATE)
+	switch (msg)
 	{
-		LPCREATESTRUCT pcs = (LPCREATESTRUCT)l_param;
-		Game * game = (Game *)pcs->lpCreateParams;
 
-		::SetWindowLongPtrW(
-			hwnd,
-			GWLP_USERDATA,
-			PtrToUlong(game)
-		);
+	// 处理鼠标消息
+	case WM_LBUTTONUP:
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONDBLCLK:
+	case WM_MBUTTONUP:
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONDBLCLK:
+	case WM_RBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONDBLCLK:
+	case WM_MOUSEMOVE:
+	case WM_MOUSEWHEEL:
+	{
+		if (game->IsTransitioning())
+			break;
 
-		result = 1;
+		auto curr_scene = game->GetCurrentScene();
+		if (curr_scene)
+		{
+			curr_scene->Dispatch(MouseEvent(msg, w_param, l_param));
+		}
 	}
-	else
+	result = 0;
+	was_handled = true;
+	break;
+
+	// 处理按键消息
+	case WM_KEYDOWN:
+	case WM_KEYUP:
 	{
-		bool was_handled = false;
-		Game * game = reinterpret_cast<Game*>(
-			static_cast<LONG_PTR>(
-				::GetWindowLongPtrW(hwnd, GWLP_USERDATA)
-				)
-			);
+		if (game->IsTransitioning())
+			break;
 
-		switch (msg)
+		auto curr_scene = game->GetCurrentScene();
+		if (curr_scene)
 		{
-
-			// 处理鼠标消息
-		case WM_LBUTTONUP:
-		case WM_LBUTTONDOWN:
-		case WM_LBUTTONDBLCLK:
-		case WM_MBUTTONUP:
-		case WM_MBUTTONDOWN:
-		case WM_MBUTTONDBLCLK:
-		case WM_RBUTTONUP:
-		case WM_RBUTTONDOWN:
-		case WM_RBUTTONDBLCLK:
-		case WM_MOUSEMOVE:
-		case WM_MOUSEWHEEL:
-		{
-			if (game->IsTransitioning())
-				break;
-
-			auto curr_scene = game->GetCurrentScene();
-			if (curr_scene)
-			{
-				curr_scene->Dispatch(MouseEvent(msg, w_param, l_param));
-			}
+			curr_scene->Dispatch(KeyEvent(msg, w_param, l_param));
 		}
-		result = 0;
-		was_handled = true;
-		break;
+	}
+	result = 0;
+	was_handled = true;
+	break;
 
-		// 处理按键消息
-		case WM_KEYDOWN:
-		case WM_KEYUP:
+	// 处理窗口大小变化消息
+	case WM_SIZE:
+	{
+		UINT width = LOWORD(l_param);
+		UINT height = HIWORD(l_param);
+
+		if (w_param == SIZE_RESTORED)
 		{
-			if (game->IsTransitioning())
-				break;
-
-			auto curr_scene = game->GetCurrentScene();
-			if (curr_scene)
-			{
-				curr_scene->Dispatch(KeyEvent(msg, w_param, l_param));
-			}
-		}
-		result = 0;
-		was_handled = true;
-		break;
-
-		// 处理窗口大小变化消息
-		case WM_SIZE:
-		{
-			UINT width = LOWORD(l_param);
-			UINT height = HIWORD(l_param);
-
-			if (w_param == SIZE_RESTORED)
-			{
-				float dpi = Graphics::GetDpi();
-				game->width_ = static_cast<int>(width * 96.f / dpi);
-				game->height_ = static_cast<int>(height * 96.f / dpi);
-			}
-
-			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
-			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
-			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-			auto render_target = Device::GetGraphics()->GetRenderTarget();
-			if (render_target)
-			{
-				render_target->Resize(D2D1::SizeU(width, height));
-			}
-		}
-		break;
-
-		// 处理窗口标题变化消息
-		case WM_SETTEXT:
-		{
-			game->title_ = (const wchar_t*)l_param;
-		}
-		break;
-
-		// 处理分辨率变化消息
-		case WM_DISPLAYCHANGE:
-		{
-			// 重绘客户区
-			::InvalidateRect(hwnd, nullptr, FALSE);
-		}
-		result = 0;
-		was_handled = true;
-		break;
-
-		// 重绘窗口
-		case WM_PAINT:
-		{
-			game->DrawScene();
-			::ValidateRect(hwnd, nullptr);
-		}
-		result = 0;
-		was_handled = true;
-		break;
-
-		// 窗口关闭消息
-		case WM_CLOSE:
-		{
-			if (game->OnExit())
-			{
-				game->Quit();
-			}
-		}
-		result = 0;
-		was_handled = true;
-		break;
-
-		// 窗口销毁消息
-		case WM_DESTROY:
-		{
-			::PostQuitMessage(0);
-		}
-		result = 1;
-		was_handled = true;
-		break;
-
+			float dpi = Graphics::GetDpi();
+			game->width_ = static_cast<int>(width * 96.f / dpi);
+			game->height_ = static_cast<int>(height * 96.f / dpi);
 		}
 
-		if (!was_handled)
+		// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
+		// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
+		// 错误，因为这个错误将在下一次调用 EndDraw 时产生
+		auto render_target = Device::GetGraphics()->GetRenderTarget();
+		if (render_target)
 		{
-			result = ::DefWindowProc(hwnd, msg, w_param, l_param);
+			render_target->Resize(D2D1::SizeU(width, height));
 		}
+	}
+	break;
+
+	// 处理窗口标题变化消息
+	case WM_SETTEXT:
+	{
+		game->title_ = (const wchar_t*)l_param;
+	}
+	break;
+
+	// 处理分辨率变化消息
+	case WM_DISPLAYCHANGE:
+	{
+		// 重绘客户区
+		::InvalidateRect(hwnd, nullptr, FALSE);
+	}
+	result = 0;
+	was_handled = true;
+	break;
+
+	// 重绘窗口
+	case WM_PAINT:
+	{
+		game->DrawScene();
+		::ValidateRect(hwnd, nullptr);
+	}
+	result = 0;
+	was_handled = true;
+	break;
+
+	// 窗口关闭消息
+	case WM_CLOSE:
+	{
+		if (game->OnExit())
+		{
+			game->Quit();
+		}
+	}
+	result = 0;
+	was_handled = true;
+	break;
+
+	// 窗口销毁消息
+	case WM_DESTROY:
+	{
+		::PostQuitMessage(0);
+	}
+	result = 1;
+	was_handled = true;
+	break;
+
+	}
+
+	if (!was_handled)
+	{
+		result = ::DefWindowProc(hwnd, msg, w_param, l_param);
 	}
 	return result;
 }

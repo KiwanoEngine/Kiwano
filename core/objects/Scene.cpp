@@ -78,6 +78,12 @@ void e2d::Scene::Draw()
 
 void e2d::Scene::Dispatch(const MouseEvent & e)
 {
+	auto handler = dynamic_cast<MouseEventHandler*>(this);
+	if (handler)
+	{
+		handler->Handle(e);
+	}
+
 	if (root_)
 	{
 		root_->Dispatch(e, false);
@@ -86,6 +92,12 @@ void e2d::Scene::Dispatch(const MouseEvent & e)
 
 void e2d::Scene::Dispatch(const KeyEvent & e)
 {
+	auto handler = dynamic_cast<KeyEventHandler*>(this);
+	if (handler)
+	{
+		handler->Handle(e);
+	}
+
 	if (root_)
 	{
 		root_->Dispatch(e, false);

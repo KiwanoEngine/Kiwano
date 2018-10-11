@@ -149,22 +149,30 @@ namespace e2d
 
 		~Audio();
 
-		// 开启设备
-		void Open();
+		// 获取音量
+		float GetVolume();
 
-		// 关闭设备
-		void Close();
+		// 设置音量
+		void SetVolume(
+			float volume
+		);
 
-		// 创建音源
-		HRESULT CreateVoice(
-			IXAudio2SourceVoice ** voice,
-			WAVEFORMATEX * wfx,
-			VoiceCallback * callback
+		// 是否静音
+		bool GetMute();
+
+		// 设置静音
+		void SetMute(
+			bool mute
 		);
 
 	protected:
-		IXAudio2 * x_audio2_;
-		IXAudio2MasteringVoice*	mastering_voice_;
+		LPWSTR					device_id;		// Device ID.
+		IMMDeviceEnumerator		*enum_;			// Audio device enumerator.
+		IMMDeviceCollection		*devices_;		// Audio device collection.
+		IMMDevice				*device_;		// An audio device.
+		IMFAttributes			*attributes_;	// Attribute store.
+		IMFMediaSink			*sink_;			// Streaming audio renderer (SAR)
+		IMFSimpleAudioVolume	*audio_volume;
 	};
 
 
@@ -300,9 +308,6 @@ namespace e2d
 			int width,
 			int height
 		);
-
-		// 进入下一场景
-		void EnterNextScene();
 
 		// Win32 窗口消息回调程序
 		static LRESULT CALLBACK WndProc(

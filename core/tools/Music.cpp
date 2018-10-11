@@ -19,64 +19,90 @@
 // THE SOFTWARE.
 
 #include "..\e2dtool.h"
-#include "..\e2dmodule.h"
+#include <cguid.h>
+
+#define MF_CLASS_NAME		L"MediaFoundationCallbackWnd"
+#define WM_APP_PLAYER_EVENT	(WM_APP + 1)
 
 
-#ifndef SAFE_DELETE
-#define SAFE_DELETE(p)			{ if (p) { delete (p); (p)=nullptr; } }
-#endif
-
-#ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p)	{ if (p) { delete[] (p); (p)=nullptr; } }
-#endif
-
-inline bool TraceError(wchar_t* prompt)
+namespace
 {
-	WARN("Music error: %s failed!", prompt);
-	return false;
-}
+	HINSTANCE media_instance = nullptr;
 
-inline bool TraceError(wchar_t* prompt, HRESULT hr)
-{
-	WARN("Music error: %s (%#X)", prompt, hr);
-	return false;
+	inline void Trace(wchar_t* msg)
+	{
+		WARN("Trace error: %s.", msg);
+	}
+
+	inline void Trace(wchar_t* msg, HRESULT hr)
+	{
+		WARN("Trace error: %s (%#X).", msg, hr);
+	}
 }
 
 
 e2d::Music::Music()
-	: opened_(false)
-	, wfx_(nullptr)
-	, hmmio_(nullptr)
-	, buffer_(nullptr)
-	, wave_data_(nullptr)
-	, size_(0)
-	, voice_(nullptr)
-	, callback_()
+	: m_pSession(nullptr)
+	, m_pSource(nullptr)
+	, m_hwndEvent(nullptr)
+	, m_state(State::Closed)
+	, m_hCloseEvent(nullptr)
+	, m_nTimes(0)
 {
+	if (!media_instance)
+	{
+		media_instance = ::GetModuleHandle(NULL);
+
+		WNDCLASS wc;
+		wc.style = 0;
+		wc.lpfnWndProc = Music::MediaProc;
+		wc.cbClsExtra = 0;
+		wc.cbWndExtra = 0;
+		wc.hInstance = media_instance;
+		wc.hIcon = 0;
+		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = NULL;
+		wc.lpszMenuName = NULL;
+		wc.lpszClassName = MF_CLASS_NAME;
+
+		if (!::RegisterClass(&wc))
+		{
+			return;
+		}
+	}
+
+	m_hwndEvent = ::CreateWindowExW(
+		WS_EX_APPWINDOW,
+		MF_CLASS_NAME,
+		NULL,
+		WS_POPUPWINDOW,
+		0, 0, 0, 0,
+		NULL,
+		NULL,
+		media_instance,
+		NULL
+	);
+
+	if (m_hwndEvent)
+	{
+		::SetWindowLongW(m_hwndEvent, GWLP_USERDATA, (LONG_PTR)this);
+	}
+
+	m_hCloseEvent = ::CreateEventW(NULL, FALSE, FALSE, NULL);
+	if (m_hCloseEvent == NULL)
+	{
+		ThrowIfFailed(
+			HRESULT_FROM_WIN32(GetLastError())
+		);
+	}
 }
 
 e2d::Music::Music(const e2d::String & file_path)
-	: opened_(false)
-	, wfx_(nullptr)
-	, hmmio_(nullptr)
-	, buffer_(nullptr)
-	, wave_data_(nullptr)
-	, size_(0)
-	, voice_(nullptr)
-	, callback_()
 {
 	this->Load(file_path);
 }
 
 e2d::Music::Music(const Resource& res)
-	: opened_(false)
-	, wfx_(nullptr)
-	, hmmio_(nullptr)
-	, buffer_(nullptr)
-	, wave_data_(nullptr)
-	, size_(0)
-	, voice_(nullptr)
-	, callback_()
 {
 	this->Load(res);
 }
@@ -84,482 +110,793 @@ e2d::Music::Music(const Resource& res)
 e2d::Music::~Music()
 {
 	Close();
+
+	if (m_hCloseEvent)
+	{
+		::CloseHandle(m_hCloseEvent);
+		m_hCloseEvent = NULL;
+	}
+
+	DestroyWindow(m_hwndEvent);
 }
 
 bool e2d::Music::Load(const e2d::String & file_path)
 {
-	if (opened_)
-	{
-		Close();
-	}
+	// 1. Create a new media session.
+	// 2. Create the media source.
+	// 3. Create the topology.
+	// 4. Queue the topology [asynchronous]
+	// 5. Start playback [asynchronous - does not happen in this method.]
 
-	if (file_path.IsEmpty())
-	{
-		WARN("Music::Load error: Invalid file name.");
-		return false;
-	}
+	IMFTopology *pTopology = NULL;
+	IMFPresentationDescriptor* pSourcePD = NULL;
 
-	File music_file;
-	if (!music_file.Open(file_path))
-	{
-		WARN("Music::Load error: File not found.");
-		return false;
-	}
+	// Close the old session, if any.
+	Close();
 
-	// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
-	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-	String music_file_path = music_file.GetPath();
-
-	// 定位 wave 文件
-	wchar_t pFilePath[MAX_PATH];
-	if (!FindMediaFileCch(pFilePath, MAX_PATH, (const wchar_t *)music_file_path))
-	{
-		WARN("Failed to Find media file: %s", pFilePath);
-		return false;
-	}
-
-	hmmio_ = mmioOpen(pFilePath, nullptr, MMIO_ALLOCBUF | MMIO_READ);
-
-	if (nullptr == hmmio_)
-	{
-		return TraceError(L"mmioOpen");
-	}
-
-	if (!ReadMMIO())
-	{
-		// 读取非 wave 文件时 ReadMMIO 调用失败
-		mmioClose(hmmio_, 0);
-		return TraceError(L"ReadMMIO");
-	}
-
-	if (!ResetFile())
-		return TraceError(L"ResetFile");
-
-	// 重置文件后，wave 文件的大小是 ck_.cksize
-	size_ = ck_.cksize;
-
-	// 将样本数据读取到内存中
-	wave_data_ = new BYTE[size_];
-
-	if (!Read(wave_data_, size_))
-	{
-		TraceError(L"Failed to read WAV data");
-		SAFE_DELETE_ARRAY(wave_data_);
-		return false;
-	}
-
-	HRESULT hr = Device::GetAudio()->CreateVoice(&voice_, wfx_, &callback_);
+	// Create the media session.
+	HRESULT hr = MFCreateMediaSession(NULL, &m_pSession);
 	if (FAILED(hr))
 	{
-		TraceError(L"Create source voice error", hr);
-		SAFE_DELETE_ARRAY(wave_data_);
-		return false;
+		goto done;
 	}
 
-	opened_ = true;
-	return true;
+	// Start pulling events from the media session
+	hr = m_pSession->BeginGetEvent((IMFAsyncCallback*)this, NULL);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Create the media source.
+	hr = CreateMediaSource(static_cast<WCHAR*>(file_path), &m_pSource);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Create the presentation descriptor for the media source.
+	hr = m_pSource->CreatePresentationDescriptor(&pSourcePD);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Create a partial topology.
+	hr = CreatePlaybackTopology(m_pSource, pSourcePD, &pTopology);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Set the topology on the media session.
+	hr = m_pSession->SetTopology(0, pTopology);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	m_state = State::Loaded;
+
+	// If SetTopology succeeds, the media session will queue an 
+	// MESessionTopologySet event.
+
+done:
+	if (FAILED(hr))
+	{
+		m_state = State::Closed;
+	}
+
+	SafeRelease(pSourcePD);
+	SafeRelease(pTopology);
+	return hr;
 }
 
 bool e2d::Music::Load(const Resource& res)
 {
-	if (opened_)
-	{
-		Close();
-	}
-
-	HRSRC hResInfo;
-	HGLOBAL hResData;
-	DWORD dwSize;
-	void* pvRes;
-
-	if (nullptr == (hResInfo = FindResourceW(HINST_THISCOMPONENT, MAKEINTRESOURCE(res.id), (LPCWSTR)res.type)))
-		return TraceError(L"FindResource");
-
-	if (nullptr == (hResData = LoadResource(HINST_THISCOMPONENT, hResInfo)))
-		return TraceError(L"LoadResource");
-
-	if (0 == (dwSize = SizeofResource(HINST_THISCOMPONENT, hResInfo)))
-		return TraceError(L"SizeofResource");
-
-	if (nullptr == (pvRes = LockResource(hResData)))
-		return TraceError(L"LockResource");
-
-	buffer_ = new CHAR[dwSize];
-	memcpy(buffer_, pvRes, dwSize);
-
-	MMIOINFO mmioInfo;
-	ZeroMemory(&mmioInfo, sizeof(mmioInfo));
-	mmioInfo.fccIOProc = FOURCC_MEM;
-	mmioInfo.cchBuffer = dwSize;
-	mmioInfo.pchBuffer = (CHAR*)buffer_;
-
-	hmmio_ = mmioOpen(nullptr, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
-
-	if (nullptr == hmmio_)
-	{
-		return TraceError(L"mmioOpen");
-	}
-
-	if (!ReadMMIO())
-	{
-		// 读取非 wave 文件时 ReadMMIO 调用失败
-		mmioClose(hmmio_, 0);
-		return TraceError(L"ReadMMIO");
-	}
-
-	if (!ResetFile())
-		return TraceError(L"ResetFile");
-
-	// 重置文件后，wave 文件的大小是 ck_.cksize
-	size_ = ck_.cksize;
-
-	// 将样本数据读取到内存中
-	wave_data_ = new BYTE[size_];
-
-	if (!Read(wave_data_, size_))
-	{
-		TraceError(L"Failed to read WAV data");
-		SAFE_DELETE_ARRAY(wave_data_);
-		return false;
-	}
-
-	HRESULT hr = Device::GetAudio()->CreateVoice(&voice_, wfx_, &callback_);
-	if (FAILED(hr))
-	{
-		TraceError(L"Create source voice error", hr);
-		SAFE_DELETE_ARRAY(wave_data_);
-		return false;
-	}
-
-	opened_ = true;
-	return true;
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+	return false;
 }
 
 bool e2d::Music::Play(int loop_count)
 {
-	if (!opened_)
+	if (m_pSession == NULL || m_pSource == NULL)
 	{
-		WARN("Music::Play Failed: Music must be opened first!");
 		return false;
 	}
-
-	if (voice_ == nullptr)
+	HRESULT hr = StartPlayback();
+	if (SUCCEEDED(hr))
 	{
-		WARN("Music::Play Failed: IXAudio2SourceVoice Null pointer exception!");
-		return false;
+		m_nTimes = loop_count;
+		return true;
 	}
-
-	XAUDIO2_VOICE_STATE state;
-	voice_->GetState(&state);
-	if (state.BuffersQueued)
-	{
-		Stop();
-	}
-
-	loop_count = std::min(loop_count, XAUDIO2_LOOP_INFINITE - 1);
-	loop_count = (loop_count < 0) ? XAUDIO2_LOOP_INFINITE : loop_count;
-
-	// 提交 wave 样本数据
-	XAUDIO2_BUFFER buffer = { 0 };
-	buffer.pAudioData = wave_data_;
-	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.AudioBytes = size_;
-	buffer.LoopCount = loop_count;
-
-	HRESULT hr;
-	if (FAILED(hr = voice_->SubmitSourceBuffer(&buffer)))
-	{
-		TraceError(L"Submitting source buffer error", hr);
-		voice_->DestroyVoice();
-		SAFE_DELETE_ARRAY(wave_data_);
-		return false;
-	}
-
-	hr = voice_->Start(0);
-
-	return SUCCEEDED(hr);
+	return false;
 }
 
 void e2d::Music::Pause()
 {
-	if (voice_)
+	if (m_state != State::Started)
 	{
-		voice_->Stop();
+		return;
 	}
-}
-
-void e2d::Music::Resume()
-{
-	if (voice_)
+	if (m_pSession == NULL || m_pSource == NULL)
 	{
-		voice_->Start();
+		return;
+	}
+
+	HRESULT hr = m_pSession->Pause();
+	if (SUCCEEDED(hr))
+	{
+		m_state = State::Paused;
 	}
 }
 
 void e2d::Music::Stop()
 {
-	if (voice_)
+	if (m_state != State::Started && m_state != State::Paused)
 	{
-		if (SUCCEEDED(voice_->Stop()))
-		{
-			voice_->ExitLoop();
-			voice_->FlushSourceBuffers();
-		}
+		return;
+	}
+	if (m_pSession == NULL)
+	{
+		return;
+	}
+
+	HRESULT hr = m_pSession->Stop();
+	if (SUCCEEDED(hr))
+	{
+		m_state = State::Stopped;
 	}
 }
 
 void e2d::Music::Close()
 {
-	if (voice_)
+	//  The IMFMediaSession::Close method is asynchronous, but the 
+	//  e2d::Music::CloseSession method waits on the MESessionClosed event.
+	//  
+	//  MESessionClosed is guaranteed to be the last event that the 
+	//  media session fires.
+
+	HRESULT hr = S_OK;
+
+	// First close the media session.
+	if (m_pSession)
 	{
-		voice_->Stop();
-		voice_->FlushSourceBuffers();
-		voice_->DestroyVoice();
-		voice_ = nullptr;
+		DWORD dwWaitResult = 0;
+
+		m_state = State::Closing;
+
+		hr = m_pSession->Close();
+
+		// Wait for the close operation to complete
+		if (SUCCEEDED(hr))
+		{
+			WaitForSingleObject(m_hCloseEvent, 5000);
+		}
 	}
 
-	if (hmmio_ != nullptr)
+	// Complete shutdown operations.
+	if (SUCCEEDED(hr))
 	{
-		mmioClose(hmmio_, 0);
-		hmmio_ = nullptr;
+		// Shut down the media source. (Synchronous operation, no events.)
+		if (m_pSource)
+		{
+			(void)m_pSource->Shutdown();
+		}
+		// Shut down the media session. (Synchronous operation, no events.)
+		if (m_pSession)
+		{
+			(void)m_pSession->Shutdown();
+		}
 	}
 
-	SAFE_DELETE_ARRAY(buffer_);
-	SAFE_DELETE_ARRAY(wave_data_);
-	SAFE_DELETE_ARRAY(wfx_);
+	SafeRelease(m_pSource);
+	SafeRelease(m_pSession);
 
-	opened_ = false;
+	m_state = State::Closed;
 }
 
 bool e2d::Music::IsPlaying() const
 {
-	if (opened_ && voice_)
-	{
-		XAUDIO2_VOICE_STATE state;
-		voice_->GetState(&state);
-		if (state.BuffersQueued)
-			return true;
-	}
-	return false;
-}
-
-IXAudio2SourceVoice * e2d::Music::GetSourceVoice() const
-{
-	return voice_;
+	return m_state == State::Started;
 }
 
 bool e2d::Music::SetVolume(float volume)
 {
-	if (voice_)
+	if (!m_pSession)
+		return false;
+
+	IMFSimpleAudioVolume* pAudioVolume = NULL;
+	HRESULT hr = GetSimpleAudioVolume(&pAudioVolume);
+	if (SUCCEEDED(hr))
 	{
-		return SUCCEEDED(voice_->SetVolume(volume));
+		volume = std::min(std::max(volume, 0.f), 1.f);
+		hr = pAudioVolume->SetMasterVolume(volume);
 	}
-	return false;
+	
+	SafeRelease(pAudioVolume);
+	return SUCCEEDED(hr);
 }
 
-void e2d::Music::SetCallbackOnEnd(const Function & func)
+float e2d::Music::GetVolume() const
 {
-	callback_.SetCallbackOnStreamEnd(func);
-}
+	if (!m_pSession)
+		return 0.f;
 
-void e2d::Music::SetCallbackOnLoopEnd(const Function & func)
-{
-	callback_.SetCallbackOnLoopEnd(func);
-}
-
-bool e2d::Music::ReadMMIO()
-{
-	MMCKINFO ckIn;
-	PCMWAVEFORMAT pcmWaveFormat;
-
-	memset(&ckIn, 0, sizeof(ckIn));
-
-	wfx_ = nullptr;
-
-	if ((0 != mmioDescend(hmmio_, &ck_riff_, nullptr, 0)))
-		return TraceError(L"mmioDescend");
-
-	// 确认文件是一个合法的 wave 文件
-	if ((ck_riff_.ckid != FOURCC_RIFF) ||
-		(ck_riff_.fccType != mmioFOURCC('W', 'A', 'V', 'E')))
-		return TraceError(L"mmioFOURCC");
-
-	// 在输入文件中查找 'fmt' 块
-	ckIn.ckid = mmioFOURCC('f', 'm', 't', ' ');
-	if (0 != mmioDescend(hmmio_, &ckIn, &ck_riff_, MMIO_FINDCHUNK))
-		return TraceError(L"mmioDescend");
-
-	// 'fmt' 块至少应和 PCMWAVEFORMAT 一样大
-	if (ckIn.cksize < (LONG)sizeof(PCMWAVEFORMAT))
-		return TraceError(L"sizeof(PCMWAVEFORMAT)");
-
-	// 将 'fmt' 块读取到 pcmWaveFormat 中
-	if (mmioRead(hmmio_, (HPSTR)&pcmWaveFormat,
-		sizeof(pcmWaveFormat)) != sizeof(pcmWaveFormat))
-		return TraceError(L"mmioRead");
-
-	// 分配 WAVEFORMATEX，但如果它不是 PCM 格式，再读取一个 WORD 大小
-	// 的数据，这个数据就是额外分配的大小
-	if (pcmWaveFormat.wf.wFormatTag == WAVE_FORMAT_PCM)
+	float volume = 0.f;
+	IMFSimpleAudioVolume* pAudioVolume = NULL;
+	HRESULT hr = GetSimpleAudioVolume(&pAudioVolume);
+	if (SUCCEEDED(hr))
 	{
-		wfx_ = (WAVEFORMATEX*) new CHAR[sizeof(WAVEFORMATEX)];
+		hr = pAudioVolume->GetMasterVolume(&volume);
+	}
+	SafeRelease(pAudioVolume);
 
-		// 拷贝数据
-		memcpy(wfx_, &pcmWaveFormat, sizeof(pcmWaveFormat));
-		wfx_->cbSize = 0;
+	if (SUCCEEDED(hr))
+	{
+		return volume;
+	}
+	return 0.f;
+}
+
+HRESULT e2d::Music::QueryInterface(REFIID riid, void** ppv)
+{
+	static const QITAB qit[] =
+	{
+		QITABENT(Music, IMFAsyncCallback),
+		{ 0 }
+	};
+	return QISearch(this, qit, riid, ppv);
+}
+
+ULONG e2d::Music::AddRef()
+{
+	return InterlockedIncrement(&m_nRefCount);
+}
+
+ULONG e2d::Music::Release()
+{
+	ULONG uCount = InterlockedDecrement(&m_nRefCount);
+	if (uCount == 0)
+	{
+		delete this;
+	}
+	return uCount;
+}
+
+HRESULT e2d::Music::GetParameters(DWORD *, DWORD *)
+{
+	// Implementation of this method is optional.
+	return E_NOTIMPL;
+}
+
+HRESULT e2d::Music::Invoke(IMFAsyncResult *pResult)
+{
+	MediaEventType meType = MEUnknown;  // Event type
+
+	IMFMediaEvent *pEvent = NULL;
+
+	// Get the event from the event queue.
+	HRESULT hr = m_pSession->EndGetEvent(pResult, &pEvent);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Get the event type. 
+	hr = pEvent->GetType(&meType);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	if (meType == MESessionClosed)
+	{
+		// The session was closed. 
+		// The application is waiting on the m_hCloseEvent event handle. 
+		SetEvent(m_hCloseEvent);
 	}
 	else
 	{
-		// 读取额外数据的大小
-		WORD cbExtraBytes = 0L;
-		if (mmioRead(hmmio_, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD))
-			return TraceError(L"mmioRead");
-
-		wfx_ = (WAVEFORMATEX*) new CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
-
-		// 拷贝数据
-		memcpy(wfx_, &pcmWaveFormat, sizeof(pcmWaveFormat));
-		wfx_->cbSize = cbExtraBytes;
-
-		// 读取额外数据
-		if (mmioRead(hmmio_, (CHAR*)(((BYTE*)&(wfx_->cbSize)) + sizeof(WORD)),
-			cbExtraBytes) != cbExtraBytes)
+		// For all other events, get the next event in the queue.
+		hr = m_pSession->BeginGetEvent(this, NULL);
+		if (FAILED(hr))
 		{
-			SAFE_DELETE(wfx_);
-			return TraceError(L"mmioRead");
+			goto done;
 		}
 	}
 
-	if (0 != mmioAscend(hmmio_, &ckIn, 0))
+	// Check the application state. 
+
+	// If a call to IMFMediaSession::Close is pending, it means the 
+	// application is waiting on the m_hCloseEvent event and
+	// the application's message loop is blocked. 
+
+	// Otherwise, post a private window message to the application. 
+
+	if (m_state != State::Closing)
 	{
-		SAFE_DELETE(wfx_);
-		return TraceError(L"mmioAscend");
+		// Leave a reference count on the event.
+		pEvent->AddRef();
+
+		::PostMessage(m_hwndEvent, WM_APP_PLAYER_EVENT, (WPARAM)pEvent, (LPARAM)meType);
 	}
 
-	return true;
+done:
+	SafeRelease(pEvent);
+	return S_OK;
 }
 
-bool e2d::Music::ResetFile()
+HRESULT e2d::Music::StartPlayback()
 {
-	// Seek to the data
-	if (-1 == mmioSeek(hmmio_, ck_riff_.dwDataOffset + sizeof(FOURCC),
-		SEEK_SET))
-		return TraceError(L"mmioSeek");
+	PROPVARIANT varStart;
+	PropVariantInit(&varStart);
 
-	// Search the input file for the 'data' chunk.
-	ck_.ckid = mmioFOURCC('d', 'a', 't', 'a');
-	if (0 != mmioDescend(hmmio_, &ck_, &ck_riff_, MMIO_FINDCHUNK))
-		return TraceError(L"mmioDescend");
-
-	return true;
+	HRESULT hr = m_pSession->Start(&GUID_NULL, &varStart);
+	if (SUCCEEDED(hr))
+	{
+		// Note: Start is an asynchronous operation. However, we
+		// can treat our state as being already started. If Start
+		// fails later, we'll get an MESessionStarted event with
+		// an error code, and we will update our state then.
+		m_state = State::Started;
+	}
+	PropVariantClear(&varStart);
+	return hr;
 }
 
-bool e2d::Music::Read(BYTE* buffer, DWORD size_to_read)
+HRESULT e2d::Music::HandleEvent(UINT_PTR pEventPtr)
 {
-	MMIOINFO mmioinfoIn; // current status of hmmio_
+	HRESULT hrStatus = S_OK;
+	MediaEventType meType = MEUnknown;
 
-	if (0 != mmioGetInfo(hmmio_, &mmioinfoIn, 0))
-		return TraceError(L"mmioGetInfo");
+	IMFMediaEvent *pEvent = (IMFMediaEvent*)pEventPtr;
 
-	UINT cbDataIn = size_to_read;
-	if (cbDataIn > ck_.cksize)
-		cbDataIn = ck_.cksize;
-
-	ck_.cksize -= cbDataIn;
-
-	for (DWORD cT = 0; cT < cbDataIn; ++cT)
+	if (pEvent == NULL)
 	{
-		// Copy the bytes from the io to the buffer.
-		if (mmioinfoIn.pchNext == mmioinfoIn.pchEndRead)
-		{
-			if (0 != mmioAdvance(hmmio_, &mmioinfoIn, MMIO_READ))
-				return TraceError(L"mmioAdvance");
-
-			if (mmioinfoIn.pchNext == mmioinfoIn.pchEndRead)
-				return TraceError(L"mmioinfoIn.pchNext");
-		}
-
-		// Actual copy.
-		*((BYTE*)buffer + cT) = *((BYTE*)mmioinfoIn.pchNext);
-		++mmioinfoIn.pchNext;
+		return E_POINTER;
 	}
 
-	if (0 != mmioSetInfo(hmmio_, &mmioinfoIn, 0))
-		return TraceError(L"mmioSetInfo");
+	// Get the event type.
+	HRESULT hr = pEvent->GetType(&meType);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
 
-	return true;
+	// Get the event status. If the operation that triggered the event 
+	// did not succeed, the status is a failure code.
+	hr = pEvent->GetStatus(&hrStatus);
+
+	// Check if the async operation succeeded.
+	if (SUCCEEDED(hr) && FAILED(hrStatus))
+	{
+		hr = hrStatus;
+	}
+
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	switch (meType)
+	{
+	case MEEndOfPresentation:
+		printf("%d\n", m_nTimes);
+		if (m_nTimes)
+		{
+			--m_nTimes;
+			hr = StartPlayback();
+		}
+		else
+		{
+			m_state = State::Stopped;
+			hr = S_OK;
+		}
+		break;
+
+	case MENewPresentation:
+		hr = OnNewPresentation(pEvent);
+		break;
+
+	default:
+		break;
+	}
+
+done:
+	SafeRelease(pEvent);
+	return hr;
 }
 
-bool e2d::Music::FindMediaFileCch(wchar_t* dest_path, int cch_dest, const wchar_t * file_name)
+HRESULT e2d::Music::OnNewPresentation(IMFMediaEvent *pEvent)
 {
-	bool bFound = false;
+	IMFPresentationDescriptor *pPD = NULL;
+	IMFTopology *pTopology = NULL;
 
-	if (nullptr == file_name || nullptr == dest_path || cch_dest < 10)
-		return false;
-
-	// Get the exe name, and exe path
-	wchar_t strExePath[MAX_PATH] = { 0 };
-	wchar_t strExeName[MAX_PATH] = { 0 };
-	GetModuleFileName(HINST_THISCOMPONENT, strExePath, MAX_PATH);
-	strExePath[MAX_PATH - 1] = 0;
-
-	wchar_t* strLastSlash = wcsrchr(strExePath, TEXT('\\'));
-	if (strLastSlash)
+	// Get the presentation descriptor from the event.
+	PROPVARIANT var;
+	HRESULT hr = pEvent->GetValue(&var);
+	if (FAILED(hr))
 	{
-		wcscpy_s(strExeName, MAX_PATH, &strLastSlash[1]);
-
-		// Chop the exe name from the exe path
-		*strLastSlash = 0;
-
-		// Chop the .exe from the exe name
-		strLastSlash = wcsrchr(strExeName, TEXT('.'));
-		if (strLastSlash)
-			*strLastSlash = 0;
+		goto done;
 	}
 
-	wcscpy_s(dest_path, cch_dest, file_name);
-	if (GetFileAttributes(dest_path) != 0xFFFFFFFF)
-		return true;
-
-	// Search all parent directories starting At .\ and using file_name as the leaf name
-	wchar_t strLeafName[MAX_PATH] = { 0 };
-	wcscpy_s(strLeafName, MAX_PATH, file_name);
-
-	wchar_t strFullPath[MAX_PATH] = { 0 };
-	wchar_t strFullFileName[MAX_PATH] = { 0 };
-	wchar_t strSearch[MAX_PATH] = { 0 };
-	wchar_t* strFilePart = nullptr;
-
-	GetFullPathName(L".", MAX_PATH, strFullPath, &strFilePart);
-	if (strFilePart == nullptr)
-		return false;
-
-	while (strFilePart != nullptr && *strFilePart != '\0')
+	if (var.vt == VT_UNKNOWN)
 	{
-		swprintf_s(strFullFileName, MAX_PATH, L"%s\\%s", strFullPath, strLeafName);
-		if (GetFileAttributes(strFullFileName) != 0xFFFFFFFF)
-		{
-			wcscpy_s(dest_path, cch_dest, strFullFileName);
-			bFound = true;
-			break;
-		}
-
-		swprintf_s(strFullFileName, MAX_PATH, L"%s\\%s\\%s", strFullPath, strExeName, strLeafName);
-		if (GetFileAttributes(strFullFileName) != 0xFFFFFFFF)
-		{
-			wcscpy_s(dest_path, cch_dest, strFullFileName);
-			bFound = true;
-			break;
-		}
-
-		swprintf_s(strSearch, MAX_PATH, L"%s\\..", strFullPath);
-		GetFullPathName(strSearch, MAX_PATH, strFullPath, &strFilePart);
+		hr = var.punkVal->QueryInterface(&pPD);
 	}
-	if (bFound)
-		return true;
+	else
+	{
+		hr = MF_E_INVALIDTYPE;
+	}
+	PropVariantClear(&var);
 
-	// 失败时，将文件作为路径返回，同时也返回错误代码
-	wcscpy_s(dest_path, cch_dest, file_name);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
 
-	return false;
+	// Create a partial topology.
+	hr = CreatePlaybackTopology(m_pSource, pPD, &pTopology);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Set the topology on the media session.
+	hr = m_pSession->SetTopology(0, pTopology);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	m_state = State::Loaded;
+
+done:
+	SafeRelease(pTopology);
+	SafeRelease(pPD);
+	return S_OK;
+}
+
+HRESULT e2d::Music::GetSimpleAudioVolume(IMFSimpleAudioVolume ** ppAudioVolume) const
+{
+	if (ppAudioVolume == NULL)
+		return E_POINTER;
+
+	IMFGetService* pGetService = NULL;
+
+	HRESULT hr = m_pSession->QueryInterface(IID_IMFGetService, (void **)&pGetService);
+	if (SUCCEEDED(hr))
+	{
+		hr = pGetService->GetService(MR_CAPTURE_POLICY_VOLUME_SERVICE, IID_PPV_ARGS(ppAudioVolume));
+	}
+	SafeRelease(pGetService);
+	return hr;
+}
+
+HRESULT e2d::Music::CreateMediaSource(PCWSTR sURL, IMFMediaSource **ppSource)
+{
+	MF_OBJECT_TYPE ObjectType = MF_OBJECT_INVALID;
+
+	IMFSourceResolver* pSourceResolver = NULL;
+	IUnknown* pSource = NULL;
+
+	// Create the source resolver.
+	HRESULT hr = MFCreateSourceResolver(&pSourceResolver);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Use the source resolver to create the media source.
+
+	// Note: For simplicity this sample uses the synchronous method to create 
+	// the media source. However, creating a media source can take a noticeable
+	// amount of time, especially for a network source. For a more responsive 
+	// UI, use the asynchronous BeginCreateObjectFromURL method.
+
+	hr = pSourceResolver->CreateObjectFromURL(
+		sURL,                       // URL of the source.
+		MF_RESOLUTION_MEDIASOURCE,  // Create a source object.
+		NULL,                       // Optional property store.
+		&ObjectType,        // Receives the created object type. 
+		&pSource            // Receives a pointer to the media source.
+	);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Get the IMFMediaSource interface from the media source.
+	hr = pSource->QueryInterface(IID_PPV_ARGS(ppSource));
+
+done:
+	SafeRelease(pSourceResolver);
+	SafeRelease(pSource);
+	return hr;
+}
+
+HRESULT e2d::Music::CreateMediaSinkActivate(
+	IMFStreamDescriptor *pSourceSD,
+	IMFActivate **ppActivate)
+{
+	IMFMediaTypeHandler *pHandler = NULL;
+	IMFActivate *pActivate = NULL;
+
+	// Get the media type handler for the stream.
+	HRESULT hr = pSourceSD->GetMediaTypeHandler(&pHandler);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Get the major media type.
+	GUID guidMajorType;
+	hr = pHandler->GetMajorType(&guidMajorType);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Create an IMFActivate object for the renderer, based on the media type.
+	if (MFMediaType_Audio == guidMajorType)
+	{
+		// Create the audio renderer.
+		hr = MFCreateAudioRendererActivate(&pActivate);
+	}
+	else if (MFMediaType_Video == guidMajorType)
+	{
+		// Create the video renderer.
+		hr = MFCreateVideoRendererActivate(m_hwndEvent, &pActivate);
+	}
+	else
+	{
+		// Unknown stream type. 
+		hr = E_FAIL;
+		// Optionally, you could deselect this stream instead of failing.
+	}
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Return IMFActivate pointer to caller.
+	*ppActivate = pActivate;
+	(*ppActivate)->AddRef();
+
+done:
+	SafeRelease(pHandler);
+	SafeRelease(pActivate);
+	return hr;
+}
+
+HRESULT e2d::Music::AddSourceNode(
+	IMFTopology *pTopology,
+	IMFMediaSource *pSource,
+	IMFPresentationDescriptor *pPD,
+	IMFStreamDescriptor *pSD,
+	IMFTopologyNode **ppNode)
+{
+	IMFTopologyNode *pNode = NULL;
+
+	// Create the node.
+	HRESULT hr = MFCreateTopologyNode(MF_TOPOLOGY_SOURCESTREAM_NODE, &pNode);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Set the attributes.
+	hr = pNode->SetUnknown(MF_TOPONODE_SOURCE, pSource);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	hr = pNode->SetUnknown(MF_TOPONODE_PRESENTATION_DESCRIPTOR, pPD);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	hr = pNode->SetUnknown(MF_TOPONODE_STREAM_DESCRIPTOR, pSD);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Add the node to the topology.
+	hr = pTopology->AddNode(pNode);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Return the pointer to the caller.
+	*ppNode = pNode;
+	(*ppNode)->AddRef();
+
+done:
+	SafeRelease(pNode);
+	return hr;
+}
+
+HRESULT e2d::Music::AddOutputNode(
+	IMFTopology *pTopology,
+	IMFActivate *pActivate,
+	DWORD dwId,
+	IMFTopologyNode **ppNode)
+{
+	IMFTopologyNode *pNode = NULL;
+
+	// Create the node.
+	HRESULT hr = MFCreateTopologyNode(MF_TOPOLOGY_OUTPUT_NODE, &pNode);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Set the object pointer.
+	hr = pNode->SetObject(pActivate);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Set the stream sink ID attribute.
+	hr = pNode->SetUINT32(MF_TOPONODE_STREAMID, dwId);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	hr = pNode->SetUINT32(MF_TOPONODE_NOSHUTDOWN_ON_REMOVE, FALSE);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Add the node to the topology.
+	hr = pTopology->AddNode(pNode);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Return the pointer to the caller.
+	*ppNode = pNode;
+	(*ppNode)->AddRef();
+
+done:
+	SafeRelease(pNode);
+	return hr;
+}
+
+HRESULT e2d::Music::AddBranchToPartialTopology(
+	IMFTopology *pTopology,
+	IMFMediaSource *pSource,
+	IMFPresentationDescriptor *pPD,
+	DWORD iStream)
+{
+	//  Add a topology branch for one stream.
+	//
+	//  For each stream, this function does the following:
+	//
+	//    1. Creates a source node associated with the stream. 
+	//    2. Creates an output node for the renderer. 
+	//    3. Connects the two nodes.
+	//
+	//  The media session will add any decoders that are needed.
+
+	IMFStreamDescriptor *pSD = NULL;
+	IMFActivate         *pSinkActivate = NULL;
+	IMFTopologyNode     *pSourceNode = NULL;
+	IMFTopologyNode     *pOutputNode = NULL;
+
+	BOOL fSelected = FALSE;
+
+	HRESULT hr = pPD->GetStreamDescriptorByIndex(iStream, &fSelected, &pSD);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	if (fSelected)
+	{
+		// Create the media sink activation object.
+		hr = CreateMediaSinkActivate(pSD, &pSinkActivate);
+		if (FAILED(hr))
+		{
+			goto done;
+		}
+
+		// Add a source node for this stream.
+		hr = AddSourceNode(pTopology, pSource, pPD, pSD, &pSourceNode);
+		if (FAILED(hr))
+		{
+			goto done;
+		}
+
+		// Create the output node for the renderer.
+		hr = AddOutputNode(pTopology, pSinkActivate, 0, &pOutputNode);
+		if (FAILED(hr))
+		{
+			goto done;
+		}
+
+		// Connect the source node to the output node.
+		hr = pSourceNode->ConnectOutput(0, pOutputNode, 0);
+	}
+	// else: If not selected, don't add the branch. 
+
+done:
+	SafeRelease(pSD);
+	SafeRelease(pSinkActivate);
+	SafeRelease(pSourceNode);
+	SafeRelease(pOutputNode);
+	return hr;
+}
+
+HRESULT e2d::Music::CreatePlaybackTopology(
+	IMFMediaSource *pSource,
+	IMFPresentationDescriptor *pPD,
+	IMFTopology **ppTopology)
+{
+	IMFTopology *pTopology = NULL;
+	DWORD cSourceStreams = 0;
+
+	// Create a new topology.
+	HRESULT hr = MFCreateTopology(&pTopology);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// Get the number of streams in the media source.
+	hr = pPD->GetStreamDescriptorCount(&cSourceStreams);
+	if (FAILED(hr))
+	{
+		goto done;
+	}
+
+	// For each stream, create the topology nodes and add them to the topology.
+	for (DWORD i = 0; i < cSourceStreams; i++)
+	{
+		hr = AddBranchToPartialTopology(pTopology, pSource, pPD, i);
+		if (FAILED(hr))
+		{
+			goto done;
+		}
+	}
+
+	// Return the IMFTopology pointer to the caller.
+	*ppTopology = pTopology;
+	(*ppTopology)->AddRef();
+
+done:
+	SafeRelease(pTopology);
+	return hr;
+}
+
+LRESULT e2d::Music::MediaProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (Msg)
+	{
+	case WM_APP_PLAYER_EVENT:
+		{
+			Music * music = reinterpret_cast<Music*>(
+				static_cast<LONG_PTR>(::GetWindowLongPtrW(hWnd, GWLP_USERDATA))
+			);
+			if (music)
+			{
+				music->HandleEvent(wParam);
+			}
+		}
+		break;
+
+	default:
+		return ::DefWindowProc(hWnd, Msg, wParam, lParam);
+	}
+	return 0;
 }

@@ -45,7 +45,9 @@
 #	define DIRECTINPUT_VERSION 0x0800
 #endif
 
-#define INITGUID
+#ifndef INITGUID
+#	define INITGUID
+#endif
 
 
 // Windows Header Files
@@ -55,8 +57,12 @@
 #include <d2d1.h>
 #include <dwrite.h>
 #include <dinput.h>
-#include <d2d1helper.h>
-#include <xaudio2.h>
+#include <shlwapi.h>
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mferror.h>
+#include <evr.h>
+#include <mmdeviceapi.h>
 
 // C++ RunTime Header Files
 #include <map>
@@ -76,8 +82,12 @@
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "windowscodecs.lib")
 #pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "shlwapi")
+#pragma comment(lib, "mfplay.lib")
+#pragma comment(lib, "mf.lib")
+#pragma comment(lib, "mfplat.lib")
+#pragma comment(lib, "mfuuid.lib")
 
 
 #ifndef HINST_THISCOMPONENT

@@ -222,7 +222,7 @@
     <ClCompile Include="..\..\core\events\KeyEvent.cpp" />
     <ClCompile Include="..\..\core\events\MouseEvent.cpp" />
     <ClCompile Include="..\..\core\impl\TextRenderer.cpp" />
-    <ClCompile Include="..\..\core\impl\VoiceCallback.cpp" />
+    <ClCompile Include="..\..\core\impl\MediaAsyncCallback.cpp" />
     <ClCompile Include="..\..\core\modules\Audio.cpp" />
     <ClCompile Include="..\..\core\modules\Device.cpp" />
     <ClCompile Include="..\..\core\modules\Game.cpp" />

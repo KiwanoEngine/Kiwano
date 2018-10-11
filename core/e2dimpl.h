@@ -25,38 +25,29 @@ namespace e2d
 {
 
 
-	class Music;
-
-	// ÒôÔ´»Øµ÷
-	class VoiceCallback
-		: public IXAudio2VoiceCallback
+	class MediaAsyncCallback : public IMFAsyncCallback
 	{
 	public:
-		VoiceCallback();
+		MediaAsyncCallback(
+			HWND hwnd,
+			IMFMediaSession * pSession,
+			HANDLE hCloseEvent
+		);
 
-		~VoiceCallback();
+		// IUnknown methods
+		STDMETHODIMP QueryInterface(REFIID iid, void** ppv);
+		STDMETHODIMP_(ULONG) AddRef();
+		STDMETHODIMP_(ULONG) Release();
 
-		STDMETHOD_(void, OnVoiceProcessingPassStart) (THIS_ UINT32 BytesRequired) {}
-
-		STDMETHOD_(void, OnVoiceProcessingPassEnd) (THIS) {}
-
-		STDMETHOD_(void, OnStreamEnd) (THIS);
-
-		STDMETHOD_(void, OnBufferStart) (THIS_ void* pBufferContext) {}
-
-		STDMETHOD_(void, OnBufferEnd) (THIS_ void* pBufferContext);
-
-		STDMETHOD_(void, OnLoopEnd) (THIS_ void* pBufferContext);
-
-		STDMETHOD_(void, OnVoiceError) (THIS_ void* pBufferContext, HRESULT Error) {}
-
-		STDMETHOD_(void, SetCallbackOnStreamEnd) (THIS_ const Function& func);
-
-		STDMETHOD_(void, SetCallbackOnLoopEnd) (THIS_ const Function& func);
+		// IMFAsyncCallback methods
+		STDMETHODIMP  GetParameters(DWORD*, DWORD*);
+		STDMETHODIMP  Invoke(IMFAsyncResult* pAsyncResult);
 
 	protected:
-		Function loop_end_callback_;
-		Function stream_end_callback_;
+		long				m_nRefCount;
+		IMFMediaSession *	m_pSession;
+		HWND				m_hwnd;
+		HANDLE				m_hCloseEvent;
 	};
 
 

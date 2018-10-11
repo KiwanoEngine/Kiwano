@@ -22,40 +22,128 @@
 
 
 e2d::Audio::Audio()
-	: x_audio2_(nullptr)
-	, mastering_voice_(nullptr)
+	: enum_(nullptr)
+	, devices_(nullptr)
+	, device_(nullptr)
+	, attributes_(nullptr)
+	, sink_(nullptr)
+	, device_id(nullptr)
+	, audio_volume(nullptr)
 {
 	ThrowIfFailed(
-		XAudio2Create(&x_audio2_, 0)
+		MFStartup(MF_VERSION)
+	);
+
+	// Create the device enumerator.
+	ThrowIfFailed(
+		CoCreateInstance(
+			__uuidof(MMDeviceEnumerator),
+			NULL,
+			CLSCTX_ALL,
+			__uuidof(IMMDeviceEnumerator),
+			(void**)&enum_
+		)
+	);
+
+	// Enumerate the rendering devices.
+	ThrowIfFailed(
+		enum_->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE, &devices_)
+	);
+
+	// Get ID of the first device in the list.
+	ThrowIfFailed(
+		devices_->Item(0, &device_)
 	);
 
 	ThrowIfFailed(
-		x_audio2_->CreateMasteringVoice(&mastering_voice_)
+		device_->GetId(&device_id)
 	);
+
+	// Create an attribute store and set the device ID attribute.
+	ThrowIfFailed(
+		MFCreateAttributes(&attributes_, 2)
+	);
+
+	ThrowIfFailed(
+		attributes_->SetString(
+			MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ID,
+			device_id
+		)
+	);
+
+	// Create the audio renderer.
+	ThrowIfFailed(
+		MFCreateAudioRenderer(attributes_, &sink_)
+	);
+
+	IMFGetService* service = NULL;
+
+	ThrowIfFailed(
+		sink_->QueryInterface(IID_IMFGetService, (void **)&service)
+	);
+	
+	ThrowIfFailed(
+		service->GetService(MR_POLICY_VOLUME_SERVICE, IID_PPV_ARGS(&audio_volume))
+	);
+
+	SafeRelease(service);
 }
 
 e2d::Audio::~Audio()
 {
-	if (mastering_voice_)
+	SafeRelease(enum_);
+	SafeRelease(devices_);
+	SafeRelease(device_);
+	SafeRelease(attributes_);
+	SafeRelease(audio_volume);
+	SafeRelease(sink_);
+	CoTaskMemFree(device_id);
+
+	MFShutdown();
+}
+
+float e2d::Audio::GetVolume()
+{
+	float volume = 0.f;
+	if (audio_volume)
 	{
-		mastering_voice_->DestroyVoice();
-		mastering_voice_ = nullptr;
+		HRESULT hr = audio_volume->GetMasterVolume(&volume);
+		if (SUCCEEDED(hr))
+		{
+			return volume;
+		}
 	}
-
-	SafeRelease(x_audio2_);
+	return 0.f;
 }
 
-HRESULT e2d::Audio::CreateVoice(IXAudio2SourceVoice ** voice, WAVEFORMATEX * wfx, VoiceCallback * callback)
+void e2d::Audio::SetVolume(float volume)
 {
-	return x_audio2_->CreateSourceVoice(voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, callback);
+	if (audio_volume)
+	{
+		volume = std::min(std::max(volume, 0.f), 1.f);
+		HRESULT hr = audio_volume->SetMasterVolume(volume);
+		printf("บวบว%#X\n", hr);
+	}
 }
 
-void e2d::Audio::Open()
+bool e2d::Audio::GetMute()
 {
-	x_audio2_->StartEngine();
+	BOOL mute = FALSE;
+	if (audio_volume)
+	{
+		HRESULT hr = audio_volume->GetMute(&mute);
+		if (SUCCEEDED(hr))
+		{
+			return mute ? true : false;
+		}
+	}
+	return FALSE;
 }
 
-void e2d::Audio::Close()
+void e2d::Audio::SetMute(bool mute)
 {
-	x_audio2_->StopEngine();
+	if (audio_volume)
+	{
+		audio_volume->SetMute(mute ? TRUE : FALSE);
+	}
 }

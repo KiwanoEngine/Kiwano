@@ -141,9 +141,6 @@
     <ClCompile Include="..\..\core\impl\TextRenderer.cpp">
       <Filter>impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\impl\VoiceCallback.cpp">
-      <Filter>impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\events\KeyEvent.cpp">
       <Filter>events</Filter>
     </ClCompile>
@@ -218,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\modules\Device.cpp">
       <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\impl\MediaAsyncCallback.cpp">
+      <Filter>impl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

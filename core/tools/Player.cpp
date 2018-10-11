@@ -68,7 +68,7 @@ void e2d::Player::Resume(const String & file_path)
 
 	size_t hash = file_path.GetHash();
 	if (musics_.end() != musics_.find(hash))
-		musics_[hash]->Resume();
+		musics_[hash]->Play();
 }
 
 void e2d::Player::Stop(const String & file_path)
@@ -137,7 +137,7 @@ void e2d::Player::Pause(const Resource& res)
 void e2d::Player::Resume(const Resource& res)
 {
 	if (musics_.end() != musics_.find(res.id))
-		musics_[res.id]->Resume();
+		musics_[res.id]->Play();
 }
 
 void e2d::Player::Stop(const Resource& res)
@@ -160,7 +160,7 @@ float e2d::Player::GetVolume()
 
 void e2d::Player::SetVolume(float volume)
 {
-	volume_ = std::min(std::max(volume, -224.f), 224.f);
+	volume_ = std::min(std::max(volume, 0.f), 1.f);
 	for (const auto& pair : musics_)
 	{
 		pair.second->SetVolume(volume_);
@@ -179,7 +179,7 @@ void e2d::Player::ResumeAll()
 {
 	for (const auto& pair : musics_)
 	{
-		pair.second->Resume();
+		pair.second->Play();
 	}
 }
 
