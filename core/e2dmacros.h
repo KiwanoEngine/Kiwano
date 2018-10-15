@@ -57,12 +57,11 @@
 #include <d2d1.h>
 #include <dwrite.h>
 #include <dinput.h>
-#include <shlwapi.h>
+#include <xaudio2.h>
 #include <mfapi.h>
 #include <mfidl.h>
-#include <mferror.h>
-#include <evr.h>
-#include <mmdeviceapi.h>
+#include <mfreadwrite.h>
+#include <shlwapi.h>
 
 // C++ RunTime Header Files
 #include <map>
@@ -83,11 +82,10 @@
 #pragma comment(lib, "windowscodecs.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "shlwapi")
-#pragma comment(lib, "mfplay.lib")
-#pragma comment(lib, "mf.lib")
+#pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "mfplat.lib")
-#pragma comment(lib, "mfuuid.lib")
+#pragma comment(lib, "mfreadwrite.lib")
+#pragma comment(lib, "shlwapi.lib")
 
 
 #ifndef HINST_THISCOMPONENT

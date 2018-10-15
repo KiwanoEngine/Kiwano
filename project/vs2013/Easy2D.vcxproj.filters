@@ -141,9 +141,6 @@
     <ClCompile Include="..\..\core\impl\TextRenderer.cpp">
       <Filter>impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\impl\VoiceCallback.cpp">
-      <Filter>impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\events\KeyEvent.cpp">
       <Filter>events</Filter>
     </ClCompile>

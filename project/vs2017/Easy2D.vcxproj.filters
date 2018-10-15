@@ -216,9 +216,6 @@
     <ClCompile Include="..\..\core\modules\Device.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\impl\MediaAsyncCallback.cpp">
-      <Filter>impl</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />

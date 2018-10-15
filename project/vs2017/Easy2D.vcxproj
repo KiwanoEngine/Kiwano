@@ -101,7 +101,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -222,7 +222,6 @@
     <ClCompile Include="..\..\core\events\KeyEvent.cpp" />
     <ClCompile Include="..\..\core\events\MouseEvent.cpp" />
     <ClCompile Include="..\..\core\impl\TextRenderer.cpp" />
-    <ClCompile Include="..\..\core\impl\MediaAsyncCallback.cpp" />
     <ClCompile Include="..\..\core\modules\Audio.cpp" />
     <ClCompile Include="..\..\core\modules\Device.cpp" />
     <ClCompile Include="..\..\core\modules\Game.cpp" />

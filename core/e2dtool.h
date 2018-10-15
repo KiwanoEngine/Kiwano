@@ -71,18 +71,9 @@ namespace e2d
 
 	// 音乐
 	class Music
-		: public IMFAsyncCallback
 	{
 	public:
 		Music();
-
-		explicit Music(
-			const e2d::String& file_path	/* 音乐文件路径 */
-		);
-
-		explicit Music(
-			const Resource& res		/* 音乐资源 */
-		);
 
 		virtual ~Music();
 
@@ -104,6 +95,9 @@ namespace e2d
 		// 暂停
 		void Pause();
 
+		// 继续
+		void Resume();
+
 		// 停止
 		void Stop();
 
@@ -113,99 +107,26 @@ namespace e2d
 		// 是否正在播放
 		bool IsPlaying() const;
 
-		// 设置音量
-		bool SetVolume(
-			float volume	/* 范围: 0.0 ~ 1.0 */
-		);
-
 		// 获取音量
 		float GetVolume() const;
 
-		// IUnknown methods
-		STDMETHODIMP QueryInterface(REFIID iid, void** ppv) override;
-		STDMETHODIMP_(ULONG) AddRef() override;
-		STDMETHODIMP_(ULONG) Release() override;
+		// 设置音量
+		bool SetVolume(
+			float volume	/* 1.0 为原始音量 */
+		);
 
-		// IMFAsyncCallback methods
-		STDMETHODIMP  GetParameters(DWORD*, DWORD*) override;
-		STDMETHODIMP  Invoke(IMFAsyncResult* pAsyncResult) override;
+		// 获取 IXAudio2SourceVoice 对象
+		IXAudio2SourceVoice * GetSourceVoice() const;
 
 	protected:
-		enum class State : int
-		{
-			Closed = 0,
-			Loaded,
-			Started,
-			Paused,
-			Stopped,
-			Closing
-		};
-
 		E2D_DISABLE_COPY(Music);
 
-		// Media event handlers
-		HRESULT OnNewPresentation(IMFMediaEvent *pEvent);
-
-		HRESULT StartPlayback();
-		HRESULT CreateMediaSource(PCWSTR sURL, IMFMediaSource **ppSource);
-		HRESULT HandleEvent(UINT_PTR pUnkPtr);
-
-		// Add a source node to a topology.
-		HRESULT AddSourceNode(
-			IMFTopology *pTopology,           // Topology.
-			IMFMediaSource *pSource,          // Media source.
-			IMFPresentationDescriptor *pPD,   // Presentation descriptor.
-			IMFStreamDescriptor *pSD,         // Stream descriptor.
-			IMFTopologyNode **ppNode         // Receives the node pointer.
-		);
-
-		// Add an output node to a topology.
-		HRESULT AddOutputNode(
-			IMFTopology *pTopology,     // Topology.
-			IMFActivate *pActivate,     // Media sink activation object.
-			DWORD dwId,                 // Identifier of the stream sink.
-			IMFTopologyNode **ppNode   // Receives the node pointer.
-		);
-
-		HRESULT AddBranchToPartialTopology(
-			IMFTopology *pTopology,         // Topology.
-			IMFMediaSource *pSource,        // Media source.
-			IMFPresentationDescriptor *pPD, // Presentation descriptor.
-			DWORD iStream                  // Stream index.
-		);
-
-		//  Create a playback topology from a media source.
-		HRESULT CreatePlaybackTopology(
-			IMFMediaSource *pSource,          // Media source.
-			IMFPresentationDescriptor *pPD,   // Presentation descriptor.
-			IMFTopology **ppTopology          // Receives a pointer to the topology.
-		);
-
-		//  Create an activation object for a renderer, based on the stream media type.
-		HRESULT CreateMediaSinkActivate(
-			IMFStreamDescriptor *pSourceSD,     // Pointer to the stream descriptor.
-			IMFActivate **ppActivate
-		);
-
-		HRESULT GetSimpleAudioVolume(
-			IMFSimpleAudioVolume** ppAudioVolume
-		) const;
-
-		static LRESULT CALLBACK MediaProc(
-			HWND hWnd,
-			UINT Msg,
-			WPARAM wParam,
-			LPARAM lParam
-		);
-
 	protected:
-		long					m_nRefCount;
-		int						m_nTimes;
-		IMFMediaSession *		m_pSession;
-		IMFMediaSource          *m_pSource;
-		HWND                    m_hwndEvent;
-		State					m_state;
-		HANDLE                  m_hCloseEvent;
+		bool					opened_;
+		bool					playing_;
+		UINT32					size_;
+		BYTE*					wave_data_;
+		IXAudio2SourceVoice*	voice_;
 	};
 
 
@@ -280,11 +201,11 @@ namespace e2d
 		);
 
 		// 获取音量
-		float GetVolume();
+		float GetVolume() const;
 
 		// 设置音量
 		void SetVolume(
-			float volume			/* 范围: 0.0 ~ 1.0 */
+			float volume			/* 1.0 为原始音量 */
 		);
 
 		// 暂停所有音乐

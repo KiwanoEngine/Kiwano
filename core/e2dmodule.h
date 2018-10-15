@@ -149,30 +149,21 @@ namespace e2d
 
 		~Audio();
 
-		// 获取音量
-		float GetVolume();
+		// 开启设备
+		void Open();
 
-		// 设置音量
-		void SetVolume(
-			float volume
-		);
+		// 关闭设备
+		void Close();
 
-		// 是否静音
-		bool GetMute();
-
-		// 设置静音
-		void SetMute(
-			bool mute
+		// 创建音源
+		HRESULT CreateVoice(
+			IXAudio2SourceVoice ** voice,
+			WAVEFORMATEX * wfx
 		);
 
 	protected:
-		LPWSTR					device_id;		// Device ID.
-		IMMDeviceEnumerator		*enum_;			// Audio device enumerator.
-		IMMDeviceCollection		*devices_;		// Audio device collection.
-		IMMDevice				*device_;		// An audio device.
-		IMFAttributes			*attributes_;	// Attribute store.
-		IMFMediaSink			*sink_;			// Streaming audio renderer (SAR)
-		IMFSimpleAudioVolume	*audio_volume;
+		IXAudio2 * x_audio2_;
+		IXAudio2MasteringVoice*	mastering_voice_;
 	};
 
 
