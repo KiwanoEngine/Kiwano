@@ -678,6 +678,57 @@ namespace easy2d
 		}
 	}
 
+	// 运行时异常
+	class RuntimeError
+	{
+	public:
+		RuntimeError() E2D_NOEXCEPT
+			: message_(nullptr)
+		{
+		}
+
+		explicit RuntimeError(char const* const message) E2D_NOEXCEPT
+			: message_(message)
+		{
+		}
+
+		RuntimeError(RuntimeError const& other) E2D_NOEXCEPT
+			: message_(other.message_)
+		{
+		}
+
+		RuntimeError& operator=(RuntimeError const& other) noexcept
+		{
+			if (this == &other)
+			{
+				return *this;
+			}
+
+			message_ = other.message_;
+			return *this;
+		}
+
+		virtual char const* Message() const
+		{
+			return message_ ? message_ : "Unknown runtime exception";
+		}
+
+	private:
+		char const* message_;
+	};
+
+
+	inline void ThrowIfFailed(HRESULT hr)
+	{
+		if (FAILED(hr))
+		{
+			// 在此处设置断点以捕获系统异常.
+			static char s_str[64] = {};
+			sprintf_s(s_str, "Failure with HRESULT of %08X", static_cast<unsigned int>(hr));
+			throw RuntimeError(s_str);
+		}
+	}
+
 } // end of easy2d namespace
 
 

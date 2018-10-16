@@ -51,7 +51,7 @@ easy2d::Game::Game()
 {
 	if (instance)
 	{
-		throw RuntimeException("同时只能存在一个游戏实例");
+		throw RuntimeError("同时只能存在一个游戏实例");
 	}
 	instance = this;
 
@@ -326,7 +326,7 @@ void easy2d::Game::Init()
 	if (hwnd_ == nullptr)
 	{
 		::UnregisterClass(REGISTER_CLASS, HINST_THISCOMPONENT);
-		throw RuntimeException("Create window failed");
+		throw RuntimeError("Create window failed");
 		return;
 	}
 

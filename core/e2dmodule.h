@@ -22,7 +22,6 @@
 #define __E2D_MODULE_H__
 
 
-#include "e2dimpl.h"
 #include "e2dobject.h"
 #include "e2dtransition.h"
 
@@ -50,31 +49,40 @@ namespace easy2d
 		void DrawDebugInfo();
 
 		// 获取 ID2D1Factory 对象
-		ID2D1Factory * GetFactory() const;
+		ID2D1Factory* GetFactory() const;
 
 		// 获取 IWICImagingFactory 对象
-		IWICImagingFactory * GetImagingFactory() const;
+		IWICImagingFactory* GetImagingFactory() const;
 
 		// 获取 IDWriteFactory 对象
-		IDWriteFactory * GetWriteFactory() const;
+		IDWriteFactory* GetWriteFactory() const;
 
 		// 获取 ID2D1HwndRenderTarget 对象
-		ID2D1HwndRenderTarget * GetRenderTarget() const;
+		ID2D1HwndRenderTarget* GetRenderTarget() const;
 
 		// 获取 ID2D1SolidColorBrush 对象
-		ID2D1SolidColorBrush * GetSolidBrush() const;
+		ID2D1SolidColorBrush* GetSolidBrush() const;
 
 		// 获取文字渲染工具
-		TextRenderer * GetTextRender() const;
+		IDWriteTextRenderer* GetTextRender() const;
 
 		// 获取 Miter 样式的 ID2D1StrokeStyle
-		ID2D1StrokeStyle * GetMiterStrokeStyle();
+		ID2D1StrokeStyle* GetMiterStrokeStyle();
 
 		// 获取 Bevel 样式的 ID2D1StrokeStyle
-		ID2D1StrokeStyle * GetBevelStrokeStyle();
+		ID2D1StrokeStyle* GetBevelStrokeStyle();
 
 		// 获取 Round 样式的 ID2D1StrokeStyle
-		ID2D1StrokeStyle * GetRoundStrokeStyle();
+		ID2D1StrokeStyle* GetRoundStrokeStyle();
+
+		// 设置文字渲染样式
+		void SetTextRendererStyle(
+			const Color& fill_color,
+			bool has_outline,
+			const Color& outline_color,
+			float outline_width,
+			Stroke outline_stroke
+		);
 
 		// 获取 DPI
 		static float GetDpi();
@@ -87,7 +95,7 @@ namespace easy2d
 		ID2D1StrokeStyle*		miter_stroke_style_;
 		ID2D1StrokeStyle*		bevel_stroke_style_;
 		ID2D1StrokeStyle*		round_stroke_style_;
-		TextRenderer*			text_renderer_;
+		IDWriteTextRenderer*	text_renderer_;
 		IDWriteTextFormat*		fps_text_format_;
 		IDWriteTextLayout*		fps_text_layout_;
 		ID2D1SolidColorBrush*	solid_brush_;

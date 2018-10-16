@@ -319,12 +319,12 @@ void easy2d::Text::Draw() const
 		graphics->GetSolidBrush()->SetOpacity(display_opacity_);
 		// 获取文本渲染器
 		auto text_renderer = graphics->GetTextRender();
-		text_renderer->SetTextStyle(
-			(D2D1_COLOR_F)style_.color,
+		graphics->SetTextRendererStyle(
+			style_.color,
 			style_.outline,
-			(D2D1_COLOR_F)style_.outline_color,
+			style_.outline_color,
 			style_.outline_width,
-			D2D1_LINE_JOIN(style_.outline_stroke)
+			style_.outline_stroke
 		);
 		text_layout_->Draw(nullptr, text_renderer, 0, 0);
 	}

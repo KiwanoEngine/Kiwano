@@ -601,14 +601,14 @@ void easy2d::Node::AddChild(Node * child, int order)
 	{
 		if (child->parent_ != nullptr)
 		{
-			throw RuntimeException("节点已有父节点, 不能再添加到其他节点");
+			throw RuntimeError("节点已有父节点, 不能再添加到其他节点");
 		}
 
 		for (Node * parent = this; parent != nullptr; parent = parent->GetParent())
 		{
 			if (child == parent)
 			{
-				throw RuntimeException("一个节点不能同时是另一个节点的父节点和子节点");
+				throw RuntimeError("一个节点不能同时是另一个节点的父节点和子节点");
 			}
 		}
 
@@ -782,7 +782,7 @@ void easy2d::Node::RunAction(Action * action)
 		}
 		else
 		{
-			throw RuntimeException("该 Action 已有执行目标");
+			throw RuntimeError("该 Action 已有执行目标");
 		}
 	}
 }

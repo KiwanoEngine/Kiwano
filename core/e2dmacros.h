@@ -130,13 +130,6 @@
 #endif
 
 
-#ifdef UNICODE
-#	define OutputDebugStringEx OutputDebugStringExW
-#else
-#	define OutputDebugStringEx OutputDebugStringExA
-#endif
-
-
 #ifndef E2D_WARNING
 #	if defined( DEBUG ) || defined( _DEBUG )
 #		define E2D_WARNING(msg) do { ::OutputDebugStringW(L"Warning: " _CRT_WIDE(msg) L"\r\n"); } while(0)

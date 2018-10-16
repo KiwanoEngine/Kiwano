@@ -13,9 +13,6 @@
     <Filter Include="components">
       <UniqueIdentifier>{7ffdcb87-b6a2-4815-be96-5598f74155ee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="impl">
-      <UniqueIdentifier>{3475b59d-d50c-43b1-8334-bcb9e1703ed2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="events">
       <UniqueIdentifier>{6c9657de-02d5-4d3b-9e1d-bc921eb5aea3}</UniqueIdentifier>
     </Filter>
@@ -138,9 +135,6 @@
     <ClCompile Include="..\..\core\components\Menu.cpp">
       <Filter>components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\impl\TextRenderer.cpp">
-      <Filter>impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\events\KeyEvent.cpp">
       <Filter>events</Filter>
     </ClCompile>
@@ -225,7 +219,6 @@
     <ClInclude Include="..\..\core\e2devent.h" />
     <ClInclude Include="..\..\core\e2dmodule.h" />
     <ClInclude Include="..\..\core\e2dcomponent.h" />
-    <ClInclude Include="..\..\core\e2dimpl.h" />
     <ClInclude Include="..\..\core\e2dtool.h" />
     <ClInclude Include="..\..\core\e2dutil.h" />
     <ClInclude Include="..\..\core\e2dobject.h" />

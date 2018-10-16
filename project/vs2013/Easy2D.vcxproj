@@ -188,7 +188,6 @@
     <ClCompile Include="..\..\core\components\Menu.cpp" />
     <ClCompile Include="..\..\core\events\KeyEvent.cpp" />
     <ClCompile Include="..\..\core\events\MouseEvent.cpp" />
-    <ClCompile Include="..\..\core\impl\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\modules\Audio.cpp" />
     <ClCompile Include="..\..\core\modules\Device.cpp" />
     <ClCompile Include="..\..\core\modules\Game.cpp" />
@@ -233,7 +232,6 @@
     <ClInclude Include="..\..\core\e2dutil.h" />
     <ClInclude Include="..\..\core\e2dcomponent.h" />
     <ClInclude Include="..\..\core\e2devent.h" />
-    <ClInclude Include="..\..\core\e2dimpl.h" />
     <ClInclude Include="..\..\core\e2dmodule.h" />
     <ClInclude Include="..\..\core\e2dmacros.h" />
     <ClInclude Include="..\..\core\e2dtool.h" />
