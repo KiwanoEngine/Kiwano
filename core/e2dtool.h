@@ -25,7 +25,6 @@
 namespace e2d
 {
 
-
 	// 随机数产生器
 	class Random
 	{
@@ -71,6 +70,7 @@ namespace e2d
 
 	// 音乐
 	class Music
+		: public Ref
 	{
 	public:
 		Music();
@@ -89,7 +89,7 @@ namespace e2d
 
 		// 播放
 		bool Play(
-			int loop_count = 0
+			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 		);
 
 		// 暂停
@@ -112,7 +112,7 @@ namespace e2d
 
 		// 设置音量
 		bool SetVolume(
-			float volume	/* 1.0 为原始音量 */
+			float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
 		);
 
 		// 获取 IXAudio2SourceVoice 对象
@@ -146,7 +146,7 @@ namespace e2d
 		// 播放音乐
 		bool Play(
 			const String& file_path,	/* 音乐文件路径 */
-			int loop_count = 0		/* 重复播放次数，设置 -1 为循环播放 */
+			int loop_count = 0			/* 播放循环次数 (-1 为循环播放) */
 		);
 
 		// 暂停音乐
@@ -177,7 +177,7 @@ namespace e2d
 		// 播放音乐
 		bool Play(
 			const Resource& res,	/* 音乐资源 */
-			int loop_count = 0		/* 重复播放次数，设置 -1 为循环播放 */
+			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 		);
 
 		// 暂停音乐

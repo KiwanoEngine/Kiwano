@@ -29,7 +29,7 @@ bool e2d::Player::Load(const String & file_path)
 		}
 		else
 		{
-			delete music;
+			music->Release();
 		}
 	}
 	return false;
@@ -109,7 +109,7 @@ bool e2d::Player::Load(const Resource& res)
 		}
 		else
 		{
-			delete music;
+			music->Release();
 		}
 	}
 	return false;
@@ -198,7 +198,7 @@ void e2d::Player::ClearCache()
 
 	for (const auto& pair : musics_)
 	{
-		delete pair.second;
+		pair.second->Release();
 	}
 	musics_.clear();
 }
