@@ -25,7 +25,7 @@ easy2d::Loop::Loop(Action * action, int times /* = -1 */)
 	, times_(0)
 	, total_times_(times)
 {
-	WARN_IF(action == nullptr, "Loop NULL pointer exception!");
+	E2D_WARNING_IF(action == nullptr, "Loop NULL pointer exception!");
 
 	if (action)
 	{

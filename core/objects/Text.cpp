@@ -396,7 +396,7 @@ void easy2d::Text::CreateLayout()
 
 	if (text_format_ == nullptr)
 	{
-		WARN("Text::CreateLayout failed! text_format_ NULL pointer exception.");
+		E2D_WARNING("Text::CreateLayout failed! text_format_ NULL pointer exception.");
 		return;
 	}
 	

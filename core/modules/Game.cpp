@@ -151,13 +151,13 @@ void easy2d::Game::EnterScene(Scene * scene, Transition * transition)
 {
 	if (scene == nullptr)
 	{
-		WARN("Next scene is null pointer!");
+		E2D_WARNING("Next scene is null pointer!");
 		return;
 	}
 
 	if (next_scene_ != nullptr)
 	{
-		WARN("Scene is transitioning...");
+		E2D_WARNING("Scene is transitioning...");
 		return;
 	}
 
@@ -393,7 +393,7 @@ easy2d::Rect easy2d::Game::Locate(int width, int height)
 	height = static_cast<int>(rect.bottom - rect.top);
 
 	// 当输入的窗口大小比分辨率大时，给出警告
-	WARN_IF(max_width < width || max_height < height, "The window Is larger than screen!");
+	E2D_WARNING_IF(max_width < width || max_height < height, "The window Is larger than screen!");
 	width = std::min(width, max_width);
 	height = std::min(height, max_height);
 

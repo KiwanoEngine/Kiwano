@@ -483,13 +483,8 @@ int easy2d::String::Find(const String & str, int offset) const
 {
 	size_t index;
 	if ((index = string_.find(str.string_, size_t(offset))) == std::wstring::npos)
-	{
 		return -1;
-	}
-	else
-	{
-		return static_cast<int>(index);
-	}
+	return static_cast<int>(index);
 }
 
 void easy2d::String::Clear()

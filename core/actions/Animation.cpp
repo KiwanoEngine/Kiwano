@@ -57,7 +57,7 @@ void easy2d::Animation::SetInterval(float interval)
 
 void easy2d::Animation::Add(Image * frame)
 {
-	WARN_IF(frame == nullptr, "Animation::Add failed, frame Is nullptr.");
+	E2D_WARNING_IF(frame == nullptr, "Animation::Add failed, frame Is nullptr.");
 	if (frame)
 	{
 		frames_.push_back(frame);

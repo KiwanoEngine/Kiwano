@@ -24,13 +24,13 @@
 
 inline bool TraceError(wchar_t* prompt)
 {
-	WARN("Music error: %s failed!", prompt);
+	E2D_WARNING("Music error: %s failed!", prompt);
 	return false;
 }
 
 inline bool TraceError(wchar_t* prompt, HRESULT hr)
 {
-	WARN("Music error: %s (%#X)", prompt, hr);
+	E2D_WARNING("Music error: %s (%#X)", prompt, hr);
 	return false;
 }
 
@@ -339,7 +339,7 @@ bool easy2d::Music::Load(const easy2d::String & file_path)
 	File music_file;
 	if (!music_file.Open(file_path))
 	{
-		WARN("Music::Load error: File not found.");
+		E2D_WARNING("Music::Load error: File not found.");
 		return false;
 	}
 
@@ -400,13 +400,13 @@ bool easy2d::Music::Play(int loop_count)
 {
 	if (!opened_)
 	{
-		WARN("Music::Play Failed: Music must be opened first!");
+		E2D_WARNING("Music::Play Failed: Music must be opened first!");
 		return false;
 	}
 
 	if (voice_ == nullptr)
 	{
-		WARN("Music::Play Failed: IXAudio2SourceVoice Null pointer exception!");
+		E2D_WARNING("Music::Play Failed: IXAudio2SourceVoice Null pointer exception!");
 		return false;
 	}
 

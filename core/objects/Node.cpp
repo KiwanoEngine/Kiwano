@@ -595,7 +595,7 @@ void easy2d::Node::SetBorderColor(const Color & color)
 
 void easy2d::Node::AddChild(Node * child, int order)
 {
-	WARN_IF(child == nullptr, "Node::AddChild NULL pointer exception.");
+	E2D_WARNING_IF(child == nullptr, "Node::AddChild NULL pointer exception.");
 
 	if (child)
 	{
@@ -699,7 +699,7 @@ void easy2d::Node::RemoveFromParent()
 
 bool easy2d::Node::RemoveChild(Node * child)
 {
-	WARN_IF(child == nullptr, "Node::RemoveChildren NULL pointer exception.");
+	E2D_WARNING_IF(child == nullptr, "Node::RemoveChildren NULL pointer exception.");
 
 	if (children_.empty())
 	{
@@ -766,7 +766,7 @@ void easy2d::Node::RemoveAllChildren()
 
 void easy2d::Node::RunAction(Action * action)
 {
-	WARN_IF(action == nullptr, "Action NULL pointer exception!");
+	E2D_WARNING_IF(action == nullptr, "Action NULL pointer exception!");
 
 	if (action)
 	{
@@ -1041,7 +1041,7 @@ void easy2d::Node::SetVisible(bool value)
 
 void easy2d::Node::SetName(const String& name)
 {
-	WARN_IF(name.IsEmpty(), "Invalid Node name.");
+	E2D_WARNING_IF(name.IsEmpty(), "Invalid Node name.");
 
 	if (!name.IsEmpty() && name_ != name)
 	{

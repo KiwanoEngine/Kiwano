@@ -69,7 +69,7 @@ bool easy2d::Image::Load(const Resource& res)
 {
 	if (!Image::CacheBitmap(res))
 	{
-		WARN("Load Image from file failed!");
+		E2D_WARNING("Load Image from file failed!");
 		return false;
 	}
 
@@ -79,14 +79,14 @@ bool easy2d::Image::Load(const Resource& res)
 
 bool easy2d::Image::Load(const String & file_name)
 {
-	WARN_IF(file_name.IsEmpty(), "Image Load failed! Invalid file name.");
+	E2D_WARNING_IF(file_name.IsEmpty(), "Image Load failed! Invalid file name.");
 
 	if (file_name.IsEmpty())
 		return false;
 
 	if (!Image::CacheBitmap(file_name))
 	{
-		WARN("Load Image from file failed!");
+		E2D_WARNING("Load Image from file failed!");
 		return false;
 	}
 

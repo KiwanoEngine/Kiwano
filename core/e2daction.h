@@ -188,7 +188,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual MoveTo * Reverse() const override
 		{
-			WARN("Reverse() not supported in MoveTo");
+			E2D_WARNING("Reverse() not supported in MoveTo");
 			return nullptr;
 		}
 
@@ -257,7 +257,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual JumpTo * Reverse() const override
 		{
-			WARN("Reverse() not supported in JumpTo");
+			E2D_WARNING("Reverse() not supported in JumpTo");
 			return nullptr;
 		}
 
@@ -333,7 +333,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ScaleTo * Reverse() const override
 		{
-			WARN("Reverse() not supported in ScaleTo");
+			E2D_WARNING("Reverse() not supported in ScaleTo");
 			return nullptr;
 		}
 
@@ -396,7 +396,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual OpacityTo * Reverse() const override
 		{
-			WARN("Reverse() not supported in OpacityTo");
+			E2D_WARNING("Reverse() not supported in OpacityTo");
 			return nullptr;
 		}
 
@@ -488,7 +488,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual RotateTo * Reverse() const override
 		{
-			WARN("Reverse() not supported in RotateTo");
+			E2D_WARNING("Reverse() not supported in RotateTo");
 			return nullptr;
 		}
 

@@ -94,24 +94,6 @@
 #endif
 
 
-#ifndef WARN
-#	if defined( DEBUG ) || defined( _DEBUG )
-#		define WARN(message, ...) do { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); } while(0)
-#	else
-#		define WARN(message, ...) ((void)0)
-#	endif
-#endif
-
-
-#ifndef WARN_IF
-#	if defined( DEBUG ) || defined( _DEBUG )
-#		define WARN_IF(expression, message, ...) do { if (expression) { fwprintf(stderr, L"Warning: " _CRT_WIDE(#message) L"\n", __VA_ARGS__); } } while(0)
-#	else
-#		define WARN_IF(expression, message, ...) ((void)0)
-#	endif
-#endif
-
-
 #if _MSC_VER >= 1800
 #	define E2D_OP_EXPLICIT explicit
 #else
@@ -144,3 +126,59 @@
 #ifdef min
 #	undef min
 #endif
+
+
+#ifdef UNICODE
+#	define OutputDebugStringEx OutputDebugStringExW
+#else
+#	define OutputDebugStringEx OutputDebugStringExA
+#endif
+
+
+#ifndef E2D_WARNING
+#	if defined( DEBUG ) || defined( _DEBUG )
+#		define E2D_WARNING(msg, ...) do { OutputDebugStringExW(L"Warning: " _CRT_WIDE(#msg) L"\n", __VA_ARGS__); } while(0)
+#	else
+#		define E2D_WARNING(msg, ...) ((void)0)
+#	endif
+#endif
+
+
+#ifndef E2D_WARNING_IF
+#	if defined( DEBUG ) || defined( _DEBUG )
+#		define E2D_WARNING_IF(exp, msg, ...) do { if (exp) { OutputDebugStringExW(L"Warning: " _CRT_WIDE(#msg) L"\n", __VA_ARGS__); } } while(0)
+#	else
+#		define E2D_WARNING_IF(exp, msg, ...) ((void)0)
+#	endif
+#endif
+
+
+void OutputDebugStringExW(LPCWSTR pszOutput, ...)
+{
+	va_list args = NULL;
+	va_start(args, pszOutput);
+
+	size_t nLen = _vscwprintf(pszOutput, args) + 1;
+	const wchar_t* psBuffer = new wchar_t[nLen];
+	_vsnwprintf_s(psBuffer, nLen, nLen, pszOutput, args);
+
+	va_end(args);
+
+	OutputDebugStringW(psBuffer);
+	delete [] psBuffer;
+}
+
+void OutputDebugStringExA(LPCSTR pszOutput, ...)
+{
+	va_list args = NULL;
+	va_start(args, pszOutput);
+
+	size_t nLen = _vscprintf(pszOutput, args) + 1;
+	const char* psBuffer = new char[nLen];
+	_vsnprintf_s(psBuffer, nLen, nLen, pszOutput, args);
+
+	va_end(args);
+
+	OutputDebugStringA(psBuffer);
+	delete [] psBuffer;
+}
