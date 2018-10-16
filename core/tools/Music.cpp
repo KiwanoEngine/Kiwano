@@ -22,16 +22,32 @@
 #include "..\e2dmodule.h"
 
 
-inline bool TraceError(wchar_t* prompt)
+namespace
 {
-	E2D_WARNING("Music error: %s failed!", prompt);
-	return false;
-}
+	void OutputDebugStringExW(LPCWSTR pszOutput, ...)
+	{
+		va_list args = NULL;
+		va_start(args, pszOutput);
 
-inline bool TraceError(wchar_t* prompt, HRESULT hr)
-{
-	E2D_WARNING("Music error: %s (%#X)", prompt, hr);
-	return false;
+		size_t nLen = _vscwprintf(pszOutput, args) + 1;
+		wchar_t* psBuffer = new wchar_t[nLen];
+		_vsnwprintf_s(psBuffer, nLen, nLen, pszOutput, args);
+
+		va_end(args);
+
+		::OutputDebugStringW(psBuffer);
+		delete[] psBuffer;
+	}
+
+	inline void TraceError(LPCWSTR output)
+	{
+		OutputDebugStringExW(L"Music error: %s failed!\r\n", output);
+	}
+
+	inline void TraceError(LPCWSTR output, HRESULT hr)
+	{
+		OutputDebugStringExW(L"Music error: %s (%#X)\r\n", output, hr);
+	}
 }
 
 
@@ -99,35 +115,40 @@ namespace easy2d
 			res_info = FindResourceW(HINST_THISCOMPONENT, res_name, res_type);
 			if (res_info == nullptr)
 			{
-				return TraceError(L"FindResource");
+				TraceError(L"FindResource");
+				return false;
 			}
 
 			res_data = LoadResource(HINST_THISCOMPONENT, res_info);
 			if (res_data == nullptr)
 			{
-				return TraceError(L"LoadResource");
+				TraceError(L"LoadResource");
+				return false;
 			}
 
 			res_size = SizeofResource(HINST_THISCOMPONENT, res_info);
 			if (res_size == 0)
 			{
-				return TraceError(L"SizeofResource");
+				TraceError(L"SizeofResource");
+				return false;
 			}
 
 			res = LockResource(res_data);
 			if (res == nullptr)
 			{
-				return TraceError(L"LockResource");
+				TraceError(L"LockResource");
+				return false;
 			}
 
-			stream = ::SHCreateMemStream(
+			stream = SHCreateMemStream(
 				static_cast<const BYTE*>(res),
 				static_cast<UINT>(res_size)
 			);
 
 			if (stream == nullptr)
 			{
-				return TraceError(L"SHCreateMemStream");
+				TraceError(L"SHCreateMemStream");
+				return false;
 			}
 
 			if (SUCCEEDED(hr))
@@ -359,7 +380,7 @@ bool easy2d::Music::Load(const easy2d::String & file_path)
 	File music_file;
 	if (!music_file.Open(file_path))
 	{
-		E2D_WARNING("Music::Load error: File not found.");
+		E2D_WARNING("Media file not found.");
 		return false;
 	}
 
@@ -381,7 +402,8 @@ bool easy2d::Music::Load(const easy2d::String & file_path)
 			delete[] wave_data_;
 			wave_data_ = nullptr;
 		}
-		return TraceError(L"Create source voice error", hr);
+		TraceError(L"Create source voice error", hr);
+		return false;
 	}
 
 	opened_ = true;
@@ -409,7 +431,8 @@ bool easy2d::Music::Load(const Resource& res)
 			delete[] wave_data_;
 			wave_data_ = nullptr;
 		}
-		return TraceError(L"Create source voice error", hr);
+		TraceError(L"Create source voice error", hr);
+		return false;
 	}
 
 	opened_ = true;
@@ -420,13 +443,13 @@ bool easy2d::Music::Play(int loop_count)
 {
 	if (!opened_)
 	{
-		E2D_WARNING("Music::Play Failed: Music must be opened first!");
+		E2D_WARNING("Music must be opened first!");
 		return false;
 	}
 
 	if (voice_ == nullptr)
 	{
-		E2D_WARNING("Music::Play Failed: IXAudio2SourceVoice Null pointer exception!");
+		E2D_WARNING("IXAudio2SourceVoice Null pointer exception!");
 		return false;
 	}
 
@@ -456,7 +479,8 @@ bool easy2d::Music::Play(int loop_count)
 	HRESULT hr;
 	if (FAILED(hr = voice_->SubmitSourceBuffer(&buffer)))
 	{
-		return TraceError(L"Submitting source buffer error", hr);
+		TraceError(L"Submitting source buffer error", hr);
+		return false;
 	}
 
 	hr = voice_->Start(0);

@@ -18,7 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
+#ifndef __E2D_TOOL_H__
+#define __E2D_TOOL_H__
+
+
 #include "e2dutil.h"
 #include "e2dimpl.h"
 
@@ -374,4 +377,7 @@ namespace easy2d
 		static const String& GetExeFilePath();
 	};
 
-}
+} // end of easy2d namespace
+
+
+#endif // __E2D_TOOL_H__

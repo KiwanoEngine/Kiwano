@@ -18,12 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
+#ifndef __E2D_UTIL_H__
+#define __E2D_UTIL_H__
+
+
 #include "e2dmacros.h"
 
 namespace easy2d
 {
-
 
 	// ·½Ïò
 	enum class Direction : int
@@ -676,5 +678,7 @@ namespace easy2d
 		}
 	}
 
+} // end of easy2d namespace
 
-}
+
+#endif // __E2D_UTIL_H__

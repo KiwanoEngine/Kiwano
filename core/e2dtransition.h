@@ -18,12 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
+#ifndef __E2D_TRANSITION_H__
+#define __E2D_TRANSITION_H__
+
+
 #include "e2dutil.h"
 
 namespace easy2d
 {
-
 
 	class Game;
 	class Scene;
@@ -193,4 +195,7 @@ namespace easy2d
 		float	rotation_;
 	};
 
-}
+} // end of easy2d namespace
+
+
+#endif // __E2D_TRANSITION_H__

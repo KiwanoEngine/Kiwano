@@ -18,14 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
+#ifndef __E2D_OBJECT_H__
+#define __E2D_OBJECT_H__
+
+
 #include "e2dutil.h"
 #include "e2devent.h"
 
 
 namespace easy2d
 {
-
 
 	// ͼƬ
 	class Image
@@ -1092,4 +1094,7 @@ namespace easy2d
 		ID2D1StrokeStyle * stroke_style_;
 	};
 
-}
+} // end of easy2d namespace
+
+
+#endif // __E2D_OBJECT_H__

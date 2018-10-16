@@ -18,13 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
+#ifndef __E2D_EVENT_H__
+#define __E2D_EVENT_H__
+
+
 #include "e2dutil.h"
 
 namespace easy2d
 {
-
-
 	// °´¼üÏûÏ¢
 	class KeyEvent
 	{
@@ -121,4 +122,7 @@ namespace easy2d
 		LPARAM	l_param_;
 	};
 
-}
+} // end of easy2d namespace
+
+
+#endif // __E2D_EVENT_H__

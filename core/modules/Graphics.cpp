@@ -314,8 +314,12 @@ ID2D1StrokeStyle * easy2d::Graphics::GetRoundStrokeStyle()
 
 float easy2d::Graphics::GetDpi()
 {
-	HDC hdc = ::GetDC(0);
-	int dpi = ::GetDeviceCaps(hdc, LOGPIXELSX);
-	::ReleaseDC(0, hdc);
-	return static_cast<float>(dpi);
+	static float dpi = -1;
+	if (dpi < 0)
+	{
+		HDC hdc = ::GetDC(0);
+		dpi = static_cast<float>(::GetDeviceCaps(hdc, LOGPIXELSX));
+		::ReleaseDC(0, hdc);
+	}
+	return dpi;
 }

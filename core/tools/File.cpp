@@ -120,11 +120,11 @@ easy2d::File easy2d::File::Extract(const Resource& res, const String& dest_file_
 		return std::move(file);
 
 	// 查找资源文件中、加载资源到内存、得到资源大小
-	HRSRC res = ::FindResource(NULL, MAKEINTRESOURCE(res.id), static_cast<LPCWSTR>(res.type));
-	HGLOBAL res_data = ::LoadResource(NULL, res);
-	DWORD res_size = ::SizeofResource(NULL, res);
+	HRSRC res_info = ::FindResource(NULL, MAKEINTRESOURCE(res.id), static_cast<LPCWSTR>(res.type));
+	HGLOBAL res_data = ::LoadResource(NULL, res_info);
+	DWORD res_size = ::SizeofResource(NULL, res_info);
 
-	if (res && res_data && res_size)
+	if (res_info && res_data && res_size)
 	{
 		// 写入文件
 		DWORD written_bytes = 0;

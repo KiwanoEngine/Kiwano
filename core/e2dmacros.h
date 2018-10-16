@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
+#ifndef __E2D_MACROS_H__
+#define __E2D_MACROS_H__
+
 
 #ifndef WINVER
 #	define WINVER 0x0700	   // Allow use of features specific to Windows 7 or later
@@ -137,48 +139,20 @@
 
 #ifndef E2D_WARNING
 #	if defined( DEBUG ) || defined( _DEBUG )
-#		define E2D_WARNING(msg, ...) do { OutputDebugStringExW(L"Warning: " _CRT_WIDE(#msg) L"\n", __VA_ARGS__); } while(0)
+#		define E2D_WARNING(msg) do { ::OutputDebugStringW(L"Warning: " _CRT_WIDE(msg) L"\r\n"); } while(0)
 #	else
-#		define E2D_WARNING(msg, ...) ((void)0)
+#		define E2D_WARNING(msg) ((void)0)
 #	endif
 #endif
 
 
 #ifndef E2D_WARNING_IF
 #	if defined( DEBUG ) || defined( _DEBUG )
-#		define E2D_WARNING_IF(exp, msg, ...) do { if (exp) { OutputDebugStringExW(L"Warning: " _CRT_WIDE(#msg) L"\n", __VA_ARGS__); } } while(0)
+#		define E2D_WARNING_IF(exp, msg) do { if (exp) { ::OutputDebugStringW(L"Warning: " _CRT_WIDE(msg) L"\r\n"); } } while(0)
 #	else
-#		define E2D_WARNING_IF(exp, msg, ...) ((void)0)
+#		define E2D_WARNING_IF(exp, msg) ((void)0)
 #	endif
 #endif
 
 
-void OutputDebugStringExW(LPCWSTR pszOutput, ...)
-{
-	va_list args = NULL;
-	va_start(args, pszOutput);
-
-	size_t nLen = _vscwprintf(pszOutput, args) + 1;
-	const wchar_t* psBuffer = new wchar_t[nLen];
-	_vsnwprintf_s(psBuffer, nLen, nLen, pszOutput, args);
-
-	va_end(args);
-
-	OutputDebugStringW(psBuffer);
-	delete [] psBuffer;
-}
-
-void OutputDebugStringExA(LPCSTR pszOutput, ...)
-{
-	va_list args = NULL;
-	va_start(args, pszOutput);
-
-	size_t nLen = _vscprintf(pszOutput, args) + 1;
-	const char* psBuffer = new char[nLen];
-	_vsnprintf_s(psBuffer, nLen, nLen, pszOutput, args);
-
-	va_end(args);
-
-	OutputDebugStringA(psBuffer);
-	delete [] psBuffer;
-}
+#endif // __E2D_MACROS_H__

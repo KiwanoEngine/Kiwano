@@ -18,26 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
+#ifndef __E2D_ACTION_H__
+#define __E2D_ACTION_H__
+
+
 #include "e2dutil.h"
 #include "e2dobject.h"
 
 namespace easy2d
 {
 
-
 	class Node;
 	class Loop;
 	class Sequence;
 	class Spawn;
-	class ActionManager;
 
 
 	// »ù´¡¶¯×÷
 	class Action
 		: public Ref
 	{
-		friend class ActionManager;
 		friend class Loop;
 		friend class Sequence;
 		friend class Spawn;
@@ -818,5 +818,7 @@ namespace easy2d
 		Animation * animation_;
 	};
 
+} // end of easy2d namespace
 
-}
+
+#endif // __E2D_ACTION_H__

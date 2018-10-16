@@ -18,11 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
+#ifndef __E2D_IMPL_H__
+#define __E2D_IMPL_H__
+
+
 #include "e2dutil.h"
 
 namespace easy2d
 {
+
 	// ÎÄ×ÖäÖÈ¾Æ÷
 	class TextRenderer
 		: public IDWriteTextRenderer
@@ -77,7 +81,7 @@ namespace easy2d
 			BOOL IsSideways,
 			BOOL IsRightToLeft,
 			IUnknown* clientDrawingEffect
-			);
+		);
 
 		STDMETHOD(IsPixelSnappingDisabled)(
 			__maybenull void* clientDrawingContext,
@@ -150,4 +154,7 @@ namespace easy2d
 		}
 	}
 
-}
+} // end of easy2d namespace
+
+
+#endif // __E2D_IMPL_H__
