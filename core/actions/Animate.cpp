@@ -21,30 +21,30 @@
 #include "..\e2daction.h"
 #include "..\e2dobject.h"
 
-e2d::Animate::Animate() 
+easy2d::Animate::Animate() 
 	: frame_index_(0)
 	, animation_(nullptr)
 {
 }
 
-e2d::Animate::Animate(Animation * animation)
+easy2d::Animate::Animate(Animation * animation)
 	: frame_index_(0)
 	, animation_(nullptr)
 {
 	this->SetAnimation(animation);
 }
 
-e2d::Animate::~Animate()
+easy2d::Animate::~Animate()
 {
 	SafeRelease(animation_);
 }
 
-e2d::Animation * e2d::Animate::GetAnimation() const
+easy2d::Animation * easy2d::Animate::GetAnimation() const
 {
 	return animation_;
 }
 
-void e2d::Animate::SetAnimation(Animation * animation)
+void easy2d::Animate::SetAnimation(Animation * animation)
 {
 	if (animation && animation != animation_)
 	{
@@ -58,7 +58,7 @@ void e2d::Animate::SetAnimation(Animation * animation)
 	}
 }
 
-void e2d::Animate::Init()
+void easy2d::Animate::Init()
 {
 	Action::Init();
 
@@ -70,7 +70,7 @@ void e2d::Animate::Init()
 	}
 }
 
-void e2d::Animate::Update()
+void easy2d::Animate::Update()
 {
 	Action::Update();
 
@@ -101,18 +101,18 @@ void e2d::Animate::Update()
 	}
 }
 
-void e2d::Animate::ResetTime()
+void easy2d::Animate::ResetTime()
 {
 	Action::ResetTime();
 }
 
-void e2d::Animate::Reset()
+void easy2d::Animate::Reset()
 {
 	Action::Reset();
 	frame_index_ = 0;
 }
 
-e2d::Animate * e2d::Animate::Clone() const
+easy2d::Animate * easy2d::Animate::Clone() const
 {
 	if (animation_)
 	{
@@ -121,7 +121,7 @@ e2d::Animate * e2d::Animate::Clone() const
 	return nullptr;
 }
 
-e2d::Animate * e2d::Animate::Reverse() const
+easy2d::Animate * easy2d::Animate::Reverse() const
 {
 	if (animation_)
 	{

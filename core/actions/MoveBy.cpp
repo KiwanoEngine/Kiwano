@@ -22,13 +22,13 @@
 #include "..\e2dobject.h"
 
 
-e2d::MoveBy::MoveBy(float duration, Point vector)
+easy2d::MoveBy::MoveBy(float duration, Point vector)
 	: FiniteTimeAction(duration)
 {
 	delta_pos_ = vector;
 }
 
-void e2d::MoveBy::Init()
+void easy2d::MoveBy::Init()
 {
 	FiniteTimeAction::Init();
 
@@ -38,7 +38,7 @@ void e2d::MoveBy::Init()
 	}
 }
 
-void e2d::MoveBy::Update()
+void easy2d::MoveBy::Update()
 {
 	FiniteTimeAction::Update();
 
@@ -55,12 +55,12 @@ void e2d::MoveBy::Update()
 	}
 }
 
-e2d::MoveBy * e2d::MoveBy::Clone() const
+easy2d::MoveBy * easy2d::MoveBy::Clone() const
 {
 	return new MoveBy(duration_, delta_pos_);
 }
 
-e2d::MoveBy * e2d::MoveBy::Reverse() const
+easy2d::MoveBy * easy2d::MoveBy::Reverse() const
 {
 	return new MoveBy(duration_, -delta_pos_);
 }

@@ -21,14 +21,14 @@
 #include "..\e2dtool.h"
 
 
-e2d::Data::Data(const String & key, const String & field)
+easy2d::Data::Data(const String & key, const String & field)
 	: key_(key)
 	, field_(field)
 	, data_path_(Path::GetDataPath())
 {
 }
 
-bool e2d::Data::Exists() const
+bool easy2d::Data::Exists() const
 {
 	wchar_t temp[256] = { 0 };
 	::GetPrivateProfileStringW(
@@ -42,7 +42,7 @@ bool e2d::Data::Exists() const
 	return temp[0] == L'\0';
 }
 
-bool e2d::Data::SaveInt(int value)
+bool easy2d::Data::SaveInt(int value)
 {
 	BOOL ret = ::WritePrivateProfileStringW(
 		(LPCWSTR)field_,
@@ -53,7 +53,7 @@ bool e2d::Data::SaveInt(int value)
 	return ret != 0;
 }
 
-bool e2d::Data::SaveFloat(float value)
+bool easy2d::Data::SaveFloat(float value)
 {
 	BOOL ret = ::WritePrivateProfileStringW(
 		(LPCWSTR)field_,
@@ -64,7 +64,7 @@ bool e2d::Data::SaveFloat(float value)
 	return ret != 0;
 }
 
-bool e2d::Data::SaveDouble(double value)
+bool easy2d::Data::SaveDouble(double value)
 {
 	BOOL ret = ::WritePrivateProfileStringW(
 		(LPCWSTR)field_,
@@ -75,7 +75,7 @@ bool e2d::Data::SaveDouble(double value)
 	return ret != 0;
 }
 
-bool e2d::Data::SaveBool(bool value)
+bool easy2d::Data::SaveBool(bool value)
 {
 	BOOL ret = ::WritePrivateProfileStringW(
 		(LPCWSTR)field_,
@@ -86,7 +86,7 @@ bool e2d::Data::SaveBool(bool value)
 	return ret != 0;
 }
 
-bool e2d::Data::SaveString(const String& value)
+bool easy2d::Data::SaveString(const String& value)
 {
 	BOOL ret = ::WritePrivateProfileStringW(
 		(LPCWSTR)field_,
@@ -97,7 +97,7 @@ bool e2d::Data::SaveString(const String& value)
 	return ret != 0;
 }
 
-int e2d::Data::GetInt() const
+int easy2d::Data::GetInt() const
 {
 	return ::GetPrivateProfileIntW(
 		(LPCWSTR)field_,
@@ -107,21 +107,21 @@ int e2d::Data::GetInt() const
 	);
 }
 
-float e2d::Data::GetFloat() const
+float easy2d::Data::GetFloat() const
 {
 	wchar_t temp[32] = { 0 };
 	::GetPrivateProfileStringW((LPCWSTR)field_, (LPCWSTR)key_, L"0.0", temp, 31, (LPCWSTR)data_path_);
 	return std::stof(temp);
 }
 
-double e2d::Data::GetDouble() const
+double easy2d::Data::GetDouble() const
 {
 	wchar_t temp[32] = { 0 };
 	::GetPrivateProfileStringW((LPCWSTR)field_, (LPCWSTR)key_, L"0.0", temp, 31, (LPCWSTR)data_path_);
 	return std::stod(temp);
 }
 
-bool e2d::Data::GetBool() const
+bool easy2d::Data::GetBool() const
 {
 	int nValue = ::GetPrivateProfileIntW(
 		(LPCWSTR)field_,
@@ -131,7 +131,7 @@ bool e2d::Data::GetBool() const
 	return nValue != 0;
 }
 
-e2d::String e2d::Data::GetString()
+easy2d::String easy2d::Data::GetString()
 {
 	wchar_t temp[256] = { 0 };
 	::GetPrivateProfileStringW(

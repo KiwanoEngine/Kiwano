@@ -21,18 +21,18 @@
 #include "..\e2daction.h"
 #include "..\e2dobject.h"
 
-e2d::JumpTo::JumpTo(float duration, const Point & pos, float height, int jumps)
+easy2d::JumpTo::JumpTo(float duration, const Point & pos, float height, int jumps)
 	: JumpBy(duration, Point(), height, jumps)
 	, end_pos_(pos)
 {
 }
 
-e2d::JumpTo * e2d::JumpTo::Clone() const
+easy2d::JumpTo * easy2d::JumpTo::Clone() const
 {
 	return new JumpTo(duration_, end_pos_, height_, jumps_);
 }
 
-void e2d::JumpTo::Init()
+void easy2d::JumpTo::Init()
 {
 	JumpBy::Init();
 	delta_pos_ = end_pos_ - start_pos_;

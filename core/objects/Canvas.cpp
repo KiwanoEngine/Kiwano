@@ -21,7 +21,7 @@
 #include "..\e2dobject.h"
 #include "..\e2dmodule.h"
 
-e2d::Canvas::Canvas(float width, float height)
+easy2d::Canvas::Canvas(float width, float height)
 	: render_target_(nullptr)
 	, fill_brush_(nullptr)
 	, line_brush_(nullptr)
@@ -52,65 +52,65 @@ e2d::Canvas::Canvas(float width, float height)
 	this->SetStrokeStyle(stroke_);
 }
 
-e2d::Canvas::~Canvas()
+easy2d::Canvas::~Canvas()
 {
 	SafeRelease(line_brush_);
 	SafeRelease(fill_brush_);
 	SafeRelease(render_target_);
 }
 
-void e2d::Canvas::SetLineColor(const Color & color)
+void easy2d::Canvas::SetLineColor(const Color & color)
 {
 	line_brush_->SetColor(D2D_COLOR_F(color));
 }
 
-void e2d::Canvas::SetFillColor(const Color & color)
+void easy2d::Canvas::SetFillColor(const Color & color)
 {
 	fill_brush_->SetColor(D2D_COLOR_F(color));
 }
 
-void e2d::Canvas::SetStrokeWidth(float width)
+void easy2d::Canvas::SetStrokeWidth(float width)
 {
 	stroke_width_ = std::max(width, 0.f);
 }
 
-void e2d::Canvas::SetStrokeStyle(Stroke strokeStyle)
+void easy2d::Canvas::SetStrokeStyle(Stroke strokeStyle)
 {
 	switch (strokeStyle)
 	{
-	case e2d::Stroke::Miter:
+	case easy2d::Stroke::Miter:
 		stroke_style_ = Device::GetGraphics()->GetMiterStrokeStyle();
 		break;
-	case e2d::Stroke::Bevel:
+	case easy2d::Stroke::Bevel:
 		stroke_style_ = Device::GetGraphics()->GetBevelStrokeStyle();
 		break;
-	case e2d::Stroke::Round:
+	case easy2d::Stroke::Round:
 		stroke_style_ = Device::GetGraphics()->GetRoundStrokeStyle();
 		break;
 	}
 }
 
-e2d::Color e2d::Canvas::GetLineColor() const
+easy2d::Color easy2d::Canvas::GetLineColor() const
 {
 	return line_brush_->GetColor();
 }
 
-e2d::Color e2d::Canvas::GetFillColor() const
+easy2d::Color easy2d::Canvas::GetFillColor() const
 {
 	return fill_brush_->GetColor();
 }
 
-float e2d::Canvas::GetStrokeWidth() const
+float easy2d::Canvas::GetStrokeWidth() const
 {
 	return stroke_width_;
 }
 
-e2d::Stroke e2d::Canvas::GetStrokeStyle() const
+easy2d::Stroke easy2d::Canvas::GetStrokeStyle() const
 {
 	return stroke_;
 }
 
-void e2d::Canvas::DrawLine(const Point & begin, const Point & end)
+void easy2d::Canvas::DrawLine(const Point & begin, const Point & end)
 {
 	render_target_->DrawLine(
 		D2D1::Point2F(begin.x, begin.y),
@@ -121,7 +121,7 @@ void e2d::Canvas::DrawLine(const Point & begin, const Point & end)
 	);
 }
 
-void e2d::Canvas::DrawCircle(const Point & center, float radius)
+void easy2d::Canvas::DrawCircle(const Point & center, float radius)
 {
 	render_target_->DrawEllipse(
 		D2D1::Ellipse(
@@ -138,7 +138,7 @@ void e2d::Canvas::DrawCircle(const Point & center, float radius)
 	);
 }
 
-void e2d::Canvas::DrawEllipse(const Point & center, float radius_x, float radius_y)
+void easy2d::Canvas::DrawEllipse(const Point & center, float radius_x, float radius_y)
 {
 	render_target_->DrawEllipse(
 		D2D1::Ellipse(
@@ -155,7 +155,7 @@ void e2d::Canvas::DrawEllipse(const Point & center, float radius_x, float radius
 	);
 }
 
-void e2d::Canvas::DrawRect(const Rect & rect)
+void easy2d::Canvas::DrawRect(const Rect & rect)
 {
 	render_target_->DrawRectangle(
 		D2D1::RectF(
@@ -170,7 +170,7 @@ void e2d::Canvas::DrawRect(const Rect & rect)
 	);
 }
 
-void e2d::Canvas::DrawRoundedRect(const Rect & rect, float radius_x, float radius_y)
+void easy2d::Canvas::DrawRoundedRect(const Rect & rect, float radius_x, float radius_y)
 {
 	render_target_->DrawRoundedRectangle(
 		D2D1::RoundedRect(
@@ -189,7 +189,7 @@ void e2d::Canvas::DrawRoundedRect(const Rect & rect, float radius_x, float radiu
 	);
 }
 
-void e2d::Canvas::FillCircle(const Point & center, float radius)
+void easy2d::Canvas::FillCircle(const Point & center, float radius)
 {
 	render_target_->FillEllipse(
 		D2D1::Ellipse(
@@ -204,7 +204,7 @@ void e2d::Canvas::FillCircle(const Point & center, float radius)
 	);
 }
 
-void e2d::Canvas::FillEllipse(const Point & center, float radius_x, float radius_y)
+void easy2d::Canvas::FillEllipse(const Point & center, float radius_x, float radius_y)
 {
 	render_target_->FillEllipse(
 		D2D1::Ellipse(
@@ -219,7 +219,7 @@ void e2d::Canvas::FillEllipse(const Point & center, float radius_x, float radius
 	);
 }
 
-void e2d::Canvas::FillRect(const Rect & rect)
+void easy2d::Canvas::FillRect(const Rect & rect)
 {
 	render_target_->FillRectangle(
 		D2D1::RectF(
@@ -232,7 +232,7 @@ void e2d::Canvas::FillRect(const Rect & rect)
 	);
 }
 
-void e2d::Canvas::FillRoundedRect(const Rect & rect, float radius_x, float radius_y)
+void easy2d::Canvas::FillRoundedRect(const Rect & rect, float radius_x, float radius_y)
 {
 	render_target_->FillRoundedRectangle(
 		D2D1::RoundedRect(

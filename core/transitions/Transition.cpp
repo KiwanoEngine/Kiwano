@@ -22,7 +22,7 @@
 #include "..\e2dobject.h"
 #include "..\e2dmodule.h"
 
-e2d::Transition::Transition(float duration)
+easy2d::Transition::Transition(float duration)
 	: done_(false)
 	, started_()
 	, process_(0)
@@ -37,7 +37,7 @@ e2d::Transition::Transition(float duration)
 	duration_ = std::max(duration, 0.f);
 }
 
-e2d::Transition::~Transition()
+easy2d::Transition::~Transition()
 {
 	SafeRelease(out_layer_);
 	SafeRelease(in_layer_);
@@ -45,12 +45,12 @@ e2d::Transition::~Transition()
 	SafeRelease(in_scene_);
 }
 
-bool e2d::Transition::IsDone()
+bool easy2d::Transition::IsDone()
 {
 	return done_;
 }
 
-void e2d::Transition::Init(Scene * prev, Scene * next, Game * game)
+void easy2d::Transition::Init(Scene * prev, Scene * next, Game * game)
 {
 	started_ = Time::Now();
 	out_scene_ = prev;
@@ -94,7 +94,7 @@ void e2d::Transition::Init(Scene * prev, Scene * next, Game * game)
 	);
 }
 
-void e2d::Transition::Update()
+void easy2d::Transition::Update()
 {
 	if (duration_ == 0)
 	{
@@ -112,7 +112,7 @@ void e2d::Transition::Update()
 	}
 }
 
-void e2d::Transition::Draw()
+void easy2d::Transition::Draw()
 {
 	auto render_target = Device::GetGraphics()->GetRenderTarget();
 
@@ -157,7 +157,7 @@ void e2d::Transition::Draw()
 	}
 }
 
-void e2d::Transition::Stop()
+void easy2d::Transition::Stop()
 {
 	done_ = true;
 	Reset();

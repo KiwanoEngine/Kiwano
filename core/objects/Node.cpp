@@ -24,7 +24,7 @@
 #include "..\e2dmodule.h"
 
 
-e2d::Node::Node()
+easy2d::Node::Node()
 	: visible_(true)
 	, parent_(nullptr)
 	, parent_scene_(nullptr)
@@ -46,7 +46,7 @@ e2d::Node::Node()
 {
 }
 
-e2d::Node::~Node()
+easy2d::Node::~Node()
 {
 	SafeRelease(border_);
 
@@ -66,7 +66,7 @@ e2d::Node::~Node()
 	}
 }
 
-void e2d::Node::Visit()
+void easy2d::Node::Visit()
 {
 	if (!visible_)
 		return;
@@ -129,7 +129,7 @@ void e2d::Node::Visit()
 	}
 }
 
-void e2d::Node::UpdateChildren(float dt)
+void easy2d::Node::UpdateChildren(float dt)
 {
 	if (children_.empty())
 	{
@@ -166,7 +166,7 @@ void e2d::Node::UpdateChildren(float dt)
 	}
 }
 
-void e2d::Node::DrawBorder()
+void easy2d::Node::DrawBorder()
 {
 	if (visible_)
 	{
@@ -189,7 +189,7 @@ void e2d::Node::DrawBorder()
 	}
 }
 
-void e2d::Node::UpdateTransform()
+void easy2d::Node::UpdateTransform()
 {
 	if (!dirty_transform_)
 		return;
@@ -246,7 +246,7 @@ void e2d::Node::UpdateTransform()
 	}
 }
 
-bool e2d::Node::Dispatch(const MouseEvent & e, bool handled)
+bool easy2d::Node::Dispatch(const MouseEvent & e, bool handled)
 {
 	if (visible_)
 	{
@@ -261,7 +261,7 @@ bool e2d::Node::Dispatch(const MouseEvent & e, bool handled)
 	return handled;
 }
 
-bool e2d::Node::Dispatch(const KeyEvent & e, bool handled)
+bool easy2d::Node::Dispatch(const KeyEvent & e, bool handled)
 {
 	if (visible_)
 	{
@@ -276,7 +276,7 @@ bool e2d::Node::Dispatch(const KeyEvent & e, bool handled)
 	return handled;
 }
 
-void e2d::Node::UpdateOpacity()
+void easy2d::Node::UpdateOpacity()
 {
 	if (parent_)
 	{
@@ -288,7 +288,7 @@ void e2d::Node::UpdateOpacity()
 	}
 }
 
-void e2d::Node::UpdateActions()
+void easy2d::Node::UpdateActions()
 {
 	if (actions_.empty())
 		return;
@@ -321,107 +321,107 @@ void e2d::Node::UpdateActions()
 	}
 }
 
-bool e2d::Node::IsVisible() const
+bool easy2d::Node::IsVisible() const
 {
 	return visible_;
 }
 
-const e2d::String& e2d::Node::GetName() const
+const easy2d::String& easy2d::Node::GetName() const
 {
 	return name_;
 }
 
-size_t e2d::Node::GetHashName() const
+size_t easy2d::Node::GetHashName() const
 {
 	return hash_name_;
 }
 
-const e2d::Point& e2d::Node::GetPosition() const
+const easy2d::Point& easy2d::Node::GetPosition() const
 {
 	return transform_.position;
 }
 
-float e2d::Node::GetWidth() const
+float easy2d::Node::GetWidth() const
 {
 	return transform_.size.width * transform_.scale_x;
 }
 
-float e2d::Node::GetHeight() const
+float easy2d::Node::GetHeight() const
 {
 	return transform_.size.height * transform_.scale_y;
 }
 
-float e2d::Node::GetRealWidth() const
+float easy2d::Node::GetRealWidth() const
 {
 	return transform_.size.width;
 }
 
-float e2d::Node::GetRealHeight() const
+float easy2d::Node::GetRealHeight() const
 {
 	return transform_.size.height;
 }
 
-const e2d::Size& e2d::Node::GetRealSize() const
+const easy2d::Size& easy2d::Node::GetRealSize() const
 {
 	return transform_.size;
 }
 
-float e2d::Node::GetPivotX() const
+float easy2d::Node::GetPivotX() const
 {
 	return transform_.pivot_x;
 }
 
-float e2d::Node::GetPivotY() const
+float easy2d::Node::GetPivotY() const
 {
 	return transform_.pivot_y;
 }
 
-e2d::Size e2d::Node::GetSize() const
+easy2d::Size easy2d::Node::GetSize() const
 {
 	return std::move(Size(GetWidth(), GetHeight()));
 }
 
-float e2d::Node::GetScaleX() const
+float easy2d::Node::GetScaleX() const
 {
 	return transform_.scale_x;
 }
 
-float e2d::Node::GetScaleY() const
+float easy2d::Node::GetScaleY() const
 {
 	return transform_.scale_y;
 }
 
-float e2d::Node::GetSkewX() const
+float easy2d::Node::GetSkewX() const
 {
 	return transform_.skew_x;
 }
 
-float e2d::Node::GetSkewY() const
+float easy2d::Node::GetSkewY() const
 {
 	return transform_.skew_y;
 }
 
-float e2d::Node::GetRotation() const
+float easy2d::Node::GetRotation() const
 {
 	return transform_.rotation;
 }
 
-const e2d::Transform & e2d::Node::GetTransform() const
+const easy2d::Transform & easy2d::Node::GetTransform() const
 {
 	return transform_;
 }
 
-float e2d::Node::GetOpacity() const
+float easy2d::Node::GetOpacity() const
 {
 	return real_opacity_;
 }
 
-int e2d::Node::GetOrder() const
+int easy2d::Node::GetOrder() const
 {
 	return order_;
 }
 
-void e2d::Node::SetOrder(int order)
+void easy2d::Node::SetOrder(int order)
 {
 	if (order_ == order)
 		return;
@@ -433,22 +433,22 @@ void e2d::Node::SetOrder(int order)
 	}
 }
 
-void e2d::Node::SetPositionX(float x)
+void easy2d::Node::SetPositionX(float x)
 {
 	this->SetPosition(x, transform_.position.y);
 }
 
-void e2d::Node::SetPositionY(float y)
+void easy2d::Node::SetPositionY(float y)
 {
 	this->SetPosition(transform_.position.x, y);
 }
 
-void e2d::Node::SetPosition(const Point & p)
+void easy2d::Node::SetPosition(const Point & p)
 {
 	this->SetPosition(p.x, p.y);
 }
 
-void e2d::Node::SetPosition(float x, float y)
+void easy2d::Node::SetPosition(float x, float y)
 {
 	if (transform_.position.x == x && transform_.position.y == y)
 		return;
@@ -458,32 +458,32 @@ void e2d::Node::SetPosition(float x, float y)
 	dirty_transform_ = true;
 }
 
-void e2d::Node::MoveBy(float x, float y)
+void easy2d::Node::MoveBy(float x, float y)
 {
 	this->SetPosition(transform_.position.x + x, transform_.position.y + y);
 }
 
-void e2d::Node::MoveBy(const Point & v)
+void easy2d::Node::MoveBy(const Point & v)
 {
 	this->MoveBy(v.x, v.y);
 }
 
-void e2d::Node::SetScaleX(float scale_x)
+void easy2d::Node::SetScaleX(float scale_x)
 {
 	this->SetScale(scale_x, transform_.scale_y);
 }
 
-void e2d::Node::SetScaleY(float scale_y)
+void easy2d::Node::SetScaleY(float scale_y)
 {
 	this->SetScale(transform_.scale_x, scale_y);
 }
 
-void e2d::Node::SetScale(float scale)
+void easy2d::Node::SetScale(float scale)
 {
 	this->SetScale(scale, scale);
 }
 
-void e2d::Node::SetScale(float scale_x, float scale_y)
+void easy2d::Node::SetScale(float scale_x, float scale_y)
 {
 	if (transform_.scale_x == scale_x && transform_.scale_y == scale_y)
 		return;
@@ -493,17 +493,17 @@ void e2d::Node::SetScale(float scale_x, float scale_y)
 	dirty_transform_ = true;
 }
 
-void e2d::Node::SetSkewX(float skew_x)
+void easy2d::Node::SetSkewX(float skew_x)
 {
 	this->SetSkew(skew_x, transform_.skew_y);
 }
 
-void e2d::Node::SetSkewY(float skew_y)
+void easy2d::Node::SetSkewY(float skew_y)
 {
 	this->SetSkew(transform_.skew_x, skew_y);
 }
 
-void e2d::Node::SetSkew(float skew_x, float skew_y)
+void easy2d::Node::SetSkew(float skew_x, float skew_y)
 {
 	if (transform_.skew_x == skew_x && transform_.skew_y == skew_y)
 		return;
@@ -513,7 +513,7 @@ void e2d::Node::SetSkew(float skew_x, float skew_y)
 	dirty_transform_ = true;
 }
 
-void e2d::Node::SetRotation(float angle)
+void easy2d::Node::SetRotation(float angle)
 {
 	if (transform_.rotation == angle)
 		return;
@@ -522,7 +522,7 @@ void e2d::Node::SetRotation(float angle)
 	dirty_transform_ = true;
 }
 
-void e2d::Node::SetOpacity(float opacity)
+void easy2d::Node::SetOpacity(float opacity)
 {
 	if (real_opacity_ == opacity)
 		return;
@@ -532,17 +532,17 @@ void e2d::Node::SetOpacity(float opacity)
 	UpdateOpacity();
 }
 
-void e2d::Node::SetPivotX(float pivot_x)
+void easy2d::Node::SetPivotX(float pivot_x)
 {
 	this->SetPivot(pivot_x, transform_.pivot_y);
 }
 
-void e2d::Node::SetPivotY(float pivot_y)
+void easy2d::Node::SetPivotY(float pivot_y)
 {
 	this->SetPivot(transform_.pivot_x, pivot_y);
 }
 
-void e2d::Node::SetPivot(float pivot_x, float pivot_y)
+void easy2d::Node::SetPivot(float pivot_x, float pivot_y)
 {
 	if (transform_.pivot_x == pivot_x && transform_.pivot_y == pivot_y)
 		return;
@@ -552,17 +552,17 @@ void e2d::Node::SetPivot(float pivot_x, float pivot_y)
 	dirty_transform_ = true;
 }
 
-void e2d::Node::SetWidth(float width)
+void easy2d::Node::SetWidth(float width)
 {
 	this->SetSize(width, transform_.size.height);
 }
 
-void e2d::Node::SetHeight(float height)
+void easy2d::Node::SetHeight(float height)
 {
 	this->SetSize(transform_.size.width, height);
 }
 
-void e2d::Node::SetSize(float width, float height)
+void easy2d::Node::SetSize(float width, float height)
 {
 	if (transform_.size.width == width && transform_.size.height == height)
 		return;
@@ -572,28 +572,28 @@ void e2d::Node::SetSize(float width, float height)
 	dirty_transform_ = true;
 }
 
-void e2d::Node::SetSize(const Size& size)
+void easy2d::Node::SetSize(const Size& size)
 {
 	this->SetSize(size.width, size.height);
 }
 
-void e2d::Node::SetTransform(const Transform & transform)
+void easy2d::Node::SetTransform(const Transform & transform)
 {
 	transform_ = transform;
 	dirty_transform_ = true;
 }
 
-void e2d::Node::SetClipEnabled(bool enabled)
+void easy2d::Node::SetClipEnabled(bool enabled)
 {
 	clip_enabled_ = enabled;
 }
 
-void e2d::Node::SetBorderColor(const Color & color)
+void easy2d::Node::SetBorderColor(const Color & color)
 {
 	border_color_ = color;
 }
 
-void e2d::Node::AddChild(Node * child, int order)
+void easy2d::Node::AddChild(Node * child, int order)
 {
 	WARN_IF(child == nullptr, "Node::AddChild NULL pointer exception.");
 
@@ -630,7 +630,7 @@ void e2d::Node::AddChild(Node * child, int order)
 	}
 }
 
-void e2d::Node::AddChild(const Nodes& nodes, int order)
+void easy2d::Node::AddChild(const Nodes& nodes, int order)
 {
 	for (const auto& node : nodes)
 	{
@@ -638,17 +638,17 @@ void e2d::Node::AddChild(const Nodes& nodes, int order)
 	}
 }
 
-e2d::Node * e2d::Node::GetParent() const
+easy2d::Node * easy2d::Node::GetParent() const
 {
 	return parent_;
 }
 
-e2d::Scene * e2d::Node::GetParentScene() const
+easy2d::Scene * easy2d::Node::GetParentScene() const
 {
 	return parent_scene_;
 }
 
-e2d::Node::Nodes e2d::Node::GetChildren(const String& name) const
+easy2d::Node::Nodes easy2d::Node::GetChildren(const String& name) const
 {
 	Nodes children;
 	size_t hash = name.GetHash();
@@ -664,7 +664,7 @@ e2d::Node::Nodes e2d::Node::GetChildren(const String& name) const
 	return std::move(children);
 }
 
-e2d::Node * e2d::Node::GetChild(const String& name) const
+easy2d::Node * easy2d::Node::GetChild(const String& name) const
 {
 	size_t hash = name.GetHash();
 
@@ -679,17 +679,17 @@ e2d::Node * e2d::Node::GetChild(const String& name) const
 	return nullptr;
 }
 
-const std::vector<e2d::Node*>& e2d::Node::GetAllChildren() const
+const std::vector<easy2d::Node*>& easy2d::Node::GetAllChildren() const
 {
 	return children_;
 }
 
-int e2d::Node::GetChildrenCount() const
+int easy2d::Node::GetChildrenCount() const
 {
 	return static_cast<int>(children_.size());
 }
 
-void e2d::Node::RemoveFromParent()
+void easy2d::Node::RemoveFromParent()
 {
 	if (parent_)
 	{
@@ -697,7 +697,7 @@ void e2d::Node::RemoveFromParent()
 	}
 }
 
-bool e2d::Node::RemoveChild(Node * child)
+bool easy2d::Node::RemoveChild(Node * child)
 {
 	WARN_IF(child == nullptr, "Node::RemoveChildren NULL pointer exception.");
 
@@ -726,7 +726,7 @@ bool e2d::Node::RemoveChild(Node * child)
 	return false;
 }
 
-void e2d::Node::RemoveChildren(const String& child_name)
+void easy2d::Node::RemoveChildren(const String& child_name)
 {
 	if (children_.empty())
 	{
@@ -753,7 +753,7 @@ void e2d::Node::RemoveChildren(const String& child_name)
 	}
 }
 
-void e2d::Node::RemoveAllChildren()
+void easy2d::Node::RemoveAllChildren()
 {
 	// 所有节点的引用计数减一
 	for (const auto& child : children_)
@@ -764,7 +764,7 @@ void e2d::Node::RemoveAllChildren()
 	children_.clear();
 }
 
-void e2d::Node::RunAction(Action * action)
+void easy2d::Node::RunAction(Action * action)
 {
 	WARN_IF(action == nullptr, "Action NULL pointer exception!");
 
@@ -787,7 +787,7 @@ void e2d::Node::RunAction(Action * action)
 	}
 }
 
-void e2d::Node::ResumeAction(const String& name)
+void easy2d::Node::ResumeAction(const String& name)
 {
 	if (actions_.empty())
 		return;
@@ -801,7 +801,7 @@ void e2d::Node::ResumeAction(const String& name)
 	}
 }
 
-void e2d::Node::PauseAction(const String& name)
+void easy2d::Node::PauseAction(const String& name)
 {
 	if (actions_.empty())
 		return;
@@ -815,7 +815,7 @@ void e2d::Node::PauseAction(const String& name)
 	}
 }
 
-void e2d::Node::StopAction(const String& name)
+void easy2d::Node::StopAction(const String& name)
 {
 	if (actions_.empty())
 		return;
@@ -829,7 +829,7 @@ void e2d::Node::StopAction(const String& name)
 	}
 }
 
-bool e2d::Node::ContainsPoint(const Point& point)
+bool easy2d::Node::ContainsPoint(const Point& point)
 {
 	if (transform_.size.width == 0.f || transform_.size.height == 0.f)
 		return false;
@@ -847,7 +847,7 @@ bool e2d::Node::ContainsPoint(const Point& point)
 	return ret != 0;
 }
 
-bool e2d::Node::Intersects(Node * node)
+bool easy2d::Node::Intersects(Node * node)
 {
 	if (transform_.size.width == 0.f || transform_.size.height == 0.f || node->transform_.size.width == 0.f || node->transform_.size.height == 0.f)
 		return false;
@@ -869,7 +869,7 @@ bool e2d::Node::Intersects(Node * node)
 		relation != D2D1_GEOMETRY_RELATION_DISJOINT;
 }
 
-void e2d::Node::ResumeAllActions()
+void easy2d::Node::ResumeAllActions()
 {
 	if (actions_.empty())
 		return;
@@ -880,7 +880,7 @@ void e2d::Node::ResumeAllActions()
 	}
 }
 
-void e2d::Node::PauseAllActions()
+void easy2d::Node::PauseAllActions()
 {
 	if (actions_.empty())
 		return;
@@ -891,7 +891,7 @@ void e2d::Node::PauseAllActions()
 	}
 }
 
-void e2d::Node::StopAllActions()
+void easy2d::Node::StopAllActions()
 {
 	if (actions_.empty())
 		return;
@@ -902,12 +902,12 @@ void e2d::Node::StopAllActions()
 	}
 }
 
-const e2d::Node::Actions & e2d::Node::GetAllActions() const
+const easy2d::Node::Actions & easy2d::Node::GetAllActions() const
 {
 	return actions_;
 }
 
-void e2d::Node::AddTask(Task * task)
+void easy2d::Node::AddTask(Task * task)
 {
 	if (task)
 	{
@@ -921,7 +921,7 @@ void e2d::Node::AddTask(Task * task)
 	}
 }
 
-void e2d::Node::StopTasks(const String& name)
+void easy2d::Node::StopTasks(const String& name)
 {
 	for (const auto& task : tasks_)
 	{
@@ -932,7 +932,7 @@ void e2d::Node::StopTasks(const String& name)
 	}
 }
 
-void e2d::Node::StartTasks(const String& name)
+void easy2d::Node::StartTasks(const String& name)
 {
 	for (const auto& task : tasks_)
 	{
@@ -943,7 +943,7 @@ void e2d::Node::StartTasks(const String& name)
 	}
 }
 
-void e2d::Node::RemoveTasks(const String& name)
+void easy2d::Node::RemoveTasks(const String& name)
 {
 	for (const auto& task : tasks_)
 	{
@@ -954,7 +954,7 @@ void e2d::Node::RemoveTasks(const String& name)
 	}
 }
 
-void e2d::Node::StopAllTasks()
+void easy2d::Node::StopAllTasks()
 {
 	for (const auto& task : tasks_)
 	{
@@ -962,7 +962,7 @@ void e2d::Node::StopAllTasks()
 	}
 }
 
-void e2d::Node::StartAllTasks()
+void easy2d::Node::StartAllTasks()
 {
 	for (const auto& task : tasks_)
 	{
@@ -970,7 +970,7 @@ void e2d::Node::StartAllTasks()
 	}
 }
 
-void e2d::Node::RemoveAllTasks()
+void easy2d::Node::RemoveAllTasks()
 {
 	for (const auto& task : tasks_)
 	{
@@ -978,12 +978,12 @@ void e2d::Node::RemoveAllTasks()
 	}
 }
 
-const e2d::Node::Tasks & e2d::Node::GetAllTasks() const
+const easy2d::Node::Tasks & easy2d::Node::GetAllTasks() const
 {
 	return tasks_;
 }
 
-void e2d::Node::UpdateTasks()
+void easy2d::Node::UpdateTasks()
 {
 	if (tasks_.empty())
 		return;
@@ -1016,7 +1016,7 @@ void e2d::Node::UpdateTasks()
 	}
 }
 
-void e2d::Node::UpdateTime()
+void easy2d::Node::UpdateTime()
 {
 	for (const auto& action : actions_)
 	{
@@ -1034,12 +1034,12 @@ void e2d::Node::UpdateTime()
 	}
 }
 
-void e2d::Node::SetVisible(bool value)
+void easy2d::Node::SetVisible(bool value)
 {
 	visible_ = value;
 }
 
-void e2d::Node::SetName(const String& name)
+void easy2d::Node::SetName(const String& name)
 {
 	WARN_IF(name.IsEmpty(), "Invalid Node name.");
 
@@ -1052,7 +1052,7 @@ void e2d::Node::SetName(const String& name)
 	}
 }
 
-void e2d::Node::SetParentScene(Scene * scene)
+void easy2d::Node::SetParentScene(Scene * scene)
 {
 	parent_scene_ = scene;
 	for (const auto& child : children_)

@@ -20,12 +20,12 @@
 
 #include "..\e2dcomponent.h"
 
-e2d::Menu::Menu()
+easy2d::Menu::Menu()
 	: enabled_(true)
 {
 }
 
-e2d::Menu::Menu(const std::vector<Button*>& buttons)
+easy2d::Menu::Menu(const std::vector<Button*>& buttons)
 	: enabled_(true)
 {
 	for (const auto& button : buttons)
@@ -34,17 +34,17 @@ e2d::Menu::Menu(const std::vector<Button*>& buttons)
 	}
 }
 
-bool e2d::Menu::IsEnable() const
+bool easy2d::Menu::IsEnable() const
 {
 	return enabled_;
 }
 
-size_t e2d::Menu::GetButtonCount() const
+size_t easy2d::Menu::GetButtonCount() const
 {
 	return buttons_.size();
 }
 
-void e2d::Menu::SetEnabled(bool enabled)
+void easy2d::Menu::SetEnabled(bool enabled)
 {
 	if (enabled_ != enabled)
 	{
@@ -57,7 +57,7 @@ void e2d::Menu::SetEnabled(bool enabled)
 	}
 }
 
-void e2d::Menu::AddButton(Button * button)
+void easy2d::Menu::AddButton(Button * button)
 {
 	if (button)
 	{
@@ -67,7 +67,7 @@ void e2d::Menu::AddButton(Button * button)
 	}
 }
 
-bool e2d::Menu::RemoveButton(Button * button)
+bool easy2d::Menu::RemoveButton(Button * button)
 {
 	if (buttons_.empty())
 	{
@@ -90,7 +90,7 @@ bool e2d::Menu::RemoveButton(Button * button)
 	return false;
 }
 
-const std::vector<e2d::Button*>& e2d::Menu::GetAllButtons() const
+const std::vector<easy2d::Button*>& easy2d::Menu::GetAllButtons() const
 {
 	return buttons_;
 }

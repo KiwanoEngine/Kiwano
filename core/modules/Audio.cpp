@@ -21,7 +21,7 @@
 #include "..\e2dmodule.h"
 
 
-e2d::Audio::Audio()
+easy2d::Audio::Audio()
 	: x_audio2_(nullptr)
 	, mastering_voice_(nullptr)
 {
@@ -38,7 +38,7 @@ e2d::Audio::Audio()
 	);
 }
 
-e2d::Audio::~Audio()
+easy2d::Audio::~Audio()
 {
 	if (mastering_voice_)
 	{
@@ -51,17 +51,17 @@ e2d::Audio::~Audio()
 	MFShutdown();
 }
 
-HRESULT e2d::Audio::CreateVoice(IXAudio2SourceVoice ** voice, WAVEFORMATEX * wfx)
+HRESULT easy2d::Audio::CreateVoice(IXAudio2SourceVoice ** voice, WAVEFORMATEX * wfx)
 {
 	return x_audio2_->CreateSourceVoice(voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
 }
 
-void e2d::Audio::Open()
+void easy2d::Audio::Open()
 {
 	x_audio2_->StartEngine();
 }
 
-void e2d::Audio::Close()
+void easy2d::Audio::Close()
 {
 	x_audio2_->StopEngine();
 }

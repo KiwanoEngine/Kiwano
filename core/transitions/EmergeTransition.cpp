@@ -21,12 +21,12 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 
-e2d::EmergeTransition::EmergeTransition(float duration)
+easy2d::EmergeTransition::EmergeTransition(float duration)
 	: Transition(duration)
 {
 }
 
-void e2d::EmergeTransition::Init(Scene * prev, Scene * next, Game * game)
+void easy2d::EmergeTransition::Init(Scene * prev, Scene * next, Game * game)
 {
 	Transition::Init(prev, next, game);
 	
@@ -34,7 +34,7 @@ void e2d::EmergeTransition::Init(Scene * prev, Scene * next, Game * game)
 	in_layer_param_.opacity = 0;
 }
 
-void e2d::EmergeTransition::Update()
+void easy2d::EmergeTransition::Update()
 {
 	Transition::Update();
 

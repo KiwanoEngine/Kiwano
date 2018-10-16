@@ -22,22 +22,22 @@
 #include "..\e2dmodule.h"
 #include "..\e2dtool.h"
 
-std::map<size_t, ID2D1Bitmap*> e2d::Image::bitmap_cache_;
+std::map<size_t, ID2D1Bitmap*> easy2d::Image::bitmap_cache_;
 
-e2d::Image::Image()
+easy2d::Image::Image()
 	: bitmap_(nullptr)
 	, crop_rect_()
 {
 }
 
-e2d::Image::Image(const Resource& res)
+easy2d::Image::Image(const Resource& res)
 	: bitmap_(nullptr)
 	, crop_rect_()
 {
 	this->Load(res);
 }
 
-e2d::Image::Image(const Resource& res, const Rect& crop_rect)
+easy2d::Image::Image(const Resource& res, const Rect& crop_rect)
 	: bitmap_(nullptr)
 	, crop_rect_()
 {
@@ -45,14 +45,14 @@ e2d::Image::Image(const Resource& res, const Rect& crop_rect)
 	this->Crop(crop_rect);
 }
 
-e2d::Image::Image(const String & file_name)
+easy2d::Image::Image(const String & file_name)
 	: bitmap_(nullptr)
 	, crop_rect_()
 {
 	this->Load(file_name);
 }
 
-e2d::Image::Image(const String & file_name, const Rect & crop_rect)
+easy2d::Image::Image(const String & file_name, const Rect & crop_rect)
 	: bitmap_(nullptr)
 	, crop_rect_()
 {
@@ -60,12 +60,12 @@ e2d::Image::Image(const String & file_name, const Rect & crop_rect)
 	this->Crop(crop_rect);
 }
 
-e2d::Image::~Image()
+easy2d::Image::~Image()
 {
 	SafeRelease(bitmap_);
 }
 
-bool e2d::Image::Load(const Resource& res)
+bool easy2d::Image::Load(const Resource& res)
 {
 	if (!Image::CacheBitmap(res))
 	{
@@ -77,7 +77,7 @@ bool e2d::Image::Load(const Resource& res)
 	return true;
 }
 
-bool e2d::Image::Load(const String & file_name)
+bool easy2d::Image::Load(const String & file_name)
 {
 	WARN_IF(file_name.IsEmpty(), "Image Load failed! Invalid file name.");
 
@@ -94,7 +94,7 @@ bool e2d::Image::Load(const String & file_name)
 	return true;
 }
 
-void e2d::Image::Crop(const Rect& crop_rect)
+void easy2d::Image::Crop(const Rect& crop_rect)
 {
 	if (bitmap_)
 	{
@@ -106,22 +106,22 @@ void e2d::Image::Crop(const Rect& crop_rect)
 	}
 }
 
-float e2d::Image::GetWidth() const
+float easy2d::Image::GetWidth() const
 {
 	return crop_rect_.size.width;
 }
 
-float e2d::Image::GetHeight() const
+float easy2d::Image::GetHeight() const
 {
 	return crop_rect_.size.height;
 }
 
-e2d::Size e2d::Image::GetSize() const
+easy2d::Size easy2d::Image::GetSize() const
 {
 	return crop_rect_.size;
 }
 
-float e2d::Image::GetSourceWidth() const
+float easy2d::Image::GetSourceWidth() const
 {
 	if (bitmap_)
 	{
@@ -133,7 +133,7 @@ float e2d::Image::GetSourceWidth() const
 	}
 }
 
-float e2d::Image::GetSourceHeight() const
+float easy2d::Image::GetSourceHeight() const
 {
 	if (bitmap_)
 	{
@@ -145,7 +145,7 @@ float e2d::Image::GetSourceHeight() const
 	}
 }
 
-e2d::Size e2d::Image::GetSourceSize() const
+easy2d::Size easy2d::Image::GetSourceSize() const
 {
 	Size source_size;
 	if (bitmap_)
@@ -157,32 +157,32 @@ e2d::Size e2d::Image::GetSourceSize() const
 	return std::move(source_size);
 }
 
-float e2d::Image::GetCropX() const
+float easy2d::Image::GetCropX() const
 {
 	return crop_rect_.origin.x;
 }
 
-float e2d::Image::GetCropY() const
+float easy2d::Image::GetCropY() const
 {
 	return crop_rect_.origin.y;
 }
 
-e2d::Point e2d::Image::GetCropPos() const
+easy2d::Point easy2d::Image::GetCropPos() const
 {
 	return crop_rect_.origin;
 }
 
-const e2d::Rect & e2d::Image::GetCropRect() const
+const easy2d::Rect & easy2d::Image::GetCropRect() const
 {
 	return crop_rect_;
 }
 
-ID2D1Bitmap * e2d::Image::GetBitmap() const
+ID2D1Bitmap * easy2d::Image::GetBitmap() const
 {
 	return bitmap_;
 }
 
-bool e2d::Image::CacheBitmap(const Resource& res)
+bool easy2d::Image::CacheBitmap(const Resource& res)
 {
 	if (bitmap_cache_.find(res.id) != bitmap_cache_.end())
 	{
@@ -308,7 +308,7 @@ bool e2d::Image::CacheBitmap(const Resource& res)
 	return SUCCEEDED(hr);
 }
 
-bool e2d::Image::CacheBitmap(const String & file_name)
+bool easy2d::Image::CacheBitmap(const String & file_name)
 {
 	size_t hash = file_name.GetHash();
 	if (bitmap_cache_.find(hash) != bitmap_cache_.end())
@@ -389,7 +389,7 @@ bool e2d::Image::CacheBitmap(const String & file_name)
 	return SUCCEEDED(hr);
 }
 
-void e2d::Image::ClearCache()
+void easy2d::Image::ClearCache()
 {
 	if (bitmap_cache_.empty())
 		return;
@@ -401,7 +401,7 @@ void e2d::Image::ClearCache()
 	bitmap_cache_.clear();
 }
 
-void e2d::Image::SetBitmap(ID2D1Bitmap * bitmap)
+void easy2d::Image::SetBitmap(ID2D1Bitmap * bitmap)
 {
 	if (bitmap_ == bitmap)
 		return;

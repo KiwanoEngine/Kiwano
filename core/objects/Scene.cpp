@@ -21,20 +21,20 @@
 #include "..\e2dmodule.h"
 #include "..\e2dobject.h"
 
-e2d::Scene::Scene()
+easy2d::Scene::Scene()
 	: root_(nullptr)
 	, transform_(D2D1::Matrix3x2F::Identity())
 {
 }
 
-e2d::Scene::Scene(Node * root)
+easy2d::Scene::Scene(Node * root)
 	: root_(nullptr)
 	, transform_(D2D1::Matrix3x2F::Identity())
 {
 	this->SetRoot(root);
 }
 
-e2d::Scene::~Scene()
+easy2d::Scene::~Scene()
 {
 	if (root_)
 	{
@@ -43,7 +43,7 @@ e2d::Scene::~Scene()
 	}
 }
 
-void e2d::Scene::SetRoot(Node * root)
+void easy2d::Scene::SetRoot(Node * root)
 {
 	if (root_ == root)
 		return;
@@ -63,12 +63,12 @@ void e2d::Scene::SetRoot(Node * root)
 	root_ = root;
 }
 
-e2d::Node * e2d::Scene::GetRoot() const
+easy2d::Node * easy2d::Scene::GetRoot() const
 {
 	return root_;
 }
 
-void e2d::Scene::Draw()
+void easy2d::Scene::Draw()
 {
 	if (root_)
 	{
@@ -76,7 +76,7 @@ void e2d::Scene::Draw()
 	}
 }
 
-void e2d::Scene::Dispatch(const MouseEvent & e)
+void easy2d::Scene::Dispatch(const MouseEvent & e)
 {
 	auto handler = dynamic_cast<MouseEventHandler*>(this);
 	if (handler)
@@ -90,7 +90,7 @@ void e2d::Scene::Dispatch(const MouseEvent & e)
 	}
 }
 
-void e2d::Scene::Dispatch(const KeyEvent & e)
+void easy2d::Scene::Dispatch(const KeyEvent & e)
 {
 	auto handler = dynamic_cast<KeyEventHandler*>(this);
 	if (handler)
@@ -104,7 +104,7 @@ void e2d::Scene::Dispatch(const KeyEvent & e)
 	}
 }
 
-void e2d::Scene::SetTransform(const D2D1::Matrix3x2F& matrix)
+void easy2d::Scene::SetTransform(const D2D1::Matrix3x2F& matrix)
 {
 	transform_ = matrix;
 
@@ -114,7 +114,7 @@ void e2d::Scene::SetTransform(const D2D1::Matrix3x2F& matrix)
 	}
 }
 
-const D2D1::Matrix3x2F & e2d::Scene::GetTransform() const
+const D2D1::Matrix3x2F & easy2d::Scene::GetTransform() const
 {
 	return transform_;
 }

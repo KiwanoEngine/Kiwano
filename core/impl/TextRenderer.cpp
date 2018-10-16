@@ -21,7 +21,7 @@
 #include "..\e2dimpl.h"
 #include "..\e2dmodule.h"
 
-using namespace e2d;
+using namespace easy2d;
 
 E2DTextRenderer::E2DTextRenderer()
 	: cRefCount_(0)

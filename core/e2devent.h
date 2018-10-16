@@ -21,7 +21,7 @@
 #pragma once
 #include "e2dutil.h"
 
-namespace e2d
+namespace easy2d
 {
 
 

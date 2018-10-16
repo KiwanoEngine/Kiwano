@@ -21,7 +21,7 @@
 #include "..\e2dobject.h"
 
 
-e2d::Task::Task(const Function & func, const String & name)
+easy2d::Task::Task(const Function & func, const String & name)
 	: running_(true)
 	, stopped_(false)
 	, run_times_(0)
@@ -32,7 +32,7 @@ e2d::Task::Task(const Function & func, const String & name)
 {
 }
 
-e2d::Task::Task(const Function & func, float delay, int times, const String & name)
+easy2d::Task::Task(const Function & func, float delay, int times, const String & name)
 	: running_(true)
 	, stopped_(false)
 	, run_times_(0)
@@ -43,18 +43,18 @@ e2d::Task::Task(const Function & func, float delay, int times, const String & na
 {
 }
 
-void e2d::Task::Start()
+void easy2d::Task::Start()
 {
 	running_ = true;
 	last_time_ = Time::Now();
 }
 
-void e2d::Task::Stop()
+void easy2d::Task::Stop()
 {
 	running_ = false;
 }
 
-void e2d::Task::Update()
+void easy2d::Task::Update()
 {
 	if (total_times_ == 0)
 	{
@@ -77,12 +77,12 @@ void e2d::Task::Update()
 	}
 }
 
-void e2d::Task::ResetTime()
+void easy2d::Task::ResetTime()
 {
 	last_time_ = Time::Now();
 }
 
-bool e2d::Task::IsReady() const
+bool easy2d::Task::IsReady() const
 {
 	if (running_)
 	{
@@ -98,12 +98,12 @@ bool e2d::Task::IsReady() const
 	return false;
 }
 
-bool e2d::Task::IsRunning() const
+bool easy2d::Task::IsRunning() const
 {
 	return running_;
 }
 
-const e2d::String& e2d::Task::GetName() const
+const easy2d::String& easy2d::Task::GetName() const
 {
 	return name_;
 }

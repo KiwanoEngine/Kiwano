@@ -22,13 +22,13 @@
 #include "..\e2dobject.h"
 
 
-e2d::RotateBy::RotateBy(float duration, float rotation)
+easy2d::RotateBy::RotateBy(float duration, float rotation)
 	: FiniteTimeAction(duration)
 {
 	delta_val_ = rotation;
 }
 
-void e2d::RotateBy::Init()
+void easy2d::RotateBy::Init()
 {
 	FiniteTimeAction::Init();
 
@@ -38,7 +38,7 @@ void e2d::RotateBy::Init()
 	}
 }
 
-void e2d::RotateBy::Update()
+void easy2d::RotateBy::Update()
 {
 	FiniteTimeAction::Update();
 
@@ -48,12 +48,12 @@ void e2d::RotateBy::Update()
 	}
 }
 
-e2d::RotateBy * e2d::RotateBy::Clone() const
+easy2d::RotateBy * easy2d::RotateBy::Clone() const
 {
 	return new RotateBy(duration_, delta_val_);
 }
 
-e2d::RotateBy * e2d::RotateBy::Reverse() const
+easy2d::RotateBy * easy2d::RotateBy::Reverse() const
 {
 	return new RotateBy(duration_, -delta_val_);
 }

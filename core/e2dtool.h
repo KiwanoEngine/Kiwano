@@ -22,7 +22,7 @@
 #include "e2dutil.h"
 #include "e2dimpl.h"
 
-namespace e2d
+namespace easy2d
 {
 
 	// 随机数产生器
@@ -33,19 +33,19 @@ namespace e2d
 		template<typename T>
 		static inline T Range(T min, T max)
 		{
-			return e2d::Random::RandomInt(min, max);
+			return easy2d::Random::RandomInt(min, max);
 		}
 
 		// 取得范围内的一个浮点数随机数
 		static inline float Range(float min, float max)
 		{
-			return e2d::Random::RandomReal(min, max);
+			return easy2d::Random::RandomReal(min, max);
 		}
 
 		// 取得范围内的一个浮点数随机数
 		static inline double Range(double min, double max)
 		{
-			return e2d::Random::RandomReal(min, max);
+			return easy2d::Random::RandomReal(min, max);
 		}
 
 	private:
@@ -79,7 +79,7 @@ namespace e2d
 
 		// 打开音乐文件
 		bool Load(
-			const e2d::String& file_path	/* 音乐文件路径 */
+			const easy2d::String& file_path	/* 音乐文件路径 */
 		);
 
 		// 打开音乐资源

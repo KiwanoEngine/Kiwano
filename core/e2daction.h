@@ -22,7 +22,7 @@
 #include "e2dutil.h"
 #include "e2dobject.h"
 
-namespace e2d
+namespace easy2d
 {
 
 

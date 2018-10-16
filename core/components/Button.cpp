@@ -37,7 +37,7 @@
 	}															\
 
 
-e2d::Button::Button()
+easy2d::Button::Button()
 	: callback_(nullptr)
 	, status_(Status::Normal)
 	, enabled_(true)
@@ -49,7 +49,7 @@ e2d::Button::Button()
 {
 }
 
-e2d::Button::Button(Node * normal, const Function& func)
+easy2d::Button::Button(Node * normal, const Function& func)
 	: callback_(nullptr)
 	, status_(Status::Normal)
 	, enabled_(true)
@@ -63,7 +63,7 @@ e2d::Button::Button(Node * normal, const Function& func)
 	this->SetCallbackOnClick(func);
 }
 
-e2d::Button::Button(Node * normal, Node * selected, const Function& func)
+easy2d::Button::Button(Node * normal, Node * selected, const Function& func)
 	: callback_(nullptr)
 	, status_(Status::Normal)
 	, enabled_(true)
@@ -78,7 +78,7 @@ e2d::Button::Button(Node * normal, Node * selected, const Function& func)
 	this->SetCallbackOnClick(func);
 }
 
-e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Function& func)
+easy2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Function& func)
 	: callback_(nullptr)
 	, status_(Status::Normal)
 	, enabled_(true)
@@ -94,7 +94,7 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Func
 	this->SetCallbackOnClick(func);
 }
 
-e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Function& func)
+easy2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Function& func)
 	: callback_(nullptr)
 	, status_(Status::Normal)
 	, enabled_(true)
@@ -111,12 +111,12 @@ e2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * dis
 	this->SetCallbackOnClick(func);
 }
 
-bool e2d::Button::IsEnable() const
+bool easy2d::Button::IsEnable() const
 {
 	return enabled_;
 }
 
-void e2d::Button::SetNormal(Node * normal)
+void easy2d::Button::SetNormal(Node * normal)
 {
 	SET_BUTTON_NODE(normal_, normal);
 	if (normal)
@@ -125,22 +125,22 @@ void e2d::Button::SetNormal(Node * normal)
 	}
 }
 
-void e2d::Button::SetMouseOver(Node * mouseover)
+void easy2d::Button::SetMouseOver(Node * mouseover)
 {
 	SET_BUTTON_NODE(mouseover_, mouseover);
 }
 
-void e2d::Button::SetSelected(Node * selected)
+void easy2d::Button::SetSelected(Node * selected)
 {
 	SET_BUTTON_NODE(selected_, selected);
 }
 
-void e2d::Button::SetDisabled(Node * disabled)
+void easy2d::Button::SetDisabled(Node * disabled)
 {
 	SET_BUTTON_NODE(disabled_, disabled);
 }
 
-void e2d::Button::SetEnabled(bool enabled)
+void easy2d::Button::SetEnabled(bool enabled)
 {
 	if (enabled_ != enabled)
 	{
@@ -149,12 +149,12 @@ void e2d::Button::SetEnabled(bool enabled)
 	}
 }
 
-void e2d::Button::SetCallbackOnClick(const Function& func)
+void easy2d::Button::SetCallbackOnClick(const Function& func)
 {
 	callback_ = func;
 }
 
-void e2d::Button::SetPivot(float pivot_x, float pivot_y)
+void easy2d::Button::SetPivot(float pivot_x, float pivot_y)
 {
 	Node::SetPivot(pivot_x, pivot_y);
 	SAFE_SET(normal_, SetPivot, pivot_x, pivot_y);
@@ -163,7 +163,7 @@ void e2d::Button::SetPivot(float pivot_x, float pivot_y)
 	SAFE_SET(disabled_, SetPivot, pivot_x, pivot_y);
 }
 
-bool e2d::Button::Dispatch(const MouseEvent & e, bool handled)
+bool easy2d::Button::Dispatch(const MouseEvent & e, bool handled)
 {
 	if (!handled && enabled_ && visible_ && normal_)
 	{
@@ -212,7 +212,7 @@ bool e2d::Button::Dispatch(const MouseEvent & e, bool handled)
 	return Node::Dispatch(e, handled);
 }
 
-void e2d::Button::Visit()
+void easy2d::Button::Visit()
 {
 	Node::Visit();
 
@@ -237,7 +237,7 @@ void e2d::Button::Visit()
 	}
 }
 
-void e2d::Button::SetStatus(Status status)
+void easy2d::Button::SetStatus(Status status)
 {
 	if (status_ != status)
 	{
@@ -246,7 +246,7 @@ void e2d::Button::SetStatus(Status status)
 	}
 }
 
-void e2d::Button::UpdateVisible()
+void easy2d::Button::UpdateVisible()
 {
 	SAFE_SET(normal_, SetVisible, false);
 	SAFE_SET(mouseover_, SetVisible, false);

@@ -21,49 +21,49 @@
 #include "..\e2dobject.h"
 #include "..\e2dmodule.h"
 
-e2d::Sprite::Sprite()
+easy2d::Sprite::Sprite()
 	: image_(nullptr)
 {
 }
 
-e2d::Sprite::Sprite(Image * image)
+easy2d::Sprite::Sprite(Image * image)
 	: image_(nullptr)
 {
 	Load(image);
 }
 
-e2d::Sprite::Sprite(const Resource& res)
+easy2d::Sprite::Sprite(const Resource& res)
 	: image_(nullptr)
 {
 	Load(res);
 }
 
-e2d::Sprite::Sprite(const Resource& res, const Rect& crop_rect)
+easy2d::Sprite::Sprite(const Resource& res, const Rect& crop_rect)
 	: image_(nullptr)
 {
 	Load(res);
 	Crop(crop_rect);
 }
 
-e2d::Sprite::Sprite(const String & file_name)
+easy2d::Sprite::Sprite(const String & file_name)
 	: image_(nullptr)
 {
 	Load(file_name);
 }
 
-e2d::Sprite::Sprite(const String & file_name, const Rect & crop_rect)
+easy2d::Sprite::Sprite(const String & file_name, const Rect & crop_rect)
 	: image_(nullptr)
 {
 	Load(file_name);
 	Crop(crop_rect);
 }
 
-e2d::Sprite::~Sprite()
+easy2d::Sprite::~Sprite()
 {
 	SafeRelease(image_);
 }
 
-bool e2d::Sprite::Load(Image * image)
+bool easy2d::Sprite::Load(Image * image)
 {
 	if (image)
 	{
@@ -81,7 +81,7 @@ bool e2d::Sprite::Load(Image * image)
 	return false;
 }
 
-bool e2d::Sprite::Load(const Resource& res)
+bool easy2d::Sprite::Load(const Resource& res)
 {
 	if (!image_)
 	{
@@ -97,7 +97,7 @@ bool e2d::Sprite::Load(const Resource& res)
 	return false;
 }
 
-bool e2d::Sprite::Load(const String & file_name)
+bool easy2d::Sprite::Load(const String & file_name)
 {
 	if (!image_)
 	{
@@ -113,7 +113,7 @@ bool e2d::Sprite::Load(const String & file_name)
 	return false;
 }
 
-void e2d::Sprite::Crop(const Rect& crop_rect)
+void easy2d::Sprite::Crop(const Rect& crop_rect)
 {
 	image_->Crop(crop_rect);
 	Node::SetSize(
@@ -122,12 +122,12 @@ void e2d::Sprite::Crop(const Rect& crop_rect)
 	);
 }
 
-e2d::Image * e2d::Sprite::GetImage() const
+easy2d::Image * easy2d::Sprite::GetImage() const
 {
 	return image_;
 }
 
-void e2d::Sprite::Draw() const
+void easy2d::Sprite::Draw() const
 {
 	if (image_ && image_->GetBitmap())
 	{

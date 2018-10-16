@@ -21,19 +21,19 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 
-e2d::BoxTransition::BoxTransition(float duration)
+easy2d::BoxTransition::BoxTransition(float duration)
 	: Transition(duration)
 {
 }
 
-void e2d::BoxTransition::Init(Scene * prev, Scene * next, Game * game)
+void easy2d::BoxTransition::Init(Scene * prev, Scene * next, Game * game)
 {
 	Transition::Init(prev, next, game);
 
 	in_layer_param_.opacity = 0;
 }
 
-void e2d::BoxTransition::Update()
+void easy2d::BoxTransition::Update()
 {
 	Transition::Update();
 

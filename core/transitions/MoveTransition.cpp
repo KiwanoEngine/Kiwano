@@ -21,13 +21,13 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 
-e2d::MoveTransition::MoveTransition(float duration, Direction direction)
+easy2d::MoveTransition::MoveTransition(float duration, Direction direction)
 	: Transition(duration)
 	, direction_(direction)
 {
 }
 
-void e2d::MoveTransition::Init(Scene * prev, Scene * next, Game * game)
+void easy2d::MoveTransition::Init(Scene * prev, Scene * next, Game * game)
 {
 	Transition::Init(prev, next, game);
 	
@@ -67,7 +67,7 @@ void e2d::MoveTransition::Init(Scene * prev, Scene * next, Game * game)
 	}
 }
 
-void e2d::MoveTransition::Update()
+void easy2d::MoveTransition::Update()
 {
 	Transition::Update();
 
@@ -94,7 +94,7 @@ void e2d::MoveTransition::Update()
 	}
 }
 
-void e2d::MoveTransition::Reset()
+void easy2d::MoveTransition::Reset()
 {
 	if (out_scene_)
 	{

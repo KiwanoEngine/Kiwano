@@ -1,18 +1,18 @@
 #include "..\e2dtool.h"
 
 
-std::map<size_t, e2d::Music*> e2d::Player::musics_;
+std::map<size_t, easy2d::Music*> easy2d::Player::musics_;
 
-e2d::Player::Player()
+easy2d::Player::Player()
 	: volume_(1.f)
 {
 }
 
-e2d::Player::~Player()
+easy2d::Player::~Player()
 {
 }
 
-bool e2d::Player::Load(const String & file_path)
+bool easy2d::Player::Load(const String & file_path)
 {
 	if (file_path.IsEmpty())
 		return false;
@@ -35,7 +35,7 @@ bool e2d::Player::Load(const String & file_path)
 	return false;
 }
 
-bool e2d::Player::Play(const String & file_path, int loop_count)
+bool easy2d::Player::Play(const String & file_path, int loop_count)
 {
 	if (file_path.IsEmpty())
 		return false;
@@ -51,7 +51,7 @@ bool e2d::Player::Play(const String & file_path, int loop_count)
 	return false;
 }
 
-void e2d::Player::Pause(const String & file_path)
+void easy2d::Player::Pause(const String & file_path)
 {
 	if (file_path.IsEmpty())
 		return;
@@ -61,7 +61,7 @@ void e2d::Player::Pause(const String & file_path)
 		musics_[hash]->Pause();
 }
 
-void e2d::Player::Resume(const String & file_path)
+void easy2d::Player::Resume(const String & file_path)
 {
 	if (file_path.IsEmpty())
 		return;
@@ -71,7 +71,7 @@ void e2d::Player::Resume(const String & file_path)
 		musics_[hash]->Resume();
 }
 
-void e2d::Player::Stop(const String & file_path)
+void easy2d::Player::Stop(const String & file_path)
 {
 	if (file_path.IsEmpty())
 		return;
@@ -81,7 +81,7 @@ void e2d::Player::Stop(const String & file_path)
 		musics_[hash]->Stop();
 }
 
-bool e2d::Player::IsPlaying(const String & file_path)
+bool easy2d::Player::IsPlaying(const String & file_path)
 {
 	if (file_path.IsEmpty())
 		return false;
@@ -92,7 +92,7 @@ bool e2d::Player::IsPlaying(const String & file_path)
 	return false;
 }
 
-bool e2d::Player::Load(const Resource& res)
+bool easy2d::Player::Load(const Resource& res)
 {
 	if (musics_.end() != musics_.find(res.id))
 		return true;
@@ -115,7 +115,7 @@ bool e2d::Player::Load(const Resource& res)
 	return false;
 }
 
-bool e2d::Player::Play(const Resource& res, int loop_count)
+bool easy2d::Player::Play(const Resource& res, int loop_count)
 {
 	if (Load(res))
 	{
@@ -128,37 +128,37 @@ bool e2d::Player::Play(const Resource& res, int loop_count)
 	return false;
 }
 
-void e2d::Player::Pause(const Resource& res)
+void easy2d::Player::Pause(const Resource& res)
 {
 	if (musics_.end() != musics_.find(res.id))
 		musics_[res.id]->Pause();
 }
 
-void e2d::Player::Resume(const Resource& res)
+void easy2d::Player::Resume(const Resource& res)
 {
 	if (musics_.end() != musics_.find(res.id))
 		musics_[res.id]->Resume();
 }
 
-void e2d::Player::Stop(const Resource& res)
+void easy2d::Player::Stop(const Resource& res)
 {
 	if (musics_.end() != musics_.find(res.id))
 		musics_[res.id]->Stop();
 }
 
-bool e2d::Player::IsPlaying(const Resource& res)
+bool easy2d::Player::IsPlaying(const Resource& res)
 {
 	if (musics_.end() != musics_.find(res.id))
 		return musics_[res.id]->IsPlaying();
 	return false;
 }
 
-float e2d::Player::GetVolume() const
+float easy2d::Player::GetVolume() const
 {
 	return volume_;
 }
 
-void e2d::Player::SetVolume(float volume)
+void easy2d::Player::SetVolume(float volume)
 {
 	volume_ = std::min(std::max(volume, -224.f), 224.f);
 	for (const auto& pair : musics_)
@@ -167,7 +167,7 @@ void e2d::Player::SetVolume(float volume)
 	}
 }
 
-void e2d::Player::PauseAll()
+void easy2d::Player::PauseAll()
 {
 	for (const auto& pair : musics_)
 	{
@@ -175,7 +175,7 @@ void e2d::Player::PauseAll()
 	}
 }
 
-void e2d::Player::ResumeAll()
+void easy2d::Player::ResumeAll()
 {
 	for (const auto& pair : musics_)
 	{
@@ -183,7 +183,7 @@ void e2d::Player::ResumeAll()
 	}
 }
 
-void e2d::Player::StopAll()
+void easy2d::Player::StopAll()
 {
 	for (const auto& pair : musics_)
 	{
@@ -191,7 +191,7 @@ void e2d::Player::StopAll()
 	}
 }
 
-void e2d::Player::ClearCache()
+void easy2d::Player::ClearCache()
 {
 	if (musics_.empty())
 		return;

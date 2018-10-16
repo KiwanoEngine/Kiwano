@@ -22,7 +22,7 @@
 #include "..\e2dobject.h"
 
 
-e2d::Graphics::Graphics(HWND hwnd)
+easy2d::Graphics::Graphics(HWND hwnd)
 	: factory_(nullptr)
 	, imaging_factory_(nullptr)
 	, write_factory_(nullptr)
@@ -101,7 +101,7 @@ e2d::Graphics::Graphics(HWND hwnd)
 	);
 }
 
-e2d::Graphics::~Graphics()
+easy2d::Graphics::~Graphics()
 {
 	SafeRelease(fps_text_format_);
 	SafeRelease(fps_text_layout_);
@@ -117,13 +117,13 @@ e2d::Graphics::~Graphics()
 	SafeRelease(write_factory_);
 }
 
-void e2d::Graphics::BeginDraw()
+void easy2d::Graphics::BeginDraw()
 {
 	render_target_->BeginDraw();
 	render_target_->Clear(clear_color_);
 }
 
-void e2d::Graphics::EndDraw()
+void easy2d::Graphics::EndDraw()
 {
 	HRESULT hr = render_target_->EndDraw();
 
@@ -143,7 +143,7 @@ void e2d::Graphics::EndDraw()
 	ThrowIfFailed(hr);
 }
 
-void e2d::Graphics::DrawDebugInfo()
+void easy2d::Graphics::DrawDebugInfo()
 {
 	static int render_times_ = 0;
 	static Time last_render_time_ = Time::Now();
@@ -213,37 +213,37 @@ void e2d::Graphics::DrawDebugInfo()
 	}
 }
 
-ID2D1HwndRenderTarget * e2d::Graphics::GetRenderTarget() const
+ID2D1HwndRenderTarget * easy2d::Graphics::GetRenderTarget() const
 {
 	return render_target_;
 }
 
-ID2D1SolidColorBrush * e2d::Graphics::GetSolidBrush() const
+ID2D1SolidColorBrush * easy2d::Graphics::GetSolidBrush() const
 {
 	return solid_brush_;
 }
 
-e2d::E2DTextRenderer * e2d::Graphics::GetTextRender() const
+easy2d::E2DTextRenderer * easy2d::Graphics::GetTextRender() const
 {
 	return text_renderer_;
 }
 
-ID2D1Factory * e2d::Graphics::GetFactory() const
+ID2D1Factory * easy2d::Graphics::GetFactory() const
 {
 	return factory_;
 }
 
-IWICImagingFactory * e2d::Graphics::GetImagingFactory() const
+IWICImagingFactory * easy2d::Graphics::GetImagingFactory() const
 {
 	return imaging_factory_;
 }
 
-IDWriteFactory * e2d::Graphics::GetWriteFactory() const
+IDWriteFactory * easy2d::Graphics::GetWriteFactory() const
 {
 	return write_factory_;
 }
 
-ID2D1StrokeStyle * e2d::Graphics::GetMiterStrokeStyle()
+ID2D1StrokeStyle * easy2d::Graphics::GetMiterStrokeStyle()
 {
 	if (!miter_stroke_style_)
 	{
@@ -266,7 +266,7 @@ ID2D1StrokeStyle * e2d::Graphics::GetMiterStrokeStyle()
 	return miter_stroke_style_;
 }
 
-ID2D1StrokeStyle * e2d::Graphics::GetBevelStrokeStyle()
+ID2D1StrokeStyle * easy2d::Graphics::GetBevelStrokeStyle()
 {
 	if (!bevel_stroke_style_)
 	{
@@ -289,7 +289,7 @@ ID2D1StrokeStyle * e2d::Graphics::GetBevelStrokeStyle()
 	return bevel_stroke_style_;
 }
 
-ID2D1StrokeStyle * e2d::Graphics::GetRoundStrokeStyle()
+ID2D1StrokeStyle * easy2d::Graphics::GetRoundStrokeStyle()
 {
 	if (!round_stroke_style_)
 	{
@@ -312,7 +312,7 @@ ID2D1StrokeStyle * e2d::Graphics::GetRoundStrokeStyle()
 	return round_stroke_style_;
 }
 
-float e2d::Graphics::GetDpi()
+float easy2d::Graphics::GetDpi()
 {
 	HDC hdc = ::GetDC(0);
 	int dpi = ::GetDeviceCaps(hdc, LOGPIXELSX);

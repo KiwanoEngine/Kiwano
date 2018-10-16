@@ -21,14 +21,14 @@
 #include "..\e2devent.h"
 
 
-e2d::KeyEvent::KeyEvent(UINT message, WPARAM w_param, LPARAM l_param)
+easy2d::KeyEvent::KeyEvent(UINT message, WPARAM w_param, LPARAM l_param)
 	: message_(message)
 	, w_param_(w_param)
 	, l_param_(l_param)
 {
 }
 
-e2d::KeyCode e2d::KeyEvent::GetCode() const
+easy2d::KeyCode easy2d::KeyEvent::GetCode() const
 {
 	switch (w_param_)
 	{
@@ -89,12 +89,12 @@ e2d::KeyCode e2d::KeyEvent::GetCode() const
 	}
 }
 
-int e2d::KeyEvent::GetCount() const
+int easy2d::KeyEvent::GetCount() const
 {
 	return static_cast<int>((DWORD)l_param_ & 0x0000FFFF);
 }
 
-e2d::KeyEvent::Type e2d::KeyEvent::GetType() const
+easy2d::KeyEvent::Type easy2d::KeyEvent::GetType() const
 {
 	return Type(message_);
 }

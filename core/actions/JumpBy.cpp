@@ -21,7 +21,7 @@
 #include "..\e2daction.h"
 #include "..\e2dobject.h"
 
-e2d::JumpBy::JumpBy(float duration, const Point & vec, float height, int jumps)
+easy2d::JumpBy::JumpBy(float duration, const Point & vec, float height, int jumps)
 	: FiniteTimeAction(duration)
 	, delta_pos_(vec)
 	, height_(height)
@@ -29,17 +29,17 @@ e2d::JumpBy::JumpBy(float duration, const Point & vec, float height, int jumps)
 {
 }
 
-e2d::JumpBy * e2d::JumpBy::Clone() const
+easy2d::JumpBy * easy2d::JumpBy::Clone() const
 {
 	return new JumpBy(duration_, delta_pos_, height_, jumps_);
 }
 
-e2d::JumpBy * e2d::JumpBy::Reverse() const
+easy2d::JumpBy * easy2d::JumpBy::Reverse() const
 {
 	return new JumpBy(duration_, -delta_pos_, height_, jumps_);
 }
 
-void e2d::JumpBy::Init()
+void easy2d::JumpBy::Init()
 {
 	FiniteTimeAction::Init();
 
@@ -49,7 +49,7 @@ void e2d::JumpBy::Init()
 	}
 }
 
-void e2d::JumpBy::Update()
+void easy2d::JumpBy::Update()
 {
 	FiniteTimeAction::Update();
 

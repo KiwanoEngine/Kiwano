@@ -21,7 +21,7 @@
 #include "..\e2dutil.h"
 
 
-e2d::Transform::Transform()
+easy2d::Transform::Transform()
 	: position()
 	, size()
 	, scale_x(1.f)
@@ -34,7 +34,7 @@ e2d::Transform::Transform()
 {
 }
 
-e2d::Transform::operator D2D1::Matrix3x2F() const
+easy2d::Transform::operator D2D1::Matrix3x2F() const
 {
 	auto pivot = D2D1::Point2F(size.width * pivot_x, size.height * pivot_y);
 	auto matrix = D2D1::Matrix3x2F::Scale(
@@ -55,7 +55,7 @@ e2d::Transform::operator D2D1::Matrix3x2F() const
 	return std::move(matrix);
 }
 
-bool e2d::Transform::operator==(const Transform & other) const
+bool easy2d::Transform::operator==(const Transform & other) const
 {
 	return position == other.position &&
 		size == other.size &&

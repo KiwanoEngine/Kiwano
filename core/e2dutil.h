@@ -21,7 +21,7 @@
 #pragma once
 #include "e2dmacros.h"
 
-namespace e2d
+namespace easy2d
 {
 
 
@@ -72,7 +72,7 @@ namespace e2d
 		Point operator - () const;
 		bool operator== (const Point& other) const;
 
-		E2D_OP_EXPLICIT operator e2d::Size() const;
+		E2D_OP_EXPLICIT operator easy2d::Size() const;
 
 		// ≈–∂œ¡Ωµ„º‰æ‡¿Î
 		static float Distance(
@@ -108,7 +108,7 @@ namespace e2d
 		Size operator - () const;
 		bool operator== (const Size& other) const;
 
-		E2D_OP_EXPLICIT operator e2d::Point() const;
+		E2D_OP_EXPLICIT operator easy2d::Point() const;
 	};
 
 

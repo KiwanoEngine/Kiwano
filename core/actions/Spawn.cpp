@@ -20,16 +20,16 @@
 
 #include "..\e2daction.h"
 
-e2d::Spawn::Spawn()
+easy2d::Spawn::Spawn()
 {
 }
 
-e2d::Spawn::Spawn(const Actions& actions)
+easy2d::Spawn::Spawn(const Actions& actions)
 {
 	this->Add(actions);
 }
 
-e2d::Spawn::~Spawn()
+easy2d::Spawn::~Spawn()
 {
 	for (auto action : actions_)
 	{
@@ -37,7 +37,7 @@ e2d::Spawn::~Spawn()
 	}
 }
 
-void e2d::Spawn::Init()
+void easy2d::Spawn::Init()
 {
 	Action::Init();
 
@@ -51,7 +51,7 @@ void e2d::Spawn::Init()
 	}
 }
 
-void e2d::Spawn::Update()
+void easy2d::Spawn::Update()
 {
 	Action::Update();
 
@@ -74,7 +74,7 @@ void e2d::Spawn::Update()
 	}
 }
 
-void e2d::Spawn::Reset()
+void easy2d::Spawn::Reset()
 {
 	Action::Reset();
 	for (const auto& action : actions_)
@@ -83,7 +83,7 @@ void e2d::Spawn::Reset()
 	}
 }
 
-void e2d::Spawn::ResetTime()
+void easy2d::Spawn::ResetTime()
 {
 	for (const auto& action : actions_)
 	{
@@ -91,7 +91,7 @@ void e2d::Spawn::ResetTime()
 	}
 }
 
-void e2d::Spawn::Add(Action * action)
+void easy2d::Spawn::Add(Action * action)
 {
 	if (action)
 	{
@@ -100,7 +100,7 @@ void e2d::Spawn::Add(Action * action)
 	}
 }
 
-void e2d::Spawn::Add(const Actions& actions)
+void easy2d::Spawn::Add(const Actions& actions)
 {
 	for (const auto &action : actions)
 	{
@@ -108,7 +108,7 @@ void e2d::Spawn::Add(const Actions& actions)
 	}
 }
 
-e2d::Spawn * e2d::Spawn::Clone() const
+easy2d::Spawn * easy2d::Spawn::Clone() const
 {
 	auto spawn = new Spawn();
 	for (const auto& action : actions_)
@@ -121,7 +121,7 @@ e2d::Spawn * e2d::Spawn::Clone() const
 	return spawn;
 }
 
-e2d::Spawn * e2d::Spawn::Reverse() const
+easy2d::Spawn * easy2d::Spawn::Reverse() const
 {
 	auto spawn = new Spawn();
 	if (spawn && !actions_.empty())

@@ -21,13 +21,13 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 
-e2d::RotationTransition::RotationTransition(float duration, float rotation)
+easy2d::RotationTransition::RotationTransition(float duration, float rotation)
 	: Transition(duration)
 	, rotation_(rotation)
 {
 }
 
-void e2d::RotationTransition::Init(Scene * prev, Scene * next, Game * game)
+void easy2d::RotationTransition::Init(Scene * prev, Scene * next, Game * game)
 {
 	Transition::Init(prev, next, game);
 
@@ -44,7 +44,7 @@ void e2d::RotationTransition::Init(Scene * prev, Scene * next, Game * game)
 	in_layer_param_.opacity = 0;
 }
 
-void e2d::RotationTransition::Update()
+void easy2d::RotationTransition::Update()
 {
 	Transition::Update();
 
@@ -90,7 +90,7 @@ void e2d::RotationTransition::Update()
 	}
 }
 
-void e2d::RotationTransition::Reset()
+void easy2d::RotationTransition::Reset()
 {
 	if (out_scene_)
 	{

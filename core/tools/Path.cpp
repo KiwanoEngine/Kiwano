@@ -22,7 +22,7 @@
 #include "..\e2dmodule.h"
 #include <shlobj.h>
 
-const e2d::String& e2d::Path::GetDataPath()
+const easy2d::String& easy2d::Path::GetDataPath()
 {
 	static String data_path;
 	if (data_path.IsEmpty())
@@ -47,7 +47,7 @@ const e2d::String& e2d::Path::GetDataPath()
 	return data_path;
 }
 
-const e2d::String& e2d::Path::GetTemporaryPath()
+const easy2d::String& easy2d::Path::GetTemporaryPath()
 {
 	static String temp_path;
 	if (temp_path.IsEmpty())
@@ -71,7 +71,7 @@ const e2d::String& e2d::Path::GetTemporaryPath()
 	return temp_path;
 }
 
-const e2d::String& e2d::Path::GetLocalAppDataPath()
+const easy2d::String& easy2d::Path::GetLocalAppDataPath()
 {
 	static String local_app_data_path;
 	if (local_app_data_path.IsEmpty())
@@ -85,7 +85,7 @@ const e2d::String& e2d::Path::GetLocalAppDataPath()
 	return local_app_data_path;
 }
 
-const e2d::String& e2d::Path::GetExeFilePath()
+const easy2d::String& easy2d::Path::GetExeFilePath()
 {
 	static String exe_file_path;
 	if (exe_file_path.IsEmpty())

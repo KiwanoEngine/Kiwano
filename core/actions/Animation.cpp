@@ -20,29 +20,29 @@
 
 #include "..\e2daction.h"
 
-e2d::Animation::Animation()
+easy2d::Animation::Animation()
 	: interval_(1)
 {
 }
 
-e2d::Animation::Animation(const Images& frames)
+easy2d::Animation::Animation(const Images& frames)
 	: interval_(1)
 {
 	this->Add(frames);
 }
 
-e2d::Animation::Animation(float interval)
+easy2d::Animation::Animation(float interval)
 	: interval_(interval)
 {
 }
 
-e2d::Animation::Animation(float interval, const Images& frames)
+easy2d::Animation::Animation(float interval, const Images& frames)
 	: interval_(interval)
 {
 	this->Add(frames);
 }
 
-e2d::Animation::~Animation()
+easy2d::Animation::~Animation()
 {
 	for (auto frame : frames_)
 	{
@@ -50,12 +50,12 @@ e2d::Animation::~Animation()
 	}
 }
 
-void e2d::Animation::SetInterval(float interval)
+void easy2d::Animation::SetInterval(float interval)
 {
 	interval_ = std::max(interval, 0.f);
 }
 
-void e2d::Animation::Add(Image * frame)
+void easy2d::Animation::Add(Image * frame)
 {
 	WARN_IF(frame == nullptr, "Animation::Add failed, frame Is nullptr.");
 	if (frame)
@@ -65,7 +65,7 @@ void e2d::Animation::Add(Image * frame)
 	}
 }
 
-void e2d::Animation::Add(const Images& frames)
+void easy2d::Animation::Add(const Images& frames)
 {
 	for (const auto &image : frames)
 	{
@@ -73,17 +73,17 @@ void e2d::Animation::Add(const Images& frames)
 	}
 }
 
-float e2d::Animation::GetInterval() const
+float easy2d::Animation::GetInterval() const
 {
 	return interval_;
 }
 
-const e2d::Animation::Images& e2d::Animation::GetFrames() const
+const easy2d::Animation::Images& easy2d::Animation::GetFrames() const
 {
 	return frames_;
 }
 
-e2d::Animation * e2d::Animation::Clone() const
+easy2d::Animation * easy2d::Animation::Clone() const
 {
 	auto animation = new Animation(interval_);
 	if (animation)
@@ -96,7 +96,7 @@ e2d::Animation * e2d::Animation::Clone() const
 	return animation;
 }
 
-e2d::Animation * e2d::Animation::Reverse() const
+easy2d::Animation * easy2d::Animation::Reverse() const
 {
 	auto& oldFrames = this->GetFrames();
 	Images frames(oldFrames.size());

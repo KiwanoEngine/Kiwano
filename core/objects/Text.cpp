@@ -25,7 +25,7 @@
 // Style
 //-------------------------------------------------------
 
-e2d::Text::Style::Style()
+easy2d::Text::Style::Style()
 	: color(Color::White)
 	, alignment(Align::Left)
 	, wrap(false)
@@ -39,7 +39,7 @@ e2d::Text::Style::Style()
 	, outline_stroke(Stroke::Round)
 {}
 
-e2d::Text::Style::Style(
+easy2d::Text::Style::Style(
 	Color color,
 	Align alignment,
 	bool wrap,
@@ -71,7 +71,7 @@ e2d::Text::Style::Style(
 // Text
 //-------------------------------------------------------
 
-e2d::Text::Text()
+easy2d::Text::Text()
 	: font_()
 	, style_()
 	, text_layout_(nullptr)
@@ -79,7 +79,7 @@ e2d::Text::Text()
 {
 }
 
-e2d::Text::Text(const String & text, const Font & font, const Style & style)
+easy2d::Text::Text(const String & text, const Font & font, const Style & style)
 	: font_(font)
 	, style_(style)
 	, text_layout_(nullptr)
@@ -89,63 +89,63 @@ e2d::Text::Text(const String & text, const Font & font, const Style & style)
 	Reset();
 }
 
-e2d::Text::~Text()
+easy2d::Text::~Text()
 {
 	SafeRelease(text_format_);
 	SafeRelease(text_layout_);
 }
 
-const e2d::String& e2d::Text::GetText() const
+const easy2d::String& easy2d::Text::GetText() const
 {
 	return text_;
 }
 
-const e2d::Font& e2d::Text::GetFont() const
+const easy2d::Font& easy2d::Text::GetFont() const
 {
 	return font_;
 }
 
-const e2d::Text::Style& e2d::Text::GetStyle() const
+const easy2d::Text::Style& easy2d::Text::GetStyle() const
 {
 	return style_;
 }
 
-const e2d::String& e2d::Text::GetFontFamily() const
+const easy2d::String& easy2d::Text::GetFontFamily() const
 {
 	return font_.family;
 }
 
-float e2d::Text::GetFontSize() const
+float easy2d::Text::GetFontSize() const
 {
 	return font_.size;
 }
 
-UINT e2d::Text::GetFontWeight() const
+UINT easy2d::Text::GetFontWeight() const
 {
 	return font_.weight;
 }
 
-const e2d::Color& e2d::Text::GetColor() const
+const easy2d::Color& easy2d::Text::GetColor() const
 {
 	return style_.color;
 }
 
-const e2d::Color& e2d::Text::GetOutlineColor() const
+const easy2d::Color& easy2d::Text::GetOutlineColor() const
 {
 	return style_.outline_color;
 }
 
-float e2d::Text::GetOutlineWidth() const
+float easy2d::Text::GetOutlineWidth() const
 {
 	return style_.outline_width;
 }
 
-e2d::Stroke e2d::Text::GetOutlineStroke() const
+easy2d::Stroke easy2d::Text::GetOutlineStroke() const
 {
 	return style_.outline_stroke;
 }
 
-int e2d::Text::GetLineCount() const
+int easy2d::Text::GetLineCount() const
 {
 	if (text_layout_)
 	{
@@ -159,74 +159,74 @@ int e2d::Text::GetLineCount() const
 	}
 }
 
-bool e2d::Text::IsItalic() const
+bool easy2d::Text::IsItalic() const
 {
 	return font_.italic;
 }
 
-bool e2d::Text::strikethrough() const
+bool easy2d::Text::strikethrough() const
 {
 	return style_.strikethrough;
 }
 
-bool e2d::Text::underline() const
+bool easy2d::Text::underline() const
 {
 	return style_.underline;
 }
 
-bool e2d::Text::outline() const
+bool easy2d::Text::outline() const
 {
 	return style_.outline;
 }
 
-void e2d::Text::SetText(const String& text)
+void easy2d::Text::SetText(const String& text)
 {
 	text_ = text;
 	Reset();
 }
 
-void e2d::Text::SetStyle(const Style& style)
+void easy2d::Text::SetStyle(const Style& style)
 {
 	style_ = style;
 	Reset();
 }
 
-void e2d::Text::SetFont(const Font & font)
+void easy2d::Text::SetFont(const Font & font)
 {
 	font_ = font;
 	Reset();
 }
 
-void e2d::Text::SetFontFamily(const String& family)
+void easy2d::Text::SetFontFamily(const String& family)
 {
 	font_.family = family;
 	Reset();
 }
 
-void e2d::Text::SetFontSize(float size)
+void easy2d::Text::SetFontSize(float size)
 {
 	font_.size = size;
 	Reset();
 }
 
-void e2d::Text::SetFontWeight(UINT weight)
+void easy2d::Text::SetFontWeight(UINT weight)
 {
 	font_.weight = weight;
 	Reset();
 }
 
-void e2d::Text::SetColor(Color color)
+void easy2d::Text::SetColor(Color color)
 {
 	style_.color = color;
 }
 
-void e2d::Text::SetItalic(bool value)
+void easy2d::Text::SetItalic(bool value)
 {
 	font_.italic = value;
 	Reset();
 }
 
-void e2d::Text::SetWrapEnabled(bool wrap)
+void easy2d::Text::SetWrapEnabled(bool wrap)
 {
 	if (style_.wrap != wrap)
 	{
@@ -235,7 +235,7 @@ void e2d::Text::SetWrapEnabled(bool wrap)
 	}
 }
 
-void e2d::Text::SetWrapWidth(float wrap_width)
+void easy2d::Text::SetWrapWidth(float wrap_width)
 {
 	if (style_.wrap_width != wrap_width)
 	{
@@ -248,7 +248,7 @@ void e2d::Text::SetWrapWidth(float wrap_width)
 	}
 }
 
-void e2d::Text::SetLineSpacing(float line_spacing)
+void easy2d::Text::SetLineSpacing(float line_spacing)
 {
 	if (style_.line_spacing != line_spacing)
 	{
@@ -257,7 +257,7 @@ void e2d::Text::SetLineSpacing(float line_spacing)
 	}
 }
 
-void e2d::Text::SetAlignment(Align align)
+void easy2d::Text::SetAlignment(Align align)
 {
 	if (style_.alignment != align)
 	{
@@ -266,7 +266,7 @@ void e2d::Text::SetAlignment(Align align)
 	}
 }
 
-void e2d::Text::SetUnderline(bool underline)
+void easy2d::Text::SetUnderline(bool underline)
 {
 	if (style_.underline != underline)
 	{
@@ -277,7 +277,7 @@ void e2d::Text::SetUnderline(bool underline)
 	}
 }
 
-void e2d::Text::SetStrikethrough(bool strikethrough)
+void easy2d::Text::SetStrikethrough(bool strikethrough)
 {
 	if (style_.strikethrough != strikethrough)
 	{
@@ -288,27 +288,27 @@ void e2d::Text::SetStrikethrough(bool strikethrough)
 	}
 }
 
-void e2d::Text::SetOutline(bool outline)
+void easy2d::Text::SetOutline(bool outline)
 {
 	style_.outline = outline;
 }
 
-void e2d::Text::SetOutlineColor(Color outline_color)
+void easy2d::Text::SetOutlineColor(Color outline_color)
 {
 	style_.outline_color = outline_color;
 }
 
-void e2d::Text::SetOutlineWidth(float outline_width)
+void easy2d::Text::SetOutlineWidth(float outline_width)
 {
 	style_.outline_width = outline_width;
 }
 
-void e2d::Text::SetOutlineStroke(Stroke outline_stroke)
+void easy2d::Text::SetOutlineStroke(Stroke outline_stroke)
 {
 	style_.outline_stroke = outline_stroke;
 }
 
-void e2d::Text::Draw() const
+void easy2d::Text::Draw() const
 {
 	if (text_layout_)
 	{
@@ -330,7 +330,7 @@ void e2d::Text::Draw() const
 	}
 }
 
-void e2d::Text::Reset()
+void easy2d::Text::Reset()
 {
 	// 创建文字格式化
 	CreateFormat();
@@ -338,7 +338,7 @@ void e2d::Text::Reset()
 	CreateLayout();
 }
 
-void e2d::Text::CreateFormat()
+void easy2d::Text::CreateFormat()
 {
 	SafeRelease(text_format_);
 
@@ -383,7 +383,7 @@ void e2d::Text::CreateFormat()
 	}
 }
 
-void e2d::Text::CreateLayout()
+void easy2d::Text::CreateLayout()
 {
 	SafeRelease(text_layout_);
 

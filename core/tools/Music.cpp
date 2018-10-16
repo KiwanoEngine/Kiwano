@@ -35,7 +35,7 @@ inline bool TraceError(wchar_t* prompt, HRESULT hr)
 }
 
 
-namespace e2d
+namespace easy2d
 {
 
 	class Transcoder
@@ -315,7 +315,7 @@ namespace e2d
 }
 
 
-e2d::Music::Music()
+easy2d::Music::Music()
 	: opened_(false)
 	, playing_(false)
 	, wave_data_(nullptr)
@@ -324,12 +324,12 @@ e2d::Music::Music()
 {
 }
 
-e2d::Music::~Music()
+easy2d::Music::~Music()
 {
 	Close();
 }
 
-bool e2d::Music::Load(const e2d::String & file_path)
+bool easy2d::Music::Load(const easy2d::String & file_path)
 {
 	if (opened_)
 	{
@@ -368,7 +368,7 @@ bool e2d::Music::Load(const e2d::String & file_path)
 	return true;
 }
 
-bool e2d::Music::Load(const Resource& res)
+bool easy2d::Music::Load(const Resource& res)
 {
 	if (opened_)
 	{
@@ -396,7 +396,7 @@ bool e2d::Music::Load(const Resource& res)
 	return true;
 }
 
-bool e2d::Music::Play(int loop_count)
+bool easy2d::Music::Play(int loop_count)
 {
 	if (!opened_)
 	{
@@ -446,7 +446,7 @@ bool e2d::Music::Play(int loop_count)
 	return playing_;
 }
 
-void e2d::Music::Pause()
+void easy2d::Music::Pause()
 {
 	if (voice_)
 	{
@@ -457,7 +457,7 @@ void e2d::Music::Pause()
 	}
 }
 
-void e2d::Music::Resume()
+void easy2d::Music::Resume()
 {
 	if (voice_)
 	{
@@ -468,7 +468,7 @@ void e2d::Music::Resume()
 	}
 }
 
-void e2d::Music::Stop()
+void easy2d::Music::Stop()
 {
 	if (voice_)
 	{
@@ -481,7 +481,7 @@ void e2d::Music::Stop()
 	}
 }
 
-void e2d::Music::Close()
+void easy2d::Music::Close()
 {
 	if (voice_)
 	{
@@ -501,7 +501,7 @@ void e2d::Music::Close()
 	playing_ = false;
 }
 
-bool e2d::Music::IsPlaying() const
+bool easy2d::Music::IsPlaying() const
 {
 	if (opened_ && voice_)
 	{
@@ -513,7 +513,7 @@ bool e2d::Music::IsPlaying() const
 	return false;
 }
 
-float e2d::Music::GetVolume() const
+float easy2d::Music::GetVolume() const
 {
 	if (voice_)
 	{
@@ -524,7 +524,7 @@ float e2d::Music::GetVolume() const
 	return 0.f;
 }
 
-bool e2d::Music::SetVolume(float volume)
+bool easy2d::Music::SetVolume(float volume)
 {
 	if (voice_)
 	{
@@ -534,7 +534,7 @@ bool e2d::Music::SetVolume(float volume)
 	return false;
 }
 
-IXAudio2SourceVoice * e2d::Music::GetSourceVoice() const
+IXAudio2SourceVoice * easy2d::Music::GetSourceVoice() const
 {
 	return voice_;
 }

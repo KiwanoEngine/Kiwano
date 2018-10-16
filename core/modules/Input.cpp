@@ -22,7 +22,7 @@
 #include "..\e2dtool.h"
 
 
-e2d::Input::Input(HWND hwnd)
+easy2d::Input::Input(HWND hwnd)
 	: direct_input_(nullptr)
 	, keyboard_device_(nullptr)
 	, mouse_device_(nullptr)
@@ -70,7 +70,7 @@ e2d::Input::Input(HWND hwnd)
 	mouse_device_->Poll();
 }
 
-e2d::Input::~Input()
+easy2d::Input::~Input()
 {
 	if (keyboard_device_)
 		keyboard_device_->Unacquire();
@@ -82,7 +82,7 @@ e2d::Input::~Input()
 	SafeRelease(direct_input_);
 }
 
-void e2d::Input::Flush()
+void easy2d::Input::Flush()
 {
 	if (keyboard_device_)
 	{
@@ -121,31 +121,31 @@ void e2d::Input::Flush()
 	}
 }
 
-bool e2d::Input::IsDown(KeyCode key)
+bool easy2d::Input::IsDown(KeyCode key)
 {
 	if (key_buffer_[static_cast<int>(key)] & 0x80)
 		return true;
 	return false;
 }
 
-bool e2d::Input::IsDown(MouseCode code)
+bool easy2d::Input::IsDown(MouseCode code)
 {
 	if (mouse_state_.rgbButtons[static_cast<int>(code)] & 0x80)
 		return true;
 	return false;
 }
 
-float e2d::Input::GetMouseX()
+float easy2d::Input::GetMouseX()
 {
 	return GetMousePos().x;
 }
 
-float e2d::Input::GetMouseY()
+float easy2d::Input::GetMouseY()
 {
 	return GetMousePos().y;
 }
 
-e2d::Point e2d::Input::GetMousePos()
+easy2d::Point easy2d::Input::GetMousePos()
 {
 	POINT mousePos;
 	::GetCursorPos(&mousePos);
@@ -154,17 +154,17 @@ e2d::Point e2d::Input::GetMousePos()
 	return Point(mousePos.x * 96.f / dpi, mousePos.y * 96.f / dpi);
 }
 
-float e2d::Input::GetMouseDeltaX()
+float easy2d::Input::GetMouseDeltaX()
 {
 	return (float)mouse_state_.lX;
 }
 
-float e2d::Input::GetMouseDeltaY()
+float easy2d::Input::GetMouseDeltaY()
 {
 	return (float)mouse_state_.lY;
 }
 
-float e2d::Input::GetMouseDeltaZ()
+float easy2d::Input::GetMouseDeltaZ()
 {
 	return (float)mouse_state_.lZ;
 }

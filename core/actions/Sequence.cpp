@@ -20,18 +20,18 @@
 
 #include "..\e2daction.h"
 
-e2d::Sequence::Sequence()
+easy2d::Sequence::Sequence()
 	: action_index_(0)
 {
 }
 
-e2d::Sequence::Sequence(const Actions& actions)
+easy2d::Sequence::Sequence(const Actions& actions)
 	: action_index_(0)
 {
 	this->Add(actions);
 }
 
-e2d::Sequence::~Sequence()
+easy2d::Sequence::~Sequence()
 {
 	for (auto action : actions_)
 	{
@@ -39,7 +39,7 @@ e2d::Sequence::~Sequence()
 	}
 }
 
-void e2d::Sequence::Init()
+void easy2d::Sequence::Init()
 {
 	Action::Init();
 	// 将所有动作与目标绑定
@@ -54,7 +54,7 @@ void e2d::Sequence::Init()
 	actions_[0]->Init();
 }
 
-void e2d::Sequence::Update()
+void easy2d::Sequence::Update()
 {
 	Action::Update();
 
@@ -75,7 +75,7 @@ void e2d::Sequence::Update()
 	}
 }
 
-void e2d::Sequence::Reset()
+void easy2d::Sequence::Reset()
 {
 	Action::Reset();
 	for (const auto& action : actions_)
@@ -85,7 +85,7 @@ void e2d::Sequence::Reset()
 	action_index_ = 0;
 }
 
-void e2d::Sequence::ResetTime()
+void easy2d::Sequence::ResetTime()
 {
 	for (const auto& action : actions_)
 	{
@@ -93,7 +93,7 @@ void e2d::Sequence::ResetTime()
 	}
 }
 
-void e2d::Sequence::Add(Action * action)
+void easy2d::Sequence::Add(Action * action)
 {
 	if (action)
 	{
@@ -102,7 +102,7 @@ void e2d::Sequence::Add(Action * action)
 	}
 }
 
-void e2d::Sequence::Add(const Actions& actions)
+void easy2d::Sequence::Add(const Actions& actions)
 {
 	for (const auto &action : actions)
 	{
@@ -110,7 +110,7 @@ void e2d::Sequence::Add(const Actions& actions)
 	}
 }
 
-e2d::Sequence * e2d::Sequence::Clone() const
+easy2d::Sequence * easy2d::Sequence::Clone() const
 {
 	auto sequence = new Sequence();
 	for (const auto& action : actions_)
@@ -123,7 +123,7 @@ e2d::Sequence * e2d::Sequence::Clone() const
 	return sequence;
 }
 
-e2d::Sequence * e2d::Sequence::Reverse() const
+easy2d::Sequence * easy2d::Sequence::Reverse() const
 {
 	auto sequence = new Sequence();
 	if (sequence && !actions_.empty())

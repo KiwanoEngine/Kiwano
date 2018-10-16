@@ -22,21 +22,21 @@
 #include "..\e2dobject.h"
 
 
-e2d::ScaleBy::ScaleBy(float duration, float scale)
+easy2d::ScaleBy::ScaleBy(float duration, float scale)
 	: FiniteTimeAction(duration)
 {
 	delta_x_ = scale;
 	delta_y_ = scale;
 }
 
-e2d::ScaleBy::ScaleBy(float duration, float scale_x, float scale_y)
+easy2d::ScaleBy::ScaleBy(float duration, float scale_x, float scale_y)
 	: FiniteTimeAction(duration)
 {
 	delta_x_ = scale_x;
 	delta_y_ = scale_y;
 }
 
-void e2d::ScaleBy::Init()
+void easy2d::ScaleBy::Init()
 {
 	FiniteTimeAction::Init();
 
@@ -47,7 +47,7 @@ void e2d::ScaleBy::Init()
 	}
 }
 
-void e2d::ScaleBy::Update()
+void easy2d::ScaleBy::Update()
 {
 	FiniteTimeAction::Update();
 
@@ -57,12 +57,12 @@ void e2d::ScaleBy::Update()
 	}
 }
 
-e2d::ScaleBy * e2d::ScaleBy::Clone() const
+easy2d::ScaleBy * easy2d::ScaleBy::Clone() const
 {
 	return new ScaleBy(duration_, delta_x_, delta_y_);
 }
 
-e2d::ScaleBy * e2d::ScaleBy::Reverse() const
+easy2d::ScaleBy * easy2d::ScaleBy::Reverse() const
 {
 	return new ScaleBy(duration_, -delta_x_, -delta_y_);
 }

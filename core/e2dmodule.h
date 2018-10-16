@@ -24,7 +24,7 @@
 #include "e2dtransition.h"
 
 
-namespace e2d
+namespace easy2d
 {
 
 	// Õº–Œ…Ë±∏

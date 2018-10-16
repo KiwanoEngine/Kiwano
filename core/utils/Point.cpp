@@ -22,50 +22,50 @@
 #include <cmath>
 
 
-e2d::Point::Point()
+easy2d::Point::Point()
 {
 	x = 0;
 	y = 0;
 }
 
-e2d::Point::Point(float x, float y)
+easy2d::Point::Point(float x, float y)
 {
 	this->x = x;
 	this->y = y;
 }
 
-e2d::Point::Point(const Point & other)
+easy2d::Point::Point(const Point & other)
 {
 	x = other.x;
 	y = other.y;
 }
 
-e2d::Point e2d::Point::operator+(const Point & p) const
+easy2d::Point easy2d::Point::operator+(const Point & p) const
 {
 	return Point(x + p.x, y + p.y);
 }
 
-e2d::Point e2d::Point::operator-(const Point & p) const
+easy2d::Point easy2d::Point::operator-(const Point & p) const
 {
 	return Point(x - p.x, y - p.y);
 }
 
-e2d::Point e2d::Point::operator*(float value) const
+easy2d::Point easy2d::Point::operator*(float value) const
 {
 	return Point(x * value, y * value);
 }
 
-e2d::Point e2d::Point::operator/(float value) const
+easy2d::Point easy2d::Point::operator/(float value) const
 {
 	return Point(x / value, y / value);
 }
 
-e2d::Point::operator e2d::Size() const
+easy2d::Point::operator easy2d::Size() const
 {
 	return Size(x, y);
 }
 
-float e2d::Point::Distance(const Point &p1, const Point &p2)
+float easy2d::Point::Distance(const Point &p1, const Point &p2)
 {
 	return sqrt(
 		(p1.x - p2.x) * (p1.x - p2.x) + 
@@ -73,12 +73,12 @@ float e2d::Point::Distance(const Point &p1, const Point &p2)
 	);
 }
 
-e2d::Point e2d::Point::operator-() const
+easy2d::Point easy2d::Point::operator-() const
 {
 	return Point(-x, -y);
 }
 
-bool e2d::Point::operator==(const Point & point) const
+bool easy2d::Point::operator==(const Point & point) const
 {
 	return (x == point.x) && (y == point.y);
 }

@@ -20,7 +20,7 @@
 
 #include "..\e2daction.h"
 
-e2d::Loop::Loop(Action * action, int times /* = -1 */)
+easy2d::Loop::Loop(Action * action, int times /* = -1 */)
 	: action_(action)
 	, times_(0)
 	, total_times_(times)
@@ -34,12 +34,12 @@ e2d::Loop::Loop(Action * action, int times /* = -1 */)
 	}
 }
 
-e2d::Loop::~Loop()
+easy2d::Loop::~Loop()
 {
 	SafeRelease(action_);
 }
 
-e2d::Loop * e2d::Loop::Clone() const
+easy2d::Loop * easy2d::Loop::Clone() const
 {
 	if (action_)
 	{
@@ -51,7 +51,7 @@ e2d::Loop * e2d::Loop::Clone() const
 	}
 }
 
-e2d::Loop * e2d::Loop::Reverse() const
+easy2d::Loop * easy2d::Loop::Reverse() const
 {
 	if (action_)
 	{
@@ -63,7 +63,7 @@ e2d::Loop * e2d::Loop::Reverse() const
 	}
 }
 
-void e2d::Loop::Init()
+void easy2d::Loop::Init()
 {
 	Action::Init();
 
@@ -74,7 +74,7 @@ void e2d::Loop::Init()
 	}
 }
 
-void e2d::Loop::Update()
+void easy2d::Loop::Update()
 {
 	Action::Update();
 
@@ -102,7 +102,7 @@ void e2d::Loop::Update()
 	}
 }
 
-void e2d::Loop::Reset()
+void easy2d::Loop::Reset()
 {
 	Action::Reset();
 
@@ -110,7 +110,7 @@ void e2d::Loop::Reset()
 	times_ = 0;
 }
 
-void e2d::Loop::ResetTime()
+void easy2d::Loop::ResetTime()
 {
 	if (action_) action_->ResetTime();
 }

@@ -20,7 +20,7 @@
 
 #include "..\e2daction.h"
 
-e2d::Action::Action() 
+easy2d::Action::Action() 
 	: running_(false)
 	, done_(false)
 	, initialized_(false)
@@ -28,71 +28,71 @@ e2d::Action::Action()
 {
 }
 
-e2d::Action::~Action()
+easy2d::Action::~Action()
 {
 }
 
-bool e2d::Action::IsRunning()
+bool easy2d::Action::IsRunning()
 {
 	return running_;
 }
 
-void e2d::Action::Resume()
+void easy2d::Action::Resume()
 {
 	running_ = true;
 }
 
-void e2d::Action::Pause()
+void easy2d::Action::Pause()
 {
 	running_ = false;
 }
 
-void e2d::Action::Stop()
+void easy2d::Action::Stop()
 {
 	done_ = true;
 }
 
-const e2d::String& e2d::Action::GetName() const
+const easy2d::String& easy2d::Action::GetName() const
 {
 	return name_;
 }
 
-void e2d::Action::SetName(const String& name)
+void easy2d::Action::SetName(const String& name)
 {
 	name_ = name;
 }
 
-e2d::Node * e2d::Action::GetTarget()
+easy2d::Node * easy2d::Action::GetTarget()
 {
 	return target_;
 }
 
-void e2d::Action::Reset()
+void easy2d::Action::Reset()
 {
 	initialized_ = false;
 	done_ = false;
 	started_ = Time::Now();
 }
 
-bool e2d::Action::IsDone() const
+bool easy2d::Action::IsDone() const
 {
 	return done_;
 }
 
-void e2d::Action::StartWithTarget(Node* target)
+void easy2d::Action::StartWithTarget(Node* target)
 {
 	target_ = target;
 	running_ = true;
 	this->Reset();
 }
 
-void e2d::Action::Init()
+void easy2d::Action::Init()
 {
 	initialized_ = true;
 	started_ = Time::Now();
 }
 
-void e2d::Action::Update()
+void easy2d::Action::Update()
 {
 	if (!initialized_)
 	{
@@ -100,6 +100,6 @@ void e2d::Action::Update()
 	}
 }
 
-void e2d::Action::ResetTime()
+void easy2d::Action::ResetTime()
 {
 }

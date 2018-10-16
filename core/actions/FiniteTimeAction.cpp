@@ -20,24 +20,24 @@
 
 #include "..\e2daction.h"
 
-e2d::FiniteTimeAction::FiniteTimeAction(float duration)
+easy2d::FiniteTimeAction::FiniteTimeAction(float duration)
 	: delta_(0)
 	, duration_(std::max(duration, 0.f))
 {
 }
 
-void e2d::FiniteTimeAction::Reset()
+void easy2d::FiniteTimeAction::Reset()
 {
 	Action::Reset();
 	delta_ = 0;
 }
 
-void e2d::FiniteTimeAction::Init()
+void easy2d::FiniteTimeAction::Init()
 {
 	Action::Init();
 }
 
-void e2d::FiniteTimeAction::Update()
+void easy2d::FiniteTimeAction::Update()
 {
 	Action::Update();
 
@@ -57,7 +57,7 @@ void e2d::FiniteTimeAction::Update()
 	}
 }
 
-void e2d::FiniteTimeAction::ResetTime()
+void easy2d::FiniteTimeAction::ResetTime()
 {
 	Action::ResetTime();
 	started_ = Time::Now() - Duration(delta_ * duration_);

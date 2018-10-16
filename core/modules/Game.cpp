@@ -30,14 +30,14 @@
 #define REGISTER_CLASS	L"Easy2DApp"
 
 
-static e2d::Game * instance = nullptr;
+static easy2d::Game * instance = nullptr;
 
-e2d::Game * e2d::Game::GetInstance()
+easy2d::Game * easy2d::Game::GetInstance()
 {
 	return instance;
 }
 
-e2d::Game::Game()
+easy2d::Game::Game()
 	: hwnd_(nullptr)
 	, quit_(true)
 	, curr_scene_(nullptr)
@@ -58,7 +58,7 @@ e2d::Game::Game()
 	::CoInitialize(nullptr);
 }
 
-e2d::Game::~Game()
+easy2d::Game::~Game()
 {
 	SafeRelease(transition_);
 	SafeRelease(curr_scene_);
@@ -78,7 +78,7 @@ e2d::Game::~Game()
 	::CoUninitialize();
 }
 
-void e2d::Game::Run(const Options& options)
+void easy2d::Game::Run(const Options& options)
 {
 	title_ = options.title;
 	width_ = options.width;
@@ -142,12 +142,12 @@ void e2d::Game::Run(const Options& options)
 	}
 }
 
-void e2d::Game::Quit()
+void easy2d::Game::Quit()
 {
 	quit_ = true;
 }
 
-void e2d::Game::EnterScene(Scene * scene, Transition * transition)
+void easy2d::Game::EnterScene(Scene * scene, Transition * transition)
 {
 	if (scene == nullptr)
 	{
@@ -182,17 +182,17 @@ void e2d::Game::EnterScene(Scene * scene, Transition * transition)
 	}
 }
 
-e2d::Scene * e2d::Game::GetCurrentScene()
+easy2d::Scene * easy2d::Game::GetCurrentScene()
 {
 	return curr_scene_;
 }
 
-bool e2d::Game::IsTransitioning() const
+bool easy2d::Game::IsTransitioning() const
 {
 	return transition_ != nullptr;
 }
 
-void e2d::Game::UpdateScene(float dt)
+void easy2d::Game::UpdateScene(float dt)
 {
 	auto update = [&](Scene * scene) -> void
 	{
@@ -240,7 +240,7 @@ void e2d::Game::UpdateScene(float dt)
 	}
 }
 
-void e2d::Game::DrawScene()
+void easy2d::Game::DrawScene()
 {
 	auto graphics = Device::GetGraphics();
 	graphics->BeginDraw();
@@ -274,7 +274,7 @@ void e2d::Game::DrawScene()
 	graphics->EndDraw();
 }
 
-void e2d::Game::Init()
+void easy2d::Game::Init()
 {
 	WNDCLASSEX wcex = { 0 };
 	wcex.cbSize			= sizeof(WNDCLASSEX);
@@ -379,7 +379,7 @@ void e2d::Game::Init()
 	quit_ = false;
 }
 
-e2d::Rect e2d::Game::Locate(int width, int height)
+easy2d::Rect easy2d::Game::Locate(int width, int height)
 {
 	int max_width = ::GetSystemMetrics(SM_CXSCREEN);
 	int max_height = ::GetSystemMetrics(SM_CYSCREEN);
@@ -406,36 +406,36 @@ e2d::Rect e2d::Game::Locate(int width, int height)
 	return std::move(client_rect);
 }
 
-int e2d::Game::GetWidth() const
+int easy2d::Game::GetWidth() const
 {
 	return width_;
 }
 
-int e2d::Game::GetHeight() const
+int easy2d::Game::GetHeight() const
 {
 	return height_;
 }
 
-e2d::Size e2d::Game::GetSize() const
+easy2d::Size easy2d::Game::GetSize() const
 {
-	e2d::Size size(
+	easy2d::Size size(
 		static_cast<float>(width_),
 		static_cast<float>(height_)
 	);
 	return std::move(size);
 }
 
-HWND e2d::Game::GetHWnd() const
+HWND easy2d::Game::GetHWnd() const
 {
 	return hwnd_;
 }
 
-const e2d::String& e2d::Game::GetTitle() const
+const easy2d::String& easy2d::Game::GetTitle() const
 {
 	return title_;
 }
 
-void e2d::Game::SetSize(int width, int height)
+void easy2d::Game::SetSize(int width, int height)
 {
 	if (width_ == width && height_ == height)
 		return;
@@ -457,7 +457,7 @@ void e2d::Game::SetSize(int width, int height)
 	}
 }
 
-void e2d::Game::SetTitle(const String& title)
+void easy2d::Game::SetTitle(const String& title)
 {
 	title_ = title;
 	
@@ -467,7 +467,7 @@ void e2d::Game::SetTitle(const String& title)
 	}
 }
 
-void e2d::Game::SetIcon(int resource_id)
+void easy2d::Game::SetIcon(int resource_id)
 {
 	icon_ = resource_id;
 
@@ -488,7 +488,7 @@ void e2d::Game::SetIcon(int resource_id)
 }
 
 
-LRESULT e2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
+LRESULT easy2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 {
 	LRESULT result = 0;
 	bool was_handled = false;

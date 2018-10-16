@@ -22,26 +22,26 @@
 #include "..\e2dmodule.h"
 #include <shobjidl.h> 
 
-std::list<e2d::String>	e2d::File::search_paths_;
+std::list<easy2d::String>	easy2d::File::search_paths_;
 
-e2d::File::File()
+easy2d::File::File()
 	: file_path_()
 	, attributes_(0)
 {
 }
 
-e2d::File::File(const String & file_name)
+easy2d::File::File(const String & file_name)
 	: file_path_(file_name)
 	, attributes_(0)
 {
 	this->Open(file_name);
 }
 
-e2d::File::~File()
+easy2d::File::~File()
 {
 }
 
-bool e2d::File::Open(const String & file_name)
+bool easy2d::File::Open(const String & file_name)
 {
 	if (file_name.IsEmpty())
 		return false;
@@ -75,22 +75,22 @@ bool e2d::File::Open(const String & file_name)
 	return false;
 }
 
-bool e2d::File::Exists() const
+bool easy2d::File::Exists() const
 {
 	return ::_waccess((const wchar_t*)file_path_, 0) == 0;
 }
 
-bool e2d::File::IsFolder() const
+bool easy2d::File::IsFolder() const
 {
 	return (attributes_ & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-const e2d::String& e2d::File::GetPath() const
+const easy2d::String& easy2d::File::GetPath() const
 {
 	return file_path_;
 }
 
-e2d::String e2d::File::GetExtension() const
+easy2d::String easy2d::File::GetExtension() const
 {
 	String file_ext;
 	// 找到文件名中的最后一个 '.' 的位置
@@ -106,14 +106,14 @@ e2d::String e2d::File::GetExtension() const
 	return std::move(file_ext);
 }
 
-bool e2d::File::Delete()
+bool easy2d::File::Delete()
 {
 	if (::DeleteFile((LPCWSTR)file_path_))
 		return true;
 	return false;
 }
 
-e2d::File e2d::File::Extract(int resource_name, const String & resource_type, const String& dest_file_name)
+easy2d::File easy2d::File::Extract(int resource_name, const String & resource_type, const String& dest_file_name)
 {
 	// 创建文件
 	HANDLE file = ::CreateFile(
@@ -150,7 +150,7 @@ e2d::File e2d::File::Extract(int resource_name, const String & resource_type, co
 	}
 }
 
-void e2d::File::AddSearchPath(const String & path)
+void easy2d::File::AddSearchPath(const String & path)
 {
 	String tmp = path;
 	tmp.Replace(L"/", L"\\");
@@ -165,7 +165,7 @@ void e2d::File::AddSearchPath(const String & path)
 	}
 }
 
-bool e2d::File::CreateFolder(const String & dir_path)
+bool easy2d::File::CreateFolder(const String & dir_path)
 {
 	if (dir_path.IsEmpty() || dir_path.GetLength() >= MAX_PATH)
 		return false;
@@ -190,7 +190,7 @@ bool e2d::File::CreateFolder(const String & dir_path)
 	return true;
 }
 
-e2d::File e2d::File::ShowOpenDialog(const String & title, const String & filter)
+easy2d::File easy2d::File::ShowOpenDialog(const String & title, const String & filter)
 {
 	String file_path;
 	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
@@ -252,7 +252,7 @@ e2d::File e2d::File::ShowOpenDialog(const String & title, const String & filter)
 	return std::move(File(file_path));
 }
 
-e2d::File e2d::File::ShowSaveDialog(const String & title, const String& def_file, const String & def_ext)
+easy2d::File easy2d::File::ShowSaveDialog(const String & title, const String& def_file, const String & def_ext)
 {
 	String file_path;
 	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);

@@ -25,77 +25,77 @@
 #pragma comment(lib, "comsuppw.lib")
 
 
-e2d::String::String()
+easy2d::String::String()
 	: string_(L"")
 {
 }
 
-e2d::String::String(const wchar_t *str)
+easy2d::String::String(const wchar_t *str)
 	: string_(str)
 {
 }
 
-e2d::String::String(const char *cstr)
+easy2d::String::String(const char *cstr)
 	: string_(static_cast<wchar_t*>(_bstr_t(cstr)))
 {
 }
 
-e2d::String::String(e2d::String && str)
+easy2d::String::String(easy2d::String && str)
 {
 	string_ = std::move(str.string_);
 }
 
-e2d::String::String(const e2d::String &str)
+easy2d::String::String(const easy2d::String &str)
 	: string_(str.string_)
 {
 }
 
-e2d::String::~String()
+easy2d::String::~String()
 {
 	string_.clear();
 }
 
-e2d::String &e2d::String::operator=(const wchar_t *str)
+easy2d::String &easy2d::String::operator=(const wchar_t *str)
 {
 	string_ = str;
 	return (*this);
 }
 
-e2d::String & e2d::String::operator=(const char *cstr)
+easy2d::String & easy2d::String::operator=(const char *cstr)
 {
 	string_ = static_cast<wchar_t*>(_bstr_t(cstr));
 	return (*this);
 }
 
-e2d::String e2d::String::Parse(int value)
+easy2d::String easy2d::String::Parse(int value)
 {
 	String tmp;
 	tmp.string_ = std::to_wstring(value);
 	return std::move(tmp);
 }
 
-e2d::String e2d::String::Parse(unsigned int value)
+easy2d::String easy2d::String::Parse(unsigned int value)
 {
 	String tmp;
 	tmp.string_ = std::to_wstring(value);
 	return std::move(tmp);
 }
 
-e2d::String e2d::String::Parse(float value)
+easy2d::String easy2d::String::Parse(float value)
 {
 	String tmp;
 	tmp.string_ = std::to_wstring(value);
 	return std::move(tmp);
 }
 
-e2d::String e2d::String::Parse(double value)
+easy2d::String easy2d::String::Parse(double value)
 {
 	String tmp;
 	tmp.string_ = std::to_wstring(value);
 	return std::move(tmp);
 }
 
-e2d::String e2d::String::Format(const char * format, ...)
+easy2d::String easy2d::String::Format(const char * format, ...)
 {
 	std::string tmp;
 
@@ -117,7 +117,7 @@ e2d::String e2d::String::Format(const char * format, ...)
 	return std::move(str);
 }
 
-e2d::String e2d::String::Format(const wchar_t * format, ...)
+easy2d::String easy2d::String::Format(const wchar_t * format, ...)
 {
 	std::wstring tmp;
 
@@ -139,13 +139,13 @@ e2d::String e2d::String::Format(const wchar_t * format, ...)
 	return std::move(str);
 }
 
-e2d::String & e2d::String::operator=(const String &str)
+easy2d::String & easy2d::String::operator=(const String &str)
 {
 	string_ = str.string_;
 	return (*this);
 }
 
-bool e2d::String::operator==(const wchar_t *str) const
+bool easy2d::String::operator==(const wchar_t *str) const
 {
 	if (str)
 	{
@@ -157,7 +157,7 @@ bool e2d::String::operator==(const wchar_t *str) const
 	}
 }
 
-bool e2d::String::operator==(const char *str) const
+bool easy2d::String::operator==(const char *str) const
 {
 	if (str)
 	{
@@ -170,12 +170,12 @@ bool e2d::String::operator==(const char *str) const
 	}
 }
 
-bool e2d::String::operator ==(const e2d::String &str) const
+bool easy2d::String::operator ==(const easy2d::String &str) const
 {
 	return string_ == str.string_;
 }
 
-bool e2d::String::operator!=(const wchar_t *str) const
+bool easy2d::String::operator!=(const wchar_t *str) const
 {
 	if (str)
 	{
@@ -187,7 +187,7 @@ bool e2d::String::operator!=(const wchar_t *str) const
 	}
 }
 
-bool e2d::String::operator!=(const char *str) const
+bool easy2d::String::operator!=(const char *str) const
 {
 	if (str)
 	{
@@ -200,205 +200,205 @@ bool e2d::String::operator!=(const char *str) const
 	}
 }
 
-bool e2d::String::operator!=(const e2d::String &str) const
+bool easy2d::String::operator!=(const easy2d::String &str) const
 {
 	return string_ != str.string_;
 }
 
-wchar_t &e2d::String::operator[](size_t index)
+wchar_t &easy2d::String::operator[](size_t index)
 {
 	return string_[index];
 }
 
-e2d::String e2d::String::operator+(const wchar_t *str) const
+easy2d::String easy2d::String::operator+(const wchar_t *str) const
 {
 	String temp;
 	temp.string_ = string_ + str;
 	return std::move(temp);
 }
 
-e2d::String e2d::String::operator+(const char *str) const
+easy2d::String easy2d::String::operator+(const char *str) const
 {
 	String temp;
 	temp.string_ = string_ + static_cast<wchar_t*>(_bstr_t(str));
 	return std::move(temp);
 }
 
-e2d::String e2d::String::operator+(const e2d::String &str) const
+easy2d::String easy2d::String::operator+(const easy2d::String &str) const
 {
 	String temp;
 	temp.string_ = string_ + str.string_;
 	return std::move(temp);
 }
 
-e2d::String e2d::operator+(const wchar_t *str1, const e2d::String &str2)
+easy2d::String easy2d::operator+(const wchar_t *str1, const easy2d::String &str2)
 {
 	String temp;
 	temp.string_ = str1 + str2.string_;
 	return std::move(temp);
 }
 
-e2d::String e2d::operator+(const char *str1, const String &str2)
+easy2d::String easy2d::operator+(const char *str1, const String &str2)
 {
 	String temp;
 	temp.string_ = static_cast<wchar_t*>(_bstr_t(str1)) + str2.string_;
 	return std::move(temp);
 }
 
-e2d::String & e2d::String::operator+=(const wchar_t *str)
+easy2d::String & easy2d::String::operator+=(const wchar_t *str)
 {
 	string_ += str;
 	return (*this);
 }
 
-e2d::String & e2d::String::operator+=(const char *str)
+easy2d::String & easy2d::String::operator+=(const char *str)
 {
 	string_ += static_cast<wchar_t*>(_bstr_t(str));
 	return (*this);
 }
 
-e2d::String & e2d::String::operator+=(const String &str)
+easy2d::String & easy2d::String::operator+=(const String &str)
 {
 	string_ += str.string_;
 	return (*this);
 }
 
-bool e2d::String::operator>(const String &str) const
+bool easy2d::String::operator>(const String &str) const
 {
 	return string_ > str.string_;
 }
 
-bool e2d::String::operator>=(const String &str) const
+bool easy2d::String::operator>=(const String &str) const
 {
 	return string_ >= str.string_;
 }
 
-bool e2d::String::operator<(const String &str) const
+bool easy2d::String::operator<(const String &str) const
 {
 	return string_ < str.string_;
 }
 
-bool e2d::String::operator<=(const String &str) const
+bool easy2d::String::operator<=(const String &str) const
 {
 	return string_ <= str.string_;
 }
 
-e2d::String & e2d::String::operator<<(const String &str)
+easy2d::String & easy2d::String::operator<<(const String &str)
 {
 	string_ += str.string_;
 	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(const wchar_t *str)
+easy2d::String & easy2d::String::operator<<(const wchar_t *str)
 {
 	string_ += str;
 	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(wchar_t *str)
+easy2d::String & easy2d::String::operator<<(wchar_t *str)
 {
 	string_ += str;
 	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(const char * cstr)
+easy2d::String & easy2d::String::operator<<(const char * cstr)
 {
 	string_ += static_cast<wchar_t*>(_bstr_t(cstr));
 	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(char * cstr)
+easy2d::String & easy2d::String::operator<<(char * cstr)
 {
 	string_ += static_cast<wchar_t*>(_bstr_t(cstr));
 	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(int value)
+easy2d::String & easy2d::String::operator<<(int value)
 {
 	(*this) += String::Parse(value);
 	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(unsigned int value)
+easy2d::String & easy2d::String::operator<<(unsigned int value)
 {
 	(*this) += String::Parse(value);
 	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(float value)
+easy2d::String & easy2d::String::operator<<(float value)
 {
 	(*this) += String::Parse(value);
 	return (*this);
 }
 
-e2d::String & e2d::String::operator<<(double value)
+easy2d::String & easy2d::String::operator<<(double value)
 {
 	(*this) += String::Parse(value);
 	return (*this);
 }
 
-e2d::String::operator const wchar_t*() const
+easy2d::String::operator const wchar_t*() const
 {
 	return string_.c_str();
 }
 
-e2d::String::operator wchar_t*() const
+easy2d::String::operator wchar_t*() const
 {
 	return const_cast<wchar_t*>(string_.c_str());
 }
 
-e2d::String::operator std::wstring() const
+easy2d::String::operator std::wstring() const
 {
 	return string_;
 }
 
-e2d::String::operator std::string() const
+easy2d::String::operator std::string() const
 {
 	std::string str = static_cast<const char *>(_bstr_t(string_.c_str()));
 	return std::move(str);
 }
 
-bool e2d::String::IsEmpty() const
+bool easy2d::String::IsEmpty() const
 {
 	return string_.empty();
 }
 
-int e2d::String::GetLength() const
+int easy2d::String::GetLength() const
 {
 	return static_cast<int>(string_.size());
 }
 
-size_t e2d::String::GetHash() const
+size_t easy2d::String::GetHash() const
 {
 	std::hash<std::wstring> hash;
 	return hash(string_);
 }
 
-const wchar_t& e2d::String::At(size_t index) const
+const wchar_t& easy2d::String::At(size_t index) const
 {
 	return string_.at(index);
 }
 
-int e2d::String::Compare(const String & str) const
+int easy2d::String::Compare(const String & str) const
 {
 	return string_.compare(str.string_);
 }
 
-e2d::String e2d::String::ToUpper() const
+easy2d::String easy2d::String::ToUpper() const
 {
 	String str(*this);
 	std::transform(str.string_.begin(), str.string_.end(), str.string_.begin(), std::towupper);
 	return std::move(str);
 }
 
-e2d::String e2d::String::ToLower() const
+easy2d::String easy2d::String::ToLower() const
 {
-	e2d::String str(*this);
+	easy2d::String str(*this);
 	std::transform(str.string_.begin(), str.string_.end(), str.string_.begin(), std::towlower);
 	return std::move(str);
 }
 
-int e2d::String::ToInt() const
+int easy2d::String::ToInt() const
 {
 	if (string_.empty())
 	{
@@ -407,7 +407,7 @@ int e2d::String::ToInt() const
 	return std::stoi(string_, 0, 10);
 }
 
-float e2d::String::ToFloat() const
+float easy2d::String::ToFloat() const
 {
 	if (string_.empty())
 	{
@@ -416,7 +416,7 @@ float e2d::String::ToFloat() const
 	return std::stof(string_, 0);
 }
 
-double e2d::String::ToDouble() const
+double easy2d::String::ToDouble() const
 {
 	if (string_.empty())
 	{
@@ -425,7 +425,7 @@ double e2d::String::ToDouble() const
 	return std::stod(string_, 0);
 }
 
-bool e2d::String::ToBool() const
+bool easy2d::String::ToBool() const
 {
 	if (string_.empty())
 	{
@@ -439,7 +439,7 @@ bool e2d::String::ToBool() const
 	return true;
 }
 
-e2d::String e2d::String::Subtract(int offset, int count) const
+easy2d::String easy2d::String::Subtract(int offset, int count) const
 {
 	String tmp;
 	int length = static_cast<int>(string_.size());
@@ -456,12 +456,12 @@ e2d::String e2d::String::Subtract(int offset, int count) const
 	return std::move(tmp);
 }
 
-void e2d::String::Insert(const String & str, int pos)
+void easy2d::String::Insert(const String & str, int pos)
 {
 	string_.insert(size_t(pos), str.string_);
 }
 
-void e2d::String::Replace(const String & from, const String & to)
+void easy2d::String::Replace(const String & from, const String & to)
 {
 	if (from.string_.empty())
 		return;
@@ -474,12 +474,12 @@ void e2d::String::Replace(const String & from, const String & to)
 	}
 }
 
-void e2d::String::Erase(int offset, int count)
+void easy2d::String::Erase(int offset, int count)
 {
 	string_.erase(size_t(offset), size_t(count));
 }
 
-int e2d::String::Find(const String & str, int offset) const
+int easy2d::String::Find(const String & str, int offset) const
 {
 	size_t index;
 	if ((index = string_.find(str.string_, size_t(offset))) == std::wstring::npos)
@@ -492,31 +492,31 @@ int e2d::String::Find(const String & str, int offset) const
 	}
 }
 
-void e2d::String::Clear()
+void easy2d::String::Clear()
 {
 	string_.clear();
 }
 
-std::wostream & e2d::operator<<(std::wostream &cout, const String &str)
+std::wostream & easy2d::operator<<(std::wostream &cout, const String &str)
 {
 	cout << str.string_;
 	return cout;
 }
 
-std::wistream & e2d::operator>>(std::wistream &cin, String &str)
+std::wistream & easy2d::operator>>(std::wistream &cin, String &str)
 {
 	cin >> str.string_;
 	return cin;
 }
 
-std::ostream & e2d::operator<<(std::ostream &cout, const String &str)
+std::ostream & easy2d::operator<<(std::ostream &cout, const String &str)
 {
 	std::string cstr = static_cast<char*>(_bstr_t(str.string_.c_str()));
 	cout << cstr;
 	return cout;
 }
 
-std::istream & e2d::operator>>(std::istream &cin, String &str)
+std::istream & easy2d::operator>>(std::istream &cin, String &str)
 {
 	std::string temp;
 	cin >> temp;
