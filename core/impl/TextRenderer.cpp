@@ -23,7 +23,7 @@
 
 using namespace easy2d;
 
-E2DTextRenderer::E2DTextRenderer()
+TextRenderer::TextRenderer()
 	: cRefCount_(0)
 	, pD2DFactory_(nullptr)
 	, pRT_(nullptr)
@@ -36,21 +36,21 @@ E2DTextRenderer::E2DTextRenderer()
 {
 }
 
-E2DTextRenderer::~E2DTextRenderer()
+TextRenderer::~TextRenderer()
 {
 	SafeRelease(pD2DFactory_);
 	SafeRelease(pRT_);
 	SafeRelease(pBrush_);
 }
 
-HRESULT E2DTextRenderer::Create(
-	E2DTextRenderer** ppTextRenderer,
+HRESULT TextRenderer::Create(
+	TextRenderer** ppTextRenderer,
 	ID2D1Factory* pD2DFactory,
 	ID2D1HwndRenderTarget* pRT,
 	ID2D1SolidColorBrush* pBrush
 )
 {
-	*ppTextRenderer = new (std::nothrow) E2DTextRenderer();
+	*ppTextRenderer = new (std::nothrow) TextRenderer();
 	if (*ppTextRenderer)
 	{
 		pD2DFactory->AddRef();
@@ -66,7 +66,7 @@ HRESULT E2DTextRenderer::Create(
 	return E_FAIL;
 }
 
-STDMETHODIMP_(void) E2DTextRenderer::SetTextStyle(
+STDMETHODIMP_(void) TextRenderer::SetTextStyle(
 	CONST D2D1_COLOR_F &fillColor,
 	BOOL outline,
 	CONST D2D1_COLOR_F &outline_color,
@@ -96,7 +96,7 @@ STDMETHODIMP_(void) E2DTextRenderer::SetTextStyle(
 	}
 }
 
-STDMETHODIMP E2DTextRenderer::DrawGlyphRun(
+STDMETHODIMP TextRenderer::DrawGlyphRun(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -185,7 +185,7 @@ STDMETHODIMP E2DTextRenderer::DrawGlyphRun(
 	return hr;
 }
 
-STDMETHODIMP E2DTextRenderer::DrawUnderline(
+STDMETHODIMP TextRenderer::DrawUnderline(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -252,7 +252,7 @@ STDMETHODIMP E2DTextRenderer::DrawUnderline(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRenderer::DrawStrikethrough(
+STDMETHODIMP TextRenderer::DrawStrikethrough(
 	__maybenull void* clientDrawingContext,
 	FLOAT baselineOriginX,
 	FLOAT baselineOriginY,
@@ -319,7 +319,7 @@ STDMETHODIMP E2DTextRenderer::DrawStrikethrough(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRenderer::DrawInlineObject(
+STDMETHODIMP TextRenderer::DrawInlineObject(
 	__maybenull void* clientDrawingContext,
 	FLOAT originX,
 	FLOAT originY,
@@ -332,12 +332,12 @@ STDMETHODIMP E2DTextRenderer::DrawInlineObject(
 	return E_NOTIMPL;
 }
 
-STDMETHODIMP_(unsigned long) E2DTextRenderer::AddRef()
+STDMETHODIMP_(unsigned long) TextRenderer::AddRef()
 {
 	return InterlockedIncrement(&cRefCount_);
 }
 
-STDMETHODIMP_(unsigned long) E2DTextRenderer::Release()
+STDMETHODIMP_(unsigned long) TextRenderer::Release()
 {
 	unsigned long newCount = InterlockedDecrement(&cRefCount_);
 
@@ -350,7 +350,7 @@ STDMETHODIMP_(unsigned long) E2DTextRenderer::Release()
 	return newCount;
 }
 
-STDMETHODIMP E2DTextRenderer::IsPixelSnappingDisabled(
+STDMETHODIMP TextRenderer::IsPixelSnappingDisabled(
 	__maybenull void* clientDrawingContext,
 	__out BOOL* isDisabled
 )
@@ -359,7 +359,7 @@ STDMETHODIMP E2DTextRenderer::IsPixelSnappingDisabled(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRenderer::GetCurrentTransform(
+STDMETHODIMP TextRenderer::GetCurrentTransform(
 	__maybenull void* clientDrawingContext,
 	__out DWRITE_MATRIX* transform
 )
@@ -368,7 +368,7 @@ STDMETHODIMP E2DTextRenderer::GetCurrentTransform(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRenderer::GetPixelsPerDip(
+STDMETHODIMP TextRenderer::GetPixelsPerDip(
 	__maybenull void* clientDrawingContext,
 	__out FLOAT* pixelsPerDip
 )
@@ -381,7 +381,7 @@ STDMETHODIMP E2DTextRenderer::GetPixelsPerDip(
 	return S_OK;
 }
 
-STDMETHODIMP E2DTextRenderer::QueryInterface(
+STDMETHODIMP TextRenderer::QueryInterface(
 	IID const& riid,
 	void** ppvObject
 )

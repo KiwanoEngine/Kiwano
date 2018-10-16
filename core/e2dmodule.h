@@ -62,7 +62,7 @@ namespace easy2d
 		ID2D1SolidColorBrush * GetSolidBrush() const;
 
 		// 获取文字渲染工具
-		E2DTextRenderer * GetTextRender() const;
+		TextRenderer * GetTextRender() const;
 
 		// 获取 Miter 样式的 ID2D1StrokeStyle
 		ID2D1StrokeStyle * GetMiterStrokeStyle();
@@ -84,7 +84,7 @@ namespace easy2d
 		ID2D1StrokeStyle*		miter_stroke_style_;
 		ID2D1StrokeStyle*		bevel_stroke_style_;
 		ID2D1StrokeStyle*		round_stroke_style_;
-		E2DTextRenderer*			text_renderer_;
+		TextRenderer*			text_renderer_;
 		IDWriteTextFormat*		fps_text_format_;
 		IDWriteTextLayout*		fps_text_layout_;
 		ID2D1SolidColorBrush*	solid_brush_;

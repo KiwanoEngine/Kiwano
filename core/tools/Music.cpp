@@ -37,7 +37,7 @@ inline bool TraceError(wchar_t* prompt, HRESULT hr)
 
 namespace easy2d
 {
-
+	// “Ù∆µΩ‚¬Î∆˜
 	class Transcoder
 	{
 		WAVEFORMATEX* wave_format_;
@@ -322,6 +322,26 @@ easy2d::Music::Music()
 	, size_(0)
 	, voice_(nullptr)
 {
+}
+
+easy2d::Music::Music(const easy2d::String& file_path)
+	: opened_(false)
+	, playing_(false)
+	, wave_data_(nullptr)
+	, size_(0)
+	, voice_(nullptr)
+{
+	Load(file_path);
+}
+
+easy2d::Music::Music(const Resource& res)
+	: opened_(false)
+	, playing_(false)
+	, wave_data_(nullptr)
+	, size_(0)
+	, voice_(nullptr)
+{
+	Load(res);
 }
 
 easy2d::Music::~Music()

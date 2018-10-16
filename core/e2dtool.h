@@ -75,6 +75,14 @@ namespace easy2d
 	public:
 		Music();
 
+		Music(
+			const easy2d::String& file_path	/* 音乐文件路径 */
+		);
+
+		Music(
+			const Resource& res				/* 音乐资源 */
+		);
+
 		virtual ~Music();
 
 		// 打开音乐文件
@@ -84,7 +92,7 @@ namespace easy2d
 
 		// 打开音乐资源
 		bool Load(
-			const Resource& res
+			const Resource& res				/* 音乐资源 */
 		);
 
 		// 播放

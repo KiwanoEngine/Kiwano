@@ -92,7 +92,7 @@ easy2d::Graphics::Graphics(HWND hwnd)
 
 	// 创建自定义的文字渲染器
 	ThrowIfFailed(
-		E2DTextRenderer::Create(
+		TextRenderer::Create(
 			&text_renderer_,
 			factory_,
 			render_target_,
@@ -223,7 +223,7 @@ ID2D1SolidColorBrush * easy2d::Graphics::GetSolidBrush() const
 	return solid_brush_;
 }
 
-easy2d::E2DTextRenderer * easy2d::Graphics::GetTextRender() const
+easy2d::TextRenderer * easy2d::Graphics::GetTextRender() const
 {
 	return text_renderer_;
 }
