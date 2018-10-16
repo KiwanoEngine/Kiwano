@@ -183,7 +183,7 @@ void easy2d::Graphics::DrawDebugInfo()
 		ThrowIfFailed(
 			write_factory_->CreateTextLayout(
 			(const wchar_t *)fps_text,
-				(UINT32)fps_text.GetLength(),
+				(UINT32)fps_text.Length(),
 				fps_text_format_,
 				0,
 				0,

@@ -179,7 +179,7 @@ namespace easy2d
 		~String();
 
 		// 获取字符串长度
-		int GetLength() const;
+		int Length() const;
 
 		// 获取该字符串的 Hash 值
 		size_t GetHash() const;

@@ -306,11 +306,8 @@ namespace easy2d
 			const String& file_name
 		);
 
-		// 文件或文件夹是否存在
+		// 文件是否存在
 		bool Exists() const;
-
-		// 是否是文件夹
-		bool IsFolder() const;
 
 		// 删除文件
 		bool Delete();
@@ -323,19 +320,13 @@ namespace easy2d
 
 		// 释放资源到临时文件目录
 		static File Extract(
-			int resource_name,				/* 资源名称 */
-			const String& resource_type,	/* 资源类型 */
+			const Resource& res,			/* 资源 */
 			const String& dest_file_name	/* 目标文件名 */
 		);
 
 		// 添加文件搜索路径
 		static void AddSearchPath(
 			const String& path
-		);
-
-		// 创建文件夹
-		static bool CreateFolder(
-			const String& dir_path	/* 文件夹路径 */
 		);
 
 		// 弹出打开文件对话框
@@ -352,8 +343,7 @@ namespace easy2d
 		);
 
 	protected:
-		DWORD attributes_;
-		String file_path_;
+		String	file_path_;
 
 		static std::list<String> search_paths_;
 	};

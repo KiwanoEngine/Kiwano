@@ -363,7 +363,7 @@ bool easy2d::String::IsEmpty() const
 	return string_.empty();
 }
 
-int easy2d::String::GetLength() const
+int easy2d::String::Length() const
 {
 	return static_cast<int>(string_.size());
 }

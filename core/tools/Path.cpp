@@ -22,6 +22,37 @@
 #include "..\e2dmodule.h"
 #include <shlobj.h>
 
+
+namespace
+{
+	// 创建指定文件夹
+	bool CreateFolder(const easy2d::String & dir_path)
+	{
+		if (dir_path.IsEmpty() || dir_path.Length() >= MAX_PATH)
+			return false;
+
+		wchar_t tmp_dir_path[MAX_PATH] = { 0 };
+		int length = dir_path.Length();
+
+		for (int i = 0; i < length; ++i)
+		{
+			tmp_dir_path[i] = dir_path.At(i);
+			if (tmp_dir_path[i] == L'\\' || tmp_dir_path[i] == L'/' || i == (length - 1))
+			{
+				if (::_waccess(tmp_dir_path, 0) != 0)
+				{
+					if (::_wmkdir(tmp_dir_path) != 0)
+					{
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+}
+
+
 const easy2d::String& easy2d::Path::GetDataPath()
 {
 	static String data_path;
@@ -37,7 +68,7 @@ const easy2d::String& easy2d::Path::GetDataPath()
 			data_path = local_app_data_path + L"\\Easy2DGameData\\" << folder_name << L"\\";
 
 			File file(data_path);
-			if (!file.Exists() && !File::CreateFolder(data_path))
+			if (!file.Exists() && !CreateFolder(data_path))
 			{
 				data_path = L"";
 			}
@@ -62,7 +93,7 @@ const easy2d::String& easy2d::Path::GetTemporaryPath()
 			temp_path << path << L"\\Easy2DGameTemp\\" << folder_name << L"\\";
 
 			File file(temp_path);
-			if (!file.Exists() && !File::CreateFolder(temp_path))
+			if (!file.Exists() && !CreateFolder(temp_path))
 			{
 				temp_path = L"";
 			}

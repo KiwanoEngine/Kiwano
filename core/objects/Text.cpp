@@ -400,7 +400,7 @@ void easy2d::Text::CreateLayout()
 		return;
 	}
 	
-	UINT32 length = (UINT32)text_.GetLength();
+	UINT32 length = (UINT32)text_.Length();
 	auto writeFactory = Device::GetGraphics()->GetWriteFactory();
 
 	// 对文本自动换行情况下进行处理

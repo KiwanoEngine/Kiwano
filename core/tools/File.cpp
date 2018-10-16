@@ -26,13 +26,11 @@ std::list<easy2d::String>	easy2d::File::search_paths_;
 
 easy2d::File::File()
 	: file_path_()
-	, attributes_(0)
 {
 }
 
 easy2d::File::File(const String & file_name)
 	: file_path_(file_name)
-	, attributes_(0)
 {
 	this->Open(file_name);
 }
@@ -46,13 +44,10 @@ bool easy2d::File::Open(const String & file_name)
 	if (file_name.IsEmpty())
 		return false;
 
-	auto FindFile = [=](const String & path) -> bool
+	auto FindFile = [](const String & path) -> bool
 	{
-		if (::_waccess((const wchar_t*)path, 0) == 0)
-		{
-			attributes_ = ::GetFileAttributes((LPCTSTR)path);
+		if (::PathFileExists((const wchar_t*)path))
 			return true;
-		}
 		return false;
 	};
 
@@ -61,15 +56,13 @@ bool easy2d::File::Open(const String & file_name)
 		file_path_ = file_name;
 		return true;
 	}
-	else
+	
+	for (const auto& path : search_paths_)
 	{
-		for (const auto& path : search_paths_)
+		if (FindFile(path + file_name))
 		{
-			if (FindFile(path + file_name))
-			{
-				file_path_ = path + file_name;
-				return true;
-			}
+			file_path_ = path + file_name;
+			return true;
 		}
 	}
 	return false;
@@ -77,12 +70,9 @@ bool easy2d::File::Open(const String & file_name)
 
 bool easy2d::File::Exists() const
 {
-	return ::_waccess((const wchar_t*)file_path_, 0) == 0;
-}
-
-bool easy2d::File::IsFolder() const
-{
-	return (attributes_ & FILE_ATTRIBUTE_DIRECTORY) != 0;
+	if (::PathFileExists(static_cast<LPCWSTR>(file_path_)))
+		return true;
+	return false;
 }
 
 const easy2d::String& easy2d::File::GetPath() const
@@ -108,15 +98,15 @@ easy2d::String easy2d::File::GetExtension() const
 
 bool easy2d::File::Delete()
 {
-	if (::DeleteFile((LPCWSTR)file_path_))
+	if (::DeleteFile(static_cast<LPCWSTR>(file_path_)))
 		return true;
 	return false;
 }
 
-easy2d::File easy2d::File::Extract(int resource_name, const String & resource_type, const String& dest_file_name)
+easy2d::File easy2d::File::Extract(const Resource& res, const String& dest_file_name)
 {
-	// 创建文件
-	HANDLE file = ::CreateFile(
+	File file;
+	HANDLE file_handle = ::CreateFile(
 		static_cast<LPCWSTR>(dest_file_name),
 		GENERIC_WRITE,
 		NULL,
@@ -126,11 +116,11 @@ easy2d::File easy2d::File::Extract(int resource_name, const String & resource_ty
 		NULL
 	);
 
-	if (file == INVALID_HANDLE_VALUE)
-		return std::move(File());
+	if (file_handle == INVALID_HANDLE_VALUE)
+		return std::move(file);
 
 	// 查找资源文件中、加载资源到内存、得到资源大小
-	HRSRC res = ::FindResource(NULL, MAKEINTRESOURCE(resource_name), (LPCWSTR)resource_type);
+	HRSRC res = ::FindResource(NULL, MAKEINTRESOURCE(res.id), static_cast<LPCWSTR>(res.type));
 	HGLOBAL res_data = ::LoadResource(NULL, res);
 	DWORD res_size = ::SizeofResource(NULL, res);
 
@@ -138,23 +128,26 @@ easy2d::File easy2d::File::Extract(int resource_name, const String & resource_ty
 	{
 		// 写入文件
 		DWORD written_bytes = 0;
-		::WriteFile(file, res_data, res_size, &written_bytes, NULL);
-		::CloseHandle(file);
-		return File(dest_file_name);
+		::WriteFile(file_handle, res_data, res_size, &written_bytes, NULL);
+		::CloseHandle(file_handle);
+
+		file.Open(dest_file_name);
 	}
 	else
 	{
-		::CloseHandle(file);
+		::CloseHandle(file_handle);
 		::DeleteFile(static_cast<LPCWSTR>(dest_file_name));
-		return std::move(File());
 	}
+
+	::FreeResource(res_data);
+	return std::move(file);
 }
 
 void easy2d::File::AddSearchPath(const String & path)
 {
 	String tmp = path;
 	tmp.Replace(L"/", L"\\");
-	if (tmp.At(tmp.GetLength() - 1) != L'\\')
+	if (tmp.At(tmp.Length() - 1) != L'\\')
 	{
 		tmp << L"\\";
 	}
@@ -163,31 +156,6 @@ void easy2d::File::AddSearchPath(const String & path)
 	{
 		search_paths_.push_front(path);
 	}
-}
-
-bool easy2d::File::CreateFolder(const String & dir_path)
-{
-	if (dir_path.IsEmpty() || dir_path.GetLength() >= MAX_PATH)
-		return false;
-
-	wchar_t tmp_dir_path[MAX_PATH] = { 0 };
-	int length = dir_path.GetLength();
-
-	for (int i = 0; i < length; ++i)
-	{
-		tmp_dir_path[i] = dir_path.At(i);
-		if (tmp_dir_path[i] == L'\\' || tmp_dir_path[i] == L'/' || i == (length - 1))
-		{
-			if (::_waccess(tmp_dir_path, 0) != 0)
-			{
-				if (::_wmkdir(tmp_dir_path) != 0)
-				{
-					return false;
-				}
-			}
-		}
-	}
-	return true;
 }
 
 easy2d::File easy2d::File::ShowOpenDialog(const String & title, const String & filter)
