@@ -505,7 +505,7 @@ namespace easy2d
 
 		E2D_OP_EXPLICIT operator bool() const;
 
-	protected:
+	private:
 		std::function<void()> func_;
 	};
 
@@ -539,7 +539,7 @@ namespace easy2d
 		Duration& operator += (Duration const &);
 		Duration& operator -= (Duration const &);
 
-	protected:
+	private:
 		std::chrono::milliseconds duration_ms_;
 	};
 
@@ -567,7 +567,7 @@ namespace easy2d
 		// 获取当前时间
 		static Time Now();
 
-	protected:
+	private:
 		std::chrono::steady_clock::time_point time_;
 	};
 
@@ -663,7 +663,7 @@ namespace easy2d
 		// 获取引用计数
 		LONG GetRefCount() const;
 
-	protected:
+	private:
 		LONG ref_count_;
 	};
 

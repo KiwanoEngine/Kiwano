@@ -165,7 +165,7 @@ void easy2d::Button::SetPivot(float pivot_x, float pivot_y)
 
 bool easy2d::Button::Dispatch(const MouseEvent & e, bool handled)
 {
-	if (!handled && enabled_ && visible_ && normal_)
+	if (!handled && enabled_ && IsVisible() && normal_)
 	{
 		bool contains = normal_->ContainsPoint(e.GetPosition());
 		if (e.GetType() == MouseEvent::Type::LeftUp && is_selected_ && contains)
@@ -216,7 +216,7 @@ void easy2d::Button::Visit()
 {
 	Node::Visit();
 
-	if (visible_ &&
+	if (IsVisible() &&
 		!enabled_ &&
 		normal_ &&
 		normal_->ContainsPoint(Device::GetInput()->GetMousePos()))

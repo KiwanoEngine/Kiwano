@@ -132,7 +132,7 @@
 
 #ifndef E2D_WARNING
 #	if defined( DEBUG ) || defined( _DEBUG )
-#		define E2D_WARNING(msg) do { ::OutputDebugStringW(L"Warning: " _CRT_WIDE(msg) L"\r\n"); } while(0)
+#		define E2D_WARNING(msg) do { ::OutputDebugStringW(L"[easy2d] Warning: " _CRT_WIDE(msg) L"\r\n"); } while(0)
 #	else
 #		define E2D_WARNING(msg) ((void)0)
 #	endif
@@ -141,7 +141,7 @@
 
 #ifndef E2D_WARNING_IF
 #	if defined( DEBUG ) || defined( _DEBUG )
-#		define E2D_WARNING_IF(exp, msg) do { if (exp) { ::OutputDebugStringW(L"Warning: " _CRT_WIDE(msg) L"\r\n"); } } while(0)
+#		define E2D_WARNING_IF(exp, msg) do { if (exp) { ::OutputDebugStringW(L"[easy2d] Warning: " _CRT_WIDE(msg) L"\r\n"); } } while(0)
 #	else
 #		define E2D_WARNING_IF(exp, msg) ((void)0)
 #	endif

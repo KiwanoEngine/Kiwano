@@ -84,7 +84,7 @@ void easy2d::Node::Visit()
 	if (children_.empty())
 	{
 		render_target->SetTransform(final_matrix_);
-		Draw();
+		OnDraw();
 	}
 	else
 	{
@@ -116,7 +116,7 @@ void easy2d::Node::Visit()
 		}
 		
 		render_target->SetTransform(final_matrix_);
-		Draw();
+		OnDraw();
 
 		// ·ÃÎÊÊ£Óà½Úµã
 		for (; i < children_.size(); ++i)
@@ -133,7 +133,7 @@ void easy2d::Node::UpdateChildren(float dt)
 {
 	if (children_.empty())
 	{
-		Update(dt);
+		OnUpdate(dt);
 		UpdateActions();
 		UpdateTasks();
 		UpdateTransform();
@@ -155,7 +155,7 @@ void easy2d::Node::UpdateChildren(float dt)
 			}
 		}
 
-		Update(dt);
+		OnUpdate(dt);
 		UpdateActions();
 		UpdateTasks();
 		UpdateTransform();
@@ -414,6 +414,11 @@ const easy2d::Transform & easy2d::Node::GetTransform() const
 float easy2d::Node::GetOpacity() const
 {
 	return real_opacity_;
+}
+
+float easy2d::Node::GetDisplayOpacity() const
+{
+	return display_opacity_;
 }
 
 int easy2d::Node::GetOrder() const

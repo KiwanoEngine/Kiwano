@@ -127,21 +127,21 @@ easy2d::Image * easy2d::Sprite::GetImage() const
 	return image_;
 }
 
-void easy2d::Sprite::Draw() const
+void easy2d::Sprite::OnDraw() const
 {
 	if (image_ && image_->GetBitmap())
 	{
 		auto crop_pos = image_->GetCropPos();
 		Device::GetGraphics()->GetRenderTarget()->DrawBitmap(
 			image_->GetBitmap(),
-			D2D1::RectF(0, 0, transform_.size.width, transform_.size.height),
-			display_opacity_,
+			D2D1::RectF(0, 0, GetTransform().size.width, GetTransform().size.height),
+			GetDisplayOpacity(),
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			D2D1::RectF(
 				crop_pos.x,
 				crop_pos.y,
-				crop_pos.y + transform_.size.width,
-				crop_pos.y + transform_.size.height
+				crop_pos.y + GetTransform().size.width,
+				crop_pos.y + GetTransform().size.height
 			)
 		);
 	}

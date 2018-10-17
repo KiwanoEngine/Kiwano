@@ -41,12 +41,12 @@ namespace
 
 	inline void TraceError(LPCWSTR output)
 	{
-		OutputDebugStringExW(L"Music error: %s failed!\r\n", output);
+		OutputDebugStringExW(L"[easy2d] Music error: %s failed!\r\n", output);
 	}
 
 	inline void TraceError(LPCWSTR output, HRESULT hr)
 	{
-		OutputDebugStringExW(L"Music error: %s (%#X)\r\n", output, hr);
+		OutputDebugStringExW(L"[easy2d] Music error: %s (%#X)\r\n", output, hr);
 	}
 }
 

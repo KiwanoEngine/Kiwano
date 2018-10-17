@@ -308,15 +308,15 @@ void easy2d::Text::SetOutlineStroke(Stroke outline_stroke)
 	style_.outline_stroke = outline_stroke;
 }
 
-void easy2d::Text::Draw() const
+void easy2d::Text::OnDraw() const
 {
 	if (text_layout_)
 	{
 		auto graphics = Device::GetGraphics();
 		// 创建文本区域
-		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, transform_.size.width, transform_.size.height);
+		D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, GetTransform().size.width, GetTransform().size.height);
 		// 设置画刷颜色和透明度
-		graphics->GetSolidBrush()->SetOpacity(display_opacity_);
+		graphics->GetSolidBrush()->SetOpacity(GetDisplayOpacity());
 		// 获取文本渲染器
 		auto text_renderer = graphics->GetTextRender();
 		graphics->SetTextRendererStyle(
@@ -449,7 +449,7 @@ void easy2d::Text::CreateLayout()
 				(const wchar_t *)text_,
 				length,
 				text_format_,
-				transform_.size.width,
+				GetTransform().size.width,
 				0,
 				&text_layout_
 			)

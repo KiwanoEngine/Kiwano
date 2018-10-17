@@ -78,19 +78,13 @@ easy2d::Game::~Game()
 	::CoUninitialize();
 }
 
-void easy2d::Game::Run(const Options& options)
+void easy2d::Game::Run()
 {
-	title_ = options.title;
-	width_ = options.width;
-	height_ = options.height;
-	icon_ = options.icon;
-	debug_mode_ = options.debug_mode;
-
 	// 初始化
 	Init();
 
 	// 开始
-	Start();
+	OnStart();
 
 	// 刷新场景
 	if (next_scene_)
@@ -118,7 +112,7 @@ void easy2d::Game::Run(const Options& options)
 			last = now;
 
 			Device::GetInput()->Flush();
-			Update(dt);
+			OnUpdate(dt);
 			UpdateScene(dt);
 			DrawScene();
 
@@ -155,11 +149,7 @@ void easy2d::Game::EnterScene(Scene * scene, Transition * transition)
 		return;
 	}
 
-	if (next_scene_ != nullptr)
-	{
-		E2D_WARNING("Scene is transitioning...");
-		return;
-	}
+	if (curr_scene_ == scene) { return; }
 
 	if (next_scene_)
 	{
@@ -198,7 +188,7 @@ void easy2d::Game::UpdateScene(float dt)
 	{
 		if (scene)
 		{
-			scene->Update(dt);
+			scene->OnUpdate(dt);
 			Node * root = scene->GetRoot();
 			if (root)
 			{
@@ -487,6 +477,11 @@ void easy2d::Game::SetIcon(int resource_id)
 	}
 }
 
+void easy2d::Game::SetDebugMode(bool enabled)
+{
+	debug_mode_ = enabled;
+}
+
 
 LRESULT easy2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 {
@@ -596,7 +591,7 @@ LRESULT easy2d::Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_para
 	// 窗口关闭消息
 	case WM_CLOSE:
 	{
-		if (game->OnExit())
+		if (game->OnClose())
 		{
 			game->Quit();
 		}

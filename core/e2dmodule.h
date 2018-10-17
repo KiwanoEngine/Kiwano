@@ -201,52 +201,33 @@ namespace easy2d
 	};
 
 
-	// 启动选项
-	struct Options
-	{
-		String	title;		// 标题
-		int		width;		// 宽度
-		int		height;		// 高度
-		int		icon;		// 图标资源 ID
-		bool	debug_mode;	// 调试模式
-
-		Options()
-			: title(L"Easy2D Game")
-			, width(640)
-			, height(480)
-			, icon(0)
-			, debug_mode(false)
-		{
-		}
-	};
-
-
 	// 游戏控制器
 	class Game
 	{
 	public:
-		// 开始
-		virtual void Start() = 0;
+		// 开始时
+		virtual void OnStart() = 0;
 
-		// 更新
-		virtual void Update(float dt) {}
+		// 更新时
+		virtual void OnUpdate(float dt) {}
+
+		// 退出时
+		virtual void OnExit() {}
+
+		// 窗口关闭时
+		// 返回值：返回 false 将阻止窗口关闭
+		virtual bool OnClose() { return true; }
 
 		// 运行
-		void Run(
-			const Options& options = Options()
-		);
+		void Run();
 
 		// 结束
 		void Quit();
 
-		// 关闭窗口时触发
-		// 返回值：返回 false 将阻止窗口关闭
-		virtual bool OnExit() { return true; }
-
-		// 修改窗体大小
+		// 设置窗口大小
 		void SetSize(
-			int width,			/* 窗体宽度 */
-			int height			/* 窗体高度 */
+			int width,			/* 窗口宽度 */
+			int height			/* 窗口高度 */
 		);
 
 		// 设置窗体标题
@@ -257,6 +238,11 @@ namespace easy2d
 		// 设置窗体图标
 		void SetIcon(
 			int resource_id		/* 图标资源 ID */
+		);
+
+		// 调试模式
+		void SetDebugMode(
+			bool enabled
 		);
 
 		// 获取窗体标题
@@ -283,6 +269,26 @@ namespace easy2d
 		// 获取当前场景
 		Scene * GetCurrentScene();
 
+		// 获取实例
+		static Game * GetInstance();
+
+	protected:
+		Game();
+
+		~Game();
+
+		E2D_DISABLE_COPY(Game);
+
+	private:
+		// 初始化
+		void Init();
+
+		// 根据客户区大小定位窗口
+		Rect Locate(
+			int width,
+			int height
+		);
+
 		// 是否正在进行场景过渡
 		bool IsTransitioning() const;
 
@@ -294,23 +300,6 @@ namespace easy2d
 		// 渲染场景画面
 		void DrawScene();
 
-		// 获取实例
-		static Game * GetInstance();
-
-	protected:
-		Game();
-
-		~Game();
-
-		// 初始化
-		void Init();
-
-		// 根据客户区大小定位窗口
-		Rect Locate(
-			int width,
-			int height
-		);
-
 		// Win32 窗口消息回调程序
 		static LRESULT CALLBACK WndProc(
 			HWND hwnd,
@@ -319,7 +308,7 @@ namespace easy2d
 			LPARAM l_param
 		);
 
-	protected:
+	private:
 		HWND		hwnd_;
 		String		title_;
 		int			width_;

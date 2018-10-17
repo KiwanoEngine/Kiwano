@@ -107,7 +107,7 @@ namespace easy2d
 		// 清空缓存
 		static void ClearCache();
 
-	protected:
+	private:
 		E2D_DISABLE_COPY(Image);
 
 		// 缓存 Bitmap 资源
@@ -125,7 +125,7 @@ namespace easy2d
 			ID2D1Bitmap * bitmap
 		);
 
-	protected:
+	private:
 		Rect crop_rect_;
 		ID2D1Bitmap * bitmap_;
 
@@ -155,7 +155,7 @@ namespace easy2d
 		virtual void OnExit() {}
 
 		// 更新场景
-		virtual void Update(float dt) {}
+		virtual void OnUpdate(float dt) {}
 
 		// 设置根节点
 		void SetRoot(
@@ -186,12 +186,12 @@ namespace easy2d
 		// 获取转换矩阵
 		const D2D1::Matrix3x2F& GetTransform() const;
 
-	protected:
+	private:
 		E2D_DISABLE_COPY(Scene);
 
-	protected:
-		Node*	root_;
-		D2D1::Matrix3x2F transform_;
+	private:
+		Node*				root_;
+		D2D1::Matrix3x2F	transform_;
 	};
 
 
@@ -235,7 +235,7 @@ namespace easy2d
 		// 重置计时
 		void ResetTime();
 
-	protected:
+	private:
 		bool		running_;
 		bool		stopped_;
 		int			run_times_;
@@ -285,10 +285,10 @@ namespace easy2d
 		virtual ~Node();
 
 		// 渲染节点
-		virtual void Draw() const {}
+		virtual void OnDraw() const {}
 
 		// 更新节点
-		virtual void Update(float dt) {}
+		virtual void OnUpdate(float dt) {}
 
 		// 获取节点显示状态
 		bool IsVisible() const;
@@ -344,11 +344,14 @@ namespace easy2d
 		// 获取节点旋转角度
 		float GetRotation() const;
 
-		// 获取二维转换
+		// 获取二维转换矩阵
 		const Transform& GetTransform() const;
 
 		// 获取节点透明度
 		float GetOpacity() const;
+
+		// 获取显示透明度
+		float GetDisplayOpacity() const;
 
 		// 获取父节点
 		Node * GetParent() const;
@@ -634,18 +637,8 @@ namespace easy2d
 		const Tasks& GetAllTasks() const;
 
 	protected:
-		E2D_DISABLE_COPY(Node);
-
 		// 遍历节点
 		virtual void Visit();
-
-		// 渲染节点边缘
-		void DrawBorder();
-
-		// 设置节点所在场景
-		void SetParentScene(
-			Scene * scene
-		);
 
 		// 分发鼠标消息
 		virtual bool Dispatch(
@@ -657,6 +650,17 @@ namespace easy2d
 		virtual bool Dispatch(
 			const KeyEvent& e,
 			bool handled
+		);
+
+	private:
+		E2D_DISABLE_COPY(Node);
+
+		// 渲染节点边缘
+		void DrawBorder();
+
+		// 设置节点所在场景
+		void SetParentScene(
+			Scene * scene
 		);
 
 		// 更新子节点
@@ -677,23 +681,23 @@ namespace easy2d
 		// 更新节点时间
 		void UpdateTime();
 
-	protected:
-		String		name_;
-		size_t		hash_name_;
-		Transform	transform_;
-		float		display_opacity_;
-		float		real_opacity_;
-		int			order_;
-		bool		visible_;
-		bool		clip_enabled_;
-		bool		dirty_sort_;
-		bool		dirty_transform_;
-		Scene *		parent_scene_;
-		Node *		parent_;
-		Color		border_color_;
-		Actions		actions_;
-		Tasks		tasks_;
-		Nodes		children_;
+	private:
+		String				name_;
+		size_t				hash_name_;
+		Transform			transform_;
+		float				display_opacity_;
+		float				real_opacity_;
+		int					order_;
+		bool				visible_;
+		bool				clip_enabled_;
+		bool				dirty_sort_;
+		bool				dirty_transform_;
+		Scene*				parent_scene_;
+		Node*				parent_;
+		Color				border_color_;
+		Actions				actions_;
+		Tasks				tasks_;
+		Nodes				children_;
 		ID2D1Geometry*		border_;
 		D2D1::Matrix3x2F	initial_matrix_;
 		D2D1::Matrix3x2F	final_matrix_;
@@ -755,13 +759,13 @@ namespace easy2d
 		Image * GetImage() const;
 
 		// 渲染精灵
-		virtual void Draw() const override;
+		virtual void OnDraw() const override;
 
-	protected:
+	private:
 		E2D_DISABLE_COPY(Sprite);
 
-	protected:
-		Image * image_;
+	private:
+		Image* image_;
 	};
 
 
@@ -959,9 +963,9 @@ namespace easy2d
 		);
 
 		// 渲染文字
-		virtual void Draw() const override;
+		virtual void OnDraw() const override;
 
-	protected:
+	private:
 		E2D_DISABLE_COPY(Text);
 
 		// 重新排版文字
@@ -973,12 +977,12 @@ namespace easy2d
 		// 创建文字布局
 		void CreateLayout();
 
-	protected:
-		String	text_;
-		Font	font_;
-		Style	style_;
-		IDWriteTextFormat * text_format_;
-		IDWriteTextLayout * text_layout_;
+	private:
+		String				text_;
+		Font				font_;
+		Style				style_;
+		IDWriteTextFormat*	text_format_;
+		IDWriteTextLayout*	text_layout_;
 	};
 
 
@@ -1082,16 +1086,16 @@ namespace easy2d
 			float radius_y
 		);
 
-	protected:
+	private:
 		E2D_DISABLE_COPY(Canvas);
 
-	protected:
-		float	stroke_width_;
-		Stroke	stroke_;
-		ID2D1RenderTarget * render_target_;
-		ID2D1SolidColorBrush * fill_brush_;
-		ID2D1SolidColorBrush * line_brush_;
-		ID2D1StrokeStyle * stroke_style_;
+	private:
+		float					stroke_width_;
+		Stroke					stroke_;
+		ID2D1RenderTarget*		render_target_;
+		ID2D1SolidColorBrush*	fill_brush_;
+		ID2D1SolidColorBrush*	line_brush_;
+		ID2D1StrokeStyle*		stroke_style_;
 	};
 
 } // end of easy2d namespace
