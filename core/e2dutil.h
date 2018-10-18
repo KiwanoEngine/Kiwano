@@ -27,25 +27,6 @@
 namespace easy2d
 {
 
-	// 方向
-	enum class Direction : int
-	{
-		Up,			/* 上 */
-		Down,		/* 下 */
-		Left,		/* 左 */
-		Right		/* 右 */
-	};
-
-
-	// 线条相交样式
-	enum class Stroke : int
-	{
-		Miter = 0,	/* 斜切 */
-		Bevel = 1,	/* 斜角 */
-		Round = 2	/* 圆角 */
-	};
-
-
 	class Size;
 
 	// 坐标
@@ -357,45 +338,45 @@ namespace easy2d
 	public:
 		enum Value : UINT
 		{
-			Black = 0x000000,
-			Blue = 0x0000FF,
-			BlueViolet = 0x8A2BE2,
-			Brown = 0xA52A2A,
-			Chocolate = 0xD2691E,
-			DarkBlue = 0x00008B,
-			DarkGray = 0xA9A9A9,
-			DarkGreen = 0x006400,
-			DarkOrange = 0xFF8C00,
-			DarkRed = 0x8B0000,
-			DarkViolet = 0x9400D3,
-			ForestGreen = 0x228B22,
-			Gold = 0xFFD700,
-			Gray = 0x808080,
-			Green = 0x008000,
-			GreenYellow = 0xADFF2F,
-			LightBlue = 0xADD8E6,
-			LightCyan = 0xE0FFFF,
-			LightGreen = 0x90EE90,
-			LightGray = 0xD3D3D3,
-			LightPink = 0xFFB6C1,
-			LightSeaGreen = 0x20B2AA,
-			LightSkyBlue = 0x87CEFA,
-			LightYellow = 0xFFFFE0,
-			Orange = 0xFFA500,
-			OrangeRed = 0xFF4500,
-			Pink = 0xFFC0CB,
-			Purple = 0x800080,
-			Red = 0xFF0000,
-			Silver = 0xC0C0C0,
-			SkyBlue = 0x87CEEB,
-			Snow = 0xFFFAFA,
-			Violet = 0xEE82EE,
-			Wheat = 0xF5DEB3,
-			White = 0xFFFFFF,
-			WhiteSmoke = 0xF5F5F5,
-			Wood = 0xDEB887,
-			Yellow = 0xFFFF00,
-			Yellow_Green = 0x9ACD32
+			Black			= 0x000000,
+			Blue			= 0x0000FF,
+			BlueViolet		= 0x8A2BE2,
+			Brown			= 0xA52A2A,
+			Chocolate		= 0xD2691E,
+			DarkBlue		= 0x00008B,
+			DarkGray		= 0xA9A9A9,
+			DarkGreen		= 0x006400,
+			DarkOrange		= 0xFF8C00,
+			DarkRed			= 0x8B0000,
+			DarkViolet		= 0x9400D3,
+			ForestGreen		= 0x228B22,
+			Gold			= 0xFFD700,
+			Gray			= 0x808080,
+			Green			= 0x008000,
+			GreenYellow		= 0xADFF2F,
+			LightBlue		= 0xADD8E6,
+			LightCyan		= 0xE0FFFF,
+			LightGreen		= 0x90EE90,
+			LightGray		= 0xD3D3D3,
+			LightPink		= 0xFFB6C1,
+			LightSeaGreen	= 0x20B2AA,
+			LightSkyBlue	= 0x87CEFA,
+			LightYellow		= 0xFFFFE0,
+			Orange			= 0xFFA500,
+			OrangeRed		= 0xFF4500,
+			Pink			= 0xFFC0CB,
+			Purple			= 0x800080,
+			Red				= 0xFF0000,
+			Silver			= 0xC0C0C0,
+			SkyBlue			= 0x87CEEB,
+			Snow			= 0xFFFAFA,
+			Violet			= 0xEE82EE,
+			Wheat			= 0xF5DEB3,
+			White			= 0xFFFFFF,
+			WhiteSmoke		= 0xF5F5F5,
+			Wood			= 0xDEB887,
+			Yellow			= 0xFFFF00,
+			YellowGreen		= 0x9ACD32
 		};
 
 	public:
@@ -406,63 +387,82 @@ namespace easy2d
 	};
 
 
+	// 方向
+	enum class Direction : int
+	{
+		Up,			/* 上 */
+		Down,		/* 下 */
+		Left,		/* 左 */
+		Right		/* 右 */
+	};
+
+
+	// 线条相交样式
+	enum class Stroke : int
+	{
+		Miter = 0,	/* 斜切 */
+		Bevel = 1,	/* 斜角 */
+		Round = 2	/* 圆角 */
+	};
+
+
 	// 键盘键值
 	enum class KeyCode : int
 	{
-		Unknown = 0,
-		Up = 0xC8,
-		Left = 0xCB,
-		Right = 0xCD,
-		Down = 0xD0,
-		Enter = 0x1C,
-		Space = 0x39,
-		Esc = 0x01,
-		Q = 0x10,
-		W = 0x11,
-		E = 0x12,
-		R = 0x13,
-		T = 0x14,
-		Y = 0x15,
-		U = 0x16,
-		I = 0x17,
-		O = 0x18,
-		P = 0x19,
-		A = 0x1E,
-		S = 0x1F,
-		D = 0x20,
-		F = 0x21,
-		G = 0x22,
-		H = 0x23,
-		J = 0x24,
-		K = 0x25,
-		L = 0x26,
-		Z = 0x2C,
-		X = 0x2D,
-		C = 0x2E,
-		V = 0x2F,
-		B = 0x30,
-		N = 0x31,
-		M = 0x32,
-		Num1 = 0x02,
-		Num2 = 0x03,
-		Num3 = 0x04,
-		Num4 = 0x05,
-		Num5 = 0x06,
-		Num6 = 0x07,
-		Num7 = 0x08,
-		Num8 = 0x09,
-		Num9 = 0x0A,
-		Num0 = 0x0B,
-		Numpad7 = 0x47,
-		Numpad8 = 0x48,
-		Numpad9 = 0x49,
-		Numpad4 = 0x4B,
-		Numpad5 = 0x4C,
-		Numpad6 = 0x4D,
-		Numpad1 = 0x4F,
-		Numpad2 = 0x50,
-		Numpad3 = 0x51,
-		Numpad0 = 0x52,
+		Unknown	= 0,
+		Up		= 0xC8,
+		Left	= 0xCB,
+		Right	= 0xCD,
+		Down	= 0xD0,
+		Enter	= 0x1C,
+		Space	= 0x39,
+		Esc		= 0x01,
+		Q		= 0x10,
+		W		= 0x11,
+		E		= 0x12,
+		R		= 0x13,
+		T		= 0x14,
+		Y		= 0x15,
+		U		= 0x16,
+		I		= 0x17,
+		O		= 0x18,
+		P		= 0x19,
+		A		= 0x1E,
+		S		= 0x1F,
+		D		= 0x20,
+		F		= 0x21,
+		G		= 0x22,
+		H		= 0x23,
+		J		= 0x24,
+		K		= 0x25,
+		L		= 0x26,
+		Z		= 0x2C,
+		X		= 0x2D,
+		C		= 0x2E,
+		V		= 0x2F,
+		B		= 0x30,
+		N		= 0x31,
+		M		= 0x32,
+		Num1	= 0x02,
+		Num2	= 0x03,
+		Num3	= 0x04,
+		Num4	= 0x05,
+		Num5	= 0x06,
+		Num6	= 0x07,
+		Num7	= 0x08,
+		Num8	= 0x09,
+		Num9	= 0x0A,
+		Num0	= 0x0B,
+		Numpad7	= 0x47,
+		Numpad8	= 0x48,
+		Numpad9	= 0x49,
+		Numpad4	= 0x4B,
+		Numpad5	= 0x4C,
+		Numpad6	= 0x4D,
+		Numpad1	= 0x4F,
+		Numpad2	= 0x50,
+		Numpad3	= 0x51,
+		Numpad0	= 0x52,
 	};
 
 
@@ -585,15 +585,15 @@ namespace easy2d
 		// 字体粗细值
 		enum Weight : UINT
 		{
-			Thin = 100,
-			ExtraLight = 200,
-			Light = 300,
-			Normal = 400,
-			Medium = 500,
-			Bold = 700,
-			ExtraBold = 800,
-			Black = 900,
-			ExtraBlack = 950
+			Thin		= 100,
+			ExtraLight	= 200,
+			Light		= 300,
+			Normal		= 400,
+			Medium		= 500,
+			Bold		= 700,
+			ExtraBold	= 800,
+			Black		= 900,
+			ExtraBlack	= 950
 		};
 
 	public:
@@ -601,9 +601,9 @@ namespace easy2d
 
 		explicit Font(
 			const String& family,
-			float size = 22,
-			UINT weight = Font::Weight::Normal,
-			bool italic = false
+			float size	= 22,
+			UINT weight	= Font::Weight::Normal,
+			bool italic	= false
 		);
 	};
 

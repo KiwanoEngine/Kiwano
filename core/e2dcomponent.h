@@ -99,7 +99,7 @@ namespace easy2d
 			float pivot_y
 		) override;
 
-	protected:
+	private:
 		E2D_DISABLE_COPY(Button);
 
 		// 按钮状态枚举
@@ -122,7 +122,7 @@ namespace easy2d
 		// 遍历节点
 		virtual void Visit() override;
 
-	protected:
+	private:
 		Node * normal_;
 		Node *		mouseover_;
 		Node *		selected_;
@@ -169,10 +169,10 @@ namespace easy2d
 		// 获取所有按钮
 		const std::vector<Button*>& GetAllButtons() const;
 
-	protected:
+	private:
 		E2D_DISABLE_COPY(Menu);
 
-	protected:
+	private:
 		bool enabled_;
 		std::vector<Button*> buttons_;
 	};

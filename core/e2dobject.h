@@ -786,32 +786,32 @@ namespace easy2d
 		class Style
 		{
 		public:
-			Color		color;				// 颜色
-			Align		alignment;			// 对齐方式
-			bool		wrap;				// 打开自动换行
-			float		wrap_width;			// 自动换行宽度
-			float		line_spacing;		// 行间距
-			bool		underline;			// 下划线
-			bool		strikethrough;		// 删除线
-			bool		outline;			// 显示描边
-			Color		outline_color;		// 描边颜色
-			float		outline_width;		// 描边线宽
-			Stroke		outline_stroke;		// 描边线相交样式
+			Color	color;				// 颜色
+			Align	alignment;			// 对齐方式
+			bool	wrap;				// 打开自动换行
+			float	wrap_width;			// 自动换行宽度
+			float	line_spacing;		// 行间距
+			bool	underline;			// 下划线
+			bool	strikethrough;		// 删除线
+			bool	outline;			// 显示描边
+			Color	outline_color;		// 描边颜色
+			float	outline_width;		// 描边线宽
+			Stroke	outline_stroke;		// 描边线相交样式
 
 		public:
 			Style();
 
 			Style(
 				Color color,
-				Align alignment = Align::Left,
-				bool wrap = false,
-				float wrap_width = 0.f,
-				float line_spacing = 0.f,
-				bool underline = false,
-				bool strikethrough = false,
-				bool outline = true,
-				Color outline_color = Color(Color::Black, 0.5),
-				float outline_width = 1.f,
+				Align alignment			= Align::Left,
+				bool wrap				= false,
+				float wrap_width		= 0.f,
+				float line_spacing		= 0.f,
+				bool underline			= false,
+				bool strikethrough		= false,
+				bool outline			= true,
+				Color outline_color		= Color(Color::Black, 0.5),
+				float outline_width		= 1.f,
 				Stroke outline_stroke = Stroke::Round
 			);
 		};
@@ -821,8 +821,8 @@ namespace easy2d
 
 		explicit Text(
 			const String& text,						/* 文字内容 */
-			const Font& font = Font(),				/* 字体 */
-			const Style& style = Style()			/* 文本样式 */
+			const Font& font	= Font(),			/* 字体 */
+			const Style& style	= Style()			/* 文本样式 */
 		);
 
 		virtual ~Text();

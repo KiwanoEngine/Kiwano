@@ -29,7 +29,9 @@
 #	error 仅能在 C++ 环境下使用 Easy2D
 #endif
 
-#if _MSC_VER < 1700
+#ifndef _MSC_VER
+#   error 仅支持在 MSVC 环境下编译
+#elif _MSC_VER < 1700
 #	error Easy2D 不支持 Visual Studio 2012 以下版本
 #endif
 
