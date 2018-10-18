@@ -234,6 +234,7 @@ namespace easy2d
 		// 数字类型转字符串
 		static String Parse(int value);
 		static String Parse(unsigned int value);
+		static String Parse(unsigned long long value);
 		static String Parse(float value);
 		static String Parse(double value);
 
@@ -523,11 +524,11 @@ namespace easy2d
 		Duration();
 
 		explicit Duration(
-			int64_t milliseconds
+			int milliseconds
 		);
 
 		// 获取毫秒数
-		int64_t Milliseconds() const;
+		int Milliseconds() const;
 
 		// 获取秒数
 		float Seconds() const;
@@ -549,18 +550,29 @@ namespace easy2d
 		Duration operator - (Duration const &) const;
 		Duration operator * (int) const;
 		Duration operator * (float) const;
+		Duration operator * (double) const;
 		Duration operator / (int) const;
 		Duration operator / (float) const;
+		Duration operator / (double) const;
 
 		Duration& operator += (Duration const &);
 		Duration& operator -= (Duration const &);
 		Duration& operator *= (int);
 		Duration& operator *= (float);
+		Duration& operator *= (double);
 		Duration& operator /= (int);
 		Duration& operator /= (float);
+		Duration& operator /= (double);
+
+		friend Duration operator* (int, const Duration &);
+		friend Duration operator* (float, const Duration &);
+		friend Duration operator* (double, const Duration &);
+		friend Duration operator/ (int, const Duration &);
+		friend Duration operator/ (float, const Duration &);
+		friend Duration operator/ (double, const Duration &);
 
 	private:
-		int64_t milliseconds_;
+		int milliseconds_;
 	};
 
 

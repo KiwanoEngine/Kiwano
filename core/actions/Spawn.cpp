@@ -55,12 +55,12 @@ void easy2d::Spawn::Update()
 {
 	Action::Update();
 
-	size_t doneNum = 0;
+	size_t done_num = 0;
 	for (const auto& action : actions_)
 	{
 		if (action->IsDone())
 		{
-			++doneNum;
+			++done_num;
 		}
 		else
 		{
@@ -68,7 +68,7 @@ void easy2d::Spawn::Update()
 		}
 	}
 
-	if (doneNum == actions_.size())
+	if (done_num == actions_.size())
 	{
 		this->Stop();
 	}

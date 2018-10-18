@@ -104,7 +104,7 @@ namespace easy2d
 		bool	running_;
 		bool	done_;
 		bool	initialized_;
-		Node *	target_;
+		Node*	target_;
 		Time	started_;
 	};
 

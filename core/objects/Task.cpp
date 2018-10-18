@@ -36,7 +36,7 @@ easy2d::Task::Task(const Function & func, float delay, int times, const String &
 	: running_(true)
 	, stopped_(false)
 	, run_times_(0)
-	, delay_(std::max(delay, 0.f))
+	, delay_(Duration::Second * std::max(delay, 0.f))
 	, total_times_(times)
 	, callback_(func)
 	, name_(name)

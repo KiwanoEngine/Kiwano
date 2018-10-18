@@ -81,6 +81,13 @@ easy2d::String easy2d::String::Parse(unsigned int value)
 	return std::move(tmp);
 }
 
+easy2d::String easy2d::String::Parse(unsigned long long value)
+{
+	String tmp;
+	tmp.string_ = std::to_wstring(value);
+	return std::move(tmp);
+}
+
 easy2d::String easy2d::String::Parse(float value)
 {
 	String tmp;
