@@ -60,5 +60,5 @@ void easy2d::FiniteTimeAction::Update()
 void easy2d::FiniteTimeAction::ResetTime()
 {
 	Action::ResetTime();
-	started_ = Time::Now() - Duration(delta_ * duration_);
+	started_ = Time::Now() - Duration::Second * (delta_ * duration_);
 }

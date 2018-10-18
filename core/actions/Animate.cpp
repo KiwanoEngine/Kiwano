@@ -90,7 +90,7 @@ void easy2d::Animate::Update()
 			target->Load(frames[frame_index_]);
 		}
 
-		started_ += Duration(animation_->GetInterval());
+		started_ += Duration::Second * animation_->GetInterval();
 		++frame_index_;
 
 		if (frame_index_ == frames.size())

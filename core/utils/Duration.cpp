@@ -20,80 +20,148 @@
 
 #include "..\e2dutil.h"
 
-using namespace std::chrono;
+
+const easy2d::Duration easy2d::Duration::Millisecond = easy2d::Duration(1);
+const easy2d::Duration easy2d::Duration::Second = 1000 * easy2d::Duration::Millisecond;
+const easy2d::Duration easy2d::Duration::Minute = 60 * easy2d::Duration::Second;
+const easy2d::Duration easy2d::Duration::Hour = 60 * easy2d::Duration::Minute;
 
 easy2d::Duration::Duration()
-	: duration_ms_()
+	: milliseconds_(0)
 {
 }
 
-easy2d::Duration::Duration(float seconds)
-	: duration_ms_(static_cast<long long>(seconds * 1000.f))
+easy2d::Duration::Duration(int64_t milliseconds)
+	: milliseconds_(milliseconds)
 {
 }
 
-int easy2d::Duration::Milliseconds() const
+int64_t easy2d::Duration::Milliseconds() const
 {
-	return static_cast<int>(duration_ms_.count());
+	return milliseconds_;
 }
 
 float easy2d::Duration::Seconds() const
 {
-	return duration_ms_.count() / 1000.f;
+	int64_t sec = milliseconds_ / Second.milliseconds_;
+	int64_t ms = milliseconds_ % Second.milliseconds_;
+	return static_cast<float>(sec) + static_cast<float>(ms) / 1000.f;
+}
+
+float easy2d::Duration::Minutes() const
+{
+	int64_t min = milliseconds_ / Minute.milliseconds_;
+	int64_t ms = milliseconds_ % Minute.milliseconds_;
+	return static_cast<float>(min) + static_cast<float>(ms) / (60 * 1000.f);
+}
+
+float easy2d::Duration::Hours() const
+{
+	int64_t hour = milliseconds_ / Hour.milliseconds_;
+	int64_t ms = milliseconds_ % Hour.milliseconds_;
+	return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
 }
 
 bool easy2d::Duration::operator==(const Duration & other) const
 {
-	return duration_ms_ == other.duration_ms_;
+	return milliseconds_ == other.milliseconds_;
 }
 
 bool easy2d::Duration::operator!=(const Duration & other) const
 {
-	return duration_ms_ != other.duration_ms_;
+	return milliseconds_ != other.milliseconds_;
 }
 
 bool easy2d::Duration::operator>(const Duration & other) const
 {
-	return duration_ms_ > other.duration_ms_;
+	return milliseconds_ > other.milliseconds_;
 }
 
 bool easy2d::Duration::operator>=(const Duration & other) const
 {
-	return duration_ms_ >= other.duration_ms_;
+	return milliseconds_ >= other.milliseconds_;
 }
 
 bool easy2d::Duration::operator<(const Duration & other) const
 {
-	return duration_ms_ < other.duration_ms_;
+	return milliseconds_ < other.milliseconds_;
 }
 
 bool easy2d::Duration::operator<=(const Duration & other) const
 {
-	return duration_ms_ <= other.duration_ms_;
+	return milliseconds_ <= other.milliseconds_;
 }
 
 easy2d::Duration easy2d::Duration::operator+(Duration const & other) const
 {
-	Duration d;
-	d.duration_ms_ = duration_ms_ + other.duration_ms_;
+	Duration d(milliseconds_ + other.milliseconds_);
 	return std::move(d);
 }
 
 easy2d::Duration easy2d::Duration::operator-(Duration const & other) const
 {
-	Duration d;
-	d.duration_ms_ = duration_ms_ - other.duration_ms_;
+	Duration d(milliseconds_ - other.milliseconds_);
+	return std::move(d);
+}
+
+easy2d::Duration easy2d::Duration::operator*(int value) const
+{
+	Duration d(milliseconds_ * value);
+	return std::move(d);
+}
+
+easy2d::Duration easy2d::Duration::operator/(int value) const
+{
+	Duration d(milliseconds_ / value);
+	return std::move(d);
+}
+
+easy2d::Duration easy2d::Duration::operator*(float value) const
+{
+	int64_t ms = static_cast<int64_t>(milliseconds_ * value);
+	Duration d(ms);
+	return std::move(d);
+}
+
+easy2d::Duration easy2d::Duration::operator/(float value) const
+{
+	int64_t ms = static_cast<int64_t>(milliseconds_ / value);
+	Duration d(ms);
 	return std::move(d);
 }
 
 easy2d::Duration & easy2d::Duration::operator+=(Duration const &other)
 {
-	duration_ms_ += other.duration_ms_;
+	milliseconds_ += other.milliseconds_;
 	return (*this);
 }
 
 easy2d::Duration & easy2d::Duration::operator-=(Duration const &other)
 {
-	duration_ms_ -= other.duration_ms_;
+	milliseconds_ -= other.milliseconds_;
+	return (*this);
+}
+
+easy2d::Duration & easy2d::Duration::operator*=(int value)
+{
+	milliseconds_ *= value;
+	return (*this);
+}
+
+easy2d::Duration & easy2d::Duration::operator/=(int value)
+{
+	milliseconds_ /= value;
+	return (*this);
+}
+
+easy2d::Duration & easy2d::Duration::operator*=(float value)
+{
+	milliseconds_ *= value;
+	return (*this);
+}
+
+easy2d::Duration & easy2d::Duration::operator/=(float value)
+{
+	milliseconds_ /= value;
 	return (*this);
 }

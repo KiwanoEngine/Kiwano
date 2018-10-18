@@ -67,7 +67,8 @@ easy2d::Time & easy2d::Time::operator-=(Duration const &other)
 easy2d::Duration easy2d::Time::operator-(Time const & other) const
 {
 	auto ms = duration_cast<milliseconds>(time_ - other.time_).count();
-	return std::move(Duration(static_cast<float>(ms) / 1000.f));
+	Duration d(static_cast<int64_t>(ms));
+	return std::move(d);
 }
 
 easy2d::Time easy2d::Time::Now()

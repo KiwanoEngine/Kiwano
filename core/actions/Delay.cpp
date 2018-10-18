@@ -62,5 +62,5 @@ void easy2d::Delay::Update()
 void easy2d::Delay::ResetTime()
 {
 	Action::ResetTime();
-	started_ = Time::Now() - Duration(delta_);
+	started_ = Time::Now() - Duration::Second * delta_;
 }

@@ -514,17 +514,29 @@ namespace easy2d
 	class Duration
 	{
 	public:
+		static const Duration Millisecond;	// 毫秒
+		static const Duration Second;		// 秒
+		static const Duration Minute;		// 分钟
+		static const Duration Hour;			// 小时
+
+	public:
 		Duration();
 
 		explicit Duration(
-			float seconds
+			int64_t milliseconds
 		);
 
 		// 获取毫秒数
-		int Milliseconds() const;
+		int64_t Milliseconds() const;
 
 		// 获取秒数
 		float Seconds() const;
+
+		// 获取分钟数
+		float Minutes() const;
+
+		// 获取小时数
+		float Hours() const;
 
 		bool operator== (const Duration &) const;
 		bool operator!= (const Duration &) const;
@@ -535,12 +547,20 @@ namespace easy2d
 
 		Duration operator + (Duration const &) const;
 		Duration operator - (Duration const &) const;
+		Duration operator * (int) const;
+		Duration operator * (float) const;
+		Duration operator / (int) const;
+		Duration operator / (float) const;
 
 		Duration& operator += (Duration const &);
 		Duration& operator -= (Duration const &);
+		Duration& operator *= (int);
+		Duration& operator *= (float);
+		Duration& operator /= (int);
+		Duration& operator /= (float);
 
 	private:
-		std::chrono::milliseconds duration_ms_;
+		int64_t milliseconds_;
 	};
 
 
@@ -553,7 +573,7 @@ namespace easy2d
 		// 获取时间戳
 		time_t GetTimeStamp() const;
 
-		// 是否是
+		// 是否是零时
 		bool IsZero() const;
 
 		Time operator + (Duration const &) const;
