@@ -697,7 +697,7 @@ namespace easy2d
 		{
 		}
 
-		RuntimeError& operator=(RuntimeError const& other) noexcept
+		RuntimeError& operator=(RuntimeError const& other) E2D_NOEXCEPT
 		{
 			if (this == &other)
 			{
