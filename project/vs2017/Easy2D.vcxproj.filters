@@ -153,9 +153,6 @@
     <ClCompile Include="..\..\core\tools\Player.cpp">
       <Filter>tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\tools\Random.cpp">
-      <Filter>tools</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\transitions\BoxTransition.cpp">
       <Filter>transitions</Filter>
     </ClCompile>
@@ -206,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\modules\Device.cpp">
       <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\utils\Random.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

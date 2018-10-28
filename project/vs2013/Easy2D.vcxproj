@@ -205,7 +205,6 @@
     <ClCompile Include="..\..\core\tools\Music.cpp" />
     <ClCompile Include="..\..\core\tools\Path.cpp" />
     <ClCompile Include="..\..\core\tools\Player.cpp" />
-    <ClCompile Include="..\..\core\tools\Random.cpp" />
     <ClCompile Include="..\..\core\transitions\BoxTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\EmergeTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\FadeTransition.cpp" />
@@ -217,11 +216,11 @@
     <ClCompile Include="..\..\core\utils\Font.cpp" />
     <ClCompile Include="..\..\core\utils\Function.cpp" />
     <ClCompile Include="..\..\core\utils\Point.cpp" />
+    <ClCompile Include="..\..\core\utils\Random.cpp" />
     <ClCompile Include="..\..\core\utils\Rect.cpp" />
     <ClCompile Include="..\..\core\utils\Ref.cpp" />
     <ClCompile Include="..\..\core\utils\Resource.cpp" />
     <ClCompile Include="..\..\core\utils\Size.cpp" />
-    <ClCompile Include="..\..\core\utils\String.cpp" />
     <ClCompile Include="..\..\core\utils\Time.cpp" />
     <ClCompile Include="..\..\core\utils\Transform.cpp" />
   </ItemGroup>
