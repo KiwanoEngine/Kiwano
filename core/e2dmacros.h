@@ -43,6 +43,10 @@
 #	define WIN32_LEAN_AND_MEAN
 #endif
 
+#ifndef NOMINMAX
+#	define NOMINMAX
+#endif
+
 #ifndef DIRECTINPUT_VERSION
 #	define DIRECTINPUT_VERSION 0x0800
 #endif
@@ -90,12 +94,6 @@
 #pragma comment(lib, "shlwapi.lib")
 
 
-#ifndef HINST_THISCOMPONENT
-	EXTERN_C IMAGE_DOS_HEADER __ImageBase;
-#	define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
-#endif
-
-
 #if _MSC_VER >= 1800
 #	define E2D_OP_EXPLICIT explicit
 #else
@@ -118,15 +116,6 @@
 #	define E2D_DISABLE_COPY(Class) \
 	Class(const Class &); \
 	Class & operator= (const Class &)
-#endif
-
-
-#ifdef max
-#	undef max
-#endif
-
-#ifdef min
-#	undef min
 #endif
 
 

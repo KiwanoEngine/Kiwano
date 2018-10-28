@@ -30,10 +30,12 @@ easy2d::Input::Input(HWND hwnd)
 	ZeroMemory(key_buffer_, sizeof(key_buffer_));
 	ZeroMemory(&mouse_state_, sizeof(mouse_state_));
 
+	HINSTANCE hinstance = GetModuleHandle(nullptr);
+
 	// 初始化接口对象
 	ThrowIfFailed(
 		DirectInput8Create(
-			HINST_THISCOMPONENT,
+			hinstance,
 			DIRECTINPUT_VERSION,
 			IID_IDirectInput8,
 			(void**)&direct_input_,

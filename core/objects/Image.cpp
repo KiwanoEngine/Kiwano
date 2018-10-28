@@ -189,30 +189,34 @@ bool easy2d::Image::CacheBitmap(const Resource& res)
 		return true;
 	}
 
-	IWICImagingFactory *imaging_factory = Device::GetGraphics()->GetImagingFactory();
-	ID2D1HwndRenderTarget* render_target = Device::GetGraphics()->GetRenderTarget();
-	IWICBitmapDecoder *decoder = nullptr;
-	IWICBitmapFrameDecode *source = nullptr;
-	IWICStream *stream = nullptr;
-	IWICFormatConverter *converter = nullptr;
-	ID2D1Bitmap *bitmap = nullptr;
-	HRSRC res_handle = nullptr;
-	HGLOBAL res_data_handle = nullptr;
-	void *image_file = nullptr;
-	DWORD image_file_size = 0;
+	HRESULT hr;
+
+	HINSTANCE				hinstance = GetModuleHandle(nullptr);
+	IWICImagingFactory*		imaging_factory = Device::GetGraphics()->GetImagingFactory();
+	ID2D1HwndRenderTarget*	render_target = Device::GetGraphics()->GetRenderTarget();
+	IWICBitmapDecoder*		decoder = nullptr;
+	IWICBitmapFrameDecode*	source = nullptr;
+	IWICStream*				stream = nullptr;
+	IWICFormatConverter*	converter = nullptr;
+	ID2D1Bitmap*			bitmap = nullptr;
+	HRSRC					res_handle = nullptr;
+	HGLOBAL					res_data_handle = nullptr;
+	LPVOID					image_file = nullptr;
+	DWORD					image_file_size = 0;
 
 	// 定位资源
 	res_handle = ::FindResourceW(
-		HINST_THISCOMPONENT,
+		hinstance,
 		MAKEINTRESOURCE(res.id),
 		(LPCWSTR)res.type
 	);
 
-	HRESULT hr = res_handle ? S_OK : E_FAIL;
+	hr = res_handle ? S_OK : E_FAIL;
+
 	if (SUCCEEDED(hr))
 	{
 		// 加载资源
-		res_data_handle = ::LoadResource(HINST_THISCOMPONENT, res_handle);
+		res_data_handle = ::LoadResource(hinstance, res_handle);
 
 		hr = res_data_handle ? S_OK : E_FAIL;
 	}
@@ -228,7 +232,7 @@ bool easy2d::Image::CacheBitmap(const Resource& res)
 	if (SUCCEEDED(hr))
 	{
 		// 计算大小
-		image_file_size = ::SizeofResource(HINST_THISCOMPONENT, res_handle);
+		image_file_size = ::SizeofResource(hinstance, res_handle);
 
 		hr = image_file_size ? S_OK : E_FAIL;
 	}
@@ -322,14 +326,14 @@ bool easy2d::Image::CacheBitmap(const String & file_name)
 	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
 	String image_file_path = image_file.GetPath();
 
-	Graphics * graphics_device = Device::GetGraphics();
-	IWICImagingFactory *imaging_factory = graphics_device->GetImagingFactory();
-	ID2D1HwndRenderTarget* render_target = graphics_device->GetRenderTarget();
-	IWICBitmapDecoder *decoder = nullptr;
-	IWICBitmapFrameDecode *source = nullptr;
-	IWICStream *stream = nullptr;
-	IWICFormatConverter *converter = nullptr;
-	ID2D1Bitmap *bitmap = nullptr;
+	Graphics*				graphics_device = Device::GetGraphics();
+	IWICImagingFactory*		imaging_factory = graphics_device->GetImagingFactory();
+	ID2D1HwndRenderTarget*	render_target = graphics_device->GetRenderTarget();
+	IWICBitmapDecoder*		decoder = nullptr;
+	IWICBitmapFrameDecode*	source = nullptr;
+	IWICStream*				stream = nullptr;
+	IWICFormatConverter*	converter = nullptr;
+	ID2D1Bitmap*			bitmap = nullptr;
 
 	// 创建解码器
 	HRESULT hr = imaging_factory->CreateDecoderFromFilename(

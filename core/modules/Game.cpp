@@ -266,7 +266,8 @@ void easy2d::Game::DrawScene()
 
 void easy2d::Game::Init()
 {
-	WNDCLASSEX wcex = { 0 };
+	HINSTANCE hinstance	= GetModuleHandle(nullptr);
+	WNDCLASSEX wcex		= { 0 };
 	wcex.cbSize			= sizeof(WNDCLASSEX);
 	wcex.lpszClassName	= REGISTER_CLASS;
 	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
@@ -274,7 +275,7 @@ void easy2d::Game::Init()
 	wcex.hIcon			= nullptr;
 	wcex.cbClsExtra		= 0;
 	wcex.cbWndExtra		= sizeof(LONG_PTR);
-	wcex.hInstance		= HINST_THISCOMPONENT;
+	wcex.hInstance		= hinstance;
 	wcex.hbrBackground	= nullptr;
 	wcex.lpszMenuName	= nullptr;
 	wcex.hCursor		= ::LoadCursor(nullptr, IDC_ARROW);
@@ -282,7 +283,7 @@ void easy2d::Game::Init()
 	if (icon_ != 0)
 	{
 		wcex.hIcon = (HICON)::LoadImage(
-			HINST_THISCOMPONENT,
+			hinstance,
 			MAKEINTRESOURCE(icon_),
 			IMAGE_ICON,
 			0,
@@ -309,13 +310,13 @@ void easy2d::Game::Init()
 		int(client_rect.size.height),
 		nullptr,
 		nullptr,
-		HINST_THISCOMPONENT,
+		hinstance,
 		this
 	);
 
 	if (hwnd_ == nullptr)
 	{
-		::UnregisterClass(REGISTER_CLASS, HINST_THISCOMPONENT);
+		::UnregisterClass(REGISTER_CLASS, hinstance);
 		throw RuntimeError("Create window failed");
 		return;
 	}
@@ -463,8 +464,9 @@ void easy2d::Game::SetIcon(int resource_id)
 
 	if (hwnd_)
 	{
+		HINSTANCE hinstance = GetModuleHandle(nullptr);
 		HICON icon = (HICON)::LoadImage(
-			HINST_THISCOMPONENT,
+			hinstance,
 			MAKEINTRESOURCE(resource_id),
 			IMAGE_ICON,
 			0,

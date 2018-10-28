@@ -106,27 +106,28 @@ namespace easy2d
 			HRSRC	res_info;
 			HGLOBAL	res_data;
 			DWORD	res_size;
-			void*	res;
+			LPVOID	res;
 
-			IStream*			stream = nullptr;
-			IMFByteStream*		byte_stream = nullptr;
-			IMFSourceReader*	reader = nullptr;
+			HINSTANCE		 hinstance = GetModuleHandle(nullptr);
+			IStream*		 stream = nullptr;
+			IMFByteStream*	 byte_stream = nullptr;
+			IMFSourceReader* reader = nullptr;
 
-			res_info = FindResourceW(HINST_THISCOMPONENT, res_name, res_type);
+			res_info = FindResourceW(hinstance, res_name, res_type);
 			if (res_info == nullptr)
 			{
 				TraceError(L"FindResource");
 				return false;
 			}
 
-			res_data = LoadResource(HINST_THISCOMPONENT, res_info);
+			res_data = LoadResource(hinstance, res_info);
 			if (res_data == nullptr)
 			{
 				TraceError(L"LoadResource");
 				return false;
 			}
 
-			res_size = SizeofResource(HINST_THISCOMPONENT, res_info);
+			res_size = SizeofResource(hinstance, res_info);
 			if (res_size == 0)
 			{
 				TraceError(L"SizeofResource");
