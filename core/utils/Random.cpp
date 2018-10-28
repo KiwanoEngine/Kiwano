@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "..\e2dtool.h"
+#include "..\e2dutil.h"
 
 std::default_random_engine &easy2d::Random::GetEngine()
 {

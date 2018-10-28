@@ -27,49 +27,6 @@
 namespace easy2d
 {
 
-	// 随机数产生器
-	class Random
-	{
-	public:
-		// 取得范围内的一个整型随机数
-		template<typename T>
-		static inline T Range(T min, T max)
-		{
-			return easy2d::Random::RandomInt(min, max);
-		}
-
-		// 取得范围内的一个浮点数随机数
-		static inline float Range(float min, float max)
-		{
-			return easy2d::Random::RandomReal(min, max);
-		}
-
-		// 取得范围内的一个浮点数随机数
-		static inline double Range(double min, double max)
-		{
-			return easy2d::Random::RandomReal(min, max);
-		}
-
-	private:
-		template<typename T>
-		static T RandomInt(T min, T max)
-		{
-			std::uniform_int_distribution<T> dist(min, max);
-			return dist(Random::GetEngine());
-		}
-
-		template<typename T>
-		static T RandomReal(T min, T max)
-		{
-			std::uniform_real_distribution<T> dist(min, max);
-			return dist(Random::GetEngine());
-		}
-
-		// 获取随机数产生器
-		static std::default_random_engine &GetEngine();
-	};
-
-
 	// 音乐
 	class Music
 		: public Ref

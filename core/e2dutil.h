@@ -526,6 +526,49 @@ namespace easy2d
 	};
 
 
+	// 随机数产生器
+	class Random
+	{
+	public:
+		// 取得范围内的一个整型随机数
+		template<typename T>
+		static inline T Range(T min, T max)
+		{
+			return easy2d::Random::RandomInt(min, max);
+		}
+
+		// 取得范围内的一个浮点数随机数
+		static inline float Range(float min, float max)
+		{
+			return easy2d::Random::RandomReal(min, max);
+		}
+
+		// 取得范围内的一个浮点数随机数
+		static inline double Range(double min, double max)
+		{
+			return easy2d::Random::RandomReal(min, max);
+		}
+
+	private:
+		template<typename T>
+		static T RandomInt(T min, T max)
+		{
+			std::uniform_int_distribution<T> dist(min, max);
+			return dist(Random::GetEngine());
+		}
+
+		template<typename T>
+		static T RandomReal(T min, T max)
+		{
+			std::uniform_real_distribution<T> dist(min, max);
+			return dist(Random::GetEngine());
+		}
+
+		// 获取随机数产生器
+		static std::default_random_engine &GetEngine();
+	};
+
+
 	// 引用计数对象
 	class Ref
 	{
@@ -558,45 +601,6 @@ namespace easy2d
 		}
 	}
 
-	// 运行时异常
-	class RuntimeError
-	{
-	public:
-		RuntimeError() E2D_NOEXCEPT
-			: message_(nullptr)
-		{
-		}
-
-		explicit RuntimeError(char const* const message) E2D_NOEXCEPT
-			: message_(message)
-		{
-		}
-
-		RuntimeError(RuntimeError const& other) E2D_NOEXCEPT
-			: message_(other.message_)
-		{
-		}
-
-		RuntimeError& operator=(RuntimeError const& other) E2D_NOEXCEPT
-		{
-			if (this == &other)
-			{
-				return *this;
-			}
-
-			message_ = other.message_;
-			return *this;
-		}
-
-		virtual char const* Message() const
-		{
-			return message_ ? message_ : "Unknown runtime exception";
-		}
-
-	private:
-		char const* message_;
-	};
-
 
 	inline void ThrowIfFailed(HRESULT hr)
 	{
@@ -605,7 +609,7 @@ namespace easy2d
 			// 在此处设置断点以捕获系统异常.
 			static char s_str[64] = {};
 			sprintf_s(s_str, "Failure with HRESULT of %08X", static_cast<unsigned int>(hr));
-			throw RuntimeError(s_str);
+			throw std::runtime_error(s_str);
 		}
 	}
 

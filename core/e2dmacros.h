@@ -81,6 +81,7 @@
 #include <sstream>
 #include <functional>
 #include <algorithm>
+#include <stdexcept>
 
 // Import Libraries
 #pragma comment(lib, "d2d1.lib")
