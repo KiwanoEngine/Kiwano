@@ -660,7 +660,9 @@ void easy2d::Graphics::DrawDebugInfo()
 	++render_times_;
 	if (duration >= 100)
 	{
-		String fps_text = String::Format(L"FPS: %.1f", (1000.f / duration * render_times_));
+		wchar_t fps_text[12] = {};
+		int len = swprintf_s(fps_text, L"FPS: %.1f", 1000.f / duration * render_times_);
+
 		last_render_time_ = Time::Now();
 		render_times_ = 0;
 
@@ -668,8 +670,8 @@ void easy2d::Graphics::DrawDebugInfo()
 
 		ThrowIfFailed(
 			write_factory_->CreateTextLayout(
-			(const wchar_t *)fps_text,
-				(UINT32)fps_text.Length(),
+				fps_text,
+				static_cast<UINT32>(len),
 				fps_text_format_,
 				0,
 				0,

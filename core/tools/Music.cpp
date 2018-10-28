@@ -100,50 +100,20 @@ namespace easy2d
 			return SUCCEEDED(hr);
 		}
 
-		bool LoadMediaResource(LPCWSTR res_name, LPCWSTR res_type, BYTE** wave_data, UINT32* wave_data_size)
+		bool LoadMediaResource(Resource& res, BYTE** wave_data, UINT32* wave_data_size)
 		{
 			HRESULT	hr = S_OK;
-			HRSRC	res_info;
-			HGLOBAL	res_data;
-			DWORD	res_size;
-			LPVOID	res;
 
 			HINSTANCE		 hinstance = GetModuleHandle(nullptr);
 			IStream*		 stream = nullptr;
 			IMFByteStream*	 byte_stream = nullptr;
 			IMFSourceReader* reader = nullptr;
 
-			res_info = FindResourceW(hinstance, res_name, res_type);
-			if (res_info == nullptr)
-			{
-				TraceError(L"FindResource");
-				return false;
-			}
-
-			res_data = LoadResource(hinstance, res_info);
-			if (res_data == nullptr)
-			{
-				TraceError(L"LoadResource");
-				return false;
-			}
-
-			res_size = SizeofResource(hinstance, res_info);
-			if (res_size == 0)
-			{
-				TraceError(L"SizeofResource");
-				return false;
-			}
-
-			res = LockResource(res_data);
-			if (res == nullptr)
-			{
-				TraceError(L"LockResource");
-				return false;
-			}
+			if (!res.Load()) { return false; }
 
 			stream = SHCreateMemStream(
-				static_cast<const BYTE*>(res),
-				static_cast<UINT>(res_size)
+				static_cast<const BYTE*>(res.GetData()),
+				static_cast<UINT>(res.GetDataSize())
 			);
 
 			if (stream == nullptr)
@@ -346,7 +316,7 @@ easy2d::Music::Music()
 {
 }
 
-easy2d::Music::Music(const easy2d::String& file_path)
+easy2d::Music::Music(const std::wstring& file_path)
 	: opened_(false)
 	, playing_(false)
 	, wave_data_(nullptr)
@@ -356,7 +326,7 @@ easy2d::Music::Music(const easy2d::String& file_path)
 	Load(file_path);
 }
 
-easy2d::Music::Music(const Resource& res)
+easy2d::Music::Music(Resource& res)
 	: opened_(false)
 	, playing_(false)
 	, wave_data_(nullptr)
@@ -371,7 +341,7 @@ easy2d::Music::~Music()
 	Close();
 }
 
-bool easy2d::Music::Load(const easy2d::String & file_path)
+bool easy2d::Music::Load(const std::wstring & file_path)
 {
 	if (opened_)
 	{
@@ -387,10 +357,10 @@ bool easy2d::Music::Load(const easy2d::String & file_path)
 
 	// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
 	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-	String music_file_path = music_file.GetPath();
+	std::wstring music_file_path = music_file.GetPath();
 
 	Transcoder transcoder;
-	if (!transcoder.LoadMediaFile((LPCWSTR)music_file_path, &wave_data_, &size_))
+	if (!transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_))
 	{
 		return false;
 	}
@@ -411,7 +381,7 @@ bool easy2d::Music::Load(const easy2d::String & file_path)
 	return true;
 }
 
-bool easy2d::Music::Load(const Resource& res)
+bool easy2d::Music::Load(Resource& res)
 {
 	if (opened_)
 	{
@@ -419,7 +389,7 @@ bool easy2d::Music::Load(const Resource& res)
 	}
 
 	Transcoder transcoder;
-	if (!transcoder.LoadMediaResource(MAKEINTRESOURCE(res.id), (LPCWSTR)res.type, &wave_data_, &size_))
+	if (!transcoder.LoadMediaResource(res, &wave_data_, &size_))
 	{
 		return false;
 	}

@@ -26,17 +26,17 @@
 namespace
 {
 	// 创建指定文件夹
-	bool CreateFolder(const easy2d::String & dir_path)
+	bool CreateFolder(const std::wstring & dir_path)
 	{
-		if (dir_path.IsEmpty() || dir_path.Length() >= MAX_PATH)
+		if (dir_path.empty() || dir_path.size() >= MAX_PATH)
 			return false;
 
 		wchar_t tmp_dir_path[MAX_PATH] = { 0 };
-		int length = dir_path.Length();
+		size_t length = dir_path.length();
 
-		for (int i = 0; i < length; ++i)
+		for (size_t i = 0; i < length; ++i)
 		{
-			tmp_dir_path[i] = dir_path.At(i);
+			tmp_dir_path[i] = dir_path.at(i);
 			if (tmp_dir_path[i] == L'\\' || tmp_dir_path[i] == L'/' || i == (length - 1))
 			{
 				if (::_waccess(tmp_dir_path, 0) != 0)
@@ -53,19 +53,22 @@ namespace
 }
 
 
-const easy2d::String& easy2d::Path::GetDataPath()
+const std::wstring& easy2d::Path::GetDataPath()
 {
-	static String data_path;
-	if (data_path.IsEmpty())
+	static std::wstring data_path;
+	if (data_path.empty())
 	{
 		// 设置数据的保存路径
-		String local_app_data_path = Path::GetLocalAppDataPath();
-		String title = Game::GetInstance()->GetTitle();
-		String folder_name = String::Parse(title.GetHash());
+		std::wstring local_app_data_path = Path::GetLocalAppDataPath();
+		std::wstring title = Game::GetInstance()->GetTitle();
+		std::wstring folder_name = std::to_wstring(std::hash<std::wstring>{}(title));
 
-		if (!local_app_data_path.IsEmpty())
+		if (!local_app_data_path.empty())
 		{
-			data_path = local_app_data_path + L"\\Easy2DGameData\\" << folder_name << L"\\";
+			data_path.append(local_app_data_path)
+				.append(L"\\Easy2DGameData\\")
+				.append(folder_name)
+				.append(L"\\");
 
 			File file(data_path);
 			if (!file.Exists() && !CreateFolder(data_path))
@@ -73,24 +76,27 @@ const easy2d::String& easy2d::Path::GetDataPath()
 				data_path = L"";
 			}
 		}
-		data_path << L"Data.ini";
+		data_path.append(L"Data.ini");
 	}
 	return data_path;
 }
 
-const easy2d::String& easy2d::Path::GetTemporaryPath()
+const std::wstring& easy2d::Path::GetTemporaryPath()
 {
-	static String temp_path;
-	if (temp_path.IsEmpty())
+	static std::wstring temp_path;
+	if (temp_path.empty())
 	{
 		// 设置临时文件保存路径
 		wchar_t path[_MAX_PATH];
-		String title = Game::GetInstance()->GetTitle();
-		String folder_name = String::Parse(title.GetHash());
+		std::wstring title = Game::GetInstance()->GetTitle();
+		std::wstring folder_name = std::to_wstring(std::hash<std::wstring>{}(title));
 
 		if (0 != ::GetTempPath(_MAX_PATH, path))
 		{
-			temp_path << path << L"\\Easy2DGameTemp\\" << folder_name << L"\\";
+			temp_path.append(path)
+				.append(L"\\Easy2DGameTemp\\")
+				.append(folder_name)
+				.append(L"\\");
 
 			File file(temp_path);
 			if (!file.Exists() && !CreateFolder(temp_path))
@@ -102,10 +108,10 @@ const easy2d::String& easy2d::Path::GetTemporaryPath()
 	return temp_path;
 }
 
-const easy2d::String& easy2d::Path::GetLocalAppDataPath()
+const std::wstring& easy2d::Path::GetLocalAppDataPath()
 {
-	static String local_app_data_path;
-	if (local_app_data_path.IsEmpty())
+	static std::wstring local_app_data_path;
+	if (local_app_data_path.empty())
 	{
 		// 获取 AppData/Local 文件夹的路径
 		wchar_t path[MAX_PATH] = { 0 };
@@ -116,10 +122,10 @@ const easy2d::String& easy2d::Path::GetLocalAppDataPath()
 	return local_app_data_path;
 }
 
-const easy2d::String& easy2d::Path::GetExeFilePath()
+const std::wstring& easy2d::Path::GetExeFilePath()
 {
-	static String exe_file_path;
-	if (exe_file_path.IsEmpty())
+	static std::wstring exe_file_path;
+	if (exe_file_path.empty())
 	{
 		TCHAR path[_MAX_PATH] = { 0 };
 		if (::GetModuleFileName(nullptr, path, _MAX_PATH) != 0)

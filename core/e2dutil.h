@@ -137,171 +137,6 @@ namespace easy2d
 	};
 
 
-	// 字符串
-	class String
-	{
-	public:
-		String();
-
-		String(
-			const String &
-		);
-
-		String(
-			const char *
-		);
-
-		String(
-			const wchar_t *
-		);
-
-		String(
-			String &&
-		);
-
-		~String();
-
-		// 获取字符串长度
-		int Length() const;
-
-		// 获取该字符串的 Hash 值
-		size_t GetHash() const;
-
-		// 判断字符串是否为空
-		bool IsEmpty() const;
-
-		// 获取指定位置字符
-		const wchar_t& At(
-			size_t index
-		) const;
-
-		// 比较字符串
-		int Compare(
-			const String & str
-		) const;
-
-		// 截取字符串
-		String Subtract(
-			int offset,		/* 偏移量 */
-			int count = -1	/* 截取字符数量 */
-		) const;
-
-		// 插入字符串
-		void Insert(
-			const String & str,
-			int pos
-		);
-
-		// 替换字符串中的指定内容
-		void Replace(
-			const String & from,	/* 需替换内容 */
-			const String & to		/* 替换成内容 */
-		);
-
-		// 删除字符串中的指定内容
-		void Erase(
-			int offset,		/* 偏移量 */
-			int count		/* 删除字符数量 */
-		);
-
-		// 搜索字符串
-		int Find(
-			const String & str,	/* 查找内容 */
-			int offset = 0		/* 偏移量 */
-		) const;
-
-		// 清空字符串
-		void Clear();
-
-		// 获取大写字符串
-		String ToUpper() const;
-
-		// 获取小写字符串
-		String ToLower() const;
-
-		// 将字符串转化为 int 型
-		int ToInt() const;
-
-		// 将字符串转化为 float 型
-		float ToFloat() const;
-
-		// 将字符串转化为 double 型
-		double ToDouble() const;
-
-		// 将字符串转化为 bool 型
-		bool ToBool() const;
-
-		// 数字类型转字符串
-		static String Parse(int value);
-		static String Parse(unsigned int value);
-		static String Parse(unsigned long long value);
-		static String Parse(float value);
-		static String Parse(double value);
-
-		// 格式化字符串
-		static String Format(const char * format, ...);
-		static String Format(const wchar_t * format, ...);
-
-		// 赋值运算符
-		String& operator= (const String &);
-		String& operator= (const char *);
-		String& operator= (const wchar_t *);
-
-		// 运算符
-		String& operator+= (const String &);
-		String& operator+= (const char *);
-		String& operator+= (const wchar_t *);
-		String operator+ (const String &) const;
-		String operator+ (const char *) const;
-		String operator+ (const wchar_t *) const;
-
-		// 友元运算符
-		friend String operator+ (const char *, const String &);
-		friend String operator+ (const wchar_t*, const String &);
-
-		// 类型转换操作符
-		E2D_OP_EXPLICIT operator const wchar_t* () const;
-		E2D_OP_EXPLICIT operator wchar_t* () const;
-		E2D_OP_EXPLICIT operator std::wstring() const;
-		E2D_OP_EXPLICIT operator std::string() const;
-
-		// 比较运算符
-		bool operator== (const String &) const;
-		bool operator== (const char *) const;
-		bool operator== (const wchar_t *) const;
-		bool operator!= (const String &) const;
-		bool operator!= (const char *) const;
-		bool operator!= (const wchar_t *) const;
-		bool operator> (const String &) const;
-		bool operator>= (const String &) const;
-		bool operator< (const String &) const;
-		bool operator<= (const String &) const;
-
-		// << 运算符（后接字符串）
-		String& operator<< (const String &);
-		String& operator<< (const char *);
-		String& operator<< (char *);
-		String& operator<< (const wchar_t *);
-		String& operator<< (wchar_t *);
-		String& operator<< (int value);
-		String& operator<< (unsigned int value);
-		String& operator<< (float value);
-		String& operator<< (double value);
-
-		// 其他运算符
-		wchar_t& operator[] (size_t);
-
-		friend std::ostream& operator<< (std::ostream &, const String &);
-		friend std::wostream& operator<< (std::wostream &, const String &);
-
-		friend std::istream& operator>> (std::istream &, String &);
-		friend std::wistream& operator>> (std::wistream &, String &);
-
-	private:
-		std::wstring string_;
-	};
-
-
 	// 颜色
 	class Color
 	{
@@ -608,10 +443,10 @@ namespace easy2d
 	class Font
 	{
 	public:
-		String	family;			// 字体族
-		float	size;			// 字号
-		UINT	weight;			// 粗细值
-		bool	italic;			// 是否斜体
+		std::wstring	family;		// 字体族
+		float			size;		// 字号
+		UINT			weight;		// 粗细值
+		bool			italic;		// 是否斜体
 
 	public:
 		// 字体粗细值
@@ -629,10 +464,8 @@ namespace easy2d
 		};
 
 	public:
-		Font();
-
 		explicit Font(
-			const String& family,
+			const std::wstring& family = L"",
 			float size	= 22,
 			UINT weight	= Font::Weight::Normal,
 			bool italic	= false
@@ -645,13 +478,28 @@ namespace easy2d
 	{
 	public:
 		Resource(
-			int resource_id,				/* 资源名称 */
-			const String& resource_type		/* 资源类型 */
+			LPCWSTR name,	/* 资源名称 */
+			LPCWSTR type	/* 资源类型 */
 		);
 
-	public:
-		int		id;
-		String	type;
+		bool Load();
+
+		LPCWSTR	GetName() const;
+
+		LPCWSTR	GetType() const;
+
+		LPVOID GetData() const;
+
+		DWORD GetDataSize() const;
+
+		size_t GetHashCode() const;
+
+	private:
+		bool	loaded_;
+		LPCWSTR	name_;
+		LPCWSTR	type_;
+		LPVOID	data_;
+		DWORD	data_size_;
 	};
 
 

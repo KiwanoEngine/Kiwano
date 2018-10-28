@@ -60,11 +60,11 @@ namespace easy2d
 		virtual void Stop();
 
 		// 获取动作名称
-		virtual const String& GetName() const;
+		virtual const std::wstring& GetName() const;
 
 		// 设置动作名称
 		virtual void SetName(
-			const String& name
+			const std::wstring& name
 		);
 
 		// 获取动作的拷贝
@@ -100,7 +100,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(Action);
 
 	protected:
-		String	name_;
+		std::wstring	name_;
 		bool	running_;
 		bool	done_;
 		bool	initialized_;

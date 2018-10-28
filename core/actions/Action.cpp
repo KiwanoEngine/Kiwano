@@ -52,12 +52,12 @@ void easy2d::Action::Stop()
 	done_ = true;
 }
 
-const easy2d::String& easy2d::Action::GetName() const
+const std::wstring& easy2d::Action::GetName() const
 {
 	return name_;
 }
 
-void easy2d::Action::SetName(const String& name)
+void easy2d::Action::SetName(const std::wstring& name)
 {
 	name_ = name;
 }

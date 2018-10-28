@@ -232,7 +232,7 @@ namespace easy2d
 
 		// 设置窗体标题
 		void SetTitle(
-			const String& title	/* 窗体标题 */
+			const std::wstring& title	/* 窗体标题 */
 		);
 
 		// 设置窗体图标
@@ -246,7 +246,7 @@ namespace easy2d
 		);
 
 		// 获取窗体标题
-		const String& GetTitle() const;
+		const std::wstring& GetTitle() const;
 
 		// 获取窗体宽度
 		int GetWidth() const;
@@ -310,7 +310,7 @@ namespace easy2d
 
 	private:
 		HWND		hwnd_;
-		String		title_;
+		std::wstring		title_;
 		int			width_;
 		int			height_;
 		int			icon_;
