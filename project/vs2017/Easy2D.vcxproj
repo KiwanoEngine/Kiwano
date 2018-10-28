@@ -254,7 +254,6 @@
     <ClCompile Include="..\..\core\utils\Ref.cpp" />
     <ClCompile Include="..\..\core\utils\Resource.cpp" />
     <ClCompile Include="..\..\core\utils\Size.cpp" />
-    <ClCompile Include="..\..\core\utils\String.cpp" />
     <ClCompile Include="..\..\core\utils\Time.cpp" />
     <ClCompile Include="..\..\core\utils\Transform.cpp" />
   </ItemGroup>

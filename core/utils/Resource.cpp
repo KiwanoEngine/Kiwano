@@ -21,8 +21,77 @@
 #include "..\e2dtool.h"
 
 
-easy2d::Resource::Resource(int resource_id, const String & resource_type)
-	: id(resource_id)
-	, type(resource_type)
+easy2d::Resource::Resource(LPCWSTR name, LPCWSTR type)
+	: name_(name)
+	, type_(type)
+	, data_(nullptr)
+	, data_size_(0)
+	, loaded_(false)
 {
+}
+
+LPCWSTR easy2d::Resource::GetName() const
+{
+	return name_;
+}
+
+LPCWSTR easy2d::Resource::GetType() const
+{
+	return type_;
+}
+
+LPVOID easy2d::Resource::GetData() const
+{
+	return data_;
+}
+
+DWORD easy2d::Resource::GetDataSize() const
+{
+	return data_size_;
+}
+
+size_t easy2d::Resource::GetHashCode() const
+{
+	return std::hash<LPCWSTR>{}(name_);
+}
+
+bool easy2d::Resource::Load()
+{
+	if (!loaded_)
+	{
+		HRSRC res_info;
+		HGLOBAL res_data;
+		HINSTANCE hinstance = GetModuleHandle(NULL);
+
+		res_info = FindResourceW(hinstance, name_, type_);
+		if (res_info == nullptr)
+		{
+			E2D_WARNING("FindResource");
+			return false;
+		}
+
+		res_data = LoadResource(hinstance, res_info);
+		if (res_data == nullptr)
+		{
+			E2D_WARNING("LoadResource");
+			return false;
+		}
+
+		data_size_ = SizeofResource(hinstance, res_info);
+		if (data_size_ == 0)
+		{
+			E2D_WARNING("SizeofResource");
+			return false;
+		}
+
+		data_ = LockResource(res_data);
+		if (data_ == nullptr)
+		{
+			E2D_WARNING("LockResource");
+			return false;
+		}
+
+		loaded_ = true;
+	}
+	return true;
 }

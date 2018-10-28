@@ -12,9 +12,9 @@ easy2d::Player::~Player()
 {
 }
 
-bool easy2d::Player::Load(const String & file_path)
+bool easy2d::Player::Load(const std::wstring & file_path)
 {
-	if (file_path.IsEmpty())
+	if (file_path.empty())
 		return false;
 
 	Music * music = new (std::nothrow) Music();
@@ -24,7 +24,9 @@ bool easy2d::Player::Load(const String & file_path)
 		if (music->Load(file_path))
 		{
 			music->SetVolume(volume_);
-			musics_.insert(std::make_pair(file_path.GetHash(), music));
+
+			size_t hash_code = std::hash<std::wstring>{}(file_path);
+			musics_.insert(std::make_pair(hash_code, music));
 			return true;
 		}
 		else
@@ -35,14 +37,14 @@ bool easy2d::Player::Load(const String & file_path)
 	return false;
 }
 
-bool easy2d::Player::Play(const String & file_path, int loop_count)
+bool easy2d::Player::Play(const std::wstring & file_path, int loop_count)
 {
-	if (file_path.IsEmpty())
+	if (file_path.empty())
 		return false;
 
 	if (Load(file_path))
 	{
-		auto music = musics_[file_path.GetHash()];
+		auto music = musics_[std::hash<std::wstring>{}(file_path)];
 		if (music->Play(loop_count))
 		{
 			return true;
@@ -51,50 +53,51 @@ bool easy2d::Player::Play(const String & file_path, int loop_count)
 	return false;
 }
 
-void easy2d::Player::Pause(const String & file_path)
+void easy2d::Player::Pause(const std::wstring & file_path)
 {
-	if (file_path.IsEmpty())
+	if (file_path.empty())
 		return;
 
-	size_t hash = file_path.GetHash();
-	if (musics_.end() != musics_.find(hash))
-		musics_[hash]->Pause();
+	size_t hash_code = std::hash<std::wstring>{}(file_path);
+	if (musics_.end() != musics_.find(hash_code))
+		musics_[hash_code]->Pause();
 }
 
-void easy2d::Player::Resume(const String & file_path)
+void easy2d::Player::Resume(const std::wstring & file_path)
 {
-	if (file_path.IsEmpty())
+	if (file_path.empty())
 		return;
 
-	size_t hash = file_path.GetHash();
-	if (musics_.end() != musics_.find(hash))
-		musics_[hash]->Resume();
+	size_t hash_code = std::hash<std::wstring>{}(file_path);
+	if (musics_.end() != musics_.find(hash_code))
+		musics_[hash_code]->Resume();
 }
 
-void easy2d::Player::Stop(const String & file_path)
+void easy2d::Player::Stop(const std::wstring & file_path)
 {
-	if (file_path.IsEmpty())
+	if (file_path.empty())
 		return;
 
-	size_t hash = file_path.GetHash();
-	if (musics_.end() != musics_.find(hash))
-		musics_[hash]->Stop();
+	size_t hash_code = std::hash<std::wstring>{}(file_path);
+	if (musics_.end() != musics_.find(hash_code))
+		musics_[hash_code]->Stop();
 }
 
-bool easy2d::Player::IsPlaying(const String & file_path)
+bool easy2d::Player::IsPlaying(const std::wstring & file_path)
 {
-	if (file_path.IsEmpty())
+	if (file_path.empty())
 		return false;
 
-	size_t hash = file_path.GetHash();
-	if (musics_.end() != musics_.find(hash))
-		return musics_[hash]->IsPlaying();
+	size_t hash_code = std::hash<std::wstring>{}(file_path);
+	if (musics_.end() != musics_.find(hash_code))
+		return musics_[hash_code]->IsPlaying();
 	return false;
 }
 
-bool easy2d::Player::Load(const Resource& res)
+bool easy2d::Player::Load(Resource& res)
 {
-	if (musics_.end() != musics_.find(res.id))
+	size_t hash_code = res.GetHashCode();
+	if (musics_.end() != musics_.find(hash_code))
 		return true;
 
 	Music * music = new (std::nothrow) Music();
@@ -104,7 +107,7 @@ bool easy2d::Player::Load(const Resource& res)
 		if (music->Load(res))
 		{
 			music->SetVolume(volume_);
-			musics_.insert(std::make_pair(res.id, music));
+			musics_.insert(std::make_pair(hash_code, music));
 			return true;
 		}
 		else
@@ -115,11 +118,12 @@ bool easy2d::Player::Load(const Resource& res)
 	return false;
 }
 
-bool easy2d::Player::Play(const Resource& res, int loop_count)
+bool easy2d::Player::Play(Resource& res, int loop_count)
 {
 	if (Load(res))
 	{
-		auto music = musics_[res.id];
+		size_t hash_code = res.GetHashCode();
+		auto music = musics_[hash_code];
 		if (music->Play(loop_count))
 		{
 			return true;
@@ -128,28 +132,32 @@ bool easy2d::Player::Play(const Resource& res, int loop_count)
 	return false;
 }
 
-void easy2d::Player::Pause(const Resource& res)
+void easy2d::Player::Pause(Resource& res)
 {
-	if (musics_.end() != musics_.find(res.id))
-		musics_[res.id]->Pause();
+	size_t hash_code = res.GetHashCode();
+	if (musics_.end() != musics_.find(hash_code))
+		musics_[hash_code]->Pause();
 }
 
-void easy2d::Player::Resume(const Resource& res)
+void easy2d::Player::Resume(Resource& res)
 {
-	if (musics_.end() != musics_.find(res.id))
-		musics_[res.id]->Resume();
+	size_t hash_code = res.GetHashCode();
+	if (musics_.end() != musics_.find(hash_code))
+		musics_[hash_code]->Resume();
 }
 
-void easy2d::Player::Stop(const Resource& res)
+void easy2d::Player::Stop(Resource& res)
 {
-	if (musics_.end() != musics_.find(res.id))
-		musics_[res.id]->Stop();
+	size_t hash_code = res.GetHashCode();
+	if (musics_.end() != musics_.find(hash_code))
+		musics_[hash_code]->Stop();
 }
 
-bool easy2d::Player::IsPlaying(const Resource& res)
+bool easy2d::Player::IsPlaying(Resource& res)
 {
-	if (musics_.end() != musics_.find(res.id))
-		return musics_[res.id]->IsPlaying();
+	size_t hash_code = res.GetHashCode();
+	if (musics_.end() != musics_.find(hash_code))
+		return musics_[hash_code]->IsPlaying();
 	return false;
 }
 

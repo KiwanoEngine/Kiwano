@@ -32,26 +32,26 @@ easy2d::Sprite::Sprite(Image * image)
 	Load(image);
 }
 
-easy2d::Sprite::Sprite(const Resource& res)
+easy2d::Sprite::Sprite(Resource& res)
 	: image_(nullptr)
 {
 	Load(res);
 }
 
-easy2d::Sprite::Sprite(const Resource& res, const Rect& crop_rect)
+easy2d::Sprite::Sprite(Resource& res, const Rect& crop_rect)
 	: image_(nullptr)
 {
 	Load(res);
 	Crop(crop_rect);
 }
 
-easy2d::Sprite::Sprite(const String & file_name)
+easy2d::Sprite::Sprite(const std::wstring & file_name)
 	: image_(nullptr)
 {
 	Load(file_name);
 }
 
-easy2d::Sprite::Sprite(const String & file_name, const Rect & crop_rect)
+easy2d::Sprite::Sprite(const std::wstring & file_name, const Rect & crop_rect)
 	: image_(nullptr)
 {
 	Load(file_name);
@@ -81,7 +81,7 @@ bool easy2d::Sprite::Load(Image * image)
 	return false;
 }
 
-bool easy2d::Sprite::Load(const Resource& res)
+bool easy2d::Sprite::Load(Resource& res)
 {
 	if (!image_)
 	{
@@ -97,7 +97,7 @@ bool easy2d::Sprite::Load(const Resource& res)
 	return false;
 }
 
-bool easy2d::Sprite::Load(const String & file_name)
+bool easy2d::Sprite::Load(const std::wstring & file_name)
 {
 	if (!image_)
 	{

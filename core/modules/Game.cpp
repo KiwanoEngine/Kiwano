@@ -302,7 +302,7 @@ void easy2d::Game::Init()
 	hwnd_ = ::CreateWindowEx(
 		NULL,
 		REGISTER_CLASS,
-		(LPCTSTR)title_,
+		title_.c_str(),
 		WINDOW_STYLE,
 		int(client_rect.origin.x),
 		int(client_rect.origin.y),
@@ -421,7 +421,7 @@ HWND easy2d::Game::GetHWnd() const
 	return hwnd_;
 }
 
-const easy2d::String& easy2d::Game::GetTitle() const
+const std::wstring& easy2d::Game::GetTitle() const
 {
 	return title_;
 }
@@ -448,13 +448,13 @@ void easy2d::Game::SetSize(int width, int height)
 	}
 }
 
-void easy2d::Game::SetTitle(const String& title)
+void easy2d::Game::SetTitle(const std::wstring& title)
 {
 	title_ = title;
 	
 	if (hwnd_)
 	{
-		::SetWindowText(hwnd_, (LPCWSTR)title);
+		::SetWindowText(hwnd_, title.c_str());
 	}
 }
 

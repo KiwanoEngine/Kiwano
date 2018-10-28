@@ -37,20 +37,20 @@ namespace easy2d
 		Image();
 
 		explicit Image(
-			const Resource& res
+			Resource& res
 		);
 
 		explicit Image(
-			const Resource& res,
+			Resource& res,
 			const Rect& crop_rect	/* 裁剪矩形 */
 		);
 
 		explicit Image(
-			const String& file_name
+			const std::wstring& file_name
 		);
 
 		explicit Image(
-			const String& file_name,
+			const std::wstring& file_name,
 			const Rect& crop_rect	/* 裁剪矩形 */
 		);
 
@@ -58,12 +58,12 @@ namespace easy2d
 
 		// 加载图片资源
 		bool Load(
-			const Resource& res
+			Resource& res
 		);
 
 		// 加载图片资源
 		bool Load(
-			const String& file_name
+			const std::wstring& file_name
 		);
 
 		// 将图片裁剪为矩形
@@ -112,12 +112,12 @@ namespace easy2d
 
 		// 缓存 Bitmap 资源
 		static bool CacheBitmap(
-			const String& file_name
+			const std::wstring& file_name
 		);
 
 		// 缓存 Bitmap 资源
 		static bool CacheBitmap(
-			const Resource& res
+			Resource& res
 		);
 
 		// 设置 Bitmap
@@ -203,15 +203,15 @@ namespace easy2d
 
 	public:
 		explicit Task(
-			const Function& func,		/* 执行函数 */
-			const String& name = L""	/* 任务名称 */
+			const Function& func,			/* 执行函数 */
+			const std::wstring& name = L""	/* 任务名称 */
 		);
 
 		explicit Task(
-			const Function& func,		/* 执行函数 */
-			float delay,				/* 时间间隔（秒） */
-			int times = -1,				/* 执行次数（设 -1 为永久执行） */
-			const String& name = L""	/* 任务名称 */
+			const Function& func,			/* 执行函数 */
+			float delay,					/* 时间间隔（秒） */
+			int times = -1,					/* 执行次数（设 -1 为永久执行） */
+			const std::wstring& name = L""	/* 任务名称 */
 		);
 
 		// 启动任务
@@ -224,7 +224,7 @@ namespace easy2d
 		bool IsRunning() const;
 
 		// 获取任务名称
-		const String& GetName() const;
+		const std::wstring& GetName() const;
 
 		// 任务是否就绪
 		bool IsReady() const;
@@ -240,7 +240,7 @@ namespace easy2d
 		bool		stopped_;
 		int			run_times_;
 		int			total_times_;
-		String		name_;
+		std::wstring		name_;
 		Duration	delay_;
 		Time		last_time_;
 		Function	callback_;
@@ -294,7 +294,7 @@ namespace easy2d
 		bool IsVisible() const;
 
 		// 获取节点名称
-		const String& GetName() const;
+		const std::wstring& GetName() const;
 
 		// 获取节点名称的 Hash 值
 		size_t GetHashName() const;
@@ -366,7 +366,7 @@ namespace easy2d
 
 		// 设置节点名称
 		void SetName(
-			const String& name
+			const std::wstring& name
 		);
 
 		// 设置节点横坐标
@@ -542,12 +542,12 @@ namespace easy2d
 
 		// 获取所有名称相同的子节点
 		Nodes GetChildren(
-			const String& name
+			const std::wstring& name
 		) const;
 
 		// 获取名称相同的子节点
 		Node* GetChild(
-			const String& name
+			const std::wstring& name
 		) const;
 
 		// 获取所有子节点
@@ -563,7 +563,7 @@ namespace easy2d
 
 		// 移除所有名称相同的子节点
 		void RemoveChildren(
-			const String& child_name
+			const std::wstring& child_name
 		);
 
 		// 移除所有节点
@@ -579,17 +579,17 @@ namespace easy2d
 
 		// 继续动作
 		void ResumeAction(
-			const String& name
+			const std::wstring& name
 		);
 
 		// 暂停动作
 		void PauseAction(
-			const String& name
+			const std::wstring& name
 		);
 
 		// 停止动作
 		void StopAction(
-			const String& name
+			const std::wstring& name
 		);
 
 		// 继续所有暂停动作
@@ -611,17 +611,17 @@ namespace easy2d
 
 		// 启动任务
 		void StartTasks(
-			const String& task_name
+			const std::wstring& task_name
 		);
 
 		// 停止任务
 		void StopTasks(
-			const String& task_name
+			const std::wstring& task_name
 		);
 
 		// 移除任务
 		void RemoveTasks(
-			const String& task_name
+			const std::wstring& task_name
 		);
 
 		// 启动所有任务
@@ -682,7 +682,7 @@ namespace easy2d
 		void UpdateTime();
 
 	private:
-		String				name_;
+		std::wstring				name_;
 		size_t				hash_name_;
 		Transform			transform_;
 		float				display_opacity_;
@@ -716,20 +716,20 @@ namespace easy2d
 		);
 
 		explicit Sprite(
-			const Resource& res
+			Resource& res
 		);
 
 		explicit Sprite(
-			const Resource& res,
+			Resource& res,
 			const Rect& crop_rect	/* 裁剪矩形 */
 		);
 
 		explicit Sprite(
-			const String& file_name
+			const std::wstring& file_name
 		);
 
 		explicit Sprite(
-			const String& file_name,
+			const std::wstring& file_name,
 			const Rect& crop_rect	/* 裁剪矩形 */
 		);
 
@@ -737,12 +737,12 @@ namespace easy2d
 
 		// 加载图片文件
 		bool Load(
-			const Resource& res
+			Resource& res
 		);
 
 		// 加载图片文件
 		bool Load(
-			const String& file_name
+			const std::wstring& file_name
 		);
 
 		// 加载图片
@@ -820,15 +820,15 @@ namespace easy2d
 		Text();
 
 		explicit Text(
-			const String& text,						/* 文字内容 */
-			const Font& font	= Font(),			/* 字体 */
-			const Style& style	= Style()			/* 文本样式 */
+			const std::wstring& text,			/* 文字内容 */
+			const Font& font	= Font(),		/* 字体 */
+			const Style& style	= Style()		/* 文本样式 */
 		);
 
 		virtual ~Text();
 
 		// 获取文本
-		const String& GetText() const;
+		const std::wstring& GetText() const;
 
 		// 获取字体
 		const Font& GetFont() const;
@@ -837,7 +837,7 @@ namespace easy2d
 		const Style& GetStyle() const;
 
 		// 获取字体族
-		const String& GetFontFamily() const;
+		const std::wstring& GetFontFamily() const;
 
 		// 获取当前字号
 		float GetFontSize() const;
@@ -874,7 +874,7 @@ namespace easy2d
 
 		// 设置文本
 		void SetText(
-			const String& text
+			const std::wstring& text
 		);
 
 		// 设置文本样式
@@ -889,7 +889,7 @@ namespace easy2d
 
 		// 设置字体族
 		void SetFontFamily(
-			const String& family
+			const std::wstring& family
 		);
 
 		// 设置字号（默认值为 22）
@@ -978,7 +978,7 @@ namespace easy2d
 		void CreateLayout();
 
 	private:
-		String				text_;
+		std::wstring				text_;
 		Font				font_;
 		Style				style_;
 		IDWriteTextFormat*	text_format_;

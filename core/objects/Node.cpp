@@ -326,7 +326,7 @@ bool easy2d::Node::IsVisible() const
 	return visible_;
 }
 
-const easy2d::String& easy2d::Node::GetName() const
+const std::wstring& easy2d::Node::GetName() const
 {
 	return name_;
 }
@@ -653,15 +653,15 @@ easy2d::Scene * easy2d::Node::GetParentScene() const
 	return parent_scene_;
 }
 
-easy2d::Node::Nodes easy2d::Node::GetChildren(const String& name) const
+easy2d::Node::Nodes easy2d::Node::GetChildren(const std::wstring& name) const
 {
 	Nodes children;
-	size_t hash = name.GetHash();
+	size_t hash_code = std::hash<std::wstring>{}(name);
 
 	for (const auto& child : children_)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
-		if (child->hash_name_ == hash && child->name_ == name)
+		if (child->hash_name_ == hash_code && child->name_ == name)
 		{
 			children.push_back(child);
 		}
@@ -669,14 +669,14 @@ easy2d::Node::Nodes easy2d::Node::GetChildren(const String& name) const
 	return std::move(children);
 }
 
-easy2d::Node * easy2d::Node::GetChild(const String& name) const
+easy2d::Node * easy2d::Node::GetChild(const std::wstring& name) const
 {
-	size_t hash = name.GetHash();
+	size_t hash_code = std::hash<std::wstring>{}(name);
 
 	for (const auto& child : children_)
 	{
 		// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
-		if (child->hash_name_ == hash && child->name_ == name)
+		if (child->hash_name_ == hash_code && child->name_ == name)
 		{
 			return child;
 		}
@@ -731,17 +731,17 @@ bool easy2d::Node::RemoveChild(Node * child)
 	return false;
 }
 
-void easy2d::Node::RemoveChildren(const String& child_name)
+void easy2d::Node::RemoveChildren(const std::wstring& child_name)
 {
 	if (children_.empty())
 	{
 		return;
 	}
 
-	size_t hash = child_name.GetHash();
+	size_t hash_code = std::hash<std::wstring>{}(child_name);
 	for (auto iter = children_.begin(); iter != children_.end();)
 	{
-		if ((*iter)->hash_name_ == hash && (*iter)->name_ == child_name)
+		if ((*iter)->hash_name_ == hash_code && (*iter)->name_ == child_name)
 		{
 			(*iter)->parent_ = nullptr;
 			if ((*iter)->parent_scene_)
@@ -792,7 +792,7 @@ void easy2d::Node::RunAction(Action * action)
 	}
 }
 
-void easy2d::Node::ResumeAction(const String& name)
+void easy2d::Node::ResumeAction(const std::wstring& name)
 {
 	if (actions_.empty())
 		return;
@@ -806,7 +806,7 @@ void easy2d::Node::ResumeAction(const String& name)
 	}
 }
 
-void easy2d::Node::PauseAction(const String& name)
+void easy2d::Node::PauseAction(const std::wstring& name)
 {
 	if (actions_.empty())
 		return;
@@ -820,7 +820,7 @@ void easy2d::Node::PauseAction(const String& name)
 	}
 }
 
-void easy2d::Node::StopAction(const String& name)
+void easy2d::Node::StopAction(const std::wstring& name)
 {
 	if (actions_.empty())
 		return;
@@ -926,7 +926,7 @@ void easy2d::Node::AddTask(Task * task)
 	}
 }
 
-void easy2d::Node::StopTasks(const String& name)
+void easy2d::Node::StopTasks(const std::wstring& name)
 {
 	for (const auto& task : tasks_)
 	{
@@ -937,7 +937,7 @@ void easy2d::Node::StopTasks(const String& name)
 	}
 }
 
-void easy2d::Node::StartTasks(const String& name)
+void easy2d::Node::StartTasks(const std::wstring& name)
 {
 	for (const auto& task : tasks_)
 	{
@@ -948,7 +948,7 @@ void easy2d::Node::StartTasks(const String& name)
 	}
 }
 
-void easy2d::Node::RemoveTasks(const String& name)
+void easy2d::Node::RemoveTasks(const std::wstring& name)
 {
 	for (const auto& task : tasks_)
 	{
@@ -1044,16 +1044,14 @@ void easy2d::Node::SetVisible(bool value)
 	visible_ = value;
 }
 
-void easy2d::Node::SetName(const String& name)
+void easy2d::Node::SetName(const std::wstring& name)
 {
-	E2D_WARNING_IF(name.IsEmpty(), "Invalid Node name.");
-
-	if (!name.IsEmpty() && name_ != name)
+	if (name_ != name)
 	{
 		// 保存节点名
 		name_ = name;
 		// 保存节点 Hash 名
-		hash_name_ = name.GetHash();
+		hash_name_ = std::hash<std::wstring>{}(name);
 	}
 }
 

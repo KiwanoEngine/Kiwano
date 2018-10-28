@@ -123,9 +123,6 @@
     <ClCompile Include="..\..\core\utils\Size.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\String.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\utils\Time.cpp">
       <Filter>utils</Filter>
     </ClCompile>

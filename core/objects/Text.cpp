@@ -79,7 +79,7 @@ easy2d::Text::Text()
 {
 }
 
-easy2d::Text::Text(const String & text, const Font & font, const Style & style)
+easy2d::Text::Text(const std::wstring & text, const Font & font, const Style & style)
 	: font_(font)
 	, style_(style)
 	, text_layout_(nullptr)
@@ -95,7 +95,7 @@ easy2d::Text::~Text()
 	SafeRelease(text_layout_);
 }
 
-const easy2d::String& easy2d::Text::GetText() const
+const std::wstring& easy2d::Text::GetText() const
 {
 	return text_;
 }
@@ -110,7 +110,7 @@ const easy2d::Text::Style& easy2d::Text::GetStyle() const
 	return style_;
 }
 
-const easy2d::String& easy2d::Text::GetFontFamily() const
+const std::wstring& easy2d::Text::GetFontFamily() const
 {
 	return font_.family;
 }
@@ -179,7 +179,7 @@ bool easy2d::Text::outline() const
 	return style_.outline;
 }
 
-void easy2d::Text::SetText(const String& text)
+void easy2d::Text::SetText(const std::wstring& text)
 {
 	text_ = text;
 	Reset();
@@ -197,7 +197,7 @@ void easy2d::Text::SetFont(const Font & font)
 	Reset();
 }
 
-void easy2d::Text::SetFontFamily(const String& family)
+void easy2d::Text::SetFontFamily(const std::wstring& family)
 {
 	font_.family = family;
 	Reset();
@@ -344,7 +344,7 @@ void easy2d::Text::CreateFormat()
 
 	ThrowIfFailed(
 		Device::GetGraphics()->GetWriteFactory()->CreateTextFormat(
-			(const wchar_t *)font_.family,
+			font_.family.c_str(),
 			nullptr,
 			DWRITE_FONT_WEIGHT(font_.weight),
 			font_.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
@@ -388,7 +388,7 @@ void easy2d::Text::CreateLayout()
 	SafeRelease(text_layout_);
 
 	// 文本为空字符串时，重置属性
-	if (text_.IsEmpty())
+	if (text_.empty())
 	{
 		this->SetSize(0, 0);
 		return;
@@ -400,7 +400,7 @@ void easy2d::Text::CreateLayout()
 		return;
 	}
 	
-	UINT32 length = (UINT32)text_.Length();
+	UINT32 length = static_cast<UINT32>(text_.size());
 	auto writeFactory = Device::GetGraphics()->GetWriteFactory();
 
 	// 对文本自动换行情况下进行处理
@@ -408,7 +408,7 @@ void easy2d::Text::CreateLayout()
 	{
 		ThrowIfFailed(
 			writeFactory->CreateTextLayout(
-				(const wchar_t *)text_,
+				text_.c_str(),
 				length,
 				text_format_,
 				style_.wrap_width,
@@ -427,7 +427,7 @@ void easy2d::Text::CreateLayout()
 		// 为防止文本对齐问题，根据先创建 layout 以获取宽度
 		ThrowIfFailed(
 			writeFactory->CreateTextLayout(
-				(const wchar_t *)text_,
+				text_.c_str(),
 				length,
 				text_format_,
 				0,
@@ -446,7 +446,7 @@ void easy2d::Text::CreateLayout()
 		SafeRelease(text_layout_);
 		ThrowIfFailed(
 			writeFactory->CreateTextLayout(
-				(const wchar_t *)text_,
+				text_.c_str(),
 				length,
 				text_format_,
 				GetTransform().size.width,
