@@ -36,9 +36,6 @@
     <ClCompile Include="..\..\core\actions\Animation.cpp">
       <Filter>actions</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\actions\Callback.cpp">
-      <Filter>actions</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\actions\Delay.cpp">
       <Filter>actions</Filter>
     </ClCompile>
@@ -203,6 +200,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\utils\Random.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\actions\CallFunc.cpp">
+      <Filter>actions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

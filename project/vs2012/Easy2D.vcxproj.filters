@@ -36,7 +36,7 @@
     <ClCompile Include="..\..\core\actions\Animation.cpp">
       <Filter>actions</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\actions\Callback.cpp">
+    <ClCompile Include="..\..\core\actions\CallFunc.cpp">
       <Filter>actions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\actions\Delay.cpp">
