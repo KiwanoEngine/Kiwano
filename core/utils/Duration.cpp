@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "..\e2dutil.h"
+#include <regex>
 
 
 const easy2d::Duration easy2d::Duration::Millisecond = easy2d::Duration(1);
@@ -62,6 +63,85 @@ float easy2d::Duration::Hours() const
 	return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
 }
 
+easy2d::Duration easy2d::Duration::Parse(const std::wstring & str)
+{
+	typedef std::map<std::wstring, Duration> UnitMap;
+	static const auto regex = std::wregex(L"[-+]?([0-9]*(\\.[0-9]*)?[a-z]+)+");
+	static const auto unit_map = UnitMap{{L"ms", Millisecond}, {L"s", Second}, {L"m", Minute}, {L"h", Hour}};
+
+	size_t len = str.length();
+	size_t pos = 0;
+	bool negative = false;
+	Duration d;
+
+	if (!std::regex_match(str, regex))
+	{
+		E2D_WARNING("Duration::Parse: invalid duration");
+		return std::move(Duration{});
+	}
+
+	if (str.empty() || str == L"0") { return std::move(Duration{}); }
+
+	// 符号位
+	if (str[0] == L'-' || str[0] == L'+')
+	{
+		negative = (str[0] == L'-');
+		pos++;
+	}
+
+	while (pos < len)
+	{
+		// 数值
+		size_t i = pos;
+		for (; i < len; ++i)
+		{
+			wchar_t ch = str[i];
+			if (!(ch == L'.' || L'0' <= ch && ch <= L'9'))
+			{
+				break;
+			}
+		}
+
+		std::wstring num_str = str.substr(pos, i - pos);
+		pos = i;
+
+		if (num_str.empty() || num_str == L".")
+		{
+			E2D_WARNING("Duration::Parse: invalid duration");
+			return std::move(Duration{});
+		}
+
+		// 单位
+		for (; i < len; ++i)
+		{
+			wchar_t ch = str[i];
+			if (ch == L'.' || L'0' <= ch && ch <= L'9')
+			{
+				break;
+			}
+		}
+
+		std::wstring unit_str = str.substr(pos, i - pos);
+		pos = i;
+
+		if (unit_map.find(unit_str) == unit_map.end())
+		{
+			E2D_WARNING("Duration::Parse: invalid duration");
+			return std::move(Duration{});
+		}
+		
+		double num = std::stod(num_str);
+		Duration unit = unit_map.at(unit_str);
+		d += unit * num;
+	}
+
+	if (negative)
+	{
+		d.milliseconds_ = -d.milliseconds_;
+	}
+	return std::move(d);
+}
+
 bool easy2d::Duration::operator==(const Duration & other) const
 {
 	return milliseconds_ == other.milliseconds_;
@@ -101,6 +181,12 @@ easy2d::Duration easy2d::Duration::operator+(Duration const & other) const
 easy2d::Duration easy2d::Duration::operator-(Duration const & other) const
 {
 	Duration d(milliseconds_ - other.milliseconds_);
+	return std::move(d);
+}
+
+easy2d::Duration easy2d::Duration::operator-() const
+{
+	Duration d(-milliseconds_);
 	return std::move(d);
 }
 

@@ -342,6 +342,8 @@ namespace easy2d
 	//     5 秒: Duration::Second * 5
 	//     1.5 小时: Duration::Hour * 1.5
 	//     3 小时 45 分 15 秒: Duration::Hour * 3 + Duration::Minute * 45 + Duration::Second * 15
+	//     时间段转化为秒: float s = duration.Seconds();
+	//     时间段格式化: Duration d = Duration::Parse(L"1h35m");  // 1小时35分钟
 	//
 	class Duration
 	{
@@ -358,17 +360,23 @@ namespace easy2d
 			int milliseconds
 		);
 
-		// 获取毫秒数
+		// 转化为毫秒
 		int Milliseconds() const;
 
-		// 获取秒数
+		// 转化为秒
 		float Seconds() const;
 
-		// 获取分钟数
+		// 转化为分钟
 		float Minutes() const;
 
-		// 获取小时数
+		// 转化为小时
 		float Hours() const;
+
+		// 时间段格式化
+		// 时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
+		// 例如: "300ms", "-1.5h", "2h45m"
+		// 允许的时间单位有 "ms", "s", "m", "h"
+		static Duration Parse(const std::wstring& str);
 
 		bool operator== (const Duration &) const;
 		bool operator!= (const Duration &) const;
@@ -379,6 +387,7 @@ namespace easy2d
 
 		Duration operator + (Duration const &) const;
 		Duration operator - (Duration const &) const;
+		Duration operator - () const;
 		Duration operator * (int) const;
 		Duration operator * (float) const;
 		Duration operator * (double) const;
