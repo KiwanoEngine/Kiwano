@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Easy2D", "Easy2D.vcxproj", "{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}"
 EndProject
@@ -18,7 +18,6 @@ Global
 		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Debug|x64.Deploy.0 = Debug|x64
 		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Debug|Win32.ActiveCfg = Debug|Win32
 		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Debug|Win32.Build.0 = Debug|Win32
-		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Debug|Win32.Deploy.0 = Debug|Win32
 		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Release|x64.ActiveCfg = Release|x64
 		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Release|x64.Build.0 = Release|x64
 		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Release|Win32.ActiveCfg = Release|Win32

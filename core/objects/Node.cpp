@@ -22,6 +22,7 @@
 #include "..\e2devent.h"
 #include "..\e2daction.h"
 #include "..\e2dmodule.h"
+#include <iterator>
 
 
 easy2d::Node::Node()

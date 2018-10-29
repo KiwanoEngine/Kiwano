@@ -95,13 +95,6 @@
 #pragma comment(lib, "shlwapi.lib")
 
 
-#if _MSC_VER >= 1800
-#	define E2D_OP_EXPLICIT explicit
-#else
-#	define E2D_OP_EXPLICIT
-#endif
-
-
 #if _MSC_VER >= 1900
 #	define E2D_NOEXCEPT noexcept
 #else
@@ -109,32 +102,22 @@
 #endif
 
 
-#if _MSC_VER >= 1800
-#	define E2D_DISABLE_COPY(Class) \
-	Class(const Class &) = delete; \
+#define E2D_DISABLE_COPY(Class)					\
+	Class(const Class &) = delete;				\
 	Class & operator= (const Class &) = delete
+
+
+#if defined( DEBUG ) || defined( _DEBUG )
+#	define E2D_WARNING(msg) do { ::OutputDebugStringW(L"[easy2d] Warning: " _CRT_WIDE(msg) L"\r\n"); } while(0)
 #else
-#	define E2D_DISABLE_COPY(Class) \
-	Class(const Class &); \
-	Class & operator= (const Class &)
+#	define E2D_WARNING(msg) ((void)0)
 #endif
 
 
-#ifndef E2D_WARNING
-#	if defined( DEBUG ) || defined( _DEBUG )
-#		define E2D_WARNING(msg) do { ::OutputDebugStringW(L"[easy2d] Warning: " _CRT_WIDE(msg) L"\r\n"); } while(0)
-#	else
-#		define E2D_WARNING(msg) ((void)0)
-#	endif
-#endif
-
-
-#ifndef E2D_WARNING_IF
-#	if defined( DEBUG ) || defined( _DEBUG )
-#		define E2D_WARNING_IF(exp, msg) do { if (exp) { ::OutputDebugStringW(L"[easy2d] Warning: " _CRT_WIDE(msg) L"\r\n"); } } while(0)
-#	else
-#		define E2D_WARNING_IF(exp, msg) ((void)0)
-#	endif
+#if defined( DEBUG ) || defined( _DEBUG )
+#	define E2D_WARNING_IF(exp, msg) do { if (exp) { ::OutputDebugStringW(L"[easy2d] Warning: " _CRT_WIDE(msg) L"\r\n"); } } while(0)
+#else
+#	define E2D_WARNING_IF(exp, msg) ((void)0)
 #endif
 
 
