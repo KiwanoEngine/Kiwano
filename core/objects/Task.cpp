@@ -21,7 +21,7 @@
 #include "..\e2dobject.h"
 
 
-easy2d::Task::Task(const Function & func, const std::wstring & name)
+easy2d::Task::Task(const Callback & func, const std::wstring & name)
 	: running_(true)
 	, stopped_(false)
 	, run_times_(0)
@@ -32,7 +32,7 @@ easy2d::Task::Task(const Function & func, const std::wstring & name)
 {
 }
 
-easy2d::Task::Task(const Function & func, float delay, int times, const std::wstring & name)
+easy2d::Task::Task(const Callback & func, float delay, int times, const std::wstring & name)
 	: running_(true)
 	, stopped_(false)
 	, run_times_(0)

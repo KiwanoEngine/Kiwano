@@ -247,7 +247,6 @@
     <ClCompile Include="..\..\core\utils\Color.cpp" />
     <ClCompile Include="..\..\core\utils\Duration.cpp" />
     <ClCompile Include="..\..\core\utils\Font.cpp" />
-    <ClCompile Include="..\..\core\utils\Function.cpp" />
     <ClCompile Include="..\..\core\utils\Point.cpp" />
     <ClCompile Include="..\..\core\utils\Random.cpp" />
     <ClCompile Include="..\..\core\utils\Rect.cpp" />

@@ -108,9 +108,6 @@
     <ClCompile Include="..\..\core\utils\Font.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\Function.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\utils\Point.cpp">
       <Filter>utils</Filter>
     </ClCompile>

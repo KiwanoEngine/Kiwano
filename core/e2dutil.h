@@ -336,41 +336,6 @@ namespace easy2d
 	};
 
 
-	// 函数对象
-	class Function
-	{
-	public:
-		Function();
-
-		Function(
-			std::nullptr_t
-		);
-
-		Function(
-			std::function<void()> func
-		);
-
-		template<typename Func>
-		Function(Func func)
-			: func_(func)
-		{
-		}
-
-		template<typename Func, typename Object>
-		Function(Func&& func, Object&& obj)
-			: func_(std::bind(func, obj))
-		{
-		}
-
-		void operator() (void) const;
-
-		E2D_OP_EXPLICIT operator bool() const;
-
-	private:
-		std::function<void()> func_;
-	};
-
-
 	// 时间段
 	//
 	// Usage:

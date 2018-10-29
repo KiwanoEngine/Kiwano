@@ -201,14 +201,16 @@ namespace easy2d
 	{
 		friend class Node;
 
+		typedef std::function<void()> Callback;
+
 	public:
 		explicit Task(
-			const Function& func,			/* 执行函数 */
+			const Callback& func,			/* 执行函数 */
 			const std::wstring& name = L""	/* 任务名称 */
 		);
 
 		explicit Task(
-			const Function& func,			/* 执行函数 */
+			const Callback& func,			/* 执行函数 */
 			float delay,					/* 时间间隔（秒） */
 			int times = -1,					/* 执行次数（设 -1 为永久执行） */
 			const std::wstring& name = L""	/* 任务名称 */
@@ -243,7 +245,7 @@ namespace easy2d
 		std::wstring		name_;
 		Duration	delay_;
 		Time		last_time_;
-		Function	callback_;
+		Callback	callback_;
 		Node *		target_;
 	};
 

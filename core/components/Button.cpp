@@ -49,7 +49,7 @@ easy2d::Button::Button()
 {
 }
 
-easy2d::Button::Button(Node * normal, const Function& func)
+easy2d::Button::Button(Node * normal, const Callback& func)
 	: callback_(nullptr)
 	, status_(Status::Normal)
 	, enabled_(true)
@@ -63,7 +63,7 @@ easy2d::Button::Button(Node * normal, const Function& func)
 	this->SetCallbackOnClick(func);
 }
 
-easy2d::Button::Button(Node * normal, Node * selected, const Function& func)
+easy2d::Button::Button(Node * normal, Node * selected, const Callback& func)
 	: callback_(nullptr)
 	, status_(Status::Normal)
 	, enabled_(true)
@@ -78,7 +78,7 @@ easy2d::Button::Button(Node * normal, Node * selected, const Function& func)
 	this->SetCallbackOnClick(func);
 }
 
-easy2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Function& func)
+easy2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const Callback& func)
 	: callback_(nullptr)
 	, status_(Status::Normal)
 	, enabled_(true)
@@ -94,7 +94,7 @@ easy2d::Button::Button(Node * normal, Node * mouseover, Node * selected, const F
 	this->SetCallbackOnClick(func);
 }
 
-easy2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Function& func)
+easy2d::Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Callback& func)
 	: callback_(nullptr)
 	, status_(Status::Normal)
 	, enabled_(true)
@@ -149,7 +149,7 @@ void easy2d::Button::SetEnabled(bool enabled)
 	}
 }
 
-void easy2d::Button::SetCallbackOnClick(const Function& func)
+void easy2d::Button::SetCallbackOnClick(const Callback& func)
 {
 	callback_ = func;
 }
