@@ -30,6 +30,12 @@ namespace easy2d
 	class Size;
 
 	// 坐标
+	//
+	// Usage:
+	//     表示一个二维空间的坐标: Point origin(0, 0);
+	//     计算两点间距离: float distance = Point::Distance(p1, p2);
+	//     坐标可以相加减: Point p = Point(10, 10) + Point(20, 20);  // p 的坐标是 (30, 30)
+	//
 	class Point
 	{
 	public:
@@ -66,6 +72,11 @@ namespace easy2d
 
 
 	// 大小
+	//
+	// Usage:
+	//     表示一个二维矩形区域的大小: Size s(10, 5);  // 宽为 10, 高为 5
+	//     大小可以相加减: Size s = Size(10, 10) + Size(20, 20);  // s 的大小是宽高均为 30
+	//
 	class Size
 	{
 	public:
@@ -96,10 +107,17 @@ namespace easy2d
 
 
 	// 矩形
+	//
+	// Usage:
+	//     表示一个二维矩形: Rect rect = Rect(10, 20, 30, 40);  // 左上角坐标为 (10, 20), 宽为 30, 高为 40
+	//     矩形可以通过 Point + Size 定义, Point 表示矩形左上角坐标, Size 表示矩形宽高
+	//     判断一个点是否在矩形内: bool contains = rect.ContainsPoint(p);
+	//     判断两矩形是否相交: bool intersects = rect1.Intersects(rect2);
+	//
 	class Rect
 	{
 	public:
-		Point origin;	// 原点坐标
+		Point origin;	// 左上角坐标
 		Size  size;		// 宽度和高度
 
 	public:
@@ -138,6 +156,13 @@ namespace easy2d
 
 
 	// 颜色
+	//
+	// Usage:
+	//     使用枚举表示颜色: Color blue = Color::Blue;
+	//     使用 RGB 表示一个颜色: Color red(1.0f, 0.0f, 0.0f);
+	//     使用 RGBA 表示一个带透明度的颜色: Color not_black(1.0f, 1.0f, 1.0f, 0.5f);
+	//     使用一个 UINT 类型的值表示 RGB: Color black(0x000000);
+	//
 	class Color
 	{
 	public:
@@ -347,6 +372,12 @@ namespace easy2d
 
 
 	// 时间段
+	//
+	// Usage:
+	//     5 秒: Duration::Second * 5
+	//     1.5 小时: Duration::Hour * 1.5
+	//     3 小时 45 分 15 秒: Duration::Hour * 3 + Duration::Minute * 45 + Duration::Second * 15
+	//
 	class Duration
 	{
 	public:
@@ -412,6 +443,16 @@ namespace easy2d
 
 
 	// 时间点
+	//
+	// Usage:
+	//     使用 Time::Now 方法获取当前时间: Time now = Time::Now();
+	//     两时间相减, 得到的结果是一个 Duration 对象, 例如:
+	//     Time t1 = Time::Now();
+	//     ...  // 做些什么
+	//     Time t2 = Time::Now();
+	//     然后获取两时间相差的毫秒数:
+	//     int ms = (t2 - t1).Milliseconds();
+	// 
 	class Time
 	{
 	public:
@@ -474,6 +515,19 @@ namespace easy2d
 
 
 	// 资源
+	// 
+	// Usage:
+	//     Resource 用于获取可执行文件 (exe) 中的资源, 必须在构造函数中指定它的
+	//     资源类型和名称标识符。
+	//     例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1, 那么可以这样指定该资源:
+	//     Resource res(MAKEINTRESOURCE(IDR_WAVE_1), L"WAVE");
+	//     如果需要手动加载这份资源, 可以通过 Load 方法获取资源内容
+	//     if (res.Load()) {
+	//         LPVOID data = res.GetData();
+	//         DWORD size = res.GetDataSize();
+	//     }
+	//     了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
+	//
 	class Resource
 	{
 	public:
@@ -527,6 +581,14 @@ namespace easy2d
 
 
 	// 随机数产生器
+	// 
+	// Usage:
+	//     使用静态方法 Range 获取指定范围内的一个随机数, 如:
+	//     int n = Random::Range(1, 5);  // 获取 1~6 内的随机整数, 包含 1 和 6
+	//     方法同样适用于浮点数的生成, 如:
+	//     double d = Random::Range(1.2, 1.5);
+	//     注意, 随机数的类型取决于参数的类型。
+	//
 	class Random
 	{
 	public:
@@ -564,7 +626,6 @@ namespace easy2d
 			return dist(Random::GetEngine());
 		}
 
-		// 获取随机数产生器
 		static std::default_random_engine &GetEngine();
 	};
 

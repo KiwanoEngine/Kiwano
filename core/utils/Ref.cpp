@@ -21,8 +21,9 @@
 #include "..\e2dobject.h"
 
 easy2d::Ref::Ref()
-	: ref_count_(0)
 {
+	// 当对象被创建时，意味着它已经被引用了一次
+	ref_count_ = 1;
 }
 
 easy2d::Ref::~Ref()
