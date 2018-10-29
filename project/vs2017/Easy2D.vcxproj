@@ -199,7 +199,7 @@
     <ClCompile Include="..\..\core\actions\Action.cpp" />
     <ClCompile Include="..\..\core\actions\Animate.cpp" />
     <ClCompile Include="..\..\core\actions\Animation.cpp" />
-    <ClCompile Include="..\..\core\actions\Callback.cpp" />
+    <ClCompile Include="..\..\core\actions\CallFunc.cpp" />
     <ClCompile Include="..\..\core\actions\Delay.cpp" />
     <ClCompile Include="..\..\core\actions\FadeIn.cpp" />
     <ClCompile Include="..\..\core\actions\FadeOut.cpp" />
