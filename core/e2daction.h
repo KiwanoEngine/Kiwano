@@ -580,22 +580,24 @@ namespace easy2d
 
 
 	// 回调动作
-	class Callback
+	class CallFunc
 		: public Action
 	{
+		typedef std::function<void()> Callback;
+
 	public:
-		explicit Callback(
-			const Function& func /* 函数对象 */
+		explicit CallFunc(
+			const Callback& func /* 函数对象 */
 		);
 
 		// 获取该动作的拷贝对象
-		virtual Callback * Clone() const override;
+		virtual CallFunc * Clone() const override;
 
 		// 获取该动作的倒转
-		virtual Callback * Reverse() const override;
+		virtual CallFunc * Reverse() const override;
 
 	protected:
-		E2D_DISABLE_COPY(Callback);
+		E2D_DISABLE_COPY(CallFunc);
 
 		// 初始化动作
 		virtual void Init() override;
@@ -604,7 +606,7 @@ namespace easy2d
 		virtual void Update() override;
 
 	protected:
-		Function callback_;
+		Callback callback_;
 	};
 
 

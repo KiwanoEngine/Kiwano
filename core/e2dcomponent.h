@@ -30,25 +30,27 @@ namespace easy2d
 	class Button
 		: public Node
 	{
+		typedef std::function<void()> Callback;
+
 	public:
 		Button();
 
 		explicit Button(
 			Node * normal,					/* 普通状态 */
-			const Function& func = nullptr	/* 按钮点击后的回调函数 */
+			const Callback& func = nullptr	/* 按钮点击后的回调函数 */
 		);
 
 		explicit Button(
 			Node * normal,					/* 普通状态 */
 			Node * selected,				/* 鼠标按下状态 */
-			const Function& func = nullptr	/* 按钮点击后的回调函数 */
+			const Callback& func = nullptr	/* 按钮点击后的回调函数 */
 		);
 
 		explicit Button(
 			Node * normal,					/* 普通状态 */
 			Node * mouseover,				/* 鼠标移入状态 */
 			Node * selected,				/* 鼠标按下状态 */
-			const Function& func = nullptr	/* 按钮点击后的回调函数 */
+			const Callback& func = nullptr	/* 按钮点击后的回调函数 */
 		);
 
 		explicit Button(
@@ -56,7 +58,7 @@ namespace easy2d
 			Node * mouseover,				/* 鼠标移入状态 */
 			Node * selected,				/* 鼠标移入状态 */
 			Node * disabled,				/* 按钮禁用状态 */
-			const Function& func = nullptr	/* 按钮点击后的回调函数 */
+			const Callback& func = nullptr	/* 按钮点击后的回调函数 */
 		);
 
 		// 获取按钮状态是启用还是禁用
@@ -89,7 +91,7 @@ namespace easy2d
 
 		// 设置按钮点击后的回调函数
 		void SetCallbackOnClick(
-			const Function& func
+			const Callback& func
 		);
 
 		// 设置支点位置
@@ -130,7 +132,7 @@ namespace easy2d
 		bool		enabled_;
 		bool		is_selected_;
 		Status		status_;
-		Function	callback_;
+		Callback	callback_;
 	};
 
 

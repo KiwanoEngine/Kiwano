@@ -20,26 +20,26 @@
 
 #include "..\e2daction.h"
 
-easy2d::Callback::Callback(const Function& func) :
+easy2d::CallFunc::CallFunc(const Callback& func) :
 	callback_(func)
 {
 }
 
-easy2d::Callback * easy2d::Callback::Clone() const
+easy2d::CallFunc * easy2d::CallFunc::Clone() const
 {
-	return new Callback(callback_);
+	return new CallFunc(callback_);
 }
 
-easy2d::Callback * easy2d::Callback::Reverse() const
+easy2d::CallFunc * easy2d::CallFunc::Reverse() const
 {
-	return new Callback(callback_);
+	return new CallFunc(callback_);
 }
 
-void easy2d::Callback::Init()
+void easy2d::CallFunc::Init()
 {
 }
 
-void easy2d::Callback::Update()
+void easy2d::CallFunc::Update()
 {
 	callback_();
 	this->Stop();
