@@ -147,14 +147,12 @@ float easy2d::Image::GetSourceHeight() const
 
 easy2d::Size easy2d::Image::GetSourceSize() const
 {
-	Size source_size;
 	if (bitmap_)
 	{
 		auto bitmap_size = bitmap_->GetSize();
-		source_size.width = bitmap_size.width;
-		source_size.height = bitmap_size.height;
+		return Size{ bitmap_size.width, bitmap_size.height };
 	}
-	return std::move(source_size);
+	return Size{};
 }
 
 float easy2d::Image::GetCropX() const

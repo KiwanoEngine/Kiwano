@@ -94,7 +94,7 @@ std::wstring easy2d::File::GetExtension() const
 		// ×ª»»ÎªÐ¡Ð´×ÖÄ¸
 		std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), std::towlower);
 	}
-	return std::move(file_ext);
+	return file_ext;
 }
 
 bool easy2d::File::Delete()
@@ -118,7 +118,7 @@ easy2d::File easy2d::File::Extract(Resource& res, const std::wstring& dest_file_
 	);
 
 	if (file_handle == INVALID_HANDLE_VALUE)
-		return std::move(file);
+		return file;
 
 	if (res.Load())
 	{
@@ -135,7 +135,7 @@ easy2d::File easy2d::File::Extract(Resource& res, const std::wstring& dest_file_
 		::DeleteFile(dest_file_name.c_str());
 	}
 
-	return std::move(file);
+	return file;
 }
 
 void easy2d::File::AddSearchPath(const std::wstring & path)
@@ -218,7 +218,7 @@ easy2d::File easy2d::File::ShowOpenDialog(const std::wstring & title, const std:
 		}
 		::CoUninitialize();
 	}
-	return std::move(File(file_path));
+	return File(file_path);
 }
 
 easy2d::File easy2d::File::ShowSaveDialog(const std::wstring & title, const std::wstring& def_file, const std::wstring & def_ext)
@@ -288,5 +288,5 @@ easy2d::File easy2d::File::ShowSaveDialog(const std::wstring & title, const std:
 		}
 		::CoUninitialize();
 	}
-	return std::move(File(file_path));
+	return File(file_path);
 }

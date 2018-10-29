@@ -77,10 +77,10 @@ easy2d::Duration easy2d::Duration::Parse(const std::wstring & str)
 	if (!std::regex_match(str, regex))
 	{
 		E2D_WARNING("Duration::Parse: invalid duration");
-		return std::move(Duration{});
+		return d;
 	}
 
-	if (str.empty() || str == L"0") { return std::move(Duration{}); }
+	if (str.empty() || str == L"0") { return d; }
 
 	// ·ûºÅÎ»
 	if (str[0] == L'-' || str[0] == L'+')
@@ -108,7 +108,7 @@ easy2d::Duration easy2d::Duration::Parse(const std::wstring & str)
 		if (num_str.empty() || num_str == L".")
 		{
 			E2D_WARNING("Duration::Parse: invalid duration");
-			return std::move(Duration{});
+			return Duration();
 		}
 
 		// µ¥Î»
@@ -127,7 +127,7 @@ easy2d::Duration easy2d::Duration::Parse(const std::wstring & str)
 		if (unit_map.find(unit_str) == unit_map.end())
 		{
 			E2D_WARNING("Duration::Parse: invalid duration");
-			return std::move(Duration{});
+			return Duration();
 		}
 		
 		double num = std::stod(num_str);
@@ -139,7 +139,7 @@ easy2d::Duration easy2d::Duration::Parse(const std::wstring & str)
 	{
 		d.milliseconds_ = -d.milliseconds_;
 	}
-	return std::move(d);
+	return d;
 }
 
 bool easy2d::Duration::operator==(const Duration & other) const
@@ -172,71 +172,58 @@ bool easy2d::Duration::operator<=(const Duration & other) const
 	return milliseconds_ <= other.milliseconds_;
 }
 
-easy2d::Duration easy2d::Duration::operator+(Duration const & other) const
+easy2d::Duration easy2d::Duration::operator+(const Duration & other) const
 {
-	Duration d(milliseconds_ + other.milliseconds_);
-	return std::move(d);
+	return Duration(milliseconds_ + other.milliseconds_);
 }
 
-easy2d::Duration easy2d::Duration::operator-(Duration const & other) const
+easy2d::Duration easy2d::Duration::operator-(const Duration & other) const
 {
-	Duration d(milliseconds_ - other.milliseconds_);
-	return std::move(d);
+	return Duration(milliseconds_ - other.milliseconds_);
 }
 
 easy2d::Duration easy2d::Duration::operator-() const
 {
-	Duration d(-milliseconds_);
-	return std::move(d);
+	return Duration(-milliseconds_);
 }
 
 easy2d::Duration easy2d::Duration::operator*(int value) const
 {
-	Duration d(milliseconds_ * value);
-	return std::move(d);
+	return Duration(milliseconds_ * value);
 }
 
 easy2d::Duration easy2d::Duration::operator/(int value) const
 {
-	Duration d(milliseconds_ / value);
-	return std::move(d);
+	return Duration(milliseconds_ / value);
 }
 
 easy2d::Duration easy2d::Duration::operator*(float value) const
 {
-	int ms = static_cast<int>(milliseconds_ * value);
-	Duration d(ms);
-	return std::move(d);
+	return Duration(static_cast<int>(milliseconds_ * value));
 }
 
 easy2d::Duration easy2d::Duration::operator/(float value) const
 {
-	int ms = static_cast<int>(milliseconds_ / value);
-	Duration d(ms);
-	return std::move(d);
+	return Duration(static_cast<int>(milliseconds_ / value));
 }
 
 easy2d::Duration easy2d::Duration::operator*(double value) const
 {
-	int ms = static_cast<int>(milliseconds_ * value);
-	Duration d(ms);
-	return std::move(d);
+	return Duration(static_cast<int>(milliseconds_ * value));
 }
 
 easy2d::Duration easy2d::Duration::operator/(double value) const
 {
-	int ms = static_cast<int>(milliseconds_ / value);
-	Duration d(ms);
-	return std::move(d);
+	return Duration(static_cast<int>(milliseconds_ / value));
 }
 
-easy2d::Duration & easy2d::Duration::operator+=(Duration const &other)
+easy2d::Duration & easy2d::Duration::operator+=(const Duration &other)
 {
 	milliseconds_ += other.milliseconds_;
 	return (*this);
 }
 
-easy2d::Duration & easy2d::Duration::operator-=(Duration const &other)
+easy2d::Duration & easy2d::Duration::operator-=(const Duration &other)
 {
 	milliseconds_ -= other.milliseconds_;
 	return (*this);
@@ -280,30 +267,30 @@ easy2d::Duration & easy2d::Duration::operator/=(double value)
 
 easy2d::Duration easy2d::operator*(int value, const Duration & dur)
 {
-	return std::move(dur * value);
+	return dur * value;
 }
 
 easy2d::Duration easy2d::operator/(int value, const Duration & dur)
 {
-	return std::move(dur / value);
+	return dur / value;
 }
 
 easy2d::Duration easy2d::operator*(float value, const Duration & dur)
 {
-	return std::move(dur * value);
+	return dur * value;
 }
 
 easy2d::Duration easy2d::operator/(float value, const Duration & dur)
 {
-	return std::move(dur / value);
+	return dur / value;
 }
 
 easy2d::Duration easy2d::operator*(double value, const Duration & dur)
 {
-	return std::move(dur * value);
+	return dur * value;
 }
 
 easy2d::Duration easy2d::operator/(double value, const Duration & dur)
 {
-	return std::move(dur / value);
+	return dur / value;
 }

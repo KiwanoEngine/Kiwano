@@ -78,6 +78,5 @@ easy2d::Color::Color(const D2D1_COLOR_F& color)
 
 easy2d::Color::operator D2D1_COLOR_F() const
 {
-	D2D1::ColorF color_f(r, g, b, a);
-	return std::move(color_f);
+	return D2D1::ColorF(r, g, b, a);
 }

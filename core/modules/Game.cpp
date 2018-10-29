@@ -388,13 +388,12 @@ easy2d::Rect easy2d::Game::Locate(int width, int height)
 	width = std::min(width, max_width);
 	height = std::min(height, max_height);
 
-	Rect client_rect(
+	return Rect(
 		static_cast<float>((max_width - width) / 2),
 		static_cast<float>((max_height - height) / 2),
 		static_cast<float>(width),
 		static_cast<float>(height)
 	);
-	return std::move(client_rect);
 }
 
 int easy2d::Game::GetWidth() const
@@ -409,11 +408,10 @@ int easy2d::Game::GetHeight() const
 
 easy2d::Size easy2d::Game::GetSize() const
 {
-	easy2d::Size size(
+	return easy2d::Size(
 		static_cast<float>(width_),
 		static_cast<float>(height_)
 	);
-	return std::move(size);
 }
 
 HWND easy2d::Game::GetHWnd() const
