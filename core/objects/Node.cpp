@@ -379,7 +379,7 @@ float easy2d::Node::GetPivotY() const
 
 easy2d::Size easy2d::Node::GetSize() const
 {
-	return std::move(Size(GetWidth(), GetHeight()));
+	return Size{ GetWidth(), GetHeight() };
 }
 
 float easy2d::Node::GetScaleX() const
@@ -667,7 +667,7 @@ easy2d::Node::Nodes easy2d::Node::GetChildren(const std::wstring& name) const
 			children.push_back(child);
 		}
 	}
-	return std::move(children);
+	return children;
 }
 
 easy2d::Node * easy2d::Node::GetChild(const std::wstring& name) const

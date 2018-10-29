@@ -52,7 +52,7 @@ easy2d::Transform::operator D2D1::Matrix3x2F() const
 		position.x - pivot.x,
 		position.y - pivot.y
 	);
-	return std::move(matrix);
+	return matrix;
 }
 
 bool easy2d::Transform::operator==(const Transform & other) const

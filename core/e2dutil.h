@@ -385,8 +385,8 @@ namespace easy2d
 		bool operator< (const Duration &) const;
 		bool operator<= (const Duration &) const;
 
-		Duration operator + (Duration const &) const;
-		Duration operator - (Duration const &) const;
+		Duration operator + (const Duration &) const;
+		Duration operator - (const Duration &) const;
 		Duration operator - () const;
 		Duration operator * (int) const;
 		Duration operator * (float) const;
@@ -395,8 +395,8 @@ namespace easy2d
 		Duration operator / (float) const;
 		Duration operator / (double) const;
 
-		Duration& operator += (Duration const &);
-		Duration& operator -= (Duration const &);
+		Duration& operator += (const Duration &);
+		Duration& operator -= (const Duration &);
 		Duration& operator *= (int);
 		Duration& operator *= (float);
 		Duration& operator *= (double);
@@ -432,19 +432,34 @@ namespace easy2d
 	public:
 		Time();
 
+		explicit Time(
+			std::chrono::steady_clock::time_point
+		);
+
+		Time(
+			const Time& other
+		);
+
+		Time(
+			Time&& other
+		);
+
 		// 获取时间戳
 		time_t GetTimeStamp() const;
 
 		// 是否是零时
 		bool IsZero() const;
 
-		Time operator + (Duration const &) const;
-		Time operator - (Duration const &) const;
+		Time operator + (const Duration &) const;
+		Time operator - (const Duration &) const;
 
-		Time& operator += (Duration const &);
-		Time& operator -= (Duration const &);
+		Time& operator += (const Duration &);
+		Time& operator -= (const Duration &);
 
-		Duration operator - (Time const &) const;
+		Duration operator - (const Time &) const;
+
+		Time& operator = (const Time &) E2D_NOEXCEPT;
+		Time& operator = (Time &&) E2D_NOEXCEPT;
 
 		// 获取当前时间
 		static Time Now();
@@ -641,7 +656,6 @@ namespace easy2d
 	{
 		if (FAILED(hr))
 		{
-			// 在此处设置断点以捕获系统异常.
 			static char s_str[64] = {};
 			sprintf_s(s_str, "Failure with HRESULT of %08X", static_cast<unsigned int>(hr));
 			throw std::runtime_error(s_str);

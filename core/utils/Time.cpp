@@ -27,6 +27,21 @@ easy2d::Time::Time()
 {
 }
 
+easy2d::Time::Time(std::chrono::steady_clock::time_point time)
+	: time_(time)
+{
+}
+
+easy2d::Time::Time(const Time & other)
+	: time_(other.time_)
+{
+}
+
+easy2d::Time::Time(Time && other)
+	: time_(std::move(other.time_))
+{
+}
+
 time_t easy2d::Time::GetTimeStamp() const
 {
 	auto& duration = time_point_cast<milliseconds>(time_).time_since_epoch();
@@ -38,42 +53,53 @@ bool easy2d::Time::IsZero() const
 	return time_.time_since_epoch().count() == 0LL;
 }
 
-easy2d::Time easy2d::Time::operator+(Duration const & other) const
+easy2d::Time easy2d::Time::operator+(const Duration & other) const
 {
-	Time t;
-	t.time_ = time_ + milliseconds(other.Milliseconds());
-	return std::move(t);
+	return Time(time_ + milliseconds(other.Milliseconds()));
 }
 
-easy2d::Time easy2d::Time::operator-(Duration const & other) const
+easy2d::Time easy2d::Time::operator-(const Duration & other) const
 {
-	Time t;
-	t.time_ = time_ - milliseconds(other.Milliseconds());
-	return std::move(t);
+	return Time(time_ - milliseconds(other.Milliseconds()));
 }
 
-easy2d::Time & easy2d::Time::operator+=(Duration const & other)
+easy2d::Time & easy2d::Time::operator+=(const Duration & other)
 {
 	time_ += milliseconds(other.Milliseconds());
 	return (*this);
 }
 
-easy2d::Time & easy2d::Time::operator-=(Duration const &other)
+easy2d::Time & easy2d::Time::operator-=(const Duration &other)
 {
 	time_ -= milliseconds(other.Milliseconds());
 	return (*this);
 }
 
-easy2d::Duration easy2d::Time::operator-(Time const & other) const
+easy2d::Duration easy2d::Time::operator-(const Time & other) const
 {
 	auto ms = duration_cast<milliseconds>(time_ - other.time_).count();
-	Duration d(static_cast<int>(ms));
-	return std::move(d);
+	return Duration(static_cast<int>(ms));
+}
+
+easy2d::Time& easy2d::Time::operator=(const Time & other) E2D_NOEXCEPT
+{
+	if (this == &other)
+		return *this;
+
+	time_ = other.time_;
+	return *this;
+}
+
+easy2d::Time& easy2d::Time::operator=(Time && other) E2D_NOEXCEPT
+{
+	if (this == &other)
+		return *this;
+
+	time_ = std::move(other.time_);
+	return *this;
 }
 
 easy2d::Time easy2d::Time::Now()
 {
-	Time t;
-	t.time_ = steady_clock::now();
-	return std::move(t);
+	return Time(steady_clock::now());
 }
