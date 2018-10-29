@@ -61,7 +61,7 @@ namespace easy2d
 		Point operator - () const;
 		bool operator== (const Point& other) const;
 
-		E2D_OP_EXPLICIT operator easy2d::Size() const;
+		explicit operator easy2d::Size() const;
 
 		// ≈–∂œ¡Ωµ„º‰æ‡¿Î
 		static float Distance(
@@ -102,7 +102,7 @@ namespace easy2d
 		Size operator - () const;
 		bool operator== (const Size& other) const;
 
-		E2D_OP_EXPLICIT operator easy2d::Point() const;
+		explicit operator easy2d::Point() const;
 	};
 
 
@@ -194,7 +194,7 @@ namespace easy2d
 			const D2D1_COLOR_F& color
 		);
 
-		E2D_OP_EXPLICIT operator D2D1_COLOR_F() const;
+		explicit operator D2D1_COLOR_F() const;
 
 	public:
 		enum Value : UINT
@@ -548,7 +548,7 @@ namespace easy2d
 	public:
 		Transform();
 
-		E2D_OP_EXPLICIT operator D2D1::Matrix3x2F() const;
+		explicit operator D2D1::Matrix3x2F() const;
 
 		bool operator== (const Transform& other) const;
 	};
