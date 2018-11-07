@@ -21,28 +21,32 @@
 #include "..\e2daction.h"
 #include "..\e2dobject.h"
 
-easy2d::ScaleTo::ScaleTo(float duration, float scale)
-	: ScaleBy(duration, 0, 0)
-{
-	end_scale_x_ = scale;
-	end_scale_y_ = scale;
-}
 
-easy2d::ScaleTo::ScaleTo(float duration, float scale_x, float scale_y)
-	: ScaleBy(duration, 0, 0)
+namespace easy2d
 {
-	end_scale_x_ = scale_x;
-	end_scale_y_ = scale_y;
-}
+	ScaleTo::ScaleTo(float duration, float scale)
+		: ScaleBy(duration, 0, 0)
+	{
+		end_scale_x_ = scale;
+		end_scale_y_ = scale;
+	}
 
-easy2d::ScaleTo * easy2d::ScaleTo::Clone() const
-{
-	return new ScaleTo(duration_, end_scale_x_, end_scale_y_);
-}
+	ScaleTo::ScaleTo(float duration, float scale_x, float scale_y)
+		: ScaleBy(duration, 0, 0)
+	{
+		end_scale_x_ = scale_x;
+		end_scale_y_ = scale_y;
+	}
 
-void easy2d::ScaleTo::Init()
-{
-	ScaleBy::Init();
-	delta_x_ = end_scale_x_ - start_scale_x_;
-	delta_y_ = end_scale_y_ - start_scale_y_;
+	ScaleTo * ScaleTo::Clone() const
+	{
+		return new ScaleTo(duration_, end_scale_x_, end_scale_y_);
+	}
+
+	void ScaleTo::Init()
+	{
+		ScaleBy::Init();
+		delta_x_ = end_scale_x_ - start_scale_x_;
+		delta_y_ = end_scale_y_ - start_scale_y_;
+	}
 }

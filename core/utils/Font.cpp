@@ -21,10 +21,13 @@
 #include "..\e2dutil.h"
 
 
-easy2d::Font::Font(const std::wstring & family, float size, UINT weight, bool italic)
-	: family(family)
-	, size(size)
-	, weight(weight)
-	, italic(italic)
+namespace easy2d
 {
+	Font::Font(const std::wstring & family, float size, UINT weight, bool italic)
+		: family(family)
+		, size(size)
+		, weight(weight)
+		, italic(italic)
+	{
+	}
 }

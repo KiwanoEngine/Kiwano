@@ -20,35 +20,38 @@
 
 #include "..\e2dobject.h"
 
-easy2d::Ref::Ref()
+namespace easy2d
 {
-	// 当对象被创建时，意味着它已经被引用了一次
-	ref_count_ = 1;
-}
-
-easy2d::Ref::~Ref()
-{
-}
-
-LONG easy2d::Ref::Retain()
-{
-	return ::InterlockedIncrement(&ref_count_);
-}
-
-LONG easy2d::Ref::Release()
-{
-	LONG new_count = ::InterlockedDecrement(&ref_count_);
-
-	if (new_count <= 0)
+	Ref::Ref()
 	{
-		delete this;
-		return 0;
+		// 当对象被创建时，意味着它已经被引用了一次
+		ref_count_ = 1;
 	}
 
-	return new_count;
-}
+	Ref::~Ref()
+	{
+	}
 
-LONG easy2d::Ref::GetRefCount() const
-{
-	return ref_count_;
+	LONG Ref::Retain()
+	{
+		return ::InterlockedIncrement(&ref_count_);
+	}
+
+	LONG Ref::Release()
+	{
+		LONG new_count = ::InterlockedDecrement(&ref_count_);
+
+		if (new_count <= 0)
+		{
+			delete this;
+			return 0;
+		}
+
+		return new_count;
+	}
+
+	LONG Ref::GetRefCount() const
+	{
+		return ref_count_;
+	}
 }

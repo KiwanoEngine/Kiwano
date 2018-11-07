@@ -20,9 +20,12 @@
 
 #include "..\e2dutil.h"
 
-std::default_random_engine &easy2d::Random::GetEngine()
+namespace easy2d
 {
-	static std::random_device device;
-	static std::default_random_engine engine(device());
-	return engine;
+	std::default_random_engine &Random::GetEngine()
+	{
+		static std::random_device device;
+		static std::default_random_engine engine(device());
+		return engine;
+	}
 }

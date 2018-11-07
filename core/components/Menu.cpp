@@ -20,77 +20,81 @@
 
 #include "..\e2dcomponent.h"
 
-easy2d::Menu::Menu()
-	: enabled_(true)
-{
-}
 
-easy2d::Menu::Menu(const std::vector<Button*>& buttons)
-	: enabled_(true)
+namespace easy2d
 {
-	for (const auto& button : buttons)
+	Menu::Menu()
+		: enabled_(true)
 	{
-		this->AddButton(button);
 	}
-}
 
-bool easy2d::Menu::IsEnable() const
-{
-	return enabled_;
-}
-
-size_t easy2d::Menu::GetButtonCount() const
-{
-	return buttons_.size();
-}
-
-void easy2d::Menu::SetEnabled(bool enabled)
-{
-	if (enabled_ != enabled)
+	Menu::Menu(const std::vector<Button*>& buttons)
+		: enabled_(true)
 	{
-		enabled_ = enabled;
-
-		for (const auto& button : buttons_)
+		for (const auto& button : buttons)
 		{
-			button->SetEnabled(enabled);
+			this->AddButton(button);
 		}
 	}
-}
 
-void easy2d::Menu::AddButton(Button * button)
-{
-	if (button)
+	bool Menu::IsEnable() const
 	{
-		this->AddChild(button);
-		buttons_.push_back(button);
-		button->SetEnabled(enabled_);
+		return enabled_;
 	}
-}
 
-bool easy2d::Menu::RemoveButton(Button * button)
-{
-	if (buttons_.empty())
+	size_t Menu::GetButtonCount() const
 	{
+		return buttons_.size();
+	}
+
+	void Menu::SetEnabled(bool enabled)
+	{
+		if (enabled_ != enabled)
+		{
+			enabled_ = enabled;
+
+			for (const auto& button : buttons_)
+			{
+				button->SetEnabled(enabled);
+			}
+		}
+	}
+
+	void Menu::AddButton(Button * button)
+	{
+		if (button)
+		{
+			this->AddChild(button);
+			buttons_.push_back(button);
+			button->SetEnabled(enabled_);
+		}
+	}
+
+	bool Menu::RemoveButton(Button * button)
+	{
+		if (buttons_.empty())
+		{
+			return false;
+		}
+
+		this->RemoveChild(button);
+
+		if (button)
+		{
+			auto iter = std::find(buttons_.begin(), buttons_.end(), button);
+			if (iter != buttons_.end())
+			{
+				// 移除按钮前，将它启用
+				button->SetEnabled(true);
+				buttons_.erase(iter);
+				return true;
+			}
+		}
 		return false;
 	}
 
-	this->RemoveChild(button);
-
-	if (button)
+	const std::vector<Button*>& Menu::GetAllButtons() const
 	{
-		auto iter = std::find(buttons_.begin(), buttons_.end(), button);
-		if (iter != buttons_.end())
-		{
-			// 移除按钮前，将它启用
-			button->SetEnabled(true);
-			buttons_.erase(iter);
-			return true;
-		}
+		return buttons_;
 	}
-	return false;
-}
-
-const std::vector<easy2d::Button*>& easy2d::Menu::GetAllButtons() const
-{
-	return buttons_;
 }

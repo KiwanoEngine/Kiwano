@@ -20,56 +20,59 @@
 
 #include "..\e2dutil.h"
 
-easy2d::Rect::Rect(void)
-	: origin()
-	, size()
+namespace easy2d
 {
-}
-
-easy2d::Rect::Rect(float x, float y, float width, float height)
-	: origin(x, y)
-	, size(width, height)
-{
-}
-
-easy2d::Rect::Rect(const Point& pos, const Size& size)
-	: origin(pos.x, pos.y)
-	, size(size.width, size.height)
-{
-}
-
-easy2d::Rect::Rect(const Rect& other)
-	: origin(other.origin.x, other.origin.y)
-	, size(other.size.width, other.size.height)
-{
-}
-
-easy2d::Rect& easy2d::Rect::operator= (const Rect& other)
-{
-	origin = other.origin;
-	size = other.size;
-	return *this;
-}
-
-bool easy2d::Rect::operator==(const Rect & rect) const
-{
-	return (origin == rect.origin) && (size == rect.size);
-}
-
-bool easy2d::Rect::ContainsPoint(const Point& point) const
-{
-	if (point.x >= origin.x && point.x <= (origin.y + size.height)
-		&& point.y >= origin.y && point.y <= (origin.y + size.height))
+	Rect::Rect(void)
+		: origin()
+		, size()
 	{
-		return true;
 	}
-	return false;
-}
 
-bool easy2d::Rect::Intersects(const Rect& rect) const
-{
-	return !((origin.x + size.width)			< rect.origin.x ||
-			(rect.origin.x + rect.size.width)	<	  origin.x ||
-			(origin.y + size.height)			< rect.origin.y ||
-			(rect.origin.y + rect.size.height)	<	  origin.y);
+	Rect::Rect(float x, float y, float width, float height)
+		: origin(x, y)
+		, size(width, height)
+	{
+	}
+
+	Rect::Rect(const Point& pos, const Size& size)
+		: origin(pos.x, pos.y)
+		, size(size.width, size.height)
+	{
+	}
+
+	Rect::Rect(const Rect& other)
+		: origin(other.origin.x, other.origin.y)
+		, size(other.size.width, other.size.height)
+	{
+	}
+
+	Rect& Rect::operator= (const Rect& other)
+	{
+		origin = other.origin;
+		size = other.size;
+		return *this;
+	}
+
+	bool Rect::operator==(const Rect & rect) const
+	{
+		return (origin == rect.origin) && (size == rect.size);
+	}
+
+	bool Rect::ContainsPoint(const Point& point) const
+	{
+		if (point.x >= origin.x && point.x <= (origin.y + size.height)
+			&& point.y >= origin.y && point.y <= (origin.y + size.height))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool Rect::Intersects(const Rect& rect) const
+	{
+		return !((origin.x + size.width) < rect.origin.x ||
+			(rect.origin.x + rect.size.width) < origin.x ||
+			(origin.y + size.height) < rect.origin.y ||
+			(rect.origin.y + rect.size.height) < origin.y);
+	}
 }

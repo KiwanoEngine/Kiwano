@@ -21,31 +21,34 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 
-easy2d::FadeTransition::FadeTransition(float duration)
-	: Transition(duration)
+namespace easy2d
 {
-}
-
-void easy2d::FadeTransition::Init(Scene * prev, Scene * next, Game * game)
-{
-	Transition::Init(prev, next, game);
-	
-	out_layer_param_.opacity = 1;
-	in_layer_param_.opacity = 0;
-}
-
-void easy2d::FadeTransition::Update()
-{
-	Transition::Update();
-
-	if (process_ < 0.5)
+	FadeTransition::FadeTransition(float duration)
+		: Transition(duration)
 	{
-		out_layer_param_.opacity = 1 - process_ * 2;
+	}
+
+	void FadeTransition::Init(Scene * prev, Scene * next, Game * game)
+	{
+		Transition::Init(prev, next, game);
+
+		out_layer_param_.opacity = 1;
 		in_layer_param_.opacity = 0;
 	}
-	else
+
+	void FadeTransition::Update()
 	{
-		out_layer_param_.opacity = 0;
-		in_layer_param_.opacity = (process_ - 0.5f) * 2;
+		Transition::Update();
+
+		if (process_ < 0.5)
+		{
+			out_layer_param_.opacity = 1 - process_ * 2;
+			in_layer_param_.opacity = 0;
+		}
+		else
+		{
+			out_layer_param_.opacity = 0;
+			in_layer_param_.opacity = (process_ - 0.5f) * 2;
+		}
 	}
 }

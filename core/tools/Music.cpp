@@ -22,38 +22,40 @@
 #include "..\e2dmodule.h"
 
 
-namespace
-{
-	void OutputDebugStringExW(LPCWSTR pszOutput, ...)
-	{
-		va_list args = NULL;
-		va_start(args, pszOutput);
-
-		size_t nLen = _vscwprintf(pszOutput, args) + 1;
-		wchar_t* psBuffer = new wchar_t[nLen];
-		_vsnwprintf_s(psBuffer, nLen, nLen, pszOutput, args);
-
-		va_end(args);
-
-		::OutputDebugStringW(psBuffer);
-		delete[] psBuffer;
-	}
-
-	inline void TraceError(LPCWSTR output)
-	{
-		OutputDebugStringExW(L"[easy2d] Music error: %s failed!\r\n", output);
-	}
-
-	inline void TraceError(LPCWSTR output, HRESULT hr)
-	{
-		OutputDebugStringExW(L"[easy2d] Music error: %s (%#X)\r\n", output, hr);
-	}
-}
-
-
 namespace easy2d
 {
-	// 音频解码器
+	namespace
+	{
+		void OutputDebugStringExW(LPCWSTR pszOutput, ...)
+		{
+			va_list args = NULL;
+			va_start(args, pszOutput);
+
+			size_t nLen = _vscwprintf(pszOutput, args) + 1;
+			wchar_t* psBuffer = new wchar_t[nLen];
+			_vsnwprintf_s(psBuffer, nLen, nLen, pszOutput, args);
+
+			va_end(args);
+
+			::OutputDebugStringW(psBuffer);
+			delete[] psBuffer;
+		}
+
+		inline void TraceError(LPCWSTR output)
+		{
+			OutputDebugStringExW(L"[easy2d] Music error: %s failed!\r\n", output);
+		}
+
+		inline void TraceError(LPCWSTR output, HRESULT hr)
+		{
+			OutputDebugStringExW(L"[easy2d] Music error: %s (%#X)\r\n", output, hr);
+		}
+	}
+
+	//-------------------------------------------------------
+	// Transcoder
+	//-------------------------------------------------------
+
 	class Transcoder
 	{
 		WAVEFORMATEX* wave_format_;
@@ -304,252 +306,255 @@ namespace easy2d
 		}
 	};
 
-}
 
+	//-------------------------------------------------------
+	// Music
+	//-------------------------------------------------------
 
-easy2d::Music::Music()
-	: opened_(false)
-	, playing_(false)
-	, wave_data_(nullptr)
-	, size_(0)
-	, voice_(nullptr)
-{
-}
+	Music::Music()
+		: opened_(false)
+		, playing_(false)
+		, wave_data_(nullptr)
+		, size_(0)
+		, voice_(nullptr)
+	{
+	}
 
-easy2d::Music::Music(const std::wstring& file_path)
-	: opened_(false)
-	, playing_(false)
-	, wave_data_(nullptr)
-	, size_(0)
-	, voice_(nullptr)
-{
-	Load(file_path);
-}
+	Music::Music(const std::wstring& file_path)
+		: opened_(false)
+		, playing_(false)
+		, wave_data_(nullptr)
+		, size_(0)
+		, voice_(nullptr)
+	{
+		Load(file_path);
+	}
 
-easy2d::Music::Music(Resource& res)
-	: opened_(false)
-	, playing_(false)
-	, wave_data_(nullptr)
-	, size_(0)
-	, voice_(nullptr)
-{
-	Load(res);
-}
+	Music::Music(Resource& res)
+		: opened_(false)
+		, playing_(false)
+		, wave_data_(nullptr)
+		, size_(0)
+		, voice_(nullptr)
+	{
+		Load(res);
+	}
 
-easy2d::Music::~Music()
-{
-	Close();
-}
-
-bool easy2d::Music::Load(const std::wstring & file_path)
-{
-	if (opened_)
+	Music::~Music()
 	{
 		Close();
 	}
 
-	File music_file;
-	if (!music_file.Open(file_path))
+	bool Music::Load(const std::wstring & file_path)
 	{
-		E2D_WARNING("Media file not found.");
-		return false;
-	}
-
-	// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
-	// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-	std::wstring music_file_path = music_file.GetPath();
-
-	Transcoder transcoder;
-	if (!transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_))
-	{
-		return false;
-	}
-
-	HRESULT hr = Device::GetAudio()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
-	if (FAILED(hr))
-	{
-		if (wave_data_)
+		if (opened_)
 		{
-			delete[] wave_data_;
-			wave_data_ = nullptr;
+			Close();
 		}
-		TraceError(L"Create source voice error", hr);
-		return false;
-	}
 
-	opened_ = true;
-	return true;
-}
-
-bool easy2d::Music::Load(Resource& res)
-{
-	if (opened_)
-	{
-		Close();
-	}
-
-	Transcoder transcoder;
-	if (!transcoder.LoadMediaResource(res, &wave_data_, &size_))
-	{
-		return false;
-	}
-
-	HRESULT hr = Device::GetAudio()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
-	if (FAILED(hr))
-	{
-		if (wave_data_)
+		File music_file;
+		if (!music_file.Open(file_path))
 		{
-			delete[] wave_data_;
-			wave_data_ = nullptr;
+			E2D_WARNING("Media file not found.");
+			return false;
 		}
-		TraceError(L"Create source voice error", hr);
-		return false;
-	}
 
-	opened_ = true;
-	return true;
-}
+		// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
+		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
+		std::wstring music_file_path = music_file.GetPath();
 
-bool easy2d::Music::Play(int loop_count)
-{
-	if (!opened_)
-	{
-		E2D_WARNING("Music must be opened first!");
-		return false;
-	}
-
-	if (voice_ == nullptr)
-	{
-		E2D_WARNING("IXAudio2SourceVoice Null pointer exception!");
-		return false;
-	}
-
-	XAUDIO2_VOICE_STATE state;
-	voice_->GetState(&state);
-	if (state.BuffersQueued)
-	{
-		Stop();
-	}
-
-	if (loop_count < 0)
-	{
-		loop_count = XAUDIO2_LOOP_INFINITE;
-	}
-	else
-	{
-		loop_count = std::min(loop_count, XAUDIO2_LOOP_INFINITE - 1);
-	}
-
-	// 提交 wave 样本数据
-	XAUDIO2_BUFFER buffer = { 0 };
-	buffer.pAudioData = wave_data_;
-	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.AudioBytes = size_;
-	buffer.LoopCount = loop_count;
-
-	HRESULT hr;
-	if (FAILED(hr = voice_->SubmitSourceBuffer(&buffer)))
-	{
-		TraceError(L"Submitting source buffer error", hr);
-		return false;
-	}
-
-	hr = voice_->Start(0);
-
-	playing_ = SUCCEEDED(hr);
-
-	return playing_;
-}
-
-void easy2d::Music::Pause()
-{
-	if (voice_)
-	{
-		if (SUCCEEDED(voice_->Stop()))
+		Transcoder transcoder;
+		if (!transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_))
 		{
-			playing_ = false;
+			return false;
 		}
-	}
-}
 
-void easy2d::Music::Resume()
-{
-	if (voice_)
-	{
-		if (SUCCEEDED(voice_->Start()))
+		HRESULT hr = Device::GetAudio()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+		if (FAILED(hr))
 		{
-			playing_ = true;
+			if (wave_data_)
+			{
+				delete[] wave_data_;
+				wave_data_ = nullptr;
+			}
+			TraceError(L"Create source voice error", hr);
+			return false;
 		}
-	}
-}
 
-void easy2d::Music::Stop()
-{
-	if (voice_)
+		opened_ = true;
+		return true;
+	}
+
+	bool Music::Load(Resource& res)
 	{
-		if (SUCCEEDED(voice_->Stop()))
+		if (opened_)
 		{
-			voice_->ExitLoop();
-			voice_->FlushSourceBuffers();
-			playing_ = false;
+			Close();
 		}
+
+		Transcoder transcoder;
+		if (!transcoder.LoadMediaResource(res, &wave_data_, &size_))
+		{
+			return false;
+		}
+
+		HRESULT hr = Device::GetAudio()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+		if (FAILED(hr))
+		{
+			if (wave_data_)
+			{
+				delete[] wave_data_;
+				wave_data_ = nullptr;
+			}
+			TraceError(L"Create source voice error", hr);
+			return false;
+		}
+
+		opened_ = true;
+		return true;
 	}
-}
 
-void easy2d::Music::Close()
-{
-	if (voice_)
+	bool Music::Play(int loop_count)
 	{
-		voice_->Stop();
-		voice_->FlushSourceBuffers();
-		voice_->DestroyVoice();
-		voice_ = nullptr;
-	}
+		if (!opened_)
+		{
+			E2D_WARNING("Music must be opened first!");
+			return false;
+		}
 
-	if (wave_data_)
-	{
-		delete[] wave_data_;
-		wave_data_ = nullptr;
-	}
+		if (voice_ == nullptr)
+		{
+			E2D_WARNING("IXAudio2SourceVoice Null pointer exception!");
+			return false;
+		}
 
-	opened_ = false;
-	playing_ = false;
-}
-
-bool easy2d::Music::IsPlaying() const
-{
-	if (opened_ && voice_)
-	{
 		XAUDIO2_VOICE_STATE state;
 		voice_->GetState(&state);
-		if (state.BuffersQueued && playing_)
-			return true;
-	}
-	return false;
-}
+		if (state.BuffersQueued)
+		{
+			Stop();
+		}
 
-float easy2d::Music::GetVolume() const
-{
-	if (voice_)
+		if (loop_count < 0)
+		{
+			loop_count = XAUDIO2_LOOP_INFINITE;
+		}
+		else
+		{
+			loop_count = std::min(loop_count, XAUDIO2_LOOP_INFINITE - 1);
+		}
+
+		// 提交 wave 样本数据
+		XAUDIO2_BUFFER buffer = { 0 };
+		buffer.pAudioData = wave_data_;
+		buffer.Flags = XAUDIO2_END_OF_STREAM;
+		buffer.AudioBytes = size_;
+		buffer.LoopCount = loop_count;
+
+		HRESULT hr;
+		if (FAILED(hr = voice_->SubmitSourceBuffer(&buffer)))
+		{
+			TraceError(L"Submitting source buffer error", hr);
+			return false;
+		}
+
+		hr = voice_->Start(0);
+
+		playing_ = SUCCEEDED(hr);
+
+		return playing_;
+	}
+
+	void Music::Pause()
 	{
-		float volume = 0.f;
-		voice_->GetVolume(&volume);
-		return volume;
+		if (voice_)
+		{
+			if (SUCCEEDED(voice_->Stop()))
+			{
+				playing_ = false;
+			}
+		}
 	}
-	return 0.f;
-}
 
-bool easy2d::Music::SetVolume(float volume)
-{
-	if (voice_)
+	void Music::Resume()
 	{
-		volume = std::min(std::max(volume, -224.f), 224.f);
-		return SUCCEEDED(voice_->SetVolume(volume));
+		if (voice_)
+		{
+			if (SUCCEEDED(voice_->Start()))
+			{
+				playing_ = true;
+			}
+		}
 	}
-	return false;
-}
 
-IXAudio2SourceVoice * easy2d::Music::GetSourceVoice() const
-{
-	return voice_;
+	void Music::Stop()
+	{
+		if (voice_)
+		{
+			if (SUCCEEDED(voice_->Stop()))
+			{
+				voice_->ExitLoop();
+				voice_->FlushSourceBuffers();
+				playing_ = false;
+			}
+		}
+	}
+
+	void Music::Close()
+	{
+		if (voice_)
+		{
+			voice_->Stop();
+			voice_->FlushSourceBuffers();
+			voice_->DestroyVoice();
+			voice_ = nullptr;
+		}
+
+		if (wave_data_)
+		{
+			delete[] wave_data_;
+			wave_data_ = nullptr;
+		}
+
+		opened_ = false;
+		playing_ = false;
+	}
+
+	bool Music::IsPlaying() const
+	{
+		if (opened_ && voice_)
+		{
+			XAUDIO2_VOICE_STATE state;
+			voice_->GetState(&state);
+			if (state.BuffersQueued && playing_)
+				return true;
+		}
+		return false;
+	}
+
+	float Music::GetVolume() const
+	{
+		if (voice_)
+		{
+			float volume = 0.f;
+			voice_->GetVolume(&volume);
+			return volume;
+		}
+		return 0.f;
+	}
+
+	bool Music::SetVolume(float volume)
+	{
+		if (voice_)
+		{
+			volume = std::min(std::max(volume, -224.f), 224.f);
+			return SUCCEEDED(voice_->SetVolume(volume));
+		}
+		return false;
+	}
+
+	IXAudio2SourceVoice * Music::GetSourceVoice() const
+	{
+		return voice_;
+	}
 }

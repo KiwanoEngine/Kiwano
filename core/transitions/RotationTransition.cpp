@@ -21,84 +21,87 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 
-easy2d::RotationTransition::RotationTransition(float duration, float rotation)
-	: Transition(duration)
-	, rotation_(rotation)
+namespace easy2d
 {
-}
-
-void easy2d::RotationTransition::Init(Scene * prev, Scene * next, Game * game)
-{
-	Transition::Init(prev, next, game);
-
-	if (out_scene_)
+	RotationTransition::RotationTransition(float duration, float rotation)
+		: Transition(duration)
+		, rotation_(rotation)
 	{
-		out_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
 	}
 
-	if (in_scene_)
+	void RotationTransition::Init(Scene * prev, Scene * next, Game * game)
 	{
-		in_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+		Transition::Init(prev, next, game);
+
+		if (out_scene_)
+		{
+			out_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+		}
+
+		if (in_scene_)
+		{
+			in_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+		}
+
+		in_layer_param_.opacity = 0;
 	}
 
-	in_layer_param_.opacity = 0;
-}
+	void RotationTransition::Update()
+	{
+		Transition::Update();
 
-void easy2d::RotationTransition::Update()
-{
-	Transition::Update();
+		auto center_pos = D2D1::Point2F(
+			window_size_.width / 2,
+			window_size_.height / 2
+		);
 
-	auto center_pos = D2D1::Point2F(
-		window_size_.width / 2,
-		window_size_.height / 2
-	);
+		if (process_ < .5f)
+		{
+			if (out_scene_)
+			{
+				out_scene_->SetTransform(
+					D2D1::Matrix3x2F::Scale(
+					(.5f - process_) * 2,
+						(.5f - process_) * 2,
+						center_pos
+					) * D2D1::Matrix3x2F::Rotation(
+						rotation_ * (.5f - process_) * 2,
+						center_pos
+					)
+				);
+			}
+		}
+		else
+		{
+			if (in_scene_)
+			{
+				out_layer_param_.opacity = 0;
+				in_layer_param_.opacity = 1;
 
-	if (process_ < .5f)
+				in_scene_->SetTransform(
+					D2D1::Matrix3x2F::Scale(
+					(process_ - .5f) * 2,
+						(process_ - .5f) * 2,
+						center_pos
+					) * D2D1::Matrix3x2F::Rotation(
+						rotation_ * (process_ - .5f) * 2,
+						center_pos
+					)
+				);
+			}
+		}
+	}
+
+	void RotationTransition::Reset()
 	{
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(
-				D2D1::Matrix3x2F::Scale(
-					(.5f - process_) * 2,
-					(.5f - process_) * 2,
-					center_pos
-				) * D2D1::Matrix3x2F::Rotation(
-					rotation_ * (.5f - process_) * 2,
-					center_pos
-				)
-			);
+			out_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
 		}
-	}
-	else
-	{
+
 		if (in_scene_)
 		{
-			out_layer_param_.opacity = 0;
-			in_layer_param_.opacity = 1;
-
-			in_scene_->SetTransform(
-				D2D1::Matrix3x2F::Scale(
-					(process_ - .5f) * 2,
-					(process_ - .5f) * 2,
-					center_pos
-				) * D2D1::Matrix3x2F::Rotation(
-					rotation_ * (process_ - .5f) * 2,
-					center_pos
-				)
-			);
+			in_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
 		}
-	}
-}
-
-void easy2d::RotationTransition::Reset()
-{
-	if (out_scene_)
-	{
-		out_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
-	}
-	
-	if (in_scene_)
-	{
-		in_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
 	}
 }

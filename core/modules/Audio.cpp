@@ -21,47 +21,50 @@
 #include "..\e2dmodule.h"
 
 
-easy2d::Audio::Audio()
-	: x_audio2_(nullptr)
-	, mastering_voice_(nullptr)
+namespace easy2d
 {
-	ThrowIfFailed(
-		MFStartup(MF_VERSION)
-	);
-
-	ThrowIfFailed(
-		XAudio2Create(&x_audio2_)
-	);
-
-	ThrowIfFailed(
-		x_audio2_->CreateMasteringVoice(&mastering_voice_)
-	);
-}
-
-easy2d::Audio::~Audio()
-{
-	if (mastering_voice_)
+	Audio::Audio()
+		: x_audio2_(nullptr)
+		, mastering_voice_(nullptr)
 	{
-		mastering_voice_->DestroyVoice();
-		mastering_voice_ = nullptr;
+		ThrowIfFailed(
+			MFStartup(MF_VERSION)
+		);
+
+		ThrowIfFailed(
+			XAudio2Create(&x_audio2_)
+		);
+
+		ThrowIfFailed(
+			x_audio2_->CreateMasteringVoice(&mastering_voice_)
+		);
 	}
 
-	SafeRelease(x_audio2_);
+	Audio::~Audio()
+	{
+		if (mastering_voice_)
+		{
+			mastering_voice_->DestroyVoice();
+			mastering_voice_ = nullptr;
+		}
 
-	MFShutdown();
-}
+		SafeRelease(x_audio2_);
 
-HRESULT easy2d::Audio::CreateVoice(IXAudio2SourceVoice ** voice, WAVEFORMATEX * wfx)
-{
-	return x_audio2_->CreateSourceVoice(voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
-}
+		MFShutdown();
+	}
 
-void easy2d::Audio::Open()
-{
-	x_audio2_->StartEngine();
-}
+	HRESULT Audio::CreateVoice(IXAudio2SourceVoice ** voice, WAVEFORMATEX * wfx)
+	{
+		return x_audio2_->CreateSourceVoice(voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
+	}
 
-void easy2d::Audio::Close()
-{
-	x_audio2_->StopEngine();
+	void Audio::Open()
+	{
+		x_audio2_->StartEngine();
+	}
+
+	void Audio::Close()
+	{
+		x_audio2_->StopEngine();
+	}
 }

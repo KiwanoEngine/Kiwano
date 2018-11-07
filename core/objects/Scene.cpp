@@ -21,100 +21,103 @@
 #include "..\e2dmodule.h"
 #include "..\e2dobject.h"
 
-easy2d::Scene::Scene()
-	: root_(nullptr)
-	, transform_(D2D1::Matrix3x2F::Identity())
+namespace easy2d
 {
-}
-
-easy2d::Scene::Scene(Node * root)
-	: root_(nullptr)
-	, transform_(D2D1::Matrix3x2F::Identity())
-{
-	this->SetRoot(root);
-}
-
-easy2d::Scene::~Scene()
-{
-	if (root_)
+	Scene::Scene()
+		: root_(nullptr)
+		, transform_(D2D1::Matrix3x2F::Identity())
 	{
-		root_->SetParentScene(nullptr);
-		root_->Release();
-	}
-}
-
-void easy2d::Scene::SetRoot(Node * root)
-{
-	if (root_ == root)
-		return;
-
-	if (root_)
-	{
-		root_->SetParentScene(nullptr);
-		root_->Release();
 	}
 
-	if (root)
+	Scene::Scene(Node * root)
+		: root_(nullptr)
+		, transform_(D2D1::Matrix3x2F::Identity())
 	{
-		root->Retain();
-		root->SetParentScene(this);
+		this->SetRoot(root);
 	}
 
-	root_ = root;
-}
-
-easy2d::Node * easy2d::Scene::GetRoot() const
-{
-	return root_;
-}
-
-void easy2d::Scene::Draw()
-{
-	if (root_)
+	Scene::~Scene()
 	{
-		root_->Visit();
-	}
-}
-
-void easy2d::Scene::Dispatch(const MouseEvent & e)
-{
-	auto handler = dynamic_cast<MouseEventHandler*>(this);
-	if (handler)
-	{
-		handler->Handle(e);
+		if (root_)
+		{
+			root_->SetParentScene(nullptr);
+			root_->Release();
+		}
 	}
 
-	if (root_)
+	void Scene::SetRoot(Node * root)
 	{
-		root_->Dispatch(e, false);
-	}
-}
+		if (root_ == root)
+			return;
 
-void easy2d::Scene::Dispatch(const KeyEvent & e)
-{
-	auto handler = dynamic_cast<KeyEventHandler*>(this);
-	if (handler)
+		if (root_)
+		{
+			root_->SetParentScene(nullptr);
+			root_->Release();
+		}
+
+		if (root)
+		{
+			root->Retain();
+			root->SetParentScene(this);
+		}
+
+		root_ = root;
+	}
+
+	Node * Scene::GetRoot() const
 	{
-		handler->Handle(e);
+		return root_;
 	}
 
-	if (root_)
+	void Scene::Draw()
 	{
-		root_->Dispatch(e, false);
+		if (root_)
+		{
+			root_->Visit();
+		}
 	}
-}
 
-void easy2d::Scene::SetTransform(const D2D1::Matrix3x2F& matrix)
-{
-	transform_ = matrix;
-
-	if (root_)
+	void Scene::Dispatch(const MouseEvent & e)
 	{
-		root_->dirty_transform_ = true;
-	}
-}
+		auto handler = dynamic_cast<MouseEventHandler*>(this);
+		if (handler)
+		{
+			handler->Handle(e);
+		}
 
-const D2D1::Matrix3x2F & easy2d::Scene::GetTransform() const
-{
-	return transform_;
+		if (root_)
+		{
+			root_->Dispatch(e, false);
+		}
+	}
+
+	void Scene::Dispatch(const KeyEvent & e)
+	{
+		auto handler = dynamic_cast<KeyEventHandler*>(this);
+		if (handler)
+		{
+			handler->Handle(e);
+		}
+
+		if (root_)
+		{
+			root_->Dispatch(e, false);
+		}
+	}
+
+	void Scene::SetTransform(const D2D1::Matrix3x2F& matrix)
+	{
+		transform_ = matrix;
+
+		if (root_)
+		{
+			root_->dirty_transform_ = true;
+		}
+	}
+
+	const D2D1::Matrix3x2F & Scene::GetTransform() const
+	{
+		return transform_;
+	}
 }

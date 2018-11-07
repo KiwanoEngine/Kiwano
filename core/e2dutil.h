@@ -61,7 +61,7 @@ namespace easy2d
 		Point operator - () const;
 		bool operator== (const Point& other) const;
 
-		explicit operator easy2d::Size() const;
+		explicit operator Size() const;
 
 		// 判断两点间距离
 		static float Distance(
@@ -102,7 +102,7 @@ namespace easy2d
 		Size operator - () const;
 		bool operator== (const Size& other) const;
 
-		explicit operator easy2d::Point() const;
+		explicit operator Point() const;
 	};
 
 
@@ -585,19 +585,19 @@ namespace easy2d
 		template<typename T>
 		static inline T Range(T min, T max)
 		{
-			return easy2d::Random::RandomInt(min, max);
+			return Random::RandomInt(min, max);
 		}
 
 		// 取得范围内的一个浮点数随机数
 		static inline float Range(float min, float max)
 		{
-			return easy2d::Random::RandomReal(min, max);
+			return Random::RandomReal(min, max);
 		}
 
 		// 取得范围内的一个浮点数随机数
 		static inline double Range(double min, double max)
 		{
-			return easy2d::Random::RandomReal(min, max);
+			return Random::RandomReal(min, max);
 		}
 
 	private:

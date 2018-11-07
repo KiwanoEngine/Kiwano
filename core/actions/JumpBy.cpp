@@ -21,53 +21,56 @@
 #include "..\e2daction.h"
 #include "..\e2dobject.h"
 
-easy2d::JumpBy::JumpBy(float duration, const Point & vec, float height, int jumps)
-	: FiniteTimeAction(duration)
-	, delta_pos_(vec)
-	, height_(height)
-	, jumps_(jumps)
+namespace easy2d
 {
-}
-
-easy2d::JumpBy * easy2d::JumpBy::Clone() const
-{
-	return new JumpBy(duration_, delta_pos_, height_, jumps_);
-}
-
-easy2d::JumpBy * easy2d::JumpBy::Reverse() const
-{
-	return new JumpBy(duration_, -delta_pos_, height_, jumps_);
-}
-
-void easy2d::JumpBy::Init()
-{
-	FiniteTimeAction::Init();
-
-	if (target_)
+	JumpBy::JumpBy(float duration, const Point & vec, float height, int jumps)
+		: FiniteTimeAction(duration)
+		, delta_pos_(vec)
+		, height_(height)
+		, jumps_(jumps)
 	{
-		prev_pos_ = start_pos_ = target_->GetPosition();
 	}
-}
 
-void easy2d::JumpBy::Update()
-{
-	FiniteTimeAction::Update();
-
-	if (target_)
+	JumpBy * JumpBy::Clone() const
 	{
-		float frac = fmod(delta_ * jumps_, 1.f);
-		float x = delta_pos_.x * delta_;
-		float y = height_ * 4 * frac * (1 - frac);
-		y += delta_pos_.y * delta_;
+		return new JumpBy(duration_, delta_pos_, height_, jumps_);
+	}
 
-		Point currentPos = target_->GetPosition();
+	JumpBy * JumpBy::Reverse() const
+	{
+		return new JumpBy(duration_, -delta_pos_, height_, jumps_);
+	}
 
-		Point diff = currentPos - prev_pos_;
-		start_pos_ = diff + start_pos_;
+	void JumpBy::Init()
+	{
+		FiniteTimeAction::Init();
 
-		Point newPos = start_pos_ + Point(x, y);
-		target_->SetPosition(newPos);
+		if (target_)
+		{
+			prev_pos_ = start_pos_ = target_->GetPosition();
+		}
+	}
 
-		prev_pos_ = newPos;
+	void JumpBy::Update()
+	{
+		FiniteTimeAction::Update();
+
+		if (target_)
+		{
+			float frac = fmod(delta_ * jumps_, 1.f);
+			float x = delta_pos_.x * delta_;
+			float y = height_ * 4 * frac * (1 - frac);
+			y += delta_pos_.y * delta_;
+
+			Point currentPos = target_->GetPosition();
+
+			Point diff = currentPos - prev_pos_;
+			start_pos_ = diff + start_pos_;
+
+			Point newPos = start_pos_ + Point(x, y);
+			target_->SetPosition(newPos);
+
+			prev_pos_ = newPos;
+		}
 	}
 }

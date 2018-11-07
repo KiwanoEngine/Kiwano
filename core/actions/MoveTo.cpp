@@ -21,19 +21,22 @@
 #include "..\e2daction.h"
 #include "..\e2dobject.h"
 
-easy2d::MoveTo::MoveTo(float duration, Point pos)
-	: MoveBy(duration, Point())
+namespace easy2d
 {
-	end_pos_ = pos;
-}
+	MoveTo::MoveTo(float duration, Point pos)
+		: MoveBy(duration, Point())
+	{
+		end_pos_ = pos;
+	}
 
-easy2d::MoveTo * easy2d::MoveTo::Clone() const
-{
-	return new MoveTo(duration_, end_pos_);
-}
+	MoveTo * MoveTo::Clone() const
+	{
+		return new MoveTo(duration_, end_pos_);
+	}
 
-void easy2d::MoveTo::Init()
-{
-	MoveBy::Init();
-	delta_pos_ = end_pos_ - start_pos_;
+	void MoveTo::Init()
+	{
+		MoveBy::Init();
+		delta_pos_ = end_pos_ - start_pos_;
+	}
 }

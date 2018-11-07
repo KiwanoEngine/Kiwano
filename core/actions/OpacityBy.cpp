@@ -22,38 +22,41 @@
 #include "..\e2dobject.h"
 
 
-easy2d::OpacityBy::OpacityBy(float duration, float opacity)
-	: FiniteTimeAction(duration)
+namespace easy2d
 {
-	delta_val_ = opacity;
-}
-
-void easy2d::OpacityBy::Init()
-{
-	FiniteTimeAction::Init();
-
-	if (target_)
+	OpacityBy::OpacityBy(float duration, float opacity)
+		: FiniteTimeAction(duration)
 	{
-		start_val_ = target_->GetOpacity();
+		delta_val_ = opacity;
 	}
-}
 
-void easy2d::OpacityBy::Update()
-{
-	FiniteTimeAction::Update();
-
-	if (target_)
+	void OpacityBy::Init()
 	{
-		target_->SetOpacity(start_val_ + delta_val_ * delta_);
+		FiniteTimeAction::Init();
+
+		if (target_)
+		{
+			start_val_ = target_->GetOpacity();
+		}
 	}
-}
 
-easy2d::OpacityBy * easy2d::OpacityBy::Clone() const
-{
-	return new OpacityBy(duration_, delta_val_);
-}
+	void OpacityBy::Update()
+	{
+		FiniteTimeAction::Update();
 
-easy2d::OpacityBy * easy2d::OpacityBy::Reverse() const
-{
-	return new OpacityBy(duration_, -delta_val_);
+		if (target_)
+		{
+			target_->SetOpacity(start_val_ + delta_val_ * delta_);
+		}
+	}
+
+	OpacityBy * OpacityBy::Clone() const
+	{
+		return new OpacityBy(duration_, delta_val_);
+	}
+
+	OpacityBy * OpacityBy::Reverse() const
+	{
+		return new OpacityBy(duration_, -delta_val_);
+	}
 }

@@ -21,65 +21,68 @@
 #include "..\e2devent.h"
 #include "..\e2dmodule.h"
 
-easy2d::MouseEvent::MouseEvent(UINT message, WPARAM w_param, LPARAM l_param)
-	: message_(message)
-	, w_param_(w_param)
-	, l_param_(l_param)
+namespace easy2d
 {
-}
+	MouseEvent::MouseEvent(UINT message, WPARAM w_param, LPARAM l_param)
+		: message_(message)
+		, w_param_(w_param)
+		, l_param_(l_param)
+	{
+	}
 
-float easy2d::MouseEvent::GetX() const
-{
-	float dpi = Graphics::GetDpi();
-	return ((float)(short)LOWORD(l_param_)) * 96.f / dpi;
-}
+	float MouseEvent::GetX() const
+	{
+		float dpi = Graphics::GetDpi();
+		return ((float)(short)LOWORD(l_param_)) * 96.f / dpi;
+	}
 
-float easy2d::MouseEvent::GetY() const
-{
-	float dpi = Graphics::GetDpi();
-	return ((float)(short)HIWORD(l_param_)) * 96.f / dpi;
-}
+	float MouseEvent::GetY() const
+	{
+		float dpi = Graphics::GetDpi();
+		return ((float)(short)HIWORD(l_param_)) * 96.f / dpi;
+	}
 
-easy2d::Point easy2d::MouseEvent::GetPosition() const
-{
-	float dpi = Graphics::GetDpi();
-	return Point(
-		((float)(short)LOWORD(l_param_)) * 96.f / dpi,
-		((float)(short)HIWORD(l_param_)) * 96.f / dpi
-	);
-}
+	Point MouseEvent::GetPosition() const
+	{
+		float dpi = Graphics::GetDpi();
+		return Point(
+			((float)(short)LOWORD(l_param_)) * 96.f / dpi,
+			((float)(short)HIWORD(l_param_)) * 96.f / dpi
+		);
+	}
 
-bool easy2d::MouseEvent::IsShiftDown() const
-{
-	return GET_KEYSTATE_WPARAM(w_param_) == MK_SHIFT;
-}
+	bool MouseEvent::IsShiftDown() const
+	{
+		return GET_KEYSTATE_WPARAM(w_param_) == MK_SHIFT;
+	}
 
-bool easy2d::MouseEvent::IsCtrlDown() const
-{
-	return GET_KEYSTATE_WPARAM(w_param_) == MK_CONTROL;
-}
+	bool MouseEvent::IsCtrlDown() const
+	{
+		return GET_KEYSTATE_WPARAM(w_param_) == MK_CONTROL;
+	}
 
-float easy2d::MouseEvent::GetWheelDelta() const
-{
-	return static_cast<float>(GET_WHEEL_DELTA_WPARAM(w_param_));
-}
+	float MouseEvent::GetWheelDelta() const
+	{
+		return static_cast<float>(GET_WHEEL_DELTA_WPARAM(w_param_));
+	}
 
-bool easy2d::MouseEvent::IsLButtonDown() const
-{
-	return GET_KEYSTATE_WPARAM(w_param_) == MK_LBUTTON;
-}
+	bool MouseEvent::IsLButtonDown() const
+	{
+		return GET_KEYSTATE_WPARAM(w_param_) == MK_LBUTTON;
+	}
 
-bool easy2d::MouseEvent::IsRButtonDown() const
-{
-	return GET_KEYSTATE_WPARAM(w_param_) == MK_RBUTTON;
-}
+	bool MouseEvent::IsRButtonDown() const
+	{
+		return GET_KEYSTATE_WPARAM(w_param_) == MK_RBUTTON;
+	}
 
-bool easy2d::MouseEvent::IsMButtonDown() const
-{
-	return GET_KEYSTATE_WPARAM(w_param_) == MK_MBUTTON;
-}
+	bool MouseEvent::IsMButtonDown() const
+	{
+		return GET_KEYSTATE_WPARAM(w_param_) == MK_MBUTTON;
+	}
 
-easy2d::MouseEvent::Type easy2d::MouseEvent::GetType() const
-{
-	return Type(message_);
+	MouseEvent::Type MouseEvent::GetType() const
+	{
+		return Type(message_);
+	}
 }

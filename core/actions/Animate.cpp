@@ -21,115 +21,118 @@
 #include "..\e2daction.h"
 #include "..\e2dobject.h"
 
-easy2d::Animate::Animate() 
-	: frame_index_(0)
-	, animation_(nullptr)
+namespace easy2d
 {
-}
+	Animate::Animate()
+		: frame_index_(0)
+		, animation_(nullptr)
+	{
+	}
 
-easy2d::Animate::Animate(Animation * animation)
-	: frame_index_(0)
-	, animation_(nullptr)
-{
-	this->SetAnimation(animation);
-}
+	Animate::Animate(Animation * animation)
+		: frame_index_(0)
+		, animation_(nullptr)
+	{
+		this->SetAnimation(animation);
+	}
 
-easy2d::Animate::~Animate()
-{
-	SafeRelease(animation_);
-}
+	Animate::~Animate()
+	{
+		SafeRelease(animation_);
+	}
 
-easy2d::Animation * easy2d::Animate::GetAnimation() const
-{
-	return animation_;
-}
+	Animation * Animate::GetAnimation() const
+	{
+		return animation_;
+	}
 
-void easy2d::Animate::SetAnimation(Animation * animation)
-{
-	if (animation && animation != animation_)
+	void Animate::SetAnimation(Animation * animation)
+	{
+		if (animation && animation != animation_)
+		{
+			if (animation_)
+			{
+				animation_->Release();
+			}
+			animation_ = animation;
+			animation_->Retain();
+			frame_index_ = 0;
+		}
+	}
+
+	void Animate::Init()
+	{
+		Action::Init();
+
+		auto target = dynamic_cast<Sprite*>(target_);
+		if (target && animation_)
+		{
+			target->Load(animation_->GetFrames()[frame_index_]);
+			++frame_index_;
+		}
+	}
+
+	void Animate::Update()
+	{
+		Action::Update();
+
+		if (!animation_)
+		{
+			this->Stop();
+			return;
+		}
+
+		while ((Time::Now() - started_).Seconds() >= animation_->GetInterval())
+		{
+			auto& frames = animation_->GetFrames();
+			auto target = dynamic_cast<Sprite*>(target_);
+
+			if (target)
+			{
+				target->Load(frames[frame_index_]);
+			}
+
+			started_ += Duration::Second * animation_->GetInterval();
+			++frame_index_;
+
+			if (frame_index_ == frames.size())
+			{
+				this->Stop();
+				break;
+			}
+		}
+	}
+
+	void Animate::ResetTime()
+	{
+		Action::ResetTime();
+	}
+
+	void Animate::Reset()
+	{
+		Action::Reset();
+		frame_index_ = 0;
+	}
+
+	Animate * Animate::Clone() const
 	{
 		if (animation_)
 		{
-			animation_->Release();
+			return new Animate(animation_);
 		}
-		animation_ = animation;
-		animation_->Retain();
-		frame_index_ = 0;
-	}
-}
-
-void easy2d::Animate::Init()
-{
-	Action::Init();
-
-	auto target = dynamic_cast<Sprite*>(target_);
-	if (target && animation_)
-	{
-		target->Load(animation_->GetFrames()[frame_index_]);
-		++frame_index_;
-	}
-}
-
-void easy2d::Animate::Update()
-{
-	Action::Update();
-
-	if (!animation_)
-	{
-		this->Stop();
-		return;
+		return nullptr;
 	}
 
-	while ((Time::Now() - started_).Seconds() >= animation_->GetInterval())
+	Animate * Animate::Reverse() const
 	{
-		auto& frames = animation_->GetFrames();
-		auto target = dynamic_cast<Sprite*>(target_);
-
-		if (target)
+		if (animation_)
 		{
-			target->Load(frames[frame_index_]);
+			auto animation = animation_->Reverse();
+			if (animation)
+			{
+				return new Animate(animation);
+			}
 		}
-
-		started_ += Duration::Second * animation_->GetInterval();
-		++frame_index_;
-
-		if (frame_index_ == frames.size())
-		{
-			this->Stop();
-			break;
-		}
+		return nullptr;
 	}
-}
-
-void easy2d::Animate::ResetTime()
-{
-	Action::ResetTime();
-}
-
-void easy2d::Animate::Reset()
-{
-	Action::Reset();
-	frame_index_ = 0;
-}
-
-easy2d::Animate * easy2d::Animate::Clone() const
-{
-	if (animation_)
-	{
-		return new Animate(animation_);
-	}
-	return nullptr;
-}
-
-easy2d::Animate * easy2d::Animate::Reverse() const
-{
-	if (animation_)
-	{
-		auto animation = animation_->Reverse();
-		if (animation)
-		{
-			return new Animate(animation);
-		}
-	}
-	return nullptr;
 }

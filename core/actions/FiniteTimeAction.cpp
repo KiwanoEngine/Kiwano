@@ -20,45 +20,48 @@
 
 #include "..\e2daction.h"
 
-easy2d::FiniteTimeAction::FiniteTimeAction(float duration)
-	: delta_(0)
-	, duration_(std::max(duration, 0.f))
+namespace easy2d
 {
-}
-
-void easy2d::FiniteTimeAction::Reset()
-{
-	Action::Reset();
-	delta_ = 0;
-}
-
-void easy2d::FiniteTimeAction::Init()
-{
-	Action::Init();
-}
-
-void easy2d::FiniteTimeAction::Update()
-{
-	Action::Update();
-
-	if (duration_ == 0)
+	FiniteTimeAction::FiniteTimeAction(float duration)
+		: delta_(0)
+		, duration_(std::max(duration, 0.f))
 	{
-		delta_ = 1;
-		this->Stop();
 	}
-	else
-	{
-		delta_ = std::min((Time::Now() - started_).Seconds() / duration_, 1.f);
 
-		if (delta_ >= 1)
+	void FiniteTimeAction::Reset()
+	{
+		Action::Reset();
+		delta_ = 0;
+	}
+
+	void FiniteTimeAction::Init()
+	{
+		Action::Init();
+	}
+
+	void FiniteTimeAction::Update()
+	{
+		Action::Update();
+
+		if (duration_ == 0)
 		{
+			delta_ = 1;
 			this->Stop();
 		}
-	}
-}
+		else
+		{
+			delta_ = std::min((Time::Now() - started_).Seconds() / duration_, 1.f);
 
-void easy2d::FiniteTimeAction::ResetTime()
-{
-	Action::ResetTime();
-	started_ = Time::Now() - Duration::Second * (delta_ * duration_);
+			if (delta_ >= 1)
+			{
+				this->Stop();
+			}
+		}
+	}
+
+	void FiniteTimeAction::ResetTime()
+	{
+		Action::ResetTime();
+		started_ = Time::Now() - Duration::Second * (delta_ * duration_);
+	}
 }
