@@ -22,38 +22,41 @@
 #include "..\e2dobject.h"
 
 
-easy2d::RotateBy::RotateBy(float duration, float rotation)
-	: FiniteTimeAction(duration)
+namespace easy2d
 {
-	delta_val_ = rotation;
-}
-
-void easy2d::RotateBy::Init()
-{
-	FiniteTimeAction::Init();
-
-	if (target_)
+	RotateBy::RotateBy(float duration, float rotation)
+		: FiniteTimeAction(duration)
 	{
-		start_val_ = target_->GetRotation();
+		delta_val_ = rotation;
 	}
-}
 
-void easy2d::RotateBy::Update()
-{
-	FiniteTimeAction::Update();
-
-	if (target_)
+	void RotateBy::Init()
 	{
-		target_->SetRotation(start_val_ + delta_val_ * delta_);
+		FiniteTimeAction::Init();
+
+		if (target_)
+		{
+			start_val_ = target_->GetRotation();
+		}
 	}
-}
 
-easy2d::RotateBy * easy2d::RotateBy::Clone() const
-{
-	return new RotateBy(duration_, delta_val_);
-}
+	void RotateBy::Update()
+	{
+		FiniteTimeAction::Update();
 
-easy2d::RotateBy * easy2d::RotateBy::Reverse() const
-{
-	return new RotateBy(duration_, -delta_val_);
+		if (target_)
+		{
+			target_->SetRotation(start_val_ + delta_val_ * delta_);
+		}
+	}
+
+	RotateBy * RotateBy::Clone() const
+	{
+		return new RotateBy(duration_, delta_val_);
+	}
+
+	RotateBy * RotateBy::Reverse() const
+	{
+		return new RotateBy(duration_, -delta_val_);
+	}
 }

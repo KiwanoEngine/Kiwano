@@ -22,63 +22,66 @@
 #include <cmath>
 
 
-easy2d::Point::Point()
+namespace easy2d
 {
-	x = 0;
-	y = 0;
-}
+	Point::Point()
+	{
+		x = 0;
+		y = 0;
+	}
 
-easy2d::Point::Point(float x, float y)
-{
-	this->x = x;
-	this->y = y;
-}
+	Point::Point(float x, float y)
+	{
+		this->x = x;
+		this->y = y;
+	}
 
-easy2d::Point::Point(const Point & other)
-{
-	x = other.x;
-	y = other.y;
-}
+	Point::Point(const Point & other)
+	{
+		x = other.x;
+		y = other.y;
+	}
 
-easy2d::Point easy2d::Point::operator+(const Point & p) const
-{
-	return Point(x + p.x, y + p.y);
-}
+	Point Point::operator+(const Point & p) const
+	{
+		return Point(x + p.x, y + p.y);
+	}
 
-easy2d::Point easy2d::Point::operator-(const Point & p) const
-{
-	return Point(x - p.x, y - p.y);
-}
+	Point Point::operator-(const Point & p) const
+	{
+		return Point(x - p.x, y - p.y);
+	}
 
-easy2d::Point easy2d::Point::operator*(float value) const
-{
-	return Point(x * value, y * value);
-}
+	Point Point::operator*(float value) const
+	{
+		return Point(x * value, y * value);
+	}
 
-easy2d::Point easy2d::Point::operator/(float value) const
-{
-	return Point(x / value, y / value);
-}
+	Point Point::operator/(float value) const
+	{
+		return Point(x / value, y / value);
+	}
 
-easy2d::Point::operator easy2d::Size() const
-{
-	return Size(x, y);
-}
+	Point::operator Size() const
+	{
+		return Size(x, y);
+	}
 
-float easy2d::Point::Distance(const Point &p1, const Point &p2)
-{
-	return sqrt(
-		(p1.x - p2.x) * (p1.x - p2.x) + 
-		(p1.y - p2.y) * (p1.y - p2.y)
-	);
-}
+	float Point::Distance(const Point &p1, const Point &p2)
+	{
+		return sqrt(
+			(p1.x - p2.x) * (p1.x - p2.x) +
+			(p1.y - p2.y) * (p1.y - p2.y)
+		);
+	}
 
-easy2d::Point easy2d::Point::operator-() const
-{
-	return Point(-x, -y);
-}
+	Point Point::operator-() const
+	{
+		return Point(-x, -y);
+	}
 
-bool easy2d::Point::operator==(const Point & point) const
-{
-	return (x == point.x) && (y == point.y);
+	bool Point::operator==(const Point & point) const
+	{
+		return (x == point.x) && (y == point.y);
+	}
 }

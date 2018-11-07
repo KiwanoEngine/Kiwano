@@ -20,86 +20,89 @@
 
 #include "..\e2dutil.h"
 
-using namespace std::chrono;
-
-
-easy2d::Time::Time()
+namespace easy2d
 {
-}
+	using namespace std::chrono;
 
-easy2d::Time::Time(std::chrono::steady_clock::time_point time)
-	: time_(time)
-{
-}
 
-easy2d::Time::Time(const Time & other)
-	: time_(other.time_)
-{
-}
+	Time::Time()
+	{
+	}
 
-easy2d::Time::Time(Time && other)
-	: time_(std::move(other.time_))
-{
-}
+	Time::Time(std::chrono::steady_clock::time_point time)
+		: time_(time)
+	{
+	}
 
-time_t easy2d::Time::GetTimeStamp() const
-{
-	auto& duration = time_point_cast<milliseconds>(time_).time_since_epoch();
-	return static_cast<time_t>(duration.count());
-}
+	Time::Time(const Time & other)
+		: time_(other.time_)
+	{
+	}
 
-bool easy2d::Time::IsZero() const
-{
-	return time_.time_since_epoch().count() == 0LL;
-}
+	Time::Time(Time && other)
+		: time_(std::move(other.time_))
+	{
+	}
 
-easy2d::Time easy2d::Time::operator+(const Duration & other) const
-{
-	return Time(time_ + milliseconds(other.Milliseconds()));
-}
+	time_t Time::GetTimeStamp() const
+	{
+		auto& duration = time_point_cast<milliseconds>(time_).time_since_epoch();
+		return static_cast<time_t>(duration.count());
+	}
 
-easy2d::Time easy2d::Time::operator-(const Duration & other) const
-{
-	return Time(time_ - milliseconds(other.Milliseconds()));
-}
+	bool Time::IsZero() const
+	{
+		return time_.time_since_epoch().count() == 0LL;
+	}
 
-easy2d::Time & easy2d::Time::operator+=(const Duration & other)
-{
-	time_ += milliseconds(other.Milliseconds());
-	return (*this);
-}
+	Time Time::operator+(const Duration & other) const
+	{
+		return Time(time_ + milliseconds(other.Milliseconds()));
+	}
 
-easy2d::Time & easy2d::Time::operator-=(const Duration &other)
-{
-	time_ -= milliseconds(other.Milliseconds());
-	return (*this);
-}
+	Time Time::operator-(const Duration & other) const
+	{
+		return Time(time_ - milliseconds(other.Milliseconds()));
+	}
 
-easy2d::Duration easy2d::Time::operator-(const Time & other) const
-{
-	auto ms = duration_cast<milliseconds>(time_ - other.time_).count();
-	return Duration(static_cast<int>(ms));
-}
+	Time & Time::operator+=(const Duration & other)
+	{
+		time_ += milliseconds(other.Milliseconds());
+		return (*this);
+	}
 
-easy2d::Time& easy2d::Time::operator=(const Time & other) E2D_NOEXCEPT
-{
-	if (this == &other)
+	Time & Time::operator-=(const Duration &other)
+	{
+		time_ -= milliseconds(other.Milliseconds());
+		return (*this);
+	}
+
+	Duration Time::operator-(const Time & other) const
+	{
+		auto ms = duration_cast<milliseconds>(time_ - other.time_).count();
+		return Duration(static_cast<int>(ms));
+	}
+
+	Time& Time::operator=(const Time & other) E2D_NOEXCEPT
+	{
+		if (this == &other)
+			return *this;
+
+		time_ = other.time_;
 		return *this;
+	}
 
-	time_ = other.time_;
-	return *this;
-}
+	Time& Time::operator=(Time && other) E2D_NOEXCEPT
+	{
+		if (this == &other)
+			return *this;
 
-easy2d::Time& easy2d::Time::operator=(Time && other) E2D_NOEXCEPT
-{
-	if (this == &other)
+		time_ = std::move(other.time_);
 		return *this;
+	}
 
-	time_ = std::move(other.time_);
-	return *this;
-}
-
-easy2d::Time easy2d::Time::Now()
-{
-	return Time(steady_clock::now());
+	Time Time::Now()
+	{
+		return Time(steady_clock::now());
+	}
 }

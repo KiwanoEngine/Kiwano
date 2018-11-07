@@ -20,97 +20,100 @@
 
 #include "..\e2daction.h"
 
-easy2d::Loop::Loop(Action * action, int times /* = -1 */)
-	: action_(action)
-	, times_(0)
-	, total_times_(times)
+namespace easy2d
 {
-	E2D_WARNING_IF(action == nullptr, "Loop NULL pointer exception!");
-
-	if (action)
+	Loop::Loop(Action * action, int times /* = -1 */)
+		: action_(action)
+		, times_(0)
+		, total_times_(times)
 	{
-		action_ = action;
-		action_->Retain();
-	}
-}
+		E2D_WARNING_IF(action == nullptr, "Loop NULL pointer exception!");
 
-easy2d::Loop::~Loop()
-{
-	SafeRelease(action_);
-}
-
-easy2d::Loop * easy2d::Loop::Clone() const
-{
-	if (action_)
-	{
-		return new Loop(action_->Clone());
-	}
-	else
-	{
-		return nullptr;
-	}
-}
-
-easy2d::Loop * easy2d::Loop::Reverse() const
-{
-	if (action_)
-	{
-		return new Loop(action_->Clone());
-	}
-	else
-	{
-		return nullptr;
-	}
-}
-
-void easy2d::Loop::Init()
-{
-	Action::Init();
-
-	if (action_)
-	{
-		action_->target_ = target_;
-		action_->Init();
-	}
-}
-
-void easy2d::Loop::Update()
-{
-	Action::Update();
-
-	if (times_ == total_times_)
-	{
-		this->Stop();
-		return;
-	}
-
-	if (action_)
-	{
-		action_->Update();
-
-		if (action_->IsDone())
+		if (action)
 		{
-			++times_;
-
-			Action::Reset();
-			action_->Reset();
+			action_ = action;
+			action_->Retain();
 		}
 	}
-	else
+
+	Loop::~Loop()
 	{
-		this->Stop();
+		SafeRelease(action_);
 	}
-}
 
-void easy2d::Loop::Reset()
-{
-	Action::Reset();
+	Loop * Loop::Clone() const
+	{
+		if (action_)
+		{
+			return new Loop(action_->Clone());
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
 
-	if (action_) action_->Reset();
-	times_ = 0;
-}
+	Loop * Loop::Reverse() const
+	{
+		if (action_)
+		{
+			return new Loop(action_->Clone());
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
 
-void easy2d::Loop::ResetTime()
-{
-	if (action_) action_->ResetTime();
+	void Loop::Init()
+	{
+		Action::Init();
+
+		if (action_)
+		{
+			action_->target_ = target_;
+			action_->Init();
+		}
+	}
+
+	void Loop::Update()
+	{
+		Action::Update();
+
+		if (times_ == total_times_)
+		{
+			this->Stop();
+			return;
+		}
+
+		if (action_)
+		{
+			action_->Update();
+
+			if (action_->IsDone())
+			{
+				++times_;
+
+				Action::Reset();
+				action_->Reset();
+			}
+		}
+		else
+		{
+			this->Stop();
+		}
+	}
+
+	void Loop::Reset()
+	{
+		Action::Reset();
+
+		if (action_) action_->Reset();
+		times_ = 0;
+	}
+
+	void Loop::ResetTime()
+	{
+		if (action_) action_->ResetTime();
+	}
 }

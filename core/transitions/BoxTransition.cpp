@@ -21,40 +21,43 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 
-easy2d::BoxTransition::BoxTransition(float duration)
-	: Transition(duration)
+namespace easy2d
 {
-}
-
-void easy2d::BoxTransition::Init(Scene * prev, Scene * next, Game * game)
-{
-	Transition::Init(prev, next, game);
-
-	in_layer_param_.opacity = 0;
-}
-
-void easy2d::BoxTransition::Update()
-{
-	Transition::Update();
-
-	if (process_ < .5f)
+	BoxTransition::BoxTransition(float duration)
+		: Transition(duration)
 	{
-		out_layer_param_.contentBounds = D2D1::RectF(
-			window_size_.width * process_,
-			window_size_.height * process_,
-			window_size_.width * (1 - process_),
-			window_size_.height * (1 - process_)
-		);
 	}
-	else
+
+	void BoxTransition::Init(Scene * prev, Scene * next, Game * game)
 	{
-		out_layer_param_.opacity = 0;
-		in_layer_param_.opacity = 1;
-		in_layer_param_.contentBounds = D2D1::RectF(
-			window_size_.width * (1 - process_),
-			window_size_.height * (1 - process_),
-			window_size_.width * process_,
-			window_size_.height * process_
-		);
+		Transition::Init(prev, next, game);
+
+		in_layer_param_.opacity = 0;
+	}
+
+	void BoxTransition::Update()
+	{
+		Transition::Update();
+
+		if (process_ < .5f)
+		{
+			out_layer_param_.contentBounds = D2D1::RectF(
+				window_size_.width * process_,
+				window_size_.height * process_,
+				window_size_.width * (1 - process_),
+				window_size_.height * (1 - process_)
+			);
+		}
+		else
+		{
+			out_layer_param_.opacity = 0;
+			in_layer_param_.opacity = 1;
+			in_layer_param_.contentBounds = D2D1::RectF(
+				window_size_.width * (1 - process_),
+				window_size_.height * (1 - process_),
+				window_size_.width * process_,
+				window_size_.height * process_
+			);
+		}
 	}
 }

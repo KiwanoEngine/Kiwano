@@ -20,47 +20,50 @@
 
 #include "..\e2daction.h"
 
-easy2d::Delay::Delay(float duration)
-	: delta_(0)
-	, delay_(std::max(duration, 0.f))
+namespace easy2d
 {
-}
-
-easy2d::Delay * easy2d::Delay::Clone() const
-{
-	return new Delay(delay_);
-}
-
-easy2d::Delay * easy2d::Delay::Reverse() const
-{
-	return new Delay(delay_);
-}
-
-void easy2d::Delay::Reset()
-{
-	Action::Reset();
-	delta_ = 0;
-}
-
-void easy2d::Delay::Init()
-{
-	Action::Init();
-}
-
-void easy2d::Delay::Update()
-{
-	Action::Update();
-
-	delta_ = (Time::Now() - started_).Seconds();
-
-	if (delta_ >= delay_)
+	Delay::Delay(float duration)
+		: delta_(0)
+		, delay_(std::max(duration, 0.f))
 	{
-		this->Stop();
 	}
-}
 
-void easy2d::Delay::ResetTime()
-{
-	Action::ResetTime();
-	started_ = Time::Now() - Duration::Second * delta_;
+	Delay * Delay::Clone() const
+	{
+		return new Delay(delay_);
+	}
+
+	Delay * Delay::Reverse() const
+	{
+		return new Delay(delay_);
+	}
+
+	void Delay::Reset()
+	{
+		Action::Reset();
+		delta_ = 0;
+	}
+
+	void Delay::Init()
+	{
+		Action::Init();
+	}
+
+	void Delay::Update()
+	{
+		Action::Update();
+
+		delta_ = (Time::Now() - started_).Seconds();
+
+		if (delta_ >= delay_)
+		{
+			this->Stop();
+		}
+	}
+
+	void Delay::ResetTime()
+	{
+		Action::ResetTime();
+		started_ = Time::Now() - Duration::Second * delta_;
+	}
 }

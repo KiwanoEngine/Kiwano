@@ -21,89 +21,92 @@
 #include "..\e2dobject.h"
 
 
-easy2d::Task::Task(const Callback & func, const std::wstring & name)
-	: running_(true)
-	, stopped_(false)
-	, run_times_(0)
-	, total_times_(-1)
-	, delay_()
-	, callback_(func)
-	, name_(name)
+namespace easy2d
 {
-}
-
-easy2d::Task::Task(const Callback & func, float delay, int times, const std::wstring & name)
-	: running_(true)
-	, stopped_(false)
-	, run_times_(0)
-	, delay_(Duration::Second * std::max(delay, 0.f))
-	, total_times_(times)
-	, callback_(func)
-	, name_(name)
-{
-}
-
-void easy2d::Task::Start()
-{
-	running_ = true;
-	last_time_ = Time::Now();
-}
-
-void easy2d::Task::Stop()
-{
-	running_ = false;
-}
-
-void easy2d::Task::Update()
-{
-	if (total_times_ == 0)
+	Task::Task(const Callback & func, const std::wstring & name)
+		: running_(true)
+		, stopped_(false)
+		, run_times_(0)
+		, total_times_(-1)
+		, delay_()
+		, callback_(func)
+		, name_(name)
 	{
-		stopped_ = true;
-		return;
 	}
 
-	++run_times_;
-	last_time_ += delay_;
-
-	if (callback_)
+	Task::Task(const Callback & func, float delay, int times, const std::wstring & name)
+		: running_(true)
+		, stopped_(false)
+		, run_times_(0)
+		, delay_(Duration::Second * std::max(delay, 0.f))
+		, total_times_(times)
+		, callback_(func)
+		, name_(name)
 	{
-		callback_();
 	}
 
-	if (run_times_ == total_times_)
+	void Task::Start()
 	{
-		stopped_ = true;
-		return;
+		running_ = true;
+		last_time_ = Time::Now();
 	}
-}
 
-void easy2d::Task::ResetTime()
-{
-	last_time_ = Time::Now();
-}
-
-bool easy2d::Task::IsReady() const
-{
-	if (running_)
+	void Task::Stop()
 	{
-		if (delay_.Milliseconds() == 0)
+		running_ = false;
+	}
+
+	void Task::Update()
+	{
+		if (total_times_ == 0)
 		{
-			return true;
+			stopped_ = true;
+			return;
 		}
-		if (Time::Now() - last_time_ >= delay_)
+
+		++run_times_;
+		last_time_ += delay_;
+
+		if (callback_)
 		{
-			return true;
+			callback_();
+		}
+
+		if (run_times_ == total_times_)
+		{
+			stopped_ = true;
+			return;
 		}
 	}
-	return false;
-}
 
-bool easy2d::Task::IsRunning() const
-{
-	return running_;
-}
+	void Task::ResetTime()
+	{
+		last_time_ = Time::Now();
+	}
 
-const std::wstring& easy2d::Task::GetName() const
-{
-	return name_;
+	bool Task::IsReady() const
+	{
+		if (running_)
+		{
+			if (delay_.Milliseconds() == 0)
+			{
+				return true;
+			}
+			if (Time::Now() - last_time_ >= delay_)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool Task::IsRunning() const
+	{
+		return running_;
+	}
+
+	const std::wstring& Task::GetName() const
+	{
+		return name_;
+	}
 }

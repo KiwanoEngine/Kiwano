@@ -21,126 +21,129 @@
 #include "..\e2dtool.h"
 
 
-easy2d::Data::Data(const std::wstring & key, const std::wstring & field)
-	: key_(key)
-	, field_(field)
-	, data_path_(Path::GetDataPath())
+namespace easy2d
 {
-}
+	Data::Data(const std::wstring & key, const std::wstring & field)
+		: key_(key)
+		, field_(field)
+		, data_path_(Path::GetDataPath())
+	{
+	}
 
-bool easy2d::Data::Exists() const
-{
-	wchar_t temp[256] = { 0 };
-	::GetPrivateProfileStringW(
-		field_.c_str(),
-		key_.c_str(),
-		L"",
-		temp,
-		255,
-		data_path_.c_str()
-	);
-	return temp[0] == L'\0';
-}
+	bool Data::Exists() const
+	{
+		wchar_t temp[256] = { 0 };
+		::GetPrivateProfileStringW(
+			field_.c_str(),
+			key_.c_str(),
+			L"",
+			temp,
+			255,
+			data_path_.c_str()
+		);
+		return temp[0] == L'\0';
+	}
 
-bool easy2d::Data::SaveInt(int value)
-{
-	BOOL ret = ::WritePrivateProfileStringW(
-		field_.c_str(),
-		key_.c_str(),
-		std::to_wstring(value).c_str(),
-		data_path_.c_str()
-	);
-	return ret == TRUE;
-}
+	bool Data::SaveInt(int value)
+	{
+		BOOL ret = ::WritePrivateProfileStringW(
+			field_.c_str(),
+			key_.c_str(),
+			std::to_wstring(value).c_str(),
+			data_path_.c_str()
+		);
+		return ret == TRUE;
+	}
 
-bool easy2d::Data::SaveFloat(float value)
-{
-	BOOL ret = ::WritePrivateProfileStringW(
-		field_.c_str(),
-		key_.c_str(),
-		std::to_wstring(value).c_str(),
-		data_path_.c_str()
-	);
-	return ret == TRUE;
-}
+	bool Data::SaveFloat(float value)
+	{
+		BOOL ret = ::WritePrivateProfileStringW(
+			field_.c_str(),
+			key_.c_str(),
+			std::to_wstring(value).c_str(),
+			data_path_.c_str()
+		);
+		return ret == TRUE;
+	}
 
-bool easy2d::Data::SaveDouble(double value)
-{
-	BOOL ret = ::WritePrivateProfileStringW(
-		field_.c_str(),
-		key_.c_str(),
-		std::to_wstring(value).c_str(),
-		data_path_.c_str()
-	);
-	return ret == TRUE;
-}
+	bool Data::SaveDouble(double value)
+	{
+		BOOL ret = ::WritePrivateProfileStringW(
+			field_.c_str(),
+			key_.c_str(),
+			std::to_wstring(value).c_str(),
+			data_path_.c_str()
+		);
+		return ret == TRUE;
+	}
 
-bool easy2d::Data::SaveBool(bool value)
-{
-	BOOL ret = ::WritePrivateProfileStringW(
-		field_.c_str(),
-		key_.c_str(),
-		(value ? L"1" : L"0"),
-		data_path_.c_str()
-	);
-	return ret == TRUE;
-}
+	bool Data::SaveBool(bool value)
+	{
+		BOOL ret = ::WritePrivateProfileStringW(
+			field_.c_str(),
+			key_.c_str(),
+			(value ? L"1" : L"0"),
+			data_path_.c_str()
+		);
+		return ret == TRUE;
+	}
 
-bool easy2d::Data::SaveString(const std::wstring& value)
-{
-	BOOL ret = ::WritePrivateProfileStringW(
-		field_.c_str(),
-		key_.c_str(),
-		value.c_str(),
-		data_path_.c_str()
-	);
-	return ret == TRUE;
-}
+	bool Data::SaveString(const std::wstring& value)
+	{
+		BOOL ret = ::WritePrivateProfileStringW(
+			field_.c_str(),
+			key_.c_str(),
+			value.c_str(),
+			data_path_.c_str()
+		);
+		return ret == TRUE;
+	}
 
-int easy2d::Data::GetInt() const
-{
-	return ::GetPrivateProfileIntW(
-		field_.c_str(),
-		key_.c_str(),
-		0,
-		data_path_.c_str()
-	);
-}
+	int Data::GetInt() const
+	{
+		return ::GetPrivateProfileIntW(
+			field_.c_str(),
+			key_.c_str(),
+			0,
+			data_path_.c_str()
+		);
+	}
 
-float easy2d::Data::GetFloat() const
-{
-	wchar_t temp[32] = { 0 };
-	::GetPrivateProfileStringW(field_.c_str(), key_.c_str(), L"0.0", temp, 31, data_path_.c_str());
-	return std::stof(temp);
-}
+	float Data::GetFloat() const
+	{
+		wchar_t temp[32] = { 0 };
+		::GetPrivateProfileStringW(field_.c_str(), key_.c_str(), L"0.0", temp, 31, data_path_.c_str());
+		return std::stof(temp);
+	}
 
-double easy2d::Data::GetDouble() const
-{
-	wchar_t temp[32] = { 0 };
-	::GetPrivateProfileStringW(field_.c_str(), key_.c_str(), L"0.0", temp, 31, data_path_.c_str());
-	return std::stod(temp);
-}
+	double Data::GetDouble() const
+	{
+		wchar_t temp[32] = { 0 };
+		::GetPrivateProfileStringW(field_.c_str(), key_.c_str(), L"0.0", temp, 31, data_path_.c_str());
+		return std::stod(temp);
+	}
 
-bool easy2d::Data::GetBool() const
-{
-	int nValue = ::GetPrivateProfileIntW(
-		field_.c_str(),
-		key_.c_str(),
-		0,
-		data_path_.c_str());
-	return nValue == TRUE;
-}
+	bool Data::GetBool() const
+	{
+		int nValue = ::GetPrivateProfileIntW(
+			field_.c_str(),
+			key_.c_str(),
+			0,
+			data_path_.c_str());
+		return nValue == TRUE;
+	}
 
-std::wstring easy2d::Data::GetString()
-{
-	wchar_t temp[256] = { 0 };
-	::GetPrivateProfileStringW(
-		field_.c_str(),
-		key_.c_str(),
-		L"",
-		temp,
-		255,
-		data_path_.c_str()
-	);
-	return temp;
+	std::wstring Data::GetString()
+	{
+		wchar_t temp[256] = { 0 };
+		::GetPrivateProfileStringW(
+			field_.c_str(),
+			key_.c_str(),
+			L"",
+			temp,
+			255,
+			data_path_.c_str()
+		);
+		return temp;
+	}
 }

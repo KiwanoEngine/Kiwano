@@ -20,7 +20,10 @@
 
 #include "..\e2daction.h"
 
-easy2d::FadeIn::FadeIn(float duration)
-	: OpacityTo(duration, 1)
+namespace easy2d
 {
+	FadeIn::FadeIn(float duration)
+		: OpacityTo(duration, 1)
+	{
+	}
 }

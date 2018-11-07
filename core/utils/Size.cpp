@@ -20,55 +20,58 @@
 
 #include "..\e2dutil.h"
 
-easy2d::Size::Size()
+namespace easy2d
 {
-	width = 0;
-	height = 0;
-}
+	Size::Size()
+	{
+		width = 0;
+		height = 0;
+	}
 
-easy2d::Size::Size(float width, float height)
-{
-	this->width = width;
-	this->height = height;
-}
+	Size::Size(float width, float height)
+	{
+		this->width = width;
+		this->height = height;
+	}
 
-easy2d::Size::Size(const Size & other)
-{
-	width = other.width;
-	height = other.height;
-}
+	Size::Size(const Size & other)
+	{
+		width = other.width;
+		height = other.height;
+	}
 
-easy2d::Size easy2d::Size::operator+(const Size & other) const
-{
-	return Size(width + other.width, height + other.height);
-}
+	Size Size::operator+(const Size & other) const
+	{
+		return Size(width + other.width, height + other.height);
+	}
 
-easy2d::Size easy2d::Size::operator-(const Size & other) const
-{
-	return Size(width - other.width, height - other.height);
-}
+	Size Size::operator-(const Size & other) const
+	{
+		return Size(width - other.width, height - other.height);
+	}
 
-easy2d::Size easy2d::Size::operator*(float value) const
-{
-	return Size(width * value, height * value);
-}
+	Size Size::operator*(float value) const
+	{
+		return Size(width * value, height * value);
+	}
 
-easy2d::Size easy2d::Size::operator/(float value) const
-{
-	return Size(width / value, height / value);
-}
+	Size Size::operator/(float value) const
+	{
+		return Size(width / value, height / value);
+	}
 
-easy2d::Size::operator easy2d::Point() const
-{
-	return Point(width, height);
-}
+	Size::operator Point() const
+	{
+		return Point(width, height);
+	}
 
-easy2d::Size easy2d::Size::operator-() const
-{
-	return Size(-width, -height);
-}
+	Size Size::operator-() const
+	{
+		return Size(-width, -height);
+	}
 
-bool easy2d::Size::operator==(const Size & other) const
-{
-	return (width == other.width) && (height == other.height);
+	bool Size::operator==(const Size & other) const
+	{
+		return (width == other.width) && (height == other.height);
+	}
 }

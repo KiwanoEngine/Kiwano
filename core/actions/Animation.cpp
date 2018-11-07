@@ -20,101 +20,104 @@
 
 #include "..\e2daction.h"
 
-easy2d::Animation::Animation()
-	: interval_(1)
+namespace easy2d
 {
-}
-
-easy2d::Animation::Animation(const Images& frames)
-	: interval_(1)
-{
-	this->Add(frames);
-}
-
-easy2d::Animation::Animation(float interval)
-	: interval_(interval)
-{
-}
-
-easy2d::Animation::Animation(float interval, const Images& frames)
-	: interval_(interval)
-{
-	this->Add(frames);
-}
-
-easy2d::Animation::~Animation()
-{
-	for (auto frame : frames_)
+	Animation::Animation()
+		: interval_(1)
 	{
-		SafeRelease(frame);
 	}
-}
 
-void easy2d::Animation::SetInterval(float interval)
-{
-	interval_ = std::max(interval, 0.f);
-}
-
-void easy2d::Animation::Add(Image * frame)
-{
-	E2D_WARNING_IF(frame == nullptr, "Animation::Add failed, frame Is nullptr.");
-	if (frame)
+	Animation::Animation(const Images& frames)
+		: interval_(1)
 	{
-		frames_.push_back(frame);
-		frame->Retain();
+		this->Add(frames);
 	}
-}
 
-void easy2d::Animation::Add(const Images& frames)
-{
-	for (const auto &image : frames)
+	Animation::Animation(float interval)
+		: interval_(interval)
 	{
-		this->Add(image);
 	}
-}
 
-float easy2d::Animation::GetInterval() const
-{
-	return interval_;
-}
-
-const easy2d::Animation::Images& easy2d::Animation::GetFrames() const
-{
-	return frames_;
-}
-
-easy2d::Animation * easy2d::Animation::Clone() const
-{
-	auto animation = new Animation(interval_);
-	if (animation)
+	Animation::Animation(float interval, const Images& frames)
+		: interval_(interval)
 	{
-		for (const auto& frame : frames_)
+		this->Add(frames);
+	}
+
+	Animation::~Animation()
+	{
+		for (auto frame : frames_)
 		{
-			animation->Add(frame);
+			SafeRelease(frame);
 		}
 	}
-	return animation;
-}
 
-easy2d::Animation * easy2d::Animation::Reverse() const
-{
-	auto& oldFrames = this->GetFrames();
-	Images frames(oldFrames.size());
-
-	if (!oldFrames.empty())
+	void Animation::SetInterval(float interval)
 	{
-		for (auto iter = oldFrames.crbegin(),
-			iterCrend = oldFrames.crend();
-			iter != iterCrend;
-			++iter)
+		interval_ = std::max(interval, 0.f);
+	}
+
+	void Animation::Add(Image * frame)
+	{
+		E2D_WARNING_IF(frame == nullptr, "Animation::Add failed, frame Is nullptr.");
+		if (frame)
 		{
-			Image* frame = *iter;
-			if (frame)
+			frames_.push_back(frame);
+			frame->Retain();
+		}
+	}
+
+	void Animation::Add(const Images& frames)
+	{
+		for (const auto &image : frames)
+		{
+			this->Add(image);
+		}
+	}
+
+	float Animation::GetInterval() const
+	{
+		return interval_;
+	}
+
+	const Animation::Images& Animation::GetFrames() const
+	{
+		return frames_;
+	}
+
+	Animation * Animation::Clone() const
+	{
+		auto animation = new Animation(interval_);
+		if (animation)
+		{
+			for (const auto& frame : frames_)
 			{
-				frames.push_back(frame);
+				animation->Add(frame);
 			}
 		}
+		return animation;
 	}
 
-	return new Animation(this->GetInterval(), frames);
+	Animation * Animation::Reverse() const
+	{
+		auto& oldFrames = this->GetFrames();
+		Images frames(oldFrames.size());
+
+		if (!oldFrames.empty())
+		{
+			for (auto iter = oldFrames.crbegin(),
+				iterCrend = oldFrames.crend();
+				iter != iterCrend;
+				++iter)
+			{
+				Image* frame = *iter;
+				if (frame)
+				{
+					frames.push_back(frame);
+				}
+			}
+		}
+
+		return new Animation(this->GetInterval(), frames);
+	}
 }

@@ -20,49 +20,56 @@
 
 #include "..\e2dmodule.h"
 
-static easy2d::Graphics *	graphics_device = nullptr;
-static easy2d::Input *		input_device = nullptr;
-static easy2d::Audio *		audio_device = nullptr;
 
-easy2d::Graphics * easy2d::Device::GetGraphics()
+namespace easy2d
 {
-	return graphics_device;
-}
-
-easy2d::Input * easy2d::Device::GetInput()
-{
-	return input_device;
-}
-
-easy2d::Audio * easy2d::Device::GetAudio()
-{
-	return audio_device;
-}
-
-void easy2d::Device::Init(HWND hwnd)
-{
-	graphics_device = new (std::nothrow) Graphics(hwnd);
-	input_device = new (std::nothrow) Input(hwnd);
-	audio_device = new (std::nothrow) Audio();
-}
-
-void easy2d::Device::Destroy()
-{
-	if (audio_device)
+	namespace
 	{
-		delete audio_device;
-		audio_device = nullptr;
+		Graphics *	graphics_device = nullptr;
+		Input *		input_device = nullptr;
+		Audio *		audio_device = nullptr;
 	}
 
-	if (input_device)
+	Graphics * Device::GetGraphics()
 	{
-		delete input_device;
-		input_device = nullptr;
+		return graphics_device;
 	}
 
-	if (graphics_device)
+	Input * Device::GetInput()
 	{
-		delete graphics_device;
-		graphics_device = nullptr;
+		return input_device;
+	}
+
+	Audio * Device::GetAudio()
+	{
+		return audio_device;
+	}
+
+	void Device::Init(HWND hwnd)
+	{
+		graphics_device = new (std::nothrow) Graphics(hwnd);
+		input_device = new (std::nothrow) Input(hwnd);
+		audio_device = new (std::nothrow) Audio();
+	}
+
+	void Device::Destroy()
+	{
+		if (audio_device)
+		{
+			delete audio_device;
+			audio_device = nullptr;
+		}
+
+		if (input_device)
+		{
+			delete input_device;
+			input_device = nullptr;
+		}
+
+		if (graphics_device)
+		{
+			delete graphics_device;
+			graphics_device = nullptr;
+		}
 	}
 }

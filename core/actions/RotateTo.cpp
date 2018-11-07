@@ -22,19 +22,22 @@
 #include "..\e2dobject.h"
 
 
-easy2d::RotateTo::RotateTo(float duration, float rotation)
-	: RotateBy(duration, 0)
+namespace easy2d
 {
-	end_val_ = rotation;
-}
+	RotateTo::RotateTo(float duration, float rotation)
+		: RotateBy(duration, 0)
+	{
+		end_val_ = rotation;
+	}
 
-easy2d::RotateTo * easy2d::RotateTo::Clone() const
-{
-	return new RotateTo(duration_, end_val_);
-}
+	RotateTo * RotateTo::Clone() const
+	{
+		return new RotateTo(duration_, end_val_);
+	}
 
-void easy2d::RotateTo::Init()
-{
-	RotateBy::Init();
-	delta_val_ = end_val_ - start_val_;
+	void RotateTo::Init()
+	{
+		RotateBy::Init();
+		delta_val_ = end_val_ - start_val_;
+	}
 }

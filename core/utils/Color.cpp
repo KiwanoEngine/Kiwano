@@ -20,63 +20,69 @@
 
 #include "..\e2dutil.h"
 
-static const UINT kRedShift = 16;
-static const UINT kGreenShift = 8;
-static const UINT kBlueShift = 0;
-
-static const UINT kRedMask = 0xff << kRedShift;
-static const UINT kGreenMask = 0xff << kGreenShift;
-static const UINT kBlueMask = 0xff << kBlueShift;
-
-easy2d::Color::Color()
-	: r(0)
-	, g(0)
-	, b(0)
-	, a(1.f)
+namespace easy2d
 {
-}
+	namespace
+	{
+		const UINT RED_SHIFT = 16;
+		const UINT GREEN_SHIFT = 8;
+		const UINT BLUE_SHIFT = 0;
 
-easy2d::Color::Color(float r, float g, float b)
-	: r(r)
-	, g(g)
-	, b(b)
-	, a(1.f)
-{
-}
+		const UINT RED_MASK = 0xff << RED_SHIFT;
+		const UINT GREEN_MASK = 0xff << GREEN_SHIFT;
+		const UINT BLUE_MASK = 0xff << BLUE_SHIFT;
+	}
 
-easy2d::Color::Color(float r, float g, float b, float alpha)
-	: r(r)
-	, g(g)
-	, b(b)
-	, a(alpha)
-{
-}
+	Color::Color()
+		: r(0)
+		, g(0)
+		, b(0)
+		, a(1.f)
+	{
+	}
 
-easy2d::Color::Color(UINT rgb)
-	: r(((rgb & kRedMask) >> kRedShift) / 255.f)
-	, g(((rgb & kGreenMask) >> kGreenShift) / 255.f)
-	, b(((rgb & kBlueMask) >> kBlueShift) / 255.f)
-	, a(1.f)
-{
-}
+	Color::Color(float r, float g, float b)
+		: r(r)
+		, g(g)
+		, b(b)
+		, a(1.f)
+	{
+	}
 
-easy2d::Color::Color(UINT rgb, float alpha)
-	: r(((rgb & kRedMask) >> kRedShift) / 255.f)
-	, g(((rgb & kGreenMask) >> kGreenShift) / 255.f)
-	, b(((rgb & kBlueMask) >> kBlueShift) / 255.f)
-	, a(alpha)
-{
-}
+	Color::Color(float r, float g, float b, float alpha)
+		: r(r)
+		, g(g)
+		, b(b)
+		, a(alpha)
+	{
+	}
 
-easy2d::Color::Color(const D2D1_COLOR_F& color)
-	: r(color.r)
-	, g(color.g)
-	, b(color.b)
-	, a(color.a)
-{
-}
+	Color::Color(UINT rgb)
+		: r(((rgb & RED_MASK) >> RED_SHIFT) / 255.f)
+		, g(((rgb & GREEN_MASK) >> GREEN_SHIFT) / 255.f)
+		, b(((rgb & BLUE_MASK) >> BLUE_SHIFT) / 255.f)
+		, a(1.f)
+	{
+	}
 
-easy2d::Color::operator D2D1_COLOR_F() const
-{
-	return D2D1::ColorF(r, g, b, a);
+	Color::Color(UINT rgb, float alpha)
+		: r(((rgb & RED_MASK) >> RED_SHIFT) / 255.f)
+		, g(((rgb & GREEN_MASK) >> GREEN_SHIFT) / 255.f)
+		, b(((rgb & BLUE_MASK) >> BLUE_SHIFT) / 255.f)
+		, a(alpha)
+	{
+	}
+
+	Color::Color(const D2D1_COLOR_F& color)
+		: r(color.r)
+		, g(color.g)
+		, b(color.b)
+		, a(color.a)
+	{
+	}
+
+	Color::operator D2D1_COLOR_F() const
+	{
+		return D2D1::ColorF(r, g, b, a);
+	}
 }

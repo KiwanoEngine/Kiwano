@@ -20,86 +20,90 @@
 
 #include "..\e2daction.h"
 
-easy2d::Action::Action() 
-	: running_(false)
-	, done_(false)
-	, initialized_(false)
-	, target_(nullptr)
-{
-}
 
-easy2d::Action::~Action()
+namespace easy2d
 {
-}
-
-bool easy2d::Action::IsRunning()
-{
-	return running_;
-}
-
-void easy2d::Action::Resume()
-{
-	running_ = true;
-}
-
-void easy2d::Action::Pause()
-{
-	running_ = false;
-}
-
-void easy2d::Action::Stop()
-{
-	done_ = true;
-}
-
-const std::wstring& easy2d::Action::GetName() const
-{
-	return name_;
-}
-
-void easy2d::Action::SetName(const std::wstring& name)
-{
-	name_ = name;
-}
-
-easy2d::Node * easy2d::Action::GetTarget()
-{
-	return target_;
-}
-
-void easy2d::Action::Reset()
-{
-	initialized_ = false;
-	done_ = false;
-	started_ = Time::Now();
-}
-
-bool easy2d::Action::IsDone() const
-{
-	return done_;
-}
-
-void easy2d::Action::StartWithTarget(Node* target)
-{
-	target_ = target;
-	running_ = true;
-	this->Reset();
-}
-
-void easy2d::Action::Init()
-{
-	initialized_ = true;
-	started_ = Time::Now();
-}
-
-void easy2d::Action::Update()
-{
-	if (!initialized_)
+	Action::Action()
+		: running_(false)
+		, done_(false)
+		, initialized_(false)
+		, target_(nullptr)
 	{
-		Init();
 	}
-}
 
-void easy2d::Action::ResetTime()
-{
+	Action::~Action()
+	{
+	}
+
+	bool Action::IsRunning()
+	{
+		return running_;
+	}
+
+	void Action::Resume()
+	{
+		running_ = true;
+	}
+
+	void Action::Pause()
+	{
+		running_ = false;
+	}
+
+	void Action::Stop()
+	{
+		done_ = true;
+	}
+
+	const std::wstring& Action::GetName() const
+	{
+		return name_;
+	}
+
+	void Action::SetName(const std::wstring& name)
+	{
+		name_ = name;
+	}
+
+	Node * Action::GetTarget()
+	{
+		return target_;
+	}
+
+	void Action::Reset()
+	{
+		initialized_ = false;
+		done_ = false;
+		started_ = Time::Now();
+	}
+
+	bool Action::IsDone() const
+	{
+		return done_;
+	}
+
+	void Action::StartWithTarget(Node* target)
+	{
+		target_ = target;
+		running_ = true;
+		this->Reset();
+	}
+
+	void Action::Init()
+	{
+		initialized_ = true;
+		started_ = Time::Now();
+	}
+
+	void Action::Update()
+	{
+		if (!initialized_)
+		{
+			Init();
+		}
+	}
+
+	void Action::ResetTime()
+	{
+	}
 }

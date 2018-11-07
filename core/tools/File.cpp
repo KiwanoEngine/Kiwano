@@ -23,270 +23,273 @@
 #include <cwctype>
 #include <shobjidl.h> 
 
-std::list<std::wstring>	easy2d::File::search_paths_;
-
-easy2d::File::File()
-	: file_path_()
+namespace easy2d
 {
-}
+	std::list<std::wstring>	File::search_paths_;
 
-easy2d::File::File(const std::wstring & file_name)
-	: file_path_(file_name)
-{
-	this->Open(file_name);
-}
-
-easy2d::File::~File()
-{
-}
-
-bool easy2d::File::Open(const std::wstring & file_name)
-{
-	if (file_name.empty())
-		return false;
-
-	auto FindFile = [](const std::wstring & path) -> bool
+	File::File()
+		: file_path_()
 	{
-		if (::PathFileExists(path.c_str()))
-			return true;
-		return false;
-	};
-
-	if (FindFile(file_name))
-	{
-		file_path_ = file_name;
-		return true;
 	}
-	
-	for (const auto& path : search_paths_)
+
+	File::File(const std::wstring & file_name)
+		: file_path_(file_name)
 	{
-		if (FindFile(path + file_name))
+		this->Open(file_name);
+	}
+
+	File::~File()
+	{
+	}
+
+	bool File::Open(const std::wstring & file_name)
+	{
+		if (file_name.empty())
+			return false;
+
+		auto FindFile = [](const std::wstring & path) -> bool
 		{
-			file_path_ = path + file_name;
+			if (::PathFileExists(path.c_str()))
+				return true;
+			return false;
+		};
+
+		if (FindFile(file_name))
+		{
+			file_path_ = file_name;
 			return true;
 		}
+
+		for (const auto& path : search_paths_)
+		{
+			if (FindFile(path + file_name))
+			{
+				file_path_ = path + file_name;
+				return true;
+			}
+		}
+		return false;
 	}
-	return false;
-}
 
-bool easy2d::File::Exists() const
-{
-	if (::PathFileExists(file_path_.c_str()))
-		return true;
-	return false;
-}
-
-const std::wstring& easy2d::File::GetPath() const
-{
-	return file_path_;
-}
-
-std::wstring easy2d::File::GetExtension() const
-{
-	std::wstring file_ext;
-	// 找到文件名中的最后一个 '.' 的位置
-	size_t pos = file_path_.find_last_of(L'.');
-	// 判断 pos 是否是有效位置
-	if (pos != std::wstring::npos)
+	bool File::Exists() const
 	{
-		// 截取扩展名
-		file_ext = file_path_.substr(pos);
-		// 转换为小写字母
-		std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), std::towlower);
+		if (::PathFileExists(file_path_.c_str()))
+			return true;
+		return false;
 	}
-	return file_ext;
-}
 
-bool easy2d::File::Delete()
-{
-	if (::DeleteFile(file_path_.c_str()))
-		return true;
-	return false;
-}
+	const std::wstring& File::GetPath() const
+	{
+		return file_path_;
+	}
 
-easy2d::File easy2d::File::Extract(Resource& res, const std::wstring& dest_file_name)
-{
-	File file;
-	HANDLE file_handle = ::CreateFile(
-		dest_file_name.c_str(),
-		GENERIC_WRITE,
-		NULL,
-		NULL,
-		CREATE_ALWAYS,
-		FILE_ATTRIBUTE_TEMPORARY,
-		NULL
-	);
+	std::wstring File::GetExtension() const
+	{
+		std::wstring file_ext;
+		// 找到文件名中的最后一个 '.' 的位置
+		size_t pos = file_path_.find_last_of(L'.');
+		// 判断 pos 是否是有效位置
+		if (pos != std::wstring::npos)
+		{
+			// 截取扩展名
+			file_ext = file_path_.substr(pos);
+			// 转换为小写字母
+			std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), std::towlower);
+		}
+		return file_ext;
+	}
 
-	if (file_handle == INVALID_HANDLE_VALUE)
+	bool File::Delete()
+	{
+		if (::DeleteFile(file_path_.c_str()))
+			return true;
+		return false;
+	}
+
+	File File::Extract(Resource& res, const std::wstring& dest_file_name)
+	{
+		File file;
+		HANDLE file_handle = ::CreateFile(
+			dest_file_name.c_str(),
+			GENERIC_WRITE,
+			NULL,
+			NULL,
+			CREATE_ALWAYS,
+			FILE_ATTRIBUTE_TEMPORARY,
+			NULL
+		);
+
+		if (file_handle == INVALID_HANDLE_VALUE)
+			return file;
+
+		if (res.Load())
+		{
+			// 写入文件
+			DWORD written_bytes = 0;
+			::WriteFile(file_handle, res.GetData(), res.GetDataSize(), &written_bytes, NULL);
+			::CloseHandle(file_handle);
+
+			file.Open(dest_file_name);
+		}
+		else
+		{
+			::CloseHandle(file_handle);
+			::DeleteFile(dest_file_name.c_str());
+		}
+
 		return file;
-
-	if (res.Load())
-	{
-		// 写入文件
-		DWORD written_bytes = 0;
-		::WriteFile(file_handle, res.GetData(), res.GetDataSize(), &written_bytes, NULL);
-		::CloseHandle(file_handle);
-
-		file.Open(dest_file_name);
-	}
-	else
-	{
-		::CloseHandle(file_handle);
-		::DeleteFile(dest_file_name.c_str());
 	}
 
-	return file;
-}
-
-void easy2d::File::AddSearchPath(const std::wstring & path)
-{
-	std::wstring tmp = path;
-	size_t pos = 0;
-	while ((pos = tmp.find(L"/", pos)) != std::wstring::npos)
+	void File::AddSearchPath(const std::wstring & path)
 	{
-		tmp.replace(pos, 1, L"\\");
-		pos++;
+		std::wstring tmp = path;
+		size_t pos = 0;
+		while ((pos = tmp.find(L"/", pos)) != std::wstring::npos)
+		{
+			tmp.replace(pos, 1, L"\\");
+			pos++;
+		}
+
+		if (tmp.at(tmp.length() - 1) != L'\\')
+		{
+			tmp.append(L"\\");
+		}
+		auto iter = std::find(search_paths_.cbegin(), search_paths_.cend(), tmp);
+		if (iter == search_paths_.cend())
+		{
+			search_paths_.push_front(path);
+		}
 	}
 
-	if (tmp.at(tmp.length() - 1) != L'\\')
+	File File::ShowOpenDialog(const std::wstring & title, const std::wstring & filter)
 	{
-		tmp.append(L"\\");
-	}
-	auto iter = std::find(search_paths_.cbegin(), search_paths_.cend(), tmp);
-	if (iter == search_paths_.cend())
-	{
-		search_paths_.push_front(path);
-	}
-}
-
-easy2d::File easy2d::File::ShowOpenDialog(const std::wstring & title, const std::wstring & filter)
-{
-	std::wstring file_path;
-	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-
-	if (SUCCEEDED(hr))
-	{
-		IFileOpenDialog *file_open;
-
-		hr = ::CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
-			IID_IFileOpenDialog, reinterpret_cast<void**>(&file_open));
+		std::wstring file_path;
+		HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 
 		if (SUCCEEDED(hr))
 		{
-			if (!title.empty())
-			{
-				file_open->SetTitle(title.c_str());
-			}
+			IFileOpenDialog *file_open;
 
-			if (!filter.empty())
-			{
-				COMDLG_FILTERSPEC spec[] =
-				{
-					{ L"", filter.c_str() }
-				};
-				file_open->SetFileTypes(1, spec);
-			}
-			else
-			{
-				COMDLG_FILTERSPEC spec[] =
-				{
-					{ L"所有文件", L"*.*" }
-				};
-				file_open->SetFileTypes(1, spec);
-			}
-
-			hr = file_open->Show(nullptr);
+			hr = ::CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+				IID_IFileOpenDialog, reinterpret_cast<void**>(&file_open));
 
 			if (SUCCEEDED(hr))
 			{
-				IShellItem *item;
-				hr = file_open->GetResult(&item);
+				if (!title.empty())
+				{
+					file_open->SetTitle(title.c_str());
+				}
+
+				if (!filter.empty())
+				{
+					COMDLG_FILTERSPEC spec[] =
+					{
+						{ L"", filter.c_str() }
+					};
+					file_open->SetFileTypes(1, spec);
+				}
+				else
+				{
+					COMDLG_FILTERSPEC spec[] =
+					{
+						{ L"所有文件", L"*.*" }
+					};
+					file_open->SetFileTypes(1, spec);
+				}
+
+				hr = file_open->Show(nullptr);
+
 				if (SUCCEEDED(hr))
 				{
-					PWSTR str_file_path;
-					hr = item->GetDisplayName(SIGDN_FILESYSPATH, &str_file_path);
-
+					IShellItem *item;
+					hr = file_open->GetResult(&item);
 					if (SUCCEEDED(hr))
 					{
-						file_path = str_file_path;
-						::CoTaskMemFree(str_file_path);
+						PWSTR str_file_path;
+						hr = item->GetDisplayName(SIGDN_FILESYSPATH, &str_file_path);
+
+						if (SUCCEEDED(hr))
+						{
+							file_path = str_file_path;
+							::CoTaskMemFree(str_file_path);
+						}
+						item->Release();
 					}
-					item->Release();
 				}
+				file_open->Release();
 			}
-			file_open->Release();
+			::CoUninitialize();
 		}
-		::CoUninitialize();
+		return File(file_path);
 	}
-	return File(file_path);
-}
 
-easy2d::File easy2d::File::ShowSaveDialog(const std::wstring & title, const std::wstring& def_file, const std::wstring & def_ext)
-{
-	std::wstring file_path;
-	HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-	
-	if (SUCCEEDED(hr))
+	File File::ShowSaveDialog(const std::wstring & title, const std::wstring& def_file, const std::wstring & def_ext)
 	{
-		IFileSaveDialog *file_save;
-
-		hr = ::CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
-			IID_IFileSaveDialog, reinterpret_cast<void**>(&file_save));
+		std::wstring file_path;
+		HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 
 		if (SUCCEEDED(hr))
 		{
-			if (!title.empty())
-			{
-				file_save->SetTitle(title.c_str());
-			}
+			IFileSaveDialog *file_save;
 
-			if (!def_file.empty())
-			{
-				file_save->SetFileName(def_file.c_str());
-			}
-
-			if (!def_ext.empty())
-			{
-				file_save->SetDefaultExtension(def_ext.c_str());
-
-				std::wstring ext = L"*." + def_ext;
-				COMDLG_FILTERSPEC spec[] =
-				{
-					{ L"", ext.c_str() }
-				};
-				file_save->SetFileTypes(1, spec);
-			}
-			else
-			{
-				COMDLG_FILTERSPEC spec[] =
-				{
-					{ L"所有文件", L"*.*" }
-				};
-				file_save->SetFileTypes(1, spec);
-			}
-
-			hr = file_save->Show(nullptr);
+			hr = ::CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
+				IID_IFileSaveDialog, reinterpret_cast<void**>(&file_save));
 
 			if (SUCCEEDED(hr))
 			{
-				IShellItem *item;
-				hr = file_save->GetResult(&item);
+				if (!title.empty())
+				{
+					file_save->SetTitle(title.c_str());
+				}
+
+				if (!def_file.empty())
+				{
+					file_save->SetFileName(def_file.c_str());
+				}
+
+				if (!def_ext.empty())
+				{
+					file_save->SetDefaultExtension(def_ext.c_str());
+
+					std::wstring ext = L"*." + def_ext;
+					COMDLG_FILTERSPEC spec[] =
+					{
+						{ L"", ext.c_str() }
+					};
+					file_save->SetFileTypes(1, spec);
+				}
+				else
+				{
+					COMDLG_FILTERSPEC spec[] =
+					{
+						{ L"所有文件", L"*.*" }
+					};
+					file_save->SetFileTypes(1, spec);
+				}
+
+				hr = file_save->Show(nullptr);
+
 				if (SUCCEEDED(hr))
 				{
-					PWSTR str_file_path;
-					hr = item->GetDisplayName(SIGDN_FILESYSPATH, &str_file_path);
-
+					IShellItem *item;
+					hr = file_save->GetResult(&item);
 					if (SUCCEEDED(hr))
 					{
-						file_path = str_file_path;
-						::CoTaskMemFree(str_file_path);
+						PWSTR str_file_path;
+						hr = item->GetDisplayName(SIGDN_FILESYSPATH, &str_file_path);
+
+						if (SUCCEEDED(hr))
+						{
+							file_path = str_file_path;
+							::CoTaskMemFree(str_file_path);
+						}
+						item->Release();
 					}
-					item->Release();
 				}
+				file_save->Release();
 			}
-			file_save->Release();
+			::CoUninitialize();
 		}
-		::CoUninitialize();
+		return File(file_path);
 	}
-	return File(file_path);
 }

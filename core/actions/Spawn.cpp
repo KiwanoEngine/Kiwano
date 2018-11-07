@@ -20,118 +20,122 @@
 
 #include "..\e2daction.h"
 
-easy2d::Spawn::Spawn()
-{
-}
 
-easy2d::Spawn::Spawn(const Actions& actions)
+namespace easy2d
 {
-	this->Add(actions);
-}
-
-easy2d::Spawn::~Spawn()
-{
-	for (auto action : actions_)
+	Spawn::Spawn()
 	{
-		SafeRelease(action);
 	}
-}
 
-void easy2d::Spawn::Init()
-{
-	Action::Init();
+	Spawn::Spawn(const Actions& actions)
+	{
+		this->Add(actions);
+	}
 
-	if (target_)
+	Spawn::~Spawn()
+	{
+		for (auto action : actions_)
+		{
+			SafeRelease(action);
+		}
+	}
+
+	void Spawn::Init()
+	{
+		Action::Init();
+
+		if (target_)
+		{
+			for (const auto& action : actions_)
+			{
+				action->target_ = target_;
+				action->Init();
+			}
+		}
+	}
+
+	void Spawn::Update()
+	{
+		Action::Update();
+
+		size_t done_num = 0;
+		for (const auto& action : actions_)
+		{
+			if (action->IsDone())
+			{
+				++done_num;
+			}
+			else
+			{
+				action->Update();
+			}
+		}
+
+		if (done_num == actions_.size())
+		{
+			this->Stop();
+		}
+	}
+
+	void Spawn::Reset()
+	{
+		Action::Reset();
+		for (const auto& action : actions_)
+		{
+			action->Reset();
+		}
+	}
+
+	void Spawn::ResetTime()
 	{
 		for (const auto& action : actions_)
 		{
-			action->target_ = target_;
-			action->Init();
-		}
-	}
-}
-
-void easy2d::Spawn::Update()
-{
-	Action::Update();
-
-	size_t done_num = 0;
-	for (const auto& action : actions_)
-	{
-		if (action->IsDone())
-		{
-			++done_num;
-		}
-		else
-		{
-			action->Update();
+			action->ResetTime();
 		}
 	}
 
-	if (done_num == actions_.size())
-	{
-		this->Stop();
-	}
-}
-
-void easy2d::Spawn::Reset()
-{
-	Action::Reset();
-	for (const auto& action : actions_)
-	{
-		action->Reset();
-	}
-}
-
-void easy2d::Spawn::ResetTime()
-{
-	for (const auto& action : actions_)
-	{
-		action->ResetTime();
-	}
-}
-
-void easy2d::Spawn::Add(Action * action)
-{
-	if (action)
-	{
-		actions_.push_back(action);
-		action->Retain();
-	}
-}
-
-void easy2d::Spawn::Add(const Actions& actions)
-{
-	for (const auto &action : actions)
-	{
-		this->Add(action);
-	}
-}
-
-easy2d::Spawn * easy2d::Spawn::Clone() const
-{
-	auto spawn = new Spawn();
-	for (const auto& action : actions_)
+	void Spawn::Add(Action * action)
 	{
 		if (action)
 		{
-			spawn->Add(action->Clone());
+			actions_.push_back(action);
+			action->Retain();
 		}
 	}
-	return spawn;
-}
 
-easy2d::Spawn * easy2d::Spawn::Reverse() const
-{
-	auto spawn = new Spawn();
-	if (spawn && !actions_.empty())
+	void Spawn::Add(const Actions& actions)
 	{
-		std::vector<Action*> newActions(actions_.size());
-		for (auto iter = actions_.crbegin(), iterCrend = actions_.crend(); iter != iterCrend; ++iter)
+		for (const auto &action : actions)
 		{
-			newActions.push_back((*iter)->Reverse());
+			this->Add(action);
 		}
-		spawn->Add(newActions);
 	}
-	return spawn;
+
+	Spawn * Spawn::Clone() const
+	{
+		auto spawn = new Spawn();
+		for (const auto& action : actions_)
+		{
+			if (action)
+			{
+				spawn->Add(action->Clone());
+			}
+		}
+		return spawn;
+	}
+
+	Spawn * Spawn::Reverse() const
+	{
+		auto spawn = new Spawn();
+		if (spawn && !actions_.empty())
+		{
+			std::vector<Action*> newActions(actions_.size());
+			for (auto iter = actions_.crbegin(), iterCrend = actions_.crend(); iter != iterCrend; ++iter)
+			{
+				newActions.push_back((*iter)->Reverse());
+			}
+			spawn->Add(newActions);
+		}
+		return spawn;
+	}
 }

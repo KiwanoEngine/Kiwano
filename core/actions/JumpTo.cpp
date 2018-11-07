@@ -21,19 +21,22 @@
 #include "..\e2daction.h"
 #include "..\e2dobject.h"
 
-easy2d::JumpTo::JumpTo(float duration, const Point & pos, float height, int jumps)
-	: JumpBy(duration, Point(), height, jumps)
-	, end_pos_(pos)
+namespace easy2d
 {
-}
+	JumpTo::JumpTo(float duration, const Point & pos, float height, int jumps)
+		: JumpBy(duration, Point(), height, jumps)
+		, end_pos_(pos)
+	{
+	}
 
-easy2d::JumpTo * easy2d::JumpTo::Clone() const
-{
-	return new JumpTo(duration_, end_pos_, height_, jumps_);
-}
+	JumpTo * JumpTo::Clone() const
+	{
+		return new JumpTo(duration_, end_pos_, height_, jumps_);
+	}
 
-void easy2d::JumpTo::Init()
-{
-	JumpBy::Init();
-	delta_pos_ = end_pos_ - start_pos_;
+	void JumpTo::Init()
+	{
+		JumpBy::Init();
+		delta_pos_ = end_pos_ - start_pos_;
+	}
 }
