@@ -42,9 +42,9 @@ namespace easy2d
 		}
 	}
 
-	void Sequence::Init()
+	void Sequence::Initialize()
 	{
-		Action::Init();
+		Action::Initialize();
 		// 将所有动作与目标绑定
 		if (target_)
 		{
@@ -54,7 +54,7 @@ namespace easy2d
 			}
 		}
 		// 初始化第一个动作
-		actions_[0]->Init();
+		actions_[0]->Initialize();
 	}
 
 	void Sequence::Update()
@@ -73,7 +73,7 @@ namespace easy2d
 			}
 			else
 			{
-				actions_[action_index_]->Init();
+				actions_[action_index_]->Initialize();
 			}
 		}
 	}

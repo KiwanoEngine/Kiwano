@@ -38,9 +38,9 @@ namespace easy2d
 		delta_y_ = scale_y;
 	}
 
-	void ScaleBy::Init()
+	void ScaleBy::Initialize()
 	{
-		FiniteTimeAction::Init();
+		FiniteTimeAction::Initialize();
 
 		if (target_)
 		{

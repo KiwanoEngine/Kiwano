@@ -30,9 +30,9 @@ namespace easy2d
 		delta_val_ = opacity;
 	}
 
-	void OpacityBy::Init()
+	void OpacityBy::Initialize()
 	{
-		FiniteTimeAction::Init();
+		FiniteTimeAction::Initialize();
 
 		if (target_)
 		{

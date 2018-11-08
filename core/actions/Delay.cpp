@@ -44,9 +44,9 @@ namespace easy2d
 		delta_ = 0;
 	}
 
-	void Delay::Init()
+	void Delay::Initialize()
 	{
-		Action::Init();
+		Action::Initialize();
 	}
 
 	void Delay::Update()

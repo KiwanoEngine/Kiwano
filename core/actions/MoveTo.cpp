@@ -34,9 +34,9 @@ namespace easy2d
 		return new MoveTo(duration_, end_pos_);
 	}
 
-	void MoveTo::Init()
+	void MoveTo::Initialize()
 	{
-		MoveBy::Init();
+		MoveBy::Initialize();
 		delta_pos_ = end_pos_ - start_pos_;
 	}
 }

@@ -45,7 +45,7 @@ namespace easy2d
 		return audio_device;
 	}
 
-	void Device::Init(HWND hwnd)
+	void Device::Initialize(HWND hwnd)
 	{
 		graphics_device = new (std::nothrow) Graphics(hwnd);
 		input_device = new (std::nothrow) Input(hwnd);

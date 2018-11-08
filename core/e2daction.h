@@ -85,7 +85,7 @@ namespace easy2d
 		);
 
 		// 初始化动作
-		virtual void Init();
+		virtual void Initialize();
 
 		// 更新动作
 		virtual void Update();
@@ -126,7 +126,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(FiniteTimeAction);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -160,7 +160,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(MoveBy);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -196,7 +196,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(MoveTo);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 	protected:
 		Point end_pos_;
@@ -225,7 +225,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(JumpBy);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -265,7 +265,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(JumpTo);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 	protected:
 		Point end_pos_;
@@ -298,7 +298,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(ScaleBy);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -341,7 +341,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(ScaleTo);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 	protected:
 		float	end_scale_x_;
@@ -369,7 +369,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(OpacityBy);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -404,7 +404,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(OpacityTo);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 	protected:
 		float end_val_;
@@ -461,7 +461,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(RotateBy);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -496,7 +496,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(RotateTo);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 	protected:
 		float end_val_;
@@ -525,7 +525,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(Delay);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -564,7 +564,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(Loop);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -600,7 +600,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(CallFunc);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -648,7 +648,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(Sequence);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -700,7 +700,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(Spawn);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;
@@ -807,7 +807,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(Animate);
 
 		// 初始化动作
-		virtual void Init() override;
+		virtual void Initialize() override;
 
 		// 更新动作
 		virtual void Update() override;

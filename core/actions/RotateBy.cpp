@@ -30,9 +30,9 @@ namespace easy2d
 		delta_val_ = rotation;
 	}
 
-	void RotateBy::Init()
+	void RotateBy::Initialize()
 	{
-		FiniteTimeAction::Init();
+		FiniteTimeAction::Initialize();
 
 		if (target_)
 		{

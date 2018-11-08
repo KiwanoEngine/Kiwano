@@ -29,9 +29,9 @@ namespace easy2d
 	{
 	}
 
-	void RotationTransition::Init(Scene * prev, Scene * next, Game * game)
+	void RotationTransition::Initialize(Scene * prev, Scene * next, Game * game)
 	{
-		Transition::Init(prev, next, game);
+		Transition::Initialize(prev, next, game);
 
 		if (out_scene_)
 		{

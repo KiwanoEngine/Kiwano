@@ -37,7 +37,7 @@ namespace easy2d
 		return new CallFunc(callback_);
 	}
 
-	void CallFunc::Init()
+	void CallFunc::Initialize()
 	{
 	}
 

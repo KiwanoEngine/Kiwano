@@ -30,9 +30,9 @@ namespace easy2d
 		delta_pos_ = vector;
 	}
 
-	void MoveBy::Init()
+	void MoveBy::Initialize()
 	{
-		FiniteTimeAction::Init();
+		FiniteTimeAction::Initialize();
 
 		if (target_)
 		{

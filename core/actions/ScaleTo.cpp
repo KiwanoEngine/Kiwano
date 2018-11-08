@@ -43,9 +43,9 @@ namespace easy2d
 		return new ScaleTo(duration_, end_scale_x_, end_scale_y_);
 	}
 
-	void ScaleTo::Init()
+	void ScaleTo::Initialize()
 	{
-		ScaleBy::Init();
+		ScaleBy::Initialize();
 		delta_x_ = end_scale_x_ - start_scale_x_;
 		delta_y_ = end_scale_y_ - start_scale_y_;
 	}

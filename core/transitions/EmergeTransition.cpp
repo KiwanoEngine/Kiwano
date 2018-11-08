@@ -28,9 +28,9 @@ namespace easy2d
 	{
 	}
 
-	void EmergeTransition::Init(Scene * prev, Scene * next, Game * game)
+	void EmergeTransition::Initialize(Scene * prev, Scene * next, Game * game)
 	{
-		Transition::Init(prev, next, game);
+		Transition::Initialize(prev, next, game);
 
 		out_layer_param_.opacity = 1;
 		in_layer_param_.opacity = 0;

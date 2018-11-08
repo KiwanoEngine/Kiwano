@@ -34,9 +34,9 @@ namespace easy2d
 		delta_ = 0;
 	}
 
-	void FiniteTimeAction::Init()
+	void FiniteTimeAction::Initialize()
 	{
-		Action::Init();
+		Action::Initialize();
 	}
 
 	void FiniteTimeAction::Update()

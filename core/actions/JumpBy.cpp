@@ -41,9 +41,9 @@ namespace easy2d
 		return new JumpBy(duration_, -delta_pos_, height_, jumps_);
 	}
 
-	void JumpBy::Init()
+	void JumpBy::Initialize()
 	{
-		FiniteTimeAction::Init();
+		FiniteTimeAction::Initialize();
 
 		if (target_)
 		{

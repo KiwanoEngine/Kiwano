@@ -29,9 +29,9 @@ namespace easy2d
 	{
 	}
 
-	void MoveTransition::Init(Scene * prev, Scene * next, Game * game)
+	void MoveTransition::Initialize(Scene * prev, Scene * next, Game * game)
 	{
-		Transition::Init(prev, next, game);
+		Transition::Initialize(prev, next, game);
 
 		switch (direction_)
 		{

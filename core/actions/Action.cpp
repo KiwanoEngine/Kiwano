@@ -89,7 +89,7 @@ namespace easy2d
 		this->Reset();
 	}
 
-	void Action::Init()
+	void Action::Initialize()
 	{
 		initialized_ = true;
 		started_ = Time::Now();
@@ -99,7 +99,7 @@ namespace easy2d
 	{
 		if (!initialized_)
 		{
-			Init();
+			Initialize();
 		}
 	}
 

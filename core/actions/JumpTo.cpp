@@ -34,9 +34,9 @@ namespace easy2d
 		return new JumpTo(duration_, end_pos_, height_, jumps_);
 	}
 
-	void JumpTo::Init()
+	void JumpTo::Initialize()
 	{
-		JumpBy::Init();
+		JumpBy::Initialize();
 		delta_pos_ = end_pos_ - start_pos_;
 	}
 }

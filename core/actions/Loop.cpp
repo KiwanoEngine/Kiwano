@@ -65,14 +65,14 @@ namespace easy2d
 		}
 	}
 
-	void Loop::Init()
+	void Loop::Initialize()
 	{
-		Action::Init();
+		Action::Initialize();
 
 		if (action_)
 		{
 			action_->target_ = target_;
-			action_->Init();
+			action_->Initialize();
 		}
 	}
 

@@ -48,7 +48,7 @@ namespace easy2d
 
 	protected:
 		// 初始化场景过渡动画
-		virtual void Init(
+		virtual void Initialize(
 			Scene * prev,
 			Scene * next,
 			Game * game
@@ -94,7 +94,7 @@ namespace easy2d
 		// 更新动画
 		virtual void Update() override;
 
-		virtual void Init(
+		virtual void Initialize(
 			Scene * prev,
 			Scene * next,
 			Game * game
@@ -114,7 +114,7 @@ namespace easy2d
 	protected:
 		virtual void Update() override;
 
-		virtual void Init(
+		virtual void Initialize(
 			Scene * prev,
 			Scene * next,
 			Game * game
@@ -134,7 +134,7 @@ namespace easy2d
 	protected:
 		virtual void Update() override;
 
-		virtual void Init(
+		virtual void Initialize(
 			Scene * prev,
 			Scene * next,
 			Game * game
@@ -155,7 +155,7 @@ namespace easy2d
 	protected:
 		virtual void Update() override;
 
-		virtual void Init(
+		virtual void Initialize(
 			Scene * prev,
 			Scene * next,
 			Game * game
@@ -183,7 +183,7 @@ namespace easy2d
 	protected:
 		virtual void Update() override;
 
-		virtual void Init(
+		virtual void Initialize(
 			Scene * prev,
 			Scene * next,
 			Game * game

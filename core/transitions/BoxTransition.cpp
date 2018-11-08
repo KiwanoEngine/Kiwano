@@ -28,9 +28,9 @@ namespace easy2d
 	{
 	}
 
-	void BoxTransition::Init(Scene * prev, Scene * next, Game * game)
+	void BoxTransition::Initialize(Scene * prev, Scene * next, Game * game)
 	{
-		Transition::Init(prev, next, game);
+		Transition::Initialize(prev, next, game);
 
 		in_layer_param_.opacity = 0;
 	}

@@ -52,7 +52,7 @@ namespace easy2d
 		return done_;
 	}
 
-	void Transition::Init(Scene * prev, Scene * next, Game * game)
+	void Transition::Initialize(Scene * prev, Scene * next, Game * game)
 	{
 		started_ = Time::Now();
 		out_scene_ = prev;

@@ -35,9 +35,9 @@ namespace easy2d
 		return new OpacityTo(duration_, end_val_);
 	}
 
-	void OpacityTo::Init()
+	void OpacityTo::Initialize()
 	{
-		OpacityBy::Init();
+		OpacityBy::Initialize();
 		delta_val_ = end_val_ - start_val_;
 	}
 }

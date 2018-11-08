@@ -47,10 +47,6 @@
 #	define NOMINMAX
 #endif
 
-#ifndef DIRECTINPUT_VERSION
-#	define DIRECTINPUT_VERSION 0x0800
-#endif
-
 #ifndef INITGUID
 #	define INITGUID
 #endif
@@ -62,7 +58,6 @@
 #include <mmsystem.h>
 #include <d2d1.h>
 #include <dwrite.h>
-#include <dinput.h>
 #include <xaudio2.h>
 #include <mfapi.h>
 #include <mfidl.h>
@@ -88,10 +83,6 @@
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "windowscodecs.lib")
 #pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "xaudio2.lib")
-#pragma comment(lib, "mfplat.lib")
-#pragma comment(lib, "mfreadwrite.lib")
 #pragma comment(lib, "shlwapi.lib")
 
 

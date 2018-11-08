@@ -28,11 +28,11 @@ namespace easy2d
 		, mastering_voice_(nullptr)
 	{
 		ThrowIfFailed(
-			MFStartup(MF_VERSION)
+			modules::MediaFoundation.MFStartup(MF_VERSION, MFSTARTUP_FULL)
 		);
 
 		ThrowIfFailed(
-			XAudio2Create(&x_audio2_)
+			modules::XAudio2.XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR)
 		);
 
 		ThrowIfFailed(
@@ -50,7 +50,7 @@ namespace easy2d
 
 		SafeRelease(x_audio2_);
 
-		MFShutdown();
+		modules::MediaFoundation.MFShutdown();
 	}
 
 	HRESULT Audio::CreateVoice(IXAudio2SourceVoice ** voice, WAVEFORMATEX * wfx)

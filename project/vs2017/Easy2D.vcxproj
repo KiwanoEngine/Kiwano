@@ -23,7 +23,8 @@
     <ProjectGuid>{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Easy2D</RootNamespace>
-    <WindowsTargetPlatformVersion></WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>
+    </WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(WindowsTargetPlatformVersion)'==''">
     <!-- Latest Target Version property -->
@@ -232,6 +233,7 @@
     <ClCompile Include="..\..\core\modules\Game.cpp" />
     <ClCompile Include="..\..\core\modules\Input.cpp" />
     <ClCompile Include="..\..\core\modules\Graphics.cpp" />
+    <ClCompile Include="..\..\core\modules\Modules.cpp" />
     <ClCompile Include="..\..\core\objects\Canvas.cpp" />
     <ClCompile Include="..\..\core\objects\Image.cpp" />
     <ClCompile Include="..\..\core\objects\Node.cpp" />

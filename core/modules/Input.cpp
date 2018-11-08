@@ -25,151 +25,51 @@
 namespace easy2d
 {
 	Input::Input(HWND hwnd)
-		: direct_input_(nullptr)
-		, keyboard_device_(nullptr)
-		, mouse_device_(nullptr)
 	{
-		ZeroMemory(key_buffer_, sizeof(key_buffer_));
-		ZeroMemory(&mouse_state_, sizeof(mouse_state_));
-
-		HINSTANCE hinstance = GetModuleHandle(nullptr);
-
-		// 初始化接口对象
-		ThrowIfFailed(
-			DirectInput8Create(
-				hinstance,
-				DIRECTINPUT_VERSION,
-				IID_IDirectInput8,
-				(void**)&direct_input_,
-				nullptr
-			)
-		);
-
-		// 初始化键盘设备
-		ThrowIfFailed(
-			direct_input_->CreateDevice(
-				GUID_SysKeyboard,
-				&keyboard_device_,
-				nullptr
-			)
-		);
-
-		keyboard_device_->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-		keyboard_device_->SetDataFormat(&c_dfDIKeyboard);
-		keyboard_device_->Acquire();
-		keyboard_device_->Poll();
-
-		// 初始化鼠标设备
-		ThrowIfFailed(
-			direct_input_->CreateDevice(
-				GUID_SysMouse,
-				&mouse_device_,
-				nullptr
-			)
-		);
-
-		mouse_device_->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-		mouse_device_->SetDataFormat(&c_dfDIMouse);
-		mouse_device_->Acquire();
-		mouse_device_->Poll();
+		ZeroMemory(keys_, sizeof(keys_));
 	}
 
 	Input::~Input()
 	{
-		if (keyboard_device_)
-			keyboard_device_->Unacquire();
-		if (mouse_device_)
-			mouse_device_->Unacquire();
-
-		SafeRelease(mouse_device_);
-		SafeRelease(keyboard_device_);
-		SafeRelease(direct_input_);
 	}
 
-	void Input::Flush()
+	void Input::Update()
 	{
-		if (keyboard_device_)
-		{
-			HRESULT hr = keyboard_device_->Poll();
-			if (FAILED(hr))
-			{
-				hr = keyboard_device_->Acquire();
-				while (hr == DIERR_INPUTLOST)
-					hr = keyboard_device_->Acquire();
-			}
-			else
-			{
-				keyboard_device_->GetDeviceState(
-					sizeof(key_buffer_),
-					(void**)&key_buffer_
-				);
-			}
-		}
+		::GetKeyboardState(keys_);
 
-		if (mouse_device_)
-		{
-			HRESULT hr = mouse_device_->Poll();
-			if (FAILED(hr))
-			{
-				hr = mouse_device_->Acquire();
-				while (hr == DIERR_INPUTLOST)
-					hr = mouse_device_->Acquire();
-			}
-			else
-			{
-				mouse_device_->GetDeviceState(
-					sizeof(mouse_state_),
-					(void**)&mouse_state_
-				);
-			}
-		}
+		float dpi = Graphics::GetDpi();
+		POINT client_cursor_pos;
+		::GetCursorPos(&client_cursor_pos);
+		::ScreenToClient(Game::GetInstance()->GetHWnd(), &client_cursor_pos);
+		mouse_pos_ = Point(client_cursor_pos.x * 96.f / dpi, client_cursor_pos.y * 96.f / dpi);
 	}
 
-	bool Input::IsDown(KeyCode key)
+	bool Input::IsDown(KeyCode code)
 	{
-		if (key_buffer_[static_cast<int>(key)] & 0x80)
+		if (keys_[static_cast<int>(code)] & 0x80)
 			return true;
 		return false;
 	}
 
 	bool Input::IsDown(MouseCode code)
 	{
-		if (mouse_state_.rgbButtons[static_cast<int>(code)] & 0x80)
+		if (keys_[static_cast<int>(code)] & 0x80)
 			return true;
 		return false;
 	}
 
 	float Input::GetMouseX()
 	{
-		return GetMousePos().x;
+		return mouse_pos_.x;
 	}
 
 	float Input::GetMouseY()
 	{
-		return GetMousePos().y;
+		return mouse_pos_.y;
 	}
 
 	Point Input::GetMousePos()
 	{
-		POINT mousePos;
-		::GetCursorPos(&mousePos);
-		::ScreenToClient(Game::GetInstance()->GetHWnd(), &mousePos);
-		float dpi = Graphics::GetDpi();
-		return Point(mousePos.x * 96.f / dpi, mousePos.y * 96.f / dpi);
-	}
-
-	float Input::GetMouseDeltaX()
-	{
-		return (float)mouse_state_.lX;
-	}
-
-	float Input::GetMouseDeltaY()
-	{
-		return (float)mouse_state_.lY;
-	}
-
-	float Input::GetMouseDeltaZ()
-	{
-		return (float)mouse_state_.lZ;
+		return mouse_pos_;
 	}
 }

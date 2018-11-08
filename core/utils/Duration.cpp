@@ -34,7 +34,8 @@ namespace easy2d
 		const auto duration_regex = std::wregex(L"[-+]?([0-9]*(\\.[0-9]*)?[a-z]+)+");
 
 		typedef std::map<std::wstring, Duration> UnitMap;
-		const auto unit_map = UnitMap{
+		const auto unit_map = UnitMap
+		{
 			{L"ms", Duration::Millisecond},
 			{L"s", Duration::Second},
 			{L"m", Duration::Minute},

@@ -60,9 +60,9 @@ namespace easy2d
 		}
 	}
 
-	void Animate::Init()
+	void Animate::Initialize()
 	{
-		Action::Init();
+		Action::Initialize();
 
 		auto target = dynamic_cast<Sprite*>(target_);
 		if (target && animation_)

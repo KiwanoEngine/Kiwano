@@ -40,16 +40,16 @@ namespace easy2d
 		}
 	}
 
-	void Spawn::Init()
+	void Spawn::Initialize()
 	{
-		Action::Init();
+		Action::Initialize();
 
 		if (target_)
 		{
 			for (const auto& action : actions_)
 			{
 				action->target_ = target_;
-				action->Init();
+				action->Initialize();
 			}
 		}
 	}

@@ -73,6 +73,8 @@ namespace easy2d
 		Player::ClearCache();
 		Device::Destroy();
 
+		modules::Uninitialize();
+
 		if (hwnd_)
 		{
 			::DestroyWindow(hwnd_);
@@ -86,7 +88,7 @@ namespace easy2d
 	void Game::Run()
 	{
 		// 初始化
-		Init();
+		Initialize();
 
 		// 开始
 		OnStart();
@@ -116,7 +118,7 @@ namespace easy2d
 				float dt = (now - last).Seconds();
 				last = now;
 
-				Device::GetInput()->Flush();
+				Device::GetInput()->Update();
 				OnUpdate(dt);
 				UpdateScene(dt);
 				DrawScene();
@@ -173,7 +175,7 @@ namespace easy2d
 			transition_ = transition;
 			transition_->Retain();
 
-			transition_->Init(curr_scene_, next_scene_, this);
+			transition_->Initialize(curr_scene_, next_scene_, this);
 		}
 	}
 
@@ -269,7 +271,7 @@ namespace easy2d
 		graphics->EndDraw();
 	}
 
-	void Game::Init()
+	void Game::Initialize()
 	{
 		HINSTANCE hinstance = GetModuleHandle(nullptr);
 		WNDCLASSEX wcex = { 0 };
@@ -332,8 +334,11 @@ namespace easy2d
 			PtrToUlong(this)
 		);
 
+		// 初始化模块
+		modules::Initialize();
+
 		// 初始化设备
-		Device::Init(hwnd_);
+		Device::Initialize(hwnd_);
 
 		// 禁用输入法
 		::ImmAssociateContext(hwnd_, nullptr);
@@ -343,11 +348,7 @@ namespace easy2d
 		// 关闭控制台
 		if (debug_mode_)
 		{
-			if (console)
-			{
-				::ShowWindow(console, SW_SHOWNORMAL);
-			}
-			else
+			if (console == nullptr)
 			{
 				// 显示一个新控制台
 				if (::AllocConsole())

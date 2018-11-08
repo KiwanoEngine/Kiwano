@@ -35,9 +35,9 @@ namespace easy2d
 		return new RotateTo(duration_, end_val_);
 	}
 
-	void RotateTo::Init()
+	void RotateTo::Initialize()
 	{
-		RotateBy::Init();
+		RotateBy::Initialize();
 		delta_val_ = end_val_ - start_val_;
 	}
 }

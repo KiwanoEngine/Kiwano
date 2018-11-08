@@ -28,6 +28,52 @@
 
 namespace easy2d
 {
+	namespace modules
+	{
+		// XAudio2 functions
+		typedef HRESULT(WINAPI *PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
+
+		struct Module_XAudio2
+		{
+			HMODULE instance;
+
+			PFN_XAudio2Create XAudio2Create;
+		};
+
+		extern Module_XAudio2 XAudio2;
+
+
+		// MediaFoundation functions
+		typedef HRESULT(WINAPI *PFN_MFStartup)(ULONG, DWORD);
+		typedef HRESULT(WINAPI *PFN_MFShutdown)();
+		typedef HRESULT(WINAPI *PFN_MFCreateMediaType)(IMFMediaType**);
+		typedef HRESULT(WINAPI *PFN_MFCreateWaveFormatExFromMFMediaType)(IMFMediaType*, WAVEFORMATEX**, UINT32*, UINT32);
+		typedef HRESULT(WINAPI *PFN_MFCreateSourceReaderFromURL)(LPCWSTR, IMFAttributes*, IMFSourceReader**);
+		typedef HRESULT(WINAPI *PFN_MFCreateSourceReaderFromByteStream)(IMFByteStream*, IMFAttributes*, IMFSourceReader**);
+		typedef HRESULT(WINAPI *PFN_MFCreateMFByteStreamOnStream)(IStream*, IMFByteStream**);
+
+		struct Module_MediaFoundation
+		{
+			HMODULE mfplat;
+			HMODULE mfreadwrite;
+
+			PFN_MFStartup MFStartup;
+			PFN_MFShutdown MFShutdown;
+			PFN_MFCreateMediaType MFCreateMediaType;
+			PFN_MFCreateWaveFormatExFromMFMediaType MFCreateWaveFormatExFromMFMediaType;
+			PFN_MFCreateSourceReaderFromURL MFCreateSourceReaderFromURL;
+			PFN_MFCreateSourceReaderFromByteStream MFCreateSourceReaderFromByteStream;
+			PFN_MFCreateMFByteStreamOnStream MFCreateMFByteStreamOnStream;
+		};
+
+		extern Module_MediaFoundation MediaFoundation;
+
+
+		void Initialize();
+
+		void Uninitialize();
+	}
+
 
 	// 图形设备
 	class Graphics
@@ -115,7 +161,7 @@ namespace easy2d
 
 		// 检测键盘某按键是否正被按下
 		bool IsDown(
-			KeyCode key
+			KeyCode code
 		);
 
 		// 检测鼠标按键是否正被按下
@@ -132,25 +178,14 @@ namespace easy2d
 		// 获得鼠标坐标值
 		Point GetMousePos();
 
-		// 获得鼠标X轴坐标增量
-		float GetMouseDeltaX();
-
-		// 获得鼠标Y轴坐标增量
-		float GetMouseDeltaY();
-
-		// 获得鼠标Z轴（鼠标滚轮）坐标增量
-		float GetMouseDeltaZ();
-
 		// 刷新设备状态
-		void Flush();
+		void Update();
 
 	protected:
-		IDirectInput8W *		direct_input_;
-		IDirectInputDevice8W*	keyboard_device_;
-		IDirectInputDevice8W*	mouse_device_;
-		DIMOUSESTATE			mouse_state_;
-		char					key_buffer_[256];
+		BYTE keys_[256];
+		Point mouse_pos_;
 	};
+
 
 	// 音频设备
 	class Audio
@@ -192,7 +227,7 @@ namespace easy2d
 		static Audio * GetAudio();
 
 		// 初始化
-		static void Init(
+		static void Initialize(
 			HWND hwnd
 		);
 
@@ -281,7 +316,7 @@ namespace easy2d
 
 	private:
 		// 初始化
-		void Init();
+		void Initialize();
 
 		// 根据客户区大小定位窗口
 		Rect Locate(
