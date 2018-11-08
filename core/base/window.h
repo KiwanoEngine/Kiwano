@@ -1,0 +1,83 @@
+// Copyright (c) 2016-2018 Easy2D - Nomango
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+#pragma once
+#include "base.h"
+
+namespace easy2d
+{
+	namespace window
+	{
+		typedef struct Property
+		{
+			String	title;	/* 标题 */
+			int		width;	/* 宽度 */
+			int		height;	/* 高度 */
+			LPCWSTR	icon;	/* 图标 */
+
+			Property()
+				: title(L"Easy2D Game")
+				, width(640)
+				, height(480)
+				, icon(nullptr)
+			{}
+		} Property;
+
+		class WindowInfo
+		{
+		public:
+			HWND handle;
+			float xscale;
+			float yscale;
+
+		public:
+			WindowInfo();
+
+			void Initialize(
+				const Property& property
+			);
+
+			void Destroy();
+
+			// 获取标题
+			String GetTitle() const;
+
+			// 设置标题
+			void SetTitle(const String& title);
+
+			// 获取窗口大小
+			Size GetSize() const;
+
+			// 获取窗口宽度
+			float GetWidth() const;
+
+			// 获取窗口高度
+			float GetHeight() const;
+
+			// 重设窗口大小
+			void SetSize(int width, int height);
+
+			// 设置窗口图标
+			void SetIcon(LPCWSTR icon_resource);
+		};
+
+		extern WindowInfo instance;
+	}
+}
