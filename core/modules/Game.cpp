@@ -22,6 +22,7 @@
 #include "..\e2dobject.h"
 #include "..\e2dtool.h"
 #include "..\e2dtransition.h"
+#include "..\utils\time.h"
 #include <thread>
 #include <imm.h>
 #pragma comment (lib ,"imm32.lib")
@@ -105,12 +106,12 @@ namespace easy2d
 
 		// ÔËÐÐ
 		const int min_interval = 5;
-		Time last = Time::Now();
+		auto last = time::Now();
 		MSG msg = { 0 };
 
 		while (!quit_)
 		{
-			auto now = Time::Now();
+			auto now = time::Now();
 			auto dur = now - last;
 
 			if (dur.Milliseconds() > min_interval)

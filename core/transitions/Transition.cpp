@@ -21,6 +21,7 @@
 #include "..\e2dtransition.h"
 #include "..\e2dobject.h"
 #include "..\e2dmodule.h"
+#include "..\utils\time.h"
 
 namespace easy2d
 {
@@ -54,7 +55,7 @@ namespace easy2d
 
 	void Transition::Initialize(Scene * prev, Scene * next, Game * game)
 	{
-		started_ = Time::Now();
+		started_ = time::Now();
 		out_scene_ = prev;
 		in_scene_ = next;
 
@@ -104,7 +105,7 @@ namespace easy2d
 		}
 		else
 		{
-			process_ = (Time::Now() - started_).Seconds() / duration_;
+			process_ = (time::Now() - started_).Seconds() / duration_;
 			process_ = std::min(process_, 1.f);
 		}
 

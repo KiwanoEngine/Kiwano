@@ -22,6 +22,7 @@
 #include "..\e2devent.h"
 #include "..\e2daction.h"
 #include "..\e2dmodule.h"
+#include "..\utils\time.h"
 #include <iterator>
 
 
@@ -923,7 +924,7 @@ namespace easy2d
 			if (iter == tasks_.end())
 			{
 				task->Retain();
-				task->last_time_ = Time::Now();
+				task->last_time_ = time::Now();
 				tasks_.push_back(task);
 			}
 		}

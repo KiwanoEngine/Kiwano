@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "..\e2daction.h"
+#include "..\utils\time.h"
 
 
 namespace easy2d
@@ -74,7 +75,7 @@ namespace easy2d
 	{
 		initialized_ = false;
 		done_ = false;
-		started_ = Time::Now();
+		started_ = time::Now();
 	}
 
 	bool Action::IsDone() const
@@ -92,7 +93,7 @@ namespace easy2d
 	void Action::Initialize()
 	{
 		initialized_ = true;
-		started_ = Time::Now();
+		started_ = time::Now();
 	}
 
 	void Action::Update()

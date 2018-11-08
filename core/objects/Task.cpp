@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "..\e2dobject.h"
+#include "..\utils\time.h"
 
 
 namespace easy2d
@@ -38,7 +39,7 @@ namespace easy2d
 		: running_(true)
 		, stopped_(false)
 		, run_times_(0)
-		, delay_(Duration::Second * std::max(delay, 0.f))
+		, delay_(time::Second * std::max(delay, 0.f))
 		, total_times_(times)
 		, callback_(func)
 		, name_(name)
@@ -48,7 +49,7 @@ namespace easy2d
 	void Task::Start()
 	{
 		running_ = true;
-		last_time_ = Time::Now();
+		last_time_ = time::Now();
 	}
 
 	void Task::Stop()
@@ -81,7 +82,7 @@ namespace easy2d
 
 	void Task::ResetTime()
 	{
-		last_time_ = Time::Now();
+		last_time_ = time::Now();
 	}
 
 	bool Task::IsReady() const
@@ -92,7 +93,7 @@ namespace easy2d
 			{
 				return true;
 			}
-			if (Time::Now() - last_time_ >= delay_)
+			if (time::Now() - last_time_ >= delay_)
 			{
 				return true;
 			}

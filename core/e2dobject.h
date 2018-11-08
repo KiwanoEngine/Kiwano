@@ -18,12 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef __E2D_OBJECT_H__
-#define __E2D_OBJECT_H__
-
-
+#pragma once
 #include "e2dutil.h"
 #include "e2devent.h"
+#include "utils\time.h"
 
 
 namespace easy2d
@@ -238,15 +236,15 @@ namespace easy2d
 		void ResetTime();
 
 	private:
-		bool		running_;
-		bool		stopped_;
-		int			run_times_;
-		int			total_times_;
-		std::wstring		name_;
-		Duration	delay_;
-		Time		last_time_;
-		Callback	callback_;
-		Node *		target_;
+		bool			running_;
+		bool			stopped_;
+		int				run_times_;
+		int				total_times_;
+		std::wstring	name_;
+		time::Duration	delay_;
+		time::TimePoint			last_time_;
+		Callback		callback_;
+		Node *			target_;
 	};
 
 
@@ -1101,6 +1099,3 @@ namespace easy2d
 	};
 
 } // end of easy2d namespace
-
-
-#endif // __E2D_OBJECT_H__

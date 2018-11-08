@@ -18,9 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef __E2D_MACROS_H__
-#define __E2D_MACROS_H__
-
+#pragma once
 
 #ifndef WINVER
 #	define WINVER 0x0700	   // Allow use of features specific to Windows 7 or later
@@ -110,6 +108,3 @@
 #else
 #	define E2D_WARNING_IF(exp, msg) ((void)0)
 #endif
-
-
-#endif // __E2D_MACROS_H__

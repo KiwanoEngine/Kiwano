@@ -20,6 +20,7 @@
 
 #include "..\e2daction.h"
 #include "..\e2dobject.h"
+#include "..\utils\time.h"
 
 namespace easy2d
 {
@@ -82,7 +83,7 @@ namespace easy2d
 			return;
 		}
 
-		while ((Time::Now() - started_).Seconds() >= animation_->GetInterval())
+		while ((time::Now() - started_).Seconds() >= animation_->GetInterval())
 		{
 			auto& frames = animation_->GetFrames();
 			auto target = dynamic_cast<Sprite*>(target_);
@@ -92,7 +93,7 @@ namespace easy2d
 				target->Load(frames[frame_index_]);
 			}
 
-			started_ += Duration::Second * animation_->GetInterval();
+			started_ += time::Second * animation_->GetInterval();
 			++frame_index_;
 
 			if (frame_index_ == frames.size())

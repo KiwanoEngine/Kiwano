@@ -18,10 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef __E2D_MODULE_H__
-#define __E2D_MODULE_H__
-
-
+#pragma once
 #include "e2dobject.h"
 #include "e2dtransition.h"
 
@@ -357,6 +354,3 @@ namespace easy2d
 	};
 
 } // end of easy2d namespace
-
-
-#endif // __E2D_MODULE_H__

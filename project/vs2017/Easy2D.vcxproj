@@ -253,7 +253,6 @@
     <ClCompile Include="..\..\core\transitions\RotationTransition.cpp" />
     <ClCompile Include="..\..\core\transitions\Transition.cpp" />
     <ClCompile Include="..\..\core\utils\Color.cpp" />
-    <ClCompile Include="..\..\core\utils\Duration.cpp" />
     <ClCompile Include="..\..\core\utils\Font.cpp" />
     <ClCompile Include="..\..\core\utils\Point.cpp" />
     <ClCompile Include="..\..\core\utils\Random.cpp" />
@@ -261,7 +260,7 @@
     <ClCompile Include="..\..\core\utils\Ref.cpp" />
     <ClCompile Include="..\..\core\utils\Resource.cpp" />
     <ClCompile Include="..\..\core\utils\Size.cpp" />
-    <ClCompile Include="..\..\core\utils\Time.cpp" />
+    <ClCompile Include="..\..\core\utils\time.cpp" />
     <ClCompile Include="..\..\core\utils\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +274,7 @@
     <ClInclude Include="..\..\core\e2dmacros.h" />
     <ClInclude Include="..\..\core\e2dtool.h" />
     <ClInclude Include="..\..\core\e2dtransition.h" />
+    <ClInclude Include="..\..\core\utils\time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

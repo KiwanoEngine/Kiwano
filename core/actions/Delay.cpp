@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "..\e2daction.h"
+#include "..\utils\time.h"
 
 namespace easy2d
 {
@@ -53,7 +54,7 @@ namespace easy2d
 	{
 		Action::Update();
 
-		delta_ = (Time::Now() - started_).Seconds();
+		delta_ = (time::Now() - started_).Seconds();
 
 		if (delta_ >= delay_)
 		{
@@ -64,6 +65,6 @@ namespace easy2d
 	void Delay::ResetTime()
 	{
 		Action::ResetTime();
-		started_ = Time::Now() - Duration::Second * delta_;
+		started_ = time::Now() - time::Second * delta_;
 	}
 }

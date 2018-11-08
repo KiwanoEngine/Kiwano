@@ -99,9 +99,6 @@
     <ClCompile Include="..\..\core\utils\Color.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\Duration.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\utils\Font.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -115,9 +112,6 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\utils\Size.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\utils\Time.cpp">
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\components\Button.cpp">
@@ -207,6 +201,9 @@
     <ClCompile Include="..\..\core\modules\Modules.cpp">
       <Filter>modules</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\utils\time.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />
@@ -219,5 +216,8 @@
     <ClInclude Include="..\..\core\e2dtool.h" />
     <ClInclude Include="..\..\core\e2dutil.h" />
     <ClInclude Include="..\..\core\e2dobject.h" />
+    <ClInclude Include="..\..\core\utils\time.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

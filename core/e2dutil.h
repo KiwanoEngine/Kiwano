@@ -18,10 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef __E2D_UTIL_H__
-#define __E2D_UTIL_H__
-
-
+#pragma once
 #include "e2dmacros.h"
 
 namespace easy2d
@@ -354,139 +351,6 @@ namespace easy2d
 	};
 
 
-	// 时间段
-	//
-	// Usage:
-	//     5 秒: Duration::Second * 5
-	//     1.5 小时: Duration::Hour * 1.5
-	//     3 小时 45 分 15 秒: Duration::Hour * 3 + Duration::Minute * 45 + Duration::Second * 15
-	//     时间段转化为秒: float s = duration.Seconds();
-	//     时间段格式化: Duration d = Duration::Parse(L"1h35m");  // 1小时35分钟
-	//
-	class Duration
-	{
-	public:
-		static const Duration Millisecond;	// 毫秒
-		static const Duration Second;		// 秒
-		static const Duration Minute;		// 分钟
-		static const Duration Hour;			// 小时
-
-	public:
-		Duration();
-
-		explicit Duration(
-			int milliseconds
-		);
-
-		// 转化为毫秒
-		int Milliseconds() const;
-
-		// 转化为秒
-		float Seconds() const;
-
-		// 转化为分钟
-		float Minutes() const;
-
-		// 转化为小时
-		float Hours() const;
-
-		// 时间段格式化
-		// 时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
-		// 例如: "300ms", "-1.5h", "2h45m"
-		// 允许的时间单位有 "ms", "s", "m", "h"
-		static Duration Parse(const std::wstring& str);
-
-		bool operator== (const Duration &) const;
-		bool operator!= (const Duration &) const;
-		bool operator> (const Duration &) const;
-		bool operator>= (const Duration &) const;
-		bool operator< (const Duration &) const;
-		bool operator<= (const Duration &) const;
-
-		Duration operator + (const Duration &) const;
-		Duration operator - (const Duration &) const;
-		Duration operator - () const;
-		Duration operator * (int) const;
-		Duration operator * (float) const;
-		Duration operator * (double) const;
-		Duration operator / (int) const;
-		Duration operator / (float) const;
-		Duration operator / (double) const;
-
-		Duration& operator += (const Duration &);
-		Duration& operator -= (const Duration &);
-		Duration& operator *= (int);
-		Duration& operator *= (float);
-		Duration& operator *= (double);
-		Duration& operator /= (int);
-		Duration& operator /= (float);
-		Duration& operator /= (double);
-
-		friend Duration operator* (int, const Duration &);
-		friend Duration operator* (float, const Duration &);
-		friend Duration operator* (double, const Duration &);
-		friend Duration operator/ (int, const Duration &);
-		friend Duration operator/ (float, const Duration &);
-		friend Duration operator/ (double, const Duration &);
-
-	private:
-		int milliseconds_;
-	};
-
-
-	// 时间点
-	//
-	// Usage:
-	//     使用 Time::Now 方法获取当前时间: Time now = Time::Now();
-	//     两时间相减, 得到的结果是一个 Duration 对象, 例如:
-	//     Time t1 = Time::Now();
-	//     ...  // 做些什么
-	//     Time t2 = Time::Now();
-	//     然后获取两时间相差的毫秒数:
-	//     int ms = (t2 - t1).Milliseconds();
-	// 
-	class Time
-	{
-	public:
-		Time();
-
-		explicit Time(
-			std::chrono::steady_clock::time_point
-		);
-
-		Time(
-			const Time& other
-		);
-
-		Time(
-			Time&& other
-		);
-
-		// 获取时间戳
-		time_t GetTimeStamp() const;
-
-		// 是否是零时
-		bool IsZero() const;
-
-		Time operator + (const Duration &) const;
-		Time operator - (const Duration &) const;
-
-		Time& operator += (const Duration &);
-		Time& operator -= (const Duration &);
-
-		Duration operator - (const Time &) const;
-
-		Time& operator = (const Time &) E2D_NOEXCEPT;
-		Time& operator = (Time &&) E2D_NOEXCEPT;
-
-		// 获取当前时间
-		static Time Now();
-
-	private:
-		std::chrono::steady_clock::time_point time_;
-	};
-
-
 	// 字体
 	class Font
 	{
@@ -681,6 +545,3 @@ namespace easy2d
 	}
 
 } // end of easy2d namespace
-
-
-#endif // __E2D_UTIL_H__

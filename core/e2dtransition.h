@@ -18,11 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef __E2D_TRANSITION_H__
-#define __E2D_TRANSITION_H__
-
-
+#pragma once
 #include "e2dutil.h"
+#include "utils\time.h"
 
 namespace easy2d
 {
@@ -70,7 +68,7 @@ namespace easy2d
 		bool	done_;
 		float	duration_;
 		float	process_;
-		Time	started_;
+		time::TimePoint	started_;
 		Size	window_size_;
 		Scene*	out_scene_;
 		Scene*	in_scene_;
@@ -196,6 +194,3 @@ namespace easy2d
 	};
 
 } // end of easy2d namespace
-
-
-#endif // __E2D_TRANSITION_H__

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "..\e2daction.h"
+#include "..\utils\time.h"
 
 namespace easy2d
 {
@@ -50,7 +51,7 @@ namespace easy2d
 		}
 		else
 		{
-			delta_ = std::min((Time::Now() - started_).Seconds() / duration_, 1.f);
+			delta_ = std::min((time::Now() - started_).Seconds() / duration_, 1.f);
 
 			if (delta_ >= 1)
 			{
@@ -62,6 +63,6 @@ namespace easy2d
 	void FiniteTimeAction::ResetTime()
 	{
 		Action::ResetTime();
-		started_ = Time::Now() - Duration::Second * (delta_ * duration_);
+		started_ = time::Now() - time::Second * (delta_ * duration_);
 	}
 }

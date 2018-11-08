@@ -20,6 +20,7 @@
 
 #include "..\e2dmodule.h"
 #include "..\e2dobject.h"
+#include "..\utils\time.h"
 
 
 namespace easy2d
@@ -638,8 +639,8 @@ namespace easy2d
 	void Graphics::DrawDebugInfo()
 	{
 		static int render_times_ = 0;
-		static Time last_render_time_ = Time::Now();
-		int duration = (Time::Now() - last_render_time_).Milliseconds();
+		static time::TimePoint last_render_time_ = time::Now();
+		int duration = (time::Now() - last_render_time_).Milliseconds();
 
 		if (!fps_text_format_)
 		{
@@ -669,7 +670,7 @@ namespace easy2d
 			wchar_t fps_text[12] = {};
 			int len = swprintf_s(fps_text, L"FPS: %.1f", 1000.f / duration * render_times_);
 
-			last_render_time_ = Time::Now();
+			last_render_time_ = time::Now();
 			render_times_ = 0;
 
 			SafeRelease(fps_text_layout_);

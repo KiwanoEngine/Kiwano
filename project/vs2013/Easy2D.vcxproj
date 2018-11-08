@@ -193,6 +193,7 @@
     <ClCompile Include="..\..\core\modules\Game.cpp" />
     <ClCompile Include="..\..\core\modules\Input.cpp" />
     <ClCompile Include="..\..\core\modules\Graphics.cpp" />
+    <ClCompile Include="..\..\core\modules\Modules.cpp" />
     <ClCompile Include="..\..\core\objects\Canvas.cpp" />
     <ClCompile Include="..\..\core\objects\Image.cpp" />
     <ClCompile Include="..\..\core\objects\Node.cpp" />

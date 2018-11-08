@@ -18,12 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef __E2D_ACTION_H__
-#define __E2D_ACTION_H__
-
-
+#pragma once
 #include "e2dutil.h"
 #include "e2dobject.h"
+#include "utils\time.h"
 
 namespace easy2d
 {
@@ -105,7 +103,7 @@ namespace easy2d
 		bool	done_;
 		bool	initialized_;
 		Node*	target_;
-		Time	started_;
+		time::TimePoint	started_;
 	};
 
 
@@ -821,6 +819,3 @@ namespace easy2d
 	};
 
 } // end of easy2d namespace
-
-
-#endif // __E2D_ACTION_H__

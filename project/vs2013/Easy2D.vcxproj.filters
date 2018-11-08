@@ -204,6 +204,9 @@
     <ClCompile Include="..\..\core\utils\Random.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\modules\Modules.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />
