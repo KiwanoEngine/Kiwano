@@ -36,14 +36,76 @@
 #endif
 
 
-#include "e2dmacros.h"
-#include "e2dutil.h"
-#include "e2dobject.h"
-#include "e2dcomponent.h"
-#include "e2dtool.h"
-#include "e2daction.h"
-#include "e2dtransition.h"
-#include "e2dmodule.h"
+//
+// base
+//
+
+#include "base/macros.h"
+#include "base/base.h"
+#include "base/modules.h"
+#include "base/render.h"
+#include "base/window.h"
+#include "base/input.h"
+#include "base/audio.h"
+#include "base/time.h"
+#include "base/logs.h"
+
+#include "base/Size.h"
+#include "base/Rect.hpp"
+#include "base/Font.h"
+#include "base/Color.h"
+#include "base/Resource.h"
+
+#include "base/RefCounter.h"
+#include "base/Image.h"
+#include "base/Scene.h"
+#include "base/Node.h"
+#include "base/Sprite.h"
+#include "base/Task.h"
+#include "base/Text.h"
+#include "base/Action.h"
+#include "base/ActionCombined.h"
+#include "base/ActionFiniteTime.h"
+#include "base/Animation.h"
+#include "base/CallFunc.h"
+#include "base/Canvas.h"
+#include "base/Transition.h"
+
+#include "base/KeyEvent.h"
+#include "base/MouseEvent.h"
+
+#include "base/Game.h"
+
+
+//
+// math
+//
+
+#include "math/scalar.hpp"
+#include "math/vector.hpp"
+#include "math/Matrix.hpp"
+#include "math/Transform.h"
+#include "math/rand.h"
+
+
+//
+// utils
+//
+
+#include "utils/Path.h"
+#include "utils/Data.h"
+#include "utils/File.h"
+#include "utils/Transcoder.h"
+#include "utils/Music.h"
+#include "utils/Player.h"
+
+
+//
+// ui
+//
+
+#include "ui/Button.h"
+#include "ui/Menu.h"
 
 
 #if defined(DEBUG) || defined(_DEBUG)

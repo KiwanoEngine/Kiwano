@@ -18,6 +18,95 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\core\base\Action.h" />
+    <ClInclude Include="..\..\core\base\ActionCombined.h" />
+    <ClInclude Include="..\..\core\base\ActionFiniteTime.h" />
+    <ClInclude Include="..\..\core\base\Animation.h" />
+    <ClInclude Include="..\..\core\base\audio.h" />
+    <ClInclude Include="..\..\core\base\base.h" />
+    <ClInclude Include="..\..\core\base\BaseTypes.h" />
+    <ClInclude Include="..\..\core\base\CallFunc.h" />
+    <ClInclude Include="..\..\core\base\Canvas.h" />
+    <ClInclude Include="..\..\core\base\Color.h" />
+    <ClInclude Include="..\..\core\base\Font.h" />
+    <ClInclude Include="..\..\core\base\Game.h" />
+    <ClInclude Include="..\..\core\base\Image.h" />
+    <ClInclude Include="..\..\core\base\Input.h" />
+    <ClInclude Include="..\..\core\base\KeyEvent.h" />
+    <ClInclude Include="..\..\core\base\logs.h" />
+    <ClInclude Include="..\..\core\base\macros.h" />
+    <ClInclude Include="..\..\core\base\modules.h" />
+    <ClInclude Include="..\..\core\base\MouseEvent.h" />
+    <ClInclude Include="..\..\core\base\Node.h" />
+    <ClInclude Include="..\..\core\base\Rect.hpp" />
+    <ClInclude Include="..\..\core\base\RefCounter.h" />
+    <ClInclude Include="..\..\core\base\render.h" />
+    <ClInclude Include="..\..\core\base\Resource.h" />
+    <ClInclude Include="..\..\core\base\Scene.h" />
+    <ClInclude Include="..\..\core\base\Size.h" />
+    <ClInclude Include="..\..\core\base\Sprite.h" />
+    <ClInclude Include="..\..\core\base\Task.h" />
+    <ClInclude Include="..\..\core\base\Text.h" />
+    <ClInclude Include="..\..\core\base\TextRenderer.h" />
+    <ClInclude Include="..\..\core\base\time.h" />
+    <ClInclude Include="..\..\core\base\Transition.h" />
+    <ClInclude Include="..\..\core\base\window.h" />
+    <ClInclude Include="..\..\core\easy2d.h" />
+    <ClInclude Include="..\..\core\math\Matrix.hpp" />
+    <ClInclude Include="..\..\core\math\rand.h" />
+    <ClInclude Include="..\..\core\math\scalar.hpp" />
+    <ClInclude Include="..\..\core\math\Transform.h" />
+    <ClInclude Include="..\..\core\math\vector.hpp" />
+    <ClInclude Include="..\..\core\ui\Button.h" />
+    <ClInclude Include="..\..\core\ui\Menu.h" />
+    <ClInclude Include="..\..\core\utils\Data.h" />
+    <ClInclude Include="..\..\core\utils\File.h" />
+    <ClInclude Include="..\..\core\utils\Music.h" />
+    <ClInclude Include="..\..\core\utils\Path.h" />
+    <ClInclude Include="..\..\core\utils\Player.h" />
+    <ClInclude Include="..\..\core\utils\Transcoder.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\core\base\Action.cpp" />
+    <ClCompile Include="..\..\core\base\ActionCombined.cpp" />
+    <ClCompile Include="..\..\core\base\ActionFiniteTime.cpp" />
+    <ClCompile Include="..\..\core\base\Animation.cpp" />
+    <ClCompile Include="..\..\core\base\audio.cpp" />
+    <ClCompile Include="..\..\core\base\CallFunc.cpp" />
+    <ClCompile Include="..\..\core\base\Canvas.cpp" />
+    <ClCompile Include="..\..\core\base\Color.cpp" />
+    <ClCompile Include="..\..\core\base\Font.cpp" />
+    <ClCompile Include="..\..\core\base\Game.cpp" />
+    <ClCompile Include="..\..\core\base\Image.cpp" />
+    <ClCompile Include="..\..\core\base\Input.cpp" />
+    <ClCompile Include="..\..\core\base\KeyEvent.cpp" />
+    <ClCompile Include="..\..\core\base\modules.cpp" />
+    <ClCompile Include="..\..\core\base\MouseEvent.cpp" />
+    <ClCompile Include="..\..\core\base\Node.cpp" />
+    <ClCompile Include="..\..\core\base\RefCounter.cpp" />
+    <ClCompile Include="..\..\core\base\render.cpp" />
+    <ClCompile Include="..\..\core\base\Resource.cpp" />
+    <ClCompile Include="..\..\core\base\Scene.cpp" />
+    <ClCompile Include="..\..\core\base\Size.cpp" />
+    <ClCompile Include="..\..\core\base\Sprite.cpp" />
+    <ClCompile Include="..\..\core\base\Task.cpp" />
+    <ClCompile Include="..\..\core\base\Text.cpp" />
+    <ClCompile Include="..\..\core\base\TextRenderer.cpp" />
+    <ClCompile Include="..\..\core\base\time.cpp" />
+    <ClCompile Include="..\..\core\base\Transition.cpp" />
+    <ClCompile Include="..\..\core\base\window.cpp" />
+    <ClCompile Include="..\..\core\math\rand.cpp" />
+    <ClCompile Include="..\..\core\math\Transform.cpp" />
+    <ClCompile Include="..\..\core\ui\Button.cpp" />
+    <ClCompile Include="..\..\core\ui\Menu.cpp" />
+    <ClCompile Include="..\..\core\utils\Data.cpp" />
+    <ClCompile Include="..\..\core\utils\File.cpp" />
+    <ClCompile Include="..\..\core\utils\Music.cpp" />
+    <ClCompile Include="..\..\core\utils\Path.cpp" />
+    <ClCompile Include="..\..\core\utils\Player.cpp" />
+    <ClCompile Include="..\..\core\utils\Transcoder.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -194,80 +283,6 @@
       </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\core\actions\Action.cpp" />
-    <ClCompile Include="..\..\core\actions\Animate.cpp" />
-    <ClCompile Include="..\..\core\actions\Animation.cpp" />
-    <ClCompile Include="..\..\core\actions\CallFunc.cpp" />
-    <ClCompile Include="..\..\core\actions\Delay.cpp" />
-    <ClCompile Include="..\..\core\actions\FadeIn.cpp" />
-    <ClCompile Include="..\..\core\actions\FadeOut.cpp" />
-    <ClCompile Include="..\..\core\actions\FiniteTimeAction.cpp" />
-    <ClCompile Include="..\..\core\actions\JumpBy.cpp" />
-    <ClCompile Include="..\..\core\actions\JumpTo.cpp" />
-    <ClCompile Include="..\..\core\actions\Loop.cpp" />
-    <ClCompile Include="..\..\core\actions\MoveBy.cpp" />
-    <ClCompile Include="..\..\core\actions\MoveTo.cpp" />
-    <ClCompile Include="..\..\core\actions\OpacityBy.cpp" />
-    <ClCompile Include="..\..\core\actions\OpacityTo.cpp" />
-    <ClCompile Include="..\..\core\actions\RotateBy.cpp" />
-    <ClCompile Include="..\..\core\actions\RotateTo.cpp" />
-    <ClCompile Include="..\..\core\actions\ScaleBy.cpp" />
-    <ClCompile Include="..\..\core\actions\ScaleTo.cpp" />
-    <ClCompile Include="..\..\core\actions\Sequence.cpp" />
-    <ClCompile Include="..\..\core\actions\Spawn.cpp" />
-    <ClCompile Include="..\..\core\components\Button.cpp" />
-    <ClCompile Include="..\..\core\components\Menu.cpp" />
-    <ClCompile Include="..\..\core\events\KeyEvent.cpp" />
-    <ClCompile Include="..\..\core\events\MouseEvent.cpp" />
-    <ClCompile Include="..\..\core\modules\Audio.cpp" />
-    <ClCompile Include="..\..\core\modules\Device.cpp" />
-    <ClCompile Include="..\..\core\modules\Game.cpp" />
-    <ClCompile Include="..\..\core\modules\Input.cpp" />
-    <ClCompile Include="..\..\core\modules\Graphics.cpp" />
-    <ClCompile Include="..\..\core\modules\Modules.cpp" />
-    <ClCompile Include="..\..\core\objects\Canvas.cpp" />
-    <ClCompile Include="..\..\core\objects\Image.cpp" />
-    <ClCompile Include="..\..\core\objects\Node.cpp" />
-    <ClCompile Include="..\..\core\objects\Scene.cpp" />
-    <ClCompile Include="..\..\core\objects\Sprite.cpp" />
-    <ClCompile Include="..\..\core\objects\Text.cpp" />
-    <ClCompile Include="..\..\core\objects\Task.cpp" />
-    <ClCompile Include="..\..\core\tools\Data.cpp" />
-    <ClCompile Include="..\..\core\tools\File.cpp" />
-    <ClCompile Include="..\..\core\tools\Music.cpp" />
-    <ClCompile Include="..\..\core\tools\Path.cpp" />
-    <ClCompile Include="..\..\core\tools\Player.cpp" />
-    <ClCompile Include="..\..\core\transitions\BoxTransition.cpp" />
-    <ClCompile Include="..\..\core\transitions\EmergeTransition.cpp" />
-    <ClCompile Include="..\..\core\transitions\FadeTransition.cpp" />
-    <ClCompile Include="..\..\core\transitions\MoveTransition.cpp" />
-    <ClCompile Include="..\..\core\transitions\RotationTransition.cpp" />
-    <ClCompile Include="..\..\core\transitions\Transition.cpp" />
-    <ClCompile Include="..\..\core\utils\Color.cpp" />
-    <ClCompile Include="..\..\core\utils\Duration.cpp" />
-    <ClCompile Include="..\..\core\utils\Font.cpp" />
-    <ClCompile Include="..\..\core\utils\Point.cpp" />
-    <ClCompile Include="..\..\core\utils\Random.cpp" />
-    <ClCompile Include="..\..\core\utils\Rect.cpp" />
-    <ClCompile Include="..\..\core\utils\Ref.cpp" />
-    <ClCompile Include="..\..\core\utils\Resource.cpp" />
-    <ClCompile Include="..\..\core\utils\Size.cpp" />
-    <ClCompile Include="..\..\core\utils\Time.cpp" />
-    <ClCompile Include="..\..\core\utils\Transform.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\core\e2dobject.h" />
-    <ClInclude Include="..\..\core\easy2d.h" />
-    <ClInclude Include="..\..\core\e2daction.h" />
-    <ClInclude Include="..\..\core\e2dutil.h" />
-    <ClInclude Include="..\..\core\e2dcomponent.h" />
-    <ClInclude Include="..\..\core\e2devent.h" />
-    <ClInclude Include="..\..\core\e2dmodule.h" />
-    <ClInclude Include="..\..\core\e2dmacros.h" />
-    <ClInclude Include="..\..\core\e2dtool.h" />
-    <ClInclude Include="..\..\core\e2dtransition.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
