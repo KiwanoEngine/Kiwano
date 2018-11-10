@@ -31,8 +31,8 @@
 
 #ifndef _MSC_VER
 #   error 仅支持在 MSVC 环境下编译
-#elif _MSC_VER < 1700
-#	error Easy2D 不支持 Visual Studio 2012 以下版本
+#elif _MSC_VER < 1800
+#	error Easy2D 不支持 Visual Studio 2013 以下版本
 #endif
 
 

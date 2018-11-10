@@ -63,7 +63,7 @@
 #include <algorithm>
 
 
-#if _MSC_VER >= 1900
+#if _MSC_VER >= 1900  // >= Visual Studio 2015
 #	define E2D_NOEXCEPT noexcept
 #else
 #	define E2D_NOEXCEPT throw()
