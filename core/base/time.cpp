@@ -192,13 +192,29 @@ namespace easy2d
 			if (milliseconds_ < 0)
 				result.append(L"-");
 
-			result.append(std::to_wstring(hour))
-				.append(L"h")
-				.append(std::to_wstring(min))
-				.append(L"m")
-				.append(float_to_str(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f))
-				.append(L"s");
+			if (hour)
+			{
+				result.append(std::to_wstring(hour)).append(L"h");
+				result.append(std::to_wstring(min)).append(L"m");
+			}
+			else if(min)
+			{
+				result.append(std::to_wstring(min)).append(L"m");
+			}
 
+			if (sec == 0 && ms == 0)
+			{
+				result.append(L"0s");
+			}
+			else if (ms == 0)
+			{
+				result.append(std::to_wstring(sec)).append(L"s");
+			}
+			else
+			{
+				result.append(float_to_str(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f))
+					.append(L"s");
+			}
 			return result;
 		}
 
