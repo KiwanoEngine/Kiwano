@@ -53,12 +53,12 @@ namespace easy2d
 
 		inline double Tan(double val) { return ::tan(val); }
 
-		inline float Ceil(float val) { return ceil(val); }
+		inline float Ceil(float val) { return ::ceil(val); }
 
-		inline double Ceil(double val) { return ceil(val); }
+		inline double Ceil(double val) { return ::ceil(val); }
 
-		inline float Floor(float val) { return floor(val); }
+		inline float Floor(float val) { return ::floor(val); }
 
-		inline double Floor(double val) { return floor(val); }
+		inline double Floor(double val) { return ::floor(val); }
 	}
 }
