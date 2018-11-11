@@ -20,6 +20,7 @@
 
 #pragma once
 #include "scalar.hpp"
+#include <d2d1.h>
 
 namespace easy2d
 {
@@ -84,6 +85,11 @@ namespace easy2d
 			inline float Distance(const Vector2& v)
 			{
 				return Vector2(x - v.x, y - v.y).Length();
+			}
+
+			inline operator D2D1_POINT_2F () const
+			{
+				return D2D1_POINT_2F{ x, y };
 			}
 		};
 	}

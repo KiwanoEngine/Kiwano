@@ -21,8 +21,8 @@
 #include "Transition.h"
 #include "Node.h"
 #include "Scene.h"
-#include "render.h"
 #include "window.h"
+#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
@@ -39,8 +39,8 @@ namespace easy2d
 		, in_scene_(nullptr)
 		, out_layer_(nullptr)
 		, in_layer_(nullptr)
-		, out_layer_param_()
-		, in_layer_param_()
+		, out_layer_prop_()
+		, in_layer_prop_()
 	{
 		duration_ = std::max(duration, 0.f);
 	}
@@ -73,32 +73,22 @@ namespace easy2d
 		if (in_scene_)
 		{
 			ThrowIfFailed(
-				render::D2D.HwndRenderTarget->CreateLayer(&in_layer_)
+				render::instance.CreateLayer(&in_layer_)
 			);
 		}
 
 		if (out_scene_)
 		{
 			ThrowIfFailed(
-				render::D2D.HwndRenderTarget->CreateLayer(&out_layer_)
+				render::instance.CreateLayer(&out_layer_)
 			);
 		}
 
 		window_size_ = window::instance.GetSize();
-		out_layer_param_ = in_layer_param_ = D2D1::LayerParameters(
-			D2D1::RectF(
-				0.f,
-				0.f,
-				window_size_.width,
-				window_size_.height
-			),
-			nullptr,
-			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
-			D2D1::Matrix3x2F::Identity(),
-			1.f,
-			render::D2D.SolidColorBrush,
-			D2D1_LAYER_OPTIONS_NONE
-		);
+		out_layer_prop_ = in_layer_prop_ = render::LayerProperties{
+			Rect(Point(), window_size_),
+			1.f
+		};
 	}
 
 	void Transition::Update()
@@ -121,46 +111,32 @@ namespace easy2d
 
 	void Transition::Draw()
 	{
-		auto render_target = render::D2D.HwndRenderTarget;
-
 		if (out_scene_)
 		{
-			render_target->SetTransform(out_scene_->GetTransform());
-			render_target->PushAxisAlignedClip(
-				D2D1::RectF(
-					0.f,
-					0.f,
-					window_size_.width,
-					window_size_.height
-				),
-				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
+			render::instance.PushClip(
+				out_scene_->GetTransform(),
+				window_size_
 			);
-			render_target->PushLayer(out_layer_param_, out_layer_);
+			render::instance.PushLayer(out_layer_, out_layer_prop_);
 
 			out_scene_->Draw();
 
-			render_target->PopLayer();
-			render_target->PopAxisAlignedClip();
+			render::instance.PopLayer();
+			render::instance.PopClip();
 		}
 
 		if (in_scene_)
 		{
-			render_target->SetTransform(in_scene_->GetTransform());
-			render_target->PushAxisAlignedClip(
-				D2D1::RectF(
-					0.f,
-					0.f,
-					window_size_.width,
-					window_size_.height
-				),
-				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
+			render::instance.PushClip(
+				in_scene_->GetTransform(),
+				window_size_
 			);
-			render_target->PushLayer(in_layer_param_, in_layer_);
+			render::instance.PushLayer(in_layer_, in_layer_prop_);
 
 			in_scene_->Draw();
 
-			render_target->PopLayer();
-			render_target->PopAxisAlignedClip();
+			render::instance.PopLayer();
+			render::instance.PopClip();
 		}
 	}
 
@@ -183,7 +159,7 @@ namespace easy2d
 	{
 		Transition::Initialize(prev, next, game);
 
-		in_layer_param_.opacity = 0;
+		in_layer_prop_.opacity = 0;
 	}
 
 	void BoxTransition::Update()
@@ -192,22 +168,22 @@ namespace easy2d
 
 		if (process_ < .5f)
 		{
-			out_layer_param_.contentBounds = D2D1::RectF(
+			out_layer_prop_.area = Rect(
 				window_size_.width * process_,
 				window_size_.height * process_,
-				window_size_.width * (1 - process_),
-				window_size_.height * (1 - process_)
+				window_size_.width * (1 - process_ * 2),
+				window_size_.height * (1 - process_ * 2)
 			);
 		}
 		else
 		{
-			out_layer_param_.opacity = 0;
-			in_layer_param_.opacity = 1;
-			in_layer_param_.contentBounds = D2D1::RectF(
+			out_layer_prop_.opacity = 0;
+			in_layer_prop_.opacity = 1;
+			in_layer_prop_.area = Rect(
 				window_size_.width * (1 - process_),
 				window_size_.height * (1 - process_),
-				window_size_.width * process_,
-				window_size_.height * process_
+				window_size_.width * (2 * process_ - 1),
+				window_size_.height * (2 * process_ - 1)
 			);
 		}
 	}
@@ -225,16 +201,16 @@ namespace easy2d
 	{
 		Transition::Initialize(prev, next, game);
 
-		out_layer_param_.opacity = 1;
-		in_layer_param_.opacity = 0;
+		out_layer_prop_.opacity = 1;
+		in_layer_prop_.opacity = 0;
 	}
 
 	void EmergeTransition::Update()
 	{
 		Transition::Update();
 
-		out_layer_param_.opacity = 1 - process_;
-		in_layer_param_.opacity = process_;
+		out_layer_prop_.opacity = 1 - process_;
+		in_layer_prop_.opacity = process_;
 	}
 
 	//-------------------------------------------------------
@@ -250,8 +226,8 @@ namespace easy2d
 	{
 		Transition::Initialize(prev, next, game);
 
-		out_layer_param_.opacity = 1;
-		in_layer_param_.opacity = 0;
+		out_layer_prop_.opacity = 1;
+		in_layer_prop_.opacity = 0;
 	}
 
 	void FadeTransition::Update()
@@ -260,13 +236,13 @@ namespace easy2d
 
 		if (process_ < 0.5)
 		{
-			out_layer_param_.opacity = 1 - process_ * 2;
-			in_layer_param_.opacity = 0;
+			out_layer_prop_.opacity = 1 - process_ * 2;
+			in_layer_prop_.opacity = 0;
 		}
 		else
 		{
-			out_layer_param_.opacity = 0;
-			in_layer_param_.opacity = (process_ - 0.5f) * 2;
+			out_layer_prop_.opacity = 0;
+			in_layer_prop_.opacity = (process_ - 0.5f) * 2;
 		}
 	}
 
@@ -306,13 +282,13 @@ namespace easy2d
 
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+			out_scene_->SetTransform(math::Matrix());
 		}
 
 		if (in_scene_)
 		{
 			in_scene_->SetTransform(
-				D2D1::Matrix3x2F::Translation(
+				math::Matrix::Translation(
 					start_pos_.x,
 					start_pos_.y
 				)
@@ -328,7 +304,7 @@ namespace easy2d
 		{
 			auto translation = pos_delta_ * process_;
 			out_scene_->SetTransform(
-				D2D1::Matrix3x2F::Translation(
+				math::Matrix::Translation(
 					translation.x,
 					translation.y
 				)
@@ -339,7 +315,7 @@ namespace easy2d
 		{
 			auto translation = start_pos_ + pos_delta_ * process_;
 			in_scene_->SetTransform(
-				D2D1::Matrix3x2F::Translation(
+				math::Matrix::Translation(
 					translation.x,
 					translation.y
 				)
@@ -351,12 +327,12 @@ namespace easy2d
 	{
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+			out_scene_->SetTransform(math::Matrix());
 		}
 
 		if (in_scene_)
 		{
-			in_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+			in_scene_->SetTransform(math::Matrix());
 		}
 	}
 
@@ -376,22 +352,22 @@ namespace easy2d
 
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+			out_scene_->SetTransform(math::Matrix());
 		}
 
 		if (in_scene_)
 		{
-			in_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+			in_scene_->SetTransform(math::Matrix());
 		}
 
-		in_layer_param_.opacity = 0;
+		in_layer_prop_.opacity = 0;
 	}
 
 	void RotationTransition::Update()
 	{
 		Transition::Update();
 
-		auto center_pos = D2D1::Point2F(
+		auto center_pos = math::Vector2(
 			window_size_.width / 2,
 			window_size_.height / 2
 		);
@@ -401,11 +377,11 @@ namespace easy2d
 			if (out_scene_)
 			{
 				out_scene_->SetTransform(
-					D2D1::Matrix3x2F::Scale(
-					(.5f - process_) * 2,
+					math::Matrix::Scaling(
+						(.5f - process_) * 2,
 						(.5f - process_) * 2,
 						center_pos
-					) * D2D1::Matrix3x2F::Rotation(
+					) * math::Matrix::Rotation(
 						rotation_ * (.5f - process_) * 2,
 						center_pos
 					)
@@ -416,15 +392,15 @@ namespace easy2d
 		{
 			if (in_scene_)
 			{
-				out_layer_param_.opacity = 0;
-				in_layer_param_.opacity = 1;
+				out_layer_prop_.opacity = 0;
+				in_layer_prop_.opacity = 1;
 
 				in_scene_->SetTransform(
-					D2D1::Matrix3x2F::Scale(
+					math::Matrix::Scaling(
 					(process_ - .5f) * 2,
 						(process_ - .5f) * 2,
 						center_pos
-					) * D2D1::Matrix3x2F::Rotation(
+					) * math::Matrix::Rotation(
 						rotation_ * (process_ - .5f) * 2,
 						center_pos
 					)
@@ -437,12 +413,12 @@ namespace easy2d
 	{
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+			out_scene_->SetTransform(math::Matrix());
 		}
 
 		if (in_scene_)
 		{
-			in_scene_->SetTransform(D2D1::Matrix3x2F::Identity());
+			in_scene_->SetTransform(math::Matrix());
 		}
 	}
 }

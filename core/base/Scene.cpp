@@ -25,13 +25,13 @@ namespace easy2d
 {
 	Scene::Scene()
 		: root_(nullptr)
-		, transform_(D2D1::Matrix3x2F::Identity())
+		, transform_()
 	{
 	}
 
 	Scene::Scene(Node * root)
 		: root_(nullptr)
-		, transform_(D2D1::Matrix3x2F::Identity())
+		, transform_()
 	{
 		this->SetRoot(root);
 	}
@@ -106,7 +106,7 @@ namespace easy2d
 		}
 	}
 
-	void Scene::SetTransform(const D2D1::Matrix3x2F& matrix)
+	void Scene::SetTransform(const math::Matrix& matrix)
 	{
 		transform_ = matrix;
 
@@ -116,7 +116,7 @@ namespace easy2d
 		}
 	}
 
-	const D2D1::Matrix3x2F & Scene::GetTransform() const
+	const math::Matrix& Scene::GetTransform() const
 	{
 		return transform_;
 	}

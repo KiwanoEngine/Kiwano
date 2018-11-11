@@ -173,21 +173,16 @@ namespace easy2d
 
 		std::wstring easy2d::time::Duration::ToString() const
 		{
-			std::wstring result;
-			int64_t ms = milliseconds_ % Second.milliseconds_;
-			int64_t sec = milliseconds_ / Second.milliseconds_;
-			int64_t min = milliseconds_ / Minute.milliseconds_;
-			int64_t hour = milliseconds_ / Hour.milliseconds_;
-
-			min -= hour * 60;
-			sec -= (hour * 60 * 60 + min * 60);
-
-			auto float_to_str = [](float val) -> std::wstring
+			if (milliseconds_ == 0LL)
 			{
-				wchar_t buf[10] = {};
-				::swprintf_s(buf, L"%.2f", val);
-				return std::wstring(buf);
-			};
+				return std::wstring(L"0s");
+			}
+
+			std::wstring result;
+			int64_t hour = milliseconds_ / Hour.milliseconds_;
+			int64_t min = milliseconds_ / Minute.milliseconds_ - hour * 60;
+			int64_t sec = milliseconds_ / Second.milliseconds_ - (hour * 60 * 60 + min * 60);
+			int64_t ms = milliseconds_ % Second.milliseconds_;
 
 			if (milliseconds_ < 0)
 				result.append(L"-");
@@ -202,18 +197,21 @@ namespace easy2d
 				result.append(std::to_wstring(min)).append(L"m");
 			}
 
-			if (sec == 0 && ms == 0)
+			if (ms != 0)
 			{
-				result.append(L"0s");
-			}
-			else if (ms == 0)
-			{
-				result.append(std::to_wstring(sec)).append(L"s");
-			}
-			else
-			{
+				auto float_to_str = [](float val) -> std::wstring
+				{
+					wchar_t buf[10] = {};
+					::swprintf_s(buf, L"%.2f", val);
+					return std::wstring(buf);
+				};
+
 				result.append(float_to_str(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f))
 					.append(L"s");
+			}
+			else if (sec != 0)
+			{
+				result.append(std::to_wstring(sec)).append(L"s");
 			}
 			return result;
 		}

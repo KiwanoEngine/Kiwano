@@ -51,7 +51,7 @@ namespace easy2d
 			bool	outline;			// 显示描边
 			Color	outline_color;		// 描边颜色
 			float	outline_width;		// 描边线宽
-			Stroke	outline_stroke;		// 描边线相交样式
+			StrokeStyle	outline_stroke;		// 描边线相交样式
 
 		public:
 			Style();
@@ -67,7 +67,7 @@ namespace easy2d
 				bool outline			= true,
 				Color outline_color		= Color(Color::Black, 0.5),
 				float outline_width		= 1.f,
-				Stroke outline_stroke = Stroke::Round
+				StrokeStyle outline_stroke = StrokeStyle::Round
 			);
 		};
 
@@ -110,7 +110,7 @@ namespace easy2d
 		float GetOutlineWidth() const;
 
 		// 获取描边线相交样式
-		Stroke GetOutlineStroke() const;
+		StrokeStyle GetOutlineStroke() const;
 
 		// 获取文本显示行数
 		int GetLineCount() const;
@@ -214,7 +214,7 @@ namespace easy2d
 
 		// 设置描边线相交样式
 		void SetOutlineStroke(
-			Stroke outline_stroke
+			StrokeStyle outline_stroke
 		);
 
 		// 渲染文字

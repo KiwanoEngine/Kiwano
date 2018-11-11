@@ -135,17 +135,11 @@ namespace easy2d
 		if (image_ && image_->GetBitmap())
 		{
 			auto crop_pos = image_->GetCropPos();
-			render::D2D.HwndRenderTarget->DrawBitmap(
-				image_->GetBitmap(),
-				D2D1::RectF(0, 0, GetTransform().size.width, GetTransform().size.height),
+			render::instance.DrawImage(
+				image_,
 				GetDisplayOpacity(),
-				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				D2D1::RectF(
-					crop_pos.x,
-					crop_pos.y,
-					crop_pos.y + GetTransform().size.width,
-					crop_pos.y + GetTransform().size.height
-				)
+				Rect(Point(), GetTransform().size),
+				Rect(crop_pos, GetTransform().size)
 			);
 		}
 	}

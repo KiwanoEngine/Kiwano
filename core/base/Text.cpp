@@ -39,7 +39,7 @@ namespace easy2d
 		, outline(true)
 		, outline_color(Color(Color::Black, 0.5))
 		, outline_width(1.f)
-		, outline_stroke(Stroke::Round)
+		, outline_stroke(StrokeStyle::Round)
 	{}
 
 	Text::Style::Style(
@@ -53,7 +53,7 @@ namespace easy2d
 		bool outline,
 		Color outline_color,
 		float outline_width,
-		Stroke outline_stroke
+		StrokeStyle outline_stroke
 	)
 		: color(color)
 		, alignment(alignment)
@@ -143,7 +143,7 @@ namespace easy2d
 		return style_.outline_width;
 	}
 
-	Stroke Text::GetOutlineStroke() const
+	StrokeStyle Text::GetOutlineStroke() const
 	{
 		return style_.outline_stroke;
 	}
@@ -306,7 +306,7 @@ namespace easy2d
 		style_.outline_width = outline_width;
 	}
 
-	void Text::SetOutlineStroke(Stroke outline_stroke)
+	void Text::SetOutlineStroke(StrokeStyle outline_stroke)
 	{
 		style_.outline_stroke = outline_stroke;
 	}
@@ -318,16 +318,16 @@ namespace easy2d
 			// 创建文本区域
 			D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, GetTransform().size.width, GetTransform().size.height);
 			// 设置画刷颜色和透明度
-			render::D2D.SolidColorBrush->SetOpacity(GetDisplayOpacity());
+			render::instance.SetBrushOpacity(GetDisplayOpacity());
 			// 获取文本渲染器
-			render::D2D.TextRenderer->SetTextStyle(
+			render::instance.SetTextStyle(
 				style_.color,
 				style_.outline,
 				style_.outline_color,
 				style_.outline_width,
-				static_cast<D2D1_LINE_JOIN>(style_.outline_stroke)
+				style_.outline_stroke
 			);
-			text_layout_->Draw(nullptr, render::D2D.TextRenderer, 0, 0);
+			render::instance.DrawTextLayout(text_layout_);
 		}
 	}
 
@@ -344,15 +344,9 @@ namespace easy2d
 		SafeRelease(text_format_);
 
 		ThrowIfFailed(
-			render::D2D.DWriteFactory->CreateTextFormat(
-				font_.family.c_str(),
-				nullptr,
-				DWRITE_FONT_WEIGHT(font_.weight),
-				font_.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
-				DWRITE_FONT_STRETCH_NORMAL,
-				font_.size,
-				L"",
-				&text_format_
+			render::instance.CreateTextFormat(
+				&text_format_,
+				font_
 			)
 		);
 
@@ -401,19 +395,15 @@ namespace easy2d
 			return;
 		}
 
-		UINT32 length = static_cast<UINT32>(text_.size());
-
 		// 对文本自动换行情况下进行处理
 		if (style_.wrap)
 		{
 			ThrowIfFailed(
-				render::D2D.DWriteFactory->CreateTextLayout(
-					text_.c_str(),
-					length,
+				render::instance.CreateTextLayout(
+					&text_layout_,
+					text_,
 					text_format_,
-					style_.wrap_width,
-					0,
-					&text_layout_
+					style_.wrap_width
 				)
 			);
 			// 获取文本布局的宽度和高度
@@ -426,13 +416,11 @@ namespace easy2d
 		{
 			// 为防止文本对齐问题，根据先创建 layout 以获取宽度
 			ThrowIfFailed(
-				render::D2D.DWriteFactory->CreateTextLayout(
-					text_.c_str(),
-					length,
+				render::instance.CreateTextLayout(
+					&text_layout_,
+					text_,
 					text_format_,
-					0,
-					0,
-					&text_layout_
+					0
 				)
 			);
 
@@ -445,19 +433,17 @@ namespace easy2d
 			// 重新创建 layout
 			SafeRelease(text_layout_);
 			ThrowIfFailed(
-				render::D2D.DWriteFactory->CreateTextLayout(
-					text_.c_str(),
-					length,
+				render::instance.CreateTextLayout(
+					&text_layout_,
+					text_,
 					text_format_,
-					GetTransform().size.width,
-					0,
-					&text_layout_
+					GetTransform().size.width
 				)
 			);
 		}
 
 		// 添加下划线和删除线
-		DWRITE_TEXT_RANGE range = { 0, length };
+		DWRITE_TEXT_RANGE range = { 0, static_cast<UINT32>(text_.length()) };
 		if (style_.underline)
 		{
 			text_layout_->SetUnderline(true, range);

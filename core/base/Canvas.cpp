@@ -24,15 +24,21 @@
 
 namespace easy2d
 {
+	///////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////
+	// FIXME!!!
+	///////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////
+
 	Canvas::Canvas(float width, float height)
 		: render_target_(nullptr)
 		, fill_brush_(nullptr)
 		, line_brush_(nullptr)
 		, stroke_style_(nullptr)
 		, stroke_width_(1.0f)
-		, stroke_(Stroke::Miter)
+		, stroke_(StrokeStyle::Miter)
 	{
-		render_target_ = render::D2D.HwndRenderTarget;
+		// render_target_ = render::D2D.HwndRenderTarget;
 		render_target_->AddRef();
 
 		ThrowIfFailed(
@@ -78,22 +84,11 @@ namespace easy2d
 		stroke_width_ = std::max(width, 0.f);
 	}
 
-	void Canvas::SetStrokeStyle(Stroke strokeStyle)
+	void Canvas::SetStrokeStyle(StrokeStyle stroke)
 	{
 		SafeRelease(stroke_style_);
 
-		switch (strokeStyle)
-		{
-		case Stroke::Miter:
-			stroke_style_ = render::D2D.MiterStrokeStyle;
-			break;
-		case Stroke::Bevel:
-			stroke_style_ = render::D2D.BevelStrokeStyle;
-			break;
-		case Stroke::Round:
-			stroke_style_ = render::D2D.RoundStrokeStyle;
-			break;
-		}
+		stroke_style_ = render::instance.GetStrokeStyle(stroke);
 
 		if (stroke_style_)
 			stroke_style_->AddRef();
@@ -114,7 +109,7 @@ namespace easy2d
 		return stroke_width_;
 	}
 
-	Stroke Canvas::GetStrokeStyle() const
+	StrokeStyle Canvas::GetStrokeStyle() const
 	{
 		return stroke_;
 	}

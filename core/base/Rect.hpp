@@ -20,6 +20,7 @@
 
 #pragma once
 #include "BaseTypes.h"
+#include <d2d1.h>
 
 namespace easy2d
 {
@@ -95,6 +96,11 @@ namespace easy2d
 					(rect.origin.x + rect.size.width)	< origin.x ||
 					(origin.y + size.height)			< rect.origin.y ||
 					(rect.origin.y + rect.size.height)	< origin.y);
+		}
+
+		inline operator D2D1_RECT_F () const
+		{
+			return D2D1_RECT_F{ origin.x, origin.y, origin.x + size.width, origin.y + size.height };
 		}
 	};
 }

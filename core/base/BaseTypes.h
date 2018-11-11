@@ -46,8 +46,8 @@ namespace easy2d
 		Right	/* 右 */
 	};
 
-	// 线条相交样式
-	enum class Stroke : int
+	// 画笔样式
+	enum class StrokeStyle : int
 	{
 		Miter = 0,	/* 斜切 */
 		Bevel = 1,	/* 斜角 */

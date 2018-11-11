@@ -21,7 +21,7 @@
 #pragma once
 #include "../base/BaseTypes.h"
 #include "../base/Size.h"
-#include <d2d1.h>
+#include "Matrix.hpp"
 
 namespace easy2d
 {
@@ -43,7 +43,7 @@ namespace easy2d
 		public:
 			Transform();
 
-			explicit operator D2D1::Matrix3x2F() const;
+			Matrix ToMatrix() const;
 
 			bool operator== (const Transform& other) const;
 		};
