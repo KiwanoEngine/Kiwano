@@ -37,27 +37,27 @@ namespace easy2d
 
 		// 保存 int 类型的值
 		bool SaveInt(
-			int value
+			int val
 		);
 
 		// 保存 float 类型的值
 		bool SaveFloat(
-			float value
+			float val
 		);
 
 		// 保存 double 类型的值
 		bool SaveDouble(
-			double value
+			double val
 		);
 
 		// 保存 bool 类型的值
 		bool SaveBool(
-			bool value
+			bool val
 		);
 
 		// 保存 String 类型的值
 		bool SaveString(
-			const String& value
+			const String& val
 		);
 
 		// 获取 int 类型的值

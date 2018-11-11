@@ -20,7 +20,7 @@
 
 #pragma once
 #include "macros.h"
-#include <chrono>
+#include <cstdint>
 
 namespace easy2d
 {
@@ -34,18 +34,22 @@ namespace easy2d
 		//         1.5 小时: time::Hour * 1.5
 		//         3 小时 45 分 15 秒: time::Hour * 3 + time::Minute * 45 + time::Second * 15
 		//     时间段格式化: auto d = time::ParseDuration(L"1h35m");  // 1小时35分钟
-		// 
+		//     在 VS2015 及更高版本可以使用 time literals:
+		//         5 秒: 5_s
+		//         1.5 小时: 1.5_h
+		//         3 小时 45 分 15 秒: 3_h + 45_m + 15_s
+		//
 		class Duration
 		{
 		public:
 			Duration();
 
 			explicit Duration(
-				int milliseconds
+				int64_t milliseconds
 			);
 
 			// 转化为毫秒
-			int Milliseconds() const;
+			int64_t Milliseconds() const;
 
 			// 转化为秒
 			float Seconds() const;
@@ -55,6 +59,9 @@ namespace easy2d
 
 			// 转化为小时
 			float Hours() const;
+
+			// 转为字符串
+			std::wstring ToString() const;
 
 			bool operator== (const Duration &) const;
 			bool operator!= (const Duration &) const;
@@ -67,30 +74,45 @@ namespace easy2d
 			Duration operator - (const Duration &) const;
 			Duration operator - () const;
 			Duration operator * (int) const;
+			Duration operator * (unsigned long long) const;
 			Duration operator * (float) const;
 			Duration operator * (double) const;
+			Duration operator * (long double) const;
 			Duration operator / (int) const;
+			Duration operator / (unsigned long long) const;
 			Duration operator / (float) const;
 			Duration operator / (double) const;
+			Duration operator / (long double) const;
 
 			Duration& operator += (const Duration &);
 			Duration& operator -= (const Duration &);
 			Duration& operator *= (int);
+			Duration& operator *= (unsigned long long);
 			Duration& operator *= (float);
 			Duration& operator *= (double);
+			Duration& operator *= (long double);
 			Duration& operator /= (int);
+			Duration& operator /= (unsigned long long);
 			Duration& operator /= (float);
 			Duration& operator /= (double);
+			Duration& operator /= (long double);
 
 			friend Duration operator* (int, const Duration &);
+			friend Duration operator* (unsigned long long, const Duration &);
 			friend Duration operator* (float, const Duration &);
 			friend Duration operator* (double, const Duration &);
+			friend Duration operator* (long double, const Duration &);
 			friend Duration operator/ (int, const Duration &);
+			friend Duration operator/ (unsigned long long, const Duration &);
 			friend Duration operator/ (float, const Duration &);
 			friend Duration operator/ (double, const Duration &);
+			friend Duration operator/ (long double, const Duration &);
+
+			friend std::wostream& operator<< (std::wostream &, const Duration &);
+			friend std::wistream& operator>> (std::wistream &, Duration &);
 
 		private:
-			int milliseconds_;
+			int64_t milliseconds_;
 		};
 
 		extern const Duration Millisecond;	// 毫秒
@@ -118,7 +140,11 @@ namespace easy2d
 			TimePoint();
 
 			explicit TimePoint(
-				std::chrono::steady_clock::time_point
+				const Duration& dur_since_epoch
+			);
+
+			explicit TimePoint(
+				int64_t dur_since_epoch
 			);
 
 			TimePoint(
@@ -147,7 +173,7 @@ namespace easy2d
 			TimePoint& operator = (TimePoint &&) E2D_NOEXCEPT;
 
 		private:
-			std::chrono::steady_clock::time_point time_;
+			Duration dur_since_epoch_;
 		};
 
 		// 获取当前时间
@@ -160,3 +186,58 @@ namespace easy2d
 		Duration ParseDuration(const std::wstring& parse_str);
 	}
 }
+
+#if VS_VER >= VS_2015
+
+namespace easy2d
+{
+	inline namespace literals
+	{
+		inline const easy2d::time::Duration operator "" _ms(long double val)
+		{
+			return easy2d::time::Millisecond * val;
+		}
+
+		inline const easy2d::time::Duration operator "" _s(long double val)
+		{
+			return easy2d::time::Second * val;
+		}
+
+		inline const easy2d::time::Duration operator "" _m(long double val)
+		{
+			return easy2d::time::Minute * val;
+		}
+
+		inline const easy2d::time::Duration operator "" _h(long double val)
+		{
+			return easy2d::time::Hour * val;
+		}
+
+		inline const easy2d::time::Duration operator "" _ms(unsigned long long val)
+		{
+			return easy2d::time::Millisecond * val;
+		}
+
+		inline const easy2d::time::Duration operator "" _s(unsigned long long val)
+		{
+			return easy2d::time::Second * val;
+		}
+
+		inline const easy2d::time::Duration operator "" _m(unsigned long long val)
+		{
+			return easy2d::time::Minute * val;
+		}
+
+		inline const easy2d::time::Duration operator "" _h(unsigned long long val)
+		{
+			return easy2d::time::Hour * val;
+		}
+	}
+
+	namespace time
+	{
+		using namespace easy2d::literals;
+	}
+}
+
+#endif

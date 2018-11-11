@@ -32,7 +32,7 @@ namespace easy2d
 	{
 		_D2D_Resource D2D = { 0 };
 
-		void Initialize(HWND hwnd)
+		void easy2d::render::Initialize(HWND hwnd)
 		{
 			if (D2D.Factory)
 				return;
@@ -106,7 +106,7 @@ namespace easy2d
 			CreateDeviceResources(hwnd);
 		}
 
-		void CreateDeviceResources(HWND hwnd)
+		void easy2d::render::CreateDeviceResources(HWND hwnd)
 		{
 			if (!D2D.HwndRenderTarget)
 			{
@@ -155,7 +155,7 @@ namespace easy2d
 			}
 		}
 
-		void Uninitialize()
+		void easy2d::render::Uninitialize()
 		{
 			SafeRelease(D2D.TextRenderer);
 			SafeRelease(D2D.SolidColorBrush);
@@ -224,8 +224,9 @@ namespace easy2d
 		void GraphicsDevice::DrawDebugInfo()
 		{
 			static int render_times_ = 0;
-			static time::TimePoint last_render_time_ = time::Now();
-			int duration = (time::Now() - last_render_time_).Milliseconds();
+			static auto last_render_time_ = time::Now();
+
+			int64_t duration = (time::Now() - last_render_time_).Milliseconds();
 
 			if (!fps_text_format_)
 			{
@@ -250,10 +251,10 @@ namespace easy2d
 			}
 
 			++render_times_;
-			if (duration >= 100)
+			if (duration >= 100LL)
 			{
 				wchar_t fps_text[12] = {};
-				int len = swprintf_s(fps_text, L"FPS: %.1f", 1000.f / duration * render_times_);
+				int len = swprintf_s(fps_text, L"FPS: %.1f", 1000.f / static_cast<float>(duration) * render_times_);
 
 				last_render_time_ = time::Now();
 				render_times_ = 0;

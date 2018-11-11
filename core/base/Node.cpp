@@ -1041,9 +1041,9 @@ namespace easy2d
 		}
 	}
 
-	void Node::SetVisible(bool value)
+	void Node::SetVisible(bool val)
 	{
-		visible_ = value;
+		visible_ = val;
 	}
 
 	void Node::SetName(const String& name)

@@ -223,9 +223,9 @@ namespace easy2d
 		style_.color = color;
 	}
 
-	void Text::SetItalic(bool value)
+	void Text::SetItalic(bool val)
 	{
-		font_.italic = value;
+		font_.italic = val;
 		Reset();
 	}
 

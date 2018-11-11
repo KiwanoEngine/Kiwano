@@ -48,8 +48,8 @@ namespace easy2d
 
 		Size operator + (const Size & other) const;
 		Size operator - (const Size & other) const;
-		Size operator * (float value) const;
-		Size operator / (float value) const;
+		Size operator * (float val) const;
+		Size operator / (float val) const;
 		Size operator - () const;
 		bool operator== (const Size& other) const;
 	};

@@ -25,40 +25,40 @@ namespace easy2d
 {
 	namespace math
 	{
-		inline int Abs(int v) { return ::abs(v); }
+		inline int Abs(int val) { return ::abs(val); }
 
-		inline float Abs(float v) { return ::fabsf(v); }
+		inline float Abs(float val) { return ::fabsf(val); }
 
-		inline double Abs(double v) { return ::fabs(v); }
+		inline double Abs(double val) { return ::fabs(val); }
 
-		inline float Sqrt(float v) { return ::sqrtf(v); }
+		inline float Sqrt(float val) { return ::sqrtf(val); }
 
-		inline double Sqrt(double v) { return ::sqrt(v); }
+		inline double Sqrt(double val) { return ::sqrt(val); }
 
-		inline int Sign(int v) { return v < 0 ? -1 : 1; }
+		inline int Sign(int val) { return val < 0 ? -1 : 1; }
 
-		inline float Sign(float v) { return v < 0 ? -1.f : 1.f; }
+		inline float Sign(float val) { return val < 0 ? -1.f : 1.f; }
 
-		inline double Sign(double v) { return v < 0 ? -1.0 : 1.0; }
+		inline double Sign(double val) { return val < 0 ? -1.0 : 1.0; }
 
-		inline float Sin(float v) { return ::sinf(v); }
+		inline float Sin(float val) { return ::sinf(val); }
 
-		inline double Sin(double v) { return ::sin(v); }
+		inline double Sin(double val) { return ::sin(val); }
 
-		inline float Cos(float v) { return ::cosf(v); }
+		inline float Cos(float val) { return ::cosf(val); }
 
-		inline double Cos(double v) { return ::cos(v); }
+		inline double Cos(double val) { return ::cos(val); }
 
-		inline float Tan(float v) { return ::tanf(v); }
+		inline float Tan(float val) { return ::tanf(val); }
 
-		inline double Tan(double v) { return ::tan(v); }
+		inline double Tan(double val) { return ::tan(val); }
 
-		inline float Ceil(float v) { return ceil(v); }
+		inline float Ceil(float val) { return ceil(val); }
 
-		inline double Ceil(double v) { return ceil(v); }
+		inline double Ceil(double val) { return ceil(val); }
 
-		inline float Floor(float v) { return floor(v); }
+		inline float Floor(float val) { return floor(val); }
 
-		inline double Floor(double v) { return floor(v); }
+		inline double Floor(double val) { return floor(val); }
 	}
 }

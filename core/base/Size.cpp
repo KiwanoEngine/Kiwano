@@ -50,14 +50,14 @@ namespace easy2d
 		return Size(width - other.width, height - other.height);
 	}
 
-	Size Size::operator*(float value) const
+	Size Size::operator*(float val) const
 	{
-		return Size(width * value, height * value);
+		return Size(width * val, height * val);
 	}
 
-	Size Size::operator/(float value) const
+	Size Size::operator/(float val) const
 	{
-		return Size(width / value, height / value);
+		return Size(width / val, height / val);
 	}
 
 	Size Size::operator-() const
