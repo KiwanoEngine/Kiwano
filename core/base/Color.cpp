@@ -80,9 +80,4 @@ namespace easy2d
 		, a(color.a)
 	{
 	}
-
-	Color::operator D2D1_COLOR_F() const
-	{
-		return D2D1::ColorF(r, g, b, a);
-	}
 }

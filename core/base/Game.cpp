@@ -23,12 +23,13 @@
 #include "Scene.h"
 #include "Transition.h"
 #include "Image.h"
-#include "../utils/Player.h"
 #include "time.h"
 #include "render.h"
 #include "input.h"
 #include "audio.h"
 #include "modules.h"
+#include "../utils/Player.h"
+#include "../math/Matrix.hpp"
 #include <thread>
 
 namespace easy2d
@@ -68,7 +69,7 @@ namespace easy2d
 		Image::ClearCache();
 		Player::ClearCache();
 
-		render::Uninitialize();
+		render::instance.Uninitialize();
 		audio::instance.Uninitialize();
 		window::instance.Destroy();
 		modules::Uninitialize();
@@ -82,8 +83,8 @@ namespace easy2d
 	{
 		modules::Initialize();
 		window::instance.Initialize(property);
+		render::instance.Initialize(window::instance.handle);
 		audio::instance.Initialize();
-		render::Initialize(window::instance.handle);
 
 		// 若开启了调试模式，打开控制台
 		HWND console = ::GetConsoleWindow();
@@ -291,14 +292,14 @@ namespace easy2d
 		{
 			if (curr_scene_ && curr_scene_->GetRoot())
 			{
-				render::D2D.HwndRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-				render::D2D.SolidColorBrush->SetOpacity(1.f);
+				render::instance.SetTransform(math::Matrix());
+				render::instance.SetBrushOpacity(1.f);
 				curr_scene_->GetRoot()->DrawBorder();
 			}
 			if (next_scene_ && next_scene_->GetRoot())
 			{
-				render::D2D.HwndRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-				render::D2D.SolidColorBrush->SetOpacity(1.f);
+				render::instance.SetTransform(math::Matrix());
+				render::instance.SetBrushOpacity(1.f);
 				next_scene_->GetRoot()->DrawBorder();
 			}
 

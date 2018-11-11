@@ -37,25 +37,13 @@ namespace easy2d
 		{
 		}
 
-		Transform::operator D2D1::Matrix3x2F() const
+		Matrix Transform::ToMatrix() const
 		{
-			auto pivot = D2D1::Point2F(size.width * pivot_x, size.height * pivot_y);
-			auto matrix = D2D1::Matrix3x2F::Scale(
-				scale_x,
-				scale_y,
-				pivot
-			) * D2D1::Matrix3x2F::Skew(
-				skew_x,
-				skew_y,
-				pivot
-			) * D2D1::Matrix3x2F::Rotation(
-				rotation,
-				pivot
-			) * D2D1::Matrix3x2F::Translation(
-				position.x - pivot.x,
-				position.y - pivot.y
-			);
-			return matrix;
+			auto pivot = Vector2(size.width * pivot_x, size.height * pivot_y);
+			return Matrix().Scale(scale_x, scale_y, pivot)
+				.Skew(skew_x, skew_y, pivot)
+				.Rotate(rotation, pivot)
+				.Translate(position - pivot);
 		}
 
 		bool Transform::operator==(const Transform & other) const

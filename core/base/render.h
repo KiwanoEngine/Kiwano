@@ -20,7 +20,11 @@
 
 #pragma once
 #include "base.h"
+#include "Font.h"
+#include "Resource.h"
+#include "Image.h"
 #include "TextRenderer.h"
+#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
@@ -37,15 +41,13 @@ namespace easy2d
 			ID2D1StrokeStyle*		MiterStrokeStyle;
 			ID2D1StrokeStyle*		BevelStrokeStyle;
 			ID2D1StrokeStyle*		RoundStrokeStyle;
-		} _D2D_Resource;
+		} D2DResources;
 
-		extern _D2D_Resource D2D;
-
-		void Initialize(HWND hwnd);
-
-		void CreateDeviceResources(HWND hwnd);
-
-		void Uninitialize();
+		typedef struct
+		{
+			Rect area;
+			float opacity;
+		} LayerProperties;
 
 		class GraphicsDevice
 		{
@@ -54,24 +56,121 @@ namespace easy2d
 
 			~GraphicsDevice();
 
+			void Initialize(HWND hwnd);
+
+			void Uninitialize();
+
 			// 开始渲染
 			void BeginDraw(HWND hwnd);
 
 			// 结束渲染
 			void EndDraw();
 
-			// 渲染调试信息
-			void DrawDebugInfo();
-
 			// 设置背景色
 			void SetBackgroundColor(
 				const Color& color
+			);
+
+			// 渲染调试信息
+			void DrawDebugInfo();
+
+			void CreateDeviceResources(HWND hwnd);
+
+			HRESULT CreateRectGeometry(
+				const math::Matrix& matrix,
+				const Size& size,
+				ID2D1Geometry** geometry
+			) const;
+
+			HRESULT CreateTextFormat(
+				IDWriteTextFormat** text_format,
+				const Font& font
+			) const;
+
+			HRESULT CreateTextLayout(
+				IDWriteTextLayout** text_layout,
+				const String& text,
+				IDWriteTextFormat* text_format,
+				float wrap_width
+			) const;
+
+			HRESULT CreateLayer(
+				ID2D1Layer** layer
+			);
+
+			ID2D1StrokeStyle* GetStrokeStyle(
+				StrokeStyle stroke
+			) const;
+
+			HRESULT SetTransform(
+				const math::Matrix& matrix
+			);
+
+			HRESULT SetBrushOpacity(
+				float opacity
+			);
+
+			HRESULT SetTextStyle(
+				const Color& color,
+				bool has_outline,
+				const Color& outline_color,
+				float outline_width,
+				StrokeStyle outline_stroke
+			);
+
+			HRESULT DrawGeometry(
+				ID2D1Geometry* geometry,
+				const Color& border_color,
+				float opacity,
+				float stroke_width,
+				StrokeStyle stroke = StrokeStyle::Miter
+			);
+
+			HRESULT DrawImage(
+				Image* image,
+				float opacity,
+				const Rect& dest_rect,
+				const Rect& source_rect
+			);
+
+			HRESULT DrawTextLayout(
+				IDWriteTextLayout* text_layout
+			);
+
+			HRESULT PushClip(
+				const math::Matrix& clip_matrix,
+				const Size& clip_size
+			);
+
+			HRESULT PopClip();
+
+			HRESULT PushLayer(
+				ID2D1Layer* layer,
+				LayerProperties properties
+			);
+
+			HRESULT PopLayer();
+
+			HRESULT CreateBitmapFromFile(
+				const String& file_path,
+				ID2D1Bitmap** bitmap
+			);
+
+			HRESULT CreateBitmapFromResource(
+				Resource& res,
+				ID2D1Bitmap** bitmap
+			);
+
+			HRESULT Resize(
+				UINT32 width,
+				UINT32 height
 			);
 
 		protected:
 			D2D1_COLOR_F		clear_color_;
 			IDWriteTextFormat*	fps_text_format_;
 			IDWriteTextLayout*	fps_text_layout_;
+			D2DResources		d2d;
 		};
 
 		extern GraphicsDevice instance;

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <d2d1.h>
 
 namespace easy2d
 {
@@ -52,5 +53,10 @@ namespace easy2d
 		Size operator / (float val) const;
 		Size operator - () const;
 		bool operator== (const Size& other) const;
+
+		inline operator D2D1_SIZE_F () const
+		{
+			return D2D1_SIZE_F{ width, height };
+		}
 	};
 }

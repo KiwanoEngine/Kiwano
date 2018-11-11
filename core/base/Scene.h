@@ -22,7 +22,7 @@
 #include "RefCounter.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
-#include <d2d1.h>
+#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
@@ -73,17 +73,17 @@ namespace easy2d
 
 		// 设置转换矩阵
 		void SetTransform(
-			const D2D1::Matrix3x2F& matrix
+			const math::Matrix& matrix
 		);
 
 		// 获取转换矩阵
-		const D2D1::Matrix3x2F& GetTransform() const;
+		const math::Matrix& GetTransform() const;
 
 	private:
 		E2D_DISABLE_COPY(Scene);
 
 	private:
-		Node*				root_;
-		D2D1::Matrix3x2F	transform_;
+		Node*			root_;
+		math::Matrix	transform_;
 	};
 }

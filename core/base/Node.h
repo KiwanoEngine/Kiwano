@@ -21,9 +21,10 @@
 #pragma once
 #include "base.h"
 #include "RefCounter.h"
-#include "../math/Transform.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
+#include "../math/Transform.h"
+#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
@@ -446,9 +447,8 @@ namespace easy2d
 		void UpdateTime();
 
 	private:
-		String		name_;
+		String				name_;
 		size_t				hash_name_;
-		math::Transform		transform_;
 		float				display_opacity_;
 		float				real_opacity_;
 		int					order_;
@@ -463,7 +463,8 @@ namespace easy2d
 		Tasks				tasks_;
 		Nodes				children_;
 		ID2D1Geometry*		border_;
-		D2D1::Matrix3x2F	initial_matrix_;
-		D2D1::Matrix3x2F	final_matrix_;
+		math::Transform		transform_;
+		math::Matrix		initial_matrix_;
+		math::Matrix		final_matrix_;
 	};
 }

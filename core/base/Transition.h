@@ -21,6 +21,7 @@
 #pragma once
 #include "base.h"
 #include "time.h"
+#include "render.h"
 #include "RefCounter.h"
 
 namespace easy2d
@@ -65,17 +66,17 @@ namespace easy2d
 		virtual void Reset() { };
 
 	protected:
-		bool	done_;
-		float	duration_;
-		float	process_;
+		bool			done_;
+		float			duration_;
+		float			process_;
 		time::TimePoint	started_;
-		Size	window_size_;
-		Scene*	out_scene_;
-		Scene*	in_scene_;
-		ID2D1Layer * out_layer_;
-		ID2D1Layer * in_layer_;
-		D2D1_LAYER_PARAMETERS out_layer_param_;
-		D2D1_LAYER_PARAMETERS in_layer_param_;
+		Size			window_size_;
+		Scene*			out_scene_;
+		Scene*			in_scene_;
+		ID2D1Layer*		out_layer_;
+		ID2D1Layer*		in_layer_;
+		render::LayerProperties out_layer_prop_;
+		render::LayerProperties in_layer_prop_;
 	};
 
 

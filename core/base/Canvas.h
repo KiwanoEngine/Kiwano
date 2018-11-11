@@ -53,7 +53,7 @@ namespace easy2d
 
 		// 设置线条相交样式
 		void SetStrokeStyle(
-			Stroke strokeStyle
+			StrokeStyle stroke
 		);
 
 		// 获取线条颜色
@@ -66,7 +66,7 @@ namespace easy2d
 		float GetStrokeWidth() const;
 
 		// 获取线条相交样式
-		Stroke GetStrokeStyle() const;
+		StrokeStyle GetStrokeStyle() const;
 
 		// 画直线
 		void DrawLine(
@@ -129,7 +129,7 @@ namespace easy2d
 
 	private:
 		float					stroke_width_;
-		Stroke					stroke_;
+		StrokeStyle					stroke_;
 		ID2D1RenderTarget*		render_target_;
 		ID2D1SolidColorBrush*	fill_brush_;
 		ID2D1SolidColorBrush*	line_brush_;

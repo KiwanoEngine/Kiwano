@@ -44,8 +44,8 @@ namespace easy2d
 		, children_()
 		, actions_()
 		, tasks_()
-		, initial_matrix_(D2D1::Matrix3x2F::Identity())
-		, final_matrix_(D2D1::Matrix3x2F::Identity())
+		, initial_matrix_()
+		, final_matrix_()
 		, border_color_(Color::Red, 0.6f)
 	{
 	}
@@ -75,19 +75,14 @@ namespace easy2d
 		if (!visible_)
 			return;
 
-		auto render_target = render::D2D.HwndRenderTarget;
 		if (clip_enabled_)
 		{
-			render_target->SetTransform(final_matrix_);
-			render_target->PushAxisAlignedClip(
-				D2D1::RectF(0, 0, transform_.size.width, transform_.size.height),
-				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
-			);
+			render::instance.PushClip(final_matrix_, transform_.size);
 		}
 
 		if (children_.empty())
 		{
-			render_target->SetTransform(final_matrix_);
+			render::instance.SetTransform(final_matrix_);
 			OnDraw();
 		}
 		else
@@ -119,7 +114,7 @@ namespace easy2d
 				}
 			}
 
-			render_target->SetTransform(final_matrix_);
+			render::instance.SetTransform(final_matrix_);
 			OnDraw();
 
 			// 访问剩余节点
@@ -129,7 +124,7 @@ namespace easy2d
 
 		if (clip_enabled_)
 		{
-			render_target->PopAxisAlignedClip();
+			render::instance.PopClip();
 		}
 	}
 
@@ -176,12 +171,7 @@ namespace easy2d
 		{
 			if (border_)
 			{
-				render::D2D.SolidColorBrush->SetColor(D2D1_COLOR_F(border_color_));
-				render::D2D.HwndRenderTarget->DrawGeometry(
-					border_,
-					render::D2D.SolidColorBrush,
-					1.5f
-				);
+				render::instance.DrawGeometry(border_, border_color_, 1.f, 1.5f);
 			}
 
 			for (const auto& child : children_)
@@ -198,14 +188,14 @@ namespace easy2d
 
 		dirty_transform_ = false;
 
-		final_matrix_ = static_cast<D2D1::Matrix3x2F>(transform_);
+		final_matrix_ = transform_.ToMatrix();
 
 		// 根据自身支点计算 Initial 矩阵，子节点将根据这个矩阵进行变换
 		auto pivot = Point(
 			transform_.size.width * transform_.pivot_x,
 			transform_.size.height * transform_.pivot_y
 		);
-		initial_matrix_ = final_matrix_ * D2D1::Matrix3x2F::Translation(pivot.x, pivot.y);
+		initial_matrix_ = final_matrix_ * math::Matrix::Translation(pivot);
 
 		if (parent_)
 		{
@@ -220,26 +210,10 @@ namespace easy2d
 
 		// 重新构造轮廓
 		SafeRelease(border_);
-
-		ID2D1Factory * factory = render::D2D.Factory;
-		ID2D1RectangleGeometry * rectangle = nullptr;
-		ID2D1TransformedGeometry * transformed = nullptr;
+		
 		ThrowIfFailed(
-			factory->CreateRectangleGeometry(
-				D2D1::RectF(0, 0, transform_.size.width, transform_.size.height),
-				&rectangle
-			)
+			render::instance.CreateRectGeometry(final_matrix_, transform_.size, &border_)
 		);
-		ThrowIfFailed(
-			factory->CreateTransformedGeometry(
-				rectangle,
-				final_matrix_,
-				&transformed
-			)
-		);
-		border_ = transformed;
-
-		SafeRelease(rectangle);
 
 		// 通知子节点进行转换
 		for (const auto& child : children_)

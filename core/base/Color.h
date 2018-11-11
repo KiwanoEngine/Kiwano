@@ -63,7 +63,10 @@ namespace easy2d
 			const D2D1_COLOR_F& color
 		);
 
-		operator D2D1_COLOR_F() const;
+		inline operator D2D1_COLOR_F() const
+		{
+			return D2D1_COLOR_F{ r, g, b, a };
+		}
 
 	public:
 		enum Value : unsigned int

@@ -20,6 +20,7 @@
 
 #pragma once
 #include "vector.hpp"
+#include <d2d1.h>
 
 namespace easy2d
 {
@@ -73,6 +74,15 @@ namespace easy2d
 				);
 			}
 
+			inline operator D2D1_MATRIX_3X2_F () const
+			{
+				return D2D1_MATRIX_3X2_F{
+					_11, _12,
+					_21, _22,
+					_31, _32
+				};
+			}
+
 			inline Matrix& Identity()
 			{
 				_11 = 1.f;
@@ -90,9 +100,21 @@ namespace easy2d
 				return *this;
 			}
 
+			inline Matrix& Translate(float x, float y)
+			{
+				*this = *this * Matrix::Translation(x, y);
+				return *this;
+			}
+
 			inline Matrix& Scale(const Vector2& v, const Vector2& center)
 			{
 				*this = *this * Matrix::Scaling(v, center);
+				return *this;
+			}
+
+			inline Matrix& Scale(float xscale, float yscale, const Vector2& center)
+			{
+				*this = *this * Matrix::Scaling(xscale, yscale, center);
 				return *this;
 			}
 

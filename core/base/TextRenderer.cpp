@@ -73,22 +73,7 @@ namespace easy2d
 		bShowOutline_ = outline;
 		sOutlineColor_ = outline_color;
 		fOutlineWidth = 2 * outline_width;
-
-		switch (outlineJoin)
-		{
-		case D2D1_LINE_JOIN_MITER:
-			pCurrStrokeStyle_ = render::D2D.MiterStrokeStyle;
-			break;
-		case D2D1_LINE_JOIN_BEVEL:
-			pCurrStrokeStyle_ = render::D2D.BevelStrokeStyle;
-			break;
-		case D2D1_LINE_JOIN_ROUND:
-			pCurrStrokeStyle_ = render::D2D.RoundStrokeStyle;
-			break;
-		default:
-			pCurrStrokeStyle_ = nullptr;
-			break;
-		}
+		pCurrStrokeStyle_ = render::instance.GetStrokeStyle(StrokeStyle(outlineJoin));
 	}
 
 	STDMETHODIMP ITextRenderer::DrawGlyphRun(
