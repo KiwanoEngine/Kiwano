@@ -44,56 +44,56 @@ namespace easy2d
 		return temp[0] == L'\0';
 	}
 
-	bool Data::SaveInt(int value)
+	bool Data::SaveInt(int val)
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_.c_str(),
 			key_.c_str(),
-			std::to_wstring(value).c_str(),
+			std::to_wstring(val).c_str(),
 			data_path_.c_str()
 		);
 		return ret == TRUE;
 	}
 
-	bool Data::SaveFloat(float value)
+	bool Data::SaveFloat(float val)
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_.c_str(),
 			key_.c_str(),
-			std::to_wstring(value).c_str(),
+			std::to_wstring(val).c_str(),
 			data_path_.c_str()
 		);
 		return ret == TRUE;
 	}
 
-	bool Data::SaveDouble(double value)
+	bool Data::SaveDouble(double val)
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_.c_str(),
 			key_.c_str(),
-			std::to_wstring(value).c_str(),
+			std::to_wstring(val).c_str(),
 			data_path_.c_str()
 		);
 		return ret == TRUE;
 	}
 
-	bool Data::SaveBool(bool value)
+	bool Data::SaveBool(bool val)
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_.c_str(),
 			key_.c_str(),
-			(value ? L"1" : L"0"),
+			(val ? L"1" : L"0"),
 			data_path_.c_str()
 		);
 		return ret == TRUE;
 	}
 
-	bool Data::SaveString(const String& value)
+	bool Data::SaveString(const String& val)
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_.c_str(),
 			key_.c_str(),
-			value.c_str(),
+			val.c_str(),
 			data_path_.c_str()
 		);
 		return ret == TRUE;

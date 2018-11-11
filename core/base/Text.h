@@ -164,7 +164,7 @@ namespace easy2d
 
 		// 设置文字斜体（默认值为 false）
 		void SetItalic(
-			bool value
+			bool val
 		);
 
 		// 打开或关闭文本自动换行（默认为关闭）

@@ -136,7 +136,7 @@ namespace easy2d
 		::ShowWindow(window::instance.handle, SW_SHOWNORMAL);
 		::UpdateWindow(window::instance.handle);
 
-		const int min_interval = 5;
+		const int64_t min_interval = 5;
 		auto last = time::Now();
 		MSG msg = { 0 };
 
@@ -171,8 +171,8 @@ namespace easy2d
 				// ID2D1HwndRenderTarget 开启了垂直同步，在渲染时会等待显示器刷新，
 				// 它起到了非常稳定的延时作用，所以大部分时候不需要手动挂起线程进行延时。
 				// 下面的代码仅在一些情况下（例如窗口最小化时）挂起线程，防止占用过高 CPU 。
-				int wait = min_interval - dur.Milliseconds();
-				if (wait > 1)
+				int64_t wait = min_interval - dur.Milliseconds();
+				if (wait > 1LL)
 				{
 					std::this_thread::sleep_for(std::chrono::milliseconds(wait));
 				}

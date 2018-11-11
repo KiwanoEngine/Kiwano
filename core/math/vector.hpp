@@ -59,14 +59,14 @@ namespace easy2d
 				return Vector2(x - other.x, y - other.y);
 			}
 
-			inline Vector2 operator * (float value) const
+			inline Vector2 operator * (float val) const
 			{
-				return Vector2(x * value, y * value);
+				return Vector2(x * val, y * val);
 			}
 
-			inline Vector2 operator / (float value) const
+			inline Vector2 operator / (float val) const
 			{
-				return Vector2(x / value, y / value);
+				return Vector2(x / val, y / val);
 			}
 
 			inline Vector2 operator - () const

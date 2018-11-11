@@ -20,6 +20,25 @@
 
 #pragma once
 
+#ifndef __cplusplus
+#	error Easy2D only supports C++ 
+#endif
+
+#ifndef _MSC_VER
+#   error Easy2D only supports MSVC compiler
+#endif
+
+#ifndef VS_VER
+#	define VS_VER _MSC_VER
+#	define VS_2013 1800
+#	define VS_2015 1900
+#	define VS_2017 1900
+#endif
+
+#if VS_VER < VS_2013
+#	error Easy2D only supports Visual Studio 2013 and above
+#endif
+
 #ifndef WINVER
 #	define WINVER 0x0700	   // Allow use of features specific to Windows 7 or later
 #endif
@@ -63,7 +82,7 @@
 #include <algorithm>
 
 
-#if _MSC_VER >= 1900  // >= Visual Studio 2015
+#if VS_VER >= VS_2015
 #	define E2D_NOEXCEPT noexcept
 #else
 #	define E2D_NOEXCEPT throw()

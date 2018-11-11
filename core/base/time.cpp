@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "time.h"
+#include <chrono>
 #include <regex>
 
 namespace easy2d
@@ -35,58 +36,61 @@ namespace easy2d
 		{
 		}
 
-		TimePoint::TimePoint(std::chrono::steady_clock::time_point time)
-			: time_(time)
+		TimePoint::TimePoint(const Duration& dur_since_epoch)
+			: dur_since_epoch_(dur_since_epoch)
+		{
+		}
+
+		TimePoint::TimePoint(int64_t dur_since_epoch)
+			: dur_since_epoch_(dur_since_epoch)
 		{
 		}
 
 		TimePoint::TimePoint(const TimePoint & other)
-			: time_(other.time_)
+			: dur_since_epoch_(other.dur_since_epoch_)
 		{
 		}
 
 		TimePoint::TimePoint(TimePoint && other)
-			: time_(std::move(other.time_))
+			: dur_since_epoch_(std::move(other.dur_since_epoch_))
 		{
 		}
 
 		time_t TimePoint::GetTimeStamp() const
 		{
-			auto& duration = time_point_cast<milliseconds>(time_).time_since_epoch();
-			return static_cast<time_t>(duration.count());
+			return static_cast<time_t>(dur_since_epoch_.Seconds());
 		}
 
 		bool TimePoint::IsZero() const
 		{
-			return time_.time_since_epoch().count() == 0LL;
+			return !!dur_since_epoch_.Milliseconds();
 		}
 
-		TimePoint TimePoint::operator+(const Duration & other) const
+		TimePoint TimePoint::operator+(const Duration & dur) const
 		{
-			return TimePoint(time_ + milliseconds(other.Milliseconds()));
+			return TimePoint(dur_since_epoch_ + dur);
 		}
 
-		TimePoint TimePoint::operator-(const Duration & other) const
+		TimePoint TimePoint::operator-(const Duration & dur) const
 		{
-			return TimePoint(time_ - milliseconds(other.Milliseconds()));
+			return TimePoint(dur_since_epoch_ - dur);
 		}
 
 		TimePoint & TimePoint::operator+=(const Duration & other)
 		{
-			time_ += milliseconds(other.Milliseconds());
+			dur_since_epoch_ += other;
 			return (*this);
 		}
 
 		TimePoint & TimePoint::operator-=(const Duration &other)
 		{
-			time_ -= milliseconds(other.Milliseconds());
+			dur_since_epoch_ -= other;
 			return (*this);
 		}
 
 		Duration TimePoint::operator-(const TimePoint & other) const
 		{
-			auto ms = duration_cast<milliseconds>(time_ - other.time_).count();
-			return Duration(static_cast<int>(ms));
+			return dur_since_epoch_ - other.dur_since_epoch_;
 		}
 
 		TimePoint& TimePoint::operator=(const TimePoint & other) E2D_NOEXCEPT
@@ -94,7 +98,7 @@ namespace easy2d
 			if (this == &other)
 				return *this;
 
-			time_ = other.time_;
+			dur_since_epoch_ = other.dur_since_epoch_;
 			return *this;
 		}
 
@@ -103,7 +107,7 @@ namespace easy2d
 			if (this == &other)
 				return *this;
 
-			time_ = std::move(other.time_);
+			dur_since_epoch_ = std::move(other.dur_since_epoch_);
 			return *this;
 		}
 
@@ -119,7 +123,7 @@ namespace easy2d
 
 		namespace
 		{
-			const auto duration_regex = std::wregex(L"[-+]?([0-9]*(\\.[0-9]*)?[a-z]+)+");
+			const auto duration_regex = std::wregex(LR"([-+]?([0-9]*(\.[0-9]*)?[a-z]+)+)");
 
 			typedef std::map<std::wstring, Duration> UnitMap;
 			const auto unit_map = UnitMap
@@ -136,12 +140,12 @@ namespace easy2d
 		{
 		}
 
-		Duration::Duration(int milliseconds)
+		Duration::Duration(int64_t milliseconds)
 			: milliseconds_(milliseconds)
 		{
 		}
 
-		int Duration::Milliseconds() const
+		int64_t Duration::Milliseconds() const
 		{
 			return milliseconds_;
 		}
@@ -165,6 +169,37 @@ namespace easy2d
 			int64_t hour = milliseconds_ / Hour.milliseconds_;
 			int64_t ms = milliseconds_ % Hour.milliseconds_;
 			return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
+		}
+
+		std::wstring easy2d::time::Duration::ToString() const
+		{
+			std::wstring result;
+			int64_t ms = milliseconds_ % Second.milliseconds_;
+			int64_t sec = milliseconds_ / Second.milliseconds_;
+			int64_t min = milliseconds_ / Minute.milliseconds_;
+			int64_t hour = milliseconds_ / Hour.milliseconds_;
+
+			min -= hour * 60;
+			sec -= (hour * 60 * 60 + min * 60);
+
+			auto float_to_str = [](float val) -> std::wstring
+			{
+				wchar_t buf[10] = {};
+				::swprintf_s(buf, L"%.2f", val);
+				return std::wstring(buf);
+			};
+
+			if (milliseconds_ < 0)
+				result.append(L"-");
+
+			result.append(std::to_wstring(hour))
+				.append(L"h")
+				.append(std::to_wstring(min))
+				.append(L"m")
+				.append(float_to_str(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f))
+				.append(L"s");
+
+			return result;
 		}
 
 		bool Duration::operator==(const Duration & other) const
@@ -212,34 +247,54 @@ namespace easy2d
 			return Duration(-milliseconds_);
 		}
 
-		Duration Duration::operator*(int value) const
+		Duration Duration::operator*(int val) const
 		{
-			return Duration(milliseconds_ * value);
+			return Duration(milliseconds_ * val);
 		}
 
-		Duration Duration::operator/(int value) const
+		Duration Duration::operator/(int val) const
 		{
-			return Duration(milliseconds_ / value);
+			return Duration(milliseconds_ / val);
 		}
 
-		Duration Duration::operator*(float value) const
+		Duration easy2d::time::Duration::operator*(unsigned long long val) const
 		{
-			return Duration(static_cast<int>(milliseconds_ * value));
+			return Duration(static_cast<int64_t>(milliseconds_ * val));
 		}
 
-		Duration Duration::operator/(float value) const
+		Duration easy2d::time::Duration::operator/(unsigned long long val) const
 		{
-			return Duration(static_cast<int>(milliseconds_ / value));
+			return Duration(static_cast<int64_t>(milliseconds_ / val));
 		}
 
-		Duration Duration::operator*(double value) const
+		Duration Duration::operator*(float val) const
 		{
-			return Duration(static_cast<int>(milliseconds_ * value));
+			return Duration(static_cast<int64_t>(milliseconds_ * val));
 		}
 
-		Duration Duration::operator/(double value) const
+		Duration Duration::operator/(float val) const
 		{
-			return Duration(static_cast<int>(milliseconds_ / value));
+			return Duration(static_cast<int64_t>(milliseconds_ / val));
+		}
+
+		Duration Duration::operator*(double val) const
+		{
+			return Duration(static_cast<int64_t>(milliseconds_ * val));
+		}
+
+		Duration Duration::operator*(long double val) const
+		{
+			return Duration(static_cast<int64_t>(milliseconds_ * val));
+		}
+
+		Duration Duration::operator/(double val) const
+		{
+			return Duration(static_cast<int64_t>(milliseconds_ / val));
+		}
+
+		Duration Duration::operator/(long double val) const
+		{
+			return Duration(static_cast<int64_t>(milliseconds_ / val));
 		}
 
 		Duration & Duration::operator+=(const Duration &other)
@@ -254,70 +309,127 @@ namespace easy2d
 			return (*this);
 		}
 
-		Duration & Duration::operator*=(int value)
+		Duration & Duration::operator*=(int val)
 		{
-			milliseconds_ *= value;
+			milliseconds_ *= val;
 			return (*this);
 		}
 
-		Duration & Duration::operator/=(int value)
+		Duration & Duration::operator/=(int val)
 		{
-			milliseconds_ /= value;
+			milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
 			return (*this);
 		}
 
-		Duration & Duration::operator*=(float value)
+		Duration & easy2d::time::Duration::operator*=(unsigned long long val)
 		{
-			milliseconds_ = static_cast<int>(milliseconds_ * value);
+			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
 			return (*this);
 		}
 
-		Duration & Duration::operator/=(float value)
+		Duration & easy2d::time::Duration::operator/=(unsigned long long val)
 		{
-			milliseconds_ = static_cast<int>(milliseconds_ / value);
+			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
 			return (*this);
 		}
 
-		Duration & Duration::operator*=(double value)
+		Duration & Duration::operator*=(float val)
 		{
-			milliseconds_ = static_cast<int>(milliseconds_ * value);
+			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
 			return (*this);
 		}
 
-		Duration & Duration::operator/=(double value)
+		Duration & Duration::operator/=(float val)
 		{
-			milliseconds_ = static_cast<int>(milliseconds_ / value);
+			milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
 			return (*this);
 		}
 
-		Duration operator*(int value, const Duration & dur)
+		Duration & Duration::operator*=(double val)
 		{
-			return dur * value;
+			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
+			return (*this);
 		}
 
-		Duration operator/(int value, const Duration & dur)
+		Duration & Duration::operator*=(long double val)
 		{
-			return dur / value;
+			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
+			return (*this);
 		}
 
-		Duration operator*(float value, const Duration & dur)
+		Duration & Duration::operator/=(double val)
 		{
-			return dur * value;
+			milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
+			return (*this);
 		}
 
-		Duration operator/(float value, const Duration & dur)
+		Duration & Duration::operator/=(long double val)
 		{
-			return dur / value;
+			milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
+			return (*this);
 		}
 
-		Duration operator*(double value, const Duration & dur)
+		Duration easy2d::time::operator*(int val, const Duration & dur)
 		{
-			return dur * value;
+			return dur * val;
 		}
 
-		Duration operator/(double value, const Duration & dur)
+		Duration easy2d::time::operator*(unsigned long long val, const Duration & dur)
 		{
-			return dur / value;
+			return dur / val;
+		}
+
+		Duration easy2d::time::operator/(int val, const Duration & dur)
+		{
+			return dur / val;
+		}
+
+		Duration easy2d::time::operator/(unsigned long long val, const Duration & dur)
+		{
+			return dur * val;
+		}
+
+		Duration easy2d::time::operator*(float val, const Duration & dur)
+		{
+			return dur * val;
+		}
+
+		Duration easy2d::time::operator/(float val, const Duration & dur)
+		{
+			return dur / val;
+		}
+
+		Duration easy2d::time::operator*(double val, const Duration & dur)
+		{
+			return dur * val;
+		}
+
+		Duration easy2d::time::operator/(double val, const Duration & dur)
+		{
+			return dur / val;
+		}
+
+		Duration easy2d::time::operator*(long double val, const Duration & dur)
+		{
+			return dur * val;
+		}
+
+		Duration easy2d::time::operator/(long double val, const Duration & dur)
+		{
+			return dur / val;
+		}
+
+		std::wostream & easy2d::time::operator<<(std::wostream & out, const Duration & dur)
+		{
+			return out << dur.ToString();
+		}
+
+		std::wistream & easy2d::time::operator>>(std::wistream & in, Duration & dur)
+		{
+			std::wstring str;
+			in >> str;
+			dur = time::ParseDuration(str);
+			return in;
 		}
 
 
@@ -325,12 +437,16 @@ namespace easy2d
 		// Functions
 		//-------------------------------------------------------
 
-		TimePoint Now()
+		TimePoint easy2d::time::Now()
 		{
-			return TimePoint(steady_clock::now());
+			return TimePoint(
+				static_cast<int64_t>(
+					duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count()
+				)
+			);
 		}
 
-		Duration ParseDuration(const std::wstring & str)
+		Duration easy2d::time::ParseDuration(const std::wstring & str)
 		{
 			size_t len = str.length();
 			size_t pos = 0;

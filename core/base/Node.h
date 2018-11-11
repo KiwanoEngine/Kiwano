@@ -125,7 +125,7 @@ namespace easy2d
 
 		// 设置节点是否显示
 		void SetVisible(
-			bool value
+			bool val
 		);
 
 		// 设置节点名称
