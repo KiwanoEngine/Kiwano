@@ -25,12 +25,21 @@ namespace easy2d
 	namespace devices
 	{
 		InputDevice::InputDevice()
+			: initialized(false)
 		{
 			ZeroMemory(keys_, sizeof(keys_));
 		}
 
 		InputDevice::~InputDevice()
 		{
+		}
+
+		void InputDevice::Initialize(bool debug)
+		{
+			if (initialized)
+				return;
+
+			initialized = true;
 		}
 
 		void InputDevice::Update(HWND hwnd, float scale_x, float scale_y)

@@ -55,9 +55,12 @@ namespace easy2d
 
 	void Game::Initialize(const Options& options)
 	{
-		Window::Instance().Initialize(options.title, options.width, options.height, options.icon, options.debug);
-		devices::Graphics::Instance().Initialize(Window::Instance().GetHandle());
-		devices::Audio::Instance().Initialize();
+		debug_mode_ = options.debug;
+
+		Window::Instance().Initialize(options.title, options.width, options.height, options.icon, debug_mode_);
+		devices::Graphics::Instance().Initialize(Window::Instance().GetHandle(), debug_mode_);
+		devices::Input::Instance().Initialize(debug_mode_);
+		devices::Audio::Instance().Initialize(debug_mode_);
 
 		// 若开启了调试模式，打开控制台
 		HWND console = ::GetConsoleWindow();
@@ -250,7 +253,8 @@ namespace easy2d
 
 	void Game::DrawScene()
 	{
-		devices::Graphics::Instance().BeginDraw(Window::Instance().GetHandle());
+		auto& graphics = devices::Graphics::Instance();
+		graphics.BeginDraw(Window::Instance().GetHandle());
 
 		if (transition_)
 		{
@@ -265,25 +269,20 @@ namespace easy2d
 		{
 			if (curr_scene_ && curr_scene_->GetRoot())
 			{
-				devices::Graphics::Instance().SetTransform(math::Matrix());
-				devices::Graphics::Instance().SetBrushOpacity(1.f);
+				graphics.SetTransform(math::Matrix());
+				graphics.SetBrushOpacity(1.f);
 				curr_scene_->GetRoot()->DrawBorder();
 			}
 			if (next_scene_ && next_scene_->GetRoot())
 			{
-				devices::Graphics::Instance().SetTransform(math::Matrix());
-				devices::Graphics::Instance().SetBrushOpacity(1.f);
+				graphics.SetTransform(math::Matrix());
+				graphics.SetBrushOpacity(1.f);
 				next_scene_->GetRoot()->DrawBorder();
 			}
 
-			devices::Graphics::Instance().DrawDebugInfo();
+			graphics.DrawDebugInfo();
 		}
 
-		devices::Graphics::Instance().EndDraw();
-	}
-
-	void Game::SetDebugMode(bool enabled)
-	{
-		debug_mode_ = enabled;
+		graphics.EndDraw();
 	}
 }

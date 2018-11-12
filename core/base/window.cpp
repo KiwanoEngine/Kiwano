@@ -42,21 +42,25 @@ namespace easy2d
 		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param);
 	}
 
-	WindowInfo::WindowInfo()
+	WindowImpl::WindowImpl()
 		: handle(nullptr)
 		, scale_x(1.f)
 		, scale_y(1.f)
+		, initialized(false)
 	{
 	}
 
-	WindowInfo::~WindowInfo()
+	WindowImpl::~WindowImpl()
 	{
 		if (handle)
 			::DestroyWindow(handle);
 	}
 
-	void WindowInfo::Initialize(String title, int width, int height, LPCWSTR icon, bool debug)
+	void WindowImpl::Initialize(String title, int width, int height, LPCWSTR icon, bool debug)
 	{
+		if (initialized)
+			return;
+
 		HINSTANCE hinstance	= GetModuleHandle(nullptr);
 		WNDCLASSEX wcex		= { 0 };
 		wcex.cbSize			= sizeof(WNDCLASSEX);
@@ -114,9 +118,11 @@ namespace easy2d
 
 		// Ω˚”√ ‰»Î∑®
 		::ImmAssociateContext(handle, nullptr);
+
+		initialized = true;
 	}
 
-	String WindowInfo::GetTitle() const
+	String WindowImpl::GetTitle() const
 	{
 		if (handle)
 		{
@@ -127,13 +133,13 @@ namespace easy2d
 		return String();
 	}
 
-	void WindowInfo::SetTitle(const String& title)
+	void WindowImpl::SetTitle(const String& title)
 	{
 		if (handle)
 			::SetWindowText(handle, title.c_str());
 	}
 
-	Size WindowInfo::GetSize() const
+	Size WindowImpl::GetSize() const
 	{
 		if (handle)
 		{
@@ -147,17 +153,17 @@ namespace easy2d
 		return Size();
 	}
 
-	float WindowInfo::GetWidth() const
+	float WindowImpl::GetWidth() const
 	{
 		return GetSize().width;
 	}
 
-	float WindowInfo::GetHeight() const
+	float WindowImpl::GetHeight() const
 	{
 		return GetSize().height;
 	}
 
-	void WindowInfo::SetSize(int width, int height)
+	void WindowImpl::SetSize(int width, int height)
 	{
 		if (handle)
 		{
@@ -173,7 +179,7 @@ namespace easy2d
 		}
 	}
 
-	void WindowInfo::SetIcon(LPCWSTR icon_resource)
+	void WindowImpl::SetIcon(LPCWSTR icon_resource)
 	{
 		if (handle)
 		{
@@ -192,17 +198,17 @@ namespace easy2d
 		}
 	}
 
-	HWND WindowInfo::GetHandle() const
+	HWND WindowImpl::GetHandle() const
 	{
 		return handle;
 	}
 
-	float WindowInfo::GetContentScaleX() const
+	float WindowImpl::GetContentScaleX() const
 	{
 		return scale_x;
 	}
 
-	float WindowInfo::GetContentScaleY() const
+	float WindowImpl::GetContentScaleY() const
 	{
 		return scale_y;
 	}

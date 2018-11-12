@@ -33,9 +33,7 @@ namespace easy2d
 			E2D_DISABLE_COPY(InputDevice);
 
 		public:
-			InputDevice();
-
-			~InputDevice();
+			void Initialize(bool debug);
 
 			// 检测键盘某按键是否正被按下
 			bool IsDown(
@@ -64,6 +62,12 @@ namespace easy2d
 			);
 
 		protected:
+			InputDevice();
+
+			~InputDevice();
+
+		protected:
+			bool initialized;
 			BYTE keys_[256];
 			Point mouse_pos_;
 		};
