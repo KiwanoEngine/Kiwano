@@ -47,11 +47,11 @@ namespace easy2d
 			const Size& other
 		);
 
-		Size operator + (const Size & other) const;
-		Size operator - (const Size & other) const;
-		Size operator * (float val) const;
-		Size operator / (float val) const;
-		Size operator - () const;
+		const Size operator + (const Size & other) const;
+		const Size operator - (const Size & other) const;
+		const Size operator * (float val) const;
+		const Size operator / (float val) const;
+		const Size operator - () const;
 		bool operator== (const Size& other) const;
 
 		inline operator D2D1_SIZE_F () const

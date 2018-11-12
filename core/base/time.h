@@ -70,19 +70,19 @@ namespace easy2d
 			bool operator< (const Duration &) const;
 			bool operator<= (const Duration &) const;
 
-			Duration operator + (const Duration &) const;
-			Duration operator - (const Duration &) const;
-			Duration operator - () const;
-			Duration operator * (int) const;
-			Duration operator * (unsigned long long) const;
-			Duration operator * (float) const;
-			Duration operator * (double) const;
-			Duration operator * (long double) const;
-			Duration operator / (int) const;
-			Duration operator / (unsigned long long) const;
-			Duration operator / (float) const;
-			Duration operator / (double) const;
-			Duration operator / (long double) const;
+			const Duration operator + (const Duration &) const;
+			const Duration operator - (const Duration &) const;
+			const Duration operator - () const;
+			const Duration operator * (int) const;
+			const Duration operator * (unsigned long long) const;
+			const Duration operator * (float) const;
+			const Duration operator * (double) const;
+			const Duration operator * (long double) const;
+			const Duration operator / (int) const;
+			const Duration operator / (unsigned long long) const;
+			const Duration operator / (float) const;
+			const Duration operator / (double) const;
+			const Duration operator / (long double) const;
 
 			Duration& operator += (const Duration &);
 			Duration& operator -= (const Duration &);
@@ -97,16 +97,16 @@ namespace easy2d
 			Duration& operator /= (double);
 			Duration& operator /= (long double);
 
-			friend Duration operator* (int, const Duration &);
-			friend Duration operator* (unsigned long long, const Duration &);
-			friend Duration operator* (float, const Duration &);
-			friend Duration operator* (double, const Duration &);
-			friend Duration operator* (long double, const Duration &);
-			friend Duration operator/ (int, const Duration &);
-			friend Duration operator/ (unsigned long long, const Duration &);
-			friend Duration operator/ (float, const Duration &);
-			friend Duration operator/ (double, const Duration &);
-			friend Duration operator/ (long double, const Duration &);
+			friend const Duration operator* (int, const Duration &);
+			friend const Duration operator* (unsigned long long, const Duration &);
+			friend const Duration operator* (float, const Duration &);
+			friend const Duration operator* (double, const Duration &);
+			friend const Duration operator* (long double, const Duration &);
+			friend const Duration operator/ (int, const Duration &);
+			friend const Duration operator/ (unsigned long long, const Duration &);
+			friend const Duration operator/ (float, const Duration &);
+			friend const Duration operator/ (double, const Duration &);
+			friend const Duration operator/ (long double, const Duration &);
 
 			friend std::wostream& operator<< (std::wostream &, const Duration &);
 			friend std::wistream& operator>> (std::wistream &, Duration &);
@@ -161,13 +161,13 @@ namespace easy2d
 			//  «∑Ò «¡„ ±
 			bool IsZero() const;
 
-			TimePoint operator + (const Duration &) const;
-			TimePoint operator - (const Duration &) const;
+			const TimePoint operator + (const Duration &) const;
+			const TimePoint operator - (const Duration &) const;
 
 			TimePoint& operator += (const Duration &);
 			TimePoint& operator -= (const Duration &);
 
-			Duration operator - (const TimePoint &) const;
+			const Duration operator - (const TimePoint &) const;
 
 			TimePoint& operator = (const TimePoint &) E2D_NOEXCEPT;
 			TimePoint& operator = (TimePoint &&) E2D_NOEXCEPT;

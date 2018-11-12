@@ -66,12 +66,12 @@ namespace easy2d
 			return !!dur_since_epoch_.Milliseconds();
 		}
 
-		TimePoint TimePoint::operator+(const Duration & dur) const
+		const TimePoint TimePoint::operator+(const Duration & dur) const
 		{
 			return TimePoint(dur_since_epoch_ + dur);
 		}
 
-		TimePoint TimePoint::operator-(const Duration & dur) const
+		const TimePoint TimePoint::operator-(const Duration & dur) const
 		{
 			return TimePoint(dur_since_epoch_ - dur);
 		}
@@ -88,7 +88,7 @@ namespace easy2d
 			return (*this);
 		}
 
-		Duration TimePoint::operator-(const TimePoint & other) const
+		const Duration TimePoint::operator-(const TimePoint & other) const
 		{
 			return dur_since_epoch_ - other.dur_since_epoch_;
 		}
@@ -246,67 +246,67 @@ namespace easy2d
 			return milliseconds_ <= other.milliseconds_;
 		}
 
-		Duration Duration::operator+(const Duration & other) const
+		const Duration Duration::operator+(const Duration & other) const
 		{
 			return Duration(milliseconds_ + other.milliseconds_);
 		}
 
-		Duration Duration::operator-(const Duration & other) const
+		const Duration Duration::operator-(const Duration & other) const
 		{
 			return Duration(milliseconds_ - other.milliseconds_);
 		}
 
-		Duration Duration::operator-() const
+		const Duration Duration::operator-() const
 		{
 			return Duration(-milliseconds_);
 		}
 
-		Duration Duration::operator*(int val) const
+		const Duration Duration::operator*(int val) const
 		{
 			return Duration(milliseconds_ * val);
 		}
 
-		Duration Duration::operator/(int val) const
+		const Duration Duration::operator/(int val) const
 		{
 			return Duration(milliseconds_ / val);
 		}
 
-		Duration easy2d::time::Duration::operator*(unsigned long long val) const
+		const Duration easy2d::time::Duration::operator*(unsigned long long val) const
 		{
 			return Duration(static_cast<int64_t>(milliseconds_ * val));
 		}
 
-		Duration easy2d::time::Duration::operator/(unsigned long long val) const
+		const Duration easy2d::time::Duration::operator/(unsigned long long val) const
 		{
 			return Duration(static_cast<int64_t>(milliseconds_ / val));
 		}
 
-		Duration Duration::operator*(float val) const
+		const Duration Duration::operator*(float val) const
 		{
 			return Duration(static_cast<int64_t>(milliseconds_ * val));
 		}
 
-		Duration Duration::operator/(float val) const
+		const Duration Duration::operator/(float val) const
 		{
 			return Duration(static_cast<int64_t>(milliseconds_ / val));
 		}
 
-		Duration Duration::operator*(double val) const
+		const Duration Duration::operator*(double val) const
 		{
 			return Duration(static_cast<int64_t>(milliseconds_ * val));
 		}
 
-		Duration Duration::operator*(long double val) const
+		const Duration Duration::operator*(long double val) const
 		{
 			return Duration(static_cast<int64_t>(milliseconds_ * val));
 		}
 
-		Duration Duration::operator/(double val) const
+		const Duration Duration::operator/(double val) const
 		{
 			return Duration(static_cast<int64_t>(milliseconds_ / val));
 		}
 
-		Duration Duration::operator/(long double val) const
+		const Duration Duration::operator/(long double val) const
 		{
 			return Duration(static_cast<int64_t>(milliseconds_ / val));
 		}
@@ -383,52 +383,52 @@ namespace easy2d
 			return (*this);
 		}
 
-		Duration easy2d::time::operator*(int val, const Duration & dur)
+		const Duration easy2d::time::operator*(int val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		Duration easy2d::time::operator*(unsigned long long val, const Duration & dur)
+		const Duration easy2d::time::operator*(unsigned long long val, const Duration & dur)
 		{
 			return dur / val;
 		}
 
-		Duration easy2d::time::operator/(int val, const Duration & dur)
+		const Duration easy2d::time::operator/(int val, const Duration & dur)
 		{
 			return dur / val;
 		}
 
-		Duration easy2d::time::operator/(unsigned long long val, const Duration & dur)
+		const Duration easy2d::time::operator/(unsigned long long val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		Duration easy2d::time::operator*(float val, const Duration & dur)
+		const Duration easy2d::time::operator*(float val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		Duration easy2d::time::operator/(float val, const Duration & dur)
+		const Duration easy2d::time::operator/(float val, const Duration & dur)
 		{
 			return dur / val;
 		}
 
-		Duration easy2d::time::operator*(double val, const Duration & dur)
+		const Duration easy2d::time::operator*(double val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		Duration easy2d::time::operator/(double val, const Duration & dur)
+		const Duration easy2d::time::operator/(double val, const Duration & dur)
 		{
 			return dur / val;
 		}
 
-		Duration easy2d::time::operator*(long double val, const Duration & dur)
+		const Duration easy2d::time::operator*(long double val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		Duration easy2d::time::operator/(long double val, const Duration & dur)
+		const Duration easy2d::time::operator/(long double val, const Duration & dur)
 		{
 			return dur / val;
 		}

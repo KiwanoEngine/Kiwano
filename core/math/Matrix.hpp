@@ -62,7 +62,7 @@ namespace easy2d
 				this->_32 = _32;
 			}
 
-			inline Matrix operator*(const Matrix &matrix) const
+			inline const Matrix operator*(const Matrix &matrix) const
 			{
 				return Matrix(
 					_11 * matrix._11 + _12 * matrix._21,

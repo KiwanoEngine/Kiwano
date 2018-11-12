@@ -60,27 +60,27 @@ namespace easy2d
 				return Vector2(x - v.x, y - v.y).Length();
 			}
 
-			inline Vector2 operator + (const Vector2 & other) const
+			inline const Vector2 operator + (const Vector2 & other) const
 			{
 				return Vector2(x + other.x, y + other.y);
 			}
 
-			inline Vector2 operator - (const Vector2 & other) const
+			inline const Vector2 operator - (const Vector2 & other) const
 			{
 				return Vector2(x - other.x, y - other.y);
 			}
 
-			inline Vector2 operator * (float val) const
+			inline const Vector2 operator * (float val) const
 			{
 				return Vector2(x * val, y * val);
 			}
 
-			inline Vector2 operator / (float val) const
+			inline const Vector2 operator / (float val) const
 			{
 				return Vector2(x / val, y / val);
 			}
 
-			inline Vector2 operator - () const
+			inline const Vector2 operator - () const
 			{
 				return Vector2(-x, -y);
 			}
