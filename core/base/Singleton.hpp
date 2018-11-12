@@ -29,8 +29,6 @@ namespace easy2d
 	public:
 		static inline T& Instance();
 
-		static inline void Destroy();
-
 	private:
 		ISingleton() {}
 
@@ -39,27 +37,16 @@ namespace easy2d
 		ISingleton(const ISingleton&) = delete;
 
 		ISingleton & operator= (const ISingleton &) = delete;
-
-		static std::unique_ptr<T> instance_;
 	};
 
 	template<typename T>
 	inline T & easy2d::ISingleton<T>::Instance()
 	{
+		static std::unique_ptr<T> instance_;
 		if (!instance_)
 			instance_.reset(new (std::nothrow) T);
 		return *instance_;
 	}
-
-	template<typename T>
-	inline void easy2d::ISingleton<T>::Destroy()
-	{
-		if (instance_)
-			instance_.reset();
-	}
-
-	template<typename T>
-	std::unique_ptr<T> easy2d::ISingleton<T>::instance_;
 }
 
 // Class that will implement the singleton mode,

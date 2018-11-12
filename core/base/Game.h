@@ -75,11 +75,6 @@ namespace easy2d
 		// 结束
 		void Quit();
 
-		// 调试模式
-		void SetDebugMode(
-			bool enabled
-		);
-
 		// 切换场景
 		void EnterScene(
 			Scene * scene,						/* 场景 */

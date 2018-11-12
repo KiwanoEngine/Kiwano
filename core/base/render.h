@@ -52,7 +52,7 @@ namespace easy2d
 			E2D_DISABLE_COPY(GraphicsDevice);
 
 		public:
-			void Initialize(HWND hwnd);
+			void Initialize(HWND hwnd, bool debug);
 
 			// ¿ªÊ¼äÖÈ¾
 			void BeginDraw(HWND hwnd);
@@ -168,6 +168,7 @@ namespace easy2d
 			~GraphicsDevice();
 
 		protected:
+			bool							initialized;
 			D2DResources					d2d;
 			D2D1_COLOR_F					clear_color_;
 			IDWriteTextFormat*				fps_text_format_;

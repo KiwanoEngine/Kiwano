@@ -26,11 +26,11 @@ namespace easy2d
 {
 	
 
-	class WindowInfo
+	class WindowImpl
 	{
-		E2D_DECLARE_SINGLETON(WindowInfo);
+		E2D_DECLARE_SINGLETON(WindowImpl);
 
-		E2D_DISABLE_COPY(WindowInfo);
+		E2D_DISABLE_COPY(WindowImpl);
 
 	public:
 		void Initialize(
@@ -69,15 +69,16 @@ namespace easy2d
 		float GetContentScaleY() const;
 
 	protected:
-		WindowInfo();
+		WindowImpl();
 
-		~WindowInfo();
+		~WindowImpl();
 
 	private:
+		bool initialized;
 		HWND handle;
 		float scale_x;
 		float scale_y;
 	};
 
-	E2D_DECLARE_SINGLETON_TYPE(WindowInfo, Window);
+	E2D_DECLARE_SINGLETON_TYPE(WindowImpl, Window);
 }

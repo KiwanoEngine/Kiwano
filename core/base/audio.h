@@ -81,7 +81,7 @@ namespace easy2d
 			E2D_DISABLE_COPY(AudioDevice);
 
 		public:
-			void Initialize();
+			void Initialize(bool debug);
 
 			// ¿ªÆôÉè±¸
 			void Open();
@@ -106,6 +106,7 @@ namespace easy2d
 			~AudioDevice();
 
 		protected:
+			bool initialized;
 			IXAudio2 * x_audio2_;
 			IXAudio2MasteringVoice*	mastering_voice_;
 			std::list<Voice*> voice_cache_;

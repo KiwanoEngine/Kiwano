@@ -25,7 +25,6 @@
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
-#pragma comment(lib, "windowscodecs.lib")
 
 namespace easy2d
 {
@@ -35,6 +34,7 @@ namespace easy2d
 			: fps_text_format_(nullptr)
 			, fps_text_layout_(nullptr)
 			, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
+			, initialized(false)
 		{
 			ZeroMemory(&d2d, sizeof(D2DResources));
 
@@ -63,15 +63,18 @@ namespace easy2d
 			modules::Destroy();
 		}
 
-		void GraphicsDevice::Initialize(HWND hwnd)
+		void GraphicsDevice::Initialize(HWND hwnd, bool debug)
 		{
-			if (d2d.factory)
+			if (initialized)
 				return;
 
+			D2D1_FACTORY_OPTIONS options{ debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE };
 			ThrowIfFailed(
 				D2D1CreateFactory(
 					D2D1_FACTORY_TYPE_SINGLE_THREADED,
-					&d2d.factory
+					__uuidof(ID2D1Factory),
+					&options,
+					reinterpret_cast<void**>(&d2d.factory)
 				)
 			);
 
@@ -80,7 +83,7 @@ namespace easy2d
 					CLSID_WICImagingFactory,
 					nullptr,
 					CLSCTX_INPROC_SERVER,
-					IID_IWICImagingFactory,
+					__uuidof(IWICImagingFactory),
 					reinterpret_cast<void**>(&d2d.imaging_factory)
 				)
 			);
@@ -135,6 +138,8 @@ namespace easy2d
 			);
 
 			CreateDeviceResources(hwnd);
+
+			initialized = true;
 		}
 
 		void GraphicsDevice::BeginDraw(HWND hwnd)
