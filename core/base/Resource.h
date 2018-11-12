@@ -23,18 +23,31 @@
 
 namespace easy2d
 {
+	// 资源数据
+	// 
+	// Usage:
+	//     如果需要手动加载资源, 可以通过 Resource::Load 方法获取资源内容
+	//     ResourceData data;
+	//     if (res.Load(&data)) {
+	//         LPVOID data = data.buffer;
+	//         DWORD size = data.buffer_size;
+	//     }
+	//
+	struct ResourceData
+	{
+		LPVOID buffer;
+		DWORD buffer_size;
+	};
+
+
 	// 资源
 	// 
 	// Usage:
 	//     Resource 用于获取可执行文件 (exe) 中的资源, 必须在构造函数中指定它的
 	//     资源类型和名称标识符。
-	//     例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1, 那么可以这样指定该资源:
-	//     Resource res(MAKEINTRESOURCE(IDR_WAVE_1), L"WAVE");
-	//     如果需要手动加载这份资源, 可以通过 Load 方法获取资源内容
-	//     if (res.Load()) {
-	//         LPVOID data = res.GetData();
-	//         DWORD size = res.GetDataSize();
-	//     }
+	//     例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1,
+	//     那么可以这样指定该资源: Resource res(MAKEINTRESOURCE(IDR_WAVE_1), L"WAVE");
+	// 
 	//     了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
 	//
 	class Resource
@@ -45,23 +58,18 @@ namespace easy2d
 			LPCWSTR type	/* 资源类型 */
 		);
 
-		bool Load();
+		bool Load(
+			ResourceData* buffer
+		) const;
 
 		LPCWSTR	GetName() const;
 
 		LPCWSTR	GetType() const;
 
-		LPVOID GetData() const;
-
-		DWORD GetDataSize() const;
-
 		size_t GetHashCode() const;
 
 	private:
-		bool	loaded_;
 		LPCWSTR	name_;
 		LPCWSTR	type_;
-		LPVOID	data_;
-		DWORD	data_size_;
 	};
 }

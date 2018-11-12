@@ -67,7 +67,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT Transcoder::LoadMediaResource(Resource& res, BYTE** wave_data, UINT32* wave_data_size)
+	HRESULT Transcoder::LoadMediaResource(const Resource& res, BYTE** wave_data, UINT32* wave_data_size)
 	{
 		HRESULT	hr = S_OK;
 
@@ -76,11 +76,12 @@ namespace easy2d
 		IMFByteStream*	 byte_stream = nullptr;
 		IMFSourceReader* reader = nullptr;
 
-		if (!res.Load()) { return false; }
+		ResourceData buffer;
+		if (!res.Load(&buffer)) { return false; }
 
 		stream = SHCreateMemStream(
-			static_cast<const BYTE*>(res.GetData()),
-			static_cast<UINT>(res.GetDataSize())
+			static_cast<const BYTE*>(buffer.buffer),
+			static_cast<UINT>(buffer.buffer_size)
 		);
 
 		if (stream == nullptr)

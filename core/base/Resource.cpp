@@ -19,15 +19,13 @@
 // THE SOFTWARE.
 
 #include "Resource.h"
+#include "logs.h"
 
 namespace easy2d
 {
 	Resource::Resource(LPCWSTR name, LPCWSTR type)
 		: name_(name)
 		, type_(type)
-		, data_(nullptr)
-		, data_size_(0)
-		, loaded_(false)
 	{
 	}
 
@@ -41,58 +39,45 @@ namespace easy2d
 		return type_;
 	}
 
-	LPVOID Resource::GetData() const
-	{
-		return data_;
-	}
-
-	DWORD Resource::GetDataSize() const
-	{
-		return data_size_;
-	}
-
 	size_t Resource::GetHashCode() const
 	{
 		return std::hash<LPCWSTR>{}(name_);
 	}
 
-	bool Resource::Load()
+	bool Resource::Load(ResourceData* buffer) const
 	{
-		if (!loaded_)
+		if (!buffer)
+			return false;
+
+		HGLOBAL res_data;
+		HRSRC res_info;
+
+		res_info = FindResourceW(nullptr, name_, type_);
+		if (res_info == nullptr)
 		{
-			HRSRC res_info;
-			HGLOBAL res_data;
-			HINSTANCE hinstance = GetModuleHandle(NULL);
+			logs::Trace(L"FindResource");
+			return false;
+		}
 
-			res_info = FindResourceW(hinstance, name_, type_);
-			if (res_info == nullptr)
-			{
-				E2D_WARNING("FindResource");
-				return false;
-			}
+		res_data = LoadResource(nullptr, res_info);
+		if (res_data == nullptr)
+		{
+			logs::Trace(L"LoadResource");
+			return false;
+		}
 
-			res_data = LoadResource(hinstance, res_info);
-			if (res_data == nullptr)
-			{
-				E2D_WARNING("LoadResource");
-				return false;
-			}
+		(*buffer).buffer_size = SizeofResource(nullptr, res_info);
+		if ((*buffer).buffer_size == 0)
+		{
+			logs::Trace(L"SizeofResource");
+			return false;
+		}
 
-			data_size_ = SizeofResource(hinstance, res_info);
-			if (data_size_ == 0)
-			{
-				E2D_WARNING("SizeofResource");
-				return false;
-			}
-
-			data_ = LockResource(res_data);
-			if (data_ == nullptr)
-			{
-				E2D_WARNING("LockResource");
-				return false;
-			}
-
-			loaded_ = true;
+		(*buffer).buffer = LockResource(res_data);
+		if ((*buffer).buffer == nullptr)
+		{
+			logs::Trace(L"LockResource");
+			return false;
 		}
 		return true;
 	}

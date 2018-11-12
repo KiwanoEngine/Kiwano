@@ -491,9 +491,10 @@ namespace easy2d
 			IWICBitmapFrameDecode*	source = nullptr;
 			IWICStream*				stream = nullptr;
 			IWICFormatConverter*	converter = nullptr;
+			ResourceData			buffer;
 
 			// 加载资源
-			hr = res.Load() ? S_OK : E_FAIL;
+			hr = res.Load(&buffer) ? S_OK : E_FAIL;
 
 			if (SUCCEEDED(hr))
 			{
@@ -505,8 +506,8 @@ namespace easy2d
 			{
 				// 初始化流
 				hr = stream->InitializeFromMemory(
-					static_cast<WICInProcPointer>(res.GetData()),
-					res.GetDataSize()
+					static_cast<WICInProcPointer>(buffer.buffer),
+					buffer.buffer_size
 				);
 			}
 

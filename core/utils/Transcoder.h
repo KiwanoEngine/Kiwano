@@ -45,7 +45,7 @@ namespace easy2d
 		);
 
 		HRESULT LoadMediaResource(
-			Resource& res,
+			const Resource& res,
 			BYTE** wave_data,
 			UINT32* wave_data_size
 		);
