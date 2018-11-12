@@ -135,7 +135,7 @@ namespace easy2d
 		if (image_ && image_->GetBitmap())
 		{
 			auto crop_pos = image_->GetCropPos();
-			render::instance.DrawImage(
+			devices::Graphics::Instance().DrawImage(
 				image_,
 				GetDisplayOpacity(),
 				Rect(Point(), GetTransform().size),

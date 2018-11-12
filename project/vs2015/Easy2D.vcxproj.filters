@@ -122,9 +122,6 @@
     <ClInclude Include="..\..\core\utils\File.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\utils\Music.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\utils\Path.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -139,6 +136,12 @@
     </ClInclude>
     <ClInclude Include="..\..\core\ui\Menu.h">
       <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\Music.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\Singleton.hpp">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -252,9 +255,6 @@
     <ClCompile Include="..\..\core\utils\File.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\Music.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\utils\Path.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -269,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\ui\Menu.cpp">
       <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\Music.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -20,64 +20,64 @@
 
 #pragma once
 #include "base.h"
+#include "Singleton.hpp"
 
 namespace easy2d
 {
-	namespace window
+	
+
+	class WindowInfo
 	{
-		typedef struct Property
-		{
-			String	title;	/* 标题 */
-			int		width;	/* 宽度 */
-			int		height;	/* 高度 */
-			LPCWSTR	icon;	/* 图标 */
+		E2D_DECLARE_SINGLETON(WindowInfo);
 
-			Property()
-				: title(L"Easy2D Game")
-				, width(640)
-				, height(480)
-				, icon(nullptr)
-			{}
-		} Property;
+		E2D_DISABLE_COPY(WindowInfo);
 
-		class WindowInfo
-		{
-		public:
-			HWND handle;
-			float xscale;
-			float yscale;
+	public:
+		void Initialize(
+			String	title,
+			int		width,
+			int		height,
+			LPCWSTR	icon,
+			bool	debug
+		);
 
-		public:
-			WindowInfo();
+		// 获取标题
+		String GetTitle() const;
 
-			void Initialize(
-				const Property& property
-			);
+		// 设置标题
+		void SetTitle(const String& title);
 
-			void Destroy();
+		// 获取窗口大小
+		Size GetSize() const;
 
-			// 获取标题
-			String GetTitle() const;
+		// 获取窗口宽度
+		float GetWidth() const;
 
-			// 设置标题
-			void SetTitle(const String& title);
+		// 获取窗口高度
+		float GetHeight() const;
 
-			// 获取窗口大小
-			Size GetSize() const;
+		// 重设窗口大小
+		void SetSize(int width, int height);
 
-			// 获取窗口宽度
-			float GetWidth() const;
+		// 设置窗口图标
+		void SetIcon(LPCWSTR icon_resource);
 
-			// 获取窗口高度
-			float GetHeight() const;
+		HWND GetHandle() const;
 
-			// 重设窗口大小
-			void SetSize(int width, int height);
+		float GetContentScaleX() const;
 
-			// 设置窗口图标
-			void SetIcon(LPCWSTR icon_resource);
-		};
+		float GetContentScaleY() const;
 
-		extern WindowInfo instance;
-	}
+	protected:
+		WindowInfo();
+
+		~WindowInfo();
+
+	private:
+		HWND handle;
+		float scale_x;
+		float scale_y;
+	};
+
+	E2D_DECLARE_SINGLETON_TYPE(WindowInfo, Window);
 }

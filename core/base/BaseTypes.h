@@ -23,6 +23,7 @@
 #include "../math/vector.hpp"
 #include "Color.h"
 #include "Size.h"
+#include "Rect.hpp"
 
 namespace easy2d
 {
@@ -33,9 +34,9 @@ namespace easy2d
 	//     计算两点间距离: float distance = p1.Distance(p2);
 	//     坐标可以相加减: Point p = Point(10, 10) + Point(20, 20);  // p 的坐标是 (30, 30)
 	//
-	typedef math::Vector2 Point;
+	using Point = math::Vector2;
 
-	typedef std::wstring String;
+	using String = std::wstring;
 
 	// 方向
 	enum class Direction : int
@@ -137,5 +138,12 @@ namespace easy2d
 		Left	= VK_LBUTTON,	/* 鼠标左键 */
 		Right	= VK_RBUTTON,	/* 鼠标右键 */
 		Middle	= VK_MBUTTON	/* 鼠标中键 */
+	};
+
+	// 图层属性
+	struct LayerProperties
+	{
+		Rect area;
+		float opacity;
 	};
 }

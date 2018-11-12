@@ -22,6 +22,7 @@
 #include "Node.h"
 #include "Scene.h"
 #include "window.h"
+#include "render.h"
 #include "../math/Matrix.hpp"
 
 namespace easy2d
@@ -73,22 +74,19 @@ namespace easy2d
 		if (in_scene_)
 		{
 			ThrowIfFailed(
-				render::instance.CreateLayer(&in_layer_)
+				devices::Graphics::Instance().CreateLayer(&in_layer_)
 			);
 		}
 
 		if (out_scene_)
 		{
 			ThrowIfFailed(
-				render::instance.CreateLayer(&out_layer_)
+				devices::Graphics::Instance().CreateLayer(&out_layer_)
 			);
 		}
 
-		window_size_ = window::instance.GetSize();
-		out_layer_prop_ = in_layer_prop_ = render::LayerProperties{
-			Rect(Point(), window_size_),
-			1.f
-		};
+		window_size_ = Window::Instance().GetSize();
+		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
 	}
 
 	void Transition::Update()
@@ -113,30 +111,30 @@ namespace easy2d
 	{
 		if (out_scene_)
 		{
-			render::instance.PushClip(
+			devices::Graphics::Instance().PushClip(
 				out_scene_->GetTransform(),
 				window_size_
 			);
-			render::instance.PushLayer(out_layer_, out_layer_prop_);
+			devices::Graphics::Instance().PushLayer(out_layer_, out_layer_prop_);
 
 			out_scene_->Draw();
 
-			render::instance.PopLayer();
-			render::instance.PopClip();
+			devices::Graphics::Instance().PopLayer();
+			devices::Graphics::Instance().PopClip();
 		}
 
 		if (in_scene_)
 		{
-			render::instance.PushClip(
+			devices::Graphics::Instance().PushClip(
 				in_scene_->GetTransform(),
 				window_size_
 			);
-			render::instance.PushLayer(in_layer_, in_layer_prop_);
+			devices::Graphics::Instance().PushLayer(in_layer_, in_layer_prop_);
 
 			in_scene_->Draw();
 
-			render::instance.PopLayer();
-			render::instance.PopClip();
+			devices::Graphics::Instance().PopLayer();
+			devices::Graphics::Instance().PopClip();
 		}
 	}
 

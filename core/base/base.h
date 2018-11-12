@@ -20,7 +20,6 @@
 
 #pragma once
 #include "BaseTypes.h"
-#include "Rect.hpp"
 #include <stdexcept>
 
 namespace easy2d

@@ -88,7 +88,7 @@ namespace easy2d
 	{
 		SafeRelease(stroke_style_);
 
-		stroke_style_ = render::instance.GetStrokeStyle(stroke);
+		stroke_style_ = devices::Graphics::Instance().GetStrokeStyle(stroke);
 
 		if (stroke_style_)
 			stroke_style_->AddRef();

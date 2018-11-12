@@ -32,6 +32,8 @@ namespace easy2d
 	class Scene
 		: public RefCounter
 	{
+		E2D_DISABLE_COPY(Scene);
+
 	public:
 		Scene();
 
@@ -78,9 +80,6 @@ namespace easy2d
 
 		// »ñÈ¡×ª»»¾ØÕó
 		const math::Matrix& GetTransform() const;
-
-	private:
-		E2D_DISABLE_COPY(Scene);
 
 	private:
 		Node*			root_;

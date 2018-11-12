@@ -73,7 +73,7 @@ namespace easy2d
 		bShowOutline_ = outline;
 		sOutlineColor_ = outline_color;
 		fOutlineWidth = 2 * outline_width;
-		pCurrStrokeStyle_ = render::instance.GetStrokeStyle(StrokeStyle(outlineJoin));
+		pCurrStrokeStyle_ = devices::Graphics::Instance().GetStrokeStyle(StrokeStyle(outlineJoin));
 	}
 
 	STDMETHODIMP ITextRenderer::DrawGlyphRun(

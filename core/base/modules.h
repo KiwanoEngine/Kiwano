@@ -29,6 +29,12 @@ namespace easy2d
 {
     namespace modules
 	{
+		// modules can be initialized multiple times,
+		// but it needs to be destroyed every time
+		void Initialize();
+
+		void Destroy();
+
 		// XAudio2 functions
 		typedef HRESULT(WINAPI *PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
 
@@ -66,13 +72,5 @@ namespace easy2d
 		};
 
 		extern Module_MediaFoundation MediaFoundation;
-
-		//
-		// Functions
-		//
-
-		void Initialize();
-
-		void Uninitialize();
 	}
 }

@@ -40,6 +40,8 @@ namespace easy2d
 		friend class Game;
 		friend class Scene;
 
+		E2D_DISABLE_COPY(Node);
+
 	public:
 		typedef std::vector<Node*> Nodes;
 		typedef std::vector<Action*> Actions;
@@ -418,8 +420,6 @@ namespace easy2d
 		);
 
 	private:
-		E2D_DISABLE_COPY(Node);
-
 		// äÖÈ¾½Úµã±ßÔµ
 		void DrawBorder();
 

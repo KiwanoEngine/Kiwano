@@ -38,13 +38,13 @@ namespace easy2d
 
 		WAVEFORMATEX* GetWaveFormatEx() const;
 
-		bool LoadMediaFile(
+		HRESULT LoadMediaFile(
 			LPCWSTR file_path,
 			BYTE** wave_data,
 			UINT32* wave_data_size
 		);
 
-		bool LoadMediaResource(
+		HRESULT LoadMediaResource(
 			Resource& res,
 			BYTE** wave_data,
 			UINT32* wave_data_size

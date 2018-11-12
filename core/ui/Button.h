@@ -29,6 +29,8 @@ namespace easy2d
 		class Button
 			: public Node
 		{
+			E2D_DISABLE_COPY(Button);
+
 			typedef std::function<void()> Callback;
 
 		public:
@@ -101,8 +103,6 @@ namespace easy2d
 			) override;
 
 		private:
-			E2D_DISABLE_COPY(Button);
-
 			// °´Å¥×´Ì¬Ã¶¾Ù
 			enum class Status { Normal, Mouseover, Selected };
 

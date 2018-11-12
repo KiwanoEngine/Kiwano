@@ -60,6 +60,7 @@
 #include "base/CallFunc.h"
 #include "base/Canvas.h"
 #include "base/Transition.h"
+#include "base/Music.h"
 
 #include "base/KeyEvent.h"
 #include "base/MouseEvent.h"
@@ -85,9 +86,8 @@
 #include "utils/Path.h"
 #include "utils/Data.h"
 #include "utils/File.h"
-#include "utils/Transcoder.h"
-#include "utils/Music.h"
 #include "utils/Player.h"
+#include "utils/Transcoder.h"
 
 
 //

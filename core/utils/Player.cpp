@@ -19,15 +19,10 @@
 // THE SOFTWARE.
 
 #include "Player.h"
-#include "Music.h"
+#include "../base/Music.h"
 
 namespace easy2d
 {
-	namespace
-	{
-		std::map<size_t, Music*> musics_;
-	}
-
 	Player::Player()
 		: volume_(1.f)
 	{
@@ -35,6 +30,7 @@ namespace easy2d
 
 	Player::~Player()
 	{
+		ClearCache();
 	}
 
 	bool Player::Load(const String & file_path)
@@ -51,7 +47,7 @@ namespace easy2d
 				music->SetVolume(volume_);
 
 				size_t hash_code = std::hash<String>{}(file_path);
-				musics_.insert(std::make_pair(hash_code, music));
+				musics_cache_.insert(std::make_pair(hash_code, music));
 				return true;
 			}
 			else
@@ -69,7 +65,7 @@ namespace easy2d
 
 		if (Load(file_path))
 		{
-			auto music = musics_[std::hash<String>{}(file_path)];
+			auto music = musics_cache_[std::hash<String>{}(file_path)];
 			if (music->Play(loop_count))
 			{
 				return true;
@@ -84,8 +80,8 @@ namespace easy2d
 			return;
 
 		size_t hash_code = std::hash<String>{}(file_path);
-		if (musics_.end() != musics_.find(hash_code))
-			musics_[hash_code]->Pause();
+		if (musics_cache_.end() != musics_cache_.find(hash_code))
+			musics_cache_[hash_code]->Pause();
 	}
 
 	void Player::Resume(const String & file_path)
@@ -94,8 +90,8 @@ namespace easy2d
 			return;
 
 		size_t hash_code = std::hash<String>{}(file_path);
-		if (musics_.end() != musics_.find(hash_code))
-			musics_[hash_code]->Resume();
+		if (musics_cache_.end() != musics_cache_.find(hash_code))
+			musics_cache_[hash_code]->Resume();
 	}
 
 	void Player::Stop(const String & file_path)
@@ -104,8 +100,8 @@ namespace easy2d
 			return;
 
 		size_t hash_code = std::hash<String>{}(file_path);
-		if (musics_.end() != musics_.find(hash_code))
-			musics_[hash_code]->Stop();
+		if (musics_cache_.end() != musics_cache_.find(hash_code))
+			musics_cache_[hash_code]->Stop();
 	}
 
 	bool Player::IsPlaying(const String & file_path)
@@ -114,15 +110,15 @@ namespace easy2d
 			return false;
 
 		size_t hash_code = std::hash<String>{}(file_path);
-		if (musics_.end() != musics_.find(hash_code))
-			return musics_[hash_code]->IsPlaying();
+		if (musics_cache_.end() != musics_cache_.find(hash_code))
+			return musics_cache_[hash_code]->IsPlaying();
 		return false;
 	}
 
 	bool Player::Load(Resource& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_.end() != musics_.find(hash_code))
+		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			return true;
 
 		Music * music = new (std::nothrow) Music();
@@ -132,7 +128,7 @@ namespace easy2d
 			if (music->Load(res))
 			{
 				music->SetVolume(volume_);
-				musics_.insert(std::make_pair(hash_code, music));
+				musics_cache_.insert(std::make_pair(hash_code, music));
 				return true;
 			}
 			else
@@ -148,7 +144,7 @@ namespace easy2d
 		if (Load(res))
 		{
 			size_t hash_code = res.GetHashCode();
-			auto music = musics_[hash_code];
+			auto music = musics_cache_[hash_code];
 			if (music->Play(loop_count))
 			{
 				return true;
@@ -160,29 +156,29 @@ namespace easy2d
 	void Player::Pause(Resource& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_.end() != musics_.find(hash_code))
-			musics_[hash_code]->Pause();
+		if (musics_cache_.end() != musics_cache_.find(hash_code))
+			musics_cache_[hash_code]->Pause();
 	}
 
 	void Player::Resume(Resource& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_.end() != musics_.find(hash_code))
-			musics_[hash_code]->Resume();
+		if (musics_cache_.end() != musics_cache_.find(hash_code))
+			musics_cache_[hash_code]->Resume();
 	}
 
 	void Player::Stop(Resource& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_.end() != musics_.find(hash_code))
-			musics_[hash_code]->Stop();
+		if (musics_cache_.end() != musics_cache_.find(hash_code))
+			musics_cache_[hash_code]->Stop();
 	}
 
 	bool Player::IsPlaying(Resource& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_.end() != musics_.find(hash_code))
-			return musics_[hash_code]->IsPlaying();
+		if (musics_cache_.end() != musics_cache_.find(hash_code))
+			return musics_cache_[hash_code]->IsPlaying();
 		return false;
 	}
 
@@ -194,7 +190,7 @@ namespace easy2d
 	void Player::SetVolume(float volume)
 	{
 		volume_ = std::min(std::max(volume, -224.f), 224.f);
-		for (const auto& pair : musics_)
+		for (const auto& pair : musics_cache_)
 		{
 			pair.second->SetVolume(volume_);
 		}
@@ -202,7 +198,7 @@ namespace easy2d
 
 	void Player::PauseAll()
 	{
-		for (const auto& pair : musics_)
+		for (const auto& pair : musics_cache_)
 		{
 			pair.second->Pause();
 		}
@@ -210,7 +206,7 @@ namespace easy2d
 
 	void Player::ResumeAll()
 	{
-		for (const auto& pair : musics_)
+		for (const auto& pair : musics_cache_)
 		{
 			pair.second->Resume();
 		}
@@ -218,7 +214,7 @@ namespace easy2d
 
 	void Player::StopAll()
 	{
-		for (const auto& pair : musics_)
+		for (const auto& pair : musics_cache_)
 		{
 			pair.second->Stop();
 		}
@@ -226,13 +222,13 @@ namespace easy2d
 
 	void Player::ClearCache()
 	{
-		if (musics_.empty())
+		if (musics_cache_.empty())
 			return;
 
-		for (const auto& pair : musics_)
+		for (const auto& pair : musics_cache_)
 		{
 			pair.second->Release();
 		}
-		musics_.clear();
+		musics_cache_.clear();
 	}
 }

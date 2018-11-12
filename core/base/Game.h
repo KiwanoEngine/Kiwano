@@ -27,12 +27,32 @@ namespace easy2d
 	class Scene;
 	class Transition;
 
+	struct Options
+	{
+		String	title;	/* 标题 */
+		int		width;	/* 宽度 */
+		int		height;	/* 高度 */
+		LPCWSTR	icon;	/* 图标 */
+		bool	debug;	/* 调试模式 */
+
+		Options()
+			: title(L"Easy2D Game")
+			, width(640)
+			, height(480)
+			, icon(nullptr)
+			, debug(false)
+		{}
+	};
+
+
 	class Game
 	{
+		E2D_DISABLE_COPY(Game);
+
 	public:
 		Game();
 
-		~Game();
+		virtual ~Game();
 
 		// 更新时
 		virtual void OnUpdate(float dt) {}
@@ -46,7 +66,7 @@ namespace easy2d
 
 		// 初始化
 		void Initialize(
-			const window::Property& property	/* 窗口属性 */
+			const Options& options	/* 属性 */
 		);
 
 		// 运行
@@ -79,12 +99,6 @@ namespace easy2d
 		void UpdateScene(
 			float dt
 		);
-
-		// 获取实例
-		static Game * GetInstance();
-
-	protected:
-		E2D_DISABLE_COPY(Game);
 
 	private:
 		bool		debug_mode_;

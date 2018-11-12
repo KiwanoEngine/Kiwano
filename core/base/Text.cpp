@@ -318,16 +318,16 @@ namespace easy2d
 			// 创建文本区域
 			D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, GetTransform().size.width, GetTransform().size.height);
 			// 设置画刷颜色和透明度
-			render::instance.SetBrushOpacity(GetDisplayOpacity());
+			devices::Graphics::Instance().SetBrushOpacity(GetDisplayOpacity());
 			// 获取文本渲染器
-			render::instance.SetTextStyle(
+			devices::Graphics::Instance().SetTextStyle(
 				style_.color,
 				style_.outline,
 				style_.outline_color,
 				style_.outline_width,
 				style_.outline_stroke
 			);
-			render::instance.DrawTextLayout(text_layout_);
+			devices::Graphics::Instance().DrawTextLayout(text_layout_);
 		}
 	}
 
@@ -344,7 +344,7 @@ namespace easy2d
 		SafeRelease(text_format_);
 
 		ThrowIfFailed(
-			render::instance.CreateTextFormat(
+			devices::Graphics::Instance().CreateTextFormat(
 				&text_format_,
 				font_
 			)
@@ -399,7 +399,7 @@ namespace easy2d
 		if (style_.wrap)
 		{
 			ThrowIfFailed(
-				render::instance.CreateTextLayout(
+				devices::Graphics::Instance().CreateTextLayout(
 					&text_layout_,
 					text_,
 					text_format_,
@@ -416,7 +416,7 @@ namespace easy2d
 		{
 			// 为防止文本对齐问题，根据先创建 layout 以获取宽度
 			ThrowIfFailed(
-				render::instance.CreateTextLayout(
+				devices::Graphics::Instance().CreateTextLayout(
 					&text_layout_,
 					text_,
 					text_format_,
@@ -433,7 +433,7 @@ namespace easy2d
 			// 重新创建 layout
 			SafeRelease(text_layout_);
 			ThrowIfFailed(
-				render::instance.CreateTextLayout(
+				devices::Graphics::Instance().CreateTextLayout(
 					&text_layout_,
 					text_,
 					text_format_,

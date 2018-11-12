@@ -24,9 +24,13 @@
 
 namespace easy2d
 {
+	class Music;
+
 	// ÒôÀÖ²¥·ÅÆ÷
 	class Player
 	{
+		E2D_DISABLE_COPY(Player);
+
 	public:
 		Player();
 
@@ -112,12 +116,10 @@ namespace easy2d
 		void StopAll();
 
 		// Çå³ý»º´æ
-		static void ClearCache();
-
-	protected:
-		E2D_DISABLE_COPY(Player);
+		void ClearCache();
 
 	protected:
 		float volume_;
+		std::map<size_t, Music*> musics_cache_;
 	};
 }

@@ -77,12 +77,12 @@ namespace easy2d
 
 		if (clip_enabled_)
 		{
-			render::instance.PushClip(final_matrix_, transform_.size);
+			devices::Graphics::Instance().PushClip(final_matrix_, transform_.size);
 		}
 
 		if (children_.empty())
 		{
-			render::instance.SetTransform(final_matrix_);
+			devices::Graphics::Instance().SetTransform(final_matrix_);
 			OnDraw();
 		}
 		else
@@ -114,7 +114,7 @@ namespace easy2d
 				}
 			}
 
-			render::instance.SetTransform(final_matrix_);
+			devices::Graphics::Instance().SetTransform(final_matrix_);
 			OnDraw();
 
 			// 访问剩余节点
@@ -124,7 +124,7 @@ namespace easy2d
 
 		if (clip_enabled_)
 		{
-			render::instance.PopClip();
+			devices::Graphics::Instance().PopClip();
 		}
 	}
 
@@ -171,7 +171,7 @@ namespace easy2d
 		{
 			if (border_)
 			{
-				render::instance.DrawGeometry(border_, border_color_, 1.f, 1.5f);
+				devices::Graphics::Instance().DrawGeometry(border_, border_color_, 1.f, 1.5f);
 			}
 
 			for (const auto& child : children_)
@@ -212,7 +212,7 @@ namespace easy2d
 		SafeRelease(border_);
 		
 		ThrowIfFailed(
-			render::instance.CreateRectGeometry(final_matrix_, transform_.size, &border_)
+			devices::Graphics::Instance().CreateRectGeometry(final_matrix_, transform_.size, &border_)
 		);
 
 		// 通知子节点进行转换

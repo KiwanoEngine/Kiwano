@@ -20,54 +20,75 @@
 
 #pragma once
 #include "base.h"
-#include "Singleton.hpp"
+#include "audio.h"
+#include "RefCounter.h"
+#include "Resource.h"
+#include <xaudio2.h>
 
 namespace easy2d
 {
-	namespace devices
+	// 音乐
+	class Music
+		: public RefCounter
 	{
-		class InputDevice
-		{
-			E2D_DECLARE_SINGLETON(InputDevice);
+		E2D_DISABLE_COPY(Music);
 
-			E2D_DISABLE_COPY(InputDevice);
+	public:
+		Music();
 
-		public:
-			InputDevice();
+		Music(
+			const String& file_path	/* 音乐文件路径 */
+		);
 
-			~InputDevice();
+		Music(
+			Resource& res					/* 音乐资源 */
+		);
 
-			// 检测键盘某按键是否正被按下
-			bool IsDown(
-				KeyCode code
-			);
+		virtual ~Music();
 
-			// 检测鼠标按键是否正被按下
-			bool IsDown(
-				MouseCode code
-			);
+		// 打开音乐文件
+		bool Load(
+			const String& file_path	/* 音乐文件路径 */
+		);
 
-			// 获得鼠标X轴坐标值
-			float GetMouseX();
+		// 打开音乐资源
+		bool Load(
+			Resource& res					/* 音乐资源 */
+		);
 
-			// 获得鼠标Y轴坐标值
-			float GetMouseY();
+		// 播放
+		bool Play(
+			int loop_count = 0				/* 播放循环次数 (-1 为循环播放) */
+		);
 
-			// 获得鼠标坐标值
-			Point GetMousePos();
+		// 暂停
+		void Pause();
 
-			// 刷新设备状态
-			void Update(
-				HWND hwnd,
-				float scale_x,
-				float scale_y
-			);
+		// 继续
+		void Resume();
 
-		protected:
-			BYTE keys_[256];
-			Point mouse_pos_;
-		};
+		// 停止
+		void Stop();
 
-		E2D_DECLARE_SINGLETON_TYPE(InputDevice, Input);
-	}
+		// 关闭并回收资源
+		void Close();
+
+		// 是否正在播放
+		bool IsPlaying() const;
+
+		// 获取音量
+		float GetVolume() const;
+
+		// 设置音量
+		bool SetVolume(
+			float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
+		);
+
+	protected:
+		bool	opened_;
+		bool	playing_;
+		UINT32	size_;
+		BYTE*	wave_data_;
+		Voice	voice_;
+	};
 }

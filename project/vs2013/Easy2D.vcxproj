@@ -38,12 +38,14 @@
     <ClInclude Include="..\..\core\base\macros.h" />
     <ClInclude Include="..\..\core\base\modules.h" />
     <ClInclude Include="..\..\core\base\MouseEvent.h" />
+    <ClInclude Include="..\..\core\base\Music.h" />
     <ClInclude Include="..\..\core\base\Node.h" />
     <ClInclude Include="..\..\core\base\Rect.hpp" />
     <ClInclude Include="..\..\core\base\RefCounter.h" />
     <ClInclude Include="..\..\core\base\render.h" />
     <ClInclude Include="..\..\core\base\Resource.h" />
     <ClInclude Include="..\..\core\base\Scene.h" />
+    <ClInclude Include="..\..\core\base\Singleton.hpp" />
     <ClInclude Include="..\..\core\base\Size.h" />
     <ClInclude Include="..\..\core\base\Sprite.h" />
     <ClInclude Include="..\..\core\base\Task.h" />
@@ -62,7 +64,6 @@
     <ClInclude Include="..\..\core\ui\Menu.h" />
     <ClInclude Include="..\..\core\utils\Data.h" />
     <ClInclude Include="..\..\core\utils\File.h" />
-    <ClInclude Include="..\..\core\utils\Music.h" />
     <ClInclude Include="..\..\core\utils\Path.h" />
     <ClInclude Include="..\..\core\utils\Player.h" />
     <ClInclude Include="..\..\core\utils\Transcoder.h" />
@@ -83,6 +84,7 @@
     <ClCompile Include="..\..\core\base\KeyEvent.cpp" />
     <ClCompile Include="..\..\core\base\modules.cpp" />
     <ClCompile Include="..\..\core\base\MouseEvent.cpp" />
+    <ClCompile Include="..\..\core\base\Music.cpp" />
     <ClCompile Include="..\..\core\base\Node.cpp" />
     <ClCompile Include="..\..\core\base\RefCounter.cpp" />
     <ClCompile Include="..\..\core\base\render.cpp" />
@@ -102,7 +104,6 @@
     <ClCompile Include="..\..\core\ui\Menu.cpp" />
     <ClCompile Include="..\..\core\utils\Data.cpp" />
     <ClCompile Include="..\..\core\utils\File.cpp" />
-    <ClCompile Include="..\..\core\utils\Music.cpp" />
     <ClCompile Include="..\..\core\utils\Path.cpp" />
     <ClCompile Include="..\..\core\utils\Player.cpp" />
     <ClCompile Include="..\..\core\utils\Transcoder.cpp" />

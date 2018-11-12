@@ -30,6 +30,8 @@ namespace easy2d
 		class Menu
 			: public Node
 		{
+			E2D_DISABLE_COPY(Menu);
+
 		public:
 			Menu();
 
@@ -60,9 +62,6 @@ namespace easy2d
 
 			// 获取所有按钮
 			const std::vector<Button*>& GetAllButtons() const;
-
-		private:
-			E2D_DISABLE_COPY(Menu);
 
 		private:
 			bool enabled_;

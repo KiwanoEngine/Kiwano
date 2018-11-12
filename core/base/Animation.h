@@ -28,6 +28,8 @@ namespace easy2d
 	class Animation
 		: public RefCounter
 	{
+		E2D_DISABLE_COPY(Animation);
+
 	public:
 		typedef std::vector<Image*> Images;
 
@@ -76,9 +78,6 @@ namespace easy2d
 		Animation * Reverse() const;
 
 	protected:
-		E2D_DISABLE_COPY(Animation);
-
-	protected:
 		float	interval_;
 		Images	frames_;
 	};
@@ -88,6 +87,8 @@ namespace easy2d
 	class Animate
 		: public Action
 	{
+		E2D_DISABLE_COPY(Animate);
+
 	public:
 		Animate();
 
@@ -115,8 +116,6 @@ namespace easy2d
 		virtual void Reset() override;
 
 	protected:
-		E2D_DISABLE_COPY(Animate);
-
 		// 初始化动作
 		virtual void Initialize() override;
 

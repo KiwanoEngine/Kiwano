@@ -21,6 +21,7 @@
 #include "render.h"
 #include "time.h"
 #include "base.h"
+#include "modules.h"
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -28,33 +29,49 @@
 
 namespace easy2d
 {
-	namespace render
+	namespace devices
 	{
-		GraphicsDevice instance;
-
 		GraphicsDevice::GraphicsDevice()
 			: fps_text_format_(nullptr)
 			, fps_text_layout_(nullptr)
 			, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
 		{
 			ZeroMemory(&d2d, sizeof(D2DResources));
+
+			modules::Initialize();
 		}
 
 		GraphicsDevice::~GraphicsDevice()
 		{
+			ClearImageCache();
+
 			SafeRelease(fps_text_format_);
 			SafeRelease(fps_text_layout_);
+
+			SafeRelease(d2d.text_renderer);
+			SafeRelease(d2d.solid_brush);
+			SafeRelease(d2d.render_target);
+
+			SafeRelease(d2d.miter_stroke_style);
+			SafeRelease(d2d.bevel_stroke_style);
+			SafeRelease(d2d.round_stroke_style);
+
+			SafeRelease(d2d.imaging_factory);
+			SafeRelease(d2d.write_factory);
+			SafeRelease(d2d.factory);
+
+			modules::Destroy();
 		}
 
 		void GraphicsDevice::Initialize(HWND hwnd)
 		{
-			if (d2d.Factory)
+			if (d2d.factory)
 				return;
 
 			ThrowIfFailed(
 				D2D1CreateFactory(
 					D2D1_FACTORY_TYPE_SINGLE_THREADED,
-					&d2d.Factory
+					&d2d.factory
 				)
 			);
 
@@ -64,7 +81,7 @@ namespace easy2d
 					nullptr,
 					CLSCTX_INPROC_SERVER,
 					IID_IWICImagingFactory,
-					reinterpret_cast<void**>(&d2d.WICImagingFactory)
+					reinterpret_cast<void**>(&d2d.imaging_factory)
 				)
 			);
 
@@ -72,7 +89,7 @@ namespace easy2d
 				DWriteCreateFactory(
 					DWRITE_FACTORY_TYPE_SHARED,
 					__uuidof(IDWriteFactory),
-					reinterpret_cast<IUnknown**>(&d2d.DWriteFactory)
+					reinterpret_cast<IUnknown**>(&d2d.write_factory)
 				)
 			);
 
@@ -87,65 +104,50 @@ namespace easy2d
 			);
 
 			ThrowIfFailed(
-				d2d.Factory->CreateStrokeStyle(
+				d2d.factory->CreateStrokeStyle(
 					stroke_style,
 					nullptr,
 					0,
-					&d2d.MiterStrokeStyle
+					&d2d.miter_stroke_style
 				)
 			);
 
 			stroke_style.lineJoin = D2D1_LINE_JOIN_BEVEL;
 
 			ThrowIfFailed(
-				d2d.Factory->CreateStrokeStyle(
+				d2d.factory->CreateStrokeStyle(
 					stroke_style,
 					nullptr,
 					0,
-					&d2d.BevelStrokeStyle
+					&d2d.bevel_stroke_style
 				)
 			);
 
 			stroke_style.lineJoin = D2D1_LINE_JOIN_ROUND;
 
 			ThrowIfFailed(
-				d2d.Factory->CreateStrokeStyle(
+				d2d.factory->CreateStrokeStyle(
 					stroke_style,
 					nullptr,
 					0,
-					&d2d.RoundStrokeStyle
+					&d2d.round_stroke_style
 				)
 			);
 
 			CreateDeviceResources(hwnd);
 		}
 
-		void GraphicsDevice::Uninitialize()
-		{
-			SafeRelease(d2d.TextRenderer);
-			SafeRelease(d2d.SolidColorBrush);
-			SafeRelease(d2d.HwndRenderTarget);
-
-			SafeRelease(d2d.MiterStrokeStyle);
-			SafeRelease(d2d.BevelStrokeStyle);
-			SafeRelease(d2d.RoundStrokeStyle);
-
-			SafeRelease(d2d.WICImagingFactory);
-			SafeRelease(d2d.DWriteFactory);
-			SafeRelease(d2d.Factory);
-		}
-
 		void GraphicsDevice::BeginDraw(HWND hwnd)
 		{
 			CreateDeviceResources(hwnd);
 
-			d2d.HwndRenderTarget->BeginDraw();
-			d2d.HwndRenderTarget->Clear(clear_color_);
+			d2d.render_target->BeginDraw();
+			d2d.render_target->Clear(clear_color_);
 		}
 
 		void GraphicsDevice::EndDraw()
 		{
-			HRESULT hr = d2d.HwndRenderTarget->EndDraw();
+			HRESULT hr = d2d.render_target->EndDraw();
 
 			if (hr == D2DERR_RECREATE_TARGET)
 			{
@@ -155,12 +157,24 @@ namespace easy2d
 
 				SafeRelease(fps_text_format_);
 				SafeRelease(fps_text_layout_);
-				SafeRelease(d2d.TextRenderer);
-				SafeRelease(d2d.SolidColorBrush);
-				SafeRelease(d2d.HwndRenderTarget);
+				SafeRelease(d2d.text_renderer);
+				SafeRelease(d2d.solid_brush);
+				SafeRelease(d2d.render_target);
 			}
 
 			ThrowIfFailed(hr);
+		}
+
+		void GraphicsDevice::ClearImageCache()
+		{
+			if (bitmap_cache_.empty())
+				return;
+
+			for (const auto& bitmap : bitmap_cache_)
+			{
+				bitmap.second->Release();
+			}
+			bitmap_cache_.clear();
 		}
 
 		HRESULT GraphicsDevice::CreateRectGeometry(
@@ -169,22 +183,22 @@ namespace easy2d
 			ID2D1Geometry** geometry
 		) const
 		{
-			if (!d2d.Factory)
+			if (!d2d.factory)
 				return E_UNEXPECTED;
 
 			HRESULT hr;
 
 			ID2D1RectangleGeometry * rectangle = nullptr;
 			ID2D1TransformedGeometry * transformed = nullptr;
-			
-			hr = d2d.Factory->CreateRectangleGeometry(
+
+			hr = d2d.factory->CreateRectangleGeometry(
 				D2D1::RectF(0, 0, size.width, size.height),
 				&rectangle
 			);
 
 			if (SUCCEEDED(hr))
 			{
-				hr = d2d.Factory->CreateTransformedGeometry(
+				hr = d2d.factory->CreateTransformedGeometry(
 					rectangle,
 					matrix,
 					&transformed
@@ -202,10 +216,10 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::CreateTextFormat(IDWriteTextFormat ** text_format, const Font & font) const
 		{
-			if (!d2d.DWriteFactory)
+			if (!d2d.write_factory)
 				return E_UNEXPECTED;
 
-			return d2d.DWriteFactory->CreateTextFormat(
+			return d2d.write_factory->CreateTextFormat(
 				font.family.c_str(),
 				nullptr,
 				DWRITE_FONT_WEIGHT(font.weight),
@@ -219,11 +233,11 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::CreateTextLayout(IDWriteTextLayout ** text_layout, const String & text, IDWriteTextFormat * text_format, float wrap_width) const
 		{
-			if (!d2d.DWriteFactory)
+			if (!d2d.write_factory)
 				return E_UNEXPECTED;
 
 			UINT32 length = static_cast<UINT32>(text.length());
-			return d2d.DWriteFactory->CreateTextLayout(
+			return d2d.write_factory->CreateTextLayout(
 				text.c_str(),
 				length,
 				text_format,
@@ -235,10 +249,10 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::CreateLayer(ID2D1Layer ** layer)
 		{
-			if (!d2d.HwndRenderTarget)
+			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			return d2d.HwndRenderTarget->CreateLayer(layer);
+			return d2d.render_target->CreateLayer(layer);
 		}
 
 		HRESULT GraphicsDevice::DrawGeometry(
@@ -249,15 +263,15 @@ namespace easy2d
 			StrokeStyle stroke
 		)
 		{
-			if (!d2d.SolidColorBrush ||
-				!d2d.HwndRenderTarget)
+			if (!d2d.solid_brush ||
+				!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.SolidColorBrush->SetColor(border_color);
-			d2d.SolidColorBrush->SetOpacity(opacity);
-			d2d.HwndRenderTarget->DrawGeometry(
+			d2d.solid_brush->SetColor(border_color);
+			d2d.solid_brush->SetOpacity(opacity);
+			d2d.render_target->DrawGeometry(
 				geometry,
-				d2d.SolidColorBrush,
+				d2d.solid_brush,
 				stroke_width,
 				GetStrokeStyle(stroke)
 			);
@@ -270,13 +284,13 @@ namespace easy2d
 			switch (stroke)
 			{
 			case StrokeStyle::Miter:
-				stroke_style = d2d.MiterStrokeStyle;
+				stroke_style = d2d.miter_stroke_style;
 				break;
 			case StrokeStyle::Bevel:
-				stroke_style = d2d.BevelStrokeStyle;
+				stroke_style = d2d.bevel_stroke_style;
 				break;
 			case StrokeStyle::Round:
-				stroke_style = d2d.RoundStrokeStyle;
+				stroke_style = d2d.round_stroke_style;
 				break;
 			}
 			return stroke_style;
@@ -289,10 +303,10 @@ namespace easy2d
 			const Rect & source_rect
 		)
 		{
-			if (!d2d.HwndRenderTarget)
+			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.HwndRenderTarget->DrawBitmap(
+			d2d.render_target->DrawBitmap(
 				image->GetBitmap(),
 				dest_rect,
 				opacity,
@@ -304,19 +318,19 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::DrawTextLayout(IDWriteTextLayout * text_layout)
 		{
-			if (!d2d.TextRenderer)
+			if (!d2d.text_renderer)
 				return E_UNEXPECTED;
 
-			return text_layout->Draw(nullptr, d2d.TextRenderer, 0, 0);
+			return text_layout->Draw(nullptr, d2d.text_renderer, 0, 0);
 		}
 
 		HRESULT GraphicsDevice::PushClip(const math::Matrix & clip_matrix, const Size & clip_size)
 		{
-			if (!d2d.HwndRenderTarget)
+			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.HwndRenderTarget->SetTransform(clip_matrix);
-			d2d.HwndRenderTarget->PushAxisAlignedClip(
+			d2d.render_target->SetTransform(clip_matrix);
+			d2d.render_target->PushAxisAlignedClip(
 				D2D1::RectF(0, 0, clip_size.width, clip_size.height),
 				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
 			);
@@ -325,27 +339,27 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::PopClip()
 		{
-			if (!d2d.HwndRenderTarget)
+			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.HwndRenderTarget->PopAxisAlignedClip();
+			d2d.render_target->PopAxisAlignedClip();
 			return S_OK;
 		}
 
 		HRESULT GraphicsDevice::PushLayer(ID2D1Layer * layer, LayerProperties properties)
 		{
-			if (!d2d.HwndRenderTarget ||
-				!d2d.SolidColorBrush)
+			if (!d2d.render_target ||
+				!d2d.solid_brush)
 				return E_UNEXPECTED;
 
-			d2d.HwndRenderTarget->PushLayer(
+			d2d.render_target->PushLayer(
 				D2D1::LayerParameters(
 					properties.area,
 					nullptr,
 					D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 					D2D1::Matrix3x2F::Identity(),
 					properties.opacity,
-					d2d.SolidColorBrush,
+					d2d.solid_brush,
 					D2D1_LAYER_OPTIONS_NONE
 				),
 				layer
@@ -355,17 +369,17 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::PopLayer()
 		{
-			if (!d2d.HwndRenderTarget)
+			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.HwndRenderTarget->PopLayer();
+			d2d.render_target->PopLayer();
 			return S_OK;
 		}
 
 		HRESULT GraphicsDevice::CreateBitmapFromFile(const String & file_path, ID2D1Bitmap ** bitmap)
 		{
-			if (d2d.WICImagingFactory == nullptr ||
-				d2d.HwndRenderTarget == nullptr)
+			if (d2d.imaging_factory == nullptr ||
+				d2d.render_target == nullptr)
 			{
 				return E_UNEXPECTED;
 			}
@@ -375,13 +389,20 @@ namespace easy2d
 				return E_POINTER;
 			}
 
+			size_t hash_code = std::hash<String>{}(file_path);
+			if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
+			{
+				*bitmap = bitmap_cache_[hash_code];
+				return S_OK;
+			}
+
 			IWICBitmapDecoder*		decoder = nullptr;
 			IWICBitmapFrameDecode*	source = nullptr;
 			IWICStream*				stream = nullptr;
 			IWICFormatConverter*	converter = nullptr;
 
 			// 创建解码器
-			HRESULT hr = d2d.WICImagingFactory->CreateDecoderFromFilename(
+			HRESULT hr = d2d.imaging_factory->CreateDecoderFromFilename(
 				file_path.c_str(),
 				nullptr,
 				GENERIC_READ,
@@ -398,7 +419,7 @@ namespace easy2d
 			if (SUCCEEDED(hr))
 			{
 				// 创建图片格式转换器
-				hr = d2d.WICImagingFactory->CreateFormatConverter(&converter);
+				hr = d2d.imaging_factory->CreateFormatConverter(&converter);
 			}
 
 			if (SUCCEEDED(hr))
@@ -417,11 +438,16 @@ namespace easy2d
 			if (SUCCEEDED(hr))
 			{
 				// 从 WIC 位图创建一个 Direct2D 位图
-				hr = d2d.HwndRenderTarget->CreateBitmapFromWicBitmap(
+				hr = d2d.render_target->CreateBitmapFromWicBitmap(
 					converter,
 					nullptr,
 					bitmap
 				);
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				bitmap_cache_.insert(std::make_pair(hash_code, *bitmap));
 			}
 
 			// 释放相关资源
@@ -435,8 +461,8 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::CreateBitmapFromResource(Resource & res, ID2D1Bitmap ** bitmap)
 		{
-			if (d2d.WICImagingFactory == nullptr ||
-				d2d.HwndRenderTarget == nullptr)
+			if (d2d.imaging_factory == nullptr ||
+				d2d.render_target == nullptr)
 			{
 				return E_UNEXPECTED;
 			}
@@ -446,6 +472,13 @@ namespace easy2d
 				return E_POINTER;
 			}
 
+			size_t hash_code = res.GetHashCode();
+			if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
+			{
+				*bitmap = bitmap_cache_[hash_code];
+				return S_OK;
+			}
+
 			HRESULT hr;
 
 			HINSTANCE				hinstance = GetModuleHandle(nullptr);
@@ -453,14 +486,14 @@ namespace easy2d
 			IWICBitmapFrameDecode*	source = nullptr;
 			IWICStream*				stream = nullptr;
 			IWICFormatConverter*	converter = nullptr;
-			
+
 			// 加载资源
 			hr = res.Load() ? S_OK : E_FAIL;
 
 			if (SUCCEEDED(hr))
 			{
 				// 创建 WIC 流
-				hr = d2d.WICImagingFactory->CreateStream(&stream);
+				hr = d2d.imaging_factory->CreateStream(&stream);
 			}
 
 			if (SUCCEEDED(hr))
@@ -475,7 +508,7 @@ namespace easy2d
 			if (SUCCEEDED(hr))
 			{
 				// 创建流的解码器
-				hr = d2d.WICImagingFactory->CreateDecoderFromStream(
+				hr = d2d.imaging_factory->CreateDecoderFromStream(
 					stream,
 					nullptr,
 					WICDecodeMetadataCacheOnLoad,
@@ -492,7 +525,7 @@ namespace easy2d
 			if (SUCCEEDED(hr))
 			{
 				// 创建图片格式转换器
-				hr = d2d.WICImagingFactory->CreateFormatConverter(&converter);
+				hr = d2d.imaging_factory->CreateFormatConverter(&converter);
 			}
 
 			if (SUCCEEDED(hr))
@@ -511,11 +544,16 @@ namespace easy2d
 			if (SUCCEEDED(hr))
 			{
 				// 从 WIC 位图创建一个 Direct2D 位图
-				hr = d2d.HwndRenderTarget->CreateBitmapFromWicBitmap(
+				hr = d2d.render_target->CreateBitmapFromWicBitmap(
 					converter,
 					nullptr,
 					bitmap
 				);
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				bitmap_cache_.insert(std::make_pair(hash_code, *bitmap));
 			}
 
 			// 释放相关资源
@@ -529,28 +567,28 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::Resize(UINT32 width, UINT32 height)
 		{
-			if (!d2d.HwndRenderTarget)
+			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.HwndRenderTarget->Resize(D2D1::SizeU(width, height));
+			d2d.render_target->Resize(D2D1::SizeU(width, height));
 			return S_OK;
 		}
 
 		HRESULT GraphicsDevice::SetTransform(const math::Matrix & matrix)
 		{
-			if (!d2d.HwndRenderTarget)
+			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.HwndRenderTarget->SetTransform(matrix);
+			d2d.render_target->SetTransform(matrix);
 			return S_OK;
 		}
 
 		HRESULT GraphicsDevice::SetBrushOpacity(float opacity)
 		{
-			if (!d2d.HwndRenderTarget)
+			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.SolidColorBrush->SetOpacity(opacity);
+			d2d.solid_brush->SetOpacity(opacity);
 			return S_OK;
 		}
 
@@ -562,10 +600,10 @@ namespace easy2d
 			StrokeStyle outline_stroke
 		)
 		{
-			if (!d2d.TextRenderer)
+			if (!d2d.text_renderer)
 				return E_UNEXPECTED;
 
-			d2d.TextRenderer->SetTextStyle(
+			d2d.text_renderer->SetTextStyle(
 				color,
 				has_outline,
 				outline_color,
@@ -590,7 +628,7 @@ namespace easy2d
 			if (!fps_text_format_)
 			{
 				ThrowIfFailed(
-					d2d.DWriteFactory->CreateTextFormat(
+					d2d.write_factory->CreateTextFormat(
 						L"",
 						nullptr,
 						DWRITE_FONT_WEIGHT_NORMAL,
@@ -621,7 +659,7 @@ namespace easy2d
 				SafeRelease(fps_text_layout_);
 
 				ThrowIfFailed(
-					d2d.DWriteFactory->CreateTextLayout(
+					d2d.write_factory->CreateTextLayout(
 						fps_text,
 						static_cast<UINT32>(len),
 						fps_text_format_,
@@ -634,9 +672,9 @@ namespace easy2d
 
 			if (fps_text_layout_)
 			{
-				d2d.HwndRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-				d2d.SolidColorBrush->SetOpacity(1.0f);
-				d2d.TextRenderer->SetTextStyle(
+				d2d.render_target->SetTransform(D2D1::Matrix3x2F::Identity());
+				d2d.solid_brush->SetOpacity(1.0f);
+				d2d.text_renderer->SetTextStyle(
 					D2D1::ColorF(D2D1::ColorF::White),
 					TRUE,
 					D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
@@ -644,13 +682,13 @@ namespace easy2d
 					D2D1_LINE_JOIN_ROUND
 				);
 
-				fps_text_layout_->Draw(nullptr, d2d.TextRenderer, 10, 0);
+				fps_text_layout_->Draw(nullptr, d2d.text_renderer, 10, 0);
 			}
 		}
 
 		void GraphicsDevice::CreateDeviceResources(HWND hwnd)
 		{
-			if (!d2d.HwndRenderTarget)
+			if (!d2d.render_target)
 			{
 				RECT rc;
 				::GetClientRect(hwnd, &rc);
@@ -663,35 +701,35 @@ namespace easy2d
 				// 创建设备相关资源。这些资源应在 Direct2D 设备消失时重建
 				// 创建一个 Direct2D 渲染目标
 				ThrowIfFailed(
-					d2d.Factory->CreateHwndRenderTarget(
+					d2d.factory->CreateHwndRenderTarget(
 						D2D1::RenderTargetProperties(),
 						D2D1::HwndRenderTargetProperties(
 							hwnd,
 							size,
 							D2D1_PRESENT_OPTIONS_NONE),
-						&d2d.HwndRenderTarget
+						&d2d.render_target
 					)
 				);
 			}
 
-			if (!d2d.SolidColorBrush)
+			if (!d2d.solid_brush)
 			{
 				ThrowIfFailed(
-					d2d.HwndRenderTarget->CreateSolidColorBrush(
+					d2d.render_target->CreateSolidColorBrush(
 						D2D1::ColorF(D2D1::ColorF::White),
-						&d2d.SolidColorBrush
+						&d2d.solid_brush
 					)
 				);
 			}
 
-			if (!d2d.TextRenderer)
+			if (!d2d.text_renderer)
 			{
 				ThrowIfFailed(
 					ITextRenderer::Create(
-						&d2d.TextRenderer,
-						d2d.Factory,
-						d2d.HwndRenderTarget,
-						d2d.SolidColorBrush
+						&d2d.text_renderer,
+						d2d.factory,
+						d2d.render_target,
+						d2d.solid_brush
 					)
 				);
 			}
