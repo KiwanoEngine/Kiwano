@@ -28,6 +28,8 @@ namespace easy2d
 	class Sprite
 		: public Node
 	{
+		E2D_DISABLE_COPY(Sprite);
+
 	public:
 		Sprite();
 
@@ -80,9 +82,6 @@ namespace easy2d
 
 		// äÖÈ¾¾«Áé
 		virtual void OnDraw() const override;
-
-	private:
-		E2D_DISABLE_COPY(Sprite);
 
 	private:
 		Image* image_;

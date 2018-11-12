@@ -20,6 +20,7 @@
 
 #pragma once
 #include "base.h"
+#include "Singleton.hpp"
 #include "Font.h"
 #include "Resource.h"
 #include "Image.h"
@@ -28,37 +29,30 @@
 
 namespace easy2d
 {
-	namespace render
+	namespace devices
 	{
-		typedef struct
+		struct D2DResources
 		{
-			ID2D1Factory*			Factory;
-			IWICImagingFactory*		WICImagingFactory;
-			IDWriteFactory*			DWriteFactory;
-			ITextRenderer*			TextRenderer;
-			ID2D1SolidColorBrush*	SolidColorBrush;
-			ID2D1HwndRenderTarget*	HwndRenderTarget;
-			ID2D1StrokeStyle*		MiterStrokeStyle;
-			ID2D1StrokeStyle*		BevelStrokeStyle;
-			ID2D1StrokeStyle*		RoundStrokeStyle;
-		} D2DResources;
+			ID2D1Factory*			factory;
+			IWICImagingFactory*		imaging_factory;
+			IDWriteFactory*			write_factory;
+			ITextRenderer*			text_renderer;
+			ID2D1SolidColorBrush*	solid_brush;
+			ID2D1HwndRenderTarget*	render_target;
+			ID2D1StrokeStyle*		miter_stroke_style;
+			ID2D1StrokeStyle*		bevel_stroke_style;
+			ID2D1StrokeStyle*		round_stroke_style;
+		};
 
-		typedef struct
-		{
-			Rect area;
-			float opacity;
-		} LayerProperties;
 
 		class GraphicsDevice
 		{
+			E2D_DECLARE_SINGLETON(GraphicsDevice);
+
+			E2D_DISABLE_COPY(GraphicsDevice);
+
 		public:
-			GraphicsDevice();
-
-			~GraphicsDevice();
-
 			void Initialize(HWND hwnd);
-
-			void Uninitialize();
 
 			// ¿ªÊ¼äÖÈ¾
 			void BeginDraw(HWND hwnd);
@@ -166,13 +160,21 @@ namespace easy2d
 				UINT32 height
 			);
 
+			void ClearImageCache();
+
 		protected:
-			D2D1_COLOR_F		clear_color_;
-			IDWriteTextFormat*	fps_text_format_;
-			IDWriteTextLayout*	fps_text_layout_;
-			D2DResources		d2d;
+			GraphicsDevice();
+
+			~GraphicsDevice();
+
+		protected:
+			D2DResources					d2d;
+			D2D1_COLOR_F					clear_color_;
+			IDWriteTextFormat*				fps_text_format_;
+			IDWriteTextLayout*				fps_text_layout_;
+			std::map<size_t, ID2D1Bitmap*>	bitmap_cache_;
 		};
 
-		extern GraphicsDevice instance;
+		E2D_DECLARE_SINGLETON_TYPE(GraphicsDevice, Graphics);
 	}
 }

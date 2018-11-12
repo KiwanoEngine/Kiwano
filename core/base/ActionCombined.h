@@ -27,6 +27,8 @@ namespace easy2d
 	class Loop
 		: public Action
 	{
+		E2D_DISABLE_COPY(Loop);
+
 	public:
 		explicit Loop(
 			Action * action,	/* 执行循环的动作 */
@@ -45,8 +47,6 @@ namespace easy2d
 		virtual void Reset() override;
 
 	protected:
-		E2D_DISABLE_COPY(Loop);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -67,6 +67,8 @@ namespace easy2d
 	class Sequence
 		: public Action
 	{
+		E2D_DISABLE_COPY(Sequence);
+
 	public:
 		typedef std::vector<Action*> Actions;
 
@@ -98,8 +100,6 @@ namespace easy2d
 		virtual void Reset() override;
 
 	protected:
-		E2D_DISABLE_COPY(Sequence);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -119,6 +119,8 @@ namespace easy2d
 	class Spawn
 		: public Action
 	{
+		E2D_DISABLE_COPY(Spawn);
+
 	public:
 		typedef std::vector<Action*> Actions;
 
@@ -150,8 +152,6 @@ namespace easy2d
 		virtual void Reset() override;
 
 	protected:
-		E2D_DISABLE_COPY(Spawn);
-
 		// 初始化动作
 		virtual void Initialize() override;
 

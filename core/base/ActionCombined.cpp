@@ -27,7 +27,7 @@ namespace easy2d
 	// Loop
 	//-------------------------------------------------------
 
-	Loop::Loop(Action * action, int times /* = -1 */)
+	Loop::Loop(Action * action, int times)
 		: action_(action)
 		, times_(0)
 		, total_times_(times)

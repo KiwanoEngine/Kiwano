@@ -20,23 +20,68 @@
 
 #pragma once
 #include "macros.h"
+#include "Singleton.hpp"
 #include <xaudio2.h>
 
 namespace easy2d
 {
-	namespace audio
+	class Voice
 	{
-		// 音频设备
+		E2D_DISABLE_COPY(Voice);
+
+	public:
+		Voice();
+
+		Voice(
+			IXAudio2SourceVoice* source_voice
+		);
+
+		~Voice();
+
+		HRESULT Play(
+			const BYTE* wave_data,
+			UINT32 data_size,
+			UINT32 loop_count
+		);
+
+		HRESULT Pause();
+
+		HRESULT Resume();
+
+		HRESULT Stop();
+
+		HRESULT GetVolume(
+			float* volume
+		) const;
+
+		HRESULT SetVolume(
+			float volume
+		);
+
+		HRESULT GetBuffersQueued(
+			UINT32* queued
+		) const;
+
+		void Destroy();
+
+		void SetSourceVoice(
+			IXAudio2SourceVoice* source_voice
+		);
+
+	protected:
+		IXAudio2SourceVoice* source_voice_;
+	};
+
+	namespace devices
+	{
 		class AudioDevice
 		{
+			E2D_DECLARE_SINGLETON(AudioDevice);
+
+			E2D_DISABLE_COPY(AudioDevice);
+
 		public:
-			AudioDevice();
-
-			~AudioDevice();
-
 			void Initialize();
-
-			void Uninitialize();
 
 			// 开启设备
 			void Open();
@@ -44,17 +89,28 @@ namespace easy2d
 			// 关闭设备
 			void Close();
 
-			// 创建音源
 			HRESULT CreateVoice(
-				IXAudio2SourceVoice ** voice,
+				Voice* voice,
 				WAVEFORMATEX * wfx
 			);
+
+			void DeleteVoice(
+				Voice* voice
+			);
+
+			void ClearVoiceCache();
+
+		protected:
+			AudioDevice();
+
+			~AudioDevice();
 
 		protected:
 			IXAudio2 * x_audio2_;
 			IXAudio2MasteringVoice*	mastering_voice_;
+			std::list<Voice*> voice_cache_;
 		};
 
-		extern AudioDevice instance;
+		E2D_DECLARE_SINGLETON_TYPE(AudioDevice, Audio);
 	}
 }

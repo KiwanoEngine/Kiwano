@@ -62,7 +62,7 @@ namespace easy2d
 		{
 			// 设置数据的保存路径
 			String local_app_data_path = Path::GetLocalAppDataPath();
-			String title = window::instance.GetTitle();
+			String title = Window::Instance().GetTitle();
 			String folder_name = std::to_wstring(std::hash<String>{}(title));
 
 			if (!local_app_data_path.empty())
@@ -90,7 +90,7 @@ namespace easy2d
 		{
 			// 设置临时文件保存路径
 			wchar_t path[_MAX_PATH];
-			String title = window::instance.GetTitle();
+			String title = Window::Instance().GetTitle();
 			String folder_name = std::to_wstring(std::hash<String>{}(title));
 
 			if (0 != ::GetTempPath(_MAX_PATH, path))

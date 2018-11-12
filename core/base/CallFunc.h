@@ -28,6 +28,8 @@ namespace easy2d
 	class CallFunc
 		: public Action
 	{
+		E2D_DISABLE_COPY(CallFunc);
+
 		typedef std::function<void()> Callback;
 
 	  public:
@@ -42,8 +44,6 @@ namespace easy2d
 		virtual CallFunc *Reverse() const override;
 
 	  protected:
-		E2D_DISABLE_COPY(CallFunc);
-
 		// 初始化动作
 		virtual void Initialize() override;
 

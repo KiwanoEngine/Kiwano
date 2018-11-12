@@ -45,7 +45,7 @@ namespace easy2d
 		return wave_format_;
 	}
 
-	bool Transcoder::LoadMediaFile(LPCWSTR file_path, BYTE** wave_data, UINT32* wave_data_size)
+	HRESULT Transcoder::LoadMediaFile(LPCWSTR file_path, BYTE** wave_data, UINT32* wave_data_size)
 	{
 		HRESULT hr = S_OK;
 
@@ -64,10 +64,10 @@ namespace easy2d
 
 		SafeRelease(reader);
 
-		return SUCCEEDED(hr);
+		return hr;
 	}
 
-	bool Transcoder::LoadMediaResource(Resource& res, BYTE** wave_data, UINT32* wave_data_size)
+	HRESULT Transcoder::LoadMediaResource(Resource& res, BYTE** wave_data, UINT32* wave_data_size)
 	{
 		HRESULT	hr = S_OK;
 
@@ -86,7 +86,7 @@ namespace easy2d
 		if (stream == nullptr)
 		{
 			logs::Trace(L"SHCreateMemStream");
-			return false;
+			return E_OUTOFMEMORY;
 		}
 
 		if (SUCCEEDED(hr))
@@ -112,7 +112,7 @@ namespace easy2d
 		SafeRelease(byte_stream);
 		SafeRelease(reader);
 
-		return SUCCEEDED(hr);
+		return hr;
 	}
 
 	HRESULT Transcoder::ReadSource(IMFSourceReader* reader, BYTE** wave_data, UINT32* wave_data_size)

@@ -34,16 +34,6 @@
 
 namespace easy2d
 {
-	namespace
-	{
-		Game * instance = nullptr;
-	}
-
-	Game * Game::GetInstance()
-	{
-		return instance;
-	}
-
 	Game::Game()
 		: quit_(true)
 		, curr_scene_(nullptr)
@@ -51,12 +41,6 @@ namespace easy2d
 		, transition_(nullptr)
 		, debug_mode_(false)
 	{
-		if (instance)
-		{
-			throw std::runtime_error("同时只能存在一个游戏实例");
-		}
-		instance = this;
-
 		::CoInitialize(nullptr);
 	}
 
@@ -66,25 +50,14 @@ namespace easy2d
 		SafeRelease(curr_scene_);
 		SafeRelease(next_scene_);
 
-		Image::ClearCache();
-		Player::ClearCache();
-
-		render::instance.Uninitialize();
-		audio::instance.Uninitialize();
-		window::instance.Destroy();
-		modules::Uninitialize();
-
-		instance = nullptr;
-
 		::CoUninitialize();
 	}
 
-	void Game::Initialize(const window::Property& property)
+	void Game::Initialize(const Options& options)
 	{
-		modules::Initialize();
-		window::instance.Initialize(property);
-		render::instance.Initialize(window::instance.handle);
-		audio::instance.Initialize();
+		Window::Instance().Initialize(options.title, options.width, options.height, options.icon, options.debug);
+		devices::Graphics::Instance().Initialize(Window::Instance().GetHandle());
+		devices::Audio::Instance().Initialize();
 
 		// 若开启了调试模式，打开控制台
 		HWND console = ::GetConsoleWindow();
@@ -117,7 +90,7 @@ namespace easy2d
 		}
 
 		::SetWindowLongPtrW(
-			window::instance.handle,
+			Window::Instance().GetHandle(),
 			GWLP_USERDATA,
 			PtrToUlong(this)
 		);
@@ -134,8 +107,8 @@ namespace easy2d
 			next_scene_ = nullptr;
 		}
 
-		::ShowWindow(window::instance.handle, SW_SHOWNORMAL);
-		::UpdateWindow(window::instance.handle);
+		::ShowWindow(Window::Instance().GetHandle(), SW_SHOWNORMAL);
+		::UpdateWindow(Window::Instance().GetHandle());
 
 		const int64_t min_interval = 5;
 		auto last = time::Now();
@@ -151,10 +124,10 @@ namespace easy2d
 				float dt = (now - last).Seconds();
 				last = now;
 
-				input::instance.Update(
-					window::instance.handle,
-					window::instance.xscale,
-					window::instance.yscale
+				devices::Input::Instance().Update(
+					Window::Instance().GetHandle(),
+					Window::Instance().GetContentScaleX(),
+					Window::Instance().GetContentScaleY()
 				);
 
 				OnUpdate(dt);
@@ -277,7 +250,7 @@ namespace easy2d
 
 	void Game::DrawScene()
 	{
-		render::instance.BeginDraw(window::instance.handle);
+		devices::Graphics::Instance().BeginDraw(Window::Instance().GetHandle());
 
 		if (transition_)
 		{
@@ -292,21 +265,21 @@ namespace easy2d
 		{
 			if (curr_scene_ && curr_scene_->GetRoot())
 			{
-				render::instance.SetTransform(math::Matrix());
-				render::instance.SetBrushOpacity(1.f);
+				devices::Graphics::Instance().SetTransform(math::Matrix());
+				devices::Graphics::Instance().SetBrushOpacity(1.f);
 				curr_scene_->GetRoot()->DrawBorder();
 			}
 			if (next_scene_ && next_scene_->GetRoot())
 			{
-				render::instance.SetTransform(math::Matrix());
-				render::instance.SetBrushOpacity(1.f);
+				devices::Graphics::Instance().SetTransform(math::Matrix());
+				devices::Graphics::Instance().SetBrushOpacity(1.f);
 				next_scene_->GetRoot()->DrawBorder();
 			}
 
-			render::instance.DrawDebugInfo();
+			devices::Graphics::Instance().DrawDebugInfo();
 		}
 
-		render::instance.EndDraw();
+		devices::Graphics::Instance().EndDraw();
 	}
 
 	void Game::SetDebugMode(bool enabled)

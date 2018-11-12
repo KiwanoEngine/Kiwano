@@ -28,6 +28,8 @@ namespace easy2d
 	class Canvas
 		: public Node
 	{
+		E2D_DISABLE_COPY(Canvas);
+
 	public:
 		Canvas(
 			float width,
@@ -125,11 +127,8 @@ namespace easy2d
 		);
 
 	private:
-		E2D_DISABLE_COPY(Canvas);
-
-	private:
 		float					stroke_width_;
-		StrokeStyle					stroke_;
+		StrokeStyle				stroke_;
 		ID2D1RenderTarget*		render_target_;
 		ID2D1SolidColorBrush*	fill_brush_;
 		ID2D1SolidColorBrush*	line_brush_;

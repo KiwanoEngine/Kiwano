@@ -80,6 +80,7 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 
 #if VS_VER >= VS_2015
@@ -89,9 +90,10 @@
 #endif
 
 
-#define E2D_DISABLE_COPY(Class)					\
-	Class(const Class &) = delete;				\
-	Class & operator= (const Class &) = delete
+#define E2D_DISABLE_COPY(Class)						\
+	private:										\
+		Class(const Class &) = delete;				\
+		Class & operator= (const Class &) = delete
 
 
 #if defined( DEBUG ) || defined( _DEBUG )

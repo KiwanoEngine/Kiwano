@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #include "Music.h"
-#include "Transcoder.h"
-#include "File.h"
-#include "../base/modules.h"
-#include "../base/audio.h"
-#include "../base/logs.h"
+#include "../utils/Transcoder.h"
+#include "../utils/File.h"
+#include "modules.h"
+#include "audio.h"
+#include "logs.h"
 
 namespace easy2d
 {
@@ -71,7 +71,7 @@ namespace easy2d
 		File music_file;
 		if (!music_file.Open(file_path))
 		{
-			E2D_WARNING("Media file not found.");
+			logs::Trace(L"Media file not found.");
 			return false;
 		}
 
@@ -80,12 +80,14 @@ namespace easy2d
 		String music_file_path = music_file.GetPath();
 
 		Transcoder transcoder;
-		if (!transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_))
+		HRESULT hr = transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_);
+		if (FAILED(hr))
 		{
+			logs::Trace(L"Load media from file failed.", hr);
 			return false;
 		}
 
-		HRESULT hr = audio::instance.CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+		hr = devices::Audio::Instance().CreateVoice(&voice_, transcoder.GetWaveFormatEx());
 		if (FAILED(hr))
 		{
 			if (wave_data_)
@@ -109,12 +111,15 @@ namespace easy2d
 		}
 
 		Transcoder transcoder;
-		if (!transcoder.LoadMediaResource(res, &wave_data_, &size_))
+		HRESULT hr = transcoder.LoadMediaResource(res, &wave_data_, &size_);
+
+		if (FAILED(hr))
 		{
+			logs::Trace(L"Load media from resource failed.", hr);
 			return false;
 		}
 
-		HRESULT hr = audio::instance.CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+		hr = devices::Audio::Instance().CreateVoice(&voice_, transcoder.GetWaveFormatEx());
 		if (FAILED(hr))
 		{
 			if (wave_data_)
@@ -134,47 +139,25 @@ namespace easy2d
 	{
 		if (!opened_)
 		{
-			E2D_WARNING("Music must be opened first!");
+			logs::Trace(L"Music must be opened first!");
 			return false;
 		}
 
-		if (voice_ == nullptr)
-		{
-			E2D_WARNING("IXAudio2SourceVoice Null pointer exception!");
-			return false;
-		}
-
-		XAUDIO2_VOICE_STATE state;
-		voice_->GetState(&state);
-		if (state.BuffersQueued)
-		{
+		UINT32 buffers_queued = 0;
+		voice_.GetBuffersQueued(&buffers_queued);
+		if (buffers_queued)
 			Stop();
-		}
 
 		if (loop_count < 0)
-		{
 			loop_count = XAUDIO2_LOOP_INFINITE;
-		}
 		else
-		{
 			loop_count = std::min(loop_count, XAUDIO2_LOOP_INFINITE - 1);
-		}
 
-		// 提交 wave 样本数据
-		XAUDIO2_BUFFER buffer = { 0 };
-		buffer.pAudioData = wave_data_;
-		buffer.Flags = XAUDIO2_END_OF_STREAM;
-		buffer.AudioBytes = size_;
-		buffer.LoopCount = loop_count;
-
-		HRESULT hr;
-		if (FAILED(hr = voice_->SubmitSourceBuffer(&buffer)))
+		HRESULT hr = voice_.Play(wave_data_, size_, static_cast<UINT32>(loop_count));
+		if (FAILED(hr))
 		{
 			logs::Trace(L"Submitting source buffer error", hr);
-			return false;
 		}
-
-		hr = voice_->Start(0);
 
 		playing_ = SUCCEEDED(hr);
 
@@ -183,48 +166,25 @@ namespace easy2d
 
 	void Music::Pause()
 	{
-		if (voice_)
-		{
-			if (SUCCEEDED(voice_->Stop()))
-			{
-				playing_ = false;
-			}
-		}
+		if (SUCCEEDED(voice_.Pause()))
+			playing_ = false;
 	}
 
 	void Music::Resume()
 	{
-		if (voice_)
-		{
-			if (SUCCEEDED(voice_->Start()))
-			{
-				playing_ = true;
-			}
-		}
+		if (SUCCEEDED(voice_.Resume()))
+			playing_ = true;
 	}
 
 	void Music::Stop()
 	{
-		if (voice_)
-		{
-			if (SUCCEEDED(voice_->Stop()))
-			{
-				voice_->ExitLoop();
-				voice_->FlushSourceBuffers();
-				playing_ = false;
-			}
-		}
+		if (SUCCEEDED(voice_.Stop()))
+			playing_ = false;
 	}
 
 	void Music::Close()
 	{
-		if (voice_)
-		{
-			voice_->Stop();
-			voice_->FlushSourceBuffers();
-			voice_->DestroyVoice();
-			voice_ = nullptr;
-		}
+		voice_.Destroy();
 
 		if (wave_data_)
 		{
@@ -238,11 +198,11 @@ namespace easy2d
 
 	bool Music::IsPlaying() const
 	{
-		if (opened_ && voice_)
+		if (opened_)
 		{
-			XAUDIO2_VOICE_STATE state;
-			voice_->GetState(&state);
-			if (state.BuffersQueued && playing_)
+			UINT32 buffers_queued = 0;
+			voice_.GetBuffersQueued(&buffers_queued);
+			if (buffers_queued && playing_)
 				return true;
 		}
 		return false;
@@ -250,27 +210,13 @@ namespace easy2d
 
 	float Music::GetVolume() const
 	{
-		if (voice_)
-		{
-			float volume = 0.f;
-			voice_->GetVolume(&volume);
-			return volume;
-		}
-		return 0.f;
+		float volume = 0.f;
+		voice_.GetVolume(&volume);
+		return volume;
 	}
 
 	bool Music::SetVolume(float volume)
 	{
-		if (voice_)
-		{
-			volume = std::min(std::max(volume, -224.f), 224.f);
-			return SUCCEEDED(voice_->SetVolume(volume));
-		}
-		return false;
-	}
-
-	IXAudio2SourceVoice * Music::GetSourceVoice() const
-	{
-		return voice_;
+		return SUCCEEDED(voice_.SetVolume(volume));
 	}
 }

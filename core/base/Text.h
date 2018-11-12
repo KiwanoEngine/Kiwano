@@ -28,6 +28,8 @@ namespace easy2d
 	class Text
 		: public Node
 	{
+		E2D_DISABLE_COPY(Text);
+
 	public:
 		// 文本对齐方式
 		enum class Align
@@ -221,8 +223,6 @@ namespace easy2d
 		virtual void OnDraw() const override;
 
 	private:
-		E2D_DISABLE_COPY(Text);
-
 		// 重新排版文字
 		void Reset();
 

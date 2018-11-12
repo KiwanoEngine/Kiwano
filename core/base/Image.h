@@ -29,6 +29,8 @@ namespace easy2d
 	class Image
 		: public RefCounter
 	{
+		E2D_DISABLE_COPY(Image);
+
 	public:
 		Image();
 
@@ -100,22 +102,7 @@ namespace easy2d
 		// 获取 ID2D1Bitmap 对象
 		ID2D1Bitmap * GetBitmap() const;
 
-		// 清空缓存
-		static void ClearCache();
-
 	private:
-		E2D_DISABLE_COPY(Image);
-
-		// 缓存 Bitmap 资源
-		static bool CacheBitmap(
-			const String& file_name
-		);
-
-		// 缓存 Bitmap 资源
-		static bool CacheBitmap(
-			Resource& res
-		);
-
 		// 设置 Bitmap
 		void SetBitmap(
 			ID2D1Bitmap * bitmap

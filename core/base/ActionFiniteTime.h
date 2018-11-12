@@ -27,6 +27,8 @@ namespace easy2d
 	class FiniteTimeAction
 		: public Action
 	{
+		E2D_DISABLE_COPY(FiniteTimeAction);
+
 	public:
 		// 创建特定时长的持续动作
 		explicit FiniteTimeAction(
@@ -37,8 +39,6 @@ namespace easy2d
 		virtual void Reset() override;
 
 	protected:
-		E2D_DISABLE_COPY(FiniteTimeAction);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -58,6 +58,8 @@ namespace easy2d
 	class MoveBy
 		: public FiniteTimeAction
 	{
+		E2D_DISABLE_COPY(MoveBy);
+
 	public:
 		explicit MoveBy(
 			float duration,		/* 持续时长 */
@@ -71,8 +73,6 @@ namespace easy2d
 		virtual MoveBy * Reverse() const override;
 
 	protected:
-		E2D_DISABLE_COPY(MoveBy);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -90,6 +90,8 @@ namespace easy2d
 	class MoveTo
 		: public MoveBy
 	{
+		E2D_DISABLE_COPY(MoveTo);
+
 	public:
 		explicit MoveTo(
 			float duration,		/* 持续时长 */
@@ -107,8 +109,6 @@ namespace easy2d
 		}
 
 	protected:
-		E2D_DISABLE_COPY(MoveTo);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -121,6 +121,8 @@ namespace easy2d
 	class JumpBy
 		: public FiniteTimeAction
 	{
+		E2D_DISABLE_COPY(JumpBy);
+
 	public:
 		explicit JumpBy(
 			float duration,			/* 持续时长 */
@@ -136,8 +138,6 @@ namespace easy2d
 		virtual JumpBy * Reverse() const override;
 
 	protected:
-		E2D_DISABLE_COPY(JumpBy);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -157,6 +157,8 @@ namespace easy2d
 	class JumpTo
 		: public JumpBy
 	{
+		E2D_DISABLE_COPY(JumpTo);
+
 	public:
 		explicit JumpTo(
 			float duration,			/* 持续时长 */
@@ -176,8 +178,6 @@ namespace easy2d
 		}
 
 	protected:
-		E2D_DISABLE_COPY(JumpTo);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -190,6 +190,8 @@ namespace easy2d
 	class ScaleBy
 		: public FiniteTimeAction
 	{
+		E2D_DISABLE_COPY(ScaleBy);
+
 	public:
 		explicit ScaleBy(
 			float duration,		/* 持续时长 */
@@ -209,8 +211,6 @@ namespace easy2d
 		virtual ScaleBy * Reverse() const override;
 
 	protected:
-		E2D_DISABLE_COPY(ScaleBy);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -229,6 +229,8 @@ namespace easy2d
 	class ScaleTo
 		: public ScaleBy
 	{
+		E2D_DISABLE_COPY(ScaleTo);
+
 	public:
 		explicit ScaleTo(
 			float duration,		/* 持续时长 */
@@ -252,8 +254,6 @@ namespace easy2d
 		}
 
 	protected:
-		E2D_DISABLE_COPY(ScaleTo);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -267,6 +267,8 @@ namespace easy2d
 	class OpacityBy
 		: public FiniteTimeAction
 	{
+		E2D_DISABLE_COPY(OpacityBy);
+
 	public:
 		explicit OpacityBy(
 			float duration,		/* 持续时长 */
@@ -280,8 +282,6 @@ namespace easy2d
 		virtual OpacityBy * Reverse() const override;
 
 	protected:
-		E2D_DISABLE_COPY(OpacityBy);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -298,6 +298,8 @@ namespace easy2d
 	class OpacityTo
 		: public OpacityBy
 	{
+		E2D_DISABLE_COPY(OpacityTo);
+
 	public:
 		explicit OpacityTo(
 			float duration,		/* 持续时长 */
@@ -315,8 +317,6 @@ namespace easy2d
 		}
 
 	protected:
-		E2D_DISABLE_COPY(OpacityTo);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -329,14 +329,13 @@ namespace easy2d
 	class FadeIn
 		: public OpacityTo
 	{
+		E2D_DISABLE_COPY(FadeIn);
+
 	public:
 		// 创建淡入动作
 		explicit FadeIn(
 			float duration		/* 持续时长 */
 		);
-
-	protected:
-		E2D_DISABLE_COPY(FadeIn);
 	};
 
 
@@ -344,14 +343,13 @@ namespace easy2d
 	class FadeOut
 		: public OpacityTo
 	{
+		E2D_DISABLE_COPY(FadeOut);
+
 	public:
 		// 创建淡出动作
 		explicit FadeOut(
 			float duration		/* 持续时长 */
 		);
-
-	protected:
-		E2D_DISABLE_COPY(FadeOut);
 	};
 
 
@@ -359,6 +357,8 @@ namespace easy2d
 	class RotateBy
 		: public FiniteTimeAction
 	{
+		E2D_DISABLE_COPY(RotateBy);
+
 	public:
 		explicit RotateBy(
 			float duration,		/* 持续时长 */
@@ -372,8 +372,6 @@ namespace easy2d
 		virtual RotateBy * Reverse() const override;
 
 	protected:
-		E2D_DISABLE_COPY(RotateBy);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -390,6 +388,8 @@ namespace easy2d
 	class RotateTo
 		: public RotateBy
 	{
+		E2D_DISABLE_COPY(RotateTo);
+
 	public:
 		explicit RotateTo(
 			float duration,		/* 持续时长 */
@@ -407,8 +407,6 @@ namespace easy2d
 		}
 
 	protected:
-		E2D_DISABLE_COPY(RotateTo);
-
 		// 初始化动作
 		virtual void Initialize() override;
 
@@ -421,6 +419,8 @@ namespace easy2d
 	class Delay
 		: public Action
 	{
+		E2D_DISABLE_COPY(Delay);
+
 	public:
 		explicit Delay(
 			float duration	/* 延迟时长（秒） */
@@ -436,8 +436,6 @@ namespace easy2d
 		virtual void Reset() override;
 
 	protected:
-		E2D_DISABLE_COPY(Delay);
-
 		// 初始化动作
 		virtual void Initialize() override;
 

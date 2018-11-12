@@ -32,19 +32,19 @@ namespace easy2d
 
 	float MouseEvent::GetX() const
 	{
-		return ((float)(short)LOWORD(l_param_)) * window::instance.xscale;
+		return ((float)(short)LOWORD(l_param_)) * Window::Instance().GetContentScaleX();
 	}
 
 	float MouseEvent::GetY() const
 	{
-		return ((float)(short)HIWORD(l_param_)) * window::instance.yscale;
+		return ((float)(short)HIWORD(l_param_)) * Window::Instance().GetContentScaleY();
 	}
 
 	Point MouseEvent::GetPosition() const
 	{
 		return Point(
-			((float)(short)LOWORD(l_param_)) * window::instance.xscale,
-			((float)(short)HIWORD(l_param_)) * window::instance.yscale
+			((float)(short)LOWORD(l_param_)) * Window::Instance().GetContentScaleX(),
+			((float)(short)HIWORD(l_param_)) * Window::Instance().GetContentScaleY()
 		);
 	}
 

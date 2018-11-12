@@ -22,10 +22,8 @@
 
 namespace easy2d
 {
-	namespace input
+	namespace devices
 	{
-		InputDevice instance;
-
 		InputDevice::InputDevice()
 		{
 			ZeroMemory(keys_, sizeof(keys_));
@@ -35,7 +33,7 @@ namespace easy2d
 		{
 		}
 
-		void InputDevice::Update(HWND hwnd, float xscale, float yscale)
+		void InputDevice::Update(HWND hwnd, float scale_x, float scale_y)
 		{
 			::GetKeyboardState(keys_);
 
@@ -43,7 +41,7 @@ namespace easy2d
 			::GetCursorPos(&client_cursor_pos);
 			::ScreenToClient(hwnd, &client_cursor_pos);
 
-			mouse_pos_ = Point(client_cursor_pos.x * xscale, client_cursor_pos.y * yscale);
+			mouse_pos_ = Point(client_cursor_pos.x * scale_x, client_cursor_pos.y * scale_y);
 		}
 
 		bool InputDevice::IsDown(KeyCode code)

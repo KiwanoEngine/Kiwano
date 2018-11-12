@@ -19,7 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "BaseTypes.h"
+#include "../math/vector.hpp"
+#include "Size.h"
 #include <d2d1.h>
 
 namespace easy2d
@@ -34,9 +35,11 @@ namespace easy2d
 	//
 	class Rect
 	{
+		using Point = math::Vector2;
+
 	public:
-		Point origin;	// 左上角坐标
-		Size  size;		// 宽度和高度
+		Point	origin;	// 左上角坐标
+		Size	size;	// 宽度和高度
 
 	public:
 		Rect() {}

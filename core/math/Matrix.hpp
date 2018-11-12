@@ -112,9 +112,9 @@ namespace easy2d
 				return *this;
 			}
 
-			inline Matrix& Scale(float xscale, float yscale, const Vector2& center)
+			inline Matrix& Scale(float scale_x, float scale_y, const Vector2& center)
 			{
-				*this = *this * Matrix::Scaling(xscale, yscale, center);
+				*this = *this * Matrix::Scaling(scale_x, scale_y, center);
 				return *this;
 			}
 

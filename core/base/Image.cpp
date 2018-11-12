@@ -25,11 +25,6 @@
 
 namespace easy2d
 {
-	namespace
-	{
-		std::map<size_t, ID2D1Bitmap*> bitmap_cache_;
-	}
-
 	Image::Image()
 		: bitmap_(nullptr)
 		, crop_rect_()
@@ -73,13 +68,12 @@ namespace easy2d
 
 	bool Image::Load(Resource& res)
 	{
-		if (!Image::CacheBitmap(res))
+		HRESULT hr = devices::Graphics::Instance().CreateBitmapFromResource(res, &bitmap_);
+		if (FAILED(hr))
 		{
-			E2D_WARNING("Load Image from file failed!");
+			logs::Trace(L"Load Image from resource failed!", hr);
 			return false;
 		}
-
-		this->SetBitmap(bitmap_cache_.at(res.GetHashCode()));
 		return true;
 	}
 
@@ -87,16 +81,23 @@ namespace easy2d
 	{
 		E2D_WARNING_IF(file_name.empty(), "Image Load failed! Invalid file name.");
 
-		if (file_name.empty())
-			return false;
-
-		if (!Image::CacheBitmap(file_name))
+		File image_file;
+		if (!image_file.Open(file_name))
 		{
-			E2D_WARNING("Load Image from file failed!");
+			E2D_WARNING("Image file not found!");
 			return false;
 		}
 
-		this->SetBitmap(bitmap_cache_.at(std::hash<String>{}(file_name)));
+		// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
+		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
+		String image_file_path = image_file.GetPath();
+
+		HRESULT hr = devices::Graphics::Instance().CreateBitmapFromFile(image_file_path, &bitmap_);
+		if (FAILED(hr))
+		{
+			logs::Trace(L"Load Image from file failed!", hr);
+			return false;
+		}
 		return true;
 	}
 
@@ -184,70 +185,6 @@ namespace easy2d
 	ID2D1Bitmap * Image::GetBitmap() const
 	{
 		return bitmap_;
-	}
-
-	bool Image::CacheBitmap(Resource& res)
-	{
-		size_t hash_code = res.GetHashCode();
-		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
-		{
-			return true;
-		}
-
-		ID2D1Bitmap* bitmap = nullptr;
-		HRESULT hr = render::instance.CreateBitmapFromResource(res, &bitmap);
-
-		if (SUCCEEDED(hr))
-		{
-			bitmap_cache_.insert(std::make_pair(hash_code, bitmap));
-		}
-		else
-		{
-			logs::Trace(L"CreateBitmapFromFile", hr);
-		}
-
-		return SUCCEEDED(hr);
-	}
-
-	bool Image::CacheBitmap(const String & file_name)
-	{
-		size_t hash_code = std::hash<String>{}(file_name);
-		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
-			return true;
-
-		File image_file;
-		if (!image_file.Open(file_name))
-			return false;
-
-		// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
-		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-		String image_file_path = image_file.GetPath();
-
-		ID2D1Bitmap* bitmap = nullptr;
-		HRESULT hr = render::instance.CreateBitmapFromFile(file_name, &bitmap);
-
-		if (SUCCEEDED(hr))
-		{
-			bitmap_cache_.insert(std::make_pair(hash_code, bitmap));
-		}
-		else
-		{
-			logs::Trace(L"CreateBitmapFromFile", hr);
-		}
-
-		return SUCCEEDED(hr);
-	}
-
-	void Image::ClearCache()
-	{
-		if (bitmap_cache_.empty())
-			return;
-
-		for (const auto& bitmap : bitmap_cache_)
-		{
-			bitmap.second->Release();
-		}
-		bitmap_cache_.clear();
 	}
 
 	void Image::SetBitmap(ID2D1Bitmap * bitmap)

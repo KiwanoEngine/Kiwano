@@ -38,6 +38,8 @@ namespace easy2d
 		friend class Sequence;
 		friend class Spawn;
 
+		E2D_DISABLE_COPY(Action);
+
 	public:
 		Action();
 
@@ -91,9 +93,6 @@ namespace easy2d
 
 		// 获取动作结束状态
 		virtual bool IsDone() const;
-
-	protected:
-		E2D_DISABLE_COPY(Action);
 
 	protected:
 		String			name_;

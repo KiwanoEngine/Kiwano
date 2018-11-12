@@ -19,79 +19,59 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/base.h"
-#include "../base/RefCounter.h"
-#include "../base/Resource.h"
-#include <xaudio2.h>
+#include <memory>
 
 namespace easy2d
 {
-	// 音乐
-	class Music
-		: public RefCounter
+	template <typename T>
+	class ISingleton
 	{
 	public:
-		Music();
+		static inline T& Instance();
 
-		Music(
-			const String& file_path	/* 音乐文件路径 */
-		);
+		static inline void Destroy();
 
-		Music(
-			Resource& res					/* 音乐资源 */
-		);
+	private:
+		ISingleton() {}
 
-		virtual ~Music();
+		~ISingleton() {}
 
-		// 打开音乐文件
-		bool Load(
-			const String& file_path	/* 音乐文件路径 */
-		);
+		ISingleton(const ISingleton&) = delete;
 
-		// 打开音乐资源
-		bool Load(
-			Resource& res					/* 音乐资源 */
-		);
+		ISingleton & operator= (const ISingleton &) = delete;
 
-		// 播放
-		bool Play(
-			int loop_count = 0				/* 播放循环次数 (-1 为循环播放) */
-		);
-
-		// 暂停
-		void Pause();
-
-		// 继续
-		void Resume();
-
-		// 停止
-		void Stop();
-
-		// 关闭并回收资源
-		void Close();
-
-		// 是否正在播放
-		bool IsPlaying() const;
-
-		// 获取音量
-		float GetVolume() const;
-
-		// 设置音量
-		bool SetVolume(
-			float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
-		);
-
-		// 获取 IXAudio2SourceVoice 对象
-		IXAudio2SourceVoice * GetSourceVoice() const;
-
-	protected:
-		E2D_DISABLE_COPY(Music);
-
-	protected:
-		bool					opened_;
-		bool					playing_;
-		UINT32					size_;
-		BYTE*					wave_data_;
-		IXAudio2SourceVoice*	voice_;
+		static std::unique_ptr<T> instance_;
 	};
+
+	template<typename T>
+	inline T & easy2d::ISingleton<T>::Instance()
+	{
+		if (!instance_)
+			instance_.reset(new (std::nothrow) T);
+		return *instance_;
+	}
+
+	template<typename T>
+	inline void easy2d::ISingleton<T>::Destroy()
+	{
+		if (instance_)
+			instance_.reset();
+	}
+
+	template<typename T>
+	std::unique_ptr<T> easy2d::ISingleton<T>::instance_;
 }
+
+// Class that will implement the singleton mode,
+// must use the macro in it's delare file
+
+#ifndef E2D_DECLARE_SINGLETON
+#define E2D_DECLARE_SINGLETON( type )			\
+	friend class ::std::unique_ptr< type >;		\
+	friend struct ::std::default_delete< type >;\
+	friend class ::easy2d::ISingleton< type >
+#endif
+
+#ifndef E2D_DECLARE_SINGLETON_TYPE
+#define E2D_DECLARE_SINGLETON_TYPE( type, singleton_type ) using singleton_type = ::easy2d::ISingleton< type >
+#endif

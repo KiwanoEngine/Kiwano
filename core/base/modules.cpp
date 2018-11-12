@@ -26,6 +26,8 @@ namespace easy2d
 	{
 		namespace
 		{
+			int initialize_count = 0;
+
 			inline void SafeFreeLibrary(HMODULE instance)
 			{
 				if (instance)
@@ -38,6 +40,10 @@ namespace easy2d
 
 		void Initialize()
 		{
+			initialize_count++;
+			if (initialize_count > 1)
+				return;
+
 			const auto xaudio2_dll_names =
 			{
 				L"xaudio2_9.dll",
@@ -86,8 +92,12 @@ namespace easy2d
 			}
 		}
 
-		void Uninitialize()
+		void Destroy()
 		{
+			initialize_count--;
+			if (initialize_count > 0)
+				return;
+
 			SafeFreeLibrary(XAudio2.instance);
 			SafeFreeLibrary(MediaFoundation.mfplat);
 			SafeFreeLibrary(MediaFoundation.mfreadwrite);
