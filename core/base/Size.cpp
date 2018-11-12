@@ -40,27 +40,27 @@ namespace easy2d
 		height = other.height;
 	}
 
-	Size Size::operator+(const Size & other) const
+	const Size Size::operator+(const Size & other) const
 	{
 		return Size(width + other.width, height + other.height);
 	}
 
-	Size Size::operator-(const Size & other) const
+	const Size Size::operator-(const Size & other) const
 	{
 		return Size(width - other.width, height - other.height);
 	}
 
-	Size Size::operator*(float val) const
+	const Size Size::operator*(float val) const
 	{
 		return Size(width * val, height * val);
 	}
 
-	Size Size::operator/(float val) const
+	const Size Size::operator/(float val) const
 	{
 		return Size(width / val, height / val);
 	}
 
-	Size Size::operator-() const
+	const Size Size::operator-() const
 	{
 		return Size(-width, -height);
 	}
