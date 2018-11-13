@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "RefCounter.h"
+#include "base.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
 #include "../math/Matrix.hpp"
@@ -38,7 +38,7 @@ namespace easy2d
 		Scene();
 
 		explicit Scene(
-			Node * root
+			spNode const& root
 		);
 
 		virtual ~Scene();
@@ -54,11 +54,11 @@ namespace easy2d
 
 		// 设置根节点
 		void SetRoot(
-			Node * root
+			spNode const& root
 		);
 
 		// 获取根节点
-		Node* GetRoot() const;
+		spNode const& GetRoot() const;
 
 		// 渲染场景
 		void Draw();
@@ -82,7 +82,7 @@ namespace easy2d
 		const math::Matrix& GetTransform() const;
 
 	private:
-		Node*			root_;
+		spNode			root_;
 		math::Matrix	transform_;
 	};
 }

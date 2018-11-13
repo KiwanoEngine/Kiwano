@@ -29,7 +29,7 @@ namespace easy2d
 	{
 	}
 
-	Scene::Scene(Node * root)
+	Scene::Scene(spNode const& root)
 		: root_(nullptr)
 		, transform_()
 	{
@@ -38,34 +38,17 @@ namespace easy2d
 
 	Scene::~Scene()
 	{
-		if (root_)
-		{
-			root_->SetParentScene(nullptr);
-			root_->Release();
-		}
 	}
 
-	void Scene::SetRoot(Node * root)
+	void Scene::SetRoot(spNode const& root)
 	{
 		if (root_ == root)
 			return;
 
-		if (root_)
-		{
-			root_->SetParentScene(nullptr);
-			root_->Release();
-		}
-
-		if (root)
-		{
-			root->Retain();
-			root->SetParentScene(this);
-		}
-
 		root_ = root;
 	}
 
-	Node * Scene::GetRoot() const
+	spNode const& Scene::GetRoot() const
 	{
 		return root_;
 	}

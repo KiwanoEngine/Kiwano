@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.h"
+#include "Action.hpp"
 
 namespace easy2d
 {
@@ -40,10 +40,10 @@ namespace easy2d
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 		// 重置动作时间
 		virtual void ResetTime() override;
@@ -67,17 +67,17 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual MoveBy * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual MoveBy * Reverse() const override;
+		virtual spAction Reverse() const override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 	protected:
 		Point	start_pos_;
@@ -99,10 +99,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual MoveTo * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual MoveTo * Reverse() const override
+		virtual spAction Reverse() const override
 		{
 			E2D_WARNING("Reverse() not supported in MoveTo");
 			return nullptr;
@@ -110,7 +110,7 @@ namespace easy2d
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 	protected:
 		Point end_pos_;
@@ -132,17 +132,17 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual JumpBy * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual JumpBy * Reverse() const override;
+		virtual spAction Reverse() const override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 	protected:
 		Point	start_pos_;
@@ -168,10 +168,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual JumpTo * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual JumpTo * Reverse() const override
+		virtual spAction Reverse() const override
 		{
 			E2D_WARNING("Reverse() not supported in JumpTo");
 			return nullptr;
@@ -179,7 +179,7 @@ namespace easy2d
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 	protected:
 		Point end_pos_;
@@ -205,17 +205,17 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ScaleBy * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ScaleBy * Reverse() const override;
+		virtual spAction Reverse() const override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 	protected:
 		float	start_scale_x_;
@@ -244,10 +244,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ScaleTo * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ScaleTo * Reverse() const override
+		virtual spAction Reverse() const override
 		{
 			E2D_WARNING("Reverse() not supported in ScaleTo");
 			return nullptr;
@@ -255,7 +255,7 @@ namespace easy2d
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 	protected:
 		float	end_scale_x_;
@@ -276,17 +276,17 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual OpacityBy * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual OpacityBy * Reverse() const override;
+		virtual spAction Reverse() const override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 	protected:
 		float start_val_;
@@ -307,10 +307,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual OpacityTo * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual OpacityTo * Reverse() const override
+		virtual spAction Reverse() const override
 		{
 			E2D_WARNING("Reverse() not supported in OpacityTo");
 			return nullptr;
@@ -318,7 +318,7 @@ namespace easy2d
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 	protected:
 		float end_val_;
@@ -366,17 +366,17 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual RotateBy * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual RotateBy * Reverse() const override;
+		virtual spAction Reverse() const override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 	protected:
 		float start_val_;
@@ -397,10 +397,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual RotateTo * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual RotateTo * Reverse() const override
+		virtual spAction Reverse() const override
 		{
 			E2D_WARNING("Reverse() not supported in RotateTo");
 			return nullptr;
@@ -408,7 +408,7 @@ namespace easy2d
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 	protected:
 		float end_val_;
@@ -427,20 +427,20 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual Delay * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual Delay * Reverse() const override;
+		virtual spAction Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 		// 重置动作时间
 		virtual void ResetTime() override;

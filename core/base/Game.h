@@ -21,12 +21,11 @@
 #pragma once
 #include "base.h"
 #include "window.h"
+#include "Scene.h"
+#include "Transition.h"
 
 namespace easy2d
 {
-	class Scene;
-	class Transition;
-
 	struct Options
 	{
 		String	title;	/* 标题 */
@@ -52,10 +51,11 @@ namespace easy2d
 	public:
 		Game();
 
-		virtual ~Game();
+		Game(
+			Options const& options
+		);
 
-		// 更新时
-		virtual void OnUpdate(float dt) {}
+		virtual ~Game();
 
 		// 退出时
 		virtual void OnExit() {}
@@ -65,8 +65,8 @@ namespace easy2d
 		virtual bool OnClose() { return true; }
 
 		// 初始化
-		void Initialize(
-			const Options& options	/* 属性 */
+		void Init(
+			Options const& options
 		);
 
 		// 运行
@@ -77,29 +77,27 @@ namespace easy2d
 
 		// 切换场景
 		void EnterScene(
-			Scene * scene,						/* 场景 */
-			Transition * transition	= nullptr	/* 场景动画 */
+			spScene const& scene,						/* 场景 */
+			spTransition const& transition = nullptr	/* 场景动画 */
 		);
 
 		// 获取当前场景
-		Scene * GetCurrentScene();
+		spScene const& GetCurrentScene();
 
-		// 是否正在进行场景过渡
 		bool IsTransitioning() const;
 
-		// 渲染场景画面
 		void DrawScene();
 
-		// 更新场景
 		void UpdateScene(
 			float dt
 		);
 
 	private:
-		bool		debug_mode_;
-		bool		quit_;
-		Scene*		curr_scene_;
-		Scene*		next_scene_;
-		Transition*	transition_;
+		bool			initialized_;
+		bool			debug_enabled_;
+		bool			quit_;
+		spScene			curr_scene_;
+		spScene			next_scene_;
+		spTransition	transition_;
 	};
 }

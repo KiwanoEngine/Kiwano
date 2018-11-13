@@ -165,7 +165,7 @@ namespace easy2d
 			, mastering_voice_(nullptr)
 			, initialized(false)
 		{
-			modules::Initialize();
+			modules::Init();
 		}
 
 		AudioDevice::~AudioDevice()
@@ -185,7 +185,7 @@ namespace easy2d
 			modules::Destroy();
 		}
 
-		void AudioDevice::Initialize(bool debug)
+		void AudioDevice::Init(bool debug)
 		{
 			if (initialized)
 				return;

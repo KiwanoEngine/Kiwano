@@ -27,30 +27,25 @@ namespace easy2d
 	// Loop
 	//-------------------------------------------------------
 
-	Loop::Loop(Action * action, int times)
+	Loop::Loop(spAction const& action, int times)
 		: action_(action)
 		, times_(0)
 		, total_times_(times)
 	{
-		E2D_WARNING_IF(action == nullptr, "Loop NULL pointer exception!");
+		E2D_WARNING_IF(!action, "Loop NULL pointer exception!");
 
-		if (action)
-		{
-			action_ = action;
-			action_->Retain();
-		}
+		action_ = action;
 	}
 
 	Loop::~Loop()
 	{
-		SafeRelease(action_);
 	}
 
-	Loop * Loop::Clone() const
+	spAction Loop::Clone() const
 	{
 		if (action_)
 		{
-			return new Loop(action_->Clone());
+			return new (std::nothrow) Loop(action_->Clone());
 		}
 		else
 		{
@@ -58,11 +53,11 @@ namespace easy2d
 		}
 	}
 
-	Loop * Loop::Reverse() const
+	spAction Loop::Reverse() const
 	{
 		if (action_)
 		{
-			return new Loop(action_->Clone());
+			return new (std::nothrow) Loop(action_->Clone());
 		}
 		else
 		{
@@ -70,20 +65,19 @@ namespace easy2d
 		}
 	}
 
-	void Loop::Initialize()
+	void Loop::Init(Node* target)
 	{
-		Action::Initialize();
+		Action::Init(target);
 
 		if (action_)
 		{
-			action_->target_ = target_;
-			action_->Initialize();
+			action_->Init(target);
 		}
 	}
 
-	void Loop::Update()
+	void Loop::Update(Node* target)
 	{
-		Action::Update();
+		Action::Update(target);
 
 		if (times_ == total_times_)
 		{
@@ -93,7 +87,7 @@ namespace easy2d
 
 		if (action_)
 		{
-			action_->Update();
+			action_->Update(target);
 
 			if (action_->IsDone())
 			{
@@ -140,33 +134,20 @@ namespace easy2d
 
 	Sequence::~Sequence()
 	{
-		for (auto action : actions_)
-		{
-			SafeRelease(action);
-		}
 	}
 
-	void Sequence::Initialize()
+	void Sequence::Init(Node* target)
 	{
-		Action::Initialize();
-		// 将所有动作与目标绑定
-		if (target_)
-		{
-			for (const auto& action : actions_)
-			{
-				action->target_ = target_;
-			}
-		}
-		// 初始化第一个动作
-		actions_[0]->Initialize();
+		Action::Init(target);
+		actions_[0]->Init(target);
 	}
 
-	void Sequence::Update()
+	void Sequence::Update(Node* target)
 	{
-		Action::Update();
+		Action::Update(target);
 
 		auto &action = actions_[action_index_];
-		action->Update();
+		action->Update(target);
 
 		if (action->IsDone())
 		{
@@ -177,7 +158,7 @@ namespace easy2d
 			}
 			else
 			{
-				actions_[action_index_]->Initialize();
+				actions_[action_index_]->Init(target);
 			}
 		}
 	}
@@ -200,12 +181,11 @@ namespace easy2d
 		}
 	}
 
-	void Sequence::Add(Action * action)
+	void Sequence::Add(spAction const& action)
 	{
 		if (action)
 		{
 			actions_.push_back(action);
-			action->Retain();
 		}
 	}
 
@@ -217,30 +197,32 @@ namespace easy2d
 		}
 	}
 
-	Sequence * Sequence::Clone() const
+	spAction Sequence::Clone() const
 	{
-		auto sequence = new Sequence();
-		for (const auto& action : actions_)
+		auto sequence = new (std::nothrow) Sequence();
+		if (sequence)
 		{
-			if (action)
+			for (const auto& action : actions_)
 			{
-				sequence->Add(action->Clone());
+				if (action)
+				{
+					sequence->Add(action->Clone());
+				}
 			}
 		}
 		return sequence;
 	}
 
-	Sequence * Sequence::Reverse() const
+	spAction Sequence::Reverse() const
 	{
-		auto sequence = new Sequence();
+		auto sequence = new (std::nothrow) Sequence();
 		if (sequence && !actions_.empty())
 		{
-			std::vector<Action*> newActions(actions_.size());
-			for (auto iter = actions_.crbegin(), iterCrend = actions_.crend(); iter != iterCrend; ++iter)
+			for (auto iter = actions_.crbegin(), crend = actions_.crend(); iter != crend; ++iter)
 			{
-				newActions.push_back((*iter)->Reverse());
+				if (*iter)
+					sequence->Add((*iter)->Reverse());
 			}
-			sequence->Add(newActions);
 		}
 		return sequence;
 	}
@@ -261,29 +243,24 @@ namespace easy2d
 
 	Spawn::~Spawn()
 	{
-		for (auto action : actions_)
-		{
-			SafeRelease(action);
-		}
 	}
 
-	void Spawn::Initialize()
+	void Spawn::Init(Node* target)
 	{
-		Action::Initialize();
+		Action::Init(target);
 
-		if (target_)
+		if (target)
 		{
 			for (const auto& action : actions_)
 			{
-				action->target_ = target_;
-				action->Initialize();
+				action->Init(target);
 			}
 		}
 	}
 
-	void Spawn::Update()
+	void Spawn::Update(Node* target)
 	{
-		Action::Update();
+		Action::Update(target);
 
 		size_t done_num = 0;
 		for (const auto& action : actions_)
@@ -294,7 +271,7 @@ namespace easy2d
 			}
 			else
 			{
-				action->Update();
+				action->Update(target);
 			}
 		}
 
@@ -321,12 +298,11 @@ namespace easy2d
 		}
 	}
 
-	void Spawn::Add(Action * action)
+	void Spawn::Add(spAction const& action)
 	{
 		if (action)
 		{
 			actions_.push_back(action);
-			action->Retain();
 		}
 	}
 
@@ -338,30 +314,32 @@ namespace easy2d
 		}
 	}
 
-	Spawn * Spawn::Clone() const
+	spAction Spawn::Clone() const
 	{
-		auto spawn = new Spawn();
-		for (const auto& action : actions_)
+		auto spawn = new (std::nothrow) Spawn();
+		if (spawn)
 		{
-			if (action)
+			for (const auto& action : actions_)
 			{
-				spawn->Add(action->Clone());
+				if (action)
+				{
+					spawn->Add(action->Clone());
+				}
 			}
 		}
 		return spawn;
 	}
 
-	Spawn * Spawn::Reverse() const
+	spAction Spawn::Reverse() const
 	{
-		auto spawn = new Spawn();
+		auto spawn = new (std::nothrow) Spawn();
 		if (spawn && !actions_.empty())
 		{
-			std::vector<Action*> newActions(actions_.size());
-			for (auto iter = actions_.crbegin(), iterCrend = actions_.crend(); iter != iterCrend; ++iter)
+			for (auto iter = actions_.crbegin(), crend = actions_.crend(); iter != crend; ++iter)
 			{
-				newActions.push_back((*iter)->Reverse());
+				if (*iter)
+					spawn->Add((*iter)->Reverse());
 			}
-			spawn->Add(newActions);
 		}
 		return spawn;
 	}

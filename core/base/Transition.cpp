@@ -50,8 +50,6 @@ namespace easy2d
 	{
 		SafeRelease(out_layer_);
 		SafeRelease(in_layer_);
-		SafeRelease(out_scene_);
-		SafeRelease(in_scene_);
 	}
 
 	bool Transition::IsDone()
@@ -59,17 +57,11 @@ namespace easy2d
 		return done_;
 	}
 
-	void Transition::Initialize(Scene * prev, Scene * next, Game * game)
+	void Transition::Init(spScene const& prev, spScene const& next)
 	{
 		started_ = time::Now();
 		out_scene_ = prev;
 		in_scene_ = next;
-
-		if (out_scene_)
-			out_scene_->Retain();
-
-		if (in_scene_)
-			in_scene_->Retain();
 
 		if (in_scene_)
 		{
@@ -153,9 +145,9 @@ namespace easy2d
 	{
 	}
 
-	void BoxTransition::Initialize(Scene * prev, Scene * next, Game * game)
+	void BoxTransition::Init(spScene const& prev, spScene const& next)
 	{
-		Transition::Initialize(prev, next, game);
+		Transition::Init(prev, next);
 
 		in_layer_prop_.opacity = 0;
 	}
@@ -195,9 +187,9 @@ namespace easy2d
 	{
 	}
 
-	void EmergeTransition::Initialize(Scene * prev, Scene * next, Game * game)
+	void EmergeTransition::Init(spScene const& prev, spScene const& next)
 	{
-		Transition::Initialize(prev, next, game);
+		Transition::Init(prev, next);
 
 		out_layer_prop_.opacity = 1;
 		in_layer_prop_.opacity = 0;
@@ -220,9 +212,9 @@ namespace easy2d
 	{
 	}
 
-	void FadeTransition::Initialize(Scene * prev, Scene * next, Game * game)
+	void FadeTransition::Init(spScene const& prev, spScene const& next)
 	{
-		Transition::Initialize(prev, next, game);
+		Transition::Init(prev, next);
 
 		out_layer_prop_.opacity = 1;
 		in_layer_prop_.opacity = 0;
@@ -254,9 +246,9 @@ namespace easy2d
 	{
 	}
 
-	void MoveTransition::Initialize(Scene * prev, Scene * next, Game * game)
+	void MoveTransition::Init(spScene const& prev, spScene const& next)
 	{
-		Transition::Initialize(prev, next, game);
+		Transition::Init(prev, next);
 
 		switch (direction_)
 		{
@@ -344,9 +336,9 @@ namespace easy2d
 	{
 	}
 
-	void RotationTransition::Initialize(Scene * prev, Scene * next, Game * game)
+	void RotationTransition::Init(spScene const& prev, spScene const& next)
 	{
-		Transition::Initialize(prev, next, game);
+		Transition::Init(prev, next);
 
 		if (out_scene_)
 		{

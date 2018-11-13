@@ -29,7 +29,7 @@ namespace easy2d
 	{
 	}
 
-	Sprite::Sprite(Image * image)
+	Sprite::Sprite(spImage const& image)
 		: image_(nullptr)
 	{
 		Load(image);
@@ -63,20 +63,13 @@ namespace easy2d
 
 	Sprite::~Sprite()
 	{
-		SafeRelease(image_);
 	}
 
-	bool Sprite::Load(Image * image)
+	bool Sprite::Load(spImage const& image)
 	{
 		if (image)
 		{
-			if (image_)
-			{
-				image_->Release();
-			}
-
 			image_ = image;
-			image_->Retain();
 
 			Node::SetSize(image_->GetWidth(), image_->GetHeight());
 			return true;
@@ -88,14 +81,16 @@ namespace easy2d
 	{
 		if (!image_)
 		{
-			image_ = new Image();
-			image_->Retain();
+			image_ = new (std::nothrow) Image();
 		}
 
-		if (image_->Load(res))
+		if (image_)
 		{
-			Node::SetSize(image_->GetWidth(), image_->GetHeight());
-			return true;
+			if (image_->Load(res))
+			{
+				Node::SetSize(image_->GetWidth(), image_->GetHeight());
+				return true;
+			}
 		}
 		return false;
 	}
@@ -104,14 +99,16 @@ namespace easy2d
 	{
 		if (!image_)
 		{
-			image_ = new Image();
-			image_->Retain();
+			image_ = new (std::nothrow) Image();
 		}
 
-		if (image_->Load(file_name))
+		if (image_)
 		{
-			Node::SetSize(image_->GetWidth(), image_->GetHeight());
-			return true;
+			if (image_->Load(file_name))
+			{
+				Node::SetSize(image_->GetWidth(), image_->GetHeight());
+				return true;
+			}
 		}
 		return false;
 	}
@@ -125,7 +122,7 @@ namespace easy2d
 		);
 	}
 
-	Image * Sprite::GetImage() const
+	spImage const& Sprite::GetImage() const
 	{
 		return image_;
 	}

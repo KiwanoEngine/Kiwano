@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.h"
+#include "Action.hpp"
 #include <functional>
 
 namespace easy2d
@@ -38,17 +38,17 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual CallFunc *Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual CallFunc *Reverse() const override;
+		virtual spAction Reverse() const override;
 
 	  protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node*) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node*) override;
 
 	  protected:
 		Callback callback_;

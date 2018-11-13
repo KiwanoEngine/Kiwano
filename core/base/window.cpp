@@ -56,7 +56,7 @@ namespace easy2d
 			::DestroyWindow(handle);
 	}
 
-	void WindowImpl::Initialize(String title, int width, int height, LPCWSTR icon, bool debug)
+	void WindowImpl::Init(String title, int width, int height, LPCWSTR icon, bool debug)
 	{
 		if (initialized)
 			return;

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\core\base\Action.h" />
+    <ClInclude Include="..\..\core\base\Action.hpp" />
     <ClInclude Include="..\..\core\base\ActionCombined.h" />
     <ClInclude Include="..\..\core\base\ActionFiniteTime.h" />
     <ClInclude Include="..\..\core\base\Animation.h" />
@@ -33,6 +33,7 @@
     <ClInclude Include="..\..\core\base\Game.h" />
     <ClInclude Include="..\..\core\base\Image.h" />
     <ClInclude Include="..\..\core\base\Input.h" />
+    <ClInclude Include="..\..\core\base\IntrusivePtr.hpp" />
     <ClInclude Include="..\..\core\base\KeyEvent.h" />
     <ClInclude Include="..\..\core\base\logs.h" />
     <ClInclude Include="..\..\core\base\macros.h" />
@@ -41,7 +42,7 @@
     <ClInclude Include="..\..\core\base\Music.h" />
     <ClInclude Include="..\..\core\base\Node.h" />
     <ClInclude Include="..\..\core\base\Rect.hpp" />
-    <ClInclude Include="..\..\core\base\RefCounter.h" />
+    <ClInclude Include="..\..\core\base\RefCounter.hpp" />
     <ClInclude Include="..\..\core\base\render.h" />
     <ClInclude Include="..\..\core\base\Resource.h" />
     <ClInclude Include="..\..\core\base\Scene.h" />
@@ -69,7 +70,6 @@
     <ClInclude Include="..\..\core\utils\Transcoder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\core\base\Action.cpp" />
     <ClCompile Include="..\..\core\base\ActionCombined.cpp" />
     <ClCompile Include="..\..\core\base\ActionFiniteTime.cpp" />
     <ClCompile Include="..\..\core\base\Animation.cpp" />
@@ -86,7 +86,6 @@
     <ClCompile Include="..\..\core\base\MouseEvent.cpp" />
     <ClCompile Include="..\..\core\base\Music.cpp" />
     <ClCompile Include="..\..\core\base\Node.cpp" />
-    <ClCompile Include="..\..\core\base\RefCounter.cpp" />
     <ClCompile Include="..\..\core\base\render.cpp" />
     <ClCompile Include="..\..\core\base\Resource.cpp" />
     <ClCompile Include="..\..\core\base\Scene.cpp" />

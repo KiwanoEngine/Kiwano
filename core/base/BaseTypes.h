@@ -20,10 +20,10 @@
 
 #pragma once
 #include "macros.h"
-#include "../math/vector.hpp"
 #include "Color.h"
 #include "Size.h"
 #include "Rect.hpp"
+#include "../math/vector.hpp"
 
 namespace easy2d
 {

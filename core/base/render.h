@@ -23,12 +23,13 @@
 #include "Singleton.hpp"
 #include "Font.h"
 #include "Resource.h"
-#include "Image.h"
 #include "TextRenderer.h"
 #include "../math/Matrix.hpp"
 
 namespace easy2d
 {
+	class Image;
+
 	namespace devices
 	{
 		struct D2DResources
@@ -52,7 +53,7 @@ namespace easy2d
 			E2D_DISABLE_COPY(GraphicsDevice);
 
 		public:
-			void Initialize(HWND hwnd, bool debug);
+			void Init(HWND hwnd, bool debug);
 
 			// ¿ªÊ¼äÖÈ¾
 			void BeginDraw(HWND hwnd);
@@ -121,7 +122,7 @@ namespace easy2d
 			);
 
 			HRESULT DrawImage(
-				Image* image,
+				spImage const& image,
 				float opacity,
 				const Rect& dest_rect,
 				const Rect& source_rect

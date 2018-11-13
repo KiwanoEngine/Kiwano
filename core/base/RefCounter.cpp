@@ -23,8 +23,8 @@
 namespace easy2d
 {
 	RefCounter::RefCounter()
+		: ref_count_(0)
 	{
-		ref_count_ = 0;
 	}
 
 	RefCounter::~RefCounter()
@@ -33,20 +33,12 @@ namespace easy2d
 
 	long RefCounter::Retain()
 	{
-		return ::InterlockedIncrement(&ref_count_);
+		
 	}
 
 	long RefCounter::Release()
 	{
-		long new_count = ::InterlockedDecrement(&ref_count_);
-
-		if (new_count <= 0)
-		{
-			delete this;
-			return 0;
-		}
-
-		return new_count;
+		
 	}
 
 	long RefCounter::GetRefCount() const

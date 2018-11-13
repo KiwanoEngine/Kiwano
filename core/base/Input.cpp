@@ -34,7 +34,7 @@ namespace easy2d
 		{
 		}
 
-		void InputDevice::Initialize(bool debug)
+		void InputDevice::Init(bool debug)
 		{
 			if (initialized)
 				return;

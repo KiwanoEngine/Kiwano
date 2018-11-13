@@ -53,7 +53,7 @@ namespace easy2d
 		{
 		}
 
-		Button::Button(Node * normal, const Callback& func)
+		Button::Button(spNode const& normal, const Callback& func)
 			: callback_(nullptr)
 			, status_(Status::Normal)
 			, enabled_(true)
@@ -67,7 +67,7 @@ namespace easy2d
 			this->SetCallbackOnClick(func);
 		}
 
-		Button::Button(Node * normal, Node * selected, const Callback& func)
+		Button::Button(spNode const& normal, spNode const& selected, const Callback& func)
 			: callback_(nullptr)
 			, status_(Status::Normal)
 			, enabled_(true)
@@ -82,7 +82,7 @@ namespace easy2d
 			this->SetCallbackOnClick(func);
 		}
 
-		Button::Button(Node * normal, Node * mouseover, Node * selected, const Callback& func)
+		Button::Button(spNode const& normal, spNode const& mouseover, spNode const& selected, const Callback& func)
 			: callback_(nullptr)
 			, status_(Status::Normal)
 			, enabled_(true)
@@ -98,7 +98,7 @@ namespace easy2d
 			this->SetCallbackOnClick(func);
 		}
 
-		Button::Button(Node * normal, Node * mouseover, Node * selected, Node * disabled, const Callback& func)
+		Button::Button(spNode const& normal, spNode const& mouseover, spNode const& selected, spNode const& disabled, const Callback& func)
 			: callback_(nullptr)
 			, status_(Status::Normal)
 			, enabled_(true)
@@ -115,12 +115,16 @@ namespace easy2d
 			this->SetCallbackOnClick(func);
 		}
 
+		Button::~Button()
+		{
+		}
+
 		bool Button::IsEnable() const
 		{
 			return enabled_;
 		}
 
-		void Button::SetNormal(Node * normal)
+		void Button::SetNormal(spNode const& normal)
 		{
 			SET_BUTTON_NODE(normal_, normal);
 			if (normal)
@@ -129,17 +133,17 @@ namespace easy2d
 			}
 		}
 
-		void Button::SetMouseOver(Node * mouseover)
+		void Button::SetMouseOver(spNode const& mouseover)
 		{
 			SET_BUTTON_NODE(mouseover_, mouseover);
 		}
 
-		void Button::SetSelected(Node * selected)
+		void Button::SetSelected(spNode const& selected)
 		{
 			SET_BUTTON_NODE(selected_, selected);
 		}
 
-		void Button::SetDisabled(Node * disabled)
+		void Button::SetDisabled(spNode const& disabled)
 		{
 			SET_BUTTON_NODE(disabled_, disabled);
 		}

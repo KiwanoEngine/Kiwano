@@ -33,7 +33,7 @@ namespace easy2d
 	{
 	}
 
-	Animate::Animate(Animation * animation)
+	Animate::Animate(spAnimation const& animation)
 		: frame_index_(0)
 		, animation_(nullptr)
 	{
@@ -42,43 +42,37 @@ namespace easy2d
 
 	Animate::~Animate()
 	{
-		SafeRelease(animation_);
 	}
 
-	Animation * Animate::GetAnimation() const
+	spAnimation Animate::GetAnimation() const
 	{
 		return animation_;
 	}
 
-	void Animate::SetAnimation(Animation * animation)
+	void Animate::SetAnimation(spAnimation const& animation)
 	{
 		if (animation && animation != animation_)
 		{
-			if (animation_)
-			{
-				animation_->Release();
-			}
 			animation_ = animation;
-			animation_->Retain();
 			frame_index_ = 0;
 		}
 	}
 
-	void Animate::Initialize()
+	void Animate::Init(Node* target)
 	{
-		Action::Initialize();
+		Action::Init(target);
 
-		auto target = dynamic_cast<Sprite*>(target_);
-		if (target && animation_)
+		auto sprite_target = dynamic_cast<Sprite*>(target);
+		if (sprite_target && animation_)
 		{
-			target->Load(animation_->GetFrames()[frame_index_]);
+			sprite_target->Load(animation_->GetFrames()[frame_index_]);
 			++frame_index_;
 		}
 	}
 
-	void Animate::Update()
+	void Animate::Update(Node* target)
 	{
-		Action::Update();
+		Action::Update(target);
 
 		if (!animation_)
 		{
@@ -89,11 +83,11 @@ namespace easy2d
 		while ((time::Now() - started_).Seconds() >= animation_->GetInterval())
 		{
 			auto& frames = animation_->GetFrames();
-			auto target = dynamic_cast<Sprite*>(target_);
+			auto sprite_target = dynamic_cast<Sprite*>(target);
 
-			if (target)
+			if (sprite_target)
 			{
-				target->Load(frames[frame_index_]);
+				sprite_target->Load(frames[frame_index_]);
 			}
 
 			started_ += time::Second * animation_->GetInterval();
@@ -118,23 +112,23 @@ namespace easy2d
 		frame_index_ = 0;
 	}
 
-	Animate * Animate::Clone() const
+	spAction Animate::Clone() const
 	{
 		if (animation_)
 		{
-			return new Animate(animation_);
+			return new (std::nothrow) Animate(animation_);
 		}
 		return nullptr;
 	}
 
-	Animate * Animate::Reverse() const
+	spAction Animate::Reverse() const
 	{
 		if (animation_)
 		{
 			auto animation = animation_->Reverse();
 			if (animation)
 			{
-				return new Animate(animation);
+				return new (std::nothrow) Animate(animation);
 			}
 		}
 		return nullptr;
@@ -169,10 +163,6 @@ namespace easy2d
 
 	Animation::~Animation()
 	{
-		for (auto frame : frames_)
-		{
-			SafeRelease(frame);
-		}
 	}
 
 	void Animation::SetInterval(float interval)
@@ -180,13 +170,12 @@ namespace easy2d
 		interval_ = std::max(interval, 0.f);
 	}
 
-	void Animation::Add(Image * frame)
+	void Animation::Add(spImage const& frame)
 	{
-		E2D_WARNING_IF(frame == nullptr, "Animation::Add failed, frame Is nullptr.");
+		E2D_WARNING_IF(!frame, "Animation::Add failed, frame Is nullptr.");
 		if (frame)
 		{
 			frames_.push_back(frame);
-			frame->Retain();
 		}
 	}
 
@@ -203,14 +192,14 @@ namespace easy2d
 		return interval_;
 	}
 
-	const Animation::Images& Animation::GetFrames() const
+	const Images& Animation::GetFrames() const
 	{
 		return frames_;
 	}
 
-	Animation * Animation::Clone() const
+	spAnimation Animation::Clone() const
 	{
-		auto animation = new Animation(interval_);
+		auto animation = new (std::nothrow) Animation(interval_);
 		if (animation)
 		{
 			for (const auto& frame : frames_)
@@ -221,26 +210,17 @@ namespace easy2d
 		return animation;
 	}
 
-	Animation * Animation::Reverse() const
+	spAnimation Animation::Reverse() const
 	{
-		auto& oldFrames = this->GetFrames();
-		Images frames(oldFrames.size());
-
-		if (!oldFrames.empty())
+		auto animation = new (std::nothrow) Animation(interval_);
+		if (!frames_.empty())
 		{
-			for (auto iter = oldFrames.crbegin(),
-				iterCrend = oldFrames.crend();
-				iter != iterCrend;
-				++iter)
+			for (auto iter = frames_.crbegin(), crend = frames_.crend(); iter != crend; ++iter)
 			{
-				Image* frame = *iter;
-				if (frame)
-				{
-					frames.push_back(frame);
-				}
+				if (*iter)
+					animation->Add(*iter);
 			}
 		}
-
-		return new Animation(this->GetInterval(), frames);
+		return animation;
 	}
 }

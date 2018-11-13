@@ -187,6 +187,11 @@ namespace easy2d
 	}
 }
 
+namespace easy2d
+{
+	using namespace time;
+}
+
 #if VS_VER >= VS_2015
 
 namespace easy2d

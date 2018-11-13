@@ -192,10 +192,7 @@ namespace easy2d
 		if (bitmap_ == bitmap)
 			return;
 
-		if (bitmap_)
-		{
-			bitmap_->Release();
-		}
+		SafeRelease(bitmap_);
 
 		if (bitmap)
 		{

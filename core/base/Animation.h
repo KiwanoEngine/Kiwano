@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.h"
+#include "Action.hpp"
 #include "Image.h"
 
 namespace easy2d
@@ -31,8 +31,6 @@ namespace easy2d
 		E2D_DISABLE_COPY(Animation);
 
 	public:
-		typedef std::vector<Image*> Images;
-
 		Animation();
 
 		explicit Animation(
@@ -52,7 +50,7 @@ namespace easy2d
 
 		// 添加关键帧
 		void Add(
-			Image * frame			/* 关键帧 */
+			spImage const& frame	/* 关键帧 */
 		);
 
 		// 添加多个关键帧
@@ -72,10 +70,10 @@ namespace easy2d
 		);
 
 		// 获取帧动画的拷贝对象
-		Animation * Clone() const;
+		spAnimation Clone() const;
 
 		// 获取帧动画的倒转
-		Animation * Reverse() const;
+		spAnimation Reverse() const;
 
 	protected:
 		float	interval_;
@@ -93,40 +91,40 @@ namespace easy2d
 		Animate();
 
 		explicit Animate(
-			Animation * animation
+			spAnimation const& animation
 		);
 
 		virtual ~Animate();
 
 		// 获取动画
-		virtual Animation * GetAnimation() const;
+		spAnimation GetAnimation() const;
 
 		// 设置动画
-		virtual void SetAnimation(
-			Animation * animation
+		void SetAnimation(
+			spAnimation const& animation
 		);
 
 		// 获取该动作的拷贝对象
-		virtual Animate * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual Animate * Reverse() const override;
+		virtual spAction Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 		// 重置动作时间
 		virtual void ResetTime() override;
 
 	protected:
 		UINT frame_index_;
-		Animation * animation_;
+		spAnimation animation_;
 	};
 }

@@ -24,8 +24,6 @@
 
 namespace easy2d
 {
-	class Music;
-
 	// “Ù¿÷≤•∑≈∆˜
 	class Player
 	{
@@ -120,6 +118,6 @@ namespace easy2d
 
 	protected:
 		float volume_;
-		std::map<size_t, Music*> musics_cache_;
+		std::map<size_t, spMusic> musics_cache_;
 	};
 }

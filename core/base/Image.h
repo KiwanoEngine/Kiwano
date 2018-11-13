@@ -21,7 +21,6 @@
 #pragma once
 #include "base.h"
 #include "Resource.h"
-#include "RefCounter.h"
 
 namespace easy2d
 {

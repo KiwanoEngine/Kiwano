@@ -23,22 +23,16 @@
 namespace easy2d
 {
 	Task::Task(const Callback & func, const String & name)
-		: running_(true)
-		, stopped_(false)
-		, run_times_(0)
-		, total_times_(-1)
-		, delay_()
-		, callback_(func)
-		, name_(name)
+		: Task(func, Duration{}, -1, name)
 	{
 	}
 
-	Task::Task(const Callback & func, float delay, int times, const String & name)
+	Task::Task(Callback const& func, Duration const& delay, int times, const String & name)
 		: running_(true)
 		, stopped_(false)
 		, run_times_(0)
-		, delay_(time::Second * std::max(delay, 0.f))
 		, total_times_(times)
+		, delay_(delay)
 		, callback_(func)
 		, name_(name)
 	{
