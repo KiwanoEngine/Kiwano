@@ -21,11 +21,9 @@
 #pragma once
 #include "base.h"
 #include "time.h"
-#include "RefCounter.h"
 
 namespace easy2d
 {
-	class Game;
 	class Scene;
 
 	// 场景过渡
@@ -46,10 +44,9 @@ namespace easy2d
 
 	protected:
 		// 初始化场景过渡动画
-		virtual void Initialize(
-			Scene * prev,
-			Scene * next,
-			Game * game
+		virtual void Init(
+			spScene const& prev,
+			spScene const& next
 		);
 
 		// 更新场景过渡动画
@@ -68,10 +65,10 @@ namespace easy2d
 		bool			done_;
 		float			duration_;
 		float			process_;
-		time::TimePoint	started_;
+		TimePoint		started_;
 		Size			window_size_;
-		Scene*			out_scene_;
-		Scene*			in_scene_;
+		spScene			out_scene_;
+		spScene			in_scene_;
 		ID2D1Layer*		out_layer_;
 		ID2D1Layer*		in_layer_;
 		LayerProperties out_layer_prop_;
@@ -92,10 +89,9 @@ namespace easy2d
 		// 更新动画
 		virtual void Update() override;
 
-		virtual void Initialize(
-			Scene * prev,
-			Scene * next,
-			Game * game
+		virtual void Init(
+			spScene const& prev,
+			spScene const& next
 		) override;
 	};
 
@@ -112,10 +108,9 @@ namespace easy2d
 	protected:
 		virtual void Update() override;
 
-		virtual void Initialize(
-			Scene * prev,
-			Scene * next,
-			Game * game
+		virtual void Init(
+			spScene const& prev,
+			spScene const& next
 		) override;
 	};
 
@@ -132,10 +127,9 @@ namespace easy2d
 	protected:
 		virtual void Update() override;
 
-		virtual void Initialize(
-			Scene * prev,
-			Scene * next,
-			Game * game
+		virtual void Init(
+			spScene const& prev,
+			spScene const& next
 		) override;
 	};
 
@@ -153,10 +147,9 @@ namespace easy2d
 	protected:
 		virtual void Update() override;
 
-		virtual void Initialize(
-			Scene * prev,
-			Scene * next,
-			Game * game
+		virtual void Init(
+			spScene const& prev,
+			spScene const& next
 		) override;
 
 		virtual void Reset() override;
@@ -181,10 +174,9 @@ namespace easy2d
 	protected:
 		virtual void Update() override;
 
-		virtual void Initialize(
-			Scene * prev,
-			Scene * next,
-			Game * game
+		virtual void Init(
+			spScene const& prev,
+			spScene const& next
 		) override;
 
 		virtual void Reset() override;

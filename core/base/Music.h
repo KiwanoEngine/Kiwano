@@ -21,7 +21,6 @@
 #pragma once
 #include "base.h"
 #include "audio.h"
-#include "RefCounter.h"
 #include "Resource.h"
 #include <xaudio2.h>
 

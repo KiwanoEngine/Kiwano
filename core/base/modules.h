@@ -31,7 +31,7 @@ namespace easy2d
 	{
 		// modules can be initialized multiple times,
 		// but it needs to be destroyed every time
-		void Initialize();
+		void Init();
 
 		void Destroy();
 

@@ -31,36 +31,38 @@ namespace easy2d
 		{
 			E2D_DISABLE_COPY(Button);
 
-			typedef std::function<void()> Callback;
+			using Callback = std::function<void()>;
 
 		public:
 			Button();
 
 			explicit Button(
-				Node * normal,					/* 普通状态 */
+				spNode const& normal,					/* 普通状态 */
 				const Callback& func = nullptr	/* 按钮点击后的回调函数 */
 			);
 
 			explicit Button(
-				Node * normal,					/* 普通状态 */
-				Node * selected,				/* 鼠标按下状态 */
+				spNode const& normal,					/* 普通状态 */
+				spNode const& selected,				/* 鼠标按下状态 */
 				const Callback& func = nullptr	/* 按钮点击后的回调函数 */
 			);
 
 			explicit Button(
-				Node * normal,					/* 普通状态 */
-				Node * mouseover,				/* 鼠标移入状态 */
-				Node * selected,				/* 鼠标按下状态 */
+				spNode const& normal,					/* 普通状态 */
+				spNode const& mouseover,				/* 鼠标移入状态 */
+				spNode const& selected,				/* 鼠标按下状态 */
 				const Callback& func = nullptr	/* 按钮点击后的回调函数 */
 			);
 
 			explicit Button(
-				Node * normal,					/* 普通状态 */
-				Node * mouseover,				/* 鼠标移入状态 */
-				Node * selected,				/* 鼠标移入状态 */
-				Node * disabled,				/* 按钮禁用状态 */
+				spNode const& normal,					/* 普通状态 */
+				spNode const& mouseover,				/* 鼠标移入状态 */
+				spNode const& selected,				/* 鼠标移入状态 */
+				spNode const& disabled,				/* 按钮禁用状态 */
 				const Callback& func = nullptr	/* 按钮点击后的回调函数 */
 			);
+
+			virtual ~Button();
 
 			// 获取按钮状态是启用还是禁用
 			bool IsEnable() const;
@@ -72,22 +74,22 @@ namespace easy2d
 
 			// 设置一般情况下显示的按钮
 			virtual void SetNormal(
-				Node * normal
+				spNode const& normal
 			);
 
 			// 设置鼠标移入按钮时显示的按钮
 			virtual void SetMouseOver(
-				Node * mouseover
+				spNode const& mouseover
 			);
 
 			// 设置鼠标按下按钮时显示的按钮
 			virtual void SetSelected(
-				Node * selected
+				spNode const& selected
 			);
 
 			// 设置按钮被禁用时显示的按钮
 			virtual void SetDisabled(
-				Node * disabled
+				spNode const& disabled
 			);
 
 			// 设置按钮点击后的回调函数
@@ -124,10 +126,10 @@ namespace easy2d
 			virtual void Visit() override;
 
 		private:
-			Node * normal_;
-			Node *		mouseover_;
-			Node *		selected_;
-			Node *		disabled_;
+			spNode		normal_;
+			spNode		mouseover_;
+			spNode		selected_;
+			spNode		disabled_;
 			bool		enabled_;
 			bool		is_selected_;
 			Status		status_;

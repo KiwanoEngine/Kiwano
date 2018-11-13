@@ -21,13 +21,10 @@
 #pragma once
 #include "base.h"
 #include "time.h"
-#include "RefCounter.h"
 #include <functional>
 
 namespace easy2d
 {
-	class Node;
-
     // 定时任务
 	class Task
 		: public RefCounter
@@ -61,24 +58,21 @@ namespace easy2d
 		// 获取任务名称
 		const String& GetName() const;
 
-		// 任务是否就绪
+	protected:
 		bool IsReady() const;
 
-		// 执行任务
 		void Update();
 
-		// 重置计时
 		void ResetTime();
 
 	private:
-		bool			running_;
-		bool			stopped_;
-		int				run_times_;
-		int				total_times_;
-		String	name_;
-		time::Duration	delay_;
-		time::TimePoint	last_time_;
-		Callback		callback_;
-		Node *			target_;
+		bool		running_;
+		bool		stopped_;
+		int			run_times_;
+		int			total_times_;
+		String		name_;
+		Duration	delay_;
+		TimePoint	last_time_;
+		Callback	callback_;
 	};
 }

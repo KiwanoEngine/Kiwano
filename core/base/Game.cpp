@@ -46,21 +46,17 @@ namespace easy2d
 
 	Game::~Game()
 	{
-		SafeRelease(transition_);
-		SafeRelease(curr_scene_);
-		SafeRelease(next_scene_);
-
 		::CoUninitialize();
 	}
 
-	void Game::Initialize(const Options& options)
+	void Game::Init(const Options& options)
 	{
 		debug_mode_ = options.debug;
 
-		Window::Instance().Initialize(options.title, options.width, options.height, options.icon, debug_mode_);
-		devices::Graphics::Instance().Initialize(Window::Instance().GetHandle(), debug_mode_);
-		devices::Input::Instance().Initialize(debug_mode_);
-		devices::Audio::Instance().Initialize(debug_mode_);
+		Window::Instance().Init(options.title, options.width, options.height, options.icon, debug_mode_);
+		devices::Graphics::Instance().Init(Window::Instance().GetHandle(), debug_mode_);
+		devices::Input::Instance().Init(debug_mode_);
+		devices::Audio::Instance().Init(debug_mode_);
 
 		// 若开启了调试模式，打开控制台
 		HWND console = ::GetConsoleWindow();
@@ -110,12 +106,13 @@ namespace easy2d
 			next_scene_ = nullptr;
 		}
 
-		::ShowWindow(Window::Instance().GetHandle(), SW_SHOWNORMAL);
-		::UpdateWindow(Window::Instance().GetHandle());
+		const auto& window = Window::Instance();
+		::ShowWindow(window.GetHandle(), SW_SHOWNORMAL);
+		::UpdateWindow(window.GetHandle());
 
 		const int64_t min_interval = 5;
 		auto last = time::Now();
-		MSG msg = { 0 };
+		MSG msg = {};
 
 		while (!quit_)
 		{
@@ -128,9 +125,9 @@ namespace easy2d
 				last = now;
 
 				devices::Input::Instance().Update(
-					Window::Instance().GetHandle(),
-					Window::Instance().GetContentScaleX(),
-					Window::Instance().GetContentScaleY()
+					window.GetHandle(),
+					window.GetContentScaleX(),
+					window.GetContentScaleY()
 				);
 
 				OnUpdate(dt);
@@ -162,9 +159,9 @@ namespace easy2d
 		quit_ = true;
 	}
 
-	void Game::EnterScene(Scene * scene, Transition * transition)
+	void Game::EnterScene(spScene const& scene, spTransition const& transition)
 	{
-		if (scene == nullptr)
+		if (!scene)
 		{
 			E2D_WARNING("Next scene is null pointer!");
 			return;
@@ -172,45 +169,37 @@ namespace easy2d
 
 		if (curr_scene_ == scene) { return; }
 
-		if (next_scene_)
-		{
-			next_scene_->Release();
-		}
 		next_scene_ = scene;
-		next_scene_->Retain();
 
 		if (transition)
 		{
 			if (transition_)
 			{
 				transition_->Stop();
-				transition_->Release();
 			}
 			transition_ = transition;
-			transition_->Retain();
-
-			transition_->Initialize(curr_scene_, next_scene_, this);
+			transition_->Init(curr_scene_, next_scene_);
 		}
 	}
 
-	Scene * Game::GetCurrentScene()
+	spScene const& Game::GetCurrentScene()
 	{
 		return curr_scene_;
 	}
 
 	bool Game::IsTransitioning() const
 	{
-		return transition_ != nullptr;
+		return transition_;
 	}
 
 	void Game::UpdateScene(float dt)
 	{
-		auto update = [&](Scene * scene) -> void
+		auto update = [&](spScene const& scene) -> void
 		{
 			if (scene)
 			{
 				scene->OnUpdate(dt);
-				Node * root = scene->GetRoot();
+				spNode const& root = scene->GetRoot();
 				if (root)
 				{
 					root->UpdateChildren(dt);
@@ -227,7 +216,6 @@ namespace easy2d
 
 			if (transition_->IsDone())
 			{
-				transition_->Release();
 				transition_ = nullptr;
 			}
 			else
@@ -241,7 +229,6 @@ namespace easy2d
 			if (curr_scene_)
 			{
 				curr_scene_->OnExit();
-				curr_scene_->Release();
 			}
 
 			next_scene_->OnEnter();

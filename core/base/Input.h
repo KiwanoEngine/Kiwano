@@ -33,7 +33,7 @@ namespace easy2d
 			E2D_DISABLE_COPY(InputDevice);
 
 		public:
-			void Initialize(bool debug);
+			void Init(bool debug);
 
 			// 检测键盘某按键是否正被按下
 			bool IsDown(

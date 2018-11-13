@@ -33,7 +33,7 @@ namespace easy2d
 		E2D_DISABLE_COPY(WindowImpl);
 
 	public:
-		void Initialize(
+		void Init(
 			String	title,
 			int		width,
 			int		height,

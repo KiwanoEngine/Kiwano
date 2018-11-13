@@ -41,14 +41,14 @@ namespace easy2d
 		delta_ = 0;
 	}
 
-	void FiniteTimeAction::Initialize()
+	void FiniteTimeAction::Init(Node* target)
 	{
-		Action::Initialize();
+		Action::Init(target);
 	}
 
-	void FiniteTimeAction::Update()
+	void FiniteTimeAction::Update(Node* target)
 	{
-		Action::Update();
+		Action::Update(target);
 
 		if (duration_ == 0)
 		{
@@ -83,41 +83,41 @@ namespace easy2d
 		delta_pos_ = vector;
 	}
 
-	void MoveBy::Initialize()
+	void MoveBy::Init(Node* target)
 	{
-		FiniteTimeAction::Initialize();
+		FiniteTimeAction::Init(target);
 
-		if (target_)
+		if (target)
 		{
-			prev_pos_ = start_pos_ = target_->GetPosition();
+			prev_pos_ = start_pos_ = target->GetPosition();
 		}
 	}
 
-	void MoveBy::Update()
+	void MoveBy::Update(Node* target)
 	{
-		FiniteTimeAction::Update();
+		FiniteTimeAction::Update(target);
 
-		if (target_)
+		if (target)
 		{
-			Point currentPos = target_->GetPosition();
+			Point currentPos = target->GetPosition();
 			Point diff = currentPos - prev_pos_;
 			start_pos_ = start_pos_ + diff;
 
 			Point newPos = start_pos_ + (delta_pos_ * delta_);
-			target_->SetPosition(newPos);
+			target->SetPosition(newPos);
 
 			prev_pos_ = newPos;
 		}
 	}
 
-	MoveBy * MoveBy::Clone() const
+	spAction MoveBy::Clone() const
 	{
-		return new MoveBy(duration_, delta_pos_);
+		return new (std::nothrow) MoveBy(duration_, delta_pos_);
 	}
 
-	MoveBy * MoveBy::Reverse() const
+	spAction MoveBy::Reverse() const
 	{
-		return new MoveBy(duration_, -delta_pos_);
+		return new (std::nothrow) MoveBy(duration_, -delta_pos_);
 	}
 
 	MoveTo::MoveTo(float duration, Point pos)
@@ -126,14 +126,14 @@ namespace easy2d
 		end_pos_ = pos;
 	}
 
-	MoveTo * MoveTo::Clone() const
+	spAction MoveTo::Clone() const
 	{
-		return new MoveTo(duration_, end_pos_);
+		return new (std::nothrow) MoveTo(duration_, end_pos_);
 	}
 
-	void MoveTo::Initialize()
+	void MoveTo::Init(Node* target)
 	{
-		MoveBy::Initialize();
+		MoveBy::Init(target);
 		delta_pos_ = end_pos_ - start_pos_;
 	}
 
@@ -150,44 +150,44 @@ namespace easy2d
 	{
 	}
 
-	JumpBy * JumpBy::Clone() const
+	spAction JumpBy::Clone() const
 	{
-		return new JumpBy(duration_, delta_pos_, height_, jumps_);
+		return new (std::nothrow) JumpBy(duration_, delta_pos_, height_, jumps_);
 	}
 
-	JumpBy * JumpBy::Reverse() const
+	spAction JumpBy::Reverse() const
 	{
-		return new JumpBy(duration_, -delta_pos_, height_, jumps_);
+		return new (std::nothrow) JumpBy(duration_, -delta_pos_, height_, jumps_);
 	}
 
-	void JumpBy::Initialize()
+	void JumpBy::Init(Node* target)
 	{
-		FiniteTimeAction::Initialize();
+		FiniteTimeAction::Init(target);
 
-		if (target_)
+		if (target)
 		{
-			prev_pos_ = start_pos_ = target_->GetPosition();
+			prev_pos_ = start_pos_ = target->GetPosition();
 		}
 	}
 
-	void JumpBy::Update()
+	void JumpBy::Update(Node* target)
 	{
-		FiniteTimeAction::Update();
+		FiniteTimeAction::Update(target);
 
-		if (target_)
+		if (target)
 		{
 			float frac = fmod(delta_ * jumps_, 1.f);
 			float x = delta_pos_.x * delta_;
 			float y = height_ * 4 * frac * (1 - frac);
 			y += delta_pos_.y * delta_;
 
-			Point currentPos = target_->GetPosition();
+			Point currentPos = target->GetPosition();
 
 			Point diff = currentPos - prev_pos_;
 			start_pos_ = diff + start_pos_;
 
 			Point newPos = start_pos_ + Point(x, y);
-			target_->SetPosition(newPos);
+			target->SetPosition(newPos);
 
 			prev_pos_ = newPos;
 		}
@@ -199,14 +199,14 @@ namespace easy2d
 	{
 	}
 
-	JumpTo * JumpTo::Clone() const
+	spAction JumpTo::Clone() const
 	{
-		return new JumpTo(duration_, end_pos_, height_, jumps_);
+		return new (std::nothrow) JumpTo(duration_, end_pos_, height_, jumps_);
 	}
 
-	void JumpTo::Initialize()
+	void JumpTo::Init(Node* target)
 	{
-		JumpBy::Initialize();
+		JumpBy::Init(target);
 		delta_pos_ = end_pos_ - start_pos_;
 	}
 
@@ -229,35 +229,35 @@ namespace easy2d
 		delta_y_ = scale_y;
 	}
 
-	void ScaleBy::Initialize()
+	void ScaleBy::Init(Node* target)
 	{
-		FiniteTimeAction::Initialize();
+		FiniteTimeAction::Init(target);
 
-		if (target_)
+		if (target)
 		{
-			start_scale_x_ = target_->GetScaleX();
-			start_scale_y_ = target_->GetScaleY();
+			start_scale_x_ = target->GetScaleX();
+			start_scale_y_ = target->GetScaleY();
 		}
 	}
 
-	void ScaleBy::Update()
+	void ScaleBy::Update(Node* target)
 	{
-		FiniteTimeAction::Update();
+		FiniteTimeAction::Update(target);
 
-		if (target_)
+		if (target)
 		{
-			target_->SetScale(start_scale_x_ + delta_x_ * delta_, start_scale_y_ + delta_y_ * delta_);
+			target->SetScale(start_scale_x_ + delta_x_ * delta_, start_scale_y_ + delta_y_ * delta_);
 		}
 	}
 
-	ScaleBy * ScaleBy::Clone() const
+	spAction ScaleBy::Clone() const
 	{
-		return new ScaleBy(duration_, delta_x_, delta_y_);
+		return new (std::nothrow) ScaleBy(duration_, delta_x_, delta_y_);
 	}
 
-	ScaleBy * ScaleBy::Reverse() const
+	spAction ScaleBy::Reverse() const
 	{
-		return new ScaleBy(duration_, -delta_x_, -delta_y_);
+		return new (std::nothrow) ScaleBy(duration_, -delta_x_, -delta_y_);
 	}
 
 	ScaleTo::ScaleTo(float duration, float scale)
@@ -274,14 +274,14 @@ namespace easy2d
 		end_scale_y_ = scale_y;
 	}
 
-	ScaleTo * ScaleTo::Clone() const
+	spAction ScaleTo::Clone() const
 	{
-		return new ScaleTo(duration_, end_scale_x_, end_scale_y_);
+		return new (std::nothrow) ScaleTo(duration_, end_scale_x_, end_scale_y_);
 	}
 
-	void ScaleTo::Initialize()
+	void ScaleTo::Init(Node* target)
 	{
-		ScaleBy::Initialize();
+		ScaleBy::Init(target);
 		delta_x_ = end_scale_x_ - start_scale_x_;
 		delta_y_ = end_scale_y_ - start_scale_y_;
 	}
@@ -297,34 +297,34 @@ namespace easy2d
 		delta_val_ = opacity;
 	}
 
-	void OpacityBy::Initialize()
+	void OpacityBy::Init(Node* target)
 	{
-		FiniteTimeAction::Initialize();
+		FiniteTimeAction::Init(target);
 
-		if (target_)
+		if (target)
 		{
-			start_val_ = target_->GetOpacity();
+			start_val_ = target->GetOpacity();
 		}
 	}
 
-	void OpacityBy::Update()
+	void OpacityBy::Update(Node* target)
 	{
-		FiniteTimeAction::Update();
+		FiniteTimeAction::Update(target);
 
-		if (target_)
+		if (target)
 		{
-			target_->SetOpacity(start_val_ + delta_val_ * delta_);
+			target->SetOpacity(start_val_ + delta_val_ * delta_);
 		}
 	}
 
-	OpacityBy * OpacityBy::Clone() const
+	spAction OpacityBy::Clone() const
 	{
-		return new OpacityBy(duration_, delta_val_);
+		return new (std::nothrow) OpacityBy(duration_, delta_val_);
 	}
 
-	OpacityBy * OpacityBy::Reverse() const
+	spAction OpacityBy::Reverse() const
 	{
-		return new OpacityBy(duration_, -delta_val_);
+		return new (std::nothrow) OpacityBy(duration_, -delta_val_);
 	}
 
 	OpacityTo::OpacityTo(float duration, float opacity)
@@ -333,14 +333,14 @@ namespace easy2d
 		end_val_ = opacity;
 	}
 
-	OpacityTo * OpacityTo::Clone() const
+	spAction OpacityTo::Clone() const
 	{
-		return new OpacityTo(duration_, end_val_);
+		return new (std::nothrow) OpacityTo(duration_, end_val_);
 	}
 
-	void OpacityTo::Initialize()
+	void OpacityTo::Init(Node* target)
 	{
-		OpacityBy::Initialize();
+		OpacityBy::Init(target);
 		delta_val_ = end_val_ - start_val_;
 	}
 
@@ -365,34 +365,34 @@ namespace easy2d
 		delta_val_ = rotation;
 	}
 
-	void RotateBy::Initialize()
+	void RotateBy::Init(Node* target)
 	{
-		FiniteTimeAction::Initialize();
+		FiniteTimeAction::Init(target);
 
-		if (target_)
+		if (target)
 		{
-			start_val_ = target_->GetRotation();
+			start_val_ = target->GetRotation();
 		}
 	}
 
-	void RotateBy::Update()
+	void RotateBy::Update(Node* target)
 	{
-		FiniteTimeAction::Update();
+		FiniteTimeAction::Update(target);
 
-		if (target_)
+		if (target)
 		{
-			target_->SetRotation(start_val_ + delta_val_ * delta_);
+			target->SetRotation(start_val_ + delta_val_ * delta_);
 		}
 	}
 
-	RotateBy * RotateBy::Clone() const
+	spAction RotateBy::Clone() const
 	{
-		return new RotateBy(duration_, delta_val_);
+		return new (std::nothrow) RotateBy(duration_, delta_val_);
 	}
 
-	RotateBy * RotateBy::Reverse() const
+	spAction RotateBy::Reverse() const
 	{
-		return new RotateBy(duration_, -delta_val_);
+		return new (std::nothrow) RotateBy(duration_, -delta_val_);
 	}
 
 	RotateTo::RotateTo(float duration, float rotation)
@@ -401,14 +401,14 @@ namespace easy2d
 		end_val_ = rotation;
 	}
 
-	RotateTo * RotateTo::Clone() const
+	spAction RotateTo::Clone() const
 	{
-		return new RotateTo(duration_, end_val_);
+		return new (std::nothrow) RotateTo(duration_, end_val_);
 	}
 
-	void RotateTo::Initialize()
+	void RotateTo::Init(Node* target)
 	{
-		RotateBy::Initialize();
+		RotateBy::Init(target);
 		delta_val_ = end_val_ - start_val_;
 	}
 
@@ -429,14 +429,14 @@ namespace easy2d
 		delta_ = 0;
 	}
 
-	void Delay::Initialize()
+	void Delay::Init(Node* target)
 	{
-		Action::Initialize();
+		Action::Init(target);
 	}
 
-	void Delay::Update()
+	void Delay::Update(Node* target)
 	{
-		Action::Update();
+		Action::Update(target);
 
 		delta_ = (time::Now() - started_).Seconds();
 
@@ -452,13 +452,13 @@ namespace easy2d
 		started_ = time::Now() - time::Second * delta_;
 	}
 
-	Delay * Delay::Clone() const
+	spAction Delay::Clone() const
 	{
-		return new Delay(delay_);
+		return new (std::nothrow) Delay(delay_);
 	}
 
-	Delay * Delay::Reverse() const
+	spAction Delay::Reverse() const
 	{
-		return new Delay(delay_);
+		return new (std::nothrow) Delay(delay_);
 	}
 }

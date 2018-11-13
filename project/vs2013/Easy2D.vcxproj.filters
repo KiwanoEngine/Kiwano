@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\..\core\easy2d.h" />
-    <ClInclude Include="..\..\core\base\Action.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\ActionCombined.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -57,9 +54,6 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\base\Rect.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\base\RefCounter.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\base\render.h">
@@ -143,6 +137,15 @@
     <ClInclude Include="..\..\core\base\Singleton.hpp">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\RefCounter.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\IntrusivePtr.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\Action.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -159,9 +162,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\core\base\Action.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\base\ActionCombined.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -199,9 +199,6 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\Node.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\base\RefCounter.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\render.cpp">

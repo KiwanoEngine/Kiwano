@@ -21,7 +21,7 @@
 #include "Node.h"
 #include "Scene.h"
 #include "Task.h"
-#include "Action.h"
+#include "Action.hpp"
 #include "time.h"
 #include "render.h"
 #include <iterator>
@@ -31,7 +31,6 @@ namespace easy2d
 	Node::Node()
 		: visible_(true)
 		, parent_(nullptr)
-		, parent_scene_(nullptr)
 		, hash_name_(0)
 		, clip_enabled_(false)
 		, dirty_sort_(false)
@@ -53,21 +52,6 @@ namespace easy2d
 	Node::~Node()
 	{
 		SafeRelease(border_);
-
-		for (auto action : actions_)
-		{
-			SafeRelease(action);
-		}
-
-		for (auto task : tasks_)
-		{
-			SafeRelease(task);
-		}
-
-		for (auto child : children_)
-		{
-			SafeRelease(child);
-		}
 	}
 
 	void Node::Visit()
@@ -93,7 +77,7 @@ namespace easy2d
 				std::sort(
 					std::begin(children_),
 					std::end(children_),
-					[](Node * n1, Node * n2) { return n1->GetOrder() < n2->GetOrder(); }
+					[](spNode const& n1, spNode const& n2) { return n1->GetOrder() < n2->GetOrder(); }
 				);
 
 				dirty_sort_ = false;
@@ -202,11 +186,6 @@ namespace easy2d
 			initial_matrix_ = initial_matrix_ * parent_->initial_matrix_;
 			final_matrix_ = final_matrix_ * parent_->initial_matrix_;
 		}
-		else if (parent_scene_)
-		{
-			initial_matrix_ = initial_matrix_ * parent_scene_->GetTransform();
-			final_matrix_ = final_matrix_ * parent_scene_->GetTransform();
-		}
 
 		// 重新构造轮廓
 		SafeRelease(border_);
@@ -269,25 +248,24 @@ namespace easy2d
 		if (actions_.empty())
 			return;
 
-		std::vector<Action*> currActions;
+		std::vector<spAction> currActions;
 		currActions.reserve(actions_.size());
 		std::copy_if(
 			actions_.begin(),
 			actions_.end(),
 			std::back_inserter(currActions),
-			[](Action* action) { return action->IsRunning() && !action->IsDone(); }
+			[](spAction action) { return action->IsRunning() && !action->IsDone(); }
 		);
 
 		// 遍历所有正在运行的动作
 		for (const auto& action : currActions)
-			action->Update();
+			action->Update(this);
 
 		// 清除完成的动作
 		for (auto iter = actions_.begin(); iter != actions_.end();)
 		{
 			if ((*iter)->IsDone())
 			{
-				(*iter)->Release();
 				iter = actions_.erase(iter);
 			}
 			else
@@ -574,18 +552,18 @@ namespace easy2d
 		border_color_ = color;
 	}
 
-	void Node::AddChild(Node * child, int order)
+	void Node::AddChild(spNode const& child, int order)
 	{
-		E2D_WARNING_IF(child == nullptr, "Node::AddChild NULL pointer exception.");
+		E2D_WARNING_IF(!child, "Node::AddChild NULL pointer exception.");
 
 		if (child)
 		{
-			if (child->parent_ != nullptr)
+			if (child->parent_)
 			{
 				throw std::runtime_error("节点已有父节点, 不能再添加到其他节点");
 			}
 
-			for (Node * parent = this; parent != nullptr; parent = parent->GetParent())
+			for (Node * parent = this; parent; parent = parent->GetParent().Get())
 			{
 				if (child == parent)
 				{
@@ -593,14 +571,9 @@ namespace easy2d
 				}
 			}
 
-			child->Retain();
 			children_.push_back(child);
 			child->SetOrder(order);
 			child->parent_ = this;
-			if (this->parent_scene_)
-			{
-				child->SetParentScene(this->parent_scene_);
-			}
 
 			// 更新子节点透明度
 			child->UpdateOpacity();
@@ -619,17 +592,12 @@ namespace easy2d
 		}
 	}
 
-	Node * Node::GetParent() const
+	spNode Node::GetParent() const
 	{
 		return parent_;
 	}
 
-	Scene * Node::GetParentScene() const
-	{
-		return parent_scene_;
-	}
-
-	Node::Nodes Node::GetChildren(const String& name) const
+	Nodes Node::GetChildren(const String& name) const
 	{
 		Nodes children;
 		size_t hash_code = std::hash<String>{}(name);
@@ -645,7 +613,7 @@ namespace easy2d
 		return children;
 	}
 
-	Node * Node::GetChild(const String& name) const
+	spNode Node::GetChild(const String& name) const
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
@@ -660,7 +628,7 @@ namespace easy2d
 		return nullptr;
 	}
 
-	const std::vector<Node*>& Node::GetAllChildren() const
+	const std::vector<spNode>& Node::GetAllChildren() const
 	{
 		return children_;
 	}
@@ -678,9 +646,9 @@ namespace easy2d
 		}
 	}
 
-	bool Node::RemoveChild(Node * child)
+	bool Node::RemoveChild(spNode const& child)
 	{
-		E2D_WARNING_IF(child == nullptr, "Node::RemoveChildren NULL pointer exception.");
+		E2D_WARNING_IF(!child, "Node::RemoveChildren NULL pointer exception.");
 
 		if (children_.empty())
 		{
@@ -694,13 +662,6 @@ namespace easy2d
 			{
 				children_.erase(iter);
 				child->parent_ = nullptr;
-
-				if (child->parent_scene_)
-				{
-					child->SetParentScene(nullptr);
-				}
-
-				child->Release();
 				return true;
 			}
 		}
@@ -720,11 +681,6 @@ namespace easy2d
 			if ((*iter)->hash_name_ == hash_code && (*iter)->name_ == child_name)
 			{
 				(*iter)->parent_ = nullptr;
-				if ((*iter)->parent_scene_)
-				{
-					(*iter)->SetParentScene(nullptr);
-				}
-				(*iter)->Release();
 				iter = children_.erase(iter);
 			}
 			else
@@ -736,34 +692,20 @@ namespace easy2d
 
 	void Node::RemoveAllChildren()
 	{
-		// 所有节点的引用计数减一
-		for (const auto& child : children_)
-		{
-			child->Release();
-		}
-		// 清空储存节点的容器
 		children_.clear();
 	}
 
-	void Node::RunAction(Action * action)
+	void Node::RunAction(spAction const& action)
 	{
-		E2D_WARNING_IF(action == nullptr, "Action NULL pointer exception!");
+		E2D_WARNING_IF(!action, "Action NULL pointer exception!");
 
 		if (action)
 		{
-			if (action->GetTarget() == nullptr)
+			auto iter = std::find(actions_.begin(), actions_.end(), action);
+			if (iter == actions_.end())
 			{
-				auto iter = std::find(actions_.begin(), actions_.end(), action);
-				if (iter == actions_.end())
-				{
-					action->Retain();
-					action->StartWithTarget(this);
-					actions_.push_back(action);
-				}
-			}
-			else
-			{
-				throw std::runtime_error("该 Action 已有执行目标");
+				action->Start();
+				actions_.push_back(action);
 			}
 		}
 	}
@@ -828,7 +770,7 @@ namespace easy2d
 		return ret != 0;
 	}
 
-	bool Node::Intersects(Node * node)
+	bool Node::Intersects(spNode const& node)
 	{
 		if (transform_.size.width == 0.f || transform_.size.height == 0.f || node->transform_.size.width == 0.f || node->transform_.size.height == 0.f)
 			return false;
@@ -883,19 +825,18 @@ namespace easy2d
 		}
 	}
 
-	const Node::Actions & Node::GetAllActions() const
+	const Actions& Node::GetAllActions() const
 	{
 		return actions_;
 	}
 
-	void Node::AddTask(Task * task)
+	void Node::AddTask(spTask const& task)
 	{
 		if (task)
 		{
 			auto iter = std::find(tasks_.begin(), tasks_.end(), task);
 			if (iter == tasks_.end())
 			{
-				task->Retain();
 				task->last_time_ = time::Now();
 				tasks_.push_back(task);
 			}
@@ -959,7 +900,7 @@ namespace easy2d
 		}
 	}
 
-	const Node::Tasks & Node::GetAllTasks() const
+	const Tasks & Node::GetAllTasks() const
 	{
 		return tasks_;
 	}
@@ -969,13 +910,13 @@ namespace easy2d
 		if (tasks_.empty())
 			return;
 
-		std::vector<Task*> currTasks;
+		std::vector<spTask> currTasks;
 		currTasks.reserve(tasks_.size());
 		std::copy_if(
 			tasks_.begin(),
 			tasks_.end(),
 			std::back_inserter(currTasks),
-			[](Task* task) { return task->IsReady() && !task->stopped_; }
+			[](spTask const& task) { return task->IsReady() && !task->stopped_; }
 		);
 
 		// 遍历就绪的任务
@@ -987,7 +928,6 @@ namespace easy2d
 		{
 			if ((*iter)->stopped_)
 			{
-				(*iter)->Release();
 				iter = tasks_.erase(iter);
 			}
 			else
@@ -1028,15 +968,6 @@ namespace easy2d
 			name_ = name;
 			// 保存节点 Hash 名
 			hash_name_ = std::hash<String>{}(name);
-		}
-	}
-
-	void Node::SetParentScene(Scene * scene)
-	{
-		parent_scene_ = scene;
-		for (const auto& child : children_)
-		{
-			child->SetParentScene(scene);
 		}
 	}
 }

@@ -21,85 +21,86 @@
 #pragma once
 #include "base.h"
 #include "time.h"
-#include "RefCounter.h"
 
 namespace easy2d
 {
-	class Node;
-	class Loop;
-	class Sequence;
-	class Spawn;
-
-	// 基础动作
 	class Action
 		: public RefCounter
 	{
+		E2D_DISABLE_COPY(Action);
+
+		friend class Node;
 		friend class Loop;
 		friend class Sequence;
 		friend class Spawn;
 
-		E2D_DISABLE_COPY(Action);
-
 	public:
-		Action();
+		Action() : running_(false), done_(false), initialized_(false) {}
 
-		virtual ~Action();
+		virtual ~Action() {}
 
 		// 获取动作运行状态
-		virtual bool IsRunning();
+		inline bool IsRunning() { return running_; }
 
 		// 继续动作
-		virtual void Resume();
+		inline void Resume() { running_ = true; }
 
 		// 暂停动作
-		virtual void Pause();
+		inline void Pause() { running_ = false; }
 
 		// 停止动作
-		virtual void Stop();
+		inline void Stop() { done_ = true; }
 
 		// 获取动作名称
-		virtual const String& GetName() const;
+		inline const String& GetName() const { return name_; }
 
 		// 设置动作名称
-		virtual void SetName(
-			const String& name
-		);
+		inline void SetName(const String& name) { name_ = name; }
+
+		inline bool IsDone() const { return done_; }
 
 		// 获取动作的拷贝
-		virtual Action * Clone() const = 0;
+		virtual spAction Clone() const = 0;
 
 		// 获取动作的倒转
-		virtual Action * Reverse() const = 0;
+		virtual spAction Reverse() const = 0;
 
 		// 重置动作
-		virtual void Reset();
-
-		// 获取该动作的执行目标
-		virtual Node * GetTarget();
-
-		// 开始动作
-		virtual void StartWithTarget(
-			Node* target
-		);
-
-		// 初始化动作
-		virtual void Initialize();
-
-		// 更新动作
-		virtual void Update();
-
-		// 重置动作时间
-		virtual void ResetTime();
-
-		// 获取动作结束状态
-		virtual bool IsDone() const;
+		virtual void Reset()
+		{
+			initialized_ = false;
+			done_ = false;
+			started_ = time::Now();
+		}
 
 	protected:
-		String			name_;
-		bool			running_;
-		bool			done_;
-		bool			initialized_;
-		Node*			target_;
-		time::TimePoint	started_;
+		virtual void Start()
+		{
+			running_ = true;
+			this->Reset();
+		}
+
+		virtual void Init(Node* target)
+		{
+			initialized_ = true;
+			started_ = time::Now();
+		}
+
+		virtual void Update(Node* target)
+		{
+			if (!initialized_)
+			{
+				Init(target);
+			}
+		}
+
+		virtual void ResetTime() {}
+
+	protected:
+		String		name_;
+		bool		running_;
+		bool		done_;
+		bool		initialized_;
+		TimePoint	started_;
 	};
 }

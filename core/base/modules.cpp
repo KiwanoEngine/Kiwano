@@ -38,7 +38,7 @@ namespace easy2d
 		Module_XAudio2 XAudio2;
 		Module_MediaFoundation MediaFoundation;
 
-		void Initialize()
+		void Init()
 		{
 			initialize_count++;
 			if (initialize_count > 1)

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.h"
+#include "Action.hpp"
 
 namespace easy2d
 {
@@ -31,35 +31,35 @@ namespace easy2d
 
 	public:
 		explicit Loop(
-			Action * action,	/* 执行循环的动作 */
-			int times = -1		/* 循环次数 */
+			spAction const& action,	/* 执行循环的动作 */
+			int times = -1			/* 循环次数 */
 		);
 
 		virtual ~Loop();
 
 		// 获取该动作的拷贝对象
-		virtual Loop * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual Loop * Reverse() const override;
+		virtual spAction Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 		// 重置动作时间
 		virtual void ResetTime() override;
 
 	protected:
-		Action * action_;
-		int times_;
-		int total_times_;
+		spAction	action_;
+		int			times_;
+		int			total_times_;
 	};
 
 
@@ -70,8 +70,6 @@ namespace easy2d
 		E2D_DISABLE_COPY(Sequence);
 
 	public:
-		typedef std::vector<Action*> Actions;
-
 		Sequence();
 
 		explicit Sequence(
@@ -82,7 +80,7 @@ namespace easy2d
 
 		// 在结尾添加动作
 		void Add(
-			Action * action
+			spAction const& action
 		);
 
 		// 在结尾添加多个动作
@@ -91,20 +89,20 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual Sequence * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual Sequence * Reverse() const;
+		virtual spAction Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 		// 重置动作时间
 		virtual void ResetTime() override;
@@ -122,8 +120,6 @@ namespace easy2d
 		E2D_DISABLE_COPY(Spawn);
 
 	public:
-		typedef std::vector<Action*> Actions;
-
 		Spawn();
 
 		explicit Spawn(
@@ -134,7 +130,7 @@ namespace easy2d
 
 		// 在结尾添加动作
 		void Add(
-			Action * action
+			spAction const& action
 		);
 
 		// 在结尾添加多个动作
@@ -143,20 +139,20 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual Spawn * Clone() const override;
+		virtual spAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual Spawn * Reverse() const;
+		virtual spAction Reverse() const;
 
 		// 重置动作
 		virtual void Reset() override;
 
 	protected:
 		// 初始化动作
-		virtual void Initialize() override;
+		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update() override;
+		virtual void Update(Node* target) override;
 
 		// 重置动作时间
 		virtual void ResetTime() override;

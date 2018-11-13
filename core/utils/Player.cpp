@@ -38,7 +38,7 @@ namespace easy2d
 		if (file_path.empty())
 			return false;
 
-		Music * music = new (std::nothrow) Music();
+		spMusic music = new (std::nothrow) Music();
 
 		if (music)
 		{
@@ -49,10 +49,6 @@ namespace easy2d
 				size_t hash_code = std::hash<String>{}(file_path);
 				musics_cache_.insert(std::make_pair(hash_code, music));
 				return true;
-			}
-			else
-			{
-				music->Release();
 			}
 		}
 		return false;
@@ -121,7 +117,7 @@ namespace easy2d
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			return true;
 
-		Music * music = new (std::nothrow) Music();
+		spMusic music = new (std::nothrow) Music();
 
 		if (music)
 		{
@@ -130,10 +126,6 @@ namespace easy2d
 				music->SetVolume(volume_);
 				musics_cache_.insert(std::make_pair(hash_code, music));
 				return true;
-			}
-			else
-			{
-				music->Release();
 			}
 		}
 		return false;
@@ -222,13 +214,6 @@ namespace easy2d
 
 	void Player::ClearCache()
 	{
-		if (musics_cache_.empty())
-			return;
-
-		for (const auto& pair : musics_cache_)
-		{
-			pair.second->Release();
-		}
 		musics_cache_.clear();
 	}
 }

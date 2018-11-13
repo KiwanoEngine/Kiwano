@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Node.h"
 #include "Button.h"
 
 namespace easy2d
@@ -36,7 +35,7 @@ namespace easy2d
 			Menu();
 
 			explicit Menu(
-				const std::vector<Button*>& buttons	/* 按钮数组 */
+				const std::vector<spButton>& buttons	/* 按钮数组 */
 			);
 
 			// 获取菜单是否禁用
@@ -52,20 +51,20 @@ namespace easy2d
 
 			// 添加按钮
 			void AddButton(
-				Button * button
+				spButton const& button
 			);
 
 			// 移除按钮
 			bool RemoveButton(
-				Button * button
+				spButton const& button
 			);
 
 			// 获取所有按钮
-			const std::vector<Button*>& GetAllButtons() const;
+			const std::vector<spButton>& GetAllButtons() const;
 
 		private:
 			bool enabled_;
-			std::vector<Button*> buttons_;
+			std::vector<spButton> buttons_;
 		};
 	}
 }

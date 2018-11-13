@@ -20,7 +20,6 @@
 
 #pragma once
 #include "base.h"
-#include "RefCounter.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
 #include "../math/Transform.h"
@@ -43,10 +42,6 @@ namespace easy2d
 		E2D_DISABLE_COPY(Node);
 
 	public:
-		typedef std::vector<Node*> Nodes;
-		typedef std::vector<Action*> Actions;
-		typedef std::vector<Task*> Tasks;
-
 		Node();
 
 		virtual ~Node();
@@ -121,10 +116,7 @@ namespace easy2d
 		float GetDisplayOpacity() const;
 
 		// 获取父节点
-		Node * GetParent() const;
-
-		// 获取节点所在场景
-		Scene * GetParentScene() const;
+		spNode GetParent() const;
 
 		// 设置节点是否显示
 		void SetVisible(
@@ -292,12 +284,12 @@ namespace easy2d
 
 		// 判断两物体是否相交
 		bool Intersects(
-			Node * node
+			spNode const& node
 		);
 
 		// 添加子节点
 		void AddChild(
-			Node * child,
+			spNode const& child,
 			int order = 0		/* 渲染顺序 */
 		);
 
@@ -313,7 +305,7 @@ namespace easy2d
 		) const;
 
 		// 获取名称相同的子节点
-		Node* GetChild(
+		spNode GetChild(
 			const String& name
 		) const;
 
@@ -325,7 +317,7 @@ namespace easy2d
 
 		// 移除子节点
 		bool RemoveChild(
-			Node * child
+			spNode const& child
 		);
 
 		// 移除所有名称相同的子节点
@@ -341,7 +333,7 @@ namespace easy2d
 
 		// 执行动作
 		void RunAction(
-			Action * action
+			spAction const& action
 		);
 
 		// 继续动作
@@ -373,7 +365,7 @@ namespace easy2d
 
 		// 添加任务
 		void AddTask(
-			Task * task
+			spTask const& task
 		);
 
 		// 启动任务
@@ -423,11 +415,6 @@ namespace easy2d
 		// 渲染节点边缘
 		void DrawBorder();
 
-		// 设置节点所在场景
-		void SetParentScene(
-			Scene * scene
-		);
-
 		// 更新子节点
 		void UpdateChildren(float dt);
 
@@ -456,7 +443,6 @@ namespace easy2d
 		bool				clip_enabled_;
 		bool				dirty_sort_;
 		bool				dirty_transform_;
-		Scene*				parent_scene_;
 		Node*				parent_;
 		Color				border_color_;
 		Actions				actions_;

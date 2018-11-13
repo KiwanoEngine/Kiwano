@@ -23,24 +23,39 @@
 
 namespace easy2d
 {
-    // 引用计数
 	class RefCounter
 	{
-	public:
-		RefCounter();
+		E2D_DISABLE_COPY(RefCounter);
 
-		virtual ~RefCounter();
+	public:
+		RefCounter() : ref_count_(0) {}
+
+		virtual ~RefCounter() {}
 
 		// 增加引用计数
-		long Retain();
+		inline void Retain() { ::InterlockedIncrement(&ref_count_); }
 
 		// 减少引用计数
-		long Release();
+		inline void Release()
+		{
+			if (::InterlockedDecrement(&ref_count_) <= 0)
+				delete this;
+		}
 
 		// 获取引用计数
-		long GetRefCount() const;
+		inline long GetRefCount() const { return ref_count_; }
 
 	private:
 		long ref_count_;
 	};
+
+	inline void IntrusivePtrAddRef(RefCounter* ptr)
+	{
+		if (ptr) ptr->Retain();
+	}
+
+	inline void IntrusivePtrRelease(RefCounter* ptr)
+	{
+		if (ptr) ptr->Release();
+	}
 }

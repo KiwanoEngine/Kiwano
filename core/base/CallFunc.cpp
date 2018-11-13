@@ -27,21 +27,21 @@ namespace easy2d
 	{
 	}
 
-	CallFunc * CallFunc::Clone() const
+	spAction CallFunc::Clone() const
 	{
 		return new CallFunc(callback_);
 	}
 
-	CallFunc * CallFunc::Reverse() const
+	spAction CallFunc::Reverse() const
 	{
 		return new CallFunc(callback_);
 	}
 
-	void CallFunc::Initialize()
+	void CallFunc::Init(Node*)
 	{
 	}
 
-	void CallFunc::Update()
+	void CallFunc::Update(Node*)
 	{
 		callback_();
 		this->Stop();

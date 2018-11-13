@@ -22,6 +22,7 @@
 #include "time.h"
 #include "base.h"
 #include "modules.h"
+#include "Image.h"
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -38,7 +39,7 @@ namespace easy2d
 		{
 			ZeroMemory(&d2d, sizeof(D2DResources));
 
-			modules::Initialize();
+			modules::Init();
 		}
 
 		GraphicsDevice::~GraphicsDevice()
@@ -63,7 +64,7 @@ namespace easy2d
 			modules::Destroy();
 		}
 
-		void GraphicsDevice::Initialize(HWND hwnd, bool debug)
+		void GraphicsDevice::Init(HWND hwnd, bool debug)
 		{
 			if (initialized)
 				return;
@@ -302,7 +303,7 @@ namespace easy2d
 		}
 
 		HRESULT GraphicsDevice::DrawImage(
-			Image * image,
+			spImage const& image,
 			float opacity,
 			const Rect & dest_rect,
 			const Rect & source_rect
