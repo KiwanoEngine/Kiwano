@@ -39,9 +39,16 @@ namespace easy2d
 		, curr_scene_(nullptr)
 		, next_scene_(nullptr)
 		, transition_(nullptr)
-		, debug_mode_(false)
+		, debug_enabled_(false)
+		, initialized_(false)
 	{
 		::CoInitialize(nullptr);
+	}
+
+	Game::Game(Options const & options)
+		: Game()
+	{
+		Init(options);
 	}
 
 	Game::~Game()
@@ -51,17 +58,18 @@ namespace easy2d
 
 	void Game::Init(const Options& options)
 	{
-		debug_mode_ = options.debug;
+		if (initialized_)
+			return;
 
-		Window::Instance().Init(options.title, options.width, options.height, options.icon, debug_mode_);
-		devices::Graphics::Instance().Init(Window::Instance().GetHandle(), debug_mode_);
-		devices::Input::Instance().Init(debug_mode_);
-		devices::Audio::Instance().Init(debug_mode_);
+		debug_enabled_ = options.debug;
 
-		// 若开启了调试模式，打开控制台
+		Window::Instance().Init(options.title, options.width, options.height, options.icon, debug_enabled_);
+		devices::Graphics::Instance().Init(Window::Instance().GetHandle(), debug_enabled_);
+		devices::Input::Instance().Init(debug_enabled_);
+		devices::Audio::Instance().Init(debug_enabled_);
+
 		HWND console = ::GetConsoleWindow();
-		// 关闭控制台
-		if (debug_mode_)
+		if (debug_enabled_)
 		{
 			if (console == nullptr)
 			{
@@ -93,6 +101,8 @@ namespace easy2d
 			GWLP_USERDATA,
 			PtrToUlong(this)
 		);
+
+		initialized_ = true;
 	}
 
 	void Game::Run()
@@ -130,7 +140,6 @@ namespace easy2d
 					window.GetContentScaleY()
 				);
 
-				OnUpdate(dt);
 				UpdateScene(dt);
 				DrawScene();
 
@@ -252,7 +261,7 @@ namespace easy2d
 			curr_scene_->Draw();
 		}
 
-		if (debug_mode_)
+		if (debug_enabled_)
 		{
 			if (curr_scene_ && curr_scene_->GetRoot())
 			{

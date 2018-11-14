@@ -35,14 +35,14 @@ namespace easy2d
 
 	public:
 		explicit Task(
-			const Callback& func,			/* 执行函数 */
+			const Callback& func,		/* 执行函数 */
 			const String& name = L""	/* 任务名称 */
 		);
 
 		explicit Task(
-			const Callback& func,			/* 执行函数 */
-			float delay,					/* 时间间隔（秒） */
-			int times = -1,					/* 执行次数（设 -1 为永久执行） */
+			Callback const& func,		/* 执行函数 */
+			Duration const& delay,		/* 时间间隔（秒） */
+			int times = -1,				/* 执行次数（设 -1 为永久执行） */
 			const String& name = L""	/* 任务名称 */
 		);
 
