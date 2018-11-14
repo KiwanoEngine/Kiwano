@@ -49,10 +49,10 @@ namespace easy2d
 			inline Matrix ToMatrix() const
 			{
 				auto center = Vector2{ size.width * pivot.x, size.height * pivot.y };
-				return Matrix{}.Scale(scale.x, scale.y, center)
-					.Skew(skew.x, skew.y, center)
-					.Rotate(rotation, center)
-					.Translate(position - center);
+				return Matrix{} * Matrix::Scaling(scale.x, scale.y, center)
+					* Matrix::Skewing(skew.x, skew.y, center)
+					* Matrix::Rotation(rotation, center)
+					* Matrix::Translation(position - center);
 			}
 
 			bool operator== (const Transform& other) const

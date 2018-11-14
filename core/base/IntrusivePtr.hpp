@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <cassert>
+#include "macros.h"
 
 namespace easy2d
 {
@@ -51,7 +51,11 @@ namespace easy2d
 			IntrusivePtrAddRef(ptr_);
 		}
 
-		IntrusivePtr(IntrusivePtr&& other) : ptr_(::std::move(other.ptr_)) {}
+		IntrusivePtr(IntrusivePtr&& other)
+		{
+			ptr_ = other.ptr_;
+			other.ptr_ = nullptr;
+		}
 
 		~IntrusivePtr()
 		{
@@ -67,14 +71,14 @@ namespace easy2d
 
 		inline ElemType* operator ->() const
 		{
-			assert(ptr_ && ptr_->GetRefCount() > 0 &&
+			E2D_WARNING_IF(!ptr_ || ptr_->GetRefCount() <= 0,
 				"Invalid pointer!");
 			return ptr_;
 		}
 
 		inline ElemType& operator *() const
 		{
-			assert(ptr_ && ptr_->GetRefCount() > 0 &&
+			E2D_WARNING_IF(!ptr_ || ptr_->GetRefCount() <= 0,
 				"Invalid pointer!");
 			return *ptr_;
 		}
@@ -86,6 +90,14 @@ namespace easy2d
 		inline IntrusivePtr& operator =(const IntrusivePtr& other)
 		{
 			IntrusivePtr(other).Swap(*this);
+			return *this;
+		}
+
+		inline IntrusivePtr& operator =(IntrusivePtr&& other)
+		{
+			IntrusivePtrRelease(ptr_);
+			ptr_ = other.ptr_;
+			other.ptr_ = nullptr;
 			return *this;
 		}
 

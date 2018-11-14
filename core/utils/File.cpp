@@ -160,7 +160,7 @@ namespace easy2d
 		auto iter = std::find(search_paths_.cbegin(), search_paths_.cend(), tmp);
 		if (iter == search_paths_.cend())
 		{
-			search_paths_.push_front(path);
+			search_paths_.push_front(tmp);
 		}
 	}
 

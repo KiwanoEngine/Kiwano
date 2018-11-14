@@ -85,8 +85,10 @@
 
 #if VS_VER >= VS_2015
 #	define E2D_NOEXCEPT noexcept
+#	define E2D_CONSTEXPR constexpr
 #else
 #	define E2D_NOEXCEPT throw()
+#	define E2D_CONSTEXPR const
 #endif
 
 

@@ -356,8 +356,8 @@ namespace easy2d
 
 	RotateBy::RotateBy(Duration const& duration, float rotation)
 		: FiniteTimeAction(duration)
+		, delta_val_(rotation)
 	{
-		delta_val_ = rotation;
 	}
 
 	void RotateBy::Init(Node* target)

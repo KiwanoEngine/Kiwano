@@ -45,6 +45,16 @@ namespace easy2d
 				MouseCode code
 			);
 
+			// 检测键盘某按键是否点击
+			bool WasPressed(
+				KeyCode code
+			);
+
+			// 检测鼠标按键是否点击
+			bool WasPressed(
+				MouseCode code
+			);
+
 			// 获得鼠标X轴坐标值
 			float GetMouseX();
 
@@ -69,6 +79,7 @@ namespace easy2d
 		protected:
 			bool initialized;
 			BYTE keys_[256];
+			BYTE keys_cache_[256];
 			Point mouse_pos_;
 		};
 

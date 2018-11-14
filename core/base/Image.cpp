@@ -68,12 +68,14 @@ namespace easy2d
 
 	bool Image::Load(Resource& res)
 	{
-		HRESULT hr = devices::Graphics::Instance().CreateBitmapFromResource(res, &bitmap_);
+		ID2D1Bitmap* bitmap;
+		HRESULT hr = devices::Graphics::Instance().CreateBitmapFromResource(res, &bitmap);
 		if (FAILED(hr))
 		{
 			logs::Trace(L"Load Image from resource failed!", hr);
 			return false;
 		}
+		this->SetBitmap(bitmap);
 		return true;
 	}
 
@@ -92,12 +94,14 @@ namespace easy2d
 		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
 		String image_file_path = image_file.GetPath();
 
-		HRESULT hr = devices::Graphics::Instance().CreateBitmapFromFile(image_file_path, &bitmap_);
+		ID2D1Bitmap* bitmap;
+		HRESULT hr = devices::Graphics::Instance().CreateBitmapFromFile(image_file_path, &bitmap);
 		if (FAILED(hr))
 		{
 			logs::Trace(L"Load Image from file failed!", hr);
 			return false;
 		}
+		this->SetBitmap(bitmap);
 		return true;
 	}
 
