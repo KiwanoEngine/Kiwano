@@ -48,7 +48,7 @@ namespace easy2d
 		virtual void Init(Node*) override;
 
 		// 更新动作
-		virtual void Update(Node*) override;
+		virtual void Update(Node*, Duration const&) override;
 
 	  protected:
 		Callback callback_;

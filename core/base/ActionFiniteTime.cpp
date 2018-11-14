@@ -29,16 +29,16 @@ namespace easy2d
 	// FiniteTimeAction
 	//-------------------------------------------------------
 
-	FiniteTimeAction::FiniteTimeAction(float duration)
-		: delta_(0)
-		, duration_(std::max(duration, 0.f))
+	FiniteTimeAction::FiniteTimeAction(Duration const& duration)
+		: process_(0)
+		, duration_(duration)
 	{
 	}
 
 	void FiniteTimeAction::Reset()
 	{
 		Action::Reset();
-		delta_ = 0;
+		process_ = 0;
 	}
 
 	void FiniteTimeAction::Init(Node* target)
@@ -46,30 +46,25 @@ namespace easy2d
 		Action::Init(target);
 	}
 
-	void FiniteTimeAction::Update(Node* target)
+	void FiniteTimeAction::Update(Node* target, Duration const& dt)
 	{
-		Action::Update(target);
+		Action::Update(target, dt);
 
-		if (duration_ == 0)
+		if (duration_.IsZero())
 		{
-			delta_ = 1;
+			process_ = 1.f;
 			this->Stop();
 		}
 		else
 		{
-			delta_ = std::min((time::Now() - started_).Seconds() / duration_, 1.f);
+			process_ += dt / duration_;
+			process_ = std::min(process_, 1.f);
 
-			if (delta_ >= 1)
+			if (process_ >= 1)
 			{
 				this->Stop();
 			}
 		}
-	}
-
-	void FiniteTimeAction::ResetTime()
-	{
-		Action::ResetTime();
-		started_ = time::Now() - time::Second * (delta_ * duration_);
 	}
 
 
@@ -77,7 +72,7 @@ namespace easy2d
 	// Move Action
 	//-------------------------------------------------------
 
-	MoveBy::MoveBy(float duration, Point vector)
+	MoveBy::MoveBy(Duration const& duration, Point const& vector)
 		: FiniteTimeAction(duration)
 	{
 		delta_pos_ = vector;
@@ -93,9 +88,9 @@ namespace easy2d
 		}
 	}
 
-	void MoveBy::Update(Node* target)
+	void MoveBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target);
+		FiniteTimeAction::Update(target, dt);
 
 		if (target)
 		{
@@ -103,7 +98,7 @@ namespace easy2d
 			Point diff = currentPos - prev_pos_;
 			start_pos_ = start_pos_ + diff;
 
-			Point newPos = start_pos_ + (delta_pos_ * delta_);
+			Point newPos = start_pos_ + (delta_pos_ * process_);
 			target->SetPosition(newPos);
 
 			prev_pos_ = newPos;
@@ -120,7 +115,7 @@ namespace easy2d
 		return new (std::nothrow) MoveBy(duration_, -delta_pos_);
 	}
 
-	MoveTo::MoveTo(float duration, Point pos)
+	MoveTo::MoveTo(Duration const& duration, Point const& pos)
 		: MoveBy(duration, Point())
 	{
 		end_pos_ = pos;
@@ -142,7 +137,7 @@ namespace easy2d
 	// Jump Action
 	//-------------------------------------------------------
 
-	JumpBy::JumpBy(float duration, const Point & vec, float height, int jumps)
+	JumpBy::JumpBy(Duration const& duration, Point const& vec, float height, int jumps)
 		: FiniteTimeAction(duration)
 		, delta_pos_(vec)
 		, height_(height)
@@ -170,16 +165,16 @@ namespace easy2d
 		}
 	}
 
-	void JumpBy::Update(Node* target)
+	void JumpBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target);
+		FiniteTimeAction::Update(target, dt);
 
 		if (target)
 		{
-			float frac = fmod(delta_ * jumps_, 1.f);
-			float x = delta_pos_.x * delta_;
+			float frac = fmod(process_ * jumps_, 1.f);
+			float x = delta_pos_.x * process_;
 			float y = height_ * 4 * frac * (1 - frac);
-			y += delta_pos_.y * delta_;
+			y += delta_pos_.y * process_;
 
 			Point currentPos = target->GetPosition();
 
@@ -193,7 +188,7 @@ namespace easy2d
 		}
 	}
 
-	JumpTo::JumpTo(float duration, const Point & pos, float height, int jumps)
+	JumpTo::JumpTo(Duration const& duration, Point const& pos, float height, int jumps)
 		: JumpBy(duration, Point(), height, jumps)
 		, end_pos_(pos)
 	{
@@ -215,14 +210,14 @@ namespace easy2d
 	// Scale Action
 	//-------------------------------------------------------
 
-	ScaleBy::ScaleBy(float duration, float scale)
+	ScaleBy::ScaleBy(Duration const& duration, float scale)
 		: FiniteTimeAction(duration)
 	{
 		delta_x_ = scale;
 		delta_y_ = scale;
 	}
 
-	ScaleBy::ScaleBy(float duration, float scale_x, float scale_y)
+	ScaleBy::ScaleBy(Duration const& duration, float scale_x, float scale_y)
 		: FiniteTimeAction(duration)
 	{
 		delta_x_ = scale_x;
@@ -240,13 +235,13 @@ namespace easy2d
 		}
 	}
 
-	void ScaleBy::Update(Node* target)
+	void ScaleBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target);
+		FiniteTimeAction::Update(target, dt);
 
 		if (target)
 		{
-			target->SetScale(start_scale_x_ + delta_x_ * delta_, start_scale_y_ + delta_y_ * delta_);
+			target->SetScale(start_scale_x_ + delta_x_ * process_, start_scale_y_ + delta_y_ * process_);
 		}
 	}
 
@@ -260,14 +255,14 @@ namespace easy2d
 		return new (std::nothrow) ScaleBy(duration_, -delta_x_, -delta_y_);
 	}
 
-	ScaleTo::ScaleTo(float duration, float scale)
+	ScaleTo::ScaleTo(Duration const& duration, float scale)
 		: ScaleBy(duration, 0, 0)
 	{
 		end_scale_x_ = scale;
 		end_scale_y_ = scale;
 	}
 
-	ScaleTo::ScaleTo(float duration, float scale_x, float scale_y)
+	ScaleTo::ScaleTo(Duration const& duration, float scale_x, float scale_y)
 		: ScaleBy(duration, 0, 0)
 	{
 		end_scale_x_ = scale_x;
@@ -291,7 +286,7 @@ namespace easy2d
 	// Opacity Action
 	//-------------------------------------------------------
 
-	OpacityBy::OpacityBy(float duration, float opacity)
+	OpacityBy::OpacityBy(Duration const& duration, float opacity)
 		: FiniteTimeAction(duration)
 	{
 		delta_val_ = opacity;
@@ -307,13 +302,13 @@ namespace easy2d
 		}
 	}
 
-	void OpacityBy::Update(Node* target)
+	void OpacityBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target);
+		FiniteTimeAction::Update(target, dt);
 
 		if (target)
 		{
-			target->SetOpacity(start_val_ + delta_val_ * delta_);
+			target->SetOpacity(start_val_ + delta_val_ * process_);
 		}
 	}
 
@@ -327,7 +322,7 @@ namespace easy2d
 		return new (std::nothrow) OpacityBy(duration_, -delta_val_);
 	}
 
-	OpacityTo::OpacityTo(float duration, float opacity)
+	OpacityTo::OpacityTo(Duration const& duration, float opacity)
 		: OpacityBy(duration, 0)
 	{
 		end_val_ = opacity;
@@ -344,12 +339,12 @@ namespace easy2d
 		delta_val_ = end_val_ - start_val_;
 	}
 
-	FadeIn::FadeIn(float duration)
+	FadeIn::FadeIn(Duration const& duration)
 		: OpacityTo(duration, 1)
 	{
 	}
 
-	FadeOut::FadeOut(float duration)
+	FadeOut::FadeOut(Duration const& duration)
 		: OpacityTo(duration, 0)
 	{
 	}
@@ -359,7 +354,7 @@ namespace easy2d
 	// Rotate Action
 	//-------------------------------------------------------
 
-	RotateBy::RotateBy(float duration, float rotation)
+	RotateBy::RotateBy(Duration const& duration, float rotation)
 		: FiniteTimeAction(duration)
 	{
 		delta_val_ = rotation;
@@ -375,13 +370,13 @@ namespace easy2d
 		}
 	}
 
-	void RotateBy::Update(Node* target)
+	void RotateBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target);
+		FiniteTimeAction::Update(target, dt);
 
 		if (target)
 		{
-			target->SetRotation(start_val_ + delta_val_ * delta_);
+			target->SetRotation(start_val_ + delta_val_ * process_);
 		}
 	}
 
@@ -395,7 +390,7 @@ namespace easy2d
 		return new (std::nothrow) RotateBy(duration_, -delta_val_);
 	}
 
-	RotateTo::RotateTo(float duration, float rotation)
+	RotateTo::RotateTo(Duration const& duration, float rotation)
 		: RotateBy(duration, 0)
 	{
 		end_val_ = rotation;
@@ -417,16 +412,16 @@ namespace easy2d
 	// Delay
 	//-------------------------------------------------------
 
-	Delay::Delay(float duration)
-		: delta_(0)
-		, delay_(std::max(duration, 0.f))
+	Delay::Delay(Duration const& duration)
+		: delta_()
+		, delay_(duration)
 	{
 	}
 
 	void Delay::Reset()
 	{
 		Action::Reset();
-		delta_ = 0;
+		delta_ = Duration{};
 	}
 
 	void Delay::Init(Node* target)
@@ -434,22 +429,16 @@ namespace easy2d
 		Action::Init(target);
 	}
 
-	void Delay::Update(Node* target)
+	void Delay::Update(Node* target, Duration const& dt)
 	{
-		Action::Update(target);
+		Action::Update(target, dt);
 
-		delta_ = (time::Now() - started_).Seconds();
+		delta_ += dt;
 
 		if (delta_ >= delay_)
 		{
 			this->Stop();
 		}
-	}
-
-	void Delay::ResetTime()
-	{
-		Action::ResetTime();
-		started_ = time::Now() - time::Second * delta_;
 	}
 
 	spAction Delay::Clone() const

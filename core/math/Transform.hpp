@@ -18,82 +18,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Task.h"
+#pragma once
+#include "../base/BaseTypes.h"
+#include "Matrix.hpp"
 
 namespace easy2d
 {
-	Task::Task(const Callback & func, const String & name)
-		: Task(func, Duration{}, -1, name)
+	namespace math
 	{
-	}
-
-	Task::Task(Callback const& func, Duration const& delay, int times, const String & name)
-		: running_(true)
-		, stopped_(false)
-		, run_times_(0)
-		, total_times_(times)
-		, delay_(delay)
-		, callback_(func)
-		, name_(name)
-		, delta_()
-	{
-	}
-
-	void Task::Start()
-	{
-		running_ = true;
-		delta_ = Duration{};
-	}
-
-	void Task::Stop()
-	{
-		running_ = false;
-	}
-
-	void Task::Update(Duration const& dt)
-	{
-		if (!running_)
-			return;
-
-		if (total_times_ == 0)
+		class Transform
 		{
-			stopped_ = true;
-			return;
-		}
+		public:
+			Size size;				// 大小
+			float rotation;			// 旋转
+			math::Vector2 position;	// 坐标
+			math::Vector2 scale;	// 缩放
+			math::Vector2 skew;		// 错切角度
+			math::Vector2 pivot;	// 支点
 
-		if (!delay_.IsZero())
-		{
-			delta_ += dt;
-			if (delta_ < delay_)
-				return;
-		}
+		public:
+			Transform()
+				: position()
+				, size()
+				, rotation(0)
+				, scale(1.f, 1.f)
+				, skew(0.f, 0.f)
+				, pivot(0.f, 0.f)
+			{}
 
-		++run_times_;
+			inline Matrix ToMatrix() const
+			{
+				auto center = Vector2{ size.width * pivot.x, size.height * pivot.y };
+				return Matrix{}.Scale(scale.x, scale.y, center)
+					.Skew(skew.x, skew.y, center)
+					.Rotate(rotation, center)
+					.Translate(position - center);
+			}
 
-		if (callback_)
-		{
-			callback_();
-		}
-
-		if (run_times_ == total_times_)
-		{
-			stopped_ = true;
-			return;
-		}
-	}
-
-	void Task::Reset()
-	{
-		delta_ = Duration{};
-	}
-
-	bool Task::IsRunning() const
-	{
-		return running_;
-	}
-
-	const String& Task::GetName() const
-	{
-		return name_;
+			bool operator== (const Transform& other) const
+			{
+				return position == other.position &&
+					size == other.size &&
+					scale == other.scale &&
+					skew == other.skew &&
+					rotation == other.rotation &&
+					pivot == other.pivot;
+			}
+		};
 	}
 }

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "Animation.h"
+#include "Image.h"
 #include "Sprite.h"
 
 namespace easy2d
@@ -70,9 +71,9 @@ namespace easy2d
 		}
 	}
 
-	void Animate::Update(Node* target)
+	void Animate::Update(Node* target, Duration const& dt)
 	{
-		Action::Update(target);
+		Action::Update(target, dt);
 
 		if (!animation_)
 		{
@@ -80,7 +81,8 @@ namespace easy2d
 			return;
 		}
 
-		while ((time::Now() - started_).Seconds() >= animation_->GetInterval())
+		delta_ += dt;
+		while (delta_ >= animation_->GetInterval())
 		{
 			auto& frames = animation_->GetFrames();
 			auto sprite_target = dynamic_cast<Sprite*>(target);
@@ -90,7 +92,7 @@ namespace easy2d
 				sprite_target->Load(frames[frame_index_]);
 			}
 
-			started_ += time::Second * animation_->GetInterval();
+			delta_ -= animation_->GetInterval();
 			++frame_index_;
 
 			if (frame_index_ == frames.size())
@@ -99,11 +101,6 @@ namespace easy2d
 				break;
 			}
 		}
-	}
-
-	void Animate::ResetTime()
-	{
-		Action::ResetTime();
 	}
 
 	void Animate::Reset()
@@ -150,12 +147,12 @@ namespace easy2d
 		this->Add(frames);
 	}
 
-	Animation::Animation(float interval)
+	Animation::Animation(Duration const& interval)
 		: interval_(interval)
 	{
 	}
 
-	Animation::Animation(float interval, const Images& frames)
+	Animation::Animation(Duration const& interval, const Images& frames)
 		: interval_(interval)
 	{
 		this->Add(frames);
@@ -165,9 +162,9 @@ namespace easy2d
 	{
 	}
 
-	void Animation::SetInterval(float interval)
+	void Animation::SetInterval(Duration const& interval)
 	{
-		interval_ = std::max(interval, 0.f);
+		interval_ = interval;
 	}
 
 	void Animation::Add(spImage const& frame)
@@ -187,7 +184,7 @@ namespace easy2d
 		}
 	}
 
-	float Animation::GetInterval() const
+	Duration const& Animation::GetInterval() const
 	{
 		return interval_;
 	}

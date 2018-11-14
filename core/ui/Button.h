@@ -73,22 +73,22 @@ namespace easy2d
 			);
 
 			// 设置一般情况下显示的按钮
-			virtual void SetNormal(
+			void SetNormal(
 				spNode const& normal
 			);
 
 			// 设置鼠标移入按钮时显示的按钮
-			virtual void SetMouseOver(
+			void SetMouseOver(
 				spNode const& mouseover
 			);
 
 			// 设置鼠标按下按钮时显示的按钮
-			virtual void SetSelected(
+			void SetSelected(
 				spNode const& selected
 			);
 
 			// 设置按钮被禁用时显示的按钮
-			virtual void SetDisabled(
+			void SetDisabled(
 				spNode const& disabled
 			);
 

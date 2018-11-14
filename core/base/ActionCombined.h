@@ -51,10 +51,7 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
-
-		// 重置动作时间
-		virtual void ResetTime() override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
 		spAction	action_;
@@ -102,10 +99,7 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
-
-		// 重置动作时间
-		virtual void ResetTime() override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
 		UINT action_index_;
@@ -152,10 +146,7 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
-
-		// 重置动作时间
-		virtual void ResetTime() override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
 		Actions actions_;

@@ -32,7 +32,7 @@ namespace easy2d
 	public:
 		// 创建特定时长的持续动作
 		explicit FiniteTimeAction(
-			float duration
+			Duration const& duration
 		);
 
 		// 重置动作
@@ -43,14 +43,11 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
-
-		// 重置动作时间
-		virtual void ResetTime() override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
-		float duration_;
-		float delta_;
+		Duration duration_;
+		float process_;
 	};
 
 
@@ -62,8 +59,8 @@ namespace easy2d
 
 	public:
 		explicit MoveBy(
-			float duration,		/* 持续时长 */
-			Point vector		/* 移动距离 */
+			Duration const& duration,	/* 持续时长 */
+			Point const& vector			/* 移动距离 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -77,7 +74,7 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
 		Point	start_pos_;
@@ -94,8 +91,8 @@ namespace easy2d
 
 	public:
 		explicit MoveTo(
-			float duration,		/* 持续时长 */
-			Point pos			/* 目的坐标 */
+			Duration const& duration,	/* 持续时长 */
+			Point const& pos			/* 目的坐标 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -125,10 +122,10 @@ namespace easy2d
 
 	public:
 		explicit JumpBy(
-			float duration,			/* 持续时长 */
-			const Point& vec,		/* 跳跃距离 */
-			float height,			/* 跳跃高度 */
-			int jumps = 1			/* 跳跃次数 */
+			Duration const& duration,	/* 持续时长 */
+			Point const& vec,			/* 跳跃距离 */
+			float height,				/* 跳跃高度 */
+			int jumps = 1				/* 跳跃次数 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -142,7 +139,7 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
 		Point	start_pos_;
@@ -161,10 +158,10 @@ namespace easy2d
 
 	public:
 		explicit JumpTo(
-			float duration,			/* 持续时长 */
-			const Point& pos,		/* 目的坐标 */
-			float height,			/* 跳跃高度 */
-			int jumps = 1			/* 跳跃次数 */
+			Duration const& duration,	/* 持续时长 */
+			Point const& pos,			/* 目的坐标 */
+			float height,				/* 跳跃高度 */
+			int jumps = 1				/* 跳跃次数 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -194,14 +191,14 @@ namespace easy2d
 
 	public:
 		explicit ScaleBy(
-			float duration,		/* 持续时长 */
-			float scale			/* 相对变化值 */
+			Duration const& duration,	/* 持续时长 */
+			float scale					/* 相对变化值 */
 		);
 
 		explicit ScaleBy(
-			float duration,		/* 持续时长 */
-			float scale_x,		/* 横向缩放相对变化值 */
-			float scale_y		/* 纵向缩放相对变化值 */
+			Duration const& duration,	/* 持续时长 */
+			float scale_x,				/* 横向缩放相对变化值 */
+			float scale_y				/* 纵向缩放相对变化值 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -215,7 +212,7 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
 		float	start_scale_x_;
@@ -233,14 +230,14 @@ namespace easy2d
 
 	public:
 		explicit ScaleTo(
-			float duration,		/* 持续时长 */
-			float scale			/* 目标值 */
+			Duration const& duration,	/* 持续时长 */
+			float scale					/* 目标值 */
 		);
 
 		explicit ScaleTo(
-			float duration,		/* 持续时长 */
-			float scale_x,		/* 横向缩放目标值 */
-			float scale_y		/* 纵向缩放目标值 */
+			Duration const& duration,	/* 持续时长 */
+			float scale_x,				/* 横向缩放目标值 */
+			float scale_y				/* 纵向缩放目标值 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -271,8 +268,8 @@ namespace easy2d
 
 	public:
 		explicit OpacityBy(
-			float duration,		/* 持续时长 */
-			float opacity		/* 相对变化值 */
+			Duration const& duration,	/* 持续时长 */
+			float opacity				/* 相对变化值 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -286,7 +283,7 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
 		float start_val_;
@@ -302,8 +299,8 @@ namespace easy2d
 
 	public:
 		explicit OpacityTo(
-			float duration,		/* 持续时长 */
-			float opacity		/* 目标值 */
+			Duration const& duration,	/* 持续时长 */
+			float opacity				/* 目标值 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -334,7 +331,7 @@ namespace easy2d
 	public:
 		// 创建淡入动作
 		explicit FadeIn(
-			float duration		/* 持续时长 */
+			Duration const& duration	/* 持续时长 */
 		);
 	};
 
@@ -348,7 +345,7 @@ namespace easy2d
 	public:
 		// 创建淡出动作
 		explicit FadeOut(
-			float duration		/* 持续时长 */
+			Duration const& duration	/* 持续时长 */
 		);
 	};
 
@@ -361,8 +358,8 @@ namespace easy2d
 
 	public:
 		explicit RotateBy(
-			float duration,		/* 持续时长 */
-			float rotation		/* 相对变化值 */
+			Duration const& duration,	/* 持续时长 */
+			float rotation				/* 相对变化值 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -376,7 +373,7 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
 		float start_val_;
@@ -392,8 +389,8 @@ namespace easy2d
 
 	public:
 		explicit RotateTo(
-			float duration,		/* 持续时长 */
-			float rotation		/* 目标值 */
+			Duration const& duration,	/* 持续时长 */
+			float rotation				/* 目标值 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -423,7 +420,7 @@ namespace easy2d
 
 	public:
 		explicit Delay(
-			float duration	/* 延迟时长（秒） */
+			Duration const& duration	/* 延迟时长（秒） */
 		);
 
 		// 获取该动作的拷贝对象
@@ -440,13 +437,10 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
-
-		// 重置动作时间
-		virtual void ResetTime() override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
-		float delay_;
-		float delta_;
+		Duration delay_;
+		Duration delta_;
 	};
 }

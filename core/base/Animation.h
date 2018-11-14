@@ -20,7 +20,6 @@
 
 #pragma once
 #include "Action.hpp"
-#include "Image.h"
 
 namespace easy2d
 {
@@ -34,16 +33,16 @@ namespace easy2d
 		Animation();
 
 		explicit Animation(
-			const Images& frames	/* 关键帧数组 */
+			const Images& frames		/* 关键帧数组 */
 		);
 
 		explicit Animation(
-			float interval			/* 帧间隔（秒） */
+			Duration const& interval	/* 帧间隔（秒） */
 		);
 
 		explicit Animation(
-			float interval,			/* 帧间隔（秒） */
-			const Images& frames	/* 关键帧数组 */
+			Duration const& interval,	/* 帧间隔（秒） */
+			const Images& frames		/* 关键帧数组 */
 		);
 
 		virtual ~Animation();
@@ -59,14 +58,14 @@ namespace easy2d
 		);
 
 		// 获取帧间隔
-		float GetInterval() const;
+		Duration const& GetInterval() const;
 
 		// 获取关键帧
 		const Images& GetFrames() const;
 
 		// 设置每一帧的时间间隔
 		void SetInterval(
-			float interval		/* 帧间隔（秒） */
+			Duration const& interval	/* 帧间隔（秒） */
 		);
 
 		// 获取帧动画的拷贝对象
@@ -76,8 +75,8 @@ namespace easy2d
 		spAnimation Reverse() const;
 
 	protected:
-		float	interval_;
-		Images	frames_;
+		Duration	interval_;
+		Images		frames_;
 	};
 
 
@@ -118,13 +117,11 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target) override;
-
-		// 重置动作时间
-		virtual void ResetTime() override;
+		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
-		UINT frame_index_;
+		size_t frame_index_;
+		Duration delta_;
 		spAnimation animation_;
 	};
 }

@@ -56,16 +56,6 @@ namespace easy2d
 		{
 		}
 
-		time_t TimePoint::GetTimeStamp() const
-		{
-			return static_cast<time_t>(dur_since_epoch_.Seconds());
-		}
-
-		bool TimePoint::IsZero() const
-		{
-			return !!dur_since_epoch_.Milliseconds();
-		}
-
 		const TimePoint TimePoint::operator+(const Duration & dur) const
 		{
 			return TimePoint(dur_since_epoch_ + dur);
@@ -145,11 +135,6 @@ namespace easy2d
 		{
 		}
 
-		int64_t Duration::Milliseconds() const
-		{
-			return milliseconds_;
-		}
-
 		float Duration::Seconds() const
 		{
 			int64_t sec = milliseconds_ / Second.milliseconds_;
@@ -173,7 +158,7 @@ namespace easy2d
 
 		std::wstring easy2d::time::Duration::ToString() const
 		{
-			if (milliseconds_ == 0LL)
+			if (IsZero())
 			{
 				return std::wstring(L"0s");
 			}
@@ -244,6 +229,11 @@ namespace easy2d
 		bool Duration::operator<=(const Duration & other) const
 		{
 			return milliseconds_ <= other.milliseconds_;
+		}
+
+		float easy2d::time::Duration::operator/(const Duration & other) const
+		{
+			return static_cast<float>(milliseconds_) / other.milliseconds_;
 		}
 
 		const Duration Duration::operator+(const Duration & other) const

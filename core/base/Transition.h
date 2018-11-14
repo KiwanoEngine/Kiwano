@@ -34,38 +34,32 @@ namespace easy2d
 
 	public:
 		explicit Transition(
-			float duration
+			Duration const& duration
 		);
 
 		virtual ~Transition();
 
-		// 场景过渡动画是否结束
 		bool IsDone();
 
 	protected:
-		// 初始化场景过渡动画
 		virtual void Init(
 			spScene const& prev,
 			spScene const& next
 		);
 
-		// 更新场景过渡动画
-		virtual void Update();
+		virtual void Update(Duration const& dt);
 
-		// 渲染场景过渡动画
 		virtual void Draw();
 
-		// 停止场景过渡动画
 		virtual void Stop();
 
-		// 重置场景过渡动画
 		virtual void Reset() { };
 
 	protected:
 		bool			done_;
-		float			duration_;
 		float			process_;
-		TimePoint		started_;
+		Duration		duration_;
+		Duration		delta_;
 		Size			window_size_;
 		spScene			out_scene_;
 		spScene			in_scene_;
@@ -82,12 +76,12 @@ namespace easy2d
 	{
 	public:
 		explicit FadeTransition(
-			float duration		/* 动画持续时长 */
+			Duration const& duration	/* 动画持续时长 */
 		);
 
 	protected:
 		// 更新动画
-		virtual void Update() override;
+		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
 			spScene const& prev,
@@ -102,11 +96,11 @@ namespace easy2d
 	{
 	public:
 		explicit EmergeTransition(
-			float duration		/* 动画持续时长 */
+			Duration const& duration	/* 动画持续时长 */
 		);
 
 	protected:
-		virtual void Update() override;
+		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
 			spScene const& prev,
@@ -121,11 +115,11 @@ namespace easy2d
 	{
 	public:
 		explicit BoxTransition(
-			float duration		/* 动画持续时长 */
+			Duration const& duration	/* 动画持续时长 */
 		);
 
 	protected:
-		virtual void Update() override;
+		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
 			spScene const& prev,
@@ -140,12 +134,12 @@ namespace easy2d
 	{
 	public:
 		explicit MoveTransition(
-			float moveDuration,						/* 动画持续时长 */
-			Direction direction = Direction::Left	/* 移动方向 */
+			Duration const& moveDuration,	/* 动画持续时长 */
+			Direction direction				/* 移动方向 */
 		);
 
 	protected:
-		virtual void Update() override;
+		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
 			spScene const& prev,
@@ -167,12 +161,12 @@ namespace easy2d
 	{
 	public:
 		explicit RotationTransition(
-			float moveDuration,		/* 动画持续时长 */
-			float rotation = 360	/* 旋转度数 */
+			Duration const& moveDuration,	/* 动画持续时长 */
+			float rotation = 360			/* 旋转度数 */
 		);
 
 	protected:
-		virtual void Update() override;
+		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
 			spScene const& prev,

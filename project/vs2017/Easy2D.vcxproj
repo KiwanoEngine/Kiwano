@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\core\base\Action.hpp" />
     <ClInclude Include="..\..\core\base\ActionCombined.h" />
     <ClInclude Include="..\..\core\base\ActionFiniteTime.h" />
+    <ClInclude Include="..\..\core\base\ActionManager.h" />
     <ClInclude Include="..\..\core\base\Animation.h" />
     <ClInclude Include="..\..\core\base\audio.h" />
     <ClInclude Include="..\..\core\base\base.h" />
@@ -50,6 +51,7 @@
     <ClInclude Include="..\..\core\base\Size.h" />
     <ClInclude Include="..\..\core\base\Sprite.h" />
     <ClInclude Include="..\..\core\base\Task.h" />
+    <ClInclude Include="..\..\core\base\TaskManager.h" />
     <ClInclude Include="..\..\core\base\Text.h" />
     <ClInclude Include="..\..\core\base\TextRenderer.h" />
     <ClInclude Include="..\..\core\base\time.h" />
@@ -59,7 +61,7 @@
     <ClInclude Include="..\..\core\math\Matrix.hpp" />
     <ClInclude Include="..\..\core\math\rand.h" />
     <ClInclude Include="..\..\core\math\scalar.hpp" />
-    <ClInclude Include="..\..\core\math\Transform.h" />
+    <ClInclude Include="..\..\core\math\Transform.hpp" />
     <ClInclude Include="..\..\core\math\vector.hpp" />
     <ClInclude Include="..\..\core\ui\Button.h" />
     <ClInclude Include="..\..\core\ui\Menu.h" />
@@ -72,6 +74,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\core\base\ActionCombined.cpp" />
     <ClCompile Include="..\..\core\base\ActionFiniteTime.cpp" />
+    <ClCompile Include="..\..\core\base\ActionManager.cpp" />
     <ClCompile Include="..\..\core\base\Animation.cpp" />
     <ClCompile Include="..\..\core\base\audio.cpp" />
     <ClCompile Include="..\..\core\base\CallFunc.cpp" />
@@ -92,13 +95,13 @@
     <ClCompile Include="..\..\core\base\Size.cpp" />
     <ClCompile Include="..\..\core\base\Sprite.cpp" />
     <ClCompile Include="..\..\core\base\Task.cpp" />
+    <ClCompile Include="..\..\core\base\TaskManager.cpp" />
     <ClCompile Include="..\..\core\base\Text.cpp" />
     <ClCompile Include="..\..\core\base\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\base\time.cpp" />
     <ClCompile Include="..\..\core\base\Transition.cpp" />
     <ClCompile Include="..\..\core\base\window.cpp" />
     <ClCompile Include="..\..\core\math\rand.cpp" />
-    <ClCompile Include="..\..\core\math\Transform.cpp" />
     <ClCompile Include="..\..\core\ui\Button.cpp" />
     <ClCompile Include="..\..\core\ui\Menu.cpp" />
     <ClCompile Include="..\..\core\utils\Data.cpp" />
@@ -197,7 +200,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>

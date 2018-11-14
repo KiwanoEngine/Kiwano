@@ -41,7 +41,7 @@ namespace easy2d
 	{
 	}
 
-	void CallFunc::Update(Node*)
+	void CallFunc::Update(Node*, Duration const&)
 	{
 		callback_();
 		this->Stop();
