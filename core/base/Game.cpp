@@ -19,17 +19,15 @@
 // THE SOFTWARE.
 
 #include "Game.h"
-#include "Node.h"
 #include "Scene.h"
 #include "Transition.h"
 #include "Image.h"
-#include "time.h"
+#include "../utils/Player.h"
+#include "../math/Matrix.hpp"
 #include "render.h"
 #include "input.h"
 #include "audio.h"
 #include "modules.h"
-#include "../utils/Player.h"
-#include "../math/Matrix.hpp"
 #include <thread>
 
 namespace easy2d
@@ -131,7 +129,7 @@ namespace easy2d
 
 			if (dur.Milliseconds() > min_interval)
 			{
-				float dt = (now - last).Seconds();
+				const auto dt = now - last;
 				last = now;
 
 				devices::Input::Instance().Update(
@@ -168,18 +166,27 @@ namespace easy2d
 		quit_ = true;
 	}
 
-	void Game::EnterScene(spScene const& scene, spTransition const& transition)
+	bool Game::EnterScene(spScene const & scene)
 	{
 		if (!scene)
 		{
 			E2D_WARNING("Next scene is null pointer!");
-			return;
+			return false;
 		}
 
-		if (curr_scene_ == scene) { return; }
+		if (curr_scene_ == scene ||
+			next_scene_ == scene)
+			return false;
 
 		next_scene_ = scene;
+		return true;
+	}
 
+	bool Game::EnterScene(spScene const& scene, spTransition const& transition)
+	{
+		if (!EnterScene(scene))
+			return false;
+		
 		if (transition)
 		{
 			if (transition_)
@@ -189,6 +196,7 @@ namespace easy2d
 			transition_ = transition;
 			transition_->Init(curr_scene_, next_scene_);
 		}
+		return true;
 	}
 
 	spScene const& Game::GetCurrentScene()
@@ -196,32 +204,21 @@ namespace easy2d
 		return curr_scene_;
 	}
 
-	bool Game::IsTransitioning() const
+	void Game::UpdateScene(Duration const& dt)
 	{
-		return transition_;
-	}
-
-	void Game::UpdateScene(float dt)
-	{
-		auto update = [&](spScene const& scene) -> void
+		if (curr_scene_)
 		{
-			if (scene)
-			{
-				scene->OnUpdate(dt);
-				spNode const& root = scene->GetRoot();
-				if (root)
-				{
-					root->UpdateChildren(dt);
-				}
-			}
-		};
+			curr_scene_->Update(dt);
+		}
 
-		update(curr_scene_);
-		update(next_scene_);
+		if (next_scene_)
+		{
+			next_scene_->Update(dt);
+		}
 
 		if (transition_)
 		{
-			transition_->Update();
+			transition_->Update(dt);
 
 			if (transition_->IsDone())
 			{
@@ -247,6 +244,24 @@ namespace easy2d
 		}
 	}
 
+	void Game::Dispatch(MouseEvent const & e)
+	{
+		if (transition_)
+			return;
+
+		if (curr_scene_)
+			curr_scene_->Dispatch(e, false);
+	}
+
+	void Game::Dispatch(KeyEvent const & e)
+	{
+		if (transition_)
+			return;
+
+		if (curr_scene_)
+			curr_scene_->Dispatch(e, false);
+	}
+
 	void Game::DrawScene()
 	{
 		auto& graphics = devices::Graphics::Instance();
@@ -258,22 +273,22 @@ namespace easy2d
 		}
 		else if (curr_scene_)
 		{
-			curr_scene_->Draw();
+			curr_scene_->Visit();
 		}
 
 		if (debug_enabled_)
 		{
-			if (curr_scene_ && curr_scene_->GetRoot())
+			if (curr_scene_)
 			{
 				graphics.SetTransform(math::Matrix());
 				graphics.SetBrushOpacity(1.f);
-				curr_scene_->GetRoot()->DrawBorder();
+				curr_scene_->DrawBorder();
 			}
-			if (next_scene_ && next_scene_->GetRoot())
+			if (next_scene_)
 			{
 				graphics.SetTransform(math::Matrix());
 				graphics.SetBrushOpacity(1.f);
-				next_scene_->GetRoot()->DrawBorder();
+				next_scene_->DrawBorder();
 			}
 
 			graphics.DrawDebugInfo();

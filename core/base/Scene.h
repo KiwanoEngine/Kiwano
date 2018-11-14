@@ -19,27 +19,18 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.h"
-#include "KeyEvent.h"
-#include "MouseEvent.h"
-#include "../math/Matrix.hpp"
+#include "Node.h"
 
 namespace easy2d
 {
-	class Node;
-
 	// 场景
 	class Scene
-		: public RefCounter
+		: public Node
 	{
 		E2D_DISABLE_COPY(Scene);
 
 	public:
 		Scene();
-
-		explicit Scene(
-			spNode const& root
-		);
 
 		virtual ~Scene();
 
@@ -48,41 +39,5 @@ namespace easy2d
 
 		// 退出场景
 		virtual void OnExit() {}
-
-		// 更新场景
-		virtual void OnUpdate(float dt) {}
-
-		// 设置根节点
-		void SetRoot(
-			spNode const& root
-		);
-
-		// 获取根节点
-		spNode const& GetRoot() const;
-
-		// 渲染场景
-		void Draw();
-
-		// 分发鼠标消息
-		virtual void Dispatch(
-			const MouseEvent& e
-		);
-
-		// 分发按键消息
-		virtual void Dispatch(
-			const KeyEvent& e
-		);
-
-		// 设置转换矩阵
-		void SetTransform(
-			const math::Matrix& matrix
-		);
-
-		// 获取转换矩阵
-		const math::Matrix& GetTransform() const;
-
-	private:
-		spNode			root_;
-		math::Matrix	transform_;
 	};
 }

@@ -18,45 +18,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Transform.h"
+#pragma once
+#include "Task.h"
 
 namespace easy2d
 {
-	namespace math
+	class TaskManager
 	{
-		Transform::Transform()
-			: position()
-			, size()
-			, scale_x(1.f)
-			, scale_y(1.f)
-			, rotation(0)
-			, skew_x(0)
-			, skew_y(0)
-			, pivot_x(0)
-			, pivot_y(0)
-		{
-		}
+	public:
+		// 添加任务
+		void AddTask(
+			spTask const& task
+		);
 
-		Matrix Transform::ToMatrix() const
-		{
-			auto pivot = Vector2(size.width * pivot_x, size.height * pivot_y);
-			return Matrix().Scale(scale_x, scale_y, pivot)
-				.Skew(skew_x, skew_y, pivot)
-				.Rotate(rotation, pivot)
-				.Translate(position - pivot);
-		}
+		// 启动任务
+		void StartTasks(
+			const String& task_name
+		);
 
-		bool Transform::operator==(const Transform & other) const
-		{
-			return position == other.position &&
-				size == other.size &&
-				scale_x == other.scale_x &&
-				scale_y == other.scale_y &&
-				skew_x == other.skew_x &&
-				skew_y == other.skew_y &&
-				rotation == other.rotation &&
-				pivot_x == other.pivot_x &&
-				pivot_y == other.pivot_y;
-		}
-	}
+		// 停止任务
+		void StopTasks(
+			const String& task_name
+		);
+
+		// 移除任务
+		void RemoveTasks(
+			const String& task_name
+		);
+
+		// 启动所有任务
+		void StartAllTasks();
+
+		// 停止所有任务
+		void StopAllTasks();
+
+		// 移除所有任务
+		void RemoveAllTasks();
+
+		// 获取所有任务
+		const Tasks& GetAllTasks() const;
+
+	protected:
+		void UpdateTasks(Duration const& dt);
+
+	protected:
+		Tasks tasks_;
+	};
 }

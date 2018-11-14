@@ -21,7 +21,6 @@
 #include "window.h"
 #include "render.h"
 #include "Game.h"
-#include "Scene.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
 #include "../math/scalar.hpp"
@@ -284,14 +283,7 @@ namespace easy2d
 			case WM_MOUSEMOVE:
 			case WM_MOUSEWHEEL:
 			{
-				if (game->IsTransitioning())
-					break;
-
-				auto curr_scene = game->GetCurrentScene();
-				if (curr_scene)
-				{
-					curr_scene->Dispatch(MouseEvent(msg, w_param, l_param));
-				}
+				game->Dispatch(MouseEvent(msg, w_param, l_param));
 			}
 			result = 0;
 			was_handled = true;
@@ -301,14 +293,7 @@ namespace easy2d
 			case WM_KEYDOWN:
 			case WM_KEYUP:
 			{
-				if (game->IsTransitioning())
-					break;
-
-				auto curr_scene = game->GetCurrentScene();
-				if (curr_scene)
-				{
-					curr_scene->Dispatch(KeyEvent(msg, w_param, l_param));
-				}
+				game->Dispatch(KeyEvent(msg, w_param, l_param));
 			}
 			result = 0;
 			was_handled = true;

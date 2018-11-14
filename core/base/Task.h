@@ -25,11 +25,13 @@
 
 namespace easy2d
 {
+	class TaskManager;
+
     // 定时任务
 	class Task
 		: public RefCounter
 	{
-		friend class Node;
+		friend class TaskManager;
 
 		typedef std::function<void()> Callback;
 
@@ -59,11 +61,9 @@ namespace easy2d
 		const String& GetName() const;
 
 	protected:
-		bool IsReady() const;
+		void Update(Duration const& dt);
 
-		void Update();
-
-		void ResetTime();
+		void Reset();
 
 	private:
 		bool		running_;
@@ -72,7 +72,7 @@ namespace easy2d
 		int			total_times_;
 		String		name_;
 		Duration	delay_;
-		TimePoint	last_time_;
+		Duration	delta_;
 		Callback	callback_;
 	};
 }

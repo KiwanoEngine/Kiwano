@@ -23,7 +23,6 @@
 #include "Scene.h"
 #include "window.h"
 #include "render.h"
-#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
@@ -31,9 +30,10 @@ namespace easy2d
 	// Transition
 	//-------------------------------------------------------
 
-	Transition::Transition(float duration)
+	Transition::Transition(Duration const& duration)
 		: done_(false)
-		, started_()
+		, duration_(duration)
+		, delta_()
 		, process_(0)
 		, window_size_()
 		, out_scene_(nullptr)
@@ -43,7 +43,6 @@ namespace easy2d
 		, out_layer_prop_()
 		, in_layer_prop_()
 	{
-		duration_ = std::max(duration, 0.f);
 	}
 
 	Transition::~Transition()
@@ -59,7 +58,9 @@ namespace easy2d
 
 	void Transition::Init(spScene const& prev, spScene const& next)
 	{
-		started_ = time::Now();
+		process_ = 0;
+		delta_ = Duration{};
+
 		out_scene_ = prev;
 		in_scene_ = next;
 
@@ -81,16 +82,16 @@ namespace easy2d
 		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
 	}
 
-	void Transition::Update()
+	void Transition::Update(Duration const& dt)
 	{
-		if (duration_ == 0)
+		if (duration_.IsZero())
 		{
 			process_ = 1;
 		}
 		else
 		{
-			process_ = (time::Now() - started_).Seconds() / duration_;
-			process_ = std::min(process_, 1.f);
+			delta_ += dt;
+			process_ = std::min(delta_ / duration_, 1.f);
 		}
 
 		if (process_ >= 1)
@@ -101,32 +102,34 @@ namespace easy2d
 
 	void Transition::Draw()
 	{
+		auto& graphics = devices::Graphics::Instance();
+
 		if (out_scene_)
 		{
-			devices::Graphics::Instance().PushClip(
-				out_scene_->GetTransform(),
+			graphics.PushClip(
+				out_scene_->GetTransform().ToMatrix(),
 				window_size_
 			);
-			devices::Graphics::Instance().PushLayer(out_layer_, out_layer_prop_);
+			graphics.PushLayer(out_layer_, out_layer_prop_);
 
-			out_scene_->Draw();
+			out_scene_->Visit();
 
-			devices::Graphics::Instance().PopLayer();
-			devices::Graphics::Instance().PopClip();
+			graphics.PopLayer();
+			graphics.PopClip();
 		}
 
 		if (in_scene_)
 		{
-			devices::Graphics::Instance().PushClip(
-				in_scene_->GetTransform(),
+			graphics.PushClip(
+				in_scene_->GetTransform().ToMatrix(),
 				window_size_
 			);
-			devices::Graphics::Instance().PushLayer(in_layer_, in_layer_prop_);
+			graphics.PushLayer(in_layer_, in_layer_prop_);
 
-			in_scene_->Draw();
+			in_scene_->Visit();
 
-			devices::Graphics::Instance().PopLayer();
-			devices::Graphics::Instance().PopClip();
+			graphics.PopLayer();
+			graphics.PopClip();
 		}
 	}
 
@@ -140,7 +143,7 @@ namespace easy2d
 	// BoxTransition
 	//-------------------------------------------------------
 
-	BoxTransition::BoxTransition(float duration)
+	BoxTransition::BoxTransition(Duration const& duration)
 		: Transition(duration)
 	{
 	}
@@ -152,9 +155,9 @@ namespace easy2d
 		in_layer_prop_.opacity = 0;
 	}
 
-	void BoxTransition::Update()
+	void BoxTransition::Update(Duration const& dt)
 	{
-		Transition::Update();
+		Transition::Update(dt);
 
 		if (process_ < .5f)
 		{
@@ -182,7 +185,7 @@ namespace easy2d
 	// EmergeTransition
 	//-------------------------------------------------------
 
-	EmergeTransition::EmergeTransition(float duration)
+	EmergeTransition::EmergeTransition(Duration const& duration)
 		: Transition(duration)
 	{
 	}
@@ -195,9 +198,9 @@ namespace easy2d
 		in_layer_prop_.opacity = 0;
 	}
 
-	void EmergeTransition::Update()
+	void EmergeTransition::Update(Duration const& dt)
 	{
-		Transition::Update();
+		Transition::Update(dt);
 
 		out_layer_prop_.opacity = 1 - process_;
 		in_layer_prop_.opacity = process_;
@@ -207,7 +210,7 @@ namespace easy2d
 	// FadeTransition
 	//-------------------------------------------------------
 
-	FadeTransition::FadeTransition(float duration)
+	FadeTransition::FadeTransition(Duration const& duration)
 		: Transition(duration)
 	{
 	}
@@ -220,9 +223,9 @@ namespace easy2d
 		in_layer_prop_.opacity = 0;
 	}
 
-	void FadeTransition::Update()
+	void FadeTransition::Update(Duration const& dt)
 	{
-		Transition::Update();
+		Transition::Update(dt);
 
 		if (process_ < 0.5)
 		{
@@ -240,7 +243,7 @@ namespace easy2d
 	// MoveTransition
 	//-------------------------------------------------------
 
-	MoveTransition::MoveTransition(float duration, Direction direction)
+	MoveTransition::MoveTransition(Duration const& duration, Direction direction)
 		: Transition(duration)
 		, direction_(direction)
 	{
@@ -272,44 +275,33 @@ namespace easy2d
 
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(math::Matrix());
+			out_scene_->SetTransform(math::Transform{});
 		}
 
 		if (in_scene_)
 		{
-			in_scene_->SetTransform(
-				math::Matrix::Translation(
-					start_pos_.x,
-					start_pos_.y
-				)
-			);
+			auto transform = math::Transform{};
+			transform.position = start_pos_;
+			in_scene_->SetTransform(transform);
 		}
 	}
 
-	void MoveTransition::Update()
+	void MoveTransition::Update(Duration const& dt)
 	{
-		Transition::Update();
+		Transition::Update(dt);
 
 		if (out_scene_)
 		{
-			auto translation = pos_delta_ * process_;
-			out_scene_->SetTransform(
-				math::Matrix::Translation(
-					translation.x,
-					translation.y
-				)
-			);
+			auto transform = math::Transform{};
+			transform.position = pos_delta_ * process_;
+			out_scene_->SetTransform(transform);
 		}
 
 		if (in_scene_)
 		{
-			auto translation = start_pos_ + pos_delta_ * process_;
-			in_scene_->SetTransform(
-				math::Matrix::Translation(
-					translation.x,
-					translation.y
-				)
-			);
+			auto transform = math::Transform{};
+			transform.position = start_pos_ + pos_delta_ * process_;
+			in_scene_->SetTransform(transform);
 		}
 	}
 
@@ -317,12 +309,12 @@ namespace easy2d
 	{
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(math::Matrix());
+			out_scene_->SetTransform(math::Transform{});
 		}
 
 		if (in_scene_)
 		{
-			in_scene_->SetTransform(math::Matrix());
+			in_scene_->SetTransform(math::Transform{});
 		}
 	}
 
@@ -330,7 +322,7 @@ namespace easy2d
 	// RotationTransition
 	//-------------------------------------------------------
 
-	RotationTransition::RotationTransition(float duration, float rotation)
+	RotationTransition::RotationTransition(Duration const& duration, float rotation)
 		: Transition(duration)
 		, rotation_(rotation)
 	{
@@ -340,42 +332,35 @@ namespace easy2d
 	{
 		Transition::Init(prev, next);
 
+		auto transform = math::Transform{};
+		transform.pivot = Point{ 0.5f, 0.5f };
+		transform.position = Point{ window_size_.width / 2, window_size_.height / 2 };
+
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(math::Matrix());
+			out_scene_->SetTransform(transform);
 		}
 
 		if (in_scene_)
 		{
-			in_scene_->SetTransform(math::Matrix());
+			in_scene_->SetTransform(transform);
 		}
 
 		in_layer_prop_.opacity = 0;
 	}
 
-	void RotationTransition::Update()
+	void RotationTransition::Update(Duration const& dt)
 	{
-		Transition::Update();
-
-		auto center_pos = math::Vector2(
-			window_size_.width / 2,
-			window_size_.height / 2
-		);
+		Transition::Update(dt);
 
 		if (process_ < .5f)
 		{
 			if (out_scene_)
 			{
-				out_scene_->SetTransform(
-					math::Matrix::Scaling(
-						(.5f - process_) * 2,
-						(.5f - process_) * 2,
-						center_pos
-					) * math::Matrix::Rotation(
-						rotation_ * (.5f - process_) * 2,
-						center_pos
-					)
-				);
+				auto transform = out_scene_->GetTransform();
+				transform.scale = Point{ (.5f - process_) * 2, (.5f - process_) * 2 };
+				transform.rotation = rotation_ * (.5f - process_) * 2;
+				out_scene_->SetTransform(transform);
 			}
 		}
 		else
@@ -385,16 +370,11 @@ namespace easy2d
 				out_layer_prop_.opacity = 0;
 				in_layer_prop_.opacity = 1;
 
-				in_scene_->SetTransform(
-					math::Matrix::Scaling(
-					(process_ - .5f) * 2,
-						(process_ - .5f) * 2,
-						center_pos
-					) * math::Matrix::Rotation(
-						rotation_ * (process_ - .5f) * 2,
-						center_pos
-					)
-				);
+				auto transform = in_scene_->GetTransform();
+				transform.scale = Point{ (process_ - .5f) * 2, (process_ - .5f) * 2 };
+				transform.rotation = rotation_ * (process_ - .5f) * 2;
+
+				in_scene_->SetTransform(transform);
 			}
 		}
 	}
@@ -403,12 +383,12 @@ namespace easy2d
 	{
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(math::Matrix());
+			out_scene_->SetTransform(math::Transform{});
 		}
 
 		if (in_scene_)
 		{
-			in_scene_->SetTransform(math::Matrix());
+			in_scene_->SetTransform(math::Transform{});
 		}
 	}
 }

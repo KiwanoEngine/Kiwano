@@ -22,7 +22,6 @@
 #include "Scene.h"
 #include "Task.h"
 #include "Action.hpp"
-#include "time.h"
 #include "render.h"
 #include <iterator>
 
@@ -41,8 +40,6 @@ namespace easy2d
 		, display_opacity_(1.f)
 		, real_opacity_(1.f)
 		, children_()
-		, actions_()
-		, tasks_()
 		, initial_matrix_()
 		, final_matrix_()
 		, border_color_(Color::Red, 0.6f)
@@ -112,13 +109,13 @@ namespace easy2d
 		}
 	}
 
-	void Node::UpdateChildren(float dt)
+	void Node::Update(Duration const& dt)
 	{
 		if (children_.empty())
 		{
 			OnUpdate(dt);
-			UpdateActions();
-			UpdateTasks();
+			UpdateActions(this, dt);
+			UpdateTasks(dt);
 			UpdateTransform();
 		}
 		else
@@ -130,7 +127,7 @@ namespace easy2d
 				// 访问 Order 小于零的节点
 				if (child->GetOrder() < 0)
 				{
-					child->UpdateChildren(dt);
+					child->Update(dt);
 				}
 				else
 				{
@@ -139,13 +136,13 @@ namespace easy2d
 			}
 
 			OnUpdate(dt);
-			UpdateActions();
-			UpdateTasks();
+			UpdateActions(this, dt);
+			UpdateTasks(dt);
 			UpdateTransform();
 
 			// 访问剩余节点
 			for (; i < children_.size(); ++i)
-				children_[i]->UpdateChildren(dt);
+				children_[i]->Update(dt);
 		}
 	}
 
@@ -176,8 +173,8 @@ namespace easy2d
 
 		// 根据自身支点计算 Initial 矩阵，子节点将根据这个矩阵进行变换
 		auto pivot = Point(
-			transform_.size.width * transform_.pivot_x,
-			transform_.size.height * transform_.pivot_y
+			transform_.size.width * transform_.pivot.x,
+			transform_.size.height * transform_.pivot.y
 		);
 		initial_matrix_ = final_matrix_ * math::Matrix::Translation(pivot);
 
@@ -243,38 +240,6 @@ namespace easy2d
 		}
 	}
 
-	void Node::UpdateActions()
-	{
-		if (actions_.empty())
-			return;
-
-		std::vector<spAction> currActions;
-		currActions.reserve(actions_.size());
-		std::copy_if(
-			actions_.begin(),
-			actions_.end(),
-			std::back_inserter(currActions),
-			[](spAction action) { return action->IsRunning() && !action->IsDone(); }
-		);
-
-		// 遍历所有正在运行的动作
-		for (const auto& action : currActions)
-			action->Update(this);
-
-		// 清除完成的动作
-		for (auto iter = actions_.begin(); iter != actions_.end();)
-		{
-			if ((*iter)->IsDone())
-			{
-				iter = actions_.erase(iter);
-			}
-			else
-			{
-				++iter;
-			}
-		}
-	}
-
 	bool Node::IsVisible() const
 	{
 		return visible_;
@@ -297,12 +262,12 @@ namespace easy2d
 
 	float Node::GetWidth() const
 	{
-		return transform_.size.width * transform_.scale_x;
+		return transform_.size.width * transform_.scale.x;
 	}
 
 	float Node::GetHeight() const
 	{
-		return transform_.size.height * transform_.scale_y;
+		return transform_.size.height * transform_.scale.y;
 	}
 
 	float Node::GetRealWidth() const
@@ -322,12 +287,12 @@ namespace easy2d
 
 	float Node::GetPivotX() const
 	{
-		return transform_.pivot_x;
+		return transform_.pivot.x;
 	}
 
 	float Node::GetPivotY() const
 	{
-		return transform_.pivot_y;
+		return transform_.pivot.y;
 	}
 
 	Size Node::GetSize() const
@@ -337,32 +302,27 @@ namespace easy2d
 
 	float Node::GetScaleX() const
 	{
-		return transform_.scale_x;
+		return transform_.scale.x;
 	}
 
 	float Node::GetScaleY() const
 	{
-		return transform_.scale_y;
+		return transform_.scale.y;
 	}
 
 	float Node::GetSkewX() const
 	{
-		return transform_.skew_x;
+		return transform_.skew.x;
 	}
 
 	float Node::GetSkewY() const
 	{
-		return transform_.skew_y;
+		return transform_.skew.y;
 	}
 
 	float Node::GetRotation() const
 	{
 		return transform_.rotation;
-	}
-
-	const math::Transform & Node::GetTransform() const
-	{
-		return transform_;
 	}
 
 	float Node::GetOpacity() const
@@ -429,12 +389,12 @@ namespace easy2d
 
 	void Node::SetScaleX(float scale_x)
 	{
-		this->SetScale(scale_x, transform_.scale_y);
+		this->SetScale(scale_x, transform_.scale.y);
 	}
 
 	void Node::SetScaleY(float scale_y)
 	{
-		this->SetScale(transform_.scale_x, scale_y);
+		this->SetScale(transform_.scale.x, scale_y);
 	}
 
 	void Node::SetScale(float scale)
@@ -444,31 +404,31 @@ namespace easy2d
 
 	void Node::SetScale(float scale_x, float scale_y)
 	{
-		if (transform_.scale_x == scale_x && transform_.scale_y == scale_y)
+		if (transform_.scale.x == scale_x && transform_.scale.y == scale_y)
 			return;
 
-		transform_.scale_x = scale_x;
-		transform_.scale_y = scale_y;
+		transform_.scale.x = scale_x;
+		transform_.scale.y = scale_y;
 		dirty_transform_ = true;
 	}
 
 	void Node::SetSkewX(float skew_x)
 	{
-		this->SetSkew(skew_x, transform_.skew_y);
+		this->SetSkew(skew_x, transform_.skew.y);
 	}
 
 	void Node::SetSkewY(float skew_y)
 	{
-		this->SetSkew(transform_.skew_x, skew_y);
+		this->SetSkew(transform_.skew.x, skew_y);
 	}
 
 	void Node::SetSkew(float skew_x, float skew_y)
 	{
-		if (transform_.skew_x == skew_x && transform_.skew_y == skew_y)
+		if (transform_.skew.x == skew_x && transform_.skew.y == skew_y)
 			return;
 
-		transform_.skew_x = skew_x;
-		transform_.skew_y = skew_y;
+		transform_.skew.x = skew_x;
+		transform_.skew.y = skew_y;
 		dirty_transform_ = true;
 	}
 
@@ -493,21 +453,21 @@ namespace easy2d
 
 	void Node::SetPivotX(float pivot_x)
 	{
-		this->SetPivot(pivot_x, transform_.pivot_y);
+		this->SetPivot(pivot_x, transform_.pivot.y);
 	}
 
 	void Node::SetPivotY(float pivot_y)
 	{
-		this->SetPivot(transform_.pivot_x, pivot_y);
+		this->SetPivot(transform_.pivot.x, pivot_y);
 	}
 
 	void Node::SetPivot(float pivot_x, float pivot_y)
 	{
-		if (transform_.pivot_x == pivot_x && transform_.pivot_y == pivot_y)
+		if (transform_.pivot.x == pivot_x && transform_.pivot.y == pivot_y)
 			return;
 
-		transform_.pivot_x = pivot_x;
-		transform_.pivot_y = pivot_y;
+		transform_.pivot.x = pivot_x;
+		transform_.pivot.y = pivot_y;
 		dirty_transform_ = true;
 	}
 
@@ -536,7 +496,12 @@ namespace easy2d
 		this->SetSize(size.width, size.height);
 	}
 
-	void Node::SetTransform(const math::Transform & transform)
+	math::Transform const& Node::GetTransform() const
+	{
+		return transform_;
+	}
+
+	void Node::SetTransform(math::Transform const& transform)
 	{
 		transform_ = transform;
 		dirty_transform_ = true;
@@ -695,63 +660,6 @@ namespace easy2d
 		children_.clear();
 	}
 
-	void Node::RunAction(spAction const& action)
-	{
-		E2D_WARNING_IF(!action, "Action NULL pointer exception!");
-
-		if (action)
-		{
-			auto iter = std::find(actions_.begin(), actions_.end(), action);
-			if (iter == actions_.end())
-			{
-				action->Start();
-				actions_.push_back(action);
-			}
-		}
-	}
-
-	void Node::ResumeAction(const String& name)
-	{
-		if (actions_.empty())
-			return;
-
-		for (const auto& action : actions_)
-		{
-			if (action->GetName() == name)
-			{
-				action->Resume();
-			}
-		}
-	}
-
-	void Node::PauseAction(const String& name)
-	{
-		if (actions_.empty())
-			return;
-
-		for (const auto& action : actions_)
-		{
-			if (action->GetName() == name)
-			{
-				action->Pause();
-			}
-		}
-	}
-
-	void Node::StopAction(const String& name)
-	{
-		if (actions_.empty())
-			return;
-
-		for (const auto& action : actions_)
-		{
-			if (action->GetName() == name)
-			{
-				action->Stop();
-			}
-		}
-	}
-
 	bool Node::ContainsPoint(const Point& point)
 	{
 		if (transform_.size.width == 0.f || transform_.size.height == 0.f)
@@ -790,169 +698,6 @@ namespace easy2d
 		);
 		return relation != D2D1_GEOMETRY_RELATION_UNKNOWN &&
 			relation != D2D1_GEOMETRY_RELATION_DISJOINT;
-	}
-
-	void Node::ResumeAllActions()
-	{
-		if (actions_.empty())
-			return;
-
-		for (const auto& action : actions_)
-		{
-			action->Resume();
-		}
-	}
-
-	void Node::PauseAllActions()
-	{
-		if (actions_.empty())
-			return;
-
-		for (const auto& action : actions_)
-		{
-			action->Pause();
-		}
-	}
-
-	void Node::StopAllActions()
-	{
-		if (actions_.empty())
-			return;
-
-		for (const auto& action : actions_)
-		{
-			action->Stop();
-		}
-	}
-
-	const Actions& Node::GetAllActions() const
-	{
-		return actions_;
-	}
-
-	void Node::AddTask(spTask const& task)
-	{
-		if (task)
-		{
-			auto iter = std::find(tasks_.begin(), tasks_.end(), task);
-			if (iter == tasks_.end())
-			{
-				task->last_time_ = time::Now();
-				tasks_.push_back(task);
-			}
-		}
-	}
-
-	void Node::StopTasks(const String& name)
-	{
-		for (const auto& task : tasks_)
-		{
-			if (task->GetName() == name)
-			{
-				task->Stop();
-			}
-		}
-	}
-
-	void Node::StartTasks(const String& name)
-	{
-		for (const auto& task : tasks_)
-		{
-			if (task->GetName() == name)
-			{
-				task->Start();
-			}
-		}
-	}
-
-	void Node::RemoveTasks(const String& name)
-	{
-		for (const auto& task : tasks_)
-		{
-			if (task->GetName() == name)
-			{
-				task->stopped_ = true;
-			}
-		}
-	}
-
-	void Node::StopAllTasks()
-	{
-		for (const auto& task : tasks_)
-		{
-			task->Stop();
-		}
-	}
-
-	void Node::StartAllTasks()
-	{
-		for (const auto& task : tasks_)
-		{
-			task->Start();
-		}
-	}
-
-	void Node::RemoveAllTasks()
-	{
-		for (const auto& task : tasks_)
-		{
-			task->stopped_ = true;
-		}
-	}
-
-	const Tasks & Node::GetAllTasks() const
-	{
-		return tasks_;
-	}
-
-	void Node::UpdateTasks()
-	{
-		if (tasks_.empty())
-			return;
-
-		std::vector<spTask> currTasks;
-		currTasks.reserve(tasks_.size());
-		std::copy_if(
-			tasks_.begin(),
-			tasks_.end(),
-			std::back_inserter(currTasks),
-			[](spTask const& task) { return task->IsReady() && !task->stopped_; }
-		);
-
-		// 遍历就绪的任务
-		for (const auto& task : currTasks)
-			task->Update();
-
-		// 清除结束的任务
-		for (auto iter = tasks_.begin(); iter != tasks_.end();)
-		{
-			if ((*iter)->stopped_)
-			{
-				iter = tasks_.erase(iter);
-			}
-			else
-			{
-				++iter;
-			}
-		}
-	}
-
-	void Node::UpdateTime()
-	{
-		for (const auto& action : actions_)
-		{
-			action->ResetTime();
-		}
-
-		for (const auto& task : tasks_)
-		{
-			task->ResetTime();
-		}
-
-		for (const auto& child : children_)
-		{
-			child->UpdateTime();
-		}
 	}
 
 	void Node::SetVisible(bool val)

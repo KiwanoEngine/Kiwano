@@ -24,83 +24,10 @@
 namespace easy2d
 {
 	Scene::Scene()
-		: root_(nullptr)
-		, transform_()
 	{
-	}
-
-	Scene::Scene(spNode const& root)
-		: root_(nullptr)
-		, transform_()
-	{
-		this->SetRoot(root);
 	}
 
 	Scene::~Scene()
 	{
-	}
-
-	void Scene::SetRoot(spNode const& root)
-	{
-		if (root_ == root)
-			return;
-
-		root_ = root;
-	}
-
-	spNode const& Scene::GetRoot() const
-	{
-		return root_;
-	}
-
-	void Scene::Draw()
-	{
-		if (root_)
-		{
-			root_->Visit();
-		}
-	}
-
-	void Scene::Dispatch(const MouseEvent & e)
-	{
-		auto handler = dynamic_cast<MouseEventHandler*>(this);
-		if (handler)
-		{
-			handler->Handle(e);
-		}
-
-		if (root_)
-		{
-			root_->Dispatch(e, false);
-		}
-	}
-
-	void Scene::Dispatch(const KeyEvent & e)
-	{
-		auto handler = dynamic_cast<KeyEventHandler*>(this);
-		if (handler)
-		{
-			handler->Handle(e);
-		}
-
-		if (root_)
-		{
-			root_->Dispatch(e, false);
-		}
-	}
-
-	void Scene::SetTransform(const math::Matrix& matrix)
-	{
-		transform_ = matrix;
-
-		if (root_)
-		{
-			root_->dirty_transform_ = true;
-		}
-	}
-
-	const math::Matrix& Scene::GetTransform() const
-	{
-		return transform_;
 	}
 }

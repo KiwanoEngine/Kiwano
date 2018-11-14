@@ -104,9 +104,6 @@
     <ClInclude Include="..\..\core\math\scalar.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\math\Transform.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\math\vector.hpp">
       <Filter>math</Filter>
     </ClInclude>
@@ -145,6 +142,15 @@
     </ClInclude>
     <ClInclude Include="..\..\core\base\Action.hpp">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\ActionManager.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\TaskManager.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Transform.hpp">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -243,9 +249,6 @@
     <ClCompile Include="..\..\core\math\rand.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\math\Transform.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\utils\Data.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -268,6 +271,12 @@
       <Filter>ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\Music.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\TaskManager.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\ActionManager.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

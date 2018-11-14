@@ -21,8 +21,9 @@
 #pragma once
 #include "base.h"
 #include "window.h"
-#include "Scene.h"
-#include "Transition.h"
+#include "time.h"
+#include "KeyEvent.h"
+#include "MouseEvent.h"
 
 namespace easy2d
 {
@@ -76,20 +77,31 @@ namespace easy2d
 		void Quit();
 
 		// 切换场景
-		void EnterScene(
-			spScene const& scene,						/* 场景 */
-			spTransition const& transition = nullptr	/* 场景动画 */
+		bool EnterScene(
+			spScene const& scene			/* 场景 */
+		);
+
+		// 切换场景
+		bool EnterScene(
+			spScene const& scene,			/* 场景 */
+			spTransition const& transition	/* 场景动画 */
 		);
 
 		// 获取当前场景
 		spScene const& GetCurrentScene();
 
-		bool IsTransitioning() const;
-
 		void DrawScene();
 
 		void UpdateScene(
-			float dt
+			Duration const& dt
+		);
+
+		void Dispatch(
+			MouseEvent const& e
+		);
+
+		void Dispatch(
+			KeyEvent const& e
 		);
 
 	private:

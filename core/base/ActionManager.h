@@ -19,33 +19,34 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/BaseTypes.h"
-#include "../base/Size.h"
-#include "Matrix.hpp"
+#include "Action.hpp"
 
 namespace easy2d
 {
-	namespace math
+	class ActionManager
 	{
-		class Transform
-		{
-		public:
-			Point position;		// 坐标
-			Size size;			// 大小
-			float scale_x;		// 横向缩放
-			float scale_y;		// 纵向缩放
-			float rotation;		// 旋转
-			float skew_x;		// 横向倾斜角度
-			float skew_y;		// 纵向倾斜角度
-			float pivot_x;		// 支点横坐标
-			float pivot_y;		// 支点纵坐标
+	public:
+		// 执行动作
+		void RunAction(
+			spAction const& action
+		);
 
-		public:
-			Transform();
+		// 继续所有暂停动作
+		void ResumeAllActions();
 
-			Matrix ToMatrix() const;
+		// 暂停所有动作
+		void PauseAllActions();
 
-			bool operator== (const Transform& other) const;
-		};
-	}
+		// 停止所有动作
+		void StopAllActions();
+
+		// 获取所有动作
+		const Actions& GetAllActions() const;
+
+	protected:
+		void UpdateActions(Node* target, Duration const& dt);
+
+	protected:
+		Actions actions_;
+	};
 }

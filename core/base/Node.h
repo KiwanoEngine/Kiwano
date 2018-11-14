@@ -20,24 +20,27 @@
 
 #pragma once
 #include "base.h"
+#include "time.h"
+#include "ActionManager.h"
+#include "TaskManager.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
-#include "../math/Transform.h"
+#include "../math/Transform.hpp"
 #include "../math/Matrix.hpp"
 
 namespace easy2d
 {
     class Game;
-    class Scene;
-    class Action;
-    class Task;
 
 	// 节点
 	class Node
 		: public RefCounter
+		, public ActionManager
+		, public TaskManager
 	{
 		friend class Game;
 		friend class Scene;
+		friend class Transition;
 
 		E2D_DISABLE_COPY(Node);
 
@@ -50,7 +53,7 @@ namespace easy2d
 		virtual void OnDraw() const {}
 
 		// 更新节点
-		virtual void OnUpdate(float dt) {}
+		virtual void OnUpdate(Duration const& dt) {}
 
 		// 获取节点显示状态
 		bool IsVisible() const;
@@ -106,9 +109,6 @@ namespace easy2d
 		// 获取节点旋转角度
 		float GetRotation() const;
 
-		// 获取二维转换矩阵
-		const math::Transform& GetTransform() const;
-
 		// 获取节点透明度
 		float GetOpacity() const;
 
@@ -129,108 +129,108 @@ namespace easy2d
 		);
 
 		// 设置节点横坐标
-		virtual void SetPositionX(
+		void SetPositionX(
 			float x
 		);
 
 		// 设置节点纵坐标
-		virtual void SetPositionY(
+		void SetPositionY(
 			float y
 		);
 
 		// 设置节点坐标
-		virtual void SetPosition(
+		void SetPosition(
 			const Point & point
 		);
 
 		// 设置节点坐标
-		virtual void SetPosition(
+		void SetPosition(
 			float x,
 			float y
 		);
 
 		// 移动节点
-		virtual void MoveBy(
+		void MoveBy(
 			float x,
 			float y
 		);
 
 		// 移动节点
-		virtual void MoveBy(
+		void MoveBy(
 			const Point & vector
 		);
 
 		// 设置节点绘图顺序
 		// 默认为 0
-		virtual void SetOrder(
+		void SetOrder(
 			int order
 		);
 
 		// 设置横向缩放比例
 		// 默认为 1.0
-		virtual void SetScaleX(
+		void SetScaleX(
 			float scale_x
 		);
 
 		// 设置纵向缩放比例
 		// 默认为 1.0
-		virtual void SetScaleY(
+		void SetScaleY(
 			float scale_y
 		);
 
 		// 设置缩放比例
 		// 默认为 (1.0, 1.0)
-		virtual void SetScale(
+		void SetScale(
 			float scale_x,
 			float scale_y
 		);
 
 		// 设置缩放比例
 		// 默认为 1.0
-		virtual void SetScale(
+		void SetScale(
 			float scale
 		);
 
 		// 设置横向倾斜角度
 		// 默认为 0
-		virtual void SetSkewX(
+		void SetSkewX(
 			float skew_x
 		);
 
 		// 设置纵向倾斜角度
 		// 默认为 0
-		virtual void SetSkewY(
+		void SetSkewY(
 			float skew_y
 		);
 
 		// 设置倾斜角度
 		// 默认为 (0, 0)
-		virtual void SetSkew(
+		void SetSkew(
 			float skew_x,
 			float skew_y
 		);
 
 		// 设置旋转角度
 		// 默认为 0
-		virtual void SetRotation(
+		void SetRotation(
 			float rotation
 		);
 
 		// 设置透明度
 		// 默认为 1.0, 范围 [0, 1]
-		virtual void SetOpacity(
+		void SetOpacity(
 			float opacity
 		);
 
 		// 设置支点的横向位置
 		// 默认为 0, 范围 [0, 1]
-		virtual void SetPivotX(
+		void SetPivotX(
 			float pivot_x
 		);
 
 		// 设置支点的纵向位置
 		// 默认为 0, 范围 [0, 1]
-		virtual void SetPivotY(
+		void SetPivotY(
 			float pivot_y
 		);
 
@@ -247,34 +247,35 @@ namespace easy2d
 		);
 
 		// 修改节点高度
-		virtual void SetHeight(
+		void SetHeight(
 			float height
 		);
 
 		// 修改节点大小
-		virtual void SetSize(
+		void SetSize(
 			float width,
 			float height
 		);
 
 		// 修改节点大小
-		virtual void SetSize(
+		void SetSize(
 			const Size & size
 		);
 
-		// 设置二维转换
-		virtual void SetTransform(
-			const math::Transform& transform
-		);
-
 		// 启用或关闭渲染区域裁剪
-		virtual void SetClipEnabled(
+		void SetClipEnabled(
 			bool enabled
 		);
 
 		// 设置节点边缘颜色
-		virtual void SetBorderColor(
+		void SetBorderColor(
 			const Color& color
+		);
+
+		math::Transform const& GetTransform() const;
+
+		void SetTransform(
+			math::Transform const& transform
 		);
 
 		// 判断点是否在节点内
@@ -331,109 +332,29 @@ namespace easy2d
 		// 从父节点移除
 		void RemoveFromParent();
 
-		// 执行动作
-		void RunAction(
-			spAction const& action
-		);
-
-		// 继续动作
-		void ResumeAction(
-			const String& name
-		);
-
-		// 暂停动作
-		void PauseAction(
-			const String& name
-		);
-
-		// 停止动作
-		void StopAction(
-			const String& name
-		);
-
-		// 继续所有暂停动作
-		void ResumeAllActions();
-
-		// 暂停所有动作
-		void PauseAllActions();
-
-		// 停止所有动作
-		void StopAllActions();
-
-		// 获取所有动作
-		const Actions& GetAllActions() const;
-
-		// 添加任务
-		void AddTask(
-			spTask const& task
-		);
-
-		// 启动任务
-		void StartTasks(
-			const String& task_name
-		);
-
-		// 停止任务
-		void StopTasks(
-			const String& task_name
-		);
-
-		// 移除任务
-		void RemoveTasks(
-			const String& task_name
-		);
-
-		// 启动所有任务
-		void StartAllTasks();
-
-		// 停止所有任务
-		void StopAllTasks();
-
-		// 移除所有任务
-		void RemoveAllTasks();
-
-		// 获取所有任务
-		const Tasks& GetAllTasks() const;
-
 	protected:
-		// 遍历节点
 		virtual void Visit();
 
-		// 分发鼠标消息
 		virtual bool Dispatch(
 			const MouseEvent& e,
 			bool handled
 		);
 
-		// 分发按键消息
 		virtual bool Dispatch(
 			const KeyEvent& e,
 			bool handled
 		);
 
-	private:
-		// 渲染节点边缘
+	protected:
 		void DrawBorder();
 
-		// 更新子节点
-		void UpdateChildren(float dt);
+		void Update(Duration const& dt);
 
-		// 更新转换矩阵
 		void UpdateTransform();
 
-		// 更新节点透明度
 		void UpdateOpacity();
 
-		// 更新动作
-		void UpdateActions();
-
-		// 更新任务
-		void UpdateTasks();
-
-		// 更新节点时间
-		void UpdateTime();
-
-	private:
+	protected:
 		String				name_;
 		size_t				hash_name_;
 		float				display_opacity_;
@@ -445,8 +366,6 @@ namespace easy2d
 		bool				dirty_transform_;
 		Node*				parent_;
 		Color				border_color_;
-		Actions				actions_;
-		Tasks				tasks_;
 		Nodes				children_;
 		ID2D1Geometry*		border_;
 		math::Transform		transform_;

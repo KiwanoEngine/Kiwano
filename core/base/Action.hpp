@@ -24,12 +24,14 @@
 
 namespace easy2d
 {
+	class ActionManager;
+
 	class Action
 		: public RefCounter
 	{
 		E2D_DISABLE_COPY(Action);
 
-		friend class Node;
+		friend class ActionManager;
 		friend class Loop;
 		friend class Sequence;
 		friend class Spawn;
@@ -51,12 +53,6 @@ namespace easy2d
 		// 停止动作
 		inline void Stop() { done_ = true; }
 
-		// 获取动作名称
-		inline const String& GetName() const { return name_; }
-
-		// 设置动作名称
-		inline void SetName(const String& name) { name_ = name; }
-
 		inline bool IsDone() const { return done_; }
 
 		// 获取动作的拷贝
@@ -70,7 +66,6 @@ namespace easy2d
 		{
 			initialized_ = false;
 			done_ = false;
-			started_ = time::Now();
 		}
 
 	protected:
@@ -80,13 +75,9 @@ namespace easy2d
 			this->Reset();
 		}
 
-		virtual void Init(Node* target)
-		{
-			initialized_ = true;
-			started_ = time::Now();
-		}
+		virtual void Init(Node* target) {}
 
-		virtual void Update(Node* target)
+		virtual void Update(Node* target, Duration const& dt)
 		{
 			if (!initialized_)
 			{
@@ -94,13 +85,9 @@ namespace easy2d
 			}
 		}
 
-		virtual void ResetTime() {}
-
 	protected:
-		String		name_;
-		bool		running_;
-		bool		done_;
-		bool		initialized_;
-		TimePoint	started_;
+		bool running_;
+		bool done_;
+		bool initialized_;
 	};
 }

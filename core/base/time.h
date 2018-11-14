@@ -49,7 +49,7 @@ namespace easy2d
 			);
 
 			// 转化为毫秒
-			int64_t Milliseconds() const;
+			inline int64_t Milliseconds() const { return milliseconds_; }
 
 			// 转化为秒
 			float Seconds() const;
@@ -60,6 +60,9 @@ namespace easy2d
 			// 转化为小时
 			float Hours() const;
 
+			// 时长是否是零
+			inline bool IsZero() const { return milliseconds_ == 0LL; }
+
 			// 转为字符串
 			std::wstring ToString() const;
 
@@ -69,6 +72,8 @@ namespace easy2d
 			bool operator>= (const Duration &) const;
 			bool operator< (const Duration &) const;
 			bool operator<= (const Duration &) const;
+
+			float operator / (const Duration &) const;
 
 			const Duration operator + (const Duration &) const;
 			const Duration operator - (const Duration &) const;
@@ -155,11 +160,13 @@ namespace easy2d
 				TimePoint&& other
 			);
 
+			inline Duration const& SinceEpoch() const { return dur_since_epoch_; }
+
 			// 获取时间戳
-			time_t GetTimeStamp() const;
+			inline time_t GetTimeStamp() const { return static_cast<time_t>(dur_since_epoch_.Seconds()); }
 
 			// 是否是零时
-			bool IsZero() const;
+			inline bool IsZero() const { return dur_since_epoch_.IsZero(); }
 
 			const TimePoint operator + (const Duration &) const;
 			const TimePoint operator - (const Duration &) const;
