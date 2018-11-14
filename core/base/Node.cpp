@@ -23,7 +23,6 @@
 #include "Task.h"
 #include "Action.hpp"
 #include "render.h"
-#include <iterator>
 
 namespace easy2d
 {
@@ -56,14 +55,16 @@ namespace easy2d
 		if (!visible_)
 			return;
 
+		auto& graphics = devices::Graphics::Instance();
+
 		if (clip_enabled_)
 		{
-			devices::Graphics::Instance().PushClip(final_matrix_, transform_.size);
+			graphics.PushClip(final_matrix_, transform_.size);
 		}
 
 		if (children_.empty())
 		{
-			devices::Graphics::Instance().SetTransform(final_matrix_);
+			graphics.SetTransform(final_matrix_);
 			OnDraw();
 		}
 		else
@@ -72,8 +73,8 @@ namespace easy2d
 			if (dirty_sort_)
 			{
 				std::sort(
-					std::begin(children_),
-					std::end(children_),
+					children_.begin(),
+					children_.end(),
 					[](spNode const& n1, spNode const& n2) { return n1->GetOrder() < n2->GetOrder(); }
 				);
 
@@ -95,7 +96,7 @@ namespace easy2d
 				}
 			}
 
-			devices::Graphics::Instance().SetTransform(final_matrix_);
+			graphics.SetTransform(final_matrix_);
 			OnDraw();
 
 			// 访问剩余节点
@@ -105,7 +106,7 @@ namespace easy2d
 
 		if (clip_enabled_)
 		{
-			devices::Graphics::Instance().PopClip();
+			graphics.PopClip();
 		}
 	}
 
@@ -170,13 +171,9 @@ namespace easy2d
 		dirty_transform_ = false;
 
 		final_matrix_ = transform_.ToMatrix();
-
-		// 根据自身支点计算 Initial 矩阵，子节点将根据这个矩阵进行变换
-		auto pivot = Point(
-			transform_.size.width * transform_.pivot.x,
-			transform_.size.height * transform_.pivot.y
+		initial_matrix_ = final_matrix_ * math::Matrix::Translation(
+			Point{ transform_.size.width * transform_.pivot.x, transform_.size.height * transform_.pivot.y }
 		);
-		initial_matrix_ = final_matrix_ * math::Matrix::Translation(pivot);
 
 		if (parent_)
 		{
@@ -186,13 +183,11 @@ namespace easy2d
 
 		// 重新构造轮廓
 		SafeRelease(border_);
-		
 		ThrowIfFailed(
 			devices::Graphics::Instance().CreateRectGeometry(final_matrix_, transform_.size, &border_)
 		);
 
-		// 通知子节点进行转换
-		for (const auto& child : children_)
+		for (auto& child : children_)
 		{
 			child->dirty_transform_ = true;
 		}

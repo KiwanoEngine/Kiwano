@@ -75,7 +75,7 @@ namespace easy2d
 			this->Reset();
 		}
 
-		virtual void Init(Node* target) {}
+		virtual void Init(Node* target) { initialized_ = true; }
 
 		virtual void Update(Node* target, Duration const& dt)
 		{

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "input.h"
+#include <cstring>
 
 namespace easy2d
 {
@@ -28,6 +29,7 @@ namespace easy2d
 			: initialized(false)
 		{
 			ZeroMemory(keys_, sizeof(keys_));
+			ZeroMemory(keys_cache_, sizeof(keys_cache_));
 		}
 
 		InputDevice::~InputDevice()
@@ -44,11 +46,12 @@ namespace easy2d
 
 		void InputDevice::Update(HWND hwnd, float scale_x, float scale_y)
 		{
-			::GetKeyboardState(keys_);
+			memcpy(keys_cache_, keys_, sizeof(keys_cache_));
+			GetKeyboardState(keys_);
 
 			POINT client_cursor_pos;
-			::GetCursorPos(&client_cursor_pos);
-			::ScreenToClient(hwnd, &client_cursor_pos);
+			GetCursorPos(&client_cursor_pos);
+			ScreenToClient(hwnd, &client_cursor_pos);
 
 			mouse_pos_ = Point(client_cursor_pos.x * scale_x, client_cursor_pos.y * scale_y);
 		}
@@ -63,6 +66,22 @@ namespace easy2d
 		bool InputDevice::IsDown(MouseCode code)
 		{
 			if (keys_[static_cast<int>(code)] & 0x80)
+				return true;
+			return false;
+		}
+
+		bool InputDevice::WasPressed(KeyCode code)
+		{
+			if (keys_cache_[static_cast<int>(code)] & 0x80 &&
+				!(keys_[static_cast<int>(code)] & 0x80))
+				return true;
+			return false;
+		}
+
+		bool InputDevice::WasPressed(MouseCode code)
+		{
+			if (keys_cache_[static_cast<int>(code)] & 0x80 &&
+				!(keys_[static_cast<int>(code)] & 0x80))
 				return true;
 			return false;
 		}

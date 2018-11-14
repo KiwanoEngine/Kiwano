@@ -26,127 +26,105 @@ namespace easy2d
 {
 	namespace math
 	{
+		class Matrix;
+
+		template <typename L, typename R>
+		struct MatrixMultiply;
+
+		inline MatrixMultiply<Matrix, Matrix>
+		operator *(Matrix const& lhs, Matrix const& rhs);
+
+		template <typename L, typename R>
+		inline MatrixMultiply<MatrixMultiply<L, R>, Matrix>
+		operator *(MatrixMultiply<L, R> const& lhs, Matrix const& rhs);
+
+
 		class Matrix
 		{
-			float _11;
-			float _12;
-			float _21;
-			float _22;
-			float _31;
-			float _32;
+			float m[6];  // m[3][2]
 
 		public:
 			Matrix()
-				: _11(1.f)
-				, _12(0.f)
-				, _21(0.f)
-				, _22(1.f)
-				, _31(0.f)
-				, _32(0.f)
 			{
+				m[0] = 1.f; m[1] = 0.f;
+				m[2] = 0.f; m[3] = 1.f;
+				m[4] = 0.f; m[5] = 0.f;
 			}
 
-			Matrix(
-				float _11,
-				float _12,
-				float _21,
-				float _22,
-				float _31,
-				float _32)
+			Matrix(float val[6])
 			{
-				this->_11 = _11;
-				this->_12 = _12;
-				this->_21 = _21;
-				this->_22 = _22;
-				this->_31 = _31;
-				this->_32 = _32;
+				m[0] = val[0]; m[1] = val[1];
+				m[2] = val[2]; m[3] = val[3];
+				m[4] = val[4]; m[5] = val[5];
 			}
 
-			inline const Matrix operator*(const Matrix &matrix) const
+			Matrix(float _11, float _12, float _21, float _22, float _31, float _32)
 			{
-				return Matrix(
-					_11 * matrix._11 + _12 * matrix._21,
-					_11 * matrix._12 + _12 * matrix._22,
-					_21 * matrix._11 + _22 * matrix._21,
-					_21 * matrix._12 + _22 * matrix._22,
-					_31 * matrix._11 + _32 * matrix._21 + matrix._31,
-					_31 * matrix._12 + _32 * matrix._22 + matrix._32
-				);
+				m[0] = _11; m[1] = _12;
+				m[2] = _21; m[3] = _22;
+				m[4] = _31; m[5] = _32;
+			}
+
+			Matrix(Matrix const& other)
+			{
+				m[0] = other.m[0]; m[1] = other.m[1];
+				m[2] = other.m[2]; m[3] = other.m[3];
+				m[4] = other.m[4]; m[5] = other.m[5];
+			}
+
+			template <typename T>
+			Matrix(T const& other)
+			{
+				m[0] = other[0]; m[1] = other[1];
+				m[2] = other[2]; m[3] = other[3];
+				m[4] = other[4]; m[5] = other[5];
+			}
+
+			inline float operator [](unsigned int index) const { return m[index]; }
+
+			template <typename T>
+			inline Matrix& operator =(T const& other)
+			{
+				m[0] = other[0]; m[1] = other[1];
+				m[2] = other[2]; m[3] = other[3];
+				m[4] = other[4]; m[5] = other[5];
+				return *this;
 			}
 
 			inline operator D2D1_MATRIX_3X2_F () const
 			{
 				return D2D1_MATRIX_3X2_F{
-					_11, _12,
-					_21, _22,
-					_31, _32
+					m[0], m[1],
+					m[2], m[3],
+					m[4], m[5]
 				};
 			}
 
 			inline Matrix& Identity()
 			{
-				_11 = 1.f;
-				_12 = 0.f;
-				_21 = 0.f;
-				_22 = 1.f;
-				_31 = 0.f;
-				_32 = 0.f;
-				return *this;
-			}
-
-			inline Matrix& Translate(const Vector2& v)
-			{
-				*this = *this * Matrix::Translation(v);
-				return *this;
-			}
-
-			inline Matrix& Translate(float x, float y)
-			{
-				*this = *this * Matrix::Translation(x, y);
-				return *this;
-			}
-
-			inline Matrix& Scale(const Vector2& v, const Vector2& center)
-			{
-				*this = *this * Matrix::Scaling(v, center);
-				return *this;
-			}
-
-			inline Matrix& Scale(float scale_x, float scale_y, const Vector2& center)
-			{
-				*this = *this * Matrix::Scaling(scale_x, scale_y, center);
-				return *this;
-			}
-
-			inline Matrix& Rotate(float angle, const Vector2& center)
-			{
-				*this = *this * Matrix::Rotation(angle, center);
-				return *this;
-			}
-
-			inline Matrix& Skew(float angle_x, float angle_y, const Vector2& center)
-			{
-				*this = *this * Matrix::Skewing(angle_x, angle_y, center);
+				m[0] = 1.f; m[1] = 0.f;
+				m[2] = 0.f; m[3] = 1.f;
+				m[4] = 0.f; m[5] = 0.f;
 				return *this;
 			}
 
 			inline float Determinant() const
 			{
-				return (_11 * _22) - (_12 * _21);
+				return (m[0] * m[3]) - (m[1] * m[2]);
 			}
 
 			inline bool IsIdentity() const
 			{
-				return	_11 == 1.f && _12 == 0.f &&
-						_21 == 0.f && _22 == 1.f &&
-						_31 == 0.f && _32 == 0.f;
+				return	m[0] == 1.f && m[1] == 0.f &&
+						m[2] == 0.f && m[3] == 1.f &&
+						m[4] == 0.f && m[5] == 0.f;
 			}
 
 			Vector2 Transform(const Vector2& v) const
 			{
 				return Vector2(
-					v.x * _11 + v.y * _21 + _31,
-					v.x * _12 + v.y * _22 + _32
+					v.x * m[0] + v.y * m[2] + m[4],
+					v.x * m[1] + v.y * m[3] + m[5]
 				);
 			}
 
@@ -214,5 +192,50 @@ namespace easy2d
 				);
 			}
 		};
+
+
+		template <typename L, typename R>
+		struct MatrixMultiply
+		{
+			L const& lhs;
+			R const& rhs;
+
+			MatrixMultiply(L const& lhs, R const& rhs)
+				: lhs(lhs)
+				, rhs(rhs)
+			{}
+
+			inline float operator [](unsigned int index) const
+			{
+				switch (index)
+				{
+				case 0:
+					return lhs[0] * rhs[0] + lhs[1] * rhs[2];
+				case 1:
+					return lhs[0] * rhs[1] + lhs[1] * rhs[3];
+				case 2:
+					return lhs[2] * rhs[0] + lhs[3] * rhs[2];
+				case 3:
+					return lhs[2] * rhs[1] + lhs[3] * rhs[3];
+				case 4:
+					return lhs[4] * rhs[0] + lhs[5] * rhs[2] + rhs[4];
+				case 5:
+					return lhs[4] * rhs[1] + lhs[5] * rhs[3] + rhs[5];
+				default:
+					return 0.f;
+				}
+			}
+		};
+
+		inline MatrixMultiply<Matrix, Matrix> operator *(Matrix const& lhs, Matrix const& rhs)
+		{
+			return MatrixMultiply<Matrix, Matrix>(lhs, rhs);
+		}
+
+		template <typename L, typename R>
+		inline MatrixMultiply<MatrixMultiply<L, R>, Matrix> operator *(MatrixMultiply<L, R> const& lhs, Matrix const& rhs)
+		{
+			return MatrixMultiply<MatrixMultiply<L, R>, Matrix>(lhs, rhs);
+		}
 	}
 }
