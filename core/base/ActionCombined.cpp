@@ -80,12 +80,6 @@ namespace easy2d
 	{
 		Action::Update(target, dt);
 
-		if (times_ == total_times_)
-		{
-			this->Stop();
-			return;
-		}
-
 		if (action_)
 		{
 			action_->Update(target, dt);
@@ -96,6 +90,11 @@ namespace easy2d
 
 				Action::Reset();
 				action_->Reset();
+			}
+
+			if (times_ == total_times_)
+			{
+				this->Stop();
 			}
 		}
 		else
@@ -110,6 +109,11 @@ namespace easy2d
 
 		if (action_) action_->Reset();
 		times_ = 0;
+	}
+
+	bool Loop::IsRunning()
+	{
+		return Action::IsRunning() && times_ != total_times_;
 	}
 
 
@@ -142,7 +146,7 @@ namespace easy2d
 	{
 		Action::Update(target, dt);
 
-		auto &action = actions_[action_index_];
+		auto& action = actions_[action_index_];
 		action->Update(target, dt);
 
 		if (action->IsDone())

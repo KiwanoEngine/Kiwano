@@ -155,6 +155,9 @@
     <ClInclude Include="..\..\core\base\Font.hpp">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\IntrusiveList.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">

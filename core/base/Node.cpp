@@ -77,7 +77,7 @@ namespace easy2d
 			graphics->PushClip(final_matrix_, transform_.size);
 		}
 
-		if (children_.empty())
+		if (children_.IsEmpty())
 		{
 			graphics->SetTransform(final_matrix_);
 			OnDraw();
@@ -87,20 +87,17 @@ namespace easy2d
 			// 子节点排序
 			if (dirty_sort_)
 			{
-				std::sort(
-					children_.begin(),
-					children_.end(),
+				children_.Sort(
 					[](spNode const& n1, spNode const& n2) { return n1->GetOrder() < n2->GetOrder(); }
 				);
 
 				dirty_sort_ = false;
 			}
 
-			size_t i;
-			for (i = 0; i < children_.size(); ++i)
+			spNode child = children_.First();
+			for (spNode next; child; child = next)
 			{
-				auto child = children_[i];
-				// 访问 Order 小于零的节点
+				next = child->Next();
 				if (child->GetOrder() < 0)
 				{
 					child->Visit();
@@ -114,9 +111,11 @@ namespace easy2d
 			graphics->SetTransform(final_matrix_);
 			OnDraw();
 
-			// 访问剩余节点
-			for (; i < children_.size(); ++i)
-				children_[i]->Visit();
+			for (spNode next; child; child = next)
+			{
+				next = child->Next();
+				child->Visit();
+			}
 		}
 
 		if (clip_enabled_)
@@ -127,7 +126,7 @@ namespace easy2d
 
 	void Node::Update(Duration const& dt)
 	{
-		if (children_.empty())
+		if (children_.IsEmpty())
 		{
 			OnUpdate(dt);
 			UpdateActions(this, dt);
@@ -136,13 +135,13 @@ namespace easy2d
 		}
 		else
 		{
-			size_t i;
-			for (i = 0; i < children_.size(); ++i)
+			// 访问 Order 小于零的节点
+			spNode child = children_.First();
+			for (spNode next; child; child = next)
 			{
-				auto child = children_[i];
-				// 访问 Order 小于零的节点
 				if (child->GetOrder() < 0)
 				{
+					next = child->Next();
 					child->Update(dt);
 				}
 				else
@@ -156,9 +155,11 @@ namespace easy2d
 			UpdateTasks(dt);
 			UpdateTransform();
 
-			// 访问剩余节点
-			for (; i < children_.size(); ++i)
-				children_[i]->Update(dt);
+			for (spNode next; child; child = next)
+			{
+				next = child->Next();
+				child->Update(dt);
+			}
 		}
 	}
 
@@ -171,7 +172,7 @@ namespace easy2d
 				devices::Graphics::Instance()->DrawGeometry(border_, border_color_, 1.f, 1.5f);
 			}
 
-			for (const auto& child : children_)
+			for (auto& child = children_.First(); child; child = child->Next())
 			{
 				child->DrawBorder();
 			}
@@ -202,7 +203,7 @@ namespace easy2d
 			devices::Graphics::Instance()->CreateRectGeometry(final_matrix_, transform_.size, &border_)
 		);
 
-		for (auto& child : children_)
+		for (auto& child = children_.First(); child; child = child->Next())
 		{
 			child->dirty_transform_ = true;
 		}
@@ -212,8 +213,12 @@ namespace easy2d
 	{
 		if (visible_)
 		{
-			for (auto riter = children_.crbegin(); riter != children_.crend(); ++riter)
-				handled = (*riter)->Dispatch(e, handled);
+			spNode prev;
+			for (auto& child = children_.Last(); child; child = prev)
+			{
+				prev = child->Prev();
+				handled = child->Dispatch(e, handled);
+			}
 
 			auto handler = dynamic_cast<MouseEventHandler*>(this);
 			if (handler)
@@ -227,8 +232,12 @@ namespace easy2d
 	{
 		if (visible_)
 		{
-			for (auto riter = children_.crbegin(); riter != children_.crend(); ++riter)
-				handled = (*riter)->Dispatch(e, handled);
+			spNode prev;
+			for (auto& child = children_.Last(); child; child = prev)
+			{
+				prev = child->Prev();
+				handled = child->Dispatch(e, handled);
+			}
 
 			auto handler = dynamic_cast<KeyEventHandler*>(this);
 			if (handler)
@@ -244,7 +253,7 @@ namespace easy2d
 		{
 			display_opacity_ = real_opacity_ * parent_->display_opacity_;
 		}
-		for (const auto& child : children_)
+		for (auto& child = children_.First(); child; child = child->Next())
 		{
 			child->UpdateOpacity();
 		}
@@ -547,7 +556,7 @@ namespace easy2d
 				}
 			}
 
-			children_.push_back(child);
+			children_.Append(child);
 			child->SetOrder(order);
 			child->parent_ = this;
 
@@ -573,14 +582,13 @@ namespace easy2d
 		return parent_;
 	}
 
-	Nodes Node::GetChildren(const String& name) const
+	Node::Nodes Node::GetChildren(const String& name) const
 	{
 		Nodes children;
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (const auto& child : children_)
+		for (auto child = children_.First(); child != children_.Last(); child = child->Next())
 		{
-			// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
 			if (child->hash_name_ == hash_code && child->name_ == name)
 			{
 				children.push_back(child);
@@ -593,9 +601,8 @@ namespace easy2d
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (const auto& child : children_)
+		for (auto child = children_.First(); child != children_.Last(); child = child->Next())
 		{
-			// 不同的名称可能会有相同的 Hash 值，但是先比较 Hash 可以提升搜索速度
 			if (child->hash_name_ == hash_code && child->name_ == name)
 			{
 				return child;
@@ -604,14 +611,14 @@ namespace easy2d
 		return nullptr;
 	}
 
-	const std::vector<spNode>& Node::GetAllChildren() const
+	Node::Children const & Node::GetChildren() const
 	{
 		return children_;
 	}
 
 	int Node::GetChildrenCount() const
 	{
-		return static_cast<int>(children_.size());
+		return children_.Size();
 	}
 
 	void Node::RemoveFromParent()
@@ -627,49 +634,40 @@ namespace easy2d
 		if (!child)
 			logs::Warningln("Node::RemoveChild failed, child is nullptr");
 
-		if (children_.empty())
+		if (children_.IsEmpty())
 		{
 			return false;
 		}
 
 		if (child)
 		{
-			auto iter = std::find(children_.begin(), children_.end(), child);
-			if (iter != children_.end())
-			{
-				children_.erase(iter);
-				child->parent_ = nullptr;
-				return true;
-			}
+			children_.Remove(child);
+			return true;
 		}
 		return false;
 	}
 
 	void Node::RemoveChildren(const String& child_name)
 	{
-		if (children_.empty())
+		if (children_.IsEmpty())
 		{
 			return;
 		}
 
 		size_t hash_code = std::hash<String>{}(child_name);
-		for (auto iter = children_.begin(); iter != children_.end();)
+		spNode next;
+		for (auto& child = children_.First(); child; child = next)
 		{
-			if ((*iter)->hash_name_ == hash_code && (*iter)->name_ == child_name)
-			{
-				(*iter)->parent_ = nullptr;
-				iter = children_.erase(iter);
-			}
-			else
-			{
-				++iter;
-			}
+			next = child->Next();
+
+			if (child->hash_name_ == hash_code && child->name_ == child_name)
+				children_.Remove(child);
 		}
 	}
 
 	void Node::RemoveAllChildren()
 	{
-		children_.clear();
+		children_.Clear();
 	}
 
 	bool Node::ContainsPoint(const Point& point)

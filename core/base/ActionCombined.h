@@ -46,6 +46,8 @@ namespace easy2d
 		// 重置动作
 		virtual void Reset() override;
 
+		virtual bool IsRunning() override;
+
 	protected:
 		// 初始化动作
 		virtual void Init(Node* target) override;
@@ -66,11 +68,13 @@ namespace easy2d
 	{
 		E2D_DISABLE_COPY(Sequence);
 
+		using Actions = std::vector<spAction>;
+
 	public:
 		Sequence();
 
 		explicit Sequence(
-			const Actions& actions	/* 动作列表 */
+			Actions const& actions	/* 动作列表 */
 		);
 
 		virtual ~Sequence();
@@ -112,6 +116,8 @@ namespace easy2d
 		: public Action
 	{
 		E2D_DISABLE_COPY(Spawn);
+
+		using Actions = std::vector<spAction>;
 
 	public:
 		Spawn();

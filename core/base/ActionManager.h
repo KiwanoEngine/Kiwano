@@ -25,9 +25,11 @@ namespace easy2d
 {
 	class ActionManager
 	{
+		using Actions = IntrusiveList<spAction>;
+
 	public:
 		// 执行动作
-		void RunAction(
+		void AddAction(
 			spAction const& action
 		);
 
@@ -41,7 +43,7 @@ namespace easy2d
 		void StopAllActions();
 
 		// 获取所有动作
-		const Actions& GetAllActions() const;
+		Actions const& GetAllActions() const;
 
 	protected:
 		void UpdateActions(Node* target, Duration const& dt);
