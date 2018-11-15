@@ -21,10 +21,11 @@
 #pragma once
 #include "base.h"
 #include "time.h"
-#include "ActionManager.h"
-#include "TaskManager.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
+#include "ActionManager.h"
+#include "TaskManager.h"
+#include "IntrusiveList.hpp"
 #include "../math/Transform.hpp"
 #include "../math/Matrix.hpp"
 
@@ -37,12 +38,16 @@ namespace easy2d
 		: public RefCounter
 		, public ActionManager
 		, public TaskManager
+		, public IntrusiveItem<spNode>
 	{
 		friend class Game;
 		friend class Scene;
 		friend class Transition;
 
 		E2D_DISABLE_COPY(Node);
+
+		using Nodes = std::vector< spNode >;
+		using Children = IntrusiveList<spNode>;
 
 	public:
 		Node();
@@ -310,8 +315,8 @@ namespace easy2d
 			const String& name
 		) const;
 
-		// 获取所有子节点
-		const Nodes& GetAllChildren() const;
+		// 获取全部子节点
+		Children const& GetChildren() const;
 
 		// 获取子节点数量
 		int GetChildrenCount() const;
@@ -372,7 +377,7 @@ namespace easy2d
 		bool				dirty_transform_;
 		Node*				parent_;
 		Color				border_color_;
-		Nodes				children_;
+		Children			children_;
 		ID2D1Geometry*		border_;
 		math::Transform		transform_;
 		math::Matrix		initial_matrix_;

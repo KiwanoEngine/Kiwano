@@ -19,25 +19,42 @@
 // THE SOFTWARE.
 
 #include "TaskManager.h"
+#include "logs.h"
 
 namespace easy2d
 {
+	void TaskManager::UpdateTasks(Duration const& dt)
+	{
+		if (tasks_.IsEmpty())
+			return;
+
+		spTask next;
+		for (auto task = tasks_.First(); task; task = next)
+		{
+			next = task->Next();
+
+			task->Update(dt);
+
+			if (task->stopped_)
+				tasks_.Remove(task);
+		}
+	}
+
 	void TaskManager::AddTask(spTask const& task)
 	{
+		if (!task)
+			logs::Warningln("Node::AddTask failed, action is nullptr");
+
 		if (task)
 		{
-			auto iter = std::find(tasks_.begin(), tasks_.end(), task);
-			if (iter == tasks_.end())
-			{
-				task->Reset();
-				tasks_.push_back(task);
-			}
+			task->Reset();
+			tasks_.Append(task);
 		}
 	}
 
 	void TaskManager::StopTasks(const String& name)
 	{
-		for (const auto& task : tasks_)
+		for (auto& task = tasks_.First(); task; task = task->Next())
 		{
 			if (task->GetName() == name)
 			{
@@ -48,7 +65,7 @@ namespace easy2d
 
 	void TaskManager::StartTasks(const String& name)
 	{
-		for (const auto& task : tasks_)
+		for (auto& task = tasks_.First(); task; task = task->Next())
 		{
 			if (task->GetName() == name)
 			{
@@ -59,7 +76,7 @@ namespace easy2d
 
 	void TaskManager::RemoveTasks(const String& name)
 	{
-		for (const auto& task : tasks_)
+		for (auto& task = tasks_.First(); task; task = task->Next())
 		{
 			if (task->GetName() == name)
 			{
@@ -70,7 +87,7 @@ namespace easy2d
 
 	void TaskManager::StopAllTasks()
 	{
-		for (const auto& task : tasks_)
+		for (auto& task = tasks_.First(); task; task = task->Next())
 		{
 			task->Stop();
 		}
@@ -78,7 +95,7 @@ namespace easy2d
 
 	void TaskManager::StartAllTasks()
 	{
-		for (const auto& task : tasks_)
+		for (auto& task = tasks_.First(); task; task = task->Next())
 		{
 			task->Start();
 		}
@@ -86,46 +103,14 @@ namespace easy2d
 
 	void TaskManager::RemoveAllTasks()
 	{
-		for (const auto& task : tasks_)
+		for (auto& task = tasks_.First(); task; task = task->Next())
 		{
 			task->stopped_ = true;
 		}
 	}
 
-	const Tasks & TaskManager::GetAllTasks() const
+	const TaskManager::Tasks & TaskManager::GetAllTasks() const
 	{
 		return tasks_;
-	}
-
-	void TaskManager::UpdateTasks(Duration const& dt)
-	{
-		if (tasks_.empty())
-			return;
-
-		std::vector<spTask> currTasks;
-		currTasks.reserve(tasks_.size());
-		std::copy_if(
-			tasks_.begin(),
-			tasks_.end(),
-			std::back_inserter(currTasks),
-			[](spTask const& task) { return !task->stopped_; }
-		);
-
-		// 遍历就绪的任务
-		for (const auto& task : currTasks)
-			task->Update(dt);
-
-		// 清除结束的任务
-		for (auto iter = tasks_.begin(); iter != tasks_.end();)
-		{
-			if ((*iter)->stopped_)
-			{
-				iter = tasks_.erase(iter);
-			}
-			else
-			{
-				++iter;
-			}
-		}
 	}
 }

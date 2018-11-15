@@ -21,6 +21,7 @@
 #pragma once
 #include "base.h"
 #include "time.h"
+#include "IntrusiveList.hpp"
 #include <functional>
 
 namespace easy2d
@@ -30,6 +31,7 @@ namespace easy2d
     // 定时任务
 	class Task
 		: public RefCounter
+		, public IntrusiveItem<spTask>
 	{
 		friend class TaskManager;
 

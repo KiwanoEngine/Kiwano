@@ -21,6 +21,7 @@
 #pragma once
 #include "base.h"
 #include "time.h"
+#include "IntrusiveList.hpp"
 
 namespace easy2d
 {
@@ -28,6 +29,7 @@ namespace easy2d
 
 	class Action
 		: public RefCounter
+		, public IntrusiveItem<spAction>
 	{
 		E2D_DISABLE_COPY(Action);
 
@@ -42,18 +44,18 @@ namespace easy2d
 		virtual ~Action() {}
 
 		// 获取动作运行状态
-		inline bool IsRunning() { return running_; }
+		virtual bool IsRunning() { return running_; }
 
 		// 继续动作
-		inline void Resume() { running_ = true; }
+		virtual void Resume() { running_ = true; }
 
 		// 暂停动作
-		inline void Pause() { running_ = false; }
+		virtual void Pause() { running_ = false; }
 
 		// 停止动作
-		inline void Stop() { done_ = true; }
+		virtual void Stop() { done_ = true; }
 
-		inline bool IsDone() const { return done_; }
+		virtual bool IsDone() const { return done_; }
 
 		// 获取动作的拷贝
 		virtual spAction Clone() const = 0;

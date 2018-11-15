@@ -68,6 +68,14 @@
 #	define INITGUID
 #endif
 
+#if defined(DEBUG) || defined(_DEBUG)
+#	ifndef E2D_DEBUG
+#		define E2D_DEBUG
+#	endif
+#else
+#	undef E2D_DEBUG
+#endif
+
 
 // Windows Header Files
 #include <windows.h>

@@ -29,6 +29,8 @@ namespace easy2d
 	{
 		E2D_DISABLE_COPY(Animation);
 
+		using Images = std::vector< spImage >;
+
 	public:
 		Animation();
 
@@ -61,7 +63,7 @@ namespace easy2d
 		Duration const& GetInterval() const;
 
 		// 获取关键帧
-		const Images& GetFrames() const;
+		Images const& GetFrames() const;
 
 		// 设置每一帧的时间间隔
 		void SetInterval(

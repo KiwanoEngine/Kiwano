@@ -192,7 +192,7 @@ namespace easy2d
 		return interval_;
 	}
 
-	const Images& Animation::GetFrames() const
+	Animation::Images const& Animation::GetFrames() const
 	{
 		return frames_;
 	}

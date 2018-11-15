@@ -81,12 +81,6 @@ namespace easy2d
 	E2D_DECLARE_NS_SMART_PTR(ui, Button);
 	E2D_DECLARE_NS_SMART_PTR(ui, Menu);
 
-	using Images = ::std::vector< spImage >;
-	using Nodes = ::std::vector< spNode >;
-	using Actions = ::std::vector< spAction >;
-	using Tasks = ::std::vector< spTask >;
-
-
 	template<class Interface>
 	inline void SafeRelease(Interface*& p)
 	{

@@ -25,58 +25,40 @@ namespace easy2d
 {
 	void ActionManager::UpdateActions(Node* target, Duration const& dt)
 	{
-		if (actions_.empty())
+		if (actions_.IsEmpty())
 			return;
 
-		std::vector<spAction> currActions;
-		currActions.reserve(actions_.size());
-		std::copy_if(
-			actions_.begin(),
-			actions_.end(),
-			std::back_inserter(currActions),
-			[](spAction action) { return action->IsRunning() && !action->IsDone(); }
-		);
-
-		// 遍历所有正在运行的动作
-		for (const auto& action : currActions)
-			action->Update(target, dt);
-
-		// 清除完成的动作
-		for (auto iter = actions_.begin(); iter != actions_.end();)
+		spAction next;
+		for (auto action = actions_.First(); action; action = next)
 		{
-			if ((*iter)->IsDone())
-			{
-				iter = actions_.erase(iter);
-			}
-			else
-			{
-				++iter;
-			}
+			next = action->Next();
+
+			if (action->IsRunning())
+				action->Update(target, dt);
+
+			if (action->IsDone())
+				actions_.Remove(action);
 		}
 	}
 
-	void ActionManager::RunAction(spAction const& action)
+	void ActionManager::AddAction(spAction const& action)
 	{
 		if (!action)
 			logs::Warningln("Node::RunAction failed, action is nullptr");
 
 		if (action)
 		{
-			auto iter = std::find(actions_.begin(), actions_.end(), action);
-			if (iter == actions_.end())
-			{
-				action->Start();
-				actions_.push_back(action);
-			}
+			action->Start();
+			actions_.Append(action);
 		}
 	}
 
 	void ActionManager::ResumeAllActions()
 	{
-		if (actions_.empty())
+		if (actions_.IsEmpty())
 			return;
 
-		for (const auto& action : actions_)
+		for (auto& action = actions_.First(); action; action = action->Next())
 		{
 			action->Resume();
 		}
@@ -84,10 +66,10 @@ namespace easy2d
 
 	void ActionManager::PauseAllActions()
 	{
-		if (actions_.empty())
+		if (actions_.IsEmpty())
 			return;
 
-		for (const auto& action : actions_)
+		for (auto& action = actions_.First(); action; action = action->Next())
 		{
 			action->Pause();
 		}
@@ -95,16 +77,16 @@ namespace easy2d
 
 	void ActionManager::StopAllActions()
 	{
-		if (actions_.empty())
+		if (actions_.IsEmpty())
 			return;
 
-		for (const auto& action : actions_)
+		for (auto& action = actions_.First(); action; action = action->Next())
 		{
 			action->Stop();
 		}
 	}
 
-	const Actions& ActionManager::GetAllActions() const
+	const ActionManager::Actions& ActionManager::GetAllActions() const
 	{
 		return actions_;
 	}

@@ -34,6 +34,7 @@
     <ClInclude Include="..\..\core\base\Game.h" />
     <ClInclude Include="..\..\core\base\Image.h" />
     <ClInclude Include="..\..\core\base\Input.h" />
+    <ClInclude Include="..\..\core\base\IntrusiveList.hpp" />
     <ClInclude Include="..\..\core\base\IntrusivePtr.hpp" />
     <ClInclude Include="..\..\core\base\KeyEvent.h" />
     <ClInclude Include="..\..\core\base\logs.h" />
