@@ -20,7 +20,8 @@
 
 #pragma once
 #include "Node.h"
-#include "Font.h"
+#include "Font.hpp"
+#include "TextStyle.hpp"
 
 namespace easy2d
 {
@@ -31,55 +32,26 @@ namespace easy2d
 		E2D_DISABLE_COPY(Text);
 
 	public:
-		// 文本对齐方式
-		enum class Align
-		{
-			Left,		/* 左对齐 */
-			Right,		/* 右对齐 */
-			Center		/* 居中对齐 */
-		};
-
-		// 文本样式
-		class Style
-		{
-		public:
-			Color	color;				// 颜色
-			Align	alignment;			// 对齐方式
-			bool	wrap;				// 打开自动换行
-			float	wrap_width;			// 自动换行宽度
-			float	line_spacing;		// 行间距
-			bool	underline;			// 下划线
-			bool	strikethrough;		// 删除线
-			bool	outline;			// 显示描边
-			Color	outline_color;		// 描边颜色
-			float	outline_width;		// 描边线宽
-			StrokeStyle	outline_stroke;		// 描边线相交样式
-
-		public:
-			Style();
-
-			Style(
-				Color color,
-				Align alignment			= Align::Left,
-				bool wrap				= false,
-				float wrap_width		= 0.f,
-				float line_spacing		= 0.f,
-				bool underline			= false,
-				bool strikethrough		= false,
-				bool outline			= true,
-				Color outline_color		= Color(Color::Black, 0.5),
-				float outline_width		= 1.f,
-				StrokeStyle outline_stroke = StrokeStyle::Round
-			);
-		};
-
-	public:
 		Text();
 
 		explicit Text(
-			const String& text,			/* 文字内容 */
-			const Font& font	= Font(),		/* 字体 */
-			const Style& style	= Style()		/* 文本样式 */
+			const String& text		/* 文字内容 */
+		);
+
+		explicit Text(
+			const String& text,		/* 文字内容 */
+			const Font& font		/* 字体 */
+		);
+
+		explicit Text(
+			const String& text,		/* 文字内容 */
+			const TextStyle& style	/* 文本样式 */
+		);
+
+		explicit Text(
+			const String& text,		/* 文字内容 */
+			const Font& font,		/* 字体 */
+			const TextStyle& style	/* 文本样式 */
 		);
 
 		virtual ~Text();
@@ -91,7 +63,7 @@ namespace easy2d
 		const Font& GetFont() const;
 
 		// 获取文本样式
-		const Style& GetStyle() const;
+		const TextStyle& GetStyle() const;
 
 		// 获取字体族
 		const String& GetFontFamily() const;
@@ -100,7 +72,7 @@ namespace easy2d
 		float GetFontSize() const;
 
 		// 获取当前字体粗细值
-		UINT GetFontWeight() const;
+		unsigned int GetFontWeight() const;
 
 		// 获取文字颜色
 		const Color& GetColor() const;
@@ -117,17 +89,20 @@ namespace easy2d
 		// 获取文本显示行数
 		int GetLineCount() const;
 
+		// 获取文字包围盒
+		Rect GetContentBounds() const;
+
 		// 是否是斜体
 		bool IsItalic() const;
 
 		// 是否显示删除线
-		bool strikethrough() const;
+		bool HasStrikethrough() const;
 
 		// 是否显示下划线
-		bool underline() const;
+		bool HasUnderline() const;
 
 		// 是否显示描边
-		bool outline() const;
+		bool HasOutline() const;
 
 		// 设置文本
 		void SetText(
@@ -136,7 +111,7 @@ namespace easy2d
 
 		// 设置文本样式
 		void SetStyle(
-			const Style& style
+			const TextStyle& style
 		);
 
 		// 设置字体
@@ -156,12 +131,12 @@ namespace easy2d
 
 		// 设置字体粗细值（默认值为 Text::Font::Weight::Normal）
 		void SetFontWeight(
-			UINT weight
+			unsigned int weight
 		);
 
 		// 设置文字颜色（默认值为 Color::WHITE）
 		void SetColor(
-			Color color
+			Color const& color
 		);
 
 		// 设置文字斜体（默认值为 false）
@@ -184,9 +159,9 @@ namespace easy2d
 			float line_spacing
 		);
 
-		// 设置对齐方式（默认为 Align::Left）
+		// 设置对齐方式（默认为 TextAlign::Left）
 		void SetAlignment(
-			Align align
+			TextAlign align
 		);
 
 		// 设置下划线（默认值为 false）
@@ -206,7 +181,7 @@ namespace easy2d
 
 		// 设置描边颜色
 		void SetOutlineColor(
-			Color outline_color
+			Color const& outline_color
 		);
 
 		// 设置描边线宽
@@ -219,24 +194,28 @@ namespace easy2d
 			StrokeStyle outline_stroke
 		);
 
+		// 设置默认字体
+		static void SetDefaultFont(
+			Font const& font
+		);
+
+		// 设置默认文字样式
+		static void SetDefaultStyle(
+			TextStyle const& style
+		);
+
 		// 渲染文字
 		virtual void OnDraw() const override;
 
 	private:
-		// 重新排版文字
-		void Reset();
-
-		// 创建文字格式化
-		void CreateFormat();
-
-		// 创建文字布局
-		void CreateLayout();
+		void UpdateLayout() const;
 
 	private:
 		String		text_;
-		Font				font_;
-		Style				style_;
-		IDWriteTextFormat*	text_format_;
-		IDWriteTextLayout*	text_layout_;
+		Font		font_;
+		TextStyle	style_;
+		mutable bool				dirty_layout_;
+		mutable IDWriteTextFormat*	text_format_;
+		mutable IDWriteTextLayout*	text_layout_;
 	};
 }

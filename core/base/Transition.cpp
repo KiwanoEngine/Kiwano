@@ -67,18 +67,18 @@ namespace easy2d
 		if (in_scene_)
 		{
 			ThrowIfFailed(
-				devices::Graphics::Instance().CreateLayer(&in_layer_)
+				devices::Graphics::Instance()->CreateLayer(&in_layer_)
 			);
 		}
 
 		if (out_scene_)
 		{
 			ThrowIfFailed(
-				devices::Graphics::Instance().CreateLayer(&out_layer_)
+				devices::Graphics::Instance()->CreateLayer(&out_layer_)
 			);
 		}
 
-		window_size_ = Window::Instance().GetSize();
+		window_size_ = Window::Instance()->GetSize();
 		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
 	}
 
@@ -102,34 +102,34 @@ namespace easy2d
 
 	void Transition::Draw()
 	{
-		auto& graphics = devices::Graphics::Instance();
+		auto graphics = devices::Graphics::Instance();
 
 		if (out_scene_)
 		{
-			graphics.PushClip(
+			graphics->PushClip(
 				out_scene_->GetTransform().ToMatrix(),
 				window_size_
 			);
-			graphics.PushLayer(out_layer_, out_layer_prop_);
+			graphics->PushLayer(out_layer_, out_layer_prop_);
 
 			out_scene_->Visit();
 
-			graphics.PopLayer();
-			graphics.PopClip();
+			graphics->PopLayer();
+			graphics->PopClip();
 		}
 
 		if (in_scene_)
 		{
-			graphics.PushClip(
+			graphics->PushClip(
 				in_scene_->GetTransform().ToMatrix(),
 				window_size_
 			);
-			graphics.PushLayer(in_layer_, in_layer_prop_);
+			graphics->PushLayer(in_layer_, in_layer_prop_);
 
 			in_scene_->Visit();
 
-			graphics.PopLayer();
-			graphics.PopClip();
+			graphics->PopLayer();
+			graphics->PopClip();
 		}
 	}
 

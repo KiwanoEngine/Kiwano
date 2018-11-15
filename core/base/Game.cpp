@@ -61,10 +61,10 @@ namespace easy2d
 
 		debug_enabled_ = options.debug;
 
-		Window::Instance().Init(options.title, options.width, options.height, options.icon, debug_enabled_);
-		devices::Graphics::Instance().Init(Window::Instance().GetHandle(), debug_enabled_);
-		devices::Input::Instance().Init(debug_enabled_);
-		devices::Audio::Instance().Init(debug_enabled_);
+		Window::Instance()->Init(options.title, options.width, options.height, options.icon, debug_enabled_);
+		devices::Graphics::Instance()->Init(Window::Instance()->GetHandle(), debug_enabled_);
+		devices::Input::Instance()->Init(debug_enabled_);
+		devices::Audio::Instance()->Init(debug_enabled_);
 
 		HWND console = ::GetConsoleWindow();
 		if (debug_enabled_)
@@ -95,7 +95,7 @@ namespace easy2d
 		}
 
 		::SetWindowLongPtrW(
-			Window::Instance().GetHandle(),
+			Window::Instance()->GetHandle(),
 			GWLP_USERDATA,
 			PtrToUlong(this)
 		);
@@ -114,9 +114,9 @@ namespace easy2d
 			next_scene_ = nullptr;
 		}
 
-		const auto& window = Window::Instance();
-		::ShowWindow(window.GetHandle(), SW_SHOWNORMAL);
-		::UpdateWindow(window.GetHandle());
+		const auto window = Window::Instance();
+		::ShowWindow(window->GetHandle(), SW_SHOWNORMAL);
+		::UpdateWindow(window->GetHandle());
 
 		const int64_t min_interval = 5;
 		auto last = time::Now();
@@ -132,10 +132,10 @@ namespace easy2d
 				const auto dt = now - last;
 				last = now;
 
-				devices::Input::Instance().Update(
-					window.GetHandle(),
-					window.GetContentScaleX(),
-					window.GetContentScaleY()
+				devices::Input::Instance()->Update(
+					window->GetHandle(),
+					window->GetContentScaleX(),
+					window->GetContentScaleY()
 				);
 
 				UpdateScene(dt);
@@ -264,8 +264,8 @@ namespace easy2d
 
 	void Game::DrawScene()
 	{
-		auto& graphics = devices::Graphics::Instance();
-		graphics.BeginDraw(Window::Instance().GetHandle());
+		auto graphics = devices::Graphics::Instance();
+		graphics->BeginDraw(Window::Instance()->GetHandle());
 
 		if (transition_)
 		{
@@ -280,20 +280,20 @@ namespace easy2d
 		{
 			if (curr_scene_)
 			{
-				graphics.SetTransform(math::Matrix());
-				graphics.SetBrushOpacity(1.f);
+				graphics->SetTransform(math::Matrix());
+				graphics->SetBrushOpacity(1.f);
 				curr_scene_->DrawBorder();
 			}
 			if (next_scene_)
 			{
-				graphics.SetTransform(math::Matrix());
-				graphics.SetBrushOpacity(1.f);
+				graphics->SetTransform(math::Matrix());
+				graphics->SetBrushOpacity(1.f);
 				next_scene_->DrawBorder();
 			}
 
-			graphics.DrawDebugInfo();
+			graphics->DrawDebugInfo();
 		}
 
-		graphics.EndDraw();
+		graphics->EndDraw();
 	}
 }

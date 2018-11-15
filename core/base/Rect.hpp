@@ -81,6 +81,24 @@ namespace easy2d
 			return (origin == rect.origin) && (size == rect.size);
 		}
 
+		inline Point GetCenter() const { return Point{ origin.x + size.width / 2, origin.y + size.height / 2 }; }
+
+		inline Point GetLeftTop() const { return origin; }
+
+		inline Point GetRightBottom() const { return Point{ GetRight(), GetBottom() }; }
+
+		inline Point GetRightTop() const { return Point{ GetRight(), GetTop() }; }
+
+		inline Point GetLeftBottom() const { return Point{ GetLeft(), GetBottom() }; }
+
+		inline float GetLeft() const { return origin.x; }
+
+		inline float GetTop() const { return origin.y; }
+
+		inline float GetRight() const { return origin.x + size.width; }
+
+		inline float GetBottom() const { return origin.y + size.height; }
+
 		// 判断点是否在矩形内
 		inline bool ContainsPoint(
 			const Point& point

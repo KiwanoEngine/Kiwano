@@ -308,7 +308,7 @@ namespace easy2d
 				// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 				// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
 				// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-				devices::Graphics::Instance().Resize(width, height);
+				devices::Graphics::Instance()->Resize(width, height);
 			}
 			break;
 

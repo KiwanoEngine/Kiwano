@@ -24,72 +24,54 @@
 
 namespace easy2d
 {
-	//-------------------------------------------------------
-	// Style
-	//-------------------------------------------------------
+	namespace
+	{
+		Font text_default_font;
+		TextStyle text_default_style;
+	}
 
-	Text::Style::Style()
-		: color(Color::White)
-		, alignment(Align::Left)
-		, wrap(false)
-		, wrap_width(0.f)
-		, line_spacing(0.f)
-		, underline(false)
-		, strikethrough(false)
-		, outline(true)
-		, outline_color(Color(Color::Black, 0.5))
-		, outline_width(1.f)
-		, outline_stroke(StrokeStyle::Round)
-	{}
+	void easy2d::Text::SetDefaultFont(Font const & font)
+	{
+		text_default_font = font;
+	}
 
-	Text::Style::Style(
-		Color color,
-		Align alignment,
-		bool wrap,
-		float wrap_width,
-		float line_spacing,
-		bool underline,
-		bool strikethrough,
-		bool outline,
-		Color outline_color,
-		float outline_width,
-		StrokeStyle outline_stroke
-	)
-		: color(color)
-		, alignment(alignment)
-		, wrap(wrap)
-		, wrap_width(wrap_width)
-		, line_spacing(line_spacing)
-		, underline(underline)
-		, strikethrough(strikethrough)
-		, outline(outline)
-		, outline_color(outline_color)
-		, outline_width(outline_width)
-		, outline_stroke(outline_stroke)
-	{}
-
-
-
-	//-------------------------------------------------------
-	// Text
-	//-------------------------------------------------------
+	void easy2d::Text::SetDefaultStyle(TextStyle const & style)
+	{
+		text_default_style = style;
+	}
 
 	Text::Text()
-		: font_()
-		, style_()
+		: font_(text_default_font)
+		, style_(text_default_style)
 		, text_layout_(nullptr)
 		, text_format_(nullptr)
+		, dirty_layout_(false)
 	{
 	}
 
-	Text::Text(const String & text, const Font & font, const Style & style)
+	Text::Text(const String & text)
+		: Text(text, text_default_font, text_default_style)
+	{
+	}
+
+	Text::Text(const String & text, const Font & font)
+		: Text(text, font, text_default_style)
+	{
+	}
+
+	Text::Text(const String & text, const TextStyle & style)
+		: Text(text, text_default_font, style)
+	{
+	}
+
+	Text::Text(const String & text, const Font & font, const TextStyle & style)
 		: font_(font)
 		, style_(style)
+		, text_(text)
 		, text_layout_(nullptr)
 		, text_format_(nullptr)
-		, text_(text)
+		, dirty_layout_(true)
 	{
-		Reset();
 	}
 
 	Text::~Text()
@@ -108,7 +90,7 @@ namespace easy2d
 		return font_;
 	}
 
-	const Text::Style& Text::GetStyle() const
+	const TextStyle& Text::GetStyle() const
 	{
 		return style_;
 	}
@@ -123,7 +105,7 @@ namespace easy2d
 		return font_.size;
 	}
 
-	UINT Text::GetFontWeight() const
+	unsigned int Text::GetFontWeight() const
 	{
 		return font_.weight;
 	}
@@ -150,16 +132,30 @@ namespace easy2d
 
 	int Text::GetLineCount() const
 	{
+		UpdateLayout();
 		if (text_layout_)
 		{
 			DWRITE_TEXT_METRICS metrics;
-			text_layout_->GetMetrics(&metrics);
-			return static_cast<int>(metrics.lineCount);
+			if (SUCCEEDED(text_layout_->GetMetrics(&metrics)))
+			{
+				return static_cast<int>(metrics.lineCount);
+			}
 		}
-		else
+		return 0;
+	}
+
+	Rect Text::GetContentBounds() const
+	{
+		UpdateLayout();
+		if (text_layout_)
 		{
-			return 0;
+			DWRITE_TEXT_METRICS metrics;
+			if (SUCCEEDED(text_layout_->GetMetrics(&metrics)))
+			{
+				return Rect(0.f, 0.f, metrics.layoutWidth, metrics.height);
+			}
 		}
+		return Rect{};
 	}
 
 	bool Text::IsItalic() const
@@ -167,17 +163,17 @@ namespace easy2d
 		return font_.italic;
 	}
 
-	bool Text::strikethrough() const
+	bool Text::HasStrikethrough() const
 	{
 		return style_.strikethrough;
 	}
 
-	bool Text::underline() const
+	bool Text::HasUnderline() const
 	{
 		return style_.underline;
 	}
 
-	bool Text::outline() const
+	bool Text::HasOutline() const
 	{
 		return style_.outline;
 	}
@@ -185,48 +181,60 @@ namespace easy2d
 	void Text::SetText(const String& text)
 	{
 		text_ = text;
-		Reset();
+		dirty_layout_ = true;
 	}
 
-	void Text::SetStyle(const Style& style)
+	void Text::SetStyle(const TextStyle& style)
 	{
 		style_ = style;
-		Reset();
+		dirty_layout_ = true;
 	}
 
 	void Text::SetFont(const Font & font)
 	{
 		font_ = font;
-		Reset();
+		dirty_layout_ = true;
 	}
 
 	void Text::SetFontFamily(const String& family)
 	{
-		font_.family = family;
-		Reset();
+		if (font_.family != family)
+		{
+			font_.family = family;
+			dirty_layout_ = true;
+		}
 	}
 
 	void Text::SetFontSize(float size)
 	{
-		font_.size = size;
-		Reset();
+		if (font_.size != size)
+		{
+			font_.size = size;
+			dirty_layout_ = true;
+		}
 	}
 
-	void Text::SetFontWeight(UINT weight)
+	void Text::SetFontWeight(unsigned int weight)
 	{
-		font_.weight = weight;
-		Reset();
+		if (font_.weight != weight)
+		{
+			font_.weight = weight;
+			dirty_layout_ = true;
+		}
 	}
 
-	void Text::SetColor(Color color)
+	void Text::SetColor(Color const& color)
 	{
 		style_.color = color;
 	}
 
 	void Text::SetItalic(bool val)
 	{
-		font_.italic = val;
-		Reset();
+		if (font_.italic != val)
+		{
+			font_.italic = val;
+			dirty_layout_ = true;
+		}
 	}
 
 	void Text::SetWrapEnabled(bool wrap)
@@ -234,7 +242,7 @@ namespace easy2d
 		if (style_.wrap != wrap)
 		{
 			style_.wrap = wrap;
-			Reset();
+			dirty_layout_ = true;
 		}
 	}
 
@@ -243,11 +251,7 @@ namespace easy2d
 		if (style_.wrap_width != wrap_width)
 		{
 			style_.wrap_width = std::max(wrap_width, 0.f);
-
-			if (style_.wrap)
-			{
-				Reset();
-			}
+			dirty_layout_ = true;
 		}
 	}
 
@@ -256,16 +260,16 @@ namespace easy2d
 		if (style_.line_spacing != line_spacing)
 		{
 			style_.line_spacing = line_spacing;
-			Reset();
+			dirty_layout_ = true;
 		}
 	}
 
-	void Text::SetAlignment(Align align)
+	void Text::SetAlignment(TextAlign align)
 	{
 		if (style_.alignment != align)
 		{
 			style_.alignment = align;
-			Reset();
+			dirty_layout_ = true;
 		}
 	}
 
@@ -274,9 +278,7 @@ namespace easy2d
 		if (style_.underline != underline)
 		{
 			style_.underline = underline;
-			if (!text_format_)
-				CreateFormat();
-			CreateLayout();
+			dirty_layout_ = true;
 		}
 	}
 
@@ -285,9 +287,7 @@ namespace easy2d
 		if (style_.strikethrough != strikethrough)
 		{
 			style_.strikethrough = strikethrough;
-			if (!text_format_)
-				CreateFormat();
-			CreateLayout();
+			dirty_layout_ = true;
 		}
 	}
 
@@ -296,7 +296,7 @@ namespace easy2d
 		style_.outline = outline;
 	}
 
-	void Text::SetOutlineColor(Color outline_color)
+	void Text::SetOutlineColor(Color const&outline_color)
 	{
 		style_.outline_color = outline_color;
 	}
@@ -313,47 +313,43 @@ namespace easy2d
 
 	void Text::OnDraw() const
 	{
+		UpdateLayout();
+
 		if (text_layout_)
 		{
-			// 创建文本区域
-			D2D1_RECT_F textLayoutRect = D2D1::RectF(0, 0, GetTransform().size.width, GetTransform().size.height);
-			// 设置画刷颜色和透明度
-			devices::Graphics::Instance().SetBrushOpacity(GetDisplayOpacity());
-			// 获取文本渲染器
-			devices::Graphics::Instance().SetTextStyle(
+			auto graphics = devices::Graphics::Instance();
+			graphics->SetBrushOpacity(GetDisplayOpacity());
+			graphics->SetTextStyle(
 				style_.color,
 				style_.outline,
 				style_.outline_color,
 				style_.outline_width,
 				style_.outline_stroke
 			);
-			devices::Graphics::Instance().DrawTextLayout(text_layout_);
+			graphics->DrawTextLayout(text_layout_);
 		}
 	}
 
-	void Text::Reset()
+	void Text::UpdateLayout() const
 	{
-		// 创建文字格式化
-		CreateFormat();
-		// 创建文字布局
-		CreateLayout();
-	}
+		if (!dirty_layout_)
+			return;
 
-	void Text::CreateFormat()
-	{
 		SafeRelease(text_format_);
+		SafeRelease(text_layout_);
+
+		if (text_.empty())
+			return;
+
+		auto graphics = devices::Graphics::Instance();
 
 		ThrowIfFailed(
-			devices::Graphics::Instance().CreateTextFormat(
+			graphics->CreateTextFormat(
 				&text_format_,
 				font_
 			)
 		);
 
-		// 设置文字对齐方式
-		text_format_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(style_.alignment));
-
-		// 设置行间距
 		if (style_.line_spacing == 0.f)
 		{
 			text_format_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
@@ -366,57 +362,24 @@ namespace easy2d
 				style_.line_spacing * 0.8f
 			);
 		}
+		text_format_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(style_.alignment));
+		text_format_->SetWordWrapping(style_.wrap ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP);
 
-		// 打开文本自动换行时，设置换行属性
-		if (style_.wrap)
-		{
-			text_format_->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
-		}
-		else
-		{
-			text_format_->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-		}
-	}
-
-	void Text::CreateLayout()
-	{
-		SafeRelease(text_layout_);
-
-		// 文本为空字符串时，重置属性
-		if (text_.empty())
-		{
-			this->SetSize(0, 0);
-			return;
-		}
-
-		if (text_format_ == nullptr)
-		{
-			E2D_WARNING("Text::CreateLayout failed! text_format_ NULL pointer exception.");
-			return;
-		}
-
-		// 对文本自动换行情况下进行处理
 		if (style_.wrap)
 		{
 			ThrowIfFailed(
-				devices::Graphics::Instance().CreateTextLayout(
+				graphics->CreateTextLayout(
 					&text_layout_,
 					text_,
 					text_format_,
 					style_.wrap_width
 				)
 			);
-			// 获取文本布局的宽度和高度
-			DWRITE_TEXT_METRICS metrics;
-			text_layout_->GetMetrics(&metrics);
-			// 重设文本宽高
-			this->SetSize(metrics.layoutWidth, metrics.height);
 		}
 		else
 		{
-			// 为防止文本对齐问题，根据先创建 layout 以获取宽度
 			ThrowIfFailed(
-				devices::Graphics::Instance().CreateTextLayout(
+				graphics->CreateTextLayout(
 					&text_layout_,
 					text_,
 					text_format_,
@@ -424,25 +387,20 @@ namespace easy2d
 				)
 			);
 
-			// 获取文本布局的宽度和高度
 			DWRITE_TEXT_METRICS metrics;
 			text_layout_->GetMetrics(&metrics);
-			// 重设文本宽高
-			this->SetSize(metrics.width, metrics.height);
 
-			// 重新创建 layout
 			SafeRelease(text_layout_);
 			ThrowIfFailed(
-				devices::Graphics::Instance().CreateTextLayout(
+				graphics->CreateTextLayout(
 					&text_layout_,
 					text_,
 					text_format_,
-					GetTransform().size.width
+					metrics.width
 				)
 			);
 		}
 
-		// 添加下划线和删除线
 		DWRITE_TEXT_RANGE range = { 0, static_cast<UINT32>(text_.length()) };
 		if (style_.underline)
 		{
@@ -452,5 +410,7 @@ namespace easy2d
 		{
 			text_layout_->SetStrikethrough(true, range);
 		}
+
+		dirty_layout_ = false;
 	}
 }

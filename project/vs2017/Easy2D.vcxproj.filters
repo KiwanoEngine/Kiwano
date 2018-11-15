@@ -29,9 +29,6 @@
     <ClInclude Include="..\..\core\base\Color.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Font.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\Game.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -152,6 +149,12 @@
     <ClInclude Include="..\..\core\math\Transform.hpp">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\TextStyle.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\Font.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -187,9 +190,6 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\Color.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\base\Font.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\Game.cpp">
