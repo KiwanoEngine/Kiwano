@@ -21,7 +21,7 @@
 #pragma once
 #include "base.h"
 #include "Singleton.hpp"
-#include "Font.h"
+#include "Font.hpp"
 #include "Resource.h"
 #include "TextRenderer.h"
 #include "../math/Matrix.hpp"

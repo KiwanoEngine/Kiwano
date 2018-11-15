@@ -30,7 +30,7 @@
     <ClInclude Include="..\..\core\base\CallFunc.h" />
     <ClInclude Include="..\..\core\base\Canvas.h" />
     <ClInclude Include="..\..\core\base\Color.h" />
-    <ClInclude Include="..\..\core\base\Font.h" />
+    <ClInclude Include="..\..\core\base\Font.hpp" />
     <ClInclude Include="..\..\core\base\Game.h" />
     <ClInclude Include="..\..\core\base\Image.h" />
     <ClInclude Include="..\..\core\base\Input.h" />
@@ -54,6 +54,7 @@
     <ClInclude Include="..\..\core\base\TaskManager.h" />
     <ClInclude Include="..\..\core\base\Text.h" />
     <ClInclude Include="..\..\core\base\TextRenderer.h" />
+    <ClInclude Include="..\..\core\base\TextStyle.hpp" />
     <ClInclude Include="..\..\core\base\time.h" />
     <ClInclude Include="..\..\core\base\Transition.h" />
     <ClInclude Include="..\..\core\base\window.h" />
@@ -80,7 +81,6 @@
     <ClCompile Include="..\..\core\base\CallFunc.cpp" />
     <ClCompile Include="..\..\core\base\Canvas.cpp" />
     <ClCompile Include="..\..\core\base\Color.cpp" />
-    <ClCompile Include="..\..\core\base\Font.cpp" />
     <ClCompile Include="..\..\core\base\Game.cpp" />
     <ClCompile Include="..\..\core\base\Image.cpp" />
     <ClCompile Include="..\..\core\base\Input.cpp" />

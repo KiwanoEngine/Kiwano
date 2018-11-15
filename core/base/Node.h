@@ -100,10 +100,10 @@ namespace easy2d
 		// 获取节点纵向缩放比例
 		float GetScaleY() const;
 
-		// 获取节点横向倾斜角度
+		// 获取节点横向错切角度
 		float GetSkewX() const;
 
-		// 获取节点纵向倾斜角度
+		// 获取节点纵向错切角度
 		float GetSkewY() const;
 
 		// 获取节点旋转角度
@@ -191,19 +191,19 @@ namespace easy2d
 			float scale
 		);
 
-		// 设置横向倾斜角度
+		// 设置横向错切角度
 		// 默认为 0
 		void SetSkewX(
 			float skew_x
 		);
 
-		// 设置纵向倾斜角度
+		// 设置纵向错切角度
 		// 默认为 0
 		void SetSkewY(
 			float skew_y
 		);
 
-		// 设置倾斜角度
+		// 设置错切角度
 		// 默认为 (0, 0)
 		void SetSkew(
 			float skew_x,
@@ -331,6 +331,12 @@ namespace easy2d
 
 		// 从父节点移除
 		void RemoveFromParent();
+
+		// 设置默认支点
+		static void SetDefaultPivot(
+			float pivot_x,
+			float pivot_y
+		);
 
 	protected:
 		virtual void Visit();

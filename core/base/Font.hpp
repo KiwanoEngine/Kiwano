@@ -48,11 +48,17 @@ namespace easy2d
 		};
 
 	public:
-		explicit Font(
+		Font(
 			const std::wstring& family	= L"",
 			float size					= 22,
 			unsigned int weight			= Font::Weight::Normal,
 			bool italic					= false
-		);
+		)
+			: family(family)
+			, size(size)
+			, weight(weight)
+			, italic(italic)
+		{
+		}
 	};
 }

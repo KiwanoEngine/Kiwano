@@ -27,7 +27,7 @@ namespace easy2d
 	class ISingleton
 	{
 	public:
-		static inline T& Instance();
+		static inline T* Instance();
 
 	private:
 		ISingleton() {}
@@ -40,12 +40,12 @@ namespace easy2d
 	};
 
 	template<typename T>
-	inline T & easy2d::ISingleton<T>::Instance()
+	inline T* easy2d::ISingleton<T>::Instance()
 	{
 		static std::unique_ptr<T> instance_;
 		if (!instance_)
 			instance_.reset(new (std::nothrow) T);
-		return *instance_;
+		return instance_.get();
 	}
 }
 
@@ -60,5 +60,6 @@ namespace easy2d
 #endif
 
 #ifndef E2D_DECLARE_SINGLETON_TYPE
-#define E2D_DECLARE_SINGLETON_TYPE( type, singleton_type ) using singleton_type = ::easy2d::ISingleton< type >
+#define E2D_DECLARE_SINGLETON_TYPE( type, singleton_type ) \
+	using singleton_type = ::easy2d::ISingleton< type >
 #endif

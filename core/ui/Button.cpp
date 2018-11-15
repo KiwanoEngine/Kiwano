@@ -227,7 +227,7 @@ namespace easy2d
 			if (IsVisible() &&
 				!enabled_ &&
 				normal_ &&
-				normal_->ContainsPoint(devices::Input::Instance().GetMousePos()))
+				normal_->ContainsPoint(devices::Input::Instance()->GetMousePos()))
 			{
 				HCURSOR hcursor = ::LoadCursor(nullptr, IDC_NO);
 				if (hcursor)

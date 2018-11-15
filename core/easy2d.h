@@ -42,7 +42,8 @@
 
 #include "base/Size.h"
 #include "base/Rect.hpp"
-#include "base/Font.h"
+#include "base/Font.hpp"
+#include "base/TextStyle.hpp"
 #include "base/Color.h"
 #include "base/Resource.h"
 

@@ -26,6 +26,18 @@
 
 namespace easy2d
 {
+	namespace
+	{
+		float default_pivot_x = 0.f;
+		float default_pivot_y = 0.f;
+	}
+
+	void Node::SetDefaultPivot(float pivot_x, float pivot_y)
+	{
+		default_pivot_x = pivot_x;
+		default_pivot_y = pivot_y;
+	}
+
 	Node::Node()
 		: visible_(true)
 		, parent_(nullptr)
@@ -43,6 +55,8 @@ namespace easy2d
 		, final_matrix_()
 		, border_color_(Color::Red, 0.6f)
 	{
+		transform_.pivot.x = default_pivot_x;
+		transform_.pivot.y = default_pivot_y;
 	}
 
 	Node::~Node()
@@ -55,16 +69,16 @@ namespace easy2d
 		if (!visible_)
 			return;
 
-		auto& graphics = devices::Graphics::Instance();
+		auto graphics = devices::Graphics::Instance();
 
 		if (clip_enabled_)
 		{
-			graphics.PushClip(final_matrix_, transform_.size);
+			graphics->PushClip(final_matrix_, transform_.size);
 		}
 
 		if (children_.empty())
 		{
-			graphics.SetTransform(final_matrix_);
+			graphics->SetTransform(final_matrix_);
 			OnDraw();
 		}
 		else
@@ -96,7 +110,7 @@ namespace easy2d
 				}
 			}
 
-			graphics.SetTransform(final_matrix_);
+			graphics->SetTransform(final_matrix_);
 			OnDraw();
 
 			// 访问剩余节点
@@ -106,7 +120,7 @@ namespace easy2d
 
 		if (clip_enabled_)
 		{
-			graphics.PopClip();
+			graphics->PopClip();
 		}
 	}
 
@@ -153,7 +167,7 @@ namespace easy2d
 		{
 			if (border_)
 			{
-				devices::Graphics::Instance().DrawGeometry(border_, border_color_, 1.f, 1.5f);
+				devices::Graphics::Instance()->DrawGeometry(border_, border_color_, 1.f, 1.5f);
 			}
 
 			for (const auto& child : children_)
@@ -184,7 +198,7 @@ namespace easy2d
 		// 重新构造轮廓
 		SafeRelease(border_);
 		ThrowIfFailed(
-			devices::Graphics::Instance().CreateRectGeometry(final_matrix_, transform_.size, &border_)
+			devices::Graphics::Instance()->CreateRectGeometry(final_matrix_, transform_.size, &border_)
 		);
 
 		for (auto& child : children_)
