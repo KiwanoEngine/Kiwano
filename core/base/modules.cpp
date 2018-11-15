@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "modules.h"
+#include "logs.h"
 
 namespace easy2d
 {
@@ -43,6 +44,8 @@ namespace easy2d
 			initialize_count++;
 			if (initialize_count > 1)
 				return;
+
+			E2D_LOG("Initing modules");
 
 			const auto xaudio2_dll_names =
 			{
@@ -97,6 +100,8 @@ namespace easy2d
 			initialize_count--;
 			if (initialize_count > 0)
 				return;
+
+			E2D_LOG("Destroying modules");
 
 			SafeFreeLibrary(XAudio2.instance);
 			SafeFreeLibrary(MediaFoundation.mfplat);

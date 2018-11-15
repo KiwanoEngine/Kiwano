@@ -80,7 +80,6 @@
 #include <list>
 #include <vector>
 #include <algorithm>
-#include <memory>
 
 
 #if VS_VER >= VS_2015
@@ -96,17 +95,3 @@
 	private:										\
 		Class(const Class &) = delete;				\
 		Class & operator= (const Class &) = delete
-
-
-#if defined( DEBUG ) || defined( _DEBUG )
-#	define E2D_WARNING(msg) do { ::OutputDebugStringW(L"[easy2d] Warning: " _CRT_WIDE(msg) L"\r\n"); } while(0)
-#else
-#	define E2D_WARNING(msg) ((void)0)
-#endif
-
-
-#if defined( DEBUG ) || defined( _DEBUG )
-#	define E2D_WARNING_IF(exp, msg) do { if (exp) { ::OutputDebugStringW(L"[easy2d] Warning: " _CRT_WIDE(msg) L"\r\n"); } } while(0)
-#else
-#	define E2D_WARNING_IF(exp, msg) ((void)0)
-#endif

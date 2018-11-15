@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "ActionManager.h"
+#include "logs.h"
 
 namespace easy2d
 {
@@ -56,7 +57,8 @@ namespace easy2d
 
 	void ActionManager::RunAction(spAction const& action)
 	{
-		E2D_WARNING_IF(!action, "Action NULL pointer exception!");
+		if (!action)
+			logs::Warningln("Node::RunAction failed, action is nullptr");
 
 		if (action)
 		{

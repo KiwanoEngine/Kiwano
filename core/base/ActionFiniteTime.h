@@ -20,6 +20,7 @@
 
 #pragma once
 #include "Action.hpp"
+#include "logs.h"
 
 namespace easy2d
 {
@@ -101,7 +102,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual spAction Reverse() const override
 		{
-			E2D_WARNING("Reverse() not supported in MoveTo");
+			logs::Errorln("Reverse() not supported in MoveTo");
 			return nullptr;
 		}
 
@@ -170,7 +171,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual spAction Reverse() const override
 		{
-			E2D_WARNING("Reverse() not supported in JumpTo");
+			logs::Errorln("Reverse() not supported in JumpTo");
 			return nullptr;
 		}
 
@@ -246,7 +247,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual spAction Reverse() const override
 		{
-			E2D_WARNING("Reverse() not supported in ScaleTo");
+			logs::Errorln("Reverse() not supported in ScaleTo");
 			return nullptr;
 		}
 
@@ -309,7 +310,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual spAction Reverse() const override
 		{
-			E2D_WARNING("Reverse() not supported in OpacityTo");
+			logs::Errorln("Reverse() not supported in OpacityTo");
 			return nullptr;
 		}
 
@@ -399,7 +400,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual spAction Reverse() const override
 		{
-			E2D_WARNING("Reverse() not supported in RotateTo");
+			logs::Errorln("Reverse() not supported in RotateTo");
 			return nullptr;
 		}
 

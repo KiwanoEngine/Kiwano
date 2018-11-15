@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
+#include <utility>
 
 namespace easy2d
 {
@@ -66,20 +66,16 @@ namespace easy2d
 
 		inline void Swap(IntrusivePtr& other)
 		{
-			::std::swap(ptr_, other.ptr_);
+			std::swap(ptr_, other.ptr_);
 		}
 
 		inline ElemType* operator ->() const
 		{
-			E2D_WARNING_IF(!ptr_ || ptr_->GetRefCount() <= 0,
-				"Invalid pointer!");
 			return ptr_;
 		}
 
 		inline ElemType& operator *() const
 		{
-			E2D_WARNING_IF(!ptr_ || ptr_->GetRefCount() <= 0,
-				"Invalid pointer!");
 			return *ptr_;
 		}
 

@@ -138,6 +138,8 @@ namespace easy2d
 		//         auto duration = t2 - t1;
 		//         获取两时间相差的毫秒数:
 		//         int ms = duration.Milliseconds();
+		//     注: 由于该时间点基于系统启动时间开始计算, 所以无法格式化该时间,
+		//         也无法获得该时间的 Unix 时间戳
 		// 
 		class TimePoint
 		{
@@ -145,11 +147,7 @@ namespace easy2d
 			TimePoint();
 
 			explicit TimePoint(
-				const Duration& dur_since_epoch
-			);
-
-			explicit TimePoint(
-				int64_t dur_since_epoch
+				const Duration&
 			);
 
 			TimePoint(
@@ -160,13 +158,8 @@ namespace easy2d
 				TimePoint&& other
 			);
 
-			inline Duration const& SinceEpoch() const { return dur_since_epoch_; }
-
-			// 获取时间戳
-			inline time_t GetTimeStamp() const { return static_cast<time_t>(dur_since_epoch_.Seconds()); }
-
 			// 是否是零时
-			inline bool IsZero() const { return dur_since_epoch_.IsZero(); }
+			inline bool IsZero() const { return dur.IsZero(); }
 
 			const TimePoint operator + (const Duration &) const;
 			const TimePoint operator - (const Duration &) const;
@@ -180,7 +173,7 @@ namespace easy2d
 			TimePoint& operator = (TimePoint &&) E2D_NOEXCEPT;
 
 		private:
-			Duration dur_since_epoch_;
+			Duration dur;
 		};
 
 		// 获取当前时间

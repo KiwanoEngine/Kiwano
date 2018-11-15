@@ -20,6 +20,7 @@
 
 #include "window.h"
 #include "render.h"
+#include "logs.h"
 #include "Game.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
@@ -51,6 +52,8 @@ namespace easy2d
 
 	WindowImpl::~WindowImpl()
 	{
+		E2D_LOG("Destroying window");
+
 		if (handle)
 			::DestroyWindow(handle);
 	}
@@ -59,6 +62,8 @@ namespace easy2d
 	{
 		if (initialized)
 			return;
+
+		E2D_LOG("Initing window");
 
 		HINSTANCE hinstance	= GetModuleHandle(nullptr);
 		WNDCLASSEX wcex		= { 0 };
@@ -112,7 +117,7 @@ namespace easy2d
 		if (handle == nullptr)
 		{
 			::UnregisterClass(REGISTER_CLASS, hinstance);
-			throw std::runtime_error("Create window failed");
+			throw std::runtime_error("Create window failed!");
 		}
 
 		// 禁用输入法
@@ -240,13 +245,13 @@ namespace easy2d
 				static_cast<LONG>(math::Ceil(height * scale_y))
 			};
 
-			// 计算合适的窗口大小
 			::AdjustWindowRectEx(&rect, WINDOW_STYLE, FALSE, NULL);
 			width = static_cast<int>(rect.right - rect.left);
 			height = static_cast<int>(rect.bottom - rect.top);
 
-			// 当输入的窗口大小比分辨率大时，给出警告
-			E2D_WARNING_IF(max_width < width || max_height < height, "The window Is larger than screen!");
+			if (max_width < width || max_height < height)
+				logs::Warningln("The window is larger than screen!");
+
 			width = std::min(width, max_width);
 			height = std::min(height, max_height);
 

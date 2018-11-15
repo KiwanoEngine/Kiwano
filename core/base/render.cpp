@@ -21,6 +21,7 @@
 #include "render.h"
 #include "time.h"
 #include "base.h"
+#include "logs.h"
 #include "modules.h"
 #include "Image.h"
 
@@ -44,6 +45,8 @@ namespace easy2d
 
 		GraphicsDevice::~GraphicsDevice()
 		{
+			E2D_LOG("Destroying graphics device");
+
 			ClearImageCache();
 
 			SafeRelease(fps_text_format_);
@@ -68,6 +71,8 @@ namespace easy2d
 		{
 			if (initialized)
 				return;
+
+			E2D_LOG("Initing graphics device");
 
 			D2D1_FACTORY_OPTIONS options{ debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE };
 			ThrowIfFailed(

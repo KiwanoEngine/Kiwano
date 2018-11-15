@@ -24,6 +24,7 @@
 #include "Image.h"
 #include "../utils/Player.h"
 #include "../math/Matrix.hpp"
+#include "logs.h"
 #include "render.h"
 #include "input.h"
 #include "audio.h"
@@ -170,7 +171,7 @@ namespace easy2d
 	{
 		if (!scene)
 		{
-			E2D_WARNING("Next scene is null pointer!");
+			logs::Warningln("Game::EnterScene failed, scene is nullptr");
 			return false;
 		}
 

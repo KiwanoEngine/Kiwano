@@ -19,15 +19,13 @@
 // THE SOFTWARE.
 
 #include "time.h"
-#include <chrono>
+#include "logs.h"
 #include <regex>
 
 namespace easy2d
 {
 	namespace time
 	{
-		using namespace std::chrono;
-
 		//-------------------------------------------------------
 		// TimePoint
 		//-------------------------------------------------------
@@ -36,51 +34,46 @@ namespace easy2d
 		{
 		}
 
-		TimePoint::TimePoint(const Duration& dur_since_epoch)
-			: dur_since_epoch_(dur_since_epoch)
-		{
-		}
-
-		TimePoint::TimePoint(int64_t dur_since_epoch)
-			: dur_since_epoch_(dur_since_epoch)
+		TimePoint::TimePoint(const Duration& dur)
+			: dur(dur)
 		{
 		}
 
 		TimePoint::TimePoint(const TimePoint & other)
-			: dur_since_epoch_(other.dur_since_epoch_)
+			: dur(other.dur)
 		{
 		}
 
 		TimePoint::TimePoint(TimePoint && other)
-			: dur_since_epoch_(std::move(other.dur_since_epoch_))
+			: dur(std::move(other.dur))
 		{
 		}
 
 		const TimePoint TimePoint::operator+(const Duration & dur) const
 		{
-			return TimePoint(dur_since_epoch_ + dur);
+			return TimePoint(dur + dur);
 		}
 
 		const TimePoint TimePoint::operator-(const Duration & dur) const
 		{
-			return TimePoint(dur_since_epoch_ - dur);
+			return TimePoint(dur - dur);
 		}
 
 		TimePoint & TimePoint::operator+=(const Duration & other)
 		{
-			dur_since_epoch_ += other;
+			dur += other;
 			return (*this);
 		}
 
 		TimePoint & TimePoint::operator-=(const Duration &other)
 		{
-			dur_since_epoch_ -= other;
+			dur -= other;
 			return (*this);
 		}
 
 		const Duration TimePoint::operator-(const TimePoint & other) const
 		{
-			return dur_since_epoch_ - other.dur_since_epoch_;
+			return dur - other.dur;
 		}
 
 		TimePoint& TimePoint::operator=(const TimePoint & other) E2D_NOEXCEPT
@@ -88,7 +81,7 @@ namespace easy2d
 			if (this == &other)
 				return *this;
 
-			dur_since_epoch_ = other.dur_since_epoch_;
+			dur = other.dur;
 			return *this;
 		}
 
@@ -97,7 +90,7 @@ namespace easy2d
 			if (this == &other)
 				return *this;
 
-			dur_since_epoch_ = std::move(other.dur_since_epoch_);
+			dur = std::move(other.dur);
 			return *this;
 		}
 
@@ -443,11 +436,19 @@ namespace easy2d
 
 		TimePoint easy2d::time::Now()
 		{
-			return TimePoint(
-				static_cast<int64_t>(
-					duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count()
-				)
-			);
+			static LARGE_INTEGER freq = {};
+			if (freq.QuadPart == 0LL)
+			{
+				if (QueryPerformanceFrequency(&freq) == 0)
+					throw std::runtime_error("QueryPerformanceFrequency not supported: " + std::to_string(GetLastError()));
+			}
+
+			LARGE_INTEGER count;
+			QueryPerformanceCounter(&count);
+
+			const long long whole = (count.QuadPart / freq.QuadPart) * 1000LL;
+			const long long part = (count.QuadPart % freq.QuadPart) * 1000LL / freq.QuadPart;
+			return TimePoint{ Duration{ whole + part } };
 		}
 
 		Duration easy2d::time::ParseDuration(const std::wstring & str)
@@ -459,7 +460,7 @@ namespace easy2d
 
 			if (!std::regex_match(str, duration_regex))
 			{
-				E2D_WARNING("Time::Duration::Parse: invalid duration");
+				logs::Errorln("time::ParseDuration failed, invalid duration");
 				return Duration();
 			}
 
@@ -490,7 +491,7 @@ namespace easy2d
 
 				if (num_str.empty() || num_str == L".")
 				{
-					E2D_WARNING("Time::Duration::Parse: invalid duration");
+					logs::Errorln("time::ParseDuration failed, invalid duration");
 					return Duration();
 				}
 
@@ -509,7 +510,7 @@ namespace easy2d
 
 				if (unit_map.find(unit_str) == unit_map.end())
 				{
-					E2D_WARNING("Time::Duration::Parse: invalid duration");
+					logs::Errorln("time::ParseDuration failed, invalid duration");
 					return Duration();
 				}
 

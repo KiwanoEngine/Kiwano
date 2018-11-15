@@ -21,6 +21,7 @@
 #include "Text.h"
 #include "render.h"
 #include "base.h"
+#include "logs.h"
 
 namespace easy2d
 {

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "input.h"
+#include "logs.h"
 #include <cstring>
 
 namespace easy2d
@@ -34,12 +35,15 @@ namespace easy2d
 
 		InputDevice::~InputDevice()
 		{
+			E2D_LOG("Destroying input device");
 		}
 
 		void InputDevice::Init(bool debug)
 		{
 			if (initialized)
 				return;
+
+			E2D_LOG("Initing input device");
 
 			initialized = true;
 		}
