@@ -20,6 +20,19 @@
 
 #pragma once
 #include "macros.h"
+#include <ctime>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <stdexcept>
+
+#ifndef E2D_LOG
+#	if defined(DEBUG) || defined(_DEBUG)
+#		define E2D_LOG(format, ...) easy2d::logs::Println(format, ##__VA_ARGS__)
+#	else
+#		define E2D_LOG ((void)0)
+#	endif
+#endif
 
 namespace easy2d
 {
@@ -27,30 +40,118 @@ namespace easy2d
 	{
 		namespace
 		{
-			inline void OutputDebugStringExW(LPCWSTR pszOutput, ...)
+			inline void Out(std::ostream& stream, const char* output)
 			{
-				va_list args = NULL;
-				va_start(args, pszOutput);
+				stream << output;
+				::OutputDebugStringA(output);
+			}
 
-				size_t nLen = ::_vscwprintf(pszOutput, args) + 1;
-				wchar_t* psBuffer = new wchar_t[nLen];
-				::_vsnwprintf_s(psBuffer, nLen, nLen, pszOutput, args);
+			inline void OutPrefix(std::stringstream& ss)
+			{
+				std::time_t unix = ::time(NULL);
+				struct tm tmbuf;
+				localtime_s(&tmbuf, &unix);
+				ss << std::put_time(&tmbuf, "[easy2d] %H:%M:%S ");
+			}
 
-				va_end(args);
+			inline void Output(std::ostream& stream, const char* prompt, const char* format, va_list args)
+			{
+				size_t len = ::_vscprintf(format, args) + 1;
+				char* buffer = new char[len];
+				::_vsnprintf_s(buffer, len, len, format, args);
 
-				::OutputDebugStringW(psBuffer);
-				delete[] psBuffer;
+				std::stringstream ss;
+				OutPrefix(ss);
+				ss << prompt << buffer;
+				Out(stream, ss.str().c_str());
+
+				delete[] buffer;
+			}
+
+			inline void OutputLine(std::ostream& stream, const char* prompt, const char* format, va_list args)
+			{
+				Output(stream, prompt, format, args);
+				Out(stream, "\r\n");
 			}
 		}
 
-		inline void Trace(LPCWSTR output)
+		inline void Print(const char* format, ...)
 		{
-			OutputDebugStringExW(L"[easy2d] Error: %s\r\n", output);
+			va_list args = nullptr;
+			va_start(args, format);
+
+			Output(std::cout, "", format, args);
+
+			va_end(args);
 		}
 
-		inline void Trace(LPCWSTR output, HRESULT hr)
+		inline void Println(const char* format, ...)
 		{
-			OutputDebugStringExW(L"[easy2d] Failure with HRESULT of %08X: %s\r\n", output, static_cast<unsigned int>(hr));
+			va_list args = nullptr;
+			va_start(args, format);
+
+			OutputLine(std::cout, "", format, args);
+
+			va_end(args);
+		}
+
+		inline void Warning(const char* format, ...)
+		{
+			va_list args = nullptr;
+			va_start(args, format);
+
+			Output(std::cerr, "Warning: ", format, args);
+
+			va_end(args);
+		}
+
+		inline void Warningln(const char* format, ...)
+		{
+			va_list args = nullptr;
+			va_start(args, format);
+
+			OutputLine(std::cerr, "Warning: ", format, args);
+
+			va_end(args);
+		}
+
+		inline void Error(const char* format, ...)
+		{
+			va_list args = nullptr;
+			va_start(args, format);
+
+			Output(std::cerr, "Error: ", format, args);
+
+			va_end(args);
+		}
+
+		inline void Errorln(const char* format, ...)
+		{
+			va_list args = nullptr;
+			va_start(args, format);
+
+			OutputLine(std::cerr, "Error: ", format, args);
+
+			va_end(args);
+		}
+
+		inline void Errorln(HRESULT hr)
+		{
+			Errorln("failure with HRESULT of %08X", hr);
+		}
+
+		inline void Errorln(HRESULT hr, const char* output)
+		{
+			Errorln("failure with HRESULT of %08X: %s", hr, output);
+		}
+	}
+
+	inline void ThrowIfFailed(HRESULT hr)
+	{
+		if (FAILED(hr))
+		{
+			logs::Errorln(hr);
+			throw std::runtime_error("Fatal error");
 		}
 	}
 }

@@ -72,7 +72,7 @@ namespace easy2d
 		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromResource(res, &bitmap);
 		if (FAILED(hr))
 		{
-			logs::Trace(L"Load Image from resource failed!", hr);
+			logs::Errorln(hr, "Load Image from resource failed!");
 			return false;
 		}
 		this->SetBitmap(bitmap);
@@ -81,12 +81,10 @@ namespace easy2d
 
 	bool Image::Load(const String & file_name)
 	{
-		E2D_WARNING_IF(file_name.empty(), "Image Load failed! Invalid file name.");
-
 		File image_file;
 		if (!image_file.Open(file_name))
 		{
-			E2D_WARNING("Image file not found!");
+			logs::Warningln("Image file '%s' not found!", file_name.c_str());
 			return false;
 		}
 
@@ -98,7 +96,7 @@ namespace easy2d
 		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromFile(image_file_path, &bitmap);
 		if (FAILED(hr))
 		{
-			logs::Trace(L"Load Image from file failed!", hr);
+			logs::Errorln(hr, "Load Image from file failed!");
 			return false;
 		}
 		this->SetBitmap(bitmap);

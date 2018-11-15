@@ -21,6 +21,7 @@
 #include "Animation.h"
 #include "Image.h"
 #include "Sprite.h"
+#include "logs.h"
 
 namespace easy2d
 {
@@ -169,7 +170,9 @@ namespace easy2d
 
 	void Animation::Add(spImage const& frame)
 	{
-		E2D_WARNING_IF(!frame, "Animation::Add failed, frame Is nullptr.");
+		if (!frame)
+			logs::Warningln("Animation::Add failed, frame is nullptr.");
+
 		if (frame)
 		{
 			frames_.push_back(frame);

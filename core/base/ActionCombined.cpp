@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "ActionCombined.h"
-#include "base.h"
+#include "logs.h"
 
 namespace easy2d
 {
@@ -32,7 +32,8 @@ namespace easy2d
 		, times_(0)
 		, total_times_(times)
 	{
-		E2D_WARNING_IF(!action, "Loop NULL pointer exception!");
+		if (!action)
+			logs::Warningln("Loop action contains a null action");
 
 		action_ = action;
 	}

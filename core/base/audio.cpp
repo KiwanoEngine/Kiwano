@@ -21,6 +21,7 @@
 #include "audio.h"
 #include "base.h"
 #include "modules.h"
+#include "logs.h"
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
@@ -170,6 +171,8 @@ namespace easy2d
 
 		AudioDevice::~AudioDevice()
 		{
+			E2D_LOG("Destroying audio device");
+
 			ClearVoiceCache();
 
 			if (mastering_voice_)
@@ -189,6 +192,8 @@ namespace easy2d
 		{
 			if (initialized)
 				return;
+
+			E2D_LOG("Initing audio device");
 
 			ThrowIfFailed(
 				modules::MediaFoundation.MFStartup(MF_VERSION, MFSTARTUP_FULL)

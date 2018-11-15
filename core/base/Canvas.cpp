@@ -21,6 +21,7 @@
 #include "base.h"
 #include "Canvas.h"
 #include "render.h"
+#include "logs.h"
 
 namespace easy2d
 {

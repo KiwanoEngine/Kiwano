@@ -22,7 +22,6 @@
 #include "BaseTypes.h"
 #include "IntrusivePtr.hpp"
 #include "RefCounter.hpp"
-#include <stdexcept>
 
 
 #ifndef E2D_DECLARE_SMART_PTR
@@ -95,17 +94,6 @@ namespace easy2d
 		{
 			p->Release();
 			p = nullptr;
-		}
-	}
-
-	inline void ThrowIfFailed(HRESULT hr)
-	{
-		if (FAILED(hr))
-		{
-			static char s_str[64] = {};
-			::sprintf_s(s_str, "[easy2d] Failure with HRESULT of %08X", static_cast<unsigned int>(hr));
-			::OutputDebugStringA(s_str);
-			throw std::runtime_error(s_str);
 		}
 	}
 }

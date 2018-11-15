@@ -23,6 +23,7 @@
 #include "Task.h"
 #include "Action.hpp"
 #include "render.h"
+#include "logs.h"
 
 namespace easy2d
 {
@@ -528,20 +529,21 @@ namespace easy2d
 
 	void Node::AddChild(spNode const& child, int order)
 	{
-		E2D_WARNING_IF(!child, "Node::AddChild NULL pointer exception.");
+		if (!child)
+			logs::Warningln("Node::AddChild failed, child is nullptr");
 
 		if (child)
 		{
 			if (child->parent_)
 			{
-				throw std::runtime_error("节点已有父节点, 不能再添加到其他节点");
+				throw std::logic_error("节点已有父节点, 不能再添加到其他节点");
 			}
 
 			for (Node * parent = this; parent; parent = parent->GetParent().Get())
 			{
 				if (child == parent)
 				{
-					throw std::runtime_error("一个节点不能同时是另一个节点的父节点和子节点");
+					throw std::logic_error("一个节点不能同时是另一个节点的父节点和子节点");
 				}
 			}
 
@@ -622,7 +624,8 @@ namespace easy2d
 
 	bool Node::RemoveChild(spNode const& child)
 	{
-		E2D_WARNING_IF(!child, "Node::RemoveChildren NULL pointer exception.");
+		if (!child)
+			logs::Warningln("Node::RemoveChild failed, child is nullptr");
 
 		if (children_.empty())
 		{

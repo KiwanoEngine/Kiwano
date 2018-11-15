@@ -23,6 +23,7 @@
 #include "Scene.h"
 #include "window.h"
 #include "render.h"
+#include "logs.h"
 
 namespace easy2d
 {
