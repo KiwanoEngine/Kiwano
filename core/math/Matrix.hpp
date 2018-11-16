@@ -20,7 +20,6 @@
 
 #pragma once
 #include "vector.hpp"
-#include <d2d1.h>
 
 namespace easy2d
 {
@@ -41,6 +40,7 @@ namespace easy2d
 
 		class Matrix
 		{
+		public:
 			float m[6];  // m[3][2]
 
 		public:
@@ -89,15 +89,6 @@ namespace easy2d
 				m[2] = other[2]; m[3] = other[3];
 				m[4] = other[4]; m[5] = other[5];
 				return *this;
-			}
-
-			inline operator D2D1_MATRIX_3X2_F () const
-			{
-				return D2D1_MATRIX_3X2_F{
-					m[0], m[1],
-					m[2], m[3],
-					m[4], m[5]
-				};
 			}
 
 			inline Matrix& Identity()

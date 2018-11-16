@@ -30,7 +30,7 @@
 #	ifdef E2D_DEBUG
 #		define E2D_LOG(format, ...) easy2d::logs::Println(format, ##__VA_ARGS__)
 #	else
-#		define E2D_LOG ((void)0)
+#		define E2D_LOG __noop
 #	endif
 #endif
 

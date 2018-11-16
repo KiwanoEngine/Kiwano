@@ -22,6 +22,13 @@
 #include <stdexcept>
 #include <functional>
 
+#undef DEBUG_CHECK_LIST
+#ifdef E2D_DEBUG
+#	define DEBUG_CHECK_LIST(list_ptr) list_ptr->Check()
+#else
+#	define DEBUG_CHECK_LIST __noop
+#endif
+
 namespace easy2d
 {
 	namespace intrusive
@@ -95,9 +102,7 @@ namespace easy2d
 				last_ = child;
 				++size_;
 
-#ifdef E2D_DEBUG
-				Check();
-#endif
+				DEBUG_CHECK_LIST(this);
 			}
 
 			void PushFront(T& child)
@@ -117,9 +122,7 @@ namespace easy2d
 				first_ = child;
 				++size_;
 
-#ifdef E2D_DEBUG
-				Check();
-#endif
+				DEBUG_CHECK_LIST(this);
 			}
 
 			void Remove(T& child)
@@ -156,9 +159,7 @@ namespace easy2d
 				child->next_ = nullptr;
 				--size_;
 
-#ifdef E2D_DEBUG
-				Check();
-#endif
+				DEBUG_CHECK_LIST(this);
 			}
 
 			void Insert(T& child, T& before)
@@ -173,9 +174,7 @@ namespace easy2d
 				before->prev_ = child;
 				++size_;
 
-#ifdef E2D_DEBUG
-				Check();
-#endif
+				DEBUG_CHECK_LIST(this);
 			}
 
 			void Clear()
@@ -229,9 +228,7 @@ namespace easy2d
 				first_ = *temp_vec.begin();
 				last_ = *temp_vec.rbegin();
 
-#ifdef E2D_DEBUG
-				Check();
-#endif
+				DEBUG_CHECK_LIST(this);
 			}
 
 #ifdef E2D_DEBUG
@@ -271,3 +268,5 @@ namespace easy2d
 		};
 	}
 }
+
+#undef DEBUG_CHECK_LIST

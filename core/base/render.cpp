@@ -32,6 +32,18 @@ namespace easy2d
 {
 	namespace devices
 	{
+		namespace
+		{
+			inline D2D1_MATRIX_3X2_F ConvertToD2DMatrix(math::Matrix const& matrix)
+			{
+				return D2D1_MATRIX_3X2_F{
+						matrix.m[0], matrix.m[1],
+						matrix.m[2], matrix.m[3],
+						matrix.m[4], matrix.m[5]
+				};
+			}
+		}
+
 		GraphicsDevice::GraphicsDevice()
 			: fps_text_format_(nullptr)
 			, fps_text_layout_(nullptr)
@@ -211,7 +223,7 @@ namespace easy2d
 			{
 				hr = d2d.factory->CreateTransformedGeometry(
 					rectangle,
-					matrix,
+					ConvertToD2DMatrix(matrix),
 					&transformed
 				);
 			}
@@ -340,7 +352,7 @@ namespace easy2d
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.render_target->SetTransform(clip_matrix);
+			d2d.render_target->SetTransform(ConvertToD2DMatrix(clip_matrix));
 			d2d.render_target->PushAxisAlignedClip(
 				D2D1::RectF(0, 0, clip_size.width, clip_size.height),
 				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
@@ -591,7 +603,7 @@ namespace easy2d
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			d2d.render_target->SetTransform(matrix);
+			d2d.render_target->SetTransform(ConvertToD2DMatrix(matrix));
 			return S_OK;
 		}
 

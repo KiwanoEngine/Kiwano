@@ -25,9 +25,8 @@
 #include "MouseEvent.h"
 #include "ActionManager.h"
 #include "TaskManager.h"
+#include "Transform.hpp"
 #include "intrusive/List.hpp"
-#include "../math/Transform.hpp"
-#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
@@ -281,10 +280,10 @@ namespace easy2d
 			const Color& color
 		);
 
-		math::Transform const& GetTransform() const;
+		Transform const& GetTransform() const;
 
 		void SetTransform(
-			math::Transform const& transform
+			Transform const& transform
 		);
 
 		// 判断点是否在节点内
@@ -383,7 +382,7 @@ namespace easy2d
 		Color				border_color_;
 		Children			children_;
 		ID2D1Geometry*		border_;
-		math::Transform		transform_;
+		Transform			transform_;
 		math::Matrix		initial_matrix_;
 		math::Matrix		final_matrix_;
 	};

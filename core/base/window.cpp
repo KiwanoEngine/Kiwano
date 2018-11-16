@@ -119,7 +119,7 @@ namespace easy2d
 			::UnregisterClass(REGISTER_CLASS, hinstance);
 
 			const char* err = "Create window failed!";
-			logs::Errorln(err);
+			logs::Errorln(HRESULT_FROM_WIN32(GetLastError()), err);
 			throw std::runtime_error(err);
 		}
 

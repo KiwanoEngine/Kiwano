@@ -19,44 +19,66 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../math/vector.hpp"
 #include <d2d1.h>
 
 namespace easy2d
 {
-    // 大小
+	// 坐标
 	//
 	// Usage:
-	//     表示一个二维矩形区域的大小: Size s(10, 5);  // 宽为 10, 高为 5
-	//     大小可以相加减: Size s = Size(10, 10) + Size(20, 20);  // s 的大小是宽高均为 30
+	//     表示一个二维空间的坐标: Point origin(0, 0);
+	//     计算两点间距离: float distance = p1.Distance(p2);
+	//     坐标可以相加减: Point p = Point(10, 10) + Point(20, 20);  // p 的坐标是 (30, 30)
 	//
-	class Size
+	class Point
+		: public math::Vector2
 	{
 	public:
-		float width;	// 宽度
-		float height;	// 高度
+		Point() {}
 
-	public:
-		Size();
+		Point(float x, float y) : math::Vector2(x, y) {}
 
-		Size(
-			float width,
-			float height
-		);
+		Point(Point const& other) : math::Vector2(other.x, other.y) {}
 
-		Size(
-			const Size& other
-		);
-
-		const Size operator + (const Size & other) const;
-		const Size operator - (const Size & other) const;
-		const Size operator * (float val) const;
-		const Size operator / (float val) const;
-		const Size operator - () const;
-		bool operator== (const Size& other) const;
-
-		inline operator D2D1_SIZE_F () const
+		inline float Distance(Point const& v)
 		{
-			return D2D1_SIZE_F{ width, height };
+			return Point(x - v.x, y - v.y).Length();
+		}
+
+		inline const Point operator + (const Point & other) const
+		{
+			return Point(x + other.x, y + other.y);
+		}
+
+		inline const Point operator - (const Point & other) const
+		{
+			return Point(x - other.x, y - other.y);
+		}
+
+		inline const Point operator * (float val) const
+		{
+			return Point(x * val, y * val);
+		}
+
+		inline const Point operator / (float val) const
+		{
+			return Point(x / val, y / val);
+		}
+
+		inline const Point operator - () const
+		{
+			return Point(-x, -y);
+		}
+
+		inline bool operator == (const Point& other) const
+		{
+			return (x == other.x) && (y == other.y);
+		}
+
+		inline operator D2D1_POINT_2F () const
+		{
+			return D2D1_POINT_2F{ x, y };
 		}
 	};
 }

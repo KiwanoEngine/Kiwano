@@ -434,17 +434,13 @@ namespace easy2d
 		// Functions
 		//-------------------------------------------------------
 
-		TimePoint easy2d::time::Now()
+		TimePoint easy2d::time::Now() E2D_NOEXCEPT
 		{
 			static LARGE_INTEGER freq = {};
 			if (freq.QuadPart == 0LL)
 			{
-				if (QueryPerformanceFrequency(&freq) == 0)
-				{
-					const char* err = "QueryPerformanceFrequency not supported";
-					logs::Errorln(HRESULT_FROM_WIN32(GetLastError()), err);
-					throw std::runtime_error(err);
-				}
+				// the function will always succceed on systems that run Windows XP or later
+				QueryPerformanceFrequency(&freq);
 			}
 
 			LARGE_INTEGER count;

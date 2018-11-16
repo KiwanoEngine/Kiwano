@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../math/vector.hpp"
-#include "Size.h"
+#include "Point.hpp"
+#include "Size.hpp"
 #include <d2d1.h>
 
 namespace easy2d
@@ -35,8 +35,6 @@ namespace easy2d
 	//
 	class Rect
 	{
-		using Point = math::Vector2;
-
 	public:
 		Point	origin;	// 左上角坐标
 		Size	size;	// 宽度和高度
@@ -100,18 +98,14 @@ namespace easy2d
 		inline float GetBottom() const { return origin.y + size.height; }
 
 		// 判断点是否在矩形内
-		inline bool ContainsPoint(
-			const Point& point
-		) const
+		inline bool ContainsPoint(const Point& point) const
 		{
 			return	point.x >= origin.x && point.x <= (origin.y + size.height) &&
 					point.y >= origin.y && point.y <= (origin.y + size.height);
 		}
 
 		// 判断两矩形是否相交
-		inline bool Intersects(
-			const Rect& rect
-		) const
+		inline bool Intersects(const Rect& rect) const
 		{
 			return !((origin.x + size.width)			< rect.origin.x ||
 					(rect.origin.x + rect.size.width)	< origin.x ||
