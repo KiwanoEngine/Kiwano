@@ -81,9 +81,9 @@ namespace easy2d
 		spImage const& GetImage() const;
 
 		// äÖÈ¾¾«Áé
-		virtual void OnDraw() const override;
+		virtual void OnDraw() override;
 
-	private:
+	protected:
 		spImage image_;
 	};
 }

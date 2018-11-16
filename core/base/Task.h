@@ -68,7 +68,7 @@ namespace easy2d
 
 		void Reset();
 
-	private:
+	protected:
 		bool		running_;
 		bool		stopped_;
 		int			run_times_;

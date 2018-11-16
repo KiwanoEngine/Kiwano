@@ -127,7 +127,7 @@ namespace easy2d
 		return image_;
 	}
 
-	void Sprite::OnDraw() const
+	void Sprite::OnDraw()
 	{
 		if (image_ && image_->GetBitmap())
 		{

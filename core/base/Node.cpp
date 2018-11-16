@@ -574,6 +574,11 @@ namespace easy2d
 		return parent_;
 	}
 
+	Rect Node::GetBounds()
+	{
+		return Rect(Point{}, transform_.size);
+	}
+
 	Node::Nodes Node::GetChildren(const String& name) const
 	{
 		Nodes children;

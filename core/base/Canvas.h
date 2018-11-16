@@ -126,7 +126,7 @@ namespace easy2d
 			float radius_y
 		);
 
-	private:
+	protected:
 		float					stroke_width_;
 		StrokeStyle				stroke_;
 		ID2D1RenderTarget*		render_target_;

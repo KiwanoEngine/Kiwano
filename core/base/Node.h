@@ -56,7 +56,7 @@ namespace easy2d
 		virtual ~Node();
 
 		// 渲染节点
-		virtual void OnDraw() const {}
+		virtual void OnDraw() {}
 
 		// 更新节点
 		virtual void OnUpdate(Duration const& dt) {}
@@ -123,6 +123,9 @@ namespace easy2d
 
 		// 获取父节点
 		spNode GetParent() const;
+
+		// 获取包围盒
+		virtual Rect GetBounds();
 
 		// 设置节点是否显示
 		void SetVisible(
@@ -358,13 +361,13 @@ namespace easy2d
 		);
 
 	protected:
-		void DrawBorder();
-
-		void Update(Duration const& dt);
+		virtual void Update(Duration const& dt);
 
 		void UpdateTransform();
 
 		void UpdateOpacity();
+
+		void DrawBorder();
 
 	protected:
 		String				name_;
