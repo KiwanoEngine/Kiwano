@@ -64,12 +64,11 @@ namespace easy2d
 		{
 			T first_;
 			T last_;
-			unsigned int size_;
 
 		public:
 			using ItemType = T;
 
-			List() : first_(), last_(), size_(0) {}
+			List() : first_(), last_() {}
 
 			~List() { Clear(); }
 
@@ -81,12 +80,15 @@ namespace easy2d
 
 			T& Last() { return last_; }
 
-			bool IsEmpty() const { return size_ == 0; }
-
-			unsigned int Size() const { return size_; }
+			bool IsEmpty() const { return !first_; }
 
 			void PushBack(T& child)
 			{
+				if (child->prev_)
+					child->prev_->next_ = child->next_;
+				if (child->next_)
+					child->next_->prev_ = child->prev_;
+
 				child->prev_ = last_;
 				child->next_ = nullptr;
 
@@ -100,13 +102,17 @@ namespace easy2d
 				}
 
 				last_ = child;
-				++size_;
 
 				DEBUG_CHECK_LIST(this);
 			}
 
 			void PushFront(T& child)
 			{
+				if (child->prev_)
+					child->prev_->next_ = child->next_;
+				if (child->next_)
+					child->next_->prev_ = child->prev_;
+
 				child->prev_ = nullptr;
 				child->next_ = first_;
 
@@ -120,7 +126,25 @@ namespace easy2d
 				}
 
 				first_ = child;
-				++size_;
+
+				DEBUG_CHECK_LIST(this);
+			}
+
+			void Insert(T& child, T& before)
+			{
+				if (child->prev_)
+					child->prev_->next_ = child->next_;
+				if (child->next_)
+					child->next_->prev_ = child->prev_;
+
+				if (before->prev_)
+					before->prev_->next_ = child;
+				else
+					first_ = child;
+
+				child->prev_ = before->prev_;
+				child->next_ = before;
+				before->prev_ = child;
 
 				DEBUG_CHECK_LIST(this);
 			}
@@ -157,22 +181,6 @@ namespace easy2d
 
 				child->prev_ = nullptr;
 				child->next_ = nullptr;
-				--size_;
-
-				DEBUG_CHECK_LIST(this);
-			}
-
-			void Insert(T& child, T& before)
-			{
-				if (before->prev_)
-					before->prev_->next_ = child;
-				else
-					first_ = child;
-
-				child->prev_ = before->prev_;
-				child->next_ = before;
-				before->prev_ = child;
-				++size_;
 
 				DEBUG_CHECK_LIST(this);
 			}
@@ -192,23 +200,22 @@ namespace easy2d
 				}
 				first_ = nullptr;
 				last_ = nullptr;
-				size_ = 0;
 			}
 
 			void Sort(std::function<bool(T const&, T const&)> const& if_lt)
 			{
-				if (size_ < 2)
+				if (IsEmpty() || first_ == last_)
 					return;
 
 				std::vector<ItemType> temp_vec;
-				temp_vec.reserve(size_);
 				for (ItemType p = first_; p; p = p->NextItem())
 				{
 					temp_vec.push_back(p);
 				}
 				std::sort(temp_vec.begin(), temp_vec.end(), if_lt);
 
-				for (unsigned int i = 0; i < size_; ++i)
+				size_t size = temp_vec.size();
+				for (size_t i = 0; i < size_; ++i)
 				{
 					if (i == 0)
 						temp_vec[i]->prev_ = ItemType();
@@ -259,9 +266,6 @@ namespace easy2d
 							throw std::logic_error("Check list failed");
 					}
 				} while (p);
-
-				if (pos != size_)
-					throw std::logic_error("Check list failed");
 			}
 
 #endif
