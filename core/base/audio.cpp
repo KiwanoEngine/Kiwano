@@ -25,7 +25,7 @@
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
-
+#include <assert.h>
 namespace easy2d
 {
 	//-------------------------------------------------------

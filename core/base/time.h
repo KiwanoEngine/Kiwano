@@ -177,7 +177,7 @@ namespace easy2d
 		};
 
 		// 获取当前时间
-		TimePoint Now();
+		TimePoint Now() E2D_NOEXCEPT;
 
 		// 时间段格式化
 		// 时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
