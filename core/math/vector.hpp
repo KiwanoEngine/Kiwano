@@ -20,7 +20,6 @@
 
 #pragma once
 #include "scalar.hpp"
-#include <d2d1.h>
 
 namespace easy2d
 {
@@ -55,11 +54,6 @@ namespace easy2d
 				return math::Sqrt(x * x + y * y);
 			}
 
-			inline float Distance(const Vector2& v)
-			{
-				return Vector2(x - v.x, y - v.y).Length();
-			}
-
 			inline const Vector2 operator + (const Vector2 & other) const
 			{
 				return Vector2(x + other.x, y + other.y);
@@ -88,11 +82,6 @@ namespace easy2d
 			inline bool operator== (const Vector2& other) const
 			{
 				return (x == other.x) && (y == other.y);
-			}
-
-			inline operator D2D1_POINT_2F () const
-			{
-				return D2D1_POINT_2F{ x, y };
 			}
 		};
 	}

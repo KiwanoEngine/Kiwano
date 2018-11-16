@@ -19,51 +19,50 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/BaseTypes.hpp"
-#include "Matrix.hpp"
+#include "Size.hpp"
+#include "Point.hpp"
+#include "../math/Matrix.hpp"
+#include <d2d1.h>
 
 namespace easy2d
 {
-	namespace math
+	class Transform
 	{
-		class Transform
+	public:
+		Size size;			// 大小
+		float rotation;		// 旋转
+		Point position;		// 坐标
+		Point scale;		// 缩放
+		Point skew;			// 错切角度
+		Point pivot;		// 支点
+
+	public:
+		Transform()
+			: position()
+			, size()
+			, rotation(0)
+			, scale(1.f, 1.f)
+			, skew(0.f, 0.f)
+			, pivot(0.f, 0.f)
+		{}
+
+		inline math::Matrix ToMatrix() const
 		{
-		public:
-			Size size;				// 大小
-			float rotation;			// 旋转
-			math::Vector2 position;	// 坐标
-			math::Vector2 scale;	// 缩放
-			math::Vector2 skew;		// 错切角度
-			math::Vector2 pivot;	// 支点
+			math::Vector2 center{ size.width * pivot.x, size.height * pivot.y };
+			return math::Matrix::Scaling(scale.x, scale.y, center)
+				* math::Matrix::Skewing(skew.x, skew.y, center)
+				* math::Matrix::Rotation(rotation, center)
+				* math::Matrix::Translation(position.x - center.x, position.y - center.y);
+		}
 
-		public:
-			Transform()
-				: position()
-				, size()
-				, rotation(0)
-				, scale(1.f, 1.f)
-				, skew(0.f, 0.f)
-				, pivot(0.f, 0.f)
-			{}
-
-			inline Matrix ToMatrix() const
-			{
-				auto center = Vector2{ size.width * pivot.x, size.height * pivot.y };
-				return Matrix{} * Matrix::Scaling(scale.x, scale.y, center)
-					* Matrix::Skewing(skew.x, skew.y, center)
-					* Matrix::Rotation(rotation, center)
-					* Matrix::Translation(position - center);
-			}
-
-			bool operator== (const Transform& other) const
-			{
-				return position == other.position &&
-					size == other.size &&
-					scale == other.scale &&
-					skew == other.skew &&
-					rotation == other.rotation &&
-					pivot == other.pivot;
-			}
-		};
-	}
+		bool operator== (const Transform& other) const
+		{
+			return position == other.position &&
+				size == other.size &&
+				scale == other.scale &&
+				skew == other.skew &&
+				rotation == other.rotation &&
+				pivot == other.pivot;
+		}
+	};
 }

@@ -20,22 +20,13 @@
 
 #pragma once
 #include "macros.h"
-#include "Color.h"
-#include "Size.h"
+#include "Point.hpp"
+#include "Size.hpp"
 #include "Rect.hpp"
-#include "../math/vector.hpp"
+#include "Color.h"
 
 namespace easy2d
 {
-	// 坐标
-	//
-	// Usage:
-	//     表示一个二维空间的坐标: Point origin(0, 0);
-	//     计算两点间距离: float distance = p1.Distance(p2);
-	//     坐标可以相加减: Point p = Point(10, 10) + Point(20, 20);  // p 的坐标是 (30, 30)
-	//
-	using Point = math::Vector2;
-
 	using String = std::wstring;
 
 	// 方向

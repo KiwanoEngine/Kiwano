@@ -20,8 +20,8 @@
 
 #pragma once
 #include "BaseTypes.hpp"
-#include "intrusive/SmartPointer.hpp"
 #include "RefCounter.hpp"
+#include "intrusive/SmartPointer.hpp"
 
 
 #ifndef E2D_DECLARE_SMART_PTR

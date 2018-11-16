@@ -276,12 +276,12 @@ namespace easy2d
 
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(math::Transform{});
+			out_scene_->SetTransform(Transform{});
 		}
 
 		if (in_scene_)
 		{
-			auto transform = math::Transform{};
+			auto transform = Transform{};
 			transform.position = start_pos_;
 			in_scene_->SetTransform(transform);
 		}
@@ -293,14 +293,14 @@ namespace easy2d
 
 		if (out_scene_)
 		{
-			auto transform = math::Transform{};
+			auto transform = Transform{};
 			transform.position = pos_delta_ * process_;
 			out_scene_->SetTransform(transform);
 		}
 
 		if (in_scene_)
 		{
-			auto transform = math::Transform{};
+			auto transform = Transform{};
 			transform.position = start_pos_ + pos_delta_ * process_;
 			in_scene_->SetTransform(transform);
 		}
@@ -310,12 +310,12 @@ namespace easy2d
 	{
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(math::Transform{});
+			out_scene_->SetTransform(Transform{});
 		}
 
 		if (in_scene_)
 		{
-			in_scene_->SetTransform(math::Transform{});
+			in_scene_->SetTransform(Transform{});
 		}
 	}
 
@@ -333,7 +333,7 @@ namespace easy2d
 	{
 		Transition::Init(prev, next);
 
-		auto transform = math::Transform{};
+		auto transform = Transform{};
 		transform.pivot = Point{ 0.5f, 0.5f };
 		transform.position = Point{ window_size_.width / 2, window_size_.height / 2 };
 
@@ -384,12 +384,12 @@ namespace easy2d
 	{
 		if (out_scene_)
 		{
-			out_scene_->SetTransform(math::Transform{});
+			out_scene_->SetTransform(Transform{});
 		}
 
 		if (in_scene_)
 		{
-			in_scene_->SetTransform(math::Transform{});
+			in_scene_->SetTransform(Transform{});
 		}
 	}
 }

@@ -515,12 +515,12 @@ namespace easy2d
 		this->SetSize(size.width, size.height);
 	}
 
-	math::Transform const& Node::GetTransform() const
+	Transform const& Node::GetTransform() const
 	{
 		return transform_;
 	}
 
-	void Node::SetTransform(math::Transform const& transform)
+	void Node::SetTransform(Transform const& transform)
 	{
 		transform_ = transform;
 		dirty_transform_ = true;

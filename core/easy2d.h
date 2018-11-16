@@ -40,12 +40,14 @@
 #include "base/time.h"
 #include "base/logs.h"
 
-#include "base/Size.h"
+#include "base/Point.hpp"
+#include "base/Size.hpp"
 #include "base/Rect.hpp"
 #include "base/Font.hpp"
-#include "base/TextStyle.hpp"
 #include "base/Color.h"
 #include "base/Resource.h"
+#include "base/Transform.hpp"
+#include "base/TextStyle.hpp"
 
 #include "base/intrusive/SmartPointer.hpp"
 #include "base/intrusive/List.hpp"
@@ -78,9 +80,8 @@
 
 #include "math/scalar.hpp"
 #include "math/vector.hpp"
-#include "math/Matrix.hpp"
-#include "math/Transform.hpp"
 #include "math/rand.h"
+#include "math/Matrix.hpp"
 
 
 //
