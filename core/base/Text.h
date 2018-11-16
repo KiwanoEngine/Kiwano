@@ -87,10 +87,10 @@ namespace easy2d
 		StrokeStyle GetOutlineStroke() const;
 
 		// 获取文本显示行数
-		int GetLineCount() const;
+		int GetLineCount();
 
-		// 获取文字包围盒
-		Rect GetContentBounds() const;
+		// 获取包围盒
+		virtual Rect GetBounds() override;
 
 		// 是否是斜体
 		bool IsItalic() const;
@@ -205,17 +205,19 @@ namespace easy2d
 		);
 
 		// 渲染文字
-		virtual void OnDraw() const override;
+		virtual void OnDraw() override;
 
-	private:
-		void UpdateLayout() const;
+	protected:
+		virtual void Update(Duration const& dt) override;
 
-	private:
-		String		text_;
-		Font		font_;
-		TextStyle	style_;
-		mutable bool				dirty_layout_;
-		mutable IDWriteTextFormat*	text_format_;
-		mutable IDWriteTextLayout*	text_layout_;
+		void UpdateLayout();
+
+	protected:
+		String				text_;
+		Font				font_;
+		TextStyle			style_;
+		bool				dirty_layout_;
+		IDWriteTextFormat*	text_format_;
+		IDWriteTextLayout*	text_layout_;
 	};
 }

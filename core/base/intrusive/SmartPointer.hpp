@@ -177,19 +177,19 @@ namespace easy2d
 		{
 			return static_cast<bool>(rhs);
 		}
+	}
 
-		template<class T>
-		inline SmartPointer<T> make_intrusive(T* ptr)
-		{
-			return SmartPointer<T>(ptr);
-		}
+	template<class T>
+	inline intrusive::SmartPointer<T> make_intrusive(T* ptr)
+	{
+		return intrusive::SmartPointer<T>(ptr);
+	}
 
-		// template class cannot support std::swap,
-		// so implement a swap function in easy2d namespace
-		template<class T>
-		inline void swap(SmartPointer<T>& lhs, SmartPointer<T>& rhs)
-		{
-			lhs.Swap(rhs);
-		}
+	// template class cannot specialize std::swap,
+	// so implement a swap function in easy2d namespace
+	template<class T>
+	inline void swap(intrusive::SmartPointer<T>& lhs, intrusive::SmartPointer<T>& rhs)
+	{
+		lhs.Swap(rhs);
 	}
 }

@@ -131,7 +131,7 @@ namespace easy2d
 		return style_.outline_stroke;
 	}
 
-	int Text::GetLineCount() const
+	int Text::GetLineCount()
 	{
 		UpdateLayout();
 		if (text_layout_)
@@ -145,18 +145,10 @@ namespace easy2d
 		return 0;
 	}
 
-	Rect Text::GetContentBounds() const
+	Rect Text::GetBounds()
 	{
 		UpdateLayout();
-		if (text_layout_)
-		{
-			DWRITE_TEXT_METRICS metrics;
-			if (SUCCEEDED(text_layout_->GetMetrics(&metrics)))
-			{
-				return Rect(0.f, 0.f, metrics.layoutWidth, metrics.height);
-			}
-		}
-		return Rect{};
+		return Node::GetBounds();
 	}
 
 	bool Text::IsItalic() const
@@ -312,10 +304,8 @@ namespace easy2d
 		style_.outline_stroke = outline_stroke;
 	}
 
-	void Text::OnDraw() const
+	void Text::OnDraw()
 	{
-		UpdateLayout();
-
 		if (text_layout_)
 		{
 			auto graphics = devices::Graphics::Instance();
@@ -331,7 +321,13 @@ namespace easy2d
 		}
 	}
 
-	void Text::UpdateLayout() const
+	void Text::Update(Duration const & dt)
+	{
+		UpdateLayout();
+		Node::Update(dt);
+	}
+
+	void Text::UpdateLayout()
 	{
 		if (!dirty_layout_)
 			return;
@@ -376,6 +372,10 @@ namespace easy2d
 					style_.wrap_width
 				)
 			);
+
+			DWRITE_TEXT_METRICS metrics;
+			text_layout_->GetMetrics(&metrics);
+			this->SetSize(metrics.layoutWidth, metrics.height);
 		}
 		else
 		{
@@ -390,6 +390,7 @@ namespace easy2d
 
 			DWRITE_TEXT_METRICS metrics;
 			text_layout_->GetMetrics(&metrics);
+			this->SetSize(metrics.width, metrics.height);
 
 			SafeRelease(text_layout_);
 			ThrowIfFailed(
