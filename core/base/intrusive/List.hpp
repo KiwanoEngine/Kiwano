@@ -215,7 +215,7 @@ namespace easy2d
 				std::sort(temp_vec.begin(), temp_vec.end(), if_lt);
 
 				size_t size = temp_vec.size();
-				for (size_t i = 0; i < size_; ++i)
+				for (size_t i = 0; i < size; ++i)
 				{
 					if (i == 0)
 						temp_vec[i]->prev_ = ItemType();
@@ -224,7 +224,7 @@ namespace easy2d
 						temp_vec[i]->prev_ = temp_vec[i - 1];
 						temp_vec[i - 1]->next_ = temp_vec[i];
 					}
-					if (i == size_ - 1)
+					if (i == size - 1)
 						temp_vec[i]->next_ = ItemType();
 					else
 					{
