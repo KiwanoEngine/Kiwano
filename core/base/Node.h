@@ -321,9 +321,6 @@ namespace easy2d
 		// 获取全部子节点
 		Children const& GetChildren() const;
 
-		// 获取子节点数量
-		int GetChildrenCount() const;
-
 		// 移除子节点
 		bool RemoveChild(
 			spNode const& child
