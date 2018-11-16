@@ -613,11 +613,6 @@ namespace easy2d
 		return children_;
 	}
 
-	int Node::GetChildrenCount() const
-	{
-		return static_cast<int>(children_.Size());
-	}
-
 	void Node::RemoveFromParent()
 	{
 		if (parent_)
