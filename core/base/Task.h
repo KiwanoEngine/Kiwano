@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.h"
+#include "base.hpp"
 #include "time.h"
-#include "IntrusiveList.hpp"
+#include "intrusive/List.hpp"
 #include <functional>
 
 namespace easy2d
@@ -31,11 +31,12 @@ namespace easy2d
     // 定时任务
 	class Task
 		: public RefCounter
-		, public IntrusiveItem<spTask>
+		, protected intrusive::ListItem<spTask>
 	{
 		friend class TaskManager;
+		friend class intrusive::List<spTask>;
 
-		typedef std::function<void()> Callback;
+		using Callback = std::function<void()>;
 
 	public:
 		explicit Task(

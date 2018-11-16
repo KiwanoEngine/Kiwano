@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.h"
+#include "base.hpp"
 #include "window.h"
 #include "time.h"
 #include "KeyEvent.h"

@@ -20,7 +20,7 @@
 
 #include "render.h"
 #include "time.h"
-#include "base.h"
+#include "base.hpp"
 #include "logs.h"
 #include "modules.h"
 #include "Image.h"

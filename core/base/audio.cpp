@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "audio.h"
-#include "base.h"
+#include "base.hpp"
 #include "modules.h"
 #include "logs.h"
 #include <mfapi.h>

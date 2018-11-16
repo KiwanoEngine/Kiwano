@@ -31,7 +31,7 @@
 //
 
 #include "base/macros.h"
-#include "base/base.h"
+#include "base/base.hpp"
 #include "base/modules.h"
 #include "base/render.h"
 #include "base/window.h"
@@ -47,8 +47,10 @@
 #include "base/Color.h"
 #include "base/Resource.h"
 
+#include "base/intrusive/SmartPointer.hpp"
+#include "base/intrusive/List.hpp"
+
 #include "base/RefCounter.hpp"
-#include "base/IntrusivePtr.hpp"
 #include "base/Image.h"
 #include "base/Node.h"
 #include "base/Scene.h"

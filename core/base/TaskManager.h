@@ -25,7 +25,7 @@ namespace easy2d
 {
 	class TaskManager
 	{
-		using Tasks = IntrusiveList<spTask>;
+		using Tasks = intrusive::List<spTask>;
 
 	public:
 		// Ìí¼ÓÈÎÎñ

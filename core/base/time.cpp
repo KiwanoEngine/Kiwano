@@ -440,7 +440,11 @@ namespace easy2d
 			if (freq.QuadPart == 0LL)
 			{
 				if (QueryPerformanceFrequency(&freq) == 0)
-					throw std::runtime_error("QueryPerformanceFrequency not supported: " + std::to_string(GetLastError()));
+				{
+					const char* err = "QueryPerformanceFrequency not supported";
+					logs::Errorln(HRESULT_FROM_WIN32(GetLastError()), err);
+					throw std::runtime_error(err);
+				}
 			}
 
 			LARGE_INTEGER count;

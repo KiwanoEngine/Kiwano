@@ -97,7 +97,7 @@ namespace easy2d
 			spNode child = children_.First();
 			for (spNode next; child; child = next)
 			{
-				next = child->Next();
+				next = child->NextItem();
 				if (child->GetOrder() < 0)
 				{
 					child->Visit();
@@ -113,7 +113,7 @@ namespace easy2d
 
 			for (spNode next; child; child = next)
 			{
-				next = child->Next();
+				next = child->NextItem();
 				child->Visit();
 			}
 		}
@@ -141,7 +141,7 @@ namespace easy2d
 			{
 				if (child->GetOrder() < 0)
 				{
-					next = child->Next();
+					next = child->NextItem();
 					child->Update(dt);
 				}
 				else
@@ -157,7 +157,7 @@ namespace easy2d
 
 			for (spNode next; child; child = next)
 			{
-				next = child->Next();
+				next = child->NextItem();
 				child->Update(dt);
 			}
 		}
@@ -172,7 +172,7 @@ namespace easy2d
 				devices::Graphics::Instance()->DrawGeometry(border_, border_color_, 1.f, 1.5f);
 			}
 
-			for (auto& child = children_.First(); child; child = child->Next())
+			for (auto& child = children_.First(); child; child = child->NextItem())
 			{
 				child->DrawBorder();
 			}
@@ -203,7 +203,7 @@ namespace easy2d
 			devices::Graphics::Instance()->CreateRectGeometry(final_matrix_, transform_.size, &border_)
 		);
 
-		for (auto& child = children_.First(); child; child = child->Next())
+		for (auto& child = children_.First(); child; child = child->NextItem())
 		{
 			child->dirty_transform_ = true;
 		}
@@ -216,7 +216,7 @@ namespace easy2d
 			spNode prev;
 			for (auto& child = children_.Last(); child; child = prev)
 			{
-				prev = child->Prev();
+				prev = child->PrevItem();
 				handled = child->Dispatch(e, handled);
 			}
 
@@ -235,7 +235,7 @@ namespace easy2d
 			spNode prev;
 			for (auto& child = children_.Last(); child; child = prev)
 			{
-				prev = child->Prev();
+				prev = child->PrevItem();
 				handled = child->Dispatch(e, handled);
 			}
 
@@ -253,7 +253,7 @@ namespace easy2d
 		{
 			display_opacity_ = real_opacity_ * parent_->display_opacity_;
 		}
-		for (auto& child = children_.First(); child; child = child->Next())
+		for (auto& child = children_.First(); child; child = child->NextItem())
 		{
 			child->UpdateOpacity();
 		}
@@ -543,28 +543,20 @@ namespace easy2d
 
 		if (child)
 		{
+#ifdef E2D_DEBUG
 			if (child->parent_)
-			{
-				throw std::logic_error("节点已有父节点, 不能再添加到其他节点");
-			}
+				logs::Errorln("The node to be added already has a parent");
+			for (Node* parent = parent_; parent; parent = parent->parent_)
+				if (parent == child)
+					logs::Errorln("A node cannot be its own parent");
+#endif // E2D_DEBUG
 
-			for (Node * parent = this; parent; parent = parent->GetParent().Get())
-			{
-				if (child == parent)
-				{
-					throw std::logic_error("一个节点不能同时是另一个节点的父节点和子节点");
-				}
-			}
-
-			children_.Append(child);
-			child->SetOrder(order);
+			children_.PushBack(Node::ItemType(child));
 			child->parent_ = this;
-
-			// 更新子节点透明度
-			child->UpdateOpacity();
-			// 更新节点转换
 			child->dirty_transform_ = true;
-			// 更新子节点排序
+			child->SetOrder(order);
+			child->UpdateOpacity();
+			
 			dirty_sort_ = true;
 		}
 	}
@@ -587,7 +579,7 @@ namespace easy2d
 		Nodes children;
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (auto child = children_.First(); child != children_.Last(); child = child->Next())
+		for (auto child = children_.First(); child != children_.Last(); child = child->NextItem())
 		{
 			if (child->hash_name_ == hash_code && child->name_ == name)
 			{
@@ -601,7 +593,7 @@ namespace easy2d
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (auto child = children_.First(); child != children_.Last(); child = child->Next())
+		for (auto child = children_.First(); child != children_.Last(); child = child->NextItem())
 		{
 			if (child->hash_name_ == hash_code && child->name_ == name)
 			{
@@ -618,7 +610,7 @@ namespace easy2d
 
 	int Node::GetChildrenCount() const
 	{
-		return children_.Size();
+		return static_cast<int>(children_.Size());
 	}
 
 	void Node::RemoveFromParent()
@@ -641,7 +633,7 @@ namespace easy2d
 
 		if (child)
 		{
-			children_.Remove(child);
+			children_.Remove(Node::ItemType(child));
 			return true;
 		}
 		return false;
@@ -658,7 +650,7 @@ namespace easy2d
 		spNode next;
 		for (auto& child = children_.First(); child; child = next)
 		{
-			next = child->Next();
+			next = child->NextItem();
 
 			if (child->hash_name_ == hash_code && child->name_ == child_name)
 				children_.Remove(child);

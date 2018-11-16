@@ -14,12 +14,6 @@
     <ClInclude Include="..\..\core\base\audio.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\base.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\base\BaseTypes.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\CallFunc.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -134,9 +128,6 @@
     <ClInclude Include="..\..\core\base\RefCounter.hpp">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\IntrusivePtr.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\Action.hpp">
       <Filter>base</Filter>
     </ClInclude>
@@ -155,7 +146,16 @@
     <ClInclude Include="..\..\core\base\Font.hpp">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\IntrusiveList.hpp">
+    <ClInclude Include="..\..\core\base\intrusive\List.hpp">
+      <Filter>base\intrusive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\intrusive\SmartPointer.hpp">
+      <Filter>base\intrusive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\base.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\BaseTypes.hpp">
       <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
@@ -171,6 +171,9 @@
     </Filter>
     <Filter Include="ui">
       <UniqueIdentifier>{07b6d541-4a1b-472a-aae0-daf9d082fe84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\intrusive">
+      <UniqueIdentifier>{0f508149-735a-43da-ab16-36cc1e9ab63a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

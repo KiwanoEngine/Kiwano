@@ -19,21 +19,21 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "BaseTypes.h"
-#include "IntrusivePtr.hpp"
+#include "BaseTypes.hpp"
+#include "intrusive/SmartPointer.hpp"
 #include "RefCounter.hpp"
 
 
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
 	class class_name;\
-	using sp##class_name = ::easy2d::IntrusivePtr< class_name >
+	using sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >
 
 #define E2D_DECLARE_NS_SMART_PTR(ns_name, class_name)\
 	namespace ns_name\
 	{\
 		class class_name; \
-		using sp##class_name = ::easy2d::IntrusivePtr< class_name >;\
+		using sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >;\
 	}
 #endif
 

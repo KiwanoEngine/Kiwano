@@ -25,8 +25,8 @@
     <ClInclude Include="..\..\core\base\ActionManager.h" />
     <ClInclude Include="..\..\core\base\Animation.h" />
     <ClInclude Include="..\..\core\base\audio.h" />
-    <ClInclude Include="..\..\core\base\base.h" />
-    <ClInclude Include="..\..\core\base\BaseTypes.h" />
+    <ClInclude Include="..\..\core\base\base.hpp" />
+    <ClInclude Include="..\..\core\base\BaseTypes.hpp" />
     <ClInclude Include="..\..\core\base\CallFunc.h" />
     <ClInclude Include="..\..\core\base\Canvas.h" />
     <ClInclude Include="..\..\core\base\Color.h" />
@@ -34,8 +34,8 @@
     <ClInclude Include="..\..\core\base\Game.h" />
     <ClInclude Include="..\..\core\base\Image.h" />
     <ClInclude Include="..\..\core\base\Input.h" />
-    <ClInclude Include="..\..\core\base\IntrusiveList.hpp" />
-    <ClInclude Include="..\..\core\base\IntrusivePtr.hpp" />
+    <ClInclude Include="..\..\core\base\intrusive\List.hpp" />
+    <ClInclude Include="..\..\core\base\intrusive\SmartPointer.hpp" />
     <ClInclude Include="..\..\core\base\KeyEvent.h" />
     <ClInclude Include="..\..\core\base\logs.h" />
     <ClInclude Include="..\..\core\base\macros.h" />
@@ -201,7 +201,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
