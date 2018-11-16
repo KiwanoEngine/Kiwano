@@ -31,7 +31,7 @@ namespace easy2d
 		spAction next;
 		for (auto action = actions_.First(); action; action = next)
 		{
-			next = action->Next();
+			next = action->NextItem();
 
 			if (action->IsRunning())
 				action->Update(target, dt);
@@ -49,7 +49,7 @@ namespace easy2d
 		if (action)
 		{
 			action->Start();
-			actions_.Append(action);
+			actions_.PushBack(Action::ItemType(action));
 		}
 	}
 
@@ -58,7 +58,7 @@ namespace easy2d
 		if (actions_.IsEmpty())
 			return;
 
-		for (auto& action = actions_.First(); action; action = action->Next())
+		for (auto& action = actions_.First(); action; action = action->NextItem())
 		{
 			action->Resume();
 		}
@@ -69,7 +69,7 @@ namespace easy2d
 		if (actions_.IsEmpty())
 			return;
 
-		for (auto& action = actions_.First(); action; action = action->Next())
+		for (auto& action = actions_.First(); action; action = action->NextItem())
 		{
 			action->Pause();
 		}
@@ -80,7 +80,7 @@ namespace easy2d
 		if (actions_.IsEmpty())
 			return;
 
-		for (auto& action = actions_.First(); action; action = action->Next())
+		for (auto& action = actions_.First(); action; action = action->NextItem())
 		{
 			action->Stop();
 		}

@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.h"
+#include "base.hpp"
 #include "time.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
 #include "ActionManager.h"
 #include "TaskManager.h"
-#include "IntrusiveList.hpp"
+#include "intrusive/List.hpp"
 #include "../math/Transform.hpp"
 #include "../math/Matrix.hpp"
 
@@ -38,16 +38,17 @@ namespace easy2d
 		: public RefCounter
 		, public ActionManager
 		, public TaskManager
-		, public IntrusiveItem<spNode>
+		, protected intrusive::ListItem<spNode>
 	{
 		friend class Game;
 		friend class Scene;
 		friend class Transition;
+		friend class intrusive::List<spNode>;
 
 		E2D_DISABLE_COPY(Node);
 
-		using Nodes = std::vector< spNode >;
-		using Children = IntrusiveList<spNode>;
+		using Nodes = std::vector<spNode>;
+		using Children = intrusive::List<spNode>;
 
 	public:
 		Node();

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Transcoder.h"
-#include "../base/base.h"
+#include "../base/base.hpp"
 #include "../base/modules.h"
 #include "../base/logs.h"
 #include <shlwapi.h>

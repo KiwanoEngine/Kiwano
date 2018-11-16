@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.h"
+#include "base.hpp"
 #include "time.h"
-#include "IntrusiveList.hpp"
+#include "intrusive/List.hpp"
 
 namespace easy2d
 {
@@ -29,7 +29,7 @@ namespace easy2d
 
 	class Action
 		: public RefCounter
-		, public IntrusiveItem<spAction>
+		, protected intrusive::ListItem<spAction>
 	{
 		E2D_DISABLE_COPY(Action);
 
@@ -37,6 +37,7 @@ namespace easy2d
 		friend class Loop;
 		friend class Sequence;
 		friend class Spawn;
+		friend class intrusive::List<spAction>;
 
 	public:
 		Action() : running_(false), done_(false), initialized_(false) {}

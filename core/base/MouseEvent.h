@@ -20,7 +20,7 @@
 
 #pragma once
 #include "macros.h"
-#include "BaseTypes.h"
+#include "BaseTypes.hpp"
 
 namespace easy2d
 {

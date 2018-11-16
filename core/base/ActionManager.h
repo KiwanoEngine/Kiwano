@@ -25,7 +25,7 @@ namespace easy2d
 {
 	class ActionManager
 	{
-		using Actions = IntrusiveList<spAction>;
+		using Actions = intrusive::List<spAction>;
 
 	public:
 		// Ö´ÐÐ¶¯×÷

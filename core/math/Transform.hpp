@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/BaseTypes.h"
+#include "../base/BaseTypes.hpp"
 #include "Matrix.hpp"
 
 namespace easy2d

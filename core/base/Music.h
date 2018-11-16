@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.h"
+#include "base.hpp"
 #include "audio.h"
 #include "Resource.h"
 #include <xaudio2.h>

@@ -117,7 +117,10 @@ namespace easy2d
 		if (handle == nullptr)
 		{
 			::UnregisterClass(REGISTER_CLASS, hinstance);
-			throw std::runtime_error("Create window failed!");
+
+			const char* err = "Create window failed!";
+			logs::Errorln(err);
+			throw std::runtime_error(err);
 		}
 
 		// Ω˚”√ ‰»Î∑®
