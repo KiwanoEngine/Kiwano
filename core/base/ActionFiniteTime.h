@@ -28,8 +28,6 @@ namespace easy2d
 	class FiniteTimeAction
 		: public Action
 	{
-		E2D_DISABLE_COPY(FiniteTimeAction);
-
 	public:
 		// 创建特定时长的持续动作
 		explicit FiniteTimeAction(
@@ -56,8 +54,6 @@ namespace easy2d
 	class MoveBy
 		: public FiniteTimeAction
 	{
-		E2D_DISABLE_COPY(MoveBy);
-
 	public:
 		explicit MoveBy(
 			Duration const& duration,	/* 持续时长 */
@@ -88,8 +84,6 @@ namespace easy2d
 	class MoveTo
 		: public MoveBy
 	{
-		E2D_DISABLE_COPY(MoveTo);
-
 	public:
 		explicit MoveTo(
 			Duration const& duration,	/* 持续时长 */
@@ -119,8 +113,6 @@ namespace easy2d
 	class JumpBy
 		: public FiniteTimeAction
 	{
-		E2D_DISABLE_COPY(JumpBy);
-
 	public:
 		explicit JumpBy(
 			Duration const& duration,	/* 持续时长 */
@@ -155,8 +147,6 @@ namespace easy2d
 	class JumpTo
 		: public JumpBy
 	{
-		E2D_DISABLE_COPY(JumpTo);
-
 	public:
 		explicit JumpTo(
 			Duration const& duration,	/* 持续时长 */
@@ -188,8 +178,6 @@ namespace easy2d
 	class ScaleBy
 		: public FiniteTimeAction
 	{
-		E2D_DISABLE_COPY(ScaleBy);
-
 	public:
 		explicit ScaleBy(
 			Duration const& duration,	/* 持续时长 */
@@ -227,8 +215,6 @@ namespace easy2d
 	class ScaleTo
 		: public ScaleBy
 	{
-		E2D_DISABLE_COPY(ScaleTo);
-
 	public:
 		explicit ScaleTo(
 			Duration const& duration,	/* 持续时长 */
@@ -265,8 +251,6 @@ namespace easy2d
 	class OpacityBy
 		: public FiniteTimeAction
 	{
-		E2D_DISABLE_COPY(OpacityBy);
-
 	public:
 		explicit OpacityBy(
 			Duration const& duration,	/* 持续时长 */
@@ -296,8 +280,6 @@ namespace easy2d
 	class OpacityTo
 		: public OpacityBy
 	{
-		E2D_DISABLE_COPY(OpacityTo);
-
 	public:
 		explicit OpacityTo(
 			Duration const& duration,	/* 持续时长 */
@@ -327,8 +309,6 @@ namespace easy2d
 	class FadeIn
 		: public OpacityTo
 	{
-		E2D_DISABLE_COPY(FadeIn);
-
 	public:
 		// 创建淡入动作
 		explicit FadeIn(
@@ -341,8 +321,6 @@ namespace easy2d
 	class FadeOut
 		: public OpacityTo
 	{
-		E2D_DISABLE_COPY(FadeOut);
-
 	public:
 		// 创建淡出动作
 		explicit FadeOut(
@@ -355,8 +333,6 @@ namespace easy2d
 	class RotateBy
 		: public FiniteTimeAction
 	{
-		E2D_DISABLE_COPY(RotateBy);
-
 	public:
 		explicit RotateBy(
 			Duration const& duration,	/* 持续时长 */
@@ -386,8 +362,6 @@ namespace easy2d
 	class RotateTo
 		: public RotateBy
 	{
-		E2D_DISABLE_COPY(RotateTo);
-
 	public:
 		explicit RotateTo(
 			Duration const& duration,	/* 持续时长 */
@@ -417,8 +391,6 @@ namespace easy2d
 	class Delay
 		: public Action
 	{
-		E2D_DISABLE_COPY(Delay);
-
 	public:
 		explicit Delay(
 			Duration const& duration	/* 延迟时长（秒） */

@@ -21,14 +21,14 @@
 #pragma once
 #include "macros.h"
 #include "Singleton.hpp"
+#include "noncopyable.hpp"
 #include <xaudio2.h>
 
 namespace easy2d
 {
 	class Voice
+		: protected Noncopyable
 	{
-		E2D_DISABLE_COPY(Voice);
-
 	public:
 		Voice();
 
@@ -75,10 +75,9 @@ namespace easy2d
 	namespace devices
 	{
 		class AudioDevice
+			: protected Noncopyable
 		{
 			E2D_DECLARE_SINGLETON(AudioDevice);
-
-			E2D_DISABLE_COPY(AudioDevice);
 
 		public:
 			void Init(bool debug);

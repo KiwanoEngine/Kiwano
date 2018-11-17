@@ -28,8 +28,6 @@ namespace easy2d
 	class Image
 		: public RefCounter
 	{
-		E2D_DISABLE_COPY(Image);
-
 	public:
 		Image();
 

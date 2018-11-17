@@ -27,8 +27,6 @@ namespace easy2d
 	class Animation
 		: public RefCounter
 	{
-		E2D_DISABLE_COPY(Animation);
-
 		using Images = std::vector< spImage >;
 
 	public:
@@ -86,8 +84,6 @@ namespace easy2d
 	class Animate
 		: public Action
 	{
-		E2D_DISABLE_COPY(Animate);
-
 	public:
 		Animate();
 

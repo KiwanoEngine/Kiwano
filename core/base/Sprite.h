@@ -28,8 +28,6 @@ namespace easy2d
 	class Sprite
 		: public Node
 	{
-		E2D_DISABLE_COPY(Sprite);
-
 	public:
 		Sprite();
 

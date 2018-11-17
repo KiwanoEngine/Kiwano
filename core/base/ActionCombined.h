@@ -27,8 +27,6 @@ namespace easy2d
 	class Loop
 		: public Action
 	{
-		E2D_DISABLE_COPY(Loop);
-
 	public:
 		explicit Loop(
 			spAction const& action,	/* 执行循环的动作 */
@@ -66,8 +64,6 @@ namespace easy2d
 	class Sequence
 		: public Action
 	{
-		E2D_DISABLE_COPY(Sequence);
-
 		using Actions = std::vector<spAction>;
 
 	public:
@@ -115,8 +111,6 @@ namespace easy2d
 	class Spawn
 		: public Action
 	{
-		E2D_DISABLE_COPY(Spawn);
-
 		using Actions = std::vector<spAction>;
 
 	public:

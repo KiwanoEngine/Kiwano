@@ -27,10 +27,9 @@ namespace easy2d
 	namespace devices
 	{
 		class InputDevice
+			: protected Noncopyable
 		{
 			E2D_DECLARE_SINGLETON(InputDevice);
-
-			E2D_DISABLE_COPY(InputDevice);
 
 		public:
 			void Init(bool debug);

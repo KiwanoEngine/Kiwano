@@ -19,42 +19,19 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "noncopyable.hpp"
-#include <memory>
 
 namespace easy2d
 {
-	template <typename T>
-	class ISingleton
-		: protected Noncopyable
+	class Noncopyable
 	{
-	public:
-		static inline T* Instance()
-		{
-			static std::unique_ptr<T> instance_;
-			if (!instance_)
-				instance_.reset(new (std::nothrow) T);
-			return instance_.get();
-		}
+	protected:
+		Noncopyable() = default;
+
+		~Noncopyable() {};
 
 	private:
-		ISingleton() = default;
+		Noncopyable(const Noncopyable&) = delete;
 
-		~ISingleton() {}
+		Noncopyable& operator=(const Noncopyable&) = delete;
 	};
 }
-
-// Class that will implement the singleton mode,
-// must use the macro in it's delare file
-
-#ifndef E2D_DECLARE_SINGLETON
-#define E2D_DECLARE_SINGLETON( type )			\
-	friend class ::std::unique_ptr< type >;		\
-	friend struct ::std::default_delete< type >;\
-	friend class ::easy2d::ISingleton< type >
-#endif
-
-#ifndef E2D_DECLARE_SINGLETON_TYPE
-#define E2D_DECLARE_SINGLETON_TYPE( type, singleton_type ) \
-	using singleton_type = ::easy2d::ISingleton< type >
-#endif

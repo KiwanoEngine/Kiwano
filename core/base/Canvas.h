@@ -29,8 +29,6 @@ namespace easy2d
 	class CanvasBrush
 		: public RefCounter
 	{
-		E2D_DISABLE_COPY(CanvasBrush);
-
 	public:
 		CanvasBrush();
 
@@ -138,8 +136,6 @@ namespace easy2d
 	class Canvas
 		: public Node
 	{
-		E2D_DISABLE_COPY(Canvas);
-
 	public:
 		Canvas();
 

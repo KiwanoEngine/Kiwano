@@ -46,9 +46,8 @@ namespace easy2d
 
 
 	class Game
+		: protected Noncopyable
 	{
-		E2D_DISABLE_COPY(Game);
-
 	public:
 		Game();
 

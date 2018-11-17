@@ -26,9 +26,8 @@ namespace easy2d
 {
 	// “Ù¿÷≤•∑≈∆˜
 	class Player
+		: protected Noncopyable
 	{
-		E2D_DISABLE_COPY(Player);
-
 	public:
 		Player();
 

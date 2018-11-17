@@ -49,6 +49,7 @@
 #include "base/Transform.hpp"
 #include "base/TextStyle.hpp"
 
+#include "base/noncopyable.hpp"
 #include "base/intrusive/SmartPointer.hpp"
 #include "base/intrusive/List.hpp"
 

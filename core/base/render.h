@@ -47,10 +47,9 @@ namespace easy2d
 
 
 		class GraphicsDevice
+			: protected Noncopyable
 		{
 			E2D_DECLARE_SINGLETON(GraphicsDevice);
-
-			E2D_DISABLE_COPY(GraphicsDevice);
 
 		public:
 			void Init(HWND hwnd, bool debug);

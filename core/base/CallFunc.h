@@ -28,8 +28,6 @@ namespace easy2d
 	class CallFunc
 		: public Action
 	{
-		E2D_DISABLE_COPY(CallFunc);
-
 		typedef std::function<void()> Callback;
 
 	  public:

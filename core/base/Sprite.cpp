@@ -81,7 +81,7 @@ namespace easy2d
 	{
 		if (!image_)
 		{
-			image_ = new (std::nothrow) Image();
+			image_ = new (std::nothrow) Image;
 		}
 
 		if (image_)
@@ -99,7 +99,7 @@ namespace easy2d
 	{
 		if (!image_)
 		{
-			image_ = new (std::nothrow) Image();
+			image_ = new (std::nothrow) Image;
 		}
 
 		if (image_)

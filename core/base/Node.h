@@ -44,8 +44,6 @@ namespace easy2d
 		friend class Transition;
 		friend class intrusive::List<spNode>;
 
-		E2D_DISABLE_COPY(Node);
-
 		using Nodes = std::vector<spNode>;
 		using Children = intrusive::List<spNode>;
 

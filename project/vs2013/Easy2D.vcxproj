@@ -44,6 +44,7 @@
     <ClInclude Include="..\..\core\base\MouseEvent.h" />
     <ClInclude Include="..\..\core\base\Music.h" />
     <ClInclude Include="..\..\core\base\Node.h" />
+    <ClInclude Include="..\..\core\base\noncopyable.hpp" />
     <ClInclude Include="..\..\core\base\Point.hpp" />
     <ClInclude Include="..\..\core\base\Rect.hpp" />
     <ClInclude Include="..\..\core\base\RefCounter.hpp" />

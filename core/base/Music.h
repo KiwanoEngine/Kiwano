@@ -29,8 +29,6 @@ namespace easy2d
 	class Music
 		: public RefCounter
 	{
-		E2D_DISABLE_COPY(Music);
-
 	public:
 		Music();
 

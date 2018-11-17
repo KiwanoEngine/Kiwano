@@ -27,10 +27,9 @@ namespace easy2d
 	
 
 	class WindowImpl
+		: protected Noncopyable
 	{
 		E2D_DECLARE_SINGLETON(WindowImpl);
-
-		E2D_DISABLE_COPY(WindowImpl);
 
 	public:
 		void Init(
