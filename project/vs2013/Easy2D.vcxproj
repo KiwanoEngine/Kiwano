@@ -88,6 +88,7 @@
     <ClCompile Include="..\..\core\base\Image.cpp" />
     <ClCompile Include="..\..\core\base\Input.cpp" />
     <ClCompile Include="..\..\core\base\KeyEvent.cpp" />
+    <ClCompile Include="..\..\core\base\logs.cpp" />
     <ClCompile Include="..\..\core\base\modules.cpp" />
     <ClCompile Include="..\..\core\base\MouseEvent.cpp" />
     <ClCompile Include="..\..\core\base\Music.cpp" />

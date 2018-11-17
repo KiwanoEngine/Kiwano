@@ -20,9 +20,7 @@
 
 #pragma once
 #include "macros.h"
-#include <ctime>
 #include <iostream>
-#include <iomanip>
 #include <sstream>
 #include <stdexcept>
 
@@ -38,112 +36,25 @@ namespace easy2d
 {
 	namespace logs
 	{
-		namespace
-		{
-			inline void Out(std::ostream& stream, const char* output)
-			{
-				stream << output;
-				::OutputDebugStringA(output);
-			}
+		void Enable();
 
-			inline void OutPrefix(std::stringstream& ss)
-			{
-				std::time_t unix = ::time(NULL);
-				struct tm tmbuf;
-				localtime_s(&tmbuf, &unix);
-				ss << std::put_time(&tmbuf, "[easy2d] %H:%M:%S ");
-			}
+		void Disable();
 
-			inline void Output(std::ostream& stream, const char* prompt, const char* format, va_list args)
-			{
-				size_t len = ::_vscprintf(format, args) + 1;
-				char* buffer = new char[len];
-				::_vsnprintf_s(buffer, len, len, format, args);
+		void Print(const char* format, ...);
 
-				std::stringstream ss;
-				OutPrefix(ss);
-				ss << prompt << buffer;
-				Out(stream, ss.str().c_str());
+		void Println(const char* format, ...);
 
-				delete[] buffer;
-			}
+		void Warning(const char* format, ...);
 
-			inline void OutputLine(std::ostream& stream, const char* prompt, const char* format, va_list args)
-			{
-				Output(stream, prompt, format, args);
-				Out(stream, "\r\n");
-			}
-		}
+		void Warningln(const char* format, ...);
 
-		inline void Print(const char* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
+		void Error(const char* format, ...);
 
-			Output(std::cout, "", format, args);
+		void Errorln(const char* format, ...);
 
-			va_end(args);
-		}
+		void Errorln(HRESULT hr);
 
-		inline void Println(const char* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			OutputLine(std::cout, "", format, args);
-
-			va_end(args);
-		}
-
-		inline void Warning(const char* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::cerr, "Warning: ", format, args);
-
-			va_end(args);
-		}
-
-		inline void Warningln(const char* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			OutputLine(std::cerr, "Warning: ", format, args);
-
-			va_end(args);
-		}
-
-		inline void Error(const char* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::cerr, "Error: ", format, args);
-
-			va_end(args);
-		}
-
-		inline void Errorln(const char* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			OutputLine(std::cerr, "Error: ", format, args);
-
-			va_end(args);
-		}
-
-		inline void Errorln(HRESULT hr)
-		{
-			Errorln("failure with HRESULT of %08X", hr);
-		}
-
-		inline void Errorln(HRESULT hr, const char* output)
-		{
-			Errorln("failure with HRESULT of %08X: %s", hr, output);
-		}
+		void Errorln(HRESULT hr, const char* output);
 	}
 
 	inline void ThrowIfFailed(HRESULT hr)

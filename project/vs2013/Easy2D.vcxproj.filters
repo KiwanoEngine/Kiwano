@@ -288,5 +288,8 @@
     <ClCompile Include="..\..\core\base\ActionManager.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\base\logs.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
