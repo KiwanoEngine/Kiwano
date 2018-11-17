@@ -20,55 +20,21 @@
 
 #pragma once
 #include "Node.h"
-#include <d2d1.h>
 
 namespace easy2d
 {
-	// 画布
-	class Canvas
-		: public Node
+	E2D_DECLARE_SMART_PTR(CanvasBrush);
+
+	// 画笔
+	class CanvasBrush
+		: public RefCounter
 	{
-		E2D_DISABLE_COPY(Canvas);
+		E2D_DISABLE_COPY(CanvasBrush);
 
 	public:
-		Canvas(
-			float width,
-			float height
-		);
+		CanvasBrush();
 
-		virtual ~Canvas();
-
-		// 设置线条颜色
-		void SetLineColor(
-			const Color& color
-		);
-
-		// 设置填充颜色
-		void SetFillColor(
-			const Color& color
-		);
-
-		// 设置线条宽度
-		void SetStrokeWidth(
-			float width
-		);
-
-		// 设置线条相交样式
-		void SetStrokeStyle(
-			StrokeStyle stroke
-		);
-
-		// 获取线条颜色
-		Color GetLineColor() const;
-
-		// 获取填充颜色
-		Color GetFillColor() const;
-
-		// 获取线条宽度
-		float GetStrokeWidth() const;
-
-		// 获取线条相交样式
-		StrokeStyle GetStrokeStyle() const;
+		virtual ~CanvasBrush();
 
 		// 画直线
 		void DrawLine(
@@ -126,12 +92,74 @@ namespace easy2d
 			float radius_y
 		);
 
+		// 设置线条颜色
+		void SetLineColor(
+			const Color& color
+		);
+
+		// 设置填充颜色
+		void SetFillColor(
+			const Color& color
+		);
+
+		// 设置线条宽度
+		void SetStrokeWidth(
+			float width
+		);
+
+		// 设置线条相交样式
+		void SetStrokeStyle(
+			StrokeStyle stroke
+		);
+
+		// 获取线条颜色
+		Color GetLineColor() const;
+
+		// 获取填充颜色
+		Color GetFillColor() const;
+
+		// 获取线条宽度
+		float GetStrokeWidth() const;
+
+		// 获取线条相交样式
+		StrokeStyle GetStrokeStyle() const;
+
 	protected:
-		float					stroke_width_;
-		StrokeStyle				stroke_;
-		ID2D1RenderTarget*		render_target_;
-		ID2D1SolidColorBrush*	fill_brush_;
-		ID2D1SolidColorBrush*	line_brush_;
-		ID2D1StrokeStyle*		stroke_style_;
+		float				stroke_width_;
+		StrokeStyle			stroke_;
+		cpRenderTarget		render_target_;
+		cpSolidColorBrush	fill_brush_;
+		cpSolidColorBrush	line_brush_;
+		cpStrokeStyle		stroke_style_;
+	};
+
+
+	// 画布
+	class Canvas
+		: public Node
+	{
+		E2D_DISABLE_COPY(Canvas);
+
+	public:
+		Canvas();
+
+		Canvas(
+			float width,
+			float height
+		);
+
+		virtual ~Canvas();
+
+		virtual void OnDraw(CanvasBrush& brush) = 0;
+
+		// 设置画刷
+		void SetBrush(
+			spCanvasBrush const& brush
+		);
+
+		virtual void OnDraw() override;
+
+	private:
+		spCanvasBrush brush_;
 	};
 }

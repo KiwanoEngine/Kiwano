@@ -44,44 +44,38 @@ namespace easy2d
 	Text::Text()
 		: font_(text_default_font)
 		, style_(text_default_style)
-		, text_layout_(nullptr)
-		, text_format_(nullptr)
 		, dirty_layout_(false)
 	{
 	}
 
-	Text::Text(const String & text)
+	Text::Text(String const& text)
 		: Text(text, text_default_font, text_default_style)
 	{
 	}
 
-	Text::Text(const String & text, const Font & font)
+	Text::Text(String const& text, const Font & font)
 		: Text(text, font, text_default_style)
 	{
 	}
 
-	Text::Text(const String & text, const TextStyle & style)
+	Text::Text(String const& text, const TextStyle & style)
 		: Text(text, text_default_font, style)
 	{
 	}
 
-	Text::Text(const String & text, const Font & font, const TextStyle & style)
+	Text::Text(String const& text, const Font & font, const TextStyle & style)
 		: font_(font)
 		, style_(style)
 		, text_(text)
-		, text_layout_(nullptr)
-		, text_format_(nullptr)
 		, dirty_layout_(true)
 	{
 	}
 
 	Text::~Text()
 	{
-		SafeRelease(text_format_);
-		SafeRelease(text_layout_);
 	}
 
-	const String& Text::GetText() const
+	String const& Text::GetText() const
 	{
 		return text_;
 	}
@@ -96,7 +90,7 @@ namespace easy2d
 		return style_;
 	}
 
-	const String& Text::GetFontFamily() const
+	String const& Text::GetFontFamily() const
 	{
 		return font_.family;
 	}
@@ -171,7 +165,7 @@ namespace easy2d
 		return style_.outline;
 	}
 
-	void Text::SetText(const String& text)
+	void Text::SetText(String const& text)
 	{
 		text_ = text;
 		dirty_layout_ = true;
@@ -189,7 +183,7 @@ namespace easy2d
 		dirty_layout_ = true;
 	}
 
-	void Text::SetFontFamily(const String& family)
+	void Text::SetFontFamily(String const& family)
 	{
 		if (font_.family != family)
 		{
@@ -332,8 +326,8 @@ namespace easy2d
 		if (!dirty_layout_)
 			return;
 
-		SafeRelease(text_format_);
-		SafeRelease(text_layout_);
+		text_format_ = nullptr;
+		text_layout_ = nullptr;
 
 		if (text_.empty())
 			return;
@@ -342,7 +336,7 @@ namespace easy2d
 
 		ThrowIfFailed(
 			graphics->CreateTextFormat(
-				&text_format_,
+				text_format_,
 				font_
 			)
 		);
@@ -366,7 +360,7 @@ namespace easy2d
 		{
 			ThrowIfFailed(
 				graphics->CreateTextLayout(
-					&text_layout_,
+					text_layout_,
 					text_,
 					text_format_,
 					style_.wrap_width
@@ -381,7 +375,7 @@ namespace easy2d
 		{
 			ThrowIfFailed(
 				graphics->CreateTextLayout(
-					&text_layout_,
+					text_layout_,
 					text_,
 					text_format_,
 					0
@@ -392,10 +386,9 @@ namespace easy2d
 			text_layout_->GetMetrics(&metrics);
 			this->SetSize(metrics.width, metrics.height);
 
-			SafeRelease(text_layout_);
 			ThrowIfFailed(
 				graphics->CreateTextLayout(
-					&text_layout_,
+					text_layout_,
 					text_,
 					text_format_,
 					metrics.width

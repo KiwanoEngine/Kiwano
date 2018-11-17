@@ -63,8 +63,8 @@ namespace easy2d
 		Size			window_size_;
 		spScene			out_scene_;
 		spScene			in_scene_;
-		ID2D1Layer*		out_layer_;
-		ID2D1Layer*		in_layer_;
+		cpLayer			out_layer_;
+		cpLayer			in_layer_;
 		LayerProperties out_layer_prop_;
 		LayerProperties in_layer_prop_;
 	};

@@ -34,38 +34,38 @@ namespace easy2d
 		Image();
 
 		explicit Image(
-			Resource& res
+			Resource const& res
 		);
 
 		explicit Image(
-			Resource& res,
-			const Rect& crop_rect	/* 裁剪矩形 */
+			Resource const& res,
+			Rect const& crop_rect	/* 裁剪矩形 */
 		);
 
 		explicit Image(
-			const String& file_name
+			String const& file_name
 		);
 
 		explicit Image(
-			const String& file_name,
-			const Rect& crop_rect	/* 裁剪矩形 */
+			String const& file_name,
+			Rect const& crop_rect	/* 裁剪矩形 */
 		);
 
 		virtual ~Image();
 
 		// 加载图片资源
 		bool Load(
-			Resource& res
+			Resource const& res
 		);
 
 		// 加载图片资源
 		bool Load(
-			const String& file_name
+			String const& file_name
 		);
 
 		// 将图片裁剪为矩形
 		void Crop(
-			const Rect& crop_rect	/* 裁剪矩形 */
+			Rect const& crop_rect	/* 裁剪矩形 */
 		);
 
 		// 获取宽度
@@ -96,19 +96,12 @@ namespace easy2d
 		Point GetCropPos() const;
 
 		// 获取裁剪矩形
-		const Rect& GetCropRect() const;
+		Rect const& GetCropRect() const;
 
-		// 获取 ID2D1Bitmap 对象
-		ID2D1Bitmap * GetBitmap() const;
+		cpBitmap const& GetBitmap() const;
 
-	private:
-		// 设置 Bitmap
-		void SetBitmap(
-			ID2D1Bitmap * bitmap
-		);
-
-	private:
-		Rect			crop_rect_;
-		ID2D1Bitmap*	bitmap_;
+	protected:
+		Rect		crop_rect_;
+		cpBitmap	bitmap_;
 	};
 }

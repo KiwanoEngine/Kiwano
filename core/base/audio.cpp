@@ -166,7 +166,6 @@ namespace easy2d
 			, mastering_voice_(nullptr)
 			, initialized(false)
 		{
-			modules::Init();
 		}
 
 		AudioDevice::~AudioDevice()
@@ -183,9 +182,7 @@ namespace easy2d
 
 			SafeRelease(x_audio2_);
 
-			modules::MediaFoundation.MFShutdown();
-
-			modules::Destroy();
+			modules::MediaFoundation().MFShutdown();
 		}
 
 		void AudioDevice::Init(bool debug)
@@ -196,11 +193,11 @@ namespace easy2d
 			E2D_LOG("Initing audio device");
 
 			ThrowIfFailed(
-				modules::MediaFoundation.MFStartup(MF_VERSION, MFSTARTUP_FULL)
+				modules::MediaFoundation().MFStartup(MF_VERSION, MFSTARTUP_FULL)
 			);
 
 			ThrowIfFailed(
-				modules::XAudio2.XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR)
+				modules::XAudio2().XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR)
 			);
 
 			ThrowIfFailed(
@@ -210,33 +207,23 @@ namespace easy2d
 			initialized = true;
 		}
 
-		HRESULT AudioDevice::CreateVoice(Voice* voice, WAVEFORMATEX * wfx)
+		HRESULT AudioDevice::CreateVoice(Voice& voice, const WAVEFORMATEX* wfx)
 		{
 			HRESULT hr;
 			IXAudio2SourceVoice* source_voice;
 
-			if (!voice)
-				return E_POINTER;
-			
 			hr = x_audio2_->CreateSourceVoice(&source_voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
 			if (SUCCEEDED(hr))
 			{
-				voice->SetSourceVoice(source_voice);
-				voice_cache_.push_back(voice);
+				voice.SetSourceVoice(source_voice);
+				voice_cache_.insert(&voice);
 			}
 			return hr;
 		}
 
-		void AudioDevice::DeleteVoice(Voice * voice)
+		void AudioDevice::DeleteVoice(Voice* voice)
 		{
-			for (auto iter = voice_cache_.begin(); iter != voice_cache_.end(); ++iter)
-			{
-				if (*iter == voice)
-				{
-					voice_cache_.erase(iter);
-					break;
-				}
-			}
+			voice_cache_.erase(voice);
 		}
 
 		void AudioDevice::ClearVoiceCache()

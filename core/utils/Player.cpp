@@ -33,7 +33,7 @@ namespace easy2d
 		ClearCache();
 	}
 
-	bool Player::Load(const String & file_path)
+	bool Player::Load(String const& file_path)
 	{
 		if (file_path.empty())
 			return false;
@@ -54,7 +54,7 @@ namespace easy2d
 		return false;
 	}
 
-	bool Player::Play(const String & file_path, int loop_count)
+	bool Player::Play(String const& file_path, int loop_count)
 	{
 		if (file_path.empty())
 			return false;
@@ -70,7 +70,7 @@ namespace easy2d
 		return false;
 	}
 
-	void Player::Pause(const String & file_path)
+	void Player::Pause(String const& file_path)
 	{
 		if (file_path.empty())
 			return;
@@ -80,7 +80,7 @@ namespace easy2d
 			musics_cache_[hash_code]->Pause();
 	}
 
-	void Player::Resume(const String & file_path)
+	void Player::Resume(String const& file_path)
 	{
 		if (file_path.empty())
 			return;
@@ -90,7 +90,7 @@ namespace easy2d
 			musics_cache_[hash_code]->Resume();
 	}
 
-	void Player::Stop(const String & file_path)
+	void Player::Stop(String const& file_path)
 	{
 		if (file_path.empty())
 			return;
@@ -100,7 +100,7 @@ namespace easy2d
 			musics_cache_[hash_code]->Stop();
 	}
 
-	bool Player::IsPlaying(const String & file_path)
+	bool Player::IsPlaying(String const& file_path)
 	{
 		if (file_path.empty())
 			return false;
@@ -111,7 +111,7 @@ namespace easy2d
 		return false;
 	}
 
-	bool Player::Load(Resource& res)
+	bool Player::Load(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
@@ -131,7 +131,7 @@ namespace easy2d
 		return false;
 	}
 
-	bool Player::Play(Resource& res, int loop_count)
+	bool Player::Play(Resource const& res, int loop_count)
 	{
 		if (Load(res))
 		{
@@ -145,28 +145,28 @@ namespace easy2d
 		return false;
 	}
 
-	void Player::Pause(Resource& res)
+	void Player::Pause(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			musics_cache_[hash_code]->Pause();
 	}
 
-	void Player::Resume(Resource& res)
+	void Player::Resume(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			musics_cache_[hash_code]->Resume();
 	}
 
-	void Player::Stop(Resource& res)
+	void Player::Stop(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			musics_cache_[hash_code]->Stop();
 	}
 
-	bool Player::IsPlaying(Resource& res)
+	bool Player::IsPlaying(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
 		if (musics_cache_.end() != musics_cache_.find(hash_code))

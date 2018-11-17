@@ -36,7 +36,7 @@ namespace easy2d
 	{
 	}
 
-	Music::Music(const String& file_path)
+	Music::Music(String const& file_path)
 		: opened_(false)
 		, playing_(false)
 		, wave_data_(nullptr)
@@ -46,7 +46,7 @@ namespace easy2d
 		Load(file_path);
 	}
 
-	Music::Music(Resource& res)
+	Music::Music(Resource const& res)
 		: opened_(false)
 		, playing_(false)
 		, wave_data_(nullptr)
@@ -61,7 +61,7 @@ namespace easy2d
 		Close();
 	}
 
-	bool Music::Load(const String & file_path)
+	bool Music::Load(String const& file_path)
 	{
 		if (opened_)
 		{
@@ -87,7 +87,7 @@ namespace easy2d
 			return false;
 		}
 
-		hr = devices::Audio::Instance()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+		hr = devices::Audio::Instance()->CreateVoice(voice_, transcoder.GetWaveFormatEx());
 		if (FAILED(hr))
 		{
 			if (wave_data_)
@@ -103,7 +103,7 @@ namespace easy2d
 		return true;
 	}
 
-	bool Music::Load(Resource& res)
+	bool Music::Load(Resource const& res)
 	{
 		if (opened_)
 		{
@@ -119,7 +119,7 @@ namespace easy2d
 			return false;
 		}
 
-		hr = devices::Audio::Instance()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+		hr = devices::Audio::Instance()->CreateVoice(voice_, transcoder.GetWaveFormatEx());
 		if (FAILED(hr))
 		{
 			if (wave_data_)

@@ -140,7 +140,7 @@ namespace easy2d
 		return String();
 	}
 
-	void WindowImpl::SetTitle(const String& title)
+	void WindowImpl::SetTitle(String const& title)
 	{
 		if (handle)
 			::SetWindowText(handle, title.c_str());

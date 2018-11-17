@@ -38,20 +38,20 @@ namespace easy2d
 		);
 
 		explicit Sprite(
-			Resource& res
+			Resource const& res
 		);
 
 		explicit Sprite(
-			Resource& res,
+			Resource const& res,
 			const Rect& crop_rect	/* 裁剪矩形 */
 		);
 
 		explicit Sprite(
-			const String& file_name
+			String const& file_name
 		);
 
 		explicit Sprite(
-			const String& file_name,
+			String const& file_name,
 			const Rect& crop_rect	/* 裁剪矩形 */
 		);
 
@@ -59,12 +59,12 @@ namespace easy2d
 
 		// 加载图片文件
 		bool Load(
-			Resource& res
+			Resource const& res
 		);
 
 		// 加载图片文件
 		bool Load(
-			const String& file_name
+			String const& file_name
 		);
 
 		// 加载图片

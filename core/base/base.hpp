@@ -22,7 +22,7 @@
 #include "BaseTypes.hpp"
 #include "RefCounter.hpp"
 #include "intrusive/SmartPointer.hpp"
-
+#include "d2dres.hpp"
 
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
@@ -36,7 +36,6 @@
 		using sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >;\
 	}
 #endif
-
 
 namespace easy2d
 {
@@ -80,14 +79,4 @@ namespace easy2d
 
 	E2D_DECLARE_NS_SMART_PTR(ui, Button);
 	E2D_DECLARE_NS_SMART_PTR(ui, Menu);
-
-	template<class Interface>
-	inline void SafeRelease(Interface*& p)
-	{
-		if (p != nullptr)
-		{
-			p->Release();
-			p = nullptr;
-		}
-	}
 }

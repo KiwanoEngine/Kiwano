@@ -34,15 +34,15 @@ namespace easy2d
 	{
 		struct D2DResources
 		{
-			ID2D1Factory*			factory;
-			IWICImagingFactory*		imaging_factory;
-			IDWriteFactory*			write_factory;
-			ITextRenderer*			text_renderer;
-			ID2D1SolidColorBrush*	solid_brush;
-			ID2D1HwndRenderTarget*	render_target;
-			ID2D1StrokeStyle*		miter_stroke_style;
-			ID2D1StrokeStyle*		bevel_stroke_style;
-			ID2D1StrokeStyle*		round_stroke_style;
+			cpFactory			factory;
+			cpImagingFactory	imaging_factory;
+			cpWriteFactory		write_factory;
+			spTextRenderer		text_renderer;
+			cpSolidColorBrush	solid_brush;
+			cpRenderTarget		render_target;
+			cpStrokeStyle		miter_stroke_style;
+			cpStrokeStyle		bevel_stroke_style;
+			cpStrokeStyle		round_stroke_style;
 		};
 
 
@@ -72,30 +72,36 @@ namespace easy2d
 			void CreateDeviceResources(HWND hwnd);
 
 			HRESULT CreateRectGeometry(
+				cpGeometry& geometry,
 				const math::Matrix& matrix,
-				const Size& size,
-				ID2D1Geometry** geometry
+				const Size& size
 			) const;
 
 			HRESULT CreateTextFormat(
-				IDWriteTextFormat** text_format,
-				const Font& font
+				cpTextFormat& text_format,
+				Font const& font
 			) const;
 
 			HRESULT CreateTextLayout(
-				IDWriteTextLayout** text_layout,
-				const String& text,
-				IDWriteTextFormat* text_format,
+				cpTextLayout& text_layout,
+				String const& text,
+				cpTextFormat const& text_format,
 				float wrap_width
 			) const;
 
 			HRESULT CreateLayer(
-				ID2D1Layer** layer
+				cpLayer& layer
 			);
 
-			ID2D1StrokeStyle* GetStrokeStyle(
+			HRESULT CreateSolidColorBrush(
+				cpSolidColorBrush& brush
+			) const;
+
+			cpStrokeStyle const& GetStrokeStyle(
 				StrokeStyle stroke
 			) const;
+
+			cpRenderTarget const& GetRenderTarget() const;
 
 			HRESULT SetTransform(
 				const math::Matrix& matrix
@@ -114,7 +120,7 @@ namespace easy2d
 			);
 
 			HRESULT DrawGeometry(
-				ID2D1Geometry* geometry,
+				cpGeometry const& geometry,
 				const Color& border_color,
 				float opacity,
 				float stroke_width,
@@ -129,7 +135,7 @@ namespace easy2d
 			);
 
 			HRESULT DrawTextLayout(
-				IDWriteTextLayout* text_layout
+				cpTextLayout const& text_layout
 			);
 
 			HRESULT PushClip(
@@ -140,20 +146,20 @@ namespace easy2d
 			HRESULT PopClip();
 
 			HRESULT PushLayer(
-				ID2D1Layer* layer,
-				LayerProperties properties
+				cpLayer const& layer,
+				LayerProperties const& properties
 			);
 
 			HRESULT PopLayer();
 
 			HRESULT CreateBitmapFromFile(
-				const String& file_path,
-				ID2D1Bitmap** bitmap
+				cpBitmap& bitmap,
+				String const& file_path
 			);
 
 			HRESULT CreateBitmapFromResource(
-				Resource& res,
-				ID2D1Bitmap** bitmap
+				cpBitmap& bitmap,
+				Resource const& res
 			);
 
 			HRESULT Resize(
@@ -172,9 +178,9 @@ namespace easy2d
 			bool							initialized;
 			D2DResources					d2d;
 			D2D1_COLOR_F					clear_color_;
-			IDWriteTextFormat*				fps_text_format_;
-			IDWriteTextLayout*				fps_text_layout_;
-			std::map<size_t, ID2D1Bitmap*>	bitmap_cache_;
+			cpTextFormat					fps_text_format_;
+			cpTextLayout					fps_text_layout_;
+			std::map<size_t, cpBitmap>		bitmap_cache_;
 		};
 
 		E2D_DECLARE_SINGLETON_TYPE(GraphicsDevice, Graphics);

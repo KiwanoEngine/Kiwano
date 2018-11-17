@@ -20,6 +20,8 @@
 
 #pragma once
 #include "macros.h"
+#include <d2d1.h>
+#include <dwrite.h>
 #include <xaudio2.h>
 #include <mfapi.h>
 #include <mfidl.h>
@@ -29,38 +31,67 @@ namespace easy2d
 {
     namespace modules
 	{
-		// modules can be initialized multiple times,
-		// but it needs to be destroyed every time
-		void Init();
-
-		void Destroy();
-
-		// XAudio2 functions
-		typedef HRESULT(WINAPI *PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
-
-		struct Module_XAudio2
+		class Shlwapi
 		{
-			HMODULE instance;
+			HMODULE shlwapi;
+
+			// Shlwapi functions
+			typedef BOOL(WINAPI *PFN_PathFileExistsW)(LPCWSTR);
+
+		public:
+			Shlwapi();
+
+			PFN_PathFileExistsW PathFileExistsW;
+		};
+
+
+		class DirectX
+		{
+			HMODULE d2d;
+			HMODULE dwrite;
+
+			// DirectX functions
+			typedef HRESULT(WINAPI *PFN_D2D1CreateFactory)(D2D1_FACTORY_TYPE, const IID&, const D2D1_FACTORY_OPTIONS*, void **);
+			typedef HRESULT(WINAPI *PFN_DWriteCreateFactory)(DWRITE_FACTORY_TYPE, const IID&, IUnknown **);
+
+		public:
+			DirectX();
+
+			PFN_D2D1CreateFactory D2D1CreateFactory;
+			PFN_DWriteCreateFactory DWriteCreateFactory;
+		};
+
+
+		class XAudio2
+		{
+			HMODULE xaudio2;
+
+			// XAudio2 functions
+			typedef HRESULT(WINAPI *PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
+
+		public:
+			XAudio2();
 
 			PFN_XAudio2Create XAudio2Create;
 		};
 
-		extern Module_XAudio2 XAudio2;
 
-
-		// MediaFoundation functions
-		typedef HRESULT(WINAPI *PFN_MFStartup)(ULONG, DWORD);
-		typedef HRESULT(WINAPI *PFN_MFShutdown)();
-		typedef HRESULT(WINAPI *PFN_MFCreateMediaType)(IMFMediaType**);
-		typedef HRESULT(WINAPI *PFN_MFCreateWaveFormatExFromMFMediaType)(IMFMediaType*, WAVEFORMATEX**, UINT32*, UINT32);
-		typedef HRESULT(WINAPI *PFN_MFCreateSourceReaderFromURL)(LPCWSTR, IMFAttributes*, IMFSourceReader**);
-		typedef HRESULT(WINAPI *PFN_MFCreateSourceReaderFromByteStream)(IMFByteStream*, IMFAttributes*, IMFSourceReader**);
-		typedef HRESULT(WINAPI *PFN_MFCreateMFByteStreamOnStream)(IStream*, IMFByteStream**);
-
-		struct Module_MediaFoundation
+		class MediaFoundation
 		{
 			HMODULE mfplat;
 			HMODULE mfreadwrite;
+
+			// MediaFoundation functions
+			typedef HRESULT(WINAPI *PFN_MFStartup)(ULONG, DWORD);
+			typedef HRESULT(WINAPI *PFN_MFShutdown)();
+			typedef HRESULT(WINAPI *PFN_MFCreateMediaType)(IMFMediaType**);
+			typedef HRESULT(WINAPI *PFN_MFCreateWaveFormatExFromMFMediaType)(IMFMediaType*, WAVEFORMATEX**, UINT32*, UINT32);
+			typedef HRESULT(WINAPI *PFN_MFCreateSourceReaderFromURL)(LPCWSTR, IMFAttributes*, IMFSourceReader**);
+			typedef HRESULT(WINAPI *PFN_MFCreateSourceReaderFromByteStream)(IMFByteStream*, IMFAttributes*, IMFSourceReader**);
+			typedef HRESULT(WINAPI *PFN_MFCreateMFByteStreamOnStream)(IStream*, IMFByteStream**);
+
+		public:
+			MediaFoundation();
 
 			PFN_MFStartup MFStartup;
 			PFN_MFShutdown MFShutdown;
@@ -70,7 +101,5 @@ namespace easy2d
 			PFN_MFCreateSourceReaderFromByteStream MFCreateSourceReaderFromByteStream;
 			PFN_MFCreateMFByteStreamOnStream MFCreateMFByteStreamOnStream;
 		};
-
-		extern Module_MediaFoundation MediaFoundation;
 	}
 }

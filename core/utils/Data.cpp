@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	Data::Data(const String & key, const String & field)
+	Data::Data(String const& key, String const& field)
 		: key_(key)
 		, field_(field)
 		, data_path_(Path::GetDataPath())
@@ -88,7 +88,7 @@ namespace easy2d
 		return ret == TRUE;
 	}
 
-	bool Data::SaveString(const String& val)
+	bool Data::SaveString(String const& val)
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_.c_str(),

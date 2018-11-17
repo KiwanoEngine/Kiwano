@@ -90,8 +90,8 @@ namespace easy2d
 			void Close();
 
 			HRESULT CreateVoice(
-				Voice* voice,
-				WAVEFORMATEX * wfx
+				Voice& voice,
+				const WAVEFORMATEX* wfx
 			);
 
 			void DeleteVoice(
@@ -109,7 +109,7 @@ namespace easy2d
 			bool					initialized;
 			IXAudio2*				x_audio2_;
 			IXAudio2MasteringVoice*	mastering_voice_;
-			std::list<Voice*>		voice_cache_;
+			std::set<Voice*>		voice_cache_;
 		};
 
 		E2D_DECLARE_SINGLETON_TYPE(AudioDevice, Audio);

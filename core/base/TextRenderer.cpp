@@ -65,15 +65,15 @@ namespace easy2d
 	STDMETHODIMP_(void) ITextRenderer::SetTextStyle(
 		CONST D2D1_COLOR_F &fillColor,
 		BOOL outline,
-		CONST D2D1_COLOR_F &outline_color,
-		FLOAT outline_width,
-		D2D1_LINE_JOIN outlineJoin)
+		CONST D2D1_COLOR_F &outlineColor,
+		FLOAT outlineWidth,
+		ID2D1StrokeStyle* outlineJoin)
 	{
 		sFillColor_ = fillColor;
 		bShowOutline_ = outline;
-		sOutlineColor_ = outline_color;
-		fOutlineWidth = 2 * outline_width;
-		pCurrStrokeStyle_ = devices::Graphics::Instance()->GetStrokeStyle(StrokeStyle(outlineJoin));
+		sOutlineColor_ = outlineColor;
+		fOutlineWidth = 2 * outlineWidth;
+		pCurrStrokeStyle_ = outlineJoin;
 	}
 
 	STDMETHODIMP ITextRenderer::DrawGlyphRun(

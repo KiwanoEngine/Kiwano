@@ -36,7 +36,7 @@ namespace easy2d
 
 		~Transcoder();
 
-		WAVEFORMATEX* GetWaveFormatEx() const;
+		const WAVEFORMATEX* GetWaveFormatEx() const;
 
 		HRESULT LoadMediaFile(
 			LPCWSTR file_path,
@@ -45,7 +45,7 @@ namespace easy2d
 		);
 
 		HRESULT LoadMediaResource(
-			const Resource& res,
+			Resource const& res,
 			BYTE** wave_data,
 			UINT32* wave_data_size
 		);

@@ -18,82 +18,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Task.h"
+#pragma once
+#include "macros.h"
+#include "intrusive/SmartPointer.hpp"
+#include <d2d1.h>
+#include <dwrite.h>
+
+#ifndef E2D_DECLARE_D2D_SMART_PTR
+#define E2D_DECLARE_D2D_SMART_PTR(class_name, sp_name)\
+	using sp_name = ::easy2d::intrusive::SmartPointer< class_name >
+#endif
+
 
 namespace easy2d
 {
-	Task::Task(const Callback & func, String const& name)
-		: Task(func, Duration{}, -1, name)
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1Factory, cpFactory);
+	E2D_DECLARE_D2D_SMART_PTR(IWICImagingFactory, cpImagingFactory);
+	E2D_DECLARE_D2D_SMART_PTR(IDWriteFactory, cpWriteFactory);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1SolidColorBrush, cpSolidColorBrush);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1HwndRenderTarget, cpRenderTarget);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1StrokeStyle, cpStrokeStyle);
+
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1Layer, cpLayer);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1Bitmap, cpBitmap);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1Geometry, cpGeometry);
+	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextFormat, cpTextFormat);
+	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextLayout, cpTextLayout);
+
+	inline void IntrusivePtrAddRef(IUnknown* ptr)
 	{
+		if (ptr) { ptr->AddRef(); }
 	}
 
-	Task::Task(Callback const& func, Duration const& delay, int times, String const& name)
-		: running_(true)
-		, stopped_(false)
-		, run_times_(0)
-		, total_times_(times)
-		, delay_(delay)
-		, callback_(func)
-		, name_(name)
-		, delta_()
+	inline void IntrusivePtrRelease(IUnknown* ptr)
 	{
+		if (ptr) { ptr->Release(); }
 	}
 
-	void Task::Start()
+	inline void SafeRelease(IUnknown* ptr)
 	{
-		running_ = true;
-		delta_ = Duration{};
-	}
-
-	void Task::Stop()
-	{
-		running_ = false;
-	}
-
-	void Task::Update(Duration const& dt)
-	{
-		if (!running_)
-			return;
-
-		if (total_times_ == 0)
+		if (ptr != nullptr)
 		{
-			stopped_ = true;
-			return;
+			ptr->Release();
 		}
-
-		if (!delay_.IsZero())
-		{
-			delta_ += dt;
-			if (delta_ < delay_)
-				return;
-		}
-
-		++run_times_;
-
-		if (callback_)
-		{
-			callback_();
-		}
-
-		if (run_times_ == total_times_)
-		{
-			stopped_ = true;
-			return;
-		}
-	}
-
-	void Task::Reset()
-	{
-		delta_ = Duration{};
-	}
-
-	bool Task::IsRunning() const
-	{
-		return running_;
-	}
-
-	String const& Task::GetName() const
-	{
-		return name_;
 	}
 }

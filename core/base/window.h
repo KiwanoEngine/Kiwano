@@ -45,7 +45,7 @@ namespace easy2d
 		String GetTitle() const;
 
 		// 设置标题
-		void SetTitle(const String& title);
+		void SetTitle(String const& title);
 
 		// 获取窗口大小
 		Size GetSize() const;

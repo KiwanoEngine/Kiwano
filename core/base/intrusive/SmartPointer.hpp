@@ -19,7 +19,16 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../macros.h"
 #include <utility>
+
+#ifndef E2D_INTRUSIVE_PTR_ASSERT
+#	ifdef E2D_DEBUG
+#		define E2D_INTRUSIVE_PTR_ASSERT(expr, msg) do { if (!(expr)) throw std::runtime_error(msg); } while(0);
+#	else
+#		define E2D_INTRUSIVE_PTR_ASSERT __noop
+#	endif
+#endif
 
 namespace easy2d
 {
@@ -33,65 +42,74 @@ namespace easy2d
 		public:
 			using Type = T;
 
-			SmartPointer() {}
+			SmartPointer() E2D_NOEXCEPT {}
 
-			SmartPointer(nullptr_t) {}
+			SmartPointer(nullptr_t) E2D_NOEXCEPT {}
 
-			SmartPointer(Type* p) : ptr_(p)
+			SmartPointer(Type* p) E2D_NOEXCEPT : ptr_(p)
 			{
 				IntrusivePtrAddRef(ptr_);
 			}
 
-			SmartPointer(const SmartPointer& other) : ptr_(other.ptr_)
+			SmartPointer(const SmartPointer& other) E2D_NOEXCEPT : ptr_(other.ptr_)
 			{
 				IntrusivePtrAddRef(ptr_);
 			}
 
 			template <typename U>
-			SmartPointer(const SmartPointer<U>& other) : ptr_(other.Get())
+			SmartPointer(const SmartPointer<U>& other) E2D_NOEXCEPT : ptr_(other.Get())
 			{
 				IntrusivePtrAddRef(ptr_);
 			}
 
-			SmartPointer(SmartPointer&& other)
+			SmartPointer(SmartPointer&& other) E2D_NOEXCEPT
 			{
 				ptr_ = other.ptr_;
 				other.ptr_ = nullptr;
 			}
 
-			~SmartPointer()
+			~SmartPointer() E2D_NOEXCEPT
 			{
 				IntrusivePtrRelease(ptr_);
 			}
 
-			inline Type* Get() const { return ptr_; }
+			inline Type* Get() const E2D_NOEXCEPT { return ptr_; }
 
-			inline void Swap(SmartPointer& other)
+			inline void Swap(SmartPointer& other) E2D_NOEXCEPT
 			{
 				std::swap(ptr_, other.ptr_);
 			}
 
 			inline Type* operator ->() const
 			{
+				E2D_INTRUSIVE_PTR_ASSERT(ptr_ != nullptr, "Invalid pointer");
 				return ptr_;
 			}
 
 			inline Type& operator *() const
 			{
+				E2D_INTRUSIVE_PTR_ASSERT(ptr_ != nullptr, "Invalid pointer");
 				return *ptr_;
 			}
 
-			inline operator bool() const { return ptr_ != nullptr; }
-
-			inline bool operator !() const { return ptr_ == 0; }
-
-			inline SmartPointer& operator =(const SmartPointer& other)
+			inline Type** operator &()
 			{
-				SmartPointer(other).Swap(*this);
+				E2D_INTRUSIVE_PTR_ASSERT(ptr_ == nullptr, "Memory leak");
+				return &ptr_;
+			}
+
+			inline operator bool() const E2D_NOEXCEPT { return ptr_ != nullptr; }
+
+			inline bool operator !() const E2D_NOEXCEPT { return ptr_ == 0; }
+
+			inline SmartPointer& operator =(const SmartPointer& other) E2D_NOEXCEPT
+			{
+				if (other.ptr_ != ptr_)
+					SmartPointer(other).Swap(*this);
 				return *this;
 			}
 
-			inline SmartPointer& operator =(SmartPointer&& other)
+			inline SmartPointer& operator =(SmartPointer&& other) E2D_NOEXCEPT
 			{
 				IntrusivePtrRelease(ptr_);
 				ptr_ = other.ptr_;
@@ -99,88 +117,90 @@ namespace easy2d
 				return *this;
 			}
 
-			inline SmartPointer& operator =(Type* p)
+			inline SmartPointer& operator =(Type* p) E2D_NOEXCEPT
 			{
-				SmartPointer(p).Swap(*this);
+				if (p != ptr_)
+					SmartPointer(p).Swap(*this);
 				return *this;
 			}
 
-			inline SmartPointer& operator =(nullptr_t)
+			inline SmartPointer& operator =(nullptr_t) E2D_NOEXCEPT
 			{
-				SmartPointer{}.Swap(*this);
+				if (nullptr != ptr_)
+					SmartPointer{}.Swap(*this);
 				return *this;
 			}
 		};
 
 		template<class T, class U>
-		inline bool operator==(SmartPointer<T> const& lhs, SmartPointer<U> const& rhs)
+		inline bool operator==(SmartPointer<T> const& lhs, SmartPointer<U> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() == rhs.Get();
 		}
 
 		template<class T, class U>
-		inline bool operator!=(SmartPointer<T> const& lhs, SmartPointer<U> const& rhs)
+		inline bool operator!=(SmartPointer<T> const& lhs, SmartPointer<U> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() != rhs.Get();
 		}
 
 		template<class T, class U>
-		inline bool operator<(SmartPointer<T> const& lhs, SmartPointer<U> const& rhs)
+		inline bool operator<(SmartPointer<T> const& lhs, SmartPointer<U> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() < rhs.Get();
 		}
 
 		template<class T>
-		inline bool operator==(SmartPointer<T> const& lhs, T* rhs)
+		inline bool operator==(SmartPointer<T> const& lhs, T* rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() == rhs;
 		}
 
 		template<class T>
-		inline bool operator!=(SmartPointer<T> const& lhs, T* rhs)
+		inline bool operator!=(SmartPointer<T> const& lhs, T* rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() != rhs;
 		}
 
 		template<class T>
-		inline bool operator==(T* lhs, SmartPointer<T> const& rhs)
+		inline bool operator==(T* lhs, SmartPointer<T> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs == rhs.Get();
 		}
 
 		template<class T>
-		inline bool operator!=(T* lhs, SmartPointer<T> const& rhs)
+		inline bool operator!=(T* lhs, SmartPointer<T> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs != rhs.Get();
 		}
 
 		template<class T>
-		inline bool operator==(SmartPointer<T> const& lhs, nullptr_t)
+		inline bool operator==(SmartPointer<T> const& lhs, nullptr_t) E2D_NOEXCEPT
 		{
 			return !static_cast<bool>(lhs);
 		}
 
 		template<class T>
-		inline bool operator!=(SmartPointer<T> const& lhs, nullptr_t)
+		inline bool operator!=(SmartPointer<T> const& lhs, nullptr_t) E2D_NOEXCEPT
 		{
 			return static_cast<bool>(lhs);
 		}
 
 		template<class T>
-		inline bool operator==(nullptr_t, SmartPointer<T> const& rhs)
+		inline bool operator==(nullptr_t, SmartPointer<T> const& rhs) E2D_NOEXCEPT
 		{
 			return !static_cast<bool>(rhs);
 		}
 
 		template<class T>
-		inline bool operator!=(nullptr_t, SmartPointer<T> const& rhs)
+		inline bool operator!=(nullptr_t, SmartPointer<T> const& rhs) E2D_NOEXCEPT
 		{
 			return static_cast<bool>(rhs);
 		}
 	}
 
 	template<class T>
-	inline intrusive::SmartPointer<T> make_intrusive(T* ptr)
+	inline intrusive::SmartPointer<T> make_intrusive(T* ptr) E2D_NOEXCEPT
 	{
 		return intrusive::SmartPointer<T>(ptr);
 	}
@@ -188,7 +208,7 @@ namespace easy2d
 	// template class cannot specialize std::swap,
 	// so implement a swap function in easy2d namespace
 	template<class T>
-	inline void swap(intrusive::SmartPointer<T>& lhs, intrusive::SmartPointer<T>& rhs)
+	inline void swap(intrusive::SmartPointer<T>& lhs, intrusive::SmartPointer<T>& rhs) E2D_NOEXCEPT
 	{
 		lhs.Swap(rhs);
 	}

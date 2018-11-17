@@ -19,9 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
-#include <d2d1.h>
-#include <dwrite.h>
+#include "d2dres.hpp"
 
 namespace easy2d
 {
@@ -39,9 +37,9 @@ namespace easy2d
 		STDMETHOD_(void, SetTextStyle)(
 			CONST D2D1_COLOR_F &fillColor,
 			BOOL outline,
-			CONST D2D1_COLOR_F &outline_color,
-			FLOAT outline_width,
-			D2D1_LINE_JOIN outlineJoin
+			CONST D2D1_COLOR_F &outlineColor,
+			FLOAT outlineWidth,
+			ID2D1StrokeStyle* outlineJoin
 		);
 
 		STDMETHOD(DrawGlyphRun)(
@@ -124,3 +122,5 @@ namespace easy2d
 		ID2D1StrokeStyle*		pCurrStrokeStyle_;
 	};
 }
+
+E2D_DECLARE_D2D_SMART_PTR(easy2d::ITextRenderer, spTextRenderer);
