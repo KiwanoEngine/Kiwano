@@ -164,6 +164,9 @@
     <ClInclude Include="..\..\core\base\d2dres.hpp">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\noncopyable.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">

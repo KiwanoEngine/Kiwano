@@ -97,9 +97,3 @@
 #	define E2D_NOEXCEPT throw()
 #	define E2D_CONSTEXPR const
 #endif
-
-
-#define E2D_DISABLE_COPY(Class)						\
-	private:										\
-		Class(const Class &) = delete;				\
-		Class & operator= (const Class &) = delete

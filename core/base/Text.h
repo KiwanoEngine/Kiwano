@@ -29,8 +29,6 @@ namespace easy2d
 	class Text
 		: public Node
 	{
-		E2D_DISABLE_COPY(Text);
-
 	public:
 		Text();
 

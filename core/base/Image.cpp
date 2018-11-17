@@ -191,4 +191,5 @@ namespace easy2d
 	{
 		return bitmap_;
 	}
+
 }

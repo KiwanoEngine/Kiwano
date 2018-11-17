@@ -21,6 +21,7 @@
 #pragma once
 #include "base.hpp"
 #include "time.h"
+#include "noncopyable.hpp"
 #include "intrusive/List.hpp"
 
 namespace easy2d
@@ -31,8 +32,6 @@ namespace easy2d
 		: public RefCounter
 		, protected intrusive::ListItem<spAction>
 	{
-		E2D_DISABLE_COPY(Action);
-
 		friend class ActionManager;
 		friend class Loop;
 		friend class Sequence;

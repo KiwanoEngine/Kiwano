@@ -20,18 +20,14 @@
 
 #pragma once
 #include "macros.h"
+#include "noncopyable.hpp"
 
 namespace easy2d
 {
 	class RefCounter
+		: protected Noncopyable
 	{
-		E2D_DISABLE_COPY(RefCounter);
-
 	public:
-		RefCounter() : ref_count_(0) {}
-
-		virtual ~RefCounter() {}
-
 		// 增加引用计数
 		inline void Retain() { ++ref_count_; }
 
@@ -45,7 +41,12 @@ namespace easy2d
 		// 获取引用计数
 		inline long GetRefCount() const { return ref_count_; }
 
-	private:
+	protected:
+		RefCounter() : ref_count_(0) {}
+
+		~RefCounter() {}
+
+	protected:
 		long ref_count_;
 	};
 

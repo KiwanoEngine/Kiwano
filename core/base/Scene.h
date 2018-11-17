@@ -27,8 +27,6 @@ namespace easy2d
 	class Scene
 		: public Node
 	{
-		E2D_DISABLE_COPY(Scene);
-
 	public:
 		Scene();
 

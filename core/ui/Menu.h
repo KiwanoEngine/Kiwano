@@ -29,8 +29,6 @@ namespace easy2d
 		class Menu
 			: public Node
 		{
-			E2D_DISABLE_COPY(Menu);
-
 		public:
 			Menu();
 
