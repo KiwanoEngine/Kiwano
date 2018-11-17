@@ -51,7 +51,7 @@ namespace easy2d
 
 		IMFSourceReader* reader = nullptr;
 
-		hr = modules::MediaFoundation.MFCreateSourceReaderFromURL(
+		hr = modules::MediaFoundation().MFCreateSourceReaderFromURL(
 			file_path,
 			nullptr,
 			&reader
@@ -92,12 +92,12 @@ namespace easy2d
 
 		if (SUCCEEDED(hr))
 		{
-			hr = modules::MediaFoundation.MFCreateMFByteStreamOnStream(stream, &byte_stream);
+			hr = modules::MediaFoundation().MFCreateMFByteStreamOnStream(stream, &byte_stream);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = modules::MediaFoundation.MFCreateSourceReaderFromByteStream(
+			hr = modules::MediaFoundation().MFCreateSourceReaderFromByteStream(
 				byte_stream,
 				nullptr,
 				&reader
@@ -124,7 +124,7 @@ namespace easy2d
 		IMFMediaType* partial_type = nullptr;
 		IMFMediaType* uncompressed_type = nullptr;
 
-		hr = modules::MediaFoundation.MFCreateMediaType(&partial_type);
+		hr = modules::MediaFoundation().MFCreateMediaType(&partial_type);
 
 		if (SUCCEEDED(hr))
 		{
@@ -168,7 +168,7 @@ namespace easy2d
 		if (SUCCEEDED(hr))
 		{
 			UINT32 size = 0;
-			hr = modules::MediaFoundation.MFCreateWaveFormatExFromMFMediaType(
+			hr = modules::MediaFoundation().MFCreateWaveFormatExFromMFMediaType(
 				uncompressed_type,
 				&wave_format_,
 				&size,

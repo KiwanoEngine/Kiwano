@@ -19,11 +19,8 @@
 // THE SOFTWARE.
 
 #include "File.h"
+#include "../base/modules.h"
 #include <cwctype>
-#include <shobjidl.h>
-#include <shlwapi.h>
-
-#pragma comment(lib, "shlwapi.lib")
 
 namespace easy2d
 {
@@ -51,7 +48,7 @@ namespace easy2d
 
 		auto FindFile = [](String const& path) -> bool
 		{
-			if (::PathFileExists(path.c_str()))
+			if (modules::Shlwapi().PathFileExistsW(path.c_str()))
 				return true;
 			return false;
 		};
@@ -75,7 +72,7 @@ namespace easy2d
 
 	bool File::Exists() const
 	{
-		if (::PathFileExists(file_path_.c_str()))
+		if (modules::Shlwapi().PathFileExistsW(file_path_.c_str()))
 			return true;
 		return false;
 	}
@@ -88,14 +85,10 @@ namespace easy2d
 	String File::GetExtension() const
 	{
 		String file_ext;
-		// 找到文件名中的最后一个 '.' 的位置
 		size_t pos = file_path_.find_last_of(L'.');
-		// 判断 pos 是否是有效位置
 		if (pos != String::npos)
 		{
-			// 截取扩展名
 			file_ext = file_path_.substr(pos);
-			// 转换为小写字母
 			std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), std::towlower);
 		}
 		return file_ext;
@@ -162,137 +155,5 @@ namespace easy2d
 		{
 			search_paths_.push_front(tmp);
 		}
-	}
-
-	File File::ShowOpenDialog(String const& title, String const& filter)
-	{
-		String file_path;
-		HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-
-		if (SUCCEEDED(hr))
-		{
-			IFileOpenDialog *file_open;
-
-			hr = ::CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
-				IID_IFileOpenDialog, reinterpret_cast<void**>(&file_open));
-
-			if (SUCCEEDED(hr))
-			{
-				if (!title.empty())
-				{
-					file_open->SetTitle(title.c_str());
-				}
-
-				if (!filter.empty())
-				{
-					COMDLG_FILTERSPEC spec[] =
-					{
-						{ L"", filter.c_str() }
-					};
-					file_open->SetFileTypes(1, spec);
-				}
-				else
-				{
-					COMDLG_FILTERSPEC spec[] =
-					{
-						{ L"所有文件", L"*.*" }
-					};
-					file_open->SetFileTypes(1, spec);
-				}
-
-				hr = file_open->Show(nullptr);
-
-				if (SUCCEEDED(hr))
-				{
-					IShellItem *item;
-					hr = file_open->GetResult(&item);
-					if (SUCCEEDED(hr))
-					{
-						PWSTR str_file_path;
-						hr = item->GetDisplayName(SIGDN_FILESYSPATH, &str_file_path);
-
-						if (SUCCEEDED(hr))
-						{
-							file_path = str_file_path;
-							::CoTaskMemFree(str_file_path);
-						}
-						item->Release();
-					}
-				}
-				file_open->Release();
-			}
-			::CoUninitialize();
-		}
-		return File(file_path);
-	}
-
-	File File::ShowSaveDialog(String const& title, String const& def_file, String const& def_ext)
-	{
-		String file_path;
-		HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-
-		if (SUCCEEDED(hr))
-		{
-			IFileSaveDialog *file_save;
-
-			hr = ::CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
-				IID_IFileSaveDialog, reinterpret_cast<void**>(&file_save));
-
-			if (SUCCEEDED(hr))
-			{
-				if (!title.empty())
-				{
-					file_save->SetTitle(title.c_str());
-				}
-
-				if (!def_file.empty())
-				{
-					file_save->SetFileName(def_file.c_str());
-				}
-
-				if (!def_ext.empty())
-				{
-					file_save->SetDefaultExtension(def_ext.c_str());
-
-					String ext = L"*." + def_ext;
-					COMDLG_FILTERSPEC spec[] =
-					{
-						{ L"", ext.c_str() }
-					};
-					file_save->SetFileTypes(1, spec);
-				}
-				else
-				{
-					COMDLG_FILTERSPEC spec[] =
-					{
-						{ L"所有文件", L"*.*" }
-					};
-					file_save->SetFileTypes(1, spec);
-				}
-
-				hr = file_save->Show(nullptr);
-
-				if (SUCCEEDED(hr))
-				{
-					IShellItem *item;
-					hr = file_save->GetResult(&item);
-					if (SUCCEEDED(hr))
-					{
-						PWSTR str_file_path;
-						hr = item->GetDisplayName(SIGDN_FILESYSPATH, &str_file_path);
-
-						if (SUCCEEDED(hr))
-						{
-							file_path = str_file_path;
-							::CoTaskMemFree(str_file_path);
-						}
-						item->Release();
-					}
-				}
-				file_save->Release();
-			}
-			::CoUninitialize();
-		}
-		return File(file_path);
 	}
 }

@@ -25,28 +25,47 @@ namespace easy2d
 {
 	namespace modules
 	{
-		namespace
+		Shlwapi::Shlwapi()
 		{
-			int initialize_count = 0;
-
-			inline void SafeFreeLibrary(HMODULE instance)
+			shlwapi = LoadLibraryW(L"shlwapi.dll");
+			if (shlwapi)
 			{
-				if (instance)
-					FreeLibrary(instance);
+				PathFileExistsW = (PFN_PathFileExistsW)
+					GetProcAddress(shlwapi, "PathFileExistsW");
+			}
+			else
+			{
+				E2D_LOG("load shlapi.dll failed");
 			}
 		}
 
-		Module_XAudio2 XAudio2;
-		Module_MediaFoundation MediaFoundation;
-
-		void Init()
+		DirectX::DirectX()
 		{
-			initialize_count++;
-			if (initialize_count > 1)
-				return;
+			d2d = LoadLibraryW(L"d2d1.dll");
+			if (d2d)
+			{
+				D2D1CreateFactory = (PFN_D2D1CreateFactory)
+					GetProcAddress(d2d, "D2D1CreateFactory");
+			}
+			else
+			{
+				E2D_LOG("load d2d.dll failed");
+			}
 
-			E2D_LOG("Initing modules");
+			dwrite = LoadLibraryW(L"dwrite.dll");
+			if (dwrite)
+			{
+				DWriteCreateFactory = (PFN_DWriteCreateFactory)
+					GetProcAddress(dwrite, "DWriteCreateFactory");
+			}
+			else
+			{
+				E2D_LOG("load dwrite.dll failed");
+			}
+		}
 
+		XAudio2::XAudio2()
+		{
 			const auto xaudio2_dll_names =
 			{
 				L"xaudio2_9.dll",
@@ -56,56 +75,59 @@ namespace easy2d
 
 			for (const auto& name : xaudio2_dll_names)
 			{
-				XAudio2.instance = LoadLibraryW(name);
-				if (XAudio2.instance)
+				xaudio2 = LoadLibraryW(name);
+				if (xaudio2)
 				{
-					XAudio2.XAudio2Create = (PFN_XAudio2Create)
-						GetProcAddress(XAudio2.instance, "XAudio2Create");
+					XAudio2Create = (PFN_XAudio2Create)
+						GetProcAddress(xaudio2, "XAudio2Create");
 					break;
 				}
 			}
 
-			MediaFoundation.mfplat = LoadLibraryW(L"Mfplat.dll");
-			if (MediaFoundation.mfplat)
+			if (!xaudio2)
 			{
-				MediaFoundation.MFStartup = (PFN_MFStartup)
-					GetProcAddress(MediaFoundation.mfplat, "MFStartup");
-
-				MediaFoundation.MFShutdown = (PFN_MFShutdown)
-					GetProcAddress(MediaFoundation.mfplat, "MFShutdown");
-
-				MediaFoundation.MFCreateMediaType = (PFN_MFCreateMediaType)
-					GetProcAddress(MediaFoundation.mfplat, "MFCreateMediaType");
-
-				MediaFoundation.MFCreateWaveFormatExFromMFMediaType = (PFN_MFCreateWaveFormatExFromMFMediaType)
-					GetProcAddress(MediaFoundation.mfplat, "MFCreateWaveFormatExFromMFMediaType");
-
-				MediaFoundation.MFCreateMFByteStreamOnStream = (PFN_MFCreateMFByteStreamOnStream)
-					GetProcAddress(MediaFoundation.mfplat, "MFCreateMFByteStreamOnStream");
-			}
-
-			MediaFoundation.mfreadwrite = LoadLibraryW(L"Mfreadwrite.dll");
-			if (MediaFoundation.mfreadwrite)
-			{
-				MediaFoundation.MFCreateSourceReaderFromURL = (PFN_MFCreateSourceReaderFromURL)
-					GetProcAddress(MediaFoundation.mfreadwrite, "MFCreateSourceReaderFromURL");
-
-				MediaFoundation.MFCreateSourceReaderFromByteStream = (PFN_MFCreateSourceReaderFromByteStream)
-					GetProcAddress(MediaFoundation.mfreadwrite, "MFCreateSourceReaderFromByteStream");
+				E2D_LOG("load xaudio2.dll failed");
 			}
 		}
 
-		void Destroy()
+		MediaFoundation::MediaFoundation()
 		{
-			initialize_count--;
-			if (initialize_count > 0)
-				return;
+			mfplat = LoadLibraryW(L"Mfplat.dll");
+			if (mfplat)
+			{
+				MFStartup = (PFN_MFStartup)
+					GetProcAddress(mfplat, "MFStartup");
 
-			E2D_LOG("Destroying modules");
+				MFShutdown = (PFN_MFShutdown)
+					GetProcAddress(mfplat, "MFShutdown");
 
-			SafeFreeLibrary(XAudio2.instance);
-			SafeFreeLibrary(MediaFoundation.mfplat);
-			SafeFreeLibrary(MediaFoundation.mfreadwrite);
+				MFCreateMediaType = (PFN_MFCreateMediaType)
+					GetProcAddress(mfplat, "MFCreateMediaType");
+
+				MFCreateWaveFormatExFromMFMediaType = (PFN_MFCreateWaveFormatExFromMFMediaType)
+					GetProcAddress(mfplat, "MFCreateWaveFormatExFromMFMediaType");
+
+				MFCreateMFByteStreamOnStream = (PFN_MFCreateMFByteStreamOnStream)
+					GetProcAddress(mfplat, "MFCreateMFByteStreamOnStream");
+			}
+			else
+			{
+				E2D_LOG("load Mfplat.dll failed");
+			}
+
+			mfreadwrite = LoadLibraryW(L"Mfreadwrite.dll");
+			if (mfreadwrite)
+			{
+				MFCreateSourceReaderFromURL = (PFN_MFCreateSourceReaderFromURL)
+					GetProcAddress(mfreadwrite, "MFCreateSourceReaderFromURL");
+
+				MFCreateSourceReaderFromByteStream = (PFN_MFCreateSourceReaderFromByteStream)
+					GetProcAddress(mfreadwrite, "MFCreateSourceReaderFromByteStream");
+			}
+			else
+			{
+				E2D_LOG("load Mfreadwrite.dll failed");
+			}
 		}
 	}
 }

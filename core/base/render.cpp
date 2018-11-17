@@ -25,9 +25,6 @@
 #include "modules.h"
 #include "Image.h"
 
-#pragma comment(lib, "d2d1.lib")
-#pragma comment(lib, "dwrite.lib")
-
 namespace easy2d
 {
 	namespace devices
@@ -51,8 +48,6 @@ namespace easy2d
 			, initialized(false)
 		{
 			ZeroMemory(&d2d, sizeof(D2DResources));
-
-			modules::Init();
 		}
 
 		GraphicsDevice::~GraphicsDevice()
@@ -60,8 +55,6 @@ namespace easy2d
 			E2D_LOG("Destroying graphics device");
 
 			ClearImageCache();
-
-			modules::Destroy();
 		}
 
 		void GraphicsDevice::Init(HWND hwnd, bool debug)
@@ -73,7 +66,7 @@ namespace easy2d
 
 			D2D1_FACTORY_OPTIONS options{ debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE };
 			ThrowIfFailed(
-				D2D1CreateFactory(
+				modules::DirectX().D2D1CreateFactory(
 					D2D1_FACTORY_TYPE_SINGLE_THREADED,
 					__uuidof(ID2D1Factory),
 					&options,
@@ -92,7 +85,7 @@ namespace easy2d
 			);
 
 			ThrowIfFailed(
-				DWriteCreateFactory(
+				modules::DirectX().DWriteCreateFactory(
 					DWRITE_FACTORY_TYPE_SHARED,
 					__uuidof(IDWriteFactory),
 					reinterpret_cast<IUnknown**>(&d2d.write_factory)
