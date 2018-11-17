@@ -366,21 +366,21 @@ namespace easy2d
 		void DrawBorder();
 
 	protected:
-		String				name_;
-		size_t				hash_name_;
-		float				display_opacity_;
-		float				real_opacity_;
-		int					order_;
-		bool				visible_;
-		bool				clip_enabled_;
-		bool				dirty_sort_;
-		bool				dirty_transform_;
-		Node*				parent_;
-		Color				border_color_;
-		Children			children_;
-		cpGeometry			border_;
-		Transform			transform_;
-		math::Matrix		initial_matrix_;
-		math::Matrix		final_matrix_;
+		String			name_;
+		size_t			hash_name_;
+		float			display_opacity_;
+		float			real_opacity_;
+		int				order_;
+		bool			visible_;
+		bool			clip_enabled_;
+		bool			dirty_sort_;
+		bool			dirty_transform_;
+		Node*			parent_;
+		Color			border_color_;
+		Children		children_;
+		cpGeometry		border_;
+		Transform		transform_;
+		math::Matrix	initial_matrix_;
+		math::Matrix	final_matrix_;
 	};
 }
