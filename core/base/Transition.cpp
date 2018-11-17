@@ -48,8 +48,6 @@ namespace easy2d
 
 	Transition::~Transition()
 	{
-		SafeRelease(out_layer_);
-		SafeRelease(in_layer_);
 	}
 
 	bool Transition::IsDone()
@@ -68,14 +66,14 @@ namespace easy2d
 		if (in_scene_)
 		{
 			ThrowIfFailed(
-				devices::Graphics::Instance()->CreateLayer(&in_layer_)
+				devices::Graphics::Instance()->CreateLayer(in_layer_)
 			);
 		}
 
 		if (out_scene_)
 		{
 			ThrowIfFailed(
-				devices::Graphics::Instance()->CreateLayer(&out_layer_)
+				devices::Graphics::Instance()->CreateLayer(out_layer_)
 			);
 		}
 

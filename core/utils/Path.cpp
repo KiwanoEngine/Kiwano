@@ -28,7 +28,7 @@ namespace easy2d
 	namespace
 	{
 		// 创建指定文件夹
-		bool CreateFolder(const String & dir_path)
+		bool CreateFolder(String const& dir_path)
 		{
 			if (dir_path.empty() || dir_path.size() >= MAX_PATH)
 				return false;
@@ -55,7 +55,7 @@ namespace easy2d
 	}
 
 
-	const String& Path::GetDataPath()
+	String const& Path::GetDataPath()
 	{
 		static String data_path;
 		if (data_path.empty())
@@ -83,7 +83,7 @@ namespace easy2d
 		return data_path;
 	}
 
-	const String& Path::GetTemporaryPath()
+	String const& Path::GetTemporaryPath()
 	{
 		static String temp_path;
 		if (temp_path.empty())
@@ -110,7 +110,7 @@ namespace easy2d
 		return temp_path;
 	}
 
-	const String& Path::GetLocalAppDataPath()
+	String const& Path::GetLocalAppDataPath()
 	{
 		static String local_app_data_path;
 		if (local_app_data_path.empty())
@@ -124,7 +124,7 @@ namespace easy2d
 		return local_app_data_path;
 	}
 
-	const String& Path::GetExeFilePath()
+	String const& Path::GetExeFilePath()
 	{
 		static String exe_file_path;
 		if (exe_file_path.empty())

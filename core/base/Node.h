@@ -64,7 +64,7 @@ namespace easy2d
 		bool IsVisible() const;
 
 		// 获取节点名称
-		const String& GetName() const;
+		String const& GetName() const;
 
 		// 获取节点名称的 Hash 值
 		size_t GetHashName() const;
@@ -133,7 +133,7 @@ namespace easy2d
 
 		// 设置节点名称
 		void SetName(
-			const String& name
+			String const& name
 		);
 
 		// 设置节点横坐标
@@ -310,12 +310,12 @@ namespace easy2d
 
 		// 获取所有名称相同的子节点
 		Nodes GetChildren(
-			const String& name
+			String const& name
 		) const;
 
 		// 获取名称相同的子节点
 		spNode GetChild(
-			const String& name
+			String const& name
 		) const;
 
 		// 获取全部子节点
@@ -328,7 +328,7 @@ namespace easy2d
 
 		// 移除所有名称相同的子节点
 		void RemoveChildren(
-			const String& child_name
+			String const& child_name
 		);
 
 		// 移除所有节点
@@ -378,7 +378,7 @@ namespace easy2d
 		Node*				parent_;
 		Color				border_color_;
 		Children			children_;
-		ID2D1Geometry*		border_;
+		cpGeometry			border_;
 		Transform			transform_;
 		math::Matrix		initial_matrix_;
 		math::Matrix		final_matrix_;

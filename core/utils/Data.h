@@ -28,8 +28,8 @@ namespace easy2d
 	{
 	public:
 		Data(
-			const String& key,				/* 键值 */
-			const String& field = L"Defalut"	/* 字段名称 */
+			String const& key,				/* 键值 */
+			String const& field = L"Defalut"	/* 字段名称 */
 		);
 
 		// 该数据是否存在
@@ -57,7 +57,7 @@ namespace easy2d
 
 		// 保存 String 类型的值
 		bool SaveString(
-			const String& val
+			String const& val
 		);
 
 		// 获取 int 类型的值
@@ -78,6 +78,6 @@ namespace easy2d
 	protected:
 		String key_;
 		String field_;
-		const String& data_path_;
+		String const& data_path_;
 	};
 }

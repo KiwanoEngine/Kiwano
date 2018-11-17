@@ -34,7 +34,7 @@ namespace easy2d
 	{
 	}
 
-	File::File(const String & file_name)
+	File::File(String const& file_name)
 		: file_path_(file_name)
 	{
 		this->Open(file_name);
@@ -44,12 +44,12 @@ namespace easy2d
 	{
 	}
 
-	bool File::Open(const String & file_name)
+	bool File::Open(String const& file_name)
 	{
 		if (file_name.empty())
 			return false;
 
-		auto FindFile = [](const String & path) -> bool
+		auto FindFile = [](String const& path) -> bool
 		{
 			if (::PathFileExists(path.c_str()))
 				return true;
@@ -80,7 +80,7 @@ namespace easy2d
 		return false;
 	}
 
-	const String& File::GetPath() const
+	String const& File::GetPath() const
 	{
 		return file_path_;
 	}
@@ -108,7 +108,7 @@ namespace easy2d
 		return false;
 	}
 
-	File File::Extract(Resource& res, const String& dest_file_name)
+	File File::Extract(Resource& res, String const& dest_file_name)
 	{
 		File file;
 		HANDLE file_handle = ::CreateFile(
@@ -143,7 +143,7 @@ namespace easy2d
 		return file;
 	}
 
-	void File::AddSearchPath(const String & path)
+	void File::AddSearchPath(String const& path)
 	{
 		String tmp = path;
 		size_t pos = 0;
@@ -164,7 +164,7 @@ namespace easy2d
 		}
 	}
 
-	File File::ShowOpenDialog(const String & title, const String & filter)
+	File File::ShowOpenDialog(String const& title, String const& filter)
 	{
 		String file_path;
 		HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
@@ -226,7 +226,7 @@ namespace easy2d
 		return File(file_path);
 	}
 
-	File File::ShowSaveDialog(const String & title, const String& def_file, const String & def_ext)
+	File File::ShowSaveDialog(String const& title, String const& def_file, String const& def_ext)
 	{
 		String file_path;
 		HRESULT hr = ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);

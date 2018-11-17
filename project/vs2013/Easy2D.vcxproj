@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\core\base\CallFunc.h" />
     <ClInclude Include="..\..\core\base\Canvas.h" />
     <ClInclude Include="..\..\core\base\Color.h" />
+    <ClInclude Include="..\..\core\base\d2dres.hpp" />
     <ClInclude Include="..\..\core\base\Font.hpp" />
     <ClInclude Include="..\..\core\base\Game.h" />
     <ClInclude Include="..\..\core\base\Image.h" />

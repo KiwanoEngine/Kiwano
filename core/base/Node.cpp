@@ -46,7 +46,6 @@ namespace easy2d
 		, clip_enabled_(false)
 		, dirty_sort_(false)
 		, dirty_transform_(false)
-		, border_(nullptr)
 		, order_(0)
 		, transform_()
 		, display_opacity_(1.f)
@@ -62,7 +61,6 @@ namespace easy2d
 
 	Node::~Node()
 	{
-		SafeRelease(border_);
 	}
 
 	void Node::Visit()
@@ -172,7 +170,7 @@ namespace easy2d
 				devices::Graphics::Instance()->DrawGeometry(border_, border_color_, 1.f, 1.5f);
 			}
 
-			for (auto& child = children_.First(); child; child = child->NextItem())
+			for (auto child = children_.First(); child; child = child->NextItem())
 			{
 				child->DrawBorder();
 			}
@@ -198,12 +196,11 @@ namespace easy2d
 		}
 
 		// 重新构造轮廓
-		SafeRelease(border_);
 		ThrowIfFailed(
-			devices::Graphics::Instance()->CreateRectGeometry(final_matrix_, transform_.size, &border_)
+			devices::Graphics::Instance()->CreateRectGeometry(border_, final_matrix_, transform_.size)
 		);
 
-		for (auto& child = children_.First(); child; child = child->NextItem())
+		for (auto child = children_.First(); child; child = child->NextItem())
 		{
 			child->dirty_transform_ = true;
 		}
@@ -214,7 +211,7 @@ namespace easy2d
 		if (visible_)
 		{
 			spNode prev;
-			for (auto& child = children_.Last(); child; child = prev)
+			for (auto child = children_.Last(); child; child = prev)
 			{
 				prev = child->PrevItem();
 				handled = child->Dispatch(e, handled);
@@ -233,7 +230,7 @@ namespace easy2d
 		if (visible_)
 		{
 			spNode prev;
-			for (auto& child = children_.Last(); child; child = prev)
+			for (auto child = children_.Last(); child; child = prev)
 			{
 				prev = child->PrevItem();
 				handled = child->Dispatch(e, handled);
@@ -253,7 +250,7 @@ namespace easy2d
 		{
 			display_opacity_ = real_opacity_ * parent_->display_opacity_;
 		}
-		for (auto& child = children_.First(); child; child = child->NextItem())
+		for (auto child = children_.First(); child; child = child->NextItem())
 		{
 			child->UpdateOpacity();
 		}
@@ -264,7 +261,7 @@ namespace easy2d
 		return visible_;
 	}
 
-	const String& Node::GetName() const
+	String const& Node::GetName() const
 	{
 		return name_;
 	}
@@ -531,7 +528,7 @@ namespace easy2d
 		clip_enabled_ = enabled;
 	}
 
-	void Node::SetBorderColor(const Color & color)
+	void Node::SetBorderColor(Color const& color)
 	{
 		border_color_ = color;
 	}
@@ -579,7 +576,7 @@ namespace easy2d
 		return Rect(Point{}, transform_.size);
 	}
 
-	Node::Nodes Node::GetChildren(const String& name) const
+	Node::Nodes Node::GetChildren(String const& name) const
 	{
 		Nodes children;
 		size_t hash_code = std::hash<String>{}(name);
@@ -594,7 +591,7 @@ namespace easy2d
 		return children;
 	}
 
-	spNode Node::GetChild(const String& name) const
+	spNode Node::GetChild(String const& name) const
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
@@ -639,7 +636,7 @@ namespace easy2d
 		return false;
 	}
 
-	void Node::RemoveChildren(const String& child_name)
+	void Node::RemoveChildren(String const& child_name)
 	{
 		if (children_.IsEmpty())
 		{
@@ -648,7 +645,7 @@ namespace easy2d
 
 		size_t hash_code = std::hash<String>{}(child_name);
 		spNode next;
-		for (auto& child = children_.First(); child; child = next)
+		for (auto child = children_.First(); child; child = next)
 		{
 			next = child->NextItem();
 
@@ -693,7 +690,7 @@ namespace easy2d
 		D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
 		ThrowIfFailed(
 			border_->CompareWithGeometry(
-				node->border_,
+				node->border_.Get(),
 				D2D1::Matrix3x2F::Identity(),
 				&relation
 			)
@@ -707,7 +704,7 @@ namespace easy2d
 		visible_ = val;
 	}
 
-	void Node::SetName(const String& name)
+	void Node::SetName(String const& name)
 	{
 		if (name_ != name)
 		{

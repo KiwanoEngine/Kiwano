@@ -31,14 +31,14 @@ namespace easy2d
 	{
 	}
 
-	Image::Image(Resource& res)
+	Image::Image(Resource const& res)
 		: bitmap_(nullptr)
 		, crop_rect_()
 	{
 		this->Load(res);
 	}
 
-	Image::Image(Resource& res, const Rect& crop_rect)
+	Image::Image(Resource const& res, Rect const& crop_rect)
 		: bitmap_(nullptr)
 		, crop_rect_()
 	{
@@ -46,14 +46,14 @@ namespace easy2d
 		this->Crop(crop_rect);
 	}
 
-	Image::Image(const String & file_name)
+	Image::Image(String const& file_name)
 		: bitmap_(nullptr)
 		, crop_rect_()
 	{
 		this->Load(file_name);
 	}
 
-	Image::Image(const String & file_name, const Rect & crop_rect)
+	Image::Image(String const& file_name, const Rect & crop_rect)
 		: bitmap_(nullptr)
 		, crop_rect_()
 	{
@@ -63,23 +63,24 @@ namespace easy2d
 
 	Image::~Image()
 	{
-		SafeRelease(bitmap_);
 	}
 
-	bool Image::Load(Resource& res)
+	bool Image::Load(Resource const& res)
 	{
-		ID2D1Bitmap* bitmap;
-		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromResource(res, &bitmap);
+		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromResource(bitmap_, res);
 		if (FAILED(hr))
 		{
 			logs::Errorln(hr, "Load Image from resource failed!");
 			return false;
 		}
-		this->SetBitmap(bitmap);
+
+		crop_rect_.origin.x = crop_rect_.origin.y = 0;
+		crop_rect_.size.width = bitmap_->GetSize().width;
+		crop_rect_.size.height = bitmap_->GetSize().height;
 		return true;
 	}
 
-	bool Image::Load(const String & file_name)
+	bool Image::Load(String const& file_name)
 	{
 		File image_file;
 		if (!image_file.Open(file_name))
@@ -92,18 +93,20 @@ namespace easy2d
 		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
 		String image_file_path = image_file.GetPath();
 
-		ID2D1Bitmap* bitmap;
-		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromFile(image_file_path, &bitmap);
+		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromFile(bitmap_, image_file_path);
 		if (FAILED(hr))
 		{
 			logs::Errorln(hr, "Load Image from file failed!");
 			return false;
 		}
-		this->SetBitmap(bitmap);
+		
+		crop_rect_.origin.x = crop_rect_.origin.y = 0;
+		crop_rect_.size.width = bitmap_->GetSize().width;
+		crop_rect_.size.height = bitmap_->GetSize().height;
 		return true;
 	}
 
-	void Image::Crop(const Rect& crop_rect)
+	void Image::Crop(Rect const& crop_rect)
 	{
 		if (bitmap_)
 		{
@@ -179,31 +182,13 @@ namespace easy2d
 		return crop_rect_.origin;
 	}
 
-	const Rect & Image::GetCropRect() const
+	Rect const& Image::GetCropRect() const
 	{
 		return crop_rect_;
 	}
 
-	ID2D1Bitmap * Image::GetBitmap() const
+	cpBitmap const& Image::GetBitmap() const
 	{
 		return bitmap_;
-	}
-
-	void Image::SetBitmap(ID2D1Bitmap * bitmap)
-	{
-		if (bitmap_ == bitmap)
-			return;
-
-		SafeRelease(bitmap_);
-
-		if (bitmap)
-		{
-			bitmap->AddRef();
-
-			bitmap_ = bitmap;
-			crop_rect_.origin.x = crop_rect_.origin.y = 0;
-			crop_rect_.size.width = bitmap_->GetSize().width;
-			crop_rect_.size.height = bitmap_->GetSize().height;
-		}
 	}
 }

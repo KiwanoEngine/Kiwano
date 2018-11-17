@@ -210,33 +210,23 @@ namespace easy2d
 			initialized = true;
 		}
 
-		HRESULT AudioDevice::CreateVoice(Voice* voice, WAVEFORMATEX * wfx)
+		HRESULT AudioDevice::CreateVoice(Voice& voice, const WAVEFORMATEX* wfx)
 		{
 			HRESULT hr;
 			IXAudio2SourceVoice* source_voice;
 
-			if (!voice)
-				return E_POINTER;
-			
 			hr = x_audio2_->CreateSourceVoice(&source_voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
 			if (SUCCEEDED(hr))
 			{
-				voice->SetSourceVoice(source_voice);
-				voice_cache_.push_back(voice);
+				voice.SetSourceVoice(source_voice);
+				voice_cache_.insert(&voice);
 			}
 			return hr;
 		}
 
-		void AudioDevice::DeleteVoice(Voice * voice)
+		void AudioDevice::DeleteVoice(Voice* voice)
 		{
-			for (auto iter = voice_cache_.begin(); iter != voice_cache_.end(); ++iter)
-			{
-				if (*iter == voice)
-				{
-					voice_cache_.erase(iter);
-					break;
-				}
-			}
+			voice_cache_.erase(voice);
 		}
 
 		void AudioDevice::ClearVoiceCache()

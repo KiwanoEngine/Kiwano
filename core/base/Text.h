@@ -35,21 +35,21 @@ namespace easy2d
 		Text();
 
 		explicit Text(
-			const String& text		/* 文字内容 */
+			String const& text		/* 文字内容 */
 		);
 
 		explicit Text(
-			const String& text,		/* 文字内容 */
+			String const& text,		/* 文字内容 */
 			const Font& font		/* 字体 */
 		);
 
 		explicit Text(
-			const String& text,		/* 文字内容 */
+			String const& text,		/* 文字内容 */
 			const TextStyle& style	/* 文本样式 */
 		);
 
 		explicit Text(
-			const String& text,		/* 文字内容 */
+			String const& text,		/* 文字内容 */
 			const Font& font,		/* 字体 */
 			const TextStyle& style	/* 文本样式 */
 		);
@@ -57,7 +57,7 @@ namespace easy2d
 		virtual ~Text();
 
 		// 获取文本
-		const String& GetText() const;
+		String const& GetText() const;
 
 		// 获取字体
 		const Font& GetFont() const;
@@ -66,7 +66,7 @@ namespace easy2d
 		const TextStyle& GetStyle() const;
 
 		// 获取字体族
-		const String& GetFontFamily() const;
+		String const& GetFontFamily() const;
 
 		// 获取当前字号
 		float GetFontSize() const;
@@ -106,7 +106,7 @@ namespace easy2d
 
 		// 设置文本
 		void SetText(
-			const String& text
+			String const& text
 		);
 
 		// 设置文本样式
@@ -121,7 +121,7 @@ namespace easy2d
 
 		// 设置字体族
 		void SetFontFamily(
-			const String& family
+			String const& family
 		);
 
 		// 设置字号（默认值为 22）
@@ -217,7 +217,7 @@ namespace easy2d
 		Font				font_;
 		TextStyle			style_;
 		bool				dirty_layout_;
-		IDWriteTextFormat*	text_format_;
-		IDWriteTextLayout*	text_layout_;
+		cpTextFormat		text_format_;
+		cpTextLayout		text_layout_;
 	};
 }

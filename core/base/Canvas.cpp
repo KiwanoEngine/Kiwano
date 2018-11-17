@@ -18,20 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "base.hpp"
 #include "Canvas.h"
 #include "render.h"
 #include "logs.h"
 
 namespace easy2d
 {
-	///////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////
-	// FIXME!!!
-	///////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////
+	//-------------------------------------------------------
+	// CanvasBrush
+	//-------------------------------------------------------
 
-	Canvas::Canvas(float width, float height)
+	CanvasBrush::CanvasBrush()
 		: render_target_(nullptr)
 		, fill_brush_(nullptr)
 		, line_brush_(nullptr)
@@ -39,94 +36,76 @@ namespace easy2d
 		, stroke_width_(1.0f)
 		, stroke_(StrokeStyle::Miter)
 	{
-		// render_target_ = render::D2D.HwndRenderTarget;
-		render_target_->AddRef();
+		auto graphics = devices::Graphics::Instance();
+		render_target_ = graphics->GetRenderTarget();
 
 		ThrowIfFailed(
-			render_target_->CreateSolidColorBrush(
-				D2D1::ColorF(D2D1::ColorF::White),
-				&fill_brush_
-			)
+			graphics->CreateSolidColorBrush(fill_brush_)
 		);
 
 		ThrowIfFailed(
-			render_target_->CreateSolidColorBrush(
-				D2D1::ColorF(D2D1::ColorF::White),
-				&line_brush_
-			)
+			graphics->CreateSolidColorBrush(line_brush_)
 		);
 
-		this->SetClipEnabled(true);
-		this->SetWidth(width);
-		this->SetHeight(height);
 		this->SetStrokeStyle(stroke_);
 	}
 
-	Canvas::~Canvas()
+	CanvasBrush::~CanvasBrush()
 	{
-		SafeRelease(stroke_style_);
-		SafeRelease(line_brush_);
-		SafeRelease(fill_brush_);
-		SafeRelease(render_target_);
 	}
 
-	void Canvas::SetLineColor(const Color & color)
+	void CanvasBrush::SetLineColor(Color const& color)
 	{
 		line_brush_->SetColor(D2D_COLOR_F(color));
 	}
 
-	void Canvas::SetFillColor(const Color & color)
+	void CanvasBrush::SetFillColor(Color const& color)
 	{
 		fill_brush_->SetColor(D2D_COLOR_F(color));
 	}
 
-	void Canvas::SetStrokeWidth(float width)
+	void CanvasBrush::SetStrokeWidth(float width)
 	{
 		stroke_width_ = std::max(width, 0.f);
 	}
 
-	void Canvas::SetStrokeStyle(StrokeStyle stroke)
+	void CanvasBrush::SetStrokeStyle(StrokeStyle stroke)
 	{
-		SafeRelease(stroke_style_);
-
 		stroke_style_ = devices::Graphics::Instance()->GetStrokeStyle(stroke);
-
-		if (stroke_style_)
-			stroke_style_->AddRef();
 	}
 
-	Color Canvas::GetLineColor() const
+	Color CanvasBrush::GetLineColor() const
 	{
 		return line_brush_->GetColor();
 	}
 
-	Color Canvas::GetFillColor() const
+	Color CanvasBrush::GetFillColor() const
 	{
 		return fill_brush_->GetColor();
 	}
 
-	float Canvas::GetStrokeWidth() const
+	float CanvasBrush::GetStrokeWidth() const
 	{
 		return stroke_width_;
 	}
 
-	StrokeStyle Canvas::GetStrokeStyle() const
+	StrokeStyle CanvasBrush::GetStrokeStyle() const
 	{
 		return stroke_;
 	}
 
-	void Canvas::DrawLine(const Point & begin, const Point & end)
+	void CanvasBrush::DrawLine(const Point & begin, const Point & end)
 	{
 		render_target_->DrawLine(
 			D2D1::Point2F(begin.x, begin.y),
 			D2D1::Point2F(end.x, end.y),
-			line_brush_,
+			line_brush_.Get(),
 			stroke_width_,
-			stroke_style_
+			stroke_style_.Get()
 		);
 	}
 
-	void Canvas::DrawCircle(const Point & center, float radius)
+	void CanvasBrush::DrawCircle(const Point & center, float radius)
 	{
 		render_target_->DrawEllipse(
 			D2D1::Ellipse(
@@ -137,13 +116,13 @@ namespace easy2d
 				radius,
 				radius
 			),
-			line_brush_,
+			line_brush_.Get(),
 			stroke_width_,
-			stroke_style_
+			stroke_style_.Get()
 		);
 	}
 
-	void Canvas::DrawEllipse(const Point & center, float radius_x, float radius_y)
+	void CanvasBrush::DrawEllipse(const Point & center, float radius_x, float radius_y)
 	{
 		render_target_->DrawEllipse(
 			D2D1::Ellipse(
@@ -154,13 +133,13 @@ namespace easy2d
 				radius_x,
 				radius_y
 			),
-			line_brush_,
+			line_brush_.Get(),
 			stroke_width_,
-			stroke_style_
+			stroke_style_.Get()
 		);
 	}
 
-	void Canvas::DrawRect(const Rect & rect)
+	void CanvasBrush::DrawRect(const Rect & rect)
 	{
 		render_target_->DrawRectangle(
 			D2D1::RectF(
@@ -169,13 +148,13 @@ namespace easy2d
 				rect.origin.x + rect.size.width,
 				rect.origin.y + rect.size.height
 			),
-			line_brush_,
+			line_brush_.Get(),
 			stroke_width_,
-			stroke_style_
+			stroke_style_.Get()
 		);
 	}
 
-	void Canvas::DrawRoundedRect(const Rect & rect, float radius_x, float radius_y)
+	void CanvasBrush::DrawRoundedRect(const Rect & rect, float radius_x, float radius_y)
 	{
 		render_target_->DrawRoundedRectangle(
 			D2D1::RoundedRect(
@@ -188,13 +167,13 @@ namespace easy2d
 				radius_x,
 				radius_y
 			),
-			line_brush_,
+			line_brush_.Get(),
 			stroke_width_,
-			stroke_style_
+			stroke_style_.Get()
 		);
 	}
 
-	void Canvas::FillCircle(const Point & center, float radius)
+	void CanvasBrush::FillCircle(const Point & center, float radius)
 	{
 		render_target_->FillEllipse(
 			D2D1::Ellipse(
@@ -205,11 +184,11 @@ namespace easy2d
 				radius,
 				radius
 			),
-			fill_brush_
+			fill_brush_.Get()
 		);
 	}
 
-	void Canvas::FillEllipse(const Point & center, float radius_x, float radius_y)
+	void CanvasBrush::FillEllipse(const Point & center, float radius_x, float radius_y)
 	{
 		render_target_->FillEllipse(
 			D2D1::Ellipse(
@@ -220,11 +199,11 @@ namespace easy2d
 				radius_x,
 				radius_y
 			),
-			fill_brush_
+			fill_brush_.Get()
 		);
 	}
 
-	void Canvas::FillRect(const Rect & rect)
+	void CanvasBrush::FillRect(const Rect & rect)
 	{
 		render_target_->FillRectangle(
 			D2D1::RectF(
@@ -233,11 +212,11 @@ namespace easy2d
 				rect.origin.x + rect.size.width,
 				rect.origin.y + rect.size.height
 			),
-			fill_brush_
+			fill_brush_.Get()
 		);
 	}
 
-	void Canvas::FillRoundedRect(const Rect & rect, float radius_x, float radius_y)
+	void CanvasBrush::FillRoundedRect(const Rect & rect, float radius_x, float radius_y)
 	{
 		render_target_->FillRoundedRectangle(
 			D2D1::RoundedRect(
@@ -250,7 +229,40 @@ namespace easy2d
 				radius_x,
 				radius_y
 			),
-			fill_brush_
+			fill_brush_.Get()
 		);
+	}
+
+
+	//-------------------------------------------------------
+	// Canvas
+	//-------------------------------------------------------
+
+	Canvas::Canvas()
+	{
+	}
+
+	Canvas::Canvas(float width, float height)
+	{
+		this->SetClipEnabled(true);
+		this->SetWidth(width);
+		this->SetHeight(height);
+	}
+
+	Canvas::~Canvas()
+	{
+	}
+
+	void Canvas::SetBrush(spCanvasBrush const & brush)
+	{
+		brush_ = brush;
+	}
+
+	void Canvas::OnDraw()
+	{
+		if (!brush_)
+			brush_ = new CanvasBrush;
+
+		OnDraw(*brush_);
 	}
 }

@@ -22,7 +22,6 @@
 #include "base.hpp"
 #include "audio.h"
 #include "Resource.h"
-#include <xaudio2.h>
 
 namespace easy2d
 {
@@ -36,28 +35,28 @@ namespace easy2d
 		Music();
 
 		Music(
-			const String& file_path	/* 音乐文件路径 */
+			String const& file_path	/* 音乐文件路径 */
 		);
 
 		Music(
-			Resource& res					/* 音乐资源 */
+			Resource const& res		/* 音乐资源 */
 		);
 
 		virtual ~Music();
 
 		// 打开音乐文件
 		bool Load(
-			const String& file_path	/* 音乐文件路径 */
+			String const& file_path	/* 音乐文件路径 */
 		);
 
 		// 打开音乐资源
 		bool Load(
-			Resource& res					/* 音乐资源 */
+			Resource const& res		/* 音乐资源 */
 		);
 
 		// 播放
 		bool Play(
-			int loop_count = 0				/* 播放循环次数 (-1 为循环播放) */
+			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 		);
 
 		// 暂停

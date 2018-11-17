@@ -33,12 +33,12 @@ namespace easy2d
 		virtual ~RefCounter() {}
 
 		// 增加引用计数
-		inline void Retain() { ::InterlockedIncrement(&ref_count_); }
+		inline void Retain() { ++ref_count_; }
 
 		// 减少引用计数
 		inline void Release()
 		{
-			if (::InterlockedDecrement(&ref_count_) <= 0)
+			if (--ref_count_ <= 0)
 				delete this;
 		}
 

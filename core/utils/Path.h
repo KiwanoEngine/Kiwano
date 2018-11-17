@@ -28,15 +28,15 @@ namespace easy2d
 	{
 	public:
 		// 获取数据的默认保存路径
-		static const String& GetDataPath();
+		static String const& GetDataPath();
 
 		// 获取临时文件目录
-		static const String& GetTemporaryPath();
+		static String const& GetTemporaryPath();
 
 		// 获取 LocalAppData 目录
-		static const String& GetLocalAppDataPath();
+		static String const& GetLocalAppDataPath();
 
 		// 获取当前程序的运行路径
-		static const String& GetExeFilePath();
+		static String const& GetExeFilePath();
 	};
 }

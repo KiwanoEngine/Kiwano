@@ -52,9 +52,9 @@ namespace easy2d
 		}
 	}
 
-	void TaskManager::StopTasks(const String& name)
+	void TaskManager::StopTasks(String const& name)
 	{
-		for (auto& task = tasks_.First(); task; task = task->NextItem())
+		for (auto task = tasks_.First(); task; task = task->NextItem())
 		{
 			if (task->GetName() == name)
 			{
@@ -63,9 +63,9 @@ namespace easy2d
 		}
 	}
 
-	void TaskManager::StartTasks(const String& name)
+	void TaskManager::StartTasks(String const& name)
 	{
-		for (auto& task = tasks_.First(); task; task = task->NextItem())
+		for (auto task = tasks_.First(); task; task = task->NextItem())
 		{
 			if (task->GetName() == name)
 			{
@@ -74,9 +74,9 @@ namespace easy2d
 		}
 	}
 
-	void TaskManager::RemoveTasks(const String& name)
+	void TaskManager::RemoveTasks(String const& name)
 	{
-		for (auto& task = tasks_.First(); task; task = task->NextItem())
+		for (auto task = tasks_.First(); task; task = task->NextItem())
 		{
 			if (task->GetName() == name)
 			{
@@ -87,7 +87,7 @@ namespace easy2d
 
 	void TaskManager::StopAllTasks()
 	{
-		for (auto& task = tasks_.First(); task; task = task->NextItem())
+		for (auto task = tasks_.First(); task; task = task->NextItem())
 		{
 			task->Stop();
 		}
@@ -95,7 +95,7 @@ namespace easy2d
 
 	void TaskManager::StartAllTasks()
 	{
-		for (auto& task = tasks_.First(); task; task = task->NextItem())
+		for (auto task = tasks_.First(); task; task = task->NextItem())
 		{
 			task->Start();
 		}
@@ -103,7 +103,7 @@ namespace easy2d
 
 	void TaskManager::RemoveAllTasks()
 	{
-		for (auto& task = tasks_.First(); task; task = task->NextItem())
+		for (auto task = tasks_.First(); task; task = task->NextItem())
 		{
 			task->stopped_ = true;
 		}
