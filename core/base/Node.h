@@ -256,11 +256,6 @@ namespace easy2d
 			const Size & size
 		);
 
-		// 启用或关闭渲染区域裁剪
-		void SetClipEnabled(
-			bool enabled
-		);
-
 		// 设置节点边缘颜色
 		void SetBorderColor(
 			const Color& color
@@ -358,7 +353,6 @@ namespace easy2d
 		float			opacity_;
 		int				order_;
 		bool			visible_;
-		bool			clip_enabled_;
 		bool			dirty_sort_;
 		bool			dirty_transform_;
 		Node*			parent_;

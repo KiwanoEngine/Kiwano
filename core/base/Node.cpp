@@ -43,7 +43,6 @@ namespace easy2d
 		: visible_(true)
 		, parent_(nullptr)
 		, hash_name_(0)
-		, clip_enabled_(false)
 		, dirty_sort_(false)
 		, dirty_transform_(false)
 		, order_(0)
@@ -68,14 +67,9 @@ namespace easy2d
 		if (!visible_)
 			return;
 
-		auto graphics = devices::Graphics::Instance();
-
-		if (clip_enabled_)
-		{
-			graphics->PushClip(final_matrix_, transform_.size);
-		}
-
 		UpdateTransform();
+
+		auto graphics = devices::Graphics::Instance();
 
 		if (children_.IsEmpty())
 		{
@@ -117,11 +111,6 @@ namespace easy2d
 				next = child->NextItem();
 				child->Visit();
 			}
-		}
-
-		if (clip_enabled_)
-		{
-			graphics->PopClip();
 		}
 	}
 
@@ -422,11 +411,6 @@ namespace easy2d
 	{
 		transform_ = transform;
 		dirty_transform_ = true;
-	}
-
-	void Node::SetClipEnabled(bool enabled)
-	{
-		clip_enabled_ = enabled;
 	}
 
 	void Node::SetBorderColor(Color const& color)
