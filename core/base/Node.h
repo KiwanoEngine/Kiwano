@@ -71,55 +71,46 @@ namespace easy2d
 		int GetOrder() const { return order_; }
 
 		// 获取节点坐标
-		const Point& GetPosition() const { return transform_.position; }
+		virtual const Point& GetPosition() const { return transform_.position; }
 
 		// 获取节点宽度
-		float GetWidth() const { return transform_.size.width * transform_.scale.x; }
+		virtual float GetWidth() const { return transform_.size.width * transform_.scale.x; }
 
 		// 获取节点高度
-		float GetHeight() const { return transform_.size.height * transform_.scale.y; }
-
-		// 获取节点宽度（不考虑缩放）
-		float GetRealWidth() const { return transform_.size.width; }
-
-		// 获取节点高度（不考虑缩放）
-		float GetRealHeight() const { return transform_.size.height; }
-
-		// 获取节点大小（不考虑缩放）
-		const Size& GetRealSize() const { return transform_.size; }
-
-		// 获取节点的支点
-		float GetPivotX() const { return transform_.pivot.x; }
-
-		// 获取节点的支点
-		float GetPivotY() const { return transform_.pivot.y; }
+		virtual float GetHeight() const { return transform_.size.height * transform_.scale.y; }
 
 		// 获取节点大小
 		Size GetSize() const { return Size{ GetWidth(), GetHeight() }; }
 
+		// 获取节点的支点
+		virtual float GetPivotX() const { return transform_.pivot.x; }
+
+		// 获取节点的支点
+		virtual float GetPivotY() const { return transform_.pivot.y; }
+
 		// 获取节点横向缩放比例
-		float GetScaleX() const { return transform_.scale.x; }
+		virtual float GetScaleX() const { return transform_.scale.x; }
 
 		// 获取节点纵向缩放比例
-		float GetScaleY() const { return transform_.scale.y; }
+		virtual float GetScaleY() const { return transform_.scale.y; }
 
 		// 获取节点横向错切角度
-		float GetSkewX() const { return transform_.skew.x; }
+		virtual float GetSkewX() const { return transform_.skew.x; }
 
 		// 获取节点纵向错切角度
-		float GetSkewY() const { return transform_.skew.y; }
+		virtual float GetSkewY() const { return transform_.skew.y; }
 
 		// 获取节点旋转角度
-		float GetRotation() const { return transform_.rotation; }
+		virtual float GetRotation() const { return transform_.rotation; }
 
 		// 获取节点透明度
-		float GetOpacity() const { return opacity_; }
-
-		// 获取父节点
-		spNode GetParent() const { return parent_; }
+		virtual float GetOpacity() const { return opacity_; }
 
 		// 获取包围盒
 		virtual Rect GetBounds();
+
+		// 获取父节点
+		virtual spNode GetParent() const { return parent_; }
 
 		// 设置节点是否显示
 		void SetVisible(

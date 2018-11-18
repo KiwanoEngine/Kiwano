@@ -44,7 +44,6 @@ namespace easy2d
 	Text::Text()
 		: font_(text_default_font)
 		, style_(text_default_style)
-		, dirty_layout_(false)
 	{
 	}
 
@@ -67,8 +66,8 @@ namespace easy2d
 		: font_(font)
 		, style_(style)
 		, text_(text)
-		, dirty_layout_(true)
 	{
+		UpdateLayout();
 	}
 
 	Text::~Text()
@@ -127,7 +126,6 @@ namespace easy2d
 
 	int Text::GetLineCount()
 	{
-		UpdateLayout();
 		if (text_layout_)
 		{
 			DWRITE_TEXT_METRICS metrics;
@@ -137,12 +135,6 @@ namespace easy2d
 			}
 		}
 		return 0;
-	}
-
-	Rect Text::GetBounds()
-	{
-		UpdateLayout();
-		return Node::GetBounds();
 	}
 
 	bool Text::IsItalic() const
@@ -168,19 +160,19 @@ namespace easy2d
 	void Text::SetText(String const& text)
 	{
 		text_ = text;
-		dirty_layout_ = true;
+		UpdateLayout();
 	}
 
 	void Text::SetStyle(const TextStyle& style)
 	{
 		style_ = style;
-		dirty_layout_ = true;
+		UpdateLayout();
 	}
 
 	void Text::SetFont(const Font & font)
 	{
 		font_ = font;
-		dirty_layout_ = true;
+		UpdateLayout();
 	}
 
 	void Text::SetFontFamily(String const& family)
@@ -188,7 +180,7 @@ namespace easy2d
 		if (font_.family != family)
 		{
 			font_.family = family;
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -197,7 +189,7 @@ namespace easy2d
 		if (font_.size != size)
 		{
 			font_.size = size;
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -206,7 +198,7 @@ namespace easy2d
 		if (font_.weight != weight)
 		{
 			font_.weight = weight;
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -220,7 +212,7 @@ namespace easy2d
 		if (font_.italic != val)
 		{
 			font_.italic = val;
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -229,7 +221,7 @@ namespace easy2d
 		if (style_.wrap != wrap)
 		{
 			style_.wrap = wrap;
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -238,7 +230,7 @@ namespace easy2d
 		if (style_.wrap_width != wrap_width)
 		{
 			style_.wrap_width = std::max(wrap_width, 0.f);
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -247,7 +239,7 @@ namespace easy2d
 		if (style_.line_spacing != line_spacing)
 		{
 			style_.line_spacing = line_spacing;
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -256,7 +248,7 @@ namespace easy2d
 		if (style_.alignment != align)
 		{
 			style_.alignment = align;
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -265,7 +257,7 @@ namespace easy2d
 		if (style_.underline != underline)
 		{
 			style_.underline = underline;
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -274,7 +266,7 @@ namespace easy2d
 		if (style_.strikethrough != strikethrough)
 		{
 			style_.strikethrough = strikethrough;
-			dirty_layout_ = true;
+			UpdateLayout();
 		}
 	}
 
@@ -314,17 +306,8 @@ namespace easy2d
 		}
 	}
 
-	void Text::Update(Duration const & dt)
-	{
-		UpdateLayout();
-		Node::Update(dt);
-	}
-
 	void Text::UpdateLayout()
 	{
-		if (!dirty_layout_)
-			return;
-
 		text_format_ = nullptr;
 		text_layout_ = nullptr;
 
@@ -351,8 +334,7 @@ namespace easy2d
 				style_
 			)
 		);
-		this->SetSize(layout_size);
 
-		dirty_layout_ = false;
+		this->SetSize(layout_size);
 	}
 }

@@ -87,9 +87,6 @@ namespace easy2d
 		// 获取文本显示行数
 		int GetLineCount();
 
-		// 获取包围盒
-		virtual Rect GetBounds() override;
-
 		// 是否是斜体
 		bool IsItalic() const;
 
@@ -202,20 +199,16 @@ namespace easy2d
 			TextStyle const& style
 		);
 
-		// 渲染文字
 		virtual void OnDraw() override;
 
 	protected:
-		virtual void Update(Duration const& dt) override;
-
 		void UpdateLayout();
 
 	protected:
-		String				text_;
-		Font				font_;
-		TextStyle			style_;
-		bool				dirty_layout_;
-		cpTextFormat		text_format_;
-		cpTextLayout		text_layout_;
+		String			text_;
+		Font			font_;
+		TextStyle		style_;
+		cpTextFormat	text_format_;
+		cpTextLayout	text_layout_;
 	};
 }

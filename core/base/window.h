@@ -65,6 +65,8 @@ namespace easy2d
 
 		float GetContentScaleY() const;
 
+		void Poll();
+
 	protected:
 		WindowImpl();
 

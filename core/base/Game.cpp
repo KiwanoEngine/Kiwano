@@ -118,10 +118,10 @@ namespace easy2d
 		const auto window = Window::Instance();
 		::ShowWindow(window->GetHandle(), SW_SHOWNORMAL);
 		::UpdateWindow(window->GetHandle());
+		window->Poll();
 
 		const int64_t min_interval = 5;
 		auto last = time::Now();
-		MSG msg = {};
 
 		while (!quit_)
 		{
@@ -142,11 +142,7 @@ namespace easy2d
 				UpdateScene(dt);
 				DrawScene();
 
-				while (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-				{
-					::TranslateMessage(&msg);
-					::DispatchMessage(&msg);
-				}
+				window->Poll();
 			}
 			else
 			{

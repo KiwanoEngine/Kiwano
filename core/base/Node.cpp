@@ -75,6 +75,8 @@ namespace easy2d
 			graphics->PushClip(final_matrix_, transform_.size);
 		}
 
+		UpdateTransform();
+
 		if (children_.IsEmpty())
 		{
 			graphics->SetTransform(final_matrix_);
@@ -130,7 +132,6 @@ namespace easy2d
 			OnUpdate(dt);
 			UpdateActions(this, dt);
 			UpdateTasks(dt);
-			UpdateTransform();
 		}
 		else
 		{
@@ -152,7 +153,6 @@ namespace easy2d
 			OnUpdate(dt);
 			UpdateActions(this, dt);
 			UpdateTasks(dt);
-			UpdateTransform();
 
 			for (spNode next; child; child = next)
 			{
