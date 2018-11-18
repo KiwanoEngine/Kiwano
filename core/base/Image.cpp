@@ -32,33 +32,35 @@ namespace easy2d
 	}
 
 	Image::Image(Resource const& res)
-		: bitmap_(nullptr)
-		, crop_rect_()
+		: Image()
 	{
 		this->Load(res);
 	}
 
 	Image::Image(Resource const& res, Rect const& crop_rect)
-		: bitmap_(nullptr)
-		, crop_rect_()
+		: Image()
 	{
 		this->Load(res);
 		this->Crop(crop_rect);
 	}
 
 	Image::Image(String const& file_name)
-		: bitmap_(nullptr)
-		, crop_rect_()
+		: Image()
 	{
 		this->Load(file_name);
 	}
 
 	Image::Image(String const& file_name, const Rect & crop_rect)
-		: bitmap_(nullptr)
-		, crop_rect_()
+		: Image()
 	{
 		this->Load(file_name);
 		this->Crop(crop_rect);
+	}
+
+	Image::Image(cpBitmap const & bitmap)
+		: Image()
+	{
+		SetBitmap(bitmap);
 	}
 
 	Image::~Image()
@@ -67,16 +69,14 @@ namespace easy2d
 
 	bool Image::Load(Resource const& res)
 	{
-		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromResource(bitmap_, res);
+		cpBitmap bitmap;
+		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromResource(bitmap, res);
 		if (FAILED(hr))
 		{
 			logs::Errorln(hr, "Load Image from resource failed!");
 			return false;
 		}
-
-		crop_rect_.origin.x = crop_rect_.origin.y = 0;
-		crop_rect_.size.width = bitmap_->GetSize().width;
-		crop_rect_.size.height = bitmap_->GetSize().height;
+		SetBitmap(bitmap);
 		return true;
 	}
 
@@ -93,16 +93,15 @@ namespace easy2d
 		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
 		String image_file_path = image_file.GetPath();
 
-		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromFile(bitmap_, image_file_path);
+		cpBitmap bitmap;
+		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromFile(bitmap, image_file_path);
 		if (FAILED(hr))
 		{
 			logs::Errorln(hr, "Load Image from file failed!");
 			return false;
 		}
 		
-		crop_rect_.origin.x = crop_rect_.origin.y = 0;
-		crop_rect_.size.width = bitmap_->GetSize().width;
-		crop_rect_.size.height = bitmap_->GetSize().height;
+		SetBitmap(bitmap);
 		return true;
 	}
 
@@ -190,6 +189,17 @@ namespace easy2d
 	cpBitmap const& Image::GetBitmap() const
 	{
 		return bitmap_;
+	}
+
+	void Image::SetBitmap(cpBitmap const & bitmap)
+	{
+		if (bitmap)
+		{
+			bitmap_ = bitmap;
+			crop_rect_.origin.x = crop_rect_.origin.y = 0;
+			crop_rect_.size.width = bitmap_->GetSize().width;
+			crop_rect_.size.height = bitmap_->GetSize().height;
+		}
 	}
 
 }

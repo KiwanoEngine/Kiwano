@@ -36,12 +36,16 @@ namespace easy2d
 	E2D_DECLARE_D2D_SMART_PTR(IWICImagingFactory, cpImagingFactory);
 	E2D_DECLARE_D2D_SMART_PTR(IDWriteFactory, cpWriteFactory);
 	E2D_DECLARE_D2D_SMART_PTR(ID2D1SolidColorBrush, cpSolidColorBrush);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1HwndRenderTarget, cpRenderTarget);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1RenderTarget, cpRenderTarget);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1HwndRenderTarget, cpHwndRenderTarget);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1BitmapRenderTarget, cpBitmapRenderTarget);
 	E2D_DECLARE_D2D_SMART_PTR(ID2D1StrokeStyle, cpStrokeStyle);
 
 	E2D_DECLARE_D2D_SMART_PTR(ID2D1Layer, cpLayer);
 	E2D_DECLARE_D2D_SMART_PTR(ID2D1Bitmap, cpBitmap);
 	E2D_DECLARE_D2D_SMART_PTR(ID2D1Geometry, cpGeometry);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1PathGeometry, cpPathGeometry);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1GeometrySink, cpGeometrySink);
 	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextFormat, cpTextFormat);
 	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextLayout, cpTextLayout);
 

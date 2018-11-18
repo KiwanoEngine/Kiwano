@@ -177,9 +177,9 @@ namespace easy2d
 				float tx = math::Tan(angle_x);
 				float ty = math::Tan(angle_y);
 				return Matrix(
-					1.f, tx,
-					ty, 1.f,
-					-center.y * tx, -center.x * ty
+					1.f, -ty,
+					-tx, 1.f,
+					center.y * tx, center.x * ty
 				);
 			}
 		};

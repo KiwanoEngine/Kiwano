@@ -59,67 +59,64 @@ namespace easy2d
 		virtual void OnUpdate(Duration const& dt) {}
 
 		// 获取节点显示状态
-		bool IsVisible() const;
+		bool IsVisible() const { return visible_; }
 
 		// 获取节点名称
-		String const& GetName() const;
+		String const& GetName() const { return name_; }
 
 		// 获取节点名称的 Hash 值
-		size_t GetHashName() const;
+		size_t GetHashName() const { return hash_name_; }
 
 		// 获取节点绘图顺序
-		int GetOrder() const;
+		int GetOrder() const { return order_; }
 
 		// 获取节点坐标
-		const Point& GetPosition() const;
+		const Point& GetPosition() const { return transform_.position; }
 
 		// 获取节点宽度
-		float GetWidth() const;
+		float GetWidth() const { return transform_.size.width * transform_.scale.x; }
 
 		// 获取节点高度
-		float GetHeight() const;
+		float GetHeight() const { return transform_.size.height * transform_.scale.y; }
 
 		// 获取节点宽度（不考虑缩放）
-		float GetRealWidth() const;
+		float GetRealWidth() const { return transform_.size.width; }
 
 		// 获取节点高度（不考虑缩放）
-		float GetRealHeight() const;
+		float GetRealHeight() const { return transform_.size.height; }
 
 		// 获取节点大小（不考虑缩放）
-		const Size& GetRealSize() const;
+		const Size& GetRealSize() const { return transform_.size; }
 
 		// 获取节点的支点
-		float GetPivotX() const;
+		float GetPivotX() const { return transform_.pivot.x; }
 
 		// 获取节点的支点
-		float GetPivotY() const;
+		float GetPivotY() const { return transform_.pivot.y; }
 
 		// 获取节点大小
-		Size GetSize() const;
+		Size GetSize() const { return Size{ GetWidth(), GetHeight() }; }
 
 		// 获取节点横向缩放比例
-		float GetScaleX() const;
+		float GetScaleX() const { return transform_.scale.x; }
 
 		// 获取节点纵向缩放比例
-		float GetScaleY() const;
+		float GetScaleY() const { return transform_.scale.y; }
 
 		// 获取节点横向错切角度
-		float GetSkewX() const;
+		float GetSkewX() const { return transform_.skew.x; }
 
 		// 获取节点纵向错切角度
-		float GetSkewY() const;
+		float GetSkewY() const { return transform_.skew.y; }
 
 		// 获取节点旋转角度
-		float GetRotation() const;
+		float GetRotation() const { return transform_.rotation; }
 
 		// 获取节点透明度
-		float GetOpacity() const;
-
-		// 获取显示透明度
-		float GetDisplayOpacity() const;
+		float GetOpacity() const { return opacity_; }
 
 		// 获取父节点
-		spNode GetParent() const;
+		spNode GetParent() const { return parent_; }
 
 		// 获取包围盒
 		virtual Rect GetBounds();
@@ -248,7 +245,7 @@ namespace easy2d
 		);
 
 		// 修改节点宽度
-		virtual void SetWidth(
+		void SetWidth(
 			float width
 		);
 
@@ -367,7 +364,7 @@ namespace easy2d
 		String			name_;
 		size_t			hash_name_;
 		float			display_opacity_;
-		float			real_opacity_;
+		float			opacity_;
 		int				order_;
 		bool			visible_;
 		bool			clip_enabled_;

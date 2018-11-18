@@ -303,7 +303,6 @@ namespace easy2d
 		if (text_layout_)
 		{
 			auto graphics = devices::Graphics::Instance();
-			graphics->SetBrushOpacity(GetDisplayOpacity());
 			graphics->SetTextStyle(
 				style_.color,
 				style_.outline,
@@ -337,74 +336,22 @@ namespace easy2d
 		ThrowIfFailed(
 			graphics->CreateTextFormat(
 				text_format_,
-				font_
+				font_,
+				style_
 			)
 		);
 
-		if (style_.line_spacing == 0.f)
-		{
-			text_format_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
-		}
-		else
-		{
-			text_format_->SetLineSpacing(
-				DWRITE_LINE_SPACING_METHOD_UNIFORM,
-				style_.line_spacing,
-				style_.line_spacing * 0.8f
-			);
-		}
-		text_format_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(style_.alignment));
-		text_format_->SetWordWrapping(style_.wrap ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP);
-
-		if (style_.wrap)
-		{
-			ThrowIfFailed(
-				graphics->CreateTextLayout(
-					text_layout_,
-					text_,
-					text_format_,
-					style_.wrap_width
-				)
-			);
-
-			DWRITE_TEXT_METRICS metrics;
-			text_layout_->GetMetrics(&metrics);
-			this->SetSize(metrics.layoutWidth, metrics.height);
-		}
-		else
-		{
-			ThrowIfFailed(
-				graphics->CreateTextLayout(
-					text_layout_,
-					text_,
-					text_format_,
-					0
-				)
-			);
-
-			DWRITE_TEXT_METRICS metrics;
-			text_layout_->GetMetrics(&metrics);
-			this->SetSize(metrics.width, metrics.height);
-
-			ThrowIfFailed(
-				graphics->CreateTextLayout(
-					text_layout_,
-					text_,
-					text_format_,
-					metrics.width
-				)
-			);
-		}
-
-		DWRITE_TEXT_RANGE range = { 0, static_cast<UINT32>(text_.length()) };
-		if (style_.underline)
-		{
-			text_layout_->SetUnderline(true, range);
-		}
-		if (style_.strikethrough)
-		{
-			text_layout_->SetStrikethrough(true, range);
-		}
+		Size layout_size;
+		ThrowIfFailed(
+			graphics->CreateTextLayout(
+				text_layout_,
+				layout_size,
+				text_,
+				text_format_,
+				style_
+			)
+		);
+		this->SetSize(layout_size);
 
 		dirty_layout_ = false;
 	}

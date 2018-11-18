@@ -20,9 +20,6 @@
 
 #pragma once
 #include "macros.h"
-#include <iostream>
-#include <sstream>
-#include <stdexcept>
 
 #ifndef E2D_LOG
 #	ifdef E2D_DEBUG

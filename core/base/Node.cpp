@@ -48,8 +48,8 @@ namespace easy2d
 		, dirty_transform_(false)
 		, order_(0)
 		, transform_()
+		, opacity_(1.f)
 		, display_opacity_(1.f)
-		, real_opacity_(1.f)
 		, children_()
 		, initial_matrix_()
 		, final_matrix_()
@@ -78,11 +78,11 @@ namespace easy2d
 		if (children_.IsEmpty())
 		{
 			graphics->SetTransform(final_matrix_);
+			graphics->SetOpacity(display_opacity_);
 			OnDraw();
 		}
 		else
 		{
-			// 子节点排序
 			if (dirty_sort_)
 			{
 				children_.Sort(
@@ -107,6 +107,7 @@ namespace easy2d
 			}
 
 			graphics->SetTransform(final_matrix_);
+			graphics->SetOpacity(display_opacity_);
 			OnDraw();
 
 			for (spNode next; child; child = next)
@@ -167,7 +168,7 @@ namespace easy2d
 		{
 			if (border_)
 			{
-				devices::Graphics::Instance()->DrawGeometry(border_, border_color_, 1.f, 1.5f);
+				devices::Graphics::Instance()->DrawGeometry(border_, border_color_, 1.5f);
 			}
 
 			for (auto child = children_.First(); child; child = child->NextItem())
@@ -248,112 +249,12 @@ namespace easy2d
 	{
 		if (parent_)
 		{
-			display_opacity_ = real_opacity_ * parent_->display_opacity_;
+			display_opacity_ = opacity_ * parent_->display_opacity_;
 		}
 		for (auto child = children_.First(); child; child = child->NextItem())
 		{
 			child->UpdateOpacity();
 		}
-	}
-
-	bool Node::IsVisible() const
-	{
-		return visible_;
-	}
-
-	String const& Node::GetName() const
-	{
-		return name_;
-	}
-
-	size_t Node::GetHashName() const
-	{
-		return hash_name_;
-	}
-
-	const Point& Node::GetPosition() const
-	{
-		return transform_.position;
-	}
-
-	float Node::GetWidth() const
-	{
-		return transform_.size.width * transform_.scale.x;
-	}
-
-	float Node::GetHeight() const
-	{
-		return transform_.size.height * transform_.scale.y;
-	}
-
-	float Node::GetRealWidth() const
-	{
-		return transform_.size.width;
-	}
-
-	float Node::GetRealHeight() const
-	{
-		return transform_.size.height;
-	}
-
-	const Size& Node::GetRealSize() const
-	{
-		return transform_.size;
-	}
-
-	float Node::GetPivotX() const
-	{
-		return transform_.pivot.x;
-	}
-
-	float Node::GetPivotY() const
-	{
-		return transform_.pivot.y;
-	}
-
-	Size Node::GetSize() const
-	{
-		return Size{ GetWidth(), GetHeight() };
-	}
-
-	float Node::GetScaleX() const
-	{
-		return transform_.scale.x;
-	}
-
-	float Node::GetScaleY() const
-	{
-		return transform_.scale.y;
-	}
-
-	float Node::GetSkewX() const
-	{
-		return transform_.skew.x;
-	}
-
-	float Node::GetSkewY() const
-	{
-		return transform_.skew.y;
-	}
-
-	float Node::GetRotation() const
-	{
-		return transform_.rotation;
-	}
-
-	float Node::GetOpacity() const
-	{
-		return real_opacity_;
-	}
-
-	float Node::GetDisplayOpacity() const
-	{
-		return display_opacity_;
-	}
-
-	int Node::GetOrder() const
-	{
-		return order_;
 	}
 
 	void Node::SetOrder(int order)
@@ -459,10 +360,10 @@ namespace easy2d
 
 	void Node::SetOpacity(float opacity)
 	{
-		if (real_opacity_ == opacity)
+		if (opacity_ == opacity)
 			return;
 
-		display_opacity_ = real_opacity_ = std::min(std::max(opacity, 0.f), 1.f);
+		display_opacity_ = opacity_ = std::min(std::max(opacity, 0.f), 1.f);
 		// 更新节点透明度
 		UpdateOpacity();
 	}
@@ -564,11 +465,6 @@ namespace easy2d
 		{
 			this->AddChild(node, order);
 		}
-	}
-
-	spNode Node::GetParent() const
-	{
-		return parent_;
 	}
 
 	Rect Node::GetBounds()

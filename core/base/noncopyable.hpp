@@ -27,7 +27,7 @@ namespace easy2d
 	protected:
 		Noncopyable() = default;
 
-		~Noncopyable() {};
+		virtual ~Noncopyable() {};
 
 	private:
 		Noncopyable(const Noncopyable&) = delete;

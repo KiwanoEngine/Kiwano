@@ -279,16 +279,16 @@ namespace easy2d
 
 		if (debug_enabled_)
 		{
+			graphics->SetTransform(math::Matrix());
+			graphics->SetOpacity(1.f);
+
 			if (curr_scene_)
 			{
-				graphics->SetTransform(math::Matrix());
-				graphics->SetBrushOpacity(1.f);
 				curr_scene_->DrawBorder();
 			}
+
 			if (next_scene_)
 			{
-				graphics->SetTransform(math::Matrix());
-				graphics->SetBrushOpacity(1.f);
 				next_scene_->DrawBorder();
 			}
 

@@ -22,6 +22,8 @@
 #include "logs.h"
 #include <ctime>
 #include <iomanip>
+#include <iostream>
+#include <sstream>
 
 namespace easy2d
 {

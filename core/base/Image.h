@@ -49,6 +49,10 @@ namespace easy2d
 			Rect const& crop_rect	/* 裁剪矩形 */
 		);
 
+		explicit Image(
+			cpBitmap const& bitmap
+		);
+
 		virtual ~Image();
 
 		// 加载图片资源
@@ -97,6 +101,11 @@ namespace easy2d
 		Rect const& GetCropRect() const;
 
 		cpBitmap const& GetBitmap() const;
+
+	protected:
+		void SetBitmap(
+			cpBitmap const& bitmap
+		);
 
 	protected:
 		Rect		crop_rect_;

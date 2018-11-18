@@ -24,8 +24,6 @@
 
 namespace easy2d
 {
-	
-
 	class WindowImpl
 		: protected Noncopyable
 	{
