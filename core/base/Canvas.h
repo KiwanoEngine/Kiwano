@@ -20,19 +20,37 @@
 
 #pragma once
 #include "Node.h"
+#include "Font.hpp"
+#include "TextStyle.hpp"
+#include "TextRenderer.h"
+
+#undef DrawText
 
 namespace easy2d
 {
-	E2D_DECLARE_SMART_PTR(CanvasBrush);
-
-	// 画笔
-	class CanvasBrush
-		: public RefCounter
+	// 画布
+	class Canvas
+		: public Node
 	{
 	public:
-		CanvasBrush();
+		Canvas();
 
-		virtual ~CanvasBrush();
+		Canvas(
+			Size const& size
+		);
+
+		Canvas(
+			float width,
+			float height
+		);
+
+		virtual ~Canvas();
+
+		// 开始绘图
+		void BeginDraw();
+
+		// 结束绘图
+		void EndDraw();
 
 		// 画直线
 		void DrawLine(
@@ -65,6 +83,18 @@ namespace easy2d
 			float radius_y
 		);
 
+		// 画图片
+		void DrawImage(
+			spImage const& image,
+			float opacity = 1.f
+		);
+
+		// 画文字
+		void DrawText(
+			String const& text,		/* 文字 */
+			Point const& point		/* 文字位置 */
+		);
+
 		// 填充圆形
 		void FillCircle(
 			const Point& center,
@@ -90,13 +120,46 @@ namespace easy2d
 			float radius_y
 		);
 
-		// 设置线条颜色
-		void SetLineColor(
-			const Color& color
+		// 开始绘制路径
+		void BeginPath(
+			Point const& begin_pos	/* 路径起始点 */
 		);
+
+		// 结束路径
+		void EndPath(
+			bool closed = true		/* 路径是否闭合 */
+		);
+
+		// 添加一条线段
+		void AddLine(
+			Point const& point		/* 端点 */
+		);
+
+		// 添加多条线段
+		void AddLines(
+			std::vector<Point> const& points
+		);
+
+		// 添加一条三次方贝塞尔曲线
+		void AddBezier(
+			Point const& point1,	/* 贝塞尔曲线的第一个控制点 */
+			Point const& point2,	/* 贝塞尔曲线的第二个控制点 */
+			Point const& point3		/* 贝塞尔曲线的终点 */
+		);
+
+		// 路径描边
+		void StrokePath();
+
+		// 路径填充
+		void FillPath();
 
 		// 设置填充颜色
 		void SetFillColor(
+			const Color& color
+		);
+
+		// 设置线条颜色
+		void SetStrokeColor(
 			const Color& color
 		);
 
@@ -106,56 +169,51 @@ namespace easy2d
 		);
 
 		// 设置线条相交样式
-		void SetStrokeStyle(
-			StrokeStyle stroke
+		void SetOutlineJoinStyle(
+			StrokeStyle outline_join
 		);
 
-		// 获取线条颜色
-		Color GetLineColor() const;
+		// 设置文字画刷样式
+		void SetTextStyle(
+			Font const& font,
+			TextStyle const& text_style
+		);
 
 		// 获取填充颜色
 		Color GetFillColor() const;
 
+		// 获取线条颜色
+		Color GetStrokeColor() const;
+
 		// 获取线条宽度
 		float GetStrokeWidth() const;
 
-		// 获取线条相交样式
-		StrokeStyle GetStrokeStyle() const;
-
-	protected:
-		float				stroke_width_;
-		StrokeStyle			stroke_;
-		cpRenderTarget		render_target_;
-		cpSolidColorBrush	fill_brush_;
-		cpSolidColorBrush	line_brush_;
-		cpStrokeStyle		stroke_style_;
-	};
-
-
-	// 画布
-	class Canvas
-		: public Node
-	{
-	public:
-		Canvas();
-
-		Canvas(
-			float width,
-			float height
+		// 变换画笔
+		void SetBrushTransform(
+			math::Matrix const& transform
 		);
 
-		virtual ~Canvas();
-
-		virtual void OnDraw(CanvasBrush& brush) = 0;
-
-		// 设置画刷
-		void SetBrush(
-			spCanvasBrush const& brush
-		);
+		// 导出为图片
+		spImage ExportToImage() const;
 
 		virtual void OnDraw() override;
 
-	private:
-		spCanvasBrush brush_;
+	protected:
+		cpBitmap const& GetBitmap() const;
+
+	protected:
+		mutable bool			cache_expired_;
+		mutable cpBitmap		bitmap_cached_;
+		float					stroke_width_;
+		Font					text_font_;
+		TextStyle				text_style_;
+		cpPathGeometry			current_geometry_;
+		cpGeometrySink			current_sink_;
+		cpStrokeStyle			outline_join_style_;
+		cpSolidColorBrush		fill_brush_;
+		cpSolidColorBrush		stroke_brush_;
+		cpSolidColorBrush		text_brush_;
+		cpTextRenderer			text_renderer_;
+		cpBitmapRenderTarget	render_target_;
 	};
 }

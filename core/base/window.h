@@ -24,8 +24,6 @@
 
 namespace easy2d
 {
-	
-
 	class WindowImpl
 		: protected Noncopyable
 	{
@@ -66,6 +64,8 @@ namespace easy2d
 		float GetContentScaleX() const;
 
 		float GetContentScaleY() const;
+
+		void Poll();
 
 	protected:
 		WindowImpl();

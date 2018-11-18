@@ -24,7 +24,7 @@
 
 namespace easy2d
 {
-	ITextRenderer::ITextRenderer(ID2D1Factory* pD2DFactory, ID2D1HwndRenderTarget* pRT, ID2D1SolidColorBrush* pBrush)
+	ITextRenderer::ITextRenderer(ID2D1Factory* pD2DFactory, ID2D1RenderTarget* pRT, ID2D1SolidColorBrush* pBrush)
 		: cRefCount_(0)
 		, pD2DFactory_(pD2DFactory)
 		, pRT_(pRT)
@@ -50,7 +50,7 @@ namespace easy2d
 	HRESULT ITextRenderer::Create(
 		ITextRenderer** ppTextRenderer,
 		ID2D1Factory* pD2DFactory,
-		ID2D1HwndRenderTarget* pRT,
+		ID2D1RenderTarget* pRT,
 		ID2D1SolidColorBrush* pBrush)
 	{
 		*ppTextRenderer = new (std::nothrow) ITextRenderer(pD2DFactory, pRT, pBrush);

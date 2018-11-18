@@ -24,27 +24,17 @@
 #include "logs.h"
 #include "modules.h"
 #include "Image.h"
+#include "Transform.hpp"
 
 namespace easy2d
 {
 	namespace devices
 	{
-		namespace
-		{
-			inline D2D1_MATRIX_3X2_F ConvertToD2DMatrix(math::Matrix const& matrix)
-			{
-				return D2D1_MATRIX_3X2_F{
-						matrix.m[0], matrix.m[1],
-						matrix.m[2], matrix.m[3],
-						matrix.m[4], matrix.m[5]
-				};
-			}
-		}
-
 		GraphicsDevice::GraphicsDevice()
 			: fps_text_format_(nullptr)
 			, fps_text_layout_(nullptr)
 			, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
+			, opacity_(1.f)
 			, initialized(false)
 		{
 			ZeroMemory(&d2d, sizeof(D2DResources));
@@ -207,13 +197,21 @@ namespace easy2d
 			return hr;
 		}
 
-		HRESULT GraphicsDevice::CreateTextFormat(cpTextFormat& text_format, Font const& font) const
+		HRESULT GraphicsDevice::CreatePathGeometry(cpPathGeometry & geometry) const
+		{
+			if (!d2d.factory)
+				return E_UNEXPECTED;
+
+			return d2d.factory->CreatePathGeometry(&geometry);
+		}
+
+		HRESULT GraphicsDevice::CreateTextFormat(cpTextFormat & text_format, Font const & font, TextStyle const & text_style) const
 		{
 			if (!d2d.write_factory)
 				return E_UNEXPECTED;
 
-			text_format = nullptr;
-			return d2d.write_factory->CreateTextFormat(
+			cpTextFormat text_format_tmp;
+			HRESULT hr = d2d.write_factory->CreateTextFormat(
 				font.family.c_str(),
 				nullptr,
 				DWRITE_FONT_WEIGHT(font.weight),
@@ -221,26 +219,128 @@ namespace easy2d
 				DWRITE_FONT_STRETCH_NORMAL,
 				font.size,
 				L"",
-				&text_format
-			);;
+				&text_format_tmp
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				if (text_style.line_spacing == 0.f)
+				{
+					text_format_tmp->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
+				}
+				else
+				{
+					text_format_tmp->SetLineSpacing(
+						DWRITE_LINE_SPACING_METHOD_UNIFORM,
+						text_style.line_spacing,
+						text_style.line_spacing * 0.8f
+					);
+				}
+				text_format_tmp->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(text_style.alignment));
+				text_format_tmp->SetWordWrapping(text_style.wrap ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP);
+				text_format = text_format_tmp;
+			}
+			return hr;
 		}
 
-		HRESULT GraphicsDevice::CreateTextLayout(cpTextLayout& text_layout, String const& text, cpTextFormat const& text_format, float wrap_width) const
+		HRESULT GraphicsDevice::CreateTextLayout(cpTextLayout & text_layout, Size& layout_size, String const & text, cpTextFormat const& text_format, TextStyle const & text_style) const
 		{
 			if (!d2d.write_factory)
 				return E_UNEXPECTED;
 
 			text_layout = nullptr;
 
+			HRESULT hr;
+			cpTextLayout text_layout_tmp;
 			UINT32 length = static_cast<UINT32>(text.length());
-			return d2d.write_factory->CreateTextLayout(
-				text.c_str(),
-				length,
-				text_format.Get(),
-				wrap_width,
-				0,
-				&text_layout
+
+			if (text_style.wrap)
+			{
+				hr = d2d.write_factory->CreateTextLayout(
+					text.c_str(),
+					length,
+					text_format.Get(),
+					text_style.wrap_width,
+					0,
+					&text_layout_tmp
+				);
+			}
+			else
+			{
+				hr = d2d.write_factory->CreateTextLayout(
+					text.c_str(),
+					length,
+					text_format.Get(),
+					0,
+					0,
+					&text_layout_tmp
+				);
+
+				DWRITE_TEXT_METRICS metrics;
+				text_layout_tmp->GetMetrics(&metrics);
+
+				if (SUCCEEDED(hr))
+				{
+					text_layout_tmp = nullptr;
+					hr = d2d.write_factory->CreateTextLayout(
+						text.c_str(),
+						length,
+						text_format.Get(),
+						metrics.width,
+						0,
+						&text_layout_tmp
+					);
+				}
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				DWRITE_TEXT_METRICS metrics;
+				text_layout_tmp->GetMetrics(&metrics);
+
+				if (text_style.wrap)
+				{
+					layout_size = Size(metrics.layoutWidth, metrics.height);
+				}
+				else
+				{
+					layout_size = Size(metrics.width, metrics.height);
+				}
+
+				DWRITE_TEXT_RANGE range = { 0, length };
+				if (text_style.underline)
+				{
+					text_layout_tmp->SetUnderline(true, range);
+				}
+				if (text_style.strikethrough)
+				{
+					text_layout_tmp->SetStrikethrough(true, range);
+				}
+				text_layout = text_layout_tmp;
+			}
+			return hr;
+		}
+
+		HRESULT GraphicsDevice::CreateTextRenderer(
+			cpTextRenderer& text_renderer,
+			cpRenderTarget const& render_target,
+			cpSolidColorBrush const& brush
+		)
+		{
+			if (!d2d.factory)
+				return E_UNEXPECTED;
+
+			cpTextRenderer text_renderer_tmp;
+			HRESULT hr = ITextRenderer::Create(
+				&text_renderer_tmp,
+				d2d.factory.Get(),
+				render_target.Get(),
+				brush.Get()
 			);
+
+			if (SUCCEEDED(hr))
+				text_renderer = text_renderer_tmp;
+			return hr;
 		}
 
 		HRESULT GraphicsDevice::CreateLayer(cpLayer& layer)
@@ -267,7 +367,6 @@ namespace easy2d
 		HRESULT GraphicsDevice::DrawGeometry(
 			cpGeometry const& geometry,
 			Color const& border_color,
-			float opacity,
 			float stroke_width,
 			StrokeStyle stroke
 		)
@@ -277,12 +376,29 @@ namespace easy2d
 				return E_UNEXPECTED;
 
 			d2d.solid_brush->SetColor(border_color);
-			d2d.solid_brush->SetOpacity(opacity);
 			d2d.render_target->DrawGeometry(
 				geometry.Get(),
 				d2d.solid_brush.Get(),
 				stroke_width,
 				GetStrokeStyle(stroke).Get()
+			);
+			return S_OK;
+		}
+
+		HRESULT GraphicsDevice::DrawImage(spImage const & image)
+		{
+			if (!d2d.render_target)
+				return E_UNEXPECTED;
+
+			if (!image->GetBitmap())
+				return S_OK;
+
+			d2d.render_target->DrawBitmap(
+				image->GetBitmap().Get(),
+				D2D1::RectF(0.f, 0.f, image->GetWidth(), image->GetHeight()),
+				opacity_,
+				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+				image->GetCropRect()
 			);
 			return S_OK;
 		}
@@ -304,27 +420,21 @@ namespace easy2d
 			return d2d.miter_stroke_style;
 		}
 
-		cpRenderTarget const & GraphicsDevice::GetRenderTarget() const
-		{
-			return d2d.render_target;
-		}
-
-		HRESULT GraphicsDevice::DrawImage(
-			spImage const& image,
-			float opacity,
-			const Rect & dest_rect,
-			const Rect & source_rect
+		HRESULT GraphicsDevice::DrawBitmap(
+			cpBitmap const& bitmap
 		)
 		{
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
+			// Do not crop bitmap 
+			auto rect = D2D1::RectF(0.f, 0.f, bitmap->GetSize().width, bitmap->GetSize().height);
 			d2d.render_target->DrawBitmap(
-				image->GetBitmap().Get(),
-				dest_rect,
-				opacity,
+				bitmap.Get(),
+				rect,
+				opacity_,
 				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				source_rect
+				rect
 			);
 			return S_OK;
 		}
@@ -386,6 +496,17 @@ namespace easy2d
 				return E_UNEXPECTED;
 
 			d2d.render_target->PopLayer();
+			return S_OK;
+		}
+
+		HRESULT GraphicsDevice::GetSize(Size & size)
+		{
+			if (!d2d.render_target)
+				return E_UNEXPECTED;
+
+			auto rtsize = d2d.render_target->GetSize();
+			size.width = rtsize.width;
+			size.height = rtsize.height;
 			return S_OK;
 		}
 
@@ -568,6 +689,15 @@ namespace easy2d
 			return hr;
 		}
 
+		HRESULT GraphicsDevice::CreateBitmapRenderTarget(cpBitmapRenderTarget & brt)
+		{
+			if (!d2d.render_target)
+				return E_UNEXPECTED;
+
+			brt = nullptr;
+			return d2d.render_target->CreateCompatibleRenderTarget(&brt);
+		}
+
 		HRESULT GraphicsDevice::Resize(UINT32 width, UINT32 height)
 		{
 			if (!d2d.render_target)
@@ -586,11 +716,12 @@ namespace easy2d
 			return S_OK;
 		}
 
-		HRESULT GraphicsDevice::SetBrushOpacity(float opacity)
+		HRESULT GraphicsDevice::SetOpacity(float opacity)
 		{
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
+			opacity_ = opacity;
 			d2d.solid_brush->SetOpacity(opacity);
 			return S_OK;
 		}
@@ -631,7 +762,16 @@ namespace easy2d
 			if (!fps_text_format_)
 			{
 				ThrowIfFailed(
-					CreateTextFormat(fps_text_format_, Font{ L"", 20 })
+					d2d.write_factory->CreateTextFormat(
+						L"",
+						nullptr,
+						DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_NORMAL,
+						DWRITE_FONT_STYLE_NORMAL,
+						DWRITE_FONT_STRETCH_NORMAL,
+						20,
+						L"",
+						&fps_text_format_
+					)
 				);
 
 				fps_text_format_->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
@@ -646,8 +786,16 @@ namespace easy2d
 				last_render_time_ = time::Now();
 				render_times_ = 0;
 
+				fps_text_layout_ = nullptr;
 				ThrowIfFailed(
-					CreateTextLayout(fps_text_layout_, fps_text, fps_text_format_, 0)
+					d2d.write_factory->CreateTextLayout(
+						fps_text,
+						len,
+						fps_text_format_.Get(),
+						0,
+						0,
+						&fps_text_layout_
+					)
 				);
 			}
 

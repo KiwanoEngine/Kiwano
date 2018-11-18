@@ -24,6 +24,7 @@
 #include "Font.hpp"
 #include "Resource.h"
 #include "TextRenderer.h"
+#include "TextStyle.hpp"
 #include "../math/Matrix.hpp"
 
 namespace easy2d
@@ -37,9 +38,9 @@ namespace easy2d
 			cpFactory			factory;
 			cpImagingFactory	imaging_factory;
 			cpWriteFactory		write_factory;
-			spTextRenderer		text_renderer;
+			cpTextRenderer		text_renderer;
 			cpSolidColorBrush	solid_brush;
-			cpRenderTarget		render_target;
+			cpHwndRenderTarget		render_target;
 			cpStrokeStyle		miter_stroke_style;
 			cpStrokeStyle		bevel_stroke_style;
 			cpStrokeStyle		round_stroke_style;
@@ -76,17 +77,29 @@ namespace easy2d
 				const Size& size
 			) const;
 
+			HRESULT CreatePathGeometry(
+				cpPathGeometry& geometry
+			) const;
+
 			HRESULT CreateTextFormat(
 				cpTextFormat& text_format,
-				Font const& font
+				Font const& font,
+				TextStyle const& text_style
 			) const;
 
 			HRESULT CreateTextLayout(
 				cpTextLayout& text_layout,
+				Size& layout_size,
 				String const& text,
 				cpTextFormat const& text_format,
-				float wrap_width
+				TextStyle const& text_style
 			) const;
+
+			HRESULT CreateTextRenderer(
+				cpTextRenderer& text_renderer,
+				cpRenderTarget const& render_target,
+				cpSolidColorBrush const& brush
+			);
 
 			HRESULT CreateLayer(
 				cpLayer& layer
@@ -96,17 +109,29 @@ namespace easy2d
 				cpSolidColorBrush& brush
 			) const;
 
+			HRESULT CreateBitmapFromFile(
+				cpBitmap& bitmap,
+				String const& file_path
+			);
+
+			HRESULT CreateBitmapFromResource(
+				cpBitmap& bitmap,
+				Resource const& res
+			);
+
+			HRESULT CreateBitmapRenderTarget(
+				cpBitmapRenderTarget& brt
+			);
+
 			cpStrokeStyle const& GetStrokeStyle(
 				StrokeStyle stroke
 			) const;
-
-			cpRenderTarget const& GetRenderTarget() const;
 
 			HRESULT SetTransform(
 				const math::Matrix& matrix
 			);
 
-			HRESULT SetBrushOpacity(
+			HRESULT SetOpacity(
 				float opacity
 			);
 
@@ -121,16 +146,16 @@ namespace easy2d
 			HRESULT DrawGeometry(
 				cpGeometry const& geometry,
 				const Color& border_color,
-				float opacity,
 				float stroke_width,
 				StrokeStyle stroke = StrokeStyle::Miter
 			);
 
 			HRESULT DrawImage(
-				spImage const& image,
-				float opacity,
-				const Rect& dest_rect,
-				const Rect& source_rect
+				spImage const& image
+			);
+
+			HRESULT DrawBitmap(
+				cpBitmap const& bitmap
 			);
 
 			HRESULT DrawTextLayout(
@@ -151,14 +176,8 @@ namespace easy2d
 
 			HRESULT PopLayer();
 
-			HRESULT CreateBitmapFromFile(
-				cpBitmap& bitmap,
-				String const& file_path
-			);
-
-			HRESULT CreateBitmapFromResource(
-				cpBitmap& bitmap,
-				Resource const& res
+			HRESULT GetSize(
+				Size& size
 			);
 
 			HRESULT Resize(
@@ -174,12 +193,13 @@ namespace easy2d
 			~GraphicsDevice();
 
 		protected:
-			bool							initialized;
-			D2DResources					d2d;
-			D2D1_COLOR_F					clear_color_;
-			cpTextFormat					fps_text_format_;
-			cpTextLayout					fps_text_layout_;
-			std::map<size_t, cpBitmap>		bitmap_cache_;
+			bool						initialized;
+			float						opacity_;
+			D2DResources				d2d;
+			D2D1_COLOR_F				clear_color_;
+			cpTextFormat				fps_text_format_;
+			cpTextLayout				fps_text_layout_;
+			std::map<size_t, cpBitmap>	bitmap_cache_;
 		};
 
 		E2D_DECLARE_SINGLETON_TYPE(GraphicsDevice, Graphics);

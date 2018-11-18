@@ -129,15 +129,9 @@ namespace easy2d
 
 	void Sprite::OnDraw()
 	{
-		if (image_ && image_->GetBitmap())
+		if (image_)
 		{
-			auto crop_pos = image_->GetCropPos();
-			devices::Graphics::Instance()->DrawImage(
-				image_,
-				GetDisplayOpacity(),
-				Rect(Point(), GetTransform().size),
-				Rect(crop_pos, GetTransform().size)
-			);
+			devices::Graphics::Instance()->DrawImage(image_);
 		}
 	}
 }

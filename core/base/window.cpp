@@ -220,6 +220,17 @@ namespace easy2d
 		return scale_y;
 	}
 
+	void WindowImpl::Poll()
+	{
+		static MSG msg = {};
+
+		while (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+		{
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+	}
+
 	namespace
 	{
 		void GetContentScale(float* scale_x, float* scale_y)

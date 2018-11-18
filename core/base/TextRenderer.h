@@ -30,7 +30,7 @@ namespace easy2d
 		static HRESULT Create(
 			ITextRenderer** ppTextRenderer,
 			ID2D1Factory* pD2DFactory,
-			ID2D1HwndRenderTarget* pRT,
+			ID2D1RenderTarget* pRT,
 			ID2D1SolidColorBrush* pBrush
 		);
 
@@ -104,7 +104,7 @@ namespace easy2d
 	private:
 		ITextRenderer(
 			ID2D1Factory* pD2DFactory,
-			ID2D1HwndRenderTarget* pRT,
+			ID2D1RenderTarget* pRT,
 			ID2D1SolidColorBrush* pBrush
 		);
 
@@ -117,10 +117,10 @@ namespace easy2d
 		FLOAT					fOutlineWidth;
 		BOOL					bShowOutline_;
 		ID2D1Factory*			pD2DFactory_;
-		ID2D1HwndRenderTarget*	pRT_;
+		ID2D1RenderTarget*		pRT_;
 		ID2D1SolidColorBrush*	pBrush_;
 		ID2D1StrokeStyle*		pCurrStrokeStyle_;
 	};
 }
 
-E2D_DECLARE_D2D_SMART_PTR(easy2d::ITextRenderer, spTextRenderer);
+E2D_DECLARE_D2D_SMART_PTR(easy2d::ITextRenderer, cpTextRenderer);
