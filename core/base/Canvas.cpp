@@ -445,6 +445,12 @@ namespace easy2d
 		cache_expired_ = true;
 	}
 
+	void Canvas::Clear()
+	{
+		render_target_->Clear();
+		cache_expired_ = true;
+	}
+
 	spImage Canvas::ExportToImage() const
 	{
 		auto image = new Image(GetBitmap());

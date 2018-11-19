@@ -153,6 +153,9 @@ namespace easy2d
 		// 路径填充
 		void FillPath();
 
+		// 清空画布
+		void Clear();
+
 		// 设置填充颜色
 		void SetFillColor(
 			const Color& color
