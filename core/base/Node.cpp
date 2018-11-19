@@ -44,18 +44,16 @@ namespace easy2d
 		, parent_(nullptr)
 		, hash_name_(0)
 		, dirty_sort_(false)
-		, dirty_transform_(false)
 		, order_(0)
-		, transform_()
 		, opacity_(1.f)
 		, display_opacity_(1.f)
 		, children_()
+		, border_color_(Color::Red, 0.6f)
 		, initial_matrix_()
 		, final_matrix_()
-		, border_color_(Color::Red, 0.6f)
+		, pivot_(default_pivot_x, default_pivot_y)
+		, size_()
 	{
-		transform_.pivot.x = default_pivot_x;
-		transform_.pivot.y = default_pivot_y;
 	}
 
 	Node::~Node()
@@ -160,11 +158,22 @@ namespace easy2d
 				devices::Graphics::Instance()->DrawGeometry(border_, border_color_, 1.5f);
 			}
 
-			for (auto child = children_.First(); child; child = child->NextItem())
-			{
-				child->DrawBorder();
-			}
+			DrawChildrenBorder();
 		}
+	}
+
+	void Node::DrawChildrenBorder()
+	{
+		for (auto child = children_.First(); child; child = child->NextItem())
+		{
+			child->DrawBorder();
+		}
+	}
+
+	math::Matrix const & Node::GetTransformMatrix()
+	{
+		UpdateTransform();
+		return final_matrix_;
 	}
 
 	void Node::UpdateTransform()
@@ -174,9 +183,14 @@ namespace easy2d
 
 		dirty_transform_ = false;
 
-		final_matrix_ = transform_.ToMatrix();
+		Point center{ size_.width * pivot_.x, size_.height * pivot_.y };
+		final_matrix_ = math::Matrix::Scaling(transform_.scale, center)
+			* math::Matrix::Skewing(transform_.skew.x, transform_.skew.y, center)
+			* math::Matrix::Rotation(transform_.rotation, center)
+			* math::Matrix::Translation(transform_.position - center);
+
 		initial_matrix_ = final_matrix_ * math::Matrix::Translation(
-			Point{ transform_.size.width * transform_.pivot.x, transform_.size.height * transform_.pivot.y }
+			Point{ size_.width * pivot_.x, size_.height * pivot_.y }
 		);
 
 		if (parent_)
@@ -185,15 +199,35 @@ namespace easy2d
 			final_matrix_ = final_matrix_ * parent_->initial_matrix_;
 		}
 
-		// 重新构造轮廓
-		ThrowIfFailed(
-			devices::Graphics::Instance()->CreateRectGeometry(border_, final_matrix_, transform_.size)
-		);
+		UpdateBorder();
 
 		for (auto child = children_.First(); child; child = child->NextItem())
 		{
 			child->dirty_transform_ = true;
 		}
+	}
+
+	void Node::UpdateBorder()
+	{
+		cpRectangleGeometry rect;
+		cpTransformedGeometry transformed;
+
+		ThrowIfFailed(
+			devices::Graphics::Instance()->CreateRectangleGeometry(
+				rect,
+				Rect(Point{}, size_)
+			)
+		);
+
+		ThrowIfFailed(
+			devices::Graphics::Instance()->CreateTransformedGeometry(
+				transformed,
+				final_matrix_,
+				rect
+			)
+		);
+
+		border_ = transformed;
 	}
 
 	bool Node::Dispatch(const MouseEvent & e, bool handled)
@@ -258,143 +292,43 @@ namespace easy2d
 		}
 	}
 
-	void Node::SetPositionX(float x)
-	{
-		this->SetPosition(x, transform_.position.y);
-	}
-
-	void Node::SetPositionY(float y)
-	{
-		this->SetPosition(transform_.position.x, y);
-	}
-
-	void Node::SetPosition(const Point & p)
-	{
-		this->SetPosition(p.x, p.y);
-	}
-
-	void Node::SetPosition(float x, float y)
-	{
-		if (transform_.position.x == x && transform_.position.y == y)
-			return;
-
-		transform_.position.x = x;
-		transform_.position.y = y;
-		dirty_transform_ = true;
-	}
-
-	void Node::MoveBy(float x, float y)
-	{
-		this->SetPosition(transform_.position.x + x, transform_.position.y + y);
-	}
-
-	void Node::MoveBy(const Point & v)
-	{
-		this->MoveBy(v.x, v.y);
-	}
-
-	void Node::SetScaleX(float scale_x)
-	{
-		this->SetScale(scale_x, transform_.scale.y);
-	}
-
-	void Node::SetScaleY(float scale_y)
-	{
-		this->SetScale(transform_.scale.x, scale_y);
-	}
-
-	void Node::SetScale(float scale)
-	{
-		this->SetScale(scale, scale);
-	}
-
-	void Node::SetScale(float scale_x, float scale_y)
-	{
-		if (transform_.scale.x == scale_x && transform_.scale.y == scale_y)
-			return;
-
-		transform_.scale.x = scale_x;
-		transform_.scale.y = scale_y;
-		dirty_transform_ = true;
-	}
-
-	void Node::SetSkewX(float skew_x)
-	{
-		this->SetSkew(skew_x, transform_.skew.y);
-	}
-
-	void Node::SetSkewY(float skew_y)
-	{
-		this->SetSkew(transform_.skew.x, skew_y);
-	}
-
-	void Node::SetSkew(float skew_x, float skew_y)
-	{
-		if (transform_.skew.x == skew_x && transform_.skew.y == skew_y)
-			return;
-
-		transform_.skew.x = skew_x;
-		transform_.skew.y = skew_y;
-		dirty_transform_ = true;
-	}
-
-	void Node::SetRotation(float angle)
-	{
-		if (transform_.rotation == angle)
-			return;
-
-		transform_.rotation = angle;
-		dirty_transform_ = true;
-	}
-
 	void Node::SetOpacity(float opacity)
 	{
 		if (opacity_ == opacity)
 			return;
 
 		display_opacity_ = opacity_ = std::min(std::max(opacity, 0.f), 1.f);
-		// 更新节点透明度
 		UpdateOpacity();
 	}
 
 	void Node::SetPivotX(float pivot_x)
 	{
-		this->SetPivot(pivot_x, transform_.pivot.y);
+		this->SetPivot(pivot_x, pivot_.y);
 	}
 
 	void Node::SetPivotY(float pivot_y)
 	{
-		this->SetPivot(transform_.pivot.x, pivot_y);
+		this->SetPivot(pivot_.x, pivot_y);
 	}
 
 	void Node::SetPivot(float pivot_x, float pivot_y)
 	{
-		if (transform_.pivot.x == pivot_x && transform_.pivot.y == pivot_y)
+		if (pivot_.x == pivot_x && pivot_.y == pivot_y)
 			return;
 
-		transform_.pivot.x = pivot_x;
-		transform_.pivot.y = pivot_y;
+		pivot_.x = pivot_x;
+		pivot_.y = pivot_y;
 		dirty_transform_ = true;
 	}
 
 	void Node::SetWidth(float width)
 	{
-		this->SetSize(width, transform_.size.height);
+		this->SetSize(width, size_.height);
 	}
 
 	void Node::SetHeight(float height)
 	{
-		this->SetSize(transform_.size.width, height);
-	}
-
-	void Node::SetSize(float width, float height)
-	{
-		if (transform_.size.width == width && transform_.size.height == height)
-			return;
-
-		transform_.size.width = width;
-		transform_.size.height = height;
-		dirty_transform_ = true;
+		this->SetSize(size_.width, height);
 	}
 
 	void Node::SetSize(const Size& size)
@@ -402,9 +336,14 @@ namespace easy2d
 		this->SetSize(size.width, size.height);
 	}
 
-	Transform const& Node::GetTransform() const
+	void Node::SetSize(float width, float height)
 	{
-		return transform_;
+		if (size_.width == width && size_.height == height)
+			return;
+
+		size_.width = width;
+		size_.height = height;
+		dirty_transform_ = true;
 	}
 
 	void Node::SetTransform(Transform const& transform)
@@ -453,7 +392,7 @@ namespace easy2d
 
 	Rect Node::GetBounds()
 	{
-		return Rect(Point{}, transform_.size);
+		return Rect(Point{}, size_);
 	}
 
 	Node::Nodes Node::GetChildren(String const& name) const
@@ -541,7 +480,7 @@ namespace easy2d
 
 	bool Node::ContainsPoint(const Point& point)
 	{
-		if (transform_.size.width == 0.f || transform_.size.height == 0.f)
+		if (size_.width == 0.f || size_.height == 0.f)
 			return false;
 
 		UpdateTransform();
@@ -549,34 +488,12 @@ namespace easy2d
 		BOOL ret = 0;
 		ThrowIfFailed(
 			border_->FillContainsPoint(
-				D2D1::Point2F(point.x, point.y),
+				point,
 				D2D1::Matrix3x2F::Identity(),
 				&ret
 			)
 		);
-		return ret != 0;
-	}
-
-	bool Node::Intersects(spNode const& node)
-	{
-		if (transform_.size.width == 0.f || transform_.size.height == 0.f || node->transform_.size.width == 0.f || node->transform_.size.height == 0.f)
-			return false;
-
-		// 更新转换矩阵
-		UpdateTransform();
-		node->UpdateTransform();
-
-		// 获取相交状态
-		D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
-		ThrowIfFailed(
-			border_->CompareWithGeometry(
-				node->border_.Get(),
-				D2D1::Matrix3x2F::Identity(),
-				&relation
-			)
-		);
-		return relation != D2D1_GEOMETRY_RELATION_UNKNOWN &&
-			relation != D2D1_GEOMETRY_RELATION_DISJOINT;
+		return !!ret;
 	}
 
 	void Node::SetVisible(bool val)

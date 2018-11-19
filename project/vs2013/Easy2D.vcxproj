@@ -34,6 +34,8 @@
     <ClInclude Include="..\..\core\base\Debuger.h" />
     <ClInclude Include="..\..\core\base\Font.hpp" />
     <ClInclude Include="..\..\core\base\Game.h" />
+    <ClInclude Include="..\..\core\base\Geometry.h" />
+    <ClInclude Include="..\..\core\base\GeometryNode.h" />
     <ClInclude Include="..\..\core\base\Image.h" />
     <ClInclude Include="..\..\core\base\Input.h" />
     <ClInclude Include="..\..\core\base\intrusive\List.hpp" />
@@ -64,6 +66,7 @@
     <ClInclude Include="..\..\core\base\time.h" />
     <ClInclude Include="..\..\core\base\Transform.hpp" />
     <ClInclude Include="..\..\core\base\Transition.h" />
+    <ClInclude Include="..\..\core\base\Unit.h" />
     <ClInclude Include="..\..\core\base\window.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\math\Matrix.hpp" />
@@ -90,6 +93,8 @@
     <ClCompile Include="..\..\core\base\Color.cpp" />
     <ClCompile Include="..\..\core\base\Debuger.cpp" />
     <ClCompile Include="..\..\core\base\Game.cpp" />
+    <ClCompile Include="..\..\core\base\Geometry.cpp" />
+    <ClCompile Include="..\..\core\base\GeometryNode.cpp" />
     <ClCompile Include="..\..\core\base\Image.cpp" />
     <ClCompile Include="..\..\core\base\Input.cpp" />
     <ClCompile Include="..\..\core\base\KeyEvent.cpp" />
@@ -109,6 +114,7 @@
     <ClCompile Include="..\..\core\base\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\base\time.cpp" />
     <ClCompile Include="..\..\core\base\Transition.cpp" />
+    <ClCompile Include="..\..\core\base\Unit.cpp" />
     <ClCompile Include="..\..\core\base\window.cpp" />
     <ClCompile Include="..\..\core\math\rand.cpp" />
     <ClCompile Include="..\..\core\ui\Button.cpp" />

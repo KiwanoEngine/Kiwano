@@ -94,14 +94,13 @@ namespace easy2d
 
 		if (target)
 		{
-			Point currentPos = target->GetPosition();
-			Point diff = currentPos - prev_pos_;
+			Point diff = target->GetPosition() - prev_pos_;
 			start_pos_ = start_pos_ + diff;
 
-			Point newPos = start_pos_ + (delta_pos_ * process_);
-			target->SetPosition(newPos);
+			Point new_pos = start_pos_ + (delta_pos_ * process_);
+			target->SetPosition(new_pos);
 
-			prev_pos_ = newPos;
+			prev_pos_ = new_pos;
 		}
 	}
 
@@ -176,15 +175,13 @@ namespace easy2d
 			float y = height_ * 4 * frac * (1 - frac);
 			y += delta_pos_.y * process_;
 
-			Point currentPos = target->GetPosition();
-
-			Point diff = currentPos - prev_pos_;
+			Point diff = target->GetPosition() - prev_pos_;
 			start_pos_ = diff + start_pos_;
 
-			Point newPos = start_pos_ + Point(x, y);
-			target->SetPosition(newPos);
+			Point new_pos = start_pos_ + Point(x, y);
+			target->SetPosition(new_pos);
 
-			prev_pos_ = newPos;
+			prev_pos_ = new_pos;
 		}
 	}
 

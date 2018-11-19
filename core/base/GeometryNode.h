@@ -19,57 +19,74 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
+#include "Geometry.h"
+#include "Node.h"
 
 namespace easy2d
 {
-	// 资源数据
-	// 
-	// Usage:
-	//     如果需要手动加载资源, 可以通过 Resource::Load 方法获取资源内容
-	//     ResourceData data;
-	//     if (res.Load(&data)) {
-	//         LPVOID data = data.buffer;
-	//         DWORD size_ = data.buffer_size;
-	//     }
-	//
-	struct ResourceData
-	{
-		LPVOID buffer;
-		DWORD buffer_size;
-	};
-
-
-	// 资源
-	// 
-	// Usage:
-	//     Resource 用于获取可执行文件 (exe) 中的资源, 必须在构造函数中指定它的
-	//     资源类型和名称标识符。
-	//     例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1,
-	//     那么可以这样指定该资源: Resource res(MAKEINTRESOURCE(IDR_WAVE_1), L"WAVE");
-	// 
-	//     了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
-	//
-	class Resource
+	// 几何图形
+	class GeometryNode
+		: public Node
 	{
 	public:
-		Resource(
-			LPCWSTR name,	/* 资源名称 */
-			LPCWSTR type	/* 资源类型 */
+		GeometryNode();
+
+		GeometryNode(
+			spGeometry const& geometry
 		);
 
-		bool Load(
-			ResourceData* buffer
-		) const;
+		virtual ~GeometryNode();
 
-		LPCWSTR	GetName() const;
+		// 设置形状
+		void SetGeometry(
+			spGeometry const& geometry
+		);
 
-		LPCWSTR	GetType() const;
+		// 设置填充颜色
+		void SetFillColor(
+			const Color& color
+		);
 
-		size_t GetHashCode() const;
+		// 设置线条颜色
+		void SetStrokeColor(
+			const Color& color
+		);
 
-	private:
-		LPCWSTR	name_;
-		LPCWSTR	type_;
+		// 设置线条宽度
+		void SetStrokeWidth(
+			float width
+		);
+
+		// 设置线条相交样式
+		void SetOutlineJoinStyle(
+			StrokeStyle outline_join
+		);
+
+		// 获取形状
+		spGeometry const& GetGeometry() const { return geometry_; }
+
+		// 获取填充颜色
+		Color GetFillColor() const { return fill_color_; }
+
+		// 获取线条颜色
+		Color GetStrokeColor() const { return stroke_color_; }
+
+		// 获取线条宽度
+		float GetStrokeWidth() const { return stroke_width_; }
+
+		// 获取线条相交样式
+		StrokeStyle SetOutlineJoinStyle() const { return outline_join_; }
+
+		virtual void OnDraw() override;
+
+	protected:
+		virtual void DrawBorder() override;
+
+	protected:
+		Color		fill_color_;
+		Color		stroke_color_;
+		float		stroke_width_;
+		StrokeStyle	outline_join_;
+		spGeometry	geometry_;
 	};
 }

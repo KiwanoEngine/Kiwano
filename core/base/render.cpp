@@ -168,41 +168,62 @@ namespace easy2d
 			bitmap_cache_.clear();
 		}
 
-		HRESULT GraphicsDevice::CreateRectGeometry(
-			cpGeometry& geometry,
-			const math::Matrix& matrix,
-			const Size& size
+		HRESULT GraphicsDevice::CreateRectangleGeometry(cpRectangleGeometry & geo, Rect const& rect) const
+		{
+			if (!d2d.factory)
+				return E_UNEXPECTED;
+
+			cpRectangleGeometry rectangle;
+			HRESULT hr = d2d.factory->CreateRectangleGeometry(
+				rect,
+				&rectangle
+			);
+
+			if (SUCCEEDED(hr))
+				geo = rectangle;
+			return hr;
+		}
+
+		HRESULT GraphicsDevice::CreateEllipseGeometry(cpEllipseGeometry & geo, Point const & center, float radius_x, float radius_y) const
+		{
+			if (!d2d.factory)
+				return E_UNEXPECTED;
+
+			cpEllipseGeometry ellipse;
+			HRESULT hr = d2d.factory->CreateEllipseGeometry(
+				D2D1::Ellipse(
+					center,
+					radius_x,
+					radius_y
+				),
+				&ellipse
+			);
+
+			if (SUCCEEDED(hr))
+				geo = ellipse;
+			return hr;
+		}
+
+		HRESULT GraphicsDevice::CreateTransformedGeometry(
+			cpTransformedGeometry& transformed,
+			math::Matrix const& matrix,
+			cpGeometry const& geo
 		) const
 		{
 			if (!d2d.factory)
 				return E_UNEXPECTED;
 
-			HRESULT hr;
-
-			ID2D1RectangleGeometry * rectangle = nullptr;
-			ID2D1TransformedGeometry * transformed = nullptr;
-
-			hr = d2d.factory->CreateRectangleGeometry(
-				D2D1::RectF(0, 0, size.width, size.height),
-				&rectangle
+			cpTransformedGeometry transformed_tmp;
+			HRESULT hr = d2d.factory->CreateTransformedGeometry(
+				geo.Get(),
+				ConvertToD2DMatrix(matrix),
+				&transformed_tmp
 			);
 
 			if (SUCCEEDED(hr))
 			{
-				hr = d2d.factory->CreateTransformedGeometry(
-					rectangle,
-					ConvertToD2DMatrix(matrix),
-					&transformed
-				);
+				transformed = transformed_tmp;
 			}
-
-			if (SUCCEEDED(hr))
-			{
-				geometry = transformed;
-			}
-
-			SafeRelease(rectangle);
-			SafeRelease(transformed);
 			return hr;
 		}
 
@@ -375,7 +396,7 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::DrawGeometry(
 			cpGeometry const& geometry,
-			Color const& border_color,
+			Color const& stroke_color,
 			float stroke_width,
 			StrokeStyle stroke
 		)
@@ -387,12 +408,29 @@ namespace easy2d
 			if (window_occluded)
 				return S_OK;
 
-			d2d.solid_brush->SetColor(border_color);
+			d2d.solid_brush->SetColor(stroke_color);
 			d2d.render_target->DrawGeometry(
 				geometry.Get(),
 				d2d.solid_brush.Get(),
 				stroke_width,
 				GetStrokeStyle(stroke).Get()
+			);
+			return S_OK;
+		}
+
+		HRESULT GraphicsDevice::FillGeometry(cpGeometry const & geometry, const Color & fill_color)
+		{
+			if (!d2d.solid_brush ||
+				!d2d.render_target)
+				return E_UNEXPECTED;
+
+			if (window_occluded)
+				return S_OK;
+
+			d2d.solid_brush->SetColor(fill_color);
+			d2d.render_target->FillGeometry(
+				geometry.Get(),
+				d2d.solid_brush.Get()
 			);
 			return S_OK;
 		}
@@ -833,5 +871,6 @@ namespace easy2d
 				);
 			}
 		}
+
 	}
 }

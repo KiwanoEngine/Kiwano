@@ -21,11 +21,11 @@
 #pragma once
 #include "base.hpp"
 #include "time.h"
+#include "Unit.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
 #include "ActionManager.h"
 #include "TaskManager.h"
-#include "Transform.hpp"
 #include "intrusive/List.hpp"
 
 namespace easy2d
@@ -34,7 +34,7 @@ namespace easy2d
 
 	// 节点
 	class Node
-		: public ObjectBase
+		: public Unit
 		, public ActionManager
 		, public TaskManager
 		, protected intrusive::ListItem<spNode>
@@ -58,162 +58,53 @@ namespace easy2d
 		// 更新节点
 		virtual void OnUpdate(Duration const& dt) {}
 
-		// 获取节点显示状态
+		// 获取显示状态
 		bool IsVisible() const { return visible_; }
 
-		// 获取节点名称
+		// 获取名称
 		String const& GetName() const { return name_; }
 
-		// 获取节点名称的 Hash 值
+		// 获取名称的 Hash 值
 		size_t GetHashName() const { return hash_name_; }
 
-		// 获取节点绘图顺序
+		// 获取绘图顺序
 		int GetOrder() const { return order_; }
 
-		// 获取节点坐标
-		virtual const Point& GetPosition() const { return transform_.position; }
+		// 获取宽度
+		virtual float GetWidth() const { return size_.width * transform_.scale.x; }
 
-		// 获取节点宽度
-		virtual float GetWidth() const { return transform_.size.width * transform_.scale.x; }
+		// 获取高度
+		virtual float GetHeight() const { return size_.height * transform_.scale.y; }
 
-		// 获取节点高度
-		virtual float GetHeight() const { return transform_.size.height * transform_.scale.y; }
-
-		// 获取节点大小
+		// 获取大小
 		Size GetSize() const { return Size{ GetWidth(), GetHeight() }; }
 
-		// 获取节点的支点
-		virtual float GetPivotX() const { return transform_.pivot.x; }
+		// 获取 x 方向支点
+		virtual float GetPivotX() const { return pivot_.x; }
 
-		// 获取节点的支点
-		virtual float GetPivotY() const { return transform_.pivot.y; }
+		// 获取 y 方向支点
+		virtual float GetPivotY() const { return pivot_.y; }
 
-		// 获取节点横向缩放比例
-		virtual float GetScaleX() const { return transform_.scale.x; }
-
-		// 获取节点纵向缩放比例
-		virtual float GetScaleY() const { return transform_.scale.y; }
-
-		// 获取节点横向错切角度
-		virtual float GetSkewX() const { return transform_.skew.x; }
-
-		// 获取节点纵向错切角度
-		virtual float GetSkewY() const { return transform_.skew.y; }
-
-		// 获取节点旋转角度
-		virtual float GetRotation() const { return transform_.rotation; }
-
-		// 获取节点透明度
+		// 获取透明度
 		virtual float GetOpacity() const { return opacity_; }
 
 		// 获取包围盒
 		virtual Rect GetBounds();
 
+		// 获取二维变换矩阵
+		virtual math::Matrix const& GetTransformMatrix() override;
+
 		// 获取父节点
 		virtual spNode GetParent() const { return parent_; }
 
-		// 设置节点是否显示
+		// 设置是否显示
 		void SetVisible(
 			bool val
 		);
 
-		// 设置节点名称
+		// 设置名称
 		void SetName(
 			String const& name
-		);
-
-		// 设置节点横坐标
-		void SetPositionX(
-			float x
-		);
-
-		// 设置节点纵坐标
-		void SetPositionY(
-			float y
-		);
-
-		// 设置节点坐标
-		void SetPosition(
-			const Point & point
-		);
-
-		// 设置节点坐标
-		void SetPosition(
-			float x,
-			float y
-		);
-
-		// 移动节点
-		void MoveBy(
-			float x,
-			float y
-		);
-
-		// 移动节点
-		void MoveBy(
-			const Point & vector
-		);
-
-		// 设置节点绘图顺序
-		// 默认为 0
-		void SetOrder(
-			int order
-		);
-
-		// 设置横向缩放比例
-		// 默认为 1.0
-		void SetScaleX(
-			float scale_x
-		);
-
-		// 设置纵向缩放比例
-		// 默认为 1.0
-		void SetScaleY(
-			float scale_y
-		);
-
-		// 设置缩放比例
-		// 默认为 (1.0, 1.0)
-		void SetScale(
-			float scale_x,
-			float scale_y
-		);
-
-		// 设置缩放比例
-		// 默认为 1.0
-		void SetScale(
-			float scale
-		);
-
-		// 设置横向错切角度
-		// 默认为 0
-		void SetSkewX(
-			float skew_x
-		);
-
-		// 设置纵向错切角度
-		// 默认为 0
-		void SetSkewY(
-			float skew_y
-		);
-
-		// 设置错切角度
-		// 默认为 (0, 0)
-		void SetSkew(
-			float skew_x,
-			float skew_y
-		);
-
-		// 设置旋转角度
-		// 默认为 0
-		void SetRotation(
-			float rotation
-		);
-
-		// 设置透明度
-		// 默认为 1.0, 范围 [0, 1]
-		void SetOpacity(
-			float opacity
 		);
 
 		// 设置支点的横向位置
@@ -235,46 +126,51 @@ namespace easy2d
 			float pivot_y
 		);
 
-		// 修改节点宽度
+		// 修改宽度
 		void SetWidth(
 			float width
 		);
 
-		// 修改节点高度
+		// 修改高度
 		void SetHeight(
 			float height
 		);
 
-		// 修改节点大小
+		// 修改大小
 		void SetSize(
 			float width,
 			float height
 		);
 
-		// 修改节点大小
+		// 修改大小
 		void SetSize(
 			const Size & size
 		);
 
-		// 设置节点边缘颜色
-		void SetBorderColor(
-			const Color& color
+		virtual void SetTransform(
+			Transform const& transform
+		) override;
+
+		// 设置透明度
+		// 默认为 1.0, 范围 [0, 1]
+		void SetOpacity(
+			float opacity
 		);
 
-		Transform const& GetTransform() const;
+		// 设置绘图顺序
+		// 默认为 0
+		void SetOrder(
+			int order
+		);
 
-		void SetTransform(
-			Transform const& transform
+		// 设置边框颜色
+		void SetBorderColor(
+			const Color& color
 		);
 
 		// 判断点是否在节点内
 		bool ContainsPoint(
 			const Point& point
-		);
-
-		// 判断两物体是否相交
-		bool Intersects(
-			spNode const& node
 		);
 
 		// 添加子节点
@@ -340,11 +236,15 @@ namespace easy2d
 	protected:
 		virtual void Update(Duration const& dt);
 
+		virtual void DrawBorder();
+
+		void DrawChildrenBorder();
+
+		void UpdateBorder();
+
 		void UpdateTransform();
 
 		void UpdateOpacity();
-
-		void DrawBorder();
 
 	protected:
 		String			name_;
@@ -354,12 +254,12 @@ namespace easy2d
 		int				order_;
 		bool			visible_;
 		bool			dirty_sort_;
-		bool			dirty_transform_;
 		Node*			parent_;
 		Color			border_color_;
 		Children		children_;
 		cpGeometry		border_;
-		Transform		transform_;
+		Point			pivot_;
+		Size			size_;
 		math::Matrix	initial_matrix_;
 		math::Matrix	final_matrix_;
 	};
