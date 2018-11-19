@@ -28,6 +28,9 @@ namespace easy2d
 	{
 		InputDevice::InputDevice()
 			: initialized(false)
+			, hwnd_(nullptr)
+			, scale_x_(1.f)
+			, scale_y_(1.f)
 		{
 			ZeroMemory(keys_, sizeof(keys_));
 			ZeroMemory(keys_cache_, sizeof(keys_cache_));
@@ -38,26 +41,30 @@ namespace easy2d
 			E2D_LOG("Destroying input device");
 		}
 
-		void InputDevice::Init(bool debug)
+		void InputDevice::Init(HWND hwnd, float scale_x, float scale_y, bool debug)
 		{
 			if (initialized)
 				return;
 
 			E2D_LOG("Initing input device");
 
+			hwnd_ = hwnd;
+			scale_x_ = scale_x;
+			scale_y_ = scale_y;
+
 			initialized = true;
 		}
 
-		void InputDevice::Update(HWND hwnd, float scale_x, float scale_y)
+		void InputDevice::Update()
 		{
 			memcpy(keys_cache_, keys_, sizeof(keys_cache_));
 			GetKeyboardState(keys_);
 
 			POINT client_cursor_pos;
 			GetCursorPos(&client_cursor_pos);
-			ScreenToClient(hwnd, &client_cursor_pos);
+			ScreenToClient(hwnd_, &client_cursor_pos);
 
-			mouse_pos_ = Point(client_cursor_pos.x * scale_x, client_cursor_pos.y * scale_y);
+			mouse_pos_ = Point(client_cursor_pos.x * scale_x_, client_cursor_pos.y * scale_y_);
 		}
 
 		bool InputDevice::IsDown(KeyCode code)

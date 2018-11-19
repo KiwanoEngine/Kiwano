@@ -89,11 +89,10 @@ namespace easy2d
 		// 获取当前场景
 		spScene const& GetCurrentScene();
 
-		void DrawScene();
+	private:
+		void Render();
 
-		void UpdateScene(
-			Duration const& dt
-		);
+		void Update();
 
 		void Dispatch(
 			MouseEvent const& e
@@ -103,10 +102,14 @@ namespace easy2d
 			KeyEvent const& e
 		);
 
+		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+
 	private:
 		bool			initialized_;
 		bool			debug_enabled_;
 		bool			quit_;
+		bool			window_inactived_;
+		HWND			hwnd_;
 		spScene			curr_scene_;
 		spScene			next_scene_;
 		spTransition	transition_;

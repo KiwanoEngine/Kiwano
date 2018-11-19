@@ -32,7 +32,7 @@ namespace easy2d
 			E2D_DECLARE_SINGLETON(InputDevice);
 
 		public:
-			void Init(bool debug);
+			void Init(HWND hwnd, float scale_x, float scale_y, bool debug);
 
 			// 检测键盘某按键是否正被按下
 			bool IsDown(
@@ -63,12 +63,7 @@ namespace easy2d
 			// 获得鼠标坐标值
 			Point GetMousePos();
 
-			// 刷新设备状态
-			void Update(
-				HWND hwnd,
-				float scale_x,
-				float scale_y
-			);
+			void Update();
 
 		protected:
 			InputDevice();
@@ -76,10 +71,13 @@ namespace easy2d
 			~InputDevice();
 
 		protected:
-			bool initialized;
-			BYTE keys_[256];
-			BYTE keys_cache_[256];
-			Point mouse_pos_;
+			bool	initialized;
+			HWND	hwnd_;
+			float	scale_x_;
+			float	scale_y_;
+			BYTE	keys_[256];
+			BYTE	keys_cache_[256];
+			Point	mouse_pos_;
 		};
 
 		E2D_DECLARE_SINGLETON_TYPE(InputDevice, Input);
