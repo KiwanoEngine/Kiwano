@@ -30,7 +30,7 @@ namespace easy2d
 
     // 定时任务
 	class Task
-		: public RefCounter
+		: public ObjectBase
 		, protected intrusive::ListItem<spTask>
 	{
 		friend class TaskManager;

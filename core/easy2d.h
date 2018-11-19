@@ -54,6 +54,7 @@
 #include "base/intrusive/List.hpp"
 
 #include "base/RefCounter.hpp"
+#include "base/ObjectBase.h"
 #include "base/Image.h"
 #include "base/Node.h"
 #include "base/Scene.h"
@@ -68,6 +69,7 @@
 #include "base/Animation.h"
 #include "base/CallFunc.h"
 #include "base/Transition.h"
+#include "base/Debuger.h"
 
 #include "base/KeyEvent.h"
 #include "base/MouseEvent.h"

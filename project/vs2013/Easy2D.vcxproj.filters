@@ -173,6 +173,9 @@
     <ClInclude Include="..\..\core\utils\string.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\ObjectBase.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -305,6 +308,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\utils\string.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\ObjectBase.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
