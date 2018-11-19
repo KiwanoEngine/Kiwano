@@ -41,11 +41,16 @@ namespace easy2d
 	E2D_DECLARE_D2D_SMART_PTR(ID2D1BitmapRenderTarget, cpBitmapRenderTarget);
 	E2D_DECLARE_D2D_SMART_PTR(ID2D1StrokeStyle, cpStrokeStyle);
 
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1Geometry, cpGeometry);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1RectangleGeometry, cpRectangleGeometry);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1EllipseGeometry, cpEllipseGeometry);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1GeometryGroup, cpGeometryGroup);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1PathGeometry, cpPathGeometry);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1TransformedGeometry, cpTransformedGeometry);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1GeometrySink, cpGeometrySink);
+
 	E2D_DECLARE_D2D_SMART_PTR(ID2D1Layer, cpLayer);
 	E2D_DECLARE_D2D_SMART_PTR(ID2D1Bitmap, cpBitmap);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1Geometry, cpGeometry);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1PathGeometry, cpPathGeometry);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1GeometrySink, cpGeometrySink);
 	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextFormat, cpTextFormat);
 	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextLayout, cpTextLayout);
 
@@ -59,11 +64,13 @@ namespace easy2d
 		if (ptr) { ptr->Release(); }
 	}
 
-	inline void SafeRelease(IUnknown* ptr)
+	template <typename T>
+	inline void SafeRelease(T*& ptr)
 	{
 		if (ptr != nullptr)
 		{
 			ptr->Release();
+			ptr = nullptr;
 		}
 	}
 }

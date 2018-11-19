@@ -176,6 +176,15 @@
     <ClInclude Include="..\..\core\base\ObjectBase.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\Geometry.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\GeometryNode.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\Unit.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -310,6 +319,15 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\ObjectBase.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\Geometry.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\GeometryNode.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\Unit.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

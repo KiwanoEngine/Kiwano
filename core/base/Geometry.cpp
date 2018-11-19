@@ -1,0 +1,291 @@
+// Copyright (c) 2016-2018 Easy2D - Nomango
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+#include "Geometry.h"
+#include "render.h"
+#include "logs.h"
+
+namespace easy2d
+{
+	//-------------------------------------------------------
+	// Geometry
+	//-------------------------------------------------------
+
+	Geometry::Geometry()
+	{
+	}
+
+	Geometry::~Geometry()
+	{
+	}
+
+	float Geometry::GetLength()
+	{
+		float length = 0.f;
+		if (geo_)
+		{
+			// no matter it failed or not
+			geo_->ComputeLength(
+				ConvertToD2DMatrix(GetTransformMatrix()),
+				&length
+			);
+		}
+		return length;
+	}
+
+	bool Geometry::ComputePointAt(float length, Point* point, Point* tangent)
+	{
+		if (geo_)
+		{
+			D2D1_POINT_2F point_tmp, tangent_tmp;
+			if (SUCCEEDED(geo_->ComputePointAtLength(
+				length,
+				ConvertToD2DMatrix(GetTransformMatrix()),
+				&point_tmp,
+				&tangent_tmp)))
+			{
+				(*point).x = point_tmp.x;
+				(*point).y = point_tmp.y;
+				(*tangent).x = tangent_tmp.x;
+				(*tangent).y = tangent_tmp.y;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool Geometry::ContainsPoint(Point const & point)
+	{
+		if (!geo_)
+			return false;
+
+		BOOL ret = 0;
+		// no matter it failed or not
+		geo_->FillContainsPoint(
+			point,
+			ConvertToD2DMatrix(GetTransformMatrix()),
+			&ret
+		);
+		return !!ret;
+	}
+
+	GeometryRelation Geometry::GetRelationWith(spGeometry const & other)
+	{
+		if (!geo_ || !other->geo_)
+			return GeometryRelation::Unknown;
+
+		cpTransformedGeometry transformed;
+		HRESULT hr = devices::Graphics::Instance()->CreateTransformedGeometry(
+			transformed,
+			GetTransformMatrix(),
+			geo_.Get()
+		);
+
+		D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
+		
+		if (SUCCEEDED(hr))
+		{
+			transformed->CompareWithGeometry(
+				other->geo_.Get(),
+				ConvertToD2DMatrix(other->GetTransformMatrix()),
+				&relation
+			);
+		}
+		return GeometryRelation(relation);
+	}
+
+
+	//-------------------------------------------------------
+	// RectangleGeometry
+	//-------------------------------------------------------
+
+	RectangleGeometry::RectangleGeometry()
+	{
+	}
+
+	RectangleGeometry::RectangleGeometry(Size const & rect_size)
+	{
+		SetSize(rect_size);
+	}
+
+	RectangleGeometry::~RectangleGeometry()
+	{
+	}
+
+	void RectangleGeometry::SetSize(Size const & rect_size)
+	{
+		cpRectangleGeometry geo;
+		if (SUCCEEDED(devices::Graphics::Instance()->CreateRectangleGeometry(geo, Rect(Point{}, rect_size))))
+		{
+			geo_ = geo;
+			size_ = rect_size;
+		}
+	}
+
+
+	//-------------------------------------------------------
+	// CircleGeometry
+	//-------------------------------------------------------
+
+	CircleGeometry::CircleGeometry()
+	{
+	}
+
+	CircleGeometry::CircleGeometry(float radius)
+	{
+		SetRadius(radius);
+	}
+
+	CircleGeometry::~CircleGeometry()
+	{
+	}
+
+	void CircleGeometry::SetRadius(float radius)
+	{
+		cpEllipseGeometry geo;
+		if (SUCCEEDED(devices::Graphics::Instance()->CreateEllipseGeometry(geo, Point{}, radius, radius)))
+		{
+			geo_ = geo;
+			radius_ = radius;
+		}
+	}
+
+
+	//-------------------------------------------------------
+	// EllipseGeometry
+	//-------------------------------------------------------
+
+	EllipseGeometry::EllipseGeometry()
+	{
+	}
+
+	EllipseGeometry::EllipseGeometry(float radius_x, float radius_y)
+	{
+		SetRadius(radius_x, radius_y);
+	}
+
+	EllipseGeometry::~EllipseGeometry()
+	{
+	}
+
+	void EllipseGeometry::SetRadius(float radius_x, float radius_y)
+	{
+		cpEllipseGeometry geo;
+		if (SUCCEEDED(devices::Graphics::Instance()->CreateEllipseGeometry(geo, Point{}, radius_x, radius_y)))
+		{
+			geo_ = geo;
+			radius_x_ = radius_x;
+			radius_y_ = radius_y;
+		}
+	}
+
+
+	//-------------------------------------------------------
+	// PathGeometry
+	//-------------------------------------------------------
+
+	PathGeometry::PathGeometry()
+	{
+	}
+
+	PathGeometry::~PathGeometry()
+	{
+	}
+
+	void PathGeometry::BeginPath()
+	{
+		current_geometry_ = nullptr;
+
+		ThrowIfFailed(
+			devices::Graphics::Instance()->CreatePathGeometry(current_geometry_)
+		);
+
+		ThrowIfFailed(
+			current_geometry_->Open(&current_sink_)
+		);
+
+		current_sink_->BeginFigure(D2D1::Point2F(), D2D1_FIGURE_BEGIN_FILLED);
+	}
+
+	void PathGeometry::EndPath(bool closed)
+	{
+		if (current_sink_)
+		{
+			current_sink_->EndFigure(closed ? D2D1_FIGURE_END_CLOSED : D2D1_FIGURE_END_OPEN);
+			ThrowIfFailed(
+				current_sink_->Close()
+			);
+
+			geo_ = current_geometry_;
+
+			current_sink_ = nullptr;
+			current_geometry_ = nullptr;
+		}
+	}
+
+	void PathGeometry::AddLine(Point const & point)
+	{
+		if (current_sink_)
+			current_sink_->AddLine(point);
+	}
+
+	void PathGeometry::AddLines(std::vector<Point> const& points)
+	{
+		if (current_sink_)
+		{
+			if (!points.empty())
+			{
+				size_t size = points.size();
+				std::vector<D2D1_POINT_2F> d2d_points(size);
+				for (size_t i = 0; i < size; ++i)
+				{
+					d2d_points[i] = points[i];
+				}
+
+				current_sink_->AddLines(
+					&d2d_points[0],
+					static_cast<UINT32>(size)
+				);
+			}
+		}
+	}
+
+	void PathGeometry::AddBezier(Point const & point1, Point const & point2, Point const & point3)
+	{
+		if (current_sink_)
+		{
+			current_sink_->AddBezier(
+				D2D1::BezierSegment(
+					point1,
+					point2,
+					point3
+				)
+			);
+		}
+	}
+
+	void PathGeometry::ClearPath()
+	{
+		geo_ = nullptr;
+		current_sink_ = nullptr;
+		current_geometry_ = nullptr;
+	}
+
+}

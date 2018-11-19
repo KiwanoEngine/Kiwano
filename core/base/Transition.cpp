@@ -106,7 +106,7 @@ namespace easy2d
 		if (out_scene_)
 		{
 			graphics->PushClip(
-				out_scene_->GetTransform().ToMatrix(),
+				out_scene_->GetTransformMatrix(),
 				window_size_
 			);
 			graphics->PushLayer(out_layer_, out_layer_prop_);
@@ -120,7 +120,7 @@ namespace easy2d
 		if (in_scene_)
 		{
 			graphics->PushClip(
-				in_scene_->GetTransform().ToMatrix(),
+				in_scene_->GetTransformMatrix(),
 				window_size_
 			);
 			graphics->PushLayer(in_layer_, in_layer_prop_);
@@ -332,17 +332,18 @@ namespace easy2d
 		Transition::Init(prev, next);
 
 		auto transform = Transform{};
-		transform.pivot = Point{ 0.5f, 0.5f };
 		transform.position = Point{ window_size_.width / 2, window_size_.height / 2 };
 
 		if (out_scene_)
 		{
 			out_scene_->SetTransform(transform);
+			out_scene_->SetPivot(0.5f, 0.5f);
 		}
 
 		if (in_scene_)
 		{
 			in_scene_->SetTransform(transform);
+			in_scene_->SetPivot(0.5f, 0.5f);
 		}
 
 		in_layer_prop_.opacity = 0;
@@ -383,11 +384,13 @@ namespace easy2d
 		if (out_scene_)
 		{
 			out_scene_->SetTransform(Transform{});
+			out_scene_->SetPivot(0.f, 0.f);
 		}
 
 		if (in_scene_)
 		{
 			in_scene_->SetTransform(Transform{});
+			in_scene_->SetPivot(0.f, 0.f);
 		}
 	}
 }

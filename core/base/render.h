@@ -68,10 +68,22 @@ namespace easy2d
 
 			void CreateDeviceResources(HWND hwnd);
 
-			HRESULT CreateRectGeometry(
-				cpGeometry& geometry,
-				const math::Matrix& matrix,
-				const Size& size
+			HRESULT CreateRectangleGeometry(
+				cpRectangleGeometry& geo,
+				Rect const& rect
+			) const;
+
+			HRESULT CreateEllipseGeometry(
+				cpEllipseGeometry& geo,
+				Point const& center,
+				float radius_x,
+				float radius_y
+			) const;
+
+			HRESULT CreateTransformedGeometry(
+				cpTransformedGeometry& transformed,
+				math::Matrix const& matrix,
+				cpGeometry const& geo
 			) const;
 
 			HRESULT CreatePathGeometry(
@@ -142,9 +154,14 @@ namespace easy2d
 
 			HRESULT DrawGeometry(
 				cpGeometry const& geometry,
-				const Color& border_color,
+				const Color& stroke_color,
 				float stroke_width,
 				StrokeStyle stroke = StrokeStyle::Miter
+			);
+
+			HRESULT FillGeometry(
+				cpGeometry const& geometry,
+				const Color& fill_color
 			);
 
 			HRESULT DrawImage(
