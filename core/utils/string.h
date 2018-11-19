@@ -23,41 +23,7 @@
 
 namespace easy2d
 {
-	// 字体粗细值
-	enum FontWeight : unsigned int
-	{
-		Thin = 100,
-		ExtraLight = 200,
-		Light = 300,
-		Normal = 400,
-		Medium = 500,
-		Bold = 700,
-		ExtraBold = 800,
-		Black = 900,
-		ExtraBlack = 950
-	};
+	std::wstring StringMultiByteToWideChar(const std::string& str);
 
-	// 字体
-	class Font
-	{
-	public:
-		std::wstring	family;		// 字体族
-		float			size;		// 字号
-		unsigned int	weight;		// 粗细值
-		bool			italic;		// 是否斜体
-
-	public:
-		Font(
-			const std::wstring& family	= L"",
-			float size					= 22,
-			unsigned int weight			= FontWeight::Normal,
-			bool italic					= false
-		)
-			: family(family)
-			, size(size)
-			, weight(weight)
-			, italic(italic)
-		{
-		}
-	};
+	std::string StringWideCharToMultiByte(const std::wstring& wstr);
 }

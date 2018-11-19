@@ -785,69 +785,6 @@ namespace easy2d
 			clear_color_ = color;
 		}
 
-		void GraphicsDevice::DrawDebugInfo()
-		{
-			static int render_times_ = 0;
-			static auto last_render_time_ = time::Now();
-
-			int64_t duration = (time::Now() - last_render_time_).Milliseconds();
-
-			if (!fps_text_format_)
-			{
-				ThrowIfFailed(
-					d2d.write_factory->CreateTextFormat(
-						L"",
-						nullptr,
-						DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_NORMAL,
-						DWRITE_FONT_STYLE_NORMAL,
-						DWRITE_FONT_STRETCH_NORMAL,
-						20,
-						L"",
-						&fps_text_format_
-					)
-				);
-
-				fps_text_format_->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-			}
-
-			++render_times_;
-			if (duration >= 100LL)
-			{
-				wchar_t fps_text[12] = {};
-				int len = swprintf_s(fps_text, L"FPS: %.1f", 1000.f / static_cast<float>(duration) * render_times_);
-
-				last_render_time_ = time::Now();
-				render_times_ = 0;
-
-				fps_text_layout_ = nullptr;
-				ThrowIfFailed(
-					d2d.write_factory->CreateTextLayout(
-						fps_text,
-						len,
-						fps_text_format_.Get(),
-						0,
-						0,
-						&fps_text_layout_
-					)
-				);
-			}
-
-			if (fps_text_layout_)
-			{
-				d2d.render_target->SetTransform(D2D1::Matrix3x2F::Identity());
-				d2d.solid_brush->SetOpacity(1.0f);
-				d2d.text_renderer->SetTextStyle(
-					D2D1::ColorF(D2D1::ColorF::White),
-					TRUE,
-					D2D1::ColorF(D2D1::ColorF::Black, 0.4f),
-					1.5f,
-					d2d.round_stroke_style.Get()
-				);
-
-				fps_text_layout_->Draw(nullptr, d2d.text_renderer.Get(), 10, 0);
-			}
-		}
-
 		void GraphicsDevice::CreateDeviceResources(HWND hwnd)
 		{
 			if (!d2d.render_target)

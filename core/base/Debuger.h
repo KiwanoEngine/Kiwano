@@ -19,45 +19,33 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <string>
+#include "Text.h"
+#include "Singleton.hpp"
+#include "time.h"
 
 namespace easy2d
 {
-	// 字体粗细值
-	enum FontWeight : unsigned int
+	class DebugerNode
+		: public Node
 	{
-		Thin = 100,
-		ExtraLight = 200,
-		Light = 300,
-		Normal = 400,
-		Medium = 500,
-		Bold = 700,
-		ExtraBold = 800,
-		Black = 900,
-		ExtraBlack = 950
-	};
-
-	// 字体
-	class Font
-	{
-	public:
-		std::wstring	family;		// 字体族
-		float			size;		// 字号
-		unsigned int	weight;		// 粗细值
-		bool			italic;		// 是否斜体
+		E2D_DECLARE_SINGLETON(DebugerNode);
 
 	public:
-		Font(
-			const std::wstring& family	= L"",
-			float size					= 22,
-			unsigned int weight			= FontWeight::Normal,
-			bool italic					= false
-		)
-			: family(family)
-			, size(size)
-			, weight(weight)
-			, italic(italic)
-		{
-		}
+		DebugerNode();
+
+		virtual ~DebugerNode();
+
+		void AddDebugText(String const& text);
+
+		void ClearDebugText();
+
+		void OnUpdate(Duration const& dt) override;
+
+	protected:
+		spText debug_text_;
+		std::vector<TimePoint> frame_time_;
+		std::vector<String> texts_;
 	};
+
+	E2D_DECLARE_SINGLETON_TYPE(DebugerNode, Debuger);
 }

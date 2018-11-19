@@ -124,12 +124,12 @@ namespace easy2d
 			float size
 		);
 
-		// 设置字体粗细值（默认值为 Text::Font::Weight::Normal）
+		// 设置字体粗细值（默认值为 FontWeight::Normal）
 		void SetFontWeight(
 			unsigned int weight
 		);
 
-		// 设置文字颜色（默认值为 Color::WHITE）
+		// 设置文字颜色（默认值为 Color::White）
 		void SetColor(
 			Color const& color
 		);

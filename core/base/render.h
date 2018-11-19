@@ -66,9 +66,6 @@ namespace easy2d
 				const Color& color
 			);
 
-			// ‰÷»æµ˜ ‘–≈œ¢
-			void DrawDebugInfo();
-
 			void CreateDeviceResources(HWND hwnd);
 
 			HRESULT CreateRectGeometry(
