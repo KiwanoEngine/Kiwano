@@ -167,6 +167,12 @@
     <ClInclude Include="..\..\core\base\noncopyable.hpp">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\Debuger.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\utils\string.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -293,6 +299,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\base\logs.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\Debuger.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\utils\string.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

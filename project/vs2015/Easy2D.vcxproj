@@ -31,6 +31,7 @@
     <ClInclude Include="..\..\core\base\Canvas.h" />
     <ClInclude Include="..\..\core\base\Color.h" />
     <ClInclude Include="..\..\core\base\d2dres.hpp" />
+    <ClInclude Include="..\..\core\base\Debuger.h" />
     <ClInclude Include="..\..\core\base\Font.hpp" />
     <ClInclude Include="..\..\core\base\Game.h" />
     <ClInclude Include="..\..\core\base\Image.h" />
@@ -74,6 +75,7 @@
     <ClInclude Include="..\..\core\utils\File.h" />
     <ClInclude Include="..\..\core\utils\Path.h" />
     <ClInclude Include="..\..\core\utils\Player.h" />
+    <ClInclude Include="..\..\core\utils\string.h" />
     <ClInclude Include="..\..\core\utils\Transcoder.h" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +87,7 @@
     <ClCompile Include="..\..\core\base\CallFunc.cpp" />
     <ClCompile Include="..\..\core\base\Canvas.cpp" />
     <ClCompile Include="..\..\core\base\Color.cpp" />
+    <ClCompile Include="..\..\core\base\Debuger.cpp" />
     <ClCompile Include="..\..\core\base\Game.cpp" />
     <ClCompile Include="..\..\core\base\Image.cpp" />
     <ClCompile Include="..\..\core\base\Input.cpp" />
@@ -112,6 +115,7 @@
     <ClCompile Include="..\..\core\utils\File.cpp" />
     <ClCompile Include="..\..\core\utils\Path.cpp" />
     <ClCompile Include="..\..\core\utils\Player.cpp" />
+    <ClCompile Include="..\..\core\utils\string.cpp" />
     <ClCompile Include="..\..\core\utils\Transcoder.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

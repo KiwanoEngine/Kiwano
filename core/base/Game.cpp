@@ -26,6 +26,7 @@
 #include "modules.h"
 #include "Scene.h"
 #include "Transition.h"
+#include "Debuger.h"
 #include "../math/Matrix.hpp"
 #include <thread>
 #include <imm.h>
@@ -196,6 +197,9 @@ namespace easy2d
 		if (next_scene_)
 			next_scene_->Update(dt);
 
+		if (debug_enabled_)
+			Debuger::Instance()->Update(dt);
+
 		if (transition_)
 		{
 			transition_->Update(dt);
@@ -249,7 +253,7 @@ namespace easy2d
 				next_scene_->DrawBorder();
 			}
 
-			graphics->DrawDebugInfo();
+			Debuger::Instance()->Visit();
 		}
 
 		graphics->EndDraw();

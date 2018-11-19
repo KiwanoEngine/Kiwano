@@ -18,46 +18,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <string>
+#include "string.h"
+#include "../base/macros.h"
+#include "../base/logs.h"
 
 namespace easy2d
 {
-	// 字体粗细值
-	enum FontWeight : unsigned int
+	std::wstring StringMultiByteToWideChar(const std::string& str)
 	{
-		Thin = 100,
-		ExtraLight = 200,
-		Light = 300,
-		Normal = 400,
-		Medium = 500,
-		Bold = 700,
-		ExtraBold = 800,
-		Black = 900,
-		ExtraBlack = 950
-	};
-
-	// 字体
-	class Font
-	{
-	public:
-		std::wstring	family;		// 字体族
-		float			size;		// 字号
-		unsigned int	weight;		// 粗细值
-		bool			italic;		// 是否斜体
-
-	public:
-		Font(
-			const std::wstring& family	= L"",
-			float size					= 22,
-			unsigned int weight			= FontWeight::Normal,
-			bool italic					= false
-		)
-			: family(family)
-			, size(size)
-			, weight(weight)
-			, italic(italic)
+		std::wstring ret;
+		if (!str.empty())
 		{
+			int len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, nullptr, 0);
+			if (len)
+			{
+				WCHAR* wstr_tmp = new WCHAR[len + 1];
+				wstr_tmp[0] = 0;
+
+				len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wstr_tmp, len + 1);
+
+				ret = wstr_tmp;
+				delete[] wstr_tmp;
+			}
+			else
+			{
+				logs::Errorln(HRESULT_FROM_WIN32(GetLastError()), "Wrong convert to WideChar code");
+			}
 		}
-	};
+		return ret;
+	}
+
+	std::string StringWideCharToMultiByte(const std::wstring& wstr)
+	{
+		std::string ret;
+		if (!wstr.empty())
+		{
+			int len = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, nullptr, 0, nullptr, FALSE);
+			if (len)
+			{
+				char* str_tmp = new char[len + 1];
+				str_tmp[0] = 0;
+
+				len = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, str_tmp, len + 1, nullptr, FALSE);
+
+				ret = str_tmp;
+				delete[] str_tmp;
+			}
+			else
+			{
+				logs::Errorln(HRESULT_FROM_WIN32(GetLastError()), ("Wrong convert to MultiByte code"));
+			}
+		}
+
+		return ret;
+	}
 }
