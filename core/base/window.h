@@ -35,6 +35,7 @@ namespace easy2d
 			int		width,
 			int		height,
 			LPCWSTR	icon,
+			WNDPROC	proc,
 			bool	debug
 		);
 
@@ -65,18 +66,16 @@ namespace easy2d
 
 		float GetContentScaleY() const;
 
-		void Poll();
-
 	protected:
 		WindowImpl();
 
 		~WindowImpl();
 
 	private:
-		bool initialized;
-		HWND handle;
-		float scale_x;
-		float scale_y;
+		bool	initialized;
+		HWND	handle;
+		float	scale_x;
+		float	scale_y;
 	};
 
 	E2D_DECLARE_SINGLETON_TYPE(WindowImpl, Window);

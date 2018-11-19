@@ -35,6 +35,7 @@ namespace easy2d
 			, fps_text_layout_(nullptr)
 			, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
 			, opacity_(1.f)
+			, window_occluded(false)
 			, initialized(false)
 		{
 			ZeroMemory(&d2d, sizeof(D2DResources));
@@ -130,28 +131,36 @@ namespace easy2d
 		{
 			CreateDeviceResources(hwnd);
 
-			d2d.render_target->BeginDraw();
-			d2d.render_target->Clear(clear_color_);
+			window_occluded = !!(d2d.render_target->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED);
+
+			if (!window_occluded)
+			{
+				d2d.render_target->BeginDraw();
+				d2d.render_target->Clear(clear_color_);
+			}
 		}
 
 		void GraphicsDevice::EndDraw()
 		{
-			HRESULT hr = d2d.render_target->EndDraw();
-
-			if (hr == D2DERR_RECREATE_TARGET)
+			if (!window_occluded)
 			{
-				// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
-				// 并在下一次调用时重建资源
-				hr = S_OK;
+				HRESULT hr = d2d.render_target->EndDraw();
 
-				fps_text_format_ = nullptr;
-				fps_text_layout_ = nullptr;
-				d2d.text_renderer = nullptr;
-				d2d.solid_brush = nullptr;
-				d2d.render_target = nullptr;
+				if (hr == D2DERR_RECREATE_TARGET)
+				{
+					// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
+					// 并在下一次调用时重建资源
+					hr = S_OK;
+
+					fps_text_format_ = nullptr;
+					fps_text_layout_ = nullptr;
+					d2d.text_renderer = nullptr;
+					d2d.solid_brush = nullptr;
+					d2d.render_target = nullptr;
+				}
+
+				ThrowIfFailed(hr);
 			}
-
-			ThrowIfFailed(hr);
 		}
 
 		void GraphicsDevice::ClearImageCache()
@@ -375,6 +384,9 @@ namespace easy2d
 				!d2d.render_target)
 				return E_UNEXPECTED;
 
+			if (window_occluded)
+				return S_OK;
+
 			d2d.solid_brush->SetColor(border_color);
 			d2d.render_target->DrawGeometry(
 				geometry.Get(),
@@ -391,6 +403,9 @@ namespace easy2d
 				return E_UNEXPECTED;
 
 			if (!image->GetBitmap())
+				return S_OK;
+
+			if (window_occluded)
 				return S_OK;
 
 			d2d.render_target->DrawBitmap(
@@ -427,6 +442,9 @@ namespace easy2d
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
+			if (window_occluded)
+				return S_OK;
+
 			// Do not crop bitmap 
 			auto rect = D2D1::RectF(0.f, 0.f, bitmap->GetSize().width, bitmap->GetSize().height);
 			d2d.render_target->DrawBitmap(
@@ -444,6 +462,9 @@ namespace easy2d
 			if (!d2d.text_renderer)
 				return E_UNEXPECTED;
 
+			if (window_occluded)
+				return S_OK;
+
 			return text_layout->Draw(nullptr, d2d.text_renderer.Get(), 0, 0);
 		}
 
@@ -451,6 +472,9 @@ namespace easy2d
 		{
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
+
+			if (window_occluded)
+				return S_OK;
 
 			d2d.render_target->SetTransform(ConvertToD2DMatrix(clip_matrix));
 			d2d.render_target->PushAxisAlignedClip(
@@ -465,6 +489,9 @@ namespace easy2d
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
+			if (window_occluded)
+				return S_OK;
+
 			d2d.render_target->PopAxisAlignedClip();
 			return S_OK;
 		}
@@ -474,6 +501,9 @@ namespace easy2d
 			if (!d2d.render_target ||
 				!d2d.solid_brush)
 				return E_UNEXPECTED;
+
+			if (window_occluded)
+				return S_OK;
 
 			d2d.render_target->PushLayer(
 				D2D1::LayerParameters(
@@ -494,6 +524,9 @@ namespace easy2d
 		{
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
+
+			if (window_occluded)
+				return S_OK;
 
 			d2d.render_target->PopLayer();
 			return S_OK;

@@ -99,7 +99,7 @@ namespace easy2d
 		}
 	}
 
-	void Transition::Draw()
+	void Transition::Render()
 	{
 		auto graphics = devices::Graphics::Instance();
 

@@ -194,6 +194,7 @@ namespace easy2d
 
 		protected:
 			bool						initialized;
+			bool						window_occluded;
 			float						opacity_;
 			D2DResources				d2d;
 			D2D1_COLOR_F				clear_color_;

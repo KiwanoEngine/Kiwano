@@ -49,7 +49,7 @@ namespace easy2d
 
 		virtual void Update(Duration const& dt);
 
-		virtual void Draw();
+		virtual void Render();
 
 		virtual void Stop();
 

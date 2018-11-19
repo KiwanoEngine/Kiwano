@@ -21,12 +21,7 @@
 #include "window.h"
 #include "render.h"
 #include "logs.h"
-#include "Game.h"
-#include "KeyEvent.h"
-#include "MouseEvent.h"
 #include "../math/scalar.hpp"
-#include <imm.h>
-#pragma comment (lib ,"imm32.lib")
 
 #define WINDOW_STYLE	WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME
 #define REGISTER_CLASS	L"Easy2DApp"
@@ -38,8 +33,6 @@ namespace easy2d
 		void GetContentScale(float* scale_x, float* scale_y);
 
 		Rect LocateWindow(int width, int height, float scale_x, float scale_y);
-
-		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param);
 	}
 
 	WindowImpl::WindowImpl()
@@ -58,7 +51,7 @@ namespace easy2d
 			::DestroyWindow(handle);
 	}
 
-	void WindowImpl::Init(String title, int width, int height, LPCWSTR icon, bool debug)
+	void WindowImpl::Init(String title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
 	{
 		if (initialized)
 			return;
@@ -70,7 +63,7 @@ namespace easy2d
 		wcex.cbSize			= sizeof(WNDCLASSEX);
 		wcex.lpszClassName	= REGISTER_CLASS;
 		wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-		wcex.lpfnWndProc	= WndProc;
+		wcex.lpfnWndProc	= proc;
 		wcex.hIcon			= nullptr;
 		wcex.cbClsExtra		= 0;
 		wcex.cbWndExtra		= sizeof(LONG_PTR);
@@ -122,9 +115,6 @@ namespace easy2d
 			logs::Errorln(HRESULT_FROM_WIN32(GetLastError()), err);
 			throw std::runtime_error(err);
 		}
-
-		// 禁用输入法
-		::ImmAssociateContext(handle, nullptr);
 
 		initialized = true;
 	}
@@ -220,17 +210,6 @@ namespace easy2d
 		return scale_y;
 	}
 
-	void WindowImpl::Poll()
-	{
-		static MSG msg = {};
-
-		while (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
-		}
-	}
-
 	namespace
 	{
 		void GetContentScale(float* scale_x, float* scale_y)
@@ -275,110 +254,6 @@ namespace easy2d
 				static_cast<float>(width),
 				static_cast<float>(height)
 			);
-		}
-
-		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
-		{
-			LRESULT result = 0;
-			bool was_handled = false;
-
-			Game * game = reinterpret_cast<Game*>(
-				static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA))
-				);
-
-			switch (msg)
-			{
-
-			// 处理鼠标消息
-			case WM_LBUTTONUP:
-			case WM_LBUTTONDOWN:
-			case WM_LBUTTONDBLCLK:
-			case WM_MBUTTONUP:
-			case WM_MBUTTONDOWN:
-			case WM_MBUTTONDBLCLK:
-			case WM_RBUTTONUP:
-			case WM_RBUTTONDOWN:
-			case WM_RBUTTONDBLCLK:
-			case WM_MOUSEMOVE:
-			case WM_MOUSEWHEEL:
-			{
-				game->Dispatch(MouseEvent(msg, w_param, l_param));
-			}
-			result = 0;
-			was_handled = true;
-			break;
-
-			// 处理按键消息
-			case WM_KEYDOWN:
-			case WM_KEYUP:
-			{
-				game->Dispatch(KeyEvent(msg, w_param, l_param));
-			}
-			result = 0;
-			was_handled = true;
-			break;
-
-			// 处理窗口大小变化消息
-			case WM_SIZE:
-			{
-				UINT width = LOWORD(l_param);
-				UINT height = HIWORD(l_param);
-
-				// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
-				// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
-				// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-				devices::Graphics::Instance()->Resize(width, height);
-			}
-			break;
-
-			// 处理分辨率变化消息
-			case WM_DISPLAYCHANGE:
-			{
-				// 重绘客户区
-				::InvalidateRect(hwnd, nullptr, FALSE);
-			}
-			result = 0;
-			was_handled = true;
-			break;
-
-			// 重绘窗口
-			case WM_PAINT:
-			{
-				game->DrawScene();
-				::ValidateRect(hwnd, nullptr);
-			}
-			result = 0;
-			was_handled = true;
-			break;
-
-			// 窗口关闭消息
-			case WM_CLOSE:
-			{
-				if (game->OnClose())
-				{
-					game->Quit();
-				}
-			}
-			result = 0;
-			was_handled = true;
-			break;
-
-			// 窗口销毁消息
-			case WM_DESTROY:
-			{
-				::PostQuitMessage(0);
-			}
-			result = 1;
-			was_handled = true;
-			break;
-
-			}
-
-			if (!was_handled)
-			{
-				result = ::DefWindowProc(hwnd, msg, w_param, l_param);
-			}
-			return result;
 		}
 	}
 }
