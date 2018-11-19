@@ -43,6 +43,9 @@ namespace easy2d
 		style.wrap = false;
 		style.line_spacing = 18.f;
 		debug_text_->SetStyle(style);
+
+		ObjectBase::__RemoveObjectFromTracingList(this);
+		ObjectBase::__RemoveObjectFromTracingList(debug_text_.Get());
 	}
 
 	DebugerNode::~DebugerNode()
@@ -84,6 +87,12 @@ namespace easy2d
 		std::wstringstream ss;
 		ss << "fps=" << frame_time_.size() << std::endl;
 
+#ifdef E2D_DEBUG
+
+		ss << "objects=" << ObjectBase::__GetTracingObjects().size() << std::endl;
+
+#endif
+
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		if (pmc.PrivateUsage > 1024 * 1024)
@@ -92,7 +101,7 @@ namespace easy2d
 			ss << "memory=" << pmc.PrivateUsage / 1024 << "Kb";
 
 		for (const auto& text : texts_)
-			ss << text << std::endl;
+			ss << std::endl << text;
 
 		debug_text_->SetText(ss.str());
 	}

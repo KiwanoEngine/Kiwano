@@ -34,7 +34,7 @@ namespace easy2d
 
 	// ½Úµã
 	class Node
-		: public RefCounter
+		: public ObjectBase
 		, public ActionManager
 		, public TaskManager
 		, protected intrusive::ListItem<spNode>

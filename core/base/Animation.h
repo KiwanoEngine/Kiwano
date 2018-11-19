@@ -25,7 +25,7 @@ namespace easy2d
 {
 	// Ö¡¶¯»­
 	class Animation
-		: public RefCounter
+		: public ObjectBase
 	{
 		using Images = std::vector< spImage >;
 

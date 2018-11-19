@@ -19,72 +19,30 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
-#include "audio.h"
-#include "Resource.h"
+#include "RefCounter.hpp"
 
 namespace easy2d
 {
-	// 音乐
-	class Music
-		: public ObjectBase
+	class ObjectBase
+		: public RefCounter
 	{
 	public:
-		Music();
+		ObjectBase();
 
-		Music(
-			String const& file_path	/* 音乐文件路径 */
-		);
+		virtual ~ObjectBase();
 
-		Music(
-			Resource const& res		/* 音乐资源 */
-		);
+		static void StartTracingLeaks();
 
-		virtual ~Music();
+		static void StopTracingLeaks();
 
-		// 打开音乐文件
-		bool Load(
-			String const& file_path	/* 音乐文件路径 */
-		);
-
-		// 打开音乐资源
-		bool Load(
-			Resource const& res		/* 音乐资源 */
-		);
-
-		// 播放
-		bool Play(
-			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
-		);
-
-		// 暂停
-		void Pause();
-
-		// 继续
-		void Resume();
-
-		// 停止
-		void Stop();
-
-		// 关闭并回收资源
-		void Close();
-
-		// 是否正在播放
-		bool IsPlaying() const;
-
-		// 获取音量
-		float GetVolume() const;
-
-		// 设置音量
-		bool SetVolume(
-			float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
-		);
+		static std::vector<ObjectBase*> const& __GetTracingObjects();
 
 	protected:
-		bool	opened_;
-		bool	playing_;
-		UINT32	size_;
-		BYTE*	wave_data_;
-		Voice	voice_;
+		static void __AddObjectToTracingList(ObjectBase*);
+
+		static void __RemoveObjectFromTracingList(ObjectBase*);
+
+	private:
+		bool tracing_leak_;
 	};
 }
