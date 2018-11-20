@@ -120,22 +120,27 @@ namespace easy2d
 	{
 	}
 
-	RectangleGeometry::RectangleGeometry(Size const & rect_size)
+	RectangleGeometry::RectangleGeometry(Rect const & rect)
 	{
-		SetSize(rect_size);
+		SetRect(rect);
+	}
+
+	RectangleGeometry::RectangleGeometry(Point const & left_top, Size const & size)
+	{
+		SetRect(Rect{ left_top, size });
 	}
 
 	RectangleGeometry::~RectangleGeometry()
 	{
 	}
 
-	void RectangleGeometry::SetSize(Size const & rect_size)
+	void RectangleGeometry::SetRect(Rect const & rect)
 	{
 		cpRectangleGeometry geo;
-		if (SUCCEEDED(devices::Graphics::Instance()->CreateRectangleGeometry(geo, Rect(Point{}, rect_size))))
+		if (SUCCEEDED(devices::Graphics::Instance()->CreateRectangleGeometry(geo, rect)))
 		{
 			geo_ = geo;
-			size_ = rect_size;
+			rect_ = rect;
 		}
 	}
 
@@ -148,9 +153,9 @@ namespace easy2d
 	{
 	}
 
-	CircleGeometry::CircleGeometry(float radius)
+	CircleGeometry::CircleGeometry(Point const & center, float radius)
 	{
-		SetRadius(radius);
+		SetCircle(center, radius);
 	}
 
 	CircleGeometry::~CircleGeometry()
@@ -159,10 +164,21 @@ namespace easy2d
 
 	void CircleGeometry::SetRadius(float radius)
 	{
+		SetCircle(center_, radius);
+	}
+
+	void CircleGeometry::SetCenter(Point const & center)
+	{
+		SetCircle(center, radius_);
+	}
+
+	void CircleGeometry::SetCircle(Point const & center, float radius)
+	{
 		cpEllipseGeometry geo;
-		if (SUCCEEDED(devices::Graphics::Instance()->CreateEllipseGeometry(geo, Point{}, radius, radius)))
+		if (SUCCEEDED(devices::Graphics::Instance()->CreateEllipseGeometry(geo, center, radius, radius)))
 		{
 			geo_ = geo;
+			center_ = center;
 			radius_ = radius;
 		}
 	}
@@ -176,9 +192,9 @@ namespace easy2d
 	{
 	}
 
-	EllipseGeometry::EllipseGeometry(float radius_x, float radius_y)
+	EllipseGeometry::EllipseGeometry(Point const & center, float radius_x, float radius_y)
 	{
-		SetRadius(radius_x, radius_y);
+		SetEllipse(center, radius_x, radius_y);
 	}
 
 	EllipseGeometry::~EllipseGeometry()
@@ -187,8 +203,18 @@ namespace easy2d
 
 	void EllipseGeometry::SetRadius(float radius_x, float radius_y)
 	{
+		SetEllipse(center_, radius_x, radius_y);
+	}
+
+	void EllipseGeometry::SetCenter(Point const & center)
+	{
+		SetEllipse(center, radius_x_, radius_y_);
+	}
+
+	void EllipseGeometry::SetEllipse(Point const & center, float radius_x, float radius_y)
+	{
 		cpEllipseGeometry geo;
-		if (SUCCEEDED(devices::Graphics::Instance()->CreateEllipseGeometry(geo, Point{}, radius_x, radius_y)))
+		if (SUCCEEDED(devices::Graphics::Instance()->CreateEllipseGeometry(geo, center, radius_x, radius_y)))
 		{
 			geo_ = geo;
 			radius_x_ = radius_x;
@@ -209,7 +235,7 @@ namespace easy2d
 	{
 	}
 
-	void PathGeometry::BeginPath()
+	void PathGeometry::BeginPath(Point const& begin_pos)
 	{
 		current_geometry_ = nullptr;
 
@@ -221,7 +247,7 @@ namespace easy2d
 			current_geometry_->Open(&current_sink_)
 		);
 
-		current_sink_->BeginFigure(D2D1::Point2F(), D2D1_FIGURE_BEGIN_FILLED);
+		current_sink_->BeginFigure(begin_pos, D2D1_FIGURE_BEGIN_FILLED);
 	}
 
 	void PathGeometry::EndPath(bool closed)
