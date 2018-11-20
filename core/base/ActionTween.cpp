@@ -22,7 +22,6 @@
 #include "Geometry.h"
 #include "base.hpp"
 #include "Node.h"
-#include "../math/ease.hpp"
 #include <algorithm>
 #include <cfloat>
 
@@ -58,13 +57,13 @@ namespace easy2d
 			ease_func_ = math::Linear;
 			break;
 		case EaseFunc::EaseIn:
-			ease_func_ = std::bind(math::EaseIn, std::placeholders::_1, 2.f);
+			ease_func_ = MakeEaseIn(2.f);
 			break;
 		case EaseFunc::EaseOut:
-			ease_func_ = std::bind(math::EaseOut, std::placeholders::_1, 2.f);
+			ease_func_ = MakeEaseOut(2.f);
 			break;
 		case EaseFunc::EaseInOut:
-			ease_func_ = std::bind(math::EaseInOut, std::placeholders::_1, 2.f);
+			ease_func_ = MakeEaseInOut(2.f);
 			break;
 		case EaseFunc::EaseExponentialIn:
 			ease_func_ = math::EaseExponentialIn;
@@ -85,13 +84,13 @@ namespace easy2d
 			ease_func_ = math::EaseBounceInOut;
 			break;
 		case EaseFunc::EaseElasticIn:
-			ease_func_ = std::bind(math::EaseElasticIn, std::placeholders::_1, 0.3f);
+			ease_func_ = MakeEaseElasticIn(0.3f);
 			break;
 		case EaseFunc::EaseElasticOut:
-			ease_func_ = std::bind(math::EaseElasticOut, std::placeholders::_1, 0.3f);
+			ease_func_ = MakeEaseElasticOut(0.3f);
 			break;
 		case EaseFunc::EaseElasticInOut:
-			ease_func_ = std::bind(math::EaseElasticInOut, std::placeholders::_1, 0.3f);
+			ease_func_ = MakeEaseElasticInOut(0.3f);
 			break;
 		case EaseFunc::EaseSineIn:
 			ease_func_ = math::EaseSineIn;
@@ -107,7 +106,7 @@ namespace easy2d
 		}
 	}
 
-	void Tween::SetEaseFunction(std::function<float(float)> func)
+	void Tween::SetEaseFunction(EaseFunction func)
 	{
 		ease_func_ = func;
 		ease_type_ = EaseFunc(-1);
