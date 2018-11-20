@@ -95,6 +95,11 @@ namespace easy2d
 			Point const& point		/* 文字位置 */
 		);
 
+		// 画几何图形边框
+		void DrawGeometry(
+			spGeometry const& geo
+		);
+
 		// 填充圆形
 		void FillCircle(
 			const Point& center,
@@ -118,6 +123,11 @@ namespace easy2d
 			const Rect& rect,
 			float radius_x,
 			float radius_y
+		);
+
+		// 填充几何图形
+		void FillGeometry(
+			spGeometry const& geo
 		);
 
 		// 开始绘制路径

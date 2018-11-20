@@ -39,6 +39,7 @@ namespace easy2d
 	class Geometry
 		: public Unit
 	{
+		friend class Canvas;
 		friend class GeometryNode;
 
 	public:

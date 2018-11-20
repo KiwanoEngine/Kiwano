@@ -22,6 +22,7 @@
 #include "render.h"
 #include "logs.h"
 #include "Image.h"
+#include "Geometry.h"
 
 namespace easy2d
 {
@@ -247,7 +248,7 @@ namespace easy2d
 
 	void Canvas::DrawImage(spImage const & image, float opacity)
 	{
-		if (image->GetBitmap())
+		if (image && image->GetBitmap())
 		{
 			render_target_->DrawBitmap(
 				image->GetBitmap().Get(),
@@ -291,6 +292,20 @@ namespace easy2d
 		ThrowIfFailed(
 			text_layout->Draw(nullptr, text_renderer_.Get(), point.x, point.y)
 		);
+	}
+
+	void Canvas::DrawGeometry(spGeometry const & geo)
+	{
+		if (geo && geo->geo_)
+		{
+			render_target_->DrawGeometry(
+				geo->geo_.Get(),
+				stroke_brush_.Get(),
+				stroke_width_,
+				outline_join_style_.Get()
+			);
+			cache_expired_ = true;
+		}
 	}
 
 	void Canvas::FillCircle(const Point & center, float radius)
@@ -355,6 +370,18 @@ namespace easy2d
 			fill_brush_.Get()
 		);
 		cache_expired_ = true;
+	}
+
+	void Canvas::FillGeometry(spGeometry const & geo)
+	{
+		if (geo && geo->geo_)
+		{
+			render_target_->FillGeometry(
+				geo->geo_.Get(),
+				fill_brush_.Get()
+			);
+			cache_expired_ = true;
+		}
 	}
 
 	void Canvas::BeginPath(Point const& begin_pos)
