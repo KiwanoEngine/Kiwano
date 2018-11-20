@@ -23,6 +23,7 @@
 #include "base.hpp"
 #include "Node.h"
 #include <algorithm>
+#include <cfloat>
 
 namespace easy2d
 {
@@ -30,16 +31,27 @@ namespace easy2d
 	// IntervalAction
 	//-------------------------------------------------------
 
-	IntervalAction::IntervalAction(Duration const& duration)
-		: process_(0)
-		, duration_(duration)
+	IntervalAction::IntervalAction()
+		: elapsed_()
+		, duration_()
 	{
+	}
+
+	IntervalAction::IntervalAction(Duration const& duration)
+		: elapsed_()
+	{
+		SetDuration(duration);
 	}
 
 	void IntervalAction::Reset()
 	{
 		Action::Reset();
-		process_ = 0;
+		elapsed_ = Duration{};
+	}
+
+	Duration const & IntervalAction::GetDuration() const
+	{
+		return duration_;
 	}
 
 	void IntervalAction::Init(Node* target)
@@ -51,21 +63,28 @@ namespace easy2d
 	{
 		Action::Update(target, dt);
 
+		float percent;
 		if (duration_.IsZero())
 		{
-			process_ = 1.f;
-			this->Stop();
+			percent = 1.f;
 		}
 		else
 		{
-			process_ += dt / duration_;
-			process_ = std::min(process_, 1.f);
-
-			if (process_ >= 1)
-			{
-				this->Stop();
-			}
+			elapsed_ += dt;
+			percent = std::min(elapsed_ / duration_, 1.f);
 		}
+
+		if ((1.f - percent) <= FLT_EPSILON)
+		{
+			this->Stop();
+		}
+
+		this->Update(target, percent);
+	}
+
+	void IntervalAction::SetDuration(Duration const & duration)
+	{
+		duration_ = duration;
 	}
 
 
@@ -89,16 +108,14 @@ namespace easy2d
 		}
 	}
 
-	void MoveBy::Update(Node* target, Duration const& dt)
+	void MoveBy::Update(Node* target, float percent)
 	{
-		IntervalAction::Update(target, dt);
-
 		if (target)
 		{
 			Point diff = target->GetPosition() - prev_pos_;
 			start_pos_ = start_pos_ + diff;
 
-			Point new_pos = start_pos_ + (delta_pos_ * process_);
+			Point new_pos = start_pos_ + (delta_pos_ * percent);
 			target->SetPosition(new_pos);
 
 			prev_pos_ = new_pos;
@@ -165,16 +182,14 @@ namespace easy2d
 		}
 	}
 
-	void JumpBy::Update(Node* target, Duration const& dt)
+	void JumpBy::Update(Node* target, float percent)
 	{
-		IntervalAction::Update(target, dt);
-
 		if (target)
 		{
-			float frac = fmod(process_ * jumps_, 1.f);
-			float x = delta_pos_.x * process_;
+			float frac = fmod(percent * jumps_, 1.f);
+			float x = delta_pos_.x * percent;
 			float y = height_ * 4 * frac * (1 - frac);
-			y += delta_pos_.y * process_;
+			y += delta_pos_.y * percent;
 
 			Point diff = target->GetPosition() - prev_pos_;
 			start_pos_ = diff + start_pos_;
@@ -233,13 +248,11 @@ namespace easy2d
 		}
 	}
 
-	void ScaleBy::Update(Node* target, Duration const& dt)
+	void ScaleBy::Update(Node* target, float percent)
 	{
-		IntervalAction::Update(target, dt);
-
 		if (target)
 		{
-			target->SetScale(start_scale_x_ + delta_x_ * process_, start_scale_y_ + delta_y_ * process_);
+			target->SetScale(start_scale_x_ + delta_x_ * percent, start_scale_y_ + delta_y_ * percent);
 		}
 	}
 
@@ -300,13 +313,11 @@ namespace easy2d
 		}
 	}
 
-	void OpacityBy::Update(Node* target, Duration const& dt)
+	void OpacityBy::Update(Node* target, float percent)
 	{
-		IntervalAction::Update(target, dt);
-
 		if (target)
 		{
-			target->SetOpacity(start_val_ + delta_val_ * process_);
+			target->SetOpacity(start_val_ + delta_val_ * percent);
 		}
 	}
 
@@ -368,13 +379,11 @@ namespace easy2d
 		}
 	}
 
-	void RotateBy::Update(Node* target, Duration const& dt)
+	void RotateBy::Update(Node* target, float percent)
 	{
-		IntervalAction::Update(target, dt);
-
 		if (target)
 		{
-			target->SetRotation(start_val_ + delta_val_ * process_);
+			target->SetRotation(start_val_ + delta_val_ * percent);
 		}
 	}
 
@@ -429,14 +438,12 @@ namespace easy2d
 		return new PathAction(duration_, geo_, rotating_, end_, start_);
 	}
 
-	void PathAction::Update(Node * target, Duration const & dt)
+	void PathAction::Update(Node* target, float percent)
 	{
-		IntervalAction::Update(target, dt);
-
 		if (target)
 		{
-			float percent = std::min(std::max((end_ - start_) * process_ + start_, 0.f), 1.f);
-			float length = geo_->GetLength() * percent;
+			float length = geo_->GetLength() * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
+
 			Point point, tangent;
 			if (geo_->ComputePointAt(length, &point, &tangent))
 			{

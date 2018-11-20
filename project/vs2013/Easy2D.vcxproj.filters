@@ -185,6 +185,9 @@
     <ClInclude Include="..\..\core\base\ActionInterval.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\ActionTween.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -328,6 +331,9 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\ActionInterval.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\ActionTween.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

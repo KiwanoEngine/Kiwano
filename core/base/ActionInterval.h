@@ -27,21 +27,32 @@ namespace easy2d
 	class IntervalAction
 		: public Action
 	{
+		friend class TweenAction;
+		friend class EaseAction;
+
 	public:
+		IntervalAction();
+
 		explicit IntervalAction(
 			Duration const& duration
 		);
 
 		virtual void Reset() override;
 
+		Duration const& GetDuration() const;
+
+		void SetDuration(Duration const& duration);
+
 	protected:
 		virtual void Init(Node* target) override;
 
 		virtual void Update(Node* target, Duration const& dt) override;
 
+		virtual void Update(Node* target, float percent) = 0;
+
 	protected:
 		Duration duration_;
-		float process_;
+		Duration elapsed_;
 	};
 
 
@@ -64,7 +75,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void Update(Node* target, float percent) override;
 
 	protected:
 		Point	start_pos_;
@@ -122,7 +133,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void Update(Node* target, float percent) override;
 
 	protected:
 		Point	start_pos_;
@@ -188,7 +199,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void Update(Node* target, float percent) override;
 
 	protected:
 		float	start_scale_x_;
@@ -252,7 +263,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void Update(Node* target, float percent) override;
 
 	protected:
 		float start_val_;
@@ -331,7 +342,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void Update(Node* target, float percent) override;
 
 	protected:
 		float start_val_;
@@ -387,7 +398,7 @@ namespace easy2d
 		virtual spAction Reverse() const override;
 
 	protected:
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void Update(Node* target, float percent) override;
 
 	protected:
 		bool		rotating_;

@@ -23,6 +23,7 @@
     <ClInclude Include="..\..\core\base\ActionCombined.h" />
     <ClInclude Include="..\..\core\base\ActionInterval.h" />
     <ClInclude Include="..\..\core\base\ActionManager.h" />
+    <ClInclude Include="..\..\core\base\ActionTween.h" />
     <ClInclude Include="..\..\core\base\Animation.h" />
     <ClInclude Include="..\..\core\base\audio.h" />
     <ClInclude Include="..\..\core\base\base.hpp" />
@@ -86,6 +87,7 @@
     <ClCompile Include="..\..\core\base\ActionCombined.cpp" />
     <ClCompile Include="..\..\core\base\ActionInterval.cpp" />
     <ClCompile Include="..\..\core\base\ActionManager.cpp" />
+    <ClCompile Include="..\..\core\base\ActionTween.cpp" />
     <ClCompile Include="..\..\core\base\Animation.cpp" />
     <ClCompile Include="..\..\core\base\audio.cpp" />
     <ClCompile Include="..\..\core\base\CallFunc.cpp" />
