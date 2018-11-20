@@ -19,36 +19,64 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.hpp"
-#include <functional>
+#include "scalar.hpp"
 
 namespace easy2d
 {
-	// 回调动作
-	class CallFunc
-		: public Action
+	namespace math
 	{
-		typedef std::function<void()> Callback;
+		inline float Linear(float step)
+		{
+			return step;
+		}
 
-	  public:
-		explicit CallFunc(
-			const Callback &func /* 函数对象 */
-		);
+		inline float EaseIn(float step, float rate)
+		{
+			return math::Pow(step, rate);
+		}
 
-		// 获取该动作的拷贝对象
-		virtual spAction Clone() const override;
+		inline float EaseOut(float step, float rate)
+		{
+			return math::Pow(step, 1.f / rate);
+		}
 
-		// 获取该动作的倒转
-		virtual spAction Reverse() const override;
+		inline float EaseInOut(float step, float rate)
+		{
+			if (step < .5f)
+				return .5f * math::Pow(2 * step, rate);
+			return 1.f - .5f * math::Pow(2.f - 2 * step, rate);
+		}
 
-	  protected:
-		// 初始化动作
-		virtual void Init(Node*) override;
+		inline float EaseExponentialIn(float step)
+		{
+			return math::Pow(2.f, 10 * (step - 1));
+		}
 
-		// 更新动作
-		virtual void Update(Node*, Duration const&) override;
+		inline float EaseExponentialOut(float step)
+		{
+			return 1.f - math::Pow(2.f, -10 * step);
+		}
 
-	  protected:
-		Callback callback_;
-	};
+		inline float EaseExponentialInOut(float step)
+		{
+			if (step < .5f)
+				return .5f * math::Pow(2.f, 10 * (2 * step - 1));
+			return 0.5f * (2 - math::Pow(2, -10 * (step * 2 - 1)));
+		}
+
+		inline float EaseSineIn(float step)
+		{
+			return 1.f - math::Cos(step * 90);
+		}
+
+		inline float EaseSineOut(float step)
+		{
+			return math::Sin(step * 90);
+		}
+
+		inline float EaseSineInOut(float step)
+		{
+			return -0.5f * (math::Cos(step * 180) - 1);
+		}
+	}
 }

@@ -11,9 +11,6 @@
     <ClInclude Include="..\..\core\base\audio.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\CallFunc.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\Canvas.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -182,10 +179,16 @@
     <ClInclude Include="..\..\core\base\Unit.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\ActionInterval.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\core\math\ease.hpp">
+      <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\base\ActionTween.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\Delay.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\Frames.h">
       <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
@@ -214,9 +217,6 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\audio.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\base\CallFunc.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\Canvas.cpp">
@@ -330,10 +330,13 @@
     <ClCompile Include="..\..\core\base\Unit.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\ActionInterval.cpp">
+    <ClCompile Include="..\..\core\base\ActionTween.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\ActionTween.cpp">
+    <ClCompile Include="..\..\core\base\Delay.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\Frames.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

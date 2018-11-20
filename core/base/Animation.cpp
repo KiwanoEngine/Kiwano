@@ -19,73 +19,69 @@
 // THE SOFTWARE.
 
 #include "Animation.h"
+#include "Frames.h"
 #include "Image.h"
 #include "Sprite.h"
-#include "logs.h"
 
 namespace easy2d
 {
-	//-------------------------------------------------------
-	// Animate
-	//-------------------------------------------------------
-
-	Animate::Animate()
+	Animation::Animation()
 		: frame_index_(0)
-		, animation_(nullptr)
+		, frames_(nullptr)
 	{
 	}
 
-	Animate::Animate(spAnimation const& animation)
+	Animation::Animation(spFrames const& animation)
 		: frame_index_(0)
-		, animation_(nullptr)
+		, frames_(nullptr)
 	{
 		this->SetAnimation(animation);
 	}
 
-	Animate::~Animate()
+	Animation::~Animation()
 	{
 	}
 
-	spAnimation Animate::GetAnimation() const
+	spFrames Animation::GetAnimation() const
 	{
-		return animation_;
+		return frames_;
 	}
 
-	void Animate::SetAnimation(spAnimation const& animation)
+	void Animation::SetAnimation(spFrames const& animation)
 	{
-		if (animation && animation != animation_)
+		if (animation && animation != frames_)
 		{
-			animation_ = animation;
+			frames_ = animation;
 			frame_index_ = 0;
 		}
 	}
 
-	void Animate::Init(Node* target)
+	void Animation::Init(Node* target)
 	{
 		Action::Init(target);
 
 		auto sprite_target = dynamic_cast<Sprite*>(target);
-		if (sprite_target && animation_)
+		if (sprite_target && frames_)
 		{
-			sprite_target->Load(animation_->GetFrames()[frame_index_]);
+			sprite_target->Load(frames_->GetFrames()[frame_index_]);
 			++frame_index_;
 		}
 	}
 
-	void Animate::Update(Node* target, Duration const& dt)
+	void Animation::Update(Node* target, Duration const& dt)
 	{
 		Action::Update(target, dt);
 
-		if (!animation_)
+		if (!frames_)
 		{
 			this->Stop();
 			return;
 		}
 
 		delta_ += dt;
-		while (delta_ >= animation_->GetInterval())
+		while (delta_ >= frames_->GetInterval())
 		{
-			auto& frames = animation_->GetFrames();
+			auto& frames = frames_->GetFrames();
 			auto sprite_target = dynamic_cast<Sprite*>(target);
 
 			if (sprite_target)
@@ -93,7 +89,7 @@ namespace easy2d
 				sprite_target->Load(frames[frame_index_]);
 			}
 
-			delta_ -= animation_->GetInterval();
+			delta_ -= frames_->GetInterval();
 			++frame_index_;
 
 			if (frame_index_ == frames.size())
@@ -104,123 +100,32 @@ namespace easy2d
 		}
 	}
 
-	void Animate::Reset()
+	void Animation::Reset()
 	{
 		Action::Reset();
 		frame_index_ = 0;
 	}
 
-	spAction Animate::Clone() const
+	spAction Animation::Clone() const
 	{
-		if (animation_)
+		if (frames_)
 		{
-			return new (std::nothrow) Animate(animation_);
+			return new (std::nothrow) Animation(frames_);
 		}
 		return nullptr;
 	}
 
-	spAction Animate::Reverse() const
+	spAction Animation::Reverse() const
 	{
-		if (animation_)
+		if (frames_)
 		{
-			auto animation = animation_->Reverse();
+			auto animation = frames_->Reverse();
 			if (animation)
 			{
-				return new (std::nothrow) Animate(animation);
+				return new (std::nothrow) Animation(animation);
 			}
 		}
 		return nullptr;
 	}
 
-
-	//-------------------------------------------------------
-	// Animation
-	//-------------------------------------------------------
-
-	Animation::Animation()
-		: interval_(1)
-	{
-	}
-
-	Animation::Animation(const Images& frames)
-		: interval_(1)
-	{
-		this->Add(frames);
-	}
-
-	Animation::Animation(Duration const& interval)
-		: interval_(interval)
-	{
-	}
-
-	Animation::Animation(Duration const& interval, const Images& frames)
-		: interval_(interval)
-	{
-		this->Add(frames);
-	}
-
-	Animation::~Animation()
-	{
-	}
-
-	void Animation::SetInterval(Duration const& interval)
-	{
-		interval_ = interval;
-	}
-
-	void Animation::Add(spImage const& frame)
-	{
-		if (!frame)
-			logs::Warningln("Animation::Add failed, frame is nullptr.");
-
-		if (frame)
-		{
-			frames_.push_back(frame);
-		}
-	}
-
-	void Animation::Add(const Images& frames)
-	{
-		for (const auto &image : frames)
-		{
-			this->Add(image);
-		}
-	}
-
-	Duration const& Animation::GetInterval() const
-	{
-		return interval_;
-	}
-
-	Animation::Images const& Animation::GetFrames() const
-	{
-		return frames_;
-	}
-
-	spAnimation Animation::Clone() const
-	{
-		auto animation = new (std::nothrow) Animation(interval_);
-		if (animation)
-		{
-			for (const auto& frame : frames_)
-			{
-				animation->Add(frame);
-			}
-		}
-		return animation;
-	}
-
-	spAnimation Animation::Reverse() const
-	{
-		auto animation = new (std::nothrow) Animation(interval_);
-		if (!frames_.empty())
-		{
-			for (auto iter = frames_.crbegin(), crend = frames_.crend(); iter != crend; ++iter)
-			{
-				if (*iter)
-					animation->Add(*iter);
-			}
-		}
-		return animation;
-	}
 }

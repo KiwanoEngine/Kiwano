@@ -19,221 +19,495 @@
 // THE SOFTWARE.
 
 #include "ActionTween.h"
+#include "Geometry.h"
+#include "base.hpp"
+#include "Node.h"
+#include "../math/ease.hpp"
+#include <algorithm>
+#include <cfloat>
 
 namespace easy2d
 {
-	namespace
-	{
-		inline float EaseExponentialIn(float percent)
-		{
-			return math::Pow(2.f, 10 * (percent - 1));
-		}
-
-		inline float EaseExponentialOut(float percent)
-		{
-			return 1.f - math::Pow(2.f, -10 * percent);
-		}
-
-		inline float EaseExponentialInOut(float percent)
-		{
-			if (percent < .5f)
-				return .5f * math::Pow(2.f, 10 * (2 * percent - 1));
-			return 0.5f * (2 - math::Pow(2, -10 * (percent * 2 - 1)));
-		}
-
-		inline float EaseSineIn(float percent)
-		{
-			return 1.f - math::Cos(percent * 90);
-		}
-
-		inline float EaseSineOut(float percent)
-		{
-			return math::Sin(percent * 90);
-		}
-
-		inline float EaseSineInOut(float percent)
-		{
-			return -0.5f * (math::Cos(percent * 180) - 1);
-		}
-	}
-
 	//-------------------------------------------------------
-	// TweenAction
+	// Tween
 	//-------------------------------------------------------
 
-	TweenAction::TweenAction()
+	Tween::Tween()
+		: elapsed_()
+		, duration_()
+		, ease_func_(math::Linear)
+		, ease_type_(EaseFunc::Linear)
 	{
 	}
 
-	TweenAction::TweenAction(spIntervalAction const & action, TweenType type)
-		: inner_(action)
-		, type_(type)
+	Tween::Tween(Duration const& duration, EaseFunc func)
+		: elapsed_()
+		, ease_func_(math::Linear)
+		, ease_type_(EaseFunc::Linear)
 	{
-		if (inner_)
-			this->SetDuration(inner_->GetDuration());
+		SetDuration(duration);
+		SetEaseFunction(func);
+	}
 
-		switch (type_)
+	void Tween::SetEaseFunction(EaseFunc func)
+	{
+		ease_type_ = func;
+		switch (func)
 		{
-		case TweenType::EaseExponentialIn:
-			ease_func_ = EaseExponentialIn;
+		case EaseFunc::Linear:
+			ease_func_ = math::Linear;
 			break;
-		case TweenType::EaseExponentialOut:
-			ease_func_ = EaseExponentialOut;
+		case EaseFunc::EaseIn:
+			ease_func_ = std::bind(math::EaseIn, std::placeholders::_1, 2.f);
 			break;
-		case TweenType::EaseExponentialInOut:
-			ease_func_ = EaseExponentialInOut;
+		case EaseFunc::EaseOut:
+			ease_func_ = std::bind(math::EaseOut, std::placeholders::_1, 2.f);
 			break;
-		case TweenType::EaseSineIn:
-			ease_func_ = EaseSineIn;
+		case EaseFunc::EaseInOut:
+			ease_func_ = std::bind(math::EaseInOut, std::placeholders::_1, 2.f);
 			break;
-		case TweenType::EaseSineOut:
-			ease_func_ = EaseSineOut;
+		case EaseFunc::EaseExponentialIn:
+			ease_func_ = math::EaseExponentialIn;
 			break;
-		case TweenType::EaseSineInOut:
-			ease_func_ = EaseSineInOut;
+		case EaseFunc::EaseExponentialOut:
+			ease_func_ = math::EaseExponentialOut;
+			break;
+		case EaseFunc::EaseExponentialInOut:
+			ease_func_ = math::EaseExponentialInOut;
+			break;
+		case EaseFunc::EaseSineIn:
+			ease_func_ = math::EaseSineIn;
+			break;
+		case EaseFunc::EaseSineOut:
+			ease_func_ = math::EaseSineOut;
+			break;
+		case EaseFunc::EaseSineInOut:
+			ease_func_ = math::EaseSineInOut;
 			break;
 		default:
 			break;
 		}
 	}
 
-	TweenAction::TweenAction(spIntervalAction const & action, EaseFunc const & func)
+	void Tween::SetEaseFunction(std::function<float(float)> func)
 	{
+		ease_func_ = func;
+		ease_type_ = EaseFunc(-1);
 	}
 
-	spAction TweenAction::Clone() const
+	void Tween::Reset()
 	{
-		auto clone = inner_->Clone();
-		return new TweenAction(dynamic_cast<IntervalAction*>(clone.Get()), ease_func_);
+		Action::Reset();
+		elapsed_ = Duration{};
 	}
 
-	spAction TweenAction::Reverse() const
+	Duration const & Tween::GetDuration() const
 	{
-		TweenType reverse_type;
-		switch (type_)
+		return duration_;
+	}
+
+	void Tween::Init(Node* target)
+	{
+		Action::Init(target);
+	}
+
+	void Tween::Update(Node* target, Duration const& dt)
+	{
+		Action::Update(target, dt);
+
+		float step;
+		if (duration_.IsZero())
 		{
-		case TweenType::EaseExponentialIn:
-			reverse_type = TweenType::EaseExponentialOut;
-			break;
-		case TweenType::EaseExponentialOut:
-			reverse_type = TweenType::EaseExponentialIn;
-			break;
-		case TweenType::EaseExponentialInOut:
-			reverse_type = TweenType::EaseExponentialInOut;
-			break;
-		case TweenType::EaseSineIn:
-			reverse_type = TweenType::EaseSineOut;
-			break;
-		case TweenType::EaseSineOut:
-			reverse_type = TweenType::EaseSineIn;
-			break;
-		case TweenType::EaseSineInOut:
-			reverse_type = TweenType::EaseSineInOut;
-			break;
-		default:
-			break;
+			step = 1.f;
 		}
-		auto reverse = inner_->Reverse();
-		return new TweenAction(dynamic_cast<IntervalAction*>(reverse.Get()), reverse_type);
-	}
-
-	void TweenAction::Init(Node * target)
-	{
-		IntervalAction::Init(target);
-		if (inner_)
-			inner_->Init(target);
-	}
-
-	void TweenAction::Update(Node * target, float percent)
-	{
-		percent = ease_func_(percent);
-
-		if (inner_)
+		else
 		{
-			inner_->Update(target, percent);
-
-			if (this->IsDone())
-				inner_->Stop();
+			elapsed_ += dt;
+			step = std::min(elapsed_ / duration_, 1.f);
 		}
+
+		if ((1.f - step) <= FLT_EPSILON)
+		{
+			this->Stop();
+		}
+
+		UpdateStep(target, ease_func_(step));
+	}
+
+	void Tween::SetDuration(Duration const & duration)
+	{
+		duration_ = duration;
 	}
 
 
 	//-------------------------------------------------------
-	// EaseAction
+	// Move Action
 	//-------------------------------------------------------
 
-	namespace
+	MoveBy::MoveBy(Duration const& duration, Point const& vector, EaseFunc func)
+		: Tween(duration, func)
 	{
-		inline float EaseIn(float percent, float rate)
-		{
-			return math::Pow(percent, rate);
-		}
+		delta_pos_ = vector;
+	}
 
-		inline float EaseOut(float percent, float rate)
-		{
-			return math::Pow(percent, 1.f / rate);
-		}
+	void MoveBy::Init(Node* target)
+	{
+		Tween::Init(target);
 
-		inline float EaseInOut(float percent, float rate)
+		if (target)
 		{
-			if (percent < .5f)
-				return .5f * math::Pow(2 * percent, rate);
-			return 1.f - .5f * math::Pow(2.f - 2 * percent, rate);
+			prev_pos_ = start_pos_ = target->GetPosition();
 		}
 	}
 
-	EaseAction::EaseAction(spIntervalAction const & action, EaseType type, float rate)
-		: inner_(action)
-		, rate_(rate)
+	void MoveBy::UpdateStep(Node* target, float step)
 	{
-		if (inner_)
-			this->SetDuration(inner_->GetDuration());
-
-		switch (type)
+		if (target)
 		{
-		case EaseType::EaseIn:
-			ease_func_ = EaseIn;
-			break;
-		case EaseType::EaseOut:
-			ease_func_ = EaseOut;
-			break;
-		case EaseType::EaseInOut:
-			ease_func_ = EaseInOut;
-			break;
-		default:
-			break;
+			Point diff = target->GetPosition() - prev_pos_;
+			start_pos_ = start_pos_ + diff;
+
+			Point new_pos = start_pos_ + (delta_pos_ * step);
+			target->SetPosition(new_pos);
+
+			prev_pos_ = new_pos;
 		}
 	}
 
-	EaseAction::EaseAction(spIntervalAction const & action, EaseFunc const & func, float rate)
-		: inner_(action)
-		, rate_(rate)
-		, ease_func_(func)
+	spAction MoveBy::Clone() const
+	{
+		return new (std::nothrow) MoveBy(duration_, delta_pos_, ease_type_);
+	}
+
+	spAction MoveBy::Reverse() const
+	{
+		return new (std::nothrow) MoveBy(duration_, -delta_pos_, ease_type_);
+	}
+
+	MoveTo::MoveTo(Duration const& duration, Point const& pos, EaseFunc func)
+		: MoveBy(duration, Point(), func)
+	{
+		end_pos_ = pos;
+	}
+
+	spAction MoveTo::Clone() const
+	{
+		return new (std::nothrow) MoveTo(duration_, end_pos_, ease_type_);
+	}
+
+	void MoveTo::Init(Node* target)
+	{
+		MoveBy::Init(target);
+		delta_pos_ = end_pos_ - start_pos_;
+	}
+
+
+	//-------------------------------------------------------
+	// Jump Action
+	//-------------------------------------------------------
+
+	JumpBy::JumpBy(Duration const& duration, Point const& vec, float height, int jumps, EaseFunc func)
+		: Tween(duration, func)
+		, delta_pos_(vec)
+		, height_(height)
+		, jumps_(jumps)
 	{
 	}
 
-	spAction EaseAction::Clone() const
+	spAction JumpBy::Clone() const
 	{
-		auto clone = inner_->Clone();
-		return new EaseAction(dynamic_cast<IntervalAction*>(clone.Get()), ease_func_, rate_);
+		return new (std::nothrow) JumpBy(duration_, delta_pos_, height_, jumps_, ease_type_);
 	}
 
-	spAction EaseAction::Reverse() const
+	spAction JumpBy::Reverse() const
 	{
-		auto reverse = inner_->Reverse();
-		return new EaseAction(dynamic_cast<IntervalAction*>(reverse.Get()), ease_func_, 1.f / rate_);
+		return new (std::nothrow) JumpBy(duration_, -delta_pos_, height_, jumps_, ease_type_);
 	}
 
-	void EaseAction::Update(Node * target, float percent)
+	void JumpBy::Init(Node* target)
 	{
-		percent = ease_func_(percent, rate_);
+		Tween::Init(target);
 
-		if (inner_)
+		if (target)
 		{
-			inner_->Update(target, percent);
+			prev_pos_ = start_pos_ = target->GetPosition();
+		}
+	}
 
-			if (this->IsDone())
-				inner_->Stop();
+	void JumpBy::UpdateStep(Node* target, float step)
+	{
+		if (target)
+		{
+			float frac = fmod(step * jumps_, 1.f);
+			float x = delta_pos_.x * step;
+			float y = height_ * 4 * frac * (1 - frac);
+			y += delta_pos_.y * step;
+
+			Point diff = target->GetPosition() - prev_pos_;
+			start_pos_ = diff + start_pos_;
+
+			Point new_pos = start_pos_ + Point(x, y);
+			target->SetPosition(new_pos);
+
+			prev_pos_ = new_pos;
+		}
+	}
+
+	JumpTo::JumpTo(Duration const& duration, Point const& pos, float height, int jumps, EaseFunc func)
+		: JumpBy(duration, Point(), height, jumps, func)
+		, end_pos_(pos)
+	{
+	}
+
+	spAction JumpTo::Clone() const
+	{
+		return new (std::nothrow) JumpTo(duration_, end_pos_, height_, jumps_, ease_type_);
+	}
+
+	void JumpTo::Init(Node* target)
+	{
+		JumpBy::Init(target);
+		delta_pos_ = end_pos_ - start_pos_;
+	}
+
+
+	//-------------------------------------------------------
+	// Scale Action
+	//-------------------------------------------------------
+
+	ScaleBy::ScaleBy(Duration const& duration, float scale, EaseFunc func)
+		: Tween(duration, func)
+	{
+		delta_x_ = scale;
+		delta_y_ = scale;
+	}
+
+	ScaleBy::ScaleBy(Duration const& duration, float scale_x, float scale_y, EaseFunc func)
+		: Tween(duration, func)
+	{
+		delta_x_ = scale_x;
+		delta_y_ = scale_y;
+	}
+
+	void ScaleBy::Init(Node* target)
+	{
+		Tween::Init(target);
+
+		if (target)
+		{
+			start_scale_x_ = target->GetScaleX();
+			start_scale_y_ = target->GetScaleY();
+		}
+	}
+
+	void ScaleBy::UpdateStep(Node* target, float step)
+	{
+		if (target)
+		{
+			target->SetScale(start_scale_x_ + delta_x_ * step, start_scale_y_ + delta_y_ * step);
+		}
+	}
+
+	spAction ScaleBy::Clone() const
+	{
+		return new (std::nothrow) ScaleBy(duration_, delta_x_, delta_y_, ease_type_);
+	}
+
+	spAction ScaleBy::Reverse() const
+	{
+		return new (std::nothrow) ScaleBy(duration_, -delta_x_, -delta_y_, ease_type_);
+	}
+
+	ScaleTo::ScaleTo(Duration const& duration, float scale, EaseFunc func)
+		: ScaleBy(duration, 0, 0, func)
+	{
+		end_scale_x_ = scale;
+		end_scale_y_ = scale;
+	}
+
+	ScaleTo::ScaleTo(Duration const& duration, float scale_x, float scale_y, EaseFunc func)
+		: ScaleBy(duration, 0, 0, func)
+	{
+		end_scale_x_ = scale_x;
+		end_scale_y_ = scale_y;
+	}
+
+	spAction ScaleTo::Clone() const
+	{
+		return new (std::nothrow) ScaleTo(duration_, end_scale_x_, end_scale_y_, ease_type_);
+	}
+
+	void ScaleTo::Init(Node* target)
+	{
+		ScaleBy::Init(target);
+		delta_x_ = end_scale_x_ - start_scale_x_;
+		delta_y_ = end_scale_y_ - start_scale_y_;
+	}
+
+
+	//-------------------------------------------------------
+	// Opacity Action
+	//-------------------------------------------------------
+
+	OpacityBy::OpacityBy(Duration const& duration, float opacity, EaseFunc func)
+		: Tween(duration, func)
+	{
+		delta_val_ = opacity;
+	}
+
+	void OpacityBy::Init(Node* target)
+	{
+		Tween::Init(target);
+
+		if (target)
+		{
+			start_val_ = target->GetOpacity();
+		}
+	}
+
+	void OpacityBy::UpdateStep(Node* target, float step)
+	{
+		if (target)
+		{
+			target->SetOpacity(start_val_ + delta_val_ * step);
+		}
+	}
+
+	spAction OpacityBy::Clone() const
+	{
+		return new (std::nothrow) OpacityBy(duration_, delta_val_, ease_type_);
+	}
+
+	spAction OpacityBy::Reverse() const
+	{
+		return new (std::nothrow) OpacityBy(duration_, -delta_val_, ease_type_);
+	}
+
+	OpacityTo::OpacityTo(Duration const& duration, float opacity, EaseFunc func)
+		: OpacityBy(duration, 0, func)
+	{
+		end_val_ = opacity;
+	}
+
+	spAction OpacityTo::Clone() const
+	{
+		return new (std::nothrow) OpacityTo(duration_, end_val_, ease_type_);
+	}
+
+	void OpacityTo::Init(Node* target)
+	{
+		OpacityBy::Init(target);
+		delta_val_ = end_val_ - start_val_;
+	}
+
+	FadeIn::FadeIn(Duration const& duration, EaseFunc func)
+		: OpacityTo(duration, 1, func)
+	{
+	}
+
+	FadeOut::FadeOut(Duration const& duration, EaseFunc func)
+		: OpacityTo(duration, 0, func)
+	{
+	}
+
+
+	//-------------------------------------------------------
+	// Rotate Action
+	//-------------------------------------------------------
+
+	RotateBy::RotateBy(Duration const& duration, float rotation, EaseFunc func)
+		: Tween(duration, func)
+		, delta_val_(rotation)
+	{
+	}
+
+	void RotateBy::Init(Node* target)
+	{
+		Tween::Init(target);
+
+		if (target)
+		{
+			start_val_ = target->GetRotation();
+		}
+	}
+
+	void RotateBy::UpdateStep(Node* target, float step)
+	{
+		if (target)
+		{
+			target->SetRotation(start_val_ + delta_val_ * step);
+		}
+	}
+
+	spAction RotateBy::Clone() const
+	{
+		return new (std::nothrow) RotateBy(duration_, delta_val_, ease_type_);
+	}
+
+	spAction RotateBy::Reverse() const
+	{
+		return new (std::nothrow) RotateBy(duration_, -delta_val_, ease_type_);
+	}
+
+	RotateTo::RotateTo(Duration const& duration, float rotation, EaseFunc func)
+		: RotateBy(duration, 0, func)
+	{
+		end_val_ = rotation;
+	}
+
+	spAction RotateTo::Clone() const
+	{
+		return new (std::nothrow) RotateTo(duration_, end_val_, ease_type_);
+	}
+
+	void RotateTo::Init(Node* target)
+	{
+		RotateBy::Init(target);
+		delta_val_ = end_val_ - start_val_;
+	}
+
+
+	//-------------------------------------------------------
+	// PathAction
+	//-------------------------------------------------------
+
+	PathAction::PathAction(Duration const & duration, spGeometry const& geo, bool rotating, float start, float end, EaseFunc func)
+		: Tween(duration, func)
+		, start_(start)
+		, end_(end)
+		, geo_(geo)
+		, rotating_(rotating)
+	{
+	}
+
+	spAction PathAction::Clone() const
+	{
+		return new PathAction(duration_, geo_, rotating_, start_, end_, ease_type_);
+	}
+
+	spAction PathAction::Reverse() const
+	{
+		return new PathAction(duration_, geo_, rotating_, end_, start_, ease_type_);
+	}
+
+	void PathAction::UpdateStep(Node* target, float step)
+	{
+		if (target)
+		{
+			float length = geo_->GetLength() * std::min(std::max((end_ - start_) * step + start_, 0.f), 1.f);
+
+			Point point, tangent;
+			if (geo_->ComputePointAt(length, &point, &tangent))
+			{
+				target->SetPosition(point);
+
+				if (rotating_)
+				{
+					float ac = math::Acos(tangent.x);
+					float rotation = (tangent.y < 0.f) ? 360.f - ac : ac;
+					target->SetRotation(rotation);
+				}
+			}
 		}
 	}
 
