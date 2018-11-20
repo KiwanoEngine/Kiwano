@@ -56,50 +56,95 @@ namespace easy2d
 		case EaseFunc::Linear:
 			ease_func_ = math::Linear;
 			break;
-		case EaseFunc::EaseIn:
+		case EaseFunc::In:
 			ease_func_ = MakeEaseIn(2.f);
 			break;
-		case EaseFunc::EaseOut:
+		case EaseFunc::Out:
 			ease_func_ = MakeEaseOut(2.f);
 			break;
-		case EaseFunc::EaseInOut:
+		case EaseFunc::InOut:
 			ease_func_ = MakeEaseInOut(2.f);
 			break;
-		case EaseFunc::EaseExponentialIn:
+		case EaseFunc::ExpoIn:
 			ease_func_ = math::EaseExponentialIn;
 			break;
-		case EaseFunc::EaseExponentialOut:
+		case EaseFunc::ExpoOut:
 			ease_func_ = math::EaseExponentialOut;
 			break;
-		case EaseFunc::EaseExponentialInOut:
+		case EaseFunc::ExpoInOut:
 			ease_func_ = math::EaseExponentialInOut;
 			break;
-		case EaseFunc::EaseBounceIn:
+		case EaseFunc::BounceIn:
 			ease_func_ = math::EaseBounceIn;
 			break;
-		case EaseFunc::EaseBounceOut:
+		case EaseFunc::BounceOut:
 			ease_func_ = math::EaseBounceOut;
 			break;
-		case EaseFunc::EaseBounceInOut:
+		case EaseFunc::BounceInOut:
 			ease_func_ = math::EaseBounceInOut;
 			break;
-		case EaseFunc::EaseElasticIn:
+		case EaseFunc::ElasticIn:
 			ease_func_ = MakeEaseElasticIn(0.3f);
 			break;
-		case EaseFunc::EaseElasticOut:
+		case EaseFunc::ElasticOut:
 			ease_func_ = MakeEaseElasticOut(0.3f);
 			break;
-		case EaseFunc::EaseElasticInOut:
+		case EaseFunc::ElasticInOut:
 			ease_func_ = MakeEaseElasticInOut(0.3f);
 			break;
-		case EaseFunc::EaseSineIn:
+		case EaseFunc::SineIn:
 			ease_func_ = math::EaseSineIn;
 			break;
-		case EaseFunc::EaseSineOut:
+		case EaseFunc::SineOut:
 			ease_func_ = math::EaseSineOut;
 			break;
-		case EaseFunc::EaseSineInOut:
+		case EaseFunc::SineInOut:
 			ease_func_ = math::EaseSineInOut;
+			break;
+		case EaseFunc::BackIn:
+			ease_func_ = math::EaseBackIn;
+			break;
+		case EaseFunc::BackOut:
+			ease_func_ = math::EaseBackOut;
+			break;
+		case EaseFunc::BackInOut:
+			ease_func_ = math::EaseBackInOut;
+			break;
+		case EaseFunc::QuadIn:
+			ease_func_ = math::EaseQuadIn;
+			break;
+		case EaseFunc::QuadOut:
+			ease_func_ = math::EaseQuadOut;
+			break;
+		case EaseFunc::QuadInOut:
+			ease_func_ = math::EaseQuadInOut;
+			break;
+		case EaseFunc::CubicIn:
+			ease_func_ = math::EaseCubicIn;
+			break;
+		case EaseFunc::CubicOut:
+			ease_func_ = math::EaseCubicOut;
+			break;
+		case EaseFunc::CubicInOut:
+			ease_func_ = math::EaseCubicInOut;
+			break;
+		case EaseFunc::QuartIn:
+			ease_func_ = math::EaseQuartIn;
+			break;
+		case EaseFunc::QuartOut:
+			ease_func_ = math::EaseQuartOut;
+			break;
+		case EaseFunc::QuartInOut:
+			ease_func_ = math::EaseQuartInOut;
+			break;
+		case EaseFunc::QuintIn:
+			ease_func_ = math::EaseQuintIn;
+			break;
+		case EaseFunc::QuintOut:
+			ease_func_ = math::EaseQuintOut;
+			break;
+		case EaseFunc::QuintInOut:
+			ease_func_ = math::EaseQuintInOut;
 			break;
 		default:
 			break;

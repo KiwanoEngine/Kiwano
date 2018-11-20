@@ -25,26 +25,44 @@
 
 namespace easy2d
 {
+	// 缓动函数枚举
+	// More infomation about ease functions, see https://easings.net
 	enum class EaseFunc
 	{
-		Linear,					// 线性
-		EaseIn,					// 由慢变快
-		EaseOut,				// 由快变慢
-		EaseInOut,				// 由慢变快, 再由快变慢
-		EaseExponentialIn,		// 由慢变极快
-		EaseExponentialOut,		// 由极快变慢
-		EaseExponentialInOut,	// 由慢至极快, 再由极快边慢
-		EaseBounceIn,			// 自起点赋予反弹力
-		EaseBounceOut,			// 自终点赋予反弹力
-		EaseBounceInOut,		// 在起点和终点赋予反弹力
-		EaseElasticIn,			// 自起点赋予弹性
-		EaseElasticOut,			// 自终点赋予弹性
-		EaseElasticInOut,		// 再起点和终点赋予弹性
-		EaseSineIn,				// 由快变慢, 采用正弦变换速度
-		EaseSineOut,			// 由慢变快, 采用正弦变换速度
-		EaseSineInOut,			// 由慢至快, 再由快至慢, 采用正弦变换速度
+		Linear,			// 线性
+		In,				// 由慢变快
+		Out,			// 由快变慢
+		InOut,			// 由慢变快, 再由快变慢
+		ExpoIn,			// 由慢变极快
+		ExpoOut,		// 由极快变慢
+		ExpoInOut,		// 由慢至极快, 再由极快边慢
+		ElasticIn,		// 自起点赋予弹性
+		ElasticOut,		// 自终点赋予弹性
+		ElasticInOut,	// 再起点和终点赋予弹性
+		BounceIn,		// 自起点赋予反弹力
+		BounceOut,		// 自终点赋予反弹力
+		BounceInOut,	// 在起点和终点赋予反弹力
+		BackIn,
+		BackOut,
+		BackInOut,
+		QuadIn,
+		QuadOut,
+		QuadInOut,
+		CubicIn,
+		CubicOut,
+		CubicInOut,
+		QuartIn,
+		QuartOut,
+		QuartInOut,
+		QuintIn,
+		QuintOut,
+		QuintInOut,
+		SineIn,
+		SineOut,
+		SineInOut,
 	};
 
+	// 缓动函数
 	using EaseFunction = std::function<float(float)>;
 
 	inline EaseFunction MakeEaseIn(float rate) { return std::bind(math::EaseIn, std::placeholders::_1, rate); }
@@ -54,6 +72,8 @@ namespace easy2d
 	inline EaseFunction MakeEaseElasticOut(float period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
 	inline EaseFunction MakeEaseElasticInOut(float period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
 
+
+	// 补间动画
 	class Tween
 		: public Action
 	{
@@ -65,12 +85,12 @@ namespace easy2d
 			EaseFunc func
 		);
 
-		// 设置速度变化曲线
+		// 设置缓动函数
 		void SetEaseFunction(
 			EaseFunc func
 		);
 
-		// 自定义速度变化曲线
+		// 自定义缓动函数
 		void SetEaseFunction(
 			EaseFunction func
 		);
