@@ -113,6 +113,60 @@ namespace easy2d
 
 
 	//-------------------------------------------------------
+	// LineGeometry
+	//-------------------------------------------------------
+
+	LineGeometry::LineGeometry()
+	{
+	}
+
+	LineGeometry::LineGeometry(Point const & begin, Point const & end)
+	{
+		SetLine(begin, end);
+	}
+
+	LineGeometry::~LineGeometry()
+	{
+	}
+
+	void LineGeometry::SetLine(Point const & begin, Point const & end)
+	{
+		cpPathGeometry path_geo;
+		cpGeometrySink path_sink;
+
+		HRESULT hr = devices::Graphics::Instance()->CreatePathGeometry(path_geo);
+
+		if (SUCCEEDED(hr))
+		{
+			hr = path_geo->Open(&path_sink);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			path_sink->BeginFigure(begin, D2D1_FIGURE_BEGIN_FILLED);
+			path_sink->AddLine(end);
+			path_sink->EndFigure(D2D1_FIGURE_END_OPEN);
+			hr = path_sink->Close();
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			geo_ = path_geo;
+		}
+	}
+
+	void LineGeometry::SetBegin(Point const & begin)
+	{
+		SetLine(begin, end_);
+	}
+
+	void LineGeometry::SetEnd(Point const & end)
+	{
+		SetLine(begin_, end);
+	}
+
+
+	//-------------------------------------------------------
 	// RectangleGeometry
 	//-------------------------------------------------------
 
@@ -150,6 +204,7 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	CircleGeometry::CircleGeometry()
+		: radius_(0.f)
 	{
 	}
 
@@ -189,6 +244,8 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	EllipseGeometry::EllipseGeometry()
+		: radius_x_(0.f)
+		, radius_y_(0.f)
 	{
 	}
 
@@ -312,6 +369,48 @@ namespace easy2d
 		geo_ = nullptr;
 		current_sink_ = nullptr;
 		current_geometry_ = nullptr;
+	}
+
+
+	//-------------------------------------------------------
+	// RoundedRectGeometry
+	//-------------------------------------------------------
+
+	RoundedRectGeometry::RoundedRectGeometry()
+		: radius_x_(0.f)
+		, radius_y_(0.f)
+	{
+	}
+
+	RoundedRectGeometry::RoundedRectGeometry(Rect const & rect, float radius_x, float radius_y)
+	{
+		SetRoundedRect(rect, radius_x, radius_y);
+	}
+
+	RoundedRectGeometry::~RoundedRectGeometry()
+	{
+	}
+
+	void RoundedRectGeometry::SetRadius(float radius_x, float radius_y)
+	{
+		SetRoundedRect(rect_, radius_x, radius_y);
+	}
+
+	void RoundedRectGeometry::SetRect(Rect const & rect)
+	{
+		SetRoundedRect(rect, radius_x_, radius_y_);
+	}
+
+	void RoundedRectGeometry::SetRoundedRect(Rect const & rect, float radius_x, float radius_y)
+	{
+		cpRoundedRectangleGeometry geo;
+		if (SUCCEEDED(devices::Graphics::Instance()->CreateRoundedRectangleGeometry(geo, rect, radius_x, radius_y)))
+		{
+			geo_ = geo;
+			rect_ = rect;
+			radius_x_ = radius_x;
+			radius_y_ = radius_y;
+		}
 	}
 
 }

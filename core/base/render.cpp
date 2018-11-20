@@ -184,6 +184,26 @@ namespace easy2d
 			return hr;
 		}
 
+		HRESULT GraphicsDevice::CreateRoundedRectangleGeometry(cpRoundedRectangleGeometry & geo, Rect const & rect, float radius_x, float radius_y) const
+		{
+			if (!d2d.factory)
+				return E_UNEXPECTED;
+
+			cpRoundedRectangleGeometry rounded_rect;
+			HRESULT hr = d2d.factory->CreateRoundedRectangleGeometry(
+				D2D1::RoundedRect(
+					rect,
+					radius_x,
+					radius_y
+				),
+				&rounded_rect
+			);
+
+			if (SUCCEEDED(hr))
+				geo = rounded_rect;
+			return hr;
+		}
+
 		HRESULT GraphicsDevice::CreateEllipseGeometry(cpEllipseGeometry & geo, Point const & center, float radius_x, float radius_y) const
 		{
 			if (!d2d.factory)
