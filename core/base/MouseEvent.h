@@ -31,7 +31,7 @@ namespace easy2d
 		// 鼠标消息类型
 		enum class Type : int
 		{
-			MoveBy = 0x0200,		// 鼠标移动
+			Move = 0x0200,		// 鼠标移动
 			LeftDown,			// 鼠标左键按下
 			LeftUp,				// 鼠标左键抬起
 			LeftDoubleClick,	// 鼠标左键双击

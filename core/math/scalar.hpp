@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "constants.hpp"
 #include <cmath>
 
 #if _MSC_VER >= 1900
@@ -32,14 +33,6 @@ namespace easy2d
 {
 	namespace math
 	{
-		namespace constants
-		{
-			E2D_CONSTEXPR auto PI_F   = 3.141592653589793f;
-			E2D_CONSTEXPR auto PI_F_2 = 1.570796326794896f;
-			E2D_CONSTEXPR auto PI_D   = 3.14159265358979323846;
-			E2D_CONSTEXPR auto PI_D_2 = 1.57079632679489661923;
-		}
-		
 		inline int Abs(int val) { return ::abs(val); }
 
 		inline float Abs(float val) { return ::fabsf(val); }

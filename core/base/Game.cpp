@@ -98,10 +98,6 @@ namespace easy2d
 					freopen_s(&stdoutStream, "conout$", "w+t", stdout);
 					freopen_s(&stdinStream, "conin$", "r+t", stdin);
 					freopen_s(&stderrStream, "conout$", "w+t", stderr);
-
-					// disable the close button of console
-					HMENU hmenu = ::GetSystemMenu(console, FALSE);
-					::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 				}
 			}
 		}
@@ -111,6 +107,13 @@ namespace easy2d
 			{
 				::ShowWindow(console, SW_HIDE);
 			}
+		}
+
+		if (console)
+		{
+			// disable the close button of console
+			HMENU hmenu = ::GetSystemMenu(console, FALSE);
+			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
 
 		initialized_ = true;

@@ -64,6 +64,74 @@ namespace easy2d
 			return 0.5f * (2 - math::Pow(2, -10 * (step * 2 - 1)));
 		}
 
+		inline float EaseBounceOut(float step)
+		{
+			if (step < 1 / 2.75f)
+			{
+				return 7.5625f * step * step;
+			}
+			else if (step < 2 / 2.75f)
+			{
+				step -= 1.5f / 2.75f;
+				return 7.5625f * step * step + 0.75f;
+			}
+			else if (step < 2.5f / 2.75f)
+			{
+				step -= 2.25f / 2.75f;
+				return 7.5625f * step * step + 0.9375f;
+			}
+
+			step -= 2.625f / 2.75f;
+			return 7.5625f * step * step + 0.984375f;
+		}
+
+		inline float EaseBounceIn(float step)
+		{
+			return 1 - EaseBounceOut(1 - step);
+		}
+
+		inline float EaseBounceInOut(float step)
+		{
+			if (step < 0.5f)
+			{
+				return EaseBounceIn(step * 2) * 0.5f;
+			}
+			else
+			{
+				return EaseBounceOut(step * 2 - 1) * 0.5f + 0.5f;
+			}
+		}
+
+		inline float EaseElasticIn(float step, float period)
+		{
+			if (step == 0 || step == 1)
+				return step;
+
+			step = step - 1;
+			return -math::Pow(2, 10 * step) * math::Sin((step - period / 4) * 360.f / period);
+		}
+
+		inline float EaseElasticOut(float step, float period)
+		{
+			if (step == 0 || step == 1)
+				return step;
+			
+			return math::Pow(2, -10 * step) * math::Sin((step - period / 4) * 360.f / period) + 1;
+		}
+
+		inline float EaseElasticInOut(float step, float period)
+		{
+			if (step == 0 || step == 1)
+				return step;
+
+			step = step * 2 - 1;
+			if (step < 0)
+			{
+				return -0.5f * math::Pow(2, 10 * step) * math::Sin((step - period / 4) * 360.f / period);
+			}
+			return math::Pow(2, -10 * step) * math::Sin((step - period / 4) * 360.f / period) * 0.5f + 1;
+		}
+
 		inline float EaseSineIn(float step)
 		{
 			return 1.f - math::Cos(step * 90);

@@ -58,6 +58,7 @@
 #include "base/Unit.h"
 #include "base/Geometry.h"
 #include "base/Image.h"
+#include "base/Frames.h"
 #include "base/Node.h"
 #include "base/Scene.h"
 #include "base/Sprite.h"
@@ -70,7 +71,7 @@
 #include "base/ActionCombined.h"
 #include "base/ActionTween.h"
 #include "base/Animation.h"
-#include "base/CallFunc.h"
+#include "base/Delay.h"
 #include "base/Transition.h"
 #include "base/Debuger.h"
 
@@ -84,7 +85,9 @@
 // math
 //
 
+#include "math/constants.hpp"
 #include "math/scalar.hpp"
+#include "math/ease.hpp"
 #include "math/vector.hpp"
 #include "math/rand.h"
 #include "math/Matrix.hpp"
