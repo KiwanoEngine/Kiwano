@@ -21,6 +21,7 @@
 #pragma once
 #include "Action.hpp"
 #include "logs.h"
+#include "../math/ease.hpp"
 
 namespace easy2d
 {
@@ -44,6 +45,15 @@ namespace easy2d
 		EaseSineInOut,			// 由慢至快, 再由快至慢, 采用正弦变换速度
 	};
 
+	using EaseFunction = std::function<float(float)>;
+
+	inline EaseFunction MakeEaseIn(float rate) { return std::bind(math::EaseIn, std::placeholders::_1, rate); }
+	inline EaseFunction MakeEaseOut(float rate) { return std::bind(math::EaseOut, std::placeholders::_1, rate); }
+	inline EaseFunction MakeEaseInOut(float rate) { return std::bind(math::EaseInOut, std::placeholders::_1, rate); }
+	inline EaseFunction MakeEaseElasticIn(float period) { return std::bind(math::EaseElasticIn, std::placeholders::_1, period); }
+	inline EaseFunction MakeEaseElasticOut(float period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
+	inline EaseFunction MakeEaseElasticInOut(float period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
+
 	class Tween
 		: public Action
 	{
@@ -62,7 +72,7 @@ namespace easy2d
 
 		// 自定义速度变化曲线
 		void SetEaseFunction(
-			std::function<float(float)> func
+			EaseFunction func
 		);
 
 		virtual void Reset() override;
@@ -79,10 +89,10 @@ namespace easy2d
 		virtual void UpdateStep(Node* target, float step) = 0;
 
 	protected:
-		Duration duration_;
-		Duration elapsed_;
-		EaseFunc ease_type_;
-		std::function<float(float)> ease_func_;
+		Duration     duration_;
+		Duration     elapsed_;
+		EaseFunc     ease_type_;
+		EaseFunction ease_func_;
 	};
 
 
