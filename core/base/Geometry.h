@@ -79,17 +79,22 @@ namespace easy2d
 		RectangleGeometry();
 
 		RectangleGeometry(
-			Size const& rect_size
+			Rect const& rect
+		);
+
+		RectangleGeometry(
+			Point const& left_top,
+			Size const& size
 		);
 
 		virtual ~RectangleGeometry();
 
-		Size const& GetSize() const { return size_; }
+		Rect const& GetRect() const { return rect_; }
 
-		void SetSize(Size const& rect_size);
+		void SetRect(Rect const& rect);
 
 	protected:
-		Size size_;
+		Rect rect_;
 	};
 
 
@@ -101,6 +106,7 @@ namespace easy2d
 		CircleGeometry();
 
 		CircleGeometry(
+			Point const& center,
 			float radius
 		);
 
@@ -112,7 +118,19 @@ namespace easy2d
 			float radius
 		);
 
+		Point const& GetCenter() const { return center_; }
+
+		void SetCenter(
+			Point const& center
+		);
+
+		void SetCircle(
+			Point const& center,
+			float radius
+		);
+
 	protected:
+		Point center_;
 		float radius_;
 	};
 
@@ -125,6 +143,7 @@ namespace easy2d
 		EllipseGeometry();
 
 		EllipseGeometry(
+			Point const& center,
 			float radius_x,
 			float radius_y
 		);
@@ -140,7 +159,20 @@ namespace easy2d
 			float radius_y
 		);
 
+		Point const& GetCenter() const { return center_; }
+
+		void SetCenter(
+			Point const& center
+		);
+
+		void SetEllipse(
+			Point const& center,
+			float radius_x,
+			float radius_y
+		);
+
 	protected:
+		Point center_;
 		float radius_x_;
 		float radius_y_;
 	};
@@ -156,7 +188,9 @@ namespace easy2d
 		virtual ~PathGeometry();
 
 		// 开始添加路径
-		void BeginPath();
+		void BeginPath(
+			Point const& begin_pos = Point{}	/* 起始点 */
+		);
 
 		// 结束路径
 		void EndPath(
