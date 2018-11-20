@@ -23,25 +23,13 @@
 
 namespace easy2d
 {
-	// 帧动画
-	class Animation
+	// 延时
+	class Delay
 		: public Action
 	{
 	public:
-		Animation();
-
-		explicit Animation(
-			spFrames const& animation
-		);
-
-		virtual ~Animation();
-
-		// 获取动画
-		spFrames GetAnimation() const;
-
-		// 设置动画
-		void SetAnimation(
-			spFrames const& animation
+		explicit Delay(
+			Duration const& duration	/* 延迟时长（秒） */
 		);
 
 		// 获取该动作的拷贝对象
@@ -54,15 +42,12 @@ namespace easy2d
 		virtual void Reset() override;
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
-		// 更新动作
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
-		size_t frame_index_;
+		Duration delay_;
 		Duration delta_;
-		spFrames frames_;
 	};
 }

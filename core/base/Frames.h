@@ -18,32 +18,65 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "CallFunc.h"
+#pragma once
+#include "base.hpp"
+#include "time.h"
 
 namespace easy2d
 {
-	CallFunc::CallFunc(const Callback& func) :
-		callback_(func)
+	// 帧集合
+	class Frames
+		: public ObjectBase
 	{
-	}
+		using Images = std::vector< spImage >;
 
-	spAction CallFunc::Clone() const
-	{
-		return new CallFunc(callback_);
-	}
+	public:
+		Frames();
 
-	spAction CallFunc::Reverse() const
-	{
-		return new CallFunc(callback_);
-	}
+		explicit Frames(
+			Images const& frames			/* 关键帧数组 */
+		);
 
-	void CallFunc::Init(Node*)
-	{
-	}
+		explicit Frames(
+			Duration const& interval	/* 帧间隔（秒） */
+		);
 
-	void CallFunc::Update(Node*, Duration const&)
-	{
-		callback_();
-		this->Stop();
-	}
+		explicit Frames(
+			Duration const& interval,	/* 帧间隔（秒） */
+			Images const& frames			/* 关键帧数组 */
+		);
+
+		virtual ~Frames();
+
+		// 添加关键帧
+		void Add(
+			spImage const& frame		/* 关键帧 */
+		);
+
+		// 添加多个关键帧
+		void Add(
+			Images const& frames			/* 关键帧数组 */
+		);
+
+		// 获取帧间隔
+		Duration const& GetInterval() const;
+
+		// 获取关键帧
+		Images const& GetFrames() const;
+
+		// 设置每一帧的时间间隔
+		void SetInterval(
+			Duration const& interval	/* 帧间隔（秒） */
+		);
+
+		// 获取帧动画的拷贝对象
+		spFrames Clone() const;
+
+		// 获取帧动画的倒转
+		spFrames Reverse() const;
+
+	protected:
+		Duration	interval_;
+		Images		frames_;
+	};
 }

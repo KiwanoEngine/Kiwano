@@ -24,35 +24,71 @@
 
 namespace easy2d
 {
-	class IntervalAction
+	enum class EaseFunc
+	{
+		Linear,					// 线性
+		EaseIn,					// 由慢变快
+		EaseOut,				// 由快变慢
+		EaseInOut,				// 由慢变快, 再由快变慢
+		EaseExponentialIn,		// 由慢变极快
+		EaseExponentialOut,		// 由极快变慢
+		EaseExponentialInOut,	// 由慢至极快, 再由极快边慢
+		EaseSineIn,				// 由快变慢, 采用正弦变换速度
+		EaseSineOut,			// 由慢变快, 采用正弦变换速度
+		EaseSineInOut			// 由慢至快, 再由快至慢, 采用正弦变换速度
+	};
+
+	class Tween
 		: public Action
 	{
 	public:
-		explicit IntervalAction(
-			Duration const& duration
+		Tween();
+
+		explicit Tween(
+			Duration const& duration,
+			EaseFunc func
+		);
+
+		// 设置速度变化曲线
+		void SetEaseFunction(
+			EaseFunc func
+		);
+
+		// 自定义速度变化曲线
+		void SetEaseFunction(
+			std::function<float(float)> func
 		);
 
 		virtual void Reset() override;
+
+		Duration const& GetDuration() const;
+
+		void SetDuration(Duration const& duration);
 
 	protected:
 		virtual void Init(Node* target) override;
 
 		virtual void Update(Node* target, Duration const& dt) override;
 
+		virtual void UpdateStep(Node* target, float step) = 0;
+
 	protected:
 		Duration duration_;
-		float process_;
+		Duration elapsed_;
+		EaseFunc ease_type_;
+		std::function<float(float)> ease_func_;
 	};
 
 
 	// 相对位移动作
 	class MoveBy
-		: public IntervalAction
+		: public Tween
 	{
 	public:
 		explicit MoveBy(
-			Duration const& duration,	/* 持续时长 */
-			Point const& vector			/* 移动距离 */
+			Duration const& duration,			/* 持续时长 */
+			Point const& vector,				/* 移动距离 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -64,7 +100,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void UpdateStep(Node* target, float step) override;
 
 	protected:
 		Point	start_pos_;
@@ -79,8 +115,9 @@ namespace easy2d
 	{
 	public:
 		explicit MoveTo(
-			Duration const& duration,	/* 持续时长 */
-			Point const& pos			/* 目的坐标 */
+			Duration const& duration,			/* 持续时长 */
+			Point const& pos,					/* 目的坐标 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -103,14 +140,15 @@ namespace easy2d
 
 	// 相对跳跃动作
 	class JumpBy
-		: public IntervalAction
+		: public Tween
 	{
 	public:
 		explicit JumpBy(
-			Duration const& duration,	/* 持续时长 */
-			Point const& vec,			/* 跳跃距离 */
-			float height,				/* 跳跃高度 */
-			int jumps = 1				/* 跳跃次数 */
+			Duration const& duration,			/* 持续时长 */
+			Point const& vec,					/* 跳跃距离 */
+			float height,						/* 跳跃高度 */
+			int jumps = 1,						/* 跳跃次数 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -122,7 +160,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void UpdateStep(Node* target, float step) override;
 
 	protected:
 		Point	start_pos_;
@@ -139,10 +177,11 @@ namespace easy2d
 	{
 	public:
 		explicit JumpTo(
-			Duration const& duration,	/* 持续时长 */
-			Point const& pos,			/* 目的坐标 */
-			float height,				/* 跳跃高度 */
-			int jumps = 1				/* 跳跃次数 */
+			Duration const& duration,			/* 持续时长 */
+			Point const& pos,					/* 目的坐标 */
+			float height,						/* 跳跃高度 */
+			int jumps = 1,						/* 跳跃次数 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -165,18 +204,20 @@ namespace easy2d
 
 	// 相对缩放动作
 	class ScaleBy
-		: public IntervalAction
+		: public Tween
 	{
 	public:
 		explicit ScaleBy(
-			Duration const& duration,	/* 持续时长 */
-			float scale					/* 相对变化值 */
+			Duration const& duration,			/* 持续时长 */
+			float scale,						/* 相对变化值 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		explicit ScaleBy(
-			Duration const& duration,	/* 持续时长 */
-			float scale_x,				/* 横向缩放相对变化值 */
-			float scale_y				/* 纵向缩放相对变化值 */
+			Duration const& duration,			/* 持续时长 */
+			float scale_x,						/* 横向缩放相对变化值 */
+			float scale_y,						/* 纵向缩放相对变化值 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -188,7 +229,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void UpdateStep(Node* target, float step) override;
 
 	protected:
 		float	start_scale_x_;
@@ -204,14 +245,16 @@ namespace easy2d
 	{
 	public:
 		explicit ScaleTo(
-			Duration const& duration,	/* 持续时长 */
-			float scale					/* 目标值 */
+			Duration const& duration,			/* 持续时长 */
+			float scale,						/* 目标值 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		explicit ScaleTo(
-			Duration const& duration,	/* 持续时长 */
-			float scale_x,				/* 横向缩放目标值 */
-			float scale_y				/* 纵向缩放目标值 */
+			Duration const& duration,			/* 持续时长 */
+			float scale_x,						/* 横向缩放目标值 */
+			float scale_y,						/* 纵向缩放目标值 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -235,12 +278,13 @@ namespace easy2d
 
 	// 透明度相对渐变动作
 	class OpacityBy
-		: public IntervalAction
+		: public Tween
 	{
 	public:
 		explicit OpacityBy(
-			Duration const& duration,	/* 持续时长 */
-			float opacity				/* 相对变化值 */
+			Duration const& duration,			/* 持续时长 */
+			float opacity,						/* 相对变化值 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -252,7 +296,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void UpdateStep(Node* target, float step) override;
 
 	protected:
 		float start_val_;
@@ -266,8 +310,9 @@ namespace easy2d
 	{
 	public:
 		explicit OpacityTo(
-			Duration const& duration,	/* 持续时长 */
-			float opacity				/* 目标值 */
+			Duration const& duration,			/* 持续时长 */
+			float opacity,						/* 目标值 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -295,7 +340,8 @@ namespace easy2d
 	public:
 		// 创建淡入动作
 		explicit FadeIn(
-			Duration const& duration	/* 持续时长 */
+			Duration const& duration,			/* 持续时长 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 	};
 
@@ -307,19 +353,21 @@ namespace easy2d
 	public:
 		// 创建淡出动作
 		explicit FadeOut(
-			Duration const& duration	/* 持续时长 */
+			Duration const& duration,			/* 持续时长 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 	};
 
 
 	// 相对旋转动作
 	class RotateBy
-		: public IntervalAction
+		: public Tween
 	{
 	public:
 		explicit RotateBy(
-			Duration const& duration,	/* 持续时长 */
-			float rotation				/* 相对变化值 */
+			Duration const& duration,			/* 持续时长 */
+			float rotation,						/* 相对变化值 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -331,7 +379,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void UpdateStep(Node* target, float step) override;
 
 	protected:
 		float start_val_;
@@ -345,8 +393,9 @@ namespace easy2d
 	{
 	public:
 		explicit RotateTo(
-			Duration const& duration,	/* 持续时长 */
-			float rotation				/* 目标值 */
+			Duration const& duration,			/* 持续时长 */
+			float rotation,						/* 目标值 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -369,15 +418,16 @@ namespace easy2d
 
 	// 路径动作
 	class PathAction
-		: public IntervalAction
+		: public Tween
 	{
 	public:
 		explicit PathAction(
-			Duration const& duration,	/* 持续时长 */
-			spGeometry const& geo,		/* 几何图形 */
-			bool rotating = false,		/* 沿路径切线方向旋转 */
-			float start = 0.f,			/* 起点 */
-			float end = 1.f				/* 终点 */
+			Duration const& duration,			/* 持续时长 */
+			spGeometry const& geo,				/* 几何图形 */
+			bool rotating = false,				/* 沿路径切线方向旋转 */
+			float start = 0.f,					/* 起点 */
+			float end = 1.f,					/* 终点 */
+			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -387,41 +437,12 @@ namespace easy2d
 		virtual spAction Reverse() const override;
 
 	protected:
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void UpdateStep(Node* target, float step) override;
 
 	protected:
 		bool		rotating_;
 		float		start_;
 		float		end_;
 		spGeometry	geo_;
-	};
-
-
-	// 延时动作
-	class Delay
-		: public Action
-	{
-	public:
-		explicit Delay(
-			Duration const& duration	/* 延迟时长（秒） */
-		);
-
-		// 获取该动作的拷贝对象
-		virtual spAction Clone() const override;
-
-		// 获取该动作的倒转
-		virtual spAction Reverse() const override;
-
-		// 重置动作
-		virtual void Reset() override;
-
-	protected:
-		virtual void Init(Node* target) override;
-
-		virtual void Update(Node* target, Duration const& dt) override;
-
-	protected:
-		Duration delay_;
-		Duration delta_;
 	};
 }

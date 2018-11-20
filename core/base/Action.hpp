@@ -53,9 +53,7 @@ namespace easy2d
 		virtual void Pause() { running_ = false; }
 
 		// 停止动作
-		virtual void Stop() { done_ = true; }
-
-		virtual bool IsDone() const { return done_; }
+		virtual void Stop() { if (!done_) { done_ = true; cb_(); } }
 
 		// 获取动作的拷贝
 		virtual spAction Clone() const = 0;
@@ -69,6 +67,11 @@ namespace easy2d
 			initialized_ = false;
 			done_ = false;
 		}
+
+		// 设置动作结束时的回调函数
+		void SetCallback(std::function<void()> cb) { cb_ = cb; }
+
+		virtual bool IsDone() const { return done_; }
 
 	protected:
 		virtual void Start()
@@ -91,5 +94,6 @@ namespace easy2d
 		bool running_;
 		bool done_;
 		bool initialized_;
+		std::function<void()> cb_;
 	};
 }

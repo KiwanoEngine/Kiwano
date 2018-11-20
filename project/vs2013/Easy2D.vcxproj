@@ -21,18 +21,19 @@
   <ItemGroup>
     <ClInclude Include="..\..\core\base\Action.hpp" />
     <ClInclude Include="..\..\core\base\ActionCombined.h" />
-    <ClInclude Include="..\..\core\base\ActionInterval.h" />
+    <ClInclude Include="..\..\core\base\ActionTween.h" />
     <ClInclude Include="..\..\core\base\ActionManager.h" />
     <ClInclude Include="..\..\core\base\Animation.h" />
     <ClInclude Include="..\..\core\base\audio.h" />
     <ClInclude Include="..\..\core\base\base.hpp" />
     <ClInclude Include="..\..\core\base\BaseTypes.hpp" />
-    <ClInclude Include="..\..\core\base\CallFunc.h" />
     <ClInclude Include="..\..\core\base\Canvas.h" />
     <ClInclude Include="..\..\core\base\Color.h" />
     <ClInclude Include="..\..\core\base\d2dres.hpp" />
     <ClInclude Include="..\..\core\base\Debuger.h" />
+    <ClInclude Include="..\..\core\base\Delay.h" />
     <ClInclude Include="..\..\core\base\Font.hpp" />
+    <ClInclude Include="..\..\core\base\Frames.h" />
     <ClInclude Include="..\..\core\base\Game.h" />
     <ClInclude Include="..\..\core\base\Geometry.h" />
     <ClInclude Include="..\..\core\base\GeometryNode.h" />
@@ -69,6 +70,7 @@
     <ClInclude Include="..\..\core\base\Unit.h" />
     <ClInclude Include="..\..\core\base\window.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
+    <ClInclude Include="..\..\core\math\ease.hpp" />
     <ClInclude Include="..\..\core\math\Matrix.hpp" />
     <ClInclude Include="..\..\core\math\rand.h" />
     <ClInclude Include="..\..\core\math\scalar.hpp" />
@@ -84,14 +86,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\base\ActionCombined.cpp" />
-    <ClCompile Include="..\..\core\base\ActionInterval.cpp" />
+    <ClCompile Include="..\..\core\base\ActionTween.cpp" />
     <ClCompile Include="..\..\core\base\ActionManager.cpp" />
     <ClCompile Include="..\..\core\base\Animation.cpp" />
     <ClCompile Include="..\..\core\base\audio.cpp" />
-    <ClCompile Include="..\..\core\base\CallFunc.cpp" />
     <ClCompile Include="..\..\core\base\Canvas.cpp" />
     <ClCompile Include="..\..\core\base\Color.cpp" />
     <ClCompile Include="..\..\core\base\Debuger.cpp" />
+    <ClCompile Include="..\..\core\base\Delay.cpp" />
+    <ClCompile Include="..\..\core\base\Frames.cpp" />
     <ClCompile Include="..\..\core\base\Game.cpp" />
     <ClCompile Include="..\..\core\base\Geometry.cpp" />
     <ClCompile Include="..\..\core\base\GeometryNode.cpp" />

@@ -68,7 +68,7 @@
 #include "base/Task.h"
 #include "base/Action.hpp"
 #include "base/ActionCombined.h"
-#include "base/ActionInterval.h"
+#include "base/ActionTween.h"
 #include "base/Animation.h"
 #include "base/CallFunc.h"
 #include "base/Transition.h"

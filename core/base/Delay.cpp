@@ -18,51 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "Action.hpp"
+#include "Delay.h"
 
 namespace easy2d
 {
-	// 帧动画
-	class Animation
-		: public Action
+	Delay::Delay(Duration const& duration)
+		: delta_()
+		, delay_(duration)
 	{
-	public:
-		Animation();
+	}
 
-		explicit Animation(
-			spFrames const& animation
-		);
+	void Delay::Reset()
+	{
+		Action::Reset();
+		delta_ = Duration{};
+	}
 
-		virtual ~Animation();
+	void Delay::Init(Node* target)
+	{
+		Action::Init(target);
+	}
 
-		// 获取动画
-		spFrames GetAnimation() const;
+	void Delay::Update(Node* target, Duration const& dt)
+	{
+		Action::Update(target, dt);
 
-		// 设置动画
-		void SetAnimation(
-			spFrames const& animation
-		);
+		delta_ += dt;
 
-		// 获取该动作的拷贝对象
-		virtual spAction Clone() const override;
+		if (delta_ >= delay_)
+		{
+			this->Stop();
+		}
+	}
 
-		// 获取该动作的倒转
-		virtual spAction Reverse() const override;
+	spAction Delay::Clone() const
+	{
+		return new (std::nothrow) Delay(delay_);
+	}
 
-		// 重置动作
-		virtual void Reset() override;
+	spAction Delay::Reverse() const
+	{
+		return new (std::nothrow) Delay(delay_);
+	}
 
-	protected:
-		// 初始化动作
-		virtual void Init(Node* target) override;
-
-		// 更新动作
-		virtual void Update(Node* target, Duration const& dt) override;
-
-	protected:
-		size_t frame_index_;
-		Duration delta_;
-		spFrames frames_;
-	};
 }
