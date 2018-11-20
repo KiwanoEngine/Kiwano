@@ -66,6 +66,18 @@ namespace easy2d
 
 		inline double Tan(double val) { return ::tan(val * constants::PId / 180.0); }
 
+		inline float Asin(float val) { return ::asinf(val) * 180.f / constants::PIf; }
+
+		inline double Asin(double val) { return ::asin(val) * 180.f / constants::PIf; }
+
+		inline float Acos(float val) { return ::acosf(val) * 180.f / constants::PIf; }
+
+		inline double Acos(double val) { return ::acos(val) * 180.f / constants::PIf; }
+
+		inline float Atan(float val) { return ::atanf(val) * 180.f / constants::PIf; }
+
+		inline double Atan(double val) { return ::atan(val) * 180.f / constants::PIf; }
+
 		inline float Ceil(float val) { return ::ceil(val); }
 
 		inline double Ceil(double val) { return ::ceil(val); }
