@@ -258,6 +258,15 @@ namespace easy2d
 			Point const& point3		/* 贝塞尔曲线的终点 */
 		);
 
+		// 添加弧线
+		void AddArc(
+			Point const& point,		/* 终点 */
+			Point const& radius,	/* 椭圆半径 */
+			float rotation,			/* 椭圆旋转角度 */
+			bool clockwise = true,	/* 顺时针 or 逆时针 */
+			bool is_small = true	/* 是否取小于 180° 的弧 */
+		);
+
 		// 清除路径
 		void ClearPath();
 

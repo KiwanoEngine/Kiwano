@@ -452,6 +452,22 @@ namespace easy2d
 		}
 	}
 
+	void Canvas::AddArc(Point const & point, Point const & radius, float rotation, bool clockwise, bool is_small)
+	{
+		if (current_sink_)
+		{
+			current_sink_->AddArc(
+				D2D1::ArcSegment(
+					point,
+					D2D1_SIZE_F{ radius.x, radius.y },
+					rotation,
+					clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
+					is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE
+				)
+			);
+		}
+	}
+
 	void Canvas::StrokePath()
 	{
 		render_target_->DrawGeometry(
