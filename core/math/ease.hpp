@@ -30,6 +30,9 @@ namespace easy2d
 			return step;
 		}
 
+
+		// Ease
+
 		inline float EaseIn(float step, float rate)
 		{
 			return math::Pow(step, rate);
@@ -47,6 +50,9 @@ namespace easy2d
 			return 1.f - .5f * math::Pow(2.f - 2 * step, rate);
 		}
 
+
+		// Exponential Ease
+
 		inline float EaseExponentialIn(float step)
 		{
 			return math::Pow(2.f, 10 * (step - 1));
@@ -63,6 +69,9 @@ namespace easy2d
 				return .5f * math::Pow(2.f, 10 * (2 * step - 1));
 			return 0.5f * (2 - math::Pow(2, -10 * (step * 2 - 1)));
 		}
+
+
+		// Bounce Ease
 
 		inline float EaseBounceOut(float step)
 		{
@@ -102,6 +111,9 @@ namespace easy2d
 			}
 		}
 
+
+		// Elastic Ease
+
 		inline float EaseElasticIn(float step, float period)
 		{
 			if (step == 0 || step == 1)
@@ -132,6 +144,39 @@ namespace easy2d
 			return math::Pow(2, -10 * step) * math::Sin((step - period / 4) * 360.f / period) * 0.5f + 1;
 		}
 
+
+		// Back Ease
+
+		inline float EaseBackIn(float step)
+		{
+			const float overshoot = 1.70158f;
+			return step * step * ((overshoot + 1) * step - overshoot);
+		}
+
+		inline float EaseBackOut(float step)
+		{
+			const float overshoot = 1.70158f;
+			step = step - 1;
+			return step * step * ((overshoot + 1) * step + overshoot) + 1;
+		}
+
+		inline float EaseBackInOut(float step)
+		{
+			const float overshoot = 1.70158f * 1.525f;
+
+			step = step * 2;
+			if (step < 1)
+			{
+				return (step * step * ((overshoot + 1) * step - overshoot)) / 2;
+			}
+
+			step = step - 2;
+			return (step * step * ((overshoot + 1) * step + overshoot)) / 2 + 1;
+		}
+
+
+		// Sine Ease
+
 		inline float EaseSineIn(float step)
 		{
 			return 1.f - math::Cos(step * 90);
@@ -145,6 +190,97 @@ namespace easy2d
 		inline float EaseSineInOut(float step)
 		{
 			return -0.5f * (math::Cos(step * 180) - 1);
+		}
+
+
+		// Quad Ease
+
+		inline float EaseQuadIn(float step)
+		{
+			return step * step;
+		}
+
+		inline float EaseQuadOut(float step)
+		{
+			return -1 * step * (step - 2);
+		}
+
+		inline float EaseQuadInOut(float step)
+		{
+			step = step * 2;
+			if (step < 1)
+				return 0.5f * step * step;
+			--step;
+			return -0.5f * (step * (step - 2) - 1);
+		}
+
+
+		// Cubic Ease
+
+		inline float EaseCubicIn(float step)
+		{
+			return step * step * step;
+		}
+
+		inline float EaseCubicOut(float step)
+		{
+			step -= 1;
+			return (step * step * step + 1);
+		}
+
+		inline float EaseCubicInOut(float step)
+		{
+			step = step * 2;
+			if (step < 1)
+				return 0.5f * step * step * step;
+			step -= 2;
+			return 0.5f * (step * step * step + 2);
+		}
+
+
+		// Quart Ease
+
+		inline float EaseQuartIn(float step)
+		{
+			return step * step * step * step;
+		}
+
+		inline float EaseQuartOut(float step)
+		{
+			step -= 1;
+			return -(step * step * step * step - 1);
+		}
+
+		inline float EaseQuartInOut(float step)
+		{
+			step = step * 2;
+			if (step < 1)
+				return 0.5f * step * step * step * step;
+			step -= 2;
+			return -0.5f * (step * step * step * step - 2);
+		}
+
+
+		// Quint Ease
+
+		inline float EaseQuintIn(float step)
+		{
+			return step * step * step * step * step;
+		}
+
+		inline float EaseQuintOut(float step)
+		{
+			step -= 1;
+			return (step * step * step * step * step + 1);
+		}
+
+		inline float EaseQuintInOut(float step)
+		{
+			step = step * 2;
+			if (step < 1)
+				return 0.5f * step * step * step * step * step;
+			step -= 2;
+			return 0.5f * (step * step * step * step * step + 2);
 		}
 	}
 }
