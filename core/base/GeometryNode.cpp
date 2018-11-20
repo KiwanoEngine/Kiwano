@@ -68,18 +68,18 @@ namespace easy2d
 
 	void GeometryNode::OnDraw()
 	{
-		if (geometry_)
+		if (geometry_ && geometry_->geo_)
 		{
 			auto graphics = devices::Graphics::Instance();
 			graphics->SetTransform(geometry_->GetTransformMatrix() * GetTransformMatrix());
 
 			graphics->FillGeometry(
-				geometry_->GetD2DGeometry(),
+				geometry_->geo_,
 				fill_color_
 			);
 
 			graphics->DrawGeometry(
-				geometry_->GetD2DGeometry(),
+				geometry_->geo_,
 				stroke_color_,
 				stroke_width_,
 				outline_join_

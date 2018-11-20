@@ -73,6 +73,13 @@ namespace easy2d
 				Rect const& rect
 			) const;
 
+			HRESULT CreateRoundedRectangleGeometry(
+				cpRoundedRectangleGeometry& geo,
+				Rect const& rect,
+				float radius_x,
+				float radius_y
+			) const;
+
 			HRESULT CreateEllipseGeometry(
 				cpEllipseGeometry& geo,
 				Point const& center,

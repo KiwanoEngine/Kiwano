@@ -45,7 +45,9 @@ namespace easy2d
 	E2D_DECLARE_SMART_PTR(Task);
 
 	E2D_DECLARE_SMART_PTR(Geometry);
+	E2D_DECLARE_SMART_PTR(LineGeometry);
 	E2D_DECLARE_SMART_PTR(RectangleGeometry);
+	E2D_DECLARE_SMART_PTR(RoundedRectGeometry);
 	E2D_DECLARE_SMART_PTR(CircleGeometry);
 	E2D_DECLARE_SMART_PTR(EllipseGeometry);
 	E2D_DECLARE_SMART_PTR(PathGeometry);

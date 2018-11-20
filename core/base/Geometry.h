@@ -39,6 +39,8 @@ namespace easy2d
 	class Geometry
 		: public Unit
 	{
+		friend class GeometryNode;
+
 	public:
 		Geometry();
 
@@ -64,10 +66,45 @@ namespace easy2d
 			Point* tangent
 		);
 
-		cpGeometry const& GetD2DGeometry() const { return geo_; }
-
 	protected:
 		cpGeometry geo_;
+	};
+
+
+	// 直线
+	class LineGeometry
+		: public Geometry
+	{
+	public:
+		LineGeometry();
+
+		LineGeometry(
+			Point const& begin,
+			Point const& end
+		);
+
+		virtual ~LineGeometry();
+
+		Point const& GetBegin() const { return begin_; }
+
+		Point const& GetEnd() const { return end_; }
+
+		void SetLine(
+			Point const& begin,
+			Point const& end
+		);
+
+		void SetBegin(
+			Point const& begin
+		);
+
+		void SetEnd(
+			Point const& end
+		);
+
+	protected:
+		Point begin_;
+		Point end_;
 	};
 
 
@@ -220,5 +257,48 @@ namespace easy2d
 	protected:
 		cpPathGeometry	current_geometry_;
 		cpGeometrySink	current_sink_;
+	};
+
+
+	// 几何圆角矩形
+	class RoundedRectGeometry
+		: public Geometry
+	{
+	public:
+		RoundedRectGeometry();
+
+		RoundedRectGeometry(
+			Rect const& rect,
+			float radius_x,
+			float radius_y
+		);
+
+		virtual ~RoundedRectGeometry();
+
+		float GetRadiusX() const { return radius_x_; }
+
+		float GetRadiusY() const { return radius_y_; }
+
+		void SetRadius(
+			float radius_x,
+			float radius_y
+		);
+
+		Rect const& GetRect() const { return rect_; }
+
+		void SetRect(
+			Rect const& rect
+		);
+
+		void SetRoundedRect(
+			Rect const& rect,
+			float radius_x,
+			float radius_y
+		);
+
+	protected:
+		Rect	rect_;
+		float	radius_x_;
+		float	radius_y_;
 	};
 }
