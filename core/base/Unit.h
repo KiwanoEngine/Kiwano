@@ -74,13 +74,13 @@ namespace easy2d
 		);
 
 		// ÒÆ¶¯
-		void MoveBy(
+		void Move(
 			float x,
 			float y
 		);
 
 		// ÒÆ¶¯
-		void MoveBy(
+		void Move(
 			const Point & vector
 		);
 

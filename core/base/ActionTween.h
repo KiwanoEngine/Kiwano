@@ -33,9 +33,15 @@ namespace easy2d
 		EaseExponentialIn,		// 由慢变极快
 		EaseExponentialOut,		// 由极快变慢
 		EaseExponentialInOut,	// 由慢至极快, 再由极快边慢
+		EaseBounceIn,			// 自起点赋予反弹力
+		EaseBounceOut,			// 自终点赋予反弹力
+		EaseBounceInOut,		// 在起点和终点赋予反弹力
+		EaseElasticIn,			// 自起点赋予弹性
+		EaseElasticOut,			// 自终点赋予弹性
+		EaseElasticInOut,		// 再起点和终点赋予弹性
 		EaseSineIn,				// 由快变慢, 采用正弦变换速度
 		EaseSineOut,			// 由慢变快, 采用正弦变换速度
-		EaseSineInOut			// 由慢至快, 再由快至慢, 采用正弦变换速度
+		EaseSineInOut,			// 由慢至快, 再由快至慢, 采用正弦变换速度
 	};
 
 	class Tween

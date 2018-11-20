@@ -198,7 +198,7 @@ namespace easy2d
 				{
 					is_selected_ = false;
 				}
-				else if (e.GetType() == MouseEvent::Type::MoveBy && is_selected_ && contains)
+				else if (e.GetType() == MouseEvent::Type::Move && is_selected_ && contains)
 				{
 					SetStatus(Status::Selected);
 					return true;

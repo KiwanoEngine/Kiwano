@@ -75,6 +75,24 @@ namespace easy2d
 		case EaseFunc::EaseExponentialInOut:
 			ease_func_ = math::EaseExponentialInOut;
 			break;
+		case EaseFunc::EaseBounceIn:
+			ease_func_ = math::EaseBounceIn;
+			break;
+		case EaseFunc::EaseBounceOut:
+			ease_func_ = math::EaseBounceOut;
+			break;
+		case EaseFunc::EaseBounceInOut:
+			ease_func_ = math::EaseBounceInOut;
+			break;
+		case EaseFunc::EaseElasticIn:
+			ease_func_ = std::bind(math::EaseElasticIn, std::placeholders::_1, 0.3f);
+			break;
+		case EaseFunc::EaseElasticOut:
+			ease_func_ = std::bind(math::EaseElasticOut, std::placeholders::_1, 0.3f);
+			break;
+		case EaseFunc::EaseElasticInOut:
+			ease_func_ = std::bind(math::EaseElasticInOut, std::placeholders::_1, 0.3f);
+			break;
 		case EaseFunc::EaseSineIn:
 			ease_func_ = math::EaseSineIn;
 			break;

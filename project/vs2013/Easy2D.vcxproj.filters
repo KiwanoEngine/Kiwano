@@ -191,6 +191,9 @@
     <ClInclude Include="..\..\core\base\Frames.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\math\constants.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">

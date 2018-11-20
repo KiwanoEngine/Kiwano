@@ -70,6 +70,7 @@
     <ClInclude Include="..\..\core\base\Unit.h" />
     <ClInclude Include="..\..\core\base\window.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
+    <ClInclude Include="..\..\core\math\constants.hpp" />
     <ClInclude Include="..\..\core\math\ease.hpp" />
     <ClInclude Include="..\..\core\math\Matrix.hpp" />
     <ClInclude Include="..\..\core\math\rand.h" />

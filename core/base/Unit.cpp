@@ -67,14 +67,14 @@ namespace easy2d
 		dirty_transform_ = true;
 	}
 
-	void Unit::MoveBy(float x, float y)
+	void Unit::Move(float x, float y)
 	{
 		this->SetPosition(transform_.position.x + x, transform_.position.y + y);
 	}
 
-	void Unit::MoveBy(const Point & v)
+	void Unit::Move(const Point & v)
 	{
-		this->MoveBy(v.x, v.y);
+		this->Move(v.x, v.y);
 	}
 
 	void Unit::SetScaleX(float scale_x)
