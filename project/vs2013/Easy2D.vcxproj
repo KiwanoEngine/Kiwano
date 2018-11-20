@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\core\base\Action.hpp" />
     <ClInclude Include="..\..\core\base\ActionCombined.h" />
-    <ClInclude Include="..\..\core\base\ActionFiniteTime.h" />
+    <ClInclude Include="..\..\core\base\ActionInterval.h" />
     <ClInclude Include="..\..\core\base\ActionManager.h" />
     <ClInclude Include="..\..\core\base\Animation.h" />
     <ClInclude Include="..\..\core\base\audio.h" />
@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\base\ActionCombined.cpp" />
-    <ClCompile Include="..\..\core\base\ActionFiniteTime.cpp" />
+    <ClCompile Include="..\..\core\base\ActionInterval.cpp" />
     <ClCompile Include="..\..\core\base\ActionManager.cpp" />
     <ClCompile Include="..\..\core\base\Animation.cpp" />
     <ClCompile Include="..\..\core\base\audio.cpp" />

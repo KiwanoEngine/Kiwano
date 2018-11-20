@@ -24,24 +24,19 @@
 
 namespace easy2d
 {
-    // 持续动作
-	class FiniteTimeAction
+	class IntervalAction
 		: public Action
 	{
 	public:
-		// 创建特定时长的持续动作
-		explicit FiniteTimeAction(
+		explicit IntervalAction(
 			Duration const& duration
 		);
 
-		// 重置动作
 		virtual void Reset() override;
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
-		// 更新动作
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
@@ -52,7 +47,7 @@ namespace easy2d
 
 	// 相对位移动作
 	class MoveBy
-		: public FiniteTimeAction
+		: public IntervalAction
 	{
 	public:
 		explicit MoveBy(
@@ -67,10 +62,8 @@ namespace easy2d
 		virtual spAction Reverse() const override;
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
-		// 更新动作
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
@@ -101,7 +94,6 @@ namespace easy2d
 		}
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
 	protected:
@@ -111,7 +103,7 @@ namespace easy2d
 
 	// 相对跳跃动作
 	class JumpBy
-		: public FiniteTimeAction
+		: public IntervalAction
 	{
 	public:
 		explicit JumpBy(
@@ -128,10 +120,8 @@ namespace easy2d
 		virtual spAction Reverse() const override;
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
-		// 更新动作
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
@@ -166,7 +156,6 @@ namespace easy2d
 		}
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
 	protected:
@@ -176,7 +165,7 @@ namespace easy2d
 
 	// 相对缩放动作
 	class ScaleBy
-		: public FiniteTimeAction
+		: public IntervalAction
 	{
 	public:
 		explicit ScaleBy(
@@ -197,10 +186,8 @@ namespace easy2d
 		virtual spAction Reverse() const override;
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
-		// 更新动作
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
@@ -238,7 +225,6 @@ namespace easy2d
 		}
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
 	protected:
@@ -249,7 +235,7 @@ namespace easy2d
 
 	// 透明度相对渐变动作
 	class OpacityBy
-		: public FiniteTimeAction
+		: public IntervalAction
 	{
 	public:
 		explicit OpacityBy(
@@ -264,10 +250,8 @@ namespace easy2d
 		virtual spAction Reverse() const override;
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
-		// 更新动作
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
@@ -297,7 +281,6 @@ namespace easy2d
 		}
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
 	protected:
@@ -331,7 +314,7 @@ namespace easy2d
 
 	// 相对旋转动作
 	class RotateBy
-		: public FiniteTimeAction
+		: public IntervalAction
 	{
 	public:
 		explicit RotateBy(
@@ -346,10 +329,8 @@ namespace easy2d
 		virtual spAction Reverse() const override;
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
-		// 更新动作
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
@@ -379,11 +360,40 @@ namespace easy2d
 		}
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
 	protected:
 		float end_val_;
+	};
+
+
+	// 路径动作
+	class PathAction
+		: public IntervalAction
+	{
+	public:
+		explicit PathAction(
+			Duration const& duration,	/* 持续时长 */
+			spGeometry const& geo,		/* 几何图形 */
+			bool rotating = false,		/* 沿路径切线方向旋转 */
+			float start = 0.f,			/* 起点 */
+			float end = 1.f				/* 终点 */
+		);
+
+		// 获取该动作的拷贝对象
+		virtual spAction Clone() const override;
+
+		// 获取该动作的倒转
+		virtual spAction Reverse() const override;
+
+	protected:
+		virtual void Update(Node* target, Duration const& dt) override;
+
+	protected:
+		bool		rotating_;
+		float		start_;
+		float		end_;
+		spGeometry	geo_;
 	};
 
 
@@ -406,10 +416,8 @@ namespace easy2d
 		virtual void Reset() override;
 
 	protected:
-		// 初始化动作
 		virtual void Init(Node* target) override;
 
-		// 更新动作
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:

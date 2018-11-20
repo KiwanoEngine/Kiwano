@@ -5,9 +5,6 @@
     <ClInclude Include="..\..\core\base\ActionCombined.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\ActionFiniteTime.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\Animation.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -185,6 +182,9 @@
     <ClInclude Include="..\..\core\base\Unit.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\ActionInterval.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -205,9 +205,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\base\ActionCombined.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\base\ActionFiniteTime.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\Animation.cpp">
@@ -328,6 +325,9 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\Unit.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\ActionInterval.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

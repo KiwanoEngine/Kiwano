@@ -44,16 +44,6 @@ namespace easy2d
 
 		virtual ~Geometry();
 
-		cpGeometry const& GetD2DGeometry() const { return geo_; }
-
-		float GetLength();
-
-		bool ComputePointAt(
-			float length,
-			Point* point,
-			Point* tangent
-		);
-
 		// 判断图形是否包含点
 		bool ContainsPoint(
 			Point const& point
@@ -63,6 +53,18 @@ namespace easy2d
 		GeometryRelation GetRelationWith(
 			spGeometry const& other
 		);
+
+		// 获取图形展开成一条直线的长度
+		float GetLength();
+
+		// 计算图形路径上点的位置和切线向量
+		bool ComputePointAt(
+			float length,
+			Point* point,
+			Point* tangent
+		);
+
+		cpGeometry const& GetD2DGeometry() const { return geo_; }
 
 	protected:
 		cpGeometry geo_;

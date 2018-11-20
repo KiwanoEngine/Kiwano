@@ -18,7 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ActionFiniteTime.h"
+#include "ActionInterval.h"
+#include "Geometry.h"
 #include "base.hpp"
 #include "Node.h"
 #include <algorithm>
@@ -26,27 +27,27 @@
 namespace easy2d
 {
 	//-------------------------------------------------------
-	// FiniteTimeAction
+	// IntervalAction
 	//-------------------------------------------------------
 
-	FiniteTimeAction::FiniteTimeAction(Duration const& duration)
+	IntervalAction::IntervalAction(Duration const& duration)
 		: process_(0)
 		, duration_(duration)
 	{
 	}
 
-	void FiniteTimeAction::Reset()
+	void IntervalAction::Reset()
 	{
 		Action::Reset();
 		process_ = 0;
 	}
 
-	void FiniteTimeAction::Init(Node* target)
+	void IntervalAction::Init(Node* target)
 	{
 		Action::Init(target);
 	}
 
-	void FiniteTimeAction::Update(Node* target, Duration const& dt)
+	void IntervalAction::Update(Node* target, Duration const& dt)
 	{
 		Action::Update(target, dt);
 
@@ -73,14 +74,14 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	MoveBy::MoveBy(Duration const& duration, Point const& vector)
-		: FiniteTimeAction(duration)
+		: IntervalAction(duration)
 	{
 		delta_pos_ = vector;
 	}
 
 	void MoveBy::Init(Node* target)
 	{
-		FiniteTimeAction::Init(target);
+		IntervalAction::Init(target);
 
 		if (target)
 		{
@@ -90,7 +91,7 @@ namespace easy2d
 
 	void MoveBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target, dt);
+		IntervalAction::Update(target, dt);
 
 		if (target)
 		{
@@ -137,7 +138,7 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	JumpBy::JumpBy(Duration const& duration, Point const& vec, float height, int jumps)
-		: FiniteTimeAction(duration)
+		: IntervalAction(duration)
 		, delta_pos_(vec)
 		, height_(height)
 		, jumps_(jumps)
@@ -156,7 +157,7 @@ namespace easy2d
 
 	void JumpBy::Init(Node* target)
 	{
-		FiniteTimeAction::Init(target);
+		IntervalAction::Init(target);
 
 		if (target)
 		{
@@ -166,7 +167,7 @@ namespace easy2d
 
 	void JumpBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target, dt);
+		IntervalAction::Update(target, dt);
 
 		if (target)
 		{
@@ -208,14 +209,14 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	ScaleBy::ScaleBy(Duration const& duration, float scale)
-		: FiniteTimeAction(duration)
+		: IntervalAction(duration)
 	{
 		delta_x_ = scale;
 		delta_y_ = scale;
 	}
 
 	ScaleBy::ScaleBy(Duration const& duration, float scale_x, float scale_y)
-		: FiniteTimeAction(duration)
+		: IntervalAction(duration)
 	{
 		delta_x_ = scale_x;
 		delta_y_ = scale_y;
@@ -223,7 +224,7 @@ namespace easy2d
 
 	void ScaleBy::Init(Node* target)
 	{
-		FiniteTimeAction::Init(target);
+		IntervalAction::Init(target);
 
 		if (target)
 		{
@@ -234,7 +235,7 @@ namespace easy2d
 
 	void ScaleBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target, dt);
+		IntervalAction::Update(target, dt);
 
 		if (target)
 		{
@@ -284,14 +285,14 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	OpacityBy::OpacityBy(Duration const& duration, float opacity)
-		: FiniteTimeAction(duration)
+		: IntervalAction(duration)
 	{
 		delta_val_ = opacity;
 	}
 
 	void OpacityBy::Init(Node* target)
 	{
-		FiniteTimeAction::Init(target);
+		IntervalAction::Init(target);
 
 		if (target)
 		{
@@ -301,7 +302,7 @@ namespace easy2d
 
 	void OpacityBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target, dt);
+		IntervalAction::Update(target, dt);
 
 		if (target)
 		{
@@ -352,14 +353,14 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	RotateBy::RotateBy(Duration const& duration, float rotation)
-		: FiniteTimeAction(duration)
+		: IntervalAction(duration)
 		, delta_val_(rotation)
 	{
 	}
 
 	void RotateBy::Init(Node* target)
 	{
-		FiniteTimeAction::Init(target);
+		IntervalAction::Init(target);
 
 		if (target)
 		{
@@ -369,7 +370,7 @@ namespace easy2d
 
 	void RotateBy::Update(Node* target, Duration const& dt)
 	{
-		FiniteTimeAction::Update(target, dt);
+		IntervalAction::Update(target, dt);
 
 		if (target)
 		{
@@ -402,6 +403,53 @@ namespace easy2d
 	{
 		RotateBy::Init(target);
 		delta_val_ = end_val_ - start_val_;
+	}
+
+
+	//-------------------------------------------------------
+	// PathAction
+	//-------------------------------------------------------
+
+	PathAction::PathAction(Duration const & duration, spGeometry const& geo, bool rotating, float start, float end)
+		: IntervalAction(duration)
+		, start_(start)
+		, end_(end)
+		, geo_(geo)
+		, rotating_(rotating)
+	{
+	}
+
+	spAction PathAction::Clone() const
+	{
+		return new PathAction(duration_, geo_, rotating_, start_, end_);
+	}
+
+	spAction PathAction::Reverse() const
+	{
+		return new PathAction(duration_, geo_, rotating_, end_, start_);
+	}
+
+	void PathAction::Update(Node * target, Duration const & dt)
+	{
+		IntervalAction::Update(target, dt);
+
+		if (target)
+		{
+			float percent = std::min(std::max((end_ - start_) * process_ + start_, 0.f), 1.f);
+			float length = geo_->GetLength() * percent;
+			Point point, tangent;
+			if (geo_->ComputePointAt(length, &point, &tangent))
+			{
+				target->SetPosition(point);
+
+				if (rotating_)
+				{
+					float ac = math::Acos(tangent.x);
+					float rotation = (tangent.y < 0.f) ? 360.f - ac : ac;
+					target->SetRotation(rotation);
+				}
+			}
+		}
 	}
 
 
@@ -447,4 +495,5 @@ namespace easy2d
 	{
 		return new (std::nothrow) Delay(delay_);
 	}
+
 }
