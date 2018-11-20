@@ -36,6 +36,20 @@ namespace easy2d
 	{
 	}
 
+	Rect Geometry::GetBoundingBox()
+	{
+		if (!geo_)
+			return Rect{};
+
+		D2D1_RECT_F rect;
+		// no matter it failed or not
+		geo_->GetBounds(
+			ConvertToD2DMatrix(GetTransformMatrix()),
+			&rect
+		);
+		return rect;
+	}
+
 	float Geometry::GetLength()
 	{
 		float length = 0.f;
@@ -69,6 +83,20 @@ namespace easy2d
 			}
 		}
 		return false;
+	}
+
+	float Geometry::ComputeArea()
+	{
+		if (!geo_)
+			return 0.f;
+
+		float area = 0.f;
+		// no matter it failed or not
+		geo_->ComputeArea(
+			ConvertToD2DMatrix(GetTransformMatrix()),
+			&area
+		);
+		return area;
 	}
 
 	bool Geometry::ContainsPoint(Point const & point)

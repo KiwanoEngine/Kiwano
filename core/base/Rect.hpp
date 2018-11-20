@@ -67,6 +67,13 @@ namespace easy2d
 		, size(other.size.width, other.size.height)
 		{}
 
+		Rect(
+			const D2D1_RECT_F& other
+		)
+			: origin(other.left, other.top)
+			, size(other.right - other.left, other.bottom - other.top)
+		{}
+
 		Rect& operator= (const Rect& other)
 		{
 			origin = other.origin;

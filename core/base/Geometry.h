@@ -46,6 +46,9 @@ namespace easy2d
 
 		virtual ~Geometry();
 
+		// 获取外切包围盒
+		Rect GetBoundingBox();
+
 		// 判断图形是否包含点
 		bool ContainsPoint(
 			Point const& point
@@ -65,6 +68,9 @@ namespace easy2d
 			Point* point,
 			Point* tangent
 		);
+
+		// 计算面积
+		float ComputeArea();
 
 	protected:
 		cpGeometry geo_;
