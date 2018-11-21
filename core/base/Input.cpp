@@ -27,8 +27,7 @@ namespace easy2d
 	namespace devices
 	{
 		InputDevice::InputDevice()
-			: initialized_(false)
-			, hwnd_(nullptr)
+			: hwnd_(nullptr)
 			, scale_x_(1.f)
 			, scale_y_(1.f)
 		{
@@ -41,18 +40,15 @@ namespace easy2d
 			E2D_LOG("Destroying input device");
 		}
 
-		void InputDevice::Init(HWND hwnd, float scale_x, float scale_y, bool debug)
+		HRESULT InputDevice::Init(HWND hwnd, float scale_x, float scale_y, bool debug)
 		{
-			if (initialized_)
-				return;
-
 			E2D_LOG("Initing input device");
 
 			hwnd_ = hwnd;
 			scale_x_ = scale_x;
 			scale_y_ = scale_y;
 
-			initialized_ = true;
+			return S_OK;
 		}
 
 		void InputDevice::Update()

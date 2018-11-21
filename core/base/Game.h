@@ -20,9 +20,11 @@
 
 #pragma once
 #include "base.hpp"
-#include "window.h"
 #include "time.h"
+#include "window.h"
 #include "render.h"
+#include "input.h"
+#include "audio.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
 
@@ -34,17 +36,16 @@ namespace easy2d
 		int		width;	// 宽度
 		int		height;	// 高度
 		LPCWSTR	icon;	// 图标
+		bool	vsync;	// 垂直同步
 		bool	debug;	// 调试模式
-
-		GraphicsOptions	graphics_options;	// 图形渲染选项
 
 		Options()
 			: title(L"Easy2D Game")
 			, width(640)
 			, height(480)
 			, icon(nullptr)
+			, vsync(true)
 			, debug(false)
-			, graphics_options()
 		{}
 	};
 
@@ -93,6 +94,9 @@ namespace easy2d
 		// 获取当前场景
 		spScene const& GetCurrentScene();
 
+		// 设置变速
+		void SetTimeScale(float scale);
+
 	private:
 		void Render();
 
@@ -112,9 +116,14 @@ namespace easy2d
 		bool			initialized_;
 		bool			debug_enabled_;
 		bool			window_inactived_;
-		HWND			hwnd_;
+		float			time_scale_;
 		spScene			curr_scene_;
 		spScene			next_scene_;
 		spTransition	transition_;
+
+		WindowImpl*					window_;
+		devices::GraphicsDevice*	graphics_;
+		devices::InputDevice*		input_;
+		devices::AudioDevice*		audio_;
 	};
 }

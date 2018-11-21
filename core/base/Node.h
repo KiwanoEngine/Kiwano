@@ -50,13 +50,14 @@ namespace easy2d
 	public:
 		Node();
 
-		virtual ~Node();
-
-		// 渲染节点
-		virtual void OnDraw() {}
+		// 初始化节点
+		virtual void Init();
 
 		// 更新节点
-		virtual void OnUpdate(Duration const& dt) {}
+		virtual void Update(Duration const& dt);
+
+		// 渲染节点
+		virtual void OnRender();
 
 		// 获取显示状态
 		bool IsVisible() const { return visible_; }
@@ -67,8 +68,8 @@ namespace easy2d
 		// 获取名称的 Hash 值
 		size_t GetHashName() const { return hash_name_; }
 
-		// 获取绘图顺序
-		int GetOrder() const { return order_; }
+		// 获取 Z 轴顺序
+		int GetZOrder() const { return z_order_; }
 
 		// 获取宽度
 		virtual float GetWidth() const { return size_.width * transform_.scale.x; }
@@ -157,9 +158,9 @@ namespace easy2d
 			float opacity
 		);
 
-		// 设置绘图顺序
+		// 设置 Z 轴顺序
 		// 默认为 0
-		void SetOrder(
+		void SetZOrder(
 			int order
 		);
 
@@ -176,13 +177,13 @@ namespace easy2d
 		// 添加子节点
 		void AddChild(
 			spNode const& child,
-			int order = 0		/* 渲染顺序 */
+			int z_order = 0		/* Z 轴顺序 */
 		);
 
 		// 添加多个子节点
 		void AddChild(
 			const Nodes& nodes,	/* 节点数组 */
-			int order = 0		/* 渲染顺序 */
+			int z_order = 0		/* Z 轴顺序 */
 		);
 
 		// 获取所有名称相同的子节点
@@ -220,8 +221,24 @@ namespace easy2d
 			float pivot_y
 		);
 
+		// 启用边框自动生成
+		static void EnableBorder();
+
+		// 禁用边框自动生成
+		static void DisableBorder();
+
 	protected:
-		virtual void Visit();
+		void Render();
+
+		void DrawBorder();
+
+		void SortChildren();
+
+		void UpdateBorder();
+
+		void UpdateTransform();
+
+		void UpdateOpacity();
 
 		virtual bool Dispatch(
 			const MouseEvent& e,
@@ -234,26 +251,14 @@ namespace easy2d
 		);
 
 	protected:
-		virtual void Update(Duration const& dt);
-
-		virtual void DrawBorder();
-
-		void DrawChildrenBorder();
-
-		void UpdateBorder();
-
-		void UpdateTransform();
-
-		void UpdateOpacity();
-
-	protected:
-		String			name_;
-		size_t			hash_name_;
-		float			display_opacity_;
-		float			opacity_;
-		int				order_;
+		bool			inited_;
 		bool			visible_;
 		bool			dirty_sort_;
+		int				z_order_;
+		float			opacity_;
+		float			display_opacity_;
+		String			name_;
+		size_t			hash_name_;
 		Node*			parent_;
 		Color			border_color_;
 		Children		children_;

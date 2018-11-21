@@ -291,7 +291,7 @@ namespace easy2d
 		style_.outline_stroke = outline_stroke;
 	}
 
-	void Text::OnDraw()
+	void Text::OnRender()
 	{
 		if (text_layout_)
 		{

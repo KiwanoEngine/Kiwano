@@ -32,6 +32,7 @@ namespace easy2d
 	{
 		float default_pivot_x = 0.f;
 		float default_pivot_y = 0.f;
+		bool border_enabled = false;
 	}
 
 	void Node::SetDefaultPivot(float pivot_x, float pivot_y)
@@ -40,12 +41,23 @@ namespace easy2d
 		default_pivot_y = pivot_y;
 	}
 
+	void easy2d::Node::EnableBorder()
+	{
+		border_enabled = true;
+	}
+
+	void easy2d::Node::DisableBorder()
+	{
+		border_enabled = false;
+	}
+
 	Node::Node()
-		: visible_(true)
+		: inited_(false)
+		, visible_(true)
+		, dirty_sort_(false)
 		, parent_(nullptr)
 		, hash_name_(0)
-		, dirty_sort_(false)
-		, order_(0)
+		, z_order_(0)
 		, opacity_(1.f)
 		, display_opacity_(1.f)
 		, children_()
@@ -57,11 +69,36 @@ namespace easy2d
 	{
 	}
 
-	Node::~Node()
+	void Node::Init()
 	{
+		inited_ = true;
 	}
 
-	void Node::Visit()
+	void Node::OnRender()
+	{
+		// normal node renders nothing
+	}
+
+	void Node::Update(Duration const & dt)
+	{
+		if (!inited_)
+		{
+			Init();
+		}
+
+		UpdateActions(this, dt);
+		UpdateTasks(dt);
+
+		if (!children_.IsEmpty())
+		{
+			for (auto child = children_.First(); child; child = child->NextItem())
+			{
+				child->Update(dt);
+			}
+		}
+	}
+
+	void Node::Render()
 	{
 		if (!visible_)
 			return;
@@ -74,26 +111,21 @@ namespace easy2d
 		{
 			graphics->SetTransform(final_matrix_);
 			graphics->SetOpacity(display_opacity_);
-			OnDraw();
+
+			OnRender();
 		}
 		else
 		{
-			if (dirty_sort_)
-			{
-				children_.Sort(
-					[](spNode const& n1, spNode const& n2) { return n1->GetOrder() < n2->GetOrder(); }
-				);
+			SortChildren();
 
-				dirty_sort_ = false;
-			}
-
+			// render children those are less than 0 in Z-Order
 			spNode child = children_.First();
 			for (spNode next; child; child = next)
 			{
 				next = child->NextItem();
-				if (child->GetOrder() < 0)
+				if (child->GetZOrder() < 0)
 				{
-					child->Visit();
+					child->Render();
 				}
 				else
 				{
@@ -103,49 +135,13 @@ namespace easy2d
 
 			graphics->SetTransform(final_matrix_);
 			graphics->SetOpacity(display_opacity_);
-			OnDraw();
+
+			OnRender();
 
 			for (spNode next; child; child = next)
 			{
 				next = child->NextItem();
-				child->Visit();
-			}
-		}
-	}
-
-	void Node::Update(Duration const& dt)
-	{
-		if (children_.IsEmpty())
-		{
-			OnUpdate(dt);
-			UpdateActions(this, dt);
-			UpdateTasks(dt);
-		}
-		else
-		{
-			// 访问 Order 小于零的节点
-			spNode child = children_.First();
-			for (spNode next; child; child = next)
-			{
-				if (child->GetOrder() < 0)
-				{
-					next = child->NextItem();
-					child->Update(dt);
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			OnUpdate(dt);
-			UpdateActions(this, dt);
-			UpdateTasks(dt);
-
-			for (spNode next; child; child = next)
-			{
-				next = child->NextItem();
-				child->Update(dt);
+				child->Render();
 			}
 		}
 	}
@@ -159,15 +155,22 @@ namespace easy2d
 				devices::Graphics::Instance()->DrawGeometry(border_, border_color_, 1.5f);
 			}
 
-			DrawChildrenBorder();
+			for (auto child = children_.First(); child; child = child->NextItem())
+			{
+				child->DrawBorder();
+			}
 		}
 	}
 
-	void Node::DrawChildrenBorder()
+	void Node::SortChildren()
 	{
-		for (auto child = children_.First(); child; child = child->NextItem())
+		if (dirty_sort_)
 		{
-			child->DrawBorder();
+			children_.Sort(
+				[](spNode const& n1, spNode const& n2) { return n1->GetZOrder() < n2->GetZOrder(); }
+			);
+
+			dirty_sort_ = false;
 		}
 	}
 
@@ -200,11 +203,16 @@ namespace easy2d
 			final_matrix_ = final_matrix_ * parent_->initial_matrix_;
 		}
 
-		UpdateBorder();
-
+		// update children's transform
 		for (auto child = children_.First(); child; child = child->NextItem())
 		{
 			child->dirty_transform_ = true;
+		}
+
+		// update border
+		if (border_enabled)
+		{
+			UpdateBorder();
 		}
 	}
 
@@ -213,22 +221,24 @@ namespace easy2d
 		cpRectangleGeometry rect;
 		cpTransformedGeometry transformed;
 
-		ThrowIfFailed(
-			Factory::Instance()->CreateRectangleGeometry(
-				rect,
-				Rect(Point{}, size_)
-			)
+		HRESULT hr = Factory::Instance()->CreateRectangleGeometry(
+			rect,
+			Rect(Point{}, size_)
 		);
 
-		ThrowIfFailed(
-			Factory::Instance()->CreateTransformedGeometry(
+		if (SUCCEEDED(hr))
+		{
+			hr = Factory::Instance()->CreateTransformedGeometry(
 				transformed,
 				final_matrix_,
 				rect
-			)
-		);
+			);
+		}
 
-		border_ = transformed;
+		if (SUCCEEDED(hr))
+		{
+			border_ = transformed;
+		}
 	}
 
 	bool Node::Dispatch(const MouseEvent & e, bool handled)
@@ -281,12 +291,12 @@ namespace easy2d
 		}
 	}
 
-	void Node::SetOrder(int order)
+	void Node::SetZOrder(int order)
 	{
-		if (order_ == order)
+		if (z_order_ == order)
 			return;
 
-		order_ = order;
+		z_order_ = order;
 		if (parent_)
 		{
 			parent_->dirty_sort_ = true;
@@ -358,7 +368,21 @@ namespace easy2d
 		border_color_ = color;
 	}
 
-	void Node::AddChild(spNode const& child, int order)
+	void Node::SetVisible(bool val)
+	{
+		visible_ = val;
+	}
+
+	void Node::SetName(String const& name)
+	{
+		if (name_ != name)
+		{
+			name_ = name;
+			hash_name_ = std::hash<String>{}(name);
+		}
+	}
+
+	void Node::AddChild(spNode const& child, int z_order)
 	{
 		if (!child)
 			logs::Warningln("Node::AddChild failed, child is nullptr");
@@ -366,28 +390,31 @@ namespace easy2d
 		if (child)
 		{
 #ifdef E2D_DEBUG
+
 			if (child->parent_)
 				logs::Errorln("The node to be added already has a parent");
+
 			for (Node* parent = parent_; parent; parent = parent->parent_)
 				if (parent == child)
 					logs::Errorln("A node cannot be its own parent");
+
 #endif // E2D_DEBUG
 
 			children_.PushBack(Node::ItemType(child));
 			child->parent_ = this;
 			child->dirty_transform_ = true;
-			child->SetOrder(order);
+			child->SetZOrder(z_order);
 			child->UpdateOpacity();
 			
 			dirty_sort_ = true;
 		}
 	}
 
-	void Node::AddChild(const Nodes& nodes, int order)
+	void Node::AddChild(const Nodes& nodes, int z_order)
 	{
 		for (const auto& node : nodes)
 		{
-			this->AddChild(node, order);
+			this->AddChild(node, z_order);
 		}
 	}
 
@@ -486,30 +513,22 @@ namespace easy2d
 
 		UpdateTransform();
 
-		BOOL ret = 0;
+		cpRectangleGeometry border;
+
 		ThrowIfFailed(
-			border_->FillContainsPoint(
-				point,
-				D2D1::Matrix3x2F::Identity(),
-				&ret
+			Factory::Instance()->CreateRectangleGeometry(
+				border,
+				Rect(Point{}, size_)
 			)
 		);
+
+		BOOL ret = 0;
+		// no matter it failed or not
+		border->FillContainsPoint(
+			point,
+			ConvertToD2DMatrix(final_matrix_),
+			&ret
+		);
 		return !!ret;
-	}
-
-	void Node::SetVisible(bool val)
-	{
-		visible_ = val;
-	}
-
-	void Node::SetName(String const& name)
-	{
-		if (name_ != name)
-		{
-			// 保存节点名
-			name_ = name;
-			// 保存节点 Hash 名
-			hash_name_ = std::hash<String>{}(name);
-		}
 	}
 }

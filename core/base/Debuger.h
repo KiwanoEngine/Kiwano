@@ -39,7 +39,7 @@ namespace easy2d
 
 		void ClearDebugText();
 
-		void OnUpdate(Duration const& dt) override;
+		void Update(Duration const& dt) override;
 
 	protected:
 		spText debug_text_;

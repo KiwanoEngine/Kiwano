@@ -35,7 +35,7 @@ namespace easy2d
 		E2D_DECLARE_SINGLETON(FactoryImpl);
 
 	public:
-		void Init(bool debug);
+		HRESULT Init(bool debug);
 
 		HRESULT CreateHwndRenderTarget(
 			cpHwndRenderTarget& hwnd_render_target,
@@ -114,13 +114,12 @@ namespace easy2d
 		~FactoryImpl();
 
 	protected:
-		bool				initialized_;
-		cpFactory			factory;
-		cpImagingFactory	imaging_factory;
-		cpWriteFactory		write_factory;
-		cpStrokeStyle		miter_stroke_style;
-		cpStrokeStyle		bevel_stroke_style;
-		cpStrokeStyle		round_stroke_style;
+		cpFactory			factory_;
+		cpImagingFactory	imaging_factory_;
+		cpWriteFactory		write_factory_;
+		cpStrokeStyle		miter_stroke_style_;
+		cpStrokeStyle		bevel_stroke_style_;
+		cpStrokeStyle		round_stroke_style_;
 	};
 
 	E2D_DECLARE_SINGLETON_TYPE(FactoryImpl, Factory);

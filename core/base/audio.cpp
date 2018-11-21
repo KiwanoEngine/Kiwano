@@ -164,7 +164,6 @@ namespace easy2d
 		AudioDevice::AudioDevice()
 			: x_audio2_(nullptr)
 			, mastering_voice_(nullptr)
-			, initialized_(false)
 		{
 		}
 
@@ -185,26 +184,23 @@ namespace easy2d
 			modules::MediaFoundation().MFShutdown();
 		}
 
-		void AudioDevice::Init(bool debug)
+		HRESULT AudioDevice::Init(bool debug)
 		{
-			if (initialized_)
-				return;
-
 			E2D_LOG("Initing audio device");
 
-			ThrowIfFailed(
-				modules::MediaFoundation().MFStartup(MF_VERSION, MFSTARTUP_FULL)
-			);
+			HRESULT hr = modules::MediaFoundation().MFStartup(MF_VERSION, MFSTARTUP_FULL);
 
-			ThrowIfFailed(
-				modules::XAudio2().XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR)
-			);
+			if (SUCCEEDED(hr))
+			{
+				hr = modules::XAudio2().XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
+			}
 
-			ThrowIfFailed(
-				x_audio2_->CreateMasteringVoice(&mastering_voice_)
-			);
-
-			initialized_ = true;
+			if (SUCCEEDED(hr))
+			{
+				hr = x_audio2_->CreateMasteringVoice(&mastering_voice_);
+			}
+			
+			return hr;
 		}
 
 		HRESULT AudioDevice::CreateVoice(Voice& voice, const WAVEFORMATEX* wfx)

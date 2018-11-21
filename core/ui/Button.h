@@ -120,9 +120,6 @@ namespace easy2d
 				bool handled
 			) override;
 
-			// ±éÀú½Úµã
-			virtual void Visit() override;
-
 		private:
 			spNode		normal_;
 			spNode		mouseover_;

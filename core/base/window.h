@@ -30,7 +30,7 @@ namespace easy2d
 		E2D_DECLARE_SINGLETON(WindowImpl);
 
 	public:
-		void Init(
+		HRESULT Init(
 			String	title,
 			int		width,
 			int		height,
@@ -72,7 +72,6 @@ namespace easy2d
 		~WindowImpl();
 
 	private:
-		bool	initialized_;
 		HWND	handle;
 		float	scale_x;
 		float	scale_y;

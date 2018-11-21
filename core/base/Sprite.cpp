@@ -127,7 +127,7 @@ namespace easy2d
 		return image_;
 	}
 
-	void Sprite::OnDraw()
+	void Sprite::OnRender()
 	{
 		if (image_)
 		{

@@ -96,7 +96,7 @@ namespace easy2d
 		cache_expired_ = true;
 	}
 
-	void Canvas::OnDraw()
+	void Canvas::OnRender()
 	{
 		if (cache_expired_)
 		{

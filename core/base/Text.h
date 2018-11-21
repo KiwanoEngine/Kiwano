@@ -199,7 +199,7 @@ namespace easy2d
 			TextStyle const& style
 		);
 
-		virtual void OnDraw() override;
+		virtual void OnRender() override;
 
 	protected:
 		void UpdateLayout();

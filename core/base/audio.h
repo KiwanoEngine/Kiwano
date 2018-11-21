@@ -80,7 +80,7 @@ namespace easy2d
 			E2D_DECLARE_SINGLETON(AudioDevice);
 
 		public:
-			void Init(bool debug);
+			HRESULT Init(bool debug);
 
 			// ¿ªÆôÉè±¸
 			void Open();
@@ -105,7 +105,6 @@ namespace easy2d
 			~AudioDevice();
 
 		protected:
-			bool					initialized_;
 			IXAudio2*				x_audio2_;
 			IXAudio2MasteringVoice*	mastering_voice_;
 			std::set<Voice*>		voice_cache_;
