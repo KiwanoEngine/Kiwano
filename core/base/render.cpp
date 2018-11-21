@@ -66,12 +66,12 @@ namespace easy2d
 		{
 			CreateDeviceResources(hwnd);
 
-			window_occluded_ = !!(render_target->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED);
+			window_occluded_ = !!(render_target_->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED);
 
 			if (!window_occluded_)
 			{
-				render_target->BeginDraw();
-				render_target->Clear(clear_color_);
+				render_target_->BeginDraw();
+				render_target_->Clear(clear_color_);
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace easy2d
 		{
 			if (!window_occluded_)
 			{
-				HRESULT hr = render_target->EndDraw();
+				HRESULT hr = render_target_->EndDraw();
 
 				if (hr == D2DERR_RECREATE_TARGET)
 				{
@@ -89,9 +89,9 @@ namespace easy2d
 
 					fps_text_format_ = nullptr;
 					fps_text_layout_ = nullptr;
-					text_renderer = nullptr;
-					solid_brush = nullptr;
-					render_target = nullptr;
+					text_renderer_ = nullptr;
+					solid_brush_ = nullptr;
+					render_target_ = nullptr;
 				}
 
 				ThrowIfFailed(hr);
@@ -105,20 +105,20 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::CreateLayer(cpLayer& layer)
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
 			layer = nullptr;
-			return render_target->CreateLayer(&layer);
+			return render_target_->CreateLayer(&layer);
 		}
 
 		HRESULT GraphicsDevice::CreateSolidColorBrush(cpSolidColorBrush & brush) const
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
 			brush = nullptr;
-			return render_target->CreateSolidColorBrush(
+			return render_target_->CreateSolidColorBrush(
 				D2D1::ColorF(D2D1::ColorF::White),
 				&brush
 			);
@@ -131,18 +131,18 @@ namespace easy2d
 			StrokeStyle stroke
 		)
 		{
-			if (!solid_brush ||
-				!render_target)
+			if (!solid_brush_ ||
+				!render_target_)
 				return E_UNEXPECTED;
 
 			if (window_occluded_)
 				return S_OK;
 
-			solid_brush->SetColor(stroke_color);
+			solid_brush_->SetColor(stroke_color);
 			auto stroke_style = Factory::Instance()->GetStrokeStyle(stroke);
-			render_target->DrawGeometry(
+			render_target_->DrawGeometry(
 				geometry.Get(),
-				solid_brush.Get(),
+				solid_brush_.Get(),
 				stroke_width,
 				stroke_style.Get()
 			);
@@ -151,24 +151,24 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::FillGeometry(cpGeometry const & geometry, const Color & fill_color)
 		{
-			if (!solid_brush ||
-				!render_target)
+			if (!solid_brush_ ||
+				!render_target_)
 				return E_UNEXPECTED;
 
 			if (window_occluded_)
 				return S_OK;
 
-			solid_brush->SetColor(fill_color);
-			render_target->FillGeometry(
+			solid_brush_->SetColor(fill_color);
+			render_target_->FillGeometry(
 				geometry.Get(),
-				solid_brush.Get()
+				solid_brush_.Get()
 			);
 			return S_OK;
 		}
 
 		HRESULT GraphicsDevice::DrawImage(spImage const & image)
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
 			if (!image->GetBitmap())
@@ -177,7 +177,7 @@ namespace easy2d
 			if (window_occluded_)
 				return S_OK;
 
-			render_target->DrawBitmap(
+			render_target_->DrawBitmap(
 				image->GetBitmap().Get(),
 				D2D1::RectF(0.f, 0.f, image->GetWidth(), image->GetHeight()),
 				opacity_,
@@ -191,7 +191,7 @@ namespace easy2d
 			cpBitmap const& bitmap
 		)
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
 			if (window_occluded_)
@@ -199,7 +199,7 @@ namespace easy2d
 
 			// Do not crop bitmap 
 			auto rect = D2D1::RectF(0.f, 0.f, bitmap->GetSize().width, bitmap->GetSize().height);
-			render_target->DrawBitmap(
+			render_target_->DrawBitmap(
 				bitmap.Get(),
 				rect,
 				opacity_,
@@ -211,25 +211,25 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::DrawTextLayout(cpTextLayout const& text_layout)
 		{
-			if (!text_renderer)
+			if (!text_renderer_)
 				return E_UNEXPECTED;
 
 			if (window_occluded_)
 				return S_OK;
 
-			return text_layout->Draw(nullptr, text_renderer.Get(), 0, 0);
+			return text_layout->Draw(nullptr, text_renderer_.Get(), 0, 0);
 		}
 
 		HRESULT GraphicsDevice::PushClip(const math::Matrix & clip_matrix, const Size & clip_size)
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
 			if (window_occluded_)
 				return S_OK;
 
-			render_target->SetTransform(ConvertToD2DMatrix(clip_matrix));
-			render_target->PushAxisAlignedClip(
+			render_target_->SetTransform(ConvertToD2DMatrix(clip_matrix));
+			render_target_->PushAxisAlignedClip(
 				D2D1::RectF(0, 0, clip_size.width, clip_size.height),
 				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
 			);
@@ -238,33 +238,33 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::PopClip()
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
 			if (window_occluded_)
 				return S_OK;
 
-			render_target->PopAxisAlignedClip();
+			render_target_->PopAxisAlignedClip();
 			return S_OK;
 		}
 
 		HRESULT GraphicsDevice::PushLayer(cpLayer const& layer, LayerProperties const& properties)
 		{
-			if (!render_target ||
-				!solid_brush)
+			if (!render_target_ ||
+				!solid_brush_)
 				return E_UNEXPECTED;
 
 			if (window_occluded_)
 				return S_OK;
 
-			render_target->PushLayer(
+			render_target_->PushLayer(
 				D2D1::LayerParameters(
 					properties.area,
 					nullptr,
 					D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 					D2D1::Matrix3x2F::Identity(),
 					properties.opacity,
-					solid_brush.Get(),
+					solid_brush_.Get(),
 					D2D1_LAYER_OPTIONS_NONE
 				),
 				layer.Get()
@@ -274,22 +274,22 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::PopLayer()
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
 			if (window_occluded_)
 				return S_OK;
 
-			render_target->PopLayer();
+			render_target_->PopLayer();
 			return S_OK;
 		}
 
 		HRESULT GraphicsDevice::GetSize(Size & size)
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
-			auto rtsize = render_target->GetSize();
+			auto rtsize = render_target_->GetSize();
 			size.width = rtsize.width;
 			size.height = rtsize.height;
 			return S_OK;
@@ -297,7 +297,7 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::CreateBitmapFromFile(cpBitmap& bitmap, String const& file_path)
 		{
-			if (render_target == nullptr)
+			if (render_target_ == nullptr)
 			{
 				return E_UNEXPECTED;
 			}
@@ -312,7 +312,7 @@ namespace easy2d
 			cpBitmap bitmap_tmp;
 			HRESULT hr = Factory::Instance()->CreateBitmapFromFile(
 				bitmap,
-				render_target,
+				render_target_,
 				file_path
 			);
 
@@ -326,7 +326,7 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::CreateBitmapFromResource(cpBitmap& bitmap, Resource const& res)
 		{
-			if (render_target == nullptr)
+			if (render_target_ == nullptr)
 			{
 				return E_UNEXPECTED;
 			}
@@ -340,7 +340,7 @@ namespace easy2d
 
 			HRESULT hr = Factory::Instance()->CreateBitmapFromResource(
 				bitmap,
-				render_target,
+				render_target_,
 				res
 			);
 
@@ -354,38 +354,38 @@ namespace easy2d
 
 		HRESULT GraphicsDevice::CreateBitmapRenderTarget(cpBitmapRenderTarget & brt)
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
 			brt = nullptr;
-			return render_target->CreateCompatibleRenderTarget(&brt);
+			return render_target_->CreateCompatibleRenderTarget(&brt);
 		}
 
 		HRESULT GraphicsDevice::Resize(UINT32 width, UINT32 height)
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
-			render_target->Resize(D2D1::SizeU(width, height));
+			render_target_->Resize(D2D1::SizeU(width, height));
 			return S_OK;
 		}
 
 		HRESULT GraphicsDevice::SetTransform(const math::Matrix & matrix)
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
-			render_target->SetTransform(ConvertToD2DMatrix(matrix));
+			render_target_->SetTransform(ConvertToD2DMatrix(matrix));
 			return S_OK;
 		}
 
 		HRESULT GraphicsDevice::SetOpacity(float opacity)
 		{
-			if (!render_target)
+			if (!render_target_)
 				return E_UNEXPECTED;
 
 			opacity_ = opacity;
-			solid_brush->SetOpacity(opacity);
+			solid_brush_->SetOpacity(opacity);
 			return S_OK;
 		}
 
@@ -397,11 +397,11 @@ namespace easy2d
 			StrokeStyle outline_stroke
 		)
 		{
-			if (!text_renderer)
+			if (!text_renderer_)
 				return E_UNEXPECTED;
 
 			auto stroke_style = Factory::Instance()->GetStrokeStyle(outline_stroke);
-			text_renderer->SetTextStyle(
+			text_renderer_->SetTextStyle(
 				color,
 				has_outline,
 				outline_color,
@@ -418,7 +418,7 @@ namespace easy2d
 
 		void GraphicsDevice::CreateDeviceResources(HWND hwnd)
 		{
-			if (!render_target)
+			if (!render_target_)
 			{
 				RECT rc;
 				::GetClientRect(hwnd, &rc);
@@ -432,7 +432,7 @@ namespace easy2d
 				// 创建一个 Direct2D 渲染目标
 				ThrowIfFailed(
 					Factory::Instance()->CreateHwndRenderTarget(
-						render_target,
+						render_target_,
 						D2D1::RenderTargetProperties(),
 						D2D1::HwndRenderTargetProperties(
 							hwnd,
@@ -442,7 +442,7 @@ namespace easy2d
 					)
 				);
 
-				render_target->SetAntialiasMode(
+				render_target_->SetAntialiasMode(
 					options_.antialias ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
 				);
 
@@ -464,26 +464,26 @@ namespace easy2d
 				default:
 					break;
 				}
-				render_target->SetTextAntialiasMode(mode);
+				render_target_->SetTextAntialiasMode(mode);
 			}
 
-			if (!solid_brush)
+			if (!solid_brush_)
 			{
 				ThrowIfFailed(
-					render_target->CreateSolidColorBrush(
+					render_target_->CreateSolidColorBrush(
 						D2D1::ColorF(D2D1::ColorF::White),
-						&solid_brush
+						&solid_brush_
 					)
 				);
 			}
 
-			if (!text_renderer)
+			if (!text_renderer_)
 			{
 				ThrowIfFailed(
 					Factory::Instance()->CreateTextRenderer(
-						text_renderer,
-						render_target,
-						solid_brush
+						text_renderer_,
+						render_target_,
+						solid_brush_
 					)
 				);
 			}

@@ -42,6 +42,7 @@ namespace easy2d
 		, initialized_(false)
 		, hwnd_(nullptr)
 		, window_inactived_(false)
+		, time_scale_(1.f)
 	{
 		::CoInitialize(nullptr);
 	}
@@ -182,12 +183,17 @@ namespace easy2d
 		return curr_scene_;
 	}
 
+	void Game::SetTimeScale(float scale)
+	{
+		time_scale_ = scale;
+	}
+
 	void Game::Update()
 	{
 		static auto last = time::Now();
 
 		const auto now = time::Now();
-		const auto dt = now - last;
+		const auto dt = (now - last) * time_scale_;
 		last = now;
 
 		devices::Input::Instance()->Update();

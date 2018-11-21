@@ -93,6 +93,9 @@ namespace easy2d
 		// 获取当前场景
 		spScene const& GetCurrentScene();
 
+		// 设置变速
+		void SetTimeScale(float scale);
+
 	private:
 		void Render();
 
@@ -112,6 +115,7 @@ namespace easy2d
 		bool			initialized_;
 		bool			debug_enabled_;
 		bool			window_inactived_;
+		float			time_scale_;
 		HWND			hwnd_;
 		spScene			curr_scene_;
 		spScene			next_scene_;

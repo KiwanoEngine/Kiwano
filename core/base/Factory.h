@@ -115,12 +115,12 @@ namespace easy2d
 
 	protected:
 		bool				initialized_;
-		cpFactory			factory;
-		cpImagingFactory	imaging_factory;
-		cpWriteFactory		write_factory;
-		cpStrokeStyle		miter_stroke_style;
-		cpStrokeStyle		bevel_stroke_style;
-		cpStrokeStyle		round_stroke_style;
+		cpFactory			factory_;
+		cpImagingFactory	imaging_factory_;
+		cpWriteFactory		write_factory_;
+		cpStrokeStyle		miter_stroke_style_;
+		cpStrokeStyle		bevel_stroke_style_;
+		cpStrokeStyle		round_stroke_style_;
 	};
 
 	E2D_DECLARE_SINGLETON_TYPE(FactoryImpl, Factory);

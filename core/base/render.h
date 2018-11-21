@@ -171,9 +171,9 @@ namespace easy2d
 			bool						window_occluded_;
 			float						opacity_;
 			GraphicsOptions				options_;
-			cpTextRenderer				text_renderer;
-			cpSolidColorBrush			solid_brush;
-			cpHwndRenderTarget			render_target;
+			cpTextRenderer				text_renderer_;
+			cpSolidColorBrush			solid_brush_;
+			cpHwndRenderTarget			render_target_;
 			D2D1_COLOR_F				clear_color_;
 			cpTextFormat				fps_text_format_;
 			cpTextLayout				fps_text_layout_;
