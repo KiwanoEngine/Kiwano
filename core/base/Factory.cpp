@@ -26,7 +26,6 @@
 namespace easy2d
 {
 	FactoryImpl::FactoryImpl()
-		: initialized_(false)
 	{
 	}
 
@@ -35,82 +34,81 @@ namespace easy2d
 		E2D_LOG("Destroying device independent resources");
 	}
 
-	void FactoryImpl::Init(bool debug)
+	HRESULT FactoryImpl::Init(bool debug)
 	{
-		if (initialized_)
-			return;
-
 		E2D_LOG("Creating device independent resources");
 
 		D2D1_FACTORY_OPTIONS fact_options;
 		fact_options.debugLevel = debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE;
-		ThrowIfFailed(
-			modules::DirectX().D2D1CreateFactory(
-				D2D1_FACTORY_TYPE_SINGLE_THREADED,
-				__uuidof(ID2D1Factory),
-				&fact_options,
-				reinterpret_cast<void**>(&factory_)
-			)
+		HRESULT hr = modules::DirectX().D2D1CreateFactory(
+			D2D1_FACTORY_TYPE_SINGLE_THREADED,
+			__uuidof(ID2D1Factory),
+			&fact_options,
+			reinterpret_cast<void**>(&factory_)
 		);
 
-		ThrowIfFailed(
+		if (SUCCEEDED(hr))
+		{
 			CoCreateInstance(
 				CLSID_WICImagingFactory,
 				nullptr,
 				CLSCTX_INPROC_SERVER,
 				__uuidof(IWICImagingFactory),
 				reinterpret_cast<void**>(&imaging_factory_)
-			)
-		);
+			);
+		}
 
-		ThrowIfFailed(
+		if (SUCCEEDED(hr))
+		{
 			modules::DirectX().DWriteCreateFactory(
 				DWRITE_FACTORY_TYPE_SHARED,
 				__uuidof(IDWriteFactory),
 				reinterpret_cast<IUnknown**>(&write_factory_)
-			)
-		);
+			);
+		}
 
-		auto stroke_style = D2D1::StrokeStyleProperties(
-			D2D1_CAP_STYLE_FLAT,
-			D2D1_CAP_STYLE_FLAT,
-			D2D1_CAP_STYLE_FLAT,
-			D2D1_LINE_JOIN_MITER,
-			2.0f,
-			D2D1_DASH_STYLE_SOLID,
-			0.0f
-		);
+		if (SUCCEEDED(hr))
+		{
+			auto stroke_style = D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_CAP_STYLE_FLAT,
+				D2D1_LINE_JOIN_MITER,
+				2.0f,
+				D2D1_DASH_STYLE_SOLID,
+				0.0f
+			);
 
-		ThrowIfFailed(
-			factory_->CreateStrokeStyle(
+			hr = factory_->CreateStrokeStyle(
 				stroke_style,
 				nullptr,
 				0,
 				&miter_stroke_style_
-			)
-		);
+			);
 
-		stroke_style.lineJoin = D2D1_LINE_JOIN_BEVEL;
-		ThrowIfFailed(
-			factory_->CreateStrokeStyle(
-				stroke_style,
-				nullptr,
-				0,
-				&bevel_stroke_style_
-			)
-		);
+			if (SUCCEEDED(hr))
+			{
+				stroke_style.lineJoin = D2D1_LINE_JOIN_BEVEL;
+				hr = factory_->CreateStrokeStyle(
+					stroke_style,
+					nullptr,
+					0,
+					&bevel_stroke_style_
+				);
+			}
 
-		stroke_style.lineJoin = D2D1_LINE_JOIN_ROUND;
-		ThrowIfFailed(
-			factory_->CreateStrokeStyle(
-				stroke_style,
-				nullptr,
-				0,
-				&round_stroke_style_
-			)
-		);
-
-		initialized_ = true;
+			if (SUCCEEDED(hr))
+			{
+				stroke_style.lineJoin = D2D1_LINE_JOIN_ROUND;
+				hr = factory_->CreateStrokeStyle(
+					stroke_style,
+					nullptr,
+					0,
+					&round_stroke_style_
+				);
+			}
+		}
+		return hr;
 	}
 
 	HRESULT FactoryImpl::CreateHwndRenderTarget(cpHwndRenderTarget & hwnd_render_target, D2D1_RENDER_TARGET_PROPERTIES const & properties, D2D1_HWND_RENDER_TARGET_PROPERTIES const & hwnd_rt_properties) const

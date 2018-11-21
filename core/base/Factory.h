@@ -35,7 +35,7 @@ namespace easy2d
 		E2D_DECLARE_SINGLETON(FactoryImpl);
 
 	public:
-		void Init(bool debug);
+		HRESULT Init(bool debug);
 
 		HRESULT CreateHwndRenderTarget(
 			cpHwndRenderTarget& hwnd_render_target,
@@ -114,7 +114,6 @@ namespace easy2d
 		~FactoryImpl();
 
 	protected:
-		bool				initialized_;
 		cpFactory			factory_;
 		cpImagingFactory	imaging_factory_;
 		cpWriteFactory		write_factory_;

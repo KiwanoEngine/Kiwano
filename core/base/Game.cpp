@@ -20,8 +20,6 @@
 
 #include "Game.h"
 #include "logs.h"
-#include "input.h"
-#include "audio.h"
 #include "modules.h"
 #include "Factory.h"
 #include "Scene.h"
@@ -40,7 +38,10 @@ namespace easy2d
 		, transition_(nullptr)
 		, debug_enabled_(false)
 		, initialized_(false)
-		, hwnd_(nullptr)
+		, window_(nullptr)
+		, graphics_(nullptr)
+		, input_(nullptr)
+		, audio_(nullptr)
 		, window_inactived_(false)
 		, time_scale_(1.f)
 	{
@@ -65,27 +66,51 @@ namespace easy2d
 
 		debug_enabled_ = options.debug;
 
-		Window::Instance()->Init(
-			options.title,
-			options.width,
-			options.height,
-			options.icon,
-			Game::WndProc,
-			debug_enabled_
+		window_ = Window::Instance();
+		graphics_ = devices::Graphics::Instance();
+		input_ = devices::Input::Instance();
+		audio_ = devices::Audio::Instance();
+
+		ThrowIfFailed(
+			Factory::Instance()->Init(debug_enabled_)
 		);
 
-		const auto window = Window::Instance();
-		hwnd_ = window->GetHandle();
+		ThrowIfFailed(
+			window_->Init(
+				options.title,
+				options.width,
+				options.height,
+				options.icon,
+				Game::WndProc,
+				debug_enabled_
+			)
+		);
 
-		::SetWindowLongW(hwnd_, GWLP_USERDATA, PtrToUlong(this));
+		HWND hwnd = window_->GetHandle();
 
-		Factory::Instance()->Init(debug_enabled_);
-		devices::Graphics::Instance()->Init(hwnd_, options.graphics_options, debug_enabled_);
-		devices::Input::Instance()->Init(hwnd_, window->GetContentScaleX(), window->GetContentScaleY(), debug_enabled_);
-		devices::Audio::Instance()->Init(debug_enabled_);
+		ThrowIfFailed(
+			graphics_->Init(
+				hwnd,
+				options.vsync,
+				debug_enabled_
+			)
+		);
+
+		ThrowIfFailed(
+			input_->Init(
+				hwnd,
+				window_->GetContentScaleX(),
+				window_->GetContentScaleY(),
+				debug_enabled_
+			)
+		);
+		
+		ThrowIfFailed(
+			audio_->Init(debug_enabled_)
+		);
 
 		// disable imm
-		::ImmAssociateContext(hwnd_, nullptr);
+		::ImmAssociateContext(hwnd, nullptr);
 
 		HWND console = ::GetConsoleWindow();
 		if (debug_enabled_)
@@ -117,11 +142,16 @@ namespace easy2d
 			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
 
+		::SetWindowLongW(hwnd, GWLP_USERDATA, PtrToUlong(this));
+
 		initialized_ = true;
 	}
 
 	void Game::Run()
 	{
+		if (!initialized_)
+			return;
+
 		if (next_scene_)
 		{
 			next_scene_->OnEnter();
@@ -129,8 +159,8 @@ namespace easy2d
 			next_scene_ = nullptr;
 		}
 
-		::ShowWindow(hwnd_, SW_SHOWNORMAL);
-		::UpdateWindow(hwnd_);
+		::ShowWindow(window_->GetHandle(), SW_SHOWNORMAL);
+		::UpdateWindow(window_->GetHandle());
 
 		MSG msg = {};
 		while (::GetMessageW(&msg, nullptr, 0, 0))
@@ -142,7 +172,8 @@ namespace easy2d
 
 	void Game::Quit()
 	{
-		::DestroyWindow(hwnd_);
+		if (window_)
+			::DestroyWindow(window_->GetHandle());
 	}
 
 	bool Game::EnterScene(spScene const & scene)
@@ -196,7 +227,7 @@ namespace easy2d
 		const auto dt = (now - last) * time_scale_;
 		last = now;
 
-		devices::Input::Instance()->Update();
+		input_->Update();
 
 		if (curr_scene_)
 			curr_scene_->Update(dt);
@@ -234,7 +265,10 @@ namespace easy2d
 	void Game::Render()
 	{
 		auto graphics = devices::Graphics::Instance();
-		graphics->BeginDraw(hwnd_);
+		
+		ThrowIfFailed(
+			graphics->BeginDraw(window_->GetHandle())
+		);
 
 		if (transition_)
 		{
@@ -263,10 +297,12 @@ namespace easy2d
 			Debuger::Instance()->Visit();
 		}
 
-		graphics->EndDraw();
+		ThrowIfFailed(
+			graphics->EndDraw()
+		);
 
 		if (!window_inactived_)
-			::InvalidateRect(hwnd_, NULL, FALSE);
+			::InvalidateRect(window_->GetHandle(), NULL, FALSE);
 	}
 
 	void Game::Dispatch(MouseEvent const & e)

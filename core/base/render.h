@@ -37,20 +37,6 @@ namespace easy2d
 		None		// 不启用抗锯齿
 	};
 
-	// 图形渲染选项
-	struct GraphicsOptions
-	{
-		bool vsync;						// 垂直同步
-		bool antialias;					// 抗锯齿
-		TextAntialias text_antialias;	// 文字抗锯齿模式
-
-		GraphicsOptions()
-			: vsync(true)
-			, antialias(true)
-			, text_antialias(TextAntialias::ClearType)
-		{}
-	};
-
 	namespace devices
 	{
 		class GraphicsDevice
@@ -59,20 +45,34 @@ namespace easy2d
 			E2D_DECLARE_SINGLETON(GraphicsDevice);
 
 		public:
-			void Init(HWND hwnd, GraphicsOptions options, bool debug);
+			HRESULT Init(HWND hwnd, bool vsync, bool debug);
 
 			// 开始渲染
-			void BeginDraw(HWND hwnd);
+			HRESULT BeginDraw(HWND hwnd);
 
 			// 结束渲染
-			void EndDraw();
+			HRESULT EndDraw();
 
-			// 设置背景色
-			void SetBackgroundColor(
+			// 设置清空屏幕的颜色
+			void SetClearColor(
 				const Color& color
 			);
 
-			void CreateDeviceResources(HWND hwnd);
+			// 设置抗锯齿模式
+			HRESULT SetAntialiasMode(
+				bool enabled
+			);
+
+			// 设置文字抗锯齿模式
+			HRESULT SetTextAntialiasMode(
+				TextAntialias mode
+			);
+
+			HRESULT CreateResources(
+				HWND hwnd
+			);
+
+			void DiscardResources();
 
 			HRESULT CreateLayer(
 				cpLayer& layer
@@ -167,10 +167,11 @@ namespace easy2d
 			~GraphicsDevice();
 
 		protected:
-			bool						initialized_;
 			bool						window_occluded_;
+			bool						vsync_enabled_;
+			bool						antialias_;
+			TextAntialias				text_antialias_;
 			float						opacity_;
-			GraphicsOptions				options_;
 			cpTextRenderer				text_renderer_;
 			cpSolidColorBrush			solid_brush_;
 			cpHwndRenderTarget			render_target_;

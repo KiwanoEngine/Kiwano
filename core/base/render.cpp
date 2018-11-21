@@ -36,8 +36,9 @@ namespace easy2d
 			, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
 			, opacity_(1.f)
 			, window_occluded_(false)
-			, initialized_(false)
-			, options_()
+			, vsync_enabled_(true)
+			, antialias_(true)
+			, text_antialias_(TextAntialias::ClearType)
 		{
 		}
 
@@ -48,54 +49,53 @@ namespace easy2d
 			ClearImageCache();
 		}
 
-		void GraphicsDevice::Init(HWND hwnd, GraphicsOptions options, bool debug)
+		HRESULT GraphicsDevice::Init(HWND hwnd, bool vsync, bool debug)
 		{
-			if (initialized_)
-				return;
-
 			E2D_LOG("Initing graphics device");
 
-			options_ = options;
+			HRESULT hr = CreateResources(hwnd);
 
-			CreateDeviceResources(hwnd);
-
-			initialized_ = true;
-		}
-
-		void GraphicsDevice::BeginDraw(HWND hwnd)
-		{
-			CreateDeviceResources(hwnd);
-
-			window_occluded_ = !!(render_target_->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED);
-
-			if (!window_occluded_)
+			if (SUCCEEDED(hr))
 			{
-				render_target_->BeginDraw();
-				render_target_->Clear(clear_color_);
+				vsync_enabled_ = vsync;
 			}
+			return hr;
 		}
 
-		void GraphicsDevice::EndDraw()
+		HRESULT GraphicsDevice::BeginDraw(HWND hwnd)
 		{
+			HRESULT hr = CreateResources(hwnd);
+			
+			if (SUCCEEDED(hr))
+			{
+				window_occluded_ = !!(render_target_->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED);
+
+				if (!window_occluded_)
+				{
+					render_target_->BeginDraw();
+					render_target_->Clear(clear_color_);
+				}
+			}
+
+			return hr;
+		}
+
+		HRESULT GraphicsDevice::EndDraw()
+		{
+			HRESULT hr = S_OK;
 			if (!window_occluded_)
 			{
-				HRESULT hr = render_target_->EndDraw();
+				hr = render_target_->EndDraw();
 
 				if (hr == D2DERR_RECREATE_TARGET)
 				{
 					// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
 					// 并在下一次调用时重建资源
+					DiscardResources();
 					hr = S_OK;
-
-					fps_text_format_ = nullptr;
-					fps_text_layout_ = nullptr;
-					text_renderer_ = nullptr;
-					solid_brush_ = nullptr;
-					render_target_ = nullptr;
 				}
-
-				ThrowIfFailed(hr);
 			}
+			return hr;
 		}
 
 		void GraphicsDevice::ClearImageCache()
@@ -411,13 +411,55 @@ namespace easy2d
 			return S_OK;
 		}
 
-		void GraphicsDevice::SetBackgroundColor(const Color& color)
+		void GraphicsDevice::SetClearColor(const Color& color)
 		{
 			clear_color_ = color;
 		}
 
-		void GraphicsDevice::CreateDeviceResources(HWND hwnd)
+		HRESULT GraphicsDevice::SetAntialiasMode(bool enabled)
 		{
+			if (!render_target_)
+				return E_UNEXPECTED;
+
+			render_target_->SetAntialiasMode(
+				enabled ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
+			);
+			antialias_ = enabled;
+			return S_OK;
+		}
+
+		HRESULT GraphicsDevice::SetTextAntialiasMode(TextAntialias mode)
+		{
+			if (!render_target_)
+				return E_UNEXPECTED;
+
+			text_antialias_ = mode;
+			D2D1_TEXT_ANTIALIAS_MODE antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
+			switch (text_antialias_)
+			{
+			case TextAntialias::Default:
+				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_DEFAULT;
+				break;
+			case TextAntialias::ClearType:
+				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
+				break;
+			case TextAntialias::GrayScale:
+				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
+				break;
+			case TextAntialias::None:
+				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_ALIASED;
+				break;
+			default:
+				break;
+			}
+			render_target_->SetTextAntialiasMode(antialias_mode);
+			return S_OK;
+		}
+
+		HRESULT GraphicsDevice::CreateResources(HWND hwnd)
+		{
+			HRESULT hr = S_OK;
+
 			if (!render_target_)
 			{
 				RECT rc;
@@ -428,65 +470,50 @@ namespace easy2d
 					rc.bottom - rc.top
 				);
 
-				// 创建设备相关资源。这些资源应在 Direct2D 设备消失时重建
-				// 创建一个 Direct2D 渲染目标
-				ThrowIfFailed(
-					Factory::Instance()->CreateHwndRenderTarget(
-						render_target_,
-						D2D1::RenderTargetProperties(),
-						D2D1::HwndRenderTargetProperties(
-							hwnd,
-							size,
-							options_.vsync ? D2D1_PRESENT_OPTIONS_NONE : D2D1_PRESENT_OPTIONS_IMMEDIATELY
-						)
+				hr = Factory::Instance()->CreateHwndRenderTarget(
+					render_target_,
+					D2D1::RenderTargetProperties(),
+					D2D1::HwndRenderTargetProperties(
+						hwnd,
+						size,
+						vsync_enabled_ ? D2D1_PRESENT_OPTIONS_NONE : D2D1_PRESENT_OPTIONS_IMMEDIATELY
 					)
 				);
 
-				render_target_->SetAntialiasMode(
-					options_.antialias ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
-				);
-
-				D2D1_TEXT_ANTIALIAS_MODE mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
-				switch (options_.text_antialias)
+				if (SUCCEEDED(hr))
 				{
-				case TextAntialias::Default:
-					mode = D2D1_TEXT_ANTIALIAS_MODE_DEFAULT;
-					break;
-				case TextAntialias::ClearType:
-					mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
-					break;
-				case TextAntialias::GrayScale:
-					mode = D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
-					break;
-				case TextAntialias::None:
-					mode = D2D1_TEXT_ANTIALIAS_MODE_ALIASED;
-					break;
-				default:
-					break;
+					SetAntialiasMode(antialias_);
+					SetTextAntialiasMode(text_antialias_);
 				}
-				render_target_->SetTextAntialiasMode(mode);
-			}
-
-			if (!solid_brush_)
-			{
-				ThrowIfFailed(
-					render_target_->CreateSolidColorBrush(
+				
+				if (SUCCEEDED(hr))
+				{
+					hr = render_target_->CreateSolidColorBrush(
 						D2D1::ColorF(D2D1::ColorF::White),
 						&solid_brush_
-					)
-				);
-			}
+					);
+				}
 
-			if (!text_renderer_)
-			{
-				ThrowIfFailed(
-					Factory::Instance()->CreateTextRenderer(
+				if (SUCCEEDED(hr))
+				{
+					hr = Factory::Instance()->CreateTextRenderer(
 						text_renderer_,
 						render_target_,
 						solid_brush_
-					)
-				);
+					);
+				}
 			}
+			return hr;
+		}
+
+		void GraphicsDevice::DiscardResources()
+		{
+			// FIXME! 应通知 Game 类销毁所有节点的 device resources
+			fps_text_format_ = nullptr;
+			fps_text_layout_ = nullptr;
+			text_renderer_ = nullptr;
+			solid_brush_ = nullptr;
+			render_target_ = nullptr;
 		}
 
 	}
