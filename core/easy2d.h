@@ -78,6 +78,7 @@
 #include "base/KeyEvent.h"
 #include "base/MouseEvent.h"
 
+#include "base/Factory.h"
 #include "base/Game.h"
 
 

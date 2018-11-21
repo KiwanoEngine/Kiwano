@@ -23,6 +23,7 @@
 #include "logs.h"
 #include "Image.h"
 #include "Geometry.h"
+#include "Factory.h"
 
 namespace easy2d
 {
@@ -57,7 +58,7 @@ namespace easy2d
 		);
 
 		ThrowIfFailed(
-			devices::Graphics::Instance()->CreateTextRenderer(
+			Factory::Instance()->CreateTextRenderer(
 				text_renderer_,
 				render_target_,
 				text_brush_
@@ -125,7 +126,7 @@ namespace easy2d
 
 	void Canvas::SetOutlineJoinStyle(StrokeStyle outline_join)
 	{
-		outline_join_style_ = devices::Graphics::Instance()->GetStrokeStyle(outline_join);
+		outline_join_style_ = Factory::Instance()->GetStrokeStyle(outline_join);
 	}
 
 	void Canvas::SetTextStyle(Font const& font, TextStyle const & text_style)
@@ -138,7 +139,7 @@ namespace easy2d
 			text_style_.outline,
 			text_style_.outline_color,
 			text_style_.outline_width,
-			devices::Graphics::Instance()->GetStrokeStyle(text_style_.outline_stroke).Get()
+			Factory::Instance()->GetStrokeStyle(text_style_.outline_stroke).Get()
 		);
 	}
 
@@ -266,11 +267,9 @@ namespace easy2d
 		if (text.empty())
 			return;
 
-		auto graphics = devices::Graphics::Instance();
-
 		cpTextFormat text_format;
 		ThrowIfFailed(
-			graphics->CreateTextFormat(
+			Factory::Instance()->CreateTextFormat(
 				text_format,
 				text_font_,
 				text_style_
@@ -280,7 +279,7 @@ namespace easy2d
 		cpTextLayout text_layout;
 		Size layout_size;
 		ThrowIfFailed(
-			graphics->CreateTextLayout(
+			Factory::Instance()->CreateTextLayout(
 				text_layout,
 				layout_size,
 				text,
@@ -389,7 +388,7 @@ namespace easy2d
 		current_geometry_ = nullptr;
 
 		ThrowIfFailed(
-			devices::Graphics::Instance()->CreatePathGeometry(current_geometry_)
+			Factory::Instance()->CreatePathGeometry(current_geometry_)
 		);
 		
 		ThrowIfFailed(

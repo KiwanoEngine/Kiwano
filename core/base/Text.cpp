@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "Text.h"
+#include "Factory.h"
 #include "render.h"
 #include "base.hpp"
 #include "logs.h"
@@ -314,10 +315,8 @@ namespace easy2d
 		if (text_.empty())
 			return;
 
-		auto graphics = devices::Graphics::Instance();
-
 		ThrowIfFailed(
-			graphics->CreateTextFormat(
+			Factory::Instance()->CreateTextFormat(
 				text_format_,
 				font_,
 				style_
@@ -326,7 +325,7 @@ namespace easy2d
 
 		Size layout_size;
 		ThrowIfFailed(
-			graphics->CreateTextLayout(
+			Factory::Instance()->CreateTextLayout(
 				text_layout_,
 				layout_size,
 				text_,

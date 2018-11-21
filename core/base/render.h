@@ -53,20 +53,6 @@ namespace easy2d
 
 	namespace devices
 	{
-		struct D2DResources
-		{
-			cpFactory			factory;
-			cpImagingFactory	imaging_factory;
-			cpWriteFactory		write_factory;
-			cpTextRenderer		text_renderer;
-			cpSolidColorBrush	solid_brush;
-			cpHwndRenderTarget	render_target;
-			cpStrokeStyle		miter_stroke_style;
-			cpStrokeStyle		bevel_stroke_style;
-			cpStrokeStyle		round_stroke_style;
-		};
-
-
 		class GraphicsDevice
 			: protected Noncopyable
 		{
@@ -87,55 +73,6 @@ namespace easy2d
 			);
 
 			void CreateDeviceResources(HWND hwnd);
-
-			HRESULT CreateRectangleGeometry(
-				cpRectangleGeometry& geo,
-				Rect const& rect
-			) const;
-
-			HRESULT CreateRoundedRectangleGeometry(
-				cpRoundedRectangleGeometry& geo,
-				Rect const& rect,
-				float radius_x,
-				float radius_y
-			) const;
-
-			HRESULT CreateEllipseGeometry(
-				cpEllipseGeometry& geo,
-				Point const& center,
-				float radius_x,
-				float radius_y
-			) const;
-
-			HRESULT CreateTransformedGeometry(
-				cpTransformedGeometry& transformed,
-				math::Matrix const& matrix,
-				cpGeometry const& geo
-			) const;
-
-			HRESULT CreatePathGeometry(
-				cpPathGeometry& geometry
-			) const;
-
-			HRESULT CreateTextFormat(
-				cpTextFormat& text_format,
-				Font const& font,
-				TextStyle const& text_style
-			) const;
-
-			HRESULT CreateTextLayout(
-				cpTextLayout& text_layout,
-				Size& layout_size,
-				String const& text,
-				cpTextFormat const& text_format,
-				TextStyle const& text_style
-			) const;
-
-			HRESULT CreateTextRenderer(
-				cpTextRenderer& text_renderer,
-				cpRenderTarget const& render_target,
-				cpSolidColorBrush const& brush
-			);
 
 			HRESULT CreateLayer(
 				cpLayer& layer
@@ -158,10 +95,6 @@ namespace easy2d
 			HRESULT CreateBitmapRenderTarget(
 				cpBitmapRenderTarget& brt
 			);
-
-			cpStrokeStyle const& GetStrokeStyle(
-				StrokeStyle stroke
-			) const;
 
 			HRESULT SetTransform(
 				const math::Matrix& matrix
@@ -238,7 +171,9 @@ namespace easy2d
 			bool						window_occluded_;
 			float						opacity_;
 			GraphicsOptions				options_;
-			D2DResources				d2d;
+			cpTextRenderer				text_renderer;
+			cpSolidColorBrush			solid_brush;
+			cpHwndRenderTarget			render_target;
 			D2D1_COLOR_F				clear_color_;
 			cpTextFormat				fps_text_format_;
 			cpTextLayout				fps_text_layout_;
