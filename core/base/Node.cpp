@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "Node.h"
+#include "Factory.h"
 #include "Scene.h"
 #include "Task.h"
 #include "Action.hpp"
@@ -213,14 +214,14 @@ namespace easy2d
 		cpTransformedGeometry transformed;
 
 		ThrowIfFailed(
-			devices::Graphics::Instance()->CreateRectangleGeometry(
+			Factory::Instance()->CreateRectangleGeometry(
 				rect,
 				Rect(Point{}, size_)
 			)
 		);
 
 		ThrowIfFailed(
-			devices::Graphics::Instance()->CreateTransformedGeometry(
+			Factory::Instance()->CreateTransformedGeometry(
 				transformed,
 				final_matrix_,
 				rect

@@ -23,6 +23,7 @@
 #include "input.h"
 #include "audio.h"
 #include "modules.h"
+#include "Factory.h"
 #include "Scene.h"
 #include "Transition.h"
 #include "Debuger.h"
@@ -77,6 +78,7 @@ namespace easy2d
 
 		::SetWindowLongW(hwnd_, GWLP_USERDATA, PtrToUlong(this));
 
+		Factory::Instance()->Init(debug_enabled_);
 		devices::Graphics::Instance()->Init(hwnd_, options.graphics_options, debug_enabled_);
 		devices::Input::Instance()->Init(hwnd_, window->GetContentScaleX(), window->GetContentScaleY(), debug_enabled_);
 		devices::Audio::Instance()->Init(debug_enabled_);

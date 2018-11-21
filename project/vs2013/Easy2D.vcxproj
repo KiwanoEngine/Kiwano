@@ -32,6 +32,7 @@
     <ClInclude Include="..\..\core\base\d2dres.hpp" />
     <ClInclude Include="..\..\core\base\Debuger.h" />
     <ClInclude Include="..\..\core\base\Delay.h" />
+    <ClInclude Include="..\..\core\base\Factory.h" />
     <ClInclude Include="..\..\core\base\Font.hpp" />
     <ClInclude Include="..\..\core\base\Frames.h" />
     <ClInclude Include="..\..\core\base\Game.h" />
@@ -95,6 +96,7 @@
     <ClCompile Include="..\..\core\base\Color.cpp" />
     <ClCompile Include="..\..\core\base\Debuger.cpp" />
     <ClCompile Include="..\..\core\base\Delay.cpp" />
+    <ClCompile Include="..\..\core\base\Factory.cpp" />
     <ClCompile Include="..\..\core\base\Frames.cpp" />
     <ClCompile Include="..\..\core\base\Game.cpp" />
     <ClCompile Include="..\..\core\base\Geometry.cpp" />

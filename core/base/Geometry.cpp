@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "Geometry.h"
+#include "Factory.h"
 #include "render.h"
 #include "logs.h"
 
@@ -120,7 +121,7 @@ namespace easy2d
 			return GeometryRelation::Unknown;
 
 		cpTransformedGeometry transformed;
-		HRESULT hr = devices::Graphics::Instance()->CreateTransformedGeometry(
+		HRESULT hr = Factory::Instance()->CreateTransformedGeometry(
 			transformed,
 			GetTransformMatrix(),
 			geo_.Get()
@@ -162,7 +163,7 @@ namespace easy2d
 		cpPathGeometry path_geo;
 		cpGeometrySink path_sink;
 
-		HRESULT hr = devices::Graphics::Instance()->CreatePathGeometry(path_geo);
+		HRESULT hr = Factory::Instance()->CreatePathGeometry(path_geo);
 
 		if (SUCCEEDED(hr))
 		{
@@ -219,7 +220,7 @@ namespace easy2d
 	void RectangleGeometry::SetRect(Rect const & rect)
 	{
 		cpRectangleGeometry geo;
-		if (SUCCEEDED(devices::Graphics::Instance()->CreateRectangleGeometry(geo, rect)))
+		if (SUCCEEDED(Factory::Instance()->CreateRectangleGeometry(geo, rect)))
 		{
 			geo_ = geo;
 			rect_ = rect;
@@ -258,7 +259,7 @@ namespace easy2d
 	void CircleGeometry::SetCircle(Point const & center, float radius)
 	{
 		cpEllipseGeometry geo;
-		if (SUCCEEDED(devices::Graphics::Instance()->CreateEllipseGeometry(geo, center, radius, radius)))
+		if (SUCCEEDED(Factory::Instance()->CreateEllipseGeometry(geo, center, radius, radius)))
 		{
 			geo_ = geo;
 			center_ = center;
@@ -299,7 +300,7 @@ namespace easy2d
 	void EllipseGeometry::SetEllipse(Point const & center, float radius_x, float radius_y)
 	{
 		cpEllipseGeometry geo;
-		if (SUCCEEDED(devices::Graphics::Instance()->CreateEllipseGeometry(geo, center, radius_x, radius_y)))
+		if (SUCCEEDED(Factory::Instance()->CreateEllipseGeometry(geo, center, radius_x, radius_y)))
 		{
 			geo_ = geo;
 			radius_x_ = radius_x;
@@ -325,7 +326,7 @@ namespace easy2d
 		current_geometry_ = nullptr;
 
 		ThrowIfFailed(
-			devices::Graphics::Instance()->CreatePathGeometry(current_geometry_)
+			Factory::Instance()->CreatePathGeometry(current_geometry_)
 		);
 
 		ThrowIfFailed(
@@ -448,7 +449,7 @@ namespace easy2d
 	void RoundedRectGeometry::SetRoundedRect(Rect const & rect, float radius_x, float radius_y)
 	{
 		cpRoundedRectangleGeometry geo;
-		if (SUCCEEDED(devices::Graphics::Instance()->CreateRoundedRectangleGeometry(geo, rect, radius_x, radius_y)))
+		if (SUCCEEDED(Factory::Instance()->CreateRoundedRectangleGeometry(geo, rect, radius_x, radius_y)))
 		{
 			geo_ = geo;
 			rect_ = rect;
