@@ -164,7 +164,7 @@ namespace easy2d
 		AudioDevice::AudioDevice()
 			: x_audio2_(nullptr)
 			, mastering_voice_(nullptr)
-			, initialized(false)
+			, initialized_(false)
 		{
 		}
 
@@ -187,7 +187,7 @@ namespace easy2d
 
 		void AudioDevice::Init(bool debug)
 		{
-			if (initialized)
+			if (initialized_)
 				return;
 
 			E2D_LOG("Initing audio device");
@@ -204,7 +204,7 @@ namespace easy2d
 				x_audio2_->CreateMasteringVoice(&mastering_voice_)
 			);
 
-			initialized = true;
+			initialized_ = true;
 		}
 
 		HRESULT AudioDevice::CreateVoice(Voice& voice, const WAVEFORMATEX* wfx)

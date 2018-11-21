@@ -35,8 +35,9 @@ namespace easy2d
 			, fps_text_layout_(nullptr)
 			, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
 			, opacity_(1.f)
-			, window_occluded(false)
-			, initialized(false)
+			, window_occluded_(false)
+			, initialized_(false)
+			, options_()
 		{
 			ZeroMemory(&d2d, sizeof(D2DResources));
 		}
@@ -48,19 +49,22 @@ namespace easy2d
 			ClearImageCache();
 		}
 
-		void GraphicsDevice::Init(HWND hwnd, bool debug)
+		void GraphicsDevice::Init(HWND hwnd, GraphicsOptions options, bool debug)
 		{
-			if (initialized)
+			if (initialized_)
 				return;
 
 			E2D_LOG("Initing graphics device");
 
-			D2D1_FACTORY_OPTIONS options{ debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE };
+			options_ = options;
+
+			D2D1_FACTORY_OPTIONS fact_options;
+			fact_options.debugLevel = debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE;
 			ThrowIfFailed(
 				modules::DirectX().D2D1CreateFactory(
 					D2D1_FACTORY_TYPE_SINGLE_THREADED,
 					__uuidof(ID2D1Factory),
-					&options,
+					&fact_options,
 					reinterpret_cast<void**>(&d2d.factory)
 				)
 			);
@@ -124,16 +128,16 @@ namespace easy2d
 
 			CreateDeviceResources(hwnd);
 
-			initialized = true;
+			initialized_ = true;
 		}
 
 		void GraphicsDevice::BeginDraw(HWND hwnd)
 		{
 			CreateDeviceResources(hwnd);
 
-			window_occluded = !!(d2d.render_target->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED);
+			window_occluded_ = !!(d2d.render_target->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED);
 
-			if (!window_occluded)
+			if (!window_occluded_)
 			{
 				d2d.render_target->BeginDraw();
 				d2d.render_target->Clear(clear_color_);
@@ -142,7 +146,7 @@ namespace easy2d
 
 		void GraphicsDevice::EndDraw()
 		{
-			if (!window_occluded)
+			if (!window_occluded_)
 			{
 				HRESULT hr = d2d.render_target->EndDraw();
 
@@ -425,7 +429,7 @@ namespace easy2d
 				!d2d.render_target)
 				return E_UNEXPECTED;
 
-			if (window_occluded)
+			if (window_occluded_)
 				return S_OK;
 
 			d2d.solid_brush->SetColor(stroke_color);
@@ -444,7 +448,7 @@ namespace easy2d
 				!d2d.render_target)
 				return E_UNEXPECTED;
 
-			if (window_occluded)
+			if (window_occluded_)
 				return S_OK;
 
 			d2d.solid_brush->SetColor(fill_color);
@@ -463,7 +467,7 @@ namespace easy2d
 			if (!image->GetBitmap())
 				return S_OK;
 
-			if (window_occluded)
+			if (window_occluded_)
 				return S_OK;
 
 			d2d.render_target->DrawBitmap(
@@ -500,7 +504,7 @@ namespace easy2d
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			if (window_occluded)
+			if (window_occluded_)
 				return S_OK;
 
 			// Do not crop bitmap 
@@ -520,7 +524,7 @@ namespace easy2d
 			if (!d2d.text_renderer)
 				return E_UNEXPECTED;
 
-			if (window_occluded)
+			if (window_occluded_)
 				return S_OK;
 
 			return text_layout->Draw(nullptr, d2d.text_renderer.Get(), 0, 0);
@@ -531,7 +535,7 @@ namespace easy2d
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			if (window_occluded)
+			if (window_occluded_)
 				return S_OK;
 
 			d2d.render_target->SetTransform(ConvertToD2DMatrix(clip_matrix));
@@ -547,7 +551,7 @@ namespace easy2d
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			if (window_occluded)
+			if (window_occluded_)
 				return S_OK;
 
 			d2d.render_target->PopAxisAlignedClip();
@@ -560,7 +564,7 @@ namespace easy2d
 				!d2d.solid_brush)
 				return E_UNEXPECTED;
 
-			if (window_occluded)
+			if (window_occluded_)
 				return S_OK;
 
 			d2d.render_target->PushLayer(
@@ -583,7 +587,7 @@ namespace easy2d
 			if (!d2d.render_target)
 				return E_UNEXPECTED;
 
-			if (window_occluded)
+			if (window_occluded_)
 				return S_OK;
 
 			d2d.render_target->PopLayer();
@@ -863,10 +867,35 @@ namespace easy2d
 						D2D1::HwndRenderTargetProperties(
 							hwnd,
 							size,
-							D2D1_PRESENT_OPTIONS_NONE),
+							options_.vsync ? D2D1_PRESENT_OPTIONS_NONE : D2D1_PRESENT_OPTIONS_IMMEDIATELY
+						),
 						&d2d.render_target
 					)
 				);
+
+				d2d.render_target->SetAntialiasMode(
+					options_.antialias ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
+				);
+
+				D2D1_TEXT_ANTIALIAS_MODE mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
+				switch (options_.text_antialias)
+				{
+				case TextAntialias::Default:
+					mode = D2D1_TEXT_ANTIALIAS_MODE_DEFAULT;
+					break;
+				case TextAntialias::ClearType:
+					mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
+					break;
+				case TextAntialias::GrayScale:
+					mode = D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
+					break;
+				case TextAntialias::None:
+					mode = D2D1_TEXT_ANTIALIAS_MODE_ALIASED;
+					break;
+				default:
+					break;
+				}
+				d2d.render_target->SetTextAntialiasMode(mode);
 			}
 
 			if (!d2d.solid_brush)

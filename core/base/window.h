@@ -72,7 +72,7 @@ namespace easy2d
 		~WindowImpl();
 
 	private:
-		bool	initialized;
+		bool	initialized_;
 		HWND	handle;
 		float	scale_x;
 		float	scale_y;
