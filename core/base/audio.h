@@ -105,7 +105,7 @@ namespace easy2d
 			~AudioDevice();
 
 		protected:
-			bool					initialized;
+			bool					initialized_;
 			IXAudio2*				x_audio2_;
 			IXAudio2MasteringVoice*	mastering_voice_;
 			std::set<Voice*>		voice_cache_;

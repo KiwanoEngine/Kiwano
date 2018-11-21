@@ -71,7 +71,7 @@ namespace easy2d
 			~InputDevice();
 
 		protected:
-			bool	initialized;
+			bool	initialized_;
 			HWND	hwnd_;
 			float	scale_x_;
 			float	scale_y_;

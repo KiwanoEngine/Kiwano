@@ -20,7 +20,6 @@
 
 #include "Game.h"
 #include "logs.h"
-#include "render.h"
 #include "input.h"
 #include "audio.h"
 #include "modules.h"
@@ -35,8 +34,7 @@
 namespace easy2d
 {
 	Game::Game()
-		: quit_(true)
-		, curr_scene_(nullptr)
+		: curr_scene_(nullptr)
 		, next_scene_(nullptr)
 		, transition_(nullptr)
 		, debug_enabled_(false)
@@ -79,7 +77,7 @@ namespace easy2d
 
 		::SetWindowLongW(hwnd_, GWLP_USERDATA, PtrToUlong(this));
 
-		devices::Graphics::Instance()->Init(hwnd_, debug_enabled_);
+		devices::Graphics::Instance()->Init(hwnd_, options.graphics_options, debug_enabled_);
 		devices::Input::Instance()->Init(hwnd_, window->GetContentScaleX(), window->GetContentScaleY(), debug_enabled_);
 		devices::Audio::Instance()->Init(debug_enabled_);
 
@@ -121,8 +119,6 @@ namespace easy2d
 
 	void Game::Run()
 	{
-		quit_ = false;
-
 		if (next_scene_)
 		{
 			next_scene_->OnEnter();
@@ -134,7 +130,7 @@ namespace easy2d
 		::UpdateWindow(hwnd_);
 
 		MSG msg = {};
-		while (::GetMessageW(&msg, nullptr, 0, 0) && !quit_)
+		while (::GetMessageW(&msg, nullptr, 0, 0))
 		{
 			::TranslateMessage(&msg);
 			::DispatchMessageW(&msg);
@@ -143,7 +139,7 @@ namespace easy2d
 
 	void Game::Quit()
 	{
-		quit_ = true;
+		::DestroyWindow(hwnd_);
 	}
 
 	bool Game::EnterScene(spScene const & scene)
@@ -367,7 +363,7 @@ namespace easy2d
 		{
 			if (game->OnClose())
 			{
-				game->Quit();
+				::DestroyWindow(hwnd);
 			}
 		}
 		result = 0;
@@ -376,6 +372,7 @@ namespace easy2d
 
 		case WM_DESTROY:
 		{
+			game->OnExit();
 			::PostQuitMessage(0);
 		}
 		result = 1;

@@ -29,7 +29,27 @@
 
 namespace easy2d
 {
-	class Image;
+	enum class TextAntialias
+	{
+		Default,	// 系统默认
+		ClearType,	// ClearType 抗锯齿
+		GrayScale,	// 灰度抗锯齿
+		None		// 不启用抗锯齿
+	};
+
+	// 图形渲染选项
+	struct GraphicsOptions
+	{
+		bool vsync;						// 垂直同步
+		bool antialias;					// 抗锯齿
+		TextAntialias text_antialias;	// 文字抗锯齿模式
+
+		GraphicsOptions()
+			: vsync(true)
+			, antialias(true)
+			, text_antialias(TextAntialias::ClearType)
+		{}
+	};
 
 	namespace devices
 	{
@@ -40,7 +60,7 @@ namespace easy2d
 			cpWriteFactory		write_factory;
 			cpTextRenderer		text_renderer;
 			cpSolidColorBrush	solid_brush;
-			cpHwndRenderTarget		render_target;
+			cpHwndRenderTarget	render_target;
 			cpStrokeStyle		miter_stroke_style;
 			cpStrokeStyle		bevel_stroke_style;
 			cpStrokeStyle		round_stroke_style;
@@ -53,7 +73,7 @@ namespace easy2d
 			E2D_DECLARE_SINGLETON(GraphicsDevice);
 
 		public:
-			void Init(HWND hwnd, bool debug);
+			void Init(HWND hwnd, GraphicsOptions options, bool debug);
 
 			// 开始渲染
 			void BeginDraw(HWND hwnd);
@@ -214,9 +234,10 @@ namespace easy2d
 			~GraphicsDevice();
 
 		protected:
-			bool						initialized;
-			bool						window_occluded;
+			bool						initialized_;
+			bool						window_occluded_;
 			float						opacity_;
+			GraphicsOptions				options_;
 			D2DResources				d2d;
 			D2D1_COLOR_F				clear_color_;
 			cpTextFormat				fps_text_format_;

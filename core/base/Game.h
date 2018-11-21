@@ -22,6 +22,7 @@
 #include "base.hpp"
 #include "window.h"
 #include "time.h"
+#include "render.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
 
@@ -29,11 +30,13 @@ namespace easy2d
 {
 	struct Options
 	{
-		String	title;	/* 标题 */
-		int		width;	/* 宽度 */
-		int		height;	/* 高度 */
-		LPCWSTR	icon;	/* 图标 */
-		bool	debug;	/* 调试模式 */
+		String	title;	// 标题
+		int		width;	// 宽度
+		int		height;	// 高度
+		LPCWSTR	icon;	// 图标
+		bool	debug;	// 调试模式
+
+		GraphicsOptions	graphics_options;	// 图形渲染选项
 
 		Options()
 			: title(L"Easy2D Game")
@@ -41,6 +44,7 @@ namespace easy2d
 			, height(480)
 			, icon(nullptr)
 			, debug(false)
+			, graphics_options()
 		{}
 	};
 
@@ -107,7 +111,6 @@ namespace easy2d
 	private:
 		bool			initialized_;
 		bool			debug_enabled_;
-		bool			quit_;
 		bool			window_inactived_;
 		HWND			hwnd_;
 		spScene			curr_scene_;

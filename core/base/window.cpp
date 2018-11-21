@@ -39,24 +39,21 @@ namespace easy2d
 		: handle(nullptr)
 		, scale_x(1.f)
 		, scale_y(1.f)
-		, initialized(false)
+		, initialized_(false)
 	{
 	}
 
 	WindowImpl::~WindowImpl()
 	{
 		E2D_LOG("Destroying window");
-
-		if (handle)
-			::DestroyWindow(handle);
 	}
 
 	void WindowImpl::Init(String title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
 	{
-		if (initialized)
+		if (initialized_)
 			return;
 
-		E2D_LOG("Initing window");
+		E2D_LOG("Creating window");
 
 		HINSTANCE hinstance	= GetModuleHandle(nullptr);
 		WNDCLASSEX wcex		= { 0 };
@@ -116,7 +113,7 @@ namespace easy2d
 			throw std::runtime_error(err);
 		}
 
-		initialized = true;
+		initialized_ = true;
 	}
 
 	String WindowImpl::GetTitle() const
