@@ -68,7 +68,7 @@ namespace easy2d
 		texts_.clear();
 	}
 
-	void DebugerNode::OnUpdate(Duration const & dt)
+	void DebugerNode::Update(Duration const & dt)
 	{
 		try
 		{

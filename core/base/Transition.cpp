@@ -111,7 +111,7 @@ namespace easy2d
 			);
 			graphics->PushLayer(out_layer_, out_layer_prop_);
 
-			out_scene_->Visit();
+			out_scene_->Render();
 
 			graphics->PopLayer();
 			graphics->PopClip();
@@ -125,7 +125,7 @@ namespace easy2d
 			);
 			graphics->PushLayer(in_layer_, in_layer_prop_);
 
-			in_scene_->Visit();
+			in_scene_->Render();
 
 			graphics->PopLayer();
 			graphics->PopClip();

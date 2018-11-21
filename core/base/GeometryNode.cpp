@@ -66,7 +66,7 @@ namespace easy2d
 		outline_join_ = outline_join;
 	}
 
-	void GeometryNode::OnDraw()
+	void GeometryNode::OnRender()
 	{
 		if (geometry_ && geometry_->geo_)
 		{
@@ -84,14 +84,6 @@ namespace easy2d
 				stroke_width_,
 				outline_join_
 			);
-		}
-	}
-
-	void GeometryNode::DrawBorder()
-	{
-		if (visible_)
-		{
-			DrawChildrenBorder();
 		}
 	}
 

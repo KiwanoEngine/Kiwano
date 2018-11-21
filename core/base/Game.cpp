@@ -33,16 +33,16 @@
 namespace easy2d
 {
 	Game::Game()
-		: curr_scene_(nullptr)
+		: initialized_(false)
+		, window_inactived_(false)
+		, curr_scene_(nullptr)
 		, next_scene_(nullptr)
 		, transition_(nullptr)
-		, debug_enabled_(false)
-		, initialized_(false)
 		, window_(nullptr)
 		, graphics_(nullptr)
 		, input_(nullptr)
 		, audio_(nullptr)
-		, window_inactived_(false)
+		, debug_enabled_(false)
 		, time_scale_(1.f)
 	{
 		::CoInitialize(nullptr);
@@ -112,36 +112,32 @@ namespace easy2d
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
 
+		// show console if debug mode enabled
 		HWND console = ::GetConsoleWindow();
-		if (debug_enabled_)
+		if (debug_enabled_ && !console)
 		{
-			if (console == nullptr)
+			if (::AllocConsole())
 			{
-				if (::AllocConsole())
-				{
-					console = ::GetConsoleWindow();
-					FILE * stdoutStream, *stdinStream, *stderrStream;
-					freopen_s(&stdoutStream, "conout$", "w+t", stdout);
-					freopen_s(&stdinStream, "conin$", "r+t", stdin);
-					freopen_s(&stderrStream, "conout$", "w+t", stderr);
-				}
+				console = ::GetConsoleWindow();
+				FILE * stdoutStream, *stdinStream, *stderrStream;
+				freopen_s(&stdoutStream, "conout$", "w+t", stdout);
+				freopen_s(&stdinStream, "conin$", "r+t", stdin);
+				freopen_s(&stderrStream, "conout$", "w+t", stderr);
 			}
 		}
-		else
+		else if (!debug_enabled_ && console)
 		{
-			if (console)
-			{
-				::ShowWindow(console, SW_HIDE);
-			}
+			::ShowWindow(console, SW_HIDE);
 		}
 
+		// disable the close button of console
 		if (console)
 		{
-			// disable the close button of console
 			HMENU hmenu = ::GetSystemMenu(console, FALSE);
 			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
 
+		// use Game instance in message loop
 		::SetWindowLongW(hwnd, GWLP_USERDATA, PtrToUlong(this));
 
 		initialized_ = true;
@@ -151,13 +147,6 @@ namespace easy2d
 	{
 		if (!initialized_)
 			return;
-
-		if (next_scene_)
-		{
-			next_scene_->OnEnter();
-			curr_scene_ = next_scene_;
-			next_scene_ = nullptr;
-		}
 
 		::ShowWindow(window_->GetHandle(), SW_SHOWNORMAL);
 		::UpdateWindow(window_->GetHandle());
@@ -276,7 +265,7 @@ namespace easy2d
 		}
 		else if (curr_scene_)
 		{
-			curr_scene_->Visit();
+			curr_scene_->Render();
 		}
 
 		if (debug_enabled_)
@@ -294,7 +283,7 @@ namespace easy2d
 				next_scene_->DrawBorder();
 			}
 
-			Debuger::Instance()->Visit();
+			Debuger::Instance()->Render();
 		}
 
 		ThrowIfFailed(

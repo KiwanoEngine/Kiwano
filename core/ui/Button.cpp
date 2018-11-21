@@ -220,31 +220,6 @@ namespace easy2d
 			return Node::Dispatch(e, handled);
 		}
 
-		void Button::Visit()
-		{
-			Node::Visit();
-
-			if (IsVisible() &&
-				!enabled_ &&
-				normal_ &&
-				normal_->ContainsPoint(devices::Input::Instance()->GetMousePos()))
-			{
-				HCURSOR hcursor = ::LoadCursor(nullptr, IDC_NO);
-				if (hcursor)
-				{
-					::SetCursor(hcursor);
-				}
-			}
-			else if (status_ == Status::Mouseover || status_ == Status::Selected)
-			{
-				HCURSOR hcursor = ::LoadCursor(nullptr, IDC_HAND);
-				if (hcursor)
-				{
-					::SetCursor(hcursor);
-				}
-			}
-		}
-
 		void Button::SetStatus(Status status)
 		{
 			if (status_ != status)

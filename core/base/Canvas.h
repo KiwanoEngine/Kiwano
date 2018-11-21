@@ -218,7 +218,7 @@ namespace easy2d
 		// µ¼³öÎªÍ¼Æ¬
 		spImage ExportToImage() const;
 
-		virtual void OnDraw() override;
+		virtual void OnRender() override;
 
 	protected:
 		cpBitmap const& GetBitmap() const;
