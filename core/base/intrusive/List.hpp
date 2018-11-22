@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <stdexcept>
+#include "../macros.h"
 #include <functional>
 
 #undef DEBUG_CHECK_LIST
@@ -156,7 +156,7 @@ namespace easy2d
 				while (tmp != child)
 				{
 					if (tmp == last_)
-						throw std::logic_error("The node to be removed is not in this list");
+						E2D_ASSERT(false && "The node to be removed is not in this list");
 					tmp = tmp->next_;
 				}
 #endif
@@ -218,14 +218,14 @@ namespace easy2d
 				for (size_t i = 0; i < size; ++i)
 				{
 					if (i == 0)
-						temp_vec[i]->prev_ = ItemType();
+						temp_vec[i]->prev_ = nullptr;
 					else
 					{
 						temp_vec[i]->prev_ = temp_vec[i - 1];
 						temp_vec[i - 1]->next_ = temp_vec[i];
 					}
 					if (i == size - 1)
-						temp_vec[i]->next_ = ItemType();
+						temp_vec[i]->next_ = nullptr;
 					else
 					{
 						temp_vec[i]->next_ = temp_vec[i + 1];
@@ -257,13 +257,11 @@ namespace easy2d
 
 					if (p)
 					{
-						if (p->prev_ != tmp)
-							throw std::logic_error("Check list failed");
+						E2D_ASSERT(p->prev_ == tmp && "Check list failed");
 					}
 					else
 					{
-						if (tmp != last_)
-							throw std::logic_error("Check list failed");
+						E2D_ASSERT(tmp == last_ && "Check list failed");
 					}
 				} while (p);
 			}

@@ -156,8 +156,7 @@ namespace easy2d
 
 	void Game::EnterScene(spScene const & scene)
 	{
-		if (!scene)
-			logs::Warningln("Game::EnterScene failed, scene is nullptr");
+		E2D_ASSERT(scene && "Game::EnterScene failed, NULL pointer exception");
 
 		if (curr_scene_ == scene || next_scene_ == scene)
 			return;
@@ -450,22 +449,13 @@ namespace easy2d
 
 	LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		LRESULT result = 0;
-		bool was_handled = false;
-
 		Game * game = reinterpret_cast<Game*>(
 			static_cast<LONG_PTR>(::GetWindowLongW(hwnd, GWLP_USERDATA))
 			);
 		
-		if (game)
-		{
-			was_handled = game->HandleMessage(hwnd, msg, wparam, lparam);
-		}
+		if (game && game->HandleMessage(hwnd, msg, wparam, lparam))
+			return 0;
 
-		if (!was_handled)
-		{
-			result = ::DefWindowProcW(hwnd, msg, wparam, lparam);
-		}
-		return result;
+		return ::DefWindowProcW(hwnd, msg, wparam, lparam);
 	}
 }

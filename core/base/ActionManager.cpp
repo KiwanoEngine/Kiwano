@@ -43,8 +43,7 @@ namespace easy2d
 
 	void ActionManager::AddAction(spAction const& action)
 	{
-		if (!action)
-			logs::Warningln("AddAction failed, action is nullptr");
+		E2D_ASSERT(action && "AddAction failed, NULL pointer exception");
 
 		if (action)
 		{

@@ -42,8 +42,7 @@ namespace easy2d
 
 	void TaskManager::AddTask(spTask const& task)
 	{
-		if (!task)
-			logs::Warningln("AddTask failed, task is nullptr");
+		E2D_ASSERT(task && "AddTask failed, NULL pointer exception");
 
 		if (task)
 		{

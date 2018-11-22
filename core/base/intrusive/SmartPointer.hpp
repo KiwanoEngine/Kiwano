@@ -22,14 +22,6 @@
 #include "../macros.h"
 #include <utility>
 
-#ifndef E2D_INTRUSIVE_PTR_ASSERT
-#	ifdef E2D_DEBUG
-#		define E2D_INTRUSIVE_PTR_ASSERT(expr, msg) do { if (!(expr)) throw std::runtime_error(msg); } while(0);
-#	else
-#		define E2D_INTRUSIVE_PTR_ASSERT __noop
-#	endif
-#endif
-
 namespace easy2d
 {
 	namespace intrusive
@@ -82,19 +74,19 @@ namespace easy2d
 
 			inline Type* operator ->() const
 			{
-				E2D_INTRUSIVE_PTR_ASSERT(ptr_ != nullptr, "Invalid pointer");
+				E2D_ASSERT(ptr_ != nullptr, "Invalid pointer");
 				return ptr_;
 			}
 
 			inline Type& operator *() const
 			{
-				E2D_INTRUSIVE_PTR_ASSERT(ptr_ != nullptr, "Invalid pointer");
+				E2D_ASSERT(ptr_ != nullptr, "Invalid pointer");
 				return *ptr_;
 			}
 
 			inline Type** operator &()
 			{
-				E2D_INTRUSIVE_PTR_ASSERT(ptr_ == nullptr, "Memory leak");
+				E2D_ASSERT(ptr_ == nullptr, "Memory leak");
 				return &ptr_;
 			}
 

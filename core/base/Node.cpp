@@ -388,8 +388,7 @@ namespace easy2d
 
 	void Node::AddChild(spNode const& child, int z_order)
 	{
-		if (!child)
-			logs::Warningln("Node::AddChild failed, child is nullptr");
+		E2D_ASSERT(child && "Node::AddChild failed, NULL pointer exception");
 
 		if (child)
 		{
@@ -472,8 +471,7 @@ namespace easy2d
 
 	bool Node::RemoveChild(spNode const& child)
 	{
-		if (!child)
-			logs::Warningln("Node::RemoveChild failed, child is nullptr");
+		E2D_ASSERT(child && "Node::RemoveChild failed, NULL pointer exception");
 
 		if (children_.IsEmpty())
 			return false;

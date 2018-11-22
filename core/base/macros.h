@@ -82,6 +82,7 @@
 #include <wincodec.h>
 
 // C++ RunTime Header Files
+#include <cstdlib>
 #include <string>
 #include <map>
 #include <set>
@@ -96,4 +97,13 @@
 #else
 #	define E2D_NOEXCEPT throw()
 #	define E2D_CONSTEXPR const
+#endif
+
+
+#ifndef E2D_ASSERT
+#	ifdef E2D_DEBUG
+#		define E2D_ASSERT(expr) if (!(expr)) { ::OutputDebugStringA("[easy2d] Assert failed: " #expr "\n"); abort(); }
+#	else
+#		define E2D_ASSERT __noop
+#	endif
 #endif
