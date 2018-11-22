@@ -131,7 +131,7 @@ namespace easy2d
 	{
 		if (image_)
 		{
-			devices::Graphics::Instance()->DrawImage(image_);
+			Graphics::Instance()->DrawImage(image_);
 		}
 	}
 }

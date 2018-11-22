@@ -105,7 +105,7 @@ namespace easy2d
 
 		UpdateTransform();
 
-		auto graphics = devices::Graphics::Instance();
+		auto graphics = Graphics::Instance();
 
 		if (children_.IsEmpty())
 		{
@@ -146,13 +146,36 @@ namespace easy2d
 		}
 	}
 
+	void Node::DispatchEvent(Event * e)
+	{
+		if (!visible_)
+			return;
+
+		this->HandleEvent(e);
+
+		if (!e->has_target)
+		{
+			EventDispatcher::DispatchEvent(e);
+		}
+	}
+
+	void Node::HandleEvent(Event * e)
+	{
+		spNode prev;
+		for (auto child = children_.Last(); child; child = prev)
+		{
+			prev = child->PrevItem();
+			child->HandleEvent(e);
+		}
+	}
+
 	void Node::DrawBorder()
 	{
 		if (visible_)
 		{
 			if (border_)
 			{
-				devices::Graphics::Instance()->DrawGeometry(border_, border_color_, 1.5f);
+				Graphics::Instance()->DrawGeometry(border_, border_color_, 1.5f);
 			}
 
 			for (auto child = children_.First(); child; child = child->NextItem())
@@ -178,6 +201,16 @@ namespace easy2d
 	{
 		UpdateTransform();
 		return final_matrix_;
+	}
+
+	spNode Node::GetParent() const
+	{
+		return parent_;
+	}
+
+	spScene Node::GetScene() const
+	{
+		return scene_;
 	}
 
 	void Node::UpdateTransform()
@@ -241,44 +274,6 @@ namespace easy2d
 		}
 	}
 
-	bool Node::Dispatch(const MouseEvent & e, bool handled)
-	{
-		if (visible_)
-		{
-			spNode prev;
-			for (auto child = children_.Last(); child; child = prev)
-			{
-				prev = child->PrevItem();
-				handled = child->Dispatch(e, handled);
-			}
-
-			auto handler = dynamic_cast<MouseEventHandler*>(this);
-			if (handler)
-				handler->Handle(e);
-		}
-
-		return handled;
-	}
-
-	bool Node::Dispatch(const KeyEvent & e, bool handled)
-	{
-		if (visible_)
-		{
-			spNode prev;
-			for (auto child = children_.Last(); child; child = prev)
-			{
-				prev = child->PrevItem();
-				handled = child->Dispatch(e, handled);
-			}
-
-			auto handler = dynamic_cast<KeyEventHandler*>(this);
-			if (handler)
-				handler->Handle(e);
-		}
-
-		return handled;
-	}
-
 	void Node::UpdateOpacity()
 	{
 		if (parent_)
@@ -288,6 +283,15 @@ namespace easy2d
 		for (auto child = children_.First(); child; child = child->NextItem())
 		{
 			child->UpdateOpacity();
+		}
+	}
+
+	void Node::SetScene(Scene * scene)
+	{
+		scene_ = scene;
+		for (auto child = children_.First(); child; child = child->NextItem())
+		{
+			child->scene_ = scene;
 		}
 	}
 
@@ -402,6 +406,7 @@ namespace easy2d
 
 			children_.PushBack(Node::ItemType(child));
 			child->parent_ = this;
+			child->SetScene(this->scene_);
 			child->dirty_transform_ = true;
 			child->SetZOrder(z_order);
 			child->UpdateOpacity();
@@ -471,12 +476,12 @@ namespace easy2d
 			logs::Warningln("Node::RemoveChild failed, child is nullptr");
 
 		if (children_.IsEmpty())
-		{
 			return false;
-		}
 
 		if (child)
 		{
+			child->parent_ = nullptr;
+			if (child->scene_) child->SetScene(nullptr);
 			children_.Remove(Node::ItemType(child));
 			return true;
 		}
@@ -497,7 +502,9 @@ namespace easy2d
 			next = child->NextItem();
 
 			if (child->hash_name_ == hash_code && child->name_ == child_name)
-				children_.Remove(child);
+			{
+				RemoveChild(child);
+			}
 		}
 	}
 

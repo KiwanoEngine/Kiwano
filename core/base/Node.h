@@ -22,10 +22,9 @@
 #include "base.hpp"
 #include "time.h"
 #include "Unit.h"
-#include "KeyEvent.h"
-#include "MouseEvent.h"
-#include "ActionManager.h"
 #include "TaskManager.h"
+#include "ActionManager.h"
+#include "EventDispatcher.h"
 #include "intrusive/List.hpp"
 
 namespace easy2d
@@ -35,8 +34,9 @@ namespace easy2d
 	// 节点
 	class Node
 		: public Unit
-		, public ActionManager
 		, public TaskManager
+		, public ActionManager
+		, public EventDispatcher
 		, protected intrusive::ListItem<spNode>
 	{
 		friend class Game;
@@ -58,6 +58,9 @@ namespace easy2d
 
 		// 渲染节点
 		virtual void OnRender();
+
+		// 处理事件
+		virtual void HandleEvent(Event* e);
 
 		// 获取显示状态
 		bool IsVisible() const { return visible_; }
@@ -96,7 +99,10 @@ namespace easy2d
 		virtual math::Matrix const& GetTransformMatrix() override;
 
 		// 获取父节点
-		virtual spNode GetParent() const { return parent_; }
+		spNode GetParent() const;
+
+		// 获取所在场景
+		spScene GetScene() const;
 
 		// 设置是否显示
 		void SetVisible(
@@ -215,6 +221,8 @@ namespace easy2d
 		// 从父节点移除
 		void RemoveFromParent();
 
+		virtual void DispatchEvent(Event* e) override;
+
 		// 设置默认支点
 		static void SetDefaultPivot(
 			float pivot_x,
@@ -240,15 +248,7 @@ namespace easy2d
 
 		void UpdateOpacity();
 
-		virtual bool Dispatch(
-			const MouseEvent& e,
-			bool handled
-		);
-
-		virtual bool Dispatch(
-			const KeyEvent& e,
-			bool handled
-		);
+		void SetScene(Scene* scene);
 
 	protected:
 		bool			inited_;
@@ -260,6 +260,7 @@ namespace easy2d
 		String			name_;
 		size_t			hash_name_;
 		Node*			parent_;
+		Scene*			scene_;
 		Color			border_color_;
 		Children		children_;
 		cpGeometry		border_;

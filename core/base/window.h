@@ -66,6 +66,8 @@ namespace easy2d
 
 		float GetContentScaleY() const;
 
+		void Destroy();
+
 	protected:
 		WindowImpl();
 

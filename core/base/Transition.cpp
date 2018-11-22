@@ -66,14 +66,14 @@ namespace easy2d
 		if (in_scene_)
 		{
 			ThrowIfFailed(
-				devices::Graphics::Instance()->CreateLayer(in_layer_)
+				Graphics::Instance()->CreateLayer(in_layer_)
 			);
 		}
 
 		if (out_scene_)
 		{
 			ThrowIfFailed(
-				devices::Graphics::Instance()->CreateLayer(out_layer_)
+				Graphics::Instance()->CreateLayer(out_layer_)
 			);
 		}
 
@@ -101,7 +101,7 @@ namespace easy2d
 
 	void Transition::Render()
 	{
-		auto graphics = devices::Graphics::Instance();
+		auto graphics = Graphics::Instance();
 
 		if (out_scene_)
 		{

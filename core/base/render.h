@@ -37,150 +37,148 @@ namespace easy2d
 		None		// 不启用抗锯齿
 	};
 
-	namespace devices
+
+	class GraphicsDevice
+		: protected Noncopyable
 	{
-		class GraphicsDevice
-			: protected Noncopyable
-		{
-			E2D_DECLARE_SINGLETON(GraphicsDevice);
+		E2D_DECLARE_SINGLETON(GraphicsDevice);
 
-		public:
-			HRESULT Init(HWND hwnd, bool vsync, bool debug);
+	public:
+		HRESULT Init(HWND hwnd, bool vsync, bool debug);
 
-			// 开始渲染
-			HRESULT BeginDraw(HWND hwnd);
+		// 开始渲染
+		HRESULT BeginDraw(HWND hwnd);
 
-			// 结束渲染
-			HRESULT EndDraw();
+		// 结束渲染
+		HRESULT EndDraw();
 
-			// 设置清空屏幕的颜色
-			void SetClearColor(
-				const Color& color
-			);
+		// 设置清空屏幕的颜色
+		void SetClearColor(
+			const Color& color
+		);
 
-			// 设置抗锯齿模式
-			HRESULT SetAntialiasMode(
-				bool enabled
-			);
+		// 设置抗锯齿模式
+		HRESULT SetAntialiasMode(
+			bool enabled
+		);
 
-			// 设置文字抗锯齿模式
-			HRESULT SetTextAntialiasMode(
-				TextAntialias mode
-			);
+		// 设置文字抗锯齿模式
+		HRESULT SetTextAntialiasMode(
+			TextAntialias mode
+		);
 
-			HRESULT CreateResources(
-				HWND hwnd
-			);
+		HRESULT CreateResources(
+			HWND hwnd
+		);
 
-			void DiscardResources();
+		void DiscardResources();
 
-			HRESULT CreateLayer(
-				cpLayer& layer
-			);
+		HRESULT CreateLayer(
+			cpLayer& layer
+		);
 
-			HRESULT CreateSolidColorBrush(
-				cpSolidColorBrush& brush
-			) const;
+		HRESULT CreateSolidColorBrush(
+			cpSolidColorBrush& brush
+		) const;
 
-			HRESULT CreateBitmapFromFile(
-				cpBitmap& bitmap,
-				String const& file_path
-			);
+		HRESULT CreateBitmapFromFile(
+			cpBitmap& bitmap,
+			String const& file_path
+		);
 
-			HRESULT CreateBitmapFromResource(
-				cpBitmap& bitmap,
-				Resource const& res
-			);
+		HRESULT CreateBitmapFromResource(
+			cpBitmap& bitmap,
+			Resource const& res
+		);
 
-			HRESULT CreateBitmapRenderTarget(
-				cpBitmapRenderTarget& brt
-			);
+		HRESULT CreateBitmapRenderTarget(
+			cpBitmapRenderTarget& brt
+		);
 
-			HRESULT SetTransform(
-				const math::Matrix& matrix
-			);
+		HRESULT SetTransform(
+			const math::Matrix& matrix
+		);
 
-			HRESULT SetOpacity(
-				float opacity
-			);
+		HRESULT SetOpacity(
+			float opacity
+		);
 
-			HRESULT SetTextStyle(
-				const Color& color,
-				bool has_outline,
-				const Color& outline_color,
-				float outline_width,
-				StrokeStyle outline_stroke
-			);
+		HRESULT SetTextStyle(
+			const Color& color,
+			bool has_outline,
+			const Color& outline_color,
+			float outline_width,
+			StrokeStyle outline_stroke
+		);
 
-			HRESULT DrawGeometry(
-				cpGeometry const& geometry,
-				const Color& stroke_color,
-				float stroke_width,
-				StrokeStyle stroke = StrokeStyle::Miter
-			);
+		HRESULT DrawGeometry(
+			cpGeometry const& geometry,
+			const Color& stroke_color,
+			float stroke_width,
+			StrokeStyle stroke = StrokeStyle::Miter
+		);
 
-			HRESULT FillGeometry(
-				cpGeometry const& geometry,
-				const Color& fill_color
-			);
+		HRESULT FillGeometry(
+			cpGeometry const& geometry,
+			const Color& fill_color
+		);
 
-			HRESULT DrawImage(
-				spImage const& image
-			);
+		HRESULT DrawImage(
+			spImage const& image
+		);
 
-			HRESULT DrawBitmap(
-				cpBitmap const& bitmap
-			);
+		HRESULT DrawBitmap(
+			cpBitmap const& bitmap
+		);
 
-			HRESULT DrawTextLayout(
-				cpTextLayout const& text_layout
-			);
+		HRESULT DrawTextLayout(
+			cpTextLayout const& text_layout
+		);
 
-			HRESULT PushClip(
-				const math::Matrix& clip_matrix,
-				const Size& clip_size
-			);
+		HRESULT PushClip(
+			const math::Matrix& clip_matrix,
+			const Size& clip_size
+		);
 
-			HRESULT PopClip();
+		HRESULT PopClip();
 
-			HRESULT PushLayer(
-				cpLayer const& layer,
-				LayerProperties const& properties
-			);
+		HRESULT PushLayer(
+			cpLayer const& layer,
+			LayerProperties const& properties
+		);
 
-			HRESULT PopLayer();
+		HRESULT PopLayer();
 
-			HRESULT GetSize(
-				Size& size
-			);
+		HRESULT GetSize(
+			Size& size
+		);
 
-			HRESULT Resize(
-				UINT32 width,
-				UINT32 height
-			);
+		HRESULT Resize(
+			UINT32 width,
+			UINT32 height
+		);
 
-			void ClearImageCache();
+		void ClearImageCache();
 
-		protected:
-			GraphicsDevice();
+	protected:
+		GraphicsDevice();
 
-			~GraphicsDevice();
+		~GraphicsDevice();
 
-		protected:
-			bool						window_occluded_;
-			bool						vsync_enabled_;
-			bool						antialias_;
-			TextAntialias				text_antialias_;
-			float						opacity_;
-			cpTextRenderer				text_renderer_;
-			cpSolidColorBrush			solid_brush_;
-			cpHwndRenderTarget			render_target_;
-			D2D1_COLOR_F				clear_color_;
-			cpTextFormat				fps_text_format_;
-			cpTextLayout				fps_text_layout_;
-			std::map<size_t, cpBitmap>	bitmap_cache_;
-		};
+	protected:
+		bool						window_occluded_;
+		bool						vsync_enabled_;
+		bool						antialias_;
+		TextAntialias				text_antialias_;
+		float						opacity_;
+		cpTextRenderer				text_renderer_;
+		cpSolidColorBrush			solid_brush_;
+		cpHwndRenderTarget			render_target_;
+		D2D1_COLOR_F				clear_color_;
+		cpTextFormat				fps_text_format_;
+		cpTextLayout				fps_text_layout_;
+		std::map<size_t, cpBitmap>	bitmap_cache_;
+	};
 
-		E2D_DECLARE_SINGLETON_TYPE(GraphicsDevice, Graphics);
-	}
+	E2D_DECLARE_SINGLETON_TYPE(GraphicsDevice, Graphics);
 }
