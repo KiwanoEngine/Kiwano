@@ -32,6 +32,9 @@
     <ClInclude Include="..\..\core\base\d2dres.hpp" />
     <ClInclude Include="..\..\core\base\Debuger.h" />
     <ClInclude Include="..\..\core\base\Delay.h" />
+    <ClInclude Include="..\..\core\base\Event.hpp" />
+    <ClInclude Include="..\..\core\base\EventDispatcher.h" />
+    <ClInclude Include="..\..\core\base\EventListener.h" />
     <ClInclude Include="..\..\core\base\Factory.h" />
     <ClInclude Include="..\..\core\base\Font.hpp" />
     <ClInclude Include="..\..\core\base\Frames.h" />
@@ -42,11 +45,11 @@
     <ClInclude Include="..\..\core\base\Input.h" />
     <ClInclude Include="..\..\core\base\intrusive\List.hpp" />
     <ClInclude Include="..\..\core\base\intrusive\SmartPointer.hpp" />
-    <ClInclude Include="..\..\core\base\KeyEvent.h" />
+    <ClInclude Include="..\..\core\base\KeyEvent.hpp" />
     <ClInclude Include="..\..\core\base\logs.h" />
     <ClInclude Include="..\..\core\base\macros.h" />
     <ClInclude Include="..\..\core\base\modules.h" />
-    <ClInclude Include="..\..\core\base\MouseEvent.h" />
+    <ClInclude Include="..\..\core\base\MouseEvent.hpp" />
     <ClInclude Include="..\..\core\base\Music.h" />
     <ClInclude Include="..\..\core\base\Node.h" />
     <ClInclude Include="..\..\core\base\noncopyable.hpp" />
@@ -96,6 +99,8 @@
     <ClCompile Include="..\..\core\base\Color.cpp" />
     <ClCompile Include="..\..\core\base\Debuger.cpp" />
     <ClCompile Include="..\..\core\base\Delay.cpp" />
+    <ClCompile Include="..\..\core\base\EventDispatcher.cpp" />
+    <ClCompile Include="..\..\core\base\EventListener.cpp" />
     <ClCompile Include="..\..\core\base\Factory.cpp" />
     <ClCompile Include="..\..\core\base\Frames.cpp" />
     <ClCompile Include="..\..\core\base\Game.cpp" />
@@ -103,10 +108,8 @@
     <ClCompile Include="..\..\core\base\GeometryNode.cpp" />
     <ClCompile Include="..\..\core\base\Image.cpp" />
     <ClCompile Include="..\..\core\base\Input.cpp" />
-    <ClCompile Include="..\..\core\base\KeyEvent.cpp" />
     <ClCompile Include="..\..\core\base\logs.cpp" />
     <ClCompile Include="..\..\core\base\modules.cpp" />
-    <ClCompile Include="..\..\core\base\MouseEvent.cpp" />
     <ClCompile Include="..\..\core\base\Music.cpp" />
     <ClCompile Include="..\..\core\base\Node.cpp" />
     <ClCompile Include="..\..\core\base\ObjectBase.cpp" />

@@ -70,7 +70,7 @@ namespace easy2d
 	{
 		if (geometry_ && geometry_->geo_)
 		{
-			auto graphics = devices::Graphics::Instance();
+			auto graphics = Graphics::Instance();
 			graphics->SetTransform(geometry_->GetTransformMatrix() * GetTransformMatrix());
 
 			graphics->FillGeometry(

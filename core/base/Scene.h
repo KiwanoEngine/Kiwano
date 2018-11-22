@@ -33,9 +33,15 @@ namespace easy2d
 		virtual ~Scene();
 
 		// 进入场景
-		virtual void OnEnter() {}
+		virtual void OnEnter();
 
 		// 退出场景
-		virtual void OnExit() {}
+		virtual void OnExit();
+
+		// 窗口获得焦点
+		virtual void OnActivate();
+
+		// 窗口失去焦点
+		virtual void OnDeactivate();
 	};
 }

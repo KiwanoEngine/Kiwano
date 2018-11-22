@@ -19,72 +19,60 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
-#include "Singleton.hpp"
+#include "EventListener.h"
 
 namespace easy2d
 {
-	class InputDevice
-		: protected Noncopyable
+	class EventDispatcher
 	{
-		E2D_DECLARE_SINGLETON(InputDevice);
+		using Listeners = intrusive::List<spEventListener>;
 
 	public:
-		HRESULT Init(HWND hwnd, float scale_x, float scale_y, bool debug);
-
-		// 检测键盘按键是否正被按下
-		bool IsDown(
-			KeyCode code
+		// 添加监听器
+		void AddListener(
+			spEventListener const& listener
 		);
 
-		// 检测鼠标按键是否正被按下
-		bool IsDown(
-			MouseButton btn
+		// 添加监听器
+		void AddListener(
+			EventType type,
+			EventCallback callback,
+			String const& name = L""
 		);
 
-		// 检测键盘按键是否刚被点击
-		bool WasPressed(
-			KeyCode code
+		// 启动监听器
+		void StartListeners(
+			String const& listener_name
 		);
 
-		// 检测鼠标按键是否刚被点击
-		bool WasPressed(
-			MouseButton btn
+		// 停止监听器
+		void StopListeners(
+			String const& listener_name
 		);
 
-		// 检测键盘按键是否刚抬起
-		bool WasReleased(
-			KeyCode code
+		// 移除监听器
+		void RemoveListeners(
+			String const& listener_name
 		);
 
-		// 检测鼠标按键是否刚抬起
-		bool WasReleased(
-			MouseButton btn
+		// 启动监听器
+		void StartListeners(
+			EventType type
 		);
 
-		// 获得鼠标 x 坐标
-		float GetMouseX();
+		// 停止监听器
+		void StopListeners(
+			EventType type
+		);
 
-		// 获得鼠标 y 坐标
-		float GetMouseY();
+		// 移除监听器
+		void RemoveListeners(
+			EventType type
+		);
 
-		// 获得鼠标坐标
-		Point GetMousePos();
-
-		void Update();
+		virtual void DispatchEvent(Event* e);
 
 	protected:
-		InputDevice();
-
-		~InputDevice();
-
-	protected:
-		HWND	hwnd_;
-		float	scale_x_;
-		float	scale_y_;
-		BYTE	keys_[256];
-		BYTE	keys_cache_[256];
+		Listeners listeners_;
 	};
-
-	E2D_DECLARE_SINGLETON_TYPE(InputDevice, Input);
 }

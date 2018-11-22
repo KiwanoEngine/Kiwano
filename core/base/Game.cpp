@@ -23,26 +23,24 @@
 #include "modules.h"
 #include "Factory.h"
 #include "Scene.h"
-#include "Transition.h"
 #include "Debuger.h"
+#include "Transition.h"
+#include "KeyEvent.hpp"
+#include "MouseEvent.hpp"
 #include "../math/Matrix.hpp"
-#include <thread>
+#include <windowsx.h>
 #include <imm.h>
+
 #pragma comment (lib ,"imm32.lib")
 
 namespace easy2d
 {
 	Game::Game()
-		: initialized_(false)
-		, window_inactived_(false)
+		: active_(false)
+		, debug_(false)
 		, curr_scene_(nullptr)
 		, next_scene_(nullptr)
 		, transition_(nullptr)
-		, window_(nullptr)
-		, graphics_(nullptr)
-		, input_(nullptr)
-		, audio_(nullptr)
-		, debug_enabled_(false)
 		, time_scale_(1.f)
 	{
 		::CoInitialize(nullptr);
@@ -61,52 +59,44 @@ namespace easy2d
 
 	void Game::Init(const Options& options)
 	{
-		if (initialized_)
-			return;
-
-		debug_enabled_ = options.debug;
-
-		window_ = Window::Instance();
-		graphics_ = devices::Graphics::Instance();
-		input_ = devices::Input::Instance();
-		audio_ = devices::Audio::Instance();
+		debug_ = options.debug;
 
 		ThrowIfFailed(
-			Factory::Instance()->Init(debug_enabled_)
+			Factory::Instance()->Init(debug_)
 		);
 
 		ThrowIfFailed(
-			window_->Init(
+			Window::Instance()->Init(
 				options.title,
 				options.width,
 				options.height,
 				options.icon,
 				Game::WndProc,
-				debug_enabled_
+				debug_
 			)
 		);
 
-		HWND hwnd = window_->GetHandle();
+		HWND hwnd = Window::Instance()->GetHandle();
 
 		ThrowIfFailed(
-			graphics_->Init(
+			Graphics::Instance()->Init(
 				hwnd,
 				options.vsync,
-				debug_enabled_
+				debug_
 			)
 		);
 
 		ThrowIfFailed(
-			input_->Init(
+			Input::Instance()->Init(
 				hwnd,
-				window_->GetContentScaleX(),
-				window_->GetContentScaleY(),
-				debug_enabled_
+				Window::Instance()->GetContentScaleX(),
+				Window::Instance()->GetContentScaleY(),
+				debug_
 			)
 		);
 		
 		ThrowIfFailed(
-			audio_->Init(debug_enabled_)
+			Audio::Instance()->Init(debug_)
 		);
 
 		// disable imm
@@ -114,7 +104,7 @@ namespace easy2d
 
 		// show console if debug mode enabled
 		HWND console = ::GetConsoleWindow();
-		if (debug_enabled_ && !console)
+		if (debug_ && !console)
 		{
 			if (::AllocConsole())
 			{
@@ -125,7 +115,7 @@ namespace easy2d
 				freopen_s(&stderrStream, "conout$", "w+t", stderr);
 			}
 		}
-		else if (!debug_enabled_ && console)
+		else if (!debug_ && console)
 		{
 			::ShowWindow(console, SW_HIDE);
 		}
@@ -139,54 +129,47 @@ namespace easy2d
 
 		// use Game instance in message loop
 		::SetWindowLongW(hwnd, GWLP_USERDATA, PtrToUlong(this));
-
-		initialized_ = true;
 	}
 
 	void Game::Run()
 	{
-		if (!initialized_)
-			return;
+		HWND hwnd = Window::Instance()->GetHandle();
 
-		::ShowWindow(window_->GetHandle(), SW_SHOWNORMAL);
-		::UpdateWindow(window_->GetHandle());
-
-		MSG msg = {};
-		while (::GetMessageW(&msg, nullptr, 0, 0))
+		if (hwnd)
 		{
-			::TranslateMessage(&msg);
-			::DispatchMessageW(&msg);
+			::ShowWindow(hwnd, SW_SHOWNORMAL);
+			::UpdateWindow(hwnd);
+
+			MSG msg = {};
+			while (::GetMessageW(&msg, nullptr, 0, 0))
+			{
+				::TranslateMessage(&msg);
+				::DispatchMessageW(&msg);
+			}
 		}
 	}
 
 	void Game::Quit()
 	{
-		if (window_)
-			::DestroyWindow(window_->GetHandle());
+		Window::Instance()->Destroy();
 	}
 
-	bool Game::EnterScene(spScene const & scene)
+	void Game::EnterScene(spScene const & scene)
 	{
 		if (!scene)
-		{
 			logs::Warningln("Game::EnterScene failed, scene is nullptr");
-			return false;
-		}
 
-		if (curr_scene_ == scene ||
-			next_scene_ == scene)
-			return false;
+		if (curr_scene_ == scene || next_scene_ == scene)
+			return;
 
 		next_scene_ = scene;
-		return true;
 	}
 
-	bool Game::EnterScene(spScene const& scene, spTransition const& transition)
+	void Game::EnterScene(spScene const& scene, spTransition const& transition)
 	{
-		if (!EnterScene(scene))
-			return false;
+		EnterScene(scene);
 		
-		if (transition)
+		if (transition && next_scene_)
 		{
 			if (transition_)
 			{
@@ -195,7 +178,6 @@ namespace easy2d
 			transition_ = transition;
 			transition_->Init(curr_scene_, next_scene_);
 		}
-		return true;
 	}
 
 	spScene const& Game::GetCurrentScene()
@@ -216,7 +198,7 @@ namespace easy2d
 		const auto dt = (now - last) * time_scale_;
 		last = now;
 
-		input_->Update();
+		Input::Instance()->Update();
 
 		if (curr_scene_)
 			curr_scene_->Update(dt);
@@ -224,7 +206,7 @@ namespace easy2d
 		if (next_scene_)
 			next_scene_->Update(dt);
 
-		if (debug_enabled_)
+		if (debug_)
 			Debuger::Instance()->Update(dt);
 
 		if (transition_)
@@ -251,12 +233,12 @@ namespace easy2d
 		}
 	}
 
-	void Game::Render()
+	void Game::Render(HWND hwnd)
 	{
-		auto graphics = devices::Graphics::Instance();
+		auto graphics = Graphics::Instance();
 		
 		ThrowIfFailed(
-			graphics->BeginDraw(window_->GetHandle())
+			graphics->BeginDraw(hwnd)
 		);
 
 		if (transition_)
@@ -268,7 +250,7 @@ namespace easy2d
 			curr_scene_->Render();
 		}
 
-		if (debug_enabled_)
+		if (debug_)
 		{
 			graphics->SetTransform(math::Matrix());
 			graphics->SetOpacity(1.f);
@@ -290,36 +272,13 @@ namespace easy2d
 			graphics->EndDraw()
 		);
 
-		if (!window_inactived_)
-			::InvalidateRect(window_->GetHandle(), NULL, FALSE);
+		if (active_)
+			::InvalidateRect(hwnd, NULL, FALSE);
 	}
 
-	void Game::Dispatch(MouseEvent const & e)
+	bool Game::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		if (transition_)
-			return;
-
-		if (curr_scene_)
-			curr_scene_->Dispatch(e, false);
-	}
-
-	void Game::Dispatch(KeyEvent const & e)
-	{
-		if (transition_)
-			return;
-
-		if (curr_scene_)
-			curr_scene_->Dispatch(e, false);
-	}
-
-	LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
-	{
-		LRESULT result = 0;
-		bool was_handled = false;
-
-		Game * game = reinterpret_cast<Game*>(
-			static_cast<LONG_PTR>(::GetWindowLongW(hwnd, GWLP_USERDATA))
-			);
+		bool unhandled = false;
 
 		switch (msg)
 		{
@@ -328,95 +287,184 @@ namespace easy2d
 			PAINTSTRUCT ps;
 			::BeginPaint(hwnd, &ps);
 
-			game->Update();
-			game->Render();
+			Update();
+			Render(hwnd);
 
 			::EndPaint(hwnd, &ps);
 		}
-		result = 0;
-		was_handled = true;
 		break;
 
 		case WM_LBUTTONUP:
 		case WM_LBUTTONDOWN:
-		case WM_LBUTTONDBLCLK:
-		case WM_MBUTTONUP:
-		case WM_MBUTTONDOWN:
-		case WM_MBUTTONDBLCLK:
+		//case WM_LBUTTONDBLCLK:
+		//case WM_MBUTTONUP:
+		//case WM_MBUTTONDOWN:
+		//case WM_MBUTTONDBLCLK:
 		case WM_RBUTTONUP:
 		case WM_RBUTTONDOWN:
-		case WM_RBUTTONDBLCLK:
+		//case WM_RBUTTONDBLCLK:
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
-			game->Dispatch(MouseEvent(msg, w_param, l_param));
+			float x = GET_X_LPARAM(lparam) * Window::Instance()->GetContentScaleX();
+			float y = GET_Y_LPARAM(lparam) * Window::Instance()->GetContentScaleY();
+			float wheel_delta = 0.f;
+
+			MouseEvent::Type type;
+			if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN)
+				type = MouseEvent::Down;
+			else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP)
+				type = MouseEvent::Up;
+			else if (msg == WM_MOUSEMOVE)
+				type = MouseEvent::Move;
+			else
+			{
+				type = MouseEvent::Wheel;
+				wheel_delta = GET_WHEEL_DELTA_WPARAM(wparam) / 120.f;
+			}
+
+			MouseEvent event(type, x, y, wheel_delta);
+
+			if (wparam & MK_LBUTTON || wparam & MK_RBUTTON)
+				event.button_down = true;
+
+			Dispatch(&event);
 		}
-		result = 0;
-		was_handled = true;
 		break;
 
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 		{
-			game->Dispatch(KeyEvent(msg, w_param, l_param));
-		}
-		result = 0;
-		was_handled = true;
-		break;
-
-		case WM_SIZE:
-		{
-			if (SIZE_MAXHIDE == w_param || SIZE_MINIMIZED == w_param)
-				game->window_inactived_ = true;
-			else
-			{
-				game->window_inactived_ = false;
-				::InvalidateRect(hwnd, nullptr, FALSE);
-			}
-
-			UINT width = LOWORD(l_param);
-			UINT height = HIWORD(l_param);
-
-			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
-			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
-			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-			devices::Graphics::Instance()->Resize(width, height);
+			KeyEvent event(msg, KeyCode(wparam));
+			Dispatch(&event);
 		}
 		break;
 
 		case WM_DISPLAYCHANGE:
 		{
+			E2D_LOG("The display resolution has changed");
 			::InvalidateRect(hwnd, nullptr, FALSE);
 		}
-		result = 0;
-		was_handled = true;
 		break;
 
 		case WM_CLOSE:
 		{
-			if (game->OnClose())
+			E2D_LOG("Received a message to close the window");
+
+			SysEvent event(SysEvent::WindowClose);
+			Dispatch(&event);
+
+			if (OnClose())
 			{
 				::DestroyWindow(hwnd);
 			}
 		}
-		result = 0;
-		was_handled = true;
 		break;
 
 		case WM_DESTROY:
 		{
-			game->OnExit();
+			E2D_LOG("Window was destroyed");
+
+			OnExit();
 			::PostQuitMessage(0);
 		}
-		result = 1;
-		was_handled = true;
 		break;
 
+		case WM_SIZE:
+		{
+			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
+			{
+				active_ = false;
+
+				E2D_LOG("Window minimized");
+			}
+			else if (SIZE_RESTORED == wparam)
+			{
+				active_ = true;
+				::InvalidateRect(hwnd, nullptr, FALSE);
+
+				E2D_LOG("Window restored");
+			}
+
+			UINT width = LOWORD(lparam);
+			UINT height = HIWORD(lparam);
+
+			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
+			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
+			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
+			Graphics::Instance()->Resize(width, height);
+		}
+		unhandled = true;
+		break;
+
+		case WM_ACTIVATE:
+		{
+			if (WA_INACTIVE == wparam)
+			{
+				E2D_LOG("Window deactivated");
+
+				SysEvent event(SysEvent::WindowDeavtivate);
+				Dispatch(&event);
+			}
+			else
+			{
+				E2D_LOG("Window activated");
+
+				SysEvent event(SysEvent::WindowActivate);
+				Dispatch(&event);
+			}
+		}
+		unhandled = true;
+		break;
+
+		case WM_SETTEXT:
+		{
+			E2D_LOG("Window title changed");
+		}
+		unhandled = true;
+		break;
+
+		case WM_SETICON:
+		{
+			E2D_LOG("Window icon changed");
+		}
+		unhandled = true;
+		break;
+
+		default:
+			unhandled = true;
+			break;
+		}
+
+		return !unhandled;
+	}
+
+	void Game::Dispatch(Event * event)
+	{
+		if (transition_)
+			return;
+
+		if (curr_scene_)
+			curr_scene_->DispatchEvent(event);
+	}
+
+	LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	{
+		LRESULT result = 0;
+		bool was_handled = false;
+
+		Game * game = reinterpret_cast<Game*>(
+			static_cast<LONG_PTR>(::GetWindowLongW(hwnd, GWLP_USERDATA))
+			);
+		
+		if (game)
+		{
+			was_handled = game->HandleMessage(hwnd, msg, wparam, lparam);
 		}
 
 		if (!was_handled)
 		{
-			result = ::DefWindowProcW(hwnd, msg, w_param, l_param);
+			result = ::DefWindowProcW(hwnd, msg, wparam, lparam);
 		}
 		return result;
 	}

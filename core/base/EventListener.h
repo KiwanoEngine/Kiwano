@@ -18,29 +18,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "KeyEvent.h"
+#pragma once
+#include "base.hpp"
+#include "intrusive/List.hpp"
+#include "Event.hpp"
 
 namespace easy2d
 {
-	KeyEvent::KeyEvent(UINT message, WPARAM w_param, LPARAM l_param)
-		: message_(message)
-		, w_param_(w_param)
-		, l_param_(l_param)
-	{
-	}
+	typedef std::function<void(Event*)> EventCallback;
 
-	KeyCode KeyEvent::GetCode() const
-	{
-		return static_cast<KeyCode>(w_param_);
-	}
 
-	int KeyEvent::GetCount() const
-	{
-		return static_cast<int>((DWORD)l_param_ & 0x0000FFFF);
-	}
+	class EventDispatcher;
 
-	KeyEvent::Type KeyEvent::GetType() const
+	class EventListener
+		: public RefCounter
+		, protected intrusive::ListItem<spEventListener>
 	{
-		return Type(message_);
-	}
+		friend class EventDispatcher;
+		friend class intrusive::List<spEventListener>;
+
+	public:
+		EventListener(
+			EventType type,
+			EventCallback const& callback,
+			String const& name = L""
+		);
+
+		virtual ~EventListener();
+
+		void Start();
+
+		void Stop();
+
+		void SetName(String const& name);
+
+		bool IsRunning() const;
+
+		String const& GetName() const;
+
+	protected:
+		bool			running_;
+		String			name_;
+		EventType		type_;
+		EventCallback	callback_;
+	};
 }

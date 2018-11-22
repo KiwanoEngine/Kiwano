@@ -19,50 +19,45 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
-#include "BaseTypes.hpp"
+#include "EventListener.h"
 
 namespace easy2d
 {
-	// 按键消息
-	class KeyEvent
+	EventListener::EventListener(EventType type, EventCallback const & callback, String const & name)
+		: type_(type)
+		, callback_(callback)
+		, name_(name)
+		, running_(true)
 	{
-	public:
-		// 按键消息类型
-		enum class Type : int
-		{
-			Down = 0x0100,	// 按下
-			Up				// 抬起
-		};
+	}
 
-	public:
-		explicit KeyEvent(
-			UINT message,
-			WPARAM w_param,
-			LPARAM l_param
-		);
-
-		// 获取事件类型
-		KeyEvent::Type GetType() const;
-
-		// 获取按键键值
-		KeyCode GetCode() const;
-
-		// 获取按键次数
-		int GetCount() const;
-
-	protected:
-		UINT	message_;
-		WPARAM	w_param_;
-		LPARAM	l_param_;
-	};
-
-
-	// 按键消息处理接口
-	class KeyEventHandler
+	EventListener::~EventListener()
 	{
-	public:
-		// 处理按键消息
-		virtual void Handle(KeyEvent e) = 0;
-	};
+	}
+
+	void EventListener::Start()
+	{
+		running_ = true;
+	}
+
+	void EventListener::Stop()
+	{
+		running_ = false;
+	}
+
+	bool EventListener::IsRunning() const
+	{
+		return running_;
+	}
+
+	String const & EventListener::GetName() const
+	{
+		return name_;
+	}
+
+	void EventListener::SetName(String const & name)
+	{
+		name_ = name;
+	}
+
 }

@@ -44,7 +44,7 @@ namespace easy2d
 	void ActionManager::AddAction(spAction const& action)
 	{
 		if (!action)
-			logs::Warningln("Node::RunAction failed, action is nullptr");
+			logs::Warningln("AddAction failed, action is nullptr");
 
 		if (action)
 		{

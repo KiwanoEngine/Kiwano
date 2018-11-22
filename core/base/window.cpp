@@ -81,7 +81,6 @@ namespace easy2d
 
 		GetContentScale(&scale_x, &scale_y);
 
-
 		Rect client_rect = LocateWindow(width, height, scale_x, scale_y);
 		handle = ::CreateWindowEx(
 			NULL,
@@ -195,6 +194,12 @@ namespace easy2d
 	float WindowImpl::GetContentScaleY() const
 	{
 		return scale_y;
+	}
+
+	void WindowImpl::Destroy()
+	{
+		if (handle)
+			::DestroyWindow(handle);
 	}
 
 	namespace

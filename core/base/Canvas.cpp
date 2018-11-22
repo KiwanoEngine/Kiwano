@@ -32,7 +32,7 @@ namespace easy2d
 		, stroke_width_(1.0f)
 	{
 		ThrowIfFailed(
-			devices::Graphics::Instance()->CreateBitmapRenderTarget(render_target_)
+			Graphics::Instance()->CreateBitmapRenderTarget(render_target_)
 		);
 
 		auto properties = D2D1::BrushProperties();
@@ -105,7 +105,7 @@ namespace easy2d
 		
 		if (bitmap_cached_)
 		{
-			devices::Graphics::Instance()->DrawBitmap(bitmap_cached_);
+			Graphics::Instance()->DrawBitmap(bitmap_cached_);
 		}
 	}
 

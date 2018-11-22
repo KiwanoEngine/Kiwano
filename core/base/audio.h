@@ -72,44 +72,42 @@ namespace easy2d
 		IXAudio2SourceVoice* source_voice_;
 	};
 
-	namespace devices
+
+	class AudioDevice
+		: protected Noncopyable
 	{
-		class AudioDevice
-			: protected Noncopyable
-		{
-			E2D_DECLARE_SINGLETON(AudioDevice);
+		E2D_DECLARE_SINGLETON(AudioDevice);
 
-		public:
-			HRESULT Init(bool debug);
+	public:
+		HRESULT Init(bool debug);
 
-			// 开启设备
-			void Open();
+		// 开启设备
+		void Open();
 
-			// 关闭设备
-			void Close();
+		// 关闭设备
+		void Close();
 
-			HRESULT CreateVoice(
-				Voice& voice,
-				const WAVEFORMATEX* wfx
-			);
+		HRESULT CreateVoice(
+			Voice& voice,
+			const WAVEFORMATEX* wfx
+		);
 
-			void DeleteVoice(
-				Voice* voice
-			);
+		void DeleteVoice(
+			Voice* voice
+		);
 
-			void ClearVoiceCache();
+		void ClearVoiceCache();
 
-		protected:
-			AudioDevice();
+	protected:
+		AudioDevice();
 
-			~AudioDevice();
+		~AudioDevice();
 
-		protected:
-			IXAudio2*				x_audio2_;
-			IXAudio2MasteringVoice*	mastering_voice_;
-			std::set<Voice*>		voice_cache_;
-		};
+	protected:
+		IXAudio2*				x_audio2_;
+		IXAudio2MasteringVoice*	mastering_voice_;
+		std::set<Voice*>		voice_cache_;
+	};
 
-		E2D_DECLARE_SINGLETON_TYPE(AudioDevice, Audio);
-	}
+	E2D_DECLARE_SINGLETON_TYPE(AudioDevice, Audio);
 }

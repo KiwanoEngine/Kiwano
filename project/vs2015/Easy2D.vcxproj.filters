@@ -71,12 +71,6 @@
     <ClInclude Include="..\..\core\base\window.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\KeyEvent.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\base\MouseEvent.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\math\Matrix.hpp">
       <Filter>math</Filter>
     </ClInclude>
@@ -197,6 +191,21 @@
     <ClInclude Include="..\..\core\base\Factory.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\base\EventDispatcher.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\Event.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\KeyEvent.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\MouseEvent.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\EventListener.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -276,12 +285,6 @@
     <ClCompile Include="..\..\core\base\window.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\KeyEvent.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\base\MouseEvent.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\math\rand.cpp">
       <Filter>math</Filter>
     </ClCompile>
@@ -346,6 +349,12 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\Factory.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\EventDispatcher.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\EventListener.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

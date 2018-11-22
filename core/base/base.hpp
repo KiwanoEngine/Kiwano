@@ -24,6 +24,7 @@
 #include "ObjectBase.h"
 #include "intrusive/SmartPointer.hpp"
 #include "d2dres.hpp"
+#include <assert.h>
 
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
@@ -43,6 +44,7 @@ namespace easy2d
 	E2D_DECLARE_SMART_PTR(Image);
 	E2D_DECLARE_SMART_PTR(Music);
 	E2D_DECLARE_SMART_PTR(Task);
+	E2D_DECLARE_SMART_PTR(EventListener);
 	E2D_DECLARE_SMART_PTR(Frames);
 
 	E2D_DECLARE_SMART_PTR(Geometry);

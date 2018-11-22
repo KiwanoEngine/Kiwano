@@ -20,14 +20,38 @@
 
 #include "Scene.h"
 #include "Node.h"
+#include "logs.h"
 
 namespace easy2d
 {
 	Scene::Scene()
 	{
+		AddListener(SysEvent::WindowActivate, std::bind(&Scene::OnActivate, this));
+		AddListener(SysEvent::WindowDeavtivate, std::bind(&Scene::OnDeactivate, this));
+
+		scene_ = this;
 	}
 
 	Scene::~Scene()
 	{
 	}
+
+	void Scene::OnEnter()
+	{
+		E2D_LOG("Scene entered");
+	}
+
+	void Scene::OnExit()
+	{
+		E2D_LOG("Scene exited");
+	}
+
+	void Scene::OnDeactivate()
+	{
+	}
+
+	void Scene::OnActivate()
+	{
+	}
+
 }

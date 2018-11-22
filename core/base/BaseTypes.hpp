@@ -46,19 +46,34 @@ namespace easy2d
 		Round = 2	/* 圆角 */
 	};
 
-	// 键盘键值
+	// 图层属性
+	struct LayerProperties
+	{
+		Rect area;
+		float opacity;
+	};
+
+	// 鼠标键值
+	enum class MouseButton : int
+	{
+		Left = VK_LBUTTON,	// 鼠标左键
+		Right = VK_RBUTTON,	// 鼠标右键
+		Middle = VK_MBUTTON	// 鼠标中键
+	};
+
+	// 按键键值
 	enum class KeyCode : int
 	{
-		Unknown	= 0,
-		Up		= VK_UP,
-		Left	= VK_LEFT,
-		Right	= VK_RIGHT,
-		Down	= VK_DOWN,
-		Enter	= VK_RETURN,
-		Space	= VK_SPACE,
-		Esc		= VK_ESCAPE,
-		Ctrl	= VK_CONTROL,
-		Shift	= VK_SHIFT,
+		Unknown = 0,
+		Up = VK_UP,
+		Left = VK_LEFT,
+		Right = VK_RIGHT,
+		Down = VK_DOWN,
+		Enter = VK_RETURN,
+		Space = VK_SPACE,
+		Esc = VK_ESCAPE,
+		Ctrl = VK_CONTROL,
+		Shift = VK_SHIFT,
 
 		A = 0x41,
 		B,
@@ -121,20 +136,5 @@ namespace easy2d
 		F10,
 		F11,
 		F12,
-	};
-
-	// 鼠标键值
-	enum class MouseCode : int
-	{
-		Left	= VK_LBUTTON,	/* 鼠标左键 */
-		Right	= VK_RBUTTON,	/* 鼠标右键 */
-		Middle	= VK_MBUTTON	/* 鼠标中键 */
-	};
-
-	// 图层属性
-	struct LayerProperties
-	{
-		Rect area;
-		float opacity;
 	};
 }

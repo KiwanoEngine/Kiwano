@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Button.h"
-#include "../base/input.h"
+#include "../base/MouseEvent.hpp"
 
 #define SAFE_SET(pointer, func, ...) if (pointer) { pointer->##func(__VA_ARGS__); }
 
@@ -171,53 +171,55 @@ namespace easy2d
 			SAFE_SET(disabled_, SetPivot, pivot_x, pivot_y);
 		}
 
-		bool Button::Dispatch(const MouseEvent & e, bool handled)
+		void Button::HandleEvent(Event* e)
 		{
-			if (!handled && enabled_ && IsVisible() && normal_)
+			if (e && MouseEvent::Check(e) && !e->has_target)
 			{
-				bool contains = normal_->ContainsPoint(e.GetPosition());
-				if (e.GetType() == MouseEvent::Type::LeftUp && is_selected_ && contains)
+				MouseEvent* me = static_cast<MouseEvent*>(e);
+				if (enabled_ && IsVisible() && normal_)
 				{
-					if (callback_)
+					bool contains = normal_->ContainsPoint(Point{ me->x, me->y });
+					if (me->type == MouseEvent::Up && is_selected_ && contains)
 					{
-						callback_();
+						if (callback_)
+						{
+							callback_();
+						}
+						is_selected_ = false;
+						SetStatus(Status::Normal);
+						me->has_target = true;
 					}
-					is_selected_ = false;
-					SetStatus(Status::Normal);
-					return true;
-				}
-				else if (e.GetType() == MouseEvent::Type::LeftDown)
-				{
-					is_selected_ = contains;
-					SetStatus(contains ? Status::Selected : Status::Normal);
+					else if (me->type == MouseEvent::Down)
+					{
+						is_selected_ = contains;
+						SetStatus(contains ? Status::Selected : Status::Normal);
 
-					if (contains)
-						return true;
-				}
-				else if (e.GetType() == MouseEvent::Type::LeftUp)
-				{
-					is_selected_ = false;
-				}
-				else if (e.GetType() == MouseEvent::Type::Move && is_selected_ && contains)
-				{
-					SetStatus(Status::Selected);
-					return true;
-				}
-				else
-				{
-					if (!e.IsLButtonDown() && is_selected_)
+						me->has_target = contains;
+					}
+					else if (me->type == MouseEvent::Up)
 					{
 						is_selected_ = false;
 					}
+					else if (me->type == MouseEvent::Move && is_selected_ && contains)
+					{
+						SetStatus(Status::Selected);
+						me->has_target = true;
+					}
+					else
+					{
+						if (!me->button_down && is_selected_)
+						{
+							is_selected_ = false;
+						}
 
-					SetStatus(contains ? Status::Mouseover : Status::Normal);
+						SetStatus(contains ? Status::Mouseover : Status::Normal);
 
-					if (contains)
-						return true;
+						me->has_target = contains;
+					}
 				}
 			}
 
-			return Node::Dispatch(e, handled);
+			Node::HandleEvent(e);
 		}
 
 		void Button::SetStatus(Status status)

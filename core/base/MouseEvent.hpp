@@ -19,72 +19,33 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
-#include "Singleton.hpp"
+#include "Event.hpp"
 
 namespace easy2d
 {
-	class InputDevice
-		: protected Noncopyable
+	class MouseEvent
+		: public Event
 	{
-		E2D_DECLARE_SINGLETON(InputDevice);
-
 	public:
-		HRESULT Init(HWND hwnd, float scale_x, float scale_y, bool debug);
+		enum Type
+		{
+			First = WM_MOUSEFIRST,
 
-		// 检测键盘按键是否正被按下
-		bool IsDown(
-			KeyCode code
-		);
+			Move,	// 移动
+			Down,	// 按下
+			Up,		// 抬起
+			Wheel,	// 滚轮滚动
 
-		// 检测鼠标按键是否正被按下
-		bool IsDown(
-			MouseButton btn
-		);
+			Last	// 结束标志
+		};
 
-		// 检测键盘按键是否刚被点击
-		bool WasPressed(
-			KeyCode code
-		);
+		MouseEvent(EventType type, float x, float y, float wheel_delta) : Event(type), x(x), y(y), wheel_delta(wheel_delta), button_down(false) {}
 
-		// 检测鼠标按键是否刚被点击
-		bool WasPressed(
-			MouseButton btn
-		);
+		static bool Check(Event* e) { return e->type > Type::First && e->type < Type::Last; }
 
-		// 检测键盘按键是否刚抬起
-		bool WasReleased(
-			KeyCode code
-		);
-
-		// 检测鼠标按键是否刚抬起
-		bool WasReleased(
-			MouseButton btn
-		);
-
-		// 获得鼠标 x 坐标
-		float GetMouseX();
-
-		// 获得鼠标 y 坐标
-		float GetMouseY();
-
-		// 获得鼠标坐标
-		Point GetMousePos();
-
-		void Update();
-
-	protected:
-		InputDevice();
-
-		~InputDevice();
-
-	protected:
-		HWND	hwnd_;
-		float	scale_x_;
-		float	scale_y_;
-		BYTE	keys_[256];
-		BYTE	keys_cache_[256];
+		float x;
+		float y;
+		float wheel_delta;
+		bool button_down;
 	};
-
-	E2D_DECLARE_SINGLETON_TYPE(InputDevice, Input);
 }

@@ -70,7 +70,7 @@ namespace easy2d
 	bool Image::Load(Resource const& res)
 	{
 		cpBitmap bitmap;
-		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromResource(bitmap, res);
+		HRESULT hr = Graphics::Instance()->CreateBitmapFromResource(bitmap, res);
 		if (FAILED(hr))
 		{
 			logs::Errorln(hr, "Load Image from resource failed!");
@@ -94,7 +94,7 @@ namespace easy2d
 		String image_file_path = image_file.GetPath();
 
 		cpBitmap bitmap;
-		HRESULT hr = devices::Graphics::Instance()->CreateBitmapFromFile(bitmap, image_file_path);
+		HRESULT hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, image_file_path);
 		if (FAILED(hr))
 		{
 			logs::Errorln(hr, "Load Image from file failed!");

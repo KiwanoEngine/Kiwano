@@ -25,8 +25,7 @@
 #include "render.h"
 #include "input.h"
 #include "audio.h"
-#include "KeyEvent.h"
-#include "MouseEvent.h"
+#include "Event.hpp"
 
 namespace easy2d
 {
@@ -62,11 +61,10 @@ namespace easy2d
 
 		virtual ~Game();
 
-		// 退出时
+		// 退出游戏
 		virtual void OnExit() {}
 
-		// 窗口关闭时
-		// 返回值：返回 false 将阻止窗口关闭
+		// 窗口关闭
 		virtual bool OnClose() { return true; }
 
 		// 初始化
@@ -81,12 +79,12 @@ namespace easy2d
 		void Quit();
 
 		// 切换场景
-		bool EnterScene(
+		void EnterScene(
 			spScene const& scene			/* 场景 */
 		);
 
 		// 切换场景
-		bool EnterScene(
+		void EnterScene(
 			spScene const& scene,			/* 场景 */
 			spTransition const& transition	/* 场景动画 */
 		);
@@ -98,32 +96,29 @@ namespace easy2d
 		void SetTimeScale(float scale);
 
 	private:
-		void Render();
+		void Render(HWND);
 
 		void Update();
 
-		void Dispatch(
-			MouseEvent const& e
+		bool HandleMessage(
+			HWND hwnd,
+			UINT msg,
+			WPARAM wparam,
+			LPARAM lparam
 		);
 
 		void Dispatch(
-			KeyEvent const& e
+			Event* event
 		);
 
 		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 	private:
-		bool			initialized_;
-		bool			debug_enabled_;
-		bool			window_inactived_;
+		bool			debug_;
+		bool			active_;
 		float			time_scale_;
 		spScene			curr_scene_;
 		spScene			next_scene_;
 		spTransition	transition_;
-
-		WindowImpl*					window_;
-		devices::GraphicsDevice*	graphics_;
-		devices::InputDevice*		input_;
-		devices::AudioDevice*		audio_;
 	};
 }

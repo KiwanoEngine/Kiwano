@@ -102,6 +102,8 @@ namespace easy2d
 				float pivot_y
 			) override;
 
+			virtual void HandleEvent(Event* e) override;
+
 		private:
 			// 按钮状态枚举
 			enum class Status { Normal, Mouseover, Selected };
@@ -113,12 +115,6 @@ namespace easy2d
 
 			// 刷新按钮显示
 			virtual void UpdateVisible();
-
-			// 分发鼠标消息
-			virtual bool Dispatch(
-				const MouseEvent& e,
-				bool handled
-			) override;
 
 		private:
 			spNode		normal_;

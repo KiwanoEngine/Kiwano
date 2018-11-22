@@ -295,7 +295,7 @@ namespace easy2d
 	{
 		if (text_layout_)
 		{
-			auto graphics = devices::Graphics::Instance();
+			auto graphics = Graphics::Instance();
 			graphics->SetTextStyle(
 				style_.color,
 				style_.outline,

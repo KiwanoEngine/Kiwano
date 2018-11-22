@@ -43,7 +43,7 @@ namespace easy2d
 	void TaskManager::AddTask(spTask const& task)
 	{
 		if (!task)
-			logs::Warningln("Node::AddTask failed, action is nullptr");
+			logs::Warningln("AddTask failed, task is nullptr");
 
 		if (task)
 		{
