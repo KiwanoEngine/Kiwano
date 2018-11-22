@@ -57,8 +57,7 @@ namespace easy2d
 
 	void Frames::Add(spImage const& frame)
 	{
-		if (!frame)
-			logs::Warningln("Frames::Add failed, frame is nullptr.");
+		E2D_ASSERT(frame && "Frames::Add failed, NULL pointer exception");
 
 		if (frame)
 		{

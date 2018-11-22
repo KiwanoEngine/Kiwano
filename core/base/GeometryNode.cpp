@@ -71,7 +71,11 @@ namespace easy2d
 		if (geometry_ && geometry_->geo_)
 		{
 			auto graphics = Graphics::Instance();
-			graphics->SetTransform(geometry_->GetTransformMatrix() * GetTransformMatrix());
+
+			if (geometry_->GetTransformMatrix().IsIdentity())
+				graphics->SetTransform(GetTransformMatrix());
+			else
+				graphics->SetTransform(geometry_->GetTransformMatrix() * GetTransformMatrix());
 
 			graphics->FillGeometry(
 				geometry_->geo_,

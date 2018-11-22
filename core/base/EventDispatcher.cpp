@@ -42,8 +42,7 @@ namespace easy2d
 
 	void EventDispatcher::AddListener(spEventListener const & listener)
 	{
-		if (!listener)
-			logs::Warningln("AddListener failed, action is nullptr");
+		E2D_ASSERT(listener && "AddListener failed, NULL pointer exception");
 
 		if (listener)
 		{

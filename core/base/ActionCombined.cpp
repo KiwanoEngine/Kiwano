@@ -32,8 +32,7 @@ namespace easy2d
 		, times_(0)
 		, total_times_(times)
 	{
-		if (!action)
-			logs::Warningln("Loop action contains a null action");
+		E2D_ASSERT(action && "Loop action contains a null action");
 
 		action_ = action;
 	}

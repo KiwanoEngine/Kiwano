@@ -24,7 +24,6 @@
 #include "ObjectBase.h"
 #include "intrusive/SmartPointer.hpp"
 #include "d2dres.hpp"
-#include <assert.h>
 
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
@@ -92,4 +91,20 @@ namespace easy2d
 
 	E2D_DECLARE_NS_SMART_PTR(ui, Button);
 	E2D_DECLARE_NS_SMART_PTR(ui, Menu);
+
+
+	template <typename Dest, typename Src>
+	inline Dest* SafeCast(Src* ptr)
+	{
+		if (!ptr)
+			return nullptr;
+
+#ifdef E2D_DEBUG
+		Dest* cast = dynamic_cast<Dest*>(ptr);
+		E2D_ASSERT(cast);
+		return cast;
+#endif
+
+		return static_cast<Dest*>(ptr);
+	}
 }
