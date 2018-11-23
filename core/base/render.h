@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "Singleton.hpp"
 #include "Font.hpp"
 #include "Resource.h"
@@ -29,15 +29,6 @@
 
 namespace easy2d
 {
-	enum class TextAntialias
-	{
-		Default,	// œµÕ≥ƒ¨»œ
-		ClearType,	// ClearType øπæ‚≥›
-		GrayScale,	// ª“∂»øπæ‚≥›
-		None		// ≤ª∆Ù”√øπæ‚≥›
-	};
-
-
 	class GraphicsDevice
 		: protected Noncopyable
 	{
@@ -83,7 +74,7 @@ namespace easy2d
 
 		HRESULT CreateBitmapFromFile(
 			cpBitmap& bitmap,
-			String const& file_path
+			std::wstring const& file_path
 		);
 
 		HRESULT CreateBitmapFromResource(

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "time.h"
 #include "intrusive/List.hpp"
 #include <functional>
@@ -30,8 +30,7 @@ namespace easy2d
 
     // 定时任务
 	class Task
-		: public RefCounter
-		, public Object
+		: public Object
 		, protected intrusive::ListItem<spTask>
 	{
 		friend class TaskManager;
@@ -42,14 +41,14 @@ namespace easy2d
 	public:
 		explicit Task(
 			const Callback& func,		/* 执行函数 */
-			String const& name = L""	/* 任务名称 */
+			std::wstring const& name = L""	/* 任务名称 */
 		);
 
 		explicit Task(
 			Callback const& func,		/* 执行函数 */
 			Duration const& delay,		/* 时间间隔（秒） */
 			int times = -1,				/* 执行次数（设 -1 为永久执行） */
-			String const& name = L""	/* 任务名称 */
+			std::wstring const& name = L""	/* 任务名称 */
 		);
 
 		// 启动任务
@@ -62,7 +61,7 @@ namespace easy2d
 		bool IsRunning() const;
 
 		// 获取任务名称
-		String const& GetName() const;
+		std::wstring const& GetName() const;
 
 	protected:
 		void Update(Duration const& dt, bool& remove_after_update);
@@ -73,7 +72,7 @@ namespace easy2d
 		bool		running_;
 		int			run_times_;
 		int			total_times_;
-		String		name_;
+		std::wstring		name_;
 		Duration	delay_;
 		Duration	delta_;
 		Callback	callback_;

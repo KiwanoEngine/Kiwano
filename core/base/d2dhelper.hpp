@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
 #include "intrusive/SmartPointer.hpp"
+#include "../math/Matrix.hpp"
 #include <d2d1.h>
 #include <dwrite.h>
 

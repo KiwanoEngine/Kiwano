@@ -150,7 +150,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateBitmapFromFile(cpBitmap & bitmap, cpRenderTarget const & rt, String const & file_path)
+	HRESULT FactoryImpl::CreateBitmapFromFile(cpBitmap & bitmap, cpRenderTarget const & rt, std::wstring const & file_path)
 	{
 		if (imaging_factory_ == nullptr)
 		{
@@ -361,7 +361,7 @@ namespace easy2d
 		cpTransformedGeometry transformed_tmp;
 		HRESULT hr = factory_->CreateTransformedGeometry(
 			geo.Get(),
-			ConvertToD2DMatrix(matrix),
+			matrix,
 			&transformed_tmp
 		);
 
@@ -418,7 +418,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateTextLayout(cpTextLayout & text_layout, Size& layout_size, String const & text, cpTextFormat const& text_format, TextStyle const & text_style) const
+	HRESULT FactoryImpl::CreateTextLayout(cpTextLayout & text_layout, Size& layout_size, std::wstring const & text, cpTextFormat const& text_format, TextStyle const & text_style) const
 	{
 		if (!write_factory_)
 			return E_UNEXPECTED;

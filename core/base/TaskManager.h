@@ -35,17 +35,17 @@ namespace easy2d
 
 		// 启动任务
 		void StartTasks(
-			String const& task_name
+			std::wstring const& task_name
 		);
 
 		// 停止任务
 		void StopTasks(
-			String const& task_name
+			std::wstring const& task_name
 		);
 
 		// 移除任务
 		void RemoveTasks(
-			String const& task_name
+			std::wstring const& task_name
 		);
 
 		// 启动所有任务

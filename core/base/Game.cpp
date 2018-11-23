@@ -250,22 +250,7 @@ namespace easy2d
 		}
 
 		if (debug_)
-		{
-			graphics->SetTransform(math::Matrix());
-			graphics->SetOpacity(1.f);
-
-			if (curr_scene_)
-			{
-				curr_scene_->DrawBorder();
-			}
-
-			if (next_scene_)
-			{
-				next_scene_->DrawBorder();
-			}
-
 			Debuger::Instance()->Render();
-		}
 
 		ThrowIfFailed(
 			graphics->EndDraw()

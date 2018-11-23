@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "Singleton.hpp"
 
 namespace easy2d
@@ -31,7 +31,7 @@ namespace easy2d
 
 	public:
 		HRESULT Init(
-			String	title,
+			std::wstring	title,
 			int		width,
 			int		height,
 			LPCWSTR	icon,
@@ -40,10 +40,10 @@ namespace easy2d
 		);
 
 		// 获取标题
-		String GetTitle() const;
+		std::wstring GetTitle() const;
 
 		// 设置标题
-		void SetTitle(String const& title);
+		void SetTitle(std::wstring const& title);
 
 		// 获取窗口大小
 		Size GetSize() const;

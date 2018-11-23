@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "Singleton.hpp"
 #include "Font.hpp"
 #include "Resource.h"
@@ -52,7 +52,7 @@ namespace easy2d
 		HRESULT CreateBitmapFromFile(
 			cpBitmap& bitmap,
 			cpRenderTarget const& rt,
-			String const& file_path
+			std::wstring const& file_path
 		);
 
 		HRESULT CreateBitmapFromResource(
@@ -99,7 +99,7 @@ namespace easy2d
 		HRESULT CreateTextLayout(
 			cpTextLayout& text_layout,
 			Size& layout_size,
-			String const& text,
+			std::wstring const& text,
 			cpTextFormat const& text_format,
 			TextStyle const& text_style
 		) const;

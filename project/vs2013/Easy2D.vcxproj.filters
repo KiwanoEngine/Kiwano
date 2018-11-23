@@ -134,12 +134,6 @@
     <ClInclude Include="..\..\core\base\intrusive\SmartPointer.hpp">
       <Filter>base\intrusive</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\base.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\base\BaseTypes.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\Transform.hpp">
       <Filter>base</Filter>
     </ClInclude>
@@ -147,9 +141,6 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\base\Size.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\base\d2dres.hpp">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\base\noncopyable.hpp">
@@ -165,9 +156,6 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\base\GeometryNode.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\base\Unit.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\math\ease.hpp">
@@ -204,6 +192,18 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\base\Object.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\helper.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\d2dhelper.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\keys.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\include-forwards.h">
       <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
@@ -331,9 +331,6 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\GeometryNode.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\base\Unit.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\ActionTween.cpp">

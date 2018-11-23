@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 
 namespace easy2d
 {

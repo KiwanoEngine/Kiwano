@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "time.h"
 #include "noncopyable.hpp"
 #include "intrusive/List.hpp"
@@ -29,8 +29,7 @@ namespace easy2d
 	class ActionManager;
 
 	class Action
-		: public RefCounter 
-		, public Object
+		: public Object
 		, protected intrusive::ListItem<spAction>
 	{
 		friend class ActionManager;
@@ -54,7 +53,7 @@ namespace easy2d
 		virtual void Pause() { running_ = false; }
 
 		// 停止动作
-		virtual void Stop() { if (!done_) { done_ = true; cb_(); } }
+		virtual void Stop() { if (!done_) { done_ = true; if (cb_) cb_(); } }
 
 		// 获取动作的拷贝
 		virtual spAction Clone() const = 0;

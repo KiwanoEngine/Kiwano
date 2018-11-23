@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "d2dres.hpp"
+#include "d2dhelper.hpp"
 
 namespace easy2d
 {

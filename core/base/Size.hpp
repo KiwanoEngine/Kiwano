@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "Point.hpp"
 #include <d2d1.h>
 
 namespace easy2d
@@ -54,6 +55,12 @@ namespace easy2d
 			height = other.height;
 		}
 
+		Size(const Point & p)
+		{
+			width = p.x;
+			height = p.y;
+		}
+
 		inline const Size operator+(const Size & other) const
 		{
 			return Size(width + other.width, height + other.height);
@@ -84,9 +91,19 @@ namespace easy2d
 			return (width == other.width) && (height == other.height);
 		}
 
-		inline operator D2D1_SIZE_F () const
+		inline operator Point () const
 		{
-			return D2D1_SIZE_F{ width, height };
+			return Point{ width, height };
+		}
+
+		inline operator D2D1_SIZE_F const& () const
+		{
+			return reinterpret_cast<D2D1_SIZE_F const&>(*this);
+		}
+
+		inline operator D2D1_SIZE_F& ()
+		{
+			return reinterpret_cast<D2D1_SIZE_F&>(*this);
 		}
 	};
 }

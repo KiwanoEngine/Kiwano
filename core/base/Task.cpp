@@ -22,12 +22,12 @@
 
 namespace easy2d
 {
-	Task::Task(const Callback & func, String const& name)
+	Task::Task(const Callback & func, std::wstring const& name)
 		: Task(func, Duration{}, -1, name)
 	{
 	}
 
-	Task::Task(Callback const& func, Duration const& delay, int times, String const& name)
+	Task::Task(Callback const& func, Duration const& delay, int times, std::wstring const& name)
 		: running_(true)
 		, run_times_(0)
 		, total_times_(times)
@@ -91,7 +91,7 @@ namespace easy2d
 		return running_;
 	}
 
-	String const& Task::GetName() const
+	std::wstring const& Task::GetName() const
 	{
 		return name_;
 	}

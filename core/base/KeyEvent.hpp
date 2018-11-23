@@ -20,7 +20,7 @@
 
 #pragma once
 #include "Event.hpp"
-#include "BaseTypes.hpp"
+#include "keys.hpp"
 
 namespace easy2d
 {

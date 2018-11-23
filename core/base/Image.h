@@ -19,15 +19,14 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "Resource.h"
 
 namespace easy2d
 {
 	// Í¼Æ¬
 	class Image
-		: public RefCounter
-		, public Object
+		: public Object
 	{
 	public:
 		Image();
@@ -42,11 +41,11 @@ namespace easy2d
 		);
 
 		explicit Image(
-			String const& file_name
+			std::wstring const& file_name
 		);
 
 		explicit Image(
-			String const& file_name,
+			std::wstring const& file_name,
 			Rect const& crop_rect	/* ²Ã¼ô¾ØÐÎ */
 		);
 
@@ -63,7 +62,7 @@ namespace easy2d
 
 		// ¼ÓÔØÍ¼Æ¬×ÊÔ´
 		bool Load(
-			String const& file_name
+			std::wstring const& file_name
 		);
 
 		// ½«Í¼Æ¬²Ã¼ôÎª¾ØÐÎ

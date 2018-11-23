@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "time.h"
 
 namespace easy2d
@@ -28,8 +28,7 @@ namespace easy2d
 
 	// ³¡¾°¹ý¶É
 	class Transition
-		: public RefCounter
-		, public Object
+		: public Object
 	{
 		friend class Game;
 

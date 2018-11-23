@@ -21,6 +21,7 @@
 #include "Music.h"
 #include "../utils/Transcoder.h"
 #include "../utils/File.h"
+#include "../utils/string.h"
 #include "modules.h"
 #include "audio.h"
 #include "logs.h"
@@ -36,7 +37,7 @@ namespace easy2d
 	{
 	}
 
-	Music::Music(String const& file_path)
+	Music::Music(std::wstring const& file_path)
 		: opened_(false)
 		, playing_(false)
 		, wave_data_(nullptr)
@@ -61,7 +62,7 @@ namespace easy2d
 		Close();
 	}
 
-	bool Music::Load(String const& file_path)
+	bool Music::Load(std::wstring const& file_path)
 	{
 		if (opened_)
 		{
@@ -71,13 +72,13 @@ namespace easy2d
 		File music_file;
 		if (!music_file.Open(file_path))
 		{
-			logs::Warningln("Media file '%s' not found", file_path.c_str());
+			logs::Warningln("Media file '%s' not found", StringWideCharToMultiByte(file_path).c_str());
 			return false;
 		}
 
 		// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
 		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-		String music_file_path = music_file.GetPath();
+		std::wstring music_file_path = music_file.GetPath();
 
 		Transcoder transcoder;
 		HRESULT hr = transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_);

@@ -44,10 +44,7 @@ namespace easy2d
 
 		D2D1_RECT_F rect;
 		// no matter it failed or not
-		geo_->GetBounds(
-			ConvertToD2DMatrix(GetTransformMatrix()),
-			&rect
-		);
+		geo_->GetBounds(D2D1::Matrix3x2F::Identity(), &rect);
 		return rect;
 	}
 
@@ -57,10 +54,7 @@ namespace easy2d
 		if (geo_)
 		{
 			// no matter it failed or not
-			geo_->ComputeLength(
-				ConvertToD2DMatrix(GetTransformMatrix()),
-				&length
-			);
+			geo_->ComputeLength(D2D1::Matrix3x2F::Identity(), &length);
 		}
 		return length;
 	}
@@ -72,7 +66,7 @@ namespace easy2d
 			D2D1_POINT_2F point_tmp, tangent_tmp;
 			if (SUCCEEDED(geo_->ComputePointAtLength(
 				length,
-				ConvertToD2DMatrix(GetTransformMatrix()),
+				D2D1::Matrix3x2F::Identity(),
 				&point_tmp,
 				&tangent_tmp)))
 			{
@@ -93,10 +87,7 @@ namespace easy2d
 
 		float area = 0.f;
 		// no matter it failed or not
-		geo_->ComputeArea(
-			ConvertToD2DMatrix(GetTransformMatrix()),
-			&area
-		);
+		geo_->ComputeArea(D2D1::Matrix3x2F::Identity(), &area);
 		return area;
 	}
 
@@ -109,35 +100,10 @@ namespace easy2d
 		// no matter it failed or not
 		geo_->FillContainsPoint(
 			point,
-			ConvertToD2DMatrix(GetTransformMatrix()),
+			D2D1::Matrix3x2F::Identity(),
 			&ret
 		);
 		return !!ret;
-	}
-
-	GeometryRelation Geometry::GetRelationWith(spGeometry const & other)
-	{
-		if (!geo_ || !other->geo_)
-			return GeometryRelation::Unknown;
-
-		cpTransformedGeometry transformed;
-		HRESULT hr = Factory::Instance()->CreateTransformedGeometry(
-			transformed,
-			GetTransformMatrix(),
-			geo_.Get()
-		);
-
-		D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
-		
-		if (SUCCEEDED(hr))
-		{
-			transformed->CompareWithGeometry(
-				other->geo_.Get(),
-				ConvertToD2DMatrix(other->GetTransformMatrix()),
-				&relation
-			);
-		}
-		return GeometryRelation(relation);
 	}
 
 

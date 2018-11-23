@@ -50,13 +50,4 @@ namespace easy2d
 				rotation == other.rotation;
 		}
 	};
-
-	inline D2D1_MATRIX_3X2_F ConvertToD2DMatrix(math::Matrix const& matrix)
-	{
-		return D2D1_MATRIX_3X2_F{
-				matrix.m[0], matrix.m[1],
-				matrix.m[2], matrix.m[3],
-				matrix.m[4], matrix.m[5]
-		};
-	}
 }

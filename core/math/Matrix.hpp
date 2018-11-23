@@ -20,6 +20,7 @@
 
 #pragma once
 #include "vector.hpp"
+#include <d2d1.h>
 
 namespace easy2d
 {
@@ -40,36 +41,46 @@ namespace easy2d
 
 		class Matrix
 		{
-		public:
-			float m[6];  // m[3][2]
+			union
+			{
+				struct
+				{
+					float m[6];  // m[3][2]
+				};
+				
+				struct
+				{
+					float
+						_11, _12,
+						_21, _22,
+						_31, _32;
+				};
+			};
 
 		public:
 			Matrix()
+				: _11(1.f), _12(0.f)
+				, _21(0.f), _22(1.f)
+				, _31(0.f), _32(0.f)
 			{
-				m[0] = 1.f; m[1] = 0.f;
-				m[2] = 0.f; m[3] = 1.f;
-				m[4] = 0.f; m[5] = 0.f;
-			}
-
-			Matrix(float val[6])
-			{
-				m[0] = val[0]; m[1] = val[1];
-				m[2] = val[2]; m[3] = val[3];
-				m[4] = val[4]; m[5] = val[5];
 			}
 
 			Matrix(float _11, float _12, float _21, float _22, float _31, float _32)
+				: _11(_11), _12(_12), _21(_21), _22(_22), _31(_31), _32(_32)
 			{
-				m[0] = _11; m[1] = _12;
-				m[2] = _21; m[3] = _22;
-				m[4] = _31; m[5] = _32;
+			}
+
+			Matrix(const float* p)
+			{
+				for (int i = 0; i < 6; i++)
+					m[i] = p[i];
 			}
 
 			Matrix(Matrix const& other)
+				: _11(other._11), _12(other._12)
+				, _21(other._21), _22(other._22)
+				, _31(other._31), _32(other._32)
 			{
-				m[0] = other.m[0]; m[1] = other.m[1];
-				m[2] = other.m[2]; m[3] = other.m[3];
-				m[4] = other.m[4]; m[5] = other.m[5];
 			}
 
 			template <typename T>
@@ -80,7 +91,10 @@ namespace easy2d
 				m[4] = other[4]; m[5] = other[5];
 			}
 
-			inline float operator [](unsigned int index) const { return m[index]; }
+			inline float operator [](unsigned int index) const
+			{
+				return m[index];
+			}
 
 			template <typename T>
 			inline Matrix& operator =(T const& other)
@@ -93,30 +107,46 @@ namespace easy2d
 
 			inline Matrix& Identity()
 			{
-				m[0] = 1.f; m[1] = 0.f;
-				m[2] = 0.f; m[3] = 1.f;
-				m[4] = 0.f; m[5] = 0.f;
+				_11 = 1.f; _12 = 0.f;
+				_21 = 0.f; _12 = 1.f;
+				_31 = 0.f; _32 = 0.f;
 				return *this;
 			}
 
 			inline float Determinant() const
 			{
-				return (m[0] * m[3]) - (m[1] * m[2]);
+				return (_11 * _22) - (_12 * _21);
 			}
 
 			inline bool IsIdentity() const
 			{
-				return	m[0] == 1.f && m[1] == 0.f &&
-						m[2] == 0.f && m[3] == 1.f &&
-						m[4] == 0.f && m[5] == 0.f;
+				return	_11 == 1.f && _12 == 0.f &&
+						_21 == 0.f && _22 == 1.f &&
+						_31 == 0.f && _32 == 0.f;
 			}
 
 			Vector2 Transform(const Vector2& v) const
 			{
 				return Vector2(
-					v.x * m[0] + v.y * m[2] + m[4],
-					v.x * m[1] + v.y * m[3] + m[5]
+					v.x * _11 + v.y * _21 + _31,
+					v.x * _12 + v.y * _22 + _32
 				);
+			}
+
+			void Translate(const Vector2& v)
+			{
+				_31 += _11 * v.x + _21 * v.y;
+				_32 += _12 * v.x + _22 * v.y;
+			}
+
+			inline operator D2D1_MATRIX_3X2_F const& () const
+			{
+				return reinterpret_cast<D2D1_MATRIX_3X2_F const&>(*this);
+			}
+
+			inline operator D2D1_MATRIX_3X2_F& ()
+			{
+				return reinterpret_cast<D2D1_MATRIX_3X2_F&>(*this);
 			}
 
 			static Matrix Translation(const Vector2& v)

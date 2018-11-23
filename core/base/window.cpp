@@ -47,7 +47,7 @@ namespace easy2d
 		E2D_LOG("Destroying window");
 	}
 
-	HRESULT WindowImpl::Init(String title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
+	HRESULT WindowImpl::Init(std::wstring title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
 	{
 		E2D_LOG("Creating window");
 
@@ -105,7 +105,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	String WindowImpl::GetTitle() const
+	std::wstring WindowImpl::GetTitle() const
 	{
 		if (handle)
 		{
@@ -113,10 +113,10 @@ namespace easy2d
 			GetWindowTextW(handle, title, 256);
 			return title;
 		}
-		return String();
+		return std::wstring();
 	}
 
-	void WindowImpl::SetTitle(String const& title)
+	void WindowImpl::SetTitle(std::wstring const& title)
 	{
 		if (handle)
 			::SetWindowText(handle, title.c_str());

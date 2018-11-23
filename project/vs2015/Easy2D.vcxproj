@@ -25,11 +25,9 @@
     <ClInclude Include="..\..\core\base\ActionManager.h" />
     <ClInclude Include="..\..\core\base\Animation.h" />
     <ClInclude Include="..\..\core\base\audio.h" />
-    <ClInclude Include="..\..\core\base\base.hpp" />
-    <ClInclude Include="..\..\core\base\BaseTypes.hpp" />
     <ClInclude Include="..\..\core\base\Canvas.h" />
     <ClInclude Include="..\..\core\base\Color.h" />
-    <ClInclude Include="..\..\core\base\d2dres.hpp" />
+    <ClInclude Include="..\..\core\base\d2dhelper.hpp" />
     <ClInclude Include="..\..\core\base\Debuger.h" />
     <ClInclude Include="..\..\core\base\Delay.h" />
     <ClInclude Include="..\..\core\base\Event.hpp" />
@@ -41,11 +39,14 @@
     <ClInclude Include="..\..\core\base\Game.h" />
     <ClInclude Include="..\..\core\base\Geometry.h" />
     <ClInclude Include="..\..\core\base\GeometryNode.h" />
+    <ClInclude Include="..\..\core\base\helper.hpp" />
     <ClInclude Include="..\..\core\base\Image.h" />
+    <ClInclude Include="..\..\core\base\include-forwards.h" />
     <ClInclude Include="..\..\core\base\Input.h" />
     <ClInclude Include="..\..\core\base\intrusive\List.hpp" />
     <ClInclude Include="..\..\core\base\intrusive\SmartPointer.hpp" />
     <ClInclude Include="..\..\core\base\KeyEvent.hpp" />
+    <ClInclude Include="..\..\core\base\keys.hpp" />
     <ClInclude Include="..\..\core\base\logs.h" />
     <ClInclude Include="..\..\core\base\macros.h" />
     <ClInclude Include="..\..\core\base\modules.h" />
@@ -71,7 +72,6 @@
     <ClInclude Include="..\..\core\base\time.h" />
     <ClInclude Include="..\..\core\base\Transform.hpp" />
     <ClInclude Include="..\..\core\base\Transition.h" />
-    <ClInclude Include="..\..\core\base\Unit.h" />
     <ClInclude Include="..\..\core\base\window.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\math\constants.hpp" />
@@ -123,7 +123,6 @@
     <ClCompile Include="..\..\core\base\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\base\time.cpp" />
     <ClCompile Include="..\..\core\base\Transition.cpp" />
-    <ClCompile Include="..\..\core\base\Unit.cpp" />
     <ClCompile Include="..\..\core\base\window.cpp" />
     <ClCompile Include="..\..\core\math\rand.cpp" />
     <ClCompile Include="..\..\core\ui\Button.cpp" />

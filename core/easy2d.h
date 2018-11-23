@@ -31,7 +31,6 @@
 //
 
 #include "base/macros.h"
-#include "base/base.hpp"
 #include "base/modules.h"
 #include "base/render.h"
 #include "base/window.h"
@@ -58,15 +57,16 @@
 #include "base/Image.h"
 #include "base/Frames.h"
 #include "base/Music.h"
+#include "base/Geometry.h"
 #include "base/Task.h"
+#include "base/TaskManager.h"
 #include "base/Action.hpp"
 #include "base/ActionCombined.h"
 #include "base/ActionTween.h"
 #include "base/Animation.h"
 #include "base/Delay.h"
-#include "base/Transition.h"
-#include "base/TaskManager.h"
 #include "base/ActionManager.h"
+#include "base/Transition.h"
 
 #include "base/Event.hpp"
 #include "base/MouseEvent.hpp"
@@ -74,8 +74,6 @@
 #include "base/EventListener.h"
 #include "base/EventDispatcher.h"
 
-#include "base/Unit.h"
-#include "base/Geometry.h"
 #include "base/Node.h"
 #include "base/Scene.h"
 #include "base/Sprite.h"

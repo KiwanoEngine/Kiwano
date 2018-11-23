@@ -20,7 +20,7 @@
 
 #include "render.h"
 #include "time.h"
-#include "base.hpp"
+#include "include-forwards.h"
 #include "logs.h"
 #include "Factory.h"
 #include "Image.h"
@@ -226,7 +226,7 @@ namespace easy2d
 		if (window_occluded_)
 			return S_OK;
 
-		render_target_->SetTransform(ConvertToD2DMatrix(clip_matrix));
+		render_target_->SetTransform(clip_matrix);
 		render_target_->PushAxisAlignedClip(
 			D2D1::RectF(0, 0, clip_size.width, clip_size.height),
 			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
@@ -293,14 +293,14 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::CreateBitmapFromFile(cpBitmap& bitmap, String const& file_path)
+	HRESULT GraphicsDevice::CreateBitmapFromFile(cpBitmap& bitmap, std::wstring const& file_path)
 	{
 		if (render_target_ == nullptr)
 		{
 			return E_UNEXPECTED;
 		}
 
-		size_t hash_code = std::hash<String>{}(file_path);
+		size_t hash_code = std::hash<std::wstring>{}(file_path);
 		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
 		{
 			bitmap = bitmap_cache_[hash_code];
@@ -373,7 +373,7 @@ namespace easy2d
 		if (!render_target_)
 			return E_UNEXPECTED;
 
-		render_target_->SetTransform(ConvertToD2DMatrix(matrix));
+		render_target_->SetTransform(matrix);
 		return S_OK;
 	}
 

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "intrusive/List.hpp"
 #include "Event.hpp"
 
@@ -31,8 +31,7 @@ namespace easy2d
 	class EventDispatcher;
 
 	class EventListener
-		: public RefCounter
-		, public Object
+		: public Object
 		, protected intrusive::ListItem<spEventListener>
 	{
 		friend class EventDispatcher;
@@ -42,7 +41,7 @@ namespace easy2d
 		EventListener(
 			EventType type,
 			EventCallback const& callback,
-			String const& name = L""
+			std::wstring const& name = L""
 		);
 
 		virtual ~EventListener();
@@ -51,15 +50,15 @@ namespace easy2d
 
 		void Stop();
 
-		void SetName(String const& name);
+		void SetName(std::wstring const& name);
 
 		bool IsRunning() const;
 
-		String const& GetName() const;
+		std::wstring const& GetName() const;
 
 	protected:
 		bool			running_;
-		String			name_;
+		std::wstring			name_;
 		EventType		type_;
 		EventCallback	callback_;
 	};

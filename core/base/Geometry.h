@@ -19,25 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
-#include "Unit.h"
+#include "include-forwards.h"
 
 namespace easy2d
 {
-	// 几何图形间相交关系
-	enum class GeometryRelation : int
-	{
-		Unknown,
-		Disjoin,		// 无交集
-		IsContained,	// 被包含
-		Contains,		// 包含
-		Overlap			// 重叠
-	};
-
-
 	// 几何抽象
 	class Geometry
-		: public Unit
+		: public RefCounter
 	{
 		friend class Canvas;
 		friend class GeometryNode;
@@ -53,11 +41,6 @@ namespace easy2d
 		// 判断图形是否包含点
 		bool ContainsPoint(
 			Point const& point
-		);
-
-		// 判断两图形相交状态
-		GeometryRelation GetRelationWith(
-			spGeometry const& other
 		);
 
 		// 获取图形展开成一条直线的长度

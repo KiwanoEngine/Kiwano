@@ -19,11 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "BaseTypes.hpp"
 #include "RefCounter.hpp"
-#include "Object.h"
 #include "intrusive/SmartPointer.hpp"
-#include "d2dres.hpp"
 
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
@@ -53,7 +50,7 @@ namespace easy2d
 	E2D_DECLARE_SMART_PTR(CircleGeometry);
 	E2D_DECLARE_SMART_PTR(EllipseGeometry);
 	E2D_DECLARE_SMART_PTR(PathGeometry);
-	
+
 	E2D_DECLARE_SMART_PTR(Node);
 	E2D_DECLARE_SMART_PTR(Scene);
 	E2D_DECLARE_SMART_PTR(Sprite);
@@ -94,17 +91,17 @@ namespace easy2d
 
 
 	template <typename Dest, typename Src>
-	inline Dest* SafeCast(Src* ptr)
+	inline Dest SafeCast(Src ptr)
 	{
 		if (!ptr)
 			return nullptr;
 
 #ifdef E2D_DEBUG
-		Dest* cast = dynamic_cast<Dest*>(ptr);
+		Dest cast = dynamic_cast<Dest>(ptr);
 		E2D_ASSERT(cast);
 		return cast;
+#else
+		return static_cast<Dest>(ptr);
 #endif
-
-		return static_cast<Dest*>(ptr);
 	}
 }

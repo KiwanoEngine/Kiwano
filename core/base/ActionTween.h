@@ -30,9 +30,9 @@ namespace easy2d
 	enum class EaseFunc
 	{
 		Linear,			// 线性
-		In,				// 由慢变快
-		Out,			// 由快变慢
-		InOut,			// 由慢变快, 再由快变慢
+		EaseIn,			// 由慢变快
+		EaseOut,		// 由快变慢
+		EaseInOut,		// 由慢变快, 再由快变慢
 		ExpoIn,			// 由慢变极快
 		ExpoOut,		// 由极快变慢
 		ExpoInOut,		// 由慢至极快, 再由极快边慢
@@ -473,12 +473,15 @@ namespace easy2d
 		virtual spAction Reverse() const override;
 
 	protected:
+		virtual void Init(Node* target) override;
+
 		virtual void UpdateStep(Node* target, float step) override;
 
 	protected:
 		bool		rotating_;
 		float		start_;
 		float		end_;
+		Point		start_pos_;
 		spGeometry	geo_;
 	};
 }

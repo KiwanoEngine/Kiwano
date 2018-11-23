@@ -52,7 +52,7 @@ namespace easy2d
 	{
 	}
 
-	void DebugerNode::AddDebugText(String const & text)
+	void DebugerNode::AddDebugText(std::wstring const & text)
 	{
 		try
 		{
@@ -68,7 +68,7 @@ namespace easy2d
 		texts_.clear();
 	}
 
-	void DebugerNode::Update(Duration const & dt)
+	void DebugerNode::OnUpdate(Duration const & dt)
 	{
 		try
 		{
