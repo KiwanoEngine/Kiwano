@@ -25,12 +25,10 @@
     <ClInclude Include="..\..\core\base\ActionManager.h" />
     <ClInclude Include="..\..\core\base\Animation.h" />
     <ClInclude Include="..\..\core\base\audio.h" />
-    <ClInclude Include="..\..\core\base\base.hpp" />
-    <ClInclude Include="..\..\core\base\BaseTypes.hpp" />
     <ClInclude Include="..\..\core\base\Canvas.h" />
     <ClInclude Include="..\..\core\base\Color.h" />
-    <ClInclude Include="..\..\core\base\d2dres.hpp" />
-    <ClInclude Include="..\..\core\base\Debuger.h" />
+    <ClInclude Include="..\..\core\base\d2dhelper.hpp" />
+    <ClInclude Include="..\..\core\base\DebugNode.h" />
     <ClInclude Include="..\..\core\base\Delay.h" />
     <ClInclude Include="..\..\core\base\Event.hpp" />
     <ClInclude Include="..\..\core\base\EventDispatcher.h" />
@@ -41,11 +39,14 @@
     <ClInclude Include="..\..\core\base\Game.h" />
     <ClInclude Include="..\..\core\base\Geometry.h" />
     <ClInclude Include="..\..\core\base\GeometryNode.h" />
+    <ClInclude Include="..\..\core\base\helper.hpp" />
     <ClInclude Include="..\..\core\base\Image.h" />
+    <ClInclude Include="..\..\core\base\include-forwards.h" />
     <ClInclude Include="..\..\core\base\Input.h" />
     <ClInclude Include="..\..\core\base\intrusive\List.hpp" />
     <ClInclude Include="..\..\core\base\intrusive\SmartPointer.hpp" />
     <ClInclude Include="..\..\core\base\KeyEvent.hpp" />
+    <ClInclude Include="..\..\core\base\keys.hpp" />
     <ClInclude Include="..\..\core\base\logs.h" />
     <ClInclude Include="..\..\core\base\macros.h" />
     <ClInclude Include="..\..\core\base\modules.h" />
@@ -53,7 +54,7 @@
     <ClInclude Include="..\..\core\base\Music.h" />
     <ClInclude Include="..\..\core\base\Node.h" />
     <ClInclude Include="..\..\core\base\noncopyable.hpp" />
-    <ClInclude Include="..\..\core\base\ObjectBase.h" />
+    <ClInclude Include="..\..\core\base\Object.h" />
     <ClInclude Include="..\..\core\base\Point.hpp" />
     <ClInclude Include="..\..\core\base\Rect.hpp" />
     <ClInclude Include="..\..\core\base\RefCounter.hpp" />
@@ -71,7 +72,6 @@
     <ClInclude Include="..\..\core\base\time.h" />
     <ClInclude Include="..\..\core\base\Transform.hpp" />
     <ClInclude Include="..\..\core\base\Transition.h" />
-    <ClInclude Include="..\..\core\base\Unit.h" />
     <ClInclude Include="..\..\core\base\window.h" />
     <ClInclude Include="..\..\core\easy2d.h" />
     <ClInclude Include="..\..\core\math\constants.hpp" />
@@ -97,7 +97,7 @@
     <ClCompile Include="..\..\core\base\audio.cpp" />
     <ClCompile Include="..\..\core\base\Canvas.cpp" />
     <ClCompile Include="..\..\core\base\Color.cpp" />
-    <ClCompile Include="..\..\core\base\Debuger.cpp" />
+    <ClCompile Include="..\..\core\base\DebugNode.cpp" />
     <ClCompile Include="..\..\core\base\Delay.cpp" />
     <ClCompile Include="..\..\core\base\EventDispatcher.cpp" />
     <ClCompile Include="..\..\core\base\EventListener.cpp" />
@@ -112,7 +112,7 @@
     <ClCompile Include="..\..\core\base\modules.cpp" />
     <ClCompile Include="..\..\core\base\Music.cpp" />
     <ClCompile Include="..\..\core\base\Node.cpp" />
-    <ClCompile Include="..\..\core\base\ObjectBase.cpp" />
+    <ClCompile Include="..\..\core\base\Object.cpp" />
     <ClCompile Include="..\..\core\base\render.cpp" />
     <ClCompile Include="..\..\core\base\Resource.cpp" />
     <ClCompile Include="..\..\core\base\Scene.cpp" />
@@ -123,7 +123,6 @@
     <ClCompile Include="..\..\core\base\TextRenderer.cpp" />
     <ClCompile Include="..\..\core\base\time.cpp" />
     <ClCompile Include="..\..\core\base\Transition.cpp" />
-    <ClCompile Include="..\..\core\base\Unit.cpp" />
     <ClCompile Include="..\..\core\base\window.cpp" />
     <ClCompile Include="..\..\core\math\rand.cpp" />
     <ClCompile Include="..\..\core\ui\Button.cpp" />

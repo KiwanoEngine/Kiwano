@@ -19,33 +19,84 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Text.h"
-#include "Singleton.hpp"
-#include "time.h"
+#include "macros.h"
 
 namespace easy2d
 {
-	class DebugerNode
-		: public Node
+	// °´¼ü¼üÖµ
+	enum class KeyCode : int
 	{
-		E2D_DECLARE_SINGLETON(DebugerNode);
+		Unknown = 0,
+		Up = VK_UP,
+		Left = VK_LEFT,
+		Right = VK_RIGHT,
+		Down = VK_DOWN,
+		Enter = VK_RETURN,
+		Space = VK_SPACE,
+		Esc = VK_ESCAPE,
+		Ctrl = VK_CONTROL,
+		Shift = VK_SHIFT,
 
-	public:
-		DebugerNode();
+		A = 0x41,
+		B,
+		C,
+		D,
+		E,
+		F,
+		G,
+		H,
+		I,
+		J,
+		K,
+		L,
+		M,
+		N,
+		O,
+		P,
+		Q,
+		R,
+		S,
+		T,
+		U,
+		V,
+		W,
+		X,
+		Y,
+		Z,
 
-		virtual ~DebugerNode();
+		Num0 = 0x30,
+		Num1,
+		Num2,
+		Num3,
+		Num4,
+		Num5,
+		Num6,
+		Num7,
+		Num8,
+		Num9,
 
-		void AddDebugText(String const& text);
+		Numpad0 = VK_NUMPAD0,
+		Numpad1,
+		Numpad2,
+		Numpad3,
+		Numpad4,
+		Numpad5,
+		Numpad6,
+		Numpad7,
+		Numpad8,
+		Numpad9,
 
-		void ClearDebugText();
-
-		void Update(Duration const& dt) override;
-
-	protected:
-		spText debug_text_;
-		std::vector<TimePoint> frame_time_;
-		std::vector<String> texts_;
+		F1 = VK_F1,
+		F2,
+		F3,
+		F4,
+		F5,
+		F6,
+		F7,
+		F8,
+		F9,
+		F10,
+		F11,
+		F12,
 	};
-
-	E2D_DECLARE_SINGLETON_TYPE(DebugerNode, Debuger);
 }

@@ -18,7 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Debuger.h"
+#include "DebugNode.h"
+#include "render.h"
 #include "../utils/string.h"
 #include <sstream>
 #include <psapi.h>
@@ -28,10 +29,10 @@
 namespace easy2d
 {
 
-	DebugerNode::DebugerNode()
+	DebugNodeImpl::DebugNodeImpl()
 	{
 		debug_text_ = new Text();
-		debug_text_->SetPosition(10, 10);
+		debug_text_->SetPosition(15, 15);
 		this->AddChild(debug_text_);
 
 		Font font;
@@ -41,18 +42,15 @@ namespace easy2d
 
 		TextStyle style;
 		style.wrap = false;
-		style.line_spacing = 18.f;
+		style.line_spacing = 20.f;
 		debug_text_->SetStyle(style);
-
-		ObjectBase::__RemoveObjectFromTracingList(this);
-		ObjectBase::__RemoveObjectFromTracingList(debug_text_.Get());
 	}
 
-	DebugerNode::~DebugerNode()
+	DebugNodeImpl::~DebugNodeImpl()
 	{
 	}
 
-	void DebugerNode::AddDebugText(String const & text)
+	void DebugNodeImpl::AddDebugText(std::wstring const & text)
 	{
 		try
 		{
@@ -63,12 +61,29 @@ namespace easy2d
 		}
 	}
 
-	void DebugerNode::ClearDebugText()
+	void DebugNodeImpl::ClearDebugText()
 	{
 		texts_.clear();
 	}
 
-	void DebugerNode::Update(Duration const & dt)
+	void DebugNodeImpl::OnRender()
+	{
+		auto graphics = Graphics::Instance();
+
+		graphics->SetTransform(math::Matrix{});
+
+		graphics->GetSolidBrush()->SetColor(Color(0.0f, 0.0f, 0.0f, 0.5f));
+
+		graphics->GetRenderTarget()->FillRoundedRectangle(
+			D2D1::RoundedRect(
+				D2D1_RECT_F{ 10, 10, 200, 120 },
+				6.f,
+				6.f),
+			graphics->GetSolidBrush().Get()
+		);
+	}
+
+	void DebugNodeImpl::OnUpdate(Duration const & dt)
 	{
 		try
 		{
@@ -85,20 +100,19 @@ namespace easy2d
 		}
 		
 		std::wstringstream ss;
-		ss << "fps=" << frame_time_.size() << std::endl;
+		ss << "Fps: " << frame_time_.size() << std::endl;
 
 #ifdef E2D_DEBUG
-
-		ss << "objects=" << ObjectBase::__GetTracingObjects().size() << std::endl;
-
+		ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
 #endif
+
+		ss << "Render: " << Graphics::Instance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
+
+		ss << "Primitives / sec: " << Graphics::Instance()->GetStatus().primitives * frame_time_.size() << std::endl;
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-		if (pmc.PrivateUsage > 1024 * 1024)
-			ss << "memory=" <<  pmc.PrivateUsage / 1024 / 1024 << "Mb " << (pmc.PrivateUsage / 1024) % 1024 << "Kb";
-		else
-			ss << "memory=" << pmc.PrivateUsage / 1024 << "Kb";
+		ss << "Memory: " << pmc.PrivateUsage / 1024 << "kb";
 
 		for (const auto& text : texts_)
 			ss << std::endl << text;

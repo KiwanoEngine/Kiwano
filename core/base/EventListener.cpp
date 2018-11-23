@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	EventListener::EventListener(EventType type, EventCallback const & callback, String const & name)
+	EventListener::EventListener(EventType type, EventCallback const & callback, std::wstring const & name)
 		: type_(type)
 		, callback_(callback)
 		, name_(name)
@@ -50,12 +50,12 @@ namespace easy2d
 		return running_;
 	}
 
-	String const & EventListener::GetName() const
+	std::wstring const & EventListener::GetName() const
 	{
 		return name_;
 	}
 
-	void EventListener::SetName(String const & name)
+	void EventListener::SetName(std::wstring const & name)
 	{
 		name_ = name;
 	}

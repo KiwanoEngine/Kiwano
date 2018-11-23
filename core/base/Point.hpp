@@ -76,9 +76,14 @@ namespace easy2d
 			return (x == other.x) && (y == other.y);
 		}
 
-		inline operator D2D1_POINT_2F () const
+		inline operator D2D1_POINT_2F const& () const
 		{
-			return D2D1_POINT_2F{ x, y };
+			return reinterpret_cast<D2D1_POINT_2F const&>(*this);
+		}
+
+		inline operator D2D1_POINT_2F& ()
+		{
+			return reinterpret_cast<D2D1_POINT_2F&>(*this);
 		}
 	};
 }

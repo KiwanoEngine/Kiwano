@@ -20,29 +20,35 @@
 
 #pragma once
 #include "RefCounter.hpp"
+#include <vector>
 
 namespace easy2d
 {
-	class ObjectBase
+	class Object
 		: public RefCounter
 	{
 	public:
-		ObjectBase();
+		Object();
 
-		virtual ~ObjectBase();
+		virtual ~Object();
+
+		void* GetUserData() const;
+
+		void SetUserData(void* data);
 
 		static void StartTracingLeaks();
 
 		static void StopTracingLeaks();
 
-		static std::vector<ObjectBase*> const& __GetTracingObjects();
+		static std::vector<Object*> const& __GetTracingObjects();
 
 	protected:
-		static void __AddObjectToTracingList(ObjectBase*);
+		static void __AddObjectToTracingList(Object*);
 
-		static void __RemoveObjectFromTracingList(ObjectBase*);
+		static void __RemoveObjectFromTracingList(Object*);
 
 	private:
 		bool tracing_leak_;
+		void* user_data_;
 	};
 }

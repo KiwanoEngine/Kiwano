@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/base.hpp"
+#include <string>
 
 namespace easy2d
 {
@@ -28,8 +28,8 @@ namespace easy2d
 	{
 	public:
 		Data(
-			String const& key,				/* 键值 */
-			String const& field = L"Defalut"	/* 字段名称 */
+			std::wstring const& key,				/* 键值 */
+			std::wstring const& field = L"Defalut"	/* 字段名称 */
 		);
 
 		// 该数据是否存在
@@ -55,9 +55,9 @@ namespace easy2d
 			bool val
 		);
 
-		// 保存 String 类型的值
+		// 保存 std::wstring 类型的值
 		bool SaveString(
-			String const& val
+			std::wstring const& val
 		);
 
 		// 获取 int 类型的值
@@ -73,11 +73,11 @@ namespace easy2d
 		bool GetBool() const;
 
 		// 获取 字符串 类型的值
-		String GetString();
+		std::wstring GetString();
 
 	protected:
-		String key_;
-		String field_;
-		String const& data_path_;
+		std::wstring key_;
+		std::wstring field_;
+		std::wstring const& data_path_;
 	};
 }

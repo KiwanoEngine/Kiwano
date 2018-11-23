@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "audio.h"
 #include "Resource.h"
 
@@ -27,13 +27,13 @@ namespace easy2d
 {
 	// 音乐
 	class Music
-		: public ObjectBase
+		: public Object
 	{
 	public:
 		Music();
 
 		Music(
-			String const& file_path	/* 音乐文件路径 */
+			std::wstring const& file_path	/* 音乐文件路径 */
 		);
 
 		Music(
@@ -44,7 +44,7 @@ namespace easy2d
 
 		// 打开音乐文件
 		bool Load(
-			String const& file_path	/* 音乐文件路径 */
+			std::wstring const& file_path	/* 音乐文件路径 */
 		);
 
 		// 打开音乐资源

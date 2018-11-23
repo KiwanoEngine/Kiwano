@@ -37,22 +37,22 @@ namespace easy2d
 		void AddListener(
 			EventType type,
 			EventCallback callback,
-			String const& name = L""
+			std::wstring const& name = L""
 		);
 
 		// Æô¶¯¼àÌıÆ÷
 		void StartListeners(
-			String const& listener_name
+			std::wstring const& listener_name
 		);
 
 		// Í£Ö¹¼àÌıÆ÷
 		void StopListeners(
-			String const& listener_name
+			std::wstring const& listener_name
 		);
 
 		// ÒÆ³ı¼àÌıÆ÷
 		void RemoveListeners(
-			String const& listener_name
+			std::wstring const& listener_name
 		);
 
 		// Æô¶¯¼àÌıÆ÷

@@ -19,8 +19,6 @@
 // THE SOFTWARE.
 
 #include "render.h"
-#include "time.h"
-#include "base.hpp"
 #include "logs.h"
 #include "Factory.h"
 #include "Image.h"
@@ -33,6 +31,7 @@ namespace easy2d
 		, fps_text_layout_(nullptr)
 		, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
 		, opacity_(1.f)
+		, debug_(false)
 		, window_occluded_(false)
 		, vsync_enabled_(true)
 		, antialias_(true)
@@ -51,18 +50,21 @@ namespace easy2d
 	{
 		E2D_LOG("Initing graphics device");
 
-		HRESULT hr = CreateResources(hwnd);
+		vsync_enabled_ = vsync;
+		debug_ = debug;
 
-		if (SUCCEEDED(hr))
-		{
-			vsync_enabled_ = vsync;
-		}
-		return hr;
+		return CreateResources(hwnd);
 	}
 
 	HRESULT GraphicsDevice::BeginDraw(HWND hwnd)
 	{
 		HRESULT hr = CreateResources(hwnd);
+
+		if (debug_)
+		{
+			status_.start = time::Now();
+			status_.primitives = 0;
+		}
 
 		if (SUCCEEDED(hr))
 		{
@@ -74,13 +76,18 @@ namespace easy2d
 				render_target_->Clear(clear_color_);
 			}
 		}
-
 		return hr;
 	}
 
 	HRESULT GraphicsDevice::EndDraw()
 	{
 		HRESULT hr = S_OK;
+
+		if (debug_)
+		{
+			status_.duration = time::Now() - status_.start;
+		}
+		
 		if (!window_occluded_)
 		{
 			hr = render_target_->EndDraw();
@@ -99,6 +106,16 @@ namespace easy2d
 	void GraphicsDevice::ClearImageCache()
 	{
 		bitmap_cache_.clear();
+	}
+
+	cpHwndRenderTarget const & GraphicsDevice::GetRenderTarget() const
+	{
+		return render_target_;
+	}
+
+	cpSolidColorBrush const & GraphicsDevice::GetSolidBrush() const
+	{
+		return solid_brush_;
 	}
 
 	HRESULT GraphicsDevice::CreateLayer(cpLayer& layer)
@@ -144,6 +161,9 @@ namespace easy2d
 			stroke_width,
 			stroke_style.Get()
 		);
+
+		if (debug_)
+			++status_.primitives;
 		return S_OK;
 	}
 
@@ -161,6 +181,9 @@ namespace easy2d
 			geometry.Get(),
 			solid_brush_.Get()
 		);
+
+		if (debug_)
+			++status_.primitives;
 		return S_OK;
 	}
 
@@ -182,6 +205,9 @@ namespace easy2d
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			image->GetCropRect()
 		);
+
+		if (debug_)
+			++status_.primitives;
 		return S_OK;
 	}
 
@@ -204,6 +230,9 @@ namespace easy2d
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			rect
 		);
+
+		if (debug_)
+			++status_.primitives;
 		return S_OK;
 	}
 
@@ -215,6 +244,8 @@ namespace easy2d
 		if (window_occluded_)
 			return S_OK;
 
+		if (debug_)
+			++status_.primitives;
 		return text_layout->Draw(nullptr, text_renderer_.Get(), 0, 0);
 	}
 
@@ -226,7 +257,7 @@ namespace easy2d
 		if (window_occluded_)
 			return S_OK;
 
-		render_target_->SetTransform(ConvertToD2DMatrix(clip_matrix));
+		render_target_->SetTransform(clip_matrix);
 		render_target_->PushAxisAlignedClip(
 			D2D1::RectF(0, 0, clip_size.width, clip_size.height),
 			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
@@ -293,14 +324,14 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::CreateBitmapFromFile(cpBitmap& bitmap, String const& file_path)
+	HRESULT GraphicsDevice::CreateBitmapFromFile(cpBitmap& bitmap, std::wstring const& file_path)
 	{
 		if (render_target_ == nullptr)
 		{
 			return E_UNEXPECTED;
 		}
 
-		size_t hash_code = std::hash<String>{}(file_path);
+		size_t hash_code = std::hash<std::wstring>{}(file_path);
 		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
 		{
 			bitmap = bitmap_cache_[hash_code];
@@ -373,7 +404,7 @@ namespace easy2d
 		if (!render_target_)
 			return E_UNEXPECTED;
 
-		render_target_->SetTransform(ConvertToD2DMatrix(matrix));
+		render_target_->SetTransform(matrix);
 		return S_OK;
 	}
 
@@ -452,6 +483,11 @@ namespace easy2d
 		}
 		render_target_->SetTextAntialiasMode(antialias_mode);
 		return S_OK;
+	}
+
+	GraphicsDevice::Status const & GraphicsDevice::GetStatus() const
+	{
+		return status_;
 	}
 
 	HRESULT GraphicsDevice::CreateResources(HWND hwnd)

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "TextRenderer.h"
-#include "base.hpp"
+#include "include-forwards.h"
 #include "render.h"
 
 namespace easy2d

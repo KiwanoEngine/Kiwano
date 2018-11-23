@@ -50,7 +50,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::AddListener(EventType type, EventCallback callback, String const& name)
+	void EventDispatcher::AddListener(EventType type, EventCallback callback, std::wstring const& name)
 	{
 		spEventListener listener = new EventListener(type, callback, name);
 		if (listener)
@@ -59,7 +59,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::StartListeners(String const & listener_name)
+	void EventDispatcher::StartListeners(std::wstring const & listener_name)
 	{
 		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
 		{
@@ -70,7 +70,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::StopListeners(String const & listener_name)
+	void EventDispatcher::StopListeners(std::wstring const & listener_name)
 	{
 		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
 		{
@@ -81,7 +81,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::RemoveListeners(String const & listener_name)
+	void EventDispatcher::RemoveListeners(std::wstring const & listener_name)
 	{
 		spEventListener next;
 		for (auto listener = listeners_.First(); listener; listener = next)

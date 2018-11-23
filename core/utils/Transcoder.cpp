@@ -19,13 +19,15 @@
 // THE SOFTWARE.
 
 #include "Transcoder.h"
-#include "../base/base.hpp"
+#include "../base/d2dhelper.hpp"
 #include "../base/modules.h"
 #include "../base/logs.h"
 #include <shlwapi.h>
 
 namespace easy2d
 {
+	using namespace intrusive;
+
 	Transcoder::Transcoder()
 		: wave_format_(nullptr)
 	{
@@ -49,7 +51,7 @@ namespace easy2d
 	{
 		HRESULT hr = S_OK;
 
-		IMFSourceReader* reader = nullptr;
+		SmartPointer<IMFSourceReader> reader;
 
 		hr = modules::MediaFoundation().MFCreateSourceReaderFromURL(
 			file_path,
@@ -59,10 +61,8 @@ namespace easy2d
 
 		if (SUCCEEDED(hr))
 		{
-			hr = ReadSource(reader, wave_data, wave_data_size);
+			hr = ReadSource(reader.Get(), wave_data, wave_data_size);
 		}
-
-		SafeRelease(reader);
 
 		return hr;
 	}
@@ -70,11 +70,11 @@ namespace easy2d
 	HRESULT Transcoder::LoadMediaResource(Resource const& res, BYTE** wave_data, UINT32* wave_data_size)
 	{
 		HRESULT	hr = S_OK;
+		HINSTANCE hinstance = GetModuleHandle(nullptr);
 
-		HINSTANCE		 hinstance = GetModuleHandle(nullptr);
-		IStream*		 stream = nullptr;
-		IMFByteStream*	 byte_stream = nullptr;
-		IMFSourceReader* reader = nullptr;
+		SmartPointer<IStream> stream;
+		SmartPointer<IMFByteStream> byte_stream;
+		SmartPointer<IMFSourceReader> reader;
 
 		ResourceData buffer;
 		if (!res.Load(&buffer)) { return false; }
@@ -92,13 +92,13 @@ namespace easy2d
 
 		if (SUCCEEDED(hr))
 		{
-			hr = modules::MediaFoundation().MFCreateMFByteStreamOnStream(stream, &byte_stream);
+			hr = modules::MediaFoundation().MFCreateMFByteStreamOnStream(stream.Get(), &byte_stream);
 		}
 
 		if (SUCCEEDED(hr))
 		{
 			hr = modules::MediaFoundation().MFCreateSourceReaderFromByteStream(
-				byte_stream,
+				byte_stream.Get(),
 				nullptr,
 				&reader
 			);
@@ -106,12 +106,8 @@ namespace easy2d
 
 		if (SUCCEEDED(hr))
 		{
-			hr = ReadSource(reader, wave_data, wave_data_size);
+			hr = ReadSource(reader.Get(), wave_data, wave_data_size);
 		}
-
-		SafeRelease(stream);
-		SafeRelease(byte_stream);
-		SafeRelease(reader);
 
 		return hr;
 	}
@@ -121,8 +117,8 @@ namespace easy2d
 		HRESULT hr = S_OK;
 		DWORD max_stream_size = 0;
 
-		IMFMediaType* partial_type = nullptr;
-		IMFMediaType* uncompressed_type = nullptr;
+		SmartPointer<IMFMediaType> partial_type;
+		SmartPointer<IMFMediaType> uncompressed_type;
 
 		hr = modules::MediaFoundation().MFCreateMediaType(&partial_type);
 
@@ -142,7 +138,7 @@ namespace easy2d
 			hr = reader->SetCurrentMediaType(
 				MF_SOURCE_READER_FIRST_AUDIO_STREAM,
 				0,
-				partial_type
+				partial_type.Get()
 			);
 		}
 
@@ -169,7 +165,7 @@ namespace easy2d
 		{
 			UINT32 size = 0;
 			hr = modules::MediaFoundation().MFCreateWaveFormatExFromMFMediaType(
-				uncompressed_type,
+				uncompressed_type.Get(),
 				&wave_format_,
 				&size,
 				MFWaveFormatExConvertFlag_Normal
@@ -200,10 +196,10 @@ namespace easy2d
 		{
 			DWORD flags = 0;
 			DWORD position = 0;
+			BYTE* data = new (std::nothrow) BYTE[max_stream_size];
 
-			IMFSample*		sample = nullptr;
-			IMFMediaBuffer*	buffer = nullptr;
-			BYTE*			data = new (std::nothrow) BYTE[max_stream_size];
+			SmartPointer<IMFSample> sample;
+			SmartPointer<IMFMediaBuffer> buffer;
 
 			if (data == nullptr)
 			{
@@ -251,9 +247,9 @@ namespace easy2d
 								hr = buffer->Unlock();
 							}
 						}
-						SafeRelease(buffer);
+						buffer = nullptr;
 					}
-					SafeRelease(sample);
+					sample = nullptr;
 
 					if (FAILED(hr)) { break; }
 				}
@@ -265,9 +261,6 @@ namespace easy2d
 				}
 			}
 		}
-
-		SafeRelease(partial_type);
-		SafeRelease(uncompressed_type);
 
 		return hr;
 	}

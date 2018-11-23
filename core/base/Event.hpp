@@ -30,6 +30,8 @@ namespace easy2d
 	public:
 		Event(EventType type) : type(type), has_target(false) {}
 
+		virtual ~Event() {}
+
 		EventType type;
 		bool has_target;
 	};

@@ -32,7 +32,6 @@ namespace easy2d
 	{
 		float default_pivot_x = 0.f;
 		float default_pivot_y = 0.f;
-		bool border_enabled = false;
 	}
 
 	void Node::SetDefaultPivot(float pivot_x, float pivot_y)
@@ -41,58 +40,30 @@ namespace easy2d
 		default_pivot_y = pivot_y;
 	}
 
-	void easy2d::Node::EnableBorder()
-	{
-		border_enabled = true;
-	}
-
-	void easy2d::Node::DisableBorder()
-	{
-		border_enabled = false;
-	}
-
 	Node::Node()
-		: inited_(false)
-		, visible_(true)
-		, dirty_sort_(false)
+		: visible_(true)
+		, dirty_transform_(false)
 		, parent_(nullptr)
 		, hash_name_(0)
 		, z_order_(0)
 		, opacity_(1.f)
 		, display_opacity_(1.f)
-		, children_()
-		, border_color_(Color::Red, 0.6f)
-		, initial_matrix_()
-		, final_matrix_()
 		, pivot_(default_pivot_x, default_pivot_y)
-		, size_()
 	{
-	}
-
-	void Node::Init()
-	{
-		inited_ = true;
-	}
-
-	void Node::OnRender()
-	{
-		// normal node renders nothing
 	}
 
 	void Node::Update(Duration const & dt)
 	{
-		if (!inited_)
-		{
-			Init();
-		}
-
+		OnUpdate(dt);
 		UpdateActions(this, dt);
 		UpdateTasks(dt);
 
 		if (!children_.IsEmpty())
 		{
-			for (auto child = children_.First(); child; child = child->NextItem())
+			spNode next;
+			for (auto child = children_.First(); child; child = next)
 			{
+				next = child->NextItem();
 				child->Update(dt);
 			}
 		}
@@ -109,39 +80,33 @@ namespace easy2d
 
 		if (children_.IsEmpty())
 		{
-			graphics->SetTransform(final_matrix_);
+			graphics->SetTransform(transform_matrix_);
 			graphics->SetOpacity(display_opacity_);
 
 			OnRender();
 		}
 		else
 		{
-			SortChildren();
-
 			// render children those are less than 0 in Z-Order
-			spNode child = children_.First();
-			for (spNode next; child; child = next)
+			Node* child = children_.First().Get();
+			while (child)
 			{
-				next = child->NextItem();
-				if (child->GetZOrder() < 0)
-				{
-					child->Render();
-				}
-				else
-				{
+				if (child->GetZOrder() >= 0)
 					break;
-				}
+
+				child->Render();
+				child = child->NextItem().Get();
 			}
 
-			graphics->SetTransform(final_matrix_);
+			graphics->SetTransform(transform_matrix_);
 			graphics->SetOpacity(display_opacity_);
 
 			OnRender();
 
-			for (spNode next; child; child = next)
+			while (child)
 			{
-				next = child->NextItem();
 				child->Render();
+				child = child->NextItem().Get();
 			}
 		}
 	}
@@ -169,38 +134,10 @@ namespace easy2d
 		}
 	}
 
-	void Node::DrawBorder()
-	{
-		if (visible_)
-		{
-			if (border_)
-			{
-				Graphics::Instance()->DrawGeometry(border_, border_color_, 1.5f);
-			}
-
-			for (auto child = children_.First(); child; child = child->NextItem())
-			{
-				child->DrawBorder();
-			}
-		}
-	}
-
-	void Node::SortChildren()
-	{
-		if (dirty_sort_)
-		{
-			children_.Sort(
-				[](spNode const& n1, spNode const& n2) { return n1->GetZOrder() < n2->GetZOrder(); }
-			);
-
-			dirty_sort_ = false;
-		}
-	}
-
 	math::Matrix const & Node::GetTransformMatrix()
 	{
 		UpdateTransform();
-		return final_matrix_;
+		return transform_matrix_;
 	}
 
 	spNode Node::GetParent() const
@@ -220,58 +157,21 @@ namespace easy2d
 
 		dirty_transform_ = false;
 
-		Point center{ size_.width * pivot_.x, size_.height * pivot_.y };
-		final_matrix_ = math::Matrix::Scaling(transform_.scale, center)
-			* math::Matrix::Skewing(transform_.skew.x, transform_.skew.y, center)
-			* math::Matrix::Rotation(transform_.rotation, center)
-			* math::Matrix::Translation(transform_.position - center);
+		// matrix multiplication is optimized by expression template
+		transform_matrix_ = math::Matrix::Scaling(transform_.scale)
+			* math::Matrix::Skewing(transform_.skew.x, transform_.skew.y)
+			* math::Matrix::Rotation(transform_.rotation)
+			* math::Matrix::Translation(transform_.position);
 
-		initial_matrix_ = final_matrix_ * math::Matrix::Translation(
-			Point{ size_.width * pivot_.x, size_.height * pivot_.y }
-		);
+		Point offset{ -size_.width * pivot_.x, -size_.height * pivot_.y };
+		transform_matrix_.Translate(offset);
 
 		if (parent_)
-		{
-			initial_matrix_ = initial_matrix_ * parent_->initial_matrix_;
-			final_matrix_ = final_matrix_ * parent_->initial_matrix_;
-		}
+			transform_matrix_ = transform_matrix_ * parent_->transform_matrix_;
 
 		// update children's transform
-		for (auto child = children_.First(); child; child = child->NextItem())
-		{
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 			child->dirty_transform_ = true;
-		}
-
-		// update border
-		if (border_enabled)
-		{
-			UpdateBorder();
-		}
-	}
-
-	void Node::UpdateBorder()
-	{
-		cpRectangleGeometry rect;
-		cpTransformedGeometry transformed;
-
-		HRESULT hr = Factory::Instance()->CreateRectangleGeometry(
-			rect,
-			Rect(Point{}, size_)
-		);
-
-		if (SUCCEEDED(hr))
-		{
-			hr = Factory::Instance()->CreateTransformedGeometry(
-				transformed,
-				final_matrix_,
-				rect
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			border_ = transformed;
-		}
 	}
 
 	void Node::UpdateOpacity()
@@ -280,7 +180,7 @@ namespace easy2d
 		{
 			display_opacity_ = opacity_ * parent_->display_opacity_;
 		}
-		for (auto child = children_.First(); child; child = child->NextItem())
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			child->UpdateOpacity();
 		}
@@ -289,21 +189,44 @@ namespace easy2d
 	void Node::SetScene(Scene * scene)
 	{
 		scene_ = scene;
-		for (auto child = children_.First(); child; child = child->NextItem())
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			child->scene_ = scene;
 		}
 	}
 
-	void Node::SetZOrder(int order)
+	void Node::SetZOrder(int zorder)
 	{
-		if (z_order_ == order)
+		if (z_order_ == zorder)
 			return;
 
-		z_order_ = order;
+		z_order_ = zorder;
+
 		if (parent_)
 		{
-			parent_->dirty_sort_ = true;
+			spNode me = this;
+
+			parent_->children_.Remove(me);
+
+			Node* sibling = parent_->children_.Last().Get();
+
+			if (sibling && sibling->GetZOrder() > zorder)
+			{
+				while (sibling = sibling->PrevItem().Get())
+				{
+					if (sibling->GetZOrder() <= zorder)
+						break;
+				}
+			}
+
+			if (sibling)
+			{
+				parent_->children_.InsertAfter(me, spNode(sibling));
+			}
+			else
+			{
+				parent_->children_.PushFront(me);
+			}
 		}
 	}
 
@@ -367,26 +290,110 @@ namespace easy2d
 		dirty_transform_ = true;
 	}
 
-	void Node::SetBorderColor(Color const& color)
-	{
-		border_color_ = color;
-	}
-
 	void Node::SetVisible(bool val)
 	{
 		visible_ = val;
 	}
 
-	void Node::SetName(String const& name)
+	void Node::SetName(std::wstring const& name)
 	{
 		if (name_ != name)
 		{
 			name_ = name;
-			hash_name_ = std::hash<String>{}(name);
+			hash_name_ = std::hash<std::wstring>{}(name);
 		}
 	}
 
-	void Node::AddChild(spNode const& child, int z_order)
+	void Node::SetPositionX(float x)
+	{
+		this->SetPosition(x, transform_.position.y);
+	}
+
+	void Node::SetPositionY(float y)
+	{
+		this->SetPosition(transform_.position.x, y);
+	}
+
+	void Node::SetPosition(const Point & p)
+	{
+		this->SetPosition(p.x, p.y);
+	}
+
+	void Node::SetPosition(float x, float y)
+	{
+		if (transform_.position.x == x && transform_.position.y == y)
+			return;
+
+		transform_.position.x = x;
+		transform_.position.y = y;
+		dirty_transform_ = true;
+	}
+
+	void Node::Move(float x, float y)
+	{
+		this->SetPosition(transform_.position.x + x, transform_.position.y + y);
+	}
+
+	void Node::Move(const Point & v)
+	{
+		this->Move(v.x, v.y);
+	}
+
+	void Node::SetScaleX(float scale_x)
+	{
+		this->SetScale(scale_x, transform_.scale.y);
+	}
+
+	void Node::SetScaleY(float scale_y)
+	{
+		this->SetScale(transform_.scale.x, scale_y);
+	}
+
+	void Node::SetScale(float scale)
+	{
+		this->SetScale(scale, scale);
+	}
+
+	void Node::SetScale(float scale_x, float scale_y)
+	{
+		if (transform_.scale.x == scale_x && transform_.scale.y == scale_y)
+			return;
+
+		transform_.scale.x = scale_x;
+		transform_.scale.y = scale_y;
+		dirty_transform_ = true;
+	}
+
+	void Node::SetSkewX(float skew_x)
+	{
+		this->SetSkew(skew_x, transform_.skew.y);
+	}
+
+	void Node::SetSkewY(float skew_y)
+	{
+		this->SetSkew(transform_.skew.x, skew_y);
+	}
+
+	void Node::SetSkew(float skew_x, float skew_y)
+	{
+		if (transform_.skew.x == skew_x && transform_.skew.y == skew_y)
+			return;
+
+		transform_.skew.x = skew_x;
+		transform_.skew.y = skew_y;
+		dirty_transform_ = true;
+	}
+
+	void Node::SetRotation(float angle)
+	{
+		if (transform_.rotation == angle)
+			return;
+
+		transform_.rotation = angle;
+		dirty_transform_ = true;
+	}
+
+	void Node::AddChild(spNode const& child)
 	{
 		E2D_ASSERT(child && "Node::AddChild failed, NULL pointer exception");
 
@@ -407,18 +414,16 @@ namespace easy2d
 			child->parent_ = this;
 			child->SetScene(this->scene_);
 			child->dirty_transform_ = true;
-			child->SetZOrder(z_order);
 			child->UpdateOpacity();
-			
-			dirty_sort_ = true;
+			child->SetZOrder(child->GetZOrder());
 		}
 	}
 
-	void Node::AddChild(const Nodes& nodes, int z_order)
+	void Node::AddChildren(const Nodes& children)
 	{
-		for (const auto& node : nodes)
+		for (const auto& node : children)
 		{
-			this->AddChild(node, z_order);
+			this->AddChild(node);
 		}
 	}
 
@@ -427,12 +432,12 @@ namespace easy2d
 		return Rect(Point{}, size_);
 	}
 
-	Node::Nodes Node::GetChildren(String const& name) const
+	Node::Nodes Node::GetChildren(std::wstring const& name) const
 	{
 		Nodes children;
-		size_t hash_code = std::hash<String>{}(name);
+		size_t hash_code = std::hash<std::wstring>{}(name);
 
-		for (auto child = children_.First(); child != children_.Last(); child = child->NextItem())
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			if (child->hash_name_ == hash_code && child->name_ == name)
 			{
@@ -442,11 +447,11 @@ namespace easy2d
 		return children;
 	}
 
-	spNode Node::GetChild(String const& name) const
+	spNode Node::GetChild(std::wstring const& name) const
 	{
-		size_t hash_code = std::hash<String>{}(name);
+		size_t hash_code = std::hash<std::wstring>{}(name);
 
-		for (auto child = children_.First(); child != children_.Last(); child = child->NextItem())
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			if (child->hash_name_ == hash_code && child->name_ == name)
 			{
@@ -471,6 +476,11 @@ namespace easy2d
 
 	bool Node::RemoveChild(spNode const& child)
 	{
+		return RemoveChild(child.Get());
+	}
+
+	bool Node::RemoveChild(Node * child)
+	{
 		E2D_ASSERT(child && "Node::RemoveChild failed, NULL pointer exception");
 
 		if (children_.IsEmpty())
@@ -480,24 +490,25 @@ namespace easy2d
 		{
 			child->parent_ = nullptr;
 			if (child->scene_) child->SetScene(nullptr);
-			children_.Remove(Node::ItemType(child));
+			children_.Remove(spNode(child));
 			return true;
 		}
 		return false;
 	}
 
-	void Node::RemoveChildren(String const& child_name)
+	void Node::RemoveChildren(std::wstring const& child_name)
 	{
 		if (children_.IsEmpty())
 		{
 			return;
 		}
 
-		size_t hash_code = std::hash<String>{}(child_name);
-		spNode next;
-		for (auto child = children_.First(); child; child = next)
+		size_t hash_code = std::hash<std::wstring>{}(child_name);
+
+		Node* next;
+		for (Node* child = children_.First().Get(); child; child = next)
 		{
-			next = child->NextItem();
+			next = child->NextItem().Get();
 
 			if (child->hash_name_ == hash_code && child->name_ == child_name)
 			{
@@ -529,11 +540,7 @@ namespace easy2d
 
 		BOOL ret = 0;
 		// no matter it failed or not
-		border->FillContainsPoint(
-			point,
-			ConvertToD2DMatrix(final_matrix_),
-			&ret
-		);
+		border->FillContainsPoint(point, transform_matrix_, &ret);
 		return !!ret;
 	}
 }

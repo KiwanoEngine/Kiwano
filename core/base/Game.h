@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "time.h"
 #include "window.h"
 #include "render.h"
@@ -31,7 +31,7 @@ namespace easy2d
 {
 	struct Options
 	{
-		String	title;	// 标题
+		std::wstring	title;	// 标题
 		int		width;	// 宽度
 		int		height;	// 高度
 		LPCWSTR	icon;	// 图标

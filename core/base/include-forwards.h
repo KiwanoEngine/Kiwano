@@ -24,10 +24,19 @@
 #include "Size.hpp"
 #include "Rect.hpp"
 #include "Color.h"
+#include "Object.h"
+#include "helper.hpp"
+#include "d2dhelper.hpp"
 
 namespace easy2d
 {
-	using String = std::wstring;
+	// »­±ÊÑùÊ½
+	enum class StrokeStyle : int
+	{
+		Miter = 0,	/* Ð±ÇÐ */
+		Bevel = 1,	/* Ð±½Ç */
+		Round = 2	/* Ô²½Ç */
+	};
 
 	// ·½Ïò
 	enum class Direction : int
@@ -38,12 +47,13 @@ namespace easy2d
 		Right	/* ÓÒ */
 	};
 
-	// »­±ÊÑùÊ½
-	enum class StrokeStyle : int
+	// ÎÄ×Ö¿¹¾â³ÝÊôÐÔ
+	enum class TextAntialias
 	{
-		Miter = 0,	/* Ð±ÇÐ */
-		Bevel = 1,	/* Ð±½Ç */
-		Round = 2	/* Ô²½Ç */
+		Default,	// ÏµÍ³Ä¬ÈÏ
+		ClearType,	// ClearType ¿¹¾â³Ý
+		GrayScale,	// »Ò¶È¿¹¾â³Ý
+		None		// ²»ÆôÓÃ¿¹¾â³Ý
 	};
 
 	// Í¼²ãÊôÐÔ
@@ -51,90 +61,5 @@ namespace easy2d
 	{
 		Rect area;
 		float opacity;
-	};
-
-	// Êó±ê¼üÖµ
-	enum class MouseButton : int
-	{
-		Left = VK_LBUTTON,	// Êó±ê×ó¼ü
-		Right = VK_RBUTTON,	// Êó±êÓÒ¼ü
-		Middle = VK_MBUTTON	// Êó±êÖÐ¼ü
-	};
-
-	// °´¼ü¼üÖµ
-	enum class KeyCode : int
-	{
-		Unknown = 0,
-		Up = VK_UP,
-		Left = VK_LEFT,
-		Right = VK_RIGHT,
-		Down = VK_DOWN,
-		Enter = VK_RETURN,
-		Space = VK_SPACE,
-		Esc = VK_ESCAPE,
-		Ctrl = VK_CONTROL,
-		Shift = VK_SHIFT,
-
-		A = 0x41,
-		B,
-		C,
-		D,
-		E,
-		F,
-		G,
-		H,
-		I,
-		J,
-		K,
-		L,
-		M,
-		N,
-		O,
-		P,
-		Q,
-		R,
-		S,
-		T,
-		U,
-		V,
-		W,
-		X,
-		Y,
-		Z,
-
-		Num0 = 0x30,
-		Num1,
-		Num2,
-		Num3,
-		Num4,
-		Num5,
-		Num6,
-		Num7,
-		Num8,
-		Num9,
-
-		Numpad0 = VK_NUMPAD0,
-		Numpad1,
-		Numpad2,
-		Numpad3,
-		Numpad4,
-		Numpad5,
-		Numpad6,
-		Numpad7,
-		Numpad8,
-		Numpad9,
-
-		F1 = VK_F1,
-		F2,
-		F3,
-		F4,
-		F5,
-		F6,
-		F7,
-		F8,
-		F9,
-		F10,
-		F11,
-		F12,
 	};
 }

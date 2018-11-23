@@ -72,11 +72,6 @@ namespace easy2d
 		{
 			auto graphics = Graphics::Instance();
 
-			if (geometry_->GetTransformMatrix().IsIdentity())
-				graphics->SetTransform(GetTransformMatrix());
-			else
-				graphics->SetTransform(geometry_->GetTransformMatrix() * GetTransformMatrix());
-
 			graphics->FillGeometry(
 				geometry_->geo_,
 				fill_color_

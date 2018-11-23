@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/base.hpp"
 #include "../base/Resource.h"
+#include <string>
 
 namespace easy2d
 {
@@ -31,14 +31,14 @@ namespace easy2d
 		File();
 
 		File(
-			String const& file_name
+			std::wstring const& file_name
 		);
 
 		virtual ~File();
 
 		// 打开文件
 		bool Open(
-			String const& file_name
+			std::wstring const& file_name
 		);
 
 		// 文件是否存在
@@ -48,38 +48,25 @@ namespace easy2d
 		bool Delete();
 
 		// 获取文件路径
-		String const& GetPath() const;
+		std::wstring const& GetPath() const;
 
 		// 获取文件扩展名
-		String GetExtension() const;
+		std::wstring GetExtension() const;
 
 		// 释放资源到临时文件目录
 		static File Extract(
 			Resource& res,						/* 资源 */
-			String const& dest_file_name	/* 目标文件名 */
+			std::wstring const& dest_file_name	/* 目标文件名 */
 		);
 
 		// 添加文件搜索路径
 		static void AddSearchPath(
-			String const& path
-		);
-
-		// 弹出打开文件对话框
-		static File ShowOpenDialog(
-			String const& title = L"打开",	/* 对话框标题 */
-			String const& filter = L""		/* 筛选扩展名，例如 "*.jpg;*.jpeg" */
-		);
-
-		// 弹出保存文件对话框
-		static File ShowSaveDialog(
-			String const& title = L"保存",	/* 对话框标题 */
-			String const& def_file = L"",		/* 默认保存的文件名 */
-			String const& def_ext = L""		/* 默认追加的扩展名，例如 "txt" */
+			std::wstring const& path
 		);
 
 	protected:
-		String file_path_;
+		std::wstring file_path_;
 
-		static std::list<String> search_paths_;
+		static std::list<std::wstring> search_paths_;
 	};
 }

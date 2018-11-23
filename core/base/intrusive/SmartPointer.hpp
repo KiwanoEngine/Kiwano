@@ -74,19 +74,19 @@ namespace easy2d
 
 			inline Type* operator ->() const
 			{
-				E2D_ASSERT(ptr_ != nullptr, "Invalid pointer");
+				E2D_ASSERT(ptr_ != nullptr && "Invalid pointer");
 				return ptr_;
 			}
 
 			inline Type& operator *() const
 			{
-				E2D_ASSERT(ptr_ != nullptr, "Invalid pointer");
+				E2D_ASSERT(ptr_ != nullptr && "Invalid pointer");
 				return *ptr_;
 			}
 
 			inline Type** operator &()
 			{
-				E2D_ASSERT(ptr_ == nullptr, "Memory leak");
+				E2D_ASSERT(ptr_ == nullptr && "Memory leak");
 				return &ptr_;
 			}
 

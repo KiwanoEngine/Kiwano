@@ -19,65 +19,35 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
+#include "Text.h"
 #include "Singleton.hpp"
+#include "time.h"
 
 namespace easy2d
 {
-	class WindowImpl
-		: protected Noncopyable
+	class DebugNodeImpl
+		: public Node
 	{
-		E2D_DECLARE_SINGLETON(WindowImpl);
+		E2D_DECLARE_SINGLETON(DebugNodeImpl);
 
 	public:
-		HRESULT Init(
-			std::wstring	title,
-			int		width,
-			int		height,
-			LPCWSTR	icon,
-			WNDPROC	proc,
-			bool	debug
-		);
+		DebugNodeImpl();
 
-		// 获取标题
-		std::wstring GetTitle() const;
+		virtual ~DebugNodeImpl();
 
-		// 设置标题
-		void SetTitle(std::wstring const& title);
+		void AddDebugText(std::wstring const& text);
 
-		// 获取窗口大小
-		Size GetSize() const;
+		void ClearDebugText();
 
-		// 获取窗口宽度
-		float GetWidth() const;
+		void OnRender() override;
 
-		// 获取窗口高度
-		float GetHeight() const;
-
-		// 重设窗口大小
-		void SetSize(int width, int height);
-
-		// 设置窗口图标
-		void SetIcon(LPCWSTR icon_resource);
-
-		HWND GetHandle() const;
-
-		float GetContentScaleX() const;
-
-		float GetContentScaleY() const;
-
-		void Destroy();
+		void OnUpdate(Duration const& dt) override;
 
 	protected:
-		WindowImpl();
-
-		~WindowImpl();
-
-	private:
-		HWND	handle;
-		float	scale_x;
-		float	scale_y;
+		spText debug_text_;
+		std::vector<TimePoint> frame_time_;
+		std::vector<std::wstring> texts_;
 	};
 
-	E2D_DECLARE_SINGLETON_TYPE(WindowImpl, Window);
+	E2D_DECLARE_SINGLETON_TYPE(DebugNodeImpl, DebugNode);
 }

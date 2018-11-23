@@ -20,7 +20,7 @@
 
 #include "ActionTween.h"
 #include "Geometry.h"
-#include "base.hpp"
+#include "include-forwards.h"
 #include "Node.h"
 #include <algorithm>
 #include <cfloat>
@@ -56,13 +56,13 @@ namespace easy2d
 		case EaseFunc::Linear:
 			ease_func_ = math::Linear;
 			break;
-		case EaseFunc::In:
+		case EaseFunc::EaseIn:
 			ease_func_ = MakeEaseIn(2.f);
 			break;
-		case EaseFunc::Out:
+		case EaseFunc::EaseOut:
 			ease_func_ = MakeEaseOut(2.f);
 			break;
-		case EaseFunc::InOut:
+		case EaseFunc::EaseInOut:
 			ease_func_ = MakeEaseInOut(2.f);
 			break;
 		case EaseFunc::ExpoIn:
@@ -552,6 +552,16 @@ namespace easy2d
 		return new PathAction(duration_, geo_, rotating_, end_, start_, ease_type_);
 	}
 
+	void PathAction::Init(Node * target)
+	{
+		Tween::Init(target);
+
+		if (target)
+		{
+			start_pos_ = target->GetPosition();
+		}
+	}
+
 	void PathAction::UpdateStep(Node* target, float step)
 	{
 		if (target)
@@ -561,7 +571,7 @@ namespace easy2d
 			Point point, tangent;
 			if (geo_->ComputePointAt(length, &point, &tangent))
 			{
-				target->SetPosition(point);
+				target->SetPosition(start_pos_ + point);
 
 				if (rotating_)
 				{

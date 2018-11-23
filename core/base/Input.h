@@ -19,11 +19,21 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
+#include "keys.hpp"
 #include "Singleton.hpp"
 
 namespace easy2d
 {
+	// 鼠标键值
+	enum class MouseButton : int
+	{
+		Left = VK_LBUTTON,	// 鼠标左键
+		Right = VK_RBUTTON,	// 鼠标右键
+		Middle = VK_MBUTTON	// 鼠标中键
+	};
+
+
 	class InputDevice
 		: protected Noncopyable
 	{

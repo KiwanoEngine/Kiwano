@@ -160,7 +160,7 @@ namespace easy2d
 
 	void Canvas::SetBrushTransform(math::Matrix const & transform)
 	{
-		render_target_->SetTransform(ConvertToD2DMatrix(transform));
+		render_target_->SetTransform(transform);
 	}
 
 	void Canvas::DrawLine(const Point & begin, const Point & end)
@@ -262,7 +262,7 @@ namespace easy2d
 		}
 	}
 
-	void Canvas::DrawText(String const & text, Point const & point)
+	void Canvas::DrawText(std::wstring const & text, Point const & point)
 	{
 		if (text.empty())
 			return;

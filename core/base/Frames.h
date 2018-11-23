@@ -19,14 +19,14 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "time.h"
 
 namespace easy2d
 {
 	// Ö¡¼¯ºÏ
 	class Frames
-		: public ObjectBase
+		: public Object
 	{
 		using Images = std::vector< spImage >;
 

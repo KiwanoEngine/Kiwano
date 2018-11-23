@@ -91,7 +91,7 @@ namespace easy2d
 
 		// 画文字
 		void DrawText(
-			String const& text,		/* 文字 */
+			std::wstring const& text,		/* 文字 */
 			Point const& point		/* 文字位置 */
 		);
 

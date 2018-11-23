@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "base.hpp"
+#include "include-forwards.h"
 #include "time.h"
-#include "Unit.h"
+#include "Transform.hpp"
 #include "TaskManager.h"
 #include "ActionManager.h"
 #include "EventDispatcher.h"
@@ -29,11 +29,11 @@
 
 namespace easy2d
 {
-    class Game;
+	class Game;
 
 	// 节点
 	class Node
-		: public Unit
+		: public Object
 		, public TaskManager
 		, public ActionManager
 		, public EventDispatcher
@@ -50,53 +50,86 @@ namespace easy2d
 	public:
 		Node();
 
-		// 初始化节点
-		virtual void Init();
-
 		// 更新节点
-		virtual void Update(Duration const& dt);
+		virtual void OnUpdate(Duration const& dt) {}
 
 		// 渲染节点
-		virtual void OnRender();
+		virtual void OnRender() {}
 
 		// 处理事件
 		virtual void HandleEvent(Event* e);
 
 		// 获取显示状态
-		bool IsVisible() const { return visible_; }
+		bool IsVisible()				const	{ return visible_; }
 
 		// 获取名称
-		String const& GetName() const { return name_; }
+		std::wstring const& GetName()	const	{ return name_; }
 
 		// 获取名称的 Hash 值
-		size_t GetHashName() const { return hash_name_; }
+		size_t GetHashName()			const	{ return hash_name_; }
 
 		// 获取 Z 轴顺序
-		int GetZOrder() const { return z_order_; }
+		int GetZOrder()					const	{ return z_order_; }
+
+		// 获取坐标
+		Point const& GetPosition()		const	{ return transform_.position; }
+
+		// 获取 x 坐标
+		float GetPositionX()			const	{ return transform_.position.x; }
+
+		// 获取 y 坐标
+		float GetPositionY()			const	{ return transform_.position.y; }
+
+		// 获取横向缩放比例
+		float GetScaleX()				const	{ return transform_.scale.x; }
+
+		// 获取纵向缩放比例
+		float GetScaleY()				const	{ return transform_.scale.y; }
+
+		// 获取横向错切角度
+		float GetSkewX()				const	{ return transform_.skew.x; }
+
+		// 获取纵向错切角度
+		float GetSkewY()				const	{ return transform_.skew.y; }
+
+		// 获取旋转角度
+		float GetRotation()				const	{ return transform_.rotation; }
 
 		// 获取宽度
-		virtual float GetWidth() const { return size_.width * transform_.scale.x; }
+		float GetWidth()				const	{ return size_.width; }
 
 		// 获取高度
-		virtual float GetHeight() const { return size_.height * transform_.scale.y; }
+		float GetHeight()				const	{ return size_.height; }
 
 		// 获取大小
-		Size GetSize() const { return Size{ GetWidth(), GetHeight() }; }
+		Size const& GetSize()			const	{ return size_; }
+
+		// 获取缩放后的宽度
+		float GetScaledWidth()			const	{ return size_.width * transform_.scale.x; }
+
+		// 获取缩放后的高度
+		float GetScaledHeight()			const	{ return size_.height * transform_.scale.y; }
+
+		// 获取缩放后的大小
+		Size GetScaledSize()			const	{ return Size{ GetScaledWidth(), GetScaledHeight() }; }
 
 		// 获取 x 方向支点
-		virtual float GetPivotX() const { return pivot_.x; }
+		float GetPivotX()				const	{ return pivot_.x; }
 
 		// 获取 y 方向支点
-		virtual float GetPivotY() const { return pivot_.y; }
+		float GetPivotY()				const	{ return pivot_.y; }
 
 		// 获取透明度
-		virtual float GetOpacity() const { return opacity_; }
+		float GetOpacity()				const	{ return opacity_; }
+
+		// 获取变换
+		Transform const& GetTransform()	const { return transform_; }
 
 		// 获取包围盒
 		virtual Rect GetBounds();
 
 		// 获取二维变换矩阵
-		virtual math::Matrix const& GetTransformMatrix() override;
+		math::Matrix const& GetTransformMatrix();
 
 		// 获取父节点
 		spNode GetParent() const;
@@ -111,7 +144,89 @@ namespace easy2d
 
 		// 设置名称
 		void SetName(
-			String const& name
+			std::wstring const& name
+		);
+
+		// 设置横坐标
+		void SetPositionX(
+			float x
+		);
+
+		// 设置纵坐标
+		void SetPositionY(
+			float y
+		);
+
+		// 设置坐标
+		void SetPosition(
+			const Point & point
+		);
+
+		// 设置坐标
+		void SetPosition(
+			float x,
+			float y
+		);
+
+		// 移动
+		void Move(
+			float x,
+			float y
+		);
+
+		// 移动
+		void Move(
+			const Point & vector
+		);
+
+		// 设置横向缩放比例
+		// 默认为 1.0
+		void SetScaleX(
+			float scale_x
+		);
+
+		// 设置纵向缩放比例
+		// 默认为 1.0
+		void SetScaleY(
+			float scale_y
+		);
+
+		// 设置缩放比例
+		// 默认为 (1.0, 1.0)
+		void SetScale(
+			float scale_x,
+			float scale_y
+		);
+
+		// 设置缩放比例
+		// 默认为 1.0
+		void SetScale(
+			float scale
+		);
+
+		// 设置横向错切角度
+		// 默认为 0
+		void SetSkewX(
+			float skew_x
+		);
+
+		// 设置纵向错切角度
+		// 默认为 0
+		void SetSkewY(
+			float skew_y
+		);
+
+		// 设置错切角度
+		// 默认为 (0, 0)
+		void SetSkew(
+			float skew_x,
+			float skew_y
+		);
+
+		// 设置旋转角度
+		// 默认为 0
+		void SetRotation(
+			float rotation
 		);
 
 		// 设置支点的横向位置
@@ -154,9 +269,9 @@ namespace easy2d
 			const Size & size
 		);
 
-		virtual void SetTransform(
+		void SetTransform(
 			Transform const& transform
-		) override;
+		);
 
 		// 设置透明度
 		// 默认为 1.0, 范围 [0, 1]
@@ -167,12 +282,7 @@ namespace easy2d
 		// 设置 Z 轴顺序
 		// 默认为 0
 		void SetZOrder(
-			int order
-		);
-
-		// 设置边框颜色
-		void SetBorderColor(
-			const Color& color
+			int zorder
 		);
 
 		// 判断点是否在节点内
@@ -182,24 +292,22 @@ namespace easy2d
 
 		// 添加子节点
 		void AddChild(
-			spNode const& child,
-			int z_order = 0		/* Z 轴顺序 */
+			spNode const& child
 		);
 
 		// 添加多个子节点
-		void AddChild(
-			const Nodes& nodes,	/* 节点数组 */
-			int z_order = 0		/* Z 轴顺序 */
+		void AddChildren(
+			const Nodes& children
 		);
 
 		// 获取所有名称相同的子节点
 		Nodes GetChildren(
-			String const& name
+			std::wstring const& name
 		) const;
 
 		// 获取名称相同的子节点
 		spNode GetChild(
-			String const& name
+			std::wstring const& name
 		) const;
 
 		// 获取全部子节点
@@ -210,9 +318,14 @@ namespace easy2d
 			spNode const& child
 		);
 
+		// 移除子节点
+		bool RemoveChild(
+			Node* child
+		);
+
 		// 移除所有名称相同的子节点
 		void RemoveChildren(
-			String const& child_name
+			std::wstring const& child_name
 		);
 
 		// 移除所有节点
@@ -229,20 +342,10 @@ namespace easy2d
 			float pivot_y
 		);
 
-		// 启用边框自动生成
-		static void EnableBorder();
-
-		// 禁用边框自动生成
-		static void DisableBorder();
-
 	protected:
+		void Update(Duration const& dt);
+
 		void Render();
-
-		void DrawBorder();
-
-		void SortChildren();
-
-		void UpdateBorder();
 
 		void UpdateTransform();
 
@@ -251,22 +354,19 @@ namespace easy2d
 		void SetScene(Scene* scene);
 
 	protected:
-		bool			inited_;
-		bool			visible_;
-		bool			dirty_sort_;
-		int				z_order_;
-		float			opacity_;
-		float			display_opacity_;
-		String			name_;
-		size_t			hash_name_;
-		Node*			parent_;
-		Scene*			scene_;
-		Color			border_color_;
-		Children		children_;
-		cpGeometry		border_;
-		Point			pivot_;
-		Size			size_;
-		math::Matrix	initial_matrix_;
-		math::Matrix	final_matrix_;
+		bool         visible_;
+		bool         dirty_transform_;
+		int          z_order_;
+		float        opacity_;
+		float        display_opacity_;
+		std::wstring name_;
+		size_t       hash_name_;
+		Transform    transform_;
+		math::Matrix transform_matrix_;
+		Point        pivot_;
+		Size         size_;
+		Node*        parent_;
+		Scene*       scene_;
+		Children     children_;
 	};
 }
