@@ -161,9 +161,6 @@
     <ClInclude Include="..\..\core\utils\string.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\ObjectBase.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\Geometry.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -204,6 +201,9 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\base\EventListener.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\base\Object.h">
       <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
@@ -327,9 +327,6 @@
     <ClCompile Include="..\..\core\utils\string.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\ObjectBase.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\core\base\Geometry.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -355,6 +352,9 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\base\EventListener.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\base\Object.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

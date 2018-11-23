@@ -21,7 +21,7 @@
 #pragma once
 #include "BaseTypes.hpp"
 #include "RefCounter.hpp"
-#include "ObjectBase.h"
+#include "Object.h"
 #include "intrusive/SmartPointer.hpp"
 #include "d2dres.hpp"
 

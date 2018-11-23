@@ -18,51 +18,61 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ObjectBase.h"
+#include "Object.h"
 
 namespace easy2d
 {
 	namespace
 	{
 		bool tracing_leaks = true;
-		std::vector<ObjectBase*> tracing_objects;
+		std::vector<Object*> tracing_objects;
 	}
 
-	ObjectBase::ObjectBase()
+	Object::Object()
 		: tracing_leak_(false)
 	{
 #ifdef E2D_DEBUG
 
-		ObjectBase::__AddObjectToTracingList(this);
+		Object::__AddObjectToTracingList(this);
 
 #endif
 	}
 
-	ObjectBase::~ObjectBase()
+	Object::~Object()
 	{
 #ifdef E2D_DEBUG
 
-		ObjectBase::__RemoveObjectFromTracingList(this);
+		Object::__RemoveObjectFromTracingList(this);
 
 #endif
 	}
 
-	void ObjectBase::StartTracingLeaks()
+	void * Object::GetUserData() const
+	{
+		return user_data_;
+	}
+
+	void Object::SetUserData(void * data)
+	{
+		user_data_ = data;
+	}
+
+	void Object::StartTracingLeaks()
 	{
 		tracing_leaks = true;
 	}
 
-	void ObjectBase::StopTracingLeaks()
+	void Object::StopTracingLeaks()
 	{
 		tracing_leaks = false;
 	}
 
-	std::vector<ObjectBase*> const& easy2d::ObjectBase::__GetTracingObjects()
+	std::vector<Object*> const& easy2d::Object::__GetTracingObjects()
 	{
 		return tracing_objects;
 	}
 
-	void ObjectBase::__AddObjectToTracingList(ObjectBase * obj)
+	void Object::__AddObjectToTracingList(Object * obj)
 	{
 #ifdef E2D_DEBUG
 
@@ -75,7 +85,7 @@ namespace easy2d
 #endif
 	}
 
-	void ObjectBase::__RemoveObjectFromTracingList(ObjectBase * obj)
+	void Object::__RemoveObjectFromTracingList(Object * obj)
 	{
 #ifdef E2D_DEBUG
 

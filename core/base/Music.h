@@ -27,7 +27,8 @@ namespace easy2d
 {
 	// “Ù¿÷
 	class Music
-		: public ObjectBase
+		: public RefCounter
+		, public Object
 	{
 	public:
 		Music();

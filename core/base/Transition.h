@@ -28,7 +28,8 @@ namespace easy2d
 
 	// ³¡¾°¹ý¶É
 	class Transition
-		: public ObjectBase
+		: public RefCounter
+		, public Object
 	{
 		friend class Game;
 

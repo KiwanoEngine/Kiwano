@@ -25,7 +25,8 @@
 namespace easy2d
 {
 	class Unit
-		: public ObjectBase
+		: public RefCounter
+		, public Object
 	{
 	public:
 		Unit();

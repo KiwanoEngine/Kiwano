@@ -44,8 +44,8 @@ namespace easy2d
 		style.line_spacing = 18.f;
 		debug_text_->SetStyle(style);
 
-		ObjectBase::__RemoveObjectFromTracingList(this);
-		ObjectBase::__RemoveObjectFromTracingList(debug_text_.Get());
+		Object::__RemoveObjectFromTracingList(this);
+		Object::__RemoveObjectFromTracingList(debug_text_.Get());
 	}
 
 	DebugerNode::~DebugerNode()
@@ -89,7 +89,7 @@ namespace easy2d
 
 #ifdef E2D_DEBUG
 
-		ss << "objects=" << ObjectBase::__GetTracingObjects().size() << std::endl;
+		ss << "objects=" << Object::__GetTracingObjects().size() << std::endl;
 
 #endif
 

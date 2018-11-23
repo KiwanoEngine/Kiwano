@@ -26,7 +26,8 @@ namespace easy2d
 {
 	// ͼƬ
 	class Image
-		: public ObjectBase
+		: public RefCounter
+		, public Object
 	{
 	public:
 		Image();

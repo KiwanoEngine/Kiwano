@@ -29,7 +29,8 @@ namespace easy2d
 	class ActionManager;
 
 	class Action
-		: public ObjectBase
+		: public RefCounter 
+		, public Object
 		, protected intrusive::ListItem<spAction>
 	{
 		friend class ActionManager;

@@ -54,7 +54,7 @@
 #include "base/intrusive/SmartPointer.hpp"
 #include "base/intrusive/List.hpp"
 
-#include "base/ObjectBase.h"
+#include "base/Object.h"
 #include "base/Image.h"
 #include "base/Frames.h"
 #include "base/Music.h"

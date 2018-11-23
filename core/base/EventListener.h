@@ -32,6 +32,7 @@ namespace easy2d
 
 	class EventListener
 		: public RefCounter
+		, public Object
 		, protected intrusive::ListItem<spEventListener>
 	{
 		friend class EventDispatcher;

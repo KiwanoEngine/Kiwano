@@ -53,7 +53,7 @@
     <ClInclude Include="..\..\core\base\Music.h" />
     <ClInclude Include="..\..\core\base\Node.h" />
     <ClInclude Include="..\..\core\base\noncopyable.hpp" />
-    <ClInclude Include="..\..\core\base\ObjectBase.h" />
+    <ClInclude Include="..\..\core\base\Object.h" />
     <ClInclude Include="..\..\core\base\Point.hpp" />
     <ClInclude Include="..\..\core\base\Rect.hpp" />
     <ClInclude Include="..\..\core\base\RefCounter.hpp" />
@@ -112,7 +112,7 @@
     <ClCompile Include="..\..\core\base\modules.cpp" />
     <ClCompile Include="..\..\core\base\Music.cpp" />
     <ClCompile Include="..\..\core\base\Node.cpp" />
-    <ClCompile Include="..\..\core\base\ObjectBase.cpp" />
+    <ClCompile Include="..\..\core\base\Object.cpp" />
     <ClCompile Include="..\..\core\base\render.cpp" />
     <ClCompile Include="..\..\core\base\Resource.cpp" />
     <ClCompile Include="..\..\core\base\Scene.cpp" />

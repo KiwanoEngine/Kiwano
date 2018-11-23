@@ -26,7 +26,8 @@ namespace easy2d
 {
 	// Ö¡¼¯ºÏ
 	class Frames
-		: public ObjectBase
+		: public RefCounter
+		, public Object
 	{
 		using Images = std::vector< spImage >;
 
