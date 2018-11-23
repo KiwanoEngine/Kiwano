@@ -33,9 +33,10 @@ namespace easy2d
 		{
 			next = task->NextItem();
 
-			task->Update(dt);
+			bool remove_after_update = false;
+			task->Update(dt, remove_after_update);
 
-			if (task->stopped_)
+			if (remove_after_update)
 				tasks_.Remove(task);
 		}
 	}
@@ -53,7 +54,10 @@ namespace easy2d
 
 	void TaskManager::StopTasks(String const& name)
 	{
-		for (auto task = tasks_.First(); task; task = task->NextItem())
+		if (tasks_.IsEmpty())
+			return;
+
+		for (auto task = tasks_.First().Get(); task; task = task->NextItem().Get())
 		{
 			if (task->GetName() == name)
 			{
@@ -64,7 +68,10 @@ namespace easy2d
 
 	void TaskManager::StartTasks(String const& name)
 	{
-		for (auto task = tasks_.First(); task; task = task->NextItem())
+		if (tasks_.IsEmpty())
+			return;
+		
+		for (auto task = tasks_.First().Get(); task; task = task->NextItem().Get())
 		{
 			if (task->GetName() == name)
 			{
@@ -75,18 +82,26 @@ namespace easy2d
 
 	void TaskManager::RemoveTasks(String const& name)
 	{
-		for (auto task = tasks_.First(); task; task = task->NextItem())
+		if (tasks_.IsEmpty())
+			return;
+
+		spTask next;
+		for (auto task = tasks_.First(); task; task = next)
 		{
+			next = task->NextItem();
 			if (task->GetName() == name)
 			{
-				task->stopped_ = true;
+				tasks_.Remove(task);
 			}
 		}
 	}
 
 	void TaskManager::StopAllTasks()
 	{
-		for (auto task = tasks_.First(); task; task = task->NextItem())
+		if (tasks_.IsEmpty())
+			return;
+
+		for (auto task = tasks_.First().Get(); task; task = task->NextItem().Get())
 		{
 			task->Stop();
 		}
@@ -94,7 +109,10 @@ namespace easy2d
 
 	void TaskManager::StartAllTasks()
 	{
-		for (auto task = tasks_.First(); task; task = task->NextItem())
+		if (tasks_.IsEmpty())
+			return;
+
+		for (auto task = tasks_.First().Get(); task; task = task->NextItem().Get())
 		{
 			task->Start();
 		}
@@ -102,10 +120,7 @@ namespace easy2d
 
 	void TaskManager::RemoveAllTasks()
 	{
-		for (auto task = tasks_.First(); task; task = task->NextItem())
-		{
-			task->stopped_ = true;
-		}
+		tasks_.Clear();
 	}
 
 	const TaskManager::Tasks & TaskManager::GetAllTasks() const

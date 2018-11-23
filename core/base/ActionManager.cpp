@@ -57,7 +57,7 @@ namespace easy2d
 		if (actions_.IsEmpty())
 			return;
 
-		for (auto action = actions_.First(); action; action = action->NextItem())
+		for (auto action = actions_.First().Get(); action; action = action->NextItem().Get())
 		{
 			action->Resume();
 		}
@@ -68,7 +68,7 @@ namespace easy2d
 		if (actions_.IsEmpty())
 			return;
 
-		for (auto action = actions_.First(); action; action = action->NextItem())
+		for (auto action = actions_.First().Get(); action; action = action->NextItem().Get())
 		{
 			action->Pause();
 		}
@@ -79,7 +79,7 @@ namespace easy2d
 		if (actions_.IsEmpty())
 			return;
 
-		for (auto action = actions_.First(); action; action = action->NextItem())
+		for (auto action = actions_.First().Get(); action; action = action->NextItem().Get())
 		{
 			action->Stop();
 		}

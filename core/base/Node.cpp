@@ -54,7 +54,6 @@ namespace easy2d
 	Node::Node()
 		: inited_(false)
 		, visible_(true)
-		, dirty_sort_(false)
 		, parent_(nullptr)
 		, hash_name_(0)
 		, z_order_(0)
@@ -91,8 +90,10 @@ namespace easy2d
 
 		if (!children_.IsEmpty())
 		{
-			for (auto child = children_.First(); child; child = child->NextItem())
+			spNode next;
+			for (auto child = children_.First(); child; child = next)
 			{
+				next = child->NextItem();
 				child->Update(dt);
 			}
 		}
@@ -116,8 +117,6 @@ namespace easy2d
 		}
 		else
 		{
-			SortChildren();
-
 			// render children those are less than 0 in Z-Order
 			spNode child = children_.First();
 			for (spNode next; child; child = next)
@@ -178,22 +177,10 @@ namespace easy2d
 				Graphics::Instance()->DrawGeometry(border_, border_color_, 1.5f);
 			}
 
-			for (auto child = children_.First(); child; child = child->NextItem())
+			for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 			{
 				child->DrawBorder();
 			}
-		}
-	}
-
-	void Node::SortChildren()
-	{
-		if (dirty_sort_)
-		{
-			children_.Sort(
-				[](spNode const& n1, spNode const& n2) { return n1->GetZOrder() < n2->GetZOrder(); }
-			);
-
-			dirty_sort_ = false;
 		}
 	}
 
@@ -237,7 +224,7 @@ namespace easy2d
 		}
 
 		// update children's transform
-		for (auto child = children_.First(); child; child = child->NextItem())
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			child->dirty_transform_ = true;
 		}
@@ -280,7 +267,7 @@ namespace easy2d
 		{
 			display_opacity_ = opacity_ * parent_->display_opacity_;
 		}
-		for (auto child = children_.First(); child; child = child->NextItem())
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			child->UpdateOpacity();
 		}
@@ -289,21 +276,44 @@ namespace easy2d
 	void Node::SetScene(Scene * scene)
 	{
 		scene_ = scene;
-		for (auto child = children_.First(); child; child = child->NextItem())
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			child->scene_ = scene;
 		}
 	}
 
-	void Node::SetZOrder(int order)
+	void Node::SetZOrder(int zorder)
 	{
-		if (z_order_ == order)
+		if (z_order_ == zorder)
 			return;
 
-		z_order_ = order;
+		z_order_ = zorder;
+
 		if (parent_)
 		{
-			parent_->dirty_sort_ = true;
+			spNode me = this;
+
+			parent_->children_.Remove(me);
+
+			Node* sibling = parent_->children_.Last().Get();
+
+			if (sibling && sibling->GetZOrder() > zorder)
+			{
+				while (sibling = sibling->PrevItem().Get())
+				{
+					if (sibling->GetZOrder() <= zorder)
+						break;
+				}
+			}
+
+			if (sibling)
+			{
+				parent_->children_.InsertAfter(me, spNode(sibling));
+			}
+			else
+			{
+				parent_->children_.PushFront(me);
+			}
 		}
 	}
 
@@ -386,7 +396,7 @@ namespace easy2d
 		}
 	}
 
-	void Node::AddChild(spNode const& child, int z_order)
+	void Node::AddChild(spNode const& child)
 	{
 		E2D_ASSERT(child && "Node::AddChild failed, NULL pointer exception");
 
@@ -407,18 +417,16 @@ namespace easy2d
 			child->parent_ = this;
 			child->SetScene(this->scene_);
 			child->dirty_transform_ = true;
-			child->SetZOrder(z_order);
 			child->UpdateOpacity();
-			
-			dirty_sort_ = true;
+			child->SetZOrder(child->GetZOrder());
 		}
 	}
 
-	void Node::AddChild(const Nodes& nodes, int z_order)
+	void Node::AddChildren(const Nodes& children)
 	{
-		for (const auto& node : nodes)
+		for (const auto& node : children)
 		{
-			this->AddChild(node, z_order);
+			this->AddChild(node);
 		}
 	}
 
@@ -432,7 +440,7 @@ namespace easy2d
 		Nodes children;
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (auto child = children_.First(); child != children_.Last(); child = child->NextItem())
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			if (child->hash_name_ == hash_code && child->name_ == name)
 			{
@@ -446,7 +454,7 @@ namespace easy2d
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (auto child = children_.First(); child != children_.Last(); child = child->NextItem())
+		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			if (child->hash_name_ == hash_code && child->name_ == name)
 			{
@@ -471,6 +479,11 @@ namespace easy2d
 
 	bool Node::RemoveChild(spNode const& child)
 	{
+		return RemoveChild(child.Get());
+	}
+
+	bool Node::RemoveChild(Node * child)
+	{
 		E2D_ASSERT(child && "Node::RemoveChild failed, NULL pointer exception");
 
 		if (children_.IsEmpty())
@@ -480,7 +493,7 @@ namespace easy2d
 		{
 			child->parent_ = nullptr;
 			if (child->scene_) child->SetScene(nullptr);
-			children_.Remove(Node::ItemType(child));
+			children_.Remove(spNode(child));
 			return true;
 		}
 		return false;
@@ -494,10 +507,11 @@ namespace easy2d
 		}
 
 		size_t hash_code = std::hash<String>{}(child_name);
-		spNode next;
-		for (auto child = children_.First(); child; child = next)
+
+		Node* next;
+		for (Node* child = children_.First().Get(); child; child = next)
 		{
-			next = child->NextItem();
+			next = child->NextItem().Get();
 
 			if (child->hash_name_ == hash_code && child->name_ == child_name)
 			{

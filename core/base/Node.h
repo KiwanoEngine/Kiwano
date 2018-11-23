@@ -167,7 +167,7 @@ namespace easy2d
 		// 设置 Z 轴顺序
 		// 默认为 0
 		void SetZOrder(
-			int order
+			int zorder
 		);
 
 		// 设置边框颜色
@@ -182,14 +182,12 @@ namespace easy2d
 
 		// 添加子节点
 		void AddChild(
-			spNode const& child,
-			int z_order = 0		/* Z 轴顺序 */
+			spNode const& child
 		);
 
 		// 添加多个子节点
-		void AddChild(
-			const Nodes& nodes,	/* 节点数组 */
-			int z_order = 0		/* Z 轴顺序 */
+		void AddChildren(
+			const Nodes& children
 		);
 
 		// 获取所有名称相同的子节点
@@ -208,6 +206,11 @@ namespace easy2d
 		// 移除子节点
 		bool RemoveChild(
 			spNode const& child
+		);
+
+		// 移除子节点
+		bool RemoveChild(
+			Node* child
 		);
 
 		// 移除所有名称相同的子节点
@@ -240,8 +243,6 @@ namespace easy2d
 
 		void DrawBorder();
 
-		void SortChildren();
-
 		void UpdateBorder();
 
 		void UpdateTransform();
@@ -253,7 +254,6 @@ namespace easy2d
 	protected:
 		bool			inited_;
 		bool			visible_;
-		bool			dirty_sort_;
 		int				z_order_;
 		float			opacity_;
 		float			display_opacity_;

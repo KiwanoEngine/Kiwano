@@ -64,13 +64,12 @@ namespace easy2d
 		String const& GetName() const;
 
 	protected:
-		void Update(Duration const& dt);
+		void Update(Duration const& dt, bool& remove_after_update);
 
 		void Reset();
 
 	protected:
 		bool		running_;
-		bool		stopped_;
 		int			run_times_;
 		int			total_times_;
 		String		name_;

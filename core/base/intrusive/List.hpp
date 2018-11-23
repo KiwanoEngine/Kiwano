@@ -130,7 +130,7 @@ namespace easy2d
 				DEBUG_CHECK_LIST(this);
 			}
 
-			void Insert(T& child, T& before)
+			void InsertBefore(T& child, T& before)
 			{
 				if (child->prev_)
 					child->prev_->next_ = child->next_;
@@ -145,6 +145,25 @@ namespace easy2d
 				child->prev_ = before->prev_;
 				child->next_ = before;
 				before->prev_ = child;
+
+				DEBUG_CHECK_LIST(this);
+			}
+
+			void InsertAfter(T& child, T& after)
+			{
+				if (child->prev_)
+					child->prev_->next_ = child->next_;
+				if (child->next_)
+					child->next_->prev_ = child->prev_;
+
+				if (after->next_)
+					after->next_->prev_ = child;
+				else
+					last_ = child;
+
+				child->next_ = after->next_;
+				child->prev_ = after;
+				after->next_ = child;
 
 				DEBUG_CHECK_LIST(this);
 			}
@@ -200,42 +219,6 @@ namespace easy2d
 				}
 				first_ = nullptr;
 				last_ = nullptr;
-			}
-
-			void Sort(std::function<bool(T const&, T const&)> const& if_lt)
-			{
-				if (IsEmpty() || first_ == last_)
-					return;
-
-				std::vector<ItemType> temp_vec;
-				for (ItemType p = first_; p; p = p->NextItem())
-				{
-					temp_vec.push_back(p);
-				}
-				std::sort(temp_vec.begin(), temp_vec.end(), if_lt);
-
-				size_t size = temp_vec.size();
-				for (size_t i = 0; i < size; ++i)
-				{
-					if (i == 0)
-						temp_vec[i]->prev_ = nullptr;
-					else
-					{
-						temp_vec[i]->prev_ = temp_vec[i - 1];
-						temp_vec[i - 1]->next_ = temp_vec[i];
-					}
-					if (i == size - 1)
-						temp_vec[i]->next_ = nullptr;
-					else
-					{
-						temp_vec[i]->next_ = temp_vec[i + 1];
-						temp_vec[i + 1]->prev_ = temp_vec[i];
-					}
-				}
-				first_ = *temp_vec.begin();
-				last_ = *temp_vec.rbegin();
-
-				DEBUG_CHECK_LIST(this);
 			}
 
 #ifdef E2D_DEBUG

@@ -29,7 +29,6 @@ namespace easy2d
 
 	Task::Task(Callback const& func, Duration const& delay, int times, String const& name)
 		: running_(true)
-		, stopped_(false)
 		, run_times_(0)
 		, total_times_(times)
 		, delay_(delay)
@@ -42,7 +41,6 @@ namespace easy2d
 	void Task::Start()
 	{
 		running_ = true;
-		delta_ = Duration{};
 	}
 
 	void Task::Stop()
@@ -50,14 +48,14 @@ namespace easy2d
 		running_ = false;
 	}
 
-	void Task::Update(Duration const& dt)
+	void Task::Update(Duration const& dt, bool& remove_after_update)
 	{
 		if (!running_)
 			return;
 
 		if (total_times_ == 0)
 		{
-			stopped_ = true;
+			remove_after_update = true;
 			return;
 		}
 
@@ -77,7 +75,7 @@ namespace easy2d
 
 		if (run_times_ == total_times_)
 		{
-			stopped_ = true;
+			remove_after_update = true;
 			return;
 		}
 	}
@@ -85,6 +83,7 @@ namespace easy2d
 	void Task::Reset()
 	{
 		delta_ = Duration{};
+		run_times_ = 0;
 	}
 
 	bool Task::IsRunning() const
@@ -96,4 +95,5 @@ namespace easy2d
 	{
 		return name_;
 	}
+
 }
