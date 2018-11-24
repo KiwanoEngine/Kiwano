@@ -20,11 +20,12 @@
 
 #pragma once
 #include "include-forwards.h"
-#include "Singleton.hpp"
+#include "time.h"
 #include "Font.hpp"
 #include "Resource.h"
 #include "TextRenderer.h"
 #include "TextStyle.hpp"
+#include "Singleton.hpp"
 #include "../math/Matrix.hpp"
 
 namespace easy2d
@@ -33,6 +34,13 @@ namespace easy2d
 		: protected Noncopyable
 	{
 		E2D_DECLARE_SINGLETON(GraphicsDevice);
+
+		struct Status
+		{
+			TimePoint start;
+			Duration duration;
+			int primitives;
+		};
 
 	public:
 		HRESULT Init(HWND hwnd, bool vsync, bool debug);
@@ -57,6 +65,8 @@ namespace easy2d
 		HRESULT SetTextAntialiasMode(
 			TextAntialias mode
 		);
+
+		Status const& GetStatus() const;
 
 		HRESULT CreateResources(
 			HWND hwnd
@@ -151,21 +161,27 @@ namespace easy2d
 
 		void ClearImageCache();
 
+		cpHwndRenderTarget const& GetRenderTarget() const;
+
+		cpSolidColorBrush const& GetSolidBrush() const;
+
 	protected:
 		GraphicsDevice();
 
 		~GraphicsDevice();
 
 	protected:
+		bool						debug_;
 		bool						window_occluded_;
 		bool						vsync_enabled_;
 		bool						antialias_;
-		TextAntialias				text_antialias_;
 		float						opacity_;
+		D2D1_COLOR_F				clear_color_;
+		TextAntialias				text_antialias_;
+		Status						status_;
 		cpTextRenderer				text_renderer_;
 		cpSolidColorBrush			solid_brush_;
 		cpHwndRenderTarget			render_target_;
-		D2D1_COLOR_F				clear_color_;
 		cpTextFormat				fps_text_format_;
 		cpTextLayout				fps_text_layout_;
 		std::map<size_t, cpBitmap>	bitmap_cache_;

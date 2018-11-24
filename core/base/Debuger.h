@@ -39,6 +39,8 @@ namespace easy2d
 
 		void ClearDebugText();
 
+		void OnRender() override;
+
 		void OnUpdate(Duration const& dt) override;
 
 	protected:
