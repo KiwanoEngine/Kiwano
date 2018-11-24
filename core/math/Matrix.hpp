@@ -86,9 +86,8 @@ namespace easy2d
 			template <typename T>
 			Matrix(T const& other)
 			{
-				m[0] = other[0]; m[1] = other[1];
-				m[2] = other[2]; m[3] = other[3];
-				m[4] = other[4]; m[5] = other[5];
+				for (int i = 0; i < 6; i++)
+					m[i] = other[i];
 			}
 
 			inline float operator [](unsigned int index) const
@@ -99,9 +98,8 @@ namespace easy2d
 			template <typename T>
 			inline Matrix& operator =(T const& other)
 			{
-				m[0] = other[0]; m[1] = other[1];
-				m[2] = other[2]; m[3] = other[3];
-				m[4] = other[4]; m[5] = other[5];
+				for (int i = 0; i < 6; i++)
+					m[i] = other[i];
 				return *this;
 			}
 
