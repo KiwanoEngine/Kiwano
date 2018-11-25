@@ -56,9 +56,6 @@ namespace easy2d
 		// 渲染节点
 		virtual void OnRender() {}
 
-		// 处理事件
-		virtual void HandleEvent(Event* e);
-
 		// 获取显示状态
 		bool IsVisible()				const	{ return visible_; }
 
@@ -246,7 +243,7 @@ namespace easy2d
 
 		// 设置支点位置
 		// 默认为 (0, 0), 范围 [0, 1]
-		virtual void SetPivot(
+		void SetPivot(
 			float pivot_x,
 			float pivot_y
 		);
@@ -358,6 +355,8 @@ namespace easy2d
 
 	protected:
 		bool         visible_;
+		bool         hover_;
+		bool         pressed_;
 		int          z_order_;
 		float        opacity_;
 		float        display_opacity_;
@@ -370,8 +369,8 @@ namespace easy2d
 		Scene*       scene_;
 		Children     children_;
 
-		mutable bool			dirty_transform_;
-		mutable bool			dirty_transform_inverse_;
+		mutable bool	dirty_transform_;
+		mutable bool	dirty_transform_inverse_;
 		mutable Matrix	transform_matrix_;
 		mutable Matrix	transform_matrix_inverse_;
 	};

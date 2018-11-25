@@ -19,10 +19,11 @@
 // THE SOFTWARE.
 
 #include "Node.h"
+#include "Action.hpp"
 #include "Factory.h"
 #include "Scene.h"
 #include "Task.h"
-#include "Action.hpp"
+#include "MouseEvent.hpp"
 #include "render.h"
 #include "logs.h"
 
@@ -117,22 +118,59 @@ namespace easy2d
 		if (!visible_)
 			return;
 
-		this->HandleEvent(e);
-
-		if (!e->has_target)
-		{
-			EventDispatcher::DispatchEvent(e);
-		}
-	}
-
-	void Node::HandleEvent(Event * e)
-	{
 		spNode prev;
 		for (auto child = children_.Last(); child; child = prev)
 		{
 			prev = child->PrevItem();
-			child->HandleEvent(e);
+			child->DispatchEvent(e);
 		}
+
+		if (MouseEvent::Check(e))
+		{
+			MouseEvent* me = static_cast<MouseEvent*>(e);
+
+			if (me->type == MouseEvent::Move)
+			{
+				if (!me->has_target && ContainsPoint(me->position))
+				{
+					me->has_target = true;
+
+					if (!hover_)
+					{
+						hover_ = true;
+
+						MouseEvent hover = *me;
+						hover.type = MouseEvent::Hover;
+						DispatchEvent(&hover);
+					}
+				}
+				else if (hover_)
+				{
+					hover_ = false;
+					pressed_ = false;
+
+					MouseEvent hover = *me;
+					hover.type = MouseEvent::Out;
+					DispatchEvent(&hover);
+				}
+			}
+
+			if (me->type == MouseEvent::Down && hover_)
+			{
+				pressed_ = true;
+			}
+
+			if (me->type == MouseEvent::Up && pressed_)
+			{
+				pressed_ = false;
+
+				MouseEvent click = *me;
+				click.type = MouseEvent::Click;
+				DispatchEvent(&click);
+			}
+		}
+
+		EventDispatcher::DispatchEvent(e);
 	}
 
 	Matrix const & Node::GetTransformMatrix()  const
@@ -143,6 +181,7 @@ namespace easy2d
 
 	Matrix const & Node::GetTransformInverseMatrix()  const
 	{
+		UpdateTransform();
 		if (dirty_transform_inverse_)
 		{
 			transform_matrix_inverse_ = Matrix::Invert(transform_matrix_);
