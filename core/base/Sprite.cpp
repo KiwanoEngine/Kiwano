@@ -20,7 +20,6 @@
 
 #include "Sprite.h"
 #include "render.h"
-#include <algorithm>
 
 namespace easy2d
 {

@@ -21,6 +21,7 @@
 #pragma once
 #include "../base/include-forwards.h"
 #include "../base/Resource.h"
+#include <unordered_map>
 
 namespace easy2d
 {
@@ -28,6 +29,8 @@ namespace easy2d
 	class Player
 		: protected Noncopyable
 	{
+		using MusicMap = std::unordered_map<size_t, spMusic>;
+
 	public:
 		Player();
 
@@ -116,7 +119,7 @@ namespace easy2d
 		void ClearCache();
 
 	protected:
-		float volume_;
-		std::map<size_t, spMusic> musics_cache_;
+		float		volume_;
+		MusicMap	musics_cache_;
 	};
 }

@@ -21,6 +21,7 @@
 #pragma once
 #include "../base/Resource.h"
 #include <string>
+#include <list>
 
 namespace easy2d
 {

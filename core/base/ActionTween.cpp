@@ -22,7 +22,6 @@
 #include "Geometry.h"
 #include "include-forwards.h"
 #include "Node.h"
-#include <algorithm>
 #include <cfloat>
 
 namespace easy2d
