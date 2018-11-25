@@ -80,7 +80,7 @@
 #include "base/Text.h"
 #include "base/Canvas.h"
 #include "base/GeometryNode.h"
-#include "base/Debuger.h"
+#include "base/DebugNode.h"
 
 #include "base/Factory.h"
 #include "base/Game.h"

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Debuger.h"
+#include "DebugNode.h"
 #include "render.h"
 #include "../utils/string.h"
 #include <sstream>
@@ -29,7 +29,7 @@
 namespace easy2d
 {
 
-	DebugerNode::DebugerNode()
+	DebugNodeImpl::DebugNodeImpl()
 	{
 		debug_text_ = new Text();
 		debug_text_->SetPosition(15, 15);
@@ -46,11 +46,11 @@ namespace easy2d
 		debug_text_->SetStyle(style);
 	}
 
-	DebugerNode::~DebugerNode()
+	DebugNodeImpl::~DebugNodeImpl()
 	{
 	}
 
-	void DebugerNode::AddDebugText(std::wstring const & text)
+	void DebugNodeImpl::AddDebugText(std::wstring const & text)
 	{
 		try
 		{
@@ -61,12 +61,12 @@ namespace easy2d
 		}
 	}
 
-	void DebugerNode::ClearDebugText()
+	void DebugNodeImpl::ClearDebugText()
 	{
 		texts_.clear();
 	}
 
-	void DebugerNode::OnRender()
+	void DebugNodeImpl::OnRender()
 	{
 		auto graphics = Graphics::Instance();
 
@@ -83,7 +83,7 @@ namespace easy2d
 		);
 	}
 
-	void DebugerNode::OnUpdate(Duration const & dt)
+	void DebugNodeImpl::OnUpdate(Duration const & dt)
 	{
 		try
 		{

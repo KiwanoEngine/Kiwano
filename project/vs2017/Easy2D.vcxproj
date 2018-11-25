@@ -28,7 +28,7 @@
     <ClInclude Include="..\..\core\base\Canvas.h" />
     <ClInclude Include="..\..\core\base\Color.h" />
     <ClInclude Include="..\..\core\base\d2dhelper.hpp" />
-    <ClInclude Include="..\..\core\base\Debuger.h" />
+    <ClInclude Include="..\..\core\base\DebugNode.h" />
     <ClInclude Include="..\..\core\base\Delay.h" />
     <ClInclude Include="..\..\core\base\Event.hpp" />
     <ClInclude Include="..\..\core\base\EventDispatcher.h" />
@@ -97,7 +97,7 @@
     <ClCompile Include="..\..\core\base\audio.cpp" />
     <ClCompile Include="..\..\core\base\Canvas.cpp" />
     <ClCompile Include="..\..\core\base\Color.cpp" />
-    <ClCompile Include="..\..\core\base\Debuger.cpp" />
+    <ClCompile Include="..\..\core\base\DebugNode.cpp" />
     <ClCompile Include="..\..\core\base\Delay.cpp" />
     <ClCompile Include="..\..\core\base\EventDispatcher.cpp" />
     <ClCompile Include="..\..\core\base\EventListener.cpp" />

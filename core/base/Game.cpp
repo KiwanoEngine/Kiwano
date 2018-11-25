@@ -23,7 +23,7 @@
 #include "modules.h"
 #include "Factory.h"
 #include "Scene.h"
-#include "Debuger.h"
+#include "DebugNode.h"
 #include "Transition.h"
 #include "KeyEvent.hpp"
 #include "MouseEvent.hpp"
@@ -206,7 +206,7 @@ namespace easy2d
 			next_scene_->Update(dt);
 
 		if (debug_)
-			Debuger::Instance()->Update(dt);
+			DebugNode::Instance()->Update(dt);
 
 		if (transition_)
 		{
@@ -250,7 +250,7 @@ namespace easy2d
 		}
 
 		if (debug_)
-			Debuger::Instance()->Render();
+			DebugNode::Instance()->Render();
 
 		ThrowIfFailed(
 			graphics->EndDraw()

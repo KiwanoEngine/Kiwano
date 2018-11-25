@@ -25,15 +25,15 @@
 
 namespace easy2d
 {
-	class DebugerNode
+	class DebugNodeImpl
 		: public Node
 	{
-		E2D_DECLARE_SINGLETON(DebugerNode);
+		E2D_DECLARE_SINGLETON(DebugNodeImpl);
 
 	public:
-		DebugerNode();
+		DebugNodeImpl();
 
-		virtual ~DebugerNode();
+		virtual ~DebugNodeImpl();
 
 		void AddDebugText(std::wstring const& text);
 
@@ -49,5 +49,5 @@ namespace easy2d
 		std::vector<std::wstring> texts_;
 	};
 
-	E2D_DECLARE_SINGLETON_TYPE(DebugerNode, Debuger);
+	E2D_DECLARE_SINGLETON_TYPE(DebugNodeImpl, DebugNode);
 }
