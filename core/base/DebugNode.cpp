@@ -70,7 +70,7 @@ namespace easy2d
 	{
 		auto graphics = Graphics::Instance();
 
-		graphics->SetTransform(math::Matrix{});
+		graphics->SetTransform(Matrix{});
 
 		graphics->GetSolidBrush()->SetColor(Color(0.0f, 0.0f, 0.0f, 0.5f));
 

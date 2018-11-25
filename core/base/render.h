@@ -97,7 +97,7 @@ namespace easy2d
 		);
 
 		HRESULT SetTransform(
-			const math::Matrix& matrix
+			const Matrix& matrix
 		);
 
 		HRESULT SetOpacity(
@@ -137,7 +137,7 @@ namespace easy2d
 		);
 
 		HRESULT PushClip(
-			const math::Matrix& clip_matrix,
+			const Matrix& clip_matrix,
 			const Size& clip_size
 		);
 

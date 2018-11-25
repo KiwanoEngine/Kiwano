@@ -43,6 +43,7 @@ namespace easy2d
 	Node::Node()
 		: visible_(true)
 		, dirty_transform_(false)
+		, dirty_transform_inverse_(false)
 		, parent_(nullptr)
 		, hash_name_(0)
 		, z_order_(0)
@@ -134,10 +135,20 @@ namespace easy2d
 		}
 	}
 
-	math::Matrix const & Node::GetTransformMatrix()
+	Matrix const & Node::GetTransformMatrix()  const
 	{
 		UpdateTransform();
 		return transform_matrix_;
+	}
+
+	Matrix const & Node::GetTransformInverseMatrix()  const
+	{
+		if (dirty_transform_inverse_)
+		{
+			transform_matrix_inverse_ = Matrix::Invert(transform_matrix_);
+			dirty_transform_inverse_ = false;
+		}
+		return transform_matrix_inverse_;
 	}
 
 	spNode Node::GetParent() const
@@ -150,20 +161,21 @@ namespace easy2d
 		return scene_;
 	}
 
-	void Node::UpdateTransform()
+	void Node::UpdateTransform() const
 	{
 		if (!dirty_transform_)
 			return;
 
 		dirty_transform_ = false;
+		dirty_transform_inverse_ = true;
 
 		// matrix multiplication is optimized by expression template
-		transform_matrix_ = math::Matrix::Scaling(transform_.scale)
-			* math::Matrix::Skewing(transform_.skew.x, transform_.skew.y)
-			* math::Matrix::Rotation(transform_.rotation)
-			* math::Matrix::Translation(transform_.position);
+		transform_matrix_ = Matrix::Scaling(transform_.scale)
+			* Matrix::Skewing(transform_.skew.x, transform_.skew.y)
+			* Matrix::Rotation(transform_.rotation)
+			* Matrix::Translation(transform_.position);
 
-		Point offset{ -size_.width * pivot_.x, -size_.height * pivot_.y };
+		Point offset{ -size_.x * pivot_.x, -size_.y * pivot_.y };
 		transform_matrix_.Translate(offset);
 
 		if (parent_)
@@ -261,26 +273,26 @@ namespace easy2d
 
 	void Node::SetWidth(float width)
 	{
-		this->SetSize(width, size_.height);
+		this->SetSize(width, size_.y);
 	}
 
 	void Node::SetHeight(float height)
 	{
-		this->SetSize(size_.width, height);
+		this->SetSize(size_.x, height);
 	}
 
 	void Node::SetSize(const Size& size)
 	{
-		this->SetSize(size.width, size.height);
+		this->SetSize(size.x, size.y);
 	}
 
 	void Node::SetSize(float width, float height)
 	{
-		if (size_.width == width && size_.height == height)
+		if (size_.x == width && size_.y == height)
 			return;
 
-		size_.width = width;
-		size_.height = height;
+		size_.x = width;
+		size_.y = height;
 		dirty_transform_ = true;
 	}
 
@@ -427,7 +439,7 @@ namespace easy2d
 		}
 	}
 
-	Rect Node::GetBounds()
+	Rect Node::GetBounds() const
 	{
 		return Rect(Point{}, size_);
 	}
@@ -522,25 +534,12 @@ namespace easy2d
 		children_.Clear();
 	}
 
-	bool Node::ContainsPoint(const Point& point)
+	bool Node::ContainsPoint(const Point& point) const
 	{
-		if (size_.width == 0.f || size_.height == 0.f)
+		if (size_.x == 0.f || size_.y == 0.f)
 			return false;
 
-		UpdateTransform();
-
-		cpRectangleGeometry border;
-
-		ThrowIfFailed(
-			Factory::Instance()->CreateRectangleGeometry(
-				border,
-				Rect(Point{}, size_)
-			)
-		);
-
-		BOOL ret = 0;
-		// no matter it failed or not
-		border->FillContainsPoint(point, transform_matrix_, &ret);
-		return !!ret;
+		math::Vector2 local = GetTransformInverseMatrix().Transform(point);
+		return GetBounds().ContainsPoint(local);
 	}
 }

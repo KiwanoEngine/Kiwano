@@ -161,10 +161,10 @@ namespace easy2d
 		if (process_ < .5f)
 		{
 			out_layer_prop_.area = Rect(
-				window_size_.width * process_,
-				window_size_.height * process_,
-				window_size_.width * (1 - process_ * 2),
-				window_size_.height * (1 - process_ * 2)
+				window_size_.x * process_,
+				window_size_.y * process_,
+				window_size_.x * (1 - process_ * 2),
+				window_size_.y * (1 - process_ * 2)
 			);
 		}
 		else
@@ -172,10 +172,10 @@ namespace easy2d
 			out_layer_prop_.opacity = 0;
 			in_layer_prop_.opacity = 1;
 			in_layer_prop_.area = Rect(
-				window_size_.width * (1 - process_),
-				window_size_.height * (1 - process_),
-				window_size_.width * (2 * process_ - 1),
-				window_size_.height * (2 * process_ - 1)
+				window_size_.x * (1 - process_),
+				window_size_.y * (1 - process_),
+				window_size_.x * (2 * process_ - 1),
+				window_size_.y * (2 * process_ - 1)
 			);
 		}
 	}
@@ -255,20 +255,20 @@ namespace easy2d
 		switch (direction_)
 		{
 		case Direction::Up:
-			pos_delta_ = Point(0, -window_size_.height);
-			start_pos_ = Point(0, window_size_.height);
+			pos_delta_ = Point(0, -window_size_.y);
+			start_pos_ = Point(0, window_size_.y);
 			break;
 		case Direction::Down:
-			pos_delta_ = Point(0, window_size_.height);
-			start_pos_ = Point(0, -window_size_.height);
+			pos_delta_ = Point(0, window_size_.y);
+			start_pos_ = Point(0, -window_size_.y);
 			break;
 		case Direction::Left:
-			pos_delta_ = Point(-window_size_.width, 0);
-			start_pos_ = Point(window_size_.width, 0);
+			pos_delta_ = Point(-window_size_.x, 0);
+			start_pos_ = Point(window_size_.x, 0);
 			break;
 		case Direction::Right:
-			pos_delta_ = Point(window_size_.width, 0);
-			start_pos_ = Point(-window_size_.width, 0);
+			pos_delta_ = Point(window_size_.x, 0);
+			start_pos_ = Point(-window_size_.x, 0);
 			break;
 		}
 
@@ -332,7 +332,7 @@ namespace easy2d
 		Transition::Init(prev, next);
 
 		auto transform = Transform{};
-		transform.position = Point{ window_size_.width / 2, window_size_.height / 2 };
+		transform.position = Point{ window_size_.x / 2, window_size_.y / 2 };
 
 		if (out_scene_)
 		{

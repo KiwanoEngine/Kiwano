@@ -123,6 +123,11 @@ namespace easy2d
 						_31 == 0.f && _32 == 0.f;
 			}
 
+			inline bool IsInvertible() const
+			{
+				return 0 != Determinant();
+			}
+
 			Vector2 Transform(const Vector2& v) const
 			{
 				return Vector2(
@@ -208,6 +213,20 @@ namespace easy2d
 					1.f, -ty,
 					-tx, 1.f,
 					center.y * tx, center.x * ty
+				);
+			}
+
+			static Matrix Invert(Matrix const& matrix)
+			{
+				float det = 1.f / matrix.Determinant();
+
+				return Matrix(
+					det * matrix._22,
+					-det * matrix._12,
+					-det * matrix._21,
+					det * matrix._11,
+					det * (matrix._21 * matrix._32 - matrix._22 * matrix._31),
+					det * (matrix._12 * matrix._31 - matrix._11 * matrix._32)
 				);
 			}
 		};

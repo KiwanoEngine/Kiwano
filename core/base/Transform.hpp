@@ -19,10 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Size.hpp"
-#include "Point.hpp"
-#include "../math/Matrix.hpp"
-#include <d2d1.h>
+#include "helper.hpp"
 
 namespace easy2d
 {

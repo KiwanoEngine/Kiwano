@@ -39,9 +39,6 @@
 #include "base/time.h"
 #include "base/logs.h"
 
-#include "base/Point.hpp"
-#include "base/Size.hpp"
-#include "base/Rect.hpp"
 #include "base/Font.hpp"
 #include "base/Color.h"
 #include "base/Resource.h"

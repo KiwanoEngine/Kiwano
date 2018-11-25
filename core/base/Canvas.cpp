@@ -75,7 +75,7 @@ namespace easy2d
 	}
 
 	Canvas::Canvas(Size const & size)
-		: Canvas(size.width, size.height)
+		: Canvas(size.x, size.y)
 	{
 	}
 
@@ -158,7 +158,7 @@ namespace easy2d
 		return stroke_width_;
 	}
 
-	void Canvas::SetBrushTransform(math::Matrix const & transform)
+	void Canvas::SetBrushTransform(Matrix const & transform)
 	{
 		render_target_->SetTransform(transform);
 	}
@@ -217,8 +217,8 @@ namespace easy2d
 			D2D1::RectF(
 				rect.origin.x,
 				rect.origin.y,
-				rect.origin.x + rect.size.width,
-				rect.origin.y + rect.size.height
+				rect.origin.x + rect.size.x,
+				rect.origin.y + rect.size.y
 			),
 			stroke_brush_.Get(),
 			stroke_width_,
@@ -234,8 +234,8 @@ namespace easy2d
 				D2D1::RectF(
 					rect.origin.x,
 					rect.origin.y,
-					rect.origin.x + rect.size.width,
-					rect.origin.y + rect.size.height
+					rect.origin.x + rect.size.x,
+					rect.origin.y + rect.size.y
 				),
 				radius_x,
 				radius_y
@@ -345,8 +345,8 @@ namespace easy2d
 			D2D1::RectF(
 				rect.origin.x,
 				rect.origin.y,
-				rect.origin.x + rect.size.width,
-				rect.origin.y + rect.size.height
+				rect.origin.x + rect.size.x,
+				rect.origin.y + rect.size.y
 			),
 			fill_brush_.Get()
 		);
@@ -360,8 +360,8 @@ namespace easy2d
 				D2D1::RectF(
 					rect.origin.x,
 					rect.origin.y,
-					rect.origin.x + rect.size.width,
-					rect.origin.y + rect.size.height
+					rect.origin.x + rect.size.x,
+					rect.origin.y + rect.size.y
 				),
 				radius_x,
 				radius_y

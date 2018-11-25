@@ -89,8 +89,8 @@ namespace easy2d
 			WINDOW_STYLE,
 			static_cast<int>(client_rect.origin.x),
 			static_cast<int>(client_rect.origin.y),
-			static_cast<int>(client_rect.size.width),
-			static_cast<int>(client_rect.size.height),
+			static_cast<int>(client_rect.size.x),
+			static_cast<int>(client_rect.size.y),
 			nullptr,
 			nullptr,
 			hinstance,
@@ -138,12 +138,12 @@ namespace easy2d
 
 	float WindowImpl::GetWidth() const
 	{
-		return GetSize().width;
+		return GetSize().x;
 	}
 
 	float WindowImpl::GetHeight() const
 	{
-		return GetSize().height;
+		return GetSize().y;
 	}
 
 	void WindowImpl::SetSize(int width, int height)
@@ -155,8 +155,8 @@ namespace easy2d
 				handle,
 				static_cast<int>(rect.origin.x),
 				static_cast<int>(rect.origin.y),
-				static_cast<int>(rect.size.width),
-				static_cast<int>(rect.size.height),
+				static_cast<int>(rect.size.x),
+				static_cast<int>(rect.size.y),
 				TRUE
 			);
 		}

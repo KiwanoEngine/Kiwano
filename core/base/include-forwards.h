@@ -20,9 +20,6 @@
 
 #pragma once
 #include "macros.h"
-#include "Point.hpp"
-#include "Size.hpp"
-#include "Rect.hpp"
 #include "Color.h"
 #include "Object.h"
 #include "helper.hpp"

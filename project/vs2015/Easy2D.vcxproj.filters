@@ -38,9 +38,6 @@
     <ClInclude Include="..\..\core\base\Node.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Rect.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\render.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -137,12 +134,6 @@
     <ClInclude Include="..\..\core\base\Transform.hpp">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Point.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\base\Size.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\base\noncopyable.hpp">
       <Filter>base</Filter>
     </ClInclude>
@@ -205,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="..\..\core\base\DebugNode.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Rect.hpp">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
