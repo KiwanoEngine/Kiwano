@@ -249,7 +249,7 @@ namespace easy2d
 		return text_layout->Draw(nullptr, text_renderer_.Get(), 0, 0);
 	}
 
-	HRESULT GraphicsDevice::PushClip(const math::Matrix & clip_matrix, const Size & clip_size)
+	HRESULT GraphicsDevice::PushClip(const Matrix & clip_matrix, const Size & clip_size)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -259,7 +259,7 @@ namespace easy2d
 
 		render_target_->SetTransform(clip_matrix);
 		render_target_->PushAxisAlignedClip(
-			D2D1::RectF(0, 0, clip_size.width, clip_size.height),
+			D2D1::RectF(0, 0, clip_size.x, clip_size.y),
 			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
 		);
 		return S_OK;
@@ -319,8 +319,8 @@ namespace easy2d
 			return E_UNEXPECTED;
 
 		auto rtsize = render_target_->GetSize();
-		size.width = rtsize.width;
-		size.height = rtsize.height;
+		size.x = rtsize.width;
+		size.y = rtsize.height;
 		return S_OK;
 	}
 
@@ -399,7 +399,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::SetTransform(const math::Matrix & matrix)
+	HRESULT GraphicsDevice::SetTransform(const Matrix & matrix)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;

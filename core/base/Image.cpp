@@ -113,19 +113,19 @@ namespace easy2d
 			auto bitmap_size = bitmap_->GetSize();
 			crop_rect_.origin.x = std::min(std::max(crop_rect.origin.x, 0.f), bitmap_size.width);
 			crop_rect_.origin.y = std::min(std::max(crop_rect.origin.y, 0.f), bitmap_size.height);
-			crop_rect_.size.width = std::min(std::max(crop_rect.size.width, 0.f), bitmap_size.width - crop_rect.origin.x);
-			crop_rect_.size.height = std::min(std::max(crop_rect.size.height, 0.f), bitmap_size.height - crop_rect.origin.y);
+			crop_rect_.size.x = std::min(std::max(crop_rect.size.x, 0.f), bitmap_size.width - crop_rect.origin.x);
+			crop_rect_.size.y = std::min(std::max(crop_rect.size.y, 0.f), bitmap_size.height - crop_rect.origin.y);
 		}
 	}
 
 	float Image::GetWidth() const
 	{
-		return crop_rect_.size.width;
+		return crop_rect_.size.x;
 	}
 
 	float Image::GetHeight() const
 	{
-		return crop_rect_.size.height;
+		return crop_rect_.size.y;
 	}
 
 	Size Image::GetSize() const
@@ -139,10 +139,7 @@ namespace easy2d
 		{
 			return bitmap_->GetSize().width;
 		}
-		else
-		{
-			return 0;
-		}
+		return 0;
 	}
 
 	float Image::GetSourceHeight() const
@@ -151,10 +148,7 @@ namespace easy2d
 		{
 			return bitmap_->GetSize().height;
 		}
-		else
-		{
-			return 0;
-		}
+		return 0;
 	}
 
 	Size Image::GetSourceSize() const
@@ -198,8 +192,8 @@ namespace easy2d
 		{
 			bitmap_ = bitmap;
 			crop_rect_.origin.x = crop_rect_.origin.y = 0;
-			crop_rect_.size.width = bitmap_->GetSize().width;
-			crop_rect_.size.height = bitmap_->GetSize().height;
+			crop_rect_.size.x = bitmap_->GetSize().width;
+			crop_rect_.size.y = bitmap_->GetSize().height;
 		}
 	}
 

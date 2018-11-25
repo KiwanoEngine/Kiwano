@@ -212,7 +212,7 @@ namespace easy2d
 
 		// 变换画笔
 		void SetBrushTransform(
-			math::Matrix const& transform
+			Matrix const& transform
 		);
 
 		// 导出为图片

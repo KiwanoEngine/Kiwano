@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Node.h"
+#include "../base/Sprite.h"
 #include <functional>
 
 namespace easy2d
@@ -27,7 +27,7 @@ namespace easy2d
 	namespace ui
 	{
 		class Button
-			: public Node
+			: public Sprite
 		{
 			using Callback = std::function<void()>;
 
@@ -35,29 +35,7 @@ namespace easy2d
 			Button();
 
 			explicit Button(
-				spNode const& normal,					/* 普通状态 */
-				const Callback& func = nullptr	/* 按钮点击后的回调函数 */
-			);
-
-			explicit Button(
-				spNode const& normal,					/* 普通状态 */
-				spNode const& selected,				/* 鼠标按下状态 */
-				const Callback& func = nullptr	/* 按钮点击后的回调函数 */
-			);
-
-			explicit Button(
-				spNode const& normal,					/* 普通状态 */
-				spNode const& mouseover,				/* 鼠标移入状态 */
-				spNode const& selected,				/* 鼠标按下状态 */
-				const Callback& func = nullptr	/* 按钮点击后的回调函数 */
-			);
-
-			explicit Button(
-				spNode const& normal,					/* 普通状态 */
-				spNode const& mouseover,				/* 鼠标移入状态 */
-				spNode const& selected,				/* 鼠标移入状态 */
-				spNode const& disabled,				/* 按钮禁用状态 */
-				const Callback& func = nullptr	/* 按钮点击后的回调函数 */
+				Callback const& func	/* 按钮回调函数 */
 			);
 
 			virtual ~Button();
@@ -70,57 +48,21 @@ namespace easy2d
 				bool enabled
 			);
 
-			// 设置一般情况下显示的按钮
-			void SetNormal(
-				spNode const& normal
-			);
-
-			// 设置鼠标移入按钮时显示的按钮
-			void SetMouseOver(
-				spNode const& mouseover
-			);
-
-			// 设置鼠标按下按钮时显示的按钮
-			void SetSelected(
-				spNode const& selected
-			);
-
-			// 设置按钮被禁用时显示的按钮
-			void SetDisabled(
-				spNode const& disabled
-			);
-
 			// 设置按钮点击后的回调函数
-			void SetCallbackOnClick(
+			void SetClickCallback(
 				const Callback& func
 			);
 
-			// 设置支点位置
-			// 默认为 (0, 0), 范围 [0, 1]
-			virtual void SetPivot(
-				float pivot_x,
-				float pivot_y
-			) override;
-
-			virtual void HandleEvent(Event* e) override;
-
 		private:
-			// 按钮状态枚举
-			enum class Status { Normal, Mouseover, Selected };
+			enum class Status { Normal, Hover, Selected };
 
-			// 设置按钮状态
-			virtual void SetStatus(
+			void SetStatus(
 				Status status
 			);
 
-			// 刷新按钮显示
-			virtual void UpdateVisible();
+			void UpdateStatus(Event* e);
 
 		private:
-			spNode		normal_;
-			spNode		mouseover_;
-			spNode		selected_;
-			spNode		disabled_;
 			bool		enabled_;
 			bool		is_selected_;
 			Status		status_;

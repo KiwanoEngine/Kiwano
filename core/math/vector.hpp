@@ -20,6 +20,7 @@
 
 #pragma once
 #include "scalar.hpp"
+#include <d2d1.h>
 
 namespace easy2d
 {
@@ -34,20 +35,9 @@ namespace easy2d
 		public:
 			Vector2() : x(0.f), y(0.f) {}
 
-			Vector2(
-				float x,
-				float y
-			)
-			: x(x)
-			, y(y)
-			{}
+			Vector2(float x, float y) : x(x), y(y) {}
 
-			Vector2(
-				const Vector2& other
-			)
-			: x(other.x)
-			, y(other.y)
-			{}
+			Vector2(const Vector2& other) : x(other.x), y(other.y) {}
 
 			inline float Length() const
 			{
@@ -82,6 +72,16 @@ namespace easy2d
 			inline bool operator== (const Vector2& other) const
 			{
 				return (x == other.x) && (y == other.y);
+			}
+
+			inline operator D2D1_POINT_2F const& () const
+			{
+				return reinterpret_cast<D2D1_POINT_2F const&>(*this);
+			}
+
+			inline operator D2D1_POINT_2F& ()
+			{
+				return reinterpret_cast<D2D1_POINT_2F&>(*this);
 			}
 		};
 	}

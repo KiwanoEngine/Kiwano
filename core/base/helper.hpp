@@ -21,6 +21,9 @@
 #pragma once
 #include "RefCounter.hpp"
 #include "intrusive/SmartPointer.hpp"
+#include "../math/vector.hpp"
+#include "../math/Rect.hpp"
+#include "../math/Matrix.hpp"
 
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
@@ -89,6 +92,11 @@ namespace easy2d
 	E2D_DECLARE_NS_SMART_PTR(ui, Button);
 	E2D_DECLARE_NS_SMART_PTR(ui, Menu);
 
+	using Vector2 = math::Vector2;
+	using Point = math::Vector2;
+	using Size = math::Vector2;
+	using Rect = math::Rect;
+	using Matrix = math::Matrix;
 
 	template <typename Dest, typename Src>
 	inline Dest SafeCast(Src ptr)

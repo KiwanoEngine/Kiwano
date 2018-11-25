@@ -56,9 +56,6 @@ namespace easy2d
 		// 渲染节点
 		virtual void OnRender() {}
 
-		// 处理事件
-		virtual void HandleEvent(Event* e);
-
 		// 获取显示状态
 		bool IsVisible()				const	{ return visible_; }
 
@@ -96,19 +93,19 @@ namespace easy2d
 		float GetRotation()				const	{ return transform_.rotation; }
 
 		// 获取宽度
-		float GetWidth()				const	{ return size_.width; }
+		float GetWidth()				const	{ return size_.x; }
 
 		// 获取高度
-		float GetHeight()				const	{ return size_.height; }
+		float GetHeight()				const	{ return size_.y; }
 
 		// 获取大小
 		Size const& GetSize()			const	{ return size_; }
 
 		// 获取缩放后的宽度
-		float GetScaledWidth()			const	{ return size_.width * transform_.scale.x; }
+		float GetScaledWidth()			const	{ return size_.x * transform_.scale.x; }
 
 		// 获取缩放后的高度
-		float GetScaledHeight()			const	{ return size_.height * transform_.scale.y; }
+		float GetScaledHeight()			const	{ return size_.y * transform_.scale.y; }
 
 		// 获取缩放后的大小
 		Size GetScaledSize()			const	{ return Size{ GetScaledWidth(), GetScaledHeight() }; }
@@ -126,10 +123,13 @@ namespace easy2d
 		Transform const& GetTransform()	const { return transform_; }
 
 		// 获取包围盒
-		virtual Rect GetBounds();
+		Rect GetBounds() const;
 
 		// 获取二维变换矩阵
-		math::Matrix const& GetTransformMatrix();
+		Matrix const& GetTransformMatrix()  const;
+
+		// 获取二维变换的逆矩阵
+		Matrix const& GetTransformInverseMatrix()  const;
 
 		// 获取父节点
 		spNode GetParent() const;
@@ -243,7 +243,7 @@ namespace easy2d
 
 		// 设置支点位置
 		// 默认为 (0, 0), 范围 [0, 1]
-		virtual void SetPivot(
+		void SetPivot(
 			float pivot_x,
 			float pivot_y
 		);
@@ -288,7 +288,7 @@ namespace easy2d
 		// 判断点是否在节点内
 		bool ContainsPoint(
 			const Point& point
-		);
+		)  const;
 
 		// 添加子节点
 		void AddChild(
@@ -347,7 +347,7 @@ namespace easy2d
 
 		void Render();
 
-		void UpdateTransform();
+		void UpdateTransform() const;
 
 		void UpdateOpacity();
 
@@ -355,18 +355,23 @@ namespace easy2d
 
 	protected:
 		bool         visible_;
-		bool         dirty_transform_;
+		bool         hover_;
+		bool         pressed_;
 		int          z_order_;
 		float        opacity_;
 		float        display_opacity_;
 		std::wstring name_;
 		size_t       hash_name_;
 		Transform    transform_;
-		math::Matrix transform_matrix_;
 		Point        pivot_;
 		Size         size_;
 		Node*        parent_;
 		Scene*       scene_;
 		Children     children_;
+
+		mutable bool	dirty_transform_;
+		mutable bool	dirty_transform_inverse_;
+		mutable Matrix	transform_matrix_;
+		mutable Matrix	transform_matrix_inverse_;
 	};
 }

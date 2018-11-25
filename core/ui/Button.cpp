@@ -21,98 +21,26 @@
 #include "Button.h"
 #include "../base/MouseEvent.hpp"
 
-#define SAFE_SET(pointer, func, ...) if (pointer) { pointer->##func(__VA_ARGS__); }
-
-#define SET_BUTTON_NODE(Old, New)								\
-	if (New != Old)												\
-	{															\
-		if (Old) this->RemoveChild(Old);						\
-		if (New)												\
-		{														\
-			New->SetPivot(GetPivotX(), GetPivotY());			\
-			this->AddChild(New);								\
-		}														\
-		Old = New;												\
-		UpdateVisible();										\
-	}															\
-
-
 namespace easy2d
 {
 	namespace ui
 	{
 		Button::Button()
-			: callback_(nullptr)
-			, status_(Status::Normal)
-			, enabled_(true)
+			: enabled_(true)
 			, is_selected_(false)
-			, normal_(nullptr)
-			, mouseover_(nullptr)
-			, selected_(nullptr)
-			, disabled_(nullptr)
+			, callback_(nullptr)
+			, status_(Status::Normal)
 		{
+			AddListener(MouseEvent::Hover, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
+			AddListener(MouseEvent::Out, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
+			AddListener(MouseEvent::Down, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
+			AddListener(MouseEvent::Up, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
 		}
 
-		Button::Button(spNode const& normal, const Callback& func)
-			: callback_(nullptr)
-			, status_(Status::Normal)
-			, enabled_(true)
-			, is_selected_(false)
-			, normal_(nullptr)
-			, mouseover_(nullptr)
-			, selected_(nullptr)
-			, disabled_(nullptr)
+		Button::Button(const Callback& func)
+			: Button()
 		{
-			this->SetNormal(normal);
-			this->SetCallbackOnClick(func);
-		}
-
-		Button::Button(spNode const& normal, spNode const& selected, const Callback& func)
-			: callback_(nullptr)
-			, status_(Status::Normal)
-			, enabled_(true)
-			, is_selected_(false)
-			, normal_(nullptr)
-			, mouseover_(nullptr)
-			, selected_(nullptr)
-			, disabled_(nullptr)
-		{
-			this->SetNormal(normal);
-			this->SetSelected(selected);
-			this->SetCallbackOnClick(func);
-		}
-
-		Button::Button(spNode const& normal, spNode const& mouseover, spNode const& selected, const Callback& func)
-			: callback_(nullptr)
-			, status_(Status::Normal)
-			, enabled_(true)
-			, is_selected_(false)
-			, normal_(nullptr)
-			, mouseover_(nullptr)
-			, selected_(nullptr)
-			, disabled_(nullptr)
-		{
-			this->SetNormal(normal);
-			this->SetMouseOver(mouseover);
-			this->SetSelected(selected);
-			this->SetCallbackOnClick(func);
-		}
-
-		Button::Button(spNode const& normal, spNode const& mouseover, spNode const& selected, spNode const& disabled, const Callback& func)
-			: callback_(nullptr)
-			, status_(Status::Normal)
-			, enabled_(true)
-			, is_selected_(false)
-			, normal_(nullptr)
-			, mouseover_(nullptr)
-			, selected_(nullptr)
-			, disabled_(nullptr)
-		{
-			this->SetNormal(normal);
-			this->SetMouseOver(mouseover);
-			this->SetSelected(selected);
-			this->SetDisabled(disabled);
-			this->SetCallbackOnClick(func);
+			this->SetClickCallback(func);
 		}
 
 		Button::~Button()
@@ -124,102 +52,17 @@ namespace easy2d
 			return enabled_;
 		}
 
-		void Button::SetNormal(spNode const& normal)
-		{
-			SET_BUTTON_NODE(normal_, normal);
-			if (normal)
-			{
-				this->SetSize(normal->GetWidth(), normal->GetHeight());
-			}
-		}
-
-		void Button::SetMouseOver(spNode const& mouseover)
-		{
-			SET_BUTTON_NODE(mouseover_, mouseover);
-		}
-
-		void Button::SetSelected(spNode const& selected)
-		{
-			SET_BUTTON_NODE(selected_, selected);
-		}
-
-		void Button::SetDisabled(spNode const& disabled)
-		{
-			SET_BUTTON_NODE(disabled_, disabled);
-		}
-
 		void Button::SetEnabled(bool enabled)
 		{
 			if (enabled_ != enabled)
 			{
 				enabled_ = enabled;
-				UpdateVisible();
 			}
 		}
 
-		void Button::SetCallbackOnClick(const Callback& func)
+		void Button::SetClickCallback(const Callback& func)
 		{
 			callback_ = func;
-		}
-
-		void Button::SetPivot(float pivot_x, float pivot_y)
-		{
-			Node::SetPivot(pivot_x, pivot_y);
-			SAFE_SET(normal_, SetPivot, pivot_x, pivot_y);
-			SAFE_SET(mouseover_, SetPivot, pivot_x, pivot_y);
-			SAFE_SET(selected_, SetPivot, pivot_x, pivot_y);
-			SAFE_SET(disabled_, SetPivot, pivot_x, pivot_y);
-		}
-
-		void Button::HandleEvent(Event* e)
-		{
-			if (e && MouseEvent::Check(e) && !e->has_target)
-			{
-				MouseEvent* me = static_cast<MouseEvent*>(e);
-				if (enabled_ && IsVisible() && normal_)
-				{
-					bool contains = normal_->ContainsPoint(Point{ me->x, me->y });
-					if (me->type == MouseEvent::Up && is_selected_ && contains)
-					{
-						if (callback_)
-						{
-							callback_();
-						}
-						is_selected_ = false;
-						SetStatus(Status::Normal);
-						me->has_target = true;
-					}
-					else if (me->type == MouseEvent::Down)
-					{
-						is_selected_ = contains;
-						SetStatus(contains ? Status::Selected : Status::Normal);
-
-						me->has_target = contains;
-					}
-					else if (me->type == MouseEvent::Up)
-					{
-						is_selected_ = false;
-					}
-					else if (me->type == MouseEvent::Move && is_selected_ && contains)
-					{
-						SetStatus(Status::Selected);
-						me->has_target = true;
-					}
-					else
-					{
-						if (!me->button_down && is_selected_)
-						{
-							is_selected_ = false;
-						}
-
-						SetStatus(contains ? Status::Mouseover : Status::Normal);
-
-						me->has_target = contains;
-					}
-				}
-			}
-
-			Node::HandleEvent(e);
 		}
 
 		void Button::SetStatus(Status status)
@@ -227,43 +70,37 @@ namespace easy2d
 			if (status_ != status)
 			{
 				status_ = status;
-				UpdateVisible();
 			}
 		}
 
-		void Button::UpdateVisible()
+		void Button::UpdateStatus(Event * e)
 		{
-			SAFE_SET(normal_, SetVisible, false);
-			SAFE_SET(mouseover_, SetVisible, false);
-			SAFE_SET(selected_, SetVisible, false);
-			SAFE_SET(disabled_, SetVisible, false);
+			E2D_ASSERT(MouseEvent::Check(e));
 
+			MouseEvent* me = static_cast<MouseEvent*>(e);
 			if (enabled_)
 			{
-				if (status_ == Status::Selected && selected_)
+				if (me->type == MouseEvent::Hover)
 				{
-					selected_->SetVisible(true);
+					SetStatus(Status::Hover);
 				}
-				else if (status_ == Status::Mouseover && mouseover_)
+				else if (me->type == MouseEvent::Out)
 				{
-					mouseover_->SetVisible(true);
+					SetStatus(Status::Normal);
 				}
-				else
+				else if (me->type == MouseEvent::Down && status_ == Status::Hover)
 				{
-					if (normal_) normal_->SetVisible(true);
+					SetStatus(Status::Selected);
 				}
-			}
-			else
-			{
-				if (disabled_)
+				else if (me->type == MouseEvent::Up && status_ == Status::Selected)
 				{
-					disabled_->SetVisible(true);
-				}
-				else
-				{
-					if (normal_) normal_->SetVisible(true);
+					SetStatus(Status::Hover);
+
+					if (callback_)
+						callback_();
 				}
 			}
 		}
+
 	}
 }

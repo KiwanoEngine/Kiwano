@@ -20,6 +20,7 @@
 
 #pragma once
 #include "Event.hpp"
+#include "helper.hpp"
 
 namespace easy2d
 {
@@ -36,15 +37,18 @@ namespace easy2d
 			Up,		// 抬起
 			Wheel,	// 滚轮滚动
 
+			Hover,	// 鼠标移入
+			Out,	// 鼠标移出
+			Click,	// 鼠标点击
+
 			Last	// 结束标志
 		};
 
-		MouseEvent(EventType type, float x, float y, float wheel_delta) : Event(type), x(x), y(y), wheel_delta(wheel_delta), button_down(false) {}
+		MouseEvent(EventType type, float x, float y, float wheel_delta) : Event(type), position(x, y), wheel_delta(wheel_delta), button_down(false) {}
 
 		static bool Check(Event* e) { return e->type > Type::First && e->type < Type::Last; }
 
-		float x;
-		float y;
+		Point position;
 		float wheel_delta;
 		bool button_down;
 	};

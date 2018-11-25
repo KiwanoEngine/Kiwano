@@ -117,8 +117,8 @@ namespace easy2d
 	{
 		image_->Crop(crop_rect);
 		Node::SetSize(
-			std::min(std::max(crop_rect.size.width, 0.f), image_->GetSourceWidth() - image_->GetCropX()),
-			std::min(std::max(crop_rect.size.height, 0.f), image_->GetSourceHeight() - image_->GetCropY())
+			std::min(std::max(crop_rect.size.x, 0.f), image_->GetSourceWidth() - image_->GetCropX()),
+			std::min(std::max(crop_rect.size.y, 0.f), image_->GetSourceHeight() - image_->GetCropY())
 		);
 	}
 

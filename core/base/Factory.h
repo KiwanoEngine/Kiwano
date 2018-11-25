@@ -82,7 +82,7 @@ namespace easy2d
 
 		HRESULT CreateTransformedGeometry(
 			cpTransformedGeometry& transformed,
-			math::Matrix const& matrix,
+			Matrix const& matrix,
 			cpGeometry const& geo
 		) const;
 
