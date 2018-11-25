@@ -28,7 +28,7 @@ namespace easy2d
 		Button::Button()
 			: enabled_(true)
 			, is_selected_(false)
-			, callback_(nullptr)
+			, click_callback_(nullptr)
 			, status_(Status::Normal)
 		{
 			AddListener(MouseEvent::Hover, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
@@ -37,10 +37,19 @@ namespace easy2d
 			AddListener(MouseEvent::Up, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
 		}
 
-		Button::Button(const Callback& func)
+		Button::Button(const Callback& click)
 			: Button()
 		{
-			this->SetClickCallback(func);
+			this->SetClickCallback(click);
+		}
+
+		Button::Button(Callback const & click, Callback const & pressed, Callback const & mouse_over, Callback const & mouse_out)
+			: Button()
+		{
+			this->SetClickCallback(click);
+			this->SetPressedCallback(pressed);
+			this->SetMouseOverCallback(mouse_over);
+			this->SetMouseOutCallback(mouse_out);
 		}
 
 		Button::~Button()
@@ -62,7 +71,22 @@ namespace easy2d
 
 		void Button::SetClickCallback(const Callback& func)
 		{
-			callback_ = func;
+			click_callback_ = func;
+		}
+
+		void Button::SetPressedCallback(const Callback & func)
+		{
+			pressed_callback_ = func;
+		}
+
+		void Button::SetMouseOverCallback(const Callback & func)
+		{
+			mouse_over_callback_ = func;
+		}
+
+		void Button::SetMouseOutCallback(const Callback & func)
+		{
+			mouse_out_callback_ = func;
 		}
 
 		void Button::SetStatus(Status status)
@@ -83,21 +107,30 @@ namespace easy2d
 				if (me->type == MouseEvent::Hover)
 				{
 					SetStatus(Status::Hover);
+
+					if (mouse_over_callback_)
+						mouse_over_callback_();
 				}
 				else if (me->type == MouseEvent::Out)
 				{
 					SetStatus(Status::Normal);
+
+					if (mouse_out_callback_)
+						mouse_out_callback_();
 				}
 				else if (me->type == MouseEvent::Down && status_ == Status::Hover)
 				{
-					SetStatus(Status::Selected);
+					SetStatus(Status::Pressed);
+
+					if (pressed_callback_)
+						pressed_callback_();
 				}
-				else if (me->type == MouseEvent::Up && status_ == Status::Selected)
+				else if (me->type == MouseEvent::Up && status_ == Status::Pressed)
 				{
 					SetStatus(Status::Hover);
 
-					if (callback_)
-						callback_();
+					if (click_callback_)
+						click_callback_();
 				}
 			}
 		}

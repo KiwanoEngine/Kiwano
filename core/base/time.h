@@ -44,12 +44,12 @@ namespace easy2d
 		public:
 			Duration();
 
-			explicit Duration(
-				int64_t milliseconds
+			Duration(
+				long long milliseconds
 			);
 
 			// 转化为毫秒
-			inline int64_t Milliseconds() const { return milliseconds_; }
+			inline long long Milliseconds() const { return milliseconds_; }
 
 			// 转化为秒
 			float Seconds() const;
@@ -117,7 +117,7 @@ namespace easy2d
 			friend std::wistream& operator>> (std::wistream &, Duration &);
 
 		private:
-			int64_t milliseconds_;
+			long long milliseconds_;
 		};
 
 		extern const Duration Millisecond;	// 毫秒

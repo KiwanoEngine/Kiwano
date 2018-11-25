@@ -82,11 +82,6 @@ namespace easy2d
 	HRESULT GraphicsDevice::EndDraw()
 	{
 		HRESULT hr = S_OK;
-
-		if (debug_)
-		{
-			status_.duration = time::Now() - status_.start;
-		}
 		
 		if (!window_occluded_)
 		{
@@ -99,6 +94,11 @@ namespace easy2d
 				DiscardResources();
 				hr = S_OK;
 			}
+		}
+
+		if (debug_)
+		{
+			status_.duration = time::Now() - status_.start;
 		}
 		return hr;
 	}

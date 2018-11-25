@@ -132,10 +132,10 @@ namespace easy2d
 		Matrix const& GetTransformInverseMatrix()  const;
 
 		// 获取父节点
-		spNode GetParent() const;
+		Node* GetParent() const;
 
 		// 获取所在场景
-		spScene GetScene() const;
+		Scene* GetScene() const;
 
 		// 设置是否显示
 		void SetVisible(

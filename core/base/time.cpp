@@ -99,7 +99,7 @@ namespace easy2d
 		// Duration
 		//-------------------------------------------------------
 
-		const Duration Millisecond	= Duration(1);
+		const Duration Millisecond	= Duration{ 1LL };
 		const Duration Second		= 1000 * Millisecond;
 		const Duration Minute		= 60 * Second;
 		const Duration Hour			= 60 * Minute;
@@ -123,29 +123,29 @@ namespace easy2d
 		{
 		}
 
-		Duration::Duration(int64_t milliseconds)
+		Duration::Duration(long long milliseconds)
 			: milliseconds_(milliseconds)
 		{
 		}
 
 		float Duration::Seconds() const
 		{
-			int64_t sec = milliseconds_ / Second.milliseconds_;
-			int64_t ms = milliseconds_ % Second.milliseconds_;
+			long long sec = milliseconds_ / Second.milliseconds_;
+			long long ms = milliseconds_ % Second.milliseconds_;
 			return static_cast<float>(sec) + static_cast<float>(ms) / 1000.f;
 		}
 
 		float Duration::Minutes() const
 		{
-			int64_t min = milliseconds_ / Minute.milliseconds_;
-			int64_t ms = milliseconds_ % Minute.milliseconds_;
+			long long min = milliseconds_ / Minute.milliseconds_;
+			long long ms = milliseconds_ % Minute.milliseconds_;
 			return static_cast<float>(min) + static_cast<float>(ms) / (60 * 1000.f);
 		}
 
 		float Duration::Hours() const
 		{
-			int64_t hour = milliseconds_ / Hour.milliseconds_;
-			int64_t ms = milliseconds_ % Hour.milliseconds_;
+			long long hour = milliseconds_ / Hour.milliseconds_;
+			long long ms = milliseconds_ % Hour.milliseconds_;
 			return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
 		}
 
@@ -157,10 +157,10 @@ namespace easy2d
 			}
 
 			std::wstring result;
-			int64_t hour = milliseconds_ / Hour.milliseconds_;
-			int64_t min = milliseconds_ / Minute.milliseconds_ - hour * 60;
-			int64_t sec = milliseconds_ / Second.milliseconds_ - (hour * 60 * 60 + min * 60);
-			int64_t ms = milliseconds_ % Second.milliseconds_;
+			long long hour = milliseconds_ / Hour.milliseconds_;
+			long long min = milliseconds_ / Minute.milliseconds_ - hour * 60;
+			long long sec = milliseconds_ / Second.milliseconds_ - (hour * 60 * 60 + min * 60);
+			long long ms = milliseconds_ % Second.milliseconds_;
 
 			if (milliseconds_ < 0)
 				result.append(L"-");
@@ -256,42 +256,42 @@ namespace easy2d
 
 		const Duration easy2d::time::Duration::operator*(unsigned long long val) const
 		{
-			return Duration(static_cast<int64_t>(milliseconds_ * val));
+			return Duration(static_cast<long long>(milliseconds_ * val));
 		}
 
 		const Duration easy2d::time::Duration::operator/(unsigned long long val) const
 		{
-			return Duration(static_cast<int64_t>(milliseconds_ / val));
+			return Duration(static_cast<long long>(milliseconds_ / val));
 		}
 
 		const Duration Duration::operator*(float val) const
 		{
-			return Duration(static_cast<int64_t>(milliseconds_ * val));
+			return Duration(static_cast<long long>(milliseconds_ * val));
 		}
 
 		const Duration Duration::operator/(float val) const
 		{
-			return Duration(static_cast<int64_t>(milliseconds_ / val));
+			return Duration(static_cast<long long>(milliseconds_ / val));
 		}
 
 		const Duration Duration::operator*(double val) const
 		{
-			return Duration(static_cast<int64_t>(milliseconds_ * val));
+			return Duration(static_cast<long long>(milliseconds_ * val));
 		}
 
 		const Duration Duration::operator*(long double val) const
 		{
-			return Duration(static_cast<int64_t>(milliseconds_ * val));
+			return Duration(static_cast<long long>(milliseconds_ * val));
 		}
 
 		const Duration Duration::operator/(double val) const
 		{
-			return Duration(static_cast<int64_t>(milliseconds_ / val));
+			return Duration(static_cast<long long>(milliseconds_ / val));
 		}
 
 		const Duration Duration::operator/(long double val) const
 		{
-			return Duration(static_cast<int64_t>(milliseconds_ / val));
+			return Duration(static_cast<long long>(milliseconds_ / val));
 		}
 
 		Duration & Duration::operator+=(const Duration &other)
@@ -314,55 +314,55 @@ namespace easy2d
 
 		Duration & Duration::operator/=(int val)
 		{
-			milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
+			milliseconds_ = static_cast<long long>(milliseconds_ / val);
 			return (*this);
 		}
 
 		Duration & easy2d::time::Duration::operator*=(unsigned long long val)
 		{
-			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
+			milliseconds_ = static_cast<long long>(milliseconds_ * val);
 			return (*this);
 		}
 
 		Duration & easy2d::time::Duration::operator/=(unsigned long long val)
 		{
-			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
+			milliseconds_ = static_cast<long long>(milliseconds_ * val);
 			return (*this);
 		}
 
 		Duration & Duration::operator*=(float val)
 		{
-			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
+			milliseconds_ = static_cast<long long>(milliseconds_ * val);
 			return (*this);
 		}
 
 		Duration & Duration::operator/=(float val)
 		{
-			milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
+			milliseconds_ = static_cast<long long>(milliseconds_ / val);
 			return (*this);
 		}
 
 		Duration & Duration::operator*=(double val)
 		{
-			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
+			milliseconds_ = static_cast<long long>(milliseconds_ * val);
 			return (*this);
 		}
 
 		Duration & Duration::operator*=(long double val)
 		{
-			milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
+			milliseconds_ = static_cast<long long>(milliseconds_ * val);
 			return (*this);
 		}
 
 		Duration & Duration::operator/=(double val)
 		{
-			milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
+			milliseconds_ = static_cast<long long>(milliseconds_ / val);
 			return (*this);
 		}
 
 		Duration & Duration::operator/=(long double val)
 		{
-			milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
+			milliseconds_ = static_cast<long long>(milliseconds_ / val);
 			return (*this);
 		}
 

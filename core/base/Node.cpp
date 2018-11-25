@@ -190,12 +190,12 @@ namespace easy2d
 		return transform_matrix_inverse_;
 	}
 
-	spNode Node::GetParent() const
+	Node* Node::GetParent() const
 	{
 		return parent_;
 	}
 
-	spScene Node::GetScene() const
+	Scene* Node::GetScene() const
 	{
 		return scene_;
 	}
