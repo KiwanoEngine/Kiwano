@@ -35,7 +35,14 @@ namespace easy2d
 			Button();
 
 			explicit Button(
-				Callback const& func	/* 按钮回调函数 */
+				Callback const& click		/* 按钮点击回调函数 */
+			);
+
+			explicit Button(
+				Callback const& click,		/* 按钮点击回调函数 */
+				Callback const& pressed,	/* 按钮按下回调函数 */
+				Callback const& mouse_over,	/* 按钮移入回调函数 */
+				Callback const& mouse_out	/* 按钮移出回调函数 */
 			);
 
 			virtual ~Button();
@@ -53,8 +60,23 @@ namespace easy2d
 				const Callback& func
 			);
 
+			// 设置按钮被按下时的回调函数
+			void SetPressedCallback(
+				const Callback& func
+			);
+
+			// 设置鼠标移入按钮时的回调函数
+			void SetMouseOverCallback(
+				const Callback& func
+			);
+
+			// 设置鼠标移出按钮时的回调函数
+			void SetMouseOutCallback(
+				const Callback& func
+			);
+
 		private:
-			enum class Status { Normal, Hover, Selected };
+			enum class Status { Normal, Hover, Pressed };
 
 			void SetStatus(
 				Status status
@@ -66,7 +88,10 @@ namespace easy2d
 			bool		enabled_;
 			bool		is_selected_;
 			Status		status_;
-			Callback	callback_;
+			Callback	click_callback_;
+			Callback	pressed_callback_;
+			Callback	mouse_over_callback_;
+			Callback	mouse_out_callback_;
 		};
 	}
 }
