@@ -21,6 +21,7 @@
 #include "time.h"
 #include "logs.h"
 #include <regex>
+#include <unordered_map>
 
 namespace easy2d
 {
@@ -108,7 +109,7 @@ namespace easy2d
 		{
 			const auto duration_regex = std::wregex(LR"([-+]?([0-9]*(\.[0-9]*)?[a-z]+)+)");
 
-			typedef std::map<std::wstring, Duration> UnitMap;
+			typedef std::unordered_map<std::wstring, Duration> UnitMap;
 			const auto unit_map = UnitMap
 			{
 				{L"ms", Millisecond},
