@@ -44,7 +44,7 @@ namespace easy2d
 		public:
 			Duration();
 
-			Duration(
+			explicit Duration(
 				long long milliseconds
 			);
 
@@ -147,7 +147,7 @@ namespace easy2d
 			TimePoint();
 
 			explicit TimePoint(
-				const Duration&
+				long long
 			);
 
 			TimePoint(
@@ -159,7 +159,7 @@ namespace easy2d
 			);
 
 			// 是否是零时
-			inline bool IsZero() const { return dur.IsZero(); }
+			inline bool IsZero() const { return dur == 0; }
 
 			const TimePoint operator + (const Duration &) const;
 			const TimePoint operator - (const Duration &) const;
@@ -173,7 +173,7 @@ namespace easy2d
 			TimePoint& operator = (TimePoint &&) E2D_NOEXCEPT;
 
 		private:
-			Duration dur;
+			long long dur;
 		};
 
 		// 获取当前时间
