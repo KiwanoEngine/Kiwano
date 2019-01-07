@@ -35,7 +35,7 @@ namespace easy2d
 		{
 		}
 
-		TimePoint::TimePoint(const Duration& dur)
+		TimePoint::TimePoint(long long dur)
 			: dur(dur)
 		{
 		}
@@ -52,29 +52,29 @@ namespace easy2d
 
 		const TimePoint TimePoint::operator+(const Duration & dur) const
 		{
-			return TimePoint(dur + dur);
+			return TimePoint{ (dur + dur).Milliseconds() };
 		}
 
 		const TimePoint TimePoint::operator-(const Duration & dur) const
 		{
-			return TimePoint(dur - dur);
+			return TimePoint{ (dur - dur).Milliseconds() };
 		}
 
 		TimePoint & TimePoint::operator+=(const Duration & other)
 		{
-			dur += other;
+			dur += other.Milliseconds();
 			return (*this);
 		}
 
 		TimePoint & TimePoint::operator-=(const Duration &other)
 		{
-			dur -= other;
+			dur -= other.Milliseconds();
 			return (*this);
 		}
 
 		const Duration TimePoint::operator-(const TimePoint & other) const
 		{
-			return dur - other.dur;
+			return Duration{ dur - other.dur };
 		}
 
 		TimePoint& TimePoint::operator=(const TimePoint & other) E2D_NOEXCEPT
@@ -449,7 +449,7 @@ namespace easy2d
 
 			const long long whole = (count.QuadPart / freq.QuadPart) * 1000LL;
 			const long long part = (count.QuadPart % freq.QuadPart) * 1000LL / freq.QuadPart;
-			return TimePoint{ Duration{ whole + part } };
+			return TimePoint{ whole + part };
 		}
 
 		Duration easy2d::time::ParseDuration(const std::wstring & str)

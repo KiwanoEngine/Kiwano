@@ -120,7 +120,7 @@ namespace easy2d
 		float GetOpacity()				const	{ return opacity_; }
 
 		// 获取变换
-		Transform const& GetTransform()	const { return transform_; }
+		Transform const& GetTransform()	const	{ return transform_; }
 
 		// 获取包围盒
 		Rect GetBounds() const;
