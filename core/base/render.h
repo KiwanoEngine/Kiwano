@@ -43,7 +43,7 @@ namespace easy2d
 			int primitives;
 		};
 
-		using BitmapMap = std::unordered_map<size_t, cpBitmap>;
+		using BitmapMap = std::unordered_map<size_t, CpBitmap>;
 
 	public:
 		HRESULT Init(HWND hwnd, bool vsync, bool debug);
@@ -78,25 +78,25 @@ namespace easy2d
 		void DiscardResources();
 
 		HRESULT CreateLayer(
-			cpLayer& layer
+			CpLayer& layer
 		);
 
 		HRESULT CreateSolidColorBrush(
-			cpSolidColorBrush& brush
+			CpSolidColorBrush& brush
 		) const;
 
 		HRESULT CreateBitmapFromFile(
-			cpBitmap& bitmap,
+			CpBitmap& bitmap,
 			std::wstring const& file_path
 		);
 
 		HRESULT CreateBitmapFromResource(
-			cpBitmap& bitmap,
+			CpBitmap& bitmap,
 			Resource const& res
 		);
 
 		HRESULT CreateBitmapRenderTarget(
-			cpBitmapRenderTarget& brt
+			CpBitmapRenderTarget& brt
 		);
 
 		HRESULT SetTransform(
@@ -116,27 +116,27 @@ namespace easy2d
 		);
 
 		HRESULT DrawGeometry(
-			cpGeometry const& geometry,
+			CpGeometry const& geometry,
 			const Color& stroke_color,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
 		HRESULT FillGeometry(
-			cpGeometry const& geometry,
+			CpGeometry const& geometry,
 			const Color& fill_color
 		);
 
 		HRESULT DrawImage(
-			spImage const& image
+			SpImage const& image
 		);
 
 		HRESULT DrawBitmap(
-			cpBitmap const& bitmap
+			CpBitmap const& bitmap
 		);
 
 		HRESULT DrawTextLayout(
-			cpTextLayout const& text_layout
+			CpTextLayout const& text_layout
 		);
 
 		HRESULT PushClip(
@@ -147,7 +147,7 @@ namespace easy2d
 		HRESULT PopClip();
 
 		HRESULT PushLayer(
-			cpLayer const& layer,
+			CpLayer const& layer,
 			LayerProperties const& properties
 		);
 
@@ -164,9 +164,9 @@ namespace easy2d
 
 		void ClearImageCache();
 
-		cpHwndRenderTarget const& GetRenderTarget() const;
+		CpHwndRenderTarget const& GetRenderTarget() const;
 
-		cpSolidColorBrush const& GetSolidBrush() const;
+		CpSolidColorBrush const& GetSolidBrush() const;
 
 	protected:
 		GraphicsDevice();
@@ -182,11 +182,11 @@ namespace easy2d
 		D2D1_COLOR_F		clear_color_;
 		TextAntialias		text_antialias_;
 		Status				status_;
-		cpTextRenderer		text_renderer_;
-		cpSolidColorBrush	solid_brush_;
-		cpHwndRenderTarget	render_target_;
-		cpTextFormat		fps_text_format_;
-		cpTextLayout		fps_text_layout_;
+		CpTextRenderer		text_renderer_;
+		CpSolidColorBrush	solid_brush_;
+		CpHwndRenderTarget	render_target_;
+		CpTextFormat		fps_text_format_;
+		CpTextLayout		fps_text_layout_;
 		BitmapMap			bitmap_cache_;
 	};
 

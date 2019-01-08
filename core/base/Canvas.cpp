@@ -247,7 +247,7 @@ namespace easy2d
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawImage(spImage const & image, float opacity)
+	void Canvas::DrawImage(SpImage const & image, float opacity)
 	{
 		if (image && image->GetBitmap())
 		{
@@ -267,7 +267,7 @@ namespace easy2d
 		if (text.empty())
 			return;
 
-		cpTextFormat text_format;
+		CpTextFormat text_format;
 		ThrowIfFailed(
 			Factory::Instance()->CreateTextFormat(
 				text_format,
@@ -276,7 +276,7 @@ namespace easy2d
 			)
 		);
 
-		cpTextLayout text_layout;
+		CpTextLayout text_layout;
 		Size layout_size;
 		ThrowIfFailed(
 			Factory::Instance()->CreateTextLayout(
@@ -293,7 +293,7 @@ namespace easy2d
 		);
 	}
 
-	void Canvas::DrawGeometry(spGeometry const & geo)
+	void Canvas::DrawGeometry(SpGeometry const & geo)
 	{
 		if (geo && geo->geo_)
 		{
@@ -371,7 +371,7 @@ namespace easy2d
 		cache_expired_ = true;
 	}
 
-	void Canvas::FillGeometry(spGeometry const & geo)
+	void Canvas::FillGeometry(SpGeometry const & geo)
 	{
 		if (geo && geo->geo_)
 		{
@@ -493,14 +493,14 @@ namespace easy2d
 		cache_expired_ = true;
 	}
 
-	spImage Canvas::ExportToImage() const
+	SpImage Canvas::ExportToImage() const
 	{
 		auto image = new Image(GetBitmap());
 		image->Crop(Rect(Point{}, this->GetSize()));
 		return image;
 	}
 
-	cpBitmap const& easy2d::Canvas::GetBitmap() const
+	CpBitmap const& easy2d::Canvas::GetBitmap() const
 	{
 		if (cache_expired_)
 		{

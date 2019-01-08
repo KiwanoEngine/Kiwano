@@ -85,7 +85,7 @@ namespace easy2d
 
 		// 画图片
 		void DrawImage(
-			spImage const& image,
+			SpImage const& image,
 			float opacity = 1.f
 		);
 
@@ -97,7 +97,7 @@ namespace easy2d
 
 		// 画几何图形边框
 		void DrawGeometry(
-			spGeometry const& geo
+			SpGeometry const& geo
 		);
 
 		// 填充圆形
@@ -127,7 +127,7 @@ namespace easy2d
 
 		// 填充几何图形
 		void FillGeometry(
-			spGeometry const& geo
+			SpGeometry const& geo
 		);
 
 		// 开始绘制路径
@@ -216,26 +216,26 @@ namespace easy2d
 		);
 
 		// 导出为图片
-		spImage ExportToImage() const;
+		SpImage ExportToImage() const;
 
 		virtual void OnRender() override;
 
 	protected:
-		cpBitmap const& GetBitmap() const;
+		CpBitmap const& GetBitmap() const;
 
 	protected:
 		mutable bool			cache_expired_;
-		mutable cpBitmap		bitmap_cached_;
+		mutable CpBitmap		bitmap_cached_;
 		float					stroke_width_;
 		Font					text_font_;
 		TextStyle				text_style_;
-		cpPathGeometry			current_geometry_;
-		cpGeometrySink			current_sink_;
-		cpStrokeStyle			outline_join_style_;
-		cpSolidColorBrush		fill_brush_;
-		cpSolidColorBrush		stroke_brush_;
-		cpSolidColorBrush		text_brush_;
-		cpTextRenderer			text_renderer_;
-		cpBitmapRenderTarget	render_target_;
+		CpPathGeometry			current_geometry_;
+		CpGeometrySink			current_sink_;
+		CpStrokeStyle			outline_join_style_;
+		CpSolidColorBrush		fill_brush_;
+		CpSolidColorBrush		stroke_brush_;
+		CpSolidColorBrush		text_brush_;
+		CpTextRenderer			text_renderer_;
+		CpBitmapRenderTarget	render_target_;
 	};
 }

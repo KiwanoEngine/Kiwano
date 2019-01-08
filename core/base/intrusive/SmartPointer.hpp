@@ -192,7 +192,7 @@ namespace easy2d
 	}
 
 	template<class T>
-	inline intrusive::SmartPointer<T> make_intrusive(T* ptr) E2D_NOEXCEPT
+	inline intrusive::SmartPointer<T> MakeSmart(T* ptr) E2D_NOEXCEPT
 	{
 		return intrusive::SmartPointer<T>(ptr);
 	}

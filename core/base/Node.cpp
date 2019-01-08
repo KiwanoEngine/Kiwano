@@ -62,7 +62,7 @@ namespace easy2d
 
 		if (!children_.IsEmpty())
 		{
-			spNode next;
+			SpNode next;
 			for (auto child = children_.First(); child; child = next)
 			{
 				next = child->NextItem();
@@ -118,7 +118,7 @@ namespace easy2d
 		if (!visible_)
 			return;
 
-		spNode prev;
+		SpNode prev;
 		for (auto child = children_.Last(); child; child = prev)
 		{
 			prev = child->PrevItem();
@@ -255,7 +255,7 @@ namespace easy2d
 
 		if (parent_)
 		{
-			spNode me = this;
+			SpNode me = this;
 
 			parent_->children_.Remove(me);
 
@@ -272,7 +272,7 @@ namespace easy2d
 
 			if (sibling)
 			{
-				parent_->children_.InsertAfter(me, spNode(sibling));
+				parent_->children_.InsertAfter(me, SpNode(sibling));
 			}
 			else
 			{
@@ -444,7 +444,7 @@ namespace easy2d
 		dirty_transform_ = true;
 	}
 
-	void Node::AddChild(spNode const& child)
+	void Node::AddChild(SpNode const& child)
 	{
 		E2D_ASSERT(child && "Node::AddChild failed, NULL pointer exception");
 
@@ -498,7 +498,7 @@ namespace easy2d
 		return children;
 	}
 
-	spNode Node::GetChild(std::wstring const& name) const
+	SpNode Node::GetChild(std::wstring const& name) const
 	{
 		size_t hash_code = std::hash<std::wstring>{}(name);
 
@@ -525,7 +525,7 @@ namespace easy2d
 		}
 	}
 
-	bool Node::RemoveChild(spNode const& child)
+	bool Node::RemoveChild(SpNode const& child)
 	{
 		return RemoveChild(child.Get());
 	}
@@ -541,7 +541,7 @@ namespace easy2d
 		{
 			child->parent_ = nullptr;
 			if (child->scene_) child->SetScene(nullptr);
-			children_.Remove(spNode(child));
+			children_.Remove(SpNode(child));
 			return true;
 		}
 		return false;

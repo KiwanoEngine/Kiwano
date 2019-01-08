@@ -38,7 +38,7 @@ namespace easy2d
 		if (file_path.empty())
 			return false;
 
-		spMusic music = new (std::nothrow) Music();
+		SpMusic music = new (std::nothrow) Music();
 
 		if (music)
 		{
@@ -117,7 +117,7 @@ namespace easy2d
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			return true;
 
-		spMusic music = new (std::nothrow) Music();
+		SpMusic music = new (std::nothrow) Music();
 
 		if (music)
 		{

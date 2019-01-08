@@ -57,7 +57,7 @@ namespace easy2d
 		float ComputeArea();
 
 	protected:
-		cpGeometry geo_;
+		CpGeometry geo_;
 	};
 
 
@@ -254,8 +254,8 @@ namespace easy2d
 		void ClearPath();
 
 	protected:
-		cpPathGeometry	current_geometry_;
-		cpGeometrySink	current_sink_;
+		CpPathGeometry	current_geometry_;
+		CpGeometrySink	current_sink_;
 	};
 
 

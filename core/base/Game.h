@@ -80,17 +80,17 @@ namespace easy2d
 
 		// 切换场景
 		void EnterScene(
-			spScene const& scene			/* 场景 */
+			SpScene const& scene			/* 场景 */
 		);
 
 		// 切换场景
 		void EnterScene(
-			spScene const& scene,			/* 场景 */
-			spTransition const& transition	/* 场景动画 */
+			SpScene const& scene,			/* 场景 */
+			SpTransition const& transition	/* 场景动画 */
 		);
 
 		// 获取当前场景
-		spScene const& GetCurrentScene();
+		SpScene const& GetCurrentScene();
 
 		// 设置变速
 		void SetTimeScale(float scale);
@@ -117,8 +117,8 @@ namespace easy2d
 		bool			debug_;
 		bool			active_;
 		float			time_scale_;
-		spScene			curr_scene_;
-		spScene			next_scene_;
-		spTransition	transition_;
+		SpScene			curr_scene_;
+		SpScene			next_scene_;
+		SpTransition	transition_;
 	};
 }

@@ -126,8 +126,8 @@ namespace easy2d
 
 	void LineGeometry::SetLine(Point const & begin, Point const & end)
 	{
-		cpPathGeometry path_geo;
-		cpGeometrySink path_sink;
+		CpPathGeometry path_geo;
+		CpGeometrySink path_sink;
 
 		HRESULT hr = Factory::Instance()->CreatePathGeometry(path_geo);
 
@@ -185,7 +185,7 @@ namespace easy2d
 
 	void RectangleGeometry::SetRect(Rect const & rect)
 	{
-		cpRectangleGeometry geo;
+		CpRectangleGeometry geo;
 		if (SUCCEEDED(Factory::Instance()->CreateRectangleGeometry(geo, rect)))
 		{
 			geo_ = geo;
@@ -224,7 +224,7 @@ namespace easy2d
 
 	void CircleGeometry::SetCircle(Point const & center, float radius)
 	{
-		cpEllipseGeometry geo;
+		CpEllipseGeometry geo;
 		if (SUCCEEDED(Factory::Instance()->CreateEllipseGeometry(geo, center, radius, radius)))
 		{
 			geo_ = geo;
@@ -265,7 +265,7 @@ namespace easy2d
 
 	void EllipseGeometry::SetEllipse(Point const & center, float radius_x, float radius_y)
 	{
-		cpEllipseGeometry geo;
+		CpEllipseGeometry geo;
 		if (SUCCEEDED(Factory::Instance()->CreateEllipseGeometry(geo, center, radius_x, radius_y)))
 		{
 			geo_ = geo;
@@ -414,7 +414,7 @@ namespace easy2d
 
 	void RoundedRectGeometry::SetRoundedRect(Rect const & rect, float radius_x, float radius_y)
 	{
-		cpRoundedRectangleGeometry geo;
+		CpRoundedRectangleGeometry geo;
 		if (SUCCEEDED(Factory::Instance()->CreateRoundedRectangleGeometry(geo, rect, radius_x, radius_y)))
 		{
 			geo_ = geo;

@@ -25,12 +25,12 @@ namespace easy2d
 {
 	class EventDispatcher
 	{
-		using Listeners = intrusive::List<spEventListener>;
+		using Listeners = intrusive::List<SpEventListener>;
 
 	public:
 		// Ìí¼Ó¼àÌıÆ÷
 		void AddListener(
-			spEventListener const& listener
+			SpEventListener const& listener
 		);
 
 		// Ìí¼Ó¼àÌıÆ÷

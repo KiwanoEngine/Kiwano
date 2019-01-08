@@ -28,7 +28,7 @@ namespace easy2d
 		if (actions_.IsEmpty())
 			return;
 
-		spAction next;
+		SpAction next;
 		for (auto action = actions_.First(); action; action = next)
 		{
 			next = action->NextItem();
@@ -41,7 +41,7 @@ namespace easy2d
 		}
 	}
 
-	void ActionManager::AddAction(spAction const& action)
+	void ActionManager::AddAction(SpAction const& action)
 	{
 		E2D_ASSERT(action && "AddAction failed, NULL pointer exception");
 

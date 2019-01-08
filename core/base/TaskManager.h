@@ -25,12 +25,12 @@ namespace easy2d
 {
 	class TaskManager
 	{
-		using Tasks = intrusive::List<spTask>;
+		using Tasks = intrusive::List<SpTask>;
 
 	public:
 		// 添加任务
 		void AddTask(
-			spTask const& task
+			SpTask const& task
 		);
 
 		// 启动任务

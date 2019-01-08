@@ -55,7 +55,7 @@ namespace easy2d
 		return done_;
 	}
 
-	void Transition::Init(spScene const& prev, spScene const& next)
+	void Transition::Init(SpScene const& prev, SpScene const& next)
 	{
 		process_ = 0;
 		delta_ = Duration{};
@@ -147,7 +147,7 @@ namespace easy2d
 	{
 	}
 
-	void BoxTransition::Init(spScene const& prev, spScene const& next)
+	void BoxTransition::Init(SpScene const& prev, SpScene const& next)
 	{
 		Transition::Init(prev, next);
 
@@ -189,7 +189,7 @@ namespace easy2d
 	{
 	}
 
-	void EmergeTransition::Init(spScene const& prev, spScene const& next)
+	void EmergeTransition::Init(SpScene const& prev, SpScene const& next)
 	{
 		Transition::Init(prev, next);
 
@@ -214,7 +214,7 @@ namespace easy2d
 	{
 	}
 
-	void FadeTransition::Init(spScene const& prev, spScene const& next)
+	void FadeTransition::Init(SpScene const& prev, SpScene const& next)
 	{
 		Transition::Init(prev, next);
 
@@ -248,7 +248,7 @@ namespace easy2d
 	{
 	}
 
-	void MoveTransition::Init(spScene const& prev, spScene const& next)
+	void MoveTransition::Init(SpScene const& prev, SpScene const& next)
 	{
 		Transition::Init(prev, next);
 
@@ -327,7 +327,7 @@ namespace easy2d
 	{
 	}
 
-	void RotationTransition::Init(spScene const& prev, spScene const& next)
+	void RotationTransition::Init(SpScene const& prev, SpScene const& next)
 	{
 		Transition::Init(prev, next);
 

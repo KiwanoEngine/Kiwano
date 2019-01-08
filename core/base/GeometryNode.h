@@ -32,14 +32,14 @@ namespace easy2d
 		GeometryNode();
 
 		GeometryNode(
-			spGeometry const& geometry
+			SpGeometry const& geometry
 		);
 
 		virtual ~GeometryNode();
 
 		// 设置形状
 		void SetGeometry(
-			spGeometry const& geometry
+			SpGeometry const& geometry
 		);
 
 		// 设置填充颜色
@@ -63,7 +63,7 @@ namespace easy2d
 		);
 
 		// 获取形状
-		spGeometry const& GetGeometry() const { return geometry_; }
+		SpGeometry const& GetGeometry() const { return geometry_; }
 
 		// 获取填充颜色
 		Color GetFillColor() const { return fill_color_; }
@@ -84,6 +84,6 @@ namespace easy2d
 		Color		stroke_color_;
 		float		stroke_width_;
 		StrokeStyle	outline_join_;
-		spGeometry	geometry_;
+		SpGeometry	geometry_;
 	};
 }

@@ -108,17 +108,17 @@ namespace easy2d
 		bitmap_cache_.clear();
 	}
 
-	cpHwndRenderTarget const & GraphicsDevice::GetRenderTarget() const
+	CpHwndRenderTarget const & GraphicsDevice::GetRenderTarget() const
 	{
 		return render_target_;
 	}
 
-	cpSolidColorBrush const & GraphicsDevice::GetSolidBrush() const
+	CpSolidColorBrush const & GraphicsDevice::GetSolidBrush() const
 	{
 		return solid_brush_;
 	}
 
-	HRESULT GraphicsDevice::CreateLayer(cpLayer& layer)
+	HRESULT GraphicsDevice::CreateLayer(CpLayer& layer)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -127,7 +127,7 @@ namespace easy2d
 		return render_target_->CreateLayer(&layer);
 	}
 
-	HRESULT GraphicsDevice::CreateSolidColorBrush(cpSolidColorBrush & brush) const
+	HRESULT GraphicsDevice::CreateSolidColorBrush(CpSolidColorBrush & brush) const
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -140,7 +140,7 @@ namespace easy2d
 	}
 
 	HRESULT GraphicsDevice::DrawGeometry(
-		cpGeometry const& geometry,
+		CpGeometry const& geometry,
 		Color const& stroke_color,
 		float stroke_width,
 		StrokeStyle stroke
@@ -167,7 +167,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::FillGeometry(cpGeometry const & geometry, const Color & fill_color)
+	HRESULT GraphicsDevice::FillGeometry(CpGeometry const & geometry, const Color & fill_color)
 	{
 		if (!solid_brush_ ||
 			!render_target_)
@@ -187,7 +187,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::DrawImage(spImage const & image)
+	HRESULT GraphicsDevice::DrawImage(SpImage const & image)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -212,7 +212,7 @@ namespace easy2d
 	}
 
 	HRESULT GraphicsDevice::DrawBitmap(
-		cpBitmap const& bitmap
+		CpBitmap const& bitmap
 	)
 	{
 		if (!render_target_)
@@ -236,7 +236,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::DrawTextLayout(cpTextLayout const& text_layout)
+	HRESULT GraphicsDevice::DrawTextLayout(CpTextLayout const& text_layout)
 	{
 		if (!text_renderer_)
 			return E_UNEXPECTED;
@@ -277,7 +277,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::PushLayer(cpLayer const& layer, LayerProperties const& properties)
+	HRESULT GraphicsDevice::PushLayer(CpLayer const& layer, LayerProperties const& properties)
 	{
 		if (!render_target_ ||
 			!solid_brush_)
@@ -324,7 +324,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::CreateBitmapFromFile(cpBitmap& bitmap, std::wstring const& file_path)
+	HRESULT GraphicsDevice::CreateBitmapFromFile(CpBitmap& bitmap, std::wstring const& file_path)
 	{
 		if (render_target_ == nullptr)
 		{
@@ -338,7 +338,7 @@ namespace easy2d
 			return S_OK;
 		}
 
-		cpBitmap bitmap_tmp;
+		CpBitmap bitmap_tmp;
 		HRESULT hr = Factory::Instance()->CreateBitmapFromFile(
 			bitmap,
 			render_target_,
@@ -353,7 +353,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT GraphicsDevice::CreateBitmapFromResource(cpBitmap& bitmap, Resource const& res)
+	HRESULT GraphicsDevice::CreateBitmapFromResource(CpBitmap& bitmap, Resource const& res)
 	{
 		if (render_target_ == nullptr)
 		{
@@ -381,7 +381,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT GraphicsDevice::CreateBitmapRenderTarget(cpBitmapRenderTarget & brt)
+	HRESULT GraphicsDevice::CreateBitmapRenderTarget(CpBitmapRenderTarget & brt)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
