@@ -29,7 +29,7 @@ namespace easy2d
 		{
 		}
 
-		Menu::Menu(const std::vector<spButton>& buttons)
+		Menu::Menu(const std::vector<SpButton>& buttons)
 			: enabled_(true)
 		{
 			for (const auto& button : buttons)
@@ -61,7 +61,7 @@ namespace easy2d
 			}
 		}
 
-		void Menu::AddButton(spButton const& button)
+		void Menu::AddButton(SpButton const& button)
 		{
 			if (button)
 			{
@@ -71,7 +71,7 @@ namespace easy2d
 			}
 		}
 
-		bool Menu::RemoveButton(spButton const& button)
+		bool Menu::RemoveButton(SpButton const& button)
 		{
 			if (buttons_.empty())
 			{
@@ -94,7 +94,7 @@ namespace easy2d
 			return false;
 		}
 
-		const std::vector<spButton>& Menu::GetAllButtons() const
+		const std::vector<SpButton>& Menu::GetAllButtons() const
 		{
 			return buttons_;
 		}

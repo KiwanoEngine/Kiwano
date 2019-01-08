@@ -31,7 +31,7 @@ namespace easy2d
 	{
 	}
 
-	Animation::Animation(spFrames const& animation)
+	Animation::Animation(SpFrames const& animation)
 		: frame_index_(0)
 		, frames_(nullptr)
 	{
@@ -42,12 +42,12 @@ namespace easy2d
 	{
 	}
 
-	spFrames Animation::GetAnimation() const
+	SpFrames Animation::GetAnimation() const
 	{
 		return frames_;
 	}
 
-	void Animation::SetAnimation(spFrames const& animation)
+	void Animation::SetAnimation(SpFrames const& animation)
 	{
 		if (animation && animation != frames_)
 		{
@@ -106,7 +106,7 @@ namespace easy2d
 		frame_index_ = 0;
 	}
 
-	spAction Animation::Clone() const
+	SpAction Animation::Clone() const
 	{
 		if (frames_)
 		{
@@ -115,7 +115,7 @@ namespace easy2d
 		return nullptr;
 	}
 
-	spAction Animation::Reverse() const
+	SpAction Animation::Reverse() const
 	{
 		if (frames_)
 		{

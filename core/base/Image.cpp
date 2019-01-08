@@ -58,7 +58,7 @@ namespace easy2d
 		this->Crop(crop_rect);
 	}
 
-	Image::Image(cpBitmap const & bitmap)
+	Image::Image(CpBitmap const & bitmap)
 		: Image()
 	{
 		SetBitmap(bitmap);
@@ -70,7 +70,7 @@ namespace easy2d
 
 	bool Image::Load(Resource const& res)
 	{
-		cpBitmap bitmap;
+		CpBitmap bitmap;
 		HRESULT hr = Graphics::Instance()->CreateBitmapFromResource(bitmap, res);
 		if (FAILED(hr))
 		{
@@ -94,7 +94,7 @@ namespace easy2d
 		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
 		std::wstring image_file_path = image_file.GetPath();
 
-		cpBitmap bitmap;
+		CpBitmap bitmap;
 		HRESULT hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, image_file_path);
 		if (FAILED(hr))
 		{
@@ -181,12 +181,12 @@ namespace easy2d
 		return crop_rect_;
 	}
 
-	cpBitmap const& Image::GetBitmap() const
+	CpBitmap const& Image::GetBitmap() const
 	{
 		return bitmap_;
 	}
 
-	void Image::SetBitmap(cpBitmap const & bitmap)
+	void Image::SetBitmap(CpBitmap const & bitmap)
 	{
 		if (bitmap)
 		{

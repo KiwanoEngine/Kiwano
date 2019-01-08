@@ -28,18 +28,20 @@
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
 	class class_name;\
-	using sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >
+	using Sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >
 
 #define E2D_DECLARE_NS_SMART_PTR(ns_name, class_name)\
 	namespace ns_name\
 	{\
 		class class_name; \
-		using sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >;\
+		using Sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >;\
 	}
 #endif
 
 namespace easy2d
 {
+	// "Sp" is a shorthand for "Smart Pointer"
+
 	E2D_DECLARE_SMART_PTR(Image);
 	E2D_DECLARE_SMART_PTR(Music);
 	E2D_DECLARE_SMART_PTR(Task);
@@ -97,19 +99,4 @@ namespace easy2d
 	using Size = math::Vector2;
 	using Rect = math::Rect;
 	using Matrix = math::Matrix;
-
-	template <typename Dest, typename Src>
-	inline Dest SafeCast(Src ptr)
-	{
-		if (!ptr)
-			return nullptr;
-
-#ifdef E2D_DEBUG
-		Dest cast = dynamic_cast<Dest>(ptr);
-		E2D_ASSERT(cast);
-		return cast;
-#else
-		return static_cast<Dest>(ptr);
-#endif
-	}
 }

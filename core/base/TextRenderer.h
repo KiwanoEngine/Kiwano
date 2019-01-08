@@ -123,4 +123,4 @@ namespace easy2d
 	};
 }
 
-E2D_DECLARE_D2D_SMART_PTR(easy2d::ITextRenderer, cpTextRenderer);
+E2D_DECLARE_D2D_SMART_PTR(easy2d::ITextRenderer, CpTextRenderer);

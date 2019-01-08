@@ -51,12 +51,12 @@ namespace easy2d
 		}
 	}
 
-	spAction Delay::Clone() const
+	SpAction Delay::Clone() const
 	{
 		return new (std::nothrow) Delay(delay_);
 	}
 
-	spAction Delay::Reverse() const
+	SpAction Delay::Reverse() const
 	{
 		return new (std::nothrow) Delay(delay_);
 	}

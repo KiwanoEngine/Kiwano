@@ -28,7 +28,7 @@ namespace easy2d
 	class Frames
 		: public Object
 	{
-		using Images = std::vector< spImage >;
+		using Images = std::vector< SpImage >;
 
 	public:
 		Frames();
@@ -50,7 +50,7 @@ namespace easy2d
 
 		// 添加关键帧
 		void Add(
-			spImage const& frame		/* 关键帧 */
+			SpImage const& frame		/* 关键帧 */
 		);
 
 		// 添加多个关键帧
@@ -70,10 +70,10 @@ namespace easy2d
 		);
 
 		// 获取帧动画的拷贝对象
-		spFrames Clone() const;
+		SpFrames Clone() const;
 
 		// 获取帧动画的倒转
-		spFrames Reverse() const;
+		SpFrames Reverse() const;
 
 	protected:
 		Duration	interval_;

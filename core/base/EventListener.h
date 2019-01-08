@@ -32,10 +32,10 @@ namespace easy2d
 
 	class EventListener
 		: public Object
-		, protected intrusive::ListItem<spEventListener>
+		, protected intrusive::ListItem<SpEventListener>
 	{
 		friend class EventDispatcher;
-		friend class intrusive::List<spEventListener>;
+		friend class intrusive::List<SpEventListener>;
 
 	public:
 		EventListener(
@@ -58,7 +58,7 @@ namespace easy2d
 
 	protected:
 		bool			running_;
-		std::wstring			name_;
+		std::wstring	name_;
 		EventType		type_;
 		EventCallback	callback_;
 	};

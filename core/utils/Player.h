@@ -29,7 +29,7 @@ namespace easy2d
 	class Player
 		: protected Noncopyable
 	{
-		using MusicMap = std::unordered_map<size_t, spMusic>;
+		using MusicMap = std::unordered_map<size_t, SpMusic>;
 
 	public:
 		Player();

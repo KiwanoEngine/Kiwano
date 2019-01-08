@@ -37,11 +37,13 @@ namespace easy2d
 
 			// Shlwapi functions
 			typedef BOOL(WINAPI *PFN_PathFileExistsW)(LPCWSTR);
+			typedef IStream*(WINAPI *PFN_SHCreateMemStream)(const BYTE*, UINT);
 
 		public:
 			Shlwapi();
 
 			PFN_PathFileExistsW PathFileExistsW;
+			PFN_SHCreateMemStream SHCreateMemStream;
 		};
 
 

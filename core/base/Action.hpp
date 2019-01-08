@@ -30,13 +30,13 @@ namespace easy2d
 
 	class Action
 		: public Object
-		, protected intrusive::ListItem<spAction>
+		, protected intrusive::ListItem<SpAction>
 	{
 		friend class ActionManager;
 		friend class Loop;
 		friend class Sequence;
 		friend class Spawn;
-		friend class intrusive::List<spAction>;
+		friend class intrusive::List<SpAction>;
 
 	public:
 		Action() : running_(false), done_(false), initialized_(false) {}
@@ -56,10 +56,10 @@ namespace easy2d
 		virtual void Stop() { if (!done_) { done_ = true; if (cb_) cb_(); } }
 
 		// 获取动作的拷贝
-		virtual spAction Clone() const = 0;
+		virtual SpAction Clone() const = 0;
 
 		// 获取动作的倒转
-		virtual spAction Reverse() const = 0;
+		virtual SpAction Reverse() const = 0;
 
 		// 重置动作
 		virtual void Reset()

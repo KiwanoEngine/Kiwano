@@ -28,7 +28,7 @@ namespace easy2d
 	{
 	}
 
-	Sprite::Sprite(spImage const& image)
+	Sprite::Sprite(SpImage const& image)
 		: image_(nullptr)
 	{
 		Load(image);
@@ -64,7 +64,7 @@ namespace easy2d
 	{
 	}
 
-	bool Sprite::Load(spImage const& image)
+	bool Sprite::Load(SpImage const& image)
 	{
 		if (image)
 		{
@@ -121,7 +121,7 @@ namespace easy2d
 		);
 	}
 
-	spImage const& Sprite::GetImage() const
+	SpImage const& Sprite::GetImage() const
 	{
 		return image_;
 	}

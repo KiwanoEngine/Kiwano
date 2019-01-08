@@ -27,7 +27,7 @@ namespace easy2d
 	// Loop
 	//-------------------------------------------------------
 
-	Loop::Loop(spAction const& action, int times)
+	Loop::Loop(SpAction const& action, int times)
 		: action_(action)
 		, times_(0)
 		, total_times_(times)
@@ -41,7 +41,7 @@ namespace easy2d
 	{
 	}
 
-	spAction Loop::Clone() const
+	SpAction Loop::Clone() const
 	{
 		if (action_)
 		{
@@ -53,7 +53,7 @@ namespace easy2d
 		}
 	}
 
-	spAction Loop::Reverse() const
+	SpAction Loop::Reverse() const
 	{
 		if (action_)
 		{
@@ -172,7 +172,7 @@ namespace easy2d
 		action_index_ = 0;
 	}
 
-	void Sequence::Add(spAction const& action)
+	void Sequence::Add(SpAction const& action)
 	{
 		if (action)
 		{
@@ -188,7 +188,7 @@ namespace easy2d
 		}
 	}
 
-	spAction Sequence::Clone() const
+	SpAction Sequence::Clone() const
 	{
 		auto sequence = new (std::nothrow) Sequence();
 		if (sequence)
@@ -204,7 +204,7 @@ namespace easy2d
 		return sequence;
 	}
 
-	spAction Sequence::Reverse() const
+	SpAction Sequence::Reverse() const
 	{
 		auto sequence = new (std::nothrow) Sequence();
 		if (sequence && !actions_.empty())
@@ -281,7 +281,7 @@ namespace easy2d
 		}
 	}
 
-	void Spawn::Add(spAction const& action)
+	void Spawn::Add(SpAction const& action)
 	{
 		if (action)
 		{
@@ -297,7 +297,7 @@ namespace easy2d
 		}
 	}
 
-	spAction Spawn::Clone() const
+	SpAction Spawn::Clone() const
 	{
 		auto spawn = new (std::nothrow) Spawn();
 		if (spawn)
@@ -313,7 +313,7 @@ namespace easy2d
 		return spawn;
 	}
 
-	spAction Spawn::Reverse() const
+	SpAction Spawn::Reverse() const
 	{
 		auto spawn = new (std::nothrow) Spawn();
 		if (spawn && !actions_.empty())

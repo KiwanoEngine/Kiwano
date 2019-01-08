@@ -44,7 +44,7 @@ namespace easy2d
 		void OnUpdate(Duration const& dt) override;
 
 	protected:
-		spText debug_text_;
+		SpText debug_text_;
 		std::vector<TimePoint> frame_time_;
 		std::vector<std::wstring> texts_;
 	};

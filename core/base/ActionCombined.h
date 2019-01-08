@@ -29,17 +29,17 @@ namespace easy2d
 	{
 	public:
 		explicit Loop(
-			spAction const& action,	/* 执行循环的动作 */
+			SpAction const& action,	/* 执行循环的动作 */
 			int times = -1			/* 循环次数 */
 		);
 
 		virtual ~Loop();
 
 		// 获取该动作的拷贝对象
-		virtual spAction Clone() const override;
+		virtual SpAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual spAction Reverse() const override;
+		virtual SpAction Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;
@@ -54,7 +54,7 @@ namespace easy2d
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
-		spAction	action_;
+		SpAction	action_;
 		int			times_;
 		int			total_times_;
 	};
@@ -64,7 +64,7 @@ namespace easy2d
 	class Sequence
 		: public Action
 	{
-		using Actions = std::vector<spAction>;
+		using Actions = std::vector<SpAction>;
 
 	public:
 		Sequence();
@@ -77,7 +77,7 @@ namespace easy2d
 
 		// 在结尾添加动作
 		void Add(
-			spAction const& action
+			SpAction const& action
 		);
 
 		// 在结尾添加多个动作
@@ -86,10 +86,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual spAction Clone() const override;
+		virtual SpAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual spAction Reverse() const override;
+		virtual SpAction Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;
@@ -111,7 +111,7 @@ namespace easy2d
 	class Spawn
 		: public Action
 	{
-		using Actions = std::vector<spAction>;
+		using Actions = std::vector<SpAction>;
 
 	public:
 		Spawn();
@@ -124,7 +124,7 @@ namespace easy2d
 
 		// 在结尾添加动作
 		void Add(
-			spAction const& action
+			SpAction const& action
 		);
 
 		// 在结尾添加多个动作
@@ -133,10 +133,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual spAction Clone() const override;
+		virtual SpAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual spAction Reverse() const;
+		virtual SpAction Reverse() const;
 
 		// 重置动作
 		virtual void Reset() override;

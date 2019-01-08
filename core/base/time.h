@@ -20,7 +20,6 @@
 
 #pragma once
 #include "macros.h"
-#include <cstdint>
 
 namespace easy2d
 {
@@ -45,11 +44,11 @@ namespace easy2d
 			Duration();
 
 			explicit Duration(
-				long long milliseconds
+				long milliseconds
 			);
 
 			// 转化为毫秒
-			inline long long Milliseconds() const { return milliseconds_; }
+			inline long Milliseconds() const { return milliseconds_; }
 
 			// 转化为秒
 			float Seconds() const;
@@ -84,40 +83,31 @@ namespace easy2d
 			const Duration operator * (double) const;
 			const Duration operator * (long double) const;
 			const Duration operator / (int) const;
-			const Duration operator / (unsigned long long) const;
 			const Duration operator / (float) const;
 			const Duration operator / (double) const;
-			const Duration operator / (long double) const;
 
 			Duration& operator += (const Duration &);
 			Duration& operator -= (const Duration &);
 			Duration& operator *= (int);
-			Duration& operator *= (unsigned long long);
 			Duration& operator *= (float);
 			Duration& operator *= (double);
-			Duration& operator *= (long double);
 			Duration& operator /= (int);
-			Duration& operator /= (unsigned long long);
 			Duration& operator /= (float);
 			Duration& operator /= (double);
-			Duration& operator /= (long double);
 
 			friend const Duration operator* (int, const Duration &);
-			friend const Duration operator* (unsigned long long, const Duration &);
 			friend const Duration operator* (float, const Duration &);
 			friend const Duration operator* (double, const Duration &);
 			friend const Duration operator* (long double, const Duration &);
 			friend const Duration operator/ (int, const Duration &);
-			friend const Duration operator/ (unsigned long long, const Duration &);
 			friend const Duration operator/ (float, const Duration &);
 			friend const Duration operator/ (double, const Duration &);
-			friend const Duration operator/ (long double, const Duration &);
 
 			friend std::wostream& operator<< (std::wostream &, const Duration &);
 			friend std::wistream& operator>> (std::wistream &, Duration &);
 
 		private:
-			long long milliseconds_;
+			long milliseconds_;
 		};
 
 		extern const Duration Millisecond;	// 毫秒
@@ -129,12 +119,12 @@ namespace easy2d
 		// 时间
 		//
 		// Usage:
-		//     获取当前时间: Time now = time::Now();
+		//     获取当前时间: TimePoint now = time::Now();
 		//     时间操作:
 		//         两时间相减, 得到一个 Duration 对象, 例如:
-		//         Time t1 = time::Now();
+		//         TimePoint t1 = time::Now();
 		//         ...  // 做些什么
-		//         Time t2 = time::Now();
+		//         TimePoint t2 = time::Now();
 		//         auto duration = t2 - t1;
 		//         获取两时间相差的毫秒数:
 		//         int ms = duration.Milliseconds();
@@ -147,7 +137,7 @@ namespace easy2d
 			TimePoint();
 
 			explicit TimePoint(
-				long long
+				long
 			);
 
 			TimePoint(
@@ -173,7 +163,7 @@ namespace easy2d
 			TimePoint& operator = (TimePoint &&) E2D_NOEXCEPT;
 
 		private:
-			long long dur;
+			long dur;
 		};
 
 		// 获取当前时间

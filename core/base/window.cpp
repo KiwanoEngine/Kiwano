@@ -55,7 +55,7 @@ namespace easy2d
 		WNDCLASSEX wcex		= { 0 };
 		wcex.cbSize			= sizeof(WNDCLASSEX);
 		wcex.lpszClassName	= REGISTER_CLASS;
-		wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+		wcex.style			= CS_HREDRAW | CS_VREDRAW /* | CS_DBLCLKS */;
 		wcex.lpfnWndProc	= proc;
 		wcex.hIcon			= nullptr;
 		wcex.cbClsExtra		= 0;

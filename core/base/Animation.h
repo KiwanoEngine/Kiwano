@@ -31,24 +31,24 @@ namespace easy2d
 		Animation();
 
 		explicit Animation(
-			spFrames const& animation
+			SpFrames const& animation
 		);
 
 		virtual ~Animation();
 
 		// 获取动画
-		spFrames GetAnimation() const;
+		SpFrames GetAnimation() const;
 
 		// 设置动画
 		void SetAnimation(
-			spFrames const& animation
+			SpFrames const& animation
 		);
 
 		// 获取该动作的拷贝对象
-		virtual spAction Clone() const override;
+		virtual SpAction Clone() const override;
 
 		// 获取该动作的倒转
-		virtual spAction Reverse() const override;
+		virtual SpAction Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;
@@ -63,6 +63,6 @@ namespace easy2d
 	protected:
 		size_t frame_index_;
 		Duration delta_;
-		spFrames frames_;
+		SpFrames frames_;
 	};
 }

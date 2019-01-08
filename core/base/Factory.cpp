@@ -111,12 +111,12 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateHwndRenderTarget(cpHwndRenderTarget & hwnd_render_target, D2D1_RENDER_TARGET_PROPERTIES const & properties, D2D1_HWND_RENDER_TARGET_PROPERTIES const & hwnd_rt_properties) const
+	HRESULT FactoryImpl::CreateHwndRenderTarget(CpHwndRenderTarget & hwnd_render_target, D2D1_RENDER_TARGET_PROPERTIES const & properties, D2D1_HWND_RENDER_TARGET_PROPERTIES const & hwnd_rt_properties) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		cpHwndRenderTarget hwnd_render_target_tmp;
+		CpHwndRenderTarget hwnd_render_target_tmp;
 		HRESULT hr = factory_->CreateHwndRenderTarget(
 			properties,
 			hwnd_rt_properties,
@@ -129,15 +129,15 @@ namespace easy2d
 	}
 
 	HRESULT FactoryImpl::CreateTextRenderer(
-		cpTextRenderer& text_renderer,
-		cpRenderTarget const& render_target,
-		cpSolidColorBrush const& brush
+		CpTextRenderer& text_renderer,
+		CpRenderTarget const& render_target,
+		CpSolidColorBrush const& brush
 	)
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		cpTextRenderer text_renderer_tmp;
+		CpTextRenderer text_renderer_tmp;
 		HRESULT hr = ITextRenderer::Create(
 			&text_renderer_tmp,
 			factory_.Get(),
@@ -150,7 +150,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateBitmapFromFile(cpBitmap & bitmap, cpRenderTarget const & rt, std::wstring const & file_path)
+	HRESULT FactoryImpl::CreateBitmapFromFile(CpBitmap & bitmap, CpRenderTarget const & rt, std::wstring const & file_path)
 	{
 		if (imaging_factory_ == nullptr)
 		{
@@ -211,7 +211,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateBitmapFromResource(cpBitmap & bitmap, cpRenderTarget const & rt, Resource const & res)
+	HRESULT FactoryImpl::CreateBitmapFromResource(CpBitmap & bitmap, CpRenderTarget const & rt, Resource const & res)
 	{
 		if (imaging_factory_ == nullptr)
 		{
@@ -293,12 +293,12 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateRectangleGeometry(cpRectangleGeometry & geo, Rect const& rect) const
+	HRESULT FactoryImpl::CreateRectangleGeometry(CpRectangleGeometry & geo, Rect const& rect) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		cpRectangleGeometry rectangle;
+		CpRectangleGeometry rectangle;
 		HRESULT hr = factory_->CreateRectangleGeometry(
 			rect,
 			&rectangle
@@ -309,12 +309,12 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateRoundedRectangleGeometry(cpRoundedRectangleGeometry & geo, Rect const & rect, float radius_x, float radius_y) const
+	HRESULT FactoryImpl::CreateRoundedRectangleGeometry(CpRoundedRectangleGeometry & geo, Rect const & rect, float radius_x, float radius_y) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		cpRoundedRectangleGeometry rounded_rect;
+		CpRoundedRectangleGeometry rounded_rect;
 		HRESULT hr = factory_->CreateRoundedRectangleGeometry(
 			D2D1::RoundedRect(
 				rect,
@@ -329,12 +329,12 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateEllipseGeometry(cpEllipseGeometry & geo, Point const & center, float radius_x, float radius_y) const
+	HRESULT FactoryImpl::CreateEllipseGeometry(CpEllipseGeometry & geo, Point const & center, float radius_x, float radius_y) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		cpEllipseGeometry ellipse;
+		CpEllipseGeometry ellipse;
 		HRESULT hr = factory_->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				center,
@@ -350,15 +350,15 @@ namespace easy2d
 	}
 
 	HRESULT FactoryImpl::CreateTransformedGeometry(
-		cpTransformedGeometry& transformed,
+		CpTransformedGeometry& transformed,
 		Matrix const& matrix,
-		cpGeometry const& geo
+		CpGeometry const& geo
 	) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		cpTransformedGeometry transformed_tmp;
+		CpTransformedGeometry transformed_tmp;
 		HRESULT hr = factory_->CreateTransformedGeometry(
 			geo.Get(),
 			matrix,
@@ -372,7 +372,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreatePathGeometry(cpPathGeometry & geometry) const
+	HRESULT FactoryImpl::CreatePathGeometry(CpPathGeometry & geometry) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
@@ -380,12 +380,12 @@ namespace easy2d
 		return factory_->CreatePathGeometry(&geometry);
 	}
 
-	HRESULT FactoryImpl::CreateTextFormat(cpTextFormat & text_format, Font const & font, TextStyle const & text_style) const
+	HRESULT FactoryImpl::CreateTextFormat(CpTextFormat & text_format, Font const & font, TextStyle const & text_style) const
 	{
 		if (!write_factory_)
 			return E_UNEXPECTED;
 
-		cpTextFormat text_format_tmp;
+		CpTextFormat text_format_tmp;
 		HRESULT hr = write_factory_->CreateTextFormat(
 			font.family.c_str(),
 			nullptr,
@@ -418,7 +418,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateTextLayout(cpTextLayout & text_layout, Size& layout_size, std::wstring const & text, cpTextFormat const& text_format, TextStyle const & text_style) const
+	HRESULT FactoryImpl::CreateTextLayout(CpTextLayout & text_layout, Size& layout_size, std::wstring const & text, CpTextFormat const& text_format, TextStyle const & text_style) const
 	{
 		if (!write_factory_)
 			return E_UNEXPECTED;
@@ -426,7 +426,7 @@ namespace easy2d
 		text_layout = nullptr;
 
 		HRESULT hr;
-		cpTextLayout text_layout_tmp;
+		CpTextLayout text_layout_tmp;
 		UINT32 length = static_cast<UINT32>(text.length());
 
 		if (text_style.wrap)
@@ -496,7 +496,7 @@ namespace easy2d
 		return hr;
 	}
 
-	cpStrokeStyle const& FactoryImpl::GetStrokeStyle(StrokeStyle stroke) const
+	CpStrokeStyle const& FactoryImpl::GetStrokeStyle(StrokeStyle stroke) const
 	{
 		switch (stroke)
 		{

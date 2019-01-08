@@ -79,7 +79,7 @@ namespace easy2d
 		ResourceData buffer;
 		if (!res.Load(&buffer)) { return false; }
 
-		stream = SHCreateMemStream(
+		stream = modules::Shlwapi{}.SHCreateMemStream(
 			static_cast<const BYTE*>(buffer.buffer),
 			static_cast<UINT>(buffer.buffer_size)
 		);

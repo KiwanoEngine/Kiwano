@@ -31,7 +31,7 @@ namespace easy2d
 	{
 	}
 
-	GeometryNode::GeometryNode(spGeometry const& geometry)
+	GeometryNode::GeometryNode(SpGeometry const& geometry)
 		: GeometryNode()
 	{
 		SetGeometry(geometry);
@@ -41,7 +41,7 @@ namespace easy2d
 	{
 	}
 
-	void GeometryNode::SetGeometry(spGeometry const& geometry)
+	void GeometryNode::SetGeometry(SpGeometry const& geometry)
 	{
 		geometry_ = geometry;
 	}

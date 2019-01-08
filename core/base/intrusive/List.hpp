@@ -82,7 +82,7 @@ namespace easy2d
 
 			bool IsEmpty() const { return !first_; }
 
-			void PushBack(T& child)
+			void PushBack(T const& child)
 			{
 				if (child->prev_)
 					child->prev_->next_ = child->next_;
@@ -106,7 +106,7 @@ namespace easy2d
 				DEBUG_CHECK_LIST(this);
 			}
 
-			void PushFront(T& child)
+			void PushFront(T const& child)
 			{
 				if (child->prev_)
 					child->prev_->next_ = child->next_;
@@ -130,7 +130,7 @@ namespace easy2d
 				DEBUG_CHECK_LIST(this);
 			}
 
-			void InsertBefore(T& child, T& before)
+			void InsertBefore(T const& child, T const& before)
 			{
 				if (child->prev_)
 					child->prev_->next_ = child->next_;
@@ -149,7 +149,7 @@ namespace easy2d
 				DEBUG_CHECK_LIST(this);
 			}
 
-			void InsertAfter(T& child, T& after)
+			void InsertAfter(T const& child, T const& after)
 			{
 				if (child->prev_)
 					child->prev_->next_ = child->next_;
@@ -168,7 +168,7 @@ namespace easy2d
 				DEBUG_CHECK_LIST(this);
 			}
 
-			void Remove(T& child)
+			void Remove(T const& child)
 			{
 #ifdef E2D_DEBUG
 				T tmp = first_;

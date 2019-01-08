@@ -22,7 +22,7 @@
 
 namespace easy2d
 {
-	Task::Task(const Callback & func, std::wstring const& name)
+	Task::Task(Callback const& func, std::wstring const& name)
 		: Task(func, Duration{}, -1, name)
 	{
 	}

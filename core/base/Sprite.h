@@ -32,7 +32,7 @@ namespace easy2d
 		Sprite();
 
 		explicit Sprite(
-			spImage const& image
+			SpImage const& image
 		);
 
 		explicit Sprite(
@@ -67,7 +67,7 @@ namespace easy2d
 
 		// 加载图片
 		bool Load(
-			spImage const& image
+			SpImage const& image
 		);
 
 		// 将图片裁剪为矩形
@@ -76,12 +76,12 @@ namespace easy2d
 		);
 
 		// 获取 Image 对象
-		spImage const& GetImage() const;
+		SpImage const& GetImage() const;
 
 		// 渲染精灵
 		virtual void OnRender() override;
 
 	protected:
-		spImage image_;
+		SpImage image_;
 	};
 }

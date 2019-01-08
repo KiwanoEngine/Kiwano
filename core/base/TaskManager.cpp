@@ -28,7 +28,7 @@ namespace easy2d
 		if (tasks_.IsEmpty())
 			return;
 
-		spTask next;
+		SpTask next;
 		for (auto task = tasks_.First(); task; task = next)
 		{
 			next = task->NextItem();
@@ -41,14 +41,14 @@ namespace easy2d
 		}
 	}
 
-	void TaskManager::AddTask(spTask const& task)
+	void TaskManager::AddTask(SpTask const& task)
 	{
 		E2D_ASSERT(task && "AddTask failed, NULL pointer exception");
 
 		if (task)
 		{
 			task->Reset();
-			tasks_.PushBack(Task::ItemType(task));
+			tasks_.PushBack(task);
 		}
 	}
 
@@ -85,7 +85,7 @@ namespace easy2d
 		if (tasks_.IsEmpty())
 			return;
 
-		spTask next;
+		SpTask next;
 		for (auto task = tasks_.First(); task; task = next)
 		{
 			next = task->NextItem();

@@ -208,7 +208,7 @@ namespace easy2d
 		std::wstring			text_;
 		Font			font_;
 		TextStyle		style_;
-		cpTextFormat	text_format_;
-		cpTextLayout	text_layout_;
+		CpTextFormat	text_format_;
+		CpTextLayout	text_layout_;
 	};
 }

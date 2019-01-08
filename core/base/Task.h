@@ -31,23 +31,23 @@ namespace easy2d
     // 定时任务
 	class Task
 		: public Object
-		, protected intrusive::ListItem<spTask>
+		, protected intrusive::ListItem<SpTask>
 	{
 		friend class TaskManager;
-		friend class intrusive::List<spTask>;
+		friend class intrusive::List<SpTask>;
 
 		using Callback = std::function<void()>;
 
 	public:
 		explicit Task(
-			const Callback& func,		/* 执行函数 */
+			Callback const& func,			/* 执行函数 */
 			std::wstring const& name = L""	/* 任务名称 */
 		);
 
 		explicit Task(
-			Callback const& func,		/* 执行函数 */
-			Duration const& delay,		/* 时间间隔（秒） */
-			int times = -1,				/* 执行次数（设 -1 为永久执行） */
+			Callback const& func,			/* 执行函数 */
+			Duration const& delay,			/* 时间间隔（秒） */
+			int times = -1,					/* 执行次数（设 -1 为永久执行） */
 			std::wstring const& name = L""	/* 任务名称 */
 		);
 
@@ -69,12 +69,12 @@ namespace easy2d
 		void Reset();
 
 	protected:
-		bool		running_;
-		int			run_times_;
-		int			total_times_;
-		std::wstring		name_;
-		Duration	delay_;
-		Duration	delta_;
-		Callback	callback_;
+		bool			running_;
+		int				run_times_;
+		int				total_times_;
+		std::wstring	name_;
+		Duration		delay_;
+		Duration		delta_;
+		Callback		callback_;
 	};
 }
