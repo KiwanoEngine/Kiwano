@@ -199,26 +199,15 @@ namespace easy2d
 
 		Input::Instance()->Update();
 
-		if (curr_scene_)
-			curr_scene_->Update(dt);
-
-		if (next_scene_)
-			next_scene_->Update(dt);
-
-		if (debug_)
-			DebugNode::Instance()->Update(dt);
-
 		if (transition_)
 		{
 			transition_->Update(dt);
 
 			if (transition_->IsDone())
 				transition_ = nullptr;
-			else
-				return;
 		}
 
-		if (next_scene_)
+		if (next_scene_ && !transition_)
 		{
 			if (curr_scene_)
 			{
@@ -230,6 +219,15 @@ namespace easy2d
 			curr_scene_ = next_scene_;
 			next_scene_ = nullptr;
 		}
+
+		if (curr_scene_)
+			curr_scene_->Update(dt);
+
+		if (next_scene_)
+			next_scene_->Update(dt);
+
+		if (debug_)
+			DebugNode::Instance()->Update(dt);
 	}
 
 	void Game::Render(HWND hwnd)

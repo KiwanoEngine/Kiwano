@@ -32,6 +32,9 @@ namespace easy2d
 			{
 				PathFileExistsW = (PFN_PathFileExistsW)
 					GetProcAddress(shlwapi, "PathFileExistsW");
+
+				SHCreateMemStream = (PFN_SHCreateMemStream)
+					GetProcAddress(shlwapi, "SHCreateMemStream");
 			}
 			else
 			{
