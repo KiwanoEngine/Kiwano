@@ -129,12 +129,12 @@ namespace easy2d
 		// 时间
 		//
 		// Usage:
-		//     获取当前时间: Time now = time::Now();
+		//     获取当前时间: TimePoint now = time::Now();
 		//     时间操作:
 		//         两时间相减, 得到一个 Duration 对象, 例如:
-		//         Time t1 = time::Now();
+		//         TimePoint t1 = time::Now();
 		//         ...  // 做些什么
-		//         Time t2 = time::Now();
+		//         TimePoint t2 = time::Now();
 		//         auto duration = t2 - t1;
 		//         获取两时间相差的毫秒数:
 		//         int ms = duration.Milliseconds();
