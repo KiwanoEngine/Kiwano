@@ -34,28 +34,28 @@ namespace easy2d
 		Frames();
 
 		explicit Frames(
-			Images const& frames			/* 关键帧数组 */
+			Images const& frames		/* 关键帧数组 */
 		);
 
 		explicit Frames(
-			Duration const& interval	/* 帧间隔（秒） */
+			Duration const& interval	/* 帧间隔 */
 		);
 
 		explicit Frames(
-			Duration const& interval,	/* 帧间隔（秒） */
-			Images const& frames			/* 关键帧数组 */
+			Duration const& interval,	/* 帧间隔 */
+			Images const& frames		/* 关键帧数组 */
 		);
 
 		virtual ~Frames();
 
 		// 添加关键帧
 		void Add(
-			SpImage const& frame		/* 关键帧 */
+			SpImage const& frame
 		);
 
 		// 添加多个关键帧
 		void Add(
-			Images const& frames			/* 关键帧数组 */
+			Images const& frames
 		);
 
 		// 获取帧间隔
@@ -66,7 +66,7 @@ namespace easy2d
 
 		// 设置每一帧的时间间隔
 		void SetInterval(
-			Duration const& interval	/* 帧间隔（秒） */
+			Duration const& interval
 		);
 
 		// 获取帧动画的拷贝对象

@@ -43,7 +43,7 @@ namespace easy2d
 		public:
 			Duration();
 
-			explicit Duration(
+			Duration(
 				long milliseconds
 			);
 
@@ -110,6 +110,7 @@ namespace easy2d
 			long milliseconds_;
 		};
 
+		/* 预定义的时间段 */
 		extern const Duration Millisecond;	// 毫秒
 		extern const Duration Second;		// 秒
 		extern const Duration Minute;		// 分钟
@@ -136,7 +137,7 @@ namespace easy2d
 		public:
 			TimePoint();
 
-			explicit TimePoint(
+			TimePoint(
 				long
 			);
 
