@@ -74,7 +74,7 @@ namespace easy2d
 
 		const Duration TimePoint::operator-(const TimePoint & other) const
 		{
-			return Duration{ dur - other.dur };
+			return Duration(dur - other.dur);
 		}
 
 		TimePoint& TimePoint::operator=(const TimePoint & other) E2D_NOEXCEPT
@@ -250,11 +250,6 @@ namespace easy2d
 			return Duration(milliseconds_ * val);
 		}
 
-		const Duration Duration::operator/(int val) const
-		{
-			return Duration(milliseconds_ / val);
-		}
-
 		const Duration easy2d::time::Duration::operator*(unsigned long long val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ * val));
@@ -265,11 +260,6 @@ namespace easy2d
 			return Duration(static_cast<long>(milliseconds_ * val));
 		}
 
-		const Duration Duration::operator/(float val) const
-		{
-			return Duration(static_cast<long>(milliseconds_ / val));
-		}
-
 		const Duration Duration::operator*(double val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ * val));
@@ -278,6 +268,16 @@ namespace easy2d
 		const Duration Duration::operator*(long double val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ * val));
+		}
+
+		const Duration Duration::operator/(int val) const
+		{
+			return Duration(milliseconds_ / val);
+		}
+
+		const Duration Duration::operator/(float val) const
+		{
+			return Duration(static_cast<long>(milliseconds_ / val));
 		}
 
 		const Duration Duration::operator/(double val) const

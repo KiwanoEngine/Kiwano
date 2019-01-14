@@ -26,7 +26,7 @@
 namespace easy2d
 {
 	// 缓动函数枚举
-	// More infomation about ease functions, see https://easings.net
+	// See https://easings.net for more information
 	enum class EaseFunc
 	{
 		Linear,			// 线性
