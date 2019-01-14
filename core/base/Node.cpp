@@ -461,7 +461,7 @@ namespace easy2d
 
 #endif // E2D_DEBUG
 
-			children_.PushBack(Node::ItemType(child));
+			children_.PushBack(child);
 			child->parent_ = this;
 			child->SetScene(this->scene_);
 			child->dirty_transform_ = true;

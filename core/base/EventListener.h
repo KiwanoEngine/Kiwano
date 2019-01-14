@@ -58,7 +58,7 @@ namespace easy2d
 
 	protected:
 		bool			running_;
-		std::wstring			name_;
+		std::wstring	name_;
 		EventType		type_;
 		EventCallback	callback_;
 	};

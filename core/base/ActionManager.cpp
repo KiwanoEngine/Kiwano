@@ -48,7 +48,7 @@ namespace easy2d
 		if (action)
 		{
 			action->Start();
-			actions_.PushBack(Action::ItemType(action));
+			actions_.PushBack(action);
 		}
 	}
 

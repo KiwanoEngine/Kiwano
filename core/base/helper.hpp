@@ -99,19 +99,4 @@ namespace easy2d
 	using Size = math::Vector2;
 	using Rect = math::Rect;
 	using Matrix = math::Matrix;
-
-	template <typename Dest, typename Src>
-	inline Dest SafeCast(Src ptr)
-	{
-		if (!ptr)
-			return nullptr;
-
-#ifdef E2D_DEBUG
-		Dest cast = dynamic_cast<Dest>(ptr);
-		E2D_ASSERT(cast);
-		return cast;
-#else
-		return static_cast<Dest>(ptr);
-#endif
-	}
 }

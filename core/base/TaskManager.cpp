@@ -48,7 +48,7 @@ namespace easy2d
 		if (task)
 		{
 			task->Reset();
-			tasks_.PushBack(Task::ItemType(task));
+			tasks_.PushBack(task);
 		}
 	}
 

@@ -46,7 +46,7 @@ namespace easy2d
 
 		if (listener)
 		{
-			listeners_.PushBack(EventListener::ItemType(listener));
+			listeners_.PushBack(listener);
 		}
 	}
 
@@ -55,7 +55,7 @@ namespace easy2d
 		SpEventListener listener = new EventListener(type, callback, name);
 		if (listener)
 		{
-			listeners_.PushBack(EventListener::ItemType(listener));
+			listeners_.PushBack(listener);
 		}
 	}
 
