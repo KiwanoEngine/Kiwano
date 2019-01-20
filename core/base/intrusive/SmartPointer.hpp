@@ -191,12 +191,6 @@ namespace easy2d
 		}
 	}
 
-	template<class T>
-	inline intrusive::SmartPointer<T> MakeSmart(T* ptr) E2D_NOEXCEPT
-	{
-		return intrusive::SmartPointer<T>(ptr);
-	}
-
 	// template class cannot specialize std::swap,
 	// so implement a swap function in easy2d namespace
 	template<class T>
@@ -204,4 +198,27 @@ namespace easy2d
 	{
 		lhs.Swap(rhs);
 	}
+
+	class SmartMaker
+	{
+	public:
+		static inline SmartMaker const& Instance()
+		{
+			static SmartMaker maker;
+			return maker;
+		}
+
+		template<typename T>
+		inline intrusive::SmartPointer<T> operator -(T* ptr) const
+		{
+			return intrusive::SmartPointer<T>(ptr);
+		}
+	};
+
+#ifdef NEW
+#	undef NEW
+#endif
+
+#define NEW ::easy2d::SmartMaker::Instance() - new (std::nothrow)
+
 }
