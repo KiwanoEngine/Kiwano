@@ -45,19 +45,6 @@ namespace easy2d
 		this->Crop(crop_rect);
 	}
 
-	Image::Image(String const& file_name)
-		: Image()
-	{
-		this->Load(file_name);
-	}
-
-	Image::Image(String const& file_name, const Rect & crop_rect)
-		: Image()
-	{
-		this->Load(file_name);
-		this->Crop(crop_rect);
-	}
-
 	Image::Image(CpBitmap const & bitmap)
 		: Image()
 	{
@@ -70,38 +57,35 @@ namespace easy2d
 
 	bool Image::Load(Resource const& res)
 	{
+		HRESULT hr = S_OK;
 		CpBitmap bitmap;
-		HRESULT hr = Graphics::Instance()->CreateBitmapFromResource(bitmap, res);
+
+		if (res.IsFile())
+		{
+			File image_file;
+			if (!image_file.Open(res.GetFileName()))
+			{
+				logs::Warningln("Image file '%s' not found!", StringWideCharToMultiByte(res.GetFileName()).c_str());
+				return false;
+			}
+
+			// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
+			// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
+			String image_file_path = image_file.GetPath();
+
+			hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, image_file_path);
+		}
+		else
+		{
+			hr = Graphics::Instance()->CreateBitmapFromResource(bitmap, res);
+		}
+
 		if (FAILED(hr))
 		{
-			logs::Errorln(hr, "Load Image from resource failed!");
-			return false;
-		}
-		SetBitmap(bitmap);
-		return true;
-	}
-
-	bool Image::Load(String const& file_name)
-	{
-		File image_file;
-		if (!image_file.Open(file_name))
-		{
-			logs::Warningln("Image file '%s' not found!", StringWideCharToMultiByte(file_name).c_str());
+			logs::Errorln(hr, "Load image file failed!");
 			return false;
 		}
 
-		// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
-		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-		String image_file_path = image_file.GetPath();
-
-		CpBitmap bitmap;
-		HRESULT hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, image_file_path);
-		if (FAILED(hr))
-		{
-			logs::Errorln(hr, "Load Image from file failed!");
-			return false;
-		}
-		
 		SetBitmap(bitmap);
 		return true;
 	}

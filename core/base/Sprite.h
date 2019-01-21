@@ -44,25 +44,11 @@ namespace easy2d
 			const Rect& crop_rect	/* 裁剪矩形 */
 		);
 
-		explicit Sprite(
-			String const& file_name
-		);
-
-		explicit Sprite(
-			String const& file_name,
-			const Rect& crop_rect	/* 裁剪矩形 */
-		);
-
 		virtual ~Sprite();
 
 		// 加载图片文件
 		bool Load(
 			Resource const& res
-		);
-
-		// 加载图片文件
-		bool Load(
-			String const& file_name
 		);
 
 		// 加载图片

@@ -38,37 +38,6 @@ namespace easy2d
 
 		// 预加载音乐资源
 		bool Load(
-			String const& file_path		/* 音乐文件路径 */
-		);
-
-		// 播放音乐
-		bool Play(
-			String const& file_path,	/* 音乐文件路径 */
-			int loop_count = 0			/* 播放循环次数 (-1 为循环播放) */
-		);
-
-		// 暂停音乐
-		void Pause(
-			String const& file_path		/* 音乐文件路径 */
-		);
-
-		// 继续播放音乐
-		void Resume(
-			String const& file_path		/* 音乐文件路径 */
-		);
-
-		// 停止音乐
-		void Stop(
-			String const& file_path		/* 音乐文件路径 */
-		);
-
-		// 获取音乐播放状态
-		bool IsPlaying(
-			String const& file_path		/* 音乐文件路径 */
-		);
-
-		// 预加载音乐资源
-		bool Load(
 			Resource const& res			/* 音乐资源 */
 		);
 

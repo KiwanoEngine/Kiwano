@@ -37,22 +37,8 @@ namespace easy2d
 	{
 	}
 
-	Music::Music(String const& file_path)
-		: opened_(false)
-		, playing_(false)
-		, wave_data_(nullptr)
-		, size_(0)
-		, voice_(nullptr)
-	{
-		Load(file_path);
-	}
-
 	Music::Music(Resource const& res)
-		: opened_(false)
-		, playing_(false)
-		, wave_data_(nullptr)
-		, size_(0)
-		, voice_(nullptr)
+		: Music()
 	{
 		Load(res);
 	}
@@ -62,48 +48,6 @@ namespace easy2d
 		Close();
 	}
 
-	bool Music::Load(String const& file_path)
-	{
-		if (opened_)
-		{
-			Close();
-		}
-
-		File music_file;
-		if (!music_file.Open(file_path))
-		{
-			logs::Warningln("Media file '%s' not found", StringWideCharToMultiByte(file_path).c_str());
-			return false;
-		}
-
-		// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
-		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-		String music_file_path = music_file.GetPath();
-
-		Transcoder transcoder;
-		HRESULT hr = transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_);
-		if (FAILED(hr))
-		{
-			logs::Errorln(hr, "Load media from file failed");
-			return false;
-		}
-
-		hr = Audio::Instance()->CreateVoice(voice_, transcoder.GetWaveFormatEx());
-		if (FAILED(hr))
-		{
-			if (wave_data_)
-			{
-				delete[] wave_data_;
-				wave_data_ = nullptr;
-			}
-			logs::Errorln(hr, "Create source voice failed");
-			return false;
-		}
-
-		opened_ = true;
-		return true;
-	}
-
 	bool Music::Load(Resource const& res)
 	{
 		if (opened_)
@@ -111,12 +55,31 @@ namespace easy2d
 			Close();
 		}
 
+		HRESULT hr = S_OK;
 		Transcoder transcoder;
-		HRESULT hr = transcoder.LoadMediaResource(res, &wave_data_, &size_);
+
+		if (res.IsFile())
+		{
+			File music_file;
+			if (!music_file.Open(res.GetFileName()))
+			{
+				logs::Warningln("Media file '%s' not found", StringWideCharToMultiByte(res.GetFileName()).c_str());
+				return false;
+			}
+
+			// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
+			// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
+			String music_file_path = music_file.GetPath();
+			HRESULT hr = transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_);
+		}
+		else
+		{
+			hr = transcoder.LoadMediaResource(res, &wave_data_, &size_);
+		}
 
 		if (FAILED(hr))
 		{
-			logs::Errorln(hr, "Load media from resource failed");
+			logs::Errorln(hr, "Load media file failed");
 			return false;
 		}
 

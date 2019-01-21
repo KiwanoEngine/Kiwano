@@ -227,8 +227,9 @@ namespace easy2d
 		SmartPointer<ID2D1Bitmap>			bitmap_tmp;
 		
 		// ¼ÓÔØ×ÊÔ´
-		ResourceData buffer;
-		HRESULT hr = res.Load(&buffer) ? S_OK : E_FAIL;
+		LPVOID buffer;
+		DWORD buffer_size;
+		HRESULT hr = res.Load(buffer, buffer_size) ? S_OK : E_FAIL;
 
 		if (SUCCEEDED(hr))
 		{
@@ -238,8 +239,8 @@ namespace easy2d
 		if (SUCCEEDED(hr))
 		{
 			hr = stream->InitializeFromMemory(
-				static_cast<WICInProcPointer>(buffer.buffer),
-				buffer.buffer_size
+				static_cast<WICInProcPointer>(buffer),
+				buffer_size
 			);
 		}
 

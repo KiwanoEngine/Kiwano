@@ -19,32 +19,15 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
+#include "helper.hpp"
 
 namespace easy2d
 {
-	// 资源数据
-	// 
-	// Usage:
-	//     如果需要手动加载资源, 可以通过 Resource::Load 方法获取资源内容
-	//     ResourceData data;
-	//     if (res.Load(&data)) {
-	//         LPVOID data = data.buffer;
-	//         DWORD size_ = data.buffer_size;
-	//     }
-	//
-	struct ResourceData
-	{
-		LPVOID buffer;
-		DWORD buffer_size;
-	};
-
-
 	// 资源
 	// 
 	// Usage:
-	//     Resource 用于获取可执行文件 (exe) 中的资源, 必须在构造函数中指定它的
-	//     资源类型和名称标识符。
+	//     Resource 用于指定一份资源
+	//     资源可以是文件类型，也可以是保存在 exe 中的二进制文件
 	//     例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1,
 	//     那么可以这样指定该资源: Resource res(MAKEINTRESOURCE(IDR_WAVE_1), L"WAVE");
 	// 
@@ -53,23 +36,50 @@ namespace easy2d
 	class Resource
 	{
 	public:
+		enum class Type { File, Binary };
+
 		Resource(
-			LPCWSTR name,	/* 资源名称 */
-			LPCWSTR type	/* 资源类型 */
+			String file_name	/* 文件路径 */
 		);
 
+		Resource(
+			LPCWSTR file_name	/* 文件路径 */
+		);
+
+		Resource(
+			LPCWSTR name,		/* 资源名称 */
+			LPCWSTR type		/* 资源类型 */
+		);
+
+		virtual ~Resource();
+
+		inline bool IsFile() const { return type_ == Type::File; }
+
+		inline Type GetType() const { return type_; }
+
+		inline String const& GetFileName() const { return file_name_; }
+
 		bool Load(
-			ResourceData* buffer
+			LPVOID& buffer,
+			DWORD& buffer_size
 		) const;
-
-		LPCWSTR	GetName() const;
-
-		LPCWSTR	GetType() const;
 
 		size_t GetHashCode() const;
 
 	private:
-		LPCWSTR	name_;
-		LPCWSTR	type_;
+		Type type_;
+		union
+		{
+			struct
+			{
+				String	file_name_;
+			};
+
+			struct
+			{
+				LPCWSTR	bin_name_;
+				LPCWSTR	bin_type_;
+			};
+		};
 	};
 }

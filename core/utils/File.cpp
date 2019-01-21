@@ -117,12 +117,13 @@ namespace easy2d
 		if (file_handle == INVALID_HANDLE_VALUE)
 			return file;
 
-		ResourceData buffer;
-		if (res.Load(&buffer))
+		LPVOID buffer;
+		DWORD buffer_size;
+		if (res.Load(buffer, buffer_size))
 		{
 			// Ð´ÈëÎÄ¼þ
 			DWORD written_bytes = 0;
-			::WriteFile(file_handle, buffer.buffer, buffer.buffer_size, &written_bytes, NULL);
+			::WriteFile(file_handle, buffer, buffer_size, &written_bytes, NULL);
 			::CloseHandle(file_handle);
 
 			file.Open(dest_file_name);

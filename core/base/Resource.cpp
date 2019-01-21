@@ -23,36 +23,45 @@
 
 namespace easy2d
 {
+	Resource::Resource(String file_name)
+		: type_(Type::File)
+		, file_name_(file_name)
+	{
+	}
+
+	Resource::Resource(LPCWSTR file_name)
+		: type_(Type::File)
+		, file_name_(file_name)
+	{
+	}
+
 	Resource::Resource(LPCWSTR name, LPCWSTR type)
-		: name_(name)
-		, type_(type)
+		: type_(Type::Binary)
+		, bin_name_(name)
+		, bin_type_(type)
 	{
 	}
 
-	LPCWSTR Resource::GetName() const
+	Resource::~Resource()
 	{
-		return name_;
-	}
-
-	LPCWSTR Resource::GetType() const
-	{
-		return type_;
 	}
 
 	size_t Resource::GetHashCode() const
 	{
-		return std::hash<LPCWSTR>{}(name_);
+		if (type_ == Type::File)
+			return std::hash<String>{}(file_name_);
+		return std::hash<LPCWSTR>{}(bin_name_);
 	}
 
-	bool Resource::Load(ResourceData* buffer) const
+	bool Resource::Load(LPVOID& buffer, DWORD& buffer_size) const
 	{
-		if (!buffer)
+		if (type_ != Type::Binary)
 			return false;
 
 		HGLOBAL res_data;
 		HRSRC res_info;
 
-		res_info = FindResourceW(nullptr, name_, type_);
+		res_info = FindResourceW(nullptr, bin_name_, bin_type_);
 		if (res_info == nullptr)
 		{
 			logs::Errorln("FindResource");
@@ -66,15 +75,15 @@ namespace easy2d
 			return false;
 		}
 
-		(*buffer).buffer_size = SizeofResource(nullptr, res_info);
-		if ((*buffer).buffer_size == 0)
+		buffer_size = SizeofResource(nullptr, res_info);
+		if (buffer_size == 0)
 		{
 			logs::Errorln("SizeofResource");
 			return false;
 		}
 
-		(*buffer).buffer = LockResource(res_data);
-		if ((*buffer).buffer == nullptr)
+		buffer = LockResource(res_data);
+		if (buffer == nullptr)
 		{
 			logs::Errorln("LockResource");
 			return false;
