@@ -25,7 +25,7 @@ namespace easy2d
 	namespace
 	{
 		bool tracing_leaks = true;
-		std::vector<Object*> tracing_objects;
+		Array<Object*> tracing_objects;
 	}
 
 	Object::Object()
@@ -67,7 +67,7 @@ namespace easy2d
 		tracing_leaks = false;
 	}
 
-	std::vector<Object*> const& easy2d::Object::__GetTracingObjects()
+	Array<Object*> const& easy2d::Object::__GetTracingObjects()
 	{
 		return tracing_objects;
 	}

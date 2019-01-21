@@ -33,7 +33,7 @@ namespace easy2d
 		Music();
 
 		Music(
-			std::wstring const& file_path	/* 音乐文件路径 */
+			String const& file_path	/* 音乐文件路径 */
 		);
 
 		Music(
@@ -44,7 +44,7 @@ namespace easy2d
 
 		// 打开音乐文件
 		bool Load(
-			std::wstring const& file_path	/* 音乐文件路径 */
+			String const& file_path	/* 音乐文件路径 */
 		);
 
 		// 打开音乐资源

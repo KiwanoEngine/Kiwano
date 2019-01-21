@@ -324,14 +324,14 @@ namespace easy2d
 			current_sink_->AddLine(point);
 	}
 
-	void PathGeometry::AddLines(std::vector<Point> const& points)
+	void PathGeometry::AddLines(Array<Point> const& points)
 	{
 		if (current_sink_)
 		{
 			if (!points.empty())
 			{
 				size_t size = points.size();
-				std::vector<D2D1_POINT_2F> d2d_points(size);
+				Array<D2D1_POINT_2F> d2d_points(size);
 				for (size_t i = 0; i < size; ++i)
 				{
 					d2d_points[i] = points[i];

@@ -20,7 +20,7 @@
 
 #pragma once
 #include "RefCounter.hpp"
-#include <vector>
+#include "helper.hpp"
 
 namespace easy2d
 {
@@ -40,7 +40,7 @@ namespace easy2d
 
 		static void StopTracingLeaks();
 
-		static std::vector<Object*> const& __GetTracingObjects();
+		static Array<Object*> const& __GetTracingObjects();
 
 	protected:
 		static void __AddObjectToTracingList(Object*);

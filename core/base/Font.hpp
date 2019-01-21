@@ -41,17 +41,17 @@ namespace easy2d
 	class Font
 	{
 	public:
-		std::wstring	family;		// 字体族
+		String			family;		// 字体族
 		float			size;		// 字号
 		unsigned int	weight;		// 粗细值
 		bool			italic;		// 是否斜体
 
 	public:
 		Font(
-			const std::wstring& family	= L"",
-			float size					= 22,
-			unsigned int weight			= FontWeight::Normal,
-			bool italic					= false
+			const String& family	= L"",
+			float size				= 22,
+			unsigned int weight		= FontWeight::Normal,
+			bool italic				= false
 		)
 			: family(family)
 			, size(size)

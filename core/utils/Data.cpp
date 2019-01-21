@@ -20,11 +20,10 @@
 
 #include "Data.h"
 #include "Path.h"
-#include "../base/macros.h"
 
 namespace easy2d
 {
-	Data::Data(std::wstring const& key, std::wstring const& field)
+	Data::Data(String const& key, String const& field)
 		: key_(key)
 		, field_(field)
 		, data_path_(Path::GetDataPath())
@@ -89,7 +88,7 @@ namespace easy2d
 		return ret == TRUE;
 	}
 
-	bool Data::SaveString(std::wstring const& val)
+	bool Data::SaveString(String const& val)
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_.c_str(),
@@ -134,7 +133,7 @@ namespace easy2d
 		return nValue == TRUE;
 	}
 
-	std::wstring Data::GetString()
+	String Data::GetString()
 	{
 		wchar_t temp[256] = { 0 };
 		::GetPrivateProfileStringW(

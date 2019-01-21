@@ -19,9 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../base/helper.hpp"
 #include "../base/Resource.h"
-#include <string>
-#include <list>
 
 namespace easy2d
 {
@@ -32,14 +31,14 @@ namespace easy2d
 		File();
 
 		File(
-			std::wstring const& file_name
+			String const& file_name
 		);
 
 		virtual ~File();
 
 		// 打开文件
 		bool Open(
-			std::wstring const& file_name
+			String const& file_name
 		);
 
 		// 文件是否存在
@@ -49,25 +48,25 @@ namespace easy2d
 		bool Delete();
 
 		// 获取文件路径
-		std::wstring const& GetPath() const;
+		String const& GetPath() const;
 
 		// 获取文件扩展名
-		std::wstring GetExtension() const;
+		String GetExtension() const;
 
 		// 释放资源到临时文件目录
 		static File Extract(
-			Resource& res,						/* 资源 */
-			std::wstring const& dest_file_name	/* 目标文件名 */
+			Resource& res,					/* 资源 */
+			String const& dest_file_name	/* 目标文件名 */
 		);
 
 		// 添加文件搜索路径
 		static void AddSearchPath(
-			std::wstring const& path
+			String const& path
 		);
 
 	protected:
-		std::wstring file_path_;
+		String file_path_;
 
-		static std::list<std::wstring> search_paths_;
+		static List<String> search_paths_;
 	};
 }

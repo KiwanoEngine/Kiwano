@@ -24,14 +24,14 @@
 
 namespace easy2d
 {
-	std::list<std::wstring>	File::search_paths_;
+	std::list<String>	File::search_paths_;
 
 	File::File()
 		: file_path_()
 	{
 	}
 
-	File::File(std::wstring const& file_name)
+	File::File(String const& file_name)
 		: file_path_(file_name)
 	{
 		this->Open(file_name);
@@ -41,12 +41,12 @@ namespace easy2d
 	{
 	}
 
-	bool File::Open(std::wstring const& file_name)
+	bool File::Open(String const& file_name)
 	{
 		if (file_name.empty())
 			return false;
 
-		auto FindFile = [](std::wstring const& path) -> bool
+		auto FindFile = [](String const& path) -> bool
 		{
 			if (modules::Shlwapi().PathFileExistsW(path.c_str()))
 				return true;
@@ -77,16 +77,16 @@ namespace easy2d
 		return false;
 	}
 
-	std::wstring const& File::GetPath() const
+	String const& File::GetPath() const
 	{
 		return file_path_;
 	}
 
-	std::wstring File::GetExtension() const
+	String File::GetExtension() const
 	{
-		std::wstring file_ext;
+		String file_ext;
 		size_t pos = file_path_.find_last_of(L'.');
-		if (pos != std::wstring::npos)
+		if (pos != String::npos)
 		{
 			file_ext = file_path_.substr(pos);
 			std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), std::towlower);
@@ -101,7 +101,7 @@ namespace easy2d
 		return false;
 	}
 
-	File File::Extract(Resource& res, std::wstring const& dest_file_name)
+	File File::Extract(Resource& res, String const& dest_file_name)
 	{
 		File file;
 		HANDLE file_handle = ::CreateFile(
@@ -136,11 +136,11 @@ namespace easy2d
 		return file;
 	}
 
-	void File::AddSearchPath(std::wstring const& path)
+	void File::AddSearchPath(String const& path)
 	{
-		std::wstring tmp = path;
+		String tmp = path;
 		size_t pos = 0;
-		while ((pos = tmp.find(L"/", pos)) != std::wstring::npos)
+		while ((pos = tmp.find(L"/", pos)) != String::npos)
 		{
 			tmp.replace(pos, 1, L"\\");
 			pos++;

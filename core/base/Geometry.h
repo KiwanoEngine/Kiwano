@@ -231,7 +231,7 @@ namespace easy2d
 
 		// 添加多条线段
 		void AddLines(
-			std::vector<Point> const& points
+			Array<Point> const& points
 		);
 
 		// 添加一条三次方贝塞尔曲线

@@ -33,7 +33,7 @@ namespace easy2d
 		ClearCache();
 	}
 
-	bool Player::Load(std::wstring const& file_path)
+	bool Player::Load(String const& file_path)
 	{
 		if (file_path.empty())
 			return false;
@@ -46,7 +46,7 @@ namespace easy2d
 			{
 				music->SetVolume(volume_);
 
-				size_t hash_code = std::hash<std::wstring>{}(file_path);
+				size_t hash_code = std::hash<String>{}(file_path);
 				musics_cache_.insert(std::make_pair(hash_code, music));
 				return true;
 			}
@@ -54,14 +54,14 @@ namespace easy2d
 		return false;
 	}
 
-	bool Player::Play(std::wstring const& file_path, int loop_count)
+	bool Player::Play(String const& file_path, int loop_count)
 	{
 		if (file_path.empty())
 			return false;
 
 		if (Load(file_path))
 		{
-			auto music = musics_cache_[std::hash<std::wstring>{}(file_path)];
+			auto music = musics_cache_[std::hash<String>{}(file_path)];
 			if (music->Play(loop_count))
 			{
 				return true;
@@ -70,42 +70,42 @@ namespace easy2d
 		return false;
 	}
 
-	void Player::Pause(std::wstring const& file_path)
+	void Player::Pause(String const& file_path)
 	{
 		if (file_path.empty())
 			return;
 
-		size_t hash_code = std::hash<std::wstring>{}(file_path);
+		size_t hash_code = std::hash<String>{}(file_path);
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			musics_cache_[hash_code]->Pause();
 	}
 
-	void Player::Resume(std::wstring const& file_path)
+	void Player::Resume(String const& file_path)
 	{
 		if (file_path.empty())
 			return;
 
-		size_t hash_code = std::hash<std::wstring>{}(file_path);
+		size_t hash_code = std::hash<String>{}(file_path);
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			musics_cache_[hash_code]->Resume();
 	}
 
-	void Player::Stop(std::wstring const& file_path)
+	void Player::Stop(String const& file_path)
 	{
 		if (file_path.empty())
 			return;
 
-		size_t hash_code = std::hash<std::wstring>{}(file_path);
+		size_t hash_code = std::hash<String>{}(file_path);
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			musics_cache_[hash_code]->Stop();
 	}
 
-	bool Player::IsPlaying(std::wstring const& file_path)
+	bool Player::IsPlaying(String const& file_path)
 	{
 		if (file_path.empty())
 			return false;
 
-		size_t hash_code = std::hash<std::wstring>{}(file_path);
+		size_t hash_code = std::hash<String>{}(file_path);
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			return musics_cache_[hash_code]->IsPlaying();
 		return false;

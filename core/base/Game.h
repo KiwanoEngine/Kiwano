@@ -31,12 +31,12 @@ namespace easy2d
 {
 	struct Options
 	{
-		std::wstring	title;	// 标题
-		int				width;	// 宽度
-		int				height;	// 高度
-		LPCWSTR			icon;	// 图标
-		bool			vsync;	// 垂直同步
-		bool			debug;	// 调试模式
+		String	title;	// 标题
+		int		width;	// 宽度
+		int		height;	// 高度
+		LPCWSTR	icon;	// 图标
+		bool	vsync;	// 垂直同步
+		bool	debug;	// 调试模式
 
 		Options()
 			: title(L"Easy2D Game")

@@ -150,7 +150,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateBitmapFromFile(CpBitmap & bitmap, CpRenderTarget const & rt, std::wstring const & file_path)
+	HRESULT FactoryImpl::CreateBitmapFromFile(CpBitmap & bitmap, CpRenderTarget const & rt, String const & file_path)
 	{
 		if (imaging_factory_ == nullptr)
 		{
@@ -418,7 +418,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateTextLayout(CpTextLayout & text_layout, Size& layout_size, std::wstring const & text, CpTextFormat const& text_format, TextStyle const & text_style) const
+	HRESULT FactoryImpl::CreateTextLayout(CpTextLayout & text_layout, Size& layout_size, String const & text, CpTextFormat const& text_format, TextStyle const & text_style) const
 	{
 		if (!write_factory_)
 			return E_UNEXPECTED;

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <string>
+#include "../base/helper.hpp"
 
 namespace easy2d
 {
@@ -28,15 +28,15 @@ namespace easy2d
 	{
 	public:
 		// 获取数据的默认保存路径
-		static std::wstring const& GetDataPath();
+		static String const& GetDataPath();
 
 		// 获取临时文件目录
-		static std::wstring const& GetTemporaryPath();
+		static String const& GetTemporaryPath();
 
 		// 获取 LocalAppData 目录
-		static std::wstring const& GetLocalAppDataPath();
+		static String const& GetLocalAppDataPath();
 
 		// 获取当前程序的运行路径
-		static std::wstring const& GetExeFilePath();
+		static String const& GetExeFilePath();
 	};
 }

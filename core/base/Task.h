@@ -41,14 +41,14 @@ namespace easy2d
 	public:
 		explicit Task(
 			Callback const& func,			/* 执行函数 */
-			std::wstring const& name = L""	/* 任务名称 */
+			String const& name = L""	/* 任务名称 */
 		);
 
 		explicit Task(
 			Callback const& func,			/* 执行函数 */
 			Duration const& delay,			/* 时间间隔（秒） */
 			int times = -1,					/* 执行次数（设 -1 为永久执行） */
-			std::wstring const& name = L""	/* 任务名称 */
+			String const& name = L""	/* 任务名称 */
 		);
 
 		// 启动任务
@@ -61,7 +61,7 @@ namespace easy2d
 		bool IsRunning() const;
 
 		// 获取任务名称
-		std::wstring const& GetName() const;
+		String const& GetName() const;
 
 	protected:
 		void Update(Duration const& dt, bool& remove_after_update);
@@ -72,7 +72,7 @@ namespace easy2d
 		bool			running_;
 		int				run_times_;
 		int				total_times_;
-		std::wstring	name_;
+		String	name_;
 		Duration		delay_;
 		Duration		delta_;
 		Callback		callback_;

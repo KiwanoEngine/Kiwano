@@ -346,12 +346,12 @@ namespace easy2d
 		visible_ = val;
 	}
 
-	void Node::SetName(std::wstring const& name)
+	void Node::SetName(String const& name)
 	{
 		if (name_ != name)
 		{
 			name_ = name;
-			hash_name_ = std::hash<std::wstring>{}(name);
+			hash_name_ = std::hash<String>{}(name);
 		}
 	}
 
@@ -470,7 +470,7 @@ namespace easy2d
 		}
 	}
 
-	void Node::AddChildren(const Nodes& children)
+	void Node::AddChildren(Array<SpNode> const& children)
 	{
 		for (const auto& node : children)
 		{
@@ -483,10 +483,10 @@ namespace easy2d
 		return Rect(Point{}, size_);
 	}
 
-	Node::Nodes Node::GetChildren(std::wstring const& name) const
+	Array<SpNode> Node::GetChildren(String const& name) const
 	{
-		Nodes children;
-		size_t hash_code = std::hash<std::wstring>{}(name);
+		Array<SpNode> children;
+		size_t hash_code = std::hash<String>{}(name);
 
 		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
@@ -498,9 +498,9 @@ namespace easy2d
 		return children;
 	}
 
-	SpNode Node::GetChild(std::wstring const& name) const
+	SpNode Node::GetChild(String const& name) const
 	{
-		size_t hash_code = std::hash<std::wstring>{}(name);
+		size_t hash_code = std::hash<String>{}(name);
 
 		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
@@ -547,14 +547,14 @@ namespace easy2d
 		return false;
 	}
 
-	void Node::RemoveChildren(std::wstring const& child_name)
+	void Node::RemoveChildren(String const& child_name)
 	{
 		if (children_.IsEmpty())
 		{
 			return;
 		}
 
-		size_t hash_code = std::hash<std::wstring>{}(child_name);
+		size_t hash_code = std::hash<String>{}(child_name);
 
 		Node* next;
 		for (Node* child = children_.First().Get(); child; child = next)

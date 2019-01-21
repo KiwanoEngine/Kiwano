@@ -33,7 +33,7 @@ namespace easy2d
 			Menu();
 
 			explicit Menu(
-				const std::vector<SpButton>& buttons	/* 按钮数组 */
+				Array<SpButton> const& buttons	/* 按钮数组 */
 			);
 
 			// 获取菜单是否禁用
@@ -58,11 +58,11 @@ namespace easy2d
 			);
 
 			// 获取所有按钮
-			const std::vector<SpButton>& GetAllButtons() const;
+			Array<SpButton> const& GetAllButtons() const;
 
 		private:
 			bool enabled_;
-			std::vector<SpButton> buttons_;
+			Array<SpButton> buttons_;
 		};
 	}
 }

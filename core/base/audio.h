@@ -20,10 +20,10 @@
 
 #pragma once
 #include "macros.h"
+#include "helper.hpp"
 #include "Singleton.hpp"
 #include "noncopyable.hpp"
 #include <xaudio2.h>
-#include <unordered_set>
 
 namespace easy2d
 {
@@ -79,7 +79,7 @@ namespace easy2d
 	{
 		E2D_DECLARE_SINGLETON(AudioDevice);
 
-		using VoiceMap = std::unordered_set<Voice*>;
+		using VoiceMap = UnorderedSet<Voice*>;
 
 	public:
 		HRESULT Init(bool debug);
@@ -107,9 +107,9 @@ namespace easy2d
 		~AudioDevice();
 
 	protected:
-		IXAudio2*				x_audio2_;
+		VoiceMap voice_cache_;
+		IXAudio2* x_audio2_;
 		IXAudio2MasteringVoice*	mastering_voice_;
-		VoiceMap				voice_cache_;
 	};
 
 	E2D_DECLARE_SINGLETON_TYPE(AudioDevice, Audio);

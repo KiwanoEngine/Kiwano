@@ -52,7 +52,7 @@ namespace easy2d
 		HRESULT CreateBitmapFromFile(
 			CpBitmap& bitmap,
 			CpRenderTarget const& rt,
-			std::wstring const& file_path
+			String const& file_path
 		);
 
 		HRESULT CreateBitmapFromResource(
@@ -99,7 +99,7 @@ namespace easy2d
 		HRESULT CreateTextLayout(
 			CpTextLayout& text_layout,
 			Size& layout_size,
-			std::wstring const& text,
+			String const& text,
 			CpTextFormat const& text_format,
 			TextStyle const& text_style
 		) const;

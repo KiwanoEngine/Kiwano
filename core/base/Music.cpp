@@ -37,7 +37,7 @@ namespace easy2d
 	{
 	}
 
-	Music::Music(std::wstring const& file_path)
+	Music::Music(String const& file_path)
 		: opened_(false)
 		, playing_(false)
 		, wave_data_(nullptr)
@@ -62,7 +62,7 @@ namespace easy2d
 		Close();
 	}
 
-	bool Music::Load(std::wstring const& file_path)
+	bool Music::Load(String const& file_path)
 	{
 		if (opened_)
 		{
@@ -78,7 +78,7 @@ namespace easy2d
 
 		// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
 		// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-		std::wstring music_file_path = music_file.GetPath();
+		String music_file_path = music_file.GetPath();
 
 		Transcoder transcoder;
 		HRESULT hr = transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_);

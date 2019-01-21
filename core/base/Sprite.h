@@ -45,11 +45,11 @@ namespace easy2d
 		);
 
 		explicit Sprite(
-			std::wstring const& file_name
+			String const& file_name
 		);
 
 		explicit Sprite(
-			std::wstring const& file_name,
+			String const& file_name,
 			const Rect& crop_rect	/* ╡ц╪Т╬ьпн */
 		);
 
@@ -62,7 +62,7 @@ namespace easy2d
 
 		// ╪стьм╪ф╛нд╪Ч
 		bool Load(
-			std::wstring const& file_name
+			String const& file_name
 		);
 
 		// ╪стьм╪ф╛

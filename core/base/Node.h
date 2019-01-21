@@ -44,7 +44,6 @@ namespace easy2d
 		friend class Transition;
 		friend class intrusive::List<SpNode>;
 
-		using Nodes = std::vector<SpNode>;
 		using Children = intrusive::List<SpNode>;
 
 	public:
@@ -60,7 +59,7 @@ namespace easy2d
 		bool IsVisible()				const	{ return visible_; }
 
 		// 获取名称
-		std::wstring const& GetName()	const	{ return name_; }
+		String const& GetName()	const	{ return name_; }
 
 		// 获取名称的 Hash 值
 		size_t GetHashName()			const	{ return hash_name_; }
@@ -144,7 +143,7 @@ namespace easy2d
 
 		// 设置名称
 		void SetName(
-			std::wstring const& name
+			String const& name
 		);
 
 		// 设置横坐标
@@ -297,17 +296,17 @@ namespace easy2d
 
 		// 添加多个子节点
 		void AddChildren(
-			const Nodes& children
+			Array<SpNode> const& children
 		);
 
 		// 获取所有名称相同的子节点
-		Nodes GetChildren(
-			std::wstring const& name
+		Array<SpNode> GetChildren(
+			String const& name
 		) const;
 
 		// 获取名称相同的子节点
 		SpNode GetChild(
-			std::wstring const& name
+			String const& name
 		) const;
 
 		// 获取全部子节点
@@ -325,7 +324,7 @@ namespace easy2d
 
 		// 移除所有名称相同的子节点
 		void RemoveChildren(
-			std::wstring const& child_name
+			String const& child_name
 		);
 
 		// 移除所有节点
@@ -354,20 +353,20 @@ namespace easy2d
 		void SetScene(Scene* scene);
 
 	protected:
-		bool         visible_;
-		bool         hover_;
-		bool         pressed_;
-		int          z_order_;
-		float        opacity_;
-		float        display_opacity_;
-		std::wstring name_;
-		size_t       hash_name_;
-		Transform    transform_;
-		Point        pivot_;
-		Size         size_;
-		Node*        parent_;
-		Scene*       scene_;
-		Children     children_;
+		bool		visible_;
+		bool		hover_;
+		bool		pressed_;
+		int			z_order_;
+		float		opacity_;
+		float		display_opacity_;
+		String		name_;
+		size_t		hash_name_;
+		Transform	transform_;
+		Point		pivot_;
+		Size		size_;
+		Node*		parent_;
+		Scene*		scene_;
+		Children	children_;
 
 		mutable bool	dirty_transform_;
 		mutable bool	dirty_transform_inverse_;

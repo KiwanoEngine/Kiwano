@@ -47,13 +47,13 @@ namespace easy2d
 		Crop(crop_rect);
 	}
 
-	Sprite::Sprite(std::wstring const& file_name)
+	Sprite::Sprite(String const& file_name)
 		: image_(nullptr)
 	{
 		Load(file_name);
 	}
 
-	Sprite::Sprite(std::wstring const& file_name, const Rect & crop_rect)
+	Sprite::Sprite(String const& file_name, const Rect & crop_rect)
 		: image_(nullptr)
 	{
 		Load(file_name);
@@ -94,7 +94,7 @@ namespace easy2d
 		return false;
 	}
 
-	bool Sprite::Load(std::wstring const& file_name)
+	bool Sprite::Load(String const& file_name)
 	{
 		if (!image_)
 		{

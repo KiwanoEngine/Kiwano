@@ -91,7 +91,7 @@ namespace easy2d
 
 		// 画文字
 		void DrawText(
-			std::wstring const& text,		/* 文字 */
+			String const& text,		/* 文字 */
 			Point const& point		/* 文字位置 */
 		);
 
@@ -147,7 +147,7 @@ namespace easy2d
 
 		// 添加多条线段
 		void AddLines(
-			std::vector<Point> const& points
+			Array<Point> const& points
 		);
 
 		// 添加一条三次方贝塞尔曲线

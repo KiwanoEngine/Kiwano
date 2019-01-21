@@ -35,7 +35,7 @@ namespace easy2d
 
 		virtual ~DebugNodeImpl();
 
-		void AddDebugText(std::wstring const& text);
+		void AddDebugText(String const& text);
 
 		void ClearDebugText();
 
@@ -44,9 +44,9 @@ namespace easy2d
 		void OnUpdate(Duration const& dt) override;
 
 	protected:
-		SpText debug_text_;
-		std::vector<TimePoint> frame_time_;
-		std::vector<std::wstring> texts_;
+		SpText				debug_text_;
+		Array<TimePoint>	frame_time_;
+		Array<String>		texts_;
 	};
 
 	E2D_DECLARE_SINGLETON_TYPE(DebugNodeImpl, DebugNode);

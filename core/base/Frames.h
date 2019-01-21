@@ -28,22 +28,20 @@ namespace easy2d
 	class Frames
 		: public Object
 	{
-		using Images = std::vector< SpImage >;
-
 	public:
 		Frames();
 
 		explicit Frames(
-			Images const& frames		/* 关键帧数组 */
+			Array<SpImage> const& frames	/* 关键帧数组 */
 		);
 
 		explicit Frames(
-			Duration const& interval	/* 帧间隔 */
+			Duration const& interval		/* 帧间隔 */
 		);
 
 		explicit Frames(
-			Duration const& interval,	/* 帧间隔 */
-			Images const& frames		/* 关键帧数组 */
+			Duration const& interval,		/* 帧间隔 */
+			Array<SpImage> const& frames	/* 关键帧数组 */
 		);
 
 		virtual ~Frames();
@@ -55,14 +53,14 @@ namespace easy2d
 
 		// 添加多个关键帧
 		void Add(
-			Images const& frames
+			Array<SpImage> const& frames
 		);
 
 		// 获取帧间隔
 		Duration const& GetInterval() const;
 
 		// 获取关键帧
-		Images const& GetFrames() const;
+		Array<SpImage> const& GetFrames() const;
 
 		// 设置每一帧的时间间隔
 		void SetInterval(
@@ -76,7 +74,7 @@ namespace easy2d
 		SpFrames Reverse() const;
 
 	protected:
-		Duration	interval_;
-		Images		frames_;
+		Duration		interval_;
+		Array<SpImage>	frames_;
 	};
 }

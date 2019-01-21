@@ -52,7 +52,7 @@ namespace easy2d
 		}
 	}
 
-	void TaskManager::StopTasks(std::wstring const& name)
+	void TaskManager::StopTasks(String const& name)
 	{
 		if (tasks_.IsEmpty())
 			return;
@@ -66,7 +66,7 @@ namespace easy2d
 		}
 	}
 
-	void TaskManager::StartTasks(std::wstring const& name)
+	void TaskManager::StartTasks(String const& name)
 	{
 		if (tasks_.IsEmpty())
 			return;
@@ -80,7 +80,7 @@ namespace easy2d
 		}
 	}
 
-	void TaskManager::RemoveTasks(std::wstring const& name)
+	void TaskManager::RemoveTasks(String const& name)
 	{
 		if (tasks_.IsEmpty())
 			return;

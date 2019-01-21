@@ -41,11 +41,11 @@ namespace easy2d
 		);
 
 		explicit Image(
-			std::wstring const& file_name
+			String const& file_name
 		);
 
 		explicit Image(
-			std::wstring const& file_name,
+			String const& file_name,
 			Rect const& crop_rect	/* 裁剪矩形 */
 		);
 
@@ -62,7 +62,7 @@ namespace easy2d
 
 		// 加载图片资源
 		bool Load(
-			std::wstring const& file_name
+			String const& file_name
 		);
 
 		// 将图片裁剪为矩形
