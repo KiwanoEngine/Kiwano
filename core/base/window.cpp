@@ -82,7 +82,7 @@ namespace easy2d
 		GetContentScale(&scale_x, &scale_y);
 
 		Rect client_rect = LocateWindow(width, height, scale_x, scale_y);
-		handle = ::CreateWindowEx(
+		handle = ::CreateWindowExW(
 			NULL,
 			REGISTER_CLASS,
 			title.c_str(),
@@ -94,7 +94,7 @@ namespace easy2d
 			nullptr,
 			nullptr,
 			hinstance,
-			this
+			nullptr
 		);
 
 		if (handle == nullptr)
@@ -128,12 +128,12 @@ namespace easy2d
 		{
 			RECT rect;
 			GetClientRect(handle, &rect);
-			return Size(
+			return Size{
 				static_cast<float>(rect.right - rect.left),
 				static_cast<float>(rect.bottom - rect.top)
-			);
+			};
 		}
-		return Size();
+		return Size{};
 	}
 
 	float WindowImpl::GetWidth() const

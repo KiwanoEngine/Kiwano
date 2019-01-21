@@ -100,13 +100,6 @@ namespace easy2d
 
 		void Update();
 
-		bool HandleMessage(
-			HWND hwnd,
-			UINT msg,
-			WPARAM wparam,
-			LPARAM lparam
-		);
-
 		void Dispatch(
 			Event* event
 		);

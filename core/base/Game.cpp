@@ -258,10 +258,22 @@ namespace easy2d
 			::InvalidateRect(hwnd, NULL, FALSE);
 	}
 
-	bool Game::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	void Game::Dispatch(Event * event)
 	{
-		bool unhandled = false;
+		if (transition_)
+			return;
 
+		if (curr_scene_)
+			curr_scene_->DispatchEvent(event);
+	}
+
+	LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	{
+		Game * game = reinterpret_cast<Game*>(::GetWindowLongW(hwnd, GWLP_USERDATA));
+
+		if (!game)
+			return ::DefWindowProcW(hwnd, msg, wparam, lparam);
+		
 		switch (msg)
 		{
 		case WM_PAINT:
@@ -269,10 +281,12 @@ namespace easy2d
 			PAINTSTRUCT ps;
 			::BeginPaint(hwnd, &ps);
 
-			Update();
-			Render(hwnd);
+			game->Update();
+			game->Render(hwnd);
 
 			::EndPaint(hwnd, &ps);
+
+			return 0;
 		}
 		break;
 
@@ -310,7 +324,7 @@ namespace easy2d
 			if (wparam & MK_LBUTTON || wparam & MK_RBUTTON)
 				event.button_down = true;
 
-			Dispatch(&event);
+			game->Dispatch(&event);
 		}
 		break;
 
@@ -318,13 +332,14 @@ namespace easy2d
 		case WM_KEYUP:
 		{
 			KeyEvent event(msg, KeyCode(wparam));
-			Dispatch(&event);
+			game->Dispatch(&event);
 		}
 		break;
 
 		case WM_DISPLAYCHANGE:
 		{
 			E2D_LOG("The display resolution has changed");
+
 			::InvalidateRect(hwnd, nullptr, FALSE);
 		}
 		break;
@@ -334,12 +349,13 @@ namespace easy2d
 			E2D_LOG("Received a message to close the window");
 
 			SysEvent event(SysEvent::WindowClose);
-			Dispatch(&event);
+			game->Dispatch(&event);
 
-			if (OnClose())
+			if (game->OnClose())
 			{
 				::DestroyWindow(hwnd);
 			}
+			return 0;
 		}
 		break;
 
@@ -347,8 +363,9 @@ namespace easy2d
 		{
 			E2D_LOG("Window was destroyed");
 
-			OnExit();
+			game->OnExit();
 			::PostQuitMessage(0);
+			return 0;
 		}
 		break;
 
@@ -356,13 +373,13 @@ namespace easy2d
 		{
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{
-				active_ = false;
+				game->active_ = false;
 
 				E2D_LOG("Window minimized");
 			}
 			else if (SIZE_RESTORED == wparam)
 			{
-				active_ = true;
+				game->active_ = true;
 				::InvalidateRect(hwnd, nullptr, FALSE);
 
 				E2D_LOG("Window restored");
@@ -376,68 +393,40 @@ namespace easy2d
 			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
 			Graphics::Instance()->Resize(width, height);
 		}
-		unhandled = true;
 		break;
 
 		case WM_ACTIVATE:
 		{
-			if (WA_INACTIVE == wparam)
-			{
-				E2D_LOG("Window deactivated");
-
-				SysEvent event(SysEvent::WindowDeavtivate);
-				Dispatch(&event);
-			}
-			else
+			bool active = (LOWORD(wparam) != WA_INACTIVE);
+			if (active)
 			{
 				E2D_LOG("Window activated");
 
 				SysEvent event(SysEvent::WindowActivate);
-				Dispatch(&event);
+				game->Dispatch(&event);
+			}
+			else
+			{
+				E2D_LOG("Window deactivated");
+
+				SysEvent event(SysEvent::WindowDeavtivate);
+				game->Dispatch(&event);
 			}
 		}
-		unhandled = true;
 		break;
 
 		case WM_SETTEXT:
 		{
 			E2D_LOG("Window title changed");
 		}
-		unhandled = true;
 		break;
 
 		case WM_SETICON:
 		{
 			E2D_LOG("Window icon changed");
 		}
-		unhandled = true;
 		break;
-
-		default:
-			unhandled = true;
-			break;
 		}
-
-		return !unhandled;
-	}
-
-	void Game::Dispatch(Event * event)
-	{
-		if (transition_)
-			return;
-
-		if (curr_scene_)
-			curr_scene_->DispatchEvent(event);
-	}
-
-	LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
-	{
-		Game * game = reinterpret_cast<Game*>(
-			static_cast<LONG_PTR>(::GetWindowLongW(hwnd, GWLP_USERDATA))
-			);
-		
-		if (game && game->HandleMessage(hwnd, msg, wparam, lparam))
-			return 0;
 
 		return ::DefWindowProcW(hwnd, msg, wparam, lparam);
 	}

@@ -94,9 +94,29 @@ namespace easy2d
 	E2D_DECLARE_NS_SMART_PTR(ui, Button);
 	E2D_DECLARE_NS_SMART_PTR(ui, Menu);
 
-	using Vector2 = math::Vector2;
-	using Point = math::Vector2;
-	using Size = math::Vector2;
-	using Rect = math::Rect;
-	using Matrix = math::Matrix;
+	using namespace math;
+	using namespace ui;
 }
+
+namespace easy2d
+{
+	class __SmartPointerMaker
+	{
+	public:
+		static inline __SmartPointerMaker const& Instance()
+		{
+			static __SmartPointerMaker maker;
+			return maker;
+		}
+
+		template<typename T>
+		inline intrusive::SmartPointer<T> operator- (T* ptr) const
+		{
+			return intrusive::SmartPointer<T>(ptr);
+		}
+	};
+}
+
+#ifndef E_NEW
+#	define E_NEW (::easy2d::__SmartPointerMaker::Instance()) - new (std::nothrow)
+#endif

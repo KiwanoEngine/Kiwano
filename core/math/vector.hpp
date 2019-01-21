@@ -84,5 +84,8 @@ namespace easy2d
 				return reinterpret_cast<D2D1_POINT_2F&>(*this);
 			}
 		};
+
+		using Point = Vector2;
+		using Size = Vector2;
 	}
 }
