@@ -150,7 +150,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateBitmapFromFile(CpBitmap & bitmap, CpRenderTarget const & rt, std::wstring const & file_path)
+	HRESULT FactoryImpl::CreateBitmapFromFile(CpBitmap & bitmap, CpRenderTarget const & rt, String const & file_path)
 	{
 		if (imaging_factory_ == nullptr)
 		{
@@ -227,8 +227,9 @@ namespace easy2d
 		SmartPointer<ID2D1Bitmap>			bitmap_tmp;
 		
 		// ¼ÓÔØ×ÊÔ´
-		ResourceData buffer;
-		HRESULT hr = res.Load(&buffer) ? S_OK : E_FAIL;
+		LPVOID buffer;
+		DWORD buffer_size;
+		HRESULT hr = res.Load(buffer, buffer_size) ? S_OK : E_FAIL;
 
 		if (SUCCEEDED(hr))
 		{
@@ -238,8 +239,8 @@ namespace easy2d
 		if (SUCCEEDED(hr))
 		{
 			hr = stream->InitializeFromMemory(
-				static_cast<WICInProcPointer>(buffer.buffer),
-				buffer.buffer_size
+				static_cast<WICInProcPointer>(buffer),
+				buffer_size
 			);
 		}
 
@@ -418,7 +419,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateTextLayout(CpTextLayout & text_layout, Size& layout_size, std::wstring const & text, CpTextFormat const& text_format, TextStyle const & text_style) const
+	HRESULT FactoryImpl::CreateTextLayout(CpTextLayout & text_layout, Size& layout_size, String const & text, CpTextFormat const& text_format, TextStyle const & text_style) const
 	{
 		if (!write_factory_)
 			return E_UNEXPECTED;

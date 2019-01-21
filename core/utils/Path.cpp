@@ -28,7 +28,7 @@ namespace easy2d
 	namespace
 	{
 		// 创建指定文件夹
-		bool CreateFolder(std::wstring const& dir_path)
+		bool CreateFolder(String const& dir_path)
 		{
 			if (dir_path.empty() || dir_path.size() >= MAX_PATH)
 				return false;
@@ -55,15 +55,15 @@ namespace easy2d
 	}
 
 
-	std::wstring const& Path::GetDataPath()
+	String const& Path::GetDataPath()
 	{
-		static std::wstring data_path;
+		static String data_path;
 		if (data_path.empty())
 		{
 			// 设置数据的保存路径
-			std::wstring local_app_data_path = Path::GetLocalAppDataPath();
-			std::wstring title = Window::Instance()->GetTitle();
-			std::wstring folder_name = std::to_wstring(std::hash<std::wstring>{}(title));
+			String local_app_data_path = Path::GetLocalAppDataPath();
+			String title = Window::Instance()->GetTitle();
+			String folder_name = std::to_wstring(std::hash<String>{}(title));
 
 			if (!local_app_data_path.empty())
 			{
@@ -83,15 +83,15 @@ namespace easy2d
 		return data_path;
 	}
 
-	std::wstring const& Path::GetTemporaryPath()
+	String const& Path::GetTemporaryPath()
 	{
-		static std::wstring temp_path;
+		static String temp_path;
 		if (temp_path.empty())
 		{
 			// 设置临时文件保存路径
 			wchar_t path[_MAX_PATH];
-			std::wstring title = Window::Instance()->GetTitle();
-			std::wstring folder_name = std::to_wstring(std::hash<std::wstring>{}(title));
+			String title = Window::Instance()->GetTitle();
+			String folder_name = std::to_wstring(std::hash<String>{}(title));
 
 			if (0 != ::GetTempPath(_MAX_PATH, path))
 			{
@@ -110,9 +110,9 @@ namespace easy2d
 		return temp_path;
 	}
 
-	std::wstring const& Path::GetLocalAppDataPath()
+	String const& Path::GetLocalAppDataPath()
 	{
-		static std::wstring local_app_data_path;
+		static String local_app_data_path;
 		if (local_app_data_path.empty())
 		{
 			// 获取 AppData/Local 文件夹的路径
@@ -124,9 +124,9 @@ namespace easy2d
 		return local_app_data_path;
 	}
 
-	std::wstring const& Path::GetExeFilePath()
+	String const& Path::GetExeFilePath()
 	{
-		static std::wstring exe_file_path;
+		static String exe_file_path;
 		if (exe_file_path.empty())
 		{
 			TCHAR path[_MAX_PATH] = { 0 };

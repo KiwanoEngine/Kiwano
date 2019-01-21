@@ -76,12 +76,13 @@ namespace easy2d
 		SmartPointer<IMFByteStream> byte_stream;
 		SmartPointer<IMFSourceReader> reader;
 
-		ResourceData buffer;
-		if (!res.Load(&buffer)) { return false; }
+		LPVOID buffer;
+		DWORD buffer_size;
+		if (!res.Load(buffer, buffer_size)) { return false; }
 
 		stream = modules::Shlwapi{}.SHCreateMemStream(
-			static_cast<const BYTE*>(buffer.buffer),
-			static_cast<UINT>(buffer.buffer_size)
+			static_cast<const BYTE*>(buffer),
+			static_cast<UINT>(buffer_size)
 		);
 
 		if (stream == nullptr)

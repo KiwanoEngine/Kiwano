@@ -47,7 +47,7 @@ namespace easy2d
 		E2D_LOG("Destroying window");
 	}
 
-	HRESULT WindowImpl::Init(std::wstring title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
+	HRESULT WindowImpl::Init(String title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
 	{
 		E2D_LOG("Creating window");
 
@@ -82,7 +82,7 @@ namespace easy2d
 		GetContentScale(&scale_x, &scale_y);
 
 		Rect client_rect = LocateWindow(width, height, scale_x, scale_y);
-		handle = ::CreateWindowEx(
+		handle = ::CreateWindowExW(
 			NULL,
 			REGISTER_CLASS,
 			title.c_str(),
@@ -94,7 +94,7 @@ namespace easy2d
 			nullptr,
 			nullptr,
 			hinstance,
-			this
+			nullptr
 		);
 
 		if (handle == nullptr)
@@ -105,7 +105,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	std::wstring WindowImpl::GetTitle() const
+	String WindowImpl::GetTitle() const
 	{
 		if (handle)
 		{
@@ -113,10 +113,10 @@ namespace easy2d
 			GetWindowTextW(handle, title, 256);
 			return title;
 		}
-		return std::wstring();
+		return String();
 	}
 
-	void WindowImpl::SetTitle(std::wstring const& title)
+	void WindowImpl::SetTitle(String const& title)
 	{
 		if (handle)
 			::SetWindowText(handle, title.c_str());
@@ -128,12 +128,12 @@ namespace easy2d
 		{
 			RECT rect;
 			GetClientRect(handle, &rect);
-			return Size(
+			return Size{
 				static_cast<float>(rect.right - rect.left),
 				static_cast<float>(rect.bottom - rect.top)
-			);
+			};
 		}
-		return Size();
+		return Size{};
 	}
 
 	float WindowImpl::GetWidth() const

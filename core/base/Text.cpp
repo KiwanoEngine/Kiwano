@@ -48,22 +48,22 @@ namespace easy2d
 	{
 	}
 
-	Text::Text(std::wstring const& text)
+	Text::Text(String const& text)
 		: Text(text, text_default_font, text_default_style)
 	{
 	}
 
-	Text::Text(std::wstring const& text, const Font & font)
+	Text::Text(String const& text, const Font & font)
 		: Text(text, font, text_default_style)
 	{
 	}
 
-	Text::Text(std::wstring const& text, const TextStyle & style)
+	Text::Text(String const& text, const TextStyle & style)
 		: Text(text, text_default_font, style)
 	{
 	}
 
-	Text::Text(std::wstring const& text, const Font & font, const TextStyle & style)
+	Text::Text(String const& text, const Font & font, const TextStyle & style)
 		: font_(font)
 		, style_(style)
 		, text_(text)
@@ -75,7 +75,7 @@ namespace easy2d
 	{
 	}
 
-	std::wstring const& Text::GetText() const
+	String const& Text::GetText() const
 	{
 		return text_;
 	}
@@ -90,7 +90,7 @@ namespace easy2d
 		return style_;
 	}
 
-	std::wstring const& Text::GetFontFamily() const
+	String const& Text::GetFontFamily() const
 	{
 		return font_.family;
 	}
@@ -158,7 +158,7 @@ namespace easy2d
 		return style_.outline;
 	}
 
-	void Text::SetText(std::wstring const& text)
+	void Text::SetText(String const& text)
 	{
 		text_ = text;
 		UpdateLayout();
@@ -176,7 +176,7 @@ namespace easy2d
 		UpdateLayout();
 	}
 
-	void Text::SetFontFamily(std::wstring const& family)
+	void Text::SetFontFamily(String const& family)
 	{
 		if (font_.family != family)
 		{

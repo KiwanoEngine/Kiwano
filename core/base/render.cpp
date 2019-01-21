@@ -324,14 +324,14 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::CreateBitmapFromFile(CpBitmap& bitmap, std::wstring const& file_path)
+	HRESULT GraphicsDevice::CreateBitmapFromFile(CpBitmap& bitmap, String const& file_path)
 	{
 		if (render_target_ == nullptr)
 		{
 			return E_UNEXPECTED;
 		}
 
-		size_t hash_code = std::hash<std::wstring>{}(file_path);
+		size_t hash_code = std::hash<String>{}(file_path);
 		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
 		{
 			bitmap = bitmap_cache_[hash_code];

@@ -33,19 +33,10 @@ namespace easy2d
 		Music();
 
 		Music(
-			std::wstring const& file_path	/* 音乐文件路径 */
-		);
-
-		Music(
 			Resource const& res		/* 音乐资源 */
 		);
 
 		virtual ~Music();
-
-		// 打开音乐文件
-		bool Load(
-			std::wstring const& file_path	/* 音乐文件路径 */
-		);
 
 		// 打开音乐资源
 		bool Load(

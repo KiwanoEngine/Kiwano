@@ -31,7 +31,7 @@ namespace easy2d
 
 	public:
 		HRESULT Init(
-			std::wstring	title,
+			String	title,
 			int		width,
 			int		height,
 			LPCWSTR	icon,
@@ -40,10 +40,10 @@ namespace easy2d
 		);
 
 		// 获取标题
-		std::wstring GetTitle() const;
+		String GetTitle() const;
 
 		// 设置标题
-		void SetTitle(std::wstring const& title);
+		void SetTitle(String const& title);
 
 		// 获取窗口大小
 		Size GetSize() const;

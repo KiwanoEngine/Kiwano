@@ -24,6 +24,12 @@
 #include "../math/vector.hpp"
 #include "../math/Rect.hpp"
 #include "../math/Matrix.hpp"
+#include <set>
+#include <map>
+#include <list>
+#include <unordered_set>
+#include <unordered_map>
+
 
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
@@ -37,6 +43,30 @@
 		using Sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >;\
 	}
 #endif
+
+namespace easy2d
+{
+	using String = std::wstring;
+	using StringStream = std::wstringstream;
+
+	template<typename T>
+	using Array = std::vector<T>;
+
+	template<typename T>
+	using List = std::list<T>;
+
+	template<typename T>
+	using Set = std::set<T>;
+
+	template<typename T>
+	using UnorderedSet = std::unordered_set<T>;
+
+	template<typename T, typename Y>
+	using Map = std::map<T, Y>;
+
+	template<typename T, typename Y>
+	using UnorderedMap = std::unordered_map<T, Y>;
+}
 
 namespace easy2d
 {
@@ -94,9 +124,29 @@ namespace easy2d
 	E2D_DECLARE_NS_SMART_PTR(ui, Button);
 	E2D_DECLARE_NS_SMART_PTR(ui, Menu);
 
-	using Vector2 = math::Vector2;
-	using Point = math::Vector2;
-	using Size = math::Vector2;
-	using Rect = math::Rect;
-	using Matrix = math::Matrix;
+	using namespace math;
+	using namespace ui;
 }
+
+namespace easy2d
+{
+	class __SmartPointerMaker
+	{
+	public:
+		static inline __SmartPointerMaker const& Instance()
+		{
+			static __SmartPointerMaker maker;
+			return maker;
+		}
+
+		template<typename T>
+		inline intrusive::SmartPointer<T> operator- (T* ptr) const
+		{
+			return intrusive::SmartPointer<T>(ptr);
+		}
+	};
+}
+
+#ifndef E_NEW
+#	define E_NEW (::easy2d::__SmartPointerMaker::Instance()) - new (std::nothrow)
+#endif

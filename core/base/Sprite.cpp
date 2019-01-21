@@ -47,19 +47,6 @@ namespace easy2d
 		Crop(crop_rect);
 	}
 
-	Sprite::Sprite(std::wstring const& file_name)
-		: image_(nullptr)
-	{
-		Load(file_name);
-	}
-
-	Sprite::Sprite(std::wstring const& file_name, const Rect & crop_rect)
-		: image_(nullptr)
-	{
-		Load(file_name);
-		Crop(crop_rect);
-	}
-
 	Sprite::~Sprite()
 	{
 	}
@@ -86,24 +73,6 @@ namespace easy2d
 		if (image_)
 		{
 			if (image_->Load(res))
-			{
-				Node::SetSize(image_->GetWidth(), image_->GetHeight());
-				return true;
-			}
-		}
-		return false;
-	}
-
-	bool Sprite::Load(std::wstring const& file_name)
-	{
-		if (!image_)
-		{
-			image_ = new (std::nothrow) Image;
-		}
-
-		if (image_)
-		{
-			if (image_->Load(file_name))
 			{
 				Node::SetSize(image_->GetWidth(), image_->GetHeight());
 				return true;

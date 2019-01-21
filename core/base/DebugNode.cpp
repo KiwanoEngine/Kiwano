@@ -50,7 +50,7 @@ namespace easy2d
 	{
 	}
 
-	void DebugNodeImpl::AddDebugText(std::wstring const & text)
+	void DebugNodeImpl::AddDebugText(String const & text)
 	{
 		try
 		{

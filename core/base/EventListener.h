@@ -41,7 +41,7 @@ namespace easy2d
 		EventListener(
 			EventType type,
 			EventCallback const& callback,
-			std::wstring const& name = L""
+			String const& name = L""
 		);
 
 		virtual ~EventListener();
@@ -50,15 +50,15 @@ namespace easy2d
 
 		void Stop();
 
-		void SetName(std::wstring const& name);
+		void SetName(String const& name);
 
 		bool IsRunning() const;
 
-		std::wstring const& GetName() const;
+		String const& GetName() const;
 
 	protected:
 		bool			running_;
-		std::wstring	name_;
+		String			name_;
 		EventType		type_;
 		EventCallback	callback_;
 	};

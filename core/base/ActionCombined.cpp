@@ -125,7 +125,7 @@ namespace easy2d
 	{
 	}
 
-	Sequence::Sequence(const Actions& actions)
+	Sequence::Sequence(Array<SpAction> const& actions)
 		: action_index_(0)
 	{
 		this->Add(actions);
@@ -180,7 +180,7 @@ namespace easy2d
 		}
 	}
 
-	void Sequence::Add(const Actions& actions)
+	void Sequence::Add(Array<SpAction> const& actions)
 	{
 		for (const auto &action : actions)
 		{
@@ -227,7 +227,7 @@ namespace easy2d
 	{
 	}
 
-	Spawn::Spawn(const Actions& actions)
+	Spawn::Spawn(Array<SpAction> const& actions)
 	{
 		this->Add(actions);
 	}
@@ -289,7 +289,7 @@ namespace easy2d
 		}
 	}
 
-	void Spawn::Add(const Actions& actions)
+	void Spawn::Add(Array<SpAction> const& actions)
 	{
 		for (const auto &action : actions)
 		{

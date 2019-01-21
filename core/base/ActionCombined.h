@@ -64,13 +64,11 @@ namespace easy2d
 	class Sequence
 		: public Action
 	{
-		using Actions = std::vector<SpAction>;
-
 	public:
 		Sequence();
 
 		explicit Sequence(
-			Actions const& actions	/* 动作列表 */
+			Array<SpAction> const& actions	/* 动作列表 */
 		);
 
 		virtual ~Sequence();
@@ -82,7 +80,7 @@ namespace easy2d
 
 		// 在结尾添加多个动作
 		void Add(
-			const Actions& actions	/* 动作列表 */
+			Array<SpAction> const& actions	/* 动作列表 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -103,7 +101,7 @@ namespace easy2d
 
 	protected:
 		UINT action_index_;
-		Actions actions_;
+		Array<SpAction> actions_;
 	};
 
 
@@ -111,13 +109,11 @@ namespace easy2d
 	class Spawn
 		: public Action
 	{
-		using Actions = std::vector<SpAction>;
-
 	public:
 		Spawn();
 
 		explicit Spawn(
-			const Actions& actions	/* 动作列表 */
+			Array<SpAction> const& actions	/* 动作列表 */
 		);
 
 		virtual ~Spawn();
@@ -129,7 +125,7 @@ namespace easy2d
 
 		// 在结尾添加多个动作
 		void Add(
-			const Actions& actions	/* 动作列表 */
+			Array<SpAction> const& actions	/* 动作列表 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -149,6 +145,6 @@ namespace easy2d
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
-		Actions actions_;
+		Array<SpAction> actions_;
 	};
 }

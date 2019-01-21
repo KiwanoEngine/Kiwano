@@ -43,7 +43,7 @@ namespace easy2d
 			int primitives;
 		};
 
-		using BitmapMap = std::unordered_map<size_t, CpBitmap>;
+		using BitmapMap = UnorderedMap<size_t, CpBitmap>;
 
 	public:
 		HRESULT Init(HWND hwnd, bool vsync, bool debug);
@@ -87,7 +87,7 @@ namespace easy2d
 
 		HRESULT CreateBitmapFromFile(
 			CpBitmap& bitmap,
-			std::wstring const& file_path
+			String const& file_path
 		);
 
 		HRESULT CreateBitmapFromResource(

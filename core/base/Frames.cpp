@@ -29,7 +29,7 @@ namespace easy2d
 	{
 	}
 
-	Frames::Frames(Images const& frames)
+	Frames::Frames(Array<SpImage> const& frames)
 		: interval_(1)
 	{
 		this->Add(frames);
@@ -40,7 +40,7 @@ namespace easy2d
 	{
 	}
 
-	Frames::Frames(Duration const& interval, Images const& frames)
+	Frames::Frames(Duration const& interval, Array<SpImage> const& frames)
 		: interval_(interval)
 	{
 		this->Add(frames);
@@ -65,7 +65,7 @@ namespace easy2d
 		}
 	}
 
-	void Frames::Add(Images const& frames)
+	void Frames::Add(Array<SpImage> const& frames)
 	{
 		for (const auto &image : frames)
 		{
@@ -78,7 +78,7 @@ namespace easy2d
 		return interval_;
 	}
 
-	Frames::Images const& Frames::GetFrames() const
+	Array<SpImage> const& Frames::GetFrames() const
 	{
 		return frames_;
 	}

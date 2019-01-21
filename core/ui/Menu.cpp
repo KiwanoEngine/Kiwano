@@ -29,7 +29,7 @@ namespace easy2d
 		{
 		}
 
-		Menu::Menu(const std::vector<SpButton>& buttons)
+		Menu::Menu(Array<SpButton> const& buttons)
 			: enabled_(true)
 		{
 			for (const auto& button : buttons)
@@ -94,7 +94,7 @@ namespace easy2d
 			return false;
 		}
 
-		const std::vector<SpButton>& Menu::GetAllButtons() const
+		Array<SpButton> const& Menu::GetAllButtons() const
 		{
 			return buttons_;
 		}
