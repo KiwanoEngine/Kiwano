@@ -38,7 +38,7 @@ namespace easy2d
 			}
 			else
 			{
-				E2D_LOG("load shlapi.dll failed");
+				E2D_LOG(L"load shlapi.dll failed");
 			}
 		}
 
@@ -52,7 +52,7 @@ namespace easy2d
 			}
 			else
 			{
-				E2D_LOG("load d2d.dll failed");
+				E2D_LOG(L"load d2d.dll failed");
 			}
 
 			dwrite = LoadLibraryW(L"dwrite.dll");
@@ -63,7 +63,7 @@ namespace easy2d
 			}
 			else
 			{
-				E2D_LOG("load dwrite.dll failed");
+				E2D_LOG(L"load dwrite.dll failed");
 			}
 		}
 
@@ -89,7 +89,7 @@ namespace easy2d
 
 			if (!xaudio2)
 			{
-				E2D_LOG("load xaudio2.dll failed");
+				E2D_LOG(L"load xaudio2.dll failed");
 			}
 		}
 
@@ -115,7 +115,7 @@ namespace easy2d
 			}
 			else
 			{
-				E2D_LOG("load Mfplat.dll failed");
+				E2D_LOG(L"load Mfplat.dll failed");
 			}
 
 			mfreadwrite = LoadLibraryW(L"Mfreadwrite.dll");
@@ -129,7 +129,7 @@ namespace easy2d
 			}
 			else
 			{
-				E2D_LOG("load Mfreadwrite.dll failed");
+				E2D_LOG(L"load Mfreadwrite.dll failed");
 			}
 		}
 	}

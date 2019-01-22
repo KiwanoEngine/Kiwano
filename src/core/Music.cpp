@@ -62,10 +62,7 @@ namespace easy2d
 		{
 			if (!File(res.GetFileName()).Exists())
 			{
-				logs::Warningln(
-					"Media file '%s' not found",
-					StringWideCharToMultiByte(res.GetFileName()).c_str()
-				);
+				logs::Warningln(L"Media file '%s' not found", res.GetFileName());
 				return false;
 			}
 			hr = transcoder.LoadMediaFile(res.GetFileName(), &wave_data_, &size_);
@@ -77,7 +74,7 @@ namespace easy2d
 
 		if (FAILED(hr))
 		{
-			logs::Errorln(hr, "Load media file failed");
+			logs::Errorln(hr, L"Load media file failed");
 			return false;
 		}
 
@@ -89,7 +86,7 @@ namespace easy2d
 				delete[] wave_data_;
 				wave_data_ = nullptr;
 			}
-			logs::Errorln(hr, "Create source voice error");
+			logs::Errorln(hr, L"Create source voice error");
 			return false;
 		}
 
@@ -101,7 +98,7 @@ namespace easy2d
 	{
 		if (!opened_)
 		{
-			logs::Errorln("Music must be opened first!");
+			logs::Errorln(L"Music must be opened first!");
 			return false;
 		}
 
@@ -118,7 +115,7 @@ namespace easy2d
 		HRESULT hr = voice_.Play(wave_data_, size_, static_cast<UINT32>(loop_count));
 		if (FAILED(hr))
 		{
-			logs::Errorln(hr, "Submitting source buffer error");
+			logs::Errorln(hr, L"Submitting source buffer error");
 		}
 
 		playing_ = SUCCEEDED(hr);

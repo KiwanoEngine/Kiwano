@@ -64,10 +64,7 @@ namespace easy2d
 		{
 			if (!File(res.GetFileName()).Exists())
 			{
-				logs::Warningln(
-					"Image file '%s' not found!",
-					StringWideCharToMultiByte(res.GetFileName()).c_str()
-				);
+				logs::Warningln(L"Image file '%s' not found!", res.GetFileName());
 				return false;
 			}
 			hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, res.GetFileName());
@@ -79,7 +76,7 @@ namespace easy2d
 
 		if (FAILED(hr))
 		{
-			logs::Errorln(hr, "Load image file failed!");
+			logs::Errorln(hr, L"Load image file failed!");
 			return false;
 		}
 

@@ -35,12 +35,12 @@ namespace easy2d
 
 	InputDevice::~InputDevice()
 	{
-		E2D_LOG("Destroying input device");
+		E2D_LOG(L"Destroying input device");
 	}
 
 	HRESULT InputDevice::Init(HWND hwnd, float scale_x, float scale_y, bool debug)
 	{
-		E2D_LOG("Initing input device");
+		E2D_LOG(L"Initing input device");
 
 		hwnd_ = hwnd;
 		scale_x_ = scale_x;

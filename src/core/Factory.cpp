@@ -31,12 +31,12 @@ namespace easy2d
 
 	FactoryImpl::~FactoryImpl()
 	{
-		E2D_LOG("Destroying device independent resources");
+		E2D_LOG(L"Destroying device independent resources");
 	}
 
 	HRESULT FactoryImpl::Init(bool debug)
 	{
-		E2D_LOG("Creating device independent resources");
+		E2D_LOG(L"Creating device independent resources");
 
 		D2D1_FACTORY_OPTIONS fact_options;
 		fact_options.debugLevel = debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE;

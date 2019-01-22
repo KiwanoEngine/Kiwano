@@ -412,7 +412,7 @@ namespace easy2d
 
 			if (!std::regex_match(str, duration_regex))
 			{
-				logs::Errorln("time::ParseDuration failed, invalid duration");
+				logs::Errorln(L"time::ParseDuration failed, invalid duration");
 				return Duration();
 			}
 
@@ -443,7 +443,7 @@ namespace easy2d
 
 				if (num_str.empty() || num_str == L".")
 				{
-					logs::Errorln("time::ParseDuration failed, invalid duration");
+					logs::Errorln(L"time::ParseDuration failed, invalid duration");
 					return Duration();
 				}
 
@@ -462,7 +462,7 @@ namespace easy2d
 
 				if (unit_map.find(unit_str) == unit_map.end())
 				{
-					logs::Errorln("time::ParseDuration failed, invalid duration");
+					logs::Errorln(L"time::ParseDuration failed, invalid duration");
 					return Duration();
 				}
 

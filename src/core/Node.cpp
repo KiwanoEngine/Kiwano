@@ -453,11 +453,11 @@ namespace easy2d
 #ifdef E2D_DEBUG
 
 			if (child->parent_)
-				logs::Errorln("The node to be added already has a parent");
+				logs::Errorln(L"The node to be added already has a parent");
 
 			for (Node* parent = parent_; parent; parent = parent->parent_)
 				if (parent == child)
-					logs::Errorln("A node cannot be its own parent");
+					logs::Errorln(L"A node cannot be its own parent");
 
 #endif // E2D_DEBUG
 

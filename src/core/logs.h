@@ -37,21 +37,21 @@ namespace easy2d
 
 		void Disable();
 
-		void Print(const char* format, ...);
+		void Print(const wchar_t* format, ...);
 
-		void Println(const char* format, ...);
+		void Println(const wchar_t* format, ...);
 
-		void Warning(const char* format, ...);
+		void Warning(const wchar_t* format, ...);
 
-		void Warningln(const char* format, ...);
+		void Warningln(const wchar_t* format, ...);
 
-		void Error(const char* format, ...);
+		void Error(const wchar_t* format, ...);
 
-		void Errorln(const char* format, ...);
+		void Errorln(const wchar_t* format, ...);
 
 		void Errorln(HRESULT hr);
 
-		void Errorln(HRESULT hr, const char* output);
+		void Errorln(HRESULT hr, const wchar_t* output);
 	}
 
 	inline void ThrowIfFailed(HRESULT hr)

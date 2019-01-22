@@ -87,7 +87,7 @@ namespace easy2d
 
 		if (stream == nullptr)
 		{
-			logs::Errorln("SHCreateMemStream");
+			logs::Errorln(L"SHCreateMemStream");
 			return E_OUTOFMEMORY;
 		}
 
@@ -204,7 +204,7 @@ namespace easy2d
 
 			if (data == nullptr)
 			{
-				logs::Errorln("Low memory");
+				logs::Errorln(L"Low memory");
 				hr = E_OUTOFMEMORY;
 			}
 			else

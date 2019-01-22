@@ -167,7 +167,7 @@ namespace easy2d
 
 	AudioDevice::~AudioDevice()
 	{
-		E2D_LOG("Destroying audio device");
+		E2D_LOG(L"Destroying audio device");
 
 		ClearVoiceCache();
 
@@ -184,7 +184,7 @@ namespace easy2d
 
 	HRESULT AudioDevice::Init(bool debug)
 	{
-		E2D_LOG("Initing audio device");
+		E2D_LOG(L"Initing audio device");
 
 		HRESULT hr = modules::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
 

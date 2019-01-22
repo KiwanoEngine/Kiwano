@@ -41,14 +41,14 @@ namespace easy2d
 
 	GraphicsDevice::~GraphicsDevice()
 	{
-		E2D_LOG("Destroying graphics device");
+		E2D_LOG(L"Destroying graphics device");
 
 		ClearImageCache();
 	}
 
 	HRESULT GraphicsDevice::Init(HWND hwnd, bool vsync, bool debug)
 	{
-		E2D_LOG("Initing graphics device");
+		E2D_LOG(L"Initing graphics device");
 
 		vsync_enabled_ = vsync;
 		debug_ = debug;
