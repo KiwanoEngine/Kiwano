@@ -32,7 +32,6 @@ namespace easy2d
 	File::File(String const& file_name)
 		: file_path_(file_name)
 	{
-		this->Open(file_name);
 	}
 
 	File::~File()
