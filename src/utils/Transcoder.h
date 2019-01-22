@@ -19,54 +19,41 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/helper.hpp"
-#include "../base/Resource.h"
+#include "../core/macros.h"
+#include "../core/Resource.h"
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfreadwrite.h>
 
 namespace easy2d
 {
-    // 文件
-	class File
+	class Transcoder
 	{
+		WAVEFORMATEX* wave_format_;
+
 	public:
-		File();
+		Transcoder();
 
-		File(
-			String const& file_name
+		~Transcoder();
+
+		const WAVEFORMATEX* GetWaveFormatEx() const;
+
+		HRESULT LoadMediaFile(
+			LPCWSTR file_path,
+			BYTE** wave_data,
+			UINT32* wave_data_size
 		);
 
-		virtual ~File();
-
-		// 打开文件
-		bool Open(
-			String const& file_name
+		HRESULT LoadMediaResource(
+			Resource const& res,
+			BYTE** wave_data,
+			UINT32* wave_data_size
 		);
 
-		// 文件是否存在
-		bool Exists() const;
-
-		// 删除文件
-		bool Delete();
-
-		// 获取文件路径
-		String const& GetPath() const;
-
-		// 获取文件扩展名
-		String GetExtension() const;
-
-		// 释放资源到临时文件目录
-		static File Extract(
-			Resource& res,					/* 资源 */
-			String const& dest_file_name	/* 目标文件名 */
+		HRESULT ReadSource(
+			IMFSourceReader* reader,
+			BYTE** wave_data,
+			UINT32* wave_data_size
 		);
-
-		// 添加文件搜索路径
-		static void AddSearchPath(
-			String const& path
-		);
-
-	protected:
-		String file_path_;
-
-		static List<String> search_paths_;
 	};
 }

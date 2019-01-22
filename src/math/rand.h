@@ -26,14 +26,12 @@ namespace easy2d
 	namespace math
 	{
 		//
-		// 随机数产生器
+		// 随机数
 		// 
-		// Usage:
-		//     获取指定范围内的一个随机数, 如:
-		//     int n = math::Rand(1, 5);  // 获取 1~5 内的随机整数, 包含 1 和 5
-		//     方法同样适用于浮点数的生成, 如:
-		//     double d = math::Rand(1.2, 1.5);
-		//     注意, 获得的随机数类型取决于参数的类型。
+		// 获取指定范围内的一个随机数, 如:
+		// int n = math::Rand(1, 5);  // 获取 1~5 内的随机整数, 包含 1 和 5
+		// 产生的随机数类型取决于参数的类型, 如获取随机浮点数:
+		// double d = math::Rand(1.2, 1.5);
 		//
 		
 		std::default_random_engine& GetRandomEngine();

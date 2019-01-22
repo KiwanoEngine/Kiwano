@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/helper.hpp"
+#include "../core/helper.hpp"
 
 namespace easy2d
 {

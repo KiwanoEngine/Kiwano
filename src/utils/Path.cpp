@@ -20,7 +20,7 @@
 
 #include "Path.h"
 #include "File.h"
-#include "../base/window.h"
+#include "../core/window.h"
 #include <shlobj.h>
 
 namespace easy2d

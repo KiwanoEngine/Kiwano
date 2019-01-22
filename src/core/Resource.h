@@ -19,41 +19,66 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/macros.h"
-#include "../base/Resource.h"
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mfreadwrite.h>
+#include "helper.hpp"
+#include "Frames.h"
 
 namespace easy2d
 {
-	class Transcoder
+	// 资源
+	// 
+	// 资源可以是文件类型，也可以是保存在 exe 中的二进制文件
+	// 例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1,
+	// 那么可以这样指定该资源: Resource res(MAKEINTRESOURCE(IDR_WAVE_1), L"WAVE");
+	// 
+	// 了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
+	//
+	class Resource
 	{
-		WAVEFORMATEX* wave_format_;
-
 	public:
-		Transcoder();
+		enum class Type { File, Binary };
 
-		~Transcoder();
-
-		const WAVEFORMATEX* GetWaveFormatEx() const;
-
-		HRESULT LoadMediaFile(
-			LPCWSTR file_path,
-			BYTE** wave_data,
-			UINT32* wave_data_size
+		Resource(
+			String const& file_name	/* 文件路径 */
 		);
 
-		HRESULT LoadMediaResource(
-			Resource const& res,
-			BYTE** wave_data,
-			UINT32* wave_data_size
+		Resource(
+			LPCWSTR file_name		/* 文件路径 */
 		);
 
-		HRESULT ReadSource(
-			IMFSourceReader* reader,
-			BYTE** wave_data,
-			UINT32* wave_data_size
+		Resource(
+			LPCWSTR name,	/* 资源名称 */
+			LPCWSTR type	/* 资源类型 */
 		);
+
+		virtual ~Resource();
+
+		inline bool IsFile() const { return type_ == Type::File; }
+
+		inline Type GetType() const { return type_; }
+
+		inline String const& GetFileName() const { return file_name_; }
+
+		bool Load(
+			LPVOID& buffer,
+			DWORD& buffer_size
+		) const;
+
+		size_t GetHashCode() const;
+
+	private:
+		Type type_;
+		union
+		{
+			struct
+			{
+				String	file_name_;
+			};
+
+			struct
+			{
+				LPCWSTR	bin_name_;
+				LPCWSTR	bin_type_;
+			};
+		};
 	};
 }

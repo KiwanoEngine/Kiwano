@@ -19,67 +19,54 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "helper.hpp"
+#include "../core/helper.hpp"
+#include "../core/Resource.h"
 
 namespace easy2d
 {
-	// 资源
-	// 
-	// Usage:
-	//     Resource 用于指定一份资源
-	//     资源可以是文件类型，也可以是保存在 exe 中的二进制文件
-	//     例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1,
-	//     那么可以这样指定该资源: Resource res(MAKEINTRESOURCE(IDR_WAVE_1), L"WAVE");
-	// 
-	//     了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
-	//
-	class Resource
+    // 文件
+	class File
 	{
 	public:
-		enum class Type { File, Binary };
+		File();
 
-		Resource(
-			String file_name	/* 文件路径 */
+		File(
+			String const& file_name
 		);
 
-		Resource(
-			LPCWSTR file_name	/* 文件路径 */
+		virtual ~File();
+
+		// 打开文件
+		bool Open(
+			String const& file_name
 		);
 
-		Resource(
-			LPCWSTR name,		/* 资源名称 */
-			LPCWSTR type		/* 资源类型 */
+		// 文件是否存在
+		bool Exists() const;
+
+		// 删除文件
+		bool Delete();
+
+		// 获取文件路径
+		String const& GetPath() const;
+
+		// 获取文件扩展名
+		String GetExtension() const;
+
+		// 释放资源到临时文件目录
+		static File Extract(
+			Resource& res,					/* 资源 */
+			String const& dest_file_name	/* 目标文件名 */
 		);
 
-		virtual ~Resource();
+		// 添加文件搜索路径
+		static void AddSearchPath(
+			String const& path
+		);
 
-		inline bool IsFile() const { return type_ == Type::File; }
+	protected:
+		String file_path_;
 
-		inline Type GetType() const { return type_; }
-
-		inline String const& GetFileName() const { return file_name_; }
-
-		bool Load(
-			LPVOID& buffer,
-			DWORD& buffer_size
-		) const;
-
-		size_t GetHashCode() const;
-
-	private:
-		Type type_;
-		union
-		{
-			struct
-			{
-				String	file_name_;
-			};
-
-			struct
-			{
-				LPCWSTR	bin_name_;
-				LPCWSTR	bin_type_;
-			};
-		};
+		static List<String> search_paths_;
 	};
 }

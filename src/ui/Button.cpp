@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Button.h"
-#include "../base/MouseEvent.hpp"
+#include "../core/MouseEvent.hpp"
 
 namespace easy2d
 {
