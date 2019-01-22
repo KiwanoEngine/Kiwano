@@ -84,6 +84,7 @@
     <ClInclude Include="..\..\src\utils\File.h" />
     <ClInclude Include="..\..\src\utils\Path.h" />
     <ClInclude Include="..\..\src\utils\Player.h" />
+    <ClInclude Include="..\..\src\utils\ResLoader.h" />
     <ClInclude Include="..\..\src\utils\string.h" />
     <ClInclude Include="..\..\src\utils\Transcoder.h" />
   </ItemGroup>
@@ -129,6 +130,7 @@
     <ClCompile Include="..\..\src\utils\File.cpp" />
     <ClCompile Include="..\..\src\utils\Path.cpp" />
     <ClCompile Include="..\..\src\utils\Player.cpp" />
+    <ClCompile Include="..\..\src\utils\ResLoader.cpp" />
     <ClCompile Include="..\..\src\utils\string.cpp" />
     <ClCompile Include="..\..\src\utils\Transcoder.cpp" />
   </ItemGroup>

@@ -104,6 +104,7 @@
 #include "utils/File.h"
 #include "utils/Player.h"
 #include "utils/Transcoder.h"
+#include "utils/ResLoader.h"
 
 
 //

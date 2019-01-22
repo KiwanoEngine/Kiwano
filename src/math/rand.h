@@ -89,7 +89,7 @@ namespace easy2d
 			return RandomReal(min, max);
 		}
 
-		inline double Range(double min, double max)
+		inline double Rand(double min, double max)
 		{
 			return RandomReal(min, max);
 		}

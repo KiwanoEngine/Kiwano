@@ -25,19 +25,14 @@
 namespace easy2d
 {
 	Frames::Frames()
-		: interval_(1)
+		: interval_(200)
 	{
 	}
 
 	Frames::Frames(Array<SpImage> const& frames)
-		: interval_(1)
+		: interval_(200)
 	{
 		this->Add(frames);
-	}
-
-	Frames::Frames(Duration const& interval)
-		: interval_(interval)
-	{
 	}
 
 	Frames::Frames(Duration const& interval, Array<SpImage> const& frames)
@@ -85,9 +80,10 @@ namespace easy2d
 
 	SpFrames Frames::Clone() const
 	{
-		auto animation = new (std::nothrow) Frames(interval_);
+		auto animation = new (std::nothrow) Frames;
 		if (animation)
 		{
+			animation->SetInterval(interval_);
 			for (const auto& frame : frames_)
 			{
 				animation->Add(frame);
@@ -98,9 +94,10 @@ namespace easy2d
 
 	SpFrames Frames::Reverse() const
 	{
-		auto animation = new (std::nothrow) Frames(interval_);
+		auto animation = new (std::nothrow) Frames;
 		if (!frames_.empty())
 		{
+			animation->SetInterval(interval_);
 			for (auto iter = frames_.crbegin(), crend = frames_.crend(); iter != crend; ++iter)
 			{
 				if (*iter)

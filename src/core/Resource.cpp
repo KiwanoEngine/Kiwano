@@ -23,12 +23,6 @@
 
 namespace easy2d
 {
-	Resource::Resource(String const& file_name)
-		: type_(Type::File)
-		, file_name_(file_name)
-	{
-	}
-
 	Resource::Resource(LPCWSTR file_name)
 		: type_(Type::File)
 		, file_name_(file_name)
@@ -42,14 +36,10 @@ namespace easy2d
 	{
 	}
 
-	Resource::~Resource()
-	{
-	}
-
 	size_t Resource::GetHashCode() const
 	{
 		if (type_ == Type::File)
-			return std::hash<String>{}(file_name_);
+			return std::hash<LPCWSTR>{}(file_name_);
 		return std::hash<LPCWSTR>{}(bin_name_);
 	}
 

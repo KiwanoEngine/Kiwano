@@ -36,10 +36,6 @@ namespace easy2d
 		);
 
 		explicit Frames(
-			Duration const& interval		/* 帧间隔 */
-		);
-
-		explicit Frames(
 			Duration const& interval,		/* 帧间隔 */
 			Array<SpImage> const& frames	/* 关键帧数组 */
 		);

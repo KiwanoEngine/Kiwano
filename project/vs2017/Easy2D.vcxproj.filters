@@ -200,6 +200,9 @@
     <ClInclude Include="..\..\src\math\Rect.hpp">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\utils\ResLoader.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -347,6 +350,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\core\DebugNode.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\ResLoader.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

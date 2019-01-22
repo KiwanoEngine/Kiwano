@@ -60,17 +60,15 @@ namespace easy2d
 
 		if (res.IsFile())
 		{
-			File music_file;
-			if (!music_file.Open(res.GetFileName()))
+			if (!File(res.GetFileName()).Exists())
 			{
-				logs::Warningln("Media file '%s' not found", StringWideCharToMultiByte(res.GetFileName()).c_str());
+				logs::Warningln(
+					"Media file '%s' not found",
+					StringWideCharToMultiByte(res.GetFileName()).c_str()
+				);
 				return false;
 			}
-
-			// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
-			// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-			String music_file_path = music_file.GetPath();
-			HRESULT hr = transcoder.LoadMediaFile(music_file_path.c_str(), &wave_data_, &size_);
+			hr = transcoder.LoadMediaFile(res.GetFileName(), &wave_data_, &size_);
 		}
 		else
 		{

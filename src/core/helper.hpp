@@ -72,6 +72,7 @@ namespace easy2d
 {
 	// "Sp" is a shorthand for "Smart Pointer"
 
+	E2D_DECLARE_SMART_PTR(Object);
 	E2D_DECLARE_SMART_PTR(Image);
 	E2D_DECLARE_SMART_PTR(Music);
 	E2D_DECLARE_SMART_PTR(Task);

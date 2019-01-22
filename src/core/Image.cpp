@@ -62,18 +62,15 @@ namespace easy2d
 
 		if (res.IsFile())
 		{
-			File image_file;
-			if (!image_file.Open(res.GetFileName()))
+			if (!File(res.GetFileName()).Exists())
 			{
-				logs::Warningln("Image file '%s' not found!", StringWideCharToMultiByte(res.GetFileName()).c_str());
+				logs::Warningln(
+					"Image file '%s' not found!",
+					StringWideCharToMultiByte(res.GetFileName()).c_str()
+				);
 				return false;
 			}
-
-			// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
-			// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-			String image_file_path = image_file.GetPath();
-
-			hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, image_file_path);
+			hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, res.GetFileName());
 		}
 		else
 		{

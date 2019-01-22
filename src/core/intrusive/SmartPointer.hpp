@@ -43,13 +43,15 @@ namespace easy2d
 				IntrusivePtrAddRef(ptr_);
 			}
 
-			SmartPointer(const SmartPointer& other) E2D_NOEXCEPT : ptr_(other.ptr_)
+			SmartPointer(const SmartPointer& other) E2D_NOEXCEPT
+				: ptr_(other.ptr_)
 			{
 				IntrusivePtrAddRef(ptr_);
 			}
 
 			template <typename U>
-			SmartPointer(const SmartPointer<U>& other) E2D_NOEXCEPT : ptr_(other.Get())
+			SmartPointer(const SmartPointer<U>& other) E2D_NOEXCEPT
+				: ptr_(other.Get())
 			{
 				IntrusivePtrAddRef(ptr_);
 			}
