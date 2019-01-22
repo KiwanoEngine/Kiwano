@@ -53,20 +53,13 @@ namespace easy2d
 		// 获取文件扩展名
 		String GetExtension() const;
 
-		// 释放资源到临时文件目录
+		// 释放二进制资源到临时文件目录
 		static File Extract(
-			Resource& res,					/* 资源 */
+			Resource const& res,			/* 资源 */
 			String const& dest_file_name	/* 目标文件名 */
-		);
-
-		// 添加文件搜索路径
-		static void AddSearchPath(
-			String const& path
 		);
 
 	protected:
 		String file_path_;
-
-		static List<String> search_paths_;
 	};
 }

@@ -25,12 +25,12 @@ namespace easy2d
 {
 	class ActionManager
 	{
-		using Actions = intrusive::List<SpAction>;
+		using Actions = intrusive::List<ActionPtr>;
 
 	public:
 		// 执行动作
 		void AddAction(
-			SpAction const& action
+			ActionPtr const& action
 		);
 
 		// 继续所有暂停动作

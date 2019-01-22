@@ -51,9 +51,9 @@ namespace easy2d
 	{
 		HRESULT hr = S_OK;
 
-		SmartPointer<IMFSourceReader> reader;
+		SmartPtr<IMFSourceReader> reader;
 
-		hr = modules::MediaFoundation().MFCreateSourceReaderFromURL(
+		hr = modules::MediaFoundation::Get().MFCreateSourceReaderFromURL(
 			file_path,
 			nullptr,
 			&reader
@@ -72,33 +72,33 @@ namespace easy2d
 		HRESULT	hr = S_OK;
 		HINSTANCE hinstance = GetModuleHandle(nullptr);
 
-		SmartPointer<IStream> stream;
-		SmartPointer<IMFByteStream> byte_stream;
-		SmartPointer<IMFSourceReader> reader;
+		SmartPtr<IStream> stream;
+		SmartPtr<IMFByteStream> byte_stream;
+		SmartPtr<IMFSourceReader> reader;
 
 		LPVOID buffer;
 		DWORD buffer_size;
 		if (!res.Load(buffer, buffer_size)) { return false; }
 
-		stream = modules::Shlwapi{}.SHCreateMemStream(
+		stream = modules::Shlwapi::Get().SHCreateMemStream(
 			static_cast<const BYTE*>(buffer),
 			static_cast<UINT>(buffer_size)
 		);
 
 		if (stream == nullptr)
 		{
-			logs::Errorln("SHCreateMemStream");
+			logs::Errorln(L"SHCreateMemStream");
 			return E_OUTOFMEMORY;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = modules::MediaFoundation().MFCreateMFByteStreamOnStream(stream.Get(), &byte_stream);
+			hr = modules::MediaFoundation::Get().MFCreateMFByteStreamOnStream(stream.Get(), &byte_stream);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = modules::MediaFoundation().MFCreateSourceReaderFromByteStream(
+			hr = modules::MediaFoundation::Get().MFCreateSourceReaderFromByteStream(
 				byte_stream.Get(),
 				nullptr,
 				&reader
@@ -118,10 +118,10 @@ namespace easy2d
 		HRESULT hr = S_OK;
 		DWORD max_stream_size = 0;
 
-		SmartPointer<IMFMediaType> partial_type;
-		SmartPointer<IMFMediaType> uncompressed_type;
+		SmartPtr<IMFMediaType> partial_type;
+		SmartPtr<IMFMediaType> uncompressed_type;
 
-		hr = modules::MediaFoundation().MFCreateMediaType(&partial_type);
+		hr = modules::MediaFoundation::Get().MFCreateMediaType(&partial_type);
 
 		if (SUCCEEDED(hr))
 		{
@@ -165,7 +165,7 @@ namespace easy2d
 		if (SUCCEEDED(hr))
 		{
 			UINT32 size = 0;
-			hr = modules::MediaFoundation().MFCreateWaveFormatExFromMFMediaType(
+			hr = modules::MediaFoundation::Get().MFCreateWaveFormatExFromMFMediaType(
 				uncompressed_type.Get(),
 				&wave_format_,
 				&size,
@@ -199,12 +199,12 @@ namespace easy2d
 			DWORD position = 0;
 			BYTE* data = new (std::nothrow) BYTE[max_stream_size];
 
-			SmartPointer<IMFSample> sample;
-			SmartPointer<IMFMediaBuffer> buffer;
+			SmartPtr<IMFSample> sample;
+			SmartPtr<IMFMediaBuffer> buffer;
 
 			if (data == nullptr)
 			{
-				logs::Errorln("Low memory");
+				logs::Errorln(L"Low memory");
 				hr = E_OUTOFMEMORY;
 			}
 			else

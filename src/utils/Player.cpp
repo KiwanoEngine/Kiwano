@@ -39,7 +39,7 @@ namespace easy2d
 		if (musics_cache_.end() != musics_cache_.find(hash_code))
 			return true;
 
-		SpMusic music = new (std::nothrow) Music();
+		MusicPtr music = new (std::nothrow) Music();
 
 		if (music)
 		{

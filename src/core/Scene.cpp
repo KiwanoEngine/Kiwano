@@ -38,12 +38,12 @@ namespace easy2d
 
 	void Scene::OnEnter()
 	{
-		E2D_LOG("Scene entered");
+		E2D_LOG(L"Scene entered");
 	}
 
 	void Scene::OnExit()
 	{
-		E2D_LOG("Scene exited");
+		E2D_LOG(L"Scene exited");
 	}
 
 	void Scene::OnDeactivate()

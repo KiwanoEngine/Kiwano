@@ -32,10 +32,10 @@ namespace easy2d
 
 	class EventListener
 		: public Object
-		, protected intrusive::ListItem<SpEventListener>
+		, protected intrusive::ListItem<EventListenerPtr>
 	{
 		friend class EventDispatcher;
-		friend class intrusive::List<SpEventListener>;
+		friend class intrusive::List<EventListenerPtr>;
 
 	public:
 		EventListener(

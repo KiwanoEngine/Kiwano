@@ -150,7 +150,7 @@ namespace easy2d
 		);
 
 		// 设置行间距（默认为 0）
-		void SetLineSpacing(
+		void SetLineacingPtr(
 			float line_spacing
 		);
 
@@ -208,7 +208,7 @@ namespace easy2d
 		String			text_;
 		Font			font_;
 		TextStyle		style_;
-		CpTextFormat	text_format_;
-		CpTextLayout	text_layout_;
+		D2DTextFormatPtr	text_format_;
+		D2DTextLayoutPtr	text_layout_;
 	};
 }

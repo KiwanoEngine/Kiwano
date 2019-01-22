@@ -33,30 +33,30 @@ namespace easy2d
 		{
 			bool enabled = true;
 
-			void Out(std::ostream& stream, const char* output)
+			void Out(std::ostream& stream, const wchar_t* output)
 			{
 				stream << output;
-				::OutputDebugStringA(output);
+				::OutputDebugStringW(output);
 			}
 
-			void OutPrefix(std::stringstream& ss)
+			void OutPrefix(std::wstringstream& ss)
 			{
 				std::time_t unix = ::time(NULL);
 				struct tm tmbuf;
 				localtime_s(&tmbuf, &unix);
-				ss << std::put_time(&tmbuf, "[easy2d] %H:%M:%S ");
+				ss << std::put_time(&tmbuf, L"[easy2d] %H:%M:%S ");
 			}
 
-			void Output(std::ostream& stream, const char* prompt, const char* format, va_list args)
+			void Output(std::ostream& stream, const wchar_t* prompt, const wchar_t* format, va_list args)
 			{
 				if (!enabled)
 					return;
 
-				size_t len = ::_vscprintf(format, args) + 1;
-				char* buffer = new char[len];
-				::_vsnprintf_s(buffer, len, len, format, args);
+				size_t len = ::_vscwprintf(format, args) + 1;
+				wchar_t* buffer = new wchar_t[len];
+				::_vsnwprintf_s(buffer, len, len, format, args);
 
-				std::stringstream ss;
+				std::wstringstream ss;
 				OutPrefix(ss);
 				ss << prompt << buffer;
 				Out(stream, ss.str().c_str());
@@ -64,13 +64,13 @@ namespace easy2d
 				delete[] buffer;
 			}
 
-			void OutputLine(std::ostream& stream, const char* prompt, const char* format, va_list args)
+			void OutputLine(std::ostream& stream, const wchar_t* prompt, const wchar_t* format, va_list args)
 			{
 				if (!enabled)
 					return;
 
 				Output(stream, prompt, format, args);
-				Out(stream, "\r\n");
+				Out(stream, L"\r\n");
 			}
 		}
 
@@ -84,74 +84,74 @@ namespace easy2d
 			enabled = false;
 		}
 
-		void Print(const char* format, ...)
+		void Print(const wchar_t* format, ...)
 		{
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::cout, "", format, args);
+			Output(std::cout, L"", format, args);
 
 			va_end(args);
 		}
 
-		void Println(const char* format, ...)
+		void Println(const wchar_t* format, ...)
 		{
 			va_list args = nullptr;
 			va_start(args, format);
 
-			OutputLine(std::cout, "", format, args);
+			OutputLine(std::cout, L"", format, args);
 
 			va_end(args);
 		}
 
-		void Warning(const char* format, ...)
+		void Warning(const wchar_t* format, ...)
 		{
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::cerr, "Warning: ", format, args);
+			Output(std::cerr, L"Warning: ", format, args);
 
 			va_end(args);
 		}
 
-		void Warningln(const char* format, ...)
+		void Warningln(const wchar_t* format, ...)
 		{
 			va_list args = nullptr;
 			va_start(args, format);
 
-			OutputLine(std::cerr, "Warning: ", format, args);
+			OutputLine(std::cerr, L"Warning: ", format, args);
 
 			va_end(args);
 		}
 
-		void Error(const char* format, ...)
+		void Error(const wchar_t* format, ...)
 		{
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::cerr, "Error: ", format, args);
+			Output(std::cerr, L"Error: ", format, args);
 
 			va_end(args);
 		}
 
-		void Errorln(const char* format, ...)
+		void Errorln(const wchar_t* format, ...)
 		{
 			va_list args = nullptr;
 			va_start(args, format);
 
-			OutputLine(std::cerr, "Error: ", format, args);
+			OutputLine(std::cerr, L"Error: ", format, args);
 
 			va_end(args);
 		}
 
 		void Errorln(HRESULT hr)
 		{
-			Errorln("failure with HRESULT of %08X", hr);
+			Errorln(L"failure with HRESULT of %08X", hr);
 		}
 
-		void Errorln(HRESULT hr, const char* output)
+		void Errorln(HRESULT hr, const wchar_t* output)
 		{
-			Errorln("failure with HRESULT of %08X: %s", hr, output);
+			Errorln(L"failure with HRESULT of %08X: %s", hr, output);
 		}
 	}
 }

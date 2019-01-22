@@ -44,12 +44,12 @@ namespace easy2d
 
 	WindowImpl::~WindowImpl()
 	{
-		E2D_LOG("Destroying window");
+		E2D_LOG(L"Destroying window");
 	}
 
 	HRESULT WindowImpl::Init(String title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
 	{
-		E2D_LOG("Creating window");
+		E2D_LOG(L"Creating window");
 
 		HINSTANCE hinstance	= GetModuleHandle(nullptr);
 		WNDCLASSEX wcex		= { 0 };
@@ -235,7 +235,7 @@ namespace easy2d
 			height = static_cast<int>(rect.bottom - rect.top);
 
 			if (max_width < width || max_height < height)
-				logs::Warningln("The window is larger than screen!");
+				logs::Warningln(L"The window is larger than screen!");
 
 			width = std::min(width, max_width);
 			height = std::min(height, max_height);

@@ -28,7 +28,7 @@ namespace easy2d
 		if (listeners_.IsEmpty())
 			return;
 
-		SpEventListener next;
+		EventListenerPtr next;
 		for (auto listener = listeners_.First(); listener; listener = next)
 		{
 			next = listener->NextItem();
@@ -40,7 +40,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::AddListener(SpEventListener const & listener)
+	void EventDispatcher::AddListener(EventListenerPtr const & listener)
 	{
 		E2D_ASSERT(listener && "AddListener failed, NULL pointer exception");
 
@@ -52,7 +52,7 @@ namespace easy2d
 
 	void EventDispatcher::AddListener(EventType type, EventCallback callback, String const& name)
 	{
-		SpEventListener listener = new EventListener(type, callback, name);
+		EventListenerPtr listener = new EventListener(type, callback, name);
 		if (listener)
 		{
 			listeners_.PushBack(listener);
@@ -83,7 +83,7 @@ namespace easy2d
 
 	void EventDispatcher::RemoveListeners(String const & listener_name)
 	{
-		SpEventListener next;
+		EventListenerPtr next;
 		for (auto listener = listeners_.First(); listener; listener = next)
 		{
 			next = listener->NextItem();
@@ -119,7 +119,7 @@ namespace easy2d
 
 	void EventDispatcher::RemoveListeners(EventType type)
 	{
-		SpEventListener next;
+		EventListenerPtr next;
 		for (auto listener = listeners_.First(); listener; listener = next)
 		{
 			next = listener->NextItem();

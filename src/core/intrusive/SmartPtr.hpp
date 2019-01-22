@@ -27,47 +27,49 @@ namespace easy2d
 	namespace intrusive
 	{
 		template <typename T>
-		class SmartPointer
+		class SmartPtr
 		{
 			T* ptr_{ nullptr };
 
 		public:
 			using Type = T;
 
-			SmartPointer() E2D_NOEXCEPT {}
+			SmartPtr() E2D_NOEXCEPT {}
 
-			SmartPointer(nullptr_t) E2D_NOEXCEPT {}
+			SmartPtr(nullptr_t) E2D_NOEXCEPT {}
 
-			SmartPointer(Type* p) E2D_NOEXCEPT : ptr_(p)
+			SmartPtr(Type* p) E2D_NOEXCEPT : ptr_(p)
 			{
 				IntrusivePtrAddRef(ptr_);
 			}
 
-			SmartPointer(const SmartPointer& other) E2D_NOEXCEPT : ptr_(other.ptr_)
+			SmartPtr(const SmartPtr& other) E2D_NOEXCEPT
+				: ptr_(other.ptr_)
 			{
 				IntrusivePtrAddRef(ptr_);
 			}
 
 			template <typename U>
-			SmartPointer(const SmartPointer<U>& other) E2D_NOEXCEPT : ptr_(other.Get())
+			SmartPtr(const SmartPtr<U>& other) E2D_NOEXCEPT
+				: ptr_(other.Get())
 			{
 				IntrusivePtrAddRef(ptr_);
 			}
 
-			SmartPointer(SmartPointer&& other) E2D_NOEXCEPT
+			SmartPtr(SmartPtr&& other) E2D_NOEXCEPT
 			{
 				ptr_ = other.ptr_;
 				other.ptr_ = nullptr;
 			}
 
-			~SmartPointer() E2D_NOEXCEPT
+			~SmartPtr() E2D_NOEXCEPT
 			{
 				IntrusivePtrRelease(ptr_);
 			}
 
 			inline Type* Get() const E2D_NOEXCEPT { return ptr_; }
 
-			inline void Swap(SmartPointer& other) E2D_NOEXCEPT
+			inline void Swap(SmartPtr& other) E2D_NOEXCEPT
 			{
 				std::swap(ptr_, other.ptr_);
 			}
@@ -94,14 +96,14 @@ namespace easy2d
 
 			inline bool operator !() const E2D_NOEXCEPT { return ptr_ == 0; }
 
-			inline SmartPointer& operator =(const SmartPointer& other) E2D_NOEXCEPT
+			inline SmartPtr& operator =(const SmartPtr& other) E2D_NOEXCEPT
 			{
 				if (other.ptr_ != ptr_)
-					SmartPointer(other).Swap(*this);
+					SmartPtr(other).Swap(*this);
 				return *this;
 			}
 
-			inline SmartPointer& operator =(SmartPointer&& other) E2D_NOEXCEPT
+			inline SmartPtr& operator =(SmartPtr&& other) E2D_NOEXCEPT
 			{
 				IntrusivePtrRelease(ptr_);
 				ptr_ = other.ptr_;
@@ -109,83 +111,83 @@ namespace easy2d
 				return *this;
 			}
 
-			inline SmartPointer& operator =(Type* p) E2D_NOEXCEPT
+			inline SmartPtr& operator =(Type* p) E2D_NOEXCEPT
 			{
 				if (p != ptr_)
-					SmartPointer(p).Swap(*this);
+					SmartPtr(p).Swap(*this);
 				return *this;
 			}
 
-			inline SmartPointer& operator =(nullptr_t) E2D_NOEXCEPT
+			inline SmartPtr& operator =(nullptr_t) E2D_NOEXCEPT
 			{
 				if (nullptr != ptr_)
-					SmartPointer{}.Swap(*this);
+					SmartPtr{}.Swap(*this);
 				return *this;
 			}
 		};
 
 		template<class T, class U>
-		inline bool operator==(SmartPointer<T> const& lhs, SmartPointer<U> const& rhs) E2D_NOEXCEPT
+		inline bool operator==(SmartPtr<T> const& lhs, SmartPtr<U> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() == rhs.Get();
 		}
 
 		template<class T, class U>
-		inline bool operator!=(SmartPointer<T> const& lhs, SmartPointer<U> const& rhs) E2D_NOEXCEPT
+		inline bool operator!=(SmartPtr<T> const& lhs, SmartPtr<U> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() != rhs.Get();
 		}
 
 		template<class T, class U>
-		inline bool operator<(SmartPointer<T> const& lhs, SmartPointer<U> const& rhs) E2D_NOEXCEPT
+		inline bool operator<(SmartPtr<T> const& lhs, SmartPtr<U> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() < rhs.Get();
 		}
 
 		template<class T>
-		inline bool operator==(SmartPointer<T> const& lhs, T* rhs) E2D_NOEXCEPT
+		inline bool operator==(SmartPtr<T> const& lhs, T* rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() == rhs;
 		}
 
 		template<class T>
-		inline bool operator!=(SmartPointer<T> const& lhs, T* rhs) E2D_NOEXCEPT
+		inline bool operator!=(SmartPtr<T> const& lhs, T* rhs) E2D_NOEXCEPT
 		{
 			return lhs.Get() != rhs;
 		}
 
 		template<class T>
-		inline bool operator==(T* lhs, SmartPointer<T> const& rhs) E2D_NOEXCEPT
+		inline bool operator==(T* lhs, SmartPtr<T> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs == rhs.Get();
 		}
 
 		template<class T>
-		inline bool operator!=(T* lhs, SmartPointer<T> const& rhs) E2D_NOEXCEPT
+		inline bool operator!=(T* lhs, SmartPtr<T> const& rhs) E2D_NOEXCEPT
 		{
 			return lhs != rhs.Get();
 		}
 
 		template<class T>
-		inline bool operator==(SmartPointer<T> const& lhs, nullptr_t) E2D_NOEXCEPT
+		inline bool operator==(SmartPtr<T> const& lhs, nullptr_t) E2D_NOEXCEPT
 		{
 			return !static_cast<bool>(lhs);
 		}
 
 		template<class T>
-		inline bool operator!=(SmartPointer<T> const& lhs, nullptr_t) E2D_NOEXCEPT
+		inline bool operator!=(SmartPtr<T> const& lhs, nullptr_t) E2D_NOEXCEPT
 		{
 			return static_cast<bool>(lhs);
 		}
 
 		template<class T>
-		inline bool operator==(nullptr_t, SmartPointer<T> const& rhs) E2D_NOEXCEPT
+		inline bool operator==(nullptr_t, SmartPtr<T> const& rhs) E2D_NOEXCEPT
 		{
 			return !static_cast<bool>(rhs);
 		}
 
 		template<class T>
-		inline bool operator!=(nullptr_t, SmartPointer<T> const& rhs) E2D_NOEXCEPT
+		inline bool operator!=(nullptr_t, SmartPtr<T> const& rhs) E2D_NOEXCEPT
 		{
 			return static_cast<bool>(rhs);
 		}
@@ -194,7 +196,7 @@ namespace easy2d
 	// template class cannot specialize std::swap,
 	// so implement a swap function in easy2d namespace
 	template<class T>
-	inline void swap(intrusive::SmartPointer<T>& lhs, intrusive::SmartPointer<T>& rhs) E2D_NOEXCEPT
+	inline void swap(intrusive::SmartPtr<T>& lhs, intrusive::SmartPtr<T>& rhs) E2D_NOEXCEPT
 	{
 		lhs.Swap(rhs);
 	}

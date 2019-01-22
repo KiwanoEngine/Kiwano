@@ -45,7 +45,7 @@ namespace easy2d
 		this->Crop(crop_rect);
 	}
 
-	Image::Image(CpBitmap const & bitmap)
+	Image::Image(D2DBitmapPtr const & bitmap)
 		: Image()
 	{
 		SetBitmap(bitmap);
@@ -58,22 +58,16 @@ namespace easy2d
 	bool Image::Load(Resource const& res)
 	{
 		HRESULT hr = S_OK;
-		CpBitmap bitmap;
+		D2DBitmapPtr bitmap;
 
 		if (res.IsFile())
 		{
-			File image_file;
-			if (!image_file.Open(res.GetFileName()))
+			if (!File(res.GetFileName()).Exists())
 			{
-				logs::Warningln("Image file '%s' not found!", StringWideCharToMultiByte(res.GetFileName()).c_str());
+				logs::Warningln(L"Image file '%s' not found!", res.GetFileName());
 				return false;
 			}
-
-			// 用户输入的路径不一定是完整路径，因为用户可能通过 File::AddSearchPath 添加
-			// 默认搜索路径，所以需要通过 File::GetPath 获取完整路径
-			String image_file_path = image_file.GetPath();
-
-			hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, image_file_path);
+			hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, res.GetFileName());
 		}
 		else
 		{
@@ -82,7 +76,7 @@ namespace easy2d
 
 		if (FAILED(hr))
 		{
-			logs::Errorln(hr, "Load image file failed!");
+			logs::Errorln(hr, L"Load image file failed!");
 			return false;
 		}
 
@@ -165,12 +159,12 @@ namespace easy2d
 		return crop_rect_;
 	}
 
-	CpBitmap const& Image::GetBitmap() const
+	D2DBitmapPtr const& Image::GetBitmap() const
 	{
 		return bitmap_;
 	}
 
-	void Image::SetBitmap(CpBitmap const & bitmap)
+	void Image::SetBitmap(D2DBitmapPtr const & bitmap)
 	{
 		if (bitmap)
 		{

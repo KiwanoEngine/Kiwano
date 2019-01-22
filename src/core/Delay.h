@@ -33,10 +33,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override;
+		virtual ActionPtr Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;

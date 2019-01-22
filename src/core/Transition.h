@@ -43,8 +43,8 @@ namespace easy2d
 
 	protected:
 		virtual void Init(
-			SpScene const& prev,
-			SpScene const& next
+			ScenePtr const& prev,
+			ScenePtr const& next
 		);
 
 		virtual void Update(Duration const& dt);
@@ -61,10 +61,10 @@ namespace easy2d
 		Duration		duration_;
 		Duration		delta_;
 		Size			window_size_;
-		SpScene			out_scene_;
-		SpScene			in_scene_;
-		CpLayer			out_layer_;
-		CpLayer			in_layer_;
+		ScenePtr			out_scene_;
+		ScenePtr			in_scene_;
+		D2DLayerPtr			out_layer_;
+		D2DLayerPtr			in_layer_;
 		LayerProperties out_layer_prop_;
 		LayerProperties in_layer_prop_;
 	};
@@ -84,8 +84,8 @@ namespace easy2d
 		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
-			SpScene const& prev,
-			SpScene const& next
+			ScenePtr const& prev,
+			ScenePtr const& next
 		) override;
 	};
 
@@ -103,8 +103,8 @@ namespace easy2d
 		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
-			SpScene const& prev,
-			SpScene const& next
+			ScenePtr const& prev,
+			ScenePtr const& next
 		) override;
 	};
 
@@ -122,8 +122,8 @@ namespace easy2d
 		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
-			SpScene const& prev,
-			SpScene const& next
+			ScenePtr const& prev,
+			ScenePtr const& next
 		) override;
 	};
 
@@ -142,8 +142,8 @@ namespace easy2d
 		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
-			SpScene const& prev,
-			SpScene const& next
+			ScenePtr const& prev,
+			ScenePtr const& next
 		) override;
 
 		virtual void Reset() override;
@@ -169,8 +169,8 @@ namespace easy2d
 		virtual void Update(Duration const& dt) override;
 
 		virtual void Init(
-			SpScene const& prev,
-			SpScene const& next
+			ScenePtr const& prev,
+			ScenePtr const& next
 		) override;
 
 		virtual void Reset() override;

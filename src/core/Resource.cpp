@@ -23,12 +23,6 @@
 
 namespace easy2d
 {
-	Resource::Resource(String const& file_name)
-		: type_(Type::File)
-		, file_name_(file_name)
-	{
-	}
-
 	Resource::Resource(LPCWSTR file_name)
 		: type_(Type::File)
 		, file_name_(file_name)
@@ -42,14 +36,10 @@ namespace easy2d
 	{
 	}
 
-	Resource::~Resource()
-	{
-	}
-
 	size_t Resource::GetHashCode() const
 	{
 		if (type_ == Type::File)
-			return std::hash<String>{}(file_name_);
+			return std::hash<LPCWSTR>{}(file_name_);
 		return std::hash<LPCWSTR>{}(bin_name_);
 	}
 
@@ -64,28 +54,28 @@ namespace easy2d
 		res_info = FindResourceW(nullptr, bin_name_, bin_type_);
 		if (res_info == nullptr)
 		{
-			logs::Errorln("FindResource");
+			logs::Errorln(L"FindResource");
 			return false;
 		}
 
 		res_data = LoadResource(nullptr, res_info);
 		if (res_data == nullptr)
 		{
-			logs::Errorln("LoadResource");
+			logs::Errorln(L"LoadResource");
 			return false;
 		}
 
 		buffer_size = SizeofResource(nullptr, res_info);
 		if (buffer_size == 0)
 		{
-			logs::Errorln("SizeofResource");
+			logs::Errorln(L"SizeofResource");
 			return false;
 		}
 
 		buffer = LockResource(res_data);
 		if (buffer == nullptr)
 		{
-			logs::Errorln("LockResource");
+			logs::Errorln(L"LockResource");
 			return false;
 		}
 		return true;

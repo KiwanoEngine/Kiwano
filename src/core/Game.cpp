@@ -153,7 +153,7 @@ namespace easy2d
 		Window::Instance()->Destroy();
 	}
 
-	void Game::EnterScene(SpScene const & scene)
+	void Game::EnterScene(ScenePtr const & scene)
 	{
 		E2D_ASSERT(scene && "Game::EnterScene failed, NULL pointer exception");
 
@@ -163,7 +163,7 @@ namespace easy2d
 		next_scene_ = scene;
 	}
 
-	void Game::EnterScene(SpScene const& scene, SpTransition const& transition)
+	void Game::EnterScene(ScenePtr const& scene, TransitionPtr const& transition)
 	{
 		EnterScene(scene);
 		
@@ -178,7 +178,7 @@ namespace easy2d
 		}
 	}
 
-	SpScene const& Game::GetCurrentScene()
+	ScenePtr const& Game::GetCurrentScene()
 	{
 		return curr_scene_;
 	}
@@ -337,7 +337,7 @@ namespace easy2d
 
 		case WM_DISPLAYCHANGE:
 		{
-			E2D_LOG("The display resolution has changed");
+			E2D_LOG(L"The display resolution has changed");
 
 			::InvalidateRect(hwnd, nullptr, FALSE);
 		}
@@ -345,7 +345,7 @@ namespace easy2d
 
 		case WM_CLOSE:
 		{
-			E2D_LOG("Received a message to close the window");
+			E2D_LOG(L"Received a message to close the window");
 
 			SysEvent event(SysEvent::WindowClose);
 			game->Dispatch(&event);
@@ -360,7 +360,7 @@ namespace easy2d
 
 		case WM_DESTROY:
 		{
-			E2D_LOG("Window was destroyed");
+			E2D_LOG(L"Window was destroyed");
 
 			game->OnExit();
 			::PostQuitMessage(0);
@@ -374,14 +374,14 @@ namespace easy2d
 			{
 				game->active_ = false;
 
-				E2D_LOG("Window minimized");
+				E2D_LOG(L"Window minimized");
 			}
 			else if (SIZE_RESTORED == wparam)
 			{
 				game->active_ = true;
 				::InvalidateRect(hwnd, nullptr, FALSE);
 
-				E2D_LOG("Window restored");
+				E2D_LOG(L"Window restored");
 			}
 
 			UINT width = LOWORD(lparam);
@@ -399,14 +399,14 @@ namespace easy2d
 			bool active = (LOWORD(wparam) != WA_INACTIVE);
 			if (active)
 			{
-				E2D_LOG("Window activated");
+				E2D_LOG(L"Window activated");
 
 				SysEvent event(SysEvent::WindowActivate);
 				game->Dispatch(&event);
 			}
 			else
 			{
-				E2D_LOG("Window deactivated");
+				E2D_LOG(L"Window deactivated");
 
 				SysEvent event(SysEvent::WindowDeavtivate);
 				game->Dispatch(&event);
@@ -416,13 +416,13 @@ namespace easy2d
 
 		case WM_SETTEXT:
 		{
-			E2D_LOG("Window title changed");
+			E2D_LOG(L"Window title changed");
 		}
 		break;
 
 		case WM_SETICON:
 		{
-			E2D_LOG("Window icon changed");
+			E2D_LOG(L"Window icon changed");
 		}
 		break;
 		}

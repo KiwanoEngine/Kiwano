@@ -18,28 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ResLoader.h"
+#pragma once
+#include "../core/include-forwards.h"
+#include "../core/Resource.h"
 
 namespace easy2d
 {
-	/*void ResLoader::Add(String const & id, SpImage const & image)
+	class ResLoader
 	{
-		res_.insert(std::make_pair(id, image.Get()));
-	}
+	public:
+		void AddImage(String const& id, Resource const& image);
 
-	void ResLoader::Add(String const & id, SpFrames const & frames)
-	{
-		res_.insert(std::make_pair(id, frames.Get()));
-	}
+		void AddFrames(String const& id, Array<Resource> const& images, Duration const& interval = 200);
 
-	SpImage easy2d::ResLoader::GetImage(String const & id)
-	{
-		return Get<Image*>(id);
-	}*/
+		void AddObj(String const& id, ObjectPtr const& obj);
 
-	/*SpFrames easy2d::ResLoader::GetFrames(String const & id)
-	{
-		return Get<Frames*>(id);
-	}*/
+		ImagePtr GetImage(String const& id) const;
 
+		FramesPtr GetFrames(String const& id) const;
+
+		ObjectPtr GetObj(String const& id) const;
+
+		void Delete(String const& id);
+
+		void Destroy();
+
+		// 添加资源搜索路径
+		void AddSearchPath(
+			String const& path
+		);
+
+		template<typename T>
+		auto Get(String const& id) const -> decltype(auto)
+		{
+			auto iter = res_.find(id);
+			if (iter == res_.end())
+				return T{};
+			return dynamic_cast<T>((*iter).second.Get());
+		}
+
+	protected:
+		UnorderedMap<String, ObjectPtr> res_;
+		List<String> search_paths_;
+	};
 }

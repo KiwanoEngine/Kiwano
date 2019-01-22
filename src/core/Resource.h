@@ -26,7 +26,7 @@ namespace easy2d
 {
 	// 资源
 	// 
-	// 资源可以是文件类型，也可以是保存在 exe 中的二进制文件
+	// 资源可以是文件类型，也可以是保存在 exe 中的二进制资源
 	// 例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1,
 	// 那么可以这样指定该资源: Resource res(MAKEINTRESOURCE(IDR_WAVE_1), L"WAVE");
 	// 
@@ -38,25 +38,19 @@ namespace easy2d
 		enum class Type { File, Binary };
 
 		Resource(
-			String const& file_name	/* 文件路径 */
+			LPCWSTR file_name	/* 文件路径 */
 		);
 
 		Resource(
-			LPCWSTR file_name		/* 文件路径 */
+			LPCWSTR name,		/* 资源名称 */
+			LPCWSTR type		/* 资源类型 */
 		);
-
-		Resource(
-			LPCWSTR name,	/* 资源名称 */
-			LPCWSTR type	/* 资源类型 */
-		);
-
-		virtual ~Resource();
 
 		inline bool IsFile() const { return type_ == Type::File; }
 
 		inline Type GetType() const { return type_; }
 
-		inline String const& GetFileName() const { return file_name_; }
+		inline LPCWSTR GetFileName() const { return file_name_; }
 
 		bool Load(
 			LPVOID& buffer,
@@ -71,7 +65,7 @@ namespace easy2d
 		{
 			struct
 			{
-				String	file_name_;
+				LPCWSTR	file_name_;
 			};
 
 			struct

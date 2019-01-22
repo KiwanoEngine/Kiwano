@@ -31,16 +31,16 @@ namespace easy2d
 
 	FactoryImpl::~FactoryImpl()
 	{
-		E2D_LOG("Destroying device independent resources");
+		E2D_LOG(L"Destroying device independent resources");
 	}
 
 	HRESULT FactoryImpl::Init(bool debug)
 	{
-		E2D_LOG("Creating device independent resources");
+		E2D_LOG(L"Creating device independent resources");
 
 		D2D1_FACTORY_OPTIONS fact_options;
 		fact_options.debugLevel = debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE;
-		HRESULT hr = modules::DirectX().D2D1CreateFactory(
+		HRESULT hr = modules::DirectX::Get().D2D1CreateFactory(
 			D2D1_FACTORY_TYPE_SINGLE_THREADED,
 			__uuidof(ID2D1Factory),
 			&fact_options,
@@ -60,7 +60,7 @@ namespace easy2d
 
 		if (SUCCEEDED(hr))
 		{
-			modules::DirectX().DWriteCreateFactory(
+			modules::DirectX::Get().DWriteCreateFactory(
 				DWRITE_FACTORY_TYPE_SHARED,
 				__uuidof(IDWriteFactory),
 				reinterpret_cast<IUnknown**>(&write_factory_)
@@ -111,12 +111,12 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateHwndRenderTarget(CpHwndRenderTarget & hwnd_render_target, D2D1_RENDER_TARGET_PROPERTIES const & properties, D2D1_HWND_RENDER_TARGET_PROPERTIES const & hwnd_rt_properties) const
+	HRESULT FactoryImpl::CreateHwndRenderTarget(D2DHwndRenderTargetPtr & hwnd_render_target, D2D1_RENDER_TARGET_PROPERTIES const & properties, D2D1_HWND_RENDER_TARGET_PROPERTIES const & hwnd_rt_properties) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		CpHwndRenderTarget hwnd_render_target_tmp;
+		D2DHwndRenderTargetPtr hwnd_render_target_tmp;
 		HRESULT hr = factory_->CreateHwndRenderTarget(
 			properties,
 			hwnd_rt_properties,
@@ -129,15 +129,15 @@ namespace easy2d
 	}
 
 	HRESULT FactoryImpl::CreateTextRenderer(
-		CpTextRenderer& text_renderer,
-		CpRenderTarget const& render_target,
-		CpSolidColorBrush const& brush
+		D2DTextRendererPtr& text_renderer,
+		D2DRenderTargetPtr const& render_target,
+		D2DSolidColorBrushPtr const& brush
 	)
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		CpTextRenderer text_renderer_tmp;
+		D2DTextRendererPtr text_renderer_tmp;
 		HRESULT hr = ITextRenderer::Create(
 			&text_renderer_tmp,
 			factory_.Get(),
@@ -150,7 +150,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateBitmapFromFile(CpBitmap & bitmap, CpRenderTarget const & rt, String const & file_path)
+	HRESULT FactoryImpl::CreateBitmapFromFile(D2DBitmapPtr & bitmap, D2DRenderTargetPtr const & rt, String const & file_path)
 	{
 		if (imaging_factory_ == nullptr)
 		{
@@ -159,11 +159,11 @@ namespace easy2d
 
 		using namespace intrusive;
 
-		SmartPointer<IWICBitmapDecoder>		decoder;
-		SmartPointer<IWICBitmapFrameDecode>	source;
-		SmartPointer<IWICStream>			stream;
-		SmartPointer<IWICFormatConverter>	converter;
-		SmartPointer<ID2D1Bitmap>			bitmap_tmp;
+		SmartPtr<IWICBitmapDecoder>		decoder;
+		SmartPtr<IWICBitmapFrameDecode>	source;
+		SmartPtr<IWICStream>			stream;
+		SmartPtr<IWICFormatConverter>	converter;
+		SmartPtr<ID2D1Bitmap>			bitmap_tmp;
 
 		HRESULT hr = imaging_factory_->CreateDecoderFromFilename(
 			file_path.c_str(),
@@ -211,7 +211,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateBitmapFromResource(CpBitmap & bitmap, CpRenderTarget const & rt, Resource const & res)
+	HRESULT FactoryImpl::CreateBitmapFromResource(D2DBitmapPtr & bitmap, D2DRenderTargetPtr const & rt, Resource const & res)
 	{
 		if (imaging_factory_ == nullptr)
 		{
@@ -220,11 +220,11 @@ namespace easy2d
 
 		using namespace intrusive;
 
-		SmartPointer<IWICBitmapDecoder>		decoder;
-		SmartPointer<IWICBitmapFrameDecode>	source;
-		SmartPointer<IWICStream>			stream;
-		SmartPointer<IWICFormatConverter>	converter;
-		SmartPointer<ID2D1Bitmap>			bitmap_tmp;
+		SmartPtr<IWICBitmapDecoder>		decoder;
+		SmartPtr<IWICBitmapFrameDecode>	source;
+		SmartPtr<IWICStream>			stream;
+		SmartPtr<IWICFormatConverter>	converter;
+		SmartPtr<ID2D1Bitmap>			bitmap_tmp;
 		
 		// ¼ÓÔØ×ÊÔ´
 		LPVOID buffer;
@@ -294,12 +294,12 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateRectangleGeometry(CpRectangleGeometry & geo, Rect const& rect) const
+	HRESULT FactoryImpl::CreateRectangleGeometry(D2DRectangleGeometryPtr & geo, Rect const& rect) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		CpRectangleGeometry rectangle;
+		D2DRectangleGeometryPtr rectangle;
 		HRESULT hr = factory_->CreateRectangleGeometry(
 			rect,
 			&rectangle
@@ -310,12 +310,12 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateRoundedRectangleGeometry(CpRoundedRectangleGeometry & geo, Rect const & rect, float radius_x, float radius_y) const
+	HRESULT FactoryImpl::CreateRoundedRectangleGeometry(D2DRoundedRectangleGeometryPtr & geo, Rect const & rect, float radius_x, float radius_y) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		CpRoundedRectangleGeometry rounded_rect;
+		D2DRoundedRectangleGeometryPtr rounded_rect;
 		HRESULT hr = factory_->CreateRoundedRectangleGeometry(
 			D2D1::RoundedRect(
 				rect,
@@ -330,12 +330,12 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateEllipseGeometry(CpEllipseGeometry & geo, Point const & center, float radius_x, float radius_y) const
+	HRESULT FactoryImpl::CreateEllipseGeometry(D2DEllipseGeometryPtr & geo, Point const & center, float radius_x, float radius_y) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		CpEllipseGeometry ellipse;
+		D2DEllipseGeometryPtr ellipse;
 		HRESULT hr = factory_->CreateEllipseGeometry(
 			D2D1::Ellipse(
 				center,
@@ -351,15 +351,15 @@ namespace easy2d
 	}
 
 	HRESULT FactoryImpl::CreateTransformedGeometry(
-		CpTransformedGeometry& transformed,
+		D2DTransformedGeometryPtr& transformed,
 		Matrix const& matrix,
-		CpGeometry const& geo
+		D2DGeometryPtr const& geo
 	) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
 
-		CpTransformedGeometry transformed_tmp;
+		D2DTransformedGeometryPtr transformed_tmp;
 		HRESULT hr = factory_->CreateTransformedGeometry(
 			geo.Get(),
 			matrix,
@@ -373,7 +373,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreatePathGeometry(CpPathGeometry & geometry) const
+	HRESULT FactoryImpl::CreatePathGeometry(D2DPathGeometryPtr & geometry) const
 	{
 		if (!factory_)
 			return E_UNEXPECTED;
@@ -381,12 +381,12 @@ namespace easy2d
 		return factory_->CreatePathGeometry(&geometry);
 	}
 
-	HRESULT FactoryImpl::CreateTextFormat(CpTextFormat & text_format, Font const & font, TextStyle const & text_style) const
+	HRESULT FactoryImpl::CreateTextFormat(D2DTextFormatPtr & text_format, Font const & font, TextStyle const & text_style) const
 	{
 		if (!write_factory_)
 			return E_UNEXPECTED;
 
-		CpTextFormat text_format_tmp;
+		D2DTextFormatPtr text_format_tmp;
 		HRESULT hr = write_factory_->CreateTextFormat(
 			font.family.c_str(),
 			nullptr,
@@ -419,7 +419,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT FactoryImpl::CreateTextLayout(CpTextLayout & text_layout, Size& layout_size, String const & text, CpTextFormat const& text_format, TextStyle const & text_style) const
+	HRESULT FactoryImpl::CreateTextLayout(D2DTextLayoutPtr & text_layout, Size& layout_size, String const & text, D2DTextFormatPtr const& text_format, TextStyle const & text_style) const
 	{
 		if (!write_factory_)
 			return E_UNEXPECTED;
@@ -427,7 +427,7 @@ namespace easy2d
 		text_layout = nullptr;
 
 		HRESULT hr;
-		CpTextLayout text_layout_tmp;
+		D2DTextLayoutPtr text_layout_tmp;
 		UINT32 length = static_cast<UINT32>(text.length());
 
 		if (text_style.wrap)
@@ -497,7 +497,7 @@ namespace easy2d
 		return hr;
 	}
 
-	CpStrokeStyle const& FactoryImpl::GetStrokeStyle(StrokeStyle stroke) const
+	D2DStrokeStylePtr const& FactoryImpl::GetStrokeStyle(StrokeStyle stroke) const
 	{
 		switch (stroke)
 		{

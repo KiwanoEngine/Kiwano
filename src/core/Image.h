@@ -41,7 +41,7 @@ namespace easy2d
 		);
 
 		explicit Image(
-			CpBitmap const& bitmap
+			D2DBitmapPtr const& bitmap
 		);
 
 		virtual ~Image();
@@ -86,15 +86,15 @@ namespace easy2d
 		// »ñÈ¡²Ã¼ô¾ØÐÎ
 		Rect const& GetCropRect() const;
 
-		CpBitmap const& GetBitmap() const;
+		D2DBitmapPtr const& GetBitmap() const;
 
 	protected:
 		void SetBitmap(
-			CpBitmap const& bitmap
+			D2DBitmapPtr const& bitmap
 		);
 
 	protected:
 		Rect		crop_rect_;
-		CpBitmap	bitmap_;
+		D2DBitmapPtr	bitmap_;
 	};
 }

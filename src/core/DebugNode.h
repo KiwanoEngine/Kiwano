@@ -44,7 +44,7 @@ namespace easy2d
 		void OnUpdate(Duration const& dt) override;
 
 	protected:
-		SpText				debug_text_;
+		TextPtr				debug_text_;
 		Array<TimePoint>	frame_time_;
 		Array<String>		texts_;
 	};

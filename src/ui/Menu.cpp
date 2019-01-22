@@ -29,7 +29,7 @@ namespace easy2d
 		{
 		}
 
-		Menu::Menu(Array<SpButton> const& buttons)
+		Menu::Menu(Array<ButtonPtr> const& buttons)
 			: enabled_(true)
 		{
 			for (const auto& button : buttons)
@@ -61,7 +61,7 @@ namespace easy2d
 			}
 		}
 
-		void Menu::AddButton(SpButton const& button)
+		void Menu::AddButton(ButtonPtr const& button)
 		{
 			if (button)
 			{
@@ -71,7 +71,7 @@ namespace easy2d
 			}
 		}
 
-		bool Menu::RemoveButton(SpButton const& button)
+		bool Menu::RemoveButton(ButtonPtr const& button)
 		{
 			if (buttons_.empty())
 			{
@@ -94,7 +94,7 @@ namespace easy2d
 			return false;
 		}
 
-		Array<SpButton> const& Menu::GetAllButtons() const
+		Array<ButtonPtr> const& Menu::GetAllButtons() const
 		{
 			return buttons_;
 		}

@@ -32,35 +32,31 @@ namespace easy2d
 		Frames();
 
 		explicit Frames(
-			Array<SpImage> const& frames	/* 关键帧数组 */
-		);
-
-		explicit Frames(
-			Duration const& interval		/* 帧间隔 */
+			Array<ImagePtr> const& frames	/* 关键帧数组 */
 		);
 
 		explicit Frames(
 			Duration const& interval,		/* 帧间隔 */
-			Array<SpImage> const& frames	/* 关键帧数组 */
+			Array<ImagePtr> const& frames	/* 关键帧数组 */
 		);
 
 		virtual ~Frames();
 
 		// 添加关键帧
 		void Add(
-			SpImage const& frame
+			ImagePtr const& frame
 		);
 
 		// 添加多个关键帧
 		void Add(
-			Array<SpImage> const& frames
+			Array<ImagePtr> const& frames
 		);
 
 		// 获取帧间隔
 		Duration const& GetInterval() const;
 
 		// 获取关键帧
-		Array<SpImage> const& GetFrames() const;
+		Array<ImagePtr> const& GetFrames() const;
 
 		// 设置每一帧的时间间隔
 		void SetInterval(
@@ -68,13 +64,13 @@ namespace easy2d
 		);
 
 		// 获取帧动画的拷贝对象
-		SpFrames Clone() const;
+		FramesPtr Clone() const;
 
 		// 获取帧动画的倒转
-		SpFrames Reverse() const;
+		FramesPtr Reverse() const;
 
 	protected:
 		Duration		interval_;
-		Array<SpImage>	frames_;
+		Array<ImagePtr>	frames_;
 	};
 }

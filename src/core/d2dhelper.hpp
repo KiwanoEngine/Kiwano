@@ -19,42 +19,42 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "intrusive/SmartPointer.hpp"
+#include "intrusive/SmartPtr.hpp"
 #include <d2d1.h>
 #include <dwrite.h>
 
 #ifndef E2D_DECLARE_D2D_SMART_PTR
 #define E2D_DECLARE_D2D_SMART_PTR(class_name, sp_name)\
-	using sp_name = ::easy2d::intrusive::SmartPointer< class_name >
+	using sp_name = ::easy2d::intrusive::SmartPtr< class_name >
 #endif
 
 
 namespace easy2d
 {
-	// "Cp" is a shorthand for "COM Pointer"
+	// "D2DPtr" is a shorthand for "COM Pointer"
 
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1Factory, CpFactory);
-	E2D_DECLARE_D2D_SMART_PTR(IWICImagingFactory, CpImagingFactory);
-	E2D_DECLARE_D2D_SMART_PTR(IDWriteFactory, CpWriteFactory);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1SolidColorBrush, CpSolidColorBrush);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1RenderTarget, CpRenderTarget);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1HwndRenderTarget, CpHwndRenderTarget);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1BitmapRenderTarget, CpBitmapRenderTarget);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1StrokeStyle, CpStrokeStyle);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1Factory, D2DFactoryPtr);
+	E2D_DECLARE_D2D_SMART_PTR(IWICImagingFactory, D2DImagingFactoryPtr);
+	E2D_DECLARE_D2D_SMART_PTR(IDWriteFactory, D2DWriteFactoryPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1SolidColorBrush, D2DSolidColorBrushPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1RenderTarget, D2DRenderTargetPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1HwndRenderTarget, D2DHwndRenderTargetPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1BitmapRenderTarget, D2DBitmapRenderTargetPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1StrokeStyle, D2DStrokeStylePtr);
 
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1Geometry, CpGeometry);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1RectangleGeometry, CpRectangleGeometry);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1RoundedRectangleGeometry, CpRoundedRectangleGeometry);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1EllipseGeometry, CpEllipseGeometry);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1GeometryGroup, CpGeometryGroup);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1PathGeometry, CpPathGeometry);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1TransformedGeometry, CpTransformedGeometry);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1GeometrySink, CpGeometrySink);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1Geometry, D2DGeometryPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1RectangleGeometry, D2DRectangleGeometryPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1RoundedRectangleGeometry, D2DRoundedRectangleGeometryPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1EllipseGeometry, D2DEllipseGeometryPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1GeometryGroup, D2DGeometryGroupPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1PathGeometry, D2DPathGeometryPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1TransformedGeometry, D2DTransformedGeometryPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1GeometrySink, D2DGeometrySinkPtr);
 
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1Layer, CpLayer);
-	E2D_DECLARE_D2D_SMART_PTR(ID2D1Bitmap, CpBitmap);
-	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextFormat, CpTextFormat);
-	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextLayout, CpTextLayout);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1Layer, D2DLayerPtr);
+	E2D_DECLARE_D2D_SMART_PTR(ID2D1Bitmap, D2DBitmapPtr);
+	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextFormat, D2DTextFormatPtr);
+	E2D_DECLARE_D2D_SMART_PTR(IDWriteTextLayout, D2DTextLayoutPtr);
 
 	inline void IntrusivePtrAddRef(IUnknown* ptr)
 	{

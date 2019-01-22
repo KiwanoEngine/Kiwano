@@ -33,6 +33,8 @@ namespace easy2d
 	{
 		class Shlwapi
 		{
+			Shlwapi();
+
 			HMODULE shlwapi;
 
 			// Shlwapi functions
@@ -40,7 +42,11 @@ namespace easy2d
 			typedef IStream*(WINAPI *PFN_SHCreateMemStream)(const BYTE*, UINT);
 
 		public:
-			Shlwapi();
+			static Shlwapi& Get()
+			{
+				static Shlwapi instance;
+				return instance;
+			}
 
 			PFN_PathFileExistsW PathFileExistsW;
 			PFN_SHCreateMemStream SHCreateMemStream;
@@ -49,6 +55,8 @@ namespace easy2d
 
 		class DirectX
 		{
+			DirectX();
+
 			HMODULE d2d;
 			HMODULE dwrite;
 
@@ -57,7 +65,11 @@ namespace easy2d
 			typedef HRESULT(WINAPI *PFN_DWriteCreateFactory)(DWRITE_FACTORY_TYPE, const IID&, IUnknown **);
 
 		public:
-			DirectX();
+			static DirectX& Get()
+			{
+				static DirectX instance;
+				return instance;
+			}
 
 			PFN_D2D1CreateFactory D2D1CreateFactory;
 			PFN_DWriteCreateFactory DWriteCreateFactory;
@@ -66,13 +78,19 @@ namespace easy2d
 
 		class XAudio2
 		{
+			XAudio2();
+
 			HMODULE xaudio2;
 
 			// XAudio2 functions
 			typedef HRESULT(WINAPI *PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
 
 		public:
-			XAudio2();
+			static XAudio2& Get()
+			{
+				static XAudio2 instance;
+				return instance;
+			}
 
 			PFN_XAudio2Create XAudio2Create;
 		};
@@ -80,6 +98,8 @@ namespace easy2d
 
 		class MediaFoundation
 		{
+			MediaFoundation();
+
 			HMODULE mfplat;
 			HMODULE mfreadwrite;
 
@@ -93,7 +113,11 @@ namespace easy2d
 			typedef HRESULT(WINAPI *PFN_MFCreateMFByteStreamOnStream)(IStream*, IMFByteStream**);
 
 		public:
-			MediaFoundation();
+			static MediaFoundation& Get()
+			{
+				static MediaFoundation instance;
+				return instance;
+			}
 
 			PFN_MFStartup MFStartup;
 			PFN_MFShutdown MFShutdown;
