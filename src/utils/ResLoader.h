@@ -43,7 +43,7 @@ namespace easy2d
 
 		void Destroy();
 
-		// 添加文件搜索路径
+		// 添加资源搜索路径
 		void AddSearchPath(
 			String const& path
 		);

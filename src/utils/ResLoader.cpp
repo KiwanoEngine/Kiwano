@@ -27,13 +27,11 @@ namespace easy2d
 {
 	namespace
 	{
-		modules::Shlwapi shlwapi;
-
 		String Search(LPCWSTR file_name, List<String> const& paths)
 		{
 			for (const auto& path : paths)
 			{
-				if (shlwapi.PathFileExistsW((path + file_name).c_str()))
+				if (modules::Shlwapi::Get().PathFileExistsW((path + file_name).c_str()))
 				{
 					return path + file_name;
 				}

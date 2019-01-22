@@ -50,7 +50,7 @@ namespace easy2d
 
 	bool File::Exists() const
 	{
-		return modules::Shlwapi{}.PathFileExistsW(file_path_.c_str());
+		return modules::Shlwapi::Get().PathFileExistsW(file_path_.c_str());
 	}
 
 	String const& File::GetPath() const
