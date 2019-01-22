@@ -26,13 +26,8 @@ namespace easy2d
 {
 	namespace math
 	{
-		// 矩形
 		//
-		// Usage:
-		//     表示一个二维矩形: Rect rect = Rect(10, 20, 30, 40);  // 左上角坐标为 (10, 20), 宽为 30, 高为 40
-		//     矩形可以通过 Vector2 + Vector2 定义, Vector2 表示矩形左上角坐标, Vector2 表示矩形宽高
-		//     判断一个点是否在矩形内: bool contains = rect.ContainsPoint(p);
-		//     判断两矩形是否相交: bool intersects = rect1.Intersects(rect2);
+		// 矩形
 		//
 		class Rect
 		{

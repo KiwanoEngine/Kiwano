@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	Resource::Resource(String file_name)
+	Resource::Resource(String const& file_name)
 		: type_(Type::File)
 		, file_name_(file_name)
 	{

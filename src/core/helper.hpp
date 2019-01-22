@@ -49,23 +49,23 @@ namespace easy2d
 	using String = std::wstring;
 	using StringStream = std::wstringstream;
 
-	template<typename T>
-	using Array = std::vector<T>;
+	template<typename Type>
+	using Array = std::vector<Type>;
 
-	template<typename T>
-	using List = std::list<T>;
+	template<typename Type>
+	using List = std::list<Type>;
 
-	template<typename T>
-	using Set = std::set<T>;
+	template<typename Type>
+	using Set = std::set<Type>;
 
-	template<typename T>
-	using UnorderedSet = std::unordered_set<T>;
+	template<typename Type>
+	using UnorderedSet = std::unordered_set<Type>;
 
-	template<typename T, typename Y>
-	using Map = std::map<T, Y>;
+	template<typename KeyType, typename MappedType>
+	using Map = std::map<KeyType, MappedType>;
 
-	template<typename T, typename Y>
-	using UnorderedMap = std::unordered_map<T, Y>;
+	template<typename KeyType, typename MappedType>
+	using UnorderedMap = std::unordered_map<KeyType, MappedType>;
 }
 
 namespace easy2d

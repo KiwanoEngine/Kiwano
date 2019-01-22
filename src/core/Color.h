@@ -26,11 +26,10 @@ namespace easy2d
 {
 	// 颜色
 	//
-	// Usage:
-	//     使用枚举表示颜色: Color blue = Color::Blue;
-	//     使用 RGB 表示一个颜色: Color red(1.0f, 0.0f, 0.0f);
-	//     使用 RGBA 表示一个带透明度的颜色: Color not_black(1.0f, 1.0f, 1.0f, 0.5f);
-	//     使用一个 unsigned int 类型的值表示 RGB: Color black(0x000000);
+	// 使用枚举表示颜色: Color blue = Color::Blue;
+	// 使用 RGB 表示一个颜色: Color red(1.0f, 0.0f, 0.0f);
+	// 使用 RGBA 表示一个带透明度的颜色: Color not_black(1.0f, 1.0f, 1.0f, 0.5f);
+	// 使用一个 unsigned int 类型的值表示 RGB: Color black(0x000000);
 	//
 	class Color
 	{

@@ -27,16 +27,14 @@ namespace easy2d
 	{
 		// 时间段
 		//
-		// Usage:
-		//     时间段表示法:
-		//         5 秒: time::Second * 5
-		//         1.5 小时: time::Hour * 1.5
-		//         3 小时 45 分 15 秒: time::Hour * 3 + time::Minute * 45 + time::Second * 15
-		//     时间段格式化: auto d = time::ParseDuration(L"1h35m");  // 1小时35分钟
-		//     在 VS2015 及更高版本可以使用 time literals:
-		//         5 秒: 5_s
-		//         1.5 小时: 1.5_h
-		//         3 小时 45 分 15 秒: 3_h + 45_m + 15_s
+		// 时间段表示法:
+		//     5 秒: time::Second * 5
+		//     1.5 小时: time::Hour * 1.5
+		//     3 小时 45 分 15 秒: time::Hour * 3 + time::Minute * 45 + time::Second * 15
+		// 在 VS2015 及更高版本可以使用 time literals:
+		//     5 秒: 5_s
+		//     1.5 小时: 1.5_h
+		//     3 小时 45 分 15 秒: 3_h + 45_m + 15_s
 		//
 		class Duration
 		{
@@ -119,18 +117,10 @@ namespace easy2d
 
 		// 时间
 		//
-		// Usage:
-		//     获取当前时间: TimePoint now = time::Now();
-		//     时间操作:
-		//         两时间相减, 得到一个 Duration 对象, 例如:
-		//         TimePoint t1 = time::Now();
-		//         ...  // 做些什么
-		//         TimePoint t2 = time::Now();
-		//         auto duration = t2 - t1;
-		//         获取两时间相差的毫秒数:
-		//         int ms = duration.Milliseconds();
-		//     注: 由于该时间点基于系统启动时间开始计算, 所以无法格式化该时间,
-		//         也无法获得该时间的 Unix 时间戳
+		// 获取当前时间: TimePoint now = time::Now();
+		// 两时间相减, 得到一个 Duration 对象, 例如:
+		//     TimePoint t1, t2;
+		//     int ms = (t2 - t1).Milliseconds();  // 获取两时间相差的毫秒数
 		// 
 		class TimePoint
 		{
@@ -168,9 +158,13 @@ namespace easy2d
 		};
 
 		// 获取当前时间
+		// 
+		// 由于该时间点基于系统启动时间开始计算, 所以无法格式化该时间, 
+		// 也无法获得该时间的 Unix 时间戳
 		TimePoint Now() E2D_NOEXCEPT;
 
 		// 时间段格式化
+		//
 		// 时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
 		// 例如: "300ms", "-1.5h", "2h45m"
 		// 允许的时间单位有 "ms", "s", "m", "h"

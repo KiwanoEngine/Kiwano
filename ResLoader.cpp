@@ -18,66 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "../base/helper.hpp"
+#include "ResLoader.h"
 
 namespace easy2d
 {
-	// 数据管理工具
-	class Data
+	/*void ResLoader::Add(String const & id, SpImage const & image)
 	{
-	public:
-		Data(
-			String const& key,					/* 键值 */
-			String const& field = L"Defalut"	/* 字段名称 */
-		);
+		res_.insert(std::make_pair(id, image.Get()));
+	}
 
-		// 该数据是否存在
-		bool Exists() const;
+	void ResLoader::Add(String const & id, SpFrames const & frames)
+	{
+		res_.insert(std::make_pair(id, frames.Get()));
+	}
 
-		// 保存 int 类型的值
-		bool SaveInt(
-			int val
-		);
+	SpImage easy2d::ResLoader::GetImage(String const & id)
+	{
+		return Get<Image*>(id);
+	}*/
 
-		// 保存 float 类型的值
-		bool SaveFloat(
-			float val
-		);
+	/*SpFrames easy2d::ResLoader::GetFrames(String const & id)
+	{
+		return Get<Frames*>(id);
+	}*/
 
-		// 保存 double 类型的值
-		bool SaveDouble(
-			double val
-		);
-
-		// 保存 bool 类型的值
-		bool SaveBool(
-			bool val
-		);
-
-		// 保存 String 类型的值
-		bool SaveString(
-			String const& val
-		);
-
-		// 获取 int 类型的值
-		int GetInt() const;
-
-		// 获取 float 类型的值
-		float GetFloat() const;
-
-		// 获取 double 类型的值
-		double GetDouble() const;
-
-		// 获取 bool 类型的值
-		bool GetBool() const;
-
-		// 获取 字符串 类型的值
-		String GetString();
-
-	protected:
-		String key_;
-		String field_;
-		String const& data_path_;
-	};
 }

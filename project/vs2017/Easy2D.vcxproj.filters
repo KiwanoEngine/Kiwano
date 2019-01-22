@@ -1,208 +1,208 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\core\easy2d.h" />
-    <ClInclude Include="..\..\core\base\ActionCombined.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\easy2d.h" />
+    <ClInclude Include="..\..\src\core\ActionCombined.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Animation.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Animation.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\audio.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\audio.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Canvas.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Canvas.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Color.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Color.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Game.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Game.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Image.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Image.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Input.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Input.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\logs.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\logs.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\macros.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\macros.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\modules.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\modules.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Node.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Node.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\render.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\render.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Resource.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Resource.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Scene.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Scene.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Sprite.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Sprite.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Task.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Task.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Text.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Text.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\TextRenderer.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\TextRenderer.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\time.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\time.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Transition.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Transition.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\window.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\window.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\math\Matrix.hpp">
+    <ClInclude Include="..\..\src\math\Matrix.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\math\rand.h">
+    <ClInclude Include="..\..\src\math\rand.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\math\scalar.hpp">
+    <ClInclude Include="..\..\src\math\scalar.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\math\vector.hpp">
+    <ClInclude Include="..\..\src\math\vector.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\utils\Data.h">
+    <ClInclude Include="..\..\src\utils\Data.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\utils\File.h">
+    <ClInclude Include="..\..\src\utils\File.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\utils\Path.h">
+    <ClInclude Include="..\..\src\utils\Path.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\utils\Player.h">
+    <ClInclude Include="..\..\src\utils\Player.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\utils\Transcoder.h">
+    <ClInclude Include="..\..\src\utils\Transcoder.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\ui\Button.h">
+    <ClInclude Include="..\..\src\ui\Button.h">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\ui\Menu.h">
+    <ClInclude Include="..\..\src\ui\Menu.h">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Music.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Music.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Singleton.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Singleton.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\RefCounter.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\RefCounter.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Action.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Action.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\ActionManager.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\ActionManager.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\TaskManager.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\TaskManager.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\TextStyle.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\TextStyle.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Font.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Font.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\intrusive\List.hpp">
-      <Filter>base\intrusive</Filter>
+    <ClInclude Include="..\..\src\core\intrusive\List.hpp">
+      <Filter>core\intrusive</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\intrusive\SmartPointer.hpp">
-      <Filter>base\intrusive</Filter>
+    <ClInclude Include="..\..\src\core\intrusive\SmartPointer.hpp">
+      <Filter>core\intrusive</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Transform.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Transform.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\noncopyable.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\noncopyable.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\utils\string.h">
+    <ClInclude Include="..\..\src\utils\string.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Geometry.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Geometry.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\GeometryNode.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\GeometryNode.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\math\ease.hpp">
+    <ClInclude Include="..\..\src\math\ease.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\ActionTween.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\ActionTween.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Delay.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Delay.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Frames.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Frames.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\math\constants.hpp">
+    <ClInclude Include="..\..\src\math\constants.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Factory.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Factory.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\EventDispatcher.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\EventDispatcher.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Event.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Event.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\KeyEvent.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\KeyEvent.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\MouseEvent.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\MouseEvent.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\EventListener.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\EventListener.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\Object.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\Object.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\helper.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\helper.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\d2dhelper.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\d2dhelper.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\keys.hpp">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\keys.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\include-forwards.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\include-forwards.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\base\DebugNode.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\..\src\core\DebugNode.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\math\Rect.hpp">
+    <ClInclude Include="..\..\src\math\Rect.hpp">
       <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="base">
+    <Filter Include="core">
       <UniqueIdentifier>{896bdedf-6e82-449b-9b6e-0bc69f3699b1}</UniqueIdentifier>
     </Filter>
     <Filter Include="math">
@@ -214,139 +214,139 @@
     <Filter Include="ui">
       <UniqueIdentifier>{07b6d541-4a1b-472a-aae0-daf9d082fe84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="base\intrusive">
+    <Filter Include="core\intrusive">
       <UniqueIdentifier>{0f508149-735a-43da-ab16-36cc1e9ab63a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\core\base\ActionCombined.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\ActionCombined.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Animation.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Animation.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\audio.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\audio.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Canvas.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Canvas.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Color.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Color.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Game.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Game.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Image.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Image.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Input.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Input.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\modules.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\modules.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Node.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Node.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\render.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\render.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Resource.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Resource.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Scene.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Scene.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Sprite.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Sprite.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Task.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Task.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Text.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Text.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\TextRenderer.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\TextRenderer.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\time.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\time.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Transition.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Transition.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\window.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\window.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\math\rand.cpp">
+    <ClCompile Include="..\..\src\math\rand.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\Data.cpp">
+    <ClCompile Include="..\..\src\utils\Data.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\File.cpp">
+    <ClCompile Include="..\..\src\utils\File.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\Path.cpp">
+    <ClCompile Include="..\..\src\utils\Path.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\Player.cpp">
+    <ClCompile Include="..\..\src\utils\Player.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\Transcoder.cpp">
+    <ClCompile Include="..\..\src\utils\Transcoder.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\ui\Button.cpp">
+    <ClCompile Include="..\..\src\ui\Button.cpp">
       <Filter>ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\ui\Menu.cpp">
+    <ClCompile Include="..\..\src\ui\Menu.cpp">
       <Filter>ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Music.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Music.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\TaskManager.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\TaskManager.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\ActionManager.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\ActionManager.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\logs.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\logs.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\utils\string.cpp">
+    <ClCompile Include="..\..\src\utils\string.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Geometry.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Geometry.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\GeometryNode.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\GeometryNode.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\ActionTween.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\ActionTween.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Delay.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Delay.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Frames.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Frames.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Factory.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Factory.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\EventDispatcher.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\EventDispatcher.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\EventListener.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\EventListener.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\Object.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\Object.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\base\DebugNode.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="..\..\src\core\DebugNode.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

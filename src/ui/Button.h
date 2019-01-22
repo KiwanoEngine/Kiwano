@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Sprite.h"
+#include "../core/Sprite.h"
 #include <functional>
 
 namespace easy2d

@@ -19,76 +19,65 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/include-forwards.h"
-#include "../base/Resource.h"
-#include <unordered_map>
+#include "../core/helper.hpp"
 
 namespace easy2d
 {
-	// 音乐播放器
-	class Player
-		: protected Noncopyable
+	// 数据管理工具
+	class Data
 	{
-		using MusicMap = Map<size_t, SpMusic>;
-
 	public:
-		Player();
-
-		~Player();
-
-		// 预加载音乐资源
-		bool Load(
-			Resource const& res			/* 音乐资源 */
+		Data(
+			String const& key,					/* 键值 */
+			String const& field = L"Defalut"	/* 字段名称 */
 		);
 
-		// 播放音乐
-		bool Play(
-			Resource const& res,	/* 音乐资源 */
-			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
+		// 该数据是否存在
+		bool Exists() const;
+
+		// 保存 int 类型的值
+		bool SaveInt(
+			int val
 		);
 
-		// 暂停音乐
-		void Pause(
-			Resource const& res		/* 音乐资源 */
+		// 保存 float 类型的值
+		bool SaveFloat(
+			float val
 		);
 
-		// 继续播放音乐
-		void Resume(
-			Resource const& res		/* 音乐资源 */
+		// 保存 double 类型的值
+		bool SaveDouble(
+			double val
 		);
 
-		// 停止音乐
-		void Stop(
-			Resource const& res		/* 音乐资源 */
+		// 保存 bool 类型的值
+		bool SaveBool(
+			bool val
 		);
 
-		// 获取音乐播放状态
-		bool IsPlaying(
-			Resource const& res		/* 音乐资源 */
+		// 保存 String 类型的值
+		bool SaveString(
+			String const& val
 		);
 
-		// 获取音量
-		float GetVolume() const;
+		// 获取 int 类型的值
+		int GetInt() const;
 
-		// 设置音量
-		void SetVolume(
-			float volume			/* 1.0 为原始音量 */
-		);
+		// 获取 float 类型的值
+		float GetFloat() const;
 
-		// 暂停所有音乐
-		void PauseAll();
+		// 获取 double 类型的值
+		double GetDouble() const;
 
-		// 继续播放所有音乐
-		void ResumeAll();
+		// 获取 bool 类型的值
+		bool GetBool() const;
 
-		// 停止所有音乐
-		void StopAll();
-
-		// 清除缓存
-		void ClearCache();
+		// 获取 字符串 类型的值
+		String GetString();
 
 	protected:
-		float		volume_;
-		MusicMap	musics_cache_;
+		String key_;
+		String field_;
+		String const& data_path_;
 	};
 }

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "File.h"
-#include "../base/modules.h"
+#include "../core/modules.h"
 #include <cwctype>
 
 namespace easy2d

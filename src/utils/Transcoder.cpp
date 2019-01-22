@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #include "Transcoder.h"
-#include "../base/d2dhelper.hpp"
-#include "../base/modules.h"
-#include "../base/logs.h"
+#include "../core/d2dhelper.hpp"
+#include "../core/modules.h"
+#include "../core/logs.h"
 #include <shlwapi.h>
 
 namespace easy2d
