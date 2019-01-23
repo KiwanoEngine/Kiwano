@@ -159,11 +159,11 @@ namespace easy2d
 
 		using namespace intrusive;
 
-		SmartPointer<IWICBitmapDecoder>		decoder;
-		SmartPointer<IWICBitmapFrameDecode>	source;
-		SmartPointer<IWICStream>			stream;
-		SmartPointer<IWICFormatConverter>	converter;
-		SmartPointer<ID2D1Bitmap>			bitmap_tmp;
+		SmartPtr<IWICBitmapDecoder>		decoder;
+		SmartPtr<IWICBitmapFrameDecode>	source;
+		SmartPtr<IWICStream>			stream;
+		SmartPtr<IWICFormatConverter>	converter;
+		SmartPtr<ID2D1Bitmap>			bitmap_tmp;
 
 		HRESULT hr = imaging_factory_->CreateDecoderFromFilename(
 			file_path.c_str(),
@@ -220,11 +220,11 @@ namespace easy2d
 
 		using namespace intrusive;
 
-		SmartPointer<IWICBitmapDecoder>		decoder;
-		SmartPointer<IWICBitmapFrameDecode>	source;
-		SmartPointer<IWICStream>			stream;
-		SmartPointer<IWICFormatConverter>	converter;
-		SmartPointer<ID2D1Bitmap>			bitmap_tmp;
+		SmartPtr<IWICBitmapDecoder>		decoder;
+		SmartPtr<IWICBitmapFrameDecode>	source;
+		SmartPtr<IWICStream>			stream;
+		SmartPtr<IWICFormatConverter>	converter;
+		SmartPtr<ID2D1Bitmap>			bitmap_tmp;
 		
 		// º”‘ÿ◊ ‘¥
 		LPVOID buffer;

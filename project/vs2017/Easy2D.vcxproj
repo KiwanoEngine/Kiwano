@@ -44,7 +44,7 @@
     <ClInclude Include="..\..\src\core\include-forwards.h" />
     <ClInclude Include="..\..\src\core\Input.h" />
     <ClInclude Include="..\..\src\core\intrusive\List.hpp" />
-    <ClInclude Include="..\..\src\core\intrusive\SmartPointer.hpp" />
+    <ClInclude Include="..\..\src\core\intrusive\SmartPtr.hpp" />
     <ClInclude Include="..\..\src\core\KeyEvent.hpp" />
     <ClInclude Include="..\..\src\core\keys.hpp" />
     <ClInclude Include="..\..\src\core\logs.h" />

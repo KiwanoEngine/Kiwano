@@ -51,7 +51,7 @@ namespace easy2d
 	{
 		HRESULT hr = S_OK;
 
-		SmartPointer<IMFSourceReader> reader;
+		SmartPtr<IMFSourceReader> reader;
 
 		hr = modules::MediaFoundation::Get().MFCreateSourceReaderFromURL(
 			file_path,
@@ -72,9 +72,9 @@ namespace easy2d
 		HRESULT	hr = S_OK;
 		HINSTANCE hinstance = GetModuleHandle(nullptr);
 
-		SmartPointer<IStream> stream;
-		SmartPointer<IMFByteStream> byte_stream;
-		SmartPointer<IMFSourceReader> reader;
+		SmartPtr<IStream> stream;
+		SmartPtr<IMFByteStream> byte_stream;
+		SmartPtr<IMFSourceReader> reader;
 
 		LPVOID buffer;
 		DWORD buffer_size;
@@ -118,8 +118,8 @@ namespace easy2d
 		HRESULT hr = S_OK;
 		DWORD max_stream_size = 0;
 
-		SmartPointer<IMFMediaType> partial_type;
-		SmartPointer<IMFMediaType> uncompressed_type;
+		SmartPtr<IMFMediaType> partial_type;
+		SmartPtr<IMFMediaType> uncompressed_type;
 
 		hr = modules::MediaFoundation::Get().MFCreateMediaType(&partial_type);
 
@@ -199,8 +199,8 @@ namespace easy2d
 			DWORD position = 0;
 			BYTE* data = new (std::nothrow) BYTE[max_stream_size];
 
-			SmartPointer<IMFSample> sample;
-			SmartPointer<IMFMediaBuffer> buffer;
+			SmartPtr<IMFSample> sample;
+			SmartPtr<IMFMediaBuffer> buffer;
 
 			if (data == nullptr)
 			{

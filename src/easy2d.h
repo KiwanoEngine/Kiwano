@@ -47,7 +47,7 @@
 
 #include "core/noncopyable.hpp"
 #include "core/RefCounter.hpp"
-#include "core/intrusive/SmartPointer.hpp"
+#include "core/intrusive/SmartPtr.hpp"
 #include "core/intrusive/List.hpp"
 
 #include "core/Object.h"

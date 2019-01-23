@@ -128,7 +128,7 @@
     <ClInclude Include="..\..\src\core\intrusive\List.hpp">
       <Filter>core\intrusive</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\intrusive\SmartPointer.hpp">
+    <ClInclude Include="..\..\src\core\intrusive\SmartPtr.hpp">
       <Filter>core\intrusive</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\Transform.hpp">

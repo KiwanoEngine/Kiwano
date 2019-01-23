@@ -20,7 +20,7 @@
 
 #pragma once
 #include "RefCounter.hpp"
-#include "intrusive/SmartPointer.hpp"
+#include "intrusive/SmartPtr.hpp"
 #include "../math/vector.hpp"
 #include "../math/Rect.hpp"
 #include "../math/Matrix.hpp"
@@ -34,13 +34,13 @@
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
 	class class_name;\
-	using Sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >
+	using Sp##class_name = ::easy2d::intrusive::SmartPtr< class_name >
 
 #define E2D_DECLARE_NS_SMART_PTR(ns_name, class_name)\
 	namespace ns_name\
 	{\
 		class class_name; \
-		using Sp##class_name = ::easy2d::intrusive::SmartPointer< class_name >;\
+		using Sp##class_name = ::easy2d::intrusive::SmartPtr< class_name >;\
 	}
 #endif
 
@@ -141,9 +141,9 @@ namespace easy2d
 		}
 
 		template<typename T>
-		inline intrusive::SmartPointer<T> operator- (T* ptr) const
+		inline intrusive::SmartPtr<T> operator- (T* ptr) const
 		{
-			return intrusive::SmartPointer<T>(ptr);
+			return intrusive::SmartPtr<T>(ptr);
 		}
 	};
 }
