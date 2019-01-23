@@ -27,7 +27,7 @@ namespace easy2d
 	// Loop
 	//-------------------------------------------------------
 
-	Loop::Loop(SpAction const& action, int times)
+	Loop::Loop(ActionPtr const& action, int times)
 		: action_(action)
 		, times_(0)
 		, total_times_(times)
@@ -41,7 +41,7 @@ namespace easy2d
 	{
 	}
 
-	SpAction Loop::Clone() const
+	ActionPtr Loop::Clone() const
 	{
 		if (action_)
 		{
@@ -53,7 +53,7 @@ namespace easy2d
 		}
 	}
 
-	SpAction Loop::Reverse() const
+	ActionPtr Loop::Reverse() const
 	{
 		if (action_)
 		{
@@ -125,7 +125,7 @@ namespace easy2d
 	{
 	}
 
-	Sequence::Sequence(Array<SpAction> const& actions)
+	Sequence::Sequence(Array<ActionPtr> const& actions)
 		: action_index_(0)
 	{
 		this->Add(actions);
@@ -172,7 +172,7 @@ namespace easy2d
 		action_index_ = 0;
 	}
 
-	void Sequence::Add(SpAction const& action)
+	void Sequence::Add(ActionPtr const& action)
 	{
 		if (action)
 		{
@@ -180,7 +180,7 @@ namespace easy2d
 		}
 	}
 
-	void Sequence::Add(Array<SpAction> const& actions)
+	void Sequence::Add(Array<ActionPtr> const& actions)
 	{
 		for (const auto &action : actions)
 		{
@@ -188,7 +188,7 @@ namespace easy2d
 		}
 	}
 
-	SpAction Sequence::Clone() const
+	ActionPtr Sequence::Clone() const
 	{
 		auto sequence = new (std::nothrow) Sequence();
 		if (sequence)
@@ -204,7 +204,7 @@ namespace easy2d
 		return sequence;
 	}
 
-	SpAction Sequence::Reverse() const
+	ActionPtr Sequence::Reverse() const
 	{
 		auto sequence = new (std::nothrow) Sequence();
 		if (sequence && !actions_.empty())
@@ -227,7 +227,7 @@ namespace easy2d
 	{
 	}
 
-	Spawn::Spawn(Array<SpAction> const& actions)
+	Spawn::Spawn(Array<ActionPtr> const& actions)
 	{
 		this->Add(actions);
 	}
@@ -281,7 +281,7 @@ namespace easy2d
 		}
 	}
 
-	void Spawn::Add(SpAction const& action)
+	void Spawn::Add(ActionPtr const& action)
 	{
 		if (action)
 		{
@@ -289,7 +289,7 @@ namespace easy2d
 		}
 	}
 
-	void Spawn::Add(Array<SpAction> const& actions)
+	void Spawn::Add(Array<ActionPtr> const& actions)
 	{
 		for (const auto &action : actions)
 		{
@@ -297,7 +297,7 @@ namespace easy2d
 		}
 	}
 
-	SpAction Spawn::Clone() const
+	ActionPtr Spawn::Clone() const
 	{
 		auto spawn = new (std::nothrow) Spawn();
 		if (spawn)
@@ -313,7 +313,7 @@ namespace easy2d
 		return spawn;
 	}
 
-	SpAction Spawn::Reverse() const
+	ActionPtr Spawn::Reverse() const
 	{
 		auto spawn = new (std::nothrow) Spawn();
 		if (spawn && !actions_.empty())

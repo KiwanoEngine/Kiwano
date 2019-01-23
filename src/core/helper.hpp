@@ -34,13 +34,13 @@
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
 	class class_name;\
-	using Sp##class_name = ::easy2d::intrusive::SmartPtr< class_name >
+	using class_name##Ptr = ::easy2d::intrusive::SmartPtr< class_name >
 
 #define E2D_DECLARE_NS_SMART_PTR(ns_name, class_name)\
 	namespace ns_name\
 	{\
 		class class_name; \
-		using Sp##class_name = ::easy2d::intrusive::SmartPtr< class_name >;\
+		using class_name##Ptr = ::easy2d::intrusive::SmartPtr< class_name >;\
 	}
 #endif
 
@@ -70,7 +70,7 @@ namespace easy2d
 
 namespace easy2d
 {
-	// "Sp" is a shorthand for "Smart Pointer"
+	// "Ptr" is a shorthand for "Smart Pointer"
 
 	E2D_DECLARE_SMART_PTR(Object);
 	E2D_DECLARE_SMART_PTR(Image);

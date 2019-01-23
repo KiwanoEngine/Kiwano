@@ -32,7 +32,7 @@ namespace easy2d
 		Right = VK_RIGHT,
 		Down = VK_DOWN,
 		Enter = VK_RETURN,
-		Space = VK_SPACE,
+		acePtr = VK_SPACE,
 		Esc = VK_ESCAPE,
 		Ctrl = VK_CONTROL,
 		Shift = VK_SHIFT,

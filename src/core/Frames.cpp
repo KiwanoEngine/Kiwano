@@ -29,13 +29,13 @@ namespace easy2d
 	{
 	}
 
-	Frames::Frames(Array<SpImage> const& frames)
+	Frames::Frames(Array<ImagePtr> const& frames)
 		: interval_(200)
 	{
 		this->Add(frames);
 	}
 
-	Frames::Frames(Duration const& interval, Array<SpImage> const& frames)
+	Frames::Frames(Duration const& interval, Array<ImagePtr> const& frames)
 		: interval_(interval)
 	{
 		this->Add(frames);
@@ -50,7 +50,7 @@ namespace easy2d
 		interval_ = interval;
 	}
 
-	void Frames::Add(SpImage const& frame)
+	void Frames::Add(ImagePtr const& frame)
 	{
 		E2D_ASSERT(frame && "Frames::Add failed, NULL pointer exception");
 
@@ -60,7 +60,7 @@ namespace easy2d
 		}
 	}
 
-	void Frames::Add(Array<SpImage> const& frames)
+	void Frames::Add(Array<ImagePtr> const& frames)
 	{
 		for (const auto &image : frames)
 		{
@@ -73,12 +73,12 @@ namespace easy2d
 		return interval_;
 	}
 
-	Array<SpImage> const& Frames::GetFrames() const
+	Array<ImagePtr> const& Frames::GetFrames() const
 	{
 		return frames_;
 	}
 
-	SpFrames Frames::Clone() const
+	FramesPtr Frames::Clone() const
 	{
 		auto animation = new (std::nothrow) Frames;
 		if (animation)
@@ -92,7 +92,7 @@ namespace easy2d
 		return animation;
 	}
 
-	SpFrames Frames::Reverse() const
+	FramesPtr Frames::Reverse() const
 	{
 		auto animation = new (std::nothrow) Frames;
 		if (!frames_.empty())

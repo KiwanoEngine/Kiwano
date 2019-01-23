@@ -62,7 +62,7 @@ namespace easy2d
 
 		if (!children_.IsEmpty())
 		{
-			SpNode next;
+			NodePtr next;
 			for (auto child = children_.First(); child; child = next)
 			{
 				next = child->NextItem();
@@ -118,7 +118,7 @@ namespace easy2d
 		if (!visible_)
 			return;
 
-		SpNode prev;
+		NodePtr prev;
 		for (auto child = children_.Last(); child; child = prev)
 		{
 			prev = child->PrevItem();
@@ -255,7 +255,7 @@ namespace easy2d
 
 		if (parent_)
 		{
-			SpNode me = this;
+			NodePtr me = this;
 
 			parent_->children_.Remove(me);
 
@@ -272,7 +272,7 @@ namespace easy2d
 
 			if (sibling)
 			{
-				parent_->children_.InsertAfter(me, SpNode(sibling));
+				parent_->children_.InsertAfter(me, NodePtr(sibling));
 			}
 			else
 			{
@@ -444,7 +444,7 @@ namespace easy2d
 		dirty_transform_ = true;
 	}
 
-	void Node::AddChild(SpNode const& child)
+	void Node::AddChild(NodePtr const& child)
 	{
 		E2D_ASSERT(child && "Node::AddChild failed, NULL pointer exception");
 
@@ -470,7 +470,7 @@ namespace easy2d
 		}
 	}
 
-	void Node::AddChildren(Array<SpNode> const& children)
+	void Node::AddChildren(Array<NodePtr> const& children)
 	{
 		for (const auto& node : children)
 		{
@@ -483,9 +483,9 @@ namespace easy2d
 		return Rect(Point{}, size_);
 	}
 
-	Array<SpNode> Node::GetChildren(String const& name) const
+	Array<NodePtr> Node::GetChildren(String const& name) const
 	{
-		Array<SpNode> children;
+		Array<NodePtr> children;
 		size_t hash_code = std::hash<String>{}(name);
 
 		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
@@ -498,7 +498,7 @@ namespace easy2d
 		return children;
 	}
 
-	SpNode Node::GetChild(String const& name) const
+	NodePtr Node::GetChild(String const& name) const
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
@@ -525,7 +525,7 @@ namespace easy2d
 		}
 	}
 
-	bool Node::RemoveChild(SpNode const& child)
+	bool Node::RemoveChild(NodePtr const& child)
 	{
 		return RemoveChild(child.Get());
 	}
@@ -541,7 +541,7 @@ namespace easy2d
 		{
 			child->parent_ = nullptr;
 			if (child->scene_) child->SetScene(nullptr);
-			children_.Remove(SpNode(child));
+			children_.Remove(NodePtr(child));
 			return true;
 		}
 		return false;

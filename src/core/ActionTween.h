@@ -128,10 +128,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override;
+		virtual ActionPtr Reverse() const override;
 
 	protected:
 		virtual void Init(Node* target) override;
@@ -157,10 +157,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override
+		virtual ActionPtr Reverse() const override
 		{
 			logs::Errorln(L"Reverse() not supported in MoveTo");
 			return nullptr;
@@ -188,10 +188,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override;
+		virtual ActionPtr Reverse() const override;
 
 	protected:
 		virtual void Init(Node* target) override;
@@ -221,10 +221,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override
+		virtual ActionPtr Reverse() const override
 		{
 			logs::Errorln(L"Reverse() not supported in JumpTo");
 			return nullptr;
@@ -257,10 +257,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override;
+		virtual ActionPtr Reverse() const override;
 
 	protected:
 		virtual void Init(Node* target) override;
@@ -294,10 +294,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override
+		virtual ActionPtr Reverse() const override
 		{
 			logs::Errorln(L"Reverse() not supported in ScaleTo");
 			return nullptr;
@@ -324,10 +324,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override;
+		virtual ActionPtr Reverse() const override;
 
 	protected:
 		virtual void Init(Node* target) override;
@@ -352,10 +352,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override
+		virtual ActionPtr Reverse() const override
 		{
 			logs::Errorln(L"Reverse() not supported in OpacityTo");
 			return nullptr;
@@ -407,10 +407,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override;
+		virtual ActionPtr Reverse() const override;
 
 	protected:
 		virtual void Init(Node* target) override;
@@ -435,10 +435,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override
+		virtual ActionPtr Reverse() const override
 		{
 			logs::Errorln(L"Reverse() not supported in RotateTo");
 			return nullptr;
@@ -459,7 +459,7 @@ namespace easy2d
 	public:
 		explicit PathAction(
 			Duration const& duration,			/* 持续时长 */
-			SpGeometry const& geo,				/* 几何图形 */
+			GeometryPtr const& geo,				/* 几何图形 */
 			bool rotating = false,				/* 沿路径切线方向旋转 */
 			float start = 0.f,					/* 起点 */
 			float end = 1.f,					/* 终点 */
@@ -467,10 +467,10 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override;
+		virtual ActionPtr Reverse() const override;
 
 	protected:
 		virtual void Init(Node* target) override;
@@ -482,6 +482,6 @@ namespace easy2d
 		float		start_;
 		float		end_;
 		Point		start_pos_;
-		SpGeometry	geo_;
+		GeometryPtr	geo_;
 	};
 }

@@ -235,7 +235,7 @@ namespace easy2d
 		}
 	}
 
-	void Text::SetLineSpacing(float line_spacing)
+	void Text::SetLineacingPtr(float line_spacing)
 	{
 		if (style_.line_spacing != line_spacing)
 		{

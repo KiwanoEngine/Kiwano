@@ -235,12 +235,12 @@ namespace easy2d
 		}
 	}
 
-	SpAction MoveBy::Clone() const
+	ActionPtr MoveBy::Clone() const
 	{
 		return new (std::nothrow) MoveBy(duration_, delta_pos_, ease_type_);
 	}
 
-	SpAction MoveBy::Reverse() const
+	ActionPtr MoveBy::Reverse() const
 	{
 		return new (std::nothrow) MoveBy(duration_, -delta_pos_, ease_type_);
 	}
@@ -251,7 +251,7 @@ namespace easy2d
 		end_pos_ = pos;
 	}
 
-	SpAction MoveTo::Clone() const
+	ActionPtr MoveTo::Clone() const
 	{
 		return new (std::nothrow) MoveTo(duration_, end_pos_, ease_type_);
 	}
@@ -275,12 +275,12 @@ namespace easy2d
 	{
 	}
 
-	SpAction JumpBy::Clone() const
+	ActionPtr JumpBy::Clone() const
 	{
 		return new (std::nothrow) JumpBy(duration_, delta_pos_, height_, jumps_, ease_type_);
 	}
 
-	SpAction JumpBy::Reverse() const
+	ActionPtr JumpBy::Reverse() const
 	{
 		return new (std::nothrow) JumpBy(duration_, -delta_pos_, height_, jumps_, ease_type_);
 	}
@@ -320,7 +320,7 @@ namespace easy2d
 	{
 	}
 
-	SpAction JumpTo::Clone() const
+	ActionPtr JumpTo::Clone() const
 	{
 		return new (std::nothrow) JumpTo(duration_, end_pos_, height_, jumps_, ease_type_);
 	}
@@ -369,12 +369,12 @@ namespace easy2d
 		}
 	}
 
-	SpAction ScaleBy::Clone() const
+	ActionPtr ScaleBy::Clone() const
 	{
 		return new (std::nothrow) ScaleBy(duration_, delta_x_, delta_y_, ease_type_);
 	}
 
-	SpAction ScaleBy::Reverse() const
+	ActionPtr ScaleBy::Reverse() const
 	{
 		return new (std::nothrow) ScaleBy(duration_, -delta_x_, -delta_y_, ease_type_);
 	}
@@ -393,7 +393,7 @@ namespace easy2d
 		end_scale_y_ = scale_y;
 	}
 
-	SpAction ScaleTo::Clone() const
+	ActionPtr ScaleTo::Clone() const
 	{
 		return new (std::nothrow) ScaleTo(duration_, end_scale_x_, end_scale_y_, ease_type_);
 	}
@@ -434,12 +434,12 @@ namespace easy2d
 		}
 	}
 
-	SpAction OpacityBy::Clone() const
+	ActionPtr OpacityBy::Clone() const
 	{
 		return new (std::nothrow) OpacityBy(duration_, delta_val_, ease_type_);
 	}
 
-	SpAction OpacityBy::Reverse() const
+	ActionPtr OpacityBy::Reverse() const
 	{
 		return new (std::nothrow) OpacityBy(duration_, -delta_val_, ease_type_);
 	}
@@ -450,7 +450,7 @@ namespace easy2d
 		end_val_ = opacity;
 	}
 
-	SpAction OpacityTo::Clone() const
+	ActionPtr OpacityTo::Clone() const
 	{
 		return new (std::nothrow) OpacityTo(duration_, end_val_, ease_type_);
 	}
@@ -500,12 +500,12 @@ namespace easy2d
 		}
 	}
 
-	SpAction RotateBy::Clone() const
+	ActionPtr RotateBy::Clone() const
 	{
 		return new (std::nothrow) RotateBy(duration_, delta_val_, ease_type_);
 	}
 
-	SpAction RotateBy::Reverse() const
+	ActionPtr RotateBy::Reverse() const
 	{
 		return new (std::nothrow) RotateBy(duration_, -delta_val_, ease_type_);
 	}
@@ -516,7 +516,7 @@ namespace easy2d
 		end_val_ = rotation;
 	}
 
-	SpAction RotateTo::Clone() const
+	ActionPtr RotateTo::Clone() const
 	{
 		return new (std::nothrow) RotateTo(duration_, end_val_, ease_type_);
 	}
@@ -532,7 +532,7 @@ namespace easy2d
 	// PathAction
 	//-------------------------------------------------------
 
-	PathAction::PathAction(Duration const & duration, SpGeometry const& geo, bool rotating, float start, float end, EaseFunc func)
+	PathAction::PathAction(Duration const & duration, GeometryPtr const& geo, bool rotating, float start, float end, EaseFunc func)
 		: Tween(duration, func)
 		, start_(start)
 		, end_(end)
@@ -541,12 +541,12 @@ namespace easy2d
 	{
 	}
 
-	SpAction PathAction::Clone() const
+	ActionPtr PathAction::Clone() const
 	{
 		return new PathAction(duration_, geo_, rotating_, start_, end_, ease_type_);
 	}
 
-	SpAction PathAction::Reverse() const
+	ActionPtr PathAction::Reverse() const
 	{
 		return new PathAction(duration_, geo_, rotating_, end_, start_, ease_type_);
 	}

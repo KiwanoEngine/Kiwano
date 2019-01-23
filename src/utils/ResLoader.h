@@ -31,13 +31,13 @@ namespace easy2d
 
 		void AddFrames(String const& id, Array<Resource> const& images, Duration const& interval = 200);
 
-		void AddObj(String const& id, SpObject const& obj);
+		void AddObj(String const& id, ObjectPtr const& obj);
 
-		SpImage GetImage(String const& id) const;
+		ImagePtr GetImage(String const& id) const;
 
-		SpFrames GetFrames(String const& id) const;
+		FramesPtr GetFrames(String const& id) const;
 
-		SpObject GetObj(String const& id) const;
+		ObjectPtr GetObj(String const& id) const;
 
 		void Delete(String const& id);
 
@@ -58,7 +58,7 @@ namespace easy2d
 		}
 
 	protected:
-		UnorderedMap<String, SpObject> res_;
+		UnorderedMap<String, ObjectPtr> res_;
 		List<String> search_paths_;
 	};
 }

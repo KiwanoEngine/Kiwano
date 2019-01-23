@@ -43,7 +43,7 @@ namespace easy2d
 			int primitives;
 		};
 
-		using BitmapMap = UnorderedMap<size_t, CpBitmap>;
+		using BitmapMap = UnorderedMap<size_t, D2DBitmapPtr>;
 
 	public:
 		HRESULT Init(HWND hwnd, bool vsync, bool debug);
@@ -78,25 +78,25 @@ namespace easy2d
 		void DiscardResources();
 
 		HRESULT CreateLayer(
-			CpLayer& layer
+			D2DLayerPtr& layer
 		);
 
 		HRESULT CreateSolidColorBrush(
-			CpSolidColorBrush& brush
+			D2DSolidColorBrushPtr& brush
 		) const;
 
 		HRESULT CreateBitmapFromFile(
-			CpBitmap& bitmap,
+			D2DBitmapPtr& bitmap,
 			String const& file_path
 		);
 
 		HRESULT CreateBitmapFromResource(
-			CpBitmap& bitmap,
+			D2DBitmapPtr& bitmap,
 			Resource const& res
 		);
 
 		HRESULT CreateBitmapRenderTarget(
-			CpBitmapRenderTarget& brt
+			D2DBitmapRenderTargetPtr& brt
 		);
 
 		HRESULT SetTransform(
@@ -116,27 +116,27 @@ namespace easy2d
 		);
 
 		HRESULT DrawGeometry(
-			CpGeometry const& geometry,
+			D2DGeometryPtr const& geometry,
 			const Color& stroke_color,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
 		HRESULT FillGeometry(
-			CpGeometry const& geometry,
+			D2DGeometryPtr const& geometry,
 			const Color& fill_color
 		);
 
 		HRESULT DrawImage(
-			SpImage const& image
+			ImagePtr const& image
 		);
 
 		HRESULT DrawBitmap(
-			CpBitmap const& bitmap
+			D2DBitmapPtr const& bitmap
 		);
 
 		HRESULT DrawTextLayout(
-			CpTextLayout const& text_layout
+			D2DTextLayoutPtr const& text_layout
 		);
 
 		HRESULT PushClip(
@@ -147,7 +147,7 @@ namespace easy2d
 		HRESULT PopClip();
 
 		HRESULT PushLayer(
-			CpLayer const& layer,
+			D2DLayerPtr const& layer,
 			LayerProperties const& properties
 		);
 
@@ -164,9 +164,9 @@ namespace easy2d
 
 		void ClearImageCache();
 
-		CpHwndRenderTarget const& GetRenderTarget() const;
+		D2DHwndRenderTargetPtr const& GetRenderTarget() const;
 
-		CpSolidColorBrush const& GetSolidBrush() const;
+		D2DSolidColorBrushPtr const& GetSolidBrush() const;
 
 	protected:
 		GraphicsDevice();
@@ -182,11 +182,11 @@ namespace easy2d
 		D2D1_COLOR_F		clear_color_;
 		TextAntialias		text_antialias_;
 		Status				status_;
-		CpTextRenderer		text_renderer_;
-		CpSolidColorBrush	solid_brush_;
-		CpHwndRenderTarget	render_target_;
-		CpTextFormat		fps_text_format_;
-		CpTextLayout		fps_text_layout_;
+		D2DTextRendererPtr		text_renderer_;
+		D2DSolidColorBrushPtr	solid_brush_;
+		D2DHwndRenderTargetPtr	render_target_;
+		D2DTextFormatPtr		fps_text_format_;
+		D2DTextLayoutPtr		fps_text_layout_;
 		BitmapMap			bitmap_cache_;
 	};
 

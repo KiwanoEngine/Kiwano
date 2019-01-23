@@ -38,73 +38,73 @@ namespace easy2d
 		HRESULT Init(bool debug);
 
 		HRESULT CreateHwndRenderTarget(
-			CpHwndRenderTarget& hwnd_render_target,
+			D2DHwndRenderTargetPtr& hwnd_render_target,
 			D2D1_RENDER_TARGET_PROPERTIES const& properties,
 			D2D1_HWND_RENDER_TARGET_PROPERTIES const& hwnd_rt_properties
 		) const;
 
 		HRESULT CreateTextRenderer(
-			CpTextRenderer& text_renderer,
-			CpRenderTarget const& render_target,
-			CpSolidColorBrush const& brush
+			D2DTextRendererPtr& text_renderer,
+			D2DRenderTargetPtr const& render_target,
+			D2DSolidColorBrushPtr const& brush
 		);
 
 		HRESULT CreateBitmapFromFile(
-			CpBitmap& bitmap,
-			CpRenderTarget const& rt,
+			D2DBitmapPtr& bitmap,
+			D2DRenderTargetPtr const& rt,
 			String const& file_path
 		);
 
 		HRESULT CreateBitmapFromResource(
-			CpBitmap& bitmap,
-			CpRenderTarget const& rt,
+			D2DBitmapPtr& bitmap,
+			D2DRenderTargetPtr const& rt,
 			Resource const& res
 		);
 
 		HRESULT CreateRectangleGeometry(
-			CpRectangleGeometry& geo,
+			D2DRectangleGeometryPtr& geo,
 			Rect const& rect
 		) const;
 
 		HRESULT CreateRoundedRectangleGeometry(
-			CpRoundedRectangleGeometry& geo,
+			D2DRoundedRectangleGeometryPtr& geo,
 			Rect const& rect,
 			float radius_x,
 			float radius_y
 		) const;
 
 		HRESULT CreateEllipseGeometry(
-			CpEllipseGeometry& geo,
+			D2DEllipseGeometryPtr& geo,
 			Point const& center,
 			float radius_x,
 			float radius_y
 		) const;
 
 		HRESULT CreateTransformedGeometry(
-			CpTransformedGeometry& transformed,
+			D2DTransformedGeometryPtr& transformed,
 			Matrix const& matrix,
-			CpGeometry const& geo
+			D2DGeometryPtr const& geo
 		) const;
 
 		HRESULT CreatePathGeometry(
-			CpPathGeometry& geometry
+			D2DPathGeometryPtr& geometry
 		) const;
 
 		HRESULT CreateTextFormat(
-			CpTextFormat& text_format,
+			D2DTextFormatPtr& text_format,
 			Font const& font,
 			TextStyle const& text_style
 		) const;
 
 		HRESULT CreateTextLayout(
-			CpTextLayout& text_layout,
+			D2DTextLayoutPtr& text_layout,
 			Size& layout_size,
 			String const& text,
-			CpTextFormat const& text_format,
+			D2DTextFormatPtr const& text_format,
 			TextStyle const& text_style
 		) const;
 
-		CpStrokeStyle const& GetStrokeStyle(
+		D2DStrokeStylePtr const& GetStrokeStyle(
 			StrokeStyle stroke
 		) const;
 
@@ -114,12 +114,12 @@ namespace easy2d
 		~FactoryImpl();
 
 	protected:
-		CpFactory			factory_;
-		CpImagingFactory	imaging_factory_;
-		CpWriteFactory		write_factory_;
-		CpStrokeStyle		miter_stroke_style_;
-		CpStrokeStyle		bevel_stroke_style_;
-		CpStrokeStyle		round_stroke_style_;
+		D2DFactoryPtr			factory_;
+		D2DImagingFactoryPtr	imaging_factory_;
+		D2DWriteFactoryPtr		write_factory_;
+		D2DStrokeStylePtr		miter_stroke_style_;
+		D2DStrokeStylePtr		bevel_stroke_style_;
+		D2DStrokeStylePtr		round_stroke_style_;
 	};
 
 	E2D_DECLARE_SINGLETON_TYPE(FactoryImpl, Factory);

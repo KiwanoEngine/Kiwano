@@ -29,17 +29,17 @@ namespace easy2d
 	{
 	public:
 		explicit Loop(
-			SpAction const& action,	/* 执行循环的动作 */
+			ActionPtr const& action,	/* 执行循环的动作 */
 			int times = -1			/* 循环次数 */
 		);
 
 		virtual ~Loop();
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override;
+		virtual ActionPtr Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;
@@ -54,7 +54,7 @@ namespace easy2d
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
-		SpAction	action_;
+		ActionPtr	action_;
 		int			times_;
 		int			total_times_;
 	};
@@ -68,26 +68,26 @@ namespace easy2d
 		Sequence();
 
 		explicit Sequence(
-			Array<SpAction> const& actions	/* 动作列表 */
+			Array<ActionPtr> const& actions	/* 动作列表 */
 		);
 
 		virtual ~Sequence();
 
 		// 在结尾添加动作
 		void Add(
-			SpAction const& action
+			ActionPtr const& action
 		);
 
 		// 在结尾添加多个动作
 		void Add(
-			Array<SpAction> const& actions	/* 动作列表 */
+			Array<ActionPtr> const& actions	/* 动作列表 */
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const override;
+		virtual ActionPtr Reverse() const override;
 
 		// 重置动作
 		virtual void Reset() override;
@@ -101,7 +101,7 @@ namespace easy2d
 
 	protected:
 		UINT action_index_;
-		Array<SpAction> actions_;
+		Array<ActionPtr> actions_;
 	};
 
 
@@ -113,26 +113,26 @@ namespace easy2d
 		Spawn();
 
 		explicit Spawn(
-			Array<SpAction> const& actions	/* 动作列表 */
+			Array<ActionPtr> const& actions	/* 动作列表 */
 		);
 
 		virtual ~Spawn();
 
 		// 在结尾添加动作
 		void Add(
-			SpAction const& action
+			ActionPtr const& action
 		);
 
 		// 在结尾添加多个动作
 		void Add(
-			Array<SpAction> const& actions	/* 动作列表 */
+			Array<ActionPtr> const& actions	/* 动作列表 */
 		);
 
 		// 获取该动作的拷贝对象
-		virtual SpAction Clone() const override;
+		virtual ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual SpAction Reverse() const;
+		virtual ActionPtr Reverse() const;
 
 		// 重置动作
 		virtual void Reset() override;
@@ -145,6 +145,6 @@ namespace easy2d
 		virtual void Update(Node* target, Duration const& dt) override;
 
 	protected:
-		Array<SpAction> actions_;
+		Array<ActionPtr> actions_;
 	};
 }

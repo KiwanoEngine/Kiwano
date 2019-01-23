@@ -37,14 +37,14 @@ namespace easy2d
 		, public TaskManager
 		, public ActionManager
 		, public EventDispatcher
-		, protected intrusive::ListItem<SpNode>
+		, protected intrusive::ListItem<NodePtr>
 	{
 		friend class Game;
 		friend class Scene;
 		friend class Transition;
-		friend class intrusive::List<SpNode>;
+		friend class intrusive::List<NodePtr>;
 
-		using Children = intrusive::List<SpNode>;
+		using Children = intrusive::List<NodePtr>;
 
 	public:
 		Node();
@@ -291,21 +291,21 @@ namespace easy2d
 
 		// 添加子节点
 		void AddChild(
-			SpNode const& child
+			NodePtr const& child
 		);
 
 		// 添加多个子节点
 		void AddChildren(
-			Array<SpNode> const& children
+			Array<NodePtr> const& children
 		);
 
 		// 获取所有名称相同的子节点
-		Array<SpNode> GetChildren(
+		Array<NodePtr> GetChildren(
 			String const& name
 		) const;
 
 		// 获取名称相同的子节点
-		SpNode GetChild(
+		NodePtr GetChild(
 			String const& name
 		) const;
 
@@ -314,7 +314,7 @@ namespace easy2d
 
 		// 移除子节点
 		bool RemoveChild(
-			SpNode const& child
+			NodePtr const& child
 		);
 
 		// 移除子节点

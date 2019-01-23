@@ -153,7 +153,7 @@ namespace easy2d
 		Window::Instance()->Destroy();
 	}
 
-	void Game::EnterScene(SpScene const & scene)
+	void Game::EnterScene(ScenePtr const & scene)
 	{
 		E2D_ASSERT(scene && "Game::EnterScene failed, NULL pointer exception");
 
@@ -163,7 +163,7 @@ namespace easy2d
 		next_scene_ = scene;
 	}
 
-	void Game::EnterScene(SpScene const& scene, SpTransition const& transition)
+	void Game::EnterScene(ScenePtr const& scene, TransitionPtr const& transition)
 	{
 		EnterScene(scene);
 		
@@ -178,7 +178,7 @@ namespace easy2d
 		}
 	}
 
-	SpScene const& Game::GetCurrentScene()
+	ScenePtr const& Game::GetCurrentScene()
 	{
 		return curr_scene_;
 	}

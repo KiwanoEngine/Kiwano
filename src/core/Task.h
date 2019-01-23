@@ -31,10 +31,10 @@ namespace easy2d
     // 定时任务
 	class Task
 		: public Object
-		, protected intrusive::ListItem<SpTask>
+		, protected intrusive::ListItem<TaskPtr>
 	{
 		friend class TaskManager;
-		friend class intrusive::List<SpTask>;
+		friend class intrusive::List<TaskPtr>;
 
 		using Callback = std::function<void()>;
 

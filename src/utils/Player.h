@@ -29,7 +29,7 @@ namespace easy2d
 	class Player
 		: protected Noncopyable
 	{
-		using MusicMap = Map<size_t, SpMusic>;
+		using MusicMap = Map<size_t, MusicPtr>;
 
 	public:
 		Player();

@@ -45,7 +45,7 @@ namespace easy2d
 		this->Crop(crop_rect);
 	}
 
-	Image::Image(CpBitmap const & bitmap)
+	Image::Image(D2DBitmapPtr const & bitmap)
 		: Image()
 	{
 		SetBitmap(bitmap);
@@ -58,7 +58,7 @@ namespace easy2d
 	bool Image::Load(Resource const& res)
 	{
 		HRESULT hr = S_OK;
-		CpBitmap bitmap;
+		D2DBitmapPtr bitmap;
 
 		if (res.IsFile())
 		{
@@ -159,12 +159,12 @@ namespace easy2d
 		return crop_rect_;
 	}
 
-	CpBitmap const& Image::GetBitmap() const
+	D2DBitmapPtr const& Image::GetBitmap() const
 	{
 		return bitmap_;
 	}
 
-	void Image::SetBitmap(CpBitmap const & bitmap)
+	void Image::SetBitmap(D2DBitmapPtr const & bitmap)
 	{
 		if (bitmap)
 		{

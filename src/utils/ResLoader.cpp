@@ -43,38 +43,38 @@ namespace easy2d
 	void ResLoader::AddImage(String const& id, Resource const& image)
 	{
 		auto path = Search(image.GetFileName(), search_paths_);
-		res_.insert(std::make_pair(id, SpImage(new Image(path.c_str()))));
+		res_.insert(std::make_pair(id, ImagePtr(new Image(path.c_str()))));
 	}
 
 	void ResLoader::AddFrames(String const& id, Array<Resource> const& images, Duration const& interval)
 	{
-		auto frames = SpFrames(new Frames);
+		auto frames = FramesPtr(new Frames);
 		frames->SetInterval(interval);
 
 		for (const auto& image : images)
 		{
 			auto path = Search(image.GetFileName(), search_paths_);
-			frames->Add(SpImage(new Image(path.c_str())));
+			frames->Add(ImagePtr(new Image(path.c_str())));
 		}
 		res_.insert(std::make_pair(id, frames));
 	}
 
-	void ResLoader::AddObj(String const& id, SpObject const& obj)
+	void ResLoader::AddObj(String const& id, ObjectPtr const& obj)
 	{
 		res_.insert(std::make_pair(id, obj));
 	}
 
-	SpImage ResLoader::GetImage(String const & id) const
+	ImagePtr ResLoader::GetImage(String const & id) const
 	{
 		return Get<Image*>(id);
 	}
 
-	SpFrames ResLoader::GetFrames(String const & id) const
+	FramesPtr ResLoader::GetFrames(String const & id) const
 	{
 		return Get<Frames*>(id);
 	}
 
-	SpObject ResLoader::GetObj(String const & id) const
+	ObjectPtr ResLoader::GetObj(String const & id) const
 	{
 		return Get<Object*>(id);
 	}
