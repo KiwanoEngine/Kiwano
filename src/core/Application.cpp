@@ -337,20 +337,6 @@ namespace easy2d
 
 		case WM_SIZE:
 		{
-			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
-			{
-				app->active_ = false;
-
-				E2D_LOG(L"Window minimized");
-			}
-			else if (SIZE_RESTORED == wparam)
-			{
-				app->active_ = true;
-				::InvalidateRect(hwnd, nullptr, FALSE);
-
-				E2D_LOG(L"Window restored");
-			}
-
 			UINT width = LOWORD(lparam);
 			UINT height = HIWORD(lparam);
 
@@ -358,38 +344,70 @@ namespace easy2d
 			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
 			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
 			RenderSystem::Instance()->Resize(width, height);
+
+			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
+			{
+				app->active_ = false;
+
+				E2D_LOG(L"Window minimized");
+			}
+			else
+			{
+				app->active_ = true;
+				::InvalidateRect(hwnd, nullptr, FALSE);
+
+				E2D_LOG(L"Window resized");
+
+				if (app->curr_scene_)
+				{
+					Event evt(WindowEvent::Resized);
+					evt.win.width = static_cast<int>(width);
+					evt.win.height = static_cast<int>(height);
+					app->curr_scene_->Dispatch(evt);
+				}
+			}
+		}
+		break;
+
+		case WM_MOVE:
+		{
+			if (app->curr_scene_)
+			{
+				int x = (int)(short)LOWORD(lparam);
+				int y = (int)(short)HIWORD(lparam);
+
+				Event evt(WindowEvent::Moved);
+				evt.win.x = x;
+				evt.win.y = y;
+				app->curr_scene_->Dispatch(evt);
+			}
 		}
 		break;
 
 		case WM_ACTIVATE:
 		{
 			bool active = (LOWORD(wparam) != WA_INACTIVE);
-			if (active)
+			if (app->curr_scene_)
 			{
-				E2D_LOG(L"Window activated");
-
-				if (app->curr_scene_)
-				{
-					Event evt(WindowEvent::Activate);
-					app->curr_scene_->Dispatch(evt);
-				}
+				Event evt(WindowEvent::FocusChanged);
+				evt.win.focus = active;
+				app->curr_scene_->Dispatch(evt);
 			}
-			else
-			{
-				E2D_LOG(L"Window deactivated");
 
-				if (app->curr_scene_)
-				{
-					Event evt(WindowEvent::Deavtivate);
-					app->curr_scene_->Dispatch(evt);
-				}
-			}
+			E2D_LOG(active ? L"Window activated" : L"Window deactivated");
 		}
 		break;
 
 		case WM_SETTEXT:
 		{
 			E2D_LOG(L"Window title changed");
+
+			if (app->curr_scene_)
+			{
+				Event evt(WindowEvent::TitleChanged);
+				evt.win.title = reinterpret_cast<const wchar_t*>(lparam);
+				app->curr_scene_->Dispatch(evt);
+			}
 		}
 		break;
 
@@ -409,7 +427,7 @@ namespace easy2d
 
 		case WM_CLOSE:
 		{
-			E2D_LOG(L"Received a message to close the window");
+			E2D_LOG(L"Window is closing");
 
 			if (app->curr_scene_)
 			{

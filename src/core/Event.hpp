@@ -96,11 +96,38 @@ namespace easy2d
 		{
 			First = WM_NULL,
 
-			Activate,		// 窗口获得焦点
-			Deavtivate,		// 窗口失去焦点
+			Moved,			// 窗口移动
+			Resized,		// 窗口大小变化
+			FocusChanged,	// 获得或失去焦点
+			TitleChanged,	// 标题变化
 			Closing,		// 关闭窗口
 
 			Last
+		};
+
+		union
+		{
+			struct		// WindowEvent::Moved
+			{
+				int x;
+				int y;
+			};
+
+			struct		// WindowEvent::Resized
+			{
+				int width;
+				int height;
+			};
+
+			struct		// WindowEvent::FocusChanged
+			{
+				bool focus;
+			};
+
+			struct		// WindowEvent::TitleChanged
+			{
+				const wchar_t* title;
+			};
 		};
 
 		static inline bool Check(EventType type)
