@@ -23,8 +23,9 @@
 #include "logs.h"
 #include "../math/scalar.hpp"
 
-#define WINDOW_STYLE	WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME
-#define REGISTER_CLASS	L"Easy2DApp"
+#define WINDOW_STYLE			WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
+#define WINDOW_FULLSCREEN_STYLE	WS_CLIPCHILDREN | WS_POPUP
+#define E2D_WND_CLASS_NAME		L"Easy2DAppWnd"
 
 namespace easy2d
 {
@@ -32,7 +33,7 @@ namespace easy2d
 	{
 		void GetContentScale(float* scale_x, float* scale_y);
 
-		Rect LocateWindow(int width, int height, float scale_x, float scale_y);
+		void AdjustWindow(UINT width, UINT height, DWORD style, float scalex, float scaley, UINT* win_width, UINT* win_height);
 	}
 
 	Window::Window()
@@ -47,14 +48,14 @@ namespace easy2d
 		E2D_LOG(L"Destroying window");
 	}
 
-	HRESULT Window::Init(String title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
+	HRESULT Window::Init(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc, bool debug)
 	{
 		E2D_LOG(L"Creating window");
-
+		
 		HINSTANCE hinstance	= GetModuleHandle(nullptr);
 		WNDCLASSEX wcex		= { 0 };
 		wcex.cbSize			= sizeof(WNDCLASSEX);
-		wcex.lpszClassName	= REGISTER_CLASS;
+		wcex.lpszClassName	= E2D_WND_CLASS_NAME;
 		wcex.style			= CS_HREDRAW | CS_VREDRAW /* | CS_DBLCLKS */;
 		wcex.lpfnWndProc	= proc;
 		wcex.hIcon			= nullptr;
@@ -67,7 +68,7 @@ namespace easy2d
 
 		if (icon)
 		{
-			wcex.hIcon = (HICON)::LoadImage(
+			wcex.hIcon = (HICON)::LoadImageW(
 				hinstance,
 				icon,
 				IMAGE_ICON,
@@ -78,23 +79,86 @@ namespace easy2d
 		}
 		else
 		{
-			wcex.hIcon = ::LoadIcon(nullptr, IDI_APPLICATION);
+			wcex.hIcon = ::LoadIconW(nullptr, IDI_APPLICATION);
 		}
 
-		::RegisterClassEx(&wcex);
+		::RegisterClassExW(&wcex);
+
+		int left = -1;
+		int top = -1;
+
+		HMONITOR		monitor = nullptr;
+		MONITORINFOEX	monitor_info_ex;
+
+		// Get the nearest monitor to this window
+		POINT anchor;
+		anchor.x = left;
+		anchor.y = top;
+		monitor = MonitorFromPoint(anchor, MONITOR_DEFAULTTOPRIMARY);
+
+		// Get the target monitor info      
+		memset(&monitor_info_ex, 0, sizeof(MONITORINFOEX));
+		monitor_info_ex.cbSize = sizeof(MONITORINFOEX);
+		GetMonitorInfoW(monitor, &monitor_info_ex);
 
 		GetContentScale(&scale_x, &scale_y);
 
-		Rect client_rect = LocateWindow(width, height, scale_x, scale_y);
+		if (fullscreen)
+		{
+			top = monitor_info_ex.rcMonitor.top;
+			left = monitor_info_ex.rcMonitor.left;
+		}
+		else
+		{
+			UINT screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
+			UINT screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
+
+			UINT win_width, win_height;
+			AdjustWindow(
+				width,
+				height,
+				fullscreen ? (WINDOW_FULLSCREEN_STYLE) : (WINDOW_STYLE),
+				scale_x,
+				scale_y,
+				&win_width,
+				&win_height
+			);
+
+			left = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
+			top = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;
+			width = win_width;
+			height = win_height;
+		}
+
+		if (width > monitor_info_ex.rcWork.right - left)
+			width = monitor_info_ex.rcWork.right - left;
+
+		if (height > monitor_info_ex.rcWork.bottom - top)
+			height = monitor_info_ex.rcWork.bottom - top;
+
+		if (fullscreen)
+		{
+			DEVMODE mode;
+			memset(&mode, 0, sizeof(mode));
+			mode.dmSize = sizeof(DEVMODE);
+			mode.dmBitsPerPel = fullscreen ? 32 : (::GetDeviceCaps(GetDC(0), BITSPIXEL));
+			mode.dmPelsWidth = width;
+			mode.dmPelsHeight = height;
+			mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+			if (DISP_CHANGE_SUCCESSFUL != ::ChangeDisplaySettingsExW(monitor_info_ex.szDevice, &mode, NULL, CDS_FULLSCREEN, NULL))
+				logs::Errorln(L"ChangeDisplaySettings failed");
+		}
+
 		handle = ::CreateWindowExW(
-			NULL,
-			REGISTER_CLASS,
+			fullscreen ? (WS_EX_TOPMOST) : 0,
+			E2D_WND_CLASS_NAME,
 			title.c_str(),
-			WINDOW_STYLE,
-			static_cast<int>(client_rect.origin.x),
-			static_cast<int>(client_rect.origin.y),
-			static_cast<int>(client_rect.size.x),
-			static_cast<int>(client_rect.size.y),
+			fullscreen ? (WINDOW_FULLSCREEN_STYLE) : (WINDOW_STYLE),
+			left,
+			top,
+			width,
+			height,
 			nullptr,
 			nullptr,
 			hinstance,
@@ -103,7 +167,7 @@ namespace easy2d
 
 		if (handle == nullptr)
 		{
-			::UnregisterClass(REGISTER_CLASS, hinstance);
+			::UnregisterClass(E2D_WND_CLASS_NAME, hinstance);
 			return HRESULT_FROM_WIN32(GetLastError());
 		}
 		return S_OK;
@@ -148,22 +212,6 @@ namespace easy2d
 	float Window::GetHeight() const
 	{
 		return GetSize().y;
-	}
-
-	void Window::SetSize(int width, int height)
-	{
-		if (handle)
-		{
-			Rect rect = LocateWindow(width, height, scale_x, scale_y);
-			::MoveWindow(
-				handle,
-				static_cast<int>(rect.origin.x),
-				static_cast<int>(rect.origin.y),
-				static_cast<int>(rect.size.x),
-				static_cast<int>(rect.size.y),
-				TRUE
-			);
-		}
 	}
 
 	void Window::SetIcon(LPCWSTR icon_resource)
@@ -222,34 +270,28 @@ namespace easy2d
 				*scale_y = ydpi / DEFAULT_SCREEN_DPI;
 		}
 
-		Rect LocateWindow(int width, int height, float scale_x, float scale_y)
+		void AdjustWindow(UINT width, UINT height, DWORD style, float scalex, float scaley, UINT* win_width, UINT* win_height)
 		{
-			int max_width = ::GetSystemMetrics(SM_CXSCREEN);
-			int max_height = ::GetSystemMetrics(SM_CYSCREEN);
-			RECT rect =
-			{
-				0,
-				0,
-				static_cast<LONG>(math::Ceil(width * scale_x)),
-				static_cast<LONG>(math::Ceil(height * scale_y))
-			};
+			RECT rc;
+			::SetRect(&rc, 0, 0, (int)math::Ceil(width * scalex), (int)math::Ceil(height * scaley));
+			::AdjustWindowRect(&rc, style, false);
 
-			::AdjustWindowRectEx(&rect, WINDOW_STYLE, FALSE, NULL);
-			width = static_cast<int>(rect.right - rect.left);
-			height = static_cast<int>(rect.bottom - rect.top);
+			*win_width = rc.right - rc.left;
+			*win_height = rc.bottom - rc.top;
 
-			if (max_width < width || max_height < height)
-				logs::Warningln(L"The window is larger than screen!");
+			HMONITOR monitor = ::MonitorFromWindow(NULL, MONITOR_DEFAULTTONEAREST);
+			MONITORINFO monitor_info;
+			::memset(&monitor_info, 0, sizeof(MONITORINFO));
+			monitor_info.cbSize = sizeof(MONITORINFO);
+			::GetMonitorInfoW(monitor, &monitor_info);
 
-			width = std::min(width, max_width);
-			height = std::min(height, max_height);
+			long max_width = monitor_info.rcWork.right - monitor_info.rcWork.left;
+			long max_height = monitor_info.rcWork.bottom - monitor_info.rcWork.top;
 
-			return Rect(
-				static_cast<float>((max_width - width) / 2),
-				static_cast<float>((max_height - height) / 2),
-				static_cast<float>(width),
-				static_cast<float>(height)
-			);
+			if (*win_width > static_cast<UINT>(max_width))
+				*win_width = max_width;
+			if (*win_height > static_cast<UINT>(max_height))
+				*win_height = max_height;
 		}
 	}
 }

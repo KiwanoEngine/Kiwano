@@ -35,15 +35,13 @@ namespace easy2d
 			int		width,
 			int		height,
 			LPCWSTR	icon,
+			bool	fullscreen,
 			WNDPROC	proc,
 			bool	debug
 		);
 
 		// 获取标题
 		String GetTitle() const;
-
-		// 设置标题
-		void SetTitle(String const& title);
 
 		// 获取窗口大小
 		Size GetSize() const;
@@ -54,8 +52,8 @@ namespace easy2d
 		// 获取窗口高度
 		float GetHeight() const;
 
-		// 重设窗口大小
-		void SetSize(int width, int height);
+		// 设置标题
+		void SetTitle(String const& title);
 
 		// 设置窗口图标
 		void SetIcon(LPCWSTR icon_resource);

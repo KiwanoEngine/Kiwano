@@ -37,11 +37,5 @@ namespace easy2d
 
 		// 退出场景
 		virtual void OnExit();
-
-		// 窗口获得焦点
-		virtual void OnActivate(Event const&);
-
-		// 窗口失去焦点
-		virtual void OnDeactivate(Event const&);
 	};
 }

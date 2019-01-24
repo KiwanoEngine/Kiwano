@@ -64,6 +64,7 @@ namespace easy2d
 				options.width,
 				options.height,
 				options.icon,
+				options.fullscreen,
 				Application::WndProc,
 				debug_
 			)
@@ -264,14 +265,8 @@ namespace easy2d
 		{
 		case WM_PAINT:
 		{
-			PAINTSTRUCT ps;
-			::BeginPaint(hwnd, &ps);
-
 			app->Update();
 			app->Render(hwnd);
-
-			::EndPaint(hwnd, &ps);
-
 			return 0;
 		}
 		break;

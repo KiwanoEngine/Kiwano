@@ -26,9 +26,6 @@ namespace easy2d
 {
 	Scene::Scene()
 	{
-		//AddListener(WindowEvent::Activate, Closure(this, &Scene::OnActivate));
-		//AddListener(WindowEvent::Deavtivate, Closure(this, &Scene::OnDeactivate));
-
 		scene_ = this;
 	}
 
@@ -44,14 +41,6 @@ namespace easy2d
 	void Scene::OnExit()
 	{
 		E2D_LOG(L"Scene exited");
-	}
-
-	void Scene::OnDeactivate(Event const&)
-	{
-	}
-
-	void Scene::OnActivate(Event const&)
-	{
 	}
 
 }
