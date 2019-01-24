@@ -35,7 +35,7 @@ namespace easy2d
 		this->Add(frames);
 	}
 
-	Frames::Frames(Duration const& interval, Array<ImagePtr> const& frames)
+	Frames::Frames(Duration interval, Array<ImagePtr> const& frames)
 		: interval_(interval)
 	{
 		this->Add(frames);
@@ -45,7 +45,7 @@ namespace easy2d
 	{
 	}
 
-	void Frames::SetInterval(Duration const& interval)
+	void Frames::SetInterval(Duration interval)
 	{
 		interval_ = interval;
 	}
@@ -68,7 +68,7 @@ namespace easy2d
 		}
 	}
 
-	Duration const& Frames::GetInterval() const
+	Duration Frames::GetInterval() const
 	{
 		return interval_;
 	}

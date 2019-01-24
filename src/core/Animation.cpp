@@ -68,7 +68,7 @@ namespace easy2d
 		}
 	}
 
-	void Animation::Update(Node* target, Duration const& dt)
+	void Animation::Update(Node* target, Duration dt)
 	{
 		Action::Update(target, dt);
 

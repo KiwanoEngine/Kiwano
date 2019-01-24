@@ -58,7 +58,7 @@ namespace easy2d
 		virtual void Init(Node* target) override;
 
 		// 更新动作
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void Update(Node* target, Duration dt) override;
 
 	protected:
 		size_t frame_index_;

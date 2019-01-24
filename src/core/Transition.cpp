@@ -31,7 +31,7 @@ namespace easy2d
 	// Transition
 	//-------------------------------------------------------
 
-	Transition::Transition(Duration const& duration)
+	Transition::Transition(Duration duration)
 		: done_(false)
 		, duration_(duration)
 		, delta_()
@@ -81,7 +81,7 @@ namespace easy2d
 		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
 	}
 
-	void Transition::Update(Duration const& dt)
+	void Transition::Update(Duration dt)
 	{
 		if (duration_.IsZero())
 		{
@@ -142,7 +142,7 @@ namespace easy2d
 	// BoxTransition
 	//-------------------------------------------------------
 
-	BoxTransition::BoxTransition(Duration const& duration)
+	BoxTransition::BoxTransition(Duration duration)
 		: Transition(duration)
 	{
 	}
@@ -154,7 +154,7 @@ namespace easy2d
 		in_layer_prop_.opacity = 0;
 	}
 
-	void BoxTransition::Update(Duration const& dt)
+	void BoxTransition::Update(Duration dt)
 	{
 		Transition::Update(dt);
 
@@ -184,7 +184,7 @@ namespace easy2d
 	// EmergeTransition
 	//-------------------------------------------------------
 
-	EmergeTransition::EmergeTransition(Duration const& duration)
+	EmergeTransition::EmergeTransition(Duration duration)
 		: Transition(duration)
 	{
 	}
@@ -197,7 +197,7 @@ namespace easy2d
 		in_layer_prop_.opacity = 0;
 	}
 
-	void EmergeTransition::Update(Duration const& dt)
+	void EmergeTransition::Update(Duration dt)
 	{
 		Transition::Update(dt);
 
@@ -209,7 +209,7 @@ namespace easy2d
 	// FadeTransition
 	//-------------------------------------------------------
 
-	FadeTransition::FadeTransition(Duration const& duration)
+	FadeTransition::FadeTransition(Duration duration)
 		: Transition(duration)
 	{
 	}
@@ -222,7 +222,7 @@ namespace easy2d
 		in_layer_prop_.opacity = 0;
 	}
 
-	void FadeTransition::Update(Duration const& dt)
+	void FadeTransition::Update(Duration dt)
 	{
 		Transition::Update(dt);
 
@@ -242,7 +242,7 @@ namespace easy2d
 	// MoveTransition
 	//-------------------------------------------------------
 
-	MoveTransition::MoveTransition(Duration const& duration, Direction direction)
+	MoveTransition::MoveTransition(Duration duration, Direction direction)
 		: Transition(duration)
 		, direction_(direction)
 	{
@@ -285,7 +285,7 @@ namespace easy2d
 		}
 	}
 
-	void MoveTransition::Update(Duration const& dt)
+	void MoveTransition::Update(Duration dt)
 	{
 		Transition::Update(dt);
 
@@ -321,7 +321,7 @@ namespace easy2d
 	// RotationTransition
 	//-------------------------------------------------------
 
-	RotationTransition::RotationTransition(Duration const& duration, float rotation)
+	RotationTransition::RotationTransition(Duration duration, float rotation)
 		: Transition(duration)
 		, rotation_(rotation)
 	{
@@ -349,7 +349,7 @@ namespace easy2d
 		in_layer_prop_.opacity = 0;
 	}
 
-	void RotationTransition::Update(Duration const& dt)
+	void RotationTransition::Update(Duration dt)
 	{
 		Transition::Update(dt);
 

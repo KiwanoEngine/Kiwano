@@ -44,7 +44,7 @@ namespace easy2d
 
 	struct TweenActionHelper
 	{
-		TweenActionHelper& SetDuration(Duration const& dur) { this->dur = dur; return (*this); }
+		TweenActionHelper& SetDuration(Duration dur) { this->dur = dur; return (*this); }
 
 		TweenActionHelper& SetLoopCount(int loop) { this->loop = loop; return (*this); }
 
@@ -137,13 +137,13 @@ namespace easy2d
 		}
 
 		static inline TweenActionHelper
-			FadeIn(Duration const& dur)
+			FadeIn(Duration dur)
 		{
 			return TweenActionHelper(new easy2d::FadeIn(dur));
 		}
 
 		static inline TweenActionHelper
-			FadeOut(Duration const& dur)
+			FadeOut(Duration dur)
 		{
 			return TweenActionHelper(new easy2d::FadeOut(dur));
 		}
@@ -171,7 +171,7 @@ namespace easy2d
 		}
 
 		static inline ActionHelper
-			Delay(Duration const& dur)
+			Delay(Duration dur)
 		{
 			return ActionHelper(new easy2d::Delay(dur));
 		}

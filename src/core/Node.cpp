@@ -54,7 +54,7 @@ namespace easy2d
 	{
 	}
 
-	void Node::Update(Duration const & dt)
+	void Node::Update(Duration dt)
 	{
 		if (pause_)
 			return;

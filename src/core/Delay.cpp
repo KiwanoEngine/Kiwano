@@ -22,7 +22,7 @@
 
 namespace easy2d
 {
-	Delay::Delay(Duration const& duration)
+	Delay::Delay(Duration duration)
 		: delta_()
 		, delay_(duration)
 	{
@@ -39,7 +39,7 @@ namespace easy2d
 		Action::Init(target);
 	}
 
-	void Delay::Update(Node* target, Duration const& dt)
+	void Delay::Update(Node* target, Duration dt)
 	{
 		Action::Update(target, dt);
 

@@ -42,7 +42,7 @@ namespace easy2d
 
 		void OnRender() override;
 
-		void OnUpdate(Duration const& dt) override;
+		void OnUpdate(Duration dt) override;
 
 	protected:
 		TextPtr				debug_text_;

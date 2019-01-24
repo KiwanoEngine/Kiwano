@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	void TaskManager::UpdateTasks(Duration const& dt)
+	void TaskManager::UpdateTasks(Duration dt)
 	{
 		if (tasks_.IsEmpty())
 			return;

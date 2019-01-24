@@ -81,7 +81,7 @@ namespace easy2d
 
 		virtual void Init(Node* target) { initialized_ = true; }
 
-		virtual void Update(Node* target, Duration const& dt)
+		virtual void Update(Node* target, Duration dt)
 		{
 			if (!initialized_)
 			{
