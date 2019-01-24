@@ -25,19 +25,10 @@
 
 namespace easy2d
 {
-	// 鼠标键值
-	enum class MouseButton : int
+	class Input
+		: public ISingleton<Input>
 	{
-		Left = VK_LBUTTON,	// 鼠标左键
-		Right = VK_RBUTTON,	// 鼠标右键
-		Middle = VK_MBUTTON	// 鼠标中键
-	};
-
-
-	class InputDevice
-		: protected Noncopyable
-	{
-		E2D_DECLARE_SINGLETON(InputDevice);
+		E2D_DECLARE_SINGLETON(Input);
 
 	public:
 		HRESULT Init(HWND hwnd, float scale_x, float scale_y, bool debug);
@@ -84,9 +75,9 @@ namespace easy2d
 		void Update();
 
 	protected:
-		InputDevice();
+		Input();
 
-		~InputDevice();
+		~Input();
 
 	protected:
 		HWND	hwnd_;
@@ -95,6 +86,4 @@ namespace easy2d
 		BYTE	keys_[256];
 		BYTE	keys_cache_[256];
 	};
-
-	E2D_DECLARE_SINGLETON_TYPE(InputDevice, Input);
 }

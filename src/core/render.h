@@ -31,10 +31,10 @@
 
 namespace easy2d
 {
-	class GraphicsDevice
-		: protected Noncopyable
+	class RenderSystem
+		: public ISingleton<RenderSystem>
 	{
-		E2D_DECLARE_SINGLETON(GraphicsDevice);
+		E2D_DECLARE_SINGLETON(RenderSystem);
 
 		struct Status
 		{
@@ -169,26 +169,24 @@ namespace easy2d
 		D2DSolidColorBrushPtr const& GetSolidBrush() const;
 
 	protected:
-		GraphicsDevice();
+		RenderSystem();
 
-		~GraphicsDevice();
+		~RenderSystem();
 
 	protected:
-		bool				debug_;
-		bool				window_occluded_;
-		bool				vsync_enabled_;
-		bool				antialias_;
-		float				opacity_;
-		D2D1_COLOR_F		clear_color_;
-		TextAntialias		text_antialias_;
-		Status				status_;
+		bool					debug_;
+		bool					window_occluded_;
+		bool					vsync_enabled_;
+		bool					antialias_;
+		float					opacity_;
+		D2D1_COLOR_F			clear_color_;
+		TextAntialias			text_antialias_;
+		Status					status_;
 		D2DTextRendererPtr		text_renderer_;
 		D2DSolidColorBrushPtr	solid_brush_;
 		D2DHwndRenderTargetPtr	render_target_;
 		D2DTextFormatPtr		fps_text_format_;
 		D2DTextLayoutPtr		fps_text_layout_;
-		BitmapMap			bitmap_cache_;
+		BitmapMap				bitmap_cache_;
 	};
-
-	E2D_DECLARE_SINGLETON_TYPE(GraphicsDevice, Graphics);
 }

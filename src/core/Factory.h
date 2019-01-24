@@ -25,14 +25,13 @@
 #include "Resource.h"
 #include "TextRenderer.h"
 #include "TextStyle.hpp"
-#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
-	class FactoryImpl
-		: protected Noncopyable
+	class Factory
+		: public ISingleton<Factory>
 	{
-		E2D_DECLARE_SINGLETON(FactoryImpl);
+		E2D_DECLARE_SINGLETON(Factory);
 
 	public:
 		HRESULT Init(bool debug);
@@ -109,9 +108,9 @@ namespace easy2d
 		) const;
 
 	protected:
-		FactoryImpl();
+		Factory();
 
-		~FactoryImpl();
+		~Factory();
 
 	protected:
 		D2DFactoryPtr			factory_;
@@ -121,6 +120,4 @@ namespace easy2d
 		D2DStrokeStylePtr		bevel_stroke_style_;
 		D2DStrokeStylePtr		round_stroke_style_;
 	};
-
-	E2D_DECLARE_SINGLETON_TYPE(FactoryImpl, Factory);
 }

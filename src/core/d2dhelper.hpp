@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "intrusive/SmartPtr.hpp"
+#include "IntrusivePtr.hpp"
 #include <d2d1.h>
 #include <dwrite.h>
 
 #ifndef E2D_DECLARE_D2D_SMART_PTR
 #define E2D_DECLARE_D2D_SMART_PTR(class_name, sp_name)\
-	using sp_name = ::easy2d::intrusive::SmartPtr< class_name >
+	using sp_name = ::easy2d::IntrusivePtr< class_name >
 #endif
 
 

@@ -20,39 +20,116 @@
 
 #pragma once
 #include "macros.h"
+#include "keys.hpp"
 
 namespace easy2d
 {
 	typedef UINT EventType;
 
-	class Event
+	// 鼠标事件
+	struct MouseEvent
 	{
-	public:
-		Event(EventType type) : type(type), has_target(false) {}
+		enum Type : EventType
+		{
+			First = WM_MOUSEFIRST,
 
-		virtual ~Event() {}
+			Move,	// 移动
+			Down,	// 按下
+			Up,		// 抬起
+			Wheel,	// 滚轮滚动
 
-		EventType type;
-		bool has_target;
+			Hover,	// 鼠标移入
+			Out,	// 鼠标移出
+			Click,	// 鼠标点击
+
+			Last	// 结束标志
+		};
+
+		float x;
+		float y;
+		bool left_btn_down;		// 左键是否按下
+		bool right_btn_down;	// 右键是否按下
+
+		struct
+		{
+			MouseButton button;	// 仅当消息类型为 Down | Up | Click 时有效
+		};
+
+		struct
+		{
+			float wheel_delta;	// 仅当消息类型为 Wheel 时有效
+		};
+
+		static inline bool Check(EventType type)
+		{
+			return type > Type::First && type < Type::Last;
+		}
 	};
 
-	class SysEvent
-		: public Event
+	// 键盘事件
+	struct KeyboardEvent
 	{
-	public:
-		enum Type
+		enum Type : UINT
 		{
-			First = WM_NULL,
+			First = WM_KEYFIRST,
 
-			WindowActivate,		// 窗口获得焦点
-			WindowDeavtivate,	// 窗口失去焦点
-			WindowClose,		// 关闭窗口
+			Down,	// 键按下
+			Up,		// 键抬起
 
 			Last
 		};
 
-		SysEvent(EventType type) : Event(type) {}
+		KeyCode code;
+		int count;
 
-		static bool Check(Event* e) { return e->type > Type::First && e->type < Type::Last; }
+		static inline bool Check(UINT type)
+		{
+			return type > Type::First && type < Type::Last;
+		}
+	};
+
+	// 窗口事件
+	struct WindowEvent
+	{
+	public:
+		enum Type : EventType
+		{
+			First = WM_NULL,
+
+			Activate,		// 窗口获得焦点
+			Deavtivate,		// 窗口失去焦点
+			Closing,		// 关闭窗口
+
+			Last
+		};
+
+		static inline bool Check(EventType type)
+		{
+			return type > Type::First && type < Type::Last;
+		}
+	};
+
+	// 事件
+	struct Event
+	{
+		EventType type;
+		bool has_target;
+
+		union
+		{
+			MouseEvent mouse;
+			KeyboardEvent key;
+			WindowEvent win;
+		};
+
+		Event()
+			: type(0)
+			, has_target(false)
+		{}
+
+		Event(EventType type)
+			: type(type)
+			, has_target(false)
+		{}
 	};
 }

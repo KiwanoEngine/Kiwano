@@ -23,19 +23,28 @@
 
 namespace easy2d
 {
+	// 鼠标按键
+	enum class MouseButton : int
+	{
+		Left	= VK_LBUTTON,	// 鼠标左键
+		Right	= VK_RBUTTON,	// 鼠标右键
+		Middle	= VK_MBUTTON	// 鼠标中键
+	};
+
+
 	// 按键键值
 	enum class KeyCode : int
 	{
 		Unknown = 0,
-		Up = VK_UP,
-		Left = VK_LEFT,
-		Right = VK_RIGHT,
-		Down = VK_DOWN,
-		Enter = VK_RETURN,
-		acePtr = VK_SPACE,
-		Esc = VK_ESCAPE,
-		Ctrl = VK_CONTROL,
-		Shift = VK_SHIFT,
+		Up		= VK_UP,
+		Left	= VK_LEFT,
+		Right	= VK_RIGHT,
+		Down	= VK_DOWN,
+		Enter	= VK_RETURN,
+		Space	= VK_SPACE,
+		Esc		= VK_ESCAPE,
+		Ctrl	= VK_CONTROL,
+		Shift	= VK_SHIFT,
 
 		A = 0x41,
 		B,

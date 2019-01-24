@@ -20,22 +20,21 @@
 
 #pragma once
 #include "include-forwards.h"
-#include "intrusive/List.hpp"
+#include "IntrusiveList.hpp"
 #include "Event.hpp"
 
 namespace easy2d
 {
-	typedef std::function<void(Event*)> EventCallback;
-
+	using EventCallback = std::function<void(Event const&)>;
 
 	class EventDispatcher;
 
 	class EventListener
-		: public Object
-		, protected intrusive::ListItem<EventListenerPtr>
+		: public virtual Object
+		, protected IntrusiveListItem<EventListenerPtr>
 	{
 		friend class EventDispatcher;
-		friend class intrusive::List<EventListenerPtr>;
+		friend class IntrusiveList<EventListenerPtr>;
 
 	public:
 		EventListener(

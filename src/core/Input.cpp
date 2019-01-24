@@ -24,7 +24,7 @@
 
 namespace easy2d
 {
-	InputDevice::InputDevice()
+	Input::Input()
 		: hwnd_(nullptr)
 		, scale_x_(1.f)
 		, scale_y_(1.f)
@@ -33,12 +33,12 @@ namespace easy2d
 		ZeroMemory(keys_cache_, sizeof(keys_cache_));
 	}
 
-	InputDevice::~InputDevice()
+	Input::~Input()
 	{
 		E2D_LOG(L"Destroying input device");
 	}
 
-	HRESULT InputDevice::Init(HWND hwnd, float scale_x, float scale_y, bool debug)
+	HRESULT Input::Init(HWND hwnd, float scale_x, float scale_y, bool debug)
 	{
 		E2D_LOG(L"Initing input device");
 
@@ -49,47 +49,47 @@ namespace easy2d
 		return S_OK;
 	}
 
-	void InputDevice::Update()
+	void Input::Update()
 	{
 		memcpy(keys_cache_, keys_, sizeof(keys_cache_));
 		GetKeyboardState(keys_);
 	}
 
-	bool InputDevice::IsDown(KeyCode code)
+	bool Input::IsDown(KeyCode code)
 	{
 		return !!(keys_[static_cast<int>(code)] & 0x80);
 	}
 
-	bool InputDevice::IsDown(MouseButton btn)
+	bool Input::IsDown(MouseButton btn)
 	{
 		return !!(keys_[static_cast<int>(btn)] & 0x80);
 	}
 
-	bool InputDevice::WasPressed(KeyCode code)
+	bool Input::WasPressed(KeyCode code)
 	{
 		return !(keys_cache_[static_cast<int>(code)] & 0x80)
 			&& (keys_[static_cast<int>(code)] & 0x80);
 	}
 
-	bool InputDevice::WasPressed(MouseButton btn)
+	bool Input::WasPressed(MouseButton btn)
 	{
 		return !(keys_cache_[static_cast<int>(btn)] & 0x80)
 			&& (keys_[static_cast<int>(btn)] & 0x80);
 	}
 
-	bool InputDevice::WasReleased(KeyCode code)
+	bool Input::WasReleased(KeyCode code)
 	{
 		return (keys_cache_[static_cast<int>(code)] & 0x80)
 			&& !(keys_[static_cast<int>(code)] & 0x80);
 	}
 
-	bool InputDevice::WasReleased(MouseButton btn)
+	bool Input::WasReleased(MouseButton btn)
 	{
 		return (keys_cache_[static_cast<int>(btn)] & 0x80)
 			&& !(keys_[static_cast<int>(btn)] & 0x80);
 	}
 
-	float InputDevice::GetMouseX()
+	float Input::GetMouseX()
 	{
 		POINT pos;
 		::GetCursorPos(&pos);
@@ -97,7 +97,7 @@ namespace easy2d
 		return pos.x * scale_x_;
 	}
 
-	float InputDevice::GetMouseY()
+	float Input::GetMouseY()
 	{
 		POINT pos;
 		::GetCursorPos(&pos);
@@ -105,7 +105,7 @@ namespace easy2d
 		return pos.y * scale_y_;
 	}
 
-	Point InputDevice::GetMousePos()
+	Point Input::GetMousePos()
 	{
 		POINT pos;
 		::GetCursorPos(&pos);

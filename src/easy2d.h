@@ -47,8 +47,8 @@
 
 #include "core/noncopyable.hpp"
 #include "core/RefCounter.hpp"
-#include "core/intrusive/SmartPtr.hpp"
-#include "core/intrusive/List.hpp"
+#include "core/IntrusivePtr.hpp"
+#include "core/IntrusiveList.hpp"
 
 #include "core/Object.h"
 #include "core/Image.h"
@@ -66,8 +66,6 @@
 #include "core/Transition.h"
 
 #include "core/Event.hpp"
-#include "core/MouseEvent.hpp"
-#include "core/KeyEvent.hpp"
 #include "core/EventListener.h"
 #include "core/EventDispatcher.h"
 
@@ -80,7 +78,7 @@
 #include "core/DebugNode.h"
 
 #include "core/Factory.h"
-#include "core/Game.h"
+#include "core/Application.h"
 
 
 //

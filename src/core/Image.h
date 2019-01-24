@@ -26,7 +26,7 @@ namespace easy2d
 {
 	// ͼƬ
 	class Image
-		: public Object
+		: public virtual Object
 	{
 	public:
 		Image();

@@ -22,21 +22,21 @@
 #include "include-forwards.h"
 #include "time.h"
 #include "noncopyable.hpp"
-#include "intrusive/List.hpp"
+#include "IntrusiveList.hpp"
 
 namespace easy2d
 {
 	class ActionManager;
 
 	class Action
-		: public Object
-		, protected intrusive::ListItem<ActionPtr>
+		: public virtual Object
+		, protected IntrusiveListItem<ActionPtr>
 	{
 		friend class ActionManager;
 		friend class Loop;
 		friend class Sequence;
 		friend class Spawn;
-		friend class intrusive::List<ActionPtr>;
+		friend class IntrusiveList<ActionPtr>;
 
 	public:
 		Action() : running_(false), done_(false), initialized_(false) {}

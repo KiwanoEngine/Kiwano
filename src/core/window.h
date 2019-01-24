@@ -24,10 +24,10 @@
 
 namespace easy2d
 {
-	class WindowImpl
-		: protected Noncopyable
+	class Window
+		: public ISingleton<Window>
 	{
-		E2D_DECLARE_SINGLETON(WindowImpl);
+		E2D_DECLARE_SINGLETON(Window);
 
 	public:
 		HRESULT Init(
@@ -69,15 +69,13 @@ namespace easy2d
 		void Destroy();
 
 	protected:
-		WindowImpl();
+		Window();
 
-		~WindowImpl();
+		~Window();
 
 	private:
 		HWND	handle;
 		float	scale_x;
 		float	scale_y;
 	};
-
-	E2D_DECLARE_SINGLETON_TYPE(WindowImpl, Window);
 }

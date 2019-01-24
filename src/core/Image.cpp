@@ -67,11 +67,11 @@ namespace easy2d
 				logs::Warningln(L"Image file '%s' not found!", res.GetFileName());
 				return false;
 			}
-			hr = Graphics::Instance()->CreateBitmapFromFile(bitmap, res.GetFileName());
+			hr = RenderSystem::Instance()->CreateBitmapFromFile(bitmap, res.GetFileName());
 		}
 		else
 		{
-			hr = Graphics::Instance()->CreateBitmapFromResource(bitmap, res);
+			hr = RenderSystem::Instance()->CreateBitmapFromResource(bitmap, res);
 		}
 
 		if (FAILED(hr))

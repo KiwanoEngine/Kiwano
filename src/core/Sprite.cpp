@@ -99,7 +99,7 @@ namespace easy2d
 	{
 		if (image_)
 		{
-			Graphics::Instance()->DrawImage(image_);
+			RenderSystem::Instance()->DrawImage(image_);
 		}
 	}
 }

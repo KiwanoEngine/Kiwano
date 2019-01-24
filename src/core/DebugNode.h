@@ -25,15 +25,16 @@
 
 namespace easy2d
 {
-	class DebugNodeImpl
+	class DebugNode
 		: public Node
+		, public ISingleton<DebugNode>
 	{
-		E2D_DECLARE_SINGLETON(DebugNodeImpl);
+		E2D_DECLARE_SINGLETON(DebugNode);
 
 	public:
-		DebugNodeImpl();
+		DebugNode();
 
-		virtual ~DebugNodeImpl();
+		virtual ~DebugNode();
 
 		void AddDebugText(String const& text);
 
@@ -48,6 +49,4 @@ namespace easy2d
 		Array<TimePoint>	frame_time_;
 		Array<String>		texts_;
 	};
-
-	E2D_DECLARE_SINGLETON_TYPE(DebugNodeImpl, DebugNode);
 }

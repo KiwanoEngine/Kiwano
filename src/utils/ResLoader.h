@@ -29,13 +29,17 @@ namespace easy2d
 	public:
 		void AddImage(String const& id, Resource const& image);
 
-		void AddFrames(String const& id, Array<Resource> const& images, Duration const& interval = 200);
+		void AddFrames(String const& id, Array<Resource> const& images);
+
+		void AddMusic(String const& id, Resource const& music);
 
 		void AddObj(String const& id, ObjectPtr const& obj);
 
 		ImagePtr GetImage(String const& id) const;
 
 		FramesPtr GetFrames(String const& id) const;
+
+		MusicPtr GetMusic(String const& id) const;
 
 		ObjectPtr GetObj(String const& id) const;
 

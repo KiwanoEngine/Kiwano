@@ -224,11 +224,9 @@ namespace easy2d
 		D2DBitmapPtr const& GetBitmap() const;
 
 	protected:
-		mutable bool			cache_expired_;
-		mutable D2DBitmapPtr		bitmap_cached_;
-		float					stroke_width_;
-		Font					text_font_;
-		TextStyle				text_style_;
+		float						stroke_width_;
+		Font						text_font_;
+		TextStyle					text_style_;
 		D2DPathGeometryPtr			current_geometry_;
 		D2DGeometrySinkPtr			current_sink_;
 		D2DStrokeStylePtr			outline_join_style_;
@@ -237,5 +235,8 @@ namespace easy2d
 		D2DSolidColorBrushPtr		text_brush_;
 		D2DTextRendererPtr			text_renderer_;
 		D2DBitmapRenderTargetPtr	render_target_;
+
+		mutable bool				cache_expired_;
+		mutable D2DBitmapPtr		bitmap_cached_;
 	};
 }

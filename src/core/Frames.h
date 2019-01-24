@@ -26,7 +26,7 @@ namespace easy2d
 {
 	// Ö¡¼¯ºÏ
 	class Frames
-		: public Object
+		: public virtual Object
 	{
 	public:
 		Frames();

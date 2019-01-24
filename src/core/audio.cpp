@@ -156,16 +156,16 @@ namespace easy2d
 
 
 	//-------------------------------------------------------
-	// AudioDevice
+	// Audio
 	//-------------------------------------------------------
 
-	AudioDevice::AudioDevice()
+	Audio::Audio()
 		: x_audio2_(nullptr)
 		, mastering_voice_(nullptr)
 	{
 	}
 
-	AudioDevice::~AudioDevice()
+	Audio::~Audio()
 	{
 		E2D_LOG(L"Destroying audio device");
 
@@ -182,7 +182,7 @@ namespace easy2d
 		modules::MediaFoundation::Get().MFShutdown();
 	}
 
-	HRESULT AudioDevice::Init(bool debug)
+	HRESULT Audio::Init(bool debug)
 	{
 		E2D_LOG(L"Initing audio device");
 
@@ -201,7 +201,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT AudioDevice::CreateVoice(Voice& voice, const WAVEFORMATEX* wfx)
+	HRESULT Audio::CreateVoice(Voice& voice, const WAVEFORMATEX* wfx)
 	{
 		HRESULT hr;
 		IXAudio2SourceVoice* source_voice;
@@ -215,12 +215,12 @@ namespace easy2d
 		return hr;
 	}
 
-	void AudioDevice::DeleteVoice(Voice* voice)
+	void Audio::DeleteVoice(Voice* voice)
 	{
 		voice_cache_.erase(voice);
 	}
 
-	void AudioDevice::ClearVoiceCache()
+	void Audio::ClearVoiceCache()
 	{
 		for (auto voice : voice_cache_)
 		{
@@ -229,12 +229,12 @@ namespace easy2d
 		voice_cache_.clear();
 	}
 
-	void AudioDevice::Open()
+	void Audio::Open()
 	{
 		x_audio2_->StartEngine();
 	}
 
-	void AudioDevice::Close()
+	void Audio::Close()
 	{
 		x_audio2_->StopEngine();
 	}

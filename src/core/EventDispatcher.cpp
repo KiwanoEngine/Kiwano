@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	void EventDispatcher::DispatchEvent(Event* e)
+	void EventDispatcher::Dispatch(Event& evt)
 	{
 		if (listeners_.IsEmpty())
 			return;
@@ -33,9 +33,9 @@ namespace easy2d
 		{
 			next = listener->NextItem();
 
-			if (listener->type_ == e->type)
+			if (listener->type_ == evt.type)
 			{
-				listener->callback_(e);
+				listener->callback_(evt);
 			}
 		}
 	}

@@ -295,15 +295,15 @@ namespace easy2d
 	{
 		if (text_layout_)
 		{
-			auto graphics = Graphics::Instance();
-			graphics->SetTextStyle(
+			auto rt = RenderSystem::Instance();
+			rt->SetTextStyle(
 				style_.color,
 				style_.outline,
 				style_.outline_color,
 				style_.outline_width,
 				style_.outline_stroke
 			);
-			graphics->DrawTextLayout(text_layout_);
+			rt->DrawTextLayout(text_layout_);
 		}
 	}
 

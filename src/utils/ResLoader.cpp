@@ -19,9 +19,10 @@
 // THE SOFTWARE.
 
 #include "ResLoader.h"
+#include "../core/modules.h"
 #include "../core/Image.h"
 #include "../core/Frames.h"
-#include "../core/modules.h"
+#include "../core/Music.h"
 
 namespace easy2d
 {
@@ -46,17 +47,21 @@ namespace easy2d
 		res_.insert(std::make_pair(id, ImagePtr(new Image(path.c_str()))));
 	}
 
-	void ResLoader::AddFrames(String const& id, Array<Resource> const& images, Duration const& interval)
+	void ResLoader::AddFrames(String const& id, Array<Resource> const& images)
 	{
 		auto frames = FramesPtr(new Frames);
-		frames->SetInterval(interval);
-
 		for (const auto& image : images)
 		{
 			auto path = Search(image.GetFileName(), search_paths_);
 			frames->Add(ImagePtr(new Image(path.c_str())));
 		}
 		res_.insert(std::make_pair(id, frames));
+	}
+
+	void ResLoader::AddMusic(String const & id, Resource const & music)
+	{
+		auto path = Search(music.GetFileName(), search_paths_);
+		res_.insert(std::make_pair(id, MusicPtr(new Music(path.c_str()))));
 	}
 
 	void ResLoader::AddObj(String const& id, ObjectPtr const& obj)
@@ -72,6 +77,11 @@ namespace easy2d
 	FramesPtr ResLoader::GetFrames(String const & id) const
 	{
 		return Get<Frames*>(id);
+	}
+
+	MusicPtr ResLoader::GetMusic(String const & id) const
+	{
+		return Get<Music*>(id);
 	}
 
 	ObjectPtr ResLoader::GetObj(String const & id) const

@@ -37,7 +37,7 @@ namespace easy2d
 			return instance_.get();
 		}
 
-	private:
+	protected:
 		ISingleton() = default;
 
 		~ISingleton() {}
@@ -52,9 +52,4 @@ namespace easy2d
 	friend class ::std::unique_ptr< type >;		\
 	friend struct ::std::default_delete< type >;\
 	friend class ::easy2d::ISingleton< type >
-#endif
-
-#ifndef E2D_DECLARE_SINGLETON_TYPE
-#define E2D_DECLARE_SINGLETON_TYPE( type, singleton_type ) \
-	using singleton_type = ::easy2d::ISingleton< type >
 #endif

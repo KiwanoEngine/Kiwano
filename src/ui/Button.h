@@ -82,7 +82,7 @@ namespace easy2d
 				Status status
 			);
 
-			void UpdateStatus(Event* e);
+			void UpdateStatus(Event const& evt);
 
 		private:
 			bool		enabled_;

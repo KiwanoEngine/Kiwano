@@ -74,10 +74,10 @@ namespace easy2d
 	};
 
 
-	class AudioDevice
-		: protected Noncopyable
+	class Audio
+		: public ISingleton<Audio>
 	{
-		E2D_DECLARE_SINGLETON(AudioDevice);
+		E2D_DECLARE_SINGLETON(Audio);
 
 		using VoiceMap = UnorderedSet<Voice*>;
 
@@ -102,15 +102,13 @@ namespace easy2d
 		void ClearVoiceCache();
 
 	protected:
-		AudioDevice();
+		Audio();
 
-		~AudioDevice();
+		~Audio();
 
 	protected:
 		VoiceMap voice_cache_;
 		IXAudio2* x_audio2_;
 		IXAudio2MasteringVoice*	mastering_voice_;
 	};
-
-	E2D_DECLARE_SINGLETON_TYPE(AudioDevice, Audio);
 }
