@@ -74,14 +74,14 @@ namespace easy2d
 
 
 	// 补间动画
-	class Tween
+	class ActionTween
 		: public Action
 	{
 	public:
-		Tween();
+		ActionTween();
 
-		explicit Tween(
-			Duration const& duration,
+		explicit ActionTween(
+			Duration duration,
 			EaseFunc func
 		);
 
@@ -97,14 +97,14 @@ namespace easy2d
 
 		virtual void Reset() override;
 
-		Duration const& GetDuration() const;
+		Duration GetDuration() const;
 
-		void SetDuration(Duration const& duration);
+		void SetDuration(Duration duration);
 
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void Update(Node* target, Duration dt) override;
 
 		virtual void UpdateStep(Node* target, float step) = 0;
 
@@ -118,11 +118,11 @@ namespace easy2d
 
 	// 相对位移动作
 	class MoveBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit MoveBy(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			Point const& vector,				/* 移动距离 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
@@ -151,7 +151,7 @@ namespace easy2d
 	{
 	public:
 		explicit MoveTo(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			Point const& pos,					/* 目的坐标 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
@@ -176,11 +176,11 @@ namespace easy2d
 
 	// 相对跳跃动作
 	class JumpBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit JumpBy(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			Point const& vec,					/* 跳跃距离 */
 			float height,						/* 跳跃高度 */
 			int jumps = 1,						/* 跳跃次数 */
@@ -213,7 +213,7 @@ namespace easy2d
 	{
 	public:
 		explicit JumpTo(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			Point const& pos,					/* 目的坐标 */
 			float height,						/* 跳跃高度 */
 			int jumps = 1,						/* 跳跃次数 */
@@ -240,17 +240,17 @@ namespace easy2d
 
 	// 相对缩放动作
 	class ScaleBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit ScaleBy(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			float scale,						/* 相对变化值 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		explicit ScaleBy(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			float scale_x,						/* 横向缩放相对变化值 */
 			float scale_y,						/* 纵向缩放相对变化值 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
@@ -281,13 +281,13 @@ namespace easy2d
 	{
 	public:
 		explicit ScaleTo(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			float scale,						/* 目标值 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 
 		explicit ScaleTo(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			float scale_x,						/* 横向缩放目标值 */
 			float scale_y,						/* 纵向缩放目标值 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
@@ -314,11 +314,11 @@ namespace easy2d
 
 	// 透明度相对渐变动作
 	class OpacityBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit OpacityBy(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			float opacity,						/* 相对变化值 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
@@ -346,7 +346,7 @@ namespace easy2d
 	{
 	public:
 		explicit OpacityTo(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			float opacity,						/* 目标值 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
@@ -376,7 +376,7 @@ namespace easy2d
 	public:
 		// 创建淡入动作
 		explicit FadeIn(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 	};
@@ -389,7 +389,7 @@ namespace easy2d
 	public:
 		// 创建淡出动作
 		explicit FadeOut(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
 	};
@@ -397,11 +397,11 @@ namespace easy2d
 
 	// 相对旋转动作
 	class RotateBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit RotateBy(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			float rotation,						/* 相对变化值 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
@@ -429,7 +429,7 @@ namespace easy2d
 	{
 	public:
 		explicit RotateTo(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			float rotation,						/* 目标值 */
 			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
 		);
@@ -454,11 +454,11 @@ namespace easy2d
 
 	// 路径动作
 	class PathAction
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit PathAction(
-			Duration const& duration,			/* 持续时长 */
+			Duration duration,			/* 持续时长 */
 			GeometryPtr const& geo,				/* 几何图形 */
 			bool rotating = false,				/* 沿路径切线方向旋转 */
 			float start = 0.f,					/* 起点 */

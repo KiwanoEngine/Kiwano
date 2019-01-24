@@ -29,7 +29,7 @@ namespace easy2d
 	{
 	public:
 		explicit Delay(
-			Duration const& duration	/* 延迟时长（秒） */
+			Duration duration	/* 延迟时长（秒） */
 		);
 
 		// 获取该动作的拷贝对象
@@ -44,7 +44,7 @@ namespace easy2d
 	protected:
 		virtual void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration const& dt) override;
+		virtual void Update(Node* target, Duration dt) override;
 
 	protected:
 		Duration delay_;

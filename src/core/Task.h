@@ -46,7 +46,7 @@ namespace easy2d
 
 		explicit Task(
 			Callback const& func,			/* 执行函数 */
-			Duration const& delay,			/* 时间间隔（秒） */
+			Duration delay,			/* 时间间隔（秒） */
 			int times = -1,					/* 执行次数（设 -1 为永久执行） */
 			String const& name = L""	/* 任务名称 */
 		);
@@ -64,7 +64,7 @@ namespace easy2d
 		String const& GetName() const;
 
 	protected:
-		void Update(Duration const& dt, bool& remove_after_update);
+		void Update(Duration dt, bool& remove_after_update);
 
 		void Reset();
 

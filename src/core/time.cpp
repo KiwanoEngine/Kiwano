@@ -40,16 +40,6 @@ namespace easy2d
 		{
 		}
 
-		TimePoint::TimePoint(const TimePoint & other)
-			: dur(other.dur)
-		{
-		}
-
-		TimePoint::TimePoint(TimePoint && other)
-			: dur(std::move(other.dur))
-		{
-		}
-
 		const TimePoint TimePoint::operator+(const Duration & dur) const
 		{
 			return TimePoint{ (dur + dur).Milliseconds() };
@@ -100,7 +90,7 @@ namespace easy2d
 		// Duration
 		//-------------------------------------------------------
 
-		const Duration Millisecond	= Duration{ 1LL };
+		const Duration Millisecond	= 1L;
 		const Duration Second		= 1000 * Millisecond;
 		const Duration Minute		= 60 * Second;
 		const Duration Hour			= 60 * Minute;

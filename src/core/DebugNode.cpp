@@ -82,7 +82,7 @@ namespace easy2d
 		);
 	}
 
-	void DebugNode::OnUpdate(Duration const & dt)
+	void DebugNode::OnUpdate(Duration dt)
 	{
 		try
 		{

@@ -46,7 +46,7 @@ namespace easy2d
 		Actions const& GetAllActions() const;
 
 	protected:
-		void UpdateActions(Node* target, Duration const& dt);
+		void UpdateActions(Node* target, Duration dt);
 
 	protected:
 		Actions actions_;

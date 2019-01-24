@@ -36,7 +36,7 @@ namespace easy2d
 		);
 
 		explicit Frames(
-			Duration const& interval,		/* 帧间隔 */
+			Duration interval,		/* 帧间隔 */
 			Array<ImagePtr> const& frames	/* 关键帧数组 */
 		);
 
@@ -53,14 +53,14 @@ namespace easy2d
 		);
 
 		// 获取帧间隔
-		Duration const& GetInterval() const;
+		Duration GetInterval() const;
 
 		// 获取关键帧
 		Array<ImagePtr> const& GetFrames() const;
 
 		// 设置每一帧的时间间隔
 		void SetInterval(
-			Duration const& interval
+			Duration interval
 		);
 
 		// 获取帧动画的拷贝对象

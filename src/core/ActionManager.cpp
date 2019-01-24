@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	void ActionManager::UpdateActions(Node* target, Duration const& dt)
+	void ActionManager::UpdateActions(Node* target, Duration dt)
 	{
 		if (actions_.IsEmpty())
 			return;

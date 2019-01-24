@@ -50,7 +50,7 @@ namespace easy2d
 		Node();
 
 		// 更新节点
-		virtual void OnUpdate(Duration const& dt) {}
+		virtual void OnUpdate(Duration dt) {}
 
 		// 渲染节点
 		virtual void OnRender() {}
@@ -349,7 +349,7 @@ namespace easy2d
 		);
 
 	protected:
-		void Update(Duration const& dt);
+		void Update(Duration dt);
 
 		void Render();
 

@@ -61,7 +61,7 @@ namespace easy2d
 		const Tasks& GetAllTasks() const;
 
 	protected:
-		void UpdateTasks(Duration const& dt);
+		void UpdateTasks(Duration dt);
 
 	protected:
 		Tasks tasks_;

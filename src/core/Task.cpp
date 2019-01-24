@@ -27,7 +27,7 @@ namespace easy2d
 	{
 	}
 
-	Task::Task(Callback const& func, Duration const& delay, int times, String const& name)
+	Task::Task(Callback const& func, Duration delay, int times, String const& name)
 		: running_(true)
 		, run_times_(0)
 		, total_times_(times)
@@ -48,7 +48,7 @@ namespace easy2d
 		running_ = false;
 	}
 
-	void Task::Update(Duration const& dt, bool& remove_after_update)
+	void Task::Update(Duration dt, bool& remove_after_update)
 	{
 		if (!running_)
 			return;

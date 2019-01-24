@@ -36,9 +36,8 @@ namespace easy2d
 		//     1.5 小时: 1.5_h
 		//     3 小时 45 分 15 秒: 3_h + 45_m + 15_s
 		//
-		class Duration
+		struct Duration
 		{
-		public:
 			Duration();
 
 			Duration(
@@ -122,22 +121,11 @@ namespace easy2d
 		//     TimePoint t1, t2;
 		//     int ms = (t2 - t1).Milliseconds();  // 获取两时间相差的毫秒数
 		// 
-		class TimePoint
+		struct TimePoint
 		{
-		public:
 			TimePoint();
 
-			TimePoint(
-				long
-			);
-
-			TimePoint(
-				const TimePoint& other
-			);
-
-			TimePoint(
-				TimePoint&& other
-			);
+			TimePoint(long);
 
 			// 是否是零时
 			inline bool IsZero() const { return dur == 0; }

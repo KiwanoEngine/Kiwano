@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ActionCombined.h"
+#include "ActionGroup.h"
 #include "logs.h"
 
 namespace easy2d
@@ -75,7 +75,7 @@ namespace easy2d
 		}
 	}
 
-	void Loop::Update(Node* target, Duration const& dt)
+	void Loop::Update(Node* target, Duration dt)
 	{
 		Action::Update(target, dt);
 
@@ -141,7 +141,7 @@ namespace easy2d
 		actions_[0]->Init(target);
 	}
 
-	void Sequence::Update(Node* target, Duration const& dt)
+	void Sequence::Update(Node* target, Duration dt)
 	{
 		Action::Update(target, dt);
 
@@ -249,7 +249,7 @@ namespace easy2d
 		}
 	}
 
-	void Spawn::Update(Node* target, Duration const& dt)
+	void Spawn::Update(Node* target, Duration dt)
 	{
 		Action::Update(target, dt);
 

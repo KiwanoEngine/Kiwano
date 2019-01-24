@@ -34,7 +34,7 @@ namespace easy2d
 
 	public:
 		explicit Transition(
-			Duration const& duration
+			Duration duration
 		);
 
 		virtual ~Transition();
@@ -47,7 +47,7 @@ namespace easy2d
 			ScenePtr const& next
 		);
 
-		virtual void Update(Duration const& dt);
+		virtual void Update(Duration dt);
 
 		virtual void Render();
 
@@ -76,12 +76,12 @@ namespace easy2d
 	{
 	public:
 		explicit FadeTransition(
-			Duration const& duration	/* 动画持续时长 */
+			Duration duration	/* 动画持续时长 */
 		);
 
 	protected:
 		// 更新动画
-		virtual void Update(Duration const& dt) override;
+		virtual void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
@@ -96,11 +96,11 @@ namespace easy2d
 	{
 	public:
 		explicit EmergeTransition(
-			Duration const& duration	/* 动画持续时长 */
+			Duration duration	/* 动画持续时长 */
 		);
 
 	protected:
-		virtual void Update(Duration const& dt) override;
+		virtual void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
@@ -115,11 +115,11 @@ namespace easy2d
 	{
 	public:
 		explicit BoxTransition(
-			Duration const& duration	/* 动画持续时长 */
+			Duration duration	/* 动画持续时长 */
 		);
 
 	protected:
-		virtual void Update(Duration const& dt) override;
+		virtual void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
@@ -134,12 +134,12 @@ namespace easy2d
 	{
 	public:
 		explicit MoveTransition(
-			Duration const& moveDuration,	/* 动画持续时长 */
+			Duration moveDuration,	/* 动画持续时长 */
 			Direction direction				/* 移动方向 */
 		);
 
 	protected:
-		virtual void Update(Duration const& dt) override;
+		virtual void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
@@ -161,12 +161,12 @@ namespace easy2d
 	{
 	public:
 		explicit RotationTransition(
-			Duration const& moveDuration,	/* 动画持续时长 */
+			Duration moveDuration,	/* 动画持续时长 */
 			float rotation = 360			/* 旋转度数 */
 		);
 
 	protected:
-		virtual void Update(Duration const& dt) override;
+		virtual void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
