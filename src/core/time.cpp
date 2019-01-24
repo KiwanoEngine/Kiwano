@@ -67,24 +67,6 @@ namespace easy2d
 			return Duration(dur - other.dur);
 		}
 
-		TimePoint& TimePoint::operator=(const TimePoint & other) E2D_NOEXCEPT
-		{
-			if (this == &other)
-				return *this;
-
-			dur = other.dur;
-			return *this;
-		}
-
-		TimePoint& TimePoint::operator=(TimePoint && other) E2D_NOEXCEPT
-		{
-			if (this == &other)
-				return *this;
-
-			dur = std::move(other.dur);
-			return *this;
-		}
-
 
 		//-------------------------------------------------------
 		// Duration

@@ -138,9 +138,6 @@ namespace easy2d
 
 			const Duration operator - (const TimePoint &) const;
 
-			TimePoint& operator = (const TimePoint &) E2D_NOEXCEPT;
-			TimePoint& operator = (TimePoint &&) E2D_NOEXCEPT;
-
 		private:
 			long dur;
 		};

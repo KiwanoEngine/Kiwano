@@ -26,8 +26,8 @@ namespace easy2d
 {
 	Scene::Scene()
 	{
-		AddListener(WindowEvent::Activate, Closure(this, &Scene::OnActivate));
-		AddListener(WindowEvent::Deavtivate, Closure(this, &Scene::OnDeactivate));
+		//AddListener(WindowEvent::Activate, Closure(this, &Scene::OnActivate));
+		//AddListener(WindowEvent::Deavtivate, Closure(this, &Scene::OnDeactivate));
 
 		scene_ = this;
 	}

@@ -35,6 +35,7 @@ namespace easy2d
 
 			void Out(std::wostream& stream, const wchar_t* output)
 			{
+				stream.imbue(std::locale("chs"));
 				stream << output;
 				::OutputDebugStringW(output);
 			}
