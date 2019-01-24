@@ -39,9 +39,9 @@ namespace easy2d
 		virtual void OnExit();
 
 		// 窗口获得焦点
-		virtual void OnActivate();
+		virtual void OnActivate(Event const&);
 
 		// 窗口失去焦点
-		virtual void OnDeactivate();
+		virtual void OnDeactivate(Event const&);
 	};
 }

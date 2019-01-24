@@ -197,6 +197,9 @@
     <ClInclude Include="..\..\src\core\IntrusivePtr.hpp">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\core\closure.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">

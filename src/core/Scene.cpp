@@ -26,8 +26,8 @@ namespace easy2d
 {
 	Scene::Scene()
 	{
-		AddListener(WindowEvent::Activate, std::bind(&Scene::OnActivate, this));
-		AddListener(WindowEvent::Deavtivate, std::bind(&Scene::OnDeactivate, this));
+		AddListener(WindowEvent::Activate, Closure(this, &Scene::OnActivate));
+		AddListener(WindowEvent::Deavtivate, Closure(this, &Scene::OnDeactivate));
 
 		scene_ = this;
 	}
@@ -46,11 +46,11 @@ namespace easy2d
 		E2D_LOG(L"Scene exited");
 	}
 
-	void Scene::OnDeactivate()
+	void Scene::OnDeactivate(Event const&)
 	{
 	}
 
-	void Scene::OnActivate()
+	void Scene::OnActivate(Event const&)
 	{
 	}
 

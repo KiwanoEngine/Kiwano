@@ -30,10 +30,10 @@ namespace easy2d
 			, click_callback_(nullptr)
 			, status_(Status::Normal)
 		{
-			AddListener(MouseEvent::Hover, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
-			AddListener(MouseEvent::Out, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
-			AddListener(MouseEvent::Down, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
-			AddListener(MouseEvent::Up, std::bind(&Button::UpdateStatus, this, std::placeholders::_1));
+			AddListener(MouseEvent::Hover, Closure(this, &Button::UpdateStatus));
+			AddListener(MouseEvent::Out, Closure(this, &Button::UpdateStatus));
+			AddListener(MouseEvent::Down, Closure(this, &Button::UpdateStatus));
+			AddListener(MouseEvent::Up, Closure(this, &Button::UpdateStatus));
 		}
 
 		Button::Button(const Callback& click)

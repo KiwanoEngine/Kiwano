@@ -21,6 +21,7 @@
 #pragma once
 #include "RefCounter.hpp"
 #include "IntrusivePtr.hpp"
+#include "closure.hpp"
 #include "../math/vector.hpp"
 #include "../math/Rect.hpp"
 #include "../math/Matrix.hpp"
