@@ -25,26 +25,26 @@
 #include "TaskManager.h"
 #include "ActionManager.h"
 #include "EventDispatcher.h"
-#include "intrusive/List.hpp"
+#include "IntrusiveList.hpp"
 
 namespace easy2d
 {
-	class Game;
+	class Application;
 
 	// 节点
 	class Node
-		: public Object
+		: public virtual Object
 		, public TaskManager
 		, public ActionManager
 		, public EventDispatcher
-		, protected intrusive::ListItem<NodePtr>
+		, protected IntrusiveListItem<NodePtr>
 	{
-		friend class Game;
+		friend class Application;
 		friend class Scene;
 		friend class Transition;
-		friend class intrusive::List<NodePtr>;
+		friend class IntrusiveList<NodePtr>;
 
-		using Children = intrusive::List<NodePtr>;
+		using Children = IntrusiveList<NodePtr>;
 
 	public:
 		Node();
@@ -55,11 +55,14 @@ namespace easy2d
 		// 渲染节点
 		virtual void OnRender() {}
 
+		// 事件分发
+		virtual void Dispatch(Event& evt) override;
+
 		// 获取显示状态
 		bool IsVisible()				const	{ return visible_; }
 
 		// 获取名称
-		String const& GetName()	const	{ return name_; }
+		String const& GetName()			const	{ return name_; }
 
 		// 获取名称的 Hash 值
 		size_t GetHashName()			const	{ return hash_name_; }
@@ -109,11 +112,11 @@ namespace easy2d
 		// 获取缩放后的大小
 		Size GetScaledSize()			const	{ return Size{ GetScaledWidth(), GetScaledHeight() }; }
 
-		// 获取 x 方向支点
-		float GetPivotX()				const	{ return pivot_.x; }
+		// 获取 x 方向锚点
+		float GetAnchorX()				const	{ return anchor_.x; }
 
-		// 获取 y 方向支点
-		float GetPivotY()				const	{ return pivot_.y; }
+		// 获取 y 方向锚点
+		float GetAnchorY()				const	{ return anchor_.y; }
 
 		// 获取透明度
 		float GetOpacity()				const	{ return opacity_; }
@@ -228,23 +231,23 @@ namespace easy2d
 			float rotation
 		);
 
-		// 设置支点的横向位置
+		// 设置锚点的横向位置
 		// 默认为 0, 范围 [0, 1]
-		void SetPivotX(
-			float pivot_x
+		void SetAnchorX(
+			float anchor_x
 		);
 
-		// 设置支点的纵向位置
+		// 设置锚点的纵向位置
 		// 默认为 0, 范围 [0, 1]
-		void SetPivotY(
-			float pivot_y
+		void SetAnchorY(
+			float anchor_y
 		);
 
-		// 设置支点位置
+		// 设置锚点位置
 		// 默认为 (0, 0), 范围 [0, 1]
-		void SetPivot(
-			float pivot_x,
-			float pivot_y
+		void SetAnchor(
+			float anchor_x,
+			float anchor_y
 		);
 
 		// 修改宽度
@@ -333,12 +336,16 @@ namespace easy2d
 		// 从父节点移除
 		void RemoveFromParent();
 
-		virtual void DispatchEvent(Event* e) override;
+		// 暂停节点更新
+		void PauseUpdating();
 
-		// 设置默认支点
-		static void SetDefaultPivot(
-			float pivot_x,
-			float pivot_y
+		// 继续节点更新
+		void ResumeUpdating();
+
+		// 设置默认锚点
+		static void SetDefaultAnchor(
+			float anchor_x,
+			float anchor_y
 		);
 
 	protected:
@@ -356,13 +363,14 @@ namespace easy2d
 		bool		visible_;
 		bool		hover_;
 		bool		pressed_;
+		bool		pause_;
 		int			z_order_;
 		float		opacity_;
 		float		display_opacity_;
 		String		name_;
 		size_t		hash_name_;
 		Transform	transform_;
-		Point		pivot_;
+		Point		anchor_;
 		Size		size_;
 		Node*		parent_;
 		Scene*		scene_;

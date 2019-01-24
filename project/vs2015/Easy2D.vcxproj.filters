@@ -17,9 +17,6 @@
     <ClInclude Include="..\..\src\core\Color.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Game.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\Image.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -125,12 +122,6 @@
     <ClInclude Include="..\..\src\core\Font.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\intrusive\List.hpp">
-      <Filter>core\intrusive</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\intrusive\SmartPtr.hpp">
-      <Filter>core\intrusive</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\Transform.hpp">
       <Filter>core</Filter>
     </ClInclude>
@@ -167,15 +158,6 @@
     <ClInclude Include="..\..\src\core\EventDispatcher.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Event.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\KeyEvent.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\MouseEvent.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\EventListener.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -203,6 +185,18 @@
     <ClInclude Include="..\..\src\utils\ResLoader.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\core\Application.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\Event.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\IntrusiveList.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\IntrusivePtr.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -216,9 +210,6 @@
     </Filter>
     <Filter Include="ui">
       <UniqueIdentifier>{07b6d541-4a1b-472a-aae0-daf9d082fe84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="core\intrusive">
-      <UniqueIdentifier>{0f508149-735a-43da-ab16-36cc1e9ab63a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -235,9 +226,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\core\Color.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\core\Game.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\core\Image.cpp">
@@ -353,6 +341,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\utils\ResLoader.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\Application.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

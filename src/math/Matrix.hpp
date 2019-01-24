@@ -26,7 +26,7 @@ namespace easy2d
 {
 	namespace math
 	{
-		class Matrix;
+		struct Matrix;
 
 		template <typename L, typename R>
 		struct MatrixMultiply;
@@ -39,7 +39,7 @@ namespace easy2d
 		operator *(MatrixMultiply<L, R> const& lhs, Matrix const& rhs);
 
 
-		class Matrix
+		struct Matrix
 		{
 			union
 			{

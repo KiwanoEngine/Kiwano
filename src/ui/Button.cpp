@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "Button.h"
-#include "../core/MouseEvent.hpp"
 
 namespace easy2d
 {
@@ -97,35 +96,34 @@ namespace easy2d
 			}
 		}
 
-		void Button::UpdateStatus(Event * e)
+		void Button::UpdateStatus(Event const& evt)
 		{
-			E2D_ASSERT(MouseEvent::Check(e));
+			E2D_ASSERT(MouseEvent::Check(evt.type));
 
-			MouseEvent* me = static_cast<MouseEvent*>(e);
 			if (enabled_)
 			{
-				if (me->type == MouseEvent::Hover)
+				if (evt.type == MouseEvent::Hover)
 				{
 					SetStatus(Status::Hover);
 
 					if (mouse_over_callback_)
 						mouse_over_callback_();
 				}
-				else if (me->type == MouseEvent::Out)
+				else if (evt.type == MouseEvent::Out)
 				{
 					SetStatus(Status::Normal);
 
 					if (mouse_out_callback_)
 						mouse_out_callback_();
 				}
-				else if (me->type == MouseEvent::Down && status_ == Status::Hover)
+				else if (evt.type == MouseEvent::Down && status_ == Status::Hover)
 				{
 					SetStatus(Status::Pressed);
 
 					if (pressed_callback_)
 						pressed_callback_();
 				}
-				else if (me->type == MouseEvent::Up && status_ == Status::Pressed)
+				else if (evt.type == MouseEvent::Up && status_ == Status::Pressed)
 				{
 					SetStatus(Status::Hover);
 

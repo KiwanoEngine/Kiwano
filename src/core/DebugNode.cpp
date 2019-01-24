@@ -28,8 +28,7 @@
 
 namespace easy2d
 {
-
-	DebugNodeImpl::DebugNodeImpl()
+	DebugNode::DebugNode()
 	{
 		debug_text_ = new Text();
 		debug_text_->SetPosition(15, 15);
@@ -46,11 +45,11 @@ namespace easy2d
 		debug_text_->SetStyle(style);
 	}
 
-	DebugNodeImpl::~DebugNodeImpl()
+	DebugNode::~DebugNode()
 	{
 	}
 
-	void DebugNodeImpl::AddDebugText(String const & text)
+	void DebugNode::AddDebugText(String const & text)
 	{
 		try
 		{
@@ -61,29 +60,29 @@ namespace easy2d
 		}
 	}
 
-	void DebugNodeImpl::ClearDebugText()
+	void DebugNode::ClearDebugText()
 	{
 		texts_.clear();
 	}
 
-	void DebugNodeImpl::OnRender()
+	void DebugNode::OnRender()
 	{
-		auto graphics = Graphics::Instance();
+		auto rt = RenderSystem::Instance();
 
-		graphics->SetTransform(Matrix{});
+		rt->SetTransform(Matrix{});
 
-		graphics->GetSolidBrush()->SetColor(Color(0.0f, 0.0f, 0.0f, 0.5f));
+		rt->GetSolidBrush()->SetColor(Color(0.0f, 0.0f, 0.0f, 0.5f));
 
-		graphics->GetRenderTarget()->FillRoundedRectangle(
+		rt->GetRenderTarget()->FillRoundedRectangle(
 			D2D1::RoundedRect(
 				D2D1_RECT_F{ 10, 10, 200, 120 },
 				6.f,
 				6.f),
-			graphics->GetSolidBrush().Get()
+			rt->GetSolidBrush().Get()
 		);
 	}
 
-	void DebugNodeImpl::OnUpdate(Duration const & dt)
+	void DebugNode::OnUpdate(Duration const & dt)
 	{
 		try
 		{
@@ -106,9 +105,9 @@ namespace easy2d
 		ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
 #endif
 
-		ss << "Render: " << Graphics::Instance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
+		ss << "Render: " << RenderSystem::Instance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
 
-		ss << "Primitives / sec: " << Graphics::Instance()->GetStatus().primitives * frame_time_.size() << std::endl;
+		ss << "Primitives / sec: " << RenderSystem::Instance()->GetStatus().primitives * frame_time_.size() << std::endl;
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));

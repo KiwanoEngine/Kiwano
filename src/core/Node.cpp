@@ -23,7 +23,6 @@
 #include "Factory.h"
 #include "Scene.h"
 #include "Task.h"
-#include "MouseEvent.hpp"
 #include "render.h"
 #include "logs.h"
 
@@ -31,18 +30,19 @@ namespace easy2d
 {
 	namespace
 	{
-		float default_pivot_x = 0.f;
-		float default_pivot_y = 0.f;
+		float default_anchor_x = 0.f;
+		float default_anchor_y = 0.f;
 	}
 
-	void Node::SetDefaultPivot(float pivot_x, float pivot_y)
+	void Node::SetDefaultAnchor(float anchor_x, float anchor_y)
 	{
-		default_pivot_x = pivot_x;
-		default_pivot_y = pivot_y;
+		default_anchor_x = anchor_x;
+		default_anchor_y = anchor_y;
 	}
 
 	Node::Node()
 		: visible_(true)
+		, pause_(false)
 		, dirty_transform_(false)
 		, dirty_transform_inverse_(false)
 		, parent_(nullptr)
@@ -50,12 +50,15 @@ namespace easy2d
 		, z_order_(0)
 		, opacity_(1.f)
 		, display_opacity_(1.f)
-		, pivot_(default_pivot_x, default_pivot_y)
+		, anchor_(default_anchor_x, default_anchor_y)
 	{
 	}
 
 	void Node::Update(Duration const & dt)
 	{
+		if (pause_)
+			return;
+
 		OnUpdate(dt);
 		UpdateActions(this, dt);
 		UpdateTasks(dt);
@@ -78,12 +81,12 @@ namespace easy2d
 
 		UpdateTransform();
 
-		auto graphics = Graphics::Instance();
+		auto rt = RenderSystem::Instance();
 
 		if (children_.IsEmpty())
 		{
-			graphics->SetTransform(transform_matrix_);
-			graphics->SetOpacity(display_opacity_);
+			rt->SetTransform(transform_matrix_);
+			rt->SetOpacity(display_opacity_);
 
 			OnRender();
 		}
@@ -100,8 +103,8 @@ namespace easy2d
 				child = child->NextItem().Get();
 			}
 
-			graphics->SetTransform(transform_matrix_);
-			graphics->SetOpacity(display_opacity_);
+			rt->SetTransform(transform_matrix_);
+			rt->SetOpacity(display_opacity_);
 
 			OnRender();
 
@@ -113,7 +116,7 @@ namespace easy2d
 		}
 	}
 
-	void Node::DispatchEvent(Event * e)
+	void Node::Dispatch(Event& evt)
 	{
 		if (!visible_)
 			return;
@@ -122,26 +125,24 @@ namespace easy2d
 		for (auto child = children_.Last(); child; child = prev)
 		{
 			prev = child->PrevItem();
-			child->DispatchEvent(e);
+			child->Dispatch(evt);
 		}
 
-		if (MouseEvent::Check(e))
+		if (MouseEvent::Check(evt.type))
 		{
-			MouseEvent* me = static_cast<MouseEvent*>(e);
-
-			if (me->type == MouseEvent::Move)
+			if (evt.type == MouseEvent::Move)
 			{
-				if (!me->has_target && ContainsPoint(me->position))
+				if (!evt.has_target && ContainsPoint(Point{ evt.mouse.x, evt.mouse.y }))
 				{
-					me->has_target = true;
+					evt.has_target = true;
 
 					if (!hover_)
 					{
 						hover_ = true;
 
-						MouseEvent hover = *me;
+						Event hover = evt;
 						hover.type = MouseEvent::Hover;
-						DispatchEvent(&hover);
+						Dispatch(hover);
 					}
 				}
 				else if (hover_)
@@ -149,28 +150,38 @@ namespace easy2d
 					hover_ = false;
 					pressed_ = false;
 
-					MouseEvent hover = *me;
-					hover.type = MouseEvent::Out;
-					DispatchEvent(&hover);
+					Event out = evt;
+					out.type = MouseEvent::Out;
+					Dispatch(out);
 				}
 			}
 
-			if (me->type == MouseEvent::Down && hover_)
+			if (evt.type == MouseEvent::Down && hover_)
 			{
 				pressed_ = true;
 			}
 
-			if (me->type == MouseEvent::Up && pressed_)
+			if (evt.type == MouseEvent::Up && pressed_)
 			{
 				pressed_ = false;
 
-				MouseEvent click = *me;
+				Event click = evt;
 				click.type = MouseEvent::Click;
-				DispatchEvent(&click);
+				Dispatch(click);
 			}
 		}
 
-		EventDispatcher::DispatchEvent(e);
+		EventDispatcher::Dispatch(evt);
+	}
+
+	void Node::PauseUpdating()
+	{
+		pause_ = true;
+	}
+
+	void Node::ResumeUpdating()
+	{
+		pause_ = false;
 	}
 
 	Matrix const & Node::GetTransformMatrix()  const
@@ -214,7 +225,7 @@ namespace easy2d
 			* Matrix::Rotation(transform_.rotation)
 			* Matrix::Translation(transform_.position);
 
-		Point offset{ -size_.x * pivot_.x, -size_.y * pivot_.y };
+		Point offset{ -size_.x * anchor_.x, -size_.y * anchor_.y };
 		transform_matrix_.Translate(offset);
 
 		if (parent_)
@@ -290,23 +301,23 @@ namespace easy2d
 		UpdateOpacity();
 	}
 
-	void Node::SetPivotX(float pivot_x)
+	void Node::SetAnchorX(float anchor_x)
 	{
-		this->SetPivot(pivot_x, pivot_.y);
+		this->SetAnchor(anchor_x, anchor_.y);
 	}
 
-	void Node::SetPivotY(float pivot_y)
+	void Node::SetAnchorY(float anchor_y)
 	{
-		this->SetPivot(pivot_.x, pivot_y);
+		this->SetAnchor(anchor_.x, anchor_y);
 	}
 
-	void Node::SetPivot(float pivot_x, float pivot_y)
+	void Node::SetAnchor(float anchor_x, float anchor_y)
 	{
-		if (pivot_.x == pivot_x && pivot_.y == pivot_y)
+		if (anchor_.x == anchor_x && anchor_.y == anchor_y)
 			return;
 
-		pivot_.x = pivot_x;
-		pivot_.y = pivot_y;
+		anchor_.x = anchor_x;
+		anchor_.y = anchor_y;
 		dirty_transform_ = true;
 	}
 

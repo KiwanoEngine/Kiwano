@@ -26,7 +26,7 @@
 
 namespace easy2d
 {
-	GraphicsDevice::GraphicsDevice()
+	RenderSystem::RenderSystem()
 		: fps_text_format_(nullptr)
 		, fps_text_layout_(nullptr)
 		, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
@@ -39,14 +39,14 @@ namespace easy2d
 	{
 	}
 
-	GraphicsDevice::~GraphicsDevice()
+	RenderSystem::~RenderSystem()
 	{
 		E2D_LOG(L"Destroying graphics device");
 
 		ClearImageCache();
 	}
 
-	HRESULT GraphicsDevice::Init(HWND hwnd, bool vsync, bool debug)
+	HRESULT RenderSystem::Init(HWND hwnd, bool vsync, bool debug)
 	{
 		E2D_LOG(L"Initing graphics device");
 
@@ -56,7 +56,7 @@ namespace easy2d
 		return CreateResources(hwnd);
 	}
 
-	HRESULT GraphicsDevice::BeginDraw(HWND hwnd)
+	HRESULT RenderSystem::BeginDraw(HWND hwnd)
 	{
 		HRESULT hr = CreateResources(hwnd);
 
@@ -79,7 +79,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT GraphicsDevice::EndDraw()
+	HRESULT RenderSystem::EndDraw()
 	{
 		HRESULT hr = S_OK;
 		
@@ -103,22 +103,22 @@ namespace easy2d
 		return hr;
 	}
 
-	void GraphicsDevice::ClearImageCache()
+	void RenderSystem::ClearImageCache()
 	{
 		bitmap_cache_.clear();
 	}
 
-	D2DHwndRenderTargetPtr const & GraphicsDevice::GetRenderTarget() const
+	D2DHwndRenderTargetPtr const & RenderSystem::GetRenderTarget() const
 	{
 		return render_target_;
 	}
 
-	D2DSolidColorBrushPtr const & GraphicsDevice::GetSolidBrush() const
+	D2DSolidColorBrushPtr const & RenderSystem::GetSolidBrush() const
 	{
 		return solid_brush_;
 	}
 
-	HRESULT GraphicsDevice::CreateLayer(D2DLayerPtr& layer)
+	HRESULT RenderSystem::CreateLayer(D2DLayerPtr& layer)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -127,7 +127,7 @@ namespace easy2d
 		return render_target_->CreateLayer(&layer);
 	}
 
-	HRESULT GraphicsDevice::CreateSolidColorBrush(D2DSolidColorBrushPtr & brush) const
+	HRESULT RenderSystem::CreateSolidColorBrush(D2DSolidColorBrushPtr & brush) const
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -139,7 +139,7 @@ namespace easy2d
 		);
 	}
 
-	HRESULT GraphicsDevice::DrawGeometry(
+	HRESULT RenderSystem::DrawGeometry(
 		D2DGeometryPtr const& geometry,
 		Color const& stroke_color,
 		float stroke_width,
@@ -167,7 +167,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::FillGeometry(D2DGeometryPtr const & geometry, const Color & fill_color)
+	HRESULT RenderSystem::FillGeometry(D2DGeometryPtr const & geometry, const Color & fill_color)
 	{
 		if (!solid_brush_ ||
 			!render_target_)
@@ -187,7 +187,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::DrawImage(ImagePtr const & image)
+	HRESULT RenderSystem::DrawImage(ImagePtr const & image)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -211,7 +211,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::DrawBitmap(
+	HRESULT RenderSystem::DrawBitmap(
 		D2DBitmapPtr const& bitmap
 	)
 	{
@@ -236,7 +236,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::DrawTextLayout(D2DTextLayoutPtr const& text_layout)
+	HRESULT RenderSystem::DrawTextLayout(D2DTextLayoutPtr const& text_layout)
 	{
 		if (!text_renderer_)
 			return E_UNEXPECTED;
@@ -249,7 +249,7 @@ namespace easy2d
 		return text_layout->Draw(nullptr, text_renderer_.Get(), 0, 0);
 	}
 
-	HRESULT GraphicsDevice::PushClip(const Matrix & clip_matrix, const Size & clip_size)
+	HRESULT RenderSystem::PushClip(const Matrix & clip_matrix, const Size & clip_size)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -265,7 +265,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::PopClip()
+	HRESULT RenderSystem::PopClip()
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -277,7 +277,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::PushLayer(D2DLayerPtr const& layer, LayerProperties const& properties)
+	HRESULT RenderSystem::PushLayer(D2DLayerPtr const& layer, LayerProperties const& properties)
 	{
 		if (!render_target_ ||
 			!solid_brush_)
@@ -301,7 +301,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::PopLayer()
+	HRESULT RenderSystem::PopLayer()
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -313,7 +313,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::GetSize(Size & size)
+	HRESULT RenderSystem::GetSize(Size & size)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -324,7 +324,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::CreateBitmapFromFile(D2DBitmapPtr& bitmap, String const& file_path)
+	HRESULT RenderSystem::CreateBitmapFromFile(D2DBitmapPtr& bitmap, String const& file_path)
 	{
 		if (render_target_ == nullptr)
 		{
@@ -353,7 +353,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT GraphicsDevice::CreateBitmapFromResource(D2DBitmapPtr& bitmap, Resource const& res)
+	HRESULT RenderSystem::CreateBitmapFromResource(D2DBitmapPtr& bitmap, Resource const& res)
 	{
 		if (render_target_ == nullptr)
 		{
@@ -381,7 +381,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT GraphicsDevice::CreateBitmapRenderTarget(D2DBitmapRenderTargetPtr & brt)
+	HRESULT RenderSystem::CreateBitmapRenderTarget(D2DBitmapRenderTargetPtr & brt)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -390,7 +390,7 @@ namespace easy2d
 		return render_target_->CreateCompatibleRenderTarget(&brt);
 	}
 
-	HRESULT GraphicsDevice::Resize(UINT32 width, UINT32 height)
+	HRESULT RenderSystem::Resize(UINT32 width, UINT32 height)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -399,7 +399,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::SetTransform(const Matrix & matrix)
+	HRESULT RenderSystem::SetTransform(const Matrix & matrix)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -408,7 +408,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::SetOpacity(float opacity)
+	HRESULT RenderSystem::SetOpacity(float opacity)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -418,7 +418,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::SetTextStyle(
+	HRESULT RenderSystem::SetTextStyle(
 		Color const& color,
 		bool has_outline,
 		Color const& outline_color,
@@ -440,12 +440,12 @@ namespace easy2d
 		return S_OK;
 	}
 
-	void GraphicsDevice::SetClearColor(const Color& color)
+	void RenderSystem::SetClearColor(const Color& color)
 	{
 		clear_color_ = color;
 	}
 
-	HRESULT GraphicsDevice::SetAntialiasMode(bool enabled)
+	HRESULT RenderSystem::SetAntialiasMode(bool enabled)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -457,7 +457,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT GraphicsDevice::SetTextAntialiasMode(TextAntialias mode)
+	HRESULT RenderSystem::SetTextAntialiasMode(TextAntialias mode)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -485,12 +485,12 @@ namespace easy2d
 		return S_OK;
 	}
 
-	GraphicsDevice::Status const & GraphicsDevice::GetStatus() const
+	RenderSystem::Status const & RenderSystem::GetStatus() const
 	{
 		return status_;
 	}
 
-	HRESULT GraphicsDevice::CreateResources(HWND hwnd)
+	HRESULT RenderSystem::CreateResources(HWND hwnd)
 	{
 		HRESULT hr = S_OK;
 
@@ -540,9 +540,9 @@ namespace easy2d
 		return hr;
 	}
 
-	void GraphicsDevice::DiscardResources()
+	void RenderSystem::DiscardResources()
 	{
-		// FIXME! 应通知 Game 类销毁所有节点的 device resources
+		// FIXME! 应通知 Application 类销毁所有节点的 device resources
 		fps_text_format_ = nullptr;
 		fps_text_layout_ = nullptr;
 		text_renderer_ = nullptr;

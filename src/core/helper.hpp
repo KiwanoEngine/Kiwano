@@ -20,7 +20,7 @@
 
 #pragma once
 #include "RefCounter.hpp"
-#include "intrusive/SmartPtr.hpp"
+#include "IntrusivePtr.hpp"
 #include "../math/vector.hpp"
 #include "../math/Rect.hpp"
 #include "../math/Matrix.hpp"
@@ -34,13 +34,13 @@
 #ifndef E2D_DECLARE_SMART_PTR
 #define E2D_DECLARE_SMART_PTR(class_name)\
 	class class_name;\
-	using class_name##Ptr = ::easy2d::intrusive::SmartPtr< class_name >
+	using class_name##Ptr = ::easy2d::IntrusivePtr< class_name >
 
 #define E2D_DECLARE_NS_SMART_PTR(ns_name, class_name)\
 	namespace ns_name\
 	{\
 		class class_name; \
-		using class_name##Ptr = ::easy2d::intrusive::SmartPtr< class_name >;\
+		using class_name##Ptr = ::easy2d::IntrusivePtr< class_name >;\
 	}
 #endif
 
@@ -76,8 +76,9 @@ namespace easy2d
 	E2D_DECLARE_SMART_PTR(Image);
 	E2D_DECLARE_SMART_PTR(Music);
 	E2D_DECLARE_SMART_PTR(Task);
-	E2D_DECLARE_SMART_PTR(EventListener);
 	E2D_DECLARE_SMART_PTR(Frames);
+
+	E2D_DECLARE_SMART_PTR(EventListener);
 
 	E2D_DECLARE_SMART_PTR(Geometry);
 	E2D_DECLARE_SMART_PTR(LineGeometry);
@@ -141,9 +142,9 @@ namespace easy2d
 		}
 
 		template<typename T>
-		inline intrusive::SmartPtr<T> operator- (T* ptr) const
+		inline IntrusivePtr<T> operator- (T* ptr) const
 		{
-			return intrusive::SmartPtr<T>(ptr);
+			return IntrusivePtr<T>(ptr);
 		}
 	};
 }

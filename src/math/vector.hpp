@@ -26,13 +26,11 @@ namespace easy2d
 {
 	namespace math
 	{
-		class Vector2
+		struct Vector2
 		{
-		public:
 			float x;
 			float y;
 
-		public:
 			Vector2() : x(0.f), y(0.f) {}
 
 			Vector2(float x, float y) : x(x), y(y) {}

@@ -26,16 +26,12 @@ namespace easy2d
 {
 	namespace math
 	{
-		//
 		// 矩形
-		//
-		class Rect
+		struct Rect
 		{
-		public:
 			Vector2	origin;	// 左上角坐标
 			Vector2	size;	// 宽度和高度
 
-		public:
 			Rect() {}
 
 			Rect(

@@ -25,7 +25,7 @@ namespace easy2d
 {
 	// ¼¸ºÎ³éÏó
 	class Geometry
-		: public RefCounter
+		: public virtual Object
 	{
 		friend class Canvas;
 		friend class GeometryNode;

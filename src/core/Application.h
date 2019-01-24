@@ -25,7 +25,6 @@
 #include "render.h"
 #include "input.h"
 #include "audio.h"
-#include "Event.hpp"
 
 namespace easy2d
 {
@@ -49,23 +48,18 @@ namespace easy2d
 	};
 
 
-	class Game
+	class Application
 		: protected Noncopyable
 	{
 	public:
-		Game();
-
-		Game(
-			Options const& options
+		Application(
+			String const& app_name = L"Easy2dGame"
 		);
 
-		virtual ~Game();
+		virtual ~Application();
 
-		// 退出游戏
-		virtual void OnExit() {}
-
-		// 窗口关闭
-		virtual bool OnClose() { return true; }
+		// 启动
+		virtual void Setup() {}
 
 		// 初始化
 		void Init(
@@ -100,18 +94,15 @@ namespace easy2d
 
 		void Update();
 
-		void Dispatch(
-			Event* event
-		);
-
 		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 	private:
 		bool			debug_;
 		bool			active_;
 		float			time_scale_;
-		ScenePtr			curr_scene_;
-		ScenePtr			next_scene_;
+		String			app_name_;
+		ScenePtr		curr_scene_;
+		ScenePtr		next_scene_;
 		TransitionPtr	transition_;
 	};
 }

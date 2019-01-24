@@ -66,14 +66,14 @@ namespace easy2d
 		if (in_scene_)
 		{
 			ThrowIfFailed(
-				Graphics::Instance()->CreateLayer(in_layer_)
+				RenderSystem::Instance()->CreateLayer(in_layer_)
 			);
 		}
 
 		if (out_scene_)
 		{
 			ThrowIfFailed(
-				Graphics::Instance()->CreateLayer(out_layer_)
+				RenderSystem::Instance()->CreateLayer(out_layer_)
 			);
 		}
 
@@ -101,34 +101,34 @@ namespace easy2d
 
 	void Transition::Render()
 	{
-		auto graphics = Graphics::Instance();
+		auto rt = RenderSystem::Instance();
 
 		if (out_scene_)
 		{
-			graphics->PushClip(
+			rt->PushClip(
 				out_scene_->GetTransformMatrix(),
 				window_size_
 			);
-			graphics->PushLayer(out_layer_, out_layer_prop_);
+			rt->PushLayer(out_layer_, out_layer_prop_);
 
 			out_scene_->Render();
 
-			graphics->PopLayer();
-			graphics->PopClip();
+			rt->PopLayer();
+			rt->PopClip();
 		}
 
 		if (in_scene_)
 		{
-			graphics->PushClip(
+			rt->PushClip(
 				in_scene_->GetTransformMatrix(),
 				window_size_
 			);
-			graphics->PushLayer(in_layer_, in_layer_prop_);
+			rt->PushLayer(in_layer_, in_layer_prop_);
 
 			in_scene_->Render();
 
-			graphics->PopLayer();
-			graphics->PopClip();
+			rt->PopLayer();
+			rt->PopClip();
 		}
 	}
 
@@ -337,13 +337,13 @@ namespace easy2d
 		if (out_scene_)
 		{
 			out_scene_->SetTransform(transform);
-			out_scene_->SetPivot(0.5f, 0.5f);
+			out_scene_->SetAnchor(0.5f, 0.5f);
 		}
 
 		if (in_scene_)
 		{
 			in_scene_->SetTransform(transform);
-			in_scene_->SetPivot(0.5f, 0.5f);
+			in_scene_->SetAnchor(0.5f, 0.5f);
 		}
 
 		in_layer_prop_.opacity = 0;
@@ -384,13 +384,13 @@ namespace easy2d
 		if (out_scene_)
 		{
 			out_scene_->SetTransform(Transform{});
-			out_scene_->SetPivot(0.f, 0.f);
+			out_scene_->SetAnchor(0.f, 0.f);
 		}
 
 		if (in_scene_)
 		{
 			in_scene_->SetTransform(Transform{});
-			in_scene_->SetPivot(0.f, 0.f);
+			in_scene_->SetAnchor(0.f, 0.f);
 		}
 	}
 }

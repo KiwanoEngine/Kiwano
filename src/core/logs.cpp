@@ -33,7 +33,7 @@ namespace easy2d
 		{
 			bool enabled = true;
 
-			void Out(std::ostream& stream, const wchar_t* output)
+			void Out(std::wostream& stream, const wchar_t* output)
 			{
 				stream << output;
 				::OutputDebugStringW(output);
@@ -47,7 +47,7 @@ namespace easy2d
 				ss << std::put_time(&tmbuf, L"[easy2d] %H:%M:%S ");
 			}
 
-			void Output(std::ostream& stream, const wchar_t* prompt, const wchar_t* format, va_list args)
+			void Output(std::wostream& stream, const wchar_t* prompt, const wchar_t* format, va_list args)
 			{
 				if (!enabled)
 					return;
@@ -64,7 +64,7 @@ namespace easy2d
 				delete[] buffer;
 			}
 
-			void OutputLine(std::ostream& stream, const wchar_t* prompt, const wchar_t* format, va_list args)
+			void OutputLine(std::wostream& stream, const wchar_t* prompt, const wchar_t* format, va_list args)
 			{
 				if (!enabled)
 					return;
@@ -89,7 +89,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::cout, L"", format, args);
+			Output(std::wcout, L"", format, args);
 
 			va_end(args);
 		}
@@ -99,7 +99,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			OutputLine(std::cout, L"", format, args);
+			OutputLine(std::wcout, L"", format, args);
 
 			va_end(args);
 		}
@@ -109,7 +109,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::cerr, L"Warning: ", format, args);
+			Output(std::wcerr, L"Warning: ", format, args);
 
 			va_end(args);
 		}
@@ -119,7 +119,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			OutputLine(std::cerr, L"Warning: ", format, args);
+			OutputLine(std::wcerr, L"Warning: ", format, args);
 
 			va_end(args);
 		}
@@ -129,7 +129,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::cerr, L"Error: ", format, args);
+			Output(std::wcerr, L"Error: ", format, args);
 
 			va_end(args);
 		}
@@ -139,7 +139,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			OutputLine(std::cerr, L"Error: ", format, args);
+			OutputLine(std::wcerr, L"Error: ", format, args);
 
 			va_end(args);
 		}

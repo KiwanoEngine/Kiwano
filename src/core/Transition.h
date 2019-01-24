@@ -28,9 +28,9 @@ namespace easy2d
 
 	// ³¡¾°¹ý¶É
 	class Transition
-		: public Object
+		: public virtual Object
 	{
-		friend class Game;
+		friend class Application;
 
 	public:
 		explicit Transition(

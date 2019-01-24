@@ -18,15 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Game.h"
+#include "Application.h"
 #include "logs.h"
 #include "modules.h"
 #include "Factory.h"
+#include "Event.hpp"
 #include "Scene.h"
 #include "DebugNode.h"
 #include "Transition.h"
-#include "KeyEvent.hpp"
-#include "MouseEvent.hpp"
 #include <windowsx.h>
 #include <imm.h>
 
@@ -34,29 +33,24 @@
 
 namespace easy2d
 {
-	Game::Game()
+	Application::Application(String const& app_name)
 		: active_(false)
 		, debug_(false)
 		, curr_scene_(nullptr)
 		, next_scene_(nullptr)
 		, transition_(nullptr)
 		, time_scale_(1.f)
+		, app_name_(app_name)
 	{
 		::CoInitialize(nullptr);
 	}
 
-	Game::Game(Options const & options)
-		: Game()
-	{
-		Init(options);
-	}
-
-	Game::~Game()
+	Application::~Application()
 	{
 		::CoUninitialize();
 	}
 
-	void Game::Init(const Options& options)
+	void Application::Init(const Options& options)
 	{
 		debug_ = options.debug;
 
@@ -70,7 +64,7 @@ namespace easy2d
 				options.width,
 				options.height,
 				options.icon,
-				Game::WndProc,
+				Application::WndProc,
 				debug_
 			)
 		);
@@ -78,7 +72,7 @@ namespace easy2d
 		HWND hwnd = Window::Instance()->GetHandle();
 
 		ThrowIfFailed(
-			Graphics::Instance()->Init(
+			RenderSystem::Instance()->Init(
 				hwnd,
 				options.vsync,
 				debug_
@@ -126,11 +120,13 @@ namespace easy2d
 			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
 		}
 
-		// use Game instance in message loop
+		// use Application instance in message loop
 		::SetWindowLongW(hwnd, GWLP_USERDATA, PtrToUlong(this));
+
+		Setup();
 	}
 
-	void Game::Run()
+	void Application::Run()
 	{
 		HWND hwnd = Window::Instance()->GetHandle();
 
@@ -148,14 +144,14 @@ namespace easy2d
 		}
 	}
 
-	void Game::Quit()
+	void Application::Quit()
 	{
 		Window::Instance()->Destroy();
 	}
 
-	void Game::EnterScene(ScenePtr const & scene)
+	void Application::EnterScene(ScenePtr const & scene)
 	{
-		E2D_ASSERT(scene && "Game::EnterScene failed, NULL pointer exception");
+		E2D_ASSERT(scene && "Application::EnterScene failed, NULL pointer exception");
 
 		if (curr_scene_ == scene || next_scene_ == scene)
 			return;
@@ -163,7 +159,7 @@ namespace easy2d
 		next_scene_ = scene;
 	}
 
-	void Game::EnterScene(ScenePtr const& scene, TransitionPtr const& transition)
+	void Application::EnterScene(ScenePtr const& scene, TransitionPtr const& transition)
 	{
 		EnterScene(scene);
 		
@@ -178,17 +174,17 @@ namespace easy2d
 		}
 	}
 
-	ScenePtr const& Game::GetCurrentScene()
+	ScenePtr const& Application::GetCurrentScene()
 	{
 		return curr_scene_;
 	}
 
-	void Game::SetTimeScale(float scale)
+	void Application::SetTimeScale(float scale)
 	{
 		time_scale_ = scale;
 	}
 
-	void Game::Update()
+	void Application::Update()
 	{
 		static auto last = time::Now();
 
@@ -229,12 +225,12 @@ namespace easy2d
 			DebugNode::Instance()->Update(dt);
 	}
 
-	void Game::Render(HWND hwnd)
+	void Application::Render(HWND hwnd)
 	{
-		auto graphics = Graphics::Instance();
+		auto rt = RenderSystem::Instance();
 		
 		ThrowIfFailed(
-			graphics->BeginDraw(hwnd)
+			rt->BeginDraw(hwnd)
 		);
 
 		if (transition_)
@@ -250,27 +246,18 @@ namespace easy2d
 			DebugNode::Instance()->Render();
 
 		ThrowIfFailed(
-			graphics->EndDraw()
+			rt->EndDraw()
 		);
 
 		if (active_)
 			::InvalidateRect(hwnd, NULL, FALSE);
 	}
 
-	void Game::Dispatch(Event * event)
+	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		if (transition_)
-			return;
+		Application * app = reinterpret_cast<Application*>(::GetWindowLongW(hwnd, GWLP_USERDATA));
 
-		if (curr_scene_)
-			curr_scene_->DispatchEvent(event);
-	}
-
-	LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
-	{
-		Game * game = reinterpret_cast<Game*>(::GetWindowLongW(hwnd, GWLP_USERDATA));
-
-		if (!game)
+		if (!app)
 			return ::DefWindowProcW(hwnd, msg, wparam, lparam);
 		
 		switch (msg)
@@ -280,8 +267,8 @@ namespace easy2d
 			PAINTSTRUCT ps;
 			::BeginPaint(hwnd, &ps);
 
-			game->Update();
-			game->Render(hwnd);
+			app->Update();
+			app->Render(hwnd);
 
 			::EndPaint(hwnd, &ps);
 
@@ -289,11 +276,25 @@ namespace easy2d
 		}
 		break;
 
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		{
+			if (!app->transition_ && app->curr_scene_)
+			{
+				Event evt((msg == WM_KEYDOWN) ? KeyboardEvent::Down : KeyboardEvent::Up);
+				evt.key.code = KeyCode(wparam);
+				evt.key.count = static_cast<int>(lparam & 0xFF);
+
+				app->curr_scene_->Dispatch(evt);
+			}
+		}
+		break;
+
 		case WM_LBUTTONUP:
 		case WM_LBUTTONDOWN:
 		//case WM_LBUTTONDBLCLK:
-		//case WM_MBUTTONUP:
-		//case WM_MBUTTONDOWN:
+		case WM_MBUTTONUP:
+		case WM_MBUTTONDOWN:
 		//case WM_MBUTTONDBLCLK:
 		case WM_RBUTTONUP:
 		case WM_RBUTTONDOWN:
@@ -301,37 +302,100 @@ namespace easy2d
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
-			float x = GET_X_LPARAM(lparam) * Window::Instance()->GetContentScaleX();
-			float y = GET_Y_LPARAM(lparam) * Window::Instance()->GetContentScaleY();
-			float wheel_delta = 0.f;
-
-			MouseEvent::Type type;
-			if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN)
-				type = MouseEvent::Down;
-			else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP)
-				type = MouseEvent::Up;
-			else if (msg == WM_MOUSEMOVE)
-				type = MouseEvent::Move;
-			else
+			if (!app->transition_ && app->curr_scene_)
 			{
-				type = MouseEvent::Wheel;
-				wheel_delta = GET_WHEEL_DELTA_WPARAM(wparam) / 120.f;
+				Event evt;
+
+				evt.mouse.x = GET_X_LPARAM(lparam) * Window::Instance()->GetContentScaleX();
+				evt.mouse.y = GET_Y_LPARAM(lparam) * Window::Instance()->GetContentScaleY();
+				evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
+				evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
+
+				if (msg == WM_MOUSEMOVE)
+					evt.type = MouseEvent::Move;
+				else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN)
+					evt.type = MouseEvent::Down;
+				else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP)
+					evt.type = MouseEvent::Up;
+				else
+				{
+					evt.type = MouseEvent::Wheel;
+					evt.mouse.wheel_delta = GET_WHEEL_DELTA_WPARAM(wparam) / 120.f;
+				}
+
+				if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP)
+					evt.mouse.button = MouseButton::Left;
+				else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP)
+					evt.mouse.button = MouseButton::Right;
+				else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP)
+					evt.mouse.button = MouseButton::Middle;
+
+				app->curr_scene_->Dispatch(evt);
 			}
-
-			MouseEvent event(type, x, y, wheel_delta);
-
-			if (wparam & MK_LBUTTON || wparam & MK_RBUTTON)
-				event.button_down = true;
-
-			game->Dispatch(&event);
 		}
 		break;
 
-		case WM_KEYDOWN:
-		case WM_KEYUP:
+		case WM_SIZE:
 		{
-			KeyEvent event(msg, KeyCode(wparam));
-			game->Dispatch(&event);
+			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
+			{
+				app->active_ = false;
+
+				E2D_LOG(L"Window minimized");
+			}
+			else if (SIZE_RESTORED == wparam)
+			{
+				app->active_ = true;
+				::InvalidateRect(hwnd, nullptr, FALSE);
+
+				E2D_LOG(L"Window restored");
+			}
+
+			UINT width = LOWORD(lparam);
+			UINT height = HIWORD(lparam);
+
+			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
+			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
+			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
+			RenderSystem::Instance()->Resize(width, height);
+		}
+		break;
+
+		case WM_ACTIVATE:
+		{
+			bool active = (LOWORD(wparam) != WA_INACTIVE);
+			if (active)
+			{
+				E2D_LOG(L"Window activated");
+
+				if (app->curr_scene_)
+				{
+					Event evt(WindowEvent::Activate);
+					app->curr_scene_->Dispatch(evt);
+				}
+			}
+			else
+			{
+				E2D_LOG(L"Window deactivated");
+
+				if (app->curr_scene_)
+				{
+					Event evt(WindowEvent::Deavtivate);
+					app->curr_scene_->Dispatch(evt);
+				}
+			}
+		}
+		break;
+
+		case WM_SETTEXT:
+		{
+			E2D_LOG(L"Window title changed");
+		}
+		break;
+
+		case WM_SETICON:
+		{
+			E2D_LOG(L"Window icon changed");
 		}
 		break;
 
@@ -347,13 +411,12 @@ namespace easy2d
 		{
 			E2D_LOG(L"Received a message to close the window");
 
-			SysEvent event(SysEvent::WindowClose);
-			game->Dispatch(&event);
-
-			if (game->OnClose())
+			if (app->curr_scene_)
 			{
-				::DestroyWindow(hwnd);
+				Event evt(WindowEvent::Closing);
+				app->curr_scene_->Dispatch(evt);
 			}
+			::DestroyWindow(hwnd);
 			return 0;
 		}
 		break;
@@ -362,67 +425,8 @@ namespace easy2d
 		{
 			E2D_LOG(L"Window was destroyed");
 
-			game->OnExit();
 			::PostQuitMessage(0);
 			return 0;
-		}
-		break;
-
-		case WM_SIZE:
-		{
-			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
-			{
-				game->active_ = false;
-
-				E2D_LOG(L"Window minimized");
-			}
-			else if (SIZE_RESTORED == wparam)
-			{
-				game->active_ = true;
-				::InvalidateRect(hwnd, nullptr, FALSE);
-
-				E2D_LOG(L"Window restored");
-			}
-
-			UINT width = LOWORD(lparam);
-			UINT height = HIWORD(lparam);
-
-			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
-			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
-			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-			Graphics::Instance()->Resize(width, height);
-		}
-		break;
-
-		case WM_ACTIVATE:
-		{
-			bool active = (LOWORD(wparam) != WA_INACTIVE);
-			if (active)
-			{
-				E2D_LOG(L"Window activated");
-
-				SysEvent event(SysEvent::WindowActivate);
-				game->Dispatch(&event);
-			}
-			else
-			{
-				E2D_LOG(L"Window deactivated");
-
-				SysEvent event(SysEvent::WindowDeavtivate);
-				game->Dispatch(&event);
-			}
-		}
-		break;
-
-		case WM_SETTEXT:
-		{
-			E2D_LOG(L"Window title changed");
-		}
-		break;
-
-		case WM_SETICON:
-		{
-			E2D_LOG(L"Window icon changed");
 		}
 		break;
 		}

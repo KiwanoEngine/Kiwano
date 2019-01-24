@@ -21,7 +21,7 @@
 #pragma once
 #include "include-forwards.h"
 #include "time.h"
-#include "intrusive/List.hpp"
+#include "IntrusiveList.hpp"
 #include <functional>
 
 namespace easy2d
@@ -30,11 +30,11 @@ namespace easy2d
 
     // 定时任务
 	class Task
-		: public Object
-		, protected intrusive::ListItem<TaskPtr>
+		: public virtual Object
+		, protected IntrusiveListItem<TaskPtr>
 	{
 		friend class TaskManager;
-		friend class intrusive::List<TaskPtr>;
+		friend class IntrusiveList<TaskPtr>;
 
 		using Callback = std::function<void()>;
 

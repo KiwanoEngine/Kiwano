@@ -25,7 +25,7 @@ namespace easy2d
 {
 	class EventDispatcher
 	{
-		using Listeners = intrusive::List<EventListenerPtr>;
+		using Listeners = IntrusiveList<EventListenerPtr>;
 
 	public:
 		// Ìí¼Ó¼àÌıÆ÷
@@ -70,7 +70,7 @@ namespace easy2d
 			EventType type
 		);
 
-		virtual void DispatchEvent(Event* e);
+		virtual void Dispatch(Event& evt);
 
 	protected:
 		Listeners listeners_;

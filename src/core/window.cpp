@@ -35,19 +35,19 @@ namespace easy2d
 		Rect LocateWindow(int width, int height, float scale_x, float scale_y);
 	}
 
-	WindowImpl::WindowImpl()
+	Window::Window()
 		: handle(nullptr)
 		, scale_x(1.f)
 		, scale_y(1.f)
 	{
 	}
 
-	WindowImpl::~WindowImpl()
+	Window::~Window()
 	{
 		E2D_LOG(L"Destroying window");
 	}
 
-	HRESULT WindowImpl::Init(String title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
+	HRESULT Window::Init(String title, int width, int height, LPCWSTR icon, WNDPROC proc, bool debug)
 	{
 		E2D_LOG(L"Creating window");
 
@@ -75,6 +75,10 @@ namespace easy2d
 				0,
 				LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
 			);
+		}
+		else
+		{
+			wcex.hIcon = ::LoadIcon(nullptr, IDI_APPLICATION);
 		}
 
 		::RegisterClassEx(&wcex);
@@ -105,7 +109,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	String WindowImpl::GetTitle() const
+	String Window::GetTitle() const
 	{
 		if (handle)
 		{
@@ -116,13 +120,13 @@ namespace easy2d
 		return String();
 	}
 
-	void WindowImpl::SetTitle(String const& title)
+	void Window::SetTitle(String const& title)
 	{
 		if (handle)
 			::SetWindowText(handle, title.c_str());
 	}
 
-	Size WindowImpl::GetSize() const
+	Size Window::GetSize() const
 	{
 		if (handle)
 		{
@@ -136,17 +140,17 @@ namespace easy2d
 		return Size{};
 	}
 
-	float WindowImpl::GetWidth() const
+	float Window::GetWidth() const
 	{
 		return GetSize().x;
 	}
 
-	float WindowImpl::GetHeight() const
+	float Window::GetHeight() const
 	{
 		return GetSize().y;
 	}
 
-	void WindowImpl::SetSize(int width, int height)
+	void Window::SetSize(int width, int height)
 	{
 		if (handle)
 		{
@@ -162,7 +166,7 @@ namespace easy2d
 		}
 	}
 
-	void WindowImpl::SetIcon(LPCWSTR icon_resource)
+	void Window::SetIcon(LPCWSTR icon_resource)
 	{
 		if (handle)
 		{
@@ -181,22 +185,22 @@ namespace easy2d
 		}
 	}
 
-	HWND WindowImpl::GetHandle() const
+	HWND Window::GetHandle() const
 	{
 		return handle;
 	}
 
-	float WindowImpl::GetContentScaleX() const
+	float Window::GetContentScaleX() const
 	{
 		return scale_x;
 	}
 
-	float WindowImpl::GetContentScaleY() const
+	float Window::GetContentScaleY() const
 	{
 		return scale_y;
 	}
 
-	void WindowImpl::Destroy()
+	void Window::Destroy()
 	{
 		if (handle)
 			::DestroyWindow(handle);

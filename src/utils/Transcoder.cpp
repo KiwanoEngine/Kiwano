@@ -26,8 +26,6 @@
 
 namespace easy2d
 {
-	using namespace intrusive;
-
 	Transcoder::Transcoder()
 		: wave_format_(nullptr)
 	{
@@ -51,7 +49,7 @@ namespace easy2d
 	{
 		HRESULT hr = S_OK;
 
-		SmartPtr<IMFSourceReader> reader;
+		IntrusivePtr<IMFSourceReader> reader;
 
 		hr = modules::MediaFoundation::Get().MFCreateSourceReaderFromURL(
 			file_path,
@@ -72,9 +70,9 @@ namespace easy2d
 		HRESULT	hr = S_OK;
 		HINSTANCE hinstance = GetModuleHandle(nullptr);
 
-		SmartPtr<IStream> stream;
-		SmartPtr<IMFByteStream> byte_stream;
-		SmartPtr<IMFSourceReader> reader;
+		IntrusivePtr<IStream> stream;
+		IntrusivePtr<IMFByteStream> byte_stream;
+		IntrusivePtr<IMFSourceReader> reader;
 
 		LPVOID buffer;
 		DWORD buffer_size;
@@ -118,8 +116,8 @@ namespace easy2d
 		HRESULT hr = S_OK;
 		DWORD max_stream_size = 0;
 
-		SmartPtr<IMFMediaType> partial_type;
-		SmartPtr<IMFMediaType> uncompressed_type;
+		IntrusivePtr<IMFMediaType> partial_type;
+		IntrusivePtr<IMFMediaType> uncompressed_type;
 
 		hr = modules::MediaFoundation::Get().MFCreateMediaType(&partial_type);
 
@@ -199,8 +197,8 @@ namespace easy2d
 			DWORD position = 0;
 			BYTE* data = new (std::nothrow) BYTE[max_stream_size];
 
-			SmartPtr<IMFSample> sample;
-			SmartPtr<IMFMediaBuffer> buffer;
+			IntrusivePtr<IMFSample> sample;
+			IntrusivePtr<IMFMediaBuffer> buffer;
 
 			if (data == nullptr)
 			{
