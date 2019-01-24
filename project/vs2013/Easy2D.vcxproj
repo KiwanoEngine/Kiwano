@@ -20,7 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\core\Action.hpp" />
-    <ClInclude Include="..\..\src\core\ActionCombined.h" />
+    <ClInclude Include="..\..\src\core\ActionGroup.h" />
+    <ClInclude Include="..\..\src\core\ActionHelper.h" />
     <ClInclude Include="..\..\src\core\ActionTween.h" />
     <ClInclude Include="..\..\src\core\ActionManager.h" />
     <ClInclude Include="..\..\src\core\Animation.h" />
@@ -88,7 +89,7 @@
     <ClInclude Include="..\..\src\utils\Transcoder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\core\ActionCombined.cpp" />
+    <ClCompile Include="..\..\src\core\ActionGroup.cpp" />
     <ClCompile Include="..\..\src\core\ActionTween.cpp" />
     <ClCompile Include="..\..\src\core\ActionManager.cpp" />
     <ClCompile Include="..\..\src\core\Animation.cpp" />

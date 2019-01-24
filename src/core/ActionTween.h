@@ -74,13 +74,13 @@ namespace easy2d
 
 
 	// 补间动画
-	class Tween
+	class ActionTween
 		: public Action
 	{
 	public:
-		Tween();
+		ActionTween();
 
-		explicit Tween(
+		explicit ActionTween(
 			Duration const& duration,
 			EaseFunc func
 		);
@@ -118,7 +118,7 @@ namespace easy2d
 
 	// 相对位移动作
 	class MoveBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit MoveBy(
@@ -176,7 +176,7 @@ namespace easy2d
 
 	// 相对跳跃动作
 	class JumpBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit JumpBy(
@@ -240,7 +240,7 @@ namespace easy2d
 
 	// 相对缩放动作
 	class ScaleBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit ScaleBy(
@@ -314,7 +314,7 @@ namespace easy2d
 
 	// 透明度相对渐变动作
 	class OpacityBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit OpacityBy(
@@ -397,7 +397,7 @@ namespace easy2d
 
 	// 相对旋转动作
 	class RotateBy
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit RotateBy(
@@ -454,7 +454,7 @@ namespace easy2d
 
 	// 路径动作
 	class PathAction
-		: public Tween
+		: public ActionTween
 	{
 	public:
 		explicit PathAction(

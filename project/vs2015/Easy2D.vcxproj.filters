@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\..\src\easy2d.h" />
-    <ClInclude Include="..\..\src\core\ActionCombined.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\Animation.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -200,6 +197,12 @@
     <ClInclude Include="..\..\src\core\closure.hpp">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\core\ActionGroup.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\ActionHelper.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -216,9 +219,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\core\ActionCombined.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\core\Animation.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -346,6 +346,9 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\core\Application.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\ActionGroup.cpp">
       <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>

@@ -27,10 +27,10 @@
 namespace easy2d
 {
 	//-------------------------------------------------------
-	// Tween
+	// ActionTween
 	//-------------------------------------------------------
 
-	Tween::Tween()
+	ActionTween::ActionTween()
 		: elapsed_()
 		, duration_()
 		, ease_func_(math::Linear)
@@ -38,7 +38,7 @@ namespace easy2d
 	{
 	}
 
-	Tween::Tween(Duration const& duration, EaseFunc func)
+	ActionTween::ActionTween(Duration const& duration, EaseFunc func)
 		: elapsed_()
 		, ease_func_(math::Linear)
 		, ease_type_(EaseFunc::Linear)
@@ -47,7 +47,7 @@ namespace easy2d
 		SetEaseFunction(func);
 	}
 
-	void Tween::SetEaseFunction(EaseFunc func)
+	void ActionTween::SetEaseFunction(EaseFunc func)
 	{
 		ease_type_ = func;
 		switch (func)
@@ -150,29 +150,29 @@ namespace easy2d
 		}
 	}
 
-	void Tween::SetEaseFunction(EaseFunction func)
+	void ActionTween::SetEaseFunction(EaseFunction func)
 	{
 		ease_func_ = func;
 		ease_type_ = EaseFunc(-1);
 	}
 
-	void Tween::Reset()
+	void ActionTween::Reset()
 	{
 		Action::Reset();
 		elapsed_ = Duration{};
 	}
 
-	Duration const & Tween::GetDuration() const
+	Duration const & ActionTween::GetDuration() const
 	{
 		return duration_;
 	}
 
-	void Tween::Init(Node* target)
+	void ActionTween::Init(Node* target)
 	{
 		Action::Init(target);
 	}
 
-	void Tween::Update(Node* target, Duration const& dt)
+	void ActionTween::Update(Node* target, Duration const& dt)
 	{
 		Action::Update(target, dt);
 
@@ -195,7 +195,7 @@ namespace easy2d
 		UpdateStep(target, ease_func_(step));
 	}
 
-	void Tween::SetDuration(Duration const & duration)
+	void ActionTween::SetDuration(Duration const & duration)
 	{
 		duration_ = duration;
 	}
@@ -206,14 +206,14 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	MoveBy::MoveBy(Duration const& duration, Point const& vector, EaseFunc func)
-		: Tween(duration, func)
+		: ActionTween(duration, func)
 	{
 		delta_pos_ = vector;
 	}
 
 	void MoveBy::Init(Node* target)
 	{
-		Tween::Init(target);
+		ActionTween::Init(target);
 
 		if (target)
 		{
@@ -268,7 +268,7 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	JumpBy::JumpBy(Duration const& duration, Point const& vec, float height, int jumps, EaseFunc func)
-		: Tween(duration, func)
+		: ActionTween(duration, func)
 		, delta_pos_(vec)
 		, height_(height)
 		, jumps_(jumps)
@@ -287,7 +287,7 @@ namespace easy2d
 
 	void JumpBy::Init(Node* target)
 	{
-		Tween::Init(target);
+		ActionTween::Init(target);
 
 		if (target)
 		{
@@ -337,14 +337,14 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	ScaleBy::ScaleBy(Duration const& duration, float scale, EaseFunc func)
-		: Tween(duration, func)
+		: ActionTween(duration, func)
 	{
 		delta_x_ = scale;
 		delta_y_ = scale;
 	}
 
 	ScaleBy::ScaleBy(Duration const& duration, float scale_x, float scale_y, EaseFunc func)
-		: Tween(duration, func)
+		: ActionTween(duration, func)
 	{
 		delta_x_ = scale_x;
 		delta_y_ = scale_y;
@@ -352,7 +352,7 @@ namespace easy2d
 
 	void ScaleBy::Init(Node* target)
 	{
-		Tween::Init(target);
+		ActionTween::Init(target);
 
 		if (target)
 		{
@@ -411,14 +411,14 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	OpacityBy::OpacityBy(Duration const& duration, float opacity, EaseFunc func)
-		: Tween(duration, func)
+		: ActionTween(duration, func)
 	{
 		delta_val_ = opacity;
 	}
 
 	void OpacityBy::Init(Node* target)
 	{
-		Tween::Init(target);
+		ActionTween::Init(target);
 
 		if (target)
 		{
@@ -477,14 +477,14 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	RotateBy::RotateBy(Duration const& duration, float rotation, EaseFunc func)
-		: Tween(duration, func)
+		: ActionTween(duration, func)
 		, delta_val_(rotation)
 	{
 	}
 
 	void RotateBy::Init(Node* target)
 	{
-		Tween::Init(target);
+		ActionTween::Init(target);
 
 		if (target)
 		{
@@ -533,7 +533,7 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	PathAction::PathAction(Duration const & duration, GeometryPtr const& geo, bool rotating, float start, float end, EaseFunc func)
-		: Tween(duration, func)
+		: ActionTween(duration, func)
 		, start_(start)
 		, end_(end)
 		, geo_(geo)
@@ -553,7 +553,7 @@ namespace easy2d
 
 	void PathAction::Init(Node * target)
 	{
-		Tween::Init(target);
+		ActionTween::Init(target);
 
 		if (target)
 		{

@@ -43,23 +43,23 @@ namespace easy2d
 
 		virtual ~Action() {}
 
-		// 获取动作运行状态
-		virtual bool IsRunning() { return running_; }
-
 		// 继续动作
-		virtual void Resume() { running_ = true; }
+		void Resume() { running_ = true; }
 
 		// 暂停动作
-		virtual void Pause() { running_ = false; }
+		void Pause() { running_ = false; }
 
 		// 停止动作
-		virtual void Stop() { if (!done_) { done_ = true; if (cb_) cb_(); } }
+		void Stop() { if (!done_) { done_ = true; if (cb_) cb_(); } }
 
 		// 获取动作的拷贝
 		virtual ActionPtr Clone() const = 0;
 
 		// 获取动作的倒转
 		virtual ActionPtr Reverse() const = 0;
+
+		// 设置动作结束时的回调函数
+		void SetCallback(std::function<void()> cb) { cb_ = cb; }
 
 		// 重置动作
 		virtual void Reset()
@@ -68,13 +68,12 @@ namespace easy2d
 			done_ = false;
 		}
 
-		// 设置动作结束时的回调函数
-		void SetCallback(std::function<void()> cb) { cb_ = cb; }
-
 		virtual bool IsDone() const { return done_; }
 
+		virtual bool IsRunning() { return running_; }
+
 	protected:
-		virtual void Start()
+		void Start()
 		{
 			running_ = true;
 			this->Reset();
