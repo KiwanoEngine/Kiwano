@@ -506,7 +506,12 @@ namespace easy2d
 
 			hr = Factory::Instance()->CreateHwndRenderTarget(
 				render_target_,
-				D2D1::RenderTargetProperties(),
+				D2D1::RenderTargetProperties(
+					D2D1_RENDER_TARGET_TYPE_DEFAULT,
+					D2D1::PixelFormat(),
+					96.f,
+					96.f
+				),
 				D2D1::HwndRenderTargetProperties(
 					hwnd,
 					size,

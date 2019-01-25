@@ -33,9 +33,7 @@ namespace easy2d
 	{
 		MONITORINFOEX GetMoniterInfoEx(HWND hwnd);
 
-		void GetContentScale(float* scalex, float* scaley);
-
-		void AdjustWindow(UINT width, UINT height, DWORD style, float scalex, float scaley, UINT* win_width, UINT* win_height);
+		void AdjustWindow(UINT width, UINT height, DWORD style, UINT* win_width, UINT* win_height);
 
 		void ChangeFullScreenResolution(int width, int height, WCHAR* device_name);
 
@@ -46,8 +44,6 @@ namespace easy2d
 		: handle_(nullptr)
 		, width_(0)
 		, height_(0)
-		, scalex_(1.f)
-		, scaley_(1.f)
 		, device_name_(nullptr)
 	{
 	}
@@ -105,8 +101,6 @@ namespace easy2d
 		device_name_ = new WCHAR[len + 1];
 		lstrcpyW(device_name_, monitor_info_ex.szDevice);
 
-		GetContentScale(&scalex_, &scaley_);
-
 		int left = -1;
 		int top = -1;
 
@@ -133,8 +127,6 @@ namespace easy2d
 				width,
 				height,
 				GetWindowStyle(),
-				scalex_,
-				scaley_,
 				&win_width,
 				&win_height
 			);
@@ -282,7 +274,7 @@ namespace easy2d
 				UINT screenh = info.rcWork.bottom - info.rcWork.top;
 
 				UINT win_width, win_height;
-				AdjustWindow(width, height, GetWindowStyle(), scalex_, scaley_, &win_width, &win_height);
+				AdjustWindow(width, height, GetWindowStyle(), &win_width, &win_height);
 
 				int left = screenw > win_width ? ((screenw - win_width) / 2) : 0;
 				int top = screenh > win_height ? ((screenh - win_height) / 2) : 0;
@@ -305,16 +297,6 @@ namespace easy2d
 	DWORD Window::GetWindowStyle() const
 	{
 		return is_fullscreen_ ? (WINDOW_FULLSCREEN_STYLE) : (WINDOW_STYLE);
-	}
-
-	float Window::GetContentScaleX() const
-	{
-		return scalex_;
-	}
-
-	float Window::GetContentScaleY() const
-	{
-		return scaley_;
 	}
 
 	void Window::UpdateWindowRect()
@@ -376,24 +358,10 @@ namespace easy2d
 			return monitor_info;
 		}
 
-		void GetContentScale(float* scalex, float* scaley)
-		{
-			const float DEFAULT_SCREEN_DPI = 96.f;
-			const HDC dc = GetDC(NULL);
-			float xdpi = static_cast<float>(GetDeviceCaps(dc, LOGPIXELSX));
-			float ydpi = static_cast<float>(GetDeviceCaps(dc, LOGPIXELSY));
-			ReleaseDC(NULL, dc);
-
-			if (scalex)
-				*scalex = xdpi / DEFAULT_SCREEN_DPI;
-			if (scaley)
-				*scaley = ydpi / DEFAULT_SCREEN_DPI;
-		}
-
-		void AdjustWindow(UINT width, UINT height, DWORD style, float scalex, float scaley, UINT* win_width, UINT* win_height)
+		void AdjustWindow(UINT width, UINT height, DWORD style, UINT* win_width, UINT* win_height)
 		{
 			RECT rc;
-			::SetRect(&rc, 0, 0, (int)math::Ceil(width * scalex), (int)math::Ceil(height * scaley));
+			::SetRect(&rc, 0, 0, (int)width, (int)height);
 			::AdjustWindowRect(&rc, style, false);
 
 			*win_width = rc.right - rc.left;

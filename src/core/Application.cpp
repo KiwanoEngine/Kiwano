@@ -83,8 +83,6 @@ namespace easy2d
 		ThrowIfFailed(
 			Input::Instance()->Init(
 				hwnd,
-				Window::Instance()->GetContentScaleX(),
-				Window::Instance()->GetContentScaleY(),
 				debug_
 			)
 		);
@@ -299,8 +297,8 @@ namespace easy2d
 			{
 				Event evt;
 
-				evt.mouse.x = GET_X_LPARAM(lparam) * Window::Instance()->GetContentScaleX();
-				evt.mouse.y = GET_Y_LPARAM(lparam) * Window::Instance()->GetContentScaleY();
+				evt.mouse.x = static_cast<float>(GET_X_LPARAM(lparam));
+				evt.mouse.y = static_cast<float>(GET_Y_LPARAM(lparam));
 				evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
 				evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
 
