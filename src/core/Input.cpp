@@ -26,8 +26,6 @@ namespace easy2d
 {
 	Input::Input()
 		: hwnd_(nullptr)
-		, scale_x_(1.f)
-		, scale_y_(1.f)
 	{
 		ZeroMemory(keys_, sizeof(keys_));
 		ZeroMemory(keys_cache_, sizeof(keys_cache_));
@@ -38,13 +36,11 @@ namespace easy2d
 		E2D_LOG(L"Destroying input device");
 	}
 
-	HRESULT Input::Init(HWND hwnd, float scalex, float scaley, bool debug)
+	HRESULT Input::Init(HWND hwnd, bool debug)
 	{
 		E2D_LOG(L"Initing input device");
 
 		hwnd_ = hwnd;
-		scale_x_ = scalex;
-		scale_y_ = scaley;
 
 		return S_OK;
 	}
@@ -52,7 +48,7 @@ namespace easy2d
 	void Input::Update()
 	{
 		memcpy(keys_cache_, keys_, sizeof(keys_cache_));
-		GetKeyboardState(keys_);
+		::GetKeyboardState(keys_);
 	}
 
 	bool Input::IsDown(KeyCode code)
@@ -91,18 +87,12 @@ namespace easy2d
 
 	float Input::GetMouseX()
 	{
-		POINT pos;
-		::GetCursorPos(&pos);
-		::ScreenToClient(hwnd_, &pos);
-		return pos.x * scale_x_;
+		return GetMousePos().x;
 	}
 
 	float Input::GetMouseY()
 	{
-		POINT pos;
-		::GetCursorPos(&pos);
-		::ScreenToClient(hwnd_, &pos);
-		return pos.y * scale_y_;
+		return GetMousePos().y;
 	}
 
 	Point Input::GetMousePos()
@@ -110,6 +100,6 @@ namespace easy2d
 		POINT pos;
 		::GetCursorPos(&pos);
 		::ScreenToClient(hwnd_, &pos);
-		return Point{ pos.x * scale_x_, pos.y * scale_y_ };
+		return Point{ static_cast<float>(pos.x), static_cast<float>(pos.y) };
 	}
 }

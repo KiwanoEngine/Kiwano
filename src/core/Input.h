@@ -31,7 +31,7 @@ namespace easy2d
 		E2D_DECLARE_SINGLETON(Input);
 
 	public:
-		HRESULT Init(HWND hwnd, float scalex, float scaley, bool debug);
+		HRESULT Init(HWND hwnd, bool debug);
 
 		// 检测键盘按键是否正被按下
 		bool IsDown(
@@ -81,8 +81,6 @@ namespace easy2d
 
 	protected:
 		HWND	hwnd_;
-		float	scale_x_;
-		float	scale_y_;
 		BYTE	keys_[256];
 		BYTE	keys_cache_[256];
 	};

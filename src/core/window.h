@@ -70,10 +70,6 @@ namespace easy2d
 
 		DWORD GetWindowStyle() const;
 
-		float GetContentScaleX() const;
-
-		float GetContentScaleY() const;
-
 		void UpdateWindowRect();
 
 		void SetActive(bool actived);
@@ -90,8 +86,6 @@ namespace easy2d
 		bool	is_fullscreen_;
 		int		width_;
 		int		height_;
-		float	scalex_;
-		float	scaley_;
 		WCHAR*	device_name_;
 	};
 }
