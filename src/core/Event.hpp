@@ -100,7 +100,7 @@ namespace easy2d
 			Resized,		// 窗口大小变化
 			FocusChanged,	// 获得或失去焦点
 			TitleChanged,	// 标题变化
-			Closing,		// 关闭窗口
+			Closed,			// 窗口被关闭
 
 			Last
 		};

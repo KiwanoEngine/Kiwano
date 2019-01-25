@@ -28,14 +28,14 @@
 #include "Transition.h"
 #include <windowsx.h>
 #include <imm.h>
+#include <iostream>
 
 #pragma comment (lib ,"imm32.lib")
 
 namespace easy2d
 {
 	Application::Application(String const& app_name)
-		: active_(false)
-		, debug_(false)
+		: debug_(false)
 		, curr_scene_(nullptr)
 		, next_scene_(nullptr)
 		, transition_(nullptr)
@@ -93,6 +93,8 @@ namespace easy2d
 			Audio::Instance()->Init(debug_)
 		);
 
+		Setup();
+
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
 
@@ -122,9 +124,7 @@ namespace easy2d
 		}
 
 		// use Application instance in message loop
-		::SetWindowLongW(hwnd, GWLP_USERDATA, PtrToUlong(this));
-
-		Setup();
+		::SetWindowLongPtr(hwnd, GWLP_USERDATA, PtrToUlong(this));
 	}
 
 	void Application::Run()
@@ -133,8 +133,7 @@ namespace easy2d
 
 		if (hwnd)
 		{
-			::ShowWindow(hwnd, SW_SHOWNORMAL);
-			::UpdateWindow(hwnd);
+			Window::Instance()->Prepare();
 
 			MSG msg = {};
 			while (::GetMessageW(&msg, nullptr, 0, 0))
@@ -250,8 +249,7 @@ namespace easy2d
 			rt->EndDraw()
 		);
 
-		if (active_)
-			::InvalidateRect(hwnd, NULL, FALSE);
+		::InvalidateRect(hwnd, NULL, FALSE);
 	}
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -342,15 +340,10 @@ namespace easy2d
 
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{
-				app->active_ = false;
-
 				E2D_LOG(L"Window minimized");
 			}
 			else
 			{
-				app->active_ = true;
-				::InvalidateRect(hwnd, nullptr, FALSE);
-
 				E2D_LOG(L"Window resized");
 
 				if (app->curr_scene_)
@@ -360,6 +353,8 @@ namespace easy2d
 					evt.win.height = static_cast<int>(height);
 					app->curr_scene_->Dispatch(evt);
 				}
+
+				Window::Instance()->UpdateWindowRect();
 			}
 		}
 		break;
@@ -382,14 +377,17 @@ namespace easy2d
 		case WM_ACTIVATE:
 		{
 			bool active = (LOWORD(wparam) != WA_INACTIVE);
+
+			E2D_LOG(active ? L"Window activated" : L"Window deactivated");
+
+			Window::Instance()->SetActive(active);
+
 			if (app->curr_scene_)
 			{
 				Event evt(WindowEvent::FocusChanged);
 				evt.win.focus = active;
 				app->curr_scene_->Dispatch(evt);
 			}
-
-			E2D_LOG(active ? L"Window activated" : L"Window deactivated");
 		}
 		break;
 
@@ -422,14 +420,7 @@ namespace easy2d
 
 		case WM_CLOSE:
 		{
-			E2D_LOG(L"Window is closing");
-
-			if (app->curr_scene_)
-			{
-				Event evt(WindowEvent::Closing);
-				app->curr_scene_->Dispatch(evt);
-			}
-			::DestroyWindow(hwnd);
+			Window::Instance()->Destroy();
 			return 0;
 		}
 		break;
@@ -437,6 +428,12 @@ namespace easy2d
 		case WM_DESTROY:
 		{
 			E2D_LOG(L"Window was destroyed");
+
+			if (app->curr_scene_)
+			{
+				Event evt(WindowEvent::Closed);
+				app->curr_scene_->Dispatch(evt);
+			}
 
 			::PostQuitMessage(0);
 			return 0;

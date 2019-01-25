@@ -100,7 +100,6 @@ namespace easy2d
 
 	private:
 		bool			debug_;
-		bool			active_;
 		float			time_scale_;
 		String			app_name_;
 		ScenePtr		curr_scene_;

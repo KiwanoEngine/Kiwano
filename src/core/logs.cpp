@@ -31,11 +31,14 @@ namespace easy2d
 	{
 		namespace
 		{
+#ifdef E2D_DEBUG
 			bool enabled = true;
+#else
+			bool enabled = false;
+#endif
 
 			void Out(std::wostream& stream, const wchar_t* output)
 			{
-				stream.imbue(std::locale("chs"));
 				stream << output;
 				::OutputDebugStringW(output);
 			}

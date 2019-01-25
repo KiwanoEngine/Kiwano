@@ -31,28 +31,46 @@ namespace easy2d
 {
 	namespace
 	{
-		void GetContentScale(float* scale_x, float* scale_y);
+		MONITORINFOEX GetMoniterInfoEx(HWND hwnd);
+
+		void GetContentScale(float* scalex, float* scaley);
 
 		void AdjustWindow(UINT width, UINT height, DWORD style, float scalex, float scaley, UINT* win_width, UINT* win_height);
+
+		void ChangeFullScreenResolution(int width, int height, WCHAR* device_name);
+
+		void RestoreResolution(WCHAR* device_name);
 	}
 
 	Window::Window()
-		: handle(nullptr)
-		, scale_x(1.f)
-		, scale_y(1.f)
+		: handle_(nullptr)
+		, width_(0)
+		, height_(0)
+		, scalex_(1.f)
+		, scaley_(1.f)
+		, device_name_(nullptr)
 	{
 	}
 
 	Window::~Window()
 	{
 		E2D_LOG(L"Destroying window");
+
+		if (is_fullscreen_)
+			RestoreResolution(device_name_);
+
+		if (device_name_)
+		{
+			delete[] device_name_;
+			device_name_ = nullptr;
+		}
 	}
 
 	HRESULT Window::Init(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc, bool debug)
 	{
 		E2D_LOG(L"Creating window");
 		
-		HINSTANCE hinstance	= GetModuleHandle(nullptr);
+		HINSTANCE hinst	= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
 		wcex.cbSize			= sizeof(WNDCLASSEX);
 		wcex.lpszClassName	= E2D_WND_CLASS_NAME;
@@ -61,52 +79,49 @@ namespace easy2d
 		wcex.hIcon			= nullptr;
 		wcex.cbClsExtra		= 0;
 		wcex.cbWndExtra		= sizeof(LONG_PTR);
-		wcex.hInstance		= hinstance;
+		wcex.hInstance		= hinst;
 		wcex.hbrBackground	= nullptr;
 		wcex.lpszMenuName	= nullptr;
-		wcex.hCursor		= ::LoadCursor(nullptr, IDC_ARROW);
+		wcex.hCursor		= ::LoadCursorW(nullptr, IDC_ARROW);
 
 		if (icon)
 		{
-			wcex.hIcon = (HICON)::LoadImageW(
-				hinstance,
-				icon,
-				IMAGE_ICON,
-				0,
-				0,
-				LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
-			);
-		}
-		else
-		{
-			wcex.hIcon = ::LoadIconW(nullptr, IDI_APPLICATION);
+			wcex.hIcon = (HICON)::LoadImageW(hinst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 		}
 
 		::RegisterClassExW(&wcex);
 
+		// Get the nearest monitor to this window
+		HMONITOR monitor = ::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY);
+
+		// Get the target monitor info
+		MONITORINFOEX monitor_info_ex;
+		memset(&monitor_info_ex, 0, sizeof(MONITORINFOEX));
+		monitor_info_ex.cbSize = sizeof(MONITORINFOEX);
+		::GetMonitorInfoW(monitor, &monitor_info_ex);
+
+		// Save the device name
+		int len = lstrlenW(monitor_info_ex.szDevice);
+		device_name_ = new WCHAR[len + 1];
+		lstrcpyW(device_name_, monitor_info_ex.szDevice);
+
+		GetContentScale(&scalex_, &scaley_);
+
 		int left = -1;
 		int top = -1;
 
-		HMONITOR		monitor = nullptr;
-		MONITORINFOEX	monitor_info_ex;
+		is_fullscreen_ = fullscreen;
 
-		// Get the nearest monitor to this window
-		POINT anchor;
-		anchor.x = left;
-		anchor.y = top;
-		monitor = MonitorFromPoint(anchor, MONITOR_DEFAULTTOPRIMARY);
-
-		// Get the target monitor info      
-		memset(&monitor_info_ex, 0, sizeof(MONITORINFOEX));
-		monitor_info_ex.cbSize = sizeof(MONITORINFOEX);
-		GetMonitorInfoW(monitor, &monitor_info_ex);
-
-		GetContentScale(&scale_x, &scale_y);
-
-		if (fullscreen)
+		if (is_fullscreen_)
 		{
 			top = monitor_info_ex.rcMonitor.top;
 			left = monitor_info_ex.rcMonitor.left;
+
+			if (width > monitor_info_ex.rcWork.right - left)
+				width = monitor_info_ex.rcWork.right - left;
+
+			if (height > monitor_info_ex.rcWork.bottom - top)
+				height = monitor_info_ex.rcWork.bottom - top;
 		}
 		else
 		{
@@ -117,9 +132,9 @@ namespace easy2d
 			AdjustWindow(
 				width,
 				height,
-				fullscreen ? (WINDOW_FULLSCREEN_STYLE) : (WINDOW_STYLE),
-				scale_x,
-				scale_y,
+				GetWindowStyle(),
+				scalex_,
+				scaley_,
 				&win_width,
 				&win_height
 			);
@@ -130,55 +145,51 @@ namespace easy2d
 			height = win_height;
 		}
 
-		if (width > monitor_info_ex.rcWork.right - left)
-			width = monitor_info_ex.rcWork.right - left;
-
-		if (height > monitor_info_ex.rcWork.bottom - top)
-			height = monitor_info_ex.rcWork.bottom - top;
-
-		if (fullscreen)
-		{
-			DEVMODE mode;
-			memset(&mode, 0, sizeof(mode));
-			mode.dmSize = sizeof(DEVMODE);
-			mode.dmBitsPerPel = fullscreen ? 32 : (::GetDeviceCaps(GetDC(0), BITSPIXEL));
-			mode.dmPelsWidth = width;
-			mode.dmPelsHeight = height;
-			mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-			if (DISP_CHANGE_SUCCESSFUL != ::ChangeDisplaySettingsExW(monitor_info_ex.szDevice, &mode, NULL, CDS_FULLSCREEN, NULL))
-				logs::Errorln(L"ChangeDisplaySettings failed");
-		}
-
-		handle = ::CreateWindowExW(
-			fullscreen ? (WS_EX_TOPMOST) : 0,
+		handle_ = ::CreateWindowExW(
+			is_fullscreen_ ? WS_EX_TOPMOST : 0,
 			E2D_WND_CLASS_NAME,
 			title.c_str(),
-			fullscreen ? (WINDOW_FULLSCREEN_STYLE) : (WINDOW_STYLE),
+			GetWindowStyle(),
 			left,
 			top,
 			width,
 			height,
 			nullptr,
 			nullptr,
-			hinstance,
+			hinst,
 			nullptr
 		);
 
-		if (handle == nullptr)
+		if (handle_ == nullptr)
 		{
-			::UnregisterClass(E2D_WND_CLASS_NAME, hinstance);
+			::UnregisterClass(E2D_WND_CLASS_NAME, hinst);
 			return HRESULT_FROM_WIN32(GetLastError());
 		}
+
+		RECT rc;
+		GetClientRect(handle_, &rc);
+		width_ = rc.right - rc.left;
+		height_ = rc.bottom - rc.top;
 		return S_OK;
+	}
+
+	void Window::Prepare()
+	{
+		::ShowWindow(handle_, SW_SHOWNORMAL);
+		::UpdateWindow(handle_);
+
+		if (is_fullscreen_)
+		{
+			ChangeFullScreenResolution(width_, height_, device_name_);
+		}
 	}
 
 	String Window::GetTitle() const
 	{
-		if (handle)
+		if (handle_)
 		{
 			wchar_t title[256];
-			GetWindowTextW(handle, title, 256);
+			::GetWindowTextW(handle_, title, 256);
 			return title;
 		}
 		return String();
@@ -186,37 +197,31 @@ namespace easy2d
 
 	void Window::SetTitle(String const& title)
 	{
-		if (handle)
-			::SetWindowText(handle, title.c_str());
+		if (handle_)
+			::SetWindowTextW(handle_, title.c_str());
 	}
 
 	Size Window::GetSize() const
 	{
-		if (handle)
-		{
-			RECT rect;
-			GetClientRect(handle, &rect);
-			return Size{
-				static_cast<float>(rect.right - rect.left),
-				static_cast<float>(rect.bottom - rect.top)
-			};
-		}
-		return Size{};
+		return Size{
+			static_cast<float>(width_),
+			static_cast<float>(height_)
+		};
 	}
 
 	float Window::GetWidth() const
 	{
-		return GetSize().x;
+		return static_cast<float>(width_);
 	}
 
 	float Window::GetHeight() const
 	{
-		return GetSize().y;
+		return static_cast<float>(height_);
 	}
 
 	void Window::SetIcon(LPCWSTR icon_resource)
 	{
-		if (handle)
+		if (handle_)
 		{
 			HINSTANCE hinstance = GetModuleHandle(nullptr);
 			HICON icon = (HICON)::LoadImage(
@@ -228,35 +233,150 @@ namespace easy2d
 				LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE
 			);
 
-			::SendMessage(handle, WM_SETICON, ICON_BIG, (LPARAM)icon);
-			::SendMessage(handle, WM_SETICON, ICON_SMALL, (LPARAM)icon);
+			::SendMessage(handle_, WM_SETICON, ICON_BIG, (LPARAM)icon);
+			::SendMessage(handle_, WM_SETICON, ICON_SMALL, (LPARAM)icon);
+		}
+	}
+
+	void Window::Resize(int width, int height)
+	{
+		if (handle_ && !is_fullscreen_)
+		{
+			RECT rc = { 0, 0, int(width), int(height) };
+			::AdjustWindowRect(&rc, GetWindowStyle(), false);
+
+			width = rc.right - rc.left;
+			height = rc.bottom - rc.top;
+			::SetWindowPos(handle_, 0, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+		}
+	}
+
+	void Window::SetFullscreen(bool fullscreen, int width, int height)
+	{
+		if (is_fullscreen_ != fullscreen || width != width_ || height != height_)
+		{
+			is_fullscreen_ = fullscreen;
+
+			if (is_fullscreen_)
+			{
+				// move window to (0, 0) before display switch
+				::SetWindowPos(handle_, HWND_TOPMOST, 0, 0, width_, height_, SWP_NOACTIVATE);
+
+				ChangeFullScreenResolution(width, height, device_name_);
+
+				MONITORINFOEX info = GetMoniterInfoEx(handle_);
+
+				::SetWindowLongPtr(handle_, GWL_STYLE, GetWindowStyle());
+				::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width, height, SWP_NOACTIVATE);
+
+				width_ = width;
+				height_ = height;
+			}
+			else
+			{
+				RestoreResolution(device_name_);
+
+				MONITORINFOEX info = GetMoniterInfoEx(handle_);
+
+				UINT screenw = info.rcWork.right - info.rcWork.left;
+				UINT screenh = info.rcWork.bottom - info.rcWork.top;
+
+				UINT win_width, win_height;
+				AdjustWindow(width, height, GetWindowStyle(), scalex_, scaley_, &win_width, &win_height);
+
+				int left = screenw > win_width ? ((screenw - win_width) / 2) : 0;
+				int top = screenh > win_height ? ((screenh - win_height) / 2) : 0;
+
+				::SetWindowLongPtr(handle_, GWL_STYLE, GetWindowStyle());
+				::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, win_width, win_height, SWP_DRAWFRAME | SWP_FRAMECHANGED);
+				
+				UpdateWindowRect();
+			}
+			
+			::ShowWindow(handle_, SW_SHOWNORMAL);
 		}
 	}
 
 	HWND Window::GetHandle() const
 	{
-		return handle;
+		return handle_;
+	}
+
+	DWORD Window::GetWindowStyle() const
+	{
+		return is_fullscreen_ ? (WINDOW_FULLSCREEN_STYLE) : (WINDOW_STYLE);
 	}
 
 	float Window::GetContentScaleX() const
 	{
-		return scale_x;
+		return scalex_;
 	}
 
 	float Window::GetContentScaleY() const
 	{
-		return scale_y;
+		return scaley_;
+	}
+
+	void Window::UpdateWindowRect()
+	{
+		if (!handle_)
+			return;
+
+		RECT rc;
+		::GetClientRect(handle_, &rc);
+
+		width_ = rc.right - rc.left;
+		height_ = rc.bottom - rc.top;
+	}
+
+	void Window::SetActive(bool actived)
+	{
+		if (!handle_)
+			return;
+
+		if (is_fullscreen_)
+		{
+			if (actived)
+			{
+				ChangeFullScreenResolution(width_, height_, device_name_);
+
+				MONITORINFOEX info = GetMoniterInfoEx(handle_);
+				::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width_, height_, SWP_NOACTIVATE);
+			}
+			else
+			{
+				RestoreResolution(device_name_);
+
+				::SetWindowPos(handle_, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+				::ShowWindow(handle_, SW_MINIMIZE);
+			}
+		}
 	}
 
 	void Window::Destroy()
 	{
-		if (handle)
-			::DestroyWindow(handle);
+		if (handle_)
+		{
+			::DestroyWindow(handle_);
+			handle_ = nullptr;
+		}
 	}
 
 	namespace
 	{
-		void GetContentScale(float* scale_x, float* scale_y)
+		MONITORINFOEX GetMoniterInfoEx(HWND hwnd)
+		{
+			HMONITOR monitor = ::MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+			MONITORINFOEX monitor_info;
+
+			memset(&monitor_info, 0, sizeof(MONITORINFOEX));
+			monitor_info.cbSize = sizeof(MONITORINFOEX);
+			::GetMonitorInfoW(monitor, &monitor_info);
+
+			return monitor_info;
+		}
+
+		void GetContentScale(float* scalex, float* scaley)
 		{
 			const float DEFAULT_SCREEN_DPI = 96.f;
 			const HDC dc = GetDC(NULL);
@@ -264,10 +384,10 @@ namespace easy2d
 			float ydpi = static_cast<float>(GetDeviceCaps(dc, LOGPIXELSY));
 			ReleaseDC(NULL, dc);
 
-			if (scale_x)
-				*scale_x = xdpi / DEFAULT_SCREEN_DPI;
-			if (scale_y)
-				*scale_y = ydpi / DEFAULT_SCREEN_DPI;
+			if (scalex)
+				*scalex = xdpi / DEFAULT_SCREEN_DPI;
+			if (scaley)
+				*scaley = ydpi / DEFAULT_SCREEN_DPI;
 		}
 
 		void AdjustWindow(UINT width, UINT height, DWORD style, float scalex, float scaley, UINT* win_width, UINT* win_height)
@@ -279,19 +399,35 @@ namespace easy2d
 			*win_width = rc.right - rc.left;
 			*win_height = rc.bottom - rc.top;
 
-			HMONITOR monitor = ::MonitorFromWindow(NULL, MONITOR_DEFAULTTONEAREST);
-			MONITORINFO monitor_info;
-			::memset(&monitor_info, 0, sizeof(MONITORINFO));
-			monitor_info.cbSize = sizeof(MONITORINFO);
-			::GetMonitorInfoW(monitor, &monitor_info);
+			MONITORINFOEX info = GetMoniterInfoEx(NULL);
 
-			long max_width = monitor_info.rcWork.right - monitor_info.rcWork.left;
-			long max_height = monitor_info.rcWork.bottom - monitor_info.rcWork.top;
+			UINT screenw = info.rcWork.right - info.rcWork.left;
+			UINT screenh = info.rcWork.bottom - info.rcWork.top;
 
-			if (*win_width > static_cast<UINT>(max_width))
-				*win_width = max_width;
-			if (*win_height > static_cast<UINT>(max_height))
-				*win_height = max_height;
+			if (*win_width > screenw)
+				*win_width = screenw;
+			if (*win_height > screenh)
+				*win_height = screenh;
+		}
+
+		void ChangeFullScreenResolution(int width, int height, WCHAR* device_name)
+		{
+			DEVMODE mode;
+
+			memset(&mode, 0, sizeof(mode));
+			mode.dmSize = sizeof(DEVMODE);
+			mode.dmBitsPerPel = ::GetDeviceCaps(::GetDC(0), BITSPIXEL);;
+			mode.dmPelsWidth = width;
+			mode.dmPelsHeight = height;
+			mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+			if (::ChangeDisplaySettingsExW(device_name, &mode, NULL, CDS_FULLSCREEN, NULL) != DISP_CHANGE_SUCCESSFUL)
+				logs::Errorln(L"ChangeDisplaySettings failed");
+		}
+
+		void RestoreResolution(WCHAR* device_name)
+		{
+			::ChangeDisplaySettingsExW(device_name, NULL, NULL, 0, NULL);
 		}
 	}
 }
