@@ -30,16 +30,6 @@ namespace easy2d
 		E2D_DECLARE_SINGLETON(Window);
 
 	public:
-		HRESULT Init(
-			String	title,
-			int		width,
-			int		height,
-			LPCWSTR	icon,
-			bool	fullscreen,
-			WNDPROC	proc,
-			bool	debug
-		);
-
 		// 获取标题
 		String GetTitle() const;
 
@@ -58,11 +48,35 @@ namespace easy2d
 		// 设置窗口图标
 		void SetIcon(LPCWSTR icon_resource);
 
+		// 重设窗口大小
+		void Resize(int width, int height);
+
+		// 设置全屏模式
+		void SetFullscreen(bool fullscreen, int width, int height);
+
+		HRESULT Init(
+			String	title,
+			int		width,
+			int		height,
+			LPCWSTR	icon,
+			bool	fullscreen,
+			WNDPROC	proc,
+			bool	debug
+		);
+
+		void Prepare();
+
 		HWND GetHandle() const;
+
+		DWORD GetWindowStyle() const;
 
 		float GetContentScaleX() const;
 
 		float GetContentScaleY() const;
+
+		void UpdateWindowRect();
+
+		void SetActive(bool actived);
 
 		void Destroy();
 
@@ -72,8 +86,12 @@ namespace easy2d
 		~Window();
 
 	private:
-		HWND	handle;
-		float	scale_x;
-		float	scale_y;
+		HWND	handle_;
+		bool	is_fullscreen_;
+		int		width_;
+		int		height_;
+		float	scalex_;
+		float	scaley_;
+		WCHAR*	device_name_;
 	};
 }

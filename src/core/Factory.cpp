@@ -38,12 +38,12 @@ namespace easy2d
 	{
 		E2D_LOG(L"Creating device-independent resources");
 
-		D2D1_FACTORY_OPTIONS fact_options;
-		fact_options.debugLevel = debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE;
+		D2D1_FACTORY_OPTIONS options;
+		options.debugLevel = debug ? D2D1_DEBUG_LEVEL_INFORMATION : D2D1_DEBUG_LEVEL_NONE;
 		HRESULT hr = modules::DirectX::Get().D2D1CreateFactory(
 			D2D1_FACTORY_TYPE_SINGLE_THREADED,
 			__uuidof(ID2D1Factory),
-			&fact_options,
+			&options,
 			reinterpret_cast<void**>(&factory_)
 		);
 
