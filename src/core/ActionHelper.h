@@ -21,6 +21,7 @@
 #pragma once
 #include "ActionGroup.h"
 #include "ActionTween.h"
+#include "Animation.h"
 #include "Delay.h"
 
 namespace easy2d
@@ -38,6 +39,7 @@ namespace easy2d
 			return base;
 		}
 
+	private:
 		ActionPtr	base;
 		int			loop;
 	};
@@ -61,6 +63,7 @@ namespace easy2d
 			return base;
 		}
 
+	private:
 		ActionTweenPtr	base;
 		Duration		dur;
 		int				loop;
@@ -168,6 +171,12 @@ namespace easy2d
 			float end = 1.f)			/* жу╣Ц */
 		{
 			return TweenActionHelper(new easy2d::PathAction(0, geo, rotating, start, end));
+		}
+
+		static inline TweenActionHelper
+			Animation(FramesPtr const& frames)
+		{
+			return TweenActionHelper(new easy2d::Animation(0, frames));
 		}
 
 		static inline ActionHelper

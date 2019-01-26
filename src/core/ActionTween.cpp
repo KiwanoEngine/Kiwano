@@ -223,16 +223,13 @@ namespace easy2d
 
 	void MoveBy::UpdateStep(Node* target, float step)
 	{
-		if (target)
-		{
-			Point diff = target->GetPosition() - prev_pos_;
-			start_pos_ = start_pos_ + diff;
+		Point diff = target->GetPosition() - prev_pos_;
+		start_pos_ = start_pos_ + diff;
 
-			Point new_pos = start_pos_ + (delta_pos_ * step);
-			target->SetPosition(new_pos);
+		Point new_pos = start_pos_ + (delta_pos_ * step);
+		target->SetPosition(new_pos);
 
-			prev_pos_ = new_pos;
-		}
+		prev_pos_ = new_pos;
 	}
 
 	ActionPtr MoveBy::Clone() const
@@ -297,21 +294,18 @@ namespace easy2d
 
 	void JumpBy::UpdateStep(Node* target, float step)
 	{
-		if (target)
-		{
-			float frac = fmod(step * jumps_, 1.f);
-			float x = delta_pos_.x * step;
-			float y = height_ * 4 * frac * (1 - frac);
-			y += delta_pos_.y * step;
+		float frac = fmod(step * jumps_, 1.f);
+		float x = delta_pos_.x * step;
+		float y = height_ * 4 * frac * (1 - frac);
+		y += delta_pos_.y * step;
 
-			Point diff = target->GetPosition() - prev_pos_;
-			start_pos_ = diff + start_pos_;
+		Point diff = target->GetPosition() - prev_pos_;
+		start_pos_ = diff + start_pos_;
 
-			Point new_pos = start_pos_ + Point(x, y);
-			target->SetPosition(new_pos);
+		Point new_pos = start_pos_ + Point(x, y);
+		target->SetPosition(new_pos);
 
-			prev_pos_ = new_pos;
-		}
+		prev_pos_ = new_pos;
 	}
 
 	JumpTo::JumpTo(Duration duration, Point const& pos, float height, int jumps, EaseFunc func)
@@ -363,10 +357,7 @@ namespace easy2d
 
 	void ScaleBy::UpdateStep(Node* target, float step)
 	{
-		if (target)
-		{
-			target->SetScale(start_scale_x_ + delta_x_ * step, start_scale_y_ + delta_y_ * step);
-		}
+		target->SetScale(start_scale_x_ + delta_x_ * step, start_scale_y_ + delta_y_ * step);
 	}
 
 	ActionPtr ScaleBy::Clone() const
@@ -428,10 +419,7 @@ namespace easy2d
 
 	void OpacityBy::UpdateStep(Node* target, float step)
 	{
-		if (target)
-		{
-			target->SetOpacity(start_val_ + delta_val_ * step);
-		}
+		target->SetOpacity(start_val_ + delta_val_ * step);
 	}
 
 	ActionPtr OpacityBy::Clone() const
@@ -494,10 +482,7 @@ namespace easy2d
 
 	void RotateBy::UpdateStep(Node* target, float step)
 	{
-		if (target)
-		{
-			target->SetRotation(start_val_ + delta_val_ * step);
-		}
+		target->SetRotation(start_val_ + delta_val_ * step);
 	}
 
 	ActionPtr RotateBy::Clone() const
@@ -563,21 +548,18 @@ namespace easy2d
 
 	void PathAction::UpdateStep(Node* target, float step)
 	{
-		if (target)
+		float length = geo_->GetLength() * std::min(std::max((end_ - start_) * step + start_, 0.f), 1.f);
+
+		Point point, tangent;
+		if (geo_->ComputePointAt(length, &point, &tangent))
 		{
-			float length = geo_->GetLength() * std::min(std::max((end_ - start_) * step + start_, 0.f), 1.f);
+			target->SetPosition(start_pos_ + point);
 
-			Point point, tangent;
-			if (geo_->ComputePointAt(length, &point, &tangent))
+			if (rotating_)
 			{
-				target->SetPosition(start_pos_ + point);
-
-				if (rotating_)
-				{
-					float ac = math::Acos(tangent.x);
-					float rotation = (tangent.y < 0.f) ? 360.f - ac : ac;
-					target->SetRotation(rotation);
-				}
+				float ac = math::Acos(tangent.x);
+				float rotation = (tangent.y < 0.f) ? 360.f - ac : ac;
+				target->SetRotation(rotation);
 			}
 		}
 	}

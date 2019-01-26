@@ -35,11 +35,6 @@ namespace easy2d
 			Array<ImagePtr> const& frames	/* 关键帧数组 */
 		);
 
-		explicit Frames(
-			Duration interval,		/* 帧间隔 */
-			Array<ImagePtr> const& frames	/* 关键帧数组 */
-		);
-
 		virtual ~Frames();
 
 		// 添加关键帧
@@ -52,16 +47,8 @@ namespace easy2d
 			Array<ImagePtr> const& frames
 		);
 
-		// 获取帧间隔
-		Duration GetInterval() const;
-
 		// 获取关键帧
 		Array<ImagePtr> const& GetFrames() const;
-
-		// 设置每一帧的时间间隔
-		void SetInterval(
-			Duration interval
-		);
 
 		// 获取帧动画的拷贝对象
 		FramesPtr Clone() const;
@@ -70,7 +57,6 @@ namespace easy2d
 		FramesPtr Reverse() const;
 
 	protected:
-		Duration		interval_;
 		Array<ImagePtr>	frames_;
 	};
 }
