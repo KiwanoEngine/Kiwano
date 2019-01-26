@@ -62,6 +62,8 @@ namespace easy2d
 			// ×ªÎª×Ö·û´®
 			std::wstring ToString() const;
 
+			inline operator bool() const { return !IsZero(); }
+
 			bool operator== (const Duration &) const;
 			bool operator!= (const Duration &) const;
 			bool operator> (const Duration &) const;

@@ -69,8 +69,6 @@ namespace easy2d
 	{
 		auto rt = RenderSystem::Instance();
 
-		rt->SetTransform(Matrix{});
-
 		rt->GetSolidBrush()->SetColor(Color(0.0f, 0.0f, 0.0f, 0.5f));
 
 		rt->GetRenderTarget()->FillRoundedRectangle(

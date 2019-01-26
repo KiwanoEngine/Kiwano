@@ -80,9 +80,14 @@ namespace easy2d
 		SetEaseFunc(func);
 	}
 
-	void ActionTween::SetEaseFunc(EaseFunc func)
+	void ActionTween::SetEaseFunc(EaseFunc const& func)
 	{
 		ease_func_ = func;
+	}
+
+	EaseFunc const & ActionTween::GetEaseFunc() const
+	{
+		return ease_func_;
 	}
 
 	void ActionTween::Reset()
@@ -106,19 +111,22 @@ namespace easy2d
 		Action::Update(target, dt);
 
 		float step;
+
 		if (duration_.IsZero())
 		{
 			step = 1.f;
+			this->Stop();
 		}
 		else
 		{
 			elapsed_ += dt;
-			step = std::min(elapsed_ / duration_, 1.f);
-		}
+			step = elapsed_ / duration_;
 
-		if ((1.f - step) <= FLT_EPSILON)
-		{
-			this->Stop();
+			if (1.f <= step)
+			{
+				step = 1.f;
+				this->Stop();
+			}
 		}
 
 		if (ease_func_)
@@ -414,7 +422,11 @@ namespace easy2d
 
 	void RotateBy::UpdateStep(Node* target, float step)
 	{
-		target->SetRotation(start_val_ + delta_val_ * step);
+		float rotation = start_val_ + delta_val_ * step;
+		if (rotation > 360.f)
+			rotation -= 360.f;
+
+		target->SetRotation(rotation);
 	}
 
 	ActionPtr RotateBy::Clone() const

@@ -87,8 +87,10 @@ namespace easy2d
 
 		// 自定义缓动函数
 		void SetEaseFunc(
-			EaseFunc func
+			EaseFunc const& func
 		);
+
+		EaseFunc const& GetEaseFunc() const;
 
 		void Reset() override;
 
