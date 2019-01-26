@@ -33,7 +33,7 @@ namespace easy2d
 		Animation(
 			Duration duration,			/* 动画时长 */
 			FramesPtr const& frames,	/* 帧集合 */
-			EaseFunc func = EaseFunc::Linear
+			EaseFunc func = nullptr		/* 速度变化 */
 		);
 
 		virtual ~Animation();

@@ -25,52 +25,52 @@
 
 namespace easy2d
 {
+	// 缓动函数
+	using EaseFunc = std::function<float(float)>;
+
 	// 缓动函数枚举
 	// See https://easings.net for more information
-	enum class EaseFunc
+	struct Ease
 	{
-		Linear,			// 线性
-		EaseIn,			// 由慢变快
-		EaseOut,		// 由快变慢
-		EaseInOut,		// 由慢变快, 再由快变慢
-		ExpoIn,			// 由慢变极快
-		ExpoOut,		// 由极快变慢
-		ExpoInOut,		// 由慢至极快, 再由极快边慢
-		ElasticIn,		// 自起点赋予弹性
-		ElasticOut,		// 自终点赋予弹性
-		ElasticInOut,	// 再起点和终点赋予弹性
-		BounceIn,		// 自起点赋予反弹力
-		BounceOut,		// 自终点赋予反弹力
-		BounceInOut,	// 在起点和终点赋予反弹力
-		BackIn,
-		BackOut,
-		BackInOut,
-		QuadIn,
-		QuadOut,
-		QuadInOut,
-		CubicIn,
-		CubicOut,
-		CubicInOut,
-		QuartIn,
-		QuartOut,
-		QuartInOut,
-		QuintIn,
-		QuintOut,
-		QuintInOut,
-		SineIn,
-		SineOut,
-		SineInOut,
+		static EaseFunc Linear;			// 线性
+		static EaseFunc EaseIn;			// 由慢变快
+		static EaseFunc EaseOut;		// 由快变慢
+		static EaseFunc EaseInOut;		// 由慢变快, 再由快变慢
+		static EaseFunc ExpoIn;			// 由慢变极快
+		static EaseFunc ExpoOut;		// 由极快变慢
+		static EaseFunc ExpoInOut;		// 由慢至极快, 再由极快边慢
+		static EaseFunc ElasticIn;		// 自起点赋予弹性
+		static EaseFunc ElasticOut;		// 自终点赋予弹性
+		static EaseFunc ElasticInOut;	// 再起点和终点赋予弹性
+		static EaseFunc BounceIn;		// 自起点赋予反弹力
+		static EaseFunc BounceOut;		// 自终点赋予反弹力
+		static EaseFunc BounceInOut;	// 在起点和终点赋予反弹力
+		static EaseFunc BackIn;
+		static EaseFunc BackOut;
+		static EaseFunc BackInOut;
+		static EaseFunc QuadIn;
+		static EaseFunc QuadOut;
+		static EaseFunc QuadInOut;
+		static EaseFunc CubicIn;
+		static EaseFunc CubicOut;
+		static EaseFunc CubicInOut;
+		static EaseFunc QuartIn;
+		static EaseFunc QuartOut;
+		static EaseFunc QuartInOut;
+		static EaseFunc QuintIn;
+		static EaseFunc QuintOut;
+		static EaseFunc QuintInOut;
+		static EaseFunc SineIn;
+		static EaseFunc SineOut;
+		static EaseFunc SineInOut;
 	};
 
-	// 缓动函数
-	using EaseFunction = std::function<float(float)>;
-
-	inline EaseFunction MakeEaseIn(float rate) { return std::bind(math::EaseIn, std::placeholders::_1, rate); }
-	inline EaseFunction MakeEaseOut(float rate) { return std::bind(math::EaseOut, std::placeholders::_1, rate); }
-	inline EaseFunction MakeEaseInOut(float rate) { return std::bind(math::EaseInOut, std::placeholders::_1, rate); }
-	inline EaseFunction MakeEaseElasticIn(float period) { return std::bind(math::EaseElasticIn, std::placeholders::_1, period); }
-	inline EaseFunction MakeEaseElasticOut(float period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
-	inline EaseFunction MakeEaseElasticInOut(float period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseIn(float rate) { return std::bind(math::EaseIn, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseOut(float rate) { return std::bind(math::EaseOut, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseInOut(float rate) { return std::bind(math::EaseInOut, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseElasticIn(float period) { return std::bind(math::EaseElasticIn, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseElasticOut(float period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseElasticInOut(float period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
 
 
 	// 补间动画
@@ -80,19 +80,14 @@ namespace easy2d
 	public:
 		ActionTween();
 
-		explicit ActionTween(
+		ActionTween(
 			Duration duration,
 			EaseFunc func
 		);
 
-		// 设置缓动函数
-		void SetEaseFunction(
-			EaseFunc func
-		);
-
 		// 自定义缓动函数
-		void SetEaseFunction(
-			EaseFunction func
+		void SetEaseFunc(
+			EaseFunc func
 		);
 
 		void Reset() override;
@@ -109,10 +104,9 @@ namespace easy2d
 		virtual void UpdateStep(Node* target, float step) = 0;
 
 	protected:
-		Duration     duration_;
-		Duration     elapsed_;
-		EaseFunc     ease_type_;
-		EaseFunction ease_func_;
+		Duration duration_;
+		Duration elapsed_;
+		EaseFunc ease_func_;
 	};
 
 
@@ -121,10 +115,10 @@ namespace easy2d
 		: public ActionTween
 	{
 	public:
-		explicit MoveBy(
-			Duration duration,			/* 持续时长 */
-			Point const& vector,				/* 移动距离 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		MoveBy(
+			Duration duration,		/* 持续时长 */
+			Point const& vector,	/* 移动距离 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -150,10 +144,10 @@ namespace easy2d
 		: public MoveBy
 	{
 	public:
-		explicit MoveTo(
-			Duration duration,			/* 持续时长 */
-			Point const& pos,					/* 目的坐标 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		MoveTo(
+			Duration duration,		/* 持续时长 */
+			Point const& pos,		/* 目的坐标 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -179,12 +173,12 @@ namespace easy2d
 		: public ActionTween
 	{
 	public:
-		explicit JumpBy(
-			Duration duration,			/* 持续时长 */
-			Point const& vec,					/* 跳跃距离 */
-			float height,						/* 跳跃高度 */
-			int jumps = 1,						/* 跳跃次数 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		JumpBy(
+			Duration duration,		/* 持续时长 */
+			Point const& vec,		/* 跳跃距离 */
+			float height,			/* 跳跃高度 */
+			int jumps = 1,			/* 跳跃次数 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -212,12 +206,12 @@ namespace easy2d
 		: public JumpBy
 	{
 	public:
-		explicit JumpTo(
-			Duration duration,			/* 持续时长 */
-			Point const& pos,					/* 目的坐标 */
-			float height,						/* 跳跃高度 */
-			int jumps = 1,						/* 跳跃次数 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		JumpTo(
+			Duration duration,		/* 持续时长 */
+			Point const& pos,		/* 目的坐标 */
+			float height,			/* 跳跃高度 */
+			int jumps = 1,			/* 跳跃次数 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -243,17 +237,17 @@ namespace easy2d
 		: public ActionTween
 	{
 	public:
-		explicit ScaleBy(
-			Duration duration,			/* 持续时长 */
-			float scale,						/* 相对变化值 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		ScaleBy(
+			Duration duration,		/* 持续时长 */
+			float scale,			/* 相对变化值 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
-		explicit ScaleBy(
-			Duration duration,			/* 持续时长 */
-			float scale_x,						/* 横向缩放相对变化值 */
-			float scale_y,						/* 纵向缩放相对变化值 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		ScaleBy(
+			Duration duration,		/* 持续时长 */
+			float scale_x,			/* 横向缩放相对变化值 */
+			float scale_y,			/* 纵向缩放相对变化值 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -280,17 +274,17 @@ namespace easy2d
 		: public ScaleBy
 	{
 	public:
-		explicit ScaleTo(
-			Duration duration,			/* 持续时长 */
-			float scale,						/* 目标值 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		ScaleTo(
+			Duration duration,		/* 持续时长 */
+			float scale,			/* 目标值 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
-		explicit ScaleTo(
-			Duration duration,			/* 持续时长 */
-			float scale_x,						/* 横向缩放目标值 */
-			float scale_y,						/* 纵向缩放目标值 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		ScaleTo(
+			Duration duration,		/* 持续时长 */
+			float scale_x,			/* 横向缩放目标值 */
+			float scale_y,			/* 纵向缩放目标值 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -317,10 +311,10 @@ namespace easy2d
 		: public ActionTween
 	{
 	public:
-		explicit OpacityBy(
-			Duration duration,			/* 持续时长 */
-			float opacity,						/* 相对变化值 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		OpacityBy(
+			Duration duration,		/* 持续时长 */
+			float opacity,			/* 相对变化值 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -345,10 +339,10 @@ namespace easy2d
 		: public OpacityBy
 	{
 	public:
-		explicit OpacityTo(
-			Duration duration,			/* 持续时长 */
-			float opacity,						/* 目标值 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		OpacityTo(
+			Duration duration,		/* 持续时长 */
+			float opacity,			/* 目标值 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -376,8 +370,8 @@ namespace easy2d
 	public:
 		// 创建淡入动作
 		explicit FadeIn(
-			Duration duration,			/* 持续时长 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+			Duration duration,		/* 持续时长 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 	};
 
@@ -389,8 +383,8 @@ namespace easy2d
 	public:
 		// 创建淡出动作
 		explicit FadeOut(
-			Duration duration,			/* 持续时长 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+			Duration duration,				/* 持续时长 */
+			EaseFunc func = Ease::Linear	/* 速度变化 */
 		);
 	};
 
@@ -400,10 +394,10 @@ namespace easy2d
 		: public ActionTween
 	{
 	public:
-		explicit RotateBy(
-			Duration duration,			/* 持续时长 */
-			float rotation,						/* 相对变化值 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		RotateBy(
+			Duration duration,		/* 持续时长 */
+			float rotation,			/* 相对变化值 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -428,10 +422,10 @@ namespace easy2d
 		: public RotateBy
 	{
 	public:
-		explicit RotateTo(
-			Duration duration,			/* 持续时长 */
-			float rotation,						/* 目标值 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		RotateTo(
+			Duration duration,		/* 持续时长 */
+			float rotation,			/* 目标值 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象
@@ -457,13 +451,13 @@ namespace easy2d
 		: public ActionTween
 	{
 	public:
-		explicit PathAction(
-			Duration duration,			/* 持续时长 */
-			GeometryPtr const& geo,				/* 几何图形 */
-			bool rotating = false,				/* 沿路径切线方向旋转 */
-			float start = 0.f,					/* 起点 */
-			float end = 1.f,					/* 终点 */
-			EaseFunc func = EaseFunc::Linear	/* 速度变化 */
+		PathAction(
+			Duration duration,		/* 持续时长 */
+			GeometryPtr const& geo,	/* 几何图形 */
+			bool rotating = false,	/* 沿路径切线方向旋转 */
+			float start = 0.f,		/* 起点 */
+			float end = 1.f,		/* 终点 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		// 获取该动作的拷贝对象

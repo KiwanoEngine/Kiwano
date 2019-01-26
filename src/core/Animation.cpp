@@ -86,7 +86,7 @@ namespace easy2d
 	{
 		if (frames_)
 		{
-			return new (std::nothrow) Animation(duration_, frames_, ease_type_);
+			return new (std::nothrow) Animation(duration_, frames_, ease_func_);
 		}
 		return nullptr;
 	}
@@ -98,7 +98,7 @@ namespace easy2d
 			FramesPtr frames = frames_->Reverse();
 			if (frames)
 			{
-				return new (std::nothrow) Animation(duration_, frames, ease_type_);
+				return new (std::nothrow) Animation(duration_, frames, ease_func_);
 			}
 		}
 		return nullptr;
