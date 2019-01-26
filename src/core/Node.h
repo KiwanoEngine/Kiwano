@@ -287,6 +287,12 @@ namespace easy2d
 			int zorder
 		);
 
+		// 是否可响应 (鼠标 Hover | Out | Click 消息)
+		// 默认为 false
+		void SetResponsible(
+			bool enable
+		);
+
 		// 判断点是否在节点内
 		bool ContainsPoint(
 			const Point& point
@@ -363,6 +369,7 @@ namespace easy2d
 		bool		visible_;
 		bool		hover_;
 		bool		pressed_;
+		bool		responsible_;
 		bool		pause_;
 		int			z_order_;
 		float		opacity_;

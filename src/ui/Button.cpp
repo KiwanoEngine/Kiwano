@@ -30,6 +30,8 @@ namespace easy2d
 			, click_callback_(nullptr)
 			, status_(Status::Normal)
 		{
+			SetResponsible(true);
+
 			AddListener(MouseEvent::Hover, Closure(this, &Button::UpdateStatus));
 			AddListener(MouseEvent::Out, Closure(this, &Button::UpdateStatus));
 			AddListener(MouseEvent::Down, Closure(this, &Button::UpdateStatus));
@@ -100,7 +102,7 @@ namespace easy2d
 		{
 			E2D_ASSERT(MouseEvent::Check(evt.type));
 
-			if (enabled_)
+			if (enabled_ && (evt.target == this))
 			{
 				if (evt.type == MouseEvent::Hover)
 				{
