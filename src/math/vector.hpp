@@ -42,6 +42,11 @@ namespace easy2d
 				return math::Sqrt(x * x + y * y);
 			}
 
+			inline bool IsOrigin() const
+			{
+				return (x == 0) && (y == 0);
+			}
+
 			inline const Vector2 operator + (const Vector2 & other) const
 			{
 				return Vector2(x + other.x, y + other.y);

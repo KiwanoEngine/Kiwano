@@ -28,7 +28,6 @@
 #include "Transition.h"
 #include <windowsx.h>
 #include <imm.h>
-#include <iostream>
 
 #pragma comment (lib ,"imm32.lib")
 

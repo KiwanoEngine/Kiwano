@@ -43,25 +43,57 @@ namespace easy2d
 
 	void ResLoader::AddImage(String const& id, Resource const& image)
 	{
-		auto path = Search(image.GetFileName(), search_paths_);
-		res_.insert(std::make_pair(id, ImagePtr(new Image(path.c_str()))));
+		String path = Search(image.GetFileName(), search_paths_);
+		ImagePtr ptr = new Image(path.c_str());
+		res_.insert(std::make_pair(id, ptr));
+	}
+
+	void ResLoader::AddImage(String const & id, ImagePtr const & image)
+	{
+		res_.insert(std::make_pair(id, image));
 	}
 
 	void ResLoader::AddFrames(String const& id, Array<Resource> const& images)
 	{
-		auto frames = FramesPtr(new Frames);
+		FramesPtr frames = new Frames;
 		for (const auto& image : images)
 		{
-			auto path = Search(image.GetFileName(), search_paths_);
-			frames->Add(ImagePtr(new Image(path.c_str())));
+			String path = Search(image.GetFileName(), search_paths_);
+			ImagePtr ptr = new Image(path.c_str());
+			frames->Add(ptr);
+		}
+		res_.insert(std::make_pair(id, frames));
+	}
+
+	void ResLoader::AddFrames(String const& id, Array<ImagePtr> const& images)
+	{
+		FramesPtr frames = new Frames;
+		for (const auto& image : images)
+			frames->Add(image);
+		res_.insert(std::make_pair(id, frames));
+	}
+
+	void ResLoader::AddFrames(String const& id, Array<std::pair<Resource, Rect>> const& images)
+	{
+		FramesPtr frames = new Frames;
+		for (const auto& pair : images)
+		{
+			String path = Search(pair.first.GetFileName(), search_paths_);
+			ImagePtr image = new Image(path.c_str());
+			if (!pair.second.IsEmpty())
+			{
+				image->Crop(pair.second);
+			}
+			frames->Add(image);
 		}
 		res_.insert(std::make_pair(id, frames));
 	}
 
 	void ResLoader::AddMusic(String const & id, Resource const & music)
 	{
-		auto path = Search(music.GetFileName(), search_paths_);
-		res_.insert(std::make_pair(id, MusicPtr(new Music(path.c_str()))));
+		String path = Search(music.GetFileName(), search_paths_);
+		MusicPtr ptr = new Music(path.c_str());
+		res_.insert(std::make_pair(id, ptr));
 	}
 
 	void ResLoader::AddObj(String const& id, ObjectPtr const& obj)

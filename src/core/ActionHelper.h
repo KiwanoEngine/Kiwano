@@ -52,12 +52,16 @@ namespace easy2d
 
 		TweenActionHelper& SetEaseFunc(EaseFunc ease) { this->ease = ease; return (*this); }
 
-		TweenActionHelper(ActionTweenPtr const& base) : base(base), dur(), loop(0), ease(EaseFunc::Linear) {}
+		TweenActionHelper(ActionTweenPtr const& base) : base(base), dur(), loop(0), ease(nullptr)
+		{
+			dur = base->GetDuration();
+		}
 
 		operator ActionPtr() const
 		{
-			base->SetEaseFunction(ease);
+			base->SetEaseFunc(ease);
 			base->SetDuration(dur);
+
 			if (loop)
 				return ActionPtr(new (std::nothrow) Loop(base));
 			return base;

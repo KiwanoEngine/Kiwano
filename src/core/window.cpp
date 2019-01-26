@@ -45,6 +45,7 @@ namespace easy2d
 		, width_(0)
 		, height_(0)
 		, device_name_(nullptr)
+		, is_fullscreen_(false)
 	{
 	}
 
@@ -66,7 +67,7 @@ namespace easy2d
 	{
 		E2D_LOG(L"Creating window");
 		
-		HINSTANCE hinst	= GetModuleHandleW(nullptr);
+		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
 		wcex.cbSize			= sizeof(WNDCLASSEX);
 		wcex.lpszClassName	= E2D_WND_CLASS_NAME;

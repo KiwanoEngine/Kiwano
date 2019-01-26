@@ -27,133 +27,67 @@
 namespace easy2d
 {
 	//-------------------------------------------------------
+	// Ease Functions
+	//-------------------------------------------------------
+
+	EaseFunc Ease::Linear = math::Linear;
+	EaseFunc Ease::EaseIn = MakeEaseIn(2.f);
+	EaseFunc Ease::EaseOut = MakeEaseOut(2.f);
+	EaseFunc Ease::EaseInOut = MakeEaseInOut(2.f);
+	EaseFunc Ease::ExpoIn = math::EaseExponentialIn;
+	EaseFunc Ease::ExpoOut = math::EaseExponentialOut;
+	EaseFunc Ease::ExpoInOut = math::EaseExponentialInOut;
+	EaseFunc Ease::BounceIn = math::EaseBounceIn;
+	EaseFunc Ease::BounceOut = math::EaseBounceOut;
+	EaseFunc Ease::BounceInOut = math::EaseBounceInOut;
+	EaseFunc Ease::ElasticIn = MakeEaseElasticIn(0.3f);
+	EaseFunc Ease::ElasticOut = MakeEaseElasticOut(0.3f);
+	EaseFunc Ease::ElasticInOut = MakeEaseElasticInOut(0.3f);
+	EaseFunc Ease::SineIn = math::EaseSineIn;
+	EaseFunc Ease::SineOut = math::EaseSineOut;
+	EaseFunc Ease::SineInOut = math::EaseSineInOut;
+	EaseFunc Ease::BackIn = math::EaseBackIn;
+	EaseFunc Ease::BackOut = math::EaseBackOut;
+	EaseFunc Ease::BackInOut = math::EaseBackInOut;
+	EaseFunc Ease::QuadIn = math::EaseQuadIn;
+	EaseFunc Ease::QuadOut = math::EaseQuadOut;
+	EaseFunc Ease::QuadInOut = math::EaseQuadInOut;
+	EaseFunc Ease::CubicIn = math::EaseCubicIn;
+	EaseFunc Ease::CubicOut = math::EaseCubicOut;
+	EaseFunc Ease::CubicInOut = math::EaseCubicInOut;
+	EaseFunc Ease::QuartIn = math::EaseQuartIn;
+	EaseFunc Ease::QuartOut = math::EaseQuartOut;
+	EaseFunc Ease::QuartInOut = math::EaseQuartInOut;
+	EaseFunc Ease::QuintIn = math::EaseQuintIn;
+	EaseFunc Ease::QuintOut = math::EaseQuintOut;
+	EaseFunc Ease::QuintInOut = math::EaseQuintInOut;
+
+	//-------------------------------------------------------
 	// ActionTween
 	//-------------------------------------------------------
 
 	ActionTween::ActionTween()
 		: elapsed_()
 		, duration_()
-		, ease_func_(math::Linear)
-		, ease_type_(EaseFunc::Linear)
+		, ease_func_(nullptr)
 	{
 	}
 
 	ActionTween::ActionTween(Duration duration, EaseFunc func)
 		: elapsed_()
-		, ease_func_(math::Linear)
-		, ease_type_(EaseFunc::Linear)
 	{
 		SetDuration(duration);
-		SetEaseFunction(func);
+		SetEaseFunc(func);
 	}
 
-	void ActionTween::SetEaseFunction(EaseFunc func)
-	{
-		ease_type_ = func;
-		switch (func)
-		{
-		case EaseFunc::Linear:
-			ease_func_ = math::Linear;
-			break;
-		case EaseFunc::EaseIn:
-			ease_func_ = MakeEaseIn(2.f);
-			break;
-		case EaseFunc::EaseOut:
-			ease_func_ = MakeEaseOut(2.f);
-			break;
-		case EaseFunc::EaseInOut:
-			ease_func_ = MakeEaseInOut(2.f);
-			break;
-		case EaseFunc::ExpoIn:
-			ease_func_ = math::EaseExponentialIn;
-			break;
-		case EaseFunc::ExpoOut:
-			ease_func_ = math::EaseExponentialOut;
-			break;
-		case EaseFunc::ExpoInOut:
-			ease_func_ = math::EaseExponentialInOut;
-			break;
-		case EaseFunc::BounceIn:
-			ease_func_ = math::EaseBounceIn;
-			break;
-		case EaseFunc::BounceOut:
-			ease_func_ = math::EaseBounceOut;
-			break;
-		case EaseFunc::BounceInOut:
-			ease_func_ = math::EaseBounceInOut;
-			break;
-		case EaseFunc::ElasticIn:
-			ease_func_ = MakeEaseElasticIn(0.3f);
-			break;
-		case EaseFunc::ElasticOut:
-			ease_func_ = MakeEaseElasticOut(0.3f);
-			break;
-		case EaseFunc::ElasticInOut:
-			ease_func_ = MakeEaseElasticInOut(0.3f);
-			break;
-		case EaseFunc::SineIn:
-			ease_func_ = math::EaseSineIn;
-			break;
-		case EaseFunc::SineOut:
-			ease_func_ = math::EaseSineOut;
-			break;
-		case EaseFunc::SineInOut:
-			ease_func_ = math::EaseSineInOut;
-			break;
-		case EaseFunc::BackIn:
-			ease_func_ = math::EaseBackIn;
-			break;
-		case EaseFunc::BackOut:
-			ease_func_ = math::EaseBackOut;
-			break;
-		case EaseFunc::BackInOut:
-			ease_func_ = math::EaseBackInOut;
-			break;
-		case EaseFunc::QuadIn:
-			ease_func_ = math::EaseQuadIn;
-			break;
-		case EaseFunc::QuadOut:
-			ease_func_ = math::EaseQuadOut;
-			break;
-		case EaseFunc::QuadInOut:
-			ease_func_ = math::EaseQuadInOut;
-			break;
-		case EaseFunc::CubicIn:
-			ease_func_ = math::EaseCubicIn;
-			break;
-		case EaseFunc::CubicOut:
-			ease_func_ = math::EaseCubicOut;
-			break;
-		case EaseFunc::CubicInOut:
-			ease_func_ = math::EaseCubicInOut;
-			break;
-		case EaseFunc::QuartIn:
-			ease_func_ = math::EaseQuartIn;
-			break;
-		case EaseFunc::QuartOut:
-			ease_func_ = math::EaseQuartOut;
-			break;
-		case EaseFunc::QuartInOut:
-			ease_func_ = math::EaseQuartInOut;
-			break;
-		case EaseFunc::QuintIn:
-			ease_func_ = math::EaseQuintIn;
-			break;
-		case EaseFunc::QuintOut:
-			ease_func_ = math::EaseQuintOut;
-			break;
-		case EaseFunc::QuintInOut:
-			ease_func_ = math::EaseQuintInOut;
-			break;
-		default:
-			break;
-		}
-	}
-
-	void ActionTween::SetEaseFunction(EaseFunction func)
+	void ActionTween::SetEaseFunc(EaseFunc const& func)
 	{
 		ease_func_ = func;
-		ease_type_ = EaseFunc(-1);
+	}
+
+	EaseFunc const & ActionTween::GetEaseFunc() const
+	{
+		return ease_func_;
 	}
 
 	void ActionTween::Reset()
@@ -177,22 +111,28 @@ namespace easy2d
 		Action::Update(target, dt);
 
 		float step;
+
 		if (duration_.IsZero())
 		{
 			step = 1.f;
+			this->Stop();
 		}
 		else
 		{
 			elapsed_ += dt;
-			step = std::min(elapsed_ / duration_, 1.f);
+			step = elapsed_ / duration_;
+
+			if (1.f <= step)
+			{
+				step = 1.f;
+				this->Stop();
+			}
 		}
 
-		if ((1.f - step) <= FLT_EPSILON)
-		{
-			this->Stop();
-		}
+		if (ease_func_)
+			step = ease_func_(step);
 
-		UpdateStep(target, ease_func_(step));
+		UpdateStep(target, step);
 	}
 
 	void ActionTween::SetDuration(Duration duration)
@@ -234,12 +174,12 @@ namespace easy2d
 
 	ActionPtr MoveBy::Clone() const
 	{
-		return new (std::nothrow) MoveBy(duration_, delta_pos_, ease_type_);
+		return new (std::nothrow) MoveBy(duration_, delta_pos_, ease_func_);
 	}
 
 	ActionPtr MoveBy::Reverse() const
 	{
-		return new (std::nothrow) MoveBy(duration_, -delta_pos_, ease_type_);
+		return new (std::nothrow) MoveBy(duration_, -delta_pos_, ease_func_);
 	}
 
 	MoveTo::MoveTo(Duration duration, Point const& pos, EaseFunc func)
@@ -250,7 +190,7 @@ namespace easy2d
 
 	ActionPtr MoveTo::Clone() const
 	{
-		return new (std::nothrow) MoveTo(duration_, end_pos_, ease_type_);
+		return new (std::nothrow) MoveTo(duration_, end_pos_, ease_func_);
 	}
 
 	void MoveTo::Init(Node* target)
@@ -274,12 +214,12 @@ namespace easy2d
 
 	ActionPtr JumpBy::Clone() const
 	{
-		return new (std::nothrow) JumpBy(duration_, delta_pos_, height_, jumps_, ease_type_);
+		return new (std::nothrow) JumpBy(duration_, delta_pos_, height_, jumps_, ease_func_);
 	}
 
 	ActionPtr JumpBy::Reverse() const
 	{
-		return new (std::nothrow) JumpBy(duration_, -delta_pos_, height_, jumps_, ease_type_);
+		return new (std::nothrow) JumpBy(duration_, -delta_pos_, height_, jumps_, ease_func_);
 	}
 
 	void JumpBy::Init(Node* target)
@@ -316,7 +256,7 @@ namespace easy2d
 
 	ActionPtr JumpTo::Clone() const
 	{
-		return new (std::nothrow) JumpTo(duration_, end_pos_, height_, jumps_, ease_type_);
+		return new (std::nothrow) JumpTo(duration_, end_pos_, height_, jumps_, ease_func_);
 	}
 
 	void JumpTo::Init(Node* target)
@@ -362,12 +302,12 @@ namespace easy2d
 
 	ActionPtr ScaleBy::Clone() const
 	{
-		return new (std::nothrow) ScaleBy(duration_, delta_x_, delta_y_, ease_type_);
+		return new (std::nothrow) ScaleBy(duration_, delta_x_, delta_y_, ease_func_);
 	}
 
 	ActionPtr ScaleBy::Reverse() const
 	{
-		return new (std::nothrow) ScaleBy(duration_, -delta_x_, -delta_y_, ease_type_);
+		return new (std::nothrow) ScaleBy(duration_, -delta_x_, -delta_y_, ease_func_);
 	}
 
 	ScaleTo::ScaleTo(Duration duration, float scale, EaseFunc func)
@@ -386,7 +326,7 @@ namespace easy2d
 
 	ActionPtr ScaleTo::Clone() const
 	{
-		return new (std::nothrow) ScaleTo(duration_, end_scale_x_, end_scale_y_, ease_type_);
+		return new (std::nothrow) ScaleTo(duration_, end_scale_x_, end_scale_y_, ease_func_);
 	}
 
 	void ScaleTo::Init(Node* target)
@@ -424,12 +364,12 @@ namespace easy2d
 
 	ActionPtr OpacityBy::Clone() const
 	{
-		return new (std::nothrow) OpacityBy(duration_, delta_val_, ease_type_);
+		return new (std::nothrow) OpacityBy(duration_, delta_val_, ease_func_);
 	}
 
 	ActionPtr OpacityBy::Reverse() const
 	{
-		return new (std::nothrow) OpacityBy(duration_, -delta_val_, ease_type_);
+		return new (std::nothrow) OpacityBy(duration_, -delta_val_, ease_func_);
 	}
 
 	OpacityTo::OpacityTo(Duration duration, float opacity, EaseFunc func)
@@ -440,7 +380,7 @@ namespace easy2d
 
 	ActionPtr OpacityTo::Clone() const
 	{
-		return new (std::nothrow) OpacityTo(duration_, end_val_, ease_type_);
+		return new (std::nothrow) OpacityTo(duration_, end_val_, ease_func_);
 	}
 
 	void OpacityTo::Init(Node* target)
@@ -482,17 +422,21 @@ namespace easy2d
 
 	void RotateBy::UpdateStep(Node* target, float step)
 	{
-		target->SetRotation(start_val_ + delta_val_ * step);
+		float rotation = start_val_ + delta_val_ * step;
+		if (rotation > 360.f)
+			rotation -= 360.f;
+
+		target->SetRotation(rotation);
 	}
 
 	ActionPtr RotateBy::Clone() const
 	{
-		return new (std::nothrow) RotateBy(duration_, delta_val_, ease_type_);
+		return new (std::nothrow) RotateBy(duration_, delta_val_, ease_func_);
 	}
 
 	ActionPtr RotateBy::Reverse() const
 	{
-		return new (std::nothrow) RotateBy(duration_, -delta_val_, ease_type_);
+		return new (std::nothrow) RotateBy(duration_, -delta_val_, ease_func_);
 	}
 
 	RotateTo::RotateTo(Duration duration, float rotation, EaseFunc func)
@@ -503,7 +447,7 @@ namespace easy2d
 
 	ActionPtr RotateTo::Clone() const
 	{
-		return new (std::nothrow) RotateTo(duration_, end_val_, ease_type_);
+		return new (std::nothrow) RotateTo(duration_, end_val_, ease_func_);
 	}
 
 	void RotateTo::Init(Node* target)
@@ -528,12 +472,12 @@ namespace easy2d
 
 	ActionPtr PathAction::Clone() const
 	{
-		return new PathAction(duration_, geo_, rotating_, start_, end_, ease_type_);
+		return new PathAction(duration_, geo_, rotating_, start_, end_, ease_func_);
 	}
 
 	ActionPtr PathAction::Reverse() const
 	{
-		return new PathAction(duration_, geo_, rotating_, end_, start_, ease_type_);
+		return new PathAction(duration_, geo_, rotating_, end_, start_, ease_func_);
 	}
 
 	void PathAction::Init(Node * target)

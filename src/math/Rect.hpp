@@ -96,6 +96,8 @@ namespace easy2d
 
 			inline float GetBottom() const { return origin.y + size.y; }
 
+			inline bool IsEmpty() const { return origin.IsOrigin() && size.IsOrigin(); }
+
 			// 判断点是否在矩形内
 			inline bool ContainsPoint(const Vector2& point) const
 			{
