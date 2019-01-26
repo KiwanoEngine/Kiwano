@@ -23,7 +23,7 @@
 
 #ifndef E2D_LOG
 #	ifdef E2D_DEBUG
-#		define E2D_LOG(format, ...) easy2d::logs::Println(format, ##__VA_ARGS__)
+#		define E2D_LOG(format, ...) easy2d::logs::Messageln((format), __VA_ARGS__)
 #	else
 #		define E2D_LOG __noop
 #	endif
@@ -40,6 +40,10 @@ namespace easy2d
 		void Print(const wchar_t* format, ...);
 
 		void Println(const wchar_t* format, ...);
+
+		void Message(const wchar_t* format, ...);
+
+		void Messageln(const wchar_t* format, ...);
 
 		void Warning(const wchar_t* format, ...);
 
