@@ -50,6 +50,9 @@ namespace easy2d
 	using String = std::wstring;
 	using StringStream = std::wstringstream;
 
+	template<typename Type1, typename Type2>
+	using Pair = std::pair<Type1, Type2>;
+
 	template<typename Type>
 	using Array = std::vector<Type>;
 
