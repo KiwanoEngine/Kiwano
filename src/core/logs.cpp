@@ -29,6 +29,43 @@ namespace easy2d
 {
 	namespace logs
 	{
+		using ConsoleColor = std::wostream&(*)(std::wostream&);
+
+		namespace color
+		{
+			const wchar_t _reset[] = L"\x1b[0m";
+
+			const wchar_t _black[] = L"\x1b[30m";
+			const wchar_t _red[] = L"\x1b[31m";
+			const wchar_t _green[] = L"\x1b[32m";
+			const wchar_t _yellow[] = L"\x1b[33m";
+			const wchar_t _blue[] = L"\x1b[34m";
+			const wchar_t _white[] = L"\x1b[37m";
+
+			const wchar_t _black_bg[] = L"\x1b[40m";
+			const wchar_t _red_bg[] = L"\x1b[41m";
+			const wchar_t _green_bg[] = L"\x1b[42m";
+			const wchar_t _yellow_bg[] = L"\x1b[43m";
+			const wchar_t _blue_bg[] = L"\x1b[44m";
+			const wchar_t _white_bg[] = L"\x1b[47m";
+
+#define DECLARE_COLOR(COLOR) \
+	inline std::wostream& (COLOR)(std::wostream& _out)\
+		{ _out.write(_##COLOR, 5); return _out; }\
+	inline std::wostream& (COLOR##_bg)(std::wostream& _out)\
+		{ _out.write(_##COLOR##_bg, 5); return _out; }
+
+			inline std::wostream& (reset)(std::wostream& _out) { _out.write(_reset, 4); return _out; }
+
+			DECLARE_COLOR(red);
+			DECLARE_COLOR(green);
+			DECLARE_COLOR(yellow);
+			DECLARE_COLOR(blue);
+			DECLARE_COLOR(white);
+
+#undef DECLARE_COLOR
+		}
+
 		namespace
 		{
 #ifdef E2D_DEBUG
@@ -37,21 +74,16 @@ namespace easy2d
 			bool enabled = false;
 #endif
 
-			void Out(std::wostream& stream, const wchar_t* output)
+			std::wostream& OutPrefix(std::wostream& out)
 			{
-				stream << output;
-				::OutputDebugStringW(output);
-			}
-
-			void OutPrefix(std::wstringstream& ss)
-			{
-				std::time_t unix = ::time(NULL);
-				struct tm tmbuf;
+				std::time_t unix = std::time(nullptr);
+				std::tm tmbuf;
 				localtime_s(&tmbuf, &unix);
-				ss << std::put_time(&tmbuf, L"[easy2d] %H:%M:%S ");
+				out << std::put_time(&tmbuf, L"[easy2d] %H:%M:%S ");
+				return out;
 			}
 
-			void Output(std::wostream& stream, const wchar_t* prompt, const wchar_t* format, va_list args)
+			void Output(std::wostream& os, ConsoleColor color, bool endl, const wchar_t* prompt, const wchar_t* format, va_list args)
 			{
 				if (!enabled)
 					return;
@@ -61,20 +93,19 @@ namespace easy2d
 				::_vsnwprintf_s(buffer, len, len, format, args);
 
 				std::wstringstream ss;
-				OutPrefix(ss);
-				ss << prompt << buffer;
-				Out(stream, ss.str().c_str());
+				if (prompt)
+					ss << OutPrefix << prompt << buffer;
+				else
+					ss << OutPrefix << buffer;
+
+				if (endl)
+					ss << L"\r\n";
+
+				std::wstring output = ss.str();
+				os << color << output << color::reset;
+				::OutputDebugStringW(output.c_str());
 
 				delete[] buffer;
-			}
-
-			void OutputLine(std::wostream& stream, const wchar_t* prompt, const wchar_t* format, va_list args)
-			{
-				if (!enabled)
-					return;
-
-				Output(stream, prompt, format, args);
-				Out(stream, L"\r\n");
 			}
 		}
 
@@ -93,7 +124,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcout, L"", format, args);
+			Output(std::wcout, color::white, false, nullptr, format, args);
 
 			va_end(args);
 		}
@@ -103,7 +134,27 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			OutputLine(std::wcout, L"", format, args);
+			Output(std::wcout, color::white, true, nullptr, format, args);
+
+			va_end(args);
+		}
+
+		void Message(const wchar_t * format, ...)
+		{
+			va_list args = nullptr;
+			va_start(args, format);
+
+			Output(std::wcout, color::blue, false, nullptr, format, args);
+
+			va_end(args);
+		}
+
+		void Messageln(const wchar_t * format, ...)
+		{
+			va_list args = nullptr;
+			va_start(args, format);
+
+			Output(std::wcout, color::blue, true, nullptr, format, args);
 
 			va_end(args);
 		}
@@ -113,7 +164,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcerr, L"Warning: ", format, args);
+			Output(std::wcerr, color::yellow_bg, false, L"Warning: ", format, args);
 
 			va_end(args);
 		}
@@ -123,7 +174,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			OutputLine(std::wcerr, L"Warning: ", format, args);
+			Output(std::wcerr, color::yellow_bg, true, L"Warning: ", format, args);
 
 			va_end(args);
 		}
@@ -133,7 +184,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcerr, L"Error: ", format, args);
+			Output(std::wcerr, color::red_bg, false, L"Error: ", format, args);
 
 			va_end(args);
 		}
@@ -143,7 +194,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			OutputLine(std::wcerr, L"Error: ", format, args);
+			Output(std::wcerr, color::red_bg, true, L"Error: ", format, args);
 
 			va_end(args);
 		}
