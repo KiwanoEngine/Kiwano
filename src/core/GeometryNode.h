@@ -77,7 +77,7 @@ namespace easy2d
 		// 获取线条相交样式
 		StrokeStyle SetOutlineJoinStyle() const { return outline_join_; }
 
-		virtual void OnRender() override;
+		void OnRender() override;
 
 	protected:
 		Color		fill_color_;

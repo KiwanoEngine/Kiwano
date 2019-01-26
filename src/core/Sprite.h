@@ -65,7 +65,7 @@ namespace easy2d
 		ImagePtr const& GetImage() const;
 
 		// äÖÈ¾¾«Áé
-		virtual void OnRender() override;
+		void OnRender() override;
 
 	protected:
 		ImagePtr image_;

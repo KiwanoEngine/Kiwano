@@ -95,16 +95,16 @@ namespace easy2d
 			EaseFunction func
 		);
 
-		virtual void Reset() override;
+		void Reset() override;
 
 		Duration GetDuration() const;
 
 		void SetDuration(Duration duration);
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration dt) override;
+		void Update(Node* target, Duration dt) override;
 
 		virtual void UpdateStep(Node* target, float step) = 0;
 
@@ -128,15 +128,15 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ActionPtr Reverse() const override;
+		ActionPtr Reverse() const override;
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
-		virtual void UpdateStep(Node* target, float step) override;
+		void UpdateStep(Node* target, float step) override;
 
 	protected:
 		Point	start_pos_;
@@ -157,7 +157,7 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
@@ -167,7 +167,7 @@ namespace easy2d
 		}
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
 	protected:
 		Point end_pos_;
@@ -188,15 +188,15 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ActionPtr Reverse() const override;
+		ActionPtr Reverse() const override;
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
-		virtual void UpdateStep(Node* target, float step) override;
+		void UpdateStep(Node* target, float step) override;
 
 	protected:
 		Point	start_pos_;
@@ -221,7 +221,7 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
@@ -231,7 +231,7 @@ namespace easy2d
 		}
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
 	protected:
 		Point end_pos_;
@@ -257,15 +257,15 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ActionPtr Reverse() const override;
+		ActionPtr Reverse() const override;
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
-		virtual void UpdateStep(Node* target, float step) override;
+		void UpdateStep(Node* target, float step) override;
 
 	protected:
 		float	start_scale_x_;
@@ -294,7 +294,7 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
@@ -304,7 +304,7 @@ namespace easy2d
 		}
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
 	protected:
 		float	end_scale_x_;
@@ -324,15 +324,15 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ActionPtr Reverse() const override;
+		ActionPtr Reverse() const override;
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
-		virtual void UpdateStep(Node* target, float step) override;
+		void UpdateStep(Node* target, float step) override;
 
 	protected:
 		float start_val_;
@@ -352,7 +352,7 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
@@ -362,7 +362,7 @@ namespace easy2d
 		}
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
 	protected:
 		float end_val_;
@@ -407,15 +407,15 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ActionPtr Reverse() const override;
+		ActionPtr Reverse() const override;
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
-		virtual void UpdateStep(Node* target, float step) override;
+		void UpdateStep(Node* target, float step) override;
 
 	protected:
 		float start_val_;
@@ -435,7 +435,7 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
@@ -445,7 +445,7 @@ namespace easy2d
 		}
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
 	protected:
 		float end_val_;
@@ -467,15 +467,15 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ActionPtr Reverse() const override;
+		ActionPtr Reverse() const override;
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
-		virtual void UpdateStep(Node* target, float step) override;
+		void UpdateStep(Node* target, float step) override;
 
 	protected:
 		bool		rotating_;

@@ -33,18 +33,18 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ActionPtr Reverse() const override;
+		ActionPtr Reverse() const override;
 
 		// 重置动作
-		virtual void Reset() override;
+		void Reset() override;
 
 	protected:
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
-		virtual void Update(Node* target, Duration dt) override;
+		void Update(Node* target, Duration dt) override;
 
 	protected:
 		Duration delay_;

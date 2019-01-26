@@ -19,19 +19,21 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.hpp"
+#include "ActionTween.h"
 
 namespace easy2d
 {
 	// 帧动画
 	class Animation
-		: public Action
+		: public ActionTween
 	{
 	public:
 		Animation();
 
-		explicit Animation(
-			FramesPtr const& animation
+		Animation(
+			Duration duration,			/* 动画时长 */
+			FramesPtr const& frames,	/* 帧集合 */
+			EaseFunc func = EaseFunc::Linear
 		);
 
 		virtual ~Animation();
@@ -45,24 +47,17 @@ namespace easy2d
 		);
 
 		// 获取该动作的拷贝对象
-		virtual ActionPtr Clone() const override;
+		ActionPtr Clone() const override;
 
 		// 获取该动作的倒转
-		virtual ActionPtr Reverse() const override;
-
-		// 重置动作
-		virtual void Reset() override;
+		ActionPtr Reverse() const override;
 
 	protected:
-		// 初始化动作
-		virtual void Init(Node* target) override;
+		void Init(Node* target) override;
 
-		// 更新动作
-		virtual void Update(Node* target, Duration dt) override;
+		void UpdateStep(Node* target, float step) override;
 
 	protected:
-		size_t frame_index_;
-		Duration delta_;
 		FramesPtr frames_;
 	};
 }

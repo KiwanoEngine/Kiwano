@@ -56,7 +56,7 @@ namespace easy2d
 		virtual void OnRender() {}
 
 		// 事件分发
-		virtual void Dispatch(Event& evt) override;
+		void Dispatch(Event& evt) override;
 
 		// 获取显示状态
 		bool IsVisible()				const	{ return visible_; }

@@ -81,7 +81,7 @@ namespace easy2d
 
 	protected:
 		// ¸üÐÂ¶¯»­
-		virtual void Update(Duration dt) override;
+		void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
@@ -100,7 +100,7 @@ namespace easy2d
 		);
 
 	protected:
-		virtual void Update(Duration dt) override;
+		void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
@@ -119,7 +119,7 @@ namespace easy2d
 		);
 
 	protected:
-		virtual void Update(Duration dt) override;
+		void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
@@ -139,14 +139,14 @@ namespace easy2d
 		);
 
 	protected:
-		virtual void Update(Duration dt) override;
+		void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
 			ScenePtr const& next
 		) override;
 
-		virtual void Reset() override;
+		void Reset() override;
 
 	protected:
 		Direction	direction_;
@@ -166,14 +166,14 @@ namespace easy2d
 		);
 
 	protected:
-		virtual void Update(Duration dt) override;
+		void Update(Duration dt) override;
 
 		virtual void Init(
 			ScenePtr const& prev,
 			ScenePtr const& next
 		) override;
 
-		virtual void Reset() override;
+		void Reset() override;
 
 	protected:
 		float	rotation_;

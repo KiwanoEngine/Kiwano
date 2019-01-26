@@ -218,7 +218,7 @@ namespace easy2d
 		// µ¼³öÎªÍ¼Æ¬
 		ImagePtr ExportToImage() const;
 
-		virtual void OnRender() override;
+		void OnRender() override;
 
 	protected:
 		D2DBitmapPtr const& GetBitmap() const;

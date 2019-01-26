@@ -26,13 +26,12 @@
 namespace easy2d
 {
 	Animation::Animation()
-		: frame_index_(0)
-		, frames_(nullptr)
+		: frames_(nullptr)
 	{
 	}
 
-	Animation::Animation(FramesPtr const& animation)
-		: frame_index_(0)
+	Animation::Animation(Duration duration, FramesPtr const& animation, EaseFunc func)
+		: ActionTween(duration, func)
 		, frames_(nullptr)
 	{
 		this->SetAnimation(animation);
@@ -52,65 +51,42 @@ namespace easy2d
 		if (animation && animation != frames_)
 		{
 			frames_ = animation;
-			frame_index_ = 0;
 		}
 	}
 
 	void Animation::Init(Node* target)
 	{
-		Action::Init(target);
+		ActionTween::Init(target);
 
-		auto sprite_target = dynamic_cast<Sprite*>(target);
-		if (sprite_target && frames_)
-		{
-			sprite_target->Load(frames_->GetFrames()[frame_index_]);
-			++frame_index_;
-		}
-	}
-
-	void Animation::Update(Node* target, Duration dt)
-	{
-		Action::Update(target, dt);
-
-		if (!frames_)
+		if (!frames_ || frames_->GetFrames().empty())
 		{
 			this->Stop();
 			return;
 		}
 
-		delta_ += dt;
-		while (delta_ >= frames_->GetInterval())
+		auto sprite_target = dynamic_cast<Sprite*>(target);
+		if (sprite_target && frames_)
 		{
-			auto& frames = frames_->GetFrames();
-			auto sprite_target = dynamic_cast<Sprite*>(target);
-
-			if (sprite_target)
-			{
-				sprite_target->Load(frames[frame_index_]);
-			}
-
-			delta_ -= frames_->GetInterval();
-			++frame_index_;
-
-			if (frame_index_ == frames.size())
-			{
-				this->Stop();
-				break;
-			}
+			sprite_target->Load(frames_->GetFrames()[0]);
 		}
 	}
 
-	void Animation::Reset()
+	void Animation::UpdateStep(Node * target, float step)
 	{
-		Action::Reset();
-		frame_index_ = 0;
+		E2D_ASSERT(dynamic_cast<Sprite*>(target) && "Animation only supports Sprites");
+
+		const auto& frames = frames_->GetFrames();
+		size_t size = frames.size();
+		size_t index = std::min(static_cast<size_t>(math::Floor(size * step)), size - 1);
+
+		static_cast<Sprite*>(target)->Load(frames[index]);
 	}
 
 	ActionPtr Animation::Clone() const
 	{
 		if (frames_)
 		{
-			return new (std::nothrow) Animation(frames_);
+			return new (std::nothrow) Animation(duration_, frames_, ease_type_);
 		}
 		return nullptr;
 	}
@@ -119,10 +95,10 @@ namespace easy2d
 	{
 		if (frames_)
 		{
-			auto animation = frames_->Reverse();
-			if (animation)
+			FramesPtr frames = frames_->Reverse();
+			if (frames)
 			{
-				return new (std::nothrow) Animation(animation);
+				return new (std::nothrow) Animation(duration_, frames, ease_type_);
 			}
 		}
 		return nullptr;

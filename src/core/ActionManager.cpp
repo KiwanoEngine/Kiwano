@@ -25,7 +25,7 @@ namespace easy2d
 {
 	void ActionManager::UpdateActions(Node* target, Duration dt)
 	{
-		if (actions_.IsEmpty())
+		if (actions_.IsEmpty() || !target)
 			return;
 
 		ActionPtr next;

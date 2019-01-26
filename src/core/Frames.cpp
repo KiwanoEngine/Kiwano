@@ -25,29 +25,16 @@
 namespace easy2d
 {
 	Frames::Frames()
-		: interval_(200)
 	{
 	}
 
 	Frames::Frames(Array<ImagePtr> const& frames)
-		: interval_(200)
-	{
-		this->Add(frames);
-	}
-
-	Frames::Frames(Duration interval, Array<ImagePtr> const& frames)
-		: interval_(interval)
 	{
 		this->Add(frames);
 	}
 
 	Frames::~Frames()
 	{
-	}
-
-	void Frames::SetInterval(Duration interval)
-	{
-		interval_ = interval;
 	}
 
 	void Frames::Add(ImagePtr const& frame)
@@ -68,11 +55,6 @@ namespace easy2d
 		}
 	}
 
-	Duration Frames::GetInterval() const
-	{
-		return interval_;
-	}
-
 	Array<ImagePtr> const& Frames::GetFrames() const
 	{
 		return frames_;
@@ -83,7 +65,6 @@ namespace easy2d
 		auto animation = new (std::nothrow) Frames;
 		if (animation)
 		{
-			animation->SetInterval(interval_);
 			for (const auto& frame : frames_)
 			{
 				animation->Add(frame);
@@ -97,7 +78,6 @@ namespace easy2d
 		auto animation = new (std::nothrow) Frames;
 		if (!frames_.empty())
 		{
-			animation->SetInterval(interval_);
 			for (auto iter = frames_.crbegin(), crend = frames_.crend(); iter != crend; ++iter)
 			{
 				if (*iter)
