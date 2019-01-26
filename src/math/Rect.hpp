@@ -99,7 +99,7 @@ namespace easy2d
 			// 判断点是否在矩形内
 			inline bool ContainsPoint(const Vector2& point) const
 			{
-				return	point.x >= origin.x && point.x <= (origin.y + size.y) &&
+				return	point.x >= origin.x && point.x <= (origin.x + size.x) &&
 					point.y >= origin.y && point.y <= (origin.y + size.y);
 			}
 

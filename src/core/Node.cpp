@@ -43,6 +43,9 @@ namespace easy2d
 	Node::Node()
 		: visible_(true)
 		, pause_(false)
+		, hover_(false)
+		, pressed_(false)
+		, responsible_(false)
 		, dirty_transform_(false)
 		, dirty_transform_inverse_(false)
 		, parent_(nullptr)
@@ -128,13 +131,13 @@ namespace easy2d
 			child->Dispatch(evt);
 		}
 
-		if (MouseEvent::Check(evt.type))
+		if (responsible_ && MouseEvent::Check(evt.type))
 		{
 			if (evt.type == MouseEvent::Move)
 			{
-				if (!evt.has_target && ContainsPoint(Point{ evt.mouse.x, evt.mouse.y }))
+				if (!evt.target && ContainsPoint(Point{ evt.mouse.x, evt.mouse.y }))
 				{
-					evt.has_target = true;
+					evt.target = this;
 
 					if (!hover_)
 					{
@@ -142,7 +145,7 @@ namespace easy2d
 
 						Event hover = evt;
 						hover.type = MouseEvent::Hover;
-						Dispatch(hover);
+						EventDispatcher::Dispatch(hover);
 					}
 				}
 				else if (hover_)
@@ -151,23 +154,26 @@ namespace easy2d
 					pressed_ = false;
 
 					Event out = evt;
+					out.target = this;
 					out.type = MouseEvent::Out;
-					Dispatch(out);
+					EventDispatcher::Dispatch(out);
 				}
 			}
 
 			if (evt.type == MouseEvent::Down && hover_)
 			{
 				pressed_ = true;
+				evt.target = this;
 			}
 
 			if (evt.type == MouseEvent::Up && pressed_)
 			{
 				pressed_ = false;
+				evt.target = this;
 
 				Event click = evt;
 				click.type = MouseEvent::Click;
-				Dispatch(click);
+				EventDispatcher::Dispatch(click);
 			}
 		}
 
@@ -584,12 +590,17 @@ namespace easy2d
 		children_.Clear();
 	}
 
+	void Node::SetResponsible(bool enable)
+	{
+		responsible_ = enable;
+	}
+
 	bool Node::ContainsPoint(const Point& point) const
 	{
 		if (size_.x == 0.f || size_.y == 0.f)
 			return false;
 
-		math::Vector2 local = GetTransformInverseMatrix().Transform(point);
+		Point local = GetTransformInverseMatrix().Transform(point);
 		return GetBounds().ContainsPoint(local);
 	}
 }

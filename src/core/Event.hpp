@@ -140,7 +140,7 @@ namespace easy2d
 	struct Event
 	{
 		EventType type;
-		bool has_target;
+		Node* target;
 
 		union
 		{
@@ -149,14 +149,6 @@ namespace easy2d
 			WindowEvent win;
 		};
 
-		Event()
-			: type(0)
-			, has_target(false)
-		{}
-
-		Event(EventType type)
-			: type(type)
-			, has_target(false)
-		{}
+		Event(EventType type = 0) : type(type), target(nullptr) {}
 	};
 }
