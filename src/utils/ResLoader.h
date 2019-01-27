@@ -58,6 +58,8 @@ namespace easy2d
 			String const& path
 		);
 
+		Resource FindRes(Resource const& res) const;
+
 		template<typename T>
 		auto Get(String const& id) const -> decltype(auto)
 		{

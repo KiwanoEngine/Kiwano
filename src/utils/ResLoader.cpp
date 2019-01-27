@@ -43,8 +43,7 @@ namespace easy2d
 
 	void ResLoader::AddImage(String const& id, Resource const& image)
 	{
-		String path = Search(image.GetFileName(), search_paths_);
-		ImagePtr ptr = new Image(path.c_str());
+		ImagePtr ptr = new Image(FindRes(image));
 		res_.insert(std::make_pair(id, ptr));
 	}
 
@@ -58,8 +57,7 @@ namespace easy2d
 		FramesPtr frames = new Frames;
 		for (const auto& image : images)
 		{
-			String path = Search(image.GetFileName(), search_paths_);
-			ImagePtr ptr = new Image(path.c_str());
+			ImagePtr ptr = new Image(FindRes(image));
 			frames->Add(ptr);
 		}
 		res_.insert(std::make_pair(id, frames));
@@ -78,8 +76,7 @@ namespace easy2d
 		FramesPtr frames = new Frames;
 		for (const auto& pair : images)
 		{
-			String path = Search(pair.first.GetFileName(), search_paths_);
-			ImagePtr image = new Image(path.c_str());
+			ImagePtr image = new Image(FindRes(pair.first));
 			if (!pair.second.IsEmpty())
 			{
 				image->Crop(pair.second);
@@ -91,8 +88,7 @@ namespace easy2d
 
 	void ResLoader::AddMusic(String const & id, Resource const & music)
 	{
-		String path = Search(music.GetFileName(), search_paths_);
-		MusicPtr ptr = new Music(path.c_str());
+		MusicPtr ptr = new Music(FindRes(music));
 		res_.insert(std::make_pair(id, ptr));
 	}
 
@@ -151,6 +147,16 @@ namespace easy2d
 		{
 			search_paths_.push_front(tmp);
 		}
+	}
+
+	Resource ResLoader::FindRes(Resource const & res) const
+	{
+		if (res.IsFile())
+		{
+			String path = Search(res.GetFileName(), search_paths_);
+			return Resource(path.c_str());
+		}
+		return res;
 	}
 
 }
