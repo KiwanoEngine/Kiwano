@@ -44,9 +44,6 @@ namespace easy2d
 	bool ResLoader::AddImage(String const& id, Resource const& image)
 	{
 		ImagePtr ptr = new (std::nothrow) Image;
-		if (!ptr)
-			return false;
-
 		if (ptr && ptr->Load(FindRes(image)))
 		{
 			res_.insert(std::make_pair(id, ptr));
@@ -70,21 +67,20 @@ namespace easy2d
 		if (images.empty())
 			return 0;
 
-		FramesPtr frames = new (std::nothrow) Frames;
-		if (!frames)
-			return 0;
-
 		int total = 0;
-		for (const auto& image : images)
+		FramesPtr frames = new (std::nothrow) Frames;
+		if (frames)
 		{
-			ImagePtr ptr = new (std::nothrow) Image;
-			if (ptr && ptr->Load(FindRes(image)))
+			for (const auto& image : images)
 			{
-				frames->Add(ptr);
-				++total;
+				ImagePtr ptr = new (std::nothrow) Image;
+				if (ptr && ptr->Load(FindRes(image)))
+				{
+					frames->Add(ptr);
+					++total;
+				}
 			}
 		}
-
 		if (total)
 			res_.insert(std::make_pair(id, frames));
 		return total;
@@ -95,20 +91,19 @@ namespace easy2d
 		if (images.empty())
 			return 0;
 
-		FramesPtr frames = new (std::nothrow) Frames;
-		if (!frames)
-			return 0;
-
 		int total = 0;
-		for (const auto& image : images)
+		FramesPtr frames = new (std::nothrow) Frames;
+		if (frames)
 		{
-			if (image)
+			for (const auto& image : images)
 			{
-				frames->Add(image);
-				total++;
+				if (image)
+				{
+					frames->Add(image);
+					total++;
+				}
 			}
 		}
-
 		if (total)
 			res_.insert(std::make_pair(id, frames));
 		return total;
@@ -119,25 +114,24 @@ namespace easy2d
 		if (images.empty())
 			return 0;
 
-		FramesPtr frames = new (std::nothrow) Frames;
-		if (!frames)
-			return 0;
-
 		int total = 0;
-		for (const auto& pair : images)
+		FramesPtr frames = new (std::nothrow) Frames;
+		if (frames)
 		{
-			ImagePtr ptr = new (std::nothrow) Image;
-			if (ptr && ptr->Load(FindRes(pair.first)))
+			for (const auto& pair : images)
 			{
-				if (!pair.second.IsEmpty())
+				ImagePtr ptr = new (std::nothrow) Image;
+				if (ptr && ptr->Load(FindRes(pair.first)))
 				{
-					ptr->Crop(pair.second);
+					if (!pair.second.IsEmpty())
+					{
+						ptr->Crop(pair.second);
+					}
+					frames->Add(ptr);
+					++total;
 				}
-				frames->Add(ptr);
-				++total;
 			}
 		}
-
 		if (total)
 			res_.insert(std::make_pair(id, frames));
 		return total;
