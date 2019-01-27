@@ -500,6 +500,11 @@ namespace easy2d
 		return Rect(Point{}, size_);
 	}
 
+	Rect Node::GetBoundingBox() const
+	{
+		return RectApplyTransform(GetBounds(), GetTransformMatrix());
+	}
+
 	Array<NodePtr> Node::GetChildren(String const& name) const
 	{
 		Array<NodePtr> children;

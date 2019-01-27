@@ -73,7 +73,7 @@
     <ClInclude Include="..\..\src\easy2d.h" />
     <ClInclude Include="..\..\src\math\constants.hpp" />
     <ClInclude Include="..\..\src\math\ease.hpp" />
-    <ClInclude Include="..\..\src\math\Matrix.hpp" />
+    <ClInclude Include="..\..\src\math\Matrix.h" />
     <ClInclude Include="..\..\src\math\rand.h" />
     <ClInclude Include="..\..\src\math\Rect.hpp" />
     <ClInclude Include="..\..\src\math\scalar.hpp" />
@@ -123,6 +123,7 @@
     <ClCompile Include="..\..\src\core\time.cpp" />
     <ClCompile Include="..\..\src\core\Transition.cpp" />
     <ClCompile Include="..\..\src\core\window.cpp" />
+    <ClCompile Include="..\..\src\math\Matrix.cpp" />
     <ClCompile Include="..\..\src\math\rand.cpp" />
     <ClCompile Include="..\..\src\ui\Button.cpp" />
     <ClCompile Include="..\..\src\ui\Menu.cpp" />

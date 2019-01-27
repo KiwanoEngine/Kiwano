@@ -91,7 +91,7 @@
 #include "math/ease.hpp"
 #include "math/vector.hpp"
 #include "math/rand.h"
-#include "math/Matrix.hpp"
+#include "math/Matrix.h"
 
 
 //

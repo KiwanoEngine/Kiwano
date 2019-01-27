@@ -24,7 +24,7 @@
 #include "closure.hpp"
 #include "../math/vector.hpp"
 #include "../math/Rect.hpp"
-#include "../math/Matrix.hpp"
+#include "../math/Matrix.h"
 #include <set>
 #include <map>
 #include <list>

@@ -127,6 +127,9 @@ namespace easy2d
 		// 获取包围盒
 		Rect GetBounds() const;
 
+		// 获取外切包围盒
+		Rect GetBoundingBox() const;
+
 		// 获取二维变换矩阵
 		Matrix const& GetTransformMatrix()  const;
 
