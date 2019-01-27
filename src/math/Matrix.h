@@ -72,7 +72,7 @@ namespace easy2d
 
 			Rect Transform(const Rect& rect) const;
 
-			inline void Matrix::Translate(const Vector2& v)
+			inline void Translate(const Vector2& v)
 			{
 				_31 += _11 * v.x + _21 * v.y;
 				_32 += _12 * v.x + _22 * v.y;
