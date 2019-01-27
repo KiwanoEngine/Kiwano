@@ -124,7 +124,7 @@ namespace easy2d
 		// 获取变换
 		Transform const& GetTransform()	const	{ return transform_; }
 
-		// 获取包围盒
+		// 获取边框
 		Rect GetBounds() const;
 
 		// 获取外切包围盒

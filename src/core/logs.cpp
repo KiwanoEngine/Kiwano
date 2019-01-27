@@ -33,35 +33,47 @@ namespace easy2d
 
 		namespace color
 		{
-			const wchar_t _reset[] = L"\x1b[0m";
+			const WORD _blue = FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+			const WORD _green = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+			const WORD _red = FOREGROUND_RED | FOREGROUND_INTENSITY;
+			const WORD _yellow = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+			const WORD _white = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
 
-			const wchar_t _black[] = L"\x1b[30m";
-			const wchar_t _red[] = L"\x1b[31m";
-			const wchar_t _green[] = L"\x1b[32m";
-			const wchar_t _yellow[] = L"\x1b[33m";
-			const wchar_t _blue[] = L"\x1b[34m";
-			const wchar_t _white[] = L"\x1b[37m";
+			const WORD _blue_bg = _white | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+			const WORD _green_bg = _white | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
+			const WORD _red_bg = _white | BACKGROUND_RED | BACKGROUND_INTENSITY;
+			const WORD _yellow_bg = BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+			const WORD _white_bg = BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
 
-			const wchar_t _black_bg[] = L"\x1b[40m";
-			const wchar_t _red_bg[] = L"\x1b[41m";
-			const wchar_t _green_bg[] = L"\x1b[42m";
-			const wchar_t _yellow_bg[] = L"\x1b[43m";
-			const wchar_t _blue_bg[] = L"\x1b[44m";
-			const wchar_t _white_bg[] = L"\x1b[47m";
+			const WORD _reset = _white;
+
 
 #define DECLARE_COLOR(COLOR) \
-	inline std::wostream& (COLOR)(std::wostream& _out)\
-		{ _out.write(_##COLOR, 5); return _out; }\
-	inline std::wostream& (COLOR##_bg)(std::wostream& _out)\
-		{ _out.write(_##COLOR##_bg, 5); return _out; }
+	inline std::wostream& (stdout_##COLOR)(std::wostream& _out)\
+		{ ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), _##COLOR); return _out; }\
+	\
+	inline std::wostream& (stderr_##COLOR)(std::wostream& _out)\
+		{ ::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), _##COLOR); return _out; }
 
-			inline std::wostream& (reset)(std::wostream& _out) { _out.write(_reset, 4); return _out; }
+#define DECLARE_BG_COLOR(COLOR) \
+	inline std::wostream& (stdout_##COLOR##_bg)(std::wostream& _out)\
+		{ ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), _##COLOR##_bg); return _out; }\
+	\
+	inline std::wostream& (stderr_##COLOR##_bg)(std::wostream& _out)\
+		{ ::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), _##COLOR##_bg); return _out; }
 
 			DECLARE_COLOR(red);
 			DECLARE_COLOR(green);
 			DECLARE_COLOR(yellow);
 			DECLARE_COLOR(blue);
 			DECLARE_COLOR(white);
+			DECLARE_COLOR(reset);
+
+			DECLARE_BG_COLOR(red);
+			DECLARE_BG_COLOR(green);
+			DECLARE_BG_COLOR(yellow);
+			DECLARE_BG_COLOR(blue);
+			DECLARE_BG_COLOR(white);
 
 #undef DECLARE_COLOR
 		}
@@ -102,7 +114,7 @@ namespace easy2d
 					ss << L"\r\n";
 
 				std::wstring output = ss.str();
-				os << color << output << color::reset;
+				os << color << output;
 				::OutputDebugStringW(output.c_str());
 
 				delete[] buffer;
@@ -124,7 +136,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcout, color::white, false, nullptr, format, args);
+			Output(std::wcout, color::stdout_white, false, nullptr, format, args);
 
 			va_end(args);
 		}
@@ -134,7 +146,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcout, color::white, true, nullptr, format, args);
+			Output(std::wcout, color::stdout_white, true, nullptr, format, args);
 
 			va_end(args);
 		}
@@ -144,7 +156,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcout, color::blue, false, nullptr, format, args);
+			Output(std::wcout, color::stdout_blue, false, nullptr, format, args);
 
 			va_end(args);
 		}
@@ -154,7 +166,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcout, color::blue, true, nullptr, format, args);
+			Output(std::wcout, color::stdout_blue, true, nullptr, format, args);
 
 			va_end(args);
 		}
@@ -164,7 +176,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcerr, color::yellow_bg, false, L"Warning: ", format, args);
+			Output(std::wcerr, color::stdout_yellow_bg, false, L"Warning: ", format, args);
 
 			va_end(args);
 		}
@@ -174,7 +186,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcerr, color::yellow_bg, true, L"Warning: ", format, args);
+			Output(std::wcerr, color::stdout_yellow_bg, true, L"Warning: ", format, args);
 
 			va_end(args);
 		}
@@ -184,7 +196,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcerr, color::red_bg, false, L"Error: ", format, args);
+			Output(std::wcerr, color::stdout_red_bg, false, L"Error: ", format, args);
 
 			va_end(args);
 		}
@@ -194,7 +206,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcerr, color::red_bg, true, L"Error: ", format, args);
+			Output(std::wcerr, color::stdout_red_bg, true, L"Error: ", format, args);
 
 			va_end(args);
 		}
