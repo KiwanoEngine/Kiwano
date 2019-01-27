@@ -187,7 +187,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::DrawImage(ImagePtr const & image)
+	HRESULT RenderSystem::DrawImage(ImagePtr const & image, Rect const& dest_rect)
 	{
 		if (!render_target_)
 			return E_UNEXPECTED;
@@ -200,7 +200,7 @@ namespace easy2d
 
 		render_target_->DrawBitmap(
 			image->GetBitmap().Get(),
-			D2D1::RectF(0.f, 0.f, image->GetWidth(), image->GetHeight()),
+			dest_rect,
 			opacity_,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			image->GetCropRect()

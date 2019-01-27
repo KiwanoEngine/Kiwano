@@ -128,7 +128,8 @@ namespace easy2d
 		);
 
 		HRESULT DrawImage(
-			ImagePtr const& image
+			ImagePtr const& image,
+			Rect const& dest_rect
 		);
 
 		HRESULT DrawBitmap(
