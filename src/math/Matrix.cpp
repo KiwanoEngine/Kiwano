@@ -56,6 +56,21 @@ namespace easy2d
 			_31 = 0.f; _32 = 0.f;
 		}
 
+		Rect Matrix::Transform(const Rect & rect) const
+		{
+			Vector2 top_left = Transform(rect.GetLeftTop());
+			Vector2 top_right = Transform(rect.GetRightTop());
+			Vector2 bottom_left = Transform(rect.GetLeftBottom());
+			Vector2 bottom_right = Transform(rect.GetRightBottom());
+
+			float left = min(min(top_left.x, top_right.x), min(bottom_left.x, bottom_right.x));
+			float right = max(max(top_left.x, top_right.x), max(bottom_left.x, bottom_right.x));
+			float top = min(min(top_left.y, top_right.y), min(bottom_left.y, bottom_right.y));
+			float bottom = max(max(top_left.y, top_right.y), max(bottom_left.y, bottom_right.y));
+
+			return Rect{ left, top, (right - left), (bottom - top) };
+		}
+
 		Matrix Matrix::Translation(const Vector2& v)
 		{
 			return Matrix(
@@ -132,29 +147,6 @@ namespace easy2d
 				det * (matrix._21 * matrix._32 - matrix._22 * matrix._31),
 				det * (matrix._12 * matrix._31 - matrix._11 * matrix._32)
 			);
-		}
-
-		Point PointApplyTransform(Point const & point, Matrix const & transform)
-		{
-			return Point{
-				transform._11 * point.x + transform._21 * point.y + transform._31,
-				transform._12 * point.x + transform._22 * point.y + transform._32
-			};
-		}
-
-		Rect RectApplyTransform(Rect const& rect, Matrix const& transform)
-		{
-			Point top_left = PointApplyTransform(rect.GetLeftTop(), transform);
-			Point top_right = PointApplyTransform(rect.GetRightTop(), transform);
-			Point bottom_left = PointApplyTransform(rect.GetLeftBottom(), transform);
-			Point bottom_right = PointApplyTransform(rect.GetRightBottom(), transform);
-
-			float left = min(min(top_left.x, top_right.x), min(bottom_left.x, bottom_right.x));
-			float right = max(max(top_left.x, top_right.x), max(bottom_left.x, bottom_right.x));
-			float top = min(min(top_left.y, top_right.y), min(bottom_left.y, bottom_right.y));
-			float bottom = max(max(top_left.y, top_right.y), max(bottom_left.y, bottom_right.y));
-
-			return Rect{ left, top, (right - left), (bottom - top) };
 		}
 	}
 }

@@ -70,6 +70,8 @@ namespace easy2d
 				);
 			}
 
+			Rect Transform(const Rect& rect) const;
+
 			inline void Matrix::Translate(const Vector2& v)
 			{
 				_31 += _11 * v.x + _21 * v.y;
@@ -147,10 +149,6 @@ namespace easy2d
 
 			static Matrix Invert(Matrix const& matrix);
 		};
-
-		Point PointApplyTransform(Point const& point, Matrix const& transform);
-
-		Rect RectApplyTransform(Rect const& rect, Matrix const& transform);
 
 
 		// Use template expression to optimize matrix multiply

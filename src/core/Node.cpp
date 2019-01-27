@@ -502,7 +502,7 @@ namespace easy2d
 
 	Rect Node::GetBoundingBox() const
 	{
-		return RectApplyTransform(GetBounds(), GetTransformMatrix());
+		return GetTransformMatrix().Transform(GetBounds());
 	}
 
 	Array<NodePtr> Node::GetChildren(String const& name) const
