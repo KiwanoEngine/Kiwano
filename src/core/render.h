@@ -26,7 +26,7 @@
 #include "TextRenderer.h"
 #include "TextStyle.hpp"
 #include "Singleton.hpp"
-#include "../math/Matrix.hpp"
+#include "../math/Matrix.h"
 #include <unordered_map>
 
 namespace easy2d
@@ -128,7 +128,8 @@ namespace easy2d
 		);
 
 		HRESULT DrawImage(
-			ImagePtr const& image
+			ImagePtr const& image,
+			Rect const& dest_rect
 		);
 
 		HRESULT DrawBitmap(

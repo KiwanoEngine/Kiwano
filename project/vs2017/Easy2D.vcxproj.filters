@@ -62,9 +62,6 @@
     <ClInclude Include="..\..\src\core\window.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\math\Matrix.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\math\rand.h">
       <Filter>math</Filter>
     </ClInclude>
@@ -202,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\core\ActionHelper.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\math\Matrix.h">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +350,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\core\ActionGroup.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\math\Matrix.cpp">
+      <Filter>math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
