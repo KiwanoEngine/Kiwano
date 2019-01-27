@@ -69,7 +69,7 @@ namespace easy2d
 	ActionTween::ActionTween()
 		: elapsed_()
 		, duration_()
-		, ease_func_(math::Linear)
+		, ease_func_(nullptr)
 	{
 	}
 
