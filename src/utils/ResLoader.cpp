@@ -41,64 +41,131 @@ namespace easy2d
 		}
 	}
 
-	void ResLoader::AddImage(String const& id, Resource const& image)
+	bool ResLoader::AddImage(String const& id, Resource const& image)
 	{
-		String path = Search(image.GetFileName(), search_paths_);
-		ImagePtr ptr = new Image(path.c_str());
-		res_.insert(std::make_pair(id, ptr));
-	}
-
-	void ResLoader::AddImage(String const & id, ImagePtr const & image)
-	{
-		res_.insert(std::make_pair(id, image));
-	}
-
-	void ResLoader::AddFrames(String const& id, Array<Resource> const& images)
-	{
-		FramesPtr frames = new Frames;
-		for (const auto& image : images)
+		ImagePtr ptr = new (std::nothrow) Image;
+		if (ptr && ptr->Load(FindRes(image)))
 		{
-			String path = Search(image.GetFileName(), search_paths_);
-			ImagePtr ptr = new Image(path.c_str());
-			frames->Add(ptr);
+			res_.insert(std::make_pair(id, ptr));
+			return true;
 		}
-		res_.insert(std::make_pair(id, frames));
+		return false;
 	}
 
-	void ResLoader::AddFrames(String const& id, Array<ImagePtr> const& images)
+	bool ResLoader::AddImage(String const & id, ImagePtr const & image)
 	{
-		FramesPtr frames = new Frames;
-		for (const auto& image : images)
-			frames->Add(image);
-		res_.insert(std::make_pair(id, frames));
-	}
-
-	void ResLoader::AddFrames(String const& id, Array<std::pair<Resource, Rect>> const& images)
-	{
-		FramesPtr frames = new Frames;
-		for (const auto& pair : images)
+		if (image)
 		{
-			String path = Search(pair.first.GetFileName(), search_paths_);
-			ImagePtr image = new Image(path.c_str());
-			if (!pair.second.IsEmpty())
+			res_.insert(std::make_pair(id, image));
+			return true;
+		}
+		return false;
+	}
+
+	int ResLoader::AddFrames(String const& id, Array<Resource> const& images)
+	{
+		if (images.empty())
+			return 0;
+
+		int total = 0;
+		FramesPtr frames = new (std::nothrow) Frames;
+		if (frames)
+		{
+			for (const auto& image : images)
 			{
-				image->Crop(pair.second);
+				ImagePtr ptr = new (std::nothrow) Image;
+				if (ptr && ptr->Load(FindRes(image)))
+				{
+					frames->Add(ptr);
+					++total;
+				}
 			}
-			frames->Add(image);
 		}
-		res_.insert(std::make_pair(id, frames));
+		if (total)
+			res_.insert(std::make_pair(id, frames));
+		return total;
 	}
 
-	void ResLoader::AddMusic(String const & id, Resource const & music)
+	int ResLoader::AddFrames(String const& id, Array<ImagePtr> const& images)
 	{
-		String path = Search(music.GetFileName(), search_paths_);
-		MusicPtr ptr = new Music(path.c_str());
-		res_.insert(std::make_pair(id, ptr));
+		if (images.empty())
+			return 0;
+
+		int total = 0;
+		FramesPtr frames = new (std::nothrow) Frames;
+		if (frames)
+		{
+			for (const auto& image : images)
+			{
+				if (image)
+				{
+					frames->Add(image);
+					total++;
+				}
+			}
+		}
+		if (total)
+			res_.insert(std::make_pair(id, frames));
+		return total;
 	}
 
-	void ResLoader::AddObj(String const& id, ObjectPtr const& obj)
+	int ResLoader::AddFrames(String const& id, Array<std::pair<Resource, Rect>> const& images)
 	{
-		res_.insert(std::make_pair(id, obj));
+		if (images.empty())
+			return 0;
+
+		int total = 0;
+		FramesPtr frames = new (std::nothrow) Frames;
+		if (frames)
+		{
+			for (const auto& pair : images)
+			{
+				ImagePtr ptr = new (std::nothrow) Image;
+				if (ptr && ptr->Load(FindRes(pair.first)))
+				{
+					if (!pair.second.IsEmpty())
+					{
+						ptr->Crop(pair.second);
+					}
+					frames->Add(ptr);
+					++total;
+				}
+			}
+		}
+		if (total)
+			res_.insert(std::make_pair(id, frames));
+		return total;
+	}
+
+	bool ResLoader::AddMusic(String const & id, Resource const & music)
+	{
+		MusicPtr ptr = new (std::nothrow) Music;
+		if (ptr && ptr->Load(FindRes(music)))
+		{
+			res_.insert(std::make_pair(id, ptr));
+			return true;
+		}
+		return false;
+	}
+
+	bool ResLoader::AddMusic(String const & id, MusicPtr const & music)
+	{
+		if (music)
+		{
+			res_.insert(std::make_pair(id, music));
+			return true;
+		}
+		return false;
+	}
+
+	bool ResLoader::AddObj(String const& id, ObjectPtr const& obj)
+	{
+		if (obj)
+		{
+			res_.insert(std::make_pair(id, obj));
+			return true;
+		}
+		return false;
 	}
 
 	ImagePtr ResLoader::GetImage(String const & id) const
@@ -151,6 +218,16 @@ namespace easy2d
 		{
 			search_paths_.push_front(tmp);
 		}
+	}
+
+	Resource ResLoader::FindRes(Resource const & res) const
+	{
+		if (res.IsFile())
+		{
+			String path = Search(res.GetFileName(), search_paths_);
+			return Resource(path.c_str());
+		}
+		return res;
 	}
 
 }

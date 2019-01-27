@@ -27,19 +27,21 @@ namespace easy2d
 	class ResLoader
 	{
 	public:
-		void AddImage(String const& id, Resource const& image);
+		bool AddImage(String const& id, Resource const& image);
 
-		void AddImage(String const& id, ImagePtr const& image);
+		bool AddImage(String const& id, ImagePtr const& image);
 
-		void AddFrames(String const& id, Array<Resource> const& images);
+		int AddFrames(String const& id, Array<Resource> const& images);
 
-		void AddFrames(String const& id, Array<Pair<Resource, Rect>> const& images);
+		int AddFrames(String const& id, Array<Pair<Resource, Rect>> const& images);
 
-		void AddFrames(String const& id, Array<ImagePtr> const& images);
+		int AddFrames(String const& id, Array<ImagePtr> const& images);
 
-		void AddMusic(String const& id, Resource const& music);
+		bool AddMusic(String const& id, Resource const& music);
 
-		void AddObj(String const& id, ObjectPtr const& obj);
+		bool AddMusic(String const& id, MusicPtr const& music);
+
+		bool AddObj(String const& id, ObjectPtr const& obj);
 
 		ImagePtr GetImage(String const& id) const;
 
@@ -57,6 +59,8 @@ namespace easy2d
 		void AddSearchPath(
 			String const& path
 		);
+
+		Resource FindRes(Resource const& res) const;
 
 		template<typename T>
 		auto Get(String const& id) const -> decltype(auto)

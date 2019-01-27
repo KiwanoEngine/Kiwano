@@ -90,7 +90,7 @@ namespace easy2d
 			Audio::Instance()->Init(debug_)
 		);
 
-		Setup();
+		OnStart();
 
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
@@ -417,7 +417,12 @@ namespace easy2d
 
 		case WM_CLOSE:
 		{
-			Window::Instance()->Destroy();
+			E2D_LOG(L"Window is closing");
+
+			if (app->OnClosing())
+			{
+				Window::Instance()->Destroy();
+			}
 			return 0;
 		}
 		break;
@@ -431,6 +436,8 @@ namespace easy2d
 				Event evt(WindowEvent::Closed);
 				app->curr_scene_->Dispatch(evt);
 			}
+
+			app->OnDestroy();
 
 			::PostQuitMessage(0);
 			return 0;

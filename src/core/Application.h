@@ -60,13 +60,19 @@ namespace easy2d
 
 		virtual ~Application();
 
-		// 启动
-		virtual void Setup() {}
-
 		// 初始化
 		void Init(
 			Options const& options
 		);
+
+		// 启动时
+		virtual void OnStart() {}
+
+		// 关闭时
+		virtual bool OnClosing() { return true; }
+
+		// 销毁时
+		virtual void OnDestroy() {}
 
 		// 运行
 		void Run();
