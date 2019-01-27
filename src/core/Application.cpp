@@ -28,6 +28,7 @@
 #include "Transition.h"
 #include <windowsx.h>
 #include <imm.h>
+#include <iostream>
 
 #pragma comment (lib ,"imm32.lib")
 
@@ -52,6 +53,40 @@ namespace easy2d
 	void Application::Init(const Options& options)
 	{
 		debug_ = options.debug;
+
+		// show console if debug mode enabled
+		HWND console = ::GetConsoleWindow();
+		if (debug_ && !console)
+		{
+			if (::AllocConsole())
+			{
+				console = ::GetConsoleWindow();
+				FILE * dummy;
+				freopen_s(&dummy, "CONOUT$", "w+t", stdout);
+				freopen_s(&dummy, "CONIN$", "r+t", stdin);
+				freopen_s(&dummy, "CONOUT$", "w+t", stderr);
+				(void)dummy;
+
+				std::cout.clear();
+				std::wcout.clear();
+				std::cin.clear();
+				std::wcin.clear();
+				std::cerr.clear();
+				std::wcerr.clear();
+			}
+		}
+		else if (!debug_ && console)
+		{
+			::ShowWindow(console, SW_HIDE);
+			console = nullptr;
+		}
+
+		// disable the close button of console
+		if (console)
+		{
+			HMENU hmenu = ::GetSystemMenu(console, FALSE);
+			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+		}
 
 		ThrowIfFailed(
 			Factory::Instance()->Init(debug_)
@@ -94,31 +129,6 @@ namespace easy2d
 
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
-
-		// show console if debug mode enabled
-		HWND console = ::GetConsoleWindow();
-		if (debug_ && !console)
-		{
-			if (::AllocConsole())
-			{
-				console = ::GetConsoleWindow();
-				FILE * stdoutStream, *stdinStream, *stderrStream;
-				freopen_s(&stdoutStream, "conout$", "w+t", stdout);
-				freopen_s(&stdinStream, "conin$", "r+t", stdin);
-				freopen_s(&stderrStream, "conout$", "w+t", stderr);
-			}
-		}
-		else if (!debug_ && console)
-		{
-			::ShowWindow(console, SW_HIDE);
-		}
-
-		// disable the close button of console
-		if (console)
-		{
-			HMENU hmenu = ::GetSystemMenu(console, FALSE);
-			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
-		}
 
 		// use Application instance in message loop
 		::SetWindowLongPtr(hwnd, GWLP_USERDATA, PtrToUlong(this));

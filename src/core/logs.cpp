@@ -196,7 +196,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcerr, color::stdout_red_bg, false, L"Error: ", format, args);
+			Output(std::wcerr, color::stderr_red_bg, false, L"Error: ", format, args);
 
 			va_end(args);
 		}
@@ -206,7 +206,7 @@ namespace easy2d
 			va_list args = nullptr;
 			va_start(args, format);
 
-			Output(std::wcerr, color::stdout_red_bg, true, L"Error: ", format, args);
+			Output(std::wcerr, color::stderr_red_bg, true, L"Error: ", format, args);
 
 			va_end(args);
 		}
