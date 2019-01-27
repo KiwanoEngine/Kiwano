@@ -26,9 +26,11 @@ namespace easy2d
 {
 	Input::Input()
 		: hwnd_(nullptr)
+		, want_update_(false)
 	{
 		ZeroMemory(keys_, sizeof(keys_));
-		ZeroMemory(keys_cache_, sizeof(keys_cache_));
+		ZeroMemory(keys_pressed_, sizeof(keys_pressed_));
+		ZeroMemory(keys_released_, sizeof(keys_released_));
 	}
 
 	Input::~Input()
@@ -47,42 +49,55 @@ namespace easy2d
 
 	void Input::Update()
 	{
-		memcpy(keys_cache_, keys_, sizeof(keys_cache_));
-		::GetKeyboardState(keys_);
+		if (want_update_)
+		{
+			want_update_ = false;
+
+			ZeroMemory(keys_pressed_, sizeof(keys_pressed_));
+			ZeroMemory(keys_released_, sizeof(keys_released_));
+		}
+	}
+
+	void Input::UpdateKey(int key, bool down)
+	{
+		if (down && !keys_[key])
+			keys_pressed_[key] = true;
+		if (!down && keys_[key])
+			keys_released_[key] = true;
+
+		keys_[key] = down;
+
+		want_update_ = true;
 	}
 
 	bool Input::IsDown(KeyCode code)
 	{
-		return !!(keys_[static_cast<int>(code)] & 0x80);
+		return keys_[static_cast<int>(code)];
 	}
 
 	bool Input::IsDown(MouseButton btn)
 	{
-		return !!(keys_[static_cast<int>(btn)] & 0x80);
+		return keys_[static_cast<int>(btn)];
 	}
 
 	bool Input::WasPressed(KeyCode code)
 	{
-		return !(keys_cache_[static_cast<int>(code)] & 0x80)
-			&& (keys_[static_cast<int>(code)] & 0x80);
+		return keys_pressed_[static_cast<int>(code)];
 	}
 
 	bool Input::WasPressed(MouseButton btn)
 	{
-		return !(keys_cache_[static_cast<int>(btn)] & 0x80)
-			&& (keys_[static_cast<int>(btn)] & 0x80);
+		return keys_pressed_[static_cast<int>(btn)];
 	}
 
 	bool Input::WasReleased(KeyCode code)
 	{
-		return (keys_cache_[static_cast<int>(code)] & 0x80)
-			&& !(keys_[static_cast<int>(code)] & 0x80);
+		return keys_released_[static_cast<int>(code)];
 	}
 
 	bool Input::WasReleased(MouseButton btn)
 	{
-		return (keys_cache_[static_cast<int>(btn)] & 0x80)
-			&& !(keys_[static_cast<int>(btn)] & 0x80);
+		return keys_released_[static_cast<int>(btn)];
 	}
 
 	float Input::GetMouseX()
@@ -97,9 +112,16 @@ namespace easy2d
 
 	Point Input::GetMousePos()
 	{
-		POINT pos;
-		::GetCursorPos(&pos);
-		::ScreenToClient(hwnd_, &pos);
-		return Point{ static_cast<float>(pos.x), static_cast<float>(pos.y) };
+		Point mouse_pos = Point{};
+		if (HWND active_window = ::GetForegroundWindow())
+		{
+			if (active_window == hwnd_ || ::IsChild(active_window, hwnd_))
+			{
+				POINT pos;
+				if (::GetCursorPos(&pos) && ::ScreenToClient(hwnd_, &pos))
+					mouse_pos = Point((float)pos.x, (float)pos.y);
+			}
+		}
+		return mouse_pos;
 	}
 }

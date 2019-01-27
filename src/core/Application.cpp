@@ -28,6 +28,7 @@
 #include "Transition.h"
 #include <windowsx.h>
 #include <imm.h>
+#include <iostream>
 
 #pragma comment (lib ,"imm32.lib")
 
@@ -52,6 +53,40 @@ namespace easy2d
 	void Application::Init(const Options& options)
 	{
 		debug_ = options.debug;
+
+		// show console if debug mode enabled
+		HWND console = ::GetConsoleWindow();
+		if (debug_ && !console)
+		{
+			if (::AllocConsole())
+			{
+				console = ::GetConsoleWindow();
+				FILE * dummy;
+				freopen_s(&dummy, "CONOUT$", "w+t", stdout);
+				freopen_s(&dummy, "CONIN$", "r+t", stdin);
+				freopen_s(&dummy, "CONOUT$", "w+t", stderr);
+				(void)dummy;
+
+				std::cout.clear();
+				std::wcout.clear();
+				std::cin.clear();
+				std::wcin.clear();
+				std::cerr.clear();
+				std::wcerr.clear();
+			}
+		}
+		else if (!debug_ && console)
+		{
+			::ShowWindow(console, SW_HIDE);
+			console = nullptr;
+		}
+
+		// disable the close button of console
+		if (console)
+		{
+			HMENU hmenu = ::GetSystemMenu(console, FALSE);
+			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+		}
 
 		ThrowIfFailed(
 			Factory::Instance()->Init(debug_)
@@ -94,31 +129,6 @@ namespace easy2d
 
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
-
-		// show console if debug mode enabled
-		HWND console = ::GetConsoleWindow();
-		if (debug_ && !console)
-		{
-			if (::AllocConsole())
-			{
-				console = ::GetConsoleWindow();
-				FILE * stdoutStream, *stdinStream, *stderrStream;
-				freopen_s(&stdoutStream, "conout$", "w+t", stdout);
-				freopen_s(&stdinStream, "conin$", "r+t", stdin);
-				freopen_s(&stderrStream, "conout$", "w+t", stderr);
-			}
-		}
-		else if (!debug_ && console)
-		{
-			::ShowWindow(console, SW_HIDE);
-		}
-
-		// disable the close button of console
-		if (console)
-		{
-			HMENU hmenu = ::GetSystemMenu(console, FALSE);
-			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
-		}
 
 		// use Application instance in message loop
 		::SetWindowLongPtr(hwnd, GWLP_USERDATA, PtrToUlong(this));
@@ -188,8 +198,6 @@ namespace easy2d
 		const auto now = time::Now();
 		const auto dt = (now - last) * time_scale_;
 		last = now;
-
-		Input::Instance()->Update();
 
 		if (transition_)
 		{
@@ -262,6 +270,8 @@ namespace easy2d
 		{
 			app->Update();
 			app->Render(hwnd);
+
+			Input::Instance()->Update();
 			return 0;
 		}
 		break;
@@ -269,6 +279,8 @@ namespace easy2d
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 		{
+			Input::Instance()->UpdateKey((int)wparam, (msg == WM_KEYDOWN) ? true : false);
+
 			if (!app->transition_ && app->curr_scene_)
 			{
 				Event evt((msg == WM_KEYDOWN) ? KeyboardEvent::Down : KeyboardEvent::Up);
@@ -292,6 +304,10 @@ namespace easy2d
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
+			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { Input::Instance()->UpdateKey(VK_LBUTTON, (msg == WM_LBUTTONDOWN) ? true : false); }
+			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { Input::Instance()->UpdateKey(VK_RBUTTON, (msg == WM_RBUTTONDOWN) ? true : false); }
+			else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { Input::Instance()->UpdateKey(VK_MBUTTON, (msg == WM_MBUTTONDOWN) ? true : false); }
+
 			if (!app->transition_ && app->curr_scene_)
 			{
 				Event evt;
@@ -301,24 +317,14 @@ namespace easy2d
 				evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
 				evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
 
-				if (msg == WM_MOUSEMOVE)
-					evt.type = MouseEvent::Move;
-				else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN)
-					evt.type = MouseEvent::Down;
-				else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP)
-					evt.type = MouseEvent::Up;
-				else
-				{
-					evt.type = MouseEvent::Wheel;
-					evt.mouse.wheel_delta = GET_WHEEL_DELTA_WPARAM(wparam) / 120.f;
-				}
+				if		(msg == WM_MOUSEMOVE) { evt.type = MouseEvent::Move; }
+				else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN) { evt.type = MouseEvent::Down; }
+				else if (msg == WM_LBUTTONUP   || msg == WM_RBUTTONUP   || msg == WM_MBUTTONUP) { evt.type = MouseEvent::Up; }
+				else if (msg == WM_MOUSEWHEEL) { evt.type = MouseEvent::Wheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA; }
 
-				if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP)
-					evt.mouse.button = MouseButton::Left;
-				else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP)
-					evt.mouse.button = MouseButton::Right;
-				else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP)
-					evt.mouse.button = MouseButton::Middle;
+				if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { evt.mouse.button = MouseButton::Left; }
+				else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { evt.mouse.button = MouseButton::Right; }
+				else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { evt.mouse.button = MouseButton::Middle; }
 
 				app->curr_scene_->Dispatch(evt);
 			}

@@ -57,7 +57,7 @@ namespace easy2d
 
 		struct
 		{
-			float wheel_delta;	// 仅当消息类型为 Wheel 时有效
+			float wheel;	// 仅当消息类型为 Wheel 时有效
 		};
 
 		static inline bool Check(EventType type)
