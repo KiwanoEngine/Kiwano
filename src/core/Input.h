@@ -31,8 +31,6 @@ namespace easy2d
 		E2D_DECLARE_SINGLETON(Input);
 
 	public:
-		HRESULT Init(HWND hwnd, bool debug);
-
 		// 检测键盘按键是否正被按下
 		bool IsDown(
 			KeyCode code
@@ -72,7 +70,11 @@ namespace easy2d
 		// 获得鼠标坐标
 		Point GetMousePos();
 
+		HRESULT Init(HWND hwnd, bool debug);
+
 		void Update();
+
+		void UpdateKey(int, bool);
 
 	protected:
 		Input();
@@ -80,8 +82,10 @@ namespace easy2d
 		~Input();
 
 	protected:
-		HWND	hwnd_;
-		BYTE	keys_[256];
-		BYTE	keys_cache_[256];
+		HWND hwnd_;
+		bool want_update_;
+		bool keys_[256];
+		bool keys_pressed_[256];
+		bool keys_released_[256];
 	};
 }

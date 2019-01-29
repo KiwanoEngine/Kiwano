@@ -199,8 +199,6 @@ namespace easy2d
 		const auto dt = (now - last) * time_scale_;
 		last = now;
 
-		Input::Instance()->Update();
-
 		if (transition_)
 		{
 			transition_->Update(dt);
@@ -272,6 +270,8 @@ namespace easy2d
 		{
 			app->Update();
 			app->Render(hwnd);
+
+			Input::Instance()->Update();
 			return 0;
 		}
 		break;
@@ -279,6 +279,8 @@ namespace easy2d
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 		{
+			Input::Instance()->UpdateKey((int)wparam, (msg == WM_KEYDOWN) ? true : false);
+
 			if (!app->transition_ && app->curr_scene_)
 			{
 				Event evt((msg == WM_KEYDOWN) ? KeyboardEvent::Down : KeyboardEvent::Up);
@@ -302,6 +304,10 @@ namespace easy2d
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
+			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { Input::Instance()->UpdateKey(VK_LBUTTON, (msg == WM_LBUTTONDOWN) ? true : false); }
+			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { Input::Instance()->UpdateKey(VK_RBUTTON, (msg == WM_RBUTTONDOWN) ? true : false); }
+			else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { Input::Instance()->UpdateKey(VK_MBUTTON, (msg == WM_MBUTTONDOWN) ? true : false); }
+
 			if (!app->transition_ && app->curr_scene_)
 			{
 				Event evt;
@@ -311,24 +317,14 @@ namespace easy2d
 				evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
 				evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
 
-				if (msg == WM_MOUSEMOVE)
-					evt.type = MouseEvent::Move;
-				else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN)
-					evt.type = MouseEvent::Down;
-				else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP)
-					evt.type = MouseEvent::Up;
-				else
-				{
-					evt.type = MouseEvent::Wheel;
-					evt.mouse.wheel_delta = GET_WHEEL_DELTA_WPARAM(wparam) / 120.f;
-				}
+				if		(msg == WM_MOUSEMOVE) { evt.type = MouseEvent::Move; }
+				else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN) { evt.type = MouseEvent::Down; }
+				else if (msg == WM_LBUTTONUP   || msg == WM_RBUTTONUP   || msg == WM_MBUTTONUP) { evt.type = MouseEvent::Up; }
+				else if (msg == WM_MOUSEWHEEL) { evt.type = MouseEvent::Wheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA; }
 
-				if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP)
-					evt.mouse.button = MouseButton::Left;
-				else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP)
-					evt.mouse.button = MouseButton::Right;
-				else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP)
-					evt.mouse.button = MouseButton::Middle;
+				if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { evt.mouse.button = MouseButton::Left; }
+				else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { evt.mouse.button = MouseButton::Right; }
+				else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { evt.mouse.button = MouseButton::Middle; }
 
 				app->curr_scene_->Dispatch(evt);
 			}

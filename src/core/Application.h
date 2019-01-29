@@ -62,7 +62,7 @@ namespace easy2d
 
 		// 初始化
 		void Init(
-			Options const& options
+			Options const& options = Options{}
 		);
 
 		// 启动时
