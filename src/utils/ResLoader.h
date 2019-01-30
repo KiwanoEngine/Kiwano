@@ -27,20 +27,36 @@ namespace easy2d
 	class ResLoader
 	{
 	public:
+		// 添加图片
 		bool AddImage(String const& id, Resource const& image);
 
+		// 添加图片
 		bool AddImage(String const& id, ImagePtr const& image);
 
+		// 添加帧集合
 		int AddFrames(String const& id, Array<Resource> const& images);
 
-		int AddFrames(String const& id, Array<Pair<Resource, Rect>> const& images);
-
+		// 添加帧集合
 		int AddFrames(String const& id, Array<ImagePtr> const& images);
 
+		// 添加帧集合
+		// 按行列数裁剪图片
+		int AddFrames(String const& id, Resource const& image, int cols, int rows = 1);
+
+		// 添加帧集合
+		// 按指定裁剪矩形裁剪图片
+		int AddFrames(String const& id, Resource const& image, Array<Rect> const& crop_rects);
+
+		// 添加帧集合
+		bool AddFrames(String const& id, FramesPtr const& frames);
+
+		// 添加音乐
 		bool AddMusic(String const& id, Resource const& music);
 
+		// 添加音乐
 		bool AddMusic(String const& id, MusicPtr const& music);
 
+		// 添加对象
 		bool AddObj(String const& id, ObjectPtr const& obj);
 
 		ImagePtr GetImage(String const& id) const;
@@ -51,16 +67,16 @@ namespace easy2d
 
 		ObjectPtr GetObj(String const& id) const;
 
+		// 删除指定资源
 		void Delete(String const& id);
 
+		// 销毁所有资源
 		void Destroy();
 
 		// 添加资源搜索路径
 		void AddSearchPath(
 			String const& path
 		);
-
-		Resource FindRes(Resource const& res) const;
 
 		template<typename T>
 		auto Get(String const& id) const -> decltype(auto)

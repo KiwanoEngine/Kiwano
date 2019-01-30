@@ -44,10 +44,21 @@ namespace easy2d
 	bool ResLoader::AddImage(String const& id, Resource const& image)
 	{
 		ImagePtr ptr = new (std::nothrow) Image;
-		if (ptr && ptr->Load(FindRes(image)))
+		if (ptr)
 		{
-			res_.insert(std::make_pair(id, ptr));
-			return true;
+			if (image.IsFile())
+			{
+				String path = Search(image.GetFileName(), search_paths_);
+				ptr->Load(path.c_str());
+			}
+			else
+				ptr->Load(image);
+
+			if (ptr->IsValid())
+			{
+				res_.insert(std::make_pair(id, ptr));
+				return true;
+			}
 		}
 		return false;
 	}
@@ -74,10 +85,21 @@ namespace easy2d
 			for (const auto& image : images)
 			{
 				ImagePtr ptr = new (std::nothrow) Image;
-				if (ptr && ptr->Load(FindRes(image)))
+				if (ptr)
 				{
-					frames->Add(ptr);
-					++total;
+					if (image.IsFile())
+					{
+						String path = Search(image.GetFileName(), search_paths_);
+						ptr->Load(path.c_str());
+					}
+					else
+						ptr->Load(image);
+
+					if (ptr->IsValid())
+					{
+						frames->Add(ptr);
+						++total;
+					}
 				}
 			}
 		}
@@ -109,24 +131,59 @@ namespace easy2d
 		return total;
 	}
 
-	int ResLoader::AddFrames(String const& id, Array<std::pair<Resource, Rect>> const& images)
+	int ResLoader::AddFrames(String const & id, Resource const & image, int cols, int rows)
 	{
-		if (images.empty())
+		if (cols <= 0 || rows <= 0)
 			return 0;
 
 		int total = 0;
 		FramesPtr frames = new (std::nothrow) Frames;
 		if (frames)
 		{
-			for (const auto& pair : images)
+			ImagePtr raw = new (std::nothrow) Image;
+			if (!raw || !raw->Load(image))
+				return 0;
+
+			float raw_width = raw->GetSourceWidth();
+			float raw_height = raw->GetSourceHeight();
+			float width = raw_width / cols;
+			float height = raw_height / rows;
+
+			for (int i = 0; i < rows; i++)
 			{
-				ImagePtr ptr = new (std::nothrow) Image;
-				if (ptr && ptr->Load(FindRes(pair.first)))
+				for (int j = 0; j < cols; j++)
 				{
-					if (!pair.second.IsEmpty())
+					ImagePtr ptr = new (std::nothrow) Image(raw->GetBitmap());
+					if (ptr)
 					{
-						ptr->Crop(pair.second);
+						ptr->Crop(Rect{ i * width, j * height, width, height });
+						frames->Add(ptr);
+						++total;
 					}
+				}
+			}
+		}
+		if (total)
+			res_.insert(std::make_pair(id, frames));
+		return total;
+	}
+
+	int ResLoader::AddFrames(String const & id, Resource const & image, Array<Rect> const & crop_rects)
+	{
+		int total = 0;
+		FramesPtr frames = new (std::nothrow) Frames;
+		if (frames)
+		{
+			ImagePtr raw = new (std::nothrow) Image;
+			if (!raw || !raw->Load(image))
+				return 0;
+
+			for (const auto& rect : crop_rects)
+			{
+				ImagePtr ptr = new (std::nothrow) Image(raw->GetBitmap());
+				if (ptr)
+				{
+					ptr->Crop(rect);
 					frames->Add(ptr);
 					++total;
 				}
@@ -137,13 +194,35 @@ namespace easy2d
 		return total;
 	}
 
+	bool ResLoader::AddFrames(String const & id, FramesPtr const & frames)
+	{
+		if (frames)
+		{
+			res_.insert(std::make_pair(id, frames));
+			return true;
+		}
+		return false;
+	}
+
 	bool ResLoader::AddMusic(String const & id, Resource const & music)
 	{
 		MusicPtr ptr = new (std::nothrow) Music;
-		if (ptr && ptr->Load(FindRes(music)))
+		if (ptr)
 		{
-			res_.insert(std::make_pair(id, ptr));
-			return true;
+			bool valid = false;
+			if (music.IsFile())
+			{
+				String path = Search(music.GetFileName(), search_paths_);
+				valid = ptr->Load(path.c_str());
+			}
+			else
+				valid = ptr->Load(music);
+
+			if (valid)
+			{
+				res_.insert(std::make_pair(id, ptr));
+				return true;
+			}
 		}
 		return false;
 	}
@@ -218,16 +297,6 @@ namespace easy2d
 		{
 			search_paths_.push_front(tmp);
 		}
-	}
-
-	Resource ResLoader::FindRes(Resource const & res) const
-	{
-		if (res.IsFile())
-		{
-			String path = Search(res.GetFileName(), search_paths_);
-			return Resource(path.c_str());
-		}
-		return res;
 	}
 
 }
