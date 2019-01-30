@@ -84,6 +84,11 @@ namespace easy2d
 		return true;
 	}
 
+	bool Image::IsValid() const
+	{
+		return !!bitmap_;
+	}
+
 	void Image::Crop(Rect const& crop_rect)
 	{
 		if (bitmap_)

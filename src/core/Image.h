@@ -51,6 +51,9 @@ namespace easy2d
 			Resource const& res
 		);
 
+		// 资源是否有效
+		bool IsValid() const;
+
 		// 将图片裁剪为矩形
 		void Crop(
 			Rect const& crop_rect	/* 裁剪矩形 */
