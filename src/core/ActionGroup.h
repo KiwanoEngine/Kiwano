@@ -30,7 +30,7 @@ namespace easy2d
 	public:
 		explicit Loop(
 			ActionPtr const& action,	/* 执行循环的动作 */
-			int times = -1			/* 循环次数 */
+			int times = -1				/* 循环次数 */
 		);
 
 		virtual ~Loop();
