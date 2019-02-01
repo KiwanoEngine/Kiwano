@@ -40,14 +40,14 @@ namespace easy2d
 
 	public:
 		explicit Task(
-			Callback const& func,			/* 执行函数 */
+			Callback const& func,		/* 执行函数 */
 			String const& name = L""	/* 任务名称 */
 		);
 
 		explicit Task(
-			Callback const& func,			/* 执行函数 */
-			Duration delay,			/* 时间间隔（秒） */
-			int times = -1,					/* 执行次数（设 -1 为永久执行） */
+			Callback const& func,		/* 执行函数 */
+			Duration delay,				/* 时间间隔（秒） */
+			int times = -1,				/* 执行次数（设 -1 为永久执行） */
 			String const& name = L""	/* 任务名称 */
 		);
 

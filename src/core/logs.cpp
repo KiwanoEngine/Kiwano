@@ -100,15 +100,16 @@ namespace easy2d
 				if (!enabled)
 					return;
 
+				static wchar_t temp_buffer[1024 * 3 + 1];
+
 				size_t len = ::_vscwprintf(format, args) + 1;
-				wchar_t* buffer = new wchar_t[len];
-				::_vsnwprintf_s(buffer, len, len, format, args);
+				::_vsnwprintf_s(temp_buffer, len, len, format, args);
 
 				std::wstringstream ss;
 				if (prompt)
-					ss << OutPrefix << prompt << buffer;
+					ss << OutPrefix << prompt << temp_buffer;
 				else
-					ss << OutPrefix << buffer;
+					ss << OutPrefix << temp_buffer;
 
 				if (endl)
 					ss << L"\r\n";
@@ -116,8 +117,6 @@ namespace easy2d
 				std::wstring output = ss.str();
 				os << color << output;
 				::OutputDebugStringW(output.c_str());
-
-				delete[] buffer;
 			}
 		}
 
