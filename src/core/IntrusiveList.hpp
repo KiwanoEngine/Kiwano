@@ -172,8 +172,7 @@ namespace easy2d
 			T tmp = first_;
 			while (tmp != child)
 			{
-				if (tmp == last_)
-					E2D_ASSERT(false && "The node to be removed is not in this list");
+				E2D_ASSERT((tmp != last_) && "The node to be removed is not in this list");
 				tmp = tmp->next_;
 			}
 #endif

@@ -65,6 +65,8 @@ namespace easy2d
 
 	HRESULT Window::Init(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc, bool debug)
 	{
+		E2D_NOT_USED(debug);
+
 		E2D_LOG(L"Creating window");
 		
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);

@@ -280,7 +280,8 @@ namespace easy2d
 
 			if (sibling && sibling->GetZOrder() > zorder)
 			{
-				while (sibling = sibling->PrevItem().Get())
+				sibling = sibling->PrevItem().Get();
+				while (sibling)
 				{
 					if (sibling->GetZOrder() <= zorder)
 						break;

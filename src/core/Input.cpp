@@ -40,6 +40,8 @@ namespace easy2d
 
 	HRESULT Input::Init(HWND hwnd, bool debug)
 	{
+		E2D_NOT_USED(debug);
+
 		E2D_LOG(L"Initing input device");
 
 		hwnd_ = hwnd;

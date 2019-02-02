@@ -68,7 +68,6 @@ namespace easy2d
 	HRESULT Transcoder::LoadMediaResource(Resource const& res, BYTE** wave_data, UINT32* wave_data_size)
 	{
 		HRESULT	hr = S_OK;
-		HINSTANCE hinstance = GetModuleHandle(nullptr);
 
 		IntrusivePtr<IStream> stream;
 		IntrusivePtr<IMFByteStream> byte_stream;
@@ -135,7 +134,7 @@ namespace easy2d
 		if (SUCCEEDED(hr))
 		{
 			hr = reader->SetCurrentMediaType(
-				MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+				(DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM,
 				0,
 				partial_type.Get()
 			);
@@ -145,7 +144,7 @@ namespace easy2d
 		if (SUCCEEDED(hr))
 		{
 			hr = reader->GetCurrentMediaType(
-				MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+				(DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM,
 				&uncompressed_type
 			);
 		}
@@ -154,7 +153,7 @@ namespace easy2d
 		if (SUCCEEDED(hr))
 		{
 			hr = reader->SetStreamSelection(
-				MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+				(DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM,
 				true
 			);
 		}
@@ -167,7 +166,7 @@ namespace easy2d
 				uncompressed_type.Get(),
 				&wave_format_,
 				&size,
-				MFWaveFormatExConvertFlag_Normal
+				(DWORD)MFWaveFormatExConvertFlag_Normal
 			);
 		}
 
@@ -178,7 +177,7 @@ namespace easy2d
 			PropVariantInit(&prop);
 
 			hr = reader->GetPresentationAttribute(
-				MF_SOURCE_READER_MEDIASOURCE,
+				(DWORD)MF_SOURCE_READER_MEDIASOURCE,
 				MF_PD_DURATION,
 				&prop
 			);
@@ -186,7 +185,7 @@ namespace easy2d
 			LONGLONG duration = prop.uhVal.QuadPart;
 			max_stream_size = static_cast<DWORD>(
 				(duration * wave_format_->nAvgBytesPerSec) / 10000000 + 1
-				);
+			);
 			PropVariantClear(&prop);
 		}
 
@@ -210,7 +209,7 @@ namespace easy2d
 				while (true)
 				{
 					hr = reader->ReadSample(
-						MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+						(DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM,
 						0,
 						nullptr,
 						&flags,

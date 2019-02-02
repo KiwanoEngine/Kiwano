@@ -130,7 +130,7 @@ namespace easy2d
 			TimePoint(long);
 
 			// 是否是零时
-			inline bool IsZero() const { return dur == 0; }
+			inline bool IsZero() const { return dur_ == 0; }
 
 			const TimePoint operator + (const Duration &) const;
 			const TimePoint operator - (const Duration &) const;
@@ -141,7 +141,7 @@ namespace easy2d
 			const Duration operator - (const TimePoint &) const;
 
 		private:
-			long dur;
+			long dur_;
 		};
 
 		// 获取当前时间

@@ -184,6 +184,8 @@ namespace easy2d
 
 	HRESULT Audio::Init(bool debug)
 	{
+		E2D_NOT_USED(debug);
+
 		E2D_LOG(L"Initing audio device");
 
 		HRESULT hr = modules::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);

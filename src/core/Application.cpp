@@ -55,12 +55,15 @@ namespace easy2d
 		debug_ = options.debug;
 
 		// show console if debug mode enabled
-		HWND console = ::GetConsoleWindow();
-		if (debug_ && !console)
+		if (debug_ && !::GetConsoleWindow())
 		{
-			if (::AllocConsole())
+			if (!::AllocConsole())
 			{
-				console = ::GetConsoleWindow();
+				logs::Warningln(L"AllocConsole failed");
+			}
+			else
+			{
+				HWND console = ::GetConsoleWindow();
 				FILE * dummy;
 				freopen_s(&dummy, "CONOUT$", "w+t", stdout);
 				freopen_s(&dummy, "CONIN$", "r+t", stdin);
@@ -73,19 +76,14 @@ namespace easy2d
 				std::wcin.clear();
 				std::cerr.clear();
 				std::wcerr.clear();
-			}
-		}
-		else if (!debug_ && console)
-		{
-			::ShowWindow(console, SW_HIDE);
-			console = nullptr;
-		}
 
-		// disable the close button of console
-		if (console)
-		{
-			HMENU hmenu = ::GetSystemMenu(console, FALSE);
-			::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+				// disable the close button of console
+				if (console)
+				{
+					HMENU hmenu = ::GetSystemMenu(console, FALSE);
+					::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+				}
+			}
 		}
 
 		ThrowIfFailed(
@@ -131,7 +129,7 @@ namespace easy2d
 		::ImmAssociateContext(hwnd, nullptr);
 
 		// use Application instance in message loop
-		::SetWindowLongPtr(hwnd, GWLP_USERDATA, PtrToUlong(this));
+		::SetWindowLongPtr(hwnd, GWLP_USERDATA, LONG_PTR(this));
 	}
 
 	void Application::Run()
@@ -259,7 +257,9 @@ namespace easy2d
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		Application * app = reinterpret_cast<Application*>(::GetWindowLongW(hwnd, GWLP_USERDATA));
+		Application * app = reinterpret_cast<Application*>(
+			static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA))
+			);
 
 		if (!app)
 			return ::DefWindowProcW(hwnd, msg, wparam, lparam);

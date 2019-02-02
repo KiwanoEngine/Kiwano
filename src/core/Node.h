@@ -50,7 +50,7 @@ namespace easy2d
 		Node();
 
 		// 更新节点
-		virtual void OnUpdate(Duration dt) {}
+		virtual void OnUpdate(Duration dt) { E2D_NOT_USED(dt); }
 
 		// 渲染节点
 		virtual void OnRender() {}

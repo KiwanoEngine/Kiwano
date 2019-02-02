@@ -112,10 +112,3 @@
 
 #include "ui/Button.h"
 #include "ui/Menu.h"
-
-
-#if defined(DEBUG) || defined(_DEBUG)
-#	pragma comment(lib, "Easy2Ddw.lib")
-#else
-#	pragma comment(lib, "Easy2Dw.lib")
-#endif

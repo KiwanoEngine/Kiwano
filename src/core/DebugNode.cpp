@@ -82,6 +82,8 @@ namespace easy2d
 
 	void DebugNode::OnUpdate(Duration dt)
 	{
+		E2D_NOT_USED(dt);
+
 		try
 		{
 			frame_time_.push_back(time::Now());
