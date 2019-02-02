@@ -79,10 +79,11 @@ namespace easy2d
 			this->Reset();
 		}
 
-		virtual void Init(Node* target) { initialized_ = true; }
+		virtual void Init(Node* target) { E2D_NOT_USED(target); initialized_ = true; }
 
 		virtual void Update(Node* target, Duration dt)
 		{
+			E2D_NOT_USED(dt);
 			if (!initialized_)
 			{
 				Init(target);

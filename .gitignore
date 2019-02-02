@@ -1,8 +1,6 @@
-x86/
 x64/
 Debug/
 Release/
-prebuilt/
 
 # vs2010
 ipch/

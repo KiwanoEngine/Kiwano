@@ -85,6 +85,11 @@ namespace easy2d
 		__in DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
 		IUnknown* clientDrawingEffect)
 	{
+		E2D_NOT_USED(clientDrawingContext);
+		E2D_NOT_USED(measuringMode);
+		E2D_NOT_USED(glyphRunDescription);
+		E2D_NOT_USED(clientDrawingEffect);
+
 		HRESULT hr = S_OK;
 
 		ID2D1PathGeometry* pPathGeometry = nullptr;
@@ -171,6 +176,9 @@ namespace easy2d
 		__in DWRITE_UNDERLINE const* underline,
 		IUnknown* clientDrawingEffect)
 	{
+		E2D_NOT_USED(clientDrawingContext);
+		E2D_NOT_USED(clientDrawingEffect);
+
 		HRESULT hr;
 
 		D2D1_RECT_F rect = D2D1::RectF(
@@ -237,6 +245,9 @@ namespace easy2d
 		__in DWRITE_STRIKETHROUGH const* strikethrough,
 		IUnknown* clientDrawingEffect)
 	{
+		E2D_NOT_USED(clientDrawingContext);
+		E2D_NOT_USED(clientDrawingEffect);
+
 		HRESULT hr;
 
 		D2D1_RECT_F rect = D2D1::RectF(
@@ -305,6 +316,13 @@ namespace easy2d
 		BOOL IsRightToLeft,
 		IUnknown* clientDrawingEffect)
 	{
+		E2D_NOT_USED(clientDrawingContext);
+		E2D_NOT_USED(originX);
+		E2D_NOT_USED(originY);
+		E2D_NOT_USED(inlineObject);
+		E2D_NOT_USED(IsSideways);
+		E2D_NOT_USED(IsRightToLeft);
+		E2D_NOT_USED(clientDrawingEffect);
 		return E_NOTIMPL;
 	}
 
@@ -330,6 +348,8 @@ namespace easy2d
 		__maybenull void* clientDrawingContext,
 		__out BOOL* isDisabled)
 	{
+		E2D_NOT_USED(clientDrawingContext);
+
 		*isDisabled = FALSE;
 		return S_OK;
 	}
@@ -338,6 +358,8 @@ namespace easy2d
 		__maybenull void* clientDrawingContext,
 		__out DWRITE_MATRIX* transform)
 	{
+		E2D_NOT_USED(clientDrawingContext);
+
 		pRT_->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(transform));
 		return S_OK;
 	}
@@ -346,6 +368,8 @@ namespace easy2d
 		__maybenull void* clientDrawingContext,
 		__out FLOAT* pixelsPerDip)
 	{
+		E2D_NOT_USED(clientDrawingContext);
+
 		float x, yUnused;
 
 		pRT_->GetDpi(&x, &yUnused);

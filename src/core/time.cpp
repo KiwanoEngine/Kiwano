@@ -36,35 +36,35 @@ namespace easy2d
 		}
 
 		TimePoint::TimePoint(long dur)
-			: dur(dur)
+			: dur_(dur)
 		{
 		}
 
 		const TimePoint TimePoint::operator+(const Duration & dur) const
 		{
-			return TimePoint{ (dur + dur).Milliseconds() };
+			return TimePoint{ dur_ + dur.Milliseconds() };
 		}
 
 		const TimePoint TimePoint::operator-(const Duration & dur) const
 		{
-			return TimePoint{ (dur - dur).Milliseconds() };
+			return TimePoint{ dur_ - dur.Milliseconds() };
 		}
 
 		TimePoint & TimePoint::operator+=(const Duration & other)
 		{
-			dur += other.Milliseconds();
+			dur_ += other.Milliseconds();
 			return (*this);
 		}
 
 		TimePoint & TimePoint::operator-=(const Duration &other)
 		{
-			dur -= other.Milliseconds();
+			dur_ -= other.Milliseconds();
 			return (*this);
 		}
 
 		const Duration TimePoint::operator-(const TimePoint & other) const
 		{
-			return Duration(dur - other.dur);
+			return Duration(dur_ - other.dur_);
 		}
 
 

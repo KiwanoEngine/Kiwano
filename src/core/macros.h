@@ -82,7 +82,7 @@
 #include <wincodec.h>
 
 // C++ RunTime Header Files
-#include <cstdlib>
+#include <cassert>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -99,8 +99,12 @@
 
 #ifndef E2D_ASSERT
 #	ifdef E2D_DEBUG
-#		define E2D_ASSERT(expr) if (!(expr)) { ::OutputDebugStringA("[easy2d] Assert failed: " #expr "\n"); abort(); }
+#		define E2D_ASSERT(expr) assert(expr)
 #	else
 #		define E2D_ASSERT __noop
 #	endif
+#endif
+
+#ifndef E2D_NOT_USED
+#	define E2D_NOT_USED(var) ((void)var);
 #endif
