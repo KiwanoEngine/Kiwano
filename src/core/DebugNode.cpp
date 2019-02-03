@@ -69,7 +69,7 @@ namespace easy2d
 	{
 		auto rt = RenderSystem::Instance();
 
-		rt->GetSolidBrush()->SetColor(Color(0.0f, 0.0f, 0.0f, 0.5f));
+		rt->GetSolidBrush()->SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, 0.5f));
 
 		rt->GetRenderTarget()->FillRoundedRectangle(
 			D2D1::RoundedRect(

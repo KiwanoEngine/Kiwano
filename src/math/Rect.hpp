@@ -20,7 +20,6 @@
 
 #pragma once
 #include "vector.hpp"
-#include <d2d1.h>
 
 namespace easy2d
 {
@@ -29,8 +28,8 @@ namespace easy2d
 		// 矩形
 		struct Rect
 		{
-			Vector2	origin;	// 左上角坐标
-			Vector2	size;	// 宽度和高度
+			Vec2	origin;	// 左上角坐标
+			Vec2	size;	// 宽度和高度
 
 			Rect() {}
 
@@ -45,8 +44,8 @@ namespace easy2d
 			{}
 
 			Rect(
-				const Vector2& pos,
-				const Vector2& size
+				const Vec2& pos,
+				const Vec2& size
 			)
 				: origin(pos.x, pos.y)
 				, size(size.x, size.y)
@@ -57,13 +56,6 @@ namespace easy2d
 			)
 				: origin(other.origin.x, other.origin.y)
 				, size(other.size.x, other.size.y)
-			{}
-
-			Rect(
-				const D2D1_RECT_F& other
-			)
-				: origin(other.left, other.top)
-				, size(other.right - other.left, other.bottom - other.top)
 			{}
 
 			Rect& operator= (const Rect& other)
@@ -78,15 +70,17 @@ namespace easy2d
 				return (origin == rect.origin) && (size == rect.size);
 			}
 
-			inline Vector2 GetCenter() const { return Vector2{ origin.x + size.x / 2, origin.y + size.y / 2 }; }
+			inline void Set(float x, float y, float width, float height) { origin = Vec2{ x, y }; size = Vec2{ width, height }; }
 
-			inline Vector2 GetLeftTop() const { return origin; }
+			inline Vec2 GetCenter() const { return Vec2{ origin.x + size.x / 2, origin.y + size.y / 2 }; }
 
-			inline Vector2 GetRightBottom() const { return Vector2{ GetRight(), GetBottom() }; }
+			inline Vec2 GetLeftTop() const { return origin; }
 
-			inline Vector2 GetRightTop() const { return Vector2{ GetRight(), GetTop() }; }
+			inline Vec2 GetRightBottom() const { return Vec2{ GetRight(), GetBottom() }; }
 
-			inline Vector2 GetLeftBottom() const { return Vector2{ GetLeft(), GetBottom() }; }
+			inline Vec2 GetRightTop() const { return Vec2{ GetRight(), GetTop() }; }
+
+			inline Vec2 GetLeftBottom() const { return Vec2{ GetLeft(), GetBottom() }; }
 
 			inline float GetLeft() const { return origin.x; }
 
@@ -99,7 +93,7 @@ namespace easy2d
 			inline bool IsEmpty() const { return origin.IsOrigin() && size.IsOrigin(); }
 
 			// 判断点是否在矩形内
-			inline bool ContainsPoint(const Vector2& point) const
+			inline bool ContainsPoint(const Vec2& point) const
 			{
 				return	point.x >= origin.x && point.x <= (origin.x + size.x) &&
 					point.y >= origin.y && point.y <= (origin.y + size.y);
@@ -112,11 +106,6 @@ namespace easy2d
 						(rect.origin.x + rect.size.x)	< origin.x ||
 						(origin.y + size.y)				< rect.origin.y ||
 						(rect.origin.y + rect.size.y)	< origin.y);
-			}
-
-			inline operator D2D1_RECT_F () const
-			{
-				return D2D1_RECT_F{ origin.x, origin.y, origin.x + size.x, origin.y + size.y };
 			}
 		};
 	}

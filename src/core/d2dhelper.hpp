@@ -20,6 +20,9 @@
 
 #pragma once
 #include "IntrusivePtr.hpp"
+#include "../math/vector.hpp"
+#include "../math/Rect.hpp"
+#include "Color.h"
 #include <d2d1.h>
 #include <dwrite.h>
 
@@ -74,5 +77,25 @@ namespace easy2d
 			ptr->Release();
 			ptr = nullptr;
 		}
+	}
+
+	inline D2D1_POINT_2F const& ToD2dPoint2F(math::Vec2 const& point)
+	{
+		return reinterpret_cast<D2D1_POINT_2F const&>(point);
+	}
+
+	inline D2D1_SIZE_F const& ToD2dSizeF(math::Vec2 const& size)
+	{
+		return reinterpret_cast<D2D1_SIZE_F const&>(size);
+	}
+
+	inline D2D1_RECT_F ToD2dRectF(math::Rect const& rect)
+	{
+		return D2D1_RECT_F{ rect.origin.x, rect.origin.y, rect.origin.x + rect.size.x, rect.origin.y + rect.size.y };
+	}
+
+	inline D2D1_COLOR_F const& ToD2dColorF(Color const& color)
+	{
+		return reinterpret_cast<D2D1_COLOR_F const&>(color);
 	}
 }

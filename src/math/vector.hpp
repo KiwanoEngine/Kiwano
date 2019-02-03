@@ -20,22 +20,21 @@
 
 #pragma once
 #include "scalar.hpp"
-#include <d2d1.h>
 
 namespace easy2d
 {
 	namespace math
 	{
-		struct Vector2
+		struct Vec2
 		{
 			float x;
 			float y;
 
-			Vector2() : x(0.f), y(0.f) {}
+			Vec2() : x(0.f), y(0.f) {}
 
-			Vector2(float x, float y) : x(x), y(y) {}
+			Vec2(float x, float y) : x(x), y(y) {}
 
-			Vector2(const Vector2& other) : x(other.x), y(other.y) {}
+			Vec2(const Vec2& other) : x(other.x), y(other.y) {}
 
 			inline float Length() const
 			{
@@ -47,48 +46,44 @@ namespace easy2d
 				return (x == 0) && (y == 0);
 			}
 
-			inline const Vector2 operator + (const Vector2 & other) const
+			inline void Set(float x, float y)
 			{
-				return Vector2(x + other.x, y + other.y);
+				this->x = x;
+				this->y = y;
 			}
 
-			inline const Vector2 operator - (const Vector2 & other) const
+			inline const Vec2 operator + (const Vec2 & other) const
 			{
-				return Vector2(x - other.x, y - other.y);
+				return Vec2(x + other.x, y + other.y);
 			}
 
-			inline const Vector2 operator * (float val) const
+			inline const Vec2 operator - (const Vec2 & other) const
 			{
-				return Vector2(x * val, y * val);
+				return Vec2(x - other.x, y - other.y);
 			}
 
-			inline const Vector2 operator / (float val) const
+			inline const Vec2 operator * (float val) const
 			{
-				return Vector2(x / val, y / val);
+				return Vec2(x * val, y * val);
 			}
 
-			inline const Vector2 operator - () const
+			inline const Vec2 operator / (float val) const
 			{
-				return Vector2(-x, -y);
+				return Vec2(x / val, y / val);
 			}
 
-			inline bool operator== (const Vector2& other) const
+			inline const Vec2 operator - () const
+			{
+				return Vec2(-x, -y);
+			}
+
+			inline bool operator== (const Vec2& other) const
 			{
 				return (x == other.x) && (y == other.y);
 			}
-
-			inline operator D2D1_POINT_2F const& () const
-			{
-				return reinterpret_cast<D2D1_POINT_2F const&>(*this);
-			}
-
-			inline operator D2D1_POINT_2F& ()
-			{
-				return reinterpret_cast<D2D1_POINT_2F&>(*this);
-			}
 		};
 
-		using Point = Vector2;
-		using Size = Vector2;
+		using Point = Vec2;
+		using Size = Vec2;
 	}
 }

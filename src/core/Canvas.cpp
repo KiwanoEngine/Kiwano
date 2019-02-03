@@ -38,21 +38,21 @@ namespace easy2d
 		auto properties = D2D1::BrushProperties();
 		ThrowIfFailed(
 			render_target_->CreateSolidColorBrush(
-				Color(Color::White, 0.f),
+				D2D1::ColorF(0, 0, 0, 0),
 				properties,
 				&fill_brush_)
 		);
 
 		ThrowIfFailed(
 			render_target_->CreateSolidColorBrush(
-				Color(Color::White),
+				D2D1::ColorF(Color::White),
 				properties,
 				&stroke_brush_)
 		);
 
 		ThrowIfFailed(
 			render_target_->CreateSolidColorBrush(
-				Color(Color::White),
+				D2D1::ColorF(Color::White),
 				properties,
 				&text_brush_)
 		);
@@ -111,12 +111,12 @@ namespace easy2d
 
 	void Canvas::SetStrokeColor(Color const& color)
 	{
-		stroke_brush_->SetColor(color);
+		stroke_brush_->SetColor(ToD2dColorF(color));
 	}
 
 	void Canvas::SetFillColor(Color const& color)
 	{
-		fill_brush_->SetColor(color);
+		fill_brush_->SetColor(ToD2dColorF(color));
 	}
 
 	void Canvas::SetStrokeWidth(float width)
@@ -135,9 +135,9 @@ namespace easy2d
 		text_style_ = text_style;
 
 		text_renderer_->SetTextStyle(
-			text_style_.color,
+			ToD2dColorF(text_style_.color),
 			text_style_.outline,
-			text_style_.outline_color,
+			ToD2dColorF(text_style_.outline_color),
 			text_style_.outline_width,
 			Factory::Instance()->GetStrokeStyle(text_style_.outline_stroke).Get()
 		);
@@ -145,12 +145,14 @@ namespace easy2d
 
 	Color Canvas::GetStrokeColor() const
 	{
-		return stroke_brush_->GetColor();
+		auto color_f = stroke_brush_->GetColor();
+		return Color{ color_f.r, color_f.g, color_f.b, color_f.a };
 	}
 
 	Color Canvas::GetFillColor() const
 	{
-		return fill_brush_->GetColor();
+		auto color_f = fill_brush_->GetColor();
+		return Color{ color_f.r, color_f.g, color_f.b, color_f.a };
 	}
 
 	float Canvas::GetStrokeWidth() const
@@ -253,10 +255,10 @@ namespace easy2d
 		{
 			render_target_->DrawBitmap(
 				image->GetBitmap().Get(),
-				Rect{ Point{}, image->GetSize() },
+				D2D1::RectF(0, 0, image->GetWidth(), image->GetHeight()),
 				opacity,
 				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				image->GetCropRect()
+				ToD2dRectF(image->GetCropRect())
 			);
 			cache_expired_ = true;
 		}
@@ -395,7 +397,7 @@ namespace easy2d
 			current_geometry_->Open(&current_sink_)
 		);
 
-		current_sink_->BeginFigure(begin_pos, D2D1_FIGURE_BEGIN_FILLED);
+		current_sink_->BeginFigure(ToD2dPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
 	}
 
 	void Canvas::EndPath(bool closed)
@@ -413,27 +415,20 @@ namespace easy2d
 	void Canvas::AddLine(Point const & point)
 	{
 		if (current_sink_)
-			current_sink_->AddLine(point);
+			current_sink_->AddLine(ToD2dPoint2F(point));
 	}
 
 	void Canvas::AddLines(Array<Point> const& points)
 	{
-		if (current_sink_)
+		if (current_sink_ && !points.empty())
 		{
-			if (!points.empty())
-			{
-				size_t size = points.size();
-				Array<D2D1_POINT_2F> d2d_points(size);
-				for (size_t i = 0; i < size; ++i)
-				{
-					d2d_points[i] = points[i];
-				}
+			auto d2d_points = reinterpret_cast<Array<D2D_POINT_2F> const&>(points);
+			auto size = d2d_points.size();
 
-				current_sink_->AddLines(
-					&d2d_points[0],
-					static_cast<UINT32>(size)
-				);
-			}
+			current_sink_->AddLines(
+				&d2d_points[0],
+				static_cast<UINT32>(size)
+			);
 		}
 	}
 
@@ -443,9 +438,9 @@ namespace easy2d
 		{
 			current_sink_->AddBezier(
 				D2D1::BezierSegment(
-					point1,
-					point2,
-					point3
+					ToD2dPoint2F(point1),
+					ToD2dPoint2F(point2),
+					ToD2dPoint2F(point3)
 				)
 			);
 		}
@@ -457,8 +452,8 @@ namespace easy2d
 		{
 			current_sink_->AddArc(
 				D2D1::ArcSegment(
-					point,
-					D2D1_SIZE_F{ radius.x, radius.y },
+					ToD2dPoint2F(point),
+					ToD2dSizeF(radius),
 					rotation,
 					clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
 					is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE

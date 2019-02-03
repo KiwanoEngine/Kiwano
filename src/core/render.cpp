@@ -153,7 +153,7 @@ namespace easy2d
 		if (window_occluded_)
 			return S_OK;
 
-		solid_brush_->SetColor(stroke_color);
+		solid_brush_->SetColor(ToD2dColorF(stroke_color));
 		auto stroke_style = Factory::Instance()->GetStrokeStyle(stroke);
 		render_target_->DrawGeometry(
 			geometry.Get(),
@@ -176,7 +176,7 @@ namespace easy2d
 		if (window_occluded_)
 			return S_OK;
 
-		solid_brush_->SetColor(fill_color);
+		solid_brush_->SetColor(ToD2dColorF(fill_color));
 		render_target_->FillGeometry(
 			geometry.Get(),
 			solid_brush_.Get()
@@ -200,10 +200,10 @@ namespace easy2d
 
 		render_target_->DrawBitmap(
 			image->GetBitmap().Get(),
-			dest_rect,
+			ToD2dRectF(dest_rect),
 			opacity_,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-			image->GetCropRect()
+			ToD2dRectF(image->GetCropRect())
 		);
 
 		if (debug_)
@@ -288,7 +288,7 @@ namespace easy2d
 
 		render_target_->PushLayer(
 			D2D1::LayerParameters(
-				properties.area,
+				ToD2dRectF(properties.area),
 				nullptr,
 				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 				D2D1::Matrix3x2F::Identity(),
@@ -431,9 +431,9 @@ namespace easy2d
 
 		auto stroke_style = Factory::Instance()->GetStrokeStyle(outline_stroke);
 		text_renderer_->SetTextStyle(
-			color,
+			ToD2dColorF(color),
 			has_outline,
-			outline_color,
+			ToD2dColorF(outline_color),
 			outline_width,
 			stroke_style.Get()
 		);
@@ -442,7 +442,7 @@ namespace easy2d
 
 	void RenderSystem::SetClearColor(const Color& color)
 	{
-		clear_color_ = color;
+		clear_color_ = ToD2dColorF(color);
 	}
 
 	HRESULT RenderSystem::SetAntialiasMode(bool enabled)
