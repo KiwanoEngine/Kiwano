@@ -24,88 +24,98 @@
 namespace easy2d
 {
 	// 鼠标按键
-	enum class MouseButton : int
+	struct MouseButton
 	{
-		Left	= VK_LBUTTON,	// 鼠标左键
-		Right	= VK_RBUTTON,	// 鼠标右键
-		Middle	= VK_MBUTTON	// 鼠标中键
+		typedef int Value;
+
+		enum : int
+		{
+			Left	= VK_LBUTTON,	// 鼠标左键
+			Right	= VK_RBUTTON,	// 鼠标右键
+			Middle	= VK_MBUTTON	// 鼠标中键
+		};
 	};
 
 
 	// 按键键值
-	enum class KeyCode : int
+	struct KeyCode
 	{
-		Unknown = 0,
-		Up		= VK_UP,
-		Left	= VK_LEFT,
-		Right	= VK_RIGHT,
-		Down	= VK_DOWN,
-		Enter	= VK_RETURN,
-		Space	= VK_SPACE,
-		Esc		= VK_ESCAPE,
-		Ctrl	= VK_CONTROL,
-		Shift	= VK_SHIFT,
+		typedef int Value;
 
-		A = 0x41,
-		B,
-		C,
-		D,
-		E,
-		F,
-		G,
-		H,
-		I,
-		J,
-		K,
-		L,
-		M,
-		N,
-		O,
-		P,
-		Q,
-		R,
-		S,
-		T,
-		U,
-		V,
-		W,
-		X,
-		Y,
-		Z,
+		enum : int
+		{
+			Unknown = 0,
+			Up		= VK_UP,
+			Left	= VK_LEFT,
+			Right	= VK_RIGHT,
+			Down	= VK_DOWN,
+			Enter	= VK_RETURN,
+			Space	= VK_SPACE,
+			Esc		= VK_ESCAPE,
+			Ctrl	= VK_CONTROL,
+			Shift	= VK_SHIFT,
 
-		Num0 = 0x30,
-		Num1,
-		Num2,
-		Num3,
-		Num4,
-		Num5,
-		Num6,
-		Num7,
-		Num8,
-		Num9,
+			A = 0x41,
+			B,
+			C,
+			D,
+			E,
+			F,
+			G,
+			H,
+			I,
+			J,
+			K,
+			L,
+			M,
+			N,
+			O,
+			P,
+			Q,
+			R,
+			S,
+			T,
+			U,
+			V,
+			W,
+			X,
+			Y,
+			Z,
 
-		Numpad0 = VK_NUMPAD0,
-		Numpad1,
-		Numpad2,
-		Numpad3,
-		Numpad4,
-		Numpad5,
-		Numpad6,
-		Numpad7,
-		Numpad8,
-		Numpad9,
+			Num0 = 0x30,
+			Num1,
+			Num2,
+			Num3,
+			Num4,
+			Num5,
+			Num6,
+			Num7,
+			Num8,
+			Num9,
 
-		F1 = VK_F1,
-		F2,
-		F3,
-		F4,
-		F5,
-		F6,
-		F7,
-		F8,
-		F9,
-		F10,
-		F11,
-		F12,
+			Numpad0 = VK_NUMPAD0,
+			Numpad1,
+			Numpad2,
+			Numpad3,
+			Numpad4,
+			Numpad5,
+			Numpad6,
+			Numpad7,
+			Numpad8,
+			Numpad9,
+
+			F1 = VK_F1,
+			F2,
+			F3,
+			F4,
+			F5,
+			F6,
+			F7,
+			F8,
+			F9,
+			F10,
+			F11,
+			F12,
+		};
 	};
 }
