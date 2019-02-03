@@ -72,34 +72,22 @@ namespace easy2d
 		want_update_ = true;
 	}
 
-	bool Input::IsDown(KeyCode code)
+	bool Input::IsDown(int code_or_btn)
 	{
-		return keys_[static_cast<int>(code)];
+		E2D_ASSERT(code_or_btn >= 0 && code_or_btn < 256);
+		return keys_[code_or_btn];
 	}
 
-	bool Input::IsDown(MouseButton btn)
+	bool Input::WasPressed(int code_or_btn)
 	{
-		return keys_[static_cast<int>(btn)];
+		E2D_ASSERT(code_or_btn >= 0 && code_or_btn < 256);
+		return keys_pressed_[code_or_btn];
 	}
 
-	bool Input::WasPressed(KeyCode code)
+	bool Input::WasReleased(int code_or_btn)
 	{
-		return keys_pressed_[static_cast<int>(code)];
-	}
-
-	bool Input::WasPressed(MouseButton btn)
-	{
-		return keys_pressed_[static_cast<int>(btn)];
-	}
-
-	bool Input::WasReleased(KeyCode code)
-	{
-		return keys_released_[static_cast<int>(code)];
-	}
-
-	bool Input::WasReleased(MouseButton btn)
-	{
-		return keys_released_[static_cast<int>(btn)];
+		E2D_ASSERT(code_or_btn >= 0 && code_or_btn < 256);
+		return keys_released_[code_or_btn];
 	}
 
 	float Input::GetMouseX()

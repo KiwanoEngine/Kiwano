@@ -154,6 +154,13 @@ namespace easy2d
 		Window::Instance()->Destroy();
 	}
 
+	void Application::Destroy()
+	{
+		transition_ = nullptr;
+		next_scene_ = nullptr;
+		curr_scene_ = nullptr;
+	}
+
 	void Application::EnterScene(ScenePtr const & scene)
 	{
 		E2D_ASSERT(scene && "Application::EnterScene failed, NULL pointer exception");
@@ -217,6 +224,8 @@ namespace easy2d
 			curr_scene_ = next_scene_;
 			next_scene_ = nullptr;
 		}
+
+		OnUpdate(dt);
 
 		if (curr_scene_)
 			curr_scene_->Update(dt);
@@ -284,7 +293,7 @@ namespace easy2d
 			if (!app->transition_ && app->curr_scene_)
 			{
 				Event evt((msg == WM_KEYDOWN) ? KeyboardEvent::Down : KeyboardEvent::Up);
-				evt.key.code = KeyCode(wparam);
+				evt.key.code = static_cast<int>(wparam);
 				evt.key.count = static_cast<int>(lparam & 0xFF);
 
 				app->curr_scene_->Dispatch(evt);

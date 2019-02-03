@@ -31,34 +31,19 @@ namespace easy2d
 		E2D_DECLARE_SINGLETON(Input);
 
 	public:
-		// 检测键盘按键是否正被按下
+		// 检测键盘或鼠标按键是否正被按下
 		bool IsDown(
-			KeyCode code
+			int code_or_btn
 		);
 
-		// 检测鼠标按键是否正被按下
-		bool IsDown(
-			MouseButton btn
-		);
-
-		// 检测键盘按键是否刚被点击
+		// 检测键盘或鼠标按键是否刚被点击
 		bool WasPressed(
-			KeyCode code
+			int code_or_btn
 		);
 
-		// 检测鼠标按键是否刚被点击
-		bool WasPressed(
-			MouseButton btn
-		);
-
-		// 检测键盘按键是否刚抬起
+		// 检测键盘或鼠标按键是否刚抬起
 		bool WasReleased(
-			KeyCode code
-		);
-
-		// 检测鼠标按键是否刚抬起
-		bool WasReleased(
-			MouseButton btn
+			int code_or_btn
 		);
 
 		// 获得鼠标 x 坐标

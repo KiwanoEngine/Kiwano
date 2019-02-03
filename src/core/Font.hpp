@@ -49,7 +49,7 @@ namespace easy2d
 	public:
 		Font(
 			const String& family	= L"",
-			float size				= 22,
+			float size				= 18,
 			unsigned int weight		= FontWeight::Normal,
 			bool italic				= false
 		)

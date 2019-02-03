@@ -119,7 +119,7 @@ namespace easy2d
 			String const& family
 		);
 
-		// 设置字号（默认值为 22）
+		// 设置字号（默认值为 18）
 		void SetFontSize(
 			float size
 		);

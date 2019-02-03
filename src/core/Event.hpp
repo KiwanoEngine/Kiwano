@@ -52,7 +52,7 @@ namespace easy2d
 
 		struct
 		{
-			MouseButton button;	// 仅当消息类型为 Down | Up | Click 时有效
+			int button;		// 仅当消息类型为 Down | Up | Click 时有效
 		};
 
 		struct
@@ -79,7 +79,7 @@ namespace easy2d
 			Last
 		};
 
-		KeyCode code;
+		int code;	// enum KeyCode
 		int count;
 
 		static inline bool Check(UINT type)

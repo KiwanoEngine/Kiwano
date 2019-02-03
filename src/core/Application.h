@@ -74,11 +74,17 @@ namespace easy2d
 		// 销毁时
 		virtual void OnDestroy() {}
 
+		// 更新时
+		virtual void OnUpdate(Duration dt) { E2D_NOT_USED(dt); }
+
 		// 运行
 		void Run();
 
 		// 结束
 		void Quit();
+
+		// 销毁
+		void Destroy();
 
 		// 切换场景
 		void EnterScene(
