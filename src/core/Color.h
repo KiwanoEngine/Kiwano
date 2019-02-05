@@ -20,7 +20,6 @@
 
 #pragma once
 #include "macros.h"
-#include <d2d1.h>
 
 namespace easy2d
 {
@@ -57,15 +56,6 @@ namespace easy2d
 			unsigned int rgb,
 			float alpha
 		);
-
-		Color(
-			const D2D1_COLOR_F& color
-		);
-
-		inline operator D2D1_COLOR_F() const
-		{
-			return D2D1_COLOR_F{ r, g, b, a };
-		}
 
 	public:
 		enum Value : unsigned int

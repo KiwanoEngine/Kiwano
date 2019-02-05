@@ -297,7 +297,7 @@ namespace easy2d
 
 		D2DRectangleGeometryPtr rectangle;
 		HRESULT hr = factory_->CreateRectangleGeometry(
-			rect,
+			ToD2dRectF(rect),
 			&rectangle
 		);
 
@@ -314,7 +314,7 @@ namespace easy2d
 		D2DRoundedRectangleGeometryPtr rounded_rect;
 		HRESULT hr = factory_->CreateRoundedRectangleGeometry(
 			D2D1::RoundedRect(
-				rect,
+				ToD2dRectF(rect),
 				radius_x,
 				radius_y
 			),
@@ -334,7 +334,7 @@ namespace easy2d
 		D2DEllipseGeometryPtr ellipse;
 		HRESULT hr = factory_->CreateEllipseGeometry(
 			D2D1::Ellipse(
-				center,
+				ToD2dPoint2F(center),
 				radius_x,
 				radius_y
 			),
@@ -449,7 +449,10 @@ namespace easy2d
 			);
 
 			DWRITE_TEXT_METRICS metrics;
-			text_layout_tmp->GetMetrics(&metrics);
+			if (SUCCEEDED(hr))
+			{
+				hr = text_layout_tmp->GetMetrics(&metrics);
+			}
 
 			if (SUCCEEDED(hr))
 			{

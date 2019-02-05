@@ -72,12 +72,4 @@ namespace easy2d
 		, a(alpha)
 	{
 	}
-
-	Color::Color(const D2D1_COLOR_F& color)
-		: r(color.r)
-		, g(color.g)
-		, b(color.b)
-		, a(color.a)
-	{
-	}
 }

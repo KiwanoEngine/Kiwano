@@ -62,9 +62,9 @@ namespace easy2d
 
 			void Identity();
 
-			inline Vector2 Transform(const Vector2& v) const
+			inline Vec2 Transform(const Vec2& v) const
 			{
-				return Vector2(
+				return Vec2(
 					v.x * _11 + v.y * _21 + _31,
 					v.x * _12 + v.y * _22 + _32
 				);
@@ -72,7 +72,7 @@ namespace easy2d
 
 			Rect Transform(const Rect& rect) const;
 
-			inline void Translate(const Vector2& v)
+			inline void Translate(const Vec2& v)
 			{
 				_31 += _11 * v.x + _21 * v.y;
 				_32 += _12 * v.x + _22 * v.y;
@@ -118,7 +118,7 @@ namespace easy2d
 				return reinterpret_cast<D2D1_MATRIX_3X2_F&>(*this);
 			}
 
-			static Matrix Translation(const Vector2& v);
+			static Matrix Translation(const Vec2& v);
 
 			static Matrix Translation(
 				float x,
@@ -126,25 +126,25 @@ namespace easy2d
 			);
 
 			static Matrix Scaling(
-				const Vector2& v,
-				const Vector2& center = Vector2()
+				const Vec2& v,
+				const Vec2& center = Vec2()
 			);
 
 			static Matrix Scaling(
 				float x,
 				float y,
-				const Vector2& center = Vector2()
+				const Vec2& center = Vec2()
 			);
 
 			static Matrix Rotation(
 				float angle,
-				const Vector2& center = Vector2()
+				const Vec2& center = Vec2()
 			);
 
 			static Matrix Skewing(
 				float angle_x,
 				float angle_y,
-				const Vector2& center = Vector2()
+				const Vec2& center = Vec2()
 			);
 
 			static Matrix Invert(Matrix const& matrix);

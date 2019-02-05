@@ -58,10 +58,10 @@ namespace easy2d
 
 		Rect Matrix::Transform(const Rect & rect) const
 		{
-			Vector2 top_left = Transform(rect.GetLeftTop());
-			Vector2 top_right = Transform(rect.GetRightTop());
-			Vector2 bottom_left = Transform(rect.GetLeftBottom());
-			Vector2 bottom_right = Transform(rect.GetRightBottom());
+			Vec2 top_left = Transform(rect.GetLeftTop());
+			Vec2 top_right = Transform(rect.GetRightTop());
+			Vec2 bottom_left = Transform(rect.GetLeftBottom());
+			Vec2 bottom_right = Transform(rect.GetRightBottom());
 
 			float left = min(min(top_left.x, top_right.x), min(bottom_left.x, bottom_right.x));
 			float right = max(max(top_left.x, top_right.x), max(bottom_left.x, bottom_right.x));
@@ -71,7 +71,7 @@ namespace easy2d
 			return Rect{ left, top, (right - left), (bottom - top) };
 		}
 
-		Matrix Matrix::Translation(const Vector2& v)
+		Matrix Matrix::Translation(const Vec2& v)
 		{
 			return Matrix(
 				1.f, 0.f,
@@ -84,12 +84,12 @@ namespace easy2d
 			float x,
 			float y)
 		{
-			return Translation(Vector2(x, y));
+			return Translation(Vec2(x, y));
 		}
 
 		Matrix Matrix::Scaling(
-			const Vector2& v,
-			const Vector2& center)
+			const Vec2& v,
+			const Vec2& center)
 		{
 			return Matrix(
 				v.x, 0.f,
@@ -102,14 +102,14 @@ namespace easy2d
 		Matrix Matrix::Scaling(
 			float x,
 			float y,
-			const Vector2& center)
+			const Vec2& center)
 		{
-			return Scaling(Vector2(x, y), center);
+			return Scaling(Vec2(x, y), center);
 		}
 
 		Matrix Matrix::Rotation(
 			float angle,
-			const Vector2& center)
+			const Vec2& center)
 		{
 			float s = math::Sin(angle);
 			float c = math::Cos(angle);
@@ -124,7 +124,7 @@ namespace easy2d
 		Matrix Matrix::Skewing(
 			float angle_x,
 			float angle_y,
-			const Vector2& center)
+			const Vec2& center)
 		{
 			float tx = math::Tan(angle_x);
 			float ty = math::Tan(angle_y);

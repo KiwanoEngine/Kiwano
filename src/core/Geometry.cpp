@@ -45,7 +45,7 @@ namespace easy2d
 		D2D1_RECT_F rect;
 		// no matter it failed or not
 		geo_->GetBounds(D2D1::Matrix3x2F::Identity(), &rect);
-		return rect;
+		return Rect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
 	}
 
 	float Geometry::GetLength()
@@ -99,7 +99,7 @@ namespace easy2d
 		BOOL ret = 0;
 		// no matter it failed or not
 		geo_->FillContainsPoint(
-			point,
+			ToD2dPoint2F(point),
 			D2D1::Matrix3x2F::Identity(),
 			&ret
 		);
@@ -138,8 +138,8 @@ namespace easy2d
 
 		if (SUCCEEDED(hr))
 		{
-			path_sink->BeginFigure(begin, D2D1_FIGURE_BEGIN_FILLED);
-			path_sink->AddLine(end);
+			path_sink->BeginFigure(ToD2dPoint2F(begin), D2D1_FIGURE_BEGIN_FILLED);
+			path_sink->AddLine(ToD2dPoint2F(end));
 			path_sink->EndFigure(D2D1_FIGURE_END_OPEN);
 			hr = path_sink->Close();
 		}
@@ -299,7 +299,7 @@ namespace easy2d
 			current_geometry_->Open(&current_sink_)
 		);
 
-		current_sink_->BeginFigure(begin_pos, D2D1_FIGURE_BEGIN_FILLED);
+		current_sink_->BeginFigure(ToD2dPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
 	}
 
 	void PathGeometry::EndPath(bool closed)
@@ -321,27 +321,20 @@ namespace easy2d
 	void PathGeometry::AddLine(Point const & point)
 	{
 		if (current_sink_)
-			current_sink_->AddLine(point);
+			current_sink_->AddLine(ToD2dPoint2F(point));
 	}
 
 	void PathGeometry::AddLines(Array<Point> const& points)
 	{
-		if (current_sink_)
+		if (current_sink_ && !points.empty())
 		{
-			if (!points.empty())
-			{
-				size_t size = points.size();
-				Array<D2D1_POINT_2F> d2d_points(size);
-				for (size_t i = 0; i < size; ++i)
-				{
-					d2d_points[i] = points[i];
-				}
+			auto d2d_points = reinterpret_cast<Array<D2D_POINT_2F> const&>(points);
+			auto size = d2d_points.size();
 
-				current_sink_->AddLines(
-					&d2d_points[0],
-					static_cast<UINT32>(size)
-				);
-			}
+			current_sink_->AddLines(
+				&d2d_points[0],
+				static_cast<UINT32>(size)
+			);
 		}
 	}
 
@@ -351,22 +344,22 @@ namespace easy2d
 		{
 			current_sink_->AddBezier(
 				D2D1::BezierSegment(
-					point1,
-					point2,
-					point3
+					ToD2dPoint2F(point1),
+					ToD2dPoint2F(point2),
+					ToD2dPoint2F(point3)
 				)
 			);
 		}
 	}
 
-	void PathGeometry::AddArc(Point const & point, Point const & radius, float rotation, bool clockwise, bool is_small)
+	void PathGeometry::AddArc(Point const & point, Size const & radius, float rotation, bool clockwise, bool is_small)
 	{
 		if (current_sink_)
 		{
 			current_sink_->AddArc(
 				D2D1::ArcSegment(
-					point,
-					D2D1_SIZE_F{ radius.x, radius.y },
+					ToD2dPoint2F(point),
+					ToD2dSizeF(radius),
 					rotation,
 					clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
 					is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE
