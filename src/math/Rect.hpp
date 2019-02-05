@@ -70,6 +70,8 @@ namespace easy2d
 				return (origin == rect.origin) && (size == rect.size);
 			}
 
+			inline void Set(float x, float y, float width, float height) { origin = Vec2{ x, y }; size = Vec2{ width, height }; }
+
 			inline Vec2 GetCenter() const { return Vec2{ origin.x + size.x / 2, origin.y + size.y / 2 }; }
 
 			inline Vec2 GetLeftTop() const { return origin; }

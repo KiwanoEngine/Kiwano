@@ -46,6 +46,12 @@ namespace easy2d
 				return (x == 0) && (y == 0);
 			}
 
+			inline void Set(float x, float y)
+			{
+				this->x = x;
+				this->y = y;
+			}
+
 			inline const Vec2 operator + (const Vec2 & other) const
 			{
 				return Vec2(x + other.x, y + other.y);
