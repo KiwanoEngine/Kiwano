@@ -30,6 +30,7 @@ namespace easy2d
 
 	Object::Object()
 		: tracing_leak_(false)
+		, user_data_(nullptr)
 	{
 #ifdef E2D_DEBUG
 

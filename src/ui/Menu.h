@@ -40,7 +40,7 @@ namespace easy2d
 			bool IsEnable() const;
 
 			// 获取菜单中的按钮数量
-			size_t GetButtonCount() const;
+			int GetButtonCount() const;
 
 			// 设置菜单启用或禁用
 			void SetEnabled(

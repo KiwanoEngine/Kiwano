@@ -328,12 +328,9 @@ namespace easy2d
 	{
 		if (current_sink_ && !points.empty())
 		{
-			auto d2d_points = reinterpret_cast<Array<D2D_POINT_2F> const&>(points);
-			auto size = d2d_points.size();
-
 			current_sink_->AddLines(
-				&d2d_points[0],
-				static_cast<UINT32>(size)
+				reinterpret_cast<const D2D_POINT_2F*>(&points[0]),
+				static_cast<UINT32>(points.size())
 			);
 		}
 	}

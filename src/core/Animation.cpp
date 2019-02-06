@@ -76,8 +76,8 @@ namespace easy2d
 		E2D_ASSERT(dynamic_cast<Sprite*>(target) && "Animation only supports Sprites");
 
 		const auto& frames = frames_->GetFrames();
-		size_t size = frames.size();
-		size_t index = std::min(static_cast<size_t>(math::Floor(size * step)), size - 1);
+		int size = frames.size();
+		int index = std::min(static_cast<int>(math::Floor(size * step)), size - 1);
 
 		static_cast<Sprite*>(target)->Load(frames[index]);
 	}

@@ -21,6 +21,7 @@
 #pragma once
 #include "RefCounter.hpp"
 #include "IntrusivePtr.hpp"
+#include "Array.h"
 #include "closure.hpp"
 #include "../math/vector.hpp"
 #include "../math/Rect.hpp"
@@ -52,9 +53,6 @@ namespace easy2d
 
 	template<typename Type1, typename Type2>
 	using Pair = std::pair<Type1, Type2>;
-
-	template<typename Type>
-	using Array = std::vector<Type>;
 
 	template<typename Type>
 	using List = std::list<Type>;
