@@ -43,7 +43,7 @@ namespace easy2d
 			return enabled_;
 		}
 
-		size_t Menu::GetButtonCount() const
+		int Menu::GetButtonCount() const
 		{
 			return buttons_.size();
 		}

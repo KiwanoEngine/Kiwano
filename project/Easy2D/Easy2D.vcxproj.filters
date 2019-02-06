@@ -217,6 +217,9 @@
     <ClInclude Include="..\..\src\math\Matrix.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\core\Array.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\core\Animation.cpp">

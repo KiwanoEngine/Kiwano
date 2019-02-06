@@ -182,9 +182,13 @@ namespace easy2d
 
 	void Sequence::Add(Array<ActionPtr> const& actions)
 	{
-		for (const auto &action : actions)
+		if (actions_.empty())
+			actions_ = actions;
+		else
 		{
-			this->Add(action);
+			actions_.reserve(actions_.size() + actions.size());
+			for (const auto& action : actions)
+				Add(action);
 		}
 	}
 
@@ -253,7 +257,7 @@ namespace easy2d
 	{
 		Action::Update(target, dt);
 
-		size_t done_num = 0;
+		int done_num = 0;
 		for (const auto& action : actions_)
 		{
 			if (action->IsDone())
@@ -291,9 +295,13 @@ namespace easy2d
 
 	void Spawn::Add(Array<ActionPtr> const& actions)
 	{
-		for (const auto &action : actions)
+		if (actions_.empty())
+			actions_ = actions;
+		else
 		{
-			this->Add(action);
+			actions_.reserve(actions_.size() + actions.size());
+			for (const auto& action : actions)
+				Add(action);
 		}
 	}
 

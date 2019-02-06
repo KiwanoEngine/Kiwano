@@ -7,6 +7,7 @@
     <ClInclude Include="..\..\src\core\ActionTween.h" />
     <ClInclude Include="..\..\src\core\ActionManager.h" />
     <ClInclude Include="..\..\src\core\Animation.h" />
+    <ClInclude Include="..\..\src\core\Array.h" />
     <ClInclude Include="..\..\src\core\audio.h" />
     <ClInclude Include="..\..\src\core\Canvas.h" />
     <ClInclude Include="..\..\src\core\closure.hpp" />

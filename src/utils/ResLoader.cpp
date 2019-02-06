@@ -79,33 +79,40 @@ namespace easy2d
 			return 0;
 
 		int total = 0;
-		FramesPtr frames = new (std::nothrow) Frames;
-		if (frames)
-		{
-			for (const auto& image : images)
-			{
-				ImagePtr ptr = new (std::nothrow) Image;
-				if (ptr)
-				{
-					if (image.IsFile())
-					{
-						String path = Search(image.GetFileName(), search_paths_);
-						ptr->Load(path.c_str());
-					}
-					else
-						ptr->Load(image);
+		Array<ImagePtr> image_arr;
 
-					if (ptr->IsValid())
-					{
-						frames->Add(ptr);
-						++total;
-					}
+		image_arr.reserve(images.size());
+		for (const auto& image : images)
+		{
+			ImagePtr ptr = new (std::nothrow) Image;
+			if (ptr)
+			{
+				if (image.IsFile())
+				{
+					String path = Search(image.GetFileName(), search_paths_);
+					ptr->Load(path.c_str());
+				}
+				else
+					ptr->Load(image);
+
+				if (ptr->IsValid())
+				{
+					image_arr.push_back(ptr);
+					++total;
 				}
 			}
 		}
+
 		if (total)
-			res_.insert(std::make_pair(id, frames));
-		return total;
+		{
+			FramesPtr frames = new (std::nothrow) Frames(image_arr);
+			if (frames)
+			{
+				res_.insert(std::make_pair(id, frames));
+				return total;
+			}
+		}
+		return 0;
 	}
 
 	int ResLoader::AddFrames(String const& id, Array<ImagePtr> const& images)
@@ -113,22 +120,13 @@ namespace easy2d
 		if (images.empty())
 			return 0;
 
-		int total = 0;
-		FramesPtr frames = new (std::nothrow) Frames;
+		FramesPtr frames = new (std::nothrow) Frames(images);
 		if (frames)
 		{
-			for (const auto& image : images)
-			{
-				if (image)
-				{
-					frames->Add(image);
-					total++;
-				}
-			}
-		}
-		if (total)
 			res_.insert(std::make_pair(id, frames));
-		return total;
+			return frames->GetFrames().size();
+		}
+		return 0;
 	}
 
 	int ResLoader::AddFrames(String const & id, Resource const & image, int cols, int rows)

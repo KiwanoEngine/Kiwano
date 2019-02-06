@@ -49,9 +49,13 @@ namespace easy2d
 
 	void Frames::Add(Array<ImagePtr> const& frames)
 	{
-		for (const auto &image : frames)
+		if (frames_.empty())
+			frames_ = frames;
+		else
 		{
-			this->Add(image);
+			frames_.reserve(frames_.size() + frames.size());
+			for (const auto& image : frames)
+				Add(image);
 		}
 	}
 
