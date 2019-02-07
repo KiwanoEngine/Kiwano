@@ -21,12 +21,44 @@
 #pragma once
 #include "macros.h"
 
+#ifdef E2D_DISABLE_LOG_FUNCTIONS
+
+#ifndef E2D_LOG
+#	define E2D_LOG __noop
+#endif
+
+#ifndef E2D_WARNING_LOG
+#	define E2D_WARNING_LOG __noop
+#endif
+
+#ifndef E2D_ERROR_LOG
+#	define E2D_ERROR_LOG __noop
+#endif
+
+#ifndef E2D_ERROR_HR_LOG
+#	define E2D_ERROR_HR_LOG __noop
+#endif
+
+#else //! E2D_DISABLE_LOG_FUNCTIONS
+
 #ifndef E2D_LOG
 #	ifdef E2D_DEBUG
-#		define E2D_LOG(format, ...) easy2d::logs::Messageln((format), __VA_ARGS__)
+#		define E2D_LOG(FORMAT, ...) easy2d::logs::Messageln((FORMAT), __VA_ARGS__)
 #	else
 #		define E2D_LOG __noop
 #	endif
+#endif
+
+#ifndef E2D_WARNING_LOG
+#	define E2D_WARNING_LOG(FORMAT, ...) easy2d::logs::Warningln((FORMAT), __VA_ARGS__)
+#endif
+
+#ifndef E2D_ERROR_LOG
+#	define E2D_ERROR_LOG(FORMAT, ...) easy2d::logs::Errorln((FORMAT), __VA_ARGS__)
+#endif
+
+#ifndef E2D_ERROR_HR_LOG
+#	define E2D_ERROR_HR_LOG(HR, FORMAT, ...) E2D_ERROR_LOG(L"Failure with HRESULT of %08X " FORMAT, HR, __VA_ARGS__)
 #endif
 
 namespace easy2d
@@ -52,17 +84,19 @@ namespace easy2d
 		void Error(const wchar_t* format, ...);
 
 		void Errorln(const wchar_t* format, ...);
-
-		void Errorln(HRESULT hr);
-
-		void Errorln(HRESULT hr, const wchar_t* output);
 	}
+}
 
+#endif //! E2D_DISABLE_LOG_FUNCTIONS
+
+
+namespace easy2d
+{
 	inline void ThrowIfFailed(HRESULT hr)
 	{
 		if (FAILED(hr))
 		{
-			logs::Errorln(hr);
+			E2D_ERROR_LOG(L"Fatal error with HRESULT of %08X", hr);
 			throw std::runtime_error("Fatal error");
 		}
 	}

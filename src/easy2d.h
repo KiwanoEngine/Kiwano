@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 //
 // Website: https://www.easy2d.cn
-// Source Code: https://github.com/Nomango/Easy2D
+// Source Code: https://github.com/easy2d/easy2d
 //
 
 

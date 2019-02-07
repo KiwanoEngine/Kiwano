@@ -18,6 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#ifndef INITGUID
+#	define INITGUID		// MFAudioFormat_PCM, MF_MT_MAJOR_TYPE, MF_MT_SUBTYPE, MFMediaType_Audio
+#endif
+
 #include "Transcoder.h"
 #include "../core/d2dhelper.hpp"
 #include "../core/modules.h"
@@ -84,7 +88,7 @@ namespace easy2d
 
 		if (stream == nullptr)
 		{
-			logs::Errorln(L"SHCreateMemStream");
+			E2D_ERROR_LOG(L"SHCreateMemStream failed");
 			return E_OUTOFMEMORY;
 		}
 
@@ -201,7 +205,7 @@ namespace easy2d
 
 			if (data == nullptr)
 			{
-				logs::Errorln(L"Low memory");
+				E2D_ERROR_LOG(L"Low memory");
 				hr = E_OUTOFMEMORY;
 			}
 			else

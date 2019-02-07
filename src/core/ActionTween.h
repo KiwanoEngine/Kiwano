@@ -158,7 +158,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			logs::Errorln(L"Reverse() not supported in MoveTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in MoveTo");
 			return nullptr;
 		}
 
@@ -222,7 +222,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			logs::Errorln(L"Reverse() not supported in JumpTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in JumpTo");
 			return nullptr;
 		}
 
@@ -295,7 +295,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			logs::Errorln(L"Reverse() not supported in ScaleTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in ScaleTo");
 			return nullptr;
 		}
 
@@ -353,7 +353,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			logs::Errorln(L"Reverse() not supported in OpacityTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in OpacityTo");
 			return nullptr;
 		}
 
@@ -436,7 +436,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			logs::Errorln(L"Reverse() not supported in RotateTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in RotateTo");
 			return nullptr;
 		}
 

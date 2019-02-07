@@ -42,3 +42,8 @@ namespace easy2d
 		}
 	}
 }
+
+namespace easy2d
+{
+	using namespace math::constants;
+}

@@ -12,6 +12,7 @@
     <ClInclude Include="..\..\src\core\Canvas.h" />
     <ClInclude Include="..\..\src\core\closure.hpp" />
     <ClInclude Include="..\..\src\core\Color.h" />
+    <ClInclude Include="..\..\src\core\config.h" />
     <ClInclude Include="..\..\src\core\d2dhelper.hpp" />
     <ClInclude Include="..\..\src\core\DebugNode.h" />
     <ClInclude Include="..\..\src\core\Delay.h" />
@@ -182,22 +183,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
-    <TargetName>easy2dd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-    <TargetName>easy2dd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
-    <TargetName>easy2d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-    <TargetName>easy2d</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

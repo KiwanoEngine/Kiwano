@@ -42,7 +42,7 @@ namespace easy2d
 			}
 			else
 			{
-				logs::Errorln(HRESULT_FROM_WIN32(GetLastError()), L"Convert to WideChar code failed");
+				E2D_ERROR_HR_LOG(HRESULT_FROM_WIN32(GetLastError()), L"Convert to WideChar code failed");
 			}
 		}
 		return ret;
@@ -66,7 +66,7 @@ namespace easy2d
 			}
 			else
 			{
-				logs::Errorln(HRESULT_FROM_WIN32(GetLastError()), L"Convert to MultiByte code failed");
+				E2D_ERROR_HR_LOG(HRESULT_FROM_WIN32(GetLastError()), L"Convert to MultiByte code failed");
 			}
 		}
 

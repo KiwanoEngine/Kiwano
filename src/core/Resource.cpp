@@ -54,28 +54,28 @@ namespace easy2d
 		res_info = FindResourceW(nullptr, bin_name_, bin_type_);
 		if (res_info == nullptr)
 		{
-			logs::Errorln(L"FindResource");
+			E2D_ERROR_LOG(L"FindResource failed");
 			return false;
 		}
 
 		res_data = LoadResource(nullptr, res_info);
 		if (res_data == nullptr)
 		{
-			logs::Errorln(L"LoadResource");
+			E2D_ERROR_LOG(L"LoadResource failed");
 			return false;
 		}
 
 		buffer_size = SizeofResource(nullptr, res_info);
 		if (buffer_size == 0)
 		{
-			logs::Errorln(L"SizeofResource");
+			E2D_ERROR_LOG(L"SizeofResource failed");
 			return false;
 		}
 
 		buffer = LockResource(res_data);
 		if (buffer == nullptr)
 		{
-			logs::Errorln(L"LockResource");
+			E2D_ERROR_LOG(L"LockResource failed");
 			return false;
 		}
 		return true;
