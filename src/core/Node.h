@@ -61,9 +61,6 @@ namespace easy2d
 		// 获取显示状态
 		bool IsVisible()				const	{ return visible_; }
 
-		// 获取名称
-		String const& GetName()			const	{ return name_; }
-
 		// 获取名称的 Hash 值
 		size_t GetHashName()			const	{ return hash_name_; }
 
@@ -377,7 +374,6 @@ namespace easy2d
 		int			z_order_;
 		float		opacity_;
 		float		display_opacity_;
-		String		name_;
 		size_t		hash_name_;
 		Transform	transform_;
 		Point		anchor_;

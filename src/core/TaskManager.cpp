@@ -59,7 +59,7 @@ namespace easy2d
 
 		for (auto task = tasks_.First().Get(); task; task = task->NextItem().Get())
 		{
-			if (task->GetName() == name)
+			if (task->IsName(name))
 			{
 				task->Stop();
 			}
@@ -73,7 +73,7 @@ namespace easy2d
 		
 		for (auto task = tasks_.First().Get(); task; task = task->NextItem().Get())
 		{
-			if (task->GetName() == name)
+			if (task->IsName(name))
 			{
 				task->Start();
 			}
@@ -89,7 +89,7 @@ namespace easy2d
 		for (auto task = tasks_.First(); task; task = next)
 		{
 			next = task->NextItem();
-			if (task->GetName() == name)
+			if (task->IsName(name))
 			{
 				tasks_.Remove(task);
 			}

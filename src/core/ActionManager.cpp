@@ -52,6 +52,17 @@ namespace easy2d
 		}
 	}
 
+	ActionPtr ActionManager::GetAction(String const & name)
+	{
+		if (actions_.IsEmpty())
+			return nullptr;
+
+		for (auto action = actions_.First().Get(); action; action = action->NextItem().Get())
+			if (action->IsName(name))
+				return action;
+		return nullptr;
+	}
+
 	void ActionManager::ResumeAllActions()
 	{
 		if (actions_.IsEmpty())

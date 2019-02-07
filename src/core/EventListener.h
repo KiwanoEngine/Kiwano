@@ -49,15 +49,10 @@ namespace easy2d
 
 		void Stop();
 
-		void SetName(String const& name);
-
 		bool IsRunning() const;
-
-		String const& GetName() const;
 
 	protected:
 		bool			running_;
-		String			name_;
 		EventType		type_;
 		EventCallback	callback_;
 	};

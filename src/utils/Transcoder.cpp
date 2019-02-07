@@ -49,14 +49,14 @@ namespace easy2d
 		return wave_format_;
 	}
 
-	HRESULT Transcoder::LoadMediaFile(LPCWSTR file_path, BYTE** wave_data, UINT32* wave_data_size)
+	HRESULT Transcoder::LoadMediaFile(String const& file_path, BYTE** wave_data, UINT32* wave_data_size)
 	{
 		HRESULT hr = S_OK;
 
 		IntrusivePtr<IMFSourceReader> reader;
 
 		hr = modules::MediaFoundation::Get().MFCreateSourceReaderFromURL(
-			file_path,
+			file_path.c_str(),
 			nullptr,
 			&reader
 		);

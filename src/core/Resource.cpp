@@ -25,8 +25,18 @@ namespace easy2d
 {
 	Resource::Resource(LPCWSTR file_name)
 		: type_(Type::File)
-		, file_name_(file_name)
+		, file_name_(nullptr)
 	{
+		if (file_name)
+			file_name_ = new (std::nothrow) String(file_name);
+	}
+
+	Resource::Resource(String const& file_name)
+		: type_(Type::File)
+		, file_name_(nullptr)
+	{
+		if (!file_name.empty())
+			file_name_ = new (std::nothrow) String(file_name);
 	}
 
 	Resource::Resource(LPCWSTR name, LPCWSTR type)
@@ -36,17 +46,85 @@ namespace easy2d
 	{
 	}
 
+	Resource::Resource(Resource const & rhs)
+	{
+		operator=(rhs);
+	}
+
+	Resource::Resource(Resource && rhs)
+	{
+		operator=(std::forward<Resource&&>(rhs));
+	}
+
+	Resource::~Resource()
+	{
+		if (IsFileType() && file_name_)
+			delete file_name_;
+	}
+
 	size_t Resource::GetHashCode() const
 	{
 		if (type_ == Type::File)
-			return std::hash<LPCWSTR>{}(file_name_);
+			return std::hash<String>{}(GetFileName());
 		return std::hash<LPCWSTR>{}(bin_name_);
+	}
+
+	Resource & Resource::operator=(Resource const & rhs)
+	{
+		if (&rhs != this)
+		{
+			if (IsFileType() && file_name_)
+			{
+				delete file_name_;
+				file_name_ = nullptr;
+			}
+
+			type_ = rhs.type_;
+			if (IsFileType())
+			{
+				if (rhs.file_name_)
+				{
+					file_name_ = new (std::nothrow) String(*rhs.file_name_);
+				}
+			}
+			else
+			{
+				bin_name_ = rhs.bin_name_;
+				bin_type_ = rhs.bin_type_;
+			}
+		}
+		return *this;
+	}
+
+	Resource & Resource::operator=(Resource && rhs)
+	{
+		if (IsFileType() && file_name_)
+		{
+			delete file_name_;
+			file_name_ = nullptr;
+		}
+
+		type_ = rhs.type_;
+		if (IsFileType())
+		{
+			file_name_ = rhs.file_name_;
+			rhs.file_name_ = nullptr;
+		}
+		else
+		{
+			bin_name_ = rhs.bin_name_;
+			bin_type_ = rhs.bin_type_;
+		}
+		return *this;
 	}
 
 	bool Resource::Load(LPVOID& buffer, DWORD& buffer_size) const
 	{
 		if (type_ != Type::Binary)
+		{
+			E2D_ERROR_LOG(L"Only binary resource can be loaded");
 			return false;
+		}
 
 		HGLOBAL res_data;
 		HRSRC res_info;

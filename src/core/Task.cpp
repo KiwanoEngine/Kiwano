@@ -33,9 +33,9 @@ namespace easy2d
 		, total_times_(times)
 		, delay_(delay)
 		, callback_(func)
-		, name_(name)
 		, delta_()
 	{
+		SetName(name);
 	}
 
 	void Task::Start()
@@ -89,11 +89,6 @@ namespace easy2d
 	bool Task::IsRunning() const
 	{
 		return running_;
-	}
-
-	String const& Task::GetName() const
-	{
-		return name_;
 	}
 
 }

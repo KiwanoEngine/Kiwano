@@ -26,9 +26,9 @@ namespace easy2d
 	EventListener::EventListener(EventType type, EventCallback const & callback, String const & name)
 		: type_(type)
 		, callback_(callback)
-		, name_(name)
 		, running_(true)
 	{
+		SetName(name);
 	}
 
 	EventListener::~EventListener()
@@ -48,16 +48,6 @@ namespace easy2d
 	bool EventListener::IsRunning() const
 	{
 		return running_;
-	}
-
-	String const & EventListener::GetName() const
-	{
-		return name_;
-	}
-
-	void EventListener::SetName(String const & name)
-	{
-		name_ = name;
 	}
 
 }

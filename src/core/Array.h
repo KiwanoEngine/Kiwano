@@ -43,11 +43,11 @@ namespace easy2d
 		inline Array()												{ size_ = capacity_ = 0; data_ = nullptr; }
 		inline Array(std::initializer_list<_Ty> const& list)		{ size_ = capacity_ = 0; data_ = nullptr; operator=(list); }
 		inline Array(const Array<_Ty>& src)							{ size_ = capacity_ = 0; data_ = nullptr; operator=(src); }
-		inline Array(Array<_Ty>&& src)								{ size_ = capacity_ = 0; data_ = nullptr; operator=(src); }
+		inline Array(Array<_Ty>&& src)								{ size_ = capacity_ = 0; data_ = nullptr; operator=(std::forward<Array<_Ty>&&>(src)); }
 		inline ~Array()												{ if (data_) _destroy_all(); }
 
 		inline Array<_Ty>& operator=(const Array<_Ty>& src)						{ if (&src == this) { return *this; } clear(); reserve(src.size_); std::uninitialized_copy(src.begin(), src.end(), begin()); size_ = src.size_; return *this; }
-		inline Array<_Ty>& operator=(Array<_Ty>&& src)							{ clear(); size_ = src.size_; capacity_ = src.capacity_; data_ = src.data_; src.data_ = src.size_ = src.capacity_ = 0; return *this; }
+		inline Array<_Ty>& operator=(Array<_Ty>&& src)							{ clear(); size_ = src.size_; capacity_ = src.capacity_; data_ = src.data_; src.size_ = src.capacity_ = 0; src.data_ = nullptr; return *this; }
 		inline Array<_Ty>& operator=(std::initializer_list<_Ty> const& list)	{ clear(); reserve((int)list.size()); std::uninitialized_copy(list.begin(), list.end(), begin()); size_ = (int)list.size(); return *this; }
 	
 		inline bool				empty() const						{ return size_ == 0; }

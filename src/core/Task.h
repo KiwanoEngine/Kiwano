@@ -60,21 +60,17 @@ namespace easy2d
 		// 任务是否正在执行
 		bool IsRunning() const;
 
-		// 获取任务名称
-		String const& GetName() const;
-
 	protected:
 		void Update(Duration dt, bool& remove_after_update);
 
 		void Reset();
 
 	protected:
-		bool			running_;
-		int				run_times_;
-		int				total_times_;
-		String	name_;
-		Duration		delay_;
-		Duration		delta_;
-		Callback		callback_;
+		bool		running_;
+		int			run_times_;
+		int			total_times_;
+		Duration	delay_;
+		Duration	delta_;
+		Callback	callback_;
 	};
 }

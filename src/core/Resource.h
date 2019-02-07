@@ -20,7 +20,6 @@
 
 #pragma once
 #include "helper.hpp"
-#include "Frames.h"
 
 namespace easy2d
 {
@@ -34,23 +33,35 @@ namespace easy2d
 	//
 	class Resource
 	{
-	public:
 		enum class Type { File, Binary };
 
+	public:
 		Resource(
-			LPCWSTR file_name	/* 文件路径 */
+			LPCWSTR file_name		/* 文件路径 */
 		);
 
 		Resource(
-			LPCWSTR name,		/* 资源名称 */
-			LPCWSTR type		/* 资源类型 */
+			String const& file_name	/* 文件路径 */
 		);
 
-		inline bool IsFile() const { return type_ == Type::File; }
+		Resource(
+			LPCWSTR name,			/* 资源名称 */
+			LPCWSTR type			/* 资源类型 */
+		);
 
-		inline Type GetType() const { return type_; }
+		Resource(
+			Resource const& rhs
+		);
 
-		inline LPCWSTR GetFileName() const { return file_name_; }
+		Resource(
+			Resource && rhs
+		);
+
+		virtual ~Resource();
+
+		inline bool IsFileType() const { return type_ == Type::File; }
+
+		inline String GetFileName() const { if (file_name_) return *file_name_; return String(); }
 
 		bool Load(
 			LPVOID& buffer,
@@ -59,13 +70,17 @@ namespace easy2d
 
 		size_t GetHashCode() const;
 
+		Resource& operator= (Resource const& rhs);
+
+		Resource& operator= (Resource && rhs);
+
 	private:
 		Type type_;
 		union
 		{
 			struct
 			{
-				LPCWSTR	file_name_;
+				String*	file_name_;
 			};
 
 			struct

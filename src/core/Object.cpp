@@ -31,6 +31,7 @@ namespace easy2d
 	Object::Object()
 		: tracing_leak_(false)
 		, user_data_(nullptr)
+		, name_(nullptr)
 	{
 #ifdef E2D_DEBUG
 
@@ -41,6 +42,9 @@ namespace easy2d
 
 	Object::~Object()
 	{
+		if (name_)
+			delete name_;
+
 #ifdef E2D_DEBUG
 
 		Object::__RemoveObjectFromTracingList(this);
@@ -56,6 +60,27 @@ namespace easy2d
 	void Object::SetUserData(void * data)
 	{
 		user_data_ = data;
+	}
+
+	void Object::SetName(String const & name)
+	{
+		if (IsName(name))
+			return;
+
+		if (name.empty())
+		{
+			if (name_)
+				name_->clear();
+			return;
+		}
+
+		if (!name_)
+		{
+			name_ = new (std::nothrow) String(name);
+			return;
+		}
+
+		*name_ = name;
 	}
 
 	void Object::StartTracingLeaks()
