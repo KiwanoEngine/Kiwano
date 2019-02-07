@@ -364,9 +364,9 @@ namespace easy2d
 
 	void Node::SetName(String const& name)
 	{
-		if (name_ != name)
+		if (!IsName(name))
 		{
-			name_ = name;
+			Object::SetName(name);
 			hash_name_ = std::hash<String>{}(name);
 		}
 	}
@@ -511,7 +511,7 @@ namespace easy2d
 
 		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
-			if (child->hash_name_ == hash_code && child->name_ == name)
+			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
 				children.push_back(child);
 			}
@@ -525,7 +525,7 @@ namespace easy2d
 
 		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
-			if (child->hash_name_ == hash_code && child->name_ == name)
+			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
 				return child;
 			}
@@ -582,7 +582,7 @@ namespace easy2d
 		{
 			next = child->NextItem().Get();
 
-			if (child->hash_name_ == hash_code && child->name_ == child_name)
+			if (child->hash_name_ == hash_code && child->IsName(child_name))
 			{
 				RemoveChild(child);
 			}

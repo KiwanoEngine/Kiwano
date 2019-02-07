@@ -36,6 +36,12 @@ namespace easy2d
 
 		void SetUserData(void* data);
 
+		void SetName(String const& name);
+
+		inline String GetName() const { if (name_) return *name_; return String(); }
+
+		inline bool IsName(String const& name) const { return (name_ && (*name_ == name)); }
+
 		static void StartTracingLeaks();
 
 		static void StopTracingLeaks();
@@ -50,5 +56,6 @@ namespace easy2d
 	private:
 		bool tracing_leak_;
 		void* user_data_;
+		String* name_;
 	};
 }

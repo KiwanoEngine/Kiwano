@@ -33,6 +33,11 @@ namespace easy2d
 			ActionPtr const& action
 		);
 
+		// 获取动作
+		ActionPtr GetAction(
+			String const& name
+		);
+
 		// 继续所有暂停动作
 		void ResumeAllActions();
 

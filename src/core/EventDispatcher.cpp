@@ -63,7 +63,7 @@ namespace easy2d
 	{
 		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
 		{
-			if (listener->GetName() == listener_name)
+			if (listener->IsName(listener_name))
 			{
 				listener->Start();
 			}
@@ -74,7 +74,7 @@ namespace easy2d
 	{
 		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
 		{
-			if (listener->GetName() == listener_name)
+			if (listener->IsName(listener_name))
 			{
 				listener->Stop();
 			}
@@ -88,7 +88,7 @@ namespace easy2d
 		{
 			next = listener->NextItem();
 
-			if (listener->GetName() == listener_name)
+			if (listener->IsName(listener_name))
 			{
 				listeners_.Remove(listener);
 			}
