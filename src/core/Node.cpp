@@ -265,9 +265,6 @@ namespace easy2d
 
 	void Node::SetZOrder(int zorder)
 	{
-		if (z_order_ == zorder)
-			return;
-
 		z_order_ = zorder;
 
 		if (parent_)
@@ -285,6 +282,7 @@ namespace easy2d
 				{
 					if (sibling->GetZOrder() <= zorder)
 						break;
+					sibling = sibling->PrevItem().Get();
 				}
 			}
 
