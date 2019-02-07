@@ -60,7 +60,7 @@ namespace easy2d
 		HRESULT hr = S_OK;
 		D2DBitmapPtr bitmap;
 
-		if (res.IsFile())
+		if (res.IsFileType())
 		{
 			if (!File(res.GetFileName()).Exists())
 			{

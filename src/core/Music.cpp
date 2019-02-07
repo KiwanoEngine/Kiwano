@@ -58,7 +58,7 @@ namespace easy2d
 		HRESULT hr = S_OK;
 		Transcoder transcoder;
 
-		if (res.IsFile())
+		if (res.IsFileType())
 		{
 			if (!File(res.GetFileName()).Exists())
 			{
