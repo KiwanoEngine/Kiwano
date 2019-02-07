@@ -64,18 +64,6 @@
 #	define NOMINMAX
 #endif
 
-#ifndef INITGUID
-#	define INITGUID
-#endif
-
-#if defined(DEBUG) || defined(_DEBUG)
-#	ifndef E2D_DEBUG
-#		define E2D_DEBUG
-#	endif
-#else
-#	undef E2D_DEBUG
-#endif
-
 
 // Windows Header Files
 #include <windows.h>
@@ -86,6 +74,14 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+
+// Compile-time Config Header File
+#include "config.h"
+
+
+#if defined(DEBUG) || defined(_DEBUG)
+#	define E2D_DEBUG
+#endif
 
 
 #if VS_VER >= VS_2015
@@ -99,12 +95,10 @@
 
 #ifndef E2D_ASSERT
 #	ifdef E2D_DEBUG
-#		define E2D_ASSERT(expr) assert(expr)
+#		define E2D_ASSERT(EXPR) assert(EXPR)
 #	else
 #		define E2D_ASSERT __noop
 #	endif
 #endif
 
-#ifndef E2D_NOT_USED
-#	define E2D_NOT_USED(var) ((void)var);
-#endif
+#define E2D_NOT_USED(VAR) ((void)VAR)

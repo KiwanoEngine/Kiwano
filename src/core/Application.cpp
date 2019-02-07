@@ -59,7 +59,7 @@ namespace easy2d
 		{
 			if (!::AllocConsole())
 			{
-				logs::Warningln(L"AllocConsole failed");
+				E2D_WARNING_LOG(L"AllocConsole failed");
 			}
 			else
 			{

@@ -290,7 +290,7 @@ namespace easy2d
 
 			if (sibling)
 			{
-				parent_->children_.InsertAfter(me, NodePtr(sibling));
+				parent_->children_.InsertAfter(me, sibling);
 			}
 			else
 			{
@@ -471,11 +471,11 @@ namespace easy2d
 #ifdef E2D_DEBUG
 
 			if (child->parent_)
-				logs::Errorln(L"The node to be added already has a parent");
+				E2D_ERROR_LOG(L"The node to be added already has a parent");
 
 			for (Node* parent = parent_; parent; parent = parent->parent_)
 				if (parent == child)
-					logs::Errorln(L"A node cannot be its own parent");
+					E2D_ERROR_LOG(L"A node cannot be its own parent");
 
 #endif // E2D_DEBUG
 

@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
 #include "logs.h"
 #include <ctime>
 #include <iomanip>
@@ -120,12 +119,12 @@ namespace easy2d
 			}
 		}
 
-		void easy2d::logs::Enable()
+		void Enable()
 		{
 			enabled = true;
 		}
 
-		void easy2d::logs::Disable()
+		void Disable()
 		{
 			enabled = false;
 		}
@@ -208,16 +207,6 @@ namespace easy2d
 			Output(std::wcerr, color::stderr_red_bg, true, L"Error: ", format, args);
 
 			va_end(args);
-		}
-
-		void Errorln(HRESULT hr)
-		{
-			Errorln(L"failure with HRESULT of %08X", hr);
-		}
-
-		void Errorln(HRESULT hr, const wchar_t* output)
-		{
-			Errorln(L"failure with HRESULT of %08X: %s", hr, output);
 		}
 	}
 }

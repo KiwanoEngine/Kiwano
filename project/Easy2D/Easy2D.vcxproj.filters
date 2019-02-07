@@ -220,6 +220,9 @@
     <ClInclude Include="..\..\src\core\Array.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\core\config.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\core\Animation.cpp">

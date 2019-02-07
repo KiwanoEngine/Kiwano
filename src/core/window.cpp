@@ -393,7 +393,7 @@ namespace easy2d
 			mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
 			if (::ChangeDisplaySettingsExW(device_name, &mode, NULL, CDS_FULLSCREEN, NULL) != DISP_CHANGE_SUCCESSFUL)
-				logs::Errorln(L"ChangeDisplaySettings failed");
+				E2D_ERROR_LOG(L"ChangeDisplaySettings failed");
 		}
 
 		void RestoreResolution(WCHAR* device_name)

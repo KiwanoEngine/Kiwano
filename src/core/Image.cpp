@@ -64,7 +64,7 @@ namespace easy2d
 		{
 			if (!File(res.GetFileName()).Exists())
 			{
-				logs::Warningln(L"Image file '%s' not found!", res.GetFileName());
+				E2D_WARNING_LOG(L"Image file '%s' not found!", res.GetFileName());
 				return false;
 			}
 			hr = RenderSystem::Instance()->CreateBitmapFromFile(bitmap, res.GetFileName());
@@ -76,7 +76,7 @@ namespace easy2d
 
 		if (FAILED(hr))
 		{
-			logs::Errorln(hr, L"Load image file failed!");
+			E2D_ERROR_HR_LOG(hr, L"Load image file failed!");
 			return false;
 		}
 
