@@ -25,7 +25,7 @@
 namespace easy2d
 {
 	// ¼¸ºÎÍ¼ÐÎ
-	class GeometryNode
+	class E2D_API GeometryNode
 		: public Node
 	{
 	public:

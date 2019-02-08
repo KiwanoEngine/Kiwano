@@ -30,7 +30,7 @@ namespace easy2d
 	// 使用 RGBA 表示一个带透明度的颜色: Color not_black(1.0f, 1.0f, 1.0f, 0.5f);
 	// 使用一个 unsigned int 类型的值表示 RGB: Color black(0x000000);
 	//
-	class Color
+	class E2D_API Color
 	{
 	public:
 		Color();

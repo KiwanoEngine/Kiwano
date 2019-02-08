@@ -167,26 +167,13 @@ namespace easy2d
 
 	Audio::~Audio()
 	{
-		E2D_LOG(L"Destroying audio device");
-
-		ClearVoiceCache();
-
-		if (mastering_voice_)
-		{
-			mastering_voice_->DestroyVoice();
-			mastering_voice_ = nullptr;
-		}
-
-		SafeRelease(x_audio2_);
-
-		modules::MediaFoundation::Get().MFShutdown();
 	}
 
 	HRESULT Audio::Init(bool debug)
 	{
 		E2D_NOT_USED(debug);
 
-		E2D_LOG(L"Initing audio device");
+		E2D_LOG(L"Initing audio resources");
 
 		HRESULT hr = modules::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
 
@@ -201,6 +188,23 @@ namespace easy2d
 		}
 
 		return hr;
+	}
+
+	void Audio::Destroy()
+	{
+		E2D_LOG(L"Destroying audio resources");
+
+		ClearVoiceCache();
+
+		if (mastering_voice_)
+		{
+			mastering_voice_->DestroyVoice();
+			mastering_voice_ = nullptr;
+		}
+
+		SafeRelease(x_audio2_);
+
+		modules::MediaFoundation::Get().MFShutdown();
 	}
 
 	HRESULT Audio::CreateVoice(Voice& voice, const WAVEFORMATEX* wfx)

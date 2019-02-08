@@ -24,7 +24,7 @@
 namespace easy2d
 {
 	// 数据管理工具
-	class Data
+	class E2D_API Data
 	{
 	public:
 		Data(

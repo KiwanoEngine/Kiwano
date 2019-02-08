@@ -31,7 +31,7 @@ namespace easy2d
 {
     namespace modules
 	{
-		class Shlwapi
+		class E2D_API Shlwapi
 		{
 			Shlwapi();
 
@@ -53,7 +53,7 @@ namespace easy2d
 		};
 
 
-		class DirectX
+		class E2D_API DirectX
 		{
 			DirectX();
 
@@ -76,7 +76,7 @@ namespace easy2d
 		};
 
 
-		class XAudio2
+		class E2D_API XAudio2
 		{
 			XAudio2();
 
@@ -96,7 +96,7 @@ namespace easy2d
 		};
 
 
-		class MediaFoundation
+		class E2D_API MediaFoundation
 		{
 			MediaFoundation();
 

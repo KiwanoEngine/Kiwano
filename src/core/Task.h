@@ -29,7 +29,7 @@ namespace easy2d
 	class TaskManager;
 
     // 定时任务
-	class Task
+	class E2D_API Task
 		: public virtual Object
 		, protected IntrusiveListItem<TaskPtr>
 	{

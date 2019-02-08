@@ -19,11 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../core/macros.h"
 #include <string>
 
 namespace easy2d
 {
-	std::wstring StringMultiByteToWideChar(const std::string& str);
+	E2D_API std::wstring StringMultiByteToWideChar(const std::string& str);
 
-	std::string StringWideCharToMultiByte(const std::wstring& wstr);
+	E2D_API std::string StringWideCharToMultiByte(const std::wstring& wstr);
 }

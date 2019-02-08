@@ -51,16 +51,6 @@ namespace easy2d
 
 	Window::~Window()
 	{
-		E2D_LOG(L"Destroying window");
-
-		if (is_fullscreen_)
-			RestoreResolution(device_name_);
-
-		if (device_name_)
-		{
-			delete[] device_name_;
-			device_name_ = nullptr;
-		}
 	}
 
 	HRESULT Window::Init(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc, bool debug)
@@ -166,6 +156,26 @@ namespace easy2d
 		width_ = rc.right - rc.left;
 		height_ = rc.bottom - rc.top;
 		return S_OK;
+	}
+
+	void Window::Destroy()
+	{
+		E2D_LOG(L"Destroying window");
+
+		if (is_fullscreen_)
+			RestoreResolution(device_name_);
+
+		if (device_name_)
+		{
+			delete[] device_name_;
+			device_name_ = nullptr;
+		}
+
+		if (handle_)
+		{
+			::DestroyWindow(handle_);
+			handle_ = nullptr;
+		}
 	}
 
 	void Window::Prepare()
@@ -335,15 +345,6 @@ namespace easy2d
 				::SetWindowPos(handle_, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 				::ShowWindow(handle_, SW_MINIMIZE);
 			}
-		}
-	}
-
-	void Window::Destroy()
-	{
-		if (handle_)
-		{
-			::DestroyWindow(handle_);
-			handle_ = nullptr;
 		}
 	}
 

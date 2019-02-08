@@ -26,7 +26,7 @@
 namespace easy2d
 {
 	// ÒôÀÖ²¥·ÅÆ÷
-	class Player
+	class E2D_API Player
 		: protected Noncopyable
 	{
 		using MusicMap = Map<size_t, MusicPtr>;

@@ -23,15 +23,15 @@
 
 namespace easy2d
 {
-	class ITextRenderer
+	interface ITextRenderer
 		: public IDWriteTextRenderer
 	{
 	public:
-		static HRESULT Create(
-			ITextRenderer** ppTextRenderer,
-			ID2D1Factory* pD2DFactory,
-			ID2D1RenderTarget* pRT,
-			ID2D1SolidColorBrush* pBrush
+		static E2D_API HRESULT Create(
+			_Out_ ITextRenderer** ppTextRenderer,
+			_In_ ID2D1Factory* pD2DFactory,
+			_In_ ID2D1RenderTarget* pRT,
+			_In_ ID2D1SolidColorBrush* pBrush
 		);
 
 		STDMETHOD_(void, SetTextStyle)(
@@ -39,87 +39,8 @@ namespace easy2d
 			BOOL outline,
 			CONST D2D1_COLOR_F &outlineColor,
 			FLOAT outlineWidth,
-			ID2D1StrokeStyle* outlineJoin
-		);
-
-		STDMETHOD(DrawGlyphRun)(
-			__maybenull void* clientDrawingContext,
-			FLOAT baselineOriginX,
-			FLOAT baselineOriginY,
-			DWRITE_MEASURING_MODE measuringMode,
-			__in DWRITE_GLYPH_RUN const* glyphRun,
-			__in DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
-			IUnknown* clientDrawingEffect
-		);
-
-		STDMETHOD(DrawUnderline)(
-			__maybenull void* clientDrawingContext,
-			FLOAT baselineOriginX,
-			FLOAT baselineOriginY,
-			__in DWRITE_UNDERLINE const* underline,
-			IUnknown* clientDrawingEffect
-		);
-
-		STDMETHOD(DrawStrikethrough)(
-			__maybenull void* clientDrawingContext,
-			FLOAT baselineOriginX,
-			FLOAT baselineOriginY,
-			__in DWRITE_STRIKETHROUGH const* strikethrough,
-			IUnknown* clientDrawingEffect
-		);
-
-		STDMETHOD(DrawInlineObject)(
-			__maybenull void* clientDrawingContext,
-			FLOAT originX,
-			FLOAT originY,
-			IDWriteInlineObject* inlineObject,
-			BOOL IsSideways,
-			BOOL IsRightToLeft,
-			IUnknown* clientDrawingEffect
-		);
-
-		STDMETHOD(IsPixelSnappingDisabled)(
-			__maybenull void* clientDrawingContext,
-			__out BOOL* isDisabled
-		);
-
-		STDMETHOD(GetCurrentTransform)(
-			__maybenull void* clientDrawingContext,
-			__out DWRITE_MATRIX* transform
-		);
-
-		STDMETHOD(GetPixelsPerDip)(
-			__maybenull void* clientDrawingContext,
-			__out FLOAT* pixelsPerDip
-		);
-
-	public:
-		unsigned long STDMETHODCALLTYPE AddRef();
-		unsigned long STDMETHODCALLTYPE Release();
-		HRESULT STDMETHODCALLTYPE QueryInterface(
-			IID const& riid,
-			void** ppvObject
-		);
-
-	private:
-		ITextRenderer(
-			ID2D1Factory* pD2DFactory,
-			ID2D1RenderTarget* pRT,
-			ID2D1SolidColorBrush* pBrush
-		);
-
-		~ITextRenderer();
-
-	private:
-		unsigned long			cRefCount_;
-		D2D1_COLOR_F			sFillColor_;
-		D2D1_COLOR_F			sOutlineColor_;
-		FLOAT					fOutlineWidth;
-		BOOL					bShowOutline_;
-		ID2D1Factory*			pD2DFactory_;
-		ID2D1RenderTarget*		pRT_;
-		ID2D1SolidColorBrush*	pBrush_;
-		ID2D1StrokeStyle*		pCurrStrokeStyle_;
+			_In_ ID2D1StrokeStyle* outlineJoin
+		) PURE;
 	};
 }
 

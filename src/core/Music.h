@@ -26,7 +26,7 @@
 namespace easy2d
 {
 	// “Ù¿÷
-	class Music
+	class E2D_API Music
 		: public virtual Object
 	{
 	public:

@@ -25,7 +25,7 @@
 
 namespace easy2d
 {
-	class Input
+	class E2D_API Input
 		: public ISingleton<Input>
 	{
 		E2D_DECLARE_SINGLETON(Input);

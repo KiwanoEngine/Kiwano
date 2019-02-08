@@ -26,7 +26,7 @@ namespace easy2d
 	namespace ui
 	{
 		// ²Ëµ¥
-		class Menu
+		class E2D_API Menu
 			: public Node
 		{
 		public:

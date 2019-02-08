@@ -22,11 +22,10 @@
 #include "macros.h"
 #include <functional>
 
-#undef DEBUG_CHECK_LIST
 #ifdef E2D_DEBUG
-#	define DEBUG_CHECK_LIST(list_ptr) list_ptr->Check()
+#	define E2D_DEBUG_CHECK_LIST(list_ptr) list_ptr->Check()
 #else
-#	define DEBUG_CHECK_LIST __noop
+#	define E2D_DEBUG_CHECK_LIST __noop
 #endif
 
 namespace easy2d
@@ -101,7 +100,7 @@ namespace easy2d
 
 			last_ = child;
 
-			DEBUG_CHECK_LIST(this);
+			E2D_DEBUG_CHECK_LIST(this);
 		}
 
 		void PushFront(T const& child)
@@ -125,7 +124,7 @@ namespace easy2d
 
 			first_ = child;
 
-			DEBUG_CHECK_LIST(this);
+			E2D_DEBUG_CHECK_LIST(this);
 		}
 
 		void InsertBefore(T const& child, T const& before)
@@ -144,7 +143,7 @@ namespace easy2d
 			child->next_ = before;
 			before->prev_ = child;
 
-			DEBUG_CHECK_LIST(this);
+			E2D_DEBUG_CHECK_LIST(this);
 		}
 
 		void InsertAfter(T const& child, T const& after)
@@ -163,7 +162,7 @@ namespace easy2d
 			child->prev_ = after;
 			after->next_ = child;
 
-			DEBUG_CHECK_LIST(this);
+			E2D_DEBUG_CHECK_LIST(this);
 		}
 
 		void Remove(T const& child)
@@ -198,7 +197,7 @@ namespace easy2d
 			child->prev_ = nullptr;
 			child->next_ = nullptr;
 
-			DEBUG_CHECK_LIST(this);
+			E2D_DEBUG_CHECK_LIST(this);
 		}
 
 		void Clear()
@@ -250,4 +249,4 @@ namespace easy2d
 	};
 }
 
-#undef DEBUG_CHECK_LIST
+#undef E2D_DEBUG_CHECK_LIST

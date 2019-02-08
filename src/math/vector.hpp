@@ -25,7 +25,7 @@ namespace easy2d
 {
 	namespace math
 	{
-		struct Vec2
+		struct E2D_API Vec2
 		{
 			float x;
 			float y;

@@ -101,4 +101,16 @@
 #	endif
 #endif
 
+#ifndef E2D_API
+/* Building or calling Easy2D as a static library */
+#	define E2D_API
+#else
+/*
+ * C4251 can be ignored if you are deriving from a type in the 
+ * C++ Standard Library, compiling a debug release (/MTd) and 
+ * where the compiler error message refers to _Container_base.
+ */
+#	pragma warning (disable: 4251)
+#endif
+
 #define E2D_NOT_USED(VAR) ((void)VAR)

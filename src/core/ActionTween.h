@@ -21,6 +21,7 @@
 #pragma once
 #include "Action.hpp"
 #include "logs.h"
+#include "Geometry.h"  // PathAction
 #include "../math/ease.hpp"
 
 namespace easy2d
@@ -32,37 +33,37 @@ namespace easy2d
 	// See https://easings.net for more information
 	struct Ease
 	{
-		static EaseFunc Linear;			// 线性
-		static EaseFunc EaseIn;			// 由慢变快
-		static EaseFunc EaseOut;		// 由快变慢
-		static EaseFunc EaseInOut;		// 由慢变快, 再由快变慢
-		static EaseFunc ExpoIn;			// 由慢变极快
-		static EaseFunc ExpoOut;		// 由极快变慢
-		static EaseFunc ExpoInOut;		// 由慢至极快, 再由极快边慢
-		static EaseFunc ElasticIn;		// 自起点赋予弹性
-		static EaseFunc ElasticOut;		// 自终点赋予弹性
-		static EaseFunc ElasticInOut;	// 再起点和终点赋予弹性
-		static EaseFunc BounceIn;		// 自起点赋予反弹力
-		static EaseFunc BounceOut;		// 自终点赋予反弹力
-		static EaseFunc BounceInOut;	// 在起点和终点赋予反弹力
-		static EaseFunc BackIn;
-		static EaseFunc BackOut;
-		static EaseFunc BackInOut;
-		static EaseFunc QuadIn;
-		static EaseFunc QuadOut;
-		static EaseFunc QuadInOut;
-		static EaseFunc CubicIn;
-		static EaseFunc CubicOut;
-		static EaseFunc CubicInOut;
-		static EaseFunc QuartIn;
-		static EaseFunc QuartOut;
-		static EaseFunc QuartInOut;
-		static EaseFunc QuintIn;
-		static EaseFunc QuintOut;
-		static EaseFunc QuintInOut;
-		static EaseFunc SineIn;
-		static EaseFunc SineOut;
-		static EaseFunc SineInOut;
+		static E2D_API EaseFunc Linear;			// 线性
+		static E2D_API EaseFunc EaseIn;			// 由慢变快
+		static E2D_API EaseFunc EaseOut;		// 由快变慢
+		static E2D_API EaseFunc EaseInOut;		// 由慢变快, 再由快变慢
+		static E2D_API EaseFunc ExpoIn;			// 由慢变极快
+		static E2D_API EaseFunc ExpoOut;		// 由极快变慢
+		static E2D_API EaseFunc ExpoInOut;		// 由慢至极快, 再由极快边慢
+		static E2D_API EaseFunc ElasticIn;		// 自起点赋予弹性
+		static E2D_API EaseFunc ElasticOut;		// 自终点赋予弹性
+		static E2D_API EaseFunc ElasticInOut;	// 再起点和终点赋予弹性
+		static E2D_API EaseFunc BounceIn;		// 自起点赋予反弹力
+		static E2D_API EaseFunc BounceOut;		// 自终点赋予反弹力
+		static E2D_API EaseFunc BounceInOut;	// 在起点和终点赋予反弹力
+		static E2D_API EaseFunc BackIn;
+		static E2D_API EaseFunc BackOut;
+		static E2D_API EaseFunc BackInOut;
+		static E2D_API EaseFunc QuadIn;
+		static E2D_API EaseFunc QuadOut;
+		static E2D_API EaseFunc QuadInOut;
+		static E2D_API EaseFunc CubicIn;
+		static E2D_API EaseFunc CubicOut;
+		static E2D_API EaseFunc CubicInOut;
+		static E2D_API EaseFunc QuartIn;
+		static E2D_API EaseFunc QuartOut;
+		static E2D_API EaseFunc QuartInOut;
+		static E2D_API EaseFunc QuintIn;
+		static E2D_API EaseFunc QuintOut;
+		static E2D_API EaseFunc QuintInOut;
+		static E2D_API EaseFunc SineIn;
+		static E2D_API EaseFunc SineOut;
+		static E2D_API EaseFunc SineInOut;
 	};
 
 	inline EaseFunc MakeEaseIn(float rate) { return std::bind(math::EaseIn, std::placeholders::_1, rate); }
@@ -74,7 +75,7 @@ namespace easy2d
 
 
 	// 补间动画
-	class ActionTween
+	class E2D_API ActionTween
 		: public Action
 	{
 	public:
@@ -113,7 +114,7 @@ namespace easy2d
 
 
 	// 相对位移动作
-	class MoveBy
+	class E2D_API MoveBy
 		: public ActionTween
 	{
 	public:
@@ -142,7 +143,7 @@ namespace easy2d
 
 
 	// 位移动作
-	class MoveTo
+	class E2D_API MoveTo
 		: public MoveBy
 	{
 	public:
@@ -171,7 +172,7 @@ namespace easy2d
 
 
 	// 相对跳跃动作
-	class JumpBy
+	class E2D_API JumpBy
 		: public ActionTween
 	{
 	public:
@@ -204,7 +205,7 @@ namespace easy2d
 
 
 	// 跳跃动作
-	class JumpTo
+	class E2D_API JumpTo
 		: public JumpBy
 	{
 	public:
@@ -235,7 +236,7 @@ namespace easy2d
 
 
 	// 相对缩放动作
-	class ScaleBy
+	class E2D_API ScaleBy
 		: public ActionTween
 	{
 	public:
@@ -272,7 +273,7 @@ namespace easy2d
 
 
 	// 缩放动作
-	class ScaleTo
+	class E2D_API ScaleTo
 		: public ScaleBy
 	{
 	public:
@@ -309,7 +310,7 @@ namespace easy2d
 
 
 	// 透明度相对渐变动作
-	class OpacityBy
+	class E2D_API OpacityBy
 		: public ActionTween
 	{
 	public:
@@ -337,7 +338,7 @@ namespace easy2d
 
 
 	// 透明度渐变动作
-	class OpacityTo
+	class E2D_API OpacityTo
 		: public OpacityBy
 	{
 	public:
@@ -366,7 +367,7 @@ namespace easy2d
 
 
 	// 淡入动作
-	class FadeIn
+	class E2D_API FadeIn
 		: public OpacityTo
 	{
 	public:
@@ -379,7 +380,7 @@ namespace easy2d
 
 
 	// 淡出动作
-	class FadeOut
+	class E2D_API FadeOut
 		: public OpacityTo
 	{
 	public:
@@ -392,7 +393,7 @@ namespace easy2d
 
 
 	// 相对旋转动作
-	class RotateBy
+	class E2D_API RotateBy
 		: public ActionTween
 	{
 	public:
@@ -420,7 +421,7 @@ namespace easy2d
 
 
 	// 旋转动作
-	class RotateTo
+	class E2D_API RotateTo
 		: public RotateBy
 	{
 	public:
@@ -449,7 +450,7 @@ namespace easy2d
 
 
 	// 路径动作
-	class PathAction
+	class E2D_API PathAction
 		: public ActionTween
 	{
 	public:

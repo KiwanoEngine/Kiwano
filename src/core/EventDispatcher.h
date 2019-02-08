@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	class EventDispatcher
+	class E2D_API EventDispatcher
 	{
 		using Listeners = IntrusiveList<EventListenerPtr>;
 

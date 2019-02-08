@@ -21,13 +21,12 @@
 #pragma once
 #include "vector.hpp"
 #include "Rect.hpp"
-#include <d2d1.h>
 
 namespace easy2d
 {
 	namespace math
 	{
-		struct Matrix
+		struct E2D_API Matrix
 		{
 			union
 			{

@@ -26,7 +26,7 @@
 
 namespace easy2d
 {
-	struct ActionHelper
+	struct E2D_API ActionHelper
 	{
 		ActionHelper& SetLoopCount(int loop) { this->loop = loop; return (*this); }
 
@@ -44,7 +44,7 @@ namespace easy2d
 		int			loop;
 	};
 
-	struct TweenActionHelper
+	struct E2D_API TweenActionHelper
 	{
 		TweenActionHelper& SetDuration(Duration dur) { this->dur = dur; return (*this); }
 

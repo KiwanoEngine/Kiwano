@@ -24,7 +24,7 @@
 namespace easy2d
 {
 	// 路径
-	class Path
+	class E2D_API Path
 	{
 	public:
 		// 获取数据的默认保存路径

@@ -137,7 +137,7 @@ namespace easy2d
 	};
 
 	// ÊÂ¼ş
-	struct Event
+	struct E2D_API Event
 	{
 		EventType type;
 		Node* target;

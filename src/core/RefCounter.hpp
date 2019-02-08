@@ -24,7 +24,7 @@
 
 namespace easy2d
 {
-	class RefCounter
+	class E2D_API RefCounter
 		: protected Noncopyable
 	{
 	public:

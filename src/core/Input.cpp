@@ -35,14 +35,11 @@ namespace easy2d
 
 	Input::~Input()
 	{
-		E2D_LOG(L"Destroying input device");
 	}
 
 	HRESULT Input::Init(HWND hwnd, bool debug)
 	{
 		E2D_NOT_USED(debug);
-
-		E2D_LOG(L"Initing input device");
 
 		hwnd_ = hwnd;
 

@@ -36,7 +36,7 @@ namespace easy2d
 		//     1.5 小时: 1.5_h
 		//     3 小时 45 分 15 秒: 3_h + 45_m + 15_s
 		//
-		struct Duration
+		struct E2D_API Duration
 		{
 			Duration();
 
@@ -110,10 +110,10 @@ namespace easy2d
 		};
 
 		/* 预定义的时间段 */
-		extern const Duration Millisecond;	// 毫秒
-		extern const Duration Second;		// 秒
-		extern const Duration Minute;		// 分钟
-		extern const Duration Hour;			// 小时
+		E2D_API extern const Duration Millisecond;	// 毫秒
+		E2D_API extern const Duration Second;		// 秒
+		E2D_API extern const Duration Minute;		// 分钟
+		E2D_API extern const Duration Hour;			// 小时
 
 
 		// 时间
@@ -123,7 +123,7 @@ namespace easy2d
 		//     TimePoint t1, t2;
 		//     int ms = (t2 - t1).Milliseconds();  // 获取两时间相差的毫秒数
 		// 
-		struct TimePoint
+		struct E2D_API TimePoint
 		{
 			TimePoint();
 
@@ -148,14 +148,14 @@ namespace easy2d
 		// 
 		// 由于该时间点基于系统启动时间开始计算, 所以无法格式化该时间, 
 		// 也无法获得该时间的 Unix 时间戳
-		TimePoint Now() E2D_NOEXCEPT;
+		E2D_API TimePoint Now() E2D_NOEXCEPT;
 
 		// 时间段格式化
 		//
 		// 时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
 		// 例如: "300ms", "-1.5h", "2h45m"
 		// 允许的时间单位有 "ms", "s", "m", "h"
-		Duration ParseDuration(const std::wstring& parse_str);
+		E2D_API Duration ParseDuration(const std::wstring& parse_str);
 	}
 }
 

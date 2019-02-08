@@ -24,7 +24,7 @@
 namespace easy2d
 {
     // 循环动作
-	class Loop
+	class E2D_API Loop
 		: public Action
 	{
 	public:
@@ -61,7 +61,7 @@ namespace easy2d
 
 
 	// 顺序动作
-	class Sequence
+	class E2D_API Sequence
 		: public Action
 	{
 	public:
@@ -106,7 +106,7 @@ namespace easy2d
 
 
 	// 同步动作
-	class Spawn
+	class E2D_API Spawn
 		: public Action
 	{
 	public:

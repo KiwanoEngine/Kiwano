@@ -24,7 +24,7 @@
 namespace easy2d
 {
 	// 几何抽象
-	class Geometry
+	class E2D_API Geometry
 		: public virtual Object
 	{
 		friend class Canvas;
@@ -62,7 +62,7 @@ namespace easy2d
 
 
 	// 直线
-	class LineGeometry
+	class E2D_API LineGeometry
 		: public Geometry
 	{
 	public:
@@ -99,7 +99,7 @@ namespace easy2d
 
 
 	// 几何矩形
-	class RectangleGeometry
+	class E2D_API RectangleGeometry
 		: public Geometry
 	{
 	public:
@@ -126,7 +126,7 @@ namespace easy2d
 
 
 	// 几何圆形
-	class CircleGeometry
+	class E2D_API CircleGeometry
 		: public Geometry
 	{
 	public:
@@ -163,7 +163,7 @@ namespace easy2d
 
 
 	// 几何椭圆
-	class EllipseGeometry
+	class E2D_API EllipseGeometry
 		: public Geometry
 	{
 	public:
@@ -206,7 +206,7 @@ namespace easy2d
 
 
 	// 几何路径
-	class PathGeometry
+	class E2D_API PathGeometry
 		: public Geometry
 	{
 	public:
@@ -260,7 +260,7 @@ namespace easy2d
 
 
 	// 几何圆角矩形
-	class RoundedRectGeometry
+	class E2D_API RoundedRectGeometry
 		: public Geometry
 	{
 	public:

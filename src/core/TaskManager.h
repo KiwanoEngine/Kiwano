@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	class TaskManager
+	class E2D_API TaskManager
 	{
 		using Tasks = IntrusiveList<TaskPtr>;
 

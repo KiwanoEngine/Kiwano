@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../core/macros.h"
 #include "constants.hpp"
 #include <cmath>
 

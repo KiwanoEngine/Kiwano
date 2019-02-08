@@ -24,7 +24,7 @@
 
 namespace easy2d
 {
-	class Object
+	class E2D_API Object
 		: public RefCounter
 	{
 	public:

@@ -25,7 +25,7 @@
 namespace easy2d
 {
 	// ͼƬ
-	class Image
+	class E2D_API Image
 		: public virtual Object
 	{
 	public:
@@ -97,7 +97,7 @@ namespace easy2d
 		);
 
 	protected:
-		Rect		crop_rect_;
+		Rect			crop_rect_;
 		D2DBitmapPtr	bitmap_;
 	};
 }

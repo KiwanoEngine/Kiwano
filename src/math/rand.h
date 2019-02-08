@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../core/macros.h"
 #include <random>
 
 namespace easy2d
@@ -34,7 +35,7 @@ namespace easy2d
 		// double d = math::Rand(1.2, 1.5);
 		//
 		
-		std::default_random_engine& GetRandomEngine();
+		E2D_API std::default_random_engine& GetRandomEngine();
 
 		template<typename T>
 		static T RandomInt(T min, T max)

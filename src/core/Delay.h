@@ -23,8 +23,8 @@
 
 namespace easy2d
 {
-	// 延时
-	class Delay
+	// 延时动作
+	class E2D_API Delay
 		: public Action
 	{
 	public:

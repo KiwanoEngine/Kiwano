@@ -24,7 +24,7 @@
 namespace easy2d
 {
 	// Ö¡¶¯»­
-	class Animation
+	class E2D_API Animation
 		: public ActionTween
 	{
 	public:
