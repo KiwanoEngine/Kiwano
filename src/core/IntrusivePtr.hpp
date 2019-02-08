@@ -67,6 +67,11 @@ namespace easy2d
 
 		inline Type* Get() const E2D_NOEXCEPT { return ptr_; }
 
+		inline void Reset() E2D_NOEXCEPT
+		{
+			IntrusivePtr{}.Swap(*this);
+		}
+
 		inline void Swap(IntrusivePtr& other) E2D_NOEXCEPT
 		{
 			std::swap(ptr_, other.ptr_);

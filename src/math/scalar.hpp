@@ -22,12 +22,6 @@
 #include "constants.hpp"
 #include <cmath>
 
-#if _MSC_VER >= 1900
-#	define E2D_CONSTEXPR constexpr
-#else
-#	define E2D_CONSTEXPR const
-#endif
-
 
 namespace easy2d
 {
