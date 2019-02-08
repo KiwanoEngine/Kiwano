@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	class Transform
+	class E2D_API Transform
 	{
 	public:
 		float rotation;		// Ðý×ª

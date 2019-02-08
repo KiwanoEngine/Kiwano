@@ -31,7 +31,7 @@
 
 namespace easy2d
 {
-	class RenderSystem
+	class E2D_API RenderSystem
 		: public ISingleton<RenderSystem>
 	{
 		E2D_DECLARE_SINGLETON(RenderSystem);
@@ -47,6 +47,8 @@ namespace easy2d
 
 	public:
 		HRESULT Init(HWND hwnd, bool vsync, bool debug);
+
+		void Destroy();
 
 		// ¿ªÊ¼äÖÈ¾
 		HRESULT BeginDraw(HWND hwnd);

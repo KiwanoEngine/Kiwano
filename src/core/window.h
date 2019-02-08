@@ -24,7 +24,7 @@
 
 namespace easy2d
 {
-	class Window
+	class E2D_API Window
 		: public ISingleton<Window>
 	{
 		E2D_DECLARE_SINGLETON(Window);
@@ -64,6 +64,8 @@ namespace easy2d
 			bool	debug
 		);
 
+		void Destroy();
+
 		void Prepare();
 
 		HWND GetHandle() const;
@@ -73,8 +75,6 @@ namespace easy2d
 		void UpdateWindowRect();
 
 		void SetActive(bool actived);
-
-		void Destroy();
 
 	protected:
 		Window();

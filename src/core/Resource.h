@@ -31,7 +31,7 @@ namespace easy2d
 	// 
 	// 了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
 	//
-	class Resource
+	class E2D_API Resource
 	{
 		enum class Type { File, Binary };
 

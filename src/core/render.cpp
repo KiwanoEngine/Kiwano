@@ -41,19 +41,29 @@ namespace easy2d
 
 	RenderSystem::~RenderSystem()
 	{
-		E2D_LOG(L"Destroying graphics device");
-
-		ClearImageCache();
 	}
 
 	HRESULT RenderSystem::Init(HWND hwnd, bool vsync, bool debug)
 	{
-		E2D_LOG(L"Initing graphics device");
+		E2D_LOG(L"Initing graphics resources");
 
 		vsync_enabled_ = vsync;
 		debug_ = debug;
 
 		return CreateResources(hwnd);
+	}
+
+	void RenderSystem::Destroy()
+	{
+		E2D_LOG(L"Destroying graphics resources");
+
+		ClearImageCache();
+
+		text_renderer_.Reset();
+		solid_brush_.Reset();
+		render_target_.Reset();
+		fps_text_format_.Reset();
+		fps_text_layout_.Reset();
 	}
 
 	HRESULT RenderSystem::BeginDraw(HWND hwnd)

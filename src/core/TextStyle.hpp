@@ -32,7 +32,7 @@ namespace easy2d
 	};
 
 	// 文本样式
-	class TextStyle
+	class E2D_API TextStyle
 	{
 	public:
 		Color		color;				// 颜色

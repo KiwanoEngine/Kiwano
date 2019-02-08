@@ -24,7 +24,7 @@
 
 namespace easy2d
 {
-	class ResLoader
+	class E2D_API ResLoader
 	{
 	public:
 		// ÃÌº”Õº∆¨

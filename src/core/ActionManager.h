@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	class ActionManager
+	class E2D_API ActionManager
 	{
 		using Actions = IntrusiveList<ActionPtr>;
 

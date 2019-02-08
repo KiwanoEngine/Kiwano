@@ -25,7 +25,7 @@
 namespace easy2d
 {
     // нд╪Ч
-	class File
+	class E2D_API  File
 	{
 	public:
 		File();

@@ -38,19 +38,11 @@ namespace easy2d
 		bool	fullscreen;	// 全屏模式
 		bool	debug;		// 调试模式
 
-		Options()
-			: title(L"Easy2D Game")
-			, width(640)
-			, height(480)
-			, icon(nullptr)
-			, vsync(true)
-			, fullscreen(false)
-			, debug(false)
-		{}
+		E2D_API Options();
 	};
 
 
-	class Application
+	class E2D_API Application
 		: protected Noncopyable
 	{
 	public:
@@ -111,6 +103,8 @@ namespace easy2d
 		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 	private:
+		bool			end_;
+		bool			inited_;
 		bool			debug_;
 		float			time_scale_;
 		String			app_name_;

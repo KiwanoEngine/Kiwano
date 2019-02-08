@@ -25,7 +25,7 @@
 namespace easy2d
 {
 	// Ö¡¼¯ºÏ
-	class Frames
+	class E2D_API Frames
 		: public virtual Object
 	{
 	public:

@@ -63,10 +63,10 @@ namespace easy2d
 			Vec2 bottom_left = Transform(rect.GetLeftBottom());
 			Vec2 bottom_right = Transform(rect.GetRightBottom());
 
-			float left = min(min(top_left.x, top_right.x), min(bottom_left.x, bottom_right.x));
-			float right = max(max(top_left.x, top_right.x), max(bottom_left.x, bottom_right.x));
-			float top = min(min(top_left.y, top_right.y), min(bottom_left.y, bottom_right.y));
-			float bottom = max(max(top_left.y, top_right.y), max(bottom_left.y, bottom_right.y));
+			float left = std::min(std::min(top_left.x, top_right.x), std::min(bottom_left.x, bottom_right.x));
+			float right = std::max(std::max(top_left.x, top_right.x), std::max(bottom_left.x, bottom_right.x));
+			float top = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
+			float bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
 
 			return Rect{ left, top, (right - left), (bottom - top) };
 		}

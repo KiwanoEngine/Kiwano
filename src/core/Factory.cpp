@@ -31,7 +31,6 @@ namespace easy2d
 
 	Factory::~Factory()
 	{
-		E2D_LOG(L"Destroying device-independent resources");
 	}
 
 	HRESULT Factory::Init(bool debug)
@@ -109,6 +108,18 @@ namespace easy2d
 			}
 		}
 		return hr;
+	}
+
+	void Factory::Destroy()
+	{
+		E2D_LOG(L"Destroying device-independent resources");
+
+		factory_.Reset();
+		imaging_factory_.Reset();
+		write_factory_.Reset();
+		miter_stroke_style_.Reset();
+		bevel_stroke_style_.Reset();
+		round_stroke_style_.Reset();
 	}
 
 	HRESULT Factory::CreateHwndRenderTarget(D2DHwndRenderTargetPtr & hwnd_render_target, D2D1_RENDER_TARGET_PROPERTIES const & properties, D2D1_HWND_RENDER_TARGET_PROPERTIES const & hwnd_rt_properties) const

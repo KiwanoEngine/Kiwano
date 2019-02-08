@@ -24,7 +24,7 @@
 namespace easy2d
 {
 	// ³¡¾°
-	class Scene
+	class E2D_API Scene
 		: public Node
 	{
 	public:

@@ -27,7 +27,7 @@ namespace easy2d
 	class Scene;
 
 	// ³¡¾°¹ý¶É
-	class Transition
+	class E2D_API Transition
 		: public virtual Object
 	{
 		friend class Application;

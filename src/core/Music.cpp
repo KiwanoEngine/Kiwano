@@ -62,7 +62,7 @@ namespace easy2d
 		{
 			if (!File(res.GetFileName()).Exists())
 			{
-				E2D_WARNING_LOG(L"Media file '%s' not found", res.GetFileName());
+				E2D_WARNING_LOG(L"Media file '%s' not found", res.GetFileName().c_str());
 				return false;
 			}
 			hr = transcoder.LoadMediaFile(res.GetFileName(), &wave_data_, &size_);

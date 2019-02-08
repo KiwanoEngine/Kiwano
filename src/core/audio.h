@@ -27,7 +27,7 @@
 
 namespace easy2d
 {
-	class Voice
+	class E2D_API Voice
 		: protected Noncopyable
 	{
 	public:
@@ -74,7 +74,7 @@ namespace easy2d
 	};
 
 
-	class Audio
+	class E2D_API Audio
 		: public ISingleton<Audio>
 	{
 		E2D_DECLARE_SINGLETON(Audio);
@@ -83,6 +83,8 @@ namespace easy2d
 
 	public:
 		HRESULT Init(bool debug);
+
+		void Destroy();
 
 		// ¿ªÆôÉè±¸
 		void Open();

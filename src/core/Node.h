@@ -32,7 +32,7 @@ namespace easy2d
 	class Application;
 
 	// ½Úµã
-	class Node
+	class E2D_API Node
 		: public virtual Object
 		, public TaskManager
 		, public ActionManager

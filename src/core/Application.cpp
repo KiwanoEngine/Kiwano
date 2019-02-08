@@ -34,8 +34,20 @@
 
 namespace easy2d
 {
+	Options::Options()
+		: title(L"Easy2D Game")
+		, width(640)
+		, height(480)
+		, icon(nullptr)
+		, vsync(true)
+		, fullscreen(false)
+		, debug(false)
+	{}
+
 	Application::Application(String const& app_name)
-		: debug_(false)
+		: end_(true)
+		, inited_(false)
+		, debug_(false)
 		, curr_scene_(nullptr)
 		, next_scene_(nullptr)
 		, transition_(nullptr)
@@ -47,6 +59,8 @@ namespace easy2d
 
 	Application::~Application()
 	{
+		Destroy();
+
 		::CoUninitialize();
 	}
 
@@ -130,6 +144,8 @@ namespace easy2d
 
 		// use Application instance in message loop
 		::SetWindowLongPtr(hwnd, GWLP_USERDATA, LONG_PTR(this));
+
+		inited_ = true;
 	}
 
 	void Application::Run()
@@ -138,10 +154,12 @@ namespace easy2d
 
 		if (hwnd)
 		{
+			end_ = false;
+
 			Window::Instance()->Prepare();
 
 			MSG msg = {};
-			while (::GetMessageW(&msg, nullptr, 0, 0))
+			while (::GetMessageW(&msg, nullptr, 0, 0) && !end_)
 			{
 				::TranslateMessage(&msg);
 				::DispatchMessageW(&msg);
@@ -151,14 +169,24 @@ namespace easy2d
 
 	void Application::Quit()
 	{
-		Window::Instance()->Destroy();
+		end_ = true;
 	}
 
 	void Application::Destroy()
 	{
-		transition_ = nullptr;
-		next_scene_ = nullptr;
-		curr_scene_ = nullptr;
+		if (inited_)
+		{
+			inited_ = false;
+
+			transition_.Reset();
+			next_scene_.Reset();
+			curr_scene_.Reset();
+
+			Audio::Instance()->Destroy();
+			RenderSystem::Instance()->Destroy();
+			Window::Instance()->Destroy();
+			Factory::Instance()->Destroy();
+		}
 	}
 
 	void Application::EnterScene(ScenePtr const & scene)

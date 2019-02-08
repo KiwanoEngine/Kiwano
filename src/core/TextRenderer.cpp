@@ -24,7 +24,113 @@
 
 namespace easy2d
 {
-	ITextRenderer::ITextRenderer(ID2D1Factory* pD2DFactory, ID2D1RenderTarget* pRT, ID2D1SolidColorBrush* pBrush)
+	class TextRendererImpl
+		: public ITextRenderer
+	{
+	public:
+		TextRendererImpl(
+			ID2D1Factory* pD2DFactory,
+			ID2D1RenderTarget* pRT,
+			ID2D1SolidColorBrush* pBrush
+		);
+
+		~TextRendererImpl();
+
+		STDMETHOD_(void, SetTextStyle)(
+			CONST D2D1_COLOR_F &fillColor,
+			BOOL outline,
+			CONST D2D1_COLOR_F &outlineColor,
+			FLOAT outlineWidth,
+			ID2D1StrokeStyle* outlineJoin
+			);
+
+		STDMETHOD(DrawGlyphRun)(
+			__maybenull void* clientDrawingContext,
+			FLOAT baselineOriginX,
+			FLOAT baselineOriginY,
+			DWRITE_MEASURING_MODE measuringMode,
+			__in DWRITE_GLYPH_RUN const* glyphRun,
+			__in DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
+			IUnknown* clientDrawingEffect
+			);
+
+		STDMETHOD(DrawUnderline)(
+			__maybenull void* clientDrawingContext,
+			FLOAT baselineOriginX,
+			FLOAT baselineOriginY,
+			__in DWRITE_UNDERLINE const* underline,
+			IUnknown* clientDrawingEffect
+			);
+
+		STDMETHOD(DrawStrikethrough)(
+			__maybenull void* clientDrawingContext,
+			FLOAT baselineOriginX,
+			FLOAT baselineOriginY,
+			__in DWRITE_STRIKETHROUGH const* strikethrough,
+			IUnknown* clientDrawingEffect
+			);
+
+		STDMETHOD(DrawInlineObject)(
+			__maybenull void* clientDrawingContext,
+			FLOAT originX,
+			FLOAT originY,
+			IDWriteInlineObject* inlineObject,
+			BOOL IsSideways,
+			BOOL IsRightToLeft,
+			IUnknown* clientDrawingEffect
+			);
+
+		STDMETHOD(IsPixelSnappingDisabled)(
+			__maybenull void* clientDrawingContext,
+			__out BOOL* isDisabled
+			);
+
+		STDMETHOD(GetCurrentTransform)(
+			__maybenull void* clientDrawingContext,
+			__out DWRITE_MATRIX* transform
+			);
+
+		STDMETHOD(GetPixelsPerDip)(
+			__maybenull void* clientDrawingContext,
+			__out FLOAT* pixelsPerDip
+			);
+
+	public:
+		unsigned long STDMETHODCALLTYPE AddRef();
+		unsigned long STDMETHODCALLTYPE Release();
+		HRESULT STDMETHODCALLTYPE QueryInterface(
+			IID const& riid,
+			void** ppvObject
+		);
+
+	private:
+		unsigned long			cRefCount_;
+		D2D1_COLOR_F			sFillColor_;
+		D2D1_COLOR_F			sOutlineColor_;
+		FLOAT					fOutlineWidth;
+		BOOL					bShowOutline_;
+		ID2D1Factory*			pD2DFactory_;
+		ID2D1RenderTarget*		pRT_;
+		ID2D1SolidColorBrush*	pBrush_;
+		ID2D1StrokeStyle*		pCurrStrokeStyle_;
+	};
+
+	HRESULT ITextRenderer::Create(
+		ITextRenderer** ppTextRenderer,
+		ID2D1Factory* pD2DFactory,
+		ID2D1RenderTarget* pRT,
+		ID2D1SolidColorBrush* pBrush)
+	{
+		*ppTextRenderer = new (std::nothrow) TextRendererImpl(pD2DFactory, pRT, pBrush);
+		if (*ppTextRenderer)
+		{
+			(*ppTextRenderer)->AddRef();
+			return S_OK;
+		}
+		return E_FAIL;
+	}
+
+	TextRendererImpl::TextRendererImpl(ID2D1Factory* pD2DFactory, ID2D1RenderTarget* pRT, ID2D1SolidColorBrush* pBrush)
 		: cRefCount_(0)
 		, pD2DFactory_(pD2DFactory)
 		, pRT_(pRT)
@@ -40,29 +146,14 @@ namespace easy2d
 		pBrush->AddRef();
 	}
 
-	ITextRenderer::~ITextRenderer()
+	TextRendererImpl::~TextRendererImpl()
 	{
 		SafeRelease(pD2DFactory_);
 		SafeRelease(pRT_);
 		SafeRelease(pBrush_);
 	}
 
-	HRESULT ITextRenderer::Create(
-		ITextRenderer** ppTextRenderer,
-		ID2D1Factory* pD2DFactory,
-		ID2D1RenderTarget* pRT,
-		ID2D1SolidColorBrush* pBrush)
-	{
-		*ppTextRenderer = new (std::nothrow) ITextRenderer(pD2DFactory, pRT, pBrush);
-		if (*ppTextRenderer)
-		{
-			(*ppTextRenderer)->AddRef();
-			return S_OK;
-		}
-		return E_FAIL;
-	}
-
-	STDMETHODIMP_(void) ITextRenderer::SetTextStyle(
+	STDMETHODIMP_(void) TextRendererImpl::SetTextStyle(
 		CONST D2D1_COLOR_F &fillColor,
 		BOOL outline,
 		CONST D2D1_COLOR_F &outlineColor,
@@ -76,7 +167,7 @@ namespace easy2d
 		pCurrStrokeStyle_ = outlineJoin;
 	}
 
-	STDMETHODIMP ITextRenderer::DrawGlyphRun(
+	STDMETHODIMP TextRendererImpl::DrawGlyphRun(
 		__maybenull void* clientDrawingContext,
 		FLOAT baselineOriginX,
 		FLOAT baselineOriginY,
@@ -169,7 +260,7 @@ namespace easy2d
 		return hr;
 	}
 
-	STDMETHODIMP ITextRenderer::DrawUnderline(
+	STDMETHODIMP TextRendererImpl::DrawUnderline(
 		__maybenull void* clientDrawingContext,
 		FLOAT baselineOriginX,
 		FLOAT baselineOriginY,
@@ -238,7 +329,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	STDMETHODIMP ITextRenderer::DrawStrikethrough(
+	STDMETHODIMP TextRendererImpl::DrawStrikethrough(
 		__maybenull void* clientDrawingContext,
 		FLOAT baselineOriginX,
 		FLOAT baselineOriginY,
@@ -307,7 +398,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	STDMETHODIMP ITextRenderer::DrawInlineObject(
+	STDMETHODIMP TextRendererImpl::DrawInlineObject(
 		__maybenull void* clientDrawingContext,
 		FLOAT originX,
 		FLOAT originY,
@@ -326,12 +417,12 @@ namespace easy2d
 		return E_NOTIMPL;
 	}
 
-	STDMETHODIMP_(unsigned long) ITextRenderer::AddRef()
+	STDMETHODIMP_(unsigned long) TextRendererImpl::AddRef()
 	{
 		return InterlockedIncrement(&cRefCount_);
 	}
 
-	STDMETHODIMP_(unsigned long) ITextRenderer::Release()
+	STDMETHODIMP_(unsigned long) TextRendererImpl::Release()
 	{
 		unsigned long newCount = InterlockedDecrement(&cRefCount_);
 
@@ -344,7 +435,7 @@ namespace easy2d
 		return newCount;
 	}
 
-	STDMETHODIMP ITextRenderer::IsPixelSnappingDisabled(
+	STDMETHODIMP TextRendererImpl::IsPixelSnappingDisabled(
 		__maybenull void* clientDrawingContext,
 		__out BOOL* isDisabled)
 	{
@@ -354,7 +445,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	STDMETHODIMP ITextRenderer::GetCurrentTransform(
+	STDMETHODIMP TextRendererImpl::GetCurrentTransform(
 		__maybenull void* clientDrawingContext,
 		__out DWRITE_MATRIX* transform)
 	{
@@ -364,7 +455,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	STDMETHODIMP ITextRenderer::GetPixelsPerDip(
+	STDMETHODIMP TextRendererImpl::GetPixelsPerDip(
 		__maybenull void* clientDrawingContext,
 		__out FLOAT* pixelsPerDip)
 	{
@@ -378,7 +469,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	STDMETHODIMP ITextRenderer::QueryInterface(
+	STDMETHODIMP TextRendererImpl::QueryInterface(
 		IID const& riid,
 		void** ppvObject)
 	{

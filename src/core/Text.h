@@ -26,7 +26,7 @@
 namespace easy2d
 {
 	// нд╠╬
-	class Text
+	class E2D_API Text
 		: public Node
 	{
 	public:

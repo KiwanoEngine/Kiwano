@@ -29,7 +29,7 @@ namespace easy2d
 
 	class EventDispatcher;
 
-	class EventListener
+	class E2D_API EventListener
 		: public virtual Object
 		, protected IntrusiveListItem<EventListenerPtr>
 	{

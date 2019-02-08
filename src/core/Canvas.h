@@ -29,7 +29,7 @@
 namespace easy2d
 {
 	// »­²¼
-	class Canvas
+	class E2D_API Canvas
 		: public Node
 	{
 	public:

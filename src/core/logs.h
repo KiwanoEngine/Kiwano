@@ -65,25 +65,25 @@ namespace easy2d
 {
 	namespace logs
 	{
-		void Enable();
+		E2D_API void Enable();
 
-		void Disable();
+		E2D_API void Disable();
 
-		void Print(const wchar_t* format, ...);
+		E2D_API void Print(const wchar_t* format, ...);
 
-		void Println(const wchar_t* format, ...);
+		E2D_API void Println(const wchar_t* format, ...);
 
-		void Message(const wchar_t* format, ...);
+		E2D_API void Message(const wchar_t* format, ...);
 
-		void Messageln(const wchar_t* format, ...);
+		E2D_API void Messageln(const wchar_t* format, ...);
 
-		void Warning(const wchar_t* format, ...);
+		E2D_API void Warning(const wchar_t* format, ...);
 
-		void Warningln(const wchar_t* format, ...);
+		E2D_API void Warningln(const wchar_t* format, ...);
 
-		void Error(const wchar_t* format, ...);
+		E2D_API void Error(const wchar_t* format, ...);
 
-		void Errorln(const wchar_t* format, ...);
+		E2D_API void Errorln(const wchar_t* format, ...);
 	}
 }
 

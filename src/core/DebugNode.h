@@ -25,7 +25,7 @@
 
 namespace easy2d
 {
-	class DebugNode
+	class E2D_API DebugNode
 		: public Node
 		, public ISingleton<DebugNode>
 	{

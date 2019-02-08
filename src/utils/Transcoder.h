@@ -27,7 +27,7 @@
 
 namespace easy2d
 {
-	class Transcoder
+	class E2D_API Transcoder
 	{
 		WAVEFORMATEX* wave_format_;
 

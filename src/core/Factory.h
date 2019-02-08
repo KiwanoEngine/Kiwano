@@ -28,7 +28,7 @@
 
 namespace easy2d
 {
-	class Factory
+	class E2D_API Factory
 		: public ISingleton<Factory>
 	{
 		E2D_DECLARE_SINGLETON(Factory);
@@ -36,68 +36,70 @@ namespace easy2d
 	public:
 		HRESULT Init(bool debug);
 
+		void Destroy();
+
 		HRESULT CreateHwndRenderTarget(
-			D2DHwndRenderTargetPtr& hwnd_render_target,
+			_Out_ D2DHwndRenderTargetPtr& hwnd_render_target,
 			D2D1_RENDER_TARGET_PROPERTIES const& properties,
 			D2D1_HWND_RENDER_TARGET_PROPERTIES const& hwnd_rt_properties
 		) const;
 
 		HRESULT CreateTextRenderer(
-			D2DTextRendererPtr& text_renderer,
+			_Out_ D2DTextRendererPtr& text_renderer,
 			D2DRenderTargetPtr const& render_target,
 			D2DSolidColorBrushPtr const& brush
 		);
 
 		HRESULT CreateBitmapFromFile(
-			D2DBitmapPtr& bitmap,
+			_Out_ D2DBitmapPtr& bitmap,
 			D2DRenderTargetPtr const& rt,
 			String const& file_path
 		);
 
 		HRESULT CreateBitmapFromResource(
-			D2DBitmapPtr& bitmap,
+			_Out_ D2DBitmapPtr& bitmap,
 			D2DRenderTargetPtr const& rt,
 			Resource const& res
 		);
 
 		HRESULT CreateRectangleGeometry(
-			D2DRectangleGeometryPtr& geo,
+			_Out_ D2DRectangleGeometryPtr& geo,
 			Rect const& rect
 		) const;
 
 		HRESULT CreateRoundedRectangleGeometry(
-			D2DRoundedRectangleGeometryPtr& geo,
+			_Out_ D2DRoundedRectangleGeometryPtr& geo,
 			Rect const& rect,
 			float radius_x,
 			float radius_y
 		) const;
 
 		HRESULT CreateEllipseGeometry(
-			D2DEllipseGeometryPtr& geo,
+			_Out_ D2DEllipseGeometryPtr& geo,
 			Point const& center,
 			float radius_x,
 			float radius_y
 		) const;
 
 		HRESULT CreateTransformedGeometry(
-			D2DTransformedGeometryPtr& transformed,
+			_Out_ D2DTransformedGeometryPtr& transformed,
 			Matrix const& matrix,
 			D2DGeometryPtr const& geo
 		) const;
 
 		HRESULT CreatePathGeometry(
-			D2DPathGeometryPtr& geometry
+			_Out_ D2DPathGeometryPtr& geometry
 		) const;
 
 		HRESULT CreateTextFormat(
-			D2DTextFormatPtr& text_format,
+			_Out_ D2DTextFormatPtr& text_format,
 			Font const& font,
 			TextStyle const& text_style
 		) const;
 
 		HRESULT CreateTextLayout(
-			D2DTextLayoutPtr& text_layout,
-			Size& layout_size,
+			_Out_ D2DTextLayoutPtr& text_layout,
+			_Out_ Size& layout_size,
 			String const& text,
 			D2DTextFormatPtr const& text_format,
 			TextStyle const& text_style

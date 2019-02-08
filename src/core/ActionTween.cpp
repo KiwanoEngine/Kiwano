@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "ActionTween.h"
-#include "Geometry.h"
 #include "include-forwards.h"
 #include "Node.h"
 #include <cfloat>
