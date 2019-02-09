@@ -62,7 +62,6 @@
 #include "core/ActionTween.h"
 #include "core/ActionHelper.h"
 #include "core/Animation.h"
-#include "core/Delay.h"
 #include "core/ActionManager.h"
 #include "core/Transition.h"
 

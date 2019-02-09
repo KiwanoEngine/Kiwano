@@ -26,6 +26,8 @@
 
 namespace easy2d
 {
+	using ActionCallback = std::function<void()>;
+
 	class ActionManager;
 
 	class E2D_API Action
@@ -59,13 +61,17 @@ namespace easy2d
 		virtual ActionPtr Reverse() const = 0;
 
 		// 设置动作结束时的回调函数
-		void SetCallback(std::function<void()> cb) { cb_ = cb; }
+		void SetCallback(ActionCallback const& cb) { cb_ = cb; }
+
+		// 设置动作延时
+		void SetDelay(Duration delay) { delay_ = delay; }
 
 		// 重置动作
 		virtual void Reset()
 		{
 			initialized_ = false;
 			done_ = false;
+			elapsed_ = 0;
 		}
 
 		virtual bool IsDone() const { return done_; }
@@ -79,21 +85,31 @@ namespace easy2d
 			this->Reset();
 		}
 
-		virtual void Init(Node* target) { E2D_NOT_USED(target); initialized_ = true; }
-
-		virtual void Update(Node* target, Duration dt)
+		void Step(Node* target, Duration dt)
 		{
-			E2D_NOT_USED(dt);
 			if (!initialized_)
 			{
 				Init(target);
+				initialized_ = true;
 			}
+
+			if (elapsed_ < delay_)
+				elapsed_ += dt;
+
+			if (elapsed_ >= delay_)
+				Update(target, dt);
 		}
+
+		virtual void Init(Node* target) = 0;
+
+		virtual void Update(Node* target, Duration dt) = 0;
 
 	protected:
 		bool running_;
 		bool done_;
 		bool initialized_;
-		std::function<void()> cb_;
+		Duration delay_;
+		Duration elapsed_;
+		ActionCallback cb_;
 	};
 }

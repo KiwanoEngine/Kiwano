@@ -56,8 +56,6 @@ namespace easy2d
 
 	void Animation::Init(Node* target)
 	{
-		ActionTween::Init(target);
-
 		if (!frames_ || frames_->GetFrames().empty())
 		{
 			this->Stop();
@@ -86,7 +84,7 @@ namespace easy2d
 	{
 		if (frames_)
 		{
-			return new (std::nothrow) Animation(duration_, frames_, ease_func_);
+			return new (std::nothrow) Animation(dur_, frames_, ease_func_);
 		}
 		return nullptr;
 	}
@@ -98,7 +96,7 @@ namespace easy2d
 			FramesPtr frames = frames_->Reverse();
 			if (frames)
 			{
-				return new (std::nothrow) Animation(duration_, frames, ease_func_);
+				return new (std::nothrow) Animation(dur_, frames, ease_func_);
 			}
 		}
 		return nullptr;

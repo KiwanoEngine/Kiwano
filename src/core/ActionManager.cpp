@@ -34,7 +34,7 @@ namespace easy2d
 			next = action->NextItem();
 
 			if (action->IsRunning())
-				action->Update(target, dt);
+				action->Step(target, dt);
 
 			if (action->IsDone())
 				actions_.Remove(action);

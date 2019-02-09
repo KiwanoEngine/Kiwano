@@ -67,8 +67,6 @@ namespace easy2d
 
 	void Loop::Init(Node* target)
 	{
-		Action::Init(target);
-
 		if (action_)
 		{
 			action_->Init(target);
@@ -77,11 +75,9 @@ namespace easy2d
 
 	void Loop::Update(Node* target, Duration dt)
 	{
-		Action::Update(target, dt);
-
 		if (action_)
 		{
-			action_->Update(target, dt);
+			action_->Step(target, dt);
 
 			if (action_->IsDone())
 			{
@@ -93,12 +89,12 @@ namespace easy2d
 
 			if (times_ == total_times_)
 			{
-				this->Stop();
+				Stop();
 			}
 		}
 		else
 		{
-			this->Stop();
+			Stop();
 		}
 	}
 
@@ -137,23 +133,27 @@ namespace easy2d
 
 	void Sequence::Init(Node* target)
 	{
-		Action::Init(target);
-		actions_[0]->Init(target);
+		if (!actions_.empty())
+			actions_[0]->Init(target);
 	}
 
 	void Sequence::Update(Node* target, Duration dt)
 	{
-		Action::Update(target, dt);
+		if (actions_.empty())
+		{
+			Stop();
+			return;
+		}
 
 		auto& action = actions_[action_index_];
-		action->Update(target, dt);
+		action->Step(target, dt);
 
 		if (action->IsDone())
 		{
 			++action_index_;
 			if (action_index_ == actions_.size())
 			{
-				this->Stop();
+				Stop();
 			}
 			else
 			{
@@ -242,21 +242,14 @@ namespace easy2d
 
 	void Spawn::Init(Node* target)
 	{
-		Action::Init(target);
-
-		if (target)
+		for (const auto& action : actions_)
 		{
-			for (const auto& action : actions_)
-			{
-				action->Init(target);
-			}
+			action->Init(target);
 		}
 	}
 
 	void Spawn::Update(Node* target, Duration dt)
 	{
-		Action::Update(target, dt);
-
 		int done_num = 0;
 		for (const auto& action : actions_)
 		{
@@ -266,13 +259,13 @@ namespace easy2d
 			}
 			else
 			{
-				action->Update(target, dt);
+				action->Step(target, dt);
 			}
 		}
 
 		if (done_num == actions_.size())
 		{
-			this->Stop();
+			Stop();
 		}
 	}
 

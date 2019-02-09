@@ -151,9 +151,6 @@
     <ClInclude Include="..\..\src\core\ActionTween.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Delay.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\Frames.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -325,9 +322,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\core\ActionTween.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\core\Delay.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\core\Frames.cpp">

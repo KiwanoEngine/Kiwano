@@ -22,56 +22,74 @@
 #include "ActionGroup.h"
 #include "ActionTween.h"
 #include "Animation.h"
-#include "Delay.h"
 
 namespace easy2d
 {
 	struct E2D_API ActionHelper
 	{
+		// 设置循环次数
 		ActionHelper& SetLoopCount(int loop) { this->loop = loop; return (*this); }
 
-		ActionHelper(ActionPtr const& base) : base(base), loop(0) {}
+		// 设置动作延迟
+		ActionHelper& SetDelay(Duration delay) { this->delay = delay; return (*this); }
+
+		// 设置动作结束回调函数
+		ActionHelper& SetCallback(ActionCallback const& cb) { this->cb = cb; return (*this); }
+
+		ActionHelper(ActionPtr const& base) : base(base), loop(0), delay(0) {}
 
 		operator ActionPtr() const
 		{
+			if (!delay.IsZero()) base->SetDelay(delay);
+			if (cb) base->SetCallback(cb);
+
 			if (loop)
 				return ActionPtr(new (std::nothrow) Loop(base));
 			return base;
 		}
 
-	private:
-		ActionPtr	base;
-		int			loop;
+	protected:
+		ActionPtr		base;
+		int				loop;
+		Duration		delay;
+		ActionCallback	cb;
 	};
 
 	struct E2D_API TweenActionHelper
+		: ActionHelper
 	{
+		// 设置动画持续时长
 		TweenActionHelper& SetDuration(Duration dur) { this->dur = dur; return (*this); }
 
+		// 设置循环次数
 		TweenActionHelper& SetLoopCount(int loop) { this->loop = loop; return (*this); }
 
+		// 设置缓动函数
 		TweenActionHelper& SetEaseFunc(EaseFunc ease) { this->ease = ease; return (*this); }
 
-		TweenActionHelper(ActionTweenPtr const& base) : base(base), dur(), loop(0), ease(nullptr)
-		{
-			dur = base->GetDuration();
-		}
+		// 设置动作延迟
+		TweenActionHelper& SetDelay(Duration delay) { this->delay = delay; return (*this); }
+
+		// 设置动作结束回调函数
+		TweenActionHelper& SetCallback(ActionCallback const& cb) { this->cb = cb; return (*this); }
+
+		TweenActionHelper(ActionTweenPtr const& base) : ActionHelper(base), dur(0), ease(nullptr) {}
 
 		operator ActionPtr() const
 		{
-			base->SetEaseFunc(ease);
-			base->SetDuration(dur);
+			if (!delay.IsZero()) base->SetDelay(delay);
+			if (cb) base->SetCallback(cb);
+			if (ease) static_cast<ActionTween*>(base.Get())->SetEaseFunc(ease);
+			if (!dur.IsZero()) static_cast<ActionTween*>(base.Get())->SetDuration(dur);
 
 			if (loop)
 				return ActionPtr(new (std::nothrow) Loop(base));
 			return base;
 		}
 
-	private:
-		ActionTweenPtr	base;
-		Duration		dur;
-		int				loop;
-		EaseFunc		ease;
+	protected:
+		Duration dur;
+		EaseFunc ease;
 	};
 
 	struct Tween
@@ -181,12 +199,6 @@ namespace easy2d
 			Animation(FramesPtr const& frames)
 		{
 			return TweenActionHelper(new easy2d::Animation(0, frames));
-		}
-
-		static inline ActionHelper
-			Delay(Duration dur)
-		{
-			return ActionHelper(new easy2d::Delay(dur));
 		}
 
 		static inline ActionHelper

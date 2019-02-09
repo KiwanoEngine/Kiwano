@@ -100,15 +100,13 @@ namespace easy2d
 		void SetDuration(Duration duration);
 
 	protected:
-		void Init(Node* target) override;
-
 		void Update(Node* target, Duration dt) override;
 
 		virtual void UpdateStep(Node* target, float step) = 0;
 
 	protected:
-		Duration duration_;
-		Duration elapsed_;
+		Duration dur_;
+		Duration elapsed_dur_;
 		EaseFunc ease_func_;
 	};
 
