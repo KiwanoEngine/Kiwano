@@ -25,73 +25,63 @@
 
 namespace easy2d
 {
-	struct E2D_API ActionHelper
+	struct ActionHelper
 	{
 		// 设置循环次数
-		ActionHelper& SetLoopCount(int loop) { this->loop = loop; return (*this); }
+		inline ActionHelper& SetLoopCount(int loop)					{ this->loop = loop; return (*this); }
 
 		// 设置动作延迟
-		ActionHelper& SetDelay(Duration delay) { this->delay = delay; return (*this); }
+		inline ActionHelper& SetDelay(Duration delay)				{ base->SetDelay(delay); return (*this); }
 
 		// 设置动作结束回调函数
-		ActionHelper& SetCallback(ActionCallback const& cb) { this->cb = cb; return (*this); }
+		inline ActionHelper& SetCallback(ActionCallback const& cb)	{ base->SetCallback(cb); return (*this); }
 
-		ActionHelper(ActionPtr const& base) : base(base), loop(0), delay(0) {}
+		inline ActionHelper(ActionPtr const& base) : base(base), loop(0) {}
 
-		operator ActionPtr() const
+		inline operator ActionPtr() const
 		{
-			if (!delay.IsZero()) base->SetDelay(delay);
-			if (cb) base->SetCallback(cb);
-
 			if (loop)
 				return ActionPtr(new (std::nothrow) Loop(base));
 			return base;
 		}
 
 	protected:
-		ActionPtr		base;
-		int				loop;
-		Duration		delay;
-		ActionCallback	cb;
+		ActionPtr base;
+		int loop;
 	};
 
-	struct E2D_API TweenActionHelper
-		: ActionHelper
+	struct TweenActionHelper
 	{
 		// 设置动画持续时长
-		TweenActionHelper& SetDuration(Duration dur) { this->dur = dur; return (*this); }
+		inline TweenActionHelper& SetDuration(Duration dur)				{ base->SetDuration(dur); return (*this); }
 
 		// 设置循环次数
-		TweenActionHelper& SetLoopCount(int loop) { this->loop = loop; return (*this); }
+		inline TweenActionHelper& SetLoopCount(int loop)				{ this->loop = loop; return (*this); }
 
 		// 设置缓动函数
-		TweenActionHelper& SetEaseFunc(EaseFunc ease) { this->ease = ease; return (*this); }
+		inline TweenActionHelper& SetEaseFunc(EaseFunc ease)			{ base->SetEaseFunc(ease); return (*this); }
 
 		// 设置动作延迟
-		TweenActionHelper& SetDelay(Duration delay) { this->delay = delay; return (*this); }
+		inline TweenActionHelper& SetDelay(Duration delay)				{ base->SetDelay(delay); return (*this); }
 
 		// 设置动作结束回调函数
-		TweenActionHelper& SetCallback(ActionCallback const& cb) { this->cb = cb; return (*this); }
+		inline TweenActionHelper& SetCallback(ActionCallback const& cb)	{ base->SetCallback(cb); return (*this); }
 
-		TweenActionHelper(ActionTweenPtr const& base) : ActionHelper(base), dur(0), ease(nullptr) {}
+		inline TweenActionHelper(ActionTweenPtr const& base) : base(base), loop(0) {}
 
-		operator ActionPtr() const
+		inline operator ActionPtr() const
 		{
-			if (!delay.IsZero()) base->SetDelay(delay);
-			if (cb) base->SetCallback(cb);
-			if (ease) static_cast<ActionTween*>(base.Get())->SetEaseFunc(ease);
-			if (!dur.IsZero()) static_cast<ActionTween*>(base.Get())->SetDuration(dur);
-
 			if (loop)
 				return ActionPtr(new (std::nothrow) Loop(base));
 			return base;
 		}
 
 	protected:
-		Duration dur;
-		EaseFunc ease;
+		ActionTweenPtr base;
+		int loop;
 	};
 
+	// Tween actions helper
 	struct Tween
 	{
 	public:

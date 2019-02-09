@@ -30,7 +30,7 @@ namespace easy2d
 
 	class ActionManager;
 
-	class E2D_API Action
+	class Action
 		: public virtual Object
 		, protected IntrusiveListItem<ActionPtr>
 	{
@@ -41,18 +41,18 @@ namespace easy2d
 		friend class IntrusiveList<ActionPtr>;
 
 	public:
-		Action() : running_(false), done_(false), initialized_(false) {}
+		inline Action() : running_(false), done_(false), initialized_(false) {}
 
-		virtual ~Action() {}
+		inline virtual ~Action() {}
 
 		// 继续动作
-		void Resume() { running_ = true; }
+		inline void Resume() { running_ = true; }
 
 		// 暂停动作
-		void Pause() { running_ = false; }
+		inline void Pause() { running_ = false; }
 
 		// 停止动作
-		void Stop() { if (!done_) { done_ = true; if (cb_) cb_(); } }
+		inline void Stop() { if (!done_) { done_ = true; if (cb_) cb_(); } }
 
 		// 获取动作的拷贝
 		virtual ActionPtr Clone() const = 0;
@@ -61,25 +61,25 @@ namespace easy2d
 		virtual ActionPtr Reverse() const = 0;
 
 		// 设置动作结束时的回调函数
-		void SetCallback(ActionCallback const& cb) { cb_ = cb; }
+		inline void SetCallback(ActionCallback const& cb) { cb_ = cb; }
 
 		// 设置动作延时
-		void SetDelay(Duration delay) { delay_ = delay; }
+		inline void SetDelay(Duration delay) { delay_ = delay; }
 
 		// 重置动作
-		virtual void Reset()
+		inline virtual void Reset()
 		{
 			initialized_ = false;
 			done_ = false;
 			elapsed_ = 0;
 		}
 
-		virtual bool IsDone() const { return done_; }
+		inline virtual bool IsDone() const { return done_; }
 
-		virtual bool IsRunning() { return running_; }
+		inline virtual bool IsRunning() { return running_; }
 
 	protected:
-		void Start()
+		inline void Start()
 		{
 			running_ = true;
 			this->Reset();

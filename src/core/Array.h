@@ -96,7 +96,7 @@ namespace easy2d
 
 	private:
 		int size_;
-		int	capacity_;
+		int capacity_;
 		_Ty* data_;
 	};
 }
