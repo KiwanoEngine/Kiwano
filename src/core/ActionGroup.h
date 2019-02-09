@@ -19,47 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.hpp"
+#include "Action.h"
 
 namespace easy2d
 {
-    // 循环动作
-	class E2D_API Loop
-		: public Action
-	{
-	public:
-		explicit Loop(
-			ActionPtr const& action,	/* 执行循环的动作 */
-			int times = -1				/* 循环次数 */
-		);
-
-		virtual ~Loop();
-
-		// 获取该动作的拷贝对象
-		ActionPtr Clone() const override;
-
-		// 获取该动作的倒转
-		ActionPtr Reverse() const override;
-
-		// 重置动作
-		void Reset() override;
-
-		bool IsRunning() override;
-
-	protected:
-		// 初始化动作
-		void Init(Node* target) override;
-
-		// 更新动作
-		void Update(Node* target, Duration dt) override;
-
-	protected:
-		ActionPtr	action_;
-		int			times_;
-		int			total_times_;
-	};
-
-
 	// 顺序动作
 	class E2D_API Sequence
 		: public Action
@@ -89,19 +52,16 @@ namespace easy2d
 		// 获取该动作的倒转
 		ActionPtr Reverse() const override;
 
-		// 重置动作
-		void Reset() override;
-
 	protected:
 		// 初始化动作
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
 		// 更新动作
-		void Update(Node* target, Duration dt) override;
+		void Update(NodePtr const& target, Duration dt) override;
 
 	protected:
-		UINT action_index_;
-		Array<ActionPtr> actions_;
+		ActionPtr current_;
+		IntrusiveList<ActionPtr> actions_;
 	};
 
 
@@ -134,17 +94,15 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const;
 
-		// 重置动作
-		void Reset() override;
-
 	protected:
 		// 初始化动作
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
 		// 更新动作
-		void Update(Node* target, Duration dt) override;
+		void Update(NodePtr const& target, Duration dt) override;
 
 	protected:
-		Array<ActionPtr> actions_;
+		int size_;
+		IntrusiveList<ActionPtr> actions_;
 	};
 }

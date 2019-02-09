@@ -57,12 +57,11 @@
 #include "core/Geometry.h"
 #include "core/Task.h"
 #include "core/TaskManager.h"
-#include "core/Action.hpp"
+#include "core/Action.h"
 #include "core/ActionGroup.h"
 #include "core/ActionTween.h"
 #include "core/ActionHelper.h"
 #include "core/Animation.h"
-#include "core/Delay.h"
 #include "core/ActionManager.h"
 #include "core/Transition.h"
 

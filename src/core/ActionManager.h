@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.hpp"
+#include "Action.h"
 
 namespace easy2d
 {
@@ -51,7 +51,7 @@ namespace easy2d
 		Actions const& GetAllActions() const;
 
 	protected:
-		void UpdateActions(Node* target, Duration dt);
+		void UpdateActions(NodePtr const& target, Duration dt);
 
 	protected:
 		Actions actions_;

@@ -39,11 +39,11 @@ namespace easy2d
 		virtual ~Animation();
 
 		// 获取动画
-		FramesPtr GetAnimation() const;
+		FramesPtr GetFrames() const;
 
 		// 设置动画
-		void SetAnimation(
-			FramesPtr const& animation
+		void SetFrames(
+			FramesPtr const& frames
 		);
 
 		// 获取该动作的拷贝对象
@@ -53,9 +53,9 @@ namespace easy2d
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
-		void UpdateStep(Node* target, float step) override;
+		void UpdateTween(NodePtr const& target, float percent) override;
 
 	protected:
 		FramesPtr frames_;

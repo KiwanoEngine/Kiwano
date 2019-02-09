@@ -18,47 +18,85 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Delay.h"
+#include "Action.h"
+#include "Node.h"
 
 namespace easy2d
 {
-	Delay::Delay(Duration duration)
-		: delta_()
-		, delay_(duration)
+	Action::Action()
+		: running_(true)
+		, detach_target_(false)
+		, loops_done_(0)
+		, loops_(0)
+		, status_(Status::NotStarted)
 	{
 	}
 
-	void Delay::Reset()
+	Action::~Action()
 	{
-		Action::Reset();
-		delta_ = Duration{};
 	}
 
-	void Delay::Init(Node* target)
+	void Action::UpdateStep(NodePtr const& target, Duration dt)
 	{
-		Action::Init(target);
-	}
+		elapsed_ += dt;
 
-	void Delay::Update(Node* target, Duration dt)
-	{
-		Action::Update(target, dt);
-
-		delta_ += dt;
-
-		if (delta_ >= delay_)
+		if (status_ == Status::NotStarted)
 		{
-			this->Stop();
+			Init(target);
+			status_ = delay_.IsZero() ? Status::Started : Status::Delayed;
+		}
+
+		switch (status_)
+		{
+		case Status::Delayed:
+			if (elapsed_ >= delay_)
+			{
+				status_ = Status::Started;
+			}
+			break;
+
+		case Status::Started:
+			Update(target, dt);
+			break;
+		}
+
+		if (status_ == Status::Done)
+		{
+			if (cb_done_)
+				cb_done_();
+
+			if (detach_target_)
+				target->RemoveFromParent();
+
+			status_ = Status::Removeable;
 		}
 	}
 
-	ActionPtr Delay::Clone() const
+	void Action::Complete(NodePtr const& target)
 	{
-		return new (std::nothrow) Delay(delay_);
+		if (cb_loop_done_)
+			cb_loop_done_();
+
+		if (loops_ >= 0
+			&& loops_done_ >= loops_)
+		{
+			Done();
+		}
+		else
+		{
+			Init(target);	// reinit when a loop is done
+		}
+
+		++loops_done_;
 	}
 
-	ActionPtr Delay::Reverse() const
+	void Action::Restart(NodePtr const & target)
 	{
-		return new (std::nothrow) Delay(delay_);
+		status_ = Status::NotStarted;
+		elapsed_ = 0;
+		loops_done_ = 0;
+
+		Init(target);
 	}
 
 }

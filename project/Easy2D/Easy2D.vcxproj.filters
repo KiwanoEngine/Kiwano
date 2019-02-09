@@ -115,9 +115,6 @@
     <ClInclude Include="..\..\src\core\RefCounter.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Action.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\ActionManager.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -149,9 +146,6 @@
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\ActionTween.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\Delay.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\Frames.h">
@@ -221,6 +215,9 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\config.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\Action.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -327,9 +324,6 @@
     <ClCompile Include="..\..\src\core\ActionTween.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Delay.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\core\Frames.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -359,6 +353,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\math\Matrix.cpp">
       <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\Action.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

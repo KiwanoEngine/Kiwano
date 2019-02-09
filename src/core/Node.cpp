@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Node.h"
-#include "Action.hpp"
+#include "Action.h"
 #include "Factory.h"
 #include "Scene.h"
 #include "Task.h"

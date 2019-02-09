@@ -30,7 +30,7 @@ public:
 					Tween::FadeOut(500),				// Action2: 500毫秒淡出动画
 					Tween::FadeIn(500)					// Action3: 500毫秒淡入动画
 				})
-			}).SetLoopCount(-1)
+			}).SetLoops(-1)
 		);
 	}
 };

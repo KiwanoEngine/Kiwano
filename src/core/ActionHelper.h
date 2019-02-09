@@ -22,171 +22,179 @@
 #include "ActionGroup.h"
 #include "ActionTween.h"
 #include "Animation.h"
-#include "Delay.h"
 
 namespace easy2d
 {
-	struct E2D_API ActionHelper
+	struct ActionHelper
 	{
-		ActionHelper& SetLoopCount(int loop) { this->loop = loop; return (*this); }
+		// 设置循环次数
+		inline ActionHelper& SetLoops(int loops)							{ base->SetLoops(loops); return (*this); }
 
-		ActionHelper(ActionPtr const& base) : base(base), loop(0) {}
+		// 设置动作延迟
+		inline ActionHelper& SetDelay(Duration delay)						{ base->SetDelay(delay); return (*this); }
 
-		operator ActionPtr() const
-		{
-			if (loop)
-				return ActionPtr(new (std::nothrow) Loop(base));
-			return base;
-		}
+		// 设置动作结束回调函数
+		inline ActionHelper& SetDoneCallback(ActionCallback const& cb)		{ base->SetDoneCallback(cb); return (*this); }
 
-	private:
-		ActionPtr	base;
-		int			loop;
+		// 设置动作循环结束时的回调函数
+		inline ActionHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ base->SetLoopDoneCallback(cb); return (*this); }
+
+		// 动作结束时移除目标节点
+		inline ActionHelper& RemoveTargetWhenDone()							{ base->RemoveTargetWhenDone(); return (*this); }
+
+		// 获取指针
+		inline ActionPtr const& Get() const									{ return base; }
+
+		inline ActionHelper(ActionPtr const& base)							: base(base) {}
+
+		inline operator ActionPtr() const									{ return base; }
+
+	protected:
+		ActionPtr base;
 	};
 
-	struct E2D_API TweenActionHelper
+	struct TweenHelper
 	{
-		TweenActionHelper& SetDuration(Duration dur) { this->dur = dur; return (*this); }
+		// 设置动画持续时长
+		inline TweenHelper& SetDuration(Duration dur)						{ base->SetDuration(dur); return (*this); }
 
-		TweenActionHelper& SetLoopCount(int loop) { this->loop = loop; return (*this); }
+		// 设置循环次数
+		inline TweenHelper& SetLoops(int loops)								{ base->SetLoops(loops); return (*this); }
 
-		TweenActionHelper& SetEaseFunc(EaseFunc ease) { this->ease = ease; return (*this); }
+		// 设置缓动函数
+		inline TweenHelper& SetEaseFunc(EaseFunc ease)						{ base->SetEaseFunc(ease); return (*this); }
 
-		TweenActionHelper(ActionTweenPtr const& base) : base(base), dur(), loop(0), ease(nullptr)
-		{
-			dur = base->GetDuration();
-		}
+		// 设置动作延迟
+		inline TweenHelper& SetDelay(Duration delay)						{ base->SetDelay(delay); return (*this); }
 
-		operator ActionPtr() const
-		{
-			base->SetEaseFunc(ease);
-			base->SetDuration(dur);
+		// 设置动作结束回调函数
+		inline TweenHelper& SetDoneCallback(ActionCallback const& cb)		{ base->SetDoneCallback(cb); return (*this); }
 
-			if (loop)
-				return ActionPtr(new (std::nothrow) Loop(base));
-			return base;
-		}
+		// 设置动作循环结束时的回调函数
+		inline TweenHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ base->SetLoopDoneCallback(cb); return (*this); }
 
-	private:
-		ActionTweenPtr	base;
-		Duration		dur;
-		int				loop;
-		EaseFunc		ease;
+		// 动作结束时移除目标节点
+		inline TweenHelper& RemoveTargetWhenDone()							{ base->RemoveTargetWhenDone(); return (*this); }
+
+		// 获取指针
+		inline ActionTweenPtr const& Get() const							{ return base; }
+		
+		inline TweenHelper(ActionTweenPtr const& base)						: base(base) {}
+
+		inline operator ActionPtr() const									{ return base; }
+
+	protected:
+		ActionTweenPtr base;
 	};
 
+	// Tween actions helper
 	struct Tween
 	{
 	public:
-		static inline TweenActionHelper
+		static inline TweenHelper
 			MoveBy(Point const& vector)
 		{
-			return TweenActionHelper(new easy2d::MoveBy(0, vector));
+			return TweenHelper(new easy2d::MoveBy(0, vector));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			MoveTo(Point const& pos)
 		{
-			return TweenActionHelper(new easy2d::MoveTo(0, pos));
+			return TweenHelper(new easy2d::MoveTo(0, pos));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 		JumpBy(
 			Point const& pos,	/* 目的坐标 */
 			float height,		/* 跳跃高度 */
 			int jumps = 1)		/* 跳跃次数 */
 		{
-			return TweenActionHelper(new easy2d::JumpBy(0, pos, height, jumps));
+			return TweenHelper(new easy2d::JumpBy(0, pos, height, jumps));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 		JumpTo(
 			Point const& pos,	/* 目的坐标 */
 			float height,		/* 跳跃高度 */
 			int jumps = 1)		/* 跳跃次数 */
 		{
-			return TweenActionHelper(new easy2d::JumpTo(0, pos, height, jumps));
+			return TweenHelper(new easy2d::JumpTo(0, pos, height, jumps));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			ScaleBy(float scale)
 		{
-			return TweenActionHelper(new easy2d::ScaleBy(0, scale));
+			return TweenHelper(new easy2d::ScaleBy(0, scale));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			ScaleBy(float scale_x, float scale_y)
 		{
-			return TweenActionHelper(new easy2d::ScaleBy(0, scale_x, scale_y));
+			return TweenHelper(new easy2d::ScaleBy(0, scale_x, scale_y));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			ScaleTo(float scale)
 		{
-			return TweenActionHelper(new easy2d::ScaleTo(0, scale));
+			return TweenHelper(new easy2d::ScaleTo(0, scale));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			ScaleTo(float scale_x, float scale_y)
 		{
-			return TweenActionHelper(new easy2d::ScaleTo(0, scale_x, scale_y));
+			return TweenHelper(new easy2d::ScaleTo(0, scale_x, scale_y));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			OpacityBy(float opacity)
 		{
-			return TweenActionHelper(new easy2d::OpacityBy(0, opacity));
+			return TweenHelper(new easy2d::OpacityBy(0, opacity));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			OpacityTo(float opacity)
 		{
-			return TweenActionHelper(new easy2d::OpacityTo(0, opacity));
+			return TweenHelper(new easy2d::OpacityTo(0, opacity));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			FadeIn(Duration dur)
 		{
-			return TweenActionHelper(new easy2d::FadeIn(dur));
+			return TweenHelper(new easy2d::FadeIn(dur));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			FadeOut(Duration dur)
 		{
-			return TweenActionHelper(new easy2d::FadeOut(dur));
+			return TweenHelper(new easy2d::FadeOut(dur));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			RotateBy(float rotation)
 		{
-			return TweenActionHelper(new easy2d::RotateBy(0, rotation));
+			return TweenHelper(new easy2d::RotateBy(0, rotation));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			RotateTo(float rotation)
 		{
-			return TweenActionHelper(new easy2d::RotateTo(0, rotation));
+			return TweenHelper(new easy2d::RotateTo(0, rotation));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 		Path(
 			GeometryPtr const& geo,		/* 几何图形 */
 			bool rotating = false,		/* 沿路径切线方向旋转 */
 			float start = 0.f,			/* 起点 */
 			float end = 1.f)			/* 终点 */
 		{
-			return TweenActionHelper(new easy2d::PathAction(0, geo, rotating, start, end));
+			return TweenHelper(new easy2d::PathAction(0, geo, rotating, start, end));
 		}
 
-		static inline TweenActionHelper
+		static inline TweenHelper
 			Animation(FramesPtr const& frames)
 		{
-			return TweenActionHelper(new easy2d::Animation(0, frames));
-		}
-
-		static inline ActionHelper
-			Delay(Duration dur)
-		{
-			return ActionHelper(new easy2d::Delay(dur));
+			return TweenHelper(new easy2d::Animation(0, frames));
 		}
 
 		static inline ActionHelper

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\src\core\Action.hpp" />
+    <ClInclude Include="..\..\src\core\Action.h" />
     <ClInclude Include="..\..\src\core\ActionGroup.h" />
     <ClInclude Include="..\..\src\core\ActionHelper.h" />
     <ClInclude Include="..\..\src\core\ActionTween.h" />
@@ -15,7 +15,6 @@
     <ClInclude Include="..\..\src\core\config.h" />
     <ClInclude Include="..\..\src\core\d2dhelper.hpp" />
     <ClInclude Include="..\..\src\core\DebugNode.h" />
-    <ClInclude Include="..\..\src\core\Delay.h" />
     <ClInclude Include="..\..\src\core\Event.hpp" />
     <ClInclude Include="..\..\src\core\EventDispatcher.h" />
     <ClInclude Include="..\..\src\core\EventListener.h" />
@@ -73,6 +72,7 @@
     <ClInclude Include="..\..\src\utils\Transcoder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\core\Action.cpp" />
     <ClCompile Include="..\..\src\core\ActionGroup.cpp" />
     <ClCompile Include="..\..\src\core\ActionTween.cpp" />
     <ClCompile Include="..\..\src\core\ActionManager.cpp" />
@@ -81,7 +81,6 @@
     <ClCompile Include="..\..\src\core\Canvas.cpp" />
     <ClCompile Include="..\..\src\core\Color.cpp" />
     <ClCompile Include="..\..\src\core\DebugNode.cpp" />
-    <ClCompile Include="..\..\src\core\Delay.cpp" />
     <ClCompile Include="..\..\src\core\EventDispatcher.cpp" />
     <ClCompile Include="..\..\src\core\EventListener.cpp" />
     <ClCompile Include="..\..\src\core\Factory.cpp" />
