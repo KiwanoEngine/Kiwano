@@ -94,13 +94,13 @@ namespace easy2d
 		static inline TweenHelper
 			MoveBy(Point const& vector)
 		{
-			return TweenHelper(new easy2d::MoveBy(0, vector));
+			return TweenHelper(new easy2d::ActionMoveBy(0, vector));
 		}
 
 		static inline TweenHelper
 			MoveTo(Point const& pos)
 		{
-			return TweenHelper(new easy2d::MoveTo(0, pos));
+			return TweenHelper(new easy2d::ActionMoveTo(0, pos));
 		}
 
 		static inline TweenHelper
@@ -109,7 +109,7 @@ namespace easy2d
 			float height,		/* 跳跃高度 */
 			int jumps = 1)		/* 跳跃次数 */
 		{
-			return TweenHelper(new easy2d::JumpBy(0, pos, height, jumps));
+			return TweenHelper(new easy2d::ActionJumpBy(0, pos, height, jumps));
 		}
 
 		static inline TweenHelper
@@ -118,67 +118,67 @@ namespace easy2d
 			float height,		/* 跳跃高度 */
 			int jumps = 1)		/* 跳跃次数 */
 		{
-			return TweenHelper(new easy2d::JumpTo(0, pos, height, jumps));
+			return TweenHelper(new easy2d::ActionJumpTo(0, pos, height, jumps));
 		}
 
 		static inline TweenHelper
 			ScaleBy(float scale)
 		{
-			return TweenHelper(new easy2d::ScaleBy(0, scale));
+			return TweenHelper(new easy2d::ActionScaleBy(0, scale));
 		}
 
 		static inline TweenHelper
 			ScaleBy(float scale_x, float scale_y)
 		{
-			return TweenHelper(new easy2d::ScaleBy(0, scale_x, scale_y));
+			return TweenHelper(new easy2d::ActionScaleBy(0, scale_x, scale_y));
 		}
 
 		static inline TweenHelper
 			ScaleTo(float scale)
 		{
-			return TweenHelper(new easy2d::ScaleTo(0, scale));
+			return TweenHelper(new easy2d::ActionScaleTo(0, scale));
 		}
 
 		static inline TweenHelper
 			ScaleTo(float scale_x, float scale_y)
 		{
-			return TweenHelper(new easy2d::ScaleTo(0, scale_x, scale_y));
+			return TweenHelper(new easy2d::ActionScaleTo(0, scale_x, scale_y));
 		}
 
 		static inline TweenHelper
 			OpacityBy(float opacity)
 		{
-			return TweenHelper(new easy2d::OpacityBy(0, opacity));
+			return TweenHelper(new easy2d::ActionOpacityBy(0, opacity));
 		}
 
 		static inline TweenHelper
 			OpacityTo(float opacity)
 		{
-			return TweenHelper(new easy2d::OpacityTo(0, opacity));
+			return TweenHelper(new easy2d::ActionOpacityTo(0, opacity));
 		}
 
 		static inline TweenHelper
 			FadeIn(Duration dur)
 		{
-			return TweenHelper(new easy2d::FadeIn(dur));
+			return TweenHelper(new easy2d::ActionFadeIn(dur));
 		}
 
 		static inline TweenHelper
 			FadeOut(Duration dur)
 		{
-			return TweenHelper(new easy2d::FadeOut(dur));
+			return TweenHelper(new easy2d::ActionFadeOut(dur));
 		}
 
 		static inline TweenHelper
 			RotateBy(float rotation)
 		{
-			return TweenHelper(new easy2d::RotateBy(0, rotation));
+			return TweenHelper(new easy2d::ActionRotateBy(0, rotation));
 		}
 
 		static inline TweenHelper
 			RotateTo(float rotation)
 		{
-			return TweenHelper(new easy2d::RotateTo(0, rotation));
+			return TweenHelper(new easy2d::ActionRotateTo(0, rotation));
 		}
 
 		static inline TweenHelper
@@ -188,7 +188,7 @@ namespace easy2d
 			float start = 0.f,			/* 起点 */
 			float end = 1.f)			/* 终点 */
 		{
-			return TweenHelper(new easy2d::PathAction(0, geo, rotating, start, end));
+			return TweenHelper(new easy2d::ActionPath(0, geo, rotating, start, end));
 		}
 
 		static inline TweenHelper
@@ -200,13 +200,13 @@ namespace easy2d
 		static inline ActionHelper
 			Sequence(Array<ActionPtr> const& actions)
 		{
-			return ActionHelper(new easy2d::Sequence(actions));
+			return ActionHelper(new easy2d::ActionSequence(actions));
 		}
 
 		static inline ActionHelper
 			Spawn(Array<ActionPtr> const& actions)
 		{
-			return ActionHelper(new easy2d::Spawn(actions));
+			return ActionHelper(new easy2d::ActionSpawn(actions));
 		}
 	};
 }

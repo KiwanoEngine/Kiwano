@@ -21,7 +21,7 @@
 #pragma once
 #include "Action.h"
 #include "logs.h"
-#include "Geometry.h"  // PathAction
+#include "Geometry.h"  // ActionPath
 #include "../math/ease.hpp"
 
 namespace easy2d
@@ -109,11 +109,11 @@ namespace easy2d
 
 
 	// 相对位移动作
-	class E2D_API MoveBy
+	class E2D_API ActionMoveBy
 		: public ActionTween
 	{
 	public:
-		MoveBy(
+		ActionMoveBy(
 			Duration duration,		/* 持续时长 */
 			Point const& vector,	/* 移动距离 */
 			EaseFunc func = nullptr	/* 速度变化 */
@@ -138,11 +138,11 @@ namespace easy2d
 
 
 	// 位移动作
-	class E2D_API MoveTo
-		: public MoveBy
+	class E2D_API ActionMoveTo
+		: public ActionMoveBy
 	{
 	public:
-		MoveTo(
+		ActionMoveTo(
 			Duration duration,		/* 持续时长 */
 			Point const& pos,		/* 目的坐标 */
 			EaseFunc func = nullptr	/* 速度变化 */
@@ -154,7 +154,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			E2D_ERROR_LOG(L"Reverse() not supported in MoveTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in ActionMoveTo");
 			return nullptr;
 		}
 
@@ -167,11 +167,11 @@ namespace easy2d
 
 
 	// 相对跳跃动作
-	class E2D_API JumpBy
+	class E2D_API ActionJumpBy
 		: public ActionTween
 	{
 	public:
-		JumpBy(
+		ActionJumpBy(
 			Duration duration,		/* 持续时长 */
 			Point const& vec,		/* 跳跃距离 */
 			float height,			/* 跳跃高度 */
@@ -200,11 +200,11 @@ namespace easy2d
 
 
 	// 跳跃动作
-	class E2D_API JumpTo
-		: public JumpBy
+	class E2D_API ActionJumpTo
+		: public ActionJumpBy
 	{
 	public:
-		JumpTo(
+		ActionJumpTo(
 			Duration duration,		/* 持续时长 */
 			Point const& pos,		/* 目的坐标 */
 			float height,			/* 跳跃高度 */
@@ -218,7 +218,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			E2D_ERROR_LOG(L"Reverse() not supported in JumpTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in ActionJumpTo");
 			return nullptr;
 		}
 
@@ -231,17 +231,17 @@ namespace easy2d
 
 
 	// 相对缩放动作
-	class E2D_API ScaleBy
+	class E2D_API ActionScaleBy
 		: public ActionTween
 	{
 	public:
-		ScaleBy(
+		ActionScaleBy(
 			Duration duration,		/* 持续时长 */
 			float scale,			/* 相对变化值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
-		ScaleBy(
+		ActionScaleBy(
 			Duration duration,		/* 持续时长 */
 			float scale_x,			/* 横向缩放相对变化值 */
 			float scale_y,			/* 纵向缩放相对变化值 */
@@ -268,17 +268,17 @@ namespace easy2d
 
 
 	// 缩放动作
-	class E2D_API ScaleTo
-		: public ScaleBy
+	class E2D_API ActionScaleTo
+		: public ActionScaleBy
 	{
 	public:
-		ScaleTo(
+		ActionScaleTo(
 			Duration duration,		/* 持续时长 */
 			float scale,			/* 目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
-		ScaleTo(
+		ActionScaleTo(
 			Duration duration,		/* 持续时长 */
 			float scale_x,			/* 横向缩放目标值 */
 			float scale_y,			/* 纵向缩放目标值 */
@@ -291,7 +291,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			E2D_ERROR_LOG(L"Reverse() not supported in ScaleTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in ActionScaleTo");
 			return nullptr;
 		}
 
@@ -305,11 +305,11 @@ namespace easy2d
 
 
 	// 透明度相对渐变动作
-	class E2D_API OpacityBy
+	class E2D_API ActionOpacityBy
 		: public ActionTween
 	{
 	public:
-		OpacityBy(
+		ActionOpacityBy(
 			Duration duration,		/* 持续时长 */
 			float opacity,			/* 相对变化值 */
 			EaseFunc func = nullptr	/* 速度变化 */
@@ -333,11 +333,11 @@ namespace easy2d
 
 
 	// 透明度渐变动作
-	class E2D_API OpacityTo
-		: public OpacityBy
+	class E2D_API ActionOpacityTo
+		: public ActionOpacityBy
 	{
 	public:
-		OpacityTo(
+		ActionOpacityTo(
 			Duration duration,		/* 持续时长 */
 			float opacity,			/* 目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
@@ -349,7 +349,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			E2D_ERROR_LOG(L"Reverse() not supported in OpacityTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in ActionOpacityTo");
 			return nullptr;
 		}
 
@@ -362,12 +362,12 @@ namespace easy2d
 
 
 	// 淡入动作
-	class E2D_API FadeIn
-		: public OpacityTo
+	class E2D_API ActionFadeIn
+		: public ActionOpacityTo
 	{
 	public:
 		// 创建淡入动作
-		explicit FadeIn(
+		explicit ActionFadeIn(
 			Duration duration,		/* 持续时长 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
@@ -375,12 +375,12 @@ namespace easy2d
 
 
 	// 淡出动作
-	class E2D_API FadeOut
-		: public OpacityTo
+	class E2D_API ActionFadeOut
+		: public ActionOpacityTo
 	{
 	public:
 		// 创建淡出动作
-		explicit FadeOut(
+		explicit ActionFadeOut(
 			Duration duration,				/* 持续时长 */
 			EaseFunc func = Ease::Linear	/* 速度变化 */
 		);
@@ -388,11 +388,11 @@ namespace easy2d
 
 
 	// 相对旋转动作
-	class E2D_API RotateBy
+	class E2D_API ActionRotateBy
 		: public ActionTween
 	{
 	public:
-		RotateBy(
+		ActionRotateBy(
 			Duration duration,		/* 持续时长 */
 			float rotation,			/* 相对变化值 */
 			EaseFunc func = nullptr	/* 速度变化 */
@@ -416,11 +416,11 @@ namespace easy2d
 
 
 	// 旋转动作
-	class E2D_API RotateTo
-		: public RotateBy
+	class E2D_API ActionRotateTo
+		: public ActionRotateBy
 	{
 	public:
-		RotateTo(
+		ActionRotateTo(
 			Duration duration,		/* 持续时长 */
 			float rotation,			/* 目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
@@ -432,7 +432,7 @@ namespace easy2d
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			E2D_ERROR_LOG(L"Reverse() not supported in RotateTo");
+			E2D_ERROR_LOG(L"Reverse() not supported in ActionRotateTo");
 			return nullptr;
 		}
 
@@ -445,11 +445,11 @@ namespace easy2d
 
 
 	// 路径动作
-	class E2D_API PathAction
+	class E2D_API ActionPath
 		: public ActionTween
 	{
 	public:
-		PathAction(
+		ActionPath(
 			Duration duration,		/* 持续时长 */
 			GeometryPtr const& geo,	/* 几何图形 */
 			bool rotating = false,	/* 沿路径切线方向旋转 */
