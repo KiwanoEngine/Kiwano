@@ -229,11 +229,7 @@ namespace easy2d
 		dirty_transform_ = false;
 		dirty_transform_inverse_ = true;
 
-		// matrix multiplication is optimized by expression template
-		transform_matrix_ = Matrix::Scaling(transform_.scale)
-			* Matrix::Skewing(transform_.skew.x, transform_.skew.y)
-			* Matrix::Rotation(transform_.rotation)
-			* Matrix::Translation(transform_.position);
+		transform_matrix_ = transform_.ToMatrix();
 
 		Point offset{ -size_.x * anchor_.x, -size_.y * anchor_.y };
 		transform_matrix_.Translate(offset);
