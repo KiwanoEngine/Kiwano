@@ -60,8 +60,8 @@ namespace easy2d
 		void Update(NodePtr const& target, Duration dt) override;
 
 	protected:
-		UINT action_index_;
-		Array<ActionPtr> actions_;
+		ActionPtr current_;
+		IntrusiveList<ActionPtr> actions_;
 	};
 
 
@@ -102,6 +102,7 @@ namespace easy2d
 		void Update(NodePtr const& target, Duration dt) override;
 
 	protected:
-		Array<ActionPtr> actions_;
+		int size_;
+		IntrusiveList<ActionPtr> actions_;
 	};
 }

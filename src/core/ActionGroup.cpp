@@ -28,12 +28,10 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	Sequence::Sequence()
-		: action_index_(0)
 	{
 	}
 
 	Sequence::Sequence(Array<ActionPtr> const& actions)
-		: action_index_(0)
 	{
 		this->Add(actions);
 	}
@@ -44,29 +42,32 @@ namespace easy2d
 
 	void Sequence::Init(NodePtr const& target)
 	{
-		if (actions_.empty())
+		if (actions_.IsEmpty())
 			Done();
 		else
-			actions_[0]->Restart(target);	// init
+		{
+			current_ = actions_.First();
+			current_->Restart(target);	// init
+		}
 	}
 
 	void Sequence::Update(NodePtr const& target, Duration dt)
 	{
-		auto& action = actions_[action_index_];
-		action->UpdateStep(target, dt);
-
-		if (action->IsDone())
+		if (current_)
 		{
-			++action_index_;
-			if (action_index_ == actions_.size())
+			current_->UpdateStep(target, dt);
+
+			if (current_->IsDone())
 			{
-				action_index_ = 0;
-				Complete(target);
+				current_ = current_->NextItem();
+				if (current_)
+					current_->Restart(target);
 			}
-			else
-			{
-				actions_[action_index_]->Restart(target);
-			}
+		}
+
+		if (!current_)
+		{
+			Complete(target);
 		}
 	}
 
@@ -74,20 +75,14 @@ namespace easy2d
 	{
 		if (action)
 		{
-			actions_.push_back(action);
+			actions_.PushBack(action);
 		}
 	}
 
 	void Sequence::Add(Array<ActionPtr> const& actions)
 	{
-		if (actions_.empty())
-			actions_ = actions;
-		else
-		{
-			actions_.reserve(actions_.size() + actions.size());
-			for (const auto& action : actions)
-				Add(action);
-		}
+		for (const auto& action : actions)
+			Add(action);
 	}
 
 	ActionPtr Sequence::Clone() const
@@ -95,7 +90,7 @@ namespace easy2d
 		auto sequence = new (std::nothrow) Sequence();
 		if (sequence)
 		{
-			for (const auto& action : actions_)
+			for (auto action = actions_.First(); action; action = action->NextItem())
 			{
 				if (action)
 				{
@@ -109,12 +104,11 @@ namespace easy2d
 	ActionPtr Sequence::Reverse() const
 	{
 		auto sequence = new (std::nothrow) Sequence();
-		if (sequence && !actions_.empty())
+		if (sequence && !actions_.IsEmpty())
 		{
-			for (auto iter = actions_.crbegin(), crend = actions_.crend(); iter != crend; ++iter)
+			for (auto action = actions_.Last(); action; action = action->PrevItem())
 			{
-				if (*iter)
-					sequence->Add((*iter)->Reverse());
+				sequence->Add(action->Reverse());
 			}
 		}
 		return sequence;
@@ -126,10 +120,12 @@ namespace easy2d
 	//-------------------------------------------------------
 
 	Spawn::Spawn()
+		: size_(0)
 	{
 	}
 
 	Spawn::Spawn(Array<ActionPtr> const& actions)
+		: size_(0)
 	{
 		this->Add(actions);
 	}
@@ -140,11 +136,11 @@ namespace easy2d
 
 	void Spawn::Init(NodePtr const& target)
 	{
-		if (actions_.empty())
+		if (actions_.IsEmpty())
 			Done();
 		else
 		{
-			for (const auto& action : actions_)
+			for (auto action = actions_.First(); action; action = action->NextItem())
 			{
 				action->Restart(target);	// init
 			}
@@ -154,7 +150,7 @@ namespace easy2d
 	void Spawn::Update(NodePtr const& target, Duration dt)
 	{
 		int done_num = 0;
-		for (const auto& action : actions_)
+		for (auto action = actions_.First(); action; action = action->NextItem())
 		{
 			if (action->IsDone())
 			{
@@ -166,7 +162,7 @@ namespace easy2d
 			}
 		}
 
-		if (done_num == actions_.size())
+		if (done_num == size_)
 		{
 			Complete(target);
 		}
@@ -176,20 +172,15 @@ namespace easy2d
 	{
 		if (action)
 		{
-			actions_.push_back(action);
+			actions_.PushBack(action);
+			++size_;
 		}
 	}
 
 	void Spawn::Add(Array<ActionPtr> const& actions)
 	{
-		if (actions_.empty())
-			actions_ = actions;
-		else
-		{
-			actions_.reserve(actions_.size() + actions.size());
-			for (const auto& action : actions)
-				Add(action);
-		}
+		for (const auto& action : actions)
+			Add(action);
 	}
 
 	ActionPtr Spawn::Clone() const
@@ -197,12 +188,9 @@ namespace easy2d
 		auto spawn = new (std::nothrow) Spawn();
 		if (spawn)
 		{
-			for (const auto& action : actions_)
+			for (auto action = actions_.First(); action; action = action->NextItem())
 			{
-				if (action)
-				{
-					spawn->Add(action->Clone());
-				}
+				spawn->Add(action->Clone());
 			}
 		}
 		return spawn;
@@ -211,12 +199,11 @@ namespace easy2d
 	ActionPtr Spawn::Reverse() const
 	{
 		auto spawn = new (std::nothrow) Spawn();
-		if (spawn && !actions_.empty())
+		if (spawn && !actions_.IsEmpty())
 		{
-			for (auto iter = actions_.crbegin(), crend = actions_.crend(); iter != crend; ++iter)
+			for (auto action = actions_.Last(); action; action = action->PrevItem())
 			{
-				if (*iter)
-					spawn->Add((*iter)->Reverse());
+				spawn->Add(action->Reverse());
 			}
 		}
 		return spawn;
