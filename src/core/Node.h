@@ -348,6 +348,9 @@ namespace easy2d
 		// 继续节点更新
 		void ResumeUpdating();
 
+		// 节点更新是否暂停
+		inline bool IsUpdatePausing() const { return pause_; }
+
 		// 设置默认锚点
 		static void SetDefaultAnchor(
 			float anchor_x,
