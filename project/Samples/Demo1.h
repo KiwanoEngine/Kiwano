@@ -24,9 +24,9 @@ public:
 
 		// 执行动画
 		text->AddAction(
-			Tween::Spawn({								// Action5: 同时执行 Action1 和 Action4, 并无限循环
+			Tween::Multiple({							// Action5: 同时执行 Action1 和 Action4, 并无限循环
 				Tween::RotateBy(60).SetDuration(1000),	// Action1: 1秒旋转 60 度
-				Tween::Sequence({						// Action4: 顺序执行 Action2 和 Action3
+				Tween::Group({							// Action4: 顺序执行 Action2 和 Action3
 					Tween::FadeOut(500),				// Action2: 500毫秒淡出动画
 					Tween::FadeIn(500)					// Action3: 500毫秒淡入动画
 				})
