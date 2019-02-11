@@ -34,8 +34,7 @@ namespace easy2d
 		, protected IntrusiveListItem<ActionPtr>
 	{
 		friend class ActionManager;
-		friend class ActionSequence;
-		friend class ActionSpawn;
+		friend class ActionGroup;
 		friend class IntrusiveList<ActionPtr>;
 
 	public:

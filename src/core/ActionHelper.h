@@ -198,15 +198,29 @@ namespace easy2d
 		}
 
 		static inline ActionHelper
-			Sequence(Array<ActionPtr> const& actions)
+			Group(Array<ActionPtr> const& actions, bool sequence = true)
 		{
-			return ActionHelper(new easy2d::ActionSequence(actions));
+			return ActionHelper(new easy2d::ActionGroup(actions, sequence));
 		}
 
 		static inline ActionHelper
+			Multiple(Array<ActionPtr> const& actions)
+		{
+			return ActionHelper(new easy2d::ActionGroup(actions, false));
+		}
+
+		E2D_DEPRECATED("Tween::Sequence is deprecated, use Tween::Group instead")
+		static inline ActionHelper
+			Sequence(Array<ActionPtr> const& actions)
+		{
+			return ActionHelper(new easy2d::ActionGroup(actions, true));
+		}
+
+		E2D_DEPRECATED("Tween::Spawn is deprecated, use Tween::Multiple instead")
+		static inline ActionHelper
 			Spawn(Array<ActionPtr> const& actions)
 		{
-			return ActionHelper(new easy2d::ActionSpawn(actions));
+			return ActionHelper(new easy2d::ActionGroup(actions, false));
 		}
 	};
 }

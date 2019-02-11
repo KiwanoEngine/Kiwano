@@ -114,3 +114,5 @@
 #endif
 
 #define E2D_NOT_USED(VAR) ((void)VAR)
+
+#define E2D_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))

@@ -23,28 +23,34 @@
 
 namespace easy2d
 {
-	// 顺序动作
-	class E2D_API ActionSequence
+	// 动作组
+	class E2D_API ActionGroup
 		: public Action
 	{
 	public:
-		ActionSequence();
+		using ActionList = IntrusiveList<ActionPtr>;
 
-		explicit ActionSequence(
-			Array<ActionPtr> const& actions	/* 动作列表 */
+		ActionGroup();
+
+		explicit ActionGroup(
+			Array<ActionPtr> const& actions,
+			bool sequence = true				// 按顺序执行或同时执行
 		);
 
-		virtual ~ActionSequence();
+		virtual ~ActionGroup();
 
-		// 在结尾添加动作
+		// 添加动作
 		void Add(
 			ActionPtr const& action
 		);
 
-		// 在结尾添加多个动作
+		// 添加多个动作
 		void Add(
-			Array<ActionPtr> const& actions	/* 动作列表 */
+			Array<ActionPtr> const& actions
 		);
+
+		// 获取所有动作
+		inline ActionList const& GetActions() { return actions_; }
 
 		// 获取该动作的拷贝对象
 		ActionPtr Clone() const override;
@@ -60,49 +66,40 @@ namespace easy2d
 		void Update(NodePtr const& target, Duration dt) override;
 
 	protected:
-		ActionPtr current_;
-		IntrusiveList<ActionPtr> actions_;
+		bool		sequence_;
+		ActionPtr	current_;
+		ActionList	actions_;
+	};
+
+
+	// 顺序动作
+	class E2D_DEPRECATED("ActionSequence is deprecated, use ActionGroup instead") E2D_API
+		ActionSequence
+		: public ActionGroup
+	{
+	public:
+		ActionSequence();
+
+		explicit ActionSequence(
+			Array<ActionPtr> const& actions
+		);
+
+		virtual ~ActionSequence();
 	};
 
 
 	// 同步动作
-	class E2D_API ActionSpawn
-		: public Action
+	class E2D_DEPRECATED("ActionSpawn is deprecated, use ActionGroup instead") E2D_API
+		ActionSpawn
+		: public ActionGroup
 	{
 	public:
 		ActionSpawn();
 
 		explicit ActionSpawn(
-			Array<ActionPtr> const& actions	/* 动作列表 */
+			Array<ActionPtr> const& actions
 		);
 
 		virtual ~ActionSpawn();
-
-		// 在结尾添加动作
-		void Add(
-			ActionPtr const& action
-		);
-
-		// 在结尾添加多个动作
-		void Add(
-			Array<ActionPtr> const& actions	/* 动作列表 */
-		);
-
-		// 获取该动作的拷贝对象
-		ActionPtr Clone() const override;
-
-		// 获取该动作的倒转
-		virtual ActionPtr Reverse() const;
-
-	protected:
-		// 初始化动作
-		void Init(NodePtr const& target) override;
-
-		// 更新动作
-		void Update(NodePtr const& target, Duration dt) override;
-
-	protected:
-		int size_;
-		IntrusiveList<ActionPtr> actions_;
 	};
 }

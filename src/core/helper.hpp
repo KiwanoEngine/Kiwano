@@ -113,7 +113,7 @@ namespace easy2d
 	E2D_DECLARE_SMART_PTR(ActionRotateTo);
 	E2D_DECLARE_SMART_PTR(ActionPath);
 	E2D_DECLARE_SMART_PTR(Animation);
-	E2D_DECLARE_SMART_PTR(ActionSequence);
+	E2D_DECLARE_SMART_PTR(ActionGroup);
 	E2D_DECLARE_SMART_PTR(ActionSpawn);
 
 	E2D_DECLARE_SMART_PTR(Transition);
