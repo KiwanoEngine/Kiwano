@@ -46,5 +46,14 @@ namespace easy2d
 				skew == other.skew &&
 				rotation == other.rotation;
 		}
+
+		inline math::Matrix ToMatrix() const
+		{
+			// matrix multiplication is optimized by expression template
+			return Matrix::Scaling(scale)
+				* Matrix::Skewing(skew.x, skew.y)
+				* Matrix::Rotation(rotation)
+				* Matrix::Translation(position);
+		}
 	};
 }

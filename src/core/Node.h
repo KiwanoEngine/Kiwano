@@ -45,6 +45,7 @@ namespace easy2d
 		friend class IntrusiveList<NodePtr>;
 
 		using Children = IntrusiveList<NodePtr>;
+		using UpdateCallback = std::function<void(Duration)>;
 
 	public:
 		Node();
@@ -349,7 +350,13 @@ namespace easy2d
 		void ResumeUpdating();
 
 		// 节点更新是否暂停
-		inline bool IsUpdatePausing() const { return pause_; }
+		inline bool IsUpdatePausing() const							{ return pause_; }
+
+		// 设置更新时的回调函数
+		inline void SetCallbackOnUpdate(UpdateCallback const& cb)	{ cb_update_ = cb; }
+
+		// 获取更新时的回调函数
+		inline UpdateCallback const& GetCallbackOnUpdate()			{ return cb_update_; }
 
 		// 设置默认锚点
 		static void SetDefaultAnchor(
@@ -384,6 +391,7 @@ namespace easy2d
 		Node*		parent_;
 		Scene*		scene_;
 		Children	children_;
+		UpdateCallback cb_update_;
 
 		mutable bool	dirty_transform_;
 		mutable bool	dirty_transform_inverse_;
