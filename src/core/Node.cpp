@@ -62,9 +62,13 @@ namespace easy2d
 		if (pause_)
 			return;
 
-		OnUpdate(dt);
 		UpdateActions(this, dt);
 		UpdateTasks(dt);
+
+		if (cb_update_)
+			cb_update_(dt);
+
+		OnUpdate(dt);
 
 		if (!children_.IsEmpty())
 		{
