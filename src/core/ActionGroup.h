@@ -24,17 +24,17 @@
 namespace easy2d
 {
 	// 顺序动作
-	class E2D_API Sequence
+	class E2D_API ActionSequence
 		: public Action
 	{
 	public:
-		Sequence();
+		ActionSequence();
 
-		explicit Sequence(
+		explicit ActionSequence(
 			Array<ActionPtr> const& actions	/* 动作列表 */
 		);
 
-		virtual ~Sequence();
+		virtual ~ActionSequence();
 
 		// 在结尾添加动作
 		void Add(
@@ -66,17 +66,17 @@ namespace easy2d
 
 
 	// 同步动作
-	class E2D_API Spawn
+	class E2D_API ActionSpawn
 		: public Action
 	{
 	public:
-		Spawn();
+		ActionSpawn();
 
-		explicit Spawn(
+		explicit ActionSpawn(
 			Array<ActionPtr> const& actions	/* 动作列表 */
 		);
 
-		virtual ~Spawn();
+		virtual ~ActionSpawn();
 
 		// 在结尾添加动作
 		void Add(

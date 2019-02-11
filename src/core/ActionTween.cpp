@@ -129,13 +129,13 @@ namespace easy2d
 	// Move Action
 	//-------------------------------------------------------
 
-	MoveBy::MoveBy(Duration duration, Point const& vector, EaseFunc func)
+	ActionMoveBy::ActionMoveBy(Duration duration, Point const& vector, EaseFunc func)
 		: ActionTween(duration, func)
 	{
 		delta_pos_ = vector;
 	}
 
-	void MoveBy::Init(NodePtr const& target)
+	void ActionMoveBy::Init(NodePtr const& target)
 	{
 		if (target)
 		{
@@ -143,7 +143,7 @@ namespace easy2d
 		}
 	}
 
-	void MoveBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionMoveBy::UpdateTween(NodePtr const& target, float percent)
 	{
 		Point diff = target->GetPosition() - prev_pos_;
 		start_pos_ = start_pos_ + diff;
@@ -154,30 +154,30 @@ namespace easy2d
 		prev_pos_ = new_pos;
 	}
 
-	ActionPtr MoveBy::Clone() const
+	ActionPtr ActionMoveBy::Clone() const
 	{
-		return new (std::nothrow) MoveBy(dur_, delta_pos_, ease_func_);
+		return new (std::nothrow) ActionMoveBy(dur_, delta_pos_, ease_func_);
 	}
 
-	ActionPtr MoveBy::Reverse() const
+	ActionPtr ActionMoveBy::Reverse() const
 	{
-		return new (std::nothrow) MoveBy(dur_, -delta_pos_, ease_func_);
+		return new (std::nothrow) ActionMoveBy(dur_, -delta_pos_, ease_func_);
 	}
 
-	MoveTo::MoveTo(Duration duration, Point const& pos, EaseFunc func)
-		: MoveBy(duration, Point(), func)
+	ActionMoveTo::ActionMoveTo(Duration duration, Point const& pos, EaseFunc func)
+		: ActionMoveBy(duration, Point(), func)
 	{
 		end_pos_ = pos;
 	}
 
-	ActionPtr MoveTo::Clone() const
+	ActionPtr ActionMoveTo::Clone() const
 	{
-		return new (std::nothrow) MoveTo(dur_, end_pos_, ease_func_);
+		return new (std::nothrow) ActionMoveTo(dur_, end_pos_, ease_func_);
 	}
 
-	void MoveTo::Init(NodePtr const& target)
+	void ActionMoveTo::Init(NodePtr const& target)
 	{
-		MoveBy::Init(target);
+		ActionMoveBy::Init(target);
 		delta_pos_ = end_pos_ - start_pos_;
 	}
 
@@ -186,7 +186,7 @@ namespace easy2d
 	// Jump Action
 	//-------------------------------------------------------
 
-	JumpBy::JumpBy(Duration duration, Point const& vec, float height, int jumps, EaseFunc func)
+	ActionJumpBy::ActionJumpBy(Duration duration, Point const& vec, float height, int jumps, EaseFunc func)
 		: ActionTween(duration, func)
 		, delta_pos_(vec)
 		, height_(height)
@@ -194,17 +194,17 @@ namespace easy2d
 	{
 	}
 
-	ActionPtr JumpBy::Clone() const
+	ActionPtr ActionJumpBy::Clone() const
 	{
-		return new (std::nothrow) JumpBy(dur_, delta_pos_, height_, jumps_, ease_func_);
+		return new (std::nothrow) ActionJumpBy(dur_, delta_pos_, height_, jumps_, ease_func_);
 	}
 
-	ActionPtr JumpBy::Reverse() const
+	ActionPtr ActionJumpBy::Reverse() const
 	{
-		return new (std::nothrow) JumpBy(dur_, -delta_pos_, height_, jumps_, ease_func_);
+		return new (std::nothrow) ActionJumpBy(dur_, -delta_pos_, height_, jumps_, ease_func_);
 	}
 
-	void JumpBy::Init(NodePtr const& target)
+	void ActionJumpBy::Init(NodePtr const& target)
 	{
 		if (target)
 		{
@@ -212,7 +212,7 @@ namespace easy2d
 		}
 	}
 
-	void JumpBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionJumpBy::UpdateTween(NodePtr const& target, float percent)
 	{
 		float frac = fmod(percent * jumps_, 1.f);
 		float x = delta_pos_.x * percent;
@@ -228,20 +228,20 @@ namespace easy2d
 		prev_pos_ = new_pos;
 	}
 
-	JumpTo::JumpTo(Duration duration, Point const& pos, float height, int jumps, EaseFunc func)
-		: JumpBy(duration, Point(), height, jumps, func)
+	ActionJumpTo::ActionJumpTo(Duration duration, Point const& pos, float height, int jumps, EaseFunc func)
+		: ActionJumpBy(duration, Point(), height, jumps, func)
 		, end_pos_(pos)
 	{
 	}
 
-	ActionPtr JumpTo::Clone() const
+	ActionPtr ActionJumpTo::Clone() const
 	{
-		return new (std::nothrow) JumpTo(dur_, end_pos_, height_, jumps_, ease_func_);
+		return new (std::nothrow) ActionJumpTo(dur_, end_pos_, height_, jumps_, ease_func_);
 	}
 
-	void JumpTo::Init(NodePtr const& target)
+	void ActionJumpTo::Init(NodePtr const& target)
 	{
-		JumpBy::Init(target);
+		ActionJumpBy::Init(target);
 		delta_pos_ = end_pos_ - start_pos_;
 	}
 
@@ -250,21 +250,21 @@ namespace easy2d
 	// Scale Action
 	//-------------------------------------------------------
 
-	ScaleBy::ScaleBy(Duration duration, float scale, EaseFunc func)
+	ActionScaleBy::ActionScaleBy(Duration duration, float scale, EaseFunc func)
 		: ActionTween(duration, func)
 	{
 		delta_x_ = scale;
 		delta_y_ = scale;
 	}
 
-	ScaleBy::ScaleBy(Duration duration, float scale_x, float scale_y, EaseFunc func)
+	ActionScaleBy::ActionScaleBy(Duration duration, float scale_x, float scale_y, EaseFunc func)
 		: ActionTween(duration, func)
 	{
 		delta_x_ = scale_x;
 		delta_y_ = scale_y;
 	}
 
-	void ScaleBy::Init(NodePtr const& target)
+	void ActionScaleBy::Init(NodePtr const& target)
 	{
 		if (target)
 		{
@@ -273,43 +273,43 @@ namespace easy2d
 		}
 	}
 
-	void ScaleBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionScaleBy::UpdateTween(NodePtr const& target, float percent)
 	{
 		target->SetScale(start_scale_x_ + delta_x_ * percent, start_scale_y_ + delta_y_ * percent);
 	}
 
-	ActionPtr ScaleBy::Clone() const
+	ActionPtr ActionScaleBy::Clone() const
 	{
-		return new (std::nothrow) ScaleBy(dur_, delta_x_, delta_y_, ease_func_);
+		return new (std::nothrow) ActionScaleBy(dur_, delta_x_, delta_y_, ease_func_);
 	}
 
-	ActionPtr ScaleBy::Reverse() const
+	ActionPtr ActionScaleBy::Reverse() const
 	{
-		return new (std::nothrow) ScaleBy(dur_, -delta_x_, -delta_y_, ease_func_);
+		return new (std::nothrow) ActionScaleBy(dur_, -delta_x_, -delta_y_, ease_func_);
 	}
 
-	ScaleTo::ScaleTo(Duration duration, float scale, EaseFunc func)
-		: ScaleBy(duration, 0, 0, func)
+	ActionScaleTo::ActionScaleTo(Duration duration, float scale, EaseFunc func)
+		: ActionScaleBy(duration, 0, 0, func)
 	{
 		end_scale_x_ = scale;
 		end_scale_y_ = scale;
 	}
 
-	ScaleTo::ScaleTo(Duration duration, float scale_x, float scale_y, EaseFunc func)
-		: ScaleBy(duration, 0, 0, func)
+	ActionScaleTo::ActionScaleTo(Duration duration, float scale_x, float scale_y, EaseFunc func)
+		: ActionScaleBy(duration, 0, 0, func)
 	{
 		end_scale_x_ = scale_x;
 		end_scale_y_ = scale_y;
 	}
 
-	ActionPtr ScaleTo::Clone() const
+	ActionPtr ActionScaleTo::Clone() const
 	{
-		return new (std::nothrow) ScaleTo(dur_, end_scale_x_, end_scale_y_, ease_func_);
+		return new (std::nothrow) ActionScaleTo(dur_, end_scale_x_, end_scale_y_, ease_func_);
 	}
 
-	void ScaleTo::Init(NodePtr const& target)
+	void ActionScaleTo::Init(NodePtr const& target)
 	{
-		ScaleBy::Init(target);
+		ActionScaleBy::Init(target);
 		delta_x_ = end_scale_x_ - start_scale_x_;
 		delta_y_ = end_scale_y_ - start_scale_y_;
 	}
@@ -319,13 +319,13 @@ namespace easy2d
 	// Opacity Action
 	//-------------------------------------------------------
 
-	OpacityBy::OpacityBy(Duration duration, float opacity, EaseFunc func)
+	ActionOpacityBy::ActionOpacityBy(Duration duration, float opacity, EaseFunc func)
 		: ActionTween(duration, func)
 	{
 		delta_val_ = opacity;
 	}
 
-	void OpacityBy::Init(NodePtr const& target)
+	void ActionOpacityBy::Init(NodePtr const& target)
 	{
 		if (target)
 		{
@@ -333,45 +333,45 @@ namespace easy2d
 		}
 	}
 
-	void OpacityBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionOpacityBy::UpdateTween(NodePtr const& target, float percent)
 	{
 		target->SetOpacity(start_val_ + delta_val_ * percent);
 	}
 
-	ActionPtr OpacityBy::Clone() const
+	ActionPtr ActionOpacityBy::Clone() const
 	{
-		return new (std::nothrow) OpacityBy(dur_, delta_val_, ease_func_);
+		return new (std::nothrow) ActionOpacityBy(dur_, delta_val_, ease_func_);
 	}
 
-	ActionPtr OpacityBy::Reverse() const
+	ActionPtr ActionOpacityBy::Reverse() const
 	{
-		return new (std::nothrow) OpacityBy(dur_, -delta_val_, ease_func_);
+		return new (std::nothrow) ActionOpacityBy(dur_, -delta_val_, ease_func_);
 	}
 
-	OpacityTo::OpacityTo(Duration duration, float opacity, EaseFunc func)
-		: OpacityBy(duration, 0, func)
+	ActionOpacityTo::ActionOpacityTo(Duration duration, float opacity, EaseFunc func)
+		: ActionOpacityBy(duration, 0, func)
 	{
 		end_val_ = opacity;
 	}
 
-	ActionPtr OpacityTo::Clone() const
+	ActionPtr ActionOpacityTo::Clone() const
 	{
-		return new (std::nothrow) OpacityTo(dur_, end_val_, ease_func_);
+		return new (std::nothrow) ActionOpacityTo(dur_, end_val_, ease_func_);
 	}
 
-	void OpacityTo::Init(NodePtr const& target)
+	void ActionOpacityTo::Init(NodePtr const& target)
 	{
-		OpacityBy::Init(target);
+		ActionOpacityBy::Init(target);
 		delta_val_ = end_val_ - start_val_;
 	}
 
-	FadeIn::FadeIn(Duration duration, EaseFunc func)
-		: OpacityTo(duration, 1, func)
+	ActionFadeIn::ActionFadeIn(Duration duration, EaseFunc func)
+		: ActionOpacityTo(duration, 1, func)
 	{
 	}
 
-	FadeOut::FadeOut(Duration duration, EaseFunc func)
-		: OpacityTo(duration, 0, func)
+	ActionFadeOut::ActionFadeOut(Duration duration, EaseFunc func)
+		: ActionOpacityTo(duration, 0, func)
 	{
 	}
 
@@ -380,13 +380,13 @@ namespace easy2d
 	// Rotate Action
 	//-------------------------------------------------------
 
-	RotateBy::RotateBy(Duration duration, float rotation, EaseFunc func)
+	ActionRotateBy::ActionRotateBy(Duration duration, float rotation, EaseFunc func)
 		: ActionTween(duration, func)
 		, delta_val_(rotation)
 	{
 	}
 
-	void RotateBy::Init(NodePtr const& target)
+	void ActionRotateBy::Init(NodePtr const& target)
 	{
 		if (target)
 		{
@@ -394,7 +394,7 @@ namespace easy2d
 		}
 	}
 
-	void RotateBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionRotateBy::UpdateTween(NodePtr const& target, float percent)
 	{
 		float rotation = start_val_ + delta_val_ * percent;
 		if (rotation > 360.f)
@@ -403,39 +403,39 @@ namespace easy2d
 		target->SetRotation(rotation);
 	}
 
-	ActionPtr RotateBy::Clone() const
+	ActionPtr ActionRotateBy::Clone() const
 	{
-		return new (std::nothrow) RotateBy(dur_, delta_val_, ease_func_);
+		return new (std::nothrow) ActionRotateBy(dur_, delta_val_, ease_func_);
 	}
 
-	ActionPtr RotateBy::Reverse() const
+	ActionPtr ActionRotateBy::Reverse() const
 	{
-		return new (std::nothrow) RotateBy(dur_, -delta_val_, ease_func_);
+		return new (std::nothrow) ActionRotateBy(dur_, -delta_val_, ease_func_);
 	}
 
-	RotateTo::RotateTo(Duration duration, float rotation, EaseFunc func)
-		: RotateBy(duration, 0, func)
+	ActionRotateTo::ActionRotateTo(Duration duration, float rotation, EaseFunc func)
+		: ActionRotateBy(duration, 0, func)
 	{
 		end_val_ = rotation;
 	}
 
-	ActionPtr RotateTo::Clone() const
+	ActionPtr ActionRotateTo::Clone() const
 	{
-		return new (std::nothrow) RotateTo(dur_, end_val_, ease_func_);
+		return new (std::nothrow) ActionRotateTo(dur_, end_val_, ease_func_);
 	}
 
-	void RotateTo::Init(NodePtr const& target)
+	void ActionRotateTo::Init(NodePtr const& target)
 	{
-		RotateBy::Init(target);
+		ActionRotateBy::Init(target);
 		delta_val_ = end_val_ - start_val_;
 	}
 
 
 	//-------------------------------------------------------
-	// PathAction
+	// ActionPath
 	//-------------------------------------------------------
 
-	PathAction::PathAction(Duration duration, GeometryPtr const& geo, bool rotating, float start, float end, EaseFunc func)
+	ActionPath::ActionPath(Duration duration, GeometryPtr const& geo, bool rotating, float start, float end, EaseFunc func)
 		: ActionTween(duration, func)
 		, start_(start)
 		, end_(end)
@@ -444,22 +444,22 @@ namespace easy2d
 	{
 	}
 
-	ActionPtr PathAction::Clone() const
+	ActionPtr ActionPath::Clone() const
 	{
-		return new PathAction(dur_, geo_, rotating_, start_, end_, ease_func_);
+		return new ActionPath(dur_, geo_, rotating_, start_, end_, ease_func_);
 	}
 
-	ActionPtr PathAction::Reverse() const
+	ActionPtr ActionPath::Reverse() const
 	{
-		return new PathAction(dur_, geo_, rotating_, end_, start_, ease_func_);
+		return new ActionPath(dur_, geo_, rotating_, end_, start_, ease_func_);
 	}
 
-	void PathAction::Init(NodePtr const& target)
+	void ActionPath::Init(NodePtr const& target)
 	{
 		start_pos_ = target->GetPosition();
 	}
 
-	void PathAction::UpdateTween(NodePtr const& target, float percent)
+	void ActionPath::UpdateTween(NodePtr const& target, float percent)
 	{
 		float length = geo_->GetLength() * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
 
