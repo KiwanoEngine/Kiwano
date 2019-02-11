@@ -34,50 +34,49 @@ namespace easy2d
 		: ActionTween(duration, func)
 		, frames_(nullptr)
 	{
-		this->SetAnimation(animation);
+		this->SetFrames(animation);
 	}
 
 	Animation::~Animation()
 	{
 	}
 
-	FramesPtr Animation::GetAnimation() const
+	FramesPtr Animation::GetFrames() const
 	{
 		return frames_;
 	}
 
-	void Animation::SetAnimation(FramesPtr const& animation)
+	void Animation::SetFrames(FramesPtr const& frames)
 	{
-		if (animation && animation != frames_)
-		{
-			frames_ = animation;
-		}
+		frames_ = frames;
 	}
 
-	void Animation::Init(Node* target)
+	void Animation::Init(NodePtr const& target)
 	{
 		if (!frames_ || frames_->GetFrames().empty())
 		{
-			this->Stop();
+			Done();
 			return;
 		}
 
-		auto sprite_target = dynamic_cast<Sprite*>(target);
+		auto sprite_target = dynamic_cast<Sprite*>(target.Get());
 		if (sprite_target && frames_)
 		{
 			sprite_target->Load(frames_->GetFrames()[0]);
 		}
 	}
 
-	void Animation::UpdateStep(Node * target, float step)
+	void Animation::UpdateTween(NodePtr const& target, float percent)
 	{
-		E2D_ASSERT(dynamic_cast<Sprite*>(target) && "Animation only supports Sprites");
+		auto sprite_target = dynamic_cast<Sprite*>(target.Get());
+
+		E2D_ASSERT(sprite_target && "Animation only supports Sprites");
 
 		const auto& frames = frames_->GetFrames();
 		int size = frames.size();
-		int index = std::min(static_cast<int>(math::Floor(size * step)), size - 1);
+		int index = std::min(static_cast<int>(math::Floor(size * percent)), size - 1);
 
-		static_cast<Sprite*>(target)->Load(frames[index]);
+		sprite_target->Load(frames[index]);
 	}
 
 	ActionPtr Animation::Clone() const

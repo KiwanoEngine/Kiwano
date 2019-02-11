@@ -24,95 +24,6 @@
 namespace easy2d
 {
 	//-------------------------------------------------------
-	// Loop
-	//-------------------------------------------------------
-
-	Loop::Loop(ActionPtr const& action, int times)
-		: action_(action)
-		, times_(0)
-		, total_times_(times)
-	{
-		E2D_ASSERT(action && "Loop action contains a null action");
-
-		action_ = action;
-	}
-
-	Loop::~Loop()
-	{
-	}
-
-	ActionPtr Loop::Clone() const
-	{
-		if (action_)
-		{
-			return new (std::nothrow) Loop(action_->Clone());
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	ActionPtr Loop::Reverse() const
-	{
-		if (action_)
-		{
-			return new (std::nothrow) Loop(action_->Clone());
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	void Loop::Init(Node* target)
-	{
-		if (action_)
-		{
-			action_->Init(target);
-		}
-	}
-
-	void Loop::Update(Node* target, Duration dt)
-	{
-		if (action_)
-		{
-			action_->Step(target, dt);
-
-			if (action_->IsDone())
-			{
-				++times_;
-
-				Action::Reset();
-				action_->Reset();
-			}
-
-			if (times_ == total_times_)
-			{
-				Stop();
-			}
-		}
-		else
-		{
-			Stop();
-		}
-	}
-
-	void Loop::Reset()
-	{
-		Action::Reset();
-
-		if (action_) action_->Reset();
-		times_ = 0;
-	}
-
-	bool Loop::IsRunning()
-	{
-		return Action::IsRunning() && times_ != total_times_;
-	}
-
-
-	//-------------------------------------------------------
 	// Sequence
 	//-------------------------------------------------------
 
@@ -131,45 +42,32 @@ namespace easy2d
 	{
 	}
 
-	void Sequence::Init(Node* target)
-	{
-		if (!actions_.empty())
-			actions_[0]->Init(target);
-	}
-
-	void Sequence::Update(Node* target, Duration dt)
+	void Sequence::Init(NodePtr const& target)
 	{
 		if (actions_.empty())
-		{
-			Stop();
-			return;
-		}
+			Done();
+		else
+			actions_[0]->Restart(target);	// init
+	}
 
+	void Sequence::Update(NodePtr const& target, Duration dt)
+	{
 		auto& action = actions_[action_index_];
-		action->Step(target, dt);
+		action->UpdateStep(target, dt);
 
 		if (action->IsDone())
 		{
 			++action_index_;
 			if (action_index_ == actions_.size())
 			{
-				Stop();
+				action_index_ = 0;
+				Complete(target);
 			}
 			else
 			{
-				actions_[action_index_]->Init(target);
+				actions_[action_index_]->Restart(target);
 			}
 		}
-	}
-
-	void Sequence::Reset()
-	{
-		Action::Reset();
-		for (const auto& action : actions_)
-		{
-			action->Reset();
-		}
-		action_index_ = 0;
 	}
 
 	void Sequence::Add(ActionPtr const& action)
@@ -240,15 +138,20 @@ namespace easy2d
 	{
 	}
 
-	void Spawn::Init(Node* target)
+	void Spawn::Init(NodePtr const& target)
 	{
-		for (const auto& action : actions_)
+		if (actions_.empty())
+			Done();
+		else
 		{
-			action->Init(target);
+			for (const auto& action : actions_)
+			{
+				action->Restart(target);	// init
+			}
 		}
 	}
 
-	void Spawn::Update(Node* target, Duration dt)
+	void Spawn::Update(NodePtr const& target, Duration dt)
 	{
 		int done_num = 0;
 		for (const auto& action : actions_)
@@ -259,22 +162,13 @@ namespace easy2d
 			}
 			else
 			{
-				action->Step(target, dt);
+				action->UpdateStep(target, dt);
 			}
 		}
 
 		if (done_num == actions_.size())
 		{
-			Stop();
-		}
-	}
-
-	void Spawn::Reset()
-	{
-		Action::Reset();
-		for (const auto& action : actions_)
-		{
-			action->Reset();
+			Complete(target);
 		}
 	}
 

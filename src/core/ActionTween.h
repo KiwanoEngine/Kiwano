@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.hpp"
+#include "Action.h"
 #include "logs.h"
 #include "Geometry.h"  // PathAction
 #include "../math/ease.hpp"
@@ -93,20 +93,17 @@ namespace easy2d
 
 		EaseFunc const& GetEaseFunc() const;
 
-		void Reset() override;
-
 		Duration GetDuration() const;
 
 		void SetDuration(Duration duration);
 
 	protected:
-		void Update(Node* target, Duration dt) override;
+		void Update(NodePtr const& target, Duration dt) override;
 
-		virtual void UpdateStep(Node* target, float step) = 0;
+		virtual void UpdateTween(NodePtr const& target, float percent) = 0;
 
 	protected:
 		Duration dur_;
-		Duration elapsed_dur_;
 		EaseFunc ease_func_;
 	};
 
@@ -129,9 +126,9 @@ namespace easy2d
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
-		void UpdateStep(Node* target, float step) override;
+		void UpdateTween(NodePtr const& target, float percent) override;
 
 	protected:
 		Point	start_pos_;
@@ -162,7 +159,7 @@ namespace easy2d
 		}
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
 	protected:
 		Point end_pos_;
@@ -189,9 +186,9 @@ namespace easy2d
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
-		void UpdateStep(Node* target, float step) override;
+		void UpdateTween(NodePtr const& target, float percent) override;
 
 	protected:
 		Point	start_pos_;
@@ -226,7 +223,7 @@ namespace easy2d
 		}
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
 	protected:
 		Point end_pos_;
@@ -258,9 +255,9 @@ namespace easy2d
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
-		void UpdateStep(Node* target, float step) override;
+		void UpdateTween(NodePtr const& target, float percent) override;
 
 	protected:
 		float	start_scale_x_;
@@ -299,7 +296,7 @@ namespace easy2d
 		}
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
 	protected:
 		float	end_scale_x_;
@@ -325,9 +322,9 @@ namespace easy2d
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
-		void UpdateStep(Node* target, float step) override;
+		void UpdateTween(NodePtr const& target, float percent) override;
 
 	protected:
 		float start_val_;
@@ -357,7 +354,7 @@ namespace easy2d
 		}
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
 	protected:
 		float end_val_;
@@ -408,9 +405,9 @@ namespace easy2d
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
-		void UpdateStep(Node* target, float step) override;
+		void UpdateTween(NodePtr const& target, float percent) override;
 
 	protected:
 		float start_val_;
@@ -440,7 +437,7 @@ namespace easy2d
 		}
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
 	protected:
 		float end_val_;
@@ -468,9 +465,9 @@ namespace easy2d
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(Node* target) override;
+		void Init(NodePtr const& target) override;
 
-		void UpdateStep(Node* target, float step) override;
+		void UpdateTween(NodePtr const& target, float percent) override;
 
 	protected:
 		bool		rotating_;

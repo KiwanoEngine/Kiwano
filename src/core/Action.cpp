@@ -18,46 +18,85 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "ActionTween.h"
+#include "Action.h"
+#include "Node.h"
 
 namespace easy2d
 {
-	// 帧动画
-	class E2D_API Animation
-		: public ActionTween
+	Action::Action()
+		: running_(true)
+		, detach_target_(false)
+		, loops_done_(0)
+		, loops_(0)
+		, status_(Status::NotStarted)
 	{
-	public:
-		Animation();
+	}
 
-		Animation(
-			Duration duration,			/* 动画时长 */
-			FramesPtr const& frames,	/* 帧集合 */
-			EaseFunc func = nullptr		/* 速度变化 */
-		);
+	Action::~Action()
+	{
+	}
 
-		virtual ~Animation();
+	void Action::UpdateStep(NodePtr const& target, Duration dt)
+	{
+		elapsed_ += dt;
 
-		// 获取动画
-		FramesPtr GetFrames() const;
+		if (status_ == Status::NotStarted)
+		{
+			Init(target);
+			status_ = delay_.IsZero() ? Status::Started : Status::Delayed;
+		}
 
-		// 设置动画
-		void SetFrames(
-			FramesPtr const& frames
-		);
+		switch (status_)
+		{
+		case Status::Delayed:
+			if (elapsed_ >= delay_)
+			{
+				status_ = Status::Started;
+			}
+			break;
 
-		// 获取该动作的拷贝对象
-		ActionPtr Clone() const override;
+		case Status::Started:
+			Update(target, dt);
+			break;
+		}
 
-		// 获取该动作的倒转
-		ActionPtr Reverse() const override;
+		if (status_ == Status::Done)
+		{
+			if (cb_done_)
+				cb_done_();
 
-	protected:
-		void Init(NodePtr const& target) override;
+			if (detach_target_)
+				target->RemoveFromParent();
 
-		void UpdateTween(NodePtr const& target, float percent) override;
+			status_ = Status::Removeable;
+		}
+	}
 
-	protected:
-		FramesPtr frames_;
-	};
+	void Action::Complete(NodePtr const& target)
+	{
+		if (cb_loop_done_)
+			cb_loop_done_();
+
+		if (loops_ >= 0
+			&& loops_done_ >= loops_)
+		{
+			Done();
+		}
+		else
+		{
+			Init(target);	// reinit when a loop is done
+		}
+
+		++loops_done_;
+	}
+
+	void Action::Restart(NodePtr const & target)
+	{
+		status_ = Status::NotStarted;
+		elapsed_ = 0;
+		loops_done_ = 0;
+
+		Init(target);
+	}
+
 }

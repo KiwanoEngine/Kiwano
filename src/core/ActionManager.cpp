@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	void ActionManager::UpdateActions(Node* target, Duration dt)
+	void ActionManager::UpdateActions(NodePtr const& target, Duration dt)
 	{
 		if (actions_.IsEmpty() || !target)
 			return;
@@ -34,9 +34,9 @@ namespace easy2d
 			next = action->NextItem();
 
 			if (action->IsRunning())
-				action->Step(target, dt);
+				action->UpdateStep(target, dt);
 
-			if (action->IsDone())
+			if (action->IsRemoveable())
 				actions_.Remove(action);
 		}
 	}
@@ -47,7 +47,6 @@ namespace easy2d
 
 		if (action)
 		{
-			action->Start();
 			actions_.PushBack(action);
 		}
 	}
