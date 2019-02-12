@@ -25,7 +25,7 @@
 namespace easy2d
 {
 	class E2D_API Window
-		: public ISingleton<Window>
+		: public Singleton<Window>
 	{
 		E2D_DECLARE_SINGLETON(Window);
 

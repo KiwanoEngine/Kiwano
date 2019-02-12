@@ -42,6 +42,9 @@ namespace easy2d
 		// 动作结束时移除目标节点
 		inline ActionHelper& RemoveTargetWhenDone()							{ base->RemoveTargetWhenDone(); return (*this); }
 
+		// 设置名称
+		inline ActionHelper& SetName(String const& name)					{ base->SetName(name); return (*this); }
+
 		// 获取指针
 		inline ActionPtr const& Get() const									{ return base; }
 
@@ -75,6 +78,9 @@ namespace easy2d
 
 		// 动作结束时移除目标节点
 		inline TweenHelper& RemoveTargetWhenDone()							{ base->RemoveTargetWhenDone(); return (*this); }
+
+		// 设置名称
+		inline TweenHelper& SetName(String const& name)						{ base->SetName(name); return (*this); }
 
 		// 获取指针
 		inline ActionTweenPtr const& Get() const							{ return base; }

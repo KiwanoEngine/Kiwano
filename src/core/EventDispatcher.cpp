@@ -50,7 +50,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::AddListener(EventType type, EventCallback callback, String const& name)
+	void EventDispatcher::AddListener(UINT type, EventCallback callback, String const& name)
 	{
 		EventListenerPtr listener = new EventListener(type, callback, name);
 		if (listener)
@@ -95,7 +95,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::StartListeners(EventType type)
+	void EventDispatcher::StartListeners(UINT type)
 	{
 		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
 		{
@@ -106,7 +106,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::StopListeners(EventType type)
+	void EventDispatcher::StopListeners(UINT type)
 	{
 		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
 		{
@@ -117,7 +117,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::RemoveListeners(EventType type)
+	void EventDispatcher::RemoveListeners(UINT type)
 	{
 		EventListenerPtr next;
 		for (auto listener = listeners_.First(); listener; listener = next)

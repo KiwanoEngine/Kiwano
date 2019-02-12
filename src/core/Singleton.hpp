@@ -19,28 +19,26 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "noncopyable.hpp"
-#include <memory>
 
 namespace easy2d
 {
-	template <typename T>
-	class ISingleton
-		: protected Noncopyable
+	template <typename _Ty>
+	class Singleton
 	{
 	public:
-		static inline T* Instance()
+		static inline _Ty& Instance()
 		{
-			static std::unique_ptr<T> instance_;
-			if (!instance_)
-				instance_.reset(new (std::nothrow) T);
-			return instance_.get();
+			static _Ty instance;	// Thread safe
+			return instance;
 		}
 
 	protected:
-		ISingleton() = default;
+		Singleton() = default;
 
-		~ISingleton() {}
+	private:
+		Singleton(const Singleton&) = delete;
+
+		Singleton& operator=(const Singleton&) = delete;
 	};
 }
 
@@ -49,7 +47,5 @@ namespace easy2d
 
 #ifndef E2D_DECLARE_SINGLETON
 #define E2D_DECLARE_SINGLETON( type )			\
-	friend class ::std::unique_ptr< type >;		\
-	friend struct ::std::default_delete< type >;\
-	friend class ::easy2d::ISingleton< type >
+	friend class ::easy2d::Singleton< type >
 #endif

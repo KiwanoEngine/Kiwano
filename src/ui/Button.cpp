@@ -32,10 +32,10 @@ namespace easy2d
 		{
 			SetResponsible(true);
 
-			AddListener(MouseEvent::Hover, Closure(this, &Button::UpdateStatus));
-			AddListener(MouseEvent::Out, Closure(this, &Button::UpdateStatus));
-			AddListener(MouseEvent::Down, Closure(this, &Button::UpdateStatus));
-			AddListener(MouseEvent::Up, Closure(this, &Button::UpdateStatus));
+			AddListener(Event::MouseHover, Closure(this, &Button::UpdateStatus));
+			AddListener(Event::MouseOut, Closure(this, &Button::UpdateStatus));
+			AddListener(Event::MouseBtnDown, Closure(this, &Button::UpdateStatus));
+			AddListener(Event::MouseBtnUp, Closure(this, &Button::UpdateStatus));
 		}
 
 		Button::Button(const Callback& click)
@@ -104,28 +104,28 @@ namespace easy2d
 
 			if (enabled_ && (evt.target == this))
 			{
-				if (evt.type == MouseEvent::Hover)
+				if (evt.type == Event::MouseHover)
 				{
 					SetStatus(Status::Hover);
 
 					if (mouse_over_callback_)
 						mouse_over_callback_();
 				}
-				else if (evt.type == MouseEvent::Out)
+				else if (evt.type == Event::MouseOut)
 				{
 					SetStatus(Status::Normal);
 
 					if (mouse_out_callback_)
 						mouse_out_callback_();
 				}
-				else if (evt.type == MouseEvent::Down && status_ == Status::Hover)
+				else if (evt.type == Event::MouseBtnDown && status_ == Status::Hover)
 				{
 					SetStatus(Status::Pressed);
 
 					if (pressed_callback_)
 						pressed_callback_();
 				}
-				else if (evt.type == MouseEvent::Up && status_ == Status::Pressed)
+				else if (evt.type == Event::MouseBtnUp && status_ == Status::Pressed)
 				{
 					SetStatus(Status::Hover);
 

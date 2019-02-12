@@ -24,122 +24,111 @@
 
 namespace easy2d
 {
-	typedef UINT EventType;
 
 	// 鼠标事件
 	struct MouseEvent
 	{
-		enum Type : EventType
-		{
-			First = WM_MOUSEFIRST,
-
-			Move,	// 移动
-			Down,	// 按下
-			Up,		// 抬起
-			Wheel,	// 滚轮滚动
-
-			Hover,	// 鼠标移入
-			Out,	// 鼠标移出
-			Click,	// 鼠标点击
-
-			Last	// 结束标志
-		};
-
 		float x;
 		float y;
 		bool left_btn_down;		// 左键是否按下
 		bool right_btn_down;	// 右键是否按下
 
-		struct
+		struct	// Events::MouseDown | Events::MouseUp | Events::MouseClick
 		{
-			int button;		// 仅当消息类型为 Down | Up | Click 时有效
+			int button;
 		};
 
-		struct
+		struct	// Events::MouseWheel
 		{
-			float wheel;	// 仅当消息类型为 Wheel 时有效
+			float wheel;
 		};
 
-		static inline bool Check(EventType type)
-		{
-			return type > Type::First && type < Type::Last;
-		}
+		static bool Check(UINT type);
 	};
 
 	// 键盘事件
 	struct KeyboardEvent
 	{
-		enum Type : UINT
-		{
-			First = WM_KEYFIRST,
-
-			Down,	// 键按下
-			Up,		// 键抬起
-
-			Last
-		};
-
-		int code;	// enum KeyCode
+		int code;		// enum KeyCode
 		int count;
 
-		static inline bool Check(UINT type)
-		{
-			return type > Type::First && type < Type::Last;
-		}
+		static bool Check(UINT type);
 	};
 
 	// 窗口事件
 	struct WindowEvent
 	{
-	public:
-		enum Type : EventType
-		{
-			First = WM_NULL,
-
-			Moved,			// 窗口移动
-			Resized,		// 窗口大小变化
-			FocusChanged,	// 获得或失去焦点
-			TitleChanged,	// 标题变化
-			Closed,			// 窗口被关闭
-
-			Last
-		};
-
 		union
 		{
-			struct		// WindowEvent::Moved
+			struct		// Events::WindowMoved
 			{
 				int x;
 				int y;
 			};
 
-			struct		// WindowEvent::Resized
+			struct		// Events::WindowResized
 			{
 				int width;
 				int height;
 			};
 
-			struct		// WindowEvent::FocusChanged
+			struct		// Events::WindowFocusChanged
 			{
 				bool focus;
 			};
 
-			struct		// WindowEvent::TitleChanged
+			struct		// Events::WindowTitleChanged
 			{
 				const wchar_t* title;
 			};
 		};
 
-		static inline bool Check(EventType type)
-		{
-			return type > Type::First && type < Type::Last;
-		}
+		static bool Check(UINT type);
+	};
+
+	// 自定义事件
+	struct CustomEvent
+	{
+		void* data;
 	};
 
 	// 事件
 	struct E2D_API Event
 	{
-		EventType type;
+		enum Type : UINT
+		{
+			First,
+
+			// 鼠标事件
+			MouseFirst,
+			MouseMove,			// 移动
+			MouseBtnDown,		// 鼠标按下
+			MouseBtnUp,			// 鼠标抬起
+			MouseWheel,			// 滚轮滚动
+			MouseHover,			// 鼠标移入
+			MouseOut,			// 鼠标移出
+			Click,				// 鼠标点击
+			MouseLast,
+
+			// 按键事件
+			KeyFirst,
+			KeyDown,			// 按键按下
+			KeyUp,				// 按键抬起
+			KeyLast,
+
+			// 窗口消息
+			WindowFirst,
+			WindowMoved,		// 窗口移动
+			WindowResized,		// 窗口大小变化
+			WindowFocusChanged,	// 获得或失去焦点
+			WindowTitleChanged,	// 标题变化
+			WindowClosed,		// 窗口被关闭
+			WindowLast,
+
+			Last
+		};
+
+		UINT type;
 		Node* target;
 
 		union
@@ -147,8 +136,28 @@ namespace easy2d
 			MouseEvent mouse;
 			KeyboardEvent key;
 			WindowEvent win;
+			CustomEvent custom;
 		};
 
-		Event(EventType type = 0) : type(type), target(nullptr) {}
+		Event(UINT type = Type::First) : type(type), target(nullptr) {}
 	};
+
+
+	// Check-functions
+
+	inline bool MouseEvent::Check(UINT type)
+	{
+		return type > Event::MouseFirst && type < Event::MouseLast;
+	}
+
+	inline bool KeyboardEvent::Check(UINT type)
+	{
+		return type > Event::KeyFirst && type < Event::KeyLast;
+	}
+
+	inline bool WindowEvent::Check(UINT type)
+	{
+		return type > Event::WindowFirst && type < Event::WindowLast;
+	}
+
 }

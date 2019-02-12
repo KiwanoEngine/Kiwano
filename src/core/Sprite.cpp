@@ -99,7 +99,7 @@ namespace easy2d
 	{
 		if (image_)
 		{
-			RenderSystem::Instance()->DrawImage(image_, GetBounds());
+			RenderSystem::Instance().DrawImage(image_, GetBounds());
 		}
 	}
 }

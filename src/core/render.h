@@ -32,7 +32,7 @@
 namespace easy2d
 {
 	class E2D_API RenderSystem
-		: public ISingleton<RenderSystem>
+		: public Singleton<RenderSystem>
 	{
 		E2D_DECLARE_SINGLETON(RenderSystem);
 

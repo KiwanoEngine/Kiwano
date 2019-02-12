@@ -129,7 +129,7 @@ namespace easy2d
 		D2DPathGeometryPtr path_geo;
 		D2DGeometrySinkPtr path_sink;
 
-		HRESULT hr = Factory::Instance()->CreatePathGeometry(path_geo);
+		HRESULT hr = Factory::Instance().CreatePathGeometry(path_geo);
 
 		if (SUCCEEDED(hr))
 		{
@@ -186,7 +186,7 @@ namespace easy2d
 	void RectangleGeometry::SetRect(Rect const & rect)
 	{
 		D2DRectangleGeometryPtr geo;
-		if (SUCCEEDED(Factory::Instance()->CreateRectangleGeometry(geo, rect)))
+		if (SUCCEEDED(Factory::Instance().CreateRectangleGeometry(geo, rect)))
 		{
 			geo_ = geo;
 			rect_ = rect;
@@ -225,7 +225,7 @@ namespace easy2d
 	void CircleGeometry::SetCircle(Point const & center, float radius)
 	{
 		D2DEllipseGeometryPtr geo;
-		if (SUCCEEDED(Factory::Instance()->CreateEllipseGeometry(geo, center, radius, radius)))
+		if (SUCCEEDED(Factory::Instance().CreateEllipseGeometry(geo, center, radius, radius)))
 		{
 			geo_ = geo;
 			center_ = center;
@@ -266,7 +266,7 @@ namespace easy2d
 	void EllipseGeometry::SetEllipse(Point const & center, float radius_x, float radius_y)
 	{
 		D2DEllipseGeometryPtr geo;
-		if (SUCCEEDED(Factory::Instance()->CreateEllipseGeometry(geo, center, radius_x, radius_y)))
+		if (SUCCEEDED(Factory::Instance().CreateEllipseGeometry(geo, center, radius_x, radius_y)))
 		{
 			geo_ = geo;
 			radius_x_ = radius_x;
@@ -292,7 +292,7 @@ namespace easy2d
 		current_geometry_ = nullptr;
 
 		ThrowIfFailed(
-			Factory::Instance()->CreatePathGeometry(current_geometry_)
+			Factory::Instance().CreatePathGeometry(current_geometry_)
 		);
 
 		ThrowIfFailed(
@@ -405,7 +405,7 @@ namespace easy2d
 	void RoundedRectGeometry::SetRoundedRect(Rect const & rect, float radius_x, float radius_y)
 	{
 		D2DRoundedRectangleGeometryPtr geo;
-		if (SUCCEEDED(Factory::Instance()->CreateRoundedRectangleGeometry(geo, rect, radius_x, radius_y)))
+		if (SUCCEEDED(Factory::Instance().CreateRoundedRectangleGeometry(geo, rect, radius_x, radius_y)))
 		{
 			geo_ = geo;
 			rect_ = rect;

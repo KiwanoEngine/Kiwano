@@ -21,67 +21,56 @@
 #pragma once
 #include <functional>
 
-#define CLOSURE_PARAMS_TYPE_1	typename Param1
-#define CLOSURE_PARAMS_1		Param1
-#define CLOSURE_PLACEHOLDERS_1	std::placeholders::_1
-#define CLOSURE_PARAMS_TYPE_2	typename Param1, typename Param2
-#define CLOSURE_PARAMS_2		Param1, Param2
-#define CLOSURE_PLACEHOLDERS_2	std::placeholders::_1, std::placeholders::_2
-#define CLOSURE_PARAMS_TYPE_3	typename Param1, typename Param2, typename Param3
-#define CLOSURE_PARAMS_3		Param1, Param2, Param3
-#define CLOSURE_PLACEHOLDERS_3	std::placeholders::_1, std::placeholders::_2, std::placeholders::_3
-#define CLOSURE_PARAMS_TYPE_4	typename Param1, typename Param2, typename Param3, typename Param4
-#define CLOSURE_PARAMS_4		Param1, Param2, Param3, Param4
-#define CLOSURE_PLACEHOLDERS_4	std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4
-#define CLOSURE_PARAMS_TYPE_5	typename Param1, typename Param2, typename Param3, typename Param4, typename Param5
-#define CLOSURE_PARAMS_5		Param1, Param2, Param3, Param4, Param5
-#define CLOSURE_PLACEHOLDERS_5	std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5
-#define CLOSURE_PARAMS_TYPE_6	typename Param1, typename Param2, typename Param3, typename Param4, typename Param5, typename Param6
-#define CLOSURE_PARAMS_6		Param1, Param2, Param3, Param4, Param5, Param6
-#define CLOSURE_PLACEHOLDERS_6	std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6
-
-#define CLOSURE_EXPAND(x) x
-
-#define CLOSURE_DECLARE(TYPE, PARAMS, PHS)\
-	template<typename T, typename R, CLOSURE_EXPAND(TYPE)>\
-	inline std::function<R(CLOSURE_EXPAND(PARAMS))> Closure(T* ptr, R(T::*func)(CLOSURE_EXPAND(PARAMS)))\
-	{\
-		return std::bind(func, ptr, CLOSURE_EXPAND(PHS));\
-	}
-
 namespace easy2d
 {
-	template<typename T, typename R>
-	inline std::function<R(void)> Closure(T* ptr, R(T::*func)(void))
+	namespace __closure__detail
 	{
-		return std::bind(func, ptr);
+		// sequence & generater
+
+		template<int... _Num>
+		struct Seq
+		{
+			using NextType = Seq<_Num..., sizeof...(_Num)>;
+		};
+
+		template<typename...>
+		struct Gen;
+
+		template<>
+		struct Gen<>
+		{
+			using SeqType = Seq<>;
+		};
+
+		template<typename _Ty1, typename... _Args>
+		struct Gen<_Ty1, _Args...>
+		{
+			using SeqType = typename Gen<_Args...>::SeqType::NextType;
+		};
+
+
+		// ClosureHelper
+
+		template<typename _Ty, typename _Ret, typename... _Args>
+		struct ClosureHelper
+		{
+			template<int... _Num>
+			static inline std::function<_Ret(_Args...)> MakeFunc(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...), Seq<_Num...>)
+			{
+				return std::bind(_Func, _Ptr, typename std::_Ph<_Num + 1>()...);
+			}
+		};
 	}
 
-	CLOSURE_DECLARE(CLOSURE_PARAMS_TYPE_1, CLOSURE_PARAMS_1, CLOSURE_PLACEHOLDERS_1);
-	CLOSURE_DECLARE(CLOSURE_PARAMS_TYPE_2, CLOSURE_PARAMS_2, CLOSURE_PLACEHOLDERS_2);
-	CLOSURE_DECLARE(CLOSURE_PARAMS_TYPE_3, CLOSURE_PARAMS_3, CLOSURE_PLACEHOLDERS_3);
-	CLOSURE_DECLARE(CLOSURE_PARAMS_TYPE_4, CLOSURE_PARAMS_4, CLOSURE_PLACEHOLDERS_4);
-	CLOSURE_DECLARE(CLOSURE_PARAMS_TYPE_5, CLOSURE_PARAMS_5, CLOSURE_PLACEHOLDERS_5);
-	CLOSURE_DECLARE(CLOSURE_PARAMS_TYPE_6, CLOSURE_PARAMS_6, CLOSURE_PLACEHOLDERS_6);
-}
+	//
+	// Closure is a simple function for binding member functions
+	//
 
-#undef CLOSURE_PARAMS_TYPE_1
-#undef CLOSURE_PARAMS_1
-#undef CLOSURE_PLACEHOLDERS_1
-#undef CLOSURE_PARAMS_TYPE_2
-#undef CLOSURE_PARAMS_2
-#undef CLOSURE_PLACEHOLDERS_2
-#undef CLOSURE_PARAMS_TYPE_3
-#undef CLOSURE_PARAMS_3
-#undef CLOSURE_PLACEHOLDERS_3
-#undef CLOSURE_PARAMS_TYPE_4
-#undef CLOSURE_PARAMS_4
-#undef CLOSURE_PLACEHOLDERS_4
-#undef CLOSURE_PARAMS_TYPE_5
-#undef CLOSURE_PARAMS_5
-#undef CLOSURE_PLACEHOLDERS_5
-#undef CLOSURE_PARAMS_TYPE_6
-#undef CLOSURE_PARAMS_6
-#undef CLOSURE_PLACEHOLDERS_6
-#undef CLOSURE_EXPAND
-#undef CLOSURE_DECLARE
+	template<typename _Ty, typename _Ret, typename... _Args>
+	inline std::function<_Ret(_Args...)> Closure(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...))
+	{
+		using namespace __closure__detail;
+		return ClosureHelper<_Ty, _Ret, _Args...>::
+			MakeFunc(_Ptr, _Func, typename Gen<_Args...>::SeqType{});
+	}
+}
