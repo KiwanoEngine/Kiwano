@@ -38,7 +38,15 @@ namespace easy2d
 		bool	fullscreen;	// 全屏模式
 		bool	debug;		// 调试模式
 
-		E2D_API Options();
+		Options()
+			: title(L"Easy2D Game")
+			, width(640)
+			, height(480)
+			, icon(nullptr)
+			, vsync(true)
+			, fullscreen(false)
+			, debug(false)
+		{}
 	};
 
 
@@ -92,8 +100,10 @@ namespace easy2d
 		// 获取当前场景
 		ScenePtr const& GetCurrentScene();
 
-		// 设置变速
-		void SetTimeScale(float scale);
+		// 设置时间缩放因子
+		void SetTimeScale(
+			float scale_factor
+		);
 
 	private:
 		void Render(HWND);

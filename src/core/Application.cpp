@@ -34,16 +34,6 @@
 
 namespace easy2d
 {
-	Options::Options()
-		: title(L"Easy2D Game")
-		, width(640)
-		, height(480)
-		, icon(nullptr)
-		, vsync(true)
-		, fullscreen(false)
-		, debug(false)
-	{}
-
 	Application::Application(String const& app_name)
 		: end_(true)
 		, inited_(false)
@@ -219,9 +209,9 @@ namespace easy2d
 		return curr_scene_;
 	}
 
-	void Application::SetTimeScale(float scale)
+	void Application::SetTimeScale(float scale_factor)
 	{
-		time_scale_ = scale;
+		time_scale_ = scale_factor;
 	}
 
 	void Application::Update()
