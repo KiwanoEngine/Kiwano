@@ -46,7 +46,7 @@ namespace easy2d
 	{
 		Destroy();
 
-		Audio::Instance()->DeleteVoice(this);
+		Audio::Instance().DeleteVoice(this);
 	}
 
 	HRESULT Voice::Play(const BYTE * wave_data, UINT32 data_size, UINT32 loop_count)

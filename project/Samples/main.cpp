@@ -40,7 +40,7 @@ public:
 
 	void ChangeDemoScene()
 	{
-		Window::Instance()->SetTitle(s_Demos[s_DemoIndex].title);
+		Window::Instance().SetTitle(s_Demos[s_DemoIndex].title);
 
 		ScenePtr scene = s_Demos[s_DemoIndex].Create();
 		EnterScene(scene);

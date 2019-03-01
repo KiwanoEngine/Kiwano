@@ -295,15 +295,15 @@ namespace easy2d
 	{
 		if (text_layout_)
 		{
-			auto rt = RenderSystem::Instance();
-			rt->SetTextStyle(
+			auto& rt = RenderSystem::Instance();
+			rt.SetTextStyle(
 				style_.color,
 				style_.outline,
 				style_.outline_color,
 				style_.outline_width,
 				style_.outline_stroke
 			);
-			rt->DrawTextLayout(text_layout_);
+			rt.DrawTextLayout(text_layout_);
 		}
 	}
 
@@ -316,7 +316,7 @@ namespace easy2d
 			return;
 
 		ThrowIfFailed(
-			Factory::Instance()->CreateTextFormat(
+			Factory::Instance().CreateTextFormat(
 				text_format_,
 				font_,
 				style_
@@ -325,7 +325,7 @@ namespace easy2d
 
 		Size layout_size;
 		ThrowIfFailed(
-			Factory::Instance()->CreateTextLayout(
+			Factory::Instance().CreateTextLayout(
 				text_layout_,
 				layout_size,
 				text_,

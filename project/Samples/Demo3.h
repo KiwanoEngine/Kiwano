@@ -66,20 +66,20 @@ public:
 		state_text->SetText(playing ? L"当前状态：正在播放" : L"当前状态：停止播放");
 
 		// 获取输入设备
-		auto input = Input::Instance();
+		auto& input = Input::Instance();
 
 		// 按空格键暂停或继续
-		if (input->WasPressed(KeyCode::Space))
+		if (input.WasPressed(KeyCode::Space))
 		{
 			music->IsPlaying() ? music->Pause() : music->Resume();
 		}
 
 		// 按上下键调整音量
-		if (input->WasPressed(KeyCode::Up))
+		if (input.WasPressed(KeyCode::Up))
 		{
 			music->SetVolume(volume + 0.1f);
 		}
-		else if (input->WasPressed(KeyCode::Down))
+		else if (input.WasPressed(KeyCode::Down))
 		{
 			music->SetVolume(volume - 0.1f);
 		}

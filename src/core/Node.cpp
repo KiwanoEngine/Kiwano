@@ -88,12 +88,12 @@ namespace easy2d
 
 		UpdateTransform();
 
-		auto rt = RenderSystem::Instance();
+		auto& rt = RenderSystem::Instance();
 
 		if (children_.IsEmpty())
 		{
-			rt->SetTransform(transform_matrix_);
-			rt->SetOpacity(display_opacity_);
+			rt.SetTransform(transform_matrix_);
+			rt.SetOpacity(display_opacity_);
 
 			OnRender();
 		}
@@ -110,8 +110,8 @@ namespace easy2d
 				child = child->NextItem().Get();
 			}
 
-			rt->SetTransform(transform_matrix_);
-			rt->SetOpacity(display_opacity_);
+			rt.SetTransform(transform_matrix_);
+			rt.SetOpacity(display_opacity_);
 
 			OnRender();
 

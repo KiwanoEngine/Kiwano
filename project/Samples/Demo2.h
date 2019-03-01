@@ -19,29 +19,29 @@ public:
 	void OnUpdate(Duration dt) override
 	{
 		// 获取输入设备
-		auto input = Input::Instance();
+		auto& input = Input::Instance();
 		// 按下左右键
-		if (input->IsDown(KeyCode::Left))
+		if (input.IsDown(KeyCode::Left))
 		{
 			this->Move(-2, 0);
 		}
-		else if (input->IsDown(KeyCode::Right))
+		else if (input.IsDown(KeyCode::Right))
 		{
 			this->Move(2, 0);
 		}
 
 		// 按下上下键
-		if (input->IsDown(KeyCode::Up))
+		if (input.IsDown(KeyCode::Up))
 		{
 			this->Move(0, -2);
 		}
-		else if (input->IsDown(KeyCode::Down))
+		else if (input.IsDown(KeyCode::Down))
 		{
 			this->Move(0, 2);
 		}
 
 		// 按下鼠标左键，顺时针旋转小人
-		if (input->IsDown(MouseButton::Left))
+		if (input.IsDown(MouseButton::Left))
 		{
 			// 获取当前旋转角度
 			float rotation = this->GetRotation();
@@ -50,7 +50,7 @@ public:
 		}
 
 		// 点击鼠标右键，隐藏或显示小人
-		if (input->WasPressed(MouseButton::Right))
+		if (input.WasPressed(MouseButton::Right))
 		{
 			// 获取当前显示状态
 			bool visible = this->IsVisible();

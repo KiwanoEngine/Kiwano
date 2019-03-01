@@ -91,11 +91,11 @@ namespace easy2d
 		}
 
 		ThrowIfFailed(
-			Factory::Instance()->Init(debug_)
+			Factory::Instance().Init(debug_)
 		);
 
 		ThrowIfFailed(
-			Window::Instance()->Init(
+			Window::Instance().Init(
 				options.title,
 				options.width,
 				options.height,
@@ -106,10 +106,10 @@ namespace easy2d
 			)
 		);
 
-		HWND hwnd = Window::Instance()->GetHandle();
+		HWND hwnd = Window::Instance().GetHandle();
 
 		ThrowIfFailed(
-			RenderSystem::Instance()->Init(
+			RenderSystem::Instance().Init(
 				hwnd,
 				options.vsync,
 				debug_
@@ -117,14 +117,14 @@ namespace easy2d
 		);
 
 		ThrowIfFailed(
-			Input::Instance()->Init(
+			Input::Instance().Init(
 				hwnd,
 				debug_
 			)
 		);
 		
 		ThrowIfFailed(
-			Audio::Instance()->Init(debug_)
+			Audio::Instance().Init(debug_)
 		);
 
 		OnStart();
@@ -140,13 +140,13 @@ namespace easy2d
 
 	void Application::Run()
 	{
-		HWND hwnd = Window::Instance()->GetHandle();
+		HWND hwnd = Window::Instance().GetHandle();
 
 		if (hwnd)
 		{
 			end_ = false;
 
-			Window::Instance()->Prepare();
+			Window::Instance().Prepare();
 
 			MSG msg = {};
 			while (::GetMessageW(&msg, nullptr, 0, 0) && !end_)
@@ -172,10 +172,10 @@ namespace easy2d
 			next_scene_.Reset();
 			curr_scene_.Reset();
 
-			Audio::Instance()->Destroy();
-			RenderSystem::Instance()->Destroy();
-			Window::Instance()->Destroy();
-			Factory::Instance()->Destroy();
+			Audio::Instance().Destroy();
+			RenderSystem::Instance().Destroy();
+			Window::Instance().Destroy();
+			Factory::Instance().Destroy();
 		}
 	}
 
@@ -252,15 +252,15 @@ namespace easy2d
 			next_scene_->Update(dt);
 
 		if (debug_)
-			DebugNode::Instance()->Update(dt);
+			DebugNode::Instance().Update(dt);
 	}
 
 	void Application::Render(HWND hwnd)
 	{
-		auto rt = RenderSystem::Instance();
+		auto& rt = RenderSystem::Instance();
 		
 		ThrowIfFailed(
-			rt->BeginDraw(hwnd)
+			rt.BeginDraw(hwnd)
 		);
 
 		if (transition_)
@@ -273,10 +273,10 @@ namespace easy2d
 		}
 
 		if (debug_)
-			DebugNode::Instance()->Render();
+			DebugNode::Instance().Render();
 
 		ThrowIfFailed(
-			rt->EndDraw()
+			rt.EndDraw()
 		);
 
 		::InvalidateRect(hwnd, NULL, FALSE);
@@ -298,7 +298,7 @@ namespace easy2d
 			app->Update();
 			app->Render(hwnd);
 
-			Input::Instance()->Update();
+			Input::Instance().Update();
 			return 0;
 		}
 		break;
@@ -306,7 +306,7 @@ namespace easy2d
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 		{
-			Input::Instance()->UpdateKey((int)wparam, (msg == WM_KEYDOWN) ? true : false);
+			Input::Instance().UpdateKey((int)wparam, (msg == WM_KEYDOWN) ? true : false);
 
 			if (!app->transition_ && app->curr_scene_)
 			{
@@ -331,9 +331,9 @@ namespace easy2d
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
-			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { Input::Instance()->UpdateKey(VK_LBUTTON, (msg == WM_LBUTTONDOWN) ? true : false); }
-			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { Input::Instance()->UpdateKey(VK_RBUTTON, (msg == WM_RBUTTONDOWN) ? true : false); }
-			else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { Input::Instance()->UpdateKey(VK_MBUTTON, (msg == WM_MBUTTONDOWN) ? true : false); }
+			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { Input::Instance().UpdateKey(VK_LBUTTON, (msg == WM_LBUTTONDOWN) ? true : false); }
+			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { Input::Instance().UpdateKey(VK_RBUTTON, (msg == WM_RBUTTONDOWN) ? true : false); }
+			else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { Input::Instance().UpdateKey(VK_MBUTTON, (msg == WM_MBUTTONDOWN) ? true : false); }
 
 			if (!app->transition_ && app->curr_scene_)
 			{
@@ -366,7 +366,7 @@ namespace easy2d
 			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
 			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
 			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-			RenderSystem::Instance()->Resize(width, height);
+			RenderSystem::Instance().Resize(width, height);
 
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{
@@ -384,7 +384,7 @@ namespace easy2d
 					app->curr_scene_->Dispatch(evt);
 				}
 
-				Window::Instance()->UpdateWindowRect();
+				Window::Instance().UpdateWindowRect();
 			}
 		}
 		break;
@@ -410,7 +410,7 @@ namespace easy2d
 
 			E2D_LOG(active ? L"Window activated" : L"Window deactivated");
 
-			Window::Instance()->SetActive(active);
+			Window::Instance().SetActive(active);
 
 			if (app->curr_scene_)
 			{
@@ -454,7 +454,7 @@ namespace easy2d
 
 			if (app->OnClosing())
 			{
-				Window::Instance()->Destroy();
+				Window::Instance().Destroy();
 			}
 			return 0;
 		}

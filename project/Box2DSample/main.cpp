@@ -134,8 +134,8 @@ public:
 	{
 		// 修改场景大小, 并设置可响应状态, 使场景可以
 		// 接收到鼠标 Click 消息
-		auto window = Window::Instance();
-		SetSize(window->GetSize());
+		auto size = Window::Instance().GetSize();
+		SetSize(size);
 		SetResponsible(true);
 
 		// 添加消息监听
@@ -144,7 +144,7 @@ public:
 		// 创建物理世界
 		world_ = new b2World(b2Vec2(0, 10));
 
-		BoardPtr board = new Board(world_, Size(GetWidth() - 100, 20), Point(window->GetSize().x / 2, window->GetSize().y - 50));
+		BoardPtr board = new Board(world_, Size(GetWidth() - 100, 20), Point(size.x / 2, size.y - 50));
 		AddChild(board);
 
 		CirclePtr circle = new Circle(world_, Point(320, 240));

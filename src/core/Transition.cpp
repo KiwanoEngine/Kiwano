@@ -66,18 +66,18 @@ namespace easy2d
 		if (in_scene_)
 		{
 			ThrowIfFailed(
-				RenderSystem::Instance()->CreateLayer(in_layer_)
+				RenderSystem::Instance().CreateLayer(in_layer_)
 			);
 		}
 
 		if (out_scene_)
 		{
 			ThrowIfFailed(
-				RenderSystem::Instance()->CreateLayer(out_layer_)
+				RenderSystem::Instance().CreateLayer(out_layer_)
 			);
 		}
 
-		window_size_ = Window::Instance()->GetSize();
+		window_size_ = Window::Instance().GetSize();
 		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
 	}
 
@@ -101,34 +101,34 @@ namespace easy2d
 
 	void Transition::Render()
 	{
-		auto rt = RenderSystem::Instance();
+		auto& rt = RenderSystem::Instance();
 
 		if (out_scene_)
 		{
-			rt->PushClip(
+			rt.PushClip(
 				out_scene_->GetTransformMatrix(),
 				window_size_
 			);
-			rt->PushLayer(out_layer_, out_layer_prop_);
+			rt.PushLayer(out_layer_, out_layer_prop_);
 
 			out_scene_->Render();
 
-			rt->PopLayer();
-			rt->PopClip();
+			rt.PopLayer();
+			rt.PopClip();
 		}
 
 		if (in_scene_)
 		{
-			rt->PushClip(
+			rt.PushClip(
 				in_scene_->GetTransformMatrix(),
 				window_size_
 			);
-			rt->PushLayer(in_layer_, in_layer_prop_);
+			rt.PushLayer(in_layer_, in_layer_prop_);
 
 			in_scene_->Render();
 
-			rt->PopLayer();
-			rt->PopClip();
+			rt.PopLayer();
+			rt.PopClip();
 		}
 	}
 
