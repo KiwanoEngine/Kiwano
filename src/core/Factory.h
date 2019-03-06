@@ -29,7 +29,7 @@
 namespace easy2d
 {
 	class E2D_API Factory
-		: public ISingleton<Factory>
+		: public Singleton<Factory>
 	{
 		E2D_DECLARE_SINGLETON(Factory);
 

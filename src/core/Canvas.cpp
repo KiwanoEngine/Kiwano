@@ -32,7 +32,7 @@ namespace easy2d
 		, stroke_width_(1.0f)
 	{
 		ThrowIfFailed(
-			RenderSystem::Instance()->CreateBitmapRenderTarget(render_target_)
+			RenderSystem::Instance().CreateBitmapRenderTarget(render_target_)
 		);
 
 		auto properties = D2D1::BrushProperties();
@@ -58,7 +58,7 @@ namespace easy2d
 		);
 
 		ThrowIfFailed(
-			Factory::Instance()->CreateTextRenderer(
+			Factory::Instance().CreateTextRenderer(
 				text_renderer_,
 				render_target_,
 				text_brush_
@@ -105,7 +105,7 @@ namespace easy2d
 		
 		if (bitmap_cached_)
 		{
-			RenderSystem::Instance()->DrawBitmap(bitmap_cached_);
+			RenderSystem::Instance().DrawBitmap(bitmap_cached_);
 		}
 	}
 
@@ -126,7 +126,7 @@ namespace easy2d
 
 	void Canvas::SetOutlineJoinStyle(StrokeStyle outline_join)
 	{
-		outline_join_style_ = Factory::Instance()->GetStrokeStyle(outline_join);
+		outline_join_style_ = Factory::Instance().GetStrokeStyle(outline_join);
 	}
 
 	void Canvas::SetTextStyle(Font const& font, TextStyle const & text_style)
@@ -139,7 +139,7 @@ namespace easy2d
 			text_style_.outline,
 			ToD2dColorF(text_style_.outline_color),
 			text_style_.outline_width,
-			Factory::Instance()->GetStrokeStyle(text_style_.outline_stroke).Get()
+			Factory::Instance().GetStrokeStyle(text_style_.outline_stroke).Get()
 		);
 	}
 
@@ -271,7 +271,7 @@ namespace easy2d
 
 		D2DTextFormatPtr text_format;
 		ThrowIfFailed(
-			Factory::Instance()->CreateTextFormat(
+			Factory::Instance().CreateTextFormat(
 				text_format,
 				text_font_,
 				text_style_
@@ -281,7 +281,7 @@ namespace easy2d
 		D2DTextLayoutPtr text_layout;
 		Size layout_size;
 		ThrowIfFailed(
-			Factory::Instance()->CreateTextLayout(
+			Factory::Instance().CreateTextLayout(
 				text_layout,
 				layout_size,
 				text,
@@ -390,7 +390,7 @@ namespace easy2d
 		current_geometry_ = nullptr;
 
 		ThrowIfFailed(
-			Factory::Instance()->CreatePathGeometry(current_geometry_)
+			Factory::Instance().CreatePathGeometry(current_geometry_)
 		);
 		
 		ThrowIfFailed(

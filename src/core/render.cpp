@@ -164,7 +164,7 @@ namespace easy2d
 			return S_OK;
 
 		solid_brush_->SetColor(ToD2dColorF(stroke_color));
-		auto stroke_style = Factory::Instance()->GetStrokeStyle(stroke);
+		auto stroke_style = Factory::Instance().GetStrokeStyle(stroke);
 		render_target_->DrawGeometry(
 			geometry.Get(),
 			solid_brush_.Get(),
@@ -349,7 +349,7 @@ namespace easy2d
 		}
 
 		D2DBitmapPtr bitmap_tmp;
-		HRESULT hr = Factory::Instance()->CreateBitmapFromFile(
+		HRESULT hr = Factory::Instance().CreateBitmapFromFile(
 			bitmap,
 			render_target_,
 			file_path
@@ -377,7 +377,7 @@ namespace easy2d
 			return S_OK;
 		}
 
-		HRESULT hr = Factory::Instance()->CreateBitmapFromResource(
+		HRESULT hr = Factory::Instance().CreateBitmapFromResource(
 			bitmap,
 			render_target_,
 			res
@@ -439,7 +439,7 @@ namespace easy2d
 		if (!text_renderer_)
 			return E_UNEXPECTED;
 
-		auto stroke_style = Factory::Instance()->GetStrokeStyle(outline_stroke);
+		auto stroke_style = Factory::Instance().GetStrokeStyle(outline_stroke);
 		text_renderer_->SetTextStyle(
 			ToD2dColorF(color),
 			has_outline,
@@ -514,7 +514,7 @@ namespace easy2d
 				rc.bottom - rc.top
 			);
 
-			hr = Factory::Instance()->CreateHwndRenderTarget(
+			hr = Factory::Instance().CreateHwndRenderTarget(
 				render_target_,
 				D2D1::RenderTargetProperties(
 					D2D1_RENDER_TARGET_TYPE_DEFAULT,
@@ -545,7 +545,7 @@ namespace easy2d
 
 			if (SUCCEEDED(hr))
 			{
-				hr = Factory::Instance()->CreateTextRenderer(
+				hr = Factory::Instance().CreateTextRenderer(
 					text_renderer_,
 					render_target_,
 					solid_brush_

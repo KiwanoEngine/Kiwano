@@ -70,14 +70,14 @@ namespace easy2d
 	{
 		if (geometry_ && geometry_->geo_)
 		{
-			auto rt = RenderSystem::Instance();
+			auto& rt = RenderSystem::Instance();
 
-			rt->FillGeometry(
+			rt.FillGeometry(
 				geometry_->geo_,
 				fill_color_
 			);
 
-			rt->DrawGeometry(
+			rt.DrawGeometry(
 				geometry_->geo_,
 				stroke_color_,
 				stroke_width_,

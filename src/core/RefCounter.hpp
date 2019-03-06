@@ -44,7 +44,7 @@ namespace easy2d
 	protected:
 		RefCounter() : ref_count_(0) {}
 
-		~RefCounter() {}
+		virtual ~RefCounter() {}
 
 	protected:
 		long ref_count_;

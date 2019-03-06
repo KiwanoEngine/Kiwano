@@ -75,7 +75,7 @@ namespace easy2d
 
 
 	class E2D_API Audio
-		: public ISingleton<Audio>
+		: public Singleton<Audio>
 	{
 		E2D_DECLARE_SINGLETON(Audio);
 
