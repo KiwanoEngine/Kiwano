@@ -35,7 +35,7 @@ namespace easy2d
 
 		// Ìí¼Ó¼àÌıÆ÷
 		void AddListener(
-			EventType type,
+			UINT type,
 			EventCallback callback,
 			String const& name = L""
 		);
@@ -57,17 +57,17 @@ namespace easy2d
 
 		// Æô¶¯¼àÌıÆ÷
 		void StartListeners(
-			EventType type
+			UINT type
 		);
 
 		// Í£Ö¹¼àÌıÆ÷
 		void StopListeners(
-			EventType type
+			UINT type
 		);
 
 		// ÒÆ³ı¼àÌıÆ÷
 		void RemoveListeners(
-			EventType type
+			UINT type
 		);
 
 		virtual void Dispatch(Event& evt);

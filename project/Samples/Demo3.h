@@ -19,12 +19,12 @@ public:
 	Demo3()
 	{
 		// 加载音乐
-		music = E_NEW Music;
+		music = new Music;
 		if (!music->Load(L"res/music.wav"))
 		{
 			music = nullptr;
 
-			auto err = E_NEW Text(L"音频文件加载失败");
+			TextPtr err = new Text(L"音频文件加载失败");
 			this->AddChild(err);
 		}
 
@@ -32,17 +32,17 @@ public:
 		music->Play(-1);
 
 		// 创建说明文字
-		auto intro_text = E_NEW Text(L"按上下键调整音量\n按空格键暂停或继续");
+		TextPtr intro_text = new Text(L"按上下键调整音量\n按空格键暂停或继续");
 		intro_text->SetAnchor(0.5f, 0.5f);
 		intro_text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 50);
 
 		// 创建音量文字
-		volume_text = E_NEW Text(L"当前音量：");
+		volume_text = new Text(L"当前音量：");
 		volume_text->SetAnchor(0.5f, 0.5f);
 		volume_text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 30);
 
 		// 创建状态文字
-		state_text = E_NEW Text(L"当前状态：");
+		state_text = new Text(L"当前状态：");
 		state_text->SetAnchor(0.5f, 0.5f);
 		state_text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 60);
 

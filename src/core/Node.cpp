@@ -137,7 +137,7 @@ namespace easy2d
 
 		if (responsible_ && MouseEvent::Check(evt.type))
 		{
-			if (evt.type == MouseEvent::Move)
+			if (evt.type == Event::MouseMove)
 			{
 				if (!evt.target && ContainsPoint(Point{ evt.mouse.x, evt.mouse.y }))
 				{
@@ -148,7 +148,7 @@ namespace easy2d
 						hover_ = true;
 
 						Event hover = evt;
-						hover.type = MouseEvent::Hover;
+						hover.type = Event::MouseHover;
 						EventDispatcher::Dispatch(hover);
 					}
 				}
@@ -159,24 +159,24 @@ namespace easy2d
 
 					Event out = evt;
 					out.target = this;
-					out.type = MouseEvent::Out;
+					out.type = Event::MouseOut;
 					EventDispatcher::Dispatch(out);
 				}
 			}
 
-			if (evt.type == MouseEvent::Down && hover_)
+			if (evt.type == Event::MouseBtnDown && hover_)
 			{
 				pressed_ = true;
 				evt.target = this;
 			}
 
-			if (evt.type == MouseEvent::Up && pressed_)
+			if (evt.type == Event::MouseBtnUp && pressed_)
 			{
 				pressed_ = false;
 				evt.target = this;
 
 				Event click = evt;
-				click.type = MouseEvent::Click;
+				click.type = Event::Click;
 				EventDispatcher::Dispatch(click);
 			}
 		}

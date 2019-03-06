@@ -3,6 +3,7 @@
 #pragma once
 #include "common.h"
 
+E2D_DECLARE_SMART_PTR(Man);
 class Man
 	: public Sprite
 {
@@ -72,13 +73,13 @@ public:
 	Demo2()
 	{
 		// 创建人物
-		auto man = E_NEW Man;
+		ManPtr man = new Man;
 		// 在屏幕上居中显示
 		man->SetAnchor(0.5f, 0.5f);
 		man->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
 		// 创建说明文字
-		auto text = E_NEW Text(L"按上下左右键移动\n按鼠标左键旋转\n点击鼠标右键隐藏");
+		TextPtr text = new Text(L"按上下左右键移动\n按鼠标左键旋转\n点击鼠标右键隐藏");
 		// 设置文字位置
 		text->SetAnchor(0.5f, 0.5f);
 		text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50);

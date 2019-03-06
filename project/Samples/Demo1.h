@@ -15,7 +15,7 @@ public:
 	Demo1()
 	{
 		// 创建文本
-		auto text = E_NEW Text(L"Hello Easy2D!");
+		TextPtr text = new Text(L"Hello Easy2D!");
 		// 让文本显示在屏幕中央
 		text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 		text->SetAnchor(0.5, 0.5);

@@ -46,7 +46,7 @@ public:
 		EnterScene(scene);
 
 		// 添加按键监听
-		scene->AddListener(KeyboardEvent::Up, Closure(this, &DemoApp::KeyPressed));
+		scene->AddListener(Event::KeyUp, Closure(this, &DemoApp::KeyPressed));
 
 		// 显示提示文字
 		TextPtr intro = new Text(L"Key 1~3 to select demo");
@@ -56,7 +56,7 @@ public:
 
 	void KeyPressed(Event const& evt)
 	{
-		E2D_ASSERT(evt.type == KeyboardEvent::Up);
+		E2D_ASSERT(evt.type == Event::KeyUp);
 
 		if (evt.key.code > KeyCode::Num0 &&
 			evt.key.code <= (KeyCode::Num0 + s_DemoNum))

@@ -38,22 +38,22 @@ namespace easy2d
 
 	public:
 		EventListener(
-			EventType type,
+			UINT type,
 			EventCallback const& callback,
 			String const& name = L""
 		);
 
 		virtual ~EventListener();
 
-		void Start();
+		inline void Start()				{ running_ = true; }
 
-		void Stop();
+		inline void Stop()				{ running_ = true; }
 
-		bool IsRunning() const;
+		inline bool IsRunning() const	{ return running_; }
 
 	protected:
 		bool			running_;
-		EventType		type_;
+		UINT			type_;
 		EventCallback	callback_;
 	};
 }

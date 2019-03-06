@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	EventListener::EventListener(EventType type, EventCallback const & callback, String const & name)
+	EventListener::EventListener(UINT type, EventCallback const & callback, String const & name)
 		: type_(type)
 		, callback_(callback)
 		, running_(true)
@@ -33,21 +33,6 @@ namespace easy2d
 
 	EventListener::~EventListener()
 	{
-	}
-
-	void EventListener::Start()
-	{
-		running_ = true;
-	}
-
-	void EventListener::Stop()
-	{
-		running_ = false;
-	}
-
-	bool EventListener::IsRunning() const
-	{
-		return running_;
 	}
 
 }
