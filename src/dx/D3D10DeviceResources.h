@@ -20,20 +20,20 @@
 
 #pragma once
 
-#ifndef E2D_USE_DIRECTX10
+#ifdef E2D_USE_DIRECTX10
 
 #include "helper.hpp"
 #include "D2DDeviceResources.h"
-#include <d3d11.h>
+#include <d3d10_1.h>
 
 namespace easy2d
 {
-	class E2D_API D3D11DeviceResources
+	class E2D_API D3D10DeviceResources
 		: public D2DDeviceResources
 	{
 	public:
 		static HRESULT Create(
-			D3D11DeviceResources** device_resources,
+			D3D10DeviceResources** device_resources,
 			HWND hwnd
 		);
 
@@ -49,22 +49,20 @@ namespace easy2d
 
 		void DiscardResources();
 
-		inline ID3D11Device*			GetD3DDevice() const			{ return d3d_device_.Get(); }
-		inline ID3D11DeviceContext*		GetD3DDeviceContext() const		{ return d3d_device_context_.Get(); }
-		inline ID3D11RenderTargetView*	GetD3DRenderTargetView() const	{ return d3d_rt_view_.Get(); }
-		inline ID3D11DepthStencilView*	GetD3DDepthStencilView() const	{ return d3d_ds_view_.Get(); }
+		inline ID3D10Device*			GetD3DDevice() const			{ return d3d_device_.Get(); }
+		inline ID3D10RenderTargetView*	GetD3DRenderTargetView() const	{ return d3d_rt_view_.Get(); }
+		inline ID3D10DepthStencilView*	GetD3DDepthStencilView() const	{ return d3d_ds_view_.Get(); }
 		inline IDXGIFactory*			GetDXGIFactory() const			{ return dxgi_factory_.Get(); }
 		inline IDXGISwapChain*			GetDXGISwapChain() const		{ return dxgi_swap_chain_.Get(); }
 
-		inline D3D_FEATURE_LEVEL		GetDeviceFeatureLevel() const	{ return d3d_feature_level_; }
 		inline Size const&				GetLogicalSize() const			{ return logical_size_; }
 		inline Size const&				GetOutputSize() const			{ return output_size_; }
 		inline float					GetDpi() const					{ return dpi_; }
 
 	protected:
-		D3D11DeviceResources();
+		D3D10DeviceResources();
 
-		virtual ~D3D11DeviceResources();
+		virtual ~D3D10DeviceResources();
 
 	protected:
 		HRESULT CreateDeviceResources();
@@ -77,12 +75,9 @@ namespace easy2d
 		Size	logical_size_;
 		Size	output_size_;
 
-		D3D_FEATURE_LEVEL d3d_feature_level_;
-
-		ComPtr<ID3D11Device>			d3d_device_;
-		ComPtr<ID3D11DeviceContext>		d3d_device_context_;
-		ComPtr<ID3D11RenderTargetView>	d3d_rt_view_;
-		ComPtr<ID3D11DepthStencilView>	d3d_ds_view_;
+		ComPtr<ID3D10Device>			d3d_device_;
+		ComPtr<ID3D10RenderTargetView>	d3d_rt_view_;
+		ComPtr<ID3D10DepthStencilView>	d3d_ds_view_;
 		ComPtr<IDXGISwapChain>			dxgi_swap_chain_;
 		ComPtr<IDXGIFactory>			dxgi_factory_;
 	};

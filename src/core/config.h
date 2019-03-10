@@ -21,3 +21,5 @@
 //#define E2D_API __declspec( dllexport )
 //#define E2D_API __declspec( dllimport )
 
+//---- Define DirectX version. Defaults to using Direct3D11
+//#define E2D_USE_DIRECTX10

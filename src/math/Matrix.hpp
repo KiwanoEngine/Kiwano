@@ -57,7 +57,7 @@ namespace easy2d
 			{
 			}
 
-			Matrix(const float* p)
+			explicit Matrix(const float* p)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = p[i];

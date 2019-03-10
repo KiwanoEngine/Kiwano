@@ -229,6 +229,9 @@
     <ClInclude Include="..\..\src\dx\TextRenderer.h">
       <Filter>dx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\dx\D3D10DeviceResources.h">
+      <Filter>dx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\core\Animation.cpp">
@@ -364,6 +367,9 @@
       <Filter>dx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\dx\TextRenderer.cpp">
+      <Filter>dx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dx\D3D10DeviceResources.cpp">
       <Filter>dx</Filter>
     </ClCompile>
   </ItemGroup>

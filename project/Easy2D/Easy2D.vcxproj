@@ -51,6 +51,7 @@
     <ClInclude Include="..\..\src\core\Transition.h" />
     <ClInclude Include="..\..\src\core\window.h" />
     <ClInclude Include="..\..\src\dx\D2DDeviceResources.h" />
+    <ClInclude Include="..\..\src\dx\D3D10DeviceResources.h" />
     <ClInclude Include="..\..\src\dx\D3D11DeviceResources.h" />
     <ClInclude Include="..\..\src\dx\DeviceResources.h" />
     <ClInclude Include="..\..\src\dx\helper.hpp" />
@@ -107,6 +108,7 @@
     <ClCompile Include="..\..\src\core\Transition.cpp" />
     <ClCompile Include="..\..\src\core\window.cpp" />
     <ClCompile Include="..\..\src\dx\D2DDeviceResources.cpp" />
+    <ClCompile Include="..\..\src\dx\D3D10DeviceResources.cpp" />
     <ClCompile Include="..\..\src\dx\D3D11DeviceResources.cpp" />
     <ClCompile Include="..\..\src\dx\TextRenderer.cpp" />
     <ClCompile Include="..\..\src\math\rand.cpp" />

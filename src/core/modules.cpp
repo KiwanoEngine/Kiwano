@@ -42,42 +42,6 @@ namespace easy2d
 			}
 		}
 
-		DirectX::DirectX()
-		{
-			d2d = LoadLibraryW(L"d2d1.dll");
-			if (d2d)
-			{
-				D2D1CreateFactory = (PFN_D2D1CreateFactory)
-					GetProcAddress(d2d, "D2D1CreateFactory");
-			}
-			else
-			{
-				E2D_LOG(L"load d2d.dll failed");
-			}
-
-			dwrite = LoadLibraryW(L"dwrite.dll");
-			if (dwrite)
-			{
-				DWriteCreateFactory = (PFN_DWriteCreateFactory)
-					GetProcAddress(dwrite, "DWriteCreateFactory");
-			}
-			else
-			{
-				E2D_LOG(L"load dwrite.dll failed");
-			}
-
-			d3d11 = LoadLibraryW(L"d3d11.dll");
-			if (d3d11)
-			{
-				D3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE)
-					GetProcAddress(d3d11, "D3D11CreateDevice");
-			}
-			else
-			{
-				E2D_LOG(L"load d3d11.dll failed");
-			}
-		}
-
 		XAudio2::XAudio2()
 		{
 			const auto xaudio2_dll_names =

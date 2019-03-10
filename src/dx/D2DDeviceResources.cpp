@@ -18,10 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "DeviceResources.h"
+#include "D2DDeviceResources.h"
 #include "../core/Image.h"
 #include "../core/modules.h"
 #include "../core/logs.h"
+
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "dwrite.lib")
 
 namespace easy2d
 {
@@ -106,7 +109,7 @@ namespace easy2d
 		options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
 #endif
 
-		hr = modules::DirectX::Get().D2D1CreateFactory(
+		hr = D2D1CreateFactory(
 			D2D1_FACTORY_TYPE_SINGLE_THREADED,
 			__uuidof(ID2D1Factory1),
 			&options,
@@ -117,7 +120,7 @@ namespace easy2d
 		{
 			d2d_factory_ = d2d_factory;
 
-			CoCreateInstance(
+			hr = CoCreateInstance(
 				CLSID_WICImagingFactory,
 				nullptr,
 				CLSCTX_INPROC_SERVER,
@@ -130,7 +133,7 @@ namespace easy2d
 		{
 			imaging_factory_ = imaging_factory;
 
-			modules::DirectX::Get().DWriteCreateFactory(
+			hr = DWriteCreateFactory(
 				DWRITE_FACTORY_TYPE_SHARED,
 				__uuidof(IDWriteFactory),
 				reinterpret_cast<IUnknown**>(&dwrite_factory)
