@@ -19,9 +19,7 @@
 // THE SOFTWARE.
 
 #include "Text.h"
-#include "Factory.h"
 #include "render.h"
-#include "include-forwards.h"
 #include "logs.h"
 
 namespace easy2d
@@ -45,6 +43,7 @@ namespace easy2d
 	Text::Text()
 		: font_(text_default_font)
 		, style_(text_default_style)
+		, layout_dirty_(false)
 	{
 	}
 
@@ -67,8 +66,8 @@ namespace easy2d
 		: font_(font)
 		, style_(style)
 		, text_(text)
+		, layout_dirty_(true)
 	{
-		UpdateLayout();
 	}
 
 	Text::~Text()
@@ -127,6 +126,7 @@ namespace easy2d
 
 	int Text::GetLineCount()
 	{
+		UpdateLayout();
 		if (text_layout_)
 		{
 			DWRITE_TEXT_METRICS metrics;
@@ -136,6 +136,12 @@ namespace easy2d
 			}
 		}
 		return 0;
+	}
+
+	Size const& Text::GetLayoutSize() const
+	{
+		UpdateLayout();
+		return layout_size_;
 	}
 
 	bool Text::IsItalic() const
@@ -161,19 +167,19 @@ namespace easy2d
 	void Text::SetText(String const& text)
 	{
 		text_ = text;
-		UpdateLayout();
+		layout_dirty_ = true;
 	}
 
 	void Text::SetStyle(const TextStyle& style)
 	{
 		style_ = style;
-		UpdateLayout();
+		layout_dirty_ = true;
 	}
 
 	void Text::SetFont(const Font & font)
 	{
 		font_ = font;
-		UpdateLayout();
+		layout_dirty_ = true;
 	}
 
 	void Text::SetFontFamily(String const& family)
@@ -181,7 +187,7 @@ namespace easy2d
 		if (font_.family != family)
 		{
 			font_.family = family;
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -190,7 +196,7 @@ namespace easy2d
 		if (font_.size != size)
 		{
 			font_.size = size;
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -199,7 +205,7 @@ namespace easy2d
 		if (font_.weight != weight)
 		{
 			font_.weight = weight;
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -213,7 +219,7 @@ namespace easy2d
 		if (font_.italic != val)
 		{
 			font_.italic = val;
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -222,7 +228,7 @@ namespace easy2d
 		if (style_.wrap != wrap)
 		{
 			style_.wrap = wrap;
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -231,7 +237,7 @@ namespace easy2d
 		if (style_.wrap_width != wrap_width)
 		{
 			style_.wrap_width = std::max(wrap_width, 0.f);
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -240,7 +246,7 @@ namespace easy2d
 		if (style_.line_spacing != line_spacing)
 		{
 			style_.line_spacing = line_spacing;
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -249,7 +255,7 @@ namespace easy2d
 		if (style_.alignment != align)
 		{
 			style_.alignment = align;
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -258,7 +264,7 @@ namespace easy2d
 		if (style_.underline != underline)
 		{
 			style_.underline = underline;
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -267,7 +273,7 @@ namespace easy2d
 		if (style_.strikethrough != strikethrough)
 		{
 			style_.strikethrough = strikethrough;
-			UpdateLayout();
+			layout_dirty_ = true;
 		}
 	}
 
@@ -293,22 +299,27 @@ namespace easy2d
 
 	void Text::OnRender()
 	{
+		UpdateLayout();
+
 		if (text_layout_)
 		{
-			auto& rt = RenderSystem::Instance();
-			rt.SetTextStyle(
+			Renderer::Instance().SetTextStyle(
 				style_.color,
 				style_.outline,
 				style_.outline_color,
 				style_.outline_width,
 				style_.outline_stroke
 			);
-			rt.DrawTextLayout(text_layout_);
+			Renderer::Instance().DrawTextLayout(text_layout_);
 		}
 	}
 
-	void Text::UpdateLayout()
+	void Text::UpdateLayout() const
 	{
+		if (!layout_dirty_)
+			return;
+
+		layout_dirty_ = false;
 		text_format_ = nullptr;
 		text_layout_ = nullptr;
 
@@ -316,24 +327,21 @@ namespace easy2d
 			return;
 
 		ThrowIfFailed(
-			Factory::Instance().CreateTextFormat(
+			Renderer::Instance().GetDeviceResources()->CreateTextFormat(
 				text_format_,
 				font_,
 				style_
 			)
 		);
 
-		Size layout_size;
 		ThrowIfFailed(
-			Factory::Instance().CreateTextLayout(
+			Renderer::Instance().GetDeviceResources()->CreateTextLayout(
 				text_layout_,
-				layout_size,
+				layout_size_,
 				text_,
 				text_format_,
 				style_
 			)
 		);
-
-		this->SetSize(layout_size);
 	}
 }

@@ -25,7 +25,7 @@
 #include "closure.hpp"
 #include "../math/vector.hpp"
 #include "../math/Rect.hpp"
-#include "../math/Matrix.h"
+#include "../math/Matrix.hpp"
 #include <set>
 #include <map>
 #include <list>
@@ -72,8 +72,6 @@ namespace easy2d
 
 namespace easy2d
 {
-	// "Ptr" is a shorthand for "Smart Pointer"
-
 	E2D_DECLARE_SMART_PTR(Object);
 	E2D_DECLARE_SMART_PTR(Image);
 	E2D_DECLARE_SMART_PTR(Music);

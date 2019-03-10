@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "Geometry.h"
-#include "Factory.h"
 #include "render.h"
 #include "logs.h"
 
@@ -99,7 +98,7 @@ namespace easy2d
 		BOOL ret = 0;
 		// no matter it failed or not
 		geo_->FillContainsPoint(
-			ToD2dPoint2F(point),
+			DX::ConvertToPoint2F(point),
 			D2D1::Matrix3x2F::Identity(),
 			&ret
 		);
@@ -126,10 +125,10 @@ namespace easy2d
 
 	void LineGeometry::SetLine(Point const & begin, Point const & end)
 	{
-		D2DPathGeometryPtr path_geo;
-		D2DGeometrySinkPtr path_sink;
+		ComPtr<ID2D1PathGeometry> path_geo;
+		ComPtr<ID2D1GeometrySink> path_sink;
 
-		HRESULT hr = Factory::Instance().CreatePathGeometry(path_geo);
+		HRESULT hr = Renderer::Instance().GetDeviceResources()->GetD2DFactory()->CreatePathGeometry(&path_geo);
 
 		if (SUCCEEDED(hr))
 		{
@@ -138,8 +137,8 @@ namespace easy2d
 
 		if (SUCCEEDED(hr))
 		{
-			path_sink->BeginFigure(ToD2dPoint2F(begin), D2D1_FIGURE_BEGIN_FILLED);
-			path_sink->AddLine(ToD2dPoint2F(end));
+			path_sink->BeginFigure(DX::ConvertToPoint2F(begin), D2D1_FIGURE_BEGIN_FILLED);
+			path_sink->AddLine(DX::ConvertToPoint2F(end));
 			path_sink->EndFigure(D2D1_FIGURE_END_OPEN);
 			hr = path_sink->Close();
 		}
@@ -185,8 +184,10 @@ namespace easy2d
 
 	void RectangleGeometry::SetRect(Rect const & rect)
 	{
-		D2DRectangleGeometryPtr geo;
-		if (SUCCEEDED(Factory::Instance().CreateRectangleGeometry(geo, rect)))
+		ComPtr<ID2D1RectangleGeometry> geo;
+		auto factory = Renderer::Instance().GetDeviceResources()->GetD2DFactory();
+
+		if (SUCCEEDED(factory->CreateRectangleGeometry(DX::ConvertToRectF(rect), &geo)))
 		{
 			geo_ = geo;
 			rect_ = rect;
@@ -224,8 +225,15 @@ namespace easy2d
 
 	void CircleGeometry::SetCircle(Point const & center, float radius)
 	{
-		D2DEllipseGeometryPtr geo;
-		if (SUCCEEDED(Factory::Instance().CreateEllipseGeometry(geo, center, radius, radius)))
+		ComPtr<ID2D1EllipseGeometry> geo;
+		auto factory = Renderer::Instance().GetDeviceResources()->GetD2DFactory();
+
+		if (SUCCEEDED(factory->CreateEllipseGeometry(
+			D2D1::Ellipse(
+				DX::ConvertToPoint2F(center),
+				radius,
+				radius),
+			&geo)))
 		{
 			geo_ = geo;
 			center_ = center;
@@ -265,8 +273,15 @@ namespace easy2d
 
 	void EllipseGeometry::SetEllipse(Point const & center, float radius_x, float radius_y)
 	{
-		D2DEllipseGeometryPtr geo;
-		if (SUCCEEDED(Factory::Instance().CreateEllipseGeometry(geo, center, radius_x, radius_y)))
+		ComPtr<ID2D1EllipseGeometry> geo;
+		auto factory = Renderer::Instance().GetDeviceResources()->GetD2DFactory();
+
+		if (SUCCEEDED(factory->CreateEllipseGeometry(
+			D2D1::Ellipse(
+				DX::ConvertToPoint2F(center),
+				radius_x,
+				radius_y),
+			&geo)))
 		{
 			geo_ = geo;
 			radius_x_ = radius_x;
@@ -291,15 +306,17 @@ namespace easy2d
 	{
 		current_geometry_ = nullptr;
 
+		auto factory = Renderer::Instance().GetDeviceResources()->GetD2DFactory();
+
 		ThrowIfFailed(
-			Factory::Instance().CreatePathGeometry(current_geometry_)
+			factory->CreatePathGeometry(&current_geometry_)
 		);
 
 		ThrowIfFailed(
 			current_geometry_->Open(&current_sink_)
 		);
 
-		current_sink_->BeginFigure(ToD2dPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
+		current_sink_->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
 	}
 
 	void PathGeometry::EndPath(bool closed)
@@ -321,7 +338,7 @@ namespace easy2d
 	void PathGeometry::AddLine(Point const & point)
 	{
 		if (current_sink_)
-			current_sink_->AddLine(ToD2dPoint2F(point));
+			current_sink_->AddLine(DX::ConvertToPoint2F(point));
 	}
 
 	void PathGeometry::AddLines(Array<Point> const& points)
@@ -341,9 +358,9 @@ namespace easy2d
 		{
 			current_sink_->AddBezier(
 				D2D1::BezierSegment(
-					ToD2dPoint2F(point1),
-					ToD2dPoint2F(point2),
-					ToD2dPoint2F(point3)
+					DX::ConvertToPoint2F(point1),
+					DX::ConvertToPoint2F(point2),
+					DX::ConvertToPoint2F(point3)
 				)
 			);
 		}
@@ -355,8 +372,8 @@ namespace easy2d
 		{
 			current_sink_->AddArc(
 				D2D1::ArcSegment(
-					ToD2dPoint2F(point),
-					ToD2dSizeF(radius),
+					DX::ConvertToPoint2F(point),
+					DX::ConvertToSizeF(radius),
 					rotation,
 					clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
 					is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE
@@ -404,8 +421,16 @@ namespace easy2d
 
 	void RoundedRectGeometry::SetRoundedRect(Rect const & rect, float radius_x, float radius_y)
 	{
-		D2DRoundedRectangleGeometryPtr geo;
-		if (SUCCEEDED(Factory::Instance().CreateRoundedRectangleGeometry(geo, rect, radius_x, radius_y)))
+		ComPtr<ID2D1RoundedRectangleGeometry> geo;
+		auto factory = Renderer::Instance().GetDeviceResources()->GetD2DFactory();
+
+		if (SUCCEEDED(factory->CreateRoundedRectangleGeometry(
+			D2D1::RoundedRect(
+				DX::ConvertToRectF(rect),
+				radius_x,
+				radius_y
+			),
+			&geo)))
 		{
 			geo_ = geo;
 			rect_ = rect;

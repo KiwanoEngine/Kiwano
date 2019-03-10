@@ -82,7 +82,7 @@ namespace easy2d
 		using VoiceMap = UnorderedSet<Voice*>;
 
 	public:
-		HRESULT Init(bool debug);
+		HRESULT Init();
 
 		void Destroy();
 

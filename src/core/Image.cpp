@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include "Image.h"
-#include "render.h"
 #include "logs.h"
+#include "render.h"
 #include "../utils/File.h"
 #include "../utils/string.h"
 
@@ -45,7 +45,7 @@ namespace easy2d
 		this->Crop(crop_rect);
 	}
 
-	Image::Image(D2DBitmapPtr const & bitmap)
+	Image::Image(ComPtr<ID2D1Bitmap> const & bitmap)
 		: Image()
 	{
 		SetBitmap(bitmap);
@@ -58,7 +58,7 @@ namespace easy2d
 	bool Image::Load(Resource const& res)
 	{
 		HRESULT hr = S_OK;
-		D2DBitmapPtr bitmap;
+		ComPtr<ID2D1Bitmap> bitmap;
 
 		if (res.IsFileType())
 		{
@@ -67,11 +67,11 @@ namespace easy2d
 				E2D_WARNING_LOG(L"Image file '%s' not found!", res.GetFileName().c_str());
 				return false;
 			}
-			hr = RenderSystem::Instance().CreateBitmapFromFile(bitmap, res.GetFileName());
+			hr = Renderer::Instance().GetDeviceResources()->CreateBitmapFromFile(bitmap, res.GetFileName());
 		}
 		else
 		{
-			hr = RenderSystem::Instance().CreateBitmapFromResource(bitmap, res);
+			hr = Renderer::Instance().GetDeviceResources()->CreateBitmapFromResource(bitmap, res);
 		}
 
 		if (FAILED(hr))
@@ -164,12 +164,12 @@ namespace easy2d
 		return crop_rect_;
 	}
 
-	D2DBitmapPtr const& Image::GetBitmap() const
+	ComPtr<ID2D1Bitmap> const& Image::GetBitmap() const
 	{
 		return bitmap_;
 	}
 
-	void Image::SetBitmap(D2DBitmapPtr const & bitmap)
+	void Image::SetBitmap(ComPtr<ID2D1Bitmap> const & bitmap)
 	{
 		if (bitmap)
 		{

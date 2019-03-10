@@ -26,7 +26,7 @@ namespace easy2d
 {
 	// ¾«Áé
 	class E2D_API Sprite
-		: public Node
+		: public VisualNode
 	{
 	public:
 		Sprite();

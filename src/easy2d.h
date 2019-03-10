@@ -77,7 +77,6 @@
 #include "core/GeometryNode.h"
 #include "core/DebugNode.h"
 
-#include "core/Factory.h"
 #include "core/Application.h"
 
 
@@ -90,7 +89,7 @@
 #include "math/ease.hpp"
 #include "math/vector.hpp"
 #include "math/rand.h"
-#include "math/Matrix.h"
+#include "math/Matrix.hpp"
 
 
 //

@@ -63,8 +63,8 @@ namespace easy2d
 		Size			window_size_;
 		ScenePtr			out_scene_;
 		ScenePtr			in_scene_;
-		D2DLayerPtr			out_layer_;
-		D2DLayerPtr			in_layer_;
+		ComPtr<ID2D1Layer>			out_layer_;
+		ComPtr<ID2D1Layer>			in_layer_;
 		LayerProperties out_layer_prop_;
 		LayerProperties in_layer_prop_;
 	};

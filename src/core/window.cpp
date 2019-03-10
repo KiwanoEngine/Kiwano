@@ -53,12 +53,8 @@ namespace easy2d
 	{
 	}
 
-	HRESULT Window::Init(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc, bool debug)
+	HRESULT Window::Init(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
 	{
-		E2D_NOT_USED(debug);
-
-		E2D_LOG(L"Creating window");
-		
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
 		wcex.cbSize			= sizeof(WNDCLASSEX);
@@ -160,8 +156,6 @@ namespace easy2d
 
 	void Window::Destroy()
 	{
-		E2D_LOG(L"Destroying window");
-
 		if (is_fullscreen_)
 			RestoreResolution(device_name_);
 

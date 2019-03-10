@@ -23,7 +23,7 @@
 #include "logs.h"
 #include "Image.h"
 #include "Geometry.h"
-#include "Factory.h"
+#include "render.h"
 
 namespace easy2d
 {
@@ -31,37 +31,30 @@ namespace easy2d
 		: cache_expired_(false)
 		, stroke_width_(1.0f)
 	{
+		auto ctx = Renderer::Instance().GetDeviceResources()->GetD2DDeviceContext();
+
 		ThrowIfFailed(
-			RenderSystem::Instance().CreateBitmapRenderTarget(render_target_)
+			ctx->CreateCompatibleRenderTarget(&render_target_)
 		);
 
-		auto properties = D2D1::BrushProperties();
 		ThrowIfFailed(
 			render_target_->CreateSolidColorBrush(
 				D2D1::ColorF(0, 0, 0, 0),
-				properties,
+				D2D1::BrushProperties(),
 				&fill_brush_)
 		);
 
 		ThrowIfFailed(
 			render_target_->CreateSolidColorBrush(
 				D2D1::ColorF(Color::White),
-				properties,
+				D2D1::BrushProperties(),
 				&stroke_brush_)
 		);
 
 		ThrowIfFailed(
-			render_target_->CreateSolidColorBrush(
-				D2D1::ColorF(Color::White),
-				properties,
-				&text_brush_)
-		);
-
-		ThrowIfFailed(
-			Factory::Instance().CreateTextRenderer(
-				text_renderer_,
-				render_target_,
-				text_brush_
+			ITextRenderer::Create(
+				&text_renderer_,
+				render_target_.Get()
 			)
 		);
 
@@ -105,18 +98,18 @@ namespace easy2d
 		
 		if (bitmap_cached_)
 		{
-			RenderSystem::Instance().DrawBitmap(bitmap_cached_);
+			Renderer::Instance().DrawBitmap(bitmap_cached_);
 		}
 	}
 
 	void Canvas::SetStrokeColor(Color const& color)
 	{
-		stroke_brush_->SetColor(ToD2dColorF(color));
+		stroke_brush_->SetColor(DX::ConvertToColorF(color));
 	}
 
 	void Canvas::SetFillColor(Color const& color)
 	{
-		fill_brush_->SetColor(ToD2dColorF(color));
+		fill_brush_->SetColor(DX::ConvertToColorF(color));
 	}
 
 	void Canvas::SetStrokeWidth(float width)
@@ -126,7 +119,7 @@ namespace easy2d
 
 	void Canvas::SetOutlineJoinStyle(StrokeStyle outline_join)
 	{
-		outline_join_style_ = Factory::Instance().GetStrokeStyle(outline_join);
+		outline_join_style_ = Renderer::Instance().GetDeviceResources()->GetStrokeStyle(outline_join);
 	}
 
 	void Canvas::SetTextStyle(Font const& font, TextStyle const & text_style)
@@ -135,12 +128,15 @@ namespace easy2d
 		text_style_ = text_style;
 
 		text_renderer_->SetTextStyle(
-			ToD2dColorF(text_style_.color),
+			DX::ConvertToColorF(text_style_.color),
 			text_style_.outline,
-			ToD2dColorF(text_style_.outline_color),
+			DX::ConvertToColorF(text_style_.outline_color),
 			text_style_.outline_width,
-			Factory::Instance().GetStrokeStyle(text_style_.outline_stroke).Get()
+			Renderer::Instance().GetDeviceResources()->GetStrokeStyle(text_style_.outline_stroke)
 		);
+
+		// clear text format
+		text_format_ = nullptr;
 	}
 
 	Color Canvas::GetStrokeColor() const
@@ -162,7 +158,7 @@ namespace easy2d
 
 	void Canvas::SetBrushTransform(Matrix const & transform)
 	{
-		render_target_->SetTransform(transform);
+		render_target_->SetTransform(DX::ConvertToMatrix3x2F(transform));
 	}
 
 	void Canvas::DrawLine(const Point & begin, const Point & end)
@@ -258,7 +254,7 @@ namespace easy2d
 				D2D1::RectF(0, 0, image->GetWidth(), image->GetHeight()),
 				opacity,
 				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				ToD2dRectF(image->GetCropRect())
+				DX::ConvertToRectF(image->GetCropRect())
 			);
 			cache_expired_ = true;
 		}
@@ -269,23 +265,25 @@ namespace easy2d
 		if (text.empty())
 			return;
 
-		D2DTextFormatPtr text_format;
-		ThrowIfFailed(
-			Factory::Instance().CreateTextFormat(
-				text_format,
-				text_font_,
-				text_style_
-			)
-		);
+		if (!text_format_)
+		{
+			ThrowIfFailed(
+				Renderer::Instance().GetDeviceResources()->CreateTextFormat(
+					text_format_,
+					text_font_,
+					text_style_
+				)
+			);
+		}
 
-		D2DTextLayoutPtr text_layout;
+		ComPtr<IDWriteTextLayout> text_layout;
 		Size layout_size;
 		ThrowIfFailed(
-			Factory::Instance().CreateTextLayout(
+			Renderer::Instance().GetDeviceResources()->CreateTextLayout(
 				text_layout,
 				layout_size,
 				text,
-				text_format,
+				text_format_,
 				text_style_
 			)
 		);
@@ -390,14 +388,14 @@ namespace easy2d
 		current_geometry_ = nullptr;
 
 		ThrowIfFailed(
-			Factory::Instance().CreatePathGeometry(current_geometry_)
+			Renderer::Instance().GetDeviceResources()->GetD2DFactory()->CreatePathGeometry(&current_geometry_)
 		);
 		
 		ThrowIfFailed(
 			current_geometry_->Open(&current_sink_)
 		);
 
-		current_sink_->BeginFigure(ToD2dPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
+		current_sink_->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
 	}
 
 	void Canvas::EndPath(bool closed)
@@ -415,7 +413,7 @@ namespace easy2d
 	void Canvas::AddLine(Point const & point)
 	{
 		if (current_sink_)
-			current_sink_->AddLine(ToD2dPoint2F(point));
+			current_sink_->AddLine(DX::ConvertToPoint2F(point));
 	}
 
 	void Canvas::AddLines(Array<Point> const& points)
@@ -435,9 +433,9 @@ namespace easy2d
 		{
 			current_sink_->AddBezier(
 				D2D1::BezierSegment(
-					ToD2dPoint2F(point1),
-					ToD2dPoint2F(point2),
-					ToD2dPoint2F(point3)
+					DX::ConvertToPoint2F(point1),
+					DX::ConvertToPoint2F(point2),
+					DX::ConvertToPoint2F(point3)
 				)
 			);
 		}
@@ -449,8 +447,8 @@ namespace easy2d
 		{
 			current_sink_->AddArc(
 				D2D1::ArcSegment(
-					ToD2dPoint2F(point),
-					ToD2dSizeF(radius),
+					DX::ConvertToPoint2F(point),
+					DX::ConvertToSizeF(radius),
 					rotation,
 					clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
 					is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE
@@ -492,7 +490,7 @@ namespace easy2d
 		return image;
 	}
 
-	D2DBitmapPtr const& easy2d::Canvas::GetBitmap() const
+	ComPtr<ID2D1Bitmap> const& easy2d::Canvas::GetBitmap() const
 	{
 		if (cache_expired_)
 		{

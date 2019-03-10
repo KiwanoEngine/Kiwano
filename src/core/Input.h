@@ -55,7 +55,7 @@ namespace easy2d
 		// 获得鼠标坐标
 		Point GetMousePos();
 
-		HRESULT Init(HWND hwnd, bool debug);
+		HRESULT Init(HWND hwnd);
 
 		void Update();
 

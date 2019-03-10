@@ -20,220 +20,233 @@
 
 #include "render.h"
 #include "logs.h"
-#include "Factory.h"
+#include "render.h"
 #include "Image.h"
 #include "Transform.hpp"
 
 namespace easy2d
 {
-	RenderSystem::RenderSystem()
-		: fps_text_format_(nullptr)
-		, fps_text_layout_(nullptr)
+	Renderer::Renderer()
+		: antialias_(true)
+		, text_antialias_(TextAntialias::ClearType)
 		, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
 		, opacity_(1.f)
-		, debug_(false)
-		, window_occluded_(false)
-		, vsync_enabled_(true)
-		, antialias_(true)
-		, text_antialias_(TextAntialias::ClearType)
+	{
+		status_.primitives = 0;
+	}
+
+	Renderer::~Renderer()
 	{
 	}
 
-	RenderSystem::~RenderSystem()
+	HRESULT Renderer::Init(HWND hwnd)
 	{
+		HRESULT hr = S_OK;
+
+		E2D_LOG(L"Creating device resources");
+		
+		{
+			device_resources_ = nullptr;
+			hr = DeviceResources::Create(
+				&device_resources_,
+				hwnd
+			);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			factory_ = device_resources_->GetD2DFactory();
+			device_context_ = device_resources_->GetD2DDeviceContext();
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			drawing_state_block_ = nullptr;
+			hr = factory_->CreateDrawingStateBlock(
+				&drawing_state_block_
+			);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = CreateDeviceResources();
+		}
+		return hr;
 	}
 
-	HRESULT RenderSystem::Init(HWND hwnd, bool vsync, bool debug)
+	void Renderer::Destroy()
 	{
-		E2D_LOG(L"Initing graphics resources");
+		E2D_LOG(L"Destroying device resources");
 
-		vsync_enabled_ = vsync;
-		debug_ = debug;
-
-		return CreateResources(hwnd);
-	}
-
-	void RenderSystem::Destroy()
-	{
-		E2D_LOG(L"Destroying graphics resources");
-
-		ClearImageCache();
-
+		device_resources_.Reset();
+		factory_.Reset();
+		device_context_.Reset();
+		drawing_state_block_.Reset();
 		text_renderer_.Reset();
-		solid_brush_.Reset();
-		render_target_.Reset();
-		fps_text_format_.Reset();
-		fps_text_layout_.Reset();
+		solid_color_brush_.Reset();
 	}
 
-	HRESULT RenderSystem::BeginDraw(HWND hwnd)
+	HRESULT Renderer::CreateDeviceResources()
 	{
-		HRESULT hr = CreateResources(hwnd);
+		HRESULT hr = S_OK;
 
-		if (debug_)
+		hr = device_context_->CreateSolidColorBrush(
+			D2D1::ColorF(D2D1::ColorF::White),
+			&solid_color_brush_
+		);
+
+		if (SUCCEEDED(hr))
+		{
+			hr = ITextRenderer::Create(
+				&text_renderer_,
+				device_context_.Get()
+			);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			SetAntialiasMode(antialias_);
+			SetTextAntialiasMode(text_antialias_);
+		}
+		return hr;
+	}
+
+	HRESULT Renderer::HandleDeviceLost()
+	{
+		HRESULT hr = device_resources_->HandleDeviceLost();
+
+		if (SUCCEEDED(hr))
+		{
+			hr = CreateDeviceResources();
+		}
+		return hr;
+	}
+
+	HRESULT Renderer::BeginDraw()
+	{
+		if (!device_context_)
+			return E_UNEXPECTED;
+
+		// if (debug_)
 		{
 			status_.start = time::Now();
 			status_.primitives = 0;
 		}
 
-		if (SUCCEEDED(hr))
-		{
-			window_occluded_ = !!(render_target_->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED);
+		device_context_->SaveDrawingState(drawing_state_block_.Get());
 
-			if (!window_occluded_)
-			{
-				render_target_->BeginDraw();
-				render_target_->Clear(clear_color_);
-			}
-		}
-		return hr;
+		device_context_->BeginDraw();
+		device_context_->Clear(clear_color_);
+		return S_OK;
 	}
 
-	HRESULT RenderSystem::EndDraw()
+	HRESULT Renderer::EndDraw()
 	{
-		HRESULT hr = S_OK;
-		
-		if (!window_occluded_)
-		{
-			hr = render_target_->EndDraw();
+		if (!device_context_)
+			return E_UNEXPECTED;
 
-			if (hr == D2DERR_RECREATE_TARGET)
-			{
-				// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
-				// 并在下一次调用时重建资源
-				DiscardResources();
-				hr = S_OK;
-			}
+		HRESULT hr = device_context_->EndDraw();
+
+		device_context_->RestoreDrawingState(drawing_state_block_.Get());
+
+		if (SUCCEEDED(hr))
+		{
+			// The first argument instructs DXGI to block until VSync.
+			hr = device_resources_->GetDXGISwapChain()->Present(1, 0);
 		}
 
-		if (debug_)
+		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+		{
+			// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
+			hr = HandleDeviceLost();
+		}
+
+		// if (debug_)
 		{
 			status_.duration = time::Now() - status_.start;
 		}
 		return hr;
 	}
 
-	void RenderSystem::ClearImageCache()
+	HRESULT Renderer::CreateLayer(ComPtr<ID2D1Layer>& layer)
 	{
-		bitmap_cache_.clear();
-	}
-
-	D2DHwndRenderTargetPtr const & RenderSystem::GetRenderTarget() const
-	{
-		return render_target_;
-	}
-
-	D2DSolidColorBrushPtr const & RenderSystem::GetSolidBrush() const
-	{
-		return solid_brush_;
-	}
-
-	HRESULT RenderSystem::CreateLayer(D2DLayerPtr& layer)
-	{
-		if (!render_target_)
+		if (!device_context_)
 			return E_UNEXPECTED;
 
 		layer = nullptr;
-		return render_target_->CreateLayer(&layer);
+		return device_context_->CreateLayer(&layer);
 	}
 
-	HRESULT RenderSystem::CreateSolidColorBrush(D2DSolidColorBrushPtr & brush) const
-	{
-		if (!render_target_)
-			return E_UNEXPECTED;
-
-		brush = nullptr;
-		return render_target_->CreateSolidColorBrush(
-			D2D1::ColorF(D2D1::ColorF::White),
-			&brush
-		);
-	}
-
-	HRESULT RenderSystem::DrawGeometry(
-		D2DGeometryPtr const& geometry,
+	HRESULT Renderer::DrawGeometry(
+		ComPtr<ID2D1Geometry> const& geometry,
 		Color const& stroke_color,
 		float stroke_width,
 		StrokeStyle stroke
 	)
 	{
-		if (!solid_brush_ ||
-			!render_target_)
+		if (!solid_color_brush_ || !device_context_)
 			return E_UNEXPECTED;
 
-		if (window_occluded_)
-			return S_OK;
+		solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
-		solid_brush_->SetColor(ToD2dColorF(stroke_color));
-		auto stroke_style = Factory::Instance().GetStrokeStyle(stroke);
-		render_target_->DrawGeometry(
+		device_context_->DrawGeometry(
 			geometry.Get(),
-			solid_brush_.Get(),
+			solid_color_brush_.Get(),
 			stroke_width,
-			stroke_style.Get()
+			device_resources_->GetStrokeStyle(stroke)
 		);
 
-		if (debug_)
+		// if (debug_)
 			++status_.primitives;
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::FillGeometry(D2DGeometryPtr const & geometry, const Color & fill_color)
+	HRESULT Renderer::FillGeometry(ComPtr<ID2D1Geometry> const & geometry, Color const& fill_color)
 	{
-		if (!solid_brush_ ||
-			!render_target_)
+		if (!solid_color_brush_ || !device_context_)
 			return E_UNEXPECTED;
 
-		if (window_occluded_)
-			return S_OK;
-
-		solid_brush_->SetColor(ToD2dColorF(fill_color));
-		render_target_->FillGeometry(
+		solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
+		device_context_->FillGeometry(
 			geometry.Get(),
-			solid_brush_.Get()
+			solid_color_brush_.Get()
 		);
 
-		if (debug_)
-			++status_.primitives;
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::DrawImage(ImagePtr const & image, Rect const& dest_rect)
+	HRESULT Renderer::DrawImage(ImagePtr const & image, Rect const& dest_rect)
 	{
-		if (!render_target_)
+		if (!device_context_)
 			return E_UNEXPECTED;
 
 		if (!image->GetBitmap())
 			return S_OK;
 
-		if (window_occluded_)
-			return S_OK;
-
-		render_target_->DrawBitmap(
+		device_context_->DrawBitmap(
 			image->GetBitmap().Get(),
-			ToD2dRectF(dest_rect),
+			DX::ConvertToRectF(dest_rect),
 			opacity_,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-			ToD2dRectF(image->GetCropRect())
+			DX::ConvertToRectF(image->GetCropRect())
 		);
 
-		if (debug_)
+		// if (debug_)
 			++status_.primitives;
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::DrawBitmap(
-		D2DBitmapPtr const& bitmap
-	)
+	HRESULT Renderer::DrawBitmap(ComPtr<ID2D1Bitmap> const & bitmap)
 	{
-		if (!render_target_)
+		if (!device_context_)
 			return E_UNEXPECTED;
 
-		if (window_occluded_)
+		if (!bitmap)
 			return S_OK;
 
 		// Do not crop bitmap 
-		auto rect = D2D1::RectF(0.f, 0.f, bitmap->GetSize().width, bitmap->GetSize().height);
-		render_target_->DrawBitmap(
+		D2D_RECT_F rect = D2D1::RectF(0.f, 0.f, bitmap->GetSize().width, bitmap->GetSize().height);
+		device_context_->DrawBitmap(
 			bitmap.Get(),
 			rect,
 			opacity_,
@@ -241,69 +254,56 @@ namespace easy2d
 			rect
 		);
 
-		if (debug_)
-			++status_.primitives;
+		// if (debug_)
+		++status_.primitives;
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::DrawTextLayout(D2DTextLayoutPtr const& text_layout)
+	HRESULT Renderer::DrawTextLayout(ComPtr<IDWriteTextLayout> const& text_layout)
 	{
 		if (!text_renderer_)
 			return E_UNEXPECTED;
 
-		if (window_occluded_)
-			return S_OK;
-
-		if (debug_)
+		// if (debug_)
 			++status_.primitives;
 		return text_layout->Draw(nullptr, text_renderer_.Get(), 0, 0);
 	}
 
-	HRESULT RenderSystem::PushClip(const Matrix & clip_matrix, const Size & clip_size)
+	HRESULT Renderer::PushClip(const Matrix & clip_matrix, const Size & clip_size)
 	{
-		if (!render_target_)
+		if (!device_context_)
 			return E_UNEXPECTED;
 
-		if (window_occluded_)
-			return S_OK;
-
-		render_target_->SetTransform(clip_matrix);
-		render_target_->PushAxisAlignedClip(
+		device_context_->SetTransform(DX::ConvertToMatrix3x2F(clip_matrix));
+		device_context_->PushAxisAlignedClip(
 			D2D1::RectF(0, 0, clip_size.x, clip_size.y),
 			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
 		);
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::PopClip()
+	HRESULT Renderer::PopClip()
 	{
-		if (!render_target_)
+		if (!device_context_)
 			return E_UNEXPECTED;
 
-		if (window_occluded_)
-			return S_OK;
-
-		render_target_->PopAxisAlignedClip();
+		device_context_->PopAxisAlignedClip();
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::PushLayer(D2DLayerPtr const& layer, LayerProperties const& properties)
+	HRESULT Renderer::PushLayer(ComPtr<ID2D1Layer> const& layer, LayerProperties const& properties)
 	{
-		if (!render_target_ ||
-			!solid_brush_)
+		if (!device_context_ || !solid_color_brush_)
 			return E_UNEXPECTED;
 
-		if (window_occluded_)
-			return S_OK;
-
-		render_target_->PushLayer(
+		device_context_->PushLayer(
 			D2D1::LayerParameters(
-				ToD2dRectF(properties.area),
+				DX::ConvertToRectF(properties.area),
 				nullptr,
 				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 				D2D1::Matrix3x2F::Identity(),
 				properties.opacity,
-				solid_brush_.Get(),
+				solid_color_brush_.Get(),
 				D2D1_LAYER_OPTIONS_NONE
 			),
 			layer.Get()
@@ -311,124 +311,39 @@ namespace easy2d
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::PopLayer()
+	HRESULT Renderer::PopLayer()
 	{
-		if (!render_target_)
+		if (!device_context_)
 			return E_UNEXPECTED;
 
-		if (window_occluded_)
-			return S_OK;
-
-		render_target_->PopLayer();
+		device_context_->PopLayer();
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::GetSize(Size & size)
+	void Renderer::SetClearColor(const Color & color)
 	{
-		if (!render_target_)
+		clear_color_ = DX::ConvertToColorF(color);
+	}
+
+	HRESULT Renderer::SetTransform(const Matrix & matrix)
+	{
+		if (!device_context_)
 			return E_UNEXPECTED;
 
-		auto rtsize = render_target_->GetSize();
-		size.x = rtsize.width;
-		size.y = rtsize.height;
+		device_context_->SetTransform(DX::ConvertToMatrix3x2F(matrix));
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::CreateBitmapFromFile(D2DBitmapPtr& bitmap, String const& file_path)
+	void Renderer::SetOpacity(float opacity)
 	{
-		if (render_target_ == nullptr)
+		if (opacity_ != opacity)
 		{
-			return E_UNEXPECTED;
+			opacity_ = opacity;
+			solid_color_brush_->SetOpacity(opacity);
 		}
-
-		size_t hash_code = std::hash<String>{}(file_path);
-		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
-		{
-			bitmap = bitmap_cache_[hash_code];
-			return S_OK;
-		}
-
-		D2DBitmapPtr bitmap_tmp;
-		HRESULT hr = Factory::Instance().CreateBitmapFromFile(
-			bitmap,
-			render_target_,
-			file_path
-		);
-
-		if (SUCCEEDED(hr))
-		{
-			bitmap_cache_.insert(std::make_pair(hash_code, bitmap));
-		}
-
-		return hr;
 	}
 
-	HRESULT RenderSystem::CreateBitmapFromResource(D2DBitmapPtr& bitmap, Resource const& res)
-	{
-		if (render_target_ == nullptr)
-		{
-			return E_UNEXPECTED;
-		}
-
-		size_t hash_code = res.GetHashCode();
-		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
-		{
-			bitmap = bitmap_cache_[hash_code];
-			return S_OK;
-		}
-
-		HRESULT hr = Factory::Instance().CreateBitmapFromResource(
-			bitmap,
-			render_target_,
-			res
-		);
-
-		if (SUCCEEDED(hr))
-		{
-			bitmap_cache_.insert(std::make_pair(hash_code, bitmap));
-		}
-
-		return hr;
-	}
-
-	HRESULT RenderSystem::CreateBitmapRenderTarget(D2DBitmapRenderTargetPtr & brt)
-	{
-		if (!render_target_)
-			return E_UNEXPECTED;
-
-		brt = nullptr;
-		return render_target_->CreateCompatibleRenderTarget(&brt);
-	}
-
-	HRESULT RenderSystem::Resize(UINT32 width, UINT32 height)
-	{
-		if (!render_target_)
-			return E_UNEXPECTED;
-
-		render_target_->Resize(D2D1::SizeU(width, height));
-		return S_OK;
-	}
-
-	HRESULT RenderSystem::SetTransform(const Matrix & matrix)
-	{
-		if (!render_target_)
-			return E_UNEXPECTED;
-
-		render_target_->SetTransform(matrix);
-		return S_OK;
-	}
-
-	HRESULT RenderSystem::SetOpacity(float opacity)
-	{
-		if (!render_target_)
-			return E_UNEXPECTED;
-
-		opacity_ = opacity;
-		solid_brush_->SetOpacity(opacity);
-		return S_OK;
-	}
-
-	HRESULT RenderSystem::SetTextStyle(
+	HRESULT Renderer::SetTextStyle(
 		Color const& color,
 		bool has_outline,
 		Color const& outline_color,
@@ -436,40 +351,34 @@ namespace easy2d
 		StrokeStyle outline_stroke
 	)
 	{
-		if (!text_renderer_)
+		if (!text_renderer_ || !device_resources_)
 			return E_UNEXPECTED;
 
-		auto stroke_style = Factory::Instance().GetStrokeStyle(outline_stroke);
 		text_renderer_->SetTextStyle(
-			ToD2dColorF(color),
+			DX::ConvertToColorF(color),
 			has_outline,
-			ToD2dColorF(outline_color),
+			DX::ConvertToColorF(outline_color),
 			outline_width,
-			stroke_style.Get()
+			device_resources_->GetStrokeStyle(outline_stroke)
 		);
 		return S_OK;
 	}
 
-	void RenderSystem::SetClearColor(const Color& color)
+	HRESULT Renderer::SetAntialiasMode(bool enabled)
 	{
-		clear_color_ = ToD2dColorF(color);
-	}
-
-	HRESULT RenderSystem::SetAntialiasMode(bool enabled)
-	{
-		if (!render_target_)
+		if (!device_context_)
 			return E_UNEXPECTED;
 
-		render_target_->SetAntialiasMode(
+		device_context_->SetAntialiasMode(
 			enabled ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
 		);
 		antialias_ = enabled;
 		return S_OK;
 	}
 
-	HRESULT RenderSystem::SetTextAntialiasMode(TextAntialias mode)
+	HRESULT Renderer::SetTextAntialiasMode(TextAntialias mode)
 	{
-		if (!render_target_)
+		if (!device_context_)
 			return E_UNEXPECTED;
 
 		text_antialias_ = mode;
@@ -491,78 +400,8 @@ namespace easy2d
 		default:
 			break;
 		}
-		render_target_->SetTextAntialiasMode(antialias_mode);
+		device_context_->SetTextAntialiasMode(antialias_mode);
 		return S_OK;
-	}
-
-	RenderSystem::Status const & RenderSystem::GetStatus() const
-	{
-		return status_;
-	}
-
-	HRESULT RenderSystem::CreateResources(HWND hwnd)
-	{
-		HRESULT hr = S_OK;
-
-		if (!render_target_)
-		{
-			RECT rc;
-			::GetClientRect(hwnd, &rc);
-
-			D2D1_SIZE_U size = D2D1::SizeU(
-				rc.right - rc.left,
-				rc.bottom - rc.top
-			);
-
-			hr = Factory::Instance().CreateHwndRenderTarget(
-				render_target_,
-				D2D1::RenderTargetProperties(
-					D2D1_RENDER_TARGET_TYPE_DEFAULT,
-					D2D1::PixelFormat(),
-					96.f,
-					96.f
-				),
-				D2D1::HwndRenderTargetProperties(
-					hwnd,
-					size,
-					vsync_enabled_ ? D2D1_PRESENT_OPTIONS_NONE : D2D1_PRESENT_OPTIONS_IMMEDIATELY
-				)
-			);
-
-			if (SUCCEEDED(hr))
-			{
-				SetAntialiasMode(antialias_);
-				SetTextAntialiasMode(text_antialias_);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				hr = render_target_->CreateSolidColorBrush(
-					D2D1::ColorF(D2D1::ColorF::White),
-					&solid_brush_
-				);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				hr = Factory::Instance().CreateTextRenderer(
-					text_renderer_,
-					render_target_,
-					solid_brush_
-				);
-			}
-		}
-		return hr;
-	}
-
-	void RenderSystem::DiscardResources()
-	{
-		// FIXME! 应通知 Application 类销毁所有节点的 device resources
-		fps_text_format_ = nullptr;
-		fps_text_layout_ = nullptr;
-		text_renderer_ = nullptr;
-		solid_brush_ = nullptr;
-		render_target_ = nullptr;
 	}
 
 }

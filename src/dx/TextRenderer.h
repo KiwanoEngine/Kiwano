@@ -19,7 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "d2dhelper.hpp"
+#include "helper.hpp"
+#include <dwrite.h>
 
 namespace easy2d
 {
@@ -29,9 +30,7 @@ namespace easy2d
 	public:
 		static E2D_API HRESULT Create(
 			_Out_ ITextRenderer** ppTextRenderer,
-			_In_ ID2D1Factory* pD2DFactory,
-			_In_ ID2D1RenderTarget* pRT,
-			_In_ ID2D1SolidColorBrush* pBrush
+			_In_ ID2D1RenderTarget* pRT
 		);
 
 		STDMETHOD_(void, SetTextStyle)(
@@ -43,5 +42,3 @@ namespace easy2d
 		) PURE;
 	};
 }
-
-E2D_DECLARE_D2D_SMART_PTR(easy2d::ITextRenderer, D2DTextRendererPtr);

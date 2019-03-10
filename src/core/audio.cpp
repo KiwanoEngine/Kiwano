@@ -169,10 +169,8 @@ namespace easy2d
 	{
 	}
 
-	HRESULT Audio::Init(bool debug)
+	HRESULT Audio::Init()
 	{
-		E2D_NOT_USED(debug);
-
 		E2D_LOG(L"Initing audio resources");
 
 		HRESULT hr = modules::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
@@ -202,7 +200,7 @@ namespace easy2d
 			mastering_voice_ = nullptr;
 		}
 
-		SafeRelease(x_audio2_);
+		DX::SafeRelease(x_audio2_);
 
 		modules::MediaFoundation::Get().MFShutdown();
 	}

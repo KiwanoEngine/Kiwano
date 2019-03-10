@@ -33,18 +33,15 @@ public:
 
 		// 创建说明文字
 		TextPtr intro_text = new Text(L"按上下键调整音量\n按空格键暂停或继续");
-		intro_text->SetAnchor(0.5f, 0.5f);
-		intro_text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 50);
+		intro_text->SetPosition(WINDOW_WIDTH / 2 - 80, WINDOW_HEIGHT / 2 - 50);
 
 		// 创建音量文字
 		volume_text = new Text(L"当前音量：");
-		volume_text->SetAnchor(0.5f, 0.5f);
-		volume_text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 30);
+		volume_text->SetPosition(WINDOW_WIDTH / 2 - 80, WINDOW_HEIGHT / 2 + 30);
 
 		// 创建状态文字
 		state_text = new Text(L"当前状态：");
-		state_text->SetAnchor(0.5f, 0.5f);
-		state_text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 60);
+		state_text->SetPosition(WINDOW_WIDTH / 2 - 80, WINDOW_HEIGHT / 2 + 60);
 
 		// 添加到场景
 		this->AddChild(intro_text);

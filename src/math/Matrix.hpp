@@ -21,12 +21,13 @@
 #pragma once
 #include "vector.hpp"
 #include "Rect.hpp"
+#include <algorithm>
 
 namespace easy2d
 {
 	namespace math
 	{
-		struct E2D_API Matrix
+		struct Matrix
 		{
 			union
 			{
@@ -44,13 +45,30 @@ namespace easy2d
 				};
 			};
 
-			Matrix();
+			Matrix()
+				: _11(1.f), _12(0.f)
+				, _21(0.f), _22(1.f)
+				, _31(0.f), _32(0.f)
+			{
+			}
 
-			Matrix(float _11, float _12, float _21, float _22, float _31, float _32);
+			Matrix(float _11, float _12, float _21, float _22, float _31, float _32)
+				: _11(_11), _12(_12), _21(_21), _22(_22), _31(_31), _32(_32)
+			{
+			}
 
-			Matrix(const float* p);
+			Matrix(const float* p)
+			{
+				for (int i = 0; i < 6; i++)
+					m[i] = p[i];
+			}
 
-			Matrix(Matrix const& other);
+			Matrix(Matrix const& other)
+				: _11(other._11), _12(other._12)
+				, _21(other._21), _22(other._22)
+				, _31(other._31), _32(other._32)
+			{
+			}
 
 			template <typename T>
 			Matrix(T const& other)
@@ -59,7 +77,12 @@ namespace easy2d
 					m[i] = other[i];
 			}
 
-			void Identity();
+			inline void Identity()
+			{
+				_11 = 1.f; _12 = 0.f;
+				_21 = 0.f; _12 = 1.f;
+				_31 = 0.f; _32 = 0.f;
+			}
 
 			inline Vec2 Transform(const Vec2& v) const
 			{
@@ -69,7 +92,20 @@ namespace easy2d
 				);
 			}
 
-			Rect Transform(const Rect& rect) const;
+			Rect Transform(const Rect & rect) const
+			{
+				Vec2 top_left = Transform(rect.GetLeftTop());
+				Vec2 top_right = Transform(rect.GetRightTop());
+				Vec2 bottom_left = Transform(rect.GetLeftBottom());
+				Vec2 bottom_right = Transform(rect.GetRightBottom());
+
+				float left = std::min(std::min(top_left.x, top_right.x), std::min(bottom_left.x, bottom_right.x));
+				float right = std::max(std::max(top_left.x, top_right.x), std::max(bottom_left.x, bottom_right.x));
+				float top = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
+				float bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
+
+				return Rect{ left, top, (right - left), (bottom - top) };
+			}
 
 			inline void Translate(const Vec2& v)
 			{
@@ -107,46 +143,83 @@ namespace easy2d
 				return 0 != Determinant();
 			}
 
-			inline operator D2D1_MATRIX_3X2_F const& () const
+			static inline Matrix Translation(const Vec2& v)
 			{
-				return reinterpret_cast<D2D1_MATRIX_3X2_F const&>(*this);
+				return Matrix(
+					1.f, 0.f,
+					0.f, 1.f,
+					v.x, v.y
+				);
 			}
 
-			inline operator D2D1_MATRIX_3X2_F& ()
-			{
-				return reinterpret_cast<D2D1_MATRIX_3X2_F&>(*this);
-			}
-
-			static Matrix Translation(const Vec2& v);
-
-			static Matrix Translation(
+			static inline Matrix Translation(
 				float x,
-				float y
-			);
+				float y)
+			{
+				return Translation(Vec2(x, y));
+			}
 
-			static Matrix Scaling(
+			static inline Matrix Scaling(
 				const Vec2& v,
-				const Vec2& center = Vec2()
-			);
+				const Vec2& center = Vec2())
+			{
+				return Matrix(
+					v.x, 0.f,
+					0.f, v.y,
+					center.x - v.x * center.x,
+					center.y - v.y * center.y
+				);
+			}
 
-			static Matrix Scaling(
+			static inline Matrix Scaling(
 				float x,
 				float y,
-				const Vec2& center = Vec2()
-			);
+				const Vec2& center = Vec2())
+			{
+				return Scaling(Vec2(x, y), center);
+			}
 
-			static Matrix Rotation(
+			static inline Matrix Rotation(
 				float angle,
-				const Vec2& center = Vec2()
-			);
+				const Vec2& center = Vec2())
+			{
+				float s = math::Sin(angle);
+				float c = math::Cos(angle);
+				return Matrix(
+					c, s,
+					-s, c,
+					center.x * (1 - c) + center.y * s,
+					center.y * (1 - c) - center.x * s
+				);
+			}
 
-			static Matrix Skewing(
+			static inline Matrix Skewing(
 				float angle_x,
 				float angle_y,
-				const Vec2& center = Vec2()
-			);
+				const Vec2& center = Vec2())
+			{
+				float tx = math::Tan(angle_x);
+				float ty = math::Tan(angle_y);
+				return Matrix(
+					1.f, -ty,
+					-tx, 1.f,
+					center.y * tx, center.x * ty
+				);
+			}
 
-			static Matrix Invert(Matrix const& matrix);
+			static inline Matrix Invert(Matrix const& matrix)
+			{
+				float det = 1.f / matrix.Determinant();
+
+				return Matrix(
+					det * matrix._22,
+					-det * matrix._12,
+					-det * matrix._21,
+					det * matrix._11,
+					det * (matrix._21 * matrix._32 - matrix._22 * matrix._31),
+					det * (matrix._12 * matrix._31 - matrix._11 * matrix._32)
+				);
+			}
 		};
 
 

@@ -26,7 +26,7 @@ namespace easy2d
 	namespace math
 	{
 		// 矩形
-		struct E2D_API Rect
+		struct Rect
 		{
 			Vec2	origin;	// 左上角坐标
 			Vec2	size;	// 宽度和高度

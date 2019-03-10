@@ -26,7 +26,7 @@
 namespace easy2d
 {
 	class E2D_API DebugNode
-		: public Node
+		: public VisualNode
 		, public Singleton<DebugNode>
 	{
 		E2D_DECLARE_SINGLETON(DebugNode);
@@ -36,6 +36,12 @@ namespace easy2d
 
 		virtual ~DebugNode();
 
+		// 显示调试信息
+		void Show();
+
+		// 隐藏调试信息
+		void Hide();
+
 		void AddDebugText(String const& text);
 
 		void ClearDebugText();
@@ -43,6 +49,8 @@ namespace easy2d
 		void OnRender() override;
 
 		void OnUpdate(Duration dt) override;
+
+		static bool IsShown();
 
 	protected:
 		TextPtr				debug_text_;

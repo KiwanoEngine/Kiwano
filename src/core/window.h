@@ -60,8 +60,7 @@ namespace easy2d
 			int		height,
 			LPCWSTR	icon,
 			bool	fullscreen,
-			WNDPROC	proc,
-			bool	debug
+			WNDPROC	proc
 		);
 
 		void Destroy();

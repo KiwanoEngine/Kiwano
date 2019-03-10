@@ -21,7 +21,7 @@
 #include "Application.h"
 #include "logs.h"
 #include "modules.h"
-#include "Factory.h"
+#include "render.h"
 #include "Event.hpp"
 #include "Scene.h"
 #include "DebugNode.h"
@@ -37,7 +37,6 @@ namespace easy2d
 	Application::Application(String const& app_name)
 		: end_(true)
 		, inited_(false)
-		, debug_(false)
 		, curr_scene_(nullptr)
 		, next_scene_(nullptr)
 		, transition_(nullptr)
@@ -56,44 +55,6 @@ namespace easy2d
 
 	void Application::Init(const Options& options)
 	{
-		debug_ = options.debug;
-
-		// show console if debug mode enabled
-		if (debug_ && !::GetConsoleWindow())
-		{
-			if (!::AllocConsole())
-			{
-				E2D_WARNING_LOG(L"AllocConsole failed");
-			}
-			else
-			{
-				HWND console = ::GetConsoleWindow();
-				FILE * dummy;
-				freopen_s(&dummy, "CONOUT$", "w+t", stdout);
-				freopen_s(&dummy, "CONIN$", "r+t", stdin);
-				freopen_s(&dummy, "CONOUT$", "w+t", stderr);
-				(void)dummy;
-
-				std::cout.clear();
-				std::wcout.clear();
-				std::cin.clear();
-				std::wcin.clear();
-				std::cerr.clear();
-				std::wcerr.clear();
-
-				// disable the close button of console
-				if (console)
-				{
-					HMENU hmenu = ::GetSystemMenu(console, FALSE);
-					::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
-				}
-			}
-		}
-
-		ThrowIfFailed(
-			Factory::Instance().Init(debug_)
-		);
-
 		ThrowIfFailed(
 			Window::Instance().Init(
 				options.title,
@@ -101,30 +62,26 @@ namespace easy2d
 				options.height,
 				options.icon,
 				options.fullscreen,
-				Application::WndProc,
-				debug_
+				Application::WndProc
 			)
 		);
 
 		HWND hwnd = Window::Instance().GetHandle();
 
 		ThrowIfFailed(
-			RenderSystem::Instance().Init(
-				hwnd,
-				options.vsync,
-				debug_
-			)
+			Renderer::Instance().Init(hwnd)
 		);
+
+		Renderer::Instance().SetClearColor(options.clear_color);
 
 		ThrowIfFailed(
 			Input::Instance().Init(
-				hwnd,
-				debug_
+				hwnd
 			)
 		);
 		
 		ThrowIfFailed(
-			Audio::Instance().Init(debug_)
+			Audio::Instance().Init()
 		);
 
 		OnStart();
@@ -173,9 +130,8 @@ namespace easy2d
 			curr_scene_.Reset();
 
 			Audio::Instance().Destroy();
-			RenderSystem::Instance().Destroy();
+			Renderer::Instance().Destroy();
 			Window::Instance().Destroy();
-			Factory::Instance().Destroy();
 		}
 	}
 
@@ -251,16 +207,14 @@ namespace easy2d
 		if (next_scene_)
 			next_scene_->Update(dt);
 
-		if (debug_)
+		if (DebugNode::IsShown())
 			DebugNode::Instance().Update(dt);
 	}
 
 	void Application::Render(HWND hwnd)
 	{
-		auto& rt = RenderSystem::Instance();
-		
 		ThrowIfFailed(
-			rt.BeginDraw(hwnd)
+			Renderer::Instance().BeginDraw()
 		);
 
 		if (transition_)
@@ -272,14 +226,48 @@ namespace easy2d
 			curr_scene_->Render();
 		}
 
-		if (debug_)
+		if (DebugNode::IsShown())
 			DebugNode::Instance().Render();
 
 		ThrowIfFailed(
-			rt.EndDraw()
+			Renderer::Instance().EndDraw()
 		);
 
 		::InvalidateRect(hwnd, NULL, FALSE);
+	}
+
+	void Application::AllocConsole()
+	{
+		if (!::GetConsoleWindow())
+		{
+			if (!::AllocConsole())
+			{
+				E2D_WARNING_LOG(L"AllocConsole failed");
+			}
+			else
+			{
+				HWND console = ::GetConsoleWindow();
+				FILE * dummy;
+				freopen_s(&dummy, "CONOUT$", "w+t", stdout);
+				freopen_s(&dummy, "CONIN$", "r+t", stdin);
+				freopen_s(&dummy, "CONOUT$", "w+t", stderr);
+				(void)dummy;
+
+				std::cout.clear();
+				std::wcout.clear();
+				std::cin.clear();
+				std::wcin.clear();
+				std::cerr.clear();
+				std::wcerr.clear();
+
+				// disable the close button of console
+				if (console)
+				{
+					HMENU hmenu = ::GetSystemMenu(console, FALSE);
+					::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+				}
+			}
+		}
 	}
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -363,10 +351,7 @@ namespace easy2d
 			UINT width = LOWORD(lparam);
 			UINT height = HIWORD(lparam);
 
-			// 如果程序接收到一个 WM_SIZE 消息，这个方法将调整渲染
-			// 目标的大小。它可能会调用失败，但是这里可以忽略有可能的
-			// 错误，因为这个错误将在下一次调用 EndDraw 时产生
-			RenderSystem::Instance().Resize(width, height);
+			Renderer::Instance().GetDeviceResources()->SetLogicalSize(Size{ (float)width, (float)height });
 
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{

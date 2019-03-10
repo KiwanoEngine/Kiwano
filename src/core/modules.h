@@ -26,6 +26,7 @@
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
+#include <d3d11.h>
 
 namespace easy2d
 {
@@ -57,6 +58,7 @@ namespace easy2d
 		{
 			DirectX();
 
+			HMODULE d3d11;
 			HMODULE d2d;
 			HMODULE dwrite;
 
@@ -73,6 +75,7 @@ namespace easy2d
 
 			PFN_D2D1CreateFactory D2D1CreateFactory;
 			PFN_DWriteCreateFactory DWriteCreateFactory;
+			PFN_D3D11_CREATE_DEVICE D3D11CreateDevice;
 		};
 
 

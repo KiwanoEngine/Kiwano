@@ -216,7 +216,7 @@ int main()
 	}
 	catch (std::exception& e)
 	{
-		::MessageBoxA(nullptr, e.what(), "An exception has occurred!", MB_ICONERROR | MB_TASKMODAL);
+		::MessageBoxA(nullptr, e.what(), "An exception has occurred!", MB_ICONERROR | MB_OK);
 	}
 	return 0;
 }

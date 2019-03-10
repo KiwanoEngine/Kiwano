@@ -28,6 +28,11 @@
 
 namespace easy2d
 {
+	namespace
+	{
+		bool show = false;
+	}
+
 	DebugNode::DebugNode()
 	{
 		debug_text_ = new Text();
@@ -67,16 +72,14 @@ namespace easy2d
 
 	void DebugNode::OnRender()
 	{
-		auto& rt = RenderSystem::Instance();
+		Renderer::Instance().GetSolidColorBrush()->SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, 0.5f));
 
-		rt.GetSolidBrush()->SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, 0.5f));
-
-		rt.GetRenderTarget()->FillRoundedRectangle(
+		Renderer::Instance().GetDeviceResources()->GetD2DDeviceContext()->FillRoundedRectangle(
 			D2D1::RoundedRect(
 				D2D1_RECT_F{ 10, 10, 200, 120 },
 				6.f,
 				6.f),
-			rt.GetSolidBrush().Get()
+			Renderer::Instance().GetSolidColorBrush()
 		);
 	}
 
@@ -105,9 +108,9 @@ namespace easy2d
 		ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
 #endif
 
-		ss << "Render: " << RenderSystem::Instance().GetStatus().duration.Milliseconds() << "ms" << std::endl;
+		ss << "Render: " << Renderer::Instance().GetStatus().duration.Milliseconds() << "ms" << std::endl;
 
-		ss << "Primitives / sec: " << RenderSystem::Instance().GetStatus().primitives * frame_time_.size() << std::endl;
+		ss << "Primitives / sec: " << Renderer::Instance().GetStatus().primitives * frame_time_.size() << std::endl;
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
@@ -117,6 +120,21 @@ namespace easy2d
 			ss << std::endl << text;
 
 		debug_text_->SetText(ss.str());
+	}
+
+	void DebugNode::Show()
+	{
+		show = true;
+	}
+
+	void DebugNode::Hide()
+	{
+		show = false;
+	}
+
+	bool DebugNode::IsShown()
+	{
+		return show;
 	}
 
 }
