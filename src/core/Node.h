@@ -344,13 +344,13 @@ namespace easy2d
 		void RemoveFromParent();
 
 		// 暂停节点更新
-		void PauseUpdating();
+		inline void PauseUpdating()									{ update_pausing_ = true; }
 
 		// 继续节点更新
-		void ResumeUpdating();
+		inline void ResumeUpdating()								{ update_pausing_ = false; }
 
 		// 节点更新是否暂停
-		inline bool IsUpdatePausing() const							{ return pause_; }
+		inline bool IsUpdatePausing() const							{ return update_pausing_; }
 
 		// 设置更新时的回调函数
 		inline void SetCallbackOnUpdate(UpdateCallback const& cb)	{ cb_update_ = cb; }
@@ -365,6 +365,8 @@ namespace easy2d
 		);
 
 	protected:
+		virtual void PrepareRender() {}
+
 		void Update(Duration dt);
 
 		void Render();
@@ -380,7 +382,7 @@ namespace easy2d
 		bool		hover_;
 		bool		pressed_;
 		bool		responsible_;
-		bool		pause_;
+		bool		update_pausing_;
 		int			z_order_;
 		float		opacity_;
 		float		display_opacity_;
@@ -398,4 +400,13 @@ namespace easy2d
 		mutable Matrix	transform_matrix_;
 		mutable Matrix	transform_matrix_inverse_;
 	};
+
+
+	class E2D_API VisualNode
+		: public Node
+	{
+	public:
+		virtual void PrepareRender() override;
+	};
+
 }

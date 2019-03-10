@@ -24,17 +24,17 @@
 
 namespace easy2d
 {
-	class TextRendererImpl
+	class TextRenderer
 		: public ITextRenderer
 	{
 	public:
-		TextRendererImpl(
-			ID2D1Factory* pD2DFactory,
-			ID2D1RenderTarget* pRT,
-			ID2D1SolidColorBrush* pBrush
+		TextRenderer(
+			ID2D1RenderTarget* pRT
 		);
 
-		~TextRendererImpl();
+		~TextRenderer();
+
+		STDMETHOD(CreateDeviceResources)();
 
 		STDMETHOD_(void, SetTextStyle)(
 			CONST D2D1_COLOR_F &fillColor,
@@ -109,7 +109,7 @@ namespace easy2d
 		D2D1_COLOR_F			sOutlineColor_;
 		FLOAT					fOutlineWidth;
 		BOOL					bShowOutline_;
-		ID2D1Factory*			pD2DFactory_;
+		ID2D1Factory*			pFactory_;
 		ID2D1RenderTarget*		pRT_;
 		ID2D1SolidColorBrush*	pBrush_;
 		ID2D1StrokeStyle*		pCurrStrokeStyle_;
@@ -117,43 +117,72 @@ namespace easy2d
 
 	HRESULT ITextRenderer::Create(
 		ITextRenderer** ppTextRenderer,
-		ID2D1Factory* pD2DFactory,
-		ID2D1RenderTarget* pRT,
-		ID2D1SolidColorBrush* pBrush)
+		ID2D1RenderTarget* pRT)
 	{
-		*ppTextRenderer = new (std::nothrow) TextRendererImpl(pD2DFactory, pRT, pBrush);
-		if (*ppTextRenderer)
+		HRESULT hr = E_FAIL;
+
+		if (ppTextRenderer)
 		{
-			(*ppTextRenderer)->AddRef();
-			return S_OK;
+			TextRenderer* pTextRenderer = new (std::nothrow) TextRenderer(pRT);
+			if (pTextRenderer)
+			{
+				hr = pTextRenderer->CreateDeviceResources();
+
+				if (SUCCEEDED(hr))
+				{
+					pTextRenderer->AddRef();
+
+					DX::SafeRelease(*ppTextRenderer);
+					(*ppTextRenderer) = pTextRenderer;
+					return S_OK;
+				}
+				else
+				{
+					delete pTextRenderer;
+					pTextRenderer = NULL;
+				}
+			}
 		}
-		return E_FAIL;
+		return hr;
 	}
 
-	TextRendererImpl::TextRendererImpl(ID2D1Factory* pD2DFactory, ID2D1RenderTarget* pRT, ID2D1SolidColorBrush* pBrush)
+	TextRenderer::TextRenderer(ID2D1RenderTarget* pRT)
 		: cRefCount_(0)
-		, pD2DFactory_(pD2DFactory)
+		, pFactory_(NULL)
 		, pRT_(pRT)
-		, pBrush_(pBrush)
+		, pBrush_(NULL)
 		, sFillColor_()
 		, sOutlineColor_()
 		, fOutlineWidth(1)
 		, bShowOutline_(TRUE)
-		, pCurrStrokeStyle_(nullptr)
+		, pCurrStrokeStyle_(NULL)
 	{
-		pD2DFactory->AddRef();
-		pRT->AddRef();
-		pBrush->AddRef();
+		pRT_->AddRef();
+		pRT_->GetFactory(&pFactory_);
 	}
 
-	TextRendererImpl::~TextRendererImpl()
+	TextRenderer::~TextRenderer()
 	{
-		SafeRelease(pD2DFactory_);
-		SafeRelease(pRT_);
-		SafeRelease(pBrush_);
+		DX::SafeRelease(pFactory_);
+		DX::SafeRelease(pRT_);
+		DX::SafeRelease(pBrush_);
 	}
 
-	STDMETHODIMP_(void) TextRendererImpl::SetTextStyle(
+	STDMETHODIMP TextRenderer::CreateDeviceResources()
+	{
+		HRESULT hr = S_OK;
+
+		DX::SafeRelease(pBrush_);
+
+		hr = pRT_->CreateSolidColorBrush(
+			D2D1::ColorF(D2D1::ColorF::White),
+			&pBrush_
+		);
+
+		return hr;
+	}
+
+	STDMETHODIMP_(void) TextRenderer::SetTextStyle(
 		CONST D2D1_COLOR_F &fillColor,
 		BOOL outline,
 		CONST D2D1_COLOR_F &outlineColor,
@@ -167,7 +196,7 @@ namespace easy2d
 		pCurrStrokeStyle_ = outlineJoin;
 	}
 
-	STDMETHODIMP TextRendererImpl::DrawGlyphRun(
+	STDMETHODIMP TextRenderer::DrawGlyphRun(
 		__maybenull void* clientDrawingContext,
 		FLOAT baselineOriginX,
 		FLOAT baselineOriginY,
@@ -183,12 +212,12 @@ namespace easy2d
 
 		HRESULT hr = S_OK;
 
-		ID2D1PathGeometry* pPathGeometry = nullptr;
-		hr = pD2DFactory_->CreatePathGeometry(
+		ID2D1PathGeometry* pPathGeometry = NULL;
+		hr = pFactory_->CreatePathGeometry(
 			&pPathGeometry
 		);
 
-		ID2D1GeometrySink* pSink = nullptr;
+		ID2D1GeometrySink* pSink = NULL;
 		if (SUCCEEDED(hr))
 		{
 			hr = pPathGeometry->Open(
@@ -221,10 +250,10 @@ namespace easy2d
 			baselineOriginX, baselineOriginY
 		);
 
-		ID2D1TransformedGeometry* pTransformedGeometry = nullptr;
+		ID2D1TransformedGeometry* pTransformedGeometry = NULL;
 		if (SUCCEEDED(hr))
 		{
-			hr = pD2DFactory_->CreateTransformedGeometry(
+			hr = pFactory_->CreateTransformedGeometry(
 				pPathGeometry,
 				&matrix,
 				&pTransformedGeometry
@@ -253,14 +282,14 @@ namespace easy2d
 			);
 		}
 
-		SafeRelease(pPathGeometry);
-		SafeRelease(pSink);
-		SafeRelease(pTransformedGeometry);
+		DX::SafeRelease(pPathGeometry);
+		DX::SafeRelease(pSink);
+		DX::SafeRelease(pTransformedGeometry);
 
 		return hr;
 	}
 
-	STDMETHODIMP TextRendererImpl::DrawUnderline(
+	STDMETHODIMP TextRenderer::DrawUnderline(
 		__maybenull void* clientDrawingContext,
 		FLOAT baselineOriginX,
 		FLOAT baselineOriginY,
@@ -279,8 +308,8 @@ namespace easy2d
 			underline->offset + underline->thickness
 		);
 
-		ID2D1RectangleGeometry* pRectangleGeometry = nullptr;
-		hr = pD2DFactory_->CreateRectangleGeometry(
+		ID2D1RectangleGeometry* pRectangleGeometry = NULL;
+		hr = pFactory_->CreateRectangleGeometry(
 			&rect,
 			&pRectangleGeometry
 		);
@@ -291,10 +320,10 @@ namespace easy2d
 			baselineOriginX, baselineOriginY
 		);
 
-		ID2D1TransformedGeometry* pTransformedGeometry = nullptr;
+		ID2D1TransformedGeometry* pTransformedGeometry = NULL;
 		if (SUCCEEDED(hr))
 		{
-			hr = pD2DFactory_->CreateTransformedGeometry(
+			hr = pFactory_->CreateTransformedGeometry(
 				pRectangleGeometry,
 				&matrix,
 				&pTransformedGeometry
@@ -323,13 +352,13 @@ namespace easy2d
 			);
 		}
 
-		SafeRelease(pRectangleGeometry);
-		SafeRelease(pTransformedGeometry);
+		DX::SafeRelease(pRectangleGeometry);
+		DX::SafeRelease(pTransformedGeometry);
 
 		return S_OK;
 	}
 
-	STDMETHODIMP TextRendererImpl::DrawStrikethrough(
+	STDMETHODIMP TextRenderer::DrawStrikethrough(
 		__maybenull void* clientDrawingContext,
 		FLOAT baselineOriginX,
 		FLOAT baselineOriginY,
@@ -348,8 +377,8 @@ namespace easy2d
 			strikethrough->offset + strikethrough->thickness
 		);
 
-		ID2D1RectangleGeometry* pRectangleGeometry = nullptr;
-		hr = pD2DFactory_->CreateRectangleGeometry(
+		ID2D1RectangleGeometry* pRectangleGeometry = NULL;
+		hr = pFactory_->CreateRectangleGeometry(
 			&rect,
 			&pRectangleGeometry
 		);
@@ -360,10 +389,10 @@ namespace easy2d
 			baselineOriginX, baselineOriginY
 		);
 
-		ID2D1TransformedGeometry* pTransformedGeometry = nullptr;
+		ID2D1TransformedGeometry* pTransformedGeometry = NULL;
 		if (SUCCEEDED(hr))
 		{
-			hr = pD2DFactory_->CreateTransformedGeometry(
+			hr = pFactory_->CreateTransformedGeometry(
 				pRectangleGeometry,
 				&matrix,
 				&pTransformedGeometry
@@ -392,13 +421,13 @@ namespace easy2d
 			);
 		}
 
-		SafeRelease(pRectangleGeometry);
-		SafeRelease(pTransformedGeometry);
+		DX::SafeRelease(pRectangleGeometry);
+		DX::SafeRelease(pTransformedGeometry);
 
 		return S_OK;
 	}
 
-	STDMETHODIMP TextRendererImpl::DrawInlineObject(
+	STDMETHODIMP TextRenderer::DrawInlineObject(
 		__maybenull void* clientDrawingContext,
 		FLOAT originX,
 		FLOAT originY,
@@ -417,12 +446,12 @@ namespace easy2d
 		return E_NOTIMPL;
 	}
 
-	STDMETHODIMP_(unsigned long) TextRendererImpl::AddRef()
+	STDMETHODIMP_(unsigned long) TextRenderer::AddRef()
 	{
 		return InterlockedIncrement(&cRefCount_);
 	}
 
-	STDMETHODIMP_(unsigned long) TextRendererImpl::Release()
+	STDMETHODIMP_(unsigned long) TextRenderer::Release()
 	{
 		unsigned long newCount = InterlockedDecrement(&cRefCount_);
 
@@ -435,7 +464,7 @@ namespace easy2d
 		return newCount;
 	}
 
-	STDMETHODIMP TextRendererImpl::IsPixelSnappingDisabled(
+	STDMETHODIMP TextRenderer::IsPixelSnappingDisabled(
 		__maybenull void* clientDrawingContext,
 		__out BOOL* isDisabled)
 	{
@@ -445,7 +474,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	STDMETHODIMP TextRendererImpl::GetCurrentTransform(
+	STDMETHODIMP TextRenderer::GetCurrentTransform(
 		__maybenull void* clientDrawingContext,
 		__out DWRITE_MATRIX* transform)
 	{
@@ -455,7 +484,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	STDMETHODIMP TextRendererImpl::GetPixelsPerDip(
+	STDMETHODIMP TextRenderer::GetPixelsPerDip(
 		__maybenull void* clientDrawingContext,
 		__out FLOAT* pixelsPerDip)
 	{
@@ -469,7 +498,7 @@ namespace easy2d
 		return S_OK;
 	}
 
-	STDMETHODIMP TextRendererImpl::QueryInterface(
+	STDMETHODIMP TextRenderer::QueryInterface(
 		IID const& riid,
 		void** ppvObject)
 	{
@@ -487,7 +516,7 @@ namespace easy2d
 		}
 		else
 		{
-			*ppvObject = nullptr;
+			*ppvObject = NULL;
 			return E_FAIL;
 		}
 

@@ -13,9 +13,11 @@ public:
 	{
 		// 创建文字节点
 		easy2d::TextPtr text = new easy2d::Text(L"Hello Easy2D!");
-		// 修改节点位置
+		// 设置节点大小为文字布局大小
+		text->SetSize(text->GetLayoutSize());
+		// 修改节点位置, 使节点在屏幕上居中
 		text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-		// 修改节点锚点, 使节点在屏幕上居中
+		// 修改节点锚点, 使文字中心对齐屏幕中心
 		text->SetAnchor(0.5, 0.5);
 		// 添加到场景中
 		this->AddChild(text);
@@ -46,7 +48,7 @@ int main()
 	}
 	catch (std::exception& e)
 	{
-		::MessageBoxA(nullptr, e.what(), "An exception has occurred!", MB_ICONERROR | MB_TASKMODAL);
+		::MessageBoxA(nullptr, e.what(), "An exception has occurred!", MB_ICONERROR | MB_OK);
 	}
 	return 0;
 }

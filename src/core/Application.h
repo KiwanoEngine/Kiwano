@@ -22,7 +22,6 @@
 #include "include-forwards.h"
 #include "time.h"
 #include "window.h"
-#include "render.h"
 #include "input.h"
 #include "audio.h"
 
@@ -30,22 +29,22 @@ namespace easy2d
 {
 	struct Options
 	{
-		String	title;		// 标题
-		int		width;		// 宽度
-		int		height;		// 高度
-		LPCWSTR	icon;		// 图标
-		bool	vsync;		// 垂直同步
-		bool	fullscreen;	// 全屏模式
-		bool	debug;		// 调试模式
+		String	title;				// 标题
+		int		width;				// 宽度
+		int		height;				// 高度
+		LPCWSTR	icon;				// 图标
+		Color	clear_color;		// 清屏颜色
+		bool	vsync;				// 垂直同步
+		bool	fullscreen;			// 全屏模式
 
 		Options()
 			: title(L"Easy2D Game")
 			, width(640)
 			, height(480)
 			, icon(nullptr)
+			, clear_color(Color::Black)
 			, vsync(true)
 			, fullscreen(false)
-			, debug(false)
 		{}
 	};
 
@@ -105,6 +104,9 @@ namespace easy2d
 			float scale_factor
 		);
 
+		// 分配控制台
+		static void AllocConsole();
+
 	private:
 		void Render(HWND);
 
@@ -115,7 +117,6 @@ namespace easy2d
 	private:
 		bool			end_;
 		bool			inited_;
-		bool			debug_;
 		float			time_scale_;
 		String			app_name_;
 		ScenePtr		curr_scene_;

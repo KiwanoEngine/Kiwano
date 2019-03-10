@@ -80,6 +80,8 @@ public:
 
 		// 创建说明文字
 		TextPtr text = new Text(L"按上下左右键移动\n按鼠标左键旋转\n点击鼠标右键隐藏");
+		// 设置节点大小为文字布局大小
+		text->SetSize(text->GetLayoutSize());
 		// 设置文字位置
 		text->SetAnchor(0.5f, 0.5f);
 		text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50);

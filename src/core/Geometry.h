@@ -57,7 +57,7 @@ namespace easy2d
 		float ComputeArea();
 
 	protected:
-		D2DGeometryPtr geo_;
+		ComPtr<ID2D1Geometry> geo_;
 	};
 
 
@@ -254,8 +254,8 @@ namespace easy2d
 		void ClearPath();
 
 	protected:
-		D2DPathGeometryPtr	current_geometry_;
-		D2DGeometrySinkPtr	current_sink_;
+		ComPtr<ID2D1PathGeometry>	current_geometry_;
+		ComPtr<ID2D1GeometrySink>	current_sink_;
 	};
 
 

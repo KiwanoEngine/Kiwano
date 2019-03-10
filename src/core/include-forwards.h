@@ -23,7 +23,7 @@
 #include "Color.h"
 #include "Object.h"
 #include "helper.hpp"
-#include "d2dhelper.hpp"
+#include "../DX/helper.hpp"
 
 namespace easy2d
 {

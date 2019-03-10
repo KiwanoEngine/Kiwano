@@ -19,23 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Node.h"
+#include "D3D11DeviceResources.h"
 
 namespace easy2d
 {
-	// 场景
-	class E2D_API Scene
-		: public VisualNode
-	{
-	public:
-		Scene();
-
-		virtual ~Scene();
-
-		// 进入场景
-		virtual void OnEnter();
-
-		// 退出场景
-		virtual void OnExit();
-	};
+	using DeviceResources = D3D11DeviceResources;
 }

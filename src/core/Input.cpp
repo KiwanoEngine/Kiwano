@@ -37,10 +37,8 @@ namespace easy2d
 	{
 	}
 
-	HRESULT Input::Init(HWND hwnd, bool debug)
+	HRESULT Input::Init(HWND hwnd)
 	{
-		E2D_NOT_USED(debug);
-
 		hwnd_ = hwnd;
 
 		return S_OK;

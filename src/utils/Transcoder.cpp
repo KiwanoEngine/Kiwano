@@ -23,9 +23,9 @@
 #endif
 
 #include "Transcoder.h"
-#include "../core/d2dhelper.hpp"
 #include "../core/modules.h"
 #include "../core/logs.h"
+#include "../DX/helper.hpp"
 #include <shlwapi.h>
 
 namespace easy2d
@@ -53,7 +53,7 @@ namespace easy2d
 	{
 		HRESULT hr = S_OK;
 
-		IntrusivePtr<IMFSourceReader> reader;
+		ComPtr<IMFSourceReader> reader;
 
 		hr = modules::MediaFoundation::Get().MFCreateSourceReaderFromURL(
 			file_path.c_str(),
@@ -73,9 +73,9 @@ namespace easy2d
 	{
 		HRESULT	hr = S_OK;
 
-		IntrusivePtr<IStream> stream;
-		IntrusivePtr<IMFByteStream> byte_stream;
-		IntrusivePtr<IMFSourceReader> reader;
+		ComPtr<IStream> stream;
+		ComPtr<IMFByteStream> byte_stream;
+		ComPtr<IMFSourceReader> reader;
 
 		LPVOID buffer;
 		DWORD buffer_size;
@@ -119,8 +119,8 @@ namespace easy2d
 		HRESULT hr = S_OK;
 		DWORD max_stream_size = 0;
 
-		IntrusivePtr<IMFMediaType> partial_type;
-		IntrusivePtr<IMFMediaType> uncompressed_type;
+		ComPtr<IMFMediaType> partial_type;
+		ComPtr<IMFMediaType> uncompressed_type;
 
 		hr = modules::MediaFoundation::Get().MFCreateMediaType(&partial_type);
 
@@ -200,8 +200,8 @@ namespace easy2d
 			DWORD position = 0;
 			BYTE* data = new (std::nothrow) BYTE[max_stream_size];
 
-			IntrusivePtr<IMFSample> sample;
-			IntrusivePtr<IMFMediaBuffer> buffer;
+			ComPtr<IMFSample> sample;
+			ComPtr<IMFMediaBuffer> buffer;
 
 			if (data == nullptr)
 			{

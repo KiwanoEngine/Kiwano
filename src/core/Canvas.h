@@ -22,7 +22,7 @@
 #include "Node.h"
 #include "Font.hpp"
 #include "TextStyle.hpp"
-#include "TextRenderer.h"
+#include "../DX/TextRenderer.h"
 
 #undef DrawText
 
@@ -30,7 +30,7 @@ namespace easy2d
 {
 	// »­²¼
 	class E2D_API Canvas
-		: public Node
+		: public VisualNode
 	{
 	public:
 		Canvas();
@@ -221,22 +221,23 @@ namespace easy2d
 		void OnRender() override;
 
 	protected:
-		D2DBitmapPtr const& GetBitmap() const;
+		ComPtr<ID2D1Bitmap> const& GetBitmap() const;
 
 	protected:
 		float						stroke_width_;
 		Font						text_font_;
 		TextStyle					text_style_;
-		D2DPathGeometryPtr			current_geometry_;
-		D2DGeometrySinkPtr			current_sink_;
-		D2DStrokeStylePtr			outline_join_style_;
-		D2DSolidColorBrushPtr		fill_brush_;
-		D2DSolidColorBrushPtr		stroke_brush_;
-		D2DSolidColorBrushPtr		text_brush_;
-		D2DTextRendererPtr			text_renderer_;
-		D2DBitmapRenderTargetPtr	render_target_;
 
-		mutable bool				cache_expired_;
-		mutable D2DBitmapPtr		bitmap_cached_;
+		ComPtr<ID2D1PathGeometry>		current_geometry_;
+		ComPtr<ID2D1GeometrySink>		current_sink_;
+		ComPtr<ID2D1StrokeStyle>		outline_join_style_;
+		ComPtr<ID2D1SolidColorBrush>	fill_brush_;
+		ComPtr<ID2D1SolidColorBrush>	stroke_brush_;
+		ComPtr<IDWriteTextFormat>		text_format_;
+		ComPtr<ITextRenderer>			text_renderer_;
+		ComPtr<ID2D1BitmapRenderTarget>	render_target_;
+
+		mutable bool					cache_expired_;
+		mutable ComPtr<ID2D1Bitmap>		bitmap_cached_;
 	};
 }

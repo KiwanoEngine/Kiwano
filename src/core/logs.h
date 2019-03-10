@@ -97,7 +97,10 @@ namespace easy2d
 		if (FAILED(hr))
 		{
 			E2D_ERROR_LOG(L"Fatal error with HRESULT of %08X", hr);
-			throw std::runtime_error("Fatal error");
+
+			static char buffer[1024 + 1];
+			sprintf_s(buffer, "Fatal error with HRESULT of %08X", hr);
+			throw std::runtime_error(buffer);
 		}
 	}
 }

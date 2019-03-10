@@ -20,45 +20,80 @@
 
 #pragma once
 #include "include-forwards.h"
-#include "time.h"
 #include "Font.hpp"
 #include "Resource.h"
-#include "TextRenderer.h"
 #include "TextStyle.hpp"
 #include "Singleton.hpp"
-#include "../math/Matrix.h"
-#include <unordered_map>
+#include "../DX/helper.hpp"
+#include "../DX/DeviceResources.h"
+#include "../DX/TextRenderer.h"
+#include "time.h"
+#include <d2d1.h>
+#include <d2d1_1.h>
 
 namespace easy2d
 {
-	class E2D_API RenderSystem
-		: public Singleton<RenderSystem>
+	struct RenderStatus
 	{
-		E2D_DECLARE_SINGLETON(RenderSystem);
+		TimePoint start;
+		Duration duration;
+		int primitives;
+	};
 
-		struct Status
-		{
-			TimePoint start;
-			Duration duration;
-			int primitives;
-		};
-
-		using BitmapMap = UnorderedMap<size_t, D2DBitmapPtr>;
+	class E2D_API Renderer
+		: public Singleton<Renderer>
+	{
+		E2D_DECLARE_SINGLETON(Renderer);
 
 	public:
-		HRESULT Init(HWND hwnd, bool vsync, bool debug);
+		HRESULT Init(HWND hwnd);
 
 		void Destroy();
 
-		// 开始渲染
-		HRESULT BeginDraw(HWND hwnd);
+		inline RenderStatus const&		GetStatus() const				{ return status_; }
 
-		// 结束渲染
+		inline DeviceResources*			GetDeviceResources() const		{ return device_resources_.Get(); }
+
+		inline ITextRenderer*			GetTextRenderer() const			{ return text_renderer_.Get(); }
+
+		inline ID2D1SolidColorBrush*	GetSolidColorBrush() const		{ return solid_color_brush_.Get(); }
+
+		HRESULT BeginDraw();
+
 		HRESULT EndDraw();
 
-		// 设置清空屏幕的颜色
+		HRESULT CreateLayer(
+			ComPtr<ID2D1Layer>& layer
+		);
+
+		HRESULT DrawGeometry(
+			ComPtr<ID2D1Geometry> const& geometry,
+			const Color& stroke_color,
+			float stroke_width,
+			StrokeStyle stroke = StrokeStyle::Miter
+		);
+
+		HRESULT FillGeometry(
+			ComPtr<ID2D1Geometry> const& geometry,
+			Color const& fill_color
+		);
+
+		HRESULT DrawImage(
+			ImagePtr const& image,
+			Rect const& dest_rect
+		);
+
+		HRESULT DrawBitmap(
+			ComPtr<ID2D1Bitmap> const& bitmap
+		);
+
+		HRESULT DrawTextLayout(
+			ComPtr<IDWriteTextLayout> const& text_layout
+		);
+
+		// 设置清屏颜色
 		void SetClearColor(
-			const Color& color
+			Color const& clear_color
 		);
 
 		// 设置抗锯齿模式
@@ -71,42 +106,13 @@ namespace easy2d
 			TextAntialias mode
 		);
 
-		Status const& GetStatus() const;
-
-		HRESULT CreateResources(
-			HWND hwnd
-		);
-
-		void DiscardResources();
-
-		HRESULT CreateLayer(
-			D2DLayerPtr& layer
-		);
-
-		HRESULT CreateSolidColorBrush(
-			D2DSolidColorBrushPtr& brush
-		) const;
-
-		HRESULT CreateBitmapFromFile(
-			D2DBitmapPtr& bitmap,
-			String const& file_path
-		);
-
-		HRESULT CreateBitmapFromResource(
-			D2DBitmapPtr& bitmap,
-			Resource const& res
-		);
-
-		HRESULT CreateBitmapRenderTarget(
-			D2DBitmapRenderTargetPtr& brt
+		// 设置画笔透明度
+		void SetOpacity(
+			float opacity
 		);
 
 		HRESULT SetTransform(
 			const Matrix& matrix
-		);
-
-		HRESULT SetOpacity(
-			float opacity
 		);
 
 		HRESULT SetTextStyle(
@@ -117,31 +123,6 @@ namespace easy2d
 			StrokeStyle outline_stroke
 		);
 
-		HRESULT DrawGeometry(
-			D2DGeometryPtr const& geometry,
-			const Color& stroke_color,
-			float stroke_width,
-			StrokeStyle stroke = StrokeStyle::Miter
-		);
-
-		HRESULT FillGeometry(
-			D2DGeometryPtr const& geometry,
-			const Color& fill_color
-		);
-
-		HRESULT DrawImage(
-			ImagePtr const& image,
-			Rect const& dest_rect
-		);
-
-		HRESULT DrawBitmap(
-			D2DBitmapPtr const& bitmap
-		);
-
-		HRESULT DrawTextLayout(
-			D2DTextLayoutPtr const& text_layout
-		);
-
 		HRESULT PushClip(
 			const Matrix& clip_matrix,
 			const Size& clip_size
@@ -150,46 +131,35 @@ namespace easy2d
 		HRESULT PopClip();
 
 		HRESULT PushLayer(
-			D2DLayerPtr const& layer,
+			ComPtr<ID2D1Layer> const& layer,
 			LayerProperties const& properties
 		);
 
 		HRESULT PopLayer();
 
-		HRESULT GetSize(
-			Size& size
-		);
+	private:
+		Renderer();
 
-		HRESULT Resize(
-			UINT32 width,
-			UINT32 height
-		);
+		~Renderer();
 
-		void ClearImageCache();
+		HRESULT CreateDeviceResources();
 
-		D2DHwndRenderTargetPtr const& GetRenderTarget() const;
+		HRESULT HandleDeviceLost();
 
-		D2DSolidColorBrushPtr const& GetSolidBrush() const;
+	private:
+		float opacity_;
+		bool antialias_;
+		unsigned long ref_count_;
 
-	protected:
-		RenderSystem();
+		TextAntialias	text_antialias_;
+		D2D1_COLOR_F	clear_color_;
+		RenderStatus	status_;
 
-		~RenderSystem();
-
-	protected:
-		bool					debug_;
-		bool					window_occluded_;
-		bool					vsync_enabled_;
-		bool					antialias_;
-		float					opacity_;
-		D2D1_COLOR_F			clear_color_;
-		TextAntialias			text_antialias_;
-		Status					status_;
-		D2DTextRendererPtr		text_renderer_;
-		D2DSolidColorBrushPtr	solid_brush_;
-		D2DHwndRenderTargetPtr	render_target_;
-		D2DTextFormatPtr		fps_text_format_;
-		D2DTextLayoutPtr		fps_text_layout_;
-		BitmapMap				bitmap_cache_;
+		ComPtr<DeviceResources>			device_resources_;
+		ComPtr<ID2D1Factory1>			factory_;
+		ComPtr<ID2D1DeviceContext>		device_context_;
+		ComPtr<ID2D1DrawingStateBlock>	drawing_state_block_;
+		ComPtr<ITextRenderer>			text_renderer_;
+		ComPtr<ID2D1SolidColorBrush>	solid_color_brush_;
 	};
 }

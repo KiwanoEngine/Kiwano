@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "helper.hpp"
+#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
-	class E2D_API Transform
+	class Transform
 	{
 	public:
 		float rotation;		// Ðý×ª

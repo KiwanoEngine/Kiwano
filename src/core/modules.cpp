@@ -65,6 +65,17 @@ namespace easy2d
 			{
 				E2D_LOG(L"load dwrite.dll failed");
 			}
+
+			d3d11 = LoadLibraryW(L"d3d11.dll");
+			if (d3d11)
+			{
+				D3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE)
+					GetProcAddress(d3d11, "D3D11CreateDevice");
+			}
+			else
+			{
+				E2D_LOG(L"load d3d11.dll failed");
+			}
 		}
 
 		XAudio2::XAudio2()

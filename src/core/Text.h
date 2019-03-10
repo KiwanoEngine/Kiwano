@@ -27,7 +27,7 @@ namespace easy2d
 {
 	// 文本
 	class E2D_API Text
-		: public Node
+		: public VisualNode
 	{
 	public:
 		Text();
@@ -86,6 +86,9 @@ namespace easy2d
 
 		// 获取文本显示行数
 		int GetLineCount();
+
+		// 获取文字布局大小
+		Size const& GetLayoutSize() const;
 
 		// 是否是斜体
 		bool IsItalic() const;
@@ -202,13 +205,16 @@ namespace easy2d
 		void OnRender() override;
 
 	protected:
-		void UpdateLayout();
+		void UpdateLayout() const;
 
 	protected:
-		String			text_;
-		Font			font_;
-		TextStyle		style_;
-		D2DTextFormatPtr	text_format_;
-		D2DTextLayoutPtr	text_layout_;
+		String		text_;
+		Font		font_;
+		TextStyle	style_;
+
+		mutable bool layout_dirty_;
+		mutable Size layout_size_;
+		mutable ComPtr<IDWriteTextFormat>	text_format_;
+		mutable ComPtr<IDWriteTextLayout>	text_layout_;
 	};
 }

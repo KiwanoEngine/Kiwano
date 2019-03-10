@@ -20,7 +20,6 @@
 
 #include "Node.h"
 #include "Action.h"
-#include "Factory.h"
 #include "Scene.h"
 #include "Task.h"
 #include "render.h"
@@ -42,7 +41,7 @@ namespace easy2d
 
 	Node::Node()
 		: visible_(true)
-		, pause_(false)
+		, update_pausing_(false)
 		, hover_(false)
 		, pressed_(false)
 		, responsible_(false)
@@ -59,7 +58,7 @@ namespace easy2d
 
 	void Node::Update(Duration dt)
 	{
-		if (pause_)
+		if (update_pausing_)
 			return;
 
 		UpdateActions(this, dt);
@@ -88,13 +87,9 @@ namespace easy2d
 
 		UpdateTransform();
 
-		auto& rt = RenderSystem::Instance();
-
 		if (children_.IsEmpty())
 		{
-			rt.SetTransform(transform_matrix_);
-			rt.SetOpacity(display_opacity_);
-
+			PrepareRender();
 			OnRender();
 		}
 		else
@@ -110,9 +105,7 @@ namespace easy2d
 				child = child->NextItem().Get();
 			}
 
-			rt.SetTransform(transform_matrix_);
-			rt.SetOpacity(display_opacity_);
-
+			PrepareRender();
 			OnRender();
 
 			while (child)
@@ -182,16 +175,6 @@ namespace easy2d
 		}
 
 		EventDispatcher::Dispatch(evt);
-	}
-
-	void Node::PauseUpdating()
-	{
-		pause_ = true;
-	}
-
-	void Node::ResumeUpdating()
-	{
-		pause_ = false;
 	}
 
 	Matrix const & Node::GetTransformMatrix()  const
@@ -607,4 +590,12 @@ namespace easy2d
 		Point local = GetTransformInverseMatrix().Transform(point);
 		return GetBounds().ContainsPoint(local);
 	}
+
+
+	void VisualNode::PrepareRender()
+	{
+		Renderer::Instance().SetTransform(transform_matrix_);
+		Renderer::Instance().SetOpacity(display_opacity_);
+	}
+
 }

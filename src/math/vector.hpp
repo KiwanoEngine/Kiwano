@@ -25,7 +25,7 @@ namespace easy2d
 {
 	namespace math
 	{
-		struct E2D_API Vec2
+		struct Vec2
 		{
 			float x;
 			float y;
@@ -80,6 +80,11 @@ namespace easy2d
 			inline bool operator== (const Vec2& other) const
 			{
 				return (x == other.x) && (y == other.y);
+			}
+
+			inline bool operator!= (const Vec2& other) const
+			{
+				return (x != other.x) || (y != other.y);
 			}
 		};
 
