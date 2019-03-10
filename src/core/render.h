@@ -28,8 +28,6 @@
 #include "../DX/DeviceResources.h"
 #include "../DX/TextRenderer.h"
 #include "time.h"
-#include <d2d1.h>
-#include <d2d1_1.h>
 
 namespace easy2d
 {

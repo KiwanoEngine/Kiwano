@@ -19,9 +19,21 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "D3D11DeviceResources.h"
+#include "../core/macros.h"
+
+#ifdef E2D_USE_DIRECTX10
+#	include "D3D10DeviceResources.h"
+#else
+#	include "D3D11DeviceResources.h"
+#endif
 
 namespace easy2d
 {
+
+#ifdef E2D_USE_DIRECTX10
+	using DeviceResources = D3D10DeviceResources;
+#else
 	using DeviceResources = D3D11DeviceResources;
+#endif
+	
 }

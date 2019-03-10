@@ -18,33 +18,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "D3D11DeviceResources.h"
+#include "D3D10DeviceResources.h"
 
-#ifndef E2D_USE_DIRECTX10
+#ifdef E2D_USE_DIRECTX10
 
 #include "../core/Image.h"
 #include "../core/logs.h"
 
-#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3d10_1.lib")
 
 namespace easy2d
 {
 #if defined(_DEBUG)
 	namespace DX
 	{
+		HRESULT CreateD3DDevice(IDXGIAdapter *adapter, D3D10_DRIVER_TYPE driver_type, UINT flags, ID3D10Device1 **device)
+		{
+			HRESULT hr = S_OK;
+
+			static const D3D10_FEATURE_LEVEL1 levels[] =
+			{
+				D3D10_FEATURE_LEVEL_10_1,
+				D3D10_FEATURE_LEVEL_10_0,
+				D3D10_FEATURE_LEVEL_9_3,
+				D3D10_FEATURE_LEVEL_9_2,
+				D3D10_FEATURE_LEVEL_9_1,
+			};
+
+			for (UINT level = 0; level < ARRAYSIZE(levels); level++)
+			{
+				hr = D3D10CreateDevice1(
+					adapter,
+					driver_type,
+					NULL,
+					flags,
+					levels[level],
+					D3D10_1_SDK_VERSION,
+					device
+				);
+
+				if (SUCCEEDED(hr))
+					break;
+			}
+			return hr;
+		}
+
 		inline bool SdkLayersAvailable()
 		{
-			HRESULT hr = D3D11CreateDevice(
-				nullptr,
-				D3D_DRIVER_TYPE_NULL,		// There is no need to create a real hardware device.
-				0,
-				D3D11_CREATE_DEVICE_DEBUG,	// Check for the SDK layers.
-				nullptr,					// Any feature level will do.
-				0,
-				D3D11_SDK_VERSION,
-				nullptr,					// No need to keep the D3D device reference.
-				nullptr,					// No need to know the feature level.
-				nullptr						// No need to keep the D3D device context reference.
+			HRESULT hr = CreateD3DDevice(
+				NULL,
+				D3D10_DRIVER_TYPE_NULL,		// There is no need to create a real hardware device.
+				D3D10_CREATE_DEVICE_DEBUG,	// Check for the SDK layers.
+				nullptr						// No need to keep the D3D device reference.
 			);
 
 			return SUCCEEDED(hr);
@@ -52,25 +77,24 @@ namespace easy2d
 	}
 #endif
 
-	D3D11DeviceResources::D3D11DeviceResources()
+	D3D10DeviceResources::D3D10DeviceResources()
 		: hwnd_(nullptr)
-		, d3d_feature_level_(D3D_FEATURE_LEVEL_9_1)
 	{
 		dpi_ = 96.f; // dpi_ = (float)GetDpiForWindow(hwnd);
 	}
 
-	D3D11DeviceResources::~D3D11DeviceResources()
+	D3D10DeviceResources::~D3D10DeviceResources()
 	{
 		DiscardResources();
 	}
 
-	HRESULT D3D11DeviceResources::Create(D3D11DeviceResources** device_resources, HWND hwnd)
+	HRESULT D3D10DeviceResources::Create(D3D10DeviceResources** device_resources, HWND hwnd)
 	{
 		HRESULT hr = E_FAIL;
 
 		if (device_resources)
 		{
-			D3D11DeviceResources* res = new (std::nothrow) D3D11DeviceResources;
+			D3D10DeviceResources* res = new (std::nothrow) D3D10DeviceResources;
 			if (res)
 			{
 				hr = res->CreateDeviceIndependentResources();
@@ -109,10 +133,9 @@ namespace easy2d
 		return hr;
 	}
 
-	void D3D11DeviceResources::DiscardResources()
+	void D3D10DeviceResources::DiscardResources()
 	{
 		d3d_device_.Reset();
-		d3d_device_context_.Reset();
 		d3d_rt_view_.Reset();
 		d3d_ds_view_.Reset();
 		dxgi_swap_chain_.Reset();
@@ -121,71 +144,32 @@ namespace easy2d
 		hwnd_ = nullptr;
 	}
 
-	HRESULT D3D11DeviceResources::CreateDeviceResources()
+	HRESULT D3D10DeviceResources::CreateDeviceResources()
 	{
 		HRESULT hr = S_OK;
 
-		static const D3D_FEATURE_LEVEL feature_levels[] =
-		{
-			D3D_FEATURE_LEVEL_11_1,
-			D3D_FEATURE_LEVEL_11_0,
-			D3D_FEATURE_LEVEL_10_1,
-			D3D_FEATURE_LEVEL_10_0,
-			D3D_FEATURE_LEVEL_9_3,
-			D3D_FEATURE_LEVEL_9_2,
-			D3D_FEATURE_LEVEL_9_1
-		};
-
-		ComPtr<ID3D11Device> device;
-		ComPtr<ID3D11DeviceContext> context;
-
 		// This flag adds support for surfaces with a different color channel ordering
 		// than the API default. It is required for compatibility with Direct2D.
-		UINT creation_flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+		UINT creation_flags = D3D10_CREATE_DEVICE_BGRA_SUPPORT;
 
 #if defined(E2D_DEBUG)
 		if (DX::SdkLayersAvailable())
 		{
-			creation_flags |= D3D11_CREATE_DEVICE_DEBUG;
+			creation_flags |= D3D10_CREATE_DEVICE_DEBUG;
 		}
 #endif
 
-		hr = D3D11CreateDevice(
-			nullptr,					// Specify nullptr to use the default adapter.
-			D3D_DRIVER_TYPE_HARDWARE,
-			0,							// Should be 0 unless the driver is D3D_DRIVER_TYPE_SOFTWARE.
-			creation_flags,				// Set debug and Direct2D compatibility flags.
-			feature_levels,				// List of feature levels this app can support.
-			ARRAYSIZE(feature_levels),	// Size of the list above.
-			D3D11_SDK_VERSION,
-			&device,					// Returns the Direct3D device created.
-			&d3d_feature_level_,		// Returns feature level of device created.
-			&context					// Returns the device immediate context.
+		ComPtr<ID3D10Device1> device;
+		hr = DX::CreateD3DDevice(
+			NULL,
+			D3D10_DRIVER_TYPE_HARDWARE,
+			creation_flags,
+			&device
 		);
-
-		if (FAILED(hr))
-		{
-			// If the initialization fails, fall back to the WARP device.
-			// For more information on WARP, see: 
-			// http://go.microsoft.com/fwlink/?LinkId=286690
-			hr = D3D11CreateDevice(
-				nullptr,
-				D3D_DRIVER_TYPE_WARP, // Create a WARP device instead of a hardware device.
-				0,
-				creation_flags,
-				feature_levels,
-				ARRAYSIZE(feature_levels),
-				D3D11_SDK_VERSION,
-				&device,
-				&d3d_feature_level_,
-				&context
-			);
-		}
 
 		if (SUCCEEDED(hr))
 		{
 			d3d_device_ = device;
-			d3d_device_context_ = context;
 
 			ComPtr<IDXGIAdapter> dxgi_adapter;
 			ComPtr<IDXGIDevice> dxgi_device;
@@ -273,7 +257,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT D3D11DeviceResources::CreateWindowSizeDependentResources()
+	HRESULT D3D10DeviceResources::CreateWindowSizeDependentResources()
 	{
 		if (!dxgi_swap_chain_)
 			return E_UNEXPECTED;
@@ -281,10 +265,10 @@ namespace easy2d
 		HRESULT hr = S_OK;
 
 		// Clear the previous window size specific context.
-		ID3D11RenderTargetView* null_views[] = { nullptr };
+		ID3D10RenderTargetView* null_views[] = { nullptr };
 		SetTargetBitmap(nullptr);
-		d3d_device_context_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
-		d3d_device_context_->Flush();
+		d3d_device_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
+		d3d_device_->Flush();
 
 		// Calculate the necessary render target size in pixels.
 		output_size_.x = DX::ConvertDipsToPixels(logical_size_.x, dpi_);
@@ -305,34 +289,49 @@ namespace easy2d
 		if (SUCCEEDED(hr))
 		{
 			// Create the render target view and set it on the device
-			ComPtr<ID3D11Resource> dxgi_back_buffer;
+			ComPtr<ID3D10Resource> dxgi_back_buffer;
 
-			hr = dxgi_swap_chain_->GetBuffer(0, IID_PPV_ARGS(&dxgi_back_buffer));
+			hr = dxgi_swap_chain_->GetBuffer(
+				0,
+				IID_PPV_ARGS(&dxgi_back_buffer)
+			);
 
 			if (SUCCEEDED(hr))
 			{
+				D3D10_RENDER_TARGET_VIEW_DESC renderDesc;
+				renderDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+				renderDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2D;
+				renderDesc.Texture2D.MipSlice = 0;
+
 				d3d_rt_view_ = nullptr;
-				hr = d3d_device_->CreateRenderTargetView(dxgi_back_buffer.Get(), nullptr, &d3d_rt_view_);
+				hr = d3d_device_->CreateRenderTargetView(dxgi_back_buffer.Get(), &renderDesc, &d3d_rt_view_);
 			}
 
-			ComPtr<ID3D11Texture2D> depth_stencil;
+			ComPtr<ID3D10Texture2D> depth_stencil;
 			if (SUCCEEDED(hr))
 			{
-				CD3D11_TEXTURE2D_DESC tex_desc(
-					DXGI_FORMAT_D24_UNORM_S8_UINT,
-					static_cast<UINT>(output_size_.x),
-					static_cast<UINT>(output_size_.y),
-					1, // This depth stencil view has only one texture.
-					1, // Use a single mipmap level.
-					D3D11_BIND_DEPTH_STENCIL
-				);
+				D3D10_TEXTURE2D_DESC tex_desc;
+				tex_desc.ArraySize = 1;
+				tex_desc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
+				tex_desc.CPUAccessFlags = 0;
+				tex_desc.Format = DXGI_FORMAT_D16_UNORM;
+				tex_desc.Width = static_cast<UINT>(output_size_.x);
+				tex_desc.Height = static_cast<UINT>(output_size_.y);
+				tex_desc.MipLevels = 1;
+				tex_desc.MiscFlags = 0;
+				tex_desc.SampleDesc.Count = 1;
+				tex_desc.SampleDesc.Quality = 0;
+				tex_desc.Usage = D3D10_USAGE_DEFAULT;
 
-				hr = d3d_device_->CreateTexture2D(&tex_desc, nullptr, &depth_stencil);
+				hr = d3d_device_->CreateTexture2D(&tex_desc, NULL, &depth_stencil);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				CD3D11_DEPTH_STENCIL_VIEW_DESC desc(D3D11_DSV_DIMENSION_TEXTURE2D);
+				D3D10_DEPTH_STENCIL_VIEW_DESC desc;
+				desc.Format = DXGI_FORMAT_D16_UNORM;
+				desc.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
+				desc.Texture2D.MipSlice = 0;
 
 				d3d_ds_view_.Reset();
 				hr = d3d_device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &d3d_ds_view_);
@@ -341,17 +340,19 @@ namespace easy2d
 
 		if (SUCCEEDED(hr))
 		{
-			ID3D11RenderTargetView* views[] = { d3d_rt_view_.Get() };
-			d3d_device_context_->OMSetRenderTargets(1, views, d3d_ds_view_.Get());
+			ID3D10RenderTargetView* views[] = { d3d_rt_view_.Get() };
+			d3d_device_->OMSetRenderTargets(1, views, d3d_ds_view_.Get());
 
-			// Set the 3D rendering viewport to target the entire window.
-			CD3D11_VIEWPORT screen_viewport(
-				0.0f,
-				0.0f,
-				output_size_.x,
-				output_size_.y);
+			// Set a new viewport based on the new dimensions
+			D3D10_VIEWPORT viewport;
+			viewport.Width = static_cast<UINT>(output_size_.x);
+			viewport.Height = static_cast<UINT>(output_size_.y);
+			viewport.TopLeftX = 0;
+			viewport.TopLeftY = 0;
+			viewport.MinDepth = 0;
+			viewport.MaxDepth = 1;
 
-			d3d_device_context_->RSSetViewports(1, &screen_viewport);
+			d3d_device_->RSSetViewports(1, &viewport);
 		}
 
 		// Create a Direct2D target bitmap associated with the
@@ -383,7 +384,7 @@ namespace easy2d
 		return hr;
 	}
 
-	HRESULT D3D11DeviceResources::HandleDeviceLost()
+	HRESULT D3D10DeviceResources::HandleDeviceLost()
 	{
 		dxgi_swap_chain_ = nullptr;
 
@@ -396,7 +397,7 @@ namespace easy2d
 		return hr;
 	}
 
-	void D3D11DeviceResources::SetLogicalSize(Size logical_size)
+	void D3D10DeviceResources::SetLogicalSize(Size logical_size)
 	{
 		if (logical_size_ != logical_size)
 		{
@@ -408,7 +409,7 @@ namespace easy2d
 		}
 	}
 
-	void D3D11DeviceResources::SetDpi(float dpi)
+	void D3D10DeviceResources::SetDpi(float dpi)
 	{
 		if (dpi != dpi_)
 		{

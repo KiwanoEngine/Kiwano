@@ -23,6 +23,7 @@
 #include "../core/Resource.h"
 #include "../core/Font.hpp"
 #include "../core/TextStyle.hpp"
+#include <dwrite.h>
 #include <d2d1.h>
 #include <d2d1_1.h>
 

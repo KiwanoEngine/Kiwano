@@ -20,13 +20,10 @@
 
 #pragma once
 #include "macros.h"
-#include <d2d1.h>
-#include <dwrite.h>
 #include <xaudio2.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
-#include <d3d11.h>
 
 namespace easy2d
 {
@@ -51,31 +48,6 @@ namespace easy2d
 
 			PFN_PathFileExistsW PathFileExistsW;
 			PFN_SHCreateMemStream SHCreateMemStream;
-		};
-
-
-		class E2D_API DirectX
-		{
-			DirectX();
-
-			HMODULE d3d11;
-			HMODULE d2d;
-			HMODULE dwrite;
-
-			// DirectX functions
-			typedef HRESULT(WINAPI *PFN_D2D1CreateFactory)(D2D1_FACTORY_TYPE, const IID&, const D2D1_FACTORY_OPTIONS*, void **);
-			typedef HRESULT(WINAPI *PFN_DWriteCreateFactory)(DWRITE_FACTORY_TYPE, const IID&, IUnknown **);
-
-		public:
-			static DirectX& Get()
-			{
-				static DirectX instance;
-				return instance;
-			}
-
-			PFN_D2D1CreateFactory D2D1CreateFactory;
-			PFN_DWriteCreateFactory DWriteCreateFactory;
-			PFN_D3D11_CREATE_DEVICE D3D11CreateDevice;
 		};
 
 

@@ -43,7 +43,7 @@ namespace easy2d
 }
 
 // Class that will implement the singleton mode,
-// must use the macro in it's delare file
+// must use the macro in its delare file
 
 #ifndef E2D_DECLARE_SINGLETON
 #define E2D_DECLARE_SINGLETON( type )			\
