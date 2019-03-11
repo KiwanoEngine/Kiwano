@@ -22,6 +22,8 @@
 #include "logs.h"
 #include "modules.h"
 #include "render.h"
+#include "window.h"
+#include "input.h"
 #include "Event.hpp"
 #include "Scene.h"
 #include "DebugNode.h"
@@ -49,6 +51,9 @@ namespace easy2d
 		, app_name_(app_name)
 	{
 		::CoInitialize(nullptr);
+
+		Use(&Renderer::Instance());
+		Use(&Input::Instance());
 	}
 
 	Application::~Application()
@@ -61,7 +66,7 @@ namespace easy2d
 	void Application::Init(const Options& options)
 	{
 		ThrowIfFailed(
-			Window::Instance().Init(
+			Window::Instance().Create(
 				options.title,
 				options.width,
 				options.height,
@@ -73,22 +78,15 @@ namespace easy2d
 
 		HWND hwnd = Window::Instance().GetHandle();
 
-		ThrowIfFailed(
-			Renderer::Instance().Init(hwnd)
-		);
-
+		Renderer::Instance().SetTargetWindow(hwnd);
 		Renderer::Instance().SetClearColor(options.clear_color);
 		Renderer::Instance().SetVSyncEnabled(options.vsync);
 
-		ThrowIfFailed(
-			Input::Instance().Init(
-				hwnd
-			)
-		);
-		
-		ThrowIfFailed(
-			Audio::Instance().Init()
-		);
+		// Setup all components
+		for (Component* c : components_)
+		{
+			c->Setup();
+		}
 
 		OnStart();
 
@@ -139,9 +137,44 @@ namespace easy2d
 			curr_scene_.Reset();
 			debug_node_.Reset();
 
-			Audio::Instance().Destroy();
-			Renderer::Instance().Destroy();
+			for (auto iter = components_.rbegin(); iter != components_.rend(); ++iter)
+			{
+				(*iter)->Destroy();
+			}
+
 			Window::Instance().Destroy();
+		}
+	}
+
+	void Application::Use(Component* component)
+	{
+		if (component)
+		{
+
+#if defined(E2D_DEBUG)
+			if (components_.contains(component))
+			{
+				E2D_ASSERT(false && "Component already exists!");
+			}
+#endif
+
+			components_.push_back(component);
+		}
+	}
+
+	void Application::Remove(Component* component)
+	{
+		if (component)
+		{
+			for (auto iter = components_.begin(); iter != components_.end(); iter++)
+			{
+				if ((*iter) == component)
+				{
+					(*iter)->Destroy();
+					components_.erase(iter);
+					break;
+				}
+			}
 		}
 	}
 
@@ -190,12 +223,12 @@ namespace easy2d
 		if (show)
 		{
 			debug_node_ = new DebugNode;
-			Renderer::Instance().StartCollectStatus();
+			Renderer::Instance().StartCollectData();
 		}
 		else
 		{
 			debug_node_.Reset();
-			Renderer::Instance().StopCollectStatus();
+			Renderer::Instance().StopCollectData();
 		}
 	}
 
@@ -376,6 +409,14 @@ namespace easy2d
 				else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { evt.mouse.button = MouseButton::Middle; }
 
 				app->curr_scene_->Dispatch(evt);
+			}
+
+			if (msg == WM_MOUSEMOVE)
+			{
+				Input::Instance().UpdateMousePos(
+					static_cast<float>(GET_X_LPARAM(lparam)),
+					static_cast<float>(GET_Y_LPARAM(lparam))
+				);
 			}
 		}
 		break;

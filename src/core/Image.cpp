@@ -21,7 +21,7 @@
 #include "Image.h"
 #include "logs.h"
 #include "render.h"
-#include "../utils/File.h"
+#include "modules.h"
 #include "../utils/string.h"
 
 namespace easy2d
@@ -62,7 +62,7 @@ namespace easy2d
 
 		if (res.IsFileType())
 		{
-			if (!File(res.GetFileName()).Exists())
+			if (!modules::Shlwapi::Get().PathFileExistsW(res.GetFileName().c_str()))
 			{
 				E2D_WARNING_LOG(L"Image file '%s' not found!", res.GetFileName().c_str());
 				return false;

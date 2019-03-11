@@ -54,7 +54,8 @@ namespace easy2d
 		// 设置全屏模式
 		void SetFullscreen(bool fullscreen, int width, int height);
 
-		HRESULT Init(
+	public:
+		HRESULT Create(
 			String	title,
 			int		width,
 			int		height,

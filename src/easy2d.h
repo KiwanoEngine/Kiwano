@@ -35,7 +35,6 @@
 #include "core/render.h"
 #include "core/window.h"
 #include "core/input.h"
-#include "core/audio.h"
 #include "core/time.h"
 #include "core/logs.h"
 
@@ -45,15 +44,9 @@
 #include "core/Transform.hpp"
 #include "core/TextStyle.hpp"
 
-#include "core/noncopyable.hpp"
-#include "core/RefCounter.hpp"
-#include "core/IntrusivePtr.hpp"
-#include "core/IntrusiveList.hpp"
-
 #include "core/Object.h"
 #include "core/Image.h"
 #include "core/Frames.h"
-#include "core/Music.h"
 #include "core/Geometry.h"
 #include "core/Task.h"
 #include "core/TaskManager.h"
@@ -93,14 +86,21 @@
 
 
 //
+// audio
+//
+
+#include "audio/audio.h"
+#include "audio/Music.h"
+#include "audio/Player.h"
+
+
+//
 // utils
 //
 
 #include "utils/Path.h"
 #include "utils/Data.h"
 #include "utils/File.h"
-#include "utils/Player.h"
-#include "utils/Transcoder.h"
 #include "utils/ResLoader.h"
 
 

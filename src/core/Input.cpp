@@ -25,8 +25,9 @@
 namespace easy2d
 {
 	Input::Input()
-		: hwnd_(nullptr)
-		, want_update_(false)
+		: want_update_(false)
+		, mouse_pos_x_(0.f)
+		, mouse_pos_y_(0.f)
 	{
 		ZeroMemory(keys_, sizeof(keys_));
 		ZeroMemory(keys_pressed_, sizeof(keys_pressed_));
@@ -35,13 +36,6 @@ namespace easy2d
 
 	Input::~Input()
 	{
-	}
-
-	HRESULT Input::Init(HWND hwnd)
-	{
-		hwnd_ = hwnd;
-
-		return S_OK;
 	}
 
 	void Input::Update()
@@ -67,46 +61,42 @@ namespace easy2d
 		want_update_ = true;
 	}
 
-	bool Input::IsDown(int code_or_btn)
+	void Input::UpdateMousePos(float x, float y)
 	{
-		E2D_ASSERT(code_or_btn >= 0 && code_or_btn < 256);
-		return keys_[code_or_btn];
+		mouse_pos_x_ = x;
+		mouse_pos_y_ = y;
 	}
 
-	bool Input::WasPressed(int code_or_btn)
+	bool Input::IsDown(int key_or_btn)
 	{
-		E2D_ASSERT(code_or_btn >= 0 && code_or_btn < 256);
-		return keys_pressed_[code_or_btn];
+		E2D_ASSERT(key_or_btn >= 0 && key_or_btn < KEY_NUM);
+		return keys_[key_or_btn];
 	}
 
-	bool Input::WasReleased(int code_or_btn)
+	bool Input::WasPressed(int key_or_btn)
 	{
-		E2D_ASSERT(code_or_btn >= 0 && code_or_btn < 256);
-		return keys_released_[code_or_btn];
+		E2D_ASSERT(key_or_btn >= 0 && key_or_btn < KEY_NUM);
+		return keys_pressed_[key_or_btn];
+	}
+
+	bool Input::WasReleased(int key_or_btn)
+	{
+		E2D_ASSERT(key_or_btn >= 0 && key_or_btn < KEY_NUM);
+		return keys_released_[key_or_btn];
 	}
 
 	float Input::GetMouseX()
 	{
-		return GetMousePos().x;
+		return mouse_pos_x_;
 	}
 
 	float Input::GetMouseY()
 	{
-		return GetMousePos().y;
+		return mouse_pos_y_;
 	}
 
 	Point Input::GetMousePos()
 	{
-		Point mouse_pos = Point{};
-		if (HWND active_window = ::GetForegroundWindow())
-		{
-			if (active_window == hwnd_ || ::IsChild(active_window, hwnd_))
-			{
-				POINT pos;
-				if (::GetCursorPos(&pos) && ::ScreenToClient(hwnd_, &pos))
-					mouse_pos = Point((float)pos.x, (float)pos.y);
-			}
-		}
-		return mouse_pos;
+		return Point{ mouse_pos_x_, mouse_pos_y_ };
 	}
 }

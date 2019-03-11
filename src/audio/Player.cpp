@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "Player.h"
-#include "../core/Music.h"
 
 namespace easy2d
 {

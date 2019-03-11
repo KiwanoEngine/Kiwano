@@ -19,41 +19,14 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/macros.h"
-#include "../core/Resource.h"
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mfreadwrite.h>
 
 namespace easy2d
 {
-	class E2D_API Transcoder
+	class Component
 	{
-		WAVEFORMATEX* wave_format_;
-
 	public:
-		Transcoder();
+		virtual void Setup() = 0;
 
-		~Transcoder();
-
-		const WAVEFORMATEX* GetWaveFormatEx() const;
-
-		HRESULT LoadMediaFile(
-			String const& file_path,
-			BYTE** wave_data,
-			UINT32* wave_data_size
-		);
-
-		HRESULT LoadMediaResource(
-			Resource const& res,
-			BYTE** wave_data,
-			UINT32* wave_data_size
-		);
-
-		HRESULT ReadSource(
-			IMFSourceReader* reader,
-			BYTE** wave_data,
-			UINT32* wave_data_size
-		);
+		virtual void Destroy() = 0;
 	};
 }

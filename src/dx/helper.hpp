@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/IntrusivePtr.hpp"
+#include "../core/ComPtr.hpp"
 #include "../core/Color.h"
 #include "../math/vector.hpp"
 #include "../math/Rect.hpp"
@@ -28,21 +28,6 @@
 
 namespace easy2d
 {
-	// ComPtr<> is a smart pointer for COM
-	template <typename _Ty>
-	using ComPtr = IntrusivePtr<_Ty>;
-
-
-	inline void IntrusivePtrAddRef(IUnknown* ptr)
-	{
-		if (ptr) { ptr->AddRef(); }
-	}
-
-	inline void IntrusivePtrRelease(IUnknown* ptr)
-	{
-		if (ptr) { ptr->Release(); }
-	}
-
 	namespace DX
 	{
 		template <typename T>

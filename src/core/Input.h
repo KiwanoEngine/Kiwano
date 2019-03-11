@@ -22,28 +22,30 @@
 #include "include-forwards.h"
 #include "keys.hpp"
 #include "Singleton.hpp"
+#include "Component.h"
 
 namespace easy2d
 {
 	class E2D_API Input
 		: public Singleton<Input>
+		, public Component
 	{
 		E2D_DECLARE_SINGLETON(Input);
 
 	public:
 		// 检测键盘或鼠标按键是否正被按下
 		bool IsDown(
-			int code_or_btn
+			int key_or_btn
 		);
 
 		// 检测键盘或鼠标按键是否刚被点击
 		bool WasPressed(
-			int code_or_btn
+			int key_or_btn
 		);
 
 		// 检测键盘或鼠标按键是否刚抬起
 		bool WasReleased(
-			int code_or_btn
+			int key_or_btn
 		);
 
 		// 获得鼠标 x 坐标
@@ -55,11 +57,16 @@ namespace easy2d
 		// 获得鼠标坐标
 		Point GetMousePos();
 
-		HRESULT Init(HWND hwnd);
+	public:
+		void Setup() override {}
+
+		void Destroy() override {}
 
 		void Update();
 
 		void UpdateKey(int, bool);
+
+		void UpdateMousePos(float, float);
 
 	protected:
 		Input();
@@ -67,10 +74,13 @@ namespace easy2d
 		~Input();
 
 	protected:
-		HWND hwnd_;
+		static const int KEY_NUM = 256;
+
 		bool want_update_;
-		bool keys_[256];
-		bool keys_pressed_[256];
-		bool keys_released_[256];
+		bool keys_[KEY_NUM];
+		bool keys_pressed_[KEY_NUM];
+		bool keys_released_[KEY_NUM];
+		float mouse_pos_x_;
+		float mouse_pos_y_;
 	};
 }

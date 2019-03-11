@@ -25,11 +25,10 @@ class DemoApp
 public:
 	DemoApp()
 	{
-		Options options;
-		options.title = L"Easy2D示例程序";
-		options.width = WINDOW_WIDTH;
-		options.height = WINDOW_HEIGHT;
+		// 使用 Audio 组件
+		Use(&Audio::Instance());
 
+		Options options(L"Easy2D示例程序", WINDOW_WIDTH, WINDOW_HEIGHT);
 		Init(options);
 	}
 

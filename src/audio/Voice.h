@@ -19,76 +19,56 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/include-forwards.h"
-#include "../core/Resource.h"
-#include <unordered_map>
+#include "../core/macros.h"
+#include "../core/noncopyable.hpp"
+#include <xaudio2.h>
 
 namespace easy2d
 {
-	// 音乐播放器
-	class E2D_API Player
+	class E2D_API Voice
 		: protected Noncopyable
 	{
-		using MusicMap = Map<size_t, MusicPtr>;
-
 	public:
-		Player();
+		Voice();
 
-		~Player();
-
-		// 预加载音乐资源
-		bool Load(
-			Resource const& res			/* 音乐资源 */
+		Voice(
+			IXAudio2SourceVoice* source_voice
 		);
 
-		// 播放音乐
-		bool Play(
-			Resource const& res,	/* 音乐资源 */
-			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
+		~Voice();
+
+		HRESULT Play(
+			const BYTE* wave_data,
+			UINT32 data_size,
+			UINT32 loop_count
 		);
 
-		// 暂停音乐
-		void Pause(
-			Resource const& res		/* 音乐资源 */
+		HRESULT Pause();
+
+		HRESULT Resume();
+
+		HRESULT Stop();
+
+		HRESULT GetVolume(
+			float* volume
+		) const;
+
+		HRESULT SetVolume(
+			float volume
 		);
 
-		// 继续播放音乐
-		void Resume(
-			Resource const& res		/* 音乐资源 */
+		HRESULT GetBuffersQueued(
+			UINT32* queued
+		) const;
+
+		void Destroy();
+
+		void SetSourceVoice(
+			IXAudio2SourceVoice* source_voice
 		);
-
-		// 停止音乐
-		void Stop(
-			Resource const& res		/* 音乐资源 */
-		);
-
-		// 获取音乐播放状态
-		bool IsPlaying(
-			Resource const& res		/* 音乐资源 */
-		);
-
-		// 获取音量
-		float GetVolume() const;
-
-		// 设置音量
-		void SetVolume(
-			float volume			/* 1.0 为原始音量 */
-		);
-
-		// 暂停所有音乐
-		void PauseAll();
-
-		// 继续播放所有音乐
-		void ResumeAll();
-
-		// 停止所有音乐
-		void StopAll();
-
-		// 清除缓存
-		void ClearCache();
 
 	protected:
-		float		volume_;
-		MusicMap	musics_cache_;
+		IXAudio2SourceVoice* source_voice_;
 	};
+
 }

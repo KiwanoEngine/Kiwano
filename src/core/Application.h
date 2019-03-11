@@ -21,9 +21,7 @@
 #pragma once
 #include "include-forwards.h"
 #include "time.h"
-#include "window.h"
-#include "input.h"
-#include "audio.h"
+#include "Component.h"
 
 namespace easy2d
 {
@@ -46,6 +44,24 @@ namespace easy2d
 			, vsync(true)
 			, fullscreen(false)
 		{}
+
+		Options(
+			String const& title,
+			int width,
+			int height,
+			LPCWSTR icon = nullptr,
+			Color clear_color = Color::Black,
+			bool vsync = true,
+			bool fullscreen = false
+		)
+			: title(title)
+			, width(width)
+			, height(height)
+			, icon(icon)
+			, clear_color(clear_color)
+			, vsync(vsync)
+			, fullscreen(fullscreen)
+		{}
 	};
 
 
@@ -61,7 +77,7 @@ namespace easy2d
 
 		// 初始化
 		void Init(
-			Options const& options = Options{}
+			Options const& options
 		);
 
 		// 启动时
@@ -87,6 +103,16 @@ namespace easy2d
 
 		// 销毁
 		void Destroy();
+
+		// 添加组件
+		void Use(
+			Component* component
+		);
+
+		// 卸载组件
+		void Remove(
+			Component* component
+		);
 
 		// 切换场景
 		void EnterScene(
@@ -136,5 +162,7 @@ namespace easy2d
 		ScenePtr		next_scene_;
 		NodePtr			debug_node_;
 		TransitionPtr	transition_;
+
+		Array<Component*> components_;
 	};
 }

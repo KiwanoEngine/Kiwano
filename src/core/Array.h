@@ -28,7 +28,7 @@ namespace easy2d
 	// Lightweight std::vector<>-like class
 	//
 	template<typename _Ty, typename _Alloc = std::allocator<_Ty>>
-	class Array : _Alloc
+	class Array
 	{
 	public:
 		using value_type				= _Ty;
@@ -78,25 +78,27 @@ namespace easy2d
 
 		inline void				resize(int new_size)				{ if (new_size > capacity_) { reserve(_grow_capacity(new_size)); } _Ty tmp; std::uninitialized_fill_n(data_ + size_, new_size - size_, tmp); size_ = new_size; }
 		inline void				resize(int new_size, const _Ty& v)	{ if (new_size > capacity_) reserve(_grow_capacity(new_size)); if (new_size > size_) std::uninitialized_fill_n(data_ + size_, new_size - size_, v); size_ = new_size; }
-		inline void				reserve(int new_capacity)			{ if (new_capacity <= capacity_) return; _Ty* new_data = _Alloc::allocate(new_capacity); if (data_) { ::memcpy(new_data, data_, (size_t)size_ * sizeof(_Ty)); _Alloc::deallocate(data_, capacity_); } data_ = new_data; capacity_ = new_capacity; }
+		inline void				reserve(int new_capacity)			{ if (new_capacity <= capacity_) return; _Ty* new_data = allocator_.allocate(new_capacity); if (data_) { ::memcpy(new_data, data_, (size_t)size_ * sizeof(_Ty)); allocator_.deallocate(data_, capacity_); } data_ = new_data; capacity_ = new_capacity; }
 
-		inline void				push_back(const _Ty& v)								{ if (size_ == capacity_) reserve(_grow_capacity(size_ + 1)); _Alloc::construct(data_ + size_, v); size_++; }
+		inline void				push_back(const _Ty& v)								{ if (size_ == capacity_) reserve(_grow_capacity(size_ + 1)); allocator_.construct(data_ + size_, v); size_++; }
 		inline void				pop_back()											{ if (empty()) throw std::out_of_range("vector empty before pop"); size_--; }
 		inline void				push_front(const _Ty& v)							{ if (size_ == 0) push_back(v); else insert(data_, v); }
-		inline iterator			erase(const_iterator it)							{ E2D_ASSERT(it >= data_ && it < data_ + size_); _Alloc::destroy(it); const ptrdiff_t off = it - data_; ::memmove(data_ + off, data_ + off + 1, ((size_t)size_ - (size_t)off - 1) * sizeof(_Ty)); size_--; return data_ + off; }
+		inline iterator			erase(const_iterator it)							{ E2D_ASSERT(it >= data_ && it < data_ + size_); allocator_.destroy(it); const ptrdiff_t off = it - data_; ::memmove(data_ + off, data_ + off + 1, ((size_t)size_ - (size_t)off - 1) * sizeof(_Ty)); size_--; return data_ + off; }
 		inline iterator			erase(const_iterator it, const_iterator it_last)	{ E2D_ASSERT(it >= data_ && it < data_ + size_ && it_last > it && it_last <= data_ + size_); _destroy(it, it_last); const ptrdiff_t count = it_last - it; const ptrdiff_t off = it - data_; ::memmove(data_ + off, data_ + off + count, ((size_t)size_ - (size_t)off - count) * sizeof(_Ty)); size_ -= (int)count; return data_ + off; }
-		inline iterator			insert(const_iterator it, const _Ty& v)				{ E2D_ASSERT(it >= data_ && it <= data_ + size_); const ptrdiff_t off = it - data_; if (size_ == capacity_) reserve(_grow_capacity(size_ + 1)); if (off < (int)size_) ::memmove(data_ + off + 1, data_ + off, ((size_t)size_ - (size_t)off) * sizeof(_Ty)); _Alloc::construct(data_ + off, v); size_++; return data_ + off; }
+		inline iterator			insert(const_iterator it, const _Ty& v)				{ E2D_ASSERT(it >= data_ && it <= data_ + size_); const ptrdiff_t off = it - data_; if (size_ == capacity_) reserve(_grow_capacity(size_ + 1)); if (off < (int)size_) ::memmove(data_ + off + 1, data_ + off, ((size_t)size_ - (size_t)off) * sizeof(_Ty)); allocator_.construct(data_ + off, v); size_++; return data_ + off; }
 		inline bool				contains(const _Ty& v) const						{ const _Ty* data = data_;  const _Ty* data_end = data_ + size_; while (data < data_end) if (*data++ == v) return true; return false; }
 		inline int				index_of(const_iterator it) const					{ E2D_ASSERT(it >= data_ && it <= data_ + size_); const ptrdiff_t off = it - data_; return (int)off; }
 
 	private:
 		inline int				_grow_capacity(int sz) const						{ int new_capacity = capacity_ ? (capacity_ + capacity_ / 2) : 8; return new_capacity > sz ? new_capacity : sz; }
-		inline void				_destroy(iterator it, iterator it_last)				{ E2D_ASSERT(it >= data_ && it < data_ + size_ && it_last > it && it_last <= data_ + size_); for (; it != it_last; ++it) _Alloc::destroy(it); }
-		inline void				_destroy_all()										{ E2D_ASSERT((data_ && capacity_) || (!data_ && !capacity_)); if (size_) _destroy(begin(), end()); if (data_ && capacity_) _Alloc::deallocate(data_, capacity_); size_ = capacity_ = 0; data_ = nullptr; }
+		inline void				_destroy(iterator it, iterator it_last)				{ E2D_ASSERT(it >= data_ && it < data_ + size_ && it_last > it && it_last <= data_ + size_); for (; it != it_last; ++it) allocator_.destroy(it); }
+		inline void				_destroy_all()										{ E2D_ASSERT((data_ && capacity_) || (!data_ && !capacity_)); if (size_) _destroy(begin(), end()); if (data_ && capacity_) allocator_.deallocate(data_, capacity_); size_ = capacity_ = 0; data_ = nullptr; }
 
 	private:
 		int size_;
 		int capacity_;
 		_Ty* data_;
+
+		typename _Alloc allocator_;
 	};
 }

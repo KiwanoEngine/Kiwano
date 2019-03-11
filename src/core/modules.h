@@ -49,58 +49,5 @@ namespace easy2d
 			PFN_PathFileExistsW PathFileExistsW;
 			PFN_SHCreateMemStream SHCreateMemStream;
 		};
-
-
-		class E2D_API XAudio2
-		{
-			XAudio2();
-
-			HMODULE xaudio2;
-
-			// XAudio2 functions
-			typedef HRESULT(WINAPI *PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
-
-		public:
-			static XAudio2& Get()
-			{
-				static XAudio2 instance;
-				return instance;
-			}
-
-			PFN_XAudio2Create XAudio2Create;
-		};
-
-
-		class E2D_API MediaFoundation
-		{
-			MediaFoundation();
-
-			HMODULE mfplat;
-			HMODULE mfreadwrite;
-
-			// MediaFoundation functions
-			typedef HRESULT(WINAPI *PFN_MFStartup)(ULONG, DWORD);
-			typedef HRESULT(WINAPI *PFN_MFShutdown)();
-			typedef HRESULT(WINAPI *PFN_MFCreateMediaType)(IMFMediaType**);
-			typedef HRESULT(WINAPI *PFN_MFCreateWaveFormatExFromMFMediaType)(IMFMediaType*, WAVEFORMATEX**, UINT32*, UINT32);
-			typedef HRESULT(WINAPI *PFN_MFCreateSourceReaderFromURL)(LPCWSTR, IMFAttributes*, IMFSourceReader**);
-			typedef HRESULT(WINAPI *PFN_MFCreateSourceReaderFromByteStream)(IMFByteStream*, IMFAttributes*, IMFSourceReader**);
-			typedef HRESULT(WINAPI *PFN_MFCreateMFByteStreamOnStream)(IStream*, IMFByteStream**);
-
-		public:
-			static MediaFoundation& Get()
-			{
-				static MediaFoundation instance;
-				return instance;
-			}
-
-			PFN_MFStartup MFStartup;
-			PFN_MFShutdown MFShutdown;
-			PFN_MFCreateMediaType MFCreateMediaType;
-			PFN_MFCreateWaveFormatExFromMFMediaType MFCreateWaveFormatExFromMFMediaType;
-			PFN_MFCreateSourceReaderFromURL MFCreateSourceReaderFromURL;
-			PFN_MFCreateSourceReaderFromByteStream MFCreateSourceReaderFromByteStream;
-			PFN_MFCreateMFByteStreamOnStream MFCreateMFByteStreamOnStream;
-		};
 	}
 }

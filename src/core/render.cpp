@@ -20,19 +20,18 @@
 
 #include "render.h"
 #include "logs.h"
-#include "render.h"
 #include "Image.h"
-#include "Transform.hpp"
 
 namespace easy2d
 {
 	Renderer::Renderer()
-		: antialias_(true)
+		: hwnd_(nullptr)
+		, antialias_(true)
 		, vsync_(true)
 		, text_antialias_(TextAntialias::ClearType)
 		, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
 		, opacity_(1.f)
-		, collecting_status_(false)
+		, collecting_data_(false)
 	{
 		status_.primitives = 0;
 	}
@@ -41,17 +40,18 @@ namespace easy2d
 	{
 	}
 
-	HRESULT Renderer::Init(HWND hwnd)
+	void Renderer::Setup()
 	{
-		HRESULT hr = S_OK;
-
 		E2D_LOG(L"Creating device resources");
+
+		HRESULT hr = hwnd_ ? S_OK : E_FAIL;
 		
+		if (SUCCEEDED(hr))
 		{
 			device_resources_ = nullptr;
 			hr = DeviceResources::Create(
 				&device_resources_,
-				hwnd
+				hwnd_
 			);
 		}
 
@@ -73,19 +73,25 @@ namespace easy2d
 		{
 			hr = CreateDeviceResources();
 		}
-		return hr;
+
+		ThrowIfFailed(hr);
 	}
 
 	void Renderer::Destroy()
 	{
 		E2D_LOG(L"Destroying device resources");
 
-		device_resources_.Reset();
-		factory_.Reset();
-		device_context_.Reset();
 		drawing_state_block_.Reset();
 		text_renderer_.Reset();
 		solid_color_brush_.Reset();
+		device_context_.Reset();
+		factory_.Reset();
+		device_resources_.Reset();
+	}
+
+	void Renderer::SetTargetWindow(HWND hwnd)
+	{
+		hwnd_ = hwnd;
 	}
 
 	HRESULT Renderer::CreateDeviceResources()
@@ -129,7 +135,7 @@ namespace easy2d
 		if (!device_context_)
 			return E_UNEXPECTED;
 
-		if (collecting_status_)
+		if (collecting_data_)
 		{
 			status_.start = time::Now();
 			status_.primitives = 0;
@@ -174,7 +180,7 @@ namespace easy2d
 			hr = HandleDeviceLost();
 		}
 
-		if (collecting_status_)
+		if (collecting_data_)
 		{
 			status_.duration = time::Now() - status_.start;
 		}
@@ -209,7 +215,7 @@ namespace easy2d
 			device_resources_->GetStrokeStyle(stroke)
 		);
 
-		if (collecting_status_)
+		if (collecting_data_)
 			++status_.primitives;
 		return S_OK;
 	}
@@ -244,7 +250,7 @@ namespace easy2d
 			DX::ConvertToRectF(image->GetCropRect())
 		);
 
-		if (collecting_status_)
+		if (collecting_data_)
 			++status_.primitives;
 		return S_OK;
 	}
@@ -267,7 +273,7 @@ namespace easy2d
 			rect
 		);
 
-		if (collecting_status_)
+		if (collecting_data_)
 		++status_.primitives;
 		return S_OK;
 	}
@@ -277,7 +283,7 @@ namespace easy2d
 		if (!text_renderer_)
 			return E_UNEXPECTED;
 
-		if (collecting_status_)
+		if (collecting_data_)
 			++status_.primitives;
 		return text_layout->Draw(nullptr, text_renderer_.Get(), 0, 0);
 	}
@@ -338,14 +344,14 @@ namespace easy2d
 		return S_OK;
 	}
 
-	void Renderer::StartCollectStatus()
+	void Renderer::StartCollectData()
 	{
-		collecting_status_ = true;
+		collecting_data_ = true;
 	}
 
-	void Renderer::StopCollectStatus()
+	void Renderer::StopCollectData()
 	{
-		collecting_status_ = false;
+		collecting_data_ = false;
 	}
 
 	void Renderer::SetClearColor(const Color & color)
