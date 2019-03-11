@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\3rd-party\ImGui\imgui.cpp">
       <Filter>imgui</Filter>
@@ -16,9 +15,10 @@
     <ClCompile Include="..\..\3rd-party\ImGui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiView.cpp" />
+    <ClCompile Include="ImGuiLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="..\..\3rd-party\ImGui\imconfig.h">
       <Filter>imgui</Filter>
@@ -38,6 +38,8 @@
     <ClInclude Include="..\..\3rd-party\ImGui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuiView.h" />
+    <ClInclude Include="ImGuiLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">

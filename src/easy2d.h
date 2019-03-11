@@ -64,6 +64,7 @@
 
 #include "core/Node.h"
 #include "core/Scene.h"
+#include "core/Layer.h"
 #include "core/Sprite.h"
 #include "core/Text.h"
 #include "core/Canvas.h"

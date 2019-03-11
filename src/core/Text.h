@@ -22,6 +22,7 @@
 #include "Node.h"
 #include "Font.hpp"
 #include "TextStyle.hpp"
+#include <dwrite.h>
 
 namespace easy2d
 {

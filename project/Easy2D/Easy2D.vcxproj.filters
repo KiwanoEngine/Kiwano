@@ -247,6 +247,9 @@
     <ClInclude Include="..\..\src\core\ComPtr.hpp">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\core\Layer.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\core\Animation.cpp">
@@ -392,6 +395,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\audio\audio-modules.cpp">
       <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\Layer.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

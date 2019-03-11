@@ -36,6 +36,7 @@
     <ClInclude Include="..\..\src\core\IntrusiveList.hpp" />
     <ClInclude Include="..\..\src\core\IntrusivePtr.hpp" />
     <ClInclude Include="..\..\src\core\keys.hpp" />
+    <ClInclude Include="..\..\src\core\Layer.h" />
     <ClInclude Include="..\..\src\core\logs.h" />
     <ClInclude Include="..\..\src\core\macros.h" />
     <ClInclude Include="..\..\src\core\modules.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="..\..\src\core\GeometryNode.cpp" />
     <ClCompile Include="..\..\src\core\Image.cpp" />
     <ClCompile Include="..\..\src\core\Input.cpp" />
+    <ClCompile Include="..\..\src\core\Layer.cpp" />
     <ClCompile Include="..\..\src\core\logs.cpp" />
     <ClCompile Include="..\..\src\core\modules.cpp" />
     <ClCompile Include="..\..\src\core\Node.cpp" />

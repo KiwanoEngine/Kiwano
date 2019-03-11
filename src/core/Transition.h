@@ -21,6 +21,7 @@
 #pragma once
 #include "include-forwards.h"
 #include "time.h"
+#include <d2d1.h>
 
 namespace easy2d
 {
@@ -56,17 +57,17 @@ namespace easy2d
 		virtual void Reset() { };
 
 	protected:
-		bool			done_;
-		float			process_;
-		Duration		duration_;
-		Duration		delta_;
-		Size			window_size_;
+		bool				done_;
+		float				process_;
+		Duration			duration_;
+		Duration			delta_;
+		Size				window_size_;
 		ScenePtr			out_scene_;
 		ScenePtr			in_scene_;
-		ComPtr<ID2D1Layer>			out_layer_;
-		ComPtr<ID2D1Layer>			in_layer_;
-		LayerProperties out_layer_prop_;
-		LayerProperties in_layer_prop_;
+		ComPtr<ID2D1Layer>	out_layer_;
+		ComPtr<ID2D1Layer>	in_layer_;
+		LayerProperties		out_layer_prop_;
+		LayerProperties		in_layer_prop_;
 	};
 
 

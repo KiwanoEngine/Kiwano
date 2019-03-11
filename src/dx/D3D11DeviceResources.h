@@ -39,11 +39,11 @@ namespace easy2d
 
 		HRESULT HandleDeviceLost();
 
-		void SetLogicalSize(
+		HRESULT SetLogicalSize(
 			Size logical_size
 		);
 
-		void SetDpi(
+		HRESULT SetDpi(
 			float dpi
 		);
 

@@ -35,7 +35,7 @@ namespace easy2d
 		using VoiceMap = UnorderedSet<Voice*>;
 
 	public:
-		void Setup() override;
+		void Setup(Application*) override;
 
 		void Destroy() override;
 

@@ -23,7 +23,6 @@
 #include "Color.h"
 #include "Object.h"
 #include "helper.hpp"
-#include "../DX/helper.hpp"
 
 namespace easy2d
 {
@@ -42,6 +41,19 @@ namespace easy2d
 		Down,	/* 下 */
 		Left,	/* 左 */
 		Right	/* 右 */
+	};
+
+	// 鼠标指针
+	enum class MouseCursor : int
+	{
+		Arrow,		/* 指针 */
+		TextInput,	/* 输入文本 */
+		Hand,		/* 手指 */
+		SizeAll,
+		SizeNESW,
+		SizeNS,
+		SizeNWSE,
+		SizeWE,
 	};
 
 	// 文字抗锯齿属性

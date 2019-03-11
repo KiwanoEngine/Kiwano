@@ -49,6 +49,20 @@ namespace easy2d
 
 	Window::~Window()
 	{
+		if (is_fullscreen_)
+			RestoreResolution(device_name_);
+
+		if (device_name_)
+		{
+			delete[] device_name_;
+			device_name_ = nullptr;
+		}
+
+		if (handle_)
+		{
+			::DestroyWindow(handle_);
+			handle_ = nullptr;
+		}
 	}
 
 	HRESULT Window::Create(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
@@ -65,7 +79,7 @@ namespace easy2d
 		wcex.hInstance		= hinst;
 		wcex.hbrBackground	= nullptr;
 		wcex.lpszMenuName	= nullptr;
-		wcex.hCursor		= ::LoadCursorW(nullptr, IDC_ARROW);
+		wcex.hCursor		= nullptr;
 
 		if (icon)
 		{
@@ -150,24 +164,6 @@ namespace easy2d
 		width_ = rc.right - rc.left;
 		height_ = rc.bottom - rc.top;
 		return S_OK;
-	}
-
-	void Window::Destroy()
-	{
-		if (is_fullscreen_)
-			RestoreResolution(device_name_);
-
-		if (device_name_)
-		{
-			delete[] device_name_;
-			device_name_ = nullptr;
-		}
-
-		if (handle_)
-		{
-			::DestroyWindow(handle_);
-			handle_ = nullptr;
-		}
 	}
 
 	void Window::Prepare()

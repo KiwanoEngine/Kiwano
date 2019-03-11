@@ -401,19 +401,18 @@ namespace easy2d
 		return hr;
 	}
 
-	void D3D11DeviceResources::SetLogicalSize(Size logical_size)
+	HRESULT D3D11DeviceResources::SetLogicalSize(Size logical_size)
 	{
 		if (logical_size_ != logical_size)
 		{
 			logical_size_ = logical_size;
 
-			ThrowIfFailed(
-				CreateWindowSizeDependentResources()
-			);
+			return CreateWindowSizeDependentResources();
 		}
+		return S_OK;
 	}
 
-	void D3D11DeviceResources::SetDpi(float dpi)
+	HRESULT D3D11DeviceResources::SetDpi(float dpi)
 	{
 		if (dpi != dpi_)
 		{
@@ -427,10 +426,9 @@ namespace easy2d
 
 			GetD2DDeviceContext()->SetDpi(dpi_, dpi_);
 
-			ThrowIfFailed(
-				CreateWindowSizeDependentResources()
-			);
+			return CreateWindowSizeDependentResources();
 		}
+		return S_OK;
 	}
 
 }

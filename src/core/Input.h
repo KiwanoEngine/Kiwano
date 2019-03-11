@@ -58,7 +58,7 @@ namespace easy2d
 		Point GetMousePos();
 
 	public:
-		void Setup() override {}
+		void Setup(Application*) override {}
 
 		void Destroy() override {}
 

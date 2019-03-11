@@ -130,12 +130,15 @@ namespace easy2d
 
 		HRESULT PopLayer();
 
+		HRESULT Resize(
+			UINT width,
+			UINT height
+		);
+
 	public:
-		void Setup() override;
+		void Setup(Application*) override;
 
 		void Destroy() override;
-
-		void SetTargetWindow(HWND);
 
 		void StartCollectData();
 
@@ -144,6 +147,8 @@ namespace easy2d
 		inline HWND						GetTargetWindow() const		{ return hwnd_; }
 
 		inline RenderStatus const&		GetStatus() const			{ return status_; }
+
+		inline Size const&				GetOutputSize() const		{ return output_size_; }
 
 		inline DeviceResources*			GetDeviceResources() const	{ return device_resources_.Get(); }
 
@@ -169,8 +174,9 @@ namespace easy2d
 		bool vsync_;
 		bool collecting_data_;
 
+		Size			output_size_;
+		Color			clear_color_;
 		TextAntialias	text_antialias_;
-		D2D1_COLOR_F	clear_color_;
 		RenderStatus	status_;
 
 		ComPtr<DeviceResources>			device_resources_;

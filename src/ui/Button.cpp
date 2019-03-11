@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "Button.h"
+#include "../core/Scene.h"
 
 namespace easy2d
 {
@@ -107,6 +108,7 @@ namespace easy2d
 				if (evt.type == Event::MouseHover)
 				{
 					SetStatus(Status::Hover);
+					GetScene()->SetMouseCursor(MouseCursor::Hand);
 
 					if (mouse_over_callback_)
 						mouse_over_callback_();
@@ -114,6 +116,7 @@ namespace easy2d
 				else if (evt.type == Event::MouseOut)
 				{
 					SetStatus(Status::Normal);
+					GetScene()->SetMouseCursor(MouseCursor::Arrow);
 
 					if (mouse_out_callback_)
 						mouse_out_callback_();

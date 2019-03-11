@@ -19,16 +19,31 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "Node.h"
 
 namespace easy2d
 {
-	class Application;
-
-	class Component
+	class E2D_API Layer
+		: public Node
 	{
 	public:
-		virtual void Setup(Application*) = 0;
+		Layer();
 
-		virtual void Destroy() = 0;
+		virtual ~Layer();
+
+		virtual void OnMouseButtonDown(int btn, Point const& p) {}
+		virtual void OnMouseButtonUp(int btn, Point const& p) {}
+		virtual void OnMouseMoved(Point const& p) {}
+		virtual void OnMouseWheel(float wheel) {}
+
+		virtual void OnKeyDown(int key) {}
+		virtual void OnKeyUp(int key) {}
+		virtual void OnChar(char c) {}
+
+	public:
+		void Dispatch(Event& evt) override;
+
+	protected:
+		void HandleMessages(Event const& evt);
 	};
 }

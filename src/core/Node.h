@@ -37,10 +37,9 @@ namespace easy2d
 		, public TaskManager
 		, public ActionManager
 		, public EventDispatcher
-		, protected IntrusiveListItem<NodePtr>
+		, public IntrusiveListItem<NodePtr>
 	{
 		friend class Application;
-		friend class Scene;
 		friend class Transition;
 		friend class IntrusiveList<NodePtr>;
 
@@ -55,9 +54,6 @@ namespace easy2d
 
 		// 渲染节点
 		virtual void OnRender() {}
-
-		// 事件分发
-		void Dispatch(Event& evt) override;
 
 		// 获取显示状态
 		bool IsVisible()				const	{ return visible_; }
@@ -135,10 +131,10 @@ namespace easy2d
 		Matrix const& GetTransformInverseMatrix()  const;
 
 		// 获取父节点
-		Node* GetParent() const;
+		inline Node* GetParent() const { return parent_; }
 
 		// 获取所在场景
-		Scene* GetScene() const;
+		inline Scene* GetScene() const { return scene_; }
 
 		// 设置是否显示
 		void SetVisible(
@@ -364,6 +360,10 @@ namespace easy2d
 			float anchor_y
 		);
 
+	public:
+		// 事件分发
+		void Dispatch(Event& evt) override;
+
 	protected:
 		virtual void PrepareRender() {}
 
@@ -402,6 +402,7 @@ namespace easy2d
 	};
 
 
+	// 可视化节点
 	class E2D_API VisualNode
 		: public Node
 	{
