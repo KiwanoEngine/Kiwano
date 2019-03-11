@@ -77,7 +77,7 @@ namespace easy2d
 			);
 		}
 
-		window_size_ = Window::Instance().GetSize();
+		window_size_ = Renderer::Instance().GetOutputSize();
 		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
 	}
 

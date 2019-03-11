@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
+#include "../macros.h"
 
 namespace easy2d
 {
@@ -54,6 +54,10 @@ namespace easy2d
 			Esc		= VK_ESCAPE,
 			Ctrl	= VK_CONTROL,
 			Shift	= VK_SHIFT,
+			Alt		= VK_MENU,
+			Tab		= VK_TAB,
+			Delete	= VK_DELETE,
+			Back	= VK_BACK,
 
 			A = 0x41,
 			B,

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/macros.h"
+#include "../macros.h"
 #include <xaudio2.h>
 #include <mfapi.h>
 #include <mfidl.h>

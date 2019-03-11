@@ -19,14 +19,19 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
+#include "helper.h"
 #include "Color.h"
 #include "Object.h"
-#include "helper.hpp"
-#include "../DX/helper.hpp"
+#include "../common/ComPtr.hpp"
+#include "../common/Closure.hpp"
+#include "../math/vector.hpp"
+#include "../math/Rect.hpp"
+#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
+	using namespace math;
+
 	// 画笔样式
 	enum class StrokeStyle : int
 	{
@@ -42,6 +47,19 @@ namespace easy2d
 		Down,	/* 下 */
 		Left,	/* 左 */
 		Right	/* 右 */
+	};
+
+	// 鼠标指针
+	enum class MouseCursor : int
+	{
+		Arrow,		/* 指针 */
+		TextInput,	/* 输入文本 */
+		Hand,		/* 手指 */
+		SizeAll,
+		SizeNESW,
+		SizeNS,
+		SizeNWSE,
+		SizeWE,
 	};
 
 	// 文字抗锯齿属性

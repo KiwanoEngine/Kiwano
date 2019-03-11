@@ -136,8 +136,9 @@
     <ClCompile Include="..\..\3rd-party\ImGui\imgui_demo.cpp" />
     <ClCompile Include="..\..\3rd-party\ImGui\imgui_draw.cpp" />
     <ClCompile Include="..\..\3rd-party\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="imgui_impl_dx11.cpp" />
-    <ClCompile Include="imgui_impl_win32.cpp" />
+    <ClCompile Include="easy2d-imgui\ImGuiLayer.cpp" />
+    <ClCompile Include="easy2d-imgui\ImGuiView.cpp" />
+    <ClCompile Include="easy2d-imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,8 +148,10 @@
     <ClInclude Include="..\..\3rd-party\ImGui\imstb_rectpack.h" />
     <ClInclude Include="..\..\3rd-party\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\..\3rd-party\ImGui\imstb_truetype.h" />
-    <ClInclude Include="imgui_impl_dx11.h" />
-    <ClInclude Include="imgui_impl_win32.h" />
+    <ClInclude Include="easy2d-imgui\easy2d-imgui.h" />
+    <ClInclude Include="easy2d-imgui\ImGuiLayer.h" />
+    <ClInclude Include="easy2d-imgui\ImGuiView.h" />
+    <ClInclude Include="easy2d-imgui\imgui_impl_dx11.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Easy2D\Easy2D.vcxproj">

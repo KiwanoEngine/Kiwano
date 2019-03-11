@@ -22,7 +22,6 @@
 #include "logs.h"
 #include "modules.h"
 #include "render.h"
-#include "window.h"
 #include "input.h"
 #include "Event.hpp"
 #include "Scene.h"
@@ -36,21 +35,16 @@
 
 namespace easy2d
 {
-	namespace
-	{
-		LRESULT(*pre_proc)(HWND, UINT, WPARAM, LPARAM) = nullptr;	// Custom message proc for user
-	}
-
 	Application::Application(String const& app_name)
 		: end_(true)
 		, inited_(false)
-		, curr_scene_(nullptr)
-		, next_scene_(nullptr)
-		, transition_(nullptr)
+		, main_window_(nullptr)
 		, time_scale_(1.f)
 		, app_name_(app_name)
 	{
 		::CoInitialize(nullptr);
+
+		main_window_ = new Window;
 
 		Use(&Renderer::Instance());
 		Use(&Input::Instance());
@@ -66,7 +60,7 @@ namespace easy2d
 	void Application::Init(const Options& options)
 	{
 		ThrowIfFailed(
-			Window::Instance().Create(
+			main_window_->Create(
 				options.title,
 				options.width,
 				options.height,
@@ -76,16 +70,15 @@ namespace easy2d
 			)
 		);
 
-		HWND hwnd = Window::Instance().GetHandle();
+		HWND hwnd = main_window_->GetHandle();
 
-		Renderer::Instance().SetTargetWindow(hwnd);
 		Renderer::Instance().SetClearColor(options.clear_color);
 		Renderer::Instance().SetVSyncEnabled(options.vsync);
 
 		// Setup all components
 		for (Component* c : components_)
 		{
-			c->Setup();
+			c->Setup(this);
 		}
 
 		OnStart();
@@ -101,13 +94,15 @@ namespace easy2d
 
 	void Application::Run()
 	{
-		HWND hwnd = Window::Instance().GetHandle();
+		HWND hwnd = main_window_->GetHandle();
+
+		if (!hwnd)
+			throw std::exception("Calling Application::Run before Application::Init");
 
 		if (hwnd)
 		{
 			end_ = false;
-
-			Window::Instance().Prepare();
+			main_window_->Prepare();
 
 			MSG msg = {};
 			while (::GetMessageW(&msg, nullptr, 0, 0) && !end_)
@@ -125,24 +120,25 @@ namespace easy2d
 
 	void Application::Destroy()
 	{
+		transition_.Reset();
+		next_scene_.Reset();
+		curr_scene_.Reset();
+		debug_node_.Reset();
+
 		if (inited_)
 		{
 			inited_ = false;
-
-			if (curr_scene_)
-				curr_scene_->OnExit();
-
-			transition_.Reset();
-			next_scene_.Reset();
-			curr_scene_.Reset();
-			debug_node_.Reset();
 
 			for (auto iter = components_.rbegin(); iter != components_.rend(); ++iter)
 			{
 				(*iter)->Destroy();
 			}
 
-			Window::Instance().Destroy();
+			if (main_window_)
+			{
+				delete main_window_;
+				main_window_ = nullptr;
+			}
 		}
 	}
 
@@ -166,7 +162,7 @@ namespace easy2d
 	{
 		if (component)
 		{
-			for (auto iter = components_.begin(); iter != components_.end(); iter++)
+			for (auto iter = components_.begin(); iter != components_.end(); ++iter)
 			{
 				if ((*iter) == component)
 				{
@@ -211,11 +207,6 @@ namespace easy2d
 	void Application::SetTimeScale(float scale_factor)
 	{
 		time_scale_ = scale_factor;
-	}
-
-	void Application::SetPreMessageProc(LRESULT(*proc)(HWND, UINT, WPARAM, LPARAM))
-	{
-		pre_proc = proc;
 	}
 
 	void Application::ShowDebugInfo(bool show)
@@ -290,10 +281,10 @@ namespace easy2d
 			curr_scene_->Render();
 		}
 
+		OnRender();
+
 		if (debug_node_)
 			debug_node_->Render();
-
-		OnRender();
 
 		ThrowIfFailed(
 			Renderer::Instance().EndDraw()
@@ -336,9 +327,6 @@ namespace easy2d
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		if (pre_proc && pre_proc(hwnd, msg, wparam, lparam))
-			return 1;
-
 		Application * app = reinterpret_cast<Application*>(
 			static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA))
 			);
@@ -359,14 +347,30 @@ namespace easy2d
 		break;
 
 		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
 		case WM_KEYUP:
+		case WM_SYSKEYUP:
 		{
-			Input::Instance().UpdateKey((int)wparam, (msg == WM_KEYDOWN) ? true : false);
+			bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
+			Input::Instance().UpdateKey((int)wparam, down);
 
 			if (!app->transition_ && app->curr_scene_)
 			{
-				Event evt((msg == WM_KEYDOWN) ? Event::KeyDown : Event::KeyUp);
+				Event evt(down ? Event::KeyDown : Event::KeyUp);
 				evt.key.code = static_cast<int>(wparam);
+				evt.key.count = static_cast<int>(lparam & 0xFF);
+
+				app->curr_scene_->Dispatch(evt);
+			}
+		}
+		break;
+
+		case WM_CHAR:
+		{
+			if (!app->transition_ && app->curr_scene_)
+			{
+				Event evt(Event::Char);
+				evt.key.c = static_cast<char>(wparam);
 				evt.key.count = static_cast<int>(lparam & 0xFF);
 
 				app->curr_scene_->Dispatch(evt);
@@ -426,7 +430,7 @@ namespace easy2d
 			UINT width = LOWORD(lparam);
 			UINT height = HIWORD(lparam);
 
-			Renderer::Instance().GetDeviceResources()->SetLogicalSize(Size{ (float)width, (float)height });
+			Renderer::Instance().Resize(width, height);
 
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{
@@ -444,7 +448,7 @@ namespace easy2d
 					app->curr_scene_->Dispatch(evt);
 				}
 
-				Window::Instance().UpdateWindowRect();
+				app->GetWindow()->UpdateWindowRect();
 			}
 		}
 		break;
@@ -470,7 +474,7 @@ namespace easy2d
 
 			E2D_LOG(active ? L"Window activated" : L"Window deactivated");
 
-			Window::Instance().SetActive(active);
+			app->GetWindow()->SetActive(active);
 
 			if (app->curr_scene_)
 			{
@@ -512,11 +516,10 @@ namespace easy2d
 		{
 			E2D_LOG(L"Window is closing");
 
-			if (app->OnClosing())
+			if (!app->OnClosing())
 			{
-				Window::Instance().Destroy();
+				return 0;
 			}
-			return 0;
 		}
 		break;
 

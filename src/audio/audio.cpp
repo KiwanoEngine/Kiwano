@@ -34,7 +34,7 @@ namespace easy2d
 	{
 	}
 
-	void Audio::Setup()
+	void Audio::Setup(Application*)
 	{
 		E2D_LOG(L"Creating audio resources");
 
@@ -65,7 +65,11 @@ namespace easy2d
 			mastering_voice_ = nullptr;
 		}
 
-		DX::SafeRelease(x_audio2_);
+		if (x_audio2_)
+		{
+			x_audio2_->Release();
+			x_audio2_ = nullptr;
+		}
 
 		modules::MediaFoundation::Get().MFShutdown();
 	}

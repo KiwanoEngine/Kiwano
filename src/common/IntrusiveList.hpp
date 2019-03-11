@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
+#include "../macros.h"
 #include <functional>
 
 #ifdef E2D_DEBUG

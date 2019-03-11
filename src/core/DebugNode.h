@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Text.h"
+#include "Node.h"
 #include "time.h"
 
 namespace easy2d

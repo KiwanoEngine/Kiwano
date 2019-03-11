@@ -21,6 +21,7 @@
 #pragma once
 #include "include-forwards.h"
 #include "Resource.h"
+#include <d2d1.h>
 
 namespace easy2d
 {

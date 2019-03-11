@@ -20,15 +20,11 @@
 
 #pragma once
 #include "include-forwards.h"
-#include "Singleton.hpp"
 
 namespace easy2d
 {
 	class E2D_API Window
-		: public Singleton<Window>
 	{
-		E2D_DECLARE_SINGLETON(Window);
-
 	public:
 		// 获取标题
 		String GetTitle() const;
@@ -64,8 +60,6 @@ namespace easy2d
 			WNDPROC	proc
 		);
 
-		void Destroy();
-
 		void Prepare();
 
 		HWND GetHandle() const;
@@ -76,7 +70,7 @@ namespace easy2d
 
 		void SetActive(bool actived);
 
-	protected:
+	public:
 		Window();
 
 		~Window();

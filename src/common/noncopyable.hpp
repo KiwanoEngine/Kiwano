@@ -19,11 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
 
 namespace easy2d
 {
-	class E2D_API Noncopyable
+	class Noncopyable
 	{
 	protected:
 		Noncopyable() = default;

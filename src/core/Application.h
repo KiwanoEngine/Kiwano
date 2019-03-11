@@ -21,6 +21,7 @@
 #pragma once
 #include "include-forwards.h"
 #include "time.h"
+#include "window.h"
 #include "Component.h"
 
 namespace easy2d
@@ -35,20 +36,10 @@ namespace easy2d
 		bool	vsync;				// 垂直同步
 		bool	fullscreen;			// 全屏模式
 
-		Options()
-			: title(L"Easy2D Game")
-			, width(640)
-			, height(480)
-			, icon(nullptr)
-			, clear_color(Color::Black)
-			, vsync(true)
-			, fullscreen(false)
-		{}
-
 		Options(
-			String const& title,
-			int width,
-			int height,
+			String const& title = L"Easy2D Game",
+			int width = 640,
+			int height = 480,
 			LPCWSTR icon = nullptr,
 			Color clear_color = Color::Black,
 			bool vsync = true,
@@ -128,14 +119,12 @@ namespace easy2d
 		// 获取当前场景
 		ScenePtr const& GetCurrentScene();
 
+		// 获取主窗口
+		inline Window* GetWindow() const { return main_window_; }
+
 		// 设置时间缩放因子
 		void SetTimeScale(
 			float scale_factor
-		);
-
-		// 设置消息预处理函数
-		void SetPreMessageProc(
-			LRESULT (*proc)(HWND, UINT, WPARAM, LPARAM)
 		);
 
 		// 显示调试信息
@@ -158,11 +147,13 @@ namespace easy2d
 		bool			inited_;
 		float			time_scale_;
 		String			app_name_;
+
 		ScenePtr		curr_scene_;
 		ScenePtr		next_scene_;
 		NodePtr			debug_node_;
 		TransitionPtr	transition_;
 
-		Array<Component*> components_;
+		Window*				main_window_;
+		Array<Component*>	components_;
 	};
 }

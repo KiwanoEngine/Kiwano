@@ -20,25 +20,19 @@
 
 #pragma once
 
-#if _MSC_VER >= 1900
-#	define E2D_CONSTEXPR constexpr
-#else
-#	define E2D_CONSTEXPR const
-#endif
-
 namespace easy2d
 {
 	namespace math
 	{
 		namespace constants
 		{
-			E2D_CONSTEXPR auto PI_F     = 3.141592653589793f;
-			E2D_CONSTEXPR auto PI_F_2   = 1.570796326794896f;
-			E2D_CONSTEXPR auto PI_F_X_2 = 6.283185307179586f;
+			const auto PI_F     = 3.141592653589793f;
+			const auto PI_F_2   = 1.570796326794896f;
+			const auto PI_F_X_2 = 6.283185307179586f;
 
-			E2D_CONSTEXPR auto PI_D     = 3.14159265358979323846;
-			E2D_CONSTEXPR auto PI_D_2   = 1.57079632679489661923;
-			E2D_CONSTEXPR auto PI_D_X_2 = 6.28318530717958647692;
+			const auto PI_D     = 3.14159265358979323846;
+			const auto PI_D_2   = 1.57079632679489661923;
+			const auto PI_D_X_2 = 6.28318530717958647692;
 		}
 	}
 }

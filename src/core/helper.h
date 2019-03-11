@@ -20,13 +20,8 @@
 
 #pragma once
 #include "RefCounter.hpp"
-#include "IntrusivePtr.hpp"
-#include "ComPtr.hpp"
-#include "Array.h"
-#include "closure.hpp"
-#include "../math/vector.hpp"
-#include "../math/Rect.hpp"
-#include "../math/Matrix.hpp"
+#include "../common/Array.h"
+#include "../common/IntrusivePtr.hpp"
 #include <set>
 #include <map>
 #include <list>
@@ -89,6 +84,7 @@ namespace easy2d
 
 	E2D_DECLARE_SMART_PTR(Node);
 	E2D_DECLARE_SMART_PTR(Scene);
+	E2D_DECLARE_SMART_PTR(Layer);
 	E2D_DECLARE_SMART_PTR(Sprite);
 	E2D_DECLARE_SMART_PTR(Text);
 	E2D_DECLARE_SMART_PTR(Canvas);
@@ -120,11 +116,8 @@ namespace easy2d
 	E2D_DECLARE_SMART_PTR(MoveTransition);
 	E2D_DECLARE_SMART_PTR(RotationTransition);
 
-	E2D_DECLARE_NS_SMART_PTR(ui, Button);
-	E2D_DECLARE_NS_SMART_PTR(ui, Menu);
-
-	using namespace math;
-	using namespace ui;
+	E2D_DECLARE_SMART_PTR(Button);
+	E2D_DECLARE_SMART_PTR(Menu);
 }
 
 namespace easy2d

@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
-#include "noncopyable.hpp"
+#include "../macros.h"
+#include "../common/noncopyable.hpp"
 
 namespace easy2d
 {

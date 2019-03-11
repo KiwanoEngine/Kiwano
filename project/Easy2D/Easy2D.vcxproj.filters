@@ -19,6 +19,9 @@
     <Filter Include="audio">
       <UniqueIdentifier>{836608a6-7443-48f9-8acd-18d3ba664348}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{86e2d0f2-a9d0-4456-b6a5-d480228bbf82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\easy2d.h" />
@@ -38,9 +41,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\logs.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\macros.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\modules.h">
@@ -100,9 +100,6 @@
     <ClInclude Include="..\..\src\ui\Menu.h">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Singleton.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\RefCounter.hpp">
       <Filter>core</Filter>
     </ClInclude>
@@ -119,9 +116,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\Transform.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\noncopyable.hpp">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\utils\string.h">
@@ -154,9 +148,6 @@
     <ClInclude Include="..\..\src\core\Object.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\helper.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\keys.hpp">
       <Filter>core</Filter>
     </ClInclude>
@@ -178,25 +169,10 @@
     <ClInclude Include="..\..\src\core\Event.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\IntrusiveList.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\IntrusivePtr.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\closure.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\ActionGroup.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\ActionHelper.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\Array.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\config.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\Action.h">
@@ -244,7 +220,33 @@
     <ClInclude Include="..\..\src\audio\audio-modules.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\ComPtr.hpp">
+    <ClInclude Include="..\..\src\core\Layer.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\config.h" />
+    <ClInclude Include="..\..\src\macros.h" />
+    <ClInclude Include="..\..\src\common\Array.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\closure.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\ComPtr.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\IntrusiveList.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\IntrusivePtr.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\noncopyable.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\Singleton.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\helper.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -296,9 +298,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\core\window.cpp">
       <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\math\rand.cpp">
-      <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\Data.cpp">
       <Filter>utils</Filter>
@@ -392,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\audio\audio-modules.cpp">
       <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\Layer.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

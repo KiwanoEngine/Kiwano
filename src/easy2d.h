@@ -25,12 +25,13 @@
 
 #pragma once
 
+#include "macros.h"
+
 
 //
 // core
 //
 
-#include "core/macros.h"
 #include "core/modules.h"
 #include "core/render.h"
 #include "core/window.h"
@@ -64,6 +65,7 @@
 
 #include "core/Node.h"
 #include "core/Scene.h"
+#include "core/Layer.h"
 #include "core/Sprite.h"
 #include "core/Text.h"
 #include "core/Canvas.h"

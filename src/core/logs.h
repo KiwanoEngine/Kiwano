@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
+#include "../macros.h"
 
 #ifdef E2D_DISABLE_LOG_FUNCTIONS
 

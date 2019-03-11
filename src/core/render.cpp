@@ -21,6 +21,7 @@
 #include "render.h"
 #include "logs.h"
 #include "Image.h"
+#include "Application.h"
 
 namespace easy2d
 {
@@ -29,7 +30,7 @@ namespace easy2d
 		, antialias_(true)
 		, vsync_(true)
 		, text_antialias_(TextAntialias::ClearType)
-		, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
+		, clear_color_(Color::Black)
 		, opacity_(1.f)
 		, collecting_data_(false)
 	{
@@ -40,11 +41,14 @@ namespace easy2d
 	{
 	}
 
-	void Renderer::Setup()
+	void Renderer::Setup(Application* app)
 	{
 		E2D_LOG(L"Creating device resources");
 
-		HRESULT hr = hwnd_ ? S_OK : E_FAIL;
+		HRESULT hr;
+
+		hwnd_ = app->GetWindow()->GetHandle();
+		hr = hwnd_ ? S_OK : E_FAIL;
 		
 		if (SUCCEEDED(hr))
 		{
@@ -74,6 +78,11 @@ namespace easy2d
 			hr = CreateDeviceResources();
 		}
 
+		if (SUCCEEDED(hr))
+		{
+			output_size_ = app->GetWindow()->GetSize();
+		}
+
 		ThrowIfFailed(hr);
 	}
 
@@ -87,11 +96,6 @@ namespace easy2d
 		device_context_.Reset();
 		factory_.Reset();
 		device_resources_.Reset();
-	}
-
-	void Renderer::SetTargetWindow(HWND hwnd)
-	{
-		hwnd_ = hwnd;
 	}
 
 	HRESULT Renderer::CreateDeviceResources()
@@ -344,6 +348,17 @@ namespace easy2d
 		return S_OK;
 	}
 
+	HRESULT Renderer::Resize(UINT width, UINT height)
+	{
+		output_size_.x = static_cast<float>(width);
+		output_size_.y = static_cast<float>(height);
+		if (device_resources_)
+		{
+			return device_resources_->SetLogicalSize(output_size_);
+		}
+		return S_OK;
+	}
+
 	void Renderer::StartCollectData()
 	{
 		collecting_data_ = true;
@@ -356,7 +371,7 @@ namespace easy2d
 
 	void Renderer::SetClearColor(const Color & color)
 	{
-		clear_color_ = DX::ConvertToColorF(color);
+		clear_color_ = color;
 	}
 
 	HRESULT Renderer::SetTransform(const Matrix & matrix)

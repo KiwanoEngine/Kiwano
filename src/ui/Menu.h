@@ -23,46 +23,44 @@
 
 namespace easy2d
 {
-	namespace ui
+	// 菜单
+	class E2D_API Menu
+		: public Node
 	{
-		// 菜单
-		class E2D_API Menu
-			: public Node
-		{
-		public:
-			Menu();
+	public:
+		Menu();
 
-			explicit Menu(
-				Array<ButtonPtr> const& buttons	/* 按钮数组 */
-			);
+		explicit Menu(
+			Array<ButtonPtr> const& buttons	/* 按钮数组 */
+		);
 
-			// 获取菜单是否禁用
-			bool IsEnable() const;
+		// 获取菜单是否禁用
+		bool IsEnable() const;
 
-			// 获取菜单中的按钮数量
-			int GetButtonCount() const;
+		// 获取菜单中的按钮数量
+		int GetButtonCount() const;
 
-			// 设置菜单启用或禁用
-			void SetEnabled(
-				bool enabled
-			);
+		// 设置菜单启用或禁用
+		void SetEnabled(
+			bool enabled
+		);
 
-			// 添加按钮
-			void AddButton(
-				ButtonPtr const& button
-			);
+		// 添加按钮
+		void AddButton(
+			ButtonPtr const& button
+		);
 
-			// 移除按钮
-			bool RemoveButton(
-				ButtonPtr const& button
-			);
+		// 移除按钮
+		bool RemoveButton(
+			ButtonPtr const& button
+		);
 
-			// 获取所有按钮
-			Array<ButtonPtr> const& GetAllButtons() const;
+		// 获取所有按钮
+		Array<ButtonPtr> const& GetAllButtons() const;
 
-		private:
-			bool enabled_;
-			Array<ButtonPtr> buttons_;
-		};
-	}
+	private:
+		bool enabled_;
+		Array<ButtonPtr> buttons_;
+	};
+
 }

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "DebugNode.h"
+#include "Text.h"
 #include "render.h"
 #include "../utils/string.h"
 #include <sstream>

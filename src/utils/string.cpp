@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "string.h"
-#include "../core/macros.h"
 #include "../core/logs.h"
 
 namespace easy2d

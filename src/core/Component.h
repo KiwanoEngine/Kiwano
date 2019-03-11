@@ -22,10 +22,12 @@
 
 namespace easy2d
 {
+	class Application;
+
 	class Component
 	{
 	public:
-		virtual void Setup() = 0;
+		virtual void Setup(Application*) = 0;
 
 		virtual void Destroy() = 0;
 	};

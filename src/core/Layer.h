@@ -19,23 +19,31 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/IntrusivePtr.hpp"
-#include <Unknwnbase.h>
+#include "Node.h"
 
 namespace easy2d
 {
-	// ComPtr<> is a smart pointer for COM
-	template <typename _Ty>
-	using ComPtr = IntrusivePtr<_Ty>;
-
-	inline void IntrusivePtrAddRef(IUnknown* ptr)
+	class E2D_API Layer
+		: public Node
 	{
-		if (ptr) { ptr->AddRef(); }
-	}
+	public:
+		Layer();
 
-	inline void IntrusivePtrRelease(IUnknown* ptr)
-	{
-		if (ptr) { ptr->Release(); }
-	}
+		virtual ~Layer();
 
+		virtual void OnMouseButtonDown(int btn, Point const& p) {}
+		virtual void OnMouseButtonUp(int btn, Point const& p) {}
+		virtual void OnMouseMoved(Point const& p) {}
+		virtual void OnMouseWheel(float wheel) {}
+
+		virtual void OnKeyDown(int key) {}
+		virtual void OnKeyUp(int key) {}
+		virtual void OnChar(char c) {}
+
+	public:
+		void Dispatch(Event& evt) override;
+
+	protected:
+		void HandleMessages(Event const& evt);
+	};
 }

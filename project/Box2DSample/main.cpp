@@ -132,10 +132,7 @@ class MainScene
 public:
 	MainScene()
 	{
-		// 修改场景大小, 并设置可响应状态, 使场景可以
-		// 接收到鼠标 Click 消息
-		auto size = Window::Instance().GetSize();
-		SetSize(size);
+		// 设置可响应状态, 使场景可以接收到鼠标 Click 消息
 		SetResponsible(true);
 
 		// 添加消息监听
@@ -144,7 +141,7 @@ public:
 		// 创建物理世界
 		world_ = new b2World(b2Vec2(0, 10));
 
-		BoardPtr board = new Board(world_, Size(GetWidth() - 100, 20), Point(size.x / 2, size.y - 50));
+		BoardPtr board = new Board(world_, Size(GetWidth() - 100, 20), Point(GetWidth() / 2, GetHeight() - 50));
 		AddChild(board);
 
 		CirclePtr circle = new Circle(world_, Point(320, 240));
@@ -208,7 +205,9 @@ int main()
 	try
 	{
 		Application app;
-		app.Init();
+
+		Options options(L"Box2D Demo");
+		app.Init(options);
 
 		ScenePtr scene = new MainScene;
 		app.EnterScene(scene);

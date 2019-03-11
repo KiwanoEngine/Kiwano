@@ -21,7 +21,7 @@
 #pragma once
 #include "include-forwards.h"
 #include "time.h"
-#include "IntrusiveList.hpp"
+#include "../common/IntrusiveList.hpp"
 
 namespace easy2d
 {

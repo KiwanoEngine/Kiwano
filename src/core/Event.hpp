@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
 #include "keys.hpp"
 
 namespace easy2d
@@ -33,14 +32,17 @@ namespace easy2d
 		bool left_btn_down;		// 左键是否按下
 		bool right_btn_down;	// 右键是否按下
 
-		struct	// Events::MouseDown | Events::MouseUp | Events::MouseClick
+		union
 		{
-			int button;
-		};
+			struct	// Events::MouseDown | Events::MouseUp | Events::MouseClick
+			{
+				int button;
+			};
 
-		struct	// Events::MouseWheel
-		{
-			float wheel;
+			struct	// Events::MouseWheel
+			{
+				float wheel;
+			};
 		};
 
 		static bool Check(UINT type);
@@ -49,8 +51,19 @@ namespace easy2d
 	// 键盘事件
 	struct KeyboardEvent
 	{
-		int code;		// enum KeyCode
 		int count;
+		union
+		{
+			struct	// Events::KeyDown | Events::KeyUp
+			{
+				int code;		// enum KeyCode
+			};
+
+			struct	// Events::Char
+			{
+				char c;
+			};
+		};
 
 		static bool Check(UINT type);
 	};
@@ -114,6 +127,7 @@ namespace easy2d
 			KeyFirst,
 			KeyDown,			// 按键按下
 			KeyUp,				// 按键抬起
+			Char,				// 输出字符
 			KeyLast,
 
 			// 窗口消息

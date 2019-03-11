@@ -48,6 +48,7 @@ namespace easy2d
 		, dirty_transform_(false)
 		, dirty_transform_inverse_(false)
 		, parent_(nullptr)
+		, scene_(nullptr)
 		, hash_name_(0)
 		, z_order_(0)
 		, opacity_(1.f)
@@ -194,16 +195,6 @@ namespace easy2d
 		return transform_matrix_inverse_;
 	}
 
-	Node* Node::GetParent() const
-	{
-		return parent_;
-	}
-
-	Scene* Node::GetScene() const
-	{
-		return scene_;
-	}
-
 	void Node::UpdateTransform() const
 	{
 		if (!dirty_transform_)
@@ -237,12 +228,15 @@ namespace easy2d
 		}
 	}
 
-	void Node::SetScene(Scene * scene)
+	void Node::SetScene(Scene* scene)
 	{
-		scene_ = scene;
-		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
+		if (scene && scene_ != scene)
 		{
-			child->scene_ = scene;
+			scene_ = scene;
+			for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
+			{
+				child->scene_ = scene;
+			}
 		}
 	}
 
