@@ -20,7 +20,7 @@
 
 #include "D3D10DeviceResources.h"
 
-#ifdef E2D_USE_DIRECTX10
+#if defined(E2D_USE_DIRECTX10)
 
 #include "../core/Image.h"
 #include "../core/logs.h"
@@ -266,8 +266,10 @@ namespace easy2d
 
 		// Clear the previous window size specific context.
 		ID3D10RenderTargetView* null_views[] = { nullptr };
-		SetTargetBitmap(nullptr);
 		d3d_device_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
+		SetTargetBitmap(nullptr);
+		d3d_rt_view_ = nullptr;
+		d3d_ds_view_ = nullptr;
 		d3d_device_->Flush();
 
 		// Calculate the necessary render target size in pixels.
@@ -278,12 +280,11 @@ namespace easy2d
 		output_size_.x = std::max(output_size_.x, 1.f);
 		output_size_.y = std::max(output_size_.y, 1.f);
 
-		// If the swap chain already exists, resize it.
 		hr = dxgi_swap_chain_->ResizeBuffers(
 			2, // Double-buffered swap chain.
 			::lround(output_size_.x),
 			::lround(output_size_.y),
-			DXGI_FORMAT_B8G8R8A8_UNORM,
+			DXGI_FORMAT_UNKNOWN,
 			0);
 
 		if (SUCCEEDED(hr))
@@ -306,25 +307,26 @@ namespace easy2d
 				d3d_rt_view_ = nullptr;
 				hr = d3d_device_->CreateRenderTargetView(dxgi_back_buffer.Get(), &renderDesc, &d3d_rt_view_);
 			}
+		}
 
+		if (SUCCEEDED(hr))
+		{
 			ComPtr<ID3D10Texture2D> depth_stencil;
-			if (SUCCEEDED(hr))
-			{
-				D3D10_TEXTURE2D_DESC tex_desc;
-				tex_desc.ArraySize = 1;
-				tex_desc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
-				tex_desc.CPUAccessFlags = 0;
-				tex_desc.Format = DXGI_FORMAT_D16_UNORM;
-				tex_desc.Width = static_cast<UINT>(output_size_.x);
-				tex_desc.Height = static_cast<UINT>(output_size_.y);
-				tex_desc.MipLevels = 1;
-				tex_desc.MiscFlags = 0;
-				tex_desc.SampleDesc.Count = 1;
-				tex_desc.SampleDesc.Quality = 0;
-				tex_desc.Usage = D3D10_USAGE_DEFAULT;
 
-				hr = d3d_device_->CreateTexture2D(&tex_desc, NULL, &depth_stencil);
-			}
+			D3D10_TEXTURE2D_DESC tex_desc;
+			tex_desc.ArraySize = 1;
+			tex_desc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
+			tex_desc.CPUAccessFlags = 0;
+			tex_desc.Format = DXGI_FORMAT_D16_UNORM;
+			tex_desc.Width = static_cast<UINT>(output_size_.x);
+			tex_desc.Height = static_cast<UINT>(output_size_.y);
+			tex_desc.MipLevels = 1;
+			tex_desc.MiscFlags = 0;
+			tex_desc.SampleDesc.Count = 1;
+			tex_desc.SampleDesc.Quality = 0;
+			tex_desc.Usage = D3D10_USAGE_DEFAULT;
+
+			hr = d3d_device_->CreateTexture2D(&tex_desc, NULL, &depth_stencil);
 
 			if (SUCCEEDED(hr))
 			{
@@ -336,13 +338,16 @@ namespace easy2d
 				d3d_ds_view_.Reset();
 				hr = d3d_device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &d3d_ds_view_);
 			}
+
+			if (SUCCEEDED(hr))
+			{
+				ID3D10RenderTargetView* main_view = d3d_rt_view_.Get();
+				d3d_device_context_->OMSetRenderTargets(1, &main_view, d3d_ds_view_.Get());
+			}
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			ID3D10RenderTargetView* views[] = { d3d_rt_view_.Get() };
-			d3d_device_->OMSetRenderTargets(1, views, d3d_ds_view_.Get());
-
 			// Set a new viewport based on the new dimensions
 			D3D10_VIEWPORT viewport;
 			viewport.Width = static_cast<UINT>(output_size_.x);
@@ -369,7 +374,7 @@ namespace easy2d
 					dxgi_back_buffer.Get(),
 					D2D1::BitmapProperties1(
 						D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-						D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
+						D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
 						dpi_,
 						dpi_),
 					&target);

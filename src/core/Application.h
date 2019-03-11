@@ -73,6 +73,9 @@ namespace easy2d
 		// 销毁时
 		virtual void OnDestroy() {}
 
+		// 渲染时
+		virtual void OnRender() {}
+
 		// 更新时
 		virtual void OnUpdate(Duration dt) { E2D_NOT_USED(dt); }
 
@@ -104,23 +107,34 @@ namespace easy2d
 			float scale_factor
 		);
 
+		// 设置消息预处理函数
+		void SetPreMessageProc(
+			LRESULT (*proc)(HWND, UINT, WPARAM, LPARAM)
+		);
+
+		// 显示调试信息
+		void ShowDebugInfo(
+			bool show = true
+		);
+
 		// 分配控制台
 		static void AllocConsole();
 
-	private:
-		void Render(HWND);
+	protected:
+		void Render();
 
 		void Update();
 
 		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-	private:
+	protected:
 		bool			end_;
 		bool			inited_;
 		float			time_scale_;
 		String			app_name_;
 		ScenePtr		curr_scene_;
 		ScenePtr		next_scene_;
+		NodePtr			debug_node_;
 		TransitionPtr	transition_;
 	};
 }

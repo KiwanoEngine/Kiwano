@@ -20,41 +20,24 @@
 
 #pragma once
 #include "Text.h"
-#include "Singleton.hpp"
 #include "time.h"
 
 namespace easy2d
 {
 	class E2D_API DebugNode
-		: public VisualNode
-		, public Singleton<DebugNode>
+		: public Node
 	{
-		E2D_DECLARE_SINGLETON(DebugNode);
-
 	public:
 		DebugNode();
 
 		virtual ~DebugNode();
 
-		// 显示调试信息
-		void Show();
-
-		// 隐藏调试信息
-		void Hide();
-
-		void AddDebugText(String const& text);
-
-		void ClearDebugText();
-
 		void OnRender() override;
 
 		void OnUpdate(Duration dt) override;
 
-		static bool IsShown();
-
 	protected:
 		TextPtr				debug_text_;
 		Array<TimePoint>	frame_time_;
-		Array<String>		texts_;
 	};
 }

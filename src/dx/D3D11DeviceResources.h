@@ -20,7 +20,7 @@
 
 #pragma once
 
-#ifndef E2D_USE_DIRECTX10
+#if !defined(E2D_USE_DIRECTX10)
 
 #include "helper.hpp"
 #include "D2DDeviceResources.h"
