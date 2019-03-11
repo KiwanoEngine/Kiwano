@@ -132,18 +132,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\3rd-party\ImGui\imgui.cpp" />
+    <ClCompile Include="..\..\3rd-party\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\3rd-party\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\3rd-party\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\3rd-party\ImGui\imconfig.h" />
+    <ClInclude Include="..\..\3rd-party\ImGui\imgui.h" />
+    <ClInclude Include="..\..\3rd-party\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\..\3rd-party\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\3rd-party\ImGui\imstb_textedit.h" />
+    <ClInclude Include="..\..\3rd-party\ImGui\imstb_truetype.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="imgui_impl_win32.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\3rd-party\ImGui\ImGui.vcxproj">
-      <Project>{aa7c72a9-ddbf-4398-a301-8ee157e37d4c}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Easy2D\Easy2D.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
