@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{324CFF47-4EB2-499A-BE5F-53A82E3BA14B}</ProjectGuid>
     <RootNamespace>Box2DSample</RootNamespace>
   </PropertyGroup>

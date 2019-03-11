@@ -19,8 +19,6 @@
 // THE SOFTWARE.
 
 #include "TextRenderer.h"
-#include "include-forwards.h"
-#include "render.h"
 
 namespace easy2d
 {
