@@ -18,28 +18,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "modules.h"
-#include "logs.h"
+#pragma once
+#include "../core/Resource.h"
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfreadwrite.h>
 
 namespace easy2d
 {
-	namespace modules
+	class E2D_API Transcoder
 	{
-		Shlwapi::Shlwapi()
-		{
-			shlwapi = LoadLibraryW(L"shlwapi.dll");
-			if (shlwapi)
-			{
-				PathFileExistsW = (PFN_PathFileExistsW)
-					GetProcAddress(shlwapi, "PathFileExistsW");
+		WAVEFORMATEX* wave_format_;
 
-				SHCreateMemStream = (PFN_SHCreateMemStream)
-					GetProcAddress(shlwapi, "SHCreateMemStream");
-			}
-			else
-			{
-				E2D_LOG(L"load shlapi.dll failed");
-			}
-		}
-	}
+	public:
+		Transcoder();
+
+		~Transcoder();
+
+		const WAVEFORMATEX* GetWaveFormatEx() const;
+
+		HRESULT LoadMediaFile(
+			String const& file_path,
+			BYTE** wave_data,
+			UINT32* wave_data_size
+		);
+
+		HRESULT LoadMediaResource(
+			Resource const& res,
+			BYTE** wave_data,
+			UINT32* wave_data_size
+		);
+
+		HRESULT ReadSource(
+			IMFSourceReader* reader,
+			BYTE** wave_data,
+			UINT32* wave_data_size
+		);
+	};
 }

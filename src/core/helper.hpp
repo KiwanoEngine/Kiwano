@@ -21,6 +21,7 @@
 #pragma once
 #include "RefCounter.hpp"
 #include "IntrusivePtr.hpp"
+#include "ComPtr.hpp"
 #include "Array.h"
 #include "closure.hpp"
 #include "../math/vector.hpp"
@@ -74,10 +75,8 @@ namespace easy2d
 {
 	E2D_DECLARE_SMART_PTR(Object);
 	E2D_DECLARE_SMART_PTR(Image);
-	E2D_DECLARE_SMART_PTR(Music);
 	E2D_DECLARE_SMART_PTR(Task);
 	E2D_DECLARE_SMART_PTR(Frames);
-
 	E2D_DECLARE_SMART_PTR(EventListener);
 
 	E2D_DECLARE_SMART_PTR(Geometry);

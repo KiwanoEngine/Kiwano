@@ -19,9 +19,7 @@
 // THE SOFTWARE.
 
 #include "window.h"
-#include "render.h"
 #include "logs.h"
-#include "../math/scalar.hpp"
 
 #define WINDOW_STYLE			WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_FULLSCREEN_STYLE	WS_CLIPCHILDREN | WS_POPUP
@@ -53,7 +51,7 @@ namespace easy2d
 	{
 	}
 
-	HRESULT Window::Init(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
+	HRESULT Window::Create(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
 	{
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };

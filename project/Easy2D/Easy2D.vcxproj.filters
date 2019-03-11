@@ -16,13 +16,13 @@
     <Filter Include="dx">
       <UniqueIdentifier>{a9793a75-3212-4e31-a443-b23f18a1e136}</UniqueIdentifier>
     </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{836608a6-7443-48f9-8acd-18d3ba664348}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\easy2d.h" />
     <ClInclude Include="..\..\src\core\Animation.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\audio.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\Canvas.h">
@@ -94,20 +94,11 @@
     <ClInclude Include="..\..\src\utils\Path.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utils\Player.h">
-      <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\utils\Transcoder.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\ui\Button.h">
       <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\ui\Menu.h">
       <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\core\Music.h">
-      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\core\Singleton.hpp">
       <Filter>core</Filter>
@@ -232,12 +223,33 @@
     <ClInclude Include="..\..\src\dx\D3D10DeviceResources.h">
       <Filter>dx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\audio\audio.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio\Music.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio\Player.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio\Transcoder.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio\Voice.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\Component.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio\audio-modules.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\ComPtr.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\core\Animation.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\core\audio.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\core\Canvas.cpp">
@@ -297,20 +309,11 @@
     <ClCompile Include="..\..\src\utils\Path.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\utils\Player.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\utils\Transcoder.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\ui\Button.cpp">
       <Filter>ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ui\Menu.cpp">
       <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\core\Music.cpp">
-      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\core\TaskManager.cpp">
       <Filter>core</Filter>
@@ -371,6 +374,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\dx\D3D10DeviceResources.cpp">
       <Filter>dx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio\audio.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio\Music.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio\Player.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio\Transcoder.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio\Voice.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio\audio-modules.cpp">
+      <Filter>audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

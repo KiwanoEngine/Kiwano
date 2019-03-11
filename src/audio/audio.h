@@ -18,28 +18,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "modules.h"
-#include "logs.h"
+#pragma once
+#include "../core/include-forwards.h"
+#include "../core/Singleton.hpp"
+#include "../core/Component.h"
+#include "Voice.h"
 
 namespace easy2d
 {
-	namespace modules
+	class E2D_API Audio
+		: public Singleton<Audio>
+		, public Component
 	{
-		Shlwapi::Shlwapi()
-		{
-			shlwapi = LoadLibraryW(L"shlwapi.dll");
-			if (shlwapi)
-			{
-				PathFileExistsW = (PFN_PathFileExistsW)
-					GetProcAddress(shlwapi, "PathFileExistsW");
+		E2D_DECLARE_SINGLETON(Audio);
 
-				SHCreateMemStream = (PFN_SHCreateMemStream)
-					GetProcAddress(shlwapi, "SHCreateMemStream");
-			}
-			else
-			{
-				E2D_LOG(L"load shlapi.dll failed");
-			}
-		}
-	}
+		using VoiceMap = UnorderedSet<Voice*>;
+
+	public:
+		void Setup() override;
+
+		void Destroy() override;
+
+		// 开启设备
+		void Open();
+
+		// 关闭设备
+		void Close();
+
+		HRESULT CreateVoice(
+			Voice& voice,
+			const WAVEFORMATEX* wfx
+		);
+
+		void DeleteVoice(
+			Voice* voice
+		);
+
+		void ClearVoiceCache();
+
+	protected:
+		Audio();
+
+		~Audio();
+
+	protected:
+		VoiceMap voice_cache_;
+		IXAudio2* x_audio2_;
+		IXAudio2MasteringVoice*	mastering_voice_;
+	};
 }

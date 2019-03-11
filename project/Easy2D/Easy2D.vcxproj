@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClInclude Include="..\..\src\audio\audio.h" />
+    <ClInclude Include="..\..\src\audio\audio-modules.h" />
+    <ClInclude Include="..\..\src\audio\Music.h" />
+    <ClInclude Include="..\..\src\audio\Player.h" />
+    <ClInclude Include="..\..\src\audio\Transcoder.h" />
+    <ClInclude Include="..\..\src\audio\Voice.h" />
     <ClInclude Include="..\..\src\core\Action.h" />
     <ClInclude Include="..\..\src\core\ActionGroup.h" />
     <ClInclude Include="..\..\src\core\ActionHelper.h" />
@@ -8,10 +14,11 @@
     <ClInclude Include="..\..\src\core\ActionManager.h" />
     <ClInclude Include="..\..\src\core\Animation.h" />
     <ClInclude Include="..\..\src\core\Array.h" />
-    <ClInclude Include="..\..\src\core\audio.h" />
     <ClInclude Include="..\..\src\core\Canvas.h" />
     <ClInclude Include="..\..\src\core\closure.hpp" />
     <ClInclude Include="..\..\src\core\Color.h" />
+    <ClInclude Include="..\..\src\core\Component.h" />
+    <ClInclude Include="..\..\src\core\ComPtr.hpp" />
     <ClInclude Include="..\..\src\core\config.h" />
     <ClInclude Include="..\..\src\core\DebugNode.h" />
     <ClInclude Include="..\..\src\core\Event.hpp" />
@@ -32,7 +39,6 @@
     <ClInclude Include="..\..\src\core\logs.h" />
     <ClInclude Include="..\..\src\core\macros.h" />
     <ClInclude Include="..\..\src\core\modules.h" />
-    <ClInclude Include="..\..\src\core\Music.h" />
     <ClInclude Include="..\..\src\core\Node.h" />
     <ClInclude Include="..\..\src\core\noncopyable.hpp" />
     <ClInclude Include="..\..\src\core\Object.h" />
@@ -69,18 +75,21 @@
     <ClInclude Include="..\..\src\utils\Data.h" />
     <ClInclude Include="..\..\src\utils\File.h" />
     <ClInclude Include="..\..\src\utils\Path.h" />
-    <ClInclude Include="..\..\src\utils\Player.h" />
     <ClInclude Include="..\..\src\utils\ResLoader.h" />
     <ClInclude Include="..\..\src\utils\string.h" />
-    <ClInclude Include="..\..\src\utils\Transcoder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\audio\audio.cpp" />
+    <ClCompile Include="..\..\src\audio\audio-modules.cpp" />
+    <ClCompile Include="..\..\src\audio\Music.cpp" />
+    <ClCompile Include="..\..\src\audio\Player.cpp" />
+    <ClCompile Include="..\..\src\audio\Transcoder.cpp" />
+    <ClCompile Include="..\..\src\audio\Voice.cpp" />
     <ClCompile Include="..\..\src\core\Action.cpp" />
     <ClCompile Include="..\..\src\core\ActionGroup.cpp" />
     <ClCompile Include="..\..\src\core\ActionTween.cpp" />
     <ClCompile Include="..\..\src\core\ActionManager.cpp" />
     <ClCompile Include="..\..\src\core\Animation.cpp" />
-    <ClCompile Include="..\..\src\core\audio.cpp" />
     <ClCompile Include="..\..\src\core\Canvas.cpp" />
     <ClCompile Include="..\..\src\core\Color.cpp" />
     <ClCompile Include="..\..\src\core\DebugNode.cpp" />
@@ -94,7 +103,6 @@
     <ClCompile Include="..\..\src\core\Input.cpp" />
     <ClCompile Include="..\..\src\core\logs.cpp" />
     <ClCompile Include="..\..\src\core\modules.cpp" />
-    <ClCompile Include="..\..\src\core\Music.cpp" />
     <ClCompile Include="..\..\src\core\Node.cpp" />
     <ClCompile Include="..\..\src\core\Object.cpp" />
     <ClCompile Include="..\..\src\core\render.cpp" />
@@ -117,10 +125,8 @@
     <ClCompile Include="..\..\src\utils\Data.cpp" />
     <ClCompile Include="..\..\src\utils\File.cpp" />
     <ClCompile Include="..\..\src\utils\Path.cpp" />
-    <ClCompile Include="..\..\src\utils\Player.cpp" />
     <ClCompile Include="..\..\src\utils\ResLoader.cpp" />
     <ClCompile Include="..\..\src\utils\string.cpp" />
-    <ClCompile Include="..\..\src\utils\Transcoder.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">

@@ -18,20 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include "Voice.h"
 #include "audio.h"
-#include "include-forwards.h"
-#include "modules.h"
-#include "logs.h"
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mfreadwrite.h>
-#include <assert.h>
+
 namespace easy2d
 {
-	//-------------------------------------------------------
-	// Voice
-	//-------------------------------------------------------
-
 	Voice::Voice()
 		: source_voice_(nullptr)
 	{
@@ -152,95 +143,6 @@ namespace easy2d
 	{
 		Destroy();
 		source_voice_ = source_voice;
-	}
-
-
-	//-------------------------------------------------------
-	// Audio
-	//-------------------------------------------------------
-
-	Audio::Audio()
-		: x_audio2_(nullptr)
-		, mastering_voice_(nullptr)
-	{
-	}
-
-	Audio::~Audio()
-	{
-	}
-
-	HRESULT Audio::Init()
-	{
-		E2D_LOG(L"Creating audio resources");
-
-		HRESULT hr = modules::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
-
-		if (SUCCEEDED(hr))
-		{
-			hr = modules::XAudio2::Get().XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = x_audio2_->CreateMasteringVoice(&mastering_voice_);
-		}
-
-		return hr;
-	}
-
-	void Audio::Destroy()
-	{
-		E2D_LOG(L"Destroying audio resources");
-
-		ClearVoiceCache();
-
-		if (mastering_voice_)
-		{
-			mastering_voice_->DestroyVoice();
-			mastering_voice_ = nullptr;
-		}
-
-		DX::SafeRelease(x_audio2_);
-
-		modules::MediaFoundation::Get().MFShutdown();
-	}
-
-	HRESULT Audio::CreateVoice(Voice& voice, const WAVEFORMATEX* wfx)
-	{
-		HRESULT hr;
-		IXAudio2SourceVoice* source_voice;
-
-		hr = x_audio2_->CreateSourceVoice(&source_voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
-		if (SUCCEEDED(hr))
-		{
-			voice.SetSourceVoice(source_voice);
-			voice_cache_.insert(&voice);
-		}
-		return hr;
-	}
-
-	void Audio::DeleteVoice(Voice* voice)
-	{
-		voice_cache_.erase(voice);
-	}
-
-	void Audio::ClearVoiceCache()
-	{
-		for (auto voice : voice_cache_)
-		{
-			voice->Destroy();
-		}
-		voice_cache_.clear();
-	}
-
-	void Audio::Open()
-	{
-		x_audio2_->StartEngine();
-	}
-
-	void Audio::Close()
-	{
-		x_audio2_->StopEngine();
 	}
 
 }

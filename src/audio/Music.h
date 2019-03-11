@@ -19,98 +19,65 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
-#include "helper.hpp"
-#include "Singleton.hpp"
-#include "noncopyable.hpp"
-#include <xaudio2.h>
+#include "../core/include-forwards.h"
+#include "../core/Resource.h"
+#include "Voice.h"
 
 namespace easy2d
 {
-	class E2D_API Voice
-		: protected Noncopyable
+	E2D_DECLARE_SMART_PTR(Music);
+
+	// 音乐对象
+	class E2D_API Music
+		: public virtual Object
 	{
 	public:
-		Voice();
+		Music();
 
-		Voice(
-			IXAudio2SourceVoice* source_voice
+		Music(
+			Resource const& res		/* 音乐资源 */
 		);
 
-		~Voice();
+		virtual ~Music();
 
-		HRESULT Play(
-			const BYTE* wave_data,
-			UINT32 data_size,
-			UINT32 loop_count
+		// 打开音乐资源
+		bool Load(
+			Resource const& res		/* 音乐资源 */
 		);
 
-		HRESULT Pause();
-
-		HRESULT Resume();
-
-		HRESULT Stop();
-
-		HRESULT GetVolume(
-			float* volume
-		) const;
-
-		HRESULT SetVolume(
-			float volume
+		// 播放
+		bool Play(
+			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 		);
 
-		HRESULT GetBuffersQueued(
-			UINT32* queued
-		) const;
+		// 暂停
+		void Pause();
 
-		void Destroy();
+		// 继续
+		void Resume();
 
-		void SetSourceVoice(
-			IXAudio2SourceVoice* source_voice
-		);
+		// 停止
+		void Stop();
 
-	protected:
-		IXAudio2SourceVoice* source_voice_;
-	};
-
-
-	class E2D_API Audio
-		: public Singleton<Audio>
-	{
-		E2D_DECLARE_SINGLETON(Audio);
-
-		using VoiceMap = UnorderedSet<Voice*>;
-
-	public:
-		HRESULT Init();
-
-		void Destroy();
-
-		// 开启设备
-		void Open();
-
-		// 关闭设备
+		// 关闭并回收资源
 		void Close();
 
-		HRESULT CreateVoice(
-			Voice& voice,
-			const WAVEFORMATEX* wfx
+		// 是否正在播放
+		bool IsPlaying() const;
+
+		// 获取音量
+		float GetVolume() const;
+
+		// 设置音量
+		bool SetVolume(
+			float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
 		);
 
-		void DeleteVoice(
-			Voice* voice
-		);
-
-		void ClearVoiceCache();
-
 	protected:
-		Audio();
-
-		~Audio();
-
-	protected:
-		VoiceMap voice_cache_;
-		IXAudio2* x_audio2_;
-		IXAudio2MasteringVoice*	mastering_voice_;
+		bool	opened_;
+		bool	playing_;
+		UINT32	size_;
+		BYTE*	wave_data_;
+		Voice	voice_;
 	};
 }

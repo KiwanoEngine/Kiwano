@@ -19,12 +19,10 @@
 // THE SOFTWARE.
 
 #include "Music.h"
-#include "../utils/Transcoder.h"
-#include "../utils/File.h"
-#include "../utils/string.h"
-#include "modules.h"
+#include "Transcoder.h"
 #include "audio.h"
-#include "logs.h"
+#include "../core/logs.h"
+#include "../core/modules.h"
 
 namespace easy2d
 {
@@ -60,7 +58,7 @@ namespace easy2d
 
 		if (res.IsFileType())
 		{
-			if (!File(res.GetFileName()).Exists())
+			if (!modules::Shlwapi::Get().PathFileExistsW(res.GetFileName().c_str()))
 			{
 				E2D_WARNING_LOG(L"Media file '%s' not found", res.GetFileName().c_str());
 				return false;

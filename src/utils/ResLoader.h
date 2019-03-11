@@ -21,6 +21,7 @@
 #pragma once
 #include "../core/include-forwards.h"
 #include "../core/Resource.h"
+#include "../audio/Music.h"
 
 namespace easy2d
 {

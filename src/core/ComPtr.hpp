@@ -18,28 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "modules.h"
-#include "logs.h"
+#pragma once
+#include "../core/IntrusivePtr.hpp"
+#include <Unknwnbase.h>
 
 namespace easy2d
 {
-	namespace modules
-	{
-		Shlwapi::Shlwapi()
-		{
-			shlwapi = LoadLibraryW(L"shlwapi.dll");
-			if (shlwapi)
-			{
-				PathFileExistsW = (PFN_PathFileExistsW)
-					GetProcAddress(shlwapi, "PathFileExistsW");
+	// ComPtr<> is a smart pointer for COM
+	template <typename _Ty>
+	using ComPtr = IntrusivePtr<_Ty>;
 
-				SHCreateMemStream = (PFN_SHCreateMemStream)
-					GetProcAddress(shlwapi, "SHCreateMemStream");
-			}
-			else
-			{
-				E2D_LOG(L"load shlapi.dll failed");
-			}
-		}
+	inline void IntrusivePtrAddRef(IUnknown* ptr)
+	{
+		if (ptr) { ptr->AddRef(); }
 	}
+
+	inline void IntrusivePtrRelease(IUnknown* ptr)
+	{
+		if (ptr) { ptr->Release(); }
+	}
+
 }

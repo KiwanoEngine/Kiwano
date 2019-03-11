@@ -19,63 +19,77 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
-#include "audio.h"
-#include "Resource.h"
+#include "../core/include-forwards.h"
+#include "Music.h"
 
 namespace easy2d
 {
-	// 音乐
-	class E2D_API Music
-		: public virtual Object
+	E2D_DECLARE_SMART_PTR(Player);
+
+	// 音乐播放器
+	class E2D_API Player
+		: protected Object
 	{
+		using MusicMap = Map<size_t, MusicPtr>;
+
 	public:
-		Music();
+		Player();
 
-		Music(
-			Resource const& res		/* 音乐资源 */
-		);
+		~Player();
 
-		virtual ~Music();
-
-		// 打开音乐资源
+		// 预加载音乐资源
 		bool Load(
-			Resource const& res		/* 音乐资源 */
+			Resource const& res			/* 音乐资源 */
 		);
 
-		// 播放
+		// 播放音乐
 		bool Play(
+			Resource const& res,	/* 音乐资源 */
 			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 		);
 
-		// 暂停
-		void Pause();
+		// 暂停音乐
+		void Pause(
+			Resource const& res		/* 音乐资源 */
+		);
 
-		// 继续
-		void Resume();
+		// 继续播放音乐
+		void Resume(
+			Resource const& res		/* 音乐资源 */
+		);
 
-		// 停止
-		void Stop();
+		// 停止音乐
+		void Stop(
+			Resource const& res		/* 音乐资源 */
+		);
 
-		// 关闭并回收资源
-		void Close();
-
-		// 是否正在播放
-		bool IsPlaying() const;
+		// 获取音乐播放状态
+		bool IsPlaying(
+			Resource const& res		/* 音乐资源 */
+		);
 
 		// 获取音量
 		float GetVolume() const;
 
 		// 设置音量
-		bool SetVolume(
-			float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
+		void SetVolume(
+			float volume			/* 1.0 为原始音量 */
 		);
 
+		// 暂停所有音乐
+		void PauseAll();
+
+		// 继续播放所有音乐
+		void ResumeAll();
+
+		// 停止所有音乐
+		void StopAll();
+
+		// 清除缓存
+		void ClearCache();
+
 	protected:
-		bool	opened_;
-		bool	playing_;
-		UINT32	size_;
-		BYTE*	wave_data_;
-		Voice	voice_;
+		float		volume_;
+		MusicMap	musics_cache_;
 	};
 }

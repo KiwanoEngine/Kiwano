@@ -22,7 +22,7 @@
 #include "../core/modules.h"
 #include "../core/Image.h"
 #include "../core/Frames.h"
-#include "../core/Music.h"
+#include "../audio/Music.h"
 
 namespace easy2d
 {

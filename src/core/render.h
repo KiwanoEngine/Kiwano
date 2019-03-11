@@ -23,6 +23,7 @@
 #include "Font.hpp"
 #include "Resource.h"
 #include "TextStyle.hpp"
+#include "Component.h"
 #include "Singleton.hpp"
 #include "../DX/helper.hpp"
 #include "../DX/DeviceResources.h"
@@ -40,22 +41,11 @@ namespace easy2d
 
 	class E2D_API Renderer
 		: public Singleton<Renderer>
+		, public Component
 	{
 		E2D_DECLARE_SINGLETON(Renderer);
 
 	public:
-		HRESULT Init(HWND hwnd);
-
-		void Destroy();
-
-		inline RenderStatus const&		GetStatus() const				{ return status_; }
-
-		inline DeviceResources*			GetDeviceResources() const		{ return device_resources_.Get(); }
-
-		inline ITextRenderer*			GetTextRenderer() const			{ return text_renderer_.Get(); }
-
-		inline ID2D1SolidColorBrush*	GetSolidColorBrush() const		{ return solid_color_brush_.Get(); }
-
 		HRESULT BeginDraw();
 
 		HRESULT EndDraw();
@@ -140,9 +130,26 @@ namespace easy2d
 
 		HRESULT PopLayer();
 
-		void StartCollectStatus();
+	public:
+		void Setup() override;
 
-		void StopCollectStatus();
+		void Destroy() override;
+
+		void SetTargetWindow(HWND);
+
+		void StartCollectData();
+
+		void StopCollectData();
+
+		inline HWND						GetTargetWindow() const		{ return hwnd_; }
+
+		inline RenderStatus const&		GetStatus() const			{ return status_; }
+
+		inline DeviceResources*			GetDeviceResources() const	{ return device_resources_.Get(); }
+
+		inline ITextRenderer*			GetTextRenderer() const		{ return text_renderer_.Get(); }
+
+		inline ID2D1SolidColorBrush*	GetSolidColorBrush() const	{ return solid_color_brush_.Get(); }
 
 	private:
 		Renderer();
@@ -156,10 +163,11 @@ namespace easy2d
 	private:
 		unsigned long ref_count_;
 
+		HWND hwnd_;
 		float opacity_;
 		bool antialias_;
 		bool vsync_;
-		bool collecting_status_;
+		bool collecting_data_;
 
 		TextAntialias	text_antialias_;
 		D2D1_COLOR_F	clear_color_;

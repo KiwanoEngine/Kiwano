@@ -23,10 +23,10 @@
 #endif
 
 #include "Transcoder.h"
-#include "../core/modules.h"
+#include "audio-modules.h"
+#include "../core/ComPtr.hpp"
 #include "../core/logs.h"
-#include "../DX/helper.hpp"
-#include <shlwapi.h>
+#include "../core/modules.h"
 
 namespace easy2d
 {
