@@ -20,7 +20,7 @@
 
 #include "D3D11DeviceResources.h"
 
-#ifndef E2D_USE_DIRECTX10
+#if !defined(E2D_USE_DIRECTX10)
 
 #include "../core/Image.h"
 #include "../core/logs.h"
@@ -241,7 +241,7 @@ namespace easy2d
 			swap_chain_desc.SampleDesc.Count = 1;
 			swap_chain_desc.SampleDesc.Quality = 0;
 			swap_chain_desc.Windowed = TRUE;
-			swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+			swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
 			ComPtr<IDXGIDevice> dxgi_device;
 			if (SUCCEEDED(hr))
@@ -282,8 +282,10 @@ namespace easy2d
 
 		// Clear the previous window size specific context.
 		ID3D11RenderTargetView* null_views[] = { nullptr };
-		SetTargetBitmap(nullptr);
 		d3d_device_context_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
+		SetTargetBitmap(nullptr);
+		d3d_rt_view_ = nullptr;
+		d3d_ds_view_ = nullptr;
 		d3d_device_context_->Flush();
 
 		// Calculate the necessary render target size in pixels.
@@ -294,12 +296,11 @@ namespace easy2d
 		output_size_.x = std::max(output_size_.x, 1.f);
 		output_size_.y = std::max(output_size_.y, 1.f);
 
-		// If the swap chain already exists, resize it.
 		hr = dxgi_swap_chain_->ResizeBuffers(
 			2, // Double-buffered swap chain.
 			::lround(output_size_.x),
 			::lround(output_size_.y),
-			DXGI_FORMAT_B8G8R8A8_UNORM,
+			DXGI_FORMAT_UNKNOWN,
 			0);
 
 		if (SUCCEEDED(hr))
@@ -314,21 +315,22 @@ namespace easy2d
 				d3d_rt_view_ = nullptr;
 				hr = d3d_device_->CreateRenderTargetView(dxgi_back_buffer.Get(), nullptr, &d3d_rt_view_);
 			}
+		}
 
+		if (SUCCEEDED(hr))
+		{
 			ComPtr<ID3D11Texture2D> depth_stencil;
-			if (SUCCEEDED(hr))
-			{
-				CD3D11_TEXTURE2D_DESC tex_desc(
-					DXGI_FORMAT_D24_UNORM_S8_UINT,
-					static_cast<UINT>(output_size_.x),
-					static_cast<UINT>(output_size_.y),
-					1, // This depth stencil view has only one texture.
-					1, // Use a single mipmap level.
-					D3D11_BIND_DEPTH_STENCIL
-				);
 
-				hr = d3d_device_->CreateTexture2D(&tex_desc, nullptr, &depth_stencil);
-			}
+			CD3D11_TEXTURE2D_DESC tex_desc(
+				DXGI_FORMAT_D24_UNORM_S8_UINT,
+				static_cast<UINT>(output_size_.x),
+				static_cast<UINT>(output_size_.y),
+				1, // This depth stencil view has only one texture.
+				1, // Use a single mipmap level.
+				D3D11_BIND_DEPTH_STENCIL
+			);
+
+			hr = d3d_device_->CreateTexture2D(&tex_desc, nullptr, &depth_stencil);
 
 			if (SUCCEEDED(hr))
 			{
@@ -337,13 +339,16 @@ namespace easy2d
 				d3d_ds_view_.Reset();
 				hr = d3d_device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &d3d_ds_view_);
 			}
+
+			if (SUCCEEDED(hr))
+			{
+				ID3D11RenderTargetView* main_view = d3d_rt_view_.Get();
+				d3d_device_context_->OMSetRenderTargets(1, &main_view, d3d_ds_view_.Get());
+			}
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			ID3D11RenderTargetView* views[] = { d3d_rt_view_.Get() };
-			d3d_device_context_->OMSetRenderTargets(1, views, d3d_ds_view_.Get());
-
 			// Set the 3D rendering viewport to target the entire window.
 			CD3D11_VIEWPORT screen_viewport(
 				0.0f,
@@ -368,7 +373,7 @@ namespace easy2d
 					dxgi_back_buffer.Get(),
 					D2D1::BitmapProperties1(
 						D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-						D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
+						D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
 						dpi_,
 						dpi_),
 					&target);

@@ -104,6 +104,11 @@ namespace easy2d
 			TextAntialias mode
 		);
 
+		// 开启或关闭垂直同步
+		void SetVSyncEnabled(
+			bool enabled
+		);
+
 		// 设置画笔透明度
 		void SetOpacity(
 			float opacity
@@ -135,6 +140,10 @@ namespace easy2d
 
 		HRESULT PopLayer();
 
+		void StartCollectStatus();
+
+		void StopCollectStatus();
+
 	private:
 		Renderer();
 
@@ -145,9 +154,12 @@ namespace easy2d
 		HRESULT HandleDeviceLost();
 
 	private:
+		unsigned long ref_count_;
+
 		float opacity_;
 		bool antialias_;
-		unsigned long ref_count_;
+		bool vsync_;
+		bool collecting_status_;
 
 		TextAntialias	text_antialias_;
 		D2D1_COLOR_F	clear_color_;

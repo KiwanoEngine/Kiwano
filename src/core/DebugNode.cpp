@@ -28,15 +28,10 @@
 
 namespace easy2d
 {
-	namespace
-	{
-		bool show = false;
-	}
-
 	DebugNode::DebugNode()
 	{
 		debug_text_ = new Text();
-		debug_text_->SetPosition(15, 15);
+		debug_text_->SetPosition(20, 20);
 		this->AddChild(debug_text_);
 
 		Font font;
@@ -54,31 +49,12 @@ namespace easy2d
 	{
 	}
 
-	void DebugNode::AddDebugText(String const & text)
-	{
-		try
-		{
-			texts_.push_back(text);
-		}
-		catch (...)
-		{
-		}
-	}
-
-	void DebugNode::ClearDebugText()
-	{
-		texts_.clear();
-	}
-
 	void DebugNode::OnRender()
 	{
 		Renderer::Instance().GetSolidColorBrush()->SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, 0.5f));
 
-		Renderer::Instance().GetDeviceResources()->GetD2DDeviceContext()->FillRoundedRectangle(
-			D2D1::RoundedRect(
-				D2D1_RECT_F{ 10, 10, 200, 120 },
-				6.f,
-				6.f),
+		Renderer::Instance().GetDeviceResources()->GetD2DDeviceContext()->FillRectangle(
+			D2D1_RECT_F{ 10, 10, 30 + debug_text_->GetWidth(), 30 + debug_text_->GetHeight() },
 			Renderer::Instance().GetSolidColorBrush()
 		);
 	}
@@ -116,25 +92,9 @@ namespace easy2d
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		ss << "Memory: " << pmc.PrivateUsage / 1024 << "kb";
 
-		for (const auto& text : texts_)
-			ss << std::endl << text;
-
 		debug_text_->SetText(ss.str());
-	}
 
-	void DebugNode::Show()
-	{
-		show = true;
-	}
-
-	void DebugNode::Hide()
-	{
-		show = false;
-	}
-
-	bool DebugNode::IsShown()
-	{
-		return show;
+		debug_text_->SetSize(debug_text_->GetLayoutSize());
 	}
 
 }

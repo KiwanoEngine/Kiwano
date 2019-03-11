@@ -28,9 +28,11 @@ namespace easy2d
 {
 	Renderer::Renderer()
 		: antialias_(true)
+		, vsync_(true)
 		, text_antialias_(TextAntialias::ClearType)
 		, clear_color_(D2D1::ColorF(D2D1::ColorF::Black))
 		, opacity_(1.f)
+		, collecting_status_(false)
 	{
 		status_.primitives = 0;
 	}
@@ -127,7 +129,7 @@ namespace easy2d
 		if (!device_context_)
 			return E_UNEXPECTED;
 
-		// if (debug_)
+		if (collecting_status_)
 		{
 			status_.start = time::Now();
 			status_.primitives = 0;
@@ -136,7 +138,6 @@ namespace easy2d
 		device_context_->SaveDrawingState(drawing_state_block_.Get());
 
 		device_context_->BeginDraw();
-		device_context_->Clear(clear_color_);
 		return S_OK;
 	}
 
@@ -152,7 +153,19 @@ namespace easy2d
 		if (SUCCEEDED(hr))
 		{
 			// The first argument instructs DXGI to block until VSync.
-			hr = device_resources_->GetDXGISwapChain()->Present(1, 0);
+			hr = device_resources_->GetDXGISwapChain()->Present(vsync_ ? 1 : 0, 0);
+
+			auto main_rt_view = device_resources_->GetD3DRenderTargetView();
+			device_resources_->GetD3DDeviceContext()->OMSetRenderTargets(
+				1, 
+				&main_rt_view,
+				device_resources_->GetD3DDepthStencilView()
+			);
+
+			device_resources_->GetD3DDeviceContext()->ClearRenderTargetView(
+				main_rt_view,
+				reinterpret_cast<float*>(&clear_color_)
+			);
 		}
 
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
@@ -161,7 +174,7 @@ namespace easy2d
 			hr = HandleDeviceLost();
 		}
 
-		// if (debug_)
+		if (collecting_status_)
 		{
 			status_.duration = time::Now() - status_.start;
 		}
@@ -196,7 +209,7 @@ namespace easy2d
 			device_resources_->GetStrokeStyle(stroke)
 		);
 
-		// if (debug_)
+		if (collecting_status_)
 			++status_.primitives;
 		return S_OK;
 	}
@@ -231,7 +244,7 @@ namespace easy2d
 			DX::ConvertToRectF(image->GetCropRect())
 		);
 
-		// if (debug_)
+		if (collecting_status_)
 			++status_.primitives;
 		return S_OK;
 	}
@@ -254,7 +267,7 @@ namespace easy2d
 			rect
 		);
 
-		// if (debug_)
+		if (collecting_status_)
 		++status_.primitives;
 		return S_OK;
 	}
@@ -264,9 +277,14 @@ namespace easy2d
 		if (!text_renderer_)
 			return E_UNEXPECTED;
 
-		// if (debug_)
+		if (collecting_status_)
 			++status_.primitives;
 		return text_layout->Draw(nullptr, text_renderer_.Get(), 0, 0);
+	}
+
+	void Renderer::SetVSyncEnabled(bool enabled)
+	{
+		vsync_ = enabled;
 	}
 
 	HRESULT Renderer::PushClip(const Matrix & clip_matrix, const Size & clip_size)
@@ -318,6 +336,16 @@ namespace easy2d
 
 		device_context_->PopLayer();
 		return S_OK;
+	}
+
+	void Renderer::StartCollectStatus()
+	{
+		collecting_status_ = true;
+	}
+
+	void Renderer::StopCollectStatus()
+	{
+		collecting_status_ = false;
 	}
 
 	void Renderer::SetClearColor(const Color & color)

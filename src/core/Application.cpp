@@ -34,6 +34,11 @@
 
 namespace easy2d
 {
+	namespace
+	{
+		LRESULT(*pre_proc)(HWND, UINT, WPARAM, LPARAM) = nullptr;	// Custom message proc for user
+	}
+
 	Application::Application(String const& app_name)
 		: end_(true)
 		, inited_(false)
@@ -73,6 +78,7 @@ namespace easy2d
 		);
 
 		Renderer::Instance().SetClearColor(options.clear_color);
+		Renderer::Instance().SetVSyncEnabled(options.vsync);
 
 		ThrowIfFailed(
 			Input::Instance().Init(
@@ -125,9 +131,13 @@ namespace easy2d
 		{
 			inited_ = false;
 
+			if (curr_scene_)
+				curr_scene_->OnExit();
+
 			transition_.Reset();
 			next_scene_.Reset();
 			curr_scene_.Reset();
+			debug_node_.Reset();
 
 			Audio::Instance().Destroy();
 			Renderer::Instance().Destroy();
@@ -170,6 +180,25 @@ namespace easy2d
 		time_scale_ = scale_factor;
 	}
 
+	void Application::SetPreMessageProc(LRESULT(*proc)(HWND, UINT, WPARAM, LPARAM))
+	{
+		pre_proc = proc;
+	}
+
+	void Application::ShowDebugInfo(bool show)
+	{
+		if (show)
+		{
+			debug_node_ = new DebugNode;
+			Renderer::Instance().StartCollectStatus();
+		}
+		else
+		{
+			debug_node_.Reset();
+			Renderer::Instance().StopCollectStatus();
+		}
+	}
+
 	void Application::Update()
 	{
 		static auto last = time::Now();
@@ -207,11 +236,13 @@ namespace easy2d
 		if (next_scene_)
 			next_scene_->Update(dt);
 
-		if (DebugNode::IsShown())
-			DebugNode::Instance().Update(dt);
+		if (debug_node_)
+			debug_node_->Update(dt);
+
+		Input::Instance().Update();
 	}
 
-	void Application::Render(HWND hwnd)
+	void Application::Render()
 	{
 		ThrowIfFailed(
 			Renderer::Instance().BeginDraw()
@@ -226,14 +257,14 @@ namespace easy2d
 			curr_scene_->Render();
 		}
 
-		if (DebugNode::IsShown())
-			DebugNode::Instance().Render();
+		if (debug_node_)
+			debug_node_->Render();
+
+		OnRender();
 
 		ThrowIfFailed(
 			Renderer::Instance().EndDraw()
 		);
-
-		::InvalidateRect(hwnd, NULL, FALSE);
 	}
 
 	void Application::AllocConsole()
@@ -272,6 +303,9 @@ namespace easy2d
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
+		if (pre_proc && pre_proc(hwnd, msg, wparam, lparam))
+			return 1;
+
 		Application * app = reinterpret_cast<Application*>(
 			static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA))
 			);
@@ -284,9 +318,9 @@ namespace easy2d
 		case WM_PAINT:
 		{
 			app->Update();
-			app->Render(hwnd);
+			app->Render();
 
-			Input::Instance().Update();
+			::InvalidateRect(hwnd, NULL, FALSE);
 			return 0;
 		}
 		break;
