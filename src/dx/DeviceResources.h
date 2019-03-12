@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/macros.h"
+#include "../macros.h"
 
 #if defined(E2D_USE_DIRECTX10)
 #	include "D3D10DeviceResources.h"

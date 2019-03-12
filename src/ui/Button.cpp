@@ -23,120 +23,117 @@
 
 namespace easy2d
 {
-	namespace ui
+	Button::Button()
+		: enabled_(true)
+		, is_selected_(false)
+		, click_callback_(nullptr)
+		, status_(Status::Normal)
 	{
-		Button::Button()
-			: enabled_(true)
-			, is_selected_(false)
-			, click_callback_(nullptr)
-			, status_(Status::Normal)
-		{
-			SetResponsible(true);
+		SetResponsible(true);
 
-			AddListener(Event::MouseHover, Closure(this, &Button::UpdateStatus));
-			AddListener(Event::MouseOut, Closure(this, &Button::UpdateStatus));
-			AddListener(Event::MouseBtnDown, Closure(this, &Button::UpdateStatus));
-			AddListener(Event::MouseBtnUp, Closure(this, &Button::UpdateStatus));
-		}
-
-		Button::Button(const Callback& click)
-			: Button()
-		{
-			this->SetClickCallback(click);
-		}
-
-		Button::Button(Callback const & click, Callback const & pressed, Callback const & mouse_over, Callback const & mouse_out)
-			: Button()
-		{
-			this->SetClickCallback(click);
-			this->SetPressedCallback(pressed);
-			this->SetMouseOverCallback(mouse_over);
-			this->SetMouseOutCallback(mouse_out);
-		}
-
-		Button::~Button()
-		{
-		}
-
-		bool Button::IsEnable() const
-		{
-			return enabled_;
-		}
-
-		void Button::SetEnabled(bool enabled)
-		{
-			if (enabled_ != enabled)
-			{
-				enabled_ = enabled;
-			}
-		}
-
-		void Button::SetClickCallback(const Callback& func)
-		{
-			click_callback_ = func;
-		}
-
-		void Button::SetPressedCallback(const Callback & func)
-		{
-			pressed_callback_ = func;
-		}
-
-		void Button::SetMouseOverCallback(const Callback & func)
-		{
-			mouse_over_callback_ = func;
-		}
-
-		void Button::SetMouseOutCallback(const Callback & func)
-		{
-			mouse_out_callback_ = func;
-		}
-
-		void Button::SetStatus(Status status)
-		{
-			if (status_ != status)
-			{
-				status_ = status;
-			}
-		}
-
-		void Button::UpdateStatus(Event const& evt)
-		{
-			E2D_ASSERT(MouseEvent::Check(evt.type));
-
-			if (enabled_ && (evt.target == this))
-			{
-				if (evt.type == Event::MouseHover)
-				{
-					SetStatus(Status::Hover);
-					GetScene()->SetMouseCursor(MouseCursor::Hand);
-
-					if (mouse_over_callback_)
-						mouse_over_callback_();
-				}
-				else if (evt.type == Event::MouseOut)
-				{
-					SetStatus(Status::Normal);
-					GetScene()->SetMouseCursor(MouseCursor::Arrow);
-
-					if (mouse_out_callback_)
-						mouse_out_callback_();
-				}
-				else if (evt.type == Event::MouseBtnDown && status_ == Status::Hover)
-				{
-					SetStatus(Status::Pressed);
-
-					if (pressed_callback_)
-						pressed_callback_();
-				}
-				else if (evt.type == Event::MouseBtnUp && status_ == Status::Pressed)
-				{
-					SetStatus(Status::Hover);
-
-					if (click_callback_)
-						click_callback_();
-				}
-			}
-		}
-
+		AddListener(Event::MouseHover, Closure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseOut, Closure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseBtnDown, Closure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseBtnUp, Closure(this, &Button::UpdateStatus));
 	}
+
+	Button::Button(const Callback& click)
+		: Button()
+	{
+		this->SetClickCallback(click);
+	}
+
+	Button::Button(Callback const & click, Callback const & pressed, Callback const & mouse_over, Callback const & mouse_out)
+		: Button()
+	{
+		this->SetClickCallback(click);
+		this->SetPressedCallback(pressed);
+		this->SetMouseOverCallback(mouse_over);
+		this->SetMouseOutCallback(mouse_out);
+	}
+
+	Button::~Button()
+	{
+	}
+
+	bool Button::IsEnable() const
+	{
+		return enabled_;
+	}
+
+	void Button::SetEnabled(bool enabled)
+	{
+		if (enabled_ != enabled)
+		{
+			enabled_ = enabled;
+		}
+	}
+
+	void Button::SetClickCallback(const Callback& func)
+	{
+		click_callback_ = func;
+	}
+
+	void Button::SetPressedCallback(const Callback & func)
+	{
+		pressed_callback_ = func;
+	}
+
+	void Button::SetMouseOverCallback(const Callback & func)
+	{
+		mouse_over_callback_ = func;
+	}
+
+	void Button::SetMouseOutCallback(const Callback & func)
+	{
+		mouse_out_callback_ = func;
+	}
+
+	void Button::SetStatus(Status status)
+	{
+		if (status_ != status)
+		{
+			status_ = status;
+		}
+	}
+
+	void Button::UpdateStatus(Event const& evt)
+	{
+		E2D_ASSERT(MouseEvent::Check(evt.type));
+
+		if (enabled_ && (evt.target == this))
+		{
+			if (evt.type == Event::MouseHover)
+			{
+				SetStatus(Status::Hover);
+				GetScene()->SetMouseCursor(MouseCursor::Hand);
+
+				if (mouse_over_callback_)
+					mouse_over_callback_();
+			}
+			else if (evt.type == Event::MouseOut)
+			{
+				SetStatus(Status::Normal);
+				GetScene()->SetMouseCursor(MouseCursor::Arrow);
+
+				if (mouse_out_callback_)
+					mouse_out_callback_();
+			}
+			else if (evt.type == Event::MouseBtnDown && status_ == Status::Hover)
+			{
+				SetStatus(Status::Pressed);
+
+				if (pressed_callback_)
+					pressed_callback_();
+			}
+			else if (evt.type == Event::MouseBtnUp && status_ == Status::Pressed)
+			{
+				SetStatus(Status::Hover);
+
+				if (click_callback_)
+					click_callback_();
+			}
+		}
+	}
+
 }

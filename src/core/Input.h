@@ -21,8 +21,8 @@
 #pragma once
 #include "include-forwards.h"
 #include "keys.hpp"
-#include "Singleton.hpp"
 #include "Component.h"
+#include "../common/Singleton.hpp"
 
 namespace easy2d
 {

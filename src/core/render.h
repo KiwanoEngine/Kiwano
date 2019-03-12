@@ -24,7 +24,7 @@
 #include "Resource.h"
 #include "TextStyle.hpp"
 #include "Component.h"
-#include "Singleton.hpp"
+#include "../common/Singleton.hpp"
 #include "../DX/helper.hpp"
 #include "../DX/DeviceResources.h"
 #include "../DX/TextRenderer.h"

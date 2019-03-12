@@ -20,7 +20,7 @@
 
 #pragma once
 #include "include-forwards.h"
-#include "IntrusiveList.hpp"
+#include "../common/IntrusiveList.hpp"
 #include "Event.hpp"
 
 namespace easy2d

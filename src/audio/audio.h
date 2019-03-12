@@ -20,8 +20,8 @@
 
 #pragma once
 #include "../core/include-forwards.h"
-#include "../core/Singleton.hpp"
 #include "../core/Component.h"
+#include "../common/Singleton.hpp"
 #include "Voice.h"
 
 namespace easy2d

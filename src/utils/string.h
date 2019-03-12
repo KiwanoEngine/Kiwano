@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/macros.h"
+#include "../macros.h"
 #include <string>
 
 namespace easy2d

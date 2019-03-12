@@ -18,21 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "rand.h"
+#pragma once
+#include "IntrusivePtr.hpp"
+#include <Unknwnbase.h>
 
 namespace easy2d
 {
-	namespace math
-	{
-		namespace
-		{
-			std::random_device device;
-			std::default_random_engine engine(device());
-		}
+	// ComPtr<> is a smart pointer for COM
+	template <typename _Ty>
+	using ComPtr = IntrusivePtr<_Ty>;
 
-		std::default_random_engine& GetRandomEngine()
-		{
-			return engine;
-		}
+	inline void IntrusivePtrAddRef(IUnknown* ptr)
+	{
+		if (ptr) { ptr->AddRef(); }
 	}
+
+	inline void IntrusivePtrRelease(IUnknown* ptr)
+	{
+		if (ptr) { ptr->Release(); }
+	}
+
 }

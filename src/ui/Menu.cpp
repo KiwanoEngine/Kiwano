@@ -22,81 +22,79 @@
 
 namespace easy2d
 {
-	namespace ui
+	Menu::Menu()
+		: enabled_(true)
 	{
-		Menu::Menu()
-			: enabled_(true)
-		{
-		}
+	}
 
-		Menu::Menu(Array<ButtonPtr> const& buttons)
-			: enabled_(true)
+	Menu::Menu(Array<ButtonPtr> const& buttons)
+		: enabled_(true)
+	{
+		for (const auto& button : buttons)
 		{
-			for (const auto& button : buttons)
+			this->AddButton(button);
+		}
+	}
+
+	bool Menu::IsEnable() const
+	{
+		return enabled_;
+	}
+
+	int Menu::GetButtonCount() const
+	{
+		return buttons_.size();
+	}
+
+	void Menu::SetEnabled(bool enabled)
+	{
+		if (enabled_ != enabled)
+		{
+			enabled_ = enabled;
+
+			for (const auto& button : buttons_)
 			{
-				this->AddButton(button);
+				button->SetEnabled(enabled);
 			}
 		}
+	}
 
-		bool Menu::IsEnable() const
+	void Menu::AddButton(ButtonPtr const& button)
+	{
+		if (button)
 		{
-			return enabled_;
+			this->AddChild(button);
+			buttons_.push_back(button);
+			button->SetEnabled(enabled_);
 		}
+	}
 
-		int Menu::GetButtonCount() const
+	bool Menu::RemoveButton(ButtonPtr const& button)
+	{
+		if (buttons_.empty())
 		{
-			return buttons_.size();
-		}
-
-		void Menu::SetEnabled(bool enabled)
-		{
-			if (enabled_ != enabled)
-			{
-				enabled_ = enabled;
-
-				for (const auto& button : buttons_)
-				{
-					button->SetEnabled(enabled);
-				}
-			}
-		}
-
-		void Menu::AddButton(ButtonPtr const& button)
-		{
-			if (button)
-			{
-				this->AddChild(button);
-				buttons_.push_back(button);
-				button->SetEnabled(enabled_);
-			}
-		}
-
-		bool Menu::RemoveButton(ButtonPtr const& button)
-		{
-			if (buttons_.empty())
-			{
-				return false;
-			}
-
-			this->RemoveChild(button);
-
-			if (button)
-			{
-				auto iter = std::find(buttons_.begin(), buttons_.end(), button);
-				if (iter != buttons_.end())
-				{
-					// 移除按钮前，将它启用
-					button->SetEnabled(true);
-					buttons_.erase(iter);
-					return true;
-				}
-			}
 			return false;
 		}
 
-		Array<ButtonPtr> const& Menu::GetAllButtons() const
+		this->RemoveChild(button);
+
+		if (button)
 		{
-			return buttons_;
+			auto iter = std::find(buttons_.begin(), buttons_.end(), button);
+			if (iter != buttons_.end())
+			{
+				// 移除按钮前，将它启用
+				button->SetEnabled(true);
+				buttons_.erase(iter);
+				return true;
+			}
 		}
+		return false;
 	}
+
+	Array<ButtonPtr> const& Menu::GetAllButtons() const
+	{
+		return buttons_;
+	}
+
 }

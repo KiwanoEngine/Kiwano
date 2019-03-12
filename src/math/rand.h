@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/macros.h"
 #include <random>
 
 namespace easy2d
@@ -34,65 +33,94 @@ namespace easy2d
 		// 产生的随机数类型取决于参数的类型, 如获取随机浮点数:
 		// double d = math::Rand(1.2, 1.5);
 		//
-		
-		E2D_API std::default_random_engine& GetRandomEngine();
 
-		template<typename T>
-		static T RandomInt(T min, T max)
-		{
-			std::uniform_int_distribution<T> dist(min, max);
-			return dist(GetRandomEngine());
-		}
+		int Rand(int min, int max);
 
-		template<typename T>
-		static T RandomReal(T min, T max)
+		unsigned int Rand(unsigned int min, unsigned int max);
+
+		long Rand(long min, long max);
+
+		unsigned long Rand(unsigned long min, unsigned long max);
+
+		char Rand(char min, char max);
+
+		unsigned char Rand(unsigned char min, unsigned char max);
+
+		float Rand(float min, float max);
+
+		double Rand(double min, double max);
+
+
+		//
+		// Details of math::Rand
+		//
+
+		namespace __rand_detail
 		{
-			std::uniform_real_distribution<T> dist(min, max);
-			return dist(GetRandomEngine());
+			inline std::default_random_engine& GetRandomEngine()
+			{
+				static std::random_device device;
+				static std::default_random_engine engine(device());
+				return engine;
+			}
+
+			template<typename T>
+			inline T RandomInt(T min, T max)
+			{
+				std::uniform_int_distribution<T> dist(min, max);
+				return dist(GetRandomEngine());
+			}
+
+			template<typename T>
+			inline T RandomReal(T min, T max)
+			{
+				std::uniform_real_distribution<T> dist(min, max);
+				return dist(GetRandomEngine());
+			}
 		}
 
 		inline int Rand(int min, int max)
 		{
-			return RandomInt(min, max);
+			return __rand_detail::RandomInt(min, max);
 		}
 
 		inline unsigned int Rand(unsigned int min, unsigned int max)
 		{
-			return RandomInt(min, max);
+			return __rand_detail::RandomInt(min, max);
 		}
 
 		inline long Rand(long min, long max)
 		{
-			return RandomInt(min, max);
+			return __rand_detail::RandomInt(min, max);
 		}
 
 		inline unsigned long Rand(unsigned long min, unsigned long max)
 		{
-			return RandomInt(min, max);
+			return __rand_detail::RandomInt(min, max);
 		}
 
 		inline char Rand(char min, char max)
 		{
 			return static_cast<char>(
-				RandomInt(static_cast<int>(min), static_cast<int>(max))
+				__rand_detail::RandomInt(static_cast<int>(min), static_cast<int>(max))
 			);
 		}
 
 		inline unsigned char Rand(unsigned char min, unsigned char max)
 		{
 			return static_cast<unsigned char>(
-				RandomInt(static_cast<unsigned int>(min), static_cast<unsigned int>(max))
+				__rand_detail::RandomInt(static_cast<unsigned int>(min), static_cast<unsigned int>(max))
 			);
 		}
 
 		inline float Rand(float min, float max)
 		{
-			return RandomReal(min, max);
+			return __rand_detail::RandomReal(min, max);
 		}
 
 		inline double Rand(double min, double max)
 		{
-			return RandomReal(min, max);
+			return __rand_detail::RandomReal(min, max);
 		}
 	}
 }

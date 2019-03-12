@@ -24,74 +24,71 @@
 
 namespace easy2d
 {
-	namespace ui
+	class E2D_API Button
+		: public Sprite
 	{
-		class E2D_API Button
-			: public Sprite
-		{
-			using Callback = std::function<void()>;
+		using Callback = std::function<void()>;
 
-		public:
-			Button();
+	public:
+		Button();
 
-			explicit Button(
-				Callback const& click		/* 按钮点击回调函数 */
-			);
+		explicit Button(
+			Callback const& click		/* 按钮点击回调函数 */
+		);
 
-			explicit Button(
-				Callback const& click,		/* 按钮点击回调函数 */
-				Callback const& pressed,	/* 按钮按下回调函数 */
-				Callback const& mouse_over,	/* 按钮移入回调函数 */
-				Callback const& mouse_out	/* 按钮移出回调函数 */
-			);
+		explicit Button(
+			Callback const& click,		/* 按钮点击回调函数 */
+			Callback const& pressed,	/* 按钮按下回调函数 */
+			Callback const& mouse_over,	/* 按钮移入回调函数 */
+			Callback const& mouse_out	/* 按钮移出回调函数 */
+		);
 
-			virtual ~Button();
+		virtual ~Button();
 
-			// 获取按钮状态是启用还是禁用
-			bool IsEnable() const;
+		// 获取按钮状态是启用还是禁用
+		bool IsEnable() const;
 
-			// 设置按钮启用或禁用
-			void SetEnabled(
-				bool enabled
-			);
+		// 设置按钮启用或禁用
+		void SetEnabled(
+			bool enabled
+		);
 
-			// 设置按钮点击后的回调函数
-			void SetClickCallback(
-				const Callback& func
-			);
+		// 设置按钮点击后的回调函数
+		void SetClickCallback(
+			const Callback& func
+		);
 
-			// 设置按钮被按下时的回调函数
-			void SetPressedCallback(
-				const Callback& func
-			);
+		// 设置按钮被按下时的回调函数
+		void SetPressedCallback(
+			const Callback& func
+		);
 
-			// 设置鼠标移入按钮时的回调函数
-			void SetMouseOverCallback(
-				const Callback& func
-			);
+		// 设置鼠标移入按钮时的回调函数
+		void SetMouseOverCallback(
+			const Callback& func
+		);
 
-			// 设置鼠标移出按钮时的回调函数
-			void SetMouseOutCallback(
-				const Callback& func
-			);
+		// 设置鼠标移出按钮时的回调函数
+		void SetMouseOutCallback(
+			const Callback& func
+		);
 
-		private:
-			enum class Status { Normal, Hover, Pressed };
+	private:
+		enum class Status { Normal, Hover, Pressed };
 
-			void SetStatus(
-				Status status
-			);
+		void SetStatus(
+			Status status
+		);
 
-			void UpdateStatus(Event const& evt);
+		void UpdateStatus(Event const& evt);
 
-		private:
-			bool		enabled_;
-			bool		is_selected_;
-			Status		status_;
-			Callback	click_callback_;
-			Callback	pressed_callback_;
-			Callback	mouse_over_callback_;
-			Callback	mouse_out_callback_;
-		};
-	}
+	private:
+		bool		enabled_;
+		bool		is_selected_;
+		Status		status_;
+		Callback	click_callback_;
+		Callback	pressed_callback_;
+		Callback	mouse_over_callback_;
+		Callback	mouse_out_callback_;
+	};
 }

@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/macros.h"
-#include "../core/noncopyable.hpp"
+#include "../macros.h"
+#include "../common/noncopyable.hpp"
 #include <xaudio2.h>
 
 namespace easy2d

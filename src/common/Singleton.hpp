@@ -19,58 +19,33 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <functional>
+
+// Class that will implement the singleton mode,
+// must use the macro in its delare file
+
+#ifndef E2D_DECLARE_SINGLETON
+#define E2D_DECLARE_SINGLETON( CLASS )			\
+	friend class ::easy2d::Singleton< CLASS >
+#endif
 
 namespace easy2d
 {
-	namespace __closure__detail
+	template <typename _Ty>
+	class Singleton
 	{
-		// sequence & generater
-
-		template<int... _Num>
-		struct Seq
+	public:
+		static inline _Ty& Instance()
 		{
-			using NextType = Seq<_Num..., sizeof...(_Num)>;
-		};
+			static _Ty instance;	// Thread-safe
+			return instance;
+		}
 
-		template<typename...>
-		struct Gen;
+	protected:
+		Singleton() = default;
 
-		template<>
-		struct Gen<>
-		{
-			using SeqType = Seq<>;
-		};
+	private:
+		Singleton(const Singleton&) = delete;
 
-		template<typename _Ty1, typename... _Args>
-		struct Gen<_Ty1, _Args...>
-		{
-			using SeqType = typename Gen<_Args...>::SeqType::NextType;
-		};
-
-
-		// ClosureHelper
-
-		template<typename _Ty, typename _Ret, typename... _Args>
-		struct ClosureHelper
-		{
-			template<int... _Num>
-			static inline std::function<_Ret(_Args...)> MakeFunc(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...), Seq<_Num...>)
-			{
-				return std::bind(_Func, _Ptr, typename std::_Ph<_Num + 1>()...);
-			}
-		};
-	}
-
-	//
-	// Closure is a simple function for binding member functions
-	//
-
-	template<typename _Ty, typename _Ret, typename... _Args>
-	inline std::function<_Ret(_Args...)> Closure(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...))
-	{
-		using namespace __closure__detail;
-		return ClosureHelper<_Ty, _Ret, _Args...>::
-			MakeFunc(_Ptr, _Func, typename Gen<_Args...>::SeqType{});
-	}
+		Singleton& operator=(const Singleton&) = delete;
+	};
 }

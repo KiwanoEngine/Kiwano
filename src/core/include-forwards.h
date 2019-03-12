@@ -19,13 +19,19 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
+#include "helper.h"
 #include "Color.h"
 #include "Object.h"
-#include "helper.hpp"
+#include "../common/ComPtr.hpp"
+#include "../common/Closure.hpp"
+#include "../math/vector.hpp"
+#include "../math/Rect.hpp"
+#include "../math/Matrix.hpp"
 
 namespace easy2d
 {
+	using namespace math;
+
 	// »­±ÊÑùÊ½
 	enum class StrokeStyle : int
 	{

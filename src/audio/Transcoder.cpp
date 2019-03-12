@@ -24,7 +24,7 @@
 
 #include "Transcoder.h"
 #include "audio-modules.h"
-#include "../core/ComPtr.hpp"
+#include "../common/ComPtr.hpp"
 #include "../core/logs.h"
 #include "../core/modules.h"
 

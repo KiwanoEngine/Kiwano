@@ -1,7 +1,6 @@
 // Copyright (C) 2019 Nomango
 
 #pragma once
-#include "easy2d.h"
 
 namespace easy2d
 {

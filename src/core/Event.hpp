@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "macros.h"
 #include "keys.hpp"
 
 namespace easy2d

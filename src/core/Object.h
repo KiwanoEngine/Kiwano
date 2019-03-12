@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "RefCounter.hpp"
-#include "helper.hpp"
+#include "helper.h"
 
 namespace easy2d
 {

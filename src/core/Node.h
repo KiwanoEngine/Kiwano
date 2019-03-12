@@ -25,7 +25,6 @@
 #include "TaskManager.h"
 #include "ActionManager.h"
 #include "EventDispatcher.h"
-#include "IntrusiveList.hpp"
 
 namespace easy2d
 {
