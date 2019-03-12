@@ -1,8 +1,7 @@
 // Copyright (C) 2019 Nomango
 
 #include "easy2d.h"
-#include "ImGuiView.h"
-#include "ImGuiLayer.h"
+#include "easy2d-imgui/imgui.h"
 
 using namespace easy2d;
 

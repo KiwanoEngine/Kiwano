@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\3rd-party\ImGui\imgui.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
@@ -15,11 +14,17 @@
     <ClCompile Include="..\..\3rd-party\ImGui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiView.cpp" />
-    <ClCompile Include="ImGuiLayer.cpp" />
+    <ClCompile Include="easy2d-imgui\imgui_impl_dx11.cpp">
+      <Filter>easy2d-imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="easy2d-imgui\ImGuiLayer.cpp">
+      <Filter>easy2d-imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="easy2d-imgui\ImGuiView.cpp">
+      <Filter>easy2d-imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="..\..\3rd-party\ImGui\imconfig.h">
       <Filter>imgui</Filter>
     </ClInclude>
@@ -38,12 +43,25 @@
     <ClInclude Include="..\..\3rd-party\ImGui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiView.h" />
-    <ClInclude Include="ImGuiLayer.h" />
+    <ClInclude Include="easy2d-imgui\imgui_impl_dx11.h">
+      <Filter>easy2d-imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="easy2d-imgui\ImGuiLayer.h">
+      <Filter>easy2d-imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="easy2d-imgui\ImGuiView.h">
+      <Filter>easy2d-imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="easy2d-imgui\imgui.h">
+      <Filter>easy2d-imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">
       <UniqueIdentifier>{24ae99cd-ee12-481f-bb03-d8be40d99342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="easy2d-imgui">
+      <UniqueIdentifier>{37f1585a-e992-454a-8cac-e9a6142b08b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
