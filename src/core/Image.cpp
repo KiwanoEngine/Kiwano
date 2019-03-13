@@ -22,7 +22,6 @@
 #include "logs.h"
 #include "render.h"
 #include "modules.h"
-#include "../utils/string.h"
 
 namespace easy2d
 {

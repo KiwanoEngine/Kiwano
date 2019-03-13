@@ -21,7 +21,6 @@
 #include "DebugNode.h"
 #include "Text.h"
 #include "render.h"
-#include "../utils/string.h"
 #include <sstream>
 #include <psapi.h>
 
@@ -64,18 +63,10 @@ namespace easy2d
 	{
 		E2D_NOT_USED(dt);
 
-		try
+		frame_time_.push_back(time::Now());
+		while (frame_time_.back() - frame_time_.front() >= time::Second)
 		{
-			frame_time_.push_back(time::Now());
-			while (frame_time_.back() - frame_time_.front() >= time::Second)
-			{
-				frame_time_.erase(frame_time_.begin());
-			}
-		}
-		catch (std::exception& e)
-		{
-			debug_text_->SetText(StringMultiByteToWideChar(e.what()));
-			return;
+			frame_time_.erase(frame_time_.begin());
 		}
 		
 		std::wstringstream ss;

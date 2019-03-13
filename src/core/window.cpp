@@ -65,7 +65,7 @@ namespace easy2d
 		}
 	}
 
-	HRESULT Window::Create(String title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
+	HRESULT Window::Create(String const& title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
 	{
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
