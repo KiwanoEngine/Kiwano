@@ -130,6 +130,8 @@ namespace easy2d
 		inline void push_back(const wchar_t ch)		{ append(1, ch); }
 		inline wchar_t pop_back()					{ if (empty()) throw std::out_of_range("pop_back() called on empty string"); check_operability(); wchar_t ch = str_[--size_]; str_[size_] = value_type(); return ch; }
 
+		inline size_type copy(wchar_t* cstr, size_type count, size_type pos = 0) const		{ check_offset(pos); if (count == 0 || cstr == const_str_) return 0; count = clamp_suffix_size(pos, count); traits::move(cstr, cbegin() + pos, count); return count; }
+
 		std::string to_string() const;
 		std::wstring to_wstring() const;
 
