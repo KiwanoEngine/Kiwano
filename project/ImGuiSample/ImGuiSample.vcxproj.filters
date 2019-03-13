@@ -14,13 +14,13 @@
     <ClCompile Include="..\..\3rd-party\ImGui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="easy2d-imgui\imgui_impl_dx11.cpp">
+    <ClCompile Include="..\..\src\easy2d-imgui\imgui_impl_dx11.cpp">
       <Filter>easy2d-imgui</Filter>
     </ClCompile>
-    <ClCompile Include="easy2d-imgui\ImGuiLayer.cpp">
+    <ClCompile Include="..\..\src\easy2d-imgui\ImGuiLayer.cpp">
       <Filter>easy2d-imgui</Filter>
     </ClCompile>
-    <ClCompile Include="easy2d-imgui\ImGuiView.cpp">
+    <ClCompile Include="..\..\src\easy2d-imgui\ImGuiView.cpp">
       <Filter>easy2d-imgui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,16 +43,16 @@
     <ClInclude Include="..\..\3rd-party\ImGui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="easy2d-imgui\imgui_impl_dx11.h">
+    <ClInclude Include="..\..\src\easy2d-imgui\imgui_impl_dx11.h">
       <Filter>easy2d-imgui</Filter>
     </ClInclude>
-    <ClInclude Include="easy2d-imgui\ImGuiLayer.h">
+    <ClInclude Include="..\..\src\easy2d-imgui\ImGuiLayer.h">
       <Filter>easy2d-imgui</Filter>
     </ClInclude>
-    <ClInclude Include="easy2d-imgui\ImGuiView.h">
+    <ClInclude Include="..\..\src\easy2d-imgui\ImGuiView.h">
       <Filter>easy2d-imgui</Filter>
     </ClInclude>
-    <ClInclude Include="easy2d-imgui\easy2d-imgui.h">
+    <ClInclude Include="..\..\src\easy2d-imgui\easy2d-imgui.h">
       <Filter>easy2d-imgui</Filter>
     </ClInclude>
   </ItemGroup>

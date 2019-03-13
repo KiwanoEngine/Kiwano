@@ -24,375 +24,375 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\easy2d.h" />
-    <ClInclude Include="..\..\src\core\Animation.h">
+    <ClInclude Include="..\..\src\easy2d\easy2d.h" />
+    <ClInclude Include="..\..\src\easy2d\core\Animation.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Canvas.h">
+    <ClInclude Include="..\..\src\easy2d\core\Canvas.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Color.h">
+    <ClInclude Include="..\..\src\easy2d\core\Color.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Image.h">
+    <ClInclude Include="..\..\src\easy2d\core\Image.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Input.h">
+    <ClInclude Include="..\..\src\easy2d\core\Input.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\logs.h">
+    <ClInclude Include="..\..\src\easy2d\core\logs.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\modules.h">
+    <ClInclude Include="..\..\src\easy2d\core\modules.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Node.h">
+    <ClInclude Include="..\..\src\easy2d\core\Node.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\render.h">
+    <ClInclude Include="..\..\src\easy2d\core\render.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Resource.h">
+    <ClInclude Include="..\..\src\easy2d\core\Resource.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Scene.h">
+    <ClInclude Include="..\..\src\easy2d\core\Scene.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Sprite.h">
+    <ClInclude Include="..\..\src\easy2d\core\Sprite.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Task.h">
+    <ClInclude Include="..\..\src\easy2d\core\Task.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Text.h">
+    <ClInclude Include="..\..\src\easy2d\core\Text.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\time.h">
+    <ClInclude Include="..\..\src\easy2d\core\time.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Transition.h">
+    <ClInclude Include="..\..\src\easy2d\core\Transition.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\window.h">
+    <ClInclude Include="..\..\src\easy2d\core\window.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\math\rand.h">
+    <ClInclude Include="..\..\src\easy2d\math\rand.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\math\scalar.hpp">
+    <ClInclude Include="..\..\src\easy2d\math\scalar.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\math\vector.hpp">
+    <ClInclude Include="..\..\src\easy2d\math\vector.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utils\Data.h">
+    <ClInclude Include="..\..\src\easy2d\utils\Data.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utils\File.h">
+    <ClInclude Include="..\..\src\easy2d\utils\File.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utils\Path.h">
+    <ClInclude Include="..\..\src\easy2d\utils\Path.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\ui\Button.h">
+    <ClInclude Include="..\..\src\easy2d\ui\Button.h">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\ui\Menu.h">
+    <ClInclude Include="..\..\src\easy2d\ui\Menu.h">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\RefCounter.hpp">
+    <ClInclude Include="..\..\src\easy2d\core\RefCounter.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\ActionManager.h">
+    <ClInclude Include="..\..\src\easy2d\core\ActionManager.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\TaskManager.h">
+    <ClInclude Include="..\..\src\easy2d\core\TaskManager.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\TextStyle.hpp">
+    <ClInclude Include="..\..\src\easy2d\core\TextStyle.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Font.hpp">
+    <ClInclude Include="..\..\src\easy2d\core\Font.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Transform.hpp">
+    <ClInclude Include="..\..\src\easy2d\core\Transform.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Geometry.h">
+    <ClInclude Include="..\..\src\easy2d\core\Geometry.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\GeometryNode.h">
+    <ClInclude Include="..\..\src\easy2d\core\GeometryNode.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\math\ease.hpp">
+    <ClInclude Include="..\..\src\easy2d\math\ease.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\ActionTween.h">
+    <ClInclude Include="..\..\src\easy2d\core\ActionTween.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Frames.h">
+    <ClInclude Include="..\..\src\easy2d\core\Frames.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\math\constants.hpp">
+    <ClInclude Include="..\..\src\easy2d\math\constants.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\EventDispatcher.h">
+    <ClInclude Include="..\..\src\easy2d\core\EventDispatcher.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\EventListener.h">
+    <ClInclude Include="..\..\src\easy2d\core\EventListener.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Object.h">
+    <ClInclude Include="..\..\src\easy2d\core\Object.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\keys.hpp">
+    <ClInclude Include="..\..\src\easy2d\core\keys.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\include-forwards.h">
+    <ClInclude Include="..\..\src\easy2d\core\include-forwards.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\DebugNode.h">
+    <ClInclude Include="..\..\src\easy2d\core\DebugNode.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\math\Rect.hpp">
+    <ClInclude Include="..\..\src\easy2d\math\Rect.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utils\ResLoader.h">
+    <ClInclude Include="..\..\src\easy2d\utils\ResLoader.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Application.h">
+    <ClInclude Include="..\..\src\easy2d\core\Application.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Event.hpp">
+    <ClInclude Include="..\..\src\easy2d\core\Event.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\ActionGroup.h">
+    <ClInclude Include="..\..\src\easy2d\core\ActionGroup.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\ActionHelper.h">
+    <ClInclude Include="..\..\src\easy2d\core\ActionHelper.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Action.h">
+    <ClInclude Include="..\..\src\easy2d\core\Action.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\math\Matrix.hpp">
+    <ClInclude Include="..\..\src\easy2d\math\Matrix.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dx\D2DDeviceResources.h">
+    <ClInclude Include="..\..\src\easy2d\dx\D2DDeviceResources.h">
       <Filter>dx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dx\D3D11DeviceResources.h">
+    <ClInclude Include="..\..\src\easy2d\dx\D3D11DeviceResources.h">
       <Filter>dx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dx\DeviceResources.h">
+    <ClInclude Include="..\..\src\easy2d\dx\DeviceResources.h">
       <Filter>dx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dx\helper.hpp">
+    <ClInclude Include="..\..\src\easy2d\dx\helper.hpp">
       <Filter>dx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dx\TextRenderer.h">
+    <ClInclude Include="..\..\src\easy2d\dx\TextRenderer.h">
       <Filter>dx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dx\D3D10DeviceResources.h">
+    <ClInclude Include="..\..\src\easy2d\dx\D3D10DeviceResources.h">
       <Filter>dx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\audio\audio.h">
+    <ClInclude Include="..\..\src\easy2d\audio\audio.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\audio\Music.h">
+    <ClInclude Include="..\..\src\easy2d\audio\Music.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\audio\Player.h">
+    <ClInclude Include="..\..\src\easy2d\audio\Player.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\audio\Transcoder.h">
+    <ClInclude Include="..\..\src\easy2d\audio\Transcoder.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\audio\Voice.h">
+    <ClInclude Include="..\..\src\easy2d\audio\Voice.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Component.h">
+    <ClInclude Include="..\..\src\easy2d\core\Component.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\audio\audio-modules.h">
+    <ClInclude Include="..\..\src\easy2d\audio\audio-modules.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\Layer.h">
+    <ClInclude Include="..\..\src\easy2d\core\Layer.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\config.h" />
-    <ClInclude Include="..\..\src\macros.h" />
-    <ClInclude Include="..\..\src\common\Array.h">
+    <ClInclude Include="..\..\src\easy2d\config.h" />
+    <ClInclude Include="..\..\src\easy2d\macros.h" />
+    <ClInclude Include="..\..\src\easy2d\common\Array.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\closure.hpp">
+    <ClInclude Include="..\..\src\easy2d\common\closure.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\ComPtr.hpp">
+    <ClInclude Include="..\..\src\easy2d\common\ComPtr.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\IntrusiveList.hpp">
+    <ClInclude Include="..\..\src\easy2d\common\IntrusiveList.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\IntrusivePtr.hpp">
+    <ClInclude Include="..\..\src\easy2d\common\IntrusivePtr.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\noncopyable.hpp">
+    <ClInclude Include="..\..\src\easy2d\common\noncopyable.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\Singleton.hpp">
+    <ClInclude Include="..\..\src\easy2d\common\Singleton.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\helper.h">
+    <ClInclude Include="..\..\src\easy2d\core\helper.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\String.h">
+    <ClInclude Include="..\..\src\easy2d\common\String.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\core\Animation.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Animation.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Canvas.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Canvas.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Color.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Color.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Image.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Image.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Input.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Input.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\modules.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\modules.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Node.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Node.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\render.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\render.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Resource.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Resource.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Scene.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Scene.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Sprite.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Sprite.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Task.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Task.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Text.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Text.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\time.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\time.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Transition.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Transition.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\window.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\window.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\utils\Data.cpp">
+    <ClCompile Include="..\..\src\easy2d\utils\Data.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\utils\File.cpp">
+    <ClCompile Include="..\..\src\easy2d\utils\File.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\utils\Path.cpp">
+    <ClCompile Include="..\..\src\easy2d\utils\Path.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ui\Button.cpp">
+    <ClCompile Include="..\..\src\easy2d\ui\Button.cpp">
       <Filter>ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ui\Menu.cpp">
+    <ClCompile Include="..\..\src\easy2d\ui\Menu.cpp">
       <Filter>ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\TaskManager.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\TaskManager.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\ActionManager.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\ActionManager.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\logs.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\logs.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Geometry.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Geometry.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\GeometryNode.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\GeometryNode.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\ActionTween.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\ActionTween.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Frames.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Frames.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\EventDispatcher.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\EventDispatcher.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\EventListener.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\EventListener.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Object.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Object.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\DebugNode.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\DebugNode.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\utils\ResLoader.cpp">
+    <ClCompile Include="..\..\src\easy2d\utils\ResLoader.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Application.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Application.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\ActionGroup.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\ActionGroup.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Action.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Action.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\dx\D2DDeviceResources.cpp">
+    <ClCompile Include="..\..\src\easy2d\dx\D2DDeviceResources.cpp">
       <Filter>dx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\dx\D3D11DeviceResources.cpp">
+    <ClCompile Include="..\..\src\easy2d\dx\D3D11DeviceResources.cpp">
       <Filter>dx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\dx\TextRenderer.cpp">
+    <ClCompile Include="..\..\src\easy2d\dx\TextRenderer.cpp">
       <Filter>dx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\dx\D3D10DeviceResources.cpp">
+    <ClCompile Include="..\..\src\easy2d\dx\D3D10DeviceResources.cpp">
       <Filter>dx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\audio\audio.cpp">
+    <ClCompile Include="..\..\src\easy2d\audio\audio.cpp">
       <Filter>audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\audio\Music.cpp">
+    <ClCompile Include="..\..\src\easy2d\audio\Music.cpp">
       <Filter>audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\audio\Player.cpp">
+    <ClCompile Include="..\..\src\easy2d\audio\Player.cpp">
       <Filter>audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\audio\Transcoder.cpp">
+    <ClCompile Include="..\..\src\easy2d\audio\Transcoder.cpp">
       <Filter>audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\audio\Voice.cpp">
+    <ClCompile Include="..\..\src\easy2d\audio\Voice.cpp">
       <Filter>audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\audio\audio-modules.cpp">
+    <ClCompile Include="..\..\src\easy2d\audio\audio-modules.cpp">
       <Filter>audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\core\Layer.cpp">
+    <ClCompile Include="..\..\src\easy2d\core\Layer.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\common\String.cpp">
+    <ClCompile Include="..\..\src\easy2d\common\String.cpp">
       <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
