@@ -18,11 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include "easy2d-audio.h"
 #include "Music.h"
 #include "Transcoder.h"
-#include "audio.h"
-#include "../core/logs.h"
-#include "../core/modules.h"
 
 namespace easy2d
 {

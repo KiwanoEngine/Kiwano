@@ -21,16 +21,27 @@
 #pragma once
 #include "../macros.h"
 #include <utility>
+#include <type_traits>
 
 namespace easy2d
 {
-	template <typename T>
-	class IntrusivePtr
+	template <typename _Ty, typename _Manager, bool _Enable>
+	class IntrusivePtr;
+
+	template <typename _Ty, typename _Manager>
+	class IntrusivePtr<_Ty, _Manager, false>;
+
+
+	template <typename _Ty, typename _Manager>
+	using RealIntrusivePtr = IntrusivePtr<_Ty, _Manager, true>;
+
+	template <typename _Ty, typename _Manager>
+	class IntrusivePtr<_Ty, _Manager, true>
 	{
-		T* ptr_{ nullptr };
+		_Ty* ptr_{ nullptr };
 
 	public:
-		using Type = T;
+		using Type = _Ty;
 
 		IntrusivePtr() E2D_NOEXCEPT {}
 
@@ -38,20 +49,20 @@ namespace easy2d
 
 		IntrusivePtr(Type* p) E2D_NOEXCEPT : ptr_(p)
 		{
-			IntrusivePtrAddRef(ptr_);
+			typename _Manager::AddRef(ptr_);
 		}
 
 		IntrusivePtr(const IntrusivePtr& other) E2D_NOEXCEPT
 			: ptr_(other.ptr_)
 		{
-			IntrusivePtrAddRef(ptr_);
+			typename _Manager::AddRef(ptr_);
 		}
 
-		template <typename U>
-		IntrusivePtr(const IntrusivePtr<U>& other) E2D_NOEXCEPT
+		template <typename _UTy>
+		IntrusivePtr(const RealIntrusivePtr<_UTy, _Manager>& other) E2D_NOEXCEPT
 			: ptr_(other.Get())
 		{
-			IntrusivePtrAddRef(ptr_);
+			typename _Manager::AddRef(ptr_);
 		}
 
 		IntrusivePtr(IntrusivePtr&& other) E2D_NOEXCEPT
@@ -62,7 +73,7 @@ namespace easy2d
 
 		~IntrusivePtr() E2D_NOEXCEPT
 		{
-			IntrusivePtrRelease(ptr_);
+			typename _Manager::Release(ptr_);
 		}
 
 		inline Type* Get() const E2D_NOEXCEPT { return ptr_; }
@@ -108,7 +119,7 @@ namespace easy2d
 
 		inline IntrusivePtr& operator =(IntrusivePtr&& other) E2D_NOEXCEPT
 		{
-			IntrusivePtrRelease(ptr_);
+			typename _Manager::Release(ptr_);
 			ptr_ = other.ptr_;
 			other.ptr_ = nullptr;
 			return *this;
@@ -129,76 +140,76 @@ namespace easy2d
 		}
 	};
 
-	template<class T, class U>
-	inline bool operator==(IntrusivePtr<T> const& lhs, IntrusivePtr<U> const& rhs) E2D_NOEXCEPT
+	template <class _Ty, class _UTy, class _Manager>
+	inline bool operator==(RealIntrusivePtr<_Ty, _Manager> const& lhs, RealIntrusivePtr<_UTy, _Manager> const& rhs) E2D_NOEXCEPT
 	{
 		return lhs.Get() == rhs.Get();
 	}
 
-	template<class T, class U>
-	inline bool operator!=(IntrusivePtr<T> const& lhs, IntrusivePtr<U> const& rhs) E2D_NOEXCEPT
+	template <class _Ty, class _UTy, class _Manager>
+	inline bool operator!=(RealIntrusivePtr<_Ty, _Manager> const& lhs, RealIntrusivePtr<_UTy, _Manager> const& rhs) E2D_NOEXCEPT
 	{
 		return lhs.Get() != rhs.Get();
 	}
 
-	template<class T, class U>
-	inline bool operator<(IntrusivePtr<T> const& lhs, IntrusivePtr<U> const& rhs) E2D_NOEXCEPT
+	template <class _Ty, class _UTy, class _Manager>
+	inline bool operator<(RealIntrusivePtr<_Ty, _Manager> const& lhs, RealIntrusivePtr<_UTy, _Manager> const& rhs) E2D_NOEXCEPT
 	{
 		return lhs.Get() < rhs.Get();
 	}
 
-	template<class T>
-	inline bool operator==(IntrusivePtr<T> const& lhs, T* rhs) E2D_NOEXCEPT
+	template <class _Ty, class _Manager>
+	inline bool operator==(RealIntrusivePtr<_Ty, _Manager> const& lhs, _Ty* rhs) E2D_NOEXCEPT
 	{
 		return lhs.Get() == rhs;
 	}
 
-	template<class T>
-	inline bool operator!=(IntrusivePtr<T> const& lhs, T* rhs) E2D_NOEXCEPT
+	template <class _Ty, class _Manager>
+	inline bool operator!=(RealIntrusivePtr<_Ty, _Manager> const& lhs, _Ty* rhs) E2D_NOEXCEPT
 	{
 		return lhs.Get() != rhs;
 	}
 
-	template<class T>
-	inline bool operator==(T* lhs, IntrusivePtr<T> const& rhs) E2D_NOEXCEPT
+	template <class _Ty, class _Manager>
+	inline bool operator==(_Ty* lhs, RealIntrusivePtr<_Ty, _Manager> const& rhs) E2D_NOEXCEPT
 	{
 		return lhs == rhs.Get();
 	}
 
-	template<class T>
-	inline bool operator!=(T* lhs, IntrusivePtr<T> const& rhs) E2D_NOEXCEPT
+	template <class _Ty, class _Manager>
+	inline bool operator!=(_Ty* lhs, RealIntrusivePtr<_Ty, _Manager> const& rhs) E2D_NOEXCEPT
 	{
 		return lhs != rhs.Get();
 	}
 
-	template<class T>
-	inline bool operator==(IntrusivePtr<T> const& lhs, nullptr_t) E2D_NOEXCEPT
+	template <class _Ty, class _Manager>
+	inline bool operator==(RealIntrusivePtr<_Ty, _Manager> const& lhs, nullptr_t) E2D_NOEXCEPT
 	{
 		return !static_cast<bool>(lhs);
 	}
 
-	template<class T>
-	inline bool operator!=(IntrusivePtr<T> const& lhs, nullptr_t) E2D_NOEXCEPT
+	template <class _Ty, class _Manager>
+	inline bool operator!=(RealIntrusivePtr<_Ty, _Manager> const& lhs, nullptr_t) E2D_NOEXCEPT
 	{
 		return static_cast<bool>(lhs);
 	}
 
-	template<class T>
-	inline bool operator==(nullptr_t, IntrusivePtr<T> const& rhs) E2D_NOEXCEPT
+	template <class _Ty, class _Manager>
+	inline bool operator==(nullptr_t, RealIntrusivePtr<_Ty, _Manager> const& rhs) E2D_NOEXCEPT
 	{
 		return !static_cast<bool>(rhs);
 	}
 
-	template<class T>
-	inline bool operator!=(nullptr_t, IntrusivePtr<T> const& rhs) E2D_NOEXCEPT
+	template <class _Ty, class _Manager>
+	inline bool operator!=(nullptr_t, RealIntrusivePtr<_Ty, _Manager> const& rhs) E2D_NOEXCEPT
 	{
 		return static_cast<bool>(rhs);
 	}
 
 	// template class cannot specialize std::swap,
 	// so implement a swap function in easy2d namespace
-	template<class T>
-	inline void swap(IntrusivePtr<T>& lhs, IntrusivePtr<T>& rhs) E2D_NOEXCEPT
+	template <class _Ty, class _Manager>
+	inline void swap(RealIntrusivePtr<_Ty, _Manager>& lhs, RealIntrusivePtr<_Ty, _Manager>& rhs) E2D_NOEXCEPT
 	{
 		lhs.Swap(rhs);
 	}

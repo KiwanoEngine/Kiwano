@@ -16,9 +16,6 @@
     <Filter Include="dx">
       <UniqueIdentifier>{a9793a75-3212-4e31-a443-b23f18a1e136}</UniqueIdentifier>
     </Filter>
-    <Filter Include="audio">
-      <UniqueIdentifier>{836608a6-7443-48f9-8acd-18d3ba664348}</UniqueIdentifier>
-    </Filter>
     <Filter Include="common">
       <UniqueIdentifier>{86e2d0f2-a9d0-4456-b6a5-d480228bbf82}</UniqueIdentifier>
     </Filter>
@@ -196,26 +193,8 @@
     <ClInclude Include="..\..\src\easy2d\dx\D3D10DeviceResources.h">
       <Filter>dx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\easy2d\audio\audio.h">
-      <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\easy2d\audio\Music.h">
-      <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\easy2d\audio\Player.h">
-      <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\easy2d\audio\Transcoder.h">
-      <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\easy2d\audio\Voice.h">
-      <Filter>audio</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\easy2d\core\Component.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\easy2d\audio\audio-modules.h">
-      <Filter>audio</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\easy2d\core\Layer.h">
       <Filter>core</Filter>
@@ -370,24 +349,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\easy2d\dx\D3D10DeviceResources.cpp">
       <Filter>dx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\easy2d\audio\audio.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\easy2d\audio\Music.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\easy2d\audio\Player.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\easy2d\audio\Transcoder.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\easy2d\audio\Voice.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\easy2d\audio\audio-modules.cpp">
-      <Filter>audio</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\easy2d\core\Layer.cpp">
       <Filter>core</Filter>

@@ -21,21 +21,25 @@
 #pragma once
 #include "IntrusivePtr.hpp"
 #include <Unknwnbase.h>
+#include <type_traits>
 
 namespace easy2d
 {
+	struct ComPtrManager
+	{
+		static inline void AddRef(IUnknown* ptr)
+		{
+			if (ptr) ptr->AddRef();
+		}
+
+		static inline void Release(IUnknown* ptr)
+		{
+			if (ptr) ptr->Release();
+		}
+	};
+
 	// ComPtr<> is a smart pointer for COM
 	template <typename _Ty>
-	using ComPtr = IntrusivePtr<_Ty>;
-
-	inline void IntrusivePtrAddRef(IUnknown* ptr)
-	{
-		if (ptr) { ptr->AddRef(); }
-	}
-
-	inline void IntrusivePtrRelease(IUnknown* ptr)
-	{
-		if (ptr) { ptr->Release(); }
-	}
+	using ComPtr = IntrusivePtr<_Ty, ComPtrManager, ::std::is_base_of<IUnknown, _Ty>::value>;
 
 }

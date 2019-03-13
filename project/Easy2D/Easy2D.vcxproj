@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\src\easy2d\audio\audio.h" />
-    <ClInclude Include="..\..\src\easy2d\audio\audio-modules.h" />
-    <ClInclude Include="..\..\src\easy2d\audio\Music.h" />
-    <ClInclude Include="..\..\src\easy2d\audio\Player.h" />
-    <ClInclude Include="..\..\src\easy2d\audio\Transcoder.h" />
-    <ClInclude Include="..\..\src\easy2d\audio\Voice.h" />
     <ClInclude Include="..\..\src\easy2d\common\Array.h" />
     <ClInclude Include="..\..\src\easy2d\common\closure.hpp" />
     <ClInclude Include="..\..\src\easy2d\common\ComPtr.hpp" />
@@ -80,12 +74,6 @@
     <ClInclude Include="..\..\src\easy2d\utils\ResLoader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\easy2d\audio\audio.cpp" />
-    <ClCompile Include="..\..\src\easy2d\audio\audio-modules.cpp" />
-    <ClCompile Include="..\..\src\easy2d\audio\Music.cpp" />
-    <ClCompile Include="..\..\src\easy2d\audio\Player.cpp" />
-    <ClCompile Include="..\..\src\easy2d\audio\Transcoder.cpp" />
-    <ClCompile Include="..\..\src\easy2d\audio\Voice.cpp" />
     <ClCompile Include="..\..\src\easy2d\common\String.cpp" />
     <ClCompile Include="..\..\src\easy2d\core\Action.cpp" />
     <ClCompile Include="..\..\src\easy2d\core\ActionGroup.cpp" />
@@ -150,12 +138,14 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}</ProjectGuid>
     <RootNamespace>Easy2D</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>

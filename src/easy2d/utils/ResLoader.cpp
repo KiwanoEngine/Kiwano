@@ -22,7 +22,6 @@
 #include "../core/modules.h"
 #include "../core/Image.h"
 #include "../core/Frames.h"
-#include "../audio/Music.h"
 
 namespace easy2d
 {
@@ -192,30 +191,6 @@ namespace easy2d
 		return false;
 	}
 
-	bool ResLoader::AddMusic(String const & id, Resource const & music)
-	{
-		MusicPtr ptr = new (std::nothrow) Music;
-		if (ptr)
-		{
-			if (ptr->Load(LocateRes(music, search_paths_)))
-			{
-				res_.insert(std::make_pair(id, ptr));
-				return true;
-			}
-		}
-		return false;
-	}
-
-	bool ResLoader::AddMusic(String const & id, MusicPtr const & music)
-	{
-		if (music)
-		{
-			res_.insert(std::make_pair(id, music));
-			return true;
-		}
-		return false;
-	}
-
 	bool ResLoader::AddObj(String const& id, ObjectPtr const& obj)
 	{
 		if (obj)
@@ -234,11 +209,6 @@ namespace easy2d
 	FramesPtr ResLoader::GetFrames(String const & id) const
 	{
 		return Get<Frames*>(id);
-	}
-
-	MusicPtr ResLoader::GetMusic(String const & id) const
-	{
-		return Get<Music*>(id);
 	}
 
 	ObjectPtr ResLoader::GetObj(String const & id) const

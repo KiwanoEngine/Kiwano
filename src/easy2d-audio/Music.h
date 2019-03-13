@@ -19,8 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/include-forwards.h"
-#include "../core/Resource.h"
 #include "Voice.h"
 
 namespace easy2d

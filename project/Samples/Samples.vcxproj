@@ -22,12 +22,14 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{45F5738D-CDF2-4024-974D-25B64F9043DE}</ProjectGuid>
     <RootNamespace>Samples</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -82,7 +84,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../src/easy2d</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src/easy2d;../../src/easy2d-audio;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -134,9 +136,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\easy2d-audio\audio-modules.cpp" />
+    <ClCompile Include="..\..\src\easy2d-audio\audio.cpp" />
+    <ClCompile Include="..\..\src\easy2d-audio\Music.cpp" />
+    <ClCompile Include="..\..\src\easy2d-audio\Player.cpp" />
+    <ClCompile Include="..\..\src\easy2d-audio\Transcoder.cpp" />
+    <ClCompile Include="..\..\src\easy2d-audio\Voice.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\easy2d-audio\audio-modules.h" />
+    <ClInclude Include="..\..\src\easy2d-audio\audio.h" />
+    <ClInclude Include="..\..\src\easy2d-audio\easy2d-audio.h" />
+    <ClInclude Include="..\..\src\easy2d-audio\Music.h" />
+    <ClInclude Include="..\..\src\easy2d-audio\Player.h" />
+    <ClInclude Include="..\..\src\easy2d-audio\Transcoder.h" />
+    <ClInclude Include="..\..\src\easy2d-audio\Voice.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="Demo1.h" />
     <ClInclude Include="Demo2.h" />

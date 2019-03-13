@@ -49,14 +49,4 @@ namespace easy2d
 	protected:
 		long ref_count_;
 	};
-
-	inline void IntrusivePtrAddRef(RefCounter* ptr)
-	{
-		if (ptr) ptr->Retain();
-	}
-
-	inline void IntrusivePtrRelease(RefCounter* ptr)
-	{
-		if (ptr) ptr->Release();
-	}
 }

@@ -2,6 +2,24 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\src\easy2d-audio\audio.cpp">
+      <Filter>easy2d-audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\easy2d-audio\audio-modules.cpp">
+      <Filter>easy2d-audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\easy2d-audio\Music.cpp">
+      <Filter>easy2d-audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\easy2d-audio\Player.cpp">
+      <Filter>easy2d-audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\easy2d-audio\Transcoder.cpp">
+      <Filter>easy2d-audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\easy2d-audio\Voice.cpp">
+      <Filter>easy2d-audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include-forwards.h" />
@@ -9,5 +27,31 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="Demo2.h" />
     <ClInclude Include="Demo3.h" />
+    <ClInclude Include="..\..\src\easy2d-audio\audio.h">
+      <Filter>easy2d-audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\easy2d-audio\audio-modules.h">
+      <Filter>easy2d-audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\easy2d-audio\easy2d-audio.h">
+      <Filter>easy2d-audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\easy2d-audio\Music.h">
+      <Filter>easy2d-audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\easy2d-audio\Player.h">
+      <Filter>easy2d-audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\easy2d-audio\Transcoder.h">
+      <Filter>easy2d-audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\easy2d-audio\Voice.h">
+      <Filter>easy2d-audio</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="easy2d-audio">
+      <UniqueIdentifier>{4643dcc9-9834-424c-bd04-612350980651}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
