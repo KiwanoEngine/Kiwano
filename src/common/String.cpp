@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "String.h"
-#include <cstring>
 
 namespace easy2d
 {
@@ -135,6 +134,12 @@ namespace easy2d
 		assign(cstr, count);
 	}
 
+	String::String(size_type count, wchar_t ch)
+		: String()
+	{
+		assign(count, ch);
+	}
+
 	String::String(std::wstring const & str)
 		: String(str.c_str(), false)
 	{
@@ -171,18 +176,13 @@ namespace easy2d
 			if (count > capacity_)
 			{
 				destroy();
-
-				capacity_ = size_ = count;
-				str_ = allocate(capacity_ + 1);
-
-				traits::assign(str_, count, ch);
+				str_ = allocate(count + 1);
+				capacity_ = count;
 			}
-			else
-			{
-				capacity_ = size_ = count;
-				traits::assign(str_, count, ch);
-			}
-			traits::assign(str_[size_], wchar_t());
+			size_ = count;
+
+			traits::assign(str_, count, ch);
+			traits::assign(str_[size_], value_type());
 			
 		}
 		else
@@ -201,18 +201,13 @@ namespace easy2d
 			if (count > capacity_)
 			{
 				destroy();
-
-				capacity_ = size_ = count;
-				str_ = allocate(capacity_ + 1);
-
-				traits::move(str_, cstr, size_);
+				str_ = allocate(count + 1);
+				capacity_ = count;
 			}
-			else
-			{
-				capacity_ = size_ = count;
-				traits::move(str_, cstr, size_);
-			}
-			traits::assign(str_[size_], wchar_t());
+			size_ = count;
+
+			traits::move(str_, cstr, size_);
+			traits::assign(str_[size_], value_type());
 		}
 		else
 		{
@@ -375,7 +370,7 @@ namespace easy2d
 
 		traits::move(new_str, str_, size_);
 		traits::assign(new_str + size_, count, ch);
-		traits::assign(new_str[new_size], wchar_t());
+		traits::assign(new_str[new_size], value_type());
 
 		destroy();
 
@@ -395,7 +390,7 @@ namespace easy2d
 
 		traits::move(new_str, str_, size_);
 		traits::move(new_str + size_, cstr, count);
-		traits::assign(new_str[new_size], wchar_t());
+		traits::assign(new_str[new_size], value_type());
 
 		destroy();
 
@@ -420,7 +415,7 @@ namespace easy2d
 
 		traits::move(new_str, str_, size_);
 		traits::move(new_str + size_, other.begin() + pos, count);
-		traits::assign(new_str[new_size], wchar_t());
+		traits::assign(new_str[new_size], value_type());
 
 		destroy();
 
