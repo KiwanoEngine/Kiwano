@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="audio.cpp" />
+    <ClCompile Include="audio-modules.cpp" />
+    <ClCompile Include="Music.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Transcoder.cpp" />
+    <ClCompile Include="Voice.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="audio.h" />
+    <ClInclude Include="audio-modules.h" />
+    <ClInclude Include="easy2d-audio.h" />
+    <ClInclude Include="Music.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Transcoder.h" />
+    <ClInclude Include="Voice.h" />
+  </ItemGroup>
+</Project>
