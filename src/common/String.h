@@ -47,16 +47,9 @@ namespace easy2d
 		String(const wchar_t* cstr, size_type count);
 		String(std::wstring const& str);
 		String(String const& rhs);
-		String(String const& rhs, size_type pos, size_type count);
+		String(String const& rhs, size_type pos, size_type count = npos);
 		String(String && rhs);
 		~String();
-
-		String& append(size_type count, wchar_t ch);
-		String& append(const wchar_t* cstr, size_type count);
-		String& append(String const& other, size_type pos, size_type count);
-		inline String& append(const wchar_t* cstr)							{ return append(cstr, npos); }
-		inline String& append(std::wstring const& str)						{ return append(str.c_str()); }
-		inline String& append(String const& other)							{ return append(other.const_str_, 0, npos); }
 
 		inline const wchar_t*	c_str() const			{ return const_str_ ? const_str_ : L""; }
 		inline wchar_t			at(size_t i) const		{ return (*this)[i]; }
@@ -70,11 +63,15 @@ namespace easy2d
 		void reserve(const size_type new_cap = 0);
 		inline void resize(const size_type new_size, const wchar_t ch = wchar_t())	{ check_operability(); if (new_size < size_) str_[size_ = new_size] = wchar_t(); else append(new_size - size_, ch); }
 
-		void swap(String& rhs);
-		size_t hash() const;
-
 		int compare(const wchar_t* const str) const;
 		inline int compare(String const& str) const																	{ return compare(str.c_str()); }
+
+		String& append(size_type count, wchar_t ch);
+		String& append(const wchar_t* cstr, size_type count);
+		String& append(String const& other, size_type pos, size_type count = npos);
+		inline String& append(const wchar_t* cstr)																	{ return append(cstr, traits::length(cstr)); }
+		inline String& append(std::wstring const& str)																{ return append(str.c_str()); }
+		inline String& append(String const& other)																	{ return append(other.const_str_, 0, npos); }
 
 		size_type find(const wchar_t ch, size_type offset = 0) const;
 		size_type find(const wchar_t* const str, size_type offset, size_type count) const;
@@ -102,21 +99,20 @@ namespace easy2d
 
 		String& assign(size_type count, const wchar_t ch);
 		String& assign(const wchar_t* cstr, size_type count);
-		inline String& assign(const wchar_t* cstr, bool const_str = true)			{ String(cstr, const_str).swap(*this); return *this; }
-		inline String& assign(std::wstring const& str)								{ String{ str }.swap(*this); return *this; }
-		inline String& assign(String const& rhs)									{ String{ rhs }.swap(*this); return *this; }
-		inline String& assign(String const& rhs, size_type pos, size_type count)	{ String(rhs, pos, count).swap(*this); return *this; }
+		inline String& assign(const wchar_t* cstr, bool const_str = true)					{ String(cstr, const_str).swap(*this); return *this; }
+		inline String& assign(std::wstring const& str)										{ String{ str }.swap(*this); return *this; }
+		inline String& assign(String const& rhs)											{ String{ rhs }.swap(*this); return *this; }
+		inline String& assign(String const& rhs, size_type pos, size_type count = npos)		{ String(rhs, pos, count).swap(*this); return *this; }
 
-		String& erase(size_type offset, size_type count);
-		String& erase(size_type offset = 0)											{ return erase(offset, 1); }
-		iterator erase(const const_iterator where)									{ size_type off = where - cbegin(); erase(off, 1); return begin() + off; }
-		iterator erase(const const_iterator first, const const_iterator last)		{ size_type off = first - cbegin(); erase(first - cbegin(), last - first); return begin() + off; }
+		String& erase(size_type offset = 0, size_type count = npos);
+		iterator erase(const const_iterator where)											{ size_type off = where - cbegin(); erase(off, 1); return begin() + off; }
+		iterator erase(const const_iterator first, const const_iterator last)				{ size_type off = first - cbegin(); erase(first - cbegin(), last - first); return begin() + off; }
 
-		String substr(size_type pos = 0, size_type count = npos) const				{ return String(*this, pos, count); }
+		String substr(size_type pos = 0, size_type count = npos) const						{ return String(*this, pos, count); }
 
 		String& insert(size_type index, size_type count, wchar_t ch);
 		String& insert(size_type index, const wchar_t* s, size_type count);
-		String& insert(size_type index, const String& str, size_type off, size_type count);
+		String& insert(size_type index, const String& str, size_type off, size_type count = npos);
 		inline String& insert(size_type index, const wchar_t* s)							{ return insert(index, s, traits::length(s)); }
 		inline String& insert(size_type index, const String& str)							{ return insert(index, str, 0, str.size()); }
 		inline iterator insert(const_iterator pos, size_type count, wchar_t ch)				{ size_type off = pos - cbegin(); insert(off, count, ch); return begin() + off; }
@@ -127,6 +123,10 @@ namespace easy2d
 
 		std::string to_string() const;
 		std::wstring to_wstring() const;
+
+		void swap(String& rhs);
+
+		size_t hash() const;
 
 	public:
 		inline iterator					begin()			{ check_operability(); return iterator(str_); }
@@ -176,27 +176,18 @@ namespace easy2d
 		inline bool operator!=(const wchar_t* cstr)						{ return compare(cstr) != 0; }
 
 	public:
-		template <class _Alloc>
-		friend std::basic_ostream<traits::char_type, traits>& operator<<(std::basic_ostream<traits::char_type, traits>& os, const String& str);
-
-		template <class _Alloc>
-		friend std::basic_istream<traits::char_type, traits>& operator>>(std::basic_istream<traits::char_type, traits>& os, String& str);
-
-	public:
 		static const String::size_type npos;
 
 	private:
 		wchar_t* allocate(size_type count);
-
 		void deallocate(wchar_t*& ptr, size_type count);
 
 		void destroy();
 
 		void discard_const_data();
-
 		void check_operability();
-
-		void check_offset(size_type offset) const { if (offset >= size()) throw std::out_of_range("invalid string position"); }
+		void check_offset(size_type offset) const							{ if (offset > size()) throw std::out_of_range("invalid string position"); }
+		size_type clamp_suffix_size(size_type off, size_type count) const	{ return std::min(size() - off, count); }
 
 	private:
 		union
@@ -231,20 +222,20 @@ namespace easy2d
 
 	inline bool operator<(String const& lhs, String const& rhs) { return lhs.compare(rhs) < 0; }
 	inline bool operator>(String const& lhs, String const& rhs) { return lhs.compare(rhs) > 0; }
+	inline bool operator<=(String const& lhs, String const& rhs) { return lhs.compare(rhs) <= 0; }
+	inline bool operator>=(String const& lhs, String const& rhs) { return lhs.compare(rhs) >= 0; }
 
 	//
 	// operator<<>> for String
 	//
 
-	template<class _Alloc>
-	std::basic_ostream<String::traits::char_type, String::traits>&
+	inline std::basic_ostream<String::traits::char_type, String::traits>&
 		operator<<(std::basic_ostream<String::traits::char_type, String::traits>& os, const String & str)
 	{
 		return os << str.c_str();
 	}
 
-	template<class _Alloc>
-	std::basic_istream<String::traits::char_type, String::traits>&
+	inline std::basic_istream<String::traits::char_type, String::traits>&
 		operator>>(std::basic_istream<String::traits::char_type, String::traits>& is, String & str)
 	{
 		using Ctype = std::ctype<wchar_t>;

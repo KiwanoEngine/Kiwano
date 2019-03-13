@@ -119,7 +119,7 @@ namespace easy2d
 	{
 		if (operable_)
 		{
-			assign(cstr, npos);
+			assign(cstr, traits::length(cstr));
 		}
 		else
 		{
@@ -130,10 +130,7 @@ namespace easy2d
 	}
 
 	String::String(const wchar_t * cstr, size_type count)
-		: size_(0)
-		, capacity_(0)
-		, operable_(true)
-		, str_(nullptr)
+		: String()
 	{
 		assign(cstr, count);
 	}
@@ -149,8 +146,9 @@ namespace easy2d
 	}
 
 	String::String(String const & rhs, size_type pos, size_type count)
-		: String(rhs.str_ + pos, count)
+		: String()
 	{
+		assign(rhs, pos, count);
 	}
 
 	String::String(String && rhs)
@@ -168,17 +166,30 @@ namespace easy2d
 	{
 		discard_const_data();
 
-		destroy();
-
 		if (count != 0)
 		{
-			size_ = count;
-			capacity_ = size_;
-			str_ = new wchar_t[capacity_ + 1];
+			if (count > capacity_)
+			{
+				destroy();
 
-			traits::assign(str_, count, ch);
-			traits::assign(str_[count], wchar_t());
+				capacity_ = size_ = count;
+				str_ = allocate(capacity_ + 1);
+
+				traits::assign(str_, count, ch);
+			}
+			else
+			{
+				capacity_ = size_ = count;
+				traits::assign(str_, count, ch);
+			}
+			traits::assign(str_[size_], wchar_t());
+			
 		}
+		else
+		{
+			clear();
+		}
+		return (*this);
 	}
 
 	inline String & String::assign(const wchar_t * cstr, size_type count)
@@ -187,19 +198,26 @@ namespace easy2d
 
 		if (cstr)
 		{
-			size_ = std::min(traits::length(cstr), count);
-			if (size_)
+			if (count > capacity_)
 			{
-				capacity_ = size_;
+				destroy();
+
+				capacity_ = size_ = count;
 				str_ = allocate(capacity_ + 1);
 
 				traits::move(str_, cstr, size_);
-				traits::assign(str_[size_], wchar_t());
-				return (*this);
 			}
+			else
+			{
+				capacity_ = size_ = count;
+				traits::move(str_, cstr, size_);
+			}
+			traits::assign(str_[size_], wchar_t());
 		}
-
-		destroy();
+		else
+		{
+			clear();
+		}
 		return (*this);
 	}
 
@@ -208,15 +226,20 @@ namespace easy2d
 		if (count == 0)
 			return (*this);
 
-		if (empty())
-			throw std::out_of_range("erase() called on empty string");
-
 		check_offset(offset);
 		check_operability();
 
-		count = std::min(count, size_ - offset);
-		traits::move(str_ + offset, str_ + offset + count, size_ - offset - count + 1);
+		count = clamp_suffix_size(offset, count);
 
+		if (count == 0)
+		{
+			clear();
+			return (*this);
+		}
+
+		size_type new_size = size_ - count;
+		iterator erase_at = begin() + offset;
+		traits::move(erase_at, erase_at + count, new_size - offset + 1);
 		return (*this);
 	}
 
@@ -270,8 +293,6 @@ namespace easy2d
 
 		check_operability();
 
-		count = std::min(traits::length(cstr), count);
-
 		wchar_t* const old_ptr = str_;
 		const size_type old_size = size_;
 		const size_type old_capacity = capacity_;
@@ -312,7 +333,7 @@ namespace easy2d
 
 		check_operability();
 
-		count = std::min(str.size() - off, count);
+		count = clamp_suffix_size(off, count);
 
 		wchar_t* const old_ptr = str_;
 		const size_type old_size = size_;
@@ -368,8 +389,6 @@ namespace easy2d
 	{
 		check_operability();
 
-		count = std::min(traits::length(cstr), count);
-
 		size_t new_size = size_ + count;
 		size_t new_cap = new_size + 1;
 		wchar_t* new_str = allocate(new_cap);
@@ -390,8 +409,10 @@ namespace easy2d
 	{
 		check_operability();
 
-		pos = std::min(size(), pos);
-		count = std::min(other.size(), count);
+		if (pos >= other.size())
+			return (*this);
+
+		count = other.clamp_suffix_size(pos, count);
 
 		size_t new_size = size_ + count;
 		size_t new_cap = new_size + 1;
@@ -504,7 +525,7 @@ namespace easy2d
 		check_offset(pos);
 		check_operability();
 
-		count = std::min(count, size_ - pos);
+		count = clamp_suffix_size(pos, count);
 		if (count == count2)
 		{
 			traits::move(str_ + pos, cstr, count2);
@@ -549,7 +570,7 @@ namespace easy2d
 		check_offset(pos);
 		check_operability();
 
-		count = std::min(count, size_ - pos);
+		count = clamp_suffix_size(pos, count);
 		if (count == count2)
 		{
 			traits::assign(str_ + pos, count2, ch);
