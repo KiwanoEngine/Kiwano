@@ -68,7 +68,7 @@ namespace easy2d
 			template<int... _Num>
 			static inline std::function<_Ret(_Args...)> MakeFunc(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...), Seq<_Num...>)
 			{
-				return std::bind(_Func, _Ptr, typename std::_Ph<_Num + 1>()...);
+				return std::bind(_Func, _Ptr, std::_Ph<_Num + 1>()...);
 			}
 		};
 	}

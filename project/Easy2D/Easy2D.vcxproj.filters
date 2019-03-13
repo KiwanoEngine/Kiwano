@@ -118,9 +118,6 @@
     <ClInclude Include="..\..\src\core\Transform.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utils\string.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\core\Geometry.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -249,6 +246,9 @@
     <ClInclude Include="..\..\src\core\helper.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\common\String.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\core\Animation.cpp">
@@ -323,9 +323,6 @@
     <ClCompile Include="..\..\src\core\logs.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\utils\string.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\core\Geometry.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -394,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\core\Layer.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\String.cpp">
+      <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

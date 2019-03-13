@@ -21,6 +21,7 @@
 #pragma once
 #include "RefCounter.hpp"
 #include "../common/Array.h"
+#include "../common/String.h"
 #include "../common/IntrusivePtr.hpp"
 #include <set>
 #include <map>
@@ -44,7 +45,6 @@
 
 namespace easy2d
 {
-	using String = std::wstring;
 	using StringStream = std::wstringstream;
 
 	template<typename Type1, typename Type2>

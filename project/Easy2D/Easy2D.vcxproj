@@ -14,6 +14,7 @@
     <ClInclude Include="..\..\src\common\IntrusivePtr.hpp" />
     <ClInclude Include="..\..\src\common\noncopyable.hpp" />
     <ClInclude Include="..\..\src\common\Singleton.hpp" />
+    <ClInclude Include="..\..\src\common\String.h" />
     <ClInclude Include="..\..\src\config.h" />
     <ClInclude Include="..\..\src\core\Action.h" />
     <ClInclude Include="..\..\src\core\ActionGroup.h" />
@@ -77,7 +78,6 @@
     <ClInclude Include="..\..\src\utils\File.h" />
     <ClInclude Include="..\..\src\utils\Path.h" />
     <ClInclude Include="..\..\src\utils\ResLoader.h" />
-    <ClInclude Include="..\..\src\utils\string.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\audio\audio.cpp" />
@@ -86,6 +86,7 @@
     <ClCompile Include="..\..\src\audio\Player.cpp" />
     <ClCompile Include="..\..\src\audio\Transcoder.cpp" />
     <ClCompile Include="..\..\src\audio\Voice.cpp" />
+    <ClCompile Include="..\..\src\common\String.cpp" />
     <ClCompile Include="..\..\src\core\Action.cpp" />
     <ClCompile Include="..\..\src\core\ActionGroup.cpp" />
     <ClCompile Include="..\..\src\core\ActionTween.cpp" />
@@ -127,7 +128,6 @@
     <ClCompile Include="..\..\src\utils\File.cpp" />
     <ClCompile Include="..\..\src\utils\Path.cpp" />
     <ClCompile Include="..\..\src\utils\ResLoader.cpp" />
-    <ClCompile Include="..\..\src\utils\string.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">

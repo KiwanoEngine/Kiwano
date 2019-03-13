@@ -52,12 +52,12 @@ namespace easy2d
 
 	public:
 		HRESULT Create(
-			String	title,
-			int		width,
-			int		height,
-			LPCWSTR	icon,
-			bool	fullscreen,
-			WNDPROC	proc
+			String const&	title,
+			int				width,
+			int				height,
+			LPCWSTR			icon,
+			bool			fullscreen,
+			WNDPROC			proc
 		);
 
 		void Prepare();
