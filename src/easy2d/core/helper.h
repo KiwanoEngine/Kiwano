@@ -29,18 +29,10 @@
 #include <unordered_set>
 #include <unordered_map>
 
-
 #ifndef E2D_DECLARE_SMART_PTR
-#define E2D_DECLARE_SMART_PTR(class_name)\
-	class class_name;\
-	using class_name##Ptr = ::easy2d::IntrusivePtr< class_name >
-
-#define E2D_DECLARE_NS_SMART_PTR(ns_name, class_name)\
-	namespace ns_name\
-	{\
-		class class_name; \
-		using class_name##Ptr = ::easy2d::IntrusivePtr< class_name >;\
-	}
+#define E2D_DECLARE_SMART_PTR(CLASS)\
+	class CLASS;\
+	using CLASS##Ptr = ::easy2d::SmartPtr< CLASS >
 #endif
 
 namespace easy2d
@@ -68,6 +60,23 @@ namespace easy2d
 
 namespace easy2d
 {
+	struct DefaultIntrusivePtrManager
+	{
+		static inline void AddRef(RefCounter* ptr)
+		{
+			if (ptr) ptr->Retain();
+		}
+
+		static inline void Release(RefCounter* ptr)
+		{
+			if (ptr) ptr->Release();
+		}
+	};
+
+	template <typename _Ty>
+	using SmartPtr = IntrusivePtr<_Ty, DefaultIntrusivePtrManager, true>;
+
+
 	E2D_DECLARE_SMART_PTR(Object);
 	E2D_DECLARE_SMART_PTR(Image);
 	E2D_DECLARE_SMART_PTR(Task);
@@ -119,26 +128,3 @@ namespace easy2d
 	E2D_DECLARE_SMART_PTR(Button);
 	E2D_DECLARE_SMART_PTR(Menu);
 }
-
-namespace easy2d
-{
-	class __SmartPointerMaker
-	{
-	public:
-		static inline __SmartPointerMaker const& Instance()
-		{
-			static __SmartPointerMaker maker;
-			return maker;
-		}
-
-		template<typename T>
-		inline IntrusivePtr<T> operator- (T* ptr) const
-		{
-			return IntrusivePtr<T>(ptr);
-		}
-	};
-}
-
-#ifndef E_NEW
-#	define E_NEW (::easy2d::__SmartPointerMaker::Instance()) - new (std::nothrow)
-#endif

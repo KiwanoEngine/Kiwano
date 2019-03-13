@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/Resource.h"
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>

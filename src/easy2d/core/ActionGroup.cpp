@@ -144,41 +144,4 @@ namespace easy2d
 		return group;
 	}
 
-	//-------------------------------------------------------
-	// ActionSequence
-	//-------------------------------------------------------
-
-	ActionSequence::ActionSequence()
-		: ActionGroup()
-	{
-	}
-
-	ActionSequence::ActionSequence(Array<ActionPtr> const & actions)
-		: ActionGroup(actions, true)
-	{
-	}
-
-	ActionSequence::~ActionSequence()
-	{
-	}
-
-	//-------------------------------------------------------
-	// ActionSpawn
-	//-------------------------------------------------------
-
-	ActionSpawn::ActionSpawn()
-		: ActionGroup()
-	{
-		sequence_ = false;
-	}
-
-	ActionSpawn::ActionSpawn(Array<ActionPtr> const & actions)
-		: ActionGroup(actions, false)
-	{
-	}
-
-	ActionSpawn::~ActionSpawn()
-	{
-	}
-
 }

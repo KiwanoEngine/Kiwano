@@ -19,28 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6152D36C-EA40-4968-A696-244B6CA58395}</ProjectGuid>
-    <RootNamespace>ImGuiSample</RootNamespace>
+    <ProjectGuid>{5D45F66B-BECD-4909-BCFC-C0F3CED9D0A2}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -77,86 +77,81 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../src/easy2d;../../src/easy2d-imgui;../../3rd-party/ImGui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../easy2d</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../src/easy2d;../../src/easy2d-imgui;../../3rd-party/ImGui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../src/easy2d;../../src/easy2d-imgui;../../3rd-party/ImGui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../src/easy2d;../../src/easy2d-imgui;../../3rd-party/ImGui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\3rd-party\ImGui\imgui.cpp" />
-    <ClCompile Include="..\..\3rd-party\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="..\..\3rd-party\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="..\..\3rd-party\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="..\..\src\easy2d-imgui\ImGuiLayer.cpp" />
-    <ClCompile Include="..\..\src\easy2d-imgui\ImGuiView.cpp" />
-    <ClCompile Include="..\..\src\easy2d-imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="audio-modules.cpp" />
+    <ClCompile Include="audio.cpp" />
+    <ClCompile Include="Music.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Transcoder.cpp" />
+    <ClCompile Include="Voice.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\3rd-party\ImGui\imconfig.h" />
-    <ClInclude Include="..\..\3rd-party\ImGui\imgui.h" />
-    <ClInclude Include="..\..\3rd-party\ImGui\imgui_internal.h" />
-    <ClInclude Include="..\..\3rd-party\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="..\..\3rd-party\ImGui\imstb_textedit.h" />
-    <ClInclude Include="..\..\3rd-party\ImGui\imstb_truetype.h" />
-    <ClInclude Include="..\..\src\easy2d-imgui\easy2d-imgui.h" />
-    <ClInclude Include="..\..\src\easy2d-imgui\ImGuiLayer.h" />
-    <ClInclude Include="..\..\src\easy2d-imgui\ImGuiView.h" />
-    <ClInclude Include="..\..\src\easy2d-imgui\imgui_impl_dx11.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Easy2D\Easy2D.vcxproj">
-      <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
-    </ProjectReference>
+    <ClInclude Include="audio-modules.h" />
+    <ClInclude Include="audio.h" />
+    <ClInclude Include="easy2d-audio.h" />
+    <ClInclude Include="Music.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Transcoder.h" />
+    <ClInclude Include="Voice.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -33,12 +33,61 @@ namespace easy2d
 	class E2D_API String
 	{
 	public:
+		// Iterator
+		template <typename _Ty>
+		struct _Iterator
+		{
+			using iterator_category = typename std::iterator_traits<_Ty*>::iterator_category;
+			using value_type = typename std::iterator_traits<_Ty*>::value_type;
+			using difference_type = typename std::iterator_traits<_Ty*>::difference_type;
+			using pointer = typename std::iterator_traits<_Ty*>::pointer;
+			using reference = typename std::iterator_traits<_Ty*>::reference;
+
+			// disable warning 4996
+			using _Unchecked_type = _Ty;
+
+			inline _Iterator(pointer base = nullptr) : base_(base) {}
+
+			inline _Iterator& operator++()									{ ++base_; return (*this); }
+			inline _Iterator operator++(int)								{ _Iterator old = (*this); ++(*this); return old; }
+
+			inline _Iterator& operator--()									{ --base_; return (*this); }
+			inline _Iterator operator--(int)								{ _Iterator old = (*this); --(*this); return old; }
+
+			inline const _Iterator operator+(difference_type off) const		{ return _Iterator(base_ + off); }
+			inline const _Iterator operator-(difference_type off) const		{ return _Iterator(base_ - off); }
+
+			inline _Iterator& operator+=(difference_type off)				{ base_ += off; return (*this); }
+			inline _Iterator& operator-=(difference_type off)				{ base_ -= off; return (*this); }
+
+			inline difference_type operator-(_Iterator const& other) const	{ return base_ - other.base_; }
+
+			inline bool operator==(_Iterator const& other) const			{ return base_ == other.base_; }
+			inline bool operator!=(_Iterator const& other) const			{ return !(*this == other); }
+
+			inline bool operator<(_Iterator const& other) const				{ return base_ < other.base_; }
+			inline bool operator<=(_Iterator const& other) const			{ return base_ <= other.base_; }
+			inline bool operator>(_Iterator const& other) const				{ return base_ > other.base_; }
+			inline bool operator>=(_Iterator const& other) const			{ return base_ >= other.base_; }
+
+			inline reference operator[](difference_type off) const			{ return *(base_ + off); }
+
+			inline operator bool() const									{ return base_ != nullptr; }
+
+			inline reference operator*() const								{ return *base_; }
+			inline pointer base() const										{ return base_; }
+
+		private:
+			pointer base_{ nullptr };
+		};
+
+	public:
 		using value_type = wchar_t;
 		using size_type = size_t;
-		using iterator = value_type * ;
-		using const_iterator = const value_type*;
-		using reference = value_type & ;
+		using reference = value_type &;
 		using const_reference = const value_type &;
+		using iterator = _Iterator<value_type>;
+		using const_iterator = _Iterator<const value_type>;
 		using reverse_iterator = std::reverse_iterator<iterator>;
 		using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 		using traits = std::char_traits<value_type>;
@@ -67,7 +116,7 @@ namespace easy2d
 		inline void				clear()					{ discard_const_data(); if (str_) { str_[0] = value_type(); } size_ = 0; }
 
 		void reserve(const size_type new_cap = 0);
-		inline void resize(const size_type new_size, const wchar_t ch = value_type())	{ check_operability(); if (new_size < size_) str_[size_ = new_size] = value_type(); else append(new_size - size_, ch); }
+		inline void resize(const size_type new_size, const wchar_t ch = value_type())								{ check_operability(); if (new_size < size_) str_[size_ = new_size] = value_type(); else append(new_size - size_, ch); }
 
 		int compare(const wchar_t* const str) const;
 		inline int compare(String const& str) const																	{ return compare(str.c_str()); }
@@ -105,32 +154,32 @@ namespace easy2d
 
 		String& assign(size_type count, const wchar_t ch);
 		String& assign(const wchar_t* cstr, size_type count);
-		inline String& assign(const wchar_t* cstr, bool const_str = true)					{ String(cstr, const_str).swap(*this); return *this; }
-		inline String& assign(std::wstring const& str)										{ String{ str }.swap(*this); return *this; }
-		inline String& assign(String const& rhs)											{ String{ rhs }.swap(*this); return *this; }
-		inline String& assign(String const& rhs, size_type pos, size_type count = npos)		{ String(rhs, pos, count).swap(*this); return *this; }
+		inline String& assign(const wchar_t* cstr, bool const_str = true)											{ String(cstr, const_str).swap(*this); return *this; }
+		inline String& assign(std::wstring const& str)																{ String{ str }.swap(*this); return *this; }
+		inline String& assign(String const& rhs)																	{ String{ rhs }.swap(*this); return *this; }
+		inline String& assign(String const& rhs, size_type pos, size_type count = npos)								{ String(rhs, pos, count).swap(*this); return *this; }
 
 		template <typename _Iter>
-		inline String& assign(_Iter first, _Iter last)										{ assign_iter(first, last); return(*this); }
+		inline String& assign(_Iter first, _Iter last)																{ assign_iter(first, last); return(*this); }
 
 		String& erase(size_type offset = 0, size_type count = npos);
-		iterator erase(const const_iterator where)											{ size_type off = where - cbegin(); erase(off, 1); return begin() + off; }
-		iterator erase(const const_iterator first, const const_iterator last)				{ size_type off = first - cbegin(); erase(first - cbegin(), last - first); return begin() + off; }
+		iterator erase(const const_iterator where)																	{ size_type off = where - cbegin(); erase(off, 1); return begin().base() + off; }
+		iterator erase(const const_iterator first, const const_iterator last)										{ size_type off = first - cbegin(); erase(first - cbegin(), last - first); return begin().base() + off; }
 
-		String substr(size_type pos = 0, size_type count = npos) const						{ return String(*this, pos, count); }
+		String substr(size_type pos = 0, size_type count = npos) const												{ return String(*this, pos, count); }
 
 		String& insert(size_type index, size_type count, wchar_t ch);
 		String& insert(size_type index, const wchar_t* s, size_type count);
 		String& insert(size_type index, const String& str, size_type off, size_type count = npos);
-		inline String& insert(size_type index, const wchar_t* s)							{ return insert(index, s, traits::length(s)); }
-		inline String& insert(size_type index, const String& str)							{ return insert(index, str, 0, str.size()); }
-		inline iterator insert(const_iterator pos, size_type count, wchar_t ch)				{ size_type off = pos - cbegin(); insert(off, count, ch); return begin() + off; }
-		inline iterator insert(const_iterator pos, wchar_t ch)								{ return insert(pos, 1, ch); }
+		inline String& insert(size_type index, const wchar_t* s)													{ return insert(index, s, traits::length(s)); }
+		inline String& insert(size_type index, const String& str)													{ return insert(index, str, 0, str.size()); }
+		inline iterator insert(const_iterator pos, size_type count, wchar_t ch)										{ size_type off = pos - cbegin(); insert(off, count, ch); return begin().base() + off; }
+		inline iterator insert(const_iterator pos, wchar_t ch)														{ return insert(pos, 1, ch); }
 
-		inline void push_back(const wchar_t ch)		{ append(1, ch); }
-		inline wchar_t pop_back()					{ if (empty()) throw std::out_of_range("pop_back() called on empty string"); check_operability(); wchar_t ch = str_[--size_]; str_[size_] = value_type(); return ch; }
+		inline void push_back(const wchar_t ch)																		{ append(1, ch); }
+		inline wchar_t pop_back()																					{ if (empty()) throw std::out_of_range("pop_back() called on empty string"); check_operability(); wchar_t ch = str_[--size_]; str_[size_] = value_type(); return ch; }
 
-		inline size_type copy(wchar_t* cstr, size_type count, size_type pos = 0) const		{ check_offset(pos); if (count == 0 || cstr == const_str_) return 0; count = clamp_suffix_size(pos, count); traits::move(cstr, cbegin() + pos, count); return count; }
+		size_type copy(wchar_t* cstr, size_type count, size_type pos = 0) const;
 
 		std::string to_string() const;
 		std::wstring to_wstring() const;
@@ -140,26 +189,26 @@ namespace easy2d
 		size_t hash() const;
 
 	public:
-		inline iterator					begin()			{ check_operability(); return iterator(str_); }
-		inline const_iterator			begin() const	{ return const_iterator(const_str_); }
-		inline const_iterator			cbegin() const	{ return begin(); }
-		inline iterator					end()			{ check_operability(); return iterator(str_ + size_); }
-		inline const_iterator			end() const		{ return const_iterator(const_str_ + size_); }
-		inline const_iterator			cend() const	{ return end(); }
-		inline reverse_iterator			rbegin()		{ check_operability(); return reverse_iterator(end()); }
-		inline const_reverse_iterator	rbegin() const	{ return const_reverse_iterator(end()); }
-		inline const_reverse_iterator	crbegin() const	{ return rbegin(); }
-		inline reverse_iterator			rend()			{ check_operability(); return reverse_iterator(begin()); }
-		inline const_reverse_iterator	rend() const	{ return const_reverse_iterator(begin()); }
-		inline const_reverse_iterator	crend() const	{ return rend(); }
-		inline reference				front()			{ if (empty()) throw std::out_of_range("front() called on empty string"); check_operability(); return str_[0]; }
-		inline const_reference			front() const	{ if (empty()) throw std::out_of_range("front() called on empty string"); return const_str_[0]; }
-		inline reference				back()			{ if (empty()) throw std::out_of_range("back() called on empty string"); check_operability(); return str_[size_ - 1]; }
-		inline const_reference			back() const	{ if (empty()) throw std::out_of_range("back() called on empty string"); return const_str_[size_ - 1]; }
+		inline iterator					begin()							{ check_operability(); return iterator(str_); }
+		inline const_iterator			begin() const					{ return const_iterator(const_str_); }
+		inline const_iterator			cbegin() const					{ return begin(); }
+		inline iterator					end()							{ check_operability(); return iterator(str_ + size_); }
+		inline const_iterator			end() const						{ return const_iterator(const_str_ + size_); }
+		inline const_iterator			cend() const					{ return end(); }
+		inline reverse_iterator			rbegin()						{ check_operability(); return reverse_iterator(end()); }
+		inline const_reverse_iterator	rbegin() const					{ return const_reverse_iterator(end()); }
+		inline const_reverse_iterator	crbegin() const					{ return rbegin(); }
+		inline reverse_iterator			rend()							{ check_operability(); return reverse_iterator(begin()); }
+		inline const_reverse_iterator	rend() const					{ return const_reverse_iterator(begin()); }
+		inline const_reverse_iterator	crend() const					{ return rend(); }
+		inline reference				front()							{ if (empty()) throw std::out_of_range("front() called on empty string"); check_operability(); return str_[0]; }
+		inline const_reference			front() const					{ if (empty()) throw std::out_of_range("front() called on empty string"); return const_str_[0]; }
+		inline reference				back()							{ if (empty()) throw std::out_of_range("back() called on empty string"); check_operability(); return str_[size_ - 1]; }
+		inline const_reference			back() const					{ if (empty()) throw std::out_of_range("back() called on empty string"); return const_str_[size_ - 1]; }
 
 	public:
-		inline wchar_t operator[](size_type off) const	{ if(off >= size_) throw std::out_of_range("string subscript out of range"); return const_str_[off]; }
-		inline wchar_t& operator[](size_type off)		{ if (off >= size_) throw std::out_of_range("string subscript out of range"); check_operability(); return str_[off]; }
+		inline wchar_t operator[](size_type off) const					{ if(off >= size_) throw std::out_of_range("string subscript out of range"); return const_str_[off]; }
+		inline wchar_t& operator[](size_type off)						{ if (off >= size_) throw std::out_of_range("string subscript out of range"); check_operability(); return str_[off]; }
 
 	public:
 		inline const String operator+(const wchar_t ch) const			{ return String{ *this }.append(1, ch); }
@@ -308,7 +357,7 @@ namespace easy2d
 	{
 		using Ctype = std::ctype<wchar_t>;
 		using IStream = std::basic_istream<wchar_t, String::traits>;
-		using SizeType = typename String::size_type;
+		using SizeType = String::size_type;
 
 		std::ios_base::iostate state = std::ios_base::goodbit;
 		bool changed = false;
@@ -429,7 +478,7 @@ namespace easy2d
 		template<typename _Ty>
 		inline String FloatingToString(const wchar_t *fmt, _Ty val)
 		{
-			static_assert(std::is_floating_point_v<_Ty>, "_Ty must be floating point");
+			static_assert(std::is_floating_point<_Ty>::value, "_Ty must be floating point");
 
 			return format_wstring(fmt, val);
 		}
@@ -437,7 +486,7 @@ namespace easy2d
 		template <typename _Ty>
 		inline String IntegralToString(const _Ty val)
 		{
-			static_assert(std::is_integral_v<_Ty>, "_Ty must be integral");
+			static_assert(std::is_integral<_Ty>::value, "_Ty must be integral");
 
 			using _UTy = std::make_unsigned_t<_Ty>;
 			using _Elem = String::traits::char_type;

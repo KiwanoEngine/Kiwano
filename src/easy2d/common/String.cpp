@@ -75,7 +75,7 @@ namespace easy2d
 		}
 
 		template<class _Traits>
-		constexpr size_t TraitsFindLastOf(
+		size_t TraitsFindLastOf(
 			const typename _Traits::char_type* first, const size_t first_size, const size_t pos,
 			const typename _Traits::char_type* second, const size_t count)
 		{
@@ -233,8 +233,8 @@ namespace easy2d
 		}
 
 		size_type new_size = size_ - count;
-		iterator erase_at = begin() + offset;
-		traits::move(erase_at, erase_at + count, new_size - offset + 1);
+		iterator erase_at = begin().base() + offset;
+		traits::move(erase_at.base(), erase_at.base() + count, new_size - offset + 1);
 		return (*this);
 	}
 
@@ -344,7 +344,7 @@ namespace easy2d
 
 			wchar_t* const insert_at = new_ptr + index;
 			traits::move(new_ptr, old_ptr, index);							// (0) - (index)
-			traits::move(insert_at, str.begin() + off, count);				// (index) - (index + count)
+			traits::move(insert_at, str.begin().base() + off, count);				// (index) - (index + count)
 			traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
 
 			deallocate(str_, old_capacity);
@@ -354,7 +354,7 @@ namespace easy2d
 		{
 			wchar_t* const insert_at = old_ptr + index;
 			traits::move(insert_at + count, old_ptr + index, suffix_size);
-			traits::move(insert_at, str.begin() + off, count);
+			traits::move(insert_at, str.begin().base() + off, count);
 		}
 
 		return (*this);
@@ -414,7 +414,7 @@ namespace easy2d
 		wchar_t* new_str = allocate(new_cap);
 
 		traits::move(new_str, str_, size_);
-		traits::move(new_str + size_, other.begin() + pos, count);
+		traits::move(new_str + size_, other.begin().base() + pos, count);
 		traits::assign(new_str[new_size], value_type());
 
 		destroy();
@@ -478,7 +478,7 @@ namespace easy2d
 		if (offset >= size_)
 			return String::npos;
 
-		const_iterator citer = traits::find(const_str_ + offset, size_, ch);
+		const_iterator citer = traits::find(cbegin().base() + offset, size_, ch);
 		return citer ? (citer - cbegin()) : String::npos;
 	}
 
@@ -494,7 +494,7 @@ namespace easy2d
 		if (offset >= size_)
 			return String::npos;
 
-		const_iterator citer = std::find_first_of(cbegin() + offset, cend(), str, str + count);
+		const_iterator citer = std::find_first_of(cbegin().base() + offset, cend().base(), str, str + count);
 		return (citer != cend()) ? (citer - cbegin()) : String::npos;
 	}
 
@@ -603,6 +603,18 @@ namespace easy2d
 		}
 
 		return (*this);
+	}
+
+	String::size_type String::copy(wchar_t * cstr, size_type count, size_type pos) const
+	{
+		if (count == 0 || cstr == const_str_)
+			return 0;
+
+		check_offset(pos);
+
+		count = clamp_suffix_size(pos, count);
+		traits::move(cstr, cbegin().base() + pos, count);
+		return count;
 	}
 
 	std::string String::to_string() const

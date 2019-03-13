@@ -21,7 +21,6 @@
 #pragma once
 #include "../core/include-forwards.h"
 #include "../core/Resource.h"
-#include "../audio/Music.h"
 
 namespace easy2d
 {
@@ -51,20 +50,12 @@ namespace easy2d
 		// 添加帧集合
 		bool AddFrames(String const& id, FramesPtr const& frames);
 
-		// 添加音乐
-		bool AddMusic(String const& id, Resource const& music);
-
-		// 添加音乐
-		bool AddMusic(String const& id, MusicPtr const& music);
-
 		// 添加对象
 		bool AddObj(String const& id, ObjectPtr const& obj);
 
 		ImagePtr GetImage(String const& id) const;
 
 		FramesPtr GetFrames(String const& id) const;
-
-		MusicPtr GetMusic(String const& id) const;
 
 		ObjectPtr GetObj(String const& id) const;
 
@@ -79,13 +70,13 @@ namespace easy2d
 			String const& path
 		);
 
-		template<typename T>
-		auto Get(String const& id) const -> decltype(auto)
+		template<typename _Ty>
+		_Ty* Get(String const& id) const
 		{
 			auto iter = res_.find(id);
 			if (iter == res_.end())
-				return T{};
-			return dynamic_cast<T>((*iter).second.Get());
+				return nullptr;
+			return dynamic_cast<_Ty*>((*iter).second.Get());
 		}
 
 	protected:

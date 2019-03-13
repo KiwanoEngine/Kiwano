@@ -2,6 +2,7 @@
 
 #pragma once
 #include "easy2d.h"
+#include "easy2d-audio.h"
 
 using namespace easy2d;
 

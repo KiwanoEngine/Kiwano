@@ -49,7 +49,7 @@ namespace easy2d
 
 	bool File::Exists() const
 	{
-		return modules::Shlwapi::Get().PathFileExistsW(file_path_.c_str());
+		return !!modules::Shlwapi::Get().PathFileExistsW(file_path_.c_str());
 	}
 
 	String const& File::GetPath() const
@@ -96,7 +96,6 @@ namespace easy2d
 		DWORD buffer_size;
 		if (res.Load(buffer, buffer_size))
 		{
-			// Ð´ÈëÎÄ¼þ
 			DWORD written_bytes = 0;
 			::WriteFile(file_handle, buffer, buffer_size, &written_bytes, NULL);
 			::CloseHandle(file_handle);
