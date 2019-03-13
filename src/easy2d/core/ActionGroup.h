@@ -73,33 +73,31 @@ namespace easy2d
 
 
 	// 顺序动作
-	class E2D_DEPRECATED("ActionSequence is deprecated, use ActionGroup instead") E2D_API
-		ActionSequence
+	class E2D_API ActionSequence
 		: public ActionGroup
 	{
 	public:
-		ActionSequence();
+		E2D_DEPRECATED("ActionSequence is deprecated, use ActionGroup instead")
+		inline ActionSequence() : ActionGroup() {}
 
-		explicit ActionSequence(
-			Array<ActionPtr> const& actions
-		);
+		E2D_DEPRECATED("ActionSequence is deprecated, use ActionGroup instead")
+		inline explicit ActionSequence(Array<ActionPtr> const& actions) : ActionGroup(actions, true) {}
 
-		virtual ~ActionSequence();
+		virtual ~ActionSequence() {}
 	};
 
 
 	// 同步动作
-	class E2D_DEPRECATED("ActionSpawn is deprecated, use ActionGroup instead") E2D_API
-		ActionSpawn
+	class E2D_API ActionSpawn
 		: public ActionGroup
 	{
 	public:
-		ActionSpawn();
+		E2D_DEPRECATED("ActionSpawn is deprecated, use ActionGroup instead")
+		inline ActionSpawn() : ActionGroup() { sequence_ = false; }
 
-		explicit ActionSpawn(
-			Array<ActionPtr> const& actions
-		);
+		E2D_DEPRECATED("ActionSpawn is deprecated, use ActionGroup instead")
+		inline explicit ActionSpawn(Array<ActionPtr> const& actions) : ActionGroup(actions, false) {}
 
-		virtual ~ActionSpawn();
+		virtual ~ActionSpawn() {}
 	};
 }

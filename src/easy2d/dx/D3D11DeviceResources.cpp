@@ -241,7 +241,14 @@ namespace easy2d
 			swap_chain_desc.SampleDesc.Count = 1;
 			swap_chain_desc.SampleDesc.Quality = 0;
 			swap_chain_desc.Windowed = TRUE;
+
+#if defined(_WIN32_WINNT_WIN10)
 			swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+#elif defined(_WIN32_WINNT_WINBLUE)
+			swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+#else
+			swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+#endif
 
 			ComPtr<IDXGIDevice> dxgi_device;
 			if (SUCCEEDED(hr))

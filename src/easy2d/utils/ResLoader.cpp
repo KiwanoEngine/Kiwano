@@ -203,17 +203,17 @@ namespace easy2d
 
 	ImagePtr ResLoader::GetImage(String const & id) const
 	{
-		return Get<Image*>(id);
+		return Get<Image>(id);
 	}
 
 	FramesPtr ResLoader::GetFrames(String const & id) const
 	{
-		return Get<Frames*>(id);
+		return Get<Frames>(id);
 	}
 
 	ObjectPtr ResLoader::GetObj(String const & id) const
 	{
-		return Get<Object*>(id);
+		return Get<Object>(id);
 	}
 
 	void ResLoader::Delete(String const & id)

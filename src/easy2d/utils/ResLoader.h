@@ -70,13 +70,13 @@ namespace easy2d
 			String const& path
 		);
 
-		template<typename T>
-		auto Get(String const& id) const -> decltype(auto)
+		template<typename _Ty>
+		_Ty* Get(String const& id) const
 		{
 			auto iter = res_.find(id);
 			if (iter == res_.end())
-				return T{};
-			return dynamic_cast<T>((*iter).second.Get());
+				return nullptr;
+			return dynamic_cast<_Ty*>((*iter).second.Get());
 		}
 
 	protected:
