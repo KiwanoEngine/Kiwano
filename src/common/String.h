@@ -21,6 +21,8 @@
 #pragma once
 #include "../macros.h"
 #include <string>
+#include <cstring>
+#include <cstdio>
 
 namespace easy2d
 {
@@ -39,17 +41,21 @@ namespace easy2d
 		using const_reference = const value_type &;
 		using reverse_iterator = std::reverse_iterator<iterator>;
 		using const_reverse_iterator = std::reverse_iterator<const_iterator>;
-		using traits = std::char_traits<wchar_t>;
-		using allocator = std::allocator<wchar_t>;
+		using traits = std::char_traits<value_type>;
+		using allocator = std::allocator<value_type>;
 
 		String();
 		String(const wchar_t* cstr, bool const_str = true);
 		String(const wchar_t* cstr, size_type count);
+		String(size_type count, wchar_t ch);
 		String(std::wstring const& str);
 		String(String const& rhs);
 		String(String const& rhs, size_type pos, size_type count = npos);
 		String(String && rhs);
 		~String();
+
+		template <typename _Iter>
+		String(_Iter first, _Iter last) : String() { assign_iter(first, last); }
 
 		inline const wchar_t*	c_str() const			{ return const_str_ ? const_str_ : L""; }
 		inline wchar_t			at(size_t i) const		{ return (*this)[i]; }
@@ -58,10 +64,10 @@ namespace easy2d
 		inline size_type		capacity() const		{ return capacity_; }
 		inline size_type		max_size() const		{ return (static_cast<size_type>(-1) / sizeof(value_type)); }
 		inline bool				empty() const			{ return size_ == 0; }
-		inline void				clear()					{ discard_const_data(); if (str_) { str_[0] = wchar_t(); } size_ = 0; }
+		inline void				clear()					{ discard_const_data(); if (str_) { str_[0] = value_type(); } size_ = 0; }
 
 		void reserve(const size_type new_cap = 0);
-		inline void resize(const size_type new_size, const wchar_t ch = wchar_t())	{ check_operability(); if (new_size < size_) str_[size_ = new_size] = wchar_t(); else append(new_size - size_, ch); }
+		inline void resize(const size_type new_size, const wchar_t ch = value_type())	{ check_operability(); if (new_size < size_) str_[size_ = new_size] = value_type(); else append(new_size - size_, ch); }
 
 		int compare(const wchar_t* const str) const;
 		inline int compare(String const& str) const																	{ return compare(str.c_str()); }
@@ -104,6 +110,9 @@ namespace easy2d
 		inline String& assign(String const& rhs)											{ String{ rhs }.swap(*this); return *this; }
 		inline String& assign(String const& rhs, size_type pos, size_type count = npos)		{ String(rhs, pos, count).swap(*this); return *this; }
 
+		template <typename _Iter>
+		inline String& assign(_Iter first, _Iter last)										{ assign_iter(first, last); return(*this); }
+
 		String& erase(size_type offset = 0, size_type count = npos);
 		iterator erase(const const_iterator where)											{ size_type off = where - cbegin(); erase(off, 1); return begin() + off; }
 		iterator erase(const const_iterator first, const const_iterator last)				{ size_type off = first - cbegin(); erase(first - cbegin(), last - first); return begin() + off; }
@@ -119,7 +128,7 @@ namespace easy2d
 		inline iterator insert(const_iterator pos, wchar_t ch)								{ return insert(pos, 1, ch); }
 
 		inline void push_back(const wchar_t ch)		{ append(1, ch); }
-		inline wchar_t pop_back()					{ if (empty()) throw std::out_of_range("pop_back() called on empty string"); check_operability(); wchar_t ch = str_[--size_]; str_[size_] = wchar_t(); return ch; }
+		inline wchar_t pop_back()					{ if (empty()) throw std::out_of_range("pop_back() called on empty string"); check_operability(); wchar_t ch = str_[--size_]; str_[size_] = value_type(); return ch; }
 
 		std::string to_string() const;
 		std::wstring to_wstring() const;
@@ -147,8 +156,6 @@ namespace easy2d
 		inline const_reference			back() const	{ if (empty()) throw std::out_of_range("back() called on empty string"); return const_str_[size_ - 1]; }
 
 	public:
-		inline operator const wchar_t*() const			{ return const_str_ ? const_str_ : L""; }
-		inline operator wchar_t*()						{ check_operability(); return str_; }
 		inline wchar_t operator[](size_type off) const	{ if(off >= size_) throw std::out_of_range("string subscript out of range"); return const_str_[off]; }
 		inline wchar_t& operator[](size_type off)		{ if (off >= size_) throw std::out_of_range("string subscript out of range"); check_operability(); return str_[off]; }
 
@@ -169,9 +176,6 @@ namespace easy2d
 		inline String& operator=(String const& rhs)						{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
 		inline String& operator=(String && rhs)							{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
 
-		inline bool operator==(String const& rhs)						{ return compare(rhs) == 0; }
-		inline bool operator==(const wchar_t* cstr)						{ return compare(cstr) == 0; }
-
 		inline bool operator!=(String const& rhs)						{ return compare(rhs) != 0; }
 		inline bool operator!=(const wchar_t* cstr)						{ return compare(cstr) != 0; }
 
@@ -188,6 +192,29 @@ namespace easy2d
 		void check_operability();
 		void check_offset(size_type offset) const							{ if (offset > size()) throw std::out_of_range("invalid string position"); }
 		size_type clamp_suffix_size(size_type off, size_type count) const	{ return std::min(size() - off, count); }
+
+		template <typename _Iter>
+		void assign_iter(_Iter first, _Iter last)
+		{
+			size_type diff = static_cast<size_type>(std::distance(first, last));
+			if (diff == 0)
+				return;
+
+			discard_const_data();
+			if (diff > capacity_)
+			{
+				destroy();
+				str_ = allocate(diff + 1);
+				capacity_ = diff;
+			}
+			size_ = diff;
+
+			for (size_type index = 0; first != last; ++first, ++index)
+			{
+				traits::assign(str_[index], traits::to_char_type(*first));
+			}
+			traits::assign(str_[size_], value_type());
+		}
 
 	private:
 		union
@@ -211,6 +238,14 @@ namespace easy2d
 
 
 	//
+	// operator== for String
+	//
+
+	inline bool operator==(String const& lhs, String const& rhs) { return lhs.compare(rhs) == 0; }
+	inline bool operator==(const wchar_t* lhs, String const& rhs) { return rhs.compare(rhs) == 0; }
+	inline bool operator==(String const& lhs, const wchar_t* rhs) { return lhs.compare(rhs) == 0; }
+
+	//
 	// operator+ for String
 	//
 
@@ -227,6 +262,37 @@ namespace easy2d
 
 	//
 	// operator<<>> for String
+	//
+
+	std::basic_ostream<String::traits::char_type, String::traits>& operator<<(std::basic_ostream<String::traits::char_type, String::traits>& os, const String & str);
+	std::basic_istream<String::traits::char_type, String::traits>& operator>>(std::basic_istream<String::traits::char_type, String::traits>& is, String & str);
+
+	//
+	// to_string functions
+	//
+
+	String to_wstring(int val);
+	String to_wstring(unsigned int val);
+	String to_wstring(long val);
+	String to_wstring(unsigned long val);
+	String to_wstring(long long val);
+	String to_wstring(unsigned long long val);
+	String to_wstring(float val);
+	String to_wstring(double val);
+	String to_wstring(long double val);
+
+	//
+	// format_wstring
+	//
+
+	template<typename ..._Args>
+	inline String format_wstring(const wchar_t* const fmt, _Args&&... args);
+}
+
+namespace easy2d
+{
+	//
+	// details of operator<<>>
 	//
 
 	inline std::basic_ostream<String::traits::char_type, String::traits>&
@@ -249,26 +315,28 @@ namespace easy2d
 		{
 			const Ctype& ctype_fac = std::use_facet<Ctype>(is.getloc());
 			str.erase();
-
 			try
 			{
-				SizeType size = (0 < is.width() && static_cast<SizeType>(is.width()) < str.max_size())
-					? static_cast<SizeType>(is.width()) : str.max_size();
-				typename String::traits::int_type meta = is.rdbuf()->sgetc();
+				SizeType size = (0 < is.width() && static_cast<SizeType>(is.width()) < str.max_size()) ? static_cast<SizeType>(is.width()) : str.max_size();
+				String::traits::int_type meta = is.rdbuf()->sgetc();
 
 				for (; 0 < size; --size, meta = is.rdbuf()->snextc())
+				{
 					if (String::traits::eq_int_type(String::traits::eof(), meta))
 					{
 						state |= std::ios_base::eofbit;
 						break;
 					}
 					else if (ctype_fac.is(Ctype::space, String::traits::to_char_type(meta)))
+					{
 						break;
+					}
 					else
 					{
 						str.push_back(String::traits::to_char_type(meta));
 						changed = true;
 					}
+				}
 			}
 			catch (...)
 			{
@@ -281,6 +349,116 @@ namespace easy2d
 			state |= std::ios_base::failbit;
 		is.setstate(state);
 		return is;
+	}
+
+	//
+	// details of to_string functions
+	//
+
+	namespace __to_string_detail
+	{
+		template<typename _Ty>
+		inline String FloatingToString(const wchar_t *fmt, _Ty val);
+
+		template <typename _Ty>
+		inline String IntegralToString(const _Ty val);
+	}
+
+	inline String to_wstring(int val)
+	{
+		return (__to_string_detail::IntegralToString(val));
+	}
+
+	inline String to_wstring(unsigned int val)
+	{
+		return (__to_string_detail::IntegralToString(val));
+	}
+
+	inline String to_wstring(long val)
+	{
+		return (__to_string_detail::IntegralToString(val));
+	}
+
+	inline String to_wstring(unsigned long val)
+	{
+		return (__to_string_detail::IntegralToString(val));
+	}
+
+	inline String to_wstring(long long val)
+	{
+		return (__to_string_detail::IntegralToString(val));
+	}
+
+	inline String to_wstring(unsigned long long val)
+	{
+		return (__to_string_detail::IntegralToString(val));
+	}
+
+	inline String to_wstring(float val)
+	{
+		return (__to_string_detail::FloatingToString(L"%f", val));
+	}
+
+	inline String to_wstring(double val)
+	{
+		return (__to_string_detail::FloatingToString(L"%f", val));
+	}
+
+	inline String to_wstring(long double val)
+	{
+		return (__to_string_detail::FloatingToString(L"%Lf", val));
+	}
+
+	template<typename ..._Args>
+	inline String format_wstring(const wchar_t* const fmt, _Args&&... args)
+	{
+		const auto len = static_cast<String::size_type>(::_scwprintf(fmt, std::forward<_Args&&>(args)...));
+		if (len)
+		{
+			String str(len, L'\0');
+			::swprintf_s(&str[0], len + 1, fmt, std::forward<_Args>(args)...);
+			return str;
+		}
+		return String{};
+	}
+
+	namespace __to_string_detail
+	{
+		template<typename _Ty>
+		inline String FloatingToString(const wchar_t *fmt, _Ty val)
+		{
+			static_assert(std::is_floating_point_v<_Ty>, "_Ty must be floating point");
+
+			return format_wstring(fmt, val);
+		}
+
+		template <typename _Ty>
+		inline String IntegralToString(const _Ty val)
+		{
+			static_assert(std::is_integral_v<_Ty>, "_Ty must be integral");
+
+			using _UTy = std::make_unsigned_t<_Ty>;
+			using _Elem = String::traits::char_type;
+
+			_Elem buffer[21];
+			_Elem* const buffer_end = std::end(buffer);
+			_Elem* next = buffer_end;
+			auto uval = static_cast<_UTy>(val);
+
+			if (val < 0)
+				uval = 0 - uval;
+
+			do
+			{
+				*--next = static_cast<_Elem>('0' + uval % 10);
+				uval /= 10;
+			} while (uval != 0);
+
+			if (val < 0)
+				*--next = static_cast<_Elem>('-');
+
+			return String(next, buffer_end);
+		}
 	}
 }
 
