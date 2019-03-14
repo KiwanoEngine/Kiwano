@@ -138,7 +138,7 @@
     <ProjectReference Include="..\..\3rd-party\box2d\Box2D.vcxproj">
       <Project>{a434e80c-1049-10be-d9ca-b31d459e0cef}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\Easy2D\Easy2D.vcxproj">
+    <ProjectReference Include="..\..\src\easy2d\Easy2D.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
   </ItemGroup>

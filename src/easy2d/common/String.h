@@ -37,16 +37,19 @@ namespace easy2d
 		template <typename _Ty>
 		struct _Iterator
 		{
-			using iterator_category = typename std::iterator_traits<_Ty*>::iterator_category;
-			using value_type = typename std::iterator_traits<_Ty*>::value_type;
-			using difference_type = typename std::iterator_traits<_Ty*>::difference_type;
-			using pointer = typename std::iterator_traits<_Ty*>::pointer;
-			using reference = typename std::iterator_traits<_Ty*>::reference;
+			using iterator_category	= typename std::iterator_traits<_Ty*>::iterator_category;
+			using value_type		= typename std::iterator_traits<_Ty*>::value_type;
+			using difference_type	= typename std::iterator_traits<_Ty*>::difference_type;
+			using pointer			= typename std::iterator_traits<_Ty*>::pointer;
+			using reference			= typename std::iterator_traits<_Ty*>::reference;
 
 			// disable warning 4996
 			using _Unchecked_type = _Ty;
 
 			inline _Iterator(pointer base = nullptr) : base_(base) {}
+
+			inline reference operator*() const								{ return *base_; }
+			inline pointer base() const										{ return base_; }
 
 			inline _Iterator& operator++()									{ ++base_; return (*this); }
 			inline _Iterator operator++(int)								{ _Iterator old = (*this); ++(*this); return old; }
@@ -70,12 +73,10 @@ namespace easy2d
 			inline bool operator>(_Iterator const& other) const				{ return base_ > other.base_; }
 			inline bool operator>=(_Iterator const& other) const			{ return base_ >= other.base_; }
 
-			inline reference operator[](difference_type off) const			{ return *(base_ + off); }
+			inline reference operator[](difference_type off)				{ return *(base_ + off); }
+			inline const reference operator[](difference_type off) const	{ return *(base_ + off); }
 
 			inline operator bool() const									{ return base_ != nullptr; }
-
-			inline reference operator*() const								{ return *base_; }
-			inline pointer base() const										{ return base_; }
 
 		private:
 			pointer base_{ nullptr };
@@ -104,89 +105,88 @@ namespace easy2d
 		~String();
 
 		template <typename _Iter>
-		String(_Iter first, _Iter last) : String() { assign_iter(first, last); }
+		String(_Iter first, _Iter last) : String()																		{ assign_iter(first, last); }
 
-		inline const wchar_t*	c_str() const			{ return const_str_ ? const_str_ : L""; }
-		inline wchar_t			at(size_t i) const		{ return (*this)[i]; }
-		inline size_type		size() const			{ return size_; }
-		inline size_type		length() const			{ return size(); }
-		inline size_type		capacity() const		{ return capacity_; }
-		inline size_type		max_size() const		{ return (static_cast<size_type>(-1) / sizeof(value_type)); }
-		inline bool				empty() const			{ return size_ == 0; }
-		inline void				clear()					{ discard_const_data(); if (str_) { str_[0] = value_type(); } size_ = 0; }
+		inline const wchar_t*	c_str() const																			{ return const_str_ ? const_str_ : L""; }
+		inline wchar_t			at(size_t i) const																		{ return (*this)[i]; }
+		inline size_type		size() const																			{ return size_; }
+		inline size_type		length() const																			{ return size(); }
+		inline size_type		capacity() const																		{ return capacity_; }
+		inline size_type		max_size() const																		{ return (static_cast<size_type>(-1) / sizeof(value_type)); }
+		inline bool				empty() const																			{ return size_ == 0; }
+		inline void				clear()																					{ discard_const_data(); if (str_) { str_[0] = value_type(); } size_ = 0; }
 
-		void reserve(const size_type new_cap = 0);
-		inline void resize(const size_type new_size, const wchar_t ch = value_type())								{ check_operability(); if (new_size < size_) str_[size_ = new_size] = value_type(); else append(new_size - size_, ch); }
+		void					reserve(const size_type new_cap = 0);
+		inline void				resize(const size_type new_size, const wchar_t ch = value_type())						{ check_operability(); if (new_size < size_) str_[size_ = new_size] = value_type(); else append(new_size - size_, ch); }
 
-		int compare(const wchar_t* const str) const;
-		inline int compare(String const& str) const																	{ return compare(str.c_str()); }
+		int						compare(const wchar_t* const str) const;
+		inline int				compare(String const& str) const														{ return compare(str.c_str()); }
 
-		String& append(size_type count, wchar_t ch);
-		String& append(const wchar_t* cstr, size_type count);
-		String& append(String const& other, size_type pos, size_type count = npos);
-		inline String& append(const wchar_t* cstr)																	{ return append(cstr, traits::length(cstr)); }
-		inline String& append(std::wstring const& str)																{ return append(str.c_str()); }
-		inline String& append(String const& other)																	{ return append(other.const_str_, 0, npos); }
+		String&					append(size_type count, wchar_t ch);
+		String&					append(const wchar_t* cstr, size_type count);
+		String&					append(String const& other, size_type pos, size_type count = npos);
+		inline String&			append(const wchar_t* cstr)																{ return append(cstr, traits::length(cstr)); }
+		inline String&			append(std::wstring const& str)															{ return append(str.c_str()); }
+		inline String&			append(String const& other)																{ return append(other.const_str_, 0, npos); }
 
-		size_type find(const wchar_t ch, size_type offset = 0) const;
-		size_type find(const wchar_t* const str, size_type offset, size_type count) const;
-		inline size_type find(String const& str, size_type offset = 0) const										{ return find(str.c_str(), offset, str.size()); }
-		inline size_type find(const wchar_t* const str, size_type offset = 0) const									{ return find(str, offset, traits::length(str)); }
+		size_type				find(const wchar_t ch, size_type offset = 0) const;
+		size_type				find(const wchar_t* const str, size_type offset, size_type count) const;
+		inline size_type		find(String const& str, size_type offset = 0) const										{ return find(str.c_str(), offset, str.size()); }
+		inline size_type		find(const wchar_t* const str, size_type offset = 0) const								{ return find(str, offset, traits::length(str)); }
 
-		size_type find_first_of(const wchar_t* const str, size_type offset, size_type count) const;
-		inline size_type find_first_of(const wchar_t ch, size_type offset = 0) const								{ return find(ch, offset); }
-		inline size_type find_first_of(String const& str, size_type offset = 0) const								{ return find_first_of(str.c_str(), offset, str.size()); }
-		inline size_type find_first_of(const wchar_t* const str, size_type offset = 0) const						{ return find_first_of(str, offset, traits::length(str)); }
+		size_type				find_first_of(const wchar_t* const str, size_type offset, size_type count) const;
+		inline size_type		find_first_of(const wchar_t ch, size_type offset = 0) const								{ return find(ch, offset); }
+		inline size_type		find_first_of(String const& str, size_type offset = 0) const							{ return find_first_of(str.c_str(), offset, str.size()); }
+		inline size_type		find_first_of(const wchar_t* const str, size_type offset = 0) const						{ return find_first_of(str, offset, traits::length(str)); }
 
-		size_type find_last_of(const wchar_t ch, size_type pos = npos) const;
-		size_type find_last_of(const wchar_t* const str, size_type pos, size_type count) const;
-		inline size_type find_last_of(String const& str, size_type pos = npos) const								{ return find_first_of(str.c_str(), pos, str.size()); }
-		inline size_type find_last_of(const wchar_t* const str, size_type pos = npos) const							{ return find_first_of(str, pos, traits::length(str)); }
+		size_type				find_last_of(const wchar_t ch, size_type pos = npos) const;
+		size_type				find_last_of(const wchar_t* const str, size_type pos, size_type count) const;
+		inline size_type		find_last_of(String const& str, size_type pos = npos) const								{ return find_first_of(str.c_str(), pos, str.size()); }
+		inline size_type		find_last_of(const wchar_t* const str, size_type pos = npos) const						{ return find_first_of(str, pos, traits::length(str)); }
 
-		String& replace(size_type pos, size_type count, const wchar_t* cstr, size_type count2);
-		String& replace(size_type pos, size_type count, size_type count2, const wchar_t ch);
-		inline String& replace(size_type pos, size_type count, const String& str)									{ return replace(pos, count, str.c_str(), str.size()); }
-		inline String& replace(size_type pos, size_type count, const wchar_t* cstr)									{ return replace(pos, count, cstr, traits::length(cstr)); }
-		inline String& replace(const_iterator first, const_iterator last, const String& str)						{ return replace(first, last, str.c_str(), str.size()); }
-		inline String& replace(const_iterator first, const_iterator last, const wchar_t* cstr)						{ return replace(first, last, cstr, traits::length(cstr)); }
-		inline String& replace(const_iterator first, const_iterator last, const wchar_t* cstr, size_type count2)	{ return replace(first - cbegin(), last - first, cstr, traits::length(cstr)); }
-		inline String& replace(const_iterator first, const_iterator last, size_type count2, const wchar_t ch)		{ return replace(first - cbegin(), last - first, count2, ch); }
+		String&					replace(size_type pos, size_type count, const wchar_t* cstr, size_type count2);
+		String&					replace(size_type pos, size_type count, size_type count2, const wchar_t ch);
+		inline String&			replace(size_type pos, size_type count, const String& str)								{ return replace(pos, count, str.c_str(), str.size()); }
+		inline String&			replace(size_type pos, size_type count, const wchar_t* cstr)							{ return replace(pos, count, cstr, traits::length(cstr)); }
+		inline String&			replace(const_iterator first, const_iterator last, const String& str)					{ return replace(first, last, str.c_str(), str.size()); }
+		inline String&			replace(const_iterator first, const_iterator last, const wchar_t* cstr)					{ return replace(first, last, cstr, traits::length(cstr)); }
+		inline String&			replace(const_iterator first, const_iterator last, const wchar_t* cstr, size_type count){ return replace(first - cbegin(), last - first, cstr, count); }
+		inline String&			replace(const_iterator first, const_iterator last, size_type count2, const wchar_t ch)	{ return replace(first - cbegin(), last - first, count2, ch); }
 
-		String& assign(size_type count, const wchar_t ch);
-		String& assign(const wchar_t* cstr, size_type count);
-		inline String& assign(const wchar_t* cstr, bool const_str = true)											{ String(cstr, const_str).swap(*this); return *this; }
-		inline String& assign(std::wstring const& str)																{ String{ str }.swap(*this); return *this; }
-		inline String& assign(String const& rhs)																	{ String{ rhs }.swap(*this); return *this; }
-		inline String& assign(String const& rhs, size_type pos, size_type count = npos)								{ String(rhs, pos, count).swap(*this); return *this; }
+		String&					assign(size_type count, const wchar_t ch);
+		String&					assign(const wchar_t* cstr, size_type count);
+		inline String&			assign(const wchar_t* cstr, bool const_str = true)										{ String(cstr, const_str).swap(*this); return *this; }
+		inline String&			assign(std::wstring const& str)															{ String{ str }.swap(*this); return *this; }
+		inline String&			assign(String const& rhs)																{ String{ rhs }.swap(*this); return *this; }
+		inline String&			assign(String const& rhs, size_type pos, size_type count = npos)						{ String(rhs, pos, count).swap(*this); return *this; }
 
 		template <typename _Iter>
-		inline String& assign(_Iter first, _Iter last)																{ assign_iter(first, last); return(*this); }
+		inline String&			assign(_Iter first, _Iter last)															{ assign_iter(first, last); return(*this); }
 
-		String& erase(size_type offset = 0, size_type count = npos);
-		iterator erase(const const_iterator where)																	{ size_type off = where - cbegin(); erase(off, 1); return begin().base() + off; }
-		iterator erase(const const_iterator first, const const_iterator last)										{ size_type off = first - cbegin(); erase(first - cbegin(), last - first); return begin().base() + off; }
+		String&					erase(size_type offset = 0, size_type count = npos);
+		iterator				erase(const const_iterator where)														{ size_type off = where - cbegin(); erase(off, 1); return begin().base() + off; }
+		iterator				erase(const const_iterator first, const const_iterator last)							{ size_type off = first - cbegin(); erase(first - cbegin(), last - first); return begin().base() + off; }
 
-		String substr(size_type pos = 0, size_type count = npos) const												{ return String(*this, pos, count); }
+		String					substr(size_type pos = 0, size_type count = npos) const									{ return String(*this, pos, count); }
 
-		String& insert(size_type index, size_type count, wchar_t ch);
-		String& insert(size_type index, const wchar_t* s, size_type count);
-		String& insert(size_type index, const String& str, size_type off, size_type count = npos);
-		inline String& insert(size_type index, const wchar_t* s)													{ return insert(index, s, traits::length(s)); }
-		inline String& insert(size_type index, const String& str)													{ return insert(index, str, 0, str.size()); }
-		inline iterator insert(const_iterator pos, size_type count, wchar_t ch)										{ size_type off = pos - cbegin(); insert(off, count, ch); return begin().base() + off; }
-		inline iterator insert(const_iterator pos, wchar_t ch)														{ return insert(pos, 1, ch); }
+		String&					insert(size_type index, size_type count, wchar_t ch);
+		String&					insert(size_type index, const wchar_t* s, size_type count);
+		String&					insert(size_type index, const String& str, size_type off, size_type count = npos);
+		inline String&			insert(size_type index, const wchar_t* s)												{ return insert(index, s, traits::length(s)); }
+		inline String&			insert(size_type index, const String& str)												{ return insert(index, str, 0, str.size()); }
+		inline iterator			insert(const_iterator pos, size_type count, wchar_t ch)									{ size_type off = pos - cbegin(); insert(off, count, ch); return begin().base() + off; }
+		inline iterator			insert(const_iterator pos, wchar_t ch)													{ return insert(pos, 1, ch); }
 
-		inline void push_back(const wchar_t ch)																		{ append(1, ch); }
-		inline wchar_t pop_back()																					{ if (empty()) throw std::out_of_range("pop_back() called on empty string"); check_operability(); wchar_t ch = str_[--size_]; str_[size_] = value_type(); return ch; }
+		inline void				push_back(const wchar_t ch)																{ append(1, ch); }
+		inline wchar_t			pop_back()																				{ if (empty()) throw std::out_of_range("pop_back() called on empty string"); check_operability(); wchar_t ch = str_[--size_]; str_[size_] = value_type(); return ch; }
 
-		size_type copy(wchar_t* cstr, size_type count, size_type pos = 0) const;
+		size_type				copy(wchar_t* cstr, size_type count, size_type pos = 0) const;
 
-		std::string to_string() const;
-		std::wstring to_wstring() const;
+		std::string				to_string() const;
+		std::wstring			to_wstring() const;
 
-		void swap(String& rhs);
-
-		size_t hash() const;
+		void					swap(String& rhs);
+		size_t					hash() const;
 
 	public:
 		inline iterator					begin()							{ check_operability(); return iterator(str_); }
@@ -207,28 +207,28 @@ namespace easy2d
 		inline const_reference			back() const					{ if (empty()) throw std::out_of_range("back() called on empty string"); return const_str_[size_ - 1]; }
 
 	public:
-		inline wchar_t operator[](size_type off) const					{ if(off >= size_) throw std::out_of_range("string subscript out of range"); return const_str_[off]; }
-		inline wchar_t& operator[](size_type off)						{ if (off >= size_) throw std::out_of_range("string subscript out of range"); check_operability(); return str_[off]; }
+		inline wchar_t		operator[](size_type off) const				{ if(off >= size_) throw std::out_of_range("string subscript out of range"); return const_str_[off]; }
+		inline wchar_t&		operator[](size_type off)					{ if (off >= size_) throw std::out_of_range("string subscript out of range"); check_operability(); return str_[off]; }
 
 	public:
-		inline const String operator+(const wchar_t ch) const			{ return String{ *this }.append(1, ch); }
-		inline const String operator+(const wchar_t* cstr) const		{ return String{ *this }.append(cstr); }
-		inline const String operator+(std::wstring const& str) const	{ return String{ *this }.append(str); }
-		inline const String operator+(String const& rhs) const			{ return String{ *this }.append(rhs); }
+		inline const String	operator+(const wchar_t ch) const			{ return String{ *this }.append(1, ch); }
+		inline const String	operator+(const wchar_t* cstr) const		{ return String{ *this }.append(cstr); }
+		inline const String	operator+(std::wstring const& str) const	{ return String{ *this }.append(str); }
+		inline const String	operator+(String const& rhs) const			{ return String{ *this }.append(rhs); }
 
-		inline String& operator+=(const wchar_t ch)						{ return append(1, ch); }
-		inline String& operator+=(const wchar_t* cstr)					{ return append(cstr); }
-		inline String& operator+=(std::wstring const& str)				{ return append(str); }
-		inline String& operator+=(String const& rhs)					{ return append(rhs); }
+		inline String&		operator+=(const wchar_t ch)				{ return append(1, ch); }
+		inline String&		operator+=(const wchar_t* cstr)				{ return append(cstr); }
+		inline String&		operator+=(std::wstring const& str)			{ return append(str); }
+		inline String&		operator+=(String const& rhs)				{ return append(rhs); }
 
 	public:
-		inline String& operator=(const wchar_t* cstr)					{ if (const_str_ != cstr) String{ cstr }.swap(*this); return *this; }
-		inline String& operator=(std::wstring const& str)				{ String{ str }.swap(*this); return *this; }
-		inline String& operator=(String const& rhs)						{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
-		inline String& operator=(String && rhs)							{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
+		inline String&		operator=(const wchar_t* cstr)				{ if (const_str_ != cstr) String{ cstr }.swap(*this); return *this; }
+		inline String&		operator=(std::wstring const& str)			{ String{ str }.swap(*this); return *this; }
+		inline String&		operator=(String const& rhs)				{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
+		inline String&		operator=(String && rhs)					{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
 
-		inline bool operator!=(String const& rhs)						{ return compare(rhs) != 0; }
-		inline bool operator!=(const wchar_t* cstr)						{ return compare(cstr) != 0; }
+		inline bool			operator!=(String const& rhs)				{ return compare(rhs) != 0; }
+		inline bool			operator!=(const wchar_t* cstr)				{ return compare(cstr) != 0; }
 
 	public:
 		static const String::size_type npos;
@@ -292,24 +292,24 @@ namespace easy2d
 	// operator== for String
 	//
 
-	inline bool operator==(String const& lhs, String const& rhs) { return lhs.compare(rhs) == 0; }
-	inline bool operator==(const wchar_t* lhs, String const& rhs) { return rhs.compare(rhs) == 0; }
-	inline bool operator==(String const& lhs, const wchar_t* rhs) { return lhs.compare(rhs) == 0; }
+	inline bool operator==(String const& lhs, String const& rhs)	{ return lhs.compare(rhs) == 0; }
+	inline bool operator==(const wchar_t* lhs, String const& rhs)	{ return rhs.compare(rhs) == 0; }
+	inline bool operator==(String const& lhs, const wchar_t* rhs)	{ return lhs.compare(rhs) == 0; }
 
 	//
 	// operator+ for String
 	//
 
-	inline String operator+(const wchar_t* lhs, String const& rhs) { return String{ lhs } + rhs; }
+	inline String operator+(const wchar_t* lhs, String const& rhs)	{ return String{ lhs } + rhs; }
 
 	//
 	// operator<> for String
 	//
 
-	inline bool operator<(String const& lhs, String const& rhs) { return lhs.compare(rhs) < 0; }
-	inline bool operator>(String const& lhs, String const& rhs) { return lhs.compare(rhs) > 0; }
-	inline bool operator<=(String const& lhs, String const& rhs) { return lhs.compare(rhs) <= 0; }
-	inline bool operator>=(String const& lhs, String const& rhs) { return lhs.compare(rhs) >= 0; }
+	inline bool operator<(String const& lhs, String const& rhs)		{ return lhs.compare(rhs) < 0; }
+	inline bool operator>(String const& lhs, String const& rhs)		{ return lhs.compare(rhs) > 0; }
+	inline bool operator<=(String const& lhs, String const& rhs)	{ return lhs.compare(rhs) <= 0; }
+	inline bool operator>=(String const& lhs, String const& rhs)	{ return lhs.compare(rhs) >= 0; }
 
 	//
 	// operator<<>> for String

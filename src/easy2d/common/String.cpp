@@ -45,7 +45,8 @@ namespace easy2d
 		}
 
 		template<class _Traits>
-		const size_t TraitsFind(const typename _Traits::char_type* first, size_t first_size, size_t offset,
+		size_t TraitsFind(
+			const typename _Traits::char_type* first, size_t first_size, size_t offset,
 			const typename _Traits::char_type* second, size_t count)
 		{
 			if (count > first_size || offset > first_size - count)
@@ -87,14 +88,12 @@ namespace easy2d
 					{
 						return static_cast<size_t>(iter - first);
 					}
-
 					if (iter == first)
 					{
 						break;
 					}
 				}
 			}
-
 			return static_cast<size_t>(-1);
 		}
 	}
