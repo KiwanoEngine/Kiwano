@@ -104,7 +104,6 @@
     <ClCompile Include="base\TaskManager.cpp" />
     <ClCompile Include="base\time.cpp" />
     <ClCompile Include="base\window.cpp" />
-    <ClCompile Include="common\String.cpp" />
     <ClCompile Include="platform\Application.cpp" />
     <ClCompile Include="platform\modules.cpp" />
     <ClCompile Include="renderer\D2DDeviceResources.cpp" />

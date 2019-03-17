@@ -302,9 +302,6 @@
     <ClCompile Include="2d\Transition.cpp">
       <Filter>2d</Filter>
     </ClCompile>
-    <ClCompile Include="common\String.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="base\EventDispatcher.cpp">
       <Filter>base</Filter>
     </ClCompile>
