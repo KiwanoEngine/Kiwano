@@ -4,11 +4,11 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloWorld", "samples\HelloWorld\HelloWorld.vcxproj", "{3561A359-F9FD-48AB-A977-34E7E568BC8E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Easy2D", "src\easy2d\Easy2D.vcxproj", "{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Easy2D", "easy2d\core\Easy2D.vcxproj", "{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Easy2D-ImGui", "src\easy2d-imgui\Easy2D-ImGui.vcxproj", "{23AFF03B-A670-4C33-B790-18EEC82C61AE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Easy2D-ImGui", "easy2d\imgui\Easy2D-ImGui.vcxproj", "{23AFF03B-A670-4C33-B790-18EEC82C61AE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Easy2D-Audio", "src\easy2d-audio\Easy2D-Audio.vcxproj", "{5D45F66B-BECD-4909-BCFC-C0F3CED9D0A2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Easy2D-Audio", "easy2d\audio\Easy2D-Audio.vcxproj", "{5D45F66B-BECD-4909-BCFC-C0F3CED9D0A2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Samples", "samples\Samples\Samples.vcxproj", "{45F5738D-CDF2-4024-974D-25B64F9043DE}"
 EndProject
