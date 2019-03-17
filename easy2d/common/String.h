@@ -1125,7 +1125,7 @@ namespace easy2d
 		if (len)
 		{
 			String str(len, L'\0');
-			::swprintf_s(&str[0], len + 1, fmt, std::forward<_Args>(args)...);
+			::swprintf_s(&str[0], len + 1, fmt, std::forward<_Args&&>(args)...);
 			return str;
 		}
 		return String{};

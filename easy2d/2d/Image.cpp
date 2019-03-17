@@ -75,7 +75,7 @@ namespace easy2d
 
 		if (FAILED(hr))
 		{
-			E2D_ERROR_HR_LOG(hr, L"Load image file failed!");
+			E2D_ERROR_LOG(L"Load image file failed with HRESULT of %08X", hr);
 			return false;
 		}
 

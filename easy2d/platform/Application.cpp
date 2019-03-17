@@ -291,7 +291,7 @@ namespace easy2d
 		);
 	}
 
-	void Application::AllocConsole()
+	void Application::ShowConsole()
 	{
 		if (!::GetConsoleWindow())
 		{

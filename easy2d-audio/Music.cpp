@@ -70,7 +70,7 @@ namespace easy2d
 
 		if (FAILED(hr))
 		{
-			E2D_ERROR_HR_LOG(hr, L"Load media file failed");
+			E2D_ERROR_LOG(L"Load media file failed with HRESULT of %08X", hr);
 			return false;
 		}
 
@@ -82,7 +82,7 @@ namespace easy2d
 				delete[] wave_data_;
 				wave_data_ = nullptr;
 			}
-			E2D_ERROR_HR_LOG(hr, L"Create source voice error");
+			E2D_ERROR_LOG(L"Create source voice failed with HRESULT of %08X", hr);
 			return false;
 		}
 
@@ -111,7 +111,7 @@ namespace easy2d
 		HRESULT hr = voice_.Play(wave_data_, size_, static_cast<UINT32>(loop_count));
 		if (FAILED(hr))
 		{
-			E2D_ERROR_HR_LOG(hr, L"Submitting source buffer error");
+			E2D_ERROR_LOG(L"Submitting source buffer failed with HRESULT of %08X", hr);
 		}
 
 		playing_ = SUCCEEDED(hr);

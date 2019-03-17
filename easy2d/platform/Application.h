@@ -132,8 +132,8 @@ namespace easy2d
 			bool show = true
 		);
 
-		// 分配控制台
-		static void AllocConsole();
+		// 显示控制台
+		static void ShowConsole();
 
 	protected:
 		void Render();

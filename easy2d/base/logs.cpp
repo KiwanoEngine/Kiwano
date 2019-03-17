@@ -19,194 +19,70 @@
 // THE SOFTWARE.
 
 #include "logs.h"
-#include <ctime>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
 
 namespace easy2d
 {
-	namespace logs
+	namespace __console_colors
 	{
-		using ConsoleColor = std::wostream&(*)(std::wostream&);
+		const WORD _blue = FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+		const WORD _green = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+		const WORD _red = FOREGROUND_RED | FOREGROUND_INTENSITY;
+		const WORD _yellow = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+		const WORD _white = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
 
-		namespace color
-		{
-			const WORD _blue = FOREGROUND_BLUE | FOREGROUND_INTENSITY;
-			const WORD _green = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-			const WORD _red = FOREGROUND_RED | FOREGROUND_INTENSITY;
-			const WORD _yellow = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
-			const WORD _white = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+		const WORD _blue_bg = _white | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+		const WORD _green_bg = _white | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
+		const WORD _red_bg = _white | BACKGROUND_RED | BACKGROUND_INTENSITY;
+		const WORD _yellow_bg = BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+		const WORD _white_bg = BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
 
-			const WORD _blue_bg = _white | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
-			const WORD _green_bg = _white | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
-			const WORD _red_bg = _white | BACKGROUND_RED | BACKGROUND_INTENSITY;
-			const WORD _yellow_bg = BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
-			const WORD _white_bg = BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+		const WORD _reset = _white;
 
-			const WORD _reset = _white;
-
+#define DECLARE_HANDLE_COLOR(NAME, HANDLE_NAME, COLOR)\
+	inline std::wostream& (NAME)(std::wostream& _out)\
+		{ ::SetConsoleTextAttribute(::GetStdHandle(HANDLE_NAME), _##COLOR); return _out; }
 
 #define DECLARE_COLOR(COLOR) \
-	inline std::wostream& (stdout_##COLOR)(std::wostream& _out)\
-		{ ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), _##COLOR); return _out; }\
-	\
-	inline std::wostream& (stderr_##COLOR)(std::wostream& _out)\
-		{ ::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), _##COLOR); return _out; }
+	DECLARE_HANDLE_COLOR(stdout_##COLOR, STD_OUTPUT_HANDLE, COLOR)\
+	DECLARE_HANDLE_COLOR(stderr_##COLOR, STD_ERROR_HANDLE, COLOR)
 
 #define DECLARE_BG_COLOR(COLOR) \
-	inline std::wostream& (stdout_##COLOR##_bg)(std::wostream& _out)\
-		{ ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), _##COLOR##_bg); return _out; }\
-	\
-	inline std::wostream& (stderr_##COLOR##_bg)(std::wostream& _out)\
-		{ ::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), _##COLOR##_bg); return _out; }
+	DECLARE_HANDLE_COLOR(stdout_##COLOR##_bg, STD_OUTPUT_HANDLE, COLOR##_bg)\
+	DECLARE_HANDLE_COLOR(stderr_##COLOR##_bg, STD_ERROR_HANDLE, COLOR##_bg)
 
-			DECLARE_COLOR(red);
-			DECLARE_COLOR(green);
-			DECLARE_COLOR(yellow);
-			DECLARE_COLOR(blue);
-			DECLARE_COLOR(white);
-			DECLARE_COLOR(reset);
+		DECLARE_COLOR(red);
+		DECLARE_COLOR(green);
+		DECLARE_COLOR(yellow);
+		DECLARE_COLOR(blue);
+		DECLARE_COLOR(white);
+		DECLARE_COLOR(reset);
 
-			DECLARE_BG_COLOR(red);
-			DECLARE_BG_COLOR(green);
-			DECLARE_BG_COLOR(yellow);
-			DECLARE_BG_COLOR(blue);
-			DECLARE_BG_COLOR(white);
+		DECLARE_BG_COLOR(red);
+		DECLARE_BG_COLOR(green);
+		DECLARE_BG_COLOR(yellow);
+		DECLARE_BG_COLOR(blue);
+		DECLARE_BG_COLOR(white);
 
 #undef DECLARE_COLOR
+#undef DECLARE_BG_COLOR
+	}
+
+	Logger::Logger()
+	{
+		enabled_ = ::GetConsoleWindow() != nullptr;
+		default_stdout_color_ = default_stderr_color_ = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+
+		CONSOLE_SCREEN_BUFFER_INFO stdout_info;
+		if (::GetConsoleScreenBufferInfo(::GetStdHandle(STD_OUTPUT_HANDLE), &stdout_info))
+		{
+			default_stdout_color_ = stdout_info.wAttributes;
 		}
 
-		namespace
+		CONSOLE_SCREEN_BUFFER_INFO stderr_info;
+		if (::GetConsoleScreenBufferInfo(::GetStdHandle(STD_ERROR_HANDLE), &stderr_info))
 		{
-#ifdef E2D_DEBUG
-			bool enabled = true;
-#else
-			bool enabled = false;
-#endif
-
-			std::wostream& OutPrefix(std::wostream& out)
-			{
-				std::time_t unix = std::time(nullptr);
-				std::tm tmbuf;
-				localtime_s(&tmbuf, &unix);
-				out << std::put_time(&tmbuf, L"[easy2d] %H:%M:%S ");
-				return out;
-			}
-
-			void Output(std::wostream& os, ConsoleColor color, bool endl, const wchar_t* prompt, const wchar_t* format, va_list args)
-			{
-				if (!enabled)
-					return;
-
-				static wchar_t temp_buffer[1024 * 3 + 1];
-
-				size_t len = ::_vscwprintf(format, args) + 1;
-				::_vsnwprintf_s(temp_buffer, len, len, format, args);
-
-				std::wstringstream ss;
-				if (prompt)
-					ss << OutPrefix << prompt << temp_buffer;
-				else
-					ss << OutPrefix << temp_buffer;
-
-				if (endl)
-					ss << L"\r\n";
-
-				std::wstring output = ss.str();
-				os << color << output;
-				::OutputDebugStringW(output.c_str());
-			}
-		}
-
-		void Enable()
-		{
-			enabled = true;
-		}
-
-		void Disable()
-		{
-			enabled = false;
-		}
-
-		void Print(const wchar_t* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::wcout, color::stdout_white, false, nullptr, format, args);
-
-			va_end(args);
-		}
-
-		void Println(const wchar_t* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::wcout, color::stdout_white, true, nullptr, format, args);
-
-			va_end(args);
-		}
-
-		void Message(const wchar_t * format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::wcout, color::stdout_blue, false, nullptr, format, args);
-
-			va_end(args);
-		}
-
-		void Messageln(const wchar_t * format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::wcout, color::stdout_blue, true, nullptr, format, args);
-
-			va_end(args);
-		}
-
-		void Warning(const wchar_t* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::wcerr, color::stdout_yellow_bg, false, L"Warning: ", format, args);
-
-			va_end(args);
-		}
-
-		void Warningln(const wchar_t* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::wcerr, color::stdout_yellow_bg, true, L"Warning: ", format, args);
-
-			va_end(args);
-		}
-
-		void Error(const wchar_t* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::wcerr, color::stderr_red_bg, false, L"Error: ", format, args);
-
-			va_end(args);
-		}
-
-		void Errorln(const wchar_t* format, ...)
-		{
-			va_list args = nullptr;
-			va_start(args, format);
-
-			Output(std::wcerr, color::stderr_red_bg, true, L"Error: ", format, args);
-
-			va_end(args);
+			default_stderr_color_ = stderr_info.wAttributes;
 		}
 	}
+
 }
