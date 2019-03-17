@@ -9,12 +9,12 @@
     <ClCompile Include="Voice.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\easy2d-audio.h" />
     <ClInclude Include="audio.h" />
     <ClInclude Include="audio-modules.h" />
     <ClInclude Include="Music.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Transcoder.h" />
     <ClInclude Include="Voice.h" />
+    <ClInclude Include="easy2d-audio.h" />
   </ItemGroup>
 </Project>

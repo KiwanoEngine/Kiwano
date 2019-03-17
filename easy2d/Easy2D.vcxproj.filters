@@ -239,7 +239,7 @@
     <ClInclude Include="base\Object.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\easy2d.h" />
+    <ClInclude Include="easy2d.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">

@@ -25,95 +25,95 @@
 
 #pragma once
 
-#include "core/macros.h"
+#include "macros.h"
 
 
 //
 // common
 //
 
-#include "core/common/Array.h"
-#include "core/common/String.h"
-#include "core/common/closure.hpp"
-#include "core/common/IntrusiveList.hpp"
-#include "core/common/IntrusivePtr.hpp"
-#include "core/common/ComPtr.hpp"
-#include "core/common/noncopyable.hpp"
-#include "core/common/Singleton.hpp"
-#include "core/common/helper.h"
+#include "common/Array.h"
+#include "common/String.h"
+#include "common/closure.hpp"
+#include "common/IntrusiveList.hpp"
+#include "common/IntrusivePtr.hpp"
+#include "common/ComPtr.hpp"
+#include "common/noncopyable.hpp"
+#include "common/Singleton.hpp"
+#include "common/helper.h"
 
 
 //
 // math
 //
 
-#include "core/math/constants.hpp"
-#include "core/math/scalar.hpp"
-#include "core/math/ease.hpp"
-#include "core/math/Vec2.hpp"
-#include "core/math/rand.h"
-#include "core/math/Matrix.hpp"
+#include "math/constants.hpp"
+#include "math/scalar.hpp"
+#include "math/ease.hpp"
+#include "math/Vec2.hpp"
+#include "math/rand.h"
+#include "math/Matrix.hpp"
 
 
 //
 // base
 //
 
-#include "core/base/window.h"
-#include "core/base/input.h"
-#include "core/base/time.h"
-#include "core/base/logs.h"
-#include "core/renderer/render.h"
-#include "core/platform/modules.h"
-#include "core/platform/Application.h"
+#include "base/window.h"
+#include "base/input.h"
+#include "base/time.h"
+#include "base/logs.h"
+#include "renderer/render.h"
+#include "platform/modules.h"
+#include "platform/Application.h"
 
-#include "core/base/Event.hpp"
-#include "core/base/EventListener.h"
-#include "core/base/EventDispatcher.h"
-#include "core/base/Task.h"
-#include "core/base/TaskManager.h"
+#include "base/Event.hpp"
+#include "base/EventListener.h"
+#include "base/EventDispatcher.h"
+#include "base/Task.h"
+#include "base/TaskManager.h"
 
-#include "core/2d/Font.hpp"
-#include "core/2d/Color.h"
-#include "core/2d/Transform.hpp"
-#include "core/2d/TextStyle.hpp"
-#include "core/base/Resource.h"
+#include "2d/Font.hpp"
+#include "2d/Color.h"
+#include "2d/Transform.hpp"
+#include "2d/TextStyle.hpp"
+#include "base/Resource.h"
 
-#include "core/base/Object.h"
-#include "core/2d/Image.h"
-#include "core/2d/Frames.h"
-#include "core/2d/Geometry.h"
-#include "core/2d/Action.h"
-#include "core/2d/ActionGroup.h"
-#include "core/2d/ActionTween.h"
-#include "core/2d/ActionHelper.h"
-#include "core/2d/Animation.h"
-#include "core/2d/ActionManager.h"
-#include "core/2d/Transition.h"
+#include "base/Object.h"
+#include "2d/Image.h"
+#include "2d/Frames.h"
+#include "2d/Geometry.h"
+#include "2d/Action.h"
+#include "2d/ActionGroup.h"
+#include "2d/ActionTween.h"
+#include "2d/ActionHelper.h"
+#include "2d/Animation.h"
+#include "2d/ActionManager.h"
+#include "2d/Transition.h"
 
-#include "core/2d/Node.h"
-#include "core/2d/Scene.h"
-#include "core/2d/Layer.h"
-#include "core/2d/Sprite.h"
-#include "core/2d/Text.h"
-#include "core/2d/Canvas.h"
-#include "core/2d/GeometryNode.h"
-#include "core/2d/DebugNode.h"
+#include "2d/Node.h"
+#include "2d/Scene.h"
+#include "2d/Layer.h"
+#include "2d/Sprite.h"
+#include "2d/Text.h"
+#include "2d/Canvas.h"
+#include "2d/GeometryNode.h"
+#include "2d/DebugNode.h"
 
 
 //
 // utils
 //
 
-#include "core/utils/Path.h"
-#include "core/utils/Data.h"
-#include "core/utils/File.h"
-#include "core/utils/ResLoader.h"
+#include "utils/Path.h"
+#include "utils/Data.h"
+#include "utils/File.h"
+#include "utils/ResLoader.h"
 
 
 //
 // ui
 //
 
-#include "core/ui/Button.h"
-#include "core/ui/Menu.h"
+#include "ui/Button.h"
+#include "ui/Menu.h"
