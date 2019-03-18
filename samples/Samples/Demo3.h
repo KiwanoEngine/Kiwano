@@ -20,7 +20,7 @@ public:
 	{
 		// ¼ÓÔØÒôÀÖ
 		music = new Music;
-		if (!music->Load(L"res/music.wav"))
+		if (!music->Load(L"res/splash.mp3"))
 		{
 			music = nullptr;
 

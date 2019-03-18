@@ -14,6 +14,7 @@ namespace
 		{ L"动画示例", Demo1::Create },
 		{ L"输入示例", Demo2::Create },
 		{ L"音频播放示例", Demo3::Create },
+		{ L"帧动画示例", Demo4::Create },
 	};
 	int s_DemoIndex = 0;
 	int s_DemoNum = sizeof(s_Demos) / sizeof(Demo);
@@ -25,6 +26,7 @@ class DemoApp
 public:
 	DemoApp()
 	{
+		ShowConsole();
 		// 使用 Audio 组件
 		Use(&Audio::Instance());
 
@@ -39,7 +41,8 @@ public:
 
 	void ChangeDemoScene()
 	{
-		GetWindow()->SetTitle(s_Demos[s_DemoIndex].title);
+		String title = s_Demos[s_DemoIndex].title;
+		GetWindow()->SetTitle(title);
 
 		ScenePtr scene = s_Demos[s_DemoIndex].Create();
 		EnterScene(scene);
@@ -48,8 +51,10 @@ public:
 		scene->AddListener(Event::KeyUp, Closure(this, &DemoApp::KeyPressed));
 
 		// 显示提示文字
-		TextPtr intro = new Text(L"Key 1~3 to select demo");
+		String intro_str = format_wstring(L"按键 1~%d 可切换示例\n", s_DemoNum);
+		TextPtr intro = new Text(intro_str + title);
 		intro->SetFontSize(16.f);
+		intro->SetPosition(10, 10);
 		scene->AddChild(intro);
 	}
 

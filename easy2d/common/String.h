@@ -1203,14 +1203,14 @@ namespace std
 	template<>
 	struct hash<::easy2d::String>
 	{
-		size_t operator()(const easy2d::String& key) const
+		inline size_t operator()(const easy2d::String& key) const
 		{
 			return key.hash();
 		}
 	};
 
 	template<>
-	void swap<::easy2d::String>(::easy2d::String& lhs, ::easy2d::String& rhs)
+	inline void swap<::easy2d::String>(::easy2d::String& lhs, ::easy2d::String& rhs)
 	{
 		lhs.swap(rhs);
 	}
