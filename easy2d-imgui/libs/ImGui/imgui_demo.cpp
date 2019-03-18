@@ -1150,7 +1150,7 @@ static void ShowDemoWindowWidgets()
         ImGui::TreePop();
     }
 
-    if (ImGui::TreeNode("Data Types"))
+    if (ImGui::TreeNode("DataUtil Types"))
     {
         // The DragScalar/InputScalar/SliderScalar functions allow various data types: signed/unsigned int/long long and float/double
         // To avoid polluting the public API with all possible combinations, we use the ImGuiDataType enum to pass the type,

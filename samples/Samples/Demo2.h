@@ -3,20 +3,21 @@
 #pragma once
 #include "common.h"
 
-E2D_DECLARE_SMART_PTR(Man);
-class Man
+// 怪物
+E2D_DECLARE_SMART_PTR(Monster);
+class Monster
 	: public Sprite
 {
 public:
-	Man()
+	Monster()
 	{
 		// 加载图片
-		Load(L"res/man.png");
+		Load(L"res/akushu.png");
 		// 缩小图片
-		SetScale(0.5f);
+		SetScale(0.7f);
 	}
 
-	// 每帧更新时
+	// 每帧渲染前执行 OnUpdate
 	void OnUpdate(Duration dt) override
 	{
 		// 获取输入设备
@@ -41,7 +42,7 @@ public:
 			this->Move(0, 2);
 		}
 
-		// 按下鼠标左键，顺时针旋转小人
+		// 按下鼠标左键，顺时针旋转怪物
 		if (input.IsDown(MouseButton::Left))
 		{
 			// 获取当前旋转角度
@@ -50,7 +51,7 @@ public:
 			this->SetRotation(rotation + 2);
 		}
 
-		// 点击鼠标右键，隐藏或显示小人
+		// 点击鼠标右键，隐藏或显示怪物
 		if (input.WasPressed(MouseButton::Right))
 		{
 			// 获取当前显示状态
@@ -72,11 +73,11 @@ public:
 
 	Demo2()
 	{
-		// 创建人物
-		ManPtr man = new Man;
+		// 创建怪物
+		MonsterPtr monster = new Monster;
 		// 在屏幕上居中显示
-		man->SetAnchor(0.5f, 0.5f);
-		man->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		monster->SetAnchor(0.5f, 0.5f);
+		monster->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
 		// 创建说明文字
 		TextPtr text = new Text(L"按上下左右键移动\n按鼠标左键旋转\n点击鼠标右键隐藏");
@@ -88,7 +89,7 @@ public:
 		text->SetAlignment(TextAlign::Center);
 
 		// 添加到场景
-		this->AddChild(man);
+		this->AddChild(monster);
 		this->AddChild(text);
 	}
 };

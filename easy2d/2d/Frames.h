@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	// 帧集合
+	// 序列帧
 	class E2D_API Frames
 		: public virtual Object
 	{
@@ -31,7 +31,7 @@ namespace easy2d
 		Frames();
 
 		explicit Frames(
-			Array<ImagePtr> const& frames	/* 关键帧数组 */
+			Array<ImagePtr> const& frames	/* 序列帧 */
 		);
 
 		virtual ~Frames();
