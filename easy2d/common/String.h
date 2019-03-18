@@ -98,6 +98,8 @@ namespace easy2d
 		String(const wchar_t* cstr, bool const_str = true);
 		String(const wchar_t* cstr, size_type count);
 		String(size_type count, wchar_t ch);
+		String(const char* cstr);
+		String(std::string const& str);
 		String(std::wstring const& str);
 		String(String const& rhs);
 		String(String const& rhs, size_type pos, size_type count = npos);
@@ -442,6 +444,31 @@ namespace easy2d
 		: String()
 	{
 		assign(count, ch);
+	}
+
+	inline String::String(const char * cstr)
+		: String()
+	{
+		if (cstr)
+		{
+			int len = ::MultiByteToWideChar(CP_ACP, 0, cstr, -1, nullptr, 0);
+			if (len)
+			{
+				wchar_t* temp = allocate(len + 1);
+				temp[0] = 0;
+
+				if (::MultiByteToWideChar(CP_ACP, 0, cstr, -1, temp, len + 1))
+				{
+					str_ = temp;
+					capacity_ = size_ = static_cast<size_type>(len);
+				}
+			}
+		}
+	}
+
+	inline String::String(std::string const & str)
+		: String(str.c_str())
+	{
 	}
 
 	inline String::String(std::wstring const & str)
@@ -1174,11 +1201,17 @@ namespace easy2d
 namespace std
 {
 	template<>
-	struct hash<easy2d::String>
+	struct hash<::easy2d::String>
 	{
 		size_t operator()(const easy2d::String& key) const
 		{
 			return key.hash();
 		}
 	};
+
+	template<>
+	void swap<::easy2d::String>(::easy2d::String& lhs, ::easy2d::String& rhs)
+	{
+		lhs.swap(rhs);
+	}
 }

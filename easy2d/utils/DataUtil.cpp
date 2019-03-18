@@ -18,131 +18,141 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Data.h"
-#include "Path.h"
+#include "DataUtil.h"
 
 namespace easy2d
 {
-	Data::Data(String const& key, String const& field)
-		: key_(key)
-		, field_(field)
-		, data_path_(Path::GetDataPath())
+	DataUtil::DataUtil(String const & file_path, String const & field)
 	{
+		SetFilePath(file_path);
+		SetFieldName(field);
 	}
 
-	bool Data::Exists() const
+	void DataUtil::SetFilePath(String const & file_path)
+	{
+		file_path_ = file_path;
+	}
+
+	void DataUtil::SetFieldName(String const & field_name)
+	{
+		field_name_ = field_name;
+	}
+
+	bool DataUtil::Exists(String const& key) const
 	{
 		wchar_t temp[256] = { 0 };
 		::GetPrivateProfileStringW(
-			field_.c_str(),
-			key_.c_str(),
+			field_name_.c_str(),
+			key.c_str(),
 			L"",
 			temp,
 			255,
-			data_path_.c_str()
+			file_path_.c_str()
 		);
 		return temp[0] == L'\0';
 	}
 
-	bool Data::SaveInt(int val)
+	bool DataUtil::SaveInt(String const& key, int val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
-			field_.c_str(),
-			key_.c_str(),
+			field_name_.c_str(),
+			key.c_str(),
 			std::to_wstring(val).c_str(),
-			data_path_.c_str()
+			file_path_.c_str()
 		);
 		return ret == TRUE;
 	}
 
-	bool Data::SaveFloat(float val)
+	bool DataUtil::SaveFloat(String const& key, float val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
-			field_.c_str(),
-			key_.c_str(),
+			field_name_.c_str(),
+			key.c_str(),
 			std::to_wstring(val).c_str(),
-			data_path_.c_str()
+			file_path_.c_str()
 		);
 		return ret == TRUE;
 	}
 
-	bool Data::SaveDouble(double val)
+	bool DataUtil::SaveDouble(String const& key, double val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
-			field_.c_str(),
-			key_.c_str(),
+			field_name_.c_str(),
+			key.c_str(),
 			std::to_wstring(val).c_str(),
-			data_path_.c_str()
+			file_path_.c_str()
 		);
 		return ret == TRUE;
 	}
 
-	bool Data::SaveBool(bool val)
+	bool DataUtil::SaveBool(String const& key, bool val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
-			field_.c_str(),
-			key_.c_str(),
+			field_name_.c_str(),
+			key.c_str(),
 			(val ? L"1" : L"0"),
-			data_path_.c_str()
+			file_path_.c_str()
 		);
 		return ret == TRUE;
 	}
 
-	bool Data::SaveString(String const& val)
+	bool DataUtil::SaveString(String const& key, String const& val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
-			field_.c_str(),
-			key_.c_str(),
+			field_name_.c_str(),
+			key.c_str(),
 			val.c_str(),
-			data_path_.c_str()
+			file_path_.c_str()
 		);
 		return ret == TRUE;
 	}
 
-	int Data::GetInt() const
+	int DataUtil::GetInt(String const & key, int default_value) const
 	{
 		return ::GetPrivateProfileIntW(
-			field_.c_str(),
-			key_.c_str(),
-			0,
-			data_path_.c_str()
+			field_name_.c_str(),
+			key.c_str(),
+			default_value,
+			file_path_.c_str()
 		);
 	}
 
-	float Data::GetFloat() const
+	float DataUtil::GetFloat(String const & key, float default_value) const
 	{
 		wchar_t temp[32] = { 0 };
-		::GetPrivateProfileStringW(field_.c_str(), key_.c_str(), L"0.0", temp, 31, data_path_.c_str());
+		String default_str = to_wstring(default_value);
+		::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
 		return std::stof(temp);
 	}
 
-	double Data::GetDouble() const
+	double DataUtil::GetDouble(String const & key, double default_value) const
 	{
 		wchar_t temp[32] = { 0 };
-		::GetPrivateProfileStringW(field_.c_str(), key_.c_str(), L"0.0", temp, 31, data_path_.c_str());
+		String default_str = to_wstring(default_value);
+		::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
 		return std::stod(temp);
 	}
 
-	bool Data::GetBool() const
+	bool DataUtil::GetBool(String const & key, bool default_value) const
 	{
 		int nValue = ::GetPrivateProfileIntW(
-			field_.c_str(),
-			key_.c_str(),
-			0,
-			data_path_.c_str());
+			field_name_.c_str(),
+			key.c_str(),
+			default_value ? 1 : 0,
+			file_path_.c_str());
 		return nValue == TRUE;
 	}
 
-	String Data::GetString()
+	String DataUtil::GetString(String const & key, String const & default_value) const
 	{
 		wchar_t temp[256] = { 0 };
 		::GetPrivateProfileStringW(
-			field_.c_str(),
-			key_.c_str(),
-			L"",
+			field_name_.c_str(),
+			key.c_str(),
+			default_value.c_str(),
 			temp,
 			255,
-			data_path_.c_str()
+			file_path_.c_str()
 		);
 		return temp;
 	}

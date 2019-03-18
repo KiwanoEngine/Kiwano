@@ -31,21 +31,21 @@ namespace easy2d
 {
 	using StringStream = std::wstringstream;
 
-	template<typename Type1, typename Type2>
-	using Pair = std::pair<Type1, Type2>;
+	template<typename _Ty1, typename _Ty2>
+	using Pair = std::pair<_Ty1, _Ty2>;
 
-	template<typename Type>
-	using List = std::list<Type>;
+	template<typename _Ty, typename... _Args>
+	using List = std::list<_Ty, _Args...>;
 
-	template<typename Type>
-	using Set = std::set<Type>;
+	template<typename _Ty, typename... _Args>
+	using Set = std::set<_Ty, _Args...>;
 
-	template<typename Type>
-	using UnorderedSet = std::unordered_set<Type>;
+	template<typename _Ty, typename... _Args>
+	using UnorderedSet = std::unordered_set<_Ty, _Args...>;
 
-	template<typename KeyType, typename MappedType>
-	using Map = std::map<KeyType, MappedType>;
+	template<typename _Kty, typename _Ty, typename... _Args>
+	using Map = std::map<_Kty, _Ty, _Args...>;
 
-	template<typename KeyType, typename MappedType>
-	using UnorderedMap = std::unordered_map<KeyType, MappedType>;
+	template<typename _Kty, typename _Ty, typename... _Args>
+	using UnorderedMap = std::unordered_map<_Kty, _Ty, _Args...>;
 }

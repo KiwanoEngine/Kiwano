@@ -70,7 +70,7 @@
     <ClInclude Include="renderer\TextRenderer.h" />
     <ClInclude Include="ui\Button.h" />
     <ClInclude Include="ui\Menu.h" />
-    <ClInclude Include="utils\Data.h" />
+    <ClInclude Include="utils\DataUtil.h" />
     <ClInclude Include="utils\File.h" />
     <ClInclude Include="utils\Path.h" />
     <ClInclude Include="utils\ResLoader.h" />
@@ -113,7 +113,7 @@
     <ClCompile Include="renderer\TextRenderer.cpp" />
     <ClCompile Include="ui\Button.cpp" />
     <ClCompile Include="ui\Menu.cpp" />
-    <ClCompile Include="utils\Data.cpp" />
+    <ClCompile Include="utils\DataUtil.cpp" />
     <ClCompile Include="utils\File.cpp" />
     <ClCompile Include="utils\Path.cpp" />
     <ClCompile Include="utils\ResLoader.cpp" />

@@ -218,9 +218,6 @@
     </ClInclude>
     <ClInclude Include="config.h" />
     <ClInclude Include="macros.h" />
-    <ClInclude Include="utils\Data.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="math\helper.h">
       <Filter>math</Filter>
     </ClInclude>
@@ -240,6 +237,9 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="easy2d.h" />
+    <ClInclude Include="utils\DataUtil.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -353,9 +353,6 @@
     <ClCompile Include="utils\ResLoader.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="utils\Data.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="base\Input.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -364,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="base\Object.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\DataUtil.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
