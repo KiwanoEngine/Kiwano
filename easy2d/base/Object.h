@@ -21,6 +21,7 @@
 #pragma once
 #include "../macros.h"
 #include "../common/helper.h"
+#include "../common/Json.h"
 #include "RefCounter.hpp"
 #include "SmartPtr.hpp"
 
@@ -44,7 +45,7 @@ namespace easy2d
 
 		inline String GetName() const { if (name_) return *name_; return String(); }
 
-		inline bool IsName(String const& name) const { return (name_ && (*name_ == name)); }
+		inline bool IsName(String const& name) const { return (name_ && (*name_ == name)) || (name.empty() && !name_); }
 
 		static void StartTracingLeaks();
 

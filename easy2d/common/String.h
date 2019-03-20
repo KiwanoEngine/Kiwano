@@ -35,7 +35,7 @@ namespace easy2d
 	public:
 		// Iterator
 		template <typename _Ty>
-		struct _Iterator
+		struct iterator_impl
 		{
 			using iterator_category	= typename std::iterator_traits<_Ty*>::iterator_category;
 			using value_type		= typename std::iterator_traits<_Ty*>::value_type;
@@ -46,53 +46,53 @@ namespace easy2d
 			// disable warning 4996
 			using _Unchecked_type = _Ty;
 
-			inline _Iterator(pointer base = nullptr) : base_(base) {}
+			inline iterator_impl(pointer base = nullptr) : base_(base) {}
 
-			inline reference operator*() const								{ return *base_; }
-			inline pointer base() const										{ return base_; }
+			inline reference operator*() const									{ return *base_; }
+			inline pointer base() const											{ return base_; }
 
-			inline _Iterator& operator++()									{ ++base_; return (*this); }
-			inline _Iterator operator++(int)								{ _Iterator old = (*this); ++(*this); return old; }
+			inline iterator_impl& operator++()									{ ++base_; return (*this); }
+			inline iterator_impl operator++(int)								{ iterator_impl old = (*this); ++(*this); return old; }
 
-			inline _Iterator& operator--()									{ --base_; return (*this); }
-			inline _Iterator operator--(int)								{ _Iterator old = (*this); --(*this); return old; }
+			inline iterator_impl& operator--()									{ --base_; return (*this); }
+			inline iterator_impl operator--(int)								{ iterator_impl old = (*this); --(*this); return old; }
 
-			inline const _Iterator operator+(difference_type off) const		{ return _Iterator(base_ + off); }
-			inline const _Iterator operator-(difference_type off) const		{ return _Iterator(base_ - off); }
+			inline const iterator_impl operator+(difference_type off) const		{ return iterator_impl(base_ + off); }
+			inline const iterator_impl operator-(difference_type off) const		{ return iterator_impl(base_ - off); }
 
-			inline _Iterator& operator+=(difference_type off)				{ base_ += off; return (*this); }
-			inline _Iterator& operator-=(difference_type off)				{ base_ -= off; return (*this); }
+			inline iterator_impl& operator+=(difference_type off)				{ base_ += off; return (*this); }
+			inline iterator_impl& operator-=(difference_type off)				{ base_ -= off; return (*this); }
 
-			inline difference_type operator-(_Iterator const& other) const	{ return base_ - other.base_; }
+			inline difference_type operator-(iterator_impl const& other) const	{ return base_ - other.base_; }
 
-			inline bool operator==(_Iterator const& other) const			{ return base_ == other.base_; }
-			inline bool operator!=(_Iterator const& other) const			{ return !(*this == other); }
+			inline bool operator==(iterator_impl const& other) const			{ return base_ == other.base_; }
+			inline bool operator!=(iterator_impl const& other) const			{ return !(*this == other); }
 
-			inline bool operator<(_Iterator const& other) const				{ return base_ < other.base_; }
-			inline bool operator<=(_Iterator const& other) const			{ return base_ <= other.base_; }
-			inline bool operator>(_Iterator const& other) const				{ return base_ > other.base_; }
-			inline bool operator>=(_Iterator const& other) const			{ return base_ >= other.base_; }
+			inline bool operator<(iterator_impl const& other) const				{ return base_ < other.base_; }
+			inline bool operator<=(iterator_impl const& other) const			{ return base_ <= other.base_; }
+			inline bool operator>(iterator_impl const& other) const				{ return base_ > other.base_; }
+			inline bool operator>=(iterator_impl const& other) const			{ return base_ >= other.base_; }
 
-			inline reference operator[](difference_type off)				{ return *(base_ + off); }
-			inline const reference operator[](difference_type off) const	{ return *(base_ + off); }
+			inline reference operator[](difference_type off)					{ return *(base_ + off); }
+			inline const reference operator[](difference_type off) const		{ return *(base_ + off); }
 
-			inline operator bool() const									{ return base_ != nullptr; }
+			inline operator bool() const										{ return base_ != nullptr; }
 
 		private:
 			pointer base_{ nullptr };
 		};
 
 	public:
-		using value_type = wchar_t;
-		using size_type = size_t;
-		using reference = value_type &;
-		using const_reference = const value_type &;
-		using iterator = _Iterator<value_type>;
-		using const_iterator = _Iterator<const value_type>;
-		using reverse_iterator = std::reverse_iterator<iterator>;
-		using const_reverse_iterator = std::reverse_iterator<const_iterator>;
-		using traits = std::char_traits<value_type>;
-		using allocator = std::allocator<value_type>;
+		using value_type				= wchar_t;
+		using size_type					= size_t;
+		using reference					= value_type &;
+		using const_reference			= const value_type &;
+		using iterator					= iterator_impl<value_type>;
+		using const_iterator			= iterator_impl<const value_type>;
+		using reverse_iterator			= std::reverse_iterator<iterator>;
+		using const_reverse_iterator	= std::reverse_iterator<const_iterator>;
+		using traits					= std::char_traits<value_type>;
+		using allocator					= std::allocator<value_type>;
 
 		String();
 		String(const wchar_t* cstr, bool const_str = true);
@@ -422,6 +422,9 @@ namespace easy2d
 		, capacity_(0)
 		, str_(nullptr)
 	{
+		if (cstr == nullptr)
+			return;
+
 		if (operable_)
 		{
 			assign(cstr, traits::length(cstr));

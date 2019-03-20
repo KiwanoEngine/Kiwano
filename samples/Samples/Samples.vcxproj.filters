@@ -4,7 +4,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include-forwards.h" />
     <ClInclude Include="Demo1.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="Demo2.h" />
