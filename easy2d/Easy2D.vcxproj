@@ -48,6 +48,7 @@
     <ClInclude Include="common\helper.h" />
     <ClInclude Include="common\IntrusiveList.hpp" />
     <ClInclude Include="common\IntrusivePtr.hpp" />
+    <ClInclude Include="common\Json.h" />
     <ClInclude Include="common\noncopyable.hpp" />
     <ClInclude Include="common\Singleton.hpp" />
     <ClInclude Include="common\String.h" />

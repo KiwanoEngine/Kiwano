@@ -1,6 +1,9 @@
 // Copyright (C) 2019 Nomango
 
-#include "include-forwards.h"
+#include "Demo1.h"
+#include "Demo2.h"
+#include "Demo3.h"
+#include "Demo4.h"
 
 namespace
 {

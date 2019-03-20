@@ -141,7 +141,6 @@
     <ClInclude Include="Demo2.h" />
     <ClInclude Include="Demo3.h" />
     <ClInclude Include="Demo4.h" />
-    <ClInclude Include="include-forwards.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\easy2d-audio\Easy2D-Audio.vcxproj">

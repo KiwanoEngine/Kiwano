@@ -51,7 +51,7 @@ namespace easy2d
 	{
 	public:
 		using value_type				= _Ty;
-		using size_type					= int;
+		using size_type					= std::size_t;
 		using iterator					= value_type * ;
 		using const_iterator			= const value_type*;
 		using reference					= value_type & ;
@@ -60,12 +60,13 @@ namespace easy2d
 		using const_reverse_iterator	= std::reverse_iterator<const_iterator>;
 		using allocator_type			= typename _Alloc;
 		using manager					= typename _Manager;
+		using initializer_list			= std::initializer_list<value_type>;
 
 	public:
 		inline Array()																	: size_(0), capacity_(0), data_(nullptr) { }
 		inline Array(size_type count)													: Array() { reserve(count); }
 		inline Array(size_type count, const _Ty& val)									: Array() { assign(count, val); }
-		inline Array(std::initializer_list<_Ty> const& list)							: Array() { assign(list); }
+		inline Array(initializer_list list)												: Array() { assign(list); }
 		inline Array(const Array& src)													: Array() { assign(src); }
 		inline Array(Array&& src)														: Array() { swap(src); }
 		inline ~Array()																	{ destroy(); }
@@ -75,11 +76,11 @@ namespace easy2d
 
 		inline Array&		operator=(const Array& src)									{ if (&src != this) { resize(src.size_); manager::copy_data(begin(), src.cbegin(), size_); } return (*this); }
 		inline Array&		operator=(Array&& src)										{ swap(src); return *this; }
-		inline Array&		operator=(std::initializer_list<_Ty> const& list)			{ if (list.size()) { assign(list.begin(), list.end()); } else clear(); return (*this); }
+		inline Array&		operator=(initializer_list list)							{ if (list.size()) { assign(list.begin(), list.end()); } else clear(); return (*this); }
 
 		inline Array&		assign(size_type count, const _Ty& val)						{ if (count > 0) { resize(count); manager::copy_data(begin(), count, val); } else clear(); return (*this); }
 		inline Array&		assign(const Array& src)									{ return operator=(src); }
-		inline Array&		assign(std::initializer_list<_Ty> const& list)				{ return operator=(list); }
+		inline Array&		assign(initializer_list list)								{ return operator=(list); }
 
 		template <typename _Iter>
 		inline void			assign(_Iter first, _Iter last)								{ auto diff = std::distance(first, last); resize((size_type)diff); auto data = begin(); while (first != last) (*data++) = (*first++); }
