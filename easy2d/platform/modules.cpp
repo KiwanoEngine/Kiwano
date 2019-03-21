@@ -38,7 +38,8 @@ namespace easy2d
 			}
 			else
 			{
-				E2D_LOG(L"load shlapi.dll failed");
+				E2D_ERROR_LOG(L"Load shlapi.dll failed");
+				throw std::runtime_error("Load shlapi.dll failed");
 			}
 		}
 	}
