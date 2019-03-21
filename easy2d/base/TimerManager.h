@@ -18,77 +18,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Task.h"
+#pragma once
+#include "Timer.h"
 
 namespace easy2d
 {
-	Task::Task(Callback const& func, String const& name)
-		: Task(func, Duration{}, -1, name)
+	class E2D_API TimerManager
 	{
-	}
+		using Timers = IntrusiveList<TimerPtr>;
 
-	Task::Task(Callback const& func, Duration delay, int times, String const& name)
-		: running_(true)
-		, run_times_(0)
-		, total_times_(times)
-		, delay_(delay)
-		, callback_(func)
-		, delta_()
-	{
-		SetName(name);
-	}
+	public:
+		// 添加任务
+		void AddTimer(
+			TimerPtr const& timer
+		);
 
-	void Task::Start()
-	{
-		running_ = true;
-	}
+		// 启动任务
+		void StartTimers(
+			String const& timer_name
+		);
 
-	void Task::Stop()
-	{
-		running_ = false;
-	}
+		// 停止任务
+		void StopTimers(
+			String const& timer_name
+		);
 
-	void Task::Update(Duration dt, bool& remove_after_update)
-	{
-		if (!running_)
-			return;
+		// 移除任务
+		void RemoveTimers(
+			String const& timer_name
+		);
 
-		if (total_times_ == 0)
-		{
-			remove_after_update = true;
-			return;
-		}
+		// 启动所有任务
+		void StartAllTimers();
 
-		if (!delay_.IsZero())
-		{
-			delta_ += dt;
-			if (delta_ < delay_)
-				return;
-		}
+		// 停止所有任务
+		void StopAllTimers();
 
-		++run_times_;
+		// 移除所有任务
+		void RemoveAllTimers();
 
-		if (callback_)
-		{
-			callback_();
-		}
+		// 获取所有任务
+		const Timers& GetAllTimers() const;
 
-		if (run_times_ == total_times_)
-		{
-			remove_after_update = true;
-			return;
-		}
-	}
+	protected:
+		void UpdateTimers(Duration dt);
 
-	void Task::Reset()
-	{
-		delta_ = Duration{};
-		run_times_ = 0;
-	}
-
-	bool Task::IsRunning() const
-	{
-		return running_;
-	}
-
+	protected:
+		Timers timers_;
+	};
 }

@@ -29,7 +29,6 @@ class DemoApp
 public:
 	DemoApp()
 	{
-		ShowConsole();
 		// 使用 Audio 组件
 		Use(&Audio::Instance());
 

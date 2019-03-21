@@ -38,8 +38,8 @@
     <ClInclude Include="base\RefCounter.hpp" />
     <ClInclude Include="base\Resource.h" />
     <ClInclude Include="base\SmartPtr.hpp" />
-    <ClInclude Include="base\Task.h" />
-    <ClInclude Include="base\TaskManager.h" />
+    <ClInclude Include="base\Timer.h" />
+    <ClInclude Include="base\TimerManager.h" />
     <ClInclude Include="base\time.h" />
     <ClInclude Include="base\window.h" />
     <ClInclude Include="common\Array.h" />
@@ -101,8 +101,8 @@
     <ClCompile Include="base\logs.cpp" />
     <ClCompile Include="base\Object.cpp" />
     <ClCompile Include="base\Resource.cpp" />
-    <ClCompile Include="base\Task.cpp" />
-    <ClCompile Include="base\TaskManager.cpp" />
+    <ClCompile Include="base\Timer.cpp" />
+    <ClCompile Include="base\TimerManager.cpp" />
     <ClCompile Include="base\time.cpp" />
     <ClCompile Include="base\window.cpp" />
     <ClCompile Include="platform\Application.cpp" />

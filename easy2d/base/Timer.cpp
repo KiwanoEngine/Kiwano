@@ -18,62 +18,77 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "../common/helper.h"
-#include "../common/IntrusiveList.hpp"
-#include "Object.h"
-#include "time.h"
-#include <functional>
+#include "Timer.h"
 
 namespace easy2d
 {
-	class TaskManager;
-
-	E2D_DECLARE_SMART_PTR(Task);
-
-    // 定时任务
-	class E2D_API Task
-		: public virtual Object
-		, protected IntrusiveListItem<TaskPtr>
+	Timer::Timer(Callback const& func, String const& name)
+		: Timer(func, Duration{}, -1, name)
 	{
-		friend class TaskManager;
-		friend class IntrusiveList<TaskPtr>;
+	}
 
-		using Callback = std::function<void()>;
+	Timer::Timer(Callback const& func, Duration delay, int times, String const& name)
+		: running_(true)
+		, run_times_(0)
+		, total_times_(times)
+		, delay_(delay)
+		, callback_(func)
+		, delta_()
+	{
+		SetName(name);
+	}
 
-	public:
-		explicit Task(
-			Callback const& func,		/* 执行函数 */
-			String const& name = L""	/* 任务名称 */
-		);
+	void Timer::Start()
+	{
+		running_ = true;
+	}
 
-		explicit Task(
-			Callback const& func,		/* 执行函数 */
-			Duration delay,				/* 时间间隔（秒） */
-			int times = -1,				/* 执行次数（设 -1 为永久执行） */
-			String const& name = L""	/* 任务名称 */
-		);
+	void Timer::Stop()
+	{
+		running_ = false;
+	}
 
-		// 启动任务
-		void Start();
+	void Timer::Update(Duration dt, bool& remove_after_update)
+	{
+		if (!running_)
+			return;
 
-		// 停止任务
-		void Stop();
+		if (total_times_ == 0)
+		{
+			remove_after_update = true;
+			return;
+		}
 
-		// 任务是否正在执行
-		bool IsRunning() const;
+		if (!delay_.IsZero())
+		{
+			delta_ += dt;
+			if (delta_ < delay_)
+				return;
+		}
 
-	protected:
-		void Update(Duration dt, bool& remove_after_update);
+		++run_times_;
 
-		void Reset();
+		if (callback_)
+		{
+			callback_();
+		}
 
-	protected:
-		bool		running_;
-		int			run_times_;
-		int			total_times_;
-		Duration	delay_;
-		Duration	delta_;
-		Callback	callback_;
-	};
+		if (run_times_ == total_times_)
+		{
+			remove_after_update = true;
+			return;
+		}
+	}
+
+	void Timer::Reset()
+	{
+		delta_ = Duration{};
+		run_times_ = 0;
+	}
+
+	bool Timer::IsRunning() const
+	{
+		return running_;
+	}
+
 }

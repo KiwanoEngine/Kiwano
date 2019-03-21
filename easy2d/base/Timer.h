@@ -19,51 +19,61 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Task.h"
+#include "../common/helper.h"
+#include "../common/IntrusiveList.hpp"
+#include "Object.h"
+#include "time.h"
+#include <functional>
 
 namespace easy2d
 {
-	class E2D_API TaskManager
+	class TimerManager;
+
+	E2D_DECLARE_SMART_PTR(Timer);
+
+    // 定时任务
+	class E2D_API Timer
+		: public virtual Object
+		, protected IntrusiveListItem<TimerPtr>
 	{
-		using Tasks = IntrusiveList<TaskPtr>;
+		friend class TimerManager;
+		friend class IntrusiveList<TimerPtr>;
+
+		using Callback = std::function<void()>;
 
 	public:
-		// 添加任务
-		void AddTask(
-			TaskPtr const& task
+		explicit Timer(
+			Callback const& func,		/* 执行函数 */
+			String const& name = L""	/* 任务名称 */
+		);
+
+		explicit Timer(
+			Callback const& func,		/* 执行函数 */
+			Duration delay,				/* 时间间隔（秒） */
+			int times = -1,				/* 执行次数（设 -1 为永久执行） */
+			String const& name = L""	/* 任务名称 */
 		);
 
 		// 启动任务
-		void StartTasks(
-			String const& task_name
-		);
+		void Start();
 
 		// 停止任务
-		void StopTasks(
-			String const& task_name
-		);
+		void Stop();
 
-		// 移除任务
-		void RemoveTasks(
-			String const& task_name
-		);
-
-		// 启动所有任务
-		void StartAllTasks();
-
-		// 停止所有任务
-		void StopAllTasks();
-
-		// 移除所有任务
-		void RemoveAllTasks();
-
-		// 获取所有任务
-		const Tasks& GetAllTasks() const;
+		// 任务是否正在执行
+		bool IsRunning() const;
 
 	protected:
-		void UpdateTasks(Duration dt);
+		void Update(Duration dt, bool& remove_after_update);
+
+		void Reset();
 
 	protected:
-		Tasks tasks_;
+		bool		running_;
+		int			run_times_;
+		int			total_times_;
+		Duration	delay_;
+		Duration	delta_;
+		Callback	callback_;
 	};
 }
