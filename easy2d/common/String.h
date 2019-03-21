@@ -191,6 +191,20 @@ namespace easy2d
 		size_t					hash() const;
 
 	public:
+		static String parse(int val);
+		static String parse(unsigned int val);
+		static String parse(long val);
+		static String parse(unsigned long val);
+		static String parse(long long val);
+		static String parse(unsigned long long val);
+		static String parse(float val);
+		static String parse(double val);
+		static String parse(long double val);
+
+		template<typename ..._Args>
+		static String format(const wchar_t* const fmt, _Args&&... args);
+
+	public:
 		inline iterator					begin()							{ check_operability(); return iterator(str_); }
 		inline const_iterator			begin() const					{ return const_iterator(const_str_); }
 		inline const_iterator			cbegin() const					{ return begin(); }
@@ -228,9 +242,6 @@ namespace easy2d
 		inline String&		operator=(std::wstring const& str)			{ String{ str }.swap(*this); return *this; }
 		inline String&		operator=(String const& rhs)				{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
 		inline String&		operator=(String && rhs)					{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
-
-		inline bool			operator!=(String const& rhs)				{ return compare(rhs) != 0; }
-		inline bool			operator!=(const wchar_t* cstr)				{ return compare(cstr) != 0; }
 
 	public:
 		static const String::size_type npos = static_cast<size_type>(-1);
@@ -299,8 +310,20 @@ namespace easy2d
 	//
 
 	inline bool operator==(String const& lhs, String const& rhs)	{ return lhs.compare(rhs) == 0; }
-	inline bool operator==(const wchar_t* lhs, String const& rhs)	{ return rhs.compare(rhs) == 0; }
+	inline bool operator==(const wchar_t* lhs, String const& rhs)	{ return rhs.compare(lhs) == 0; }
 	inline bool operator==(String const& lhs, const wchar_t* rhs)	{ return lhs.compare(rhs) == 0; }
+	inline bool operator==(const char* lhs, String const& rhs)		{ return rhs.compare(String(lhs)) == 0; }
+	inline bool operator==(String const& lhs, const char* rhs)		{ return lhs.compare(String(rhs)) == 0; }
+
+	//
+	// operator!= for String
+	//
+
+	inline bool operator!=(String const& lhs, String const& rhs)	{ return lhs.compare(rhs) != 0; }
+	inline bool operator!=(const wchar_t* lhs, String const& rhs)	{ return rhs.compare(lhs) != 0; }
+	inline bool operator!=(String const& lhs, const wchar_t* rhs)	{ return lhs.compare(rhs) != 0; }
+	inline bool operator!=(const char* lhs, String const& rhs)		{ return rhs.compare(String(lhs)) != 0; }
+	inline bool operator!=(String const& lhs, const char* rhs)		{ return lhs.compare(String(rhs)) != 0; }
 
 	//
 	// operator+ for String
@@ -343,7 +366,7 @@ namespace easy2d
 	//
 
 	template<typename ..._Args>
-	inline String format_wstring(const wchar_t* const fmt, _Args&&... args);
+	String format_wstring(const wchar_t* const fmt, _Args&&... args);
 }
 
 namespace easy2d
@@ -1031,6 +1054,26 @@ namespace easy2d
 	}
 
 	//
+	// details of String::parese
+	//
+
+	inline String String::parse(int val)				{ return ::easy2d::to_wstring(val); }
+	inline String String::parse(unsigned int val)		{ return ::easy2d::to_wstring(val); }
+	inline String String::parse(long val)				{ return ::easy2d::to_wstring(val); }
+	inline String String::parse(unsigned long val)		{ return ::easy2d::to_wstring(val); }
+	inline String String::parse(long long val)			{ return ::easy2d::to_wstring(val); }
+	inline String String::parse(unsigned long long val)	{ return ::easy2d::to_wstring(val); }
+	inline String String::parse(float val)				{ return ::easy2d::to_wstring(val); }
+	inline String String::parse(double val)				{ return ::easy2d::to_wstring(val); }
+	inline String String::parse(long double val)		{ return ::easy2d::to_wstring(val); }
+
+	template<typename ..._Args>
+	inline String String::format(const wchar_t* const fmt, _Args&&... args)
+	{
+		return ::easy2d::format_wstring(fmt, std::forward<_Args>(args)...);
+	}
+
+	//
 	// details of operator<<>>
 	//
 
@@ -1151,11 +1194,11 @@ namespace easy2d
 	template<typename ..._Args>
 	inline String format_wstring(const wchar_t* const fmt, _Args&&... args)
 	{
-		const auto len = static_cast<String::size_type>(::_scwprintf(fmt, std::forward<_Args&&>(args)...));
+		const auto len = static_cast<String::size_type>(::_scwprintf(fmt, std::forward<_Args>(args)...));
 		if (len)
 		{
 			String str(len, L'\0');
-			::swprintf_s(&str[0], len + 1, fmt, std::forward<_Args&&>(args)...);
+			::swprintf_s(&str[0], len + 1, fmt, std::forward<_Args>(args)...);
 			return str;
 		}
 		return String{};

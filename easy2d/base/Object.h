@@ -43,17 +43,24 @@ namespace easy2d
 
 		void SetName(String const& name);
 
-		inline String GetName() const { if (name_) return *name_; return String(); }
+		inline String GetName() const					{ if (name_) return *name_; return String(); }
 
-		inline bool IsName(String const& name) const { return (name_ && (*name_ == name)) || (name.empty() && !name_); }
+		inline bool IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
 
+		inline unsigned int GetObjectID() const			{ return id_; }
+
+		String DumpObject();
+
+	public:
 		static void StartTracingLeaks();
 
 		static void StopTracingLeaks();
 
-		static Array<Object*> const& __GetTracingObjects();
+		static void DumpTracingObjects();
 
-	protected:
+	public:
+		static Array<Object*>& __GetTracingObjects();
+
 		static void __AddObjectToTracingList(Object*);
 
 		static void __RemoveObjectFromTracingList(Object*);
@@ -62,5 +69,8 @@ namespace easy2d
 		bool tracing_leak_;
 		void* user_data_;
 		String* name_;
+
+		const unsigned int id_;
+		static unsigned int last_object_id;
 	};
 }

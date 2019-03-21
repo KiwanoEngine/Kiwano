@@ -29,7 +29,7 @@ namespace easy2d
 
 	public:
 		// Ìí¼Ó¼àÌıÆ÷
-		void AddListener(
+		EventListenerPtr AddListener(
 			EventListenerPtr const& listener
 		);
 

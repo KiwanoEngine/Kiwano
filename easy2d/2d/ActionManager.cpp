@@ -41,7 +41,7 @@ namespace easy2d
 		}
 	}
 
-	void ActionManager::AddAction(ActionPtr const& action)
+	ActionPtr ActionManager::AddAction(ActionPtr const& action)
 	{
 		E2D_ASSERT(action && "AddAction failed, NULL pointer exception");
 
@@ -49,6 +49,7 @@ namespace easy2d
 		{
 			actions_.PushBack(action);
 		}
+		return action;
 	}
 
 	ActionPtr ActionManager::GetAction(String const & name)
