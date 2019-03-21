@@ -22,7 +22,7 @@
 #include "include-forwards.h"
 #include "Transform.hpp"
 #include "ActionManager.h"
-#include "../base/TaskManager.h"
+#include "../base/TimerManager.h"
 #include "../base/EventDispatcher.h"
 
 namespace easy2d
@@ -32,7 +32,7 @@ namespace easy2d
 	// ½Úµã
 	class E2D_API Node
 		: public virtual Object
-		, public TaskManager
+		, public TimerManager
 		, public ActionManager
 		, public EventDispatcher
 		, public IntrusiveListItem<NodePtr>

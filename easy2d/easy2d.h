@@ -71,8 +71,8 @@
 #include "base/Event.hpp"
 #include "base/EventListener.h"
 #include "base/EventDispatcher.h"
-#include "base/Task.h"
-#include "base/TaskManager.h"
+#include "base/Timer.h"
+#include "base/TimerManager.h"
 
 #include "2d/Font.hpp"
 #include "2d/Color.h"

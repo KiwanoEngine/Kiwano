@@ -1080,7 +1080,7 @@ namespace easy2d
 		using size_type = String::size_type;
 		using traits = String::char_traits;
 
-		const typename ostream::sentry ok(os);
+		const ostream::sentry ok(os);
 		std::ios_base::iostate state = std::ios_base::goodbit;
 
 		if (!ok)
@@ -1142,7 +1142,7 @@ namespace easy2d
 		using traits = String::char_traits;
 
 		bool changed = false;
-		const typename istream::sentry ok(is);
+		const istream::sentry ok(is);
 		std::ios_base::iostate state = std::ios_base::goodbit;
 
 		if (ok)

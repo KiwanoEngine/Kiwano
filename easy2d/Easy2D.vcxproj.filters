@@ -153,12 +153,6 @@
     <ClInclude Include="base\Resource.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="base\Task.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="base\TaskManager.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="base\time.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -243,6 +237,12 @@
     <ClInclude Include="common\Json.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="base\Timer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\TimerManager.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -317,12 +317,6 @@
     <ClCompile Include="base\Resource.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="base\Task.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="base\TaskManager.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="base\time.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -367,6 +361,12 @@
     </ClCompile>
     <ClCompile Include="utils\DataUtil.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Timer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\TimerManager.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -62,7 +62,7 @@ namespace easy2d
 			return;
 
 		UpdateActions(this, dt);
-		UpdateTasks(dt);
+		UpdateTimers(dt);
 
 		if (cb_update_)
 			cb_update_(dt);
