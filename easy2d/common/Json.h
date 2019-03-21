@@ -130,25 +130,23 @@ namespace easy2d
 	};
 
 
-	//
-	// basic_json
-	//
-
-	E2D_DECLARE_BASIC_JSON_TEMPLATE
-	class basic_json
+	namespace __json_detail
 	{
-	public:
-		using size_type = std::size_t;
-		using string_type = typename _StringTy;
-		using integer_type = typename _IntegerTy;
-		using float_type = typename _FloatTy;
-		using boolean_type = typename _BooleanTy;
-		using array_type = typename _ArrayTy<basic_json, _Allocator<basic_json>>;
-		using object_type = typename _ObjectTy<string_type, basic_json, std::less<string_type>, _Allocator<std::pair<const string_type, basic_json>>>;
-		using initializer_list = std::initializer_list<basic_json>;
+		//
+		// json_value
+		//
 
-		struct JsonValue
+		template <typename _BasicJsonTy>
+		struct json_value
 		{
+			using string_type	= typename _BasicJsonTy::string_type;
+			using char_type		= typename _BasicJsonTy::char_type;
+			using integer_type	= typename _BasicJsonTy::integer_type;
+			using float_type	= typename _BasicJsonTy::float_type;
+			using boolean_type	= typename _BasicJsonTy::boolean_type;
+			using array_type	= typename _BasicJsonTy::array_type;
+			using object_type	= typename _BasicJsonTy::object_type;
+
 			JsonType type;
 			union
 			{
@@ -160,62 +158,62 @@ namespace easy2d
 				boolean_type boolean;
 			} data;
 
-			JsonValue()
+			json_value()
 			{
 				type = JsonType::Null;
 				data.object = nullptr;
 			}
 
-			JsonValue(std::nullptr_t)
+			json_value(std::nullptr_t)
 			{
 				type = JsonType::Null;
 				data.object = nullptr;
 			}
 
-			JsonValue(const object_type& value)
+			json_value(const object_type& value)
 			{
 				type = JsonType::Object;
 				data.object = create<object_type>(value);
 			}
 
-			JsonValue(const array_type& value)
+			json_value(const array_type& value)
 			{
 				type = JsonType::Array;
 				data.vector = create<array_type>(value);
 			}
 
-			JsonValue(const string_type& value)
+			json_value(const string_type& value)
 			{
 				type = JsonType::String;
 				data.string = create<string_type>(value);
 			}
 
 			template <typename _CharT>
-			JsonValue(const _CharT* str)
+			json_value(const _CharT* str)
 			{
 				type = JsonType::String;
 				data.string = create<string_type>(str);
 			}
 
-			JsonValue(const integer_type value)
+			json_value(const integer_type value)
 			{
 				type = JsonType::Integer;
 				data.number_integer = value;
 			}
 
-			JsonValue(const float_type value)
+			json_value(const float_type value)
 			{
 				type = JsonType::Float;
 				data.number_float = value;
 			}
 
-			JsonValue(const boolean_type value)
+			json_value(const boolean_type value)
 			{
 				type = JsonType::Boolean;
 				data.boolean = value;
 			}
 
-			JsonValue(const JsonType value_type)
+			json_value(const JsonType value_type)
 			{
 				type = value_type;
 				switch (type)
@@ -244,7 +242,7 @@ namespace easy2d
 				}
 			}
 
-			JsonValue(JsonValue const& other)
+			json_value(json_value const& other)
 			{
 				type = other.type;
 				
@@ -274,7 +272,7 @@ namespace easy2d
 				}
 			}
 
-			JsonValue(JsonValue&& other)
+			json_value(json_value&& other)
 			{
 				type = other.type;
 				data = other.data;
@@ -282,7 +280,7 @@ namespace easy2d
 				other.data.object = nullptr;
 			}
 
-			~JsonValue()
+			~json_value()
 			{
 				switch (type)
 				{
@@ -300,7 +298,7 @@ namespace easy2d
 				}
 			}
 
-			void swap(JsonValue& other)
+			void swap(json_value& other)
 			{
 				std::swap(type, other.type);
 				std::swap(data, other.data);
@@ -309,480 +307,45 @@ namespace easy2d
 			template <typename _Ty, typename ..._Args>
 			inline _Ty* create(_Args&&... args)
 			{
-				using Allocator = _Allocator<_Ty>;
-				using AllocatorTraits = std::allocator_traits<Allocator>;
+				using allocator_type = typename _BasicJsonTy::template allocator_type<_Ty>;
+				using allocator_traits = std::allocator_traits<allocator_type>;
 
-				Allocator allocator;
-				_Ty* ptr = AllocatorTraits::allocate(allocator, 1);
-				AllocatorTraits::construct(allocator, ptr, std::forward<_Args>(args)...);
+				allocator_type allocator;
+				_Ty* ptr = allocator_traits::allocate(allocator, 1);
+				allocator_traits::construct(allocator, ptr, std::forward<_Args>(args)...);
 				return ptr;
 			}
 
 			template <typename _Ty>
 			inline void destroy(_Ty* ptr)
 			{
-				using Allocator = _Allocator<_Ty>;
-				using AllocatorTraits = std::allocator_traits<Allocator>;
+				using allocator_type = typename _BasicJsonTy::template allocator_type<_Ty>;
+				using allocator_traits = std::allocator_traits<allocator_type>;
 
-				Allocator allocator;
-				AllocatorTraits::destroy(allocator, ptr);
-				AllocatorTraits::deallocate(allocator, ptr, 1);
+				allocator_type allocator;
+				allocator_traits::destroy(allocator, ptr);
+				allocator_traits::deallocate(allocator, ptr, 1);
 			}
 
-			inline JsonValue& operator=(JsonValue const& other)
+			inline json_value& operator=(json_value const& other)
 			{
-				JsonValue{ other }.swap(*this);
+				json_value{ other }.swap(*this);
 				return (*this);
 			}
 
-			inline JsonValue& operator=(JsonValue && other)
+			inline json_value& operator=(json_value && other)
 			{
-				JsonValue{ std::forward<JsonValue>(other) }.swap(*this);
+				json_value{ std::forward<json_value>(other) }.swap(*this);
 				return (*this);
 			}
 		};
-
-	public:
-		basic_json() {}
-
-		basic_json(std::nullptr_t) {}
-
-		basic_json(const JsonType type) : value_(type) {}
-
-		basic_json(basic_json const& other) : value_(other.value_) {}
-
-		basic_json(string_type const& value) : value_(value) {}
-
-		template <
-			typename _CompatibleTy,
-			enable_if_t<std::is_constructible<string_type, _CompatibleTy>::value, int> = 0>
-		basic_json(const _CompatibleTy& value)
-		{
-			value_.type = JsonType::String;
-			value_.data.string = value_.template create<string_type>(value);
-		}
-
-		basic_json(array_type const& arr)
-			: value_(arr)
-		{
-		}
-
-		basic_json(object_type const& object)
-			: value_(object)
-		{
-		}
-
-		template <
-			typename _FloatingTy,
-			enable_if_t<std::is_floating_point<_FloatingTy>::value, int> = 0>
-		basic_json(_FloatingTy value)
-			: value_(static_cast<float_type>(value))
-		{
-		}
-
-		template <
-			typename _IntegerTy,
-			enable_if_t<std::is_integral<_IntegerTy>::value, int> = 0>
-		basic_json(_IntegerTy value)
-			: value_(static_cast<integer_type>(value))
-		{
-		}
-
-		basic_json(boolean_type value)
-			: value_(value)
-		{
-		}
-
-		basic_json(initializer_list init_list)
-		{
-			bool is_an_object = std::all_of(init_list.begin(), init_list.end(), [](const basic_json& json)
-			{
-				return (json.is_array() && json.size() == 2 && json[0].is_string());
-			});
-
-			if (is_an_object)
-			{
-				value_ = JsonType::Object;
-
-				std::for_each(init_list.begin(), init_list.end(), [this](const basic_json& json)
-				{
-					value_.data.object->emplace(
-						*((*json.value_.data.vector)[0].value_.data.string),
-						(*json.value_.data.vector)[1]
-					);
-				});
-			}
-			else
-			{
-				value_ = JsonType::Array;
-				value_.data.vector->reserve(init_list.size());
-				value_.data.vector->assign(init_list.begin(), init_list.end());
-			}
-		}
-
-		inline bool is_object() const				{ return value_.type == JsonType::Object; }
-
-		inline bool is_array() const				{ return value_.type == JsonType::Array; }
-
-		inline bool is_string() const				{ return value_.type == JsonType::String; }
-
-		inline bool is_boolean() const				{ return value_.type == JsonType::Boolean; }
-
-		inline bool is_integer() const				{ return value_.type == JsonType::Integer; }
-
-		inline bool is_float() const				{ return value_.type == JsonType::Float; }
-
-		inline bool is_number() const				{ return is_integer() || is_float(); }
-
-		inline bool is_null() const					{ return value_.type == JsonType::Null; }
-
-		inline JsonType type() const				{ return value_.type; }
-
-		inline string_type type_name() const
-		{
-			switch (type())
-			{
-			case JsonType::Object:
-				return string_type(L"object");
-			case JsonType::Array:
-				return string_type(L"array");
-			case JsonType::String:
-				return string_type(L"string");
-			case JsonType::Integer:
-				return string_type(L"integer");
-			case JsonType::Float:
-				return string_type(L"float");
-			case JsonType::Boolean:
-				return string_type(L"boolean");
-			case JsonType::Null:
-				return string_type(L"null");
-			}
-			return string_type();
-		}
-
-		inline void swap(basic_json& rhs) { value_.swap(rhs.value_); }
-
-	public:
-		// GET value functions
-
-		inline bool get_value(boolean_type& val) const
-		{
-			if (is_boolean())
-			{
-				val = value_.data.boolean;
-				return true;
-			}
-			return false;
-		}
-
-		inline bool get_value(integer_type& val) const
-		{
-			if (is_integer())
-			{
-				val = value_.data.number_integer;
-				return true;
-			}
-			return false;
-		}
-
-		inline bool get_value(float_type& val) const
-		{
-			if (is_float())
-			{
-				val = value_.data.number_float;
-				return true;
-			}
-			return false;
-		}
-
-		template <
-			typename _IntegerTy,
-			enable_if_t<std::is_integral<_IntegerTy>::value, int> = 0>
-		inline bool get_value(_IntegerTy& val) const
-		{
-			if (is_integer())
-			{
-				val = static_cast<_IntegerTy>(value_.data.number_integer);
-				return true;
-			}
-			return false;
-		}
-
-		template <
-			typename _FloatingTy,
-			enable_if_t<std::is_floating_point<_FloatingTy>::value, int> = 0>
-		inline bool get_value(_FloatingTy& val) const
-		{
-			if (is_float())
-			{
-				val = static_cast<_FloatingTy>(value_.data.number_float);
-				return true;
-			}
-			return false;
-		}
-
-		inline bool get_value(array_type& val) const
-		{
-			if (is_array())
-			{
-				val.assign((*value_.data.vector).begin(), (*value_.data.vector).end());
-				return true;
-			}
-			return false;
-		}
-
-		inline bool get_value(string_type& val) const
-		{
-			if (is_string())
-			{
-				val.assign(*value_.data.string);
-				return true;
-			}
-			return false;
-		}
-
-		inline bool get_value(object_type& val) const
-		{
-			if (is_object())
-			{
-				val.assign(*value_.data.object);
-				return true;
-			}
-			return false;
-		}
-
-		boolean_type as_bool() const
-		{
-			if (!is_boolean()) throw json_type_error();
-			return value_.data.boolean;
-		}
-
-		integer_type as_int() const
-		{
-			if (!is_integer()) throw json_type_error();
-			return value_.data.number_integer;
-		}
-
-		float_type as_float() const
-		{
-			if (!is_float()) throw json_type_error();
-			return value_.data.number_float;
-		}
-
-		const array_type& as_array() const
-		{
-			if (!is_array()) throw json_type_error();
-			return *value_.data.vector;
-		}
-
-		const string_type& as_string() const
-		{
-			if (!is_string()) throw json_type_error();
-			return *value_.data.string;
-		}
-
-		const object_type& as_object() const
-		{
-			if (!is_object()) throw json_type_error();
-			return *value_.data.object;
-		}
-
-	public:
-		// json_value_getter
-
-		template <typename _Ty>
-		_Ty get() const
-		{
-			_Ty value;
-			json_value_getter::assign(*this, value);
-			return value;
-		}
-
-		struct json_value_getter
-		{
-			template <typename _BasicJsonTy>
-			static inline void assign(const _BasicJsonTy& json, object_type& value)
-			{
-				if (!json.is_object()) throw json_type_error();
-				value = *json.value_.data.object;
-			}
-
-			template <typename _BasicJsonTy>
-			static inline void assign(const _BasicJsonTy& json, array_type& value)
-			{
-				if (!json.is_array()) throw json_type_error();
-				value = *json.value_.data.vector;
-			}
-
-			template <typename _BasicJsonTy>
-			static inline void assign(const _BasicJsonTy& json, string_type& value)
-			{
-				if (!json.is_string()) throw json_type_error();
-				value = *json.value_.data.string;
-			}
-
-			template <typename _BasicJsonTy>
-			static inline void assign(const _BasicJsonTy& json, boolean_type& value)
-			{
-				if (!json.is_boolean()) throw json_type_error();
-				value = json.value_.data.boolean;
-			}
-
-			template <typename _BasicJsonTy>
-			static inline void assign(const _BasicJsonTy& json, integer_type& value)
-			{
-				if (!json.is_integer()) throw json_type_error();
-				value = json.value_.data.number_integer;
-			}
-
-			template <
-				typename _BasicJsonTy,
-				typename _IntegerTy,
-				enable_if_t<std::is_integral<_IntegerTy>::value, int> = 0>
-			static inline void assign(const _BasicJsonTy& json, _IntegerTy& value)
-			{
-				if (!json.is_integer()) throw json_type_error();
-				value = static_cast<_IntegerTy>(json.value_.data.number_integer);
-			}
-
-			template <
-				typename _BasicJsonTy,
-				typename _FloatingTy,
-				enable_if_t<std::is_floating_point<_FloatingTy>::value, int> = 0>
-			static inline void assign(const _BasicJsonTy& json, _FloatingTy& value)
-			{
-				if (!json.is_float()) throw json_type_error();
-				value = static_cast<_FloatingTy>(json.value_.data.number_float);
-			}
-		};
-
-		friend struct json_value_getter;
-
-	public:
-		// operator= functions
-
-		inline basic_json& operator=(basic_json const& other)
-		{
-			value_ = other.value_;
-			return (*this);
-		}
-
-		inline basic_json& operator=(std::nullptr_t)
-		{
-			value_ = nullptr;
-			return (*this);
-		}
-
-	public:
-		// operator[] functions
-
-		inline basic_json& operator[](size_type index)
-		{
-			if (is_null())
-			{
-				value_ = JsonType::Array;
-			}
-
-			if (!is_array())
-			{
-				throw json_invalid_key();
-			}
-
-			if (index >= value_.data.vector->size())
-			{
-				value_.data.vector->insert(value_.data.vector->end(),
-					index - value_.data.vector->size() + 1,
-					basic_json()
-				);
-			}
-			return (*value_.data.vector)[index];
-		}
-
-		inline basic_json& operator[](size_type index) const
-		{
-			if (!is_array())
-			{
-				throw json_invalid_key();
-			}
-
-			if (index >= value_.data.vector->size())
-			{
-				throw json_invalid_key();
-			}
-			return (*value_.data.vector)[index];
-		}
-
-		inline basic_json& operator[](const typename object_type::key_type& key)
-		{
-			if (is_null())
-			{
-				value_ = JsonType::Object;
-			}
-
-			if (!is_object())
-			{
-				throw json_invalid_key();
-			}
-			return (*value_.data.object)[key];
-		}
-
-		inline basic_json& operator[](const typename object_type::key_type& key) const
-		{
-			if (!is_object())
-			{
-				throw json_invalid_key();
-			}
-
-			auto iter = value_.data.object->find(key);
-			if (iter == value_.data.object->end())
-			{
-				throw json_invalid_key();
-			}
-			return iter->second;
-		}
-
-		template <typename _CharT>
-		inline basic_json& operator[](_CharT* key)
-		{
-			if (is_null())
-			{
-				value_ = JsonType::Object;
-			}
-
-			if (!is_object())
-			{
-				throw json_invalid_key();
-			}
-			return (*value_.data.object)[key];
-		}
-
-		template <typename _CharT>
-		inline basic_json& operator[](_CharT* key) const
-		{
-			if (!is_object())
-			{
-				throw json_invalid_key();
-			}
-
-			auto iter = value_.data.object->find(key);
-			if (iter == value_.data.object->end())
-			{
-				throw json_invalid_key();
-			}
-			return iter->second;
-		}
-
-	public:
-		// implicitly convert functions
-
-		template <typename _Ty>
-		inline operator _Ty() const
-		{
-			return get<_Ty>();
-		}
-
-	public:
+	} // end of namespace __json_detail
+
+	namespace __json_detail
+	{
+		//
 		// iterator for basic_json
+		//
 
 		struct original_iterator
 		{
@@ -798,7 +361,7 @@ namespace easy2d
 			inline original_iterator operator++(int)								{ original_iterator old(it_); ++(*this); return old; }
 
 			inline original_iterator& operator--()									{ --it_; return (*this); }
-			inline original_iterator operator--(int)								{ iterator_impl old = (*this); --(*this); return old; }
+			inline original_iterator operator--(int)								{ original_iterator old = (*this); --(*this); return old; }
 
 			inline bool operator==(original_iterator const& other) const			{ return it_ == other.it_ && it_ == other.it_; }
 			inline bool operator!=(original_iterator const& other) const			{ return !(*this == other); }
@@ -820,19 +383,28 @@ namespace easy2d
 			int it_;
 		};
 
+		template <typename _BasicJsonTy>
 		struct internal_iterator
 		{
-			typename array_type::iterator array_iter;
-			typename object_type::iterator object_iter;
+			typename _BasicJsonTy::array_type::iterator array_iter;
+			typename _BasicJsonTy::object_type::iterator object_iter;
 			original_iterator original_iter = 0;  // for other types
 		};
 
-		template <typename _Ty>
+		template <typename _BasicJsonTy>
 		struct iterator_impl
 		{
-			friend _Ty;
+			friend _BasicJsonTy;
 
-			using value_type		= _Ty;
+			using string_type	= typename _BasicJsonTy::string_type;
+			using char_type		= typename _BasicJsonTy::char_type;
+			using integer_type	= typename _BasicJsonTy::integer_type;
+			using float_type	= typename _BasicJsonTy::float_type;
+			using boolean_type	= typename _BasicJsonTy::boolean_type;
+			using array_type	= typename _BasicJsonTy::array_type;
+			using object_type	= typename _BasicJsonTy::object_type;
+
+			using value_type		= _BasicJsonTy;
 			using difference_type	= std::ptrdiff_t;
 			using iterator_category = std::bidirectional_iterator_tag;
 			using pointer			= value_type*;
@@ -1038,9 +610,9 @@ namespace easy2d
 				}
 			}
 
-			inline bool operator>(iterator_impl const& other) const { return other.operator<(*this); }
-			inline bool operator>=(iterator_impl const& other) const { return !operator<(other); }
-			inline bool operator<=(iterator_impl const& other) const { return !other.operator<(*this); }
+			inline bool operator>(iterator_impl const& other) const		{ return other.operator<(*this); }
+			inline bool operator>=(iterator_impl const& other) const	{ return !operator<(other); }
+			inline bool operator<=(iterator_impl const& other) const	{ return !other.operator<(*this); }
 			inline bool operator<(iterator_impl const& other) const
 			{
 				check_data();
@@ -1092,204 +664,20 @@ namespace easy2d
 
 		private:
 			pointer data_;
-			internal_iterator it_;
+			internal_iterator<_BasicJsonTy> it_;
 		};
+	} // end of namespace __json_detail
 
-	public:
-		friend struct iterator_impl<basic_json>;
-		friend struct iterator_impl<const basic_json>;
-
-		using iterator					= iterator_impl<basic_json>;
-		using const_iterator			= iterator_impl<const basic_json>;
-		using reverse_iterator			= std::reverse_iterator<iterator>;
-		using const_reverse_iterator	= std::reverse_iterator<const_iterator>;
-
-		inline iterator					begin()				{ iterator iter(this); iter.set_begin(); return iter; }
-		inline const_iterator			begin() const		{ return cbegin(); }
-		inline const_iterator			cbegin() const		{ const_iterator iter(this); iter.set_begin(); return iter; }
-		inline iterator					end()				{ iterator iter(this); iter.set_end(); return iter; }
-		inline const_iterator			end() const			{ return cend(); }
-		inline const_iterator			cend() const		{ const_iterator iter(this); iter.set_end(); return iter; }
-		inline reverse_iterator			rbegin()			{ return reverse_iterator(end()); }
-		inline const_reverse_iterator	rbegin() const		{ return const_reverse_iterator(end()); }
-		inline const_reverse_iterator	crbegin() const		{ return rbegin(); }
-		inline reverse_iterator			rend()				{ return reverse_iterator(begin()); }
-		inline const_reverse_iterator	rend() const		{ return const_reverse_iterator(begin()); }
-		inline const_reverse_iterator	crend() const		{ return rend(); }
-
-	public:
-		inline size_type size() const
-		{
-			switch (type())
-			{
-			case JsonType::Null:
-				return 0;
-			case JsonType::Array:
-				return value_.data.vector->size();
-			case JsonType::Object:
-				return value_.data.object->size();
-			default:
-				return 1;
-			}
-		}
-
-		inline bool empty() const
-		{
-			if (is_null())
-				return true;
-
-			if (is_object())
-				return value_.data.object->empty();
-
-			if (is_array())
-				return value_.data.vector->empty();
-
-			return false;
-		}
-
-		template <typename _Kty>
-		inline const_iterator find(_Kty && key) const
-		{
-			if (is_object())
-			{
-				const_iterator iter;
-				iter.it_.object_iter = value_.data.object->find(std::forward<_Kty>(key));
-				return iter;
-			}
-			return cend();
-		}
-
-		template <typename _Kty>
-		inline size_type count(_Kty && key) const
-		{
-			return is_object() ? value_.data.object->count(std::forward<_Kty>(key)) : 0;
-		}
-
-		inline void clear() { value_ = nullptr; }
-
-	public:
-		// compare functions
-
-		friend bool operator==(const basic_json& lhs, const basic_json& rhs)
-		{
-			const auto lhs_type = lhs.type();
-			const auto rhs_type = rhs.type();
-
-			if (lhs_type == rhs_type)
-			{
-				switch (lhs_type)
-				{
-				case JsonType::Array:
-					return (*lhs.value_.data.vector == *rhs.value_.data.vector);
-
-				case JsonType::Object:
-					return (*lhs.value_.data.object == *rhs.value_.data.object);
-
-				case JsonType::Null:
-					return true;
-
-				case JsonType::String:
-					return (*lhs.value_.data.string == *rhs.value_.data.string);
-
-				case JsonType::Boolean:
-					return (lhs.value_.data.boolean == rhs.value_.data.boolean);
-
-				case JsonType::Integer:
-					return (lhs.value_.data.number_integer == rhs.value_.data.number_integer);
-
-				case JsonType::Float:
-					return (lhs.value_.data.number_float == rhs.value_.data.number_float);
-
-				default:
-					return false;
-				}
-			}
-			else if (lhs_type == JsonType::Integer && rhs_type == JsonType::Float)
-			{
-				return (static_cast<float_type>(lhs.value_.data.number_integer) == rhs.value_.data.number_float);
-			}
-			else if (lhs_type == JsonType::Float && rhs_type == JsonType::Integer)
-			{
-				return (lhs.value_.data.number_float == static_cast<float_type>(rhs.value_.data.number_integer));
-			}
-
-			return false;
-		}
-
-		friend bool operator!=(const basic_json& lhs, const basic_json& rhs)
-		{
-			return !(lhs == rhs);
-		}
-
-		friend bool operator<(const basic_json& lhs, const basic_json& rhs)
-		{
-			const auto lhs_type = lhs.type();
-			const auto rhs_type = rhs.type();
-
-			if (lhs_type == rhs_type)
-			{
-				switch (lhs_type)
-				{
-				case JsonType::Array:
-					return (*lhs.value_.data.vector) < (*rhs.value_.data.vector);
-
-				case JsonType::Object:
-					return (*lhs.value_.data.object) < (*rhs.value_.data.object);
-
-				case JsonType::Null:
-					return false;
-
-				case JsonType::String:
-					return (*lhs.value_.data.string) < (*rhs.value_.data.string);
-
-				case JsonType::Boolean:
-					return (lhs.value_.data.boolean < rhs.value_.data.boolean);
-
-				case JsonType::Integer:
-					return (lhs.value_.data.number_integer < rhs.value_.data.number_integer);
-
-				case JsonType::Float:
-					return (lhs.value_.data.number_float < rhs.value_.data.number_float);
-
-				default:
-					return false;
-				}
-			}
-			else if (lhs_type == JsonType::Integer && rhs_type == JsonType::Float)
-			{
-				return (static_cast<float_type>(lhs.value_.data.number_integer) < rhs.value_.data.number_float);
-			}
-			else if (lhs_type == JsonType::Float && rhs_type == JsonType::Integer)
-			{
-				return (lhs.value_.data.number_float < static_cast<float_type>(rhs.value_.data.number_integer));
-			}
-
-			return false;
-		}
-
-		friend bool operator<=(const basic_json& lhs, const basic_json& rhs)
-		{
-			return !(rhs < lhs);
-		}
-
-		friend bool operator>(const basic_json& lhs, const basic_json& rhs)
-		{
-			return rhs < lhs;
-		}
-
-		friend bool operator>=(const basic_json& lhs, const basic_json& rhs)
-		{
-			return !(lhs < rhs);
-		}
-
-	public:
+	namespace __json_detail
+	{
+		//
 		// output_adapter
+		//
 
 		template <typename _CharTy>
 		struct output_adapter
 		{
-			using char_type = typename _StringTy::value_type;
-			using size_type = typename _StringTy::size_type;
+			using char_type = _CharTy;
 			using char_traits = std::char_traits<char_type>;
 
 			virtual void write(const _CharTy ch) = 0;
@@ -1297,7 +685,7 @@ namespace easy2d
 			virtual void write(const _CharTy* str)
 			{
 				const auto size = char_traits::length(str);
-				write(str, static_cast<size_type>(size));
+				write(str, static_cast<std::size_t>(size));
 			}
 		};
 
@@ -1348,52 +736,24 @@ namespace easy2d
 		private:
 			std::basic_ostream<char_type>& stream_;
 		};
+	} // end of namespace __json_detail
 
-	public:
-		friend std::basic_ostream<typename string_type::value_type>& operator<<(std::basic_ostream<typename string_type::value_type>& out, const basic_json& json)
-		{
-			using char_type = typename std::basic_ostream<typename string_type::value_type>::char_type;
-
-			const bool pretty_print = (out.width() > 0);
-			const auto indentation = (pretty_print ? out.width() : 0);
-			out.width(0);
-
-			stream_output_adapter<char_type> adapter(out);
-			json_serializer(&adapter, out.fill()).dump(json, pretty_print, static_cast<unsigned int>(indentation));
-			return out;
-		}
-
-		string_type dump(
-			const int indent = -1,
-			const typename string_type::value_type indent_char = ' ') const
-		{
-			string_type result;
-			string_output_adapter<string_type> adapter(result);
-			dump(&adapter, indent, indent_char);
-			return result;
-		}
-
-		void dump(
-			output_adapter<typename string_type::value_type>* adapter,
-			const int indent = -1,
-			const typename string_type::value_type indent_char = ' ') const
-		{
-			if (indent >= 0)
-			{
-				json_serializer(adapter, indent_char).dump(*this, true, static_cast<unsigned int>(indent));
-			}
-			else
-			{
-				json_serializer(adapter, indent_char).dump(*this, false, 0);
-			}
-		}
-
-	public:
+	namespace __json_detail
+	{
+		//
 		// json_serializer
+		//
 
+		template <typename _BasicJsonTy>
 		struct json_serializer
 		{
-			using char_type = typename string_type::value_type;
+			using string_type	= typename _BasicJsonTy::string_type;
+			using char_type		= typename _BasicJsonTy::char_type;
+			using integer_type	= typename _BasicJsonTy::integer_type;
+			using float_type	= typename _BasicJsonTy::float_type;
+			using boolean_type	= typename _BasicJsonTy::boolean_type;
+			using array_type	= typename _BasicJsonTy::array_type;
+			using object_type	= typename _BasicJsonTy::object_type;
 
 			json_serializer(output_adapter<char_type>* out, const wchar_t indent_char)
 				: out(out)
@@ -1402,7 +762,7 @@ namespace easy2d
 			{}
 
 			void dump(
-				const basic_json& json,
+				const _BasicJsonTy& json,
 				const bool pretty_print,
 				const unsigned int indent_step,
 				const unsigned int current_indent = 0)
@@ -1460,7 +820,7 @@ namespace easy2d
 							out->write(iter->first.c_str());
 							out->write(L"\":");
 							dump(iter->second, false, indent_step, current_indent);
-							
+
 							// not last element
 							if (i != size - 1)
 								out->write(',');
@@ -1622,11 +982,13 @@ namespace easy2d
 			string_type indent_string;
 			std::array<char_type, 21> number_buffer;
 		};
+	} // end of namespace __json_detail
 
-		friend struct json_serializer;
-
-	public:
+	namespace __json_detail
+	{
+		//
 		// input_adapter
+		//
 
 		template <typename _CharTy>
 		struct input_adapter
@@ -1726,83 +1088,57 @@ namespace easy2d
 			const char_type* str;
 			std::size_t index;
 		};
+	} // end of namespace __json_detail
 
-	public:
-		// json_parser
+	namespace __json_detail
+	{
+		//
+		// json_lexer & json_parser
+		//
 
-		friend std::basic_istream<typename string_type::value_type>&
-			operator>>(std::basic_istream<typename string_type::value_type>& in, basic_json& json)
+		enum class token_type
 		{
-			using char_type = typename string_type::value_type;
+			uninitialized,
 
-			stream_input_adapter<char_type> adapter(in);
-			json_parser(&adapter).parse(json);
-			return in;
-		}
+			literal_true,
+			literal_false,
+			literal_null,
 
-		static inline basic_json parse(const string_type& str)
-		{
-			string_input_adapter<string_type> adapter(str);
-			return parse(&adapter);
-		}
+			value_string,
+			value_integer,
+			value_float,
 
-		static inline basic_json parse(const typename string_type::value_type* str)
-		{
-			buffer_input_adapter<typename string_type::value_type> adapter(str);
-			return parse(&adapter);
-		}
+			begin_array,
+			end_array,
 
-		static inline basic_json parse(std::FILE* file)
-		{
-			using char_type = typename string_type::value_type;
+			begin_object,
+			end_object,
 
-			file_input_adapter<char_type> adapter(file);
-			return parse(&adapter);
-		}
+			name_separator,
+			value_separator,
 
-		static inline basic_json parse(input_adapter<typename string_type::value_type>* adapter)
-		{
-			basic_json result;
-			json_parser(adapter).parse(result);
-			return result;
-		}
+			parse_error,
 
+			end_of_input
+		};
+
+		template <typename _BasicJsonTy>
 		struct json_lexer
 		{
-			using char_type = typename string_type::value_type;
-			using char_traits = std::char_traits<char_type>;
+			using string_type	= typename _BasicJsonTy::string_type;
+			using char_type		= typename _BasicJsonTy::char_type;
+			using integer_type	= typename _BasicJsonTy::integer_type;
+			using float_type	= typename _BasicJsonTy::float_type;
+			using boolean_type	= typename _BasicJsonTy::boolean_type;
+			using array_type	= typename _BasicJsonTy::array_type;
+			using object_type	= typename _BasicJsonTy::object_type;
+			using char_traits	= std::char_traits<char_type>;
 
 			json_lexer(input_adapter<char_type>* adapter) : adapter(adapter)
 			{
 				// read first char
 				read_next();
 			}
-
-			enum class token_type
-			{
-				uninitialized,
-
-				literal_true,
-				literal_false,
-				literal_null,
-
-				value_string,
-				value_integer,
-				value_float,
-
-				begin_array,
-				end_array,
-
-				begin_object,
-				end_object,
-
-				name_separator,
-				value_separator,
-
-				parse_error,
-
-				end_of_input
-			};
 
 			typename char_traits::int_type read_next()
 			{
@@ -2080,15 +1416,25 @@ namespace easy2d
 			string_type string_buffer;
 		};
 
+
+		template <typename _BasicJsonTy>
 		struct json_parser
 		{
-			using char_type = typename string_type::value_type;
-			using char_traits = std::char_traits<char_type>;
-			using token_type = typename json_lexer::token_type;
+			using string_type	= typename _BasicJsonTy::string_type;
+			using char_type		= typename _BasicJsonTy::char_type;
+			using integer_type	= typename _BasicJsonTy::integer_type;
+			using float_type	= typename _BasicJsonTy::float_type;
+			using boolean_type	= typename _BasicJsonTy::boolean_type;
+			using array_type	= typename _BasicJsonTy::array_type;
+			using object_type	= typename _BasicJsonTy::object_type;
+			using char_traits	= std::char_traits<char_type>;
 
-			json_parser(input_adapter<char_type>* adapter) : lexer(adapter), last_token(token_type::uninitialized) {}
+			json_parser(input_adapter<char_type>* adapter)
+				: lexer(adapter)
+				, last_token(token_type::uninitialized)
+			{}
 
-			void parse(basic_json& json)
+			void parse(_BasicJsonTy& json)
 			{
 				parse_value(json);
 
@@ -2103,7 +1449,7 @@ namespace easy2d
 				return last_token;
 			}
 
-			void parse_value(basic_json& json)
+			void parse_value(_BasicJsonTy& json)
 			{
 				switch (get_token())
 				{
@@ -2137,7 +1483,7 @@ namespace easy2d
 					json = JsonType::Array;
 					while (true)
 					{
-						json.value_.data.vector->push_back(basic_json());
+						json.value_.data.vector->push_back(_BasicJsonTy());
 						parse_value(json.value_.data.vector->back());
 
 						// read ','
@@ -2159,7 +1505,7 @@ namespace easy2d
 						if (get_token() != token_type::name_separator)
 							break;
 
-						basic_json object;
+						_BasicJsonTy object;
 						parse_value(object);
 						json.value_.data.object->insert(std::make_pair(key, object));
 
@@ -2179,14 +1525,744 @@ namespace easy2d
 			}
 
 		private:
-			json_lexer lexer;
+			json_lexer<_BasicJsonTy> lexer;
 			token_type last_token;
 		};
+	} // end of namespace __json_detail
 
-		friend struct json_parser;
+	namespace __json_detail
+	{
+		//
+		// json_value_getter
+		//
+
+		template <typename _BasicJsonTy>
+		struct json_value_getter
+		{
+			using string_type	= typename _BasicJsonTy::string_type;
+			using char_type		= typename _BasicJsonTy::char_type;
+			using integer_type	= typename _BasicJsonTy::integer_type;
+			using float_type	= typename _BasicJsonTy::float_type;
+			using boolean_type	= typename _BasicJsonTy::boolean_type;
+			using array_type	= typename _BasicJsonTy::array_type;
+			using object_type	= typename _BasicJsonTy::object_type;
+
+			static inline void assign(const _BasicJsonTy& json, object_type& value)
+			{
+				if (!json.is_object()) throw json_type_error();
+				value = *json.value_.data.object;
+			}
+
+			static inline void assign(const _BasicJsonTy& json, array_type& value)
+			{
+				if (!json.is_array()) throw json_type_error();
+				value = *json.value_.data.vector;
+			}
+
+			static inline void assign(const _BasicJsonTy& json, string_type& value)
+			{
+				if (!json.is_string()) throw json_type_error();
+				value = *json.value_.data.string;
+			}
+
+			static inline void assign(const _BasicJsonTy& json, boolean_type& value)
+			{
+				if (!json.is_boolean()) throw json_type_error();
+				value = json.value_.data.boolean;
+			}
+
+			static inline void assign(const _BasicJsonTy& json, integer_type& value)
+			{
+				if (!json.is_integer()) throw json_type_error();
+				value = json.value_.data.number_integer;
+			}
+
+			template <
+				typename _IntegerTy,
+				enable_if_t<std::is_integral<_IntegerTy>::value, int> = 0>
+			static inline void assign(const _BasicJsonTy& json, _IntegerTy& value)
+			{
+				if (!json.is_integer()) throw json_type_error();
+				value = static_cast<_IntegerTy>(json.value_.data.number_integer);
+			}
+
+			template <
+				typename _FloatingTy,
+				enable_if_t<std::is_floating_point<_FloatingTy>::value, int> = 0>
+			static inline void assign(const _BasicJsonTy& json, _FloatingTy& value)
+			{
+				if (!json.is_float()) throw json_type_error();
+				value = static_cast<_FloatingTy>(json.value_.data.number_float);
+			}
+		};
+	} // end of namespace __json_detail
+
+	//
+	// basic_json
+	//
+
+	E2D_DECLARE_BASIC_JSON_TEMPLATE
+	class basic_json
+	{
+		friend struct __json_detail::iterator_impl<basic_json>;
+		friend struct __json_detail::iterator_impl<const basic_json>;
+		friend struct __json_detail::json_serializer<basic_json>;
+		friend struct __json_detail::json_parser<basic_json>;
+		friend struct __json_detail::json_value_getter<basic_json>;
+
+	public:
+		template <typename _Ty>
+		using allocator_type			= _Allocator<_Ty>;
+		using size_type					= std::size_t;
+		using string_type				= _StringTy;
+		using char_type					= typename _StringTy::value_type;
+		using integer_type				= _IntegerTy;
+		using float_type				= _FloatTy;
+		using boolean_type				= _BooleanTy;
+		using array_type				= typename _ArrayTy<basic_json, allocator_type<basic_json>>;
+		using object_type				= typename _ObjectTy<string_type, basic_json, std::less<string_type>, allocator_type<std::pair<const string_type, basic_json>>>;
+		using initializer_list			= std::initializer_list<basic_json>;
+
+		using iterator					= __json_detail::iterator_impl<basic_json>;
+		using const_iterator			= __json_detail::iterator_impl<const basic_json>;
+		using reverse_iterator			= std::reverse_iterator<iterator>;
+		using const_reverse_iterator	= std::reverse_iterator<const_iterator>;
+
+	public:
+		basic_json() {}
+
+		basic_json(std::nullptr_t) {}
+
+		basic_json(const JsonType type) : value_(type) {}
+
+		basic_json(basic_json const& other) : value_(other.value_) {}
+
+		basic_json(string_type const& value) : value_(value) {}
+
+		template <
+			typename _CompatibleTy,
+			enable_if_t<std::is_constructible<string_type, _CompatibleTy>::value, int> = 0>
+		basic_json(const _CompatibleTy& value)
+		{
+			value_.type = JsonType::String;
+			value_.data.string = value_.template create<string_type>(value);
+		}
+
+		basic_json(array_type const& arr)
+			: value_(arr)
+		{
+		}
+
+		basic_json(object_type const& object)
+			: value_(object)
+		{
+		}
+
+		template <
+			typename _FloatingTy,
+			enable_if_t<std::is_floating_point<_FloatingTy>::value, int> = 0>
+		basic_json(_FloatingTy value)
+			: value_(static_cast<float_type>(value))
+		{
+		}
+
+		template <
+			typename _IntegerTy,
+			enable_if_t<std::is_integral<_IntegerTy>::value, int> = 0>
+		basic_json(_IntegerTy value)
+			: value_(static_cast<integer_type>(value))
+		{
+		}
+
+		basic_json(boolean_type value)
+			: value_(value)
+		{
+		}
+
+		basic_json(initializer_list init_list)
+		{
+			bool is_an_object = std::all_of(init_list.begin(), init_list.end(), [](const basic_json& json)
+			{
+				return (json.is_array() && json.size() == 2 && json[0].is_string());
+			});
+
+			if (is_an_object)
+			{
+				value_ = JsonType::Object;
+
+				std::for_each(init_list.begin(), init_list.end(), [this](const basic_json& json)
+				{
+					value_.data.object->emplace(
+						*((*json.value_.data.vector)[0].value_.data.string),
+						(*json.value_.data.vector)[1]
+					);
+				});
+			}
+			else
+			{
+				value_ = JsonType::Array;
+				value_.data.vector->reserve(init_list.size());
+				value_.data.vector->assign(init_list.begin(), init_list.end());
+			}
+		}
+
+		inline bool is_object() const				{ return value_.type == JsonType::Object; }
+
+		inline bool is_array() const				{ return value_.type == JsonType::Array; }
+
+		inline bool is_string() const				{ return value_.type == JsonType::String; }
+
+		inline bool is_boolean() const				{ return value_.type == JsonType::Boolean; }
+
+		inline bool is_integer() const				{ return value_.type == JsonType::Integer; }
+
+		inline bool is_float() const				{ return value_.type == JsonType::Float; }
+
+		inline bool is_number() const				{ return is_integer() || is_float(); }
+
+		inline bool is_null() const					{ return value_.type == JsonType::Null; }
+
+		inline JsonType type() const				{ return value_.type; }
+
+		inline string_type type_name() const
+		{
+			switch (type())
+			{
+			case JsonType::Object:
+				return string_type(L"object");
+			case JsonType::Array:
+				return string_type(L"array");
+			case JsonType::String:
+				return string_type(L"string");
+			case JsonType::Integer:
+				return string_type(L"integer");
+			case JsonType::Float:
+				return string_type(L"float");
+			case JsonType::Boolean:
+				return string_type(L"boolean");
+			case JsonType::Null:
+				return string_type(L"null");
+			}
+			return string_type();
+		}
+
+		inline void swap(basic_json& rhs) { value_.swap(rhs.value_); }
+
+	public:
+
+		inline iterator					begin()				{ iterator iter(this); iter.set_begin(); return iter; }
+		inline const_iterator			begin() const		{ return cbegin(); }
+		inline const_iterator			cbegin() const		{ const_iterator iter(this); iter.set_begin(); return iter; }
+		inline iterator					end()				{ iterator iter(this); iter.set_end(); return iter; }
+		inline const_iterator			end() const			{ return cend(); }
+		inline const_iterator			cend() const		{ const_iterator iter(this); iter.set_end(); return iter; }
+		inline reverse_iterator			rbegin()			{ return reverse_iterator(end()); }
+		inline const_reverse_iterator	rbegin() const		{ return const_reverse_iterator(end()); }
+		inline const_reverse_iterator	crbegin() const		{ return rbegin(); }
+		inline reverse_iterator			rend()				{ return reverse_iterator(begin()); }
+		inline const_reverse_iterator	rend() const		{ return const_reverse_iterator(begin()); }
+		inline const_reverse_iterator	crend() const		{ return rend(); }
+
+	public:
+		inline size_type size() const
+		{
+			switch (type())
+			{
+			case JsonType::Null:
+				return 0;
+			case JsonType::Array:
+				return value_.data.vector->size();
+			case JsonType::Object:
+				return value_.data.object->size();
+			default:
+				return 1;
+			}
+		}
+
+		inline bool empty() const
+		{
+			if (is_null())
+				return true;
+
+			if (is_object())
+				return value_.data.object->empty();
+
+			if (is_array())
+				return value_.data.vector->empty();
+
+			return false;
+		}
+
+		template <typename _Kty>
+		inline const_iterator find(_Kty && key) const
+		{
+			if (is_object())
+			{
+				const_iterator iter;
+				iter.it_.object_iter = value_.data.object->find(std::forward<_Kty>(key));
+				return iter;
+			}
+			return cend();
+		}
+
+		template <typename _Kty>
+		inline size_type count(_Kty && key) const
+		{
+			return is_object() ? value_.data.object->count(std::forward<_Kty>(key)) : 0;
+		}
+
+		inline void clear() { value_ = nullptr; }
+
+	public:
+		// GET value functions
+
+		inline bool get_value(boolean_type& val) const
+		{
+			if (is_boolean())
+			{
+				val = value_.data.boolean;
+				return true;
+			}
+			return false;
+		}
+
+		inline bool get_value(integer_type& val) const
+		{
+			if (is_integer())
+			{
+				val = value_.data.number_integer;
+				return true;
+			}
+			return false;
+		}
+
+		inline bool get_value(float_type& val) const
+		{
+			if (is_float())
+			{
+				val = value_.data.number_float;
+				return true;
+			}
+			return false;
+		}
+
+		template <
+			typename _IntegerTy,
+			enable_if_t<std::is_integral<_IntegerTy>::value, int> = 0>
+		inline bool get_value(_IntegerTy& val) const
+		{
+			if (is_integer())
+			{
+				val = static_cast<_IntegerTy>(value_.data.number_integer);
+				return true;
+			}
+			return false;
+		}
+
+		template <
+			typename _FloatingTy,
+			enable_if_t<std::is_floating_point<_FloatingTy>::value, int> = 0>
+		inline bool get_value(_FloatingTy& val) const
+		{
+			if (is_float())
+			{
+				val = static_cast<_FloatingTy>(value_.data.number_float);
+				return true;
+			}
+			return false;
+		}
+
+		inline bool get_value(array_type& val) const
+		{
+			if (is_array())
+			{
+				val.assign((*value_.data.vector).begin(), (*value_.data.vector).end());
+				return true;
+			}
+			return false;
+		}
+
+		inline bool get_value(string_type& val) const
+		{
+			if (is_string())
+			{
+				val.assign(*value_.data.string);
+				return true;
+			}
+			return false;
+		}
+
+		inline bool get_value(object_type& val) const
+		{
+			if (is_object())
+			{
+				val.assign(*value_.data.object);
+				return true;
+			}
+			return false;
+		}
+
+		boolean_type as_bool() const
+		{
+			if (!is_boolean()) throw json_type_error();
+			return value_.data.boolean;
+		}
+
+		integer_type as_int() const
+		{
+			if (!is_integer()) throw json_type_error();
+			return value_.data.number_integer;
+		}
+
+		float_type as_float() const
+		{
+			if (!is_float()) throw json_type_error();
+			return value_.data.number_float;
+		}
+
+		const array_type& as_array() const
+		{
+			if (!is_array()) throw json_type_error();
+			return *value_.data.vector;
+		}
+
+		const string_type& as_string() const
+		{
+			if (!is_string()) throw json_type_error();
+			return *value_.data.string;
+		}
+
+		const object_type& as_object() const
+		{
+			if (!is_object()) throw json_type_error();
+			return *value_.data.object;
+		}
+
+		template <typename _Ty>
+		_Ty get() const
+		{
+			_Ty value;
+			__json_detail::json_value_getter<basic_json>::assign(*this, value);
+			return value;
+		}
+
+	public:
+		// operator= functions
+
+		inline basic_json& operator=(basic_json const& other)
+		{
+			value_ = other.value_;
+			return (*this);
+		}
+
+		inline basic_json& operator=(std::nullptr_t)
+		{
+			value_ = nullptr;
+			return (*this);
+		}
+
+	public:
+		// operator[] functions
+
+		inline basic_json& operator[](size_type index)
+		{
+			if (is_null())
+			{
+				value_ = JsonType::Array;
+			}
+
+			if (!is_array())
+			{
+				throw json_invalid_key();
+			}
+
+			if (index >= value_.data.vector->size())
+			{
+				value_.data.vector->insert(value_.data.vector->end(),
+					index - value_.data.vector->size() + 1,
+					basic_json()
+				);
+			}
+			return (*value_.data.vector)[index];
+		}
+
+		inline basic_json& operator[](size_type index) const
+		{
+			if (!is_array())
+			{
+				throw json_invalid_key();
+			}
+
+			if (index >= value_.data.vector->size())
+			{
+				throw json_invalid_key();
+			}
+			return (*value_.data.vector)[index];
+		}
+
+		inline basic_json& operator[](const typename object_type::key_type& key)
+		{
+			if (is_null())
+			{
+				value_ = JsonType::Object;
+			}
+
+			if (!is_object())
+			{
+				throw json_invalid_key();
+			}
+			return (*value_.data.object)[key];
+		}
+
+		inline basic_json& operator[](const typename object_type::key_type& key) const
+		{
+			if (!is_object())
+			{
+				throw json_invalid_key();
+			}
+
+			auto iter = value_.data.object->find(key);
+			if (iter == value_.data.object->end())
+			{
+				throw json_invalid_key();
+			}
+			return iter->second;
+		}
+
+		template <typename _CharT>
+		inline basic_json& operator[](_CharT* key)
+		{
+			if (is_null())
+			{
+				value_ = JsonType::Object;
+			}
+
+			if (!is_object())
+			{
+				throw json_invalid_key();
+			}
+			return (*value_.data.object)[key];
+		}
+
+		template <typename _CharT>
+		inline basic_json& operator[](_CharT* key) const
+		{
+			if (!is_object())
+			{
+				throw json_invalid_key();
+			}
+
+			auto iter = value_.data.object->find(key);
+			if (iter == value_.data.object->end())
+			{
+				throw json_invalid_key();
+			}
+			return iter->second;
+		}
+
+	public:
+		// implicitly convert functions
+
+		template <typename _Ty>
+		inline operator _Ty() const
+		{
+			return get<_Ty>();
+		}
+
+	public:
+		// dumps functions
+
+		friend std::basic_ostream<char_type>& operator<<(std::basic_ostream<char_type>& out, const basic_json& json)
+		{
+			using char_type = typename std::basic_ostream<char_type>::char_type;
+
+			const bool pretty_print = (out.width() > 0);
+			const auto indentation = (pretty_print ? out.width() : 0);
+			out.width(0);
+
+			__json_detail::stream_output_adapter<char_type> adapter(out);
+			__json_detail::json_serializer<basic_json>(&adapter, out.fill()).dump(json, pretty_print, static_cast<unsigned int>(indentation));
+			return out;
+		}
+
+		string_type dump(
+			const int indent = -1,
+			const char_type indent_char = ' ') const
+		{
+			string_type result;
+			__json_detail::string_output_adapter<string_type> adapter(result);
+			dump(&adapter, indent, indent_char);
+			return result;
+		}
+
+		void dump(
+			__json_detail::output_adapter<char_type>* adapter,
+			const int indent = -1,
+			const char_type indent_char = ' ') const
+		{
+			if (indent >= 0)
+			{
+				__json_detail::json_serializer<basic_json>(adapter, indent_char).dump(*this, true, static_cast<unsigned int>(indent));
+			}
+			else
+			{
+				__json_detail::json_serializer<basic_json>(adapter, indent_char).dump(*this, false, 0);
+			}
+		}
+
+	public:
+		// parse functions
+
+		friend std::basic_istream<char_type>&
+			operator>>(std::basic_istream<char_type>& in, basic_json& json)
+		{
+			__json_detail::stream_input_adapter<char_type> adapter(in);
+			__json_detail::json_parser<basic_json>(&adapter).parse(json);
+			return in;
+		}
+
+		static inline basic_json parse(const string_type& str)
+		{
+			__json_detail::string_input_adapter<string_type> adapter(str);
+			return parse(&adapter);
+		}
+
+		static inline basic_json parse(const char_type* str)
+		{
+			__json_detail::buffer_input_adapter<char_type> adapter(str);
+			return parse(&adapter);
+		}
+
+		static inline basic_json parse(std::FILE* file)
+		{
+			__json_detail::file_input_adapter<char_type> adapter(file);
+			return parse(&adapter);
+		}
+
+		static inline basic_json parse(__json_detail::input_adapter<char_type>* adapter)
+		{
+			basic_json result;
+			__json_detail::json_parser<basic_json>(adapter).parse(result);
+			return result;
+		}
+
+	public:
+		// compare functions
+
+		friend bool operator==(const basic_json& lhs, const basic_json& rhs)
+		{
+			const auto lhs_type = lhs.type();
+			const auto rhs_type = rhs.type();
+
+			if (lhs_type == rhs_type)
+			{
+				switch (lhs_type)
+				{
+				case JsonType::Array:
+					return (*lhs.value_.data.vector == *rhs.value_.data.vector);
+
+				case JsonType::Object:
+					return (*lhs.value_.data.object == *rhs.value_.data.object);
+
+				case JsonType::Null:
+					return true;
+
+				case JsonType::String:
+					return (*lhs.value_.data.string == *rhs.value_.data.string);
+
+				case JsonType::Boolean:
+					return (lhs.value_.data.boolean == rhs.value_.data.boolean);
+
+				case JsonType::Integer:
+					return (lhs.value_.data.number_integer == rhs.value_.data.number_integer);
+
+				case JsonType::Float:
+					return (lhs.value_.data.number_float == rhs.value_.data.number_float);
+
+				default:
+					return false;
+				}
+			}
+			else if (lhs_type == JsonType::Integer && rhs_type == JsonType::Float)
+			{
+				return (static_cast<float_type>(lhs.value_.data.number_integer) == rhs.value_.data.number_float);
+			}
+			else if (lhs_type == JsonType::Float && rhs_type == JsonType::Integer)
+			{
+				return (lhs.value_.data.number_float == static_cast<float_type>(rhs.value_.data.number_integer));
+			}
+
+			return false;
+		}
+
+		friend bool operator!=(const basic_json& lhs, const basic_json& rhs)
+		{
+			return !(lhs == rhs);
+		}
+
+		friend bool operator<(const basic_json& lhs, const basic_json& rhs)
+		{
+			const auto lhs_type = lhs.type();
+			const auto rhs_type = rhs.type();
+
+			if (lhs_type == rhs_type)
+			{
+				switch (lhs_type)
+				{
+				case JsonType::Array:
+					return (*lhs.value_.data.vector) < (*rhs.value_.data.vector);
+
+				case JsonType::Object:
+					return (*lhs.value_.data.object) < (*rhs.value_.data.object);
+
+				case JsonType::Null:
+					return false;
+
+				case JsonType::String:
+					return (*lhs.value_.data.string) < (*rhs.value_.data.string);
+
+				case JsonType::Boolean:
+					return (lhs.value_.data.boolean < rhs.value_.data.boolean);
+
+				case JsonType::Integer:
+					return (lhs.value_.data.number_integer < rhs.value_.data.number_integer);
+
+				case JsonType::Float:
+					return (lhs.value_.data.number_float < rhs.value_.data.number_float);
+
+				default:
+					return false;
+				}
+			}
+			else if (lhs_type == JsonType::Integer && rhs_type == JsonType::Float)
+			{
+				return (static_cast<float_type>(lhs.value_.data.number_integer) < rhs.value_.data.number_float);
+			}
+			else if (lhs_type == JsonType::Float && rhs_type == JsonType::Integer)
+			{
+				return (lhs.value_.data.number_float < static_cast<float_type>(rhs.value_.data.number_integer));
+			}
+
+			return false;
+		}
+
+		friend bool operator<=(const basic_json& lhs, const basic_json& rhs)
+		{
+			return !(rhs < lhs);
+		}
+
+		friend bool operator>(const basic_json& lhs, const basic_json& rhs)
+		{
+			return rhs < lhs;
+		}
+
+		friend bool operator>=(const basic_json& lhs, const basic_json& rhs)
+		{
+			return !(lhs < rhs);
+		}
 
 	private:
-		JsonValue value_;
+		__json_detail::json_value<basic_json> value_;
 	};
 
 #undef E2D_DECLARE_BASIC_JSON_TEMPLATE
