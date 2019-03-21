@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../macros.h"
 #include "../common/helper.h"
 #include "../math/helper.h"
 

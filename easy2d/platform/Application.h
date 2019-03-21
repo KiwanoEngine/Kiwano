@@ -60,9 +60,7 @@ namespace easy2d
 		: protected Noncopyable
 	{
 	public:
-		Application(
-			String const& app_name = L"Easy2dGame"
-		);
+		Application();
 
 		virtual ~Application();
 
@@ -146,7 +144,6 @@ namespace easy2d
 		bool			end_;
 		bool			inited_;
 		float			time_scale_;
-		String			app_name_;
 
 		ScenePtr		curr_scene_;
 		ScenePtr		next_scene_;

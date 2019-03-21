@@ -1216,33 +1216,9 @@ namespace easy2d
 			return false;
 		}
 
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator==(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs == basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator==(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) == rhs;
-		}
-
 		friend bool operator!=(const basic_json& lhs, const basic_json& rhs)
 		{
 			return !(lhs == rhs);
-		}
-
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator!=(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs != basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator!=(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return rhs != basic_json(lhs);
 		}
 
 		friend bool operator<(const basic_json& lhs, const basic_json& rhs)
@@ -1291,33 +1267,9 @@ namespace easy2d
 			return false;
 		}
 
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator<(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs < basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator<(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) < rhs;
-		}
-
 		friend bool operator<=(const basic_json& lhs, const basic_json& rhs)
 		{
 			return !(rhs < lhs);
-		}
-
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator<=(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs <= basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator<=(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) <= rhs;
 		}
 
 		friend bool operator>(const basic_json& lhs, const basic_json& rhs)
@@ -1325,33 +1277,9 @@ namespace easy2d
 			return rhs < lhs;
 		}
 
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator>(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs > basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator>(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) > rhs;
-		}
-
 		friend bool operator>=(const basic_json& lhs, const basic_json& rhs)
 		{
 			return !(lhs < rhs);
-		}
-
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator>=(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs >= basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, enable_if_t<std::is_scalar<_ScalarTy>::value, int> = 0>
-		friend bool operator>=(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) >= rhs;
 		}
 
 	public:

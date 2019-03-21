@@ -28,9 +28,6 @@ namespace easy2d
 	class E2D_API Path
 	{
 	public:
-		// 获取数据的默认保存路径
-		static String const& GetDataPath();
-
 		// 获取临时文件目录
 		static String const& GetTemporaryPath();
 

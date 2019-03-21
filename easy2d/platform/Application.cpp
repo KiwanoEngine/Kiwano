@@ -35,12 +35,11 @@
 
 namespace easy2d
 {
-	Application::Application(String const& app_name)
+	Application::Application()
 		: end_(true)
 		, inited_(false)
 		, main_window_(nullptr)
 		, time_scale_(1.f)
-		, app_name_(app_name)
 	{
 		::CoInitialize(nullptr);
 
