@@ -28,8 +28,8 @@ namespace easy2d
 		using Actions = IntrusiveList<ActionPtr>;
 
 	public:
-		// 执行动作
-		void AddAction(
+		// 添加动作
+		ActionPtr AddAction(
 			ActionPtr const& action
 		);
 

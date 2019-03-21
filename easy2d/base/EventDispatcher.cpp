@@ -40,7 +40,7 @@ namespace easy2d
 		}
 	}
 
-	void EventDispatcher::AddListener(EventListenerPtr const & listener)
+	EventListenerPtr EventDispatcher::AddListener(EventListenerPtr const & listener)
 	{
 		E2D_ASSERT(listener && "AddListener failed, NULL pointer exception");
 
@@ -48,6 +48,7 @@ namespace easy2d
 		{
 			listeners_.PushBack(listener);
 		}
+		return listener;
 	}
 
 	void EventDispatcher::AddListener(UINT type, EventCallback callback, String const& name)

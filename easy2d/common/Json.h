@@ -337,7 +337,7 @@ namespace easy2d
 
 			inline JsonValue& operator=(JsonValue && other)
 			{
-				JsonValue{ std::forward<JsonValue &&>(other) }.swap(*this);
+				JsonValue{ std::forward<JsonValue>(other) }.swap(*this);
 				return (*this);
 			}
 		};
@@ -355,8 +355,7 @@ namespace easy2d
 
 		template <
 			typename _CompatibleTy,
-			enable_if_t<std::is_constructible<string_type, _CompatibleTy>::value, int> = 0
-		>
+			enable_if_t<std::is_constructible<string_type, _CompatibleTy>::value, int> = 0>
 		basic_json(const _CompatibleTy& value)
 		{
 			value_.type = JsonType::String;
@@ -460,37 +459,6 @@ namespace easy2d
 			}
 			return string_type();
 		}
-
-		inline size_type size() const
-		{
-			switch (type())
-			{
-			case JsonType::Null:
-				return 0;
-			case JsonType::Array:
-				return value_.data.vector->size();
-			case JsonType::Object:
-				return value_.data.object->size();
-			default:
-				return 1;
-			}
-		}
-
-		inline bool empty() const
-		{
-			if (is_null())
-				return true;
-
-			if (is_object())
-				return value_.data.object->empty();
-
-			if (is_array())
-				return value_.data.vector->empty();
-
-			return false;
-		}
-
-		inline void clear() { value_ = nullptr; }
 
 		inline void swap(basic_json& rhs) { value_.swap(rhs.value_); }
 
@@ -693,9 +661,9 @@ namespace easy2d
 	public:
 		// operator= functions
 
-		inline basic_json& operator=(basic_json other)
+		inline basic_json& operator=(basic_json const& other)
 		{
-			other.swap(*this);
+			value_ = other.value_;
 			return (*this);
 		}
 
@@ -770,7 +738,7 @@ namespace easy2d
 			{
 				throw json_invalid_key();
 			}
-			return iter.second;
+			return iter->second;
 		}
 
 		template <typename _CharT>
@@ -801,7 +769,7 @@ namespace easy2d
 			{
 				throw json_invalid_key();
 			}
-			return iter.second;
+			return iter->second;
 		}
 
 	public:
@@ -862,6 +830,8 @@ namespace easy2d
 		template <typename _Ty>
 		struct iterator_impl
 		{
+			friend _Ty;
+
 			using value_type		= _Ty;
 			using difference_type	= std::ptrdiff_t;
 			using iterator_category = std::bidirectional_iterator_tag;
@@ -1146,6 +1116,56 @@ namespace easy2d
 		inline reverse_iterator			rend()				{ return reverse_iterator(begin()); }
 		inline const_reverse_iterator	rend() const		{ return const_reverse_iterator(begin()); }
 		inline const_reverse_iterator	crend() const		{ return rend(); }
+
+	public:
+		inline size_type size() const
+		{
+			switch (type())
+			{
+			case JsonType::Null:
+				return 0;
+			case JsonType::Array:
+				return value_.data.vector->size();
+			case JsonType::Object:
+				return value_.data.object->size();
+			default:
+				return 1;
+			}
+		}
+
+		inline bool empty() const
+		{
+			if (is_null())
+				return true;
+
+			if (is_object())
+				return value_.data.object->empty();
+
+			if (is_array())
+				return value_.data.vector->empty();
+
+			return false;
+		}
+
+		template <typename _Kty>
+		inline const_iterator find(_Kty && key) const
+		{
+			if (is_object())
+			{
+				const_iterator iter;
+				iter.it_.object_iter = value_.data.object->find(std::forward<_Kty>(key));
+				return iter;
+			}
+			return cend();
+		}
+
+		template <typename _Kty>
+		inline size_type count(_Kty && key) const
+		{
+			return is_object() ? value_.data.object->count(std::forward<_Kty>(key)) : 0;
+		}
+
+		inline void clear() { value_ = nullptr; }
 
 	public:
 		// compare functions

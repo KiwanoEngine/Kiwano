@@ -19,19 +19,24 @@
 // THE SOFTWARE.
 
 #include "Object.h"
+#include "logs.h"
+#include <typeinfo>
 
 namespace easy2d
 {
 	namespace
 	{
-		bool tracing_leaks = true;
+		bool tracing_leaks = false;
 		Array<Object*> tracing_objects;
 	}
+
+	unsigned int Object::last_object_id = 0;
 
 	Object::Object()
 		: tracing_leak_(false)
 		, user_data_(nullptr)
 		, name_(nullptr)
+		, id_(++last_object_id)
 	{
 #ifdef E2D_DEBUG
 
@@ -83,6 +88,13 @@ namespace easy2d
 		*name_ = name;
 	}
 
+	String Object::DumpObject()
+	{
+		String name = typeid(*this).name();
+		return String::format(L"{ class=\"%s\" id=%d refcount=%d name=\"%s\" }",
+			name.c_str(), GetObjectID(), GetRefCount(), GetName().c_str());
+	}
+
 	void Object::StartTracingLeaks()
 	{
 		tracing_leaks = true;
@@ -93,7 +105,17 @@ namespace easy2d
 		tracing_leaks = false;
 	}
 
-	Array<Object*> const& easy2d::Object::__GetTracingObjects()
+	void Object::DumpTracingObjects()
+	{
+		E2D_LOG(L"-------------------------- All Objects --------------------------");
+		for (const auto object : tracing_objects)
+		{
+			E2D_LOG(object->DumpObject().c_str());
+		}
+		E2D_LOG(L"------------------------- Total size: %d -------------------------", tracing_objects.size());
+	}
+
+	Array<Object*>& easy2d::Object::__GetTracingObjects()
 	{
 		return tracing_objects;
 	}

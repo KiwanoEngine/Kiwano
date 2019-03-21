@@ -93,56 +93,56 @@ namespace easy2d
 		inline void Print(const wchar_t* format, _Args&&... args) const
 		{
 			using namespace __console_colors;
-			Output(std::wcout, stdout_white, nullptr, format, std::forward<_Args&&>(args)...);
+			Output(std::wcout, stdout_white, nullptr, format, std::forward<_Args>(args)...);
 		}
 
 		template <typename ..._Args>
 		inline void Println(const wchar_t* format, _Args&&... args) const
 		{
 			using namespace __console_colors;
-			OutputLine(std::wcout, stdout_white, nullptr, format, std::forward<_Args&&>(args)...);
+			OutputLine(std::wcout, stdout_white, nullptr, format, std::forward<_Args>(args)...);
 		}
 
 		template <typename ..._Args>
 		inline void Message(const wchar_t * format, _Args&&... args) const
 		{
 			using namespace __console_colors;
-			Output(std::wcout, stdout_blue, nullptr, format, std::forward<_Args&&>(args)...);
+			Output(std::wcout, stdout_blue, nullptr, format, std::forward<_Args>(args)...);
 		}
 
 		template <typename ..._Args>
 		inline void Messageln(const wchar_t * format, _Args&&... args) const
 		{
 			using namespace __console_colors;
-			OutputLine(std::wcout, stdout_blue, nullptr, format, std::forward<_Args&&>(args)...);
+			OutputLine(std::wcout, stdout_blue, nullptr, format, std::forward<_Args>(args)...);
 		}
 
 		template <typename ..._Args>
 		inline void Warning(const wchar_t* format, _Args&&... args) const
 		{
 			using namespace __console_colors;
-			Output(std::wcerr, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args&&>(args)...);
+			Output(std::wcerr, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args>(args)...);
 		}
 
 		template <typename ..._Args>
 		inline void Warningln(const wchar_t* format, _Args&&... args) const
 		{
 			using namespace __console_colors;
-			OutputLine(std::wcerr, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args&&>(args)...);
+			OutputLine(std::wcerr, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args>(args)...);
 		}
 
 		template <typename ..._Args>
 		inline void Error(const wchar_t* format, _Args&&... args) const
 		{
 			using namespace __console_colors;
-			Output(std::wcerr, stderr_red_bg, L"Error: ", format, std::forward<_Args&&>(args)...);
+			Output(std::wcerr, stderr_red_bg, L"Error: ", format, std::forward<_Args>(args)...);
 		}
 
 		template <typename ..._Args>
 		inline void Errorln(const wchar_t* format, _Args&&... args) const
 		{
 			using namespace __console_colors;
-			OutputLine(std::wcerr, stderr_red_bg, L"Error: ", format, std::forward<_Args&&>(args)...);
+			OutputLine(std::wcerr, stderr_red_bg, L"Error: ", format, std::forward<_Args>(args)...);
 		}
 
 	private:
@@ -154,7 +154,7 @@ namespace easy2d
 			if (!enabled_)
 				return;
 
-			Output(os, color, prompt, format, std::forward<_Args&&>(args)...);
+			Output(os, color, prompt, format, std::forward<_Args>(args)...);
 
 			os << std::endl;
 			::OutputDebugStringW(L"\r\n");
@@ -166,7 +166,7 @@ namespace easy2d
 			if (!enabled_)
 				return;
 
-			std::wstring output = MakeOutputString(prompt, format, std::forward<_Args&&>(args)...);
+			std::wstring output = MakeOutputString(prompt, format, std::forward<_Args>(args)...);
 
 			os << color << output;
 			::OutputDebugStringW(output.c_str());
@@ -179,8 +179,8 @@ namespace easy2d
 		{
 			static wchar_t temp_buffer[1024 * 3 + 1];
 
-			const auto len = ::_scwprintf(format, std::forward<_Args&&>(args)...);
-			::swprintf_s(temp_buffer, len + 1, format, std::forward<_Args&&>(args)...);
+			const auto len = ::_scwprintf(format, std::forward<_Args>(args)...);
+			::swprintf_s(temp_buffer, len + 1, format, std::forward<_Args>(args)...);
 
 			std::wstringstream ss;
 			ss << Logger::OutPrefix;
