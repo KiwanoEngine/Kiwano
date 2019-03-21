@@ -40,7 +40,7 @@ namespace easy2d
 			typedef IStream*(WINAPI *PFN_SHCreateMemStream)(const BYTE*, UINT);
 
 		public:
-			static Shlwapi& Get()
+			static inline Shlwapi& Get()
 			{
 				static Shlwapi instance;
 				return instance;

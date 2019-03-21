@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #include "Path.h"
-#include "File.h"
-#include "../base/window.h"
+#include "../platform/modules.h"
 #include <shlobj.h>
 
 namespace easy2d
@@ -54,30 +53,6 @@ namespace easy2d
 		}
 	}
 
-
-	String const& Path::GetDataPath()
-	{
-		static String data_path;
-		if (data_path.empty())
-		{
-			// 设置数据的保存路径
-			String local_app_data_path = Path::GetLocalAppDataPath();
-
-			if (!local_app_data_path.empty())
-			{
-				data_path.append(local_app_data_path).append(L"\\Easy2DGameData\\");
-
-				File file(data_path);
-				if (!file.Exists() && !CreateFolder(data_path))
-				{
-					data_path = L"";
-				}
-			}
-			data_path.append(L"Data.ini");
-		}
-		return data_path;
-	}
-
 	String const& Path::GetTemporaryPath()
 	{
 		static String temp_path;
@@ -90,8 +65,7 @@ namespace easy2d
 			{
 				temp_path.append(path).append(L"\\Easy2DGameTemp\\");
 
-				File file(temp_path);
-				if (!file.Exists() && !CreateFolder(temp_path))
+				if (!modules::Shlwapi::Get().PathFileExistsW(temp_path.c_str()) && !CreateFolder(temp_path))
 				{
 					temp_path = L"";
 				}

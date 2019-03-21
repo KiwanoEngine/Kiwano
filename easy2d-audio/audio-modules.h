@@ -38,7 +38,7 @@ namespace easy2d
 			typedef HRESULT(WINAPI *PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
 
 		public:
-			static XAudio2& Get()
+			static inline XAudio2& Get()
 			{
 				static XAudio2 instance;
 				return instance;
@@ -65,7 +65,7 @@ namespace easy2d
 			typedef HRESULT(WINAPI *PFN_MFCreateMFByteStreamOnStream)(IStream*, IMFByteStream**);
 
 		public:
-			static MediaFoundation& Get()
+			static inline MediaFoundation& Get()
 			{
 				static MediaFoundation instance;
 				return instance;

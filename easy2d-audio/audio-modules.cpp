@@ -29,9 +29,9 @@ namespace easy2d
 		{
 			const auto xaudio2_dll_names =
 			{
-				L"xaudio2_9.dll",
-				L"xaudio2_8.dll",
-				L"xaudio2_7.dll"
+				L"xaudio2_9.dll",	// for Windows 10
+				L"xaudio2_8.dll",	// for Windows 8
+				L"xaudio2_7.dll"	// for DirectX SDK
 			};
 
 			for (const auto& name : xaudio2_dll_names)
@@ -47,7 +47,8 @@ namespace easy2d
 
 			if (!xaudio2)
 			{
-				E2D_LOG(L"load xaudio2.dll failed");
+				E2D_ERROR_LOG(L"Load xaudio2.dll failed");
+				throw std::runtime_error("Load xaudio2.dll failed");
 			}
 		}
 
@@ -73,7 +74,8 @@ namespace easy2d
 			}
 			else
 			{
-				E2D_LOG(L"load Mfplat.dll failed");
+				E2D_LOG(L"Load Mfplat.dll failed");
+				throw std::runtime_error("Load Mfplat.dll failed");
 			}
 
 			mfreadwrite = LoadLibraryW(L"Mfreadwrite.dll");
@@ -87,7 +89,8 @@ namespace easy2d
 			}
 			else
 			{
-				E2D_LOG(L"load Mfreadwrite.dll failed");
+				E2D_LOG(L"Load Mfreadwrite.dll failed");
+				throw std::runtime_error("Load Mfreadwrite.dll failed");
 			}
 		}
 	}

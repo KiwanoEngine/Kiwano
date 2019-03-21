@@ -19,10 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
 #include <string>
+#include <algorithm>
 #include <cstring>
 #include <cstdio>
+#include <cstdlib>
 
 namespace easy2d
 {
@@ -91,7 +92,7 @@ namespace easy2d
 		using const_iterator			= iterator_impl<const value_type>;
 		using reverse_iterator			= std::reverse_iterator<iterator>;
 		using const_reverse_iterator	= std::reverse_iterator<const_iterator>;
-		using traits					= std::char_traits<value_type>;
+		using char_traits				= std::char_traits<value_type>;
 		using allocator					= std::allocator<value_type>;
 
 		String();
@@ -110,6 +111,7 @@ namespace easy2d
 		String(_Iter first, _Iter last) : String()																		{ assign_iter(first, last); }
 
 		inline const wchar_t*	c_str() const																			{ return const_str_ ? const_str_ : L""; }
+		inline const wchar_t*	data() const																			{ return const_str_ ? const_str_ : L""; }
 		inline wchar_t			at(size_t i) const																		{ return (*this)[i]; }
 		inline size_type		size() const																			{ return size_; }
 		inline size_type		length() const																			{ return size(); }
@@ -127,31 +129,31 @@ namespace easy2d
 		String&					append(size_type count, wchar_t ch);
 		String&					append(const wchar_t* cstr, size_type count);
 		String&					append(String const& other, size_type pos, size_type count = npos);
-		inline String&			append(const wchar_t* cstr)																{ return append(cstr, traits::length(cstr)); }
+		inline String&			append(const wchar_t* cstr)																{ return append(cstr, char_traits::length(cstr)); }
 		inline String&			append(std::wstring const& str)															{ return append(str.c_str()); }
 		inline String&			append(String const& other)																{ return append(other.const_str_, 0, npos); }
 
 		size_type				find(const wchar_t ch, size_type offset = 0) const;
 		size_type				find(const wchar_t* const str, size_type offset, size_type count) const;
 		inline size_type		find(String const& str, size_type offset = 0) const										{ return find(str.c_str(), offset, str.size()); }
-		inline size_type		find(const wchar_t* const str, size_type offset = 0) const								{ return find(str, offset, traits::length(str)); }
+		inline size_type		find(const wchar_t* const str, size_type offset = 0) const								{ return find(str, offset, char_traits::length(str)); }
 
 		size_type				find_first_of(const wchar_t* const str, size_type offset, size_type count) const;
 		inline size_type		find_first_of(const wchar_t ch, size_type offset = 0) const								{ return find(ch, offset); }
 		inline size_type		find_first_of(String const& str, size_type offset = 0) const							{ return find_first_of(str.c_str(), offset, str.size()); }
-		inline size_type		find_first_of(const wchar_t* const str, size_type offset = 0) const						{ return find_first_of(str, offset, traits::length(str)); }
+		inline size_type		find_first_of(const wchar_t* const str, size_type offset = 0) const						{ return find_first_of(str, offset, char_traits::length(str)); }
 
 		size_type				find_last_of(const wchar_t ch, size_type pos = npos) const;
 		size_type				find_last_of(const wchar_t* const str, size_type pos, size_type count) const;
 		inline size_type		find_last_of(String const& str, size_type pos = npos) const								{ return find_first_of(str.c_str(), pos, str.size()); }
-		inline size_type		find_last_of(const wchar_t* const str, size_type pos = npos) const						{ return find_first_of(str, pos, traits::length(str)); }
+		inline size_type		find_last_of(const wchar_t* const str, size_type pos = npos) const						{ return find_first_of(str, pos, char_traits::length(str)); }
 
 		String&					replace(size_type pos, size_type count, const wchar_t* cstr, size_type count2);
 		String&					replace(size_type pos, size_type count, size_type count2, const wchar_t ch);
 		inline String&			replace(size_type pos, size_type count, const String& str)								{ return replace(pos, count, str.c_str(), str.size()); }
-		inline String&			replace(size_type pos, size_type count, const wchar_t* cstr)							{ return replace(pos, count, cstr, traits::length(cstr)); }
+		inline String&			replace(size_type pos, size_type count, const wchar_t* cstr)							{ return replace(pos, count, cstr, char_traits::length(cstr)); }
 		inline String&			replace(const_iterator first, const_iterator last, const String& str)					{ return replace(first, last, str.c_str(), str.size()); }
-		inline String&			replace(const_iterator first, const_iterator last, const wchar_t* cstr)					{ return replace(first, last, cstr, traits::length(cstr)); }
+		inline String&			replace(const_iterator first, const_iterator last, const wchar_t* cstr)					{ return replace(first, last, cstr, char_traits::length(cstr)); }
 		inline String&			replace(const_iterator first, const_iterator last, const wchar_t* cstr, size_type count){ return replace(first - cbegin(), last - first, cstr, count); }
 		inline String&			replace(const_iterator first, const_iterator last, size_type count2, const wchar_t ch)	{ return replace(first - cbegin(), last - first, count2, ch); }
 
@@ -174,7 +176,7 @@ namespace easy2d
 		String&					insert(size_type index, size_type count, wchar_t ch);
 		String&					insert(size_type index, const wchar_t* s, size_type count);
 		String&					insert(size_type index, const String& str, size_type off, size_type count = npos);
-		inline String&			insert(size_type index, const wchar_t* s)												{ return insert(index, s, traits::length(s)); }
+		inline String&			insert(size_type index, const wchar_t* s)												{ return insert(index, s, char_traits::length(s)); }
 		inline String&			insert(size_type index, const String& str)												{ return insert(index, str, 0, str.size()); }
 		inline iterator			insert(const_iterator pos, size_type count, wchar_t ch)									{ size_type off = pos - cbegin(); insert(off, count, ch); return begin().base() + off; }
 		inline iterator			insert(const_iterator pos, wchar_t ch)													{ return insert(pos, 1, ch); }
@@ -281,9 +283,9 @@ namespace easy2d
 
 			for (size_type index = 0; first != last; ++first, ++index)
 			{
-				traits::assign(str_[index], traits::to_char_type(*first));
+				char_traits::assign(str_[index], char_traits::to_char_type(*first));
 			}
-			traits::assign(str_[size_], value_type());
+			char_traits::assign(str_[size_], value_type());
 		}
 
 	private:
@@ -344,8 +346,8 @@ namespace easy2d
 	// operator<<>> for String
 	//
 
-	std::basic_ostream<String::traits::char_type, String::traits>& operator<<(std::basic_ostream<String::traits::char_type, String::traits>& os, const String & str);
-	std::basic_istream<String::traits::char_type, String::traits>& operator>>(std::basic_istream<String::traits::char_type, String::traits>& is, String & str);
+	std::basic_ostream<String::value_type>& operator<<(std::basic_ostream<String::value_type>& os, const String & str);
+	std::basic_istream<String::value_type>& operator>>(std::basic_istream<String::value_type>& is, String & str);
 
 	//
 	// to_string functions
@@ -450,12 +452,12 @@ namespace easy2d
 
 		if (operable_)
 		{
-			assign(cstr, traits::length(cstr));
+			assign(cstr, char_traits::length(cstr));
 		}
 		else
 		{
 			const_str_ = cstr;
-			size_ = traits::length(cstr);
+			size_ = char_traits::length(cstr);
 			capacity_ = size_;
 		}
 	}
@@ -475,19 +477,18 @@ namespace easy2d
 	inline String::String(const char * cstr)
 		: String()
 	{
-		if (cstr)
+		if (cstr && cstr[0])
 		{
-			int len = ::MultiByteToWideChar(CP_ACP, 0, cstr, -1, nullptr, 0);
-			if (len)
+			size_t len;
+			errno_t ret = ::mbstowcs_s(&len, nullptr, 0, cstr, 0);
+			if (!ret)
 			{
-				wchar_t* temp = allocate(len + 1);
-				temp[0] = 0;
+				str_ = allocate(len);
+				str_[0] = 0;
 
-				if (::MultiByteToWideChar(CP_ACP, 0, cstr, -1, temp, len + 1))
-				{
-					str_ = temp;
-					capacity_ = size_ = static_cast<size_type>(len);
-				}
+				::mbstowcs_s(nullptr, str_, len, cstr, len - 1);
+
+				capacity_ = size_ = static_cast<size_type>(len - 1);
 			}
 		}
 	}
@@ -538,8 +539,8 @@ namespace easy2d
 			}
 			size_ = count;
 
-			traits::assign(str_, count, ch);
-			traits::assign(str_[size_], value_type());
+			char_traits::assign(str_, count, ch);
+			char_traits::assign(str_[size_], value_type());
 
 		}
 		else
@@ -563,8 +564,8 @@ namespace easy2d
 			}
 			size_ = count;
 
-			traits::move(str_, cstr, size_);
-			traits::assign(str_[size_], value_type());
+			char_traits::move(str_, cstr, size_);
+			char_traits::assign(str_[size_], value_type());
 		}
 		else
 		{
@@ -591,7 +592,7 @@ namespace easy2d
 
 		size_type new_size = size_ - count;
 		iterator erase_at = begin().base() + offset;
-		traits::move(erase_at.base(), erase_at.base() + count, new_size - offset + 1);
+		char_traits::move(erase_at.base(), erase_at.base() + count, new_size - offset + 1);
 		return (*this);
 	}
 
@@ -618,18 +619,18 @@ namespace easy2d
 			wchar_t* new_ptr = allocate(capacity_ + 1);
 
 			wchar_t* const insert_at = new_ptr + index;
-			traits::move(new_ptr, old_ptr, index);							// (0) - (index)
-			traits::assign(insert_at, count, ch);							// (index) - (index + count)
-			traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
+			char_traits::move(new_ptr, old_ptr, index);							// (0) - (index)
+			char_traits::assign(insert_at, count, ch);							// (index) - (index + count)
+			char_traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
 
-			deallocate(str_, old_capacity);
+			deallocate(str_, old_capacity + 1);
 			str_ = new_ptr;
 		}
 		else
 		{
 			wchar_t* const insert_at = old_ptr + index;
-			traits::move(insert_at + count, old_ptr + index, suffix_size);
-			traits::assign(insert_at, count, ch);
+			char_traits::move(insert_at + count, old_ptr + index, suffix_size);
+			char_traits::assign(insert_at, count, ch);
 		}
 
 		return (*this);
@@ -658,18 +659,18 @@ namespace easy2d
 			wchar_t* new_ptr = allocate(capacity_ + 1);
 
 			wchar_t* const insert_at = new_ptr + index;
-			traits::move(new_ptr, old_ptr, index);							// (0) - (index)
-			traits::move(insert_at, cstr, count);							// (index) - (index + count)
-			traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
+			char_traits::move(new_ptr, old_ptr, index);							// (0) - (index)
+			char_traits::move(insert_at, cstr, count);							// (index) - (index + count)
+			char_traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
 
-			deallocate(str_, old_capacity);
+			deallocate(str_, old_capacity + 1);
 			str_ = new_ptr;
 		}
 		else
 		{
 			wchar_t* const insert_at = old_ptr + index;
-			traits::move(insert_at + count, old_ptr + index, suffix_size);
-			traits::move(insert_at, cstr, count);
+			char_traits::move(insert_at + count, old_ptr + index, suffix_size);
+			char_traits::move(insert_at, cstr, count);
 		}
 
 		return (*this);
@@ -700,18 +701,18 @@ namespace easy2d
 			wchar_t* new_ptr = allocate(capacity_ + 1);
 
 			wchar_t* const insert_at = new_ptr + index;
-			traits::move(new_ptr, old_ptr, index);							// (0) - (index)
-			traits::move(insert_at, str.begin().base() + off, count);				// (index) - (index + count)
-			traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
+			char_traits::move(new_ptr, old_ptr, index);							// (0) - (index)
+			char_traits::move(insert_at, str.begin().base() + off, count);				// (index) - (index + count)
+			char_traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
 
-			deallocate(str_, old_capacity);
+			deallocate(str_, old_capacity + 1);
 			str_ = new_ptr;
 		}
 		else
 		{
 			wchar_t* const insert_at = old_ptr + index;
-			traits::move(insert_at + count, old_ptr + index, suffix_size);
-			traits::move(insert_at, str.begin().base() + off, count);
+			char_traits::move(insert_at + count, old_ptr + index, suffix_size);
+			char_traits::move(insert_at, str.begin().base() + off, count);
 		}
 
 		return (*this);
@@ -725,9 +726,9 @@ namespace easy2d
 		size_t new_cap = new_size + 1;
 		wchar_t* new_str = allocate(new_cap);
 
-		traits::move(new_str, str_, size_);
-		traits::assign(new_str + size_, count, ch);
-		traits::assign(new_str[new_size], value_type());
+		char_traits::move(new_str, str_, size_);
+		char_traits::assign(new_str + size_, count, ch);
+		char_traits::assign(new_str[new_size], value_type());
 
 		destroy();
 
@@ -745,9 +746,9 @@ namespace easy2d
 		size_t new_cap = new_size + 1;
 		wchar_t* new_str = allocate(new_cap);
 
-		traits::move(new_str, str_, size_);
-		traits::move(new_str + size_, cstr, count);
-		traits::assign(new_str[new_size], value_type());
+		char_traits::move(new_str, str_, size_);
+		char_traits::move(new_str + size_, cstr, count);
+		char_traits::assign(new_str[new_size], value_type());
 
 		destroy();
 
@@ -770,9 +771,9 @@ namespace easy2d
 		size_t new_cap = new_size + 1;
 		wchar_t* new_str = allocate(new_cap);
 
-		traits::move(new_str, str_, size_);
-		traits::move(new_str + size_, other.begin().base() + pos, count);
-		traits::assign(new_str[new_size], value_type());
+		char_traits::move(new_str, str_, size_);
+		char_traits::move(new_str + size_, other.begin().base() + pos, count);
+		char_traits::assign(new_str[new_size], value_type());
 
 		destroy();
 
@@ -790,7 +791,7 @@ namespace easy2d
 		check_operability();
 
 		wchar_t* new_str = allocate(new_cap);
-		traits::move(new_str, str_, capacity_);
+		char_traits::move(new_str, str_, capacity_);
 
 		destroy();
 
@@ -814,10 +815,10 @@ namespace easy2d
 	inline int String::compare(const wchar_t * const str) const
 	{
 		size_type count1 = size();
-		size_type count2 = traits::length(str);
+		size_type count2 = char_traits::length(str);
 		size_type rlen = std::min(count1, count2);
 
-		int ret = traits::compare(const_str_, str, rlen);
+		int ret = char_traits::compare(const_str_, str, rlen);
 		if (ret != 0)
 			return ret;
 
@@ -835,7 +836,7 @@ namespace easy2d
 		if (offset >= size_)
 			return String::npos;
 
-		const_iterator citer = traits::find(cbegin().base() + offset, size_, ch);
+		const_iterator citer = char_traits::find(cbegin().base() + offset, size_, ch);
 		return citer ? (citer - cbegin()) : String::npos;
 	}
 
@@ -843,7 +844,7 @@ namespace easy2d
 	{
 		if (offset >= size_)
 			return String::npos;
-		return __string_details::TraitsFind<String::traits>(const_str_, size_, offset, str, count);
+		return __string_details::TraitsFind<String::char_traits>(const_str_, size_, offset, str, count);
 	}
 
 	inline String::size_type String::find_first_of(const wchar_t * const str, size_type offset, size_type count) const
@@ -869,7 +870,7 @@ namespace easy2d
 		if (pos == 0 || pos > size_ || pos == npos)
 			return npos;
 
-		return __string_details::TraitsFindLastOf<String::traits>(const_str_, size_, pos, str, count);
+		return __string_details::TraitsFindLastOf<String::char_traits>(const_str_, size_, pos, str, count);
 	}
 
 	inline String & String::replace(size_type pos, size_type count, const wchar_t * cstr, size_type count2)
@@ -880,7 +881,7 @@ namespace easy2d
 		count = clamp_suffix_size(pos, count);
 		if (count == count2)
 		{
-			traits::move(str_ + pos, cstr, count2);
+			char_traits::move(str_ + pos, cstr, count2);
 			return (*this);
 		}
 
@@ -897,7 +898,7 @@ namespace easy2d
 			capacity_ = size_;
 			new_ptr = allocate(capacity_ + 1);
 
-			traits::move(new_ptr, old_ptr, pos);
+			char_traits::move(new_ptr, old_ptr, pos);
 		}
 		else
 		{
@@ -905,12 +906,12 @@ namespace easy2d
 		}
 
 		wchar_t* const insert_at = (new_ptr ? new_ptr : old_ptr) + pos;
-		traits::move(insert_at, cstr, count2);
-		traits::move(insert_at + count2, old_ptr + count, suffix_size);
+		char_traits::move(insert_at, cstr, count2);
+		char_traits::move(insert_at + count2, old_ptr + count, suffix_size);
 
 		if (new_ptr)
 		{
-			deallocate(str_, old_capacity);
+			deallocate(str_, old_capacity + 1);
 			str_ = new_ptr;
 		}
 
@@ -925,7 +926,7 @@ namespace easy2d
 		count = clamp_suffix_size(pos, count);
 		if (count == count2)
 		{
-			traits::assign(str_ + pos, count2, ch);
+			char_traits::assign(str_ + pos, count2, ch);
 			return (*this);
 		}
 
@@ -942,7 +943,7 @@ namespace easy2d
 			capacity_ = size_;
 			new_ptr = allocate(capacity_ + 1);
 
-			traits::move(new_ptr, old_ptr, pos);
+			char_traits::move(new_ptr, old_ptr, pos);
 		}
 		else
 		{
@@ -950,12 +951,12 @@ namespace easy2d
 		}
 
 		wchar_t* const insert_at = (new_ptr ? new_ptr : old_ptr) + pos;
-		traits::assign(insert_at, count2, ch);
-		traits::move(insert_at + count2, old_ptr + count, suffix_size);
+		char_traits::assign(insert_at, count2, ch);
+		char_traits::move(insert_at + count2, old_ptr + count, suffix_size);
 
 		if (new_ptr)
 		{
-			deallocate(str_, old_capacity);
+			deallocate(str_, old_capacity + 1);
 			str_ = new_ptr;
 		}
 
@@ -970,28 +971,24 @@ namespace easy2d
 		check_offset(pos);
 
 		count = clamp_suffix_size(pos, count);
-		traits::move(cstr, cbegin().base() + pos, count);
+		char_traits::move(cstr, cbegin().base() + pos, count);
 		return count;
 	}
 
 	inline std::string String::to_string() const
 	{
-		std::string ret;
-		if (const_str_)
+		if (const_str_ && size_)
 		{
-			int len = ::WideCharToMultiByte(CP_ACP, 0, const_str_, -1, nullptr, 0, nullptr, FALSE);
-			if (len)
+			size_t len;
+			errno_t ret = ::wcstombs_s(&len, nullptr, 0, const_str_, 0);
+			if (!ret)
 			{
-				char* str_tmp = new char[len + 1];
-				str_tmp[0] = 0;
-
-				len = ::WideCharToMultiByte(CP_ACP, 0, const_str_, -1, str_tmp, len + 1, nullptr, FALSE);
-
-				ret = str_tmp;
-				delete[] str_tmp;
+				std::string ret(len - 1, '\0');
+				::wcstombs_s(nullptr, &ret[0], len, const_str_, len - 1);
+				return ret;
 			}
 		}
-		return ret;
+		return std::string();
 	}
 
 	inline std::wstring String::to_wstring() const
@@ -1014,7 +1011,7 @@ namespace easy2d
 	{
 		if (operable_ && str_)
 		{
-			deallocate(str_, capacity_);
+			deallocate(str_, capacity_ + 1);
 		}
 		else
 		{
@@ -1077,45 +1074,100 @@ namespace easy2d
 	// details of operator<<>>
 	//
 
-	inline std::basic_ostream<String::traits::char_type, String::traits>&
-		operator<<(std::basic_ostream<String::traits::char_type, String::traits>& os, const String & str)
+	inline std::basic_ostream<String::value_type>& operator<<(std::basic_ostream<String::value_type>& os, const String & str)
 	{
-		return os << str.c_str();
+		using ostream = std::basic_ostream<String::value_type>;
+		using size_type = String::size_type;
+		using traits = String::char_traits;
+
+		const typename ostream::sentry ok(os);
+		std::ios_base::iostate state = std::ios_base::goodbit;
+
+		if (!ok)
+		{
+			state |= std::ios_base::badbit;
+		}
+		else
+		{
+			const auto str_size = str.size();
+			size_type pad = (os.width() <= 0 || static_cast<size_type>(os.width()) <= str_size) ? 0 : static_cast<size_type>(os.width()) - str_size;
+
+			try
+			{
+				if ((os.flags() & std::ios_base::adjustfield) != std::ios_base::left)
+				{
+					for (; 0 < pad; --pad)
+					{
+						if (traits::eq_int_type(traits::eof(), os.rdbuf()->sputc(os.fill())))
+						{
+							state |= std::ios_base::badbit;
+							break;
+						}
+					}
+				}
+
+				if (state == std::ios_base::goodbit
+					&& os.rdbuf()->sputn(str.data(), (std::streamsize)str_size) != (std::streamsize)str_size)
+				{
+					state |= std::ios_base::badbit;
+				}
+				else
+				{
+					for (; 0 < pad; --pad)
+					{
+						if (traits::eq_int_type(traits::eof(), os.rdbuf()->sputc(os.fill())))
+						{
+							state |= std::ios_base::badbit;
+							break;
+						}
+					}
+				}
+				os.width(0);
+			}
+			catch (...)
+			{
+				os.setstate(std::ios_base::badbit, true);
+			}
+		}
+
+		os.setstate(state);
+		return (os);
 	}
 
-	inline std::basic_istream<String::traits::char_type, String::traits>&
-		operator>>(std::basic_istream<String::traits::char_type, String::traits>& is, String & str)
+	inline std::basic_istream<String::value_type>& operator>>(std::basic_istream<String::value_type>& is, String & str)
 	{
-		using Ctype = std::ctype<wchar_t>;
-		using IStream = std::basic_istream<wchar_t, String::traits>;
-		using SizeType = String::size_type;
+		using ctype = std::ctype<String::value_type>;
+		using istream = std::basic_istream<String::value_type>;
+		using size_type = String::size_type;
+		using traits = String::char_traits;
 
-		std::ios_base::iostate state = std::ios_base::goodbit;
 		bool changed = false;
+		const typename istream::sentry ok(is);
+		std::ios_base::iostate state = std::ios_base::goodbit;
 
-		if (IStream::sentry(is))
+		if (ok)
 		{
-			const Ctype& ctype_fac = std::use_facet<Ctype>(is.getloc());
+			const ctype& ctype_fac = std::use_facet<ctype>(is.getloc());
 			str.erase();
 			try
 			{
-				SizeType size = (0 < is.width() && static_cast<SizeType>(is.width()) < str.max_size()) ? static_cast<SizeType>(is.width()) : str.max_size();
-				String::traits::int_type meta = is.rdbuf()->sgetc();
+				size_type size = (0 < is.width() && static_cast<size_type>(is.width()) < str.max_size()) ? static_cast<size_type>(is.width()) : str.max_size();
+				traits::int_type meta = is.rdbuf()->sgetc();
 
 				for (; 0 < size; --size, meta = is.rdbuf()->snextc())
 				{
-					if (String::traits::eq_int_type(String::traits::eof(), meta))
+					if (traits::eq_int_type(traits::eof(), meta))
 					{
 						state |= std::ios_base::eofbit;
 						break;
 					}
-					else if (ctype_fac.is(Ctype::space, String::traits::to_char_type(meta)))
+					else if (ctype_fac.is(ctype::space, traits::to_char_type(meta)))
 					{
 						break;
 					}
 					else
 					{
-						str.push_back(String::traits::to_char_type(meta));
+						str.push_back(traits::to_char_type(meta));
 						changed = true;
 					}
 				}
@@ -1220,7 +1272,7 @@ namespace easy2d
 			static_assert(std::is_integral<_Ty>::value, "_Ty must be integral");
 
 			using _UTy = std::make_unsigned_t<_Ty>;
-			using _Elem = String::traits::char_type;
+			using _Elem = String::char_traits::char_type;
 
 			_Elem buffer[21];
 			_Elem* const buffer_end = std::end(buffer);
