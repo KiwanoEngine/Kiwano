@@ -1676,11 +1676,8 @@ namespace easy2d
 		{
 		}
 
-		template <
-			typename _FloatingTy,
-			typename std::enable_if<std::is_floating_point<_FloatingTy>::value, int>::type = 0>
-		basic_json(_FloatingTy value)
-			: value_(static_cast<float_type>(value))
+		basic_json(integer_type value)
+			: value_(value)
 		{
 		}
 
@@ -1689,6 +1686,19 @@ namespace easy2d
 			typename std::enable_if<std::is_integral<_IntegerTy>::value, int>::type = 0>
 		basic_json(_IntegerTy value)
 			: value_(static_cast<integer_type>(value))
+		{
+		}
+
+		basic_json(float_type value)
+			: value_(value)
+		{
+		}
+
+		template <
+			typename _FloatingTy,
+			typename std::enable_if<std::is_floating_point<_FloatingTy>::value, int>::type = 0>
+		basic_json(_FloatingTy value)
+			: value_(static_cast<float_type>(value))
 		{
 		}
 
@@ -2363,33 +2373,9 @@ namespace easy2d
 			return false;
 		}
 
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator==(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs == basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator==(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) == rhs;
-		}
-
 		friend bool operator!=(const basic_json& lhs, const basic_json& rhs)
 		{
 			return !(lhs == rhs);
-		}
-
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator!=(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs != basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator!=(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return rhs != basic_json(lhs);
 		}
 
 		friend bool operator<(const basic_json& lhs, const basic_json& rhs)
@@ -2438,33 +2424,9 @@ namespace easy2d
 			return false;
 		}
 
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator<(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs < basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator<(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) < rhs;
-		}
-
 		friend bool operator<=(const basic_json& lhs, const basic_json& rhs)
 		{
 			return !(rhs < lhs);
-		}
-
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator<=(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs <= basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator<=(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) <= rhs;
 		}
 
 		friend bool operator>(const basic_json& lhs, const basic_json& rhs)
@@ -2472,33 +2434,9 @@ namespace easy2d
 			return rhs < lhs;
 		}
 
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator>(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs > basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator>(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) > rhs;
-		}
-
 		friend bool operator>=(const basic_json& lhs, const basic_json& rhs)
 		{
 			return !(lhs < rhs);
-		}
-
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator>=(const basic_json& lhs, const _ScalarTy rhs)
-		{
-			return lhs >= basic_json(rhs);
-		}
-
-		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
-		friend bool operator>=(const _ScalarTy lhs, const basic_json& rhs)
-		{
-			return basic_json(lhs) >= rhs;
 		}
 
 	private:
