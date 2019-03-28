@@ -48,7 +48,4 @@ namespace easy2d
 
 	template<typename _Kty, typename _Ty, typename... _Args>
 	using UnorderedMap = std::unordered_map<_Kty, _Ty, _Args...>;
-
-	template <bool _Boolean, typename _Ty = void>
-	using enable_if_t = typename std::enable_if<_Boolean, _Ty>::type;
 }

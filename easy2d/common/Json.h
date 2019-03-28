@@ -282,6 +282,17 @@ namespace easy2d
 
 			~json_value()
 			{
+				clear();
+			}
+
+			void swap(json_value& other)
+			{
+				std::swap(type, other.type);
+				std::swap(data, other.data);
+			}
+
+			void clear()
+			{
 				switch (type)
 				{
 				case JsonType::Object:
@@ -296,12 +307,6 @@ namespace easy2d
 				default:
 					break;
 				}
-			}
-
-			void swap(json_value& other)
-			{
-				std::swap(type, other.type);
-				std::swap(data, other.data);
 			}
 
 			template <typename _Ty, typename ..._Args>
@@ -335,7 +340,12 @@ namespace easy2d
 
 			inline json_value& operator=(json_value && other)
 			{
-				json_value{ std::forward<json_value>(other) }.swap(*this);
+				clear();
+				type = other.type;
+				data = std::move(other.data);
+				// invalidate payload
+				other.type = JsonType::Null;
+				other.data.object = nullptr;
 				return (*this);
 			}
 		};
@@ -1579,7 +1589,7 @@ namespace easy2d
 
 			template <
 				typename _IntegerTy,
-				enable_if_t<std::is_integral<_IntegerTy>::value, int> = 0>
+				typename std::enable_if<std::is_integral<_IntegerTy>::value, int>::type = 0>
 			static inline void assign(const _BasicJsonTy& json, _IntegerTy& value)
 			{
 				if (!json.is_integer()) throw json_type_error();
@@ -1588,7 +1598,7 @@ namespace easy2d
 
 			template <
 				typename _FloatingTy,
-				enable_if_t<std::is_floating_point<_FloatingTy>::value, int> = 0>
+				typename std::enable_if<std::is_floating_point<_FloatingTy>::value, int>::type = 0>
 			static inline void assign(const _BasicJsonTy& json, _FloatingTy& value)
 			{
 				if (!json.is_float()) throw json_type_error();
@@ -1614,6 +1624,7 @@ namespace easy2d
 		template <typename _Ty>
 		using allocator_type			= _Allocator<_Ty>;
 		using size_type					= std::size_t;
+		using difference_type			= std::ptrdiff_t;
 		using string_type				= _StringTy;
 		using char_type					= typename _StringTy::value_type;
 		using integer_type				= _IntegerTy;
@@ -1637,11 +1648,18 @@ namespace easy2d
 
 		basic_json(basic_json const& other) : value_(other.value_) {}
 
+		basic_json(basic_json&& other) : value_(std::move(other.value_))
+		{
+			// invalidate payload
+			other.value_.type = JsonType::Null;
+			other.value_.data.object = nullptr;
+		}
+
 		basic_json(string_type const& value) : value_(value) {}
 
 		template <
 			typename _CompatibleTy,
-			enable_if_t<std::is_constructible<string_type, _CompatibleTy>::value, int> = 0>
+			typename std::enable_if<std::is_constructible<string_type, _CompatibleTy>::value, int>::type = 0>
 		basic_json(const _CompatibleTy& value)
 		{
 			value_.type = JsonType::String;
@@ -1660,7 +1678,7 @@ namespace easy2d
 
 		template <
 			typename _FloatingTy,
-			enable_if_t<std::is_floating_point<_FloatingTy>::value, int> = 0>
+			typename std::enable_if<std::is_floating_point<_FloatingTy>::value, int>::type = 0>
 		basic_json(_FloatingTy value)
 			: value_(static_cast<float_type>(value))
 		{
@@ -1668,7 +1686,7 @@ namespace easy2d
 
 		template <
 			typename _IntegerTy,
-			enable_if_t<std::is_integral<_IntegerTy>::value, int> = 0>
+			typename std::enable_if<std::is_integral<_IntegerTy>::value, int>::type = 0>
 		basic_json(_IntegerTy value)
 			: value_(static_cast<integer_type>(value))
 		{
@@ -1811,7 +1829,151 @@ namespace easy2d
 			return is_object() ? value_.data.object->count(std::forward<_Kty>(key)) : 0;
 		}
 
-		inline void clear() { value_ = nullptr; }
+		inline size_type erase(const typename object_type::key_type& key)
+		{
+			if (!is_object())
+			{
+				throw json_invalid_key();
+			}
+			return value_.data.object->erase(key);
+		}
+
+		inline void erase(const size_type index)
+		{
+			if (!is_array())
+			{
+				throw json_invalid_key();
+			}
+			value_.data.vector->erase(value_.data.vector->begin() + static_cast<difference_type>(index));
+		}
+
+		template<
+			class _IteratorTy,
+			typename std::enable_if<
+				std::is_same<_IteratorTy, iterator>::value ||
+				std::is_same<_IteratorTy, const_iterator>::value, int
+			>::type = 0>
+		inline _IteratorTy erase(_IteratorTy pos)
+		{
+			_IteratorTy result = end();
+
+			switch (type())
+			{
+			case JsonType::Object:
+			{
+				result.it_.object_iter = value_.data.object->erase(pos.it_.object_iter);
+				break;
+			}
+
+			case JsonType::Array:
+			{
+				result.it_.array_iter = value_.data.vector->erase(pos.it_.array_iter);
+				break;
+			}
+
+			default:
+				throw json_invalid_iterator();
+			}
+
+			return result;
+		}
+
+		template<
+			class _IteratorTy,
+			typename std::enable_if<
+				std::is_same<_IteratorTy, iterator>::value ||
+				std::is_same<_IteratorTy, const_iterator>::value, int
+			>::type = 0>
+		inline _IteratorTy erase(_IteratorTy first, _IteratorTy last)
+		{
+			_IteratorTy result = end();
+
+			switch (type())
+			{
+			case JsonType::Object:
+			{
+				result.it_.object_iter = value_.data.object->erase(first.it_.object_iter, last.it_.object_iter);
+				break;
+			}
+
+			case JsonType::Array:
+			{
+				result.it_.array_iter = value_.data.vector->erase(first.it_.array_iter, last.it_.array_iter);
+				break;
+			}
+
+			default:
+				throw json_invalid_iterator();
+			}
+
+			return result;
+		}
+
+		inline void push_back(basic_json&& json)
+		{
+			if (!is_null() && !is_array())
+			{
+				throw json_type_error();
+			}
+
+			if (is_null())
+			{
+				value_ = JsonType::Array;
+			}
+
+			value_.data.vector->push_back(std::move(json));
+		}
+
+		inline basic_json& operator+=(basic_json&& json)
+		{
+			push_back(std::move(json));
+			return (*this);
+		}
+
+		inline void clear()
+		{
+			switch (type())
+			{
+			case JsonType::Integer:
+			{
+				value_.data.number_integer = 0;
+				break;
+			}
+
+			case JsonType::Float:
+			{
+				value_.data.number_float = static_cast<float_type>(0.0);
+				break;
+			}
+
+			case JsonType::Boolean:
+			{
+				value_.data.boolean = false;
+				break;
+			}
+
+			case JsonType::String:
+			{
+				value_.data.string->clear();
+				break;
+			}
+
+			case JsonType::Array:
+			{
+				value_.data.vector->clear();
+				break;
+			}
+
+			case JsonType::Object:
+			{
+				value_.data.object->clear();
+				break;
+			}
+
+			default:
+				break;
+			}
+		}
 
 	public:
 		// GET value functions
@@ -1848,7 +2010,7 @@ namespace easy2d
 
 		template <
 			typename _IntegerTy,
-			enable_if_t<std::is_integral<_IntegerTy>::value, int> = 0>
+			typename std::enable_if<std::is_integral<_IntegerTy>::value, int>::type = 0>
 		inline bool get_value(_IntegerTy& val) const
 		{
 			if (is_integer())
@@ -1861,7 +2023,7 @@ namespace easy2d
 
 		template <
 			typename _FloatingTy,
-			enable_if_t<std::is_floating_point<_FloatingTy>::value, int> = 0>
+			typename std::enable_if<std::is_floating_point<_FloatingTy>::value, int>::type = 0>
 		inline bool get_value(_FloatingTy& val) const
 		{
 			if (is_float())
@@ -1952,6 +2114,12 @@ namespace easy2d
 		inline basic_json& operator=(basic_json const& other)
 		{
 			value_ = other.value_;
+			return (*this);
+		}
+
+		inline basic_json& operator=(basic_json&& other)
+		{
+			value_ = std::move(other.value_);
 			return (*this);
 		}
 
@@ -2195,9 +2363,33 @@ namespace easy2d
 			return false;
 		}
 
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator==(const basic_json& lhs, const _ScalarTy rhs)
+		{
+			return lhs == basic_json(rhs);
+		}
+
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator==(const _ScalarTy lhs, const basic_json& rhs)
+		{
+			return basic_json(lhs) == rhs;
+		}
+
 		friend bool operator!=(const basic_json& lhs, const basic_json& rhs)
 		{
 			return !(lhs == rhs);
+		}
+
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator!=(const basic_json& lhs, const _ScalarTy rhs)
+		{
+			return lhs != basic_json(rhs);
+		}
+
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator!=(const _ScalarTy lhs, const basic_json& rhs)
+		{
+			return rhs != basic_json(lhs);
 		}
 
 		friend bool operator<(const basic_json& lhs, const basic_json& rhs)
@@ -2246,9 +2438,33 @@ namespace easy2d
 			return false;
 		}
 
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator<(const basic_json& lhs, const _ScalarTy rhs)
+		{
+			return lhs < basic_json(rhs);
+		}
+
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator<(const _ScalarTy lhs, const basic_json& rhs)
+		{
+			return basic_json(lhs) < rhs;
+		}
+
 		friend bool operator<=(const basic_json& lhs, const basic_json& rhs)
 		{
 			return !(rhs < lhs);
+		}
+
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator<=(const basic_json& lhs, const _ScalarTy rhs)
+		{
+			return lhs <= basic_json(rhs);
+		}
+
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator<=(const _ScalarTy lhs, const basic_json& rhs)
+		{
+			return basic_json(lhs) <= rhs;
 		}
 
 		friend bool operator>(const basic_json& lhs, const basic_json& rhs)
@@ -2256,9 +2472,33 @@ namespace easy2d
 			return rhs < lhs;
 		}
 
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator>(const basic_json& lhs, const _ScalarTy rhs)
+		{
+			return lhs > basic_json(rhs);
+		}
+
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator>(const _ScalarTy lhs, const basic_json& rhs)
+		{
+			return basic_json(lhs) > rhs;
+		}
+
 		friend bool operator>=(const basic_json& lhs, const basic_json& rhs)
 		{
 			return !(lhs < rhs);
+		}
+
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator>=(const basic_json& lhs, const _ScalarTy rhs)
+		{
+			return lhs >= basic_json(rhs);
+		}
+
+		template <typename _ScalarTy, typename std::enable_if<std::is_scalar<_ScalarTy>::value, int>::type = 0>
+		friend bool operator>=(const _ScalarTy lhs, const basic_json& rhs)
+		{
+			return basic_json(lhs) >= rhs;
 		}
 
 	private:
