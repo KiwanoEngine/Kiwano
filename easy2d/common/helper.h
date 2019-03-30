@@ -24,6 +24,7 @@
 #include <set>
 #include <map>
 #include <list>
+#include <queue>
 #include <unordered_set>
 #include <unordered_map>
 
@@ -36,6 +37,9 @@ namespace easy2d
 
 	template<typename _Ty, typename... _Args>
 	using List = std::list<_Ty, _Args...>;
+
+	template<typename _Ty, typename... _Args>
+	using Queue = std::queue<_Ty, _Args...>;
 
 	template<typename _Ty, typename... _Args>
 	using Set = std::set<_Ty, _Args...>;

@@ -5,7 +5,7 @@
 
 namespace easy2d
 {
-	void ImGuiView::Setup(Application* app)
+	void ImGuiView::SetupComponent(Application* app)
 	{
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -21,7 +21,7 @@ namespace easy2d
 		Init(app->GetWindow()->GetHandle());
 	}
 
-	void ImGuiView::Destroy()
+	void ImGuiView::DestroyComponent()
 	{
 		ImGui_ImplDX11_Shutdown();
 		ImGui::DestroyContext();

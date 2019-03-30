@@ -41,7 +41,7 @@ namespace easy2d
 	{
 	}
 
-	void Renderer::Setup(Application* app)
+	void Renderer::SetupComponent(Application* app)
 	{
 		E2D_LOG(L"Creating device resources");
 
@@ -86,7 +86,7 @@ namespace easy2d
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::Destroy()
+	void Renderer::DestroyComponent()
 	{
 		E2D_LOG(L"Destroying device resources");
 

@@ -23,6 +23,7 @@
 #include "../base/logs.h"
 #include "../base/input.h"
 #include "../base/Event.hpp"
+#include "../base/AsyncTask.h"
 #include "../renderer/render.h"
 #include "../2d/Scene.h"
 #include "../2d/DebugNode.h"
@@ -31,7 +32,7 @@
 #include <imm.h>
 #include <iostream>
 
-#pragma comment (lib ,"imm32.lib")
+#pragma comment(lib, "imm32.lib")
 
 namespace easy2d
 {
@@ -44,9 +45,6 @@ namespace easy2d
 		::CoInitialize(nullptr);
 
 		main_window_ = new Window;
-
-		Use(&Renderer::Instance());
-		Use(&Input::Instance());
 	}
 
 	Application::~Application()
@@ -69,18 +67,23 @@ namespace easy2d
 			)
 		);
 
-		HWND hwnd = main_window_->GetHandle();
-
 		Renderer::Instance().SetClearColor(options.clear_color);
 		Renderer::Instance().SetVSyncEnabled(options.vsync);
+
+		Use(&Renderer::Instance());
+		Use(&Input::Instance());
+		Use(&AsyncTaskThread::Instance());
 
 		// Setup all components
 		for (Component* c : components_)
 		{
-			c->Setup(this);
+			c->SetupComponent(this);
 		}
 
+		// Everything is ready
 		OnStart();
+
+		HWND hwnd = main_window_->GetHandle();
 
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
@@ -130,7 +133,7 @@ namespace easy2d
 
 			for (auto iter = components_.rbegin(); iter != components_.rend(); ++iter)
 			{
-				(*iter)->Destroy();
+				(*iter)->DestroyComponent();
 			}
 
 			if (main_window_)
@@ -165,7 +168,7 @@ namespace easy2d
 			{
 				if ((*iter) == component)
 				{
-					(*iter)->Destroy();
+					(*iter)->DestroyComponent();
 					components_.erase(iter);
 					break;
 				}
@@ -251,6 +254,26 @@ namespace easy2d
 			next_scene_ = nullptr;
 		}
 
+		// perform functions
+		{
+			if (!functions_to_perform_.empty())
+			{
+				perform_mutex_.lock();
+				auto functions = std::move(functions_to_perform_);
+				perform_mutex_.unlock();
+
+				while (!functions.empty())
+				{
+					auto& func = functions.front();
+					if (func)
+					{
+						func();
+					}
+					functions.pop();
+				}
+			}
+		}
+
 		OnUpdate(dt);
 
 		if (curr_scene_)
@@ -290,35 +313,67 @@ namespace easy2d
 		);
 	}
 
-	void Application::ShowConsole()
+	void Application::PreformFunctionInMainThread(std::function<void()> function)
 	{
-		if (!::GetConsoleWindow())
+		std::lock_guard<std::mutex> lock(perform_mutex_);
+		functions_to_perform_.push(function);
+	}
+
+	void Application::ShowConsole(bool show)
+	{
+		static HWND allocated_console = nullptr;
+
+		HWND current_console = ::GetConsoleWindow();
+		if (show)
 		{
-			if (!::AllocConsole())
+			if (current_console)
 			{
-				E2D_WARNING_LOG(L"AllocConsole failed");
+				::ShowWindow(current_console, SW_SHOW);
 			}
 			else
 			{
-				HWND console = ::GetConsoleWindow();
-				FILE * dummy;
-				freopen_s(&dummy, "CONOUT$", "w+t", stdout);
-				freopen_s(&dummy, "CONIN$", "r+t", stdin);
-				freopen_s(&dummy, "CONOUT$", "w+t", stderr);
-				(void)dummy;
-
-				std::cout.clear();
-				std::wcout.clear();
-				std::cin.clear();
-				std::wcin.clear();
-				std::cerr.clear();
-				std::wcerr.clear();
-
-				// disable the close button of console
-				if (console)
+				if (!::AllocConsole())
 				{
-					HMENU hmenu = ::GetSystemMenu(console, FALSE);
-					::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+					E2D_WARNING_LOG(L"AllocConsole failed");
+				}
+				else
+				{
+					allocated_console = ::GetConsoleWindow();
+
+					if (allocated_console)
+					{
+						FILE * dummy;
+						freopen_s(&dummy, "CONOUT$", "w+t", stdout);
+						freopen_s(&dummy, "CONIN$", "r+t", stdin);
+						freopen_s(&dummy, "CONOUT$", "w+t", stderr);
+						(void)dummy;
+
+						std::cout.clear();
+						std::wcout.clear();
+						std::cin.clear();
+						std::wcin.clear();
+						std::cerr.clear();
+						std::wcerr.clear();
+
+						// disable the close button of console
+						HMENU hmenu = ::GetSystemMenu(allocated_console, FALSE);
+						::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
+					}
+				}
+			}
+		}
+		else
+		{
+			if (current_console)
+			{
+				if (current_console == allocated_console)
+				{
+					::FreeConsole();
+					allocated_console = nullptr;
+				}
+				else
+				{
+					::ShowWindow(current_console, SW_HIDE);
 				}
 			}
 		}

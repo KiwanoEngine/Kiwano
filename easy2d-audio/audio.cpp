@@ -34,7 +34,7 @@ namespace easy2d
 	{
 	}
 
-	void Audio::Setup(Application*)
+	void Audio::SetupComponent(Application*)
 	{
 		E2D_LOG(L"Creating audio resources");
 
@@ -53,7 +53,7 @@ namespace easy2d
 		ThrowIfFailed(hr);
 	}
 
-	void Audio::Destroy()
+	void Audio::DestroyComponent()
 	{
 		E2D_LOG(L"Destroying audio resources");
 

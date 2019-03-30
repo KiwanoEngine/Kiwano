@@ -3,7 +3,7 @@
 #pragma once
 
 #include "easy2d.h"
-#include "Box2D/Box2D.h"
+#include <Box2D/Box2D.h>
 
 using namespace easy2d;
 

@@ -27,8 +27,8 @@ namespace easy2d
 	class Component
 	{
 	public:
-		virtual void Setup(Application*) = 0;
+		virtual void SetupComponent(Application*) = 0;
 
-		virtual void Destroy() = 0;
+		virtual void DestroyComponent() = 0;
 	};
 }

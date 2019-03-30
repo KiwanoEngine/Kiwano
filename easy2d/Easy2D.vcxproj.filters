@@ -243,6 +243,9 @@
     <ClInclude Include="base\TimerManager.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="base\AsyncTask.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -366,6 +369,9 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\TimerManager.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\AsyncTask.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

@@ -19,8 +19,64 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "easy2d.h"
+#include "Object.h"
+#include "Component.h"
+#include "../common/Singleton.hpp"
+#include <functional>
+#include <mutex>
 
-#include "audio.h"
-#include "Music.h"
-#include "Player.h"
+namespace easy2d
+{
+	E2D_DECLARE_SMART_PTR(AsyncTask);
+
+	typedef std::function<void()> AsyncTaskFunc;
+	typedef std::function<void()> AsyncTaskCallback;
+
+	class AsyncTask
+		: public Object
+	{
+	public:
+		AsyncTask();
+
+		AsyncTask(
+			AsyncTaskFunc func
+		);
+
+		AsyncTask& Then(
+			AsyncTaskFunc func
+		);
+
+		AsyncTask& SetCallback(
+			AsyncTaskCallback callback
+		);
+
+		void Start();
+
+	protected:
+		void TaskThread();
+
+		void Complete();
+
+	protected:
+		Queue<AsyncTaskFunc> thread_func_queue_;
+		AsyncTaskCallback thread_cb_;
+		std::mutex func_mutex_;
+	};
+
+	class AsyncTaskThread
+		: public Singleton<AsyncTaskThread>
+		, public Component
+	{
+		E2D_DECLARE_SINGLETON(AsyncTaskThread);
+
+	public:
+		virtual void SetupComponent(Application*);
+
+		virtual void DestroyComponent();
+
+		void PerformTaskCallback(std::function<void()> func);
+
+	private:
+		Application* app_;
+	};
+}

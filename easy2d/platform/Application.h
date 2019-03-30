@@ -23,6 +23,7 @@
 #include "../base/time.h"
 #include "../base/window.h"
 #include "../base/Component.h"
+#include <mutex>
 
 namespace easy2d
 {
@@ -130,8 +131,16 @@ namespace easy2d
 			bool show = true
 		);
 
+		// 在 Easy2D 主线程中执行函数
+		// 当在其他线程调用 Easy2D 函数时使用
+		void PreformFunctionInMainThread(
+			std::function<void()> function
+		);
+
 		// 显示控制台
-		static void ShowConsole();
+		static void ShowConsole(
+			bool show
+		);
 
 	protected:
 		void Render();
@@ -152,5 +161,8 @@ namespace easy2d
 
 		Window*				main_window_;
 		Array<Component*>	components_;
+
+		std::mutex						perform_mutex_;
+		Queue<std::function<void()>>	functions_to_perform_;
 	};
 }

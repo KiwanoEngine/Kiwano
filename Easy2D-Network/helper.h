@@ -19,8 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "easy2d.h"
 
-#include "audio.h"
-#include "Music.h"
-#include "Player.h"
+namespace easy2d
+{
+	namespace network
+	{
+		E2D_DECLARE_SMART_PTR(HttpRequest);
+		E2D_DECLARE_SMART_PTR(HttpResponse);
+	}
+}

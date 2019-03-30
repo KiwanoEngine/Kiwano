@@ -27,6 +27,7 @@
     <ClInclude Include="2d\TextStyle.hpp" />
     <ClInclude Include="2d\Transform.hpp" />
     <ClInclude Include="2d\Transition.h" />
+    <ClInclude Include="base\AsyncTask.h" />
     <ClInclude Include="base\Component.h" />
     <ClInclude Include="base\Event.hpp" />
     <ClInclude Include="base\EventDispatcher.h" />
@@ -95,6 +96,7 @@
     <ClCompile Include="2d\Sprite.cpp" />
     <ClCompile Include="2d\Text.cpp" />
     <ClCompile Include="2d\Transition.cpp" />
+    <ClCompile Include="base\AsyncTask.cpp" />
     <ClCompile Include="base\EventDispatcher.cpp" />
     <ClCompile Include="base\EventListener.cpp" />
     <ClCompile Include="base\Input.cpp" />

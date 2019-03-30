@@ -10,5 +10,9 @@ ipch/
 
 *.user
 *.lnk
+
 .vs
 .vscode
+
+# NuGet packages
+packages/

@@ -73,6 +73,7 @@
 #include "base/EventDispatcher.h"
 #include "base/Timer.h"
 #include "base/TimerManager.h"
+#include "base/AsyncTask.h"
 
 #include "2d/Font.hpp"
 #include "2d/Color.h"

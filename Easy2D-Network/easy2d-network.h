@@ -21,6 +21,7 @@
 #pragma once
 #include "easy2d.h"
 
-#include "audio.h"
-#include "Music.h"
-#include "Player.h"
+#include "helper.h"
+#include "HttpRequest.h"
+#include "HttpResponse.h"
+#include "HttpClient.h"
