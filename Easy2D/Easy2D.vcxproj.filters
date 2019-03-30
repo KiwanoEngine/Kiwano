@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{80bc6386-2b70-4bae-993c-649a55163a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{68eac919-ee87-4030-a033-c251731928f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{07b6d541-4a1b-472a-aae0-daf9d082fe84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{86e2d0f2-a9d0-4456-b6a5-d480228bbf82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{c2654ccc-59f6-4c17-bb6b-99b07fc78702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2d">
+      <UniqueIdentifier>{896bdedf-6e82-449b-9b6e-0bc69f3699b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{2e18d99a-e906-499a-9e29-4e0783202644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{7897afce-24cb-42b4-9443-56508e4ec89c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ui\Button.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\Menu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Action.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\ActionGroup.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\ActionHelper.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\ActionManager.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\ActionTween.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Animation.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Canvas.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Color.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\DebugNode.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Font.hpp">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Frames.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Geometry.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\GeometryNode.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Image.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\include-forwards.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Layer.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Node.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Scene.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Sprite.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Text.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\TextStyle.hpp">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Transform.hpp">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Transition.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Array.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\closure.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ComPtr.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\helper.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\IntrusiveList.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\IntrusivePtr.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\noncopyable.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Singleton.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\String.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Component.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Event.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\EventDispatcher.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\EventListener.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\keys.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\logs.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\RefCounter.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Resource.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\time.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\D2DDeviceResources.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\D3D10DeviceResources.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\D3D11DeviceResources.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\DeviceResources.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\helper.hpp">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\render.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\TextRenderer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="math\constants.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\ease.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Matrix.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\rand.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Rect.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\scalar.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\Application.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\modules.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\File.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Path.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ResLoader.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h" />
+    <ClInclude Include="macros.h" />
+    <ClInclude Include="math\helper.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vec2.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Input.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\window.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\SmartPtr.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Object.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="easy2d.h" />
+    <ClInclude Include="utils\DataUtil.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Json.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Timer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\TimerManager.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\AsyncTask.h">
+      <Filter>base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ui\Button.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\Menu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Action.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\ActionGroup.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\ActionManager.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\ActionTween.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Animation.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Canvas.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Color.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\DebugNode.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Frames.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Geometry.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\GeometryNode.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Image.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Layer.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Node.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Scene.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Sprite.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Text.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Transition.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="base\EventDispatcher.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\EventListener.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\logs.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Resource.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\time.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\D2DDeviceResources.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\D3D10DeviceResources.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\D3D11DeviceResources.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\render.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\TextRenderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\Application.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\modules.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\File.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\Path.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ResLoader.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Input.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\window.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Object.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\DataUtil.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Timer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\TimerManager.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\AsyncTask.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

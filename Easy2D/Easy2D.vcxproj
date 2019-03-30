@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="easy2d.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="macros.h" />
+    <ClInclude Include="2d\include-forwards.h" />
+    <ClInclude Include="2d\Action.h" />
+    <ClInclude Include="2d\ActionGroup.h" />
+    <ClInclude Include="2d\ActionHelper.h" />
+    <ClInclude Include="2d\ActionManager.h" />
+    <ClInclude Include="2d\ActionTween.h" />
+    <ClInclude Include="2d\Animation.h" />
+    <ClInclude Include="2d\Canvas.h" />
+    <ClInclude Include="2d\Color.h" />
+    <ClInclude Include="2d\DebugNode.h" />
+    <ClInclude Include="2d\Font.hpp" />
+    <ClInclude Include="2d\Frames.h" />
+    <ClInclude Include="2d\Geometry.h" />
+    <ClInclude Include="2d\GeometryNode.h" />
+    <ClInclude Include="2d\Image.h" />
+    <ClInclude Include="2d\Layer.h" />
+    <ClInclude Include="2d\Node.h" />
+    <ClInclude Include="2d\Scene.h" />
+    <ClInclude Include="2d\Sprite.h" />
+    <ClInclude Include="2d\Text.h" />
+    <ClInclude Include="2d\TextStyle.hpp" />
+    <ClInclude Include="2d\Transform.hpp" />
+    <ClInclude Include="2d\Transition.h" />
+    <ClInclude Include="base\AsyncTask.h" />
+    <ClInclude Include="base\Component.h" />
+    <ClInclude Include="base\Event.hpp" />
+    <ClInclude Include="base\EventDispatcher.h" />
+    <ClInclude Include="base\EventListener.h" />
+    <ClInclude Include="base\Input.h" />
+    <ClInclude Include="base\keys.hpp" />
+    <ClInclude Include="base\logs.h" />
+    <ClInclude Include="base\Object.h" />
+    <ClInclude Include="base\RefCounter.hpp" />
+    <ClInclude Include="base\Resource.h" />
+    <ClInclude Include="base\SmartPtr.hpp" />
+    <ClInclude Include="base\Timer.h" />
+    <ClInclude Include="base\TimerManager.h" />
+    <ClInclude Include="base\time.h" />
+    <ClInclude Include="base\window.h" />
+    <ClInclude Include="common\Array.h" />
+    <ClInclude Include="common\closure.hpp" />
+    <ClInclude Include="common\ComPtr.hpp" />
+    <ClInclude Include="common\helper.h" />
+    <ClInclude Include="common\IntrusiveList.hpp" />
+    <ClInclude Include="common\IntrusivePtr.hpp" />
+    <ClInclude Include="common\Json.h" />
+    <ClInclude Include="common\noncopyable.hpp" />
+    <ClInclude Include="common\Singleton.hpp" />
+    <ClInclude Include="common\String.h" />
+    <ClInclude Include="math\constants.hpp" />
+    <ClInclude Include="math\ease.hpp" />
+    <ClInclude Include="math\helper.h" />
+    <ClInclude Include="math\Matrix.hpp" />
+    <ClInclude Include="math\rand.h" />
+    <ClInclude Include="math\Rect.hpp" />
+    <ClInclude Include="math\scalar.hpp" />
+    <ClInclude Include="math\Vec2.hpp" />
+    <ClInclude Include="platform\Application.h" />
+    <ClInclude Include="platform\modules.h" />
+    <ClInclude Include="renderer\D2DDeviceResources.h" />
+    <ClInclude Include="renderer\D3D10DeviceResources.h" />
+    <ClInclude Include="renderer\D3D11DeviceResources.h" />
+    <ClInclude Include="renderer\DeviceResources.h" />
+    <ClInclude Include="renderer\helper.hpp" />
+    <ClInclude Include="renderer\render.h" />
+    <ClInclude Include="renderer\TextRenderer.h" />
+    <ClInclude Include="ui\Button.h" />
+    <ClInclude Include="ui\Menu.h" />
+    <ClInclude Include="utils\DataUtil.h" />
+    <ClInclude Include="utils\File.h" />
+    <ClInclude Include="utils\Path.h" />
+    <ClInclude Include="utils\ResLoader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="2d\Action.cpp" />
+    <ClCompile Include="2d\ActionGroup.cpp" />
+    <ClCompile Include="2d\ActionManager.cpp" />
+    <ClCompile Include="2d\ActionTween.cpp" />
+    <ClCompile Include="2d\Animation.cpp" />
+    <ClCompile Include="2d\Canvas.cpp" />
+    <ClCompile Include="2d\Color.cpp" />
+    <ClCompile Include="2d\DebugNode.cpp" />
+    <ClCompile Include="2d\Frames.cpp" />
+    <ClCompile Include="2d\Geometry.cpp" />
+    <ClCompile Include="2d\GeometryNode.cpp" />
+    <ClCompile Include="2d\Image.cpp" />
+    <ClCompile Include="2d\Layer.cpp" />
+    <ClCompile Include="2d\Node.cpp" />
+    <ClCompile Include="2d\Scene.cpp" />
+    <ClCompile Include="2d\Sprite.cpp" />
+    <ClCompile Include="2d\Text.cpp" />
+    <ClCompile Include="2d\Transition.cpp" />
+    <ClCompile Include="base\AsyncTask.cpp" />
+    <ClCompile Include="base\EventDispatcher.cpp" />
+    <ClCompile Include="base\EventListener.cpp" />
+    <ClCompile Include="base\Input.cpp" />
+    <ClCompile Include="base\logs.cpp" />
+    <ClCompile Include="base\Object.cpp" />
+    <ClCompile Include="base\Resource.cpp" />
+    <ClCompile Include="base\Timer.cpp" />
+    <ClCompile Include="base\TimerManager.cpp" />
+    <ClCompile Include="base\time.cpp" />
+    <ClCompile Include="base\window.cpp" />
+    <ClCompile Include="platform\Application.cpp" />
+    <ClCompile Include="platform\modules.cpp" />
+    <ClCompile Include="renderer\D2DDeviceResources.cpp" />
+    <ClCompile Include="renderer\D3D10DeviceResources.cpp" />
+    <ClCompile Include="renderer\D3D11DeviceResources.cpp" />
+    <ClCompile Include="renderer\render.cpp" />
+    <ClCompile Include="renderer\TextRenderer.cpp" />
+    <ClCompile Include="ui\Button.cpp" />
+    <ClCompile Include="ui\Menu.cpp" />
+    <ClCompile Include="utils\DataUtil.cpp" />
+    <ClCompile Include="utils\File.cpp" />
+    <ClCompile Include="utils\Path.cpp" />
+    <ClCompile Include="utils\ResLoader.cpp" />
+  </ItemGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}</ProjectGuid>
+    <RootNamespace>Easy2D</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
