@@ -81,7 +81,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../easy2d;../../easy2d-audio</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Easy2D;../../Easy2D-Audio;../../Easy2D-Network</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -93,7 +93,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../easy2d;../../easy2d-audio</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Easy2D;../../Easy2D-Audio;../../Easy2D-Network</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -107,7 +107,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../easy2d;../../easy2d-audio</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Easy2D;../../Easy2D-Audio;../../Easy2D-Network</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -123,7 +123,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../easy2d;../../easy2d-audio</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Easy2D;../../Easy2D-Audio;../../Easy2D-Network</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -141,12 +141,16 @@
     <ClInclude Include="Demo2.h" />
     <ClInclude Include="Demo3.h" />
     <ClInclude Include="Demo4.h" />
+    <ClInclude Include="Demo5.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\easy2d-audio\Easy2D-Audio.vcxproj">
+    <ProjectReference Include="..\..\Easy2D-Audio\Easy2D-Audio.vcxproj">
       <Project>{5d45f66b-becd-4909-bcfc-c0f3ced9d0a2}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\easy2d\Easy2D.vcxproj">
+    <ProjectReference Include="..\..\Easy2D-Network\Easy2D-Network.vcxproj">
+      <Project>{05c5c84b-4ee3-4456-9aed-eeca583b793b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Easy2D\Easy2D.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
   </ItemGroup>

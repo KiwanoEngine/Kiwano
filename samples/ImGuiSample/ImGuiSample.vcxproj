@@ -80,7 +80,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../easy2d;../../easy2d-imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Easy2D;../../Easy2D-ImGui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -92,7 +92,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../easy2d;../../easy2d-imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Easy2D;../../Easy2D-ImGui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -106,7 +106,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../easy2d;../../easy2d-imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Easy2D;../../Easy2D-ImGui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -122,7 +122,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../easy2d;../../easy2d-imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Easy2D;../../Easy2D-ImGui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -135,10 +135,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\easy2d-imgui\Easy2D-ImGui.vcxproj">
+    <ProjectReference Include="..\..\Easy2D-ImGui\Easy2D-ImGui.vcxproj">
       <Project>{23aff03b-a670-4c33-b790-18eec82c61ae}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\easy2d\Easy2D.vcxproj">
+    <ProjectReference Include="..\..\Easy2D\Easy2D.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
   </ItemGroup>
