@@ -119,11 +119,7 @@ namespace
 				return false;
 
 			CURLcode code = curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, response_code);
-			if (code != CURLE_OK || !(*response_code >= 200 && *response_code < 300))
-			{
-				return false;
-			}
-			return true;
+			return code == CURLE_OK && (*response_code >= 200 && *response_code < 300);
 		}
 
 		template <typename ..._Args>
@@ -133,41 +129,68 @@ namespace
 		}
 
 	public:
-		static inline bool GetRequest(HttpClient* client, HttpRequestPtr const& request, long* response_code, std::string* response_data, std::string* response_header, char* error_buffer)
+		static inline bool GetRequest(
+			HttpClient* client,
+			Array<std::string> const& headers,
+			std::string const& url,
+			long* response_code,
+			std::string* response_data,
+			std::string* response_header,
+			char* error_buffer)
 		{
 			Curl curl;
-			return curl.Init(client, request->GetHeaders(), request->GetUrl(), response_data, response_header, error_buffer)
+			return curl.Init(client, headers, url, response_data, response_header, error_buffer)
 				&& curl.SetOption(CURLOPT_FOLLOWLOCATION, true)
 				&& curl.Perform(response_code);
 		}
 
-		static inline bool PostRequest(HttpClient* client, HttpRequestPtr const& request, long* response_code, std::string* response_data, std::string* response_header, char* error_buffer)
+		static inline bool PostRequest(
+			HttpClient* client,
+			Array<std::string> const& headers,
+			std::string const& url,
+			std::string const& request_data,
+			long* response_code,
+			std::string* response_data,
+			std::string* response_header,
+			char* error_buffer)
 		{
 			Curl curl;
-			const auto request_data = request->GetData();
-			return curl.Init(client, request->GetHeaders(), request->GetUrl(), response_data, response_header, error_buffer)
+			return curl.Init(client, headers, url, response_data, response_header, error_buffer)
 				&& curl.SetOption(CURLOPT_POST, 1)
 				&& curl.SetOption(CURLOPT_POSTFIELDS, request_data.c_str())
 				&& curl.SetOption(CURLOPT_POSTFIELDSIZE, request_data.size())
 				&& curl.Perform(response_code);
 		}
 
-		static inline bool PutRequest(HttpClient* client, HttpRequestPtr const& request, long* response_code, std::string* response_data, std::string* response_header, char* error_buffer)
+		static inline bool PutRequest(
+			HttpClient* client,
+			Array<std::string> const& headers,
+			std::string const& url,
+			std::string const& request_data,
+			long* response_code,
+			std::string* response_data,
+			std::string* response_header,
+			char* error_buffer)
 		{
 			Curl curl;
-			const auto request_data = request->GetData();
-			return curl.Init(client, request->GetHeaders(), request->GetUrl(), response_data, response_header, error_buffer)
+			return curl.Init(client, headers, url, response_data, response_header, error_buffer)
 				&& curl.SetOption(CURLOPT_CUSTOMREQUEST, "PUT")
 				&& curl.SetOption(CURLOPT_POSTFIELDS, request_data.c_str())
 				&& curl.SetOption(CURLOPT_POSTFIELDSIZE, request_data.size())
 				&& curl.Perform(response_code);
 		}
 
-		static inline bool DeleteRequest(HttpClient* client, HttpRequestPtr const& request, long* response_code, std::string* response_data, std::string* response_header, char* error_buffer)
+		static inline bool DeleteRequest(
+			HttpClient* client,
+			Array<std::string> const& headers,
+			std::string const& url,
+			long* response_code,
+			std::string* response_data,
+			std::string* response_header,
+			char* error_buffer)
 		{
 			Curl curl;
-			const auto request_data = request->GetData();
-			return curl.Init(client, request->GetHeaders(), request->GetUrl(), response_data, response_header, error_buffer)
+			return curl.Init(client, headers, url, response_data, response_header, error_buffer)
 				&& curl.SetOption(CURLOPT_CUSTOMREQUEST, "DELETE")
 				&& curl.SetOption(CURLOPT_FOLLOWLOCATION, true)
 				&& curl.Perform(response_code);
@@ -250,21 +273,32 @@ namespace easy2d
 		{
 			bool ok = false;
 			long response_code = 0;
-			char error_message[256];
+			char error_message[256] = { 0 };
+			std::string response_header;
+			std::string response_data;
+
+			std::string url = request->GetUrl().to_string();
+			std::string data = request->GetData().to_string();
+			Array<std::string> headers;
+			headers.reserve(request->GetHeaders().size());
+			for (const auto& header : request->GetHeaders())
+			{
+				headers.push_back(header.to_string());
+			}
 
 			switch (request->GetType())
 			{
 			case HttpRequest::Type::Get:
-				ok = Curl::GetRequest(this, request, &response_code, response->GetDataPtr(), response->GetHeaderPtr(), error_message);
+				ok = Curl::GetRequest(this, headers, url, &response_code, &response_data, &response_header, error_message);
 				break;
 			case HttpRequest::Type::Post:
-				ok = Curl::PostRequest(this, request, &response_code, response->GetDataPtr(), response->GetHeaderPtr(), error_message);
+				ok = Curl::PostRequest(this, headers, url, data, &response_code, &response_data, &response_header, error_message);
 				break;
 			case HttpRequest::Type::Put:
-				ok = Curl::PutRequest(this, request, &response_code, response->GetDataPtr(), response->GetHeaderPtr(), error_message);
+				ok = Curl::PutRequest(this, headers, url, data, &response_code, &response_data, &response_header, error_message);
 				break;
 			case HttpRequest::Type::Delete:
-				ok = Curl::DeleteRequest(this, request, &response_code, response->GetDataPtr(), response->GetHeaderPtr(), error_message);
+				ok = Curl::DeleteRequest(this, headers, url, &response_code, &response_data, &response_header, error_message);
 				break;
 			default:
 				E2D_ERROR_LOG(L"HttpClient: unknown request type, only GET, POST, PUT or DELETE is supported");
@@ -272,6 +306,8 @@ namespace easy2d
 			}
 
 			response->SetResponseCode(response_code);
+			response->SetHeader(response_header);
+			response->SetData(response_data);
 			if (!ok)
 			{
 				response->SetSucceed(false);

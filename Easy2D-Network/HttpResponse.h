@@ -60,49 +60,34 @@ namespace easy2d
 				return response_code_;
 			}
 
-			inline void SetHeader(std::string const& response_header)
+			inline void SetHeader(String const& response_header)
 			{
 				response_header_ = response_header;
 			}
 
 			inline String GetHeader() const
 			{
-				return String(response_header_);
+				return response_header_;
 			}
 
-			inline std::string* GetHeaderPtr()
-			{
-				return &response_header_;
-			}
-
-			inline void SetData(std::string const& response_data)
+			inline void SetData(String const& response_data)
 			{
 				response_data_ = response_data;
 			}
 
-			inline String GetData() const
+			inline String const& GetData() const
 			{
-				return String(response_data_);
+				return response_data_;
 			}
 
-			inline std::string* GetDataPtr()
-			{
-				return &response_data_;
-			}
-
-			inline void SetError(std::string const& error_buffer)
+			inline void SetError(String const& error_buffer)
 			{
 				error_buffer_ = error_buffer;
 			}
 
-			inline String GetError() const
+			inline String const& GetError() const
 			{
-				return String(error_buffer_);
-			}
-
-			inline std::string* GetErrorPtr()
-			{
-				return &error_buffer_;
+				return error_buffer_;
 			}
 
 		protected:
@@ -110,9 +95,9 @@ namespace easy2d
 			long response_code_;
 			HttpRequestPtr request_;
 
-			std::string response_header_;
-			std::string response_data_;
-			std::string error_buffer_;
+			String response_header_;
+			String response_data_;
+			String error_buffer_;
 		};
 	}
 }

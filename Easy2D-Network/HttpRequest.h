@@ -56,7 +56,7 @@ namespace easy2d
 				url_ = url.to_string();
 			}
 
-			inline std::string const& GetUrl() const
+			inline String const& GetUrl() const
 			{
 				return url_;
 			}
@@ -76,21 +76,17 @@ namespace easy2d
 				data_ = data.to_string();
 			}
 
-			inline std::string const& GetData() const
+			inline String const& GetData() const
 			{
 				return data_;
 			}
 
 			inline void SetHeaders(Array<String> const& headers)
 			{
-				headers_.reserve(headers.size());
-				for (const auto& header : headers)
-				{
-					headers_.push_back(header.to_string());
-				}
+				headers_ = headers;
 			}
 
-			inline Array<std::string> const& GetHeaders() const
+			inline Array<String> const& GetHeaders() const
 			{
 				return headers_;
 			}
@@ -107,9 +103,9 @@ namespace easy2d
 
 		protected:
 			Type type_;
-			std::string url_;
-			std::string data_;
-			Array<std::string> headers_;
+			String url_;
+			String data_;
+			Array<String> headers_;
 			ResponseCallback response_cb_;
 		};
 	}
