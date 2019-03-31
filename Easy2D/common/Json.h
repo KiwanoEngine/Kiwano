@@ -901,7 +901,7 @@ namespace easy2d
 				case JsonType::String:
 				{
 					out->write('\"');
-					out->write(json.value_.data.string->c_str());
+					dump_string(*json.value_.data.string);
 					out->write('\"');
 					return;
 				}
@@ -984,6 +984,31 @@ namespace easy2d
 					number_buffer[3] = '\0';
 				}
 				out->write(number_buffer.data());
+			}
+
+			void dump_string(const string_type & val)
+			{
+				for (const auto& ch : val)
+				{
+					switch (ch)
+					{
+					case '\t':
+						out->write('\\');
+						out->write('t');
+						break;
+					case '\r':
+						out->write('\\');
+						out->write('r');
+						break;
+					case '\n':
+						out->write('\\');
+						out->write('n');
+						break;
+					default:
+						out->write(ch);
+						break;
+					}
+				}
 			}
 
 		private:
@@ -1247,10 +1272,20 @@ namespace easy2d
 				{
 					string_buffer.clear();
 
+					bool must_read_next = false;
 					while (true)
 					{
 						const auto ch = read_next();
-						if (ch == '\"')
+
+						if (must_read_next)
+						{
+							must_read_next = false;
+						}
+						else if (ch == '\\')
+						{
+							must_read_next = true;
+						}
+						else if (ch == '\"')
 						{
 							// skip last \"
 							read_next();
