@@ -21,9 +21,9 @@
 #pragma once
 #include <string>
 #include <algorithm>
+#include <codecvt>
 #include <cstring>
 #include <cstdio>
-#include <cstdlib>
 
 namespace easy2d
 {
@@ -431,6 +431,25 @@ namespace easy2d
 			}
 			return static_cast<size_t>(-1);
 		}
+
+		class chs_codecvt
+			: public std::codecvt_byname<wchar_t, char, std::mbstate_t>
+		{
+		public:
+			chs_codecvt() : codecvt_byname("chs") {}
+
+			static inline std::wstring string_to_wide(std::string const& str)
+			{
+				std::wstring_convert<chs_codecvt> conv;
+				return conv.from_bytes(str);
+			}
+
+			static inline std::string wide_to_string(std::wstring const& str)
+			{
+				std::wstring_convert<chs_codecvt> conv;
+				return conv.to_bytes(str);
+			}
+		};
 	}
 
 	inline String::String()
@@ -479,16 +498,15 @@ namespace easy2d
 	{
 		if (cstr && cstr[0])
 		{
-			size_t len;
-			errno_t ret = ::mbstowcs_s(&len, nullptr, 0, cstr, 0);
-			if (!ret)
+			try
 			{
-				str_ = allocate(len);
-				str_[0] = 0;
-
-				::mbstowcs_s(nullptr, str_, len, cstr, len - 1);
-
-				capacity_ = size_ = static_cast<size_type>(len - 1);
+				std::wstring wide_string = __string_details::chs_codecvt::string_to_wide(cstr);
+				assign(wide_string);
+			}
+			catch (std::range_error& e)
+			{
+				// bad conversion
+				(void)e;
 			}
 		}
 	}
@@ -702,7 +720,7 @@ namespace easy2d
 
 			wchar_t* const insert_at = new_ptr + index;
 			char_traits::move(new_ptr, old_ptr, index);							// (0) - (index)
-			char_traits::move(insert_at, str.begin().base() + off, count);				// (index) - (index + count)
+			char_traits::move(insert_at, str.begin().base() + off, count);		// (index) - (index + count)
 			char_traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
 
 			deallocate(str_, old_capacity + 1);
@@ -979,13 +997,15 @@ namespace easy2d
 	{
 		if (const_str_ && size_)
 		{
-			size_t len;
-			errno_t ret = ::wcstombs_s(&len, nullptr, 0, const_str_, 0);
-			if (!ret)
+			try
 			{
-				std::string ret(len - 1, '\0');
-				::wcstombs_s(nullptr, &ret[0], len, const_str_, len - 1);
-				return ret;
+				std::string string = __string_details::chs_codecvt::wide_to_string(const_str_);
+				return string;
+			}
+			catch (std::range_error& e)
+			{
+				// bad conversion
+				(void)e;
 			}
 		}
 		return std::string();

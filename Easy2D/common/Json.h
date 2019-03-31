@@ -95,38 +95,40 @@ namespace easy2d
 	//
 
 	class json_exception
-		: public std::exception
+		: public std::runtime_error
 	{
 	public:
-		json_exception(const char* message) : std::exception(message) {}
+		json_exception(const char* message)
+			: std::runtime_error(message)
+		{}
 	};
 
 	class json_type_error
 		: public json_exception
 	{
 	public:
-		json_type_error() : json_exception("invalid json type") {}
+		json_type_error(const char* message) : json_exception(message) {}
 	};
 
 	class json_invalid_key
 		: public json_exception
 	{
 	public:
-		json_invalid_key() : json_exception("invalid basic_json key") {}
+		json_invalid_key(const char* message) : json_exception(message) {}
 	};
 
 	class json_invalid_iterator
 		: public json_exception
 	{
 	public:
-		json_invalid_iterator() : json_exception("invalid basic_json iterator") {}
+		json_invalid_iterator(const char* message) : json_exception(message) {}
 	};
 
 	class json_parse_error
 		: public json_exception
 	{
 	public:
-		json_parse_error() : json_exception("parse json data error") {}
+		json_parse_error(const char* message) : json_exception(message) {}
 	};
 
 
@@ -457,7 +459,7 @@ namespace easy2d
 				check_data();
 				check_iterator();
 				if (!data_->is_object())
-					throw json_invalid_iterator();
+					throw json_invalid_iterator("cannot use key() with non-object type");
 				return it_.object_iter->first;
 			}
 
@@ -577,7 +579,7 @@ namespace easy2d
 				{
 					case JsonType::Object:
 					{
-						throw json_invalid_iterator();
+						throw json_invalid_iterator("cannot use offsets with object type");
 						break;
 					}
 					case JsonType::Array:
@@ -600,8 +602,8 @@ namespace easy2d
 				check_data();
 				other.check_data();
 
-				if (data_->type() != other.data_->type())
-					throw json_invalid_iterator();
+				if (data_ != other.data_)
+					throw json_invalid_iterator("cannot compare iterators of different objects");
 
 				switch (data_->type())
 				{
@@ -626,11 +628,15 @@ namespace easy2d
 			inline bool operator<(iterator_impl const& other) const
 			{
 				check_data();
+				other.check_data();
+
+				if (data_ != other.data_)
+					throw json_invalid_iterator("cannot compare iterators of different objects");
 
 				switch (data_->type())
 				{
 				case JsonType::Object:
-					throw json_invalid_iterator();
+					throw json_invalid_iterator("cannot compare iterators with object type");
 				case JsonType::Array:
 					return it_.array_iter < other.it_.array_iter;
 				default:
@@ -643,7 +649,7 @@ namespace easy2d
 			{
 				if (data_ == nullptr)
 				{
-					throw json_invalid_iterator();
+					throw json_invalid_iterator("iterator contains an empty object");
 				}
 			}
 
@@ -654,19 +660,19 @@ namespace easy2d
 				case JsonType::Object:
 					if (it_.object_iter == data_->value_.data.object->end())
 					{
-						throw json_invalid_iterator();
+						throw std::out_of_range("iterator out of range");
 					}
 					break;
 				case JsonType::Array:
 					if (it_.array_iter == data_->value_.data.vector->end())
 					{
-						throw json_invalid_iterator();
+						throw std::out_of_range("iterator out of range");
 					}
 					break;
 				default:
 					if (it_.original_iter == 1)
 					{
-						throw json_invalid_iterator();
+						throw std::out_of_range("iterator out of range");
 					}
 					break;
 				}
@@ -993,20 +999,62 @@ namespace easy2d
 					switch (ch)
 					{
 					case '\t':
-						out->write('\\');
-						out->write('t');
+					{
+						out->write(L"\\t");
 						break;
+					}
+
 					case '\r':
-						out->write('\\');
-						out->write('r');
+					{
+						out->write(L"\\r");
 						break;
+					}
+
 					case '\n':
-						out->write('\\');
-						out->write('n');
+					{
+						out->write(L"\\n");
 						break;
+					}
+
+					case '\b':
+					{
+						out->write(L"\\b");
+						break;
+					}
+
+					case '\f':
+					{
+						out->write(L"\\f");
+						break;
+					}
+
+					case '\"':
+					{
+						out->write(L"\\\"");
+						break;
+					}
+
+					case '\\':
+					{
+						out->write(L"\\\\");
+						break;
+					}
+
 					default:
-						out->write(ch);
+					{
+						const auto char_byte = static_cast<uint16_t>(ch);
+						if ((char_byte > 0x1F) && (char_byte < 0x7F))
+						{
+							out->write(ch);
+						}
+						else
+						{
+							wchar_t escaped[7] = { 0 };
+							::swprintf_s(escaped, 7, L"\\u%04x", char_byte);
+							out->write(escaped);
+						}
 						break;
+					}
 					}
 				}
 			}
@@ -1268,38 +1316,149 @@ namespace easy2d
 
 			token_type scan_string()
 			{
-				if (current == '\"')
+				if (current != '\"')
+					return token_type::parse_error;
+
+				string_buffer.clear();
+
+				while (true)
 				{
-					string_buffer.clear();
-
-					bool must_read_next = false;
-					while (true)
+					const auto ch = read_next();
+					switch (ch)
 					{
-						const auto ch = read_next();
+					case char_traits::eof():
+					{
+						// unexpected end
+						return token_type::parse_error;
+					}
 
-						if (must_read_next)
+					case '\"':
+					{
+						// skip last `\"`
+						read_next();
+						return token_type::value_string;
+					}
+
+					case 0x00:
+					case 0x01:
+					case 0x02:
+					case 0x03:
+					case 0x04:
+					case 0x05:
+					case 0x06:
+					case 0x07:
+					case 0x08:
+					case 0x09:
+					case 0x0A:
+					case 0x0B:
+					case 0x0C:
+					case 0x0D:
+					case 0x0E:
+					case 0x0F:
+					case 0x10:
+					case 0x11:
+					case 0x12:
+					case 0x13:
+					case 0x14:
+					case 0x15:
+					case 0x16:
+					case 0x17:
+					case 0x18:
+					case 0x19:
+					case 0x1A:
+					case 0x1B:
+					case 0x1C:
+					case 0x1D:
+					case 0x1E:
+					case 0x1F:
+					{
+						// invalid control character
+						return token_type::parse_error;
+					}
+
+					case '\\':
+					{
+						switch (read_next())
 						{
-							must_read_next = false;
-						}
-						else if (ch == '\\')
+						case '\"':
+							string_buffer.push_back('\"');
+							break;
+						case '\\':
+							string_buffer.push_back('\\');
+							break;
+						case '/':
+							string_buffer.push_back('/');
+							break;
+						case 'b':
+							string_buffer.push_back('\b');
+							break;
+						case 'f':
+							string_buffer.push_back('\f');
+							break;
+						case 'n':
+							string_buffer.push_back('\n');
+							break;
+						case 'r':
+							string_buffer.push_back('\r');
+							break;
+						case 't':
+							string_buffer.push_back('\t');
+							break;
+
+						case 'u':
 						{
-							must_read_next = true;
-						}
-						else if (ch == '\"')
-						{
-							// skip last \"
-							read_next();
+							// unicode escapes
+							uint16_t byte = 0;
+
+							for (const auto factor : { 12, 8, 4, 0 })
+							{
+								const auto n = read_next();
+								if (n >= L'0' && n <= L'9')
+								{
+									byte += ((n - L'0') << factor);
+								}
+								else if (n >= L'A' && n <= L'F')
+								{
+									byte += ((n - L'A' + 10) << factor);
+								}
+								else if (n >= L'a' && n <= L'f')
+								{
+									byte += ((n - L'a' + 10) << factor);
+								}
+								else
+								{
+									// '\u' must be followed by 4 hex digits
+									return token_type::parse_error;
+								}
+							}
+
+							string_buffer.push_back(char_traits::to_char_type(byte));
 							break;
 						}
 
-						if (ch == '\0' || ch == char_traits::eof())
+						default:
+						{
 							return token_type::parse_error;
-
-						string_buffer.push_back(char_traits::to_char_type(ch));
+						}
+						}
+						break;
 					}
-					return token_type::value_string;
+
+					default:
+					{
+						if (ch > 0x1F && ch < 0x7F)
+						{
+							string_buffer.push_back(char_traits::to_char_type(ch));
+							break;
+						}
+						else
+						{
+							return token_type::parse_error;
+						}
+					}
+
+					}
 				}
-				return token_type::parse_error;
 			}
 
 			token_type scan_number()
@@ -1484,7 +1643,7 @@ namespace easy2d
 				parse_value(json);
 
 				if (get_token() != token_type::end_of_input)
-					throw json_parse_error();
+					throw json_parse_error("unexpected token, expect end");
 			}
 
 		private:
@@ -1536,7 +1695,7 @@ namespace easy2d
 							break;
 					}
 					if (last_token != token_type::end_array)
-						throw json_parse_error();
+						throw json_parse_error("unexpected token in array");
 					break;
 
 				case token_type::begin_object:
@@ -1559,12 +1718,12 @@ namespace easy2d
 							break;
 					}
 					if (last_token != token_type::end_object)
-						throw json_parse_error();
+						throw json_parse_error("unexpected token in object");
 					break;
 
 				default:
 					// unexpected token
-					throw json_parse_error();
+					throw json_parse_error("unexpected token");
 					break;
 				}
 			}
@@ -1594,31 +1753,31 @@ namespace easy2d
 
 			static inline void assign(const _BasicJsonTy& json, object_type& value)
 			{
-				if (!json.is_object()) throw json_type_error();
+				if (!json.is_object()) throw json_type_error("json value type must be object");
 				value = *json.value_.data.object;
 			}
 
 			static inline void assign(const _BasicJsonTy& json, array_type& value)
 			{
-				if (!json.is_array()) throw json_type_error();
+				if (!json.is_array()) throw json_type_error("json value type must be array");
 				value = *json.value_.data.vector;
 			}
 
 			static inline void assign(const _BasicJsonTy& json, string_type& value)
 			{
-				if (!json.is_string()) throw json_type_error();
+				if (!json.is_string()) throw json_type_error("json value type must be string");
 				value = *json.value_.data.string;
 			}
 
 			static inline void assign(const _BasicJsonTy& json, boolean_type& value)
 			{
-				if (!json.is_boolean()) throw json_type_error();
+				if (!json.is_boolean()) throw json_type_error("json value type must be boolean");
 				value = json.value_.data.boolean;
 			}
 
 			static inline void assign(const _BasicJsonTy& json, integer_type& value)
 			{
-				if (!json.is_integer()) throw json_type_error();
+				if (!json.is_integer()) throw json_type_error("json value type must be integer");
 				value = json.value_.data.number_integer;
 			}
 
@@ -1627,8 +1786,14 @@ namespace easy2d
 				typename std::enable_if<std::is_integral<_IntegerTy>::value, int>::type = 0>
 			static inline void assign(const _BasicJsonTy& json, _IntegerTy& value)
 			{
-				if (!json.is_integer()) throw json_type_error();
+				if (!json.is_integer()) throw json_type_error("json value type must be integer");
 				value = static_cast<_IntegerTy>(json.value_.data.number_integer);
+			}
+
+			static inline void assign(const _BasicJsonTy& json, float_type& value)
+			{
+				if (!json.is_float()) throw json_type_error("json value type must be float");
+				value = json.value_.data.number_float;
 			}
 
 			template <
@@ -1636,7 +1801,7 @@ namespace easy2d
 				typename std::enable_if<std::is_floating_point<_FloatingTy>::value, int>::type = 0>
 			static inline void assign(const _BasicJsonTy& json, _FloatingTy& value)
 			{
-				if (!json.is_float()) throw json_type_error();
+				if (!json.is_float()) throw json_type_error("json value type must be float");
 				value = static_cast<_FloatingTy>(json.value_.data.number_float);
 			}
 		};
@@ -1878,7 +2043,7 @@ namespace easy2d
 		{
 			if (!is_object())
 			{
-				throw json_invalid_key();
+				throw json_invalid_key("cannot use erase() with non-object value");
 			}
 			return value_.data.object->erase(key);
 		}
@@ -1887,7 +2052,7 @@ namespace easy2d
 		{
 			if (!is_array())
 			{
-				throw json_invalid_key();
+				throw json_invalid_key("cannot use erase() with non-array value");
 			}
 			value_.data.vector->erase(value_.data.vector->begin() + static_cast<difference_type>(index));
 		}
@@ -1917,7 +2082,7 @@ namespace easy2d
 			}
 
 			default:
-				throw json_invalid_iterator();
+				throw json_invalid_iterator("cannot use erase() with non-object & non-array value");
 			}
 
 			return result;
@@ -1948,7 +2113,7 @@ namespace easy2d
 			}
 
 			default:
-				throw json_invalid_iterator();
+				throw json_invalid_iterator("cannot use erase() with non-object & non-array value");
 			}
 
 			return result;
@@ -1958,7 +2123,7 @@ namespace easy2d
 		{
 			if (!is_null() && !is_array())
 			{
-				throw json_type_error();
+				throw json_type_error("cannot use push_back() with non-array value");
 			}
 
 			if (is_null())
@@ -2111,37 +2276,37 @@ namespace easy2d
 
 		boolean_type as_bool() const
 		{
-			if (!is_boolean()) throw json_type_error();
+			if (!is_boolean()) throw json_type_error("json value must be boolean");
 			return value_.data.boolean;
 		}
 
 		integer_type as_int() const
 		{
-			if (!is_integer()) throw json_type_error();
+			if (!is_integer()) throw json_type_error("json value must be integer");
 			return value_.data.number_integer;
 		}
 
 		float_type as_float() const
 		{
-			if (!is_float()) throw json_type_error();
+			if (!is_float()) throw json_type_error("json value must be float");
 			return value_.data.number_float;
 		}
 
 		const array_type& as_array() const
 		{
-			if (!is_array()) throw json_type_error();
+			if (!is_array()) throw json_type_error("json value must be array");
 			return *value_.data.vector;
 		}
 
 		const string_type& as_string() const
 		{
-			if (!is_string()) throw json_type_error();
+			if (!is_string()) throw json_type_error("json value must be string");
 			return *value_.data.string;
 		}
 
 		const object_type& as_object() const
 		{
-			if (!is_object()) throw json_type_error();
+			if (!is_object()) throw json_type_error("json value must be object");
 			return *value_.data.object;
 		}
 
@@ -2186,7 +2351,7 @@ namespace easy2d
 
 			if (!is_array())
 			{
-				throw json_invalid_key();
+				throw json_invalid_key("operator[] called on a non-array object");
 			}
 
 			if (index >= value_.data.vector->size())
@@ -2203,12 +2368,12 @@ namespace easy2d
 		{
 			if (!is_array())
 			{
-				throw json_invalid_key();
+				throw json_invalid_key("operator[] called on a non-array type");
 			}
 
 			if (index >= value_.data.vector->size())
 			{
-				throw json_invalid_key();
+				throw std::out_of_range("operator[] index out of range");
 			}
 			return (*value_.data.vector)[index];
 		}
@@ -2222,7 +2387,7 @@ namespace easy2d
 
 			if (!is_object())
 			{
-				throw json_invalid_key();
+				throw json_invalid_key("operator[] called on a non-object type");
 			}
 			return (*value_.data.object)[key];
 		}
@@ -2231,13 +2396,13 @@ namespace easy2d
 		{
 			if (!is_object())
 			{
-				throw json_invalid_key();
+				throw json_invalid_key("operator[] called on a non-object object");
 			}
 
 			auto iter = value_.data.object->find(key);
 			if (iter == value_.data.object->end())
 			{
-				throw json_invalid_key();
+				throw std::out_of_range("operator[] key out of range");
 			}
 			return iter->second;
 		}
@@ -2252,7 +2417,7 @@ namespace easy2d
 
 			if (!is_object())
 			{
-				throw json_invalid_key();
+				throw json_invalid_key("operator[] called on a non-object object");
 			}
 			return (*value_.data.object)[key];
 		}
@@ -2262,13 +2427,13 @@ namespace easy2d
 		{
 			if (!is_object())
 			{
-				throw json_invalid_key();
+				throw json_invalid_key("operator[] called on a non-object object");
 			}
 
 			auto iter = value_.data.object->find(key);
 			if (iter == value_.data.object->end())
 			{
-				throw json_invalid_key();
+				throw std::out_of_range("operator[] key out of range");
 			}
 			return iter->second;
 		}

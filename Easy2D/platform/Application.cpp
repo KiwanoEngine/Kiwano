@@ -59,6 +59,12 @@ namespace
 		wconsole_output.open("CONOUT$", std::ios::out);
 		wconsole_error.open("CONOUT$", std::ios::out);
 
+		FILE* dummy;
+		freopen_s(&dummy, "CONOUT$", "w+t", stdout);
+		freopen_s(&dummy, "CONIN$", "r+t", stdin);
+		freopen_s(&dummy, "CONOUT$", "w+t", stderr);
+		(void)dummy;
+
 		std::cin.rdbuf(console_input.rdbuf());
 		std::cout.rdbuf(console_output.rdbuf());
 		std::cerr.rdbuf(console_error.rdbuf());
@@ -82,6 +88,10 @@ namespace
 		std::wcin.rdbuf(wcin_buffer);
 		std::wcout.rdbuf(wcout_buffer);
 		std::wcerr.rdbuf(wcerr_buffer);
+
+		fclose(stdout);
+		fclose(stdin);
+		fclose(stderr);
 
 		cin_buffer = nullptr;
 		cout_buffer = nullptr;

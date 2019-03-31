@@ -53,7 +53,7 @@ namespace easy2d
 
 			inline void SetUrl(String const& url)
 			{
-				url_ = url.to_string();
+				url_ = url;
 			}
 
 			inline String const& GetUrl() const
@@ -73,7 +73,13 @@ namespace easy2d
 
 			inline void SetData(String const& data)
 			{
-				data_ = data.to_string();
+				data_ = data;
+			}
+
+			inline void SetJsonData(Json const& json)
+			{
+				SetHeader(L"Content-Type", L"application/json;charset=UTF-8");
+				data_ = json.dump();
 			}
 
 			inline String const& GetData() const
@@ -81,14 +87,32 @@ namespace easy2d
 				return data_;
 			}
 
-			inline void SetHeaders(Array<String> const& headers)
+			inline void SetHeaders(Map<String, String> const& headers)
 			{
 				headers_ = headers;
 			}
 
-			inline Array<String> const& GetHeaders() const
+			inline void SetHeader(String const& field, String const& content)
+			{
+				auto iter = headers_.find(field);
+				if (iter != headers_.end())
+				{
+					headers_[field] = content;
+				}
+				else
+				{
+					headers_.insert(std::make_pair(field, content));
+				}
+			}
+
+			inline Map<String, String>& GetHeaders()
 			{
 				return headers_;
+			}
+
+			inline String const& GetHeader(String const& header) const
+			{
+				return headers_.at(header);
 			}
 
 			inline void SetResponseCallback(ResponseCallback const& callback)
@@ -105,7 +129,7 @@ namespace easy2d
 			Type type_;
 			String url_;
 			String data_;
-			Array<String> headers_;
+			Map<String, String> headers_;
 			ResponseCallback response_cb_;
 		};
 	}
