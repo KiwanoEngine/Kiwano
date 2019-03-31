@@ -21,6 +21,7 @@
 #include "easy2d-network.h"
 #include "curl/curl.h"
 #include <thread>
+#include <codecvt>
 
 #pragma comment(lib, "libcurl.lib")
 
@@ -39,6 +40,40 @@ namespace
 		recv_buffer->append((char*)buffer, total);
 
 		return  total;
+	}
+
+	std::string convert_to_utf8(String const& str)
+	{
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
+		std::string result;
+
+		try
+		{
+			result = utf8_conv.to_bytes(str.c_str());
+		}
+		catch (std::range_error&)
+		{
+			// bad conversion
+			result = str.to_string();
+		}
+		return result;
+	}
+
+	String convert_from_utf8(std::string const& str)
+	{
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
+		String result;
+
+		try
+		{
+			result = utf8_conv.from_bytes(str);
+		}
+		catch (std::range_error&)
+		{
+			// bad conversion
+			result = str;
+		}
+		return result;
 	}
 
 	class Curl
@@ -277,13 +312,15 @@ namespace easy2d
 			std::string response_header;
 			std::string response_data;
 
-			std::string url = request->GetUrl().to_string();
-			std::string data = request->GetData().to_string();
+
+			std::string url = convert_to_utf8(request->GetUrl());
+			std::string data = convert_to_utf8(request->GetData());
+
 			Array<std::string> headers;
 			headers.reserve(request->GetHeaders().size());
-			for (const auto& header : request->GetHeaders())
+			for (const auto& pair : request->GetHeaders())
 			{
-				headers.push_back(header.to_string());
+				headers.push_back(pair.first.to_string() + ":" + pair.second.to_string());
 			}
 
 			switch (request->GetType())
@@ -307,7 +344,7 @@ namespace easy2d
 
 			response->SetResponseCode(response_code);
 			response->SetHeader(response_header);
-			response->SetData(response_data);
+			response->SetData(convert_from_utf8(response_data));
 			if (!ok)
 			{
 				response->SetSucceed(false);

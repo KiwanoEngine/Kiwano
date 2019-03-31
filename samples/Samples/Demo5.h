@@ -87,19 +87,19 @@ public:
 
 		// 创建 JSON 格式的 POST 数据
 		Json request_data = {
-			{"String", "StringTest"},
-			{"Boolean", true},
-			{"Integer", 12},
-			{"Float", 3.125},
-			{"Array", {1, 2, 3, 4, 4.5 }},
-			{"Object", {"Key", "Value"}},
+			{"string", "test中文"},
+			{"boolean", true},
+			{"integer", 12},
+			{"float", 3.125},
+			{"array", {1, 2, 3, 4, 4.5 }},
+			{"object", {"key", "value"}},
 		};
 
 		HttpRequestPtr request = new HttpRequest;
 		request->SetUrl(L"http://httpbin.org/post");
 		request->SetType(HttpRequest::Type::Post);
 		// 设置 POST 请求的数据
-		request->SetData(request_data.dump());
+		request->SetJsonData(request_data);
 		request->SetResponseCallback(Closure(this, &Demo5::Complete));
 
 		HttpClient::Instance().Send(request);
@@ -119,7 +119,7 @@ public:
 		request->SetUrl(L"http://httpbin.org/put");
 		request->SetType(HttpRequest::Type::Put);
 		// 设置 PUT 请求的数据
-		request->SetData(request_data.dump());
+		request->SetJsonData(request_data);
 		request->SetResponseCallback(Closure(this, &Demo5::Complete));
 
 		HttpClient::Instance().Send(request);
@@ -156,7 +156,7 @@ public:
 			}
 			catch (json_exception& e)
 			{
-				E2D_ERROR_LOG(L"Parse JSON failed: %s", e.what());
+				std::wcout << L"Parse JSON failed: " << e.what() << std::endl;
 			}
 		}
 		else
