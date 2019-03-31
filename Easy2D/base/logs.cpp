@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "logs.h"
+#include <iostream>
 
 namespace easy2d
 {
@@ -68,21 +69,48 @@ namespace easy2d
 	}
 
 	Logger::Logger()
+		: enabled_(true)
+		, has_console_(false)
+		, default_stdout_color_(0)
+		, default_stderr_color_(0)
+		, output_stream_(std::wcout.rdbuf())
+		, error_stream_(std::wcerr.rdbuf())
 	{
-		enabled_ = ::GetConsoleWindow() != nullptr;
-		default_stdout_color_ = default_stderr_color_ = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+		ResetOutputStream();
+	}
 
-		CONSOLE_SCREEN_BUFFER_INFO stdout_info;
-		if (::GetConsoleScreenBufferInfo(::GetStdHandle(STD_OUTPUT_HANDLE), &stdout_info))
+	void Logger::ResetOutputStream()
+	{
+		has_console_ = ::GetConsoleWindow() != nullptr;
+		if (has_console_)
 		{
-			default_stdout_color_ = stdout_info.wAttributes;
-		}
+			default_stdout_color_ = default_stderr_color_ = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
 
-		CONSOLE_SCREEN_BUFFER_INFO stderr_info;
-		if (::GetConsoleScreenBufferInfo(::GetStdHandle(STD_ERROR_HANDLE), &stderr_info))
-		{
-			default_stderr_color_ = stderr_info.wAttributes;
+			CONSOLE_SCREEN_BUFFER_INFO stdout_info;
+			if (::GetConsoleScreenBufferInfo(::GetStdHandle(STD_OUTPUT_HANDLE), &stdout_info))
+			{
+				default_stdout_color_ = stdout_info.wAttributes;
+			}
+
+			CONSOLE_SCREEN_BUFFER_INFO stderr_info;
+			if (::GetConsoleScreenBufferInfo(::GetStdHandle(STD_ERROR_HANDLE), &stderr_info))
+			{
+				default_stderr_color_ = stderr_info.wAttributes;
+			}
+
+			RedirectOutputStreamBuffer(std::wcout.rdbuf());
+			RedirectErrorStreamBuffer(std::wcerr.rdbuf());
 		}
+	}
+
+	std::wstreambuf* Logger::RedirectOutputStreamBuffer(std::wstreambuf* buf)
+	{
+		return output_stream_.rdbuf(buf);
+	}
+
+	std::wstreambuf* Logger::RedirectErrorStreamBuffer(std::wstreambuf* buf)
+	{
+		return error_stream_.rdbuf(buf);
 	}
 
 }

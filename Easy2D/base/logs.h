@@ -23,7 +23,6 @@
 #include "../common/Singleton.hpp"
 #include <ctime>
 #include <iomanip>
-#include <iostream>
 #include <sstream>
 
 #ifndef E2D_LOG
@@ -44,10 +43,81 @@
 
 namespace easy2d
 {
+	class E2D_API Logger
+		: public Singleton<Logger>
+	{
+		E2D_DECLARE_SINGLETON(Logger);
+
+	public:
+		void Enable();
+
+		void Disable();
+
+		template <typename ..._Args>
+		void Print(const wchar_t* format, _Args&&... args);
+
+		template <typename ..._Args>
+		void Println(const wchar_t* format, _Args&&... args);
+
+		template <typename ..._Args>
+		void Message(const wchar_t * format, _Args&&... args);
+
+		template <typename ..._Args>
+		void Messageln(const wchar_t * format, _Args&&... args);
+
+		template <typename ..._Args>
+		void Warning(const wchar_t* format, _Args&&... args);
+
+		template <typename ..._Args>
+		void Warningln(const wchar_t* format, _Args&&... args);
+
+		template <typename ..._Args>
+		void Error(const wchar_t* format, _Args&&... args);
+
+		template <typename ..._Args>
+		void Errorln(const wchar_t* format, _Args&&... args);
+
+		std::wstreambuf* RedirectOutputStreamBuffer(std::wstreambuf* buf);
+
+		std::wstreambuf* RedirectErrorStreamBuffer(std::wstreambuf* buf);
+
+		void ResetOutputStream();
+
+	private:
+		Logger();
+
+		template <typename ..._Args>
+		void OutputLine(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, _Args&&... args) const;
+
+		template <typename ..._Args>
+		void Output(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, _Args&&... args) const;
+
+		template <typename ..._Args>
+		std::wstring MakeOutputString(const wchar_t* prompt, const wchar_t* format, _Args&&... args) const;
+
+		void ResetConsoleColor() const;
+
+		static std::wostream& DefaultOutputColor(std::wostream& out);
+
+		static std::wostream& OutPrefix(std::wostream& out);
+
+	private:
+		bool enabled_;
+		bool has_console_;
+		WORD default_stdout_color_;
+		WORD default_stderr_color_;
+
+		std::wostream output_stream_;
+		std::wostream error_stream_;
+	};
+
+
+	//
+	// details of Logger
+	//
+
 	namespace __console_colors
 	{
-		using ConsoleColor = std::wostream&(*)(std::wostream&);
-
 #define DECLARE_COLOR(COLOR)\
 		extern std::wostream&(stdout_##COLOR)(std::wostream&);\
 		extern std::wostream&(stderr_##COLOR)(std::wostream&);
@@ -73,146 +143,136 @@ namespace easy2d
 #undef DECLARE_BG_COLOR
 	}
 
-	class E2D_API Logger
-		: public Singleton<Logger>
+
+	inline void Logger::Enable()
 	{
-		E2D_DECLARE_SINGLETON(Logger);
+		enabled_ = true;
+	}
 
-	public:
-		inline void Enable()
+	inline void Logger::Disable()
+	{
+		enabled_ = false;
+	}
+
+	template <typename ..._Args>
+	inline void Logger::Print(const wchar_t* format, _Args&&... args)
+	{
+		Output(output_stream_, Logger::DefaultOutputColor, nullptr, format, std::forward<_Args>(args)...);
+	}
+
+	template <typename ..._Args>
+	inline void Logger::Println(const wchar_t* format, _Args&&... args)
+	{
+		OutputLine(output_stream_, Logger::DefaultOutputColor, nullptr, format, std::forward<_Args>(args)...);
+	}
+
+	template <typename ..._Args>
+	inline void Logger::Message(const wchar_t * format, _Args&&... args)
+	{
+		using namespace __console_colors;
+		Output(output_stream_, stdout_blue, nullptr, format, std::forward<_Args>(args)...);
+	}
+
+	template <typename ..._Args>
+	inline void Logger::Messageln(const wchar_t * format, _Args&&... args)
+	{
+		using namespace __console_colors;
+		OutputLine(output_stream_, stdout_blue, nullptr, format, std::forward<_Args>(args)...);
+	}
+
+	template <typename ..._Args>
+	inline void Logger::Warning(const wchar_t* format, _Args&&... args)
+	{
+		using namespace __console_colors;
+		Output(output_stream_, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args>(args)...);
+	}
+
+	template <typename ..._Args>
+	inline void Logger::Warningln(const wchar_t* format, _Args&&... args)
+	{
+		using namespace __console_colors;
+		OutputLine(output_stream_, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args>(args)...);
+	}
+
+	template <typename ..._Args>
+	inline void Logger::Error(const wchar_t* format, _Args&&... args)
+	{
+		using namespace __console_colors;
+		Output(error_stream_, stderr_red_bg, L"Error: ", format, std::forward<_Args>(args)...);
+	}
+
+	template <typename ..._Args>
+	inline void Logger::Errorln(const wchar_t* format, _Args&&... args)
+	{
+		using namespace __console_colors;
+		OutputLine(error_stream_, stderr_red_bg, L"Error: ", format, std::forward<_Args>(args)...);
+	}
+
+	template <typename ..._Args>
+	inline void Logger::OutputLine(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, _Args&&... args) const
+	{
+		if (enabled_ && has_console_)
 		{
-			enabled_ = true;
-		}
-
-		inline void Disable()
-		{
-			enabled_ = false;
-		}
-
-		template <typename ..._Args>
-		inline void Print(const wchar_t* format, _Args&&... args) const
-		{
-			using namespace __console_colors;
-			Output(std::wcout, stdout_white, nullptr, format, std::forward<_Args>(args)...);
-		}
-
-		template <typename ..._Args>
-		inline void Println(const wchar_t* format, _Args&&... args) const
-		{
-			using namespace __console_colors;
-			OutputLine(std::wcout, stdout_white, nullptr, format, std::forward<_Args>(args)...);
-		}
-
-		template <typename ..._Args>
-		inline void Message(const wchar_t * format, _Args&&... args) const
-		{
-			using namespace __console_colors;
-			Output(std::wcout, stdout_blue, nullptr, format, std::forward<_Args>(args)...);
-		}
-
-		template <typename ..._Args>
-		inline void Messageln(const wchar_t * format, _Args&&... args) const
-		{
-			using namespace __console_colors;
-			OutputLine(std::wcout, stdout_blue, nullptr, format, std::forward<_Args>(args)...);
-		}
-
-		template <typename ..._Args>
-		inline void Warning(const wchar_t* format, _Args&&... args) const
-		{
-			using namespace __console_colors;
-			Output(std::wcerr, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args>(args)...);
-		}
-
-		template <typename ..._Args>
-		inline void Warningln(const wchar_t* format, _Args&&... args) const
-		{
-			using namespace __console_colors;
-			OutputLine(std::wcerr, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args>(args)...);
-		}
-
-		template <typename ..._Args>
-		inline void Error(const wchar_t* format, _Args&&... args) const
-		{
-			using namespace __console_colors;
-			Output(std::wcerr, stderr_red_bg, L"Error: ", format, std::forward<_Args>(args)...);
-		}
-
-		template <typename ..._Args>
-		inline void Errorln(const wchar_t* format, _Args&&... args) const
-		{
-			using namespace __console_colors;
-			OutputLine(std::wcerr, stderr_red_bg, L"Error: ", format, std::forward<_Args>(args)...);
-		}
-
-	private:
-		Logger();
-
-		template <typename ..._Args>
-		inline void OutputLine(std::wostream& os, __console_colors::ConsoleColor color, const wchar_t* prompt, const wchar_t* format, _Args&&... args) const
-		{
-			if (!enabled_)
-				return;
-
 			Output(os, color, prompt, format, std::forward<_Args>(args)...);
 
 			os << std::endl;
 			::OutputDebugStringW(L"\r\n");
 		}
+	}
 
-		template <typename ..._Args>
-		inline void Output(std::wostream& os, __console_colors::ConsoleColor color, const wchar_t* prompt, const wchar_t* format, _Args&&... args) const
+	template <typename ..._Args>
+	inline void Logger::Output(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, _Args&&... args) const
+	{
+		if (enabled_ && has_console_)
 		{
-			if (!enabled_)
-				return;
-
 			std::wstring output = MakeOutputString(prompt, format, std::forward<_Args>(args)...);
 
 			os << color << output;
 			::OutputDebugStringW(output.c_str());
 
-			ResetColor();
+			ResetConsoleColor();
 		}
+	}
 
-		template <typename ..._Args>
-		inline std::wstring MakeOutputString(const wchar_t* prompt, const wchar_t* format, _Args&&... args) const
-		{
-			static wchar_t temp_buffer[1024 * 3 + 1];
+	template <typename ..._Args>
+	inline std::wstring Logger::MakeOutputString(const wchar_t* prompt, const wchar_t* format, _Args&&... args) const
+	{
+		static wchar_t temp_buffer[1024 * 3 + 1];
 
-			const auto len = ::_scwprintf(format, std::forward<_Args>(args)...);
-			::swprintf_s(temp_buffer, len + 1, format, std::forward<_Args>(args)...);
+		const auto len = ::_scwprintf(format, std::forward<_Args>(args)...);
+		::swprintf_s(temp_buffer, len + 1, format, std::forward<_Args>(args)...);
 
-			std::wstringstream ss;
-			ss << Logger::OutPrefix;
+		std::wstringstream ss;
+		ss << Logger::OutPrefix;
 
-			if (prompt)
-				ss << prompt;
+		if (prompt)
+			ss << prompt;
 
-			ss << temp_buffer;
+		ss << temp_buffer;
 
-			return ss.str();
-		}
+		return ss.str();
+	}
 
-		inline void ResetColor() const
-		{
-			::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), default_stdout_color_);
-			::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), default_stderr_color_);
-		}
+	inline void Logger::ResetConsoleColor() const
+	{
+		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), default_stdout_color_);
+		::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), default_stderr_color_);
+	}
 
-		static inline std::wostream& OutPrefix(std::wostream& out)
-		{
-			std::time_t unix = std::time(nullptr);
-			std::tm tmbuf;
-			localtime_s(&tmbuf, &unix);
-			out << std::put_time(&tmbuf, L"[easy2d] %H:%M:%S ");
-			return out;
-		}
+	inline std::wostream& Logger::DefaultOutputColor(std::wostream& out)
+	{
+		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), Logger::Instance().default_stdout_color_);
+		return out;
+	}
 
-	private:
-		bool enabled_;
-		WORD default_stdout_color_;
-		WORD default_stderr_color_;
-	};
+	inline std::wostream& Logger::OutPrefix(std::wostream& out)
+	{
+		std::time_t unix = std::time(nullptr);
+		std::tm tmbuf;
+		localtime_s(&tmbuf, &unix);
+		out << std::put_time(&tmbuf, L"[easy2d] %H:%M:%S ");
+		return out;
+	}
 }
 
 namespace easy2d
