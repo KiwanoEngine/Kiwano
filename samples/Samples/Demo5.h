@@ -2,6 +2,7 @@
 
 #pragma once
 #include "common.h"
+#include <iostream>
 
 class Demo5
 	: public Scene
@@ -31,6 +32,7 @@ public:
 	void OnEnter() override
 	{
 		Application::ShowConsole(true);
+		SendRequest();
 	}
 
 	void OnExit() override
@@ -42,25 +44,40 @@ public:
 	{
 		if (e.key.code == KeyCode::Space)
 		{
-			HttpRequestPtr request = new HttpRequest;
-			request->SetUrl(L"http://httpbin.org/get/");
-			request->SetType(HttpRequest::Type::Get);
-			request->SetResponseCallback(Closure(this, &Demo5::Complete));
-
-			HttpClient::Instance().Send(request);
+			SendRequest();
 		}
+	}
+
+	void SendRequest()
+	{
+		Logger::Instance().Println(L"Start to send request...");
+
+		HttpRequestPtr request = new HttpRequest;
+		request->SetUrl(L"http://httpbin.org/get");
+		request->SetType(HttpRequest::Type::Get);
+		request->SetResponseCallback(Closure(this, &Demo5::Complete));
+
+		HttpClient::Instance().Send(request);
 	}
 
 	void Complete(HttpRequestPtr request, HttpResponsePtr response)
 	{
 		if (response->IsSucceed())
 		{
-			std::wcout << "Response: " << std::endl << "HttpCode: " << response->GetResponseCode()
-				<< std::endl << "Data: " << response->GetData() << std::endl;
+			Json response_data = Json::parse(response->GetData());
+			Json result = {
+				{L"HttpCode", response->GetResponseCode()},
+				{L"Data", response_data},
+			};
+			std::wcout << L"Response: " << std::endl << result.dump(4) << std::endl;
 		}
 		else
 		{
-			std::wcout << "Error: " << response->GetError() << std::endl;
+			Json result = {
+				{L"HttpCode", response->GetResponseCode()},
+				{L"Error", response->GetError()},
+			};
+			std::wcout << L"Response: " << std::endl << result.dump(4) << std::endl;
 		}
 	}
 };
