@@ -554,7 +554,7 @@ namespace easy2d
 	{
 		discard_const_data();
 
-		if (cstr)
+		if (cstr && count)
 		{
 			if (count > capacity_)
 			{
