@@ -998,7 +998,7 @@ namespace easy2d
 
 				for (const auto& ch : val)
 				{
-					const auto byte = static_cast<uint8_t>(ch);
+					const auto byte = static_cast<uint16_t>(ch);
 
 					switch (ch)
 					{
@@ -1046,7 +1046,6 @@ namespace easy2d
 
 					default:
 					{
-						const auto byte = static_cast<uint16_t>(ch);
 						if ((byte > 0x1F) && (byte < 0x7F))
 						{
 							out->write(ch);
