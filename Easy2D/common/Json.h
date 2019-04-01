@@ -1907,7 +1907,7 @@ namespace easy2d
 		{
 		}
 
-		basic_json(initializer_list init_list)
+		basic_json(initializer_list const& init_list)
 		{
 			bool is_an_object = std::all_of(init_list.begin(), init_list.end(), [](const basic_json& json)
 			{
@@ -1932,6 +1932,32 @@ namespace easy2d
 				value_.data.vector->reserve(init_list.size());
 				value_.data.vector->assign(init_list.begin(), init_list.end());
 			}
+		}
+
+		static inline basic_json object(initializer_list const& init_list)
+		{
+			if (init_list.size() != 2 || !(*init_list.begin()).is_string())
+			{
+				throw json_type_error("cannot create object from initializer_list");
+			}
+
+			basic_json json;
+			json.value_ = JsonType::Object;
+			json.value_.data.object->emplace(*((*init_list.begin()).value_.data.string), *(init_list.begin() + 1));
+			return json;
+		}
+
+		static inline basic_json array(initializer_list const& init_list)
+		{
+			basic_json json;
+			json.value_ = JsonType::Array;
+
+			if (init_list.size())
+			{
+				json.value_.data.vector->reserve(init_list.size());
+				json.value_.data.vector->assign(init_list.begin(), init_list.end());
+			}
+			return json;
 		}
 
 		inline bool is_object() const				{ return value_.type == JsonType::Object; }
