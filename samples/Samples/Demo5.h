@@ -87,12 +87,12 @@ public:
 
 		// 创建 JSON 格式的 POST 数据
 		Json request_data = {
-			{"string", "test中文"},
-			{"boolean", true},
-			{"integer", 12},
-			{"float", 3.125},
-			{"array", {1, 2, 3, 4, 4.5 }},
-			{"object", {"key", "value"}},
+			{ "string",		"test中文" },
+			{ "boolean",	true },
+			{ "integer",	12 },
+			{ "float",		3.125 },
+			{ "array",		{ 1, 2, 3, 4, 4.5 } },
+			{ "object",		{ "key", "value" } },
 		};
 
 		HttpRequestPtr request = new HttpRequest;
@@ -111,9 +111,7 @@ public:
 		Logger::Instance().Println(L"Start to send PUT request...");
 
 		// 创建 JSON 格式的 PUT 数据
-		Json request_data = {
-			{"user", {{"id", 1}, {"phone", "12345678"}}},
-		};
+		Json request_data = Json::array({ 1, 2, 3 });
 
 		HttpRequestPtr request = new HttpRequest;
 		request->SetUrl(L"http://httpbin.org/put");
