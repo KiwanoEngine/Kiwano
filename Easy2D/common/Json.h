@@ -994,12 +994,8 @@ namespace easy2d
 
 			void dump_string(const string_type & val)
 			{
-				wchar_t escaped[7] = { 0 };
-
 				for (const auto& ch : val)
 				{
-					const auto byte = static_cast<uint16_t>(ch);
-
 					switch (ch)
 					{
 					case '\t':
@@ -1046,13 +1042,15 @@ namespace easy2d
 
 					default:
 					{
-						if ((byte > 0x1F) && (byte < 0x7F))
+						const auto char_byte = static_cast<uint16_t>(ch);
+						if ((char_byte > 0x1F) && (char_byte < 0x7F))
 						{
 							out->write(ch);
 						}
 						else
 						{
-							::swprintf_s(escaped, 7, L"\\u%04x", byte);
+							wchar_t escaped[7] = { 0 };
+							::swprintf_s(escaped, 7, L"\\u%04x", char_byte);
 							out->write(escaped);
 						}
 						break;
