@@ -16,3 +16,6 @@ ipch/
 
 # NuGet packages
 packages/
+
+!*.dll
+!*.lib
