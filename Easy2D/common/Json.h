@@ -359,37 +359,37 @@ namespace easy2d
 		// iterator for basic_json
 		//
 
-		struct original_iterator
+		struct primitive_iterator
 		{
 			using difference_type = std::ptrdiff_t;
 
-			inline original_iterator(int it = 0)									: it_(it) {}
+			inline primitive_iterator(int it = 0)									: it_(it) {}
 
 			inline void set_begin()													{ it_ = 0; }
 			inline void set_end()													{ it_ = 1; }
 
-			inline original_iterator& operator++()									{ ++it_; return *this; }
+			inline primitive_iterator& operator++()									{ ++it_; return *this; }
 
-			inline original_iterator operator++(int)								{ original_iterator old(it_); ++(*this); return old; }
+			inline primitive_iterator operator++(int)								{ primitive_iterator old(it_); ++(*this); return old; }
 
-			inline original_iterator& operator--()									{ --it_; return (*this); }
-			inline original_iterator operator--(int)								{ original_iterator old = (*this); --(*this); return old; }
+			inline primitive_iterator& operator--()									{ --it_; return (*this); }
+			inline primitive_iterator operator--(int)								{ primitive_iterator old = (*this); --(*this); return old; }
 
-			inline bool operator==(original_iterator const& other) const			{ return it_ == other.it_ && it_ == other.it_; }
-			inline bool operator!=(original_iterator const& other) const			{ return !(*this == other); }
+			inline bool operator==(primitive_iterator const& other) const			{ return it_ == other.it_; }
+			inline bool operator!=(primitive_iterator const& other) const			{ return !(*this == other); }
 
-			inline const original_iterator operator+(difference_type off) const		{ return original_iterator(it_ + off); }
-			inline const original_iterator operator-(difference_type off) const		{ return original_iterator(it_ - off); }
+			inline const primitive_iterator operator+(difference_type off) const	{ return primitive_iterator(it_ + off); }
+			inline const primitive_iterator operator-(difference_type off) const	{ return primitive_iterator(it_ - off); }
 
-			inline original_iterator& operator+=(difference_type off)				{ it_ += off; return (*this); }
-			inline original_iterator& operator-=(difference_type off)				{ it_ -= off; return (*this); }
+			inline primitive_iterator& operator+=(difference_type off)				{ it_ += off; return (*this); }
+			inline primitive_iterator& operator-=(difference_type off)				{ it_ -= off; return (*this); }
 
-			inline difference_type operator-(original_iterator const& other) const	{ return it_ - other.it_; }
+			inline difference_type operator-(primitive_iterator const& other) const	{ return it_ - other.it_; }
 
-			inline bool operator<(original_iterator const& other) const				{ return it_ < other.it_; }
-			inline bool operator<=(original_iterator const& other) const			{ return it_ <= other.it_; }
-			inline bool operator>(original_iterator const& other) const				{ return it_ > other.it_; }
-			inline bool operator>=(original_iterator const& other) const			{ return it_ >= other.it_; }
+			inline bool operator<(primitive_iterator const& other) const			{ return it_ < other.it_; }
+			inline bool operator<=(primitive_iterator const& other) const			{ return it_ <= other.it_; }
+			inline bool operator>(primitive_iterator const& other) const			{ return it_ > other.it_; }
+			inline bool operator>=(primitive_iterator const& other) const			{ return it_ >= other.it_; }
 
 		private:
 			int it_;
@@ -400,7 +400,7 @@ namespace easy2d
 		{
 			typename _BasicJsonTy::array_type::iterator array_iter;
 			typename _BasicJsonTy::object_type::iterator object_iter;
-			original_iterator original_iter = 0;  // for other types
+			primitive_iterator original_iter = 0;  // for other types
 		};
 
 		template <typename _BasicJsonTy>
@@ -2668,10 +2668,6 @@ namespace easy2d
 	private:
 		__json_detail::json_value<basic_json> value_;
 	};
-
-#undef E2D_DECLARE_BASIC_JSON_TEMPLATE
-#undef E2D_DECLARE_BASIC_JSON_TPL_ARGS
-
 }
 
 namespace std
@@ -2691,3 +2687,6 @@ namespace std
 		lhs.swap(rhs);
 	}
 }
+
+#undef E2D_DECLARE_BASIC_JSON_TEMPLATE
+#undef E2D_DECLARE_BASIC_JSON_TPL_ARGS

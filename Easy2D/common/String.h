@@ -22,6 +22,8 @@
 #include <string>
 #include <algorithm>
 #include <codecvt>
+#include <ostream>
+#include <istream>
 #include <cstring>
 #include <cstdio>
 
@@ -533,9 +535,13 @@ namespace easy2d
 	}
 
 	inline String::String(String && rhs)
-		: String()
+		: str_(rhs.str_)
+		, size_(rhs.size_)
+		, capacity_(rhs.capacity_)
+		, operable_(rhs.operable_)
 	{
-		swap(rhs);
+		rhs.str_ = nullptr;
+		rhs.size_ = rhs.capacity_ = 0;
 	}
 
 	inline String::~String()
@@ -1096,7 +1102,7 @@ namespace easy2d
 
 	inline std::basic_ostream<String::value_type>& operator<<(std::basic_ostream<String::value_type>& os, const String & str)
 	{
-		using ostream = std::basic_ostream<String::value_type>;
+		using ostream = std::basic_ostream<String::value_type, String::char_traits>;
 		using size_type = String::size_type;
 		using traits = String::char_traits;
 
@@ -1157,7 +1163,7 @@ namespace easy2d
 	inline std::basic_istream<String::value_type>& operator>>(std::basic_istream<String::value_type>& is, String & str)
 	{
 		using ctype = std::ctype<String::value_type>;
-		using istream = std::basic_istream<String::value_type>;
+		using istream = std::basic_istream<String::value_type, String::char_traits>;
 		using size_type = String::size_type;
 		using traits = String::char_traits;
 
