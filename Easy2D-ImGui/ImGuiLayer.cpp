@@ -39,6 +39,7 @@ namespace easy2d
 
 	ImGuiLayer::~ImGuiLayer()
 	{
+		ImGuiView::Instance().RemoveLayer(this);
 	}
 
 	void ImGuiLayer::OnMouseButtonDown(int btn, Point const & p)

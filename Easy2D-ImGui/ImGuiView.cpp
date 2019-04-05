@@ -80,4 +80,36 @@ namespace easy2d
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	}
 
+	ImGuiLayerPtr ImGuiView::CreateLayer(Scene* scene)
+	{
+		auto iter = layers_.find(scene);
+		if (iter == layers_.end())
+		{
+			ImGuiLayerPtr layer = new (std::nothrow) ImGuiLayer;
+			if (layer)
+			{
+				layers_.insert(std::make_pair(scene, layer.Get()));
+			}
+			return layer;
+		}
+		else
+		{
+			return iter->second;
+		}
+	}
+
+	void ImGuiView::RemoveLayer(ImGuiLayer* layer)
+	{
+		using value_type = Map<Scene*, Layer*>::value_type;
+
+		auto iter = std::find_if(layers_.begin(), layers_.end(), [=](value_type const& value)
+			{
+				return value.second == layer;
+			});
+		if (iter != layers_.end())
+		{
+			layers_.erase(iter);
+		}
+	}
+
 }

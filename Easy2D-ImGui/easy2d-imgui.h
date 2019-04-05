@@ -20,8 +20,8 @@
 
 #pragma once
 #include "easy2d.h"
-#include "ImGuiView.h"
 #include "ImGuiLayer.h"
+#include "ImGuiView.h"
 
 // ImGui
 #include "libs/ImGui/imgui.h"

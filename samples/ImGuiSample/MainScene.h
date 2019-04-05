@@ -19,7 +19,7 @@ public:
 	MainScene()
 	{
 		// 创建 ImGui 图层
-		ImGuiLayerPtr layer = new ImGuiLayer;
+		ImGuiLayerPtr layer = ImGuiView::Instance().CreateLayer(this);
 		AddChild(layer);
 
 		// 添加 ImGui 提供的 Demo 窗口

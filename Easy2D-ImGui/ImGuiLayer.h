@@ -22,6 +22,8 @@
 
 namespace easy2d
 {
+	class ImGuiView;
+
 	E2D_DECLARE_SMART_PTR(ImGuiLayer);
 
 	using ImGuiPipeline = std::function<void()>;
@@ -29,9 +31,9 @@ namespace easy2d
 	class ImGuiLayer
 		: public Layer
 	{
-	public:
-		ImGuiLayer();
+		friend class ImGuiView;
 
+	public:
 		virtual ~ImGuiLayer();
 
 		// Ìí¼Ó ImGui ÔªËØ
@@ -63,6 +65,9 @@ namespace easy2d
 
 		void UpdateMousePos();
 		void UpdateMouseCursor();
+
+	protected:
+		ImGuiLayer();
 
 	protected:
 		HWND target_window_;
