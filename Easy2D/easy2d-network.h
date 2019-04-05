@@ -21,7 +21,10 @@
 #pragma once
 #include "easy2d.h"
 
-#include "helper.h"
-#include "HttpRequest.h"
-#include "HttpResponse.h"
-#include "HttpClient.h"
+#include "network/helper.h"
+#include "network/HttpRequest.h"
+#include "network/HttpResponse.h"
+#include "network/HttpClient.h"
+
+// CURL
+#include "third-party/curl/curl.h"

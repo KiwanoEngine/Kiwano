@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "easy2d-audio.h"
+#include "../easy2d-audio.h"
 #include "audio-modules.h"
 
 namespace easy2d

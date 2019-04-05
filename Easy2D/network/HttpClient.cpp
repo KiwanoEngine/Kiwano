@@ -18,10 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "easy2d-network.h"
-#include "curl/curl.h"
+#include "../easy2d-network.h"
 #include <thread>
 #include <codecvt>
+
+// CURL
+#include "../third-party/curl/curl.h"
 
 #pragma comment(lib, "libcurl.lib")
 

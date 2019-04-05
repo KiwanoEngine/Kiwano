@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "easy2d-imgui.h"
+#include "../easy2d-imgui.h"
 
 namespace easy2d
 {
@@ -39,6 +39,7 @@ namespace easy2d
 
 	ImGuiLayer::~ImGuiLayer()
 	{
+		ImGuiView::Instance().RemoveLayer(this);
 	}
 
 	void ImGuiLayer::OnMouseButtonDown(int btn, Point const & p)

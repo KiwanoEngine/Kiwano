@@ -164,7 +164,7 @@ namespace easy2d
 		inline String&			assign(const wchar_t* cstr, bool const_str = true)										{ String(cstr, const_str).swap(*this); return *this; }
 		inline String&			assign(std::wstring const& str)															{ String{ str }.swap(*this); return *this; }
 		inline String&			assign(String const& rhs)																{ String{ rhs }.swap(*this); return *this; }
-		inline String&			assign(String const& rhs, size_type pos, size_type count = npos)						{ String(rhs, pos, count).swap(*this); return *this; }
+		String&					assign(String const& rhs, size_type pos, size_type count = npos);
 
 		template <typename _Iter>
 		inline String&			assign(_Iter first, _Iter last)															{ assign_iter(first, last); return(*this); }
@@ -595,6 +595,31 @@ namespace easy2d
 		{
 			clear();
 		}
+		return (*this);
+	}
+
+	inline String& String::assign(String const& rhs, size_type pos, size_type count)
+	{
+		if (count == 0 || pos > rhs.size())
+		{
+			clear();
+			return (*this);
+		}
+
+		discard_const_data();
+
+		count = rhs.clamp_suffix_size(pos, count);
+
+		if (count > capacity_)
+		{
+			destroy();
+			str_ = allocate(count + 1);
+			capacity_ = count;
+		}
+		size_ = count;
+
+		char_traits::move(str_, rhs.begin().base() + pos, size_);
+		char_traits::assign(str_[size_], value_type());
 		return (*this);
 	}
 

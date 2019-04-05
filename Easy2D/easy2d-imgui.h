@@ -19,26 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "easy2d.h"
 
-namespace easy2d
-{
-	class ImGuiView
-		: public Singleton<ImGuiView>
-		, public Component
-	{
-		E2D_DECLARE_SINGLETON(ImGuiView);
+#include "imgui/ImGuiLayer.h"
+#include "imgui/ImGuiView.h"
 
-	public:
-		void SetupComponent(Application* app) override;
-
-		void DestroyComponent() override;
-
-	public:
-		void Init(HWND hwnd);
-
-		void NewFrame();
-
-		void Render();
-	};
-
-}
+// ImGui
+#include "third-party/ImGui/imgui.h"

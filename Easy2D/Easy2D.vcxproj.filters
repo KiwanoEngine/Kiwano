@@ -25,6 +25,21 @@
     <Filter Include="renderer">
       <UniqueIdentifier>{7897afce-24cb-42b4-9443-56508e4ec89c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{75bae23a-ca4e-4571-86b2-9ce77c385989}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{3ff6bc37-0aa4-4f22-8ba3-923d730c2591}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{622338f7-bf1e-4108-92d7-78625c447f74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third-party">
+      <UniqueIdentifier>{91029e1e-40c2-40d9-bfc4-a51d9df02b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third-party\ImGui">
+      <UniqueIdentifier>{2f24af2d-eba6-4be1-9ac4-fc58aeac6670}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ui\Button.h">
@@ -246,6 +261,66 @@
     <ClInclude Include="base\AsyncTask.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="audio\audio.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\audio-modules.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\Music.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\Player.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\Transcoder.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\Voice.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="network\helper.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\HttpClient.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\HttpRequest.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\HttpResponse.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx11.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\ImGuiLayer.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\ImGuiView.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="easy2d-audio.h" />
+    <ClInclude Include="easy2d-imgui.h" />
+    <ClInclude Include="easy2d-network.h" />
+    <ClInclude Include="third-party\ImGui\imconfig.h">
+      <Filter>third-party\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="third-party\ImGui\imgui.h">
+      <Filter>third-party\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="third-party\ImGui\imgui_internal.h">
+      <Filter>third-party\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="third-party\ImGui\imstb_rectpack.h">
+      <Filter>third-party\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="third-party\ImGui\imstb_textedit.h">
+      <Filter>third-party\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="third-party\ImGui\imstb_truetype.h">
+      <Filter>third-party\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -373,6 +448,48 @@
     </ClCompile>
     <ClCompile Include="base\AsyncTask.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\audio.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\audio-modules.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\Music.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\Player.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\Transcoder.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\Voice.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="network\HttpClient.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx11.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\ImGuiLayer.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\ImGuiView.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="third-party\ImGui\imgui.cpp">
+      <Filter>third-party\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="third-party\ImGui\imgui_demo.cpp">
+      <Filter>third-party\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="third-party\ImGui\imgui_draw.cpp">
+      <Filter>third-party\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="third-party\ImGui\imgui_widgets.cpp">
+      <Filter>third-party\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

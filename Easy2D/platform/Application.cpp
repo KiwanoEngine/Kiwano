@@ -144,6 +144,10 @@ namespace easy2d
 		::CoInitialize(nullptr);
 
 		main_window_ = new Window;
+
+		Use(&Renderer::Instance());
+		Use(&Input::Instance());
+		Use(&AsyncTaskThread::Instance());
 	}
 
 	Application::~Application()
@@ -170,10 +174,6 @@ namespace easy2d
 
 		Renderer::Instance().SetClearColor(options.clear_color);
 		Renderer::Instance().SetVSyncEnabled(options.vsync);
-
-		Use(&Renderer::Instance());
-		Use(&Input::Instance());
-		Use(&AsyncTaskThread::Instance());
 
 		// Setup all components
 		for (Component* c : components_)

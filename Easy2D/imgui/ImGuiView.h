@@ -19,8 +19,41 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "easy2d.h"
 
-#include "audio.h"
-#include "Music.h"
-#include "Player.h"
+namespace easy2d
+{
+	class ImGuiLayer;
+
+	class ImGuiView
+		: public Singleton<ImGuiView>
+		, public Component
+	{
+		E2D_DECLARE_SINGLETON(ImGuiView);
+
+		friend class ImGuiLayer;
+
+	public:
+		// 创建 ImGui 图层
+		ImGuiLayerPtr CreateLayer(
+			Scene* scene		/* 指定场景 */
+		);
+
+	private:
+		void Init(HWND hwnd);
+
+		void NewFrame();
+
+		void Render();
+
+		void RemoveLayer(ImGuiLayer* layer);
+
+	public:
+		void SetupComponent(Application* app) override;
+
+		void DestroyComponent() override;
+
+	private:
+		Map<Scene*, ImGuiLayer*> layers_;
+	};
+
+}
