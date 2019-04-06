@@ -26,7 +26,7 @@ namespace easy2d
 {
 	namespace network
 	{
-		class HttpClient
+		class E2D_API HttpClient
 			: public Singleton<HttpClient>
 			, public Component
 		{

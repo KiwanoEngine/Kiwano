@@ -27,7 +27,7 @@ namespace easy2d
 
 	class ActionManager;
 
-	class Action
+	class E2D_API Action
 		: public virtual Object
 		, protected IntrusiveListItem<ActionPtr>
 	{

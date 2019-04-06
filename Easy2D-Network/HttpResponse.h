@@ -24,7 +24,7 @@ namespace easy2d
 {
 	namespace network
 	{
-		class HttpResponse
+		class E2D_API HttpResponse
 			: public Object
 		{
 		public:
