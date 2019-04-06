@@ -20,8 +20,11 @@
 
 #pragma once
 #include "easy2d.h"
-#include "ImGuiLayer.h"
-#include "ImGuiView.h"
 
-// ImGui
-#include "libs/ImGui/imgui.h"
+#include "network/helper.h"
+#include "network/HttpRequest.h"
+#include "network/HttpResponse.h"
+#include "network/HttpClient.h"
+
+// CURL
+#include "third-party/curl/curl.h"

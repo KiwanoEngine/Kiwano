@@ -1,6 +1,6 @@
 // dear imgui: Renderer for Easy2D (DirectX11)
 
-#include "libs/ImGui/imgui.h"
+#include "../easy2d-imgui.h"
 #include "imgui_impl_dx11.h"
 
 // DirectX

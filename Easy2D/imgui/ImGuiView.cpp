@@ -1,6 +1,6 @@
 // Copyright (C) 2019 Nomango
 
-#include "easy2d-imgui.h"
+#include "../easy2d-imgui.h"
 #include "imgui_impl_dx11.h"
 
 namespace easy2d

@@ -22,7 +22,7 @@
 #	define INITGUID		// MFAudioFormat_PCM, MF_MT_MAJOR_TYPE, MF_MT_SUBTYPE, MFMediaType_Audio
 #endif
 
-#include "easy2d-audio.h"
+#include "../easy2d-audio.h"
 #include "Transcoder.h"
 #include "audio-modules.h"
 

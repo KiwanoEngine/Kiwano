@@ -21,6 +21,8 @@
 #pragma once
 #include "easy2d.h"
 
-#include "audio.h"
-#include "Music.h"
-#include "Player.h"
+#include "imgui/ImGuiLayer.h"
+#include "imgui/ImGuiView.h"
+
+// ImGui
+#include "third-party/ImGui/imgui.h"
