@@ -110,7 +110,7 @@ namespace easy2d
 		E2D_LOG(L"-------------------------- All Objects --------------------------");
 		for (const auto object : tracing_objects)
 		{
-			E2D_LOG(object->DumpObject().c_str());
+			E2D_LOG(L"%s", object->DumpObject().c_str());
 		}
 		E2D_LOG(L"------------------------- Total size: %d -------------------------", tracing_objects.size());
 	}
