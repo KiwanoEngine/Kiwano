@@ -70,11 +70,25 @@ namespace easy2d
 			{
 				return std::bind(_Func, _Ptr, std::_Ph<_Num + 1>()...);
 			}
+
+			template<int... _Num>
+			static inline std::function<_Ret(_Args...)> MakeFunc(_Ty* _Ptr, _Ret(_Ty::* _Func)(_Args...) const, Seq<_Num...>)
+			{
+				return std::bind(_Func, _Ptr, std::_Ph<_Num + 1>()...);
+			}
 		};
 	}
 
 	template<typename _Ty, typename _Ret, typename... _Args>
 	inline std::function<_Ret(_Args...)> Closure(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...))
+	{
+		using namespace __closure__detail;
+		return ClosureHelper<_Ty, _Ret, _Args...>::
+			MakeFunc(_Ptr, _Func, typename Gen<_Args...>::SeqType{});
+	}
+
+	template<typename _Ty, typename _Ret, typename... _Args>
+	inline std::function<_Ret(_Args...)> Closure(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...) const)
 	{
 		using namespace __closure__detail;
 		return ClosureHelper<_Ty, _Ret, _Args...>::

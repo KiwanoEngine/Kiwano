@@ -27,18 +27,18 @@
 
 #ifndef E2D_LOG
 #	ifdef E2D_DEBUG
-#		define E2D_LOG(FORMAT, ...) easy2d::Logger::Instance().Messageln((FORMAT), __VA_ARGS__)
+#		define E2D_LOG(FORMAT, ...) easy2d::Logger::Instance().Messagef((FORMAT ## "\n"), __VA_ARGS__)
 #	else
 #		define E2D_LOG __noop
 #	endif
 #endif
 
 #ifndef E2D_WARNING_LOG
-#	define E2D_WARNING_LOG(FORMAT, ...) easy2d::Logger::Instance().Warningln((FORMAT), __VA_ARGS__)
+#	define E2D_WARNING_LOG(FORMAT, ...) easy2d::Logger::Instance().Warningf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 #ifndef E2D_ERROR_LOG
-#	define E2D_ERROR_LOG(FORMAT, ...) easy2d::Logger::Instance().Errorln((FORMAT), __VA_ARGS__)
+#	define E2D_ERROR_LOG(FORMAT, ...) easy2d::Logger::Instance().Errorf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 namespace easy2d
@@ -53,29 +53,37 @@ namespace easy2d
 
 		void Disable();
 
-		template <typename ..._Args>
-		void Print(const wchar_t* format, _Args&&... args);
+		void Printf(const wchar_t* format, ...);
+
+		void Messagef(const wchar_t * format, ...);
+
+		void Warningf(const wchar_t* format, ...);
+
+		void Errorf(const wchar_t* format, ...);
 
 		template <typename ..._Args>
-		void Println(const wchar_t* format, _Args&&... args);
+		void Print(_Args&& ... args);
 
 		template <typename ..._Args>
-		void Message(const wchar_t * format, _Args&&... args);
+		void Println(_Args&& ... args);
 
 		template <typename ..._Args>
-		void Messageln(const wchar_t * format, _Args&&... args);
+		void Message(_Args&& ... args);
 
 		template <typename ..._Args>
-		void Warning(const wchar_t* format, _Args&&... args);
+		void Messageln(_Args&& ... args);
 
 		template <typename ..._Args>
-		void Warningln(const wchar_t* format, _Args&&... args);
+		void Warning(_Args&& ... args);
 
 		template <typename ..._Args>
-		void Error(const wchar_t* format, _Args&&... args);
+		void Warningln(_Args&& ... args);
 
 		template <typename ..._Args>
-		void Errorln(const wchar_t* format, _Args&&... args);
+		void Error(_Args&& ... args);
+
+		template <typename ..._Args>
+		void Errorln(_Args&& ... args);
 
 		std::wstreambuf* RedirectOutputStreamBuffer(std::wstreambuf* buf);
 
@@ -86,14 +94,18 @@ namespace easy2d
 	private:
 		Logger();
 
-		template <typename ..._Args>
-		void OutputLine(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, _Args&&... args) const;
+		void Outputf(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const;
+
+		std::wstring MakeOutputStringf(const wchar_t* prompt, const wchar_t* format, va_list args) const;
 
 		template <typename ..._Args>
-		void Output(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, _Args&&... args) const;
+		void OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const;
 
 		template <typename ..._Args>
-		std::wstring MakeOutputString(const wchar_t* prompt, const wchar_t* format, _Args&&... args) const;
+		void Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const;
+
+		template <typename ..._Args>
+		std::wstring MakeOutputString(const wchar_t* prompt, _Args&& ... args) const;
 
 		void ResetConsoleColor() const;
 
@@ -155,65 +167,65 @@ namespace easy2d
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Print(const wchar_t* format, _Args&&... args)
+	inline void Logger::Print(_Args&& ... args)
 	{
-		Output(output_stream_, Logger::DefaultOutputColor, nullptr, format, std::forward<_Args>(args)...);
+		Output(output_stream_, Logger::DefaultOutputColor, nullptr, std::forward<_Args>(args)...);
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Println(const wchar_t* format, _Args&&... args)
+	inline void Logger::Println(_Args&& ... args)
 	{
-		OutputLine(output_stream_, Logger::DefaultOutputColor, nullptr, format, std::forward<_Args>(args)...);
+		OutputLine(output_stream_, Logger::DefaultOutputColor, nullptr, std::forward<_Args>(args)...);
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Message(const wchar_t * format, _Args&&... args)
-	{
-		using namespace __console_colors;
-		Output(output_stream_, stdout_blue, nullptr, format, std::forward<_Args>(args)...);
-	}
-
-	template <typename ..._Args>
-	inline void Logger::Messageln(const wchar_t * format, _Args&&... args)
+	inline void Logger::Message(_Args&& ... args)
 	{
 		using namespace __console_colors;
-		OutputLine(output_stream_, stdout_blue, nullptr, format, std::forward<_Args>(args)...);
+		Output(output_stream_, stdout_blue, nullptr, std::forward<_Args>(args)...);
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Warning(const wchar_t* format, _Args&&... args)
+	inline void Logger::Messageln(_Args&& ... args)
 	{
 		using namespace __console_colors;
-		Output(output_stream_, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args>(args)...);
+		OutputLine(output_stream_, stdout_blue, nullptr, std::forward<_Args>(args)...);
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Warningln(const wchar_t* format, _Args&&... args)
+	inline void Logger::Warning(_Args&& ... args)
 	{
 		using namespace __console_colors;
-		OutputLine(output_stream_, stdout_yellow_bg, L"Warning: ", format, std::forward<_Args>(args)...);
+		Output(output_stream_, stdout_yellow_bg, L"Warning:", std::forward<_Args>(args)...);
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Error(const wchar_t* format, _Args&&... args)
+	inline void Logger::Warningln(_Args&& ... args)
 	{
 		using namespace __console_colors;
-		Output(error_stream_, stderr_red_bg, L"Error: ", format, std::forward<_Args>(args)...);
+		OutputLine(output_stream_, stdout_yellow_bg, L"Warning:", std::forward<_Args>(args)...);
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Errorln(const wchar_t* format, _Args&&... args)
+	inline void Logger::Error(_Args&& ... args)
 	{
 		using namespace __console_colors;
-		OutputLine(error_stream_, stderr_red_bg, L"Error: ", format, std::forward<_Args>(args)...);
+		Output(error_stream_, stderr_red_bg, L"Error:", std::forward<_Args>(args)...);
 	}
 
 	template <typename ..._Args>
-	inline void Logger::OutputLine(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, _Args&&... args) const
+	inline void Logger::Errorln(_Args&& ... args)
+	{
+		using namespace __console_colors;
+		OutputLine(error_stream_, stderr_red_bg, L"Error:", std::forward<_Args>(args)...);
+	}
+
+	template <typename ..._Args>
+	void Logger::OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
 	{
 		if (enabled_ && has_console_)
 		{
-			Output(os, color, prompt, format, std::forward<_Args>(args)...);
+			Output(os, color, prompt, std::forward<_Args>(args)...);
 
 			os << std::endl;
 			::OutputDebugStringW(L"\r\n");
@@ -221,11 +233,11 @@ namespace easy2d
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Output(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, _Args&&... args) const
+	void Logger::Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
 	{
 		if (enabled_ && has_console_)
 		{
-			std::wstring output = MakeOutputString(prompt, format, std::forward<_Args>(args)...);
+			std::wstring output = MakeOutputString(prompt, std::forward<_Args>(args)...);
 
 			os << color << output;
 			::OutputDebugStringW(output.c_str());
@@ -235,20 +247,15 @@ namespace easy2d
 	}
 
 	template <typename ..._Args>
-	inline std::wstring Logger::MakeOutputString(const wchar_t* prompt, const wchar_t* format, _Args&&... args) const
+	std::wstring Logger::MakeOutputString(const wchar_t* prompt, _Args&& ... args) const
 	{
-		static wchar_t temp_buffer[1024 * 3 + 1];
-
-		const auto len = ::_scwprintf(format, std::forward<_Args>(args)...);
-		::swprintf_s(temp_buffer, len + 1, format, std::forward<_Args>(args)...);
-
 		std::wstringstream ss;
 		ss << Logger::OutPrefix;
 
 		if (prompt)
 			ss << prompt;
 
-		ss << temp_buffer;
+		(void)std::initializer_list<int>{((ss << ' ' << args), 0)...};
 
 		return ss.str();
 	}
@@ -262,15 +269,6 @@ namespace easy2d
 	inline std::wostream& Logger::DefaultOutputColor(std::wostream& out)
 	{
 		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), Logger::Instance().default_stdout_color_);
-		return out;
-	}
-
-	inline std::wostream& Logger::OutPrefix(std::wostream& out)
-	{
-		std::time_t unix = std::time(nullptr);
-		std::tm tmbuf;
-		localtime_s(&tmbuf, &unix);
-		out << std::put_time(&tmbuf, L"[easy2d] %H:%M:%S ");
 		return out;
 	}
 }

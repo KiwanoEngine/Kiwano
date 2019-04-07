@@ -113,4 +113,92 @@ namespace easy2d
 		return error_stream_.rdbuf(buf);
 	}
 
+	void Logger::Printf(const wchar_t* format, ...)
+	{
+		va_list args = nullptr;
+		va_start(args, format);
+
+		Outputf(output_stream_, Logger::DefaultOutputColor, nullptr, format, args);
+
+		va_end(args);
+	}
+
+	void Logger::Messagef(const wchar_t* format, ...)
+	{
+		using namespace __console_colors;
+
+		va_list args = nullptr;
+		va_start(args, format);
+
+		Outputf(output_stream_, stdout_blue, nullptr, format, args);
+
+		va_end(args);
+	}
+
+	void Logger::Warningf(const wchar_t* format, ...)
+	{
+		using namespace __console_colors;
+
+		va_list args = nullptr;
+		va_start(args, format);
+
+		Outputf(output_stream_, stdout_yellow_bg, L" Warning:", format, args);
+
+		va_end(args);
+	}
+
+	void Logger::Errorf(const wchar_t* format, ...)
+	{
+		using namespace __console_colors;
+
+		va_list args = nullptr;
+		va_start(args, format);
+
+		Outputf(error_stream_, stderr_red_bg, L" Error:", format, args);
+
+		va_end(args);
+	}
+
+	void Logger::Outputf(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const
+	{
+		if (enabled_ && has_console_)
+		{
+			std::wstring output = MakeOutputString(prompt, format, args);
+
+			os << color << output;
+			::OutputDebugStringW(output.c_str());
+
+			ResetConsoleColor();
+		}
+	}
+
+	std::wstring Logger::MakeOutputStringf(const wchar_t* prompt, const wchar_t* format, va_list args) const
+	{
+		static wchar_t temp_buffer[1024 * 3 + 1];
+
+		std::wstringstream ss;
+		ss << Logger::OutPrefix;
+
+		if (prompt)
+			ss << prompt;
+
+		if (format)
+		{
+			const auto len = ::_vscwprintf(format, args) + 1;
+			::_vsnwprintf_s(temp_buffer, len, len, format, args);
+
+			ss << ' ' << temp_buffer;
+		}
+		return ss.str();
+	}
+
+	std::wostream& Logger::OutPrefix(std::wostream& out)
+	{
+		std::time_t unix = std::time(nullptr);
+		std::tm tmbuf;
+		localtime_s(&tmbuf, &unix);
+		out << std::put_time(&tmbuf, L"[easy2d] %H:%M:%S");
+		return out;
+	}
+
 }
