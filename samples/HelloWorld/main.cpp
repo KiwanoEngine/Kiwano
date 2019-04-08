@@ -2,17 +2,19 @@
 
 #include "easy2d.h"
 
+using namespace easy2d;
+
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 
 class MainScene
-	: public easy2d::Scene
+	: public Scene
 {
 public:
 	MainScene()
 	{
 		// 创建文字节点
-		easy2d::TextPtr text = new easy2d::Text(L"Hello Easy2D!");
+		TextPtr text = new Text(L"Hello Easy2D!");
 		// 设置节点大小为文字布局大小
 		text->SetSize(text->GetLayoutSize());
 		// 修改节点位置, 使节点在屏幕上居中
@@ -29,10 +31,10 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
 	try
 	{
 		// 创建 Easy2D 程序实例
-		easy2d::Application app;
+		Application app;
 
 		// 创建初始化选项
-		easy2d::Options options;
+		Options options;
 		// 设置窗口宽高
 		options.width = WINDOW_WIDTH;
 		options.height = WINDOW_HEIGHT;
@@ -40,7 +42,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
 		app.Init(options);
 
 		// 创建场景并进入
-		easy2d::ScenePtr scene = new MainScene;
+		ScenePtr scene = new MainScene;
 		app.EnterScene(scene);
 
 		// 运行

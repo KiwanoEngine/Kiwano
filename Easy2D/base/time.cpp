@@ -28,43 +28,60 @@ namespace easy2d
 	namespace time
 	{
 		//-------------------------------------------------------
-		// TimePoint
+		// Time
 		//-------------------------------------------------------
 
-		TimePoint::TimePoint()
+		Time::Time()
 		{
 		}
 
-		TimePoint::TimePoint(long dur)
+		Time::Time(long dur)
 			: dur_(dur)
 		{
 		}
 
-		const TimePoint TimePoint::operator+(const Duration & dur) const
+		const Time Time::operator+(const Duration & dur) const
 		{
-			return TimePoint{ dur_ + dur.Milliseconds() };
+			return Time{ dur_ + dur.Milliseconds() };
 		}
 
-		const TimePoint TimePoint::operator-(const Duration & dur) const
+		const Time Time::operator-(const Duration & dur) const
 		{
-			return TimePoint{ dur_ - dur.Milliseconds() };
+			return Time{ dur_ - dur.Milliseconds() };
 		}
 
-		TimePoint & TimePoint::operator+=(const Duration & other)
+		Time & Time::operator+=(const Duration & other)
 		{
 			dur_ += other.Milliseconds();
 			return (*this);
 		}
 
-		TimePoint & TimePoint::operator-=(const Duration &other)
+		Time & Time::operator-=(const Duration &other)
 		{
 			dur_ -= other.Milliseconds();
 			return (*this);
 		}
 
-		const Duration TimePoint::operator-(const TimePoint & other) const
+		const Duration Time::operator-(const Time & other) const
 		{
 			return Duration(dur_ - other.dur_);
+		}
+
+		Time Time::Now() E2D_NOEXCEPT
+		{
+			static LARGE_INTEGER freq = {};
+			if (freq.QuadPart == 0LL)
+			{
+				// the function will always succceed on systems that run Windows XP or later
+				QueryPerformanceFrequency(&freq);
+			}
+
+			LARGE_INTEGER count;
+			QueryPerformanceCounter(&count);
+
+			const long long whole = (count.QuadPart / freq.QuadPart) * 1000LL;
+			const long long part = (count.QuadPart % freq.QuadPart) * 1000LL / freq.QuadPart;
+			return Time{ static_cast<long>(whole + part) };
 		}
 
 
@@ -72,21 +89,21 @@ namespace easy2d
 		// Duration
 		//-------------------------------------------------------
 
-		const Duration Millisecond	= 1L;
-		const Duration Second		= 1000 * Millisecond;
-		const Duration Minute		= 60 * Second;
-		const Duration Hour			= 60 * Minute;
+		const Duration Ms	= 1L;
+		const Duration Sec	= 1000 * Ms;
+		const Duration Min	= 60 * Sec;
+		const Duration Hour	= 60 * Min;
 
 		namespace
 		{
 			const auto duration_regex = std::wregex(LR"([-+]?([0-9]*(\.[0-9]*)?[a-z]+)+)");
 
-			typedef std::unordered_map<std::wstring, Duration> UnitMap;
+			typedef std::unordered_map<String, Duration> UnitMap;
 			const auto unit_map = UnitMap
 			{
-				{L"ms", Millisecond},
-				{L"s", Second},
-				{L"m", Minute},
+				{L"ms", Ms},
+				{L"s", Sec},
+				{L"m", Min},
 				{L"h", Hour}
 			};
 		}
@@ -103,49 +120,53 @@ namespace easy2d
 
 		float Duration::Seconds() const
 		{
-			long long sec = milliseconds_ / Second.milliseconds_;
-			long long ms = milliseconds_ % Second.milliseconds_;
+			long sec = milliseconds_ / Sec.milliseconds_;
+			long ms = milliseconds_ % Sec.milliseconds_;
 			return static_cast<float>(sec) + static_cast<float>(ms) / 1000.f;
 		}
 
 		float Duration::Minutes() const
 		{
-			long long min = milliseconds_ / Minute.milliseconds_;
-			long long ms = milliseconds_ % Minute.milliseconds_;
+			long min = milliseconds_ / Min.milliseconds_;
+			long ms = milliseconds_ % Min.milliseconds_;
 			return static_cast<float>(min) + static_cast<float>(ms) / (60 * 1000.f);
 		}
 
 		float Duration::Hours() const
 		{
-			long long hour = milliseconds_ / Hour.milliseconds_;
-			long long ms = milliseconds_ % Hour.milliseconds_;
+			long hour = milliseconds_ / Hour.milliseconds_;
+			long ms = milliseconds_ % Hour.milliseconds_;
 			return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
 		}
 
-		std::wstring easy2d::time::Duration::ToString() const
+		String easy2d::time::Duration::ToString() const
 		{
 			if (IsZero())
 			{
-				return std::wstring(L"0s");
+				return String(L"0s");
 			}
 
-			std::wstring result;
-			long long hour = milliseconds_ / Hour.milliseconds_;
-			long long min = milliseconds_ / Minute.milliseconds_ - hour * 60;
-			long long sec = milliseconds_ / Second.milliseconds_ - (hour * 60 * 60 + min * 60);
-			long long ms = milliseconds_ % Second.milliseconds_;
-
-			if (milliseconds_ < 0)
+			String result;
+			long total_ms = milliseconds_;
+			if (total_ms < 0)
+			{
 				result.append(L"-");
+				total_ms = -total_ms;
+			}
+
+			long hour = total_ms / Hour.milliseconds_;
+			long min = total_ms / Min.milliseconds_ - hour * 60;
+			long sec = total_ms / Sec.milliseconds_ - (hour * 60 * 60 + min * 60);
+			long ms = total_ms % Sec.milliseconds_;
 
 			if (hour)
 			{
-				result.append(std::to_wstring(hour)).append(L"h");
-				result.append(std::to_wstring(min)).append(L"m");
+				result.append(easy2d::to_wstring(hour)).append(L"h");
+				result.append(easy2d::to_wstring(min)).append(L"m");
 			}
 			else if(min)
 			{
-				result.append(std::to_wstring(min)).append(L"m");
+				result.append(easy2d::to_wstring(min)).append(L"m");
 			}
 
 			if (ms != 0)
@@ -162,7 +183,7 @@ namespace easy2d
 			}
 			else if (sec != 0)
 			{
-				result.append(std::to_wstring(sec)).append(L"s");
+				result.append(easy2d::to_wstring(sec)).append(L"s");
 			}
 			return result;
 		}
@@ -340,51 +361,16 @@ namespace easy2d
 			return dur * val;
 		}
 
-		std::wostream & easy2d::time::operator<<(std::wostream & out, const Duration & dur)
-		{
-			return out << dur.ToString();
-		}
-
-		std::wistream & easy2d::time::operator>>(std::wistream & in, Duration & dur)
-		{
-			std::wstring str;
-			in >> str;
-			dur = time::ParseDuration(str);
-			return in;
-		}
-
-
-		//-------------------------------------------------------
-		// Functions
-		//-------------------------------------------------------
-
-		TimePoint easy2d::time::Now() E2D_NOEXCEPT
-		{
-			static LARGE_INTEGER freq = {};
-			if (freq.QuadPart == 0LL)
-			{
-				// the function will always succceed on systems that run Windows XP or later
-				QueryPerformanceFrequency(&freq);
-			}
-
-			LARGE_INTEGER count;
-			QueryPerformanceCounter(&count);
-
-			const long long whole = (count.QuadPart / freq.QuadPart) * 1000LL;
-			const long long part = (count.QuadPart % freq.QuadPart) * 1000LL / freq.QuadPart;
-			return TimePoint{ static_cast<long>(whole + part) };
-		}
-
-		Duration easy2d::time::ParseDuration(const std::wstring & str)
+		Duration Duration::Parse(const String& str)
 		{
 			size_t len = str.length();
 			size_t pos = 0;
 			bool negative = false;
 			Duration d;
 
-			if (!std::regex_match(str, duration_regex))
+			if (!std::regex_match(str.c_str(), duration_regex))
 			{
-				E2D_ERROR_LOG(L"time::ParseDuration failed, invalid duration");
+				E2D_ERROR_LOG(L"Duration::Parse failed, invalid duration");
 				return Duration();
 			}
 
@@ -410,12 +396,12 @@ namespace easy2d
 					}
 				}
 
-				std::wstring num_str = str.substr(pos, i - pos);
+				String num_str = str.substr(pos, i - pos);
 				pos = i;
 
 				if (num_str.empty() || num_str == L".")
 				{
-					E2D_ERROR_LOG(L"time::ParseDuration failed, invalid duration");
+					E2D_ERROR_LOG(L"Duration::Parse failed, invalid duration");
 					return Duration();
 				}
 
@@ -429,16 +415,16 @@ namespace easy2d
 					}
 				}
 
-				std::wstring unit_str = str.substr(pos, i - pos);
+				String unit_str = str.substr(pos, i - pos);
 				pos = i;
 
 				if (unit_map.find(unit_str) == unit_map.end())
 				{
-					E2D_ERROR_LOG(L"time::ParseDuration failed, invalid duration");
+					E2D_ERROR_LOG(L"Duration::Parse failed, invalid duration");
 					return Duration();
 				}
 
-				double num = std::stod(num_str);
+				double num = std::wcstod(num_str.c_str(), nullptr);
 				Duration unit = unit_map.at(unit_str);
 				d += unit * num;
 			}

@@ -20,6 +20,9 @@
 
 #pragma once
 #include "../macros.h"
+#include "../common/String.h"
+#include <ostream>
+#include <istream>
 
 namespace easy2d
 {
@@ -28,9 +31,9 @@ namespace easy2d
 		// 时间段
 		//
 		// 时间段表示法:
-		//     5 秒: time::Second * 5
+		//     5 秒: time::Sec * 5
 		//     1.5 小时: time::Hour * 1.5
-		//     3 小时 45 分 15 秒: time::Hour * 3 + time::Minute * 45 + time::Second * 15
+		//     3 小时 45 分 15 秒: time::Hour * 3 + time::Min * 45 + time::Sec * 15
 		// 在 VS2015 及更高版本可以使用 time literals:
 		//     5 秒: 5_s
 		//     1.5 小时: 1.5_h
@@ -60,7 +63,7 @@ namespace easy2d
 			inline bool IsZero() const { return milliseconds_ == 0LL; }
 
 			// 转为字符串
-			std::wstring ToString() const;
+			String ToString() const;
 
 			inline operator bool() const { return !IsZero(); }
 
@@ -102,60 +105,75 @@ namespace easy2d
 			friend const Duration operator/ (float, const Duration &);
 			friend const Duration operator/ (double, const Duration &);
 
-			friend std::wostream& operator<< (std::wostream &, const Duration &);
-			friend std::wistream& operator>> (std::wistream &, Duration &);
+		public:
+			// 时间段格式化
+			//
+			// 时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
+			// 例如: "300ms", "-1.5h", "2h45m"
+			// 允许的时间单位有 "ms", "s", "m", "h"
+			static Duration Parse(const String& parse_str);
+
+			template <typename _Char>
+			friend inline std::basic_ostream<_Char>& operator<<(std::basic_ostream<_Char>& out, const Duration& dur)
+			{
+				return out << dur.ToString();
+			}
+
+			template <typename _Char>
+			friend inline std::basic_istream<_Char>& operator>>(std::basic_istream<_Char>& in, Duration& dur)
+			{
+				String str;
+				if (in >> str)
+				{
+					dur = Duration::Parse(str);
+				}
+				return in;
+			}
 
 		private:
 			long milliseconds_;
 		};
 
 		/* 预定义的时间段 */
-		E2D_API extern const Duration Millisecond;	// 毫秒
-		E2D_API extern const Duration Second;		// 秒
-		E2D_API extern const Duration Minute;		// 分钟
-		E2D_API extern const Duration Hour;			// 小时
+		E2D_API extern const Duration Ms;		// 毫秒
+		E2D_API extern const Duration Sec;		// 秒
+		E2D_API extern const Duration Min;		// 分钟
+		E2D_API extern const Duration Hour;		// 小时
 
 
 		// 时间
 		//
-		// 获取当前时间: TimePoint now = time::Now();
+		// 获取当前时间: Time now = Time::Now();
 		// 两时间相减, 得到一个 Duration 对象, 例如:
-		//     TimePoint t1, t2;
+		//     Time t1, t2;
 		//     int ms = (t2 - t1).Milliseconds();  // 获取两时间相差的毫秒数
 		// 
-		struct E2D_API TimePoint
+		struct E2D_API Time
 		{
-			TimePoint();
+			Time();
 
-			TimePoint(long);
+			Time(long);
 
 			// 是否是零时
 			inline bool IsZero() const { return dur_ == 0; }
 
-			const TimePoint operator + (const Duration &) const;
-			const TimePoint operator - (const Duration &) const;
+			const Time operator + (const Duration &) const;
+			const Time operator - (const Duration &) const;
 
-			TimePoint& operator += (const Duration &);
-			TimePoint& operator -= (const Duration &);
+			Time& operator += (const Duration &);
+			Time& operator -= (const Duration &);
 
-			const Duration operator - (const TimePoint &) const;
+			const Duration operator - (const Time &) const;
+
+		public:
+			// 获取当前时间
+			// 由于该时间点基于系统启动时间开始计算, 所以无法格式化该时间, 
+			// 也无法获得该时间的 Unix 时间戳
+			static Time Now() E2D_NOEXCEPT;
 
 		private:
 			long dur_;
 		};
-
-		// 获取当前时间
-		// 
-		// 由于该时间点基于系统启动时间开始计算, 所以无法格式化该时间, 
-		// 也无法获得该时间的 Unix 时间戳
-		E2D_API TimePoint Now() E2D_NOEXCEPT;
-
-		// 时间段格式化
-		//
-		// 时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
-		// 例如: "300ms", "-1.5h", "2h45m"
-		// 允许的时间单位有 "ms", "s", "m", "h"
-		E2D_API Duration ParseDuration(const std::wstring& parse_str);
 	}
 }
 
@@ -172,17 +190,17 @@ namespace easy2d
 	{
 		inline const easy2d::time::Duration operator "" _ms(long double val)
 		{
-			return easy2d::time::Millisecond * val;
+			return easy2d::time::Ms * val;
 		}
 
 		inline const easy2d::time::Duration operator "" _s(long double val)
 		{
-			return easy2d::time::Second * val;
+			return easy2d::time::Sec * val;
 		}
 
 		inline const easy2d::time::Duration operator "" _m(long double val)
 		{
-			return easy2d::time::Minute * val;
+			return easy2d::time::Min * val;
 		}
 
 		inline const easy2d::time::Duration operator "" _h(long double val)
@@ -192,17 +210,17 @@ namespace easy2d
 
 		inline const easy2d::time::Duration operator "" _ms(unsigned long long val)
 		{
-			return easy2d::time::Millisecond * val;
+			return easy2d::time::Ms * val;
 		}
 
 		inline const easy2d::time::Duration operator "" _s(unsigned long long val)
 		{
-			return easy2d::time::Second * val;
+			return easy2d::time::Sec * val;
 		}
 
 		inline const easy2d::time::Duration operator "" _m(unsigned long long val)
 		{
-			return easy2d::time::Minute * val;
+			return easy2d::time::Min * val;
 		}
 
 		inline const easy2d::time::Duration operator "" _h(unsigned long long val)

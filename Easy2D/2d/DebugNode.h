@@ -37,6 +37,6 @@ namespace easy2d
 
 	protected:
 		TextPtr				debug_text_;
-		Array<TimePoint>	frame_time_;
+		Array<Time>	frame_time_;
 	};
 }

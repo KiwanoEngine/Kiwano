@@ -351,6 +351,9 @@ namespace easy2d
 	std::basic_ostream<String::value_type>& operator<<(std::basic_ostream<String::value_type>& os, const String & str);
 	std::basic_istream<String::value_type>& operator>>(std::basic_istream<String::value_type>& is, String & str);
 
+	std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const String& str);
+	std::basic_istream<char>& operator>>(std::basic_istream<char>& is, String& str);
+
 	//
 	// to_string functions
 	//
@@ -1233,6 +1236,21 @@ namespace easy2d
 		if (!changed)
 			state |= std::ios_base::failbit;
 		is.setstate(state);
+		return is;
+	}
+
+	inline std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const String& str)
+	{
+		return os << str.to_string();
+	}
+
+	inline std::basic_istream<char>& operator>>(std::basic_istream<char>& is, String& str)
+	{
+		std::string tmp;
+		if (is >> tmp)
+		{
+			str = tmp;
+		}
 		return is;
 	}
 

@@ -328,9 +328,9 @@ namespace easy2d
 
 	void Application::Update()
 	{
-		static auto last = time::Now();
+		static auto last = Time::Now();
 
-		const auto now = time::Now();
+		const auto now = Time::Now();
 		const auto dt = (now - last) * time_scale_;
 		last = now;
 

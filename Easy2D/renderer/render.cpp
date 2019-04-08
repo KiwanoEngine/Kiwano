@@ -141,7 +141,7 @@ namespace easy2d
 
 		if (collecting_data_)
 		{
-			status_.start = time::Now();
+			status_.start = Time::Now();
 			status_.primitives = 0;
 		}
 
@@ -186,7 +186,7 @@ namespace easy2d
 
 		if (collecting_data_)
 		{
-			status_.duration = time::Now() - status_.start;
+			status_.duration = Time::Now() - status_.start;
 		}
 		return hr;
 	}
