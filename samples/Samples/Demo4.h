@@ -48,8 +48,8 @@ public:
 		);
 
 		// 添加按键监听
-		AddListener(Event::KeyDown, Closure(this, &Tiger::OnKeyDown));
-		AddListener(Event::KeyUp, Closure(this, &Tiger::OnKeyUp));
+		AddListener(Event::KeyDown, MakeClosure(this, &Tiger::OnKeyDown));
+		AddListener(Event::KeyUp, MakeClosure(this, &Tiger::OnKeyUp));
 
 		// 默认方向为 Left
 		facing_left = true;

@@ -23,7 +23,7 @@
 
 namespace easy2d
 {
-	using ActionCallback = std::function<void()>;
+	using ActionCallback = Closure<void()>;
 
 	class ActionManager;
 

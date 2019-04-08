@@ -19,7 +19,7 @@ public:
 		SetResponsible(true);
 
 		// 添加消息监听
-		AddListener(Event::Click, Closure(this, &MainScene::Click));
+		AddListener(Event::Click, MakeClosure(this, &MainScene::Click));
 
 		// 创建物理世界
 		world_ = new b2World(b2Vec2(0, 10));

@@ -256,7 +256,7 @@ namespace easy2d
 
 			::curl_global_init(CURL_GLOBAL_ALL);
 
-			std::thread thread(Closure(this, &HttpClient::NetworkThread));
+			std::thread thread(MakeClosure(this, &HttpClient::NetworkThread));
 			thread.detach();
 		}
 
@@ -301,7 +301,7 @@ namespace easy2d
 
 				if (app_)
 				{
-					app_->PreformFunctionInMainThread(Closure(this, &HttpClient::DispatchResponseCallback));
+					app_->PreformFunctionInMainThread(MakeClosure(this, &HttpClient::DispatchResponseCallback));
 				}
 			}
 		}

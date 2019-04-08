@@ -31,10 +31,10 @@ namespace easy2d
 	{
 		SetResponsible(true);
 
-		AddListener(Event::MouseHover, Closure(this, &Button::UpdateStatus));
-		AddListener(Event::MouseOut, Closure(this, &Button::UpdateStatus));
-		AddListener(Event::MouseBtnDown, Closure(this, &Button::UpdateStatus));
-		AddListener(Event::MouseBtnUp, Closure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseHover, MakeClosure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseOut, MakeClosure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseBtnDown, MakeClosure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseBtnUp, MakeClosure(this, &Button::UpdateStatus));
 	}
 
 	Button::Button(const Callback& click)

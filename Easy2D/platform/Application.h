@@ -134,7 +134,7 @@ namespace easy2d
 		// 在 Easy2D 主线程中执行函数
 		// 当在其他线程调用 Easy2D 函数时使用
 		void PreformFunctionInMainThread(
-			std::function<void()> function
+			Closure<void()> function
 		);
 
 		// 显示控制台
@@ -163,6 +163,6 @@ namespace easy2d
 		Array<Component*>	components_;
 
 		std::mutex						perform_mutex_;
-		Queue<std::function<void()>>	functions_to_perform_;
+		Queue<Closure<void()>>	functions_to_perform_;
 	};
 }

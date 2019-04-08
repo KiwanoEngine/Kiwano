@@ -40,7 +40,7 @@ namespace easy2d
 
 	void AsyncTask::Start()
 	{
-		std::thread thread(Closure(this, &AsyncTask::TaskThread));
+		std::thread thread(MakeClosure(this, &AsyncTask::TaskThread));
 		thread.detach();
 
 		// retain this object until finished
@@ -77,7 +77,7 @@ namespace easy2d
 
 		if (thread_cb_)
 		{
-			AsyncTaskThread::Instance().PerformTaskCallback(Closure(this, &AsyncTask::Complete));
+			AsyncTaskThread::Instance().PerformTaskCallback(MakeClosure(this, &AsyncTask::Complete));
 		}
 	}
 
@@ -102,7 +102,7 @@ namespace easy2d
 	{
 	}
 
-	void AsyncTaskThread::PerformTaskCallback(std::function<void()> func)
+	void AsyncTaskThread::PerformTaskCallback(Closure<void()> func)
 	{
 		if (app_)
 		{

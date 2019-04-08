@@ -29,10 +29,10 @@ public:
 		}, L"DemoWindow");
 
 		// 添加一个简单窗口
-		layer->AddItem(Closure(this, &MainScene::SimpleWindow), L"SimpleWindow");
+		layer->AddItem(MakeClosure(this, &MainScene::SimpleWindow), L"SimpleWindow");
 
 		// 再添加一个窗口
-		layer->AddItem(Closure(this, &MainScene::AnotherWindow), L"AnotherWindow");
+		layer->AddItem(MakeClosure(this, &MainScene::AnotherWindow), L"AnotherWindow");
 	}
 
 	void SimpleWindow()

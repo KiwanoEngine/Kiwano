@@ -24,74 +24,248 @@
 namespace easy2d
 {
 	//
-	// Closure is a simple function for binding member functions
+	// Closure is a light weight std::function<>-like class
 	//
+
+	class bad_function_call : public std::exception
+	{
+	public:
+		bad_function_call() {}
+
+		virtual const char* what() const override
+		{
+			return "bad function call";
+		}
+	};
+
+	template<typename _Ret, typename... _Args>
+	class Callable
+	{
+	public:
+		virtual ~Callable() {}
+
+		virtual void AddRef() = 0;
+		virtual void Release() = 0;
+		virtual _Ret Invoke(_Args... args) const = 0;
+	};
+
+	template<typename _Ret, typename... _Args>
+	class RefCountCallable
+		: public Callable<_Ret, _Args...>
+	{
+	public:
+		RefCountCallable() : ref_count_(0) {}
+
+		virtual void AddRef() override
+		{
+			++ref_count_;
+		}
+
+		virtual void Release() override
+		{
+			--ref_count_;
+			if (ref_count_ <= 0)
+			{
+				delete this;
+			}
+		}
+
+	private:
+		int ref_count_;
+	};
 
 	template<typename _Ty, typename _Ret, typename... _Args>
-	std::function<_Ret(_Args...)> Closure(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...));
-
-
-	//
-	// Details of Closure
-	//
-	namespace __closure__detail
+	class ProxyCallable
+		: public RefCountCallable<_Ret, _Args...>
 	{
-		// sequence & generater
-
-		template<int... _Num>
-		struct Seq
+	public:
+		ProxyCallable(_Ty&& val)
+			: callee_(std::move(val))
 		{
-			using NextType = Seq<_Num..., sizeof...(_Num)>;
-		};
+		}
 
-		template<typename...>
-		struct Gen;
-
-		template<>
-		struct Gen<>
+		virtual _Ret Invoke(_Args... args) const override
 		{
-			using SeqType = Seq<>;
-		};
+			return callee_(std::forward<_Args>(args)...);
+		}
 
-		template<typename _Ty1, typename... _Args>
-		struct Gen<_Ty1, _Args...>
+		static inline Callable<_Ret, _Args...>* Make(_Ty&& val)
 		{
-			using SeqType = typename Gen<_Args...>::SeqType::NextType;
-		};
+			return new (std::nothrow) ProxyCallable<_Ty, _Ret, _Args...>(std::move(val));
+		}
 
+	private:
+		_Ty callee_;
+	};
 
-		// ClosureHelper
+	template<typename _Ty, typename _Ret, typename... _Args>
+	class ProxyMemCallable
+		: public RefCountCallable<_Ret, _Args...>
+	{
+	public:
+		typedef _Ret(_Ty::* _FuncType)(_Args...);
 
-		template<typename _Ty, typename _Ret, typename... _Args>
-		struct ClosureHelper
+		ProxyMemCallable(_Ty* ptr, _FuncType func)
+			: ptr_(std::move(ptr))
+			, func_(func)
 		{
-			template<int... _Num>
-			static inline std::function<_Ret(_Args...)> MakeFunc(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...), Seq<_Num...>)
+		}
+
+		virtual _Ret Invoke(_Args... args) const override
+		{
+			return ((ptr_)->*func_)(std::forward<_Args>(args)...);
+		}
+
+		static inline Callable<_Ret, _Args...>* Make(_Ty* ptr, _FuncType func)
+		{
+			return new (std::nothrow) ProxyMemCallable<_Ty, _Ret, _Args...>(ptr, func);
+		}
+
+	private:
+		_Ty* ptr_;
+		_FuncType func_;
+	};
+
+	template<typename _Ty, typename _Ret, typename... _Args>
+	class ProxyConstMemCallable
+		: public RefCountCallable<_Ret, _Args...>
+	{
+	public:
+		typedef _Ret(_Ty::* _FuncType)(_Args...) const;
+
+		ProxyConstMemCallable(_Ty* ptr, _FuncType func)
+			: ptr_(std::move(ptr))
+			, func_(func)
+		{
+		}
+
+		virtual _Ret Invoke(_Args... args) const override
+		{
+			return ((ptr_)->*func_)(std::forward<_Args>(args)...);
+		}
+
+		static inline Callable<_Ret, _Args...>* Make(_Ty* ptr, _FuncType func)
+		{
+			return new (std::nothrow) ProxyConstMemCallable<_Ty, _Ret, _Args...>(ptr, func);
+		}
+
+	private:
+		_Ty* ptr_;
+		_FuncType func_;
+	};
+
+
+	template<typename _Ty>
+	class Closure;
+
+	template<typename _Ret, typename... _Args>
+	class Closure<_Ret(_Args...)>
+	{
+	public:
+		Closure()
+			: callable_(nullptr)
+		{
+		}
+
+		Closure(std::nullptr_t)
+			: callable_(nullptr)
+		{
+		}
+
+		Closure(const Closure& rhs)
+			: callable_(rhs.callable_)
+		{
+			if (callable_) callable_->AddRef();
+		}
+
+		Closure(Closure&& rhs)
+			: callable_(rhs.callable_)
+		{
+			rhs.callable_ = nullptr;
+		}
+
+		template <typename _Ty>
+		Closure(_Ty val)
+		{
+			callable_ = ProxyCallable<_Ty, _Ret, _Args...>::Make(std::move(val));
+			if (callable_) callable_->AddRef();
+		}
+
+		template <typename _Ty>
+		Closure(_Ty* ptr, _Ret(_Ty::* func)(_Args...))
+		{
+			callable_ = ProxyMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
+			if (callable_) callable_->AddRef();
+		}
+
+		template <typename _Ty>
+		Closure(_Ty* ptr, _Ret(_Ty::* func)(_Args...) const)
+		{
+			callable_ = ProxyConstMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
+			if (callable_) callable_->AddRef();
+		}
+
+		~Closure()
+		{
+			tidy();
+		}
+
+		inline void swap(const Closure& rhs)
+		{
+			std::swap(callable_, rhs.callable_);
+		}
+
+		inline _Ret operator()(_Args... args) const
+		{
+			if (!callable_)
+				throw bad_function_call();
+			return callable_->Invoke(std::forward<_Args>(args)...);
+		}
+
+		inline operator bool() const
+		{
+			return !!callable_;
+		}
+
+		inline Closure& operator=(const Closure& rhs)
+		{
+			tidy();
+			callable_ = rhs.callable_;
+			if (callable_) callable_->AddRef();
+			return (*this);
+		}
+
+		inline Closure& operator=(Closure&& rhs)
+		{
+			tidy();
+			callable_ = rhs.callable_;
+			rhs.callable_ = nullptr;
+			return (*this);
+		}
+
+	private:
+		inline void tidy()
+		{
+			if (callable_)
 			{
-				return std::bind(_Func, _Ptr, std::_Ph<_Num + 1>()...);
+				callable_->Release();
+				callable_ = nullptr;
 			}
+		}
 
-			template<int... _Num>
-			static inline std::function<_Ret(_Args...)> MakeFunc(_Ty* _Ptr, _Ret(_Ty::* _Func)(_Args...) const, Seq<_Num...>)
-			{
-				return std::bind(_Func, _Ptr, std::_Ph<_Num + 1>()...);
-			}
-		};
+	private:
+		Callable<_Ret, _Args...>* callable_;
+	};
+
+	template<typename _Ty, typename _Ret, typename... _Args>
+	inline Closure<_Ret(_Args...)> MakeClosure(_Ty* ptr, _Ret(_Ty::* func)(_Args...))
+	{
+		return Closure<_Ret(_Args...)>(ptr, func);
 	}
 
 	template<typename _Ty, typename _Ret, typename... _Args>
-	inline std::function<_Ret(_Args...)> Closure(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...))
+	inline Closure<_Ret(_Args...)> MakeClosure(_Ty* ptr, _Ret(_Ty::* func)(_Args...) const)
 	{
-		using namespace __closure__detail;
-		return ClosureHelper<_Ty, _Ret, _Args...>::
-			MakeFunc(_Ptr, _Func, typename Gen<_Args...>::SeqType{});
-	}
-
-	template<typename _Ty, typename _Ret, typename... _Args>
-	inline std::function<_Ret(_Args...)> Closure(_Ty* _Ptr, _Ret(_Ty::*_Func)(_Args...) const)
-	{
-		using namespace __closure__detail;
-		return ClosureHelper<_Ty, _Ret, _Args...>::
-			MakeFunc(_Ptr, _Func, typename Gen<_Args...>::SeqType{});
+		return Closure<_Ret(_Args...)>(ptr, func);
 	}
 }
