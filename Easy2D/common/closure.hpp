@@ -27,121 +27,124 @@ namespace easy2d
 	// Closure is a light weight std::function<>-like class
 	//
 
-	template<typename _Ret, typename... _Args>
-	class Callable
+	namespace __closure_detail
 	{
-	public:
-		virtual ~Callable() {}
-
-		virtual void AddRef() = 0;
-		virtual void Release() = 0;
-		virtual _Ret Invoke(_Args... args) const = 0;
-	};
-
-	template<typename _Ret, typename... _Args>
-	class RefCountCallable
-		: public Callable<_Ret, _Args...>
-	{
-	public:
-		RefCountCallable() : ref_count_(0) {}
-
-		virtual void AddRef() override
+		template<typename _Ret, typename... _Args>
+		class Callable
 		{
-			++ref_count_;
-		}
+		public:
+			virtual ~Callable() {}
 
-		virtual void Release() override
+			virtual void AddRef() = 0;
+			virtual void Release() = 0;
+			virtual _Ret Invoke(_Args... args) const = 0;
+		};
+
+		template<typename _Ret, typename... _Args>
+		class RefCountCallable
+			: public Callable<_Ret, _Args...>
 		{
-			--ref_count_;
-			if (ref_count_ <= 0)
+		public:
+			RefCountCallable() : ref_count_(0) {}
+
+			virtual void AddRef() override
 			{
-				delete this;
+				++ref_count_;
 			}
-		}
 
-	private:
-		int ref_count_;
-	};
+			virtual void Release() override
+			{
+				--ref_count_;
+				if (ref_count_ <= 0)
+				{
+					delete this;
+				}
+			}
 
-	template<typename _Ty, typename _Ret, typename... _Args>
-	class ProxyCallable
-		: public RefCountCallable<_Ret, _Args...>
-	{
-	public:
-		ProxyCallable(_Ty&& val)
-			: callee_(std::move(val))
+		private:
+			int ref_count_;
+		};
+
+		template<typename _Ty, typename _Ret, typename... _Args>
+		class ProxyCallable
+			: public RefCountCallable<_Ret, _Args...>
 		{
-		}
+		public:
+			ProxyCallable(_Ty&& val)
+				: callee_(std::move(val))
+			{
+			}
 
-		virtual _Ret Invoke(_Args... args) const override
+			virtual _Ret Invoke(_Args... args) const override
+			{
+				return callee_(std::forward<_Args>(args)...);
+			}
+
+			static inline Callable<_Ret, _Args...>* Make(_Ty&& val)
+			{
+				return new (std::nothrow) ProxyCallable<_Ty, _Ret, _Args...>(std::move(val));
+			}
+
+		private:
+			_Ty callee_;
+		};
+
+		template<typename _Ty, typename _Ret, typename... _Args>
+		class ProxyMemCallable
+			: public RefCountCallable<_Ret, _Args...>
 		{
-			return callee_(std::forward<_Args>(args)...);
-		}
+		public:
+			typedef _Ret(_Ty::* _FuncType)(_Args...);
 
-		static inline Callable<_Ret, _Args...>* Make(_Ty&& val)
+			ProxyMemCallable(void* ptr, _FuncType func)
+				: ptr_(ptr)
+				, func_(func)
+			{
+			}
+
+			virtual _Ret Invoke(_Args... args) const override
+			{
+				return (static_cast<_Ty*>(ptr_)->*func_)(std::forward<_Args>(args)...);
+			}
+
+			static inline Callable<_Ret, _Args...>* Make(void* ptr, _FuncType func)
+			{
+				return new (std::nothrow) ProxyMemCallable<_Ty, _Ret, _Args...>(ptr, func);
+			}
+
+		private:
+			void* ptr_;
+			_FuncType func_;
+		};
+
+		template<typename _Ty, typename _Ret, typename... _Args>
+		class ProxyConstMemCallable
+			: public RefCountCallable<_Ret, _Args...>
 		{
-			return new (std::nothrow) ProxyCallable<_Ty, _Ret, _Args...>(std::move(val));
-		}
+		public:
+			typedef _Ret(_Ty::* _FuncType)(_Args...) const;
 
-	private:
-		_Ty callee_;
-	};
+			ProxyConstMemCallable(void* ptr, _FuncType func)
+				: ptr_(ptr)
+				, func_(func)
+			{
+			}
 
-	template<typename _Ty, typename _Ret, typename... _Args>
-	class ProxyMemCallable
-		: public RefCountCallable<_Ret, _Args...>
-	{
-	public:
-		typedef _Ret(_Ty::* _FuncType)(_Args...);
+			virtual _Ret Invoke(_Args... args) const override
+			{
+				return (static_cast<_Ty*>(ptr_)->*func_)(std::forward<_Args>(args)...);
+			}
 
-		ProxyMemCallable(void* ptr, _FuncType func)
-			: ptr_(ptr)
-			, func_(func)
-		{
-		}
+			static inline Callable<_Ret, _Args...>* Make(void* ptr, _FuncType func)
+			{
+				return new (std::nothrow) ProxyConstMemCallable<_Ty, _Ret, _Args...>(ptr, func);
+			}
 
-		virtual _Ret Invoke(_Args... args) const override
-		{
-			return (static_cast<_Ty*>(ptr_)->*func_)(std::forward<_Args>(args)...);
-		}
-
-		static inline Callable<_Ret, _Args...>* Make(void* ptr, _FuncType func)
-		{
-			return new (std::nothrow) ProxyMemCallable<_Ty, _Ret, _Args...>(ptr, func);
-		}
-
-	private:
-		void* ptr_;
-		_FuncType func_;
-	};
-
-	template<typename _Ty, typename _Ret, typename... _Args>
-	class ProxyConstMemCallable
-		: public RefCountCallable<_Ret, _Args...>
-	{
-	public:
-		typedef _Ret(_Ty::* _FuncType)(_Args...) const;
-
-		ProxyConstMemCallable(void* ptr, _FuncType func)
-			: ptr_(ptr)
-			, func_(func)
-		{
-		}
-
-		virtual _Ret Invoke(_Args... args) const override
-		{
-			return (static_cast<_Ty*>(ptr_)->*func_)(std::forward<_Args>(args)...);
-		}
-
-		static inline Callable<_Ret, _Args...>* Make(void* ptr, _FuncType func)
-		{
-			return new (std::nothrow) ProxyConstMemCallable<_Ty, _Ret, _Args...>(ptr, func);
-		}
-
-	private:
-		void* ptr_;
-		_FuncType func_;
-	};
+		private:
+			void* ptr_;
+			_FuncType func_;
+		};
+	}
 
 	//
 	// exceptions
@@ -193,21 +196,21 @@ namespace easy2d
 		template <typename _Ty>
 		Closure(_Ty val)
 		{
-			callable_ = ProxyCallable<_Ty, _Ret, _Args...>::Make(std::move(val));
+			callable_ = __closure_detail::ProxyCallable<_Ty, _Ret, _Args...>::Make(std::move(val));
 			if (callable_) callable_->AddRef();
 		}
 
 		template <typename _Ty>
 		Closure(void* ptr, _Ret(_Ty::* func)(_Args...))
 		{
-			callable_ = ProxyMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
+			callable_ = __closure_detail::ProxyMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
 			if (callable_) callable_->AddRef();
 		}
 
 		template <typename _Ty>
 		Closure(void* ptr, _Ret(_Ty::* func)(_Args...) const)
 		{
-			callable_ = ProxyConstMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
+			callable_ = __closure_detail::ProxyConstMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
 			if (callable_) callable_->AddRef();
 		}
 
@@ -260,7 +263,7 @@ namespace easy2d
 		}
 
 	private:
-		Callable<_Ret, _Args...>* callable_;
+		__closure_detail::Callable<_Ret, _Args...>* callable_;
 	};
 
 	template<typename _Ty, typename _Ret, typename... _Args>
