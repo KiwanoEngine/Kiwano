@@ -42,7 +42,7 @@ namespace easy2d
 		friend class IntrusiveList<NodePtr>;
 
 		using Children = IntrusiveList<NodePtr>;
-		using UpdateCallback = std::function<void(Duration)>;
+		using UpdateCallback = Closure<void(Duration)>;
 
 	public:
 		Node();
@@ -56,6 +56,9 @@ namespace easy2d
 		// 获取显示状态
 		bool IsVisible()				const	{ return visible_; }
 
+		// 获取响应状态
+		bool IsResponsible()			const	{ return responsible_; }
+
 		// 获取名称的 Hash 值
 		size_t GetHashName()			const	{ return hash_name_; }
 
@@ -63,7 +66,7 @@ namespace easy2d
 		int GetZOrder()					const	{ return z_order_; }
 
 		// 获取坐标
-		Point const& GetPosition()		const	{ return transform_.position; }
+		Point GetPosition()				const	{ return transform_.position; }
 
 		// 获取 x 坐标
 		float GetPositionX()			const	{ return transform_.position.x; }
@@ -72,10 +75,16 @@ namespace easy2d
 		float GetPositionY()			const	{ return transform_.position.y; }
 
 		// 获取横向缩放比例
+		Point GetScale()				const	{ return transform_.scale; }
+
+		// 获取横向缩放比例
 		float GetScaleX()				const	{ return transform_.scale.x; }
 
 		// 获取纵向缩放比例
 		float GetScaleY()				const	{ return transform_.scale.y; }
+
+		// 获取错切角度
+		Point GetSkew()					const { return transform_.skew; }
 
 		// 获取横向错切角度
 		float GetSkewX()				const	{ return transform_.skew.x; }
@@ -93,7 +102,7 @@ namespace easy2d
 		float GetHeight()				const	{ return size_.y; }
 
 		// 获取大小
-		Size const& GetSize()			const	{ return size_; }
+		Size GetSize()					const	{ return size_; }
 
 		// 获取缩放后的宽度
 		float GetScaledWidth()			const	{ return size_.x * transform_.scale.x; }
@@ -103,6 +112,9 @@ namespace easy2d
 
 		// 获取缩放后的大小
 		Size GetScaledSize()			const	{ return Size{ GetScaledWidth(), GetScaledHeight() }; }
+
+		// 获取锚点
+		Point GetAnchor()				const	{ return anchor_; }
 
 		// 获取 x 方向锚点
 		float GetAnchorX()				const	{ return anchor_.x; }
@@ -114,7 +126,7 @@ namespace easy2d
 		float GetOpacity()				const	{ return opacity_; }
 
 		// 获取变换
-		Transform const& GetTransform()	const	{ return transform_; }
+		Transform GetTransform()		const	{ return transform_; }
 
 		// 获取边框
 		Rect GetBounds() const;
@@ -196,6 +208,12 @@ namespace easy2d
 		);
 
 		// 设置缩放比例
+		// 默认为 (1.0, 1.0)
+		void SetScale(
+			Point const& scale
+		);
+
+		// 设置缩放比例
 		// 默认为 1.0
 		void SetScale(
 			float scale
@@ -218,6 +236,12 @@ namespace easy2d
 		void SetSkew(
 			float skew_x,
 			float skew_y
+		);
+
+		// 设置错切角度
+		// 默认为 (0, 0)
+		void SetSkew(
+			Point const& skew
 		);
 
 		// 设置旋转角度
@@ -243,6 +267,12 @@ namespace easy2d
 		void SetAnchor(
 			float anchor_x,
 			float anchor_y
+		);
+
+		// 设置锚点位置
+		// 默认为 (0, 0), 范围 [0, 1]
+		void SetAnchor(
+			Point const& anchor
 		);
 
 		// 修改宽度
@@ -317,12 +347,12 @@ namespace easy2d
 		Children const& GetChildren() const;
 
 		// 移除子节点
-		bool RemoveChild(
+		void RemoveChild(
 			NodePtr const& child
 		);
 
 		// 移除子节点
-		bool RemoveChild(
+		void RemoveChild(
 			Node* child
 		);
 
@@ -376,22 +406,22 @@ namespace easy2d
 		void SetScene(Scene* scene);
 
 	protected:
-		bool		visible_;
-		bool		hover_;
-		bool		pressed_;
-		bool		responsible_;
-		bool		update_pausing_;
-		int			z_order_;
-		float		opacity_;
-		float		display_opacity_;
-		size_t		hash_name_;
-		Transform	transform_;
-		Point		anchor_;
-		Size		size_;
-		Node*		parent_;
-		Scene*		scene_;
-		Children	children_;
-		UpdateCallback cb_update_;
+		bool			visible_;
+		bool			hover_;
+		bool			pressed_;
+		bool			responsible_;
+		bool			update_pausing_;
+		int				z_order_;
+		float			opacity_;
+		float			display_opacity_;
+		size_t			hash_name_;
+		Transform		transform_;
+		Point			anchor_;
+		Size			size_;
+		Node*			parent_;
+		Scene*			scene_;
+		Children		children_;
+		UpdateCallback	cb_update_;
 
 		mutable bool	dirty_transform_;
 		mutable bool	dirty_transform_inverse_;

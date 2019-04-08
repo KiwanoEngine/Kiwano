@@ -88,7 +88,7 @@ namespace easy2d
 		Point GetCropPos() const;
 
 		// »ñÈ¡²Ã¼ô¾ØÐÎ
-		Rect const& GetCropRect() const;
+		Rect GetCropRect() const;
 
 		ComPtr<ID2D1Bitmap> const& GetBitmap() const;
 
@@ -98,7 +98,7 @@ namespace easy2d
 		);
 
 	protected:
-		Rect			crop_rect_;
+		Rect crop_rect_;
 		ComPtr<ID2D1Bitmap>	bitmap_;
 	};
 }

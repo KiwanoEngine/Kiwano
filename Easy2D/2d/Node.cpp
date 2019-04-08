@@ -302,6 +302,11 @@ namespace easy2d
 		dirty_transform_ = true;
 	}
 
+	void Node::SetAnchor(Point const& anchor)
+	{
+		this->SetAnchor(anchor.x, anchor.y);
+	}
+
 	void Node::SetWidth(float width)
 	{
 		this->SetSize(width, size_.y);
@@ -407,6 +412,11 @@ namespace easy2d
 		dirty_transform_ = true;
 	}
 
+	void Node::SetScale(Point const& scale)
+	{
+		this->SetScale(scale.x, scale.y);
+	}
+
 	void Node::SetSkewX(float skew_x)
 	{
 		this->SetSkew(skew_x, transform_.skew.y);
@@ -425,6 +435,11 @@ namespace easy2d
 		transform_.skew.x = skew_x;
 		transform_.skew.y = skew_y;
 		dirty_transform_ = true;
+	}
+
+	void Node::SetSkew(Point const& skew)
+	{
+		this->SetSkew(skew.x, skew.y);
 	}
 
 	void Node::SetRotation(float angle)
@@ -522,26 +537,24 @@ namespace easy2d
 		}
 	}
 
-	bool Node::RemoveChild(NodePtr const& child)
+	void Node::RemoveChild(NodePtr const& child)
 	{
-		return RemoveChild(child.Get());
+		RemoveChild(child.Get());
 	}
 
-	bool Node::RemoveChild(Node * child)
+	void Node::RemoveChild(Node * child)
 	{
 		E2D_ASSERT(child && "Node::RemoveChild failed, NULL pointer exception");
 
 		if (children_.IsEmpty())
-			return false;
+			return;
 
 		if (child)
 		{
 			child->parent_ = nullptr;
 			if (child->scene_) child->SetScene(nullptr);
 			children_.Remove(NodePtr(child));
-			return true;
 		}
-		return false;
 	}
 
 	void Node::RemoveChildren(String const& child_name)
