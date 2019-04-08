@@ -19,24 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <functional>
+#include <stdexcept>
 
 namespace easy2d
 {
 	//
 	// Closure is a light weight std::function<>-like class
 	//
-
-	class bad_function_call : public std::exception
-	{
-	public:
-		bad_function_call() {}
-
-		virtual const char* what() const override
-		{
-			return "bad function call";
-		}
-	};
 
 	template<typename _Ret, typename... _Args>
 	class Callable
@@ -154,7 +143,24 @@ namespace easy2d
 		_FuncType func_;
 	};
 
+	//
+	// exceptions
+	//
+	class bad_function_call : public std::exception
+	{
+	public:
+		bad_function_call() {}
 
+		virtual const char* what() const override
+		{
+			return "bad function call";
+		}
+	};
+
+
+	//
+	// Closure details
+	//
 	template<typename _Ty>
 	class Closure;
 
