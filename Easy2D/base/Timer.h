@@ -20,6 +20,7 @@
 
 #pragma once
 #include "../common/helper.h"
+#include "../common/Closure.hpp"
 #include "../common/IntrusiveList.hpp"
 #include "Object.h"
 #include "time.h"
@@ -39,7 +40,7 @@ namespace easy2d
 		friend class TimerManager;
 		friend class IntrusiveList<TimerPtr>;
 
-		using Callback = std::function<void()>;
+		using Callback = Closure<void()>;
 
 	public:
 		explicit Timer(

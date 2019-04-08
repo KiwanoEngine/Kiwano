@@ -21,6 +21,7 @@
 #pragma once
 #include "Object.h"
 #include "Component.h"
+#include "../common/Closure.hpp"
 #include "../common/Singleton.hpp"
 #include <functional>
 #include <mutex>
@@ -29,8 +30,8 @@ namespace easy2d
 {
 	E2D_DECLARE_SMART_PTR(AsyncTask);
 
-	typedef std::function<void()> AsyncTaskFunc;
-	typedef std::function<void()> AsyncTaskCallback;
+	typedef Closure<void()> AsyncTaskFunc;
+	typedef Closure<void()> AsyncTaskCallback;
 
 	class AsyncTask
 		: public Object
@@ -74,7 +75,7 @@ namespace easy2d
 
 		virtual void DestroyComponent();
 
-		void PerformTaskCallback(std::function<void()> func);
+		void PerformTaskCallback(Closure<void()> func);
 
 	private:
 		Application* app_;

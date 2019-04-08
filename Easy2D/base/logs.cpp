@@ -163,9 +163,9 @@ namespace easy2d
 	{
 		if (enabled_ && has_console_)
 		{
-			std::wstring output = MakeOutputString(prompt, format, args);
+			std::wstring output = MakeOutputStringf(prompt, format, args);
 
-			os << color << output;
+			os << color << output << std::flush;
 			::OutputDebugStringW(output.c_str());
 
 			ResetConsoleColor();

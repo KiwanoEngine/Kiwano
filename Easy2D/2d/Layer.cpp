@@ -28,14 +28,14 @@ namespace easy2d
 	{
 		SetSize(Renderer::Instance().GetOutputSize());
 
-		AddListener(Event::MouseBtnDown, Closure(this, &Layer::HandleMessages));
-		AddListener(Event::MouseBtnUp, Closure(this, &Layer::HandleMessages));
-		AddListener(Event::MouseMove, Closure(this, &Layer::HandleMessages));
-		AddListener(Event::MouseWheel, Closure(this, &Layer::HandleMessages));
+		AddListener(Event::MouseBtnDown, MakeClosure(this, &Layer::HandleMessages));
+		AddListener(Event::MouseBtnUp, MakeClosure(this, &Layer::HandleMessages));
+		AddListener(Event::MouseMove, MakeClosure(this, &Layer::HandleMessages));
+		AddListener(Event::MouseWheel, MakeClosure(this, &Layer::HandleMessages));
 
-		AddListener(Event::KeyDown, Closure(this, &Layer::HandleMessages));
-		AddListener(Event::KeyUp, Closure(this, &Layer::HandleMessages));
-		AddListener(Event::Char, Closure(this, &Layer::HandleMessages));
+		AddListener(Event::KeyDown, MakeClosure(this, &Layer::HandleMessages));
+		AddListener(Event::KeyUp, MakeClosure(this, &Layer::HandleMessages));
+		AddListener(Event::Char, MakeClosure(this, &Layer::HandleMessages));
 	}
 
 	Layer::~Layer()

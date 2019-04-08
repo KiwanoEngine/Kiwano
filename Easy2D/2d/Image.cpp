@@ -158,7 +158,7 @@ namespace easy2d
 		return crop_rect_.origin;
 	}
 
-	Rect const& Image::GetCropRect() const
+	Rect Image::GetCropRect() const
 	{
 		return crop_rect_;
 	}

@@ -27,7 +27,7 @@ namespace easy2d
 	class E2D_API Button
 		: public Sprite
 	{
-		using Callback = std::function<void()>;
+		using Callback = Closure<void()>;
 
 	public:
 		Button();

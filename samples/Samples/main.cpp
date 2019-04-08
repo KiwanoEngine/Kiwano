@@ -59,7 +59,7 @@ public:
 			EnterScene(scene);
 
 			// 添加按键监听
-			scene->AddListener(Event::KeyUp, Closure(this, &DemoApp::KeyPressed));
+			scene->AddListener(Event::KeyUp, MakeClosure(this, &DemoApp::KeyPressed));
 
 			// 显示提示文字
 			String intro_str = format_wstring(L"按键 1~%d 可切换示例\n", s_DemoNum);

@@ -24,7 +24,7 @@ namespace easy2d
 {
 	namespace network
 	{
-		typedef std::function<void(HttpRequestPtr, HttpResponsePtr)> ResponseCallback;
+		typedef Closure<void(HttpRequestPtr, HttpResponsePtr)> ResponseCallback;
 
 		class E2D_API HttpRequest
 			: public Object

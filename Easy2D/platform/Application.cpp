@@ -414,7 +414,7 @@ namespace easy2d
 		);
 	}
 
-	void Application::PreformFunctionInMainThread(std::function<void()> function)
+	void Application::PreformFunctionInMainThread(Closure<void()> function)
 	{
 		std::lock_guard<std::mutex> lock(perform_mutex_);
 		functions_to_perform_.push(function);

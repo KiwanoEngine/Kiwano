@@ -21,6 +21,7 @@
 #pragma once
 #include "../base/SmartPtr.hpp"
 #include "../common/helper.h"
+#include "../common/Closure.hpp"
 #include "../common/IntrusiveList.hpp"
 #include "Object.h"
 #include "Event.hpp"
@@ -28,7 +29,7 @@
 
 namespace easy2d
 {
-	typedef std::function<void(Event const&)> EventCallback;
+	typedef Closure<void(Event const&)> EventCallback;
 
 	class EventDispatcher;
 

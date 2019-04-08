@@ -26,7 +26,7 @@
 namespace easy2d
 {
 	// 缓动函数
-	using EaseFunc = std::function<float(float)>;
+	using EaseFunc = Closure<float(float)>;
 
 	// 缓动函数枚举
 	// See https://easings.net for more information
@@ -380,8 +380,8 @@ namespace easy2d
 	public:
 		// 创建淡出动作
 		explicit ActionFadeOut(
-			Duration duration,				/* 持续时长 */
-			EaseFunc func = Ease::Linear	/* 速度变化 */
+			Duration duration,		/* 持续时长 */
+			EaseFunc func = nullptr	/* 速度变化 */
 		);
 	};
 

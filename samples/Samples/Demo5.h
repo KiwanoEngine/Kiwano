@@ -16,7 +16,7 @@ public:
 	Demo5()
 	{
 		// 添加按键监听
-		AddListener(Event::KeyDown, Closure(this, &Demo5::OnKeyDown));
+		AddListener(Event::KeyDown, MakeClosure(this, &Demo5::OnKeyDown));
 
 		// 创建说明文字
 		TextPtr text = new Text(L"按G发送GET请求\n按P发送POST请求\n按U发送PUT请求\n按D发送DELETE请求");
@@ -74,7 +74,7 @@ public:
 		// 设置请求类型为 GET
 		request->SetType(HttpRequest::Type::Get);
 		// 设置请求完成后的回调函数
-		request->SetResponseCallback(Closure(this, &Demo5::Complete));
+		request->SetResponseCallback(MakeClosure(this, &Demo5::Complete));
 
 		// 发送 HTTP 请求
 		HttpClient::Instance().Send(request);
@@ -100,7 +100,7 @@ public:
 		request->SetType(HttpRequest::Type::Post);
 		// 设置 POST 请求的数据
 		request->SetJsonData(request_data);
-		request->SetResponseCallback(Closure(this, &Demo5::Complete));
+		request->SetResponseCallback(MakeClosure(this, &Demo5::Complete));
 
 		HttpClient::Instance().Send(request);
 	}
@@ -118,7 +118,7 @@ public:
 		request->SetType(HttpRequest::Type::Put);
 		// 设置 PUT 请求的数据
 		request->SetJsonData(request_data);
-		request->SetResponseCallback(Closure(this, &Demo5::Complete));
+		request->SetResponseCallback(MakeClosure(this, &Demo5::Complete));
 
 		HttpClient::Instance().Send(request);
 	}
@@ -131,7 +131,7 @@ public:
 		HttpRequestPtr request = new HttpRequest;
 		request->SetUrl(L"http://httpbin.org/delete");
 		request->SetType(HttpRequest::Type::Delete);
-		request->SetResponseCallback(Closure(this, &Demo5::Complete));
+		request->SetResponseCallback(MakeClosure(this, &Demo5::Complete));
 
 		HttpClient::Instance().Send(request);
 	}

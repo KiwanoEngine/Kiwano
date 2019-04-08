@@ -239,7 +239,7 @@ namespace easy2d
 		{
 			std::wstring output = MakeOutputString(prompt, std::forward<_Args>(args)...);
 
-			os << color << output;
+			os << color << output << std::flush;
 			::OutputDebugStringW(output.c_str());
 
 			ResetConsoleColor();

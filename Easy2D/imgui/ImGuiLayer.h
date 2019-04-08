@@ -26,7 +26,7 @@ namespace easy2d
 
 	E2D_DECLARE_SMART_PTR(ImGuiLayer);
 
-	using ImGuiPipeline = std::function<void()>;
+	using ImGuiPipeline = Closure<void()>;
 
 	class ImGuiLayer
 		: public Layer
