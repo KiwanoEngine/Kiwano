@@ -33,7 +33,7 @@ namespace easy2d
 {
 	struct RenderStatus
 	{
-		TimePoint start;
+		Time start;
 		Duration duration;
 		int primitives;
 	};
