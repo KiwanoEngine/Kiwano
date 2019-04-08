@@ -105,24 +105,24 @@ namespace easy2d
 	public:
 		typedef _Ret(_Ty::* _FuncType)(_Args...);
 
-		ProxyMemCallable(_Ty* ptr, _FuncType func)
-			: ptr_(std::move(ptr))
+		ProxyMemCallable(void* ptr, _FuncType func)
+			: ptr_(ptr)
 			, func_(func)
 		{
 		}
 
 		virtual _Ret Invoke(_Args... args) const override
 		{
-			return ((ptr_)->*func_)(std::forward<_Args>(args)...);
+			return (static_cast<_Ty*>(ptr_)->*func_)(std::forward<_Args>(args)...);
 		}
 
-		static inline Callable<_Ret, _Args...>* Make(_Ty* ptr, _FuncType func)
+		static inline Callable<_Ret, _Args...>* Make(void* ptr, _FuncType func)
 		{
 			return new (std::nothrow) ProxyMemCallable<_Ty, _Ret, _Args...>(ptr, func);
 		}
 
 	private:
-		_Ty* ptr_;
+		void* ptr_;
 		_FuncType func_;
 	};
 
@@ -133,24 +133,24 @@ namespace easy2d
 	public:
 		typedef _Ret(_Ty::* _FuncType)(_Args...) const;
 
-		ProxyConstMemCallable(_Ty* ptr, _FuncType func)
-			: ptr_(std::move(ptr))
+		ProxyConstMemCallable(void* ptr, _FuncType func)
+			: ptr_(ptr)
 			, func_(func)
 		{
 		}
 
 		virtual _Ret Invoke(_Args... args) const override
 		{
-			return ((ptr_)->*func_)(std::forward<_Args>(args)...);
+			return (static_cast<_Ty*>(ptr_)->*func_)(std::forward<_Args>(args)...);
 		}
 
-		static inline Callable<_Ret, _Args...>* Make(_Ty* ptr, _FuncType func)
+		static inline Callable<_Ret, _Args...>* Make(void* ptr, _FuncType func)
 		{
 			return new (std::nothrow) ProxyConstMemCallable<_Ty, _Ret, _Args...>(ptr, func);
 		}
 
 	private:
-		_Ty* ptr_;
+		void* ptr_;
 		_FuncType func_;
 	};
 
@@ -192,14 +192,14 @@ namespace easy2d
 		}
 
 		template <typename _Ty>
-		Closure(_Ty* ptr, _Ret(_Ty::* func)(_Args...))
+		Closure(void* ptr, _Ret(_Ty::* func)(_Args...))
 		{
 			callable_ = ProxyMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
 			if (callable_) callable_->AddRef();
 		}
 
 		template <typename _Ty>
-		Closure(_Ty* ptr, _Ret(_Ty::* func)(_Args...) const)
+		Closure(void* ptr, _Ret(_Ty::* func)(_Args...) const)
 		{
 			callable_ = ProxyConstMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
 			if (callable_) callable_->AddRef();
@@ -258,13 +258,13 @@ namespace easy2d
 	};
 
 	template<typename _Ty, typename _Ret, typename... _Args>
-	inline Closure<_Ret(_Args...)> MakeClosure(_Ty* ptr, _Ret(_Ty::* func)(_Args...))
+	inline Closure<_Ret(_Args...)> MakeClosure(void* ptr, _Ret(_Ty::* func)(_Args...))
 	{
 		return Closure<_Ret(_Args...)>(ptr, func);
 	}
 
 	template<typename _Ty, typename _Ret, typename... _Args>
-	inline Closure<_Ret(_Args...)> MakeClosure(_Ty* ptr, _Ret(_Ty::* func)(_Args...) const)
+	inline Closure<_Ret(_Args...)> MakeClosure(void* ptr, _Ret(_Ty::* func)(_Args...) const)
 	{
 		return Closure<_Ret(_Args...)>(ptr, func);
 	}
