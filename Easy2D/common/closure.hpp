@@ -96,12 +96,6 @@ namespace easy2d
 		public:
 			typedef _Ret(_Ty::* _FuncType)(_Args...);
 
-			ProxyMemCallable(void* ptr, _FuncType func)
-				: ptr_(ptr)
-				, func_(func)
-			{
-			}
-
 			virtual _Ret Invoke(_Args... args) const override
 			{
 				return (static_cast<_Ty*>(ptr_)->*func_)(std::forward<_Args>(args)...);
@@ -112,7 +106,14 @@ namespace easy2d
 				return new (std::nothrow) ProxyMemCallable<_Ty, _Ret, _Args...>(ptr, func);
 			}
 
-		private:
+		protected:
+			ProxyMemCallable(void* ptr, _FuncType func)
+				: ptr_(ptr)
+				, func_(func)
+			{
+			}
+
+		protected:
 			void* ptr_;
 			_FuncType func_;
 		};
@@ -124,12 +125,6 @@ namespace easy2d
 		public:
 			typedef _Ret(_Ty::* _FuncType)(_Args...) const;
 
-			ProxyConstMemCallable(void* ptr, _FuncType func)
-				: ptr_(ptr)
-				, func_(func)
-			{
-			}
-
 			virtual _Ret Invoke(_Args... args) const override
 			{
 				return (static_cast<_Ty*>(ptr_)->*func_)(std::forward<_Args>(args)...);
@@ -140,7 +135,14 @@ namespace easy2d
 				return new (std::nothrow) ProxyConstMemCallable<_Ty, _Ret, _Args...>(ptr, func);
 			}
 
-		private:
+		protected:
+			ProxyConstMemCallable(void* ptr, _FuncType func)
+				: ptr_(ptr)
+				, func_(func)
+			{
+			}
+
+		protected:
 			void* ptr_;
 			_FuncType func_;
 		};
@@ -200,15 +202,19 @@ namespace easy2d
 			if (callable_) callable_->AddRef();
 		}
 
-		template <typename _Ty>
-		Closure(void* ptr, _Ret(_Ty::* func)(_Args...))
+		template<typename _Ty,
+			typename _Uty,
+			typename std::enable_if<std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int>::type = 0>
+		Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
 		{
 			callable_ = __closure_detail::ProxyMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
 			if (callable_) callable_->AddRef();
 		}
 
-		template <typename _Ty>
-		Closure(void* ptr, _Ret(_Ty::* func)(_Args...) const)
+		template<typename _Ty,
+			typename _Uty,
+			typename std::enable_if<std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int>::type = 0>
+		Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
 		{
 			callable_ = __closure_detail::ProxyConstMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
 			if (callable_) callable_->AddRef();
@@ -266,14 +272,26 @@ namespace easy2d
 		__closure_detail::Callable<_Ret, _Args...>* callable_;
 	};
 
-	template<typename _Ty, typename _Ret, typename... _Args>
-	inline Closure<_Ret(_Args...)> MakeClosure(void* ptr, _Ret(_Ty::* func)(_Args...))
+	template<typename _Ty,
+		typename _Uty,
+		typename std::enable_if<
+			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
+		>::type = 0,
+		typename _Ret,
+		typename... _Args>
+	inline Closure<_Ret(_Args...)> MakeClosure(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
 	{
 		return Closure<_Ret(_Args...)>(ptr, func);
 	}
 
-	template<typename _Ty, typename _Ret, typename... _Args>
-	inline Closure<_Ret(_Args...)> MakeClosure(void* ptr, _Ret(_Ty::* func)(_Args...) const)
+	template<typename _Ty,
+		typename _Uty,
+		typename std::enable_if<
+			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
+		>::type = 0,
+		typename _Ret,
+		typename... _Args>
+	inline Closure<_Ret(_Args...)> MakeClosure(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
 	{
 		return Closure<_Ret(_Args...)>(ptr, func);
 	}
