@@ -28,7 +28,7 @@ namespace kiwano
 	class KGE_API Player
 		: protected Object
 	{
-		using MusicMap = Map<size_t, MusicPtr>;
+		using MusicMap = Map<size_t, SoundPtr>;
 
 	public:
 		Player();
@@ -41,7 +41,7 @@ namespace kiwano
 		);
 
 		// 播放音乐
-		bool Play(
+		void Play(
 			Resource const& res,	/* 音乐资源 */
 			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 		);
@@ -88,6 +88,6 @@ namespace kiwano
 
 	protected:
 		float		volume_;
-		MusicMap	musics_cache_;
+		MusicMap	sound_cache_;
 	};
 }

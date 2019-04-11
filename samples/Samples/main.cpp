@@ -53,7 +53,7 @@ public:
 			s_CurrIndex = index;
 
 			String title = s_Demos[index].title;
-			GetWindow()->SetTitle(title);
+			GetWindow()->SetTitle(L"KiwanoÊ¾Àý³ÌÐò - " + title);
 
 			ScenePtr scene = s_Demos[index].Create();
 			EnterScene(scene);

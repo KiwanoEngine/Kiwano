@@ -9,10 +9,9 @@
     <ClInclude Include="kiwano-network.h" />
     <ClInclude Include="audio\audio-modules.h" />
     <ClInclude Include="audio\audio.h" />
-    <ClInclude Include="audio\Music.h" />
+    <ClInclude Include="audio\Sound.h" />
     <ClInclude Include="audio\Player.h" />
     <ClInclude Include="audio\Transcoder.h" />
-    <ClInclude Include="audio\Voice.h" />
     <ClInclude Include="imgui\ImGuiLayer.h" />
     <ClInclude Include="imgui\ImGuiView.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
@@ -120,10 +119,9 @@
     <ClCompile Include="2d\Transition.cpp" />
     <ClCompile Include="audio\audio-modules.cpp" />
     <ClCompile Include="audio\audio.cpp" />
-    <ClCompile Include="audio\Music.cpp" />
+    <ClCompile Include="audio\Sound.cpp" />
     <ClCompile Include="audio\Player.cpp" />
     <ClCompile Include="audio\Transcoder.cpp" />
-    <ClCompile Include="audio\Voice.cpp" />
     <ClCompile Include="base\AsyncTask.cpp" />
     <ClCompile Include="base\EventDispatcher.cpp" />
     <ClCompile Include="base\EventListener.cpp" />

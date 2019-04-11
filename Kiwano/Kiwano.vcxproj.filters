@@ -267,16 +267,10 @@
     <ClInclude Include="audio\audio-modules.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="audio\Music.h">
-      <Filter>audio</Filter>
-    </ClInclude>
     <ClInclude Include="audio\Player.h">
       <Filter>audio</Filter>
     </ClInclude>
     <ClInclude Include="audio\Transcoder.h">
-      <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="audio\Voice.h">
       <Filter>audio</Filter>
     </ClInclude>
     <ClInclude Include="network\helper.h">
@@ -320,6 +314,9 @@
     </ClInclude>
     <ClInclude Include="third-party\ImGui\imstb_truetype.h">
       <Filter>third-party\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\Sound.h">
+      <Filter>audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -455,16 +452,10 @@
     <ClCompile Include="audio\audio-modules.cpp">
       <Filter>audio</Filter>
     </ClCompile>
-    <ClCompile Include="audio\Music.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
     <ClCompile Include="audio\Player.cpp">
       <Filter>audio</Filter>
     </ClCompile>
     <ClCompile Include="audio\Transcoder.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="audio\Voice.cpp">
       <Filter>audio</Filter>
     </ClCompile>
     <ClCompile Include="network\HttpClient.cpp">
@@ -490,6 +481,9 @@
     </ClCompile>
     <ClCompile Include="third-party\ImGui\imgui_widgets.cpp">
       <Filter>third-party\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\Sound.cpp">
+      <Filter>audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
