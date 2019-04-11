@@ -1,10 +1,10 @@
 // Copyright (C) 2019 Nomango
 
-#include "easy2d.h"
-#include "easy2d-imgui.h"
+#include "kiwano.h"
+#include "kiwano-imgui.h"
 #include "MainScene.h"
 
-using namespace easy2d;
+using namespace kiwano;
 
 class ImGuiApp
 	: public Application

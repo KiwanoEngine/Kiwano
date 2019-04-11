@@ -4,7 +4,7 @@
 #include "common.h"
 
 // π÷ŒÔ
-E2D_DECLARE_SMART_PTR(Monster);
+KGE_DECLARE_SMART_PTR(Monster);
 class Monster
 	: public Sprite
 {

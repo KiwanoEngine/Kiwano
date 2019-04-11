@@ -1,9 +1,9 @@
-# Easy2D
+# Kiwano
 
 ## Introduction
-Easy2D is a open-source 2D C++ game engine, only support win32 platform.
+Kiwano is a open-source 2D C++ game engine, only support win32 platform.
 
-Easy2D-Core is a game irrelevant lib that provide a lot useful tools can be used in other projects. I made a lot wheels to make cpp simpler to use.
+Kiwano-Core is a game irrelevant lib that provide a lot useful tools can be used in other projects. I made a lot wheels to make cpp simpler to use.
 
 It's still under heavy developing. I write it and use it to developy my own tiny games.
 
@@ -24,5 +24,5 @@ More docs and examples will be added later.
 * Particle system
 
 ## Contact
-* Website: www.easy2d.cn
+* Website: www.kiwanoengine.com
 * QQ Group: 608406540

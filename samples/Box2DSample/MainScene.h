@@ -6,7 +6,7 @@
 #include "Rect.h"
 #include "Board.h"
 
-E2D_DECLARE_SMART_PTR(MainScene);
+KGE_DECLARE_SMART_PTR(MainScene);
 class MainScene
 	: public Scene
 {

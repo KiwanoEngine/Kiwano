@@ -1,12 +1,12 @@
 // Copyright (C) 2019 Nomango
 
 #pragma once
-#include "easy2d.h"
-#include "easy2d-audio.h"
-#include "easy2d-network.h"
+#include "kiwano.h"
+#include "kiwano-audio.h"
+#include "kiwano-network.h"
 
-using namespace easy2d;
-using namespace easy2d::network;
+using namespace kiwano;
+using namespace kiwano::network;
 
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
