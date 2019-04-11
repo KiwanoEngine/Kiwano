@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Voice.h"
 
 namespace kiwano
 {
@@ -28,8 +27,6 @@ namespace kiwano
 		, public Component
 	{
 		KGE_DECLARE_SINGLETON(Audio);
-
-		using VoiceMap = UnorderedSet<Voice*>;
 
 	public:
 		void SetupComponent(Application*) override;
@@ -43,15 +40,9 @@ namespace kiwano
 		void Close();
 
 		HRESULT CreateVoice(
-			Voice& voice,
+			IXAudio2SourceVoice** voice,
 			const WAVEFORMATEX* wfx
 		);
-
-		void DeleteVoice(
-			Voice* voice
-		);
-
-		void ClearVoiceCache();
 
 	protected:
 		Audio();
@@ -59,7 +50,6 @@ namespace kiwano
 		~Audio();
 
 	protected:
-		VoiceMap voice_cache_;
 		IXAudio2* x_audio2_;
 		IXAudio2MasteringVoice*	mastering_voice_;
 	};

@@ -23,50 +23,59 @@
 
 namespace kiwano
 {
-	class KGE_API Voice
-		: protected Noncopyable
+	KGE_DECLARE_SMART_PTR(Sound);
+
+	// 音乐对象
+	class KGE_API Sound
+		: public virtual Object
 	{
 	public:
-		Voice();
+		Sound();
 
-		Voice(
-			IXAudio2SourceVoice* source_voice
+		Sound(
+			Resource const& res		/* 音乐资源 */
 		);
 
-		~Voice();
+		virtual ~Sound();
 
-		HRESULT Play(
-			const BYTE* wave_data,
-			UINT32 data_size,
-			UINT32 loop_count
+		// 打开音乐资源
+		bool Load(
+			Resource const& res		/* 音乐资源 */
 		);
 
-		HRESULT Pause();
-
-		HRESULT Resume();
-
-		HRESULT Stop();
-
-		HRESULT GetVolume(
-			float* volume
-		) const;
-
-		HRESULT SetVolume(
-			float volume
+		// 播放
+		void Play(
+			int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 		);
 
-		HRESULT GetBuffersQueued(
-			UINT32* queued
-		) const;
+		// 暂停
+		void Pause();
 
-		void Destroy();
+		// 继续
+		void Resume();
 
-		void SetSourceVoice(
-			IXAudio2SourceVoice* source_voice
+		// 停止
+		void Stop();
+
+		// 关闭并回收资源
+		void Close();
+
+		// 是否正在播放
+		bool IsPlaying() const;
+
+		// 获取音量
+		float GetVolume() const;
+
+		// 设置音量
+		void SetVolume(
+			float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
 		);
 
 	protected:
-		IXAudio2SourceVoice* source_voice_;
+		bool	opened_;
+		bool	playing_;
+		UINT32	size_;
+		BYTE*	wave_data_;
+		IXAudio2SourceVoice* voice_;
 	};
-
 }

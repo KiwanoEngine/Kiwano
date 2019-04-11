@@ -57,8 +57,6 @@ namespace kiwano
 	{
 		KGE_LOG(L"Destroying audio resources");
 
-		ClearVoiceCache();
-
 		if (mastering_voice_)
 		{
 			mastering_voice_->DestroyVoice();
@@ -74,32 +72,15 @@ namespace kiwano
 		modules::MediaFoundation::Get().MFShutdown();
 	}
 
-	HRESULT Audio::CreateVoice(Voice& voice, const WAVEFORMATEX* wfx)
+	HRESULT Audio::CreateVoice(IXAudio2SourceVoice** voice, const WAVEFORMATEX* wfx)
 	{
-		HRESULT hr;
-		IXAudio2SourceVoice* source_voice;
-
-		hr = x_audio2_->CreateSourceVoice(&source_voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
-		if (SUCCEEDED(hr))
+		if (voice == nullptr)
 		{
-			voice.SetSourceVoice(source_voice);
-			voice_cache_.insert(&voice);
+			return E_UNEXPECTED;
 		}
+
+		HRESULT hr = x_audio2_->CreateSourceVoice(voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
 		return hr;
-	}
-
-	void Audio::DeleteVoice(Voice* voice)
-	{
-		voice_cache_.erase(voice);
-	}
-
-	void Audio::ClearVoiceCache()
-	{
-		for (auto voice : voice_cache_)
-		{
-			voice->Destroy();
-		}
-		voice_cache_.clear();
 	}
 
 	void Audio::Open()

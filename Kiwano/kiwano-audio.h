@@ -22,5 +22,5 @@
 #include "kiwano.h"
 
 #include "audio/audio.h"
-#include "audio/Music.h"
+#include "audio/Sound.h"
 #include "audio/Player.h"

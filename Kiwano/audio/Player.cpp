@@ -36,63 +36,59 @@ namespace kiwano
 	bool Player::Load(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_cache_.end() != musics_cache_.find(hash_code))
+		if (sound_cache_.end() != sound_cache_.find(hash_code))
 			return true;
 
-		MusicPtr music = new (std::nothrow) Music();
+		SoundPtr sound = new (std::nothrow) Sound();
 
-		if (music)
+		if (sound)
 		{
-			if (music->Load(res))
+			if (sound->Load(res))
 			{
-				music->SetVolume(volume_);
-				musics_cache_.insert(std::make_pair(hash_code, music));
+				sound->SetVolume(volume_);
+				sound_cache_.insert(std::make_pair(hash_code, sound));
 				return true;
 			}
 		}
 		return false;
 	}
 
-	bool Player::Play(Resource const& res, int loop_count)
+	void Player::Play(Resource const& res, int loop_count)
 	{
 		if (Load(res))
 		{
 			size_t hash_code = res.GetHashCode();
-			auto music = musics_cache_[hash_code];
-			if (music->Play(loop_count))
-			{
-				return true;
-			}
+			if (sound_cache_.end() != sound_cache_.find(hash_code))
+				sound_cache_[hash_code]->Play(loop_count);
 		}
-		return false;
 	}
 
 	void Player::Pause(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_cache_.end() != musics_cache_.find(hash_code))
-			musics_cache_[hash_code]->Pause();
+		if (sound_cache_.end() != sound_cache_.find(hash_code))
+			sound_cache_[hash_code]->Pause();
 	}
 
 	void Player::Resume(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_cache_.end() != musics_cache_.find(hash_code))
-			musics_cache_[hash_code]->Resume();
+		if (sound_cache_.end() != sound_cache_.find(hash_code))
+			sound_cache_[hash_code]->Resume();
 	}
 
 	void Player::Stop(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_cache_.end() != musics_cache_.find(hash_code))
-			musics_cache_[hash_code]->Stop();
+		if (sound_cache_.end() != sound_cache_.find(hash_code))
+			sound_cache_[hash_code]->Stop();
 	}
 
 	bool Player::IsPlaying(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
-		if (musics_cache_.end() != musics_cache_.find(hash_code))
-			return musics_cache_[hash_code]->IsPlaying();
+		if (sound_cache_.end() != sound_cache_.find(hash_code))
+			return sound_cache_[hash_code]->IsPlaying();
 		return false;
 	}
 
@@ -104,7 +100,7 @@ namespace kiwano
 	void Player::SetVolume(float volume)
 	{
 		volume_ = std::min(std::max(volume, -224.f), 224.f);
-		for (const auto& pair : musics_cache_)
+		for (const auto& pair : sound_cache_)
 		{
 			pair.second->SetVolume(volume_);
 		}
@@ -112,7 +108,7 @@ namespace kiwano
 
 	void Player::PauseAll()
 	{
-		for (const auto& pair : musics_cache_)
+		for (const auto& pair : sound_cache_)
 		{
 			pair.second->Pause();
 		}
@@ -120,7 +116,7 @@ namespace kiwano
 
 	void Player::ResumeAll()
 	{
-		for (const auto& pair : musics_cache_)
+		for (const auto& pair : sound_cache_)
 		{
 			pair.second->Resume();
 		}
@@ -128,7 +124,7 @@ namespace kiwano
 
 	void Player::StopAll()
 	{
-		for (const auto& pair : musics_cache_)
+		for (const auto& pair : sound_cache_)
 		{
 			pair.second->Stop();
 		}
@@ -136,6 +132,6 @@ namespace kiwano
 
 	void Player::ClearCache()
 	{
-		musics_cache_.clear();
+		sound_cache_.clear();
 	}
 }
