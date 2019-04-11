@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "easy2d.h"
-#include "easy2d-imgui.h"
+#include "kiwano.h"
+#include "kiwano-imgui.h"
 
-using namespace easy2d;
+using namespace kiwano;
 
-E2D_DECLARE_SMART_PTR(MainScene);
+KGE_DECLARE_SMART_PTR(MainScene);
 class MainScene
 	: public Scene
 {

@@ -5,7 +5,7 @@
 #include "common.h"
 
 // ¹Ì¶¨µÄÄ¾°å
-E2D_DECLARE_SMART_PTR(Board);
+KGE_DECLARE_SMART_PTR(Board);
 class Board
 	: public GeometryNode
 {

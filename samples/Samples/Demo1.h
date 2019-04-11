@@ -15,7 +15,7 @@ public:
 	Demo1()
 	{
 		// 创建文本
-		TextPtr text = new Text(L"Hello Easy2D!");
+		TextPtr text = new Text(L"Hello Kiwano!");
 		// 设置节点大小为文字布局大小
 		text->SetSize(text->GetLayoutSize());
 		// 让文本显示在屏幕中央

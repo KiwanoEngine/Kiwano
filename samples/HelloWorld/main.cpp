@@ -1,8 +1,8 @@
 // Copyright (C) 2019 Nomango
 
-#include "easy2d.h"
+#include "kiwano.h"
 
-using namespace easy2d;
+using namespace kiwano;
 
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
@@ -14,7 +14,7 @@ public:
 	MainScene()
 	{
 		// 创建文字节点
-		TextPtr text = new Text(L"Hello Easy2D!");
+		TextPtr text = new Text(L"Hello Kiwano!");
 		// 设置节点大小为文字布局大小
 		text->SetSize(text->GetLayoutSize());
 		// 修改节点位置, 使节点在屏幕上居中
@@ -30,7 +30,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
 {
 	try
 	{
-		// 创建 Easy2D 程序实例
+		// 创建 Kiwano 程序实例
 		Application app;
 
 		// 创建初始化选项

@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "easy2d.h"
+#include "kiwano.h"
 #include <Box2D/Box2D.h>
 
-using namespace easy2d;
+using namespace kiwano;
 
 //
 // Box2D 非常好地适应了 米/千克/秒 的单位, 所以
 // 它并不是以像素为单位进行计算.
-// 我们在平衡 Box2D 和 Easy2D 世界的度量时, 需要
+// 我们在平衡 Box2D 和 Kiwano 世界的度量时, 需要
 // 进行一些转换.
 //
 namespace

@@ -5,7 +5,7 @@
 #include "common.h"
 
 // ·½¿é
-E2D_DECLARE_SMART_PTR(Square);
+KGE_DECLARE_SMART_PTR(Square);
 class Square
 	: public Sprite
 {

@@ -4,7 +4,7 @@
 #include "common.h"
 
 // ¿œª¢
-E2D_DECLARE_SMART_PTR(Tiger);
+KGE_DECLARE_SMART_PTR(Tiger);
 class Tiger
 	: public Sprite
 {

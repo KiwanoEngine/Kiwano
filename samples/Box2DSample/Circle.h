@@ -5,7 +5,7 @@
 #include "common.h"
 
 // т╡пн
-E2D_DECLARE_SMART_PTR(Circle);
+KGE_DECLARE_SMART_PTR(Circle);
 class Circle
 	: public Sprite
 {

@@ -104,12 +104,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../Easy2D;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Kiwano;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../Easy2D/third-party/libs;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Kiwano/third-party/libs;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -117,12 +117,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../Easy2D;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Kiwano;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../Easy2D/third-party/libs;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Kiwano/third-party/libs;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,14 +132,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../Easy2D;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Kiwano;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../Easy2D/third-party/libs;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Kiwano/third-party/libs;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,14 +149,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../Easy2D;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Kiwano;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../Easy2D/third-party/libs;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Kiwano/third-party/libs;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -171,7 +171,7 @@
     <ClInclude Include="Demo5.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Easy2D\Easy2D.vcxproj">
+    <ProjectReference Include="..\..\Kiwano\Kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
   </ItemGroup>

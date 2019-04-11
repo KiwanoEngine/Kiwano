@@ -37,7 +37,7 @@ public:
 		// 使用 HttpClient 组件
 		Use(&HttpClient::Instance());
 
-		Options options(L"Easy2D示例程序", WINDOW_WIDTH, WINDOW_HEIGHT);
+		Options options(L"Kiwano示例程序", WINDOW_WIDTH, WINDOW_HEIGHT);
 		Init(options);
 	}
 
@@ -72,7 +72,7 @@ public:
 
 	void KeyPressed(Event const& evt)
 	{
-		E2D_ASSERT(evt.type == Event::KeyUp);
+		KGE_ASSERT(evt.type == Event::KeyUp);
 
 		if (evt.key.code > KeyCode::Num0 &&
 			evt.key.code <= (KeyCode::Num0 + s_DemoNum))
