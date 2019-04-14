@@ -14,25 +14,36 @@ public:
 
 	Demo1()
 	{
-		// 创建文本
-		TextPtr text = new Text(L"Hello Kiwano!");
-		// 设置节点大小为文字布局大小
-		text->SetSize(text->GetLayoutSize());
-		// 让文本显示在屏幕中央
-		text->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-		text->SetAnchor(0.5, 0.5);
-		// 添加到场景
-		this->AddChild(text);
+		// 创建人物图片
+		ImagePtr man_image = new Image(L"res/man.png");
 
-		// 执行动画
-		text->AddAction(
-			Tween::Multiple({							// Action5: 同时执行 Action1 和 Action4, 并无限循环
-				Tween::RotateBy(60).SetDuration(1000),	// Action1: 1秒旋转 60 度
-				Tween::Group({							// Action4: 顺序执行 Action2 和 Action3
-					Tween::FadeOut(500),				// Action2: 500毫秒淡出动画
-					Tween::FadeIn(500)					// Action3: 500毫秒淡入动画
+		// 缓动函数列表
+		auto ease_functions = { Ease::Linear, Ease::EaseInOut, Ease::ExpoInOut, Ease::BounceInOut, Ease::BackInOut };
+
+		float height = 100.f;
+		for (auto& func : ease_functions)
+		{
+			SpritePtr man = new Sprite(man_image);
+			man->SetPosition(100, height);
+			man->SetScale(0.5f, 0.3f);
+			this->AddChild(man);
+
+			// 重置人物位置函数
+			auto reset_pos = [ptr = man.Get()]() { ptr->Move(-350, 0); };
+
+			// 执行动画
+			man->AddAction(
+				Tween::Group({							// Tween::Group 组合动画
+					Tween::MoveBy(Point{ 350, 0 })		// Tween::MoveBy 横向位移 350 像素
+						.SetDuration(4000)				//     设置位移时间为 4 秒
+						.SetEaseFunc(func),				//     设置缓动函数
+					Tween::Delay(1000)					// Tween::Delay 延迟 1 秒
 				})
-			}).SetLoops(-1)
-		);
+				.SetLoops(-1)							// 无限循环执行
+				.SetLoopDoneCallback(reset_pos)			// 设置每次循环结束都重置人物位置
+			);
+
+			height += 60.f;
+		}
 	}
 };

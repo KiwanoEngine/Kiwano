@@ -43,8 +43,8 @@ public:
 		// 执行动画
 		AddAction(
 			Tween::Animation(stand_frames)
-			.SetDuration(1000)
-			.SetLoops(-1)
+				.SetDuration(1000)
+				.SetLoops(-1)
 		);
 
 		// 添加按键监听
@@ -94,8 +94,8 @@ public:
 			// 执行跑步动画
 			AddAction(
 				Tween::Animation(run_frames)
-				.SetDuration(500)
-				.SetLoops(-1)
+					.SetDuration(500)
+					.SetLoops(-1)
 			);
 		}
 
@@ -124,8 +124,8 @@ public:
 			// 执行站立动画
 			AddAction(
 				Tween::Animation(stand_frames)
-				.SetDuration(1000)
-				.SetLoops(-1)
+					.SetDuration(1000)
+					.SetLoops(-1)
 			);
 		}
 	}
@@ -170,6 +170,10 @@ public:
 
 	Demo4()
 	{
+		// 创建背景
+		SpritePtr bg = new Sprite(L"res/spring_forest.jpg");
+		bg->SetSize(GetSize());
+
 		// 创建老虎
 		TigerPtr tiger = new Tiger;
 		// 在屏幕上居中显示
@@ -186,6 +190,7 @@ public:
 		text->SetAlignment(TextAlign::Center);
 
 		// 添加到场景
+		this->AddChild(bg);
 		this->AddChild(tiger);
 		this->AddChild(text);
 	}

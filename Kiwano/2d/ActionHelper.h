@@ -204,6 +204,12 @@ namespace kiwano
 		}
 
 		static inline ActionHelper
+			Delay(Duration delay)
+		{
+			return ActionHelper(new kiwano::ActionDelay(delay));
+		}
+
+		static inline ActionHelper
 			Group(Array<ActionPtr> const& actions, bool sequence = true)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, sequence));
