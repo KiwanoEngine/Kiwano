@@ -135,6 +135,7 @@ namespace kiwano
 			if (frame_delay_ <= frame_elapsed_)
 			{
 				frame_delay_ -= frame_elapsed_;
+				frame_elapsed_ = 0;
 				ComposeNextFrame();
 			}
 		}
