@@ -17,8 +17,14 @@ public:
 		// 创建人物图片
 		ImagePtr man_image = new Image(L"res/man.png");
 
-		// 缓动函数列表
-		auto ease_functions = { Ease::Linear, Ease::EaseInOut, Ease::ExpoInOut, Ease::BounceInOut, Ease::BackInOut };
+		// 缓动方程
+		auto ease_functions = {
+			Ease::Linear,		// 线性变化
+			Ease::EaseInOut,	// 变化过程中有缓冲
+			Ease::ExpoInOut,	// 在开始和结束阶段非常慢，但过程非常快
+			Ease::BounceInOut,	// 在开始和结束阶段均赋予弹性
+			Ease::BackInOut		// 开始和结束阶段均有一个短暂的反方向运动
+		};
 
 		float height = 100.f;
 		for (auto& func : ease_functions)
