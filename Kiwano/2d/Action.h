@@ -102,7 +102,7 @@ namespace kiwano
 	protected:
 		virtual void Init(NodePtr const& target) {}
 
-		virtual void Update(NodePtr const& target, Duration dt) {}
+		virtual void Update(NodePtr const& target, Duration dt) { Complete(target); }
 
 		void UpdateStep(NodePtr const& target, Duration dt);
 

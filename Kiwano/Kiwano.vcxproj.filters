@@ -321,6 +321,12 @@
     <ClInclude Include="2d\GifImage.h">
       <Filter>2d</Filter>
     </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx10.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl.hpp">
+      <Filter>imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -490,6 +496,9 @@
     </ClCompile>
     <ClCompile Include="2d\GifImage.cpp">
       <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx10.cpp">
+      <Filter>imgui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

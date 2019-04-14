@@ -477,4 +477,24 @@ namespace kiwano
 		}
 	}
 
+
+	//-------------------------------------------------------
+	// ActionDelay
+	//-------------------------------------------------------
+
+	ActionDelay::ActionDelay(Duration delay)
+	{
+		SetDelay(delay);
+	}
+
+	ActionPtr ActionDelay::Clone() const
+	{
+		return new ActionDelay(delay_);
+	}
+
+	ActionPtr ActionDelay::Reverse() const
+	{
+		return new ActionDelay(delay_);
+	}
+
 }

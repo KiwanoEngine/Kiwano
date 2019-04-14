@@ -475,4 +475,21 @@ namespace kiwano
 		Point		start_pos_;
 		GeometryPtr	geo_;
 	};
+
+
+	// 延时动作
+	class KGE_API ActionDelay
+		: public Action
+	{
+	public:
+		ActionDelay(
+			Duration delay		/* 持续时长 */
+		);
+
+		// 获取该动作的拷贝对象
+		ActionPtr Clone() const override;
+
+		// 获取该动作的倒转
+		ActionPtr Reverse() const override;
+	};
 }

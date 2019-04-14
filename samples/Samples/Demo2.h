@@ -3,18 +3,18 @@
 #pragma once
 #include "common.h"
 
-// 怪物
-KGE_DECLARE_SMART_PTR(Monster);
-class Monster
-	: public Sprite
+// 角色
+KGE_DECLARE_SMART_PTR(Hero);
+class Hero
+	: public GifImage
 {
 public:
-	Monster()
+	Hero()
 	{
 		// 加载图片
-		Load(L"res/akushu.png");
-		// 缩小图片
-		SetScale(0.7f);
+		Load(L"res/Kusanagi.gif");
+		// 设置 GIF 动图无限循环
+		SetLoopCount(-1);
 	}
 
 	// 每帧渲染前执行 OnUpdate
@@ -22,6 +22,7 @@ public:
 	{
 		// 获取输入设备
 		auto& input = Input::Instance();
+
 		// 按下左右键
 		if (input.IsDown(KeyCode::Left))
 		{
@@ -42,7 +43,7 @@ public:
 			this->Move(0, 2);
 		}
 
-		// 按下鼠标左键，顺时针旋转怪物
+		// 按下鼠标左键，顺时针旋转角色
 		if (input.IsDown(MouseButton::Left))
 		{
 			// 获取当前旋转角度
@@ -51,7 +52,7 @@ public:
 			this->SetRotation(rotation + 2);
 		}
 
-		// 点击鼠标右键，隐藏或显示怪物
+		// 点击鼠标右键，隐藏或显示角色
 		if (input.WasPressed(MouseButton::Right))
 		{
 			// 获取当前显示状态
@@ -73,11 +74,11 @@ public:
 
 	Demo2()
 	{
-		// 创建怪物
-		MonsterPtr monster = new Monster;
+		// 创建角色
+		HeroPtr hero = new Hero;
 		// 在屏幕上居中显示
-		monster->SetAnchor(0.5f, 0.5f);
-		monster->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		hero->SetAnchor(0.5f, 0.5f);
+		hero->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
 		// 创建说明文字
 		TextPtr text = new Text(L"按上下左右键移动\n按鼠标左键旋转\n点击鼠标右键隐藏");
@@ -89,7 +90,7 @@ public:
 		text->SetAlignment(TextAlign::Center);
 
 		// 添加到场景
-		this->AddChild(monster);
+		this->AddChild(hero);
 		this->AddChild(text);
 	}
 };

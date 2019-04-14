@@ -342,7 +342,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				ID3D10RenderTargetView* main_view = d3d_rt_view_.Get();
-				d3d_device_context_->OMSetRenderTargets(1, &main_view, d3d_ds_view_.Get());
+				d3d_device_->OMSetRenderTargets(1, &main_view, d3d_ds_view_.Get());
 			}
 		}
 
@@ -402,19 +402,18 @@ namespace kiwano
 		return hr;
 	}
 
-	void D3D10DeviceResources::SetLogicalSize(Size logical_size)
+	HRESULT D3D10DeviceResources::SetLogicalSize(Size logical_size)
 	{
 		if (logical_size_ != logical_size)
 		{
 			logical_size_ = logical_size;
 
-			ThrowIfFailed(
-				CreateWindowSizeDependentResources()
-			);
+			return CreateWindowSizeDependentResources();
 		}
+		return S_OK;
 	}
 
-	void D3D10DeviceResources::SetDpi(float dpi)
+	HRESULT D3D10DeviceResources::SetDpi(float dpi)
 	{
 		if (dpi != dpi_)
 		{
@@ -428,10 +427,9 @@ namespace kiwano
 
 			GetD2DDeviceContext()->SetDpi(dpi_, dpi_);
 
-			ThrowIfFailed(
-				CreateWindowSizeDependentResources()
-			);
+			return CreateWindowSizeDependentResources();
 		}
+		return S_OK;
 	}
 
 }
