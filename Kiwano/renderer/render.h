@@ -71,7 +71,9 @@ namespace kiwano
 		);
 
 		HRESULT DrawBitmap(
-			ComPtr<ID2D1Bitmap> const& bitmap
+			ComPtr<ID2D1Bitmap> const& bitmap,
+			Rect const& src_rect,
+			Rect const& dest_rect
 		);
 
 		HRESULT DrawTextLayout(

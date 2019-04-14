@@ -29,6 +29,7 @@
     <ClInclude Include="2d\Frames.h" />
     <ClInclude Include="2d\Geometry.h" />
     <ClInclude Include="2d\GeometryNode.h" />
+    <ClInclude Include="2d\GifImage.h" />
     <ClInclude Include="2d\Image.h" />
     <ClInclude Include="2d\Layer.h" />
     <ClInclude Include="2d\Node.h" />
@@ -110,6 +111,7 @@
     <ClCompile Include="2d\Frames.cpp" />
     <ClCompile Include="2d\Geometry.cpp" />
     <ClCompile Include="2d\GeometryNode.cpp" />
+    <ClCompile Include="2d\GifImage.cpp" />
     <ClCompile Include="2d\Image.cpp" />
     <ClCompile Include="2d\Layer.cpp" />
     <ClCompile Include="2d\Node.cpp" />
