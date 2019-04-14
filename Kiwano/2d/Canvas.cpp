@@ -97,7 +97,12 @@ namespace kiwano
 		
 		if (bitmap_cached_)
 		{
-			Renderer::Instance().DrawBitmap(bitmap_cached_);
+			Rect bitmap_rect(0.f, 0.f, bitmap_cached_->GetSize().width, bitmap_cached_->GetSize().height);
+			Renderer::Instance().DrawBitmap(
+				bitmap_cached_,
+				bitmap_rect,
+				bitmap_rect
+			);
 		}
 	}
 

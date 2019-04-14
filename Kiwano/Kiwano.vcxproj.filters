@@ -318,6 +318,9 @@
     <ClInclude Include="audio\Sound.h">
       <Filter>audio</Filter>
     </ClInclude>
+    <ClInclude Include="2d\GifImage.h">
+      <Filter>2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -484,6 +487,9 @@
     </ClCompile>
     <ClCompile Include="audio\Sound.cpp">
       <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\GifImage.cpp">
+      <Filter>2d</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

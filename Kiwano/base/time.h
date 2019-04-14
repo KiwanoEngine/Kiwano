@@ -48,7 +48,7 @@ namespace kiwano
 			);
 
 			// 转化为毫秒
-			inline long Milliseconds() const { return milliseconds_; }
+			inline long Milliseconds() const		{ return milliseconds_; }
 
 			// 转化为秒
 			float Seconds() const;
@@ -60,12 +60,20 @@ namespace kiwano
 			float Hours() const;
 
 			// 时长是否是零
-			inline bool IsZero() const { return milliseconds_ == 0LL; }
+			inline bool IsZero() const				{ return milliseconds_ == 0LL; }
+
+			inline void SetMilliseconds(long ms)	{ milliseconds_ = ms; }
+
+			inline void SetSeconds(float seconds)	{ milliseconds_ = static_cast<long>(seconds * 1000.f); }
+
+			inline void SetMinutes(float minutes)	{ milliseconds_ = static_cast<long>(minutes * 60 * 1000.f); }
+
+			inline void SetHours(float hours)		{ milliseconds_ = static_cast<long>(hours * 60 * 60 * 1000.f); }
 
 			// 转为字符串
 			String ToString() const;
 
-			inline operator bool() const { return !IsZero(); }
+			inline operator bool() const			{ return !IsZero(); }
 
 			bool operator== (const Duration &) const;
 			bool operator!= (const Duration &) const;

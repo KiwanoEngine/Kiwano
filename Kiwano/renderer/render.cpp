@@ -259,7 +259,7 @@ namespace kiwano
 		return S_OK;
 	}
 
-	HRESULT Renderer::DrawBitmap(ComPtr<ID2D1Bitmap> const & bitmap)
+	HRESULT Renderer::DrawBitmap(ComPtr<ID2D1Bitmap> const & bitmap, Rect const& src_rect, Rect const& dest_rect)
 	{
 		if (!device_context_)
 			return E_UNEXPECTED;
@@ -268,13 +268,12 @@ namespace kiwano
 			return S_OK;
 
 		// Do not crop bitmap 
-		D2D_RECT_F rect = D2D1::RectF(0.f, 0.f, bitmap->GetSize().width, bitmap->GetSize().height);
 		device_context_->DrawBitmap(
 			bitmap.Get(),
-			rect,
+			DX::ConvertToRectF(dest_rect),
 			opacity_,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-			rect
+			DX::ConvertToRectF(src_rect)
 		);
 
 		if (collecting_data_)

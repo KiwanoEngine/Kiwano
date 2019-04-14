@@ -395,7 +395,7 @@ namespace kiwano
 	protected:
 		virtual void PrepareRender() {}
 
-		void Update(Duration dt);
+		virtual void Update(Duration dt);
 
 		void Render();
 
