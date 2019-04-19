@@ -25,6 +25,7 @@
 namespace kiwano
 {
 	Layer::Layer()
+		: swallow_(false)
 	{
 		SetSize(Renderer::Instance().GetOutputSize());
 
@@ -47,11 +48,14 @@ namespace kiwano
 		if (!IsVisible())
 			return;
 
-		NodePtr prev;
-		for (auto child = children_.Last(); child; child = prev)
+		if (!swallow_)
 		{
-			prev = child->PrevItem();
-			child->Dispatch(evt);
+			NodePtr prev;
+			for (auto child = children_.Last(); child; child = prev)
+			{
+				prev = child->PrevItem();
+				child->Dispatch(evt);
+			}
 		}
 
 		EventDispatcher::Dispatch(evt);

@@ -35,6 +35,7 @@ namespace kiwano
 	ImGuiLayer::ImGuiLayer()
 	{
 		target_window_ = Renderer::Instance().GetTargetWindow();
+		SetSwallowEvents(true);
 	}
 
 	ImGuiLayer::~ImGuiLayer()

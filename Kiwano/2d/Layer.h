@@ -40,10 +40,16 @@ namespace kiwano
 		virtual void OnKeyUp(int key) {}
 		virtual void OnChar(char c) {}
 
+		// ÕÃ√ªœ˚œ¢
+		inline void SetSwallowEvents(bool enabled) { swallow_ = enabled; }
+
 	public:
 		void Dispatch(Event& evt) override;
 
 	protected:
 		void HandleMessages(Event const& evt);
+
+	protected:
+		bool swallow_;
 	};
 }

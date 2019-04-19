@@ -41,7 +41,7 @@ namespace
 		// write data maybe called more than once in a single request
 		recv_buffer->append((char*)buffer, total);
 
-		return  total;
+		return total;
 	}
 
 	std::string convert_to_utf8(String const& str)
