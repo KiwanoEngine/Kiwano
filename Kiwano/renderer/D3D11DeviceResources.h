@@ -20,9 +20,10 @@
 
 #pragma once
 
+#include "../macros.h"
+
 #if !defined(KGE_USE_DIRECTX10)
 
-#include "helper.hpp"
 #include "D2DDeviceResources.h"
 #include <d3d11.h>
 

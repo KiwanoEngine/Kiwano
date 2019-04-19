@@ -1,7 +1,7 @@
 // Copyright (C) 2019 Nomango
 
 #include "../kiwano-imgui.h"
-#include "imgui_impl_dx11.h"
+#include "imgui_impl.hpp"
 
 namespace kiwano
 {
@@ -23,7 +23,7 @@ namespace kiwano
 
 	void ImGuiView::DestroyComponent()
 	{
-		ImGui_ImplDX11_Shutdown();
+		ImGui_Impl_Shutdown();
 		ImGui::DestroyContext();
 	}
 
@@ -53,15 +53,14 @@ namespace kiwano
 		io.KeyMap[ImGuiKey_Y] = KeyCode::Y;
 		io.KeyMap[ImGuiKey_Z] = KeyCode::Z;
 
-		ImGui_ImplDX11_Init(
-			Renderer::Instance().GetDeviceResources()->GetD3DDevice(),
-			Renderer::Instance().GetDeviceResources()->GetD3DDeviceContext()
+		ImGui_Impl_Init(
+			Renderer::Instance()
 		);
 	}
 
 	void ImGuiView::NewFrame()
 	{
-		ImGui_ImplDX11_NewFrame();
+		ImGui_Impl_NewFrame();
 
 		ImGuiIO& io = ImGui::GetIO();
 		KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
@@ -77,7 +76,7 @@ namespace kiwano
 	{
 		ImGui::Render();
 
-		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
 	}
 
 	ImGuiLayerPtr ImGuiView::CreateLayer(Scene* scene)

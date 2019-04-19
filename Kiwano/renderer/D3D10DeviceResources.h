@@ -20,9 +20,10 @@
 
 #pragma once
 
+#include "../macros.h"
+
 #if defined(KGE_USE_DIRECTX10)
 
-#include "helper.hpp"
 #include "D2DDeviceResources.h"
 #include <d3d10_1.h>
 
@@ -39,17 +40,18 @@ namespace kiwano
 
 		HRESULT HandleDeviceLost();
 
-		void SetLogicalSize(
+		HRESULT SetLogicalSize(
 			Size logical_size
 		);
 
-		void SetDpi(
+		HRESULT SetDpi(
 			float dpi
 		);
 
 		void DiscardResources();
 
 		inline ID3D10Device*			GetD3DDevice() const			{ return d3d_device_.Get(); }
+		inline ID3D10Device*			GetD3DDeviceContext() const		{ return d3d_device_.Get(); }
 		inline ID3D10RenderTargetView*	GetD3DRenderTargetView() const	{ return d3d_rt_view_.Get(); }
 		inline ID3D10DepthStencilView*	GetD3DDepthStencilView() const	{ return d3d_ds_view_.Get(); }
 		inline IDXGIFactory*			GetDXGIFactory() const			{ return dxgi_factory_.Get(); }

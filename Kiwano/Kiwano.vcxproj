@@ -14,6 +14,8 @@
     <ClInclude Include="audio\Transcoder.h" />
     <ClInclude Include="imgui\ImGuiLayer.h" />
     <ClInclude Include="imgui\ImGuiView.h" />
+    <ClInclude Include="imgui\imgui_impl.hpp" />
+    <ClInclude Include="imgui\imgui_impl_dx10.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
     <ClInclude Include="2d\include-forwards.h" />
     <ClInclude Include="2d\Action.h" />
@@ -137,6 +139,7 @@
     <ClCompile Include="base\window.cpp" />
     <ClCompile Include="imgui\ImGuiLayer.cpp" />
     <ClCompile Include="imgui\ImGuiView.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx10.cpp" />
     <ClCompile Include="imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="network\HttpClient.cpp" />
     <ClCompile Include="platform\Application.cpp" />
