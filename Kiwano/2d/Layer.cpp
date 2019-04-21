@@ -29,14 +29,16 @@ namespace kiwano
 	{
 		SetSize(Renderer::Instance().GetOutputSize());
 
-		AddListener(Event::MouseBtnDown, MakeClosure(this, &Layer::HandleMessages));
-		AddListener(Event::MouseBtnUp, MakeClosure(this, &Layer::HandleMessages));
-		AddListener(Event::MouseMove, MakeClosure(this, &Layer::HandleMessages));
-		AddListener(Event::MouseWheel, MakeClosure(this, &Layer::HandleMessages));
+		auto handler = MakeClosure(this, &Layer::HandleMessages);
 
-		AddListener(Event::KeyDown, MakeClosure(this, &Layer::HandleMessages));
-		AddListener(Event::KeyUp, MakeClosure(this, &Layer::HandleMessages));
-		AddListener(Event::Char, MakeClosure(this, &Layer::HandleMessages));
+		AddListener(Event::MouseBtnDown, handler);
+		AddListener(Event::MouseBtnUp, handler);
+		AddListener(Event::MouseMove, handler);
+		AddListener(Event::MouseWheel, handler);
+
+		AddListener(Event::KeyDown, handler);
+		AddListener(Event::KeyUp, handler);
+		AddListener(Event::Char, handler);
 	}
 
 	Layer::~Layer()
