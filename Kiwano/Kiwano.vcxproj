@@ -94,6 +94,7 @@
     <ClInclude Include="third-party\ImGui\imstb_rectpack.h" />
     <ClInclude Include="third-party\ImGui\imstb_textedit.h" />
     <ClInclude Include="third-party\ImGui\imstb_truetype.h" />
+    <ClInclude Include="third-party\StackWalker\StackWalker.h" />
     <ClInclude Include="ui\Button.h" />
     <ClInclude Include="ui\Menu.h" />
     <ClInclude Include="utils\DataUtil.h" />
@@ -153,6 +154,7 @@
     <ClCompile Include="third-party\ImGui\imgui_demo.cpp" />
     <ClCompile Include="third-party\ImGui\imgui_draw.cpp" />
     <ClCompile Include="third-party\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="third-party\StackWalker\StackWalker.cpp" />
     <ClCompile Include="ui\Button.cpp" />
     <ClCompile Include="ui\Menu.cpp" />
     <ClCompile Include="utils\DataUtil.cpp" />

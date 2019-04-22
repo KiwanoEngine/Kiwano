@@ -70,7 +70,6 @@ namespace kiwano
 
 	Logger::Logger()
 		: enabled_(true)
-		, has_console_(false)
 		, default_stdout_color_(0)
 		, default_stderr_color_(0)
 		, output_stream_(std::wcout.rdbuf())
@@ -81,8 +80,8 @@ namespace kiwano
 
 	void Logger::ResetOutputStream()
 	{
-		has_console_ = ::GetConsoleWindow() != nullptr;
-		if (has_console_)
+		bool has_console = ::GetConsoleWindow() != nullptr;
+		if (has_console)
 		{
 			default_stdout_color_ = default_stderr_color_ = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
 
@@ -161,7 +160,7 @@ namespace kiwano
 
 	void Logger::Outputf(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const
 	{
-		if (enabled_ && has_console_)
+		if (enabled_)
 		{
 			std::wstring output = MakeOutputStringf(prompt, format, args);
 

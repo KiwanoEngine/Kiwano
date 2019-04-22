@@ -45,45 +45,34 @@ namespace kiwano
 	{
 		KGE_LOG(L"Creating device resources");
 
-		HRESULT hr;
-
 		hwnd_ = app->GetWindow()->GetHandle();
-		hr = hwnd_ ? S_OK : E_FAIL;
+
+		ThrowIfFailed(hwnd_ ? S_OK : E_FAIL);
 		
-		if (SUCCEEDED(hr))
-		{
-			device_resources_ = nullptr;
-			hr = DeviceResources::Create(
+		device_resources_ = nullptr;
+		drawing_state_block_ = nullptr;
+
+		ThrowIfFailed(
+			DeviceResources::Create(
 				&device_resources_,
 				hwnd_
-			);
-		}
+			)
+		);
 
-		if (SUCCEEDED(hr))
-		{
-			factory_ = device_resources_->GetD2DFactory();
-			device_context_ = device_resources_->GetD2DDeviceContext();
-		}
+		factory_ = device_resources_->GetD2DFactory();
+		device_context_ = device_resources_->GetD2DDeviceContext();
 
-		if (SUCCEEDED(hr))
-		{
-			drawing_state_block_ = nullptr;
-			hr = factory_->CreateDrawingStateBlock(
+		ThrowIfFailed(
+			factory_->CreateDrawingStateBlock(
 				&drawing_state_block_
-			);
-		}
+			)
+		);
 
-		if (SUCCEEDED(hr))
-		{
-			hr = CreateDeviceResources();
-		}
+		ThrowIfFailed(
+			CreateDeviceResources()
+		);
 
-		if (SUCCEEDED(hr))
-		{
-			output_size_ = app->GetWindow()->GetSize();
-		}
-
-		ThrowIfFailed(hr);
+		output_size_ = app->GetWindow()->GetSize();
 	}
 
 	void Renderer::DestroyComponent()

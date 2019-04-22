@@ -115,7 +115,6 @@ namespace kiwano
 
 	private:
 		bool enabled_;
-		bool has_console_;
 		WORD default_stdout_color_;
 		WORD default_stderr_color_;
 
@@ -223,7 +222,7 @@ namespace kiwano
 	template <typename ..._Args>
 	void Logger::OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
 	{
-		if (enabled_ && has_console_)
+		if (enabled_)
 		{
 			Output(os, color, prompt, std::forward<_Args>(args)...);
 
@@ -235,7 +234,7 @@ namespace kiwano
 	template <typename ..._Args>
 	void Logger::Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
 	{
-		if (enabled_ && has_console_)
+		if (enabled_)
 		{
 			std::wstring output = MakeOutputString(prompt, std::forward<_Args>(args)...);
 
@@ -273,6 +272,12 @@ namespace kiwano
 	}
 }
 
+//
+// Display stack trace on exception
+//
+
+#include "../third-party/StackWalker/StackWalker.h"
+
 namespace kiwano
 {
 	inline void ThrowIfFailed(HRESULT hr)
@@ -280,6 +285,8 @@ namespace kiwano
 		if (FAILED(hr))
 		{
 			KGE_ERROR_LOG(L"Fatal error with HRESULT of %08X", hr);
+
+			StackWalker{}.ShowCallstack();
 
 			static char buffer[1024 + 1];
 			sprintf_s(buffer, "Fatal error with HRESULT of %08X", hr);

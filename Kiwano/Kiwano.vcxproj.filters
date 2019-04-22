@@ -40,6 +40,9 @@
     <Filter Include="third-party\ImGui">
       <UniqueIdentifier>{2f24af2d-eba6-4be1-9ac4-fc58aeac6670}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third-party\StackWalker">
+      <UniqueIdentifier>{1fec4835-63a1-4612-80b5-828dadf0ac63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ui\Button.h">
@@ -327,6 +330,9 @@
     <ClInclude Include="imgui\imgui_impl.hpp">
       <Filter>imgui</Filter>
     </ClInclude>
+    <ClInclude Include="third-party\StackWalker\StackWalker.h">
+      <Filter>third-party\StackWalker</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -499,6 +505,9 @@
     </ClCompile>
     <ClCompile Include="imgui\imgui_impl_dx10.cpp">
       <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="third-party\StackWalker\StackWalker.cpp">
+      <Filter>third-party\StackWalker</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
