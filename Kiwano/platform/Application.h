@@ -23,7 +23,6 @@
 #include "../base/time.h"
 #include "../base/window.h"
 #include "../base/Component.h"
-#include <mutex>
 
 namespace kiwano
 {
@@ -133,13 +132,8 @@ namespace kiwano
 
 		// 在 Kiwano 主线程中执行函数
 		// 当在其他线程调用 Kiwano 函数时使用
-		void PreformFunctionInMainThread(
+		static void PreformInMainThread(
 			Closure<void()> function
-		);
-
-		// 显示控制台
-		static void ShowConsole(
-			bool show
 		);
 
 	protected:
@@ -161,8 +155,5 @@ namespace kiwano
 
 		Window*				main_window_;
 		Array<Component*>	components_;
-
-		std::mutex						perform_mutex_;
-		Queue<Closure<void()>>	functions_to_perform_;
 	};
 }

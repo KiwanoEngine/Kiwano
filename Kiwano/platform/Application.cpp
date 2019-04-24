@@ -23,113 +23,24 @@
 #include "../base/logs.h"
 #include "../base/input.h"
 #include "../base/Event.hpp"
-#include "../base/AsyncTask.h"
 #include "../renderer/render.h"
 #include "../2d/Scene.h"
 #include "../2d/DebugNode.h"
 #include "../2d/Transition.h"
-#include <windowsx.h>
-#include <imm.h>
-#include <iostream>
-#include <fstream>
+#include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
+#include <imm.h>  // ImmAssociateContext
+#include <mutex>  // std::mutex
 
 #pragma comment(lib, "imm32.lib")
 
-namespace
+namespace kiwano
 {
-	std::streambuf *cin_buffer, *cout_buffer, *cerr_buffer;
-	std::fstream console_input, console_output, console_error;
+	using FunctionToPerform = Closure<void()>;
 
-	std::wstreambuf *wcin_buffer, *wcout_buffer, *wcerr_buffer;
-	std::wfstream wconsole_input, wconsole_output, wconsole_error;
-
-	void RedirectStdIO()
+	namespace
 	{
-		cin_buffer = std::cin.rdbuf();
-		cout_buffer = std::cout.rdbuf();
-		cerr_buffer = std::cerr.rdbuf();
-		wcin_buffer = std::wcin.rdbuf();
-		wcout_buffer = std::wcout.rdbuf();
-		wcerr_buffer = std::wcerr.rdbuf();
-
-		console_input.open("CONIN$", std::ios::in);
-		console_output.open("CONOUT$", std::ios::out);
-		console_error.open("CONOUT$", std::ios::out);
-		wconsole_input.open("CONIN$", std::ios::in);
-		wconsole_output.open("CONOUT$", std::ios::out);
-		wconsole_error.open("CONOUT$", std::ios::out);
-
-		FILE* dummy;
-		freopen_s(&dummy, "CONOUT$", "w+t", stdout);
-		freopen_s(&dummy, "CONIN$", "r+t", stdin);
-		freopen_s(&dummy, "CONOUT$", "w+t", stderr);
-		(void)dummy;
-
-		std::cin.rdbuf(console_input.rdbuf());
-		std::cout.rdbuf(console_output.rdbuf());
-		std::cerr.rdbuf(console_error.rdbuf());
-		std::wcin.rdbuf(wconsole_input.rdbuf());
-		std::wcout.rdbuf(wconsole_output.rdbuf());
-		std::wcerr.rdbuf(wconsole_error.rdbuf());
-	}
-
-	void ResetStdIO()
-	{
-		console_input.close();
-		console_output.close();
-		console_error.close();
-		wconsole_input.close();
-		wconsole_output.close();
-		wconsole_error.close();
-
-		std::cin.rdbuf(cin_buffer);
-		std::cout.rdbuf(cout_buffer);
-		std::cerr.rdbuf(cerr_buffer);
-		std::wcin.rdbuf(wcin_buffer);
-		std::wcout.rdbuf(wcout_buffer);
-		std::wcerr.rdbuf(wcerr_buffer);
-
-		fclose(stdout);
-		fclose(stdin);
-		fclose(stderr);
-
-		cin_buffer = nullptr;
-		cout_buffer = nullptr;
-		cerr_buffer = nullptr;
-		wcin_buffer = nullptr;
-		wcout_buffer = nullptr;
-		wcerr_buffer = nullptr;
-	}
-
-	HWND allocated_console = nullptr;
-
-	HWND AllocateConsole()
-	{
-		if (::AllocConsole())
-		{
-			allocated_console = ::GetConsoleWindow();
-
-			if (allocated_console)
-			{
-				RedirectStdIO();
-			}
-		}
-		return allocated_console;
-	}
-
-	void FreeAllocatedConsole()
-	{
-		if (allocated_console)
-		{
-			ResetStdIO();
-			::FreeConsole();
-			allocated_console = nullptr;
-		}
-	}
-
-	HWND GetAllocatedConsole()
-	{
-		return allocated_console;
+		std::mutex				 perform_mutex_;
+		Queue<FunctionToPerform> functions_to_perform_;
 	}
 }
 
@@ -141,20 +52,19 @@ namespace kiwano
 		, main_window_(nullptr)
 		, time_scale_(1.f)
 	{
-		::CoInitialize(nullptr);
+		ThrowIfFailed(
+			::CoInitialize(nullptr)
+		);
 
 		main_window_ = new Window;
 
 		Use(&Renderer::Instance());
 		Use(&Input::Instance());
-		Use(&AsyncTaskThread::Instance());
 	}
 
 	Application::~Application()
 	{
 		Destroy();
-
-		FreeAllocatedConsole();
 
 		::CoUninitialize();
 	}
@@ -414,52 +324,10 @@ namespace kiwano
 		);
 	}
 
-	void Application::PreformFunctionInMainThread(Closure<void()> function)
+	void Application::PreformInMainThread(Closure<void()> function)
 	{
 		std::lock_guard<std::mutex> lock(perform_mutex_);
 		functions_to_perform_.push(function);
-	}
-
-	void Application::ShowConsole(bool show)
-	{
-		HWND current_console = ::GetConsoleWindow();
-		if (show)
-		{
-			if (current_console)
-			{
-				::ShowWindow(current_console, SW_SHOW);
-			}
-			else
-			{
-				HWND console = ::AllocateConsole();
-				if (!console)
-				{
-					KGE_WARNING_LOG(L"AllocConsole failed");
-				}
-				else
-				{
-					// disable the close button of console
-					HMENU hmenu = ::GetSystemMenu(console, FALSE);
-					::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
-				}
-			}
-		}
-		else
-		{
-			if (current_console)
-			{
-				if (current_console == GetAllocatedConsole())
-				{
-					FreeAllocatedConsole();
-				}
-				else
-				{
-					::ShowWindow(current_console, SW_HIDE);
-				}
-			}
-		}
-
-		Logger::Instance().ResetOutputStream();
 	}
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

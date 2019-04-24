@@ -49,8 +49,13 @@ namespace kiwano
 		KGE_DECLARE_SINGLETON(Logger);
 
 	public:
+		// 显示或关闭控制台
+		void ShowConsole(bool show);
+
+		// 启用 Logger
 		void Enable();
 
+		// 禁用 Logger
 		void Disable();
 
 		void Printf(const wchar_t* format, ...);
@@ -93,6 +98,8 @@ namespace kiwano
 
 	private:
 		Logger();
+
+		~Logger();
 
 		void Outputf(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const;
 

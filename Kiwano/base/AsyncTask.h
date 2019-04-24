@@ -20,9 +20,7 @@
 
 #pragma once
 #include "Object.h"
-#include "Component.h"
-#include "../common/Closure.hpp"
-#include "../common/Singleton.hpp"
+#include "../common/closure.hpp"
 #include <functional>
 #include <mutex>
 
@@ -62,22 +60,5 @@ namespace kiwano
 		Queue<AsyncTaskFunc> thread_func_queue_;
 		AsyncTaskCallback thread_cb_;
 		std::mutex func_mutex_;
-	};
-
-	class AsyncTaskThread
-		: public Singleton<AsyncTaskThread>
-		, public Component
-	{
-		KGE_DECLARE_SINGLETON(AsyncTaskThread);
-
-	public:
-		virtual void SetupComponent(Application*);
-
-		virtual void DestroyComponent();
-
-		void PerformTaskCallback(Closure<void()> func);
-
-	private:
-		Application* app_;
 	};
 }

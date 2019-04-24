@@ -85,8 +85,6 @@ namespace kiwano
 			void DispatchResponseCallback();
 
 		private:
-			Application* app_;
-
 			Duration timeout_for_connect_;
 			Duration timeout_for_read_;
 
