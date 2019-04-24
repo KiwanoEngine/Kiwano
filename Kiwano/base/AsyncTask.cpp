@@ -19,15 +19,11 @@
 // THE SOFTWARE.
 
 #include "AsyncTask.h"
-#include "../common/closure.hpp"
 #include "../platform/Application.h"
 #include <thread>
 
 namespace kiwano
 {
-	//
-	// AsyncTask
-	//
 
 	AsyncTask::AsyncTask()
 	{
@@ -75,39 +71,18 @@ namespace kiwano
 			func_mutex_.unlock();
 		}
 
-		if (thread_cb_)
-		{
-			AsyncTaskThread::Instance().PerformTaskCallback(MakeClosure(this, &AsyncTask::Complete));
-		}
+		Application::PreformInMainThread(MakeClosure(this, &AsyncTask::Complete));
 	}
 
 	void AsyncTask::Complete()
 	{
-		thread_cb_();
+		if (thread_cb_)
+		{
+			thread_cb_();
+		}
 
 		// Release this object
 		Release();
-	}
-
-	//
-	// AsyncTaskThread
-	//
-
-	void AsyncTaskThread::SetupComponent(Application* app)
-	{
-		app_ = app;
-	}
-
-	void AsyncTaskThread::DestroyComponent()
-	{
-	}
-
-	void AsyncTaskThread::PerformTaskCallback(Closure<void()> func)
-	{
-		if (app_)
-		{
-			app_->PreformFunctionInMainThread(func);
-		}
 	}
 
 }

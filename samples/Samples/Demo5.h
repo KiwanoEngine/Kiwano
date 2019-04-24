@@ -33,13 +33,13 @@ public:
 	void OnEnter() override
 	{
 		// 进入场景时打开控制台
-		Application::ShowConsole(true);
+		Logger::Instance().ShowConsole(true);
 	}
 
 	void OnExit() override
 	{
 		// 退出场景时关闭控制台
-		Application::ShowConsole(false);
+		Logger::Instance().ShowConsole(false);
 	}
 
 	void OnKeyDown(Event const& e)

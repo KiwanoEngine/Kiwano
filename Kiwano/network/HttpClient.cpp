@@ -244,16 +244,13 @@ namespace kiwano
 	namespace network
 	{
 		HttpClient::HttpClient()
-			: app_(nullptr)
-			, timeout_for_connect_(30000 /* 30 seconds */)
+			: timeout_for_connect_(30000 /* 30 seconds */)
 			, timeout_for_read_(60000 /* 60 seconds */)
 		{
 		}
 
 		void HttpClient::SetupComponent(Application * app)
 		{
-			app_ = app;
-
 			::curl_global_init(CURL_GLOBAL_ALL);
 
 			std::thread thread(MakeClosure(this, &HttpClient::NetworkThread));
@@ -299,10 +296,7 @@ namespace kiwano
 				response_queue_.push(response);
 				response_mutex_.unlock();
 
-				if (app_)
-				{
-					app_->PreformFunctionInMainThread(MakeClosure(this, &HttpClient::DispatchResponseCallback));
-				}
+				Application::PreformInMainThread(MakeClosure(this, &HttpClient::DispatchResponseCallback));
 			}
 		}
 
@@ -313,7 +307,6 @@ namespace kiwano
 			char error_message[256] = { 0 };
 			std::string response_header;
 			std::string response_data;
-
 
 			std::string url = convert_to_utf8(request->GetUrl());
 			std::string data = convert_to_utf8(request->GetData());
