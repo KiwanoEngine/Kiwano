@@ -67,7 +67,7 @@ namespace kiwano
 			return Duration(dur_ - other.dur_);
 		}
 
-		Time Time::Now() KGE_NOEXCEPT
+		Time Time::Now() noexcept
 		{
 			static LARGE_INTEGER freq = {};
 			if (freq.QuadPart == 0LL)

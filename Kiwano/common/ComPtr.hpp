@@ -39,7 +39,9 @@ namespace kiwano
 	};
 
 	// ComPtr<> is a smart pointer for COM
-	template <typename _Ty>
-	using ComPtr = IntrusivePtr<_Ty, ComPtrManager, ::std::is_base_of<IUnknown, _Ty>::value>;
+	template<
+		typename _Ty,
+		typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
+	using ComPtr = IntrusivePtr<_Ty, ComPtrManager>;
 
 }

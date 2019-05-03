@@ -221,6 +221,9 @@ namespace kiwano
 			return ActionHelper(new kiwano::ActionGroup(actions, false));
 		}
 
+#pragma warning(push)
+#pragma warning(disable : 4996)
+
 		KGE_DEPRECATED("Tween::Sequence is deprecated, use Tween::Group instead")
 		static inline ActionHelper
 			Sequence(Array<ActionPtr> const& actions)
@@ -234,5 +237,7 @@ namespace kiwano
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, false));
 		}
+
+#pragma warning(pop)
 	};
 }

@@ -28,6 +28,13 @@ namespace kiwano
 	// Ease Functions
 	//-------------------------------------------------------
 
+	inline EaseFunc MakeEaseIn(float rate) { return std::bind(math::EaseIn, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseOut(float rate) { return std::bind(math::EaseOut, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseInOut(float rate) { return std::bind(math::EaseInOut, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseElasticIn(float period) { return std::bind(math::EaseElasticIn, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseElasticOut(float period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseElasticInOut(float period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
+
 	EaseFunc Ease::Linear = math::Linear;
 	EaseFunc Ease::EaseIn = MakeEaseIn(2.f);
 	EaseFunc Ease::EaseOut = MakeEaseOut(2.f);

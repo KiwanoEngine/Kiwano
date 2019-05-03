@@ -25,65 +25,55 @@
 
 namespace kiwano
 {
-	template <typename _Ty, typename _Manager, bool _Enable>
-	class IntrusivePtr;
-
 	template <typename _Ty, typename _Manager>
-	class IntrusivePtr<_Ty, _Manager, false>;
-
-
-	template <typename _Ty, typename _Manager>
-	using RealIntrusivePtr = IntrusivePtr<_Ty, _Manager, true>;
-
-	template <typename _Ty, typename _Manager>
-	class IntrusivePtr<_Ty, _Manager, true>
+	class IntrusivePtr
 	{
 		_Ty* ptr_{ nullptr };
 
 	public:
 		using Type = _Ty;
 
-		IntrusivePtr() KGE_NOEXCEPT {}
+		IntrusivePtr() noexcept {}
 
-		IntrusivePtr(nullptr_t) KGE_NOEXCEPT {}
+		IntrusivePtr(nullptr_t) noexcept {}
 
-		IntrusivePtr(Type* p) KGE_NOEXCEPT : ptr_(p)
+		IntrusivePtr(Type* p) noexcept : ptr_(p)
 		{
 			typename _Manager::AddRef(ptr_);
 		}
 
-		IntrusivePtr(const IntrusivePtr& other) KGE_NOEXCEPT
+		IntrusivePtr(const IntrusivePtr& other) noexcept
 			: ptr_(other.ptr_)
 		{
 			typename _Manager::AddRef(ptr_);
 		}
 
 		template <typename _UTy>
-		IntrusivePtr(const RealIntrusivePtr<_UTy, _Manager>& other) KGE_NOEXCEPT
+		IntrusivePtr(const IntrusivePtr<_UTy, _Manager>& other) noexcept
 			: ptr_(other.Get())
 		{
 			typename _Manager::AddRef(ptr_);
 		}
 
-		IntrusivePtr(IntrusivePtr&& other) KGE_NOEXCEPT
+		IntrusivePtr(IntrusivePtr&& other) noexcept
 		{
 			ptr_ = other.ptr_;
 			other.ptr_ = nullptr;
 		}
 
-		~IntrusivePtr() KGE_NOEXCEPT
+		~IntrusivePtr() noexcept
 		{
 			typename _Manager::Release(ptr_);
 		}
 
-		inline Type* Get() const KGE_NOEXCEPT { return ptr_; }
+		inline Type* Get() const noexcept { return ptr_; }
 
-		inline void Reset() KGE_NOEXCEPT
+		inline void Reset() noexcept
 		{
 			IntrusivePtr{}.Swap(*this);
 		}
 
-		inline void Swap(IntrusivePtr& other) KGE_NOEXCEPT
+		inline void Swap(IntrusivePtr& other) noexcept
 		{
 			std::swap(ptr_, other.ptr_);
 		}
@@ -106,18 +96,18 @@ namespace kiwano
 			return &ptr_;
 		}
 
-		inline operator bool() const KGE_NOEXCEPT { return ptr_ != nullptr; }
+		inline operator bool() const noexcept { return ptr_ != nullptr; }
 
-		inline bool operator !() const KGE_NOEXCEPT { return ptr_ == 0; }
+		inline bool operator !() const noexcept { return ptr_ == 0; }
 
-		inline IntrusivePtr& operator =(const IntrusivePtr& other) KGE_NOEXCEPT
+		inline IntrusivePtr& operator =(const IntrusivePtr& other) noexcept
 		{
 			if (other.ptr_ != ptr_)
 				IntrusivePtr(other).Swap(*this);
 			return *this;
 		}
 
-		inline IntrusivePtr& operator =(IntrusivePtr&& other) KGE_NOEXCEPT
+		inline IntrusivePtr& operator =(IntrusivePtr&& other) noexcept
 		{
 			typename _Manager::Release(ptr_);
 			ptr_ = other.ptr_;
@@ -125,14 +115,14 @@ namespace kiwano
 			return *this;
 		}
 
-		inline IntrusivePtr& operator =(Type* p) KGE_NOEXCEPT
+		inline IntrusivePtr& operator =(Type* p) noexcept
 		{
 			if (p != ptr_)
 				IntrusivePtr(p).Swap(*this);
 			return *this;
 		}
 
-		inline IntrusivePtr& operator =(nullptr_t) KGE_NOEXCEPT
+		inline IntrusivePtr& operator =(nullptr_t) noexcept
 		{
 			if (nullptr != ptr_)
 				IntrusivePtr{}.Swap(*this);
@@ -141,67 +131,67 @@ namespace kiwano
 	};
 
 	template <class _Ty, class _UTy, class _Manager>
-	inline bool operator==(RealIntrusivePtr<_Ty, _Manager> const& lhs, RealIntrusivePtr<_UTy, _Manager> const& rhs) KGE_NOEXCEPT
+	inline bool operator==(IntrusivePtr<_Ty, _Manager> const& lhs, IntrusivePtr<_UTy, _Manager> const& rhs) noexcept
 	{
 		return lhs.Get() == rhs.Get();
 	}
 
 	template <class _Ty, class _UTy, class _Manager>
-	inline bool operator!=(RealIntrusivePtr<_Ty, _Manager> const& lhs, RealIntrusivePtr<_UTy, _Manager> const& rhs) KGE_NOEXCEPT
+	inline bool operator!=(IntrusivePtr<_Ty, _Manager> const& lhs, IntrusivePtr<_UTy, _Manager> const& rhs) noexcept
 	{
 		return lhs.Get() != rhs.Get();
 	}
 
 	template <class _Ty, class _UTy, class _Manager>
-	inline bool operator<(RealIntrusivePtr<_Ty, _Manager> const& lhs, RealIntrusivePtr<_UTy, _Manager> const& rhs) KGE_NOEXCEPT
+	inline bool operator<(IntrusivePtr<_Ty, _Manager> const& lhs, IntrusivePtr<_UTy, _Manager> const& rhs) noexcept
 	{
 		return lhs.Get() < rhs.Get();
 	}
 
 	template <class _Ty, class _Manager>
-	inline bool operator==(RealIntrusivePtr<_Ty, _Manager> const& lhs, _Ty* rhs) KGE_NOEXCEPT
+	inline bool operator==(IntrusivePtr<_Ty, _Manager> const& lhs, _Ty* rhs) noexcept
 	{
 		return lhs.Get() == rhs;
 	}
 
 	template <class _Ty, class _Manager>
-	inline bool operator!=(RealIntrusivePtr<_Ty, _Manager> const& lhs, _Ty* rhs) KGE_NOEXCEPT
+	inline bool operator!=(IntrusivePtr<_Ty, _Manager> const& lhs, _Ty* rhs) noexcept
 	{
 		return lhs.Get() != rhs;
 	}
 
 	template <class _Ty, class _Manager>
-	inline bool operator==(_Ty* lhs, RealIntrusivePtr<_Ty, _Manager> const& rhs) KGE_NOEXCEPT
+	inline bool operator==(_Ty* lhs, IntrusivePtr<_Ty, _Manager> const& rhs) noexcept
 	{
 		return lhs == rhs.Get();
 	}
 
 	template <class _Ty, class _Manager>
-	inline bool operator!=(_Ty* lhs, RealIntrusivePtr<_Ty, _Manager> const& rhs) KGE_NOEXCEPT
+	inline bool operator!=(_Ty* lhs, IntrusivePtr<_Ty, _Manager> const& rhs) noexcept
 	{
 		return lhs != rhs.Get();
 	}
 
 	template <class _Ty, class _Manager>
-	inline bool operator==(RealIntrusivePtr<_Ty, _Manager> const& lhs, nullptr_t) KGE_NOEXCEPT
+	inline bool operator==(IntrusivePtr<_Ty, _Manager> const& lhs, nullptr_t) noexcept
 	{
 		return !static_cast<bool>(lhs);
 	}
 
 	template <class _Ty, class _Manager>
-	inline bool operator!=(RealIntrusivePtr<_Ty, _Manager> const& lhs, nullptr_t) KGE_NOEXCEPT
+	inline bool operator!=(IntrusivePtr<_Ty, _Manager> const& lhs, nullptr_t) noexcept
 	{
 		return static_cast<bool>(lhs);
 	}
 
 	template <class _Ty, class _Manager>
-	inline bool operator==(nullptr_t, RealIntrusivePtr<_Ty, _Manager> const& rhs) KGE_NOEXCEPT
+	inline bool operator==(nullptr_t, IntrusivePtr<_Ty, _Manager> const& rhs) noexcept
 	{
 		return !static_cast<bool>(rhs);
 	}
 
 	template <class _Ty, class _Manager>
-	inline bool operator!=(nullptr_t, RealIntrusivePtr<_Ty, _Manager> const& rhs) KGE_NOEXCEPT
+	inline bool operator!=(nullptr_t, IntrusivePtr<_Ty, _Manager> const& rhs) noexcept
 	{
 		return static_cast<bool>(rhs);
 	}
@@ -209,7 +199,7 @@ namespace kiwano
 	// template class cannot specialize std::swap,
 	// so implement a swap function in kiwano namespace
 	template <class _Ty, class _Manager>
-	inline void swap(RealIntrusivePtr<_Ty, _Manager>& lhs, RealIntrusivePtr<_Ty, _Manager>& rhs) KGE_NOEXCEPT
+	inline void swap(IntrusivePtr<_Ty, _Manager>& lhs, IntrusivePtr<_Ty, _Manager>& rhs) noexcept
 	{
 		lhs.Swap(rhs);
 	}

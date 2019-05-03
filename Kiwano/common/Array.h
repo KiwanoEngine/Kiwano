@@ -26,14 +26,6 @@
 namespace kiwano
 {
 	//
-	// Array
-	// Lightweight std::vector<>-like class
-	//
-	template<typename _Ty, typename _Alloc, typename _Manager>
-	class Array;
-
-
-	//
 	// ArrayManager<> with memory operations
 	//
 	template<typename _Ty, typename _Alloc, bool _IsClassType = std::is_class<_Ty>::value>
@@ -42,6 +34,7 @@ namespace kiwano
 
 	//
 	// Array<>
+	// Lightweight std::vector<>-like class
 	//
 	template<
 		typename _Ty,
@@ -68,14 +61,14 @@ namespace kiwano
 		inline Array(size_type count, const _Ty& val)									: Array() { assign(count, val); }
 		inline Array(initializer_list list)												: Array() { assign(list); }
 		inline Array(const Array& src)													: Array() { assign(src); }
-		inline Array(Array&& src)														: Array() { swap(src); }
+		inline Array(Array&& src) noexcept												: Array() { swap(src); }
 		inline ~Array()																	{ destroy(); }
 
 		template <typename _Iter>
 		inline Array(_Iter first, _Iter last)											: Array() { assign(first, last); }
 
 		inline Array&		operator=(const Array& src)									{ if (&src != this) { resize(src.size_); manager::copy_data(begin(), src.cbegin(), size_); } return (*this); }
-		inline Array&		operator=(Array&& src)										{ swap(src); return *this; }
+		inline Array&		operator=(Array&& src) noexcept								{ swap(src); return *this; }
 		inline Array&		operator=(initializer_list list)							{ if (list.size()) { assign(list.begin(), list.end()); } else clear(); return (*this); }
 
 		inline Array&		assign(size_type count, const _Ty& val)						{ if (count > 0) { resize(count); manager::copy_data(begin(), count, val); } else clear(); return (*this); }
@@ -86,7 +79,7 @@ namespace kiwano
 		inline void			assign(_Iter first, _Iter last)								{ auto diff = std::distance(first, last); resize((size_type)diff); auto data = begin(); while (first != last) (*data++) = (*first++); }
 
 		inline void			clear()														{ destroy(); size_ = capacity_ = 0; data_ = nullptr; }
-		inline void			swap(Array& rhs)											{ std::swap(size_, rhs.size_); std::swap(capacity_, rhs.capacity_); std::swap(data_, rhs.data_); }
+		inline void			swap(Array& rhs) noexcept									{ std::swap(size_, rhs.size_); std::swap(capacity_, rhs.capacity_); std::swap(data_, rhs.data_); }
 
 		inline void			resize(size_type new_size)									{ resize(new_size, _Ty()); }
 		inline void			resize(size_type new_size, const _Ty& v);
