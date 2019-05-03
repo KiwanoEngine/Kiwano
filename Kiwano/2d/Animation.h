@@ -32,7 +32,7 @@ namespace kiwano
 
 		Animation(
 			Duration duration,			/* 动画时长 */
-			FramesPtr const& frames,	/* 序列帧 */
+			FramesPtr frames,			/* 序列帧 */
 			EaseFunc func = nullptr		/* 速度变化 */
 		);
 
@@ -43,7 +43,7 @@ namespace kiwano
 
 		// 设置动画
 		void SetFrames(
-			FramesPtr const& frames
+			FramesPtr frames
 		);
 
 		// 获取该动作的拷贝对象
@@ -53,9 +53,9 @@ namespace kiwano
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(NodePtr const& target) override;
+		void Init(NodePtr target) override;
 
-		void UpdateTween(NodePtr const& target, float percent) override;
+		void UpdateTween(NodePtr target, float percent) override;
 
 	protected:
 		FramesPtr frames_;

@@ -177,7 +177,7 @@ namespace kiwano
 			// 获取当前时间
 			// 由于该时间点基于系统启动时间开始计算, 所以无法格式化该时间, 
 			// 也无法获得该时间的 Unix 时间戳
-			static Time Now() KGE_NOEXCEPT;
+			static Time Now() noexcept;
 
 		private:
 			long dur_;

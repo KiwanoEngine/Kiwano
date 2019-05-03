@@ -105,17 +105,17 @@ namespace kiwano
 
 		// 切换场景
 		void EnterScene(
-			ScenePtr const& scene			/* 场景 */
+			ScenePtr scene				/* 场景 */
 		);
 
 		// 切换场景
 		void EnterScene(
-			ScenePtr const& scene,			/* 场景 */
-			TransitionPtr const& transition	/* 场景动画 */
+			ScenePtr scene,				/* 场景 */
+			TransitionPtr transition	/* 场景动画 */
 		);
 
 		// 获取当前场景
-		ScenePtr const& GetCurrentScene();
+		ScenePtr GetCurrentScene();
 
 		// 获取主窗口
 		inline Window* GetWindow() const { return main_window_; }

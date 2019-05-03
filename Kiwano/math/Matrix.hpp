@@ -27,43 +27,49 @@ namespace kiwano
 {
 	namespace math
 	{
-		struct Matrix
+		template <typename _Ty, typename _Lty, typename _Rty>
+		struct MatrixMultiply;
+
+		template <typename _Ty>
+		struct MatrixT
 		{
+			using value_type = _Ty;
+
 			union
 			{
 				struct
 				{
-					float m[6];  // m[3][2]
+					_Ty m[6];  // m[3][2]
 				};
 				
 				struct
 				{
-					float
+					_Ty
 						_11, _12,
 						_21, _22,
 						_31, _32;
 				};
 			};
 
-			Matrix()
+			MatrixT()
 				: _11(1.f), _12(0.f)
 				, _21(0.f), _22(1.f)
 				, _31(0.f), _32(0.f)
 			{
 			}
 
-			Matrix(float _11, float _12, float _21, float _22, float _31, float _32)
+			MatrixT(value_type _11, value_type _12, value_type _21, value_type _22, value_type _31, value_type _32)
 				: _11(_11), _12(_12), _21(_21), _22(_22), _31(_31), _32(_32)
 			{
 			}
 
-			explicit Matrix(const float* p)
+			explicit MatrixT(const value_type* p)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = p[i];
 			}
 
-			Matrix(Matrix const& other)
+			MatrixT(MatrixT const& other)
 				: _11(other._11), _12(other._12)
 				, _21(other._21), _22(other._22)
 				, _31(other._31), _32(other._32)
@@ -71,7 +77,7 @@ namespace kiwano
 			}
 
 			template <typename T>
-			Matrix(T const& other)
+			MatrixT(T const& other)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = other[i];
@@ -92,17 +98,17 @@ namespace kiwano
 				);
 			}
 
-			Rect Transform(const Rect & rect) const
+			RectT<value_type> Transform(const Rect & rect) const
 			{
-				Vec2 top_left = Transform(rect.GetLeftTop());
-				Vec2 top_right = Transform(rect.GetRightTop());
-				Vec2 bottom_left = Transform(rect.GetLeftBottom());
-				Vec2 bottom_right = Transform(rect.GetRightBottom());
+				Vec2T<value_type> top_left = Transform(rect.GetLeftTop());
+				Vec2T<value_type> top_right = Transform(rect.GetRightTop());
+				Vec2T<value_type> bottom_left = Transform(rect.GetLeftBottom());
+				Vec2T<value_type> bottom_right = Transform(rect.GetRightBottom());
 
-				float left = std::min(std::min(top_left.x, top_right.x), std::min(bottom_left.x, bottom_right.x));
-				float right = std::max(std::max(top_left.x, top_right.x), std::max(bottom_left.x, bottom_right.x));
-				float top = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
-				float bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
+				value_type left = std::min(std::min(top_left.x, top_right.x), std::min(bottom_left.x, bottom_right.x));
+				value_type right = std::max(std::max(top_left.x, top_right.x), std::max(bottom_left.x, bottom_right.x));
+				value_type top = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
+				value_type bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
 
 				return Rect{ left, top, (right - left), (bottom - top) };
 			}
@@ -113,20 +119,20 @@ namespace kiwano
 				_32 += _12 * v.x + _22 * v.y;
 			}
 
-			inline float operator [](unsigned int index) const
+			inline value_type operator [](unsigned int index) const
 			{
 				return m[index];
 			}
 
-			template <typename T>
-			inline Matrix& operator =(T const& other)
+			template <typename _Lty, typename _Rty>
+			inline MatrixT& operator= (MatrixMultiply<value_type, _Lty, _Rty> const& other)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = other[i];
 				return *this;
 			}
 
-			inline float Determinant() const
+			inline value_type Determinant() const
 			{
 				return (_11 * _22) - (_12 * _21);
 			}
@@ -143,27 +149,27 @@ namespace kiwano
 				return 0 != Determinant();
 			}
 
-			static inline Matrix Translation(const Vec2& v)
+			static inline MatrixT Translation(const Vec2& v)
 			{
-				return Matrix(
+				return MatrixT(
 					1.f, 0.f,
 					0.f, 1.f,
 					v.x, v.y
 				);
 			}
 
-			static inline Matrix Translation(
-				float x,
-				float y)
+			static inline MatrixT Translation(
+				value_type x,
+				value_type y)
 			{
 				return Translation(Vec2(x, y));
 			}
 
-			static inline Matrix Scaling(
+			static inline MatrixT Scaling(
 				const Vec2& v,
 				const Vec2& center = Vec2())
 			{
-				return Matrix(
+				return MatrixT(
 					v.x, 0.f,
 					0.f, v.y,
 					center.x - v.x * center.x,
@@ -171,21 +177,21 @@ namespace kiwano
 				);
 			}
 
-			static inline Matrix Scaling(
-				float x,
-				float y,
+			static inline MatrixT Scaling(
+				value_type x,
+				value_type y,
 				const Vec2& center = Vec2())
 			{
 				return Scaling(Vec2(x, y), center);
 			}
 
-			static inline Matrix Rotation(
-				float angle,
+			static inline MatrixT Rotation(
+				value_type angle,
 				const Vec2& center = Vec2())
 			{
-				float s = math::Sin(angle);
-				float c = math::Cos(angle);
-				return Matrix(
+				value_type s = math::Sin(angle);
+				value_type c = math::Cos(angle);
+				return MatrixT(
 					c, s,
 					-s, c,
 					center.x * (1 - c) + center.y * s,
@@ -193,25 +199,25 @@ namespace kiwano
 				);
 			}
 
-			static inline Matrix Skewing(
-				float angle_x,
-				float angle_y,
+			static inline MatrixT Skewing(
+				value_type angle_x,
+				value_type angle_y,
 				const Vec2& center = Vec2())
 			{
-				float tx = math::Tan(angle_x);
-				float ty = math::Tan(angle_y);
-				return Matrix(
+				value_type tx = math::Tan(angle_x);
+				value_type ty = math::Tan(angle_y);
+				return MatrixT(
 					1.f, -ty,
 					-tx, 1.f,
 					center.y * tx, center.x * ty
 				);
 			}
 
-			static inline Matrix Invert(Matrix const& matrix)
+			static inline MatrixT Invert(MatrixT const& matrix)
 			{
-				float det = 1.f / matrix.Determinant();
+				value_type det = 1.f / matrix.Determinant();
 
-				return Matrix(
+				return MatrixT(
 					det * matrix._22,
 					-det * matrix._12,
 					-det * matrix._21,
@@ -224,18 +230,18 @@ namespace kiwano
 
 
 		// Use template expression to optimize matrix multiply
-		template <typename L, typename R>
+		template <typename _Ty, typename _Lty, typename _Rty>
 		struct MatrixMultiply
 		{
-			L const& lhs;
-			R const& rhs;
+			_Lty const& lhs;
+			_Rty const& rhs;
 
-			MatrixMultiply(L const& lhs, R const& rhs)
+			MatrixMultiply(_Lty const& lhs, _Rty const& rhs)
 				: lhs(lhs)
 				, rhs(rhs)
 			{}
 
-			inline float operator [](unsigned int index) const
+			inline _Ty operator [](unsigned int index) const
 			{
 				switch (index)
 				{
@@ -257,15 +263,25 @@ namespace kiwano
 			}
 		};
 
-		inline MatrixMultiply<Matrix, Matrix> operator *(Matrix const& lhs, Matrix const& rhs)
+		template <typename _Ty>
+		inline
+		MatrixMultiply<_Ty, MatrixT<_Ty>, MatrixT<_Ty>>
+		operator *(MatrixT<_Ty> const& lhs, MatrixT<_Ty> const& rhs)
 		{
-			return MatrixMultiply<Matrix, Matrix>(lhs, rhs);
+			return MatrixMultiply<_Ty, MatrixT<_Ty>, MatrixT<_Ty>>(lhs, rhs);
 		}
 
-		template <typename L, typename R>
-		inline MatrixMultiply<MatrixMultiply<L, R>, Matrix> operator *(MatrixMultiply<L, R> const& lhs, Matrix const& rhs)
+		template <typename _Ty, typename _Lty, typename _Rty>
+		inline
+		MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, MatrixT<_Ty>>
+		operator *(MatrixMultiply<_Ty, _Lty, _Rty> const& lhs, MatrixT<_Ty> const& rhs)
 		{
-			return MatrixMultiply<MatrixMultiply<L, R>, Matrix>(lhs, rhs);
+			return MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, MatrixT<_Ty>>(lhs, rhs);
 		}
 	}
+}
+
+namespace kiwano
+{
+	using Matrix = kiwano::math::MatrixT<float>;
 }

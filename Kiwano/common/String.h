@@ -106,7 +106,7 @@ namespace kiwano
 		String(std::wstring const& str);
 		String(String const& rhs);
 		String(String const& rhs, size_type pos, size_type count = npos);
-		String(String && rhs);
+		String(String && rhs) noexcept;
 		~String();
 
 		template <typename _Iter>
@@ -191,7 +191,7 @@ namespace kiwano
 		std::string				to_string() const;
 		std::wstring			to_wstring() const;
 
-		void					swap(String& rhs);
+		void					swap(String& rhs) noexcept;
 		size_t					hash() const;
 
 	public:
@@ -245,7 +245,7 @@ namespace kiwano
 		inline String&		operator=(const wchar_t* cstr)				{ if (const_str_ != cstr) String{ cstr }.swap(*this); return *this; }
 		inline String&		operator=(std::wstring const& str)			{ String{ str }.swap(*this); return *this; }
 		inline String&		operator=(String const& rhs)				{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
-		inline String&		operator=(String && rhs)					{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
+		inline String&		operator=(String && rhs) noexcept			{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
 
 	public:
 		static const String::size_type npos = static_cast<size_type>(-1);
@@ -537,7 +537,7 @@ namespace kiwano
 		assign(rhs, pos, count);
 	}
 
-	inline String::String(String && rhs)
+	inline String::String(String && rhs) noexcept
 		: str_(rhs.str_)
 		, size_(rhs.size_)
 		, capacity_(rhs.capacity_)
@@ -1074,7 +1074,7 @@ namespace kiwano
 		size_ = capacity_ = 0;
 	}
 
-	inline void String::swap(String & rhs)
+	inline void String::swap(String & rhs) noexcept
 	{
 		std::swap(const_str_, rhs.const_str_);
 		std::swap(size_, rhs.size_);

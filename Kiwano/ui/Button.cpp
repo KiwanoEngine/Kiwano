@@ -79,6 +79,11 @@ namespace kiwano
 		pressed_callback_ = func;
 	}
 
+	void Button::SetReleasedCallback(const Callback& func)
+	{
+		released_callback_ = func;
+	}
+
 	void Button::SetMouseOverCallback(const Callback & func)
 	{
 		mouse_over_callback_ = func;
@@ -129,6 +134,9 @@ namespace kiwano
 			else if (evt.type == Event::MouseBtnUp && status_ == Status::Pressed)
 			{
 				SetStatus(Status::Hover);
+
+				if (released_callback_)
+					released_callback_();
 
 				if (click_callback_)
 					click_callback_();

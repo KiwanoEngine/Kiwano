@@ -27,16 +27,16 @@ namespace kiwano
 	class KGE_API Button
 		: public Sprite
 	{
+	public:
 		using Callback = Closure<void()>;
 
-	public:
 		Button();
 
 		explicit Button(
 			Callback const& click		/* 按钮点击回调函数 */
 		);
 
-		explicit Button(
+		Button(
 			Callback const& click,		/* 按钮点击回调函数 */
 			Callback const& pressed,	/* 按钮按下回调函数 */
 			Callback const& mouse_over,	/* 按钮移入回调函数 */
@@ -60,6 +60,11 @@ namespace kiwano
 
 		// 设置按钮被按下时的回调函数
 		void SetPressedCallback(
+			const Callback& func
+		);
+
+		// 设置按钮被抬起时的回调函数
+		void SetReleasedCallback(
 			const Callback& func
 		);
 
@@ -88,6 +93,7 @@ namespace kiwano
 		Status		status_;
 		Callback	click_callback_;
 		Callback	pressed_callback_;
+		Callback	released_callback_;
 		Callback	mouse_over_callback_;
 		Callback	mouse_out_callback_;
 	};

@@ -29,6 +29,43 @@ namespace kiwano
 
 	namespace __closure_detail
 	{
+		//
+		// is_callable
+		//
+
+		namespace __callable_detail
+		{
+			template <typename _Ty, typename _Ret, typename... _Args>
+			struct helper
+			{
+				template <typename _Uty> static int test(...);
+
+				template <typename _Uty, _Ret(_Uty::*)(_Args...)> struct class_mem;
+				template <typename _Uty> static char test(class_mem<_Uty, &_Uty::operator()>*);
+
+				template <typename _Uty, _Ret(_Uty::*)(_Args...) const> struct class_const_mem;
+				template <typename _Uty> static char test(class_const_mem<_Uty, &_Uty::operator()>*);
+
+				template<
+					typename _Uty,
+					typename _Uret = typename std::decay<decltype(std::declval<_Uty>().operator()(std::declval<_Args>()...))>::type,
+					typename = typename std::enable_if<std::is_convertible<_Ret, _Uret>::value>::type>
+				static char test(int);
+
+				static constexpr bool value = sizeof(test<_Ty>(0)) == sizeof(char);
+			};
+		}
+
+		template<typename _Ty, typename _Ret, typename... _Args>
+		struct is_callable
+			: public std::bool_constant<__callable_detail::helper<_Ty, _Ret, _Args...>::value>
+		{
+		};
+
+		//
+		// Callable
+		//
+
 		template<typename _Ret, typename... _Args>
 		class Callable
 		{
@@ -195,7 +232,15 @@ namespace kiwano
 			rhs.callable_ = nullptr;
 		}
 
-		template <typename _Ty>
+		Closure(_Ret(*func)(_Args...))
+		{
+			callable_ = __closure_detail::ProxyCallable<_Ret(*)(_Args...), _Ret, _Args...>::Make(std::move(func));
+			if (callable_) callable_->AddRef();
+		}
+
+		template<
+			typename _Ty,
+			typename = typename std::enable_if<__closure_detail::is_callable<_Ty, _Ret, _Args...>::value, int>::type>
 		Closure(_Ty val)
 		{
 			callable_ = __closure_detail::ProxyCallable<_Ty, _Ret, _Args...>::Make(std::move(val));
@@ -204,7 +249,7 @@ namespace kiwano
 
 		template<typename _Ty,
 			typename _Uty,
-			typename std::enable_if<std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int>::type = 0>
+			typename = typename std::enable_if<std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int>::type>
 		Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
 		{
 			callable_ = __closure_detail::ProxyMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
@@ -213,7 +258,7 @@ namespace kiwano
 
 		template<typename _Ty,
 			typename _Uty,
-			typename std::enable_if<std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int>::type = 0>
+			typename = typename std::enable_if<std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int>::type>
 		Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
 		{
 			callable_ = __closure_detail::ProxyConstMemCallable<_Ty, _Ret, _Args...>::Make(ptr, func);
@@ -274,9 +319,9 @@ namespace kiwano
 
 	template<typename _Ty,
 		typename _Uty,
-		typename std::enable_if<
+		typename = typename std::enable_if<
 			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
-		>::type = 0,
+		>::type,
 		typename _Ret,
 		typename... _Args>
 	inline Closure<_Ret(_Args...)> MakeClosure(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
@@ -286,9 +331,9 @@ namespace kiwano
 
 	template<typename _Ty,
 		typename _Uty,
-		typename std::enable_if<
+		typename = typename std::enable_if<
 			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
-		>::type = 0,
+		>::type,
 		typename _Ret,
 		typename... _Args>
 	inline Closure<_Ret(_Args...)> MakeClosure(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)

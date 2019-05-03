@@ -19,11 +19,12 @@
 // THE SOFTWARE.
 
 #include "ActionManager.h"
+#include "Node.h"
 #include "../base/logs.h"
 
 namespace kiwano
 {
-	void ActionManager::UpdateActions(NodePtr const& target, Duration dt)
+	void ActionManager::UpdateActions(NodePtr target, Duration dt)
 	{
 		if (actions_.IsEmpty() || !target)
 			return;
@@ -41,7 +42,7 @@ namespace kiwano
 		}
 	}
 
-	ActionPtr ActionManager::AddAction(ActionPtr const& action)
+	ActionPtr ActionManager::AddAction(ActionPtr action)
 	{
 		KGE_ASSERT(action && "AddAction failed, NULL pointer exception");
 

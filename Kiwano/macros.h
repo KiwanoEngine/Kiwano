@@ -33,10 +33,11 @@
 #	define VS_2013 1800
 #	define VS_2015 1900
 #	define VS_2017 1900
+#	define VS_2019 1920
 #endif
 
-#if VS_VER < VS_2013
-#	error Kiwano only supports Visual Studio 2013 and above
+#if VS_VER < VS_2015
+#	error Kiwano only supports Visual Studio 2015 and above
 #endif
 
 #ifndef WINVER
@@ -81,15 +82,6 @@
 
 #if defined(DEBUG) || defined(_DEBUG)
 #	define KGE_DEBUG
-#endif
-
-
-#if VS_VER >= VS_2015
-#	define KGE_NOEXCEPT noexcept
-#	define KGE_CONSTEXPR constexpr
-#else
-#	define KGE_NOEXCEPT throw()
-#	define KGE_CONSTEXPR const
 #endif
 
 

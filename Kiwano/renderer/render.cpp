@@ -227,7 +227,7 @@ namespace kiwano
 		return S_OK;
 	}
 
-	HRESULT Renderer::DrawImage(ImagePtr const & image, Rect const& dest_rect)
+	HRESULT Renderer::DrawImage(ImagePtr image, Rect const& dest_rect)
 	{
 		if (!device_context_)
 			return E_UNEXPECTED;

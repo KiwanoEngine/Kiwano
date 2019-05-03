@@ -58,16 +58,16 @@ namespace kiwano
 
 	void Node::Update(Duration dt)
 	{
-		if (update_pausing_)
-			return;
+		if (!update_pausing_)
+		{
+			UpdateActions(this, dt);
+			UpdateTimers(dt);
 
-		UpdateActions(this, dt);
-		UpdateTimers(dt);
+			if (cb_update_)
+				cb_update_(dt);
 
-		if (cb_update_)
-			cb_update_(dt);
-
-		OnUpdate(dt);
+			OnUpdate(dt);
+		}
 
 		if (!children_.IsEmpty())
 		{
@@ -451,7 +451,7 @@ namespace kiwano
 		dirty_transform_ = true;
 	}
 
-	void Node::AddChild(NodePtr const& child)
+	void Node::AddChild(NodePtr child)
 	{
 		KGE_ASSERT(child && "Node::AddChild failed, NULL pointer exception");
 
@@ -537,7 +537,7 @@ namespace kiwano
 		}
 	}
 
-	void Node::RemoveChild(NodePtr const& child)
+	void Node::RemoveChild(NodePtr child)
 	{
 		RemoveChild(child.Get());
 	}

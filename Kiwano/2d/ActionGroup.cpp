@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "ActionGroup.h"
+#include "Node.h"
 #include "../base/logs.h"
 
 namespace kiwano
@@ -42,7 +43,7 @@ namespace kiwano
 	{
 	}
 
-	void ActionGroup::Init(NodePtr const& target)
+	void ActionGroup::Init(NodePtr target)
 	{
 		if (actions_.IsEmpty())
 		{
@@ -63,7 +64,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionGroup::Update(NodePtr const& target, Duration dt)
+	void ActionGroup::Update(NodePtr target, Duration dt)
 	{
 		if (sequence_)
 		{
@@ -101,7 +102,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionGroup::Add(ActionPtr const& action)
+	void ActionGroup::Add(ActionPtr action)
 	{
 		if (action)
 		{

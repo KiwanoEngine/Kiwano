@@ -43,8 +43,8 @@ namespace kiwano
 
 	protected:
 		virtual void Init(
-			ScenePtr const& prev,
-			ScenePtr const& next
+			ScenePtr prev,
+			ScenePtr next
 		);
 
 		virtual void Update(Duration dt);
@@ -84,8 +84,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr const& prev,
-			ScenePtr const& next
+			ScenePtr prev,
+			ScenePtr next
 		) override;
 	};
 
@@ -103,8 +103,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr const& prev,
-			ScenePtr const& next
+			ScenePtr prev,
+			ScenePtr next
 		) override;
 	};
 
@@ -122,8 +122,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr const& prev,
-			ScenePtr const& next
+			ScenePtr prev,
+			ScenePtr next
 		) override;
 	};
 
@@ -142,8 +142,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr const& prev,
-			ScenePtr const& next
+			ScenePtr prev,
+			ScenePtr next
 		) override;
 
 		void Reset() override;
@@ -169,8 +169,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr const& prev,
-			ScenePtr const& next
+			ScenePtr prev,
+			ScenePtr next
 		) override;
 
 		void Reset() override;

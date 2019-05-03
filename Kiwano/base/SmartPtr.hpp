@@ -38,7 +38,7 @@ namespace kiwano
 	};
 
 	template <typename _Ty>
-	using SmartPtr = IntrusivePtr<_Ty, DefaultIntrusivePtrManager, true>;
+	using SmartPtr = IntrusivePtr<_Ty, DefaultIntrusivePtrManager>;
 
 }
 

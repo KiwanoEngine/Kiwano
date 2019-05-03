@@ -38,17 +38,17 @@ namespace kiwano
 			}
 		}
 
-		inline D2D1_POINT_2F const& ConvertToPoint2F(math::Vec2 const& point)
+		inline D2D1_POINT_2F const& ConvertToPoint2F(Vec2 const& point)
 		{
 			return reinterpret_cast<D2D1_POINT_2F const&>(point);
 		}
 
-		inline D2D1_SIZE_F const& ConvertToSizeF(math::Vec2 const& size)
+		inline D2D1_SIZE_F const& ConvertToSizeF(Vec2 const& size)
 		{
 			return reinterpret_cast<D2D1_SIZE_F const&>(size);
 		}
 
-		inline D2D1_RECT_F ConvertToRectF(math::Rect const& rect)
+		inline D2D1_RECT_F ConvertToRectF(Rect const& rect)
 		{
 			return D2D1_RECT_F{ rect.origin.x, rect.origin.y, rect.origin.x + rect.size.x, rect.origin.y + rect.size.y };
 		}
@@ -58,7 +58,7 @@ namespace kiwano
 			return reinterpret_cast<D2D1_COLOR_F const&>(color);
 		}
 
-		inline D2D1_MATRIX_3X2_F const& ConvertToMatrix3x2F(math::Matrix const& matrix)
+		inline D2D1_MATRIX_3X2_F const& ConvertToMatrix3x2F(Matrix const& matrix)
 		{
 			return reinterpret_cast<D2D1_MATRIX_3X2_F const&>(matrix);
 		}

@@ -249,7 +249,7 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawImage(ImagePtr const & image, float opacity)
+	void Canvas::DrawImage(ImagePtr image, float opacity)
 	{
 		if (image && image->GetBitmap())
 		{
@@ -297,7 +297,7 @@ namespace kiwano
 		);
 	}
 
-	void Canvas::DrawGeometry(GeometryPtr const & geo)
+	void Canvas::DrawGeometry(GeometryPtr geo)
 	{
 		if (geo && geo->geo_)
 		{
@@ -375,7 +375,7 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	void Canvas::FillGeometry(GeometryPtr const & geo)
+	void Canvas::FillGeometry(GeometryPtr geo)
 	{
 		if (geo && geo->geo_)
 		{

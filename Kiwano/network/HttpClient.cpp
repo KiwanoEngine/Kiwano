@@ -262,7 +262,7 @@ namespace kiwano
 			::curl_global_cleanup();
 		}
 
-		void HttpClient::Send(HttpRequestPtr const & request)
+		void HttpClient::Send(HttpRequestPtr request)
 		{
 			if (!request)
 				return;
@@ -300,7 +300,7 @@ namespace kiwano
 			}
 		}
 
-		void HttpClient::Perform(HttpRequestPtr const & request, HttpResponsePtr const & response)
+		void HttpClient::Perform(HttpRequestPtr request, HttpResponsePtr response)
 		{
 			bool ok = false;
 			long response_code = 0;

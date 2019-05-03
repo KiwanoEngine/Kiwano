@@ -58,7 +58,7 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResLoader::AddImage(String const & id, ImagePtr const & image)
+	bool ResLoader::AddImage(String const & id, ImagePtr image)
 	{
 		if (image)
 		{
@@ -68,7 +68,7 @@ namespace kiwano
 		return false;
 	}
 
-	int ResLoader::AddFrames(String const& id, Array<Resource> const& images)
+	size_t ResLoader::AddFrames(String const& id, Array<Resource> const& images)
 	{
 		if (images.empty())
 			return 0;
@@ -100,7 +100,7 @@ namespace kiwano
 		return 0;
 	}
 
-	int ResLoader::AddFrames(String const& id, Array<ImagePtr> const& images)
+	size_t ResLoader::AddFrames(String const& id, Array<ImagePtr> const& images)
 	{
 		if (images.empty())
 			return 0;
@@ -114,7 +114,7 @@ namespace kiwano
 		return 0;
 	}
 
-	int ResLoader::AddFrames(String const & id, Resource const & image, int cols, int rows)
+	size_t ResLoader::AddFrames(String const & id, Resource const & image, int cols, int rows)
 	{
 		if (cols <= 0 || rows <= 0)
 			return 0;
@@ -153,7 +153,7 @@ namespace kiwano
 		return 0;
 	}
 
-	int ResLoader::AddFrames(String const & id, Resource const & image, Array<Rect> const & crop_rects)
+	size_t ResLoader::AddFrames(String const & id, Resource const & image, Array<Rect> const & crop_rects)
 	{
 		ImagePtr raw = new (std::nothrow) Image;
 		if (!raw || !raw->Load(LocateRes(image, search_paths_)))
@@ -181,7 +181,7 @@ namespace kiwano
 		return 0;
 	}
 
-	bool ResLoader::AddFrames(String const & id, FramesPtr const & frames)
+	bool ResLoader::AddFrames(String const & id, FramesPtr frames)
 	{
 		if (frames)
 		{
@@ -191,7 +191,7 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResLoader::AddObj(String const& id, ObjectPtr const& obj)
+	bool ResLoader::AddObj(String const& id, ObjectPtr obj)
 	{
 		if (obj)
 		{
