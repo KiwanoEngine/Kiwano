@@ -87,6 +87,8 @@ namespace kiwano
 		
 		inline TweenHelper(ActionTweenPtr const& base)						: base(base) {}
 
+		inline operator ActionPtr() const									{ return base; }
+
 		inline operator ActionTweenPtr() const								{ return base; }
 
 	protected:
