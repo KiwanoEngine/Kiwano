@@ -27,16 +27,16 @@ namespace kiwano
 	class KGE_API Button
 		: public Sprite
 	{
+	public:
 		using Callback = Closure<void()>;
 
-	public:
 		Button();
 
 		explicit Button(
 			Callback const& click		/* 按钮点击回调函数 */
 		);
 
-		explicit Button(
+		Button(
 			Callback const& click,		/* 按钮点击回调函数 */
 			Callback const& pressed,	/* 按钮按下回调函数 */
 			Callback const& mouse_over,	/* 按钮移入回调函数 */

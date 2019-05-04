@@ -30,6 +30,7 @@ namespace kiwano
 	{
 		scene_ = this;
 
+		SetAnchor(0, 0);
 		SetSize(Renderer::Instance().GetOutputSize());
 	}
 
