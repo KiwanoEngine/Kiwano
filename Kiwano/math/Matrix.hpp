@@ -27,6 +27,9 @@ namespace kiwano
 {
 	namespace math
 	{
+		template <typename L, typename R>
+		struct MatrixMultiply;
+
 		struct Matrix
 		{
 			union
@@ -118,8 +121,8 @@ namespace kiwano
 				return m[index];
 			}
 
-			template <typename T>
-			inline Matrix& operator =(T const& other)
+			template <typename L, typename R>
+			inline Matrix& operator= (MatrixMultiply<L, R> const& other)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = other[i];
