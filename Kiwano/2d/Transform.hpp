@@ -47,7 +47,7 @@ namespace kiwano
 				rotation == other.rotation;
 		}
 
-		inline math::Matrix ToMatrix() const
+		inline Matrix ToMatrix() const
 		{
 			// matrix multiplication is optimized by expression template
 			return Matrix::Scaling(scale)

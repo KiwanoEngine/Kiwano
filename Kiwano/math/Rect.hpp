@@ -26,24 +26,29 @@ namespace kiwano
 	namespace math
 	{
 		// 矩形
-		struct Rect
+		template <typename _Ty>
+		struct RectT
 		{
-			Vec2	origin;	// 左上角坐标
-			Vec2	size;	// 宽度和高度
+		public:
+			using value_type = _Ty;
 
-			Rect() {}
+			Vec2T<value_type> origin;	// 左上角坐标
+			Vec2T<value_type> size;	// 宽度和高度
 
-			Rect(
-				float x,
-				float y,
-				float width,
-				float height
+		public:
+			RectT() {}
+
+			RectT(
+				value_type x,
+				value_type y,
+				value_type width,
+				value_type height
 			)
 				: origin(x, y)
 				, size(width, height)
 			{}
 
-			Rect(
+			RectT(
 				const Vec2& pos,
 				const Vec2& size
 			)
@@ -51,26 +56,26 @@ namespace kiwano
 				, size(size.x, size.y)
 			{}
 
-			Rect(
-				const Rect& other
+			RectT(
+				const RectT& other
 			)
 				: origin(other.origin.x, other.origin.y)
 				, size(other.size.x, other.size.y)
 			{}
 
-			Rect& operator= (const Rect& other)
+			RectT& operator= (const RectT& other)
 			{
 				origin = other.origin;
 				size = other.size;
 				return *this;
 			}
 
-			inline bool operator== (const Rect& rect) const
+			inline bool operator== (const RectT& rect) const
 			{
 				return (origin == rect.origin) && (size == rect.size);
 			}
 
-			inline void Set(float x, float y, float width, float height) { origin = Vec2{ x, y }; size = Vec2{ width, height }; }
+			inline void Set(value_type x, value_type y, value_type width, value_type height) { origin = Vec2{ x, y }; size = Vec2{ width, height }; }
 
 			inline Vec2 GetCenter() const { return Vec2{ origin.x + size.x / 2, origin.y + size.y / 2 }; }
 
@@ -82,13 +87,13 @@ namespace kiwano
 
 			inline Vec2 GetLeftBottom() const { return Vec2{ GetLeft(), GetBottom() }; }
 
-			inline float GetLeft() const { return origin.x; }
+			inline value_type GetLeft() const { return origin.x; }
 
-			inline float GetTop() const { return origin.y; }
+			inline value_type GetTop() const { return origin.y; }
 
-			inline float GetRight() const { return origin.x + size.x; }
+			inline value_type GetRight() const { return origin.x + size.x; }
 
-			inline float GetBottom() const { return origin.y + size.y; }
+			inline value_type GetBottom() const { return origin.y + size.y; }
 
 			inline bool IsEmpty() const { return origin.IsOrigin() && size.IsOrigin(); }
 
@@ -100,7 +105,7 @@ namespace kiwano
 			}
 
 			// 判断两矩形是否相交
-			inline bool Intersects(const Rect& rect) const
+			inline bool Intersects(const RectT& rect) const
 			{
 				return !((origin.x + size.x)			< rect.origin.x ||
 						(rect.origin.x + rect.size.x)	< origin.x ||
@@ -109,4 +114,9 @@ namespace kiwano
 			}
 		};
 	}
+}
+
+namespace kiwano
+{
+	using Rect = kiwano::math::RectT<float>;
 }

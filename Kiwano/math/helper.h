@@ -28,8 +28,6 @@
 
 namespace kiwano
 {
-	using namespace kiwano::math;
-
-	typedef Vec2 Point;
-	typedef Vec2 Size;
+	using Point = Vec2;
+	using Size = Vec2;
 }

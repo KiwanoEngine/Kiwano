@@ -25,18 +25,21 @@ namespace kiwano
 {
 	namespace math
 	{
-		struct Vec2
+		template <typename _Ty>
+		struct Vec2T
 		{
-			float x;
-			float y;
+			using value_type = _Ty;
 
-			Vec2() : x(0.f), y(0.f) {}
+			value_type x;
+			value_type y;
 
-			Vec2(float x, float y) : x(x), y(y) {}
+			Vec2T() : x(0.f), y(0.f) {}
 
-			Vec2(const Vec2& other) : x(other.x), y(other.y) {}
+			Vec2T(value_type x, value_type y) : x(x), y(y) {}
 
-			inline float Length() const
+			Vec2T(const Vec2T& other) : x(other.x), y(other.y) {}
+
+			inline value_type Length() const
 			{
 				return math::Sqrt(x * x + y * y);
 			}
@@ -46,46 +49,51 @@ namespace kiwano
 				return (x == 0) && (y == 0);
 			}
 
-			inline void Set(float x, float y)
+			inline void Set(value_type x, value_type y)
 			{
 				this->x = x;
 				this->y = y;
 			}
 
-			inline const Vec2 operator + (const Vec2 & other) const
+			inline const Vec2T operator + (const Vec2T & other) const
 			{
-				return Vec2(x + other.x, y + other.y);
+				return Vec2T(x + other.x, y + other.y);
 			}
 
-			inline const Vec2 operator - (const Vec2 & other) const
+			inline const Vec2T operator - (const Vec2T & other) const
 			{
-				return Vec2(x - other.x, y - other.y);
+				return Vec2T(x - other.x, y - other.y);
 			}
 
-			inline const Vec2 operator * (float val) const
+			inline const Vec2T operator * (value_type val) const
 			{
-				return Vec2(x * val, y * val);
+				return Vec2T(x * val, y * val);
 			}
 
-			inline const Vec2 operator / (float val) const
+			inline const Vec2T operator / (value_type val) const
 			{
-				return Vec2(x / val, y / val);
+				return Vec2T(x / val, y / val);
 			}
 
-			inline const Vec2 operator - () const
+			inline const Vec2T operator - () const
 			{
-				return Vec2(-x, -y);
+				return Vec2T(-x, -y);
 			}
 
-			inline bool operator== (const Vec2& other) const
+			inline bool operator== (const Vec2T& other) const
 			{
 				return (x == other.x) && (y == other.y);
 			}
 
-			inline bool operator!= (const Vec2& other) const
+			inline bool operator!= (const Vec2T& other) const
 			{
 				return (x != other.x) || (y != other.y);
 			}
 		};
 	}
+}
+
+namespace kiwano
+{
+	using Vec2 = kiwano::math::Vec2T<float>;
 }

@@ -126,7 +126,7 @@ namespace kiwano
 	// Õº≤„ Ù–‘
 	struct LayerProperties
 	{
-		math::Rect area;
+		Rect area;
 		float opacity;
 	};
 }
