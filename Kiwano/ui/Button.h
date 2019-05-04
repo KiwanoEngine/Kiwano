@@ -63,6 +63,11 @@ namespace kiwano
 			const Callback& func
 		);
 
+		// 设置按钮被抬起时的回调函数
+		void SetReleasedCallback(
+			const Callback& func
+		);
+
 		// 设置鼠标移入按钮时的回调函数
 		void SetMouseOverCallback(
 			const Callback& func
@@ -88,6 +93,7 @@ namespace kiwano
 		Status		status_;
 		Callback	click_callback_;
 		Callback	pressed_callback_;
+		Callback	released_callback_;
 		Callback	mouse_over_callback_;
 		Callback	mouse_out_callback_;
 	};
