@@ -28,14 +28,14 @@ namespace kiwano
 			: public Object
 		{
 		public:
-			inline HttpResponse(HttpRequestPtr const& request)
+			inline HttpResponse(HttpRequestPtr request)
 				: request_(request)
 				, succeed_(false)
 				, response_code_(0)
 			{
 			}
 
-			inline HttpRequestPtr const& GetRequest() const
+			inline HttpRequestPtr GetRequest() const
 			{
 				return request_;
 			}

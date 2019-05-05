@@ -30,7 +30,7 @@ namespace kiwano
 	{
 	}
 
-	Animation::Animation(Duration duration, FramesPtr const& animation, EaseFunc func)
+	Animation::Animation(Duration duration, FramesPtr animation, EaseFunc func)
 		: ActionTween(duration, func)
 		, frames_(nullptr)
 	{
@@ -46,12 +46,12 @@ namespace kiwano
 		return frames_;
 	}
 
-	void Animation::SetFrames(FramesPtr const& frames)
+	void Animation::SetFrames(FramesPtr frames)
 	{
 		frames_ = frames;
 	}
 
-	void Animation::Init(NodePtr const& target)
+	void Animation::Init(NodePtr target)
 	{
 		if (!frames_ || frames_->GetFrames().empty())
 		{
@@ -66,7 +66,7 @@ namespace kiwano
 		}
 	}
 
-	void Animation::UpdateTween(NodePtr const& target, float percent)
+	void Animation::UpdateTween(NodePtr target, float percent)
 	{
 		auto sprite_target = dynamic_cast<Sprite*>(target.Get());
 

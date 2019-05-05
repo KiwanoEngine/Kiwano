@@ -47,12 +47,12 @@ namespace kiwano
 
 		// 添加按钮
 		void AddButton(
-			ButtonPtr const& button
+			ButtonPtr button
 		);
 
 		// 移除按钮
 		bool RemoveButton(
-			ButtonPtr const& button
+			ButtonPtr button
 		);
 
 		// 获取所有按钮

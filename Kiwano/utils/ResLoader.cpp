@@ -58,7 +58,7 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResLoader::AddImage(String const & id, ImagePtr const & image)
+	bool ResLoader::AddImage(String const & id, ImagePtr image)
 	{
 		if (image)
 		{
@@ -181,7 +181,7 @@ namespace kiwano
 		return 0;
 	}
 
-	bool ResLoader::AddFrames(String const & id, FramesPtr const & frames)
+	bool ResLoader::AddFrames(String const & id, FramesPtr frames)
 	{
 		if (frames)
 		{
@@ -191,7 +191,7 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResLoader::AddObj(String const& id, ObjectPtr const& obj)
+	bool ResLoader::AddObj(String const& id, ObjectPtr obj)
 	{
 		if (obj)
 		{

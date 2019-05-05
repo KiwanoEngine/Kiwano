@@ -31,7 +31,7 @@ namespace kiwano
 	{
 	}
 
-	GeometryNode::GeometryNode(GeometryPtr const& geometry)
+	GeometryNode::GeometryNode(GeometryPtr geometry)
 		: GeometryNode()
 	{
 		SetGeometry(geometry);
@@ -41,7 +41,7 @@ namespace kiwano
 	{
 	}
 
-	void GeometryNode::SetGeometry(GeometryPtr const& geometry)
+	void GeometryNode::SetGeometry(GeometryPtr geometry)
 	{
 		geometry_ = geometry;
 	}

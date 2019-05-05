@@ -32,14 +32,14 @@ namespace kiwano
 		GeometryNode();
 
 		GeometryNode(
-			GeometryPtr const& geometry
+			GeometryPtr geometry
 		);
 
 		virtual ~GeometryNode();
 
 		// 设置形状
 		void SetGeometry(
-			GeometryPtr const& geometry
+			GeometryPtr geometry
 		);
 
 		// 设置填充颜色
@@ -63,7 +63,7 @@ namespace kiwano
 		);
 
 		// 获取形状
-		GeometryPtr const& GetGeometry() const { return geometry_; }
+		GeometryPtr GetGeometry() const { return geometry_; }
 
 		// 获取填充颜色
 		Color GetFillColor() const { return fill_color_; }

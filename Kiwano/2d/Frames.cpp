@@ -37,7 +37,7 @@ namespace kiwano
 	{
 	}
 
-	void Frames::Add(ImagePtr const& frame)
+	void Frames::Add(ImagePtr frame)
 	{
 		KGE_ASSERT(frame && "Frames::Add failed, NULL pointer exception");
 

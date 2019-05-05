@@ -34,7 +34,7 @@ namespace kiwano
 
 		public:
 			void Send(
-				HttpRequestPtr const& request
+				HttpRequestPtr request
 			);
 
 			inline void SetTimeoutForConnect(Duration timeout)
@@ -78,8 +78,8 @@ namespace kiwano
 			void NetworkThread();
 
 			void Perform(
-				HttpRequestPtr const& request,
-				HttpResponsePtr const& response
+				HttpRequestPtr request,
+				HttpResponsePtr response
 			);
 
 			void DispatchResponseCallback();

@@ -30,7 +30,7 @@ namespace kiwano
 	public:
 		// Ìí¼Ó¼àÌıÆ÷
 		EventListenerPtr AddListener(
-			EventListenerPtr const& listener
+			EventListenerPtr listener
 		);
 
 		// Ìí¼Ó¼àÌıÆ÷

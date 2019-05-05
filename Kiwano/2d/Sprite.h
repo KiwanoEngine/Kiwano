@@ -32,7 +32,7 @@ namespace kiwano
 		Sprite();
 
 		explicit Sprite(
-			ImagePtr const& image
+			ImagePtr image
 		);
 
 		explicit Sprite(
@@ -53,7 +53,7 @@ namespace kiwano
 
 		// 加载图片
 		bool Load(
-			ImagePtr const& image
+			ImagePtr image
 		);
 
 		// 将图片裁剪为矩形
@@ -62,7 +62,7 @@ namespace kiwano
 		);
 
 		// 获取 Image 对象
-		ImagePtr const& GetImage() const;
+		ImagePtr GetImage() const;
 
 		// 渲染精灵
 		void OnRender() override;

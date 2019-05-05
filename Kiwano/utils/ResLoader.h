@@ -33,7 +33,7 @@ namespace kiwano
 		bool AddImage(String const& id, Resource const& image);
 
 		// 添加图片
-		bool AddImage(String const& id, ImagePtr const& image);
+		bool AddImage(String const& id, ImagePtr image);
 
 		// 添加帧集合
 		int AddFrames(String const& id, Array<Resource> const& images);
@@ -50,10 +50,10 @@ namespace kiwano
 		int AddFrames(String const& id, Resource const& image, Array<Rect> const& crop_rects);
 
 		// 添加帧集合
-		bool AddFrames(String const& id, FramesPtr const& frames);
+		bool AddFrames(String const& id, FramesPtr frames);
 
 		// 添加对象
-		bool AddObj(String const& id, ObjectPtr const& obj);
+		bool AddObj(String const& id, ObjectPtr obj);
 
 		ImagePtr GetImage(String const& id) const;
 

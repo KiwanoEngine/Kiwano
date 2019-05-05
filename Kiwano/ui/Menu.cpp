@@ -59,7 +59,7 @@ namespace kiwano
 		}
 	}
 
-	void Menu::AddButton(ButtonPtr const& button)
+	void Menu::AddButton(ButtonPtr button)
 	{
 		if (button)
 		{
@@ -69,7 +69,7 @@ namespace kiwano
 		}
 	}
 
-	bool Menu::RemoveButton(ButtonPtr const& button)
+	bool Menu::RemoveButton(ButtonPtr button)
 	{
 		if (buttons_.empty())
 		{

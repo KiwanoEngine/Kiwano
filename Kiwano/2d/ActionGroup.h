@@ -41,7 +41,7 @@ namespace kiwano
 
 		// 添加动作
 		void Add(
-			ActionPtr const& action
+			ActionPtr action
 		);
 
 		// 添加多个动作
@@ -60,10 +60,10 @@ namespace kiwano
 
 	protected:
 		// 初始化动作
-		void Init(NodePtr const& target) override;
+		void Init(NodePtr target) override;
 
 		// 更新动作
-		void Update(NodePtr const& target, Duration dt) override;
+		void Update(NodePtr target, Duration dt) override;
 
 	protected:
 		bool		sequence_;

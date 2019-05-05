@@ -36,7 +36,16 @@ namespace kiwano
 	{
 	}
 
-	void Action::UpdateStep(NodePtr const& target, Duration dt)
+	void Action::Init(NodePtr target)
+	{
+	}
+
+	void Action::Update(NodePtr target, Duration dt)
+	{
+		Complete(target);
+	}
+
+	void Action::UpdateStep(NodePtr target, Duration dt)
 	{
 		elapsed_ += dt;
 
@@ -72,7 +81,7 @@ namespace kiwano
 		}
 	}
 
-	void Action::Complete(NodePtr const& target)
+	void Action::Complete(NodePtr target)
 	{
 		if (cb_loop_done_)
 			cb_loop_done_();
@@ -90,7 +99,7 @@ namespace kiwano
 		++loops_done_;
 	}
 
-	void Action::Restart(NodePtr const & target)
+	void Action::Restart(NodePtr target)
 	{
 		status_ = Status::NotStarted;
 		elapsed_ = 0;

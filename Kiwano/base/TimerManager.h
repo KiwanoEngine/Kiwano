@@ -30,7 +30,7 @@ namespace kiwano
 	public:
 		// 添加任务
 		void AddTimer(
-			TimerPtr const& timer
+			TimerPtr timer
 		);
 
 		// 启动任务

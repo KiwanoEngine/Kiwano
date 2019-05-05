@@ -55,7 +55,7 @@ namespace kiwano
 		return done_;
 	}
 
-	void Transition::Init(ScenePtr const& prev, ScenePtr const& next)
+	void Transition::Init(ScenePtr prev, ScenePtr next)
 	{
 		process_ = 0;
 		delta_ = Duration{};
@@ -147,7 +147,7 @@ namespace kiwano
 	{
 	}
 
-	void BoxTransition::Init(ScenePtr const& prev, ScenePtr const& next)
+	void BoxTransition::Init(ScenePtr prev, ScenePtr next)
 	{
 		Transition::Init(prev, next);
 
@@ -189,7 +189,7 @@ namespace kiwano
 	{
 	}
 
-	void EmergeTransition::Init(ScenePtr const& prev, ScenePtr const& next)
+	void EmergeTransition::Init(ScenePtr prev, ScenePtr next)
 	{
 		Transition::Init(prev, next);
 
@@ -214,7 +214,7 @@ namespace kiwano
 	{
 	}
 
-	void FadeTransition::Init(ScenePtr const& prev, ScenePtr const& next)
+	void FadeTransition::Init(ScenePtr prev, ScenePtr next)
 	{
 		Transition::Init(prev, next);
 
@@ -248,7 +248,7 @@ namespace kiwano
 	{
 	}
 
-	void MoveTransition::Init(ScenePtr const& prev, ScenePtr const& next)
+	void MoveTransition::Init(ScenePtr prev, ScenePtr next)
 	{
 		Transition::Init(prev, next);
 
@@ -327,7 +327,7 @@ namespace kiwano
 	{
 	}
 
-	void RotationTransition::Init(ScenePtr const& prev, ScenePtr const& next)
+	void RotationTransition::Init(ScenePtr prev, ScenePtr next)
 	{
 		Transition::Init(prev, next);
 

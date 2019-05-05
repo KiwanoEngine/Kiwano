@@ -38,7 +38,7 @@ namespace kiwano
 
 		// 添加关键帧
 		void Add(
-			ImagePtr const& frame
+			ImagePtr frame
 		);
 
 		// 添加多个关键帧

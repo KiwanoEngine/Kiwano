@@ -66,7 +66,7 @@ namespace kiwano
 		);
 
 		HRESULT DrawImage(
-			ImagePtr const& image,
+			ImagePtr image,
 			Rect const& dest_rect
 		);
 

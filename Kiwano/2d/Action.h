@@ -95,20 +95,20 @@ namespace kiwano
 
 		inline Duration GetElapsed() const							{ return elapsed_; }
 
-		inline ActionCallback const& GetDoneCallback() const		{ return cb_done_; }
+		inline ActionCallback GetDoneCallback() const				{ return cb_done_; }
 
-		inline ActionCallback const& GetLoopDoneCallback() const	{ return cb_loop_done_; }
+		inline ActionCallback GetLoopDoneCallback() const			{ return cb_loop_done_; }
 
 	protected:
-		virtual void Init(NodePtr const& target) {}
+		virtual void Init(NodePtr target);
 
-		virtual void Update(NodePtr const& target, Duration dt) { Complete(target); }
+		virtual void Update(NodePtr target, Duration dt);
 
-		void UpdateStep(NodePtr const& target, Duration dt);
+		void UpdateStep(NodePtr target, Duration dt);
 
-		void Complete(NodePtr const& target);
+		void Complete(NodePtr target);
 
-		void Restart(NodePtr const& target);
+		void Restart(NodePtr target);
 
 	protected:
 		Status			status_;

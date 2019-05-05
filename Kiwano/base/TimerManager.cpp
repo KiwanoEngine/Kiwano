@@ -41,7 +41,7 @@ namespace kiwano
 		}
 	}
 
-	void TimerManager::AddTimer(TimerPtr const& timer)
+	void TimerManager::AddTimer(TimerPtr timer)
 	{
 		KGE_ASSERT(timer && "AddTimer failed, NULL pointer exception");
 

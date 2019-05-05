@@ -85,7 +85,7 @@ namespace kiwano
 
 		// 画图片
 		void DrawImage(
-			ImagePtr const& image,
+			ImagePtr image,
 			float opacity = 1.f
 		);
 
@@ -97,7 +97,7 @@ namespace kiwano
 
 		// 画几何图形边框
 		void DrawGeometry(
-			GeometryPtr const& geo
+			GeometryPtr geo
 		);
 
 		// 填充圆形
@@ -127,7 +127,7 @@ namespace kiwano
 
 		// 填充几何图形
 		void FillGeometry(
-			GeometryPtr const& geo
+			GeometryPtr geo
 		);
 
 		// 开始绘制路径

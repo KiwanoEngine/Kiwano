@@ -187,7 +187,7 @@ namespace kiwano
 		}
 	}
 
-	void Application::EnterScene(ScenePtr const & scene)
+	void Application::EnterScene(ScenePtr scene)
 	{
 		KGE_ASSERT(scene && "Application::EnterScene failed, NULL pointer exception");
 
@@ -197,7 +197,7 @@ namespace kiwano
 		next_scene_ = scene;
 	}
 
-	void Application::EnterScene(ScenePtr const& scene, TransitionPtr const& transition)
+	void Application::EnterScene(ScenePtr scene, TransitionPtr transition)
 	{
 		EnterScene(scene);
 		
@@ -212,7 +212,7 @@ namespace kiwano
 		}
 	}
 
-	ScenePtr const& Application::GetCurrentScene()
+	ScenePtr Application::GetCurrentScene()
 	{
 		return curr_scene_;
 	}

@@ -28,7 +28,7 @@ namespace kiwano
 	{
 	}
 
-	Sprite::Sprite(ImagePtr const& image)
+	Sprite::Sprite(ImagePtr image)
 		: image_(nullptr)
 	{
 		Load(image);
@@ -51,7 +51,7 @@ namespace kiwano
 	{
 	}
 
-	bool Sprite::Load(ImagePtr const& image)
+	bool Sprite::Load(ImagePtr image)
 	{
 		if (image)
 		{
@@ -90,7 +90,7 @@ namespace kiwano
 		);
 	}
 
-	ImagePtr const& Sprite::GetImage() const
+	ImagePtr Sprite::GetImage() const
 	{
 		return image_;
 	}

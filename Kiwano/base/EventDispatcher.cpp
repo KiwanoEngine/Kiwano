@@ -40,7 +40,7 @@ namespace kiwano
 		}
 	}
 
-	EventListenerPtr EventDispatcher::AddListener(EventListenerPtr const & listener)
+	EventListenerPtr EventDispatcher::AddListener(EventListenerPtr listener)
 	{
 		KGE_ASSERT(listener && "AddListener failed, NULL pointer exception");
 

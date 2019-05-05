@@ -98,7 +98,7 @@ namespace kiwano
 		return dur_;
 	}
 
-	void ActionTween::Update(NodePtr const& target, Duration dt)
+	void ActionTween::Update(NodePtr target, Duration dt)
 	{
 		float percent;
 
@@ -142,7 +142,7 @@ namespace kiwano
 		delta_pos_ = vector;
 	}
 
-	void ActionMoveBy::Init(NodePtr const& target)
+	void ActionMoveBy::Init(NodePtr target)
 	{
 		if (target)
 		{
@@ -150,7 +150,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionMoveBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionMoveBy::UpdateTween(NodePtr target, float percent)
 	{
 		Point diff = target->GetPosition() - prev_pos_;
 		start_pos_ = start_pos_ + diff;
@@ -182,7 +182,7 @@ namespace kiwano
 		return new (std::nothrow) ActionMoveTo(dur_, end_pos_, ease_func_);
 	}
 
-	void ActionMoveTo::Init(NodePtr const& target)
+	void ActionMoveTo::Init(NodePtr target)
 	{
 		ActionMoveBy::Init(target);
 		delta_pos_ = end_pos_ - start_pos_;
@@ -211,7 +211,7 @@ namespace kiwano
 		return new (std::nothrow) ActionJumpBy(dur_, -delta_pos_, height_, jumps_, ease_func_);
 	}
 
-	void ActionJumpBy::Init(NodePtr const& target)
+	void ActionJumpBy::Init(NodePtr target)
 	{
 		if (target)
 		{
@@ -219,7 +219,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionJumpBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionJumpBy::UpdateTween(NodePtr target, float percent)
 	{
 		float frac = fmod(percent * jumps_, 1.f);
 		float x = delta_pos_.x * percent;
@@ -246,7 +246,7 @@ namespace kiwano
 		return new (std::nothrow) ActionJumpTo(dur_, end_pos_, height_, jumps_, ease_func_);
 	}
 
-	void ActionJumpTo::Init(NodePtr const& target)
+	void ActionJumpTo::Init(NodePtr target)
 	{
 		ActionJumpBy::Init(target);
 		delta_pos_ = end_pos_ - start_pos_;
@@ -271,7 +271,7 @@ namespace kiwano
 		delta_y_ = scale_y;
 	}
 
-	void ActionScaleBy::Init(NodePtr const& target)
+	void ActionScaleBy::Init(NodePtr target)
 	{
 		if (target)
 		{
@@ -280,7 +280,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionScaleBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionScaleBy::UpdateTween(NodePtr target, float percent)
 	{
 		target->SetScale(start_scale_x_ + delta_x_ * percent, start_scale_y_ + delta_y_ * percent);
 	}
@@ -314,7 +314,7 @@ namespace kiwano
 		return new (std::nothrow) ActionScaleTo(dur_, end_scale_x_, end_scale_y_, ease_func_);
 	}
 
-	void ActionScaleTo::Init(NodePtr const& target)
+	void ActionScaleTo::Init(NodePtr target)
 	{
 		ActionScaleBy::Init(target);
 		delta_x_ = end_scale_x_ - start_scale_x_;
@@ -332,7 +332,7 @@ namespace kiwano
 		delta_val_ = opacity;
 	}
 
-	void ActionOpacityBy::Init(NodePtr const& target)
+	void ActionOpacityBy::Init(NodePtr target)
 	{
 		if (target)
 		{
@@ -340,7 +340,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionOpacityBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionOpacityBy::UpdateTween(NodePtr target, float percent)
 	{
 		target->SetOpacity(start_val_ + delta_val_ * percent);
 	}
@@ -366,7 +366,7 @@ namespace kiwano
 		return new (std::nothrow) ActionOpacityTo(dur_, end_val_, ease_func_);
 	}
 
-	void ActionOpacityTo::Init(NodePtr const& target)
+	void ActionOpacityTo::Init(NodePtr target)
 	{
 		ActionOpacityBy::Init(target);
 		delta_val_ = end_val_ - start_val_;
@@ -393,7 +393,7 @@ namespace kiwano
 	{
 	}
 
-	void ActionRotateBy::Init(NodePtr const& target)
+	void ActionRotateBy::Init(NodePtr target)
 	{
 		if (target)
 		{
@@ -401,7 +401,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionRotateBy::UpdateTween(NodePtr const& target, float percent)
+	void ActionRotateBy::UpdateTween(NodePtr target, float percent)
 	{
 		float rotation = start_val_ + delta_val_ * percent;
 		if (rotation > 360.f)
@@ -431,7 +431,7 @@ namespace kiwano
 		return new (std::nothrow) ActionRotateTo(dur_, end_val_, ease_func_);
 	}
 
-	void ActionRotateTo::Init(NodePtr const& target)
+	void ActionRotateTo::Init(NodePtr target)
 	{
 		ActionRotateBy::Init(target);
 		delta_val_ = end_val_ - start_val_;
@@ -442,7 +442,7 @@ namespace kiwano
 	// ActionPath
 	//-------------------------------------------------------
 
-	ActionPath::ActionPath(Duration duration, GeometryPtr const& geo, bool rotating, float start, float end, EaseFunc func)
+	ActionPath::ActionPath(Duration duration, GeometryPtr geo, bool rotating, float start, float end, EaseFunc func)
 		: ActionTween(duration, func)
 		, start_(start)
 		, end_(end)
@@ -461,12 +461,12 @@ namespace kiwano
 		return new ActionPath(dur_, geo_, rotating_, end_, start_, ease_func_);
 	}
 
-	void ActionPath::Init(NodePtr const& target)
+	void ActionPath::Init(NodePtr target)
 	{
 		start_pos_ = target->GetPosition();
 	}
 
-	void ActionPath::UpdateTween(NodePtr const& target, float percent)
+	void ActionPath::UpdateTween(NodePtr target, float percent)
 	{
 		float length = geo_->GetLength() * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
 

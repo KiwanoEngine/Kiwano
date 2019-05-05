@@ -30,7 +30,7 @@ namespace kiwano
 	public:
 		// 添加动作
 		ActionPtr AddAction(
-			ActionPtr const& action
+			ActionPtr action
 		);
 
 		// 获取动作
@@ -51,7 +51,7 @@ namespace kiwano
 		Actions const& GetAllActions() const;
 
 	protected:
-		void UpdateActions(NodePtr const& target, Duration dt);
+		void UpdateActions(NodePtr target, Duration dt);
 
 	protected:
 		Actions actions_;

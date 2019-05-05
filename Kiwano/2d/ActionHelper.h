@@ -46,9 +46,9 @@ namespace kiwano
 		inline ActionHelper& SetName(String const& name)					{ base->SetName(name); return (*this); }
 
 		// 获取指针
-		inline ActionPtr const& Get() const									{ return base; }
+		inline ActionPtr Get() const									{ return base; }
 
-		inline ActionHelper(ActionPtr const& base)							: base(base) {}
+		inline ActionHelper(ActionPtr base)							: base(base) {}
 
 		inline operator ActionPtr() const									{ return base; }
 
@@ -83,9 +83,9 @@ namespace kiwano
 		inline TweenHelper& SetName(String const& name)						{ base->SetName(name); return (*this); }
 
 		// 获取指针
-		inline ActionTweenPtr const& Get() const							{ return base; }
+		inline ActionTweenPtr Get() const							{ return base; }
 		
-		inline TweenHelper(ActionTweenPtr const& base)						: base(base) {}
+		inline TweenHelper(ActionTweenPtr base)						: base(base) {}
 
 		inline operator ActionPtr() const									{ return base; }
 
@@ -191,7 +191,7 @@ namespace kiwano
 
 		static inline TweenHelper
 		Path(
-			GeometryPtr const& geo,		/* 几何图形 */
+			GeometryPtr geo,			/* 几何图形 */
 			bool rotating = false,		/* 沿路径切线方向旋转 */
 			float start = 0.f,			/* 起点 */
 			float end = 1.f)			/* 终点 */
@@ -200,7 +200,7 @@ namespace kiwano
 		}
 
 		static inline TweenHelper
-			Animation(FramesPtr const& frames)
+			Animation(FramesPtr frames)
 		{
 			return TweenHelper(new kiwano::Animation(0, frames));
 		}

@@ -325,7 +325,7 @@ namespace kiwano
 
 		// 添加子节点
 		void AddChild(
-			NodePtr const& child
+			NodePtr child
 		);
 
 		// 添加多个子节点
@@ -348,7 +348,7 @@ namespace kiwano
 
 		// 移除子节点
 		void RemoveChild(
-			NodePtr const& child
+			NodePtr child
 		);
 
 		// 移除子节点
