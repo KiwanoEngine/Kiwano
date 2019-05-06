@@ -58,16 +58,16 @@ namespace kiwano
 
 	void Node::Update(Duration dt)
 	{
-		if (update_pausing_)
-			return;
+		if (!update_pausing_)
+		{
+			UpdateActions(this, dt);
+			UpdateTimers(dt);
 
-		UpdateActions(this, dt);
-		UpdateTimers(dt);
+			if (cb_update_)
+				cb_update_(dt);
 
-		if (cb_update_)
-			cb_update_(dt);
-
-		OnUpdate(dt);
+			OnUpdate(dt);
+		}
 
 		if (!children_.IsEmpty())
 		{
