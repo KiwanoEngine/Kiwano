@@ -51,10 +51,11 @@ namespace kiwano
 
 	void DebugNode::OnRender()
 	{
+		Renderer::Instance().SetTransform(Matrix{});
 		Renderer::Instance().GetSolidColorBrush()->SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, 0.5f));
 
 		Renderer::Instance().GetDeviceResources()->GetD2DDeviceContext()->FillRectangle(
-			D2D1_RECT_F{ 10, 10, 30 + debug_text_->GetWidth(), 30 + debug_text_->GetHeight() },
+			D2D1_RECT_F{ 10, 10, 30 + debug_text_->GetLayoutSize().x, 30 + debug_text_->GetLayoutSize().y },
 			Renderer::Instance().GetSolidColorBrush()
 		);
 	}
@@ -85,8 +86,6 @@ namespace kiwano
 		ss << "Memory: " << pmc.PrivateUsage / 1024 << "kb";
 
 		debug_text_->SetText(ss.str());
-
-		debug_text_->SetSize(debug_text_->GetLayoutSize());
 	}
 
 }
