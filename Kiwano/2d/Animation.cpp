@@ -73,8 +73,8 @@ namespace kiwano
 		KGE_ASSERT(sprite_target && "Animation only supports Sprites");
 
 		const auto& frames = frames_->GetFrames();
-		int size = frames.size();
-		int index = std::min(static_cast<int>(math::Floor(size * percent)), size - 1);
+		auto size = frames.size();
+		auto index = std::min(static_cast<size_t>(math::Floor(size * percent)), size - 1);
 
 		sprite_target->Load(frames[index]);
 	}

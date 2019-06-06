@@ -38,7 +38,7 @@ namespace kiwano
 		bool IsEnable() const;
 
 		// 获取菜单中的按钮数量
-		int GetButtonCount() const;
+		size_t GetButtonCount() const;
 
 		// 设置菜单启用或禁用
 		void SetEnabled(

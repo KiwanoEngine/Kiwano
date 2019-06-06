@@ -208,7 +208,7 @@ namespace kiwano
 	struct __ArrayManager<_Ty, _Alloc, false>
 	{
 		using value_type		= _Ty;
-		using size_type			= int;
+		using size_type			= size_t;
 		using allocator_type	= typename _Alloc;
 
 		static inline void copy_data(value_type* dest, const value_type* src, size_type count)	{ if (src == dest) return; ::memcpy(dest, src, (size_t)count * sizeof(value_type)); }
@@ -237,7 +237,7 @@ namespace kiwano
 	struct __ArrayManager<_Ty, _Alloc, true>
 	{
 		using value_type		= _Ty;
-		using size_type			= int;
+		using size_type			= size_t;
 		using allocator_type	= typename _Alloc;
 
 		static inline void copy_data(value_type* dest, const value_type* src, size_type count)		{ if (src == dest) return; while (count--) (*dest++) = (*src++); }

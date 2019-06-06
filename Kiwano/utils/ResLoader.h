@@ -36,18 +36,18 @@ namespace kiwano
 		bool AddImage(String const& id, ImagePtr image);
 
 		// 添加帧集合
-		int AddFrames(String const& id, Array<Resource> const& images);
+		size_t AddFrames(String const& id, Array<Resource> const& images);
 
 		// 添加帧集合
-		int AddFrames(String const& id, Array<ImagePtr> const& images);
+		size_t AddFrames(String const& id, Array<ImagePtr> const& images);
 
 		// 添加帧集合
 		// 按行列数裁剪图片
-		int AddFrames(String const& id, Resource const& image, int cols, int rows = 1);
+		size_t AddFrames(String const& id, Resource const& image, int cols, int rows = 1);
 
 		// 添加帧集合
 		// 按指定裁剪矩形裁剪图片
-		int AddFrames(String const& id, Resource const& image, Array<Rect> const& crop_rects);
+		size_t AddFrames(String const& id, Resource const& image, Array<Rect> const& crop_rects);
 
 		// 添加帧集合
 		bool AddFrames(String const& id, FramesPtr frames);

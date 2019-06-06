@@ -363,7 +363,7 @@ namespace kiwano
 		{
 			using difference_type = std::ptrdiff_t;
 
-			inline primitive_iterator(int it = 0)									: it_(it) {}
+			inline primitive_iterator(difference_type it = 0)						: it_(it) {}
 
 			inline void set_begin()													{ it_ = 0; }
 			inline void set_end()													{ it_ = 1; }
@@ -392,7 +392,7 @@ namespace kiwano
 			inline bool operator>=(primitive_iterator const& other) const			{ return it_ >= other.it_; }
 
 		private:
-			int it_;
+			difference_type it_;
 		};
 
 		template <typename _BasicJsonTy>
