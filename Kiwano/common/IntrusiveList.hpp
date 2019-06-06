@@ -22,7 +22,9 @@
 #include "../macros.h"
 #include <functional>
 
-#ifdef KGE_DEBUG
+// #define KGE_DEBUG_ENABLE_LIST_CHECK
+
+#ifdef KGE_DEBUG_ENABLE_LIST_CHECK
 #	define KGE_DEBUG_CHECK_LIST(list_ptr) list_ptr->Check()
 #else
 #	define KGE_DEBUG_CHECK_LIST __noop
@@ -167,7 +169,7 @@ namespace kiwano
 
 		void Remove(T const& child)
 		{
-#ifdef KGE_DEBUG
+#ifdef KGE_DEBUG_ENABLE_LIST_CHECK
 			T tmp = first_;
 			while (tmp != child)
 			{
@@ -217,7 +219,7 @@ namespace kiwano
 			last_ = nullptr;
 		}
 
-#ifdef KGE_DEBUG
+#ifdef KGE_DEBUG_ENABLE_LIST_CHECK
 
 	private:
 		void Check()
@@ -250,3 +252,4 @@ namespace kiwano
 }
 
 #undef KGE_DEBUG_CHECK_LIST
+#undef KGE_DEBUG_ENABLE_LIST_CHECK

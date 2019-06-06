@@ -239,10 +239,8 @@ namespace kiwano
 		}
 	}
 
-	void Node::SetZOrder(int zorder)
+	void Node::Reorder()
 	{
-		z_order_ = zorder;
-
 		if (parent_)
 		{
 			NodePtr me = this;
@@ -251,12 +249,12 @@ namespace kiwano
 
 			Node* sibling = parent_->children_.Last().Get();
 
-			if (sibling && sibling->GetZOrder() > zorder)
+			if (sibling && sibling->GetZOrder() > z_order_)
 			{
 				sibling = sibling->PrevItem().Get();
 				while (sibling)
 				{
-					if (sibling->GetZOrder() <= zorder)
+					if (sibling->GetZOrder() <= z_order_)
 						break;
 					sibling = sibling->PrevItem().Get();
 				}
@@ -270,6 +268,15 @@ namespace kiwano
 			{
 				parent_->children_.PushFront(me);
 			}
+		}
+	}
+
+	void Node::SetZOrder(int zorder)
+	{
+		if (z_order_ != zorder)
+		{
+			z_order_ = zorder;
+			Reorder();
 		}
 	}
 
@@ -473,7 +480,7 @@ namespace kiwano
 			child->SetScene(this->scene_);
 			child->dirty_transform_ = true;
 			child->UpdateOpacity();
-			child->SetZOrder(child->GetZOrder());
+			child->Reorder();
 		}
 	}
 
