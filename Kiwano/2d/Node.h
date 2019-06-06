@@ -405,6 +405,8 @@ namespace kiwano
 
 		void SetScene(Scene* scene);
 
+		void Reorder();
+
 	protected:
 		bool			visible_;
 		bool			hover_;
