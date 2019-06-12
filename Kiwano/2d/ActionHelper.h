@@ -205,6 +205,12 @@ namespace kiwano
 			return TweenHelper(new kiwano::Animation(0, frames));
 		}
 
+		static inline TweenHelper
+			Custom(kiwano::ActionCustom::TweenFunc tween_func)
+		{
+			return TweenHelper(new kiwano::ActionCustom(0, tween_func));
+		}
+
 		static inline ActionHelper
 			Delay(Duration delay)
 		{

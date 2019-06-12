@@ -470,6 +470,39 @@ namespace kiwano
 	};
 
 
+	// 自定义动作
+	class KGE_API ActionCustom
+		: public ActionTween
+	{
+	public:
+		using TweenFunc = Closure<void(NodePtr, float)>;
+
+		ActionCustom(
+			Duration duration,		/* 持续时长 */
+			TweenFunc tween_func,	/* 过程函数 */
+			EaseFunc func = nullptr	/* 速度变化 */
+		);
+
+		// 获取该动作的拷贝对象
+		ActionPtr Clone() const override;
+
+		// 获取该动作的倒转
+		ActionPtr Reverse() const override
+		{
+			KGE_ERROR_LOG(L"Reverse() not supported in ActionCustom");
+			return nullptr;
+		}
+
+	protected:
+		void Init(NodePtr target) override;
+
+		void UpdateTween(NodePtr target, float percent) override;
+
+	protected:
+		TweenFunc tween_func_;
+	};
+
+
 	// 延时动作
 	class KGE_API ActionDelay
 		: public Action
