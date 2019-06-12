@@ -259,16 +259,16 @@ namespace kiwano
 
 	ActionScaleBy::ActionScaleBy(Duration duration, float scale, EaseFunc func)
 		: ActionTween(duration, func)
+		, delta_x_(scale)
+		, delta_y_(scale)
 	{
-		delta_x_ = scale;
-		delta_y_ = scale;
 	}
 
 	ActionScaleBy::ActionScaleBy(Duration duration, float scale_x, float scale_y, EaseFunc func)
 		: ActionTween(duration, func)
+		, delta_x_(scale_x)
+		, delta_y_(scale_y)
 	{
-		delta_x_ = scale_x;
-		delta_y_ = scale_y;
 	}
 
 	void ActionScaleBy::Init(NodePtr target)
@@ -328,8 +328,8 @@ namespace kiwano
 
 	ActionOpacityBy::ActionOpacityBy(Duration duration, float opacity, EaseFunc func)
 		: ActionTween(duration, func)
+		, delta_val_(opacity)
 	{
-		delta_val_ = opacity;
 	}
 
 	void ActionOpacityBy::Init(NodePtr target)
@@ -389,6 +389,7 @@ namespace kiwano
 
 	ActionRotateBy::ActionRotateBy(Duration duration, float rotation, EaseFunc func)
 		: ActionTween(duration, func)
+		, start_val_()
 		, delta_val_(rotation)
 	{
 	}
@@ -482,6 +483,34 @@ namespace kiwano
 				target->SetRotation(rotation);
 			}
 		}
+	}
+
+
+	//-------------------------------------------------------
+	// ActionCustom
+	//-------------------------------------------------------
+
+	ActionCustom::ActionCustom(Duration duration, TweenFunc tween_func, EaseFunc func)
+		: ActionTween(duration, func)
+		, tween_func_(tween_func)
+	{
+	}
+
+	ActionPtr ActionCustom::Clone() const
+	{
+		return new ActionCustom(dur_, tween_func_);
+	}
+
+	void ActionCustom::Init(NodePtr target)
+	{
+		if (!tween_func_)
+			this->Done();
+	}
+
+	void ActionCustom::UpdateTween(NodePtr target, float percent)
+	{
+		if (tween_func_)
+			tween_func_(target, percent);
 	}
 
 
