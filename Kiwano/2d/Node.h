@@ -31,7 +31,7 @@ namespace kiwano
 
 	// ½Úµã
 	class KGE_API Node
-		: public virtual Object
+		: public Object
 		, public TimerManager
 		, public ActionManager
 		, public EventDispatcher

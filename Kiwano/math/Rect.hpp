@@ -49,8 +49,8 @@ namespace kiwano
 			{}
 
 			RectT(
-				const Vec2& pos,
-				const Vec2& size
+				const Vec2T<value_type>& pos,
+				const Vec2T<value_type>& size
 			)
 				: origin(pos.x, pos.y)
 				, size(size.x, size.y)
@@ -75,36 +75,38 @@ namespace kiwano
 				return (origin == rect.origin) && (size == rect.size);
 			}
 
-			inline void Set(value_type x, value_type y, value_type width, value_type height) { origin = Vec2{ x, y }; size = Vec2{ width, height }; }
+			inline void Set(value_type x, value_type y, value_type width, value_type height)
+			{
+				origin = Vec2T<value_type>{ x, y };
+				size = Vec2T<value_type>{ width, height };
+			}
 
-			inline Vec2 GetCenter() const { return Vec2{ origin.x + size.x / 2, origin.y + size.y / 2 }; }
+			inline Vec2T<value_type> GetCenter() const		{ return Vec2T<value_type>{ origin.x + size.x / 2, origin.y + size.y / 2 }; }
 
-			inline Vec2 GetLeftTop() const { return origin; }
+			inline Vec2T<value_type> GetLeftTop() const		{ return origin; }
 
-			inline Vec2 GetRightBottom() const { return Vec2{ GetRight(), GetBottom() }; }
+			inline Vec2T<value_type> GetRightBottom() const	{ return Vec2T<value_type>{ GetRight(), GetBottom() }; }
 
-			inline Vec2 GetRightTop() const { return Vec2{ GetRight(), GetTop() }; }
+			inline Vec2T<value_type> GetRightTop() const	{ return Vec2T<value_type>{ GetRight(), GetTop() }; }
 
-			inline Vec2 GetLeftBottom() const { return Vec2{ GetLeft(), GetBottom() }; }
+			inline Vec2T<value_type> GetLeftBottom() const	{ return Vec2T<value_type>{ GetLeft(), GetBottom() }; }
 
-			inline value_type GetLeft() const { return origin.x; }
+			inline value_type GetLeft() const				{ return origin.x; }
 
-			inline value_type GetTop() const { return origin.y; }
+			inline value_type GetTop() const				{ return origin.y; }
 
-			inline value_type GetRight() const { return origin.x + size.x; }
+			inline value_type GetRight() const				{ return origin.x + size.x; }
 
-			inline value_type GetBottom() const { return origin.y + size.y; }
+			inline value_type GetBottom() const				{ return origin.y + size.y; }
 
-			inline bool IsEmpty() const { return origin.IsOrigin() && size.IsOrigin(); }
+			inline bool IsEmpty() const						{ return origin.IsOrigin() && size.IsOrigin(); }
 
-			// 判断点是否在矩形内
-			inline bool ContainsPoint(const Vec2& point) const
+			inline bool ContainsPoint(const Vec2T<value_type>& point) const
 			{
 				return	point.x >= origin.x && point.x <= (origin.x + size.x) &&
 					point.y >= origin.y && point.y <= (origin.y + size.y);
 			}
 
-			// 判断两矩形是否相交
 			inline bool Intersects(const RectT& rect) const
 			{
 				return !((origin.x + size.x)			< rect.origin.x ||

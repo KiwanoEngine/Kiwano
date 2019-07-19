@@ -50,12 +50,12 @@ namespace kiwano
 
 		void DiscardResources();
 
-		inline ID3D10Device*			GetD3DDevice() const			{ return d3d_device_.Get(); }
-		inline ID3D10Device*			GetD3DDeviceContext() const		{ return d3d_device_.Get(); }
-		inline ID3D10RenderTargetView*	GetD3DRenderTargetView() const	{ return d3d_rt_view_.Get(); }
-		inline ID3D10DepthStencilView*	GetD3DDepthStencilView() const	{ return d3d_ds_view_.Get(); }
-		inline IDXGIFactory*			GetDXGIFactory() const			{ return dxgi_factory_.Get(); }
-		inline IDXGISwapChain*			GetDXGISwapChain() const		{ return dxgi_swap_chain_.Get(); }
+		inline ID3D10Device*			GetD3DDevice() const			{ KGE_ASSERT(d3d_device_); return d3d_device_.Get(); }
+		inline ID3D10Device*			GetD3DDeviceContext() const		{ KGE_ASSERT(d3d_device_); return d3d_device_.Get(); }
+		inline ID3D10RenderTargetView*	GetD3DRenderTargetView() const	{ KGE_ASSERT(d3d_rt_view_); return d3d_rt_view_.Get(); }
+		inline ID3D10DepthStencilView*	GetD3DDepthStencilView() const	{ KGE_ASSERT(d3d_ds_view_); return d3d_ds_view_.Get(); }
+		inline IDXGIFactory*			GetDXGIFactory() const			{ KGE_ASSERT(dxgi_factory_); return dxgi_factory_.Get(); }
+		inline IDXGISwapChain*			GetDXGISwapChain() const		{ KGE_ASSERT(dxgi_swap_chain_); return dxgi_swap_chain_.Get(); }
 
 		inline Size const&				GetLogicalSize() const			{ return logical_size_; }
 		inline Size const&				GetOutputSize() const			{ return output_size_; }

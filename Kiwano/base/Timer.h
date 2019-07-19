@@ -34,7 +34,7 @@ namespace kiwano
 
     // 定时任务
 	class KGE_API Timer
-		: public virtual Object
+		: public Object
 		, protected IntrusiveListItem<TimerPtr>
 	{
 		friend class TimerManager;

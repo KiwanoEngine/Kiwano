@@ -27,7 +27,7 @@ namespace kiwano
 {
 	// ͼƬ
 	class KGE_API Image
-		: public virtual Object
+		: public Object
 	{
 	public:
 		Image();

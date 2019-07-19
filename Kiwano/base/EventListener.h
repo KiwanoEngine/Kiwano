@@ -37,7 +37,7 @@ namespace kiwano
 
 	// ÊÂ¼ş¼àÌıÆ÷
 	class KGE_API EventListener
-		: public virtual Object
+		: public Object
 		, protected IntrusiveListItem<EventListenerPtr>
 	{
 		friend class EventDispatcher;

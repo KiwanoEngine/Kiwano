@@ -26,7 +26,7 @@ namespace kiwano
 {
 	// ¼¸ºÎ³éÏó
 	class KGE_API Geometry
-		: public virtual Object
+		: public Object
 	{
 		friend class Canvas;
 		friend class GeometryNode;

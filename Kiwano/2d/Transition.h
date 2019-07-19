@@ -28,7 +28,7 @@ namespace kiwano
 
 	// ³¡¾°¹ý¶É
 	class KGE_API Transition
-		: public virtual Object
+		: public Object
 	{
 		friend class Application;
 

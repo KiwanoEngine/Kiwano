@@ -151,11 +151,11 @@ namespace kiwano
 
 		inline Size const&				GetOutputSize() const		{ return output_size_; }
 
-		inline DeviceResources*			GetDeviceResources() const	{ return device_resources_.Get(); }
+		inline DeviceResources*			GetDeviceResources() const	{ KGE_ASSERT(device_resources_); return device_resources_.Get(); }
 
-		inline ITextRenderer*			GetTextRenderer() const		{ return text_renderer_.Get(); }
+		inline ITextRenderer*			GetTextRenderer() const		{ KGE_ASSERT(text_renderer_); return text_renderer_.Get(); }
 
-		inline ID2D1SolidColorBrush*	GetSolidColorBrush() const	{ return solid_color_brush_.Get(); }
+		inline ID2D1SolidColorBrush*	GetSolidColorBrush() const	{ KGE_ASSERT(solid_color_brush_); return solid_color_brush_.Get(); }
 
 	private:
 		Renderer();

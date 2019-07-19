@@ -80,6 +80,34 @@ namespace kiwano
 				return Vec2T(-x, -y);
 			}
 
+			inline Vec2T& operator += (const Vec2T& other)
+			{
+				x += other.x;
+				y += other.y;
+				return (*this);
+			}
+
+			inline Vec2T& operator -= (const Vec2T& other)
+			{
+				x -= other.x;
+				y -= other.y;
+				return (*this);
+			}
+
+			inline Vec2T& operator *= (value_type val)
+			{
+				x *= val;
+				y *= val;
+				return (*this);
+			}
+
+			inline Vec2T& operator /= (value_type val)
+			{
+				x /= val;
+				y /= val;
+				return (*this);
+			}
+
 			inline bool operator== (const Vec2T& other) const
 			{
 				return (x == other.x) && (y == other.y);
