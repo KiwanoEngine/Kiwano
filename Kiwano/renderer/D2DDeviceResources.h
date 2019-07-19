@@ -69,12 +69,12 @@ namespace kiwano
 			_In_ ComPtr<ID2D1Bitmap1> const& target
 		);
 
-		inline ID2D1Factory1*			GetD2DFactory() const			{ return d2d_factory_.Get(); }
-		inline IWICImagingFactory*		GetWICImagingFactory() const	{ return imaging_factory_.Get(); }
-		inline IDWriteFactory*			GetDWriteFactory() const		{ return dwrite_factory_.Get(); }
-		inline ID2D1Device*				GetD2DDevice() const			{ return d2d_device_.Get(); }
-		inline ID2D1DeviceContext*		GetD2DDeviceContext() const		{ return d2d_device_context_.Get(); }
-		inline ID2D1Bitmap1*			GetD2DTargetBitmap() const		{ return d2d_target_bitmap_.Get(); }
+		inline ID2D1Factory1*			GetD2DFactory() const			{ KGE_ASSERT(d2d_factory_); return d2d_factory_.Get(); }
+		inline IWICImagingFactory*		GetWICImagingFactory() const	{ KGE_ASSERT(imaging_factory_); return imaging_factory_.Get(); }
+		inline IDWriteFactory*			GetDWriteFactory() const		{ KGE_ASSERT(dwrite_factory_); return dwrite_factory_.Get(); }
+		inline ID2D1Device*				GetD2DDevice() const			{ KGE_ASSERT(d2d_device_); return d2d_device_.Get(); }
+		inline ID2D1DeviceContext*		GetD2DDeviceContext() const		{ KGE_ASSERT(d2d_device_context_); return d2d_device_context_.Get(); }
+		inline ID2D1Bitmap1*			GetD2DTargetBitmap() const		{ KGE_ASSERT(d2d_target_bitmap_); return d2d_target_bitmap_.Get(); }
 
 		ID2D1StrokeStyle*				GetStrokeStyle(StrokeStyle stroke) const;
 
