@@ -28,7 +28,7 @@ namespace kiwano
 	class ActionManager;
 
 	class KGE_API Action
-		: public virtual Object
+		: public Object
 		, protected IntrusiveListItem<ActionPtr>
 	{
 		friend class ActionManager;

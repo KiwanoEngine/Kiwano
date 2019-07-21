@@ -25,7 +25,7 @@ namespace kiwano
 {
 	// ађСажЁ
 	class KGE_API Frames
-		: public virtual Object
+		: public Object
 	{
 	public:
 		Frames();

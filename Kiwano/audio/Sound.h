@@ -27,7 +27,7 @@ namespace kiwano
 
 	// “Ù¿÷∂‘œÛ
 	class KGE_API Sound
-		: public virtual Object
+		: public Object
 	{
 	public:
 		Sound();
