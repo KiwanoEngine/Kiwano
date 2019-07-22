@@ -21,7 +21,7 @@
 #pragma once
 #include "Object.h"
 #include "../common/closure.hpp"
-#include <functional>
+#include <thread>
 #include <mutex>
 
 namespace kiwano
@@ -41,6 +41,8 @@ namespace kiwano
 			AsyncTaskFunc func
 		);
 
+		virtual ~AsyncTask();
+
 		AsyncTask& Then(
 			AsyncTaskFunc func
 		);
@@ -57,8 +59,9 @@ namespace kiwano
 		void Complete();
 
 	protected:
+		std::thread thread_;
+		std::mutex func_mutex_;
 		Queue<AsyncTaskFunc> thread_func_queue_;
 		AsyncTaskCallback thread_cb_;
-		std::mutex func_mutex_;
 	};
 }
