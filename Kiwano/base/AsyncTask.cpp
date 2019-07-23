@@ -20,24 +20,27 @@
 
 #include "AsyncTask.h"
 #include "../platform/Application.h"
-#include <thread>
 
 namespace kiwano
 {
-
 	AsyncTask::AsyncTask()
+		: thread_(MakeClosure(this, &AsyncTask::TaskThread))
 	{
 	}
 
 	AsyncTask::AsyncTask(AsyncTaskFunc func)
+		: AsyncTask()
 	{
 		Then(func);
 	}
 
+	AsyncTask::~AsyncTask()
+	{
+	}
+
 	void AsyncTask::Start()
 	{
-		std::thread thread(MakeClosure(this, &AsyncTask::TaskThread));
-		thread.detach();
+		thread_.detach();
 
 		// retain this object until finished
 		Retain();
