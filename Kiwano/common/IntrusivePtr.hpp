@@ -42,6 +42,11 @@ namespace kiwano
 			typename _Manager::AddRef(ptr_);
 		}
 
+		IntrusivePtr(const Type* p) noexcept : ptr_(p)
+		{
+			typename _Manager::AddRef(ptr_);
+		}
+
 		IntrusivePtr(const IntrusivePtr& other) noexcept
 			: ptr_(other.ptr_)
 		{
