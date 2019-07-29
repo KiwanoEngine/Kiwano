@@ -18,67 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "File.h"
+#include "FileUtil.h"
 #include "../platform/modules.h"
-#include <cwctype>
 
 namespace kiwano
 {
-	File::File()
-		: file_path_()
-	{
-	}
 
-	File::File(String const& file_name)
-		: file_path_(file_name)
+	bool FileUtil::Delete(String const& file_path)
 	{
-	}
-
-	File::~File()
-	{
-	}
-
-	bool File::Open(String const& file_name)
-	{
-		if (file_name.empty())
-			return false;
-
-		file_path_ = file_name;
-		return Exists();
-	}
-
-	bool File::Exists() const
-	{
-		return !!modules::Shlwapi::Get().PathFileExistsW(file_path_.c_str());
-	}
-
-	String const& File::GetPath() const
-	{
-		return file_path_;
-	}
-
-	String File::GetExtension() const
-	{
-		String file_ext;
-		size_t pos = file_path_.find_last_of(L'.');
-		if (pos != String::npos)
-		{
-			file_ext = file_path_.substr(pos);
-			std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), std::towlower);
-		}
-		return file_ext;
-	}
-
-	bool File::Delete()
-	{
-		if (::DeleteFile(file_path_.c_str()))
+		if (::DeleteFile(file_path.c_str()))
 			return true;
 		return false;
 	}
 
-	File File::Extract(Resource const& res, String const& dest_file_name)
+	bool FileUtil::Extract(Resource const& res, String const& dest_file_name)
 	{
-		File file;
 		HANDLE file_handle = ::CreateFile(
 			dest_file_name.c_str(),
 			GENERIC_WRITE,
@@ -90,7 +44,7 @@ namespace kiwano
 		);
 
 		if (file_handle == INVALID_HANDLE_VALUE)
-			return file;
+			return false;
 
 		LPVOID buffer;
 		DWORD buffer_size;
@@ -100,14 +54,29 @@ namespace kiwano
 			::WriteFile(file_handle, buffer, buffer_size, &written_bytes, NULL);
 			::CloseHandle(file_handle);
 
-			file.Open(dest_file_name);
+			return true;
 		}
 		else
 		{
 			::CloseHandle(file_handle);
 			::DeleteFile(dest_file_name.c_str());
 		}
+		return false;
+	}
 
-		return file;
+	bool FileUtil::ExistsFile(String const& file_path)
+	{
+		DWORD dwAttrib = ::GetFileAttributesW(file_path.c_str());
+
+		return (dwAttrib != INVALID_FILE_ATTRIBUTES &&
+			!(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+	}
+
+	bool FileUtil::ExistsDirectory(String const& dir_path)
+	{
+		DWORD dwAttrib = ::GetFileAttributesW(dir_path.c_str());
+
+		return (dwAttrib != INVALID_FILE_ATTRIBUTES &&
+			(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 	}
 }

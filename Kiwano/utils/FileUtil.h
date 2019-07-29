@@ -26,41 +26,22 @@
 namespace kiwano
 {
     // 文件
-	class KGE_API  File
+	class KGE_API FileUtil
 	{
 	public:
-		File();
-
-		File(
-			String const& file_name
-		);
-
-		virtual ~File();
-
-		// 打开文件
-		bool Open(
-			String const& file_name
-		);
-
-		// 文件是否存在
-		bool Exists() const;
-
 		// 删除文件
-		bool Delete();
-
-		// 获取文件路径
-		String const& GetPath() const;
-
-		// 获取文件扩展名
-		String GetExtension() const;
+		static bool Delete(String const& file_path);
 
 		// 释放二进制资源到临时文件目录
-		static File Extract(
+		static bool Extract(
 			Resource const& res,			/* 资源 */
 			String const& dest_file_name	/* 目标文件名 */
 		);
 
-	protected:
-		String file_path_;
+		// 文件是否存在
+		static bool ExistsFile(String const& file_path);
+
+		// 文件夹是否存在
+		static bool ExistsDirectory(String const& dir_path);
 	};
 }

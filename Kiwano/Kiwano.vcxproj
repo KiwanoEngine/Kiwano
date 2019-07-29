@@ -98,7 +98,7 @@
     <ClInclude Include="ui\Button.h" />
     <ClInclude Include="ui\Menu.h" />
     <ClInclude Include="utils\DataUtil.h" />
-    <ClInclude Include="utils\File.h" />
+    <ClInclude Include="utils\FileUtil.h" />
     <ClInclude Include="utils\Path.h" />
     <ClInclude Include="utils\ResLoader.h" />
   </ItemGroup>
@@ -158,7 +158,7 @@
     <ClCompile Include="ui\Button.cpp" />
     <ClCompile Include="ui\Menu.cpp" />
     <ClCompile Include="utils\DataUtil.cpp" />
-    <ClCompile Include="utils\File.cpp" />
+    <ClCompile Include="utils\FileUtil.cpp" />
     <ClCompile Include="utils\Path.cpp" />
     <ClCompile Include="utils\ResLoader.cpp" />
   </ItemGroup>

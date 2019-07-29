@@ -56,11 +56,13 @@ namespace kiwano
 
 		if (res.IsFileType())
 		{
-			if (!modules::Shlwapi::Get().PathFileExistsW(res.GetFileName().c_str()))
+#if defined(KGE_DEBUG)
+			if (!FileUtil::ExistsFile(res.GetFileName()))
 			{
 				KGE_WARNING_LOG(L"Media file '%s' not found", res.GetFileName().c_str());
 				return false;
 			}
+#endif
 			hr = transcoder.LoadMediaFile(res.GetFileName(), &wave_data_, &size_);
 		}
 		else

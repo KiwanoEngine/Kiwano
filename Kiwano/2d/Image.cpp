@@ -22,6 +22,7 @@
 #include "../base/logs.h"
 #include "../renderer/render.h"
 #include "../platform/modules.h"
+#include "../utils/FileUtil.h"
 
 namespace kiwano
 {
@@ -61,11 +62,13 @@ namespace kiwano
 
 		if (res.IsFileType())
 		{
-			if (!modules::Shlwapi::Get().PathFileExistsW(res.GetFileName().c_str()))
+#if defined(KGE_DEBUG)
+			if (!FileUtil::ExistsFile(res.GetFileName()))
 			{
 				KGE_WARNING_LOG(L"Image file '%s' not found!", res.GetFileName().c_str());
 				return false;
 			}
+#endif
 			hr = Renderer::Instance().GetDeviceResources()->CreateBitmapFromFile(bitmap, res.GetFileName());
 		}
 		else

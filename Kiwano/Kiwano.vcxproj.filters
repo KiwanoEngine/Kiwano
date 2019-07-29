@@ -219,9 +219,6 @@
     <ClInclude Include="platform\modules.h">
       <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="utils\File.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="utils\Path.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -333,6 +330,9 @@
     <ClInclude Include="third-party\StackWalker\StackWalker.h">
       <Filter>third-party\StackWalker</Filter>
     </ClInclude>
+    <ClInclude Include="utils\FileUtil.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -431,9 +431,6 @@
     <ClCompile Include="platform\modules.cpp">
       <Filter>platform</Filter>
     </ClCompile>
-    <ClCompile Include="utils\File.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="utils\Path.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -508,6 +505,9 @@
     </ClCompile>
     <ClCompile Include="third-party\StackWalker\StackWalker.cpp">
       <Filter>third-party\StackWalker</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\FileUtil.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
