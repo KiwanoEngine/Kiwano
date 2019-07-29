@@ -354,7 +354,7 @@ namespace kiwano
 		if (!device_context_)
 			return E_UNEXPECTED;
 
-		device_context_->SetTransform(DX::ConvertToMatrix3x2F(matrix));
+		device_context_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
 		return S_OK;
 	}
 

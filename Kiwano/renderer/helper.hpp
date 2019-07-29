@@ -63,6 +63,11 @@ namespace kiwano
 			return reinterpret_cast<D2D1_MATRIX_3X2_F const&>(matrix);
 		}
 
+		inline const D2D1_MATRIX_3X2_F* ConvertToMatrix3x2F(const Matrix* matrix)
+		{
+			return reinterpret_cast<const D2D1_MATRIX_3X2_F*>(matrix);
+		}
+
 		// Converts a length in device-independent pixels (DIPs) to a length in physical pixels.
 		inline float ConvertDipsToPixels(float dips, float dpi)
 		{
