@@ -416,15 +416,16 @@ namespace kiwano
 		int				z_order_;
 		float			opacity_;
 		float			display_opacity_;
-		size_t			hash_name_;
-		Transform		transform_;
-		Point			anchor_;
-		Size			size_;
 		Node*			parent_;
 		Scene*			scene_;
+		size_t			hash_name_;
+		Point			anchor_;
+		Size			size_;
 		Children		children_;
 		UpdateCallback	cb_update_;
+		Transform		transform_;
 
+		bool			is_fast_transform_;
 		mutable bool	dirty_transform_;
 		mutable bool	dirty_transform_inverse_;
 		mutable Matrix	transform_matrix_;

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../math/Matrix.hpp"
+#include "../math/Vec2.hpp"
 
 namespace kiwano
 {
@@ -34,7 +34,7 @@ namespace kiwano
 	public:
 		Transform()
 			: position()
-			, rotation(0)
+			, rotation(0.f)
 			, scale(1.f, 1.f)
 			, skew(0.f, 0.f)
 		{}
@@ -45,15 +45,6 @@ namespace kiwano
 				scale == other.scale &&
 				skew == other.skew &&
 				rotation == other.rotation;
-		}
-
-		inline Matrix ToMatrix() const
-		{
-			// matrix multiplication is optimized by expression template
-			return Matrix::Scaling(scale)
-				* Matrix::Skewing(skew.x, skew.y)
-				* Matrix::Rotation(rotation)
-				* Matrix::Translation(position);
 		}
 	};
 }

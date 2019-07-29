@@ -188,7 +188,7 @@ namespace kiwano
 		UpdateTransform();
 		if (dirty_transform_inverse_)
 		{
-			transform_matrix_inverse_ = Matrix::Invert(transform_matrix_);
+			transform_matrix_inverse_ = transform_matrix_.Invert();
 			dirty_transform_inverse_ = false;
 		}
 		return transform_matrix_inverse_;
@@ -202,13 +202,26 @@ namespace kiwano
 		dirty_transform_ = false;
 		dirty_transform_inverse_ = true;
 
-		transform_matrix_ = transform_.ToMatrix();
+		if (is_fast_transform_)
+		{
+			transform_matrix_ = Matrix::Translation(transform_.position);
+		}
+		else
+		{
+			// matrix multiplication is optimized by expression template
+			transform_matrix_ = Matrix::Scaling(transform_.scale)
+				* Matrix::Skewing(transform_.skew)
+				* Matrix::Rotation(transform_.rotation)
+				* Matrix::Translation(transform_.position);
+		}
 
 		Point offset{ -size_.x * anchor_.x, -size_.y * anchor_.y };
 		transform_matrix_.Translate(offset);
 
 		if (parent_)
+		{
 			transform_matrix_ = transform_matrix_ * parent_->transform_matrix_;
+		}
 
 		// update children's transform
 		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
@@ -343,6 +356,7 @@ namespace kiwano
 	{
 		transform_ = transform;
 		dirty_transform_ = true;
+		is_fast_transform_ = false;
 	}
 
 	void Node::SetVisible(bool val)
@@ -417,6 +431,7 @@ namespace kiwano
 		transform_.scale.x = scale_x;
 		transform_.scale.y = scale_y;
 		dirty_transform_ = true;
+		is_fast_transform_ = false;
 	}
 
 	void Node::SetScale(Point const& scale)
@@ -442,6 +457,7 @@ namespace kiwano
 		transform_.skew.x = skew_x;
 		transform_.skew.y = skew_y;
 		dirty_transform_ = true;
+		is_fast_transform_ = false;
 	}
 
 	void Node::SetSkew(Point const& skew)
@@ -456,6 +472,7 @@ namespace kiwano
 
 		transform_.rotation = angle;
 		dirty_transform_ = true;
+		is_fast_transform_ = false;
 	}
 
 	void Node::AddChild(NodePtr child)
