@@ -80,8 +80,55 @@ namespace kiwano
 	} // namespace DX
 
 
+	struct D3D10DeviceResources
+		: public ID3D10DeviceResources
+	{
+	public:
+		HRESULT Present(bool vsync);
+
+		HRESULT ClearRenderTarget(Color& clear_color);
+
+		HRESULT HandleDeviceLost();
+
+		HRESULT SetLogicalSize(Size logical_size);
+
+		HRESULT SetDpi(float dpi);
+
+		void DiscardResources();
+
+	public:
+		unsigned long STDMETHODCALLTYPE AddRef();
+
+		unsigned long STDMETHODCALLTYPE Release();
+
+		HRESULT STDMETHODCALLTYPE QueryInterface(
+			IID const& riid,
+			void** ppvObject
+		);
+
+	public:
+		D3D10DeviceResources();
+
+		virtual ~D3D10DeviceResources();
+
+		HRESULT CreateDeviceResources();
+
+		HRESULT CreateWindowSizeDependentResources();
+
+	public:
+		HWND	hwnd_;
+		float	dpi_;
+		Size	logical_size_;
+		Size	output_size_;
+		unsigned long ref_count_;
+
+		ComPtr<ID2DDeviceResources> d2d_res_;
+	};
+
+
 	D3D10DeviceResources::D3D10DeviceResources()
-		: hwnd_(nullptr)
+		: ref_count_(0)
+		, hwnd_(nullptr)
 	{
 		dpi_ = 96.f; // dpi_ = (float)GetDpiForWindow(hwnd);
 	}
@@ -91,28 +138,24 @@ namespace kiwano
 		DiscardResources();
 	}
 
-	HRESULT D3D10DeviceResources::Create(D3D10DeviceResources** device_resources, HWND hwnd)
+	HRESULT ID3D10DeviceResources::Create(ID3D10DeviceResources** device_resources, ID2DDeviceResources* d2d_device_res, HWND hwnd)
 	{
 		HRESULT hr = E_FAIL;
 
-		if (device_resources)
+		if (device_resources && d2d_device_res)
 		{
 			D3D10DeviceResources* res = new (std::nothrow) D3D10DeviceResources;
 			if (res)
 			{
-				hr = res->CreateDeviceIndependentResources();
+				RECT rc;
+				::GetClientRect(hwnd, &rc);
 
-				if (SUCCEEDED(hr))
-				{
-					RECT rc;
-					GetClientRect(hwnd, &rc);
+				res->hwnd_ = hwnd;
+				res->d2d_res_ = d2d_device_res;
+				res->logical_size_.x = float(rc.right - rc.left);
+				res->logical_size_.y = float(rc.bottom - rc.top);
 
-					res->hwnd_ = hwnd;
-					res->logical_size_.x = float(rc.right - rc.left);
-					res->logical_size_.y = float(rc.bottom - rc.top);
-
-					hr = res->CreateDeviceResources();
-				}
+				hr = res->CreateDeviceResources();
 
 				if (SUCCEEDED(hr))
 				{
@@ -138,29 +181,28 @@ namespace kiwano
 
 	HRESULT D3D10DeviceResources::Present(bool vsync)
 	{
+		KGE_ASSERT(dxgi_swap_chain_ != nullptr);
+
 		// The first argument instructs DXGI to block until VSync.
 		return dxgi_swap_chain_->Present(vsync ? 1 : 0, 0);
 	}
 
 	HRESULT D3D10DeviceResources::ClearRenderTarget(Color& clear_color)
 	{
-		d3d_device_->OMSetRenderTargets(
-			1,
-			&d3d_rt_view_,
-			d3d_ds_view_.Get()
-		);
-		d3d_device_->ClearRenderTargetView(
-			d3d_rt_view_.Get(),
-			reinterpret_cast<float*>(&clear_color)
-		);
+		KGE_ASSERT(device_ != nullptr && rt_view_ != nullptr && ds_view_ != nullptr);
+
+		auto rt_view = rt_view_.Get();
+		device_->OMSetRenderTargets(1, &rt_view, ds_view_.Get());
+		device_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
 		return S_OK;
 	}
 
 	void D3D10DeviceResources::DiscardResources()
 	{
-		d3d_device_.Reset();
-		d3d_rt_view_.Reset();
-		d3d_ds_view_.Reset();
+		d2d_res_.Reset();
+		device_.Reset();
+		rt_view_.Reset();
+		ds_view_.Reset();
 		dxgi_swap_chain_.Reset();
 		dxgi_factory_.Reset();
 
@@ -192,7 +234,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			d3d_device_ = device;
+			device_ = device;
 
 			ComPtr<IDXGIAdapter> dxgi_adapter;
 			ComPtr<IDXGIDevice> dxgi_device;
@@ -201,7 +243,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = d3d_device_->QueryInterface(IID_PPV_ARGS(&dxgi_device));
+				hr = device_->QueryInterface(IID_PPV_ARGS(&dxgi_device));
 			}
 
 			if (SUCCEEDED(hr))
@@ -222,12 +264,12 @@ namespace kiwano
 			// Create the Direct2D device object and a corresponding context.
 			if (SUCCEEDED(hr))
 			{
-				hr = GetD2DFactory()->CreateDevice(dxgi_device.Get(), &d2d_device);
+				hr = d2d_res_->GetFactory()->CreateDevice(dxgi_device.Get(), &d2d_device);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				hr = SetD2DDevice(d2d_device);
+				hr = d2d_res_->SetD2DDevice(d2d_device);
 			}
 		}
 
@@ -253,7 +295,7 @@ namespace kiwano
 			ComPtr<IDXGIDevice> dxgi_device;
 			if (SUCCEEDED(hr))
 			{
-				hr = d3d_device_->QueryInterface(&dxgi_device);
+				hr = device_->QueryInterface(&dxgi_device);
 			}
 
 			ComPtr<IDXGIAdapter> dxgi_adapter;
@@ -271,7 +313,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				hr = dxgi_factory->CreateSwapChain(
-					d3d_device_.Get(),
+					device_.Get(),
 					&swap_chain_desc,
 					&dxgi_swap_chain_);
 			}
@@ -289,11 +331,11 @@ namespace kiwano
 
 		// Clear the previous window size specific context.
 		ID3D10RenderTargetView* null_views[] = { nullptr };
-		d3d_device_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
-		SetTargetBitmap(nullptr);
-		d3d_rt_view_ = nullptr;
-		d3d_ds_view_ = nullptr;
-		d3d_device_->Flush();
+		device_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
+		d2d_res_->SetTargetBitmap(nullptr);
+		rt_view_ = nullptr;
+		ds_view_ = nullptr;
+		device_->Flush();
 
 		// Calculate the necessary render target size in pixels.
 		output_size_.x = DX::ConvertDipsToPixels(logical_size_.x, dpi_);
@@ -327,8 +369,8 @@ namespace kiwano
 				renderDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2D;
 				renderDesc.Texture2D.MipSlice = 0;
 
-				d3d_rt_view_ = nullptr;
-				hr = d3d_device_->CreateRenderTargetView(dxgi_back_buffer.Get(), &renderDesc, &d3d_rt_view_);
+				rt_view_ = nullptr;
+				hr = device_->CreateRenderTargetView(dxgi_back_buffer.Get(), &renderDesc, &rt_view_);
 			}
 		}
 
@@ -349,7 +391,7 @@ namespace kiwano
 			tex_desc.SampleDesc.Quality = 0;
 			tex_desc.Usage = D3D10_USAGE_DEFAULT;
 
-			hr = d3d_device_->CreateTexture2D(&tex_desc, NULL, &depth_stencil);
+			hr = device_->CreateTexture2D(&tex_desc, NULL, &depth_stencil);
 
 			if (SUCCEEDED(hr))
 			{
@@ -358,14 +400,14 @@ namespace kiwano
 				desc.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
 				desc.Texture2D.MipSlice = 0;
 
-				d3d_ds_view_.Reset();
-				hr = d3d_device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &d3d_ds_view_);
+				ds_view_.Reset();
+				hr = device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &ds_view_);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				ID3D10RenderTargetView* main_view = d3d_rt_view_.Get();
-				d3d_device_->OMSetRenderTargets(1, &main_view, d3d_ds_view_.Get());
+				ID3D10RenderTargetView* main_view = rt_view_.Get();
+				device_->OMSetRenderTargets(1, &main_view, ds_view_.Get());
 			}
 		}
 
@@ -380,7 +422,7 @@ namespace kiwano
 			viewport.MinDepth = 0;
 			viewport.MaxDepth = 1;
 
-			d3d_device_->RSSetViewports(1, &viewport);
+			device_->RSSetViewports(1, &viewport);
 		}
 
 		// Create a Direct2D target bitmap associated with the
@@ -393,7 +435,7 @@ namespace kiwano
 			ComPtr<ID2D1Bitmap1> target;
 			if (SUCCEEDED(hr))
 			{
-				hr = GetD2DDeviceContext()->CreateBitmapFromDxgiSurface(
+				hr = d2d_res_->GetDeviceContext()->CreateBitmapFromDxgiSurface(
 					dxgi_back_buffer.Get(),
 					D2D1::BitmapProperties1(
 						D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
@@ -405,7 +447,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				SetTargetBitmap(target);
+				d2d_res_->SetTargetBitmap(target);
 			}
 		}
 
@@ -448,10 +490,53 @@ namespace kiwano
 			logical_size_.x = float(rc.right - rc.left);
 			logical_size_.y = float(rc.bottom - rc.top);
 
-			GetD2DDeviceContext()->SetDpi(dpi_, dpi_);
+			d2d_res_->GetDeviceContext()->SetDpi(dpi_, dpi_);
 
 			return CreateWindowSizeDependentResources();
 		}
+		return S_OK;
+	}
+
+	STDMETHODIMP_(unsigned long) D3D10DeviceResources::AddRef()
+	{
+		return InterlockedIncrement(&ref_count_);
+	}
+
+	STDMETHODIMP_(unsigned long) D3D10DeviceResources::Release()
+	{
+		unsigned long newCount = InterlockedDecrement(&ref_count_);
+
+		if (newCount == 0)
+		{
+			delete this;
+			return 0;
+		}
+
+		return newCount;
+	}
+
+	STDMETHODIMP D3D10DeviceResources::QueryInterface(IID const& riid, void** object)
+	{
+		if (__uuidof(ID3D10DeviceResources) == riid)
+		{
+			*object = this;
+		}
+		else if (__uuidof(ID3DDeviceResourcesBase) == riid)
+		{
+			*object = this;
+		}
+		else if (__uuidof(IUnknown) == riid)
+		{
+			*object = this;
+		}
+		else
+		{
+			*object = nullptr;
+			return E_FAIL;
+		}
+
+		AddRef();
+
 		return S_OK;
 	}
 

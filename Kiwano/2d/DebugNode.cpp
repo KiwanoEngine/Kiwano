@@ -54,7 +54,7 @@ namespace kiwano
 		Renderer::Instance().SetTransform(Matrix{});
 		Renderer::Instance().GetSolidColorBrush()->SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, 0.5f));
 
-		Renderer::Instance().GetDeviceResources()->GetD2DDeviceContext()->FillRectangle(
+		Renderer::Instance().GetD2DDeviceResources()->GetDeviceContext()->FillRectangle(
 			D2D1_RECT_F{ 10, 10, 30 + debug_text_->GetLayoutSize().x, 30 + debug_text_->GetLayoutSize().y },
 			Renderer::Instance().GetSolidColorBrush()
 		);

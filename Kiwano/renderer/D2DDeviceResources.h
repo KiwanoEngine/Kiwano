@@ -29,90 +29,66 @@
 
 namespace kiwano
 {
-	class KGE_API D2DDeviceResources
+	MIDL_INTERFACE("5706684a-bf6d-4b03-b627-094758a33032")
+	KGE_API ID2DDeviceResources
 		: public IUnknown
 	{
 	public:
-		HRESULT CreateBitmapFromFile(
+		static HRESULT Create(ID2DDeviceResources** device_resources);
+
+		virtual HRESULT CreateBitmapFromFile(
 			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
 			_In_ String const& file_path
-		);
+		) = 0;
 
-		HRESULT CreateBitmapFromResource(
+		virtual HRESULT CreateBitmapFromResource(
 			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
 			_In_ Resource const& res
-		);
+		) = 0;
 
-		HRESULT CreateTextFormat(
+		virtual HRESULT CreateTextFormat(
 			_Out_ ComPtr<IDWriteTextFormat>& text_format,
 			_In_ Font const& font,
 			_In_ TextStyle const& text_style
-		) const;
+		) const = 0;
 
-		HRESULT CreateTextLayout(
+		virtual HRESULT CreateTextLayout(
 			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
 			_Out_ Size& layout_size,
 			_In_ String const& text,
 			_In_ ComPtr<IDWriteTextFormat> const& text_format,
 			_In_ TextStyle const& text_style
-		) const;
+		) const = 0;
 
-		void ClearImageCache();
+		virtual ID2D1StrokeStyle* GetStrokeStyle(StrokeStyle stroke) const = 0;
 
-		void DiscardResources();
-
-		HRESULT SetD2DDevice(
+		virtual HRESULT SetD2DDevice(
 			_In_ ComPtr<ID2D1Device> const& device
-		);
+		) = 0;
 
-		void SetTargetBitmap(
+		virtual void SetTargetBitmap(
 			_In_ ComPtr<ID2D1Bitmap1> const& target
-		);
+		) = 0;
 
-		inline ID2D1Factory1*			GetD2DFactory() const			{ KGE_ASSERT(d2d_factory_); return d2d_factory_.Get(); }
+		virtual void ClearImageCache() = 0;
+
+		virtual void DiscardResources() = 0;
+
+		inline ID2D1Factory1*			GetFactory() const				{ KGE_ASSERT(factory_); return factory_.Get(); }
 		inline IWICImagingFactory*		GetWICImagingFactory() const	{ KGE_ASSERT(imaging_factory_); return imaging_factory_.Get(); }
 		inline IDWriteFactory*			GetDWriteFactory() const		{ KGE_ASSERT(dwrite_factory_); return dwrite_factory_.Get(); }
-		inline ID2D1Device*				GetD2DDevice() const			{ KGE_ASSERT(d2d_device_); return d2d_device_.Get(); }
-		inline ID2D1DeviceContext*		GetD2DDeviceContext() const		{ KGE_ASSERT(d2d_device_context_); return d2d_device_context_.Get(); }
-		inline ID2D1Bitmap1*			GetD2DTargetBitmap() const		{ KGE_ASSERT(d2d_target_bitmap_); return d2d_target_bitmap_.Get(); }
-
-		ID2D1StrokeStyle*				GetStrokeStyle(StrokeStyle stroke) const;
-
-	public:
-		unsigned long STDMETHODCALLTYPE AddRef();
-
-		unsigned long STDMETHODCALLTYPE Release();
-
-		HRESULT STDMETHODCALLTYPE QueryInterface(
-			IID const& riid,
-			void** ppvObject
-		);
+		inline ID2D1Device*				GetDevice() const				{ KGE_ASSERT(device_); return device_.Get(); }
+		inline ID2D1DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.Get(); }
+		inline ID2D1Bitmap1*			GetTargetBitmap() const			{ KGE_ASSERT(target_bitmap_); return target_bitmap_.Get(); }
 
 	protected:
-		D2DDeviceResources();
-
-		virtual ~D2DDeviceResources();
-
-		HRESULT CreateDeviceIndependentResources();
-
-	private:
-		unsigned long ref_count_;
-		float dpi_;
-
-		using BitmapMap = UnorderedMap<size_t, ComPtr<ID2D1Bitmap>>;
-		BitmapMap bitmap_cache_;
-
-		ComPtr<ID2D1Factory1>		d2d_factory_;
-		ComPtr<ID2D1Device>			d2d_device_;
-		ComPtr<ID2D1DeviceContext>	d2d_device_context_;
-		ComPtr<ID2D1Bitmap1>		d2d_target_bitmap_;
+		ComPtr<ID2D1Factory1>		factory_;
+		ComPtr<ID2D1Device>			device_;
+		ComPtr<ID2D1DeviceContext>	device_context_;
+		ComPtr<ID2D1Bitmap1>		target_bitmap_;
 
 		ComPtr<IWICImagingFactory>	imaging_factory_;
 		ComPtr<IDWriteFactory>		dwrite_factory_;
-
-		ComPtr<ID2D1StrokeStyle>	d2d_miter_stroke_style_;
-		ComPtr<ID2D1StrokeStyle>	d2d_bevel_stroke_style_;
-		ComPtr<ID2D1StrokeStyle>	d2d_round_stroke_style_;
 	};
 
 }

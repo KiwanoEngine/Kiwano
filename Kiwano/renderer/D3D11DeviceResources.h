@@ -25,73 +25,30 @@
 #if !defined(KGE_USE_DIRECTX10)
 
 #include "D2DDeviceResources.h"
+#include "D3DDeviceResourcesBase.h"
 #include <d3d11.h>
 
 namespace kiwano
 {
-	class KGE_API D3D11DeviceResources
-		: public D2DDeviceResources
+	MIDL_INTERFACE("3ede2b87-a202-4799-a39b-2308ad34cae8")
+	KGE_API ID3D11DeviceResources
+		: public ID3DDeviceResourcesBase
 	{
 	public:
-		static HRESULT Create(
-			D3D11DeviceResources** device_resources,
-			HWND hwnd
-		);
+		static HRESULT Create(ID3D11DeviceResources** device_resources, ID2DDeviceResources* d2d_device_res, HWND hwnd);
 
-		HRESULT Present(
-			bool vsync
-		);
-
-		HRESULT ClearRenderTarget(
-			Color& clear_color
-		);
-
-		HRESULT HandleDeviceLost();
-
-		HRESULT SetLogicalSize(
-			Size logical_size
-		);
-
-		HRESULT SetDpi(
-			float dpi
-		);
-
-		void DiscardResources();
-
-		inline ID3D11Device*			GetD3DDevice() const			{ KGE_ASSERT(d3d_device_); return d3d_device_.Get(); }
-		inline ID3D11DeviceContext*		GetD3DDeviceContext() const		{ KGE_ASSERT(d3d_device_context_); return d3d_device_context_.Get(); }
-		inline ID3D11RenderTargetView*	GetD3DRenderTargetView() const	{ KGE_ASSERT(d3d_rt_view_); return d3d_rt_view_.Get(); }
-		inline ID3D11DepthStencilView*	GetD3DDepthStencilView() const	{ KGE_ASSERT(d3d_ds_view_); return d3d_ds_view_.Get(); }
+		inline ID3D11Device*			GetDevice() const				{ KGE_ASSERT(device_); return device_.Get(); }
+		inline ID3D11DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.Get(); }
+		inline ID3D11RenderTargetView*	GetRenderTargetView() const		{ KGE_ASSERT(rt_view_); return rt_view_.Get(); }
+		inline ID3D11DepthStencilView*	GetDepthStencilView() const		{ KGE_ASSERT(ds_view_); return ds_view_.Get(); }
 		inline IDXGIFactory*			GetDXGIFactory() const			{ KGE_ASSERT(dxgi_factory_); return dxgi_factory_.Get(); }
 		inline IDXGISwapChain*			GetDXGISwapChain() const		{ KGE_ASSERT(dxgi_swap_chain_); return dxgi_swap_chain_.Get(); }
 
-		inline D3D_FEATURE_LEVEL		GetDeviceFeatureLevel() const	{ return d3d_feature_level_; }
-		inline Size const&				GetLogicalSize() const			{ return logical_size_; }
-		inline Size const&				GetOutputSize() const			{ return output_size_; }
-		inline float					GetDpi() const					{ return dpi_; }
-
 	protected:
-		D3D11DeviceResources();
-
-		virtual ~D3D11DeviceResources();
-
-	protected:
-		HRESULT CreateDeviceResources();
-
-		HRESULT CreateWindowSizeDependentResources();
-
-	private:
-		HWND	hwnd_;
-		float	dpi_;
-		Size	logical_size_;
-		Size	output_size_;
-
-		D3D_FEATURE_LEVEL d3d_feature_level_;
-
-		ComPtr<ID3D11Device>			d3d_device_;
-		ComPtr<ID3D11DeviceContext>		d3d_device_context_;
-		ComPtr<ID3D11RenderTargetView>	d3d_rt_view_;
-		ComPtr<ID3D11DepthStencilView>	d3d_ds_view_;
+		ComPtr<ID3D11Device>			device_;
+		ComPtr<ID3D11DeviceContext>		device_context_;
+		ComPtr<ID3D11RenderTargetView>	rt_view_;
+		ComPtr<ID3D11DepthStencilView>	ds_view_;
 		ComPtr<IDXGISwapChain>			dxgi_swap_chain_;
 		ComPtr<IDXGIFactory>			dxgi_factory_;
 	};

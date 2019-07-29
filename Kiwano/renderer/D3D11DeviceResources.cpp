@@ -52,8 +52,57 @@ namespace kiwano
 	}
 #endif
 
+
+	struct D3D11DeviceResources
+		: public ID3D11DeviceResources
+	{
+	public:
+		HRESULT Present(bool vsync) override;
+
+		HRESULT ClearRenderTarget(Color& clear_color) override;
+
+		HRESULT HandleDeviceLost() override;
+
+		HRESULT SetLogicalSize(Size logical_size) override;
+
+		HRESULT SetDpi(float dpi) override;
+
+		void DiscardResources() override;
+
+	public:
+		unsigned long STDMETHODCALLTYPE AddRef();
+
+		unsigned long STDMETHODCALLTYPE Release();
+
+		HRESULT STDMETHODCALLTYPE QueryInterface(
+			IID const& riid,
+			void** ppvObject
+		);
+
+	public:
+		D3D11DeviceResources();
+
+		virtual ~D3D11DeviceResources();
+
+		HRESULT CreateDeviceResources();
+
+		HRESULT CreateWindowSizeDependentResources();
+
+	public:
+		HWND	hwnd_;
+		float	dpi_;
+		Size	logical_size_;
+		Size	output_size_;
+		unsigned long ref_count_;
+
+		D3D_FEATURE_LEVEL d3d_feature_level_;
+		ComPtr<ID2DDeviceResources> d2d_res_;
+	};
+
+
 	D3D11DeviceResources::D3D11DeviceResources()
-		: hwnd_(nullptr)
+		: ref_count_(0)
+		, hwnd_(nullptr)
 		, d3d_feature_level_(D3D_FEATURE_LEVEL_9_1)
 	{
 		dpi_ = 96.f; // dpi_ = (float)GetDpiForWindow(hwnd);
@@ -64,28 +113,24 @@ namespace kiwano
 		DiscardResources();
 	}
 
-	HRESULT D3D11DeviceResources::Create(D3D11DeviceResources** device_resources, HWND hwnd)
+	HRESULT ID3D11DeviceResources::Create(ID3D11DeviceResources** device_resources, ID2DDeviceResources* d2d_device_res, HWND hwnd)
 	{
 		HRESULT hr = E_FAIL;
 
-		if (device_resources)
+		if (device_resources && d2d_device_res)
 		{
 			D3D11DeviceResources* res = new (std::nothrow) D3D11DeviceResources;
 			if (res)
 			{
-				hr = res->CreateDeviceIndependentResources();
+				RECT rc;
+				::GetClientRect(hwnd, &rc);
 
-				if (SUCCEEDED(hr))
-				{
-					RECT rc;
-					GetClientRect(hwnd, &rc);
+				res->hwnd_ = hwnd;
+				res->d2d_res_ = d2d_device_res;
+				res->logical_size_.x = float(rc.right - rc.left);
+				res->logical_size_.y = float(rc.bottom - rc.top);
 
-					res->hwnd_ = hwnd;
-					res->logical_size_.x = float(rc.right - rc.left);
-					res->logical_size_.y = float(rc.bottom - rc.top);
-
-					hr = res->CreateDeviceResources();
-				}
+				hr = res->CreateDeviceResources();
 
 				if (SUCCEEDED(hr))
 				{
@@ -111,30 +156,29 @@ namespace kiwano
 
 	HRESULT D3D11DeviceResources::Present(bool vsync)
 	{
+		KGE_ASSERT(dxgi_swap_chain_ != nullptr);
+
 		// The first argument instructs DXGI to block until VSync.
 		return dxgi_swap_chain_->Present(vsync ? 1 : 0, 0);
 	}
 
 	HRESULT D3D11DeviceResources::ClearRenderTarget(Color& clear_color)
 	{
-		d3d_device_context_->OMSetRenderTargets(
-			1,
-			&d3d_rt_view_,
-			d3d_ds_view_.Get()
-		);
-		d3d_device_context_->ClearRenderTargetView(
-			d3d_rt_view_.Get(),
-			reinterpret_cast<float*>(&clear_color)
-		);
+		KGE_ASSERT(device_context_ != nullptr && rt_view_ != nullptr && ds_view_ != nullptr);
+
+		auto rt_view = rt_view_.Get();
+		device_context_->OMSetRenderTargets(1, &rt_view, ds_view_.Get());
+		device_context_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
 		return S_OK;
 	}
 
 	void D3D11DeviceResources::DiscardResources()
 	{
-		d3d_device_.Reset();
-		d3d_device_context_.Reset();
-		d3d_rt_view_.Reset();
-		d3d_ds_view_.Reset();
+		d2d_res_.Reset();
+		device_.Reset();
+		device_context_.Reset();
+		rt_view_.Reset();
+		ds_view_.Reset();
 		dxgi_swap_chain_.Reset();
 		dxgi_factory_.Reset();
 
@@ -204,8 +248,8 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			d3d_device_ = device;
-			d3d_device_context_ = context;
+			device_ = device;
+			device_context_ = context;
 
 			ComPtr<IDXGIAdapter> dxgi_adapter;
 			ComPtr<IDXGIDevice> dxgi_device;
@@ -214,7 +258,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = d3d_device_->QueryInterface(IID_PPV_ARGS(&dxgi_device));
+				hr = device_->QueryInterface(IID_PPV_ARGS(&dxgi_device));
 			}
 
 			if (SUCCEEDED(hr))
@@ -235,12 +279,12 @@ namespace kiwano
 			// Create the Direct2D device object and a corresponding context.
 			if (SUCCEEDED(hr))
 			{
-				hr = GetD2DFactory()->CreateDevice(dxgi_device.Get(), &d2d_device);
+				hr = d2d_res_->GetFactory()->CreateDevice(dxgi_device.Get(), &d2d_device);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				hr = SetD2DDevice(d2d_device);
+				hr = d2d_res_->SetD2DDevice(d2d_device);
 			}
 		}
 
@@ -273,7 +317,7 @@ namespace kiwano
 			ComPtr<IDXGIDevice> dxgi_device;
 			if (SUCCEEDED(hr))
 			{
-				hr = d3d_device_->QueryInterface(&dxgi_device);
+				hr = device_->QueryInterface(&dxgi_device);
 			}
 
 			ComPtr<IDXGIAdapter> dxgi_adapter;
@@ -291,7 +335,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				hr = dxgi_factory->CreateSwapChain(
-					d3d_device_.Get(),
+					device_.Get(),
 					&swap_chain_desc,
 					&dxgi_swap_chain_);
 			}
@@ -309,11 +353,11 @@ namespace kiwano
 
 		// Clear the previous window size specific context.
 		ID3D11RenderTargetView* null_views[] = { nullptr };
-		d3d_device_context_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
-		SetTargetBitmap(nullptr);
-		d3d_rt_view_ = nullptr;
-		d3d_ds_view_ = nullptr;
-		d3d_device_context_->Flush();
+		device_context_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
+		d2d_res_->SetTargetBitmap(nullptr);
+		rt_view_ = nullptr;
+		ds_view_ = nullptr;
+		device_context_->Flush();
 
 		// Calculate the necessary render target size in pixels.
 		output_size_.x = DX::ConvertDipsToPixels(logical_size_.x, dpi_);
@@ -339,8 +383,8 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				d3d_rt_view_ = nullptr;
-				hr = d3d_device_->CreateRenderTargetView(dxgi_back_buffer.Get(), nullptr, &d3d_rt_view_);
+				rt_view_ = nullptr;
+				hr = device_->CreateRenderTargetView(dxgi_back_buffer.Get(), nullptr, &rt_view_);
 			}
 		}
 
@@ -357,20 +401,20 @@ namespace kiwano
 				D3D11_BIND_DEPTH_STENCIL
 			);
 
-			hr = d3d_device_->CreateTexture2D(&tex_desc, nullptr, &depth_stencil);
+			hr = device_->CreateTexture2D(&tex_desc, nullptr, &depth_stencil);
 
 			if (SUCCEEDED(hr))
 			{
 				CD3D11_DEPTH_STENCIL_VIEW_DESC desc(D3D11_DSV_DIMENSION_TEXTURE2D);
 
-				d3d_ds_view_.Reset();
-				hr = d3d_device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &d3d_ds_view_);
+				ds_view_.Reset();
+				hr = device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &ds_view_);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				ID3D11RenderTargetView* main_view = d3d_rt_view_.Get();
-				d3d_device_context_->OMSetRenderTargets(1, &main_view, d3d_ds_view_.Get());
+				ID3D11RenderTargetView* main_view = rt_view_.Get();
+				device_context_->OMSetRenderTargets(1, &main_view, ds_view_.Get());
 			}
 		}
 
@@ -383,7 +427,7 @@ namespace kiwano
 				output_size_.x,
 				output_size_.y);
 
-			d3d_device_context_->RSSetViewports(1, &screen_viewport);
+			device_context_->RSSetViewports(1, &screen_viewport);
 		}
 
 		// Create a Direct2D target bitmap associated with the
@@ -396,7 +440,7 @@ namespace kiwano
 			ComPtr<ID2D1Bitmap1> target;
 			if (SUCCEEDED(hr))
 			{
-				hr = GetD2DDeviceContext()->CreateBitmapFromDxgiSurface(
+				hr = d2d_res_->GetDeviceContext()->CreateBitmapFromDxgiSurface(
 					dxgi_back_buffer.Get(),
 					D2D1::BitmapProperties1(
 						D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
@@ -408,7 +452,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				SetTargetBitmap(target);
+				d2d_res_->SetTargetBitmap(target);
 			}
 		}
 
@@ -451,10 +495,53 @@ namespace kiwano
 			logical_size_.x = float(rc.right - rc.left);
 			logical_size_.y = float(rc.bottom - rc.top);
 
-			GetD2DDeviceContext()->SetDpi(dpi_, dpi_);
+			d2d_res_->GetDeviceContext()->SetDpi(dpi_, dpi_);
 
 			return CreateWindowSizeDependentResources();
 		}
+		return S_OK;
+	}
+
+	STDMETHODIMP_(unsigned long) D3D11DeviceResources::AddRef()
+	{
+		return InterlockedIncrement(&ref_count_);
+	}
+
+	STDMETHODIMP_(unsigned long) D3D11DeviceResources::Release()
+	{
+		unsigned long newCount = InterlockedDecrement(&ref_count_);
+
+		if (newCount == 0)
+		{
+			delete this;
+			return 0;
+		}
+
+		return newCount;
+	}
+
+	STDMETHODIMP D3D11DeviceResources::QueryInterface(IID const& riid, void** object)
+	{
+		if (__uuidof(ID3D11DeviceResources) == riid)
+		{
+			*object = this;
+		}
+		else if (__uuidof(ID3DDeviceResourcesBase) == riid)
+		{
+			*object = this;
+		}
+		else if (__uuidof(IUnknown) == riid)
+		{
+			*object = this;
+		}
+		else
+		{
+			*object = nullptr;
+			return E_FAIL;
+		}
+
+		AddRef();
+
 		return S_OK;
 	}
 

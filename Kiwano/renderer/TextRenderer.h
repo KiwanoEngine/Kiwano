@@ -24,7 +24,7 @@
 
 namespace kiwano
 {
-	interface ITextRenderer
+	interface DWRITE_DECLARE_INTERFACE("b293e798-9916-4096-a3c1-e5d4039dfa64") ITextRenderer
 		: public IDWriteTextRenderer
 	{
 	public:

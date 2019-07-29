@@ -183,9 +183,6 @@
     <ClInclude Include="renderer\D3D11DeviceResources.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\DeviceResources.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\helper.hpp">
       <Filter>renderer</Filter>
     </ClInclude>
@@ -332,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="utils\FileUtil.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\D3DDeviceResourcesBase.h">
+      <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

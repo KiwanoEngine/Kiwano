@@ -327,7 +327,7 @@ namespace kiwano
 			return;
 
 		ThrowIfFailed(
-			Renderer::Instance().GetDeviceResources()->CreateTextFormat(
+			Renderer::Instance().GetD2DDeviceResources()->CreateTextFormat(
 				text_format_,
 				font_,
 				style_
@@ -335,7 +335,7 @@ namespace kiwano
 		);
 
 		ThrowIfFailed(
-			Renderer::Instance().GetDeviceResources()->CreateTextLayout(
+			Renderer::Instance().GetD2DDeviceResources()->CreateTextLayout(
 				text_layout_,
 				layout_size_,
 				text_,
