@@ -46,12 +46,13 @@ namespace kiwano
 		, responsible_(false)
 		, dirty_transform_(false)
 		, dirty_transform_inverse_(false)
+		, cascade_opacity_(false)
 		, parent_(nullptr)
 		, scene_(nullptr)
 		, hash_name_(0)
 		, z_order_(0)
 		, opacity_(1.f)
-		, display_opacity_(1.f)
+		, displayed_opacity_(1.f)
 		, anchor_(default_anchor_x, default_anchor_y)
 	{
 	}
@@ -230,10 +231,15 @@ namespace kiwano
 
 	void Node::UpdateOpacity()
 	{
-		if (parent_)
+		if (parent_ && parent_->IsCascadeOpacityEnabled())
 		{
-			display_opacity_ = opacity_ * parent_->display_opacity_;
+			displayed_opacity_ = opacity_ * parent_->displayed_opacity_;
 		}
+		else
+		{
+			displayed_opacity_ = opacity_;
+		}
+
 		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			child->UpdateOpacity();
@@ -298,7 +304,16 @@ namespace kiwano
 		if (opacity_ == opacity)
 			return;
 
-		display_opacity_ = opacity_ = std::min(std::max(opacity, 0.f), 1.f);
+		displayed_opacity_ = opacity_ = std::min(std::max(opacity, 0.f), 1.f);
+		UpdateOpacity();
+	}
+
+	void Node::SetCascadeOpacityEnabled(bool enabled)
+	{
+		if (cascade_opacity_ == enabled)
+			return;
+
+		cascade_opacity_ = enabled;
 		UpdateOpacity();
 	}
 
@@ -625,7 +640,7 @@ namespace kiwano
 	void VisualNode::PrepareRender()
 	{
 		Renderer::Instance().SetTransform(transform_matrix_);
-		Renderer::Instance().SetOpacity(display_opacity_);
+		Renderer::Instance().SetOpacity(displayed_opacity_);
 	}
 
 }

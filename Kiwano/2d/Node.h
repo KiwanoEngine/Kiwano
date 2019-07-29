@@ -59,6 +59,9 @@ namespace kiwano
 		// 获取响应状态
 		bool IsResponsible()			const	{ return responsible_; }
 
+		// 是否启用级联透明度
+		bool IsCascadeOpacityEnabled()	const	{ return cascade_opacity_; }
+
 		// 获取名称的 Hash 值
 		size_t GetHashName()			const	{ return hash_name_; }
 
@@ -124,6 +127,9 @@ namespace kiwano
 
 		// 获取透明度
 		float GetOpacity()				const	{ return opacity_; }
+
+		// 获取显示透明度
+		float GetDisplayedOpacity()		const	{ return displayed_opacity_; }
 
 		// 获取变换
 		Transform GetTransform()		const	{ return transform_; }
@@ -296,6 +302,7 @@ namespace kiwano
 			const Size & size
 		);
 
+		// 设置二维仿射变换
 		void SetTransform(
 			Transform const& transform
 		);
@@ -304,6 +311,11 @@ namespace kiwano
 		// 默认为 1.0, 范围 [0, 1]
 		void SetOpacity(
 			float opacity
+		);
+
+		// 启用或禁用级联透明度
+		void SetCascadeOpacityEnabled(
+			bool enabled
 		);
 
 		// 设置 Z 轴顺序
@@ -413,9 +425,10 @@ namespace kiwano
 		bool			pressed_;
 		bool			responsible_;
 		bool			update_pausing_;
+		bool			cascade_opacity_;
 		int				z_order_;
 		float			opacity_;
-		float			display_opacity_;
+		float			displayed_opacity_;
 		Node*			parent_;
 		Scene*			scene_;
 		size_t			hash_name_;
