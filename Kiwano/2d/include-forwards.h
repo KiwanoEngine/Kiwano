@@ -60,8 +60,7 @@ namespace kiwano
 	KGE_DECLARE_SMART_PTR(ActionJumpTo);
 	KGE_DECLARE_SMART_PTR(ActionScaleBy);
 	KGE_DECLARE_SMART_PTR(ActionScaleTo);
-	KGE_DECLARE_SMART_PTR(ActionOpacityBy);
-	KGE_DECLARE_SMART_PTR(ActionOpacityTo);
+	KGE_DECLARE_SMART_PTR(ActionFadeTo);
 	KGE_DECLARE_SMART_PTR(ActionFadeIn);
 	KGE_DECLARE_SMART_PTR(ActionFadeOut);
 	KGE_DECLARE_SMART_PTR(ActionRotateBy);
