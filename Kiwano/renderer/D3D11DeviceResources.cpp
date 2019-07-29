@@ -29,7 +29,7 @@
 
 namespace kiwano
 {
-#if defined(_DEBUG)
+#if defined(KGE_DEBUG)
 	namespace DX
 	{
 		inline bool SdkLayersAvailable()
@@ -107,6 +107,26 @@ namespace kiwano
 			}
 		}
 		return hr;
+	}
+
+	HRESULT D3D11DeviceResources::Present(bool vsync)
+	{
+		// The first argument instructs DXGI to block until VSync.
+		return dxgi_swap_chain_->Present(vsync ? 1 : 0, 0);
+	}
+
+	HRESULT D3D11DeviceResources::ClearRenderTarget(Color& clear_color)
+	{
+		d3d_device_context_->OMSetRenderTargets(
+			1,
+			&d3d_rt_view_,
+			d3d_ds_view_.Get()
+		);
+		d3d_device_context_->ClearRenderTargetView(
+			d3d_rt_view_.Get(),
+			reinterpret_cast<float*>(&clear_color)
+		);
+		return S_OK;
 	}
 
 	void D3D11DeviceResources::DiscardResources()
