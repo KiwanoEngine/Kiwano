@@ -26,17 +26,23 @@
 #include "../2d/Font.hpp"
 #include "../2d/TextStyle.hpp"
 #include "helper.hpp"
-#include "DeviceResources.h"
 #include "TextRenderer.h"
+#include "D2DDeviceResources.h"
+
+#if defined(KGE_USE_DIRECTX10)
+#	include "D3D10DeviceResources.h"
+#else
+#	include "D3D11DeviceResources.h"
+#endif
 
 namespace kiwano
 {
-	struct RenderStatus
-	{
-		Time start;
-		Duration duration;
-		int primitives;
-	};
+
+#if defined(KGE_USE_DIRECTX10)
+	typedef ID3D10DeviceResources ID3DDeviceResources;
+#else
+	typedef ID3D11DeviceResources ID3DDeviceResources;
+#endif
 
 	class KGE_API Renderer
 		: public Singleton<Renderer>
@@ -137,23 +143,32 @@ namespace kiwano
 		);
 
 	public:
+		struct Status
+		{
+			Time start;
+			Duration duration;
+			int primitives;
+		};
+
 		void SetupComponent(Application*) override;
 
 		void DestroyComponent() override;
 
 		void SetCollectingStatus(bool collecting);
 
-		inline HWND						GetTargetWindow() const		{ return hwnd_; }
+		inline HWND						GetTargetWindow() const			{ return hwnd_; }
 
-		inline RenderStatus const&		GetStatus() const			{ return status_; }
+		inline Status const&			GetStatus() const				{ return status_; }
 
-		inline Size const&				GetOutputSize() const		{ return output_size_; }
+		inline Size const&				GetOutputSize() const			{ return output_size_; }
 
-		inline DeviceResources*			GetDeviceResources() const	{ KGE_ASSERT(device_resources_); return device_resources_.Get(); }
+		inline ID2DDeviceResources*		GetD2DDeviceResources() const	{ KGE_ASSERT(d2d_res_); return d2d_res_.Get(); }
 
-		inline ITextRenderer*			GetTextRenderer() const		{ KGE_ASSERT(text_renderer_); return text_renderer_.Get(); }
+		inline ID3DDeviceResources*		GetD3DDeviceResources() const	{ KGE_ASSERT(d3d_res_); return d3d_res_.Get(); }
 
-		inline ID2D1SolidColorBrush*	GetSolidColorBrush() const	{ KGE_ASSERT(solid_color_brush_); return solid_color_brush_.Get(); }
+		inline ITextRenderer*			GetTextRenderer() const			{ KGE_ASSERT(text_renderer_); return text_renderer_.Get(); }
+
+		inline ID2D1SolidColorBrush*	GetSolidColorBrush() const		{ KGE_ASSERT(solid_color_brush_); return solid_color_brush_.Get(); }
 
 	private:
 		Renderer();
@@ -176,10 +191,10 @@ namespace kiwano
 		Size			output_size_;
 		Color			clear_color_;
 		TextAntialias	text_antialias_;
-		RenderStatus	status_;
+		Status			status_;
 
-		ComPtr<DeviceResources>			device_resources_;
-		ComPtr<ID2D1Factory1>			factory_;
+		ComPtr<ID2DDeviceResources>		d2d_res_;
+		ComPtr<ID3DDeviceResources>		d3d_res_;
 		ComPtr<ID2D1DeviceContext>		device_context_;
 		ComPtr<ID2D1DrawingStateBlock>	drawing_state_block_;
 		ComPtr<ITextRenderer>			text_renderer_;

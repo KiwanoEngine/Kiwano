@@ -25,66 +25,25 @@
 #if defined(KGE_USE_DIRECTX10)
 
 #include "D2DDeviceResources.h"
+#include "D3DDeviceResourcesBase.h"
 #include <d3d10_1.h>
 
 namespace kiwano
 {
-	class KGE_API D3D10DeviceResources
-		: public D2DDeviceResources
+	MIDL_INTERFACE("3a150b9d-cc23-4022-a463-7e95452a54c4")
+	KGE_API ID3D10DeviceResources
+		: public ID3DDeviceResourcesBase
 	{
 	public:
-		static HRESULT Create(
-			D3D10DeviceResources** device_resources,
-			HWND hwnd
-		);
-
-		HRESULT Present(
-			bool vsync
-		);
-
-		HRESULT ClearRenderTarget(
-			Color& clear_color
-		);
-
-		HRESULT HandleDeviceLost();
-
-		HRESULT SetLogicalSize(
-			Size logical_size
-		);
-
-		HRESULT SetDpi(
-			float dpi
-		);
-
-		void DiscardResources();
+		static HRESULT Create(ID3D10DeviceResources** device_resources, ID2DDeviceResources* d2d_device_res, HWND hwnd);
 
 		inline ID3D10Device*			GetD3DDevice() const			{ KGE_ASSERT(d3d_device_); return d3d_device_.Get(); }
-		inline ID3D10Device*			GetD3DDeviceContext() const		{ KGE_ASSERT(d3d_device_); return d3d_device_.Get(); }
 		inline ID3D10RenderTargetView*	GetD3DRenderTargetView() const	{ KGE_ASSERT(d3d_rt_view_); return d3d_rt_view_.Get(); }
 		inline ID3D10DepthStencilView*	GetD3DDepthStencilView() const	{ KGE_ASSERT(d3d_ds_view_); return d3d_ds_view_.Get(); }
 		inline IDXGIFactory*			GetDXGIFactory() const			{ KGE_ASSERT(dxgi_factory_); return dxgi_factory_.Get(); }
 		inline IDXGISwapChain*			GetDXGISwapChain() const		{ KGE_ASSERT(dxgi_swap_chain_); return dxgi_swap_chain_.Get(); }
 
-		inline Size const&				GetLogicalSize() const			{ return logical_size_; }
-		inline Size const&				GetOutputSize() const			{ return output_size_; }
-		inline float					GetDpi() const					{ return dpi_; }
-
 	protected:
-		D3D10DeviceResources();
-
-		virtual ~D3D10DeviceResources();
-
-	protected:
-		HRESULT CreateDeviceResources();
-
-		HRESULT CreateWindowSizeDependentResources();
-
-	private:
-		HWND	hwnd_;
-		float	dpi_;
-		Size	logical_size_;
-		Size	output_size_;
-
 		ComPtr<ID3D10Device>			d3d_device_;
 		ComPtr<ID3D10RenderTargetView>	d3d_rt_view_;
 		ComPtr<ID3D10DepthStencilView>	d3d_ds_view_;

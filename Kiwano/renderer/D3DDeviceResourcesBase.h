@@ -20,20 +20,28 @@
 
 #pragma once
 #include "../macros.h"
-
-#if defined(KGE_USE_DIRECTX10)
-#	include "D3D10DeviceResources.h"
-#else
-#	include "D3D11DeviceResources.h"
-#endif
+#include "../math/helper.h"
+#include "../2d/Color.h"
+#include <Unknwnbase.h>
 
 namespace kiwano
 {
 
-#if defined(KGE_USE_DIRECTX10)
-	using DeviceResources = D3D10DeviceResources;
-#else
-	using DeviceResources = D3D11DeviceResources;
-#endif
+	MIDL_INTERFACE("fb99fa64-d9cf-4e0e-9c75-90514797b01d")
+	KGE_API ID3DDeviceResourcesBase : public IUnknown
+	{
+	public:
+		virtual HRESULT Present(bool vsync) = 0;
+
+		virtual HRESULT ClearRenderTarget(Color& clear_color) = 0;
+
+		virtual HRESULT HandleDeviceLost() = 0;
+
+		virtual HRESULT SetLogicalSize(Size logical_size) = 0;
+
+		virtual HRESULT SetDpi(float dpi) = 0;
+
+		virtual void DiscardResources() = 0;
+	};
 	
 }

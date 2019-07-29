@@ -52,8 +52,57 @@ namespace kiwano
 	}
 #endif
 
+
+	struct D3D11DeviceResources
+		: public ID3D11DeviceResources
+	{
+	public:
+		HRESULT Present(bool vsync) override;
+
+		HRESULT ClearRenderTarget(Color& clear_color) override;
+
+		HRESULT HandleDeviceLost() override;
+
+		HRESULT SetLogicalSize(Size logical_size) override;
+
+		HRESULT SetDpi(float dpi) override;
+
+		void DiscardResources() override;
+
+	public:
+		unsigned long STDMETHODCALLTYPE AddRef();
+
+		unsigned long STDMETHODCALLTYPE Release();
+
+		HRESULT STDMETHODCALLTYPE QueryInterface(
+			IID const& riid,
+			void** ppvObject
+		);
+
+	public:
+		D3D11DeviceResources();
+
+		virtual ~D3D11DeviceResources();
+
+		HRESULT CreateDeviceResources();
+
+		HRESULT CreateWindowSizeDependentResources();
+
+	public:
+		HWND	hwnd_;
+		float	dpi_;
+		Size	logical_size_;
+		Size	output_size_;
+		unsigned long ref_count_;
+
+		D3D_FEATURE_LEVEL d3d_feature_level_;
+		ComPtr<ID2DDeviceResources> d2d_res_;
+	};
+
+
 	D3D11DeviceResources::D3D11DeviceResources()
-		: hwnd_(nullptr)
+		: ref_count_(0)
+		, hwnd_(nullptr)
 		, d3d_feature_level_(D3D_FEATURE_LEVEL_9_1)
 	{
 		dpi_ = 96.f; // dpi_ = (float)GetDpiForWindow(hwnd);
@@ -64,28 +113,24 @@ namespace kiwano
 		DiscardResources();
 	}
 
-	HRESULT D3D11DeviceResources::Create(D3D11DeviceResources** device_resources, HWND hwnd)
+	HRESULT ID3D11DeviceResources::Create(ID3D11DeviceResources** device_resources, ID2DDeviceResources* d2d_device_res, HWND hwnd)
 	{
 		HRESULT hr = E_FAIL;
 
-		if (device_resources)
+		if (device_resources && d2d_device_res)
 		{
 			D3D11DeviceResources* res = new (std::nothrow) D3D11DeviceResources;
 			if (res)
 			{
-				hr = res->CreateDeviceIndependentResources();
+				RECT rc;
+				::GetClientRect(hwnd, &rc);
 
-				if (SUCCEEDED(hr))
-				{
-					RECT rc;
-					GetClientRect(hwnd, &rc);
+				res->hwnd_ = hwnd;
+				res->d2d_res_ = d2d_device_res;
+				res->logical_size_.x = float(rc.right - rc.left);
+				res->logical_size_.y = float(rc.bottom - rc.top);
 
-					res->hwnd_ = hwnd;
-					res->logical_size_.x = float(rc.right - rc.left);
-					res->logical_size_.y = float(rc.bottom - rc.top);
-
-					hr = res->CreateDeviceResources();
-				}
+				hr = res->CreateDeviceResources();
 
 				if (SUCCEEDED(hr))
 				{
@@ -111,26 +156,25 @@ namespace kiwano
 
 	HRESULT D3D11DeviceResources::Present(bool vsync)
 	{
+		KGE_ASSERT(dxgi_swap_chain_ != nullptr);
+
 		// The first argument instructs DXGI to block until VSync.
 		return dxgi_swap_chain_->Present(vsync ? 1 : 0, 0);
 	}
 
 	HRESULT D3D11DeviceResources::ClearRenderTarget(Color& clear_color)
 	{
-		d3d_device_context_->OMSetRenderTargets(
-			1,
-			&d3d_rt_view_,
-			d3d_ds_view_.Get()
-		);
-		d3d_device_context_->ClearRenderTargetView(
-			d3d_rt_view_.Get(),
-			reinterpret_cast<float*>(&clear_color)
-		);
+		KGE_ASSERT(d3d_device_context_ != nullptr && d3d_rt_view_ != nullptr && d3d_ds_view_ != nullptr);
+
+		auto rt_view = d3d_rt_view_.Get();
+		d3d_device_context_->OMSetRenderTargets(1, &rt_view, d3d_ds_view_.Get());
+		d3d_device_context_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
 		return S_OK;
 	}
 
 	void D3D11DeviceResources::DiscardResources()
 	{
+		d2d_res_.Reset();
 		d3d_device_.Reset();
 		d3d_device_context_.Reset();
 		d3d_rt_view_.Reset();
@@ -235,12 +279,12 @@ namespace kiwano
 			// Create the Direct2D device object and a corresponding context.
 			if (SUCCEEDED(hr))
 			{
-				hr = GetD2DFactory()->CreateDevice(dxgi_device.Get(), &d2d_device);
+				hr = d2d_res_->GetD2DFactory()->CreateDevice(dxgi_device.Get(), &d2d_device);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				hr = SetD2DDevice(d2d_device);
+				hr = d2d_res_->SetD2DDevice(d2d_device);
 			}
 		}
 
@@ -310,7 +354,7 @@ namespace kiwano
 		// Clear the previous window size specific context.
 		ID3D11RenderTargetView* null_views[] = { nullptr };
 		d3d_device_context_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
-		SetTargetBitmap(nullptr);
+		d2d_res_->SetTargetBitmap(nullptr);
 		d3d_rt_view_ = nullptr;
 		d3d_ds_view_ = nullptr;
 		d3d_device_context_->Flush();
@@ -396,7 +440,7 @@ namespace kiwano
 			ComPtr<ID2D1Bitmap1> target;
 			if (SUCCEEDED(hr))
 			{
-				hr = GetD2DDeviceContext()->CreateBitmapFromDxgiSurface(
+				hr = d2d_res_->GetD2DDeviceContext()->CreateBitmapFromDxgiSurface(
 					dxgi_back_buffer.Get(),
 					D2D1::BitmapProperties1(
 						D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
@@ -408,7 +452,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				SetTargetBitmap(target);
+				d2d_res_->SetTargetBitmap(target);
 			}
 		}
 
@@ -451,10 +495,53 @@ namespace kiwano
 			logical_size_.x = float(rc.right - rc.left);
 			logical_size_.y = float(rc.bottom - rc.top);
 
-			GetD2DDeviceContext()->SetDpi(dpi_, dpi_);
+			d2d_res_->GetD2DDeviceContext()->SetDpi(dpi_, dpi_);
 
 			return CreateWindowSizeDependentResources();
 		}
+		return S_OK;
+	}
+
+	STDMETHODIMP_(unsigned long) D3D11DeviceResources::AddRef()
+	{
+		return InterlockedIncrement(&ref_count_);
+	}
+
+	STDMETHODIMP_(unsigned long) D3D11DeviceResources::Release()
+	{
+		unsigned long newCount = InterlockedDecrement(&ref_count_);
+
+		if (newCount == 0)
+		{
+			delete this;
+			return 0;
+		}
+
+		return newCount;
+	}
+
+	STDMETHODIMP D3D11DeviceResources::QueryInterface(IID const& riid, void** object)
+	{
+		if (__uuidof(ID3D11DeviceResources) == riid)
+		{
+			*object = this;
+		}
+		else if (__uuidof(ID3DDeviceResourcesBase) == riid)
+		{
+			*object = this;
+		}
+		else if (__uuidof(IUnknown) == riid)
+		{
+			*object = this;
+		}
+		else
+		{
+			*object = nullptr;
+			return E_FAIL;
+		}
+
+		AddRef();
+
 		return S_OK;
 	}
 

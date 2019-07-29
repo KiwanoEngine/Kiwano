@@ -500,7 +500,11 @@ namespace kiwano
 		IID const& riid,
 		void** ppvObject)
 	{
-		if (__uuidof(IDWriteTextRenderer) == riid)
+		if (__uuidof(ITextRenderer) == riid)
+		{
+			*ppvObject = this;
+		}
+		else if (__uuidof(IDWriteTextRenderer) == riid)
 		{
 			*ppvObject = this;
 		}

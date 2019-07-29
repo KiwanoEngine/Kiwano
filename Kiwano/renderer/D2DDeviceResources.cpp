@@ -28,12 +28,109 @@
 
 namespace kiwano
 {
+	struct D2DDeviceResources
+		: public ID2DDeviceResources
+	{
+	public:
+		D2DDeviceResources();
+
+		virtual ~D2DDeviceResources();
+
+		HRESULT CreateDeviceIndependentResources();
+
+	public:
+		HRESULT CreateBitmapFromFile(
+			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
+			_In_ String const& file_path
+		) override;
+
+		HRESULT CreateBitmapFromResource(
+			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
+			_In_ Resource const& res
+		) override;
+
+		HRESULT CreateTextFormat(
+			_Out_ ComPtr<IDWriteTextFormat>& text_format,
+			_In_ Font const& font,
+			_In_ TextStyle const& text_style
+		) const override;
+
+		HRESULT CreateTextLayout(
+			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
+			_Out_ Size& layout_size,
+			_In_ String const& text,
+			_In_ ComPtr<IDWriteTextFormat> const& text_format,
+			_In_ TextStyle const& text_style
+		) const override;
+
+		void ClearImageCache() override;
+
+		void DiscardResources() override;
+
+		HRESULT SetD2DDevice(
+			_In_ ComPtr<ID2D1Device> const& device
+		) override;
+
+		void SetTargetBitmap(
+			_In_ ComPtr<ID2D1Bitmap1> const& target
+		) override;
+
+		ID2D1StrokeStyle* GetStrokeStyle(StrokeStyle stroke) const override;
+
+	public:
+		unsigned long STDMETHODCALLTYPE AddRef();
+
+		unsigned long STDMETHODCALLTYPE Release();
+
+		HRESULT STDMETHODCALLTYPE QueryInterface(
+			IID const& riid,
+			void** ppvObject
+		);
+
+	protected:
+		unsigned long ref_count_;
+		float dpi_;
+
+		using BitmapMap = UnorderedMap<size_t, ComPtr<ID2D1Bitmap>>;
+		BitmapMap bitmap_cache_;
+
+		ComPtr<ID2D1StrokeStyle>	d2d_miter_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>	d2d_bevel_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>	d2d_round_stroke_style_;
+	};
+
+
+	HRESULT ID2DDeviceResources::Create(ID2DDeviceResources** device_resources)
+	{
+		HRESULT hr = E_FAIL;
+		if (device_resources)
+		{
+			D2DDeviceResources* res = new (std::nothrow) D2DDeviceResources;
+			if (res)
+			{
+				hr = res->CreateDeviceIndependentResources();
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				res->AddRef();
+
+				DX::SafeRelease(*device_resources);
+				(*device_resources) = res;
+			}
+			else
+			{
+				delete res;
+				res = nullptr;
+			}
+		}
+		return hr;
+	}
 
 	D2DDeviceResources::D2DDeviceResources()
 		: ref_count_(0)
 		, dpi_(96.f)
 	{
-		CreateDeviceIndependentResources();
 	}
 
 	D2DDeviceResources::~D2DDeviceResources()
@@ -59,11 +156,13 @@ namespace kiwano
 		return newCount;
 	}
 
-	STDMETHODIMP D2DDeviceResources::QueryInterface(
-		IID const& riid,
-		void** object)
+	STDMETHODIMP D2DDeviceResources::QueryInterface(IID const& riid, void** object)
 	{
-		if (__uuidof(IUnknown) == riid)
+		if (__uuidof(ID2DDeviceResources) == riid)
+		{
+			*object = this;
+		}
+		else if (__uuidof(IUnknown) == riid)
 		{
 			*object = this;
 		}

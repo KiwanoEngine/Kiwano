@@ -49,21 +49,36 @@ namespace kiwano
 
 		ThrowIfFailed(hwnd_ ? S_OK : E_FAIL);
 		
-		device_resources_ = nullptr;
+		d2d_res_ = nullptr;
+		d3d_res_ = nullptr;
 		drawing_state_block_ = nullptr;
 
 		ThrowIfFailed(
-			DeviceResources::Create(
-				&device_resources_,
-				hwnd_
+			ID2DDeviceResources::Create(
+				&d2d_res_
 			)
 		);
 
-		factory_ = device_resources_->GetD2DFactory();
-		device_context_ = device_resources_->GetD2DDeviceContext();
+		ThrowIfFailed(
+#if defined(KGE_USE_DIRECTX10)
+			ID3D10DeviceResources::Create(
+				&d3d_res_,
+				d2d_res_.Get(),
+				hwnd_
+			)
+#else
+			ID3D11DeviceResources::Create(
+				&d3d_res_,
+				d2d_res_.Get(),
+				hwnd_
+			)
+#endif
+		);
+
+		device_context_ = d2d_res_->GetD2DDeviceContext();
 
 		ThrowIfFailed(
-			factory_->CreateDrawingStateBlock(
+			d2d_res_->GetD2DFactory()->CreateDrawingStateBlock(
 				&drawing_state_block_
 			)
 		);
@@ -80,11 +95,9 @@ namespace kiwano
 		KGE_LOG(L"Destroying device resources");
 
 		drawing_state_block_.Reset();
-		text_renderer_.Reset();
 		solid_color_brush_.Reset();
-		device_context_.Reset();
-		factory_.Reset();
-		device_resources_.Reset();
+		d2d_res_.Reset();
+		d3d_res_.Reset();
 	}
 
 	HRESULT Renderer::CreateDeviceResources()
@@ -114,7 +127,7 @@ namespace kiwano
 
 	HRESULT Renderer::HandleDeviceLost()
 	{
-		HRESULT hr = device_resources_->HandleDeviceLost();
+		HRESULT hr = d3d_res_->HandleDeviceLost();
 
 		if (SUCCEEDED(hr))
 		{
@@ -151,12 +164,12 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = device_resources_->Present(vsync_);
+			hr = d3d_res_->Present(vsync_);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = device_resources_->ClearRenderTarget(clear_color_);
+			hr = d3d_res_->ClearRenderTarget(clear_color_);
 		}
 
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
@@ -197,7 +210,7 @@ namespace kiwano
 			geometry.Get(),
 			solid_color_brush_.Get(),
 			stroke_width,
-			device_resources_->GetStrokeStyle(stroke)
+			d2d_res_->GetStrokeStyle(stroke)
 		);
 
 		if (collecting_status_)
@@ -332,9 +345,9 @@ namespace kiwano
 	{
 		output_size_.x = static_cast<float>(width);
 		output_size_.y = static_cast<float>(height);
-		if (device_resources_)
+		if (d3d_res_)
 		{
-			return device_resources_->SetLogicalSize(output_size_);
+			return d3d_res_->SetLogicalSize(output_size_);
 		}
 		return S_OK;
 	}
@@ -375,7 +388,7 @@ namespace kiwano
 		StrokeStyle outline_stroke
 	)
 	{
-		if (!text_renderer_ || !device_resources_)
+		if (!text_renderer_ || !d3d_res_)
 			return E_UNEXPECTED;
 
 		text_renderer_->SetTextStyle(
@@ -383,7 +396,7 @@ namespace kiwano
 			has_outline,
 			DX::ConvertToColorF(outline_color),
 			outline_width,
-			device_resources_->GetStrokeStyle(outline_stroke)
+			d2d_res_->GetStrokeStyle(outline_stroke)
 		);
 		return S_OK;
 	}

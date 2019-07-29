@@ -84,7 +84,7 @@
     <ClInclude Include="renderer\D2DDeviceResources.h" />
     <ClInclude Include="renderer\D3D10DeviceResources.h" />
     <ClInclude Include="renderer\D3D11DeviceResources.h" />
-    <ClInclude Include="renderer\DeviceResources.h" />
+    <ClInclude Include="renderer\D3DDeviceResourcesBase.h" />
     <ClInclude Include="renderer\helper.hpp" />
     <ClInclude Include="renderer\render.h" />
     <ClInclude Include="renderer\TextRenderer.h" />
