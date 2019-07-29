@@ -326,59 +326,39 @@ namespace kiwano
 	// Opacity Action
 	//-------------------------------------------------------
 
-	ActionOpacityBy::ActionOpacityBy(Duration duration, float opacity, EaseFunc func)
+	ActionFadeTo::ActionFadeTo(Duration duration, float opacity, EaseFunc func)
 		: ActionTween(duration, func)
-		, delta_val_(opacity)
+		, delta_val_(0.f)
+		, end_val_(opacity)
 	{
 	}
 
-	void ActionOpacityBy::Init(NodePtr target)
+	void ActionFadeTo::Init(NodePtr target)
 	{
 		if (target)
 		{
 			start_val_ = target->GetOpacity();
+			delta_val_ = end_val_ - start_val_;
 		}
 	}
 
-	void ActionOpacityBy::UpdateTween(NodePtr target, float percent)
+	void ActionFadeTo::UpdateTween(NodePtr target, float percent)
 	{
 		target->SetOpacity(start_val_ + delta_val_ * percent);
 	}
 
-	ActionPtr ActionOpacityBy::Clone() const
+	ActionPtr ActionFadeTo::Clone() const
 	{
-		return new (std::nothrow) ActionOpacityBy(dur_, delta_val_, ease_func_);
-	}
-
-	ActionPtr ActionOpacityBy::Reverse() const
-	{
-		return new (std::nothrow) ActionOpacityBy(dur_, -delta_val_, ease_func_);
-	}
-
-	ActionOpacityTo::ActionOpacityTo(Duration duration, float opacity, EaseFunc func)
-		: ActionOpacityBy(duration, 0, func)
-	{
-		end_val_ = opacity;
-	}
-
-	ActionPtr ActionOpacityTo::Clone() const
-	{
-		return new (std::nothrow) ActionOpacityTo(dur_, end_val_, ease_func_);
-	}
-
-	void ActionOpacityTo::Init(NodePtr target)
-	{
-		ActionOpacityBy::Init(target);
-		delta_val_ = end_val_ - start_val_;
+		return new (std::nothrow) ActionFadeTo(dur_, end_val_, ease_func_);
 	}
 
 	ActionFadeIn::ActionFadeIn(Duration duration, EaseFunc func)
-		: ActionOpacityTo(duration, 1, func)
+		: ActionFadeTo(duration, 1, func)
 	{
 	}
 
 	ActionFadeOut::ActionFadeOut(Duration duration, EaseFunc func)
-		: ActionOpacityTo(duration, 0, func)
+		: ActionFadeTo(duration, 0, func)
 	{
 	}
 

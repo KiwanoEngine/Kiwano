@@ -296,40 +296,12 @@ namespace kiwano
 	};
 
 
-	// 透明度相对渐变动作
-	class KGE_API ActionOpacityBy
+	// 透明度渐变动作
+	class KGE_API ActionFadeTo
 		: public ActionTween
 	{
 	public:
-		ActionOpacityBy(
-			Duration duration,		/* 持续时长 */
-			float opacity,			/* 相对变化值 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
-
-		// 获取该动作的拷贝对象
-		ActionPtr Clone() const override;
-
-		// 获取该动作的倒转
-		ActionPtr Reverse() const override;
-
-	protected:
-		void Init(NodePtr target) override;
-
-		void UpdateTween(NodePtr target, float percent) override;
-
-	protected:
-		float start_val_;
-		float delta_val_;
-	};
-
-
-	// 透明度渐变动作
-	class KGE_API ActionOpacityTo
-		: public ActionOpacityBy
-	{
-	public:
-		ActionOpacityTo(
+		ActionFadeTo(
 			Duration duration,		/* 持续时长 */
 			float opacity,			/* 目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
@@ -341,21 +313,25 @@ namespace kiwano
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			KGE_ERROR_LOG(L"Reverse() not supported in ActionOpacityTo");
+			KGE_ERROR_LOG(L"Reverse() not supported in ActionFadeTo");
 			return nullptr;
 		}
 
 	protected:
 		void Init(NodePtr target) override;
 
+		void UpdateTween(NodePtr target, float percent) override;
+
 	protected:
+		float start_val_;
+		float delta_val_;
 		float end_val_;
 	};
 
 
 	// 淡入动作
 	class KGE_API ActionFadeIn
-		: public ActionOpacityTo
+		: public ActionFadeTo
 	{
 	public:
 		// 创建淡入动作
@@ -368,7 +344,7 @@ namespace kiwano
 
 	// 淡出动作
 	class KGE_API ActionFadeOut
-		: public ActionOpacityTo
+		: public ActionFadeTo
 	{
 	public:
 		// 创建淡出动作

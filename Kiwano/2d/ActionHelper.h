@@ -46,9 +46,9 @@ namespace kiwano
 		inline ActionHelper& SetName(String const& name)					{ base->SetName(name); return (*this); }
 
 		// ªÒ»°÷∏’Î
-		inline ActionPtr Get() const									{ return base; }
+		inline ActionPtr Get() const										{ return base; }
 
-		inline ActionHelper(ActionPtr base)							: base(base) {}
+		inline ActionHelper(ActionPtr base)									: base(base) {}
 
 		inline operator ActionPtr() const									{ return base; }
 
@@ -154,15 +154,9 @@ namespace kiwano
 		}
 
 		static inline TweenHelper
-			OpacityBy(float opacity)
+			FadeTo(float opacity)
 		{
-			return TweenHelper(new kiwano::ActionOpacityBy(0, opacity));
-		}
-
-		static inline TweenHelper
-			OpacityTo(float opacity)
-		{
-			return TweenHelper(new kiwano::ActionOpacityTo(0, opacity));
+			return TweenHelper(new kiwano::ActionFadeTo(0, opacity));
 		}
 
 		static inline TweenHelper
@@ -231,6 +225,21 @@ namespace kiwano
 
 #pragma warning(push)
 #pragma warning(disable : 4996)
+
+		KGE_DEPRECATED("Tween::OpacityBy has been removed, use Tween::FadeTo instead")
+		static inline TweenHelper
+			OpacityBy(float opacity)
+		{
+			KGE_ASSERT("Tween::OpacityBy has been removed, use Tween::FadeTo instead");
+			return TweenHelper(nullptr);
+		}
+
+		KGE_DEPRECATED("Tween::OpacityTo is deprecated, use Tween::FadeTo instead")
+		static inline TweenHelper
+			OpacityTo(float opacity)
+		{
+			return TweenHelper(new kiwano::ActionFadeTo(0, opacity));
+		}
 
 		KGE_DEPRECATED("Tween::Sequence is deprecated, use Tween::Group instead")
 		static inline ActionHelper
