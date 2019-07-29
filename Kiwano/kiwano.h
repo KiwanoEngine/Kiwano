@@ -110,7 +110,7 @@
 
 #include "utils/Path.h"
 #include "utils/DataUtil.h"
-#include "utils/File.h"
+#include "utils/FileUtil.h"
 #include "utils/ResLoader.h"
 
 
