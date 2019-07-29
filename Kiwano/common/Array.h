@@ -82,17 +82,17 @@ namespace kiwano
 		inline void			swap(Array& rhs) noexcept									{ std::swap(size_, rhs.size_); std::swap(capacity_, rhs.capacity_); std::swap(data_, rhs.data_); }
 
 		inline void			resize(size_type new_size)									{ resize(new_size, _Ty()); }
-		inline void			resize(size_type new_size, const _Ty& v);
-		inline void			reserve(size_type new_capacity);
+		void				resize(size_type new_size, const _Ty& v);
+		void				reserve(size_type new_capacity);
 
 		inline void			push_back(const _Ty& val)									{ resize(size_ + 1, val); }
 		inline void			pop_back()													{ if (empty()) throw std::out_of_range("pop() called on empty vector"); resize(size_ - 1); }
 		inline void			push_front(const _Ty& val)									{ if (size_ == 0) push_back(val); else insert(begin(), val); }
 
 		inline iterator		erase(const_iterator where)									{ return erase(where, where + 1); }
-		inline iterator		erase(const_iterator first, const_iterator last);
+		iterator			erase(const_iterator first, const_iterator last);
 
-		inline iterator		insert(const_iterator where, const _Ty& v);
+		iterator			insert(const_iterator where, const _Ty& v);
 
 		inline bool						empty() const									{ return size_ == 0; }
 		inline size_type				size() const									{ return size_; }
@@ -134,7 +134,7 @@ namespace kiwano
 	};
 
 	template<typename _Ty, typename _Alloc, typename _Manager>
-	inline void Array<_Ty, _Alloc, _Manager>::resize(size_type new_size, const _Ty& val)
+	void Array<_Ty, _Alloc, _Manager>::resize(size_type new_size, const _Ty& val)
 	{
 		if (new_size > size_)
 		{
@@ -152,7 +152,7 @@ namespace kiwano
 	}
 
 	template<typename _Ty, typename _Alloc, typename _Manager>
-	inline void Array<_Ty, _Alloc, _Manager>::reserve(size_type new_capacity)
+	void Array<_Ty, _Alloc, _Manager>::reserve(size_type new_capacity)
 	{
 		if (new_capacity <= capacity_)
 			return;
@@ -170,7 +170,7 @@ namespace kiwano
 	}
 
 	template<typename _Ty, typename _Alloc, typename _Manager>
-	inline typename Array<_Ty, _Alloc, _Manager>::iterator
+	typename Array<_Ty, _Alloc, _Manager>::iterator
 		Array<_Ty, _Alloc, _Manager>::erase(const_iterator first, const_iterator last)
 	{
 		const auto off = first - begin();
@@ -187,7 +187,7 @@ namespace kiwano
 	}
 
 	template<typename _Ty, typename _Alloc, typename _Manager>
-	inline typename Array<_Ty, _Alloc, _Manager>::iterator
+	typename Array<_Ty, _Alloc, _Manager>::iterator
 		Array<_Ty, _Alloc, _Manager>::insert(const_iterator where, const _Ty& v)
 	{
 		const auto off = where - begin();
@@ -211,16 +211,16 @@ namespace kiwano
 		using size_type			= size_t;
 		using allocator_type	= typename _Alloc;
 
-		static inline void copy_data(value_type* dest, const value_type* src, size_type count)	{ if (src == dest) return; ::memcpy(dest, src, (size_t)count * sizeof(value_type)); }
-		static inline void copy_data(value_type* dest, size_type count, const value_type& val)	{ ::memset(dest, (int)val, (size_t)count * sizeof(value_type)); }
-		static inline void move_data(value_type* dest, const value_type* src, size_type count)	{ if (src == dest) return; ::memmove(dest, src, (size_t)count * sizeof(value_type)); }
+		static void copy_data(value_type* dest, const value_type* src, size_type count)		{ if (src == dest) return; ::memcpy(dest, src, (size_t)count * sizeof(value_type)); }
+		static void copy_data(value_type* dest, size_type count, const value_type& val)		{ ::memset(dest, (int)val, (size_t)count * sizeof(value_type)); }
+		static void move_data(value_type* dest, const value_type* src, size_type count)		{ if (src == dest) return; ::memmove(dest, src, (size_t)count * sizeof(value_type)); }
 
-		static inline value_type* allocate(size_type count)										{ return get_allocator().allocate(count); }
-		static inline void deallocate(value_type*& ptr, size_type count)						{ if (ptr) { get_allocator().deallocate(ptr, count); ptr = nullptr; } }
+		static value_type* allocate(size_type count)										{ return get_allocator().allocate(count); }
+		static void deallocate(value_type*& ptr, size_type count)							{ if (ptr) { get_allocator().deallocate(ptr, count); ptr = nullptr; } }
 
-		static inline void construct(value_type* ptr, size_type count)							{ }
-		static inline void construct(value_type* ptr, size_type count, const value_type& val)	{ while (count) { --count; *(ptr + count) = val; } }
-		static inline void destroy(value_type* ptr, size_type count)							{ }
+		static void construct(value_type* ptr, size_type count)								{ }
+		static void construct(value_type* ptr, size_type count, const value_type& val)		{ while (count) { --count; *(ptr + count) = val; } }
+		static void destroy(value_type* ptr, size_type count)								{ }
 
 	private:
 		static allocator_type& get_allocator()
@@ -240,9 +240,9 @@ namespace kiwano
 		using size_type			= size_t;
 		using allocator_type	= typename _Alloc;
 
-		static inline void copy_data(value_type* dest, const value_type* src, size_type count)		{ if (src == dest) return; while (count--) (*dest++) = (*src++); }
-		static inline void copy_data(value_type* dest, size_type count, const value_type& val)		{ while (count--) (*dest++) = val; }
-		static inline void move_data(value_type* dest, const value_type* src, size_type count)
+		static void copy_data(value_type* dest, const value_type* src, size_type count)	{ if (src == dest) return; while (count--) (*dest++) = (*src++); }
+		static void copy_data(value_type* dest, size_type count, const value_type& val)	{ while (count--) (*dest++) = val; }
+		static void move_data(value_type* dest, const value_type* src, size_type count)
 		{
 			if (src == dest) return;
 			if (dest > src && dest < src + count)
@@ -259,12 +259,12 @@ namespace kiwano
 			}
 		}
 
-		static inline value_type* allocate(size_type count)										{ return get_allocator().allocate(count); }
-		static inline void deallocate(value_type*& ptr, size_type count)						{ if (ptr) { get_allocator().deallocate(ptr, count); ptr = nullptr; } }
+		static value_type* allocate(size_type count)									{ return get_allocator().allocate(count); }
+		static void deallocate(value_type*& ptr, size_type count)						{ if (ptr) { get_allocator().deallocate(ptr, count); ptr = nullptr; } }
 
-		static inline void construct(value_type* ptr, size_type count)							{ construct(ptr, count, value_type()); }
-		static inline void construct(value_type* ptr, size_type count, const value_type& val)	{ while (count) get_allocator().construct(ptr + (--count), val); }
-		static inline void destroy(value_type* ptr, size_type count)							{ while (count) get_allocator().destroy(ptr + (--count)); }
+		static void construct(value_type* ptr, size_type count)							{ construct(ptr, count, value_type()); }
+		static void construct(value_type* ptr, size_type count, const value_type& val)	{ while (count) get_allocator().construct(ptr + (--count), val); }
+		static void destroy(value_type* ptr, size_type count)							{ while (count) get_allocator().destroy(ptr + (--count)); }
 
 	private:
 		static allocator_type& get_allocator()
