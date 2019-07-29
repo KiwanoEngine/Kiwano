@@ -38,6 +38,14 @@ namespace kiwano
 			HWND hwnd
 		);
 
+		HRESULT Present(
+			bool vsync
+		);
+
+		HRESULT ClearRenderTarget(
+			Color& clear_color
+		);
+
 		HRESULT HandleDeviceLost();
 
 		HRESULT SetLogicalSize(

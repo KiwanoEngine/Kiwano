@@ -151,20 +151,12 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			// The first argument instructs DXGI to block until VSync.
-			hr = device_resources_->GetDXGISwapChain()->Present(vsync_ ? 1 : 0, 0);
+			hr = device_resources_->Present(vsync_);
+		}
 
-			auto main_rt_view = device_resources_->GetD3DRenderTargetView();
-			device_resources_->GetD3DDeviceContext()->OMSetRenderTargets(
-				1, 
-				&main_rt_view,
-				device_resources_->GetD3DDepthStencilView()
-			);
-
-			device_resources_->GetD3DDeviceContext()->ClearRenderTargetView(
-				main_rt_view,
-				reinterpret_cast<float*>(&clear_color_)
-			);
+		if (SUCCEEDED(hr))
+		{
+			hr = device_resources_->ClearRenderTarget(clear_color_);
 		}
 
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)

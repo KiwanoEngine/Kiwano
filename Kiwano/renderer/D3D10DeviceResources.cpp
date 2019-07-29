@@ -29,7 +29,7 @@
 
 namespace kiwano
 {
-#if defined(_DEBUG)
+
 	namespace DX
 	{
 		HRESULT CreateD3DDevice(IDXGIAdapter *adapter, D3D10_DRIVER_TYPE driver_type, UINT flags, ID3D10Device1 **device)
@@ -63,6 +63,7 @@ namespace kiwano
 			return hr;
 		}
 
+#if defined(KGE_DEBUG)
 		inline bool SdkLayersAvailable()
 		{
 			HRESULT hr = CreateD3DDevice(
@@ -74,8 +75,10 @@ namespace kiwano
 
 			return SUCCEEDED(hr);
 		}
-	}
 #endif
+
+	} // namespace DX
+
 
 	D3D10DeviceResources::D3D10DeviceResources()
 		: hwnd_(nullptr)
@@ -131,6 +134,26 @@ namespace kiwano
 			}
 		}
 		return hr;
+	}
+
+	HRESULT D3D10DeviceResources::Present(bool vsync)
+	{
+		// The first argument instructs DXGI to block until VSync.
+		return dxgi_swap_chain_->Present(vsync ? 1 : 0, 0);
+	}
+
+	HRESULT D3D10DeviceResources::ClearRenderTarget(Color& clear_color)
+	{
+		d3d_device_->OMSetRenderTargets(
+			1,
+			&d3d_rt_view_,
+			d3d_ds_view_.Get()
+		);
+		d3d_device_->ClearRenderTargetView(
+			d3d_rt_view_.Get(),
+			reinterpret_cast<float*>(&clear_color)
+		);
+		return S_OK;
 	}
 
 	void D3D10DeviceResources::DiscardResources()
