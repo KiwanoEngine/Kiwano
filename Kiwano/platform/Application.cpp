@@ -227,12 +227,12 @@ namespace kiwano
 		if (show)
 		{
 			debug_node_ = new DebugNode;
-			Renderer::Instance().StartCollectData();
+			Renderer::Instance().SetCollectingStatus(true);
 		}
 		else
 		{
 			debug_node_.Reset();
-			Renderer::Instance().StopCollectData();
+			Renderer::Instance().SetCollectingStatus(false);
 		}
 	}
 

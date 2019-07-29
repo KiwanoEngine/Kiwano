@@ -32,7 +32,7 @@ namespace kiwano
 		, text_antialias_(TextAntialias::ClearType)
 		, clear_color_(Color::Black)
 		, opacity_(1.f)
-		, collecting_data_(false)
+		, collecting_status_(false)
 	{
 		status_.primitives = 0;
 	}
@@ -128,7 +128,7 @@ namespace kiwano
 		if (!device_context_)
 			return E_UNEXPECTED;
 
-		if (collecting_data_)
+		if (collecting_status_)
 		{
 			status_.start = Time::Now();
 			status_.primitives = 0;
@@ -165,7 +165,7 @@ namespace kiwano
 			hr = HandleDeviceLost();
 		}
 
-		if (collecting_data_)
+		if (collecting_status_)
 		{
 			status_.duration = Time::Now() - status_.start;
 		}
@@ -200,7 +200,7 @@ namespace kiwano
 			device_resources_->GetStrokeStyle(stroke)
 		);
 
-		if (collecting_data_)
+		if (collecting_status_)
 			++status_.primitives;
 		return S_OK;
 	}
@@ -235,7 +235,7 @@ namespace kiwano
 			DX::ConvertToRectF(image->GetCropRect())
 		);
 
-		if (collecting_data_)
+		if (collecting_status_)
 			++status_.primitives;
 		return S_OK;
 	}
@@ -257,7 +257,7 @@ namespace kiwano
 			DX::ConvertToRectF(src_rect)
 		);
 
-		if (collecting_data_)
+		if (collecting_status_)
 		++status_.primitives;
 		return S_OK;
 	}
@@ -267,7 +267,7 @@ namespace kiwano
 		if (!text_renderer_)
 			return E_UNEXPECTED;
 
-		if (collecting_data_)
+		if (collecting_status_)
 			++status_.primitives;
 		return text_layout->Draw(nullptr, text_renderer_.Get(), 0, 0);
 	}
@@ -339,14 +339,9 @@ namespace kiwano
 		return S_OK;
 	}
 
-	void Renderer::StartCollectData()
+	void Renderer::SetCollectingStatus(bool collecting)
 	{
-		collecting_data_ = true;
-	}
-
-	void Renderer::StopCollectData()
-	{
-		collecting_data_ = false;
+		collecting_status_ = collecting;
 	}
 
 	void Renderer::SetClearColor(const Color & color)

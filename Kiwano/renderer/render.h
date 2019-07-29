@@ -141,9 +141,7 @@ namespace kiwano
 
 		void DestroyComponent() override;
 
-		void StartCollectData();
-
-		void StopCollectData();
+		void SetCollectingStatus(bool collecting);
 
 		inline HWND						GetTargetWindow() const		{ return hwnd_; }
 
@@ -173,7 +171,7 @@ namespace kiwano
 		float opacity_;
 		bool antialias_;
 		bool vsync_;
-		bool collecting_data_;
+		bool collecting_status_;
 
 		Size			output_size_;
 		Color			clear_color_;
