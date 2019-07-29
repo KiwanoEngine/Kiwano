@@ -34,6 +34,8 @@ namespace kiwano
 		struct MatrixT
 		{
 			using value_type = _Ty;
+			using vec2_type = Vec2T<value_type>;
+			using rect_type = RectT<value_type>;
 
 			union
 			{
@@ -83,43 +85,12 @@ namespace kiwano
 					m[i] = other[i];
 			}
 
-			inline void Identity()
-			{
-				_11 = 1.f; _12 = 0.f;
-				_21 = 0.f; _12 = 1.f;
-				_31 = 0.f; _32 = 0.f;
-			}
-
-			inline Vec2 Transform(const Vec2& v) const
-			{
-				return Vec2(
-					v.x * _11 + v.y * _21 + _31,
-					v.x * _12 + v.y * _22 + _32
-				);
-			}
-
-			RectT<value_type> Transform(const Rect & rect) const
-			{
-				Vec2T<value_type> top_left = Transform(rect.GetLeftTop());
-				Vec2T<value_type> top_right = Transform(rect.GetRightTop());
-				Vec2T<value_type> bottom_left = Transform(rect.GetLeftBottom());
-				Vec2T<value_type> bottom_right = Transform(rect.GetRightBottom());
-
-				value_type left = std::min(std::min(top_left.x, top_right.x), std::min(bottom_left.x, bottom_right.x));
-				value_type right = std::max(std::max(top_left.x, top_right.x), std::max(bottom_left.x, bottom_right.x));
-				value_type top = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
-				value_type bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
-
-				return Rect{ left, top, (right - left), (bottom - top) };
-			}
-
-			inline void Translate(const Vec2& v)
-			{
-				_31 += _11 * v.x + _21 * v.y;
-				_32 += _12 * v.x + _22 * v.y;
-			}
-
 			inline value_type operator [](unsigned int index) const
+			{
+				return m[index];
+			}
+
+			inline value_type& operator [](unsigned int index)
 			{
 				return m[index];
 			}
@@ -132,16 +103,31 @@ namespace kiwano
 				return *this;
 			}
 
-			inline value_type Determinant() const
+			inline void Identity()
 			{
-				return (_11 * _22) - (_12 * _21);
+				_11 = 1.f; _12 = 0.f;
+				_21 = 0.f; _22 = 1.f;
+				_31 = 0.f; _32 = 0.f;
 			}
 
 			inline bool IsIdentity() const
 			{
 				return	_11 == 1.f && _12 == 0.f &&
-						_21 == 0.f && _22 == 1.f &&
-						_31 == 0.f && _32 == 0.f;
+					_21 == 0.f && _22 == 1.f &&
+					_31 == 0.f && _32 == 0.f;
+			}
+
+			inline MatrixT Invert() const
+			{
+				value_type det = 1.f / Determinant();
+				return MatrixT(
+					det * _22,
+					-det * _12,
+					-det * _21,
+					det * _11,
+					det * (_21 * _32 - _22 * _31),
+					det * (_12 * _31 - _11 * _32)
+				);
 			}
 
 			inline bool IsInvertible() const
@@ -149,7 +135,41 @@ namespace kiwano
 				return 0 != Determinant();
 			}
 
-			static inline MatrixT Translation(const Vec2& v)
+			inline value_type Determinant() const
+			{
+				return (_11 * _22) - (_12 * _21);
+			}
+
+			inline vec2_type Transform(const vec2_type& v) const
+			{
+				return vec2_type(
+					v.x * _11 + v.y * _21 + _31,
+					v.x * _12 + v.y * _22 + _32
+				);
+			}
+
+			rect_type Transform(const rect_type & rect) const
+			{
+				vec2_type top_left = Transform(rect.GetLeftTop());
+				vec2_type top_right = Transform(rect.GetRightTop());
+				vec2_type bottom_left = Transform(rect.GetLeftBottom());
+				vec2_type bottom_right = Transform(rect.GetRightBottom());
+
+				value_type left = std::min(std::min(top_left.x, top_right.x), std::min(bottom_left.x, bottom_right.x));
+				value_type right = std::max(std::max(top_left.x, top_right.x), std::max(bottom_left.x, bottom_right.x));
+				value_type top = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
+				value_type bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
+
+				return rect_type{ left, top, (right - left), (bottom - top) };
+			}
+
+			inline void Translate(const vec2_type& v)
+			{
+				_31 += _11 * v.x + _21 * v.y;
+				_32 += _12 * v.x + _22 * v.y;
+			}
+
+			static inline MatrixT Translation(const vec2_type& v)
 			{
 				return MatrixT(
 					1.f, 0.f,
@@ -158,16 +178,18 @@ namespace kiwano
 				);
 			}
 
-			static inline MatrixT Translation(
-				value_type x,
-				value_type y)
+			static inline MatrixT Scaling(const vec2_type& v)
 			{
-				return Translation(Vec2(x, y));
+				return MatrixT(
+					v.x, 0.f,
+					0.f, v.y,
+					0.f, 0.f
+				);
 			}
 
 			static inline MatrixT Scaling(
-				const Vec2& v,
-				const Vec2& center = Vec2())
+				const vec2_type& v,
+				const vec2_type& center)
 			{
 				return MatrixT(
 					v.x, 0.f,
@@ -177,17 +199,20 @@ namespace kiwano
 				);
 			}
 
-			static inline MatrixT Scaling(
-				value_type x,
-				value_type y,
-				const Vec2& center = Vec2())
+			static inline MatrixT Rotation(value_type angle)
 			{
-				return Scaling(Vec2(x, y), center);
+				value_type s = math::Sin(angle);
+				value_type c = math::Cos(angle);
+				return MatrixT(
+					c, s,
+					-s, c,
+					0.f, 0.f
+				);
 			}
 
 			static inline MatrixT Rotation(
 				value_type angle,
-				const Vec2& center = Vec2())
+				const vec2_type& center)
 			{
 				value_type s = math::Sin(angle);
 				value_type c = math::Cos(angle);
@@ -199,31 +224,27 @@ namespace kiwano
 				);
 			}
 
-			static inline MatrixT Skewing(
-				value_type angle_x,
-				value_type angle_y,
-				const Vec2& center = Vec2())
+			static inline MatrixT Skewing(const vec2_type& angle)
 			{
-				value_type tx = math::Tan(angle_x);
-				value_type ty = math::Tan(angle_y);
+				value_type tx = math::Tan(angle.x);
+				value_type ty = math::Tan(angle.y);
+				return MatrixT(
+					1.f, -ty,
+					-tx, 1.f,
+					0.f, 0.f
+				);
+			}
+
+			static inline MatrixT Skewing(
+				const vec2_type& angle,
+				const vec2_type& center)
+			{
+				value_type tx = math::Tan(angle.x);
+				value_type ty = math::Tan(angle.y);
 				return MatrixT(
 					1.f, -ty,
 					-tx, 1.f,
 					center.y * tx, center.x * ty
-				);
-			}
-
-			static inline MatrixT Invert(MatrixT const& matrix)
-			{
-				value_type det = 1.f / matrix.Determinant();
-
-				return MatrixT(
-					det * matrix._22,
-					-det * matrix._12,
-					-det * matrix._21,
-					det * matrix._11,
-					det * (matrix._21 * matrix._32 - matrix._22 * matrix._31),
-					det * (matrix._12 * matrix._31 - matrix._11 * matrix._32)
 				);
 			}
 		};
