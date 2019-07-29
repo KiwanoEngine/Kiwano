@@ -30,7 +30,7 @@ namespace kiwano
 		: cache_expired_(false)
 		, stroke_width_(1.0f)
 	{
-		auto ctx = Renderer::Instance().GetD2DDeviceResources()->GetD2DDeviceContext();
+		auto ctx = Renderer::Instance().GetD2DDeviceResources()->GetDeviceContext();
 
 		ThrowIfFailed(
 			ctx->CreateCompatibleRenderTarget(&render_target_)
@@ -392,7 +392,7 @@ namespace kiwano
 		current_geometry_ = nullptr;
 
 		ThrowIfFailed(
-			Renderer::Instance().GetD2DDeviceResources()->GetD2DFactory()->CreatePathGeometry(&current_geometry_)
+			Renderer::Instance().GetD2DDeviceResources()->GetFactory()->CreatePathGeometry(&current_geometry_)
 		);
 		
 		ThrowIfFailed(

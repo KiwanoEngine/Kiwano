@@ -75,10 +75,10 @@ namespace kiwano
 #endif
 		);
 
-		device_context_ = d2d_res_->GetD2DDeviceContext();
+		device_context_ = d2d_res_->GetDeviceContext();
 
 		ThrowIfFailed(
-			d2d_res_->GetD2DFactory()->CreateDrawingStateBlock(
+			d2d_res_->GetFactory()->CreateDrawingStateBlock(
 				&drawing_state_block_
 			)
 		);

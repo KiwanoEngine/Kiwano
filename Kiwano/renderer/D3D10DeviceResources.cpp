@@ -189,20 +189,20 @@ namespace kiwano
 
 	HRESULT D3D10DeviceResources::ClearRenderTarget(Color& clear_color)
 	{
-		KGE_ASSERT(d3d_device_ != nullptr && d3d_rt_view_ != nullptr && d3d_ds_view_ != nullptr);
+		KGE_ASSERT(device_ != nullptr && rt_view_ != nullptr && ds_view_ != nullptr);
 
-		auto rt_view = d3d_rt_view_.Get();
-		d3d_device_->OMSetRenderTargets(1, &rt_view, d3d_ds_view_.Get());
-		d3d_device_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
+		auto rt_view = rt_view_.Get();
+		device_->OMSetRenderTargets(1, &rt_view, ds_view_.Get());
+		device_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
 		return S_OK;
 	}
 
 	void D3D10DeviceResources::DiscardResources()
 	{
 		d2d_res_.Reset();
-		d3d_device_.Reset();
-		d3d_rt_view_.Reset();
-		d3d_ds_view_.Reset();
+		device_.Reset();
+		rt_view_.Reset();
+		ds_view_.Reset();
 		dxgi_swap_chain_.Reset();
 		dxgi_factory_.Reset();
 
@@ -234,7 +234,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			d3d_device_ = device;
+			device_ = device;
 
 			ComPtr<IDXGIAdapter> dxgi_adapter;
 			ComPtr<IDXGIDevice> dxgi_device;
@@ -243,7 +243,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = d3d_device_->QueryInterface(IID_PPV_ARGS(&dxgi_device));
+				hr = device_->QueryInterface(IID_PPV_ARGS(&dxgi_device));
 			}
 
 			if (SUCCEEDED(hr))
@@ -264,7 +264,7 @@ namespace kiwano
 			// Create the Direct2D device object and a corresponding context.
 			if (SUCCEEDED(hr))
 			{
-				hr = d2d_res_->GetD2DFactory()->CreateDevice(dxgi_device.Get(), &d2d_device);
+				hr = d2d_res_->GetFactory()->CreateDevice(dxgi_device.Get(), &d2d_device);
 			}
 
 			if (SUCCEEDED(hr))
@@ -295,7 +295,7 @@ namespace kiwano
 			ComPtr<IDXGIDevice> dxgi_device;
 			if (SUCCEEDED(hr))
 			{
-				hr = d3d_device_->QueryInterface(&dxgi_device);
+				hr = device_->QueryInterface(&dxgi_device);
 			}
 
 			ComPtr<IDXGIAdapter> dxgi_adapter;
@@ -313,7 +313,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				hr = dxgi_factory->CreateSwapChain(
-					d3d_device_.Get(),
+					device_.Get(),
 					&swap_chain_desc,
 					&dxgi_swap_chain_);
 			}
@@ -331,11 +331,11 @@ namespace kiwano
 
 		// Clear the previous window size specific context.
 		ID3D10RenderTargetView* null_views[] = { nullptr };
-		d3d_device_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
+		device_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
 		d2d_res_->SetTargetBitmap(nullptr);
-		d3d_rt_view_ = nullptr;
-		d3d_ds_view_ = nullptr;
-		d3d_device_->Flush();
+		rt_view_ = nullptr;
+		ds_view_ = nullptr;
+		device_->Flush();
 
 		// Calculate the necessary render target size in pixels.
 		output_size_.x = DX::ConvertDipsToPixels(logical_size_.x, dpi_);
@@ -369,8 +369,8 @@ namespace kiwano
 				renderDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2D;
 				renderDesc.Texture2D.MipSlice = 0;
 
-				d3d_rt_view_ = nullptr;
-				hr = d3d_device_->CreateRenderTargetView(dxgi_back_buffer.Get(), &renderDesc, &d3d_rt_view_);
+				rt_view_ = nullptr;
+				hr = device_->CreateRenderTargetView(dxgi_back_buffer.Get(), &renderDesc, &rt_view_);
 			}
 		}
 
@@ -391,7 +391,7 @@ namespace kiwano
 			tex_desc.SampleDesc.Quality = 0;
 			tex_desc.Usage = D3D10_USAGE_DEFAULT;
 
-			hr = d3d_device_->CreateTexture2D(&tex_desc, NULL, &depth_stencil);
+			hr = device_->CreateTexture2D(&tex_desc, NULL, &depth_stencil);
 
 			if (SUCCEEDED(hr))
 			{
@@ -400,14 +400,14 @@ namespace kiwano
 				desc.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
 				desc.Texture2D.MipSlice = 0;
 
-				d3d_ds_view_.Reset();
-				hr = d3d_device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &d3d_ds_view_);
+				ds_view_.Reset();
+				hr = device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &ds_view_);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				ID3D10RenderTargetView* main_view = d3d_rt_view_.Get();
-				d3d_device_->OMSetRenderTargets(1, &main_view, d3d_ds_view_.Get());
+				ID3D10RenderTargetView* main_view = rt_view_.Get();
+				device_->OMSetRenderTargets(1, &main_view, ds_view_.Get());
 			}
 		}
 
@@ -422,7 +422,7 @@ namespace kiwano
 			viewport.MinDepth = 0;
 			viewport.MaxDepth = 1;
 
-			d3d_device_->RSSetViewports(1, &viewport);
+			device_->RSSetViewports(1, &viewport);
 		}
 
 		// Create a Direct2D target bitmap associated with the
@@ -435,7 +435,7 @@ namespace kiwano
 			ComPtr<ID2D1Bitmap1> target;
 			if (SUCCEEDED(hr))
 			{
-				hr = d2d_res_->GetD2DDeviceContext()->CreateBitmapFromDxgiSurface(
+				hr = d2d_res_->GetDeviceContext()->CreateBitmapFromDxgiSurface(
 					dxgi_back_buffer.Get(),
 					D2D1::BitmapProperties1(
 						D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
@@ -490,7 +490,7 @@ namespace kiwano
 			logical_size_.x = float(rc.right - rc.left);
 			logical_size_.y = float(rc.bottom - rc.top);
 
-			d2d_res_->GetD2DDeviceContext()->SetDpi(dpi_, dpi_);
+			d2d_res_->GetDeviceContext()->SetDpi(dpi_, dpi_);
 
 			return CreateWindowSizeDependentResources();
 		}

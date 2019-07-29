@@ -37,18 +37,18 @@ namespace kiwano
 	public:
 		static HRESULT Create(ID3D11DeviceResources** device_resources, ID2DDeviceResources* d2d_device_res, HWND hwnd);
 
-		inline ID3D11Device*			GetD3DDevice() const			{ KGE_ASSERT(d3d_device_); return d3d_device_.Get(); }
-		inline ID3D11DeviceContext*		GetD3DDeviceContext() const		{ KGE_ASSERT(d3d_device_context_); return d3d_device_context_.Get(); }
-		inline ID3D11RenderTargetView*	GetD3DRenderTargetView() const	{ KGE_ASSERT(d3d_rt_view_); return d3d_rt_view_.Get(); }
-		inline ID3D11DepthStencilView*	GetD3DDepthStencilView() const	{ KGE_ASSERT(d3d_ds_view_); return d3d_ds_view_.Get(); }
+		inline ID3D11Device*			GetDevice() const				{ KGE_ASSERT(device_); return device_.Get(); }
+		inline ID3D11DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.Get(); }
+		inline ID3D11RenderTargetView*	GetRenderTargetView() const		{ KGE_ASSERT(rt_view_); return rt_view_.Get(); }
+		inline ID3D11DepthStencilView*	GetDepthStencilView() const		{ KGE_ASSERT(ds_view_); return ds_view_.Get(); }
 		inline IDXGIFactory*			GetDXGIFactory() const			{ KGE_ASSERT(dxgi_factory_); return dxgi_factory_.Get(); }
 		inline IDXGISwapChain*			GetDXGISwapChain() const		{ KGE_ASSERT(dxgi_swap_chain_); return dxgi_swap_chain_.Get(); }
 
 	protected:
-		ComPtr<ID3D11Device>			d3d_device_;
-		ComPtr<ID3D11DeviceContext>		d3d_device_context_;
-		ComPtr<ID3D11RenderTargetView>	d3d_rt_view_;
-		ComPtr<ID3D11DepthStencilView>	d3d_ds_view_;
+		ComPtr<ID3D11Device>			device_;
+		ComPtr<ID3D11DeviceContext>		device_context_;
+		ComPtr<ID3D11RenderTargetView>	rt_view_;
+		ComPtr<ID3D11DepthStencilView>	ds_view_;
 		ComPtr<IDXGISwapChain>			dxgi_swap_chain_;
 		ComPtr<IDXGIFactory>			dxgi_factory_;
 	};

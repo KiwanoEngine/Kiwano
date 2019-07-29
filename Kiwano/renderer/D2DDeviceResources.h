@@ -74,18 +74,18 @@ namespace kiwano
 
 		virtual void DiscardResources() = 0;
 
-		inline ID2D1Factory1*			GetD2DFactory() const			{ KGE_ASSERT(d2d_factory_); return d2d_factory_.Get(); }
+		inline ID2D1Factory1*			GetFactory() const				{ KGE_ASSERT(factory_); return factory_.Get(); }
 		inline IWICImagingFactory*		GetWICImagingFactory() const	{ KGE_ASSERT(imaging_factory_); return imaging_factory_.Get(); }
 		inline IDWriteFactory*			GetDWriteFactory() const		{ KGE_ASSERT(dwrite_factory_); return dwrite_factory_.Get(); }
-		inline ID2D1Device*				GetD2DDevice() const			{ KGE_ASSERT(d2d_device_); return d2d_device_.Get(); }
-		inline ID2D1DeviceContext*		GetD2DDeviceContext() const		{ KGE_ASSERT(d2d_device_context_); return d2d_device_context_.Get(); }
-		inline ID2D1Bitmap1*			GetD2DTargetBitmap() const		{ KGE_ASSERT(d2d_target_bitmap_); return d2d_target_bitmap_.Get(); }
+		inline ID2D1Device*				GetDevice() const				{ KGE_ASSERT(device_); return device_.Get(); }
+		inline ID2D1DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.Get(); }
+		inline ID2D1Bitmap1*			GetTargetBitmap() const			{ KGE_ASSERT(target_bitmap_); return target_bitmap_.Get(); }
 
 	protected:
-		ComPtr<ID2D1Factory1>		d2d_factory_;
-		ComPtr<ID2D1Device>			d2d_device_;
-		ComPtr<ID2D1DeviceContext>	d2d_device_context_;
-		ComPtr<ID2D1Bitmap1>		d2d_target_bitmap_;
+		ComPtr<ID2D1Factory1>		factory_;
+		ComPtr<ID2D1Device>			device_;
+		ComPtr<ID2D1DeviceContext>	device_context_;
+		ComPtr<ID2D1Bitmap1>		target_bitmap_;
 
 		ComPtr<IWICImagingFactory>	imaging_factory_;
 		ComPtr<IDWriteFactory>		dwrite_factory_;
