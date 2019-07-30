@@ -19,25 +19,41 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <memory>
+#include <mutex>
 
 // Class that will implement the singleton mode,
 // must use the macro in its delare file
 
 #ifndef KGE_DECLARE_SINGLETON
 #define KGE_DECLARE_SINGLETON( CLASS )			\
-	friend class ::kiwano::Singleton< CLASS >
+	friend ::kiwano::Singleton< CLASS >;  \
+	friend ::std::default_delete< CLASS >
 #endif
 
 namespace kiwano
 {
 	template <typename _Ty>
-	class Singleton
+	struct Singleton
 	{
 	public:
-		static inline _Ty& Instance()
+		static inline _Ty* Instance()
 		{
-			static _Ty instance;	// Thread-safe
-			return instance;
+			if (!instance_)
+			{
+				std::call_once(once_, Init);
+			}
+			return instance_.get();
+		}
+
+		static inline void Init()
+		{
+			if (!instance_) instance_.reset(new (std::nothrow) _Ty);
+		}
+
+		static inline void Destroy()
+		{
+			instance_.reset();
 		}
 
 	protected:
@@ -47,5 +63,15 @@ namespace kiwano
 		Singleton(const Singleton&) = delete;
 
 		Singleton& operator=(const Singleton&) = delete;
+
+	private:
+		static std::once_flag once_;
+		static std::unique_ptr<_Ty> instance_;
 	};
+
+	template <typename _Ty>
+	std::once_flag Singleton<_Ty>::once_;
+
+	template <typename _Ty>
+	std::unique_ptr<_Ty> Singleton<_Ty>::instance_;
 }

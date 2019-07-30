@@ -32,10 +32,10 @@ public:
 	DemoApp()
 	{
 		// 使用 Audio 组件
-		Use(&Audio::Instance());
+		Use(Audio::Instance());
 
 		// 使用 HttpClient 组件
-		Use(&HttpClient::Instance());
+		Use(HttpClient::Instance());
 
 		Options options(L"Kiwano示例程序", WINDOW_WIDTH, WINDOW_HEIGHT);
 		Init(options);
@@ -53,7 +53,7 @@ public:
 			s_CurrIndex = index;
 
 			String title = s_Demos[index].title;
-			GetWindow()->SetTitle(L"Kiwano示例程序 - " + title);
+			Window::Instance()->SetTitle(L"Kiwano示例程序 - " + title);
 
 			ScenePtr scene = s_Demos[index].Create();
 			EnterScene(scene);
