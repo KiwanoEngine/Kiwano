@@ -143,6 +143,7 @@ namespace kiwano
 			{
 				(*iter)->DestroyComponent();
 			}
+			components_.clear();
 		}
 
 		// Destroy all instances
