@@ -258,6 +258,9 @@
     <ClInclude Include="renderer\D3DDeviceResourcesBase.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="base\types.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">

@@ -18,32 +18,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Scene.h"
-#include "../base/logs.h"
-#include "../renderer/render.h"
+#pragma once
 
 namespace kiwano
 {
-	Scene::Scene()
+	namespace imgui
 	{
-		scene_ = this;
+		class ImGuiModule
+			: public Singleton<ImGuiModule>
+			, public Component
+		{
+			KGE_DECLARE_SINGLETON(ImGuiModule);
 
-		SetAnchor(0, 0);
-		SetSize(Renderer::Instance().GetOutputSize());
+		private:
+			void Init(HWND hwnd);
+
+			void NewFrame();
+
+			void Render();
+
+		public:
+			ImGuiModule();
+
+			void SetupComponent(Application* app) override;
+
+			void DestroyComponent() override;
+
+			void BeforeUpdate(float dt) override;
+
+			void BeforeRender() override;
+
+			void AfterRender() override;
+
+			void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
+
+			void UpdateMousePos();
+
+			void UpdateMouseCursor();
+
+			void UpdateGamepads();
+
+		private:
+			bool has_gamepad_;
+			bool want_update_has_gamepad_;
+			HWND target_window_;
+		};
 	}
-
-	Scene::~Scene()
-	{
-	}
-
-	void Scene::OnEnter()
-	{
-		KGE_LOG(L"Scene entered");
-	}
-
-	void Scene::OnExit()
-	{
-		KGE_LOG(L"Scene exited");
-	}
-
 }

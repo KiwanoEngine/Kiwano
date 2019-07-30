@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2016-2019 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,43 +19,53 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../math/Rect.hpp"
 
 namespace kiwano
 {
-	namespace imgui
+	// 画笔样式
+	enum class StrokeStyle : int
 	{
-		class ImGuiLayer;
+		Miter = 0,	/* 斜切 */
+		Bevel = 1,	/* 斜角 */
+		Round = 2	/* 圆角 */
+	};
 
-		class ImGuiView
-			: public Singleton<ImGuiView>
-			, public Component
-		{
-			KGE_DECLARE_SINGLETON(ImGuiView);
+	// 方向
+	enum class Direction : int
+	{
+		Up,		/* 上 */
+		Down,	/* 下 */
+		Left,	/* 左 */
+		Right	/* 右 */
+	};
 
-			friend class ImGuiLayer;
+	// 鼠标指针
+	enum class MouseCursor : int
+	{
+		Arrow,		/* 指针 */
+		TextInput,	/* 输入文本 */
+		Hand,		/* 手指 */
+		SizeAll,
+		SizeNESW,
+		SizeNS,
+		SizeNWSE,
+		SizeWE,
+	};
 
-		public:
-			// 创建 ImGui 图层
-			ImGuiLayerPtr CreateLayer(
-				Scene* scene		/* 指定场景 */
-			);
+	// 文字抗锯齿属性
+	enum class TextAntialias
+	{
+		Default,	// 系统默认
+		ClearType,	// ClearType 抗锯齿
+		GrayScale,	// 灰度抗锯齿
+		None		// 不启用抗锯齿
+	};
 
-		private:
-			void Init(HWND hwnd);
-
-			void NewFrame();
-
-			void Render();
-
-			void RemoveLayer(ImGuiLayer* layer);
-
-		public:
-			void SetupComponent(Application* app) override;
-
-			void DestroyComponent() override;
-
-		private:
-			Map<Scene*, ImGuiLayer*> layers_;
-		};
-	}
+	// 图层属性
+	struct LayerProperties
+	{
+		Rect area;
+		float opacity;
+	};
 }

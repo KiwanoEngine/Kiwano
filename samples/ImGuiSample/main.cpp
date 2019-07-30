@@ -11,11 +11,10 @@ public:
 	ImGuiApp()
 	{
 		// 添加 ImGui 组件
-		Use(&ImGuiView::Instance());
+		Use(&ImGuiModule::Instance());
 
 		// 初始化
 		Options options(L"ImGui Demo", 1280, 800);
-
 		Init(options);
 	}
 

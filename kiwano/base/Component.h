@@ -30,12 +30,10 @@ namespace kiwano
 		virtual void SetupComponent(Application*) = 0;
 		virtual void DestroyComponent() = 0;
 
-		virtual void BeforeUpdate() {}
-		virtual void OnUpdate(float dt) {}
+		virtual void BeforeUpdate(float dt) {}
 		virtual void AfterUpdate() {}
 
 		virtual void BeforeRender() {}
-		virtual void OnRender() {}
 		virtual void AfterRender() {}
 
 		virtual void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {}

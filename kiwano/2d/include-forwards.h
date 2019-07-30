@@ -30,6 +30,7 @@
 #include "../base/SmartPtr.hpp"
 #include "../base/Object.h"
 #include "../math/helper.h"
+#include "../base/types.h"
 
 namespace kiwano
 {
@@ -79,53 +80,4 @@ namespace kiwano
 
 	KGE_DECLARE_SMART_PTR(Button);
 	KGE_DECLARE_SMART_PTR(Menu);
-}
-
-namespace kiwano
-{
-	// 画笔样式
-	enum class StrokeStyle : int
-	{
-		Miter = 0,	/* 斜切 */
-		Bevel = 1,	/* 斜角 */
-		Round = 2	/* 圆角 */
-	};
-
-	// 方向
-	enum class Direction : int
-	{
-		Up,		/* 上 */
-		Down,	/* 下 */
-		Left,	/* 左 */
-		Right	/* 右 */
-	};
-
-	// 鼠标指针
-	enum class MouseCursor : int
-	{
-		Arrow,		/* 指针 */
-		TextInput,	/* 输入文本 */
-		Hand,		/* 手指 */
-		SizeAll,
-		SizeNESW,
-		SizeNS,
-		SizeNWSE,
-		SizeWE,
-	};
-
-	// 文字抗锯齿属性
-	enum class TextAntialias
-	{
-		Default,	// 系统默认
-		ClearType,	// ClearType 抗锯齿
-		GrayScale,	// 灰度抗锯齿
-		None		// 不启用抗锯齿
-	};
-
-	// 图层属性
-	struct LayerProperties
-	{
-		Rect area;
-		float opacity;
-	};
 }

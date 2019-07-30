@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\imgui_impl.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\imgui_impl_dx10.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -22,9 +19,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ImGuiLayer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ImGuiView.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="third-party\ImGui\imconfig.h">
@@ -46,6 +40,12 @@
       <Filter>third-party\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="kiwano-imgui.h" />
+    <ClInclude Include="src\imgui_impl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiModule.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\imgui_impl_dx10.cpp">
@@ -55,9 +55,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGuiLayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImGuiView.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="third-party\ImGui\imgui.cpp">
@@ -71,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="third-party\ImGui\imgui_widgets.cpp">
       <Filter>third-party\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiModule.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
