@@ -21,6 +21,7 @@
 #pragma once
 #include "../macros.h"
 #include "../common/helper.h"
+#include "../common/Json.h"
 #include "../base/Resource.h"
 #include "../2d/include-forwards.h"
 
@@ -29,11 +30,23 @@ namespace kiwano
 	class KGE_API ResLoader
 	{
 	public:
+		// 从 JSON 文件加载资源信息
+		bool LoadFromJsonFile(String const& file_path);
+
+		// 从 JSON 加载资源信息
+		bool LoadFromJson(Json const& json_data);
+
 		// 添加图片
 		bool AddImage(String const& id, Resource const& image);
 
 		// 添加图片
 		bool AddImage(String const& id, ImagePtr image);
+
+		// 添加 GIF 图片
+		bool AddGifImage(String const& id, Resource const& image);
+
+		// 添加 GIF 图片
+		bool AddGifImage(String const& id, GifImagePtr image);
 
 		// 添加帧集合
 		size_t AddFrames(String const& id, Array<Resource> const& images);
@@ -57,6 +70,8 @@ namespace kiwano
 
 		ImagePtr GetImage(String const& id) const;
 
+		GifImagePtr GetGifImage(String const& id) const;
+
 		FramesPtr GetFrames(String const& id) const;
 
 		ObjectPtr GetObj(String const& id) const;
@@ -66,11 +81,6 @@ namespace kiwano
 
 		// 销毁所有资源
 		void Destroy();
-
-		// 添加资源搜索路径
-		void AddSearchPath(
-			String const& path
-		);
 
 		template<typename _Ty>
 		_Ty* Get(String const& id) const
@@ -83,6 +93,5 @@ namespace kiwano
 
 	protected:
 		UnorderedMap<String, ObjectPtr> res_;
-		List<String> search_paths_;
 	};
 }

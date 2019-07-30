@@ -11,4 +11,7 @@
     <ClInclude Include="Demo4.h" />
     <ClInclude Include="Demo5.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\res.json" />
+  </ItemGroup>
 </Project>
