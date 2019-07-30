@@ -1,7 +1,5 @@
 // Copyright (C) 2019 Nomango
 
-#include "kiwano.h"
-#include "kiwano-imgui.h"
 #include "MainScene.h"
 
 using namespace kiwano;

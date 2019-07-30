@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "kiwano.h"
+#include "kiwano/kiwano.h"
 #include <Box2D/Box2D.h>
 
 using namespace kiwano;

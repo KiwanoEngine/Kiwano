@@ -4,13 +4,19 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloWorld", "samples\HelloWorld\HelloWorld.vcxproj", "{3561A359-F9FD-48AB-A977-34E7E568BC8E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kiwano", "Kiwano\Kiwano.vcxproj", "{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano", "kiwano\kiwano.vcxproj", "{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Samples", "samples\Samples\Samples.vcxproj", "{45F5738D-CDF2-4024-974D-25B64F9043DE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGuiSample", "samples\ImGuiSample\ImGuiSample.vcxproj", "{6152D36C-EA40-4968-A696-244B6CA58395}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Box2DSample", "samples\Box2DSample\Box2DSample.vcxproj", "{324CFF47-4EB2-499A-BE5F-53A82E3BA14B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-audio", "kiwano-audio\kiwano-audio.vcxproj", "{1B97937D-8184-426C-BE71-29A163DC76C9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-network", "kiwano-network\kiwano-network.vcxproj", "{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-imgui", "kiwano-imgui\kiwano-imgui.vcxproj", "{A7062ED8-8910-48A5-A3BC-C1612672571F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +68,30 @@ Global
 		{324CFF47-4EB2-499A-BE5F-53A82E3BA14B}.Release|Win32.Build.0 = Release|Win32
 		{324CFF47-4EB2-499A-BE5F-53A82E3BA14B}.Release|x64.ActiveCfg = Release|x64
 		{324CFF47-4EB2-499A-BE5F-53A82E3BA14B}.Release|x64.Build.0 = Release|x64
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Debug|Win32.Build.0 = Debug|Win32
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Debug|x64.ActiveCfg = Debug|x64
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Debug|x64.Build.0 = Debug|x64
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Release|Win32.ActiveCfg = Release|Win32
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Release|Win32.Build.0 = Release|Win32
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Release|x64.ActiveCfg = Release|x64
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Release|x64.Build.0 = Release|x64
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Debug|Win32.Build.0 = Debug|Win32
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Debug|x64.ActiveCfg = Debug|x64
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Debug|x64.Build.0 = Debug|x64
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Release|Win32.ActiveCfg = Release|Win32
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Release|Win32.Build.0 = Release|Win32
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Release|x64.ActiveCfg = Release|x64
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Release|x64.Build.0 = Release|x64
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Debug|Win32.Build.0 = Debug|Win32
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Debug|x64.ActiveCfg = Debug|x64
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Debug|x64.Build.0 = Debug|x64
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Release|Win32.ActiveCfg = Release|Win32
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Release|Win32.Build.0 = Release|Win32
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Release|x64.ActiveCfg = Release|x64
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
