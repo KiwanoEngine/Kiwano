@@ -144,6 +144,12 @@ namespace kiwano
 				(*iter)->DestroyComponent();
 			}
 		}
+
+		// Destroy all instances
+		Renderer::Destroy();
+		Input::Destroy();
+		Window::Destroy();
+		Logger::Destroy();
 	}
 
 	void Application::Use(Component* component)
