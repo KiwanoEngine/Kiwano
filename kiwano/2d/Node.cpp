@@ -638,8 +638,8 @@ namespace kiwano
 
 	void VisualNode::PrepareRender()
 	{
-		Renderer::Instance().SetTransform(transform_matrix_);
-		Renderer::Instance().SetOpacity(displayed_opacity_);
+		Renderer::Instance()->SetTransform(transform_matrix_);
+		Renderer::Instance()->SetOpacity(displayed_opacity_);
 	}
 
 }

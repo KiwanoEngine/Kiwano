@@ -59,7 +59,7 @@ public:
 		ImGui::End();
 
 		// ÐÞ¸Ä´°¿Ú±³¾°É«
-		Renderer::Instance().SetClearColor(clear_color);
+		Renderer::Instance()->SetClearColor(clear_color);
 	}
 
 	void AnotherWindow()

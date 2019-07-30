@@ -66,18 +66,18 @@ namespace kiwano
 		if (in_scene_)
 		{
 			ThrowIfFailed(
-				Renderer::Instance().CreateLayer(in_layer_)
+				Renderer::Instance()->CreateLayer(in_layer_)
 			);
 		}
 
 		if (out_scene_)
 		{
 			ThrowIfFailed(
-				Renderer::Instance().CreateLayer(out_layer_)
+				Renderer::Instance()->CreateLayer(out_layer_)
 			);
 		}
 
-		window_size_ = Renderer::Instance().GetOutputSize();
+		window_size_ = Renderer::Instance()->GetOutputSize();
 		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
 	}
 
@@ -101,34 +101,34 @@ namespace kiwano
 
 	void Transition::Render()
 	{
-		auto& renderer = Renderer::Instance();
+		auto renderer = Renderer::Instance();
 
 		if (out_scene_)
 		{
-			renderer.PushClip(
+			renderer->PushClip(
 				out_scene_->GetTransformMatrix(),
 				window_size_
 			);
-			renderer.PushLayer(out_layer_, out_layer_prop_);
+			renderer->PushLayer(out_layer_, out_layer_prop_);
 
 			out_scene_->Render();
 
-			renderer.PopLayer();
-			renderer.PopClip();
+			renderer->PopLayer();
+			renderer->PopClip();
 		}
 
 		if (in_scene_)
 		{
-			renderer.PushClip(
+			renderer->PushClip(
 				in_scene_->GetTransformMatrix(),
 				window_size_
 			);
-			renderer.PushLayer(in_layer_, in_layer_prop_);
+			renderer->PushLayer(in_layer_, in_layer_prop_);
 
 			in_scene_->Render();
 
-			renderer.PopLayer();
-			renderer.PopClip();
+			renderer->PopLayer();
+			renderer->PopClip();
 		}
 	}
 

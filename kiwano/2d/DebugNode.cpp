@@ -51,12 +51,12 @@ namespace kiwano
 
 	void DebugNode::OnRender()
 	{
-		Renderer::Instance().SetTransform(Matrix{});
-		Renderer::Instance().GetSolidColorBrush()->SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, 0.5f));
+		Renderer::Instance()->SetTransform(Matrix{});
+		Renderer::Instance()->GetSolidColorBrush()->SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, 0.5f));
 
-		Renderer::Instance().GetD2DDeviceResources()->GetDeviceContext()->FillRectangle(
+		Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext()->FillRectangle(
 			D2D1_RECT_F{ 10, 10, 30 + debug_text_->GetLayoutSize().x, 30 + debug_text_->GetLayoutSize().y },
-			Renderer::Instance().GetSolidColorBrush()
+			Renderer::Instance()->GetSolidColorBrush()
 		);
 	}
 
@@ -77,9 +77,9 @@ namespace kiwano
 		ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
 #endif
 
-		ss << "Render: " << Renderer::Instance().GetStatus().duration.Milliseconds() << "ms" << std::endl;
+		ss << "Render: " << Renderer::Instance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
 
-		ss << "Primitives / sec: " << Renderer::Instance().GetStatus().primitives * frame_time_.size() << std::endl;
+		ss << "Primitives / sec: " << Renderer::Instance()->GetStatus().primitives * frame_time_.size() << std::endl;
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));

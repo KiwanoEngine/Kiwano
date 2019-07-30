@@ -49,17 +49,14 @@ namespace kiwano
 	Application::Application()
 		: end_(true)
 		, inited_(false)
-		, main_window_(nullptr)
 		, time_scale_(1.f)
 	{
 		ThrowIfFailed(
 			::CoInitialize(nullptr)
 		);
 
-		main_window_ = &Window::Instance();
-
-		Use(&Renderer::Instance());
-		Use(&Input::Instance());
+		Use(Renderer::Instance());
+		Use(Input::Instance());
 	}
 
 	Application::~Application()
@@ -72,7 +69,7 @@ namespace kiwano
 	void Application::Init(const Options& options)
 	{
 		ThrowIfFailed(
-			main_window_->Create(
+			Window::Instance()->Create(
 				options.title,
 				options.width,
 				options.height,
@@ -82,8 +79,8 @@ namespace kiwano
 			)
 		);
 
-		Renderer::Instance().SetClearColor(options.clear_color);
-		Renderer::Instance().SetVSyncEnabled(options.vsync);
+		Renderer::Instance()->SetClearColor(options.clear_color);
+		Renderer::Instance()->SetVSyncEnabled(options.vsync);
 
 		// Setup all components
 		for (Component* c : components_)
@@ -94,7 +91,7 @@ namespace kiwano
 		// Everything is ready
 		OnStart();
 
-		HWND hwnd = main_window_->GetHandle();
+		HWND hwnd = Window::Instance()->GetHandle();
 
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
@@ -107,7 +104,7 @@ namespace kiwano
 
 	void Application::Run()
 	{
-		HWND hwnd = main_window_->GetHandle();
+		HWND hwnd = Window::Instance()->GetHandle();
 
 		if (!hwnd)
 			throw std::exception("Calling Application::Run before Application::Init");
@@ -115,7 +112,7 @@ namespace kiwano
 		if (hwnd)
 		{
 			end_ = false;
-			main_window_->Prepare();
+			Window::Instance()->Prepare();
 
 			MSG msg = {};
 			while (::GetMessageW(&msg, nullptr, 0, 0) && !end_)
@@ -221,12 +218,12 @@ namespace kiwano
 		if (show)
 		{
 			debug_node_ = new DebugNode;
-			Renderer::Instance().SetCollectingStatus(true);
+			Renderer::Instance()->SetCollectingStatus(true);
 		}
 		else
 		{
 			debug_node_.Reset();
-			Renderer::Instance().SetCollectingStatus(false);
+			Renderer::Instance()->SetCollectingStatus(false);
 		}
 	}
 
@@ -448,7 +445,7 @@ namespace kiwano
 					app->curr_scene_->Dispatch(evt);
 				}
 
-				app->GetWindow()->UpdateWindowRect();
+				Window::Instance()->UpdateWindowRect();
 			}
 		}
 		break;
@@ -472,7 +469,7 @@ namespace kiwano
 		{
 			bool active = (LOWORD(wparam) != WA_INACTIVE);
 
-			app->GetWindow()->SetActive(active);
+			Window::Instance()->SetActive(active);
 
 			if (app->curr_scene_)
 			{

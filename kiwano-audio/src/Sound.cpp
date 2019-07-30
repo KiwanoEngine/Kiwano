@@ -79,7 +79,7 @@ namespace kiwano
 				return false;
 			}
 
-			hr = Audio::Instance().CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+			hr = Audio::Instance()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
 			if (FAILED(hr))
 			{
 				if (wave_data_)

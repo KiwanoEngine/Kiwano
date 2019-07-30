@@ -70,12 +70,12 @@ namespace kiwano
 	{
 		if (geometry_ && geometry_->geo_)
 		{
-			Renderer::Instance().FillGeometry(
+			Renderer::Instance()->FillGeometry(
 				geometry_->geo_.Get(),
 				fill_color_
 			);
 
-			Renderer::Instance().DrawGeometry(
+			Renderer::Instance()->DrawGeometry(
 				geometry_->geo_,
 				stroke_color_,
 				stroke_width_,

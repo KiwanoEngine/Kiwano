@@ -117,9 +117,6 @@ namespace kiwano
 		// 获取当前场景
 		ScenePtr GetCurrentScene();
 
-		// 获取主窗口
-		inline Window* GetWindow() const { return main_window_; }
-
 		// 设置时间缩放因子
 		void SetTimeScale(
 			float scale_factor
@@ -153,7 +150,6 @@ namespace kiwano
 		NodePtr			debug_node_;
 		TransitionPtr	transition_;
 
-		Window*				main_window_;
 		Array<Component*>	components_;
 	};
 }

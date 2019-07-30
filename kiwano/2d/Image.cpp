@@ -69,11 +69,11 @@ namespace kiwano
 				return false;
 			}
 #endif
-			hr = Renderer::Instance().GetD2DDeviceResources()->CreateBitmapFromFile(bitmap, res.GetFileName());
+			hr = Renderer::Instance()->GetD2DDeviceResources()->CreateBitmapFromFile(bitmap, res.GetFileName());
 		}
 		else
 		{
-			hr = Renderer::Instance().GetD2DDeviceResources()->CreateBitmapFromResource(bitmap, res);
+			hr = Renderer::Instance()->GetD2DDeviceResources()->CreateBitmapFromResource(bitmap, res);
 		}
 
 		if (FAILED(hr))

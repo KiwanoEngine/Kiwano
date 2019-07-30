@@ -99,7 +99,7 @@ namespace kiwano
 	{
 		if (image_)
 		{
-			Renderer::Instance().DrawImage(image_, GetBounds());
+			Renderer::Instance()->DrawImage(image_, GetBounds());
 		}
 	}
 }

@@ -303,14 +303,14 @@ namespace kiwano
 
 		if (text_layout_)
 		{
-			Renderer::Instance().SetTextStyle(
+			Renderer::Instance()->SetTextStyle(
 				style_.color,
 				style_.outline,
 				style_.outline_color,
 				style_.outline_width,
 				style_.outline_stroke
 			);
-			Renderer::Instance().DrawTextLayout(text_layout_);
+			Renderer::Instance()->DrawTextLayout(text_layout_);
 		}
 	}
 
@@ -327,7 +327,7 @@ namespace kiwano
 			return;
 
 		ThrowIfFailed(
-			Renderer::Instance().GetD2DDeviceResources()->CreateTextFormat(
+			Renderer::Instance()->GetD2DDeviceResources()->CreateTextFormat(
 				text_format_,
 				font_,
 				style_
@@ -335,7 +335,7 @@ namespace kiwano
 		);
 
 		ThrowIfFailed(
-			Renderer::Instance().GetD2DDeviceResources()->CreateTextLayout(
+			Renderer::Instance()->GetD2DDeviceResources()->CreateTextLayout(
 				text_layout_,
 				layout_size_,
 				text_,

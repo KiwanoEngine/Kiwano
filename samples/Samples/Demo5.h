@@ -33,13 +33,13 @@ public:
 	void OnEnter() override
 	{
 		// 进入场景时打开控制台
-		Logger::Instance().ShowConsole(true);
+		Logger::Instance()->ShowConsole(true);
 	}
 
 	void OnExit() override
 	{
 		// 退出场景时关闭控制台
-		Logger::Instance().ShowConsole(false);
+		Logger::Instance()->ShowConsole(false);
 	}
 
 	void OnKeyDown(Event const& e)
@@ -66,7 +66,7 @@ public:
 	void SendGetRequest()
 	{
 		// 发送 GET 请求
-		Logger::Instance().Println(L"Start to send GET request...");
+		Logger::Instance()->Println(L"Start to send GET request...");
 
 		HttpRequestPtr request = new HttpRequest;
 		// 设置请求 URL
@@ -77,13 +77,13 @@ public:
 		request->SetResponseCallback(MakeClosure(this, &Demo5::Complete));
 
 		// 发送 HTTP 请求
-		HttpClient::Instance().Send(request);
+		HttpClient::Instance()->Send(request);
 	}
 
 	void SendPostRequest()
 	{
 		// 发送 POST 请求
-		Logger::Instance().Println(L"Start to send POST request...");
+		Logger::Instance()->Println(L"Start to send POST request...");
 
 		// 创建 JSON 格式的 POST 数据
 		Json request_data = {
@@ -102,13 +102,13 @@ public:
 		request->SetJsonData(request_data);
 		request->SetResponseCallback(MakeClosure(this, &Demo5::Complete));
 
-		HttpClient::Instance().Send(request);
+		HttpClient::Instance()->Send(request);
 	}
 
 	void SendPutRequest()
 	{
 		// 发送 PUT 请求
-		Logger::Instance().Println(L"Start to send PUT request...");
+		Logger::Instance()->Println(L"Start to send PUT request...");
 
 		// 创建 JSON 格式的 PUT 数据
 		Json request_data = Json::array({ 1, 2, 3 });
@@ -120,20 +120,20 @@ public:
 		request->SetJsonData(request_data);
 		request->SetResponseCallback(MakeClosure(this, &Demo5::Complete));
 
-		HttpClient::Instance().Send(request);
+		HttpClient::Instance()->Send(request);
 	}
 
 	void SendDeleteRequest()
 	{
 		// 发送 DELETE 请求
-		Logger::Instance().Println(L"Start to send DELETE request...");
+		Logger::Instance()->Println(L"Start to send DELETE request...");
 
 		HttpRequestPtr request = new HttpRequest;
 		request->SetUrl(L"http://httpbin.org/delete");
 		request->SetType(HttpRequest::Type::Delete);
 		request->SetResponseCallback(MakeClosure(this, &Demo5::Complete));
 
-		HttpClient::Instance().Send(request);
+		HttpClient::Instance()->Send(request);
 	}
 
 	void Complete(HttpRequestPtr request, HttpResponsePtr response)

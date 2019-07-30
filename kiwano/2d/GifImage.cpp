@@ -36,8 +36,8 @@ namespace kiwano
 		, frame_position_{}
 		, bg_color_{}
 	{
-		factory_ = Renderer::Instance().GetD2DDeviceResources()->GetWICImagingFactory();
-		auto ctx = Renderer::Instance().GetD2DDeviceResources()->GetDeviceContext();
+		factory_ = Renderer::Instance()->GetD2DDeviceResources()->GetWICImagingFactory();
+		auto ctx = Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext();
 
 		ThrowIfFailed(
 			ctx->CreateCompatibleRenderTarget(&frame_rt_)
@@ -157,7 +157,7 @@ namespace kiwano
 			if (SUCCEEDED(frame_rt_->GetBitmap(&frame_to_render)))
 			{
 				Rect bounds = GetBounds();
-				Renderer::Instance().DrawBitmap(frame_to_render, bounds, bounds);
+				Renderer::Instance()->DrawBitmap(frame_to_render, bounds, bounds);
 			}
 		}
 	}
@@ -192,7 +192,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			auto ctx = Renderer::Instance().GetD2DDeviceResources()->GetDeviceContext();
+			auto ctx = Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext();
 
 			// Create a D2DBitmap from IWICBitmapSource
 			raw_frame_.Reset();

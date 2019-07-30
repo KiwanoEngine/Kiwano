@@ -27,18 +27,18 @@
 
 #ifndef KGE_LOG
 #	ifdef KGE_DEBUG
-#		define KGE_LOG(FORMAT, ...) kiwano::Logger::Instance().Messagef((FORMAT ## "\n"), __VA_ARGS__)
+#		define KGE_LOG(FORMAT, ...) kiwano::Logger::Instance()->Messagef((FORMAT ## "\n"), __VA_ARGS__)
 #	else
 #		define KGE_LOG __noop
 #	endif
 #endif
 
 #ifndef KGE_WARNING_LOG
-#	define KGE_WARNING_LOG(FORMAT, ...) kiwano::Logger::Instance().Warningf((FORMAT ## "\n"), __VA_ARGS__)
+#	define KGE_WARNING_LOG(FORMAT, ...) kiwano::Logger::Instance()->Warningf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 #ifndef KGE_ERROR_LOG
-#	define KGE_ERROR_LOG(FORMAT, ...) kiwano::Logger::Instance().Errorf((FORMAT ## "\n"), __VA_ARGS__)
+#	define KGE_ERROR_LOG(FORMAT, ...) kiwano::Logger::Instance()->Errorf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 namespace kiwano
@@ -274,7 +274,7 @@ namespace kiwano
 
 	inline std::wostream& Logger::DefaultOutputColor(std::wostream& out)
 	{
-		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), Logger::Instance().default_stdout_color_);
+		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), Logger::Instance()->default_stdout_color_);
 		return out;
 	}
 }

@@ -30,7 +30,7 @@ namespace kiwano
 		: cache_expired_(false)
 		, stroke_width_(1.0f)
 	{
-		auto ctx = Renderer::Instance().GetD2DDeviceResources()->GetDeviceContext();
+		auto ctx = Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext();
 
 		ThrowIfFailed(
 			ctx->CreateCompatibleRenderTarget(&render_target_)
@@ -98,7 +98,7 @@ namespace kiwano
 		if (bitmap_cached_)
 		{
 			Rect bitmap_rect(0.f, 0.f, bitmap_cached_->GetSize().width, bitmap_cached_->GetSize().height);
-			Renderer::Instance().DrawBitmap(
+			Renderer::Instance()->DrawBitmap(
 				bitmap_cached_,
 				bitmap_rect,
 				bitmap_rect
@@ -123,7 +123,7 @@ namespace kiwano
 
 	void Canvas::SetOutlineJoinStyle(StrokeStyle outline_join)
 	{
-		outline_join_style_ = Renderer::Instance().GetD2DDeviceResources()->GetStrokeStyle(outline_join);
+		outline_join_style_ = Renderer::Instance()->GetD2DDeviceResources()->GetStrokeStyle(outline_join);
 	}
 
 	void Canvas::SetTextStyle(Font const& font, TextStyle const & text_style)
@@ -136,7 +136,7 @@ namespace kiwano
 			text_style_.outline,
 			DX::ConvertToColorF(text_style_.outline_color),
 			text_style_.outline_width,
-			Renderer::Instance().GetD2DDeviceResources()->GetStrokeStyle(text_style_.outline_stroke)
+			Renderer::Instance()->GetD2DDeviceResources()->GetStrokeStyle(text_style_.outline_stroke)
 		);
 
 		// clear text format
@@ -272,7 +272,7 @@ namespace kiwano
 		if (!text_format_)
 		{
 			ThrowIfFailed(
-				Renderer::Instance().GetD2DDeviceResources()->CreateTextFormat(
+				Renderer::Instance()->GetD2DDeviceResources()->CreateTextFormat(
 					text_format_,
 					text_font_,
 					text_style_
@@ -283,7 +283,7 @@ namespace kiwano
 		ComPtr<IDWriteTextLayout> text_layout;
 		Size layout_size;
 		ThrowIfFailed(
-			Renderer::Instance().GetD2DDeviceResources()->CreateTextLayout(
+			Renderer::Instance()->GetD2DDeviceResources()->CreateTextLayout(
 				text_layout,
 				layout_size,
 				text,
@@ -392,7 +392,7 @@ namespace kiwano
 		current_geometry_ = nullptr;
 
 		ThrowIfFailed(
-			Renderer::Instance().GetD2DDeviceResources()->GetFactory()->CreatePathGeometry(&current_geometry_)
+			Renderer::Instance()->GetD2DDeviceResources()->GetFactory()->CreatePathGeometry(&current_geometry_)
 		);
 		
 		ThrowIfFailed(

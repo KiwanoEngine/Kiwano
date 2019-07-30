@@ -21,7 +21,7 @@
 #include "render.h"
 #include "../2d/Image.h"
 #include "../base/logs.h"
-#include "../platform/Application.h"
+#include "../base/window.h"
 
 namespace kiwano
 {
@@ -45,7 +45,7 @@ namespace kiwano
 	{
 		KGE_LOG(L"Creating device resources");
 
-		hwnd_ = app->GetWindow()->GetHandle();
+		hwnd_ = Window::Instance()->GetHandle();
 
 		ThrowIfFailed(hwnd_ ? S_OK : E_FAIL);
 		
@@ -87,7 +87,7 @@ namespace kiwano
 			CreateDeviceResources()
 		);
 
-		output_size_ = app->GetWindow()->GetSize();
+		output_size_ = Window::Instance()->GetSize();
 	}
 
 	void Renderer::DestroyComponent()
