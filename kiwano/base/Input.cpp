@@ -20,7 +20,7 @@
 
 #include "input.h"
 #include "logs.h"
-#include <cstring>
+#include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 
 namespace kiwano
 {
@@ -65,6 +65,41 @@ namespace kiwano
 	{
 		mouse_pos_x_ = x;
 		mouse_pos_y_ = y;
+	}
+
+	void Input::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	{
+		switch (msg)
+		{
+		case WM_LBUTTONUP:
+		case WM_LBUTTONDOWN:
+		//case WM_LBUTTONDBLCLK:
+		case WM_MBUTTONUP:
+		case WM_MBUTTONDOWN:
+		//case WM_MBUTTONDBLCLK:
+		case WM_RBUTTONUP:
+		case WM_RBUTTONDOWN:
+		//case WM_RBUTTONDBLCLK:
+		case WM_MOUSEMOVE:
+		case WM_MOUSEWHEEL:
+		{
+			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { UpdateKey(VK_LBUTTON, (msg == WM_LBUTTONDOWN) ? true : false); }
+			else if	(msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { UpdateKey(VK_RBUTTON, (msg == WM_RBUTTONDOWN) ? true : false); }
+			else if	(msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { UpdateKey(VK_MBUTTON, (msg == WM_MBUTTONDOWN) ? true : false); }
+			else if (msg == WM_MOUSEMOVE) { UpdateMousePos(static_cast<float>(GET_X_LPARAM(lparam)), static_cast<float>(GET_Y_LPARAM(lparam))); }
+
+			break;
+		}
+
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+		{
+			bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
+			UpdateKey((int)wparam, down);
+		}
+		}
 	}
 
 	bool Input::IsDown(int key_or_btn)
