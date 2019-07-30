@@ -8,7 +8,7 @@ class Demo5
 	: public Scene
 {
 public:
-	static ScenePtr Create()
+	static ScenePtr Create(ResLoader* loader)
 	{
 		return new Demo5;
 	}

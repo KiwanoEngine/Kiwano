@@ -19,29 +19,97 @@
 // THE SOFTWARE.
 
 #include "ResLoader.h"
-#include "../platform/modules.h"
+#include "../base/logs.h"
 #include "../2d/Image.h"
 #include "../2d/Frames.h"
+#include "../2d/GifImage.h"
+#include "FileUtil.h"
+#include <fstream>
 
 namespace kiwano
 {
 	namespace
 	{
-		Resource LocateRes(Resource const& res, List<String> const& paths)
+		void LoadJsonData09(Json const& json_data, ResLoader* loader)
 		{
-			if (res.IsFileType())
+			String path;
+			if (json_data.count(L"path"))
 			{
-				String file_name = res.GetFileName();
-				for (const auto& path : paths)
+				path = json_data[L"path"];
+			}
+
+			if (json_data.count(L"images"))
+			{
+				for (const auto& image : json_data[L"images"])
 				{
-					if (modules::Shlwapi::Get().PathFileExistsW((path + file_name).c_str()))
-					{
-						return Resource{ path + file_name };
-					}
+					String file = image[L"file"];
+					String id = image.count(L"id") ? image[L"id"] : file;
+
+					if (image.count(L"type") && image[L"type"].as_string() == L"gif")
+						loader->AddGifImage(id, Resource(path + file));
+					else
+						loader->AddImage(id, Resource(path + file));
 				}
 			}
-			return res;
+			
+			/*if (json_data.count(L"sounds"))
+			{
+				for (const auto& sound : json_data[L"sounds"])
+				{
+					loader->AddObj();
+				}
+			}*/
 		}
+	}
+
+	bool ResLoader::LoadFromJsonFile(String const& file_path)
+	{
+		Json json_data;
+		std::wifstream ifs;
+		ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+		try
+		{
+			ifs.open(file_path.c_str());
+			ifs >> json_data;
+			ifs.close();
+		}
+		catch (std::wifstream::failure& e)
+		{
+			String msg(e.what());
+			KGE_WARNING_LOG(L"ResLoader::LoadFromJsonFile failed: Cannot open file. (%s)", msg.c_str());
+			return false;
+		}
+		catch (json_exception& e)
+		{
+			String msg(e.what());
+			KGE_WARNING_LOG(L"ResLoader::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", msg.c_str());
+			return false;
+		}
+		return LoadFromJson(json_data);
+	}
+
+	bool ResLoader::LoadFromJson(Json const& json_data)
+	{
+		try
+		{
+			String version = json_data[L"version"];
+			if (version.empty() || version == L"0.9")
+			{
+				LoadJsonData09(json_data, this);
+			}
+			else
+			{
+				throw std::runtime_error("unknown JSON data version");
+			}
+		}
+		catch (std::exception& e)
+		{
+			String msg(e.what());
+			KGE_WARNING_LOG(L"ResLoader::LoadFromJson failed: JSON data is invalid. (%s)", msg.c_str());
+			return false;
+		}
+		return true;
 	}
 
 	bool ResLoader::AddImage(String const& id, Resource const& image)
@@ -49,16 +117,38 @@ namespace kiwano
 		ImagePtr ptr = new (std::nothrow) Image;
 		if (ptr)
 		{
-			if (ptr->Load(LocateRes(image, search_paths_)))
+			if (ptr->Load(image))
 			{
-				res_.insert(std::make_pair(id, ptr));
-				return true;
+				return AddImage(id, ptr);
 			}
 		}
 		return false;
 	}
 
 	bool ResLoader::AddImage(String const & id, ImagePtr image)
+	{
+		if (image)
+		{
+			res_.insert(std::make_pair(id, image));
+			return true;
+		}
+		return false;
+	}
+
+	bool ResLoader::AddGifImage(String const& id, Resource const& image)
+	{
+		GifImagePtr ptr = new (std::nothrow) GifImage;
+		if (ptr)
+		{
+			if (ptr->Load(image))
+			{
+				return AddGifImage(id, ptr);
+			}
+		}
+		return false;
+	}
+
+	bool ResLoader::AddGifImage(String const& id, GifImagePtr image)
 	{
 		if (image)
 		{
@@ -81,7 +171,7 @@ namespace kiwano
 			ImagePtr ptr = new (std::nothrow) Image;
 			if (ptr)
 			{
-				if (ptr->Load(LocateRes(image, search_paths_)))
+				if (ptr->Load(image))
 				{
 					image_arr.push_back(ptr);
 				}
@@ -120,7 +210,7 @@ namespace kiwano
 			return 0;
 
 		ImagePtr raw = new (std::nothrow) Image;
-		if (!raw || !raw->Load(LocateRes(image, search_paths_)))
+		if (!raw || !raw->Load(image))
 			return 0;
 
 		float raw_width = raw->GetSourceWidth();
@@ -156,7 +246,7 @@ namespace kiwano
 	size_t ResLoader::AddFrames(String const & id, Resource const & image, Array<Rect> const & crop_rects)
 	{
 		ImagePtr raw = new (std::nothrow) Image;
-		if (!raw || !raw->Load(LocateRes(image, search_paths_)))
+		if (!raw || !raw->Load(image))
 			return 0;
 
 		Array<ImagePtr> image_arr;
@@ -206,6 +296,11 @@ namespace kiwano
 		return Get<Image>(id);
 	}
 
+	GifImagePtr ResLoader::GetGifImage(String const& id) const
+	{
+		return Get<GifImage>(id);
+	}
+
 	FramesPtr ResLoader::GetFrames(String const & id) const
 	{
 		return Get<Frames>(id);
@@ -224,28 +319,6 @@ namespace kiwano
 	void ResLoader::Destroy()
 	{
 		res_.clear();
-	}
-
-	void ResLoader::AddSearchPath(String const & path)
-	{
-		String tmp = path;
-		size_t pos = 0;
-		while ((pos = tmp.find(L"/", pos)) != String::npos)
-		{
-			tmp.replace(pos, 1, L"\\");
-			pos++;
-		}
-
-		if (tmp.at(tmp.length() - 1) != L'\\')
-		{
-			tmp.append(L"\\");
-		}
-
-		auto iter = std::find(search_paths_.cbegin(), search_paths_.cend(), tmp);
-		if (iter == search_paths_.cend())
-		{
-			search_paths_.push_front(tmp);
-		}
 	}
 
 }

@@ -1,0 +1,35 @@
+{
+  "version": "0.9",
+  "path": "./res/",
+  "images": [
+    {
+      "id": "man",
+      "file": "man.png"
+    },
+    {
+      "id": "monster",
+      "file": "akushu.png"
+    },
+    {
+      "id": "forest_bg",
+      "file": "spring_forest.jpg"
+    },
+    {
+      "id": "tiger",
+      "file": "tiger.png",
+      "rows": 3,
+      "cols": 5
+    },
+    {
+      "id": "Kusanagi",
+      "file": "Kusanagi.gif",
+      "type": "gif"
+    }
+  ],
+  "sounds": [
+    {
+      "id": "bg_music",
+      "file": "splash.mp3"
+    }
+  ]
+}

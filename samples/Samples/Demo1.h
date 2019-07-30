@@ -7,15 +7,15 @@ class Demo1
 	: public Scene
 {
 public:
-	static ScenePtr Create()
+	static ScenePtr Create(ResLoader* loader)
 	{
-		return new Demo1;
+		return new Demo1(loader);
 	}
 
-	Demo1()
+	Demo1(ResLoader* loader)
 	{
-		// 创建人物图片
-		ImagePtr man_image = new Image(L"res/man.png");
+		// 获取人物图片
+		ImagePtr man_image = loader->GetImage(L"man");
 
 		// 缓动方程
 		auto ease_functions = {

@@ -2467,10 +2467,34 @@ namespace kiwano
 	public:
 		// implicitly convert functions
 
-		template <typename _Ty>
-		inline operator _Ty() const
+		inline operator boolean_type () const
 		{
-			return get<_Ty>();
+			return as_bool();
+		}
+
+		inline operator integer_type () const
+		{
+			return as_int();
+		}
+
+		inline operator float_type () const
+		{
+			return as_float();
+		}
+
+		inline operator const array_type& () const
+		{
+			return as_array();
+		}
+
+		inline operator const string_type& () const
+		{
+			return as_string();
+		}
+
+		inline operator const object_type& () const
+		{
+			return as_object();
 		}
 
 	public:
