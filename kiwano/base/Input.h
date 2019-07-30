@@ -69,6 +69,8 @@ namespace kiwano
 
 		void UpdateMousePos(float, float);
 
+		void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
+
 	protected:
 		Input();
 

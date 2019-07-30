@@ -51,10 +51,6 @@ namespace kiwano
 		KGE_DECLARE_SINGLETON(Renderer);
 
 	public:
-		HRESULT BeginDraw();
-
-		HRESULT EndDraw();
-
 		HRESULT CreateLayer(
 			ComPtr<ID2D1Layer>& layer
 		);
@@ -143,18 +139,25 @@ namespace kiwano
 		);
 
 	public:
+		void SetupComponent(Application*) override;
+
+		void DestroyComponent() override;
+
+		void BeforeRender() override;
+
+		void AfterRender() override;
+
+		void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
+
+		void SetCollectingStatus(bool collecting);
+
+	public:
 		struct Status
 		{
 			Time start;
 			Duration duration;
 			int primitives;
 		};
-
-		void SetupComponent(Application*) override;
-
-		void DestroyComponent() override;
-
-		void SetCollectingStatus(bool collecting);
 
 		inline HWND						GetTargetWindow() const			{ return hwnd_; }
 
@@ -178,6 +181,10 @@ namespace kiwano
 		HRESULT CreateDeviceResources();
 
 		HRESULT HandleDeviceLost();
+
+		HRESULT BeginDraw();
+
+		HRESULT EndDraw();
 
 	private:
 		unsigned long ref_count_;

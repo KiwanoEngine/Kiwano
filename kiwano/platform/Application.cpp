@@ -244,6 +244,13 @@ namespace kiwano
 		const auto dt = (now - last) * time_scale_;
 		last = now;
 
+		// Before update
+		for (Component* c : components_)
+		{
+			c->BeforeUpdate();
+		}
+
+		// Updating
 		if (transition_)
 		{
 			transition_->Update(dt);
@@ -296,15 +303,22 @@ namespace kiwano
 		if (debug_node_)
 			debug_node_->Update(dt);
 
-		Input::Instance().Update();
+		// After update
+		for (auto rit = components_.rbegin(); rit != components_.rend(); ++rit)
+		{
+			(*rit)->AfterUpdate();
+		}
 	}
 
 	void Application::Render()
 	{
-		ThrowIfFailed(
-			Renderer::Instance().BeginDraw()
-		);
+		// Before render
+		for (Component* c : components_)
+		{
+			c->BeforeRender();
+		}
 
+		// Rendering
 		if (transition_)
 		{
 			transition_->Render();
@@ -319,9 +333,11 @@ namespace kiwano
 		if (debug_node_)
 			debug_node_->Render();
 
-		ThrowIfFailed(
-			Renderer::Instance().EndDraw()
-		);
+		// After render
+		for (auto rit = components_.rbegin(); rit != components_.rend(); ++rit)
+		{
+			(*rit)->AfterRender();
+		}
 	}
 
 	void Application::PreformInMainThread(Closure<void()> function)
@@ -332,12 +348,16 @@ namespace kiwano
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		Application * app = reinterpret_cast<Application*>(
-			static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA))
-			);
+		Application * app = reinterpret_cast<Application*>(static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA)));
 
 		if (!app)
 			return ::DefWindowProcW(hwnd, msg, wparam, lparam);
+
+		// Handle Message
+		for (Component* c : app->components_)
+		{
+			c->HandleMessage(hwnd, msg, wparam, lparam);
+		}
 		
 		switch (msg)
 		{
@@ -356,11 +376,9 @@ namespace kiwano
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
 		{
-			bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
-			Input::Instance().UpdateKey((int)wparam, down);
-
 			if (!app->transition_ && app->curr_scene_)
 			{
+				bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
 				Event evt(down ? Event::KeyDown : Event::KeyUp);
 				evt.key.code = static_cast<int>(wparam);
 				evt.key.count = static_cast<int>(lparam & 0xFF);
@@ -395,10 +413,6 @@ namespace kiwano
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
-			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { Input::Instance().UpdateKey(VK_LBUTTON, (msg == WM_LBUTTONDOWN) ? true : false); }
-			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { Input::Instance().UpdateKey(VK_RBUTTON, (msg == WM_RBUTTONDOWN) ? true : false); }
-			else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { Input::Instance().UpdateKey(VK_MBUTTON, (msg == WM_MBUTTONDOWN) ? true : false); }
-
 			if (!app->transition_ && app->curr_scene_)
 			{
 				Event evt;
@@ -419,24 +433,11 @@ namespace kiwano
 
 				app->curr_scene_->Dispatch(evt);
 			}
-
-			if (msg == WM_MOUSEMOVE)
-			{
-				Input::Instance().UpdateMousePos(
-					static_cast<float>(GET_X_LPARAM(lparam)),
-					static_cast<float>(GET_Y_LPARAM(lparam))
-				);
-			}
 		}
 		break;
 
 		case WM_SIZE:
 		{
-			UINT width = LOWORD(lparam);
-			UINT height = HIWORD(lparam);
-
-			Renderer::Instance().Resize(width, height);
-
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{
 				KGE_LOG(L"Window minimized");
@@ -448,8 +449,8 @@ namespace kiwano
 				if (app->curr_scene_)
 				{
 					Event evt(Event::WindowResized);
-					evt.win.width = static_cast<int>(width);
-					evt.win.height = static_cast<int>(height);
+					evt.win.width = LOWORD(lparam);
+					evt.win.height = HIWORD(lparam);
 					app->curr_scene_->Dispatch(evt);
 				}
 

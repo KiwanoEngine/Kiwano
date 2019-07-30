@@ -100,6 +100,35 @@ namespace kiwano
 		d3d_res_.Reset();
 	}
 
+	void Renderer::BeforeRender()
+	{
+		ThrowIfFailed(
+			BeginDraw()
+		);
+	}
+
+	void Renderer::AfterRender()
+	{
+		ThrowIfFailed(
+			EndDraw()
+		);
+	}
+
+	void Renderer::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	{
+		switch (msg)
+		{
+		case WM_SIZE:
+		{
+			UINT width = LOWORD(lparam);
+			UINT height = HIWORD(lparam);
+
+			Resize(width, height);
+			break;
+		}
+		}
+	}
+
 	HRESULT Renderer::CreateDeviceResources()
 	{
 		HRESULT hr = S_OK;
