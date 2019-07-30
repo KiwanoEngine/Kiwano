@@ -20,6 +20,7 @@
 
 #include "Button.h"
 #include "../2d/Scene.h"
+#include "../base/window.h"
 
 namespace kiwano
 {
@@ -111,7 +112,7 @@ namespace kiwano
 			if (evt.type == Event::MouseHover)
 			{
 				SetStatus(Status::Hover);
-				GetScene()->SetMouseCursor(MouseCursor::Hand);
+				Window::Instance().SetMouseCursor(MouseCursor::Hand);
 
 				if (mouse_over_callback_)
 					mouse_over_callback_();
@@ -119,7 +120,7 @@ namespace kiwano
 			else if (evt.type == Event::MouseOut)
 			{
 				SetStatus(Status::Normal);
-				GetScene()->SetMouseCursor(MouseCursor::Arrow);
+				Window::Instance().SetMouseCursor(MouseCursor::Arrow);
 
 				if (mouse_out_callback_)
 					mouse_out_callback_();

@@ -22,7 +22,7 @@
 #include "kiwano/kiwano.h"
 
 #include "src/ImGuiLayer.h"
-#include "src/ImGuiView.h"
+#include "src/ImGuiModule.h"
 
 // ImGui
 #include "third-party/ImGui/imgui.h"

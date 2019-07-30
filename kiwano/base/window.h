@@ -22,11 +22,16 @@
 #include "../macros.h"
 #include "../common/helper.h"
 #include "../math/helper.h"
+#include "../common/Singleton.hpp"
+#include "types.h"
 
 namespace kiwano
 {
 	class KGE_API Window
+		: public Singleton<Window>
 	{
+		KGE_DECLARE_SINGLETON(Window);
+
 	public:
 		// 获取标题
 		String GetTitle() const;
@@ -52,6 +57,9 @@ namespace kiwano
 		// 设置全屏模式
 		void SetFullscreen(bool fullscreen, int width, int height);
 
+		// 设置鼠标指针
+		void SetMouseCursor(MouseCursor cursor);
+
 	public:
 		HRESULT Create(
 			String const&	title,
@@ -72,7 +80,7 @@ namespace kiwano
 
 		void SetActive(bool actived);
 
-	public:
+	protected:
 		Window();
 
 		~Window();
@@ -83,5 +91,6 @@ namespace kiwano
 		int		width_;
 		int		height_;
 		WCHAR*	device_name_;
+		MouseCursor mouse_cursor_;
 	};
 }

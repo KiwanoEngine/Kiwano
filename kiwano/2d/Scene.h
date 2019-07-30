@@ -37,16 +37,5 @@ namespace kiwano
 
 		// ÍË³ö³¡¾°
 		virtual void OnExit();
-
-	public:
-		void Update(Duration dt);
-
-		void SetMouseCursor(
-			MouseCursor cursor
-		);
-
-	protected:
-		MouseCursor mouse_cursor_;
-		MouseCursor last_mouse_cursor;
 	};
 }

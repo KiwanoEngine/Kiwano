@@ -44,6 +44,7 @@ namespace kiwano
 		, height_(0)
 		, device_name_(nullptr)
 		, is_fullscreen_(false)
+		, mouse_cursor_(MouseCursor(-1))
 	{
 	}
 
@@ -163,6 +164,8 @@ namespace kiwano
 		GetClientRect(handle_, &rc);
 		width_ = rc.right - rc.left;
 		height_ = rc.bottom - rc.top;
+
+		SetMouseCursor(MouseCursor::Arrow);
 		return S_OK;
 	}
 
@@ -287,6 +290,28 @@ namespace kiwano
 			}
 			
 			::ShowWindow(handle_, SW_SHOWNORMAL);
+		}
+	}
+
+	void Window::SetMouseCursor(MouseCursor cursor)
+	{
+		if (mouse_cursor_ != cursor)
+		{
+			mouse_cursor_ = cursor;
+
+			LPTSTR win32_cursor = IDC_ARROW;
+			switch (cursor)
+			{
+			case MouseCursor::Arrow:		win32_cursor = IDC_ARROW; break;
+			case MouseCursor::TextInput:	win32_cursor = IDC_IBEAM; break;
+			case MouseCursor::SizeAll:		win32_cursor = IDC_SIZEALL; break;
+			case MouseCursor::SizeWE:		win32_cursor = IDC_SIZEWE; break;
+			case MouseCursor::SizeNS:		win32_cursor = IDC_SIZENS; break;
+			case MouseCursor::SizeNESW:		win32_cursor = IDC_SIZENESW; break;
+			case MouseCursor::SizeNWSE:		win32_cursor = IDC_SIZENWSE; break;
+			case MouseCursor::Hand:			win32_cursor = IDC_HAND; break;
+			}
+			::SetCursor(::LoadCursorW(nullptr, win32_cursor));
 		}
 	}
 

@@ -3,8 +3,8 @@
   <ItemGroup>
     <ClInclude Include="kiwano-imgui.h" />
     <ClInclude Include="src\ImGuiLayer.h" />
-    <ClInclude Include="src\ImGuiView.h" />
-    <ClInclude Include="src\imgui_impl.hpp" />
+    <ClInclude Include="src\ImGuiModule.h" />
+    <ClInclude Include="src\imgui_impl.h" />
     <ClInclude Include="src\imgui_impl_dx10.h" />
     <ClInclude Include="src\imgui_impl_dx11.h" />
     <ClInclude Include="third-party\ImGui\imconfig.h" />
@@ -16,7 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ImGuiLayer.cpp" />
-    <ClCompile Include="src\ImGuiView.cpp" />
+    <ClCompile Include="src\ImGuiModule.cpp" />
     <ClCompile Include="src\imgui_impl_dx10.cpp" />
     <ClCompile Include="src\imgui_impl_dx11.cpp" />
     <ClCompile Include="third-party\ImGui\imgui.cpp" />

@@ -63,13 +63,13 @@ namespace kiwano
 
 		void DestroyComponent() override {}
 
-		void Update();
+		void AfterUpdate() override;
+
+		void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 		void UpdateKey(int, bool);
 
 		void UpdateMousePos(float, float);
-
-		void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 	protected:
 		Input();

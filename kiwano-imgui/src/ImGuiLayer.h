@@ -28,14 +28,12 @@ namespace kiwano
 
 		using ImGuiPipeline = Closure<void()>;
 
-		class ImGuiView;
-
 		class ImGuiLayer
 			: public Layer
 		{
-			friend class ImGuiView;
-
 		public:
+			ImGuiLayer();
+
 			virtual ~ImGuiLayer();
 
 			// Ìí¼Ó ImGui ÔªËØ
@@ -53,26 +51,9 @@ namespace kiwano
 			void RemoveAllItems();
 
 		public:
-			void OnMouseButtonDown(int btn, Point const& p) override;
-			void OnMouseButtonUp(int btn, Point const& p) override;
-			void OnMouseWheel(float wheel) override;
-
-			void OnKeyDown(int key) override;
-			void OnKeyUp(int key) override;
-			void OnChar(char c) override;
-
-		public:
-			void OnUpdate(Duration dt) override;
 			void OnRender() override;
 
-			void UpdateMousePos();
-			void UpdateMouseCursor();
-
 		protected:
-			ImGuiLayer();
-
-		protected:
-			HWND target_window_;
 			Map<String, ImGuiPipeline> pipelines_;
 		};
 	}

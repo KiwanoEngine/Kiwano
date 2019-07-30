@@ -38,17 +38,6 @@ namespace kiwano
 	{
 	}
 
-	void Input::Update()
-	{
-		if (want_update_)
-		{
-			want_update_ = false;
-
-			ZeroMemory(keys_pressed_, sizeof(keys_pressed_));
-			ZeroMemory(keys_released_, sizeof(keys_released_));
-		}
-	}
-
 	void Input::UpdateKey(int key, bool down)
 	{
 		if (down && !keys_[key])
@@ -65,6 +54,17 @@ namespace kiwano
 	{
 		mouse_pos_x_ = x;
 		mouse_pos_y_ = y;
+	}
+
+	void Input::AfterUpdate()
+	{
+		if (want_update_)
+		{
+			want_update_ = false;
+
+			ZeroMemory(keys_pressed_, sizeof(keys_pressed_));
+			ZeroMemory(keys_released_, sizeof(keys_released_));
+		}
 	}
 
 	void Input::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

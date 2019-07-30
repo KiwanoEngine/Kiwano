@@ -56,7 +56,7 @@ namespace kiwano
 			::CoInitialize(nullptr)
 		);
 
-		main_window_ = new Window;
+		main_window_ = &Window::Instance();
 
 		Use(&Renderer::Instance());
 		Use(&Input::Instance());
@@ -145,12 +145,6 @@ namespace kiwano
 			for (auto iter = components_.rbegin(); iter != components_.rend(); ++iter)
 			{
 				(*iter)->DestroyComponent();
-			}
-
-			if (main_window_)
-			{
-				delete main_window_;
-				main_window_ = nullptr;
 			}
 		}
 	}
@@ -247,7 +241,7 @@ namespace kiwano
 		// Before update
 		for (Component* c : components_)
 		{
-			c->BeforeUpdate();
+			c->BeforeUpdate(dt.Seconds());
 		}
 
 		// Updating
