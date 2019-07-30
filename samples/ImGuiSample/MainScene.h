@@ -2,10 +2,11 @@
 
 #pragma once
 
-#include "kiwano.h"
-#include "kiwano-imgui.h"
+#include "kiwano/kiwano.h"
+#include "kiwano-imgui/kiwano-imgui.h"
 
 using namespace kiwano;
+using namespace kiwano::imgui;
 
 KGE_DECLARE_SMART_PTR(MainScene);
 class MainScene

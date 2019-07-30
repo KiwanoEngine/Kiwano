@@ -11,7 +11,4 @@
     <ClInclude Include="Demo4.h" />
     <ClInclude Include="Demo5.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="readme.txt" />
-  </ItemGroup>
 </Project>

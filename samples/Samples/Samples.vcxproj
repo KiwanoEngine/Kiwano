@@ -88,15 +88,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -104,26 +112,38 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../Kiwano;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../Kiwano/third-party/libs;</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>
+        xcopy "$(ProjectDir)\res" "$(OutDir)\res\" /D /E /I /F /Y
+        xcopy "$(ProjectDir)..\..\kiwano-network\dlls\*.dll" "$(OutDir)" /D /Y
+      </Command>
+      <Message>Copy files</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../Kiwano;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../Kiwano/third-party/libs;</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>
+        xcopy "$(ProjectDir)\res" "$(OutDir)\res\" /D /E /I /F /Y
+        xcopy "$(ProjectDir)..\..\kiwano-network\dlls\*.dll" "$(OutDir)" /D /Y
+      </Command>
+      <Message>Copy files</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -132,15 +152,21 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../Kiwano;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../Kiwano/third-party/libs;</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>
+        xcopy "$(ProjectDir)\res" "$(OutDir)\res\" /D /E /I /F /Y
+        xcopy "$(ProjectDir)..\..\kiwano-network\dlls\*.dll" "$(OutDir)" /D /Y
+      </Command>
+      <Message>Copy files</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -149,15 +175,21 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../Kiwano;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../Kiwano/third-party/libs;</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>
+        xcopy "$(ProjectDir)\res" "$(OutDir)\res\" /D /E /I /F /Y
+        xcopy "$(ProjectDir)..\..\kiwano-network\dlls\*.dll" "$(OutDir)" /D /Y
+      </Command>
+      <Message>Copy files</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -171,12 +203,15 @@
     <ClInclude Include="Demo5.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Kiwano\Kiwano.vcxproj">
+    <ProjectReference Include="..\..\kiwano-audio\kiwano-audio.vcxproj">
+      <Project>{1b97937d-8184-426c-be71-29a163dc76c9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\kiwano-network\kiwano-network.vcxproj">
+      <Project>{69dfbe92-c06f-4cf8-9495-ca9bf2e3baf2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\kiwano\kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="readme.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
