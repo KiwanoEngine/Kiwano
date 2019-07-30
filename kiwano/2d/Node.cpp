@@ -220,7 +220,7 @@ namespace kiwano
 
 		if (parent_)
 		{
-			transform_matrix_ = transform_matrix_ * parent_->transform_matrix_;
+			transform_matrix_ *= parent_->transform_matrix_;
 		}
 
 		// update children's transform

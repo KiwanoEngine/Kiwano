@@ -78,8 +78,8 @@ namespace kiwano
 			{
 			}
 
-			template <typename T>
-			MatrixT(T const& other)
+			template <typename _MTy>
+			MatrixT(_MTy const& other)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = other[i];
@@ -95,12 +95,24 @@ namespace kiwano
 				return m[index];
 			}
 
-			template <typename _Lty, typename _Rty>
-			inline MatrixT& operator= (MatrixMultiply<value_type, _Lty, _Rty> const& other)
+			inline MatrixT& operator= (MatrixT const& other)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = other[i];
-				return *this;
+				return (*this);
+			}
+
+			template <typename _Lty, typename _Rty>
+			inline MatrixT& operator= (MatrixMultiply<value_type, _Lty, _Rty> const& other)
+			{
+				MatrixT result(other);
+				(*this) = result;
+				return (*this);
+			}
+
+			inline MatrixT& operator*= (MatrixT const& other)
+			{
+				return operator=((*this) * other);
 			}
 
 			inline void Identity()
