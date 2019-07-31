@@ -6,13 +6,13 @@
 // 角色
 KGE_DECLARE_SMART_PTR(Hero);
 class Hero
-	: public GifImage
+	: public GifSprite
 {
 public:
-	Hero()
+	Hero(GifImagePtr image)
 	{
 		// 加载图片
-		Load(L"res/Kusanagi.gif");
+		Load(image);
 		// 设置 GIF 动图无限循环
 		SetLoopCount(-1);
 	}
@@ -69,13 +69,13 @@ class Demo2
 public:
 	static ScenePtr Create(ResLoader* loader)
 	{
-		return new Demo2;
+		return new Demo2(loader);
 	}
 
-	Demo2()
+	Demo2(ResLoader* loader)
 	{
 		// 创建角色
-		HeroPtr hero = new Hero;
+		HeroPtr hero = new Hero(loader->GetGifImage(L"Kusanagi"));
 		// 在屏幕上居中显示
 		hero->SetAnchor(0.5f, 0.5f);
 		hero->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
