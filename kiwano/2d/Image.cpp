@@ -20,7 +20,6 @@
 
 #include "Image.h"
 #include "../base/logs.h"
-#include "../renderer/render.h"
 #include "../platform/modules.h"
 #include "../utils/FileUtil.h"
 

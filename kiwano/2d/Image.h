@@ -21,7 +21,7 @@
 #pragma once
 #include "include-forwards.h"
 #include "../base/Resource.h"
-#include <d2d1.h>
+#include "../renderer/render.h"
 
 namespace kiwano
 {

@@ -21,27 +21,19 @@
 #include "GifImage.h"
 #include "../base/logs.h"
 #include "../platform/modules.h"
+#include "../utils/FileUtil.h"
 
 namespace kiwano
 {
 	GifImage::GifImage()
-		: animating_(false)
-		, next_index_(0)
-		, total_loop_count_(1)
-		, loop_count_(0)
-		, frames_count_(0)
+		: frames_count_(0)
 		, disposal_type_(DisposalType::Unknown)
 		, width_in_pixels_(0)
 		, height_in_pixels_(0)
+		, frame_delay_(0)
 		, frame_position_{}
 		, bg_color_{}
 	{
-		factory_ = Renderer::Instance()->GetD2DDeviceResources()->GetWICImagingFactory();
-		auto ctx = Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext();
-
-		ThrowIfFailed(
-			ctx->CreateCompatibleRenderTarget(&frame_rt_)
-		);
 	}
 
 	GifImage::GifImage(Resource const& res)
@@ -54,23 +46,25 @@ namespace kiwano
 	{
 		HRESULT hr = S_OK;
 
-		next_index_ = 0;
-		loop_count_ = 0;
 		frames_count_ = 0;
 		disposal_type_ = DisposalType::None;
 		
 		saved_frame_.Reset();
 		decoder_.Reset();
 
+		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetWICImagingFactory();
+
 		if (res.IsFileType())
 		{
-			if (!modules::Shlwapi::Get().PathFileExistsW(res.GetFileName().c_str()))
+#ifdef KGE_DEBUG
+			if (!FileUtil::ExistsFile(res.GetFileName().c_str()))
 			{
 				KGE_WARNING_LOG(L"Gif file '%s' not found!", res.GetFileName().c_str());
 				return false;
 			}
+#endif
 
-			hr = factory_->CreateDecoderFromFilename(
+			hr = factory->CreateDecoderFromFilename(
 				res.GetFileName().c_str(),
 				nullptr,
 				GENERIC_READ,
@@ -87,7 +81,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = factory_->CreateStream(&stream);
+				hr = factory->CreateStream(&stream);
 			}
 
 			if (SUCCEEDED(hr))
@@ -100,7 +94,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = factory_->CreateDecoderFromStream(
+				hr = factory->CreateDecoderFromStream(
 					stream.Get(),
 					nullptr,
 					WICDecodeMetadataCacheOnLoad,
@@ -114,52 +108,7 @@ namespace kiwano
 			hr = GetGlobalMetadata();
 		}
 
-		if (SUCCEEDED(hr))
-		{
-			if (frames_count_ > 0)
-			{
-				hr = ComposeNextFrame();
-			}
-		}
-
 		return SUCCEEDED(hr);
-	}
-
-	void GifImage::Update(Duration dt)
-	{
-		VisualNode::Update(dt);
-
-		if (animating_)
-		{
-			frame_elapsed_ += dt;
-			if (frame_delay_ <= frame_elapsed_)
-			{
-				frame_delay_ -= frame_elapsed_;
-				frame_elapsed_ = 0;
-				ComposeNextFrame();
-			}
-		}
-	}
-
-	void GifImage::Restart()
-	{
-		animating_ = true;
-		next_index_ = 0;
-		loop_count_ = 0;
-		disposal_type_ = DisposalType::None;
-	}
-
-	void GifImage::OnRender()
-	{
-		if (frame_rt_)
-		{
-			ComPtr<ID2D1Bitmap> frame_to_render;
-			if (SUCCEEDED(frame_rt_->GetBitmap(&frame_to_render)))
-			{
-				Rect bounds = GetBounds();
-				Renderer::Instance()->DrawBitmap(frame_to_render, bounds, bounds);
-			}
-		}
 	}
 
 	HRESULT GifImage::GetRawFrame(UINT frame_index)
@@ -176,7 +125,8 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			// Format convert to 32bppPBGRA which D2D expects
-			hr = factory_->CreateFormatConverter(&converter);
+			auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetWICImagingFactory();
+			hr = factory->CreateFormatConverter(&converter);
 		}
 
 		if (SUCCEEDED(hr))
@@ -269,7 +219,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			unsigned int frame_delay = 0;
+			frame_delay_ = 0;
 
 			hr = metadata_reader->GetMetadataByName(
 				L"/grctlext/Delay",
@@ -280,24 +230,22 @@ namespace kiwano
 				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 				if (SUCCEEDED(hr))
 				{
-					hr = UIntMult(prop_val.uiVal, 10, &frame_delay);
+					hr = UIntMult(prop_val.uiVal, 10, &frame_delay_);
 				}
 				PropVariantClear(&prop_val);
 			}
 			else
 			{
-				frame_delay = 0;
+				frame_delay_ = 0;
 			}
 
 			if (SUCCEEDED(hr))
 			{
 				// 插入一个强制延迟
-				if (frame_delay < 90)
+				if (frame_delay_ < 90)
 				{
-					frame_delay = 90;
+					frame_delay_ = 90;
 				}
-
-				frame_delay_.SetMilliseconds(static_cast<long>(frame_delay));
 			}
 		}
 
@@ -341,8 +289,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = decoder_->GetMetadataQueryReader(
-				&metadata_reader);
+			hr = decoder_->GetMetadataQueryReader(&metadata_reader);
 		}
 
 		if (SUCCEEDED(hr))
@@ -428,8 +375,6 @@ namespace kiwano
 						width_in_pixels_ = width;
 						height_in_pixels_ = height;
 					}
-
-					SetSize(static_cast<float>(width_in_pixels_), static_cast<float>(height_in_pixels_));
 				}
 				::PropVariantClear(&prop_val);
 			}
@@ -439,28 +384,7 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT GifImage::ComposeNextFrame()
-	{
-		HRESULT hr = E_FAIL;
-
-		if (frame_rt_)
-		{
-			// 找到延迟大于 0 的帧 (0 延迟帧是不可见的中间帧)
-			do
-			{
-				hr = DisposeCurrentFrame();
-				if (SUCCEEDED(hr))
-				{
-					hr = OverlayNextFrame();
-				}
-			} while (SUCCEEDED(hr) && frame_delay_.IsZero() && !IsLastFrame());
-
-			animating_ = (SUCCEEDED(hr) && !EndOfAnimation() && frames_count_ > 1);
-		}
-		return hr;
-	}
-
-	HRESULT GifImage::DisposeCurrentFrame()
+	HRESULT GifImage::DisposeCurrentFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt)
 	{
 		HRESULT hr = S_OK;
 
@@ -471,11 +395,11 @@ namespace kiwano
 			break;
 		case DisposalType::Background:
 			// 用背景颜色清除当前原始帧覆盖的区域
-			hr = ClearCurrentFrameArea();
+			hr = ClearCurrentFrameArea(frame_rt);
 			break;
 		case DisposalType::Previous:
 			// 恢复先前构图的帧
-			hr = RestoreSavedFrame();
+			hr = RestoreSavedFrame(frame_rt);
 			break;
 		default:
 			hr = E_FAIL;
@@ -483,59 +407,13 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT GifImage::OverlayNextFrame()
-	{
-		HRESULT hr = GetRawFrame(next_index_);
-		if (SUCCEEDED(hr))
-		{
-			if (disposal_type_ == DisposalType::Previous)
-			{
-				hr = SaveComposedFrame();
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			frame_rt_->BeginDraw();
-
-			if (next_index_ == 0)
-			{
-				// 重新绘制背景
-				frame_rt_->Clear(bg_color_);
-
-				loop_count_++;
-			}
-
-			frame_rt_->DrawBitmap(raw_frame_.Get(), frame_position_);
-
-			hr = frame_rt_->EndDraw();
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			next_index_ = (++next_index_) % frames_count_;
-		}
-
-		if (IsLastFrame() && loop_cb_)
-		{
-			loop_cb_(loop_count_ - 1);
-		}
-
-		if (EndOfAnimation() && done_cb_)
-		{
-			done_cb_();
-		}
-
-		return hr;
-	}
-
-	HRESULT GifImage::SaveComposedFrame()
+	HRESULT GifImage::SaveComposedFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt)
 	{
 		HRESULT hr = S_OK;
 
 		ComPtr<ID2D1Bitmap> frame_to_be_saved;
 
-		hr = frame_rt_->GetBitmap(&frame_to_be_saved);
+		hr = frame_rt->GetBitmap(&frame_to_be_saved);
 		if (SUCCEEDED(hr))
 		{
 			if (saved_frame_ == nullptr)
@@ -543,7 +421,7 @@ namespace kiwano
 				auto size = frame_to_be_saved->GetPixelSize();
 				auto prop = D2D1::BitmapProperties(frame_to_be_saved->GetPixelFormat());
 
-				hr = frame_rt_->CreateBitmap(size, prop, &saved_frame_);
+				hr = frame_rt->CreateBitmap(size, prop, &saved_frame_);
 			}
 		}
 
@@ -554,7 +432,7 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT GifImage::RestoreSavedFrame()
+	HRESULT GifImage::RestoreSavedFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt)
 	{
 		HRESULT hr = S_OK;
 
@@ -564,7 +442,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = frame_rt_->GetBitmap(&frame_to_copy_to);
+			hr = frame_rt->GetBitmap(&frame_to_copy_to);
 		}
 
 		if (SUCCEEDED(hr))
@@ -575,15 +453,15 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT GifImage::ClearCurrentFrameArea()
+	HRESULT GifImage::ClearCurrentFrameArea(ComPtr<ID2D1BitmapRenderTarget> frame_rt)
 	{
-		frame_rt_->BeginDraw();
+		frame_rt->BeginDraw();
 
-		frame_rt_->PushAxisAlignedClip(&frame_position_, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-		frame_rt_->Clear(bg_color_);
-		frame_rt_->PopAxisAlignedClip();
+		frame_rt->PushAxisAlignedClip(&frame_position_, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+		frame_rt->Clear(bg_color_);
+		frame_rt->PopAxisAlignedClip();
 
-		return frame_rt_->EndDraw();
+		return frame_rt->EndDraw();
 	}
 
 	HRESULT GifImage::GetBackgroundColor(IWICMetadataQueryReader* metadata_reader)
@@ -627,7 +505,8 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = factory_->CreatePalette(&wic_palette);
+			auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetWICImagingFactory();
+			hr = factory->CreatePalette(&wic_palette);
 		}
 
 		if (SUCCEEDED(hr))
