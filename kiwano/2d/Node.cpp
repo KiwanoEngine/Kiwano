@@ -47,6 +47,8 @@ namespace kiwano
 		, dirty_transform_(false)
 		, dirty_transform_inverse_(false)
 		, cascade_opacity_(false)
+		, show_border_(false)
+		, is_fast_transform_(true)
 		, parent_(nullptr)
 		, scene_(nullptr)
 		, hash_name_(0)
@@ -114,6 +116,22 @@ namespace kiwano
 				child->Render();
 				child = child->NextItem().Get();
 			}
+		}
+	}
+
+	void Node::RenderBorder()
+	{
+		if (show_border_)
+		{
+			Rect bounds = GetBounds();
+			Renderer::Instance()->SetTransform(transform_matrix_);
+			Renderer::Instance()->FillRectangle(bounds, Color(Color::Red, .4f));
+			Renderer::Instance()->DrawRectangle(bounds, Color(Color::Red, .8f), 4.f);
+		}
+
+		for (auto child = children_.First(); child; child = child->NextItem())
+		{
+			child->RenderBorder();
 		}
 	}
 

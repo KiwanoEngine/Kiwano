@@ -1377,7 +1377,7 @@ namespace std
 	};
 
 	template<>
-	inline void swap<::kiwano::String>(::kiwano::String& lhs, ::kiwano::String& rhs)
+	inline void swap<::kiwano::String>(::kiwano::String& lhs, ::kiwano::String& rhs) noexcept
 	{
 		lhs.swap(rhs);
 	}
