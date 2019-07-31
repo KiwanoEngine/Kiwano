@@ -261,6 +261,9 @@
     <ClInclude Include="base\types.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="2d\GifSprite.h">
+      <Filter>2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -394,6 +397,9 @@
     </ClCompile>
     <ClCompile Include="utils\FileUtil.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\GifSprite.cpp">
+      <Filter>2d</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

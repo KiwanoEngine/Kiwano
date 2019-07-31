@@ -19,19 +19,16 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Node.h"
+#include "include-forwards.h"
 #include "../base/Resource.h"
 #include "../renderer/render.h"
 
 namespace kiwano
 {
 	class KGE_API GifImage
-		: public VisualNode
+		: public Object
 	{
 	public:
-		typedef Closure<void(int)> LoopDoneCallback;
-		typedef Closure<void()> DoneCallback;
-
 		GifImage();
 
 		GifImage(
@@ -42,53 +39,15 @@ namespace kiwano
 			Resource const& res
 		);
 
-		// 设置 GIF 动画循环次数
-		inline void SetLoopCount(int loops)								{ total_loop_count_ = loops; }
+		inline unsigned int GetWidthInPixels() const	{ return width_in_pixels_; }
 
-		// 设置 GIF 动画每次循环结束回调函数
-		inline void SetLoopDoneCallback(LoopDoneCallback const& cb)		{ loop_cb_ = cb; }
+		inline unsigned int GetHeightInPixels() const	{ return height_in_pixels_; }
 
-		// 设置 GIF 动画结束回调函数
-		inline void SetDoneCallback(DoneCallback const& cb)				{ done_cb_ = cb; }
+		inline unsigned int GetFrameDelay() const		{ return frame_delay_; }
 
-		// 重新播放动画
-		void Restart();
+		inline unsigned int GetFramesCount() const		{ return frames_count_; }
 
-		inline int GetFramesCount() const								{ return static_cast<int>(frames_count_); }
-		inline int GetLoopCount() const									{ return total_loop_count_; }
-		inline LoopDoneCallback GetLoopDoneCallback() const				{ return loop_cb_; }
-		inline DoneCallback GetDoneCallback() const						{ return done_cb_; }
-
-		void OnRender() override;
-
-	protected:
-		void Update(Duration dt) override;
-
-		HRESULT GetRawFrame(UINT frame_index);
-		HRESULT GetGlobalMetadata();
-		HRESULT GetBackgroundColor(IWICMetadataQueryReader* metadata_reader);
-
-		HRESULT ComposeNextFrame();
-		HRESULT DisposeCurrentFrame();
-		HRESULT OverlayNextFrame();
-
-		HRESULT SaveComposedFrame();
-		HRESULT RestoreSavedFrame();
-		HRESULT ClearCurrentFrameArea();
-
-		inline bool IsLastFrame() const		{ return (next_index_ == 0); }
-		inline bool EndOfAnimation() const	{ return IsLastFrame() && loop_count_ == total_loop_count_ + 1; }
-
-	protected:
-		Duration frame_delay_;
-		Duration frame_elapsed_;
-
-		ComPtr<IWICImagingFactory>		factory_;
-		ComPtr<ID2D1BitmapRenderTarget>	frame_rt_;
-		ComPtr<ID2D1Bitmap>				raw_frame_;
-		ComPtr<ID2D1Bitmap>				saved_frame_;
-		ComPtr<IWICBitmapDecoder>		decoder_;
-
+	public:
 		enum class DisposalType
 		{
 			Unknown,
@@ -97,18 +56,37 @@ namespace kiwano
 			Previous
 		};
 
-		bool			animating_;
-		int				total_loop_count_;
-		int				loop_count_;
-		unsigned int	next_index_;
+		inline DisposalType			GetDisposalType() const				{ return disposal_type_; }
+
+		inline D2D1_COLOR_F			GetBackgroundColor() const			{ return bg_color_; }
+
+		inline D2D1_RECT_F const&	GetFramePosition() const			{ return frame_position_; }
+
+		inline ComPtr<ID2D1Bitmap>	GetRawFrame() const					{ return raw_frame_; }
+
+		inline void					SetDisposalType(DisposalType type)	{ disposal_type_ = type; }
+
+	public:
+		HRESULT GetRawFrame(UINT frame_index);
+		HRESULT GetGlobalMetadata();
+		HRESULT GetBackgroundColor(IWICMetadataQueryReader* metadata_reader);
+
+		HRESULT DisposeCurrentFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt);
+		HRESULT SaveComposedFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt);
+		HRESULT RestoreSavedFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt);
+		HRESULT ClearCurrentFrameArea(ComPtr<ID2D1BitmapRenderTarget> frame_rt);
+
+	protected:
+		ComPtr<ID2D1Bitmap>			raw_frame_;
+		ComPtr<ID2D1Bitmap>			saved_frame_;
+		ComPtr<IWICBitmapDecoder>	decoder_;
+
 		unsigned int	frames_count_;
+		unsigned int	frame_delay_;
 		unsigned int	width_in_pixels_;
 		unsigned int	height_in_pixels_;
 		DisposalType	disposal_type_;
 		D2D1_RECT_F		frame_position_;
 		D2D1_COLOR_F	bg_color_;
-
-		LoopDoneCallback	loop_cb_;
-		DoneCallback		done_cb_;
 	};
 }

@@ -53,7 +53,7 @@ namespace kiwano
 
 	bool Sprite::Load(ImagePtr image)
 	{
-		if (image)
+		if (image && image_ != image)
 		{
 			image_ = image;
 
@@ -65,18 +65,10 @@ namespace kiwano
 
 	bool Sprite::Load(Resource const& res)
 	{
-		if (!image_)
+		ImagePtr image = new (std::nothrow) Image;
+		if (image->Load(res))
 		{
-			image_ = new (std::nothrow) Image;
-		}
-
-		if (image_)
-		{
-			if (image_->Load(res))
-			{
-				Node::SetSize(image_->GetWidth(), image_->GetHeight());
-				return true;
-			}
+			return Load(image);
 		}
 		return false;
 	}

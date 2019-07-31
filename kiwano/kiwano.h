@@ -98,6 +98,7 @@
 #include "2d/Scene.h"
 #include "2d/Layer.h"
 #include "2d/Sprite.h"
+#include "2d/GifSprite.h"
 #include "2d/Text.h"
 #include "2d/Canvas.h"
 #include "2d/GeometryNode.h"

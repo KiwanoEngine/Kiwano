@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClInclude Include="2d\GifSprite.h" />
     <ClInclude Include="base\types.h" />
     <ClInclude Include="kiwano.h" />
     <ClInclude Include="config.h" />
@@ -93,6 +94,7 @@
     <ClCompile Include="2d\Geometry.cpp" />
     <ClCompile Include="2d\GeometryNode.cpp" />
     <ClCompile Include="2d\GifImage.cpp" />
+    <ClCompile Include="2d\GifSprite.cpp" />
     <ClCompile Include="2d\Image.cpp" />
     <ClCompile Include="2d\Layer.cpp" />
     <ClCompile Include="2d\Node.cpp" />
