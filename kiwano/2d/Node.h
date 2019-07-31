@@ -392,7 +392,10 @@ namespace kiwano
 		inline void SetCallbackOnUpdate(UpdateCallback const& cb)	{ cb_update_ = cb; }
 
 		// 获取更新时的回调函数
-		inline UpdateCallback const& GetCallbackOnUpdate()			{ return cb_update_; }
+		inline UpdateCallback GetCallbackOnUpdate() const			{ return cb_update_; }
+
+		// 渲染节点边界
+		inline void ShowBorder(bool show)							{ show_border_ = show; }
 
 		// 设置默认锚点
 		static void SetDefaultAnchor(
@@ -409,15 +412,17 @@ namespace kiwano
 
 		virtual void Update(Duration dt);
 
-		void Render();
+		virtual void Render();
+
+		void RenderBorder();
 
 		void UpdateTransform() const;
 
 		void UpdateOpacity();
 
-		void SetScene(Scene* scene);
-
 		void Reorder();
+
+		void SetScene(Scene* scene);
 
 	protected:
 		bool			visible_;
@@ -426,6 +431,7 @@ namespace kiwano
 		bool			responsible_;
 		bool			update_pausing_;
 		bool			cascade_opacity_;
+		bool			show_border_;
 		int				z_order_;
 		float			opacity_;
 		float			displayed_opacity_;

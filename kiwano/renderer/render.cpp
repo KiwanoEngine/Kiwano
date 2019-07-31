@@ -261,6 +261,39 @@ namespace kiwano
 		return S_OK;
 	}
 
+	HRESULT Renderer::DrawRectangle(Rect const& rect, const Color& stroke_color, float stroke_width, StrokeStyle stroke)
+	{
+		if (!solid_color_brush_ || !device_context_)
+			return E_UNEXPECTED;
+
+		solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
+
+		device_context_->DrawRectangle(
+			DX::ConvertToRectF(rect),
+			solid_color_brush_.Get(),
+			stroke_width,
+			d2d_res_->GetStrokeStyle(stroke)
+		);
+
+		if (collecting_status_)
+			++status_.primitives;
+		return S_OK;
+	}
+
+	HRESULT Renderer::FillRectangle(Rect const& rect, Color const& fill_color)
+	{
+		if (!solid_color_brush_ || !device_context_)
+			return E_UNEXPECTED;
+
+		solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
+		device_context_->FillRectangle(
+			DX::ConvertToRectF(rect),
+			solid_color_brush_.Get()
+		);
+
+		return S_OK;
+	}
+
 	HRESULT Renderer::DrawImage(ImagePtr image, Rect const& dest_rect)
 	{
 		if (!device_context_)
@@ -400,13 +433,17 @@ namespace kiwano
 		return S_OK;
 	}
 
-	void Renderer::SetOpacity(float opacity)
+	HRESULT Renderer::SetOpacity(float opacity)
 	{
+		if (!solid_color_brush_)
+			return E_UNEXPECTED;
+
 		if (opacity_ != opacity)
 		{
 			opacity_ = opacity;
 			solid_color_brush_->SetOpacity(opacity);
 		}
+		return S_OK;
 	}
 
 	HRESULT Renderer::SetTextStyle(

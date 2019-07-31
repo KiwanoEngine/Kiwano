@@ -27,6 +27,9 @@ namespace kiwano
 	class KGE_API Scene
 		: public Node
 	{
+		friend class Transition;
+		friend class Application;
+
 	public:
 		Scene();
 
@@ -37,5 +40,14 @@ namespace kiwano
 
 		// 退出场景
 		virtual void OnExit();
+
+		// 启用或禁用场景内的节点边界渲染功能
+		inline void SetRenderBorderEnabled(bool enabled) { render_border_enabled_ = enabled; }
+
+	protected:
+		void Render() override;
+
+	protected:
+		bool render_border_enabled_;
 	};
 }

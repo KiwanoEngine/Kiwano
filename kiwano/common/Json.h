@@ -775,6 +775,7 @@ namespace kiwano
 				: out(out)
 				, indent_char(indent_char)
 				, indent_string(32, indent_char)
+				, number_buffer()
 			{}
 
 			void dump(
@@ -2706,7 +2707,7 @@ namespace std
 	};
 
 	template<>
-	inline void swap<::kiwano::Json>(::kiwano::Json& lhs, ::kiwano::Json& rhs)
+	inline void swap<::kiwano::Json>(::kiwano::Json& lhs, ::kiwano::Json& rhs) noexcept
 	{
 		lhs.swap(rhs);
 	}

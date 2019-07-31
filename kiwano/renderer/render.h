@@ -67,6 +67,18 @@ namespace kiwano
 			Color const& fill_color
 		);
 
+		HRESULT DrawRectangle(
+			Rect const& rect,
+			const Color& stroke_color,
+			float stroke_width,
+			StrokeStyle stroke = StrokeStyle::Miter
+		);
+
+		HRESULT FillRectangle(
+			Rect const& rect,
+			Color const& fill_color
+		);
+
 		HRESULT DrawImage(
 			ImagePtr image,
 			Rect const& dest_rect
@@ -103,7 +115,7 @@ namespace kiwano
 		);
 
 		// …Ë÷√ª≠± Õ∏√˜∂»
-		void SetOpacity(
+		HRESULT SetOpacity(
 			float opacity
 		);
 
@@ -187,8 +199,6 @@ namespace kiwano
 		HRESULT EndDraw();
 
 	private:
-		unsigned long ref_count_;
-
 		HWND hwnd_;
 		float opacity_;
 		bool antialias_;
