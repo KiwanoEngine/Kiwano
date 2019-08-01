@@ -37,9 +37,9 @@ namespace kiwano
 
 			~Player();
 
-			// 预加载音乐资源
+			// 加载音乐资源
 			bool Load(
-				Resource const& res			/* 音乐资源 */
+				Resource const& res		/* 音乐资源 */
 			);
 
 			// 播放音乐

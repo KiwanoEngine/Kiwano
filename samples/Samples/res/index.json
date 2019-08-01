@@ -36,11 +36,5 @@
       "file": "Kusanagi.gif",
       "type": "gif"
     }
-  ],
-  "sounds": [
-    {
-      "id": "bg_music",
-      "file": "splash.mp3"
-    }
   ]
 }

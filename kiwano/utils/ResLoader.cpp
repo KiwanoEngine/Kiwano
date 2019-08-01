@@ -211,7 +211,7 @@ namespace kiwano
 		return false;
 	}
 
-	size_t ResLoader::AddFrames(String const& id, Array<Resource> const& images)
+	bool ResLoader::AddFrames(String const& id, Array<Resource> const& images)
 	{
 		if (images.empty())
 			return 0;
@@ -234,11 +234,7 @@ namespace kiwano
 		if (!image_arr.empty())
 		{
 			FramesPtr frames = new (std::nothrow) Frames(image_arr);
-			if (frames)
-			{
-				res_.insert(std::make_pair(id, frames));
-				return frames->GetFrames().size();
-			}
+			return AddFrames(id, frames);
 		}
 		return 0;
 	}
@@ -249,12 +245,7 @@ namespace kiwano
 			return 0;
 
 		FramesPtr frames = new (std::nothrow) Frames(images);
-		if (frames)
-		{
-			res_.insert(std::make_pair(id, frames));
-			return frames->GetFrames().size();
-		}
-		return 0;
+		return AddFrames(id, frames);
 	}
 
 	size_t ResLoader::AddFrames(String const & id, Resource const & image, int cols, int rows)
@@ -264,7 +255,7 @@ namespace kiwano
 
 		ImagePtr raw = new (std::nothrow) Image;
 		if (!raw || !raw->Load(image))
-			return 0;
+			return false;
 
 		float raw_width = raw->GetSourceWidth();
 		float raw_height = raw->GetSourceHeight();
@@ -288,12 +279,7 @@ namespace kiwano
 		}
 
 		FramesPtr frames = new (std::nothrow) Frames(image_arr);
-		if (frames)
-		{
-			res_.insert(std::make_pair(id, frames));
-			return frames->GetFrames().size();
-		}
-		return 0;
+		return AddFrames(id, frames);
 	}
 
 	size_t ResLoader::AddFrames(String const & id, Resource const & image, Array<Rect> const & crop_rects)
@@ -316,22 +302,17 @@ namespace kiwano
 		}
 
 		FramesPtr frames = new (std::nothrow) Frames(image_arr);
+		return AddFrames(id, frames);
+	}
+
+	size_t ResLoader::AddFrames(String const & id, FramesPtr frames)
+	{
 		if (frames)
 		{
 			res_.insert(std::make_pair(id, frames));
 			return frames->GetFrames().size();
 		}
 		return 0;
-	}
-
-	bool ResLoader::AddFrames(String const & id, FramesPtr frames)
-	{
-		if (frames)
-		{
-			res_.insert(std::make_pair(id, frames));
-			return true;
-		}
-		return false;
 	}
 
 	bool ResLoader::AddObj(String const& id, ObjectPtr obj)
