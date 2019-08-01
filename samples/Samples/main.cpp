@@ -11,7 +11,7 @@ namespace
 	struct Demo
 	{
 		String title;
-		ScenePtr(*Create)(ResLoader*);
+		ScenePtr(*Create)();
 	};
 
 	Demo s_Demos[] = {
@@ -25,11 +25,12 @@ namespace
 	int s_DemoNum = sizeof(s_Demos) / sizeof(Demo);
 }
 
+// 资源加载工具
+ResLoader g_Loader;
+
 class DemoApp
 	: public Application
 {
-	ResLoader loader_;
-
 public:
 	DemoApp()
 	{
@@ -46,10 +47,16 @@ public:
 	void OnStart() override
 	{
 		// 从 JSON 文件中加载资源
-		loader_.LoadFromJsonFile(L"res/res.json");
+		g_Loader.LoadFromJsonFile(L"res/index.json");
 
 		// 切换到第一个场景
 		ChangeDemoScene(0);
+	}
+
+	void OnDestroy() override
+	{
+		// 退出游戏时销毁资源
+		g_Loader.Destroy();
 	}
 
 	void ChangeDemoScene(int index)
@@ -61,7 +68,7 @@ public:
 			String title = s_Demos[index].title;
 			Window::Instance()->SetTitle(L"Kiwano示例程序 - " + title);
 
-			ScenePtr scene = s_Demos[index].Create(&loader_);
+			ScenePtr scene = s_Demos[index].Create();
 			EnterScene(scene);
 
 			// 添加按键监听

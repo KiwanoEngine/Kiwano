@@ -67,15 +67,15 @@ class Demo2
 	: public Scene
 {
 public:
-	static ScenePtr Create(ResLoader* loader)
+	static ScenePtr Create()
 	{
-		return new Demo2(loader);
+		return new Demo2;
 	}
 
-	Demo2(ResLoader* loader)
+	Demo2()
 	{
 		// 创建角色
-		HeroPtr hero = new Hero(loader->GetGifImage(L"Kusanagi"));
+		HeroPtr hero = new Hero(g_Loader.GetGifImage(L"Kusanagi"));
 		// 在屏幕上居中显示
 		hero->SetAnchor(0.5f, 0.5f);
 		hero->SetPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);

@@ -4,14 +4,31 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Demo1.h" />
-    <ClInclude Include="common.h" />
-    <ClInclude Include="Demo2.h" />
-    <ClInclude Include="Demo3.h" />
-    <ClInclude Include="Demo4.h" />
-    <ClInclude Include="Demo5.h" />
+    <ClInclude Include="Demo1.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo2.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo3.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo4.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo5.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\res.json" />
+    <None Include="res\index.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4460eeec-9e2f-46b6-909a-5ff4443075ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

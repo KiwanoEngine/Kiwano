@@ -27,6 +27,7 @@
 
 namespace kiwano
 {
+	// 资源加载器
 	class KGE_API ResLoader
 	{
 	public:
@@ -49,7 +50,7 @@ namespace kiwano
 		bool AddGifImage(String const& id, GifImagePtr image);
 
 		// 添加帧集合
-		size_t AddFrames(String const& id, Array<Resource> const& images);
+		bool AddFrames(String const& id, Array<Resource> const& images);
 
 		// 添加帧集合
 		size_t AddFrames(String const& id, Array<ImagePtr> const& images);
@@ -63,17 +64,21 @@ namespace kiwano
 		size_t AddFrames(String const& id, Resource const& image, Array<Rect> const& crop_rects);
 
 		// 添加帧集合
-		bool AddFrames(String const& id, FramesPtr frames);
+		size_t AddFrames(String const& id, FramesPtr frames);
 
 		// 添加对象
 		bool AddObj(String const& id, ObjectPtr obj);
 
+		// 获取图片资源
 		ImagePtr GetImage(String const& id) const;
 
+		// 获取 GIF 图片资源
 		GifImagePtr GetGifImage(String const& id) const;
 
+		// 获取序列帧
 		FramesPtr GetFrames(String const& id) const;
 
+		// 获取对象
 		ObjectPtr GetObj(String const& id) const;
 
 		// 删除指定资源
@@ -90,6 +95,11 @@ namespace kiwano
 				return nullptr;
 			return dynamic_cast<_Ty*>((*iter).second.Get());
 		}
+
+	public:
+		ResLoader();
+
+		virtual ~ResLoader();
 
 	protected:
 		UnorderedMap<String, ObjectPtr> res_;

@@ -15,21 +15,26 @@
       "file": "spring_forest.jpg"
     },
     {
-      "id": "tiger",
-      "file": "tiger.png",
-      "rows": 3,
-      "cols": 5
+      "id": "tiger_running",
+      "files": [
+        "tiger/run/run01.png",
+        "tiger/run/run02.png",
+        "tiger/run/run03.png",
+        "tiger/run/run04.png",
+        "tiger/run/run05.png",
+        "tiger/run/run06.png"
+      ]
+    },
+    {
+      "id": "tiger_standing",
+      "file": "tiger/stand.png",
+      "rows": 2,
+      "cols": 3
     },
     {
       "id": "Kusanagi",
       "file": "Kusanagi.gif",
       "type": "gif"
-    }
-  ],
-  "sounds": [
-    {
-      "id": "bg_music",
-      "file": "splash.mp3"
     }
   ]
 }

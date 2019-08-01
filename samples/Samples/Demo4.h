@@ -17,28 +17,9 @@ class Tiger
 public:
 	Tiger()
 	{
-		// 获取图片原始大小
-		ImagePtr image = new Image(L"res/tiger.png");
-		Size source_size = image->GetSize();
-		// 计算每帧图片大小
-		Size frame_size = { source_size.x / 5, source_size.y / 3 };
-
 		// 加载帧动画
-		run_frames = new Frames;
-		for (int i = 0; i < 6; ++i)
-		{
-			Point pos = { (i % 5) * frame_size.x, (i / 5) * frame_size.y };
-			ImagePtr frame = new Image(L"res/tiger.png", Rect{ pos, frame_size });
-			run_frames->Add(frame);
-		}
-
-		stand_frames = new Frames;
-		for (int i = 0; i < 6; ++i)
-		{
-			Point pos = { ((i + 1) % 5) * frame_size.x, ((i + 1) / 5 + 1) * frame_size.y };
-			ImagePtr frame = new Image(L"res/tiger.png", Rect{ pos, frame_size });
-			stand_frames->Add(frame);
-		}
+		run_frames = g_Loader.GetFrames(L"tiger_running");
+		stand_frames = g_Loader.GetFrames(L"tiger_standing");
 
 		// 执行动画
 		AddAction(
@@ -163,7 +144,7 @@ class Demo4
 	: public Scene
 {
 public:
-	static ScenePtr Create(ResLoader* loader)
+	static ScenePtr Create()
 	{
 		return new Demo4;
 	}

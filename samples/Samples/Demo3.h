@@ -11,7 +11,7 @@ class Demo3
 	TextPtr state_text;		// ²¥·Å×´Ì¬ÎÄ×Ö
 
 public:
-	static ScenePtr Create(ResLoader* loader)
+	static ScenePtr Create()
 	{
 		return new Demo3;
 	}
