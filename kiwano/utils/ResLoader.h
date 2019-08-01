@@ -91,6 +91,11 @@ namespace kiwano
 			return dynamic_cast<_Ty*>((*iter).second.Get());
 		}
 
+	public:
+		ResLoader();
+
+		virtual ~ResLoader();
+
 	protected:
 		UnorderedMap<String, ObjectPtr> res_;
 	};

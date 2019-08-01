@@ -28,37 +28,90 @@
 
 namespace kiwano
 {
-	namespace
+	namespace __res_loader_09
 	{
-		void LoadJsonData09(Json const& json_data, ResLoader* loader)
+		struct GlobalData
 		{
 			String path;
+		};
+
+		void LoadImageFromData(ResLoader* loader, GlobalData const& global_data, Json const& image_data);
+		bool CompareJsonWithString(Json const& data, const wchar_t* key, const wchar_t* value);
+
+		void LoadJsonData(ResLoader* loader, Json const& json_data)
+		{
+			GlobalData global_data;
 			if (json_data.count(L"path"))
 			{
-				path = json_data[L"path"];
+				global_data.path = json_data[L"path"];
 			}
 
 			if (json_data.count(L"images"))
 			{
 				for (const auto& image : json_data[L"images"])
 				{
-					String file = image[L"file"];
-					String id = image.count(L"id") ? image[L"id"] : file;
-
-					if (image.count(L"type") && image[L"type"].as_string() == L"gif")
-						loader->AddGifImage(id, Resource(path + file));
-					else
-						loader->AddImage(id, Resource(path + file));
+					LoadImageFromData(loader, global_data, image);
 				}
 			}
-			
-			/*if (json_data.count(L"sounds"))
+		}
+
+		void LoadImageFromData(ResLoader* loader, GlobalData const& global_data, Json const& image_data)
+		{
+			String id = image_data[L"id"];
+
+			if (image_data.count(L"file"))
 			{
-				for (const auto& sound : json_data[L"sounds"])
+				String file = image_data[L"file"];
+
+				// Gif image
+				if (CompareJsonWithString(image_data, L"type", L"gif"))
 				{
-					loader->AddObj();
+					loader->AddGifImage(id, Resource(global_data.path + file));
+					return;
 				}
-			}*/
+
+				if (!file.empty())
+				{
+					if (image_data.count(L"rows") || image_data.count(L"cols"))
+					{
+						// Image slices
+						int rows = 1, cols = 1;
+						if (image_data.count(L"rows")) rows = image_data[L"rows"];
+						if (image_data.count(L"cols")) cols = image_data[L"cols"];
+						loader->AddFrames(id, Resource(global_data.path + file), cols, rows);
+						return;
+					}
+					else
+					{
+						// Simple image
+						loader->AddImage(id, Resource(global_data.path + file));
+						return;
+					}
+				}
+			}
+
+			// Frames
+			if (image_data.count(L"files"))
+			{
+				Array<ImagePtr> images;
+				images.reserve(image_data[L"files"].size());
+				for (const auto& file : image_data[L"files"])
+				{
+					auto filePath = file.as_string();
+					ImagePtr image = new Image(global_data.path + file.as_string());
+					if (image->IsValid())
+					{
+						images.push_back(image);
+					}
+				}
+				loader->AddFrames(id, images);
+			}
+
+		}
+
+		bool CompareJsonWithString(Json const& data, const wchar_t* key, const wchar_t* value)
+		{
+			return data.count(key) && data[key].as_string() == value;
 		}
 	}
 
@@ -96,7 +149,7 @@ namespace kiwano
 			String version = json_data[L"version"];
 			if (version.empty() || version == L"0.9")
 			{
-				LoadJsonData09(json_data, this);
+				__res_loader_09::LoadJsonData(this, json_data);
 			}
 			else
 			{
@@ -228,7 +281,7 @@ namespace kiwano
 				ImagePtr ptr = new (std::nothrow) Image(raw->GetBitmap());
 				if (ptr)
 				{
-					ptr->Crop(Rect{ i * width, j * height, width, height });
+					ptr->Crop(Rect{ j * width, i * height, width, height });
 					image_arr.push_back(ptr);
 				}
 			}
@@ -319,6 +372,15 @@ namespace kiwano
 	void ResLoader::Destroy()
 	{
 		res_.clear();
+	}
+
+	ResLoader::ResLoader()
+	{
+	}
+
+	ResLoader::~ResLoader()
+	{
+		Destroy();
 	}
 
 }

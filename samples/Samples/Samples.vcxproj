@@ -214,7 +214,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\res.json" />
+    <None Include="res\index.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
