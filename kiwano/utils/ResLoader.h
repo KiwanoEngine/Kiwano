@@ -50,7 +50,7 @@ namespace kiwano
 		bool AddGifImage(String const& id, GifImagePtr image);
 
 		// 添加帧集合
-		bool AddFrames(String const& id, Array<Resource> const& images);
+		size_t AddFrames(String const& id, Array<Resource> const& images);
 
 		// 添加帧集合
 		size_t AddFrames(String const& id, Array<ImagePtr> const& images);
