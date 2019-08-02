@@ -90,7 +90,7 @@ namespace kiwano
 
 	String Object::DumpObject()
 	{
-		String name = typeid(*this).name();
+		String name = kiwano::string_to_wide(typeid(*this).name());
 		return String::format(L"{ class=\"%s\" id=%d refcount=%d name=\"%s\" }",
 			name.c_str(), GetObjectID(), GetRefCount(), GetName().c_str());
 	}

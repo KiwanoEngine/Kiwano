@@ -274,7 +274,7 @@ namespace kiwano
 				}
 			}
 
-			json_value(json_value&& other)
+			json_value(json_value&& other) noexcept
 			{
 				type = other.type;
 				data = other.data;
@@ -340,7 +340,7 @@ namespace kiwano
 				return (*this);
 			}
 
-			inline json_value& operator=(json_value && other)
+			inline json_value& operator=(json_value && other) noexcept
 			{
 				clear();
 				type = other.type;
@@ -1849,7 +1849,7 @@ namespace kiwano
 
 		basic_json(basic_json const& other) : value_(other.value_) {}
 
-		basic_json(basic_json&& other) : value_(std::move(other.value_))
+		basic_json(basic_json&& other) noexcept : value_(std::move(other.value_))
 		{
 			// invalidate payload
 			other.value_.type = JsonType::Null;
@@ -2354,7 +2354,7 @@ namespace kiwano
 			return (*this);
 		}
 
-		inline basic_json& operator=(basic_json&& other)
+		inline basic_json& operator=(basic_json&& other) noexcept
 		{
 			value_ = std::move(other.value_);
 			return (*this);

@@ -29,11 +29,25 @@
 
 namespace kiwano
 {
+	template <typename _CharTy>
+	class basic_string;
+
+	using string = basic_string<char>;
+	using wstring = basic_string<wchar_t>;
+
+	// String for kiwano
+	using String = wstring;
+}
+
+
+namespace kiwano
+{
 	//
-	// String
+	// basic_string
 	// Lightweight std::wstring<>-like class
 	//
-	class String
+	template <typename _CharTy>
+	class basic_string
 	{
 	public:
 		// Iterator
@@ -86,7 +100,8 @@ namespace kiwano
 		};
 
 	public:
-		using value_type				= wchar_t;
+		using value_type				= _CharTy;
+		using char_type					= value_type;
 		using size_type					= size_t;
 		using reference					= value_type &;
 		using const_reference			= const value_type &;
@@ -97,116 +112,111 @@ namespace kiwano
 		using char_traits				= std::char_traits<value_type>;
 		using allocator					= std::allocator<value_type>;
 
-		String();
-		String(const wchar_t* cstr, bool const_str = true);
-		String(const wchar_t* cstr, size_type count);
-		String(size_type count, wchar_t ch);
-		String(const char* cstr);
-		String(std::string const& str);
-		String(std::wstring const& str);
-		String(String const& rhs);
-		String(String const& rhs, size_type pos, size_type count = npos);
-		String(String && rhs) noexcept;
-		~String();
+		basic_string();
+		basic_string(const char_type* cstr, bool const_str = true);
+		basic_string(const char_type* cstr, size_type count);
+		basic_string(size_type count, char_type ch);
+		basic_string(std::basic_string<char_type> const& str);
+		basic_string(basic_string const& rhs);
+		basic_string(basic_string const& rhs, size_type pos, size_type count = npos);
+		basic_string(basic_string && rhs) noexcept;
+		~basic_string();
 
 		template <typename _Iter>
-		String(_Iter first, _Iter last) : String()																		{ assign_iter(first, last); }
+		basic_string(_Iter first, _Iter last) : basic_string()																{ assign_iter(first, last); }
 
-		inline const wchar_t*	c_str() const																			{ return const_str_ ? const_str_ : L""; }
-		inline const wchar_t*	data() const																			{ return const_str_ ? const_str_ : L""; }
-		inline wchar_t			at(size_t i) const																		{ return (*this)[i]; }
-		inline size_type		size() const																			{ return size_; }
-		inline size_type		length() const																			{ return size(); }
-		inline size_type		capacity() const																		{ return capacity_; }
-		inline size_type		max_size() const																		{ return (static_cast<size_type>(-1) / sizeof(value_type)); }
-		inline bool				empty() const																			{ return size_ == 0; }
-		inline void				clear()																					{ discard_const_data(); if (str_) { str_[0] = value_type(); } size_ = 0; }
+		inline const char_type*	c_str() const																				{ return empty() ? empty_cstr : const_str_; }
+		inline const char_type*	data() const																				{ return empty() ? empty_cstr : const_str_; }
+		inline char_type		at(size_t i) const																			{ return (*this)[i]; }
+		inline size_type		size() const																				{ return size_; }
+		inline size_type		length() const																				{ return size(); }
+		inline size_type		capacity() const																			{ return capacity_; }
+		inline size_type		max_size() const																			{ return (static_cast<size_type>(-1) / sizeof(value_type)); }
+		inline bool				empty() const																				{ return size_ == 0; }
+		inline void				clear()																						{ discard_const_data(); if (str_) { str_[0] = value_type(); } size_ = 0; }
 
 		void					reserve(const size_type new_cap = 0);
-		inline void				resize(const size_type new_size, const wchar_t ch = value_type())						{ check_operability(); if (new_size < size_) str_[size_ = new_size] = value_type(); else append(new_size - size_, ch); }
+		inline void				resize(const size_type new_size, const char_type ch = value_type())							{ check_operability(); if (new_size < size_) str_[size_ = new_size] = value_type(); else append(new_size - size_, ch); }
 
-		int						compare(const wchar_t* const str) const;
-		inline int				compare(String const& str) const														{ return compare(str.c_str()); }
+		int						compare(const char_type* const str) const;
+		inline int				compare(basic_string const& str) const														{ return compare(str.c_str()); }
 
-		String&					append(size_type count, wchar_t ch);
-		String&					append(const wchar_t* cstr, size_type count);
-		String&					append(String const& other, size_type pos, size_type count = npos);
-		inline String&			append(const wchar_t* cstr)																{ return append(cstr, char_traits::length(cstr)); }
-		inline String&			append(std::wstring const& str)															{ return append(str.c_str()); }
-		inline String&			append(String const& other)																{ return append(other.const_str_, 0, npos); }
+		basic_string&			append(size_type count, char_type ch);
+		basic_string&			append(const char_type* cstr, size_type count);
+		basic_string&			append(basic_string const& other, size_type pos, size_type count = npos);
+		inline basic_string&	append(const char_type* cstr)																{ return append(cstr, char_traits::length(cstr)); }
+		inline basic_string&	append(basic_string const& other)															{ return append(other.const_str_, 0, npos); }
+		inline basic_string&	append(std::basic_string<char_type> const& other)											{ return append(other.c_str()); }
 
-		size_type				find(const wchar_t ch, size_type offset = 0) const;
-		size_type				find(const wchar_t* const str, size_type offset, size_type count) const;
-		inline size_type		find(String const& str, size_type offset = 0) const										{ return find(str.c_str(), offset, str.size()); }
-		inline size_type		find(const wchar_t* const str, size_type offset = 0) const								{ return find(str, offset, char_traits::length(str)); }
+		size_type				find(const char_type ch, size_type offset = 0) const;
+		size_type				find(const char_type* const str, size_type offset, size_type count) const;
+		inline size_type		find(basic_string const& str, size_type offset = 0) const									{ return find(str.c_str(), offset, str.size()); }
+		inline size_type		find(const char_type* const str, size_type offset = 0) const								{ return find(str, offset, char_traits::length(str)); }
 
-		size_type				find_first_of(const wchar_t* const str, size_type offset, size_type count) const;
-		inline size_type		find_first_of(const wchar_t ch, size_type offset = 0) const								{ return find(ch, offset); }
-		inline size_type		find_first_of(String const& str, size_type offset = 0) const							{ return find_first_of(str.c_str(), offset, str.size()); }
-		inline size_type		find_first_of(const wchar_t* const str, size_type offset = 0) const						{ return find_first_of(str, offset, char_traits::length(str)); }
+		size_type				find_first_of(const char_type* const str, size_type offset, size_type count) const;
+		inline size_type		find_first_of(const char_type ch, size_type offset = 0) const								{ return find(ch, offset); }
+		inline size_type		find_first_of(basic_string const& str, size_type offset = 0) const							{ return find_first_of(str.c_str(), offset, str.size()); }
+		inline size_type		find_first_of(const char_type* const str, size_type offset = 0) const						{ return find_first_of(str, offset, char_traits::length(str)); }
 
-		size_type				find_last_of(const wchar_t ch, size_type pos = npos) const;
-		size_type				find_last_of(const wchar_t* const str, size_type pos, size_type count) const;
-		inline size_type		find_last_of(String const& str, size_type pos = npos) const								{ return find_first_of(str.c_str(), pos, str.size()); }
-		inline size_type		find_last_of(const wchar_t* const str, size_type pos = npos) const						{ return find_first_of(str, pos, char_traits::length(str)); }
+		size_type				find_last_of(const char_type ch, size_type pos = npos) const;
+		size_type				find_last_of(const char_type* const str, size_type pos, size_type count) const;
+		inline size_type		find_last_of(basic_string const& str, size_type pos = npos) const							{ return find_first_of(str.c_str(), pos, str.size()); }
+		inline size_type		find_last_of(const char_type* const str, size_type pos = npos) const						{ return find_first_of(str, pos, char_traits::length(str)); }
 
-		String&					replace(size_type pos, size_type count, const wchar_t* cstr, size_type count2);
-		String&					replace(size_type pos, size_type count, size_type count2, const wchar_t ch);
-		inline String&			replace(size_type pos, size_type count, const String& str)								{ return replace(pos, count, str.c_str(), str.size()); }
-		inline String&			replace(size_type pos, size_type count, const wchar_t* cstr)							{ return replace(pos, count, cstr, char_traits::length(cstr)); }
-		inline String&			replace(const_iterator first, const_iterator last, const String& str)					{ return replace(first, last, str.c_str(), str.size()); }
-		inline String&			replace(const_iterator first, const_iterator last, const wchar_t* cstr)					{ return replace(first, last, cstr, char_traits::length(cstr)); }
-		inline String&			replace(const_iterator first, const_iterator last, const wchar_t* cstr, size_type count){ return replace(first - cbegin(), last - first, cstr, count); }
-		inline String&			replace(const_iterator first, const_iterator last, size_type count2, const wchar_t ch)	{ return replace(first - cbegin(), last - first, count2, ch); }
+		basic_string&			replace(size_type pos, size_type count, const char_type* cstr, size_type count2);
+		basic_string&			replace(size_type pos, size_type count, size_type count2, const char_type ch);
+		inline basic_string&	replace(size_type pos, size_type count, const basic_string& str)							{ return replace(pos, count, str.c_str(), str.size()); }
+		inline basic_string&	replace(size_type pos, size_type count, const char_type* cstr)								{ return replace(pos, count, cstr, char_traits::length(cstr)); }
+		inline basic_string&	replace(const_iterator first, const_iterator last, const basic_string& str)					{ return replace(first, last, str.c_str(), str.size()); }
+		inline basic_string&	replace(const_iterator first, const_iterator last, const char_type* cstr)					{ return replace(first, last, cstr, char_traits::length(cstr)); }
+		inline basic_string&	replace(const_iterator first, const_iterator last, const char_type* cstr, size_type count)	{ return replace(first - cbegin(), last - first, cstr, count); }
+		inline basic_string&	replace(const_iterator first, const_iterator last, size_type count2, const char_type ch)	{ return replace(first - cbegin(), last - first, count2, ch); }
 
-		String&					assign(size_type count, const wchar_t ch);
-		String&					assign(const wchar_t* cstr, size_type count);
-		inline String&			assign(const wchar_t* cstr, bool const_str = true)										{ String(cstr, const_str).swap(*this); return *this; }
-		inline String&			assign(std::wstring const& str)															{ String{ str }.swap(*this); return *this; }
-		inline String&			assign(String const& rhs)																{ String{ rhs }.swap(*this); return *this; }
-		String&					assign(String const& rhs, size_type pos, size_type count = npos);
+		basic_string&			assign(size_type count, const char_type ch);
+		basic_string&			assign(const char_type* cstr, size_type count);
+		inline basic_string&	assign(const char_type* cstr, bool const_str = true)										{ basic_string(cstr, const_str).swap(*this); return *this; }
+		inline basic_string&	assign(basic_string const& rhs)																{ basic_string{ rhs }.swap(*this); return *this; }
+		inline basic_string&	assign(std::basic_string<char_type> const& rhs)												{ basic_string{ rhs }.swap(*this); return *this; }
+		basic_string&			assign(basic_string const& rhs, size_type pos, size_type count = npos);
 
 		template <typename _Iter>
-		inline String&			assign(_Iter first, _Iter last)															{ assign_iter(first, last); return(*this); }
+		inline basic_string&	assign(_Iter first, _Iter last)																{ assign_iter(first, last); return(*this); }
 
-		String&					erase(size_type offset = 0, size_type count = npos);
-		iterator				erase(const const_iterator where)														{ size_type off = where - cbegin(); erase(off, 1); return begin().base() + off; }
-		iterator				erase(const const_iterator first, const const_iterator last)							{ size_type off = first - cbegin(); erase(first - cbegin(), last - first); return begin().base() + off; }
+		basic_string&			erase(size_type offset = 0, size_type count = npos);
+		iterator				erase(const const_iterator where)															{ size_type off = where - cbegin(); erase(off, 1); return begin().base() + off; }
+		iterator				erase(const const_iterator first, const const_iterator last)								{ size_type off = first - cbegin(); erase(first - cbegin(), last - first); return begin().base() + off; }
 
-		String					substr(size_type pos = 0, size_type count = npos) const									{ return String(*this, pos, count); }
+		basic_string			substr(size_type pos = 0, size_type count = npos) const										{ return basic_string(*this, pos, count); }
 
-		String&					insert(size_type index, size_type count, wchar_t ch);
-		String&					insert(size_type index, const wchar_t* s, size_type count);
-		String&					insert(size_type index, const String& str, size_type off, size_type count = npos);
-		inline String&			insert(size_type index, const wchar_t* s)												{ return insert(index, s, char_traits::length(s)); }
-		inline String&			insert(size_type index, const String& str)												{ return insert(index, str, 0, str.size()); }
-		inline iterator			insert(const_iterator pos, size_type count, wchar_t ch)									{ size_type off = pos - cbegin(); insert(off, count, ch); return begin().base() + off; }
-		inline iterator			insert(const_iterator pos, wchar_t ch)													{ return insert(pos, 1, ch); }
+		basic_string&			insert(size_type index, size_type count, char_type ch);
+		basic_string&			insert(size_type index, const char_type* s, size_type count);
+		basic_string&			insert(size_type index, const basic_string& str, size_type off, size_type count = npos);
+		inline basic_string&	insert(size_type index, const char_type* s)													{ return insert(index, s, char_traits::length(s)); }
+		inline basic_string&	insert(size_type index, const basic_string& str)											{ return insert(index, str, 0, str.size()); }
+		inline iterator			insert(const_iterator pos, size_type count, char_type ch)									{ size_type off = pos - cbegin(); insert(off, count, ch); return begin().base() + off; }
+		inline iterator			insert(const_iterator pos, char_type ch)													{ return insert(pos, 1, ch); }
 
-		inline void				push_back(const wchar_t ch)																{ append(1, ch); }
-		inline wchar_t			pop_back()																				{ if (empty()) throw std::out_of_range("pop_back() called on empty string"); check_operability(); wchar_t ch = str_[--size_]; str_[size_] = value_type(); return ch; }
+		inline void				push_back(const char_type ch)																{ append(1, ch); }
+		inline char_type		pop_back()																					{ if (empty()) throw std::out_of_range("pop_back() called on empty string"); check_operability(); char_type ch = str_[--size_]; str_[size_] = value_type(); return ch; }
 
-		size_type				copy(wchar_t* cstr, size_type count, size_type pos = 0) const;
+		size_type				copy(char_type* cstr, size_type count, size_type pos = 0) const;
 
-		std::string				to_string() const;
-		std::wstring			to_wstring() const;
-
-		void					swap(String& rhs) noexcept;
+		void					swap(basic_string& rhs) noexcept;
 		size_t					hash() const;
 
 	public:
-		static String parse(int val);
-		static String parse(unsigned int val);
-		static String parse(long val);
-		static String parse(unsigned long val);
-		static String parse(long long val);
-		static String parse(unsigned long long val);
-		static String parse(float val);
-		static String parse(double val);
-		static String parse(long double val);
+		static basic_string parse(int val);
+		static basic_string parse(unsigned int val);
+		static basic_string parse(long val);
+		static basic_string parse(unsigned long val);
+		static basic_string parse(long long val);
+		static basic_string parse(unsigned long long val);
+		static basic_string parse(float val);
+		static basic_string parse(double val);
+		static basic_string parse(long double val);
 
-		template<typename ..._Args>
-		static String format(const wchar_t* const fmt, _Args&&... args);
+		template <typename ..._Args>
+		static basic_string format(const char_type* fmt, _Args&&... args);
 
 	public:
 		inline iterator					begin()							{ check_operability(); return iterator(str_); }
@@ -227,28 +237,27 @@ namespace kiwano
 		inline const_reference			back() const					{ if (empty()) throw std::out_of_range("back() called on empty string"); return const_str_[size_ - 1]; }
 
 	public:
-		inline wchar_t		operator[](size_type off) const				{ if(off >= size_) throw std::out_of_range("string subscript out of range"); return const_str_[off]; }
-		inline wchar_t&		operator[](size_type off)					{ if (off >= size_) throw std::out_of_range("string subscript out of range"); check_operability(); return str_[off]; }
+		inline char_type			operator[](size_type off) const						{ if(off >= size_) throw std::out_of_range("string subscript out of range"); return const_str_[off]; }
+		inline char_type&			operator[](size_type off)							{ if (off >= size_) throw std::out_of_range("string subscript out of range"); check_operability(); return str_[off]; }
 
 	public:
-		inline const String	operator+(const wchar_t ch) const			{ return String{ *this }.append(1, ch); }
-		inline const String	operator+(const wchar_t* cstr) const		{ return String{ *this }.append(cstr); }
-		inline const String	operator+(std::wstring const& str) const	{ return String{ *this }.append(str); }
-		inline const String	operator+(String const& rhs) const			{ return String{ *this }.append(rhs); }
+		inline const basic_string	operator+(const char_type ch) const					{ return basic_string{ *this }.append(1, ch); }
+		inline const basic_string	operator+(const char_type* cstr) const				{ return basic_string{ *this }.append(cstr); }
+		inline const basic_string	operator+(basic_string const& rhs) const			{ return basic_string{ *this }.append(rhs); }
 
-		inline String&		operator+=(const wchar_t ch)				{ return append(1, ch); }
-		inline String&		operator+=(const wchar_t* cstr)				{ return append(cstr); }
-		inline String&		operator+=(std::wstring const& str)			{ return append(str); }
-		inline String&		operator+=(String const& rhs)				{ return append(rhs); }
+		inline basic_string&		operator+=(const char_type ch)						{ return append(1, ch); }
+		inline basic_string&		operator+=(const char_type* cstr)					{ return append(cstr); }
+		inline basic_string&		operator+=(basic_string const& rhs)					{ return append(rhs); }
 
 	public:
-		inline String&		operator=(const wchar_t* cstr)				{ if (const_str_ != cstr) String{ cstr }.swap(*this); return *this; }
-		inline String&		operator=(std::wstring const& str)			{ String{ str }.swap(*this); return *this; }
-		inline String&		operator=(String const& rhs)				{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
-		inline String&		operator=(String && rhs) noexcept			{ if (this != &rhs) String{ rhs }.swap(*this); return *this; }
+		inline basic_string&		operator=(const char_type* cstr)					{ if (const_str_ != cstr) basic_string{ cstr }.swap(*this); return *this; }
+		inline basic_string&		operator=(std::basic_string<char_type> const& rhs)	{ basic_string{ rhs }.swap(*this); return *this; }
+		inline basic_string&		operator=(basic_string const& rhs)					{ if (this != &rhs) basic_string{ rhs }.swap(*this); return *this; }
+		inline basic_string&		operator=(basic_string && rhs) noexcept				{ if (this != &rhs) basic_string{ rhs }.swap(*this); return *this; }
 
 	public:
-		static const String::size_type npos = static_cast<size_type>(-1);
+		static const size_type npos;
+		static const char_type empty_cstr[1];
 
 		static inline allocator& get_allocator()
 		{
@@ -257,8 +266,8 @@ namespace kiwano
 		}
 
 	private:
-		wchar_t* allocate(size_type count);
-		void deallocate(wchar_t*& ptr, size_type count);
+		char_type* allocate(size_type count);
+		void deallocate(char_type*& ptr, size_type count);
 
 		void destroy();
 
@@ -308,78 +317,119 @@ namespace kiwano
 		const bool operable_;
 	};
 
+	// static members
+	template <typename _CharTy>
+	const typename basic_string<_CharTy>::size_type basic_string<_CharTy>::npos = static_cast<typename basic_string<_CharTy>::size_type>(-1);
+
+	template <typename _CharTy>
+	const typename basic_string<_CharTy>::char_type basic_string<_CharTy>::empty_cstr[1] = { 0 };
+
 
 	//
-	// operator== for String
+	// operator== for basic_string
 	//
 
-	inline bool operator==(String const& lhs, String const& rhs)	{ return lhs.compare(rhs) == 0; }
-	inline bool operator==(const wchar_t* lhs, String const& rhs)	{ return rhs.compare(lhs) == 0; }
-	inline bool operator==(String const& lhs, const wchar_t* rhs)	{ return lhs.compare(rhs) == 0; }
-	inline bool operator==(const char* lhs, String const& rhs)		{ return rhs.compare(String(lhs)) == 0; }
-	inline bool operator==(String const& lhs, const char* rhs)		{ return lhs.compare(String(rhs)) == 0; }
+	template <typename _CharTy>
+	inline bool operator==(basic_string<_CharTy> const& lhs, basic_string<_CharTy> const& rhs)	{ return lhs.compare(rhs) == 0; }
+	
+	template <typename _CharTy>
+	inline bool operator==(const typename basic_string<_CharTy>::char_type* lhs, basic_string<_CharTy> const& rhs)	{ return rhs.compare(lhs) == 0; }
+	
+	template <typename _CharTy>
+	inline bool operator==(basic_string<_CharTy> const& lhs, const typename basic_string<_CharTy>::char_type* rhs)	{ return lhs.compare(rhs) == 0; }
 
 	//
-	// operator!= for String
+	// operator!= for basic_string
 	//
 
-	inline bool operator!=(String const& lhs, String const& rhs)	{ return lhs.compare(rhs) != 0; }
-	inline bool operator!=(const wchar_t* lhs, String const& rhs)	{ return rhs.compare(lhs) != 0; }
-	inline bool operator!=(String const& lhs, const wchar_t* rhs)	{ return lhs.compare(rhs) != 0; }
-	inline bool operator!=(const char* lhs, String const& rhs)		{ return rhs.compare(String(lhs)) != 0; }
-	inline bool operator!=(String const& lhs, const char* rhs)		{ return lhs.compare(String(rhs)) != 0; }
+	template <typename _CharTy>
+	inline bool operator!=(basic_string<_CharTy> const& lhs, basic_string<_CharTy> const& rhs)	{ return lhs.compare(rhs) != 0; }
+	
+	template <typename _CharTy>
+	inline bool operator!=(const typename basic_string<_CharTy>::char_type* lhs, basic_string<_CharTy> const& rhs)	{ return rhs.compare(lhs) != 0; }
+	
+	template <typename _CharTy>
+	inline bool operator!=(basic_string<_CharTy> const& lhs, const typename basic_string<_CharTy>::char_type* rhs)	{ return lhs.compare(rhs) != 0; }
 
 	//
-	// operator+ for String
+	// operator+ for basic_string
 	//
 
-	inline String operator+(const wchar_t* lhs, String const& rhs)	{ return String{ lhs } + rhs; }
+	template <typename _CharTy>
+	inline basic_string<_CharTy> operator+(const typename basic_string<_CharTy>::char_type* lhs, basic_string<_CharTy> const& rhs)	{ return basic_string{ lhs } + rhs; }
 
 	//
-	// operator<> for String
+	// operator<> for basic_string
 	//
 
-	inline bool operator<(String const& lhs, String const& rhs)		{ return lhs.compare(rhs) < 0; }
-	inline bool operator>(String const& lhs, String const& rhs)		{ return lhs.compare(rhs) > 0; }
-	inline bool operator<=(String const& lhs, String const& rhs)	{ return lhs.compare(rhs) <= 0; }
-	inline bool operator>=(String const& lhs, String const& rhs)	{ return lhs.compare(rhs) >= 0; }
+	template <typename _CharTy>
+	inline bool operator<(basic_string<_CharTy> const& lhs, basic_string<_CharTy> const& rhs)		{ return lhs.compare(rhs) < 0; }
+	
+	template <typename _CharTy>
+	inline bool operator>(basic_string<_CharTy> const& lhs, basic_string<_CharTy> const& rhs)		{ return lhs.compare(rhs) > 0; }
+	
+	template <typename _CharTy>
+	inline bool operator<=(basic_string<_CharTy> const& lhs, basic_string<_CharTy> const& rhs)	{ return lhs.compare(rhs) <= 0; }
+	
+	template <typename _CharTy>
+	inline bool operator>=(basic_string<_CharTy> const& lhs, basic_string<_CharTy> const& rhs)	{ return lhs.compare(rhs) >= 0; }
 
 	//
-	// operator<<>> for String
+	// operator<<>> for basic_string
 	//
 
-	std::basic_ostream<String::value_type>& operator<<(std::basic_ostream<String::value_type>& os, const String & str);
-	std::basic_istream<String::value_type>& operator>>(std::basic_istream<String::value_type>& is, String & str);
-
-	std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const String& str);
-	std::basic_istream<char>& operator>>(std::basic_istream<char>& is, String& str);
+	template <typename _CharTy>
+	std::basic_ostream<typename basic_string<_CharTy>::char_type>& operator<<(std::basic_ostream<typename basic_string<_CharTy>::char_type>& os, const basic_string<_CharTy>& str);
+	
+	template <typename _CharTy>
+	std::basic_istream<typename basic_string<_CharTy>::char_type>& operator>>(std::basic_istream<typename basic_string<_CharTy>::char_type>& is, basic_string<_CharTy>& str);
 
 	//
 	// to_string functions
 	//
 
-	String to_wstring(int val);
-	String to_wstring(unsigned int val);
-	String to_wstring(long val);
-	String to_wstring(unsigned long val);
-	String to_wstring(long long val);
-	String to_wstring(unsigned long long val);
-	String to_wstring(float val);
-	String to_wstring(double val);
-	String to_wstring(long double val);
+	template <typename _CharTy>
+	basic_string<_CharTy> to_basic_string(int val);
+	
+	template <typename _CharTy>
+	basic_string<_CharTy> to_basic_string(unsigned int val);
+	
+	template <typename _CharTy>
+	basic_string<_CharTy> to_basic_string(long val);
+	
+	template <typename _CharTy>
+	basic_string<_CharTy> to_basic_string(unsigned long val);
+	
+	template <typename _CharTy>
+	basic_string<_CharTy> to_basic_string(long long val);
+	
+	template <typename _CharTy>
+	basic_string<_CharTy> to_basic_string(unsigned long long val);
+	
+	template <typename _CharTy>
+	basic_string<_CharTy> to_basic_string(float val);
+	
+	template <typename _CharTy>
+	basic_string<_CharTy> to_basic_string(double val);
+	
+	template <typename _CharTy>
+	basic_string<_CharTy> to_basic_string(long double val);
 
 	//
 	// format_wstring
 	//
 
-	template<typename ..._Args>
-	String format_wstring(const wchar_t* const fmt, _Args&&... args);
+	template <typename ..._Args>
+	basic_string<char> format_string(const char* const fmt, _Args&&... args);
+
+	template <typename ..._Args>
+	basic_string<wchar_t> format_string(const wchar_t* const fmt, _Args&& ... args);
 }
 
 namespace kiwano
 {
 	//
-	// details of String
+	// details of basic_string
 	//
 
 	namespace __string_details
@@ -436,28 +486,10 @@ namespace kiwano
 			}
 			return static_cast<size_t>(-1);
 		}
-
-		class chs_codecvt
-			: public std::codecvt_byname<wchar_t, char, std::mbstate_t>
-		{
-		public:
-			chs_codecvt() : codecvt_byname("chs") {}
-
-			static inline std::wstring string_to_wide(std::string const& str)
-			{
-				std::wstring_convert<chs_codecvt> conv;
-				return conv.from_bytes(str);
-			}
-
-			static inline std::string wide_to_string(std::wstring const& str)
-			{
-				std::wstring_convert<chs_codecvt> conv;
-				return conv.to_bytes(str);
-			}
-		};
 	}
 
-	inline String::String()
+	template <typename _CharTy>
+	inline basic_string<_CharTy>::basic_string()
 		: str_(nullptr)
 		, size_(0)
 		, capacity_(0)
@@ -465,7 +497,8 @@ namespace kiwano
 	{
 	}
 
-	inline String::String(const wchar_t * cstr, bool const_str)
+	template <typename _CharTy>
+	inline basic_string<_CharTy>::basic_string(const char_type * cstr, bool const_str)
 		: operable_(!const_str)
 		, size_(0)
 		, capacity_(0)
@@ -486,58 +519,41 @@ namespace kiwano
 		}
 	}
 
-	inline String::String(const wchar_t * cstr, size_type count)
-		: String()
+	template <typename _CharTy>
+	inline basic_string<_CharTy>::basic_string(const char_type * cstr, size_type count)
+		: basic_string()
 	{
 		assign(cstr, count);
 	}
 
-	inline String::String(size_type count, wchar_t ch)
-		: String()
+	template <typename _CharTy>
+	inline basic_string<_CharTy>::basic_string(size_type count, char_type ch)
+		: basic_string()
 	{
 		assign(count, ch);
 	}
 
-	inline String::String(const char * cstr)
-		: String()
-	{
-		if (cstr && cstr[0])
-		{
-			try
-			{
-				std::wstring wide_string = __string_details::chs_codecvt::string_to_wide(cstr);
-				assign(wide_string);
-			}
-			catch (std::range_error& e)
-			{
-				// bad conversion
-				(void)e;
-			}
-		}
-	}
-
-	inline String::String(std::string const & str)
-		: String(str.c_str())
+	template <typename _CharTy>
+	inline basic_string<_CharTy>::basic_string(basic_string const & rhs)
+		: basic_string(rhs.const_str_, !rhs.operable_)
 	{
 	}
 
-	inline String::String(std::wstring const & str)
-		: String(str.c_str(), false)
-	{
-	}
-
-	inline String::String(String const & rhs)
-		: String(rhs.const_str_, !rhs.operable_)
-	{
-	}
-
-	inline String::String(String const & rhs, size_type pos, size_type count)
-		: String()
+	template <typename _CharTy>
+	inline basic_string<_CharTy>::basic_string(basic_string const & rhs, size_type pos, size_type count)
+		: basic_string()
 	{
 		assign(rhs, pos, count);
 	}
 
-	inline String::String(String && rhs) noexcept
+	template <typename _CharTy>
+	inline basic_string<_CharTy>::basic_string(std::basic_string<char_type> const& str)
+		: String(str.c_str(), false)
+	{
+	}
+
+	template <typename _CharTy>
+	inline basic_string<_CharTy>::basic_string(basic_string && rhs) noexcept
 		: str_(rhs.str_)
 		, size_(rhs.size_)
 		, capacity_(rhs.capacity_)
@@ -547,12 +563,14 @@ namespace kiwano
 		rhs.size_ = rhs.capacity_ = 0;
 	}
 
-	inline String::~String()
+	template <typename _CharTy>
+	inline basic_string<_CharTy>::~basic_string()
 	{
 		destroy();
 	}
 
-	inline String & String::assign(size_type count, const wchar_t ch)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::assign(size_type count, const char_type ch)
 	{
 		discard_const_data();
 
@@ -566,9 +584,8 @@ namespace kiwano
 			}
 			size_ = count;
 
-			char_traits::assign(str_, count, ch);
+			char_traits::assign(str_, size_, ch);
 			char_traits::assign(str_[size_], value_type());
-
 		}
 		else
 		{
@@ -577,7 +594,8 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String & String::assign(const wchar_t * cstr, size_type count)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::assign(const char_type * cstr, size_type count)
 	{
 		discard_const_data();
 
@@ -601,7 +619,8 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String& String::assign(String const& rhs, size_type pos, size_type count)
+	template <typename _CharTy>
+	inline basic_string<_CharTy>& basic_string<_CharTy>::assign(basic_string const& rhs, size_type pos, size_type count)
 	{
 		if (count == 0 || pos > rhs.size())
 		{
@@ -626,7 +645,8 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String & String::erase(size_type offset, size_type count)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::erase(size_type offset, size_type count)
 	{
 		if (count == 0)
 			return (*this);
@@ -648,7 +668,8 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String & String::insert(size_type index, size_type count, wchar_t ch)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::insert(size_type index, size_type count, char_type ch)
 	{
 		if (count == 0)
 			return (*this);
@@ -658,7 +679,7 @@ namespace kiwano
 
 		check_operability();
 
-		wchar_t* const old_ptr = str_;
+		char_type* const old_ptr = str_;
 		const size_type old_size = size_;
 		const size_type old_capacity = capacity_;
 		const size_type suffix_size = old_size - index + 1;
@@ -668,9 +689,9 @@ namespace kiwano
 		if (size_ > old_capacity)
 		{
 			capacity_ = size_;
-			wchar_t* new_ptr = allocate(capacity_ + 1);
+			char_type* new_ptr = allocate(capacity_ + 1);
 
-			wchar_t* const insert_at = new_ptr + index;
+			char_type* const insert_at = new_ptr + index;
 			char_traits::move(new_ptr, old_ptr, index);							// (0) - (index)
 			char_traits::assign(insert_at, count, ch);							// (index) - (index + count)
 			char_traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
@@ -680,7 +701,7 @@ namespace kiwano
 		}
 		else
 		{
-			wchar_t* const insert_at = old_ptr + index;
+			char_type* const insert_at = old_ptr + index;
 			char_traits::move(insert_at + count, old_ptr + index, suffix_size);
 			char_traits::assign(insert_at, count, ch);
 		}
@@ -688,7 +709,8 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String & String::insert(size_type index, const wchar_t * cstr, size_type count)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::insert(size_type index, const char_type * cstr, size_type count)
 	{
 		if (count == 0)
 			return (*this);
@@ -698,7 +720,7 @@ namespace kiwano
 
 		check_operability();
 
-		wchar_t* const old_ptr = str_;
+		char_type* const old_ptr = str_;
 		const size_type old_size = size_;
 		const size_type old_capacity = capacity_;
 		const size_type suffix_size = old_size - index + 1;
@@ -708,9 +730,9 @@ namespace kiwano
 		if (size_ > old_capacity)
 		{
 			capacity_ = size_;
-			wchar_t* new_ptr = allocate(capacity_ + 1);
+			char_type* new_ptr = allocate(capacity_ + 1);
 
-			wchar_t* const insert_at = new_ptr + index;
+			char_type* const insert_at = new_ptr + index;
 			char_traits::move(new_ptr, old_ptr, index);							// (0) - (index)
 			char_traits::move(insert_at, cstr, count);							// (index) - (index + count)
 			char_traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
@@ -720,7 +742,7 @@ namespace kiwano
 		}
 		else
 		{
-			wchar_t* const insert_at = old_ptr + index;
+			char_type* const insert_at = old_ptr + index;
 			char_traits::move(insert_at + count, old_ptr + index, suffix_size);
 			char_traits::move(insert_at, cstr, count);
 		}
@@ -728,7 +750,8 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String & String::insert(size_type index, const String & str, size_type off, size_type count)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::insert(size_type index, const basic_string & str, size_type off, size_type count)
 	{
 		if (count == 0 || off > str.size())
 			return (*this);
@@ -740,7 +763,7 @@ namespace kiwano
 
 		count = clamp_suffix_size(off, count);
 
-		wchar_t* const old_ptr = str_;
+		char_type* const old_ptr = str_;
 		const size_type old_size = size_;
 		const size_type old_capacity = capacity_;
 		const size_type suffix_size = old_size - index + 1;
@@ -750,9 +773,9 @@ namespace kiwano
 		if (size_ > old_capacity)
 		{
 			capacity_ = size_;
-			wchar_t* new_ptr = allocate(capacity_ + 1);
+			char_type* new_ptr = allocate(capacity_ + 1);
 
-			wchar_t* const insert_at = new_ptr + index;
+			char_type* const insert_at = new_ptr + index;
 			char_traits::move(new_ptr, old_ptr, index);							// (0) - (index)
 			char_traits::move(insert_at, str.begin().base() + off, count);		// (index) - (index + count)
 			char_traits::move(insert_at + count, old_ptr + index, suffix_size);	// (index + count) - (old_size - index)
@@ -762,7 +785,7 @@ namespace kiwano
 		}
 		else
 		{
-			wchar_t* const insert_at = old_ptr + index;
+			char_type* const insert_at = old_ptr + index;
 			char_traits::move(insert_at + count, old_ptr + index, suffix_size);
 			char_traits::move(insert_at, str.begin().base() + off, count);
 		}
@@ -770,13 +793,14 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String & String::append(size_type count, wchar_t ch)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::append(size_type count, char_type ch)
 	{
 		check_operability();
 
 		size_t new_size = size_ + count;
 		size_t new_cap = new_size + 1;
-		wchar_t* new_str = allocate(new_cap);
+		char_type* new_str = allocate(new_cap);
 
 		char_traits::move(new_str, str_, size_);
 		char_traits::assign(new_str + size_, count, ch);
@@ -790,13 +814,14 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String & String::append(const wchar_t * cstr, size_type count)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::append(const char_type * cstr, size_type count)
 	{
 		check_operability();
 
 		size_t new_size = size_ + count;
 		size_t new_cap = new_size + 1;
-		wchar_t* new_str = allocate(new_cap);
+		char_type* new_str = allocate(new_cap);
 
 		char_traits::move(new_str, str_, size_);
 		char_traits::move(new_str + size_, cstr, count);
@@ -810,7 +835,8 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String & String::append(String const & other, size_type pos, size_type count)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::append(basic_string const & other, size_type pos, size_type count)
 	{
 		check_operability();
 
@@ -821,7 +847,7 @@ namespace kiwano
 
 		size_t new_size = size_ + count;
 		size_t new_cap = new_size + 1;
-		wchar_t* new_str = allocate(new_cap);
+		char_type* new_str = allocate(new_cap);
 
 		char_traits::move(new_str, str_, size_);
 		char_traits::move(new_str + size_, other.begin().base() + pos, count);
@@ -835,14 +861,15 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline void String::reserve(const size_type new_cap)
+	template <typename _CharTy>
+	inline void basic_string<_CharTy>::reserve(const size_type new_cap)
 	{
 		if (new_cap <= capacity_)
 			return;
 
 		check_operability();
 
-		wchar_t* new_str = allocate(new_cap);
+		char_type* new_str = allocate(new_cap);
 		char_traits::move(new_str, str_, capacity_);
 
 		destroy();
@@ -851,7 +878,8 @@ namespace kiwano
 		capacity_ = new_cap;
 	}
 
-	inline size_t String::hash() const
+	template <typename _CharTy>
+	inline size_t basic_string<_CharTy>::hash() const
 	{
 		static size_t fnv_prime = 16777619U;
 		size_t fnv_offset_basis = 2166136261U;
@@ -864,7 +892,8 @@ namespace kiwano
 		return fnv_offset_basis;
 	}
 
-	inline int String::compare(const wchar_t * const str) const
+	template <typename _CharTy>
+	inline int basic_string<_CharTy>::compare(const char_type * const str) const
 	{
 		size_type count1 = size();
 		size_type count2 = char_traits::length(str);
@@ -883,49 +912,55 @@ namespace kiwano
 		return 0;
 	}
 
-	inline String::size_type String::find(const wchar_t ch, size_type offset) const
+	template <typename _CharTy>
+	inline typename basic_string<_CharTy>::size_type basic_string<_CharTy>::find(const char_type ch, size_type offset) const
 	{
 		if (offset >= size_)
-			return String::npos;
+			return basic_string<_CharTy>::npos;
 
 		const_iterator citer = char_traits::find(cbegin().base() + offset, size_, ch);
-		return citer ? (citer - cbegin()) : String::npos;
+		return citer ? (citer - cbegin()) : basic_string<_CharTy>::npos;
 	}
 
-	inline String::size_type String::find(const wchar_t * const str, size_type offset, size_type count) const
+	template <typename _CharTy>
+	inline typename basic_string<_CharTy>::size_type basic_string<_CharTy>::find(const char_type * const str, size_type offset, size_type count) const
 	{
 		if (offset >= size_)
-			return String::npos;
-		return __string_details::TraitsFind<String::char_traits>(const_str_, size_, offset, str, count);
+			return basic_string<_CharTy>::npos;
+		return __string_details::TraitsFind<typename basic_string<_CharTy>::char_traits>(const_str_, size_, offset, str, count);
 	}
 
-	inline String::size_type String::find_first_of(const wchar_t * const str, size_type offset, size_type count) const
+	template <typename _CharTy>
+	inline typename basic_string<_CharTy>::size_type basic_string<_CharTy>::find_first_of(const char_type * const str, size_type offset, size_type count) const
 	{
 		if (offset >= size_)
-			return String::npos;
+			return basic_string<_CharTy>::npos;
 
 		const_iterator citer = std::find_first_of(cbegin().base() + offset, cend().base(), str, str + count);
-		return (citer != cend()) ? (citer - cbegin()) : String::npos;
+		return (citer != cend()) ? (citer - cbegin()) : basic_string<_CharTy>::npos;
 	}
 
-	inline String::size_type String::find_last_of(const wchar_t ch, size_type pos) const
+	template <typename _CharTy>
+	inline typename basic_string<_CharTy>::size_type basic_string<_CharTy>::find_last_of(const char_type ch, size_type pos) const
 	{
 		if (pos == 0 || pos > size_ || pos == npos)
 			return npos;
 
 		const_reverse_iterator criter = std::find(crbegin(), crend(), ch);
-		return (criter != crend()) ? (criter.base() - cbegin()) : String::npos;
+		return (criter != crend()) ? (criter.base() - cbegin()) : basic_string<_CharTy>::npos;
 	}
 
-	inline String::size_type String::find_last_of(const wchar_t * const str, size_type pos, size_type count) const
+	template <typename _CharTy>
+	inline typename basic_string<_CharTy>::size_type basic_string<_CharTy>::find_last_of(const char_type * const str, size_type pos, size_type count) const
 	{
 		if (pos == 0 || pos > size_ || pos == npos)
 			return npos;
 
-		return __string_details::TraitsFindLastOf<String::char_traits>(const_str_, size_, pos, str, count);
+		return __string_details::TraitsFindLastOf<typename basic_string<_CharTy>::char_traits>(const_str_, size_, pos, str, count);
 	}
 
-	inline String & String::replace(size_type pos, size_type count, const wchar_t * cstr, size_type count2)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::replace(size_type pos, size_type count, const char_type * cstr, size_type count2)
 	{
 		check_offset(pos);
 		check_operability();
@@ -937,8 +972,8 @@ namespace kiwano
 			return (*this);
 		}
 
-		wchar_t* new_ptr = nullptr;
-		wchar_t* const old_ptr = str_;
+		char_type* new_ptr = nullptr;
+		char_type* const old_ptr = str_;
 		const size_type old_size = size_;
 		const size_type old_capacity = capacity_;
 		const size_type suffix_size = old_size - count - pos + 1;
@@ -957,7 +992,7 @@ namespace kiwano
 			size_ = old_size - (count - count2);
 		}
 
-		wchar_t* const insert_at = (new_ptr ? new_ptr : old_ptr) + pos;
+		char_type* const insert_at = (new_ptr ? new_ptr : old_ptr) + pos;
 		char_traits::move(insert_at, cstr, count2);
 		char_traits::move(insert_at + count2, old_ptr + count, suffix_size);
 
@@ -970,7 +1005,8 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String & String::replace(size_type pos, size_type count, size_type count2, const wchar_t ch)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> & basic_string<_CharTy>::replace(size_type pos, size_type count, size_type count2, const char_type ch)
 	{
 		check_offset(pos);
 		check_operability();
@@ -982,8 +1018,8 @@ namespace kiwano
 			return (*this);
 		}
 
-		wchar_t* new_ptr = nullptr;
-		wchar_t* const old_ptr = str_;
+		char_type* new_ptr = nullptr;
+		char_type* const old_ptr = str_;
 		const size_type old_size = size_;
 		const size_type old_capacity = capacity_;
 		const size_type suffix_size = old_size - count - pos + 1;
@@ -1002,7 +1038,7 @@ namespace kiwano
 			size_ = old_size - (count - count2);
 		}
 
-		wchar_t* const insert_at = (new_ptr ? new_ptr : old_ptr) + pos;
+		char_type* const insert_at = (new_ptr ? new_ptr : old_ptr) + pos;
 		char_traits::assign(insert_at, count2, ch);
 		char_traits::move(insert_at + count2, old_ptr + count, suffix_size);
 
@@ -1015,7 +1051,8 @@ namespace kiwano
 		return (*this);
 	}
 
-	inline String::size_type String::copy(wchar_t * cstr, size_type count, size_type pos) const
+	template <typename _CharTy>
+	inline typename basic_string<_CharTy>::size_type basic_string<_CharTy>::copy(char_type * cstr, size_type count, size_type pos) const
 	{
 		if (count == 0 || cstr == const_str_)
 			return 0;
@@ -1027,41 +1064,21 @@ namespace kiwano
 		return count;
 	}
 
-	inline std::string String::to_string() const
-	{
-		if (const_str_ && size_)
-		{
-			try
-			{
-				std::string string = __string_details::chs_codecvt::wide_to_string(const_str_);
-				return string;
-			}
-			catch (std::range_error& e)
-			{
-				// bad conversion
-				(void)e;
-			}
-		}
-		return std::string();
-	}
-
-	inline std::wstring String::to_wstring() const
-	{
-		return std::wstring(const_str_);
-	}
-
-	inline wchar_t * String::allocate(size_type count)
+	template <typename _CharTy>
+	inline typename basic_string<_CharTy>::char_type* basic_string<_CharTy>::allocate(size_type count)
 	{
 		return get_allocator().allocate(count);
 	}
 
-	inline void String::deallocate(wchar_t*& ptr, size_type count)
+	template <typename _CharTy>
+	inline void basic_string<_CharTy>::deallocate(char_type*& ptr, size_type count)
 	{
 		get_allocator().deallocate(ptr, count);
 		ptr = nullptr;
 	}
 
-	inline void String::destroy()
+	template <typename _CharTy>
+	inline void basic_string<_CharTy>::destroy()
 	{
 		if (operable_ && str_)
 		{
@@ -1074,7 +1091,8 @@ namespace kiwano
 		size_ = capacity_ = 0;
 	}
 
-	inline void String::swap(String & rhs) noexcept
+	template <typename _CharTy>
+	inline void basic_string<_CharTy>::swap(basic_string & rhs) noexcept
 	{
 		std::swap(const_str_, rhs.const_str_);
 		std::swap(size_, rhs.size_);
@@ -1084,7 +1102,8 @@ namespace kiwano
 		std::swap(*const_cast<bool*>(&operable_), *const_cast<bool*>(&rhs.operable_));
 	}
 
-	inline void String::discard_const_data()
+	template <typename _CharTy>
+	inline void basic_string<_CharTy>::discard_const_data()
 	{
 		if (!operable_)
 		{
@@ -1095,44 +1114,68 @@ namespace kiwano
 		}
 	}
 
-	inline void String::check_operability()
+	template <typename _CharTy>
+	inline void basic_string<_CharTy>::check_operability()
 	{
 		if (!operable_)
 		{
 			// create a new string, then swap it with self
-			String(const_str_, false).swap(*this);
+			basic_string(const_str_, false).swap(*this);
 		}
 	}
 
 	//
-	// details of String::parese
+	// details of basic_string<>::parese
 	//
 
-	inline String String::parse(int val)				{ return ::kiwano::to_wstring(val); }
-	inline String String::parse(unsigned int val)		{ return ::kiwano::to_wstring(val); }
-	inline String String::parse(long val)				{ return ::kiwano::to_wstring(val); }
-	inline String String::parse(unsigned long val)		{ return ::kiwano::to_wstring(val); }
-	inline String String::parse(long long val)			{ return ::kiwano::to_wstring(val); }
-	inline String String::parse(unsigned long long val)	{ return ::kiwano::to_wstring(val); }
-	inline String String::parse(float val)				{ return ::kiwano::to_wstring(val); }
-	inline String String::parse(double val)				{ return ::kiwano::to_wstring(val); }
-	inline String String::parse(long double val)		{ return ::kiwano::to_wstring(val); }
+	template <typename _CharTy>
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(int val)					{ return ::kiwano::to_basic_string<char_type>(val); }
+	
+	template <typename _CharTy>
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned int val)			{ return ::kiwano::to_basic_string<char_type>(val); }
+	
+	template <typename _CharTy>
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long val)					{ return ::kiwano::to_basic_string<char_type>(val); }
+	
+	template <typename _CharTy>
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long val)		{ return ::kiwano::to_basic_string<char_type>(val); }
+	
+	template <typename _CharTy>
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long long val)			{ return ::kiwano::to_basic_string<char_type>(val); }
+	
+	template <typename _CharTy>
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long long val)	{ return ::kiwano::to_basic_string<char_type>(val); }
+	
+	template <typename _CharTy>
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(float val)				{ return ::kiwano::to_basic_string<char_type>(val); }
+	
+	template <typename _CharTy>
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(double val)				{ return ::kiwano::to_basic_string<char_type>(val); }
+	
+	template <typename _CharTy>
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long double val)			{ return ::kiwano::to_basic_string<char_type>(val); }
 
-	template<typename ..._Args>
-	inline String String::format(const wchar_t* const fmt, _Args&&... args)
+	//
+	// details of basic_string::format
+	//
+
+	template <typename _CharTy>
+	template <typename ..._Args>
+	inline basic_string<_CharTy> basic_string<_CharTy>::format(const char_type* fmt, _Args&& ... args)
 	{
-		return ::kiwano::format_wstring(fmt, std::forward<_Args>(args)...);
+		return ::kiwano::format_string(fmt, std::forward<_Args>(args)...);
 	}
 
 	//
 	// details of operator<<>>
 	//
 
-	inline std::basic_ostream<String::value_type>& operator<<(std::basic_ostream<String::value_type>& os, const String & str)
+	template <typename _CharTy>
+	inline std::basic_ostream<typename basic_string<_CharTy>::char_type>& operator<<(std::basic_ostream<typename basic_string<_CharTy>::char_type>& os, const basic_string<_CharTy>& str)
 	{
-		using ostream = std::basic_ostream<String::value_type, String::char_traits>;
-		using size_type = String::size_type;
-		using traits = String::char_traits;
+		using ostream = std::basic_ostream<typename basic_string<_CharTy>::char_type, typename basic_string<_CharTy>::char_traits>;
+		using size_type = typename basic_string<_CharTy>::size_type;
+		using traits = typename basic_string<_CharTy>::char_traits;
 
 		const ostream::sentry ok(os);
 		std::ios_base::iostate state = std::ios_base::goodbit;
@@ -1188,12 +1231,13 @@ namespace kiwano
 		return (os);
 	}
 
-	inline std::basic_istream<String::value_type>& operator>>(std::basic_istream<String::value_type>& is, String & str)
+	template <typename _CharTy>
+	inline std::basic_istream<typename basic_string<_CharTy>::char_type>& operator>>(std::basic_istream<typename basic_string<_CharTy>::char_type>& is, basic_string<_CharTy>& str)
 	{
-		using ctype = std::ctype<String::value_type>;
-		using istream = std::basic_istream<String::value_type, String::char_traits>;
-		using size_type = String::size_type;
-		using traits = String::char_traits;
+		using ctype = std::ctype<typename basic_string<_CharTy>::char_type>;
+		using istream = std::basic_istream<typename basic_string<_CharTy>::char_type, typename basic_string<_CharTy>::char_traits>;
+		using size_type = typename basic_string<_CharTy>::size_type;
+		using traits = typename basic_string<_CharTy>::char_traits;
 
 		bool changed = false;
 		const istream::sentry ok(is);
@@ -1206,7 +1250,7 @@ namespace kiwano
 			try
 			{
 				size_type size = (0 < is.width() && static_cast<size_type>(is.width()) < str.max_size()) ? static_cast<size_type>(is.width()) : str.max_size();
-				traits::int_type meta = is.rdbuf()->sgetc();
+				typename traits::int_type meta = is.rdbuf()->sgetc();
 
 				for (; 0 < size; --size, meta = is.rdbuf()->snextc())
 				{
@@ -1239,112 +1283,116 @@ namespace kiwano
 		return is;
 	}
 
-	inline std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const String& str)
-	{
-		return os << str.to_string();
-	}
-
-	inline std::basic_istream<char>& operator>>(std::basic_istream<char>& is, String& str)
-	{
-		std::string tmp;
-		if (is >> tmp)
-		{
-			str = tmp;
-		}
-		return is;
-	}
-
 	//
 	// details of to_string functions
 	//
 
 	namespace __to_string_detail
 	{
-		template<typename _Ty>
-		inline String FloatingToString(const wchar_t *fmt, _Ty val);
+		template <typename _CharTy>
+		struct FloatingToString
+		{
+			// template <typename _Ty>
+			// static basic_string<_CharTy> convert(const _Ty val);
+		};
 
-		template <typename _Ty>
-		inline String IntegralToString(const _Ty val);
+		template <typename _CharTy>
+		struct IntegralToString
+		{
+			// template <typename _Ty>
+			// static basic_string<_CharTy> convert(const _Ty val);
+		};
 	}
 
-	inline String to_wstring(int val)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> to_basic_string(int val)
 	{
-		return (__to_string_detail::IntegralToString(val));
+		return (__to_string_detail::IntegralToString<_CharTy>::convert(val));
 	}
 
-	inline String to_wstring(unsigned int val)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> to_basic_string(unsigned int val)
 	{
-		return (__to_string_detail::IntegralToString(val));
+		return (__to_string_detail::IntegralToString<_CharTy>::convert(val));
 	}
 
-	inline String to_wstring(long val)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> to_basic_string(long val)
 	{
-		return (__to_string_detail::IntegralToString(val));
+		return (__to_string_detail::IntegralToString<_CharTy>::convert(val));
 	}
 
-	inline String to_wstring(unsigned long val)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> to_basic_string(unsigned long val)
 	{
-		return (__to_string_detail::IntegralToString(val));
+		return (__to_string_detail::IntegralToString<_CharTy>::convert(val));
 	}
 
-	inline String to_wstring(long long val)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> to_basic_string(long long val)
 	{
-		return (__to_string_detail::IntegralToString(val));
+		return (__to_string_detail::IntegralToString<_CharTy>::convert(val));
 	}
 
-	inline String to_wstring(unsigned long long val)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> to_basic_string(unsigned long long val)
 	{
-		return (__to_string_detail::IntegralToString(val));
+		return (__to_string_detail::IntegralToString<_CharTy>::convert(val));
 	}
 
-	inline String to_wstring(float val)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> to_basic_string(float val)
 	{
-		return (__to_string_detail::FloatingToString(L"%f", val));
+		return (__to_string_detail::FloatingToString<_CharTy>::convert(val));
 	}
 
-	inline String to_wstring(double val)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> to_basic_string(double val)
 	{
-		return (__to_string_detail::FloatingToString(L"%f", val));
+		return (__to_string_detail::FloatingToString<_CharTy>::convert(val));
 	}
 
-	inline String to_wstring(long double val)
+	template <typename _CharTy>
+	inline basic_string<_CharTy> to_basic_string(long double val)
 	{
-		return (__to_string_detail::FloatingToString(L"%Lf", val));
+		return (__to_string_detail::FloatingToString<_CharTy>::convert(val));
 	}
 
-	template<typename ..._Args>
-	inline String format_wstring(const wchar_t* const fmt, _Args&&... args)
+	template <typename ..._Args>
+	inline basic_string<char> format_string(const char* const fmt, _Args&& ... args)
 	{
-		const auto len = static_cast<String::size_type>(::_scwprintf(fmt, std::forward<_Args>(args)...));
+		using string_type = basic_string<char>;
+		const auto len = static_cast<typename string_type::size_type>(::_scprintf(fmt, std::forward<_Args>(args)...));
 		if (len)
 		{
-			String str(len, L'\0');
+			string_type str(len, '\0');
+			::sprintf_s(&str[0], len + 1, fmt, std::forward<_Args>(args)...);
+			return str;
+		}
+		return string_type{};
+	}
+
+	template <typename ..._Args>
+	inline basic_string<wchar_t> format_string(const wchar_t* const fmt, _Args&&... args)
+	{
+		using string_type = basic_string<wchar_t>;
+		const auto len = static_cast<typename string_type::size_type>(::_scwprintf(fmt, std::forward<_Args>(args)...));
+		if (len)
+		{
+			string_type str(len, L'\0');
 			::swprintf_s(&str[0], len + 1, fmt, std::forward<_Args>(args)...);
 			return str;
 		}
-		return String{};
+		return string_type{};
 	}
 
 	namespace __to_string_detail
 	{
-		template<typename _Ty>
-		inline String FloatingToString(const wchar_t *fmt, _Ty val)
+		template <typename _Ty, typename _Elem>
+		_Elem* __IntegerToStringBufferEnd(const _Ty val, _Elem* const buffer_end)
 		{
-			static_assert(std::is_floating_point<_Ty>::value, "_Ty must be floating point");
-
-			return format_wstring(fmt, val);
-		}
-
-		template <typename _Ty>
-		inline String IntegralToString(const _Ty val)
-		{
-			static_assert(std::is_integral<_Ty>::value, "_Ty must be integral");
-
 			using _UTy = std::make_unsigned_t<_Ty>;
-			using _Elem = String::char_traits::char_type;
 
-			_Elem buffer[21];
-			_Elem* const buffer_end = std::end(buffer);
 			_Elem* next = buffer_end;
 			auto uval = static_cast<_UTy>(val);
 
@@ -1358,26 +1406,153 @@ namespace kiwano
 			} while (uval != 0);
 
 			if (val < 0)
-				*--next = static_cast<_Elem>('-');
+				* --next = static_cast<_Elem>('-');
 
-			return String(next, buffer_end);
+			return next;
 		}
+
+		template <>
+		struct IntegralToString<char>
+		{
+			template <typename _Ty>
+			static basic_string<char> convert(const _Ty val)
+			{
+				static_assert(std::is_integral<_Ty>::value, "_Ty must be integral");
+
+				using _Elem = typename basic_string<char>::char_traits::char_type;
+
+				_Elem buffer[21];
+				_Elem* const buffer_end = std::end(buffer);
+				_Elem* buffer_begin = __IntegerToStringBufferEnd(val, buffer_end);
+
+				return basic_string<char>(buffer_begin, buffer_end);
+			}
+		};
+
+		template <>
+		struct IntegralToString<wchar_t>
+		{
+			template <typename _Ty>
+			static basic_string<wchar_t> convert(const _Ty val)
+			{
+				static_assert(std::is_integral<_Ty>::value, "_Ty must be integral");
+
+				using _Elem = typename basic_string<wchar_t>::char_traits::char_type;
+
+				_Elem buffer[21];
+				_Elem* const buffer_end = std::end(buffer);
+				_Elem* buffer_begin = __IntegerToStringBufferEnd(val, buffer_end);
+				
+				return basic_string<wchar_t>(buffer_begin, buffer_end);
+			}
+		};
+
+		template<>
+		struct FloatingToString<wchar_t>
+		{
+			static inline basic_string<wchar_t> convert(const float val)
+			{
+				return format_string(L"%g", val);
+			}
+
+			static inline basic_string<wchar_t> convert(const double val)
+			{
+				return format_string(L"%g", val);
+			}
+
+			static inline basic_string<wchar_t> convert(const long double val)
+			{
+				return format_string(L"%Lg", val);
+			}
+		};
+
+		template<>
+		struct FloatingToString<char>
+		{
+			static inline basic_string<char> convert(const float val)
+			{
+				return format_string("%g", val);
+			}
+
+			static inline basic_string<char> convert(const double val)
+			{
+				return format_string("%g", val);
+			}
+
+			static inline basic_string<char> convert(const long double val)
+			{
+				return format_string("%Lg", val);
+			}
+		};
+	}
+}
+
+namespace kiwano
+{
+	namespace __string_details
+	{
+		class chs_codecvt
+			: public std::codecvt_byname<wchar_t, char, std::mbstate_t>
+		{
+		public:
+			chs_codecvt() : codecvt_byname("chs") {}
+
+			static inline std::wstring string_to_wide(std::string const& str)
+			{
+				std::wstring_convert<chs_codecvt> conv;
+				return conv.from_bytes(str);
+			}
+
+			static inline std::string wide_to_string(std::wstring const& str)
+			{
+				std::wstring_convert<chs_codecvt> conv;
+				return conv.to_bytes(str);
+			}
+		};
+	}
+
+	inline ::kiwano::wstring string_to_wide(::kiwano::string const& str)
+	{
+		return __string_details::chs_codecvt::string_to_wide(str.c_str()).c_str();
+	}
+
+	inline ::kiwano::string wide_to_string(::kiwano::wstring const& str)
+	{
+		return __string_details::chs_codecvt::wide_to_string(str.c_str()).c_str();
 	}
 }
 
 namespace std
 {
 	template<>
-	struct hash<::kiwano::String>
+	struct hash<::kiwano::string>
 	{
-		inline size_t operator()(const kiwano::String& key) const
+		inline size_t operator()(const kiwano::string& key) const
 		{
 			return key.hash();
 		}
 	};
 
 	template<>
-	inline void swap<::kiwano::String>(::kiwano::String& lhs, ::kiwano::String& rhs) noexcept
+	struct hash<::kiwano::wstring>
+	{
+		inline size_t operator()(const kiwano::wstring& key) const
+		{
+			return key.hash();
+		}
+	};
+}
+
+namespace std
+{
+	template<>
+	inline void swap<::kiwano::string>(::kiwano::string& lhs, ::kiwano::string& rhs) noexcept
+	{
+		lhs.swap(rhs);
+	}
+
+	template<>
+	inline void swap<::kiwano::wstring>(::kiwano::wstring& lhs, ::kiwano::wstring& rhs) noexcept
 	{
 		lhs.swap(rhs);
 	}

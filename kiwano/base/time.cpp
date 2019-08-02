@@ -32,6 +32,7 @@ namespace kiwano
 		//-------------------------------------------------------
 
 		Time::Time()
+			: dur_(0)
 		{
 		}
 
@@ -161,21 +162,21 @@ namespace kiwano
 
 			if (hour)
 			{
-				result.append(kiwano::to_wstring(hour)).append(L"h");
-				result.append(kiwano::to_wstring(min)).append(L"m");
+				result.append(String::parse(hour)).append(L"h");
+				result.append(String::parse(min)).append(L"m");
 			}
 			else if(min)
 			{
-				result.append(kiwano::to_wstring(min)).append(L"m");
+				result.append(String::parse(min)).append(L"m");
 			}
 
 			if (ms != 0)
 			{
-				auto float_to_str = [](float val) -> std::wstring
+				auto float_to_str = [](float val) -> String
 				{
 					wchar_t buf[10] = {};
-					::swprintf_s(buf, L"%.2f", val);
-					return std::wstring(buf);
+					::swprintf_s(buf, L"%g", val);
+					return String(buf);
 				};
 
 				result.append(float_to_str(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f))
@@ -183,7 +184,7 @@ namespace kiwano
 			}
 			else if (sec != 0)
 			{
-				result.append(kiwano::to_wstring(sec)).append(L"s");
+				result.append(String::parse(sec)).append(L"s");
 			}
 			return result;
 		}

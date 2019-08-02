@@ -120,7 +120,7 @@ namespace kiwano
 	float DataUtil::GetFloat(String const & key, float default_value) const
 	{
 		wchar_t temp[32] = { 0 };
-		String default_str = to_wstring(default_value);
+		String default_str = String::parse(default_value);
 		::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
 		return std::stof(temp);
 	}
@@ -128,7 +128,7 @@ namespace kiwano
 	double DataUtil::GetDouble(String const & key, double default_value) const
 	{
 		wchar_t temp[32] = { 0 };
-		String default_str = to_wstring(default_value);
+		String default_str = String::parse(default_value);
 		::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
 		return std::stod(temp);
 	}
