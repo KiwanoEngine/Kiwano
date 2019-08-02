@@ -87,12 +87,12 @@ public:
 
 		// 创建 JSON 格式的 POST 数据
 		Json request_data = {
-			{ "string",		"test中文" },
-			{ "boolean",	true },
-			{ "integer",	12 },
-			{ "float",		3.125 },
-			{ "array",		{ 1, 2, 3, 4, 4.5 } },
-			{ "object",		{ "key", "value" } },
+			{ L"string",	L"test中文" },
+			{ L"boolean",	true },
+			{ L"integer",	12 },
+			{ L"float",		3.125 },
+			{ L"array",		{ 1, 2, 3, 4, 4.5 } },
+			{ L"object",	{ L"key", L"value" } },
 		};
 
 		HttpRequestPtr request = new HttpRequest;
