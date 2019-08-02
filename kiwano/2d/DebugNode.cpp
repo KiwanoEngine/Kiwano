@@ -30,7 +30,7 @@ namespace kiwano
 {
 	DebugNode::DebugNode()
 	{
-		debug_text_ = new Text();
+		debug_text_ = new Text;
 		debug_text_->SetPosition(20, 20);
 		this->AddChild(debug_text_);
 

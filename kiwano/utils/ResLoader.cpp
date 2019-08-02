@@ -129,14 +129,12 @@ namespace kiwano
 		}
 		catch (std::wifstream::failure& e)
 		{
-			String msg(e.what());
-			KGE_WARNING_LOG(L"ResLoader::LoadFromJsonFile failed: Cannot open file. (%s)", msg.c_str());
+			KGE_WARNING_LOG(L"ResLoader::LoadFromJsonFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
 		catch (json_exception& e)
 		{
-			String msg(e.what());
-			KGE_WARNING_LOG(L"ResLoader::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", msg.c_str());
+			KGE_WARNING_LOG(L"ResLoader::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return LoadFromJson(json_data);
@@ -158,8 +156,7 @@ namespace kiwano
 		}
 		catch (std::exception& e)
 		{
-			String msg(e.what());
-			KGE_WARNING_LOG(L"ResLoader::LoadFromJson failed: JSON data is invalid. (%s)", msg.c_str());
+			KGE_WARNING_LOG(L"ResLoader::LoadFromJson failed: JSON data is invalid. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return true;
