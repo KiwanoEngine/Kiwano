@@ -208,7 +208,7 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResLoader::AddFrames(String const& id, Array<Resource> const& images)
+	size_t ResLoader::AddFrames(String const& id, Array<Resource> const& images)
 	{
 		if (images.empty())
 			return 0;

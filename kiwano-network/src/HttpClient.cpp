@@ -32,7 +32,7 @@ namespace
 
 	size_t write_data(void* buffer, size_t size, size_t nmemb, void* userp)
 	{
-		std::string* recv_buffer = (std::string*)userp;
+		kiwano::string* recv_buffer = (kiwano::string*)userp;
 		size_t total = size * nmemb;
 
 		// add data to the end of recv_buffer
@@ -42,10 +42,10 @@ namespace
 		return total;
 	}
 
-	std::string convert_to_utf8(String const& str)
+	kiwano::string convert_to_utf8(kiwano::wstring const& str)
 	{
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-		std::string result;
+		kiwano::string result;
 
 		try
 		{
@@ -54,15 +54,15 @@ namespace
 		catch (std::range_error&)
 		{
 			// bad conversion
-			result = str.to_string();
+			result = wide_to_string(str);
 		}
 		return result;
 	}
 
-	String convert_from_utf8(std::string const& str)
+	kiwano::wstring convert_from_utf8(kiwano::string const& str)
 	{
-		std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-		String result;
+		kiwano::string_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
+		kiwano::wstring result;
 
 		try
 		{
@@ -71,7 +71,7 @@ namespace
 		catch (std::range_error&)
 		{
 			// bad conversion
-			result = str;
+			result = string_to_wide(str);
 		}
 		return result;
 	}
@@ -100,7 +100,7 @@ namespace
 			}
 		}
 
-		bool Init(HttpClient* client, Array<std::string> const& headers, std::string const& url, std::string* response_data, std::string* response_header, char* error_buffer)
+		bool Init(HttpClient* client, Array<kiwano::string> const& headers, kiwano::string const& url, kiwano::string* response_data, kiwano::string* response_header, char* error_buffer)
 		{
 			if (!SetOption(CURLOPT_ERRORBUFFER, error_buffer))
 				return false;
@@ -109,7 +109,7 @@ namespace
 			if (!SetOption(CURLOPT_CONNECTTIMEOUT, client->GetTimeoutForConnect()))
 				return false;
 
-			const auto ssl_ca_file = client->GetSSLVerification().to_string();
+			const auto ssl_ca_file = wide_to_string(client->GetSSLVerification());
 			if (ssl_ca_file.empty()) {
 				if (!SetOption(CURLOPT_SSL_VERIFYPEER, 0L))
 					return false;
@@ -166,11 +166,11 @@ namespace
 	public:
 		static inline bool GetRequest(
 			HttpClient* client,
-			Array<std::string> const& headers,
-			std::string const& url,
+			Array<kiwano::string> const& headers,
+			kiwano::string const& url,
 			long* response_code,
-			std::string* response_data,
-			std::string* response_header,
+			kiwano::string* response_data,
+			kiwano::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -181,12 +181,12 @@ namespace
 
 		static inline bool PostRequest(
 			HttpClient* client,
-			Array<std::string> const& headers,
-			std::string const& url,
-			std::string const& request_data,
+			Array<kiwano::string> const& headers,
+			kiwano::string const& url,
+			kiwano::string const& request_data,
 			long* response_code,
-			std::string* response_data,
-			std::string* response_header,
+			kiwano::string* response_data,
+			kiwano::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -199,12 +199,12 @@ namespace
 
 		static inline bool PutRequest(
 			HttpClient* client,
-			Array<std::string> const& headers,
-			std::string const& url,
-			std::string const& request_data,
+			Array<kiwano::string> const& headers,
+			kiwano::string const& url,
+			kiwano::string const& request_data,
 			long* response_code,
-			std::string* response_data,
-			std::string* response_header,
+			kiwano::string* response_data,
+			kiwano::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -217,11 +217,11 @@ namespace
 
 		static inline bool DeleteRequest(
 			HttpClient* client,
-			Array<std::string> const& headers,
-			std::string const& url,
+			Array<kiwano::string> const& headers,
+			kiwano::string const& url,
 			long* response_code,
-			std::string* response_data,
-			std::string* response_header,
+			kiwano::string* response_data,
+			kiwano::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -303,17 +303,17 @@ namespace kiwano
 			bool ok = false;
 			long response_code = 0;
 			char error_message[256] = { 0 };
-			std::string response_header;
-			std::string response_data;
+			kiwano::string response_header;
+			kiwano::string response_data;
 
-			std::string url = convert_to_utf8(request->GetUrl());
-			std::string data = convert_to_utf8(request->GetData());
+			kiwano::string url = convert_to_utf8(request->GetUrl());
+			kiwano::string data = convert_to_utf8(request->GetData());
 
-			Array<std::string> headers;
+			Array<kiwano::string> headers;
 			headers.reserve(request->GetHeaders().size());
 			for (const auto& pair : request->GetHeaders())
 			{
-				headers.push_back(pair.first.to_string() + ":" + pair.second.to_string());
+				headers.push_back(wide_to_string(pair.first) + ":" + wide_to_string(pair.second));
 			}
 
 			switch (request->GetType())
@@ -336,12 +336,12 @@ namespace kiwano
 			}
 
 			response->SetResponseCode(response_code);
-			response->SetHeader(response_header);
+			response->SetHeader(string_to_wide(response_header));
 			response->SetData(convert_from_utf8(response_data));
 			if (!ok)
 			{
 				response->SetSucceed(false);
-				response->SetError(error_message);
+				response->SetError(string_to_wide(error_message));
 			}
 			else
 			{

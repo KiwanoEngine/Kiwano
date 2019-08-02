@@ -75,7 +75,7 @@ public:
 			scene->AddListener(Event::KeyUp, MakeClosure(this, &DemoApp::KeyPressed));
 
 			// 显示提示文字
-			String intro_str = format_wstring(L"按键 1~%d 可切换示例\n", s_DemoNum);
+			String intro_str = String::format(L"按键 1~%d 可切换示例\n", s_DemoNum);
 			TextPtr intro = new Text(intro_str + title);
 			intro->SetFontSize(16.f);
 			intro->SetPosition(10, 10);
