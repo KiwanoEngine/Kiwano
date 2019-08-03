@@ -34,6 +34,7 @@ namespace kiwano
 		);
 
 		STDMETHOD_(void, SetTextStyle)(
+			FLOAT opacity,
 			CONST D2D1_COLOR_F &fillColor,
 			BOOL outline,
 			CONST D2D1_COLOR_F &outlineColor,

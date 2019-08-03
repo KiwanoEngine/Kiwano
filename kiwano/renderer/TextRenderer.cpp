@@ -35,6 +35,7 @@ namespace kiwano
 		STDMETHOD(CreateDeviceResources)();
 
 		STDMETHOD_(void, SetTextStyle)(
+			FLOAT opacity,
 			CONST D2D1_COLOR_F &fillColor,
 			BOOL outline,
 			CONST D2D1_COLOR_F &outlineColor,
@@ -155,8 +156,11 @@ namespace kiwano
 		, bShowOutline_(TRUE)
 		, pCurrStrokeStyle_(NULL)
 	{
-		pRT_->AddRef();
-		pRT_->GetFactory(&pFactory_);
+		if (pRT_)
+		{
+			pRT_->AddRef();
+			pRT_->GetFactory(&pFactory_);
+		}
 	}
 
 	TextRenderer::~TextRenderer()
@@ -172,15 +176,19 @@ namespace kiwano
 
 		DX::SafeRelease(pBrush_);
 
-		hr = pRT_->CreateSolidColorBrush(
-			D2D1::ColorF(D2D1::ColorF::White),
-			&pBrush_
-		);
+		if (pRT_)
+		{
+			hr = pRT_->CreateSolidColorBrush(
+				D2D1::ColorF(D2D1::ColorF::White),
+				&pBrush_
+			);
+		}
 
 		return hr;
 	}
 
 	STDMETHODIMP_(void) TextRenderer::SetTextStyle(
+		FLOAT opacity,
 		CONST D2D1_COLOR_F &fillColor,
 		BOOL outline,
 		CONST D2D1_COLOR_F &outlineColor,
@@ -192,6 +200,8 @@ namespace kiwano
 		sOutlineColor_ = outlineColor;
 		fOutlineWidth = 2 * outlineWidth;
 		pCurrStrokeStyle_ = outlineJoin;
+
+		if (pBrush_) pBrush_->SetOpacity(opacity);
 	}
 
 	STDMETHODIMP TextRenderer::DrawGlyphRun(

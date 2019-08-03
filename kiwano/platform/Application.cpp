@@ -22,7 +22,6 @@
 #include "modules.h"
 #include "../base/logs.h"
 #include "../base/input.h"
-#include "../base/Event.hpp"
 #include "../renderer/render.h"
 #include "../2d/Scene.h"
 #include "../2d/DebugNode.h"
@@ -135,6 +134,8 @@ namespace kiwano
 		curr_scene_.Reset();
 		debug_node_.Reset();
 
+		OnDestroy();
+
 		if (inited_)
 		{
 			inited_ = false;
@@ -147,10 +148,12 @@ namespace kiwano
 		}
 
 		// Destroy all instances
-		Renderer::Destroy();
 		Input::Destroy();
+		Renderer::Destroy();
 		Window::Destroy();
-		Logger::Destroy();
+
+		// DO NOT destroy Logger instance manually
+		// Logger::Destroy();
 	}
 
 	void Application::Use(Component* component)
@@ -232,6 +235,15 @@ namespace kiwano
 			debug_node_.Reset();
 			Renderer::Instance()->SetCollectingStatus(false);
 		}
+	}
+
+	void Application::Dispatch(Event& evt)
+	{
+		if (debug_node_)
+			debug_node_->Dispatch(evt);
+
+		if (curr_scene_)
+			curr_scene_->Dispatch(evt);
 	}
 
 	void Application::Update()
@@ -381,7 +393,7 @@ namespace kiwano
 				evt.key.code = static_cast<int>(wparam);
 				evt.key.count = static_cast<int>(lparam & 0xFF);
 
-				app->curr_scene_->Dispatch(evt);
+				app->Dispatch(evt);
 			}
 		}
 		break;
@@ -394,7 +406,7 @@ namespace kiwano
 				evt.key.c = static_cast<char>(wparam);
 				evt.key.count = static_cast<int>(lparam & 0xFF);
 
-				app->curr_scene_->Dispatch(evt);
+				app->Dispatch(evt);
 			}
 		}
 		break;
@@ -429,7 +441,7 @@ namespace kiwano
 				else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { evt.mouse.button = MouseButton::Right; }
 				else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { evt.mouse.button = MouseButton::Middle; }
 
-				app->curr_scene_->Dispatch(evt);
+				app->Dispatch(evt);
 			}
 		}
 		break;
@@ -449,7 +461,7 @@ namespace kiwano
 					Event evt(Event::WindowResized);
 					evt.win.width = LOWORD(lparam);
 					evt.win.height = HIWORD(lparam);
-					app->curr_scene_->Dispatch(evt);
+					app->Dispatch(evt);
 				}
 
 				Window::Instance()->UpdateWindowRect();
@@ -467,7 +479,7 @@ namespace kiwano
 				Event evt(Event::WindowMoved);
 				evt.win.x = x;
 				evt.win.y = y;
-				app->curr_scene_->Dispatch(evt);
+				app->Dispatch(evt);
 			}
 		}
 		break;
@@ -482,7 +494,7 @@ namespace kiwano
 			{
 				Event evt(Event::WindowFocusChanged);
 				evt.win.focus = active;
-				app->curr_scene_->Dispatch(evt);
+				app->Dispatch(evt);
 			}
 		}
 		break;
@@ -495,7 +507,7 @@ namespace kiwano
 			{
 				Event evt(Event::WindowTitleChanged);
 				evt.win.title = reinterpret_cast<const wchar_t*>(lparam);
-				app->curr_scene_->Dispatch(evt);
+				app->Dispatch(evt);
 			}
 		}
 		break;
@@ -532,10 +544,8 @@ namespace kiwano
 			if (app->curr_scene_)
 			{
 				Event evt(Event::WindowClosed);
-				app->curr_scene_->Dispatch(evt);
+				app->Dispatch(evt);
 			}
-
-			app->OnDestroy();
 
 			::PostQuitMessage(0);
 			return 0;

@@ -29,9 +29,15 @@
 namespace kiwano
 {
 	DebugNode::DebugNode()
+		: background_color_(0.0f, 0.0f, 0.0f, 0.7f)
 	{
+		SetName(L"kiwano-debug-node");
+		SetPosition(10, 10);
+		SetResponsible(true);
+		SetCascadeOpacityEnabled(true);
+
 		debug_text_ = new Text;
-		debug_text_->SetPosition(20, 20);
+		debug_text_->SetPosition(10, 10);
 		this->AddChild(debug_text_);
 
 		Font font;
@@ -43,6 +49,11 @@ namespace kiwano
 		style.wrap = false;
 		style.line_spacing = 20.f;
 		debug_text_->SetStyle(style);
+
+		AddListener(Event::MouseHover, [=](const Event&) {
+			SetOpacity(0.4f);
+			});
+		AddListener(Event::MouseOut, [=](const Event&) { SetOpacity(1.f); });
 	}
 
 	DebugNode::~DebugNode()
@@ -51,11 +62,10 @@ namespace kiwano
 
 	void DebugNode::OnRender()
 	{
-		Renderer::Instance()->SetTransform(Matrix{});
-		Renderer::Instance()->GetSolidColorBrush()->SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, 0.5f));
+		Renderer::Instance()->GetSolidColorBrush()->SetColor(DX::ConvertToColorF(background_color_));
 
-		Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext()->FillRectangle(
-			D2D1_RECT_F{ 10, 10, 30 + debug_text_->GetLayoutSize().x, 30 + debug_text_->GetLayoutSize().y },
+		Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext()->FillRoundedRectangle(
+			D2D1::RoundedRect(DX::ConvertToRectF(GetBounds()), 5.f, 5.f),
 			Renderer::Instance()->GetSolidColorBrush()
 		);
 	}
@@ -73,8 +83,11 @@ namespace kiwano
 		std::wstringstream ss;
 		ss << "Fps: " << frame_time_.size() << std::endl;
 
-#ifdef KGE_DEBUG
-		ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
+#if defined(KGE_DEBUG)
+		if (Object::IsTracingLeaks())
+		{
+			ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
+		}
 #endif
 
 		ss << "Render: " << Renderer::Instance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
@@ -86,6 +99,7 @@ namespace kiwano
 		ss << "Memory: " << pmc.PrivateUsage / 1024 << "kb";
 
 		debug_text_->SetText(ss.str());
+		SetSize(Size{ 20 + debug_text_->GetLayoutSize().x, 20 + debug_text_->GetLayoutSize().y });
 	}
 
 }

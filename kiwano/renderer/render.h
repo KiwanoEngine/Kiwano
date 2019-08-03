@@ -124,6 +124,7 @@ namespace kiwano
 		);
 
 		HRESULT SetTextStyle(
+			float opacity,
 			const Color& color,
 			bool has_outline,
 			const Color& outline_color,
