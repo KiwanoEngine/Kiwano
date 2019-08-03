@@ -304,6 +304,7 @@ namespace kiwano
 		if (text_layout_)
 		{
 			Renderer::Instance()->SetTextStyle(
+				GetDisplayedOpacity(),
 				style_.color,
 				style_.outline,
 				style_.outline_color,

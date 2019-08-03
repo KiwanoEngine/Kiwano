@@ -24,7 +24,7 @@
 namespace kiwano
 {
 	class KGE_API DebugNode
-		: public Node
+		: public VisualNode
 	{
 	public:
 		DebugNode();
@@ -36,7 +36,8 @@ namespace kiwano
 		void OnUpdate(Duration dt) override;
 
 	protected:
-		TextPtr				debug_text_;
+		Color		background_color_;
+		TextPtr		debug_text_;
 		Array<Time>	frame_time_;
 	};
 }

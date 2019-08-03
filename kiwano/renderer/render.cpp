@@ -447,6 +447,7 @@ namespace kiwano
 	}
 
 	HRESULT Renderer::SetTextStyle(
+		float opacity,
 		Color const& color,
 		bool has_outline,
 		Color const& outline_color,
@@ -458,6 +459,7 @@ namespace kiwano
 			return E_UNEXPECTED;
 
 		text_renderer_->SetTextStyle(
+			opacity,
 			DX::ConvertToColorF(color),
 			has_outline,
 			DX::ConvertToColorF(outline_color),

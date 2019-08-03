@@ -23,6 +23,7 @@
 #include "../base/time.h"
 #include "../base/window.h"
 #include "../base/Component.h"
+#include "../base/Event.hpp"
 
 namespace kiwano
 {
@@ -126,6 +127,9 @@ namespace kiwano
 		void ShowDebugInfo(
 			bool show = true
 		);
+
+		// 分发事件
+		void Dispatch(Event& evt);
 
 		// 在 Kiwano 主线程中执行函数
 		// 当在其他线程调用 Kiwano 函数时使用

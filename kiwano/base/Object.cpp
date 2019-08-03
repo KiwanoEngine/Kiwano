@@ -95,6 +95,11 @@ namespace kiwano
 			name.c_str(), GetObjectID(), GetRefCount(), GetName().c_str());
 	}
 
+	bool Object::IsTracingLeaks()
+	{
+		return tracing_leaks;
+	}
+
 	void Object::StartTracingLeaks()
 	{
 		tracing_leaks = true;

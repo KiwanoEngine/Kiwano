@@ -132,6 +132,7 @@ namespace kiwano
 		text_style_ = text_style;
 
 		text_renderer_->SetTextStyle(
+			1.f,
 			DX::ConvertToColorF(text_style_.color),
 			text_style_.outline,
 			DX::ConvertToColorF(text_style_.outline_color),
