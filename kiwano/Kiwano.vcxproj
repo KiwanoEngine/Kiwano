@@ -74,6 +74,7 @@
     <ClInclude Include="renderer\render.h" />
     <ClInclude Include="renderer\TextRenderer.h" />
     <ClInclude Include="third-party\StackWalker\StackWalker.h" />
+    <ClInclude Include="third-party\tinyxml2\tinyxml2.h" />
     <ClInclude Include="ui\Button.h" />
     <ClInclude Include="ui\Menu.h" />
     <ClInclude Include="utils\DataUtil.h" />
@@ -121,6 +122,7 @@
     <ClCompile Include="renderer\render.cpp" />
     <ClCompile Include="renderer\TextRenderer.cpp" />
     <ClCompile Include="third-party\StackWalker\StackWalker.cpp" />
+    <ClCompile Include="third-party\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="ui\Button.cpp" />
     <ClCompile Include="ui\Menu.cpp" />
     <ClCompile Include="utils\DataUtil.cpp" />

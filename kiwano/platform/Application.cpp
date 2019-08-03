@@ -134,8 +134,6 @@ namespace kiwano
 		curr_scene_.Reset();
 		debug_node_.Reset();
 
-		OnDestroy();
-
 		if (inited_)
 		{
 			inited_ = false;
@@ -546,6 +544,8 @@ namespace kiwano
 				Event evt(Event::WindowClosed);
 				app->Dispatch(evt);
 			}
+
+			app->OnDestroy();
 
 			::PostQuitMessage(0);
 			return 0;

@@ -216,6 +216,9 @@
   <ItemGroup>
     <None Include="res\index.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="res\index.xml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

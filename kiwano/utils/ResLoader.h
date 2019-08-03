@@ -24,6 +24,7 @@
 #include "../common/Json.hpp"
 #include "../base/Resource.h"
 #include "../2d/include-forwards.h"
+#include "../third-party/tinyxml2/tinyxml2.h"
 
 namespace kiwano
 {
@@ -36,6 +37,12 @@ namespace kiwano
 
 		// 从 JSON 加载资源信息
 		bool LoadFromJson(Json const& json_data);
+
+		// 从 XML 文件加载资源信息
+		bool LoadFromXmlFile(String const& file_path);
+
+		// 从 XML 文档对象加载资源信息
+		bool LoadFromXml(tinyxml2::XMLDocument* doc);
 
 		// 添加图片
 		bool AddImage(String const& id, Resource const& image);
@@ -77,9 +84,6 @@ namespace kiwano
 
 		// 获取序列帧
 		FramesPtr GetFrames(String const& id) const;
-
-		// 获取对象
-		ObjectPtr GetObj(String const& id) const;
 
 		// 删除指定资源
 		void Delete(String const& id);

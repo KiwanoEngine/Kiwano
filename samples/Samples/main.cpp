@@ -46,8 +46,11 @@ public:
 
 	void OnStart() override
 	{
-		// 从 JSON 文件中加载资源
-		g_Loader.LoadFromJsonFile(L"res/index.json");
+		// 从 JSON 文件中读取资源信息
+		//g_Loader.LoadFromJsonFile(L"res/index.json");
+
+		// 从 XML 文件中读取资源信息
+		g_Loader.LoadFromXmlFile(L"res/index.xml");
 
 		// 切换到第一个场景
 		ChangeDemoScene(0);

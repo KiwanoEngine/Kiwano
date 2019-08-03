@@ -31,4 +31,7 @@
       <UniqueIdentifier>{4460eeec-9e2f-46b6-909a-5ff4443075ce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="res\index.xml" />
+  </ItemGroup>
 </Project>
