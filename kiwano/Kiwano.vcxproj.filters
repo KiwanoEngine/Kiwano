@@ -31,6 +31,9 @@
     <Filter Include="third-party\StackWalker">
       <UniqueIdentifier>{1fec4835-63a1-4612-80b5-828dadf0ac63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third-party\tinyxml2">
+      <UniqueIdentifier>{0cae76f7-7016-4a45-bb26-a130fbce8024}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ui\Button.h">
@@ -264,6 +267,9 @@
     <ClInclude Include="common\Array.hpp">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="third-party\tinyxml2\tinyxml2.h">
+      <Filter>third-party\tinyxml2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\Button.cpp">
@@ -400,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="2d\GifSprite.cpp">
       <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="third-party\tinyxml2\tinyxml2.cpp">
+      <Filter>third-party\tinyxml2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

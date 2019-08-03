@@ -28,17 +28,60 @@
 
 namespace kiwano
 {
-	namespace __res_loader_09
+	namespace __res_loader_01
 	{
 		struct GlobalData
 		{
 			String path;
 		};
 
-		void LoadImageFromData(ResLoader* loader, GlobalData const& global_data, Json const& image_data);
-		bool CompareJsonWithString(Json const& data, const wchar_t* key, const wchar_t* value);
+		bool LoadImagesFromData(ResLoader* loader, GlobalData* gdata, const String* id, const String* type,
+			const String* file, const Array<String>* files, int rows, int cols)
+		{
+			if (!gdata || !id) return false;
 
-		void LoadJsonData(ResLoader* loader, Json const& json_data)
+			if (file)
+			{
+				// Gif image
+				if (type && (*type) == L"gif")
+				{
+					return loader->AddGifImage(*id, Resource(gdata->path + (*file)));
+				}
+
+				if (!(*file).empty())
+				{
+					if (rows || cols)
+					{
+						// Image slices
+						return loader->AddFrames(*id, Resource(gdata->path + (*file)), std::max(cols, 1), std::max(rows, 1));
+					}
+					else
+					{
+						// Simple image
+						return loader->AddImage(*id, Resource(gdata->path + (*file)));
+					}
+				}
+			}
+
+			// Frames
+			if (files)
+			{
+				Array<ImagePtr> images;
+				images.reserve(files->size());
+				for (const auto& file : (*files))
+				{
+					ImagePtr image = new Image(gdata->path + (file));
+					if (image->IsValid())
+					{
+						images.push_back(image);
+					}
+				}
+				return !!loader->AddFrames(*id, images);
+			}
+			return false;
+		}
+
+		bool LoadJsonData(ResLoader* loader, Json const& json_data)
 		{
 			GlobalData global_data;
 			if (json_data.count(L"path"))
@@ -50,69 +93,93 @@ namespace kiwano
 			{
 				for (const auto& image : json_data[L"images"])
 				{
-					LoadImageFromData(loader, global_data, image);
-				}
-			}
-		}
+					const String* id = nullptr, *type = nullptr, *file = nullptr;
+					int rows = 0, cols = 0;
 
-		void LoadImageFromData(ResLoader* loader, GlobalData const& global_data, Json const& image_data)
-		{
-			String id = image_data[L"id"];
+					if (image.count(L"id")) id = &image[L"id"].as_string();
+					if (image.count(L"type")) type = &image[L"type"].as_string();
+					if (image.count(L"file")) file = &image[L"file"].as_string();
+					if (image.count(L"rows")) rows = image[L"rows"].as_int();
+					if (image.count(L"cols")) cols = image[L"cols"].as_int();
 
-			if (image_data.count(L"file"))
-			{
-				String file = image_data[L"file"];
-
-				// Gif image
-				if (CompareJsonWithString(image_data, L"type", L"gif"))
-				{
-					loader->AddGifImage(id, Resource(global_data.path + file));
-					return;
-				}
-
-				if (!file.empty())
-				{
-					if (image_data.count(L"rows") || image_data.count(L"cols"))
+					if (image.count(L"files"))
 					{
-						// Image slices
-						int rows = 1, cols = 1;
-						if (image_data.count(L"rows")) rows = image_data[L"rows"];
-						if (image_data.count(L"cols")) cols = image_data[L"cols"];
-						loader->AddFrames(id, Resource(global_data.path + file), cols, rows);
-						return;
+						Array<String> files;
+						files.reserve(image[L"files"].size());
+						for (const auto& file : image[L"files"])
+						{
+							files.push_back(file.as_string());
+						}
+						if (!LoadImagesFromData(loader, &global_data, id, type, file, &files, rows, cols))
+							return false;
 					}
 					else
 					{
-						// Simple image
-						loader->AddImage(id, Resource(global_data.path + file));
-						return;
+						if (!LoadImagesFromData(loader, &global_data, id, type, file, nullptr, rows, cols))
+							return false;
 					}
 				}
 			}
-
-			// Frames
-			if (image_data.count(L"files"))
-			{
-				Array<ImagePtr> images;
-				images.reserve(image_data[L"files"].size());
-				for (const auto& file : image_data[L"files"])
-				{
-					auto filePath = file.as_string();
-					ImagePtr image = new Image(global_data.path + file.as_string());
-					if (image->IsValid())
-					{
-						images.push_back(image);
-					}
-				}
-				loader->AddFrames(id, images);
-			}
-
+			return true;
 		}
 
-		bool CompareJsonWithString(Json const& data, const wchar_t* key, const wchar_t* value)
+		bool LoadXmlData(ResLoader* loader, tinyxml2::XMLElement* elem)
 		{
-			return data.count(key) && data[key].as_string() == value;
+			GlobalData global_data;
+			if (elem->FirstChildElement("path"))
+			{
+				global_data.path = string_to_wide(elem->FirstChildElement("path")->GetText());
+			}
+
+			if (elem->FirstChildElement("images"))
+			{
+				auto images = elem->FirstChildElement("images");
+				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
+				{
+					String id, type, file;
+					int rows = 0, cols = 0;
+
+					if (image->Attribute("id")) id = string_to_wide(image->Attribute("id"));
+					if (image->Attribute("type")) type = string_to_wide(image->Attribute("type"));
+					if (image->Attribute("file")) file = string_to_wide(image->Attribute("file"));
+					if (image->Attribute("rows")) rows = image->IntAttribute("rows");
+					if (image->Attribute("cols")) cols = image->IntAttribute("cols");
+
+					if (file.empty() && !image->NoChildren())
+					{
+						Array<String> files_arr;
+						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
+						{
+							if (file->Attribute("path"))
+							{
+								files_arr.push_back(string_to_wide(file->Attribute("path")));
+							}
+						}
+						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, &files_arr, rows, cols))
+							return false;
+					}
+					else
+					{
+						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, nullptr, rows, cols))
+							return false;
+					}
+				}
+			}
+			return true;
 		}
+	}
+
+	namespace
+	{
+		Map<String, Closure<bool(ResLoader*, Json const&)>> load_json_funcs = {
+			{ L"latest", __res_loader_01::LoadJsonData },
+			{ L"0.1", __res_loader_01::LoadJsonData },
+		};
+
+		Map<String, Closure<bool(ResLoader*, tinyxml2::XMLElement*)>> load_xml_funcs = {
+			{ L"latest", __res_loader_01::LoadXmlData },
+			{ L"0.1", __res_loader_01::LoadXmlData },
+		};
 	}
 
 	bool ResLoader::LoadFromJsonFile(String const& file_path)
@@ -145,9 +212,15 @@ namespace kiwano
 		try
 		{
 			String version = json_data[L"version"];
-			if (version.empty() || version == L"0.9")
+
+			auto load = load_json_funcs.find(version);
+			if (load != load_json_funcs.end())
 			{
-				__res_loader_09::LoadJsonData(this, json_data);
+				return load->second(this, json_data);
+			}
+			else if (version.empty())
+			{
+				return load_json_funcs[L"latest"](this, json_data);
 			}
 			else
 			{
@@ -159,7 +232,56 @@ namespace kiwano
 			KGE_WARNING_LOG(L"ResLoader::LoadFromJson failed: JSON data is invalid. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
-		return true;
+		return false;
+	}
+
+	bool ResLoader::LoadFromXmlFile(String const& file_path)
+	{
+		tinyxml2::XMLDocument doc;
+		if (tinyxml2::XML_SUCCESS != doc.LoadFile(kiwano::wide_to_string(file_path).c_str()))
+		{
+			KGE_WARNING_LOG(L"ResLoader::LoadFromXmlFile failed: %s",
+				string_to_wide(tinyxml2::XMLDocument::ErrorIDToName(doc.ErrorID())).c_str());
+			return false;
+		}
+		return LoadFromXml(&doc);
+	}
+
+	bool ResLoader::LoadFromXml(tinyxml2::XMLDocument* doc)
+	{
+		if (doc)
+		{
+			try
+			{
+				auto root = doc->FirstChildElement("resources");
+				KGE_ASSERT(root);
+
+				if (root)
+				{
+					kiwano::string version = root->FirstChildElement("version")->GetText();
+
+					auto load = load_xml_funcs.find(string_to_wide(version));
+					if (load != load_xml_funcs.end())
+					{
+						load->second(this, root);
+					}
+					else if (version.empty())
+					{
+						load_xml_funcs[L"latest"](this, root);
+					}
+					else
+					{
+						throw std::runtime_error("unknown JSON data version");
+					}
+				}
+			}
+			catch (std::exception& e)
+			{
+				KGE_WARNING_LOG(L"ResLoader::LoadFromXml failed: %s", string_to_wide(e.what()).c_str());
+				return false;
+			}
+		}
+		return false;
 	}
 
 	bool ResLoader::AddImage(String const& id, Resource const& image)
@@ -335,11 +457,6 @@ namespace kiwano
 	FramesPtr ResLoader::GetFrames(String const & id) const
 	{
 		return Get<Frames>(id);
-	}
-
-	ObjectPtr ResLoader::GetObj(String const & id) const
-	{
-		return Get<Object>(id);
 	}
 
 	void ResLoader::Delete(String const & id)
