@@ -21,7 +21,7 @@
 #pragma once
 #include "../macros.h"
 #include "../common/helper.h"
-#include "../common/Json.h"
+#include "../common/Json.hpp"
 #include "../base/Resource.h"
 #include "../2d/include-forwards.h"
 

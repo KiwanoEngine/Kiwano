@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../macros.h"
-#include "../common/String.h"
+#include "../common/String.hpp"
 #include <ostream>
 #include <istream>
 

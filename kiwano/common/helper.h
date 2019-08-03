@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Array.h"
-#include "String.h"
+#include "Array.hpp"
+#include "String.hpp"
 #include <set>
 #include <map>
 #include <list>

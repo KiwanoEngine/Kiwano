@@ -46,16 +46,16 @@
     <ClInclude Include="base\TimerManager.h" />
     <ClInclude Include="base\time.h" />
     <ClInclude Include="base\window.h" />
-    <ClInclude Include="common\Array.h" />
-    <ClInclude Include="common\closure.hpp" />
+    <ClInclude Include="common\Array.hpp" />
+    <ClInclude Include="common\Closure.hpp" />
     <ClInclude Include="common\ComPtr.hpp" />
     <ClInclude Include="common\helper.h" />
     <ClInclude Include="common\IntrusiveList.hpp" />
     <ClInclude Include="common\IntrusivePtr.hpp" />
-    <ClInclude Include="common\Json.h" />
-    <ClInclude Include="common\noncopyable.hpp" />
+    <ClInclude Include="common\Json.hpp" />
+    <ClInclude Include="common\Noncopyable.hpp" />
     <ClInclude Include="common\Singleton.hpp" />
-    <ClInclude Include="common\String.h" />
+    <ClInclude Include="common\String.hpp" />
     <ClInclude Include="math\constants.hpp" />
     <ClInclude Include="math\ease.hpp" />
     <ClInclude Include="math\helper.h" />
@@ -214,23 +214,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
+    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform)\</IntDir>
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
+    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
+    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform)\</IntDir>
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
+    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

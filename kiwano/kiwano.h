@@ -32,16 +32,16 @@
 // common
 //
 
-#include "common/Array.h"
-#include "common/String.h"
+#include "common/Array.hpp"
+#include "common/String.hpp"
 #include "common/helper.h"
-#include "common/closure.hpp"
+#include "common/Closure.hpp"
 #include "common/IntrusiveList.hpp"
 #include "common/IntrusivePtr.hpp"
 #include "common/ComPtr.hpp"
-#include "common/noncopyable.hpp"
+#include "common/Noncopyable.hpp"
 #include "common/Singleton.hpp"
-#include "common/Json.h"
+#include "common/Json.hpp"
 
 
 //

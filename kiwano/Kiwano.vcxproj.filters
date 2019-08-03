@@ -108,12 +108,6 @@
     <ClInclude Include="2d\Transition.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="common\Array.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="common\closure.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="common\ComPtr.hpp">
       <Filter>common</Filter>
     </ClInclude>
@@ -126,13 +120,7 @@
     <ClInclude Include="common\IntrusivePtr.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="common\noncopyable.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="common\Singleton.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="common\String.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="base\Component.h">
@@ -234,9 +222,6 @@
     <ClInclude Include="utils\DataUtil.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="common\Json.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="base\Timer.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -263,6 +248,21 @@
     </ClInclude>
     <ClInclude Include="2d\GifSprite.h">
       <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Closure.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Noncopyable.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\String.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Json.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Array.hpp">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
