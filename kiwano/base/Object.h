@@ -51,6 +51,8 @@ namespace kiwano
 		String DumpObject();
 
 	public:
+		static bool IsTracingLeaks();
+
 		static void StartTracingLeaks();
 
 		static void StopTracingLeaks();

@@ -135,6 +135,8 @@ namespace kiwano
 		curr_scene_.Reset();
 		debug_node_.Reset();
 
+		OnDestroy();
+
 		if (inited_)
 		{
 			inited_ = false;
@@ -147,10 +149,12 @@ namespace kiwano
 		}
 
 		// Destroy all instances
-		Renderer::Destroy();
 		Input::Destroy();
+		Renderer::Destroy();
 		Window::Destroy();
-		Logger::Destroy();
+
+		// DO NOT destroy Logger instance manually
+		// Logger::Destroy();
 	}
 
 	void Application::Use(Component* component)
@@ -534,8 +538,6 @@ namespace kiwano
 				Event evt(Event::WindowClosed);
 				app->curr_scene_->Dispatch(evt);
 			}
-
-			app->OnDestroy();
 
 			::PostQuitMessage(0);
 			return 0;

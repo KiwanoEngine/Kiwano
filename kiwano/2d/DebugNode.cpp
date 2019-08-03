@@ -73,8 +73,11 @@ namespace kiwano
 		std::wstringstream ss;
 		ss << "Fps: " << frame_time_.size() << std::endl;
 
-#ifdef KGE_DEBUG
-		ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
+#if defined(KGE_DEBUG)
+		if (Object::IsTracingLeaks())
+		{
+			ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
+		}
 #endif
 
 		ss << "Render: " << Renderer::Instance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
