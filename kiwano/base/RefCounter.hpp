@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../macros.h"
-#include "../common/noncopyable.hpp"
+#include "../common/Noncopyable.hpp"
 
 namespace kiwano
 {

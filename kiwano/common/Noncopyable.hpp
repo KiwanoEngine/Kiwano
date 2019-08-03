@@ -19,49 +19,17 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Object.h"
-#include "../common/Closure.hpp"
-#include <thread>
-#include <mutex>
 
 namespace kiwano
 {
-	KGE_DECLARE_SMART_PTR(AsyncTask);
-
-	typedef Closure<void()> AsyncTaskFunc;
-	typedef Closure<void()> AsyncTaskCallback;
-
-	class AsyncTask
-		: public Object
+	class Noncopyable
 	{
-	public:
-		AsyncTask();
-
-		AsyncTask(
-			AsyncTaskFunc func
-		);
-
-		virtual ~AsyncTask();
-
-		AsyncTask& Then(
-			AsyncTaskFunc func
-		);
-
-		AsyncTask& SetCallback(
-			AsyncTaskCallback callback
-		);
-
-		void Start();
-
 	protected:
-		void TaskThread();
+		Noncopyable() = default;
 
-		void Complete();
+	private:
+		Noncopyable(const Noncopyable&) = delete;
 
-	protected:
-		std::thread thread_;
-		std::mutex func_mutex_;
-		Queue<AsyncTaskFunc> thread_func_queue_;
-		AsyncTaskCallback thread_cb_;
+		Noncopyable& operator=(const Noncopyable&) = delete;
 	};
 }
