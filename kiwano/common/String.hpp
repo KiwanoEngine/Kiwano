@@ -43,8 +43,11 @@ namespace kiwano
 namespace kiwano
 {
 	//
-	// basic_string
-	// Lightweight std::wstring<>-like class
+	// basic_string<>
+	//   Lightweight std::basic_string<>-like class
+	//   When using basic_string<> with a c-style string (char* or wchar_t*), constructor and operator=() just hold
+	//   a pointer to the character array but don't copy its content, considering performance issues.
+	//   Use assign() and basic_string<>::cstr() to work fine with c-style strings.
 	//
 	template <typename _CharTy>
 	class basic_string
@@ -174,7 +177,7 @@ namespace kiwano
 
 		basic_string&			assign(size_type count, const char_type ch);
 		basic_string&			assign(const char_type* cstr, size_type count);
-		inline basic_string&	assign(const char_type* cstr, bool const_str = true)										{ basic_string(cstr, const_str).swap(*this); return *this; }
+		inline basic_string&	assign(const char_type* cstr)																{ basic_string(cstr, false).swap(*this); return *this; }
 		inline basic_string&	assign(basic_string const& rhs)																{ basic_string{ rhs }.swap(*this); return *this; }
 		inline basic_string&	assign(std::basic_string<char_type> const& rhs)												{ basic_string{ rhs }.swap(*this); return *this; }
 		basic_string&			assign(basic_string const& rhs, size_type pos, size_type count = npos);
@@ -218,6 +221,8 @@ namespace kiwano
 		template <typename ..._Args>
 		static basic_string format(const char_type* fmt, _Args&&... args);
 
+		static inline basic_string cstr(const char_type* cstr)			{ return basic_string(cstr, false); }
+
 	public:
 		inline iterator					begin()							{ check_operability(); return iterator(str_); }
 		inline const_iterator			begin() const					{ return const_iterator(const_str_); }
@@ -237,7 +242,7 @@ namespace kiwano
 		inline const_reference			back() const					{ if (empty()) throw std::out_of_range("back() called on empty string"); return const_str_[size_ - 1]; }
 
 	public:
-		inline char_type			operator[](size_type off) const						{ if(off >= size_) throw std::out_of_range("string subscript out of range"); return const_str_[off]; }
+		inline char_type			operator[](size_type off) const						{ if (off >= size_) throw std::out_of_range("string subscript out of range"); return const_str_[off]; }
 		inline char_type&			operator[](size_type off)							{ if (off >= size_) throw std::out_of_range("string subscript out of range"); check_operability(); return str_[off]; }
 
 	public:

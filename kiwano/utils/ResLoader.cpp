@@ -36,7 +36,7 @@ namespace kiwano
 		};
 
 		bool LoadImagesFromData(ResLoader* loader, GlobalData* gdata, const String* id, const String* type,
-			const String* file, const Array<String>* files, int rows, int cols)
+			const String* file, const Array<const wchar_t*>* files, int rows, int cols)
 		{
 			if (!gdata || !id) return false;
 
@@ -104,11 +104,11 @@ namespace kiwano
 
 					if (image.count(L"files"))
 					{
-						Array<String> files;
+						Array<const wchar_t*> files;
 						files.reserve(image[L"files"].size());
 						for (const auto& file : image[L"files"])
 						{
-							files.push_back(file.as_string());
+							files.push_back(file.as_string().c_str());
 						}
 						if (!LoadImagesFromData(loader, &global_data, id, type, file, &files, rows, cols))
 							return false;
@@ -138,15 +138,15 @@ namespace kiwano
 					String id, type, file;
 					int rows = 0, cols = 0;
 
-					if (auto attr = image->Attribute(L"id")) id = String(attr, false);
-					if (auto attr = image->Attribute(L"type")) type = attr;
-					if (auto attr = image->Attribute(L"file")) file = attr;
+					if (auto attr = image->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
+					if (auto attr = image->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
+					if (auto attr = image->Attribute(L"file"))    file = attr;
 					if (auto attr = image->IntAttribute(L"rows")) rows = attr;
 					if (auto attr = image->IntAttribute(L"cols")) cols = attr;
 
 					if (file.empty() && !image->NoChildren())
 					{
-						Array<String> files_arr;
+						Array<const wchar_t*> files_arr;
 						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
 						{
 							if (auto path = file->Attribute(L"path"))

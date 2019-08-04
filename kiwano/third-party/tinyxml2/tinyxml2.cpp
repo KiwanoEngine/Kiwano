@@ -193,7 +193,7 @@ void StrPair::SetStr( const wchar_t* str, int flags )
     size_t len = strlen( str );
     TIXMLASSERT( _start == 0 );
     _start = new wchar_t[ len+1 ];
-    memcpy( _start, str, (len+1) * sizeof(_start[0]));
+    memcpy( _start, str, (len+1) * sizeof(wchar_t));
     _end = _start + len;
     _flags = flags | NEEDS_DELETE;
 }
@@ -329,7 +329,7 @@ const wchar_t* StrPair::GetStr()
                             TIXMLASSERT( 0 <= len && len <= buflen );
                             TIXMLASSERT( q + len <= adjusted );
                             p = adjusted;
-                            memcpy( q, buf, len );
+                            memcpy( q, buf, len * sizeof(wchar_t));
                             q += len;
                         }
                     }
@@ -2304,7 +2304,7 @@ XMLError XMLDocument::Parse( const wchar_t* p, size_t len )
     }
     TIXMLASSERT( _wcharBuffer == 0 );
     _wcharBuffer = new wchar_t[ len+1 ];
-    memcpy( _wcharBuffer, p, len * sizeof(_wcharBuffer[0]) );
+    memcpy( _wcharBuffer, p, len * sizeof(wchar_t));
     _wcharBuffer[len] = 0;
 
     Parse();
@@ -2467,7 +2467,7 @@ void XMLPrinter::Write( const wchar_t* data, size_t size )
     }
     else {
         wchar_t* p = _buffer.PushArr( static_cast<int>(size) ) - 1;   // back up over the null terminator.
-        memcpy( p, data, size );
+        memcpy( p, data, size * sizeof(wchar_t));
         p[size] = 0;
     }
 }
