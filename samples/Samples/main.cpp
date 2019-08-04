@@ -46,9 +46,6 @@ public:
 
 	void OnStart() override
 	{
-		Logger::Instance()->ShowConsole(true);
-		ShowDebugInfo(true);
-
 		// 从 JSON 文件中读取资源信息
 		//g_Loader.LoadFromJsonFile(L"res/index.json");
 

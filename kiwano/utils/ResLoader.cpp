@@ -126,33 +126,32 @@ namespace kiwano
 		bool LoadXmlData(ResLoader* loader, tinyxml2::XMLElement* elem)
 		{
 			GlobalData global_data;
-			if (elem->FirstChildElement("path"))
+			if (auto path = elem->FirstChildElement("path"))
 			{
-				global_data.path = string_to_wide(elem->FirstChildElement("path")->GetText());
+				global_data.path = string_to_wide(path->GetText());
 			}
 
-			if (elem->FirstChildElement("images"))
+			if (auto images = elem->FirstChildElement("images"))
 			{
-				auto images = elem->FirstChildElement("images");
 				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
 				{
 					String id, type, file;
 					int rows = 0, cols = 0;
 
-					if (image->Attribute("id")) id = string_to_wide(image->Attribute("id"));
-					if (image->Attribute("type")) type = string_to_wide(image->Attribute("type"));
-					if (image->Attribute("file")) file = string_to_wide(image->Attribute("file"));
-					if (image->Attribute("rows")) rows = image->IntAttribute("rows");
-					if (image->Attribute("cols")) cols = image->IntAttribute("cols");
+					if (auto attr = image->Attribute("id")) id = string_to_wide(attr);
+					if (auto attr = image->Attribute("type")) type = string_to_wide(attr);
+					if (auto attr = image->Attribute("file")) file = string_to_wide(attr);
+					if (auto attr = image->IntAttribute("rows")) rows = attr;
+					if (auto attr = image->IntAttribute("cols")) cols = attr;
 
 					if (file.empty() && !image->NoChildren())
 					{
 						Array<String> files_arr;
 						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
 						{
-							if (file->Attribute("path"))
+							if (auto path = file->Attribute("path"))
 							{
-								files_arr.push_back(string_to_wide(file->Attribute("path")));
+								files_arr.push_back(string_to_wide(path));
 							}
 						}
 						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, &files_arr, rows, cols))
