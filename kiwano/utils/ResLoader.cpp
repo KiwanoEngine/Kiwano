@@ -126,32 +126,32 @@ namespace kiwano
 		bool LoadXmlData(ResLoader* loader, tinyxml2::XMLElement* elem)
 		{
 			GlobalData global_data;
-			if (auto path = elem->FirstChildElement("path"))
+			if (auto path = elem->FirstChildElement(L"path"))
 			{
-				global_data.path = string_to_wide(path->GetText());
+				global_data.path = path->GetText();
 			}
 
-			if (auto images = elem->FirstChildElement("images"))
+			if (auto images = elem->FirstChildElement(L"images"))
 			{
 				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
 				{
 					String id, type, file;
 					int rows = 0, cols = 0;
 
-					if (auto attr = image->Attribute("id")) id = string_to_wide(attr);
-					if (auto attr = image->Attribute("type")) type = string_to_wide(attr);
-					if (auto attr = image->Attribute("file")) file = string_to_wide(attr);
-					if (auto attr = image->IntAttribute("rows")) rows = attr;
-					if (auto attr = image->IntAttribute("cols")) cols = attr;
+					if (auto attr = image->Attribute(L"id")) id = String(attr, false);
+					if (auto attr = image->Attribute(L"type")) type = attr;
+					if (auto attr = image->Attribute(L"file")) file = attr;
+					if (auto attr = image->IntAttribute(L"rows")) rows = attr;
+					if (auto attr = image->IntAttribute(L"cols")) cols = attr;
 
 					if (file.empty() && !image->NoChildren())
 					{
 						Array<String> files_arr;
 						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
 						{
-							if (auto path = file->Attribute("path"))
+							if (auto path = file->Attribute(L"path"))
 							{
-								files_arr.push_back(string_to_wide(path));
+								files_arr.push_back(path);
 							}
 						}
 						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, &files_arr, rows, cols))
@@ -237,12 +237,30 @@ namespace kiwano
 	bool ResLoader::LoadFromXmlFile(String const& file_path)
 	{
 		tinyxml2::XMLDocument doc;
-		if (tinyxml2::XML_SUCCESS != doc.LoadFile(kiwano::wide_to_string(file_path).c_str()))
+
+		std::wifstream ifs;
+		ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+		try
 		{
-			KGE_WARNING_LOG(L"ResLoader::LoadFromXmlFile failed: %s",
-				string_to_wide(tinyxml2::XMLDocument::ErrorIDToName(doc.ErrorID())).c_str());
+			ifs.open(file_path.c_str());
+
+			std::wstringstream ss;
+			ss << ifs.rdbuf();
+
+			if (tinyxml2::XML_SUCCESS != doc.Parse(ss.str().c_str()))
+			{
+				KGE_WARNING_LOG(L"ResLoader::LoadFromXmlFile failed: %s (%s)",
+					tinyxml2::XMLDocument::ErrorIDToName(doc.ErrorID()), doc.ErrorStr());
+				return false;
+			}
+		}
+		catch (std::wifstream::failure& e)
+		{
+			KGE_WARNING_LOG(L"ResLoader::LoadFromXmlFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
+
 		return LoadFromXml(&doc);
 	}
 
@@ -252,21 +270,19 @@ namespace kiwano
 		{
 			try
 			{
-				auto root = doc->FirstChildElement("resources");
-				KGE_ASSERT(root);
-
-				if (root)
+				if (auto root = doc->FirstChildElement(L"resources"))
 				{
-					kiwano::string version = root->FirstChildElement("version")->GetText();
+					kiwano::wstring version;
+					if (auto ver = root->FirstChildElement(L"version")) version = ver->GetText();
 
-					auto load = load_xml_funcs.find(string_to_wide(version));
+					auto load = load_xml_funcs.find(version);
 					if (load != load_xml_funcs.end())
 					{
-						load->second(this, root);
+						return load->second(this, root);
 					}
 					else if (version.empty())
 					{
-						load_xml_funcs[L"latest"](this, root);
+						return load_xml_funcs[L"latest"](this, root);
 					}
 					else
 					{
