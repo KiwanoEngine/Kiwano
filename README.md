@@ -1,6 +1,8 @@
+![Kiwano Logo](https://github.com/Nomango/Kiwano/raw/master/logo/logo_text_h.png)
+
 # Kiwano Game Engine
 
-![Kiwano Logo](https://github.com/Nomango/Kiwano/raw/master/logo/logo_text_h.png)
+[![Build status](https://ci.appveyor.com/api/projects/status/frqh09om9ldaklr9/branch/master?svg=true)](https://ci.appveyor.com/project/Nomango/kiwano/branch/master)
 
 ## Introduction
 Kiwano is a open-source 2D C++ game engine, only support win32 platform.

@@ -1,7 +1,4 @@
 version: 1.0.{build}
-branches:
-  only:
-  - configure_ci
 configuration:
 - Debug
 - Release
@@ -13,3 +10,10 @@ build:
   project: ./Kiwano.sln
   parallel: true
   verbosity: minimal
+notifications:
+- provider: Email
+  to:
+  - 569629550@qq.com
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: true
