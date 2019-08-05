@@ -226,7 +226,7 @@ namespace kiwano
 			if (callable_) callable_->AddRef();
 		}
 
-		Closure(Closure&& rhs)
+		Closure(Closure&& rhs) noexcept
 			: callable_(rhs.callable_)
 		{
 			rhs.callable_ = nullptr;

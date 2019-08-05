@@ -20,8 +20,6 @@
 
 #include "D3D10DeviceResources.h"
 
-#if defined(KGE_USE_DIRECTX10)
-
 #include "../2d/Image.h"
 #include "../base/logs.h"
 
@@ -541,5 +539,3 @@ namespace kiwano
 	}
 
 }
-
-#endif // !KGE_USE_DIRECTX10

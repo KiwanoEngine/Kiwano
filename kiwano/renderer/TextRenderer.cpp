@@ -35,12 +35,12 @@ namespace kiwano
 		STDMETHOD(CreateDeviceResources)();
 
 		STDMETHOD_(void, SetTextStyle)(
-			FLOAT opacity,
-			CONST D2D1_COLOR_F &fillColor,
-			BOOL outline,
-			CONST D2D1_COLOR_F &outlineColor,
-			FLOAT outlineWidth,
-			ID2D1StrokeStyle* outlineJoin
+            _In_ FLOAT opacity,
+            _In_ CONST D2D1_COLOR_F &fillColor,
+            _In_ BOOL outline,
+            _In_ CONST D2D1_COLOR_F &outlineColor,
+            _In_ FLOAT outlineWidth,
+            _In_ ID2D1StrokeStyle* outlineJoin
 			);
 
 		STDMETHOD(DrawGlyphRun)(
@@ -115,8 +115,8 @@ namespace kiwano
 	};
 
 	HRESULT ITextRenderer::Create(
-		ITextRenderer** ppTextRenderer,
-		ID2D1RenderTarget* pRT)
+        _Out_ ITextRenderer** ppTextRenderer,
+		_In_ ID2D1RenderTarget* pRT)
 	{
 		HRESULT hr = E_FAIL;
 
@@ -188,12 +188,12 @@ namespace kiwano
 	}
 
 	STDMETHODIMP_(void) TextRenderer::SetTextStyle(
-		FLOAT opacity,
-		CONST D2D1_COLOR_F &fillColor,
-		BOOL outline,
-		CONST D2D1_COLOR_F &outlineColor,
-		FLOAT outlineWidth,
-		ID2D1StrokeStyle* outlineJoin)
+        _In_ FLOAT opacity,
+        _In_ CONST D2D1_COLOR_F &fillColor,
+        _In_ BOOL outline,
+        _In_ CONST D2D1_COLOR_F &outlineColor,
+        _In_ FLOAT outlineWidth,
+        _In_ ID2D1StrokeStyle* outlineJoin)
 	{
 		sFillColor_ = fillColor;
 		bShowOutline_ = outline;

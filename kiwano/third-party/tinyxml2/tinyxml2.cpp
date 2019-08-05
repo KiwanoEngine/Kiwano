@@ -2419,7 +2419,8 @@ XMLPrinter::XMLPrinter( FILE* file, bool compact, int depth ) :
     _textDepth( -1 ),
     _processEntities( true ),
     _compactMode( compact ),
-    _buffer()
+    _buffer(),
+    _entityFlag{}
 {
     for( int i=0; i<ENTITY_RANGE; ++i ) {
         _entityFlag[i] = false;

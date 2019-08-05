@@ -26,6 +26,9 @@ namespace kiwano
 	namespace modules
 	{
 		Shlwapi::Shlwapi()
+			: shlwapi(nullptr)
+			, PathFileExistsW(nullptr)
+			, SHCreateMemStream(nullptr)
 		{
 			shlwapi = LoadLibraryW(L"shlwapi.dll");
 			if (shlwapi)

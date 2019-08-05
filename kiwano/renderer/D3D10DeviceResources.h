@@ -22,8 +22,6 @@
 
 #include "../macros.h"
 
-#if defined(KGE_USE_DIRECTX10)
-
 #include "D2DDeviceResources.h"
 #include "D3DDeviceResourcesBase.h"
 #include <d3d10_1.h>
@@ -52,5 +50,3 @@ namespace kiwano
 	};
 
 }
-
-#endif // !KGE_USE_DIRECTX10

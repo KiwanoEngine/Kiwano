@@ -80,7 +80,7 @@ namespace kiwano
 
 			LPVOID buffer;
 			DWORD buffer_size;
-			if (!res.Load(buffer, buffer_size)) { return false; }
+			if (!res.Load(buffer, buffer_size)) { return E_FAIL; }
 
 			stream = kiwano::modules::Shlwapi::Get().SHCreateMemStream(
 				static_cast<const BYTE*>(buffer),

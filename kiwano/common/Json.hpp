@@ -396,14 +396,6 @@ namespace kiwano
 		};
 
 		template <typename _BasicJsonTy>
-		struct internal_iterator
-		{
-			typename _BasicJsonTy::array_type::iterator array_iter;
-			typename _BasicJsonTy::object_type::iterator object_iter;
-			primitive_iterator original_iter = 0;  // for other types
-		};
-
-		template <typename _BasicJsonTy>
 		struct iterator_impl
 		{
 			friend _BasicJsonTy;
@@ -422,7 +414,38 @@ namespace kiwano
 			using pointer			= value_type*;
 			using reference			= value_type&;
 
-			inline iterator_impl(pointer json = nullptr) : data_(json) {}
+			using array_iterator	= typename _BasicJsonTy::array_type::iterator;
+			using object_iterator	= typename _BasicJsonTy::object_type::iterator;
+
+			inline iterator_impl(pointer json = nullptr) : data_(json), primitive_iter(0), array_iter(), object_iter() {}
+
+			inline iterator_impl(const iterator_impl& rhs) : iterator_impl()
+			{
+				operator=(rhs);
+			}
+
+			~iterator_impl() {}
+
+			inline iterator_impl& operator=(const iterator_impl& rhs)
+			{
+				data_ = rhs.data_;
+				if (data_)
+				{
+					switch (data_->type())
+					{
+					case JsonType::Object:
+						object_iter = rhs.object_iter;
+						break;
+					case JsonType::Array:
+						array_iter = rhs.array_iter;
+						break;
+					default:
+						primitive_iter = rhs.primitive_iter;
+						break;
+					}
+				}
+				return (*this);
+			}
 
 			inline reference operator*() const
 			{
@@ -431,9 +454,9 @@ namespace kiwano
 				switch (data_->type())
 				{
 				case JsonType::Object:
-					return (it_.object_iter->second);
+					return (object_iter->second);
 				case JsonType::Array:
-					return (*it_.array_iter);
+					return (*array_iter);
 				default:
 					return *data_;
 				}
@@ -446,9 +469,9 @@ namespace kiwano
 				switch (data_->type())
 				{
 				case JsonType::Object:
-					return &(it_.object_iter->second);
+					return &(object_iter->second);
 				case JsonType::Array:
-					return &(*it_.array_iter);
+					return &(*array_iter);
 				default:
 					return data_;
 				}
@@ -460,7 +483,7 @@ namespace kiwano
 				check_iterator();
 				if (!data_->is_object())
 					throw json_invalid_iterator("cannot use key() with non-object type");
-				return it_.object_iter->first;
+				return object_iter->first;
 			}
 
 			inline reference value() const
@@ -476,17 +499,17 @@ namespace kiwano
 				{
 					case JsonType::Object:
 					{
-						it_.object_iter = data_->value_.data.object->begin();
+						object_iter = data_->value_.data.object->begin();
 						break;
 					}
 					case JsonType::Array:
 					{
-						it_.array_iter = data_->value_.data.vector->begin();
+						array_iter = data_->value_.data.vector->begin();
 						break;
 					}
 					default:
 					{
-						it_.original_iter.set_begin();
+						primitive_iter.set_begin();
 						break;
 					}
 				}
@@ -500,17 +523,17 @@ namespace kiwano
 				{
 					case JsonType::Object:
 					{
-						it_.object_iter = data_->value_.data.object->end();
+						object_iter = data_->value_.data.object->end();
 						break;
 					}
 					case JsonType::Array:
 					{
-						it_.array_iter = data_->value_.data.vector->end();
+						array_iter = data_->value_.data.vector->end();
 						break;
 					}
 					default:
 					{
-						it_.original_iter.set_end();
+						primitive_iter.set_end();
 						break;
 					}
 				}
@@ -525,17 +548,17 @@ namespace kiwano
 				{
 					case JsonType::Object:
 					{
-						std::advance(it_.object_iter, 1);
+						std::advance(object_iter, 1);
 						break;
 					}
 					case JsonType::Array:
 					{
-						std::advance(it_.array_iter, 1);
+						std::advance(array_iter, 1);
 						break;
 					}
 					default:
 					{
-						++it_.original_iter;
+						++primitive_iter;
 						break;
 					}
 				}
@@ -551,17 +574,17 @@ namespace kiwano
 				{
 					case JsonType::Object:
 					{
-						std::advance(it_.object_iter, -1);
+						std::advance(object_iter, -1);
 						break;
 					}
 					case JsonType::Array:
 					{
-						std::advance(it_.array_iter, -1);
+						std::advance(array_iter, -1);
 						break;
 					}
 					default:
 					{
-						--it_.original_iter;
+						--primitive_iter;
 						break;
 					}
 				}
@@ -584,12 +607,12 @@ namespace kiwano
 					}
 					case JsonType::Array:
 					{
-						std::advance(it_.array_iter, off);
+						std::advance(array_iter, off);
 						break;
 					}
 					default:
 					{
-						it_.original_iter += off;
+						primitive_iter += off;
 						break;
 					}
 				}
@@ -609,15 +632,15 @@ namespace kiwano
 				{
 					case JsonType::Object:
 					{
-						return it_.object_iter == other.it_.object_iter;
+						return object_iter == other.object_iter;
 					}
 					case JsonType::Array:
 					{
-						return it_.array_iter == other.it_.array_iter;
+						return array_iter == other.array_iter;
 					}
 					default:
 					{
-						return it_.original_iter == other.it_.original_iter;
+						return primitive_iter == other.primitive_iter;
 					}
 				}
 			}
@@ -638,9 +661,9 @@ namespace kiwano
 				case JsonType::Object:
 					throw json_invalid_iterator("cannot compare iterators with object type");
 				case JsonType::Array:
-					return it_.array_iter < other.it_.array_iter;
+					return array_iter < other.array_iter;
 				default:
-					return it_.original_iter < other.it_.original_iter;
+					return primitive_iter < other.primitive_iter;
 				}
 			}
 
@@ -658,19 +681,19 @@ namespace kiwano
 				switch (data_->type())
 				{
 				case JsonType::Object:
-					if (it_.object_iter == data_->value_.data.object->end())
+					if (object_iter == data_->value_.data.object->end())
 					{
 						throw std::out_of_range("iterator out of range");
 					}
 					break;
 				case JsonType::Array:
-					if (it_.array_iter == data_->value_.data.vector->end())
+					if (array_iter == data_->value_.data.vector->end())
 					{
 						throw std::out_of_range("iterator out of range");
 					}
 					break;
 				default:
-					if (it_.original_iter == 1)
+					if (primitive_iter == 1)
 					{
 						throw std::out_of_range("iterator out of range");
 					}
@@ -680,7 +703,24 @@ namespace kiwano
 
 		private:
 			pointer data_;
-			internal_iterator<_BasicJsonTy> it_;
+
+			union
+			{
+				struct
+				{
+					array_iterator array_iter;
+				};
+
+				struct
+				{
+					object_iterator object_iter;
+				};
+
+				struct
+				{
+					primitive_iterator primitive_iter;  // for other types
+				};
+			};
 		};
 	} // end of namespace __json_detail
 
@@ -2054,7 +2094,7 @@ namespace kiwano
 			if (is_object())
 			{
 				const_iterator iter;
-				iter.it_.object_iter = value_.data.object->find(std::forward<_Kty>(key));
+				iter.object_iter = value_.data.object->find(std::forward<_Kty>(key));
 				return iter;
 			}
 			return cend();
@@ -2098,13 +2138,13 @@ namespace kiwano
 			{
 			case JsonType::Object:
 			{
-				result.it_.object_iter = value_.data.object->erase(pos.it_.object_iter);
+				result.object_iter = value_.data.object->erase(pos.object_iter);
 				break;
 			}
 
 			case JsonType::Array:
 			{
-				result.it_.array_iter = value_.data.vector->erase(pos.it_.array_iter);
+				result.array_iter = value_.data.vector->erase(pos.array_iter);
 				break;
 			}
 
@@ -2129,13 +2169,13 @@ namespace kiwano
 			{
 			case JsonType::Object:
 			{
-				result.it_.object_iter = value_.data.object->erase(first.it_.object_iter, last.it_.object_iter);
+				result.object_iter = value_.data.object->erase(first.object_iter, last.object_iter);
 				break;
 			}
 
 			case JsonType::Array:
 			{
-				result.it_.array_iter = value_.data.vector->erase(first.it_.array_iter, last.it_.array_iter);
+				result.array_iter = value_.data.vector->erase(first.array_iter, last.array_iter);
 				break;
 			}
 
