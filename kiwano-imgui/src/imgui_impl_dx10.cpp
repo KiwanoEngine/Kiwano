@@ -1,6 +1,5 @@
 // dear imgui: Renderer for Kiwano (DirectX10)
 
-#include "../kiwano-imgui.h"
 #include "imgui_impl_dx10.h"
 
 // DirectX

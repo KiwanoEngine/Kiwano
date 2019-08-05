@@ -93,6 +93,16 @@
 #	endif
 #endif
 
+
+#ifndef KGE_API
+#	if defined(KGE_USE_DLL)
+#		define KGE_API __declspec( dllimport )
+#	elif defined(KGE_EXPORT_DLL)
+#		define KGE_API __declspec( dllexport )
+#	endif
+#endif
+
+
 #ifndef KGE_API
 /* Building or calling Kiwano as a static library */
 #	define KGE_API

@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "kiwano/kiwano.h"
 
 #include "src/audio.h"
 #include "src/Sound.h"

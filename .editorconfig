@@ -5,7 +5,7 @@ root = true
 
 # Unix-style newlines with a newline ending every file
 [*]
-end_of_line = lf
+end_of_line = crlf
 insert_final_newline = true
 
 # Matches multiple files with brace expansion notation
@@ -14,7 +14,7 @@ insert_final_newline = true
 charset = gb2312
 
 # 4 space indentation
-indent_style = space
+indent_style = tab
 indent_size = 4
 
 # Matches the exact files

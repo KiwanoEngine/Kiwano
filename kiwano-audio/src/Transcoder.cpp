@@ -22,9 +22,14 @@
 #	define INITGUID		// MFAudioFormat_PCM, MF_MT_MAJOR_TYPE, MF_MT_SUBTYPE, MFMediaType_Audio
 #endif
 
-#include "../kiwano-audio.h"
-#include "Transcoder.h"
+#include <kiwano/macros.h>
+#include <kiwano/common/ComPtr.hpp>
+#include <kiwano/common/String.hpp>
+#include <kiwano/base/Resource.h>
+#include <kiwano/base/logs.h>
+#include <kiwano/platform/modules.h>
 #include "audio-modules.h"
+#include "Transcoder.h"
 
 namespace kiwano
 {

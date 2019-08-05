@@ -25,6 +25,11 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\kiwano\kiwano.vcxproj">
+      <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1B97937D-8184-426C-BE71-29A163DC76C9}</ProjectGuid>
     <RootNamespace>kiwano-audio</RootNamespace>
@@ -44,7 +49,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
@@ -66,13 +71,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)\output\$(Platform)\$(Configuration).$(PlatformToolset)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration).$(PlatformToolset)\$(ProjectName)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)\output\$(Platform)\$(Configuration).$(PlatformToolset)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration).$(PlatformToolset)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -80,6 +85,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>None</DebugInformationFormat>
       <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -99,7 +105,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>

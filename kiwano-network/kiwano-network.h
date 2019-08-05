@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "kiwano/kiwano.h"
 
 #include "src/helper.h"
 #include "src/HttpRequest.h"

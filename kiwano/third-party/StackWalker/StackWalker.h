@@ -12,7 +12,7 @@
 // so we need not to check the version (because we only support _MSC_VER >= 1100)!
 #pragma once
 
-#include <windows.h>
+#include "../../macros.h"
 
 // special defines for VC5/6 (if no actual PSDK is installed):
 #if _MSC_VER < 1300
@@ -25,7 +25,7 @@ typedef unsigned long SIZE_T, *PSIZE_T;
 #endif  // _MSC_VER < 1300
 
 class StackWalkerInternal;  // forward
-class StackWalker
+class KGE_API StackWalker
 {
 public:
   typedef enum StackWalkOptions

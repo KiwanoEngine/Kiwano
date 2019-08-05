@@ -19,6 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/common/Closure.hpp>
+#include <kiwano/common/Json.hpp>
+#include <kiwano/base/Object.h>
 
 namespace kiwano
 {

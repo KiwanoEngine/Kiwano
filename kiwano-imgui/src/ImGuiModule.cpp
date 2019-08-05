@@ -1,6 +1,12 @@
 // Copyright (C) 2019 Nomango
 
-#include "../kiwano-imgui.h"
+#include <kiwano/common/helper.h>
+#include <kiwano/common/Closure.hpp>
+#include <kiwano/common/IntrusivePtr.hpp>
+#include <kiwano/base/Window.h>
+#include <kiwano/base/Input.h>
+#include <kiwano/renderer/render.h>
+#include "ImGuiModule.h"
 #include "imgui_impl.h"
 
 #include <XInput.h>

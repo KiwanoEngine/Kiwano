@@ -22,8 +22,10 @@
 
 #include "../2d/Image.h"
 #include "../base/logs.h"
+#include <versionhelpers.h>  // IsWindows10OrGreater
 
 #pragma comment(lib, "d3d11.lib")
+
 
 namespace kiwano
 {
@@ -305,12 +307,24 @@ namespace kiwano
 			swap_chain_desc.Windowed = TRUE;
 
 #if defined(_WIN32_WINNT_WIN10)
-			swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-#elif defined(_WIN32_WINNT_WINBLUE)
-			swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-#else
-			swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+			// DXGI_SWAP_EFFECT_FLIP_DISCARD is supported starting with Windows 10.
+			if (IsWindows10OrGreater())
+			{
+				swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+			}
+			else
 #endif
+#if defined(_WIN32_WINNT_WIN10) || defined(_WIN32_WINNT_WINBLUE)
+			// DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL is supported starting with Windows 8.
+			if (IsWindows8OrGreater())
+			{
+				swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+			}
+			else
+#endif
+			{
+				swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+			}
 
 			ComPtr<IDXGIDevice> dxgi_device;
 			if (SUCCEEDED(hr))

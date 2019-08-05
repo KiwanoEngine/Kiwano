@@ -19,12 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../macros.h"
 
 namespace kiwano
 {
 	class Application;
 
-	class Component
+	class KGE_API Component
 	{
 	public:
 		virtual void SetupComponent(Application*) = 0;

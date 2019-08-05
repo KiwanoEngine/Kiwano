@@ -35,37 +35,37 @@ namespace kiwano
 	inline EaseFunc MakeEaseElasticOut(float period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
 	inline EaseFunc MakeEaseElasticInOut(float period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
 
-	EaseFunc Ease::Linear = math::Linear;
-	EaseFunc Ease::EaseIn = MakeEaseIn(2.f);
-	EaseFunc Ease::EaseOut = MakeEaseOut(2.f);
-	EaseFunc Ease::EaseInOut = MakeEaseInOut(2.f);
-	EaseFunc Ease::ExpoIn = math::EaseExponentialIn;
-	EaseFunc Ease::ExpoOut = math::EaseExponentialOut;
-	EaseFunc Ease::ExpoInOut = math::EaseExponentialInOut;
-	EaseFunc Ease::BounceIn = math::EaseBounceIn;
-	EaseFunc Ease::BounceOut = math::EaseBounceOut;
-	EaseFunc Ease::BounceInOut = math::EaseBounceInOut;
-	EaseFunc Ease::ElasticIn = MakeEaseElasticIn(0.3f);
-	EaseFunc Ease::ElasticOut = MakeEaseElasticOut(0.3f);
-	EaseFunc Ease::ElasticInOut = MakeEaseElasticInOut(0.3f);
-	EaseFunc Ease::SineIn = math::EaseSineIn;
-	EaseFunc Ease::SineOut = math::EaseSineOut;
-	EaseFunc Ease::SineInOut = math::EaseSineInOut;
-	EaseFunc Ease::BackIn = math::EaseBackIn;
-	EaseFunc Ease::BackOut = math::EaseBackOut;
-	EaseFunc Ease::BackInOut = math::EaseBackInOut;
-	EaseFunc Ease::QuadIn = math::EaseQuadIn;
-	EaseFunc Ease::QuadOut = math::EaseQuadOut;
-	EaseFunc Ease::QuadInOut = math::EaseQuadInOut;
-	EaseFunc Ease::CubicIn = math::EaseCubicIn;
-	EaseFunc Ease::CubicOut = math::EaseCubicOut;
-	EaseFunc Ease::CubicInOut = math::EaseCubicInOut;
-	EaseFunc Ease::QuartIn = math::EaseQuartIn;
-	EaseFunc Ease::QuartOut = math::EaseQuartOut;
-	EaseFunc Ease::QuartInOut = math::EaseQuartInOut;
-	EaseFunc Ease::QuintIn = math::EaseQuintIn;
-	EaseFunc Ease::QuintOut = math::EaseQuintOut;
-	EaseFunc Ease::QuintInOut = math::EaseQuintInOut;
+    KGE_API EaseFunc Ease::Linear = math::Linear;
+	KGE_API EaseFunc Ease::EaseIn = MakeEaseIn(2.f);
+	KGE_API EaseFunc Ease::EaseOut = MakeEaseOut(2.f);
+	KGE_API EaseFunc Ease::EaseInOut = MakeEaseInOut(2.f);
+	KGE_API EaseFunc Ease::ExpoIn = math::EaseExponentialIn;
+	KGE_API EaseFunc Ease::ExpoOut = math::EaseExponentialOut;
+	KGE_API EaseFunc Ease::ExpoInOut = math::EaseExponentialInOut;
+	KGE_API EaseFunc Ease::BounceIn = math::EaseBounceIn;
+	KGE_API EaseFunc Ease::BounceOut = math::EaseBounceOut;
+	KGE_API EaseFunc Ease::BounceInOut = math::EaseBounceInOut;
+	KGE_API EaseFunc Ease::ElasticIn = MakeEaseElasticIn(0.3f);
+	KGE_API EaseFunc Ease::ElasticOut = MakeEaseElasticOut(0.3f);
+	KGE_API EaseFunc Ease::ElasticInOut = MakeEaseElasticInOut(0.3f);
+	KGE_API EaseFunc Ease::SineIn = math::EaseSineIn;
+	KGE_API EaseFunc Ease::SineOut = math::EaseSineOut;
+	KGE_API EaseFunc Ease::SineInOut = math::EaseSineInOut;
+	KGE_API EaseFunc Ease::BackIn = math::EaseBackIn;
+	KGE_API EaseFunc Ease::BackOut = math::EaseBackOut;
+	KGE_API EaseFunc Ease::BackInOut = math::EaseBackInOut;
+	KGE_API EaseFunc Ease::QuadIn = math::EaseQuadIn;
+	KGE_API EaseFunc Ease::QuadOut = math::EaseQuadOut;
+	KGE_API EaseFunc Ease::QuadInOut = math::EaseQuadInOut;
+	KGE_API EaseFunc Ease::CubicIn = math::EaseCubicIn;
+	KGE_API EaseFunc Ease::CubicOut = math::EaseCubicOut;
+	KGE_API EaseFunc Ease::CubicInOut = math::EaseCubicInOut;
+	KGE_API EaseFunc Ease::QuartIn = math::EaseQuartIn;
+	KGE_API EaseFunc Ease::QuartOut = math::EaseQuartOut;
+	KGE_API EaseFunc Ease::QuartInOut = math::EaseQuartInOut;
+	KGE_API EaseFunc Ease::QuintIn = math::EaseQuintIn;
+	KGE_API EaseFunc Ease::QuintOut = math::EaseQuintOut;
+	KGE_API EaseFunc Ease::QuintInOut = math::EaseQuintInOut;
 
 	//-------------------------------------------------------
 	// ActionTween

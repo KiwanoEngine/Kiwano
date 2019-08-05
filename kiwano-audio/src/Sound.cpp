@@ -18,8 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "../kiwano-audio.h"
+#include <kiwano/base/logs.h>
+#include <kiwano/utils/FileUtil.h>
 #include "Sound.h"
+#include "audio.h"
 #include "Transcoder.h"
 
 namespace kiwano

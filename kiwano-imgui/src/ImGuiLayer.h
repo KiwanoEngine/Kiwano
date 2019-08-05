@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/2d/Layer.h>
 
 namespace kiwano
 {
