@@ -5,6 +5,7 @@
 #include "Demo3.h"
 #include "Demo4.h"
 #include "Demo5.h"
+#include "resource.h"
 
 namespace
 {
@@ -40,7 +41,7 @@ public:
 		// 使用 HttpClient 组件
 		Use(HttpClient::Instance());
 
-		Options options(L"Kiwano示例程序", WINDOW_WIDTH, WINDOW_HEIGHT);
+		Options options(L"Kiwano示例程序", WINDOW_WIDTH, WINDOW_HEIGHT, MAKEINTRESOURCE(IDI_ICON1));
 		Init(options);
 	}
 

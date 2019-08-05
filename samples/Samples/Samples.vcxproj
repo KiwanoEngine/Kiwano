@@ -112,6 +112,7 @@
     <ClInclude Include="Demo3.h" />
     <ClInclude Include="Demo4.h" />
     <ClInclude Include="Demo5.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\kiwano-audio\kiwano-audio.vcxproj">
@@ -129,6 +130,12 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="res\index.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Samples.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\logo\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

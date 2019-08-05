@@ -1,9 +1,14 @@
+# Build folders
 build/
 output/
 
 x64/
 Debug/
 Release/
+
+# Application folders
+.vs
+.vscode
 
 # vs2010
 ipch/
@@ -14,11 +19,11 @@ ipch/
 *.user
 *.lnk
 
-.vs
-.vscode
-
 # NuGet packages
 packages/
 
 !*.dll
 !*.lib
+
+# Resources bin
+*.aps
