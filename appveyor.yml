@@ -1,0 +1,16 @@
+version: 1.0.{build}
+branches:
+  only:
+  - configure_ci
+configuration:
+- Debug
+- Release
+platform:
+- Win32
+- x64
+before_build:
+- ps: nuget restore
+build:
+  project: ./Kiwano.sln
+  parallel: true
+  verbosity: minimal
