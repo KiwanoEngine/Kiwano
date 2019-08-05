@@ -303,7 +303,8 @@ namespace kiwano
 
 		if (text_layout_)
 		{
-			Renderer::Instance()->SetTextStyle(
+            auto renderer = Renderer::Instance();
+            renderer->SetTextStyle(
 				GetDisplayedOpacity(),
 				style_.color,
 				style_.outline,
@@ -311,7 +312,7 @@ namespace kiwano
 				style_.outline_width,
 				style_.outline_stroke
 			);
-			Renderer::Instance()->DrawTextLayout(text_layout_);
+            renderer->DrawTextLayout(text_layout_);
 		}
 	}
 
@@ -327,8 +328,10 @@ namespace kiwano
 		if (text_.empty())
 			return;
 
+        auto renderer = Renderer::Instance();
+
 		ThrowIfFailed(
-			Renderer::Instance()->GetD2DDeviceResources()->CreateTextFormat(
+            renderer->GetD2DDeviceResources()->CreateTextFormat(
 				text_format_,
 				font_,
 				style_
@@ -336,7 +339,7 @@ namespace kiwano
 		);
 
 		ThrowIfFailed(
-			Renderer::Instance()->GetD2DDeviceResources()->CreateTextLayout(
+            renderer->GetD2DDeviceResources()->CreateTextLayout(
 				text_layout_,
 				layout_size_,
 				text_,

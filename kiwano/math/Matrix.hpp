@@ -236,6 +236,17 @@ namespace kiwano
 				);
 			}
 
+            static inline MatrixT SRT(const vec2_type& trans, const vec2_type& scale, value_type angle)
+            {
+                value_type s = math::Sin(angle);
+                value_type c = math::Cos(angle);
+                return MatrixT(
+                    c * scale.x, s * scale.x,
+                    -s * scale.y, c * scale.y,
+                    trans.x, trans.y
+                );
+            }
+
 			static inline MatrixT Skewing(const vec2_type& angle)
 			{
 				value_type tx = math::Tan(angle.x);
