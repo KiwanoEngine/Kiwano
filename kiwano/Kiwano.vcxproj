@@ -135,17 +135,9 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -154,17 +146,6 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
@@ -187,31 +168,13 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -220,19 +183,9 @@
     <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -246,34 +199,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <TreatWarningAsError>false</TreatWarningAsError>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <TreatWarningAsError>false</TreatWarningAsError>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>

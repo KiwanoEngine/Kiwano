@@ -9,14 +9,6 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3561A359-F9FD-48AB-A977-34E7E568BC8E}</ProjectGuid>
@@ -46,29 +38,6 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -80,29 +49,13 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)\output\$(Configuration).$(Platform).$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)\build\$(Configuration).$(Platform).$(PlatformToolset)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
@@ -120,37 +73,7 @@
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
