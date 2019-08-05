@@ -419,12 +419,9 @@ namespace kiwano
                 };
             };
 
-            internal_iterator()
-                : original_iter(0)
-                , array_iter()
-                , object_iter()
-            {
-            }
+            internal_iterator() : original_iter(0), array_iter(), object_iter() {}
+
+            ~internal_iterator() {}
 		};
 
 		template <typename _BasicJsonTy>
