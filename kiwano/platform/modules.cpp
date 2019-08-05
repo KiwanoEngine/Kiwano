@@ -26,7 +26,7 @@ namespace kiwano
 	namespace modules
 	{
 		Shlwapi::Shlwapi()
-            : shlwapi(nullptr)
+			: shlwapi(nullptr)
 			, PathFileExistsW(nullptr)
 			, SHCreateMemStream(nullptr)
 		{

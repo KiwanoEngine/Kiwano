@@ -414,38 +414,38 @@ namespace kiwano
 			using pointer			= value_type*;
 			using reference			= value_type&;
 
-			using array_iterator = typename _BasicJsonTy::array_type::iterator;
-			using object_iterator = typename _BasicJsonTy::object_type::iterator;
+			using array_iterator	= typename _BasicJsonTy::array_type::iterator;
+			using object_iterator	= typename _BasicJsonTy::object_type::iterator;
 
 			inline iterator_impl(pointer json = nullptr) : data_(json), primitive_iter(0), array_iter(), object_iter() {}
 
 			inline iterator_impl(const iterator_impl& rhs) : iterator_impl()
-            {
-                operator=(rhs);
-            }
+			{
+				operator=(rhs);
+			}
 
 			~iterator_impl() {}
 
-            inline iterator_impl& operator=(const iterator_impl& rhs)
-            {
-                data_ = rhs.data_;
-                if (data_)
-                {
-                    switch (data_->type())
-                    {
-                    case JsonType::Object:
-                        object_iter = rhs.object_iter;
-                        break;
-                    case JsonType::Array:
-                        array_iter = rhs.array_iter;
-                        break;
-                    default:
-                        primitive_iter = rhs.primitive_iter;
-                        break;
-                    }
-                }
-                return (*this);
-            }
+			inline iterator_impl& operator=(const iterator_impl& rhs)
+			{
+				data_ = rhs.data_;
+				if (data_)
+				{
+					switch (data_->type())
+					{
+					case JsonType::Object:
+						object_iter = rhs.object_iter;
+						break;
+					case JsonType::Array:
+						array_iter = rhs.array_iter;
+						break;
+					default:
+						primitive_iter = rhs.primitive_iter;
+						break;
+					}
+				}
+				return (*this);
+			}
 
 			inline reference operator*() const
 			{
@@ -704,23 +704,23 @@ namespace kiwano
 		private:
 			pointer data_;
 
-            union
-            {
-                struct
-                {
-                    array_iterator array_iter;
-                };
+			union
+			{
+				struct
+				{
+					array_iterator array_iter;
+				};
 
-                struct
-                {
-                    object_iterator object_iter;
-                };
+				struct
+				{
+					object_iterator object_iter;
+				};
 
-                struct
-                {
-                    primitive_iterator primitive_iter;  // for other types
-                };
-            };
+				struct
+				{
+					primitive_iterator primitive_iter;  // for other types
+				};
+			};
 		};
 	} // end of namespace __json_detail
 

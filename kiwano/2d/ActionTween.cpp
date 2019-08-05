@@ -266,8 +266,8 @@ namespace kiwano
 		: ActionTween(duration, func)
 		, delta_x_(scale_x)
 		, delta_y_(scale_y)
-        , start_scale_x_(0.f)
-        , start_scale_y_(0.f)
+		, start_scale_x_(0.f)
+		, start_scale_y_(0.f)
 	{
 	}
 

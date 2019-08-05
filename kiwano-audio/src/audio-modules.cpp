@@ -27,9 +27,9 @@ namespace kiwano
 	{
 		namespace modules
 		{
-            XAudio2::XAudio2()
-                : xaudio2(nullptr)
-                , XAudio2Create(nullptr)
+			XAudio2::XAudio2()
+				: xaudio2(nullptr)
+				, XAudio2Create(nullptr)
 			{
 				const auto xaudio2_dll_names =
 				{
@@ -57,15 +57,15 @@ namespace kiwano
 			}
 
 			MediaFoundation::MediaFoundation()
-                : mfplat(nullptr)
-                , mfreadwrite(nullptr)
-                , MFStartup(nullptr)
-                , MFShutdown(nullptr)
-                , MFCreateMediaType(nullptr)
-                , MFCreateWaveFormatExFromMFMediaType(nullptr)
-                , MFCreateSourceReaderFromURL(nullptr)
-                , MFCreateSourceReaderFromByteStream(nullptr)
-                , MFCreateMFByteStreamOnStream(nullptr)
+				: mfplat(nullptr)
+				, mfreadwrite(nullptr)
+				, MFStartup(nullptr)
+				, MFShutdown(nullptr)
+				, MFCreateMediaType(nullptr)
+				, MFCreateWaveFormatExFromMFMediaType(nullptr)
+				, MFCreateSourceReaderFromURL(nullptr)
+				, MFCreateSourceReaderFromByteStream(nullptr)
+				, MFCreateMFByteStreamOnStream(nullptr)
 			{
 				mfplat = LoadLibraryW(L"Mfplat.dll");
 				if (mfplat)
