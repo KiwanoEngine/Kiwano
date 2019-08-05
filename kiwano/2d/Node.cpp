@@ -123,10 +123,12 @@ namespace kiwano
 	{
 		if (show_border_)
 		{
-			Rect bounds = GetBounds();
-			Renderer::Instance()->SetTransform(transform_matrix_);
-			Renderer::Instance()->FillRectangle(bounds, Color(Color::Red, .4f));
-			Renderer::Instance()->DrawRectangle(bounds, Color(Color::Red, .8f), 4.f);
+            Rect bounds = GetBounds();
+
+            auto renderer = Renderer::Instance();
+            renderer->SetTransform(transform_matrix_);
+            renderer->FillRectangle(bounds, Color(Color::Red, .4f));
+            renderer->DrawRectangle(bounds, Color(Color::Red, .8f), 4.f);
 		}
 
 		for (auto child = children_.First(); child; child = child->NextItem())
@@ -228,10 +230,12 @@ namespace kiwano
 		else
 		{
 			// matrix multiplication is optimized by expression template
-			transform_matrix_ = Matrix::Scaling(transform_.scale)
-				* Matrix::Skewing(transform_.skew)
-				* Matrix::Rotation(transform_.rotation)
-				* Matrix::Translation(transform_.position);
+            transform_matrix_ = Matrix::SRT(transform_.position, transform_.scale, transform_.rotation);
+
+            if (!transform_.skew.IsOrigin())
+            {
+                transform_matrix_ = Matrix::Skewing(transform_.skew) * transform_matrix_;
+            }
 		}
 
 		transform_matrix_.Translate(Point{ -size_.x * anchor_.x, -size_.y * anchor_.y });
@@ -656,8 +660,9 @@ namespace kiwano
 
 	void VisualNode::PrepareRender()
 	{
-		Renderer::Instance()->SetTransform(transform_matrix_);
-		Renderer::Instance()->SetOpacity(displayed_opacity_);
+        auto renderer = Renderer::Instance();
+        renderer->SetTransform(transform_matrix_);
+        renderer->SetOpacity(displayed_opacity_);
 	}
 
 }

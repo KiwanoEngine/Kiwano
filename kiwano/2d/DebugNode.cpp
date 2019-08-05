@@ -60,11 +60,12 @@ namespace kiwano
 
 	void DebugNode::OnRender()
 	{
-		Renderer::Instance()->GetSolidColorBrush()->SetColor(DX::ConvertToColorF(background_color_));
+		auto renderer = Renderer::Instance();
 
-		Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext()->FillRoundedRectangle(
+		renderer->GetSolidColorBrush()->SetColor(DX::ConvertToColorF(background_color_));
+		renderer->GetD2DDeviceResources()->GetDeviceContext()->FillRoundedRectangle(
 			D2D1::RoundedRect(DX::ConvertToRectF(GetBounds()), 5.f, 5.f),
-			Renderer::Instance()->GetSolidColorBrush()
+			renderer->GetSolidColorBrush()
 		);
 	}
 
