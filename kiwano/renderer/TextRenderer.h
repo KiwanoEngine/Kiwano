@@ -34,11 +34,11 @@ namespace kiwano
 		);
 
 		STDMETHOD_(void, SetTextStyle)(
-			FLOAT opacity,
-			CONST D2D1_COLOR_F &fillColor,
-			BOOL outline,
-			CONST D2D1_COLOR_F &outlineColor,
-			FLOAT outlineWidth,
+			_In_ FLOAT opacity,
+            _In_ CONST D2D1_COLOR_F &fillColor,
+            _In_ BOOL outline,
+            _In_ CONST D2D1_COLOR_F &outlineColor,
+            _In_ FLOAT outlineWidth,
 			_In_ ID2D1StrokeStyle* outlineJoin
 		) PURE;
 	};

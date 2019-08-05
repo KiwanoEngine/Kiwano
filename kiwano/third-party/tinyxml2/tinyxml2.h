@@ -212,6 +212,7 @@ class DynArray
 {
 public:
     DynArray() :
+        _pool{},
         _mem( _pool ),
         _allocated( INITIAL_SIZE ),
         _size( 0 )

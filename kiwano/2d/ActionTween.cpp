@@ -258,9 +258,7 @@ namespace kiwano
 	//-------------------------------------------------------
 
 	ActionScaleBy::ActionScaleBy(Duration duration, float scale, EaseFunc func)
-		: ActionTween(duration, func)
-		, delta_x_(scale)
-		, delta_y_(scale)
+		: ActionScaleBy(duration, scale, scale, func)
 	{
 	}
 
@@ -268,6 +266,8 @@ namespace kiwano
 		: ActionTween(duration, func)
 		, delta_x_(scale_x)
 		, delta_y_(scale_y)
+        , start_scale_x_(0.f)
+        , start_scale_y_(0.f)
 	{
 	}
 
@@ -329,6 +329,7 @@ namespace kiwano
 	ActionFadeTo::ActionFadeTo(Duration duration, float opacity, EaseFunc func)
 		: ActionTween(duration, func)
 		, delta_val_(0.f)
+		, start_val_(0.f)
 		, end_val_(opacity)
 	{
 	}

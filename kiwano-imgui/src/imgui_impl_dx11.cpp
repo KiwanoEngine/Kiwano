@@ -259,17 +259,25 @@ static void ImGui_ImplDX11_CreateFontsTexture()
         subResource.pSysMem = pixels;
         subResource.SysMemPitch = desc.Width * 4;
         subResource.SysMemSlicePitch = 0;
-        g_pd3dDevice->CreateTexture2D(&desc, &subResource, &pTexture);
+        kiwano::ThrowIfFailed(
+            g_pd3dDevice->CreateTexture2D(&desc, &subResource, &pTexture)
+        );
 
-        // Create texture view
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        ZeroMemory(&srvDesc, sizeof(srvDesc));
-        srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MipLevels = desc.MipLevels;
-        srvDesc.Texture2D.MostDetailedMip = 0;
-        g_pd3dDevice->CreateShaderResourceView(pTexture, &srvDesc, &g_pFontTextureView);
-        pTexture->Release();
+        if (pTexture)
+        {
+            // Create texture view
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            ZeroMemory(&srvDesc, sizeof(srvDesc));
+            srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+            srvDesc.Texture2D.MipLevels = desc.MipLevels;
+            srvDesc.Texture2D.MostDetailedMip = 0;
+            kiwano::ThrowIfFailed(
+                g_pd3dDevice->CreateShaderResourceView(pTexture, &srvDesc, &g_pFontTextureView)
+            );
+
+            pTexture->Release();
+        }
     }
 
     // Store our identifier

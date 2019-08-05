@@ -25,7 +25,8 @@ namespace kiwano
 {
 	Resource::Resource(LPCWSTR file_name)
 		: type_(Type::File)
-		, file_name_(nullptr)
+		, bin_name_(nullptr)
+		, bin_type_(nullptr)
 	{
 		if (file_name)
 			file_name_ = new (std::nothrow) String(file_name);
@@ -33,7 +34,8 @@ namespace kiwano
 
 	Resource::Resource(String const& file_name)
 		: type_(Type::File)
-		, file_name_(nullptr)
+        , bin_name_(nullptr)
+        , bin_type_(nullptr)
 	{
 		if (!file_name.empty())
 			file_name_ = new (std::nothrow) String(file_name);

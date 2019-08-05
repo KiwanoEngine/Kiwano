@@ -626,7 +626,7 @@ private:
           LPVOID vData = malloc(dwSize);
           if (vData != NULL)
           {
-            if (GetFileVersionInfoA(szImg, dwHandle, dwSize, vData) != 0)
+            if (GetFileVersionInfoA(szImg, NULL /* dwHandle reserved */, dwSize, vData) != 0)
             {
               UINT len;
               TCHAR szSubBlock[] = _T("\\");

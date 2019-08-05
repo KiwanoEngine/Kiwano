@@ -53,7 +53,7 @@ namespace kiwano
 					if (rows || cols)
 					{
 						// Image slices
-						return loader->AddFrames(*id, Resource(gdata->path + (*file)), std::max(cols, 1), std::max(rows, 1));
+						return !!loader->AddFrames(*id, Resource(gdata->path + (*file)), std::max(cols, 1), std::max(rows, 1));
 					}
 					else
 					{

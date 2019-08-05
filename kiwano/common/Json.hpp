@@ -398,9 +398,33 @@ namespace kiwano
 		template <typename _BasicJsonTy>
 		struct internal_iterator
 		{
-			typename _BasicJsonTy::array_type::iterator array_iter;
-			typename _BasicJsonTy::object_type::iterator object_iter;
-			primitive_iterator original_iter = 0;  // for other types
+            using array_iterator = typename _BasicJsonTy::array_type::iterator;
+            using object_iterator = typename _BasicJsonTy::object_type::iterator;
+
+            union
+            {
+                struct
+                {
+                    array_iterator array_iter;
+                };
+
+                struct
+                {
+                    object_iterator object_iter;
+                };
+
+                struct
+                {
+                    primitive_iterator original_iter;  // for other types
+                };
+            };
+
+            internal_iterator()
+                : original_iter(0)
+                , array_iter()
+                , object_iter()
+            {
+            }
 		};
 
 		template <typename _BasicJsonTy>

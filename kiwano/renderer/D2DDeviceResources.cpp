@@ -63,10 +63,6 @@ namespace kiwano
 			_In_ TextStyle const& text_style
 		) const override;
 
-		void ClearImageCache() override;
-
-		void DiscardResources() override;
-
 		HRESULT SetD2DDevice(
 			_In_ ComPtr<ID2D1Device> const& device
 		) override;
@@ -76,6 +72,10 @@ namespace kiwano
 		) override;
 
 		ID2D1StrokeStyle* GetStrokeStyle(StrokeStyle stroke) const override;
+
+        void ClearImageCache() override;
+
+        void DiscardResources() override;
 
 	public:
 		unsigned long STDMETHODCALLTYPE AddRef();
@@ -297,7 +297,7 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::SetD2DDevice(ComPtr<ID2D1Device> const& device)
+	HRESULT D2DDeviceResources::SetD2DDevice(_In_ ComPtr<ID2D1Device> const& device)
 	{
 		ComPtr<ID2D1DeviceContext> d2d_device_ctx;
 
@@ -316,14 +316,14 @@ namespace kiwano
 		return hr;
 	}
 
-	void D2DDeviceResources::SetTargetBitmap(ComPtr<ID2D1Bitmap1> const& target)
+	void D2DDeviceResources::SetTargetBitmap(_In_ ComPtr<ID2D1Bitmap1> const& target)
 	{
 		target_bitmap_ = target;
 		if (device_context_)
 			device_context_->SetTarget(target_bitmap_.Get());
 	}
 
-	HRESULT D2DDeviceResources::CreateBitmapFromFile(ComPtr<ID2D1Bitmap> & bitmap, String const & file_path)
+	HRESULT D2DDeviceResources::CreateBitmapFromFile(_Out_ ComPtr<ID2D1Bitmap> & bitmap, _In_ String const & file_path)
 	{
 		if (!imaging_factory_ || !device_context_)
 			return E_UNEXPECTED;
@@ -390,7 +390,7 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateBitmapFromResource(ComPtr<ID2D1Bitmap> & bitmap, Resource const & res)
+	HRESULT D2DDeviceResources::CreateBitmapFromResource(_Out_ ComPtr<ID2D1Bitmap> & bitmap, _In_ Resource const & res)
 	{
 		if (!imaging_factory_ || !device_context_)
 			return E_UNEXPECTED;
@@ -477,7 +477,8 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateTextFormat(ComPtr<IDWriteTextFormat> & text_format, Font const & font, TextStyle const & text_style) const
+	HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format,
+        _In_ Font const & font, _In_ TextStyle const & text_style) const
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;
@@ -515,7 +516,9 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateTextLayout(ComPtr<IDWriteTextLayout> & text_layout, Size& layout_size, String const & text, ComPtr<IDWriteTextFormat> const& text_format, TextStyle const & text_style) const
+	HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout> & text_layout,
+        _Out_ Size& layout_size, _In_ String const & text, _In_ ComPtr<IDWriteTextFormat> const& text_format,
+        _In_ TextStyle const & text_style) const
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;
