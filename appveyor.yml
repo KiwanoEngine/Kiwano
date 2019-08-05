@@ -1,7 +1,4 @@
 version: 1.0.{build}
-branches:
-  only:
-  - configure_ci
 configuration:
 - Debug
 - Release
