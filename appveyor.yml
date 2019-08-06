@@ -1,7 +1,10 @@
 version: 0.9.{build}
+
 skip_tags: true
+
 skip_commits:
   message: /\[chore\]/
+
 only_commits:
   files:
     - '**/*.h'
@@ -10,17 +13,26 @@ only_commits:
     - '**/*.sln'
     - '**/*.vcxproj'
     - '**/*.rc'
+
 configuration:
 - Debug
 - Release
+
 platform:
 - Win32
+
 before_build:
 - ps: nuget restore
+
 build:
   project: ./Kiwano.sln
   parallel: true
   verbosity: minimal
+
+artifacts:
+- path: output/Win32/**/*.lib
+  name: Win32
+
 notifications:
 - provider: Email
   to:
