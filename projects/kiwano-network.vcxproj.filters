@@ -8,10 +8,10 @@
     <ClInclude Include="..\src\kiwano-network\src\HttpClient.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano-network\src\HttpRequest.h">
+    <ClInclude Include="..\src\kiwano-network\src\HttpRequest.hpp">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano-network\src\HttpResponse.h">
+    <ClInclude Include="..\src\kiwano-network\src\HttpResponse.hpp">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,22 +2,42 @@ version: 0.9.{build}
 
 skip_tags: true
 
-image:
-- Visual Studio 2019
-- Visual Studio 2017
-- Visual Studio 2015
+# image:
+# - Visual Studio 2019
+# - Visual Studio 2017
+# - Visual Studio 2015
+
+environment:
+  time_out_mins: 5
+  job_to_deploy: 6 # 3(images) * 1(platform) * 2(configuration)
+  flag_to_deploy: false
+  APPVEYOR_API_TOKEN:
+    secure: UJFCbRNHMOqQg3e3Kv/ZnaIqqwXAt+5HDldetaZsZ5E=
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      VS_PLATFORM_TOOLSET: v142
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      VS_PLATFORM_TOOLSET: v141
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      VS_PLATFORM_TOOLSET: v140
 
 skip_commits:
   message: /\[chore\]/
 
 only_commits:
   files:
-    - '**/*.h'
-    - '**/*.hpp'
-    - '**/*.cpp'
-    - '**/*.sln'
-    - '**/*.vcxproj'
-    - '**/*.rc'
+    - '**/*.(h|hpp|cpp)'
+    - '**/*.(sln|vcxproj|rc)'
+    - 'scripts/**/*.ps1'
+    - 'appveyor.yml'
+
+for:
+-
+  branches:
+    except:
+      - master
+  only_commits:
+    message: /\[build\]|\[deploy\]/
 
 configuration:
 - Debug
@@ -26,18 +46,52 @@ configuration:
 platform:
 - Win32
 
-before_build:
-- ps: nuget restore projects/Kiwano.sln
+# cache: packages/
+
+install:
+- ps: .\scripts\appveyor\install_coapp.ps1
+
+# before_build:
+# - ps: nuget restore projects/Kiwano.sln
 
 build:
   parallel: true
   project: projects/Kiwano.sln
-  verbosity: normal
+  verbosity: minimal
+
+after_build:
+- ps: .\scripts\appveyor\wait_for_other_jobs.ps1
 
 artifacts:
-- path: projects/output/
-  name: $(platform).$(configuration)
-  type: zip
+- path: projects/output/**/*.lib
+  name: $(appveyor_project_name)-v$(appveyor_build_version)-$(VS_PLATFORM_TOOLSET).$(platform).$(configuration)
+
+before_deploy:
+- ps: .\scripts\appveyor\coapp_make.ps1
+
+deploy:
+- provider: GitHub
+  tag: v$(appveyor_build_version)
+  release: v$(appveyor_build_version)
+  description: Kiwano-v$(appveyor_build_version) releases.
+  auth_token:
+    secure: pDsK6i03d4qRjtrNXcbhLpAquso/muJWgDSWJHnxP7b6p54kXEvptB67J+1kJOhq
+  artifact: /.*\.nupkg/
+  draft: true
+  on:
+    # branch: master
+    # APPVEYOR_REPO_TAG: true
+    flag_to_deploy: true
+
+- provider: NuGet
+  api_key:
+    secure: I8fmE32nASXVHph+lmAlTKafL0YXmf/S021DgkCxe4+Sjgk2L9SIgp0IFQs9qESG
+  skip_symbols: true
+  artifact: /.*\.nupkg/
+  on:
+    # branch: master
+    # APPVEYOR_REPO_TAG: true
+    flag_to_deploy: true
 
 notifications:
 - provider: Email
