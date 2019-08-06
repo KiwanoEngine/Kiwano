@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="kiwano-network.h" />
-    <ClInclude Include="src\helper.h">
+    <ClInclude Include="..\src\kiwano-network\kiwano-network.h" />
+    <ClInclude Include="..\src\kiwano-network\src\helper.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\HttpClient.h">
+    <ClInclude Include="..\src\kiwano-network\src\HttpClient.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\HttpRequest.h">
+    <ClInclude Include="..\src\kiwano-network\src\HttpRequest.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\HttpResponse.h">
+    <ClInclude Include="..\src\kiwano-network\src\HttpResponse.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -24,7 +24,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\HttpClient.cpp">
+    <ClCompile Include="..\src\kiwano-network\src\HttpClient.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

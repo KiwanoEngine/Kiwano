@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="kiwano-network.h" />
-    <ClInclude Include="src\helper.h" />
-    <ClInclude Include="src\HttpClient.h" />
-    <ClInclude Include="src\HttpRequest.h" />
-    <ClInclude Include="src\HttpResponse.h" />
+    <ClInclude Include="..\src\kiwano-audio\kiwano-audio.h" />
+    <ClInclude Include="..\src\kiwano-audio\src\audio-modules.h" />
+    <ClInclude Include="..\src\kiwano-audio\src\audio.h" />
+    <ClInclude Include="..\src\kiwano-audio\src\Player.h" />
+    <ClInclude Include="..\src\kiwano-audio\src\Sound.h" />
+    <ClInclude Include="..\src\kiwano-audio\src\Transcoder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\HttpClient.cpp" />
+    <ClCompile Include="..\src\kiwano-audio\src\audio-modules.cpp" />
+    <ClCompile Include="..\src\kiwano-audio\src\audio.cpp" />
+    <ClCompile Include="..\src\kiwano-audio\src\Player.cpp" />
+    <ClCompile Include="..\src\kiwano-audio\src\Sound.cpp" />
+    <ClCompile Include="..\src\kiwano-audio\src\Transcoder.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -21,16 +26,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="third-party\libs\libcurl.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\kiwano\kiwano.vcxproj">
+    <ProjectReference Include="kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}</ProjectGuid>
-    <RootNamespace>kiwano-network</RootNamespace>
+    <ProjectGuid>{1B97937D-8184-426C-BE71-29A163DC76C9}</ProjectGuid>
+    <RootNamespace>kiwano-audio</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -84,7 +86,9 @@
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../src/</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -99,8 +103,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../src/</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

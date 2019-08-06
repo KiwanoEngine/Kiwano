@@ -35,7 +35,7 @@ namespace kiwano
 	inline EaseFunc MakeEaseElasticOut(float period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
 	inline EaseFunc MakeEaseElasticInOut(float period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
 
-    KGE_API EaseFunc Ease::Linear = math::Linear;
+	KGE_API EaseFunc Ease::Linear = math::Linear;
 	KGE_API EaseFunc Ease::EaseIn = MakeEaseIn(2.f);
 	KGE_API EaseFunc Ease::EaseOut = MakeEaseOut(2.f);
 	KGE_API EaseFunc Ease::EaseInOut = MakeEaseInOut(2.f);

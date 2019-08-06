@@ -190,7 +190,7 @@ namespace kiwano
 	using namespace time;
 }
 
-#if VS_VER >= VS_2015
+#if KGE_VS_VER > KGE_VS_2013
 
 namespace kiwano
 {

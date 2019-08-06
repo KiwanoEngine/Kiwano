@@ -65,7 +65,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -79,7 +79,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -92,10 +92,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\kiwano-imgui\kiwano-imgui.vcxproj">
+    <ProjectReference Include="..\..\projects\kiwano-imgui.vcxproj">
       <Project>{a7062ed8-8910-48a5-a3bc-c1612672571f}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\kiwano\kiwano.vcxproj">
+    <ProjectReference Include="..\..\projects\kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
   </ItemGroup>

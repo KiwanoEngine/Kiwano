@@ -12,64 +12,64 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\imgui_impl_dx10.h">
+    <ClInclude Include="..\src\kiwano-imgui\src\imgui_impl_dx10.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\imgui_impl_dx11.h">
+    <ClInclude Include="..\src\kiwano-imgui\src\imgui_impl_dx11.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGuiLayer.h">
+    <ClInclude Include="..\src\kiwano-imgui\src\ImGuiLayer.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\ImGui\imconfig.h">
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imconfig.h">
       <Filter>third-party\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\ImGui\imgui.h">
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imgui.h">
       <Filter>third-party\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\ImGui\imgui_internal.h">
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imgui_internal.h">
       <Filter>third-party\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\ImGui\imstb_rectpack.h">
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imstb_rectpack.h">
       <Filter>third-party\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\ImGui\imstb_textedit.h">
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imstb_textedit.h">
       <Filter>third-party\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\ImGui\imstb_truetype.h">
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imstb_truetype.h">
       <Filter>third-party\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="kiwano-imgui.h" />
-    <ClInclude Include="src\imgui_impl.h">
+    <ClInclude Include="..\src\kiwano-imgui\kiwano-imgui.h" />
+    <ClInclude Include="..\src\kiwano-imgui\src\imgui_impl.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGuiModule.h">
+    <ClInclude Include="..\src\kiwano-imgui\src\ImGuiModule.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\imgui_impl_dx10.cpp">
+    <ClCompile Include="..\src\kiwano-imgui\src\imgui_impl_dx10.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui_impl_dx11.cpp">
+    <ClCompile Include="..\src\kiwano-imgui\src\imgui_impl_dx11.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGuiLayer.cpp">
+    <ClCompile Include="..\src\kiwano-imgui\src\ImGuiLayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="third-party\ImGui\imgui.cpp">
+    <ClCompile Include="..\src\kiwano-imgui\third-party\ImGui\imgui.cpp">
       <Filter>third-party\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="third-party\ImGui\imgui_demo.cpp">
+    <ClCompile Include="..\src\kiwano-imgui\third-party\ImGui\imgui_demo.cpp">
       <Filter>third-party\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="third-party\ImGui\imgui_draw.cpp">
+    <ClCompile Include="..\src\kiwano-imgui\third-party\ImGui\imgui_draw.cpp">
       <Filter>third-party\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="third-party\ImGui\imgui_widgets.cpp">
+    <ClCompile Include="..\src\kiwano-imgui\third-party\ImGui\imgui_widgets.cpp">
       <Filter>third-party\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGuiModule.cpp">
+    <ClCompile Include="..\src\kiwano-imgui\src\ImGuiModule.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

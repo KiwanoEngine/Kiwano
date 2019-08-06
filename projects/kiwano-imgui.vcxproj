@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="kiwano-audio.h" />
-    <ClInclude Include="src\audio-modules.h" />
-    <ClInclude Include="src\audio.h" />
-    <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\Sound.h" />
-    <ClInclude Include="src\Transcoder.h" />
+    <ClInclude Include="..\src\kiwano-imgui\kiwano-imgui.h" />
+    <ClInclude Include="..\src\kiwano-imgui\src\ImGuiLayer.h" />
+    <ClInclude Include="..\src\kiwano-imgui\src\ImGuiModule.h" />
+    <ClInclude Include="..\src\kiwano-imgui\src\imgui_impl.h" />
+    <ClInclude Include="..\src\kiwano-imgui\src\imgui_impl_dx10.h" />
+    <ClInclude Include="..\src\kiwano-imgui\src\imgui_impl_dx11.h" />
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imconfig.h" />
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imgui.h" />
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imstb_textedit.h" />
+    <ClInclude Include="..\src\kiwano-imgui\third-party\ImGui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\audio-modules.cpp" />
-    <ClCompile Include="src\audio.cpp" />
-    <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Sound.cpp" />
-    <ClCompile Include="src\Transcoder.cpp" />
+    <ClCompile Include="..\src\kiwano-imgui\src\ImGuiLayer.cpp" />
+    <ClCompile Include="..\src\kiwano-imgui\src\ImGuiModule.cpp" />
+    <ClCompile Include="..\src\kiwano-imgui\src\imgui_impl_dx10.cpp" />
+    <ClCompile Include="..\src\kiwano-imgui\src\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\src\kiwano-imgui\third-party\ImGui\imgui.cpp" />
+    <ClCompile Include="..\src\kiwano-imgui\third-party\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\src\kiwano-imgui\third-party\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\src\kiwano-imgui\third-party\ImGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -26,13 +35,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\kiwano\kiwano.vcxproj">
+    <ProjectReference Include="kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1B97937D-8184-426C-BE71-29A163DC76C9}</ProjectGuid>
-    <RootNamespace>kiwano-audio</RootNamespace>
+    <ProjectGuid>{A7062ED8-8910-48A5-A3BC-C1612672571F}</ProjectGuid>
+    <RootNamespace>kiwano-imgui</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -70,15 +79,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)\output\$(Platform)\$(Configuration).$(PlatformToolset)\</OutDir>
-    <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration).$(PlatformToolset)\$(ProjectName)\</IntDir>
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)\output\$(Platform)\$(Configuration).$(PlatformToolset)\</OutDir>
     <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration).$(PlatformToolset)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)\output\$(Platform)\$(Configuration).$(PlatformToolset)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration).$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -86,7 +95,9 @@
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../src/</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -101,7 +112,10 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../src/</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

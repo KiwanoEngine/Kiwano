@@ -65,7 +65,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -74,7 +74,7 @@
     <PreBuildEvent>
       <Command>
         xcopy "$(ProjectDir)\res" "$(OutDir)\res\" /D /E /I /F /Y
-        xcopy "$(ProjectDir)..\..\kiwano-network\dlls\*.dll" "$(OutDir)" /D /Y
+        xcopy "$(ProjectDir)..\..\src\kiwano-network\dlls\*.dll" "$(OutDir)" /D /Y
       </Command>
       <Message>Copy files</Message>
     </PreBuildEvent>
@@ -86,7 +86,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../..;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -97,7 +97,7 @@
     <PreBuildEvent>
       <Command>
         xcopy "$(ProjectDir)\res" "$(OutDir)\res\" /D /E /I /F /Y
-        xcopy "$(ProjectDir)..\..\kiwano-network\dlls\*.dll" "$(OutDir)" /D /Y
+        xcopy "$(ProjectDir)..\..\src\kiwano-network\dlls\*.dll" "$(OutDir)" /D /Y
       </Command>
       <Message>Copy files</Message>
     </PreBuildEvent>
@@ -115,13 +115,13 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\kiwano-audio\kiwano-audio.vcxproj">
+    <ProjectReference Include="..\..\projects\kiwano-audio.vcxproj">
       <Project>{1b97937d-8184-426c-be71-29a163dc76c9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\kiwano-network\kiwano-network.vcxproj">
+    <ProjectReference Include="..\..\projects\kiwano-network.vcxproj">
       <Project>{69dfbe92-c06f-4cf8-9495-ca9bf2e3baf2}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\kiwano\kiwano.vcxproj">
+    <ProjectReference Include="..\..\projects\kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
   </ItemGroup>

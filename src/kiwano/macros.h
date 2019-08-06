@@ -28,15 +28,15 @@
 #   error Kiwano only supports MSVC compiler
 #endif
 
-#ifndef VS_VER
-#	define VS_VER _MSC_VER
-#	define VS_2013 1800
-#	define VS_2015 1900
-#	define VS_2017 1900
-#	define VS_2019 1920
+#ifndef KGE_VS_VER
+#	define KGE_VS_VER _MSC_VER
+#	define KGE_VS_2013 1800
+#	define KGE_VS_2015 1900
+#	define KGE_VS_2017 1900
+#	define KGE_VS_2019 1920
 #endif
 
-#if VS_VER < VS_2015
+#if KGE_VS_VER < KGE_VS_2015
 #	error Kiwano only supports Visual Studio 2015 and above
 #endif
 

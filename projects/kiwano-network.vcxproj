@@ -1,28 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="kiwano-imgui.h" />
-    <ClInclude Include="src\ImGuiLayer.h" />
-    <ClInclude Include="src\ImGuiModule.h" />
-    <ClInclude Include="src\imgui_impl.h" />
-    <ClInclude Include="src\imgui_impl_dx10.h" />
-    <ClInclude Include="src\imgui_impl_dx11.h" />
-    <ClInclude Include="third-party\ImGui\imconfig.h" />
-    <ClInclude Include="third-party\ImGui\imgui.h" />
-    <ClInclude Include="third-party\ImGui\imgui_internal.h" />
-    <ClInclude Include="third-party\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="third-party\ImGui\imstb_textedit.h" />
-    <ClInclude Include="third-party\ImGui\imstb_truetype.h" />
+    <ClInclude Include="..\src\kiwano-network\kiwano-network.h" />
+    <ClInclude Include="..\src\kiwano-network\src\helper.h" />
+    <ClInclude Include="..\src\kiwano-network\src\HttpClient.h" />
+    <ClInclude Include="..\src\kiwano-network\src\HttpRequest.h" />
+    <ClInclude Include="..\src\kiwano-network\src\HttpResponse.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ImGuiLayer.cpp" />
-    <ClCompile Include="src\ImGuiModule.cpp" />
-    <ClCompile Include="src\imgui_impl_dx10.cpp" />
-    <ClCompile Include="src\imgui_impl_dx11.cpp" />
-    <ClCompile Include="third-party\ImGui\imgui.cpp" />
-    <ClCompile Include="third-party\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="third-party\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="third-party\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="..\src\kiwano-network\src\HttpClient.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -35,13 +21,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\kiwano\kiwano.vcxproj">
+    <Library Include="..\src\kiwano-network\third-party\libs\libcurl.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A7062ED8-8910-48A5-A3BC-C1612672571F}</ProjectGuid>
-    <RootNamespace>kiwano-imgui</RootNamespace>
+    <ProjectGuid>{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}</ProjectGuid>
+    <RootNamespace>kiwano-network</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -79,15 +68,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)\output\$(Platform)\$(Configuration).$(PlatformToolset)\</OutDir>
-    <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration).$(PlatformToolset)\$(ProjectName)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)\output\$(Platform)\$(Configuration).$(PlatformToolset)\</OutDir>
     <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration).$(PlatformToolset)\$(ProjectName)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)\output\$(Platform)\$(Configuration).$(PlatformToolset)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration).$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -95,7 +84,9 @@
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../src/</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -111,7 +102,9 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../src/</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

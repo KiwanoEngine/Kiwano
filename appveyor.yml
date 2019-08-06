@@ -2,6 +2,11 @@ version: 0.9.{build}
 
 skip_tags: true
 
+image:
+- Visual Studio 2019
+- Visual Studio 2017
+- Visual Studio 2015
+
 skip_commits:
   message: /\[chore\]/
 
@@ -22,16 +27,17 @@ platform:
 - Win32
 
 before_build:
-- ps: nuget restore
+- ps: nuget restore projects/Kiwano.sln
 
 build:
-  project: ./Kiwano.sln
   parallel: true
-  verbosity: minimal
+  project: projects/Kiwano.sln
+  verbosity: normal
 
 artifacts:
-- path: output/Win32/**/*.lib
-  name: Win32
+- path: projects/output/
+  name: $(platform).$(configuration)
+  type: zip
 
 notifications:
 - provider: Email

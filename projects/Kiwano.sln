@@ -1,0 +1,43 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano", "kiwano.vcxproj", "{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-audio", "kiwano-audio.vcxproj", "{1B97937D-8184-426C-BE71-29A163DC76C9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-network", "kiwano-network.vcxproj", "{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-imgui", "kiwano-imgui.vcxproj", "{A7062ED8-8910-48A5-A3BC-C1612672571F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Debug|Win32.Build.0 = Debug|Win32
+		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Debug|Win32.Deploy.0 = Debug|Win32
+		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Release|Win32.ActiveCfg = Release|Win32
+		{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}.Release|Win32.Build.0 = Release|Win32
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Debug|Win32.Build.0 = Debug|Win32
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Release|Win32.ActiveCfg = Release|Win32
+		{1B97937D-8184-426C-BE71-29A163DC76C9}.Release|Win32.Build.0 = Release|Win32
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Debug|Win32.Build.0 = Debug|Win32
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Release|Win32.ActiveCfg = Release|Win32
+		{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}.Release|Win32.Build.0 = Release|Win32
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Debug|Win32.Build.0 = Debug|Win32
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Release|Win32.ActiveCfg = Release|Win32
+		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FAC2BE2F-19AF-477A-8DC6-4645E66868A4}
+	EndGlobalSection
+EndGlobal

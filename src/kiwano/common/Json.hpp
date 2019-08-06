@@ -22,6 +22,7 @@
 #include "helper.h"
 #include <cstdint>
 #include <cctype>
+#include <memory>
 #include <array>
 #include <iosfwd>
 

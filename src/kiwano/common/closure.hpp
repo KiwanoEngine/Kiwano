@@ -20,6 +20,7 @@
 
 #pragma once
 #include <stdexcept>
+#include <type_traits>
 
 namespace kiwano
 {
@@ -114,7 +115,7 @@ namespace kiwano
 
 			virtual _Ret Invoke(_Args... args) const override
 			{
-				return callee_(std::forward<_Args>(args)...);
+				return callee_(std::forward<_Args&&>(args)...);
 			}
 
 			static inline Callable<_Ret, _Args...>* Make(_Ty&& val)
