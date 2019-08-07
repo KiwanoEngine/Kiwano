@@ -79,7 +79,7 @@ deploy:
   artifact: /.*\.nupkg/
   draft: true
   on:
-    # branch: master
+    branch: master
     # APPVEYOR_REPO_TAG: true
     flag_to_deploy: true
 
@@ -89,7 +89,7 @@ deploy:
   skip_symbols: true
   artifact: /.*\.nupkg/
   on:
-    # branch: master
+    branch: master
     # APPVEYOR_REPO_TAG: true
     flag_to_deploy: true
 
