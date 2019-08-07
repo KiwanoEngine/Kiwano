@@ -1,0 +1,140 @@
+#defines {
+    // Global variables may be added here.
+    // Variables on the "value" side of each definition will be processed at access time.
+    // GlobalVar1 = "";
+}
+
+configurations {
+    // This node contains pivot information.
+    // These are discussed in detail in the Pivots section.
+    Toolset { 
+        key : "PlatformToolset"; 
+        choices: { v142, v141, v140 };
+    };
+
+    Platform {
+        key : "Platform"; 
+        choices: { Win32 };
+        Win32.aliases : { x86, win32, 386 };
+    };
+
+    Configuration {
+        key : "Configuration"; 
+        choices: { Release, Debug };
+    };
+
+    Linkage {
+        choices : { dynamic, static };
+        description = "Which version of the .lib file to link to this library";
+
+        dynamic.description = "Dynamic Library (DLL)";
+        static.description = "Static";
+    };
+
+    // Only really applicable to x86
+    CallingConvention {
+        choices : { cdecl };
+        description = "Calling convention model to use (for x86 only)";
+        cdecl.description = "cdecl";
+    };
+}
+
+nuget {
+
+    #defines {
+        // Variable definitions specific to this node (ie. "nuget").
+        // Only available while inside this scope.
+        // This metadata is not needed for most packages and is typically omitted.
+    };
+
+
+    // The nuspec file metadata.
+    nuspec {
+        id = Kiwano;
+        // "@appveyor_version" is replaced by the current Appveyor build number in the
+        // pre-deployment script.
+        version: @appveyor_version;
+        title: Kiwano Game Framework;
+        authors: Nomango;
+        owners: Nomango;
+        licenseUrl: "https://github.com/Nomango/Kiwano/blob/master/LICENSE";
+        projectUrl: "https://github.com/Nomango/Kiwano";
+        iconUrl: "https://github.com/Nomango/Kiwano/raw/master/logo/logo_square.png";
+        description: A simple game framework for C++;
+        releaseNotes: "Initial release of a Nuget package for Kiwano Game Engine";
+        copyright: Copyright 2019;
+        tags: { C++, GameFramework, Kiwano };
+    };
+
+
+    #output-packages {
+        // Output file definitions.  These are covered in detail in Output Files.
+        // This metadata is not needed for most packages and is typically omitted.
+    }
+
+
+    dependencies {
+        // This node defines any outside items which may be needed to consume this package.
+        packages : {
+            // This is a list of other NuGet packages required to use this package.
+            // Each item follows the format "<pkg_name>/<version>"
+            // my_pkg/1.0.0,
+            // my_other_pkg/2.1.5.33
+        };
+    }
+
+
+    files {
+        include: {
+            ..\..\src\**\*.h,
+            ..\..\src\**\*.hpp
+        };
+
+        [Win32, v140, Debug] {
+            lib += ..\..\projects\output\v140\Win32\Debug\*.lib;
+        }
+        [Win32, v140, Release] {
+            lib += ..\..\projects\output\v140\Win32\Release\*.lib;
+        }
+
+        [Win32, v141, Debug] {
+            lib += ..\..\projects\output\v141\Win32\Debug\*.lib;
+        }
+        [Win32, v141, Release] {
+            lib += ..\..\projects\output\v141\Win32\Release\*.lib;
+        }
+
+        [Win32, v142, Debug] {
+            lib += ..\..\projects\output\v142\Win32\Debug\*.lib;
+        }
+        [Win32, v142, Release] {
+            lib += ..\..\projects\output\v142\Win32\Release\*.lib;
+        }
+
+        bin += ..\..\src\**\*.dll;
+
+    };
+
+
+    props {
+        // Additional declarations to insert into consuming projects before most of the
+        // project settings. (These may be modified in visual studio by a developer
+        // consuming this package.)
+        // This node is typically not needed for most packages and may be omitted.
+    }
+
+
+    targets {
+        // Additional declarations to insert into consuming projects after most of the
+        // project settings. (These may NOT be modified in visual studio by a developer
+        // consuming this package.)
+        // This node is often used to set defines that are required that must be set by
+        // the consuming project in order to correctly link to the libraries in this
+        // package.  Such defines may be set either globally or only set under specific
+        // conditions.
+        //Defines += HAS_MyLib;
+        //[dynamic]
+        //    Defines += HAS_MyLib;
+    }
+
+}
