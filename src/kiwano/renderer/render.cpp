@@ -179,7 +179,10 @@ namespace kiwano
 		device_context_->SaveDrawingState(drawing_state_block_.Get());
 
 		device_context_->BeginDraw();
-		return S_OK;
+
+		HRESULT hr = d3d_res_->ClearRenderTarget(clear_color_);
+
+		return hr;
 	}
 
 	HRESULT Renderer::EndDraw()
@@ -194,11 +197,6 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = d3d_res_->Present(vsync_);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = d3d_res_->ClearRenderTarget(clear_color_);
 		}
 
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
