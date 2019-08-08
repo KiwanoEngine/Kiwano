@@ -20,8 +20,8 @@
 
 #pragma once
 #include "Action.h"
-#include "Geometry.h"  // ActionPath
 #include "../base/logs.h"
+#include "../renderer/render.h"  // ID2D1PathGeometry, ID2D1GeometrySink
 
 namespace kiwano
 {
@@ -419,7 +419,6 @@ namespace kiwano
 	public:
 		ActionPath(
 			Duration duration,		/* 持续时长 */
-			GeometryPtr geo,		/* 几何图形 */
 			bool rotating = false,	/* 沿路径切线方向旋转 */
 			float start = 0.f,		/* 起点 */
 			float end = 1.f,		/* 终点 */
@@ -432,17 +431,69 @@ namespace kiwano
 		// 获取该动作的倒转
 		ActionPtr Reverse() const override;
 
+		// 开始添加路径
+		void BeginPath();
+
+		// 结束路径
+		void EndPath(
+			bool closed = false		/* 路径是否闭合 */
+		);
+
+		// 添加一条线段
+		void AddLine(
+			Point const& point		/* 端点 */
+		);
+
+		// 添加多条线段
+		void AddLines(
+			Array<Point> const& points
+		);
+
+		// 添加一条三次方贝塞尔曲线
+		void AddBezier(
+			Point const& point1,	/* 贝塞尔曲线的第一个控制点 */
+			Point const& point2,	/* 贝塞尔曲线的第二个控制点 */
+			Point const& point3		/* 贝塞尔曲线的终点 */
+		);
+
+		// 添加弧线
+		void AddArc(
+			Point const& point,		/* 终点 */
+			Size const& radius,		/* 椭圆半径 */
+			float rotation,			/* 椭圆旋转角度 */
+			bool clockwise = true,	/* 顺时针 or 逆时针 */
+			bool is_small = true	/* 是否取小于 180° 的弧 */
+		);
+
+		// 清除路径
+		void ClearPath();
+
+		// 获取路径长度
+		float GetPathLength() const;
+
+		// 计算当前路径上指定点坐标和切线
+		bool ComputePointAtLength(float length, Point* point, Vec2* tangent) const;
+
+		// 获取几何路径
+		inline ComPtr<ID2D1PathGeometry> GetGeometry() const	{ return geo_; }
+
+		// 设置几何路径
+		inline void SetGeometry(ComPtr<ID2D1PathGeometry> geo)	{ geo_ = geo; }
+
 	protected:
 		void Init(NodePtr target) override;
 
 		void UpdateTween(NodePtr target, float percent) override;
 
 	protected:
-		bool		rotating_;
-		float		start_;
-		float		end_;
-		Point		start_pos_;
-		GeometryPtr	geo_;
+		bool	path_beginning_;
+		bool	rotating_;
+		float	start_;
+		float	end_;
+		Point	start_pos_;
+
+		ComPtr<ID2D1PathGeometry> geo_;
+		ComPtr<ID2D1GeometrySink> geo_sink_;
 	};
 
 

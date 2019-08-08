@@ -72,6 +72,9 @@ namespace kiwano
 	};
 
 
+#pragma warning(push)
+#pragma warning(disable : 4996)
+
 	// Ë³Ðò¶¯×÷
 	class KGE_API ActionSequence
 		: public ActionGroup
@@ -100,4 +103,7 @@ namespace kiwano
 
 		virtual ~ActionSpawn() {}
 	};
+
+#pragma warning(pop)
+
 }
