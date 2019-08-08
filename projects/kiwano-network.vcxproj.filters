@@ -29,7 +29,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="third-party\libs\libcurl.lib">
+    <Library Include="..\src\kiwano-network\third-party\libs\libcurl.lib">
       <Filter>libs</Filter>
     </Library>
   </ItemGroup>

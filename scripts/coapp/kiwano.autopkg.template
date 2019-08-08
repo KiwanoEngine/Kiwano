@@ -102,6 +102,7 @@ nuget {
 
         [Win32, v140, Debug] {
             lib += ${OUTPUT_DIR}v140\Win32\Debug\*.lib;
+            symbols += ${OUTPUT_DIR}v140\Win32\Debug\*.pdb;
         }
         [Win32, v140, Release] {
             lib += ${OUTPUT_DIR}v140\Win32\Release\*.lib;
@@ -109,6 +110,7 @@ nuget {
 
         [Win32, v141, Debug] {
             lib += ${OUTPUT_DIR}v141\Win32\Debug\*.lib;
+            symbols += ${OUTPUT_DIR}v141\Win32\Debug\*.pdb;
         }
         [Win32, v141, Release] {
             lib += ${OUTPUT_DIR}v141\Win32\Release\*.lib;
@@ -116,6 +118,7 @@ nuget {
 
         [Win32, v142, Debug] {
             lib += ${OUTPUT_DIR}v142\Win32\Debug\*.lib;
+            symbols += ${OUTPUT_DIR}v142\Win32\Debug\*.pdb;
         }
         [Win32, v142, Release] {
             lib += ${OUTPUT_DIR}v142\Win32\Release\*.lib;
