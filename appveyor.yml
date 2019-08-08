@@ -29,10 +29,10 @@ skip_commits:
 
 only_commits:
   files:
-    - /**\/*\.(h|hpp|cpp)/
-    - /**\/*\.(sln|vcxproj|rc)/
-    - /scripts\/**\/*\.ps1/
-    - 'appveyor.yml'
+    - projects/
+    - src/
+    - scripts/**/*.ps1
+    - appveyor.yml
 
 for:
 -

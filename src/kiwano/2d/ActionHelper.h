@@ -184,16 +184,6 @@ namespace kiwano
 		}
 
 		static inline TweenHelper
-		Path(
-			GeometryPtr geo,			/* 几何图形 */
-			bool rotating = false,		/* 沿路径切线方向旋转 */
-			float start = 0.f,			/* 起点 */
-			float end = 1.f)			/* 终点 */
-		{
-			return TweenHelper(new kiwano::ActionPath(0, geo, rotating, start, end));
-		}
-
-		static inline TweenHelper
 			Animation(FramesPtr frames)
 		{
 			return TweenHelper(new kiwano::Animation(0, frames));
