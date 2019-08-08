@@ -14,7 +14,32 @@ Kiwano-Core is a game irrelevant lib that provide a lot useful tools can be used
 
 It's still under heavy developing. I write it and use it to developy my own tiny games.
 
+You can move to [Kiwano Demos](https://github.com/Nomango/KiwanoDemos) repository to see how to use Kiwano implement simple games.
+
 More docs and examples will be added later.
+
+## Install
+
+### Dev Environment
+
+- Win8 or Greater (Win10 recommended)
+- Visual Studio 2015 or Greater
+
+### Install with NuGet
+
+1. Open your Visual Studio solution
+2. In Solution Explorer, right-click `References` and choose `Manage NuGet Packages`
+3. Select the `Browse` tab, search for `kiwano`, select that package in the list, and select Install
+4. Have a good trip with Kiwano !
+
+### Install with source code
+
+1. Clone or download source code from Github repository
+2. Open your Visual Studio solution, right-click your solution in Solution Explorer, select `Add` and then `Existing item`
+3. Select `.vcxproj` files in /projects folder which you downloaded in 1st step
+4. Right-click your project and choose `Properties`, select C\C++ => General, add the root directory of kiwano project to the `Additional include directory` field
+5. Right-click `References` and choose `Add Reference`, select `kiwano` project
+6. Now you can build your own applications based on Kiwano source code !
 
 ## Features
 * Scene management
