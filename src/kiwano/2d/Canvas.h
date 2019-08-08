@@ -95,11 +95,6 @@ namespace kiwano
 			Point const& point		/* 文字位置 */
 		);
 
-		// 画几何图形边框
-		void DrawGeometry(
-			GeometryPtr geo
-		);
-
 		// 填充圆形
 		void FillCircle(
 			const Point& center,
@@ -123,11 +118,6 @@ namespace kiwano
 			const Rect& rect,
 			float radius_x,
 			float radius_y
-		);
-
-		// 填充几何图形
-		void FillGeometry(
-			GeometryPtr geo
 		);
 
 		// 开始绘制路径

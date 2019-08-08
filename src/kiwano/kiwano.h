@@ -85,7 +85,6 @@
 #include "2d/Image.h"
 #include "2d/GifImage.h"
 #include "2d/Frames.h"
-#include "2d/Geometry.h"
 #include "2d/Action.h"
 #include "2d/ActionGroup.h"
 #include "2d/ActionTween.h"
@@ -101,7 +100,7 @@
 #include "2d/GifSprite.h"
 #include "2d/Text.h"
 #include "2d/Canvas.h"
-#include "2d/GeometryNode.h"
+#include "2d/ShapeNode.h"
 #include "2d/DebugNode.h"
 
 

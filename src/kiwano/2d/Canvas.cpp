@@ -20,7 +20,6 @@
 
 #include "Canvas.h"
 #include "Image.h"
-#include "Geometry.h"
 #include "../base/logs.h"
 #include "../renderer/render.h"
 
@@ -298,20 +297,6 @@ namespace kiwano
 		);
 	}
 
-	void Canvas::DrawGeometry(GeometryPtr geo)
-	{
-		if (geo && geo->geo_)
-		{
-			render_target_->DrawGeometry(
-				geo->geo_.Get(),
-				stroke_brush_.Get(),
-				stroke_width_,
-				outline_join_style_.Get()
-			);
-			cache_expired_ = true;
-		}
-	}
-
 	void Canvas::FillCircle(const Point & center, float radius)
 	{
 		render_target_->FillEllipse(
@@ -374,18 +359,6 @@ namespace kiwano
 			fill_brush_.Get()
 		);
 		cache_expired_ = true;
-	}
-
-	void Canvas::FillGeometry(GeometryPtr geo)
-	{
-		if (geo && geo->geo_)
-		{
-			render_target_->FillGeometry(
-				geo->geo_.Get(),
-				fill_brush_.Get()
-			);
-			cache_expired_ = true;
-		}
 	}
 
 	void Canvas::BeginPath(Point const& begin_pos)

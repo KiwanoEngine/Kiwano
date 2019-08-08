@@ -75,12 +75,6 @@
     <ClInclude Include="..\src\kiwano\2d\Frames.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\Geometry.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\GeometryNode.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\Image.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -270,6 +264,9 @@
     <ClInclude Include="..\src\kiwano\third-party\tinyxml2\tinyxml2.h">
       <Filter>third-party\tinyxml2</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\ShapeNode.h">
+      <Filter>2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\kiwano\ui\Button.cpp">
@@ -303,12 +300,6 @@
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\Frames.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\Geometry.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\GeometryNode.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\Image.cpp">
@@ -409,6 +400,9 @@
     </ClCompile>
     <ClCompile Include="..\src\kiwano\third-party\tinyxml2\tinyxml2.cpp">
       <Filter>third-party\tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\ShapeNode.cpp">
+      <Filter>2d</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
