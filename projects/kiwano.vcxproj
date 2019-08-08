@@ -18,8 +18,7 @@
     <ClInclude Include="..\src\kiwano\2d\DebugNode.h" />
     <ClInclude Include="..\src\kiwano\2d\Font.hpp" />
     <ClInclude Include="..\src\kiwano\2d\Frames.h" />
-    <ClInclude Include="..\src\kiwano\2d\Geometry.h" />
-    <ClInclude Include="..\src\kiwano\2d\GeometryNode.h" />
+    <ClInclude Include="..\src\kiwano\2d\ShapeNode.h" />
     <ClInclude Include="..\src\kiwano\2d\GifImage.h" />
     <ClInclude Include="..\src\kiwano\2d\Image.h" />
     <ClInclude Include="..\src\kiwano\2d\Layer.h" />
@@ -92,8 +91,7 @@
     <ClCompile Include="..\src\kiwano\2d\Color.cpp" />
     <ClCompile Include="..\src\kiwano\2d\DebugNode.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Frames.cpp" />
-    <ClCompile Include="..\src\kiwano\2d\Geometry.cpp" />
-    <ClCompile Include="..\src\kiwano\2d\GeometryNode.cpp" />
+    <ClCompile Include="..\src\kiwano\2d\ShapeNode.cpp" />
     <ClCompile Include="..\src\kiwano\2d\GifImage.cpp" />
     <ClCompile Include="..\src\kiwano\2d\GifSprite.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Image.cpp" />

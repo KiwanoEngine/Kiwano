@@ -424,36 +424,84 @@ namespace kiwano
 	// ActionPath
 	//-------------------------------------------------------
 
-	ActionPath::ActionPath(Duration duration, GeometryPtr geo, bool rotating, float start, float end, EaseFunc func)
+	ActionPath::ActionPath(Duration duration, bool rotating, float start, float end, EaseFunc func)
 		: ActionTween(duration, func)
 		, start_(start)
 		, end_(end)
-		, geo_(geo)
 		, rotating_(rotating)
+		, path_beginning_(false)
+		, geo_(nullptr)
+		, geo_sink_(nullptr)
 	{
 	}
 
 	ActionPtr ActionPath::Clone() const
 	{
-		return new ActionPath(dur_, geo_, rotating_, start_, end_, ease_func_);
+		ActionPathPtr clone = new ActionPath(dur_, rotating_, start_, end_, ease_func_);
+		if (clone)
+		{
+			clone->SetGeometry(geo_);
+		}
+		return clone;
 	}
 
 	ActionPtr ActionPath::Reverse() const
 	{
-		return new ActionPath(dur_, geo_, rotating_, end_, start_, ease_func_);
+		ActionPathPtr reverse = new ActionPath(dur_, rotating_, end_, start_, ease_func_);
+		if (reverse)
+		{
+			reverse->SetGeometry(geo_);
+		}
+		return reverse;
+	}
+
+	float ActionPath::GetPathLength() const
+	{
+		float length = 0.f;
+		if (geo_)
+		{
+			// no matter it failed or not
+			geo_->ComputeLength(D2D1::Matrix3x2F::Identity(), &length);
+		}
+		return length;
+	}
+
+	bool ActionPath::ComputePointAtLength(float length, Point* point, Vec2* tangent) const
+	{
+		if (geo_)
+		{
+			HRESULT hr = geo_->ComputePointAtLength(
+				length,
+				D2D1::Matrix3x2F::Identity(),
+				DX::ConvertToPoint2F(point),
+				DX::ConvertToPoint2F(tangent)
+			);
+			return SUCCEEDED(hr);
+		}
+		return false;
 	}
 
 	void ActionPath::Init(NodePtr target)
 	{
 		start_pos_ = target->GetPosition();
+
+		if (path_beginning_)
+		{
+			EndPath();
+		}
+
+		if (!geo_)
+		{
+			Complete(target);
+		}
 	}
 
 	void ActionPath::UpdateTween(NodePtr target, float percent)
 	{
-		float length = geo_->GetLength() * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
+		float length = GetPathLength() * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
 
 		Point point, tangent;
-		if (geo_->ComputePointAt(length, &point, &tangent))
+		if (ComputePointAtLength(length, &point, &tangent))
 		{
 			target->SetPosition(start_pos_ + point);
 
@@ -466,6 +514,123 @@ namespace kiwano
 		}
 	}
 
+	void ActionPath::BeginPath()
+	{
+		if (path_beginning_) return;
+		path_beginning_ = true;
+
+		geo_ = nullptr;
+		geo_sink_ = nullptr;
+
+		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
+
+		ThrowIfFailed(
+			factory->CreatePathGeometry(&geo_)
+		);
+
+		ThrowIfFailed(
+			geo_->Open(&geo_sink_)
+		);
+
+		geo_sink_->BeginFigure(DX::ConvertToPoint2F(Point{ 0, 0 }), D2D1_FIGURE_BEGIN_FILLED);
+	}
+
+	void ActionPath::EndPath(bool closed)
+	{
+		if (!path_beginning_) return;
+		path_beginning_ = false;
+
+		if (geo_sink_)
+		{
+			geo_sink_->EndFigure(closed ? D2D1_FIGURE_END_CLOSED : D2D1_FIGURE_END_OPEN);
+			ThrowIfFailed(
+				geo_sink_->Close()
+			);
+
+			// Clear geometry sink
+			geo_sink_ = nullptr;
+		}
+	}
+
+	void ActionPath::AddLine(Point const& point)
+	{
+		if (!path_beginning_)
+		{
+			BeginPath();
+		}
+
+		if (geo_sink_)
+		{
+			geo_sink_->AddLine(DX::ConvertToPoint2F(point));
+		}
+	}
+
+	void ActionPath::AddLines(Array<Point> const& points)
+	{
+		if (!path_beginning_)
+		{
+			BeginPath();
+		}
+
+		if (geo_sink_ && !points.empty())
+		{
+			geo_sink_->AddLines(
+				reinterpret_cast<const D2D_POINT_2F*>(&points[0]),
+				static_cast<UINT32>(points.size())
+			);
+		}
+	}
+
+	void ActionPath::AddBezier(Point const& point1, Point const& point2, Point const& point3)
+	{
+		if (!path_beginning_)
+		{
+			BeginPath();
+		}
+
+		if (geo_sink_)
+		{
+			geo_sink_->AddBezier(
+				D2D1::BezierSegment(
+					DX::ConvertToPoint2F(point1),
+					DX::ConvertToPoint2F(point2),
+					DX::ConvertToPoint2F(point3)
+				)
+			);
+		}
+	}
+
+	void ActionPath::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
+	{
+		if (!path_beginning_)
+		{
+			BeginPath();
+		}
+
+		if (geo_sink_)
+		{
+			geo_sink_->AddArc(
+				D2D1::ArcSegment(
+					DX::ConvertToPoint2F(point),
+					DX::ConvertToSizeF(radius),
+					rotation,
+					clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
+					is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE
+				)
+			);
+		}
+	}
+
+	void ActionPath::ClearPath()
+	{
+		if (path_beginning_)
+		{
+			EndPath();
+		}
+
+		geo_sink_ = nullptr;
+		geo_ = nullptr;
+	}
 
 	//-------------------------------------------------------
 	// ActionCustom

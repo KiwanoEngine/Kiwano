@@ -18,25 +18,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Geometry.h"
-#include "../renderer/render.h"
+#include "ShapeNode.h"
 #include "../base/logs.h"
 
 namespace kiwano
 {
-	//-------------------------------------------------------
-	// Geometry
-	//-------------------------------------------------------
-
-	Geometry::Geometry()
+	ShapeNode::ShapeNode()
+		: fill_color_(Color::White)
+		, stroke_color_(Color(Color::Black, 0))
+		, stroke_width_(1.f)
+		, outline_join_(StrokeStyle::Miter)
 	{
 	}
 
-	Geometry::~Geometry()
+	ShapeNode::ShapeNode(ComPtr<ID2D1Geometry> geometry)
+		: ShapeNode()
+	{
+		SetGeometry(geometry);
+	}
+
+	ShapeNode::~ShapeNode()
 	{
 	}
 
-	Rect Geometry::GetBoundingBox()
+	Rect ShapeNode::GetBoundingBox()
 	{
 		if (!geo_)
 			return Rect{};
@@ -47,7 +52,7 @@ namespace kiwano
 		return Rect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
 	}
 
-	float Geometry::GetLength()
+	float ShapeNode::GetLength()
 	{
 		float length = 0.f;
 		if (geo_)
@@ -58,28 +63,23 @@ namespace kiwano
 		return length;
 	}
 
-	bool Geometry::ComputePointAt(float length, Point* point, Point* tangent)
+	bool ShapeNode::ComputePointAtLength(float length, Point& point, Vec2& tangent)
 	{
 		if (geo_)
 		{
-			D2D1_POINT_2F point_tmp, tangent_tmp;
 			if (SUCCEEDED(geo_->ComputePointAtLength(
 				length,
 				D2D1::Matrix3x2F::Identity(),
-				&point_tmp,
-				&tangent_tmp)))
+				DX::ConvertToPoint2F(&point),
+				DX::ConvertToPoint2F(&tangent))))
 			{
-				(*point).x = point_tmp.x;
-				(*point).y = point_tmp.y;
-				(*tangent).x = tangent_tmp.x;
-				(*tangent).y = tangent_tmp.y;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	float Geometry::ComputeArea()
+	float ShapeNode::ComputeArea()
 	{
 		if (!geo_)
 			return 0.f;
@@ -90,7 +90,7 @@ namespace kiwano
 		return area;
 	}
 
-	bool Geometry::ContainsPoint(Point const & point)
+	bool ShapeNode::ContainsPoint(Point const& point)
 	{
 		if (!geo_)
 			return false;
@@ -105,25 +105,62 @@ namespace kiwano
 		return !!ret;
 	}
 
+	void ShapeNode::SetFillColor(const Color & color)
+	{
+		fill_color_ = color;
+	}
+
+	void ShapeNode::SetStrokeColor(const Color & color)
+	{
+		stroke_color_ = color;
+	}
+
+	void ShapeNode::SetStrokeWidth(float width)
+	{
+		stroke_width_ = std::max(width, 0.f);
+	}
+
+	void ShapeNode::SetOutlineJoinStyle(StrokeStyle outline_join)
+	{
+		outline_join_ = outline_join;
+	}
+
+	void ShapeNode::OnRender()
+	{
+		if (geo_)
+		{
+			Renderer::Instance()->FillGeometry(
+				geo_,
+				fill_color_
+			);
+
+			Renderer::Instance()->DrawGeometry(
+				geo_,
+				stroke_color_,
+				stroke_width_,
+				outline_join_
+			);
+		}
+	}
 
 	//-------------------------------------------------------
-	// LineGeometry
+	// LineNode
 	//-------------------------------------------------------
 
-	LineGeometry::LineGeometry()
+	LineNode::LineNode()
 	{
 	}
 
-	LineGeometry::LineGeometry(Point const & begin, Point const & end)
+	LineNode::LineNode(Point const& begin, Point const& end)
 	{
 		SetLine(begin, end);
 	}
 
-	LineGeometry::~LineGeometry()
+	LineNode::~LineNode()
 	{
 	}
 
-	void LineGeometry::SetLine(Point const & begin, Point const & end)
+	void LineNode::SetLine(Point const& begin, Point const& end)
 	{
 		ComPtr<ID2D1PathGeometry> path_geo;
 		ComPtr<ID2D1GeometrySink> path_sink;
@@ -149,40 +186,40 @@ namespace kiwano
 		}
 	}
 
-	void LineGeometry::SetBegin(Point const & begin)
+	void LineNode::SetBegin(Point const& begin)
 	{
 		SetLine(begin, end_);
 	}
 
-	void LineGeometry::SetEnd(Point const & end)
+	void LineNode::SetEnd(Point const& end)
 	{
 		SetLine(begin_, end);
 	}
 
 
 	//-------------------------------------------------------
-	// RectangleGeometry
+	// RectNode
 	//-------------------------------------------------------
 
-	RectangleGeometry::RectangleGeometry()
+	RectNode::RectNode()
 	{
 	}
 
-	RectangleGeometry::RectangleGeometry(Rect const & rect)
+	RectNode::RectNode(Rect const& rect)
 	{
 		SetRect(rect);
 	}
 
-	RectangleGeometry::RectangleGeometry(Point const & left_top, Size const & size)
+	RectNode::RectNode(Point const& left_top, Size const& size)
 	{
 		SetRect(Rect{ left_top, size });
 	}
 
-	RectangleGeometry::~RectangleGeometry()
+	RectNode::~RectNode()
 	{
 	}
 
-	void RectangleGeometry::SetRect(Rect const & rect)
+	void RectNode::SetRect(Rect const& rect)
 	{
 		ComPtr<ID2D1RectangleGeometry> geo;
 		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
@@ -196,34 +233,84 @@ namespace kiwano
 
 
 	//-------------------------------------------------------
-	// CircleGeometry
+	// RoundedRectNode
 	//-------------------------------------------------------
 
-	CircleGeometry::CircleGeometry()
+	RoundedRectNode::RoundedRectNode()
+		: radius_x_(0.f)
+		, radius_y_(0.f)
+	{
+	}
+
+	RoundedRectNode::RoundedRectNode(Rect const& rect, float radius_x, float radius_y)
+	{
+		SetRoundedRect(rect, radius_x, radius_y);
+	}
+
+	RoundedRectNode::~RoundedRectNode()
+	{
+	}
+
+	void RoundedRectNode::SetRadius(float radius_x, float radius_y)
+	{
+		SetRoundedRect(rect_, radius_x, radius_y);
+	}
+
+	void RoundedRectNode::SetRect(Rect const& rect)
+	{
+		SetRoundedRect(rect, radius_x_, radius_y_);
+	}
+
+	void RoundedRectNode::SetRoundedRect(Rect const& rect, float radius_x, float radius_y)
+	{
+		ComPtr<ID2D1RoundedRectangleGeometry> geo;
+		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
+
+		if (SUCCEEDED(factory->CreateRoundedRectangleGeometry(
+			D2D1::RoundedRect(
+				DX::ConvertToRectF(rect),
+				radius_x,
+				radius_y
+			),
+			&geo)))
+		{
+			geo_ = geo;
+			rect_ = rect;
+			radius_x_ = radius_x;
+			radius_y_ = radius_y;
+		}
+	}
+
+
+	//-------------------------------------------------------
+	// CircleNode
+	//-------------------------------------------------------
+
+	CircleNode::CircleNode()
 		: radius_(0.f)
 	{
 	}
 
-	CircleGeometry::CircleGeometry(Point const & center, float radius)
+	CircleNode::CircleNode(Point const& center, float radius)
 	{
 		SetCircle(center, radius);
 	}
 
-	CircleGeometry::~CircleGeometry()
+	CircleNode::~CircleNode()
 	{
 	}
 
-	void CircleGeometry::SetRadius(float radius)
+	void CircleNode::SetRadius(float radius)
 	{
 		SetCircle(center_, radius);
 	}
 
-	void CircleGeometry::SetCenter(Point const & center)
+	void CircleNode::SetCenter(Point const& center)
 	{
 		SetCircle(center, radius_);
 	}
 
-	void CircleGeometry::SetCircle(Point const & center, float radius)
+	void CircleNode::SetCircle(Point const& center, float radius)
 	{
 		ComPtr<ID2D1EllipseGeometry> geo;
 		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
@@ -243,35 +330,35 @@ namespace kiwano
 
 
 	//-------------------------------------------------------
-	// EllipseGeometry
+	// EllipseNode
 	//-------------------------------------------------------
 
-	EllipseGeometry::EllipseGeometry()
+	EllipseNode::EllipseNode()
 		: radius_x_(0.f)
 		, radius_y_(0.f)
 	{
 	}
 
-	EllipseGeometry::EllipseGeometry(Point const & center, float radius_x, float radius_y)
+	EllipseNode::EllipseNode(Point const& center, float radius_x, float radius_y)
 	{
 		SetEllipse(center, radius_x, radius_y);
 	}
 
-	EllipseGeometry::~EllipseGeometry()
+	EllipseNode::~EllipseNode()
 	{
 	}
 
-	void EllipseGeometry::SetRadius(float radius_x, float radius_y)
+	void EllipseNode::SetRadius(float radius_x, float radius_y)
 	{
 		SetEllipse(center_, radius_x, radius_y);
 	}
 
-	void EllipseGeometry::SetCenter(Point const & center)
+	void EllipseNode::SetCenter(Point const& center)
 	{
 		SetEllipse(center, radius_x_, radius_y_);
 	}
 
-	void EllipseGeometry::SetEllipse(Point const & center, float radius_x, float radius_y)
+	void EllipseNode::SetEllipse(Point const& center, float radius_x, float radius_y)
 	{
 		ComPtr<ID2D1EllipseGeometry> geo;
 		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
@@ -291,18 +378,18 @@ namespace kiwano
 
 
 	//-------------------------------------------------------
-	// PathGeometry
+	// PathNode
 	//-------------------------------------------------------
 
-	PathGeometry::PathGeometry()
+	PathNode::PathNode()
 	{
 	}
 
-	PathGeometry::~PathGeometry()
+	PathNode::~PathNode()
 	{
 	}
 
-	void PathGeometry::BeginPath(Point const& begin_pos)
+	void PathNode::BeginPath(Point const& begin_pos)
 	{
 		current_geometry_ = nullptr;
 
@@ -319,7 +406,7 @@ namespace kiwano
 		current_sink_->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
 	}
 
-	void PathGeometry::EndPath(bool closed)
+	void PathNode::EndPath(bool closed)
 	{
 		if (current_sink_)
 		{
@@ -335,13 +422,13 @@ namespace kiwano
 		}
 	}
 
-	void PathGeometry::AddLine(Point const & point)
+	void PathNode::AddLine(Point const& point)
 	{
 		if (current_sink_)
 			current_sink_->AddLine(DX::ConvertToPoint2F(point));
 	}
 
-	void PathGeometry::AddLines(Array<Point> const& points)
+	void PathNode::AddLines(Array<Point> const& points)
 	{
 		if (current_sink_ && !points.empty())
 		{
@@ -352,7 +439,7 @@ namespace kiwano
 		}
 	}
 
-	void PathGeometry::AddBezier(Point const & point1, Point const & point2, Point const & point3)
+	void PathNode::AddBezier(Point const& point1, Point const& point2, Point const& point3)
 	{
 		if (current_sink_)
 		{
@@ -366,7 +453,7 @@ namespace kiwano
 		}
 	}
 
-	void PathGeometry::AddArc(Point const & point, Size const & radius, float rotation, bool clockwise, bool is_small)
+	void PathNode::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 	{
 		if (current_sink_)
 		{
@@ -382,61 +469,11 @@ namespace kiwano
 		}
 	}
 
-	void PathGeometry::ClearPath()
+	void PathNode::ClearPath()
 	{
 		geo_ = nullptr;
 		current_sink_ = nullptr;
 		current_geometry_ = nullptr;
-	}
-
-
-	//-------------------------------------------------------
-	// RoundedRectGeometry
-	//-------------------------------------------------------
-
-	RoundedRectGeometry::RoundedRectGeometry()
-		: radius_x_(0.f)
-		, radius_y_(0.f)
-	{
-	}
-
-	RoundedRectGeometry::RoundedRectGeometry(Rect const & rect, float radius_x, float radius_y)
-	{
-		SetRoundedRect(rect, radius_x, radius_y);
-	}
-
-	RoundedRectGeometry::~RoundedRectGeometry()
-	{
-	}
-
-	void RoundedRectGeometry::SetRadius(float radius_x, float radius_y)
-	{
-		SetRoundedRect(rect_, radius_x, radius_y);
-	}
-
-	void RoundedRectGeometry::SetRect(Rect const & rect)
-	{
-		SetRoundedRect(rect, radius_x_, radius_y_);
-	}
-
-	void RoundedRectGeometry::SetRoundedRect(Rect const & rect, float radius_x, float radius_y)
-	{
-		ComPtr<ID2D1RoundedRectangleGeometry> geo;
-		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
-
-		if (SUCCEEDED(factory->CreateRoundedRectangleGeometry(
-			D2D1::RoundedRect(
-				DX::ConvertToRectF(rect),
-				radius_x,
-				radius_y
-			),
-			&geo)))
-		{
-			geo_ = geo;
-			rect_ = rect;
-			radius_x_ = radius_x;
-			radius_y_ = radius_y;
-		}
 	}
 
 }

@@ -19,22 +19,35 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
-#include <d2d1.h>
+#include "Node.h"
+#include "../renderer/render.h"  // ID2D1Geometry
 
 namespace kiwano
 {
-	// 几何抽象
-	class KGE_API Geometry
-		: public Object
+	// 二维图形节点
+	class KGE_API ShapeNode
+		: public VisualNode
 	{
-		friend class Canvas;
-		friend class GeometryNode;
-
 	public:
-		Geometry();
+		ShapeNode();
 
-		virtual ~Geometry();
+		ShapeNode(
+			ComPtr<ID2D1Geometry> geometry
+		);
+
+		virtual ~ShapeNode();
+
+		// 获取填充颜色
+		Color GetFillColor() const				{ return fill_color_; }
+
+		// 获取线条颜色
+		Color GetStrokeColor() const			{ return stroke_color_; }
+
+		// 获取线条宽度
+		float GetStrokeWidth() const			{ return stroke_width_; }
+
+		// 获取线条相交样式
+		StrokeStyle SetOutlineJoinStyle() const	{ return outline_join_; }
 
 		// 获取外切包围盒
 		Rect GetBoundingBox();
@@ -47,34 +60,66 @@ namespace kiwano
 		// 获取图形展开成一条直线的长度
 		float GetLength();
 
-		// 计算图形路径上点的位置和切线向量
-		bool ComputePointAt(
-			float length,
-			Point* point,
-			Point* tangent
-		);
-
 		// 计算面积
 		float ComputeArea();
 
+		// 计算图形路径上点的位置和切线向量
+		bool ComputePointAtLength(
+			float length,
+			Point& point,
+			Vec2& tangent
+		);
+
+		// 设置填充颜色
+		void SetFillColor(
+			const Color& color
+		);
+
+		// 设置线条颜色
+		void SetStrokeColor(
+			const Color& color
+		);
+
+		// 设置线条宽度
+		void SetStrokeWidth(
+			float width
+		);
+
+		// 设置线条相交样式
+		void SetOutlineJoinStyle(
+			StrokeStyle outline_join
+		);
+
+		// 设置形状
+		inline void SetGeometry(ComPtr<ID2D1Geometry> geometry)	{ geo_ = geometry; }
+
+		// 获取形状
+		inline ComPtr<ID2D1Geometry> GetGeometry() const		{ return geo_; }
+
+		void OnRender() override;
+
 	protected:
-		ComPtr<ID2D1Geometry> geo_;
+		Color					fill_color_;
+		Color					stroke_color_;
+		float					stroke_width_;
+		StrokeStyle				outline_join_;
+		ComPtr<ID2D1Geometry>	geo_;
 	};
 
 
 	// 直线
-	class KGE_API LineGeometry
-		: public Geometry
+	class KGE_API LineNode
+		: public ShapeNode
 	{
 	public:
-		LineGeometry();
+		LineNode();
 
-		LineGeometry(
+		LineNode(
 			Point const& begin,
 			Point const& end
 		);
 
-		virtual ~LineGeometry();
+		virtual ~LineNode();
 
 		Point const& GetBegin() const { return begin_; }
 
@@ -99,23 +144,23 @@ namespace kiwano
 	};
 
 
-	// 几何矩形
-	class KGE_API RectangleGeometry
-		: public Geometry
+	// 矩形节点
+	class KGE_API RectNode
+		: public ShapeNode
 	{
 	public:
-		RectangleGeometry();
+		RectNode();
 
-		RectangleGeometry(
+		RectNode(
 			Rect const& rect
 		);
 
-		RectangleGeometry(
+		RectNode(
 			Point const& left_top,
 			Size const& size
 		);
 
-		virtual ~RectangleGeometry();
+		virtual ~RectNode();
 
 		Rect const& GetRect() const { return rect_; }
 
@@ -126,19 +171,62 @@ namespace kiwano
 	};
 
 
-	// 几何圆形
-	class KGE_API CircleGeometry
-		: public Geometry
+	// 圆角矩形节点
+	class KGE_API RoundedRectNode
+		: public ShapeNode
 	{
 	public:
-		CircleGeometry();
+		RoundedRectNode();
 
-		CircleGeometry(
+		RoundedRectNode(
+			Rect const& rect,
+			float radius_x,
+			float radius_y
+		);
+
+		virtual ~RoundedRectNode();
+
+		float GetRadiusX() const { return radius_x_; }
+
+		float GetRadiusY() const { return radius_y_; }
+
+		void SetRadius(
+			float radius_x,
+			float radius_y
+		);
+
+		Rect const& GetRect() const { return rect_; }
+
+		void SetRect(
+			Rect const& rect
+		);
+
+		void SetRoundedRect(
+			Rect const& rect,
+			float radius_x,
+			float radius_y
+		);
+
+	protected:
+		Rect	rect_;
+		float	radius_x_;
+		float	radius_y_;
+	};
+
+
+	// 圆形节点
+	class KGE_API CircleNode
+		: public ShapeNode
+	{
+	public:
+		CircleNode();
+
+		CircleNode(
 			Point const& center,
 			float radius
 		);
 
-		virtual ~CircleGeometry();
+		virtual ~CircleNode();
 
 		float GetRadius() const { return radius_; }
 
@@ -163,20 +251,20 @@ namespace kiwano
 	};
 
 
-	// 几何椭圆
-	class KGE_API EllipseGeometry
-		: public Geometry
+	// 椭圆节点
+	class KGE_API EllipseNode
+		: public ShapeNode
 	{
 	public:
-		EllipseGeometry();
+		EllipseNode();
 
-		EllipseGeometry(
+		EllipseNode(
 			Point const& center,
 			float radius_x,
 			float radius_y
 		);
 
-		virtual ~EllipseGeometry();
+		virtual ~EllipseNode();
 
 		float GetRadiusX() const { return radius_x_; }
 
@@ -206,14 +294,14 @@ namespace kiwano
 	};
 
 
-	// 几何路径
-	class KGE_API PathGeometry
-		: public Geometry
+	// 路径节点
+	class KGE_API PathNode
+		: public ShapeNode
 	{
 	public:
-		PathGeometry();
+		PathNode();
 
-		virtual ~PathGeometry();
+		virtual ~PathNode();
 
 		// 开始添加路径
 		void BeginPath(
@@ -259,46 +347,4 @@ namespace kiwano
 		ComPtr<ID2D1GeometrySink>	current_sink_;
 	};
 
-
-	// 几何圆角矩形
-	class KGE_API RoundedRectGeometry
-		: public Geometry
-	{
-	public:
-		RoundedRectGeometry();
-
-		RoundedRectGeometry(
-			Rect const& rect,
-			float radius_x,
-			float radius_y
-		);
-
-		virtual ~RoundedRectGeometry();
-
-		float GetRadiusX() const { return radius_x_; }
-
-		float GetRadiusY() const { return radius_y_; }
-
-		void SetRadius(
-			float radius_x,
-			float radius_y
-		);
-
-		Rect const& GetRect() const { return rect_; }
-
-		void SetRect(
-			Rect const& rect
-		);
-
-		void SetRoundedRect(
-			Rect const& rect,
-			float radius_x,
-			float radius_y
-		);
-
-	protected:
-		Rect	rect_;
-		float	radius_x_;
-		float	radius_y_;
-	};
 }
