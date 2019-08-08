@@ -85,33 +85,44 @@ nuget {
 
 
     files {
+        #defines {
+            SRC_ROOT            = ..\..\src\;
+            KIWANO_ROOT         = ${SRC_ROOT}kiwano\;
+            KIWANO_AUDIO_ROOT   = ${SRC_ROOT}kiwano-audio\;
+            KIWANO_NETWORK_ROOT = ${SRC_ROOT}kiwano-network\;
+            KIWANO_IMGUI_ROOT   = ${SRC_ROOT}kiwano-imgui\;
+
+            OUTPUT_DIR          = ..\..\projects\output\;
+        }
+
         include: {
-            ..\..\src\**\*.h,
-            ..\..\src\**\*.hpp
+            ${SRC_ROOT}**\*.h,
+            ${SRC_ROOT}**\*.hpp
         };
 
         [Win32, v140, Debug] {
-            lib += ..\..\projects\output\v140\Win32\Debug\*.lib;
+            lib += ${OUTPUT_DIR}v140\Win32\Debug\*.lib;
         }
         [Win32, v140, Release] {
-            lib += ..\..\projects\output\v140\Win32\Release\*.lib;
+            lib += ${OUTPUT_DIR}v140\Win32\Release\*.lib;
         }
 
         [Win32, v141, Debug] {
-            lib += ..\..\projects\output\v141\Win32\Debug\*.lib;
+            lib += ${OUTPUT_DIR}v141\Win32\Debug\*.lib;
         }
         [Win32, v141, Release] {
-            lib += ..\..\projects\output\v141\Win32\Release\*.lib;
+            lib += ${OUTPUT_DIR}v141\Win32\Release\*.lib;
         }
 
         [Win32, v142, Debug] {
-            lib += ..\..\projects\output\v142\Win32\Debug\*.lib;
+            lib += ${OUTPUT_DIR}v142\Win32\Debug\*.lib;
         }
         [Win32, v142, Release] {
-            lib += ..\..\projects\output\v142\Win32\Release\*.lib;
+            lib += ${OUTPUT_DIR}v142\Win32\Release\*.lib;
         }
 
-        bin += ..\..\src\**\*.dll;
+        # kiwano-network 3-rd patry
+        bin += ${KIWANO_NETWORK_ROOT}dlls\*.dll;
 
     };
 
