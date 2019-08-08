@@ -124,7 +124,7 @@ nuget {
             lib += ${OUTPUT_DIR}v142\Win32\Release\*.lib;
         }
 
-        # kiwano-network 3-rd patry
+        // kiwano-network 3-rd patry
         bin += ${KIWANO_NETWORK_ROOT}dlls\*.dll;
 
     };

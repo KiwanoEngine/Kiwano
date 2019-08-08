@@ -1,5 +1,4 @@
 . .\scripts\appveyor\appveyor_get_build.ps1
-. .\scripts\appveyor\appveyor_get_artifacts.ps1
 
 # Only deploy when commit message contains "[deploy]"
 if (!(Get-AppVeyorBuild).build.message.Contains('[deploy]')) { return }
@@ -26,23 +25,6 @@ while(!$success -and ([datetime]::Now) -lt $stop) {
 
 if (!$success) {
     throw "Test jobs were not finished in $env:time_out_mins minutes"
-}
-
-# get job artifacts
-(Get-AppVeyorBuild).build.jobs | foreach-object {
-    $jobId = $_.jobId
-    if ($jobId -ne $env:APPVEYOR_JOB_ID) {
-        # Get job artifacts information
-        (Get-AppVeyorArtifacts -Job $jobId) | foreach-object {
-            # Create directory if not exists
-            $filePath = $_.fileName.Substring(0, $_.fileName.LastIndexOf('/'))
-            if (!(Test-Path -Path $filePath)) {
-                New-Item -ItemType "directory" -Path $filePath
-            }
-            # Download artifact from other job
-            Start-FileDownload "https://ci.appveyor.com/api/buildjobs/$jobId/artifacts/$($_.fileName)" -FileName $_.fileName
-        }
-    };
 }
 
 # Set flag to deploy
