@@ -26,9 +26,9 @@ skip_commits:
 
 only_commits:
   files:
-    - '**/*.(h|hpp|cpp)'
-    - '**/*.(sln|vcxproj|rc)'
-    - 'scripts/**/*.ps1'
+    - /**\/*\.(h|hpp|cpp)/
+    - /**\/*\.(sln|vcxproj|rc)/
+    - /scripts\/**\/*\.ps1/
     - 'appveyor.yml'
 
 for:
@@ -64,6 +64,8 @@ after_build:
 
 artifacts:
 - path: projects/output/**/*.lib
+  name: $(appveyor_project_name)-v$(appveyor_build_version)-$(VS_PLATFORM_TOOLSET).$(platform).$(configuration)
+- path: projects/output/**/*.pdb
   name: $(appveyor_project_name)-v$(appveyor_build_version)-$(VS_PLATFORM_TOOLSET).$(platform).$(configuration)
 
 before_deploy:
