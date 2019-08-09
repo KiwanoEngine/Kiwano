@@ -4,7 +4,6 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/frqh09om9ldaklr9/branch/master?svg=true)](https://ci.appveyor.com/project/Nomango/kiwano/branch/master)
 [![GitHub release](https://img.shields.io/github/release/nomango/kiwano)](https://github.com/Nomango/Kiwano/releases/latest)
-[![GitHub All Releases](https://img.shields.io/github/downloads/nomango/kiwano/total)](https://github.com/Nomango/Kiwano/releases)
 [![GitHub license](https://img.shields.io/github/license/nomango/kiwano)](https://github.com/Nomango/Kiwano/blob/master/LICENSE)
 
 ## Introduction
@@ -14,7 +13,7 @@ Kiwano-Core is a game irrelevant lib that provide a lot useful tools can be used
 
 It's still under heavy developing. I write it and use it to developy my own tiny games.
 
-You can move to [Kiwano Demos](https://github.com/Nomango/KiwanoDemos) repository to see how to use Kiwano implement simple games.
+You can move to [Kiwano Demos](https://github.com/kiwanogame/KiwanoDemos) repository to see how to use Kiwano implement simple games.
 
 More docs and examples will be added later.
 
