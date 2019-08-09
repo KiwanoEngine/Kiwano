@@ -40,7 +40,7 @@ for:
     except:
       - master
   only_commits:
-    message: /\[build\]|\[deploy\]/
+    message: /\[build\]/
 
 configuration:
 - Debug
