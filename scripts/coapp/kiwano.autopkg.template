@@ -86,46 +86,30 @@ nuget {
 
     files {
         #defines {
-            SRC_ROOT            = ..\..\src\;
-            KIWANO_ROOT         = ${SRC_ROOT}kiwano\;
-            KIWANO_AUDIO_ROOT   = ${SRC_ROOT}kiwano-audio\;
-            KIWANO_NETWORK_ROOT = ${SRC_ROOT}kiwano-network\;
-            KIWANO_IMGUI_ROOT   = ${SRC_ROOT}kiwano-imgui\;
-
-            OUTPUT_DIR          = ..\..\projects\output\;
+            SRC_ROOT            = ..\..\src;
+            OUTPUT_DIR          = ..\..\projects\output;
         }
 
         include: {
-            ${SRC_ROOT}**\*.h,
-            ${SRC_ROOT}**\*.hpp
+            ${SRC_ROOT}\**\*.h,
+            ${SRC_ROOT}\**\*.hpp
         };
 
-        [Win32, v140, Debug] {
-            lib += ${OUTPUT_DIR}v140\Win32\Debug\*.lib;
-            symbols += ${OUTPUT_DIR}v140\Win32\Debug\*.pdb;
-        }
-        [Win32, v140, Release] {
-            lib += ${OUTPUT_DIR}v140\Win32\Release\*.lib;
-        }
-
-        [Win32, v141, Debug] {
-            lib += ${OUTPUT_DIR}v141\Win32\Debug\*.lib;
-            symbols += ${OUTPUT_DIR}v141\Win32\Debug\*.pdb;
-        }
-        [Win32, v141, Release] {
-            lib += ${OUTPUT_DIR}v141\Win32\Release\*.lib;
-        }
-
-        [Win32, v142, Debug] {
-            lib += ${OUTPUT_DIR}v142\Win32\Debug\*.lib;
-            symbols += ${OUTPUT_DIR}v142\Win32\Debug\*.pdb;
-        }
-        [Win32, v142, Release] {
-            lib += ${OUTPUT_DIR}v142\Win32\Release\*.lib;
-        }
-
         // kiwano-network 3-rd patry
-        bin += ${KIWANO_NETWORK_ROOT}dlls\*.dll;
+        bin: { ${SRC_ROOT}\kiwano-network\dlls\*.dll };
+
+        ("v140,v141,v142", "Win32", "Debug") => {
+            [${0},${1},${2}] {
+                lib:     { ${OUTPUT_DIR}\${0}\${1}\${2}\*.lib };
+                symbols: { ${OUTPUT_DIR}\${0}\${1}\${2}\*.pdb };
+            };
+        };
+
+        ("v140,v141,v142", "Win32", "Release") => {
+            [${0},${1},${2}] {
+                lib:     { ${OUTPUT_DIR}\${0}\${1}\${2}\*.lib };
+            };
+        };
 
     };
 
