@@ -13,9 +13,19 @@ Kiwano-Core is a game irrelevant lib that provide a lot useful tools can be used
 
 It's still under heavy developing. I write it and use it to developy my own tiny games.
 
-You can move to [Kiwano Demos](https://github.com/kiwanogame/KiwanoDemos) repository to see how to use Kiwano implement simple games.
+You can move to [Kiwano Demos](https://github.com/kiwanogame/KiwanoDemos) repository to see how to use Kiwano to implement simple games.
 
 More docs and examples will be added later.
+
+## Features
+* Scene management
+* Transitions between scenes
+* Actions behaviours
+* Buttons and menus
+* Texture atlas support
+* Audio support
+* Custom data storage
+* Direct2D based
 
 ## Install
 
@@ -40,17 +50,8 @@ More docs and examples will be added later.
 5. Right-click `References` and choose `Add Reference`, select `kiwano` project
 6. Now you can build your own applications based on Kiwano source code !
 
-## Features
-* Scene management
-* Transitions between scenes
-* Actions behaviours
-* Buttons and menus
-* Texture atlas support
-* Audio support
-* Custom data storage
-* Direct2D based
-
 ## Next plan
+* GUI system
 * Physical engine
 * Particle system
 
