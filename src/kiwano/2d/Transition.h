@@ -24,13 +24,13 @@
 
 namespace kiwano
 {
-	class Stage;
+	class Director;
 
 	// ³¡¾°¹ý¶É
 	class KGE_API Transition
 		: public Object
 	{
-		friend class Stage;
+		friend class Director;
 
 	public:
 		explicit Transition(
@@ -43,8 +43,8 @@ namespace kiwano
 
 	protected:
 		virtual void Init(
-			ScenePtr prev,
-			ScenePtr next
+			StagePtr prev,
+			StagePtr next
 		);
 
 		virtual void Update(Duration dt);
@@ -61,8 +61,8 @@ namespace kiwano
 		Duration			duration_;
 		Duration			delta_;
 		Size				window_size_;
-		ScenePtr			out_scene_;
-		ScenePtr			in_scene_;
+		StagePtr			out_scene_;
+		StagePtr			in_scene_;
 		ComPtr<ID2D1Layer>	out_layer_;
 		ComPtr<ID2D1Layer>	in_layer_;
 		LayerProperties		out_layer_prop_;
@@ -84,8 +84,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr prev,
-			ScenePtr next
+			StagePtr prev,
+			StagePtr next
 		) override;
 	};
 
@@ -103,8 +103,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr prev,
-			ScenePtr next
+			StagePtr prev,
+			StagePtr next
 		) override;
 	};
 
@@ -122,8 +122,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr prev,
-			ScenePtr next
+			StagePtr prev,
+			StagePtr next
 		) override;
 	};
 
@@ -142,8 +142,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr prev,
-			ScenePtr next
+			StagePtr prev,
+			StagePtr next
 		) override;
 
 		void Reset() override;
@@ -169,8 +169,8 @@ namespace kiwano
 		void Update(Duration dt) override;
 
 		virtual void Init(
-			ScenePtr prev,
-			ScenePtr next
+			StagePtr prev,
+			StagePtr next
 		) override;
 
 		void Reset() override;

@@ -19,12 +19,12 @@
 // THE SOFTWARE.
 
 #include "ActionManager.h"
-#include "Node.h"
+#include "Actor.h"
 #include "../base/logs.h"
 
 namespace kiwano
 {
-	void ActionManager::UpdateActions(NodePtr target, Duration dt)
+	void ActionManager::UpdateActions(ActorPtr target, Duration dt)
 	{
 		if (actions_.IsEmpty() || !target)
 			return;

@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Node.h"
+#include "Actor.h"
 #include "Action.h"
-#include "Scene.h"
+#include "Stage.h"
 #include "../base/logs.h"
 #include "../renderer/render.h"
 
@@ -32,13 +32,13 @@ namespace kiwano
 		float default_anchor_y = 0.f;
 	}
 
-	void Node::SetDefaultAnchor(float anchor_x, float anchor_y)
+	void Actor::SetDefaultAnchor(float anchor_x, float anchor_y)
 	{
 		default_anchor_x = anchor_x;
 		default_anchor_y = anchor_y;
 	}
 
-	Node::Node()
+	Actor::Actor()
 		: visible_(true)
 		, update_pausing_(false)
 		, hover_(false)
@@ -50,7 +50,7 @@ namespace kiwano
 		, show_border_(false)
 		, is_fast_transform_(true)
 		, parent_(nullptr)
-		, scene_(nullptr)
+		, stage_(nullptr)
 		, hash_name_(0)
 		, z_order_(0)
 		, opacity_(1.f)
@@ -59,7 +59,7 @@ namespace kiwano
 	{
 	}
 
-	void Node::Update(Duration dt)
+	void Actor::Update(Duration dt)
 	{
 		if (!update_pausing_)
 		{
@@ -74,7 +74,7 @@ namespace kiwano
 
 		if (!children_.IsEmpty())
 		{
-			NodePtr next;
+			ActorPtr next;
 			for (auto child = children_.First(); child; child = next)
 			{
 				next = child->NextItem();
@@ -83,7 +83,7 @@ namespace kiwano
 		}
 	}
 
-	void Node::Render()
+	void Actor::Render()
 	{
 		if (!visible_)
 			return;
@@ -98,7 +98,7 @@ namespace kiwano
 		else
 		{
 			// render children those are less than 0 in Z-Order
-			Node* child = children_.First().Get();
+			Actor* child = children_.First().Get();
 			while (child)
 			{
 				if (child->GetZOrder() >= 0)
@@ -119,7 +119,7 @@ namespace kiwano
 		}
 	}
 
-	void Node::RenderBorder()
+	void Actor::RenderBorder()
 	{
 		if (show_border_)
 		{
@@ -137,12 +137,12 @@ namespace kiwano
 		}
 	}
 
-	void Node::Dispatch(Event& evt)
+	void Actor::Dispatch(Event& evt)
 	{
 		if (!visible_)
 			return;
 
-		NodePtr prev;
+		ActorPtr prev;
 		for (auto child = children_.Last(); child; child = prev)
 		{
 			prev = child->PrevItem();
@@ -198,13 +198,13 @@ namespace kiwano
 		EventDispatcher::Dispatch(evt);
 	}
 
-	Matrix const & Node::GetTransformMatrix()  const
+	Matrix const & Actor::GetTransformMatrix()  const
 	{
 		UpdateTransform();
 		return transform_matrix_;
 	}
 
-	Matrix const & Node::GetTransformInverseMatrix()  const
+	Matrix const & Actor::GetTransformInverseMatrix()  const
 	{
 		UpdateTransform();
 		if (dirty_transform_inverse_)
@@ -215,7 +215,7 @@ namespace kiwano
 		return transform_matrix_inverse_;
 	}
 
-	void Node::UpdateTransform() const
+	void Actor::UpdateTransform() const
 	{
 		if (!dirty_transform_)
 			return;
@@ -246,11 +246,11 @@ namespace kiwano
 		}
 
 		// update children's transform
-		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
+		for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
 			child->dirty_transform_ = true;
 	}
 
-	void Node::UpdateOpacity()
+	void Actor::UpdateOpacity()
 	{
 		if (parent_ && parent_->IsCascadeOpacityEnabled())
 		{
@@ -261,33 +261,33 @@ namespace kiwano
 			displayed_opacity_ = opacity_;
 		}
 
-		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
+		for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			child->UpdateOpacity();
 		}
 	}
 
-	void Node::SetScene(Scene* scene)
+	void Actor::SetStage(Stage* scene)
 	{
-		if (scene && scene_ != scene)
+		if (scene && stage_ != scene)
 		{
-			scene_ = scene;
-			for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
+			stage_ = scene;
+			for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
 			{
-				child->scene_ = scene;
+				child->stage_ = scene;
 			}
 		}
 	}
 
-	void Node::Reorder()
+	void Actor::Reorder()
 	{
 		if (parent_)
 		{
-			NodePtr me = this;
+			ActorPtr me = this;
 
 			parent_->children_.Remove(me);
 
-			Node* sibling = parent_->children_.Last().Get();
+			Actor* sibling = parent_->children_.Last().Get();
 
 			if (sibling && sibling->GetZOrder() > z_order_)
 			{
@@ -311,7 +311,7 @@ namespace kiwano
 		}
 	}
 
-	void Node::SetZOrder(int zorder)
+	void Actor::SetZOrder(int zorder)
 	{
 		if (z_order_ != zorder)
 		{
@@ -320,7 +320,7 @@ namespace kiwano
 		}
 	}
 
-	void Node::SetOpacity(float opacity)
+	void Actor::SetOpacity(float opacity)
 	{
 		if (opacity_ == opacity)
 			return;
@@ -329,7 +329,7 @@ namespace kiwano
 		UpdateOpacity();
 	}
 
-	void Node::SetCascadeOpacityEnabled(bool enabled)
+	void Actor::SetCascadeOpacityEnabled(bool enabled)
 	{
 		if (cascade_opacity_ == enabled)
 			return;
@@ -338,17 +338,17 @@ namespace kiwano
 		UpdateOpacity();
 	}
 
-	void Node::SetAnchorX(float anchor_x)
+	void Actor::SetAnchorX(float anchor_x)
 	{
 		this->SetAnchor(anchor_x, anchor_.y);
 	}
 
-	void Node::SetAnchorY(float anchor_y)
+	void Actor::SetAnchorY(float anchor_y)
 	{
 		this->SetAnchor(anchor_.x, anchor_y);
 	}
 
-	void Node::SetAnchor(float anchor_x, float anchor_y)
+	void Actor::SetAnchor(float anchor_x, float anchor_y)
 	{
 		if (anchor_.x == anchor_x && anchor_.y == anchor_y)
 			return;
@@ -358,27 +358,27 @@ namespace kiwano
 		dirty_transform_ = true;
 	}
 
-	void Node::SetAnchor(Point const& anchor)
+	void Actor::SetAnchor(Point const& anchor)
 	{
 		this->SetAnchor(anchor.x, anchor.y);
 	}
 
-	void Node::SetWidth(float width)
+	void Actor::SetWidth(float width)
 	{
 		this->SetSize(width, size_.y);
 	}
 
-	void Node::SetHeight(float height)
+	void Actor::SetHeight(float height)
 	{
 		this->SetSize(size_.x, height);
 	}
 
-	void Node::SetSize(const Size& size)
+	void Actor::SetSize(const Size& size)
 	{
 		this->SetSize(size.x, size.y);
 	}
 
-	void Node::SetSize(float width, float height)
+	void Actor::SetSize(float width, float height)
 	{
 		if (size_.x == width && size_.y == height)
 			return;
@@ -388,19 +388,19 @@ namespace kiwano
 		dirty_transform_ = true;
 	}
 
-	void Node::SetTransform(Transform const& transform)
+	void Actor::SetTransform(Transform const& transform)
 	{
 		transform_ = transform;
 		dirty_transform_ = true;
 		is_fast_transform_ = false;
 	}
 
-	void Node::SetVisible(bool val)
+	void Actor::SetVisible(bool val)
 	{
 		visible_ = val;
 	}
 
-	void Node::SetName(String const& name)
+	void Actor::SetName(String const& name)
 	{
 		if (!IsName(name))
 		{
@@ -409,22 +409,22 @@ namespace kiwano
 		}
 	}
 
-	void Node::SetPositionX(float x)
+	void Actor::SetPositionX(float x)
 	{
 		this->SetPosition(x, transform_.position.y);
 	}
 
-	void Node::SetPositionY(float y)
+	void Actor::SetPositionY(float y)
 	{
 		this->SetPosition(transform_.position.x, y);
 	}
 
-	void Node::SetPosition(const Point & p)
+	void Actor::SetPosition(const Point & p)
 	{
 		this->SetPosition(p.x, p.y);
 	}
 
-	void Node::SetPosition(float x, float y)
+	void Actor::SetPosition(float x, float y)
 	{
 		if (transform_.position.x == x && transform_.position.y == y)
 			return;
@@ -434,32 +434,32 @@ namespace kiwano
 		dirty_transform_ = true;
 	}
 
-	void Node::Move(float x, float y)
+	void Actor::Move(float x, float y)
 	{
 		this->SetPosition(transform_.position.x + x, transform_.position.y + y);
 	}
 
-	void Node::Move(const Point & v)
+	void Actor::Move(const Point & v)
 	{
 		this->Move(v.x, v.y);
 	}
 
-	void Node::SetScaleX(float scale_x)
+	void Actor::SetScaleX(float scale_x)
 	{
 		this->SetScale(scale_x, transform_.scale.y);
 	}
 
-	void Node::SetScaleY(float scale_y)
+	void Actor::SetScaleY(float scale_y)
 	{
 		this->SetScale(transform_.scale.x, scale_y);
 	}
 
-	void Node::SetScale(float scale)
+	void Actor::SetScale(float scale)
 	{
 		this->SetScale(scale, scale);
 	}
 
-	void Node::SetScale(float scale_x, float scale_y)
+	void Actor::SetScale(float scale_x, float scale_y)
 	{
 		if (transform_.scale.x == scale_x && transform_.scale.y == scale_y)
 			return;
@@ -470,22 +470,22 @@ namespace kiwano
 		is_fast_transform_ = false;
 	}
 
-	void Node::SetScale(Point const& scale)
+	void Actor::SetScale(Point const& scale)
 	{
 		this->SetScale(scale.x, scale.y);
 	}
 
-	void Node::SetSkewX(float skew_x)
+	void Actor::SetSkewX(float skew_x)
 	{
 		this->SetSkew(skew_x, transform_.skew.y);
 	}
 
-	void Node::SetSkewY(float skew_y)
+	void Actor::SetSkewY(float skew_y)
 	{
 		this->SetSkew(transform_.skew.x, skew_y);
 	}
 
-	void Node::SetSkew(float skew_x, float skew_y)
+	void Actor::SetSkew(float skew_x, float skew_y)
 	{
 		if (transform_.skew.x == skew_x && transform_.skew.y == skew_y)
 			return;
@@ -496,12 +496,12 @@ namespace kiwano
 		is_fast_transform_ = false;
 	}
 
-	void Node::SetSkew(Point const& skew)
+	void Actor::SetSkew(Point const& skew)
 	{
 		this->SetSkew(skew.x, skew.y);
 	}
 
-	void Node::SetRotation(float angle)
+	void Actor::SetRotation(float angle)
 	{
 		if (transform_.rotation == angle)
 			return;
@@ -511,9 +511,9 @@ namespace kiwano
 		is_fast_transform_ = false;
 	}
 
-	void Node::AddChild(NodePtr child)
+	void Actor::AddChild(ActorPtr child)
 	{
-		KGE_ASSERT(child && "Node::AddChild failed, NULL pointer exception");
+		KGE_ASSERT(child && "Actor::AddChild failed, NULL pointer exception");
 
 		if (child)
 		{
@@ -522,7 +522,7 @@ namespace kiwano
 			if (child->parent_)
 				KGE_ERROR_LOG(L"The node to be added already has a parent");
 
-			for (Node* parent = parent_; parent; parent = parent->parent_)
+			for (Actor* parent = parent_; parent; parent = parent->parent_)
 				if (parent == child)
 					KGE_ERROR_LOG(L"A node cannot be its own parent");
 
@@ -530,14 +530,14 @@ namespace kiwano
 
 			children_.PushBack(child);
 			child->parent_ = this;
-			child->SetScene(this->scene_);
+			child->SetStage(this->stage_);
 			child->dirty_transform_ = true;
 			child->UpdateOpacity();
 			child->Reorder();
 		}
 	}
 
-	void Node::AddChildren(Array<NodePtr> const& children)
+	void Actor::AddChildren(Array<ActorPtr> const& children)
 	{
 		for (const auto& node : children)
 		{
@@ -545,22 +545,22 @@ namespace kiwano
 		}
 	}
 
-	Rect Node::GetBounds() const
+	Rect Actor::GetBounds() const
 	{
 		return Rect(Point{}, size_);
 	}
 
-	Rect Node::GetBoundingBox() const
+	Rect Actor::GetBoundingBox() const
 	{
 		return GetTransformMatrix().Transform(GetBounds());
 	}
 
-	Array<NodePtr> Node::GetChildren(String const& name) const
+	Array<ActorPtr> Actor::GetChildren(String const& name) const
 	{
-		Array<NodePtr> children;
+		Array<ActorPtr> children;
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
+		for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
@@ -570,11 +570,11 @@ namespace kiwano
 		return children;
 	}
 
-	NodePtr Node::GetChild(String const& name) const
+	ActorPtr Actor::GetChild(String const& name) const
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (Node* child = children_.First().Get(); child; child = child->NextItem().Get())
+		for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
 		{
 			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
@@ -584,12 +584,12 @@ namespace kiwano
 		return nullptr;
 	}
 
-	Node::Children const & Node::GetChildren() const
+	Actor::Children const & Actor::GetChildren() const
 	{
 		return children_;
 	}
 
-	void Node::RemoveFromParent()
+	void Actor::RemoveFromParent()
 	{
 		if (parent_)
 		{
@@ -597,14 +597,14 @@ namespace kiwano
 		}
 	}
 
-	void Node::RemoveChild(NodePtr child)
+	void Actor::RemoveChild(ActorPtr child)
 	{
 		RemoveChild(child.Get());
 	}
 
-	void Node::RemoveChild(Node * child)
+	void Actor::RemoveChild(Actor * child)
 	{
-		KGE_ASSERT(child && "Node::RemoveChild failed, NULL pointer exception");
+		KGE_ASSERT(child && "Actor::RemoveChild failed, NULL pointer exception");
 
 		if (children_.IsEmpty())
 			return;
@@ -612,12 +612,12 @@ namespace kiwano
 		if (child)
 		{
 			child->parent_ = nullptr;
-			if (child->scene_) child->SetScene(nullptr);
-			children_.Remove(NodePtr(child));
+			if (child->stage_) child->SetStage(nullptr);
+			children_.Remove(ActorPtr(child));
 		}
 	}
 
-	void Node::RemoveChildren(String const& child_name)
+	void Actor::RemoveChildren(String const& child_name)
 	{
 		if (children_.IsEmpty())
 		{
@@ -626,8 +626,8 @@ namespace kiwano
 
 		size_t hash_code = std::hash<String>{}(child_name);
 
-		Node* next;
-		for (Node* child = children_.First().Get(); child; child = next)
+		Actor* next;
+		for (Actor* child = children_.First().Get(); child; child = next)
 		{
 			next = child->NextItem().Get();
 
@@ -638,17 +638,17 @@ namespace kiwano
 		}
 	}
 
-	void Node::RemoveAllChildren()
+	void Actor::RemoveAllChildren()
 	{
 		children_.Clear();
 	}
 
-	void Node::SetResponsible(bool enable)
+	void Actor::SetResponsible(bool enable)
 	{
 		responsible_ = enable;
 	}
 
-	bool Node::ContainsPoint(const Point& point) const
+	bool Actor::ContainsPoint(const Point& point) const
 	{
 		if (size_.x == 0.f || size_.y == 0.f)
 			return false;

@@ -19,63 +19,26 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../common/Singleton.hpp"
-#include "../2d/include-forwards.h"
-#include "Component.h"
+#include "Actor.h"
 
 namespace kiwano
 {
+	// 场景
 	class KGE_API Stage
-		: public Singleton<Stage>
-		, public Component
+		: public Actor
 	{
-		KGE_DECLARE_SINGLETON(Stage);
+		friend class Transition;
+		friend class Director;
 
 	public:
-		// 切换场景
-		void EnterScene(
-			ScenePtr scene				/* 场景 */
-		);
-
-		// 切换场景
-		void EnterScene(
-			ScenePtr scene,				/* 场景 */
-			TransitionPtr transition	/* 场景动画 */
-		);
-
-		// 获取当前场景
-		ScenePtr GetCurrentScene();
-
-		// 启用或禁用场景内的节点边界渲染功能
-		void SetRenderBorderEnabled(bool enabled);
-
-		// 显示调试信息
-		void ShowDebugInfo(bool show = true);
-
-	public:
-		void SetupComponent() override {}
-
-		void DestroyComponent() override {}
-
-		void OnUpdate(Duration dt) override;
-
-		void OnRender() override;
-
-		void AfterRender() override;
-
-		void HandleEvent(Event& evt) override;
-
-	protected:
 		Stage();
 
 		virtual ~Stage();
 
-	protected:
-		bool			render_border_enabled_;
-		ScenePtr		curr_scene_;
-		ScenePtr		next_scene_;
-		NodePtr			debug_node_;
-		TransitionPtr	transition_;
+		// 进入场景
+		virtual void OnEnter();
+
+		// 退出场景
+		virtual void OnExit();
 	};
 }

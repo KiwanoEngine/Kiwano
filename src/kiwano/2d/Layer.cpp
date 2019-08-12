@@ -52,7 +52,7 @@ namespace kiwano
 
 		if (!swallow_)
 		{
-			NodePtr prev;
+			ActorPtr prev;
 			for (auto child = children_.Last(); child; child = prev)
 			{
 				prev = child->PrevItem();

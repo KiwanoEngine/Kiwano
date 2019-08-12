@@ -19,12 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Node.h"
+#include "Actor.h"
 
 namespace kiwano
 {
 	class KGE_API Layer
-		: public Node
+		: public Actor
 	{
 	public:
 		Layer();

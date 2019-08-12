@@ -57,7 +57,7 @@ namespace kiwano
 		{
 			image_ = image;
 
-			Node::SetSize(image_->GetWidth(), image_->GetHeight());
+			Actor::SetSize(image_->GetWidth(), image_->GetHeight());
 			return true;
 		}
 		return false;
@@ -76,7 +76,7 @@ namespace kiwano
 	void Sprite::Crop(const Rect& crop_rect)
 	{
 		image_->Crop(crop_rect);
-		Node::SetSize(
+		Actor::SetSize(
 			std::min(std::max(crop_rect.size.x, 0.f), image_->GetSourceWidth() - image_->GetCropX()),
 			std::min(std::max(crop_rect.size.y, 0.f), image_->GetSourceHeight() - image_->GetCropY())
 		);

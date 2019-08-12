@@ -18,32 +18,64 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Scene.h"
-#include "../base/logs.h"
-#include "../renderer/render.h"
+#pragma once
+#include "../macros.h"
+#include "../common/Singleton.hpp"
+#include "../2d/include-forwards.h"
+#include "Component.h"
 
 namespace kiwano
 {
-	Scene::Scene()
+	class KGE_API Director
+		: public Singleton<Director>
+		, public Component
 	{
-		scene_ = this;
+		KGE_DECLARE_SINGLETON(Director);
 
-		SetAnchor(0, 0);
-		SetSize(Renderer::Instance()->GetOutputSize());
-	}
+	public:
+		// 切换场景
+		void EnterStage(
+			StagePtr scene				/* 场景 */
+		);
 
-	Scene::~Scene()
-	{
-	}
+		// 切换场景
+		void EnterStage(
+			StagePtr scene,				/* 场景 */
+			TransitionPtr transition	/* 场景动画 */
+		);
 
-	void Scene::OnEnter()
-	{
-		KGE_LOG(L"Scene entered");
-	}
+		// 获取当前场景
+		StagePtr GetCurrentStage();
 
-	void Scene::OnExit()
-	{
-		KGE_LOG(L"Scene exited");
-	}
+		// 启用或禁用角色边界渲染功能
+		void SetRenderBorderEnabled(bool enabled);
 
+		// 显示调试信息
+		void ShowDebugInfo(bool show = true);
+
+	public:
+		void SetupComponent() override {}
+
+		void DestroyComponent() override {}
+
+		void OnUpdate(Duration dt) override;
+
+		void OnRender() override;
+
+		void AfterRender() override;
+
+		void HandleEvent(Event& evt) override;
+
+	protected:
+		Director();
+
+		virtual ~Director();
+
+	protected:
+		bool			render_border_enabled_;
+		StagePtr		curr_scene_;
+		StagePtr		next_scene_;
+		ActorPtr			debug_node_;
+		TransitionPtr	transition_;
+	};
 }

@@ -18,27 +18,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "Node.h"
+#include "Stage.h"
+#include "../base/logs.h"
+#include "../renderer/render.h"
 
 namespace kiwano
 {
-	// 场景
-	class KGE_API Scene
-		: public Node
+	Stage::Stage()
 	{
-		friend class Transition;
-		friend class Stage;
+		stage_ = this;
 
-	public:
-		Scene();
+		SetAnchor(0, 0);
+		SetSize(Renderer::Instance()->GetOutputSize());
+	}
 
-		virtual ~Scene();
+	Stage::~Stage()
+	{
+	}
 
-		// 进入场景
-		virtual void OnEnter();
+	void Stage::OnEnter()
+	{
+		KGE_LOG(L"Stage entered");
+	}
 
-		// 退出场景
-		virtual void OnExit();
-	};
+	void Stage::OnExit()
+	{
+		KGE_LOG(L"Stage exited");
+	}
+
 }

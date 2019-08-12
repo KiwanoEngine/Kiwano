@@ -23,7 +23,7 @@
 #include "../base/window.h"
 #include "../base/logs.h"
 #include "../base/input.h"
-#include "../base/Stage.h"
+#include "../base/Director.h"
 #include "../renderer/render.h"
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext
@@ -66,7 +66,7 @@ namespace kiwano
 
 		Use(Renderer::Instance());
 		Use(Input::Instance());
-		Use(Stage::Instance());
+		Use(Director::Instance());
 	}
 
 	Application::~Application()
@@ -100,7 +100,7 @@ namespace kiwano
 
 		if (options.debug)
 		{
-			Stage::Instance()->ShowDebugInfo(true);
+			Director::Instance()->ShowDebugInfo(true);
 			Renderer::Instance()->SetCollectingStatus(true);
 		}
 
@@ -158,7 +158,7 @@ namespace kiwano
 		}
 
 		// Destroy all instances
-		Stage::Destroy();
+		Director::Destroy();
 		Input::Destroy();
 		Renderer::Destroy();
 		Window::Destroy();

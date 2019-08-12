@@ -84,12 +84,6 @@
     <ClInclude Include="..\src\kiwano\2d\Layer.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\Node.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\Scene.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\Sprite.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -267,8 +261,14 @@
     <ClInclude Include="..\src\kiwano\2d\ShapeNode.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\base\Stage.h">
+    <ClInclude Include="..\src\kiwano\base\Director.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\Actor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\Stage.h">
+      <Filter>2d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -309,12 +309,6 @@
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\Layer.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\Node.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\Scene.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\Sprite.cpp">
@@ -407,8 +401,14 @@
     <ClCompile Include="..\src\kiwano\2d\ShapeNode.cpp">
       <Filter>2d</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\kiwano\base\Stage.cpp">
+    <ClCompile Include="..\src\kiwano\base\Director.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\Actor.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\Stage.cpp">
+      <Filter>2d</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

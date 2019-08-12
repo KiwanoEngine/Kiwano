@@ -25,7 +25,7 @@ namespace kiwano
 {
 	// ²Ëµ¥
 	class KGE_API Menu
-		: public Node
+		: public Actor
 	{
 	public:
 		Menu();

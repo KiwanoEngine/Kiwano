@@ -90,9 +90,9 @@ namespace kiwano
 		void SetDuration(Duration duration);
 
 	protected:
-		void Update(NodePtr target, Duration dt) override;
+		void Update(ActorPtr target, Duration dt) override;
 
-		virtual void UpdateTween(NodePtr target, float percent) = 0;
+		virtual void UpdateTween(ActorPtr target, float percent) = 0;
 
 	protected:
 		Duration dur_;
@@ -118,9 +118,9 @@ namespace kiwano
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
-		void UpdateTween(NodePtr target, float percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		Point	start_pos_;
@@ -151,7 +151,7 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
 	protected:
 		Point end_pos_;
@@ -178,9 +178,9 @@ namespace kiwano
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
-		void UpdateTween(NodePtr target, float percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		Point	start_pos_;
@@ -215,7 +215,7 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
 	protected:
 		Point end_pos_;
@@ -247,9 +247,9 @@ namespace kiwano
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
-		void UpdateTween(NodePtr target, float percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		float	start_scale_x_;
@@ -288,7 +288,7 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
 	protected:
 		float	end_scale_x_;
@@ -318,9 +318,9 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
-		void UpdateTween(NodePtr target, float percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		float start_val_;
@@ -373,9 +373,9 @@ namespace kiwano
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
-		void UpdateTween(NodePtr target, float percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		float start_val_;
@@ -405,7 +405,7 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
 	protected:
 		float end_val_;
@@ -481,9 +481,9 @@ namespace kiwano
 		inline void SetGeometry(ComPtr<ID2D1PathGeometry> geo)	{ geo_ = geo; }
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
-		void UpdateTween(NodePtr target, float percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		bool	path_beginning_;
@@ -502,7 +502,7 @@ namespace kiwano
 		: public ActionTween
 	{
 	public:
-		using TweenFunc = Closure<void(NodePtr, float)>;
+		using TweenFunc = Closure<void(ActorPtr, float)>;
 
 		ActionCustom(
 			Duration duration,		/* 持续时长 */
@@ -521,9 +521,9 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
-		void UpdateTween(NodePtr target, float percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		TweenFunc tween_func_;

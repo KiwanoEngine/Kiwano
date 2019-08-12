@@ -51,7 +51,7 @@ namespace kiwano
 		Actions const& GetAllActions() const;
 
 	protected:
-		void UpdateActions(NodePtr target, Duration dt);
+		void UpdateActions(ActorPtr target, Duration dt);
 
 	protected:
 		Actions actions_;

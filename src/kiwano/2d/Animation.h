@@ -53,9 +53,9 @@ namespace kiwano
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
-		void UpdateTween(NodePtr target, float percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		FramesPtr frames_;
