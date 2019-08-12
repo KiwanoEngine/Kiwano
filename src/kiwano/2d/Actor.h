@@ -149,7 +149,7 @@ namespace kiwano
 		// 获取父角色
 		inline Actor* GetParent() const { return parent_; }
 
-		// 获取所在场景
+		// 获取所在舞台
 		inline Stage* GetStage() const { return stage_; }
 
 		// 设置是否显示

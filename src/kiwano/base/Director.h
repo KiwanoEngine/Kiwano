@@ -26,6 +26,7 @@
 
 namespace kiwano
 {
+	// 导演
 	class KGE_API Director
 		: public Singleton<Director>
 		, public Component
@@ -33,18 +34,18 @@ namespace kiwano
 		KGE_DECLARE_SINGLETON(Director);
 
 	public:
-		// 切换场景
+		// 切换舞台
 		void EnterStage(
-			StagePtr scene				/* 场景 */
+			StagePtr scene				/* 舞台 */
 		);
 
-		// 切换场景
+		// 切换舞台
 		void EnterStage(
-			StagePtr scene,				/* 场景 */
-			TransitionPtr transition	/* 场景动画 */
+			StagePtr scene,				/* 舞台 */
+			TransitionPtr transition	/* 过渡动画 */
 		);
 
-		// 获取当前场景
+		// 获取当前舞台
 		StagePtr GetCurrentStage();
 
 		// 启用或禁用角色边界渲染功能

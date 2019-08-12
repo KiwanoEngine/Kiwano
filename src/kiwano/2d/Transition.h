@@ -26,7 +26,7 @@ namespace kiwano
 {
 	class Director;
 
-	// 场景过渡
+	// 舞台过渡
 	class KGE_API Transition
 		: public Object
 	{
