@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include "Transition.h"
-#include "Node.h"
-#include "Scene.h"
+#include "Actor.h"
+#include "Stage.h"
 #include "../base/window.h"
 #include "../base/logs.h"
 #include "../renderer/render.h"
@@ -55,7 +55,7 @@ namespace kiwano
 		return done_;
 	}
 
-	void Transition::Init(ScenePtr prev, ScenePtr next)
+	void Transition::Init(StagePtr prev, StagePtr next)
 	{
 		process_ = 0;
 		delta_ = Duration{};
@@ -147,7 +147,7 @@ namespace kiwano
 	{
 	}
 
-	void BoxTransition::Init(ScenePtr prev, ScenePtr next)
+	void BoxTransition::Init(StagePtr prev, StagePtr next)
 	{
 		Transition::Init(prev, next);
 
@@ -189,7 +189,7 @@ namespace kiwano
 	{
 	}
 
-	void EmergeTransition::Init(ScenePtr prev, ScenePtr next)
+	void EmergeTransition::Init(StagePtr prev, StagePtr next)
 	{
 		Transition::Init(prev, next);
 
@@ -214,7 +214,7 @@ namespace kiwano
 	{
 	}
 
-	void FadeTransition::Init(ScenePtr prev, ScenePtr next)
+	void FadeTransition::Init(StagePtr prev, StagePtr next)
 	{
 		Transition::Init(prev, next);
 
@@ -248,7 +248,7 @@ namespace kiwano
 	{
 	}
 
-	void MoveTransition::Init(ScenePtr prev, ScenePtr next)
+	void MoveTransition::Init(StagePtr prev, StagePtr next)
 	{
 		Transition::Init(prev, next);
 
@@ -327,7 +327,7 @@ namespace kiwano
 	{
 	}
 
-	void RotationTransition::Init(ScenePtr prev, ScenePtr next)
+	void RotationTransition::Init(StagePtr prev, StagePtr next)
 	{
 		Transition::Init(prev, next);
 

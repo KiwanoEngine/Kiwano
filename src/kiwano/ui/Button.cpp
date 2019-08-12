@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Button.h"
-#include "../2d/Scene.h"
+#include "../2d/Stage.h"
 #include "../base/window.h"
 
 namespace kiwano

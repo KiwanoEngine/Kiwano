@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Node.h"
+#include "Actor.h"
 #include "Font.hpp"
 #include "TextStyle.hpp"
 #include "../renderer/TextRenderer.h"

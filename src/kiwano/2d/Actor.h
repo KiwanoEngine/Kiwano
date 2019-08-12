@@ -27,30 +27,30 @@
 
 namespace kiwano
 {
-	class Stage;
+	class Director;
 
-	// 节点
-	class KGE_API Node
+	// 角色
+	class KGE_API Actor
 		: public Object
 		, public TimerManager
 		, public ActionManager
 		, public EventDispatcher
-		, public IntrusiveListItem<NodePtr>
+		, public IntrusiveListItem<ActorPtr>
 	{
-		friend class Stage;
+		friend class Director;
 		friend class Transition;
-		friend class IntrusiveList<NodePtr>;
+		friend class IntrusiveList<ActorPtr>;
 
-		using Children = IntrusiveList<NodePtr>;
+		using Children = IntrusiveList<ActorPtr>;
 		using UpdateCallback = Closure<void(Duration)>;
 
 	public:
-		Node();
+		Actor();
 
-		// 更新节点
+		// 更新角色
 		virtual void OnUpdate(Duration dt) { KGE_UNUSED(dt); }
 
-		// 渲染节点
+		// 渲染角色
 		virtual void OnRender() {}
 
 		// 获取显示状态
@@ -87,7 +87,7 @@ namespace kiwano
 		float GetScaleY()				const	{ return transform_.scale.y; }
 
 		// 获取错切角度
-		Point GetSkew()					const { return transform_.skew; }
+		Point GetSkew()					const	{ return transform_.skew; }
 
 		// 获取横向错切角度
 		float GetSkewX()				const	{ return transform_.skew.x; }
@@ -146,11 +146,11 @@ namespace kiwano
 		// 获取二维变换的逆矩阵
 		Matrix const& GetTransformInverseMatrix()  const;
 
-		// 获取父节点
-		inline Node* GetParent() const { return parent_; }
+		// 获取父角色
+		inline Actor* GetParent() const { return parent_; }
 
 		// 获取所在场景
-		inline Scene* GetScene() const { return scene_; }
+		inline Stage* GetStage() const { return stage_; }
 
 		// 设置是否显示
 		void SetVisible(
@@ -330,62 +330,62 @@ namespace kiwano
 			bool enable
 		);
 
-		// 判断点是否在节点内
+		// 判断点是否在角色内
 		bool ContainsPoint(
 			const Point& point
 		)  const;
 
-		// 添加子节点
+		// 添加子角色
 		void AddChild(
-			NodePtr child
+			ActorPtr child
 		);
 
-		// 添加多个子节点
+		// 添加多个子角色
 		void AddChildren(
-			Array<NodePtr> const& children
+			Array<ActorPtr> const& children
 		);
 
-		// 获取所有名称相同的子节点
-		Array<NodePtr> GetChildren(
+		// 获取所有名称相同的子角色
+		Array<ActorPtr> GetChildren(
 			String const& name
 		) const;
 
-		// 获取名称相同的子节点
-		NodePtr GetChild(
+		// 获取名称相同的子角色
+		ActorPtr GetChild(
 			String const& name
 		) const;
 
-		// 获取全部子节点
+		// 获取全部子角色
 		Children const& GetChildren() const;
 
-		// 移除子节点
+		// 移除子角色
 		void RemoveChild(
-			NodePtr child
+			ActorPtr child
 		);
 
-		// 移除子节点
+		// 移除子角色
 		void RemoveChild(
-			Node* child
+			Actor* child
 		);
 
-		// 移除所有名称相同的子节点
+		// 移除所有名称相同的子角色
 		void RemoveChildren(
 			String const& child_name
 		);
 
-		// 移除所有节点
+		// 移除所有角色
 		void RemoveAllChildren();
 
-		// 从父节点移除
+		// 从父角色移除
 		void RemoveFromParent();
 
-		// 暂停节点更新
+		// 暂停角色更新
 		inline void PauseUpdating()									{ update_pausing_ = true; }
 
-		// 继续节点更新
+		// 继续角色更新
 		inline void ResumeUpdating()								{ update_pausing_ = false; }
 
-		// 节点更新是否暂停
+		// 角色更新是否暂停
 		inline bool IsUpdatePausing() const							{ return update_pausing_; }
 
 		// 设置更新时的回调函数
@@ -394,7 +394,7 @@ namespace kiwano
 		// 获取更新时的回调函数
 		inline UpdateCallback GetCallbackOnUpdate() const			{ return cb_update_; }
 
-		// 渲染节点边界
+		// 渲染角色边界
 		inline void ShowBorder(bool show)							{ show_border_ = show; }
 
 		// 设置默认锚点
@@ -422,7 +422,7 @@ namespace kiwano
 
 		void Reorder();
 
-		void SetScene(Scene* scene);
+		void SetStage(Stage* scene);
 
 	protected:
 		bool			visible_;
@@ -435,8 +435,8 @@ namespace kiwano
 		int				z_order_;
 		float			opacity_;
 		float			displayed_opacity_;
-		Node*			parent_;
-		Scene*			scene_;
+		Actor*			parent_;
+		Stage*			stage_;
 		size_t			hash_name_;
 		Point			anchor_;
 		Size			size_;
@@ -452,9 +452,9 @@ namespace kiwano
 	};
 
 
-	// 可视化节点
+	// 可视化角色
 	class KGE_API VisualNode
-		: public Node
+		: public Actor
 	{
 	public:
 		virtual void PrepareRender() override;

@@ -19,12 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Node.h"
+#include "Actor.h"
 #include "../renderer/render.h"  // ID2D1Geometry
 
 namespace kiwano
 {
-	// 二维图形节点
+	// 二维图形角色
 	class KGE_API ShapeNode
 		: public VisualNode
 	{
@@ -144,7 +144,7 @@ namespace kiwano
 	};
 
 
-	// 矩形节点
+	// 矩形角色
 	class KGE_API RectNode
 		: public ShapeNode
 	{
@@ -171,7 +171,7 @@ namespace kiwano
 	};
 
 
-	// 圆角矩形节点
+	// 圆角矩形角色
 	class KGE_API RoundedRectNode
 		: public ShapeNode
 	{
@@ -214,7 +214,7 @@ namespace kiwano
 	};
 
 
-	// 圆形节点
+	// 圆形角色
 	class KGE_API CircleNode
 		: public ShapeNode
 	{
@@ -251,7 +251,7 @@ namespace kiwano
 	};
 
 
-	// 椭圆节点
+	// 椭圆角色
 	class KGE_API EllipseNode
 		: public ShapeNode
 	{
@@ -294,7 +294,7 @@ namespace kiwano
 	};
 
 
-	// 路径节点
+	// 路径角色
 	class KGE_API PathNode
 		: public ShapeNode
 	{

@@ -105,7 +105,7 @@ namespace kiwano
 		void* data;
 	};
 
-	class Node;
+	class Actor;
 
 	// ÊÂ¼þ
 	struct KGE_API Event
@@ -145,7 +145,7 @@ namespace kiwano
 		};
 
 		UINT type;
-		Node* target;
+		Actor* target;
 
 		union
 		{

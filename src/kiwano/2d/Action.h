@@ -64,7 +64,7 @@ namespace kiwano
 		// 设置循环次数 (-1 为永久循环)
 		inline void SetLoops(int loops)								{ loops_ = loops; }
 
-		// 动作结束时移除目标节点
+		// 动作结束时移除目标角色
 		inline void RemoveTargetWhenDone()							{ detach_target_ = true; }
 
 		// 设置动作结束时的回调函数
@@ -100,15 +100,15 @@ namespace kiwano
 		inline ActionCallback GetLoopDoneCallback() const			{ return cb_loop_done_; }
 
 	protected:
-		virtual void Init(NodePtr target);
+		virtual void Init(ActorPtr target);
 
-		virtual void Update(NodePtr target, Duration dt);
+		virtual void Update(ActorPtr target, Duration dt);
 
-		void UpdateStep(NodePtr target, Duration dt);
+		void UpdateStep(ActorPtr target, Duration dt);
 
-		void Complete(NodePtr target);
+		void Complete(ActorPtr target);
 
-		void Restart(NodePtr target);
+		void Restart(ActorPtr target);
 
 	protected:
 		Status			status_;

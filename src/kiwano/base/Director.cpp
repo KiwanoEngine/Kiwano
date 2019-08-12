@@ -18,26 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Stage.h"
-#include "../2d/Node.h"
-#include "../2d/Scene.h"
+#include "Director.h"
+#include "../2d/Actor.h"
+#include "../2d/Stage.h"
 #include "../2d/Transition.h"
 #include "../2d/DebugNode.h"
 
 namespace kiwano
 {
-	Stage::Stage()
+	Director::Director()
 		: render_border_enabled_(false)
 	{
 	}
 
-	Stage::~Stage()
+	Director::~Director()
 	{
 	}
 
-	void Stage::EnterScene(ScenePtr scene)
+	void Director::EnterStage(StagePtr scene)
 	{
-		KGE_ASSERT(scene && "Stage::EnterScene failed, NULL pointer exception");
+		KGE_ASSERT(scene && "Director::EnterStage failed, NULL pointer exception");
 
 		if (curr_scene_ == scene || next_scene_ == scene)
 			return;
@@ -45,9 +45,9 @@ namespace kiwano
 		next_scene_ = scene;
 	}
 
-	void Stage::EnterScene(ScenePtr scene, TransitionPtr transition)
+	void Director::EnterStage(StagePtr scene, TransitionPtr transition)
 	{
-		EnterScene(scene);
+		EnterStage(scene);
 
 		if (transition && next_scene_)
 		{
@@ -60,17 +60,17 @@ namespace kiwano
 		}
 	}
 
-	ScenePtr Stage::GetCurrentScene()
+	StagePtr Director::GetCurrentStage()
 	{
 		return curr_scene_;
 	}
 
-	void Stage::SetRenderBorderEnabled(bool enabled)
+	void Director::SetRenderBorderEnabled(bool enabled)
 	{
 		render_border_enabled_ = enabled;
 	}
 
-	void Stage::ShowDebugInfo(bool show)
+	void Director::ShowDebugInfo(bool show)
 	{
 		if (show)
 		{
@@ -83,7 +83,7 @@ namespace kiwano
 		}
 	}
 
-	void Stage::OnUpdate(Duration dt)
+	void Director::OnUpdate(Duration dt)
 	{
 		if (transition_)
 		{
@@ -116,7 +116,7 @@ namespace kiwano
 			debug_node_->Update(dt);
 	}
 
-	void Stage::OnRender()
+	void Director::OnRender()
 	{
 		if (transition_)
 		{
@@ -131,7 +131,7 @@ namespace kiwano
 			debug_node_->Render();
 	}
 
-	void Stage::AfterRender()
+	void Director::AfterRender()
 	{
 		if (render_border_enabled_)
 		{
@@ -140,7 +140,7 @@ namespace kiwano
 		}
 	}
 
-	void Stage::HandleEvent(Event& evt)
+	void Director::HandleEvent(Event& evt)
 	{
 		if (debug_node_)
 			debug_node_->Dispatch(evt);

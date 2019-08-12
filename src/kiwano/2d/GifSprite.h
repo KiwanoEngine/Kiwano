@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Node.h"
+#include "Actor.h"
 #include "../base/Resource.h"
 #include "../renderer/render.h"
 

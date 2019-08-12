@@ -51,7 +51,7 @@ namespace kiwano
 		frames_ = frames;
 	}
 
-	void Animation::Init(NodePtr target)
+	void Animation::Init(ActorPtr target)
 	{
 		if (!frames_ || frames_->GetFrames().empty())
 		{
@@ -66,7 +66,7 @@ namespace kiwano
 		}
 	}
 
-	void Animation::UpdateTween(NodePtr target, float percent)
+	void Animation::UpdateTween(ActorPtr target, float percent)
 	{
 		auto sprite_target = dynamic_cast<Sprite*>(target.Get());
 

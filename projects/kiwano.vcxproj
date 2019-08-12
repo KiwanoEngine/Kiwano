@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\src\kiwano\2d\GifSprite.h" />
-    <ClInclude Include="..\src\kiwano\base\Stage.h" />
+    <ClInclude Include="..\src\kiwano\base\Director.h" />
     <ClInclude Include="..\src\kiwano\base\types.h" />
     <ClInclude Include="..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\src\kiwano\config.h" />
@@ -23,8 +23,8 @@
     <ClInclude Include="..\src\kiwano\2d\GifImage.h" />
     <ClInclude Include="..\src\kiwano\2d\Image.h" />
     <ClInclude Include="..\src\kiwano\2d\Layer.h" />
-    <ClInclude Include="..\src\kiwano\2d\Node.h" />
-    <ClInclude Include="..\src\kiwano\2d\Scene.h" />
+    <ClInclude Include="..\src\kiwano\2d\Actor.h" />
+    <ClInclude Include="..\src\kiwano\2d\Stage.h" />
     <ClInclude Include="..\src\kiwano\2d\Sprite.h" />
     <ClInclude Include="..\src\kiwano\2d\Text.h" />
     <ClInclude Include="..\src\kiwano\2d\TextStyle.hpp" />
@@ -97,8 +97,8 @@
     <ClCompile Include="..\src\kiwano\2d\GifSprite.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Image.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Layer.cpp" />
-    <ClCompile Include="..\src\kiwano\2d\Node.cpp" />
-    <ClCompile Include="..\src\kiwano\2d\Scene.cpp" />
+    <ClCompile Include="..\src\kiwano\2d\Actor.cpp" />
+    <ClCompile Include="..\src\kiwano\2d\Stage.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Sprite.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Text.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Transition.cpp" />
@@ -109,7 +109,7 @@
     <ClCompile Include="..\src\kiwano\base\logs.cpp" />
     <ClCompile Include="..\src\kiwano\base\Object.cpp" />
     <ClCompile Include="..\src\kiwano\base\Resource.cpp" />
-    <ClCompile Include="..\src\kiwano\base\Stage.cpp" />
+    <ClCompile Include="..\src\kiwano\base\Director.cpp" />
     <ClCompile Include="..\src\kiwano\base\Timer.cpp" />
     <ClCompile Include="..\src\kiwano\base\TimerManager.cpp" />
     <ClCompile Include="..\src\kiwano\base\time.cpp" />

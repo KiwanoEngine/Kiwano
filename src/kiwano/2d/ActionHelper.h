@@ -39,7 +39,7 @@ namespace kiwano
 		// 设置动作循环结束时的回调函数
 		inline ActionHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ base->SetLoopDoneCallback(cb); return (*this); }
 
-		// 动作结束时移除目标节点
+		// 动作结束时移除目标角色
 		inline ActionHelper& RemoveTargetWhenDone()							{ base->RemoveTargetWhenDone(); return (*this); }
 
 		// 设置名称
@@ -76,7 +76,7 @@ namespace kiwano
 		// 设置动作循环结束时的回调函数
 		inline TweenHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ base->SetLoopDoneCallback(cb); return (*this); }
 
-		// 动作结束时移除目标节点
+		// 动作结束时移除目标角色
 		inline TweenHelper& RemoveTargetWhenDone()							{ base->RemoveTargetWhenDone(); return (*this); }
 
 		// 设置名称

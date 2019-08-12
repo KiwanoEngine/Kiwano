@@ -60,10 +60,10 @@ namespace kiwano
 
 	protected:
 		// 初始化动作
-		void Init(NodePtr target) override;
+		void Init(ActorPtr target) override;
 
 		// 更新动作
-		void Update(NodePtr target, Duration dt) override;
+		void Update(ActorPtr target, Duration dt) override;
 
 	protected:
 		bool		sequence_;
