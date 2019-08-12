@@ -57,9 +57,9 @@ nuget {
         title: Kiwano Game Framework;
         authors: Nomango;
         owners: Nomango;
-        licenseUrl: "https://github.com/Nomango/Kiwano/blob/master/LICENSE";
-        projectUrl: "https://github.com/Nomango/Kiwano";
-        iconUrl: "https://github.com/Nomango/Kiwano/raw/master/logo/logo_square.png";
+        licenseUrl: "https://github.com/KiwanoEngine/Kiwano/blob/master/LICENSE";
+        projectUrl: "https://github.com/KiwanoEngine/Kiwano";
+        iconUrl: "https://github.com/KiwanoEngine/Kiwano/raw/master/logo/logo_square.png";
         description: A simple game framework for C++;
         releaseNotes: "Initial release of a Nuget package for Kiwano Game Engine";
         copyright: Copyright 2019;
