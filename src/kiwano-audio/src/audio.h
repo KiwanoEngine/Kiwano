@@ -33,7 +33,7 @@ namespace kiwano
 			KGE_DECLARE_SINGLETON(Audio);
 
 		public:
-			void SetupComponent(Application*) override;
+			void SetupComponent() override;
 
 			void DestroyComponent() override;
 

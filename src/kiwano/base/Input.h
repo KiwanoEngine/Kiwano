@@ -59,7 +59,7 @@ namespace kiwano
 		Point GetMousePos();
 
 	public:
-		void SetupComponent(Application*) override {}
+		void SetupComponent() override {}
 
 		void DestroyComponent() override {}
 

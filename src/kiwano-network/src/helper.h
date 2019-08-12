@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/IntrusivePtr.hpp>
+#include <kiwano/base/SmartPtr.hpp>
 
 namespace kiwano
 {

@@ -20,23 +20,26 @@
 
 #pragma once
 #include "../macros.h"
+#include "time.h"
+#include "Event.hpp"
 
 namespace kiwano
 {
-	class Application;
-
 	class KGE_API Component
 	{
 	public:
-		virtual void SetupComponent(Application*) = 0;
+		virtual void SetupComponent() = 0;
 		virtual void DestroyComponent() = 0;
 
-		virtual void BeforeUpdate(float dt) {}
+		virtual void BeforeUpdate() {}
+		virtual void OnUpdate(Duration) {}
 		virtual void AfterUpdate() {}
 
 		virtual void BeforeRender() {}
+		virtual void OnRender() {}
 		virtual void AfterRender() {}
 
-		virtual void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {}
+		virtual void HandleEvent(Event&) {}
+		virtual void HandleMessage(HWND, UINT, WPARAM, LPARAM) {}
 	};
 }

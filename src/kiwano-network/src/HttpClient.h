@@ -71,7 +71,7 @@ namespace kiwano
 			}
 
 		public:
-			virtual void SetupComponent(Application* app) override;
+			virtual void SetupComponent() override;
 
 			virtual void DestroyComponent() override;
 

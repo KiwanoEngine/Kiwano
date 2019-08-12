@@ -41,7 +41,7 @@ namespace kiwano
 	{
 	}
 
-	void Renderer::SetupComponent(Application* app)
+	void Renderer::SetupComponent()
 	{
 		KGE_LOG(L"Creating device resources");
 

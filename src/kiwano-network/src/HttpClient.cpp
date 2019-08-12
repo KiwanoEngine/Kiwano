@@ -20,7 +20,10 @@
 
 #include <kiwano/base/logs.h>
 #include <kiwano/platform/Application.h>
-#include "../kiwano-network.h"
+#include "helper.h"
+#include "HttpRequest.hpp"
+#include "HttpResponse.hpp"
+#include "HttpClient.h"
 #include <thread>
 #include <codecvt>
 
@@ -249,7 +252,7 @@ namespace kiwano
 		{
 		}
 
-		void HttpClient::SetupComponent(Application * app)
+		void HttpClient::SetupComponent()
 		{
 			::curl_global_init(CURL_GLOBAL_ALL);
 
