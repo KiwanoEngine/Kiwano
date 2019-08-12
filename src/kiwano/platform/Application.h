@@ -19,11 +19,14 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../2d/include-forwards.h"
+#include "../common/String.hpp"
+#include "../common/Array.hpp"
+#include "../common/Closure.hpp"
+#include "../common/Noncopyable.hpp"
 #include "../base/time.h"
-#include "../base/window.h"
 #include "../base/Component.h"
 #include "../base/Event.hpp"
+#include "../2d/Color.h"
 
 namespace kiwano
 {
@@ -36,6 +39,7 @@ namespace kiwano
 		Color	clear_color;		// 清屏颜色
 		bool	vsync;				// 垂直同步
 		bool	fullscreen;			// 全屏模式
+		bool	debug;				// 调试模式
 
 		Options(
 			String const& title = L"Kiwano Game",
@@ -44,19 +48,13 @@ namespace kiwano
 			LPCWSTR icon = nullptr,
 			Color clear_color = Color::Black,
 			bool vsync = true,
-			bool fullscreen = false
-		)
-			: title(title)
-			, width(width)
-			, height(height)
-			, icon(icon)
-			, clear_color(clear_color)
-			, vsync(vsync)
-			, fullscreen(fullscreen)
-		{}
+			bool fullscreen = false,
+			bool debug = false
+		);
 	};
 
 
+	// 应用
 	class KGE_API Application
 		: protected Noncopyable
 	{
@@ -67,23 +65,17 @@ namespace kiwano
 
 		// 初始化
 		void Init(
-			Options const& options
+			Options const& options = Options{}
 		);
 
-		// 启动时
-		virtual void OnStart() {}
+		// 初始化成功时
+		virtual void OnReady() {}
 
-		// 关闭时
+		// 窗口关闭时
 		virtual bool OnClosing() { return true; }
 
 		// 销毁时
 		virtual void OnDestroy() {}
-
-		// 渲染时
-		virtual void OnRender() {}
-
-		// 更新时
-		virtual void OnUpdate(Duration dt) { KGE_NOT_USED(dt); }
 
 		// 运行
 		void Run();
@@ -104,32 +96,13 @@ namespace kiwano
 			Component* component
 		);
 
-		// 切换场景
-		void EnterScene(
-			ScenePtr scene				/* 场景 */
-		);
-
-		// 切换场景
-		void EnterScene(
-			ScenePtr scene,				/* 场景 */
-			TransitionPtr transition	/* 场景动画 */
-		);
-
-		// 获取当前场景
-		ScenePtr GetCurrentScene();
-
 		// 设置时间缩放因子
 		void SetTimeScale(
 			float scale_factor
 		);
 
-		// 显示调试信息
-		void ShowDebugInfo(
-			bool show = true
-		);
-
 		// 分发事件
-		void Dispatch(Event& evt);
+		void DispatchEvent(Event& evt);
 
 		// 在 Kiwano 主线程中执行函数
 		// 当在其他线程调用 Kiwano 函数时使用
@@ -145,14 +118,9 @@ namespace kiwano
 		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 	protected:
-		bool			end_;
-		bool			inited_;
-		float			time_scale_;
-
-		ScenePtr		curr_scene_;
-		ScenePtr		next_scene_;
-		NodePtr			debug_node_;
-		TransitionPtr	transition_;
+		bool	end_;
+		bool	inited_;
+		float	time_scale_;
 
 		Array<Component*>	components_;
 	};

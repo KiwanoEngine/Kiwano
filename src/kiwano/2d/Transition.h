@@ -24,13 +24,13 @@
 
 namespace kiwano
 {
-	class Scene;
+	class Stage;
 
 	// ³¡¾°¹ý¶É
 	class KGE_API Transition
 		: public Object
 	{
-		friend class Application;
+		friend class Stage;
 
 	public:
 		explicit Transition(

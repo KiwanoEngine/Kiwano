@@ -25,7 +25,6 @@
 namespace kiwano
 {
 	Scene::Scene()
-		: render_border_enabled_(false)
 	{
 		scene_ = this;
 
@@ -45,16 +44,6 @@ namespace kiwano
 	void Scene::OnExit()
 	{
 		KGE_LOG(L"Scene exited");
-	}
-
-	void Scene::Render()
-	{
-		Node::Render();
-
-		if (render_border_enabled_)
-		{
-			Node::RenderBorder();
-		}
 	}
 
 }

@@ -152,7 +152,7 @@ namespace kiwano
 		);
 
 	public:
-		void SetupComponent(Application*) override;
+		void SetupComponent() override;
 
 		void DestroyComponent() override;
 

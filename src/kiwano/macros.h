@@ -115,6 +115,6 @@
 #	pragma warning (disable: 4251)
 #endif
 
-#define KGE_NOT_USED(VAR) ((void)VAR)
+#define KGE_UNUSED(VAR) ((void)VAR)
 
 #define KGE_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))

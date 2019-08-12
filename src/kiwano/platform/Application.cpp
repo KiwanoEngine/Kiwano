@@ -20,12 +20,11 @@
 
 #include "Application.h"
 #include "modules.h"
+#include "../base/window.h"
 #include "../base/logs.h"
 #include "../base/input.h"
+#include "../base/Stage.h"
 #include "../renderer/render.h"
-#include "../2d/Scene.h"
-#include "../2d/DebugNode.h"
-#include "../2d/Transition.h"
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext
 #include <mutex>  // std::mutex
@@ -34,13 +33,24 @@
 
 namespace kiwano
 {
-	using FunctionToPerform = Closure<void()>;
-
 	namespace
 	{
+		using FunctionToPerform = Closure<void()>;
+
 		std::mutex				 perform_mutex_;
 		Queue<FunctionToPerform> functions_to_perform_;
 	}
+
+	Options::Options(String const& title, int width, int height, LPCWSTR icon, Color clear_color, bool vsync, bool fullscreen, bool debug)
+		: title(title)
+		, width(width)
+		, height(height)
+		, icon(icon)
+		, clear_color(clear_color)
+		, vsync(vsync)
+		, fullscreen(fullscreen)
+		, debug(debug)
+	{}
 }
 
 namespace kiwano
@@ -56,6 +66,7 @@ namespace kiwano
 
 		Use(Renderer::Instance());
 		Use(Input::Instance());
+		Use(Stage::Instance());
 	}
 
 	Application::~Application()
@@ -84,11 +95,17 @@ namespace kiwano
 		// Setup all components
 		for (Component* c : components_)
 		{
-			c->SetupComponent(this);
+			c->SetupComponent();
+		}
+
+		if (options.debug)
+		{
+			Stage::Instance()->ShowDebugInfo(true);
+			Renderer::Instance()->SetCollectingStatus(true);
 		}
 
 		// Everything is ready
-		OnStart();
+		OnReady();
 
 		HWND hwnd = Window::Instance()->GetHandle();
 
@@ -129,11 +146,6 @@ namespace kiwano
 
 	void Application::Destroy()
 	{
-		transition_.Reset();
-		next_scene_.Reset();
-		curr_scene_.Reset();
-		debug_node_.Reset();
-
 		if (inited_)
 		{
 			inited_ = false;
@@ -146,6 +158,7 @@ namespace kiwano
 		}
 
 		// Destroy all instances
+		Stage::Destroy();
 		Input::Destroy();
 		Renderer::Destroy();
 		Window::Destroy();
@@ -186,98 +199,17 @@ namespace kiwano
 		}
 	}
 
-	void Application::EnterScene(ScenePtr scene)
-	{
-		KGE_ASSERT(scene && "Application::EnterScene failed, NULL pointer exception");
-
-		if (curr_scene_ == scene || next_scene_ == scene)
-			return;
-
-		next_scene_ = scene;
-	}
-
-	void Application::EnterScene(ScenePtr scene, TransitionPtr transition)
-	{
-		EnterScene(scene);
-		
-		if (transition && next_scene_)
-		{
-			if (transition_)
-			{
-				transition_->Stop();
-			}
-			transition_ = transition;
-			transition_->Init(curr_scene_, next_scene_);
-		}
-	}
-
-	ScenePtr Application::GetCurrentScene()
-	{
-		return curr_scene_;
-	}
-
 	void Application::SetTimeScale(float scale_factor)
 	{
 		time_scale_ = scale_factor;
 	}
 
-	void Application::ShowDebugInfo(bool show)
-	{
-		if (show)
-		{
-			debug_node_ = new DebugNode;
-			Renderer::Instance()->SetCollectingStatus(true);
-		}
-		else
-		{
-			debug_node_.Reset();
-			Renderer::Instance()->SetCollectingStatus(false);
-		}
-	}
-
-	void Application::Dispatch(Event& evt)
-	{
-		if (debug_node_)
-			debug_node_->Dispatch(evt);
-
-		if (curr_scene_)
-			curr_scene_->Dispatch(evt);
-	}
-
 	void Application::Update()
 	{
-		static auto last = Time::Now();
-
-		const auto now = Time::Now();
-		const auto dt = (now - last) * time_scale_;
-		last = now;
-
 		// Before update
 		for (Component* c : components_)
 		{
-			c->BeforeUpdate(dt.Seconds());
-		}
-
-		// Updating
-		if (transition_)
-		{
-			transition_->Update(dt);
-
-			if (transition_->IsDone())
-				transition_ = nullptr;
-		}
-
-		if (next_scene_ && !transition_)
-		{
-			if (curr_scene_)
-			{
-				curr_scene_->OnExit();
-			}
-
-			next_scene_->OnEnter();
-
-			curr_scene_ = next_scene_;
-			next_scene_ = nullptr;
+			c->BeforeUpdate();
 		}
 
 		// perform functions
@@ -300,16 +232,19 @@ namespace kiwano
 			}
 		}
 
-		OnUpdate(dt);
+		// Updating
+		{
+			static auto last = Time::Now();
 
-		if (curr_scene_)
-			curr_scene_->Update(dt);
+			const auto now = Time::Now();
+			const auto dt = (now - last) * time_scale_;
+			last = now;
 
-		if (next_scene_)
-			next_scene_->Update(dt);
-
-		if (debug_node_)
-			debug_node_->Update(dt);
+			for (Component* c : components_)
+			{
+				c->OnUpdate(dt);
+			}
+		}
 
 		// After update
 		for (auto rit = components_.rbegin(); rit != components_.rend(); ++rit)
@@ -327,24 +262,23 @@ namespace kiwano
 		}
 
 		// Rendering
-		if (transition_)
+		for (Component* c : components_)
 		{
-			transition_->Render();
+			c->OnRender();
 		}
-		else if (curr_scene_)
-		{
-			curr_scene_->Render();
-		}
-
-		OnRender();
-
-		if (debug_node_)
-			debug_node_->Render();
 
 		// After render
 		for (auto rit = components_.rbegin(); rit != components_.rend(); ++rit)
 		{
 			(*rit)->AfterRender();
+		}
+	}
+
+	void Application::DispatchEvent(Event& evt)
+	{
+		for (Component* c : components_)
+		{
+			c->HandleEvent(evt);
 		}
 	}
 
@@ -366,7 +300,7 @@ namespace kiwano
 		{
 			c->HandleMessage(hwnd, msg, wparam, lparam);
 		}
-		
+
 		switch (msg)
 		{
 		case WM_PAINT:
@@ -384,28 +318,22 @@ namespace kiwano
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
 		{
-			if (!app->transition_ && app->curr_scene_)
-			{
-				bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
-				Event evt(down ? Event::KeyDown : Event::KeyUp);
-				evt.key.code = static_cast<int>(wparam);
-				evt.key.count = static_cast<int>(lparam & 0xFF);
+			bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
+			Event evt(down ? Event::KeyDown : Event::KeyUp);
+			evt.key.code = static_cast<int>(wparam);
+			evt.key.count = static_cast<int>(lparam & 0xFF);
 
-				app->Dispatch(evt);
-			}
+			app->DispatchEvent(evt);
 		}
 		break;
 
 		case WM_CHAR:
 		{
-			if (!app->transition_ && app->curr_scene_)
-			{
-				Event evt(Event::Char);
-				evt.key.c = static_cast<char>(wparam);
-				evt.key.count = static_cast<int>(lparam & 0xFF);
+			Event evt(Event::Char);
+			evt.key.c = static_cast<char>(wparam);
+			evt.key.count = static_cast<int>(lparam & 0xFF);
 
-				app->Dispatch(evt);
-			}
+			app->DispatchEvent(evt);
 		}
 		break;
 
@@ -421,26 +349,23 @@ namespace kiwano
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
-			if (!app->transition_ && app->curr_scene_)
-			{
-				Event evt;
+			Event evt;
 
-				evt.mouse.x = static_cast<float>(GET_X_LPARAM(lparam));
-				evt.mouse.y = static_cast<float>(GET_Y_LPARAM(lparam));
-				evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
-				evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
+			evt.mouse.x = static_cast<float>(GET_X_LPARAM(lparam));
+			evt.mouse.y = static_cast<float>(GET_Y_LPARAM(lparam));
+			evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
+			evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
 
-				if		(msg == WM_MOUSEMOVE) { evt.type = Event::MouseMove; }
-				else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN) { evt.type = Event::MouseBtnDown; }
-				else if (msg == WM_LBUTTONUP   || msg == WM_RBUTTONUP   || msg == WM_MBUTTONUP) { evt.type = Event::MouseBtnUp; }
-				else if (msg == WM_MOUSEWHEEL) { evt.type = Event::MouseWheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA; }
+			if (msg == WM_MOUSEMOVE) { evt.type = Event::MouseMove; }
+			else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN) { evt.type = Event::MouseBtnDown; }
+			else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP) { evt.type = Event::MouseBtnUp; }
+			else if (msg == WM_MOUSEWHEEL) { evt.type = Event::MouseWheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA; }
 
-				if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { evt.mouse.button = MouseButton::Left; }
-				else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { evt.mouse.button = MouseButton::Right; }
-				else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { evt.mouse.button = MouseButton::Middle; }
+			if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { evt.mouse.button = MouseButton::Left; }
+			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { evt.mouse.button = MouseButton::Right; }
+			else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { evt.mouse.button = MouseButton::Middle; }
 
-				app->Dispatch(evt);
-			}
+			app->DispatchEvent(evt);
 		}
 		break;
 
@@ -454,31 +379,25 @@ namespace kiwano
 			{
 				KGE_LOG(L"Window resized");
 
-				if (app->curr_scene_)
-				{
-					Event evt(Event::WindowResized);
-					evt.win.width = LOWORD(lparam);
-					evt.win.height = HIWORD(lparam);
-					app->Dispatch(evt);
-				}
-
 				Window::Instance()->UpdateWindowRect();
+
+				Event evt(Event::WindowResized);
+				evt.win.width = LOWORD(lparam);
+				evt.win.height = HIWORD(lparam);
+				app->DispatchEvent(evt);
 			}
 		}
 		break;
 
 		case WM_MOVE:
 		{
-			if (app->curr_scene_)
-			{
-				int x = (int)(short)LOWORD(lparam);
-				int y = (int)(short)HIWORD(lparam);
+			int x = (int)(short)LOWORD(lparam);
+			int y = (int)(short)HIWORD(lparam);
 
-				Event evt(Event::WindowMoved);
-				evt.win.x = x;
-				evt.win.y = y;
-				app->Dispatch(evt);
-			}
+			Event evt(Event::WindowMoved);
+			evt.win.x = x;
+			evt.win.y = y;
+			app->DispatchEvent(evt);
 		}
 		break;
 
@@ -488,12 +407,9 @@ namespace kiwano
 
 			Window::Instance()->SetActive(active);
 
-			if (app->curr_scene_)
-			{
-				Event evt(Event::WindowFocusChanged);
-				evt.win.focus = active;
-				app->Dispatch(evt);
-			}
+			Event evt(Event::WindowFocusChanged);
+			evt.win.focus = active;
+			app->DispatchEvent(evt);
 		}
 		break;
 
@@ -501,12 +417,9 @@ namespace kiwano
 		{
 			KGE_LOG(L"Window title changed");
 
-			if (app->curr_scene_)
-			{
-				Event evt(Event::WindowTitleChanged);
-				evt.win.title = reinterpret_cast<const wchar_t*>(lparam);
-				app->Dispatch(evt);
-			}
+			Event evt(Event::WindowTitleChanged);
+			evt.win.title = reinterpret_cast<const wchar_t*>(lparam);
+			app->DispatchEvent(evt);
 		}
 		break;
 
@@ -539,12 +452,8 @@ namespace kiwano
 		{
 			KGE_LOG(L"Window was destroyed");
 
-			if (app->curr_scene_)
-			{
-				Event evt(Event::WindowClosed);
-				app->Dispatch(evt);
-			}
-
+			Event evt(Event::WindowClosed);
+			app->DispatchEvent(evt);
 			app->OnDestroy();
 
 			::PostQuitMessage(0);

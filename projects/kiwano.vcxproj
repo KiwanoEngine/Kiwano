@@ -2,6 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\src\kiwano\2d\GifSprite.h" />
+    <ClInclude Include="..\src\kiwano\base\Stage.h" />
     <ClInclude Include="..\src\kiwano\base\types.h" />
     <ClInclude Include="..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\src\kiwano\config.h" />
@@ -108,6 +109,7 @@
     <ClCompile Include="..\src\kiwano\base\logs.cpp" />
     <ClCompile Include="..\src\kiwano\base\Object.cpp" />
     <ClCompile Include="..\src\kiwano\base\Resource.cpp" />
+    <ClCompile Include="..\src\kiwano\base\Stage.cpp" />
     <ClCompile Include="..\src\kiwano\base\Timer.cpp" />
     <ClCompile Include="..\src\kiwano\base\TimerManager.cpp" />
     <ClCompile Include="..\src\kiwano\base\time.cpp" />

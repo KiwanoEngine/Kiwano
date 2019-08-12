@@ -27,7 +27,7 @@
 
 namespace kiwano
 {
-	class Application;
+	class Stage;
 
 	// 节点
 	class KGE_API Node
@@ -37,7 +37,7 @@ namespace kiwano
 		, public EventDispatcher
 		, public IntrusiveListItem<NodePtr>
 	{
-		friend class Application;
+		friend class Stage;
 		friend class Transition;
 		friend class IntrusiveList<NodePtr>;
 
@@ -48,7 +48,7 @@ namespace kiwano
 		Node();
 
 		// 更新节点
-		virtual void OnUpdate(Duration dt) { KGE_NOT_USED(dt); }
+		virtual void OnUpdate(Duration dt) { KGE_UNUSED(dt); }
 
 		// 渲染节点
 		virtual void OnRender() {}

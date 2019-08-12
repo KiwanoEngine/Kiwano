@@ -42,11 +42,11 @@ namespace kiwano
 		public:
 			ImGuiModule();
 
-			void SetupComponent(Application* app) override;
+			void SetupComponent() override;
 
 			void DestroyComponent() override;
 
-			void BeforeUpdate(float dt) override;
+			void OnUpdate(Duration dt) override;
 
 			void BeforeRender() override;
 

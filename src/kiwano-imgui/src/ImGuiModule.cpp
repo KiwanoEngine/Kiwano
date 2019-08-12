@@ -32,7 +32,7 @@ namespace kiwano
 		{
 		}
 
-		void ImGuiModule::SetupComponent(Application* app)
+		void ImGuiModule::SetupComponent()
 		{
 			// Setup Dear ImGui context
 			IMGUI_CHECKVERSION();
@@ -56,12 +56,12 @@ namespace kiwano
 			ImGui::DestroyContext();
 		}
 
-		void ImGuiModule::BeforeUpdate(float dt)
+		void ImGuiModule::OnUpdate(Duration dt)
 		{
 			ImGuiIO& io = ImGui::GetIO();
 
 			// Setup time step
-			io.DeltaTime = dt;
+			io.DeltaTime = dt.Seconds();
 
 			// Read keyboard modifiers inputs
 			io.KeyCtrl = Input::Instance()->IsDown(KeyCode::Ctrl);

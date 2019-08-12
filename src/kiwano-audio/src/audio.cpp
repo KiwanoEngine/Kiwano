@@ -36,7 +36,7 @@ namespace kiwano
 		{
 		}
 
-		void Audio::SetupComponent(Application*)
+		void Audio::SetupComponent()
 		{
 			KGE_LOG(L"Creating audio resources");
 

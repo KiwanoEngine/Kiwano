@@ -60,9 +60,10 @@
 // base
 //
 
+#include "base/time.h"
 #include "base/window.h"
 #include "base/input.h"
-#include "base/time.h"
+#include "base/Stage.h"
 #include "base/logs.h"
 #include "renderer/render.h"
 #include "platform/modules.h"

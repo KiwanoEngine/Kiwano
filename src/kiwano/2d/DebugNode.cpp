@@ -71,7 +71,7 @@ namespace kiwano
 
 	void DebugNode::OnUpdate(Duration dt)
 	{
-		KGE_NOT_USED(dt);
+		KGE_UNUSED(dt);
 
 		frame_time_.push_back(Time::Now());
 		while (frame_time_.back() - frame_time_.front() >= time::Sec)
