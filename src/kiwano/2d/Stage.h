@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	// 场景
+	// 舞台
 	class KGE_API Stage
 		: public Actor
 	{
@@ -35,10 +35,10 @@ namespace kiwano
 
 		virtual ~Stage();
 
-		// 进入场景
+		// 进入舞台
 		virtual void OnEnter();
 
-		// 退出场景
+		// 退出舞台
 		virtual void OnExit();
 	};
 }
