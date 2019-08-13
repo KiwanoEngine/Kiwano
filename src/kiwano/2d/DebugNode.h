@@ -38,6 +38,6 @@ namespace kiwano
 	protected:
 		Color		background_color_;
 		TextPtr		debug_text_;
-		Array<Time>	frame_time_;
+		Vector<Time>	frame_time_;
 	};
 }

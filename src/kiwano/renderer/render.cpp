@@ -62,13 +62,13 @@ namespace kiwano
 #if defined(KGE_USE_DIRECTX10)
 			ID3D10DeviceResources::Create(
 				&d3d_res_,
-				d2d_res_.Get(),
+				d2d_res_.get(),
 				hwnd_
 			)
 #else
 			ID3D11DeviceResources::Create(
 				&d3d_res_,
-				d2d_res_.Get(),
+				d2d_res_.get(),
 				hwnd_
 			)
 #endif
@@ -93,10 +93,10 @@ namespace kiwano
 	{
 		KGE_LOG(L"Destroying device resources");
 
-		drawing_state_block_.Reset();
-		solid_color_brush_.Reset();
-		d2d_res_.Reset();
-		d3d_res_.Reset();
+		drawing_state_block_.reset();
+		solid_color_brush_.reset();
+		d2d_res_.reset();
+		d3d_res_.reset();
 	}
 
 	void Renderer::BeforeRender()
@@ -141,7 +141,7 @@ namespace kiwano
 		{
 			hr = ITextRenderer::Create(
 				&text_renderer_,
-				device_context_.Get()
+				device_context_.get()
 			);
 		}
 
@@ -175,7 +175,7 @@ namespace kiwano
 			status_.primitives = 0;
 		}
 
-		device_context_->SaveDrawingState(drawing_state_block_.Get());
+		device_context_->SaveDrawingState(drawing_state_block_.get());
 
 		device_context_->BeginDraw();
 
@@ -191,7 +191,7 @@ namespace kiwano
 
 		HRESULT hr = device_context_->EndDraw();
 
-		device_context_->RestoreDrawingState(drawing_state_block_.Get());
+		device_context_->RestoreDrawingState(drawing_state_block_.get());
 
 		if (SUCCEEDED(hr))
 		{
@@ -233,8 +233,8 @@ namespace kiwano
 		solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
 		device_context_->DrawGeometry(
-			geometry.Get(),
-			solid_color_brush_.Get(),
+			geometry.get(),
+			solid_color_brush_.get(),
 			stroke_width,
 			d2d_res_->GetStrokeStyle(stroke)
 		);
@@ -251,8 +251,8 @@ namespace kiwano
 
 		solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
 		device_context_->FillGeometry(
-			geometry.Get(),
-			solid_color_brush_.Get()
+			geometry.get(),
+			solid_color_brush_.get()
 		);
 
 		return S_OK;
@@ -267,7 +267,7 @@ namespace kiwano
 
 		device_context_->DrawRectangle(
 			DX::ConvertToRectF(rect),
-			solid_color_brush_.Get(),
+			solid_color_brush_.get(),
 			stroke_width,
 			d2d_res_->GetStrokeStyle(stroke)
 		);
@@ -285,7 +285,7 @@ namespace kiwano
 		solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
 		device_context_->FillRectangle(
 			DX::ConvertToRectF(rect),
-			solid_color_brush_.Get()
+			solid_color_brush_.get()
 		);
 
 		return S_OK;
@@ -300,7 +300,7 @@ namespace kiwano
 			return S_OK;
 
 		device_context_->DrawBitmap(
-			bitmap.Get(),
+			bitmap.get(),
 			DX::ConvertToRectF(dest_rect),
 			opacity_,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
@@ -319,7 +319,7 @@ namespace kiwano
 
 		if (collecting_status_)
 			++status_.primitives;
-		return text_layout->Draw(nullptr, text_renderer_.Get(), 0, 0);
+		return text_layout->Draw(nullptr, text_renderer_.get(), 0, 0);
 	}
 
 	void Renderer::SetVSyncEnabled(bool enabled)
@@ -361,10 +361,10 @@ namespace kiwano
 				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 				D2D1::Matrix3x2F::Identity(),
 				properties.opacity,
-				solid_color_brush_.Get(),
+				solid_color_brush_.get(),
 				D2D1_LAYER_OPTIONS_NONE
 			),
-			layer.Get()
+			layer.get()
 		);
 		return S_OK;
 	}

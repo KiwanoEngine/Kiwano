@@ -428,7 +428,7 @@ namespace kiwano
 			current_sink_->AddLine(DX::ConvertToPoint2F(point));
 	}
 
-	void PathNode::AddLines(Array<Point> const& points)
+	void PathNode::AddLines(Vector<Point> const& points)
 	{
 		if (current_sink_ && !points.empty())
 		{

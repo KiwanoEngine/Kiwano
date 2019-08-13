@@ -19,17 +19,14 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../core/core.h"
 #include "../base/SmartPtr.hpp"
-#include "../common/helper.h"
-#include "../common/Closure.hpp"
-#include "../common/IntrusiveList.hpp"
 #include "Object.h"
 #include "Event.hpp"
-#include <functional>
 
 namespace kiwano
 {
-	typedef Closure<void(Event const&)> EventCallback;
+	typedef Function<void(Event const&)> EventCallback;
 
 	class EventDispatcher;
 
@@ -38,10 +35,10 @@ namespace kiwano
 	// ÊÂ¼þ¼àÌýÆ÷
 	class KGE_API EventListener
 		: public Object
-		, protected IntrusiveListItem<EventListenerPtr>
+		, protected intrusive_list_item<EventListenerPtr>
 	{
 		friend class EventDispatcher;
-		friend class IntrusiveList<EventListenerPtr>;
+		friend class intrusive_list<EventListenerPtr>;
 
 	public:
 		EventListener(

@@ -51,7 +51,7 @@ namespace kiwano
 		ThrowIfFailed(
 			ITextRenderer::Create(
 				&text_renderer_,
-				render_target_.Get()
+				render_target_.get()
 			)
 		);
 
@@ -169,9 +169,9 @@ namespace kiwano
 		render_target_->DrawLine(
 			D2D1::Point2F(begin.x, begin.y),
 			D2D1::Point2F(end.x, end.y),
-			stroke_brush_.Get(),
+			stroke_brush_.get(),
 			stroke_width_,
-			outline_join_style_.Get()
+			outline_join_style_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -187,9 +187,9 @@ namespace kiwano
 				radius,
 				radius
 			),
-			stroke_brush_.Get(),
+			stroke_brush_.get(),
 			stroke_width_,
-			outline_join_style_.Get()
+			outline_join_style_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -205,9 +205,9 @@ namespace kiwano
 				radius_x,
 				radius_y
 			),
-			stroke_brush_.Get(),
+			stroke_brush_.get(),
 			stroke_width_,
-			outline_join_style_.Get()
+			outline_join_style_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -221,9 +221,9 @@ namespace kiwano
 				rect.origin.x + rect.size.x,
 				rect.origin.y + rect.size.y
 			),
-			stroke_brush_.Get(),
+			stroke_brush_.get(),
 			stroke_width_,
-			outline_join_style_.Get()
+			outline_join_style_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -241,9 +241,9 @@ namespace kiwano
 				radius_x,
 				radius_y
 			),
-			stroke_brush_.Get(),
+			stroke_brush_.get(),
 			stroke_width_,
-			outline_join_style_.Get()
+			outline_join_style_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -253,7 +253,7 @@ namespace kiwano
 		if (image && image->GetBitmap())
 		{
 			render_target_->DrawBitmap(
-				image->GetBitmap().Get(),
+				image->GetBitmap().get(),
 				D2D1::RectF(0, 0, image->GetWidth(), image->GetHeight()),
 				opacity,
 				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
@@ -292,7 +292,7 @@ namespace kiwano
 		);
 
 		ThrowIfFailed(
-			text_layout->Draw(nullptr, text_renderer_.Get(), point.x, point.y)
+			text_layout->Draw(nullptr, text_renderer_.get(), point.x, point.y)
 		);
 	}
 
@@ -307,7 +307,7 @@ namespace kiwano
 				radius,
 				radius
 			),
-			fill_brush_.Get()
+			fill_brush_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -323,7 +323,7 @@ namespace kiwano
 				radius_x,
 				radius_y
 			),
-			fill_brush_.Get()
+			fill_brush_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -337,7 +337,7 @@ namespace kiwano
 				rect.origin.x + rect.size.x,
 				rect.origin.y + rect.size.y
 			),
-			fill_brush_.Get()
+			fill_brush_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -355,7 +355,7 @@ namespace kiwano
 				radius_x,
 				radius_y
 			),
-			fill_brush_.Get()
+			fill_brush_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -393,7 +393,7 @@ namespace kiwano
 			current_sink_->AddLine(DX::ConvertToPoint2F(point));
 	}
 
-	void Canvas::AddLines(Array<Point> const& points)
+	void Canvas::AddLines(Vector<Point> const& points)
 	{
 		if (current_sink_ && !points.empty())
 		{
@@ -437,10 +437,10 @@ namespace kiwano
 	void Canvas::StrokePath()
 	{
 		render_target_->DrawGeometry(
-			current_geometry_.Get(),
-			stroke_brush_.Get(),
+			current_geometry_.get(),
+			stroke_brush_.get(),
 			stroke_width_,
-			outline_join_style_.Get()
+			outline_join_style_.get()
 		);
 		cache_expired_ = true;
 	}
@@ -448,8 +448,8 @@ namespace kiwano
 	void Canvas::FillPath()
 	{
 		render_target_->FillGeometry(
-			current_geometry_.Get(),
-			fill_brush_.Get()
+			current_geometry_.get(),
+			fill_brush_.get()
 		);
 		cache_expired_ = true;
 	}

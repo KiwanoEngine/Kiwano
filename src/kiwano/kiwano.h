@@ -29,19 +29,18 @@
 
 
 //
-// common
+// core
 //
 
-#include "common/Array.hpp"
-#include "common/String.hpp"
-#include "common/helper.h"
-#include "common/Closure.hpp"
-#include "common/IntrusiveList.hpp"
-#include "common/IntrusivePtr.hpp"
-#include "common/ComPtr.hpp"
-#include "common/Noncopyable.hpp"
-#include "common/Singleton.hpp"
-#include "common/Json.hpp"
+#include "core/vector.hpp"
+#include "core/string.hpp"
+#include "core/core.h"
+#include "core/Function.hpp"
+#include "core/intrusive_list.hpp"
+#include "core/intrusive_ptr.hpp"
+#include "core/noncopyable.hpp"
+#include "core/singleton.hpp"
+#include "core/basic_json.hpp"
 
 
 //
@@ -69,6 +68,9 @@
 #include "base/input.h"
 #include "base/Director.h"
 #include "base/logs.h"
+
+#include "base/SmartPtr.hpp"
+#include "base/ComPtr.hpp"
 
 #include "base/Object.h"
 #include "base/Event.hpp"

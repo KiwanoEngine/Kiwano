@@ -28,7 +28,7 @@ namespace kiwano
 		: public Sprite
 	{
 	public:
-		using Callback = Closure<void()>;
+		using Callback = Function<void()>;
 
 		Button();
 

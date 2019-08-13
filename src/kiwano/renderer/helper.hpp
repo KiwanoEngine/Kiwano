@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../common/ComPtr.hpp"
+#include "../base/ComPtr.hpp"
 #include "../math/helper.h"
 #include "../2d/Color.h"
 #include <d2d1.h>

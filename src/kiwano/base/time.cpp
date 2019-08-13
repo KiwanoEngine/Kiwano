@@ -73,7 +73,7 @@ namespace kiwano
 			static LARGE_INTEGER freq = {};
 			if (freq.QuadPart == 0LL)
 			{
-				// the function will always succceed on systems that run Windows XP or later
+				// the Function will always succceed on systems that run Windows XP or later
 				QueryPerformanceFrequency(&freq);
 			}
 

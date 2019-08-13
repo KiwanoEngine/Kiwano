@@ -20,7 +20,6 @@
 
 #pragma once
 #include "Object.h"
-#include "../common/Closure.hpp"
 #include <thread>
 #include <mutex>
 
@@ -28,8 +27,8 @@ namespace kiwano
 {
 	KGE_DECLARE_SMART_PTR(AsyncTask);
 
-	typedef Closure<void()> AsyncTaskFunc;
-	typedef Closure<void()> AsyncTaskCallback;
+	typedef Function<void()> AsyncTaskFunc;
+	typedef Function<void()> AsyncTaskCallback;
 
 	class AsyncTask
 		: public Object

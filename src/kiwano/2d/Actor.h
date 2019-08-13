@@ -35,14 +35,14 @@ namespace kiwano
 		, public TimerManager
 		, public ActionManager
 		, public EventDispatcher
-		, public IntrusiveListItem<ActorPtr>
+		, public intrusive_list_item<ActorPtr>
 	{
 		friend class Director;
 		friend class Transition;
-		friend class IntrusiveList<ActorPtr>;
+		friend class intrusive_list<ActorPtr>;
 
-		using Children = IntrusiveList<ActorPtr>;
-		using UpdateCallback = Closure<void(Duration)>;
+		using Children = intrusive_list<ActorPtr>;
+		using UpdateCallback = Function<void(Duration)>;
 
 	public:
 		Actor();
@@ -342,11 +342,11 @@ namespace kiwano
 
 		// 添加多个子角色
 		void AddChildren(
-			Array<ActorPtr> const& children
+			Vector<ActorPtr> const& children
 		);
 
 		// 获取所有名称相同的子角色
-		Array<ActorPtr> GetChildren(
+		Vector<ActorPtr> GetChildren(
 			String const& name
 		) const;
 

@@ -57,6 +57,7 @@ namespace kiwano
 		{
 			ImagePtr ptr = new Image(bitmap);
 			image_cache_.insert(std::make_pair(hash_code, ptr));
+			return ptr;
 		}
 		else
 		{

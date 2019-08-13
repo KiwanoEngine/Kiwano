@@ -58,7 +58,7 @@ namespace kiwano
 			return;
 		}
 
-		auto sprite_target = dynamic_cast<Sprite*>(target.Get());
+		auto sprite_target = dynamic_cast<Sprite*>(target.get());
 		if (sprite_target && frame_seq_)
 		{
 			sprite_target->SetFrame(frame_seq_->GetFrames()[0]);
@@ -67,7 +67,7 @@ namespace kiwano
 
 	void Animation::UpdateTween(ActorPtr target, float percent)
 	{
-		auto sprite_target = dynamic_cast<Sprite*>(target.Get());
+		auto sprite_target = dynamic_cast<Sprite*>(target.get());
 
 		KGE_ASSERT(sprite_target && "Animation only supports Sprites");
 

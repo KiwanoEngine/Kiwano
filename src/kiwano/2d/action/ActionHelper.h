@@ -184,7 +184,7 @@ namespace kiwano
 		}
 
 		static inline TweenHelper
-			Animation(FramesPtr frames)
+			Animation(FrameSequencePtr frames)
 		{
 			return TweenHelper(new kiwano::Animation(0, frames));
 		}
@@ -202,13 +202,13 @@ namespace kiwano
 		}
 
 		static inline ActionHelper
-			Group(Array<ActionPtr> const& actions, bool sequence = true)
+			Group(Vector<ActionPtr> const& actions, bool sequence = true)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, sequence));
 		}
 
 		static inline ActionHelper
-			Multiple(Array<ActionPtr> const& actions)
+			Multiple(Vector<ActionPtr> const& actions)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, false));
 		}
@@ -233,14 +233,14 @@ namespace kiwano
 
 		KGE_DEPRECATED("Tween::Sequence is deprecated, use Tween::Group instead")
 		static inline ActionHelper
-			Sequence(Array<ActionPtr> const& actions)
+			Sequence(Vector<ActionPtr> const& actions)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, true));
 		}
 
 		KGE_DEPRECATED("Tween::Spawn is deprecated, use Tween::Multiple instead")
 		static inline ActionHelper
-			Spawn(Array<ActionPtr> const& actions)
+			Spawn(Vector<ActionPtr> const& actions)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, false));
 		}

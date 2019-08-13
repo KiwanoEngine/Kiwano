@@ -35,7 +35,7 @@ struct VERTEX_CONSTANT_BUFFER
     float   mvp[4][4];
 };
 
-// Render function
+// Render Function
 // (this used to be set in io.RenderDrawListsFn and called by ImGui::Render(), but you can now call this directly from your main loop)
 void ImGui_ImplDX10_RenderDrawData(ImDrawData* draw_data)
 {

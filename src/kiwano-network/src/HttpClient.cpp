@@ -105,7 +105,7 @@ namespace
 			}
 		}
 
-		bool Init(HttpClient* client, Array<kiwano::string> const& headers, kiwano::string const& url, kiwano::string* response_data, kiwano::string* response_header, char* error_buffer)
+		bool Init(HttpClient* client, Vector<kiwano::string> const& headers, kiwano::string const& url, kiwano::string* response_data, kiwano::string* response_header, char* error_buffer)
 		{
 			if (!SetOption(CURLOPT_ERRORBUFFER, error_buffer))
 				return false;
@@ -171,7 +171,7 @@ namespace
 	public:
 		static inline bool GetRequest(
 			HttpClient* client,
-			Array<kiwano::string> const& headers,
+			Vector<kiwano::string> const& headers,
 			kiwano::string const& url,
 			long* response_code,
 			kiwano::string* response_data,
@@ -186,7 +186,7 @@ namespace
 
 		static inline bool PostRequest(
 			HttpClient* client,
-			Array<kiwano::string> const& headers,
+			Vector<kiwano::string> const& headers,
 			kiwano::string const& url,
 			kiwano::string const& request_data,
 			long* response_code,
@@ -204,7 +204,7 @@ namespace
 
 		static inline bool PutRequest(
 			HttpClient* client,
-			Array<kiwano::string> const& headers,
+			Vector<kiwano::string> const& headers,
 			kiwano::string const& url,
 			kiwano::string const& request_data,
 			long* response_code,
@@ -222,7 +222,7 @@ namespace
 
 		static inline bool DeleteRequest(
 			HttpClient* client,
-			Array<kiwano::string> const& headers,
+			Vector<kiwano::string> const& headers,
 			kiwano::string const& url,
 			long* response_code,
 			kiwano::string* response_data,
@@ -256,7 +256,7 @@ namespace kiwano
 		{
 			::curl_global_init(CURL_GLOBAL_ALL);
 
-			std::thread thread(MakeClosure(this, &HttpClient::NetworkThread));
+			std::thread thread(bind_func(this, &HttpClient::NetworkThread));
 			thread.detach();
 		}
 
@@ -299,7 +299,7 @@ namespace kiwano
 				response_queue_.push(response);
 				response_mutex_.unlock();
 
-				Application::PreformInMainThread(MakeClosure(this, &HttpClient::DispatchResponseCallback));
+				Application::PreformInMainThread(bind_func(this, &HttpClient::DispatchResponseCallback));
 			}
 		}
 
@@ -314,7 +314,7 @@ namespace kiwano
 			kiwano::string url = convert_to_utf8(request->GetUrl());
 			kiwano::string data = convert_to_utf8(request->GetData());
 
-			Array<kiwano::string> headers;
+			Vector<kiwano::string> headers;
 			headers.reserve(request->GetHeaders().size());
 			for (const auto& pair : request->GetHeaders())
 			{

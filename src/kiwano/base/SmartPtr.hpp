@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../base/RefCounter.hpp"
-#include "../common/IntrusivePtr.hpp"
+#include "../core/intrusive_ptr.hpp"
 
 namespace kiwano
 {
@@ -38,7 +38,7 @@ namespace kiwano
 	};
 
 	template <typename _Ty>
-	using SmartPtr = IntrusivePtr<_Ty, DefaultIntrusivePtrManager>;
+	using SmartPtr = intrusive_ptr<_Ty, DefaultIntrusivePtrManager>;
 
 }
 

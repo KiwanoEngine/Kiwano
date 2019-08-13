@@ -31,7 +31,7 @@ namespace kiwano
 		Menu();
 
 		explicit Menu(
-			Array<ButtonPtr> const& buttons	/* 按钮数组 */
+			Vector<ButtonPtr> const& buttons	/* 按钮数组 */
 		);
 
 		// 获取菜单是否禁用
@@ -56,11 +56,11 @@ namespace kiwano
 		);
 
 		// 获取所有按钮
-		Array<ButtonPtr> const& GetAllButtons() const;
+		Vector<ButtonPtr> const& GetAllButtons() const;
 
 	private:
 		bool enabled_;
-		Array<ButtonPtr> buttons_;
+		Vector<ButtonPtr> buttons_;
 	};
 
 }

@@ -22,14 +22,19 @@
 
 namespace kiwano
 {
-	class Noncopyable
-	{
-	protected:
-		Noncopyable() = default;
+inline namespace core
+{
 
-	private:
-		Noncopyable(const Noncopyable&) = delete;
+class noncopyable
+{
+protected:
+	noncopyable() = default;
 
-		Noncopyable& operator=(const Noncopyable&) = delete;
-	};
-}
+private:
+	noncopyable(const noncopyable&) = delete;
+
+	noncopyable& operator=(const noncopyable&) = delete;
+};
+
+}  // inline namespace core
+}  // namespace kiwano

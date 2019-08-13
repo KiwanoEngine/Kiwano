@@ -20,7 +20,6 @@
 
 #pragma once
 #include "../macros.h"
-#include "../common/helper.h"
 #include "../base/Resource.h"
 
 namespace kiwano

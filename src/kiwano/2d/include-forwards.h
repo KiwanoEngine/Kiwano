@@ -20,14 +20,11 @@
 
 #pragma once
 #include "Color.h"
-#include "../common/helper.h"
-#include "../common/ComPtr.hpp"
-#include "../common/Closure.hpp"
-#include "../common/Singleton.hpp"
-#include "../common/IntrusiveList.hpp"
+#include "../core/core.h"
 #include "../base/time.h"
 #include "../base/RefCounter.hpp"
 #include "../base/SmartPtr.hpp"
+#include "../base/ComPtr.hpp"
 #include "../base/Object.h"
 #include "../math/helper.h"
 #include "../base/types.h"

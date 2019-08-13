@@ -174,13 +174,13 @@ namespace kiwano
 
 		inline Size const&				GetOutputSize() const			{ return output_size_; }
 
-		inline ID2DDeviceResources*		GetD2DDeviceResources() const	{ KGE_ASSERT(d2d_res_); return d2d_res_.Get(); }
+		inline ID2DDeviceResources*		GetD2DDeviceResources() const	{ KGE_ASSERT(d2d_res_); return d2d_res_.get(); }
 
-		inline ID3DDeviceResources*		GetD3DDeviceResources() const	{ KGE_ASSERT(d3d_res_); return d3d_res_.Get(); }
+		inline ID3DDeviceResources*		GetD3DDeviceResources() const	{ KGE_ASSERT(d3d_res_); return d3d_res_.get(); }
 
-		inline ITextRenderer*			GetTextRenderer() const			{ KGE_ASSERT(text_renderer_); return text_renderer_.Get(); }
+		inline ITextRenderer*			GetTextRenderer() const			{ KGE_ASSERT(text_renderer_); return text_renderer_.get(); }
 
-		inline ID2D1SolidColorBrush*	GetSolidColorBrush() const		{ KGE_ASSERT(solid_color_brush_); return solid_color_brush_.Get(); }
+		inline ID2D1SolidColorBrush*	GetSolidColorBrush() const		{ KGE_ASSERT(solid_color_brush_); return solid_color_brush_.get(); }
 
 	private:
 		Renderer();

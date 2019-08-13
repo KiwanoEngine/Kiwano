@@ -1,8 +1,8 @@
 // Copyright (C) 2019 Nomango
 
-#include <kiwano/common/helper.h>
-#include <kiwano/common/Closure.hpp>
-#include <kiwano/common/IntrusivePtr.hpp>
+#include <kiwano/core/core.h>
+#include <kiwano/core/Function.hpp>
+#include <kiwano/core/intrusive_ptr.hpp>
 #include <kiwano/base/Window.h>
 #include <kiwano/base/Input.h>
 #include <kiwano/renderer/render.h>

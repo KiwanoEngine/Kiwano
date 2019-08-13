@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../macros.h"
-#include "../common/Singleton.hpp"
+#include "../core/core.h"
 #include <ctime>
 #include <iomanip>
 #include <sstream>

@@ -23,8 +23,8 @@
 #endif
 
 #include <kiwano/macros.h>
-#include <kiwano/common/ComPtr.hpp>
-#include <kiwano/common/String.hpp>
+#include <kiwano/core/string.hpp>
+#include <kiwano/base/ComPtr.hpp>
 #include <kiwano/base/Resource.h>
 #include <kiwano/base/logs.h>
 #include <kiwano/platform/modules.h>
@@ -69,7 +69,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = ReadSource(reader.Get(), wave_data, wave_data_size);
+				hr = ReadSource(reader.get(), wave_data, wave_data_size);
 			}
 
 			return hr;
@@ -100,13 +100,13 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = modules::MediaFoundation::Get().MFCreateMFByteStreamOnStream(stream.Get(), &byte_stream);
+				hr = modules::MediaFoundation::Get().MFCreateMFByteStreamOnStream(stream.get(), &byte_stream);
 			}
 
 			if (SUCCEEDED(hr))
 			{
 				hr = modules::MediaFoundation::Get().MFCreateSourceReaderFromByteStream(
-					byte_stream.Get(),
+					byte_stream.get(),
 					nullptr,
 					&reader
 				);
@@ -114,7 +114,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = ReadSource(reader.Get(), wave_data, wave_data_size);
+				hr = ReadSource(reader.get(), wave_data, wave_data_size);
 			}
 
 			return hr;
@@ -146,7 +146,7 @@ namespace kiwano
 				hr = reader->SetCurrentMediaType(
 					(DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM,
 					0,
-					partial_type.Get()
+					partial_type.get()
 				);
 			}
 
@@ -173,7 +173,7 @@ namespace kiwano
 			{
 				UINT32 size = 0;
 				hr = modules::MediaFoundation::Get().MFCreateWaveFormatExFromMFMediaType(
-					uncompressed_type.Get(),
+					uncompressed_type.get(),
 					&wave_format_,
 					&size,
 					(DWORD)MFWaveFormatExConvertFlag_Normal

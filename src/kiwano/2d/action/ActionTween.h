@@ -26,7 +26,7 @@
 namespace kiwano
 {
 	// 缓动函数
-	using EaseFunc = Closure<float(float)>;
+	using EaseFunc = Function<float(float)>;
 
 	// 缓动函数枚举
 	// See https://easings.net for more information
@@ -446,7 +446,7 @@ namespace kiwano
 
 		// 添加多条线段
 		void AddLines(
-			Array<Point> const& points
+			Vector<Point> const& points
 		);
 
 		// 添加一条三次方贝塞尔曲线
@@ -502,7 +502,7 @@ namespace kiwano
 		: public ActionTween
 	{
 	public:
-		using TweenFunc = Closure<void(ActorPtr, float)>;
+		using TweenFunc = Function<void(ActorPtr, float)>;
 
 		ActionCustom(
 			Duration duration,		/* 持续时长 */

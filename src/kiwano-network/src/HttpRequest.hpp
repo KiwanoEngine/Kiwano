@@ -19,15 +19,15 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/Closure.hpp>
-#include <kiwano/common/Json.hpp>
+#include <kiwano/core/Function.hpp>
+#include <kiwano/core/basic_json.hpp>
 #include <kiwano/base/Object.h>
 
 namespace kiwano
 {
 	namespace network
 	{
-		typedef Closure<void(HttpRequestPtr, HttpResponsePtr)> ResponseCallback;
+		typedef Function<void(HttpRequestPtr, HttpResponsePtr)> ResponseCallback;
 
 		class KGE_API HttpRequest
 			: public Object

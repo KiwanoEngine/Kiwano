@@ -564,7 +564,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionPath::AddLines(Array<Point> const& points)
+	void ActionPath::AddLines(Vector<Point> const& points)
 	{
 		if (!path_beginning_)
 		{

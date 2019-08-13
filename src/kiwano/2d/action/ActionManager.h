@@ -25,7 +25,7 @@ namespace kiwano
 {
 	class KGE_API ActionManager
 	{
-		using Actions = IntrusiveList<ActionPtr>;
+		using Actions = intrusive_list<ActionPtr>;
 
 	public:
 		// Ìí¼Ó¶¯×÷

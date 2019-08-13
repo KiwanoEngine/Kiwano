@@ -20,9 +20,8 @@
 
 #pragma once
 #include "../macros.h"
-#include "../common/helper.h"
+#include "../core/core.h"
 #include "../math/helper.h"
-#include "../common/Singleton.hpp"
 #include "types.h"
 
 namespace kiwano

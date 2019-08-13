@@ -25,13 +25,13 @@ namespace kiwano
 {
 	void EventDispatcher::Dispatch(Event& evt)
 	{
-		if (listeners_.IsEmpty())
+		if (listeners_.is_empty())
 			return;
 
 		EventListenerPtr next;
-		for (auto listener = listeners_.First(); listener; listener = next)
+		for (auto listener = listeners_.first_item(); listener; listener = next)
 		{
-			next = listener->NextItem();
+			next = listener->next_item();
 
 			if (listener->type_ == evt.type)
 			{
@@ -46,7 +46,7 @@ namespace kiwano
 
 		if (listener)
 		{
-			listeners_.PushBack(listener);
+			listeners_.push_back_item(listener);
 		}
 		return listener;
 	}
@@ -56,13 +56,13 @@ namespace kiwano
 		EventListenerPtr listener = new EventListener(type, callback, name);
 		if (listener)
 		{
-			listeners_.PushBack(listener);
+			listeners_.push_back_item(listener);
 		}
 	}
 
 	void EventDispatcher::StartListeners(String const & listener_name)
 	{
-		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
+		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
 			if (listener->IsName(listener_name))
 			{
@@ -73,7 +73,7 @@ namespace kiwano
 
 	void EventDispatcher::StopListeners(String const & listener_name)
 	{
-		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
+		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
 			if (listener->IsName(listener_name))
 			{
@@ -85,20 +85,20 @@ namespace kiwano
 	void EventDispatcher::RemoveListeners(String const & listener_name)
 	{
 		EventListenerPtr next;
-		for (auto listener = listeners_.First(); listener; listener = next)
+		for (auto listener = listeners_.first_item(); listener; listener = next)
 		{
-			next = listener->NextItem();
+			next = listener->next_item();
 
 			if (listener->IsName(listener_name))
 			{
-				listeners_.Remove(listener);
+				listeners_.remove_item(listener);
 			}
 		}
 	}
 
 	void EventDispatcher::StartListeners(UINT type)
 	{
-		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
+		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
 			if (listener->type_ == type)
 			{
@@ -109,7 +109,7 @@ namespace kiwano
 
 	void EventDispatcher::StopListeners(UINT type)
 	{
-		for (auto listener = listeners_.First(); listener; listener = listener->NextItem())
+		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
 			if (listener->type_ == type)
 			{
@@ -121,13 +121,13 @@ namespace kiwano
 	void EventDispatcher::RemoveListeners(UINT type)
 	{
 		EventListenerPtr next;
-		for (auto listener = listeners_.First(); listener; listener = next)
+		for (auto listener = listeners_.first_item(); listener; listener = next)
 		{
-			next = listener->NextItem();
+			next = listener->next_item();
 
 			if (listener->type_ == type)
 			{
-				listeners_.Remove(listener);
+				listeners_.remove_item(listener);
 			}
 		}
 	}

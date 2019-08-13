@@ -19,10 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../common/String.hpp"
-#include "../common/Array.hpp"
-#include "../common/Closure.hpp"
-#include "../common/Noncopyable.hpp"
+#include "../core/core.h"
 #include "../base/time.h"
 #include "../base/Component.h"
 #include "../base/Event.hpp"
@@ -56,7 +53,7 @@ namespace kiwano
 
 	// 应用
 	class KGE_API Application
-		: protected Noncopyable
+		: protected noncopyable
 	{
 	public:
 		Application();
@@ -107,7 +104,7 @@ namespace kiwano
 		// 在 Kiwano 主线程中执行函数
 		// 当在其他线程调用 Kiwano 函数时使用
 		static void PreformInMainThread(
-			Closure<void()> function
+			Function<void()> Function
 		);
 
 	protected:
@@ -122,6 +119,6 @@ namespace kiwano
 		bool	inited_;
 		float	time_scale_;
 
-		Array<Component*>	components_;
+		Vector<Component*>	components_;
 	};
 }

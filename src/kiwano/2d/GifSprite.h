@@ -30,8 +30,8 @@ namespace kiwano
 		: public VisualActor
 	{
 	public:
-		using LoopDoneCallback = Closure<void(int)>;
-		using DoneCallback = Closure<void()>;
+		using LoopDoneCallback = Function<void(int)>;
+		using DoneCallback = Function<void()>;
 
 		GifSprite();
 

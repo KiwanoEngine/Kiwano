@@ -10,9 +10,6 @@
     <Filter Include="ui">
       <UniqueIdentifier>{07b6d541-4a1b-472a-aae0-daf9d082fe84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="common">
-      <UniqueIdentifier>{86e2d0f2-a9d0-4456-b6a5-d480228bbf82}</UniqueIdentifier>
-    </Filter>
     <Filter Include="platform">
       <UniqueIdentifier>{c2654ccc-59f6-4c17-bb6b-99b07fc78702}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,9 @@
     </Filter>
     <Filter Include="2d\action">
       <UniqueIdentifier>{9314f30d-5742-48b6-94e5-e3b4284106f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{86e2d0f2-a9d0-4456-b6a5-d480228bbf82}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -77,21 +77,6 @@
     </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\Transition.h">
       <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\ComPtr.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\helper.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\IntrusiveList.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\IntrusivePtr.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\Singleton.hpp">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\base\Component.h">
       <Filter>base</Filter>
@@ -213,21 +198,6 @@
     <ClInclude Include="..\src\kiwano\2d\GifSprite.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\Closure.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\Noncopyable.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\String.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\Json.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\common\Array.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\third-party\tinyxml2\tinyxml2.h">
       <Filter>third-party\tinyxml2</Filter>
     </ClInclude>
@@ -278,6 +248,36 @@
     </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\FrameSequence.h">
       <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\basic_json.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\function.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\intrusive_list.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\intrusive_ptr.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\noncopyable.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\singleton.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\string.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\vector.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\base\ComPtr.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\core.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

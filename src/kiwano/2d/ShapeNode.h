@@ -320,7 +320,7 @@ namespace kiwano
 
 		// 添加多条线段
 		void AddLines(
-			Array<Point> const& points
+			Vector<Point> const& points
 		);
 
 		// 添加一条三次方贝塞尔曲线

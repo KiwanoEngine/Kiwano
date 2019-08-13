@@ -31,7 +31,7 @@ namespace kiwano
 		FrameSequence();
 
 		explicit FrameSequence(
-			Array<FramePtr> const& frames	/* 帧序列 */
+			Vector<FramePtr> const& frames	/* 帧序列 */
 		);
 
 		virtual ~FrameSequence();
@@ -43,14 +43,14 @@ namespace kiwano
 
 		// 添加多个关键帧
 		void AddFrames(
-			Array<FramePtr> const& frames
+			Vector<FramePtr> const& frames
 		);
 
 		// 获取关键帧
 		FramePtr GetFrame(size_t index) const;
 
 		// 获取关键帧
-		Array<FramePtr> const& GetFrames() const;
+		Vector<FramePtr> const& GetFrames() const;
 
 		// 获取帧动画的拷贝对象
 		FrameSequencePtr Clone() const;
@@ -59,6 +59,6 @@ namespace kiwano
 		FrameSequencePtr Reverse() const;
 
 	protected:
-		Array<FramePtr>	frames_;
+		Vector<FramePtr>	frames_;
 	};
 }

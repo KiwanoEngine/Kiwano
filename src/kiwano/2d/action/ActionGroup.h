@@ -28,12 +28,12 @@ namespace kiwano
 		: public Action
 	{
 	public:
-		using ActionList = IntrusiveList<ActionPtr>;
+		using ActionList = intrusive_list<ActionPtr>;
 
 		ActionGroup();
 
 		explicit ActionGroup(
-			Array<ActionPtr> const& actions,
+			Vector<ActionPtr> const& actions,
 			bool sequence = true				// 按顺序执行或同时执行
 		);
 
@@ -46,7 +46,7 @@ namespace kiwano
 
 		// 添加多个动作
 		void Add(
-			Array<ActionPtr> const& actions
+			Vector<ActionPtr> const& actions
 		);
 
 		// 获取所有动作
@@ -84,7 +84,7 @@ namespace kiwano
 		inline ActionSequence() : ActionGroup() {}
 
 		KGE_DEPRECATED("ActionSequence is deprecated, use ActionGroup instead")
-		inline explicit ActionSequence(Array<ActionPtr> const& actions) : ActionGroup(actions, true) {}
+		inline explicit ActionSequence(Vector<ActionPtr> const& actions) : ActionGroup(actions, true) {}
 
 		virtual ~ActionSequence() {}
 	};
@@ -99,7 +99,7 @@ namespace kiwano
 		inline ActionSpawn() : ActionGroup() { sequence_ = false; }
 
 		KGE_DEPRECATED("ActionSpawn is deprecated, use ActionGroup instead")
-		inline explicit ActionSpawn(Array<ActionPtr> const& actions) : ActionGroup(actions, false) {}
+		inline explicit ActionSpawn(Vector<ActionPtr> const& actions) : ActionGroup(actions, false) {}
 
 		virtual ~ActionSpawn() {}
 	};

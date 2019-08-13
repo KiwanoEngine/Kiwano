@@ -23,17 +23,17 @@
 
 namespace kiwano
 {
-	using ActionCallback = Closure<void()>;
+	using ActionCallback = Function<void()>;
 
 	class ActionManager;
 
 	class KGE_API Action
 		: public Object
-		, protected IntrusiveListItem<ActionPtr>
+		, protected intrusive_list_item<ActionPtr>
 	{
 		friend class ActionManager;
 		friend class ActionGroup;
-		friend class IntrusiveList<ActionPtr>;
+		friend class intrusive_list<ActionPtr>;
 
 	public:
 		enum class Status

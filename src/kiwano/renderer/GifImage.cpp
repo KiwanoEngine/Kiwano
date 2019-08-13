@@ -48,8 +48,8 @@ namespace kiwano
 		frames_count_ = 0;
 		disposal_type_ = DisposalType::None;
 		
-		saved_frame_.Reset();
-		decoder_.Reset();
+		saved_frame_.reset();
+		decoder_.reset();
 
 		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetWICImagingFactory();
 
@@ -94,7 +94,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				hr = factory->CreateDecoderFromStream(
-					stream.Get(),
+					stream.get(),
 					nullptr,
 					WICDecodeMetadataCacheOnLoad,
 					&decoder_
@@ -131,7 +131,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = converter->Initialize(
-				wic_frame.Get(),
+				wic_frame.get(),
 				GUID_WICPixelFormat32bppPBGRA,
 				WICBitmapDitherTypeNone,
 				nullptr,
@@ -144,9 +144,9 @@ namespace kiwano
 			auto ctx = Renderer::GetInstance()->GetD2DDeviceResources()->GetDeviceContext();
 
 			// Create a D2DBitmap from IWICBitmapSource
-			raw_frame_.Reset();
+			raw_frame_.reset();
 			hr = ctx->CreateBitmapFromWicBitmap(
-				converter.Get(),
+				converter.get(),
 				nullptr,
 				&raw_frame_);
 		}
@@ -294,7 +294,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			// 获取背景色
-			if (FAILED(GetBackgroundColor(metadata_reader.Get())))
+			if (FAILED(GetBackgroundColor(metadata_reader.get())))
 			{
 				// 如果未能获得颜色，则默认为透明
 				bg_color_ = D2D1::ColorF(0, 0.f);
@@ -426,7 +426,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = saved_frame_->CopyFromBitmap(nullptr, frame_to_be_saved.Get(), nullptr);
+			hr = saved_frame_->CopyFromBitmap(nullptr, frame_to_be_saved.get(), nullptr);
 		}
 		return hr;
 	}
@@ -446,7 +446,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = frame_to_copy_to->CopyFromBitmap(nullptr, saved_frame_.Get(), nullptr);
+			hr = frame_to_copy_to->CopyFromBitmap(nullptr, saved_frame_.get(), nullptr);
 		}
 
 		return hr;
@@ -510,7 +510,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = decoder_->CopyPalette(wic_palette.Get());
+			hr = decoder_->CopyPalette(wic_palette.get());
 		}
 
 		if (SUCCEEDED(hr))

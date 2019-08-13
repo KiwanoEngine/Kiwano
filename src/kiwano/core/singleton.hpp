@@ -33,48 +33,53 @@
 
 namespace kiwano
 {
-	template <typename _Ty>
-	struct Singleton
+inline namespace core
+{
+
+template <typename _Ty>
+struct Singleton
+{
+public:
+	static inline _Ty* GetInstance()
 	{
-	public:
-		static inline _Ty* GetInstance()
+		if (!instance_)
 		{
-			if (!instance_)
-			{
-				std::call_once(once_, InitInstance);
-			}
-			return instance_.get();
+			std::call_once(once_, InitInstance);
 		}
+		return instance_.get();
+	}
 
-		static inline void InitInstance()
+	static inline void DestroyInstance()
+	{
+		instance_.reset();
+	}
+
+protected:
+	Singleton() = default;
+
+private:
+	Singleton(const Singleton&) = delete;
+
+	Singleton& operator=(const Singleton&) = delete;
+
+	static inline void InitInstance()
+	{
+		if (!instance_)
 		{
-			if (!instance_)
-			{
-				instance_.reset(new (std::nothrow) _Ty);
-			}
+			instance_.reset(new (std::nothrow) _Ty);
 		}
+	}
 
-		static inline void DestroyInstance()
-		{
-			instance_.reset();
-		}
+private:
+	static std::once_flag once_;
+	static std::unique_ptr<_Ty> instance_;
+};
 
-	protected:
-		Singleton() = default;
+template <typename _Ty>
+std::once_flag Singleton<_Ty>::once_;
 
-	private:
-		Singleton(const Singleton&) = delete;
+template <typename _Ty>
+std::unique_ptr<_Ty> Singleton<_Ty>::instance_;
 
-		Singleton& operator=(const Singleton&) = delete;
-
-	private:
-		static std::once_flag once_;
-		static std::unique_ptr<_Ty> instance_;
-	};
-
-	template <typename _Ty>
-	std::once_flag Singleton<_Ty>::once_;
-
-	template <typename _Ty>
-	std::unique_ptr<_Ty> Singleton<_Ty>::instance_;
-}
+}  // inline namespace core
+}  // namespace kiwano

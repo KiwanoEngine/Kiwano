@@ -31,7 +31,7 @@ namespace kiwano
 	DebugNode::DebugNode()
 		: background_color_(0.0f, 0.0f, 0.0f, 0.7f)
 	{
-		SetName(L"kiwano-debug-node");
+		SetName(L"kiwano-debug-actor");
 		SetPosition(10, 10);
 		SetResponsible(true);
 		SetCascadeOpacityEnabled(true);

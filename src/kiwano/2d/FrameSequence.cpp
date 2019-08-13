@@ -28,7 +28,7 @@ namespace kiwano
 	{
 	}
 
-	FrameSequence::FrameSequence(Array<FramePtr> const& frames)
+	FrameSequence::FrameSequence(Vector<FramePtr> const& frames)
 	{
 		this->AddFrames(frames);
 	}
@@ -47,7 +47,7 @@ namespace kiwano
 		}
 	}
 
-	void FrameSequence::AddFrames(Array<FramePtr> const& frames)
+	void FrameSequence::AddFrames(Vector<FramePtr> const& frames)
 	{
 		if (frames_.empty())
 			frames_ = frames;
@@ -65,7 +65,7 @@ namespace kiwano
 		return frames_[index];
 	}
 
-	Array<FramePtr> const& FrameSequence::GetFrames() const
+	Vector<FramePtr> const& FrameSequence::GetFrames() const
 	{
 		return frames_;
 	}

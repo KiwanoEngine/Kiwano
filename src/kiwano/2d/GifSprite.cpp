@@ -163,7 +163,7 @@ namespace kiwano
 				loop_count_++;
 			}
 
-			frame_rt_->DrawBitmap(image_->GetRawFrame().Get(), image_->GetFramePosition());
+			frame_rt_->DrawBitmap(image_->GetRawFrame().get(), image_->GetFramePosition());
 			hr = frame_rt_->EndDraw();
 		}
 

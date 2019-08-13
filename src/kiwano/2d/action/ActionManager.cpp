@@ -26,19 +26,19 @@ namespace kiwano
 {
 	void ActionManager::UpdateActions(ActorPtr target, Duration dt)
 	{
-		if (actions_.IsEmpty() || !target)
+		if (actions_.is_empty() || !target)
 			return;
 
 		ActionPtr next;
-		for (auto action = actions_.First(); action; action = next)
+		for (auto action = actions_.first_item(); action; action = next)
 		{
-			next = action->NextItem();
+			next = action->next_item();
 
 			if (action->IsRunning())
 				action->UpdateStep(target, dt);
 
 			if (action->IsRemoveable())
-				actions_.Remove(action);
+				actions_.remove_item(action);
 		}
 	}
 
@@ -48,17 +48,17 @@ namespace kiwano
 
 		if (action)
 		{
-			actions_.PushBack(action);
+			actions_.push_back_item(action);
 		}
 		return action;
 	}
 
 	ActionPtr ActionManager::GetAction(String const & name)
 	{
-		if (actions_.IsEmpty())
+		if (actions_.is_empty())
 			return nullptr;
 
-		for (auto action = actions_.First().Get(); action; action = action->NextItem().Get())
+		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
 			if (action->IsName(name))
 				return action;
 		return nullptr;
@@ -66,10 +66,10 @@ namespace kiwano
 
 	void ActionManager::ResumeAllActions()
 	{
-		if (actions_.IsEmpty())
+		if (actions_.is_empty())
 			return;
 
-		for (auto action = actions_.First().Get(); action; action = action->NextItem().Get())
+		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
 		{
 			action->Resume();
 		}
@@ -77,10 +77,10 @@ namespace kiwano
 
 	void ActionManager::PauseAllActions()
 	{
-		if (actions_.IsEmpty())
+		if (actions_.is_empty())
 			return;
 
-		for (auto action = actions_.First().Get(); action; action = action->NextItem().Get())
+		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
 		{
 			action->Pause();
 		}
@@ -88,10 +88,10 @@ namespace kiwano
 
 	void ActionManager::StopAllActions()
 	{
-		if (actions_.IsEmpty())
+		if (actions_.is_empty())
 			return;
 
-		for (auto action = actions_.First().Get(); action; action = action->NextItem().Get())
+		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
 		{
 			action->Stop();
 		}

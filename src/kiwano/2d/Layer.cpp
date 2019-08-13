@@ -29,7 +29,7 @@ namespace kiwano
 	{
 		SetSize(Renderer::GetInstance()->GetOutputSize());
 
-		auto handler = MakeClosure(this, &Layer::HandleMessages);
+		auto handler = bind_func(this, &Layer::HandleMessages);
 
 		AddListener(Event::MouseBtnDown, handler);
 		AddListener(Event::MouseBtnUp, handler);
@@ -53,9 +53,9 @@ namespace kiwano
 		if (!swallow_)
 		{
 			ActorPtr prev;
-			for (auto child = children_.Last(); child; child = prev)
+			for (auto child = children_.last_item(); child; child = prev)
 			{
-				prev = child->PrevItem();
+				prev = child->prev_item();
 				child->Dispatch(evt);
 			}
 		}

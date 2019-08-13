@@ -36,7 +36,7 @@ namespace kiwano
 {
 	namespace
 	{
-		using FunctionToPerform = Closure<void()>;
+		using FunctionToPerform = Function<void()>;
 
 		std::mutex				 perform_mutex_;
 		Queue<FunctionToPerform> functions_to_perform_;
@@ -123,7 +123,7 @@ namespace kiwano
 	{
 		HWND hwnd = Window::GetInstance()->GetHandle();
 
-		if (!hwnd)
+		if (!inited_)
 			throw std::exception("Calling Application::Run before Application::Init");
 
 		if (hwnd)
@@ -147,6 +147,9 @@ namespace kiwano
 
 	void Application::Destroy()
 	{
+		// Clear all stages
+		Director::GetInstance()->ClearStages();
+
 		if (inited_)
 		{
 			inited_ = false;
@@ -159,8 +162,8 @@ namespace kiwano
 		}
 
 		// Destroy all instances
-		ResourceCache::DestroyInstance();
 		Director::DestroyInstance();
+		ResourceCache::DestroyInstance();
 		Input::DestroyInstance();
 		Renderer::DestroyInstance();
 		Window::DestroyInstance();
@@ -284,10 +287,10 @@ namespace kiwano
 		}
 	}
 
-	void Application::PreformInMainThread(Closure<void()> function)
+	void Application::PreformInMainThread(Function<void()> Function)
 	{
 		std::lock_guard<std::mutex> lock(perform_mutex_);
-		functions_to_perform_.push(function);
+		functions_to_perform_.push(Function);
 	}
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

@@ -74,13 +74,21 @@ namespace kiwano
 	{
 		if (show)
 		{
-			if (!debug_node_)
-				debug_node_ = new DebugNode;
+			if (!debug_actor_)
+				debug_actor_ = new DebugNode;
 		}
 		else
 		{
-			debug_node_.Reset();
+			debug_actor_.reset();
 		}
+	}
+
+	void Director::ClearStages()
+	{
+		curr_scene_.reset();
+		next_scene_.reset();
+		debug_actor_.reset();
+		transition_.reset();
 	}
 
 	void Director::OnUpdate(Duration dt)
@@ -112,8 +120,8 @@ namespace kiwano
 		if (next_scene_)
 			next_scene_->Update(dt);
 
-		if (debug_node_)
-			debug_node_->Update(dt);
+		if (debug_actor_)
+			debug_actor_->Update(dt);
 	}
 
 	void Director::OnRender()
@@ -127,8 +135,8 @@ namespace kiwano
 			curr_scene_->Render();
 		}
 
-		if (debug_node_)
-			debug_node_->Render();
+		if (debug_actor_)
+			debug_actor_->Render();
 	}
 
 	void Director::AfterRender()
@@ -142,8 +150,8 @@ namespace kiwano
 
 	void Director::HandleEvent(Event& evt)
 	{
-		if (debug_node_)
-			debug_node_->Dispatch(evt);
+		if (debug_actor_)
+			debug_actor_->Dispatch(evt);
 
 		if (curr_scene_)
 			curr_scene_->Dispatch(evt);

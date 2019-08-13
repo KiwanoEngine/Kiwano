@@ -20,9 +20,6 @@
 
 #pragma once
 #include "../macros.h"
-#include "../common/helper.h"
-#include "../common/Json.hpp"
-#include "../common/Singleton.hpp"
 #include "../base/Resource.h"
 #include "../2d/include-forwards.h"
 #include "../renderer/GifImage.h"
@@ -62,10 +59,10 @@ namespace kiwano
 		bool AddGifImage(String const& id, GifImagePtr image);
 
 		// 添加序列帧
-		size_t AddFrameSequence(String const& id, Array<Resource> const& frames);
+		size_t AddFrameSequence(String const& id, Vector<Resource> const& frames);
 
 		// 添加序列帧
-		size_t AddFrameSequence(String const& id, Array<FramePtr> const& frames);
+		size_t AddFrameSequence(String const& id, Vector<FramePtr> const& frames);
 
 		// 添加序列帧
 		// 按行列数裁剪图片
@@ -73,7 +70,7 @@ namespace kiwano
 
 		// 添加序列帧
 		// 按指定裁剪矩形裁剪图片
-		size_t AddFrameSequence(String const& id, Resource const& frame, Array<Rect> const& crop_rects);
+		size_t AddFrameSequence(String const& id, Resource const& frame, Vector<Rect> const& crop_rects);
 
 		// 添加序列帧
 		size_t AddFrameSequence(String const& id, FrameSequencePtr frames);
@@ -102,7 +99,7 @@ namespace kiwano
 			auto iter = cache_.find(id);
 			if (iter == cache_.end())
 				return nullptr;
-			return dynamic_cast<_Ty*>((*iter).second.Get());
+			return dynamic_cast<_Ty*>((*iter).second.get());
 		}
 
 	protected:

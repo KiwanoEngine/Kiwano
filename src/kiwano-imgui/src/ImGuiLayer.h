@@ -27,7 +27,7 @@ namespace kiwano
 	{
 		KGE_DECLARE_SMART_PTR(ImGuiLayer);
 
-		using ImGuiPipeline = Closure<void()>;
+		using ImGuiPipeline = Function<void()>;
 
 		class ImGuiLayer
 			: public Layer

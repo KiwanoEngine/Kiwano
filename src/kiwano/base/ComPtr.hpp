@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "IntrusivePtr.hpp"
+#include "../core/intrusive_ptr.hpp"
 #include <Unknwnbase.h>
 #include <type_traits>
 
@@ -42,6 +42,6 @@ namespace kiwano
 	template<
 		typename _Ty,
 		typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-	using ComPtr = IntrusivePtr<_Ty, ComPtrManager>;
+	using ComPtr = intrusive_ptr<_Ty, ComPtrManager>;
 
 }

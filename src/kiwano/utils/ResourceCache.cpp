@@ -35,12 +35,12 @@ namespace kiwano
 
 	namespace
 	{
-		Map<String, Closure<bool(ResourceCache*, Json const&)>> load_json_funcs = {
+		Map<String, Function<bool(ResourceCache*, Json const&)>> load_json_funcs = {
 			{ L"latest", __resource_cache_01::LoadJsonData },
 			{ L"0.1", __resource_cache_01::LoadJsonData },
 		};
 
-		Map<String, Closure<bool(ResourceCache*, tinyxml2::XMLElement*)>> load_xml_funcs = {
+		Map<String, Function<bool(ResourceCache*, tinyxml2::XMLElement*)>> load_xml_funcs = {
 			{ L"latest", __resource_cache_01::LoadXmlData },
 			{ L"0.1", __resource_cache_01::LoadXmlData },
 		};
@@ -219,12 +219,12 @@ namespace kiwano
 		return false;
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const& id, Array<Resource> const& images)
+	size_t ResourceCache::AddFrameSequence(String const& id, Vector<Resource> const& images)
 	{
 		if (images.empty())
 			return 0;
 
-		Array<FramePtr> image_arr;
+		Vector<FramePtr> image_arr;
 		image_arr.reserve(images.size());
 
 		for (const auto& image : images)
@@ -247,7 +247,7 @@ namespace kiwano
 		return 0;
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const& id, Array<FramePtr> const& images)
+	size_t ResourceCache::AddFrameSequence(String const& id, Vector<FramePtr> const& images)
 	{
 		if (images.empty())
 			return 0;
@@ -270,7 +270,7 @@ namespace kiwano
 		float width = raw_width / cols;
 		float height = raw_height / rows;
 
-		Array<FramePtr> image_arr;
+		Vector<FramePtr> image_arr;
 		image_arr.reserve(rows * cols);
 
 		for (int i = 0; i < rows; i++)
@@ -290,13 +290,13 @@ namespace kiwano
 		return AddFrameSequence(id, frames);
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const & id, Resource const & image, Array<Rect> const & crop_rects)
+	size_t ResourceCache::AddFrameSequence(String const & id, Resource const & image, Vector<Rect> const & crop_rects)
 	{
 		FramePtr raw = new (std::nothrow) Frame;
 		if (!raw || !raw->Load(image))
 			return 0;
 
-		Array<FramePtr> image_arr;
+		Vector<FramePtr> image_arr;
 		image_arr.reserve(crop_rects.size());
 
 		for (const auto& rect : crop_rects)
@@ -370,7 +370,7 @@ namespace kiwano
 		};
 
 		bool LoadImagesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type,
-			const String* file, const Array<const wchar_t*>* files, int rows, int cols)
+			const String* file, const Vector<const wchar_t*>* files, int rows, int cols)
 		{
 			if (!gdata || !id) return false;
 
@@ -400,7 +400,7 @@ namespace kiwano
 			// Frames
 			if (files)
 			{
-				Array<FramePtr> frames;
+				Vector<FramePtr> frames;
 				frames.reserve(files->size());
 				for (const auto& file : (*files))
 				{
@@ -438,7 +438,7 @@ namespace kiwano
 
 					if (image.count(L"files"))
 					{
-						Array<const wchar_t*> files;
+						Vector<const wchar_t*> files;
 						files.reserve(image[L"files"].size());
 						for (const auto& file : image[L"files"])
 						{
@@ -480,7 +480,7 @@ namespace kiwano
 
 					if (file.empty() && !image->NoChildren())
 					{
-						Array<const wchar_t*> files_arr;
+						Vector<const wchar_t*> files_arr;
 						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
 						{
 							if (auto path = file->Attribute(L"path"))

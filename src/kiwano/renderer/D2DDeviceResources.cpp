@@ -176,17 +176,17 @@ namespace kiwano
 	{
 		ImageCache::GetInstance()->Clear();
 
-		factory_.Reset();
-		device_.Reset();
-		device_context_.Reset();
-		target_bitmap_.Reset();
+		factory_.reset();
+		device_.reset();
+		device_context_.reset();
+		target_bitmap_.reset();
 
-		imaging_factory_.Reset();
-		dwrite_factory_.Reset();
+		imaging_factory_.reset();
+		dwrite_factory_.reset();
 
-		d2d_miter_stroke_style_.Reset();
-		d2d_bevel_stroke_style_.Reset();
-		d2d_round_stroke_style_.Reset();
+		d2d_miter_stroke_style_.reset();
+		d2d_bevel_stroke_style_.reset();
+		d2d_round_stroke_style_.reset();
 	}
 
 	HRESULT D2DDeviceResources::CreateDeviceIndependentResources()
@@ -315,7 +315,7 @@ namespace kiwano
 	{
 		target_bitmap_ = target;
 		if (device_context_)
-			device_context_->SetTarget(target_bitmap_.Get());
+			device_context_->SetTarget(target_bitmap_.get());
 	}
 
 	HRESULT D2DDeviceResources::CreateBitmapFromFile(_Out_ ComPtr<ID2D1Bitmap> & bitmap, _In_ String const & file_path)
@@ -357,7 +357,7 @@ namespace kiwano
 		{
 			// 图片格式转换成 32bppPBGRA
 			hr = converter->Initialize(
-				source.Get(),
+				source.get(),
 				GUID_WICPixelFormat32bppPBGRA,
 				WICBitmapDitherTypeNone,
 				nullptr,
@@ -369,7 +369,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = device_context_->CreateBitmapFromWicBitmap(
-				converter.Get(),
+				converter.get(),
 				nullptr,
 				&bitmap_tmp
 			);
@@ -414,7 +414,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = imaging_factory_->CreateDecoderFromStream(
-				stream.Get(),
+				stream.get(),
 				nullptr,
 				WICDecodeMetadataCacheOnLoad,
 				&decoder
@@ -435,7 +435,7 @@ namespace kiwano
 		{
 			// 图片格式转换成 32bppPBGRA
 			hr = converter->Initialize(
-				source.Get(),
+				source.get(),
 				GUID_WICPixelFormat32bppPBGRA,
 				WICBitmapDitherTypeNone,
 				nullptr,
@@ -447,7 +447,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = device_context_->CreateBitmapFromWicBitmap(
-				converter.Get(),
+				converter.get(),
 				nullptr,
 				&bitmap_tmp
 			);
@@ -517,7 +517,7 @@ namespace kiwano
 			hr = dwrite_factory_->CreateTextLayout(
 				text.c_str(),
 				length,
-				text_format.Get(),
+				text_format.get(),
 				text_style.wrap_width,
 				0,
 				&text_layout_tmp
@@ -528,7 +528,7 @@ namespace kiwano
 			hr = dwrite_factory_->CreateTextLayout(
 				text.c_str(),
 				length,
-				text_format.Get(),
+				text_format.get(),
 				0,
 				0,
 				&text_layout_tmp
@@ -546,7 +546,7 @@ namespace kiwano
 				hr = dwrite_factory_->CreateTextLayout(
 					text.c_str(),
 					length,
-					text_format.Get(),
+					text_format.get(),
 					metrics.width,
 					0,
 					&text_layout_tmp
@@ -586,9 +586,9 @@ namespace kiwano
 	{
 		switch (stroke)
 		{
-		case StrokeStyle::Miter: return d2d_miter_stroke_style_.Get(); break;
-		case StrokeStyle::Bevel: return d2d_bevel_stroke_style_.Get(); break;
-		case StrokeStyle::Round: return d2d_round_stroke_style_.Get(); break;
+		case StrokeStyle::Miter: return d2d_miter_stroke_style_.get(); break;
+		case StrokeStyle::Bevel: return d2d_bevel_stroke_style_.get(); break;
+		case StrokeStyle::Round: return d2d_round_stroke_style_.get(); break;
 		}
 		return nullptr;
 	}

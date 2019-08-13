@@ -33,7 +33,7 @@ namespace kiwano
 	{
 	}
 
-	ActionGroup::ActionGroup(Array<ActionPtr> const& actions, bool sequence)
+	ActionGroup::ActionGroup(Vector<ActionPtr> const& actions, bool sequence)
 		: sequence_(sequence)
 	{
 		this->Add(actions);
@@ -45,19 +45,19 @@ namespace kiwano
 
 	void ActionGroup::Init(ActorPtr target)
 	{
-		if (actions_.IsEmpty())
+		if (actions_.is_empty())
 		{
 			Done();
 			return;
 		}
 		
-		current_ = actions_.First();
+		current_ = actions_.first_item();
 		current_->Restart(target);	// init first action
 
 		if (!sequence_)
 		{
 			// init all actions
-			for (; current_; current_ = current_->NextItem())
+			for (; current_; current_ = current_->next_item())
 			{
 				current_->Restart(target);
 			}
@@ -74,7 +74,7 @@ namespace kiwano
 
 				if (current_->IsDone())
 				{
-					current_ = current_->NextItem();
+					current_ = current_->next_item();
 
 					if (current_)
 						current_->Restart(target);	// init next action
@@ -86,7 +86,7 @@ namespace kiwano
 		else
 		{
 			bool done = true;
-			for (current_ = actions_.First(); current_; current_ = current_->NextItem())
+			for (current_ = actions_.first_item(); current_; current_ = current_->next_item())
 			{
 				if (!current_->IsDone())
 				{
@@ -106,11 +106,11 @@ namespace kiwano
 	{
 		if (action)
 		{
-			actions_.PushBack(action);
+			actions_.push_back_item(action);
 		}
 	}
 
-	void ActionGroup::Add(Array<ActionPtr> const& actions)
+	void ActionGroup::Add(Vector<ActionPtr> const& actions)
 	{
 		for (const auto& action : actions)
 			Add(action);
@@ -121,7 +121,7 @@ namespace kiwano
 		auto group = new (std::nothrow) ActionGroup();
 		if (group)
 		{
-			for (auto action = actions_.First(); action; action = action->NextItem())
+			for (auto action = actions_.first_item(); action; action = action->next_item())
 			{
 				if (action)
 				{
@@ -135,9 +135,9 @@ namespace kiwano
 	ActionPtr ActionGroup::Reverse() const
 	{
 		auto group = new (std::nothrow) ActionGroup();
-		if (group && !actions_.IsEmpty())
+		if (group && !actions_.is_empty())
 		{
-			for (auto action = actions_.Last(); action; action = action->PrevItem())
+			for (auto action = actions_.last_item(); action; action = action->prev_item())
 			{
 				group->Add(action->Reverse());
 			}

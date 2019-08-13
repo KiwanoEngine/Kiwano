@@ -71,12 +71,12 @@ namespace kiwano
 			OnUpdate(dt);
 		}
 
-		if (!children_.IsEmpty())
+		if (!children_.is_empty())
 		{
 			ActorPtr next;
-			for (auto child = children_.First(); child; child = next)
+			for (auto child = children_.first_item(); child; child = next)
 			{
-				next = child->NextItem();
+				next = child->next_item();
 				child->Update(dt);
 			}
 		}
@@ -89,7 +89,7 @@ namespace kiwano
 
 		UpdateTransform();
 
-		if (children_.IsEmpty())
+		if (children_.is_empty())
 		{
 			PrepareRender();
 			OnRender();
@@ -97,14 +97,14 @@ namespace kiwano
 		else
 		{
 			// render children those are less than 0 in Z-Order
-			Actor* child = children_.First().Get();
+			Actor* child = children_.first_item().get();
 			while (child)
 			{
 				if (child->GetZOrder() >= 0)
 					break;
 
 				child->Render();
-				child = child->NextItem().Get();
+				child = child->next_item().get();
 			}
 
 			PrepareRender();
@@ -113,7 +113,7 @@ namespace kiwano
 			while (child)
 			{
 				child->Render();
-				child = child->NextItem().Get();
+				child = child->next_item().get();
 			}
 		}
 	}
@@ -130,7 +130,7 @@ namespace kiwano
             renderer->DrawRectangle(bounds, Color(Color::Red, .8f), 4.f);
 		}
 
-		for (auto child = children_.First(); child; child = child->NextItem())
+		for (auto child = children_.first_item(); child; child = child->next_item())
 		{
 			child->RenderBorder();
 		}
@@ -142,9 +142,9 @@ namespace kiwano
 			return;
 
 		ActorPtr prev;
-		for (auto child = children_.Last(); child; child = prev)
+		for (auto child = children_.last_item(); child; child = prev)
 		{
-			prev = child->PrevItem();
+			prev = child->prev_item();
 			child->Dispatch(evt);
 		}
 
@@ -245,7 +245,7 @@ namespace kiwano
 		}
 
 		// update children's transform
-		for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
+		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 			child->dirty_transform_ = true;
 	}
 
@@ -260,7 +260,7 @@ namespace kiwano
 			displayed_opacity_ = opacity_;
 		}
 
-		for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
+		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 		{
 			child->UpdateOpacity();
 		}
@@ -271,7 +271,7 @@ namespace kiwano
 		if (scene && stage_ != scene)
 		{
 			stage_ = scene;
-			for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
+			for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 			{
 				child->stage_ = scene;
 			}
@@ -284,28 +284,28 @@ namespace kiwano
 		{
 			ActorPtr me = this;
 
-			parent_->children_.Remove(me);
+			parent_->children_.remove_item(me);
 
-			Actor* sibling = parent_->children_.Last().Get();
+			Actor* sibling = parent_->children_.last_item().get();
 
 			if (sibling && sibling->GetZOrder() > z_order_)
 			{
-				sibling = sibling->PrevItem().Get();
+				sibling = sibling->prev_item().get();
 				while (sibling)
 				{
 					if (sibling->GetZOrder() <= z_order_)
 						break;
-					sibling = sibling->PrevItem().Get();
+					sibling = sibling->prev_item().get();
 				}
 			}
 
 			if (sibling)
 			{
-				parent_->children_.InsertAfter(me, sibling);
+				parent_->children_.insert_after(me, sibling);
 			}
 			else
 			{
-				parent_->children_.PushFront(me);
+				parent_->children_.push_front_item(me);
 			}
 		}
 	}
@@ -519,15 +519,15 @@ namespace kiwano
 #ifdef KGE_DEBUG
 
 			if (child->parent_)
-				KGE_ERROR_LOG(L"The node to be added already has a parent");
+				KGE_ERROR_LOG(L"The actor to be added already has a parent");
 
 			for (Actor* parent = parent_; parent; parent = parent->parent_)
 				if (parent == child)
-					KGE_ERROR_LOG(L"A node cannot be its own parent");
+					KGE_ERROR_LOG(L"A actor cannot be its own parent");
 
 #endif // KGE_DEBUG
 
-			children_.PushBack(child);
+			children_.push_back_item(child);
 			child->parent_ = this;
 			child->SetStage(this->stage_);
 			child->dirty_transform_ = true;
@@ -536,11 +536,11 @@ namespace kiwano
 		}
 	}
 
-	void Actor::AddChildren(Array<ActorPtr> const& children)
+	void Actor::AddChildren(Vector<ActorPtr> const& children)
 	{
-		for (const auto& node : children)
+		for (const auto& actor : children)
 		{
-			this->AddChild(node);
+			this->AddChild(actor);
 		}
 	}
 
@@ -554,12 +554,12 @@ namespace kiwano
 		return GetTransformMatrix().Transform(GetBounds());
 	}
 
-	Array<ActorPtr> Actor::GetChildren(String const& name) const
+	Vector<ActorPtr> Actor::GetChildren(String const& name) const
 	{
-		Array<ActorPtr> children;
+		Vector<ActorPtr> children;
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
+		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 		{
 			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
@@ -573,7 +573,7 @@ namespace kiwano
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (Actor* child = children_.First().Get(); child; child = child->NextItem().Get())
+		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 		{
 			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
@@ -598,27 +598,27 @@ namespace kiwano
 
 	void Actor::RemoveChild(ActorPtr child)
 	{
-		RemoveChild(child.Get());
+		RemoveChild(child.get());
 	}
 
 	void Actor::RemoveChild(Actor * child)
 	{
 		KGE_ASSERT(child && "Actor::RemoveChild failed, NULL pointer exception");
 
-		if (children_.IsEmpty())
+		if (children_.is_empty())
 			return;
 
 		if (child)
 		{
 			child->parent_ = nullptr;
 			if (child->stage_) child->SetStage(nullptr);
-			children_.Remove(ActorPtr(child));
+			children_.remove_item(ActorPtr(child));
 		}
 	}
 
 	void Actor::RemoveChildren(String const& child_name)
 	{
-		if (children_.IsEmpty())
+		if (children_.is_empty())
 		{
 			return;
 		}
@@ -626,9 +626,9 @@ namespace kiwano
 		size_t hash_code = std::hash<String>{}(child_name);
 
 		Actor* next;
-		for (Actor* child = children_.First().Get(); child; child = next)
+		for (Actor* child = children_.first_item().get(); child; child = next)
 		{
-			next = child->NextItem().Get();
+			next = child->next_item().get();
 
 			if (child->hash_name_ == hash_code && child->IsName(child_name))
 			{
@@ -639,7 +639,7 @@ namespace kiwano
 
 	void Actor::RemoveAllChildren()
 	{
-		children_.Clear();
+		children_.clear_items();
 	}
 
 	void Actor::SetResponsible(bool enable)

@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../macros.h"
-#include "../common/Singleton.hpp"
+#include "../core/core.h"
 #include "../math/helper.h"
 #include "keys.hpp"
 #include "Component.h"
