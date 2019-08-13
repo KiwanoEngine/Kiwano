@@ -22,7 +22,7 @@
 #include "../2d/Actor.h"
 #include "../2d/Stage.h"
 #include "../2d/Transition.h"
-#include "../2d/DebugNode.h"
+#include "../2d/DebugActor.h"
 
 namespace kiwano
 {

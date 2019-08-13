@@ -51,9 +51,6 @@
     <ClInclude Include="..\src\kiwano\2d\Color.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\DebugNode.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\Font.hpp">
       <Filter>2d</Filter>
     </ClInclude>
@@ -201,9 +198,6 @@
     <ClInclude Include="..\src\kiwano\third-party\tinyxml2\tinyxml2.h">
       <Filter>third-party\tinyxml2</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\ShapeNode.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\base\Director.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -279,6 +273,12 @@
     <ClInclude Include="..\src\kiwano\core\core.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\DebugActor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\ShapeActor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\kiwano\ui\Button.cpp">
@@ -291,9 +291,6 @@
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\Color.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\DebugNode.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\Layer.cpp">
@@ -380,9 +377,6 @@
     <ClCompile Include="..\src\kiwano\third-party\tinyxml2\tinyxml2.cpp">
       <Filter>third-party\tinyxml2</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\ShapeNode.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\kiwano\base\Director.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -423,6 +417,12 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\FrameSequence.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\DebugActor.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\ShapeActor.cpp">
       <Filter>2d</Filter>
     </ClCompile>
   </ItemGroup>

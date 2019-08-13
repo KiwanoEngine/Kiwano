@@ -25,17 +25,17 @@
 namespace kiwano
 {
 	// 二维图形角色
-	class KGE_API ShapeNode
+	class KGE_API ShapeActor
 		: public VisualActor
 	{
 	public:
-		ShapeNode();
+		ShapeActor();
 
-		ShapeNode(
+		ShapeActor(
 			ComPtr<ID2D1Geometry> geometry
 		);
 
-		virtual ~ShapeNode();
+		virtual ~ShapeActor();
 
 		// 获取填充颜色
 		Color GetFillColor() const				{ return fill_color_; }
@@ -108,18 +108,18 @@ namespace kiwano
 
 
 	// 直线
-	class KGE_API LineNode
-		: public ShapeNode
+	class KGE_API LineActor
+		: public ShapeActor
 	{
 	public:
-		LineNode();
+		LineActor();
 
-		LineNode(
+		LineActor(
 			Point const& begin,
 			Point const& end
 		);
 
-		virtual ~LineNode();
+		virtual ~LineActor();
 
 		Point const& GetBegin() const { return begin_; }
 
@@ -145,22 +145,22 @@ namespace kiwano
 
 
 	// 矩形角色
-	class KGE_API RectNode
-		: public ShapeNode
+	class KGE_API RectActor
+		: public ShapeActor
 	{
 	public:
-		RectNode();
+		RectActor();
 
-		RectNode(
+		RectActor(
 			Rect const& rect
 		);
 
-		RectNode(
+		RectActor(
 			Point const& left_top,
 			Size const& size
 		);
 
-		virtual ~RectNode();
+		virtual ~RectActor();
 
 		Rect const& GetRect() const { return rect_; }
 
@@ -172,19 +172,19 @@ namespace kiwano
 
 
 	// 圆角矩形角色
-	class KGE_API RoundedRectNode
-		: public ShapeNode
+	class KGE_API RoundRectActor
+		: public ShapeActor
 	{
 	public:
-		RoundedRectNode();
+		RoundRectActor();
 
-		RoundedRectNode(
+		RoundRectActor(
 			Rect const& rect,
 			float radius_x,
 			float radius_y
 		);
 
-		virtual ~RoundedRectNode();
+		virtual ~RoundRectActor();
 
 		float GetRadiusX() const { return radius_x_; }
 
@@ -215,18 +215,18 @@ namespace kiwano
 
 
 	// 圆形角色
-	class KGE_API CircleNode
-		: public ShapeNode
+	class KGE_API CircleActor
+		: public ShapeActor
 	{
 	public:
-		CircleNode();
+		CircleActor();
 
-		CircleNode(
+		CircleActor(
 			Point const& center,
 			float radius
 		);
 
-		virtual ~CircleNode();
+		virtual ~CircleActor();
 
 		float GetRadius() const { return radius_; }
 
@@ -252,19 +252,19 @@ namespace kiwano
 
 
 	// 椭圆角色
-	class KGE_API EllipseNode
-		: public ShapeNode
+	class KGE_API EllipseActor
+		: public ShapeActor
 	{
 	public:
-		EllipseNode();
+		EllipseActor();
 
-		EllipseNode(
+		EllipseActor(
 			Point const& center,
 			float radius_x,
 			float radius_y
 		);
 
-		virtual ~EllipseNode();
+		virtual ~EllipseActor();
 
 		float GetRadiusX() const { return radius_x_; }
 
@@ -295,13 +295,13 @@ namespace kiwano
 
 
 	// 路径角色
-	class KGE_API PathNode
-		: public ShapeNode
+	class KGE_API PathActor
+		: public ShapeActor
 	{
 	public:
-		PathNode();
+		PathActor();
 
-		virtual ~PathNode();
+		virtual ~PathActor();
 
 		// 开始添加路径
 		void BeginPath(

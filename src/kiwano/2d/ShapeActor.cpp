@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ShapeNode.h"
+#include "ShapeActor.h"
 #include "../base/logs.h"
 
 namespace kiwano
 {
-	ShapeNode::ShapeNode()
+	ShapeActor::ShapeActor()
 		: fill_color_(Color::White)
 		, stroke_color_(Color(Color::Black, 0))
 		, stroke_width_(1.f)
@@ -31,17 +31,17 @@ namespace kiwano
 	{
 	}
 
-	ShapeNode::ShapeNode(ComPtr<ID2D1Geometry> geometry)
-		: ShapeNode()
+	ShapeActor::ShapeActor(ComPtr<ID2D1Geometry> geometry)
+		: ShapeActor()
 	{
 		SetGeometry(geometry);
 	}
 
-	ShapeNode::~ShapeNode()
+	ShapeActor::~ShapeActor()
 	{
 	}
 
-	Rect ShapeNode::GetBoundingBox()
+	Rect ShapeActor::GetBoundingBox()
 	{
 		if (!geo_)
 			return Rect{};
@@ -52,7 +52,7 @@ namespace kiwano
 		return Rect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
 	}
 
-	float ShapeNode::GetLength()
+	float ShapeActor::GetLength()
 	{
 		float length = 0.f;
 		if (geo_)
@@ -63,7 +63,7 @@ namespace kiwano
 		return length;
 	}
 
-	bool ShapeNode::ComputePointAtLength(float length, Point& point, Vec2& tangent)
+	bool ShapeActor::ComputePointAtLength(float length, Point& point, Vec2& tangent)
 	{
 		if (geo_)
 		{
@@ -79,7 +79,7 @@ namespace kiwano
 		return false;
 	}
 
-	float ShapeNode::ComputeArea()
+	float ShapeActor::ComputeArea()
 	{
 		if (!geo_)
 			return 0.f;
@@ -90,7 +90,7 @@ namespace kiwano
 		return area;
 	}
 
-	bool ShapeNode::ContainsPoint(Point const& point)
+	bool ShapeActor::ContainsPoint(Point const& point)
 	{
 		if (!geo_)
 			return false;
@@ -105,27 +105,27 @@ namespace kiwano
 		return !!ret;
 	}
 
-	void ShapeNode::SetFillColor(const Color & color)
+	void ShapeActor::SetFillColor(const Color & color)
 	{
 		fill_color_ = color;
 	}
 
-	void ShapeNode::SetStrokeColor(const Color & color)
+	void ShapeActor::SetStrokeColor(const Color & color)
 	{
 		stroke_color_ = color;
 	}
 
-	void ShapeNode::SetStrokeWidth(float width)
+	void ShapeActor::SetStrokeWidth(float width)
 	{
 		stroke_width_ = std::max(width, 0.f);
 	}
 
-	void ShapeNode::SetOutlineJoinStyle(StrokeStyle outline_join)
+	void ShapeActor::SetOutlineJoinStyle(StrokeStyle outline_join)
 	{
 		outline_join_ = outline_join;
 	}
 
-	void ShapeNode::OnRender()
+	void ShapeActor::OnRender()
 	{
 		if (geo_)
 		{
@@ -144,23 +144,23 @@ namespace kiwano
 	}
 
 	//-------------------------------------------------------
-	// LineNode
+	// LineActor
 	//-------------------------------------------------------
 
-	LineNode::LineNode()
+	LineActor::LineActor()
 	{
 	}
 
-	LineNode::LineNode(Point const& begin, Point const& end)
+	LineActor::LineActor(Point const& begin, Point const& end)
 	{
 		SetLine(begin, end);
 	}
 
-	LineNode::~LineNode()
+	LineActor::~LineActor()
 	{
 	}
 
-	void LineNode::SetLine(Point const& begin, Point const& end)
+	void LineActor::SetLine(Point const& begin, Point const& end)
 	{
 		ComPtr<ID2D1PathGeometry> path_geo;
 		ComPtr<ID2D1GeometrySink> path_sink;
@@ -186,40 +186,40 @@ namespace kiwano
 		}
 	}
 
-	void LineNode::SetBegin(Point const& begin)
+	void LineActor::SetBegin(Point const& begin)
 	{
 		SetLine(begin, end_);
 	}
 
-	void LineNode::SetEnd(Point const& end)
+	void LineActor::SetEnd(Point const& end)
 	{
 		SetLine(begin_, end);
 	}
 
 
 	//-------------------------------------------------------
-	// RectNode
+	// RectActor
 	//-------------------------------------------------------
 
-	RectNode::RectNode()
+	RectActor::RectActor()
 	{
 	}
 
-	RectNode::RectNode(Rect const& rect)
+	RectActor::RectActor(Rect const& rect)
 	{
 		SetRect(rect);
 	}
 
-	RectNode::RectNode(Point const& left_top, Size const& size)
+	RectActor::RectActor(Point const& left_top, Size const& size)
 	{
 		SetRect(Rect{ left_top, size });
 	}
 
-	RectNode::~RectNode()
+	RectActor::~RectActor()
 	{
 	}
 
-	void RectNode::SetRect(Rect const& rect)
+	void RectActor::SetRect(Rect const& rect)
 	{
 		ComPtr<ID2D1RectangleGeometry> geo;
 		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
@@ -233,35 +233,35 @@ namespace kiwano
 
 
 	//-------------------------------------------------------
-	// RoundedRectNode
+	// RoundRectActor
 	//-------------------------------------------------------
 
-	RoundedRectNode::RoundedRectNode()
+	RoundRectActor::RoundRectActor()
 		: radius_x_(0.f)
 		, radius_y_(0.f)
 	{
 	}
 
-	RoundedRectNode::RoundedRectNode(Rect const& rect, float radius_x, float radius_y)
+	RoundRectActor::RoundRectActor(Rect const& rect, float radius_x, float radius_y)
 	{
 		SetRoundedRect(rect, radius_x, radius_y);
 	}
 
-	RoundedRectNode::~RoundedRectNode()
+	RoundRectActor::~RoundRectActor()
 	{
 	}
 
-	void RoundedRectNode::SetRadius(float radius_x, float radius_y)
+	void RoundRectActor::SetRadius(float radius_x, float radius_y)
 	{
 		SetRoundedRect(rect_, radius_x, radius_y);
 	}
 
-	void RoundedRectNode::SetRect(Rect const& rect)
+	void RoundRectActor::SetRect(Rect const& rect)
 	{
 		SetRoundedRect(rect, radius_x_, radius_y_);
 	}
 
-	void RoundedRectNode::SetRoundedRect(Rect const& rect, float radius_x, float radius_y)
+	void RoundRectActor::SetRoundedRect(Rect const& rect, float radius_x, float radius_y)
 	{
 		ComPtr<ID2D1RoundedRectangleGeometry> geo;
 		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
@@ -283,34 +283,34 @@ namespace kiwano
 
 
 	//-------------------------------------------------------
-	// CircleNode
+	// CircleActor
 	//-------------------------------------------------------
 
-	CircleNode::CircleNode()
+	CircleActor::CircleActor()
 		: radius_(0.f)
 	{
 	}
 
-	CircleNode::CircleNode(Point const& center, float radius)
+	CircleActor::CircleActor(Point const& center, float radius)
 	{
 		SetCircle(center, radius);
 	}
 
-	CircleNode::~CircleNode()
+	CircleActor::~CircleActor()
 	{
 	}
 
-	void CircleNode::SetRadius(float radius)
+	void CircleActor::SetRadius(float radius)
 	{
 		SetCircle(center_, radius);
 	}
 
-	void CircleNode::SetCenter(Point const& center)
+	void CircleActor::SetCenter(Point const& center)
 	{
 		SetCircle(center, radius_);
 	}
 
-	void CircleNode::SetCircle(Point const& center, float radius)
+	void CircleActor::SetCircle(Point const& center, float radius)
 	{
 		ComPtr<ID2D1EllipseGeometry> geo;
 		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
@@ -330,35 +330,35 @@ namespace kiwano
 
 
 	//-------------------------------------------------------
-	// EllipseNode
+	// EllipseActor
 	//-------------------------------------------------------
 
-	EllipseNode::EllipseNode()
+	EllipseActor::EllipseActor()
 		: radius_x_(0.f)
 		, radius_y_(0.f)
 	{
 	}
 
-	EllipseNode::EllipseNode(Point const& center, float radius_x, float radius_y)
+	EllipseActor::EllipseActor(Point const& center, float radius_x, float radius_y)
 	{
 		SetEllipse(center, radius_x, radius_y);
 	}
 
-	EllipseNode::~EllipseNode()
+	EllipseActor::~EllipseActor()
 	{
 	}
 
-	void EllipseNode::SetRadius(float radius_x, float radius_y)
+	void EllipseActor::SetRadius(float radius_x, float radius_y)
 	{
 		SetEllipse(center_, radius_x, radius_y);
 	}
 
-	void EllipseNode::SetCenter(Point const& center)
+	void EllipseActor::SetCenter(Point const& center)
 	{
 		SetEllipse(center, radius_x_, radius_y_);
 	}
 
-	void EllipseNode::SetEllipse(Point const& center, float radius_x, float radius_y)
+	void EllipseActor::SetEllipse(Point const& center, float radius_x, float radius_y)
 	{
 		ComPtr<ID2D1EllipseGeometry> geo;
 		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
@@ -378,18 +378,18 @@ namespace kiwano
 
 
 	//-------------------------------------------------------
-	// PathNode
+	// PathActor
 	//-------------------------------------------------------
 
-	PathNode::PathNode()
+	PathActor::PathActor()
 	{
 	}
 
-	PathNode::~PathNode()
+	PathActor::~PathActor()
 	{
 	}
 
-	void PathNode::BeginPath(Point const& begin_pos)
+	void PathActor::BeginPath(Point const& begin_pos)
 	{
 		current_geometry_ = nullptr;
 
@@ -406,7 +406,7 @@ namespace kiwano
 		current_sink_->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
 	}
 
-	void PathNode::EndPath(bool closed)
+	void PathActor::EndPath(bool closed)
 	{
 		if (current_sink_)
 		{
@@ -422,13 +422,13 @@ namespace kiwano
 		}
 	}
 
-	void PathNode::AddLine(Point const& point)
+	void PathActor::AddLine(Point const& point)
 	{
 		if (current_sink_)
 			current_sink_->AddLine(DX::ConvertToPoint2F(point));
 	}
 
-	void PathNode::AddLines(Vector<Point> const& points)
+	void PathActor::AddLines(Vector<Point> const& points)
 	{
 		if (current_sink_ && !points.empty())
 		{
@@ -439,7 +439,7 @@ namespace kiwano
 		}
 	}
 
-	void PathNode::AddBezier(Point const& point1, Point const& point2, Point const& point3)
+	void PathActor::AddBezier(Point const& point1, Point const& point2, Point const& point3)
 	{
 		if (current_sink_)
 		{
@@ -453,7 +453,7 @@ namespace kiwano
 		}
 	}
 
-	void PathNode::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
+	void PathActor::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 	{
 		if (current_sink_)
 		{
@@ -469,7 +469,7 @@ namespace kiwano
 		}
 	}
 
-	void PathNode::ClearPath()
+	void PathActor::ClearPath()
 	{
 		geo_ = nullptr;
 		current_sink_ = nullptr;

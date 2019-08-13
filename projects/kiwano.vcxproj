@@ -27,10 +27,10 @@
     <ClInclude Include="..\src\kiwano\2d\include-forwards.h" />
     <ClInclude Include="..\src\kiwano\2d\Canvas.h" />
     <ClInclude Include="..\src\kiwano\2d\Color.h" />
-    <ClInclude Include="..\src\kiwano\2d\DebugNode.h" />
+    <ClInclude Include="..\src\kiwano\2d\DebugActor.h" />
     <ClInclude Include="..\src\kiwano\2d\Font.hpp" />
     <ClInclude Include="..\src\kiwano\2d\FrameSequence.h" />
-    <ClInclude Include="..\src\kiwano\2d\ShapeNode.h" />
+    <ClInclude Include="..\src\kiwano\2d\ShapeActor.h" />
     <ClInclude Include="..\src\kiwano\2d\Layer.h" />
     <ClInclude Include="..\src\kiwano\2d\Actor.h" />
     <ClInclude Include="..\src\kiwano\2d\Stage.h" />
@@ -92,10 +92,10 @@
     <ClCompile Include="..\src\kiwano\2d\action\Animation.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Canvas.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Color.cpp" />
-    <ClCompile Include="..\src\kiwano\2d\DebugNode.cpp" />
+    <ClCompile Include="..\src\kiwano\2d\DebugActor.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Frame.cpp" />
     <ClCompile Include="..\src\kiwano\2d\FrameSequence.cpp" />
-    <ClCompile Include="..\src\kiwano\2d\ShapeNode.cpp" />
+    <ClCompile Include="..\src\kiwano\2d\ShapeActor.cpp" />
     <ClCompile Include="..\src\kiwano\2d\GifSprite.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Layer.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Actor.cpp" />

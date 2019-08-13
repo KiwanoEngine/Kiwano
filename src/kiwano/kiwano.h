@@ -105,8 +105,8 @@
 #include "2d/GifSprite.h"
 #include "2d/Text.h"
 #include "2d/Canvas.h"
-#include "2d/ShapeNode.h"
-#include "2d/DebugNode.h"
+#include "2d/ShapeActor.h"
+#include "2d/DebugActor.h"
 
 #include "platform/modules.h"
 #include "platform/Application.h"
