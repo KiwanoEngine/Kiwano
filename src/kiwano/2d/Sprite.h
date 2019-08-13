@@ -26,7 +26,7 @@ namespace kiwano
 {
 	// ¾«Áé
 	class KGE_API Sprite
-		: public VisualActor
+		: public Actor
 	{
 	public:
 		Sprite();
@@ -63,7 +63,7 @@ namespace kiwano
 		void SetFrame(FramePtr frame);
 
 		// äÖÈ¾¾«Áé
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 	protected:
 		FramePtr frame_;

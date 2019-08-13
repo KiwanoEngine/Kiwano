@@ -83,11 +83,12 @@ namespace kiwano
 		}
 	}
 
-	void Sprite::OnRender()
+	void Sprite::OnRender(Renderer* renderer)
 	{
-		if (frame_)
+		if (frame_ && renderer->CheckVisibility(size_, transform_matrix_))
 		{
-			Renderer::GetInstance()->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
+			PrepareRender(renderer);
+			renderer->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
 		}
 	}
 }

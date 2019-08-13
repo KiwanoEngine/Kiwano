@@ -28,6 +28,7 @@
 namespace kiwano
 {
 	class Director;
+	class Renderer;
 
 	// 角色
 	class KGE_API Actor
@@ -51,7 +52,7 @@ namespace kiwano
 		virtual void OnUpdate(Duration dt) { KGE_UNUSED(dt); }
 
 		// 渲染角色
-		virtual void OnRender() {}
+		virtual void OnRender(Renderer* renderer) { KGE_UNUSED(renderer); }
 
 		// 获取显示状态
 		bool IsVisible()				const	{ return visible_; }
@@ -135,10 +136,10 @@ namespace kiwano
 		Transform GetTransform()		const	{ return transform_; }
 
 		// 获取边框
-		Rect GetBounds() const;
+		virtual Rect GetBounds() const;
 
 		// 获取外切包围盒
-		Rect GetBoundingBox() const;
+		virtual Rect GetBoundingBox() const;
 
 		// 获取二维变换矩阵
 		Matrix const& GetTransformMatrix()  const;
@@ -379,6 +380,9 @@ namespace kiwano
 		// 从父角色移除
 		void RemoveFromParent();
 
+		// 事件分发
+		void Dispatch(Event& evt) override;
+
 		// 暂停角色更新
 		inline void PauseUpdating()									{ update_pausing_ = true; }
 
@@ -403,16 +407,12 @@ namespace kiwano
 			float anchor_y
 		);
 
-	public:
-		// 事件分发
-		void Dispatch(Event& evt) override;
-
 	protected:
-		virtual void PrepareRender() {}
-
 		virtual void Update(Duration dt);
 
-		virtual void Render();
+		virtual void Render(Renderer* renderer);
+
+		void PrepareRender(Renderer* renderer);
 
 		void RenderBorder();
 
@@ -449,16 +449,6 @@ namespace kiwano
 		mutable bool	dirty_transform_inverse_;
 		mutable Matrix	transform_matrix_;
 		mutable Matrix	transform_matrix_inverse_;
-	};
-
-
-	// 可视角色
-	// 在渲染前处理二维旋转矩阵和透明度
-	class KGE_API VisualActor
-		: public Actor
-	{
-	public:
-		virtual void PrepareRender() override;
 	};
 
 }

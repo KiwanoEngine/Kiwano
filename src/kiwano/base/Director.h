@@ -63,7 +63,7 @@ namespace kiwano
 
 		void OnUpdate(Duration dt) override;
 
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 		void AfterRender() override;
 

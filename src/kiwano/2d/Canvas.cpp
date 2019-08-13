@@ -86,7 +86,7 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	void Canvas::OnRender()
+	void Canvas::OnRender(Renderer* renderer)
 	{
 		if (cache_expired_)
 		{
@@ -95,8 +95,10 @@ namespace kiwano
 		
 		if (bitmap_cached_)
 		{
+			PrepareRender(renderer);
+
 			Rect bitmap_rect(0.f, 0.f, bitmap_cached_->GetSize().width, bitmap_cached_->GetSize().height);
-			Renderer::GetInstance()->DrawBitmap(
+			renderer->DrawBitmap(
 				bitmap_cached_,
 				bitmap_rect,
 				bitmap_rect

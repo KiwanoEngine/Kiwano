@@ -41,7 +41,7 @@ namespace kiwano
 	{
 	}
 
-	Rect ShapeActor::GetBoundingBox()
+	Rect ShapeActor::GetBounds() const
 	{
 		if (!geo_)
 			return Rect{};
@@ -49,6 +49,17 @@ namespace kiwano
 		D2D1_RECT_F rect;
 		// no matter it failed or not
 		geo_->GetBounds(D2D1::Matrix3x2F::Identity(), &rect);
+		return Rect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
+	}
+
+	Rect ShapeActor::GetBoundingBox() const
+	{
+		if (!geo_)
+			return Rect{};
+
+		D2D1_RECT_F rect;
+		// no matter it failed or not
+		geo_->GetBounds(DX::ConvertToMatrix3x2F(transform_matrix_), &rect);
 		return Rect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
 	}
 
@@ -125,16 +136,18 @@ namespace kiwano
 		outline_join_ = outline_join;
 	}
 
-	void ShapeActor::OnRender()
+	void ShapeActor::OnRender(Renderer* renderer)
 	{
 		if (geo_)
 		{
-			Renderer::GetInstance()->FillGeometry(
+			PrepareRender(renderer);
+
+			renderer->FillGeometry(
 				geo_,
 				fill_color_
 			);
 
-			Renderer::GetInstance()->DrawGeometry(
+			renderer->DrawGeometry(
 				geo_,
 				stroke_color_,
 				stroke_width_,

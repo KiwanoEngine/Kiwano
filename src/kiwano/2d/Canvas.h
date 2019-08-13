@@ -33,7 +33,7 @@ namespace kiwano
 {
 	// 画布
 	class KGE_API Canvas
-		: public VisualActor
+		: public Actor
 	{
 	public:
 		Canvas();
@@ -211,7 +211,7 @@ namespace kiwano
 		// 导出为图片
 		ImagePtr ExportToImage() const;
 
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 	protected:
 		ComPtr<ID2D1Bitmap> const& GetBitmap() const;

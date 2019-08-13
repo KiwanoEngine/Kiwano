@@ -484,4 +484,11 @@ namespace kiwano
 		return S_OK;
 	}
 
+	bool Renderer::CheckVisibility(Size const& content_size, Matrix const& transform)
+	{
+		return Rect{ Point{}, output_size_ }.Intersects(
+			transform.Transform(Rect{ Point{}, content_size })
+		);
+	}
+
 }

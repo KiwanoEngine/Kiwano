@@ -297,14 +297,14 @@ namespace kiwano
 		style_.outline_stroke = outline_stroke;
 	}
 
-	void Text::OnRender()
+	void Text::OnRender(Renderer* renderer)
 	{
 		UpdateLayout();
 
-		if (text_layout_)
+		if (text_layout_ && renderer->CheckVisibility(layout_size_, transform_matrix_))
 		{
-            auto renderer = Renderer::GetInstance();
-            renderer->SetTextStyle(
+			PrepareRender(renderer);
+			renderer->SetTextStyle(
 				GetDisplayedOpacity(),
 				style_.color,
 				style_.outline,

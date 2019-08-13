@@ -28,7 +28,7 @@
 
 namespace kiwano
 {
-	DebugNode::DebugNode()
+	DebugActor::DebugActor()
 		: background_color_(0.0f, 0.0f, 0.0f, 0.7f)
 	{
 		SetName(L"kiwano-debug-actor");
@@ -54,13 +54,13 @@ namespace kiwano
 		AddListener(Event::MouseOut, [=](const Event&) { SetOpacity(1.f); });
 	}
 
-	DebugNode::~DebugNode()
+	DebugActor::~DebugActor()
 	{
 	}
 
-	void DebugNode::OnRender()
+	void DebugActor::OnRender(Renderer* renderer)
 	{
-		auto renderer = Renderer::GetInstance();
+		PrepareRender(renderer);
 
 		renderer->GetSolidColorBrush()->SetColor(DX::ConvertToColorF(background_color_));
 		renderer->GetD2DDeviceResources()->GetDeviceContext()->FillRoundedRectangle(
@@ -69,7 +69,7 @@ namespace kiwano
 		);
 	}
 
-	void DebugNode::OnUpdate(Duration dt)
+	void DebugActor::OnUpdate(Duration dt)
 	{
 		KGE_UNUSED(dt);
 

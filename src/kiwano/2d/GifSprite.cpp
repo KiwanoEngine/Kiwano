@@ -86,7 +86,7 @@ namespace kiwano
 
 	void GifSprite::Update(Duration dt)
 	{
-		VisualActor::Update(dt);
+		Actor::Update(dt);
 
 		if (image_ && animating_)
 		{
@@ -100,12 +100,14 @@ namespace kiwano
 		}
 	}
 
-	void GifSprite::OnRender()
+	void GifSprite::OnRender(Renderer* renderer)
 	{
-		if (frame_to_render_)
+		if (frame_to_render_ && renderer->CheckVisibility(size_, transform_matrix_))
 		{
+			PrepareRender(renderer);
+
 			Rect bounds = GetBounds();
-			Renderer::GetInstance()->DrawBitmap(frame_to_render_, bounds, bounds);
+			renderer->DrawBitmap(frame_to_render_, bounds, bounds);
 		}
 	}
 

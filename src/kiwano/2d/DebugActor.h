@@ -23,15 +23,15 @@
 
 namespace kiwano
 {
-	class KGE_API DebugNode
-		: public VisualActor
+	class KGE_API DebugActor
+		: public Actor
 	{
 	public:
-		DebugNode();
+		DebugActor();
 
-		virtual ~DebugNode();
+		virtual ~DebugActor();
 
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 		void OnUpdate(Duration dt) override;
 

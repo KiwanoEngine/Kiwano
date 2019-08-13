@@ -99,10 +99,8 @@ namespace kiwano
 		}
 	}
 
-	void Transition::Render()
+	void Transition::Render(Renderer* renderer)
 	{
-		auto renderer = Renderer::GetInstance();
-
 		if (out_scene_)
 		{
 			renderer->PushClip(
@@ -111,7 +109,7 @@ namespace kiwano
 			);
 			renderer->PushLayer(out_layer_, out_layer_prop_);
 
-			out_scene_->Render();
+			out_scene_->Render(renderer);
 
 			renderer->PopLayer();
 			renderer->PopClip();
@@ -125,7 +123,7 @@ namespace kiwano
 			);
 			renderer->PushLayer(in_layer_, in_layer_prop_);
 
-			in_scene_->Render();
+			in_scene_->Render(renderer);
 
 			renderer->PopLayer();
 			renderer->PopClip();

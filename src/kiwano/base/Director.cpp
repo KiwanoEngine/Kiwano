@@ -75,7 +75,7 @@ namespace kiwano
 		if (show)
 		{
 			if (!debug_actor_)
-				debug_actor_ = new DebugNode;
+				debug_actor_ = new DebugActor;
 		}
 		else
 		{
@@ -124,19 +124,21 @@ namespace kiwano
 			debug_actor_->Update(dt);
 	}
 
-	void Director::OnRender()
+	void Director::OnRender(Renderer* renderer)
 	{
 		if (transition_)
 		{
-			transition_->Render();
+			transition_->Render(renderer);
 		}
 		else if (curr_scene_)
 		{
-			curr_scene_->Render();
+			curr_scene_->Render(renderer);
 		}
 
 		if (debug_actor_)
-			debug_actor_->Render();
+		{
+			debug_actor_->Render(renderer);
+		}
 	}
 
 	void Director::AfterRender()

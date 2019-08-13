@@ -26,7 +26,7 @@ namespace kiwano
 {
 	// 二维图形角色
 	class KGE_API ShapeActor
-		: public VisualActor
+		: public Actor
 	{
 	public:
 		ShapeActor();
@@ -49,8 +49,11 @@ namespace kiwano
 		// 获取线条相交样式
 		StrokeStyle SetOutlineJoinStyle() const	{ return outline_join_; }
 
+		// 获取边界
+		Rect GetBounds() const override;
+
 		// 获取外切包围盒
-		Rect GetBoundingBox();
+		Rect GetBoundingBox() const override;
 
 		// 判断图形是否包含点
 		bool ContainsPoint(
@@ -96,7 +99,7 @@ namespace kiwano
 		// 获取形状
 		inline ComPtr<ID2D1Geometry> GetGeometry() const		{ return geo_; }
 
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 	protected:
 		Color					fill_color_;

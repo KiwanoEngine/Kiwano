@@ -52,7 +52,7 @@ namespace kiwano
 			void RemoveAllItems();
 
 		public:
-			void OnRender() override;
+			void OnRender(Renderer* renderer) override;
 
 		protected:
 			Map<String, ImGuiPipeline> pipelines_;

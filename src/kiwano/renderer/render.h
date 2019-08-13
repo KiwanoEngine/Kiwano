@@ -147,6 +147,11 @@ namespace kiwano
 			UINT height
 		);
 
+		bool CheckVisibility(
+			Size const& content_size,
+			Matrix const& transform
+		);
+
 	public:
 		void SetupComponent() override;
 

@@ -27,7 +27,7 @@
 namespace kiwano
 {
 	class KGE_API GifSprite
-		: public VisualActor
+		: public Actor
 	{
 	public:
 		using LoopDoneCallback = Function<void(int)>;
@@ -67,7 +67,7 @@ namespace kiwano
 
 		inline DoneCallback GetDoneCallback() const					{ return done_cb_; }
 
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 	protected:
 		void Update(Duration dt) override;

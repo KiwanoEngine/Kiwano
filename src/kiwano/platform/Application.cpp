@@ -267,9 +267,10 @@ namespace kiwano
 		}
 
 		// Rendering
+		Renderer* renderer = Renderer::GetInstance();
 		for (Component* c : components_)
 		{
-			c->OnRender();
+			c->OnRender(renderer);
 		}
 
 		// After render

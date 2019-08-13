@@ -82,7 +82,7 @@ namespace kiwano
 		}
 	}
 
-	void Actor::Render()
+	void Actor::Render(Renderer* renderer)
 	{
 		if (!visible_)
 			return;
@@ -91,8 +91,7 @@ namespace kiwano
 
 		if (children_.is_empty())
 		{
-			PrepareRender();
-			OnRender();
+			OnRender(renderer);
 		}
 		else
 		{
@@ -103,19 +102,24 @@ namespace kiwano
 				if (child->GetZOrder() >= 0)
 					break;
 
-				child->Render();
+				child->Render(renderer);
 				child = child->next_item().get();
 			}
 
-			PrepareRender();
-			OnRender();
+			OnRender(renderer);
 
 			while (child)
 			{
-				child->Render();
+				child->Render(renderer);
 				child = child->next_item().get();
 			}
 		}
+	}
+
+	void Actor::PrepareRender(Renderer* renderer)
+	{
+		renderer->SetTransform(transform_matrix_);
+		renderer->SetOpacity(displayed_opacity_);
 	}
 
 	void Actor::RenderBorder()
@@ -654,14 +658,6 @@ namespace kiwano
 
 		Point local = GetTransformInverseMatrix().Transform(point);
 		return GetBounds().ContainsPoint(local);
-	}
-
-
-	void VisualActor::PrepareRender()
-	{
-		auto renderer = Renderer::GetInstance();
-		renderer->SetTransform(transform_matrix_);
-		renderer->SetOpacity(displayed_opacity_);
 	}
 
 }
