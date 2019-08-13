@@ -174,7 +174,7 @@ namespace kiwano
 
 	void D2DDeviceResources::DiscardResources()
 	{
-		ImageCache::Instance()->Clear();
+		ImageCache::GetInstance()->Clear();
 
 		factory_.Reset();
 		device_.Reset();

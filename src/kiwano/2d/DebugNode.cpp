@@ -60,7 +60,7 @@ namespace kiwano
 
 	void DebugNode::OnRender()
 	{
-		auto renderer = Renderer::Instance();
+		auto renderer = Renderer::GetInstance();
 
 		renderer->GetSolidColorBrush()->SetColor(DX::ConvertToColorF(background_color_));
 		renderer->GetD2DDeviceResources()->GetDeviceContext()->FillRoundedRectangle(
@@ -89,9 +89,9 @@ namespace kiwano
 		}
 #endif
 
-		ss << "Render: " << Renderer::Instance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
+		ss << "Render: " << Renderer::GetInstance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
 
-		ss << "Primitives / sec: " << Renderer::Instance()->GetStatus().primitives * frame_time_.size() << std::endl;
+		ss << "Primitives / sec: " << Renderer::GetInstance()->GetStatus().primitives * frame_time_.size() << std::endl;
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));

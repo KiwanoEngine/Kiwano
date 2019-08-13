@@ -39,7 +39,7 @@ namespace kiwano
 
 	bool Frame::Load(Resource const& res)
 	{
-		ImagePtr image = ImageCache::Instance()->AddImage(res);
+		ImagePtr image = ImageCache::GetInstance()->AddImage(res);
 		if (image && image->IsValid())
 		{
 			SetImage(image);

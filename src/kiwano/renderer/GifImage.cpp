@@ -51,7 +51,7 @@ namespace kiwano
 		saved_frame_.Reset();
 		decoder_.Reset();
 
-		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetWICImagingFactory();
+		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetWICImagingFactory();
 
 		if (res.IsFileType())
 		{
@@ -124,7 +124,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			// Format convert to 32bppPBGRA which D2D expects
-			auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetWICImagingFactory();
+			auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetWICImagingFactory();
 			hr = factory->CreateFormatConverter(&converter);
 		}
 
@@ -141,7 +141,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			auto ctx = Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext();
+			auto ctx = Renderer::GetInstance()->GetD2DDeviceResources()->GetDeviceContext();
 
 			// Create a D2DBitmap from IWICBitmapSource
 			raw_frame_.Reset();
@@ -504,7 +504,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetWICImagingFactory();
+			auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetWICImagingFactory();
 			hr = factory->CreatePalette(&wic_palette);
 		}
 

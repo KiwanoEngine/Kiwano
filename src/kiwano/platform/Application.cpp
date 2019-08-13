@@ -25,6 +25,7 @@
 #include "../base/input.h"
 #include "../base/Director.h"
 #include "../renderer/render.h"
+#include "../utils/ResourceCache.h"
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext
 #include <mutex>  // std::mutex
@@ -64,9 +65,9 @@ namespace kiwano
 			::CoInitialize(nullptr)
 		);
 
-		Use(Renderer::Instance());
-		Use(Input::Instance());
-		Use(Director::Instance());
+		Use(Renderer::GetInstance());
+		Use(Input::GetInstance());
+		Use(Director::GetInstance());
 	}
 
 	Application::~Application()
@@ -79,7 +80,7 @@ namespace kiwano
 	void Application::Init(const Options& options)
 	{
 		ThrowIfFailed(
-			Window::Instance()->Create(
+			Window::GetInstance()->Create(
 				options.title,
 				options.width,
 				options.height,
@@ -89,8 +90,8 @@ namespace kiwano
 			)
 		);
 
-		Renderer::Instance()->SetClearColor(options.clear_color);
-		Renderer::Instance()->SetVSyncEnabled(options.vsync);
+		Renderer::GetInstance()->SetClearColor(options.clear_color);
+		Renderer::GetInstance()->SetVSyncEnabled(options.vsync);
 
 		// Setup all components
 		for (Component* c : components_)
@@ -100,14 +101,14 @@ namespace kiwano
 
 		if (options.debug)
 		{
-			Director::Instance()->ShowDebugInfo(true);
-			Renderer::Instance()->SetCollectingStatus(true);
+			Director::GetInstance()->ShowDebugInfo(true);
+			Renderer::GetInstance()->SetCollectingStatus(true);
 		}
 
 		// Everything is ready
 		OnReady();
 
-		HWND hwnd = Window::Instance()->GetHandle();
+		HWND hwnd = Window::GetInstance()->GetHandle();
 
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
@@ -120,7 +121,7 @@ namespace kiwano
 
 	void Application::Run()
 	{
-		HWND hwnd = Window::Instance()->GetHandle();
+		HWND hwnd = Window::GetInstance()->GetHandle();
 
 		if (!hwnd)
 			throw std::exception("Calling Application::Run before Application::Init");
@@ -128,7 +129,7 @@ namespace kiwano
 		if (hwnd)
 		{
 			end_ = false;
-			Window::Instance()->Prepare();
+			Window::GetInstance()->Prepare();
 
 			MSG msg = {};
 			while (::GetMessageW(&msg, nullptr, 0, 0) && !end_)
@@ -158,13 +159,14 @@ namespace kiwano
 		}
 
 		// Destroy all instances
-		Director::Destroy();
-		Input::Destroy();
-		Renderer::Destroy();
-		Window::Destroy();
+		ResourceCache::DestroyInstance();
+		Director::DestroyInstance();
+		Input::DestroyInstance();
+		Renderer::DestroyInstance();
+		Window::DestroyInstance();
 
 		// DO NOT destroy Logger instance manually
-		// Logger::Destroy();
+		// Logger::DestroyInstance();
 	}
 
 	void Application::Use(Component* component)
@@ -379,7 +381,7 @@ namespace kiwano
 			{
 				KGE_LOG(L"Window resized");
 
-				Window::Instance()->UpdateWindowRect();
+				Window::GetInstance()->UpdateWindowRect();
 
 				Event evt(Event::WindowResized);
 				evt.win.width = LOWORD(lparam);
@@ -405,7 +407,7 @@ namespace kiwano
 		{
 			bool active = (LOWORD(wparam) != WA_INACTIVE);
 
-			Window::Instance()->SetActive(active);
+			Window::GetInstance()->SetActive(active);
 
 			Event evt(Event::WindowFocusChanged);
 			evt.win.focus = active;

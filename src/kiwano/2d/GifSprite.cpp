@@ -69,7 +69,7 @@ namespace kiwano
 
 			if (!frame_rt_)
 			{
-				auto ctx = Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext();
+				auto ctx = Renderer::GetInstance()->GetD2DDeviceResources()->GetDeviceContext();
 				ThrowIfFailed(
 					ctx->CreateCompatibleRenderTarget(&frame_rt_)
 				);
@@ -105,7 +105,7 @@ namespace kiwano
 		if (frame_to_render_)
 		{
 			Rect bounds = GetBounds();
-			Renderer::Instance()->DrawBitmap(frame_to_render_, bounds, bounds);
+			Renderer::GetInstance()->DrawBitmap(frame_to_render_, bounds, bounds);
 		}
 	}
 

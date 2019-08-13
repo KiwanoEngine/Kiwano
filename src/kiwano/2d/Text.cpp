@@ -303,7 +303,7 @@ namespace kiwano
 
 		if (text_layout_)
 		{
-            auto renderer = Renderer::Instance();
+            auto renderer = Renderer::GetInstance();
             renderer->SetTextStyle(
 				GetDisplayedOpacity(),
 				style_.color,
@@ -328,7 +328,7 @@ namespace kiwano
 		if (text_.empty())
 			return;
 
-        auto renderer = Renderer::Instance();
+        auto renderer = Renderer::GetInstance();
 
 		ThrowIfFailed(
             renderer->GetD2DDeviceResources()->CreateTextFormat(

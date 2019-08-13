@@ -27,7 +27,7 @@ namespace kiwano
 	Layer::Layer()
 		: swallow_(false)
 	{
-		SetSize(Renderer::Instance()->GetOutputSize());
+		SetSize(Renderer::GetInstance()->GetOutputSize());
 
 		auto handler = MakeClosure(this, &Layer::HandleMessages);
 

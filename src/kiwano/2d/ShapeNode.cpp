@@ -129,12 +129,12 @@ namespace kiwano
 	{
 		if (geo_)
 		{
-			Renderer::Instance()->FillGeometry(
+			Renderer::GetInstance()->FillGeometry(
 				geo_,
 				fill_color_
 			);
 
-			Renderer::Instance()->DrawGeometry(
+			Renderer::GetInstance()->DrawGeometry(
 				geo_,
 				stroke_color_,
 				stroke_width_,
@@ -165,7 +165,7 @@ namespace kiwano
 		ComPtr<ID2D1PathGeometry> path_geo;
 		ComPtr<ID2D1GeometrySink> path_sink;
 
-		HRESULT hr = Renderer::Instance()->GetD2DDeviceResources()->GetFactory()->CreatePathGeometry(&path_geo);
+		HRESULT hr = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory()->CreatePathGeometry(&path_geo);
 
 		if (SUCCEEDED(hr))
 		{
@@ -222,7 +222,7 @@ namespace kiwano
 	void RectNode::SetRect(Rect const& rect)
 	{
 		ComPtr<ID2D1RectangleGeometry> geo;
-		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
+		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
 
 		if (SUCCEEDED(factory->CreateRectangleGeometry(DX::ConvertToRectF(rect), &geo)))
 		{
@@ -264,7 +264,7 @@ namespace kiwano
 	void RoundedRectNode::SetRoundedRect(Rect const& rect, float radius_x, float radius_y)
 	{
 		ComPtr<ID2D1RoundedRectangleGeometry> geo;
-		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
+		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
 
 		if (SUCCEEDED(factory->CreateRoundedRectangleGeometry(
 			D2D1::RoundedRect(
@@ -313,7 +313,7 @@ namespace kiwano
 	void CircleNode::SetCircle(Point const& center, float radius)
 	{
 		ComPtr<ID2D1EllipseGeometry> geo;
-		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
+		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
 
 		if (SUCCEEDED(factory->CreateEllipseGeometry(
 			D2D1::Ellipse(
@@ -361,7 +361,7 @@ namespace kiwano
 	void EllipseNode::SetEllipse(Point const& center, float radius_x, float radius_y)
 	{
 		ComPtr<ID2D1EllipseGeometry> geo;
-		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
+		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
 
 		if (SUCCEEDED(factory->CreateEllipseGeometry(
 			D2D1::Ellipse(
@@ -393,7 +393,7 @@ namespace kiwano
 	{
 		current_geometry_ = nullptr;
 
-		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
+		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
 
 		ThrowIfFailed(
 			factory->CreatePathGeometry(&current_geometry_)

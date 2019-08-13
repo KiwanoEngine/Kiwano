@@ -66,18 +66,18 @@ namespace kiwano
 		if (in_scene_)
 		{
 			ThrowIfFailed(
-				Renderer::Instance()->CreateLayer(in_layer_)
+				Renderer::GetInstance()->CreateLayer(in_layer_)
 			);
 		}
 
 		if (out_scene_)
 		{
 			ThrowIfFailed(
-				Renderer::Instance()->CreateLayer(out_layer_)
+				Renderer::GetInstance()->CreateLayer(out_layer_)
 			);
 		}
 
-		window_size_ = Renderer::Instance()->GetOutputSize();
+		window_size_ = Renderer::GetInstance()->GetOutputSize();
 		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
 	}
 
@@ -101,7 +101,7 @@ namespace kiwano
 
 	void Transition::Render()
 	{
-		auto renderer = Renderer::Instance();
+		auto renderer = Renderer::GetInstance();
 
 		if (out_scene_)
 		{

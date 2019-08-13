@@ -28,7 +28,7 @@
 #ifndef KGE_DECLARE_SINGLETON
 #define KGE_DECLARE_SINGLETON( CLASS )			\
 	friend ::kiwano::Singleton< CLASS >;  \
-	friend ::std::default_delete< CLASS >
+	friend typename std::unique_ptr< CLASS >::deleter_type
 #endif
 
 namespace kiwano
@@ -37,21 +37,24 @@ namespace kiwano
 	struct Singleton
 	{
 	public:
-		static inline _Ty* Instance()
+		static inline _Ty* GetInstance()
 		{
 			if (!instance_)
 			{
-				std::call_once(once_, Init);
+				std::call_once(once_, InitInstance);
 			}
 			return instance_.get();
 		}
 
-		static inline void Init()
+		static inline void InitInstance()
 		{
-			if (!instance_) instance_.reset(new (std::nothrow) _Ty);
+			if (!instance_)
+			{
+				instance_.reset(new (std::nothrow) _Ty);
+			}
 		}
 
-		static inline void Destroy()
+		static inline void DestroyInstance()
 		{
 			instance_.reset();
 		}

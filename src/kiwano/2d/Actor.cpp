@@ -124,7 +124,7 @@ namespace kiwano
 		{
             Rect bounds = GetBounds();
 
-            auto renderer = Renderer::Instance();
+            auto renderer = Renderer::GetInstance();
             renderer->SetTransform(transform_matrix_);
             renderer->FillRectangle(bounds, Color(Color::Red, .4f));
             renderer->DrawRectangle(bounds, Color(Color::Red, .8f), 4.f);
@@ -659,7 +659,7 @@ namespace kiwano
 
 	void VisualActor::PrepareRender()
 	{
-		auto renderer = Renderer::Instance();
+		auto renderer = Renderer::GetInstance();
 		renderer->SetTransform(transform_matrix_);
 		renderer->SetOpacity(displayed_opacity_);
 	}

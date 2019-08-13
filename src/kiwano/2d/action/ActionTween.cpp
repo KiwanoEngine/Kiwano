@@ -521,7 +521,7 @@ namespace kiwano
 		geo_ = nullptr;
 		geo_sink_ = nullptr;
 
-		auto factory = Renderer::Instance()->GetD2DDeviceResources()->GetFactory();
+		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
 
 		ThrowIfFailed(
 			factory->CreatePathGeometry(&geo_)

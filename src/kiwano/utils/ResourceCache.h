@@ -22,6 +22,7 @@
 #include "../macros.h"
 #include "../common/helper.h"
 #include "../common/Json.hpp"
+#include "../common/Singleton.hpp"
 #include "../base/Resource.h"
 #include "../2d/include-forwards.h"
 #include "../renderer/GifImage.h"
@@ -31,7 +32,10 @@ namespace kiwano
 {
 	// 资源缓存
 	class KGE_API ResourceCache
+		: public Singleton<ResourceCache>
 	{
+		KGE_DECLARE_SINGLETON(ResourceCache);
+
 	public:
 		// 从 JSON 文件加载资源信息
 		bool LoadFromJsonFile(String const& file_path);
@@ -89,8 +93,8 @@ namespace kiwano
 		// 删除指定资源
 		void Delete(String const& id);
 
-		// 销毁所有资源
-		void Destroy();
+		// 清空所有资源
+		void Clear();
 
 		template<typename _Ty>
 		_Ty* Get(String const& id) const
@@ -101,7 +105,7 @@ namespace kiwano
 			return dynamic_cast<_Ty*>((*iter).second.Get());
 		}
 
-	public:
+	protected:
 		ResourceCache();
 
 		virtual ~ResourceCache();

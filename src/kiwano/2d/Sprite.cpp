@@ -87,7 +87,7 @@ namespace kiwano
 	{
 		if (frame_)
 		{
-			Renderer::Instance()->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
+			Renderer::GetInstance()->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
 		}
 	}
 }

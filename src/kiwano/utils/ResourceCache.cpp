@@ -23,162 +23,36 @@
 #include "../2d/Frame.h"
 #include "../2d/FrameSequence.h"
 #include "../renderer/GifImage.h"
-#include "FileUtil.h"
 #include <fstream>
 
 namespace kiwano
 {
-	namespace __res_loader_01
+	namespace __resource_cache_01
 	{
-		struct GlobalData
-		{
-			String path;
-		};
-
-		bool LoadImagesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type,
-			const String* file, const Array<const wchar_t*>* files, int rows, int cols)
-		{
-			if (!gdata || !id) return false;
-
-			if (file)
-			{
-				// Gif image
-				if (type && (*type) == L"gif")
-				{
-					return loader->AddGifImage(*id, Resource(gdata->path + (*file)));
-				}
-
-				if (!(*file).empty())
-				{
-					if (rows || cols)
-					{
-						// Frame slices
-						return !!loader->AddFrameSequence(*id, Resource(gdata->path + (*file)), std::max(cols, 1), std::max(rows, 1));
-					}
-					else
-					{
-						// Simple image
-						return loader->AddFrame(*id, Resource(gdata->path + (*file)));
-					}
-				}
-			}
-
-			// Frames
-			if (files)
-			{
-				Array<FramePtr> frames;
-				frames.reserve(files->size());
-				for (const auto& file : (*files))
-				{
-					FramePtr frame = new Frame;
-					if (frame->Load(gdata->path + (file)))
-					{
-						frames.push_back(frame);
-					}
-				}
-				return !!loader->AddFrameSequence(*id, frames);
-			}
-			return false;
-		}
-
-		bool LoadJsonData(ResourceCache* loader, Json const& json_data)
-		{
-			GlobalData global_data;
-			if (json_data.count(L"path"))
-			{
-				global_data.path = json_data[L"path"];
-			}
-
-			if (json_data.count(L"images"))
-			{
-				for (const auto& image : json_data[L"images"])
-				{
-					const String* id = nullptr, *type = nullptr, *file = nullptr;
-					int rows = 0, cols = 0;
-
-					if (image.count(L"id")) id = &image[L"id"].as_string();
-					if (image.count(L"type")) type = &image[L"type"].as_string();
-					if (image.count(L"file")) file = &image[L"file"].as_string();
-					if (image.count(L"rows")) rows = image[L"rows"].as_int();
-					if (image.count(L"cols")) cols = image[L"cols"].as_int();
-
-					if (image.count(L"files"))
-					{
-						Array<const wchar_t*> files;
-						files.reserve(image[L"files"].size());
-						for (const auto& file : image[L"files"])
-						{
-							files.push_back(file.as_string().c_str());
-						}
-						if (!LoadImagesFromData(loader, &global_data, id, type, file, &files, rows, cols))
-							return false;
-					}
-					else
-					{
-						if (!LoadImagesFromData(loader, &global_data, id, type, file, nullptr, rows, cols))
-							return false;
-					}
-				}
-			}
-			return true;
-		}
-
-		bool LoadXmlData(ResourceCache* loader, tinyxml2::XMLElement* elem)
-		{
-			GlobalData global_data;
-			if (auto path = elem->FirstChildElement(L"path"))
-			{
-				global_data.path = path->GetText();
-			}
-
-			if (auto images = elem->FirstChildElement(L"images"))
-			{
-				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
-				{
-					String id, type, file;
-					int rows = 0, cols = 0;
-
-					if (auto attr = image->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
-					if (auto attr = image->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
-					if (auto attr = image->Attribute(L"file"))    file = attr;
-					if (auto attr = image->IntAttribute(L"rows")) rows = attr;
-					if (auto attr = image->IntAttribute(L"cols")) cols = attr;
-
-					if (file.empty() && !image->NoChildren())
-					{
-						Array<const wchar_t*> files_arr;
-						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
-						{
-							if (auto path = file->Attribute(L"path"))
-							{
-								files_arr.push_back(path);
-							}
-						}
-						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, &files_arr, rows, cols))
-							return false;
-					}
-					else
-					{
-						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, nullptr, rows, cols))
-							return false;
-					}
-				}
-			}
-			return true;
-		}
+		bool LoadJsonData(ResourceCache* loader, Json const& json_data);
+		bool LoadXmlData(ResourceCache* loader, tinyxml2::XMLElement* elem);
 	}
 
 	namespace
 	{
 		Map<String, Closure<bool(ResourceCache*, Json const&)>> load_json_funcs = {
-			{ L"latest", __res_loader_01::LoadJsonData },
-			{ L"0.1", __res_loader_01::LoadJsonData },
+			{ L"latest", __resource_cache_01::LoadJsonData },
+			{ L"0.1", __resource_cache_01::LoadJsonData },
 		};
 
 		Map<String, Closure<bool(ResourceCache*, tinyxml2::XMLElement*)>> load_xml_funcs = {
-			{ L"latest", __res_loader_01::LoadXmlData },
-			{ L"0.1", __res_loader_01::LoadXmlData },
+			{ L"latest", __resource_cache_01::LoadXmlData },
+			{ L"0.1", __resource_cache_01::LoadXmlData },
 		};
+	}
+
+	ResourceCache::ResourceCache()
+	{
+	}
+
+	ResourceCache::~ResourceCache()
+	{
+		Clear();
 	}
 
 	bool ResourceCache::LoadFromJsonFile(String const& file_path)
@@ -479,18 +353,152 @@ namespace kiwano
 		cache_.erase(id);
 	}
 
-	void ResourceCache::Destroy()
+	void ResourceCache::Clear()
 	{
 		cache_.clear();
 	}
 
-	ResourceCache::ResourceCache()
-	{
-	}
+}
 
-	ResourceCache::~ResourceCache()
+namespace kiwano
+{
+	namespace __resource_cache_01
 	{
-		Destroy();
-	}
+		struct GlobalData
+		{
+			String path;
+		};
 
+		bool LoadImagesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type,
+			const String* file, const Array<const wchar_t*>* files, int rows, int cols)
+		{
+			if (!gdata || !id) return false;
+
+			if (file)
+			{
+				// Gif image
+				if (type && (*type) == L"gif")
+				{
+					return loader->AddGifImage(*id, Resource(gdata->path + (*file)));
+				}
+
+				if (!(*file).empty())
+				{
+					if (rows || cols)
+					{
+						// Frame slices
+						return !!loader->AddFrameSequence(*id, Resource(gdata->path + (*file)), std::max(cols, 1), std::max(rows, 1));
+					}
+					else
+					{
+						// Simple image
+						return loader->AddFrame(*id, Resource(gdata->path + (*file)));
+					}
+				}
+			}
+
+			// Frames
+			if (files)
+			{
+				Array<FramePtr> frames;
+				frames.reserve(files->size());
+				for (const auto& file : (*files))
+				{
+					FramePtr frame = new Frame;
+					if (frame->Load(gdata->path + (file)))
+					{
+						frames.push_back(frame);
+					}
+				}
+				return !!loader->AddFrameSequence(*id, frames);
+			}
+			return false;
+		}
+
+		bool LoadJsonData(ResourceCache* loader, Json const& json_data)
+		{
+			GlobalData global_data;
+			if (json_data.count(L"path"))
+			{
+				global_data.path = json_data[L"path"];
+			}
+
+			if (json_data.count(L"images"))
+			{
+				for (const auto& image : json_data[L"images"])
+				{
+					const String* id = nullptr, * type = nullptr, * file = nullptr;
+					int rows = 0, cols = 0;
+
+					if (image.count(L"id")) id = &image[L"id"].as_string();
+					if (image.count(L"type")) type = &image[L"type"].as_string();
+					if (image.count(L"file")) file = &image[L"file"].as_string();
+					if (image.count(L"rows")) rows = image[L"rows"].as_int();
+					if (image.count(L"cols")) cols = image[L"cols"].as_int();
+
+					if (image.count(L"files"))
+					{
+						Array<const wchar_t*> files;
+						files.reserve(image[L"files"].size());
+						for (const auto& file : image[L"files"])
+						{
+							files.push_back(file.as_string().c_str());
+						}
+						if (!LoadImagesFromData(loader, &global_data, id, type, file, &files, rows, cols))
+							return false;
+					}
+					else
+					{
+						if (!LoadImagesFromData(loader, &global_data, id, type, file, nullptr, rows, cols))
+							return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		bool LoadXmlData(ResourceCache* loader, tinyxml2::XMLElement* elem)
+		{
+			GlobalData global_data;
+			if (auto path = elem->FirstChildElement(L"path"))
+			{
+				global_data.path = path->GetText();
+			}
+
+			if (auto images = elem->FirstChildElement(L"images"))
+			{
+				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
+				{
+					String id, type, file;
+					int rows = 0, cols = 0;
+
+					if (auto attr = image->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
+					if (auto attr = image->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
+					if (auto attr = image->Attribute(L"file"))    file = attr;
+					if (auto attr = image->IntAttribute(L"rows")) rows = attr;
+					if (auto attr = image->IntAttribute(L"cols")) cols = attr;
+
+					if (file.empty() && !image->NoChildren())
+					{
+						Array<const wchar_t*> files_arr;
+						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
+						{
+							if (auto path = file->Attribute(L"path"))
+							{
+								files_arr.push_back(path);
+							}
+						}
+						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, &files_arr, rows, cols))
+							return false;
+					}
+					else
+					{
+						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, nullptr, rows, cols))
+							return false;
+					}
+				}
+			}
+			return true;
+		}
+	}
 }

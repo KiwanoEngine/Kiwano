@@ -44,7 +44,7 @@ namespace kiwano
 	{
 		KGE_LOG(L"Creating device resources");
 
-		hwnd_ = Window::Instance()->GetHandle();
+		hwnd_ = Window::GetInstance()->GetHandle();
 
 		ThrowIfFailed(hwnd_ ? S_OK : E_FAIL);
 		
@@ -86,7 +86,7 @@ namespace kiwano
 			CreateDeviceResources()
 		);
 
-		output_size_ = Window::Instance()->GetSize();
+		output_size_ = Window::GetInstance()->GetSize();
 	}
 
 	void Renderer::DestroyComponent()

@@ -29,7 +29,7 @@ namespace kiwano
 		stage_ = this;
 
 		SetAnchor(0, 0);
-		SetSize(Renderer::Instance()->GetOutputSize());
+		SetSize(Renderer::GetInstance()->GetOutputSize());
 	}
 
 	Stage::~Stage()
