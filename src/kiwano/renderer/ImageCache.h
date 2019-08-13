@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2016-2019 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,25 +19,30 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Actor.h"
+#include "../common/Singleton.hpp"
+#include "render.h"
 
 namespace kiwano
 {
-	class KGE_API DebugNode
-		: public VisualActor
+	class KGE_API ImageCache
+		: public Singleton<ImageCache>
 	{
+		KGE_DECLARE_SINGLETON(ImageCache);
+
 	public:
-		DebugNode();
+		ImagePtr AddImage(Resource const& res);
 
-		virtual ~DebugNode();
+		void RemoveImage(Resource const& res);
 
-		void OnRender() override;
-
-		void OnUpdate(Duration dt) override;
+		void Clear();
 
 	protected:
-		Color		background_color_;
-		TextPtr		debug_text_;
-		Array<Time>	frame_time_;
+		ImageCache();
+
+		virtual ~ImageCache();
+
+	protected:
+		using ImageMap = UnorderedMap<size_t, ImagePtr>;
+		ImageMap image_cache_;
 	};
 }

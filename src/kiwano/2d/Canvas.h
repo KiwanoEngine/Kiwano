@@ -22,15 +22,18 @@
 #include "Actor.h"
 #include "Font.hpp"
 #include "TextStyle.hpp"
+#include "../renderer/Image.h"
 #include "../renderer/TextRenderer.h"
 
-#undef DrawText
+#ifdef DrawText
+#	undef DrawText
+#endif
 
 namespace kiwano
 {
 	// »­²¼
 	class KGE_API Canvas
-		: public VisualNode
+		: public VisualActor
 	{
 	public:
 		Canvas();

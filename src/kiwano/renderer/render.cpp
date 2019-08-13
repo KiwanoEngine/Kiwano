@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "render.h"
-#include "../2d/Image.h"
 #include "../base/logs.h"
 #include "../base/window.h"
 
@@ -29,7 +28,7 @@ namespace kiwano
 		: hwnd_(nullptr)
 		, antialias_(true)
 		, vsync_(true)
-		, text_antialias_(TextAntialias::ClearType)
+		, text_antialias_(TextAntialias::GrayScale)
 		, clear_color_(Color::Black)
 		, opacity_(1.f)
 		, collecting_status_(false)
@@ -292,27 +291,6 @@ namespace kiwano
 		return S_OK;
 	}
 
-	HRESULT Renderer::DrawImage(ImagePtr image, Rect const& dest_rect)
-	{
-		if (!device_context_)
-			return E_UNEXPECTED;
-
-		if (!image->GetBitmap())
-			return S_OK;
-
-		device_context_->DrawBitmap(
-			image->GetBitmap().Get(),
-			DX::ConvertToRectF(dest_rect),
-			opacity_,
-			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-			DX::ConvertToRectF(image->GetCropRect())
-		);
-
-		if (collecting_status_)
-			++status_.primitives;
-		return S_OK;
-	}
-
 	HRESULT Renderer::DrawBitmap(ComPtr<ID2D1Bitmap> const & bitmap, Rect const& src_rect, Rect const& dest_rect)
 	{
 		if (!device_context_)
@@ -321,7 +299,6 @@ namespace kiwano
 		if (!bitmap)
 			return S_OK;
 
-		// Do not crop bitmap 
 		device_context_->DrawBitmap(
 			bitmap.Get(),
 			DX::ConvertToRectF(dest_rect),

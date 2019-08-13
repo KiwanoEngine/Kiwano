@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Action.h"
-#include "Actor.h"
+#include "../Actor.h"
 
 namespace kiwano
 {

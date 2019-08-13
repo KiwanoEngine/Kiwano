@@ -20,7 +20,6 @@
 
 #include "GifImage.h"
 #include "../base/logs.h"
-#include "../platform/modules.h"
 #include "../utils/FileUtil.h"
 
 namespace kiwano

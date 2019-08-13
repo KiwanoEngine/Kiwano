@@ -26,6 +26,7 @@
 #include "../2d/Font.hpp"
 #include "../2d/TextStyle.hpp"
 #include "helper.hpp"
+#include "Image.h"
 #include "TextRenderer.h"
 #include "D2DDeviceResources.h"
 
@@ -77,11 +78,6 @@ namespace kiwano
 		HRESULT FillRectangle(
 			Rect const& rect,
 			Color const& fill_color
-		);
-
-		HRESULT DrawImage(
-			ImagePtr image,
-			Rect const& dest_rect
 		);
 
 		HRESULT DrawBitmap(

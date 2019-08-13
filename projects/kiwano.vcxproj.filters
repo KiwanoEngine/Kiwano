@@ -34,6 +34,9 @@
     <Filter Include="third-party\tinyxml2">
       <UniqueIdentifier>{0cae76f7-7016-4a45-bb26-a130fbce8024}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2d\action">
+      <UniqueIdentifier>{9314f30d-5742-48b6-94e5-e3b4284106f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\kiwano\ui\Button.h">
@@ -41,24 +44,6 @@
     </ClInclude>
     <ClInclude Include="..\src\kiwano\ui\Menu.h">
       <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\Action.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\ActionGroup.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\ActionHelper.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\ActionManager.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\ActionTween.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\Animation.h">
-      <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\Canvas.h">
       <Filter>2d</Filter>
@@ -70,12 +55,6 @@
       <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\Font.hpp">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\Frames.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\Image.h">
       <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\include-forwards.h">
@@ -186,9 +165,6 @@
     <ClInclude Include="..\src\kiwano\utils\Path.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\utils\ResLoader.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\config.h" />
     <ClInclude Include="..\src\kiwano\macros.h" />
     <ClInclude Include="..\src\kiwano\math\helper.h">
@@ -221,9 +197,6 @@
     </ClInclude>
     <ClInclude Include="..\src\kiwano\base\AsyncTask.h">
       <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\GifImage.h">
-      <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\third-party\StackWalker\StackWalker.h">
       <Filter>third-party\StackWalker</Filter>
@@ -270,6 +243,42 @@
     <ClInclude Include="..\src\kiwano\2d\Stage.h">
       <Filter>2d</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\Frame.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\GifImage.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\Image.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\action\Action.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\action\ActionGroup.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\action\ActionHelper.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\action\ActionTween.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\action\ActionManager.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\action\Animation.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\ImageCache.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\utils\ResourceCache.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\FrameSequence.h">
+      <Filter>2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\kiwano\ui\Button.cpp">
@@ -278,21 +287,6 @@
     <ClCompile Include="..\src\kiwano\ui\Menu.cpp">
       <Filter>ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\Action.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\ActionGroup.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\ActionManager.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\ActionTween.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\Animation.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\Canvas.cpp">
       <Filter>2d</Filter>
     </ClCompile>
@@ -300,12 +294,6 @@
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\DebugNode.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\Frames.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\Image.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\Layer.cpp">
@@ -359,9 +347,6 @@
     <ClCompile Include="..\src\kiwano\utils\Path.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\kiwano\utils\ResLoader.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\kiwano\base\Input.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -382,9 +367,6 @@
     </ClCompile>
     <ClCompile Include="..\src\kiwano\base\AsyncTask.cpp">
       <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\2d\GifImage.cpp">
-      <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\third-party\StackWalker\StackWalker.cpp">
       <Filter>third-party\StackWalker</Filter>
@@ -408,6 +390,39 @@
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\Stage.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\Frame.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\GifImage.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\Image.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\action\Action.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\action\ActionGroup.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\action\ActionTween.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\action\ActionManager.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\action\Animation.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\ImageCache.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\utils\ResourceCache.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\FrameSequence.cpp">
       <Filter>2d</Filter>
     </ClCompile>
   </ItemGroup>

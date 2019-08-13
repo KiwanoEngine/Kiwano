@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
+#include "../include-forwards.h"
 
 namespace kiwano
 {

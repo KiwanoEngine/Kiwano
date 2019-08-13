@@ -28,7 +28,7 @@ namespace kiwano
 {
 	// нд╠╬
 	class KGE_API Text
-		: public VisualNode
+		: public VisualActor
 	{
 	public:
 		Text();

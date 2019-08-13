@@ -18,77 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Frames.h"
-#include "Image.h"
-#include "../base/logs.h"
+#pragma once
+#include "include-forwards.h"
 
 namespace kiwano
 {
-	Frames::Frames()
+	// 序列帧
+	class KGE_API FrameSequence
+		: public Object
 	{
-	}
+	public:
+		FrameSequence();
 
-	Frames::Frames(Array<ImagePtr> const& frames)
-	{
-		this->Add(frames);
-	}
+		explicit FrameSequence(
+			Array<FramePtr> const& frames	/* 帧序列 */
+		);
 
-	Frames::~Frames()
-	{
-	}
+		virtual ~FrameSequence();
 
-	void Frames::Add(ImagePtr frame)
-	{
-		KGE_ASSERT(frame && "Frames::Add failed, NULL pointer exception");
+		// 添加关键帧
+		void AddFrame(
+			FramePtr frame
+		);
 
-		if (frame)
-		{
-			frames_.push_back(frame);
-		}
-	}
+		// 添加多个关键帧
+		void AddFrames(
+			Array<FramePtr> const& frames
+		);
 
-	void Frames::Add(Array<ImagePtr> const& frames)
-	{
-		if (frames_.empty())
-			frames_ = frames;
-		else
-		{
-			frames_.reserve(frames_.size() + frames.size());
-			for (const auto& image : frames)
-				Add(image);
-		}
-	}
+		// 获取关键帧
+		FramePtr GetFrame(size_t index) const;
 
-	Array<ImagePtr> const& Frames::GetFrames() const
-	{
-		return frames_;
-	}
+		// 获取关键帧
+		Array<FramePtr> const& GetFrames() const;
 
-	FramesPtr Frames::Clone() const
-	{
-		auto animation = new (std::nothrow) Frames;
-		if (animation)
-		{
-			for (const auto& frame : frames_)
-			{
-				animation->Add(frame);
-			}
-		}
-		return animation;
-	}
+		// 获取帧动画的拷贝对象
+		FrameSequencePtr Clone() const;
 
-	FramesPtr Frames::Reverse() const
-	{
-		auto animation = new (std::nothrow) Frames;
-		if (!frames_.empty())
-		{
-			for (auto iter = frames_.crbegin(), crend = frames_.crend(); iter != crend; ++iter)
-			{
-				if (*iter)
-					animation->Add(*iter);
-			}
-		}
-		return animation;
-	}
+		// 获取帧动画的倒转
+		FrameSequencePtr Reverse() const;
 
+	protected:
+		Array<FramePtr>	frames_;
+	};
 }

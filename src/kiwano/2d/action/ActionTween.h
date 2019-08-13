@@ -20,8 +20,8 @@
 
 #pragma once
 #include "Action.h"
-#include "../base/logs.h"
-#include "../renderer/render.h"  // ID2D1PathGeometry, ID2D1GeometrySink
+#include "../../base/logs.h"
+#include "../../renderer/render.h"  // ID2D1PathGeometry, ID2D1GeometrySink
 
 namespace kiwano
 {

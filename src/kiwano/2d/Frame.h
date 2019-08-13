@@ -19,86 +19,57 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
-#include "../base/Resource.h"
-#include "../renderer/render.h"
+#include "../renderer/Image.h"
 
 namespace kiwano
 {
-	// 图片
-	class KGE_API Image
+	// 帧图像
+	class KGE_API Frame
 		: public Object
 	{
 	public:
-		Image();
+		Frame();
 
-		explicit Image(
+		explicit Frame(
 			Resource const& res
 		);
 
-		explicit Image(
-			Resource const& res,
-			Rect const& crop_rect	/* 裁剪矩形 */
+		explicit Frame(
+			ImagePtr image
 		);
 
-		explicit Image(
-			ComPtr<ID2D1Bitmap> const& bitmap
-		);
-
-		virtual ~Image();
-
-		// 加载图片资源
 		bool Load(
 			Resource const& res
 		);
 
-		// 资源是否有效
-		bool IsValid() const;
-
-		// 将图片裁剪为矩形
+		// 裁剪矩形
 		void Crop(
 			Rect const& crop_rect	/* 裁剪矩形 */
 		);
 
 		// 获取宽度
-		float GetWidth() const;
+		float GetWidth() const					{ return crop_rect_.size.x; }
 
 		// 获取高度
-		float GetHeight() const;
+		float GetHeight() const					{ return crop_rect_.size.y; }
 
 		// 获取大小
-		Size GetSize() const;
-
-		// 获取源图片宽度
-		float GetSourceWidth() const;
-
-		// 获取源图片高度
-		float GetSourceHeight() const;
-
-		// 获取源图片大小
-		Size GetSourceSize() const;
-
-		// 获取裁剪位置 X 坐标
-		float GetCropX() const;
-
-		// 获取裁剪位置 Y 坐标
-		float GetCropY() const;
+		Size GetSize() const					{ return crop_rect_.size; }
 
 		// 获取裁剪位置
-		Point GetCropPos() const;
+		Point GetCropPoint() const				{ return crop_rect_.origin; }
 
 		// 获取裁剪矩形
-		Rect GetCropRect() const;
+		inline Rect const& GetCropRect() const	{ return crop_rect_; }
 
-		ComPtr<ID2D1Bitmap> const& GetBitmap() const;
+		// 获取位图
+		inline ImagePtr GetImage() const		{ return image_; }
+
+		// 设置位图
+		void SetImage(ImagePtr image);
 
 	protected:
-		void SetBitmap(
-			ComPtr<ID2D1Bitmap> const& bitmap
-		);
-
-	protected:
+		ImagePtr image_;
 		Rect crop_rect_;
-		ComPtr<ID2D1Bitmap>	bitmap_;
 	};
 }

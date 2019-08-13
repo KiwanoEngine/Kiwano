@@ -24,12 +24,13 @@
 #include "../common/Json.hpp"
 #include "../base/Resource.h"
 #include "../2d/include-forwards.h"
+#include "../renderer/GifImage.h"
 #include "../third-party/tinyxml2/tinyxml2.h"
 
 namespace kiwano
 {
-	// 资源加载器
-	class KGE_API ResLoader
+	// 资源缓存
+	class KGE_API ResourceCache
 	{
 	public:
 		// 从 JSON 文件加载资源信息
@@ -45,45 +46,45 @@ namespace kiwano
 		bool LoadFromXml(tinyxml2::XMLDocument* doc);
 
 		// 添加图片
-		bool AddImage(String const& id, Resource const& image);
+		bool AddFrame(String const& id, Resource const& res);
 
 		// 添加图片
-		bool AddImage(String const& id, ImagePtr image);
+		bool AddFrame(String const& id, FramePtr frame);
 
 		// 添加 GIF 图片
-		bool AddGifImage(String const& id, Resource const& image);
+		bool AddGifImage(String const& id, Resource const& res);
 
 		// 添加 GIF 图片
 		bool AddGifImage(String const& id, GifImagePtr image);
 
-		// 添加帧集合
-		size_t AddFrames(String const& id, Array<Resource> const& images);
+		// 添加序列帧
+		size_t AddFrameSequence(String const& id, Array<Resource> const& frames);
 
-		// 添加帧集合
-		size_t AddFrames(String const& id, Array<ImagePtr> const& images);
+		// 添加序列帧
+		size_t AddFrameSequence(String const& id, Array<FramePtr> const& frames);
 
-		// 添加帧集合
+		// 添加序列帧
 		// 按行列数裁剪图片
-		size_t AddFrames(String const& id, Resource const& image, int cols, int rows = 1);
+		size_t AddFrameSequence(String const& id, Resource const& frame, int cols, int rows = 1);
 
-		// 添加帧集合
+		// 添加序列帧
 		// 按指定裁剪矩形裁剪图片
-		size_t AddFrames(String const& id, Resource const& image, Array<Rect> const& crop_rects);
+		size_t AddFrameSequence(String const& id, Resource const& frame, Array<Rect> const& crop_rects);
 
-		// 添加帧集合
-		size_t AddFrames(String const& id, FramesPtr frames);
+		// 添加序列帧
+		size_t AddFrameSequence(String const& id, FrameSequencePtr frames);
 
 		// 添加对象
 		bool AddObj(String const& id, ObjectPtr obj);
 
 		// 获取图片资源
-		ImagePtr GetImage(String const& id) const;
+		FramePtr GetFrame(String const& id) const;
 
 		// 获取 GIF 图片资源
 		GifImagePtr GetGifImage(String const& id) const;
 
 		// 获取序列帧
-		FramesPtr GetFrames(String const& id) const;
+		FrameSequencePtr GetFrameSequence(String const& id) const;
 
 		// 删除指定资源
 		void Delete(String const& id);
@@ -94,18 +95,18 @@ namespace kiwano
 		template<typename _Ty>
 		_Ty* Get(String const& id) const
 		{
-			auto iter = res_.find(id);
-			if (iter == res_.end())
+			auto iter = cache_.find(id);
+			if (iter == cache_.end())
 				return nullptr;
 			return dynamic_cast<_Ty*>((*iter).second.Get());
 		}
 
 	public:
-		ResLoader();
+		ResourceCache();
 
-		virtual ~ResLoader();
+		virtual ~ResourceCache();
 
 	protected:
-		UnorderedMap<String, ObjectPtr> res_;
+		UnorderedMap<String, ObjectPtr> cache_;
 	};
 }

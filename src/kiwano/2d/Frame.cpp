@@ -18,26 +18,56 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "Actor.h"
+#include "Frame.h"
+#include "../renderer/ImageCache.h"
 
 namespace kiwano
 {
-	class KGE_API DebugNode
-		: public VisualActor
+	Frame::Frame()
 	{
-	public:
-		DebugNode();
+	}
 
-		virtual ~DebugNode();
+	Frame::Frame(Resource const& res)
+	{
+		Load(res);
+	}
 
-		void OnRender() override;
+	Frame::Frame(ImagePtr image)
+		: image_(image)
+	{
+	}
 
-		void OnUpdate(Duration dt) override;
+	bool Frame::Load(Resource const& res)
+	{
+		ImagePtr image = ImageCache::Instance()->AddImage(res);
+		if (image && image->IsValid())
+		{
+			SetImage(image);
+			return true;
+		}
+		return false;
+	}
 
-	protected:
-		Color		background_color_;
-		TextPtr		debug_text_;
-		Array<Time>	frame_time_;
-	};
+	void Frame::Crop(Rect const& crop_rect)
+	{
+		if (image_)
+		{
+			auto bitmap_size = image_->GetSize();
+			crop_rect_.origin.x = std::min(std::max(crop_rect.origin.x, 0.f), bitmap_size.x);
+			crop_rect_.origin.y = std::min(std::max(crop_rect.origin.y, 0.f), bitmap_size.y);
+			crop_rect_.size.x = std::min(std::max(crop_rect.size.x, 0.f), bitmap_size.x - crop_rect.origin.x);
+			crop_rect_.size.y = std::min(std::max(crop_rect.size.y, 0.f), bitmap_size.y - crop_rect.origin.y);
+		}
+	}
+
+	void Frame::SetImage(ImagePtr image)
+	{
+		image_ = image;
+		if (image_)
+		{
+			crop_rect_.origin.x = crop_rect_.origin.y = 0;
+			crop_rect_.size.x = image_->GetWidth();
+			crop_rect_.size.y = image_->GetHeight();
+		}
+	}
 }

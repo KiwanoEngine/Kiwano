@@ -20,7 +20,6 @@
 
 #include "D3D11DeviceResources.h"
 
-#include "../2d/Image.h"
 #include "../base/logs.h"
 #include <versionhelpers.h>  // IsWindows10OrGreater
 

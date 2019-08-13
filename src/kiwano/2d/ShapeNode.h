@@ -26,7 +26,7 @@ namespace kiwano
 {
 	// ¶þÎ¬Í¼ÐÎ½ÇÉ«
 	class KGE_API ShapeNode
-		: public VisualNode
+		: public VisualActor
 	{
 	public:
 		ShapeNode();

@@ -19,50 +19,49 @@
 // THE SOFTWARE.
 
 #include "Animation.h"
-#include "Frames.h"
-#include "Image.h"
-#include "Sprite.h"
+#include "../FrameSequence.h"
+#include "../Sprite.h"
 
 namespace kiwano
 {
 	Animation::Animation()
-		: frames_(nullptr)
+		: frame_seq_(nullptr)
 	{
 	}
 
-	Animation::Animation(Duration duration, FramesPtr animation, EaseFunc func)
+	Animation::Animation(Duration duration, FrameSequencePtr frame_seq, EaseFunc func)
 		: ActionTween(duration, func)
-		, frames_(nullptr)
+		, frame_seq_(nullptr)
 	{
-		this->SetFrames(animation);
+		this->SetFrameSequence(frame_seq);
 	}
 
 	Animation::~Animation()
 	{
 	}
 
-	FramesPtr Animation::GetFrames() const
+	FrameSequencePtr Animation::GetFrameSequence() const
 	{
-		return frames_;
+		return frame_seq_;
 	}
 
-	void Animation::SetFrames(FramesPtr frames)
+	void Animation::SetFrameSequence(FrameSequencePtr frames)
 	{
-		frames_ = frames;
+		frame_seq_ = frames;
 	}
 
 	void Animation::Init(ActorPtr target)
 	{
-		if (!frames_ || frames_->GetFrames().empty())
+		if (!frame_seq_ || frame_seq_->GetFrames().empty())
 		{
 			Done();
 			return;
 		}
 
 		auto sprite_target = dynamic_cast<Sprite*>(target.Get());
-		if (sprite_target && frames_)
+		if (sprite_target && frame_seq_)
 		{
-			sprite_target->Load(frames_->GetFrames()[0]);
+			sprite_target->SetFrame(frame_seq_->GetFrames()[0]);
 		}
 	}
 
@@ -72,27 +71,27 @@ namespace kiwano
 
 		KGE_ASSERT(sprite_target && "Animation only supports Sprites");
 
-		const auto& frames = frames_->GetFrames();
+		const auto& frames = frame_seq_->GetFrames();
 		auto size = frames.size();
 		auto index = std::min(static_cast<size_t>(math::Floor(size * percent)), size - 1);
 
-		sprite_target->Load(frames[index]);
+		sprite_target->SetFrame(frames[index]);
 	}
 
 	ActionPtr Animation::Clone() const
 	{
-		if (frames_)
+		if (frame_seq_)
 		{
-			return new (std::nothrow) Animation(dur_, frames_, ease_func_);
+			return new (std::nothrow) Animation(dur_, frame_seq_, ease_func_);
 		}
 		return nullptr;
 	}
 
 	ActionPtr Animation::Reverse() const
 	{
-		if (frames_)
+		if (frame_seq_)
 		{
-			FramesPtr frames = frames_->Reverse();
+			FrameSequencePtr frames = frame_seq_->Reverse();
 			if (frames)
 			{
 				return new (std::nothrow) Animation(dur_, frames, ease_func_);

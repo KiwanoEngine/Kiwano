@@ -22,11 +22,12 @@
 #include "Actor.h"
 #include "../base/Resource.h"
 #include "../renderer/render.h"
+#include "../renderer/GifImage.h"
 
 namespace kiwano
 {
 	class KGE_API GifSprite
-		: public VisualNode
+		: public VisualActor
 	{
 	public:
 		using LoopDoneCallback = Closure<void(int)>;

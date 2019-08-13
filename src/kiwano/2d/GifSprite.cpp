@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "GifSprite.h"
-#include "GifImage.h"
 #include "../base/logs.h"
 #include "../platform/modules.h"
 
@@ -87,7 +86,7 @@ namespace kiwano
 
 	void GifSprite::Update(Duration dt)
 	{
-		VisualNode::Update(dt);
+		VisualActor::Update(dt);
 
 		if (image_ && animating_)
 		{

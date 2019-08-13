@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ResLoader.h"
+#include "ResourceCache.h"
 #include "../base/logs.h"
-#include "../2d/Image.h"
-#include "../2d/Frames.h"
-#include "../2d/GifImage.h"
+#include "../2d/Frame.h"
+#include "../2d/FrameSequence.h"
+#include "../renderer/GifImage.h"
 #include "FileUtil.h"
 #include <fstream>
 
@@ -35,7 +35,7 @@ namespace kiwano
 			String path;
 		};
 
-		bool LoadImagesFromData(ResLoader* loader, GlobalData* gdata, const String* id, const String* type,
+		bool LoadImagesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type,
 			const String* file, const Array<const wchar_t*>* files, int rows, int cols)
 		{
 			if (!gdata || !id) return false;
@@ -52,13 +52,13 @@ namespace kiwano
 				{
 					if (rows || cols)
 					{
-						// Image slices
-						return !!loader->AddFrames(*id, Resource(gdata->path + (*file)), std::max(cols, 1), std::max(rows, 1));
+						// Frame slices
+						return !!loader->AddFrameSequence(*id, Resource(gdata->path + (*file)), std::max(cols, 1), std::max(rows, 1));
 					}
 					else
 					{
 						// Simple image
-						return loader->AddImage(*id, Resource(gdata->path + (*file)));
+						return loader->AddFrame(*id, Resource(gdata->path + (*file)));
 					}
 				}
 			}
@@ -66,22 +66,22 @@ namespace kiwano
 			// Frames
 			if (files)
 			{
-				Array<ImagePtr> images;
-				images.reserve(files->size());
+				Array<FramePtr> frames;
+				frames.reserve(files->size());
 				for (const auto& file : (*files))
 				{
-					ImagePtr image = new Image(gdata->path + (file));
-					if (image->IsValid())
+					FramePtr frame = new Frame;
+					if (frame->Load(gdata->path + (file)))
 					{
-						images.push_back(image);
+						frames.push_back(frame);
 					}
 				}
-				return !!loader->AddFrames(*id, images);
+				return !!loader->AddFrameSequence(*id, frames);
 			}
 			return false;
 		}
 
-		bool LoadJsonData(ResLoader* loader, Json const& json_data)
+		bool LoadJsonData(ResourceCache* loader, Json const& json_data)
 		{
 			GlobalData global_data;
 			if (json_data.count(L"path"))
@@ -123,7 +123,7 @@ namespace kiwano
 			return true;
 		}
 
-		bool LoadXmlData(ResLoader* loader, tinyxml2::XMLElement* elem)
+		bool LoadXmlData(ResourceCache* loader, tinyxml2::XMLElement* elem)
 		{
 			GlobalData global_data;
 			if (auto path = elem->FirstChildElement(L"path"))
@@ -170,18 +170,18 @@ namespace kiwano
 
 	namespace
 	{
-		Map<String, Closure<bool(ResLoader*, Json const&)>> load_json_funcs = {
+		Map<String, Closure<bool(ResourceCache*, Json const&)>> load_json_funcs = {
 			{ L"latest", __res_loader_01::LoadJsonData },
 			{ L"0.1", __res_loader_01::LoadJsonData },
 		};
 
-		Map<String, Closure<bool(ResLoader*, tinyxml2::XMLElement*)>> load_xml_funcs = {
+		Map<String, Closure<bool(ResourceCache*, tinyxml2::XMLElement*)>> load_xml_funcs = {
 			{ L"latest", __res_loader_01::LoadXmlData },
 			{ L"0.1", __res_loader_01::LoadXmlData },
 		};
 	}
 
-	bool ResLoader::LoadFromJsonFile(String const& file_path)
+	bool ResourceCache::LoadFromJsonFile(String const& file_path)
 	{
 		Json json_data;
 		std::wifstream ifs;
@@ -195,18 +195,18 @@ namespace kiwano
 		}
 		catch (std::wifstream::failure& e)
 		{
-			KGE_WARNING_LOG(L"ResLoader::LoadFromJsonFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
 		catch (json_exception& e)
 		{
-			KGE_WARNING_LOG(L"ResLoader::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return LoadFromJson(json_data);
 	}
 
-	bool ResLoader::LoadFromJson(Json const& json_data)
+	bool ResourceCache::LoadFromJson(Json const& json_data)
 	{
 		try
 		{
@@ -228,13 +228,13 @@ namespace kiwano
 		}
 		catch (std::exception& e)
 		{
-			KGE_WARNING_LOG(L"ResLoader::LoadFromJson failed: JSON data is invalid. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARNING_LOG(L"ResourceCache::LoadFromJson failed: JSON data is invalid. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return false;
 	}
 
-	bool ResLoader::LoadFromXmlFile(String const& file_path)
+	bool ResourceCache::LoadFromXmlFile(String const& file_path)
 	{
 		tinyxml2::XMLDocument doc;
 
@@ -250,21 +250,21 @@ namespace kiwano
 
 			if (tinyxml2::XML_SUCCESS != doc.Parse(ss.str().c_str()))
 			{
-				KGE_WARNING_LOG(L"ResLoader::LoadFromXmlFile failed: %s (%s)",
+				KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: %s (%s)",
 					tinyxml2::XMLDocument::ErrorIDToName(doc.ErrorID()), doc.ErrorStr());
 				return false;
 			}
 		}
 		catch (std::wifstream::failure& e)
 		{
-			KGE_WARNING_LOG(L"ResLoader::LoadFromXmlFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
 
 		return LoadFromXml(&doc);
 	}
 
-	bool ResLoader::LoadFromXml(tinyxml2::XMLDocument* doc)
+	bool ResourceCache::LoadFromXml(tinyxml2::XMLDocument* doc)
 	{
 		if (doc)
 		{
@@ -292,42 +292,42 @@ namespace kiwano
 			}
 			catch (std::exception& e)
 			{
-				KGE_WARNING_LOG(L"ResLoader::LoadFromXml failed: %s", string_to_wide(e.what()).c_str());
+				KGE_WARNING_LOG(L"ResourceCache::LoadFromXml failed: %s", string_to_wide(e.what()).c_str());
 				return false;
 			}
 		}
 		return false;
 	}
 
-	bool ResLoader::AddImage(String const& id, Resource const& image)
+	bool ResourceCache::AddFrame(String const& id, Resource const& res)
 	{
-		ImagePtr ptr = new (std::nothrow) Image;
+		FramePtr ptr = new (std::nothrow) Frame;
 		if (ptr)
 		{
-			if (ptr->Load(image))
+			if (ptr->Load(res))
 			{
-				return AddImage(id, ptr);
+				return AddFrame(id, ptr);
 			}
 		}
 		return false;
 	}
 
-	bool ResLoader::AddImage(String const & id, ImagePtr image)
+	bool ResourceCache::AddFrame(String const & id, FramePtr frame)
 	{
-		if (image)
+		if (frame)
 		{
-			res_.insert(std::make_pair(id, image));
+			cache_.insert(std::make_pair(id, frame));
 			return true;
 		}
 		return false;
 	}
 
-	bool ResLoader::AddGifImage(String const& id, Resource const& image)
+	bool ResourceCache::AddGifImage(String const& id, Resource const& res)
 	{
 		GifImagePtr ptr = new (std::nothrow) GifImage;
 		if (ptr)
 		{
-			if (ptr->Load(image))
+			if (ptr->Load(res))
 			{
 				return AddGifImage(id, ptr);
 			}
@@ -335,27 +335,27 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResLoader::AddGifImage(String const& id, GifImagePtr image)
+	bool ResourceCache::AddGifImage(String const& id, GifImagePtr image)
 	{
 		if (image)
 		{
-			res_.insert(std::make_pair(id, image));
+			cache_.insert(std::make_pair(id, image));
 			return true;
 		}
 		return false;
 	}
 
-	size_t ResLoader::AddFrames(String const& id, Array<Resource> const& images)
+	size_t ResourceCache::AddFrameSequence(String const& id, Array<Resource> const& images)
 	{
 		if (images.empty())
 			return 0;
 
-		Array<ImagePtr> image_arr;
+		Array<FramePtr> image_arr;
 		image_arr.reserve(images.size());
 
 		for (const auto& image : images)
 		{
-			ImagePtr ptr = new (std::nothrow) Image;
+			FramePtr ptr = new (std::nothrow) Frame;
 			if (ptr)
 			{
 				if (ptr->Load(image))
@@ -367,43 +367,43 @@ namespace kiwano
 
 		if (!image_arr.empty())
 		{
-			FramesPtr frames = new (std::nothrow) Frames(image_arr);
-			return AddFrames(id, frames);
+			FrameSequencePtr frames = new (std::nothrow) FrameSequence(image_arr);
+			return AddFrameSequence(id, frames);
 		}
 		return 0;
 	}
 
-	size_t ResLoader::AddFrames(String const& id, Array<ImagePtr> const& images)
+	size_t ResourceCache::AddFrameSequence(String const& id, Array<FramePtr> const& images)
 	{
 		if (images.empty())
 			return 0;
 
-		FramesPtr frames = new (std::nothrow) Frames(images);
-		return AddFrames(id, frames);
+		FrameSequencePtr frames = new (std::nothrow) FrameSequence(images);
+		return AddFrameSequence(id, frames);
 	}
 
-	size_t ResLoader::AddFrames(String const & id, Resource const & image, int cols, int rows)
+	size_t ResourceCache::AddFrameSequence(String const & id, Resource const & image, int cols, int rows)
 	{
 		if (cols <= 0 || rows <= 0)
 			return 0;
 
-		ImagePtr raw = new (std::nothrow) Image;
+		FramePtr raw = new (std::nothrow) Frame;
 		if (!raw || !raw->Load(image))
 			return false;
 
-		float raw_width = raw->GetSourceWidth();
-		float raw_height = raw->GetSourceHeight();
+		float raw_width = raw->GetWidth();
+		float raw_height = raw->GetHeight();
 		float width = raw_width / cols;
 		float height = raw_height / rows;
 
-		Array<ImagePtr> image_arr;
+		Array<FramePtr> image_arr;
 		image_arr.reserve(rows * cols);
 
 		for (int i = 0; i < rows; i++)
 		{
 			for (int j = 0; j < cols; j++)
 			{
-				ImagePtr ptr = new (std::nothrow) Image(raw->GetBitmap());
+				FramePtr ptr = new (std::nothrow) Frame(raw->GetImage());
 				if (ptr)
 				{
 					ptr->Crop(Rect{ j * width, i * height, width, height });
@@ -412,22 +412,22 @@ namespace kiwano
 			}
 		}
 
-		FramesPtr frames = new (std::nothrow) Frames(image_arr);
-		return AddFrames(id, frames);
+		FrameSequencePtr frames = new (std::nothrow) FrameSequence(image_arr);
+		return AddFrameSequence(id, frames);
 	}
 
-	size_t ResLoader::AddFrames(String const & id, Resource const & image, Array<Rect> const & crop_rects)
+	size_t ResourceCache::AddFrameSequence(String const & id, Resource const & image, Array<Rect> const & crop_rects)
 	{
-		ImagePtr raw = new (std::nothrow) Image;
+		FramePtr raw = new (std::nothrow) Frame;
 		if (!raw || !raw->Load(image))
 			return 0;
 
-		Array<ImagePtr> image_arr;
+		Array<FramePtr> image_arr;
 		image_arr.reserve(crop_rects.size());
 
 		for (const auto& rect : crop_rects)
 		{
-			ImagePtr ptr = new (std::nothrow) Image(raw->GetBitmap());
+			FramePtr ptr = new (std::nothrow) Frame(raw->GetImage());
 			if (ptr)
 			{
 				ptr->Crop(rect);
@@ -435,60 +435,60 @@ namespace kiwano
 			}
 		}
 
-		FramesPtr frames = new (std::nothrow) Frames(image_arr);
-		return AddFrames(id, frames);
+		FrameSequencePtr frames = new (std::nothrow) FrameSequence(image_arr);
+		return AddFrameSequence(id, frames);
 	}
 
-	size_t ResLoader::AddFrames(String const & id, FramesPtr frames)
+	size_t ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
 	{
 		if (frames)
 		{
-			res_.insert(std::make_pair(id, frames));
+			cache_.insert(std::make_pair(id, frames));
 			return frames->GetFrames().size();
 		}
 		return 0;
 	}
 
-	bool ResLoader::AddObj(String const& id, ObjectPtr obj)
+	bool ResourceCache::AddObj(String const& id, ObjectPtr obj)
 	{
 		if (obj)
 		{
-			res_.insert(std::make_pair(id, obj));
+			cache_.insert(std::make_pair(id, obj));
 			return true;
 		}
 		return false;
 	}
 
-	ImagePtr ResLoader::GetImage(String const & id) const
+	FramePtr ResourceCache::GetFrame(String const & id) const
 	{
-		return Get<Image>(id);
+		return Get<Frame>(id);
 	}
 
-	GifImagePtr ResLoader::GetGifImage(String const& id) const
+	GifImagePtr ResourceCache::GetGifImage(String const& id) const
 	{
 		return Get<GifImage>(id);
 	}
 
-	FramesPtr ResLoader::GetFrames(String const & id) const
+	FrameSequencePtr ResourceCache::GetFrameSequence(String const & id) const
 	{
-		return Get<Frames>(id);
+		return Get<FrameSequence>(id);
 	}
 
-	void ResLoader::Delete(String const & id)
+	void ResourceCache::Delete(String const & id)
 	{
-		res_.erase(id);
+		cache_.erase(id);
 	}
 
-	void ResLoader::Destroy()
+	void ResourceCache::Destroy()
 	{
-		res_.clear();
+		cache_.clear();
 	}
 
-	ResLoader::ResLoader()
+	ResourceCache::ResourceCache()
 	{
 	}
 
-	ResLoader::~ResLoader()
+	ResourceCache::~ResourceCache()
 	{
 		Destroy();
 	}

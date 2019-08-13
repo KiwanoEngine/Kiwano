@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include "ActionManager.h"
-#include "Actor.h"
-#include "../base/logs.h"
+#include "../Actor.h"
+#include "../../base/logs.h"
 
 namespace kiwano
 {

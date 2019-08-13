@@ -19,45 +19,53 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "ActionTween.h"
+#include "../base/Resource.h"
+#include "render.h"  // ID2D1Bitmap
 
 namespace kiwano
 {
-	// 帧动画
-	class KGE_API Animation
-		: public ActionTween
+	// 图像
+	KGE_DECLARE_SMART_PTR(Image);
+	class KGE_API Image
+		: public Object
 	{
 	public:
-		Animation();
+		Image();
 
-		Animation(
-			Duration duration,			/* 动画时长 */
-			FramesPtr frames,			/* 序列帧 */
-			EaseFunc func = nullptr		/* 速度变化 */
+		explicit Image(
+			ComPtr<ID2D1Bitmap> const& bitmap
 		);
 
-		virtual ~Animation();
+		virtual ~Image();
 
-		// 获取动画
-		FramesPtr GetFrames() const;
+		// 资源是否有效
+		bool IsValid() const;
 
-		// 设置动画
-		void SetFrames(
-			FramesPtr frames
-		);
+		// 获取位图宽度
+		float GetWidth() const;
 
-		// 获取该动作的拷贝对象
-		ActionPtr Clone() const override;
+		// 获取位图高度
+		float GetHeight() const;
 
-		// 获取该动作的倒转
-		ActionPtr Reverse() const override;
+		// 获取位图大小
+		Size GetSize() const;
+
+		// 获取位图像素宽度
+		UINT32 GetWidthInPixels() const;
+
+		// 获取位图像素高度
+		UINT32 GetHeightInPixels() const;
+
+		// 获取位图像素大小
+		math::Vec2T<UINT32> GetSizeInPixels() const;
+
+		// 获取源位图
+		ComPtr<ID2D1Bitmap> GetBitmap() const;
+
+		// 设置源位图
+		void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
 
 	protected:
-		void Init(ActorPtr target) override;
-
-		void UpdateTween(ActorPtr target, float percent) override;
-
-	protected:
-		FramesPtr frames_;
+		ComPtr<ID2D1Bitmap>	bitmap_;
 	};
 }

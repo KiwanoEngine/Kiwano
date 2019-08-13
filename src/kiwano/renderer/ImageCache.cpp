@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2016-2019 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,76 +18,66 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Sprite.h"
-#include "../renderer/render.h"
+#include "ImageCache.h"
+#include "../base/logs.h"
 
 namespace kiwano
 {
-	Sprite::Sprite()
-		: frame_(nullptr)
+
+	ImageCache::ImageCache()
 	{
 	}
 
-	Sprite::Sprite(Resource const& res)
-		: frame_(nullptr)
-	{
-		Load(res);
-	}
-
-	Sprite::Sprite(Resource const& res, const Rect& crop_rect)
-		: frame_(nullptr)
-	{
-		Load(res);
-		Crop(crop_rect);
-	}
-
-	Sprite::Sprite(FramePtr frame)
-		: frame_(nullptr)
-	{
-		SetFrame(frame);
-	}
-
-	Sprite::~Sprite()
+	ImageCache::~ImageCache()
 	{
 	}
 
-	bool Sprite::Load(Resource const& res)
+	ImagePtr ImageCache::AddImage(Resource const& res)
 	{
-		FramePtr frame = new (std::nothrow) Frame;
-		if (frame->Load(res))
+		size_t hash_code = res.GetHashCode();
+		auto iter = image_cache_.find(hash_code);
+		if (iter != image_cache_.end())
 		{
-			SetFrame(frame);
-			return true;
+			return iter->second;
 		}
-		return false;
-	}
 
-	void Sprite::Crop(const Rect& crop_rect)
-	{
-		if (frame_)
+		HRESULT hr = S_OK;
+		ComPtr<ID2D1Bitmap> bitmap;
+
+		if (res.IsFileType())
 		{
-			frame_->Crop(crop_rect);
-			SetSize(frame_->GetWidth(), frame_->GetHeight());
+			hr = Renderer::Instance()->GetD2DDeviceResources()->CreateBitmapFromFile(bitmap, res.GetFileName());
 		}
+		else
+		{
+			hr = Renderer::Instance()->GetD2DDeviceResources()->CreateBitmapFromResource(bitmap, res);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ImagePtr ptr = new Image(bitmap);
+			image_cache_.insert(std::make_pair(hash_code, ptr));
+		}
+		else
+		{
+			KGE_ERROR_LOG(L"Load image file failed with HRESULT of %08X", hr);
+		}
+		return nullptr;
 	}
 
-	void Sprite::SetFrame(FramePtr frame)
+	void ImageCache::RemoveImage(Resource const& res)
 	{
-		if (frame_ != frame)
+		size_t hash_code = res.GetHashCode();
+		auto iter = image_cache_.find(hash_code);
+		if (iter != image_cache_.end())
 		{
-			frame_ = frame;
-			if (frame_)
-			{
-				SetSize(frame_->GetWidth(), frame_->GetHeight());
-			}
+			image_cache_.erase(iter);
 		}
 	}
 
-	void Sprite::OnRender()
+	void ImageCache::Clear()
 	{
-		if (frame_)
-		{
-			Renderer::Instance()->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
-		}
+		image_cache_.clear();
 	}
+
 }

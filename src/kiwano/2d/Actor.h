@@ -21,7 +21,7 @@
 #pragma once
 #include "include-forwards.h"
 #include "Transform.hpp"
-#include "ActionManager.h"
+#include "action/ActionManager.h"
 #include "../base/TimerManager.h"
 #include "../base/EventDispatcher.h"
 
@@ -77,7 +77,7 @@ namespace kiwano
 		// 获取 y 坐标
 		float GetPositionY()			const	{ return transform_.position.y; }
 
-		// 获取横向缩放比例
+		// 获取缩放比例
 		Point GetScale()				const	{ return transform_.scale; }
 
 		// 获取横向缩放比例
@@ -452,8 +452,9 @@ namespace kiwano
 	};
 
 
-	// 可视化角色
-	class KGE_API VisualNode
+	// 可视角色
+	// 在渲染前处理二维旋转矩阵和透明度
+	class KGE_API VisualActor
 		: public Actor
 	{
 	public:

@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #include "ActionTween.h"
-#include "include-forwards.h"
-#include "Actor.h"
+#include "../Actor.h"
 
 namespace kiwano
 {

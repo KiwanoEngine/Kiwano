@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "Canvas.h"
-#include "Image.h"
 #include "../base/logs.h"
 #include "../renderer/render.h"
 
@@ -258,7 +257,7 @@ namespace kiwano
 				D2D1::RectF(0, 0, image->GetWidth(), image->GetHeight()),
 				opacity,
 				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				DX::ConvertToRectF(image->GetCropRect())
+				D2D1::RectF(0, 0, image->GetWidth(), image->GetHeight())
 			);
 			cache_expired_ = true;
 		}
@@ -463,8 +462,7 @@ namespace kiwano
 
 	ImagePtr Canvas::ExportToImage() const
 	{
-		auto image = new Image(GetBitmap());
-		image->Crop(Rect(Point{}, this->GetSize()));
+		ImagePtr image = new Image(GetBitmap());
 		return image;
 	}
 

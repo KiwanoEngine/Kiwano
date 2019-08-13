@@ -20,7 +20,6 @@
 
 #include "D3D10DeviceResources.h"
 
-#include "../2d/Image.h"
 #include "../base/logs.h"
 
 #pragma comment(lib, "d3d10_1.lib")

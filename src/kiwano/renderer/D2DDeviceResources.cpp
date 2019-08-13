@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #include "D2DDeviceResources.h"
-#include "../2d/Image.h"
+#include "ImageCache.h"
 #include "../base/logs.h"
-#include "../platform/modules.h"
+#include "../utils/FileUtil.h"
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -73,9 +73,7 @@ namespace kiwano
 
 		ID2D1StrokeStyle* GetStrokeStyle(StrokeStyle stroke) const override;
 
-        void ClearImageCache() override;
-
-        void DiscardResources() override;
+		void DiscardResources() override;
 
 	public:
 		unsigned long STDMETHODCALLTYPE AddRef();
@@ -90,9 +88,6 @@ namespace kiwano
 	protected:
 		unsigned long ref_count_;
 		float dpi_;
-
-		using BitmapMap = UnorderedMap<size_t, ComPtr<ID2D1Bitmap>>;
-		BitmapMap bitmap_cache_;
 
 		ComPtr<ID2D1StrokeStyle>	d2d_miter_stroke_style_;
 		ComPtr<ID2D1StrokeStyle>	d2d_bevel_stroke_style_;
@@ -179,7 +174,7 @@ namespace kiwano
 
 	void D2DDeviceResources::DiscardResources()
 	{
-		ClearImageCache();
+		ImageCache::Instance()->Clear();
 
 		factory_.Reset();
 		device_.Reset();
@@ -328,11 +323,10 @@ namespace kiwano
 		if (!imaging_factory_ || !device_context_)
 			return E_UNEXPECTED;
 
-		size_t hash_code = std::hash<String>{}(file_path);
-		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
+		if (!FileUtil::ExistsFile(file_path))
 		{
-			bitmap = bitmap_cache_[hash_code];
-			return S_OK;
+			KGE_WARNING_LOG(L"Image file '%s' not found!", file_path.c_str());
+			return E_FAIL;
 		}
 
 		ComPtr<IWICBitmapDecoder>		decoder;
@@ -384,9 +378,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			bitmap = bitmap_tmp;
-			bitmap_cache_.insert(std::make_pair(hash_code, bitmap));
 		}
-
 		return hr;
 	}
 
@@ -394,13 +386,6 @@ namespace kiwano
 	{
 		if (!imaging_factory_ || !device_context_)
 			return E_UNEXPECTED;
-
-		size_t hash_code = res.GetHashCode();
-		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
-		{
-			bitmap = bitmap_cache_[hash_code];
-			return S_OK;
-		}
 
 		ComPtr<IWICBitmapDecoder>		decoder;
 		ComPtr<IWICBitmapFrameDecode>	source;
@@ -471,9 +456,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			bitmap = bitmap_tmp;
-			bitmap_cache_.insert(std::make_pair(hash_code, bitmap));
 		}
-
 		return hr;
 	}
 
@@ -597,11 +580,6 @@ namespace kiwano
 			text_layout = text_layout_tmp;
 		}
 		return hr;
-	}
-
-	void D2DDeviceResources::ClearImageCache()
-	{
-		bitmap_cache_.clear();
 	}
 
 	ID2D1StrokeStyle* D2DDeviceResources::GetStrokeStyle(StrokeStyle stroke) const

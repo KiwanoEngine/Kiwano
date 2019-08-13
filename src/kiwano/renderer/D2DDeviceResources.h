@@ -70,8 +70,6 @@ namespace kiwano
 			_In_ ComPtr<ID2D1Bitmap1> const& target
 		) = 0;
 
-		virtual void ClearImageCache() = 0;
-
 		virtual void DiscardResources() = 0;
 
 		inline ID2D1Factory1*			GetFactory() const				{ KGE_ASSERT(factory_); return factory_.Get(); }

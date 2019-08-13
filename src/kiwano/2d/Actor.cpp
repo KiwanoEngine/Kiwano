@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include "Actor.h"
-#include "Action.h"
 #include "Stage.h"
 #include "../base/logs.h"
 #include "../renderer/render.h"
@@ -658,11 +657,11 @@ namespace kiwano
 	}
 
 
-	void VisualNode::PrepareRender()
+	void VisualActor::PrepareRender()
 	{
-        auto renderer = Renderer::Instance();
-        renderer->SetTransform(transform_matrix_);
-        renderer->SetOpacity(displayed_opacity_);
+		auto renderer = Renderer::Instance();
+		renderer->SetTransform(transform_matrix_);
+		renderer->SetOpacity(displayed_opacity_);
 	}
 
 }

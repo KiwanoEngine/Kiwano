@@ -19,43 +19,45 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
+#include "ActionTween.h"
 
 namespace kiwano
 {
-	// 序列帧
-	class KGE_API Frames
-		: public Object
+	// 帧动画
+	class KGE_API Animation
+		: public ActionTween
 	{
 	public:
-		Frames();
+		Animation();
 
-		explicit Frames(
-			Array<ImagePtr> const& frames	/* 序列帧 */
+		Animation(
+			Duration duration,			/* 动画时长 */
+			FrameSequencePtr frame_seq,	/* 序列帧 */
+			EaseFunc func = nullptr		/* 速度变化 */
 		);
 
-		virtual ~Frames();
+		virtual ~Animation();
 
-		// 添加关键帧
-		void Add(
-			ImagePtr frame
+		// 获取动画
+		FrameSequencePtr GetFrameSequence() const;
+
+		// 设置动画
+		void SetFrameSequence(
+			FrameSequencePtr frames
 		);
 
-		// 添加多个关键帧
-		void Add(
-			Array<ImagePtr> const& frames
-		);
+		// 获取该动作的拷贝对象
+		ActionPtr Clone() const override;
 
-		// 获取关键帧
-		Array<ImagePtr> const& GetFrames() const;
-
-		// 获取帧动画的拷贝对象
-		FramesPtr Clone() const;
-
-		// 获取帧动画的倒转
-		FramesPtr Reverse() const;
+		// 获取该动作的倒转
+		ActionPtr Reverse() const override;
 
 	protected:
-		Array<ImagePtr>	frames_;
+		void Init(ActorPtr target) override;
+
+		void UpdateTween(ActorPtr target, float percent) override;
+
+	protected:
+		FrameSequencePtr frame_seq_;
 	};
 }

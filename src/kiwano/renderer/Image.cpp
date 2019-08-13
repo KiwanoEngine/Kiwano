@@ -18,76 +18,96 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Sprite.h"
-#include "../renderer/render.h"
+#include "Image.h"
+#include "../base/logs.h"
+#include "../platform/modules.h"
 
 namespace kiwano
 {
-	Sprite::Sprite()
-		: frame_(nullptr)
+	Image::Image()
+		: bitmap_(nullptr)
 	{
 	}
 
-	Sprite::Sprite(Resource const& res)
-		: frame_(nullptr)
+	Image::Image(ComPtr<ID2D1Bitmap> const & bitmap)
+		: Image()
 	{
-		Load(res);
+		SetBitmap(bitmap);
 	}
 
-	Sprite::Sprite(Resource const& res, const Rect& crop_rect)
-		: frame_(nullptr)
-	{
-		Load(res);
-		Crop(crop_rect);
-	}
-
-	Sprite::Sprite(FramePtr frame)
-		: frame_(nullptr)
-	{
-		SetFrame(frame);
-	}
-
-	Sprite::~Sprite()
+	Image::~Image()
 	{
 	}
 
-	bool Sprite::Load(Resource const& res)
+	bool Image::IsValid() const
 	{
-		FramePtr frame = new (std::nothrow) Frame;
-		if (frame->Load(res))
+		return !!bitmap_;
+	}
+
+	float Image::GetWidth() const
+	{
+		if (bitmap_)
 		{
-			SetFrame(frame);
-			return true;
+			return bitmap_->GetSize().width;
 		}
-		return false;
+		return 0;
 	}
 
-	void Sprite::Crop(const Rect& crop_rect)
+	float Image::GetHeight() const
 	{
-		if (frame_)
+		if (bitmap_)
 		{
-			frame_->Crop(crop_rect);
-			SetSize(frame_->GetWidth(), frame_->GetHeight());
+			return bitmap_->GetSize().height;
 		}
+		return 0;
 	}
 
-	void Sprite::SetFrame(FramePtr frame)
+	Size Image::GetSize() const
 	{
-		if (frame_ != frame)
+		if (bitmap_)
 		{
-			frame_ = frame;
-			if (frame_)
-			{
-				SetSize(frame_->GetWidth(), frame_->GetHeight());
-			}
+			auto bitmap_size = bitmap_->GetSize();
+			return Size{ bitmap_size.width, bitmap_size.height };
 		}
+		return Size{};
 	}
 
-	void Sprite::OnRender()
+	UINT32 Image::GetWidthInPixels() const
 	{
-		if (frame_)
+		if (bitmap_)
 		{
-			Renderer::Instance()->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
+			return bitmap_->GetPixelSize().width;
 		}
+		return 0;
 	}
+
+	UINT32 Image::GetHeightInPixels() const
+	{
+		if (bitmap_)
+		{
+			return bitmap_->GetPixelSize().height;
+		}
+		return 0;
+	}
+
+	math::Vec2T<UINT32> Image::GetSizeInPixels() const
+	{
+		if (bitmap_)
+		{
+			auto bitmap_size = bitmap_->GetPixelSize();
+			return math::Vec2T<UINT32>{ bitmap_size.width, bitmap_size.height };
+		}
+		return math::Vec2T<UINT32>{};
+	}
+
+	ComPtr<ID2D1Bitmap> Image::GetBitmap() const
+	{
+		return bitmap_;
+	}
+
+	void Image::SetBitmap(ComPtr<ID2D1Bitmap> bitmap)
+	{
+		bitmap_ = bitmap;
+	}
+
 }

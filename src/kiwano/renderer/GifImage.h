@@ -19,12 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
 #include "../base/Resource.h"
-#include "../renderer/render.h"
+#include "render.h"
 
 namespace kiwano
 {
+	// GIF Í¼Ïñ
+	KGE_DECLARE_SMART_PTR(GifImage);
 	class KGE_API GifImage
 		: public Object
 	{
