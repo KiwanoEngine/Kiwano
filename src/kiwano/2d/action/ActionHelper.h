@@ -83,9 +83,9 @@ namespace kiwano
 		inline TweenHelper& SetName(String const& name)						{ base->SetName(name); return (*this); }
 
 		// 获取指针
-		inline ActionTweenPtr Get() const							{ return base; }
+		inline ActionTweenPtr Get() const									{ return base; }
 		
-		inline TweenHelper(ActionTweenPtr base)						: base(base) {}
+		inline TweenHelper(ActionTweenPtr base)								: base(base) {}
 
 		inline operator ActionPtr() const									{ return base; }
 
@@ -100,115 +100,117 @@ namespace kiwano
 	{
 	public:
 		static inline TweenHelper
-			MoveBy(Point const& vector)
+		MoveBy(Duration dur, Point const& vector)
 		{
-			return TweenHelper(new kiwano::ActionMoveBy(0, vector));
+			return TweenHelper(new kiwano::ActionMoveBy(dur, vector));
 		}
 
 		static inline TweenHelper
-			MoveTo(Point const& pos)
+		MoveTo(Duration dur, Point const& pos)
 		{
-			return TweenHelper(new kiwano::ActionMoveTo(0, pos));
+			return TweenHelper(new kiwano::ActionMoveTo(dur, pos));
 		}
 
 		static inline TweenHelper
 		JumpBy(
+			Duration dur,
 			Point const& pos,	/* 目的坐标 */
 			float height,		/* 跳跃高度 */
 			int jumps = 1)		/* 跳跃次数 */
 		{
-			return TweenHelper(new kiwano::ActionJumpBy(0, pos, height, jumps));
+			return TweenHelper(new kiwano::ActionJumpBy(dur, pos, height, jumps));
 		}
 
 		static inline TweenHelper
 		JumpTo(
+			Duration dur,
 			Point const& pos,	/* 目的坐标 */
 			float height,		/* 跳跃高度 */
 			int jumps = 1)		/* 跳跃次数 */
 		{
-			return TweenHelper(new kiwano::ActionJumpTo(0, pos, height, jumps));
+			return TweenHelper(new kiwano::ActionJumpTo(dur, pos, height, jumps));
 		}
 
 		static inline TweenHelper
-			ScaleBy(float scale)
+		ScaleBy(Duration dur, float scale)
 		{
-			return TweenHelper(new kiwano::ActionScaleBy(0, scale));
+			return TweenHelper(new kiwano::ActionScaleBy(dur, scale));
 		}
 
 		static inline TweenHelper
-			ScaleBy(float scale_x, float scale_y)
+		ScaleBy(Duration dur, float scale_x, float scale_y)
 		{
-			return TweenHelper(new kiwano::ActionScaleBy(0, scale_x, scale_y));
+			return TweenHelper(new kiwano::ActionScaleBy(dur, scale_x, scale_y));
 		}
 
 		static inline TweenHelper
-			ScaleTo(float scale)
+		ScaleTo(Duration dur, float scale)
 		{
-			return TweenHelper(new kiwano::ActionScaleTo(0, scale));
+			return TweenHelper(new kiwano::ActionScaleTo(dur, scale));
 		}
 
 		static inline TweenHelper
-			ScaleTo(float scale_x, float scale_y)
+		ScaleTo(Duration dur, float scale_x, float scale_y)
 		{
-			return TweenHelper(new kiwano::ActionScaleTo(0, scale_x, scale_y));
+			return TweenHelper(new kiwano::ActionScaleTo(dur, scale_x, scale_y));
 		}
 
 		static inline TweenHelper
-			FadeTo(float opacity)
+		FadeTo(Duration dur, float opacity)
 		{
-			return TweenHelper(new kiwano::ActionFadeTo(0, opacity));
+			return TweenHelper(new kiwano::ActionFadeTo(dur, opacity));
 		}
 
 		static inline TweenHelper
-			FadeIn(Duration dur)
+		FadeIn(Duration dur)
 		{
 			return TweenHelper(new kiwano::ActionFadeIn(dur));
 		}
 
 		static inline TweenHelper
-			FadeOut(Duration dur)
+		FadeOut(Duration dur)
 		{
 			return TweenHelper(new kiwano::ActionFadeOut(dur));
 		}
 
 		static inline TweenHelper
-			RotateBy(float rotation)
+		RotateBy(Duration dur, float rotation)
 		{
-			return TweenHelper(new kiwano::ActionRotateBy(0, rotation));
+			return TweenHelper(new kiwano::ActionRotateBy(dur, rotation));
 		}
 
 		static inline TweenHelper
-			RotateTo(float rotation)
+		RotateTo(Duration dur, float rotation)
 		{
-			return TweenHelper(new kiwano::ActionRotateTo(0, rotation));
+			return TweenHelper(new kiwano::ActionRotateTo(dur, rotation));
 		}
 
 		static inline TweenHelper
-			Animation(FrameSequencePtr frames)
+		Animation(Duration dur, FrameSequencePtr frames)
 		{
-			return TweenHelper(new kiwano::Animation(0, frames));
+			return TweenHelper(new kiwano::Animation(dur, frames));
 		}
 
 		static inline TweenHelper
-			Custom(kiwano::ActionCustom::TweenFunc tween_func)
+		Custom(Duration dur, ActionCustom::TweenFunc tween_func)
 		{
-			return TweenHelper(new kiwano::ActionCustom(0, tween_func));
+			return TweenHelper(new kiwano::ActionCustom(dur, tween_func));
 		}
 
 		static inline ActionHelper
-			Delay(Duration delay)
+		Delay(Duration delay)
 		{
 			return ActionHelper(new kiwano::ActionDelay(delay));
 		}
 
 		static inline ActionHelper
-			Group(Vector<ActionPtr> const& actions, bool sequence = true)
+		Group(Vector<ActionPtr> const& actions, bool sequence = true)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, sequence));
 		}
 
 		static inline ActionHelper
-			Multiple(Vector<ActionPtr> const& actions)
+		Multiple(Vector<ActionPtr> const& actions)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, false));
 		}
@@ -226,14 +228,14 @@ namespace kiwano
 
 		KGE_DEPRECATED("Tween::OpacityTo is deprecated, use Tween::FadeTo instead")
 		static inline TweenHelper
-			OpacityTo(float opacity)
+		OpacityTo(Duration dur, float opacity)
 		{
-			return TweenHelper(new kiwano::ActionFadeTo(0, opacity));
+			return TweenHelper(new kiwano::ActionFadeTo(dur, opacity));
 		}
 
 		KGE_DEPRECATED("Tween::Sequence is deprecated, use Tween::Group instead")
 		static inline ActionHelper
-			Sequence(Vector<ActionPtr> const& actions)
+		Sequence(Vector<ActionPtr> const& actions)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, true));
 		}
