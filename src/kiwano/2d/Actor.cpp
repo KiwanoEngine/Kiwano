@@ -20,8 +20,8 @@
 
 #include "Actor.h"
 #include "Stage.h"
-#include "../base/logs.h"
-#include "../renderer/render.h"
+#include "../base/Logger.h"
+#include "../renderer/Renderer.h"
 
 namespace kiwano
 {

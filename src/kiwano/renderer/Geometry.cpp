@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include "Geometry.h"
-#include "render.h"
-#include "../base/logs.h"
+#include "Renderer.h"
+#include "../base/Logger.h"
 
 namespace kiwano
 {

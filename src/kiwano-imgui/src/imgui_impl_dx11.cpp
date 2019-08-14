@@ -1,6 +1,6 @@
 // dear imgui: Renderer for Kiwano (DirectX11)
 
-#include <kiwano/base/logs.h>
+#include <kiwano/base/Logger.h>
 #include "imgui_impl_dx11.h"
 
 // DirectX

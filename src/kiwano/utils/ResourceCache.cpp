@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "ResourceCache.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 #include "../2d/Frame.h"
 #include "../2d/FrameSequence.h"
 #include "../renderer/GifImage.h"

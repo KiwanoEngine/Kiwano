@@ -20,7 +20,7 @@
 
 #include "D3D11DeviceResources.h"
 
-#include "../base/logs.h"
+#include "../base/Logger.h"
 #include <versionhelpers.h>  // IsWindows10OrGreater
 
 #pragma comment(lib, "d3d11.lib")

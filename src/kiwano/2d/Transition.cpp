@@ -21,9 +21,9 @@
 #include "Transition.h"
 #include "Actor.h"
 #include "Stage.h"
-#include "../base/window.h"
-#include "../base/logs.h"
-#include "../renderer/render.h"
+#include "../base/Window.h"
+#include "../base/Logger.h"
+#include "../renderer/Renderer.h"
 
 namespace kiwano
 {

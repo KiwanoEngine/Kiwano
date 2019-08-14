@@ -20,11 +20,11 @@
 
 #include "Application.h"
 #include "modules.h"
-#include "../base/window.h"
-#include "../base/logs.h"
+#include "../base/Window.h"
+#include "../base/Logger.h"
 #include "../base/input.h"
 #include "../base/Director.h"
-#include "../renderer/render.h"
+#include "../renderer/Renderer.h"
 #include "../utils/ResourceCache.h"
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext

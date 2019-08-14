@@ -20,7 +20,7 @@
 
 #include "DebugActor.h"
 #include "Text.h"
-#include "../renderer/render.h"
+#include "../renderer/Renderer.h"
 #include <sstream>
 #include <psapi.h>
 

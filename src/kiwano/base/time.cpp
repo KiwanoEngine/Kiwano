@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "time.h"
-#include "logs.h"
+#include "Logger.h"
 #include <regex>
 #include <unordered_map>
 

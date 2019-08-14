@@ -21,7 +21,7 @@
 #pragma once
 #include "Actor.h"
 #include "../base/Resource.h"
-#include "../renderer/render.h"
+#include "../renderer/Renderer.h"
 #include "../renderer/GifImage.h"
 
 namespace kiwano

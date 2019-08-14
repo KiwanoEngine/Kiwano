@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Object.h"
-#include "logs.h"
+#include "Logger.h"
 #include <typeinfo>
 
 namespace kiwano

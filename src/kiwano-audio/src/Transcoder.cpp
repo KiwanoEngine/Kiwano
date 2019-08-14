@@ -26,7 +26,7 @@
 #include <kiwano/core/string.hpp>
 #include <kiwano/base/ComPtr.hpp>
 #include <kiwano/base/Resource.h>
-#include <kiwano/base/logs.h>
+#include <kiwano/base/Logger.h>
 #include <kiwano/platform/modules.h>
 #include "audio-modules.h"
 #include "Transcoder.h"

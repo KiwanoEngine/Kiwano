@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "render.h"
-#include "../base/logs.h"
-#include "../base/window.h"
+#include "Renderer.h"
+#include "../base/Logger.h"
+#include "../base/Window.h"
 
 namespace kiwano
 {

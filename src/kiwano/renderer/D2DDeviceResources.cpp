@@ -20,7 +20,7 @@
 
 #include "D2DDeviceResources.h"
 #include "ImageCache.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 #include "../utils/FileUtil.h"
 
 #pragma comment(lib, "d2d1.lib")

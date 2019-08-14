@@ -59,15 +59,15 @@
 // base
 //
 
-#include "renderer/render.h"
+#include "renderer/Renderer.h"
 #include "renderer/Image.h"
 #include "renderer/GifImage.h"
 
 #include "base/time.h"
-#include "base/window.h"
+#include "base/Window.h"
 #include "base/input.h"
 #include "base/Director.h"
-#include "base/logs.h"
+#include "base/Logger.h"
 
 #include "base/SmartPtr.hpp"
 #include "base/ComPtr.hpp"

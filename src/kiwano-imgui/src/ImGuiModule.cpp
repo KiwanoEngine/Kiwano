@@ -5,7 +5,7 @@
 #include <kiwano/core/intrusive_ptr.hpp>
 #include <kiwano/base/Window.h>
 #include <kiwano/base/Input.h>
-#include <kiwano/renderer/render.h>
+#include <kiwano/renderer/Renderer.h>
 #include "ImGuiModule.h"
 #include "imgui_impl.h"
 

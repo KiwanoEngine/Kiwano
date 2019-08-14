@@ -48,7 +48,7 @@
     <ClInclude Include="..\src\kiwano\base\EventListener.h" />
     <ClInclude Include="..\src\kiwano\base\Input.h" />
     <ClInclude Include="..\src\kiwano\base\keys.hpp" />
-    <ClInclude Include="..\src\kiwano\base\logs.h" />
+    <ClInclude Include="..\src\kiwano\base\Logger.h" />
     <ClInclude Include="..\src\kiwano\base\Object.h" />
     <ClInclude Include="..\src\kiwano\base\RefCounter.hpp" />
     <ClInclude Include="..\src\kiwano\base\Resource.h" />
@@ -56,7 +56,7 @@
     <ClInclude Include="..\src\kiwano\base\Timer.h" />
     <ClInclude Include="..\src\kiwano\base\TimerManager.h" />
     <ClInclude Include="..\src\kiwano\base\time.h" />
-    <ClInclude Include="..\src\kiwano\base\window.h" />
+    <ClInclude Include="..\src\kiwano\base\Window.h" />
     <ClInclude Include="..\src\kiwano\math\constants.hpp" />
     <ClInclude Include="..\src\kiwano\math\ease.hpp" />
     <ClInclude Include="..\src\kiwano\math\helper.h" />
@@ -76,7 +76,7 @@
     <ClInclude Include="..\src\kiwano\renderer\helper.hpp" />
     <ClInclude Include="..\src\kiwano\renderer\Image.h" />
     <ClInclude Include="..\src\kiwano\renderer\ImageCache.h" />
-    <ClInclude Include="..\src\kiwano\renderer\render.h" />
+    <ClInclude Include="..\src\kiwano\renderer\Renderer.h" />
     <ClInclude Include="..\src\kiwano\renderer\TextRenderer.h" />
     <ClInclude Include="..\src\kiwano\third-party\StackWalker\StackWalker.h" />
     <ClInclude Include="..\src\kiwano\third-party\tinyxml2\tinyxml2.h" />
@@ -112,14 +112,14 @@
     <ClCompile Include="..\src\kiwano\base\EventDispatcher.cpp" />
     <ClCompile Include="..\src\kiwano\base\EventListener.cpp" />
     <ClCompile Include="..\src\kiwano\base\Input.cpp" />
-    <ClCompile Include="..\src\kiwano\base\logs.cpp" />
+    <ClCompile Include="..\src\kiwano\base\Logger.cpp" />
     <ClCompile Include="..\src\kiwano\base\Object.cpp" />
     <ClCompile Include="..\src\kiwano\base\Resource.cpp" />
     <ClCompile Include="..\src\kiwano\base\Director.cpp" />
     <ClCompile Include="..\src\kiwano\base\Timer.cpp" />
     <ClCompile Include="..\src\kiwano\base\TimerManager.cpp" />
     <ClCompile Include="..\src\kiwano\base\time.cpp" />
-    <ClCompile Include="..\src\kiwano\base\window.cpp" />
+    <ClCompile Include="..\src\kiwano\base\Window.cpp" />
     <ClCompile Include="..\src\kiwano\platform\Application.cpp" />
     <ClCompile Include="..\src\kiwano\platform\modules.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\D2DDeviceResources.cpp" />
@@ -129,7 +129,7 @@
     <ClCompile Include="..\src\kiwano\renderer\GifImage.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\Image.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\ImageCache.cpp" />
-    <ClCompile Include="..\src\kiwano\renderer\render.cpp" />
+    <ClCompile Include="..\src\kiwano\renderer\Renderer.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\TextRenderer.cpp" />
     <ClCompile Include="..\src\kiwano\third-party\StackWalker\StackWalker.cpp" />
     <ClCompile Include="..\src\kiwano\third-party\tinyxml2\tinyxml2.cpp" />

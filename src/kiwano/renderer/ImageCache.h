@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../core/singleton.hpp"
-#include "render.h"
+#include "Renderer.h"
 
 namespace kiwano
 {

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "EventDispatcher.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 
 namespace kiwano
 {

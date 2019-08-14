@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../base/Resource.h"
-#include "render.h"
+#include "Renderer.h"
 
 namespace kiwano
 {

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "GifSprite.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 #include "../platform/modules.h"
 
 namespace kiwano

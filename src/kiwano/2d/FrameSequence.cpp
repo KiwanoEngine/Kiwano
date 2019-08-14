@@ -20,7 +20,7 @@
 
 #include "FrameSequence.h"
 #include "Frame.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 
 namespace kiwano
 {

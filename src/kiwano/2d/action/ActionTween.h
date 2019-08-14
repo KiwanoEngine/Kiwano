@@ -20,7 +20,7 @@
 
 #pragma once
 #include "Action.h"
-#include "../../base/logs.h"
+#include "../../base/Logger.h"
 
 namespace kiwano
 {

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "GifImage.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 #include "../utils/FileUtil.h"
 
 namespace kiwano

@@ -27,18 +27,26 @@
 
 #ifndef KGE_LOG
 #	ifdef KGE_DEBUG
-#		define KGE_LOG(FORMAT, ...) kiwano::Logger::GetInstance()->Messagef((FORMAT ## "\n"), __VA_ARGS__)
+#		define KGE_LOG(FORMAT, ...) ::kiwano::Logger::GetInstance()->Messagef((FORMAT ## "\n"), __VA_ARGS__)
 #	else
 #		define KGE_LOG __noop
 #	endif
 #endif
 
 #ifndef KGE_WARNING_LOG
-#	define KGE_WARNING_LOG(FORMAT, ...) kiwano::Logger::GetInstance()->Warningf((FORMAT ## "\n"), __VA_ARGS__)
+#	define KGE_WARNING_LOG(FORMAT, ...) ::kiwano::Logger::GetInstance()->Warningf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 #ifndef KGE_ERROR_LOG
-#	define KGE_ERROR_LOG(FORMAT, ...) kiwano::Logger::GetInstance()->Errorf((FORMAT ## "\n"), __VA_ARGS__)
+#	define KGE_ERROR_LOG(FORMAT, ...) ::kiwano::Logger::GetInstance()->Errorf((FORMAT ## "\n"), __VA_ARGS__)
+#endif
+
+#ifndef KGE_PRINT
+#	define KGE_PRINT(...) ::kiwano::Logger::GetInstance()->Println(__VA_ARGS__)
+#endif
+
+#ifndef KGE_PRINTF
+#	define KGE_PRINTF(FORMAT, ...) ::kiwano::Logger::GetInstance()->Printf((FORMAT), __VA_ARGS__)
 #endif
 
 namespace kiwano

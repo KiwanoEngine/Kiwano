@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Image.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 #include "../platform/modules.h"
 
 namespace kiwano

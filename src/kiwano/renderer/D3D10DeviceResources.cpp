@@ -20,7 +20,7 @@
 
 #include "D3D10DeviceResources.h"
 
-#include "../base/logs.h"
+#include "../base/Logger.h"
 
 #pragma comment(lib, "d3d10_1.lib")
 

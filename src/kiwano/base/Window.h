@@ -18,32 +18,78 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Stage.h"
-#include "../base/Logger.h"
-#include "../renderer/Renderer.h"
+#pragma once
+#include "../macros.h"
+#include "../core/core.h"
+#include "../math/helper.h"
+#include "types.h"
 
 namespace kiwano
 {
-	Stage::Stage()
+	class KGE_API Window
+		: public Singleton<Window>
 	{
-		stage_ = this;
+		KGE_DECLARE_SINGLETON(Window);
 
-		SetAnchor(0, 0);
-		SetSize(Renderer::GetInstance()->GetOutputSize());
-	}
+	public:
+		// 获取标题
+		String GetTitle() const;
 
-	Stage::~Stage()
-	{
-	}
+		// 获取窗口大小
+		Size GetSize() const;
 
-	void Stage::OnEnter()
-	{
-		KGE_LOG(L"Stage entered");
-	}
+		// 获取窗口宽度
+		float GetWidth() const;
 
-	void Stage::OnExit()
-	{
-		KGE_LOG(L"Stage exited");
-	}
+		// 获取窗口高度
+		float GetHeight() const;
 
+		// 设置标题
+		void SetTitle(String const& title);
+
+		// 设置窗口图标
+		void SetIcon(LPCWSTR icon_resource);
+
+		// 重设窗口大小
+		void Resize(int width, int height);
+
+		// 设置全屏模式
+		void SetFullscreen(bool fullscreen, int width, int height);
+
+		// 设置鼠标指针
+		void SetMouseCursor(MouseCursor cursor);
+
+	public:
+		HRESULT Create(
+			String const&	title,
+			int				width,
+			int				height,
+			LPCWSTR			icon,
+			bool			fullscreen,
+			WNDPROC			proc
+		);
+
+		void Prepare();
+
+		HWND GetHandle() const;
+
+		DWORD GetWindowStyle() const;
+
+		void UpdateWindowRect();
+
+		void SetActive(bool actived);
+
+	protected:
+		Window();
+
+		~Window();
+
+	private:
+		HWND	handle_;
+		bool	is_fullscreen_;
+		int		width_;
+		int		height_;
+		WCHAR*	device_name_;
+		MouseCursor mouse_cursor_;
+	};
 }
