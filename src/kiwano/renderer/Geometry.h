@@ -24,13 +24,28 @@
 
 namespace kiwano
 {
+
 	// 几何体
 	class KGE_API Geometry
 	{
 	public:
+		// 几何体组合模式
+		enum class CombineMode
+		{
+			Union,		/* 并集 (A + B) */
+			Intersect,	/* 交集 (A + B) */
+			Xor,		/* 对称差集 ((A - B) + (B - A)) */
+			Exclude		/* 差集 (A - B) */
+		};
+
+	public:
+		Geometry();
+
+		Geometry(ComPtr<ID2D1Geometry> geo);
+
 		// 获取外切包围盒
 		Rect GetBoundingBox(
-			Matrix const& transform = Matrix()
+			Matrix3x2 const& transform = Matrix3x2()
 		) const;
 
 		// 判断图形是否包含点
@@ -51,10 +66,49 @@ namespace kiwano
 			Vec2& tangent
 		);
 
-	public:
-		Geometry();
+		// 组合几何体
+		Geometry CombineWith(
+			Geometry input,
+			CombineMode mode,
+			Matrix3x2 const& input_matrix = Matrix3x2()
+		);
 
-		Geometry(ComPtr<ID2D1Geometry> geo);
+		// 组合多个几何体
+		// 参数 modes 和 matrixs 的数量应为 1 或 geos 的数量减一
+		static Geometry Combine(
+			Vector<Geometry> const& geos,
+			Vector<CombineMode> const& modes,
+			Vector<Matrix3x2> const& matrixs = { Matrix3x2() }
+		);
+
+		// 创建直线
+		static Geometry CreateLine(
+			Point const& begin,
+			Point const& end
+		);
+
+		// 创建矩形
+		static Geometry CreateRect(
+			Rect const& rect
+		);
+
+		// 创建圆角矩形
+		static Geometry CreateRoundedRect(
+			Rect const& rect,
+			Vec2 const& radius
+		);
+
+		// 创建圆形
+		static Geometry CreateCircle(
+			Point const& center,
+			float radius
+		);
+
+		// 创建椭圆形
+		static Geometry CreateEllipse(
+			Point const& center,
+			Vec2 const& radius
+		);
 
 	public:
 		inline ComPtr<ID2D1Geometry> GetGeometry() const		{ return geo_; }
@@ -118,6 +172,16 @@ namespace kiwano
 		inline ComPtr<ID2D1PathGeometry> GetPathGeometry() const	{ return path_geo_; }
 
 		inline void SetPathGeometry(ComPtr<ID2D1PathGeometry> path)	{ path_geo_ = path; }
+
+		inline ComPtr<ID2D1GeometrySink> GetGeometrySink() const	{ return sink_; }
+
+		inline void SetGeometrySink(ComPtr<ID2D1GeometrySink> sink)	{ sink_ = sink; }
+
+		void Init();
+
+		void OpenSink();
+
+		void CloseSink();
 
 	protected:
 		ComPtr<ID2D1PathGeometry> path_geo_;

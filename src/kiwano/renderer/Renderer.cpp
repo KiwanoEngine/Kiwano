@@ -523,7 +523,7 @@ namespace kiwano
 		vsync_ = enabled;
 	}
 
-	void Renderer::PushClip(const Matrix & clip_matrix, const Size & clip_size)
+	void Renderer::PushClip(const Matrix3x2 & clip_matrix, const Size & clip_size)
 	{
 		HRESULT hr = S_OK;
 		if (!device_context_)
@@ -630,7 +630,7 @@ namespace kiwano
 		clear_color_ = color;
 	}
 
-	void Renderer::SetTransform(const Matrix & matrix)
+	void Renderer::SetTransform(const Matrix3x2 & matrix)
 	{
 		HRESULT hr = S_OK;
 		if (!device_context_)
@@ -750,7 +750,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	bool Renderer::CheckVisibility(Size const& content_size, Matrix const& transform)
+	bool Renderer::CheckVisibility(Size const& content_size, Matrix3x2 const& transform)
 	{
 		return Rect{ Point{}, output_size_ }.Intersects(
 			transform.Transform(Rect{ Point{}, content_size })

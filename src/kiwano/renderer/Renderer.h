@@ -143,7 +143,7 @@ namespace kiwano
 		);
 
 		void SetTransform(
-			const Matrix& matrix
+			const Matrix3x2& matrix
 		);
 
 		void SetTextStyle(
@@ -156,7 +156,7 @@ namespace kiwano
 		);
 
 		void PushClip(
-			const Matrix& clip_matrix,
+			const Matrix3x2& clip_matrix,
 			const Size& clip_size
 		);
 
@@ -176,7 +176,7 @@ namespace kiwano
 
 		bool CheckVisibility(
 			Size const& content_size,
-			Matrix const& transform
+			Matrix3x2 const& transform
 		);
 
 	public:

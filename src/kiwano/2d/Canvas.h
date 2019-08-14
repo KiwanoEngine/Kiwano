@@ -205,7 +205,7 @@ namespace kiwano
 
 		// 变换画笔
 		void SetBrushTransform(
-			Matrix const& transform
+			Matrix3x2 const& transform
 		);
 
 		// 导出为图片

@@ -142,10 +142,10 @@ namespace kiwano
 		virtual Rect GetBoundingBox() const;
 
 		// 获取二维变换矩阵
-		Matrix const& GetTransformMatrix()  const;
+		Matrix3x2 const& GetTransformMatrix()  const;
 
 		// 获取二维变换的逆矩阵
-		Matrix const& GetTransformInverseMatrix()  const;
+		Matrix3x2 const& GetTransformInverseMatrix()  const;
 
 		// 获取父角色
 		inline Actor* GetParent() const { return parent_; }
@@ -447,8 +447,8 @@ namespace kiwano
 		bool			is_fast_transform_;
 		mutable bool	dirty_transform_;
 		mutable bool	dirty_transform_inverse_;
-		mutable Matrix	transform_matrix_;
-		mutable Matrix	transform_matrix_inverse_;
+		mutable Matrix3x2	transform_matrix_;
+		mutable Matrix3x2	transform_matrix_inverse_;
 	};
 
 }

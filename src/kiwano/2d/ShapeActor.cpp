@@ -47,7 +47,7 @@ namespace kiwano
 		if (!geo_)
 			return Rect{};
 
-		return geo_.GetBoundingBox(Matrix());
+		return geo_.GetBoundingBox(Matrix3x2());
 	}
 
 	Rect ShapeActor::GetBoundingBox() const
@@ -117,7 +117,7 @@ namespace kiwano
 
 	void LineActor::SetEndPoint(Point const& end)
 	{
-		Renderer::GetInstance()->CreateLineGeometry(geo_, Point{}, end);
+		geo_ = Geometry::CreateLine(Point{}, end);
 
 		if (geo_)
 		{
@@ -145,7 +145,7 @@ namespace kiwano
 
 	void RectActor::SetRectSize(Size const& size)
 	{
-		Renderer::GetInstance()->CreateRectGeometry(geo_, Rect{ Point{}, size });
+		geo_ = Geometry::CreateRect(Rect{ Point{}, size });
 
 		if (geo_)
 		{
@@ -183,7 +183,7 @@ namespace kiwano
 
 	void RoundRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
 	{
-		Renderer::GetInstance()->CreateRoundedRectGeometry(geo_, Rect{ Point{}, size }, radius);
+		geo_ = Geometry::CreateRoundedRect(Rect{ Point{}, size }, radius);
 
 		if (geo_)
 		{
@@ -212,7 +212,7 @@ namespace kiwano
 
 	void CircleActor::SetRadius(float radius)
 	{
-		Renderer::GetInstance()->CreateEllipseGeometry(geo_, Point{}, Vec2{ radius, radius });
+		geo_ = Geometry::CreateCircle(Point{}, radius);
 
 		if (geo_)
 		{
@@ -240,7 +240,7 @@ namespace kiwano
 
 	void EllipseActor::SetRadius(Vec2 const& radius)
 	{
-		Renderer::GetInstance()->CreateEllipseGeometry(geo_, Point{}, radius);
+		geo_ = Geometry::CreateEllipse(Point{}, radius);
 
 		if (geo_)
 		{

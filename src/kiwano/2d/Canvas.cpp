@@ -161,7 +161,7 @@ namespace kiwano
 		return stroke_width_;
 	}
 
-	void Canvas::SetBrushTransform(Matrix const & transform)
+	void Canvas::SetBrushTransform(Matrix3x2 const & transform)
 	{
 		render_target_->SetTransform(DX::ConvertToMatrix3x2F(transform));
 	}

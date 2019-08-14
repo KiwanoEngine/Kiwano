@@ -201,13 +201,13 @@ namespace kiwano
 		EventDispatcher::Dispatch(evt);
 	}
 
-	Matrix const & Actor::GetTransformMatrix()  const
+	Matrix3x2 const & Actor::GetTransformMatrix()  const
 	{
 		UpdateTransform();
 		return transform_matrix_;
 	}
 
-	Matrix const & Actor::GetTransformInverseMatrix()  const
+	Matrix3x2 const & Actor::GetTransformInverseMatrix()  const
 	{
 		UpdateTransform();
 		if (dirty_transform_inverse_)
@@ -228,16 +228,16 @@ namespace kiwano
 
 		if (is_fast_transform_)
 		{
-			transform_matrix_ = Matrix::Translation(transform_.position);
+			transform_matrix_ = Matrix3x2::Translation(transform_.position);
 		}
 		else
 		{
 			// matrix multiplication is optimized by expression template
-            transform_matrix_ = Matrix::SRT(transform_.position, transform_.scale, transform_.rotation);
+            transform_matrix_ = Matrix3x2::SRT(transform_.position, transform_.scale, transform_.rotation);
 
             if (!transform_.skew.IsOrigin())
             {
-                transform_matrix_ = Matrix::Skewing(transform_.skew) * transform_matrix_;
+                transform_matrix_ = Matrix3x2::Skewing(transform_.skew) * transform_matrix_;
             }
 		}
 

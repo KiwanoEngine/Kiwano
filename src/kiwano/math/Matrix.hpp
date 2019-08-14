@@ -31,7 +31,7 @@ namespace kiwano
 		struct MatrixMultiply;
 
 		template <typename _Ty>
-		struct MatrixT
+		struct Matrix3x2T
 		{
 			using value_type = _Ty;
 			using vec2_type = Vec2T<value_type>;
@@ -53,25 +53,25 @@ namespace kiwano
 				};
 			};
 
-			MatrixT()
+			Matrix3x2T()
 				: _11(1.f), _12(0.f)
 				, _21(0.f), _22(1.f)
 				, _31(0.f), _32(0.f)
 			{
 			}
 
-			MatrixT(value_type _11, value_type _12, value_type _21, value_type _22, value_type _31, value_type _32)
+			Matrix3x2T(value_type _11, value_type _12, value_type _21, value_type _22, value_type _31, value_type _32)
 				: _11(_11), _12(_12), _21(_21), _22(_22), _31(_31), _32(_32)
 			{
 			}
 
-			explicit MatrixT(const value_type* p)
+			explicit Matrix3x2T(const value_type* p)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = p[i];
 			}
 
-			MatrixT(MatrixT const& other)
+			Matrix3x2T(Matrix3x2T const& other)
 				: _11(other._11), _12(other._12)
 				, _21(other._21), _22(other._22)
 				, _31(other._31), _32(other._32)
@@ -79,7 +79,7 @@ namespace kiwano
 			}
 
 			template <typename _MTy>
-			MatrixT(_MTy const& other)
+			Matrix3x2T(_MTy const& other)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = other[i];
@@ -95,7 +95,7 @@ namespace kiwano
 				return m[index];
 			}
 
-			inline MatrixT& operator= (MatrixT const& other)
+			inline Matrix3x2T& operator= (Matrix3x2T const& other)
 			{
 				for (int i = 0; i < 6; i++)
 					m[i] = other[i];
@@ -103,14 +103,14 @@ namespace kiwano
 			}
 
 			template <typename _Lty, typename _Rty>
-			inline MatrixT& operator= (MatrixMultiply<value_type, _Lty, _Rty> const& other)
+			inline Matrix3x2T& operator= (MatrixMultiply<value_type, _Lty, _Rty> const& other)
 			{
-				MatrixT result(other);
+				Matrix3x2T result(other);
 				(*this) = result;
 				return (*this);
 			}
 
-			inline MatrixT& operator*= (MatrixT const& other)
+			inline Matrix3x2T& operator*= (Matrix3x2T const& other)
 			{
 				return operator=((*this) * other);
 			}
@@ -129,10 +129,10 @@ namespace kiwano
 					_31 == 0.f && _32 == 0.f;
 			}
 
-			inline MatrixT Invert() const
+			inline Matrix3x2T Invert() const
 			{
 				value_type det = 1.f / Determinant();
-				return MatrixT(
+				return Matrix3x2T(
 					det * _22,
 					-det * _12,
 					-det * _21,
@@ -181,29 +181,29 @@ namespace kiwano
 				_32 += _12 * v.x + _22 * v.y;
 			}
 
-			static inline MatrixT Translation(const vec2_type& v)
+			static inline Matrix3x2T Translation(const vec2_type& v)
 			{
-				return MatrixT(
+				return Matrix3x2T(
 					1.f, 0.f,
 					0.f, 1.f,
 					v.x, v.y
 				);
 			}
 
-			static inline MatrixT Scaling(const vec2_type& v)
+			static inline Matrix3x2T Scaling(const vec2_type& v)
 			{
-				return MatrixT(
+				return Matrix3x2T(
 					v.x, 0.f,
 					0.f, v.y,
 					0.f, 0.f
 				);
 			}
 
-			static inline MatrixT Scaling(
+			static inline Matrix3x2T Scaling(
 				const vec2_type& v,
 				const vec2_type& center)
 			{
-				return MatrixT(
+				return Matrix3x2T(
 					v.x, 0.f,
 					0.f, v.y,
 					center.x - v.x * center.x,
@@ -211,24 +211,24 @@ namespace kiwano
 				);
 			}
 
-			static inline MatrixT Rotation(value_type angle)
+			static inline Matrix3x2T Rotation(value_type angle)
 			{
 				value_type s = math::Sin(angle);
 				value_type c = math::Cos(angle);
-				return MatrixT(
+				return Matrix3x2T(
 					c, s,
 					-s, c,
 					0.f, 0.f
 				);
 			}
 
-			static inline MatrixT Rotation(
+			static inline Matrix3x2T Rotation(
 				value_type angle,
 				const vec2_type& center)
 			{
 				value_type s = math::Sin(angle);
 				value_type c = math::Cos(angle);
-				return MatrixT(
+				return Matrix3x2T(
 					c, s,
 					-s, c,
 					center.x * (1 - c) + center.y * s,
@@ -236,35 +236,35 @@ namespace kiwano
 				);
 			}
 
-            static inline MatrixT SRT(const vec2_type& trans, const vec2_type& scale, value_type angle)
+            static inline Matrix3x2T SRT(const vec2_type& trans, const vec2_type& scale, value_type angle)
             {
                 value_type s = math::Sin(angle);
                 value_type c = math::Cos(angle);
-                return MatrixT(
+                return Matrix3x2T(
                     c * scale.x, s * scale.x,
                     -s * scale.y, c * scale.y,
                     trans.x, trans.y
                 );
             }
 
-			static inline MatrixT Skewing(const vec2_type& angle)
+			static inline Matrix3x2T Skewing(const vec2_type& angle)
 			{
 				value_type tx = math::Tan(angle.x);
 				value_type ty = math::Tan(angle.y);
-				return MatrixT(
+				return Matrix3x2T(
 					1.f, -ty,
 					-tx, 1.f,
 					0.f, 0.f
 				);
 			}
 
-			static inline MatrixT Skewing(
+			static inline Matrix3x2T Skewing(
 				const vec2_type& angle,
 				const vec2_type& center)
 			{
 				value_type tx = math::Tan(angle.x);
 				value_type ty = math::Tan(angle.y);
-				return MatrixT(
+				return Matrix3x2T(
 					1.f, -ty,
 					-tx, 1.f,
 					center.y * tx, center.x * ty
@@ -309,23 +309,23 @@ namespace kiwano
 
 		template <typename _Ty>
 		inline
-		MatrixMultiply<_Ty, MatrixT<_Ty>, MatrixT<_Ty>>
-		operator *(MatrixT<_Ty> const& lhs, MatrixT<_Ty> const& rhs)
+		MatrixMultiply<_Ty, Matrix3x2T<_Ty>, Matrix3x2T<_Ty>>
+		operator *(Matrix3x2T<_Ty> const& lhs, Matrix3x2T<_Ty> const& rhs)
 		{
-			return MatrixMultiply<_Ty, MatrixT<_Ty>, MatrixT<_Ty>>(lhs, rhs);
+			return MatrixMultiply<_Ty, Matrix3x2T<_Ty>, Matrix3x2T<_Ty>>(lhs, rhs);
 		}
 
 		template <typename _Ty, typename _Lty, typename _Rty>
 		inline
-		MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, MatrixT<_Ty>>
-		operator *(MatrixMultiply<_Ty, _Lty, _Rty> const& lhs, MatrixT<_Ty> const& rhs)
+		MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, Matrix3x2T<_Ty>>
+		operator *(MatrixMultiply<_Ty, _Lty, _Rty> const& lhs, Matrix3x2T<_Ty> const& rhs)
 		{
-			return MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, MatrixT<_Ty>>(lhs, rhs);
+			return MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, Matrix3x2T<_Ty>>(lhs, rhs);
 		}
 	}
 }
 
 namespace kiwano
 {
-	using Matrix = kiwano::math::MatrixT<float>;
+	using Matrix3x2 = kiwano::math::Matrix3x2T<float>;
 }

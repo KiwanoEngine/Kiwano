@@ -86,7 +86,6 @@ namespace kiwano
 				target->SetRotation(rotation);
 			}
 		}
-		KGE_LOG(L"%.2f, %.2f", target->GetPositionX(), target->GetPositionY());
 	}
 
 	void ActionWalk::BeginPath()
