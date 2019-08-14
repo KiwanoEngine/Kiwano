@@ -20,7 +20,7 @@
 
 #include "Button.h"
 #include "../2d/Stage.h"
-#include "../base/window.h"
+#include "../base/Window.h"
 
 namespace kiwano
 {
@@ -32,10 +32,10 @@ namespace kiwano
 	{
 		SetResponsible(true);
 
-		AddListener(Event::MouseHover, MakeClosure(this, &Button::UpdateStatus));
-		AddListener(Event::MouseOut, MakeClosure(this, &Button::UpdateStatus));
-		AddListener(Event::MouseBtnDown, MakeClosure(this, &Button::UpdateStatus));
-		AddListener(Event::MouseBtnUp, MakeClosure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseHover, bind_func(this, &Button::UpdateStatus));
+		AddListener(Event::MouseOut, bind_func(this, &Button::UpdateStatus));
+		AddListener(Event::MouseBtnDown, bind_func(this, &Button::UpdateStatus));
+		AddListener(Event::MouseBtnUp, bind_func(this, &Button::UpdateStatus));
 	}
 
 	Button::Button(const Callback& click)
@@ -112,7 +112,7 @@ namespace kiwano
 			if (evt.type == Event::MouseHover)
 			{
 				SetStatus(Status::Hover);
-				Window::Instance()->SetMouseCursor(MouseCursor::Hand);
+				Window::GetInstance()->SetMouseCursor(MouseCursor::Hand);
 
 				if (mouse_over_callback_)
 					mouse_over_callback_();
@@ -120,7 +120,7 @@ namespace kiwano
 			else if (evt.type == Event::MouseOut)
 			{
 				SetStatus(Status::Normal);
-				Window::Instance()->SetMouseCursor(MouseCursor::Arrow);
+				Window::GetInstance()->SetMouseCursor(MouseCursor::Arrow);
 
 				if (mouse_out_callback_)
 					mouse_out_callback_();

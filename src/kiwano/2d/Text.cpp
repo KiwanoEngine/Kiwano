@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include "Text.h"
-#include "../base/logs.h"
-#include "../renderer/render.h"
+#include "../base/Logger.h"
+#include "../renderer/Renderer.h"
 
 namespace kiwano
 {
@@ -297,14 +297,14 @@ namespace kiwano
 		style_.outline_stroke = outline_stroke;
 	}
 
-	void Text::OnRender()
+	void Text::OnRender(Renderer* renderer)
 	{
 		UpdateLayout();
 
-		if (text_layout_)
+		if (text_layout_ && renderer->CheckVisibility(layout_size_, transform_matrix_))
 		{
-            auto renderer = Renderer::Instance();
-            renderer->SetTextStyle(
+			PrepareRender(renderer);
+			renderer->SetTextStyle(
 				GetDisplayedOpacity(),
 				style_.color,
 				style_.outline,
@@ -328,7 +328,7 @@ namespace kiwano
 		if (text_.empty())
 			return;
 
-        auto renderer = Renderer::Instance();
+        auto renderer = Renderer::GetInstance();
 
 		ThrowIfFailed(
             renderer->GetD2DDeviceResources()->CreateTextFormat(

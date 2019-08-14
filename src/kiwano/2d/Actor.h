@@ -21,13 +21,14 @@
 #pragma once
 #include "include-forwards.h"
 #include "Transform.hpp"
-#include "ActionManager.h"
+#include "action/ActionManager.h"
 #include "../base/TimerManager.h"
 #include "../base/EventDispatcher.h"
 
 namespace kiwano
 {
 	class Director;
+	class Renderer;
 
 	// 角色
 	class KGE_API Actor
@@ -35,14 +36,14 @@ namespace kiwano
 		, public TimerManager
 		, public ActionManager
 		, public EventDispatcher
-		, public IntrusiveListItem<ActorPtr>
+		, public intrusive_list_item<ActorPtr>
 	{
 		friend class Director;
 		friend class Transition;
-		friend class IntrusiveList<ActorPtr>;
+		friend class intrusive_list<ActorPtr>;
 
-		using Children = IntrusiveList<ActorPtr>;
-		using UpdateCallback = Closure<void(Duration)>;
+		using Children = intrusive_list<ActorPtr>;
+		using UpdateCallback = Function<void(Duration)>;
 
 	public:
 		Actor();
@@ -51,7 +52,7 @@ namespace kiwano
 		virtual void OnUpdate(Duration dt) { KGE_UNUSED(dt); }
 
 		// 渲染角色
-		virtual void OnRender() {}
+		virtual void OnRender(Renderer* renderer) { KGE_UNUSED(renderer); }
 
 		// 获取显示状态
 		bool IsVisible()				const	{ return visible_; }
@@ -77,7 +78,7 @@ namespace kiwano
 		// 获取 y 坐标
 		float GetPositionY()			const	{ return transform_.position.y; }
 
-		// 获取横向缩放比例
+		// 获取缩放比例
 		Point GetScale()				const	{ return transform_.scale; }
 
 		// 获取横向缩放比例
@@ -135,16 +136,16 @@ namespace kiwano
 		Transform GetTransform()		const	{ return transform_; }
 
 		// 获取边框
-		Rect GetBounds() const;
+		virtual Rect GetBounds() const;
 
 		// 获取外切包围盒
-		Rect GetBoundingBox() const;
+		virtual Rect GetBoundingBox() const;
 
 		// 获取二维变换矩阵
-		Matrix const& GetTransformMatrix()  const;
+		Matrix3x2 const& GetTransformMatrix()  const;
 
 		// 获取二维变换的逆矩阵
-		Matrix const& GetTransformInverseMatrix()  const;
+		Matrix3x2 const& GetTransformInverseMatrix()  const;
 
 		// 获取父角色
 		inline Actor* GetParent() const { return parent_; }
@@ -342,11 +343,11 @@ namespace kiwano
 
 		// 添加多个子角色
 		void AddChildren(
-			Array<ActorPtr> const& children
+			Vector<ActorPtr> const& children
 		);
 
 		// 获取所有名称相同的子角色
-		Array<ActorPtr> GetChildren(
+		Vector<ActorPtr> GetChildren(
 			String const& name
 		) const;
 
@@ -379,6 +380,9 @@ namespace kiwano
 		// 从父角色移除
 		void RemoveFromParent();
 
+		// 事件分发
+		void Dispatch(Event& evt) override;
+
 		// 暂停角色更新
 		inline void PauseUpdating()									{ update_pausing_ = true; }
 
@@ -403,16 +407,12 @@ namespace kiwano
 			float anchor_y
 		);
 
-	public:
-		// 事件分发
-		void Dispatch(Event& evt) override;
-
 	protected:
-		virtual void PrepareRender() {}
-
 		virtual void Update(Duration dt);
 
-		virtual void Render();
+		virtual void Render(Renderer* renderer);
+
+		void PrepareRender(Renderer* renderer);
 
 		void RenderBorder();
 
@@ -447,17 +447,8 @@ namespace kiwano
 		bool			is_fast_transform_;
 		mutable bool	dirty_transform_;
 		mutable bool	dirty_transform_inverse_;
-		mutable Matrix	transform_matrix_;
-		mutable Matrix	transform_matrix_inverse_;
-	};
-
-
-	// 可视化角色
-	class KGE_API VisualNode
-		: public Actor
-	{
-	public:
-		virtual void PrepareRender() override;
+		mutable Matrix3x2	transform_matrix_;
+		mutable Matrix3x2	transform_matrix_inverse_;
 	};
 
 }

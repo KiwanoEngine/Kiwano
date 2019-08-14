@@ -70,16 +70,14 @@ namespace kiwano
 			_In_ ComPtr<ID2D1Bitmap1> const& target
 		) = 0;
 
-		virtual void ClearImageCache() = 0;
-
 		virtual void DiscardResources() = 0;
 
-		inline ID2D1Factory1*			GetFactory() const				{ KGE_ASSERT(factory_); return factory_.Get(); }
-		inline IWICImagingFactory*		GetWICImagingFactory() const	{ KGE_ASSERT(imaging_factory_); return imaging_factory_.Get(); }
-		inline IDWriteFactory*			GetDWriteFactory() const		{ KGE_ASSERT(dwrite_factory_); return dwrite_factory_.Get(); }
-		inline ID2D1Device*				GetDevice() const				{ KGE_ASSERT(device_); return device_.Get(); }
-		inline ID2D1DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.Get(); }
-		inline ID2D1Bitmap1*			GetTargetBitmap() const			{ KGE_ASSERT(target_bitmap_); return target_bitmap_.Get(); }
+		inline ID2D1Factory1*			GetFactory() const				{ KGE_ASSERT(factory_); return factory_.get(); }
+		inline IWICImagingFactory*		GetWICImagingFactory() const	{ KGE_ASSERT(imaging_factory_); return imaging_factory_.get(); }
+		inline IDWriteFactory*			GetDWriteFactory() const		{ KGE_ASSERT(dwrite_factory_); return dwrite_factory_.get(); }
+		inline ID2D1Device*				GetDevice() const				{ KGE_ASSERT(device_); return device_.get(); }
+		inline ID2D1DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.get(); }
+		inline ID2D1Bitmap1*			GetTargetBitmap() const			{ KGE_ASSERT(target_bitmap_); return target_bitmap_.get(); }
 
 	protected:
 		ComPtr<ID2D1Factory1>		factory_;

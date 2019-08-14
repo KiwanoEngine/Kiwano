@@ -19,79 +19,77 @@
 // THE SOFTWARE.
 
 #include "Sprite.h"
-#include "../renderer/render.h"
+#include "../renderer/Renderer.h"
 
 namespace kiwano
 {
 	Sprite::Sprite()
-		: image_(nullptr)
+		: frame_(nullptr)
 	{
-	}
-
-	Sprite::Sprite(ImagePtr image)
-		: image_(nullptr)
-	{
-		Load(image);
 	}
 
 	Sprite::Sprite(Resource const& res)
-		: image_(nullptr)
+		: frame_(nullptr)
 	{
 		Load(res);
 	}
 
 	Sprite::Sprite(Resource const& res, const Rect& crop_rect)
-		: image_(nullptr)
+		: frame_(nullptr)
 	{
 		Load(res);
 		Crop(crop_rect);
+	}
+
+	Sprite::Sprite(FramePtr frame)
+		: frame_(nullptr)
+	{
+		SetFrame(frame);
 	}
 
 	Sprite::~Sprite()
 	{
 	}
 
-	bool Sprite::Load(ImagePtr image)
-	{
-		if (image && image_ != image)
-		{
-			image_ = image;
-
-			Actor::SetSize(image_->GetWidth(), image_->GetHeight());
-			return true;
-		}
-		return false;
-	}
-
 	bool Sprite::Load(Resource const& res)
 	{
-		ImagePtr image = new (std::nothrow) Image;
-		if (image->Load(res))
+		FramePtr frame = new (std::nothrow) Frame;
+		if (frame->Load(res))
 		{
-			return Load(image);
+			SetFrame(frame);
+			return true;
 		}
 		return false;
 	}
 
 	void Sprite::Crop(const Rect& crop_rect)
 	{
-		image_->Crop(crop_rect);
-		Actor::SetSize(
-			std::min(std::max(crop_rect.size.x, 0.f), image_->GetSourceWidth() - image_->GetCropX()),
-			std::min(std::max(crop_rect.size.y, 0.f), image_->GetSourceHeight() - image_->GetCropY())
-		);
-	}
-
-	ImagePtr Sprite::GetImage() const
-	{
-		return image_;
-	}
-
-	void Sprite::OnRender()
-	{
-		if (image_)
+		if (frame_)
 		{
-			Renderer::Instance()->DrawImage(image_, GetBounds());
+			frame_->Crop(crop_rect);
+			SetSize(frame_->GetWidth(), frame_->GetHeight());
+		}
+	}
+
+	void Sprite::SetFrame(FramePtr frame)
+	{
+		if (frame_ != frame)
+		{
+			frame_ = frame;
+			if (frame_)
+			{
+				SetSize(frame_->GetWidth(), frame_->GetHeight());
+			}
+		}
+	}
+
+	void Sprite::OnRender(Renderer* renderer)
+	{
+		if (frame_ && renderer->CheckVisibility(size_, transform_matrix_))
+		{
+			PrepareRender(renderer);
+
+			renderer->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
 		}
 	}
 }

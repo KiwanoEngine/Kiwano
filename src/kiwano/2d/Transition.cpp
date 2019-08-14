@@ -21,9 +21,9 @@
 #include "Transition.h"
 #include "Actor.h"
 #include "Stage.h"
-#include "../base/window.h"
-#include "../base/logs.h"
-#include "../renderer/render.h"
+#include "../base/Window.h"
+#include "../base/Logger.h"
+#include "../renderer/Renderer.h"
 
 namespace kiwano
 {
@@ -65,19 +65,15 @@ namespace kiwano
 
 		if (in_scene_)
 		{
-			ThrowIfFailed(
-				Renderer::Instance()->CreateLayer(in_layer_)
-			);
+			Renderer::GetInstance()->CreateLayer(in_layer_);
 		}
 
 		if (out_scene_)
 		{
-			ThrowIfFailed(
-				Renderer::Instance()->CreateLayer(out_layer_)
-			);
+			Renderer::GetInstance()->CreateLayer(out_layer_);
 		}
 
-		window_size_ = Renderer::Instance()->GetOutputSize();
+		window_size_ = Renderer::GetInstance()->GetOutputSize();
 		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
 	}
 
@@ -99,10 +95,8 @@ namespace kiwano
 		}
 	}
 
-	void Transition::Render()
+	void Transition::Render(Renderer* renderer)
 	{
-		auto renderer = Renderer::Instance();
-
 		if (out_scene_)
 		{
 			renderer->PushClip(
@@ -111,7 +105,7 @@ namespace kiwano
 			);
 			renderer->PushLayer(out_layer_, out_layer_prop_);
 
-			out_scene_->Render();
+			out_scene_->Render(renderer);
 
 			renderer->PopLayer();
 			renderer->PopClip();
@@ -125,7 +119,7 @@ namespace kiwano
 			);
 			renderer->PushLayer(in_layer_, in_layer_prop_);
 
-			in_scene_->Render();
+			in_scene_->Render(renderer);
 
 			renderer->PopLayer();
 			renderer->PopClip();

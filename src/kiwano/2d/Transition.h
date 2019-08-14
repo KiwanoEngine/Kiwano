@@ -25,6 +25,7 @@
 namespace kiwano
 {
 	class Director;
+	class Renderer;
 
 	// ÎèÌ¨¹ý¶É
 	class KGE_API Transition
@@ -49,7 +50,7 @@ namespace kiwano
 
 		virtual void Update(Duration dt);
 
-		virtual void Render();
+		virtual void Render(Renderer* renderer);
 
 		virtual void Stop();
 

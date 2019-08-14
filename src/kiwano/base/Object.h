@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../macros.h"
-#include "../common/helper.h"
+#include "../core/core.h"
 #include "RefCounter.hpp"
 #include "SmartPtr.hpp"
 
@@ -60,7 +60,7 @@ namespace kiwano
 		static void DumpTracingObjects();
 
 	public:
-		static Array<Object*>& __GetTracingObjects();
+		static Vector<Object*>& __GetTracingObjects();
 
 		static void __AddObjectToTracingList(Object*);
 

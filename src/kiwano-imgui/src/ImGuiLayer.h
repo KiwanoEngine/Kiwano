@@ -27,7 +27,7 @@ namespace kiwano
 	{
 		KGE_DECLARE_SMART_PTR(ImGuiLayer);
 
-		using ImGuiPipeline = Closure<void()>;
+		using ImGuiPipeline = Function<void()>;
 
 		class ImGuiLayer
 			: public Layer
@@ -52,7 +52,7 @@ namespace kiwano
 			void RemoveAllItems();
 
 		public:
-			void OnRender() override;
+			void OnRender(Renderer* renderer) override;
 
 		protected:
 			Map<String, ImGuiPipeline> pipelines_;

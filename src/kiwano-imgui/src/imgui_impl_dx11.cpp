@@ -1,6 +1,6 @@
 // dear imgui: Renderer for Kiwano (DirectX11)
 
-#include <kiwano/base/logs.h>
+#include <kiwano/base/Logger.h>
 #include "imgui_impl_dx11.h"
 
 // DirectX
@@ -36,7 +36,7 @@ struct VERTEX_CONSTANT_BUFFER
     float   mvp[4][4];
 };
 
-// Render function
+// Render Function
 // (this used to be set in io.RenderDrawListsFn and called by ImGui::Render(), but you can now call this directly from your main loop)
 void ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data)
 {

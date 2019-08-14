@@ -20,23 +20,19 @@
 
 #pragma once
 #include "Color.h"
-#include "../common/helper.h"
-#include "../common/ComPtr.hpp"
-#include "../common/Closure.hpp"
-#include "../common/Singleton.hpp"
-#include "../common/IntrusiveList.hpp"
+#include "../core/core.h"
 #include "../base/time.h"
 #include "../base/RefCounter.hpp"
 #include "../base/SmartPtr.hpp"
+#include "../base/ComPtr.hpp"
 #include "../base/Object.h"
 #include "../math/helper.h"
 #include "../base/types.h"
 
 namespace kiwano
 {
-	KGE_DECLARE_SMART_PTR(Image);
-	KGE_DECLARE_SMART_PTR(GifImage);
-	KGE_DECLARE_SMART_PTR(Frames);
+	KGE_DECLARE_SMART_PTR(Frame);
+	KGE_DECLARE_SMART_PTR(FrameSequence);
 
 	KGE_DECLARE_SMART_PTR(Actor);
 	KGE_DECLARE_SMART_PTR(Stage);
@@ -45,13 +41,13 @@ namespace kiwano
 	KGE_DECLARE_SMART_PTR(GifSprite);
 	KGE_DECLARE_SMART_PTR(Text);
 	KGE_DECLARE_SMART_PTR(Canvas);
-	KGE_DECLARE_SMART_PTR(ShapeNode);
-	KGE_DECLARE_SMART_PTR(LineNode);
-	KGE_DECLARE_SMART_PTR(RectNode);
-	KGE_DECLARE_SMART_PTR(RoundedRectNode);
-	KGE_DECLARE_SMART_PTR(CircleNode);
-	KGE_DECLARE_SMART_PTR(EllipseNode);
-	KGE_DECLARE_SMART_PTR(PathNode);
+	KGE_DECLARE_SMART_PTR(ShapeActor);
+	KGE_DECLARE_SMART_PTR(LineActor);
+	KGE_DECLARE_SMART_PTR(RectActor);
+	KGE_DECLARE_SMART_PTR(RoundRectActor);
+	KGE_DECLARE_SMART_PTR(CircleActor);
+	KGE_DECLARE_SMART_PTR(EllipseActor);
+	KGE_DECLARE_SMART_PTR(PathActor);
 
 	KGE_DECLARE_SMART_PTR(Action);
 	KGE_DECLARE_SMART_PTR(ActionTween);
@@ -66,7 +62,7 @@ namespace kiwano
 	KGE_DECLARE_SMART_PTR(ActionFadeOut);
 	KGE_DECLARE_SMART_PTR(ActionRotateBy);
 	KGE_DECLARE_SMART_PTR(ActionRotateTo);
-	KGE_DECLARE_SMART_PTR(ActionPath);
+	KGE_DECLARE_SMART_PTR(ActionWalk);
 	KGE_DECLARE_SMART_PTR(Animation);
 	KGE_DECLARE_SMART_PTR(ActionGroup);
 	KGE_DECLARE_SMART_PTR(ActionSpawn);

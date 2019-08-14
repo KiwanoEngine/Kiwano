@@ -110,8 +110,6 @@ static const int TIXML2_PATCH_VERSION = 1;
 #define TINYXML2_STR(STR) (L##STR)
 #define TINYXML2_CHAR(CH) (L##CH)
 
-#include "../../common/String.hpp"
-
 // A fixed element depth limit is problematic. There needs to be a
 // limit to avoid a stack overflow. However, that limit varies per
 // system, and the capacity of the stack. On the other hand, it's a trivial

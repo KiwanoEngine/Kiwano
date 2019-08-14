@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include "Stage.h"
-#include "../base/logs.h"
-#include "../renderer/render.h"
+#include "../base/Logger.h"
+#include "../renderer/Renderer.h"
 
 namespace kiwano
 {
@@ -29,7 +29,7 @@ namespace kiwano
 		stage_ = this;
 
 		SetAnchor(0, 0);
-		SetSize(Renderer::Instance()->GetOutputSize());
+		SetSize(Renderer::GetInstance()->GetOutputSize());
 	}
 
 	Stage::~Stage()

@@ -20,11 +20,12 @@
 
 #include "Application.h"
 #include "modules.h"
-#include "../base/window.h"
-#include "../base/logs.h"
+#include "../base/Window.h"
+#include "../base/Logger.h"
 #include "../base/input.h"
 #include "../base/Director.h"
-#include "../renderer/render.h"
+#include "../renderer/Renderer.h"
+#include "../utils/ResourceCache.h"
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext
 #include <mutex>  // std::mutex
@@ -35,7 +36,7 @@ namespace kiwano
 {
 	namespace
 	{
-		using FunctionToPerform = Closure<void()>;
+		using FunctionToPerform = Function<void()>;
 
 		std::mutex				 perform_mutex_;
 		Queue<FunctionToPerform> functions_to_perform_;
@@ -64,9 +65,9 @@ namespace kiwano
 			::CoInitialize(nullptr)
 		);
 
-		Use(Renderer::Instance());
-		Use(Input::Instance());
-		Use(Director::Instance());
+		Use(Renderer::GetInstance());
+		Use(Input::GetInstance());
+		Use(Director::GetInstance());
 	}
 
 	Application::~Application()
@@ -79,7 +80,7 @@ namespace kiwano
 	void Application::Init(const Options& options)
 	{
 		ThrowIfFailed(
-			Window::Instance()->Create(
+			Window::GetInstance()->Create(
 				options.title,
 				options.width,
 				options.height,
@@ -89,8 +90,8 @@ namespace kiwano
 			)
 		);
 
-		Renderer::Instance()->SetClearColor(options.clear_color);
-		Renderer::Instance()->SetVSyncEnabled(options.vsync);
+		Renderer::GetInstance()->SetClearColor(options.clear_color);
+		Renderer::GetInstance()->SetVSyncEnabled(options.vsync);
 
 		// Setup all components
 		for (Component* c : components_)
@@ -100,14 +101,14 @@ namespace kiwano
 
 		if (options.debug)
 		{
-			Director::Instance()->ShowDebugInfo(true);
-			Renderer::Instance()->SetCollectingStatus(true);
+			Director::GetInstance()->ShowDebugInfo(true);
+			Renderer::GetInstance()->SetCollectingStatus(true);
 		}
 
 		// Everything is ready
 		OnReady();
 
-		HWND hwnd = Window::Instance()->GetHandle();
+		HWND hwnd = Window::GetInstance()->GetHandle();
 
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
@@ -120,15 +121,15 @@ namespace kiwano
 
 	void Application::Run()
 	{
-		HWND hwnd = Window::Instance()->GetHandle();
+		HWND hwnd = Window::GetInstance()->GetHandle();
 
-		if (!hwnd)
+		if (!inited_)
 			throw std::exception("Calling Application::Run before Application::Init");
 
 		if (hwnd)
 		{
 			end_ = false;
-			Window::Instance()->Prepare();
+			Window::GetInstance()->Prepare();
 
 			MSG msg = {};
 			while (::GetMessageW(&msg, nullptr, 0, 0) && !end_)
@@ -146,6 +147,9 @@ namespace kiwano
 
 	void Application::Destroy()
 	{
+		// Clear all stages
+		Director::GetInstance()->ClearStages();
+
 		if (inited_)
 		{
 			inited_ = false;
@@ -158,13 +162,14 @@ namespace kiwano
 		}
 
 		// Destroy all instances
-		Director::Destroy();
-		Input::Destroy();
-		Renderer::Destroy();
-		Window::Destroy();
+		Director::DestroyInstance();
+		ResourceCache::DestroyInstance();
+		Input::DestroyInstance();
+		Renderer::DestroyInstance();
+		Window::DestroyInstance();
 
 		// DO NOT destroy Logger instance manually
-		// Logger::Destroy();
+		// Logger::DestroyInstance();
 	}
 
 	void Application::Use(Component* component)
@@ -262,9 +267,10 @@ namespace kiwano
 		}
 
 		// Rendering
+		Renderer* renderer = Renderer::GetInstance();
 		for (Component* c : components_)
 		{
-			c->OnRender();
+			c->OnRender(renderer);
 		}
 
 		// After render
@@ -282,10 +288,10 @@ namespace kiwano
 		}
 	}
 
-	void Application::PreformInMainThread(Closure<void()> function)
+	void Application::PreformInMainThread(Function<void()> Function)
 	{
 		std::lock_guard<std::mutex> lock(perform_mutex_);
-		functions_to_perform_.push(function);
+		functions_to_perform_.push(Function);
 	}
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -379,7 +385,7 @@ namespace kiwano
 			{
 				KGE_LOG(L"Window resized");
 
-				Window::Instance()->UpdateWindowRect();
+				Window::GetInstance()->UpdateWindowRect();
 
 				Event evt(Event::WindowResized);
 				evt.win.width = LOWORD(lparam);
@@ -405,7 +411,7 @@ namespace kiwano
 		{
 			bool active = (LOWORD(wparam) != WA_INACTIVE);
 
-			Window::Instance()->SetActive(active);
+			Window::GetInstance()->SetActive(active);
 
 			Event evt(Event::WindowFocusChanged);
 			evt.win.focus = active;

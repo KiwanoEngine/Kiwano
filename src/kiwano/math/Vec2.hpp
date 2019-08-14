@@ -33,7 +33,7 @@ namespace kiwano
 			value_type x;
 			value_type y;
 
-			Vec2T() : x(0.f), y(0.f) {}
+			Vec2T() : x(value_type(0)), y(value_type(0)) {}
 
 			Vec2T(value_type x, value_type y) : x(x), y(y) {}
 
@@ -41,7 +41,7 @@ namespace kiwano
 
 			inline value_type Length() const
 			{
-				return math::Sqrt(x * x + y * y);
+				return static_cast<value_type>(math::Sqrt(static_cast<float>(x * x + y * y)));
 			}
 
 			inline bool IsOrigin() const

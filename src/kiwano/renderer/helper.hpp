@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../common/ComPtr.hpp"
+#include "../base/ComPtr.hpp"
 #include "../math/helper.h"
 #include "../2d/Color.h"
 #include <d2d1.h>
@@ -122,22 +122,22 @@ namespace kiwano
 		// SizeF
 		//
 
-		inline D2D1_MATRIX_3X2_F const& ConvertToMatrix3x2F(Matrix const& matrix)
+		inline D2D1_MATRIX_3X2_F const& ConvertToMatrix3x2F(Matrix3x2 const& matrix)
 		{
 			return reinterpret_cast<D2D1_MATRIX_3X2_F const&>(matrix);
 		}
 
-		inline D2D1_MATRIX_3X2_F& ConvertToMatrix3x2F(Matrix& matrix)
+		inline D2D1_MATRIX_3X2_F& ConvertToMatrix3x2F(Matrix3x2& matrix)
 		{
 			return reinterpret_cast<D2D1_MATRIX_3X2_F&>(matrix);
 		}
 
-		inline const D2D1_MATRIX_3X2_F* ConvertToMatrix3x2F(const Matrix* matrix)
+		inline const D2D1_MATRIX_3X2_F* ConvertToMatrix3x2F(const Matrix3x2* matrix)
 		{
 			return reinterpret_cast<const D2D1_MATRIX_3X2_F*>(matrix);
 		}
 
-		inline D2D1_MATRIX_3X2_F* ConvertToMatrix3x2F(Matrix* matrix)
+		inline D2D1_MATRIX_3X2_F* ConvertToMatrix3x2F(Matrix3x2* matrix)
 		{
 			return reinterpret_cast<D2D1_MATRIX_3X2_F*>(matrix);
 		}

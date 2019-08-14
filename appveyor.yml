@@ -2,8 +2,14 @@ version: 0.9.{build}
 
 skip_tags: true
 
+# fetch repository as zip archive
+shallow_clone: true
+
 # pull_requests:
 #   do_not_increment_build_number: true
+
+# Do not build feature branch with open Pull Requests
+# skip_branch_with_pr: true
 
 # image:
 # - Visual Studio 2019
@@ -11,11 +17,12 @@ skip_tags: true
 # - Visual Studio 2015
 
 environment:
-  time_out_mins: 5
-  job_to_deploy: 6 # 3(images) * 1(platform) * 2(configuration)
-  flag_to_deploy: false
-  APPVEYOR_API_TOKEN:
-    secure: UJFCbRNHMOqQg3e3Kv/ZnaIqqwXAt+5HDldetaZsZ5E=
+  global:
+    time_out_mins: 5
+    job_to_deploy: 6 # 3(images) * 1(platform) * 2(configuration)
+    flag_to_deploy: false
+    appveyor_api_token:
+      secure: UJFCbRNHMOqQg3e3Kv/ZnaIqqwXAt+5HDldetaZsZ5E=
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       VS_PLATFORM_TOOLSET: v142
@@ -23,6 +30,12 @@ environment:
       VS_PLATFORM_TOOLSET: v141
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       VS_PLATFORM_TOOLSET: v140
+
+matrix:
+  fast_finish: true # set this flag to immediately finish build once one of the jobs fails
+  # allow_failures:
+  #   - platform: x86
+  #     configuration: Debug
 
 skip_commits:
   message: /\[chore\]/
@@ -33,14 +46,6 @@ only_commits:
     - src/
     - scripts/**/*.ps1
     - appveyor.yml
-
-for:
--
-  branches:
-    except:
-      - master
-  only_commits:
-    message: /\[build\]/
 
 configuration:
 - Debug
@@ -62,8 +67,19 @@ build:
   project: projects/Kiwano.sln
   verbosity: minimal
 
-after_build:
-- ps: .\scripts\appveyor\wait_for_other_jobs.ps1
+for:
+-
+  branches:
+    except:
+      - master
+  only_commits:
+    message: /\[build\]/
+-
+  branches:
+    only:
+      - master
+  after_build:
+  - ps: .\scripts\appveyor\wait_for_other_jobs.ps1
 
 artifacts:
 - path: projects/output/**/*.lib

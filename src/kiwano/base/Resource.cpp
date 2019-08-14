@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Resource.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 
 namespace kiwano
 {
@@ -62,7 +62,7 @@ namespace kiwano
 	size_t Resource::GetHashCode() const
 	{
 		if (type_ == Type::File)
-			return std::hash<String>{}(GetFileName());
+			return GetFileName().hash();
 		return std::hash<LPCWSTR>{}(bin_name_);
 	}
 

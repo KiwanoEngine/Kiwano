@@ -27,7 +27,7 @@ namespace kiwano
 	{
 	}
 
-	Menu::Menu(Array<ButtonPtr> const& buttons)
+	Menu::Menu(Vector<ButtonPtr> const& buttons)
 		: enabled_(true)
 	{
 		for (const auto& button : buttons)
@@ -92,7 +92,7 @@ namespace kiwano
 		return false;
 	}
 
-	Array<ButtonPtr> const& Menu::GetAllButtons() const
+	Vector<ButtonPtr> const& Menu::GetAllButtons() const
 	{
 		return buttons_;
 	}

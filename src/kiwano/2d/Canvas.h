@@ -22,15 +22,18 @@
 #include "Actor.h"
 #include "Font.hpp"
 #include "TextStyle.hpp"
+#include "../renderer/Image.h"
 #include "../renderer/TextRenderer.h"
 
-#undef DrawText
+#ifdef DrawText
+#	undef DrawText
+#endif
 
 namespace kiwano
 {
 	// 画布
 	class KGE_API Canvas
-		: public VisualNode
+		: public Actor
 	{
 	public:
 		Canvas();
@@ -137,7 +140,7 @@ namespace kiwano
 
 		// 添加多条线段
 		void AddLines(
-			Array<Point> const& points
+			Vector<Point> const& points
 		);
 
 		// 添加一条三次方贝塞尔曲线
@@ -202,13 +205,13 @@ namespace kiwano
 
 		// 变换画笔
 		void SetBrushTransform(
-			Matrix const& transform
+			Matrix3x2 const& transform
 		);
 
 		// 导出为图片
 		ImagePtr ExportToImage() const;
 
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 	protected:
 		ComPtr<ID2D1Bitmap> const& GetBitmap() const;

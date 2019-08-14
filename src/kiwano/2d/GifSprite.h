@@ -21,16 +21,17 @@
 #pragma once
 #include "Actor.h"
 #include "../base/Resource.h"
-#include "../renderer/render.h"
+#include "../renderer/Renderer.h"
+#include "../renderer/GifImage.h"
 
 namespace kiwano
 {
 	class KGE_API GifSprite
-		: public VisualNode
+		: public Actor
 	{
 	public:
-		using LoopDoneCallback = Closure<void(int)>;
-		using DoneCallback = Closure<void()>;
+		using LoopDoneCallback = Function<void(int)>;
+		using DoneCallback = Function<void()>;
 
 		GifSprite();
 
@@ -66,7 +67,7 @@ namespace kiwano
 
 		inline DoneCallback GetDoneCallback() const					{ return done_cb_; }
 
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 	protected:
 		void Update(Duration dt) override;

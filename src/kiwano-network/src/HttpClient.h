@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/helper.h>
-#include <kiwano/common/Singleton.hpp>
+#include <kiwano/core/core.h>
+#include <kiwano/core/singleton.hpp>
 #include <kiwano/base/Component.h>
 #include <mutex>
 #include <condition_variable>

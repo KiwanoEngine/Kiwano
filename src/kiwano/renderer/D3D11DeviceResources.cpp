@@ -20,8 +20,7 @@
 
 #include "D3D11DeviceResources.h"
 
-#include "../2d/Image.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 #include <versionhelpers.h>  // IsWindows10OrGreater
 
 #pragma comment(lib, "d3d11.lib")
@@ -166,21 +165,21 @@ namespace kiwano
 	{
 		KGE_ASSERT(device_context_ != nullptr && rt_view_ != nullptr && ds_view_ != nullptr);
 
-		auto rt_view = rt_view_.Get();
-		device_context_->OMSetRenderTargets(1, &rt_view, ds_view_.Get());
+		auto rt_view = rt_view_.get();
+		device_context_->OMSetRenderTargets(1, &rt_view, ds_view_.get());
 		device_context_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
 		return S_OK;
 	}
 
 	void D3D11DeviceResources::DiscardResources()
 	{
-		d2d_res_.Reset();
-		device_.Reset();
-		device_context_.Reset();
-		rt_view_.Reset();
-		ds_view_.Reset();
-		dxgi_swap_chain_.Reset();
-		dxgi_factory_.Reset();
+		d2d_res_.reset();
+		device_.reset();
+		device_context_.reset();
+		rt_view_.reset();
+		ds_view_.reset();
+		dxgi_swap_chain_.reset();
+		dxgi_factory_.reset();
 
 		hwnd_ = nullptr;
 	}
@@ -279,7 +278,7 @@ namespace kiwano
 			// Create the Direct2D device object and a corresponding context.
 			if (SUCCEEDED(hr))
 			{
-				hr = d2d_res_->GetFactory()->CreateDevice(dxgi_device.Get(), &d2d_device);
+				hr = d2d_res_->GetFactory()->CreateDevice(dxgi_device.get(), &d2d_device);
 			}
 
 			if (SUCCEEDED(hr))
@@ -347,7 +346,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				hr = dxgi_factory->CreateSwapChain(
-					device_.Get(),
+					device_.get(),
 					&swap_chain_desc,
 					&dxgi_swap_chain_);
 			}
@@ -396,7 +395,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				rt_view_ = nullptr;
-				hr = device_->CreateRenderTargetView(dxgi_back_buffer.Get(), nullptr, &rt_view_);
+				hr = device_->CreateRenderTargetView(dxgi_back_buffer.get(), nullptr, &rt_view_);
 			}
 		}
 
@@ -419,14 +418,14 @@ namespace kiwano
 			{
 				CD3D11_DEPTH_STENCIL_VIEW_DESC desc(D3D11_DSV_DIMENSION_TEXTURE2D);
 
-				ds_view_.Reset();
-				hr = device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &ds_view_);
+				ds_view_.reset();
+				hr = device_->CreateDepthStencilView(depth_stencil.get(), &desc, &ds_view_);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				ID3D11RenderTargetView* main_view = rt_view_.Get();
-				device_context_->OMSetRenderTargets(1, &main_view, ds_view_.Get());
+				ID3D11RenderTargetView* main_view = rt_view_.get();
+				device_context_->OMSetRenderTargets(1, &main_view, ds_view_.get());
 			}
 		}
 
@@ -453,7 +452,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				hr = d2d_res_->GetDeviceContext()->CreateBitmapFromDxgiSurface(
-					dxgi_back_buffer.Get(),
+					dxgi_back_buffer.get(),
 					D2D1::BitmapProperties1(
 						D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
 						D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),

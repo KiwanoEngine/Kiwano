@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/base/Component.h>
-#include <kiwano/common/Singleton.hpp>
+#include <kiwano/core/singleton.hpp>
 
 namespace kiwano
 {

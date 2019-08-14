@@ -28,7 +28,7 @@ namespace kiwano
 {
 	// ÎÄ±¾
 	class KGE_API Text
-		: public VisualNode
+		: public Actor
 	{
 	public:
 		Text();
@@ -203,7 +203,7 @@ namespace kiwano
 			TextStyle const& style
 		);
 
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 	protected:
 		void UpdateLayout() const;

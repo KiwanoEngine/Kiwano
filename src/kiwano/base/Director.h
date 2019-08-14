@@ -20,7 +20,6 @@
 
 #pragma once
 #include "../macros.h"
-#include "../common/Singleton.hpp"
 #include "../2d/include-forwards.h"
 #include "Component.h"
 
@@ -54,6 +53,9 @@ namespace kiwano
 		// 显示调试信息
 		void ShowDebugInfo(bool show = true);
 
+		// 清空舞台
+		void ClearStages();
+
 	public:
 		void SetupComponent() override {}
 
@@ -61,7 +63,7 @@ namespace kiwano
 
 		void OnUpdate(Duration dt) override;
 
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 		void AfterRender() override;
 
@@ -76,7 +78,7 @@ namespace kiwano
 		bool			render_border_enabled_;
 		StagePtr		curr_scene_;
 		StagePtr		next_scene_;
-		ActorPtr			debug_node_;
+		ActorPtr		debug_actor_;
 		TransitionPtr	transition_;
 	};
 }

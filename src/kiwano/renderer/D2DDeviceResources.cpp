@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #include "D2DDeviceResources.h"
-#include "../2d/Image.h"
-#include "../base/logs.h"
-#include "../platform/modules.h"
+#include "ImageCache.h"
+#include "../base/Logger.h"
+#include "../utils/FileUtil.h"
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -73,9 +73,7 @@ namespace kiwano
 
 		ID2D1StrokeStyle* GetStrokeStyle(StrokeStyle stroke) const override;
 
-        void ClearImageCache() override;
-
-        void DiscardResources() override;
+		void DiscardResources() override;
 
 	public:
 		unsigned long STDMETHODCALLTYPE AddRef();
@@ -90,9 +88,6 @@ namespace kiwano
 	protected:
 		unsigned long ref_count_;
 		float dpi_;
-
-		using BitmapMap = UnorderedMap<size_t, ComPtr<ID2D1Bitmap>>;
-		BitmapMap bitmap_cache_;
 
 		ComPtr<ID2D1StrokeStyle>	d2d_miter_stroke_style_;
 		ComPtr<ID2D1StrokeStyle>	d2d_bevel_stroke_style_;
@@ -179,19 +174,19 @@ namespace kiwano
 
 	void D2DDeviceResources::DiscardResources()
 	{
-		ClearImageCache();
+		ImageCache::GetInstance()->Clear();
 
-		factory_.Reset();
-		device_.Reset();
-		device_context_.Reset();
-		target_bitmap_.Reset();
+		factory_.reset();
+		device_.reset();
+		device_context_.reset();
+		target_bitmap_.reset();
 
-		imaging_factory_.Reset();
-		dwrite_factory_.Reset();
+		imaging_factory_.reset();
+		dwrite_factory_.reset();
 
-		d2d_miter_stroke_style_.Reset();
-		d2d_bevel_stroke_style_.Reset();
-		d2d_round_stroke_style_.Reset();
+		d2d_miter_stroke_style_.reset();
+		d2d_bevel_stroke_style_.reset();
+		d2d_round_stroke_style_.reset();
 	}
 
 	HRESULT D2DDeviceResources::CreateDeviceIndependentResources()
@@ -320,7 +315,7 @@ namespace kiwano
 	{
 		target_bitmap_ = target;
 		if (device_context_)
-			device_context_->SetTarget(target_bitmap_.Get());
+			device_context_->SetTarget(target_bitmap_.get());
 	}
 
 	HRESULT D2DDeviceResources::CreateBitmapFromFile(_Out_ ComPtr<ID2D1Bitmap> & bitmap, _In_ String const & file_path)
@@ -328,11 +323,10 @@ namespace kiwano
 		if (!imaging_factory_ || !device_context_)
 			return E_UNEXPECTED;
 
-		size_t hash_code = std::hash<String>{}(file_path);
-		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
+		if (!FileUtil::ExistsFile(file_path))
 		{
-			bitmap = bitmap_cache_[hash_code];
-			return S_OK;
+			KGE_WARNING_LOG(L"Image file '%s' not found!", file_path.c_str());
+			return E_FAIL;
 		}
 
 		ComPtr<IWICBitmapDecoder>		decoder;
@@ -363,7 +357,7 @@ namespace kiwano
 		{
 			// 图片格式转换成 32bppPBGRA
 			hr = converter->Initialize(
-				source.Get(),
+				source.get(),
 				GUID_WICPixelFormat32bppPBGRA,
 				WICBitmapDitherTypeNone,
 				nullptr,
@@ -375,7 +369,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = device_context_->CreateBitmapFromWicBitmap(
-				converter.Get(),
+				converter.get(),
 				nullptr,
 				&bitmap_tmp
 			);
@@ -384,9 +378,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			bitmap = bitmap_tmp;
-			bitmap_cache_.insert(std::make_pair(hash_code, bitmap));
 		}
-
 		return hr;
 	}
 
@@ -394,13 +386,6 @@ namespace kiwano
 	{
 		if (!imaging_factory_ || !device_context_)
 			return E_UNEXPECTED;
-
-		size_t hash_code = res.GetHashCode();
-		if (bitmap_cache_.find(hash_code) != bitmap_cache_.end())
-		{
-			bitmap = bitmap_cache_[hash_code];
-			return S_OK;
-		}
 
 		ComPtr<IWICBitmapDecoder>		decoder;
 		ComPtr<IWICBitmapFrameDecode>	source;
@@ -429,7 +414,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = imaging_factory_->CreateDecoderFromStream(
-				stream.Get(),
+				stream.get(),
 				nullptr,
 				WICDecodeMetadataCacheOnLoad,
 				&decoder
@@ -450,7 +435,7 @@ namespace kiwano
 		{
 			// 图片格式转换成 32bppPBGRA
 			hr = converter->Initialize(
-				source.Get(),
+				source.get(),
 				GUID_WICPixelFormat32bppPBGRA,
 				WICBitmapDitherTypeNone,
 				nullptr,
@@ -462,7 +447,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = device_context_->CreateBitmapFromWicBitmap(
-				converter.Get(),
+				converter.get(),
 				nullptr,
 				&bitmap_tmp
 			);
@@ -471,9 +456,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			bitmap = bitmap_tmp;
-			bitmap_cache_.insert(std::make_pair(hash_code, bitmap));
 		}
-
 		return hr;
 	}
 
@@ -534,7 +517,7 @@ namespace kiwano
 			hr = dwrite_factory_->CreateTextLayout(
 				text.c_str(),
 				length,
-				text_format.Get(),
+				text_format.get(),
 				text_style.wrap_width,
 				0,
 				&text_layout_tmp
@@ -545,7 +528,7 @@ namespace kiwano
 			hr = dwrite_factory_->CreateTextLayout(
 				text.c_str(),
 				length,
-				text_format.Get(),
+				text_format.get(),
 				0,
 				0,
 				&text_layout_tmp
@@ -563,7 +546,7 @@ namespace kiwano
 				hr = dwrite_factory_->CreateTextLayout(
 					text.c_str(),
 					length,
-					text_format.Get(),
+					text_format.get(),
 					metrics.width,
 					0,
 					&text_layout_tmp
@@ -599,18 +582,13 @@ namespace kiwano
 		return hr;
 	}
 
-	void D2DDeviceResources::ClearImageCache()
-	{
-		bitmap_cache_.clear();
-	}
-
 	ID2D1StrokeStyle* D2DDeviceResources::GetStrokeStyle(StrokeStyle stroke) const
 	{
 		switch (stroke)
 		{
-		case StrokeStyle::Miter: return d2d_miter_stroke_style_.Get(); break;
-		case StrokeStyle::Bevel: return d2d_bevel_stroke_style_.Get(); break;
-		case StrokeStyle::Round: return d2d_round_stroke_style_.Get(); break;
+		case StrokeStyle::Miter: return d2d_miter_stroke_style_.get(); break;
+		case StrokeStyle::Bevel: return d2d_bevel_stroke_style_.get(); break;
+		case StrokeStyle::Round: return d2d_round_stroke_style_.get(); break;
 		}
 		return nullptr;
 	}

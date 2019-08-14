@@ -19,9 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../common/helper.h"
-#include "../common/Closure.hpp"
-#include "../common/IntrusiveList.hpp"
 #include "Object.h"
 #include "time.h"
 #include <functional>
@@ -35,12 +32,12 @@ namespace kiwano
     // 定时任务
 	class KGE_API Timer
 		: public Object
-		, protected IntrusiveListItem<TimerPtr>
+		, protected intrusive_list_item<TimerPtr>
 	{
 		friend class TimerManager;
-		friend class IntrusiveList<TimerPtr>;
+		friend class intrusive_list<TimerPtr>;
 
-		using Callback = Closure<void()>;
+		using Callback = Function<void()>;
 
 	public:
 		explicit Timer(

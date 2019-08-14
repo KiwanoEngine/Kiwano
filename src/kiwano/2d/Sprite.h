@@ -20,20 +20,16 @@
 
 #pragma once
 #include "Actor.h"
-#include "Image.h"
+#include "Frame.h"
 
 namespace kiwano
 {
 	// 精灵
 	class KGE_API Sprite
-		: public VisualNode
+		: public Actor
 	{
 	public:
 		Sprite();
-
-		explicit Sprite(
-			ImagePtr image
-		);
 
 		explicit Sprite(
 			Resource const& res
@@ -41,33 +37,35 @@ namespace kiwano
 
 		explicit Sprite(
 			Resource const& res,
-			const Rect& crop_rect	/* 裁剪矩形 */
+			Rect const& crop_rect	/* 裁剪矩形 */
+		);
+
+		explicit Sprite(
+			FramePtr frame
 		);
 
 		virtual ~Sprite();
 
-		// 加载图片文件
+		// 加载图像资源
 		bool Load(
 			Resource const& res
 		);
 
-		// 加载图片
-		bool Load(
-			ImagePtr image
-		);
-
-		// 将图片裁剪为矩形
+		// 裁剪矩形
 		void Crop(
-			const Rect& crop_rect	/* 裁剪矩形 */
+			const Rect& crop_rect
 		);
 
-		// 获取 Image 对象
-		ImagePtr GetImage() const;
+		// 获取帧图像
+		inline FramePtr GetFrame() const { return frame_; }
+
+		// 设置帧图像
+		void SetFrame(FramePtr frame);
 
 		// 渲染精灵
-		void OnRender() override;
+		void OnRender(Renderer* renderer) override;
 
 	protected:
-		ImagePtr image_;
+		FramePtr frame_;
 	};
 }

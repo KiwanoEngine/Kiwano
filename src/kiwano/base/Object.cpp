@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Object.h"
-#include "logs.h"
+#include "Logger.h"
 #include <typeinfo>
 
 namespace kiwano
@@ -27,7 +27,7 @@ namespace kiwano
 	namespace
 	{
 		bool tracing_leaks = false;
-		Array<Object*> tracing_objects;
+		Vector<Object*> tracing_objects;
 	}
 
 	unsigned int Object::last_object_id = 0;
@@ -120,7 +120,7 @@ namespace kiwano
 		KGE_LOG(L"------------------------- Total size: %d -------------------------", tracing_objects.size());
 	}
 
-	Array<Object*>& kiwano::Object::__GetTracingObjects()
+	Vector<Object*>& kiwano::Object::__GetTracingObjects()
 	{
 		return tracing_objects;
 	}

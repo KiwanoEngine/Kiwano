@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/logs.h>
+#include <kiwano/base/Logger.h>
 #include <kiwano/utils/FileUtil.h>
 #include "Sound.h"
 #include "audio.h"
@@ -81,7 +81,7 @@ namespace kiwano
 				return false;
 			}
 
-			hr = Audio::Instance()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
 			if (FAILED(hr))
 			{
 				if (wave_data_)

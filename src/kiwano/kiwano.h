@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-// Website: https://www.kiwano.cn
-// Source Code: https://github.com/kiwano/kiwano
+// Website: https://www.kiwanoengine.com
+// Source Code: https://github.com/KiwanoEngine/Kiwano
 //
 
 
@@ -29,19 +29,18 @@
 
 
 //
-// common
+// core
 //
 
-#include "common/Array.hpp"
-#include "common/String.hpp"
-#include "common/helper.h"
-#include "common/Closure.hpp"
-#include "common/IntrusiveList.hpp"
-#include "common/IntrusivePtr.hpp"
-#include "common/ComPtr.hpp"
-#include "common/Noncopyable.hpp"
-#include "common/Singleton.hpp"
-#include "common/Json.hpp"
+#include "core/vector.hpp"
+#include "core/string.hpp"
+#include "core/core.h"
+#include "core/Function.hpp"
+#include "core/intrusive_list.hpp"
+#include "core/intrusive_ptr.hpp"
+#include "core/noncopyable.hpp"
+#include "core/singleton.hpp"
+#include "core/basic_json.hpp"
 
 
 //
@@ -60,14 +59,18 @@
 // base
 //
 
+#include "renderer/Renderer.h"
+#include "renderer/Image.h"
+#include "renderer/GifImage.h"
+
 #include "base/time.h"
-#include "base/window.h"
+#include "base/Window.h"
 #include "base/input.h"
 #include "base/Director.h"
-#include "base/logs.h"
-#include "renderer/render.h"
-#include "platform/modules.h"
-#include "platform/Application.h"
+#include "base/Logger.h"
+
+#include "base/SmartPtr.hpp"
+#include "base/ComPtr.hpp"
 
 #include "base/Object.h"
 #include "base/Event.hpp"
@@ -83,15 +86,18 @@
 #include "2d/Transform.hpp"
 #include "2d/TextStyle.hpp"
 
-#include "2d/Image.h"
-#include "2d/GifImage.h"
-#include "2d/Frames.h"
-#include "2d/Action.h"
-#include "2d/ActionGroup.h"
-#include "2d/ActionTween.h"
-#include "2d/ActionHelper.h"
-#include "2d/Animation.h"
-#include "2d/ActionManager.h"
+#include "2d/Frame.h"
+#include "2d/FrameSequence.h"
+
+#include "2d/action/Action.h"
+#include "2d/action/ActionGroup.h"
+#include "2d/action/ActionTween.h"
+#include "2d/action/ActionWalk.h"
+#include "2d/action/ActionDelay.h"
+#include "2d/action/Animation.h"
+#include "2d/action/ActionHelper.h"
+#include "2d/action/ActionManager.h"
+
 #include "2d/Transition.h"
 
 #include "2d/Actor.h"
@@ -101,9 +107,11 @@
 #include "2d/GifSprite.h"
 #include "2d/Text.h"
 #include "2d/Canvas.h"
-#include "2d/ShapeNode.h"
-#include "2d/DebugNode.h"
+#include "2d/ShapeActor.h"
+#include "2d/DebugActor.h"
 
+#include "platform/modules.h"
+#include "platform/Application.h"
 
 //
 // utils
@@ -112,7 +120,7 @@
 #include "utils/Path.h"
 #include "utils/DataUtil.h"
 #include "utils/FileUtil.h"
-#include "utils/ResLoader.h"
+#include "utils/ResourceCache.h"
 
 
 //

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "input.h"
-#include "logs.h"
+#include "Logger.h"
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 
 namespace kiwano

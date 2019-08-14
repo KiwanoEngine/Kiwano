@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #include "GifSprite.h"
-#include "GifImage.h"
-#include "../base/logs.h"
+#include "../base/Logger.h"
 #include "../platform/modules.h"
 
 namespace kiwano
@@ -70,7 +69,7 @@ namespace kiwano
 
 			if (!frame_rt_)
 			{
-				auto ctx = Renderer::Instance()->GetD2DDeviceResources()->GetDeviceContext();
+				auto ctx = Renderer::GetInstance()->GetD2DDeviceResources()->GetDeviceContext();
 				ThrowIfFailed(
 					ctx->CreateCompatibleRenderTarget(&frame_rt_)
 				);
@@ -87,7 +86,7 @@ namespace kiwano
 
 	void GifSprite::Update(Duration dt)
 	{
-		VisualNode::Update(dt);
+		Actor::Update(dt);
 
 		if (image_ && animating_)
 		{
@@ -101,12 +100,14 @@ namespace kiwano
 		}
 	}
 
-	void GifSprite::OnRender()
+	void GifSprite::OnRender(Renderer* renderer)
 	{
-		if (frame_to_render_)
+		if (frame_to_render_ && renderer->CheckVisibility(size_, transform_matrix_))
 		{
+			PrepareRender(renderer);
+
 			Rect bounds = GetBounds();
-			Renderer::Instance()->DrawBitmap(frame_to_render_, bounds, bounds);
+			renderer->DrawBitmap(frame_to_render_, bounds, bounds);
 		}
 	}
 
@@ -164,7 +165,7 @@ namespace kiwano
 				loop_count_++;
 			}
 
-			frame_rt_->DrawBitmap(image_->GetRawFrame().Get(), image_->GetFramePosition());
+			frame_rt_->DrawBitmap(image_->GetRawFrame().get(), image_->GetFramePosition());
 			hr = frame_rt_->EndDraw();
 		}
 

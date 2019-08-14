@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/IntrusivePtr.hpp>
+#include <kiwano/core/intrusive_ptr.hpp>
 #include <kiwano/base/Object.h>
 #include <kiwano/base/Resource.h>
 #include <xaudio2.h>
