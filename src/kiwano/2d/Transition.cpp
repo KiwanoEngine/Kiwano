@@ -65,16 +65,12 @@ namespace kiwano
 
 		if (in_scene_)
 		{
-			ThrowIfFailed(
-				Renderer::GetInstance()->CreateLayer(in_layer_)
-			);
+			Renderer::GetInstance()->CreateLayer(in_layer_);
 		}
 
 		if (out_scene_)
 		{
-			ThrowIfFailed(
-				Renderer::GetInstance()->CreateLayer(out_layer_)
-			);
+			Renderer::GetInstance()->CreateLayer(out_layer_);
 		}
 
 		window_size_ = Renderer::GetInstance()->GetOutputSize();

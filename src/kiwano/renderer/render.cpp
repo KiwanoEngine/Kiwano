@@ -211,115 +211,172 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT Renderer::CreateLayer(ComPtr<ID2D1Layer>& layer)
+	void Renderer::IncreasePrimitivesCount()
 	{
-		if (!device_context_)
-			return E_UNEXPECTED;
-
-		layer = nullptr;
-		return device_context_->CreateLayer(&layer);
+		if (collecting_status_)
+		{
+			++status_.primitives;
+		}
 	}
 
-	HRESULT Renderer::DrawGeometry(
+	void Renderer::CreateLayer(ComPtr<ID2D1Layer>& layer)
+	{
+		HRESULT hr = S_OK;
+		ComPtr<ID2D1Layer> new_layer;
+
+		if (!device_context_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = device_context_->CreateLayer(&new_layer);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			layer = new_layer;
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::DrawGeometry(
 		ComPtr<ID2D1Geometry> const& geometry,
 		Color const& stroke_color,
 		float stroke_width,
 		StrokeStyle stroke
 	)
 	{
+		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !device_context_)
-			return E_UNEXPECTED;
+		{
+			hr = E_UNEXPECTED;
+		}
 
-		solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
+		if (SUCCEEDED(hr))
+		{
+			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
-		device_context_->DrawGeometry(
-			geometry.get(),
-			solid_color_brush_.get(),
-			stroke_width,
-			d2d_res_->GetStrokeStyle(stroke)
-		);
+			device_context_->DrawGeometry(
+				geometry.get(),
+				solid_color_brush_.get(),
+				stroke_width,
+				d2d_res_->GetStrokeStyle(stroke)
+			);
 
-		if (collecting_status_)
-			++status_.primitives;
-		return S_OK;
+			IncreasePrimitivesCount();
+		}
+
+		ThrowIfFailed(hr);
 	}
 
-	HRESULT Renderer::FillGeometry(ComPtr<ID2D1Geometry> const & geometry, Color const& fill_color)
+	void Renderer::FillGeometry(ComPtr<ID2D1Geometry> const & geometry, Color const& fill_color)
 	{
+		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !device_context_)
-			return E_UNEXPECTED;
+		{
+			hr = E_UNEXPECTED;
+		}
 
-		solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
-		device_context_->FillGeometry(
-			geometry.get(),
-			solid_color_brush_.get()
-		);
+		if (SUCCEEDED(hr))
+		{
+			solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
+			device_context_->FillGeometry(
+				geometry.get(),
+				solid_color_brush_.get()
+			);
+		}
 
-		return S_OK;
+		ThrowIfFailed(hr);
 	}
 
-	HRESULT Renderer::DrawRectangle(Rect const& rect, const Color& stroke_color, float stroke_width, StrokeStyle stroke)
+	void Renderer::DrawRectangle(Rect const& rect, const Color& stroke_color, float stroke_width, StrokeStyle stroke)
 	{
+		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !device_context_)
-			return E_UNEXPECTED;
+		{
+			hr = E_UNEXPECTED;
+		}
 
-		solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
+		if (SUCCEEDED(hr))
+		{
+			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
-		device_context_->DrawRectangle(
-			DX::ConvertToRectF(rect),
-			solid_color_brush_.get(),
-			stroke_width,
-			d2d_res_->GetStrokeStyle(stroke)
-		);
+			device_context_->DrawRectangle(
+				DX::ConvertToRectF(rect),
+				solid_color_brush_.get(),
+				stroke_width,
+				d2d_res_->GetStrokeStyle(stroke)
+			);
 
-		if (collecting_status_)
-			++status_.primitives;
-		return S_OK;
+			IncreasePrimitivesCount();
+		}
+
+		ThrowIfFailed(hr);
 	}
 
-	HRESULT Renderer::FillRectangle(Rect const& rect, Color const& fill_color)
+	void Renderer::FillRectangle(Rect const& rect, Color const& fill_color)
 	{
+		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !device_context_)
-			return E_UNEXPECTED;
+		{
+			hr = E_UNEXPECTED;
+		}
 
-		solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
-		device_context_->FillRectangle(
-			DX::ConvertToRectF(rect),
-			solid_color_brush_.get()
-		);
+		if (SUCCEEDED(hr))
+		{
+			solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
+			device_context_->FillRectangle(
+				DX::ConvertToRectF(rect),
+				solid_color_brush_.get()
+			);
+		}
 
-		return S_OK;
+		ThrowIfFailed(hr);
 	}
 
-	HRESULT Renderer::DrawBitmap(ComPtr<ID2D1Bitmap> const & bitmap, Rect const& src_rect, Rect const& dest_rect)
+	void Renderer::DrawBitmap(ComPtr<ID2D1Bitmap> const & bitmap, Rect const& src_rect, Rect const& dest_rect)
 	{
+		HRESULT hr = S_OK;
 		if (!device_context_)
-			return E_UNEXPECTED;
+		{
+			hr = E_UNEXPECTED;
+		}
 
-		if (!bitmap)
-			return S_OK;
+		if (SUCCEEDED(hr) && bitmap)
+		{
+			device_context_->DrawBitmap(
+				bitmap.get(),
+				DX::ConvertToRectF(dest_rect),
+				opacity_,
+				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+				DX::ConvertToRectF(src_rect)
+			);
 
-		device_context_->DrawBitmap(
-			bitmap.get(),
-			DX::ConvertToRectF(dest_rect),
-			opacity_,
-			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-			DX::ConvertToRectF(src_rect)
-		);
+			IncreasePrimitivesCount();
+		}
 
-		if (collecting_status_)
-		++status_.primitives;
-		return S_OK;
+		ThrowIfFailed(hr);
 	}
 
-	HRESULT Renderer::DrawTextLayout(ComPtr<IDWriteTextLayout> const& text_layout)
+	void Renderer::DrawTextLayout(ComPtr<IDWriteTextLayout> const& text_layout)
 	{
+		HRESULT hr = S_OK;
 		if (!text_renderer_)
-			return E_UNEXPECTED;
+		{
+			hr = E_UNEXPECTED;
+		}
 
-		if (collecting_status_)
-			++status_.primitives;
-		return text_layout->Draw(nullptr, text_renderer_.get(), 0, 0);
+		if (SUCCEEDED(hr))
+		{
+			hr = text_layout->Draw(nullptr, text_renderer_.get(), 0, 0);
+
+			IncreasePrimitivesCount();
+		}
+
+		ThrowIfFailed(hr);
 	}
 
 	void Renderer::SetVSyncEnabled(bool enabled)
@@ -327,66 +384,101 @@ namespace kiwano
 		vsync_ = enabled;
 	}
 
-	HRESULT Renderer::PushClip(const Matrix & clip_matrix, const Size & clip_size)
+	void Renderer::PushClip(const Matrix & clip_matrix, const Size & clip_size)
 	{
+		HRESULT hr = S_OK;
 		if (!device_context_)
-			return E_UNEXPECTED;
-
-		device_context_->SetTransform(DX::ConvertToMatrix3x2F(clip_matrix));
-		device_context_->PushAxisAlignedClip(
-			D2D1::RectF(0, 0, clip_size.x, clip_size.y),
-			D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
-		);
-		return S_OK;
-	}
-
-	HRESULT Renderer::PopClip()
-	{
-		if (!device_context_)
-			return E_UNEXPECTED;
-
-		device_context_->PopAxisAlignedClip();
-		return S_OK;
-	}
-
-	HRESULT Renderer::PushLayer(ComPtr<ID2D1Layer> const& layer, LayerProperties const& properties)
-	{
-		if (!device_context_ || !solid_color_brush_)
-			return E_UNEXPECTED;
-
-		device_context_->PushLayer(
-			D2D1::LayerParameters(
-				DX::ConvertToRectF(properties.area),
-				nullptr,
-				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
-				D2D1::Matrix3x2F::Identity(),
-				properties.opacity,
-				solid_color_brush_.get(),
-				D2D1_LAYER_OPTIONS_NONE
-			),
-			layer.get()
-		);
-		return S_OK;
-	}
-
-	HRESULT Renderer::PopLayer()
-	{
-		if (!device_context_)
-			return E_UNEXPECTED;
-
-		device_context_->PopLayer();
-		return S_OK;
-	}
-
-	HRESULT Renderer::Resize(UINT width, UINT height)
-	{
-		output_size_.x = static_cast<float>(width);
-		output_size_.y = static_cast<float>(height);
-		if (d3d_res_)
 		{
-			return d3d_res_->SetLogicalSize(output_size_);
+			hr = E_UNEXPECTED;
 		}
-		return S_OK;
+
+		if (SUCCEEDED(hr))
+		{
+			device_context_->SetTransform(DX::ConvertToMatrix3x2F(clip_matrix));
+			device_context_->PushAxisAlignedClip(
+				D2D1::RectF(0, 0, clip_size.x, clip_size.y),
+				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
+			);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::PopClip()
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			device_context_->PopAxisAlignedClip();
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::PushLayer(ComPtr<ID2D1Layer> const& layer, LayerProperties const& properties)
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_ || !solid_color_brush_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			device_context_->PushLayer(
+				D2D1::LayerParameters(
+					DX::ConvertToRectF(properties.area),
+					nullptr,
+					D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+					D2D1::Matrix3x2F::Identity(),
+					properties.opacity,
+					solid_color_brush_.get(),
+					D2D1_LAYER_OPTIONS_NONE
+				),
+				layer.get()
+			);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::PopLayer()
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			device_context_->PopLayer();
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::Resize(UINT width, UINT height)
+	{
+		HRESULT hr = S_OK;
+		if (!d3d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			output_size_.x = static_cast<float>(width);
+			output_size_.y = static_cast<float>(height);
+			hr = d3d_res_->SetLogicalSize(output_size_);
+		}
+
+		ThrowIfFailed(hr);
 	}
 
 	void Renderer::SetCollectingStatus(bool collecting)
@@ -399,29 +491,43 @@ namespace kiwano
 		clear_color_ = color;
 	}
 
-	HRESULT Renderer::SetTransform(const Matrix & matrix)
+	void Renderer::SetTransform(const Matrix & matrix)
 	{
+		HRESULT hr = S_OK;
 		if (!device_context_)
-			return E_UNEXPECTED;
-
-		device_context_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
-		return S_OK;
-	}
-
-	HRESULT Renderer::SetOpacity(float opacity)
-	{
-		if (!solid_color_brush_)
-			return E_UNEXPECTED;
-
-		if (opacity_ != opacity)
 		{
-			opacity_ = opacity;
-			solid_color_brush_->SetOpacity(opacity);
+			hr = E_UNEXPECTED;
 		}
-		return S_OK;
+
+		if (SUCCEEDED(hr))
+		{
+			device_context_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
+		}
+
+		ThrowIfFailed(hr);
 	}
 
-	HRESULT Renderer::SetTextStyle(
+	void Renderer::SetOpacity(float opacity)
+	{
+		HRESULT hr = S_OK;
+		if (!solid_color_brush_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			if (opacity_ != opacity)
+			{
+				opacity_ = opacity;
+				solid_color_brush_->SetOpacity(opacity);
+			}
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::SetTextStyle(
 		float opacity,
 		Color const& color,
 		bool has_outline,
@@ -430,58 +536,79 @@ namespace kiwano
 		StrokeStyle outline_stroke
 	)
 	{
+		HRESULT hr = S_OK;
 		if (!text_renderer_ || !d3d_res_)
-			return E_UNEXPECTED;
-
-		text_renderer_->SetTextStyle(
-			opacity,
-			DX::ConvertToColorF(color),
-			has_outline,
-			DX::ConvertToColorF(outline_color),
-			outline_width,
-			d2d_res_->GetStrokeStyle(outline_stroke)
-		);
-		return S_OK;
-	}
-
-	HRESULT Renderer::SetAntialiasMode(bool enabled)
-	{
-		if (!device_context_)
-			return E_UNEXPECTED;
-
-		device_context_->SetAntialiasMode(
-			enabled ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
-		);
-		antialias_ = enabled;
-		return S_OK;
-	}
-
-	HRESULT Renderer::SetTextAntialiasMode(TextAntialias mode)
-	{
-		if (!device_context_)
-			return E_UNEXPECTED;
-
-		text_antialias_ = mode;
-		D2D1_TEXT_ANTIALIAS_MODE antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
-		switch (text_antialias_)
 		{
-		case TextAntialias::Default:
-			antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_DEFAULT;
-			break;
-		case TextAntialias::ClearType:
-			antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
-			break;
-		case TextAntialias::GrayScale:
-			antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
-			break;
-		case TextAntialias::None:
-			antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_ALIASED;
-			break;
-		default:
-			break;
+			hr = E_UNEXPECTED;
 		}
-		device_context_->SetTextAntialiasMode(antialias_mode);
-		return S_OK;
+
+		if (SUCCEEDED(hr))
+		{
+			text_renderer_->SetTextStyle(
+				opacity,
+				DX::ConvertToColorF(color),
+				has_outline,
+				DX::ConvertToColorF(outline_color),
+				outline_width,
+				d2d_res_->GetStrokeStyle(outline_stroke)
+			);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::SetAntialiasMode(bool enabled)
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			device_context_->SetAntialiasMode(
+				enabled ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
+			);
+			antialias_ = enabled;
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::SetTextAntialiasMode(TextAntialias mode)
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			text_antialias_ = mode;
+			D2D1_TEXT_ANTIALIAS_MODE antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
+			switch (text_antialias_)
+			{
+			case TextAntialias::Default:
+				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_DEFAULT;
+				break;
+			case TextAntialias::ClearType:
+				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
+				break;
+			case TextAntialias::GrayScale:
+				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
+				break;
+			case TextAntialias::None:
+				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_ALIASED;
+				break;
+			default:
+				break;
+			}
+			device_context_->SetTextAntialiasMode(antialias_mode);
+		}
+
+		ThrowIfFailed(hr);
 	}
 
 	bool Renderer::CheckVisibility(Size const& content_size, Matrix const& transform)

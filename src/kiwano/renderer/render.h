@@ -52,41 +52,41 @@ namespace kiwano
 		KGE_DECLARE_SINGLETON(Renderer);
 
 	public:
-		HRESULT CreateLayer(
+		void CreateLayer(
 			ComPtr<ID2D1Layer>& layer
 		);
 
-		HRESULT DrawGeometry(
+		void DrawGeometry(
 			ComPtr<ID2D1Geometry> const& geometry,
 			const Color& stroke_color,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
-		HRESULT FillGeometry(
+		void FillGeometry(
 			ComPtr<ID2D1Geometry> const& geometry,
 			Color const& fill_color
 		);
 
-		HRESULT DrawRectangle(
+		void DrawRectangle(
 			Rect const& rect,
 			const Color& stroke_color,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
-		HRESULT FillRectangle(
+		void FillRectangle(
 			Rect const& rect,
 			Color const& fill_color
 		);
 
-		HRESULT DrawBitmap(
+		void DrawBitmap(
 			ComPtr<ID2D1Bitmap> const& bitmap,
 			Rect const& src_rect,
 			Rect const& dest_rect
 		);
 
-		HRESULT DrawTextLayout(
+		void DrawTextLayout(
 			ComPtr<IDWriteTextLayout> const& text_layout
 		);
 
@@ -96,12 +96,12 @@ namespace kiwano
 		);
 
 		// 设置抗锯齿模式
-		HRESULT SetAntialiasMode(
+		void SetAntialiasMode(
 			bool enabled
 		);
 
 		// 设置文字抗锯齿模式
-		HRESULT SetTextAntialiasMode(
+		void SetTextAntialiasMode(
 			TextAntialias mode
 		);
 
@@ -111,15 +111,15 @@ namespace kiwano
 		);
 
 		// 设置画笔透明度
-		HRESULT SetOpacity(
+		void SetOpacity(
 			float opacity
 		);
 
-		HRESULT SetTransform(
+		void SetTransform(
 			const Matrix& matrix
 		);
 
-		HRESULT SetTextStyle(
+		void SetTextStyle(
 			float opacity,
 			const Color& color,
 			bool has_outline,
@@ -128,21 +128,21 @@ namespace kiwano
 			StrokeStyle outline_stroke
 		);
 
-		HRESULT PushClip(
+		void PushClip(
 			const Matrix& clip_matrix,
 			const Size& clip_size
 		);
 
-		HRESULT PopClip();
+		void PopClip();
 
-		HRESULT PushLayer(
+		void PushLayer(
 			ComPtr<ID2D1Layer> const& layer,
 			LayerProperties const& properties
 		);
 
-		HRESULT PopLayer();
+		void PopLayer();
 
-		HRESULT Resize(
+		void Resize(
 			UINT width,
 			UINT height
 		);
@@ -200,13 +200,14 @@ namespace kiwano
 
 		HRESULT EndDraw();
 
-	private:
-		HWND hwnd_;
-		float opacity_;
-		bool antialias_;
-		bool vsync_;
-		bool collecting_status_;
+		void IncreasePrimitivesCount();
 
+	private:
+		bool			vsync_;
+		bool			antialias_;
+		bool			collecting_status_;
+		float			opacity_;
+		HWND			hwnd_;
 		Size			output_size_;
 		Color			clear_color_;
 		TextAntialias	text_antialias_;
