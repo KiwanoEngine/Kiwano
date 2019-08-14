@@ -132,13 +132,16 @@ namespace kiwano
 	{
 		HRESULT hr = S_OK;
 
+		solid_color_brush_.reset();
 		hr = device_context_->CreateSolidColorBrush(
 			D2D1::ColorF(D2D1::ColorF::White),
+			D2D1::BrushProperties(),
 			&solid_color_brush_
 		);
 
 		if (SUCCEEDED(hr))
 		{
+			text_renderer_.reset();
 			hr = ITextRenderer::Create(
 				&text_renderer_,
 				device_context_.get()
@@ -242,8 +245,144 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
+	void Renderer::CreateLineGeometry(Geometry& geo, Point const& begin_pos, Point const& end_pos)
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_ || !d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<ID2D1PathGeometry> path_geo;
+		ComPtr<ID2D1GeometrySink> path_sink;
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetFactory()->CreatePathGeometry(&path_geo);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = path_geo->Open(&path_sink);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			path_sink->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
+			path_sink->AddLine(DX::ConvertToPoint2F(end_pos));
+			path_sink->EndFigure(D2D1_FIGURE_END_OPEN);
+			hr = path_sink->Close();
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			geo.SetGeometry(path_geo);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreateRectGeometry(Geometry& geo, Rect const& rect)
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_ || !d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<ID2D1RectangleGeometry> output;
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetFactory()->CreateRectangleGeometry(DX::ConvertToRectF(rect), &output);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			geo.SetGeometry(output);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreateRoundedRectGeometry(Geometry& geo, Rect const& rect, Vec2 const& radius)
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_ || !d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<ID2D1RoundedRectangleGeometry> output;
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetFactory()->CreateRoundedRectangleGeometry(
+				D2D1::RoundedRect(
+					DX::ConvertToRectF(rect),
+					radius.x,
+					radius.y
+				),
+				&output);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			geo.SetGeometry(output);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreateEllipseGeometry(Geometry& geo, Point const& center, Vec2 const& radius)
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_ || !d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<ID2D1EllipseGeometry> output;
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetFactory()->CreateEllipseGeometry(
+				D2D1::Ellipse(
+					DX::ConvertToPoint2F(center),
+					radius.x,
+					radius.y
+				),
+				&output);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			geo.SetGeometry(output);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreatePathGeometrySink(GeometrySink& sink)
+	{
+		HRESULT hr = S_OK;
+		if (!device_context_ || !d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<ID2D1PathGeometry> output;
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetFactory()->CreatePathGeometry(&output);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			sink.SetPathGeometry(output);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
 	void Renderer::DrawGeometry(
-		ComPtr<ID2D1Geometry> const& geometry,
+		Geometry const& geometry,
 		Color const& stroke_color,
 		float stroke_width,
 		StrokeStyle stroke
@@ -255,12 +394,12 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (SUCCEEDED(hr))
+		if (SUCCEEDED(hr) && geometry.GetGeometry())
 		{
 			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
 			device_context_->DrawGeometry(
-				geometry.get(),
+				geometry.GetGeometry().get(),
 				solid_color_brush_.get(),
 				stroke_width,
 				d2d_res_->GetStrokeStyle(stroke)
@@ -272,7 +411,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::FillGeometry(ComPtr<ID2D1Geometry> const & geometry, Color const& fill_color)
+	void Renderer::FillGeometry(Geometry const & geometry, Color const& fill_color)
 	{
 		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !device_context_)
@@ -280,11 +419,11 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (SUCCEEDED(hr))
+		if (SUCCEEDED(hr) && geometry.GetGeometry())
 		{
 			solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
 			device_context_->FillGeometry(
-				geometry.get(),
+				geometry.GetGeometry().get(),
 				solid_color_brush_.get()
 			);
 		}
@@ -292,7 +431,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::DrawRectangle(Rect const& rect, const Color& stroke_color, float stroke_width, StrokeStyle stroke)
+	void Renderer::DrawRectangle(Rect const& rect, Color const& stroke_color, float stroke_width, StrokeStyle stroke)
 	{
 		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !device_context_)
@@ -437,7 +576,7 @@ namespace kiwano
 					D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
 					D2D1::Matrix3x2F::Identity(),
 					properties.opacity,
-					solid_color_brush_.get(),
+					nullptr,
 					D2D1_LAYER_OPTIONS_NONE
 				),
 				layer.get()

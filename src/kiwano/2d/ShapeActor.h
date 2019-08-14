@@ -20,7 +20,7 @@
 
 #pragma once
 #include "Actor.h"
-#include "../renderer/render.h"  // ID2D1Geometry
+#include "../renderer/Geometry.h"
 
 namespace kiwano
 {
@@ -32,7 +32,7 @@ namespace kiwano
 		ShapeActor();
 
 		ShapeActor(
-			ComPtr<ID2D1Geometry> geometry
+			Geometry geometry
 		);
 
 		virtual ~ShapeActor();
@@ -55,24 +55,6 @@ namespace kiwano
 		// 获取外切包围盒
 		Rect GetBoundingBox() const override;
 
-		// 判断图形是否包含点
-		bool ContainsPoint(
-			Point const& point
-		);
-
-		// 获取图形展开成一条直线的长度
-		float GetLength();
-
-		// 计算面积
-		float ComputeArea();
-
-		// 计算图形路径上点的位置和切线向量
-		bool ComputePointAtLength(
-			float length,
-			Point& point,
-			Vec2& tangent
-		);
-
 		// 设置填充颜色
 		void SetFillColor(
 			const Color& color
@@ -94,19 +76,19 @@ namespace kiwano
 		);
 
 		// 设置形状
-		inline void SetGeometry(ComPtr<ID2D1Geometry> geometry)	{ geo_ = geometry; }
+		inline void SetGeometry(Geometry geometry)	{ geo_ = geometry; }
 
 		// 获取形状
-		inline ComPtr<ID2D1Geometry> GetGeometry() const		{ return geo_; }
+		inline Geometry GetGeometry() const			{ return geo_; }
 
 		void OnRender(Renderer* renderer) override;
 
 	protected:
-		Color					fill_color_;
-		Color					stroke_color_;
-		float					stroke_width_;
-		StrokeStyle				outline_join_;
-		ComPtr<ID2D1Geometry>	geo_;
+		Color		fill_color_;
+		Color		stroke_color_;
+		float		stroke_width_;
+		StrokeStyle	outline_join_;
+		Geometry	geo_;
 	};
 
 
@@ -118,31 +100,18 @@ namespace kiwano
 		LineActor();
 
 		LineActor(
-			Point const& begin,
-			Point const& end
+			Point const& end_pos
 		);
 
 		virtual ~LineActor();
 
-		Point const& GetBegin() const { return begin_; }
+		Point const& GetEndPoint() const { return end_; }
 
-		Point const& GetEnd() const { return end_; }
-
-		void SetLine(
-			Point const& begin,
-			Point const& end
-		);
-
-		void SetBegin(
-			Point const& begin
-		);
-
-		void SetEnd(
+		void SetEndPoint(
 			Point const& end
 		);
 
 	protected:
-		Point begin_;
 		Point end_;
 	};
 
@@ -155,22 +124,17 @@ namespace kiwano
 		RectActor();
 
 		RectActor(
-			Rect const& rect
-		);
-
-		RectActor(
-			Point const& left_top,
 			Size const& size
 		);
 
 		virtual ~RectActor();
 
-		Rect const& GetRect() const { return rect_; }
+		void SetRectSize(Size const& size);
 
-		void SetRect(Rect const& rect);
+		inline Size const& GetRectSize() const { return size_; }
 
 	protected:
-		Rect rect_;
+		Size size_;
 	};
 
 
@@ -182,38 +146,32 @@ namespace kiwano
 		RoundRectActor();
 
 		RoundRectActor(
-			Rect const& rect,
-			float radius_x,
-			float radius_y
+			Size const& size,
+			Vec2 const& radius
 		);
 
 		virtual ~RoundRectActor();
 
-		float GetRadiusX() const { return radius_x_; }
-
-		float GetRadiusY() const { return radius_y_; }
-
 		void SetRadius(
-			float radius_x,
-			float radius_y
+			Vec2 const& radius
 		);
 
-		Rect const& GetRect() const { return rect_; }
-
-		void SetRect(
-			Rect const& rect
+		void SetRectSize(
+			Size const& size
 		);
 
 		void SetRoundedRect(
-			Rect const& rect,
-			float radius_x,
-			float radius_y
+			Size const& size,
+			Vec2 const& radius
 		);
 
+		inline Vec2 GetRadius() const	{ return radius_; }
+
+		inline Size GetRectSize() const	{ return size_; }
+
 	protected:
-		Rect	rect_;
-		float	radius_x_;
-		float	radius_y_;
+		Size size_;
+		Vec2 radius_;
 	};
 
 
@@ -225,31 +183,16 @@ namespace kiwano
 		CircleActor();
 
 		CircleActor(
-			Point const& center,
 			float radius
 		);
 
 		virtual ~CircleActor();
 
-		float GetRadius() const { return radius_; }
+		inline float GetRadius() const { return radius_; }
 
-		void SetRadius(
-			float radius
-		);
-
-		Point const& GetCenter() const { return center_; }
-
-		void SetCenter(
-			Point const& center
-		);
-
-		void SetCircle(
-			Point const& center,
-			float radius
-		);
+		void SetRadius(float radius);
 
 	protected:
-		Point center_;
 		float radius_;
 	};
 
@@ -262,38 +205,19 @@ namespace kiwano
 		EllipseActor();
 
 		EllipseActor(
-			Point const& center,
-			float radius_x,
-			float radius_y
+			Vec2 const& radius
 		);
 
 		virtual ~EllipseActor();
 
-		float GetRadiusX() const { return radius_x_; }
-
-		float GetRadiusY() const { return radius_y_; }
+		Vec2 GetRadius() const { return radius_; }
 
 		void SetRadius(
-			float radius_x,
-			float radius_y
-		);
-
-		Point const& GetCenter() const { return center_; }
-
-		void SetCenter(
-			Point const& center
-		);
-
-		void SetEllipse(
-			Point const& center,
-			float radius_x,
-			float radius_y
+			Vec2 const& radius
 		);
 
 	protected:
-		Point center_;
-		float radius_x_;
-		float radius_y_;
+		Vec2 radius_;
 	};
 
 
@@ -346,8 +270,7 @@ namespace kiwano
 		void ClearPath();
 
 	protected:
-		ComPtr<ID2D1PathGeometry>	current_geometry_;
-		ComPtr<ID2D1GeometrySink>	current_sink_;
+		GeometrySink sink_;
 	};
 
 }

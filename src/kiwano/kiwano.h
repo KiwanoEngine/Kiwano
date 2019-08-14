@@ -92,6 +92,8 @@
 #include "2d/action/Action.h"
 #include "2d/action/ActionGroup.h"
 #include "2d/action/ActionTween.h"
+#include "2d/action/ActionWalk.h"
+#include "2d/action/ActionDelay.h"
 #include "2d/action/Animation.h"
 #include "2d/action/ActionHelper.h"
 #include "2d/action/ActionManager.h"

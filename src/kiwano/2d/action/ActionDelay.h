@@ -19,53 +19,23 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Resource.h"
-#include "D2DDeviceResources.h"  // ID2D1Bitmap
+#include "Action.h"
 
 namespace kiwano
 {
-	// 图像
-	KGE_DECLARE_SMART_PTR(Image);
-	class KGE_API Image
-		: public Object
+	// 延时动作
+	class KGE_API ActionDelay
+		: public Action
 	{
 	public:
-		Image();
-
-		explicit Image(
-			ComPtr<ID2D1Bitmap> const& bitmap
+		ActionDelay(
+			Duration delay		/* 持续时长 */
 		);
 
-		virtual ~Image();
+		// 获取该动作的拷贝对象
+		ActionPtr Clone() const override;
 
-		// 资源是否有效
-		bool IsValid() const;
-
-		// 获取位图宽度
-		float GetWidth() const;
-
-		// 获取位图高度
-		float GetHeight() const;
-
-		// 获取位图大小
-		Size GetSize() const;
-
-		// 获取位图像素宽度
-		UINT32 GetWidthInPixels() const;
-
-		// 获取位图像素高度
-		UINT32 GetHeightInPixels() const;
-
-		// 获取位图像素大小
-		math::Vec2T<UINT32> GetSizeInPixels() const;
-
-		// 获取源位图
-		ComPtr<ID2D1Bitmap> GetBitmap() const;
-
-		// 设置源位图
-		void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
-
-	protected:
-		ComPtr<ID2D1Bitmap>	bitmap_;
+		// 获取该动作的倒转
+		ActionPtr Reverse() const override;
 	};
 }

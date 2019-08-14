@@ -2,9 +2,11 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\src\kiwano\2d\action\Action.h" />
+    <ClInclude Include="..\src\kiwano\2d\action\ActionDelay.h" />
     <ClInclude Include="..\src\kiwano\2d\action\ActionGroup.h" />
     <ClInclude Include="..\src\kiwano\2d\action\ActionHelper.h" />
     <ClInclude Include="..\src\kiwano\2d\action\ActionManager.h" />
+    <ClInclude Include="..\src\kiwano\2d\action\ActionWalk.h" />
     <ClInclude Include="..\src\kiwano\2d\action\ActionTween.h" />
     <ClInclude Include="..\src\kiwano\2d\action\Animation.h" />
     <ClInclude Include="..\src\kiwano\2d\Frame.h" />
@@ -69,6 +71,7 @@
     <ClInclude Include="..\src\kiwano\renderer\D3D10DeviceResources.h" />
     <ClInclude Include="..\src\kiwano\renderer\D3D11DeviceResources.h" />
     <ClInclude Include="..\src\kiwano\renderer\D3DDeviceResourcesBase.h" />
+    <ClInclude Include="..\src\kiwano\renderer\Geometry.h" />
     <ClInclude Include="..\src\kiwano\renderer\GifImage.h" />
     <ClInclude Include="..\src\kiwano\renderer\helper.hpp" />
     <ClInclude Include="..\src\kiwano\renderer\Image.h" />
@@ -86,8 +89,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\kiwano\2d\action\Action.cpp" />
+    <ClCompile Include="..\src\kiwano\2d\action\ActionDelay.cpp" />
     <ClCompile Include="..\src\kiwano\2d\action\ActionGroup.cpp" />
     <ClCompile Include="..\src\kiwano\2d\action\ActionManager.cpp" />
+    <ClCompile Include="..\src\kiwano\2d\action\ActionWalk.cpp" />
     <ClCompile Include="..\src\kiwano\2d\action\ActionTween.cpp" />
     <ClCompile Include="..\src\kiwano\2d\action\Animation.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Canvas.cpp" />
@@ -120,6 +125,7 @@
     <ClCompile Include="..\src\kiwano\renderer\D2DDeviceResources.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\D3D10DeviceResources.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\D3D11DeviceResources.cpp" />
+    <ClCompile Include="..\src\kiwano\renderer\Geometry.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\GifImage.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\Image.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\ImageCache.cpp" />

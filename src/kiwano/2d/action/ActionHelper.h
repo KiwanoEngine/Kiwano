@@ -19,8 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "ActionGroup.h"
 #include "ActionTween.h"
+#include "ActionWalk.h"
+#include "ActionDelay.h"
+#include "ActionGroup.h"
 #include "Animation.h"
 
 namespace kiwano
@@ -186,6 +188,32 @@ namespace kiwano
 		}
 
 		static inline TweenHelper
+		Walk(
+			Duration duration,		/* 持续时长 */
+			Geometry const& geo,	/* 路线 */
+			bool rotating = false,	/* 沿路线切线方向旋转 */
+			float start = 0.f,		/* 起点 */
+			float end = 1.f,		/* 终点 */
+			EaseFunc func = nullptr	/* 速度变化 */
+		)
+		{
+			return TweenHelper(new kiwano::ActionWalk(duration, geo, rotating, start, end, func));
+		}
+
+		static inline TweenHelper
+		Walk(
+			Duration duration,			/* 持续时长 */
+			GeometrySink& sink,			/* 路线生成器 */
+			bool rotating = false,		/* 沿路线切线方向旋转 */
+			float start = 0.f,			/* 起点 */
+			float end = 1.f,			/* 终点 */
+			EaseFunc func = nullptr		/* 速度变化 */
+		)
+		{
+			return TweenHelper(new kiwano::ActionWalk(duration, sink.GetGeometry(), rotating, start, end, func));
+		}
+
+		static inline TweenHelper
 		Animation(Duration dur, FrameSequencePtr frames)
 		{
 			return TweenHelper(new kiwano::Animation(dur, frames));
@@ -220,7 +248,7 @@ namespace kiwano
 
 		KGE_DEPRECATED("Tween::OpacityBy has been removed, use Tween::FadeTo instead")
 		static inline TweenHelper
-			OpacityBy(float opacity)
+		OpacityBy(float opacity)
 		{
 			KGE_ASSERT("Tween::OpacityBy has been removed, use Tween::FadeTo instead");
 			return TweenHelper(nullptr);
@@ -242,7 +270,7 @@ namespace kiwano
 
 		KGE_DEPRECATED("Tween::Spawn is deprecated, use Tween::Multiple instead")
 		static inline ActionHelper
-			Spawn(Vector<ActionPtr> const& actions)
+		Spawn(Vector<ActionPtr> const& actions)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, false));
 		}

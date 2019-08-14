@@ -20,6 +20,7 @@
 
 #include "ShapeActor.h"
 #include "../base/logs.h"
+#include "../renderer/render.h"
 
 namespace kiwano
 {
@@ -31,7 +32,7 @@ namespace kiwano
 	{
 	}
 
-	ShapeActor::ShapeActor(ComPtr<ID2D1Geometry> geometry)
+	ShapeActor::ShapeActor(Geometry geometry)
 		: ShapeActor()
 	{
 		SetGeometry(geometry);
@@ -46,10 +47,7 @@ namespace kiwano
 		if (!geo_)
 			return Rect{};
 
-		D2D1_RECT_F rect;
-		// no matter it failed or not
-		geo_->GetBounds(D2D1::Matrix3x2F::Identity(), &rect);
-		return Rect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
+		return geo_.GetBoundingBox(Matrix());
 	}
 
 	Rect ShapeActor::GetBoundingBox() const
@@ -57,63 +55,7 @@ namespace kiwano
 		if (!geo_)
 			return Rect{};
 
-		D2D1_RECT_F rect;
-		// no matter it failed or not
-		geo_->GetBounds(DX::ConvertToMatrix3x2F(transform_matrix_), &rect);
-		return Rect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
-	}
-
-	float ShapeActor::GetLength()
-	{
-		float length = 0.f;
-		if (geo_)
-		{
-			// no matter it failed or not
-			geo_->ComputeLength(D2D1::Matrix3x2F::Identity(), &length);
-		}
-		return length;
-	}
-
-	bool ShapeActor::ComputePointAtLength(float length, Point& point, Vec2& tangent)
-	{
-		if (geo_)
-		{
-			if (SUCCEEDED(geo_->ComputePointAtLength(
-				length,
-				D2D1::Matrix3x2F::Identity(),
-				DX::ConvertToPoint2F(&point),
-				DX::ConvertToPoint2F(&tangent))))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	float ShapeActor::ComputeArea()
-	{
-		if (!geo_)
-			return 0.f;
-
-		float area = 0.f;
-		// no matter it failed or not
-		geo_->ComputeArea(D2D1::Matrix3x2F::Identity(), &area);
-		return area;
-	}
-
-	bool ShapeActor::ContainsPoint(Point const& point)
-	{
-		if (!geo_)
-			return false;
-
-		BOOL ret = 0;
-		// no matter it failed or not
-		geo_->FillContainsPoint(
-			DX::ConvertToPoint2F(point),
-			D2D1::Matrix3x2F::Identity(),
-			&ret
-		);
-		return !!ret;
+		return geo_.GetBoundingBox(GetTransformMatrix());
 	}
 
 	void ShapeActor::SetFillColor(const Color & color)
@@ -164,49 +106,23 @@ namespace kiwano
 	{
 	}
 
-	LineActor::LineActor(Point const& begin, Point const& end)
+	LineActor::LineActor(Point const& end)
 	{
-		SetLine(begin, end);
+		SetEndPoint(end);
 	}
 
 	LineActor::~LineActor()
 	{
 	}
 
-	void LineActor::SetLine(Point const& begin, Point const& end)
+	void LineActor::SetEndPoint(Point const& end)
 	{
-		ComPtr<ID2D1PathGeometry> path_geo;
-		ComPtr<ID2D1GeometrySink> path_sink;
+		Renderer::GetInstance()->CreateLineGeometry(geo_, Point{}, end);
 
-		HRESULT hr = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory()->CreatePathGeometry(&path_geo);
-
-		if (SUCCEEDED(hr))
+		if (geo_)
 		{
-			hr = path_geo->Open(&path_sink);
+			SetSize(end);
 		}
-
-		if (SUCCEEDED(hr))
-		{
-			path_sink->BeginFigure(DX::ConvertToPoint2F(begin), D2D1_FIGURE_BEGIN_FILLED);
-			path_sink->AddLine(DX::ConvertToPoint2F(end));
-			path_sink->EndFigure(D2D1_FIGURE_END_OPEN);
-			hr = path_sink->Close();
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			geo_ = path_geo;
-		}
-	}
-
-	void LineActor::SetBegin(Point const& begin)
-	{
-		SetLine(begin, end_);
-	}
-
-	void LineActor::SetEnd(Point const& end)
-	{
-		SetLine(begin_, end);
 	}
 
 
@@ -218,29 +134,22 @@ namespace kiwano
 	{
 	}
 
-	RectActor::RectActor(Rect const& rect)
+	RectActor::RectActor(Size const& size)
 	{
-		SetRect(rect);
-	}
-
-	RectActor::RectActor(Point const& left_top, Size const& size)
-	{
-		SetRect(Rect{ left_top, size });
+		SetRectSize(size);
 	}
 
 	RectActor::~RectActor()
 	{
 	}
 
-	void RectActor::SetRect(Rect const& rect)
+	void RectActor::SetRectSize(Size const& size)
 	{
-		ComPtr<ID2D1RectangleGeometry> geo;
-		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
+		Renderer::GetInstance()->CreateRectGeometry(geo_, Rect{ Point{}, size });
 
-		if (SUCCEEDED(factory->CreateRectangleGeometry(DX::ConvertToRectF(rect), &geo)))
+		if (geo_)
 		{
-			geo_ = geo;
-			rect_ = rect;
+			SetSize(size);
 		}
 	}
 
@@ -250,47 +159,35 @@ namespace kiwano
 	//-------------------------------------------------------
 
 	RoundRectActor::RoundRectActor()
-		: radius_x_(0.f)
-		, radius_y_(0.f)
 	{
 	}
 
-	RoundRectActor::RoundRectActor(Rect const& rect, float radius_x, float radius_y)
+	RoundRectActor::RoundRectActor(Size const& size, Vec2 const& radius)
 	{
-		SetRoundedRect(rect, radius_x, radius_y);
+		SetRoundedRect(size, radius);
 	}
 
 	RoundRectActor::~RoundRectActor()
 	{
 	}
 
-	void RoundRectActor::SetRadius(float radius_x, float radius_y)
+	void RoundRectActor::SetRadius(Vec2 const& radius)
 	{
-		SetRoundedRect(rect_, radius_x, radius_y);
+		SetRoundedRect(size_, radius);
 	}
 
-	void RoundRectActor::SetRect(Rect const& rect)
+	void RoundRectActor::SetRectSize(Size const& size)
 	{
-		SetRoundedRect(rect, radius_x_, radius_y_);
+		SetRoundedRect(size, radius_);
 	}
 
-	void RoundRectActor::SetRoundedRect(Rect const& rect, float radius_x, float radius_y)
+	void RoundRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
 	{
-		ComPtr<ID2D1RoundedRectangleGeometry> geo;
-		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
+		Renderer::GetInstance()->CreateRoundedRectGeometry(geo_, Rect{ Point{}, size }, radius);
 
-		if (SUCCEEDED(factory->CreateRoundedRectangleGeometry(
-			D2D1::RoundedRect(
-				DX::ConvertToRectF(rect),
-				radius_x,
-				radius_y
-			),
-			&geo)))
+		if (geo_)
 		{
-			geo_ = geo;
-			rect_ = rect;
-			radius_x_ = radius_x;
-			radius_y_ = radius_y;
+			SetSize(size);
 		}
 	}
 
@@ -304,9 +201,9 @@ namespace kiwano
 	{
 	}
 
-	CircleActor::CircleActor(Point const& center, float radius)
+	CircleActor::CircleActor(float radius)
 	{
-		SetCircle(center, radius);
+		SetRadius(radius);
 	}
 
 	CircleActor::~CircleActor()
@@ -315,29 +212,11 @@ namespace kiwano
 
 	void CircleActor::SetRadius(float radius)
 	{
-		SetCircle(center_, radius);
-	}
+		Renderer::GetInstance()->CreateEllipseGeometry(geo_, Point{}, Vec2{ radius, radius });
 
-	void CircleActor::SetCenter(Point const& center)
-	{
-		SetCircle(center, radius_);
-	}
-
-	void CircleActor::SetCircle(Point const& center, float radius)
-	{
-		ComPtr<ID2D1EllipseGeometry> geo;
-		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
-
-		if (SUCCEEDED(factory->CreateEllipseGeometry(
-			D2D1::Ellipse(
-				DX::ConvertToPoint2F(center),
-				radius,
-				radius),
-			&geo)))
+		if (geo_)
 		{
-			geo_ = geo;
-			center_ = center;
-			radius_ = radius;
+			SetSize(radius * 2, radius * 2);
 		}
 	}
 
@@ -347,45 +226,25 @@ namespace kiwano
 	//-------------------------------------------------------
 
 	EllipseActor::EllipseActor()
-		: radius_x_(0.f)
-		, radius_y_(0.f)
 	{
 	}
 
-	EllipseActor::EllipseActor(Point const& center, float radius_x, float radius_y)
+	EllipseActor::EllipseActor(Vec2 const& radius)
 	{
-		SetEllipse(center, radius_x, radius_y);
+		SetRadius(radius);
 	}
 
 	EllipseActor::~EllipseActor()
 	{
 	}
 
-	void EllipseActor::SetRadius(float radius_x, float radius_y)
+	void EllipseActor::SetRadius(Vec2 const& radius)
 	{
-		SetEllipse(center_, radius_x, radius_y);
-	}
+		Renderer::GetInstance()->CreateEllipseGeometry(geo_, Point{}, radius);
 
-	void EllipseActor::SetCenter(Point const& center)
-	{
-		SetEllipse(center, radius_x_, radius_y_);
-	}
-
-	void EllipseActor::SetEllipse(Point const& center, float radius_x, float radius_y)
-	{
-		ComPtr<ID2D1EllipseGeometry> geo;
-		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
-
-		if (SUCCEEDED(factory->CreateEllipseGeometry(
-			D2D1::Ellipse(
-				DX::ConvertToPoint2F(center),
-				radius_x,
-				radius_y),
-			&geo)))
+		if (geo_)
 		{
-			geo_ = geo;
-			radius_x_ = radius_x;
-			radius_y_ = radius_y;
+			SetSize(radius * 2);
 		}
 	}
 
@@ -404,89 +263,38 @@ namespace kiwano
 
 	void PathActor::BeginPath(Point const& begin_pos)
 	{
-		current_geometry_ = nullptr;
-
-		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory();
-
-		ThrowIfFailed(
-			factory->CreatePathGeometry(&current_geometry_)
-		);
-
-		ThrowIfFailed(
-			current_geometry_->Open(&current_sink_)
-		);
-
-		current_sink_->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
+		sink_.BeginPath(begin_pos);
 	}
 
 	void PathActor::EndPath(bool closed)
 	{
-		if (current_sink_)
-		{
-			current_sink_->EndFigure(closed ? D2D1_FIGURE_END_CLOSED : D2D1_FIGURE_END_OPEN);
-			ThrowIfFailed(
-				current_sink_->Close()
-			);
-
-			geo_ = current_geometry_;
-
-			current_sink_ = nullptr;
-			current_geometry_ = nullptr;
-		}
+		sink_.EndPath(closed);
+		geo_ = sink_.GetGeometry();
 	}
 
 	void PathActor::AddLine(Point const& point)
 	{
-		if (current_sink_)
-			current_sink_->AddLine(DX::ConvertToPoint2F(point));
+		sink_.AddLine(point);
 	}
 
 	void PathActor::AddLines(Vector<Point> const& points)
 	{
-		if (current_sink_ && !points.empty())
-		{
-			current_sink_->AddLines(
-				reinterpret_cast<const D2D_POINT_2F*>(&points[0]),
-				static_cast<UINT32>(points.size())
-			);
-		}
+		sink_.AddLines(points);
 	}
 
 	void PathActor::AddBezier(Point const& point1, Point const& point2, Point const& point3)
 	{
-		if (current_sink_)
-		{
-			current_sink_->AddBezier(
-				D2D1::BezierSegment(
-					DX::ConvertToPoint2F(point1),
-					DX::ConvertToPoint2F(point2),
-					DX::ConvertToPoint2F(point3)
-				)
-			);
-		}
+		sink_.AddBezier(point1, point2, point3);
 	}
 
 	void PathActor::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 	{
-		if (current_sink_)
-		{
-			current_sink_->AddArc(
-				D2D1::ArcSegment(
-					DX::ConvertToPoint2F(point),
-					DX::ConvertToSizeF(radius),
-					rotation,
-					clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
-					is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE
-				)
-			);
-		}
+		sink_.AddArc(point, radius, rotation, clockwise, is_small);
 	}
 
 	void PathActor::ClearPath()
 	{
-		geo_ = nullptr;
-		current_sink_ = nullptr;
-		current_geometry_ = nullptr;
+		geo_.SetGeometry(nullptr);
 	}
 
 }

@@ -279,6 +279,15 @@
     <ClInclude Include="..\src\kiwano\2d\ShapeActor.h">
       <Filter>2d</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\Geometry.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\action\ActionDelay.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\action\ActionWalk.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\kiwano\ui\Button.cpp">
@@ -424,6 +433,15 @@
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\ShapeActor.cpp">
       <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\Geometry.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\action\ActionDelay.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\action\ActionWalk.cpp">
+      <Filter>2d\action</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

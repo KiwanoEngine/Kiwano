@@ -27,8 +27,8 @@
 #include "../2d/TextStyle.hpp"
 #include "helper.hpp"
 #include "Image.h"
+#include "Geometry.h"
 #include "TextRenderer.h"
-#include "D2DDeviceResources.h"
 
 #if defined(KGE_USE_DIRECTX10)
 #	include "D3D10DeviceResources.h"
@@ -56,21 +56,48 @@ namespace kiwano
 			ComPtr<ID2D1Layer>& layer
 		);
 
+		void CreateLineGeometry(
+			Geometry& geo,
+			Point const& begin_pos,
+			Point const& end_pos
+		);
+
+		void CreateRectGeometry(
+			Geometry& geo,
+			Rect const& rect
+		);
+
+		void CreateRoundedRectGeometry(
+			Geometry& geo,
+			Rect const& rect,
+			Vec2 const& radius
+		);
+
+		void CreateEllipseGeometry(
+			Geometry& geo,
+			Point const& center,
+			Vec2 const& radius
+		);
+
+		void CreatePathGeometrySink(
+			GeometrySink& sink
+		);
+
 		void DrawGeometry(
-			ComPtr<ID2D1Geometry> const& geometry,
+			Geometry const& geometry,
 			const Color& stroke_color,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
 		void FillGeometry(
-			ComPtr<ID2D1Geometry> const& geometry,
+			Geometry const& geometry,
 			Color const& fill_color
 		);
 
 		void DrawRectangle(
 			Rect const& rect,
-			const Color& stroke_color,
+			Color const& stroke_color,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		);

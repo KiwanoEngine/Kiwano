@@ -18,78 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Sprite.h"
-#include "../renderer/render.h"
+#include "ActionDelay.h"
 
 namespace kiwano
 {
-	Sprite::Sprite()
-		: frame_(nullptr)
+	ActionDelay::ActionDelay(Duration delay)
 	{
+		SetDelay(delay);
 	}
 
-	Sprite::Sprite(Resource const& res)
-		: frame_(nullptr)
+	ActionPtr ActionDelay::Clone() const
 	{
-		Load(res);
+		return new ActionDelay(delay_);
 	}
 
-	Sprite::Sprite(Resource const& res, const Rect& crop_rect)
-		: frame_(nullptr)
+	ActionPtr ActionDelay::Reverse() const
 	{
-		Load(res);
-		Crop(crop_rect);
+		return new ActionDelay(delay_);
 	}
 
-	Sprite::Sprite(FramePtr frame)
-		: frame_(nullptr)
-	{
-		SetFrame(frame);
-	}
-
-	Sprite::~Sprite()
-	{
-	}
-
-	bool Sprite::Load(Resource const& res)
-	{
-		FramePtr frame = new (std::nothrow) Frame;
-		if (frame->Load(res))
-		{
-			SetFrame(frame);
-			return true;
-		}
-		return false;
-	}
-
-	void Sprite::Crop(const Rect& crop_rect)
-	{
-		if (frame_)
-		{
-			frame_->Crop(crop_rect);
-			SetSize(frame_->GetWidth(), frame_->GetHeight());
-		}
-	}
-
-	void Sprite::SetFrame(FramePtr frame)
-	{
-		if (frame_ != frame)
-		{
-			frame_ = frame;
-			if (frame_)
-			{
-				SetSize(frame_->GetWidth(), frame_->GetHeight());
-			}
-		}
-	}
-
-	void Sprite::OnRender(Renderer* renderer)
-	{
-		if (frame_ && renderer->CheckVisibility(size_, transform_matrix_))
-		{
-			PrepareRender(renderer);
-
-			renderer->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
-		}
-	}
 }
