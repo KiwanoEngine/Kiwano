@@ -245,6 +245,55 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
+	void Renderer::CreateTextFormat(TextFormat& format, Font const& font)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<IDWriteTextFormat> output;
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->CreateTextFormat(output, font);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			format.SetTextFormat(output);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreateTextLayout(TextLayout& layout, String const& text, TextStyle const& style, TextFormat const& format)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<IDWriteTextLayout> output;
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->CreateTextLayout(
+				output,
+				text,
+				style,
+				format.GetTextFormat()
+			);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			layout.SetTextLayout(output);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
 	void Renderer::CreateLineGeometry(Geometry& geo, Point const& begin_pos, Point const& end_pos)
 	{
 		HRESULT hr = S_OK;
@@ -500,7 +549,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::DrawTextLayout(ComPtr<IDWriteTextLayout> const& text_layout)
+	void Renderer::DrawTextLayout(TextLayout const& layout)
 	{
 		HRESULT hr = S_OK;
 		if (!text_renderer_)
@@ -510,7 +559,19 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = text_layout->Draw(nullptr, text_renderer_.get(), 0, 0);
+			SetTextStyle(
+				opacity_,
+				layout.GetTextStyle().color,
+				layout.GetTextStyle().outline,
+				layout.GetTextStyle().outline_color,
+				layout.GetTextStyle().outline_width,
+				layout.GetTextStyle().outline_stroke
+			);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = layout.GetTextLayout()->Draw(nullptr, text_renderer_.get(), 0, 0);
 
 			IncreasePrimitivesCount();
 		}
@@ -676,7 +737,7 @@ namespace kiwano
 	)
 	{
 		HRESULT hr = S_OK;
-		if (!text_renderer_ || !d3d_res_)
+		if (!text_renderer_)
 		{
 			hr = E_UNEXPECTED;
 		}

@@ -23,11 +23,10 @@
 #include "../base/Component.h"
 #include "../base/Resource.h"
 #include "../2d/include-forwards.h"
-#include "../2d/Font.hpp"
-#include "../2d/TextStyle.hpp"
 #include "helper.hpp"
 #include "Image.h"
 #include "Geometry.h"
+#include "TextLayout.h"
 #include "TextRenderer.h"
 
 #if defined(KGE_USE_DIRECTX10)
@@ -52,8 +51,41 @@ namespace kiwano
 		KGE_DECLARE_SINGLETON(Renderer);
 
 	public:
+		// 设置清屏颜色
+		void SetClearColor(
+			Color const& clear_color
+		);
+
+		// 设置抗锯齿模式
+		void SetAntialiasMode(
+			bool enabled
+		);
+
+		// 设置文字抗锯齿模式
+		void SetTextAntialiasMode(
+			TextAntialias mode
+		);
+
+		// 开启或关闭垂直同步
+		void SetVSyncEnabled(
+			bool enabled
+		);
+
+	public:
 		void CreateLayer(
 			ComPtr<ID2D1Layer>& layer
+		);
+
+		void CreateTextFormat(
+			TextFormat& format,
+			Font const& font
+		);
+
+		void CreateTextLayout(
+			TextLayout& layout,
+			String const& text,
+			TextStyle const& style,
+			TextFormat const& format
 		);
 
 		void CreateLineGeometry(
@@ -114,30 +146,9 @@ namespace kiwano
 		);
 
 		void DrawTextLayout(
-			ComPtr<IDWriteTextLayout> const& text_layout
+			TextLayout const& layout
 		);
 
-		// 设置清屏颜色
-		void SetClearColor(
-			Color const& clear_color
-		);
-
-		// 设置抗锯齿模式
-		void SetAntialiasMode(
-			bool enabled
-		);
-
-		// 设置文字抗锯齿模式
-		void SetTextAntialiasMode(
-			TextAntialias mode
-		);
-
-		// 开启或关闭垂直同步
-		void SetVSyncEnabled(
-			bool enabled
-		);
-
-		// 设置画笔透明度
 		void SetOpacity(
 			float opacity
 		);

@@ -275,21 +275,18 @@ namespace kiwano
 			ThrowIfFailed(
 				Renderer::GetInstance()->GetD2DDeviceResources()->CreateTextFormat(
 					text_format_,
-					text_font_,
-					text_style_
+					text_font_
 				)
 			);
 		}
 
 		ComPtr<IDWriteTextLayout> text_layout;
-		Size layout_size;
 		ThrowIfFailed(
 			Renderer::GetInstance()->GetD2DDeviceResources()->CreateTextLayout(
 				text_layout,
-				layout_size,
 				text,
-				text_format_,
-				text_style_
+				text_style_,
+				text_format_
 			)
 		);
 

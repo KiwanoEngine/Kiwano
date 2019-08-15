@@ -37,7 +37,6 @@ namespace kiwano
 	public:
 		Color		color;				// 颜色
 		TextAlign	alignment;			// 对齐方式
-		bool		wrap;				// 打开自动换行
 		float		wrap_width;			// 自动换行宽度
 		float		line_spacing;		// 行间距
 		bool		underline;			// 下划线
@@ -51,7 +50,6 @@ namespace kiwano
 		TextStyle()
 			: color(Color::White)
 			, alignment(TextAlign::Left)
-			, wrap(false)
 			, wrap_width(0.f)
 			, line_spacing(0.f)
 			, underline(false)
@@ -65,7 +63,6 @@ namespace kiwano
 		TextStyle(
 			Color color,
 			TextAlign alignment			= TextAlign::Left,
-			bool wrap					= false,
 			float wrap_width			= 0.f,
 			float line_spacing			= 0.f,
 			bool underline				= false,
@@ -77,7 +74,6 @@ namespace kiwano
 		)
 			: color(color)
 			, alignment(alignment)
-			, wrap(wrap)
 			, wrap_width(wrap_width)
 			, line_spacing(line_spacing)
 			, underline(underline)

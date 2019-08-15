@@ -48,16 +48,14 @@ namespace kiwano
 
 		virtual HRESULT CreateTextFormat(
 			_Out_ ComPtr<IDWriteTextFormat>& text_format,
-			_In_ Font const& font,
-			_In_ TextStyle const& text_style
+			_In_ Font const& font
 		) const = 0;
 
 		virtual HRESULT CreateTextLayout(
 			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
-			_Out_ Size& layout_size,
 			_In_ String const& text,
-			_In_ ComPtr<IDWriteTextFormat> const& text_format,
-			_In_ TextStyle const& text_style
+			_In_ TextStyle const& text_style,
+			_In_ ComPtr<IDWriteTextFormat> const& text_format
 		) const = 0;
 
 		virtual ID2D1StrokeStyle* GetStrokeStyle(StrokeStyle stroke) const = 0;

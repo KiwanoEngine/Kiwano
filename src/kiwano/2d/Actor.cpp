@@ -131,7 +131,7 @@ namespace kiwano
             auto renderer = Renderer::GetInstance();
             renderer->SetTransform(transform_matrix_);
             renderer->FillRectangle(bounds, Color(Color::Red, .4f));
-            renderer->DrawRectangle(bounds, Color(Color::Red, .8f), 4.f);
+            renderer->DrawRectangle(bounds, Color(Color::Red, .8f), 2.f);
 		}
 
 		for (auto child = children_.first_item(); child; child = child->next_item())

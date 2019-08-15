@@ -47,6 +47,14 @@ only_commits:
     - scripts/**/*.ps1
     - appveyor.yml
 
+for:
+-
+  branches:
+    except:
+      - master
+  only_commits:
+    message: /\[build\]/
+
 configuration:
 - Debug
 - Release
@@ -67,19 +75,8 @@ build:
   project: projects/Kiwano.sln
   verbosity: minimal
 
-for:
--
-  branches:
-    except:
-      - master
-  only_commits:
-    message: /\[build\]/
--
-  branches:
-    only:
-      - master
-  after_build:
-  - ps: .\scripts\appveyor\wait_for_other_jobs.ps1
+after_build:
+- ps: .\scripts\appveyor\wait_for_other_jobs.ps1
 
 artifacts:
 - path: projects/output/**/*.lib
@@ -119,6 +116,6 @@ notifications:
 - provider: Email
   to:
   - 569629550@qq.com
-  on_build_success: false
+  on_build_success: true
   on_build_failure: true
   on_build_status_changed: false

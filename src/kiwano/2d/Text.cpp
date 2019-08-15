@@ -44,6 +44,7 @@ namespace kiwano
 		: font_(text_default_font)
 		, style_(text_default_style)
 		, layout_dirty_(false)
+		, format_dirty_(false)
 	{
 	}
 
@@ -74,96 +75,6 @@ namespace kiwano
 	{
 	}
 
-	String const& Text::GetText() const
-	{
-		return text_;
-	}
-
-	const Font& Text::GetFont() const
-	{
-		return font_;
-	}
-
-	const TextStyle& Text::GetStyle() const
-	{
-		return style_;
-	}
-
-	String const& Text::GetFontFamily() const
-	{
-		return font_.family;
-	}
-
-	float Text::GetFontSize() const
-	{
-		return font_.size;
-	}
-
-	unsigned int Text::GetFontWeight() const
-	{
-		return font_.weight;
-	}
-
-	const Color& Text::GetColor() const
-	{
-		return style_.color;
-	}
-
-	const Color& Text::GetOutlineColor() const
-	{
-		return style_.outline_color;
-	}
-
-	float Text::GetOutlineWidth() const
-	{
-		return style_.outline_width;
-	}
-
-	StrokeStyle Text::GetOutlineStroke() const
-	{
-		return style_.outline_stroke;
-	}
-
-	int Text::GetLineCount()
-	{
-		UpdateLayout();
-		if (text_layout_)
-		{
-			DWRITE_TEXT_METRICS metrics;
-			if (SUCCEEDED(text_layout_->GetMetrics(&metrics)))
-			{
-				return static_cast<int>(metrics.lineCount);
-			}
-		}
-		return 0;
-	}
-
-	Size const& Text::GetLayoutSize() const
-	{
-		UpdateLayout();
-		return layout_size_;
-	}
-
-	bool Text::IsItalic() const
-	{
-		return font_.italic;
-	}
-
-	bool Text::HasStrikethrough() const
-	{
-		return style_.strikethrough;
-	}
-
-	bool Text::HasUnderline() const
-	{
-		return style_.underline;
-	}
-
-	bool Text::HasOutline() const
-	{
-		return style_.outline;
-	}
-
 	void Text::SetText(String const& text)
 	{
 		text_ = text;
@@ -179,7 +90,7 @@ namespace kiwano
 	void Text::SetFont(const Font & font)
 	{
 		font_ = font;
-		layout_dirty_ = true;
+		format_dirty_ = true;
 	}
 
 	void Text::SetFontFamily(String const& family)
@@ -187,7 +98,7 @@ namespace kiwano
 		if (font_.family != family)
 		{
 			font_.family = family;
-			layout_dirty_ = true;
+			format_dirty_ = true;
 		}
 	}
 
@@ -196,7 +107,7 @@ namespace kiwano
 		if (font_.size != size)
 		{
 			font_.size = size;
-			layout_dirty_ = true;
+			format_dirty_ = true;
 		}
 	}
 
@@ -205,7 +116,7 @@ namespace kiwano
 		if (font_.weight != weight)
 		{
 			font_.weight = weight;
-			layout_dirty_ = true;
+			format_dirty_ = true;
 		}
 	}
 
@@ -219,16 +130,7 @@ namespace kiwano
 		if (font_.italic != val)
 		{
 			font_.italic = val;
-			layout_dirty_ = true;
-		}
-	}
-
-	void Text::SetWrapEnabled(bool wrap)
-	{
-		if (style_.wrap != wrap)
-		{
-			style_.wrap = wrap;
-			layout_dirty_ = true;
+			format_dirty_ = true;
 		}
 	}
 
@@ -236,12 +138,12 @@ namespace kiwano
 	{
 		if (style_.wrap_width != wrap_width)
 		{
-			style_.wrap_width = std::max(wrap_width, 0.f);
+			style_.wrap_width = wrap_width;
 			layout_dirty_ = true;
 		}
 	}
 
-	void Text::SetLineacingPtr(float line_spacing)
+	void Text::SetLineSpacing(float line_spacing)
 	{
 		if (style_.line_spacing != line_spacing)
 		{
@@ -301,51 +203,26 @@ namespace kiwano
 	{
 		UpdateLayout();
 
-		if (text_layout_ && renderer->CheckVisibility(layout_size_, transform_matrix_))
+		if (text_layout_ && renderer->CheckVisibility(size_, transform_matrix_))
 		{
 			PrepareRender(renderer);
-			renderer->SetTextStyle(
-				GetDisplayedOpacity(),
-				style_.color,
-				style_.outline,
-				style_.outline_color,
-				style_.outline_width,
-				style_.outline_stroke
-			);
             renderer->DrawTextLayout(text_layout_);
 		}
 	}
 
-	void Text::UpdateLayout() const
+	void Text::UpdateLayout()
 	{
-		if (!layout_dirty_)
-			return;
+		if (format_dirty_)
+		{
+			format_dirty_ = false;
+			text_layout_.Update(font_);
+		}
 
-		layout_dirty_ = false;
-		text_format_ = nullptr;
-		text_layout_ = nullptr;
-
-		if (text_.empty())
-			return;
-
-        auto renderer = Renderer::GetInstance();
-
-		ThrowIfFailed(
-            renderer->GetD2DDeviceResources()->CreateTextFormat(
-				text_format_,
-				font_,
-				style_
-			)
-		);
-
-		ThrowIfFailed(
-            renderer->GetD2DDeviceResources()->CreateTextLayout(
-				text_layout_,
-				layout_size_,
-				text_,
-				text_format_,
-				style_
-			)
-		);
+		if (layout_dirty_)
+		{
+			layout_dirty_ = false;
+			text_layout_.Update(text_, style_);
+			SetSize(text_layout_.GetLayoutSize());
+		}
 	}
 }
