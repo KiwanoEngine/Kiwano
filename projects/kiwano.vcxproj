@@ -77,6 +77,7 @@
     <ClInclude Include="..\src\kiwano\renderer\Image.h" />
     <ClInclude Include="..\src\kiwano\renderer\ImageCache.h" />
     <ClInclude Include="..\src\kiwano\renderer\Renderer.h" />
+    <ClInclude Include="..\src\kiwano\renderer\RenderTarget.h" />
     <ClInclude Include="..\src\kiwano\renderer\TextLayout.h" />
     <ClInclude Include="..\src\kiwano\renderer\TextRenderer.h" />
     <ClInclude Include="..\src\kiwano\third-party\StackWalker\StackWalker.h" />
@@ -131,6 +132,7 @@
     <ClCompile Include="..\src\kiwano\renderer\Image.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\ImageCache.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\Renderer.cpp" />
+    <ClCompile Include="..\src\kiwano\renderer\RenderTarget.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\TextLayout.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\TextRenderer.cpp" />
     <ClCompile Include="..\src\kiwano\third-party\StackWalker\StackWalker.cpp" />

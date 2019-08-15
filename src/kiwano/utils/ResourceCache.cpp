@@ -280,7 +280,7 @@ namespace kiwano
 				FramePtr ptr = new (std::nothrow) Frame(raw->GetImage());
 				if (ptr)
 				{
-					ptr->Crop(Rect{ j * width, i * height, width, height });
+					ptr->SetCropRect(Rect{ j * width, i * height, width, height });
 					image_arr.push_back(ptr);
 				}
 			}
@@ -304,7 +304,7 @@ namespace kiwano
 			FramePtr ptr = new (std::nothrow) Frame(raw->GetImage());
 			if (ptr)
 			{
-				ptr->Crop(rect);
+				ptr->SetCropRect(rect);
 				image_arr.push_back(ptr);
 			}
 		}

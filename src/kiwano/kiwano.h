@@ -56,12 +56,22 @@
 
 
 //
-// base
+// renderer
 //
 
-#include "renderer/Renderer.h"
 #include "renderer/Image.h"
 #include "renderer/GifImage.h"
+#include "renderer/TextLayout.h"
+#include "renderer/TextRenderer.h"
+#include "renderer/Geometry.h"
+#include "renderer/ImageCache.h"
+#include "renderer/RenderTarget.h"
+#include "renderer/Renderer.h"
+
+
+//
+// base
+//
 
 #include "base/time.h"
 #include "base/Window.h"
@@ -80,6 +90,11 @@
 #include "base/TimerManager.h"
 #include "base/AsyncTask.h"
 #include "base/Resource.h"
+
+
+//
+// 2d
+//
 
 #include "2d/Font.hpp"
 #include "2d/Color.h"
@@ -110,8 +125,14 @@
 #include "2d/ShapeActor.h"
 #include "2d/DebugActor.h"
 
+
+//
+// platform
+//
+
 #include "platform/modules.h"
 #include "platform/Application.h"
+
 
 //
 // utils

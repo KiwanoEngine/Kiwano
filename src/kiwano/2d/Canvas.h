@@ -20,10 +20,7 @@
 
 #pragma once
 #include "Actor.h"
-#include "Font.hpp"
-#include "TextStyle.hpp"
-#include "../renderer/Image.h"
-#include "../renderer/TextRenderer.h"
+#include "../renderer/RenderTarget.h"
 
 #ifdef DrawText
 #	undef DrawText
@@ -57,70 +54,67 @@ namespace kiwano
 
 		// 画直线
 		void DrawLine(
-			const Point& begin,
-			const Point& end
+			Point const& begin,
+			Point const& end
 		);
 
 		// 画圆形边框
 		void DrawCircle(
-			const Point& center,
+			Point const& center,
 			float radius
 		);
 
 		// 画椭圆形边框
 		void DrawEllipse(
-			const Point& center,
-			float radius_x,
-			float radius_y
+			Point const& center,
+			Vec2 const& radius
 		);
 
 		// 画矩形边框
 		void DrawRect(
-			const Rect& rect
+			Rect const& rect
 		);
 
 		// 画圆角矩形边框
 		void DrawRoundedRect(
-			const Rect& rect,
-			float radius_x,
-			float radius_y
+			Rect const& rect,
+			Vec2 const& radius
+		);
+
+		// 填充圆形
+		void FillCircle(
+			Point const& center,
+			float radius
+		);
+
+		// 填充椭圆形
+		void FillEllipse(
+			Point const& center,
+			Vec2 const& radius
+		);
+
+		// 填充矩形
+		void FillRect(
+			Rect const& rect
+		);
+
+		// 填充圆角矩形
+		void FillRoundedRect(
+			Rect const& rect,
+			Vec2 const& radius
 		);
 
 		// 画图片
 		void DrawImage(
-			ImagePtr image,
-			float opacity = 1.f
+			Image const& image,
+			const Rect* src_rect = nullptr,
+			const Rect* dest_rect = nullptr
 		);
 
 		// 画文字
 		void DrawText(
 			String const& text,		/* 文字 */
 			Point const& point		/* 文字位置 */
-		);
-
-		// 填充圆形
-		void FillCircle(
-			const Point& center,
-			float radius
-		);
-
-		// 填充椭圆形
-		void FillEllipse(
-			const Point& center,
-			float radius_x,
-			float radius_y
-		);
-
-		// 填充矩形
-		void FillRect(
-			const Rect& rect
-		);
-
-		// 填充圆角矩形
-		void FillRoundedRect(
-			const Rect& rect,
-			float radius_x,
-			float radius_y
 		);
 
 		// 开始绘制路径
@@ -168,14 +162,19 @@ namespace kiwano
 		// 清空画布
 		void Clear();
 
+		// 清空画布
+		void Clear(
+			Color const& clear_color
+		);
+
 		// 设置填充颜色
 		void SetFillColor(
-			const Color& color
+			Color const& color
 		);
 
 		// 设置线条颜色
 		void SetStrokeColor(
-			const Color& color
+			Color const& color
 		);
 
 		// 设置线条宽度
@@ -183,15 +182,24 @@ namespace kiwano
 			float width
 		);
 
-		// 设置线条相交样式
-		void SetOutlineJoinStyle(
-			StrokeStyle outline_join
+		// 设置线条样式
+		void SetStrokeStyle(
+			StrokeStyle stroke_style
+		);
+
+		// 设置文字字体
+		void SetTextFont(
+			Font const& font
 		);
 
 		// 设置文字画刷样式
 		void SetTextStyle(
-			Font const& font,
 			TextStyle const& text_style
+		);
+
+		// 设置画笔透明度
+		void SetBrushOpacity(
+			float opacity
 		);
 
 		// 获取填充颜色
@@ -203,34 +211,38 @@ namespace kiwano
 		// 获取线条宽度
 		float GetStrokeWidth() const;
 
-		// 变换画笔
+		// 获取画笔透明度
+		float GetBrushOpacity() const;
+
+		// 画笔二维变换
+		void SetBrushTransform(
+			Transform const& transform
+		);
+
+		// 画笔二维变换
 		void SetBrushTransform(
 			Matrix3x2 const& transform
 		);
 
 		// 导出为图片
-		ImagePtr ExportToImage() const;
+		Image ExportToImage() const;
 
 		void OnRender(Renderer* renderer) override;
 
 	protected:
-		ComPtr<ID2D1Bitmap> const& GetBitmap() const;
+		void UpdateCache() const;
 
 	protected:
-		float						stroke_width_;
-		Font						text_font_;
-		TextStyle					text_style_;
+		float				stroke_width_;
+		Color				fill_color_;
+		Color				stroke_color_;
+		Font				text_font_;
+		TextStyle			text_style_;
+		StrokeStyle			stroke_style_;
+		GeometrySink		geo_sink_;
+		ImageRenderTarget	rt_;
 
-		ComPtr<ID2D1PathGeometry>		current_geometry_;
-		ComPtr<ID2D1GeometrySink>		current_sink_;
-		ComPtr<ID2D1StrokeStyle>		outline_join_style_;
-		ComPtr<ID2D1SolidColorBrush>	fill_brush_;
-		ComPtr<ID2D1SolidColorBrush>	stroke_brush_;
-		ComPtr<IDWriteTextFormat>		text_format_;
-		ComPtr<ITextRenderer>			text_renderer_;
-		ComPtr<ID2D1BitmapRenderTarget>	render_target_;
-
-		mutable bool					cache_expired_;
-		mutable ComPtr<ID2D1Bitmap>		bitmap_cached_;
+		mutable bool		cache_expired_;
+		mutable Image		image_cached_;
 	};
 }

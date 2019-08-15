@@ -52,7 +52,7 @@ namespace kiwano
 		);
 
 		// ²Ã¼ô¾ØÐÎ
-		void Crop(
+		void SetCropRect(
 			const Rect& crop_rect
 		);
 

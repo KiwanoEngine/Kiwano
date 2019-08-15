@@ -46,8 +46,8 @@ namespace kiwano
 		// 获取线条宽度
 		float GetStrokeWidth() const			{ return stroke_width_; }
 
-		// 获取线条相交样式
-		StrokeStyle SetOutlineJoinStyle() const	{ return outline_join_; }
+		// 获取线条样式
+		StrokeStyle SetStrokeStyle() const		{ return stroke_style_; }
 
 		// 获取边界
 		Rect GetBounds() const override;
@@ -70,9 +70,9 @@ namespace kiwano
 			float width
 		);
 
-		// 设置线条相交样式
-		void SetOutlineJoinStyle(
-			StrokeStyle outline_join
+		// 设置线条样式
+		void SetStrokeStyle(
+			StrokeStyle stroke_style
 		);
 
 		// 设置形状
@@ -87,7 +87,7 @@ namespace kiwano
 		Color		fill_color_;
 		Color		stroke_color_;
 		float		stroke_width_;
-		StrokeStyle	outline_join_;
+		StrokeStyle	stroke_style_;
 		Geometry	geo_;
 	};
 

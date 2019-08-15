@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "ImageCache.h"
+#include "Renderer.h"
 #include "../base/Logger.h"
 
 namespace kiwano
@@ -32,43 +33,28 @@ namespace kiwano
 	{
 	}
 
-	ImagePtr ImageCache::AddImage(Resource const& res)
+	Image ImageCache::AddImage(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
+
 		auto iter = image_cache_.find(hash_code);
 		if (iter != image_cache_.end())
 		{
 			return iter->second;
 		}
 
-		HRESULT hr = S_OK;
-		ComPtr<ID2D1Bitmap> bitmap;
-
-		if (res.IsFileType())
+		Image image;
+		if (image.Load(res))
 		{
-			hr = Renderer::GetInstance()->GetD2DDeviceResources()->CreateBitmapFromFile(bitmap, res.GetFileName());
+			image_cache_.insert(std::make_pair(hash_code, image));
 		}
-		else
-		{
-			hr = Renderer::GetInstance()->GetD2DDeviceResources()->CreateBitmapFromResource(bitmap, res);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			ImagePtr ptr = new Image(bitmap);
-			image_cache_.insert(std::make_pair(hash_code, ptr));
-			return ptr;
-		}
-		else
-		{
-			KGE_ERROR_LOG(L"Load image file failed with HRESULT of %08X", hr);
-		}
-		return nullptr;
+		return image;
 	}
 
 	void ImageCache::RemoveImage(Resource const& res)
 	{
 		size_t hash_code = res.GetHashCode();
+
 		auto iter = image_cache_.find(hash_code);
 		if (iter != image_cache_.end())
 		{
@@ -76,9 +62,39 @@ namespace kiwano
 		}
 	}
 
+	GifImagePtr ImageCache::AddGifImage(Resource const& res)
+	{
+		size_t hash_code = res.GetHashCode();
+
+		auto iter = gif_image_cache_.find(hash_code);
+		if (iter != gif_image_cache_.end())
+		{
+			return iter->second;
+		}
+
+		GifImagePtr ptr = new GifImage;
+		if (ptr->Load(res))
+		{
+			gif_image_cache_.insert(std::make_pair(hash_code, ptr));
+		}
+		return ptr;
+	}
+
+	void ImageCache::RemoveGifImage(Resource const& res)
+	{
+		size_t hash_code = res.GetHashCode();
+
+		auto iter = gif_image_cache_.find(hash_code);
+		if (iter != gif_image_cache_.end())
+		{
+			gif_image_cache_.erase(iter);
+		}
+	}
+
 	void ImageCache::Clear()
 	{
 		image_cache_.clear();
+		gif_image_cache_.clear();
 	}
 
 }

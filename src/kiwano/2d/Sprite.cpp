@@ -38,7 +38,7 @@ namespace kiwano
 		: frame_(nullptr)
 	{
 		Load(res);
-		Crop(crop_rect);
+		SetCropRect(crop_rect);
 	}
 
 	Sprite::Sprite(FramePtr frame)
@@ -62,11 +62,11 @@ namespace kiwano
 		return false;
 	}
 
-	void Sprite::Crop(const Rect& crop_rect)
+	void Sprite::SetCropRect(const Rect& crop_rect)
 	{
 		if (frame_)
 		{
-			frame_->Crop(crop_rect);
+			frame_->SetCropRect(crop_rect);
 			SetSize(frame_->GetWidth(), frame_->GetHeight());
 		}
 	}
@@ -89,7 +89,7 @@ namespace kiwano
 		{
 			PrepareRender(renderer);
 
-			renderer->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
+			renderer->DrawImage(frame_->GetImage(), &frame_->GetCropRect(), nullptr);
 		}
 	}
 }

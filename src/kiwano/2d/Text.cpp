@@ -206,7 +206,7 @@ namespace kiwano
 		if (text_layout_ && renderer->CheckVisibility(size_, transform_matrix_))
 		{
 			PrepareRender(renderer);
-            renderer->DrawTextLayout(text_layout_);
+			renderer->DrawTextLayout(text_layout_);
 		}
 	}
 

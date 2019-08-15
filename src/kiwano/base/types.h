@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	// 画笔样式
+	// 线条样式
 	enum class StrokeStyle : int
 	{
 		Miter = 0,	/* 斜切 */

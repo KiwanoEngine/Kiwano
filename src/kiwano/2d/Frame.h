@@ -35,7 +35,7 @@ namespace kiwano
 		);
 
 		explicit Frame(
-			ImagePtr image
+			Image const& image
 		);
 
 		bool Load(
@@ -43,7 +43,7 @@ namespace kiwano
 		);
 
 		// 裁剪矩形
-		void Crop(
+		void SetCropRect(
 			Rect const& crop_rect	/* 裁剪矩形 */
 		);
 
@@ -63,13 +63,13 @@ namespace kiwano
 		inline Rect const& GetCropRect() const	{ return crop_rect_; }
 
 		// 获取位图
-		inline ImagePtr GetImage() const		{ return image_; }
+		inline Image const& GetImage() const	{ return image_; }
 
 		// 设置位图
-		void SetImage(ImagePtr image);
+		void SetImage(Image const& image);
 
 	protected:
-		ImagePtr image_;
+		Image image_;
 		Rect crop_rect_;
 	};
 }

@@ -291,6 +291,9 @@
     <ClInclude Include="..\src\kiwano\renderer\TextLayout.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\RenderTarget.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\kiwano\ui\Button.cpp">
@@ -447,6 +450,9 @@
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\renderer\TextLayout.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\RenderTarget.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>

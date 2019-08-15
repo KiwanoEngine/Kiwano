@@ -99,30 +99,26 @@ namespace kiwano
 	{
 		if (out_scene_)
 		{
-			renderer->PushClip(
-				out_scene_->GetTransformMatrix(),
-				window_size_
-			);
+			renderer->SetTransform(out_scene_->GetTransformMatrix());
+			renderer->PushClipRect(Rect{ Point{}, window_size_ });
 			renderer->PushLayer(out_layer_, out_layer_prop_);
 
 			out_scene_->Render(renderer);
 
 			renderer->PopLayer();
-			renderer->PopClip();
+			renderer->PopClipRect();
 		}
 
 		if (in_scene_)
 		{
-			renderer->PushClip(
-				in_scene_->GetTransformMatrix(),
-				window_size_
-			);
+			renderer->SetTransform(in_scene_->GetTransformMatrix());
+			renderer->PushClipRect(Rect{ Point{}, window_size_ });
 			renderer->PushLayer(in_layer_, in_layer_prop_);
 
 			in_scene_->Render(renderer);
 
 			renderer->PopLayer();
-			renderer->PopClip();
+			renderer->PopClipRect();
 		}
 	}
 

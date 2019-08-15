@@ -21,19 +21,15 @@
 #include "Renderer.h"
 #include "../base/Logger.h"
 #include "../base/Window.h"
+#include "../utils/FileUtil.h"
 
 namespace kiwano
 {
 	Renderer::Renderer()
 		: hwnd_(nullptr)
-		, antialias_(true)
 		, vsync_(true)
-		, text_antialias_(TextAntialias::GrayScale)
 		, clear_color_(Color::Black)
-		, opacity_(1.f)
-		, collecting_status_(false)
 	{
-		status_.primitives = 0;
 	}
 
 	Renderer::~Renderer()
@@ -74,8 +70,6 @@ namespace kiwano
 #endif
 		);
 
-		device_context_ = d2d_res_->GetDeviceContext();
-
 		ThrowIfFailed(
 			d2d_res_->GetFactory()->CreateDrawingStateBlock(
 				&drawing_state_block_
@@ -101,16 +95,55 @@ namespace kiwano
 
 	void Renderer::BeforeRender()
 	{
-		ThrowIfFailed(
-			BeginDraw()
-		);
+		HRESULT hr = S_OK;
+
+		if (!IsValid())
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			render_target_->SaveDrawingState(drawing_state_block_.get());
+			BeginDraw();
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = d3d_res_->ClearRenderTarget(clear_color_);
+		}
+
+		ThrowIfFailed(hr);
 	}
 
 	void Renderer::AfterRender()
 	{
-		ThrowIfFailed(
-			EndDraw()
-		);
+		HRESULT hr = S_OK;
+		
+		if (!IsValid())
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			EndDraw();
+
+			render_target_->RestoreDrawingState(drawing_state_block_.get());
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = d3d_res_->Present(vsync_);
+		}
+
+		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+		{
+			// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
+			hr = HandleDeviceLost();
+		}
+
+		ThrowIfFailed(hr);
 	}
 
 	void Renderer::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -130,23 +163,10 @@ namespace kiwano
 
 	HRESULT Renderer::CreateDeviceResources()
 	{
-		HRESULT hr = S_OK;
-
-		solid_color_brush_.reset();
-		hr = device_context_->CreateSolidColorBrush(
-			D2D1::ColorF(D2D1::ColorF::White),
-			D2D1::BrushProperties(),
-			&solid_color_brush_
+		HRESULT hr = InitDeviceResources(
+			d2d_res_->GetDeviceContext(),
+			d2d_res_
 		);
-
-		if (SUCCEEDED(hr))
-		{
-			text_renderer_.reset();
-			hr = ITextRenderer::Create(
-				&text_renderer_,
-				device_context_.get()
-			);
-		}
 
 		if (SUCCEEDED(hr))
 		{
@@ -167,82 +187,104 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT Renderer::BeginDraw()
-	{
-		if (!device_context_)
-			return E_UNEXPECTED;
-
-		if (collecting_status_)
-		{
-			status_.start = Time::Now();
-			status_.primitives = 0;
-		}
-
-		device_context_->SaveDrawingState(drawing_state_block_.get());
-
-		device_context_->BeginDraw();
-
-		HRESULT hr = d3d_res_->ClearRenderTarget(clear_color_);
-
-		return hr;
-	}
-
-	HRESULT Renderer::EndDraw()
-	{
-		if (!device_context_)
-			return E_UNEXPECTED;
-
-		HRESULT hr = device_context_->EndDraw();
-
-		device_context_->RestoreDrawingState(drawing_state_block_.get());
-
-		if (SUCCEEDED(hr))
-		{
-			hr = d3d_res_->Present(vsync_);
-		}
-
-		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
-		{
-			// 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
-			hr = HandleDeviceLost();
-		}
-
-		if (collecting_status_)
-		{
-			status_.duration = Time::Now() - status_.start;
-		}
-		return hr;
-	}
-
-	void Renderer::IncreasePrimitivesCount()
-	{
-		if (collecting_status_)
-		{
-			++status_.primitives;
-		}
-	}
-
-	void Renderer::CreateLayer(ComPtr<ID2D1Layer>& layer)
+	void Renderer::CreateImage(Image& image, Resource const& res)
 	{
 		HRESULT hr = S_OK;
-		ComPtr<ID2D1Layer> new_layer;
-
-		if (!device_context_)
+		if (!d2d_res_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
-		if (SUCCEEDED(hr))
+		ComPtr<ID2D1Bitmap> bitmap;
+		if (res.IsFileType())
 		{
-			hr = device_context_->CreateLayer(&new_layer);
+			hr = d2d_res_->CreateBitmapFromFile(bitmap, res.GetFileName());
+		}
+		else
+		{
+			hr = d2d_res_->CreateBitmapFromResource(bitmap, res);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			layer = new_layer;
+			image.SetBitmap(bitmap);
 		}
 
-		ThrowIfFailed(hr);
+		if (FAILED(hr))
+		{
+			KGE_WARNING_LOG(L"Load image failed with HRESULT of %08X!", hr);
+		}
+	}
+
+	void Renderer::CreateGifImage(GifImage& image, Resource const& res)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<IWICBitmapDecoder> decoder;
+		if (res.IsFileType())
+		{
+			if (!FileUtil::ExistsFile(res.GetFileName().c_str()))
+			{
+				KGE_WARNING_LOG(L"Gif image file '%s' not found!", res.GetFileName().c_str());
+				hr = E_FAIL;
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				hr = d2d_res_->GetWICImagingFactory()->CreateDecoderFromFilename(
+					res.GetFileName().c_str(),
+					nullptr,
+					GENERIC_READ,
+					WICDecodeMetadataCacheOnLoad,
+					&decoder
+				);
+			}
+		}
+		else
+		{
+			LPVOID buffer;
+			DWORD buffer_size;
+			HRESULT hr = res.Load(buffer, buffer_size) ? S_OK : E_FAIL;
+
+			ComPtr<IWICStream> stream;
+
+			if (SUCCEEDED(hr))
+			{
+				hr = d2d_res_->GetWICImagingFactory()->CreateStream(&stream);
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				hr = stream->InitializeFromMemory(
+					static_cast<WICInProcPointer>(buffer),
+					buffer_size
+				);
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				hr = d2d_res_->GetWICImagingFactory()->CreateDecoderFromStream(
+					stream.get(),
+					nullptr,
+					WICDecodeMetadataCacheOnLoad,
+					&decoder
+				);
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			image.SetDecoder(decoder);
+		}
+
+		if (FAILED(hr))
+		{
+			KGE_WARNING_LOG(L"Load GIF image failed with HRESULT of %08X!", hr);
+		}
 	}
 
 	void Renderer::CreateTextFormat(TextFormat& format, Font const& font)
@@ -297,7 +339,7 @@ namespace kiwano
 	void Renderer::CreateLineGeometry(Geometry& geo, Point const& begin_pos, Point const& end_pos)
 	{
 		HRESULT hr = S_OK;
-		if (!device_context_ || !d2d_res_)
+		if (!d2d_res_)
 		{
 			hr = E_UNEXPECTED;
 		}
@@ -333,7 +375,7 @@ namespace kiwano
 	void Renderer::CreateRectGeometry(Geometry& geo, Rect const& rect)
 	{
 		HRESULT hr = S_OK;
-		if (!device_context_ || !d2d_res_)
+		if (!d2d_res_)
 		{
 			hr = E_UNEXPECTED;
 		}
@@ -355,7 +397,7 @@ namespace kiwano
 	void Renderer::CreateRoundedRectGeometry(Geometry& geo, Rect const& rect, Vec2 const& radius)
 	{
 		HRESULT hr = S_OK;
-		if (!device_context_ || !d2d_res_)
+		if (!d2d_res_)
 		{
 			hr = E_UNEXPECTED;
 		}
@@ -383,7 +425,7 @@ namespace kiwano
 	void Renderer::CreateEllipseGeometry(Geometry& geo, Point const& center, Vec2 const& radius)
 	{
 		HRESULT hr = S_OK;
-		if (!device_context_ || !d2d_res_)
+		if (!d2d_res_)
 		{
 			hr = E_UNEXPECTED;
 		}
@@ -411,7 +453,7 @@ namespace kiwano
 	void Renderer::CreatePathGeometrySink(GeometrySink& sink)
 	{
 		HRESULT hr = S_OK;
-		if (!device_context_ || !d2d_res_)
+		if (!d2d_res_)
 		{
 			hr = E_UNEXPECTED;
 		}
@@ -430,150 +472,23 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::DrawGeometry(
-		Geometry const& geometry,
-		Color const& stroke_color,
-		float stroke_width,
-		StrokeStyle stroke
-	)
+	void Renderer::CreateImageRenderTarget(ImageRenderTarget& render_target)
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !device_context_)
+		if (!d2d_res_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
-		if (SUCCEEDED(hr) && geometry.GetGeometry())
+		ComPtr<ID2D1BitmapRenderTarget> output;
+		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
-
-			device_context_->DrawGeometry(
-				geometry.GetGeometry().get(),
-				solid_color_brush_.get(),
-				stroke_width,
-				d2d_res_->GetStrokeStyle(stroke)
-			);
-
-			IncreasePrimitivesCount();
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::FillGeometry(Geometry const & geometry, Color const& fill_color)
-	{
-		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !device_context_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr) && geometry.GetGeometry())
-		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
-			device_context_->FillGeometry(
-				geometry.GetGeometry().get(),
-				solid_color_brush_.get()
-			);
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::DrawRectangle(Rect const& rect, Color const& stroke_color, float stroke_width, StrokeStyle stroke)
-	{
-		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !device_context_)
-		{
-			hr = E_UNEXPECTED;
+			hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(&output);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
-
-			device_context_->DrawRectangle(
-				DX::ConvertToRectF(rect),
-				solid_color_brush_.get(),
-				stroke_width,
-				d2d_res_->GetStrokeStyle(stroke)
-			);
-
-			IncreasePrimitivesCount();
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::FillRectangle(Rect const& rect, Color const& fill_color)
-	{
-		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !device_context_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
-			device_context_->FillRectangle(
-				DX::ConvertToRectF(rect),
-				solid_color_brush_.get()
-			);
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::DrawBitmap(ComPtr<ID2D1Bitmap> const & bitmap, Rect const& src_rect, Rect const& dest_rect)
-	{
-		HRESULT hr = S_OK;
-		if (!device_context_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr) && bitmap)
-		{
-			device_context_->DrawBitmap(
-				bitmap.get(),
-				DX::ConvertToRectF(dest_rect),
-				opacity_,
-				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				DX::ConvertToRectF(src_rect)
-			);
-
-			IncreasePrimitivesCount();
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::DrawTextLayout(TextLayout const& layout)
-	{
-		HRESULT hr = S_OK;
-		if (!text_renderer_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			SetTextStyle(
-				opacity_,
-				layout.GetTextStyle().color,
-				layout.GetTextStyle().outline,
-				layout.GetTextStyle().outline_color,
-				layout.GetTextStyle().outline_width,
-				layout.GetTextStyle().outline_stroke
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = layout.GetTextLayout()->Draw(nullptr, text_renderer_.get(), 0, 0);
-
-			IncreasePrimitivesCount();
+			hr = render_target.InitDeviceResources(output, d2d_res_);
 		}
 
 		ThrowIfFailed(hr);
@@ -582,85 +497,6 @@ namespace kiwano
 	void Renderer::SetVSyncEnabled(bool enabled)
 	{
 		vsync_ = enabled;
-	}
-
-	void Renderer::PushClip(const Matrix3x2 & clip_matrix, const Size & clip_size)
-	{
-		HRESULT hr = S_OK;
-		if (!device_context_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			device_context_->SetTransform(DX::ConvertToMatrix3x2F(clip_matrix));
-			device_context_->PushAxisAlignedClip(
-				D2D1::RectF(0, 0, clip_size.x, clip_size.y),
-				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
-			);
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::PopClip()
-	{
-		HRESULT hr = S_OK;
-		if (!device_context_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			device_context_->PopAxisAlignedClip();
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::PushLayer(ComPtr<ID2D1Layer> const& layer, LayerProperties const& properties)
-	{
-		HRESULT hr = S_OK;
-		if (!device_context_ || !solid_color_brush_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			device_context_->PushLayer(
-				D2D1::LayerParameters(
-					DX::ConvertToRectF(properties.area),
-					nullptr,
-					D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
-					D2D1::Matrix3x2F::Identity(),
-					properties.opacity,
-					nullptr,
-					D2D1_LAYER_OPTIONS_NONE
-				),
-				layer.get()
-			);
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::PopLayer()
-	{
-		HRESULT hr = S_OK;
-		if (!device_context_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			device_context_->PopLayer();
-		}
-
-		ThrowIfFailed(hr);
 	}
 
 	void Renderer::Resize(UINT width, UINT height)
@@ -681,134 +517,9 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::SetCollectingStatus(bool collecting)
-	{
-		collecting_status_ = collecting;
-	}
-
-	void Renderer::SetClearColor(const Color & color)
+	void Renderer::SetClearColor(const Color& color)
 	{
 		clear_color_ = color;
-	}
-
-	void Renderer::SetTransform(const Matrix3x2 & matrix)
-	{
-		HRESULT hr = S_OK;
-		if (!device_context_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			device_context_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::SetOpacity(float opacity)
-	{
-		HRESULT hr = S_OK;
-		if (!solid_color_brush_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			if (opacity_ != opacity)
-			{
-				opacity_ = opacity;
-				solid_color_brush_->SetOpacity(opacity);
-			}
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::SetTextStyle(
-		float opacity,
-		Color const& color,
-		bool has_outline,
-		Color const& outline_color,
-		float outline_width,
-		StrokeStyle outline_stroke
-	)
-	{
-		HRESULT hr = S_OK;
-		if (!text_renderer_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			text_renderer_->SetTextStyle(
-				opacity,
-				DX::ConvertToColorF(color),
-				has_outline,
-				DX::ConvertToColorF(outline_color),
-				outline_width,
-				d2d_res_->GetStrokeStyle(outline_stroke)
-			);
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::SetAntialiasMode(bool enabled)
-	{
-		HRESULT hr = S_OK;
-		if (!device_context_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			device_context_->SetAntialiasMode(
-				enabled ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
-			);
-			antialias_ = enabled;
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void Renderer::SetTextAntialiasMode(TextAntialias mode)
-	{
-		HRESULT hr = S_OK;
-		if (!device_context_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			text_antialias_ = mode;
-			D2D1_TEXT_ANTIALIAS_MODE antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
-			switch (text_antialias_)
-			{
-			case TextAntialias::Default:
-				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_DEFAULT;
-				break;
-			case TextAntialias::ClearType:
-				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
-				break;
-			case TextAntialias::GrayScale:
-				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
-				break;
-			case TextAntialias::None:
-				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_ALIASED;
-				break;
-			default:
-				break;
-			}
-			device_context_->SetTextAntialiasMode(antialias_mode);
-		}
-
-		ThrowIfFailed(hr);
 	}
 
 	bool Renderer::CheckVisibility(Size const& content_size, Matrix3x2 const& transform)
