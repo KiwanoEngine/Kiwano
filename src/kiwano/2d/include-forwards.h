@@ -19,15 +19,15 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Color.h"
 #include "../core/core.h"
 #include "../base/time.h"
 #include "../base/RefCounter.hpp"
 #include "../base/SmartPtr.hpp"
 #include "../base/ComPtr.hpp"
 #include "../base/Object.h"
-#include "../math/helper.h"
 #include "../base/types.h"
+#include "../math/helper.h"
+#include "../renderer/Color.h"
 
 namespace kiwano
 {

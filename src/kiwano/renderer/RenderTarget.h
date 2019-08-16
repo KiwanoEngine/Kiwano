@@ -24,6 +24,7 @@
 #include "Geometry.h"
 #include "TextLayout.h"
 #include "TextRenderer.h"
+#include "LayerArea.h"
 
 namespace kiwano
 {
@@ -37,7 +38,7 @@ namespace kiwano
 		void EndDraw();
 
 		void CreateLayer(
-			ComPtr<ID2D1Layer>& layer
+			LayerArea& layer
 		) const;
 
 		void DrawGeometry(
@@ -124,8 +125,7 @@ namespace kiwano
 		void PopClipRect();
 
 		void PushLayer(
-			ComPtr<ID2D1Layer> const& layer,
-			LayerProperties const& properties
+			LayerArea const& layer
 		);
 
 		void PopLayer();

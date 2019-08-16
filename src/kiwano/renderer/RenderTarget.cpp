@@ -389,10 +389,9 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::CreateLayer(ComPtr<ID2D1Layer>& layer) const
+	void RenderTarget::CreateLayer(LayerArea& layer) const
 	{
 		HRESULT hr = S_OK;
-		ComPtr<ID2D1Layer> new_layer;
 
 		if (!render_target_)
 		{
@@ -401,12 +400,13 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = render_target_->CreateLayer(&new_layer);
-		}
+			ComPtr<ID2D1Layer> output;
+			hr = render_target_->CreateLayer(&output);
 
-		if (SUCCEEDED(hr))
-		{
-			layer = new_layer;
+			if (SUCCEEDED(hr))
+			{
+				layer.SetLayer(output);
+			}
 		}
 
 		ThrowIfFailed(hr);
@@ -424,7 +424,7 @@ namespace kiwano
 		{
 			render_target_->PushAxisAlignedClip(
 				DX::ConvertToRectF(clip_rect),
-				D2D1_ANTIALIAS_MODE_PER_PRIMITIVE
+				antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
 			);
 		}
 
@@ -447,7 +447,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::PushLayer(ComPtr<ID2D1Layer> const& layer, LayerProperties const& properties)
+	void RenderTarget::PushLayer(LayerArea const& layer)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !solid_color_brush_)
@@ -455,19 +455,19 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (SUCCEEDED(hr))
+		if (SUCCEEDED(hr) && layer.IsValid())
 		{
 			render_target_->PushLayer(
 				D2D1::LayerParameters(
-					DX::ConvertToRectF(properties.area),
-					nullptr,
-					D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+					DX::ConvertToRectF(layer.GetAreaRect()),
+					layer.GetMaskGeometry().GetGeometry().get(),
+					antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED,
 					D2D1::Matrix3x2F::Identity(),
-					properties.opacity,
+					layer.GetOpacity(),
 					nullptr,
 					D2D1_LAYER_OPTIONS_NONE
 				),
-				layer.get()
+				layer.GetLayer().get()
 			);
 		}
 

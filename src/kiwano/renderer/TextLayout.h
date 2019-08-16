@@ -20,7 +20,7 @@
 
 #pragma once
 #include "D2DDeviceResources.h"
-#include "../2d/Font.hpp"
+#include "Font.h"
 #include "../2d/TextStyle.hpp"
 
 namespace kiwano

@@ -19,46 +19,42 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../math/Rect.hpp"
+#include "D2DDeviceResources.h"
+#include "Geometry.h"
 
 namespace kiwano
 {
-	// 线条样式
-	enum class StrokeStyle : int
+	// 图层
+	class KGE_API LayerArea
 	{
-		Miter = 0,	/* 斜切 */
-		Bevel = 1,	/* 斜角 */
-		Round = 2	/* 圆角 */
-	};
+	public:
+		LayerArea();
 
-	// 方向
-	enum class Direction : int
-	{
-		Up,		/* 上 */
-		Down,	/* 下 */
-		Left,	/* 左 */
-		Right	/* 右 */
-	};
+		bool IsValid() const;
 
-	// 鼠标指针
-	enum class MouseCursor : int
-	{
-		Arrow,		/* 指针 */
-		TextInput,	/* 输入文本 */
-		Hand,		/* 手指 */
-		SizeAll,
-		SizeNESW,
-		SizeNS,
-		SizeNWSE,
-		SizeWE,
-	};
+		Size GetSize() const;
 
-	// 文字抗锯齿属性
-	enum class TextAntialias
-	{
-		Default,	// 系统默认
-		ClearType,	// ClearType 抗锯齿
-		GrayScale,	// 灰度抗锯齿
-		None		// 不启用抗锯齿
+		inline Rect const& GetAreaRect() const				{ return area_; }
+
+		inline void SetAreaRect(Rect const& area)			{ area_ = area; }
+
+		inline float GetOpacity() const						{ return opacity_; }
+
+		inline void SetOpacity(float opacity)				{ opacity_ = opacity; }
+
+		inline Geometry const& GetMaskGeometry() const		{ return mask_; }
+
+		inline void SetMaskGeometry(Geometry const& mask)	{ mask_ = mask; }
+
+	public:
+		inline ComPtr<ID2D1Layer> GetLayer() const			{ return layer_; }
+
+		inline void SetLayer(ComPtr<ID2D1Layer> layer)		{ layer_ = layer; }
+
+	protected:
+		Rect area_;
+		float opacity_;
+		Geometry mask_;
+		ComPtr<ID2D1Layer> layer_;
 	};
 }

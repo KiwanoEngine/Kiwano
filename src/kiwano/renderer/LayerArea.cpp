@@ -18,47 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "../math/Rect.hpp"
+#include "LayerArea.h"
 
 namespace kiwano
 {
-	// 线条样式
-	enum class StrokeStyle : int
+	LayerArea::LayerArea()
+		: opacity_(1.f)
 	{
-		Miter = 0,	/* 斜切 */
-		Bevel = 1,	/* 斜角 */
-		Round = 2	/* 圆角 */
-	};
+	}
 
-	// 方向
-	enum class Direction : int
+	bool LayerArea::IsValid() const
 	{
-		Up,		/* 上 */
-		Down,	/* 下 */
-		Left,	/* 左 */
-		Right	/* 右 */
-	};
+		return layer_ != nullptr;
+	}
 
-	// 鼠标指针
-	enum class MouseCursor : int
+	Size LayerArea::GetSize() const
 	{
-		Arrow,		/* 指针 */
-		TextInput,	/* 输入文本 */
-		Hand,		/* 手指 */
-		SizeAll,
-		SizeNESW,
-		SizeNS,
-		SizeNWSE,
-		SizeWE,
-	};
+		if (layer_)
+		{
+			return reinterpret_cast<Size const&>(layer_->GetSize());
+		}
+		return Size();
+	}
 
-	// 文字抗锯齿属性
-	enum class TextAntialias
-	{
-		Default,	// 系统默认
-		ClearType,	// ClearType 抗锯齿
-		GrayScale,	// 灰度抗锯齿
-		None		// 不启用抗锯齿
-	};
 }

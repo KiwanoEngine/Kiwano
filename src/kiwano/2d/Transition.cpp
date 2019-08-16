@@ -39,10 +39,8 @@ namespace kiwano
 		, window_size_()
 		, out_scene_(nullptr)
 		, in_scene_(nullptr)
-		, out_layer_(nullptr)
-		, in_layer_(nullptr)
-		, out_layer_prop_()
-		, in_layer_prop_()
+		, out_layer_()
+		, in_layer_()
 	{
 	}
 
@@ -74,7 +72,8 @@ namespace kiwano
 		}
 
 		window_size_ = Renderer::GetInstance()->GetOutputSize();
-		out_layer_prop_ = in_layer_prop_ = LayerProperties{ Rect(Point(), window_size_),1.f };
+		out_layer_.SetAreaRect(Rect{ Point(), window_size_ });
+		in_layer_.SetAreaRect(Rect{ Point(), window_size_ });
 	}
 
 	void Transition::Update(Duration dt)
@@ -101,7 +100,7 @@ namespace kiwano
 		{
 			renderer->SetTransform(out_scene_->GetTransformMatrix());
 			renderer->PushClipRect(Rect{ Point{}, window_size_ });
-			renderer->PushLayer(out_layer_, out_layer_prop_);
+			renderer->PushLayer(out_layer_);
 
 			out_scene_->Render(renderer);
 
@@ -113,7 +112,7 @@ namespace kiwano
 		{
 			renderer->SetTransform(in_scene_->GetTransformMatrix());
 			renderer->PushClipRect(Rect{ Point{}, window_size_ });
-			renderer->PushLayer(in_layer_, in_layer_prop_);
+			renderer->PushLayer(in_layer_);
 
 			in_scene_->Render(renderer);
 
@@ -141,7 +140,7 @@ namespace kiwano
 	{
 		Transition::Init(prev, next);
 
-		in_layer_prop_.opacity = 0;
+		in_layer_.SetOpacity(0.f);
 	}
 
 	void BoxTransition::Update(Duration dt)
@@ -150,22 +149,26 @@ namespace kiwano
 
 		if (process_ < .5f)
 		{
-			out_layer_prop_.area = Rect(
-				window_size_.x * process_,
-				window_size_.y * process_,
-				window_size_.x * (1 - process_ * 2),
-				window_size_.y * (1 - process_ * 2)
+			out_layer_.SetAreaRect(
+				Rect(
+					window_size_.x * process_,
+					window_size_.y * process_,
+					window_size_.x * (1 - process_ * 2),
+					window_size_.y * (1 - process_ * 2)
+				)
 			);
 		}
 		else
 		{
-			out_layer_prop_.opacity = 0;
-			in_layer_prop_.opacity = 1;
-			in_layer_prop_.area = Rect(
-				window_size_.x * (1 - process_),
-				window_size_.y * (1 - process_),
-				window_size_.x * (2 * process_ - 1),
-				window_size_.y * (2 * process_ - 1)
+			out_layer_.SetOpacity(0.f);
+			in_layer_.SetOpacity(1.f);
+			in_layer_.SetAreaRect(
+				Rect(
+					window_size_.x * (1 - process_),
+					window_size_.y * (1 - process_),
+					window_size_.x * (2 * process_ - 1),
+					window_size_.y * (2 * process_ - 1)
+				)
 			);
 		}
 	}
@@ -183,16 +186,16 @@ namespace kiwano
 	{
 		Transition::Init(prev, next);
 
-		out_layer_prop_.opacity = 1;
-		in_layer_prop_.opacity = 0;
+		out_layer_.SetOpacity(1.f);
+		in_layer_.SetOpacity(0.f);
 	}
 
 	void EmergeTransition::Update(Duration dt)
 	{
 		Transition::Update(dt);
 
-		out_layer_prop_.opacity = 1 - process_;
-		in_layer_prop_.opacity = process_;
+		out_layer_.SetOpacity(1 - process_);
+		in_layer_.SetOpacity(process_);
 	}
 
 	//-------------------------------------------------------
@@ -208,8 +211,8 @@ namespace kiwano
 	{
 		Transition::Init(prev, next);
 
-		out_layer_prop_.opacity = 1;
-		in_layer_prop_.opacity = 0;
+		out_layer_.SetOpacity(1.f);
+		in_layer_.SetOpacity(0.f);
 	}
 
 	void FadeTransition::Update(Duration dt)
@@ -218,13 +221,13 @@ namespace kiwano
 
 		if (process_ < 0.5)
 		{
-			out_layer_prop_.opacity = 1 - process_ * 2;
-			in_layer_prop_.opacity = 0;
+			out_layer_.SetOpacity(1 - process_ * 2);
+			in_layer_.SetOpacity(0.f);
 		}
 		else
 		{
-			out_layer_prop_.opacity = 0;
-			in_layer_prop_.opacity = (process_ - 0.5f) * 2;
+			out_layer_.SetOpacity(0.f);
+			in_layer_.SetOpacity((process_ - 0.5f) * 2);
 		}
 	}
 
@@ -336,7 +339,7 @@ namespace kiwano
 			in_scene_->SetAnchor(0.5f, 0.5f);
 		}
 
-		in_layer_prop_.opacity = 0;
+		in_layer_.SetOpacity(0.f);
 	}
 
 	void RotationTransition::Update(Duration dt)
@@ -357,8 +360,8 @@ namespace kiwano
 		{
 			if (in_scene_)
 			{
-				out_layer_prop_.opacity = 0;
-				in_layer_prop_.opacity = 1;
+				out_layer_.SetOpacity(0.f);
+				in_layer_.SetOpacity(1.f);
 
 				auto transform = in_scene_->GetTransform();
 				transform.scale = Point{ (process_ - .5f) * 2, (process_ - .5f) * 2 };

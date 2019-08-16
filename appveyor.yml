@@ -5,8 +5,8 @@ skip_tags: true
 # fetch repository as zip archive
 shallow_clone: true
 
-# pull_requests:
-#   do_not_increment_build_number: true
+pull_requests:
+  do_not_increment_build_number: true
 
 # Do not build feature branch with open Pull Requests
 # skip_branch_with_pr: true
@@ -54,6 +54,9 @@ for:
       - master
   only_commits:
     message: /\[build\]/
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      VS_PLATFORM_TOOLSET: v142
 
 configuration:
 - Debug

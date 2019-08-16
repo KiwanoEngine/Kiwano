@@ -20,8 +20,8 @@
 
 #pragma once
 #include "helper.hpp"
+#include "Font.h"
 #include "../base/Resource.h"
-#include "../2d/Font.hpp"
 #include "../2d/TextStyle.hpp"
 #include <dwrite.h>
 #include <d2d1.h>

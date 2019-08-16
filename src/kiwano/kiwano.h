@@ -59,11 +59,14 @@
 // renderer
 //
 
+#include "renderer/Color.h"
+#include "renderer/Font.h"
 #include "renderer/Image.h"
 #include "renderer/GifImage.h"
 #include "renderer/TextLayout.h"
 #include "renderer/TextRenderer.h"
 #include "renderer/Geometry.h"
+#include "renderer/LayerArea.h"
 #include "renderer/ImageCache.h"
 #include "renderer/RenderTarget.h"
 #include "renderer/Renderer.h"
@@ -96,8 +99,7 @@
 // 2d
 //
 
-#include "2d/Font.hpp"
-#include "2d/Color.h"
+
 #include "2d/Transform.hpp"
 #include "2d/TextStyle.hpp"
 

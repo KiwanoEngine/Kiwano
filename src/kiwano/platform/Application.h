@@ -23,7 +23,7 @@
 #include "../base/time.h"
 #include "../base/Component.h"
 #include "../base/Event.hpp"
-#include "../2d/Color.h"
+#include "../renderer/Color.h"
 
 namespace kiwano
 {

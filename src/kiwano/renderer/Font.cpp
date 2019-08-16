@@ -18,46 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <string>
+#include "Font.h"
 
 namespace kiwano
 {
-	// 字体粗细值
-	enum FontWeight : unsigned int
+	Font::Font(const String& family, float size, unsigned int weight, bool italic)
+		: family(family)
+		, size(size)
+		, weight(weight)
+		, italic(italic)
 	{
-		Thin = 100,
-		ExtraLight = 200,
-		Light = 300,
-		Normal = 400,
-		Medium = 500,
-		Bold = 700,
-		ExtraBold = 800,
-		Black = 900,
-		ExtraBlack = 950
-	};
-
-	// 字体
-	class Font
-	{
-	public:
-		String			family;		// 字体族
-		float			size;		// 字号
-		unsigned int	weight;		// 粗细值
-		bool			italic;		// 是否斜体
-
-	public:
-		Font(
-			const String& family	= L"",
-			float size				= 18,
-			unsigned int weight		= FontWeight::Normal,
-			bool italic				= false
-		)
-			: family(family)
-			, size(size)
-			, weight(weight)
-			, italic(italic)
-		{
-		}
-	};
+	}
 }

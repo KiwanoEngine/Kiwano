@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2019 Kiwano - Nomango
+// Copyright (c) 2016-2018 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,46 +19,39 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../math/Rect.hpp"
+#include "../core/core.h"
 
 namespace kiwano
 {
-	// 线条样式
-	enum class StrokeStyle : int
+	// 字体粗细值
+	enum FontWeight : unsigned int
 	{
-		Miter = 0,	/* 斜切 */
-		Bevel = 1,	/* 斜角 */
-		Round = 2	/* 圆角 */
+		Thin		= 100,
+		ExtraLight	= 200,
+		Light		= 300,
+		Normal		= 400,
+		Medium		= 500,
+		Bold		= 700,
+		ExtraBold	= 800,
+		Black		= 900,
+		ExtraBlack	= 950
 	};
 
-	// 方向
-	enum class Direction : int
+	// 字体
+	class Font
 	{
-		Up,		/* 上 */
-		Down,	/* 下 */
-		Left,	/* 左 */
-		Right	/* 右 */
-	};
+	public:
+		String			family;		// 字体族
+		float			size;		// 字号
+		unsigned int	weight;		// 粗细值
+		bool			italic;		// 是否斜体
 
-	// 鼠标指针
-	enum class MouseCursor : int
-	{
-		Arrow,		/* 指针 */
-		TextInput,	/* 输入文本 */
-		Hand,		/* 手指 */
-		SizeAll,
-		SizeNESW,
-		SizeNS,
-		SizeNWSE,
-		SizeWE,
-	};
-
-	// 文字抗锯齿属性
-	enum class TextAntialias
-	{
-		Default,	// 系统默认
-		ClearType,	// ClearType 抗锯齿
-		GrayScale,	// 灰度抗锯齿
-		None		// 不启用抗锯齿
+	public:
+		Font(
+			const String& family	= L"",
+			float size				= 18,
+			unsigned int weight		= FontWeight::Normal,
+			bool italic				= false
+		);
 	};
 }

@@ -21,7 +21,7 @@
 #pragma once
 #include "../base/ComPtr.hpp"
 #include "../math/helper.h"
-#include "../2d/Color.h"
+#include "Color.h"
 #include <d2d1.h>
 
 namespace kiwano

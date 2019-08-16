@@ -21,7 +21,7 @@
 #pragma once
 #include "../macros.h"
 #include "../math/helper.h"
-#include "../2d/Color.h"
+#include "Color.h"
 #include <Unknwnbase.h>
 
 namespace kiwano
