@@ -42,7 +42,7 @@ namespace kiwano
 		}
 	}
 
-	ActionPtr ActionManager::AddAction(ActionPtr action)
+	Action* ActionManager::AddAction(ActionPtr action)
 	{
 		KGE_ASSERT(action && "AddAction failed, NULL pointer exception");
 
@@ -50,7 +50,7 @@ namespace kiwano
 		{
 			actions_.push_back_item(action);
 		}
-		return action;
+		return action.get();
 	}
 
 	ActionPtr ActionManager::GetAction(String const & name)

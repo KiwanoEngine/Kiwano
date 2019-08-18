@@ -306,6 +306,9 @@
     <ClInclude Include="..\src\kiwano\renderer\FontCollection.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\kiwano\core\types.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\kiwano\ui\Button.cpp">

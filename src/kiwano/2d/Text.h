@@ -87,12 +87,12 @@ namespace kiwano
 
 		// 设置字号（默认值为 18）
 		void SetFontSize(
-			float size
+			Float32 size
 		);
 
 		// 设置字体粗细值（默认值为 FontWeight::Normal）
 		void SetFontWeight(
-			unsigned int weight
+			UInt32 weight
 		);
 
 		// 设置文字颜色（默认值为 Color::White）
@@ -107,12 +107,12 @@ namespace kiwano
 
 		// 设置文本自动换行的宽度（默认为 0）
 		void SetWrapWidth(
-			float wrap_width
+			Float32 wrap_width
 		);
 
 		// 设置行间距（默认为 0）
 		void SetLineSpacing(
-			float line_spacing
+			Float32 line_spacing
 		);
 
 		// 设置对齐方式（默认为 TextAlign::Left）
@@ -142,7 +142,7 @@ namespace kiwano
 
 		// 设置描边线宽
 		void SetOutlineWidth(
-			float outline_width
+			Float32 outline_width
 		);
 
 		// 设置描边线相交样式

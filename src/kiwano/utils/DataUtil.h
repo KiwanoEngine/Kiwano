@@ -26,12 +26,12 @@ namespace kiwano
 {
 	//
 	// 数据存取工具 (.ini 格式)
-	// 一个 DataUtil 对象表示一个数据储存实体, 用于存取简单格式 (bool | int | float | double | String) 的数据
+	// 一个 DataUtil 对象表示一个数据储存实体, 用于存取简单格式 (bool | Int32 | float | Float64 | String) 的数据
 	// 数据都采用 key-value (键-值) 的方式存取
 	// 例如, 保存一份游戏最高分, 以便下次进行游戏时读取:
 	// DataUtil data;                          // 创建数据对象
 	// data.SaveInt(L"best score", 20);        // 保存最高分 20
-	// int best = data.GetInt(L"best score");  // 读取之前储存的最高分
+	// Int32 best = data.GetInt(L"best score");  // 读取之前储存的最高分
 	//
 
 	class KGE_API DataUtil
@@ -63,22 +63,22 @@ namespace kiwano
 			String const& key
 		) const;
 
-		// 保存 int 类型的值
+		// 保存 Int32 类型的值
 		bool SaveInt(
 			String const& key,
-			int val
+			Int32 val
 		) const;
 
 		// 保存 float 类型的值
 		bool SaveFloat(
 			String const& key,
-			float val
+			Float32 val
 		) const;
 
-		// 保存 double 类型的值
+		// 保存 Float64 类型的值
 		bool SaveDouble(
 			String const& key,
-			double val
+			Float64 val
 		) const;
 
 		// 保存 bool 类型的值
@@ -93,22 +93,22 @@ namespace kiwano
 			String const& val
 		) const;
 
-		// 获取 int 类型的值
-		int GetInt(
+		// 获取 Int32 类型的值
+		Int32 GetInt(
 			String const& key,
-			int default_value = 0
+			Int32 default_value = 0
 		) const;
 
 		// 获取 float 类型的值
-		float GetFloat(
+		Float32 GetFloat(
 			String const& key,
-			float default_value = 0.0f
+			Float32 default_value = 0.0f
 		) const;
 
-		// 获取 double 类型的值
-		double GetDouble(
+		// 获取 Float64 类型的值
+		Float64 GetDouble(
 			String const& key,
-			double default_value = 0.0
+			Float64 default_value = 0.0
 		) const;
 
 		// 获取 bool 类型的值
@@ -120,7 +120,7 @@ namespace kiwano
 		// 获取 字符串 类型的值
 		String GetString(
 			String const& key,
-			String const& default_value = L""
+			String const& default_value = String()
 		) const;
 
 	protected:

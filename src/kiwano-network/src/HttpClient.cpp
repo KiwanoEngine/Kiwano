@@ -35,10 +35,10 @@ namespace
 	using namespace kiwano;
 	using namespace kiwano::network;
 
-	size_t write_data(void* buffer, size_t size, size_t nmemb, void* userp)
+	UInt32 write_data(void* buffer, UInt32 size, UInt32 nmemb, void* userp)
 	{
 		kiwano::string* recv_buffer = (kiwano::string*)userp;
-		size_t total = size * nmemb;
+		UInt32 total = size * nmemb;
 
 		// add data to the end of recv_buffer
 		// write data maybe called more than once in a single request
@@ -49,7 +49,7 @@ namespace
 
 	kiwano::string convert_to_utf8(kiwano::wstring const& str)
 	{
-		std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
+		std::wstring_convert<std::codecvt_utf8<WChar>> utf8_conv;
 		kiwano::string result;
 
 		try
@@ -66,7 +66,7 @@ namespace
 
 	kiwano::wstring convert_from_utf8(kiwano::string const& str)
 	{
-		kiwano::string_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
+		kiwano::string_convert<std::codecvt_utf8<WChar>> utf8_conv;
 		kiwano::wstring result;
 
 		try
@@ -256,7 +256,7 @@ namespace kiwano
 		{
 			::curl_global_init(CURL_GLOBAL_ALL);
 
-			std::thread thread(bind_func(this, &HttpClient::NetworkThread));
+			std::thread thread(Closure(this, &HttpClient::NetworkThread));
 			thread.detach();
 		}
 
@@ -299,7 +299,7 @@ namespace kiwano
 				response_queue_.push(response);
 				response_mutex_.unlock();
 
-				Application::PreformInMainThread(bind_func(this, &HttpClient::DispatchResponseCallback));
+				Application::PreformInMainThread(Closure(this, &HttpClient::DispatchResponseCallback));
 			}
 		}
 

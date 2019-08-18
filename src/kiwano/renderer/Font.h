@@ -24,7 +24,7 @@
 namespace kiwano
 {
 	// 字体粗细值
-	enum FontWeight : unsigned int
+	enum FontWeight : UInt32
 	{
 		Thin		= 100,
 		ExtraLight	= 200,
@@ -42,16 +42,16 @@ namespace kiwano
 	{
 	public:
 		String			family;		// 字体族
-		float			size;		// 字号
-		unsigned int	weight;		// 粗细值
+		Float32			size;		// 字号
+		UInt32	weight;		// 粗细值
 		bool			italic;		// 是否斜体
 		FontCollection	collection;	// 字体集
 
 	public:
 		Font(
 			const String& family		= L"",
-			float size					= 18,
-			unsigned int weight			= FontWeight::Normal,
+			Float32 size					= 18,
+			UInt32 weight			= FontWeight::Normal,
 			bool italic					= false,
 			FontCollection collection	= FontCollection()
 		);

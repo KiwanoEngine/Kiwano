@@ -55,7 +55,7 @@ namespace kiwano
 			return wave_format_;
 		}
 
-		HRESULT Transcoder::LoadMediaFile(String const& file_path, BYTE** wave_data, UINT32* wave_data_size)
+		HRESULT Transcoder::LoadMediaFile(String const& file_path, BYTE** wave_data, UInt32* wave_data_size)
 		{
 			HRESULT hr = S_OK;
 
@@ -75,7 +75,7 @@ namespace kiwano
 			return hr;
 		}
 
-		HRESULT Transcoder::LoadMediaResource(Resource const& res, BYTE** wave_data, UINT32* wave_data_size)
+		HRESULT Transcoder::LoadMediaResource(Resource const& res, BYTE** wave_data, UInt32* wave_data_size)
 		{
 			HRESULT	hr = S_OK;
 
@@ -88,7 +88,7 @@ namespace kiwano
 
 			stream = kiwano::modules::Shlwapi::Get().SHCreateMemStream(
 				static_cast<const BYTE*>(data.buffer),
-				static_cast<UINT>(data.size)
+				static_cast<UInt32>(data.size)
 			);
 
 			if (stream == nullptr)
@@ -119,7 +119,7 @@ namespace kiwano
 			return hr;
 		}
 
-		HRESULT Transcoder::ReadSource(IMFSourceReader* reader, BYTE** wave_data, UINT32* wave_data_size)
+		HRESULT Transcoder::ReadSource(IMFSourceReader* reader, BYTE** wave_data, UInt32* wave_data_size)
 		{
 			HRESULT hr = S_OK;
 			DWORD max_stream_size = 0;
@@ -170,7 +170,7 @@ namespace kiwano
 			// 获取 WAVEFORMAT 数据
 			if (SUCCEEDED(hr))
 			{
-				UINT32 size = 0;
+				UInt32 size = 0;
 				hr = modules::MediaFoundation::Get().MFCreateWaveFormatExFromMFMediaType(
 					uncompressed_type.get(),
 					&wave_format_,

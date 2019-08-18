@@ -56,7 +56,7 @@ namespace kiwano
 
 		void Update(String const& text, TextStyle const& style);
 
-		UINT32 GetLineCount();
+		UInt32 GetLineCount();
 
 		Size GetLayoutSize() const;
 

@@ -37,13 +37,13 @@ namespace kiwano
 	public:
 		Color		color;				// 颜色
 		TextAlign	alignment;			// 对齐方式
-		float		wrap_width;			// 自动换行宽度
-		float		line_spacing;		// 行间距
+		Float32		wrap_width;			// 自动换行宽度
+		Float32		line_spacing;		// 行间距
 		bool		underline;			// 下划线
 		bool		strikethrough;		// 删除线
 		bool		outline;			// 显示描边
 		Color		outline_color;		// 描边颜色
-		float		outline_width;		// 描边线宽
+		Float32		outline_width;		// 描边线宽
 		StrokeStyle	outline_stroke;		// 描边线相交样式
 
 	public:
@@ -63,13 +63,13 @@ namespace kiwano
 		TextStyle(
 			Color color,
 			TextAlign alignment			= TextAlign::Left,
-			float wrap_width			= 0.f,
-			float line_spacing			= 0.f,
+			Float32 wrap_width			= 0.f,
+			Float32 line_spacing			= 0.f,
 			bool underline				= false,
 			bool strikethrough			= false,
 			bool outline				= true,
 			Color outline_color			= Color(Color::Black, 0.5),
-			float outline_width			= 1.f,
+			Float32 outline_width			= 1.f,
 			StrokeStyle outline_stroke	= StrokeStyle::Round
 		)
 			: color(color)

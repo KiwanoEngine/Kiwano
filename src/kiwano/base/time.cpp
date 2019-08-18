@@ -119,25 +119,25 @@ namespace kiwano
 		{
 		}
 
-		float Duration::Seconds() const
+		Float32 Duration::Seconds() const
 		{
 			long sec = milliseconds_ / Sec.milliseconds_;
 			long ms = milliseconds_ % Sec.milliseconds_;
-			return static_cast<float>(sec) + static_cast<float>(ms) / 1000.f;
+			return static_cast<Float32>(sec) + static_cast<Float32>(ms) / 1000.f;
 		}
 
-		float Duration::Minutes() const
+		Float32 Duration::Minutes() const
 		{
 			long min = milliseconds_ / Min.milliseconds_;
 			long ms = milliseconds_ % Min.milliseconds_;
-			return static_cast<float>(min) + static_cast<float>(ms) / (60 * 1000.f);
+			return static_cast<Float32>(min) + static_cast<Float32>(ms) / (60 * 1000.f);
 		}
 
-		float Duration::Hours() const
+		Float32 Duration::Hours() const
 		{
 			long hour = milliseconds_ / Hour.milliseconds_;
 			long ms = milliseconds_ % Hour.milliseconds_;
-			return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
+			return static_cast<Float32>(hour) + static_cast<Float32>(ms) / (60 * 60 * 1000.f);
 		}
 
 		String kiwano::time::Duration::ToString() const
@@ -172,14 +172,14 @@ namespace kiwano
 
 			if (ms != 0)
 			{
-				auto float_to_str = [](float val) -> String
+				auto float_to_str = [](Float32 val) -> String
 				{
-					wchar_t buf[10] = {};
+					WChar buf[10] = {};
 					::swprintf_s(buf, L"%g", val);
 					return String(buf);
 				};
 
-				result.append(float_to_str(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f))
+				result.append(float_to_str(static_cast<Float32>(sec) + static_cast<Float32>(ms) / 1000.f))
 					.append(L"s");
 			}
 			else if (sec != 0)
@@ -219,9 +219,9 @@ namespace kiwano
 			return milliseconds_ <= other.milliseconds_;
 		}
 
-		float kiwano::time::Duration::operator/(const Duration & other) const
+		Float32 kiwano::time::Duration::operator/(const Duration & other) const
 		{
-			return static_cast<float>(milliseconds_) / other.milliseconds_;
+			return static_cast<Float32>(milliseconds_) / other.milliseconds_;
 		}
 
 		const Duration Duration::operator+(const Duration & other) const
@@ -239,7 +239,7 @@ namespace kiwano
 			return Duration(-milliseconds_);
 		}
 
-		const Duration Duration::operator*(int val) const
+		const Duration Duration::operator*(Int32 val) const
 		{
 			return Duration(milliseconds_ * val);
 		}
@@ -249,12 +249,12 @@ namespace kiwano
 			return Duration(static_cast<long>(milliseconds_ * val));
 		}
 
-		const Duration Duration::operator*(float val) const
+		const Duration Duration::operator*(Float32 val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ * val));
 		}
 
-		const Duration Duration::operator*(double val) const
+		const Duration Duration::operator*(Float64 val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ * val));
 		}
@@ -264,17 +264,17 @@ namespace kiwano
 			return Duration(static_cast<long>(milliseconds_ * val));
 		}
 
-		const Duration Duration::operator/(int val) const
+		const Duration Duration::operator/(Int32 val) const
 		{
 			return Duration(milliseconds_ / val);
 		}
 
-		const Duration Duration::operator/(float val) const
+		const Duration Duration::operator/(Float32 val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ / val));
 		}
 
-		const Duration Duration::operator/(double val) const
+		const Duration Duration::operator/(Float64 val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ / val));
 		}
@@ -291,68 +291,68 @@ namespace kiwano
 			return (*this);
 		}
 
-		Duration & Duration::operator*=(int val)
+		Duration & Duration::operator*=(Int32 val)
 		{
 			milliseconds_ *= val;
 			return (*this);
 		}
 
-		Duration & Duration::operator/=(int val)
+		Duration & Duration::operator/=(Int32 val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ / val);
 			return (*this);
 		}
 
-		Duration & Duration::operator*=(float val)
+		Duration & Duration::operator*=(Float32 val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ * val);
 			return (*this);
 		}
 
-		Duration & Duration::operator/=(float val)
+		Duration & Duration::operator/=(Float32 val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ / val);
 			return (*this);
 		}
 
-		Duration & Duration::operator*=(double val)
+		Duration & Duration::operator*=(Float64 val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ * val);
 			return (*this);
 		}
 
-		Duration & Duration::operator/=(double val)
+		Duration & Duration::operator/=(Float64 val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ / val);
 			return (*this);
 		}
 
-		const Duration kiwano::time::operator*(int val, const Duration & dur)
+		const Duration kiwano::time::operator*(Int32 val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		const Duration kiwano::time::operator/(int val, const Duration & dur)
+		const Duration kiwano::time::operator/(Int32 val, const Duration & dur)
 		{
 			return dur / val;
 		}
 
-		const Duration kiwano::time::operator*(float val, const Duration & dur)
+		const Duration kiwano::time::operator*(Float32 val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		const Duration kiwano::time::operator/(float val, const Duration & dur)
+		const Duration kiwano::time::operator/(Float32 val, const Duration & dur)
 		{
 			return dur / val;
 		}
 
-		const Duration kiwano::time::operator*(double val, const Duration & dur)
+		const Duration kiwano::time::operator*(Float64 val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		const Duration kiwano::time::operator/(double val, const Duration & dur)
+		const Duration kiwano::time::operator/(Float64 val, const Duration & dur)
 		{
 			return dur / val;
 		}
@@ -364,8 +364,8 @@ namespace kiwano
 
 		Duration Duration::Parse(const String& str)
 		{
-			size_t len = str.length();
-			size_t pos = 0;
+			UInt32 len = str.length();
+			UInt32 pos = 0;
 			bool negative = false;
 			Duration d;
 
@@ -387,10 +387,10 @@ namespace kiwano
 			while (pos < len)
 			{
 				// 数值
-				size_t i = pos;
+				UInt32 i = pos;
 				for (; i < len; ++i)
 				{
-					wchar_t ch = str[i];
+					WChar ch = str[i];
 					if (!(ch == L'.' || L'0' <= ch && ch <= L'9'))
 					{
 						break;
@@ -409,7 +409,7 @@ namespace kiwano
 				// 单位
 				for (; i < len; ++i)
 				{
-					wchar_t ch = str[i];
+					WChar ch = str[i];
 					if (ch == L'.' || L'0' <= ch && ch <= L'9')
 					{
 						break;
@@ -425,7 +425,7 @@ namespace kiwano
 					return Duration();
 				}
 
-				double num = std::wcstod(num_str.c_str(), nullptr);
+				Float64 num = std::wcstod(num_str.c_str(), nullptr);
 				Duration unit = unit_map.at(unit_str);
 				d += unit * num;
 			}

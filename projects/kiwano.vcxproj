@@ -21,6 +21,7 @@
     <ClInclude Include="..\src\kiwano\core\noncopyable.hpp" />
     <ClInclude Include="..\src\kiwano\core\singleton.hpp" />
     <ClInclude Include="..\src\kiwano\core\string.hpp" />
+    <ClInclude Include="..\src\kiwano\core\types.h" />
     <ClInclude Include="..\src\kiwano\core\vector.hpp" />
     <ClInclude Include="..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\src\kiwano\config.h" />

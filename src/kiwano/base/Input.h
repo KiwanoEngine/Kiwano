@@ -36,24 +36,24 @@ namespace kiwano
 	public:
 		// 检测键盘或鼠标按键是否正被按下
 		bool IsDown(
-			int key_or_btn
+			Int32 key_or_btn
 		);
 
 		// 检测键盘或鼠标按键是否刚被点击
 		bool WasPressed(
-			int key_or_btn
+			Int32 key_or_btn
 		);
 
 		// 检测键盘或鼠标按键是否刚抬起
 		bool WasReleased(
-			int key_or_btn
+			Int32 key_or_btn
 		);
 
 		// 获得鼠标 x 坐标
-		float GetMouseX();
+		Float32 GetMouseX();
 
 		// 获得鼠标 y 坐标
-		float GetMouseY();
+		Float32 GetMouseY();
 
 		// 获得鼠标坐标
 		Point GetMousePos();
@@ -65,11 +65,11 @@ namespace kiwano
 
 		void AfterUpdate() override;
 
-		void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
+		void HandleMessage(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam) override;
 
-		void UpdateKey(int, bool);
+		void UpdateKey(Int32, bool);
 
-		void UpdateMousePos(float, float);
+		void UpdateMousePos(Float32, Float32);
 
 	protected:
 		Input();
@@ -77,13 +77,13 @@ namespace kiwano
 		~Input();
 
 	protected:
-		static const int KEY_NUM = 256;
+		static const Int32 KEY_NUM = 256;
 
 		bool want_update_;
 		bool keys_[KEY_NUM];
 		bool keys_pressed_[KEY_NUM];
 		bool keys_released_[KEY_NUM];
-		float mouse_pos_x_;
-		float mouse_pos_y_;
+		Float32 mouse_pos_x_;
+		Float32 mouse_pos_y_;
 	};
 }

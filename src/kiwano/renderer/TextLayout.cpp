@@ -81,7 +81,7 @@ namespace kiwano
 		);
 	}
 
-	UINT32 TextLayout::GetLineCount()
+	UInt32 TextLayout::GetLineCount()
 	{
 		if (text_layout_)
 		{

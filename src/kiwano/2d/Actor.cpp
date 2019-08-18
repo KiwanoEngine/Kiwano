@@ -27,11 +27,11 @@ namespace kiwano
 {
 	namespace
 	{
-		float default_anchor_x = 0.f;
-		float default_anchor_y = 0.f;
+		Float32 default_anchor_x = 0.f;
+		Float32 default_anchor_y = 0.f;
 	}
 
-	void Actor::SetDefaultAnchor(float anchor_x, float anchor_y)
+	void Actor::SetDefaultAnchor(Float32 anchor_x, Float32 anchor_y)
 	{
 		default_anchor_x = anchor_x;
 		default_anchor_y = anchor_y;
@@ -314,7 +314,7 @@ namespace kiwano
 		}
 	}
 
-	void Actor::SetZOrder(int zorder)
+	void Actor::SetZOrder(Int32 zorder)
 	{
 		if (z_order_ != zorder)
 		{
@@ -323,7 +323,7 @@ namespace kiwano
 		}
 	}
 
-	void Actor::SetOpacity(float opacity)
+	void Actor::SetOpacity(Float32 opacity)
 	{
 		if (opacity_ == opacity)
 			return;
@@ -341,17 +341,17 @@ namespace kiwano
 		UpdateOpacity();
 	}
 
-	void Actor::SetAnchorX(float anchor_x)
+	void Actor::SetAnchorX(Float32 anchor_x)
 	{
 		this->SetAnchor(anchor_x, anchor_.y);
 	}
 
-	void Actor::SetAnchorY(float anchor_y)
+	void Actor::SetAnchorY(Float32 anchor_y)
 	{
 		this->SetAnchor(anchor_.x, anchor_y);
 	}
 
-	void Actor::SetAnchor(float anchor_x, float anchor_y)
+	void Actor::SetAnchor(Float32 anchor_x, Float32 anchor_y)
 	{
 		if (anchor_.x == anchor_x && anchor_.y == anchor_y)
 			return;
@@ -366,12 +366,12 @@ namespace kiwano
 		this->SetAnchor(anchor.x, anchor.y);
 	}
 
-	void Actor::SetWidth(float width)
+	void Actor::SetWidth(Float32 width)
 	{
 		this->SetSize(width, size_.y);
 	}
 
-	void Actor::SetHeight(float height)
+	void Actor::SetHeight(Float32 height)
 	{
 		this->SetSize(size_.x, height);
 	}
@@ -381,7 +381,7 @@ namespace kiwano
 		this->SetSize(size.x, size.y);
 	}
 
-	void Actor::SetSize(float width, float height)
+	void Actor::SetSize(Float32 width, Float32 height)
 	{
 		if (size_.x == width && size_.y == height)
 			return;
@@ -412,12 +412,12 @@ namespace kiwano
 		}
 	}
 
-	void Actor::SetPositionX(float x)
+	void Actor::SetPositionX(Float32 x)
 	{
 		this->SetPosition(x, transform_.position.y);
 	}
 
-	void Actor::SetPositionY(float y)
+	void Actor::SetPositionY(Float32 y)
 	{
 		this->SetPosition(transform_.position.x, y);
 	}
@@ -427,7 +427,7 @@ namespace kiwano
 		this->SetPosition(p.x, p.y);
 	}
 
-	void Actor::SetPosition(float x, float y)
+	void Actor::SetPosition(Float32 x, Float32 y)
 	{
 		if (transform_.position.x == x && transform_.position.y == y)
 			return;
@@ -437,7 +437,7 @@ namespace kiwano
 		dirty_transform_ = true;
 	}
 
-	void Actor::Move(float x, float y)
+	void Actor::Move(Float32 x, Float32 y)
 	{
 		this->SetPosition(transform_.position.x + x, transform_.position.y + y);
 	}
@@ -447,22 +447,22 @@ namespace kiwano
 		this->Move(v.x, v.y);
 	}
 
-	void Actor::SetScaleX(float scale_x)
+	void Actor::SetScaleX(Float32 scale_x)
 	{
 		this->SetScale(scale_x, transform_.scale.y);
 	}
 
-	void Actor::SetScaleY(float scale_y)
+	void Actor::SetScaleY(Float32 scale_y)
 	{
 		this->SetScale(transform_.scale.x, scale_y);
 	}
 
-	void Actor::SetScale(float scale)
+	void Actor::SetScale(Float32 scale)
 	{
 		this->SetScale(scale, scale);
 	}
 
-	void Actor::SetScale(float scale_x, float scale_y)
+	void Actor::SetScale(Float32 scale_x, Float32 scale_y)
 	{
 		if (transform_.scale.x == scale_x && transform_.scale.y == scale_y)
 			return;
@@ -478,17 +478,17 @@ namespace kiwano
 		this->SetScale(scale.x, scale.y);
 	}
 
-	void Actor::SetSkewX(float skew_x)
+	void Actor::SetSkewX(Float32 skew_x)
 	{
 		this->SetSkew(skew_x, transform_.skew.y);
 	}
 
-	void Actor::SetSkewY(float skew_y)
+	void Actor::SetSkewY(Float32 skew_y)
 	{
 		this->SetSkew(transform_.skew.x, skew_y);
 	}
 
-	void Actor::SetSkew(float skew_x, float skew_y)
+	void Actor::SetSkew(Float32 skew_x, Float32 skew_y)
 	{
 		if (transform_.skew.x == skew_x && transform_.skew.y == skew_y)
 			return;
@@ -504,7 +504,7 @@ namespace kiwano
 		this->SetSkew(skew.x, skew.y);
 	}
 
-	void Actor::SetRotation(float angle)
+	void Actor::SetRotation(Float32 angle)
 	{
 		if (transform_.rotation == angle)
 			return;
@@ -561,7 +561,7 @@ namespace kiwano
 	Vector<ActorPtr> Actor::GetChildren(String const& name) const
 	{
 		Vector<ActorPtr> children;
-		size_t hash_code = std::hash<String>{}(name);
+		UInt32 hash_code = std::hash<String>{}(name);
 
 		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 		{
@@ -575,7 +575,7 @@ namespace kiwano
 
 	ActorPtr Actor::GetChild(String const& name) const
 	{
-		size_t hash_code = std::hash<String>{}(name);
+		UInt32 hash_code = std::hash<String>{}(name);
 
 		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 		{
@@ -627,7 +627,7 @@ namespace kiwano
 			return;
 		}
 
-		size_t hash_code = std::hash<String>{}(child_name);
+		UInt32 hash_code = std::hash<String>{}(child_name);
 
 		Actor* next;
 		for (Actor* child = children_.first_item().get(); child; child = next)

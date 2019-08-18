@@ -31,9 +31,9 @@ namespace kiwano
 	{
 		MONITORINFOEX GetMoniterInfoEx(HWND hwnd);
 
-		void AdjustWindow(UINT width, UINT height, DWORD style, UINT* win_width, UINT* win_height);
+		void AdjustWindow(UInt32 width, UInt32 height, DWORD style, UInt32* win_width, UInt32* win_height);
 
-		void ChangeFullScreenResolution(int width, int height, WCHAR* device_name);
+		void ChangeFullScreenResolution(Int32 width, Int32 height, WCHAR* device_name);
 
 		void RestoreResolution(WCHAR* device_name);
 	}
@@ -66,7 +66,7 @@ namespace kiwano
 		}
 	}
 
-	void Window::Init(String const& title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
+	void Window::Init(String const& title, Int32 width, Int32 height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
 	{
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
@@ -99,12 +99,12 @@ namespace kiwano
 		::GetMonitorInfoW(monitor, &monitor_info_ex);
 
 		// Save the device name
-		int len = lstrlenW(monitor_info_ex.szDevice);
+		Int32 len = lstrlenW(monitor_info_ex.szDevice);
 		device_name_ = new WCHAR[len + 1];
 		lstrcpyW(device_name_, monitor_info_ex.szDevice);
 
-		int left = -1;
-		int top = -1;
+		Int32 left = -1;
+		Int32 top = -1;
 
 		is_fullscreen_ = fullscreen;
 
@@ -121,10 +121,10 @@ namespace kiwano
 		}
 		else
 		{
-			UINT screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
-			UINT screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
+			UInt32 screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
+			UInt32 screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
 
-			UINT win_width, win_height;
+			UInt32 win_width, win_height;
 			AdjustWindow(
 				width,
 				height,
@@ -185,7 +185,7 @@ namespace kiwano
 	{
 		if (handle_)
 		{
-			wchar_t title[256];
+			WChar title[256];
 			::GetWindowTextW(handle_, title, 256);
 			return title;
 		}
@@ -201,19 +201,19 @@ namespace kiwano
 	Size Window::GetSize() const
 	{
 		return Size{
-			static_cast<float>(width_),
-			static_cast<float>(height_)
+			static_cast<Float32>(width_),
+			static_cast<Float32>(height_)
 		};
 	}
 
-	float Window::GetWidth() const
+	Float32 Window::GetWidth() const
 	{
-		return static_cast<float>(width_);
+		return static_cast<Float32>(width_);
 	}
 
-	float Window::GetHeight() const
+	Float32 Window::GetHeight() const
 	{
-		return static_cast<float>(height_);
+		return static_cast<Float32>(height_);
 	}
 
 	void Window::SetIcon(LPCWSTR icon_resource)
@@ -235,11 +235,11 @@ namespace kiwano
 		}
 	}
 
-	void Window::Resize(int width, int height)
+	void Window::Resize(Int32 width, Int32 height)
 	{
 		if (handle_ && !is_fullscreen_)
 		{
-			RECT rc = { 0, 0, int(width), int(height) };
+			RECT rc = { 0, 0, Int32(width), Int32(height) };
 			::AdjustWindowRect(&rc, GetWindowStyle(), false);
 
 			width = rc.right - rc.left;
@@ -248,7 +248,7 @@ namespace kiwano
 		}
 	}
 
-	void Window::SetFullscreen(bool fullscreen, int width, int height)
+	void Window::SetFullscreen(bool fullscreen, Int32 width, Int32 height)
 	{
 		if (is_fullscreen_ != fullscreen || width != width_ || height != height_)
 		{
@@ -275,14 +275,14 @@ namespace kiwano
 
 				MONITORINFOEX info = GetMoniterInfoEx(handle_);
 
-				UINT screenw = info.rcWork.right - info.rcWork.left;
-				UINT screenh = info.rcWork.bottom - info.rcWork.top;
+				UInt32 screenw = info.rcWork.right - info.rcWork.left;
+				UInt32 screenh = info.rcWork.bottom - info.rcWork.top;
 
-				UINT win_width, win_height;
+				UInt32 win_width, win_height;
 				AdjustWindow(width, height, GetWindowStyle(), &win_width, &win_height);
 
-				int left = screenw > win_width ? ((screenw - win_width) / 2) : 0;
-				int top = screenh > win_height ? ((screenh - win_height) / 2) : 0;
+				Int32 left = screenw > win_width ? ((screenw - win_width) / 2) : 0;
+				Int32 top = screenh > win_height ? ((screenh - win_height) / 2) : 0;
 
 				::SetWindowLongPtr(handle_, GWL_STYLE, GetWindowStyle());
 				::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, win_width, win_height, SWP_DRAWFRAME | SWP_FRAMECHANGED);
@@ -376,10 +376,10 @@ namespace kiwano
 			return monitor_info;
 		}
 
-		void AdjustWindow(UINT width, UINT height, DWORD style, UINT* win_width, UINT* win_height)
+		void AdjustWindow(UInt32 width, UInt32 height, DWORD style, UInt32* win_width, UInt32* win_height)
 		{
 			RECT rc;
-			::SetRect(&rc, 0, 0, (int)width, (int)height);
+			::SetRect(&rc, 0, 0, (Int32)width, (Int32)height);
 			::AdjustWindowRect(&rc, style, false);
 
 			*win_width = rc.right - rc.left;
@@ -387,8 +387,8 @@ namespace kiwano
 
 			MONITORINFOEX info = GetMoniterInfoEx(NULL);
 
-			UINT screenw = info.rcWork.right - info.rcWork.left;
-			UINT screenh = info.rcWork.bottom - info.rcWork.top;
+			UInt32 screenw = info.rcWork.right - info.rcWork.left;
+			UInt32 screenh = info.rcWork.bottom - info.rcWork.top;
 
 			if (*win_width > screenw)
 				*win_width = screenw;
@@ -396,7 +396,7 @@ namespace kiwano
 				*win_height = screenh;
 		}
 
-		void ChangeFullScreenResolution(int width, int height, WCHAR* device_name)
+		void ChangeFullScreenResolution(Int32 width, Int32 height, WCHAR* device_name)
 		{
 			DEVMODE mode;
 

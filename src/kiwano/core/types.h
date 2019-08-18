@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2019 Kiwano - Nomango
+// Copyright (c) 2016-2018 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,36 +19,27 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <cstdint>
+
+#define KGE_DEFINE_NUMERIC_TYPE(TYPE, OLD_TYPE) using TYPE = OLD_TYPE;
 
 namespace kiwano
 {
-	// 线条样式
-	enum class StrokeStyle : Int32
-	{
-		Miter = 0,	/* 斜切 */
-		Bevel = 1,	/* 斜角 */
-		Round = 2	/* 圆角 */
-	};
+	KGE_DEFINE_NUMERIC_TYPE(Char, signed char);
+	KGE_DEFINE_NUMERIC_TYPE(UChar, unsigned char);
+	KGE_DEFINE_NUMERIC_TYPE(WChar, wchar_t);
 
-	// 鼠标指针
-	enum class MouseCursor : Int32
-	{
-		Arrow,		/* 指针 */
-		TextInput,	/* 输入文本 */
-		Hand,		/* 手指 */
-		SizeAll,
-		SizeNESW,
-		SizeNS,
-		SizeNWSE,
-		SizeWE,
-	};
+	KGE_DEFINE_NUMERIC_TYPE(Int8, std::int8_t);
+	KGE_DEFINE_NUMERIC_TYPE(Int16, std::int16_t);
+	KGE_DEFINE_NUMERIC_TYPE(Int32, std::int32_t);
+	KGE_DEFINE_NUMERIC_TYPE(Int64, std::int64_t);
 
-	// 文字抗锯齿属性
-	enum class TextAntialias
-	{
-		Default,	// 系统默认
-		ClearType,	// ClearType 抗锯齿
-		GrayScale,	// 灰度抗锯齿
-		None		// 不启用抗锯齿
-	};
+	KGE_DEFINE_NUMERIC_TYPE(UInt8, std::uint8_t);
+	KGE_DEFINE_NUMERIC_TYPE(UInt16, std::uint16_t);
+	KGE_DEFINE_NUMERIC_TYPE(UInt32, std::uint32_t);
+	KGE_DEFINE_NUMERIC_TYPE(UInt64, std::uint64_t);
+
+	KGE_DEFINE_NUMERIC_TYPE(Float32, float);
+	KGE_DEFINE_NUMERIC_TYPE(Float64, double);
+
 }

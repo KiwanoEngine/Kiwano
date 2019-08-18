@@ -43,7 +43,7 @@ namespace kiwano
 		Queue<FunctionToPerform> functions_to_perform_;
 	}
 
-	Options::Options(String const& title, int width, int height, LPCWSTR icon, Color clear_color, bool vsync, bool fullscreen, bool debug)
+	Options::Options(String const& title, Int32 width, Int32 height, LPCWSTR icon, Color clear_color, bool vsync, bool fullscreen, bool debug)
 		: title(title)
 		, width(width)
 		, height(height)
@@ -205,7 +205,7 @@ namespace kiwano
 		}
 	}
 
-	void Application::SetTimeScale(float scale_factor)
+	void Application::SetTimeScale(Float32 scale_factor)
 	{
 		time_scale_ = scale_factor;
 	}
@@ -295,7 +295,7 @@ namespace kiwano
 		functions_to_perform_.push(Function);
 	}
 
-	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	LRESULT CALLBACK Application::WndProc(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam)
 	{
 		Application * app = reinterpret_cast<Application*>(static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA)));
 
@@ -327,8 +327,8 @@ namespace kiwano
 		{
 			bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
 			Event evt(down ? Event::KeyDown : Event::KeyUp);
-			evt.key.code = static_cast<int>(wparam);
-			evt.key.count = static_cast<int>(lparam & 0xFF);
+			evt.key.code = static_cast<Int32>(wparam);
+			evt.key.count = static_cast<Int32>(lparam & 0xFF);
 
 			app->DispatchEvent(evt);
 		}
@@ -338,7 +338,7 @@ namespace kiwano
 		{
 			Event evt(Event::Char);
 			evt.key.c = static_cast<char>(wparam);
-			evt.key.count = static_cast<int>(lparam & 0xFF);
+			evt.key.count = static_cast<Int32>(lparam & 0xFF);
 
 			app->DispatchEvent(evt);
 		}
@@ -358,15 +358,15 @@ namespace kiwano
 		{
 			Event evt;
 
-			evt.mouse.x = static_cast<float>(GET_X_LPARAM(lparam));
-			evt.mouse.y = static_cast<float>(GET_Y_LPARAM(lparam));
+			evt.mouse.x = static_cast<Float32>(GET_X_LPARAM(lparam));
+			evt.mouse.y = static_cast<Float32>(GET_Y_LPARAM(lparam));
 			evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
 			evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
 
 			if (msg == WM_MOUSEMOVE) { evt.type = Event::MouseMove; }
 			else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN) { evt.type = Event::MouseBtnDown; }
 			else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP) { evt.type = Event::MouseBtnUp; }
-			else if (msg == WM_MOUSEWHEEL) { evt.type = Event::MouseWheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA; }
+			else if (msg == WM_MOUSEWHEEL) { evt.type = Event::MouseWheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (Float32)WHEEL_DELTA; }
 
 			if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { evt.mouse.button = MouseButton::Left; }
 			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { evt.mouse.button = MouseButton::Right; }
@@ -398,8 +398,8 @@ namespace kiwano
 
 		case WM_MOVE:
 		{
-			int x = (int)(short)LOWORD(lparam);
-			int y = (int)(short)HIWORD(lparam);
+			Int32 x = (Int32)(short)LOWORD(lparam);
+			Int32 y = (Int32)(short)HIWORD(lparam);
 
 			Event evt(Event::WindowMoved);
 			evt.win.x = x;
@@ -425,7 +425,7 @@ namespace kiwano
 			KGE_LOG(L"Window title changed");
 
 			Event evt(Event::WindowTitleChanged);
-			evt.win.title = reinterpret_cast<const wchar_t*>(lparam);
+			evt.win.title = reinterpret_cast<const WChar*>(lparam);
 			app->DispatchEvent(evt);
 		}
 		break;

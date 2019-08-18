@@ -24,7 +24,7 @@
 namespace kiwano
 {
 	AsyncTask::AsyncTask()
-		: thread_(bind_func(this, &AsyncTask::TaskThread))
+		: thread_(Closure(this, &AsyncTask::TaskThread))
 	{
 	}
 
@@ -74,7 +74,7 @@ namespace kiwano
 			func_mutex_.unlock();
 		}
 
-		Application::PreformInMainThread(bind_func(this, &AsyncTask::Complete));
+		Application::PreformInMainThread(Closure(this, &AsyncTask::Complete));
 	}
 
 	void AsyncTask::Complete()

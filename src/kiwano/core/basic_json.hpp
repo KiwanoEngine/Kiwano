@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <cstdint>
+#include "types.h"
 #include <cctype>
 #include <memory>
 #include <array>
@@ -365,10 +365,10 @@ namespace __json_detail
 
 		inline primitive_iterator& operator++()									{ ++it_; return *this; }
 
-		inline primitive_iterator operator++(int)								{ primitive_iterator old(it_); ++(*this); return old; }
+		inline primitive_iterator operator++(Int32)								{ primitive_iterator old(it_); ++(*this); return old; }
 
 		inline primitive_iterator& operator--()									{ --it_; return (*this); }
-		inline primitive_iterator operator--(int)								{ primitive_iterator old = (*this); --(*this); return old; }
+		inline primitive_iterator operator--(Int32)								{ primitive_iterator old = (*this); --(*this); return old; }
 
 		inline bool operator==(primitive_iterator const& other) const			{ return it_ == other.it_; }
 		inline bool operator!=(primitive_iterator const& other) const			{ return !(*this == other); }
@@ -534,7 +534,7 @@ namespace __json_detail
 			}
 		}
 
-		inline iterator_impl operator++(int) { iterator_impl old = (*this); ++(*this); return old; }
+		inline iterator_impl operator++(Int32) { iterator_impl old = (*this); ++(*this); return old; }
 		inline iterator_impl& operator++()
 		{
 			check_data();
@@ -560,7 +560,7 @@ namespace __json_detail
 			return *this;
 		}
 
-		inline iterator_impl operator--(int) { iterator_impl old = (*this); --(*this); return old; }
+		inline iterator_impl operator--(Int32) { iterator_impl old = (*this); --(*this); return old; }
 		inline iterator_impl& operator--()
 		{
 			check_data();
@@ -732,11 +732,11 @@ namespace __json_detail
 		using char_traits = ::std::char_traits<char_type>;
 
 		virtual void write(const _CharTy ch) = 0;
-		virtual void write(const _CharTy* str, ::std::size_t size) = 0;
+		virtual void write(const _CharTy* str, UInt32 size) = 0;
 		virtual void write(const _CharTy* str)
 		{
 			const auto size = char_traits::length(str);
-			write(str, static_cast<::std::size_t>(size));
+			write(str, static_cast<UInt32>(size));
 		}
 	};
 
@@ -755,7 +755,7 @@ namespace __json_detail
 			str_.push_back(ch);
 		}
 
-		virtual void write(const char_type* str, ::std::size_t size) override
+		virtual void write(const char_type* str, UInt32 size) override
 		{
 			str_.append(str, static_cast<size_type>(size));
 		}
@@ -779,7 +779,7 @@ namespace __json_detail
 			stream_.put(ch);
 		}
 
-		virtual void write(const char_type* str, ::std::size_t size) override
+		virtual void write(const char_type* str, UInt32 size) override
 		{
 			stream_.write(str, static_cast<size_type>(size));
 		}
@@ -806,7 +806,7 @@ namespace __json_detail
 		using array_type	= typename _BasicJsonTy::array_type;
 		using object_type	= typename _BasicJsonTy::object_type;
 
-		json_serializer(output_adapter<char_type>* out, const wchar_t indent_char)
+		json_serializer(output_adapter<char_type>* out, const WChar indent_char)
 			: out(out)
 			, indent_char(indent_char)
 			, indent_string(32, indent_char)
@@ -816,8 +816,8 @@ namespace __json_detail
 		void dump(
 			const _BasicJsonTy& json,
 			const bool pretty_print,
-			const unsigned int indent_step,
-			const unsigned int current_indent = 0)
+			const UInt32 indent_step,
+			const UInt32 current_indent = 0)
 		{
 			switch (json.type())
 			{
@@ -843,7 +843,7 @@ namespace __json_detail
 
 					auto iter = object.cbegin();
 					const auto size = object.size();
-					for (::std::size_t i = 0; i < size; ++i, ++iter)
+					for (UInt32 i = 0; i < size; ++i, ++iter)
 					{
 						out->write(indent_string.c_str(), new_indent);
 						out->write('\"');
@@ -866,7 +866,7 @@ namespace __json_detail
 
 					auto iter = object.cbegin();
 					const auto size = object.size();
-					for (::std::size_t i = 0; i < size; ++i, ++iter)
+					for (UInt32 i = 0; i < size; ++i, ++iter)
 					{
 						out->write('\"');
 						out->write(iter->first.c_str());
@@ -906,7 +906,7 @@ namespace __json_detail
 
 					auto iter = vector.cbegin();
 					const auto size = vector.size();
-					for (::std::size_t i = 0; i < size; ++i, ++iter)
+					for (UInt32 i = 0; i < size; ++i, ++iter)
 					{
 						out->write(indent_string.c_str(), new_indent);
 						dump(*iter, true, indent_step, new_indent);
@@ -926,7 +926,7 @@ namespace __json_detail
 
 					auto iter = vector.cbegin();
 					const auto size = vector.size();
-					for (::std::size_t i = 0; i < size; ++i, ++iter)
+					for (UInt32 i = 0; i < size; ++i, ++iter)
 					{
 						dump(*iter, false, indent_step, current_indent);
 						// not last element
@@ -999,7 +999,7 @@ namespace __json_detail
 
 			do
 			{
-				*(++next) = static_cast<wchar_t>('0' + uval % 10);
+				*(++next) = static_cast<WChar>('0' + uval % 10);
 				uval /= 10;
 			} while (uval != 0);
 
@@ -1085,7 +1085,7 @@ namespace __json_detail
 					}
 					else
 					{
-						wchar_t escaped[7] = { 0 };
+						WChar escaped[7] = { 0 };
 						::swprintf_s(escaped, 7, L"\\u%04x", char_byte);
 						out->write(escaped);
 					}
@@ -1205,7 +1205,7 @@ namespace __json_detail
 
 	private:
 		const char_type* str;
-		::std::size_t index;
+		UInt32 index;
 	};
 } // end of namespace __json_detail
 
@@ -1339,7 +1339,7 @@ namespace __json_detail
 
 		token_type scan_literal(const char_type* text, token_type result)
 		{
-			for (::std::size_t i = 0; text[i] != '\0'; ++i)
+			for (UInt32 i = 0; text[i] != '\0'; ++i)
 			{
 				if (text[i] != char_traits::to_char_type(current))
 				{
@@ -1614,10 +1614,10 @@ namespace __json_detail
 					read_next();
 				}
 
-				unsigned int exponent = static_cast<unsigned int>(current - '0');
+				UInt32 exponent = static_cast<UInt32>(current - '0');
 				while (::std::isdigit(read_next()))
 				{
-					exponent = (exponent * 10) + static_cast<unsigned int>(current - '0');
+					exponent = (exponent * 10) + static_cast<UInt32>(current - '0');
 				}
 
 				float_type power = 1;
@@ -1819,7 +1819,7 @@ namespace __json_detail
 
 		template <
 			typename _IntegerTy,
-			typename ::std::enable_if<::std::is_integral<_IntegerTy>::value, int>::type = 0>
+			typename ::std::enable_if<::std::is_integral<_IntegerTy>::value, Int32>::type = 0>
 		static inline void assign(const _BasicJsonTy& json, _IntegerTy& value)
 		{
 			if (!json.is_integer()) throw json_type_error("json value type must be integer");
@@ -1828,16 +1828,16 @@ namespace __json_detail
 
 		static inline void assign(const _BasicJsonTy& json, float_type& value)
 		{
-			if (!json.is_float()) throw json_type_error("json value type must be float");
+			if (!json.is_float()) throw json_type_error("json value type must be Float32");
 			value = json.value_.data.number_float;
 		}
 
 		template <
 			typename _FloatingTy,
-			typename ::std::enable_if<::std::is_floating_point<_FloatingTy>::value, int>::type = 0>
+			typename ::std::enable_if<::std::is_floating_point<_FloatingTy>::value, Int32>::type = 0>
 		static inline void assign(const _BasicJsonTy& json, _FloatingTy& value)
 		{
-			if (!json.is_float()) throw json_type_error("json value type must be float");
+			if (!json.is_float()) throw json_type_error("json value type must be Float32");
 			value = static_cast<_FloatingTy>(json.value_.data.number_float);
 		}
 	};
@@ -1859,7 +1859,7 @@ class basic_json
 public:
 	template <typename _Ty>
 	using allocator_type			= _Allocator<_Ty>;
-	using size_type					= ::std::size_t;
+	using size_type					= UInt32;
 	using difference_type			= ::std::ptrdiff_t;
 	using string_type				= _StringTy;
 	using char_type					= typename _StringTy::value_type;
@@ -1895,7 +1895,7 @@ public:
 
 	template <
 		typename _CompatibleTy,
-		typename ::std::enable_if<::std::is_constructible<string_type, _CompatibleTy>::value, int>::type = 0>
+		typename ::std::enable_if<::std::is_constructible<string_type, _CompatibleTy>::value, Int32>::type = 0>
 	basic_json(const _CompatibleTy& value)
 	{
 		value_.type = JsonType::String;
@@ -1919,7 +1919,7 @@ public:
 
 	template <
 		typename _IntegerTy,
-		typename ::std::enable_if<::std::is_integral<_IntegerTy>::value, int>::type = 0>
+		typename ::std::enable_if<::std::is_integral<_IntegerTy>::value, Int32>::type = 0>
 	basic_json(_IntegerTy value)
 		: value_(static_cast<integer_type>(value))
 	{
@@ -1932,7 +1932,7 @@ public:
 
 	template <
 		typename _FloatingTy,
-		typename ::std::enable_if<::std::is_floating_point<_FloatingTy>::value, int>::type = 0>
+		typename ::std::enable_if<::std::is_floating_point<_FloatingTy>::value, Int32>::type = 0>
 	basic_json(_FloatingTy value)
 		: value_(static_cast<float_type>(value))
 	{
@@ -2027,7 +2027,7 @@ public:
 		case JsonType::Integer:
 			return string_type(L"integer");
 		case JsonType::Float:
-			return string_type(L"float");
+			return string_type(L"Float32");
 		case JsonType::Boolean:
 			return string_type(L"boolean");
 		case JsonType::Null:
@@ -2123,7 +2123,7 @@ public:
 		class _IteratorTy,
 		typename ::std::enable_if<
 			::std::is_same<_IteratorTy, iterator>::value ||
-			::std::is_same<_IteratorTy, const_iterator>::value, int
+			::std::is_same<_IteratorTy, const_iterator>::value, Int32
 		>::type = 0>
 	inline _IteratorTy erase(_IteratorTy pos)
 	{
@@ -2154,7 +2154,7 @@ public:
 		class _IteratorTy,
 		typename ::std::enable_if<
 			::std::is_same<_IteratorTy, iterator>::value ||
-			::std::is_same<_IteratorTy, const_iterator>::value, int
+			::std::is_same<_IteratorTy, const_iterator>::value, Int32
 		>::type = 0>
 	inline _IteratorTy erase(_IteratorTy first, _IteratorTy last)
 	{
@@ -2282,7 +2282,7 @@ public:
 
 	template <
 		typename _IntegerTy,
-		typename ::std::enable_if<::std::is_integral<_IntegerTy>::value, int>::type = 0>
+		typename ::std::enable_if<::std::is_integral<_IntegerTy>::value, Int32>::type = 0>
 	inline bool get_value(_IntegerTy& val) const
 	{
 		if (is_integer())
@@ -2295,7 +2295,7 @@ public:
 
 	template <
 		typename _FloatingTy,
-		typename ::std::enable_if<::std::is_floating_point<_FloatingTy>::value, int>::type = 0>
+		typename ::std::enable_if<::std::is_floating_point<_FloatingTy>::value, Int32>::type = 0>
 	inline bool get_value(_FloatingTy& val) const
 	{
 		if (is_float())
@@ -2350,7 +2350,7 @@ public:
 
 	float_type as_float() const
 	{
-		if (!is_float()) throw json_type_error("json value must be float");
+		if (!is_float()) throw json_type_error("json value must be Float32");
 		return value_.data.number_float;
 	}
 
@@ -2545,12 +2545,12 @@ public:
 		out.width(0);
 
 		__json_detail::stream_output_adapter<char_type> adapter(out);
-		__json_detail::json_serializer<basic_json>(&adapter, out.fill()).dump(json, pretty_print, static_cast<unsigned int>(indentation));
+		__json_detail::json_serializer<basic_json>(&adapter, out.fill()).dump(json, pretty_print, static_cast<UInt32>(indentation));
 		return out;
 	}
 
 	string_type dump(
-		const int indent = -1,
+		const Int32 indent = -1,
 		const char_type indent_char = ' ') const
 	{
 		string_type result;
@@ -2561,12 +2561,12 @@ public:
 
 	void dump(
 		__json_detail::output_adapter<char_type>* adapter,
-		const int indent = -1,
+		const Int32 indent = -1,
 		const char_type indent_char = ' ') const
 	{
 		if (indent >= 0)
 		{
-			__json_detail::json_serializer<basic_json>(adapter, indent_char).dump(*this, true, static_cast<unsigned int>(indent));
+			__json_detail::json_serializer<basic_json>(adapter, indent_char).dump(*this, true, static_cast<UInt32>(indent));
 		}
 		else
 		{

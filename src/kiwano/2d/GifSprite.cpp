@@ -73,8 +73,8 @@ namespace kiwano
 			disposal_type_ = DisposalType::None;
 
 			SetSize(
-				static_cast<float>(image_.GetWidthInPixels()),
-				static_cast<float>(image_.GetHeightInPixels())
+				static_cast<Float32>(image_.GetWidthInPixels()),
+				static_cast<Float32>(image_.GetHeightInPixels())
 			);
 
 			if (!frame_rt_.IsValid())

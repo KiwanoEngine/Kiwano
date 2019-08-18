@@ -44,7 +44,7 @@ namespace kiwano
 		Color GetStrokeColor() const			{ return stroke_color_; }
 
 		// 获取线条宽度
-		float GetStrokeWidth() const			{ return stroke_width_; }
+		Float32 GetStrokeWidth() const			{ return stroke_width_; }
 
 		// 获取线条样式
 		StrokeStyle SetStrokeStyle() const		{ return stroke_style_; }
@@ -67,7 +67,7 @@ namespace kiwano
 
 		// 设置线条宽度
 		void SetStrokeWidth(
-			float width
+			Float32 width
 		);
 
 		// 设置线条样式
@@ -86,7 +86,7 @@ namespace kiwano
 	protected:
 		Color		fill_color_;
 		Color		stroke_color_;
-		float		stroke_width_;
+		Float32		stroke_width_;
 		StrokeStyle	stroke_style_;
 		Geometry	geo_;
 	};
@@ -183,17 +183,17 @@ namespace kiwano
 		CircleActor();
 
 		CircleActor(
-			float radius
+			Float32 radius
 		);
 
 		virtual ~CircleActor();
 
-		inline float GetRadius() const { return radius_; }
+		inline Float32 GetRadius() const { return radius_; }
 
-		void SetRadius(float radius);
+		void SetRadius(Float32 radius);
 
 	protected:
-		float radius_;
+		Float32 radius_;
 	};
 
 
@@ -261,7 +261,7 @@ namespace kiwano
 		void AddArc(
 			Point const& point,		/* 终点 */
 			Size const& radius,		/* 椭圆半径 */
-			float rotation,			/* 椭圆旋转角度 */
+			Float32 rotation,			/* 椭圆旋转角度 */
 			bool clockwise = true,	/* 顺时针 or 逆时针 */
 			bool is_small = true	/* 是否取小于 180° 的弧 */
 		);

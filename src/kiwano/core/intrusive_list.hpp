@@ -20,6 +20,7 @@
 
 #pragma once
 #include "../macros.h"
+#include "types.h"
 
 // #define KGE_DEBUG_ENABLE_LIST_CHECK
 
@@ -230,7 +231,7 @@ private:
 		if (!first_)
 			return;
 
-		int pos = 0;
+		Int32 pos = 0;
 		T p = first_;
 		T tmp = p;
 		do

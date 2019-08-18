@@ -20,6 +20,7 @@
 
 #pragma once
 #include "../macros.h"
+#include "../core/core.h"
 
 namespace kiwano
 {
@@ -28,7 +29,7 @@ namespace kiwano
 	// 使用枚举表示颜色: Color blue = Color::Blue;
 	// 使用 RGB 表示一个颜色: Color red(1.0f, 0.0f, 0.0f);
 	// 使用 RGBA 表示一个带透明度的颜色: Color not_black(1.0f, 1.0f, 1.0f, 0.5f);
-	// 使用一个 unsigned int 类型的值表示 RGB: Color black(0x000000);
+	// 使用一个 UInt32 类型的值表示 RGB: Color black(0x000000);
 	//
 	class KGE_API Color
 	{
@@ -36,29 +37,29 @@ namespace kiwano
 		Color();
 
 		Color(
-			float r,
-			float g,
-			float b
+			Float32 r,
+			Float32 g,
+			Float32 b
 		);
 
 		Color(
-			float r,
-			float g,
-			float b,
-			float alpha
+			Float32 r,
+			Float32 g,
+			Float32 b,
+			Float32 alpha
 		);
 
 		Color(
-			unsigned int rgb
+			UInt32 rgb
 		);
 
 		Color(
-			unsigned int rgb,
-			float alpha
+			UInt32 rgb,
+			Float32 alpha
 		);
 
 	public:
-		enum Value : unsigned int
+		enum Value : UInt32
 		{
 			Black			= 0x000000,
 			Blue			= 0x0000FF,
@@ -102,9 +103,9 @@ namespace kiwano
 		};
 
 	public:
-		float r;
-		float g;
-		float b;
-		float a;
+		Float32 r;
+		Float32 g;
+		Float32 b;
+		Float32 a;
 	};
 }

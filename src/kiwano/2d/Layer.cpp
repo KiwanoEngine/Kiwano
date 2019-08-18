@@ -29,7 +29,7 @@ namespace kiwano
 	{
 		SetSize(Renderer::GetInstance()->GetOutputSize());
 
-		auto handler = bind_func(this, &Layer::HandleMessages);
+		auto handler = Closure(this, &Layer::HandleMessages);
 
 		AddListener(Event::MouseBtnDown, handler);
 		AddListener(Event::MouseBtnUp, handler);

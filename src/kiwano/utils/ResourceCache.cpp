@@ -196,7 +196,7 @@ namespace kiwano
 		return false;
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const& id, Vector<String> const& files)
+	UInt32 ResourceCache::AddFrameSequence(String const& id, Vector<String> const& files)
 	{
 		if (files.empty())
 			return 0;
@@ -224,7 +224,7 @@ namespace kiwano
 		return 0;
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const & id, String const& file_path, int cols, int rows)
+	UInt32 ResourceCache::AddFrameSequence(String const & id, String const& file_path, Int32 cols, Int32 rows)
 	{
 		if (cols <= 0 || rows <= 0)
 			return 0;
@@ -233,17 +233,17 @@ namespace kiwano
 		if (!raw || !raw->Load(file_path))
 			return false;
 
-		float raw_width = raw->GetWidth();
-		float raw_height = raw->GetHeight();
-		float width = raw_width / cols;
-		float height = raw_height / rows;
+		Float32 raw_width = raw->GetWidth();
+		Float32 raw_height = raw->GetHeight();
+		Float32 width = raw_width / cols;
+		Float32 height = raw_height / rows;
 
 		Vector<FramePtr> image_arr;
 		image_arr.reserve(rows * cols);
 
-		for (int i = 0; i < rows; i++)
+		for (Int32 i = 0; i < rows; i++)
 		{
-			for (int j = 0; j < cols; j++)
+			for (Int32 j = 0; j < cols; j++)
 			{
 				FramePtr ptr = new (std::nothrow) Frame(raw->GetImage());
 				if (ptr)
@@ -258,7 +258,7 @@ namespace kiwano
 		return AddFrameSequence(id, frames);
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
+	UInt32 ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
 	{
 		if (frames)
 		{
@@ -310,7 +310,7 @@ namespace kiwano
 		};
 
 		bool LoadImagesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type,
-			const String* file, const Vector<const wchar_t*>* files, int rows, int cols)
+			const String* file, const Vector<const WChar*>* files, Int32 rows, Int32 cols)
 		{
 			if (!gdata || !id) return false;
 
@@ -363,7 +363,7 @@ namespace kiwano
 				for (const auto& image : json_data[L"images"])
 				{
 					const String* id = nullptr, * type = nullptr, * file = nullptr;
-					int rows = 0, cols = 0;
+					Int32 rows = 0, cols = 0;
 
 					if (image.count(L"id")) id = &image[L"id"].as_string();
 					if (image.count(L"type")) type = &image[L"type"].as_string();
@@ -373,7 +373,7 @@ namespace kiwano
 
 					if (image.count(L"files"))
 					{
-						Vector<const wchar_t*> files;
+						Vector<const WChar*> files;
 						files.reserve(image[L"files"].size());
 						for (const auto& file : image[L"files"])
 						{
@@ -405,7 +405,7 @@ namespace kiwano
 				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
 				{
 					String id, type, file;
-					int rows = 0, cols = 0;
+					Int32 rows = 0, cols = 0;
 
 					if (auto attr = image->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
 					if (auto attr = image->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
@@ -415,7 +415,7 @@ namespace kiwano
 
 					if (file.empty() && !image->NoChildren())
 					{
-						Vector<const wchar_t*> files_arr;
+						Vector<const WChar*> files_arr;
 						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
 						{
 							if (auto path = file->Attribute(L"path"))

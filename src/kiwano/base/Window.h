@@ -39,10 +39,10 @@ namespace kiwano
 		Size GetSize() const;
 
 		// 获取窗口宽度
-		float GetWidth() const;
+		Float32 GetWidth() const;
 
 		// 获取窗口高度
-		float GetHeight() const;
+		Float32 GetHeight() const;
 
 		// 设置标题
 		void SetTitle(String const& title);
@@ -51,10 +51,10 @@ namespace kiwano
 		void SetIcon(LPCWSTR icon_resource);
 
 		// 重设窗口大小
-		void Resize(int width, int height);
+		void Resize(Int32 width, Int32 height);
 
 		// 设置全屏模式
-		void SetFullscreen(bool fullscreen, int width, int height);
+		void SetFullscreen(bool fullscreen, Int32 width, Int32 height);
 
 		// 设置鼠标指针
 		void SetMouseCursor(MouseCursor cursor);
@@ -62,8 +62,8 @@ namespace kiwano
 	public:
 		void Init(
 			String const&	title,
-			int				width,
-			int				height,
+			Int32				width,
+			Int32				height,
 			LPCWSTR			icon,
 			bool			fullscreen,
 			WNDPROC			proc
@@ -87,8 +87,8 @@ namespace kiwano
 	private:
 		HWND	handle_;
 		bool	is_fullscreen_;
-		int		width_;
-		int		height_;
+		Int32		width_;
+		Int32		height_;
 		WCHAR*	device_name_;
 		MouseCursor mouse_cursor_;
 	};

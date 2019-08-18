@@ -30,7 +30,7 @@ namespace kiwano
 	struct ActionHelper
 	{
 		// 设置循环次数
-		inline ActionHelper& SetLoops(int loops)							{ base->SetLoops(loops); return (*this); }
+		inline ActionHelper& SetLoops(Int32 loops)							{ base->SetLoops(loops); return (*this); }
 
 		// 设置动作延迟
 		inline ActionHelper& SetDelay(Duration delay)						{ base->SetDelay(delay); return (*this); }
@@ -64,7 +64,7 @@ namespace kiwano
 		inline TweenHelper& SetDuration(Duration dur)						{ base->SetDuration(dur); return (*this); }
 
 		// 设置循环次数
-		inline TweenHelper& SetLoops(int loops)								{ base->SetLoops(loops); return (*this); }
+		inline TweenHelper& SetLoops(Int32 loops)								{ base->SetLoops(loops); return (*this); }
 
 		// 设置缓动函数
 		inline TweenHelper& SetEaseFunc(EaseFunc ease)						{ base->SetEaseFunc(ease); return (*this); }
@@ -117,8 +117,8 @@ namespace kiwano
 		JumpBy(
 			Duration dur,
 			Point const& pos,	/* 目的坐标 */
-			float height,		/* 跳跃高度 */
-			int jumps = 1)		/* 跳跃次数 */
+			Float32 height,		/* 跳跃高度 */
+			Int32 jumps = 1)		/* 跳跃次数 */
 		{
 			return TweenHelper(new kiwano::ActionJumpBy(dur, pos, height, jumps));
 		}
@@ -127,38 +127,38 @@ namespace kiwano
 		JumpTo(
 			Duration dur,
 			Point const& pos,	/* 目的坐标 */
-			float height,		/* 跳跃高度 */
-			int jumps = 1)		/* 跳跃次数 */
+			Float32 height,		/* 跳跃高度 */
+			Int32 jumps = 1)		/* 跳跃次数 */
 		{
 			return TweenHelper(new kiwano::ActionJumpTo(dur, pos, height, jumps));
 		}
 
 		static inline TweenHelper
-		ScaleBy(Duration dur, float scale)
+		ScaleBy(Duration dur, Float32 scale)
 		{
 			return TweenHelper(new kiwano::ActionScaleBy(dur, scale));
 		}
 
 		static inline TweenHelper
-		ScaleBy(Duration dur, float scale_x, float scale_y)
+		ScaleBy(Duration dur, Float32 scale_x, Float32 scale_y)
 		{
 			return TweenHelper(new kiwano::ActionScaleBy(dur, scale_x, scale_y));
 		}
 
 		static inline TweenHelper
-		ScaleTo(Duration dur, float scale)
+		ScaleTo(Duration dur, Float32 scale)
 		{
 			return TweenHelper(new kiwano::ActionScaleTo(dur, scale));
 		}
 
 		static inline TweenHelper
-		ScaleTo(Duration dur, float scale_x, float scale_y)
+		ScaleTo(Duration dur, Float32 scale_x, Float32 scale_y)
 		{
 			return TweenHelper(new kiwano::ActionScaleTo(dur, scale_x, scale_y));
 		}
 
 		static inline TweenHelper
-		FadeTo(Duration dur, float opacity)
+		FadeTo(Duration dur, Float32 opacity)
 		{
 			return TweenHelper(new kiwano::ActionFadeTo(dur, opacity));
 		}
@@ -176,13 +176,13 @@ namespace kiwano
 		}
 
 		static inline TweenHelper
-		RotateBy(Duration dur, float rotation)
+		RotateBy(Duration dur, Float32 rotation)
 		{
 			return TweenHelper(new kiwano::ActionRotateBy(dur, rotation));
 		}
 
 		static inline TweenHelper
-		RotateTo(Duration dur, float rotation)
+		RotateTo(Duration dur, Float32 rotation)
 		{
 			return TweenHelper(new kiwano::ActionRotateTo(dur, rotation));
 		}
@@ -192,8 +192,8 @@ namespace kiwano
 			Duration duration,		/* 持续时长 */
 			Geometry const& geo,	/* 路线 */
 			bool rotating = false,	/* 沿路线切线方向旋转 */
-			float start = 0.f,		/* 起点 */
-			float end = 1.f,		/* 终点 */
+			Float32 start = 0.f,		/* 起点 */
+			Float32 end = 1.f,		/* 终点 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		)
 		{
@@ -205,8 +205,8 @@ namespace kiwano
 			Duration duration,			/* 持续时长 */
 			GeometrySink& sink,			/* 路线生成器 */
 			bool rotating = false,		/* 沿路线切线方向旋转 */
-			float start = 0.f,			/* 起点 */
-			float end = 1.f,			/* 终点 */
+			Float32 start = 0.f,			/* 起点 */
+			Float32 end = 1.f,			/* 终点 */
 			EaseFunc func = nullptr		/* 速度变化 */
 		)
 		{
@@ -248,7 +248,7 @@ namespace kiwano
 
 		KGE_DEPRECATED("Tween::OpacityBy has been removed, use Tween::FadeTo instead")
 		static inline TweenHelper
-		OpacityBy(float opacity)
+		OpacityBy(Float32 opacity)
 		{
 			KGE_ASSERT("Tween::OpacityBy has been removed, use Tween::FadeTo instead");
 			return TweenHelper(nullptr);
@@ -256,7 +256,7 @@ namespace kiwano
 
 		KGE_DEPRECATED("Tween::OpacityTo is deprecated, use Tween::FadeTo instead")
 		static inline TweenHelper
-		OpacityTo(Duration dur, float opacity)
+		OpacityTo(Duration dur, Float32 opacity)
 		{
 			return TweenHelper(new kiwano::ActionFadeTo(dur, opacity));
 		}

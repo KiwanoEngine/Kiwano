@@ -39,7 +39,7 @@ namespace kiwano
 		struct Data
 		{
 			void* buffer;
-			UINT32 size;
+			UInt32 size;
 
 			inline Data() : buffer(nullptr), size(0) {}
 
@@ -49,19 +49,19 @@ namespace kiwano
 		Resource();
 
 		Resource(
-			UINT id,		/* 资源名称 */
+			UInt32 id,		/* 资源名称 */
 			LPCWSTR type	/* 资源类型 */
 		);
 
 		// 获取二进制数据
 		Resource::Data GetData() const;
 
-		inline UINT GetId() const		{ return id_; }
+		inline UInt32 GetId() const		{ return id_; }
 
 		inline LPCWSTR GetType() const	{ return type_; }
 
 	private:
-		UINT	id_;
+		UInt32	id_;
 		LPCWSTR	type_;
 		mutable Resource::Data	data_;
 	};

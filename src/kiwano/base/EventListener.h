@@ -42,7 +42,7 @@ namespace kiwano
 
 	public:
 		EventListener(
-			UINT type,
+			UInt32 type,
 			EventCallback const& callback,
 			String const& name = L""
 		);
@@ -57,7 +57,7 @@ namespace kiwano
 
 	protected:
 		bool			running_;
-		UINT			type_;
+		UInt32			type_;
 		EventCallback	callback_;
 	};
 }

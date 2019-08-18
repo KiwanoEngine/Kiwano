@@ -49,9 +49,9 @@ namespace kiwano
 		return Rect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
 	}
 
-	float Geometry::GetLength()
+	Float32 Geometry::GetLength()
 	{
-		float length = 0.f;
+		Float32 length = 0.f;
 		if (geo_)
 		{
 			// no matter it failed or not
@@ -60,7 +60,7 @@ namespace kiwano
 		return length;
 	}
 
-	bool Geometry::ComputePointAtLength(float length, Point& point, Vec2& tangent)
+	bool Geometry::ComputePointAtLength(Float32 length, Point& point, Vec2& tangent)
 	{
 		if (geo_)
 		{
@@ -108,7 +108,7 @@ namespace kiwano
 			sink.Init();
 			sink.OpenSink();
 
-			for (size_t i = 0; i < geos.size() - 1; i++)
+			for (UInt32 i = 0; i < geos.size() - 1; i++)
 			{
 				CombineMode mode = (modes.size() == 1) ? modes[0] : modes[i];
 				const Matrix3x2& matrix = (matrixs.size() == 1) ? matrixs[0] : matrixs[i];
@@ -129,12 +129,12 @@ namespace kiwano
 		return Geometry();
 	}
 
-	float Geometry::ComputeArea()
+	Float32 Geometry::ComputeArea()
 	{
 		if (!geo_)
 			return 0.f;
 
-		float area = 0.f;
+		Float32 area = 0.f;
 		// no matter it failed or not
 		geo_->ComputeArea(D2D1::Matrix3x2F::Identity(), &area);
 		return area;
@@ -176,7 +176,7 @@ namespace kiwano
 		return output;
 	}
 
-	Geometry Geometry::CreateCircle(Point const& center, float radius)
+	Geometry Geometry::CreateCircle(Point const& center, Float32 radius)
 	{
 		Geometry output;
 		Renderer::GetInstance()->CreateEllipseGeometry(output, center, Vec2{ radius, radius });
@@ -236,7 +236,7 @@ namespace kiwano
 		
 		sink_->AddLines(
 			reinterpret_cast<const D2D_POINT_2F*>(&points[0]),
-			static_cast<UINT32>(points.size())
+			static_cast<UInt32>(points.size())
 		);
 		return (*this);
 	}
@@ -255,7 +255,7 @@ namespace kiwano
 		return (*this);
 	}
 
-	GeometrySink& GeometrySink::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
+	GeometrySink& GeometrySink::AddArc(Point const& point, Size const& radius, Float32 rotation, bool clockwise, bool is_small)
 	{
 		if (!sink_) BeginPath();
 

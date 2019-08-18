@@ -27,56 +27,56 @@ namespace kiwano
 {
 	namespace math
 	{
-		inline int Abs(int val) { return ::abs(val); }
+		inline Int32 Abs(Int32 val) { return ::abs(val); }
 
-		inline float Abs(float val) { return ::fabsf(val); }
+		inline Float32 Abs(Float32 val) { return ::fabsf(val); }
 
-		inline double Abs(double val) { return ::fabs(val); }
+		inline Float64 Abs(Float64 val) { return ::fabs(val); }
 
-		inline float Sqrt(float val) { return ::sqrtf(val); }
+		inline Float32 Sqrt(Float32 val) { return ::sqrtf(val); }
 
-		inline double Sqrt(double val) { return ::sqrt(val); }
+		inline Float64 Sqrt(Float64 val) { return ::sqrt(val); }
 
-		inline float Pow(float base, float exponent) { return ::powf(base, exponent); }
+		inline Float32 Pow(Float32 base, Float32 exponent) { return ::powf(base, exponent); }
 
-		inline double Pow(double base, double exponent) { return ::pow(base, exponent); }
+		inline Float64 Pow(Float64 base, Float64 exponent) { return ::pow(base, exponent); }
 
-		inline int Sign(int val) { return val < 0 ? -1 : 1; }
+		inline Int32 Sign(Int32 val) { return val < 0 ? -1 : 1; }
 
-		inline float Sign(float val) { return val < 0 ? -1.f : 1.f; }
+		inline Float32 Sign(Float32 val) { return val < 0 ? -1.f : 1.f; }
 
-		inline double Sign(double val) { return val < 0 ? -1.0 : 1.0; }
+		inline Float64 Sign(Float64 val) { return val < 0 ? -1.0 : 1.0; }
 
-		inline float Sin(float val) { return ::sinf(val * constants::PI_F / 180.f); }
+		inline Float32 Sin(Float32 val) { return ::sinf(val * constants::PI_F / 180.f); }
 
-		inline double Sin(double val) { return ::sin(val * constants::PI_D / 180.0); }
+		inline Float64 Sin(Float64 val) { return ::sin(val * constants::PI_D / 180.0); }
 
-		inline float Cos(float val) { return ::cosf(val * constants::PI_F / 180.f); }
+		inline Float32 Cos(Float32 val) { return ::cosf(val * constants::PI_F / 180.f); }
 
-		inline double Cos(double val) { return ::cos(val * constants::PI_D / 180.0); }
+		inline Float64 Cos(Float64 val) { return ::cos(val * constants::PI_D / 180.0); }
 
-		inline float Tan(float val) { return ::tanf(val * constants::PI_F / 180.f); }
+		inline Float32 Tan(Float32 val) { return ::tanf(val * constants::PI_F / 180.f); }
 
-		inline double Tan(double val) { return ::tan(val * constants::PI_D / 180.0); }
+		inline Float64 Tan(Float64 val) { return ::tan(val * constants::PI_D / 180.0); }
 
-		inline float Asin(float val) { return ::asinf(val) * 180.f / constants::PI_F; }
+		inline Float32 Asin(Float32 val) { return ::asinf(val) * 180.f / constants::PI_F; }
 
-		inline double Asin(double val) { return ::asin(val) * 180.f / constants::PI_F; }
+		inline Float64 Asin(Float64 val) { return ::asin(val) * 180.f / constants::PI_F; }
 
-		inline float Acos(float val) { return ::acosf(val) * 180.f / constants::PI_F; }
+		inline Float32 Acos(Float32 val) { return ::acosf(val) * 180.f / constants::PI_F; }
 
-		inline double Acos(double val) { return ::acos(val) * 180.f / constants::PI_F; }
+		inline Float64 Acos(Float64 val) { return ::acos(val) * 180.f / constants::PI_F; }
 
-		inline float Atan(float val) { return ::atanf(val) * 180.f / constants::PI_F; }
+		inline Float32 Atan(Float32 val) { return ::atanf(val) * 180.f / constants::PI_F; }
 
-		inline double Atan(double val) { return ::atan(val) * 180.f / constants::PI_F; }
+		inline Float64 Atan(Float64 val) { return ::atan(val) * 180.f / constants::PI_F; }
 
-		inline float Ceil(float val) { return ::ceil(val); }
+		inline Float32 Ceil(Float32 val) { return ::ceil(val); }
 
-		inline double Ceil(double val) { return ::ceil(val); }
+		inline Float64 Ceil(Float64 val) { return ::ceil(val); }
 
-		inline float Floor(float val) { return ::floor(val); }
+		inline Float32 Floor(Float32 val) { return ::floor(val); }
 
-		inline double Floor(double val) { return ::floor(val); }
+		inline Float64 Floor(Float64 val) { return ::floor(val); }
 	}
 }

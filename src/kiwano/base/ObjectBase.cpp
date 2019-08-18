@@ -30,7 +30,7 @@ namespace kiwano
 		Vector<ObjectBase*> tracing_objects;
 	}
 
-	unsigned int ObjectBase::last_object_id = 0;
+	UInt32 ObjectBase::last_object_id = 0;
 
 	ObjectBase::ObjectBase()
 		: tracing_leak_(false)

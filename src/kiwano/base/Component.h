@@ -42,6 +42,6 @@ namespace kiwano
 		virtual void AfterRender() {}
 
 		virtual void HandleEvent(Event&) {}
-		virtual void HandleMessage(HWND, UINT, WPARAM, LPARAM) {}
+		virtual void HandleMessage(HWND, UInt32, WPARAM, LPARAM) {}
 	};
 }

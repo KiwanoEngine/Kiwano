@@ -120,5 +120,5 @@ namespace kiwano
 
 namespace kiwano
 {
-	using Rect = kiwano::math::RectT<float>;
+	using Rect = kiwano::math::RectT<Float32>;
 }

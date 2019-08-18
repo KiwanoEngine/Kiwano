@@ -191,14 +191,14 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	void Renderer::HandleMessage(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam)
 	{
 		switch (msg)
 		{
 		case WM_SIZE:
 		{
-			UINT width = LOWORD(lparam);
-			UINT height = HIWORD(lparam);
+			UInt32 width = LOWORD(lparam);
+			UInt32 height = HIWORD(lparam);
 
 			Resize(width, height);
 			break;
@@ -390,7 +390,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			LPVOID collection_key = nullptr;
-			UINT32 collection_key_size = 0;
+			UInt32 collection_key_size = 0;
 
 			hr = font_collection_loader_->AddFilePaths(file_paths, &collection_key, &collection_key_size);
 
@@ -428,7 +428,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			LPVOID collection_key = nullptr;
-			UINT32 collection_key_size = 0;
+			UInt32 collection_key_size = 0;
 
 			hr = res_font_collection_loader_->AddResources(res_arr, &collection_key, &collection_key_size);
 
@@ -667,7 +667,7 @@ namespace kiwano
 		vsync_ = enabled;
 	}
 
-	void Renderer::Resize(UINT width, UINT height)
+	void Renderer::Resize(UInt32 width, UInt32 height)
 	{
 		HRESULT hr = S_OK;
 		if (!d3d_res_)
@@ -677,8 +677,8 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			output_size_.x = static_cast<float>(width);
-			output_size_.y = static_cast<float>(height);
+			output_size_.x = static_cast<Float32>(width);
+			output_size_.y = static_cast<Float32>(height);
 			hr = d3d_res_->SetLogicalSize(output_size_);
 		}
 

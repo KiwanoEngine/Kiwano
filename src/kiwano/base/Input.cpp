@@ -38,7 +38,7 @@ namespace kiwano
 	{
 	}
 
-	void Input::UpdateKey(int key, bool down)
+	void Input::UpdateKey(Int32 key, bool down)
 	{
 		if (down && !keys_[key])
 			keys_pressed_[key] = true;
@@ -50,7 +50,7 @@ namespace kiwano
 		want_update_ = true;
 	}
 
-	void Input::UpdateMousePos(float x, float y)
+	void Input::UpdateMousePos(Float32 x, Float32 y)
 	{
 		mouse_pos_x_ = x;
 		mouse_pos_y_ = y;
@@ -67,7 +67,7 @@ namespace kiwano
 		}
 	}
 
-	void Input::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	void Input::HandleMessage(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam)
 	{
 		switch (msg)
 		{
@@ -86,7 +86,7 @@ namespace kiwano
 			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { UpdateKey(VK_LBUTTON, (msg == WM_LBUTTONDOWN) ? true : false); }
 			else if	(msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { UpdateKey(VK_RBUTTON, (msg == WM_RBUTTONDOWN) ? true : false); }
 			else if	(msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { UpdateKey(VK_MBUTTON, (msg == WM_MBUTTONDOWN) ? true : false); }
-			else if (msg == WM_MOUSEMOVE) { UpdateMousePos(static_cast<float>(GET_X_LPARAM(lparam)), static_cast<float>(GET_Y_LPARAM(lparam))); }
+			else if (msg == WM_MOUSEMOVE) { UpdateMousePos(static_cast<Float32>(GET_X_LPARAM(lparam)), static_cast<Float32>(GET_Y_LPARAM(lparam))); }
 
 			break;
 		}
@@ -97,35 +97,41 @@ namespace kiwano
 		case WM_SYSKEYUP:
 		{
 			bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
-			UpdateKey((int)wparam, down);
+			UpdateKey((Int32)wparam, down);
 		}
 		}
 	}
 
-	bool Input::IsDown(int key_or_btn)
+	bool Input::IsDown(Int32 key_or_btn)
 	{
 		KGE_ASSERT(key_or_btn >= 0 && key_or_btn < KEY_NUM);
-		return keys_[key_or_btn];
+		if (key_or_btn >= 0 && key_or_btn < KEY_NUM)
+			return keys_[key_or_btn];
+		return false;
 	}
 
-	bool Input::WasPressed(int key_or_btn)
+	bool Input::WasPressed(Int32 key_or_btn)
 	{
 		KGE_ASSERT(key_or_btn >= 0 && key_or_btn < KEY_NUM);
-		return keys_pressed_[key_or_btn];
+		if (key_or_btn >= 0 && key_or_btn < KEY_NUM)
+			return keys_pressed_[key_or_btn];
+		return false;
 	}
 
-	bool Input::WasReleased(int key_or_btn)
+	bool Input::WasReleased(Int32 key_or_btn)
 	{
 		KGE_ASSERT(key_or_btn >= 0 && key_or_btn < KEY_NUM);
-		return keys_released_[key_or_btn];
+		if (key_or_btn >= 0 && key_or_btn < KEY_NUM)
+			return keys_released_[key_or_btn];
+		return false;
 	}
 
-	float Input::GetMouseX()
+	Float32 Input::GetMouseX()
 	{
 		return mouse_pos_x_;
 	}
 
-	float Input::GetMouseY()
+	Float32 Input::GetMouseY()
 	{
 		return mouse_pos_y_;
 	}

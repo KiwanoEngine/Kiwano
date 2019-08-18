@@ -32,10 +32,10 @@ namespace kiwano
 	{
 		SetResponsible(true);
 
-		AddListener(Event::MouseHover, bind_func(this, &Button::UpdateStatus));
-		AddListener(Event::MouseOut, bind_func(this, &Button::UpdateStatus));
-		AddListener(Event::MouseBtnDown, bind_func(this, &Button::UpdateStatus));
-		AddListener(Event::MouseBtnUp, bind_func(this, &Button::UpdateStatus));
+		AddListener(Event::MouseHover, Closure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseOut, Closure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseBtnDown, Closure(this, &Button::UpdateStatus));
+		AddListener(Event::MouseBtnUp, Closure(this, &Button::UpdateStatus));
 	}
 
 	Button::Button(const Callback& click)

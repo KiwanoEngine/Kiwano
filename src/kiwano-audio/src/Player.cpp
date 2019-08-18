@@ -34,9 +34,9 @@ namespace kiwano
 			ClearCache();
 		}
 
-		size_t Player::Load(String const& file_path)
+		UInt32 Player::Load(String const& file_path)
 		{
-			size_t hash_code = file_path.hash();
+			UInt32 hash_code = file_path.hash();
 			if (sound_cache_.end() != sound_cache_.find(hash_code))
 				return true;
 
@@ -54,9 +54,9 @@ namespace kiwano
 			return false;
 		}
 
-		size_t Player::Load(Resource const& res)
+		UInt32 Player::Load(Resource const& res)
 		{
-			size_t hash_code = res.GetId();
+			UInt32 hash_code = res.GetId();
 			if (sound_cache_.end() != sound_cache_.find(hash_code))
 				return true;
 
@@ -74,35 +74,35 @@ namespace kiwano
 			return false;
 		}
 
-		void Player::Play(size_t id, int loop_count)
+		void Player::Play(UInt32 id, Int32 loop_count)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Play(loop_count);
 		}
 
-		void Player::Pause(size_t id)
+		void Player::Pause(UInt32 id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Pause();
 		}
 
-		void Player::Resume(size_t id)
+		void Player::Resume(UInt32 id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Resume();
 		}
 
-		void Player::Stop(size_t id)
+		void Player::Stop(UInt32 id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Stop();
 		}
 
-		bool Player::IsPlaying(size_t id)
+		bool Player::IsPlaying(UInt32 id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
@@ -110,12 +110,12 @@ namespace kiwano
 			return false;
 		}
 
-		float Player::GetVolume() const
+		Float32 Player::GetVolume() const
 		{
 			return volume_;
 		}
 
-		void Player::SetVolume(float volume)
+		void Player::SetVolume(Float32 volume)
 		{
 			volume_ = std::min(std::max(volume, -224.f), 224.f);
 			for (const auto& pair : sound_cache_)

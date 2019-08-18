@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	EventListener::EventListener(UINT type, EventCallback const & callback, String const & name)
+	EventListener::EventListener(UInt32 type, EventCallback const & callback, String const & name)
 		: type_(type)
 		, callback_(callback)
 		, running_(true)

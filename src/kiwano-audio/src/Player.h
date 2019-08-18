@@ -39,47 +39,47 @@ namespace kiwano
 			~Player();
 
 			// 加载本地音频文件, 返回该资源标识符
-			size_t Load(
+			UInt32 Load(
 				String const& file_path
 			);
 
 			// 加载音乐资源, 返回该资源标识符
-			size_t Load(
+			UInt32 Load(
 				Resource const& res		/* 音乐资源 */
 			);
 
 			// 播放音乐
 			void Play(
-				size_t id,				/* 标识符 */
-				int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
+				UInt32 id,				/* 标识符 */
+				Int32 loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 			);
 
 			// 暂停音乐
 			void Pause(
-				size_t id				/* 标识符 */
+				UInt32 id				/* 标识符 */
 			);
 
 			// 继续播放音乐
 			void Resume(
-				size_t id				/* 标识符 */
+				UInt32 id				/* 标识符 */
 			);
 
 			// 停止音乐
 			void Stop(
-				size_t id				/* 标识符 */
+				UInt32 id				/* 标识符 */
 			);
 
 			// 获取音乐播放状态
 			bool IsPlaying(
-				size_t id				/* 标识符 */
+				UInt32 id				/* 标识符 */
 			);
 
 			// 获取音量
-			float GetVolume() const;
+			Float32 GetVolume() const;
 
 			// 设置音量
 			void SetVolume(
-				float volume			/* 1.0 为原始音量 */
+				Float32 volume			/* 1.0 为原始音量 */
 			);
 
 			// 暂停所有音乐
@@ -95,9 +95,9 @@ namespace kiwano
 			void ClearCache();
 
 		protected:
-			float volume_;
+			Float32 volume_;
 
-			using MusicMap = Map<size_t, SoundPtr>;
+			using MusicMap = Map<UInt32, SoundPtr>;
 			MusicMap sound_cache_;
 		};
 	}

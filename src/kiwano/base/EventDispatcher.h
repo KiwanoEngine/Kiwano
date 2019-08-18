@@ -35,7 +35,7 @@ namespace kiwano
 
 		// Ìí¼Ó¼àÌıÆ÷
 		void AddListener(
-			UINT type,
+			UInt32 type,
 			EventCallback callback,
 			String const& name = L""
 		);
@@ -57,17 +57,17 @@ namespace kiwano
 
 		// Æô¶¯¼àÌıÆ÷
 		void StartListeners(
-			UINT type
+			UInt32 type
 		);
 
 		// Í£Ö¹¼àÌıÆ÷
 		void StopListeners(
-			UINT type
+			UInt32 type
 		);
 
 		// ÒÆ³ı¼àÌıÆ÷
 		void RemoveListeners(
-			UINT type
+			UInt32 type
 		);
 
 		virtual void Dispatch(Event& evt);

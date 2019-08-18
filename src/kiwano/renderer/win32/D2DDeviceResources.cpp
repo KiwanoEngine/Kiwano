@@ -84,7 +84,7 @@ namespace kiwano
 
 	protected:
 		unsigned long ref_count_;
-		float dpi_;
+		Float32 dpi_;
 
 		ComPtr<ID2D1StrokeStyle>	d2d_miter_stroke_style_;
 		ComPtr<ID2D1StrokeStyle>	d2d_bevel_stroke_style_;
@@ -489,7 +489,7 @@ namespace kiwano
 
 		HRESULT hr;
 		ComPtr<IDWriteTextLayout> output;
-		UINT32 length = static_cast<UINT32>(text.length());
+		UInt32 length = static_cast<UInt32>(text.length());
 
 		if (text_style.wrap_width > 0)
 		{

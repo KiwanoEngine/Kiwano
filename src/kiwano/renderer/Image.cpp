@@ -64,7 +64,7 @@ namespace kiwano
 		return bitmap_ != nullptr;
 	}
 
-	float Image::GetWidth() const
+	Float32 Image::GetWidth() const
 	{
 		if (bitmap_)
 		{
@@ -73,7 +73,7 @@ namespace kiwano
 		return 0;
 	}
 
-	float Image::GetHeight() const
+	Float32 Image::GetHeight() const
 	{
 		if (bitmap_)
 		{
@@ -92,7 +92,7 @@ namespace kiwano
 		return Size{};
 	}
 
-	UINT32 Image::GetWidthInPixels() const
+	UInt32 Image::GetWidthInPixels() const
 	{
 		if (bitmap_)
 		{
@@ -101,7 +101,7 @@ namespace kiwano
 		return 0;
 	}
 
-	UINT32 Image::GetHeightInPixels() const
+	UInt32 Image::GetHeightInPixels() const
 	{
 		if (bitmap_)
 		{
@@ -110,14 +110,14 @@ namespace kiwano
 		return 0;
 	}
 
-	math::Vec2T<UINT32> Image::GetSizeInPixels() const
+	math::Vec2T<UInt32> Image::GetSizeInPixels() const
 	{
 		if (bitmap_)
 		{
 			auto bitmap_size = bitmap_->GetPixelSize();
-			return math::Vec2T<UINT32>{ bitmap_size.width, bitmap_size.height };
+			return math::Vec2T<UInt32>{ bitmap_size.width, bitmap_size.height };
 		}
-		return math::Vec2T<UINT32>{};
+		return math::Vec2T<UInt32>{};
 	}
 
 	void Image::CopyFrom(Image const& copy_from)
@@ -135,13 +135,13 @@ namespace kiwano
 		if (IsValid() && copy_from.IsValid())
 		{
 			HRESULT hr = bitmap_->CopyFromBitmap(
-				&D2D1::Point2U(UINT(dest_point.x), UINT(dest_point.y)),
+				&D2D1::Point2U(UInt32(dest_point.x), UInt32(dest_point.y)),
 				copy_from.GetBitmap().get(),
 				&D2D1::RectU(
-					UINT(src_rect.GetLeft()),
-					UINT(src_rect.GetTop()),
-					UINT(src_rect.GetRight()),
-					UINT(src_rect.GetBottom()))
+					UInt32(src_rect.GetLeft()),
+					UInt32(src_rect.GetTop()),
+					UInt32(src_rect.GetRight()),
+					UInt32(src_rect.GetBottom()))
 			);
 
 			ThrowIfFailed(hr);

@@ -29,14 +29,14 @@ namespace kiwano
 		// 随机数
 		// 
 		// 获取指定范围内的一个随机数, 如:
-		// int n = math::Rand(1, 5);  // 获取 1~5 内的随机整数, 包含 1 和 5
+		// Int32 n = math::Rand(1, 5);  // 获取 1~5 内的随机整数, 包含 1 和 5
 		// 产生的随机数类型取决于参数的类型, 如获取随机浮点数:
-		// double d = math::Rand(1.2, 1.5);
+		// Float64 d = math::Rand(1.2, 1.5);
 		//
 
-		int Rand(int min, int max);
+		Int32 Rand(Int32 min, Int32 max);
 
-		unsigned int Rand(unsigned int min, unsigned int max);
+		UInt32 Rand(UInt32 min, UInt32 max);
 
 		long Rand(long min, long max);
 
@@ -44,11 +44,11 @@ namespace kiwano
 
 		char Rand(char min, char max);
 
-		unsigned char Rand(unsigned char min, unsigned char max);
+		UChar Rand(UChar min, UChar max);
 
-		float Rand(float min, float max);
+		Float32 Rand(Float32 min, Float32 max);
 
-		double Rand(double min, double max);
+		Float64 Rand(Float64 min, Float64 max);
 
 
 		//
@@ -79,12 +79,12 @@ namespace kiwano
 			}
 		}
 
-		inline int Rand(int min, int max)
+		inline Int32 Rand(Int32 min, Int32 max)
 		{
 			return __rand_detail::RandomInt(min, max);
 		}
 
-		inline unsigned int Rand(unsigned int min, unsigned int max)
+		inline UInt32 Rand(UInt32 min, UInt32 max)
 		{
 			return __rand_detail::RandomInt(min, max);
 		}
@@ -102,23 +102,23 @@ namespace kiwano
 		inline char Rand(char min, char max)
 		{
 			return static_cast<char>(
-				__rand_detail::RandomInt(static_cast<int>(min), static_cast<int>(max))
+				__rand_detail::RandomInt(static_cast<Int32>(min), static_cast<Int32>(max))
 			);
 		}
 
-		inline unsigned char Rand(unsigned char min, unsigned char max)
+		inline UChar Rand(UChar min, UChar max)
 		{
-			return static_cast<unsigned char>(
-				__rand_detail::RandomInt(static_cast<unsigned int>(min), static_cast<unsigned int>(max))
+			return static_cast<UChar>(
+				__rand_detail::RandomInt(static_cast<UInt32>(min), static_cast<UInt32>(max))
 			);
 		}
 
-		inline float Rand(float min, float max)
+		inline Float32 Rand(Float32 min, Float32 max)
 		{
 			return __rand_detail::RandomReal(min, max);
 		}
 
-		inline double Rand(double min, double max)
+		inline Float64 Rand(Float64 min, Float64 max)
 		{
 			return __rand_detail::RandomReal(min, max);
 		}

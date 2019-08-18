@@ -71,7 +71,8 @@ platform:
 install:
 - ps: .\scripts\appveyor\install_coapp.ps1
 
-# before_build:
+before_build:
+- ps: .\scripts\appveyor\clear_project_configuration.ps1
 # - ps: nuget restore projects/Kiwano.sln
 
 build:

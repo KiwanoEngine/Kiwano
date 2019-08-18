@@ -106,7 +106,7 @@ namespace kiwano
 	void RenderTarget::DrawGeometry(
 		Geometry const& geometry,
 		Color const& stroke_color,
-		float stroke_width,
+		Float32 stroke_width,
 		StrokeStyle stroke
 	) const
 	{
@@ -153,7 +153,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawLine(Point const& point1, Point const& point2, Color const& stroke_color, float stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawLine(Point const& point1, Point const& point2, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !render_target_)
@@ -179,7 +179,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawRectangle(Rect const& rect, Color const& stroke_color, float stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawRectangle(Rect const& rect, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !render_target_)
@@ -224,7 +224,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, Color const& stroke_color, float stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !render_target_)
@@ -277,7 +277,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, Color const& stroke_color, float stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
 		if (!solid_color_brush_ || !render_target_)
@@ -516,7 +516,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	float RenderTarget::GetOpacity() const
+	Float32 RenderTarget::GetOpacity() const
 	{
 		return opacity_;
 	}
@@ -537,7 +537,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::SetOpacity(float opacity)
+	void RenderTarget::SetOpacity(Float32 opacity)
 	{
 		HRESULT hr = S_OK;
 		if (!solid_color_brush_)

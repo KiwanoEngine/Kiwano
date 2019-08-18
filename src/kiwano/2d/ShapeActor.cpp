@@ -68,7 +68,7 @@ namespace kiwano
 		stroke_color_ = color;
 	}
 
-	void ShapeActor::SetStrokeWidth(float width)
+	void ShapeActor::SetStrokeWidth(Float32 width)
 	{
 		stroke_width_ = std::max(width, 0.f);
 	}
@@ -201,7 +201,7 @@ namespace kiwano
 	{
 	}
 
-	CircleActor::CircleActor(float radius)
+	CircleActor::CircleActor(Float32 radius)
 	{
 		SetRadius(radius);
 	}
@@ -210,7 +210,7 @@ namespace kiwano
 	{
 	}
 
-	void CircleActor::SetRadius(float radius)
+	void CircleActor::SetRadius(Float32 radius)
 	{
 		geo_ = Geometry::CreateCircle(Point{}, radius);
 
@@ -287,7 +287,7 @@ namespace kiwano
 		sink_.AddBezier(point1, point2, point3);
 	}
 
-	void PathActor::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
+	void PathActor::AddArc(Point const& point, Size const& radius, Float32 rotation, bool clockwise, bool is_small)
 	{
 		sink_.AddArc(point, radius, rotation, clockwise, is_small);
 	}

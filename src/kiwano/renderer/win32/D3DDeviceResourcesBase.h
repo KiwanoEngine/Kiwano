@@ -35,7 +35,7 @@ namespace kiwano
 
 		virtual HRESULT SetLogicalSize(Size logical_size) = 0;
 
-		virtual HRESULT SetDpi(float dpi) = 0;
+		virtual HRESULT SetDpi(Float32 dpi) = 0;
 
 		virtual void DiscardResources() = 0;
 	};

@@ -61,10 +61,10 @@ namespace kiwano
 		);
 
 		// 获取宽度
-		float GetWidth() const					{ return crop_rect_.size.x; }
+		Float32 GetWidth() const					{ return crop_rect_.size.x; }
 
 		// 获取高度
-		float GetHeight() const					{ return crop_rect_.size.y; }
+		Float32 GetHeight() const					{ return crop_rect_.size.y; }
 
 		// 获取大小
 		Size GetSize() const					{ return crop_rect_.size; }

@@ -58,7 +58,7 @@ namespace kiwano
 
 	protected:
 		bool		done_;
-		float		process_;
+		Float32		process_;
 		Duration	duration_;
 		Duration	delta_;
 		Size		window_size_;
@@ -132,9 +132,17 @@ namespace kiwano
 		: public Transition
 	{
 	public:
+		enum class Type : Int32
+		{
+			Up,		/* 上移 */
+			Down,	/* 下移 */
+			Left,	/* 左移 */
+			Right	/* 右移 */
+		};
+
 		explicit MoveTransition(
-			Duration moveDuration,	/* 动画持续时长 */
-			Direction direction				/* 移动方向 */
+			Duration duration,	/* 动画持续时长 */
+			Type type			/* 移动方式 */
 		);
 
 	protected:
@@ -148,9 +156,9 @@ namespace kiwano
 		void Reset() override;
 
 	protected:
-		Direction	direction_;
-		Point		pos_delta_;
-		Point		start_pos_;
+		Type	type_;
+		Point	pos_delta_;
+		Point	start_pos_;
 	};
 
 
@@ -160,8 +168,8 @@ namespace kiwano
 	{
 	public:
 		explicit RotationTransition(
-			Duration moveDuration,	/* 动画持续时长 */
-			float rotation = 360			/* 旋转度数 */
+			Duration duration,		/* 动画持续时长 */
+			Float32 rotation = 360	/* 旋转度数 */
 		);
 
 	protected:
@@ -175,6 +183,6 @@ namespace kiwano
 		void Reset() override;
 
 	protected:
-		float	rotation_;
+		Float32	rotation_;
 	};
 }

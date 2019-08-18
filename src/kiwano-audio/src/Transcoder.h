@@ -40,19 +40,19 @@ namespace kiwano
 			HRESULT LoadMediaFile(
 				String const& file_path,
 				BYTE** wave_data,
-				UINT32* wave_data_size
+				UInt32* wave_data_size
 			);
 
 			HRESULT LoadMediaResource(
 				Resource const& res,
 				BYTE** wave_data,
-				UINT32* wave_data_size
+				UInt32* wave_data_size
 			);
 
 			HRESULT ReadSource(
 				IMFSourceReader* reader,
 				BYTE** wave_data,
-				UINT32* wave_data_size
+				UInt32* wave_data_size
 			);
 
 		private:

@@ -64,55 +64,55 @@ namespace kiwano
 		bool IsCascadeOpacityEnabled()	const	{ return cascade_opacity_; }
 
 		// 获取名称的 Hash 值
-		size_t GetHashName()			const	{ return hash_name_; }
+		UInt32 GetHashName()			const	{ return hash_name_; }
 
 		// 获取 Z 轴顺序
-		int GetZOrder()					const	{ return z_order_; }
+		Int32 GetZOrder()					const	{ return z_order_; }
 
 		// 获取坐标
 		Point GetPosition()				const	{ return transform_.position; }
 
 		// 获取 x 坐标
-		float GetPositionX()			const	{ return transform_.position.x; }
+		Float32 GetPositionX()			const	{ return transform_.position.x; }
 
 		// 获取 y 坐标
-		float GetPositionY()			const	{ return transform_.position.y; }
+		Float32 GetPositionY()			const	{ return transform_.position.y; }
 
 		// 获取缩放比例
 		Point GetScale()				const	{ return transform_.scale; }
 
 		// 获取横向缩放比例
-		float GetScaleX()				const	{ return transform_.scale.x; }
+		Float32 GetScaleX()				const	{ return transform_.scale.x; }
 
 		// 获取纵向缩放比例
-		float GetScaleY()				const	{ return transform_.scale.y; }
+		Float32 GetScaleY()				const	{ return transform_.scale.y; }
 
 		// 获取错切角度
 		Point GetSkew()					const	{ return transform_.skew; }
 
 		// 获取横向错切角度
-		float GetSkewX()				const	{ return transform_.skew.x; }
+		Float32 GetSkewX()				const	{ return transform_.skew.x; }
 
 		// 获取纵向错切角度
-		float GetSkewY()				const	{ return transform_.skew.y; }
+		Float32 GetSkewY()				const	{ return transform_.skew.y; }
 
 		// 获取旋转角度
-		float GetRotation()				const	{ return transform_.rotation; }
+		Float32 GetRotation()				const	{ return transform_.rotation; }
 
 		// 获取宽度
-		float GetWidth()				const	{ return size_.x; }
+		Float32 GetWidth()				const	{ return size_.x; }
 
 		// 获取高度
-		float GetHeight()				const	{ return size_.y; }
+		Float32 GetHeight()				const	{ return size_.y; }
 
 		// 获取大小
 		Size GetSize()					const	{ return size_; }
 
 		// 获取缩放后的宽度
-		float GetScaledWidth()			const	{ return size_.x * transform_.scale.x; }
+		Float32 GetScaledWidth()			const	{ return size_.x * transform_.scale.x; }
 
 		// 获取缩放后的高度
-		float GetScaledHeight()			const	{ return size_.y * transform_.scale.y; }
+		Float32 GetScaledHeight()			const	{ return size_.y * transform_.scale.y; }
 
 		// 获取缩放后的大小
 		Size GetScaledSize()			const	{ return Size{ GetScaledWidth(), GetScaledHeight() }; }
@@ -121,16 +121,16 @@ namespace kiwano
 		Point GetAnchor()				const	{ return anchor_; }
 
 		// 获取 x 方向锚点
-		float GetAnchorX()				const	{ return anchor_.x; }
+		Float32 GetAnchorX()				const	{ return anchor_.x; }
 
 		// 获取 y 方向锚点
-		float GetAnchorY()				const	{ return anchor_.y; }
+		Float32 GetAnchorY()				const	{ return anchor_.y; }
 
 		// 获取透明度
-		float GetOpacity()				const	{ return opacity_; }
+		Float32 GetOpacity()				const	{ return opacity_; }
 
 		// 获取显示透明度
-		float GetDisplayedOpacity()		const	{ return displayed_opacity_; }
+		Float32 GetDisplayedOpacity()		const	{ return displayed_opacity_; }
 
 		// 获取变换
 		Transform GetTransform()		const	{ return transform_; }
@@ -165,12 +165,12 @@ namespace kiwano
 
 		// 设置横坐标
 		void SetPositionX(
-			float x
+			Float32 x
 		);
 
 		// 设置纵坐标
 		void SetPositionY(
-			float y
+			Float32 y
 		);
 
 		// 设置坐标
@@ -180,14 +180,14 @@ namespace kiwano
 
 		// 设置坐标
 		void SetPosition(
-			float x,
-			float y
+			Float32 x,
+			Float32 y
 		);
 
 		// 移动
 		void Move(
-			float x,
-			float y
+			Float32 x,
+			Float32 y
 		);
 
 		// 移动
@@ -198,20 +198,20 @@ namespace kiwano
 		// 设置横向缩放比例
 		// 默认为 1.0
 		void SetScaleX(
-			float scale_x
+			Float32 scale_x
 		);
 
 		// 设置纵向缩放比例
 		// 默认为 1.0
 		void SetScaleY(
-			float scale_y
+			Float32 scale_y
 		);
 
 		// 设置缩放比例
 		// 默认为 (1.0, 1.0)
 		void SetScale(
-			float scale_x,
-			float scale_y
+			Float32 scale_x,
+			Float32 scale_y
 		);
 
 		// 设置缩放比例
@@ -223,26 +223,26 @@ namespace kiwano
 		// 设置缩放比例
 		// 默认为 1.0
 		void SetScale(
-			float scale
+			Float32 scale
 		);
 
 		// 设置横向错切角度
 		// 默认为 0
 		void SetSkewX(
-			float skew_x
+			Float32 skew_x
 		);
 
 		// 设置纵向错切角度
 		// 默认为 0
 		void SetSkewY(
-			float skew_y
+			Float32 skew_y
 		);
 
 		// 设置错切角度
 		// 默认为 (0, 0)
 		void SetSkew(
-			float skew_x,
-			float skew_y
+			Float32 skew_x,
+			Float32 skew_y
 		);
 
 		// 设置错切角度
@@ -254,26 +254,26 @@ namespace kiwano
 		// 设置旋转角度
 		// 默认为 0
 		void SetRotation(
-			float rotation
+			Float32 rotation
 		);
 
 		// 设置锚点的横向位置
 		// 默认为 0, 范围 [0, 1]
 		void SetAnchorX(
-			float anchor_x
+			Float32 anchor_x
 		);
 
 		// 设置锚点的纵向位置
 		// 默认为 0, 范围 [0, 1]
 		void SetAnchorY(
-			float anchor_y
+			Float32 anchor_y
 		);
 
 		// 设置锚点位置
 		// 默认为 (0, 0), 范围 [0, 1]
 		void SetAnchor(
-			float anchor_x,
-			float anchor_y
+			Float32 anchor_x,
+			Float32 anchor_y
 		);
 
 		// 设置锚点位置
@@ -284,18 +284,18 @@ namespace kiwano
 
 		// 修改宽度
 		void SetWidth(
-			float width
+			Float32 width
 		);
 
 		// 修改高度
 		void SetHeight(
-			float height
+			Float32 height
 		);
 
 		// 修改大小
 		void SetSize(
-			float width,
-			float height
+			Float32 width,
+			Float32 height
 		);
 
 		// 修改大小
@@ -311,7 +311,7 @@ namespace kiwano
 		// 设置透明度
 		// 默认为 1.0, 范围 [0, 1]
 		void SetOpacity(
-			float opacity
+			Float32 opacity
 		);
 
 		// 启用或禁用级联透明度
@@ -322,7 +322,7 @@ namespace kiwano
 		// 设置 Z 轴顺序
 		// 默认为 0
 		void SetZOrder(
-			int zorder
+			Int32 zorder
 		);
 
 		// 是否可响应 (鼠标 Hover | Out | Click 消息)
@@ -403,8 +403,8 @@ namespace kiwano
 
 		// 设置默认锚点
 		static void SetDefaultAnchor(
-			float anchor_x,
-			float anchor_y
+			Float32 anchor_x,
+			Float32 anchor_y
 		);
 
 	protected:
@@ -432,12 +432,12 @@ namespace kiwano
 		bool			update_pausing_;
 		bool			cascade_opacity_;
 		bool			show_border_;
-		int				z_order_;
-		float			opacity_;
-		float			displayed_opacity_;
+		Int32				z_order_;
+		Float32			opacity_;
+		Float32			displayed_opacity_;
 		Actor*			parent_;
 		Stage*			stage_;
-		size_t			hash_name_;
+		UInt32			hash_name_;
 		Point			anchor_;
 		Size			size_;
 		Children		children_;

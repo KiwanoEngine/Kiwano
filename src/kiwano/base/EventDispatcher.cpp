@@ -51,7 +51,7 @@ namespace kiwano
 		return listener;
 	}
 
-	void EventDispatcher::AddListener(UINT type, EventCallback callback, String const& name)
+	void EventDispatcher::AddListener(UInt32 type, EventCallback callback, String const& name)
 	{
 		EventListenerPtr listener = new EventListener(type, callback, name);
 		if (listener)
@@ -96,7 +96,7 @@ namespace kiwano
 		}
 	}
 
-	void EventDispatcher::StartListeners(UINT type)
+	void EventDispatcher::StartListeners(UInt32 type)
 	{
 		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
@@ -107,7 +107,7 @@ namespace kiwano
 		}
 	}
 
-	void EventDispatcher::StopListeners(UINT type)
+	void EventDispatcher::StopListeners(UInt32 type)
 	{
 		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
@@ -118,7 +118,7 @@ namespace kiwano
 		}
 	}
 
-	void EventDispatcher::RemoveListeners(UINT type)
+	void EventDispatcher::RemoveListeners(UInt32 type)
 	{
 		EventListenerPtr next;
 		for (auto listener = listeners_.first_item(); listener; listener = next)

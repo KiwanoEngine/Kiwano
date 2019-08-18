@@ -132,8 +132,8 @@ namespace kiwano
 		);
 
 		void Resize(
-			UINT width,
-			UINT height
+			UInt32 width,
+			UInt32 height
 		);
 
 		bool CheckVisibility(
@@ -150,7 +150,7 @@ namespace kiwano
 
 		void AfterRender() override;
 
-		void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
+		void HandleMessage(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam) override;
 
 	public:
 		inline HWND						GetTargetWindow() const			{ return hwnd_; }

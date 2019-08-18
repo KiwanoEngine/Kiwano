@@ -37,9 +37,9 @@ namespace kiwano
 
 		inline void SetAreaRect(Rect const& area)			{ area_ = area; }
 
-		inline float GetOpacity() const						{ return opacity_; }
+		inline Float32 GetOpacity() const						{ return opacity_; }
 
-		inline void SetOpacity(float opacity)				{ opacity_ = opacity; }
+		inline void SetOpacity(Float32 opacity)				{ opacity_ = opacity; }
 
 		inline Geometry const& GetMaskGeometry() const		{ return mask_; }
 
@@ -52,7 +52,7 @@ namespace kiwano
 
 	protected:
 		Rect area_;
-		float opacity_;
+		Float32 opacity_;
 		Geometry mask_;
 		ComPtr<ID2D1Layer> layer_;
 	};

@@ -46,7 +46,7 @@ namespace kiwano
 
 		inline bool IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
 
-		inline unsigned int GetObjectID() const			{ return id_; }
+		inline UInt32 GetObjectID() const			{ return id_; }
 
 		String DumpObject();
 
@@ -71,7 +71,7 @@ namespace kiwano
 		void* user_data_;
 		String* name_;
 
-		const unsigned int id_;
-		static unsigned int last_object_id;
+		const UInt32 id_;
+		static UInt32 last_object_id;
 	};
 }

@@ -59,7 +59,7 @@ namespace kiwano
 
 			// 播放
 			void Play(
-				int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
+				Int32 loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 			);
 
 			// 暂停
@@ -78,17 +78,17 @@ namespace kiwano
 			bool IsPlaying() const;
 
 			// 获取音量
-			float GetVolume() const;
+			Float32 GetVolume() const;
 
 			// 设置音量
 			void SetVolume(
-				float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
+				Float32 volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
 			);
 
 		protected:
 			bool	opened_;
 			bool	playing_;
-			UINT32	size_;
+			UInt32	size_;
 			BYTE* wave_data_;
 			IXAudio2SourceVoice* voice_;
 		};

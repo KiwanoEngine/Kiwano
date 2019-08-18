@@ -157,9 +157,9 @@ namespace kiwano
 		}
 
 		// Converts a length in device-independent pixels (DIPs) to a length in physical pixels.
-		inline float ConvertDipsToPixels(float dips, float dpi)
+		inline Float32 ConvertDipsToPixels(Float32 dips, Float32 dpi)
 		{
-			static const float dips_per_inch = 96.0f;
+			static const Float32 dips_per_inch = 96.0f;
 			return math::Floor(dips * dpi / dips_per_inch + 0.5f); // Round to nearest integer.
 		}
 	}

@@ -44,7 +44,7 @@ namespace kiwano
 		void DrawGeometry(
 			Geometry const& geometry,
 			Color const& stroke_color,
-			float stroke_width,
+			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
@@ -57,14 +57,14 @@ namespace kiwano
 			Point const& point1,
 			Point const& point2,
 			Color const& stroke_color,
-			float stroke_width,
+			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
 		void DrawRectangle(
 			Rect const& rect,
 			Color const& stroke_color,
-			float stroke_width,
+			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
@@ -77,7 +77,7 @@ namespace kiwano
 			Rect const& rect,
 			Vec2 const& radius,
 			Color const& stroke_color,
-			float stroke_width,
+			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
@@ -91,7 +91,7 @@ namespace kiwano
 			Point const& center,
 			Vec2 const& radius,
 			Color const& stroke_color,
-			float stroke_width,
+			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
@@ -136,10 +136,10 @@ namespace kiwano
 			Color const& clear_color
 		);
 
-		float GetOpacity() const;
+		Float32 GetOpacity() const;
 
 		void SetOpacity(
-			float opacity
+			Float32 opacity
 		);
 
 		void SetTransform(
@@ -159,7 +159,7 @@ namespace kiwano
 	public:
 		struct Status
 		{
-			int primitives;
+			Int32 primitives;
 			Time start;
 			Duration duration;
 		};
@@ -183,7 +183,7 @@ namespace kiwano
 		bool IsValid() const;
 
 	protected:
-		float							opacity_;
+		Float32							opacity_;
 		bool							antialias_;
 		mutable bool					collecting_status_;
 		mutable Status					status_;

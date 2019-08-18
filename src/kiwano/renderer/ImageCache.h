@@ -48,10 +48,10 @@ namespace kiwano
 		virtual ~ImageCache();
 
 	protected:
-		using ImageMap = UnorderedMap<size_t, Image>;
+		using ImageMap = UnorderedMap<UInt32, Image>;
 		ImageMap image_cache_;
 
-		using GifImageMap = UnorderedMap<size_t, GifImage>;
+		using GifImageMap = UnorderedMap<UInt32, GifImage>;
 		GifImageMap gif_image_cache_;
 	};
 }

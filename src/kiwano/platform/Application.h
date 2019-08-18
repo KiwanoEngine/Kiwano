@@ -30,8 +30,8 @@ namespace kiwano
 	struct Options
 	{
 		String	title;				// 标题
-		int		width;				// 宽度
-		int		height;				// 高度
+		Int32		width;				// 宽度
+		Int32		height;				// 高度
 		LPCWSTR	icon;				// 图标
 		Color	clear_color;		// 清屏颜色
 		bool	vsync;				// 垂直同步
@@ -40,8 +40,8 @@ namespace kiwano
 
 		Options(
 			String const& title = L"Kiwano Game",
-			int width = 640,
-			int height = 480,
+			Int32 width = 640,
+			Int32 height = 480,
 			LPCWSTR icon = nullptr,
 			Color clear_color = Color::Black,
 			bool vsync = true,
@@ -95,7 +95,7 @@ namespace kiwano
 
 		// 设置时间缩放因子
 		void SetTimeScale(
-			float scale_factor
+			Float32 scale_factor
 		);
 
 		// 分发事件
@@ -112,12 +112,12 @@ namespace kiwano
 
 		void Update();
 
-		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+		static LRESULT CALLBACK WndProc(HWND, UInt32, WPARAM, LPARAM);
 
 	protected:
 		bool	end_;
 		bool	inited_;
-		float	time_scale_;
+		Float32	time_scale_;
 
 		Vector<Component*>	components_;
 	};

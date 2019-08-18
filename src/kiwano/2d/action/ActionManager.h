@@ -29,7 +29,7 @@ namespace kiwano
 
 	public:
 		// Ìí¼Ó¶¯×÷
-		ActionPtr AddAction(
+		Action* AddAction(
 			ActionPtr action
 		);
 

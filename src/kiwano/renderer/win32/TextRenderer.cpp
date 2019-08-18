@@ -35,18 +35,18 @@ namespace kiwano
 		STDMETHOD(CreateDeviceResources)();
 
 		STDMETHOD_(void, SetTextStyle)(
-            _In_ FLOAT opacity,
+            _In_ Float32 opacity,
             _In_ CONST D2D1_COLOR_F &fillColor,
             _In_ BOOL outline,
             _In_ CONST D2D1_COLOR_F &outlineColor,
-            _In_ FLOAT outlineWidth,
+            _In_ Float32 outlineWidth,
             _In_ ID2D1StrokeStyle* outlineJoin
 			);
 
 		STDMETHOD(DrawGlyphRun)(
 			__maybenull void* clientDrawingContext,
-			FLOAT baselineOriginX,
-			FLOAT baselineOriginY,
+			Float32 baselineOriginX,
+			Float32 baselineOriginY,
 			DWRITE_MEASURING_MODE measuringMode,
 			__in DWRITE_GLYPH_RUN const* glyphRun,
 			__in DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
@@ -55,24 +55,24 @@ namespace kiwano
 
 		STDMETHOD(DrawUnderline)(
 			__maybenull void* clientDrawingContext,
-			FLOAT baselineOriginX,
-			FLOAT baselineOriginY,
+			Float32 baselineOriginX,
+			Float32 baselineOriginY,
 			__in DWRITE_UNDERLINE const* underline,
 			IUnknown* clientDrawingEffect
 			);
 
 		STDMETHOD(DrawStrikethrough)(
 			__maybenull void* clientDrawingContext,
-			FLOAT baselineOriginX,
-			FLOAT baselineOriginY,
+			Float32 baselineOriginX,
+			Float32 baselineOriginY,
 			__in DWRITE_STRIKETHROUGH const* strikethrough,
 			IUnknown* clientDrawingEffect
 			);
 
 		STDMETHOD(DrawInlineObject)(
 			__maybenull void* clientDrawingContext,
-			FLOAT originX,
-			FLOAT originY,
+			Float32 originX,
+			Float32 originY,
 			IDWriteInlineObject* inlineObject,
 			BOOL IsSideways,
 			BOOL IsRightToLeft,
@@ -91,7 +91,7 @@ namespace kiwano
 
 		STDMETHOD(GetPixelsPerDip)(
 			__maybenull void* clientDrawingContext,
-			__out FLOAT* pixelsPerDip
+			__out Float32* pixelsPerDip
 			);
 
 	public:
@@ -106,7 +106,7 @@ namespace kiwano
 		unsigned long			cRefCount_;
 		D2D1_COLOR_F			sFillColor_;
 		D2D1_COLOR_F			sOutlineColor_;
-		FLOAT					fOutlineWidth;
+		Float32					fOutlineWidth;
 		BOOL					bShowOutline_;
 		ID2D1Factory*			pFactory_;
 		ID2D1RenderTarget*		pRT_;
@@ -188,11 +188,11 @@ namespace kiwano
 	}
 
 	STDMETHODIMP_(void) TextRenderer::SetTextStyle(
-        _In_ FLOAT opacity,
+        _In_ Float32 opacity,
         _In_ CONST D2D1_COLOR_F &fillColor,
         _In_ BOOL outline,
         _In_ CONST D2D1_COLOR_F &outlineColor,
-        _In_ FLOAT outlineWidth,
+        _In_ Float32 outlineWidth,
         _In_ ID2D1StrokeStyle* outlineJoin)
 	{
 		sFillColor_ = fillColor;
@@ -206,8 +206,8 @@ namespace kiwano
 
 	STDMETHODIMP TextRenderer::DrawGlyphRun(
 		__maybenull void* clientDrawingContext,
-		FLOAT baselineOriginX,
-		FLOAT baselineOriginY,
+		Float32 baselineOriginX,
+		Float32 baselineOriginY,
 		DWRITE_MEASURING_MODE measuringMode,
 		__in DWRITE_GLYPH_RUN const* glyphRun,
 		__in DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
@@ -299,8 +299,8 @@ namespace kiwano
 
 	STDMETHODIMP TextRenderer::DrawUnderline(
 		__maybenull void* clientDrawingContext,
-		FLOAT baselineOriginX,
-		FLOAT baselineOriginY,
+		Float32 baselineOriginX,
+		Float32 baselineOriginY,
 		__in DWRITE_UNDERLINE const* underline,
 		IUnknown* clientDrawingEffect)
 	{
@@ -368,8 +368,8 @@ namespace kiwano
 
 	STDMETHODIMP TextRenderer::DrawStrikethrough(
 		__maybenull void* clientDrawingContext,
-		FLOAT baselineOriginX,
-		FLOAT baselineOriginY,
+		Float32 baselineOriginX,
+		Float32 baselineOriginY,
 		__in DWRITE_STRIKETHROUGH const* strikethrough,
 		IUnknown* clientDrawingEffect)
 	{
@@ -437,8 +437,8 @@ namespace kiwano
 
 	STDMETHODIMP TextRenderer::DrawInlineObject(
 		__maybenull void* clientDrawingContext,
-		FLOAT originX,
-		FLOAT originY,
+		Float32 originX,
+		Float32 originY,
 		IDWriteInlineObject* inlineObject,
 		BOOL IsSideways,
 		BOOL IsRightToLeft,
@@ -476,11 +476,11 @@ namespace kiwano
 
 	STDMETHODIMP TextRenderer::GetPixelsPerDip(
 		__maybenull void* clientDrawingContext,
-		__out FLOAT* pixelsPerDip)
+		__out Float32* pixelsPerDip)
 	{
 		KGE_UNUSED(clientDrawingContext);
 
-		float x, yUnused;
+		Float32 x, yUnused;
 
 		pRT_->GetDpi(&x, &yUnused);
 		*pixelsPerDip = x / 96;

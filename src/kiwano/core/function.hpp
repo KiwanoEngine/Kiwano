@@ -42,7 +42,7 @@ namespace __function_detail
 		template <typename _Ty, typename _Ret, typename... _Args>
 		struct helper
 		{
-			template <typename _Uty> static int test(...);
+			template <typename _Uty> static Int32 test(...);
 
 			template <typename _Uty, _Ret(_Uty::*)(_Args...)> struct class_mem;
 			template <typename _Uty> static char test(class_mem<_Uty, &_Uty::operator()>*);
@@ -54,7 +54,7 @@ namespace __function_detail
 				typename _Uty,
 				typename _Uret = typename ::std::decay<decltype(::std::declval<_Uty>().operator()(::std::declval<_Args>()...))>::type,
 				typename = typename ::std::enable_if<::std::is_convertible<_Ret, _Uret>::value>::type>
-			static char test(int);
+			static char test(Int32);
 
 			static constexpr bool value = sizeof(test<_Ty>(0)) == sizeof(char);
 		};
@@ -76,9 +76,9 @@ namespace __function_detail
 	public:
 		virtual ~callable() {}
 
-		virtual void AddRef() = 0;
-		virtual void Release() = 0;
-		virtual _Ret Invoke(_Args... args) const = 0;
+		virtual void retain() = 0;
+		virtual void release() = 0;
+		virtual _Ret invoke(_Args... args) const = 0;
 	};
 
 	template<typename _Ret, typename... _Args>
@@ -88,12 +88,12 @@ namespace __function_detail
 	public:
 		ref_count_callable() : ref_count_(0) {}
 
-		virtual void AddRef() override
+		virtual void retain() override
 		{
 			++ref_count_;
 		}
 
-		virtual void Release() override
+		virtual void release() override
 		{
 			--ref_count_;
 			if (ref_count_ <= 0)
@@ -103,7 +103,7 @@ namespace __function_detail
 		}
 
 	private:
-		int ref_count_;
+		Int32 ref_count_;
 	};
 
 	template<typename _Ty, typename _Ret, typename... _Args>
@@ -116,12 +116,12 @@ namespace __function_detail
 		{
 		}
 
-		virtual _Ret Invoke(_Args... args) const override
+		virtual _Ret invoke(_Args... args) const override
 		{
 			return callee_(::std::forward<_Args&&>(args)...);
 		}
 
-		static inline callable<_Ret, _Args...>* Make(_Ty&& val)
+		static inline callable<_Ret, _Args...>* make(_Ty&& val)
 		{
 			return new (::std::nothrow) proxy_callable<_Ty, _Ret, _Args...>(::std::move(val));
 		}
@@ -137,12 +137,12 @@ namespace __function_detail
 	public:
 		typedef _Ret(_Ty::* _FuncType)(_Args...);
 
-		virtual _Ret Invoke(_Args... args) const override
+		virtual _Ret invoke(_Args... args) const override
 		{
 			return (static_cast<_Ty*>(ptr_)->*func_)(::std::forward<_Args>(args)...);
 		}
 
-		static inline callable<_Ret, _Args...>* Make(void* ptr, _FuncType func)
+		static inline callable<_Ret, _Args...>* make(void* ptr, _FuncType func)
 		{
 			return new (::std::nothrow) proxy_mem_callable<_Ty, _Ret, _Args...>(ptr, func);
 		}
@@ -166,12 +166,12 @@ namespace __function_detail
 	public:
 		typedef _Ret(_Ty::* _FuncType)(_Args...) const;
 
-		virtual _Ret Invoke(_Args... args) const override
+		virtual _Ret invoke(_Args... args) const override
 		{
 			return (static_cast<_Ty*>(ptr_)->*func_)(::std::forward<_Args>(args)...);
 		}
 
-		static inline callable<_Ret, _Args...>* Make(void* ptr, _FuncType func)
+		static inline callable<_Ret, _Args...>* make(void* ptr, _FuncType func)
 		{
 			return new (::std::nothrow) proxy_const_mem_callable<_Ty, _Ret, _Args...>(ptr, func);
 		}
@@ -227,7 +227,7 @@ public:
 	function(const function& rhs)
 		: callable_(rhs.callable_)
 	{
-		if (callable_) callable_->AddRef();
+		if (callable_) callable_->retain();
 	}
 
 	function(function&& rhs) noexcept
@@ -238,35 +238,35 @@ public:
 
 	function(_Ret(*func)(_Args...))
 	{
-		callable_ = __function_detail::proxy_callable<_Ret(*)(_Args...), _Ret, _Args...>::Make(::std::move(func));
-		if (callable_) callable_->AddRef();
+		callable_ = __function_detail::proxy_callable<_Ret(*)(_Args...), _Ret, _Args...>::make(::std::move(func));
+		if (callable_) callable_->retain();
 	}
 
 	template<
 		typename _Ty,
-		typename = typename ::std::enable_if<__function_detail::is_callable<_Ty, _Ret, _Args...>::value, int>::type>
+		typename = typename ::std::enable_if<__function_detail::is_callable<_Ty, _Ret, _Args...>::value, Int32>::type>
 	function(_Ty val)
 	{
-		callable_ = __function_detail::proxy_callable<_Ty, _Ret, _Args...>::Make(::std::move(val));
-		if (callable_) callable_->AddRef();
+		callable_ = __function_detail::proxy_callable<_Ty, _Ret, _Args...>::make(::std::move(val));
+		if (callable_) callable_->retain();
 	}
 
 	template<typename _Ty,
 		typename _Uty,
-		typename = typename ::std::enable_if<::std::is_same<_Ty, _Uty>::value || ::std::is_base_of<_Ty, _Uty>::value, int>::type>
+		typename = typename ::std::enable_if<::std::is_same<_Ty, _Uty>::value || ::std::is_base_of<_Ty, _Uty>::value, Int32>::type>
 	function(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
 	{
-		callable_ = __function_detail::proxy_mem_callable<_Ty, _Ret, _Args...>::Make(ptr, func);
-		if (callable_) callable_->AddRef();
+		callable_ = __function_detail::proxy_mem_callable<_Ty, _Ret, _Args...>::make(ptr, func);
+		if (callable_) callable_->retain();
 	}
 
 	template<typename _Ty,
 		typename _Uty,
-		typename = typename ::std::enable_if<::std::is_same<_Ty, _Uty>::value || ::std::is_base_of<_Ty, _Uty>::value, int>::type>
+		typename = typename ::std::enable_if<::std::is_same<_Ty, _Uty>::value || ::std::is_base_of<_Ty, _Uty>::value, Int32>::type>
 	function(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
 	{
-		callable_ = __function_detail::proxy_const_mem_callable<_Ty, _Ret, _Args...>::Make(ptr, func);
-		if (callable_) callable_->AddRef();
+		callable_ = __function_detail::proxy_const_mem_callable<_Ty, _Ret, _Args...>::make(ptr, func);
+		if (callable_) callable_->retain();
 	}
 
 	~function()
@@ -283,7 +283,7 @@ public:
 	{
 		if (!callable_)
 			throw bad_function_call();
-		return callable_->Invoke(::std::forward<_Args>(args)...);
+		return callable_->invoke(::std::forward<_Args>(args)...);
 	}
 
 	inline operator bool() const
@@ -295,7 +295,7 @@ public:
 	{
 		tidy();
 		callable_ = rhs.callable_;
-		if (callable_) callable_->AddRef();
+		if (callable_) callable_->retain();
 		return (*this);
 	}
 
@@ -312,7 +312,7 @@ private:
 	{
 		if (callable_)
 		{
-			callable_->Release();
+			callable_->release();
 			callable_ = nullptr;
 		}
 	}
@@ -330,11 +330,11 @@ namespace kiwano
 	template<typename _Ty,
 		typename _Uty,
 		typename = typename std::enable_if<
-		std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
+			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, Int32
 		>::type,
 		typename _Ret,
 		typename... _Args>
-		inline function<_Ret(_Args...)> bind_func(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
+	inline function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
 	{
 		return function<_Ret(_Args...)>(ptr, func);
 	}
@@ -342,11 +342,11 @@ namespace kiwano
 	template<typename _Ty,
 		typename _Uty,
 		typename = typename std::enable_if<
-		std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
+			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, Int32
 		>::type,
 		typename _Ret,
 		typename... _Args>
-		inline function<_Ret(_Args...)> bind_func(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
+	inline function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
 	{
 		return function<_Ret(_Args...)>(ptr, func);
 	}

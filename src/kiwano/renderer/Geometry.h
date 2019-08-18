@@ -53,14 +53,14 @@ namespace kiwano
 		);
 
 		// 获取图形展开成一条直线的长度
-		float GetLength();
+		Float32 GetLength();
 
 		// 计算面积
-		float ComputeArea();
+		Float32 ComputeArea();
 
 		// 计算图形路径上点的位置和切线向量
 		bool ComputePointAtLength(
-			float length,
+			Float32 length,
 			Point& point,
 			Vec2& tangent
 		);
@@ -100,7 +100,7 @@ namespace kiwano
 		// 创建圆形
 		static Geometry CreateCircle(
 			Point const& center,
-			float radius
+			Float32 radius
 		);
 
 		// 创建椭圆形
@@ -159,7 +159,7 @@ namespace kiwano
 		GeometrySink& AddArc(
 			Point const& point,		/* 终点 */
 			Size const& radius,		/* 椭圆半径 */
-			float rotation,			/* 椭圆旋转角度 */
+			Float32 rotation,			/* 椭圆旋转角度 */
 			bool clockwise = true,	/* 顺时针 or 逆时针 */
 			bool is_small = true	/* 是否取小于 180° 的弧 */
 		);

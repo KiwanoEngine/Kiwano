@@ -39,11 +39,11 @@ namespace kiwano
 
 		bool IsValid() const;
 
-		inline UINT GetWidthInPixels() const	{ return width_in_pixels_; }
+		inline UInt32 GetWidthInPixels() const	{ return width_in_pixels_; }
 
-		inline UINT GetHeightInPixels() const	{ return height_in_pixels_; }
+		inline UInt32 GetHeightInPixels() const	{ return height_in_pixels_; }
 
-		inline UINT GetFramesCount() const		{ return frames_count_; }
+		inline UInt32 GetFramesCount() const		{ return frames_count_; }
 
 		inline Color GetBackgroundColor() const	{ return bg_color_; }
 
@@ -57,7 +57,7 @@ namespace kiwano
 		};
 
 		HRESULT GetRawFrame(
-			UINT frame_index,
+			UInt32 frame_index,
 			Image& raw_frame,
 			Rect& frame_rect,
 			Duration& delay,
@@ -76,9 +76,9 @@ namespace kiwano
 		);
 
 	protected:
-		UINT	frames_count_;
-		UINT	width_in_pixels_;
-		UINT	height_in_pixels_;
+		UInt32	frames_count_;
+		UInt32	width_in_pixels_;
+		UInt32	height_in_pixels_;
 		Color	bg_color_;
 
 		ComPtr<IWICBitmapDecoder>	decoder_;

@@ -34,7 +34,7 @@ namespace kiwano
 		Renderer::GetInstance()->CreateImageRenderTarget(rt_);
 	}
 
-	Canvas::Canvas(float width, float height)
+	Canvas::Canvas(Float32 width, Float32 height)
 		: Canvas()
 	{
 		this->SetSize(width, height);
@@ -83,7 +83,7 @@ namespace kiwano
 		fill_color_ = color;
 	}
 
-	void Canvas::SetStrokeWidth(float width)
+	void Canvas::SetStrokeWidth(Float32 width)
 	{
 		stroke_width_ = std::max(width, 0.f);
 	}
@@ -103,7 +103,7 @@ namespace kiwano
 		text_style_ = text_style;
 	}
 
-	void Canvas::SetBrushOpacity(float opacity)
+	void Canvas::SetBrushOpacity(Float32 opacity)
 	{
 		rt_.SetOpacity(opacity);
 	}
@@ -118,12 +118,12 @@ namespace kiwano
 		return fill_color_;
 	}
 
-	float Canvas::GetStrokeWidth() const
+	Float32 Canvas::GetStrokeWidth() const
 	{
 		return stroke_width_;
 	}
 
-	float Canvas::GetBrushOpacity() const
+	Float32 Canvas::GetBrushOpacity() const
 	{
 		return rt_.GetOpacity();
 	}
@@ -156,7 +156,7 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawCircle(Point const& center, float radius)
+	void Canvas::DrawCircle(Point const& center, Float32 radius)
 	{
 		rt_.DrawEllipse(
 			center,
@@ -203,7 +203,7 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	void Canvas::FillCircle(Point const& center, float radius)
+	void Canvas::FillCircle(Point const& center, Float32 radius)
 	{
 		rt_.FillEllipse(
 			center,
@@ -286,7 +286,7 @@ namespace kiwano
 		geo_sink_.AddBezier(point1, point2, point3);
 	}
 
-	void Canvas::AddArc(Point const & point, Point const & radius, float rotation, bool clockwise, bool is_small)
+	void Canvas::AddArc(Point const & point, Point const & radius, Float32 rotation, bool clockwise, bool is_small)
 	{
 		geo_sink_.AddArc(point, radius, rotation, clockwise, is_small);
 	}

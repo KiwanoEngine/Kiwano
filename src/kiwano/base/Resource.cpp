@@ -31,7 +31,7 @@ namespace kiwano
 
 	}
 
-	Resource::Resource(UINT id, LPCWSTR type)
+	Resource::Resource(UInt32 id, LPCWSTR type)
 		: id_(id)
 		, type_(type)
 	{
@@ -75,7 +75,7 @@ namespace kiwano
 			}
 
 			data_.buffer = static_cast<void*>(buffer);
-			data_.size = static_cast<UINT32>(size);
+			data_.size = static_cast<UInt32>(size);
 		} while (0);
 
 		return data_;

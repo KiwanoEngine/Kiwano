@@ -68,6 +68,7 @@ namespace kiwano
 		, style_(style)
 		, text_(text)
 		, layout_dirty_(true)
+		, format_dirty_(true)
 	{
 	}
 
@@ -102,7 +103,7 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetFontSize(float size)
+	void Text::SetFontSize(Float32 size)
 	{
 		if (font_.size != size)
 		{
@@ -111,7 +112,7 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetFontWeight(unsigned int weight)
+	void Text::SetFontWeight(UInt32 weight)
 	{
 		if (font_.weight != weight)
 		{
@@ -134,7 +135,7 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetWrapWidth(float wrap_width)
+	void Text::SetWrapWidth(Float32 wrap_width)
 	{
 		if (style_.wrap_width != wrap_width)
 		{
@@ -143,7 +144,7 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetLineSpacing(float line_spacing)
+	void Text::SetLineSpacing(Float32 line_spacing)
 	{
 		if (style_.line_spacing != line_spacing)
 		{
@@ -189,7 +190,7 @@ namespace kiwano
 		style_.outline_color = outline_color;
 	}
 
-	void Text::SetOutlineWidth(float outline_width)
+	void Text::SetOutlineWidth(Float32 outline_width)
 	{
 		style_.outline_width = outline_width;
 	}

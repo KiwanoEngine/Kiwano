@@ -31,13 +31,13 @@ namespace kiwano
 
 		virtual ~Layer();
 
-		virtual void OnMouseButtonDown(int btn, Point const& p) {}
-		virtual void OnMouseButtonUp(int btn, Point const& p) {}
+		virtual void OnMouseButtonDown(Int32 btn, Point const& p) {}
+		virtual void OnMouseButtonUp(Int32 btn, Point const& p) {}
 		virtual void OnMouseMoved(Point const& p) {}
-		virtual void OnMouseWheel(float wheel) {}
+		virtual void OnMouseWheel(Float32 wheel) {}
 
-		virtual void OnKeyDown(int key) {}
-		virtual void OnKeyUp(int key) {}
+		virtual void OnKeyDown(Int32 key) {}
+		virtual void OnKeyUp(Int32 key) {}
 		virtual void OnChar(char c) {}
 
 		// ÕÃ√ªœ˚œ¢

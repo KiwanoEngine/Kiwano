@@ -82,8 +82,8 @@ namespace kiwano
 
 	HRESULT GifImage::GetGlobalMetadata()
 	{
-		unsigned int width = 0;
-		unsigned int height = 0;
+		UInt32 width = 0;
+		UInt32 height = 0;
 
 		PROPVARIANT prop_val;
 		::PropVariantInit(&prop_val);
@@ -160,17 +160,17 @@ namespace kiwano
 					{
 						// 需要计算比率
 						// 最高像素 1：4，最宽像素 4：1，增量为 1/64
-						float pixel_asp_ratio = (prop_val.bVal + 15.f) / 64.f;
+						Float32 pixel_asp_ratio = (prop_val.bVal + 15.f) / 64.f;
 
 						// 根据像素长宽比计算像素中的图像宽度和高度，只缩小图像
 						if (pixel_asp_ratio > 1.f)
 						{
 							width_in_pixels_ = width;
-							height_in_pixels_ = static_cast<unsigned int>(height / pixel_asp_ratio);
+							height_in_pixels_ = static_cast<UInt32>(height / pixel_asp_ratio);
 						}
 						else
 						{
-							width_in_pixels_ = static_cast<unsigned int>(width * pixel_asp_ratio);
+							width_in_pixels_ = static_cast<UInt32>(width * pixel_asp_ratio);
 							height_in_pixels_ = height;
 						}
 					}
@@ -193,7 +193,7 @@ namespace kiwano
 	{
 		BYTE bg_index = 0;
 		WICColor bgcolors[256];
-		UINT colors_copied = 0;
+		UInt32 colors_copied = 0;
 		ComPtr<IWICPalette> wic_palette;
 
 		PROPVARIANT prop_val;
@@ -249,13 +249,13 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			// 转换为 ARGB 格式
-			float alpha = (bgcolors[bg_index] >> 24) / 255.f;
+			Float32 alpha = (bgcolors[bg_index] >> 24) / 255.f;
 			bg_color_ = Color(bgcolors[bg_index], alpha);
 		}
 		return hr;
 	}
 
-	HRESULT GifImage::GetRawFrame(UINT frame_index, Image& raw_frame, Rect& frame_rect, Duration& delay, DisposalType& disposal_type)
+	HRESULT GifImage::GetRawFrame(UInt32 frame_index, Image& raw_frame, Rect& frame_rect, Duration& delay, DisposalType& disposal_type)
 	{
 		ComPtr<IWICFormatConverter> converter;
 		ComPtr<IWICBitmapFrameDecode> wic_frame;
@@ -317,7 +317,7 @@ namespace kiwano
 				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 				if (SUCCEEDED(hr))
 				{
-					frame_rect.origin.x = static_cast<float>(prop_val.uiVal);
+					frame_rect.origin.x = static_cast<Float32>(prop_val.uiVal);
 				}
 				PropVariantClear(&prop_val);
 			}
@@ -331,7 +331,7 @@ namespace kiwano
 				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 				if (SUCCEEDED(hr))
 				{
-					frame_rect.origin.y = static_cast<float>(prop_val.uiVal);
+					frame_rect.origin.y = static_cast<Float32>(prop_val.uiVal);
 				}
 				PropVariantClear(&prop_val);
 			}
@@ -345,7 +345,7 @@ namespace kiwano
 				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 				if (SUCCEEDED(hr))
 				{
-					frame_rect.size.x = static_cast<float>(prop_val.uiVal);
+					frame_rect.size.x = static_cast<Float32>(prop_val.uiVal);
 				}
 				PropVariantClear(&prop_val);
 			}
@@ -359,7 +359,7 @@ namespace kiwano
 				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 				if (SUCCEEDED(hr))
 				{
-					frame_rect.size.y = static_cast<float>(prop_val.uiVal);
+					frame_rect.size.y = static_cast<Float32>(prop_val.uiVal);
 				}
 				PropVariantClear(&prop_val);
 			}
@@ -375,7 +375,7 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					UINT udelay = 0;
+					UInt32 udelay = 0;
 					hr = UIntMult(prop_val.uiVal, 10, &udelay);
 					if (SUCCEEDED(hr))
 					{

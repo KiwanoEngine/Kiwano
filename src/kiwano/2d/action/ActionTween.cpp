@@ -27,12 +27,12 @@ namespace kiwano
 	// Ease Functions
 	//-------------------------------------------------------
 
-	inline EaseFunc MakeEaseIn(float rate) { return std::bind(math::EaseIn, std::placeholders::_1, rate); }
-	inline EaseFunc MakeEaseOut(float rate) { return std::bind(math::EaseOut, std::placeholders::_1, rate); }
-	inline EaseFunc MakeEaseInOut(float rate) { return std::bind(math::EaseInOut, std::placeholders::_1, rate); }
-	inline EaseFunc MakeEaseElasticIn(float period) { return std::bind(math::EaseElasticIn, std::placeholders::_1, period); }
-	inline EaseFunc MakeEaseElasticOut(float period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
-	inline EaseFunc MakeEaseElasticInOut(float period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseIn(Float32 rate) { return std::bind(math::EaseIn, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseOut(Float32 rate) { return std::bind(math::EaseOut, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseInOut(Float32 rate) { return std::bind(math::EaseInOut, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseElasticIn(Float32 period) { return std::bind(math::EaseElasticIn, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseElasticOut(Float32 period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseElasticInOut(Float32 period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
 
 	KGE_API EaseFunc Ease::Linear = math::Linear;
 	KGE_API EaseFunc Ease::EaseIn = MakeEaseIn(2.f);
@@ -99,7 +99,7 @@ namespace kiwano
 
 	void ActionTween::Update(ActorPtr target, Duration dt)
 	{
-		float percent;
+		Float32 percent;
 
 		if (dur_.IsZero())
 		{
@@ -109,14 +109,14 @@ namespace kiwano
 		else
 		{
 			Duration elapsed = elapsed_ - delay_;
-			float loops_done = elapsed / dur_;
+			Float32 loops_done = elapsed / dur_;
 
-			while (loops_done_ < static_cast<int>(loops_done))
+			while (loops_done_ < static_cast<Int32>(loops_done))
 			{
 				Complete(target);	// loops_done_++
 			}
 
-			percent = (status_ == Status::Done) ? 1.f : (loops_done - static_cast<float>(loops_done_));
+			percent = (status_ == Status::Done) ? 1.f : (loops_done - static_cast<Float32>(loops_done_));
 		}
 
 		if (ease_func_)
@@ -149,7 +149,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionMoveBy::UpdateTween(ActorPtr target, float percent)
+	void ActionMoveBy::UpdateTween(ActorPtr target, Float32 percent)
 	{
 		Point diff = target->GetPosition() - prev_pos_;
 		start_pos_ = start_pos_ + diff;
@@ -192,7 +192,7 @@ namespace kiwano
 	// Jump Action
 	//-------------------------------------------------------
 
-	ActionJumpBy::ActionJumpBy(Duration duration, Point const& vec, float height, int jumps, EaseFunc func)
+	ActionJumpBy::ActionJumpBy(Duration duration, Point const& vec, Float32 height, Int32 jumps, EaseFunc func)
 		: ActionTween(duration, func)
 		, delta_pos_(vec)
 		, height_(height)
@@ -218,11 +218,11 @@ namespace kiwano
 		}
 	}
 
-	void ActionJumpBy::UpdateTween(ActorPtr target, float percent)
+	void ActionJumpBy::UpdateTween(ActorPtr target, Float32 percent)
 	{
-		float frac = fmod(percent * jumps_, 1.f);
-		float x = delta_pos_.x * percent;
-		float y = height_ * 4 * frac * (1 - frac);
+		Float32 frac = fmod(percent * jumps_, 1.f);
+		Float32 x = delta_pos_.x * percent;
+		Float32 y = height_ * 4 * frac * (1 - frac);
 		y += delta_pos_.y * percent;
 
 		Point diff = target->GetPosition() - prev_pos_;
@@ -234,7 +234,7 @@ namespace kiwano
 		prev_pos_ = new_pos;
 	}
 
-	ActionJumpTo::ActionJumpTo(Duration duration, Point const& pos, float height, int jumps, EaseFunc func)
+	ActionJumpTo::ActionJumpTo(Duration duration, Point const& pos, Float32 height, Int32 jumps, EaseFunc func)
 		: ActionJumpBy(duration, Point(), height, jumps, func)
 		, end_pos_(pos)
 	{
@@ -256,12 +256,12 @@ namespace kiwano
 	// Scale Action
 	//-------------------------------------------------------
 
-	ActionScaleBy::ActionScaleBy(Duration duration, float scale, EaseFunc func)
+	ActionScaleBy::ActionScaleBy(Duration duration, Float32 scale, EaseFunc func)
 		: ActionScaleBy(duration, scale, scale, func)
 	{
 	}
 
-	ActionScaleBy::ActionScaleBy(Duration duration, float scale_x, float scale_y, EaseFunc func)
+	ActionScaleBy::ActionScaleBy(Duration duration, Float32 scale_x, Float32 scale_y, EaseFunc func)
 		: ActionTween(duration, func)
 		, delta_x_(scale_x)
 		, delta_y_(scale_y)
@@ -279,7 +279,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionScaleBy::UpdateTween(ActorPtr target, float percent)
+	void ActionScaleBy::UpdateTween(ActorPtr target, Float32 percent)
 	{
 		target->SetScale(start_scale_x_ + delta_x_ * percent, start_scale_y_ + delta_y_ * percent);
 	}
@@ -294,14 +294,14 @@ namespace kiwano
 		return new (std::nothrow) ActionScaleBy(dur_, -delta_x_, -delta_y_, ease_func_);
 	}
 
-	ActionScaleTo::ActionScaleTo(Duration duration, float scale, EaseFunc func)
+	ActionScaleTo::ActionScaleTo(Duration duration, Float32 scale, EaseFunc func)
 		: ActionScaleBy(duration, 0, 0, func)
 	{
 		end_scale_x_ = scale;
 		end_scale_y_ = scale;
 	}
 
-	ActionScaleTo::ActionScaleTo(Duration duration, float scale_x, float scale_y, EaseFunc func)
+	ActionScaleTo::ActionScaleTo(Duration duration, Float32 scale_x, Float32 scale_y, EaseFunc func)
 		: ActionScaleBy(duration, 0, 0, func)
 	{
 		end_scale_x_ = scale_x;
@@ -325,7 +325,7 @@ namespace kiwano
 	// Opacity Action
 	//-------------------------------------------------------
 
-	ActionFadeTo::ActionFadeTo(Duration duration, float opacity, EaseFunc func)
+	ActionFadeTo::ActionFadeTo(Duration duration, Float32 opacity, EaseFunc func)
 		: ActionTween(duration, func)
 		, delta_val_(0.f)
 		, start_val_(0.f)
@@ -342,7 +342,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionFadeTo::UpdateTween(ActorPtr target, float percent)
+	void ActionFadeTo::UpdateTween(ActorPtr target, Float32 percent)
 	{
 		target->SetOpacity(start_val_ + delta_val_ * percent);
 	}
@@ -367,7 +367,7 @@ namespace kiwano
 	// Rotate Action
 	//-------------------------------------------------------
 
-	ActionRotateBy::ActionRotateBy(Duration duration, float rotation, EaseFunc func)
+	ActionRotateBy::ActionRotateBy(Duration duration, Float32 rotation, EaseFunc func)
 		: ActionTween(duration, func)
 		, start_val_()
 		, delta_val_(rotation)
@@ -382,9 +382,9 @@ namespace kiwano
 		}
 	}
 
-	void ActionRotateBy::UpdateTween(ActorPtr target, float percent)
+	void ActionRotateBy::UpdateTween(ActorPtr target, Float32 percent)
 	{
-		float rotation = start_val_ + delta_val_ * percent;
+		Float32 rotation = start_val_ + delta_val_ * percent;
 		if (rotation > 360.f)
 			rotation -= 360.f;
 
@@ -401,7 +401,7 @@ namespace kiwano
 		return new (std::nothrow) ActionRotateBy(dur_, -delta_val_, ease_func_);
 	}
 
-	ActionRotateTo::ActionRotateTo(Duration duration, float rotation, EaseFunc func)
+	ActionRotateTo::ActionRotateTo(Duration duration, Float32 rotation, EaseFunc func)
 		: ActionRotateBy(duration, 0, func)
 	{
 		end_val_ = rotation;
@@ -440,7 +440,7 @@ namespace kiwano
 			this->Done();
 	}
 
-	void ActionCustom::UpdateTween(ActorPtr target, float percent)
+	void ActionCustom::UpdateTween(ActorPtr target, Float32 percent)
 	{
 		if (tween_func_)
 			tween_func_(target, percent);

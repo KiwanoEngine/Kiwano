@@ -25,7 +25,7 @@
 #include "intrusive_ptr.hpp"
 #include "noncopyable.hpp"
 #include "singleton.hpp"
-#include "Function.hpp"
+#include "function.hpp"
 #include "basic_json.hpp"
 #include <set>
 #include <map>
@@ -68,7 +68,7 @@ namespace kiwano
 	using Function = kiwano::core::function<_FuncTy>;
 
 	using Json = kiwano::core::basic_json<kiwano::Map, kiwano::Vector, kiwano::String,
-		std::int32_t, double, bool, std::allocator>;
+		Int32, Float64, bool, std::allocator>;
 }
 
 namespace std

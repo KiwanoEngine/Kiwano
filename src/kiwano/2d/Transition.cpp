@@ -235,9 +235,9 @@ namespace kiwano
 	// MoveTransition
 	//-------------------------------------------------------
 
-	MoveTransition::MoveTransition(Duration duration, Direction direction)
+	MoveTransition::MoveTransition(Duration duration, Type type)
 		: Transition(duration)
-		, direction_(direction)
+		, type_(type)
 	{
 	}
 
@@ -245,21 +245,21 @@ namespace kiwano
 	{
 		Transition::Init(prev, next);
 
-		switch (direction_)
+		switch (type_)
 		{
-		case Direction::Up:
+		case Type::Up:
 			pos_delta_ = Point(0, -window_size_.y);
 			start_pos_ = Point(0, window_size_.y);
 			break;
-		case Direction::Down:
+		case Type::Down:
 			pos_delta_ = Point(0, window_size_.y);
 			start_pos_ = Point(0, -window_size_.y);
 			break;
-		case Direction::Left:
+		case Type::Left:
 			pos_delta_ = Point(-window_size_.x, 0);
 			start_pos_ = Point(window_size_.x, 0);
 			break;
-		case Direction::Right:
+		case Type::Right:
 			pos_delta_ = Point(window_size_.x, 0);
 			start_pos_ = Point(-window_size_.x, 0);
 			break;
@@ -314,7 +314,7 @@ namespace kiwano
 	// RotationTransition
 	//-------------------------------------------------------
 
-	RotationTransition::RotationTransition(Duration duration, float rotation)
+	RotationTransition::RotationTransition(Duration duration, Float32 rotation)
 		: Transition(duration)
 		, rotation_(rotation)
 	{

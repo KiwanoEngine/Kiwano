@@ -47,7 +47,7 @@ namespace kiwano
 		);
 
 		// 获取关键帧
-		FramePtr GetFrame(size_t index) const;
+		FramePtr GetFrame(UInt32 index) const;
 
 		// 获取关键帧
 		Vector<FramePtr> const& GetFrames() const;

@@ -57,22 +57,22 @@ namespace kiwano
 		bool IsValid() const;
 
 		// 获取位图宽度
-		float GetWidth() const;
+		Float32 GetWidth() const;
 
 		// 获取位图高度
-		float GetHeight() const;
+		Float32 GetHeight() const;
 
 		// 获取位图大小
 		Size GetSize() const;
 
 		// 获取位图像素宽度
-		UINT32 GetWidthInPixels() const;
+		UInt32 GetWidthInPixels() const;
 
 		// 获取位图像素高度
-		UINT32 GetHeightInPixels() const;
+		UInt32 GetHeightInPixels() const;
 
 		// 获取位图像素大小
-		math::Vec2T<UINT32> GetSizeInPixels() const;
+		math::Vec2T<UInt32> GetSizeInPixels() const;
 
 		// 拷贝位图内存
 		void CopyFrom(Image const& copy_from);
