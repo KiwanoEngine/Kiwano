@@ -66,7 +66,7 @@ namespace kiwano
 		}
 	}
 
-	HRESULT Window::Create(String const& title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
+	void Window::Init(String const& title, int width, int height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
 	{
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
@@ -157,16 +157,17 @@ namespace kiwano
 		if (handle_ == nullptr)
 		{
 			::UnregisterClass(KGE_WND_CLASS_NAME, hinst);
-			return HRESULT_FROM_WIN32(GetLastError());
+			ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
 		}
+		else
+		{
+			RECT rc;
+			GetClientRect(handle_, &rc);
+			width_ = rc.right - rc.left;
+			height_ = rc.bottom - rc.top;
 
-		RECT rc;
-		GetClientRect(handle_, &rc);
-		width_ = rc.right - rc.left;
-		height_ = rc.bottom - rc.top;
-
-		SetMouseCursor(MouseCursor::Arrow);
-		return S_OK;
+			SetMouseCursor(MouseCursor::Arrow);
+		}
 	}
 
 	void Window::Prepare()

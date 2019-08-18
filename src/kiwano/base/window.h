@@ -60,7 +60,7 @@ namespace kiwano
 		void SetMouseCursor(MouseCursor cursor);
 
 	public:
-		HRESULT Create(
+		void Init(
 			String const&	title,
 			int				width,
 			int				height,

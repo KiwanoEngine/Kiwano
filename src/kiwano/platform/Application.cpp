@@ -80,15 +80,13 @@ namespace kiwano
 
 	void Application::Init(const Options& options)
 	{
-		ThrowIfFailed(
-			Window::GetInstance()->Create(
-				options.title,
-				options.width,
-				options.height,
-				options.icon,
-				options.fullscreen,
-				Application::WndProc
-			)
+		Window::GetInstance()->Init(
+			options.title,
+			options.width,
+			options.height,
+			options.icon,
+			options.fullscreen,
+			Application::WndProc
 		);
 
 		Renderer::GetInstance()->SetClearColor(options.clear_color);
@@ -122,10 +120,9 @@ namespace kiwano
 
 	void Application::Run()
 	{
-		HWND hwnd = Window::GetInstance()->GetHandle();
+		KGE_ASSERT(inited_ && "Calling Application::Run before Application::Init");
 
-		if (!inited_)
-			throw std::exception("Calling Application::Run before Application::Init");
+		HWND hwnd = Window::GetInstance()->GetHandle();
 
 		if (hwnd)
 		{
