@@ -46,31 +46,18 @@ namespace kiwano
 		// 从 XML 文档对象加载资源信息
 		bool LoadFromXml(tinyxml2::XMLDocument* doc);
 
-		// 添加图片
-		bool AddFrame(String const& id, Resource const& res);
+		// 添加帧图像
+		bool AddFrame(String const& id, String const& file_path);
 
-		// 添加图片
+		// 添加帧图像
 		bool AddFrame(String const& id, FramePtr frame);
 
-		// 添加 GIF 图片
-		bool AddGifImage(String const& id, Resource const& res);
-
-		// 添加 GIF 图片
-		bool AddGifImage(String const& id, GifImagePtr image);
-
 		// 添加序列帧
-		size_t AddFrameSequence(String const& id, Vector<Resource> const& frames);
-
-		// 添加序列帧
-		size_t AddFrameSequence(String const& id, Vector<FramePtr> const& frames);
+		size_t AddFrameSequence(String const& id, Vector<String> const& files);
 
 		// 添加序列帧
 		// 按行列数裁剪图片
-		size_t AddFrameSequence(String const& id, Resource const& frame, int cols, int rows = 1);
-
-		// 添加序列帧
-		// 按指定裁剪矩形裁剪图片
-		size_t AddFrameSequence(String const& id, Resource const& frame, Vector<Rect> const& crop_rects);
+		size_t AddFrameSequence(String const& id, String const& file_path, int cols, int rows = 1);
 
 		// 添加序列帧
 		size_t AddFrameSequence(String const& id, FrameSequencePtr frames);
@@ -78,11 +65,8 @@ namespace kiwano
 		// 添加对象
 		bool AddObjectBase(String const& id, ObjectBasePtr obj);
 
-		// 获取图片资源
+		// 获取帧图像
 		FramePtr GetFrame(String const& id) const;
-
-		// 获取 GIF 图片资源
-		GifImagePtr GetGifImage(String const& id) const;
 
 		// 获取序列帧
 		FrameSequencePtr GetFrameSequence(String const& id) const;

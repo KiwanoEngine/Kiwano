@@ -32,10 +32,31 @@ namespace kiwano
 	{
 	}
 
+	GifImage::GifImage(String const& file_path)
+	{
+		Load(file_path);
+	}
+
 	GifImage::GifImage(Resource const& res)
 		: GifImage()
 	{
 		Load(res);
+	}
+
+	bool GifImage::Load(String const& file_path)
+	{
+		Renderer::GetInstance()->CreateGifImage(*this, file_path);
+
+		if (IsValid())
+		{
+			if (FAILED(GetGlobalMetadata()))
+			{
+				SetDecoder(nullptr);
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	bool GifImage::Load(Resource const& res)

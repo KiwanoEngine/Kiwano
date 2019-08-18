@@ -28,19 +28,29 @@ namespace kiwano
 	{
 	}
 
+	Image::Image(String const& file_path)
+	{
+		Load(file_path);
+	}
+
 	Image::Image(Resource const& res)
 	{
 		Load(res);
 	}
 
 	Image::Image(ComPtr<ID2D1Bitmap> const & bitmap)
-		: Image()
 	{
 		SetBitmap(bitmap);
 	}
 
 	Image::~Image()
 	{
+	}
+
+	bool Image::Load(String const& file_path)
+	{
+		Renderer::GetInstance()->CreateImage(*this, file_path);
+		return IsValid();
 	}
 
 	bool Image::Load(Resource const& res)

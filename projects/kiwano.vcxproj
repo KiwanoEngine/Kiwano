@@ -67,6 +67,7 @@
     <ClInclude Include="..\src\kiwano\platform\modules.h" />
     <ClInclude Include="..\src\kiwano\renderer\Color.h" />
     <ClInclude Include="..\src\kiwano\renderer\Font.h" />
+    <ClInclude Include="..\src\kiwano\renderer\FontCollection.h" />
     <ClInclude Include="..\src\kiwano\renderer\Geometry.h" />
     <ClInclude Include="..\src\kiwano\renderer\GifImage.h" />
     <ClInclude Include="..\src\kiwano\renderer\Image.h" />
@@ -127,6 +128,7 @@
     <ClCompile Include="..\src\kiwano\platform\modules.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\Color.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\Font.cpp" />
+    <ClCompile Include="..\src\kiwano\renderer\FontCollection.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\Geometry.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\GifImage.cpp" />
     <ClCompile Include="..\src\kiwano\renderer\Image.cpp" />

@@ -31,11 +31,19 @@ namespace kiwano
 		Frame();
 
 		explicit Frame(
+			String const& file_path
+		);
+
+		explicit Frame(
 			Resource const& res
 		);
 
 		explicit Frame(
 			Image const& image
+		);
+
+		bool Load(
+			String const& file_path
 		);
 
 		bool Load(
@@ -45,6 +53,11 @@ namespace kiwano
 		// 裁剪矩形
 		void SetCropRect(
 			Rect const& crop_rect	/* 裁剪矩形 */
+		);
+
+		// 设置位图
+		void SetImage(
+			Image const& image
 		);
 
 		// 获取宽度
@@ -64,9 +77,6 @@ namespace kiwano
 
 		// 获取位图
 		inline Image const& GetImage() const	{ return image_; }
-
-		// 设置位图
-		void SetImage(Image const& image);
 
 	protected:
 		Image image_;

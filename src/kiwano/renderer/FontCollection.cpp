@@ -18,17 +18,56 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Font.h"
+#include "FontCollection.h"
+#include "Renderer.h"
 
 namespace kiwano
 {
-	Font::Font(const String& family, float size, unsigned int weight, bool italic, FontCollection collection)
-		: family(family)
-		, size(size)
-		, weight(weight)
-		, italic(italic)
-		, collection(collection)
+	FontCollection::FontCollection()
 	{
 	}
 
+	FontCollection::FontCollection(String const& file)
+	{
+		Load(file);
+	}
+
+	FontCollection::FontCollection(Vector<String> const& files)
+	{
+		Load(files);
+	}
+
+	FontCollection::FontCollection(Resource const& res)
+	{
+		Load(res);
+	}
+
+	FontCollection::FontCollection(Vector<Resource> const& res_arr)
+	{
+		Load(res_arr);
+	}
+
+	bool FontCollection::Load(String const& file)
+	{
+		Renderer::GetInstance()->CreateFontCollection(*this, { file });
+		return false;
+	}
+
+	bool FontCollection::Load(Vector<String> const& files)
+	{
+		Renderer::GetInstance()->CreateFontCollection(*this, files);
+		return false;
+	}
+
+	bool FontCollection::Load(Resource const& res)
+	{
+		Renderer::GetInstance()->CreateFontCollection(*this, { res });
+		return false;
+	}
+
+	bool FontCollection::Load(Vector<Resource> const& res_arr)
+	{
+		Renderer::GetInstance()->CreateFontCollection(*this, res_arr);
+		return false;
+	}
 }

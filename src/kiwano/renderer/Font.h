@@ -19,10 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/core.h"
-#include "../base/Resource.h"
-#include "win32/ComPtr.hpp"
-#include <dwrite.h>
+#include "FontCollection.h"
 
 namespace kiwano
 {
@@ -39,28 +36,6 @@ namespace kiwano
 		Black		= 900,
 		ExtraBlack	= 950
 	};
-
-
-	// 字体集
-	class FontCollection
-	{
-	public:
-		FontCollection();
-
-		FontCollection(Resource const& res);
-
-		// 从资源加载字体集
-		bool Load(Resource const& res);
-
-	public:
-		inline ComPtr<IDWriteFontCollection> GetFontCollection() const			{ return collection_; }
-
-		inline void SetFontCollection(ComPtr<IDWriteFontCollection> collection)	{ collection_ = collection; }
-
-	protected:
-		ComPtr<IDWriteFontCollection> collection_;
-	};
-
 
 	// 字体
 	class Font

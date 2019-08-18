@@ -26,64 +26,43 @@ namespace kiwano
 {
 	// 资源
 	// 
-	// 资源可以是文件类型，也可以是保存在 exe 中的二进制资源
+	// 资源是保存在 exe 中的二进制数据
 	// 例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1,
-	// 那么可以这样指定该资源: Resource res(IDR_WAVE_1, L"WAVE");
+	// 那么可以这样指定该资源: Resource(IDR_WAVE_1, L"WAVE");
 	// 
 	// 了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
 	//
 	class KGE_API Resource
 	{
-		enum class Type { File, Binary };
-
 	public:
-		Resource(
-			LPCWSTR file_name		/* 文件路径 */
-		);
+		// 二进制数据
+		struct Data
+		{
+			void* buffer;
+			UINT32 size;
+
+			inline Data() : buffer(nullptr), size(0) {}
+
+			inline operator bool() const { return buffer && size; }
+		};
+
+		Resource();
 
 		Resource(
-			String const& file_name	/* 文件路径 */
+			UINT id,		/* 资源名称 */
+			LPCWSTR type	/* 资源类型 */
 		);
 
-		Resource(
-			UINT id,				/* 资源名称 */
-			LPCWSTR type			/* 资源类型 */
-		);
+		// 获取二进制数据
+		Resource::Data GetData() const;
 
-		Resource(
-			Resource const& rhs
-		);
+		inline UINT GetId() const		{ return id_; }
 
-		virtual ~Resource();
-
-		bool Load(LPVOID& buffer, DWORD& buffer_size) const;
-
-		size_t GetHashCode() const;
-
-		Resource& operator= (Resource const& rhs);
-
-		inline bool IsFileType() const			{ return type_ == Type::File; }
-
-		inline String GetFileName() const		{ return file_name_ ? (*file_name_) : L""; }
-
-		inline UINT GetResourceId() const		{ return bin_id_; }
-
-		inline LPCWSTR GetResourceType() const	{ return bin_type_; }
+		inline LPCWSTR GetType() const	{ return type_; }
 
 	private:
-		Type type_;
-		union
-		{
-			struct
-			{
-				String*	file_name_;
-			};
-
-			struct
-			{
-				UINT	bin_id_;
-				LPCWSTR	bin_type_;
-			};
-		};
+		UINT	id_;
+		LPCWSTR	type_;
+		mutable Resource::Data	data_;
 	};
 }

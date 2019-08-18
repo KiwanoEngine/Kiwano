@@ -24,14 +24,16 @@
 namespace kiwano
 {
 	// GIF Í¼Ïñ
-	KGE_DECLARE_SMART_PTR(GifImage);
 	class KGE_API GifImage
-		: public ObjectBase
 	{
 	public:
 		GifImage();
 
+		GifImage(String const& file_path);
+
 		GifImage(Resource const& res);
+
+		bool Load(String const& file_path);
 
 		bool Load(Resource const& res);
 

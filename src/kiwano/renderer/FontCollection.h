@@ -18,17 +18,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Font.h"
+#pragma once
+#include "../base/Resource.h"
+#include "win32/ComPtr.hpp"
+#include <dwrite.h>
 
 namespace kiwano
 {
-	Font::Font(const String& family, float size, unsigned int weight, bool italic, FontCollection collection)
-		: family(family)
-		, size(size)
-		, weight(weight)
-		, italic(italic)
-		, collection(collection)
+	// 字体集
+	class FontCollection
 	{
-	}
+	public:
+		FontCollection();
 
+		FontCollection(String const& file);
+
+		FontCollection(Vector<String> const& files);
+
+		FontCollection(Resource const& res);
+
+		FontCollection(Vector<Resource> const& res_arr);
+
+		// 从本地文件加载字体
+		bool Load(String const& file);
+
+		// 从多个本地文件加载字体
+		bool Load(Vector<String> const& files);
+
+		// 从资源加载字体
+		bool Load(Resource const& res);
+
+		// 从多个资源加载字体
+		bool Load(Vector<Resource> const& res_arr);
+
+	public:
+		inline ComPtr<IDWriteFontCollection> GetFontCollection() const			{ return collection_; }
+
+		inline void SetFontCollection(ComPtr<IDWriteFontCollection> collection)	{ collection_ = collection; }
+
+	protected:
+		ComPtr<IDWriteFontCollection> collection_;
+	};
 }

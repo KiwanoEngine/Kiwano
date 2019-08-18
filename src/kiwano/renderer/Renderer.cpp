@@ -232,6 +232,31 @@ namespace kiwano
 		return hr;
 	}
 
+	void Renderer::CreateImage(Image& image, String const& file_path)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ComPtr<ID2D1Bitmap> bitmap;
+			hr = d2d_res_->CreateBitmapFromFile(bitmap, file_path);
+
+			if (SUCCEEDED(hr))
+			{
+				image.SetBitmap(bitmap);
+			}
+		}
+
+		if (FAILED(hr))
+		{
+			KGE_WARNING_LOG(L"Load image failed with HRESULT of %08X!", hr);
+		}
+	}
+
 	void Renderer::CreateImage(Image& image, Resource const& res)
 	{
 		HRESULT hr = S_OK;
@@ -240,24 +265,57 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		ComPtr<ID2D1Bitmap> bitmap;
-		if (res.IsFileType())
-		{
-			hr = d2d_res_->CreateBitmapFromFile(bitmap, res.GetFileName());
-		}
-		else
-		{
-			hr = d2d_res_->CreateBitmapFromResource(bitmap, res);
-		}
-
 		if (SUCCEEDED(hr))
 		{
-			image.SetBitmap(bitmap);
+			ComPtr<ID2D1Bitmap> bitmap;
+			hr = d2d_res_->CreateBitmapFromResource(bitmap, res);
+
+			if (SUCCEEDED(hr))
+			{
+				image.SetBitmap(bitmap);
+			}
 		}
 
 		if (FAILED(hr))
 		{
 			KGE_WARNING_LOG(L"Load image failed with HRESULT of %08X!", hr);
+		}
+	}
+
+	void Renderer::CreateGifImage(GifImage& image, String const& file_path)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (!FileUtil::ExistsFile(file_path))
+		{
+			KGE_WARNING_LOG(L"Gif image file '%s' not found!", file_path.c_str());
+			hr = E_FAIL;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ComPtr<IWICBitmapDecoder> decoder;
+			hr = d2d_res_->GetWICImagingFactory()->CreateDecoderFromFilename(
+				file_path.c_str(),
+				nullptr,
+				GENERIC_READ,
+				WICDecodeMetadataCacheOnLoad,
+				&decoder
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				image.SetDecoder(decoder);
+			}
+		}
+
+		if (FAILED(hr))
+		{
+			KGE_WARNING_LOG(L"Load GIF image failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -269,61 +327,38 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		ComPtr<IWICBitmapDecoder> decoder;
-		if (res.IsFileType())
-		{
-			if (!FileUtil::ExistsFile(res.GetFileName().c_str()))
-			{
-				KGE_WARNING_LOG(L"Gif image file '%s' not found!", res.GetFileName().c_str());
-				hr = E_FAIL;
-			}
+		Resource::Data res_data = res.GetData();
 
-			if (SUCCEEDED(hr))
-			{
-				hr = d2d_res_->GetWICImagingFactory()->CreateDecoderFromFilename(
-					res.GetFileName().c_str(),
-					nullptr,
-					GENERIC_READ,
-					WICDecodeMetadataCacheOnLoad,
-					&decoder
-				);
-			}
-		}
-		else
-		{
-			LPVOID buffer;
-			DWORD buffer_size;
-			HRESULT hr = res.Load(buffer, buffer_size) ? S_OK : E_FAIL;
+		hr = res_data ? S_OK : E_FAIL;
 
+		if (SUCCEEDED(hr))
+		{
 			ComPtr<IWICStream> stream;
-
-			if (SUCCEEDED(hr))
-			{
-				hr = d2d_res_->GetWICImagingFactory()->CreateStream(&stream);
-			}
+			hr = d2d_res_->GetWICImagingFactory()->CreateStream(&stream);
 
 			if (SUCCEEDED(hr))
 			{
 				hr = stream->InitializeFromMemory(
-					static_cast<WICInProcPointer>(buffer),
-					buffer_size
+					static_cast<WICInProcPointer>(res_data.buffer),
+					res_data.size
 				);
 			}
 
 			if (SUCCEEDED(hr))
 			{
+				ComPtr<IWICBitmapDecoder> decoder;
 				hr = d2d_res_->GetWICImagingFactory()->CreateDecoderFromStream(
 					stream.get(),
 					nullptr,
 					WICDecodeMetadataCacheOnLoad,
 					&decoder
 				);
-			}
-		}
 
-		if (SUCCEEDED(hr))
-		{
-			image.SetDecoder(decoder);
+				if (SUCCEEDED(hr))
+				{
+					image.SetDecoder(decoder);
+				}
+			}
 		}
 
 		if (FAILED(hr))
@@ -332,7 +367,7 @@ namespace kiwano
 		}
 	}
 
-	void Renderer::CreateFontFromResource(FontCollection& collection, Resource const& res)
+	void Renderer::CreateFontCollection(FontCollection& collection, Vector<String> const& file_paths)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -340,37 +375,78 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		ComPtr<IDWriteFontCollection> font_collection;
-		if (res.IsFileType())
+		if (SUCCEEDED(hr))
 		{
-			String file_path = res.GetFileName();
-			if (!FileUtil::ExistsFile(file_path.c_str()))
+			for (const auto& file_path : file_paths)
 			{
-				KGE_WARNING_LOG(L"Font file '%s' not found!", file_path.c_str());
-				hr = E_FAIL;
+				if (!FileUtil::ExistsFile(file_path))
+				{
+					KGE_WARNING_LOG(L"Font file '%s' not found!", file_path.c_str());
+					hr = E_FAIL;
+				}
 			}
-
-			hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(
-				font_collection_loader_.get(),
-				reinterpret_cast<const void*>(&file_path),
-				sizeof(file_path),
-				&font_collection
-			);
-		}
-		else
-		{
-			UINT id = res.GetResourceId();
-			hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(
-				res_font_collection_loader_.get(),
-				reinterpret_cast<const void*>(&id),
-				sizeof(id),
-				&font_collection
-			);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			collection.SetFontCollection(font_collection);
+			LPVOID collection_key = nullptr;
+			UINT32 collection_key_size = 0;
+
+			hr = font_collection_loader_->AddFilePaths(file_paths, &collection_key, &collection_key_size);
+
+			if (SUCCEEDED(hr))
+			{
+				ComPtr<IDWriteFontCollection> font_collection;
+				hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(
+					font_collection_loader_.get(),
+					collection_key,
+					collection_key_size,
+					&font_collection
+				);
+
+				if (SUCCEEDED(hr))
+				{
+					collection.SetFontCollection(font_collection);
+				}
+			}
+		}
+
+		if (FAILED(hr))
+		{
+			KGE_WARNING_LOG(L"Load font failed with HRESULT of %08X!", hr);
+		}
+	}
+
+	void Renderer::CreateFontCollection(FontCollection& collection, Vector<Resource> const& res_arr)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			LPVOID collection_key = nullptr;
+			UINT32 collection_key_size = 0;
+
+			hr = res_font_collection_loader_->AddResources(res_arr, &collection_key, &collection_key_size);
+
+			if (SUCCEEDED(hr))
+			{
+				ComPtr<IDWriteFontCollection> font_collection;
+				hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(
+					res_font_collection_loader_.get(),
+					collection_key,
+					collection_key_size,
+					&font_collection
+				);
+
+				if (SUCCEEDED(hr))
+				{
+					collection.SetFontCollection(font_collection);
+				}
+			}
 		}
 
 		if (FAILED(hr))

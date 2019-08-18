@@ -30,6 +30,10 @@ namespace kiwano
 		Image();
 
 		explicit Image(
+			String const& file_path
+		);
+
+		explicit Image(
 			Resource const& res
 		);
 
@@ -38,6 +42,11 @@ namespace kiwano
 		);
 
 		virtual ~Image();
+
+		// 加载本地文件
+		bool Load(
+			String const& file_path
+		);
 
 		// 加载资源
 		bool Load(

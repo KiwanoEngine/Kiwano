@@ -34,26 +34,37 @@ namespace kiwano
 	{
 	}
 
+	GifSprite::GifSprite(String const& file_path)
+	{
+		Load(file_path);
+	}
+
 	GifSprite::GifSprite(Resource const& res)
 		: GifSprite()
 	{
 		Load(res);
 	}
 
-	GifSprite::GifSprite(GifImagePtr image)
+	GifSprite::GifSprite(GifImage image)
 	{
 		Load(image);
 	}
 
-	bool GifSprite::Load(Resource const& res)
+	bool GifSprite::Load(String const& file_path)
 	{
-		GifImagePtr image = ImageCache::GetInstance()->AddGifImage(res);
+		GifImage image = ImageCache::GetInstance()->AddOrGetGifImage(file_path);
 		return Load(image);
 	}
 
-	bool GifSprite::Load(GifImagePtr image)
+	bool GifSprite::Load(Resource const& res)
 	{
-		if (image && image_ != image)
+		GifImage image = ImageCache::GetInstance()->AddOrGetGifImage(res);
+		return Load(image);
+	}
+
+	bool GifSprite::Load(GifImage image)
+	{
+		if (image.IsValid())
 		{
 			image_ = image;
 
@@ -62,8 +73,8 @@ namespace kiwano
 			disposal_type_ = DisposalType::None;
 
 			SetSize(
-				static_cast<float>(image_->GetWidthInPixels()),
-				static_cast<float>(image_->GetHeightInPixels())
+				static_cast<float>(image_.GetWidthInPixels()),
+				static_cast<float>(image_.GetHeightInPixels())
 			);
 
 			if (!frame_rt_.IsValid())
@@ -71,7 +82,7 @@ namespace kiwano
 				Renderer::GetInstance()->CreateImageRenderTarget(frame_rt_);
 			}
 
-			if (image_->GetFramesCount() > 0)
+			if (image_.GetFramesCount() > 0)
 			{
 				ComposeNextFrame();
 			}
@@ -94,7 +105,7 @@ namespace kiwano
 	{
 		Actor::Update(dt);
 
-		if (image_ && animating_)
+		if (image_.IsValid() && animating_)
 		{
 			frame_elapsed_ += dt;
 			if (frame_delay_ <= frame_elapsed_)
@@ -124,7 +135,7 @@ namespace kiwano
 				OverlayNextFrame();
 			} while (frame_delay_.IsZero() && !IsLastFrame());
 
-			animating_ = (!EndOfAnimation() && image_->GetFramesCount() > 1);
+			animating_ = (!EndOfAnimation() && image_.GetFramesCount() > 1);
 		}
 	}
 
@@ -157,7 +168,7 @@ namespace kiwano
 	{
 		Image raw_image;
 
-		HRESULT hr = image_->GetRawFrame(next_index_, raw_image, frame_rect_, frame_delay_, disposal_type_);
+		HRESULT hr = image_.GetRawFrame(next_index_, raw_image, frame_rect_, frame_delay_, disposal_type_);
 		
 		if (SUCCEEDED(hr))
 		{
@@ -174,7 +185,7 @@ namespace kiwano
 			if (next_index_ == 0)
 			{
 				// ÖØÐÂ»æÖÆ±³¾°
-				frame_rt_.Clear(image_->GetBackgroundColor());
+				frame_rt_.Clear(image_.GetBackgroundColor());
 				loop_count_++;
 			}
 
@@ -192,7 +203,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				frame_ = frame_to_render;
-				next_index_ = (++next_index_) % image_->GetFramesCount();
+				next_index_ = (++next_index_) % image_.GetFramesCount();
 			}
 		}
 
@@ -266,7 +277,7 @@ namespace kiwano
 		frame_rt_.BeginDraw();
 
 		frame_rt_.PushClipRect(frame_rect_);
-		frame_rt_.Clear(image_->GetBackgroundColor());
+		frame_rt_.Clear(image_.GetBackgroundColor());
 		frame_rt_.PopClipRect();
 
 		return frame_rt_.EndDraw();

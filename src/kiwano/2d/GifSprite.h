@@ -38,11 +38,19 @@ namespace kiwano
 		GifSprite();
 
 		GifSprite(
+			String const& file_path
+		);
+
+		GifSprite(
 			Resource const& res
 		);
 
 		GifSprite(
-			GifImagePtr image
+			GifImage image
+		);
+
+		bool Load(
+			String const& file_path
 		);
 
 		bool Load(
@@ -50,7 +58,7 @@ namespace kiwano
 		);
 
 		bool Load(
-			GifImagePtr image
+			GifImage image
 		);
 
 		// 设置 GIF 动画循环次数
@@ -100,7 +108,7 @@ namespace kiwano
 		DisposalType		disposal_type_;
 		LoopDoneCallback	loop_cb_;
 		DoneCallback		done_cb_;
-		GifImagePtr			image_;
+		GifImage			image_;
 		Image				frame_;
 		Rect				frame_rect_;
 		Image				saved_frame_;

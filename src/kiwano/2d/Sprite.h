@@ -32,10 +32,19 @@ namespace kiwano
 		Sprite();
 
 		explicit Sprite(
-			Resource const& res
+			String const& file_path
+		);
+
+		Sprite(
+			String const& file_path,
+			Rect const& crop_rect	/* 裁剪矩形 */
 		);
 
 		explicit Sprite(
+			Resource const& res
+		);
+
+		Sprite(
 			Resource const& res,
 			Rect const& crop_rect	/* 裁剪矩形 */
 		);
@@ -45,6 +54,11 @@ namespace kiwano
 		);
 
 		virtual ~Sprite();
+
+		// 加载图像
+		bool Load(
+			String const& file_path
+		);
 
 		// 加载图像资源
 		bool Load(

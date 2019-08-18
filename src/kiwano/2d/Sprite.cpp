@@ -24,18 +24,26 @@
 namespace kiwano
 {
 	Sprite::Sprite()
-		: frame_(nullptr)
 	{
 	}
 
+	Sprite::Sprite(String const& file_path)
+	{
+		Load(file_path);
+	}
+
+	Sprite::Sprite(String const& file_path, Rect const& crop_rect)
+	{
+		Load(file_path);
+		SetCropRect(crop_rect);
+	}
+
 	Sprite::Sprite(Resource const& res)
-		: frame_(nullptr)
 	{
 		Load(res);
 	}
 
 	Sprite::Sprite(Resource const& res, const Rect& crop_rect)
-		: frame_(nullptr)
 	{
 		Load(res);
 		SetCropRect(crop_rect);
@@ -49,6 +57,17 @@ namespace kiwano
 
 	Sprite::~Sprite()
 	{
+	}
+
+	bool Sprite::Load(String const& file_path)
+	{
+		FramePtr frame = new (std::nothrow) Frame;
+		if (frame->Load(file_path))
+		{
+			SetFrame(frame);
+			return true;
+		}
+		return false;
 	}
 
 	bool Sprite::Load(Resource const& res)

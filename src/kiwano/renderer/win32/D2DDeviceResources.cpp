@@ -392,9 +392,8 @@ namespace kiwano
 		ComPtr<ID2D1Bitmap>				bitmap_tmp;
 
 		// ¼ÓÔØ×ÊÔ´
-		LPVOID buffer;
-		DWORD buffer_size;
-		HRESULT hr = res.Load(buffer, buffer_size) ? S_OK : E_FAIL;
+		Resource::Data res_data = res.GetData();
+		HRESULT hr = res_data ? S_OK : E_FAIL;
 
 		if (SUCCEEDED(hr))
 		{
@@ -404,8 +403,8 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = stream->InitializeFromMemory(
-				static_cast<WICInProcPointer>(buffer),
-				buffer_size
+				static_cast<WICInProcPointer>(res_data.buffer),
+				res_data.size
 			);
 		}
 

@@ -27,19 +27,35 @@ namespace kiwano
 	{
 	}
 
+	Frame::Frame(String const& file_path)
+	{
+		Load(file_path);
+	}
+
 	Frame::Frame(Resource const& res)
 	{
 		Load(res);
 	}
 
 	Frame::Frame(Image const& image)
-		: image_(image)
 	{
+		SetImage(image);
+	}
+
+	bool Frame::Load(String const& file_path)
+	{
+		Image image = ImageCache::GetInstance()->AddOrGetImage(file_path);
+		if (image.IsValid())
+		{
+			SetImage(image);
+			return true;
+		}
+		return false;
 	}
 
 	bool Frame::Load(Resource const& res)
 	{
-		Image image = ImageCache::GetInstance()->AddImage(res);
+		Image image = ImageCache::GetInstance()->AddOrGetImage(res);
 		if (image.IsValid())
 		{
 			SetImage(image);

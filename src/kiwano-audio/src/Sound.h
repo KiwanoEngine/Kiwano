@@ -38,10 +38,19 @@ namespace kiwano
 			Sound();
 
 			Sound(
+				String const& file_path	/* 本地音频文件 */
+			);
+
+			Sound(
 				Resource const& res		/* 音乐资源 */
 			);
 
 			virtual ~Sound();
+
+			// 打开本地音频文件
+			bool Load(
+				String const& file_path
+			);
 
 			// 打开音乐资源
 			bool Load(

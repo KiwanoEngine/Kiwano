@@ -30,6 +30,12 @@ namespace kiwano
 		static HRESULT Create(
 			_Out_ IFontCollectionLoader** ppCollectionLoader
 		);
+
+		STDMETHOD(AddFilePaths)(
+			Vector<String> const& filePaths,
+			_Out_ LPVOID * pCollectionKey,
+			_Out_ UINT32 * pCollectionKeySize
+		) PURE;
 	};
 
 
@@ -43,8 +49,7 @@ namespace kiwano
 		);
 
 		STDMETHOD(SetFilePaths)(
-			String const* filePath,
-			UINT32 const fileCount
+			Vector<String> const& filePaths
 		) PURE;
 	};
 
@@ -57,6 +62,12 @@ namespace kiwano
 			_Out_ IResourceFontCollectionLoader** ppCollectionLoader,
 			IDWriteFontFileLoader * pFileLoader
 		);
+
+		STDMETHOD(AddResources)(
+			Vector<Resource> const& resources,
+			_Out_ LPVOID * pCollectionKey,
+			_Out_ UINT32 * pCollectionKeySize
+		) PURE;
 	};
 
 
@@ -81,8 +92,7 @@ namespace kiwano
 		);
 
 		STDMETHOD(SetResources)(
-			UINT const* resourceID,
-			UINT32 const resourceCount
+			Vector<Resource> const& resources
 		) PURE;
 	};
 
@@ -93,7 +103,7 @@ namespace kiwano
 	public:
 		static HRESULT Create(
 			_Out_ IResourceFontFileStream** ppStream,
-			const UINT resourceID
+			const Resource resource
 		);
 	};
 }

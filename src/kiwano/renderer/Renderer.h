@@ -60,7 +60,17 @@ namespace kiwano
 	public:
 		void CreateImage(
 			Image& image,
+			String const& file_path
+		);
+
+		void CreateImage(
+			Image& image,
 			Resource const& res
+		);
+
+		void CreateGifImage(
+			GifImage& image,
+			String const& file_path
 		);
 
 		void CreateGifImage(
@@ -68,9 +78,14 @@ namespace kiwano
 			Resource const& res
 		);
 
-		void CreateFontFromResource(
+		void CreateFontCollection(
 			FontCollection& collection,
-			Resource const& res
+			Vector<String> const& file_paths
+		);
+
+		void CreateFontCollection(
+			FontCollection& collection,
+			Vector<Resource> const& res_arr
 		);
 
 		void CreateTextFormat(

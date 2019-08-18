@@ -37,6 +37,12 @@ namespace kiwano
 		{
 		}
 
+		STDMETHOD(AddFilePaths)(
+			Vector<String> const& filePaths,
+			_Out_ LPVOID* pCollectionKey,
+			_Out_ UINT32* pCollectionKeySize
+		);
+
 		// IUnknown methods
 		virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
 		virtual ULONG STDMETHODCALLTYPE AddRef();
@@ -52,6 +58,10 @@ namespace kiwano
 
 	private:
 		ULONG refCount_;
+
+		typedef Vector<String> FileCollection;
+		Vector<FileCollection> filePaths_;
+		Vector<UINT32> collectionKeys_;
 	};
 
 	HRESULT IFontCollectionLoader::Create(_Out_ IFontCollectionLoader** ppCollectionLoader)
@@ -75,6 +85,37 @@ namespace kiwano
 			}
 		}
 		return hr;
+	}
+
+	STDMETHODIMP FontCollectionLoader::AddFilePaths(
+		Vector<String> const& filePaths,
+		_Out_ LPVOID* pCollectionKey,
+		_Out_ UINT32* pCollectionKeySize
+	)
+	{
+		if (!pCollectionKey || !pCollectionKeySize)
+		{
+			return E_INVALIDARG;
+		}
+
+		try
+		{
+			UINT32 collectionKey = filePaths_.size();
+			collectionKeys_.push_back(collectionKey);
+			filePaths_.push_back(filePaths);
+
+			*pCollectionKey = reinterpret_cast<LPVOID>(&collectionKeys_.back());
+			*pCollectionKeySize = sizeof(collectionKey);
+		}
+		catch (std::bad_alloc&)
+		{
+			return E_OUTOFMEMORY;
+		}
+		catch (...)
+		{
+			return E_FAIL;
+		}
+		return S_OK;
 	}
 
 	HRESULT STDMETHODCALLTYPE FontCollectionLoader::QueryInterface(REFIID iid, void** ppvObject)
@@ -115,7 +156,7 @@ namespace kiwano
 	{
 		HRESULT hr = S_OK;
 
-		if (collectionKey == NULL || collectionKeySize != sizeof(String))
+		if (collectionKey == NULL || collectionKeySize % sizeof(UINT32) != 0)
 			hr = E_INVALIDARG;
 
 		if (SUCCEEDED(hr))
@@ -125,10 +166,8 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				String const* filePath = static_cast<String const*>(collectionKey);
-				UINT32 const fileCount = collectionKeySize / sizeof(String);
-
-				hr = pEnumerator->SetFilePaths(filePath, fileCount);
+				const UINT32 fileIndex = *static_cast<UINT32 const*>(collectionKey);
+				hr = pEnumerator->SetFilePaths(filePaths_[fileIndex]);
 			}
 
 			if (SUCCEEDED(hr))
@@ -157,8 +196,7 @@ namespace kiwano
 		);
 
 		STDMETHOD(SetFilePaths)(
-			String const* filePath,
-			UINT32 const fileCount
+			Vector<String> const& filePaths
 		);
 
 		~FontFileEnumerator()
@@ -234,13 +272,12 @@ namespace kiwano
 	}
 
 	STDMETHODIMP FontFileEnumerator::SetFilePaths(
-		String const* filePath,
-		UINT32 const fileCount
+		Vector<String> const& filePaths
 	)
 	{
 		try
 		{
-			filePaths_.assign(filePath, filePath + fileCount);
+			filePaths_.assign(filePaths);
 		}
 		catch (std::bad_alloc&)
 		{
@@ -332,6 +369,12 @@ namespace kiwano
 		{
 		}
 
+		STDMETHOD(AddResources)(
+			Vector<Resource> const& resources,
+			_Out_ LPVOID* pCollectionKey,
+			_Out_ UINT32* pCollectionKeySize
+		);
+
 		// IUnknown methods
 		virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
 		virtual ULONG STDMETHODCALLTYPE AddRef();
@@ -348,6 +391,10 @@ namespace kiwano
 	private:
 		ULONG refCount_;
 		IDWriteFontFileLoader* pFileLoader_;
+
+		typedef Vector<Resource> ResourceCollection;
+		Vector<ResourceCollection> resources_;
+		Vector<UINT32> collectionKeys_;
 	};
 
 	HRESULT IResourceFontCollectionLoader::Create(_Out_ IResourceFontCollectionLoader** ppCollectionLoader, IDWriteFontFileLoader* pFileLoader)
@@ -371,6 +418,37 @@ namespace kiwano
 			}
 		}
 		return hr;
+	}
+
+	STDMETHODIMP ResourceFontCollectionLoader::AddResources(
+		Vector<Resource> const& resources,
+		_Out_ LPVOID* pCollectionKey,
+		_Out_ UINT32* pCollectionKeySize
+		)
+	{
+		if (!pCollectionKey || !pCollectionKeySize)
+		{
+			return E_INVALIDARG;
+		}
+
+		try
+		{
+			UINT32 collectionKey = resources_.size();
+			collectionKeys_.push_back(collectionKey);
+			resources_.push_back(resources);
+
+			*pCollectionKey = reinterpret_cast<LPVOID>(&collectionKeys_.back());
+			*pCollectionKeySize = sizeof(collectionKey);
+		}
+		catch (std::bad_alloc&)
+		{
+			return E_OUTOFMEMORY;
+		}
+		catch (...)
+		{
+			return E_FAIL;
+		}
+		return S_OK;
 	}
 
 	HRESULT STDMETHODCALLTYPE ResourceFontCollectionLoader::QueryInterface(REFIID iid, void** ppvObject)
@@ -411,7 +489,7 @@ namespace kiwano
 	{
 		HRESULT hr = S_OK;
 
-		if (collectionKey == NULL || collectionKeySize % sizeof(UINT) != 0)
+		if (collectionKey == NULL || collectionKeySize % sizeof(Resource*) != 0)
 			hr = E_INVALIDARG;
 
 		if (SUCCEEDED(hr))
@@ -421,10 +499,9 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				UINT const* resourceID = static_cast<const UINT*>(collectionKey);
-				UINT32 const resourceCount = collectionKeySize / sizeof(UINT);
+				const UINT32 resourceIndex = *static_cast<const UINT32*>(collectionKey);
 
-				hr = pEnumerator->SetResources(resourceID, resourceCount);
+				hr = pEnumerator->SetResources(resources_[resourceIndex]);
 			}
 
 			if (SUCCEEDED(hr))
@@ -527,16 +604,16 @@ namespace kiwano
 		HRESULT hr = S_OK;
 
 		// Make sure the key is the right size.
-		if (fontFileReferenceKeySize != sizeof(UINT))
+		if (fontFileReferenceKeySize != sizeof(Resource))
 			hr = E_INVALIDARG;
 
 		if (SUCCEEDED(hr))
 		{
 			// Create the pFileStream object.
 			IResourceFontFileStream* pFileStream = NULL;
-			UINT resourceID = *static_cast<UINT const*>(fontFileReferenceKey);
+			Resource resource = *static_cast<Resource const*>(fontFileReferenceKey);
 
-			hr = IResourceFontFileStream::Create(&pFileStream, resourceID);
+			hr = IResourceFontFileStream::Create(&pFileStream, resource);
 
 			if (SUCCEEDED(hr))
 			{
@@ -566,8 +643,7 @@ namespace kiwano
 		);
 
 		STDMETHOD(SetResources)(
-			UINT const* resourceID,
-			UINT32 const resourceCount
+			Vector<Resource> const& resources
 		);
 
 		~ResourceFontFileEnumerator()
@@ -591,7 +667,7 @@ namespace kiwano
 		IDWriteFactory* pFactory_;
 		IDWriteFontFile* currentFile_;
 		IDWriteFontFileLoader* pLoader_;
-		Vector<UINT> resourceIDs_;
+		Vector<Resource> resources_;
 		size_t nextIndex_;
 	};
 
@@ -647,13 +723,12 @@ namespace kiwano
 	}
 
 	STDMETHODIMP ResourceFontFileEnumerator::SetResources(
-		UINT const* resourceID,
-		UINT32 const resourceCount
+		Vector<Resource> const& resources
 	)
 	{
 		try
 		{
-			resourceIDs_.assign(resourceID, resourceID + resourceCount);
+			resources_.assign(resources);
 		}
 		catch (std::bad_alloc&)
 		{
@@ -702,11 +777,11 @@ namespace kiwano
 		*hasCurrentFile = FALSE;
 		DX::SafeRelease(currentFile_);
 
-		if (nextIndex_ < resourceIDs_.size())
+		if (nextIndex_ < resources_.size())
 		{
 			hr = pFactory_->CreateCustomFontFileReference(
-				&resourceIDs_[nextIndex_],
-				sizeof(UINT),
+				&resources_[nextIndex_],
+				sizeof(Resource),
 				pLoader_,
 				&currentFile_
 			);
@@ -743,7 +818,7 @@ namespace kiwano
 		ResourceFontFileStream();
 
 		STDMETHOD(Initialize)(
-			const UINT resourceID
+			Resource const resources
 		);
 
 		// IUnknown methods
@@ -782,7 +857,7 @@ namespace kiwano
 		DWORD resourceSize_;
 	};
 
-	HRESULT IResourceFontFileStream::Create(_Out_ IResourceFontFileStream** ppStream, const UINT resourceID)
+	HRESULT IResourceFontFileStream::Create(_Out_ IResourceFontFileStream** ppStream, const Resource resource)
 	{
 		HRESULT hr = S_OK;
 
@@ -798,7 +873,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = pFileStream->Initialize(resourceID);
+				hr = pFileStream->Initialize(resource);
 			}
 
 			if (SUCCEEDED(hr))
@@ -818,14 +893,16 @@ namespace kiwano
 	}
 
 	STDMETHODIMP ResourceFontFileStream::Initialize(
-		const UINT resourceID
+		const Resource resource
 	)
 	{
-		HRESULT hr = S_OK;
+		Resource::Data data = resource.GetData();
+		HRESULT hr = data ? S_OK : E_FAIL;
 
-		if (!Resource{ resourceID, RT_FONT }.Load(resourcePtr_, resourceSize_))
+		if (SUCCEEDED(hr))
 		{
-			hr = E_FAIL;
+			resourcePtr_ = data.buffer;
+			resourceSize_ = data.size;
 		}
 		return hr;
 	}

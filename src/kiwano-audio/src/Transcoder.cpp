@@ -83,13 +83,12 @@ namespace kiwano
 			ComPtr<IMFByteStream> byte_stream;
 			ComPtr<IMFSourceReader> reader;
 
-			LPVOID buffer;
-			DWORD buffer_size;
-			if (!res.Load(buffer, buffer_size)) { return E_FAIL; }
+			Resource::Data data = res.GetData();
+			if (!data) { return E_FAIL; }
 
 			stream = kiwano::modules::Shlwapi::Get().SHCreateMemStream(
-				static_cast<const BYTE*>(buffer),
-				static_cast<UINT>(buffer_size)
+				static_cast<const BYTE*>(data.buffer),
+				static_cast<UINT>(data.size)
 			);
 
 			if (stream == nullptr)
