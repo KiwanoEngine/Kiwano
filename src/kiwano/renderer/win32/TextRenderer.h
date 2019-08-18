@@ -19,77 +19,26 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
-#include "../math/helper.h"
-#include "types.h"
+#include "D2DDeviceResources.h"
 
 namespace kiwano
 {
-	class KGE_API Window
-		: public Singleton<Window>
+	interface DWRITE_DECLARE_INTERFACE("b293e798-9916-4096-a3c1-e5d4039dfa64")
+		ITextRenderer : public IDWriteTextRenderer
 	{
-		KGE_DECLARE_SINGLETON(Window);
-
 	public:
-		// 获取标题
-		String GetTitle() const;
-
-		// 获取窗口大小
-		Size GetSize() const;
-
-		// 获取窗口宽度
-		float GetWidth() const;
-
-		// 获取窗口高度
-		float GetHeight() const;
-
-		// 设置标题
-		void SetTitle(String const& title);
-
-		// 设置窗口图标
-		void SetIcon(LPCWSTR icon_resource);
-
-		// 重设窗口大小
-		void Resize(int width, int height);
-
-		// 设置全屏模式
-		void SetFullscreen(bool fullscreen, int width, int height);
-
-		// 设置鼠标指针
-		void SetMouseCursor(MouseCursor cursor);
-
-	public:
-		HRESULT Create(
-			String const&	title,
-			int				width,
-			int				height,
-			LPCWSTR			icon,
-			bool			fullscreen,
-			WNDPROC			proc
+		static KGE_API HRESULT Create(
+			_Out_ ITextRenderer** ppTextRenderer,
+			_In_ ID2D1RenderTarget* pRT
 		);
 
-		void Prepare();
-
-		HWND GetHandle() const;
-
-		DWORD GetWindowStyle() const;
-
-		void UpdateWindowRect();
-
-		void SetActive(bool actived);
-
-	protected:
-		Window();
-
-		~Window();
-
-	private:
-		HWND	handle_;
-		bool	is_fullscreen_;
-		int		width_;
-		int		height_;
-		WCHAR*	device_name_;
-		MouseCursor mouse_cursor_;
+		STDMETHOD_(void, SetTextStyle)(
+			_In_ FLOAT opacity,
+            _In_ CONST D2D1_COLOR_F &fillColor,
+            _In_ BOOL outline,
+            _In_ CONST D2D1_COLOR_F &outlineColor,
+            _In_ FLOAT outlineWidth,
+			_In_ ID2D1StrokeStyle* outlineJoin
+		) PURE;
 	};
 }

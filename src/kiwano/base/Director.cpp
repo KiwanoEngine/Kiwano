@@ -146,7 +146,9 @@ namespace kiwano
 		if (render_border_enabled_)
 		{
 			if (curr_scene_)
+			{
 				curr_scene_->RenderBorder();
+			}
 		}
 	}
 

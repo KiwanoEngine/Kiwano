@@ -82,7 +82,7 @@ public:
 
 	T& last_item()					{ return last_; }
 
-	bool is_empty() const			{ return !first_; }
+	bool item_empty() const			{ return !first_; }
 
 	void push_back_item(T const& child)
 	{

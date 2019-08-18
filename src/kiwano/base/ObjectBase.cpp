@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Object.h"
+#include "ObjectBase.h"
 #include "Logger.h"
 #include <typeinfo>
 
@@ -27,12 +27,12 @@ namespace kiwano
 	namespace
 	{
 		bool tracing_leaks = false;
-		Vector<Object*> tracing_objects;
+		Vector<ObjectBase*> tracing_objects;
 	}
 
-	unsigned int Object::last_object_id = 0;
+	unsigned int ObjectBase::last_object_id = 0;
 
-	Object::Object()
+	ObjectBase::ObjectBase()
 		: tracing_leak_(false)
 		, user_data_(nullptr)
 		, name_(nullptr)
@@ -40,34 +40,34 @@ namespace kiwano
 	{
 #ifdef KGE_DEBUG
 
-		Object::__AddObjectToTracingList(this);
+		ObjectBase::__AddObjectToTracingList(this);
 
 #endif
 	}
 
-	Object::~Object()
+	ObjectBase::~ObjectBase()
 	{
 		if (name_)
 			delete name_;
 
 #ifdef KGE_DEBUG
 
-		Object::__RemoveObjectFromTracingList(this);
+		ObjectBase::__RemoveObjectFromTracingList(this);
 
 #endif
 	}
 
-	void * Object::GetUserData() const
+	void * ObjectBase::GetUserData() const
 	{
 		return user_data_;
 	}
 
-	void Object::SetUserData(void * data)
+	void ObjectBase::SetUserData(void * data)
 	{
 		user_data_ = data;
 	}
 
-	void Object::SetName(String const & name)
+	void ObjectBase::SetName(String const & name)
 	{
 		if (IsName(name))
 			return;
@@ -88,29 +88,29 @@ namespace kiwano
 		*name_ = name;
 	}
 
-	String Object::DumpObject()
+	String ObjectBase::DumpObject()
 	{
 		String name = kiwano::string_to_wide(typeid(*this).name());
 		return String::format(L"{ class=\"%s\" id=%d refcount=%d name=\"%s\" }",
 			name.c_str(), GetObjectID(), GetRefCount(), GetName().c_str());
 	}
 
-	bool Object::IsTracingLeaks()
+	bool ObjectBase::IsTracingLeaks()
 	{
 		return tracing_leaks;
 	}
 
-	void Object::StartTracingLeaks()
+	void ObjectBase::StartTracingLeaks()
 	{
 		tracing_leaks = true;
 	}
 
-	void Object::StopTracingLeaks()
+	void ObjectBase::StopTracingLeaks()
 	{
 		tracing_leaks = false;
 	}
 
-	void Object::DumpTracingObjects()
+	void ObjectBase::DumpTracingObjects()
 	{
 		KGE_LOG(L"-------------------------- All Objects --------------------------");
 		for (const auto object : tracing_objects)
@@ -120,12 +120,12 @@ namespace kiwano
 		KGE_LOG(L"------------------------- Total size: %d -------------------------", tracing_objects.size());
 	}
 
-	Vector<Object*>& kiwano::Object::__GetTracingObjects()
+	Vector<ObjectBase*>& kiwano::ObjectBase::__GetTracingObjects()
 	{
 		return tracing_objects;
 	}
 
-	void Object::__AddObjectToTracingList(Object * obj)
+	void ObjectBase::__AddObjectToTracingList(ObjectBase * obj)
 	{
 #ifdef KGE_DEBUG
 
@@ -138,7 +138,7 @@ namespace kiwano
 #endif
 	}
 
-	void Object::__RemoveObjectFromTracingList(Object * obj)
+	void ObjectBase::__RemoveObjectFromTracingList(ObjectBase * obj)
 	{
 #ifdef KGE_DEBUG
 

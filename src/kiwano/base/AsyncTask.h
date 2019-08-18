@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Object.h"
+#include "ObjectBase.h"
 #include <thread>
 #include <mutex>
 
@@ -31,7 +31,7 @@ namespace kiwano
 	typedef Function<void()> AsyncTaskCallback;
 
 	class AsyncTask
-		: public Object
+		: public ObjectBase
 	{
 	public:
 		AsyncTask();

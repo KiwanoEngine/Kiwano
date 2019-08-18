@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/SmartPtr.hpp"
-#include "D2DDeviceResources.h"
+#include "win32/D2DDeviceResources.h"
 
 namespace kiwano
 {

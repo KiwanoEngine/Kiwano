@@ -28,7 +28,7 @@ namespace kiwano
 		: fill_color_(Color::White)
 		, stroke_color_(Color(Color::Black, 0))
 		, stroke_width_(1.f)
-		, outline_join_(StrokeStyle::Miter)
+		, stroke_style_(StrokeStyle::Miter)
 	{
 	}
 
@@ -73,9 +73,9 @@ namespace kiwano
 		stroke_width_ = std::max(width, 0.f);
 	}
 
-	void ShapeActor::SetOutlineJoinStyle(StrokeStyle outline_join)
+	void ShapeActor::SetStrokeStyle(StrokeStyle stroke_style)
 	{
-		outline_join_ = outline_join;
+		stroke_style_ = stroke_style;
 	}
 
 	void ShapeActor::OnRender(Renderer* renderer)
@@ -93,7 +93,7 @@ namespace kiwano
 				geo_,
 				stroke_color_,
 				stroke_width_,
-				outline_join_
+				stroke_style_
 			);
 		}
 	}

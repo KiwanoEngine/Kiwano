@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	// 画笔样式
+	// 线条样式
 	enum class StrokeStyle : int
 	{
 		Miter = 0,	/* 斜切 */
@@ -60,12 +60,5 @@ namespace kiwano
 		ClearType,	// ClearType 抗锯齿
 		GrayScale,	// 灰度抗锯齿
 		None		// 不启用抗锯齿
-	};
-
-	// 图层属性
-	struct LayerProperties
-	{
-		Rect area;
-		float opacity;
 	};
 }

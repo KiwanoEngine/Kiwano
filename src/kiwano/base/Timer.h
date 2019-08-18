@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Object.h"
+#include "ObjectBase.h"
 #include "time.h"
 #include <functional>
 
@@ -31,7 +31,7 @@ namespace kiwano
 
     // 定时任务
 	class KGE_API Timer
-		: public Object
+		: public ObjectBase
 		, protected intrusive_list_item<TimerPtr>
 	{
 		friend class TimerManager;

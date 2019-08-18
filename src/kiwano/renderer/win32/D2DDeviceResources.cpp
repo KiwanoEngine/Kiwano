@@ -19,9 +19,8 @@
 // THE SOFTWARE.
 
 #include "D2DDeviceResources.h"
-#include "ImageCache.h"
-#include "../base/Logger.h"
-#include "../utils/FileUtil.h"
+#include "../../base/Logger.h"
+#include "../../utils/FileUtil.h"
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -51,16 +50,14 @@ namespace kiwano
 
 		HRESULT CreateTextFormat(
 			_Out_ ComPtr<IDWriteTextFormat>& text_format,
-			_In_ Font const& font,
-			_In_ TextStyle const& text_style
+			_In_ Font const& font
 		) const override;
 
 		HRESULT CreateTextLayout(
 			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
-			_Out_ Size& layout_size,
 			_In_ String const& text,
-			_In_ ComPtr<IDWriteTextFormat> const& text_format,
-			_In_ TextStyle const& text_style
+			_In_ TextStyle const& text_style,
+			_In_ ComPtr<IDWriteTextFormat> const& text_format
 		) const override;
 
 		HRESULT SetD2DDevice(
@@ -110,7 +107,10 @@ namespace kiwano
 			{
 				res->AddRef();
 
-				DX::SafeRelease(*device_resources);
+				if (*device_resources)
+				{
+					(*device_resources)->Release();
+				}
 				(*device_resources) = res;
 			}
 			else
@@ -174,8 +174,6 @@ namespace kiwano
 
 	void D2DDeviceResources::DiscardResources()
 	{
-		ImageCache::GetInstance()->Clear();
-
 		factory_.reset();
 		device_.reset();
 		device_context_.reset();
@@ -193,9 +191,9 @@ namespace kiwano
 	{
 		HRESULT hr = S_OK;
 
-		ComPtr<ID2D1Factory1>			d2d_factory;
-		ComPtr<IWICImagingFactory>		imaging_factory;
-		ComPtr<IDWriteFactory>			dwrite_factory;
+		ComPtr<ID2D1Factory1>		d2d_factory;
+		ComPtr<IWICImagingFactory>	imaging_factory;
+		ComPtr<IDWriteFactory>		dwrite_factory;
 
 		D2D1_FACTORY_OPTIONS options;
 		ZeroMemory(&options, sizeof(D2D1_FACTORY_OPTIONS));
@@ -238,9 +236,9 @@ namespace kiwano
 		{
 			dwrite_factory_ = dwrite_factory;
 
-			ComPtr<ID2D1StrokeStyle>		d2d_miter_stroke_style;
-			ComPtr<ID2D1StrokeStyle>		d2d_bevel_stroke_style;
-			ComPtr<ID2D1StrokeStyle>		d2d_round_stroke_style;
+			ComPtr<ID2D1StrokeStyle> d2d_miter_stroke_style;
+			ComPtr<ID2D1StrokeStyle> d2d_bevel_stroke_style;
+			ComPtr<ID2D1StrokeStyle> d2d_round_stroke_style;
 
 			D2D1_STROKE_STYLE_PROPERTIES stroke_style = D2D1::StrokeStyleProperties(
 				D2D1_CAP_STYLE_FLAT,
@@ -394,9 +392,8 @@ namespace kiwano
 		ComPtr<ID2D1Bitmap>				bitmap_tmp;
 
 		// ¼ÓÔØ×ÊÔ´
-		LPVOID buffer;
-		DWORD buffer_size;
-		HRESULT hr = res.Load(buffer, buffer_size) ? S_OK : E_FAIL;
+		Resource::Data res_data = res.GetData();
+		HRESULT hr = res_data ? S_OK : E_FAIL;
 
 		if (SUCCEEDED(hr))
 		{
@@ -406,8 +403,8 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = stream->InitializeFromMemory(
-				static_cast<WICInProcPointer>(buffer),
-				buffer_size
+				static_cast<WICInProcPointer>(res_data.buffer),
+				res_data.size
 			);
 		}
 
@@ -460,59 +457,41 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format,
-        _In_ Font const & font, _In_ TextStyle const & text_style) const
+	HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format, _In_ Font const & font) const
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;
 
-		ComPtr<IDWriteTextFormat> text_format_tmp;
+		ComPtr<IDWriteTextFormat> output;
 		HRESULT hr = dwrite_factory_->CreateTextFormat(
 			font.family.c_str(),
-			nullptr,
+			font.collection.GetFontCollection().get(),
 			DWRITE_FONT_WEIGHT(font.weight),
 			font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
 			font.size,
-			L"",
-			&text_format_tmp
+			L"en-us",
+			&output
 		);
 
 		if (SUCCEEDED(hr))
 		{
-			if (text_style.line_spacing == 0.f)
-			{
-				text_format_tmp->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
-			}
-			else
-			{
-				text_format_tmp->SetLineSpacing(
-					DWRITE_LINE_SPACING_METHOD_UNIFORM,
-					text_style.line_spacing,
-					text_style.line_spacing * 0.8f
-				);
-			}
-			text_format_tmp->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(text_style.alignment));
-			text_format_tmp->SetWordWrapping(text_style.wrap ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP);
-			text_format = text_format_tmp;
+			text_format = output;
 		}
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout> & text_layout,
-        _Out_ Size& layout_size, _In_ String const & text, _In_ ComPtr<IDWriteTextFormat> const& text_format,
-        _In_ TextStyle const & text_style) const
+	HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout> & text_layout, _In_ String const & text,
+		_In_ TextStyle const & text_style, _In_ ComPtr<IDWriteTextFormat> const& text_format) const
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;
 
-		text_layout = nullptr;
-
 		HRESULT hr;
-		ComPtr<IDWriteTextLayout> text_layout_tmp;
+		ComPtr<IDWriteTextLayout> output;
 		UINT32 length = static_cast<UINT32>(text.length());
 
-		if (text_style.wrap)
+		if (text_style.wrap_width > 0)
 		{
 			hr = dwrite_factory_->CreateTextLayout(
 				text.c_str(),
@@ -520,7 +499,7 @@ namespace kiwano
 				text_format.get(),
 				text_style.wrap_width,
 				0,
-				&text_layout_tmp
+				&output
 			);
 		}
 		else
@@ -531,53 +510,70 @@ namespace kiwano
 				text_format.get(),
 				0,
 				0,
-				&text_layout_tmp
+				&output
 			);
+		}
 
-			DWRITE_TEXT_METRICS metrics;
-			if (SUCCEEDED(hr))
+		if (SUCCEEDED(hr))
+		{
+			if (text_style.line_spacing == 0.f)
 			{
-				hr = text_layout_tmp->GetMetrics(&metrics);
+				hr = output->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
 			}
-
-			if (SUCCEEDED(hr))
+			else
 			{
-				text_layout_tmp = nullptr;
-				hr = dwrite_factory_->CreateTextLayout(
-					text.c_str(),
-					length,
-					text_format.get(),
-					metrics.width,
-					0,
-					&text_layout_tmp
+				hr = output->SetLineSpacing(
+					DWRITE_LINE_SPACING_METHOD_UNIFORM,
+					text_style.line_spacing,
+					text_style.line_spacing * 0.8f
 				);
 			}
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			DWRITE_TEXT_METRICS metrics;
-			text_layout_tmp->GetMetrics(&metrics);
+			hr = output->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(text_style.alignment));
+		}
 
-			if (text_style.wrap)
-			{
-				layout_size = Size(metrics.layoutWidth, metrics.height);
-			}
-			else
-			{
-				layout_size = Size(metrics.width, metrics.height);
-			}
+		if (SUCCEEDED(hr))
+		{
+			hr = output->SetWordWrapping((text_style.wrap_width > 0) ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP);
+		}
 
-			DWRITE_TEXT_RANGE range = { 0, length };
+		if (SUCCEEDED(hr))
+		{
 			if (text_style.underline)
 			{
-				text_layout_tmp->SetUnderline(true, range);
+				hr = output->SetUnderline(true, { 0, length });
 			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
 			if (text_style.strikethrough)
 			{
-				text_layout_tmp->SetStrikethrough(true, range);
+				output->SetStrikethrough(true, { 0, length });
 			}
-			text_layout = text_layout_tmp;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			// Fix the layout width when the text does not wrap
+			if (!(text_style.wrap_width > 0))
+			{
+				DWRITE_TEXT_METRICS metrics;
+				hr = output->GetMetrics(&metrics);
+				
+				if (SUCCEEDED(hr))
+				{
+					hr = output->SetMaxWidth(metrics.width);
+				}
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			text_layout = output;
 		}
 		return hr;
 	}

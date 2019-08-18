@@ -71,7 +71,7 @@ namespace kiwano
 			OnUpdate(dt);
 		}
 
-		if (!children_.is_empty())
+		if (!children_.item_empty())
 		{
 			ActorPtr next;
 			for (auto child = children_.first_item(); child; child = next)
@@ -89,7 +89,7 @@ namespace kiwano
 
 		UpdateTransform();
 
-		if (children_.is_empty())
+		if (children_.item_empty())
 		{
 			OnRender(renderer);
 		}
@@ -131,7 +131,7 @@ namespace kiwano
             auto renderer = Renderer::GetInstance();
             renderer->SetTransform(transform_matrix_);
             renderer->FillRectangle(bounds, Color(Color::Red, .4f));
-            renderer->DrawRectangle(bounds, Color(Color::Red, .8f), 4.f);
+            renderer->DrawRectangle(bounds, Color(Color::Red, .8f), 2.f);
 		}
 
 		for (auto child = children_.first_item(); child; child = child->next_item())
@@ -407,7 +407,7 @@ namespace kiwano
 	{
 		if (!IsName(name))
 		{
-			Object::SetName(name);
+			ObjectBase::SetName(name);
 			hash_name_ = std::hash<String>{}(name);
 		}
 	}
@@ -609,7 +609,7 @@ namespace kiwano
 	{
 		KGE_ASSERT(child && "Actor::RemoveChild failed, NULL pointer exception");
 
-		if (children_.is_empty())
+		if (children_.item_empty())
 			return;
 
 		if (child)
@@ -622,7 +622,7 @@ namespace kiwano
 
 	void Actor::RemoveChildren(String const& child_name)
 	{
-		if (children_.is_empty())
+		if (children_.item_empty())
 		{
 			return;
 		}

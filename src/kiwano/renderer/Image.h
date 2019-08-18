@@ -19,24 +19,39 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Resource.h"
-#include "D2DDeviceResources.h"  // ID2D1Bitmap
+#include "win32/D2DDeviceResources.h"
 
 namespace kiwano
 {
 	// 图像
-	KGE_DECLARE_SMART_PTR(Image);
 	class KGE_API Image
-		: public Object
 	{
 	public:
 		Image();
+
+		explicit Image(
+			String const& file_path
+		);
+
+		explicit Image(
+			Resource const& res
+		);
 
 		explicit Image(
 			ComPtr<ID2D1Bitmap> const& bitmap
 		);
 
 		virtual ~Image();
+
+		// 加载本地文件
+		bool Load(
+			String const& file_path
+		);
+
+		// 加载资源
+		bool Load(
+			Resource const& res
+		);
 
 		// 资源是否有效
 		bool IsValid() const;
@@ -59,11 +74,21 @@ namespace kiwano
 		// 获取位图像素大小
 		math::Vec2T<UINT32> GetSizeInPixels() const;
 
+		// 拷贝位图内存
+		void CopyFrom(Image const& copy_from);
+
+		// 拷贝位图内存
+		void CopyFrom(Image const& copy_from, Rect const& src_rect, Point const& dest_point);
+
+	public:
 		// 获取源位图
 		ComPtr<ID2D1Bitmap> GetBitmap() const;
 
 		// 设置源位图
 		void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
+
+		// 获取像素格式
+		D2D1_PIXEL_FORMAT GetPixelFormat() const;
 
 	protected:
 		ComPtr<ID2D1Bitmap>	bitmap_;

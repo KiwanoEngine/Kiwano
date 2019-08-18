@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/singleton.hpp"
-#include "Renderer.h"
+#include "Image.h"
+#include "GifImage.h"
 
 namespace kiwano
 {
@@ -30,9 +30,15 @@ namespace kiwano
 		KGE_DECLARE_SINGLETON(ImageCache);
 
 	public:
-		ImagePtr AddImage(Resource const& res);
+		Image AddOrGetImage(String const& file_path);
+		Image AddOrGetImage(Resource const& res);
+		GifImage AddOrGetGifImage(String const& file_path);
+		GifImage AddOrGetGifImage(Resource const& res);
 
+		void RemoveImage(String const& file_path);
 		void RemoveImage(Resource const& res);
+		void RemoveGifImage(String const& file_path);
+		void RemoveGifImage(Resource const& res);
 
 		void Clear();
 
@@ -42,7 +48,10 @@ namespace kiwano
 		virtual ~ImageCache();
 
 	protected:
-		using ImageMap = UnorderedMap<size_t, ImagePtr>;
+		using ImageMap = UnorderedMap<size_t, Image>;
 		ImageMap image_cache_;
+
+		using GifImageMap = UnorderedMap<size_t, GifImage>;
+		GifImageMap gif_image_cache_;
 	};
 }

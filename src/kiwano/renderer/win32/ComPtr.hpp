@@ -19,45 +19,29 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <string>
+#include "../../core/intrusive_ptr.hpp"
+#include <Unknwnbase.h>
+#include <type_traits>
 
 namespace kiwano
 {
-	// 字体粗细值
-	enum FontWeight : unsigned int
+	struct ComPtrManager
 	{
-		Thin = 100,
-		ExtraLight = 200,
-		Light = 300,
-		Normal = 400,
-		Medium = 500,
-		Bold = 700,
-		ExtraBold = 800,
-		Black = 900,
-		ExtraBlack = 950
-	};
-
-	// 字体
-	class Font
-	{
-	public:
-		String			family;		// 字体族
-		float			size;		// 字号
-		unsigned int	weight;		// 粗细值
-		bool			italic;		// 是否斜体
-
-	public:
-		Font(
-			const String& family	= L"",
-			float size				= 18,
-			unsigned int weight		= FontWeight::Normal,
-			bool italic				= false
-		)
-			: family(family)
-			, size(size)
-			, weight(weight)
-			, italic(italic)
+		static inline void AddRef(IUnknown* ptr)
 		{
+			if (ptr) ptr->AddRef();
+		}
+
+		static inline void Release(IUnknown* ptr)
+		{
+			if (ptr) ptr->Release();
 		}
 	};
+
+	// ComPtr<> is a smart pointer for COM
+	template<
+		typename _Ty,
+		typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
+	using ComPtr = intrusive_ptr<_Ty, ComPtrManager>;
+
 }

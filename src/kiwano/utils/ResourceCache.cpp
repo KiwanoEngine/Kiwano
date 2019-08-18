@@ -173,12 +173,12 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResourceCache::AddFrame(String const& id, Resource const& res)
+	bool ResourceCache::AddFrame(String const& id, String const& file_path)
 	{
 		FramePtr ptr = new (std::nothrow) Frame;
 		if (ptr)
 		{
-			if (ptr->Load(res))
+			if (ptr->Load(file_path))
 			{
 				return AddFrame(id, ptr);
 			}
@@ -196,43 +196,20 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResourceCache::AddGifImage(String const& id, Resource const& res)
+	size_t ResourceCache::AddFrameSequence(String const& id, Vector<String> const& files)
 	{
-		GifImagePtr ptr = new (std::nothrow) GifImage;
-		if (ptr)
-		{
-			if (ptr->Load(res))
-			{
-				return AddGifImage(id, ptr);
-			}
-		}
-		return false;
-	}
-
-	bool ResourceCache::AddGifImage(String const& id, GifImagePtr image)
-	{
-		if (image)
-		{
-			cache_.insert(std::make_pair(id, image));
-			return true;
-		}
-		return false;
-	}
-
-	size_t ResourceCache::AddFrameSequence(String const& id, Vector<Resource> const& images)
-	{
-		if (images.empty())
+		if (files.empty())
 			return 0;
 
 		Vector<FramePtr> image_arr;
-		image_arr.reserve(images.size());
+		image_arr.reserve(files.size());
 
-		for (const auto& image : images)
+		for (const auto& file : files)
 		{
 			FramePtr ptr = new (std::nothrow) Frame;
 			if (ptr)
 			{
-				if (ptr->Load(image))
+				if (ptr->Load(file))
 				{
 					image_arr.push_back(ptr);
 				}
@@ -247,22 +224,13 @@ namespace kiwano
 		return 0;
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const& id, Vector<FramePtr> const& images)
-	{
-		if (images.empty())
-			return 0;
-
-		FrameSequencePtr frames = new (std::nothrow) FrameSequence(images);
-		return AddFrameSequence(id, frames);
-	}
-
-	size_t ResourceCache::AddFrameSequence(String const & id, Resource const & image, int cols, int rows)
+	size_t ResourceCache::AddFrameSequence(String const & id, String const& file_path, int cols, int rows)
 	{
 		if (cols <= 0 || rows <= 0)
 			return 0;
 
 		FramePtr raw = new (std::nothrow) Frame;
-		if (!raw || !raw->Load(image))
+		if (!raw || !raw->Load(file_path))
 			return false;
 
 		float raw_width = raw->GetWidth();
@@ -280,32 +248,9 @@ namespace kiwano
 				FramePtr ptr = new (std::nothrow) Frame(raw->GetImage());
 				if (ptr)
 				{
-					ptr->Crop(Rect{ j * width, i * height, width, height });
+					ptr->SetCropRect(Rect{ j * width, i * height, width, height });
 					image_arr.push_back(ptr);
 				}
-			}
-		}
-
-		FrameSequencePtr frames = new (std::nothrow) FrameSequence(image_arr);
-		return AddFrameSequence(id, frames);
-	}
-
-	size_t ResourceCache::AddFrameSequence(String const & id, Resource const & image, Vector<Rect> const & crop_rects)
-	{
-		FramePtr raw = new (std::nothrow) Frame;
-		if (!raw || !raw->Load(image))
-			return 0;
-
-		Vector<FramePtr> image_arr;
-		image_arr.reserve(crop_rects.size());
-
-		for (const auto& rect : crop_rects)
-		{
-			FramePtr ptr = new (std::nothrow) Frame(raw->GetImage());
-			if (ptr)
-			{
-				ptr->Crop(rect);
-				image_arr.push_back(ptr);
 			}
 		}
 
@@ -323,7 +268,7 @@ namespace kiwano
 		return 0;
 	}
 
-	bool ResourceCache::AddObj(String const& id, ObjectPtr obj)
+	bool ResourceCache::AddObjectBase(String const& id, ObjectBasePtr obj)
 	{
 		if (obj)
 		{
@@ -336,11 +281,6 @@ namespace kiwano
 	FramePtr ResourceCache::GetFrame(String const & id) const
 	{
 		return Get<Frame>(id);
-	}
-
-	GifImagePtr ResourceCache::GetGifImage(String const& id) const
-	{
-		return Get<GifImage>(id);
 	}
 
 	FrameSequencePtr ResourceCache::GetFrameSequence(String const & id) const
@@ -376,23 +316,17 @@ namespace kiwano
 
 			if (file)
 			{
-				// Gif image
-				if (type && (*type) == L"gif")
-				{
-					return loader->AddGifImage(*id, Resource(gdata->path + (*file)));
-				}
-
 				if (!(*file).empty())
 				{
 					if (rows || cols)
 					{
 						// Frame slices
-						return !!loader->AddFrameSequence(*id, Resource(gdata->path + (*file)), std::max(cols, 1), std::max(rows, 1));
+						return !!loader->AddFrameSequence(*id, gdata->path + (*file), std::max(cols, 1), std::max(rows, 1));
 					}
 					else
 					{
 						// Simple image
-						return loader->AddFrame(*id, Resource(gdata->path + (*file)));
+						return loader->AddFrame(*id, gdata->path + (*file));
 					}
 				}
 			}
@@ -410,7 +344,8 @@ namespace kiwano
 						frames.push_back(frame);
 					}
 				}
-				return !!loader->AddFrameSequence(*id, frames);
+				FrameSequencePtr frame_seq = new FrameSequence(frames);
+				return !!loader->AddFrameSequence(*id, frame_seq);
 			}
 			return false;
 		}

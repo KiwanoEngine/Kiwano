@@ -34,13 +34,33 @@ namespace kiwano
 			ClearCache();
 		}
 
-		bool Player::Load(Resource const& res)
+		size_t Player::Load(String const& file_path)
 		{
-			size_t hash_code = res.GetHashCode();
+			size_t hash_code = file_path.hash();
 			if (sound_cache_.end() != sound_cache_.find(hash_code))
 				return true;
 
-			SoundPtr sound = new (std::nothrow) Sound();
+			SoundPtr sound = new (std::nothrow) Sound;
+
+			if (sound)
+			{
+				if (sound->Load(file_path))
+				{
+					sound->SetVolume(volume_);
+					sound_cache_.insert(std::make_pair(hash_code, sound));
+					return true;
+				}
+			}
+			return false;
+		}
+
+		size_t Player::Load(Resource const& res)
+		{
+			size_t hash_code = res.GetId();
+			if (sound_cache_.end() != sound_cache_.find(hash_code))
+				return true;
+
+			SoundPtr sound = new (std::nothrow) Sound;
 
 			if (sound)
 			{
@@ -54,42 +74,39 @@ namespace kiwano
 			return false;
 		}
 
-		void Player::Play(Resource const& res, int loop_count)
+		void Player::Play(size_t id, int loop_count)
 		{
-			if (Load(res))
-			{
-				size_t hash_code = res.GetHashCode();
-				if (sound_cache_.end() != sound_cache_.find(hash_code))
-					sound_cache_[hash_code]->Play(loop_count);
-			}
+			auto iter = sound_cache_.find(id);
+			if (sound_cache_.end() != iter)
+				iter->second->Play(loop_count);
 		}
 
-		void Player::Pause(Resource const& res)
+		void Player::Pause(size_t id)
 		{
-			size_t hash_code = res.GetHashCode();
-			if (sound_cache_.end() != sound_cache_.find(hash_code))
-				sound_cache_[hash_code]->Pause();
+			auto iter = sound_cache_.find(id);
+			if (sound_cache_.end() != iter)
+				iter->second->Pause();
 		}
 
-		void Player::Resume(Resource const& res)
+		void Player::Resume(size_t id)
 		{
-			size_t hash_code = res.GetHashCode();
-			if (sound_cache_.end() != sound_cache_.find(hash_code))
-				sound_cache_[hash_code]->Resume();
+			auto iter = sound_cache_.find(id);
+			if (sound_cache_.end() != iter)
+				iter->second->Resume();
 		}
 
-		void Player::Stop(Resource const& res)
+		void Player::Stop(size_t id)
 		{
-			size_t hash_code = res.GetHashCode();
-			if (sound_cache_.end() != sound_cache_.find(hash_code))
-				sound_cache_[hash_code]->Stop();
+			auto iter = sound_cache_.find(id);
+			if (sound_cache_.end() != iter)
+				iter->second->Stop();
 		}
 
-		bool Player::IsPlaying(Resource const& res)
+		bool Player::IsPlaying(size_t id)
 		{
-			size_t hash_code = res.GetHashCode();
-			if (sound_cache_.end() != sound_cache_.find(hash_code))
-				return sound_cache_[hash_code]->IsPlaying();
+			auto iter = sound_cache_.find(id);
+			if (sound_cache_.end() != iter)
+				return iter->second->IsPlaying();
 			return false;
 		}
 

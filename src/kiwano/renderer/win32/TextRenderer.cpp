@@ -98,7 +98,7 @@ namespace kiwano
 		unsigned long STDMETHODCALLTYPE AddRef();
 		unsigned long STDMETHODCALLTYPE Release();
 		HRESULT STDMETHODCALLTYPE QueryInterface(
-			IID const& riid,
+			REFIID riid,
 			void** ppvObject
 		);
 
@@ -454,24 +454,6 @@ namespace kiwano
 		return E_NOTIMPL;
 	}
 
-	STDMETHODIMP_(unsigned long) TextRenderer::AddRef()
-	{
-		return InterlockedIncrement(&cRefCount_);
-	}
-
-	STDMETHODIMP_(unsigned long) TextRenderer::Release()
-	{
-		unsigned long newCount = InterlockedDecrement(&cRefCount_);
-
-		if (newCount == 0)
-		{
-			delete this;
-			return 0;
-		}
-
-		return newCount;
-	}
-
 	STDMETHODIMP TextRenderer::IsPixelSnappingDisabled(
 		__maybenull void* clientDrawingContext,
 		__out BOOL* isDisabled)
@@ -506,8 +488,26 @@ namespace kiwano
 		return S_OK;
 	}
 
+	STDMETHODIMP_(unsigned long) TextRenderer::AddRef()
+	{
+		return InterlockedIncrement(&cRefCount_);
+	}
+
+	STDMETHODIMP_(unsigned long) TextRenderer::Release()
+	{
+		unsigned long newCount = InterlockedDecrement(&cRefCount_);
+
+		if (newCount == 0)
+		{
+			delete this;
+			return 0;
+		}
+
+		return newCount;
+	}
+
 	STDMETHODIMP TextRenderer::QueryInterface(
-		IID const& riid,
+		REFIID riid,
 		void** ppvObject)
 	{
 		if (__uuidof(ITextRenderer) == riid)

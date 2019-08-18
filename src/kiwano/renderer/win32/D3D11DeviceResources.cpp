@@ -20,7 +20,7 @@
 
 #include "D3D11DeviceResources.h"
 
-#include "../base/Logger.h"
+#include "../../base/Logger.h"
 #include <versionhelpers.h>  // IsWindows10OrGreater
 
 #pragma comment(lib, "d3d11.lib")
@@ -140,7 +140,10 @@ namespace kiwano
 				{
 					res->AddRef();
 
-					DX::SafeRelease(*device_resources);
+					if (*device_resources)
+					{
+						(*device_resources)->Release();
+					}
 					(*device_resources) = res;
 				}
 				else

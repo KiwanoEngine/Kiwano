@@ -46,7 +46,6 @@ namespace kiwano
 		debug_text_->SetFont(font);
 
 		TextStyle style;
-		style.wrap = false;
 		style.line_spacing = 20.f;
 		debug_text_->SetStyle(style);
 
@@ -83,9 +82,9 @@ namespace kiwano
 		ss << "Fps: " << frame_time_.size() << std::endl;
 
 #if defined(KGE_DEBUG)
-		if (Object::IsTracingLeaks())
+		if (ObjectBase::IsTracingLeaks())
 		{
-			ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
+			ss << "Objects: " << ObjectBase::__GetTracingObjects().size() << std::endl;
 		}
 #endif
 
@@ -98,7 +97,7 @@ namespace kiwano
 		ss << "Memory: " << pmc.PrivateUsage / 1024 << "kb";
 
 		debug_text_->SetText(ss.str());
-		SetSize(Size{ 20 + debug_text_->GetLayoutSize().x, 20 + debug_text_->GetLayoutSize().y });
+		SetSize(Size{ 20 + debug_text_->GetSize().x, 20 + debug_text_->GetSize().y });
 	}
 
 }

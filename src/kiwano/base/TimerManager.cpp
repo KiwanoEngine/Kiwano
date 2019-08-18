@@ -25,7 +25,7 @@ namespace kiwano
 {
 	void TimerManager::UpdateTimers(Duration dt)
 	{
-		if (timers_.is_empty())
+		if (timers_.item_empty())
 			return;
 
 		TimerPtr next;
@@ -54,7 +54,7 @@ namespace kiwano
 
 	void TimerManager::StopTimers(String const& name)
 	{
-		if (timers_.is_empty())
+		if (timers_.item_empty())
 			return;
 
 		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
@@ -68,7 +68,7 @@ namespace kiwano
 
 	void TimerManager::StartTimers(String const& name)
 	{
-		if (timers_.is_empty())
+		if (timers_.item_empty())
 			return;
 		
 		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
@@ -82,7 +82,7 @@ namespace kiwano
 
 	void TimerManager::RemoveTimers(String const& name)
 	{
-		if (timers_.is_empty())
+		if (timers_.item_empty())
 			return;
 
 		TimerPtr next;
@@ -98,7 +98,7 @@ namespace kiwano
 
 	void TimerManager::StopAllTimers()
 	{
-		if (timers_.is_empty())
+		if (timers_.item_empty())
 			return;
 
 		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
@@ -109,7 +109,7 @@ namespace kiwano
 
 	void TimerManager::StartAllTimers()
 	{
-		if (timers_.is_empty())
+		if (timers_.item_empty())
 			return;
 
 		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())

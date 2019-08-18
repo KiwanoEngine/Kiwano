@@ -19,10 +19,37 @@
 // THE SOFTWARE.
 
 #include "ImageCache.h"
+#include "Renderer.h"
 #include "../base/Logger.h"
 
 namespace kiwano
 {
+	template <typename _Ty, typename _PathTy, typename _CacheTy>
+	_Ty CreateOrGetCache(_CacheTy& cache, _PathTy const& path, size_t hash)
+	{
+		auto iter = cache.find(hash);
+		if (iter != cache.end())
+		{
+			return iter->second;
+		}
+
+		_Ty image;
+		if (image.Load(path))
+		{
+			cache.insert(std::make_pair(hash, image));
+		}
+		return image;
+	}
+
+	template <typename _CacheTy>
+	void RemoveCache(_CacheTy& cache, size_t hash)
+	{
+		auto iter = cache.find(hash);
+		if (iter != cache.end())
+		{
+			cache.erase(iter);
+		}
+	}
 
 	ImageCache::ImageCache()
 	{
@@ -32,53 +59,50 @@ namespace kiwano
 	{
 	}
 
-	ImagePtr ImageCache::AddImage(Resource const& res)
+	Image ImageCache::AddOrGetImage(String const& file_path)
 	{
-		size_t hash_code = res.GetHashCode();
-		auto iter = image_cache_.find(hash_code);
-		if (iter != image_cache_.end())
-		{
-			return iter->second;
-		}
+		return CreateOrGetCache<Image>(image_cache_, file_path, file_path.hash());
+	}
 
-		HRESULT hr = S_OK;
-		ComPtr<ID2D1Bitmap> bitmap;
+	Image ImageCache::AddOrGetImage(Resource const& res)
+	{
+		return CreateOrGetCache<Image>(image_cache_, res, res.GetId());
+	}
 
-		if (res.IsFileType())
-		{
-			hr = Renderer::GetInstance()->GetD2DDeviceResources()->CreateBitmapFromFile(bitmap, res.GetFileName());
-		}
-		else
-		{
-			hr = Renderer::GetInstance()->GetD2DDeviceResources()->CreateBitmapFromResource(bitmap, res);
-		}
+	GifImage ImageCache::AddOrGetGifImage(String const& file_path)
+	{
+		return CreateOrGetCache<GifImage>(gif_image_cache_, file_path, file_path.hash());
+	}
 
-		if (SUCCEEDED(hr))
-		{
-			ImagePtr ptr = new Image(bitmap);
-			image_cache_.insert(std::make_pair(hash_code, ptr));
-			return ptr;
-		}
-		else
-		{
-			KGE_ERROR_LOG(L"Load image file failed with HRESULT of %08X", hr);
-		}
-		return nullptr;
+	GifImage ImageCache::AddOrGetGifImage(Resource const& res)
+	{
+		return CreateOrGetCache<GifImage>(gif_image_cache_, res, res.GetId());
+	}
+
+	void ImageCache::RemoveImage(String const& file_path)
+	{
+		RemoveCache(image_cache_, file_path.hash());
 	}
 
 	void ImageCache::RemoveImage(Resource const& res)
 	{
-		size_t hash_code = res.GetHashCode();
-		auto iter = image_cache_.find(hash_code);
-		if (iter != image_cache_.end())
-		{
-			image_cache_.erase(iter);
-		}
+		RemoveCache(image_cache_, res.GetId());
+	}
+
+	void ImageCache::RemoveGifImage(String const& file_path)
+	{
+		RemoveCache(gif_image_cache_, file_path.hash());
+	}
+
+	void ImageCache::RemoveGifImage(Resource const& res)
+	{
+		RemoveCache(gif_image_cache_, res.GetId());
 	}
 
 	void ImageCache::Clear()
 	{
 		image_cache_.clear();
+		gif_image_cache_.clear();
 	}
 
 }

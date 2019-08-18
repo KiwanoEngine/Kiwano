@@ -20,7 +20,7 @@
 
 #pragma once
 #include "include-forwards.h"
-#include <d2d1.h>
+#include "../renderer/LayerArea.h"
 
 namespace kiwano
 {
@@ -29,7 +29,7 @@ namespace kiwano
 
 	// ÎèÌ¨¹ý¶É
 	class KGE_API Transition
-		: public Object
+		: public ObjectBase
 	{
 		friend class Director;
 
@@ -57,17 +57,15 @@ namespace kiwano
 		virtual void Reset() { };
 
 	protected:
-		bool				done_;
-		float				process_;
-		Duration			duration_;
-		Duration			delta_;
-		Size				window_size_;
-		StagePtr			out_scene_;
-		StagePtr			in_scene_;
-		ComPtr<ID2D1Layer>	out_layer_;
-		ComPtr<ID2D1Layer>	in_layer_;
-		LayerProperties		out_layer_prop_;
-		LayerProperties		in_layer_prop_;
+		bool		done_;
+		float		process_;
+		Duration	duration_;
+		Duration	delta_;
+		Size		window_size_;
+		StagePtr	out_scene_;
+		StagePtr	in_scene_;
+		LayerArea	out_layer_;
+		LayerArea	in_layer_;
 	};
 
 

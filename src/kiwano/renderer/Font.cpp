@@ -18,35 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-
-#include "../macros.h"
-
-#include "D2DDeviceResources.h"
-#include "D3DDeviceResourcesBase.h"
-#include <d3d10_1.h>
+#include "Font.h"
 
 namespace kiwano
 {
-	MIDL_INTERFACE("3a150b9d-cc23-4022-a463-7e95452a54c4")
-	KGE_API ID3D10DeviceResources
-		: public ID3DDeviceResourcesBase
+	Font::Font(const String& family, float size, unsigned int weight, bool italic, FontCollection collection)
+		: family(family)
+		, size(size)
+		, weight(weight)
+		, italic(italic)
+		, collection(collection)
 	{
-	public:
-		static HRESULT Create(ID3D10DeviceResources** device_resources, ID2DDeviceResources* d2d_device_res, HWND hwnd);
-
-		inline ID3D10Device*			GetDevice() const				{ KGE_ASSERT(device_); return device_.get(); }
-		inline ID3D10RenderTargetView*	GetRenderTargetView() const		{ KGE_ASSERT(rt_view_); return rt_view_.get(); }
-		inline ID3D10DepthStencilView*	GetDepthStencilView() const		{ KGE_ASSERT(ds_view_); return ds_view_.get(); }
-		inline IDXGIFactory*			GetDXGIFactory() const			{ KGE_ASSERT(dxgi_factory_); return dxgi_factory_.get(); }
-		inline IDXGISwapChain*			GetDXGISwapChain() const		{ KGE_ASSERT(dxgi_swap_chain_); return dxgi_swap_chain_.get(); }
-
-	protected:
-		ComPtr<ID3D10Device>			device_;
-		ComPtr<ID3D10RenderTargetView>	rt_view_;
-		ComPtr<ID3D10DepthStencilView>	ds_view_;
-		ComPtr<IDXGISwapChain>			dxgi_swap_chain_;
-		ComPtr<IDXGIFactory>			dxgi_factory_;
-	};
+	}
 
 }

@@ -32,10 +32,19 @@ namespace kiwano
 		Sprite();
 
 		explicit Sprite(
-			Resource const& res
+			String const& file_path
+		);
+
+		Sprite(
+			String const& file_path,
+			Rect const& crop_rect	/* ²Ã¼ô¾ØÐÎ */
 		);
 
 		explicit Sprite(
+			Resource const& res
+		);
+
+		Sprite(
 			Resource const& res,
 			Rect const& crop_rect	/* ²Ã¼ô¾ØÐÎ */
 		);
@@ -46,13 +55,18 @@ namespace kiwano
 
 		virtual ~Sprite();
 
+		// ¼ÓÔØÍ¼Ïñ
+		bool Load(
+			String const& file_path
+		);
+
 		// ¼ÓÔØÍ¼Ïñ×ÊÔ´
 		bool Load(
 			Resource const& res
 		);
 
 		// ²Ã¼ô¾ØÐÎ
-		void Crop(
+		void SetCropRect(
 			const Rect& crop_rect
 		);
 

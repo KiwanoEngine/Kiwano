@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/intrusive_ptr.hpp>
-#include <kiwano/base/Object.h>
+#include <kiwano/base/ObjectBase.h>
 #include "Sound.h"
 
 namespace kiwano
@@ -31,44 +31,47 @@ namespace kiwano
 
 		// 音乐播放器
 		class KGE_API Player
-			: protected Object
+			: protected ObjectBase
 		{
-			using MusicMap = Map<size_t, SoundPtr>;
-
 		public:
 			Player();
 
 			~Player();
 
-			// 加载音乐资源
-			bool Load(
+			// 加载本地音频文件, 返回该资源标识符
+			size_t Load(
+				String const& file_path
+			);
+
+			// 加载音乐资源, 返回该资源标识符
+			size_t Load(
 				Resource const& res		/* 音乐资源 */
 			);
 
 			// 播放音乐
 			void Play(
-				Resource const& res,	/* 音乐资源 */
+				size_t id,				/* 标识符 */
 				int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 			);
 
 			// 暂停音乐
 			void Pause(
-				Resource const& res		/* 音乐资源 */
+				size_t id				/* 标识符 */
 			);
 
 			// 继续播放音乐
 			void Resume(
-				Resource const& res		/* 音乐资源 */
+				size_t id				/* 标识符 */
 			);
 
 			// 停止音乐
 			void Stop(
-				Resource const& res		/* 音乐资源 */
+				size_t id				/* 标识符 */
 			);
 
 			// 获取音乐播放状态
 			bool IsPlaying(
-				Resource const& res		/* 音乐资源 */
+				size_t id				/* 标识符 */
 			);
 
 			// 获取音量
@@ -92,8 +95,10 @@ namespace kiwano
 			void ClearCache();
 
 		protected:
-			float		volume_;
-			MusicMap	sound_cache_;
+			float volume_;
+
+			using MusicMap = Map<size_t, SoundPtr>;
+			MusicMap sound_cache_;
 		};
 	}
 }

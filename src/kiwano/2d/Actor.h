@@ -32,7 +32,7 @@ namespace kiwano
 
 	// ½ÇÉ«
 	class KGE_API Actor
-		: public Object
+		: public ObjectBase
 		, public TimerManager
 		, public ActionManager
 		, public EventDispatcher

@@ -24,6 +24,7 @@
 #include "../base/Logger.h"
 #include "../base/input.h"
 #include "../base/Director.h"
+#include "../renderer/ImageCache.h"
 #include "../renderer/Renderer.h"
 #include "../utils/ResourceCache.h"
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
@@ -79,15 +80,13 @@ namespace kiwano
 
 	void Application::Init(const Options& options)
 	{
-		ThrowIfFailed(
-			Window::GetInstance()->Create(
-				options.title,
-				options.width,
-				options.height,
-				options.icon,
-				options.fullscreen,
-				Application::WndProc
-			)
+		Window::GetInstance()->Init(
+			options.title,
+			options.width,
+			options.height,
+			options.icon,
+			options.fullscreen,
+			Application::WndProc
 		);
 
 		Renderer::GetInstance()->SetClearColor(options.clear_color);
@@ -121,10 +120,9 @@ namespace kiwano
 
 	void Application::Run()
 	{
-		HWND hwnd = Window::GetInstance()->GetHandle();
+		KGE_ASSERT(inited_ && "Calling Application::Run before Application::Init");
 
-		if (!inited_)
-			throw std::exception("Calling Application::Run before Application::Init");
+		HWND hwnd = Window::GetInstance()->GetHandle();
 
 		if (hwnd)
 		{
@@ -147,8 +145,10 @@ namespace kiwano
 
 	void Application::Destroy()
 	{
-		// Clear all stages
+		// Clear all resources
 		Director::GetInstance()->ClearStages();
+		ResourceCache::GetInstance()->Clear();
+		ImageCache::GetInstance()->Clear();
 
 		if (inited_)
 		{
@@ -164,6 +164,7 @@ namespace kiwano
 		// Destroy all instances
 		Director::DestroyInstance();
 		ResourceCache::DestroyInstance();
+		ImageCache::DestroyInstance();
 		Input::DestroyInstance();
 		Renderer::DestroyInstance();
 		Window::DestroyInstance();

@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/intrusive_ptr.hpp>
-#include <kiwano/base/Object.h>
+#include <kiwano/base/ObjectBase.h>
 #include <kiwano/base/Resource.h>
 #include <xaudio2.h>
 
@@ -32,16 +32,25 @@ namespace kiwano
 
 		// 音乐对象
 		class KGE_API Sound
-			: public Object
+			: public ObjectBase
 		{
 		public:
 			Sound();
+
+			Sound(
+				String const& file_path	/* 本地音频文件 */
+			);
 
 			Sound(
 				Resource const& res		/* 音乐资源 */
 			);
 
 			virtual ~Sound();
+
+			// 打开本地音频文件
+			bool Load(
+				String const& file_path
+			);
 
 			// 打开音乐资源
 			bool Load(

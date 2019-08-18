@@ -19,77 +19,61 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
-#include "../math/math.h"
-#include "types.h"
+#include "Font.h"
+#include "../2d/TextStyle.hpp"
 
 namespace kiwano
 {
-	class KGE_API Window
-		: public Singleton<Window>
+	// 文本格式化
+	class KGE_API TextFormat
 	{
-		KGE_DECLARE_SINGLETON(Window);
+	public:
+		TextFormat();
+
+		TextFormat(Font const& font);
+
+		void Update(Font const& font);
 
 	public:
-		// 获取标题
-		String GetTitle() const;
+		inline ComPtr<IDWriteTextFormat> GetTextFormat() const		{ return text_format_; }
 
-		// 获取窗口大小
-		Size GetSize() const;
-
-		// 获取窗口宽度
-		float GetWidth() const;
-
-		// 获取窗口高度
-		float GetHeight() const;
-
-		// 设置标题
-		void SetTitle(String const& title);
-
-		// 设置窗口图标
-		void SetIcon(LPCWSTR icon_resource);
-
-		// 重设窗口大小
-		void Resize(int width, int height);
-
-		// 设置全屏模式
-		void SetFullscreen(bool fullscreen, int width, int height);
-
-		// 设置鼠标指针
-		void SetMouseCursor(MouseCursor cursor);
-
-	public:
-		void Init(
-			String const&	title,
-			int				width,
-			int				height,
-			LPCWSTR			icon,
-			bool			fullscreen,
-			WNDPROC			proc
-		);
-
-		void Prepare();
-
-		HWND GetHandle() const;
-
-		DWORD GetWindowStyle() const;
-
-		void UpdateWindowRect();
-
-		void SetActive(bool actived);
+		inline void SetTextFormat(ComPtr<IDWriteTextFormat> format)	{ text_format_ = format; }
 
 	protected:
-		Window();
+		ComPtr<IDWriteTextFormat> text_format_;
+	};
 
-		~Window();
 
-	private:
-		HWND	handle_;
-		bool	is_fullscreen_;
-		int		width_;
-		int		height_;
-		WCHAR*	device_name_;
-		MouseCursor mouse_cursor_;
+	// 文本布局
+	class KGE_API TextLayout
+	{
+	public:
+		TextLayout();
+
+		TextLayout(String const& text, Font const& font, TextStyle const& style);
+
+		void Update(Font const& font);
+
+		void Update(String const& text, TextStyle const& style);
+
+		UINT32 GetLineCount();
+
+		Size GetLayoutSize() const;
+
+		inline TextStyle const& GetTextStyle() const				{ return style_; }
+
+	public:
+		inline TextFormat GetTextFormat() const						{ return text_format_; }
+
+		inline ComPtr<IDWriteTextLayout> GetTextLayout() const		{ return text_layout_; }
+
+		inline void SetTextLayout(ComPtr<IDWriteTextLayout> layout)	{ text_layout_ = layout; }
+
+		inline operator bool() const								{ return static_cast<bool>(text_layout_); }
+
+	protected:
+		TextStyle style_;
+		TextFormat text_format_;
+		ComPtr<IDWriteTextLayout> text_layout_;
 	};
 }

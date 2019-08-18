@@ -19,46 +19,44 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
+#include "../base/Resource.h"
+#include "win32/ComPtr.hpp"
+#include <dwrite.h>
 
 namespace kiwano
 {
-	// 序列帧
-	class KGE_API FrameSequence
-		: public ObjectBase
+	// 字体集
+	class FontCollection
 	{
 	public:
-		FrameSequence();
+		FontCollection();
 
-		explicit FrameSequence(
-			Vector<FramePtr> const& frames	/* 帧序列 */
-		);
+		FontCollection(String const& file);
 
-		virtual ~FrameSequence();
+		FontCollection(Vector<String> const& files);
 
-		// 添加关键帧
-		void AddFrame(
-			FramePtr frame
-		);
+		FontCollection(Resource const& res);
 
-		// 添加多个关键帧
-		void AddFrames(
-			Vector<FramePtr> const& frames
-		);
+		FontCollection(Vector<Resource> const& res_arr);
 
-		// 获取关键帧
-		FramePtr GetFrame(size_t index) const;
+		// 从本地文件加载字体
+		bool Load(String const& file);
 
-		// 获取关键帧
-		Vector<FramePtr> const& GetFrames() const;
+		// 从多个本地文件加载字体
+		bool Load(Vector<String> const& files);
 
-		// 获取帧动画的拷贝对象
-		FrameSequencePtr Clone() const;
+		// 从资源加载字体
+		bool Load(Resource const& res);
 
-		// 获取帧动画的倒转
-		FrameSequencePtr Reverse() const;
+		// 从多个资源加载字体
+		bool Load(Vector<Resource> const& res_arr);
+
+	public:
+		inline ComPtr<IDWriteFontCollection> GetFontCollection() const			{ return collection_; }
+
+		inline void SetFontCollection(ComPtr<IDWriteFontCollection> collection)	{ collection_ = collection; }
 
 	protected:
-		Vector<FramePtr>	frames_;
+		ComPtr<IDWriteFontCollection> collection_;
 	};
 }

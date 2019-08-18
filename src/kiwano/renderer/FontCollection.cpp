@@ -18,30 +18,56 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "../core/intrusive_ptr.hpp"
-#include <Unknwnbase.h>
-#include <type_traits>
+#include "FontCollection.h"
+#include "Renderer.h"
 
 namespace kiwano
 {
-	struct ComPtrManager
+	FontCollection::FontCollection()
 	{
-		static inline void AddRef(IUnknown* ptr)
-		{
-			if (ptr) ptr->AddRef();
-		}
+	}
 
-		static inline void Release(IUnknown* ptr)
-		{
-			if (ptr) ptr->Release();
-		}
-	};
+	FontCollection::FontCollection(String const& file)
+	{
+		Load(file);
+	}
 
-	// ComPtr<> is a smart pointer for COM
-	template<
-		typename _Ty,
-		typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-	using ComPtr = intrusive_ptr<_Ty, ComPtrManager>;
+	FontCollection::FontCollection(Vector<String> const& files)
+	{
+		Load(files);
+	}
 
+	FontCollection::FontCollection(Resource const& res)
+	{
+		Load(res);
+	}
+
+	FontCollection::FontCollection(Vector<Resource> const& res_arr)
+	{
+		Load(res_arr);
+	}
+
+	bool FontCollection::Load(String const& file)
+	{
+		Renderer::GetInstance()->CreateFontCollection(*this, { file });
+		return false;
+	}
+
+	bool FontCollection::Load(Vector<String> const& files)
+	{
+		Renderer::GetInstance()->CreateFontCollection(*this, files);
+		return false;
+	}
+
+	bool FontCollection::Load(Resource const& res)
+	{
+		Renderer::GetInstance()->CreateFontCollection(*this, { res });
+		return false;
+	}
+
+	bool FontCollection::Load(Vector<Resource> const& res_arr)
+	{
+		Renderer::GetInstance()->CreateFontCollection(*this, res_arr);
+		return false;
+	}
 }

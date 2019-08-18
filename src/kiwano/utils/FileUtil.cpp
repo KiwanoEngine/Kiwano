@@ -46,12 +46,11 @@ namespace kiwano
 		if (file_handle == INVALID_HANDLE_VALUE)
 			return false;
 
-		LPVOID buffer;
-		DWORD buffer_size;
-		if (res.Load(buffer, buffer_size))
+		Resource::Data data = res.GetData();
+		if (data)
 		{
 			DWORD written_bytes = 0;
-			::WriteFile(file_handle, buffer, buffer_size, &written_bytes, NULL);
+			::WriteFile(file_handle, data.buffer, data.size, &written_bytes, NULL);
 			::CloseHandle(file_handle);
 
 			return true;

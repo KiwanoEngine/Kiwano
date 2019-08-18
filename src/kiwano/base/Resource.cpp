@@ -21,116 +21,63 @@
 #include "Resource.h"
 #include "../base/Logger.h"
 
+#include <iostream>
 namespace kiwano
 {
-	Resource::Resource(LPCWSTR file_name)
-		: type_(Type::File)
-		, bin_name_(nullptr)
-		, bin_type_(nullptr)
+	Resource::Resource()
+		: id_(0)
+		, type_(nullptr)
 	{
-		if (file_name)
-			file_name_ = new (std::nothrow) String(file_name);
+
 	}
 
-	Resource::Resource(String const& file_name)
-		: type_(Type::File)
-        , bin_name_(nullptr)
-        , bin_type_(nullptr)
-	{
-		if (!file_name.empty())
-			file_name_ = new (std::nothrow) String(file_name);
-	}
-
-	Resource::Resource(LPCWSTR name, LPCWSTR type)
-		: type_(Type::Binary)
-		, bin_name_(name)
-		, bin_type_(type)
+	Resource::Resource(UINT id, LPCWSTR type)
+		: id_(id)
+		, type_(type)
 	{
 	}
 
-	Resource::Resource(Resource const & rhs)
+	Resource::Data Resource::GetData() const
 	{
-		operator=(rhs);
-	}
-
-	Resource::~Resource()
-	{
-		if (IsFileType() && file_name_)
-			delete file_name_;
-	}
-
-	size_t Resource::GetHashCode() const
-	{
-		if (type_ == Type::File)
-			return GetFileName().hash();
-		return std::hash<LPCWSTR>{}(bin_name_);
-	}
-
-	Resource & Resource::operator=(Resource const & rhs)
-	{
-		if (&rhs != this)
+		do
 		{
-			if (IsFileType() && file_name_)
+			if (data_.buffer && data_.size)
 			{
-				delete file_name_;
-				file_name_ = nullptr;
+				break;
 			}
 
-			type_ = rhs.type_;
-			if (IsFileType())
+			HRSRC res_info = FindResourceW(nullptr, MAKEINTRESOURCE(id_), type_);
+			if (res_info == nullptr)
 			{
-				if (rhs.file_name_)
-				{
-					file_name_ = new (std::nothrow) String(*rhs.file_name_);
-				}
+				KGE_ERROR_LOG(L"FindResource failed");
+				break;
 			}
-			else
+
+			HGLOBAL res_data = LoadResource(nullptr, res_info);
+			if (res_data == nullptr)
 			{
-				bin_name_ = rhs.bin_name_;
-				bin_type_ = rhs.bin_type_;
+				KGE_ERROR_LOG(L"LoadResource failed");
+				break;
 			}
-		}
-		return *this;
-	}
 
-	bool Resource::Load(LPVOID& buffer, DWORD& buffer_size) const
-	{
-		if (type_ != Type::Binary)
-		{
-			KGE_ERROR_LOG(L"Only binary resource can be loaded");
-			return false;
-		}
+			DWORD size = SizeofResource(nullptr, res_info);
+			if (size == 0)
+			{
+				KGE_ERROR_LOG(L"SizeofResource failed");
+				break;
+			}
 
-		HGLOBAL res_data;
-		HRSRC res_info;
+			LPVOID buffer = LockResource(res_data);
+			if (buffer == nullptr)
+			{
+				KGE_ERROR_LOG(L"LockResource failed");
+				break;
+			}
 
-		res_info = FindResourceW(nullptr, bin_name_, bin_type_);
-		if (res_info == nullptr)
-		{
-			KGE_ERROR_LOG(L"FindResource failed");
-			return false;
-		}
+			data_.buffer = static_cast<void*>(buffer);
+			data_.size = static_cast<UINT32>(size);
+		} while (0);
 
-		res_data = LoadResource(nullptr, res_info);
-		if (res_data == nullptr)
-		{
-			KGE_ERROR_LOG(L"LoadResource failed");
-			return false;
-		}
-
-		buffer_size = SizeofResource(nullptr, res_info);
-		if (buffer_size == 0)
-		{
-			KGE_ERROR_LOG(L"SizeofResource failed");
-			return false;
-		}
-
-		buffer = LockResource(res_data);
-		if (buffer == nullptr)
-		{
-			KGE_ERROR_LOG(L"LockResource failed");
-			return false;
-		}
-		return true;
+		return data_;
 	}
 }

@@ -19,20 +19,22 @@
 // THE SOFTWARE.
 
 #include "GifImage.h"
+#include "Renderer.h"
 #include "../base/Logger.h"
-#include "../utils/FileUtil.h"
 
 namespace kiwano
 {
 	GifImage::GifImage()
 		: frames_count_(0)
-		, disposal_type_(DisposalType::Unknown)
 		, width_in_pixels_(0)
 		, height_in_pixels_(0)
-		, frame_delay_(0)
-		, frame_position_{}
 		, bg_color_{}
 	{
+	}
+
+	GifImage::GifImage(String const& file_path)
+	{
+		Load(file_path);
 	}
 
 	GifImage::GifImage(Resource const& res)
@@ -41,236 +43,41 @@ namespace kiwano
 		Load(res);
 	}
 
-	bool GifImage::Load(Resource const& res)
+	bool GifImage::Load(String const& file_path)
 	{
-		HRESULT hr = S_OK;
+		Renderer::GetInstance()->CreateGifImage(*this, file_path);
 
-		frames_count_ = 0;
-		disposal_type_ = DisposalType::None;
-		
-		saved_frame_.reset();
-		decoder_.reset();
-
-		auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetWICImagingFactory();
-
-		if (res.IsFileType())
+		if (IsValid())
 		{
-#ifdef KGE_DEBUG
-			if (!FileUtil::ExistsFile(res.GetFileName().c_str()))
+			if (FAILED(GetGlobalMetadata()))
 			{
-				KGE_WARNING_LOG(L"Gif file '%s' not found!", res.GetFileName().c_str());
+				SetDecoder(nullptr);
 				return false;
 			}
-#endif
-
-			hr = factory->CreateDecoderFromFilename(
-				res.GetFileName().c_str(),
-				nullptr,
-				GENERIC_READ,
-				WICDecodeMetadataCacheOnLoad,
-				&decoder_);
+			return true;
 		}
-		else
-		{
-			LPVOID buffer;
-			DWORD buffer_size;
-			HRESULT hr = res.Load(buffer, buffer_size) ? S_OK : E_FAIL;
-
-			ComPtr<IWICStream> stream;
-
-			if (SUCCEEDED(hr))
-			{
-				hr = factory->CreateStream(&stream);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				hr = stream->InitializeFromMemory(
-					static_cast<WICInProcPointer>(buffer),
-					buffer_size
-				);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				hr = factory->CreateDecoderFromStream(
-					stream.get(),
-					nullptr,
-					WICDecodeMetadataCacheOnLoad,
-					&decoder_
-				);
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = GetGlobalMetadata();
-		}
-
-		return SUCCEEDED(hr);
+		return false;
 	}
 
-	HRESULT GifImage::GetRawFrame(UINT frame_index)
+	bool GifImage::Load(Resource const& res)
 	{
-		ComPtr<IWICFormatConverter> converter;
-		ComPtr<IWICBitmapFrameDecode> wic_frame;
-		ComPtr<IWICMetadataQueryReader> metadata_reader;
+		Renderer::GetInstance()->CreateGifImage(*this, res);
 
-		PROPVARIANT prop_val;
-		PropVariantInit(&prop_val);
-
-		// Retrieve the current frame
-		HRESULT hr = decoder_->GetFrame(frame_index, &wic_frame);
-		if (SUCCEEDED(hr))
+		if (IsValid())
 		{
-			// Format convert to 32bppPBGRA which D2D expects
-			auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetWICImagingFactory();
-			hr = factory->CreateFormatConverter(&converter);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = converter->Initialize(
-				wic_frame.get(),
-				GUID_WICPixelFormat32bppPBGRA,
-				WICBitmapDitherTypeNone,
-				nullptr,
-				0.f,
-				WICBitmapPaletteTypeCustom);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			auto ctx = Renderer::GetInstance()->GetD2DDeviceResources()->GetDeviceContext();
-
-			// Create a D2DBitmap from IWICBitmapSource
-			raw_frame_.reset();
-			hr = ctx->CreateBitmapFromWicBitmap(
-				converter.get(),
-				nullptr,
-				&raw_frame_);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			// Get Metadata Query Reader from the frame
-			hr = wic_frame->GetMetadataQueryReader(&metadata_reader);
-		}
-
-		// Get the Metadata for the current frame
-		if (SUCCEEDED(hr))
-		{
-			hr = metadata_reader->GetMetadataByName(L"/imgdesc/Left", &prop_val);
-			if (SUCCEEDED(hr))
+			if (FAILED(GetGlobalMetadata()))
 			{
-				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
-				if (SUCCEEDED(hr))
-				{
-					frame_position_.left = static_cast<float>(prop_val.uiVal);
-				}
-				PropVariantClear(&prop_val);
+				SetDecoder(nullptr);
+				return false;
 			}
+			return true;
 		}
+		return false;
+	}
 
-		if (SUCCEEDED(hr))
-		{
-			hr = metadata_reader->GetMetadataByName(L"/imgdesc/Top", &prop_val);
-			if (SUCCEEDED(hr))
-			{
-				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
-				if (SUCCEEDED(hr))
-				{
-					frame_position_.top = static_cast<float>(prop_val.uiVal);
-				}
-				PropVariantClear(&prop_val);
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = metadata_reader->GetMetadataByName(L"/imgdesc/Width", &prop_val);
-			if (SUCCEEDED(hr))
-			{
-				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
-				if (SUCCEEDED(hr))
-				{
-					frame_position_.right = static_cast<float>(prop_val.uiVal)
-						+ frame_position_.left;
-				}
-				PropVariantClear(&prop_val);
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = metadata_reader->GetMetadataByName(L"/imgdesc/Height", &prop_val);
-			if (SUCCEEDED(hr))
-			{
-				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
-				if (SUCCEEDED(hr))
-				{
-					frame_position_.bottom = static_cast<float>(prop_val.uiVal)
-						+ frame_position_.top;
-				}
-				PropVariantClear(&prop_val);
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			frame_delay_ = 0;
-
-			hr = metadata_reader->GetMetadataByName(
-				L"/grctlext/Delay",
-				&prop_val);
-
-			if (SUCCEEDED(hr))
-			{
-				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
-				if (SUCCEEDED(hr))
-				{
-					hr = UIntMult(prop_val.uiVal, 10, &frame_delay_);
-				}
-				PropVariantClear(&prop_val);
-			}
-			else
-			{
-				frame_delay_ = 0;
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				// 插入一个强制延迟
-				if (frame_delay_ < 90)
-				{
-					frame_delay_ = 90;
-				}
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = metadata_reader->GetMetadataByName(
-				L"/grctlext/Disposal",
-				&prop_val);
-
-			if (SUCCEEDED(hr))
-			{
-				hr = (prop_val.vt == VT_UI1) ? S_OK : E_FAIL;
-				if (SUCCEEDED(hr))
-				{
-					disposal_type_ = DisposalType(prop_val.bVal);
-				}
-			}
-			else
-			{
-				// 获取 DisposalType 失败，可能图片是只有一帧的图片
-				disposal_type_ = DisposalType::Unknown;
-			}
-		}
-
-		::PropVariantClear(&prop_val);
-		return hr;
+	bool GifImage::IsValid() const
+	{
+		return decoder_ != nullptr;
 	}
 
 	HRESULT GifImage::GetGlobalMetadata()
@@ -284,7 +91,12 @@ namespace kiwano
 		ComPtr<IWICMetadataQueryReader> metadata_reader;
 
 		// 获取帧数量
-		HRESULT hr = decoder_->GetFrameCount(&frames_count_);
+		HRESULT hr = decoder_ ? S_OK : E_FAIL;
+
+		if (SUCCEEDED(hr))
+		{
+			hr = decoder_->GetFrameCount(&frames_count_);
+		}
 
 		if (SUCCEEDED(hr))
 		{
@@ -297,7 +109,7 @@ namespace kiwano
 			if (FAILED(GetBackgroundColor(metadata_reader.get())))
 			{
 				// 如果未能获得颜色，则默认为透明
-				bg_color_ = D2D1::ColorF(0, 0.f);
+				bg_color_ = Color(0, 0.f);
 			}
 		}
 
@@ -305,9 +117,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			// 获取宽度
-			hr = metadata_reader->GetMetadataByName(
-				L"/logscrdesc/Width",
-				&prop_val);
+			hr = metadata_reader->GetMetadataByName(L"/logscrdesc/Width", &prop_val);
 
 			if (SUCCEEDED(hr))
 			{
@@ -323,9 +133,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			// 获取高度
-			hr = metadata_reader->GetMetadataByName(
-				L"/logscrdesc/Height",
-				&prop_val);
+			hr = metadata_reader->GetMetadataByName(L"/logscrdesc/Height", &prop_val);
 
 			if (SUCCEEDED(hr))
 			{
@@ -341,9 +149,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			// 获得像素纵横比
-			hr = metadata_reader->GetMetadataByName(
-				L"/logscrdesc/PixelAspectRatio",
-				&prop_val);
+			hr = metadata_reader->GetMetadataByName(L"/logscrdesc/PixelAspectRatio", &prop_val);
 
 			if (SUCCEEDED(hr))
 			{
@@ -383,101 +189,17 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT GifImage::DisposeCurrentFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt)
+	HRESULT GifImage::GetBackgroundColor(ComPtr<IWICMetadataQueryReader> metadata_reader)
 	{
-		HRESULT hr = S_OK;
-
-		switch (disposal_type_)
-		{
-		case DisposalType::Unknown:
-		case DisposalType::None:
-			break;
-		case DisposalType::Background:
-			// 用背景颜色清除当前原始帧覆盖的区域
-			hr = ClearCurrentFrameArea(frame_rt);
-			break;
-		case DisposalType::Previous:
-			// 恢复先前构图的帧
-			hr = RestoreSavedFrame(frame_rt);
-			break;
-		default:
-			hr = E_FAIL;
-		}
-		return hr;
-	}
-
-	HRESULT GifImage::SaveComposedFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt)
-	{
-		HRESULT hr = S_OK;
-
-		ComPtr<ID2D1Bitmap> frame_to_be_saved;
-
-		hr = frame_rt->GetBitmap(&frame_to_be_saved);
-		if (SUCCEEDED(hr))
-		{
-			if (saved_frame_ == nullptr)
-			{
-				auto size = frame_to_be_saved->GetPixelSize();
-				auto prop = D2D1::BitmapProperties(frame_to_be_saved->GetPixelFormat());
-
-				hr = frame_rt->CreateBitmap(size, prop, &saved_frame_);
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = saved_frame_->CopyFromBitmap(nullptr, frame_to_be_saved.get(), nullptr);
-		}
-		return hr;
-	}
-
-	HRESULT GifImage::RestoreSavedFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt)
-	{
-		HRESULT hr = S_OK;
-
-		ComPtr<ID2D1Bitmap> frame_to_copy_to;
-
-		hr = saved_frame_ ? S_OK : E_FAIL;
-
-		if (SUCCEEDED(hr))
-		{
-			hr = frame_rt->GetBitmap(&frame_to_copy_to);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = frame_to_copy_to->CopyFromBitmap(nullptr, saved_frame_.get(), nullptr);
-		}
-
-		return hr;
-	}
-
-	HRESULT GifImage::ClearCurrentFrameArea(ComPtr<ID2D1BitmapRenderTarget> frame_rt)
-	{
-		frame_rt->BeginDraw();
-
-		frame_rt->PushAxisAlignedClip(&frame_position_, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-		frame_rt->Clear(bg_color_);
-		frame_rt->PopAxisAlignedClip();
-
-		return frame_rt->EndDraw();
-	}
-
-	HRESULT GifImage::GetBackgroundColor(IWICMetadataQueryReader* metadata_reader)
-	{
-		DWORD bgcolor = 0;
 		BYTE bg_index = 0;
 		WICColor bgcolors[256];
 		UINT colors_copied = 0;
+		ComPtr<IWICPalette> wic_palette;
 
 		PROPVARIANT prop_val;
 		PropVariantInit(&prop_val);
 
-		ComPtr<IWICPalette> wic_palette;
-
-		HRESULT hr = metadata_reader->GetMetadataByName(
-			L"/logscrdesc/GlobalColorTableFlag",
-			&prop_val);
+		HRESULT hr = metadata_reader->GetMetadataByName(L"/logscrdesc/GlobalColorTableFlag", &prop_val);
 
 		if (SUCCEEDED(hr))
 		{
@@ -487,9 +209,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = metadata_reader->GetMetadataByName(
-				L"/logscrdesc/BackgroundColorIndex",
-				&prop_val);
+			hr = metadata_reader->GetMetadataByName(L"/logscrdesc/BackgroundColorIndex", &prop_val);
 
 			if (SUCCEEDED(hr))
 			{
@@ -523,18 +243,174 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			// 检查下标
 			hr = (bg_index >= colors_copied) ? E_FAIL : S_OK;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			bgcolor = bgcolors[bg_index];
-
 			// 转换为 ARGB 格式
-			float alpha = (bgcolor >> 24) / 255.f;
-			bg_color_ = D2D1::ColorF(bgcolor, alpha);
+			float alpha = (bgcolors[bg_index] >> 24) / 255.f;
+			bg_color_ = Color(bgcolors[bg_index], alpha);
 		}
+		return hr;
+	}
+
+	HRESULT GifImage::GetRawFrame(UINT frame_index, Image& raw_frame, Rect& frame_rect, Duration& delay, DisposalType& disposal_type)
+	{
+		ComPtr<IWICFormatConverter> converter;
+		ComPtr<IWICBitmapFrameDecode> wic_frame;
+		ComPtr<IWICMetadataQueryReader> metadata_reader;
+
+		PROPVARIANT prop_val;
+		PropVariantInit(&prop_val);
+
+		// Retrieve the current frame
+		HRESULT hr = decoder_->GetFrame(frame_index, &wic_frame);
+		if (SUCCEEDED(hr))
+		{
+			// Format convert to 32bppPBGRA which D2D expects
+			auto factory = Renderer::GetInstance()->GetD2DDeviceResources()->GetWICImagingFactory();
+			hr = factory->CreateFormatConverter(&converter);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = converter->Initialize(
+				wic_frame.get(),
+				GUID_WICPixelFormat32bppPBGRA,
+				WICBitmapDitherTypeNone,
+				nullptr,
+				0.f,
+				WICBitmapPaletteTypeCustom);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			auto ctx = Renderer::GetInstance()->GetD2DDeviceResources()->GetDeviceContext();
+
+			// Create a D2DBitmap from IWICBitmapSource
+			ComPtr<ID2D1Bitmap> raw_bitmap;
+			hr = ctx->CreateBitmapFromWicBitmap(
+				converter.get(),
+				nullptr,
+				&raw_bitmap
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				raw_frame.SetBitmap(raw_bitmap);
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			// Get Metadata Query Reader from the frame
+			hr = wic_frame->GetMetadataQueryReader(&metadata_reader);
+		}
+
+		// Get the Metadata for the current frame
+		if (SUCCEEDED(hr))
+		{
+			hr = metadata_reader->GetMetadataByName(L"/imgdesc/Left", &prop_val);
+			if (SUCCEEDED(hr))
+			{
+				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+				if (SUCCEEDED(hr))
+				{
+					frame_rect.origin.x = static_cast<float>(prop_val.uiVal);
+				}
+				PropVariantClear(&prop_val);
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = metadata_reader->GetMetadataByName(L"/imgdesc/Top", &prop_val);
+			if (SUCCEEDED(hr))
+			{
+				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+				if (SUCCEEDED(hr))
+				{
+					frame_rect.origin.y = static_cast<float>(prop_val.uiVal);
+				}
+				PropVariantClear(&prop_val);
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = metadata_reader->GetMetadataByName(L"/imgdesc/Width", &prop_val);
+			if (SUCCEEDED(hr))
+			{
+				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+				if (SUCCEEDED(hr))
+				{
+					frame_rect.size.x = static_cast<float>(prop_val.uiVal);
+				}
+				PropVariantClear(&prop_val);
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = metadata_reader->GetMetadataByName(L"/imgdesc/Height", &prop_val);
+			if (SUCCEEDED(hr))
+			{
+				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+				if (SUCCEEDED(hr))
+				{
+					frame_rect.size.y = static_cast<float>(prop_val.uiVal);
+				}
+				PropVariantClear(&prop_val);
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = metadata_reader->GetMetadataByName(L"/grctlext/Delay", &prop_val);
+
+			if (SUCCEEDED(hr))
+			{
+				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+
+				if (SUCCEEDED(hr))
+				{
+					UINT udelay = 0;
+					hr = UIntMult(prop_val.uiVal, 10, &udelay);
+					if (SUCCEEDED(hr))
+					{
+						delay.SetMilliseconds(static_cast<long>(udelay));
+					}
+				}
+				PropVariantClear(&prop_val);
+			}
+			else
+			{
+				delay = 0;
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = metadata_reader->GetMetadataByName(L"/grctlext/Disposal", &prop_val);
+
+			if (SUCCEEDED(hr))
+			{
+				hr = (prop_val.vt == VT_UI1) ? S_OK : E_FAIL;
+				if (SUCCEEDED(hr))
+				{
+					disposal_type = DisposalType(prop_val.bVal);
+				}
+				::PropVariantClear(&prop_val);
+			}
+			else
+			{
+				// 获取 DisposalType 失败，可能图片是只有一帧的图片
+				disposal_type = DisposalType::Unknown;
+			}
+		}
+
+		::PropVariantClear(&prop_val);
 		return hr;
 	}
 

@@ -27,20 +27,25 @@ namespace kiwano
 	{
 	}
 
+	Frame::Frame(String const& file_path)
+	{
+		Load(file_path);
+	}
+
 	Frame::Frame(Resource const& res)
 	{
 		Load(res);
 	}
 
-	Frame::Frame(ImagePtr image)
-		: image_(image)
+	Frame::Frame(Image const& image)
 	{
+		SetImage(image);
 	}
 
-	bool Frame::Load(Resource const& res)
+	bool Frame::Load(String const& file_path)
 	{
-		ImagePtr image = ImageCache::GetInstance()->AddImage(res);
-		if (image && image->IsValid())
+		Image image = ImageCache::GetInstance()->AddOrGetImage(file_path);
+		if (image.IsValid())
 		{
 			SetImage(image);
 			return true;
@@ -48,11 +53,22 @@ namespace kiwano
 		return false;
 	}
 
-	void Frame::Crop(Rect const& crop_rect)
+	bool Frame::Load(Resource const& res)
 	{
-		if (image_)
+		Image image = ImageCache::GetInstance()->AddOrGetImage(res);
+		if (image.IsValid())
 		{
-			auto bitmap_size = image_->GetSize();
+			SetImage(image);
+			return true;
+		}
+		return false;
+	}
+
+	void Frame::SetCropRect(Rect const& crop_rect)
+	{
+		if (image_.IsValid())
+		{
+			auto bitmap_size = image_.GetSize();
 			crop_rect_.origin.x = std::min(std::max(crop_rect.origin.x, 0.f), bitmap_size.x);
 			crop_rect_.origin.y = std::min(std::max(crop_rect.origin.y, 0.f), bitmap_size.y);
 			crop_rect_.size.x = std::min(std::max(crop_rect.size.x, 0.f), bitmap_size.x - crop_rect.origin.x);
@@ -60,14 +76,14 @@ namespace kiwano
 		}
 	}
 
-	void Frame::SetImage(ImagePtr image)
+	void Frame::SetImage(Image const& image)
 	{
 		image_ = image;
-		if (image_)
+		if (image_.IsValid())
 		{
 			crop_rect_.origin.x = crop_rect_.origin.y = 0;
-			crop_rect_.size.x = image_->GetWidth();
-			crop_rect_.size.y = image_->GetHeight();
+			crop_rect_.size.x = image_.GetWidth();
+			crop_rect_.size.y = image_.GetHeight();
 		}
 	}
 }

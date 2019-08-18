@@ -19,27 +19,25 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "helper.hpp"
-#include <dwrite.h>
+#include <Unknwnbase.h>
 
 namespace kiwano
 {
-	interface DWRITE_DECLARE_INTERFACE("b293e798-9916-4096-a3c1-e5d4039dfa64") ITextRenderer
-		: public IDWriteTextRenderer
+	MIDL_INTERFACE("fb99fa64-d9cf-4e0e-9c75-90514797b01d")
+	ID3DDeviceResourcesBase : public IUnknown
 	{
 	public:
-		static KGE_API HRESULT Create(
-			_Out_ ITextRenderer** ppTextRenderer,
-			_In_ ID2D1RenderTarget* pRT
-		);
+		virtual HRESULT Present(bool vsync) = 0;
 
-		STDMETHOD_(void, SetTextStyle)(
-			_In_ FLOAT opacity,
-            _In_ CONST D2D1_COLOR_F &fillColor,
-            _In_ BOOL outline,
-            _In_ CONST D2D1_COLOR_F &outlineColor,
-            _In_ FLOAT outlineWidth,
-			_In_ ID2D1StrokeStyle* outlineJoin
-		) PURE;
+		virtual HRESULT ClearRenderTarget(Color& clear_color) = 0;
+
+		virtual HRESULT HandleDeviceLost() = 0;
+
+		virtual HRESULT SetLogicalSize(Size logical_size) = 0;
+
+		virtual HRESULT SetDpi(float dpi) = 0;
+
+		virtual void DiscardResources() = 0;
 	};
+	
 }

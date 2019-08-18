@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2016-2019 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,59 +19,41 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
-#include "RefCounter.hpp"
-#include "SmartPtr.hpp"
+#include "Geometry.h"
 
 namespace kiwano
 {
-	KGE_DECLARE_SMART_PTR(Object);
-
-	class KGE_API Object
-		: public RefCounter
+	// Í¼²ã
+	class KGE_API LayerArea
 	{
 	public:
-		Object();
+		LayerArea();
 
-		virtual ~Object();
+		bool IsValid() const;
 
-		void* GetUserData() const;
+		Size GetSize() const;
 
-		void SetUserData(void* data);
+		inline Rect const& GetAreaRect() const				{ return area_; }
 
-		void SetName(String const& name);
+		inline void SetAreaRect(Rect const& area)			{ area_ = area; }
 
-		inline String GetName() const					{ if (name_) return *name_; return String(); }
+		inline float GetOpacity() const						{ return opacity_; }
 
-		inline bool IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
+		inline void SetOpacity(float opacity)				{ opacity_ = opacity; }
 
-		inline unsigned int GetObjectID() const			{ return id_; }
+		inline Geometry const& GetMaskGeometry() const		{ return mask_; }
 
-		String DumpObject();
-
-	public:
-		static bool IsTracingLeaks();
-
-		static void StartTracingLeaks();
-
-		static void StopTracingLeaks();
-
-		static void DumpTracingObjects();
+		inline void SetMaskGeometry(Geometry const& mask)	{ mask_ = mask; }
 
 	public:
-		static Vector<Object*>& __GetTracingObjects();
+		inline ComPtr<ID2D1Layer> GetLayer() const			{ return layer_; }
 
-		static void __AddObjectToTracingList(Object*);
+		inline void SetLayer(ComPtr<ID2D1Layer> layer)		{ layer_ = layer; }
 
-		static void __RemoveObjectFromTracingList(Object*);
-
-	private:
-		bool tracing_leak_;
-		void* user_data_;
-		String* name_;
-
-		const unsigned int id_;
-		static unsigned int last_object_id;
+	protected:
+		Rect area_;
+		float opacity_;
+		Geometry mask_;
+		ComPtr<ID2D1Layer> layer_;
 	};
 }

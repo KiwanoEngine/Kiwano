@@ -19,46 +19,59 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
+#include "../macros.h"
+#include "../core/core.h"
+#include "RefCounter.hpp"
+#include "SmartPtr.hpp"
 
 namespace kiwano
 {
-	// 序列帧
-	class KGE_API FrameSequence
-		: public ObjectBase
+	KGE_DECLARE_SMART_PTR(ObjectBase);
+
+	class KGE_API ObjectBase
+		: public RefCounter
 	{
 	public:
-		FrameSequence();
+		ObjectBase();
 
-		explicit FrameSequence(
-			Vector<FramePtr> const& frames	/* 帧序列 */
-		);
+		virtual ~ObjectBase();
 
-		virtual ~FrameSequence();
+		void* GetUserData() const;
 
-		// 添加关键帧
-		void AddFrame(
-			FramePtr frame
-		);
+		void SetUserData(void* data);
 
-		// 添加多个关键帧
-		void AddFrames(
-			Vector<FramePtr> const& frames
-		);
+		void SetName(String const& name);
 
-		// 获取关键帧
-		FramePtr GetFrame(size_t index) const;
+		inline String GetName() const					{ if (name_) return *name_; return String(); }
 
-		// 获取关键帧
-		Vector<FramePtr> const& GetFrames() const;
+		inline bool IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
 
-		// 获取帧动画的拷贝对象
-		FrameSequencePtr Clone() const;
+		inline unsigned int GetObjectID() const			{ return id_; }
 
-		// 获取帧动画的倒转
-		FrameSequencePtr Reverse() const;
+		String DumpObject();
 
-	protected:
-		Vector<FramePtr>	frames_;
+	public:
+		static bool IsTracingLeaks();
+
+		static void StartTracingLeaks();
+
+		static void StopTracingLeaks();
+
+		static void DumpTracingObjects();
+
+	public:
+		static Vector<ObjectBase*>& __GetTracingObjects();
+
+		static void __AddObjectToTracingList(ObjectBase*);
+
+		static void __RemoveObjectFromTracingList(ObjectBase*);
+
+	private:
+		bool tracing_leak_;
+		void* user_data_;
+		String* name_;
+
+		const unsigned int id_;
+		static unsigned int last_object_id;
 	};
 }

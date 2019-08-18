@@ -87,7 +87,7 @@
 
 #ifndef KGE_ASSERT
 #	ifdef KGE_DEBUG
-#		define KGE_ASSERT(EXPR) assert(EXPR)
+#		define KGE_ASSERT(EXPR) do { (void)((!!(EXPR)) || (_wassert(_CRT_WIDE(#EXPR), _CRT_WIDE(__FUNCTION__), (unsigned)(__LINE__)), 0)); } while(0)
 #	else
 #		define KGE_ASSERT __noop
 #	endif

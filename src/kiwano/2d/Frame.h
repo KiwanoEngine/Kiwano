@@ -25,17 +25,25 @@ namespace kiwano
 {
 	// 帧图像
 	class KGE_API Frame
-		: public Object
+		: public ObjectBase
 	{
 	public:
 		Frame();
+
+		explicit Frame(
+			String const& file_path
+		);
 
 		explicit Frame(
 			Resource const& res
 		);
 
 		explicit Frame(
-			ImagePtr image
+			Image const& image
+		);
+
+		bool Load(
+			String const& file_path
 		);
 
 		bool Load(
@@ -43,8 +51,13 @@ namespace kiwano
 		);
 
 		// 裁剪矩形
-		void Crop(
+		void SetCropRect(
 			Rect const& crop_rect	/* 裁剪矩形 */
+		);
+
+		// 设置位图
+		void SetImage(
+			Image const& image
 		);
 
 		// 获取宽度
@@ -63,13 +76,10 @@ namespace kiwano
 		inline Rect const& GetCropRect() const	{ return crop_rect_; }
 
 		// 获取位图
-		inline ImagePtr GetImage() const		{ return image_; }
-
-		// 设置位图
-		void SetImage(ImagePtr image);
+		inline Image const& GetImage() const	{ return image_; }
 
 	protected:
-		ImagePtr image_;
+		Image image_;
 		Rect crop_rect_;
 	};
 }

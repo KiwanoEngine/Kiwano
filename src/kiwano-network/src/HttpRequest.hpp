@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/Function.hpp>
 #include <kiwano/core/basic_json.hpp>
-#include <kiwano/base/Object.h>
+#include <kiwano/base/ObjectBase.h>
 
 namespace kiwano
 {
@@ -30,7 +30,7 @@ namespace kiwano
 		typedef Function<void(HttpRequestPtr, HttpResponsePtr)> ResponseCallback;
 
 		class KGE_API HttpRequest
-			: public Object
+			: public ObjectBase
 		{
 		public:
 			enum class Type

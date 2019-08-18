@@ -27,35 +27,11 @@ namespace kiwano
 	Canvas::Canvas()
 		: cache_expired_(false)
 		, stroke_width_(1.0f)
+		, fill_color_(0, 0, 0)
+		, stroke_color_(Color::White)
+		, stroke_style_(StrokeStyle::Miter)
 	{
-		auto ctx = Renderer::GetInstance()->GetD2DDeviceResources()->GetDeviceContext();
-
-		ThrowIfFailed(
-			ctx->CreateCompatibleRenderTarget(&render_target_)
-		);
-
-		ThrowIfFailed(
-			render_target_->CreateSolidColorBrush(
-				D2D1::ColorF(0, 0, 0, 0),
-				D2D1::BrushProperties(),
-				&fill_brush_)
-		);
-
-		ThrowIfFailed(
-			render_target_->CreateSolidColorBrush(
-				D2D1::ColorF(Color::White),
-				D2D1::BrushProperties(),
-				&stroke_brush_)
-		);
-
-		ThrowIfFailed(
-			ITextRenderer::Create(
-				&text_renderer_,
-				render_target_.get()
-			)
-		);
-
-		SetTextStyle(Font{}, TextStyle{});
+		Renderer::GetInstance()->CreateImageRenderTarget(rt_);
 	}
 
 	Canvas::Canvas(float width, float height)
@@ -75,45 +51,36 @@ namespace kiwano
 
 	void Canvas::BeginDraw()
 	{
-		render_target_->BeginDraw();
+		rt_.BeginDraw();
 	}
 
 	void Canvas::EndDraw()
 	{
-		ThrowIfFailed(
-			render_target_->EndDraw()
-		);
+		rt_.EndDraw();
 		cache_expired_ = true;
 	}
 
 	void Canvas::OnRender(Renderer* renderer)
 	{
-		if (cache_expired_)
-		{
-			GetBitmap();
-		}
+		UpdateCache();
 		
-		if (bitmap_cached_)
+		if (image_cached_.IsValid())
 		{
 			PrepareRender(renderer);
 
-			Rect bitmap_rect(0.f, 0.f, bitmap_cached_->GetSize().width, bitmap_cached_->GetSize().height);
-			renderer->DrawBitmap(
-				bitmap_cached_,
-				bitmap_rect,
-				bitmap_rect
-			);
+			Rect bitmap_rect(0.f, 0.f, image_cached_.GetWidth(), image_cached_.GetHeight());
+			renderer->DrawImage(image_cached_, bitmap_rect, bitmap_rect);
 		}
 	}
 
 	void Canvas::SetStrokeColor(Color const& color)
 	{
-		stroke_brush_->SetColor(DX::ConvertToColorF(color));
+		stroke_color_ = color;
 	}
 
 	void Canvas::SetFillColor(Color const& color)
 	{
-		fill_brush_->SetColor(DX::ConvertToColorF(color));
+		fill_color_ = color;
 	}
 
 	void Canvas::SetStrokeWidth(float width)
@@ -121,39 +88,34 @@ namespace kiwano
 		stroke_width_ = std::max(width, 0.f);
 	}
 
-	void Canvas::SetOutlineJoinStyle(StrokeStyle outline_join)
+	void Canvas::SetStrokeStyle(StrokeStyle stroke_style)
 	{
-		outline_join_style_ = Renderer::GetInstance()->GetD2DDeviceResources()->GetStrokeStyle(outline_join);
+		stroke_style_ = stroke_style;
 	}
 
-	void Canvas::SetTextStyle(Font const& font, TextStyle const & text_style)
+	void Canvas::SetTextFont(Font const& font)
 	{
 		text_font_ = font;
+	}
+
+	void Canvas::SetTextStyle(TextStyle const & text_style)
+	{
 		text_style_ = text_style;
+	}
 
-		text_renderer_->SetTextStyle(
-			1.f,
-			DX::ConvertToColorF(text_style_.color),
-			text_style_.outline,
-			DX::ConvertToColorF(text_style_.outline_color),
-			text_style_.outline_width,
-			Renderer::GetInstance()->GetD2DDeviceResources()->GetStrokeStyle(text_style_.outline_stroke)
-		);
-
-		// clear text format
-		text_format_ = nullptr;
+	void Canvas::SetBrushOpacity(float opacity)
+	{
+		rt_.SetOpacity(opacity);
 	}
 
 	Color Canvas::GetStrokeColor() const
 	{
-		auto color_f = stroke_brush_->GetColor();
-		return Color{ color_f.r, color_f.g, color_f.b, color_f.a };
+		return stroke_color_;
 	}
 
 	Color Canvas::GetFillColor() const
 	{
-		auto color_f = fill_brush_->GetColor();
-		return Color{ color_f.r, color_f.g, color_f.b, color_f.a };
+		return fill_color_;
 	}
 
 	float Canvas::GetStrokeWidth() const
@@ -161,324 +123,219 @@ namespace kiwano
 		return stroke_width_;
 	}
 
+	float Canvas::GetBrushOpacity() const
+	{
+		return rt_.GetOpacity();
+	}
+
+	void Canvas::SetBrushTransform(Transform const& transform)
+	{
+		Matrix3x2 matrix = Matrix3x2::SRT(transform.position, transform.scale, transform.rotation);
+		if (!transform.skew.IsOrigin())
+		{
+			matrix = Matrix3x2::Skewing(transform.skew) * matrix;
+		}
+
+		rt_.SetTransform(matrix);
+	}
+
 	void Canvas::SetBrushTransform(Matrix3x2 const & transform)
 	{
-		render_target_->SetTransform(DX::ConvertToMatrix3x2F(transform));
+		rt_.SetTransform(transform);
 	}
 
-	void Canvas::DrawLine(const Point & begin, const Point & end)
+	void Canvas::DrawLine(Point const& begin, Point const& end)
 	{
-		render_target_->DrawLine(
-			D2D1::Point2F(begin.x, begin.y),
-			D2D1::Point2F(end.x, end.y),
-			stroke_brush_.get(),
+		rt_.DrawLine(
+			begin,
+			end,
+			stroke_color_,
 			stroke_width_,
-			outline_join_style_.get()
+			stroke_style_
 		);
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawCircle(const Point & center, float radius)
+	void Canvas::DrawCircle(Point const& center, float radius)
 	{
-		render_target_->DrawEllipse(
-			D2D1::Ellipse(
-				D2D1::Point2F(
-					center.x,
-					center.y
-				),
-				radius,
-				radius
-			),
-			stroke_brush_.get(),
+		rt_.DrawEllipse(
+			center,
+			Vec2(radius, radius),
+			stroke_color_,
 			stroke_width_,
-			outline_join_style_.get()
+			stroke_style_
 		);
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawEllipse(const Point & center, float radius_x, float radius_y)
+	void Canvas::DrawEllipse(Point const& center, Vec2 const& radius)
 	{
-		render_target_->DrawEllipse(
-			D2D1::Ellipse(
-				D2D1::Point2F(
-					center.x,
-					center.y
-				),
-				radius_x,
-				radius_y
-			),
-			stroke_brush_.get(),
+		rt_.DrawEllipse(
+			center,
+			radius,
+			stroke_color_,
 			stroke_width_,
-			outline_join_style_.get()
+			stroke_style_
 		);
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawRect(const Rect & rect)
+	void Canvas::DrawRect(Rect const& rect)
 	{
-		render_target_->DrawRectangle(
-			D2D1::RectF(
-				rect.origin.x,
-				rect.origin.y,
-				rect.origin.x + rect.size.x,
-				rect.origin.y + rect.size.y
-			),
-			stroke_brush_.get(),
+		rt_.DrawRectangle(
+			rect,
+			stroke_color_,
 			stroke_width_,
-			outline_join_style_.get()
+			stroke_style_
 		);
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawRoundedRect(const Rect & rect, float radius_x, float radius_y)
+	void Canvas::DrawRoundedRect(Rect const& rect, Vec2 const& radius)
 	{
-		render_target_->DrawRoundedRectangle(
-			D2D1::RoundedRect(
-				D2D1::RectF(
-					rect.origin.x,
-					rect.origin.y,
-					rect.origin.x + rect.size.x,
-					rect.origin.y + rect.size.y
-				),
-				radius_x,
-				radius_y
-			),
-			stroke_brush_.get(),
+		rt_.DrawRoundedRectangle(
+			rect,
+			radius,
+			stroke_color_,
 			stroke_width_,
-			outline_join_style_.get()
+			stroke_style_
 		);
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawImage(ImagePtr image, float opacity)
+	void Canvas::FillCircle(Point const& center, float radius)
 	{
-		if (image && image->GetBitmap())
+		rt_.FillEllipse(
+			center,
+			Vec2(radius, radius),
+			fill_color_
+		);
+		cache_expired_ = true;
+	}
+
+	void Canvas::FillEllipse(Point const& center, Vec2 const& radius)
+	{
+		rt_.FillEllipse(
+			center,
+			radius,
+			fill_color_
+		);
+		cache_expired_ = true;
+	}
+
+	void Canvas::FillRect(Rect const& rect)
+	{
+		rt_.FillRectangle(
+			rect,
+			fill_color_
+		);
+		cache_expired_ = true;
+	}
+
+	void Canvas::FillRoundedRect(Rect const& rect, Vec2 const& radius)
+	{
+		rt_.FillRoundedRectangle(
+			rect,
+			radius,
+			fill_color_
+		);
+		cache_expired_ = true;
+	}
+
+	void Canvas::DrawImage(Image const& image, const Rect* src_rect, const Rect* dest_rect)
+	{
+		if (image.IsValid())
 		{
-			render_target_->DrawBitmap(
-				image->GetBitmap().get(),
-				D2D1::RectF(0, 0, image->GetWidth(), image->GetHeight()),
-				opacity,
-				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				D2D1::RectF(0, 0, image->GetWidth(), image->GetHeight())
-			);
+			rt_.DrawImage(image, src_rect, dest_rect);
 			cache_expired_ = true;
 		}
 	}
 
-	void Canvas::DrawText(String const & text, Point const & point)
+	void Canvas::DrawText(String const& text, Point const& point)
 	{
 		if (text.empty())
 			return;
 
-		if (!text_format_)
-		{
-			ThrowIfFailed(
-				Renderer::GetInstance()->GetD2DDeviceResources()->CreateTextFormat(
-					text_format_,
-					text_font_,
-					text_style_
-				)
-			);
-		}
+		TextLayout layout(text, text_font_, text_style_);
 
-		ComPtr<IDWriteTextLayout> text_layout;
-		Size layout_size;
-		ThrowIfFailed(
-			Renderer::GetInstance()->GetD2DDeviceResources()->CreateTextLayout(
-				text_layout,
-				layout_size,
-				text,
-				text_format_,
-				text_style_
-			)
-		);
-
-		ThrowIfFailed(
-			text_layout->Draw(nullptr, text_renderer_.get(), point.x, point.y)
-		);
-	}
-
-	void Canvas::FillCircle(const Point & center, float radius)
-	{
-		render_target_->FillEllipse(
-			D2D1::Ellipse(
-				D2D1::Point2F(
-					center.x,
-					center.y
-				),
-				radius,
-				radius
-			),
-			fill_brush_.get()
-		);
-		cache_expired_ = true;
-	}
-
-	void Canvas::FillEllipse(const Point & center, float radius_x, float radius_y)
-	{
-		render_target_->FillEllipse(
-			D2D1::Ellipse(
-				D2D1::Point2F(
-					center.x,
-					center.y
-				),
-				radius_x,
-				radius_y
-			),
-			fill_brush_.get()
-		);
-		cache_expired_ = true;
-	}
-
-	void Canvas::FillRect(const Rect & rect)
-	{
-		render_target_->FillRectangle(
-			D2D1::RectF(
-				rect.origin.x,
-				rect.origin.y,
-				rect.origin.x + rect.size.x,
-				rect.origin.y + rect.size.y
-			),
-			fill_brush_.get()
-		);
-		cache_expired_ = true;
-	}
-
-	void Canvas::FillRoundedRect(const Rect & rect, float radius_x, float radius_y)
-	{
-		render_target_->FillRoundedRectangle(
-			D2D1::RoundedRect(
-				D2D1::RectF(
-					rect.origin.x,
-					rect.origin.y,
-					rect.origin.x + rect.size.x,
-					rect.origin.y + rect.size.y
-				),
-				radius_x,
-				radius_y
-			),
-			fill_brush_.get()
-		);
-		cache_expired_ = true;
+		rt_.DrawTextLayout(layout, point);
 	}
 
 	void Canvas::BeginPath(Point const& begin_pos)
 	{
-		current_geometry_ = nullptr;
-
-		ThrowIfFailed(
-			Renderer::GetInstance()->GetD2DDeviceResources()->GetFactory()->CreatePathGeometry(&current_geometry_)
-		);
-		
-		ThrowIfFailed(
-			current_geometry_->Open(&current_sink_)
-		);
-
-		current_sink_->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
+		geo_sink_.BeginPath(begin_pos);
 	}
 
 	void Canvas::EndPath(bool closed)
 	{
-		if (current_sink_)
-		{
-			current_sink_->EndFigure(closed ? D2D1_FIGURE_END_CLOSED : D2D1_FIGURE_END_OPEN);
-			ThrowIfFailed(
-				current_sink_->Close()
-			);
-			current_sink_ = nullptr;
-		}
+		geo_sink_.EndPath(closed);
 	}
 
 	void Canvas::AddLine(Point const & point)
 	{
-		if (current_sink_)
-			current_sink_->AddLine(DX::ConvertToPoint2F(point));
+		geo_sink_.AddLine(point);
 	}
 
 	void Canvas::AddLines(Vector<Point> const& points)
 	{
-		if (current_sink_ && !points.empty())
-		{
-			current_sink_->AddLines(
-				reinterpret_cast<const D2D_POINT_2F*>(&points[0]),
-				static_cast<UINT32>(points.size())
-			);
-		}
+		geo_sink_.AddLines(points);
 	}
 
 	void Canvas::AddBezier(Point const & point1, Point const & point2, Point const & point3)
 	{
-		if (current_sink_)
-		{
-			current_sink_->AddBezier(
-				D2D1::BezierSegment(
-					DX::ConvertToPoint2F(point1),
-					DX::ConvertToPoint2F(point2),
-					DX::ConvertToPoint2F(point3)
-				)
-			);
-		}
+		geo_sink_.AddBezier(point1, point2, point3);
 	}
 
 	void Canvas::AddArc(Point const & point, Point const & radius, float rotation, bool clockwise, bool is_small)
 	{
-		if (current_sink_)
-		{
-			current_sink_->AddArc(
-				D2D1::ArcSegment(
-					DX::ConvertToPoint2F(point),
-					DX::ConvertToSizeF(radius),
-					rotation,
-					clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
-					is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE
-				)
-			);
-		}
+		geo_sink_.AddArc(point, radius, rotation, clockwise, is_small);
 	}
 
 	void Canvas::StrokePath()
 	{
-		render_target_->DrawGeometry(
-			current_geometry_.get(),
-			stroke_brush_.get(),
+		rt_.DrawGeometry(
+			geo_sink_.GetGeometry(),
+			stroke_color_,
 			stroke_width_,
-			outline_join_style_.get()
+			stroke_style_
 		);
 		cache_expired_ = true;
 	}
 
 	void Canvas::FillPath()
 	{
-		render_target_->FillGeometry(
-			current_geometry_.get(),
-			fill_brush_.get()
+		rt_.FillGeometry(
+			geo_sink_.GetGeometry(),
+			fill_color_
 		);
 		cache_expired_ = true;
 	}
 
 	void Canvas::Clear()
 	{
-		render_target_->Clear();
+		rt_.Clear();
 		cache_expired_ = true;
 	}
 
-	ImagePtr Canvas::ExportToImage() const
+	void Canvas::Clear(Color const& clear_color)
 	{
-		ImagePtr image = new Image(GetBitmap());
-		return image;
+		rt_.Clear(clear_color);
+		cache_expired_ = true;
 	}
 
-	ComPtr<ID2D1Bitmap> const& kiwano::Canvas::GetBitmap() const
+	Image Canvas::ExportToImage() const
+	{
+		UpdateCache();
+		return image_cached_;
+	}
+
+	void Canvas::UpdateCache() const
 	{
 		if (cache_expired_)
 		{
-			bitmap_cached_ = nullptr;
-			ThrowIfFailed(
-				render_target_->GetBitmap(&bitmap_cached_)
-			);
+			rt_.GetOutput(image_cached_);
 			cache_expired_ = false;
 		}
-		return bitmap_cached_;
 	}
 
 }

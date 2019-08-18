@@ -19,34 +19,33 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Resource.h"
-#include "Renderer.h"
+#include "Image.h"
 
 namespace kiwano
 {
 	// GIF Í¼Ïñ
-	KGE_DECLARE_SMART_PTR(GifImage);
 	class KGE_API GifImage
-		: public Object
 	{
 	public:
 		GifImage();
 
-		GifImage(
-			Resource const& res
-		);
+		GifImage(String const& file_path);
 
-		bool Load(
-			Resource const& res
-		);
+		GifImage(Resource const& res);
 
-		inline unsigned int GetWidthInPixels() const	{ return width_in_pixels_; }
+		bool Load(String const& file_path);
 
-		inline unsigned int GetHeightInPixels() const	{ return height_in_pixels_; }
+		bool Load(Resource const& res);
 
-		inline unsigned int GetFrameDelay() const		{ return frame_delay_; }
+		bool IsValid() const;
 
-		inline unsigned int GetFramesCount() const		{ return frames_count_; }
+		inline UINT GetWidthInPixels() const	{ return width_in_pixels_; }
+
+		inline UINT GetHeightInPixels() const	{ return height_in_pixels_; }
+
+		inline UINT GetFramesCount() const		{ return frames_count_; }
+
+		inline Color GetBackgroundColor() const	{ return bg_color_; }
 
 	public:
 		enum class DisposalType
@@ -57,37 +56,31 @@ namespace kiwano
 			Previous
 		};
 
-		inline DisposalType			GetDisposalType() const				{ return disposal_type_; }
+		HRESULT GetRawFrame(
+			UINT frame_index,
+			Image& raw_frame,
+			Rect& frame_rect,
+			Duration& delay,
+			DisposalType& disposal_type
+		);
 
-		inline D2D1_COLOR_F			GetBackgroundColor() const			{ return bg_color_; }
+		inline ComPtr<IWICBitmapDecoder> GetDecoder() const			{ return decoder_; }
 
-		inline D2D1_RECT_F const&	GetFramePosition() const			{ return frame_position_; }
-
-		inline ComPtr<ID2D1Bitmap>	GetRawFrame() const					{ return raw_frame_; }
-
-		inline void					SetDisposalType(DisposalType type)	{ disposal_type_ = type; }
-
-	public:
-		HRESULT GetRawFrame(UINT frame_index);
-		HRESULT GetGlobalMetadata();
-		HRESULT GetBackgroundColor(IWICMetadataQueryReader* metadata_reader);
-
-		HRESULT DisposeCurrentFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt);
-		HRESULT SaveComposedFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt);
-		HRESULT RestoreSavedFrame(ComPtr<ID2D1BitmapRenderTarget> frame_rt);
-		HRESULT ClearCurrentFrameArea(ComPtr<ID2D1BitmapRenderTarget> frame_rt);
+		inline void SetDecoder(ComPtr<IWICBitmapDecoder> decoder)	{ decoder_ = decoder; }
 
 	protected:
-		ComPtr<ID2D1Bitmap>			raw_frame_;
-		ComPtr<ID2D1Bitmap>			saved_frame_;
-		ComPtr<IWICBitmapDecoder>	decoder_;
+		HRESULT GetGlobalMetadata();
 
-		unsigned int	frames_count_;
-		unsigned int	frame_delay_;
-		unsigned int	width_in_pixels_;
-		unsigned int	height_in_pixels_;
-		DisposalType	disposal_type_;
-		D2D1_RECT_F		frame_position_;
-		D2D1_COLOR_F	bg_color_;
+		HRESULT GetBackgroundColor(
+			ComPtr<IWICMetadataQueryReader> metadata_reader
+		);
+
+	protected:
+		UINT	frames_count_;
+		UINT	width_in_pixels_;
+		UINT	height_in_pixels_;
+		Color	bg_color_;
+
+		ComPtr<IWICBitmapDecoder>	decoder_;
 	};
 }

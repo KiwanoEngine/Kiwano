@@ -24,21 +24,29 @@
 namespace kiwano
 {
 	Sprite::Sprite()
-		: frame_(nullptr)
 	{
 	}
 
+	Sprite::Sprite(String const& file_path)
+	{
+		Load(file_path);
+	}
+
+	Sprite::Sprite(String const& file_path, Rect const& crop_rect)
+	{
+		Load(file_path);
+		SetCropRect(crop_rect);
+	}
+
 	Sprite::Sprite(Resource const& res)
-		: frame_(nullptr)
 	{
 		Load(res);
 	}
 
 	Sprite::Sprite(Resource const& res, const Rect& crop_rect)
-		: frame_(nullptr)
 	{
 		Load(res);
-		Crop(crop_rect);
+		SetCropRect(crop_rect);
 	}
 
 	Sprite::Sprite(FramePtr frame)
@@ -49,6 +57,17 @@ namespace kiwano
 
 	Sprite::~Sprite()
 	{
+	}
+
+	bool Sprite::Load(String const& file_path)
+	{
+		FramePtr frame = new (std::nothrow) Frame;
+		if (frame->Load(file_path))
+		{
+			SetFrame(frame);
+			return true;
+		}
+		return false;
 	}
 
 	bool Sprite::Load(Resource const& res)
@@ -62,11 +81,11 @@ namespace kiwano
 		return false;
 	}
 
-	void Sprite::Crop(const Rect& crop_rect)
+	void Sprite::SetCropRect(const Rect& crop_rect)
 	{
 		if (frame_)
 		{
-			frame_->Crop(crop_rect);
+			frame_->SetCropRect(crop_rect);
 			SetSize(frame_->GetWidth(), frame_->GetHeight());
 		}
 	}
@@ -89,7 +108,7 @@ namespace kiwano
 		{
 			PrepareRender(renderer);
 
-			renderer->DrawBitmap(frame_->GetImage()->GetBitmap(), frame_->GetCropRect(), GetBounds());
+			renderer->DrawImage(frame_->GetImage(), &frame_->GetCropRect(), nullptr);
 		}
 	}
 }

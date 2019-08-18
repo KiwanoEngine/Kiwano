@@ -49,6 +49,46 @@ namespace kiwano
 			Close();
 		}
 
+		bool Sound::Load(String const& file_path)
+		{
+			if (opened_)
+			{
+				Close();
+			}
+
+#if defined(KGE_DEBUG)
+			if (!FileUtil::ExistsFile(file_path))
+			{
+				KGE_WARNING_LOG(L"Media file '%s' not found", file_path.c_str());
+				return false;
+			}
+#endif
+
+			Transcoder transcoder;
+			HRESULT hr = transcoder.LoadMediaFile(file_path, &wave_data_, &size_);
+
+			if (FAILED(hr))
+			{
+				KGE_ERROR_LOG(L"Load media file failed with HRESULT of %08X", hr);
+				return false;
+			}
+
+			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+			if (FAILED(hr))
+			{
+				if (wave_data_)
+				{
+					delete[] wave_data_;
+					wave_data_ = nullptr;
+				}
+				KGE_ERROR_LOG(L"Create source voice failed with HRESULT of %08X", hr);
+				return false;
+			}
+
+			opened_ = true;
+			return true;
+		}
+
 		bool Sound::Load(Resource const& res)
 		{
 			if (opened_)
@@ -56,28 +96,12 @@ namespace kiwano
 				Close();
 			}
 
-			HRESULT hr = S_OK;
 			Transcoder transcoder;
-
-			if (res.IsFileType())
-			{
-#if defined(KGE_DEBUG)
-				if (!FileUtil::ExistsFile(res.GetFileName()))
-				{
-					KGE_WARNING_LOG(L"Media file '%s' not found", res.GetFileName().c_str());
-					return false;
-				}
-#endif
-				hr = transcoder.LoadMediaFile(res.GetFileName(), &wave_data_, &size_);
-			}
-			else
-			{
-				hr = transcoder.LoadMediaResource(res, &wave_data_, &size_);
-			}
+			HRESULT hr = transcoder.LoadMediaResource(res, &wave_data_, &size_);
 
 			if (FAILED(hr))
 			{
-				KGE_ERROR_LOG(L"Load media file failed with HRESULT of %08X", hr);
+				KGE_ERROR_LOG(L"Load media resource failed with HRESULT of %08X", hr);
 				return false;
 			}
 

@@ -19,46 +19,41 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
+#include "FontCollection.h"
 
 namespace kiwano
 {
-	// 序列帧
-	class KGE_API FrameSequence
-		: public ObjectBase
+	// 字体粗细值
+	enum FontWeight : unsigned int
+	{
+		Thin		= 100,
+		ExtraLight	= 200,
+		Light		= 300,
+		Normal		= 400,
+		Medium		= 500,
+		Bold		= 700,
+		ExtraBold	= 800,
+		Black		= 900,
+		ExtraBlack	= 950
+	};
+
+	// 字体
+	class Font
 	{
 	public:
-		FrameSequence();
+		String			family;		// 字体族
+		float			size;		// 字号
+		unsigned int	weight;		// 粗细值
+		bool			italic;		// 是否斜体
+		FontCollection	collection;	// 字体集
 
-		explicit FrameSequence(
-			Vector<FramePtr> const& frames	/* 帧序列 */
+	public:
+		Font(
+			const String& family		= L"",
+			float size					= 18,
+			unsigned int weight			= FontWeight::Normal,
+			bool italic					= false,
+			FontCollection collection	= FontCollection()
 		);
-
-		virtual ~FrameSequence();
-
-		// 添加关键帧
-		void AddFrame(
-			FramePtr frame
-		);
-
-		// 添加多个关键帧
-		void AddFrames(
-			Vector<FramePtr> const& frames
-		);
-
-		// 获取关键帧
-		FramePtr GetFrame(size_t index) const;
-
-		// 获取关键帧
-		Vector<FramePtr> const& GetFrames() const;
-
-		// 获取帧动画的拷贝对象
-		FrameSequencePtr Clone() const;
-
-		// 获取帧动画的倒转
-		FrameSequencePtr Reverse() const;
-
-	protected:
-		Vector<FramePtr>	frames_;
 	};
 }

@@ -20,9 +20,7 @@
 
 #pragma once
 #include "Actor.h"
-#include "Font.hpp"
-#include "TextStyle.hpp"
-#include <dwrite.h>
+#include "../renderer/TextLayout.h"
 
 namespace kiwano
 {
@@ -56,52 +54,16 @@ namespace kiwano
 		virtual ~Text();
 
 		// 获取文本
-		String const& GetText() const;
+		inline String const& GetText() const	{ return text_; }
 
 		// 获取字体
-		const Font& GetFont() const;
+		inline Font GetFont() const				{ return font_; }
 
 		// 获取文本样式
-		const TextStyle& GetStyle() const;
+		inline TextStyle GetStyle() const		{ return style_; }
 
-		// 获取字体族
-		String const& GetFontFamily() const;
-
-		// 获取当前字号
-		float GetFontSize() const;
-
-		// 获取当前字体粗细值
-		unsigned int GetFontWeight() const;
-
-		// 获取文字颜色
-		const Color& GetColor() const;
-
-		// 获取描边颜色
-		const Color& GetOutlineColor() const;
-
-		// 获取描边线宽
-		float GetOutlineWidth() const;
-
-		// 获取描边线相交样式
-		StrokeStyle GetOutlineStroke() const;
-
-		// 获取文本显示行数
-		int GetLineCount();
-
-		// 获取文字布局大小
-		Size const& GetLayoutSize() const;
-
-		// 是否是斜体
-		bool IsItalic() const;
-
-		// 是否显示删除线
-		bool HasStrikethrough() const;
-
-		// 是否显示下划线
-		bool HasUnderline() const;
-
-		// 是否显示描边
-		bool HasOutline() const;
+		// 获取文本布局
+		inline TextLayout GetLayout() const		{ return text_layout_; }
 
 		// 设置文本
 		void SetText(
@@ -143,18 +105,13 @@ namespace kiwano
 			bool val
 		);
 
-		// 打开或关闭文本自动换行（默认为关闭）
-		void SetWrapEnabled(
-			bool wrap
-		);
-
 		// 设置文本自动换行的宽度（默认为 0）
 		void SetWrapWidth(
 			float wrap_width
 		);
 
 		// 设置行间距（默认为 0）
-		void SetLineacingPtr(
+		void SetLineSpacing(
 			float line_spacing
 		);
 
@@ -206,16 +163,14 @@ namespace kiwano
 		void OnRender(Renderer* renderer) override;
 
 	protected:
-		void UpdateLayout() const;
+		void UpdateLayout();
 
 	protected:
+		bool		format_dirty_;
+		bool		layout_dirty_;
+		TextLayout	text_layout_;
 		String		text_;
 		Font		font_;
 		TextStyle	style_;
-
-		mutable bool layout_dirty_;
-		mutable Size layout_size_;
-		mutable ComPtr<IDWriteTextFormat>	text_format_;
-		mutable ComPtr<IDWriteTextLayout>	text_layout_;
 	};
 }

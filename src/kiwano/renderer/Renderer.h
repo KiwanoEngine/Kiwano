@@ -19,21 +19,15 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/time.h"
 #include "../base/Component.h"
-#include "../base/Resource.h"
-#include "../2d/include-forwards.h"
-#include "../2d/Font.hpp"
-#include "../2d/TextStyle.hpp"
-#include "helper.hpp"
-#include "Image.h"
-#include "Geometry.h"
-#include "TextRenderer.h"
+#include "win32/FontCollectionLoader.h"
+#include "RenderTarget.h"
+#include "GifImage.h"
 
 #if defined(KGE_USE_DIRECTX10)
 #	include "D3D10DeviceResources.h"
 #else
-#	include "D3D11DeviceResources.h"
+#	include "win32/D3D11DeviceResources.h"
 #endif
 
 namespace kiwano
@@ -48,12 +42,62 @@ namespace kiwano
 	class KGE_API Renderer
 		: public Singleton<Renderer>
 		, public Component
+		, public RenderTarget
 	{
 		KGE_DECLARE_SINGLETON(Renderer);
 
 	public:
-		void CreateLayer(
-			ComPtr<ID2D1Layer>& layer
+		// 设置清屏颜色
+		void SetClearColor(
+			Color const& clear_color
+		);
+
+		// 开启或关闭垂直同步
+		void SetVSyncEnabled(
+			bool enabled
+		);
+
+	public:
+		void CreateImage(
+			Image& image,
+			String const& file_path
+		);
+
+		void CreateImage(
+			Image& image,
+			Resource const& res
+		);
+
+		void CreateGifImage(
+			GifImage& image,
+			String const& file_path
+		);
+
+		void CreateGifImage(
+			GifImage& image,
+			Resource const& res
+		);
+
+		void CreateFontCollection(
+			FontCollection& collection,
+			Vector<String> const& file_paths
+		);
+
+		void CreateFontCollection(
+			FontCollection& collection,
+			Vector<Resource> const& res_arr
+		);
+
+		void CreateTextFormat(
+			TextFormat& format,
+			Font const& font
+		);
+
+		void CreateTextLayout(
+			TextLayout& layout,
+			String const& text,
+			TextStyle const& style,
+			TextFormat const& format
 		);
 
 		void CreateLineGeometry(
@@ -83,91 +127,9 @@ namespace kiwano
 			GeometrySink& sink
 		);
 
-		void DrawGeometry(
-			Geometry const& geometry,
-			const Color& stroke_color,
-			float stroke_width,
-			StrokeStyle stroke = StrokeStyle::Miter
+		void CreateImageRenderTarget(
+			ImageRenderTarget& render_target
 		);
-
-		void FillGeometry(
-			Geometry const& geometry,
-			Color const& fill_color
-		);
-
-		void DrawRectangle(
-			Rect const& rect,
-			Color const& stroke_color,
-			float stroke_width,
-			StrokeStyle stroke = StrokeStyle::Miter
-		);
-
-		void FillRectangle(
-			Rect const& rect,
-			Color const& fill_color
-		);
-
-		void DrawBitmap(
-			ComPtr<ID2D1Bitmap> const& bitmap,
-			Rect const& src_rect,
-			Rect const& dest_rect
-		);
-
-		void DrawTextLayout(
-			ComPtr<IDWriteTextLayout> const& text_layout
-		);
-
-		// 设置清屏颜色
-		void SetClearColor(
-			Color const& clear_color
-		);
-
-		// 设置抗锯齿模式
-		void SetAntialiasMode(
-			bool enabled
-		);
-
-		// 设置文字抗锯齿模式
-		void SetTextAntialiasMode(
-			TextAntialias mode
-		);
-
-		// 开启或关闭垂直同步
-		void SetVSyncEnabled(
-			bool enabled
-		);
-
-		// 设置画笔透明度
-		void SetOpacity(
-			float opacity
-		);
-
-		void SetTransform(
-			const Matrix3x2& matrix
-		);
-
-		void SetTextStyle(
-			float opacity,
-			const Color& color,
-			bool has_outline,
-			const Color& outline_color,
-			float outline_width,
-			StrokeStyle outline_stroke
-		);
-
-		void PushClip(
-			const Matrix3x2& clip_matrix,
-			const Size& clip_size
-		);
-
-		void PopClip();
-
-		void PushLayer(
-			ComPtr<ID2D1Layer> const& layer,
-			LayerProperties const& properties
-		);
-
-		void PopLayer();
 
 		void Resize(
 			UINT width,
@@ -190,19 +152,8 @@ namespace kiwano
 
 		void HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
 
-		void SetCollectingStatus(bool collecting);
-
 	public:
-		struct Status
-		{
-			Time start;
-			Duration duration;
-			int primitives;
-		};
-
 		inline HWND						GetTargetWindow() const			{ return hwnd_; }
-
-		inline Status const&			GetStatus() const				{ return status_; }
 
 		inline Size const&				GetOutputSize() const			{ return output_size_; }
 
@@ -223,28 +174,18 @@ namespace kiwano
 
 		HRESULT HandleDeviceLost();
 
-		HRESULT BeginDraw();
-
-		HRESULT EndDraw();
-
-		void IncreasePrimitivesCount();
-
 	private:
-		bool			vsync_;
-		bool			antialias_;
-		bool			collecting_status_;
-		float			opacity_;
-		HWND			hwnd_;
-		Size			output_size_;
-		Color			clear_color_;
-		TextAntialias	text_antialias_;
-		Status			status_;
+		bool	vsync_;
+		HWND	hwnd_;
+		Size	output_size_;
+		Color	clear_color_;
 
 		ComPtr<ID2DDeviceResources>		d2d_res_;
 		ComPtr<ID3DDeviceResources>		d3d_res_;
-		ComPtr<ID2D1DeviceContext>		device_context_;
 		ComPtr<ID2D1DrawingStateBlock>	drawing_state_block_;
-		ComPtr<ITextRenderer>			text_renderer_;
-		ComPtr<ID2D1SolidColorBrush>	solid_color_brush_;
+
+		ComPtr<IFontCollectionLoader>			font_collection_loader_;
+		ComPtr<IResourceFontFileLoader>			res_font_file_loader_;
+		ComPtr<IResourceFontCollectionLoader>	res_font_collection_loader_;
 	};
 }

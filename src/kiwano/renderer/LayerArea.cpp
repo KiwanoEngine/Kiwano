@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2016-2019 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,30 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "../macros.h"
-#include "../math/helper.h"
-#include "../2d/Color.h"
-#include <Unknwnbase.h>
+#include "LayerArea.h"
 
 namespace kiwano
 {
-
-	MIDL_INTERFACE("fb99fa64-d9cf-4e0e-9c75-90514797b01d")
-	KGE_API ID3DDeviceResourcesBase : public IUnknown
+	LayerArea::LayerArea()
+		: opacity_(1.f)
 	{
-	public:
-		virtual HRESULT Present(bool vsync) = 0;
+	}
 
-		virtual HRESULT ClearRenderTarget(Color& clear_color) = 0;
+	bool LayerArea::IsValid() const
+	{
+		return layer_ != nullptr;
+	}
 
-		virtual HRESULT HandleDeviceLost() = 0;
+	Size LayerArea::GetSize() const
+	{
+		if (layer_)
+		{
+			return reinterpret_cast<Size const&>(layer_->GetSize());
+		}
+		return Size();
+	}
 
-		virtual HRESULT SetLogicalSize(Size logical_size) = 0;
-
-		virtual HRESULT SetDpi(float dpi) = 0;
-
-		virtual void DiscardResources() = 0;
-	};
-	
 }

@@ -25,7 +25,7 @@ namespace kiwano
 {
 	void EventDispatcher::Dispatch(Event& evt)
 	{
-		if (listeners_.is_empty())
+		if (listeners_.item_empty())
 			return;
 
 		EventListenerPtr next;

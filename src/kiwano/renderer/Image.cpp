@@ -19,18 +19,26 @@
 // THE SOFTWARE.
 
 #include "Image.h"
+#include "Renderer.h"
 #include "../base/Logger.h"
-#include "../platform/modules.h"
 
 namespace kiwano
 {
 	Image::Image()
-		: bitmap_(nullptr)
 	{
 	}
 
+	Image::Image(String const& file_path)
+	{
+		Load(file_path);
+	}
+
+	Image::Image(Resource const& res)
+	{
+		Load(res);
+	}
+
 	Image::Image(ComPtr<ID2D1Bitmap> const & bitmap)
-		: Image()
 	{
 		SetBitmap(bitmap);
 	}
@@ -39,9 +47,21 @@ namespace kiwano
 	{
 	}
 
+	bool Image::Load(String const& file_path)
+	{
+		Renderer::GetInstance()->CreateImage(*this, file_path);
+		return IsValid();
+	}
+
+	bool Image::Load(Resource const& res)
+	{
+		Renderer::GetInstance()->CreateImage(*this, res);
+		return IsValid();
+	}
+
 	bool Image::IsValid() const
 	{
-		return !!bitmap_;
+		return bitmap_ != nullptr;
 	}
 
 	float Image::GetWidth() const
@@ -98,6 +118,43 @@ namespace kiwano
 			return math::Vec2T<UINT32>{ bitmap_size.width, bitmap_size.height };
 		}
 		return math::Vec2T<UINT32>{};
+	}
+
+	void Image::CopyFrom(Image const& copy_from)
+	{
+		if (IsValid() && copy_from.IsValid())
+		{
+			HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from.GetBitmap().get(), nullptr);
+
+			ThrowIfFailed(hr);
+		}
+	}
+
+	void Image::CopyFrom(Image const& copy_from, Rect const& src_rect, Point const& dest_point)
+	{
+		if (IsValid() && copy_from.IsValid())
+		{
+			HRESULT hr = bitmap_->CopyFromBitmap(
+				&D2D1::Point2U(UINT(dest_point.x), UINT(dest_point.y)),
+				copy_from.GetBitmap().get(),
+				&D2D1::RectU(
+					UINT(src_rect.GetLeft()),
+					UINT(src_rect.GetTop()),
+					UINT(src_rect.GetRight()),
+					UINT(src_rect.GetBottom()))
+			);
+
+			ThrowIfFailed(hr);
+		}
+	}
+
+	D2D1_PIXEL_FORMAT Image::GetPixelFormat() const
+	{
+		if (bitmap_)
+		{
+			return bitmap_->GetPixelFormat();
+		}
+		return D2D1_PIXEL_FORMAT();
 	}
 
 	ComPtr<ID2D1Bitmap> Image::GetBitmap() const

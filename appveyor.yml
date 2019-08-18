@@ -5,8 +5,8 @@ skip_tags: true
 # fetch repository as zip archive
 shallow_clone: true
 
-# pull_requests:
-#   do_not_increment_build_number: true
+pull_requests:
+  do_not_increment_build_number: true
 
 # Do not build feature branch with open Pull Requests
 # skip_branch_with_pr: true
@@ -47,6 +47,18 @@ only_commits:
     - scripts/**/*.ps1
     - appveyor.yml
 
+for:
+-
+  branches:
+    except:
+      - master
+  # only_commits:
+  #   message: /\[build\]/
+  environment:
+    matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      VS_PLATFORM_TOOLSET: v142
+
 configuration:
 - Debug
 - Release
@@ -67,19 +79,8 @@ build:
   project: projects/Kiwano.sln
   verbosity: minimal
 
-for:
--
-  branches:
-    except:
-      - master
-  only_commits:
-    message: /\[build\]/
--
-  branches:
-    only:
-      - master
-  after_build:
-  - ps: .\scripts\appveyor\wait_for_other_jobs.ps1
+after_build:
+- ps: .\scripts\appveyor\wait_for_other_jobs.ps1
 
 artifacts:
 - path: projects/output/**/*.lib
@@ -119,6 +120,6 @@ notifications:
 - provider: Email
   to:
   - 569629550@qq.com
-  on_build_success: false
+  on_build_success: true
   on_build_failure: true
   on_build_status_changed: false
