@@ -52,8 +52,8 @@ for:
   branches:
     except:
       - master
-  only_commits:
-    message: /\[build\]/
+  # only_commits:
+  #   message: /\[build\]/
   environment:
     matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019

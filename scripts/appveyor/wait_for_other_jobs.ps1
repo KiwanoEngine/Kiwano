@@ -1,5 +1,8 @@
 . .\scripts\appveyor\appveyor_get_build.ps1
 
+# Ignore commits without APPVEYOR_API_TOKEN envrionment variable
+if (-not ($env:APPVEYOR_API_TOKEN)) { return }
+
 # Only deploy when commit message contains "[deploy]"
 if (!(Get-AppVeyorBuild).build.message.Contains('[deploy]')) { return }
 
