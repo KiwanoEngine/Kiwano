@@ -36,7 +36,7 @@ inline namespace core
 //
 // basic_string<>
 //   Lightweight ::std::basic_string<>-like class
-//   When using basic_string<> with a c-style string (char* or WChar*), constructor and operator=() just hold
+//   When using basic_string<> with a c-style string (char* or wchar_t*), constructor and operator=() just hold
 //   a pointer to the character array but don't copy its content, considering performance issues.
 //   Use assign() and basic_string<>::cstr() to work fine with c-style strings.
 //
@@ -132,8 +132,8 @@ public:
 	void					reserve(const size_type new_cap = 0);
 	inline void				resize(const size_type new_size, const char_type ch = value_type())							{ check_operability(); if (new_size < size_) str_[size_ = new_size] = value_type(); else append(new_size - size_, ch); }
 
-	Int32						compare(const char_type* const str) const;
-	inline Int32				compare(basic_string const& str) const														{ return compare(str.c_str()); }
+	Int32					compare(const char_type* const str) const;
+	inline Int32			compare(basic_string const& str) const														{ return compare(str.c_str()); }
 
 	basic_string&			append(size_type count, char_type ch);
 	basic_string&			append(const char_type* cstr, size_type count);
@@ -380,6 +380,14 @@ template <typename _CharTy>
 template <typename _CharTy>
 ::std::basic_istream<typename basic_string<_CharTy>::char_type>& operator>>(::std::basic_istream<typename basic_string<_CharTy>::char_type>& is, basic_string<_CharTy>& str);
 
+
+//
+// string && wstring
+//
+using string = ::kiwano::core::basic_string<char>;
+using wstring = ::kiwano::core::basic_string<WChar>;
+
+
 //
 // to_string functions
 //
@@ -411,6 +419,26 @@ basic_string<_CharTy> to_basic_string(Float64 val);
 template <typename _CharTy>
 basic_string<_CharTy> to_basic_string(long double val);
 
+string to_string(Int32 val);
+string to_string(UInt32 val);
+string to_string(long val);
+string to_string(unsigned long val);
+string to_string(long long val);
+string to_string(unsigned long long val);
+string to_string(Float32 val);
+string to_string(Float64 val);
+string to_string(long double val);
+
+wstring to_wstring(Int32 val);
+wstring to_wstring(UInt32 val);
+wstring to_wstring(long val);
+wstring to_wstring(unsigned long val);
+wstring to_wstring(long long val);
+wstring to_wstring(unsigned long long val);
+wstring to_wstring(Float32 val);
+wstring to_wstring(Float64 val);
+wstring to_wstring(long double val);
+
 //
 // format_wstring
 //
@@ -421,12 +449,6 @@ basic_string<char> format_string(const char* const fmt, _Args&&... args);
 template <typename ..._Args>
 basic_string<WChar> format_string(const WChar* const fmt, _Args&& ... args);
 
-
-//
-// string && wstring
-//
-using string = ::kiwano::core::basic_string<char>;
-using wstring = ::kiwano::core::basic_string<WChar>;
 
 }  // inline namespace core
 }  // namespace kiwano
@@ -1365,6 +1387,26 @@ inline namespace core
 	{
 		return (__to_string_detail::FloatingToString<_CharTy>::convert(val));
 	}
+
+	inline string to_string(Int32 val)					{ return to_basic_string<char>(val); }
+	inline string to_string(UInt32 val)					{ return to_basic_string<char>(val); }
+	inline string to_string(long val)					{ return to_basic_string<char>(val); }
+	inline string to_string(unsigned long val)			{ return to_basic_string<char>(val); }
+	inline string to_string(long long val)				{ return to_basic_string<char>(val); }
+	inline string to_string(unsigned long long val)		{ return to_basic_string<char>(val); }
+	inline string to_string(Float32 val)				{ return to_basic_string<char>(val); }
+	inline string to_string(Float64 val)				{ return to_basic_string<char>(val); }
+	inline string to_string(long double val)			{ return to_basic_string<char>(val); }
+
+	inline wstring to_wstring(Int32 val)				{ return to_basic_string<WChar>(val); }
+	inline wstring to_wstring(UInt32 val)				{ return to_basic_string<WChar>(val); }
+	inline wstring to_wstring(long val)					{ return to_basic_string<WChar>(val); }
+	inline wstring to_wstring(unsigned long val)		{ return to_basic_string<WChar>(val); }
+	inline wstring to_wstring(long long val)			{ return to_basic_string<WChar>(val); }
+	inline wstring to_wstring(unsigned long long val)	{ return to_basic_string<WChar>(val); }
+	inline wstring to_wstring(Float32 val)				{ return to_basic_string<WChar>(val); }
+	inline wstring to_wstring(Float64 val)				{ return to_basic_string<WChar>(val); }
+	inline wstring to_wstring(long double val)			{ return to_basic_string<WChar>(val); }
 
 	template <typename ..._Args>
 	inline basic_string<char> format_string(const char* const fmt, _Args&& ... args)
