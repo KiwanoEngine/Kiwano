@@ -21,14 +21,14 @@
 #pragma once
 #include <kiwano/core/Function.hpp>
 #include <kiwano/core/basic_json.hpp>
-#include <kiwano/base/Object.h>
+#include <kiwano/base/ObjectBase.h>
 
 namespace kiwano
 {
 	namespace network
 	{
 		class KGE_API HttpResponse
-			: public Object
+			: public ObjectBase
 		{
 		public:
 			inline HttpResponse(HttpRequestPtr request)

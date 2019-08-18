@@ -323,7 +323,7 @@ namespace kiwano
 		return 0;
 	}
 
-	bool ResourceCache::AddObj(String const& id, ObjectPtr obj)
+	bool ResourceCache::AddObjectBase(String const& id, ObjectBasePtr obj)
 	{
 		if (obj)
 		{

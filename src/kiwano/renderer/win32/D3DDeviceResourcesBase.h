@@ -19,29 +19,25 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/intrusive_ptr.hpp"
 #include <Unknwnbase.h>
-#include <type_traits>
 
 namespace kiwano
 {
-	struct ComPtrManager
+	MIDL_INTERFACE("fb99fa64-d9cf-4e0e-9c75-90514797b01d")
+	ID3DDeviceResourcesBase : public IUnknown
 	{
-		static inline void AddRef(IUnknown* ptr)
-		{
-			if (ptr) ptr->AddRef();
-		}
+	public:
+		virtual HRESULT Present(bool vsync) = 0;
 
-		static inline void Release(IUnknown* ptr)
-		{
-			if (ptr) ptr->Release();
-		}
+		virtual HRESULT ClearRenderTarget(Color& clear_color) = 0;
+
+		virtual HRESULT HandleDeviceLost() = 0;
+
+		virtual HRESULT SetLogicalSize(Size logical_size) = 0;
+
+		virtual HRESULT SetDpi(float dpi) = 0;
+
+		virtual void DiscardResources() = 0;
 	};
-
-	// ComPtr<> is a smart pointer for COM
-	template<
-		typename _Ty,
-		typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-	using ComPtr = intrusive_ptr<_Ty, ComPtrManager>;
-
+	
 }

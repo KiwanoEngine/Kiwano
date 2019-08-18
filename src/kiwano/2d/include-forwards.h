@@ -23,10 +23,9 @@
 #include "../base/time.h"
 #include "../base/RefCounter.hpp"
 #include "../base/SmartPtr.hpp"
-#include "../base/ComPtr.hpp"
-#include "../base/Object.h"
+#include "../base/ObjectBase.h"
 #include "../base/types.h"
-#include "../math/helper.h"
+#include "../math/math.h"
 #include "../renderer/Color.h"
 
 namespace kiwano

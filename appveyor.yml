@@ -54,7 +54,8 @@ for:
       - master
   only_commits:
     message: /\[build\]/
-  matrix:
+  environment:
+    matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       VS_PLATFORM_TOOLSET: v142
 

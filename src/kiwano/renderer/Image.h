@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Resource.h"
-#include "D2DDeviceResources.h"  // ID2D1Bitmap
+#include "win32/D2DDeviceResources.h"
 
 namespace kiwano
 {

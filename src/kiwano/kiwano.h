@@ -64,11 +64,9 @@
 #include "renderer/Image.h"
 #include "renderer/GifImage.h"
 #include "renderer/TextLayout.h"
-#include "renderer/TextRenderer.h"
 #include "renderer/Geometry.h"
 #include "renderer/LayerArea.h"
 #include "renderer/ImageCache.h"
-#include "renderer/RenderTarget.h"
 #include "renderer/Renderer.h"
 
 
@@ -81,11 +79,8 @@
 #include "base/input.h"
 #include "base/Director.h"
 #include "base/Logger.h"
-
 #include "base/SmartPtr.hpp"
-#include "base/ComPtr.hpp"
-
-#include "base/Object.h"
+#include "base/ObjectBase.h"
 #include "base/Event.hpp"
 #include "base/EventListener.h"
 #include "base/EventDispatcher.h"

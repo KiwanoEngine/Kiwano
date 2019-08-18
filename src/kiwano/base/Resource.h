@@ -28,7 +28,7 @@ namespace kiwano
 	// 
 	// 资源可以是文件类型，也可以是保存在 exe 中的二进制资源
 	// 例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1,
-	// 那么可以这样指定该资源: Resource res(MAKEINTRESOURCE(IDR_WAVE_1), L"WAVE");
+	// 那么可以这样指定该资源: Resource res(IDR_WAVE_1, L"WAVE");
 	// 
 	// 了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
 	//
@@ -46,7 +46,7 @@ namespace kiwano
 		);
 
 		Resource(
-			LPCWSTR name,			/* 资源名称 */
+			UINT id,				/* 资源名称 */
 			LPCWSTR type			/* 资源类型 */
 		);
 
@@ -56,18 +56,19 @@ namespace kiwano
 
 		virtual ~Resource();
 
-		inline bool IsFileType() const { return type_ == Type::File; }
-
-		inline String GetFileName() const { if (file_name_) return *file_name_; return String(); }
-
-		bool Load(
-			LPVOID& buffer,
-			DWORD& buffer_size
-		) const;
+		bool Load(LPVOID& buffer, DWORD& buffer_size) const;
 
 		size_t GetHashCode() const;
 
 		Resource& operator= (Resource const& rhs);
+
+		inline bool IsFileType() const			{ return type_ == Type::File; }
+
+		inline String GetFileName() const		{ return file_name_ ? (*file_name_) : L""; }
+
+		inline UINT GetResourceId() const		{ return bin_id_; }
+
+		inline LPCWSTR GetResourceType() const	{ return bin_type_; }
 
 	private:
 		Type type_;
@@ -80,7 +81,7 @@ namespace kiwano
 
 			struct
 			{
-				LPCWSTR	bin_name_;
+				UINT	bin_id_;
 				LPCWSTR	bin_type_;
 			};
 		};

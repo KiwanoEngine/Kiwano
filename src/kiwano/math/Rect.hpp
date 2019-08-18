@@ -99,7 +99,7 @@ namespace kiwano
 
 			inline value_type GetBottom() const				{ return origin.y + size.y; }
 
-			inline bool is_empty() const						{ return origin.IsOrigin() && size.IsOrigin(); }
+			inline bool IsEmpty() const						{ return origin.IsOrigin() && size.IsOrigin(); }
 
 			inline bool ContainsPoint(const Vec2T<value_type>& point) const
 			{

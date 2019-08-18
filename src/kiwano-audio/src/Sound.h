@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/intrusive_ptr.hpp>
-#include <kiwano/base/Object.h>
+#include <kiwano/base/ObjectBase.h>
 #include <kiwano/base/Resource.h>
 #include <xaudio2.h>
 
@@ -32,7 +32,7 @@ namespace kiwano
 
 		// “Ù¿÷∂‘œÛ
 		class KGE_API Sound
-			: public Object
+			: public ObjectBase
 		{
 		public:
 			Sound();

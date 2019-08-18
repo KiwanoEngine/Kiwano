@@ -41,51 +41,96 @@ namespace kiwano
 		KGE_LOG(L"Creating device resources");
 
 		hwnd_ = Window::GetInstance()->GetHandle();
+		output_size_ = Window::GetInstance()->GetSize();
 
-		ThrowIfFailed(hwnd_ ? S_OK : E_FAIL);
-		
 		d2d_res_ = nullptr;
 		d3d_res_ = nullptr;
 		drawing_state_block_ = nullptr;
 
-		ThrowIfFailed(
-			ID2DDeviceResources::Create(
-				&d2d_res_
-			)
-		);
+		HRESULT hr = hwnd_ ? S_OK : E_FAIL;
 
-		ThrowIfFailed(
+		// Direct2D device resources
+		if (SUCCEEDED(hr))
+		{
+			hr = ID2DDeviceResources::Create(&d2d_res_);
+		}
+
+		// Direct3D device resources
+		if (SUCCEEDED(hr))
+		{
 #if defined(KGE_USE_DIRECTX10)
-			ID3D10DeviceResources::Create(
+			hr = ID3D10DeviceResources::Create(
 				&d3d_res_,
 				d2d_res_.get(),
 				hwnd_
-			)
+			);
 #else
-			ID3D11DeviceResources::Create(
+			hr = ID3D11DeviceResources::Create(
 				&d3d_res_,
 				d2d_res_.get(),
 				hwnd_
-			)
+			);
 #endif
-		);
+		}
 
-		ThrowIfFailed(
-			d2d_res_->GetFactory()->CreateDrawingStateBlock(
+		// DrawingStateBlock
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetFactory()->CreateDrawingStateBlock(
 				&drawing_state_block_
-			)
-		);
+			);
+		}
 
-		ThrowIfFailed(
-			CreateDeviceResources()
-		);
+		// Other device resources
+		if (SUCCEEDED(hr))
+		{
+			hr = CreateDeviceResources();
+		}
 
-		output_size_ = Window::GetInstance()->GetSize();
+		// FontFileLoader and FontCollectionLoader
+		if (SUCCEEDED(hr))
+		{
+			hr = IFontCollectionLoader::Create(&font_collection_loader_);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.get());
+		}
+
+		// ResourceFontFileLoader and ResourceFontCollectionLoader
+		if (SUCCEEDED(hr))
+		{
+			hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.get());
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.get());
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.get());
+		}
+
+		ThrowIfFailed(hr);
 	}
 
 	void Renderer::DestroyComponent()
 	{
 		KGE_LOG(L"Destroying device resources");
+
+		d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.get());
+		res_font_file_loader_.reset();
+
+		d2d_res_->GetDWriteFactory()->UnregisterFontCollectionLoader(res_font_collection_loader_.get());
+		res_font_collection_loader_.reset();
 
 		drawing_state_block_.reset();
 		solid_color_brush_.reset();
@@ -284,6 +329,53 @@ namespace kiwano
 		if (FAILED(hr))
 		{
 			KGE_WARNING_LOG(L"Load GIF image failed with HRESULT of %08X!", hr);
+		}
+	}
+
+	void Renderer::CreateFontFromResource(FontCollection& collection, Resource const& res)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<IDWriteFontCollection> font_collection;
+		if (res.IsFileType())
+		{
+			String file_path = res.GetFileName();
+			if (!FileUtil::ExistsFile(file_path.c_str()))
+			{
+				KGE_WARNING_LOG(L"Font file '%s' not found!", file_path.c_str());
+				hr = E_FAIL;
+			}
+
+			hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(
+				font_collection_loader_.get(),
+				reinterpret_cast<const void*>(&file_path),
+				sizeof(file_path),
+				&font_collection
+			);
+		}
+		else
+		{
+			UINT id = res.GetResourceId();
+			hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(
+				res_font_collection_loader_.get(),
+				reinterpret_cast<const void*>(&id),
+				sizeof(id),
+				&font_collection
+			);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			collection.SetFontCollection(font_collection);
+		}
+
+		if (FAILED(hr))
+		{
+			KGE_WARNING_LOG(L"Load font failed with HRESULT of %08X!", hr);
 		}
 	}
 

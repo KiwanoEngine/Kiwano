@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/intrusive_ptr.hpp>
-#include <kiwano/base/Object.h>
+#include <kiwano/base/ObjectBase.h>
 #include "Sound.h"
 
 namespace kiwano
@@ -31,7 +31,7 @@ namespace kiwano
 
 		// “Ù¿÷≤•∑≈∆˜
 		class KGE_API Player
-			: protected Object
+			: protected ObjectBase
 		{
 			using MusicMap = Map<size_t, SoundPtr>;
 

@@ -25,7 +25,7 @@ namespace kiwano
 {
 	Resource::Resource(LPCWSTR file_name)
 		: type_(Type::File)
-		, bin_name_(nullptr)
+		, bin_id_(0)
 		, bin_type_(nullptr)
 	{
 		if (file_name)
@@ -34,16 +34,16 @@ namespace kiwano
 
 	Resource::Resource(String const& file_name)
 		: type_(Type::File)
-        , bin_name_(nullptr)
+        , bin_id_(0)
         , bin_type_(nullptr)
 	{
 		if (!file_name.empty())
 			file_name_ = new (std::nothrow) String(file_name);
 	}
 
-	Resource::Resource(LPCWSTR name, LPCWSTR type)
+	Resource::Resource(UINT id, LPCWSTR type)
 		: type_(Type::Binary)
-		, bin_name_(name)
+		, bin_id_(id)
 		, bin_type_(type)
 	{
 	}
@@ -61,9 +61,7 @@ namespace kiwano
 
 	size_t Resource::GetHashCode() const
 	{
-		if (type_ == Type::File)
-			return GetFileName().hash();
-		return std::hash<LPCWSTR>{}(bin_name_);
+		return (type_ == Type::File) ? GetFileName().hash() : static_cast<size_t>(bin_id_);
 	}
 
 	Resource & Resource::operator=(Resource const & rhs)
@@ -86,7 +84,7 @@ namespace kiwano
 			}
 			else
 			{
-				bin_name_ = rhs.bin_name_;
+				bin_id_ = rhs.bin_id_;
 				bin_type_ = rhs.bin_type_;
 			}
 		}
@@ -104,7 +102,7 @@ namespace kiwano
 		HGLOBAL res_data;
 		HRSRC res_info;
 
-		res_info = FindResourceW(nullptr, bin_name_, bin_type_);
+		res_info = FindResourceW(nullptr, MAKEINTRESOURCE(bin_id_), bin_type_);
 		if (res_info == nullptr)
 		{
 			KGE_ERROR_LOG(L"FindResource failed");

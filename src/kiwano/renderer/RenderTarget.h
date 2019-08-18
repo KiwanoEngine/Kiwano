@@ -19,12 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "D2DDeviceResources.h"
+#include "../base/time.h"
 #include "Image.h"
 #include "Geometry.h"
 #include "TextLayout.h"
-#include "TextRenderer.h"
 #include "LayerArea.h"
+#include "win32/TextRenderer.h"
 
 namespace kiwano
 {
@@ -168,9 +168,9 @@ namespace kiwano
 
 		void IncreasePrimitivesCount() const;
 
-		inline Status const& GetStatus() const { return status_; }
+		inline Status const& GetStatus() const						{ return status_; }
 
-		inline ComPtr<ID2D1RenderTarget> GetRenderTarget() const { return render_target_; }
+		inline ComPtr<ID2D1RenderTarget> GetRenderTarget() const	{ return render_target_; }
 
 	public:
 		RenderTarget();

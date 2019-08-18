@@ -19,10 +19,14 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/ComPtr.hpp"
-#include "../math/helper.h"
-#include "Color.h"
+#include "../Font.h"
+#include "../Color.h"
+#include "../../math/math.h"
+#include "../../base/Resource.h"
+#include "../../2d/TextStyle.hpp"
+#include <dwrite.h>
 #include <d2d1.h>
+#include <d2d1_1.h>
 
 namespace kiwano
 {
@@ -36,6 +40,16 @@ namespace kiwano
 				ptr->Release();
 				ptr = nullptr;
 			}
+		}
+
+		template <typename T>
+		inline T* SafeAcquire(T* ptr)
+		{
+			if (ptr != nullptr)
+			{
+				ptr->AddRef();
+			}
+			return ptr;
 		}
 
 		//
@@ -149,4 +163,66 @@ namespace kiwano
 			return math::Floor(dips * dpi / dips_per_inch + 0.5f); // Round to nearest integer.
 		}
 	}
+}
+
+namespace kiwano
+{
+	MIDL_INTERFACE("5706684a-bf6d-4b03-b627-094758a33032")
+	KGE_API ID2DDeviceResources
+		: public IUnknown
+	{
+	public:
+		static HRESULT Create(ID2DDeviceResources** device_resources);
+
+		virtual HRESULT CreateBitmapFromFile(
+			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
+			_In_ String const& file_path
+		) = 0;
+
+		virtual HRESULT CreateBitmapFromResource(
+			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
+			_In_ Resource const& res
+		) = 0;
+
+		virtual HRESULT CreateTextFormat(
+			_Out_ ComPtr<IDWriteTextFormat>& text_format,
+			_In_ Font const& font
+		) const = 0;
+
+		virtual HRESULT CreateTextLayout(
+			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
+			_In_ String const& text,
+			_In_ TextStyle const& text_style,
+			_In_ ComPtr<IDWriteTextFormat> const& text_format
+		) const = 0;
+
+		virtual ID2D1StrokeStyle* GetStrokeStyle(StrokeStyle stroke) const = 0;
+
+		virtual HRESULT SetD2DDevice(
+			_In_ ComPtr<ID2D1Device> const& device
+		) = 0;
+
+		virtual void SetTargetBitmap(
+			_In_ ComPtr<ID2D1Bitmap1> const& target
+		) = 0;
+
+		virtual void DiscardResources() = 0;
+
+		inline ID2D1Factory1*			GetFactory() const				{ KGE_ASSERT(factory_); return factory_.get(); }
+		inline IWICImagingFactory*		GetWICImagingFactory() const	{ KGE_ASSERT(imaging_factory_); return imaging_factory_.get(); }
+		inline IDWriteFactory*			GetDWriteFactory() const		{ KGE_ASSERT(dwrite_factory_); return dwrite_factory_.get(); }
+		inline ID2D1Device*				GetDevice() const				{ KGE_ASSERT(device_); return device_.get(); }
+		inline ID2D1DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.get(); }
+		inline ID2D1Bitmap1*			GetTargetBitmap() const			{ KGE_ASSERT(target_bitmap_); return target_bitmap_.get(); }
+
+	protected:
+		ComPtr<ID2D1Factory1>		factory_;
+		ComPtr<ID2D1Device>			device_;
+		ComPtr<ID2D1DeviceContext>	device_context_;
+		ComPtr<ID2D1Bitmap1>		target_bitmap_;
+
+		ComPtr<IWICImagingFactory>	imaging_factory_;
+		ComPtr<IDWriteFactory>		dwrite_factory_;
+	};
+
 }

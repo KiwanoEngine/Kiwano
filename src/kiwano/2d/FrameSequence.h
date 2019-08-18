@@ -25,7 +25,7 @@ namespace kiwano
 {
 	// ађСажЁ
 	class KGE_API FrameSequence
-		: public Object
+		: public ObjectBase
 	{
 	public:
 		FrameSequence();

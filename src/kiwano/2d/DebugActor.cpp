@@ -82,9 +82,9 @@ namespace kiwano
 		ss << "Fps: " << frame_time_.size() << std::endl;
 
 #if defined(KGE_DEBUG)
-		if (Object::IsTracingLeaks())
+		if (ObjectBase::IsTracingLeaks())
 		{
-			ss << "Objects: " << Object::__GetTracingObjects().size() << std::endl;
+			ss << "Objects: " << ObjectBase::__GetTracingObjects().size() << std::endl;
 		}
 #endif
 

@@ -21,7 +21,7 @@
 #pragma once
 #include "../macros.h"
 #include "../core/core.h"
-#include "../math/helper.h"
+#include "../math/math.h"
 #include "types.h"
 
 namespace kiwano

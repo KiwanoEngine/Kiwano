@@ -26,7 +26,7 @@ namespace kiwano
 	// GIF Í¼Ïñ
 	KGE_DECLARE_SMART_PTR(GifImage);
 	class KGE_API GifImage
-		: public Object
+		: public ObjectBase
 	{
 	public:
 		GifImage();

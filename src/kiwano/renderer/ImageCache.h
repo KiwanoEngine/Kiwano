@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/singleton.hpp"
 #include "Image.h"
 #include "GifImage.h"
 

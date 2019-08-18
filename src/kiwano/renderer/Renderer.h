@@ -19,18 +19,15 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/time.h"
 #include "../base/Component.h"
-#include "../base/Resource.h"
-#include "../2d/include-forwards.h"
-#include "helper.hpp"
+#include "win32/FontCollectionLoader.h"
 #include "RenderTarget.h"
 #include "GifImage.h"
 
 #if defined(KGE_USE_DIRECTX10)
 #	include "D3D10DeviceResources.h"
 #else
-#	include "D3D11DeviceResources.h"
+#	include "win32/D3D11DeviceResources.h"
 #endif
 
 namespace kiwano
@@ -68,6 +65,11 @@ namespace kiwano
 
 		void CreateGifImage(
 			GifImage& image,
+			Resource const& res
+		);
+
+		void CreateFontFromResource(
+			FontCollection& collection,
 			Resource const& res
 		);
 
@@ -166,5 +168,9 @@ namespace kiwano
 		ComPtr<ID2DDeviceResources>		d2d_res_;
 		ComPtr<ID3DDeviceResources>		d3d_res_;
 		ComPtr<ID2D1DrawingStateBlock>	drawing_state_block_;
+
+		ComPtr<IFontCollectionLoader>			font_collection_loader_;
+		ComPtr<IResourceFontFileLoader>			res_font_file_loader_;
+		ComPtr<IResourceFontCollectionLoader>	res_font_collection_loader_;
 	};
 }

@@ -37,6 +37,9 @@
     <Filter Include="core">
       <UniqueIdentifier>{86e2d0f2-a9d0-4456-b6a5-d480228bbf82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\win32">
+      <UniqueIdentifier>{30333461-e9bc-4709-84bd-ce6e0e1a3079}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\kiwano\ui\Button.h">
@@ -96,21 +99,6 @@
     <ClInclude Include="..\src\kiwano\base\time.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\D2DDeviceResources.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\D3D10DeviceResources.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\D3D11DeviceResources.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\helper.hpp">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\TextRenderer.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\math\constants.hpp">
       <Filter>math</Filter>
     </ClInclude>
@@ -140,9 +128,6 @@
     </ClInclude>
     <ClInclude Include="..\src\kiwano\config.h" />
     <ClInclude Include="..\src\kiwano\macros.h" />
-    <ClInclude Include="..\src\kiwano\math\helper.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\math\Vec2.hpp">
       <Filter>math</Filter>
     </ClInclude>
@@ -150,9 +135,6 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\base\SmartPtr.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\base\Object.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\kiwano.h" />
@@ -173,9 +155,6 @@
     </ClInclude>
     <ClInclude Include="..\src\kiwano\utils\FileUtil.h">
       <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\D3DDeviceResourcesBase.h">
-      <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\base\types.h">
       <Filter>base</Filter>
@@ -198,12 +177,6 @@
     <ClInclude Include="..\src\kiwano\2d\Frame.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\GifImage.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\Image.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\action\Action.h">
       <Filter>2d\action</Filter>
     </ClInclude>
@@ -221,9 +194,6 @@
     </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\action\Animation.h">
       <Filter>2d\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\ImageCache.h">
-      <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\utils\ResourceCache.h">
       <Filter>utils</Filter>
@@ -255,9 +225,6 @@
     <ClInclude Include="..\src\kiwano\core\vector.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\base\ComPtr.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\core\core.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -266,9 +233,6 @@
     </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\ShapeActor.h">
       <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\Geometry.h">
-      <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\action\ActionDelay.h">
       <Filter>2d\action</Filter>
@@ -282,14 +246,11 @@
     <ClInclude Include="..\src\kiwano\base\Window.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\Renderer.h">
-      <Filter>renderer</Filter>
+    <ClInclude Include="..\src\kiwano\math\math.h">
+      <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\TextLayout.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\kiwano\renderer\RenderTarget.h">
-      <Filter>renderer</Filter>
+    <ClInclude Include="..\src\kiwano\base\ObjectBase.h">
+      <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano\renderer\Color.h">
       <Filter>renderer</Filter>
@@ -297,7 +258,49 @@
     <ClInclude Include="..\src\kiwano\renderer\Font.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\Geometry.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\GifImage.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\Image.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\ImageCache.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\kiwano\renderer\LayerArea.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\Renderer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\TextLayout.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\win32\ComPtr.hpp">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\win32\D2DDeviceResources.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\win32\D3D10DeviceResources.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\win32\D3D11DeviceResources.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\win32\D3DDeviceResourcesBase.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\win32\FontCollectionLoader.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\win32\TextRenderer.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano\renderer\RenderTarget.h">
       <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -335,18 +338,6 @@
     <ClCompile Include="..\src\kiwano\base\time.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\D2DDeviceResources.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\D3D10DeviceResources.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\D3D11DeviceResources.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\TextRenderer.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\kiwano\platform\Application.cpp">
       <Filter>platform</Filter>
     </ClCompile>
@@ -357,9 +348,6 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\base\Input.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\base\Object.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\utils\DataUtil.cpp">
@@ -398,12 +386,6 @@
     <ClCompile Include="..\src\kiwano\2d\Frame.cpp">
       <Filter>2d</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\GifImage.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\Image.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\action\Action.cpp">
       <Filter>2d\action</Filter>
     </ClCompile>
@@ -419,9 +401,6 @@
     <ClCompile Include="..\src\kiwano\2d\action\Animation.cpp">
       <Filter>2d\action</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\ImageCache.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\kiwano\utils\ResourceCache.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -433,9 +412,6 @@
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\ShapeActor.cpp">
       <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\Geometry.cpp">
-      <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\2d\action\ActionDelay.cpp">
       <Filter>2d\action</Filter>
@@ -449,14 +425,8 @@
     <ClCompile Include="..\src\kiwano\base\Window.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\Renderer.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\TextLayout.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\kiwano\renderer\RenderTarget.cpp">
-      <Filter>renderer</Filter>
+    <ClCompile Include="..\src\kiwano\base\ObjectBase.cpp">
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano\renderer\Color.cpp">
       <Filter>renderer</Filter>
@@ -464,7 +434,43 @@
     <ClCompile Include="..\src\kiwano\renderer\Font.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\Geometry.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\GifImage.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\Image.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\ImageCache.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\kiwano\renderer\LayerArea.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\Renderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\TextLayout.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\win32\D2DDeviceResources.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\win32\D3D10DeviceResources.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\win32\D3D11DeviceResources.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\win32\FontCollectionLoader.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\win32\TextRenderer.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\renderer\RenderTarget.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>

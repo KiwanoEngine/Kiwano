@@ -45,7 +45,7 @@ namespace kiwano
 
 	void ActionGroup::Init(ActorPtr target)
 	{
-		if (actions_.is_empty())
+		if (actions_.item_empty())
 		{
 			Done();
 			return;
@@ -135,7 +135,7 @@ namespace kiwano
 	ActionPtr ActionGroup::Reverse() const
 	{
 		auto group = new (std::nothrow) ActionGroup();
-		if (group && !actions_.is_empty())
+		if (group && !actions_.item_empty())
 		{
 			for (auto action = actions_.last_item(); action; action = action->prev_item())
 			{

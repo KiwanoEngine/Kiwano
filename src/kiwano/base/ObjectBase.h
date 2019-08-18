@@ -20,28 +20,58 @@
 
 #pragma once
 #include "../macros.h"
-#include "../math/helper.h"
-#include "Color.h"
-#include <Unknwnbase.h>
+#include "../core/core.h"
+#include "RefCounter.hpp"
+#include "SmartPtr.hpp"
 
 namespace kiwano
 {
+	KGE_DECLARE_SMART_PTR(ObjectBase);
 
-	MIDL_INTERFACE("fb99fa64-d9cf-4e0e-9c75-90514797b01d")
-	KGE_API ID3DDeviceResourcesBase : public IUnknown
+	class KGE_API ObjectBase
+		: public RefCounter
 	{
 	public:
-		virtual HRESULT Present(bool vsync) = 0;
+		ObjectBase();
 
-		virtual HRESULT ClearRenderTarget(Color& clear_color) = 0;
+		virtual ~ObjectBase();
 
-		virtual HRESULT HandleDeviceLost() = 0;
+		void* GetUserData() const;
 
-		virtual HRESULT SetLogicalSize(Size logical_size) = 0;
+		void SetUserData(void* data);
 
-		virtual HRESULT SetDpi(float dpi) = 0;
+		void SetName(String const& name);
 
-		virtual void DiscardResources() = 0;
+		inline String GetName() const					{ if (name_) return *name_; return String(); }
+
+		inline bool IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
+
+		inline unsigned int GetObjectID() const			{ return id_; }
+
+		String DumpObject();
+
+	public:
+		static bool IsTracingLeaks();
+
+		static void StartTracingLeaks();
+
+		static void StopTracingLeaks();
+
+		static void DumpTracingObjects();
+
+	public:
+		static Vector<ObjectBase*>& __GetTracingObjects();
+
+		static void __AddObjectToTracingList(ObjectBase*);
+
+		static void __RemoveObjectFromTracingList(ObjectBase*);
+
+	private:
+		bool tracing_leak_;
+		void* user_data_;
+		String* name_;
+
+		const unsigned int id_;
+		static unsigned int last_object_id;
 	};
-	
 }

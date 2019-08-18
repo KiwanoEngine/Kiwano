@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "D2DDeviceResources.h"
 #include "Geometry.h"
 
 namespace kiwano

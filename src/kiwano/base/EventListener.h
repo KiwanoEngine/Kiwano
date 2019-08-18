@@ -21,7 +21,7 @@
 #pragma once
 #include "../core/core.h"
 #include "../base/SmartPtr.hpp"
-#include "Object.h"
+#include "ObjectBase.h"
 #include "Event.hpp"
 
 namespace kiwano
@@ -34,7 +34,7 @@ namespace kiwano
 
 	// ÊÂ¼þ¼àÌýÆ÷
 	class KGE_API EventListener
-		: public Object
+		: public ObjectBase
 		, protected intrusive_list_item<EventListenerPtr>
 	{
 		friend class EventDispatcher;

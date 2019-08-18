@@ -20,7 +20,7 @@
 
 #include "D3D10DeviceResources.h"
 
-#include "../base/Logger.h"
+#include "../../base/Logger.h"
 
 #pragma comment(lib, "d3d10_1.lib")
 
@@ -163,7 +163,10 @@ namespace kiwano
 				{
 					res->AddRef();
 
-					DX::SafeRelease(*device_resources);
+					if (*device_resources)
+					{
+						(*device_resources)->Release();
+					}
 					(*device_resources) = res;
 				}
 				else

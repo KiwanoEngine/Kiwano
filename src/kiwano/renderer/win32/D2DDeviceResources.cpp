@@ -19,9 +19,8 @@
 // THE SOFTWARE.
 
 #include "D2DDeviceResources.h"
-#include "ImageCache.h"
-#include "../base/Logger.h"
-#include "../utils/FileUtil.h"
+#include "../../base/Logger.h"
+#include "../../utils/FileUtil.h"
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -108,7 +107,10 @@ namespace kiwano
 			{
 				res->AddRef();
 
-				DX::SafeRelease(*device_resources);
+				if (*device_resources)
+				{
+					(*device_resources)->Release();
+				}
 				(*device_resources) = res;
 			}
 			else
@@ -172,8 +174,6 @@ namespace kiwano
 
 	void D2DDeviceResources::DiscardResources()
 	{
-		ImageCache::GetInstance()->Clear();
-
 		factory_.reset();
 		device_.reset();
 		device_context_.reset();
@@ -191,9 +191,9 @@ namespace kiwano
 	{
 		HRESULT hr = S_OK;
 
-		ComPtr<ID2D1Factory1>			d2d_factory;
-		ComPtr<IWICImagingFactory>		imaging_factory;
-		ComPtr<IDWriteFactory>			dwrite_factory;
+		ComPtr<ID2D1Factory1>		d2d_factory;
+		ComPtr<IWICImagingFactory>	imaging_factory;
+		ComPtr<IDWriteFactory>		dwrite_factory;
 
 		D2D1_FACTORY_OPTIONS options;
 		ZeroMemory(&options, sizeof(D2D1_FACTORY_OPTIONS));
@@ -236,9 +236,9 @@ namespace kiwano
 		{
 			dwrite_factory_ = dwrite_factory;
 
-			ComPtr<ID2D1StrokeStyle>		d2d_miter_stroke_style;
-			ComPtr<ID2D1StrokeStyle>		d2d_bevel_stroke_style;
-			ComPtr<ID2D1StrokeStyle>		d2d_round_stroke_style;
+			ComPtr<ID2D1StrokeStyle> d2d_miter_stroke_style;
+			ComPtr<ID2D1StrokeStyle> d2d_bevel_stroke_style;
+			ComPtr<ID2D1StrokeStyle> d2d_round_stroke_style;
 
 			D2D1_STROKE_STYLE_PROPERTIES stroke_style = D2D1::StrokeStyleProperties(
 				D2D1_CAP_STYLE_FLAT,
@@ -466,12 +466,12 @@ namespace kiwano
 		ComPtr<IDWriteTextFormat> output;
 		HRESULT hr = dwrite_factory_->CreateTextFormat(
 			font.family.c_str(),
-			nullptr,
+			font.collection.GetFontCollection().get(),
 			DWRITE_FONT_WEIGHT(font.weight),
 			font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
 			font.size,
-			L"",
+			L"en-us",
 			&output
 		);
 

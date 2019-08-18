@@ -19,59 +19,26 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
-#include "RefCounter.hpp"
-#include "SmartPtr.hpp"
+#include "D2DDeviceResources.h"
 
 namespace kiwano
 {
-	KGE_DECLARE_SMART_PTR(Object);
-
-	class KGE_API Object
-		: public RefCounter
+	interface DWRITE_DECLARE_INTERFACE("b293e798-9916-4096-a3c1-e5d4039dfa64")
+		ITextRenderer : public IDWriteTextRenderer
 	{
 	public:
-		Object();
+		static KGE_API HRESULT Create(
+			_Out_ ITextRenderer** ppTextRenderer,
+			_In_ ID2D1RenderTarget* pRT
+		);
 
-		virtual ~Object();
-
-		void* GetUserData() const;
-
-		void SetUserData(void* data);
-
-		void SetName(String const& name);
-
-		inline String GetName() const					{ if (name_) return *name_; return String(); }
-
-		inline bool IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
-
-		inline unsigned int GetObjectID() const			{ return id_; }
-
-		String DumpObject();
-
-	public:
-		static bool IsTracingLeaks();
-
-		static void StartTracingLeaks();
-
-		static void StopTracingLeaks();
-
-		static void DumpTracingObjects();
-
-	public:
-		static Vector<Object*>& __GetTracingObjects();
-
-		static void __AddObjectToTracingList(Object*);
-
-		static void __RemoveObjectFromTracingList(Object*);
-
-	private:
-		bool tracing_leak_;
-		void* user_data_;
-		String* name_;
-
-		const unsigned int id_;
-		static unsigned int last_object_id;
+		STDMETHOD_(void, SetTextStyle)(
+			_In_ FLOAT opacity,
+            _In_ CONST D2D1_COLOR_F &fillColor,
+            _In_ BOOL outline,
+            _In_ CONST D2D1_COLOR_F &outlineColor,
+            _In_ FLOAT outlineWidth,
+			_In_ ID2D1StrokeStyle* outlineJoin
+		) PURE;
 	};
 }

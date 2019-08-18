@@ -76,7 +76,7 @@ namespace kiwano
 		size_t AddFrameSequence(String const& id, FrameSequencePtr frames);
 
 		// 添加对象
-		bool AddObj(String const& id, ObjectPtr obj);
+		bool AddObjectBase(String const& id, ObjectBasePtr obj);
 
 		// 获取图片资源
 		FramePtr GetFrame(String const& id) const;
@@ -108,6 +108,6 @@ namespace kiwano
 		virtual ~ResourceCache();
 
 	protected:
-		UnorderedMap<String, ObjectPtr> cache_;
+		UnorderedMap<String, ObjectBasePtr> cache_;
 	};
 }

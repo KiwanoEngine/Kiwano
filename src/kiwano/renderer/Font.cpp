@@ -19,14 +19,41 @@
 // THE SOFTWARE.
 
 #include "Font.h"
+#include "Renderer.h"
 
 namespace kiwano
 {
-	Font::Font(const String& family, float size, unsigned int weight, bool italic)
+	//
+	// FontCollection
+	//
+
+	FontCollection::FontCollection()
+	{
+	}
+
+	FontCollection::FontCollection(Resource const& res)
+	{
+		Load(res);
+	}
+
+	bool FontCollection::Load(Resource const& res)
+	{
+		Renderer::GetInstance()->CreateFontFromResource(*this, res);
+		return false;
+	}
+
+
+	//
+	// Font
+	//
+
+	Font::Font(const String& family, float size, unsigned int weight, bool italic, FontCollection collection)
 		: family(family)
 		, size(size)
 		, weight(weight)
 		, italic(italic)
+		, collection(collection)
 	{
 	}
+
 }

@@ -29,7 +29,7 @@ namespace kiwano
 
 	// ÎèÌ¨¹ý¶É
 	class KGE_API Transition
-		: public Object
+		: public ObjectBase
 	{
 		friend class Director;
 

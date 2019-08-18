@@ -20,6 +20,9 @@
 
 #pragma once
 #include "../core/core.h"
+#include "../base/Resource.h"
+#include "win32/ComPtr.hpp"
+#include <dwrite.h>
 
 namespace kiwano
 {
@@ -37,6 +40,28 @@ namespace kiwano
 		ExtraBlack	= 950
 	};
 
+
+	// 字体集
+	class FontCollection
+	{
+	public:
+		FontCollection();
+
+		FontCollection(Resource const& res);
+
+		// 从资源加载字体集
+		bool Load(Resource const& res);
+
+	public:
+		inline ComPtr<IDWriteFontCollection> GetFontCollection() const			{ return collection_; }
+
+		inline void SetFontCollection(ComPtr<IDWriteFontCollection> collection)	{ collection_ = collection; }
+
+	protected:
+		ComPtr<IDWriteFontCollection> collection_;
+	};
+
+
 	// 字体
 	class Font
 	{
@@ -45,13 +70,15 @@ namespace kiwano
 		float			size;		// 字号
 		unsigned int	weight;		// 粗细值
 		bool			italic;		// 是否斜体
+		FontCollection	collection;	// 字体集
 
 	public:
 		Font(
-			const String& family	= L"",
-			float size				= 18,
-			unsigned int weight		= FontWeight::Normal,
-			bool italic				= false
+			const String& family		= L"",
+			float size					= 18,
+			unsigned int weight			= FontWeight::Normal,
+			bool italic					= false,
+			FontCollection collection	= FontCollection()
 		);
 	};
 }
