@@ -43,7 +43,7 @@ namespace kiwano
 		Queue<FunctionToPerform> functions_to_perform_;
 	}
 
-	Options::Options(String const& title, Int32 width, Int32 height, LPCWSTR icon, Color clear_color, bool vsync, bool fullscreen, bool debug)
+	Options::Options(String const& title, Int32 width, Int32 height, UInt32 icon, Color clear_color, bool vsync, bool fullscreen, bool debug)
 		: title(title)
 		, width(width)
 		, height(height)

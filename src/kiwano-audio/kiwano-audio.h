@@ -22,4 +22,4 @@
 
 #include "src/audio.h"
 #include "src/Sound.h"
-#include "src/Player.h"
+#include "src/SoundPlayer.h"

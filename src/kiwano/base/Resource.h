@@ -49,8 +49,8 @@ namespace kiwano
 		Resource();
 
 		Resource(
-			UInt32 id,		/* 资源名称 */
-			LPCWSTR type	/* 资源类型 */
+			UInt32 id,			/* 资源 ID */
+			const WChar* type	/* 资源类型 */
 		);
 
 		// 获取二进制数据
@@ -58,11 +58,12 @@ namespace kiwano
 
 		inline UInt32 GetId() const		{ return id_; }
 
-		inline LPCWSTR GetType() const	{ return type_; }
+		inline const WChar* GetType() const	{ return type_; }
 
 	private:
-		UInt32	id_;
-		LPCWSTR	type_;
+		UInt32			id_;
+		const WChar*	type_;
+
 		mutable Resource::Data	data_;
 	};
 }

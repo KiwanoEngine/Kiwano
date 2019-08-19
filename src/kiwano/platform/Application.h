@@ -30,23 +30,23 @@ namespace kiwano
 	struct Options
 	{
 		String	title;				// 标题
-		Int32		width;				// 宽度
-		Int32		height;				// 高度
-		LPCWSTR	icon;				// 图标
+		Int32	width;				// 宽度
+		Int32	height;				// 高度
+		UInt32	icon;				// 图标资源 ID
 		Color	clear_color;		// 清屏颜色
 		bool	vsync;				// 垂直同步
 		bool	fullscreen;			// 全屏模式
 		bool	debug;				// 调试模式
 
 		Options(
-			String const& title = L"Kiwano Game",
-			Int32 width = 640,
-			Int32 height = 480,
-			LPCWSTR icon = nullptr,
-			Color clear_color = Color::Black,
-			bool vsync = true,
-			bool fullscreen = false,
-			bool debug = false
+			String const& title	= L"Kiwano Game",
+			Int32 width			= 640,
+			Int32 height		= 480,
+			UInt32 icon			= 0,
+			Color clear_color	= Color::Black,
+			bool vsync			= true,
+			bool fullscreen		= false,
+			bool debug			= false
 		);
 	};
 

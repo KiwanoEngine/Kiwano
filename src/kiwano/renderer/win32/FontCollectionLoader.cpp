@@ -948,7 +948,7 @@ namespace kiwano
 		if (fileOffset <= resourceSize_ &&
 			fragmentSize <= resourceSize_ - fileOffset)
 		{
-			*fragmentStart = static_cast<BYTE const*>(resourcePtr_) + static_cast<UInt32>(fileOffset);
+			*fragmentStart = static_cast<Byte const*>(resourcePtr_) + static_cast<UInt32>(fileOffset);
 			*fragmentContext = NULL;
 			return S_OK;
 		}

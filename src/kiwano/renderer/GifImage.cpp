@@ -191,7 +191,7 @@ namespace kiwano
 
 	HRESULT GifImage::GetBackgroundColor(ComPtr<IWICMetadataQueryReader> metadata_reader)
 	{
-		BYTE bg_index = 0;
+		UChar bg_index = 0;
 		WICColor bgcolors[256];
 		UInt32 colors_copied = 0;
 		ComPtr<IWICPalette> wic_palette;

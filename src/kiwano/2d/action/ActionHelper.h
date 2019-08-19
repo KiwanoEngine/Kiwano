@@ -64,7 +64,7 @@ namespace kiwano
 		inline TweenHelper& SetDuration(Duration dur)						{ base->SetDuration(dur); return (*this); }
 
 		// 设置循环次数
-		inline TweenHelper& SetLoops(Int32 loops)								{ base->SetLoops(loops); return (*this); }
+		inline TweenHelper& SetLoops(Int32 loops)							{ base->SetLoops(loops); return (*this); }
 
 		// 设置缓动函数
 		inline TweenHelper& SetEaseFunc(EaseFunc ease)						{ base->SetEaseFunc(ease); return (*this); }
@@ -118,7 +118,7 @@ namespace kiwano
 			Duration dur,
 			Point const& pos,	/* 目的坐标 */
 			Float32 height,		/* 跳跃高度 */
-			Int32 jumps = 1)		/* 跳跃次数 */
+			Int32 jumps = 1)	/* 跳跃次数 */
 		{
 			return TweenHelper(new kiwano::ActionJumpBy(dur, pos, height, jumps));
 		}
@@ -128,7 +128,7 @@ namespace kiwano
 			Duration dur,
 			Point const& pos,	/* 目的坐标 */
 			Float32 height,		/* 跳跃高度 */
-			Int32 jumps = 1)		/* 跳跃次数 */
+			Int32 jumps = 1)	/* 跳跃次数 */
 		{
 			return TweenHelper(new kiwano::ActionJumpTo(dur, pos, height, jumps));
 		}

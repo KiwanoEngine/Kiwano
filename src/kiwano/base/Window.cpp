@@ -66,7 +66,7 @@ namespace kiwano
 		}
 	}
 
-	void Window::Init(String const& title, Int32 width, Int32 height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
+	void Window::Init(String const& title, Int32 width, Int32 height, UInt32 icon, bool fullscreen, WNDPROC proc)
 	{
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
@@ -84,7 +84,7 @@ namespace kiwano
 
 		if (icon)
 		{
-			wcex.hIcon = (HICON)::LoadImageW(hinst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+			wcex.hIcon = (HICON)::LoadImageW(hinst, MAKEINTRESOURCE(icon), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 		}
 
 		::RegisterClassExW(&wcex);
@@ -216,14 +216,14 @@ namespace kiwano
 		return static_cast<Float32>(height_);
 	}
 
-	void Window::SetIcon(LPCWSTR icon_resource)
+	void Window::SetIcon(UInt32 icon_resource)
 	{
 		if (handle_)
 		{
 			HINSTANCE hinstance = GetModuleHandle(nullptr);
 			HICON icon = (HICON)::LoadImage(
 				hinstance,
-				icon_resource,
+				MAKEINTRESOURCE(icon_resource),
 				IMAGE_ICON,
 				0,
 				0,

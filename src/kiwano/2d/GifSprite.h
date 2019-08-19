@@ -62,7 +62,7 @@ namespace kiwano
 		);
 
 		// 设置 GIF 动画循环次数
-		inline void SetLoopCount(Int32 loops)							{ total_loop_count_ = loops; }
+		inline void SetLoopCount(Int32 loops)						{ total_loop_count_ = loops; }
 
 		// 设置 GIF 动画每次循环结束回调函数
 		inline void SetLoopDoneCallback(LoopDoneCallback const& cb)	{ loop_cb_ = cb; }
@@ -100,8 +100,8 @@ namespace kiwano
 
 	protected:
 		bool				animating_;
-		Int32					total_loop_count_;
-		Int32					loop_count_;
+		Int32				total_loop_count_;
+		Int32				loop_count_;
 		UInt32				next_index_;
 		Duration			frame_delay_;
 		Duration			frame_elapsed_;

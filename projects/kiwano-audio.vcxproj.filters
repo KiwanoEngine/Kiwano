@@ -8,13 +8,13 @@
     <ClInclude Include="..\src\kiwano-audio\src\audio-modules.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano-audio\src\Player.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano-audio\src\Sound.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\kiwano-audio\src\Transcoder.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\kiwano-audio\src\SoundPlayer.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -25,13 +25,13 @@
     <ClCompile Include="..\src\kiwano-audio\src\audio-modules.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\kiwano-audio\src\Player.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\kiwano-audio\src\Sound.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\kiwano-audio\src\Transcoder.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano-audio\src\SoundPlayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

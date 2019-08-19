@@ -18,23 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Player.h"
+#include "SoundPlayer.h"
 
 namespace kiwano
 {
 	namespace audio
 	{
-		Player::Player()
+		SoundPlayer::SoundPlayer()
 			: volume_(1.f)
 		{
 		}
 
-		Player::~Player()
+		SoundPlayer::~SoundPlayer()
 		{
 			ClearCache();
 		}
 
-		UInt32 Player::Load(String const& file_path)
+		UInt32 SoundPlayer::Load(String const& file_path)
 		{
 			UInt32 hash_code = file_path.hash();
 			if (sound_cache_.end() != sound_cache_.find(hash_code))
@@ -54,7 +54,7 @@ namespace kiwano
 			return false;
 		}
 
-		UInt32 Player::Load(Resource const& res)
+		UInt32 SoundPlayer::Load(Resource const& res)
 		{
 			UInt32 hash_code = res.GetId();
 			if (sound_cache_.end() != sound_cache_.find(hash_code))
@@ -74,35 +74,35 @@ namespace kiwano
 			return false;
 		}
 
-		void Player::Play(UInt32 id, Int32 loop_count)
+		void SoundPlayer::Play(UInt32 id, Int32 loop_count)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Play(loop_count);
 		}
 
-		void Player::Pause(UInt32 id)
+		void SoundPlayer::Pause(UInt32 id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Pause();
 		}
 
-		void Player::Resume(UInt32 id)
+		void SoundPlayer::Resume(UInt32 id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Resume();
 		}
 
-		void Player::Stop(UInt32 id)
+		void SoundPlayer::Stop(UInt32 id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Stop();
 		}
 
-		bool Player::IsPlaying(UInt32 id)
+		bool SoundPlayer::IsPlaying(UInt32 id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
@@ -110,12 +110,12 @@ namespace kiwano
 			return false;
 		}
 
-		Float32 Player::GetVolume() const
+		Float32 SoundPlayer::GetVolume() const
 		{
 			return volume_;
 		}
 
-		void Player::SetVolume(Float32 volume)
+		void SoundPlayer::SetVolume(Float32 volume)
 		{
 			volume_ = std::min(std::max(volume, -224.f), 224.f);
 			for (const auto& pair : sound_cache_)
@@ -124,7 +124,7 @@ namespace kiwano
 			}
 		}
 
-		void Player::PauseAll()
+		void SoundPlayer::PauseAll()
 		{
 			for (const auto& pair : sound_cache_)
 			{
@@ -132,7 +132,7 @@ namespace kiwano
 			}
 		}
 
-		void Player::ResumeAll()
+		void SoundPlayer::ResumeAll()
 		{
 			for (const auto& pair : sound_cache_)
 			{
@@ -140,7 +140,7 @@ namespace kiwano
 			}
 		}
 
-		void Player::StopAll()
+		void SoundPlayer::StopAll()
 		{
 			for (const auto& pair : sound_cache_)
 			{
@@ -148,7 +148,7 @@ namespace kiwano
 			}
 		}
 
-		void Player::ClearCache()
+		void SoundPlayer::ClearCache()
 		{
 			sound_cache_.clear();
 		}

@@ -27,23 +27,23 @@ namespace kiwano
 {
 	namespace audio
 	{
-		KGE_DECLARE_SMART_PTR(Player);
+		KGE_DECLARE_SMART_PTR(SoundPlayer);
 
 		// 音乐播放器
-		class KGE_API Player
+		class KGE_API SoundPlayer
 			: protected ObjectBase
 		{
 		public:
-			Player();
+			SoundPlayer();
 
-			~Player();
+			~SoundPlayer();
 
-			// 加载本地音频文件, 返回该资源标识符
+			// 加载本地音频文件, 返回该资源的标识符
 			UInt32 Load(
 				String const& file_path
 			);
 
-			// 加载音乐资源, 返回该资源标识符
+			// 加载音乐资源, 返回该资源的标识符
 			UInt32 Load(
 				Resource const& res		/* 音乐资源 */
 			);
@@ -51,7 +51,7 @@ namespace kiwano
 			// 播放音乐
 			void Play(
 				UInt32 id,				/* 标识符 */
-				Int32 loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
+				Int32 loop_count = 0	/* 播放循环次数 (-1 为循环播放) */
 			);
 
 			// 暂停音乐

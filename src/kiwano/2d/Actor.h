@@ -432,7 +432,7 @@ namespace kiwano
 		bool			update_pausing_;
 		bool			cascade_opacity_;
 		bool			show_border_;
-		Int32				z_order_;
+		Int32			z_order_;
 		Float32			opacity_;
 		Float32			displayed_opacity_;
 		Actor*			parent_;
@@ -444,9 +444,9 @@ namespace kiwano
 		UpdateCallback	cb_update_;
 		Transform		transform_;
 
-		bool			is_fast_transform_;
-		mutable bool	dirty_transform_;
-		mutable bool	dirty_transform_inverse_;
+		bool				is_fast_transform_;
+		mutable bool		dirty_transform_;
+		mutable bool		dirty_transform_inverse_;
 		mutable Matrix3x2	transform_matrix_;
 		mutable Matrix3x2	transform_matrix_inverse_;
 	};
