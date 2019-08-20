@@ -120,8 +120,3 @@ namespace kiwano
 		};
 	}
 }
-
-namespace kiwano
-{
-	using Vec2 = kiwano::math::Vec2T<Float32>;
-}

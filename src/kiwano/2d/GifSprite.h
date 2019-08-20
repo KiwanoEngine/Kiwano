@@ -77,7 +77,7 @@ namespace kiwano
 
 		inline DoneCallback GetDoneCallback() const					{ return done_cb_; }
 
-		void OnRender(Renderer* renderer) override;
+		void OnRender(RenderTarget* rt) override;
 
 	protected:
 		void Update(Duration dt) override;

@@ -101,16 +101,31 @@ namespace kiwano
 		}
 
 		//
-		// SizeF
+		// RectF
 		//
 
-		inline D2D1_RECT_F ConvertToRectF(Rect const& rect)
+		inline D2D1_RECT_F const& ConvertToRectF(Rect const& rect)
 		{
-			return D2D1_RECT_F{ rect.origin.x, rect.origin.y, rect.origin.x + rect.size.x, rect.origin.y + rect.size.y };
+			return reinterpret_cast<D2D1_RECT_F const&>(rect);
+		}
+
+		inline D2D1_RECT_F& ConvertToRectF(Rect& rect)
+		{
+			return reinterpret_cast<D2D1_RECT_F&>(rect);
+		}
+
+		inline const D2D1_RECT_F* ConvertToRectF(const Rect* rect)
+		{
+			return reinterpret_cast<const D2D1_RECT_F*>(rect);
+		}
+
+		inline D2D1_RECT_F* ConvertToRectF(Rect* rect)
+		{
+			return reinterpret_cast<D2D1_RECT_F*>(rect);
 		}
 
 		//
-		// SizeF
+		// ColorF
 		//
 		inline D2D1_COLOR_F const& ConvertToColorF(Color const& color)
 		{
@@ -133,7 +148,7 @@ namespace kiwano
 		}
 
 		//
-		// SizeF
+		// MatrixF
 		//
 
 		inline D2D1_MATRIX_3X2_F const& ConvertToMatrix3x2F(Matrix3x2 const& matrix)

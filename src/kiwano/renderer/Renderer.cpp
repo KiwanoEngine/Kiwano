@@ -126,6 +126,8 @@ namespace kiwano
 	{
 		KGE_LOG(L"Destroying device resources");
 
+		RenderTarget::DiscardDeviceResources();
+
 		d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.get());
 		res_font_file_loader_.reset();
 
@@ -133,7 +135,6 @@ namespace kiwano
 		res_font_collection_loader_.reset();
 
 		drawing_state_block_.reset();
-		solid_color_brush_.reset();
 		d2d_res_.reset();
 		d3d_res_.reset();
 	}
@@ -208,7 +209,9 @@ namespace kiwano
 
 	HRESULT Renderer::CreateDeviceResources()
 	{
-		HRESULT hr = InitDeviceResources(
+		KGE_ASSERT(d2d_res_);
+
+		HRESULT hr = RenderTarget::CreateDeviceResources(
 			d2d_res_->GetDeviceContext(),
 			d2d_res_
 		);
@@ -656,7 +659,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = render_target.InitDeviceResources(output, d2d_res_);
+			hr = render_target.CreateDeviceResources(output, d2d_res_);
 		}
 
 		ThrowIfFailed(hr);
@@ -688,13 +691,6 @@ namespace kiwano
 	void Renderer::SetClearColor(const Color& color)
 	{
 		clear_color_ = color;
-	}
-
-	bool Renderer::CheckVisibility(Size const& content_size, Matrix3x2 const& transform)
-	{
-		return Rect{ Point{}, output_size_ }.Intersects(
-			transform.Transform(Rect{ Point{}, content_size })
-		);
 	}
 
 }

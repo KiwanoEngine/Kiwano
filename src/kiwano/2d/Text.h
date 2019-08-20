@@ -160,7 +160,7 @@ namespace kiwano
 			TextStyle const& style
 		);
 
-		void OnRender(Renderer* renderer) override;
+		void OnRender(RenderTarget* rt) override;
 
 	protected:
 		void UpdateLayout();

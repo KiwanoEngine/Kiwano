@@ -48,12 +48,12 @@ namespace kiwano
 		: background_color_(0.0f, 0.0f, 0.0f, 0.7f)
 	{
 		SetName(L"kiwano-debug-actor");
-		SetPosition(10, 10);
+		SetPosition(Point{ 10, 10 });
 		SetResponsible(true);
 		SetCascadeOpacityEnabled(true);
 
 		debug_text_ = new Text;
-		debug_text_->SetPosition(10, 10);
+		debug_text_->SetPosition(Point{ 10, 10 });
 		this->AddChild(debug_text_);
 
 		Font font;
@@ -74,11 +74,11 @@ namespace kiwano
 	{
 	}
 
-	void DebugActor::OnRender(Renderer* renderer)
+	void DebugActor::OnRender(RenderTarget* rt)
 	{
-		PrepareRender(renderer);
+		PrepareRender(rt);
 
-		renderer->FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f }, background_color_);
+		rt->FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f }, background_color_);
 	}
 
 	void DebugActor::OnUpdate(Duration dt)

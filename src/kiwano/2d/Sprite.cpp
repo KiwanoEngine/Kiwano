@@ -86,7 +86,7 @@ namespace kiwano
 		if (frame_)
 		{
 			frame_->SetCropRect(crop_rect);
-			SetSize(frame_->GetWidth(), frame_->GetHeight());
+			SetSize(Size{ frame_->GetWidth(), frame_->GetHeight() });
 		}
 	}
 
@@ -97,18 +97,18 @@ namespace kiwano
 			frame_ = frame;
 			if (frame_)
 			{
-				SetSize(frame_->GetWidth(), frame_->GetHeight());
+				SetSize(Size{ frame_->GetWidth(), frame_->GetHeight() });
 			}
 		}
 	}
 
-	void Sprite::OnRender(Renderer* renderer)
+	void Sprite::OnRender(RenderTarget* rt)
 	{
-		if (frame_ && renderer->CheckVisibility(size_, transform_matrix_))
+		if (frame_ && rt->CheckVisibility(size_, transform_matrix_))
 		{
-			PrepareRender(renderer);
+			PrepareRender(rt);
 
-			renderer->DrawImage(frame_->GetImage(), &frame_->GetCropRect(), nullptr);
+			rt->DrawImage(frame_->GetImage(), &frame_->GetCropRect(), nullptr);
 		}
 	}
 }

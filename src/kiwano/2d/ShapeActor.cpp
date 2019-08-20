@@ -78,18 +78,18 @@ namespace kiwano
 		stroke_style_ = stroke_style;
 	}
 
-	void ShapeActor::OnRender(Renderer* renderer)
+	void ShapeActor::OnRender(RenderTarget* rt)
 	{
-		if (geo_)
+		if (geo_ && rt->CheckVisibility(size_, transform_matrix_))
 		{
-			PrepareRender(renderer);
+			PrepareRender(rt);
 
-			renderer->FillGeometry(
+			rt->FillGeometry(
 				geo_,
 				fill_color_
 			);
 
-			renderer->DrawGeometry(
+			rt->DrawGeometry(
 				geo_,
 				stroke_color_,
 				stroke_width_,
@@ -106,22 +106,23 @@ namespace kiwano
 	{
 	}
 
-	LineActor::LineActor(Point const& end)
+	LineActor::LineActor(Point const& point)
 	{
-		SetEndPoint(end);
+		SetPoint(point);
 	}
 
 	LineActor::~LineActor()
 	{
 	}
 
-	void LineActor::SetEndPoint(Point const& end)
+	void LineActor::SetPoint(Point const& point)
 	{
-		geo_ = Geometry::CreateLine(Point{}, end);
+		geo_ = Geometry::CreateLine(Point{}, point);
 
 		if (geo_)
 		{
-			SetSize(end);
+			point_ = point;
+			SetSize(point_);
 		}
 	}
 
@@ -149,6 +150,7 @@ namespace kiwano
 
 		if (geo_)
 		{
+			rect_size_ = size;
 			SetSize(size);
 		}
 	}
@@ -187,6 +189,7 @@ namespace kiwano
 
 		if (geo_)
 		{
+			rect_size_ = size;
 			SetSize(size);
 		}
 	}
@@ -216,7 +219,7 @@ namespace kiwano
 
 		if (geo_)
 		{
-			SetSize(radius * 2, radius * 2);
+			SetSize(Size{ radius * 2, radius * 2 });
 		}
 	}
 
@@ -270,6 +273,12 @@ namespace kiwano
 	{
 		sink_.EndPath(closed);
 		geo_ = sink_.GetGeometry();
+
+		if (geo_)
+		{
+			Rect bounds = geo_.GetBoundingBox();
+			SetSize(bounds.GetSize());
+		}
 	}
 
 	void PathActor::AddLine(Point const& point)

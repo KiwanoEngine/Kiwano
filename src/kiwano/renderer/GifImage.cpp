@@ -317,7 +317,7 @@ namespace kiwano
 				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 				if (SUCCEEDED(hr))
 				{
-					frame_rect.origin.x = static_cast<Float32>(prop_val.uiVal);
+					frame_rect.left_top.x = static_cast<Float32>(prop_val.uiVal);
 				}
 				PropVariantClear(&prop_val);
 			}
@@ -331,7 +331,7 @@ namespace kiwano
 				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 				if (SUCCEEDED(hr))
 				{
-					frame_rect.origin.y = static_cast<Float32>(prop_val.uiVal);
+					frame_rect.left_top.y = static_cast<Float32>(prop_val.uiVal);
 				}
 				PropVariantClear(&prop_val);
 			}
@@ -345,7 +345,7 @@ namespace kiwano
 				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 				if (SUCCEEDED(hr))
 				{
-					frame_rect.size.x = static_cast<Float32>(prop_val.uiVal);
+					frame_rect.right_bottom.x = frame_rect.left_top.x + static_cast<Float32>(prop_val.uiVal);
 				}
 				PropVariantClear(&prop_val);
 			}
@@ -359,7 +359,7 @@ namespace kiwano
 				hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 				if (SUCCEEDED(hr))
 				{
-					frame_rect.size.y = static_cast<Float32>(prop_val.uiVal);
+					frame_rect.right_bottom.y = frame_rect.left_top.y + static_cast<Float32>(prop_val.uiVal);
 				}
 				PropVariantClear(&prop_val);
 			}

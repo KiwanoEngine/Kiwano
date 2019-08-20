@@ -69,10 +69,10 @@ namespace kiwano
 		if (image_.IsValid())
 		{
 			auto bitmap_size = image_.GetSize();
-			crop_rect_.origin.x = std::min(std::max(crop_rect.origin.x, 0.f), bitmap_size.x);
-			crop_rect_.origin.y = std::min(std::max(crop_rect.origin.y, 0.f), bitmap_size.y);
-			crop_rect_.size.x = std::min(std::max(crop_rect.size.x, 0.f), bitmap_size.x - crop_rect.origin.x);
-			crop_rect_.size.y = std::min(std::max(crop_rect.size.y, 0.f), bitmap_size.y - crop_rect.origin.y);
+			crop_rect_.left_top.x = std::min(std::max(crop_rect.left_top.x, 0.f), bitmap_size.x);
+			crop_rect_.left_top.y = std::min(std::max(crop_rect.left_top.y, 0.f), bitmap_size.y);
+			crop_rect_.right_bottom.x = std::min(std::max(crop_rect.right_bottom.x, 0.f), bitmap_size.x);
+			crop_rect_.right_bottom.y = std::min(std::max(crop_rect.right_bottom.y, 0.f), bitmap_size.y);
 		}
 	}
 
@@ -81,9 +81,9 @@ namespace kiwano
 		image_ = image;
 		if (image_.IsValid())
 		{
-			crop_rect_.origin.x = crop_rect_.origin.y = 0;
-			crop_rect_.size.x = image_.GetWidth();
-			crop_rect_.size.y = image_.GetHeight();
+			crop_rect_.left_top.x = crop_rect_.left_top.y = 0;
+			crop_rect_.right_bottom.x = image_.GetWidth();
+			crop_rect_.right_bottom.y = image_.GetHeight();
 		}
 	}
 }

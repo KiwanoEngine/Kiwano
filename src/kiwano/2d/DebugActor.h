@@ -31,7 +31,7 @@ namespace kiwano
 
 		virtual ~DebugActor();
 
-		void OnRender(Renderer* renderer) override;
+		void OnRender(RenderTarget* rt) override;
 
 		void OnUpdate(Duration dt) override;
 

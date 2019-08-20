@@ -35,15 +35,6 @@ namespace kiwano
 	public:
 		Canvas();
 
-		Canvas(
-			Size const& size
-		);
-
-		Canvas(
-			Float32 width,
-			Float32 height
-		);
-
 		virtual ~Canvas();
 
 		// 开始绘图
@@ -148,7 +139,7 @@ namespace kiwano
 		void AddArc(
 			Point const& point,		/* 终点 */
 			Point const& radius,	/* 椭圆半径 */
-			Float32 rotation,			/* 椭圆旋转角度 */
+			Float32 rotation,		/* 椭圆旋转角度 */
 			bool clockwise = true,	/* 顺时针 or 逆时针 */
 			bool is_small = true	/* 是否取小于 180° 的弧 */
 		);
@@ -202,6 +193,32 @@ namespace kiwano
 			Float32 opacity
 		);
 
+		// 画笔二维变换
+		void SetBrushTransform(
+			Transform const& transform
+		);
+
+		// 画笔二维变换
+		void SetBrushTransform(
+			Matrix3x2 const& transform
+		);
+
+		// 设置图层
+		void PushLayerArea(
+			LayerArea& area
+		);
+
+		// 弹出图层
+		void PopLayerArea();
+
+		// 设置裁剪区域
+		void PushClipRect(
+			Rect const& clip_rect
+		);
+
+		// 弹出裁剪区域
+		void PopClipRect();
+
 		// 获取填充颜色
 		Color GetFillColor() const;
 
@@ -214,20 +231,10 @@ namespace kiwano
 		// 获取画笔透明度
 		Float32 GetBrushOpacity() const;
 
-		// 画笔二维变换
-		void SetBrushTransform(
-			Transform const& transform
-		);
-
-		// 画笔二维变换
-		void SetBrushTransform(
-			Matrix3x2 const& transform
-		);
-
 		// 导出为图片
 		Image ExportToImage() const;
 
-		void OnRender(Renderer* renderer) override;
+		void OnRender(RenderTarget* rt) override;
 
 	protected:
 		void UpdateCache() const;

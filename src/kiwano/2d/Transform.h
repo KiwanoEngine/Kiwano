@@ -19,29 +19,23 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "time.h"
-#include "Event.hpp"
+#include "../math/math.h"
 
 namespace kiwano
 {
-	class RenderTarget;
-
-	class KGE_API Component
+	class Transform
 	{
 	public:
-		virtual void SetupComponent() = 0;
-		virtual void DestroyComponent() = 0;
+		Float32 rotation;	// 旋转
+		Point position;		// 坐标
+		Point scale;		// 缩放
+		Point skew;			// 错切角度
 
-		virtual void BeforeUpdate() {}
-		virtual void OnUpdate(Duration) {}
-		virtual void AfterUpdate() {}
+	public:
+		Transform();
 
-		virtual void BeforeRender() {}
-		virtual void OnRender(RenderTarget*) {}
-		virtual void AfterRender() {}
+		Matrix3x2 ToMatrix() const;
 
-		virtual void HandleEvent(Event&) {}
-		virtual void HandleMessage(HWND, UInt32, WPARAM, LPARAM) {}
+		bool operator== (const Transform& rhs) const;
 	};
 }

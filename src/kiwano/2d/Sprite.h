@@ -77,7 +77,7 @@ namespace kiwano
 		void SetFrame(FramePtr frame);
 
 		// äÖÈ¾¾«Áé
-		void OnRender(Renderer* renderer) override;
+		void OnRender(RenderTarget* rt) override;
 
 	protected:
 		FramePtr frame_;

@@ -66,9 +66,6 @@
     <ClInclude Include="..\src\kiwano\2d\TextStyle.hpp">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\kiwano\2d\Transform.hpp">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\kiwano\2d\Transition.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -306,6 +303,9 @@
     <ClInclude Include="..\src\kiwano\core\types.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\kiwano\2d\Transform.h">
+      <Filter>2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\kiwano\ui\Button.cpp">
@@ -478,6 +478,9 @@
     </ClCompile>
     <ClCompile Include="..\src\kiwano\renderer\FontCollection.cpp">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\kiwano\2d\Transform.cpp">
+      <Filter>2d</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

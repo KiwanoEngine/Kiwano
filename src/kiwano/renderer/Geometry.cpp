@@ -43,10 +43,10 @@ namespace kiwano
 		if (!geo_)
 			return Rect{};
 
-		D2D1_RECT_F rect;
+		Rect rect;
 		// no matter it failed or not
-		geo_->GetBounds(DX::ConvertToMatrix3x2F(transform), &rect);
-		return Rect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
+		geo_->GetBounds(DX::ConvertToMatrix3x2F(transform), DX::ConvertToRectF(&rect));
+		return rect;
 	}
 
 	Float32 Geometry::GetLength()

@@ -81,7 +81,7 @@ namespace kiwano
 		// 获取形状
 		inline Geometry GetGeometry() const			{ return geo_; }
 
-		void OnRender(Renderer* renderer) override;
+		void OnRender(RenderTarget* rt) override;
 
 	protected:
 		Color		fill_color_;
@@ -92,7 +92,7 @@ namespace kiwano
 	};
 
 
-	// 直线
+	// 直线角色
 	class KGE_API LineActor
 		: public ShapeActor
 	{
@@ -100,19 +100,19 @@ namespace kiwano
 		LineActor();
 
 		LineActor(
-			Point const& end_pos
+			Point const& point
 		);
 
 		virtual ~LineActor();
 
-		Point const& GetEndPoint() const { return end_; }
+		Point const& GetPoint() const { return point_; }
 
-		void SetEndPoint(
-			Point const& end
+		void SetPoint(
+			Point const& point
 		);
 
 	protected:
-		Point end_;
+		Point point_;
 	};
 
 
@@ -131,10 +131,10 @@ namespace kiwano
 
 		void SetRectSize(Size const& size);
 
-		inline Size const& GetRectSize() const { return size_; }
+		inline Size const& GetRectSize() const { return rect_size_; }
 
 	protected:
-		Size size_;
+		Size rect_size_;
 	};
 
 
@@ -170,7 +170,7 @@ namespace kiwano
 		inline Size GetRectSize() const	{ return size_; }
 
 	protected:
-		Size size_;
+		Size rect_size_;
 		Vec2 radius_;
 	};
 
@@ -261,7 +261,7 @@ namespace kiwano
 		void AddArc(
 			Point const& point,		/* 终点 */
 			Size const& radius,		/* 椭圆半径 */
-			Float32 rotation,			/* 椭圆旋转角度 */
+			Float32 rotation,		/* 椭圆旋转角度 */
 			bool clockwise = true,	/* 顺时针 or 逆时针 */
 			bool is_small = true	/* 是否取小于 180° 的弧 */
 		);

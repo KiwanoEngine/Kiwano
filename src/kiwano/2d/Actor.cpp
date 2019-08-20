@@ -71,7 +71,7 @@ namespace kiwano
 			OnUpdate(dt);
 		}
 
-		if (!children_.item_empty())
+		if (!children_.empty())
 		{
 			ActorPtr next;
 			for (auto child = children_.first_item(); child; child = next)
@@ -82,16 +82,16 @@ namespace kiwano
 		}
 	}
 
-	void Actor::Render(Renderer* renderer)
+	void Actor::Render(RenderTarget* rt)
 	{
 		if (!visible_)
 			return;
 
 		UpdateTransform();
 
-		if (children_.item_empty())
+		if (children_.empty())
 		{
-			OnRender(renderer);
+			OnRender(rt);
 		}
 		else
 		{
@@ -102,41 +102,40 @@ namespace kiwano
 				if (child->GetZOrder() >= 0)
 					break;
 
-				child->Render(renderer);
+				child->Render(rt);
 				child = child->next_item().get();
 			}
 
-			OnRender(renderer);
+			OnRender(rt);
 
 			while (child)
 			{
-				child->Render(renderer);
+				child->Render(rt);
 				child = child->next_item().get();
 			}
 		}
 	}
 
-	void Actor::PrepareRender(Renderer* renderer)
+	void Actor::PrepareRender(RenderTarget* rt)
 	{
-		renderer->SetTransform(transform_matrix_);
-		renderer->SetOpacity(displayed_opacity_);
+		rt->SetTransform(transform_matrix_);
+		rt->SetOpacity(displayed_opacity_);
 	}
 
-	void Actor::RenderBorder()
+	void Actor::RenderBorder(RenderTarget* rt)
 	{
-		if (show_border_)
+		if (show_border_ && !size_.IsOrigin())
 		{
             Rect bounds = GetBounds();
 
-            auto renderer = Renderer::GetInstance();
-            renderer->SetTransform(transform_matrix_);
-            renderer->FillRectangle(bounds, Color(Color::Red, .4f));
-            renderer->DrawRectangle(bounds, Color(Color::Red, .8f), 2.f);
+			rt->SetTransform(transform_matrix_);
+			rt->FillRectangle(bounds, Color(Color::Red, .4f));
+			rt->DrawRectangle(bounds, Color(Color::Red, .8f), 2.f);
 		}
 
 		for (auto child = children_.first_item(); child; child = child->next_item())
 		{
-			child->RenderBorder();
+			child->RenderBorder(rt);
 		}
 	}
 
@@ -233,12 +232,7 @@ namespace kiwano
 		else
 		{
 			// matrix multiplication is optimized by expression template
-            transform_matrix_ = Matrix3x2::SRT(transform_.position, transform_.scale, transform_.rotation);
-
-            if (!transform_.skew.IsOrigin())
-            {
-                transform_matrix_ = Matrix3x2::Skewing(transform_.skew) * transform_matrix_;
-            }
+			transform_matrix_ = transform_.ToMatrix();
 		}
 
 		transform_matrix_.Translate(Point{ -size_.x * anchor_.x, -size_.y * anchor_.y });
@@ -270,14 +264,14 @@ namespace kiwano
 		}
 	}
 
-	void Actor::SetStage(Stage* scene)
+	void Actor::SetStage(Stage* stage)
 	{
-		if (scene && stage_ != scene)
+		if (stage && stage_ != stage)
 		{
-			stage_ = scene;
+			stage_ = stage;
 			for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 			{
-				child->stage_ = scene;
+				child->stage_ = stage;
 			}
 		}
 	}
@@ -288,7 +282,7 @@ namespace kiwano
 		{
 			ActorPtr me = this;
 
-			parent_->children_.remove_item(me);
+			parent_->children_.remove(me);
 
 			Actor* sibling = parent_->children_.last_item().get();
 
@@ -309,7 +303,7 @@ namespace kiwano
 			}
 			else
 			{
-				parent_->children_.push_front_item(me);
+				parent_->children_.push_front(me);
 			}
 		}
 	}
@@ -341,53 +335,31 @@ namespace kiwano
 		UpdateOpacity();
 	}
 
-	void Actor::SetAnchorX(Float32 anchor_x)
+	void Actor::SetAnchor(Vec2 const& anchor)
 	{
-		this->SetAnchor(anchor_x, anchor_.y);
-	}
-
-	void Actor::SetAnchorY(Float32 anchor_y)
-	{
-		this->SetAnchor(anchor_.x, anchor_y);
-	}
-
-	void Actor::SetAnchor(Float32 anchor_x, Float32 anchor_y)
-	{
-		if (anchor_.x == anchor_x && anchor_.y == anchor_y)
+		if (anchor_ == anchor)
 			return;
 
-		anchor_.x = anchor_x;
-		anchor_.y = anchor_y;
+		anchor_ = anchor;
 		dirty_transform_ = true;
-	}
-
-	void Actor::SetAnchor(Point const& anchor)
-	{
-		this->SetAnchor(anchor.x, anchor.y);
 	}
 
 	void Actor::SetWidth(Float32 width)
 	{
-		this->SetSize(width, size_.y);
+		SetSize(Size{ width, size_.y });
 	}
 
 	void Actor::SetHeight(Float32 height)
 	{
-		this->SetSize(size_.x, height);
+		SetSize(Size{ size_.x, height });
 	}
 
-	void Actor::SetSize(const Size& size)
+	void Actor::SetSize(Size const& size)
 	{
-		this->SetSize(size.x, size.y);
-	}
-
-	void Actor::SetSize(Float32 width, Float32 height)
-	{
-		if (size_.x == width && size_.y == height)
+		if (size_ == size)
 			return;
 
-		size_.x = width;
-		size_.y = height;
+		size_ = size;
 		dirty_transform_ = true;
 	}
 
@@ -412,96 +384,48 @@ namespace kiwano
 		}
 	}
 
+	void Actor::SetPosition(const Point & pos)
+	{
+		if (transform_.position == pos)
+			return;
+
+		transform_.position = pos;
+		dirty_transform_ = true;
+	}
+
 	void Actor::SetPositionX(Float32 x)
 	{
-		this->SetPosition(x, transform_.position.y);
+		SetPosition(Point{ x, transform_.position.y });
 	}
 
 	void Actor::SetPositionY(Float32 y)
 	{
-		this->SetPosition(transform_.position.x, y);
+		SetPosition(Point{ transform_.position.x, y });
 	}
 
-	void Actor::SetPosition(const Point & p)
+	void Actor::Move(Vec2 const& v)
 	{
-		this->SetPosition(p.x, p.y);
+		this->SetPosition(Point{ transform_.position.x + v.x, transform_.position.y + v.y });
 	}
 
-	void Actor::SetPosition(Float32 x, Float32 y)
+	void Actor::SetScale(Vec2 const& scale)
 	{
-		if (transform_.position.x == x && transform_.position.y == y)
+		if (transform_.scale == scale)
 			return;
 
-		transform_.position.x = x;
-		transform_.position.y = y;
-		dirty_transform_ = true;
-	}
-
-	void Actor::Move(Float32 x, Float32 y)
-	{
-		this->SetPosition(transform_.position.x + x, transform_.position.y + y);
-	}
-
-	void Actor::Move(const Point & v)
-	{
-		this->Move(v.x, v.y);
-	}
-
-	void Actor::SetScaleX(Float32 scale_x)
-	{
-		this->SetScale(scale_x, transform_.scale.y);
-	}
-
-	void Actor::SetScaleY(Float32 scale_y)
-	{
-		this->SetScale(transform_.scale.x, scale_y);
-	}
-
-	void Actor::SetScale(Float32 scale)
-	{
-		this->SetScale(scale, scale);
-	}
-
-	void Actor::SetScale(Float32 scale_x, Float32 scale_y)
-	{
-		if (transform_.scale.x == scale_x && transform_.scale.y == scale_y)
-			return;
-
-		transform_.scale.x = scale_x;
-		transform_.scale.y = scale_y;
+		transform_.scale = scale;
 		dirty_transform_ = true;
 		is_fast_transform_ = false;
 	}
 
-	void Actor::SetScale(Point const& scale)
+	void Actor::SetSkew(Vec2 const& skew)
 	{
-		this->SetScale(scale.x, scale.y);
-	}
-
-	void Actor::SetSkewX(Float32 skew_x)
-	{
-		this->SetSkew(skew_x, transform_.skew.y);
-	}
-
-	void Actor::SetSkewY(Float32 skew_y)
-	{
-		this->SetSkew(transform_.skew.x, skew_y);
-	}
-
-	void Actor::SetSkew(Float32 skew_x, Float32 skew_y)
-	{
-		if (transform_.skew.x == skew_x && transform_.skew.y == skew_y)
+		if (transform_.skew == skew)
 			return;
 
-		transform_.skew.x = skew_x;
-		transform_.skew.y = skew_y;
+		transform_.skew = skew;
 		dirty_transform_ = true;
 		is_fast_transform_ = false;
-	}
-
-	void Actor::SetSkew(Point const& skew)
-	{
-		this->SetSkew(skew.x, skew.y);
 	}
 
 	void Actor::SetRotation(Float32 angle)
@@ -531,7 +455,7 @@ namespace kiwano
 
 #endif // KGE_DEBUG
 
-			children_.push_back_item(child);
+			children_.push_back(child);
 			child->parent_ = this;
 			child->SetStage(this->stage_);
 			child->dirty_transform_ = true;
@@ -550,7 +474,7 @@ namespace kiwano
 
 	Rect Actor::GetBounds() const
 	{
-		return Rect(Point{}, size_);
+		return Rect{ Point{}, size_ };
 	}
 
 	Rect Actor::GetBoundingBox() const
@@ -609,20 +533,20 @@ namespace kiwano
 	{
 		KGE_ASSERT(child && "Actor::RemoveChild failed, NULL pointer exception");
 
-		if (children_.item_empty())
+		if (children_.empty())
 			return;
 
 		if (child)
 		{
 			child->parent_ = nullptr;
 			if (child->stage_) child->SetStage(nullptr);
-			children_.remove_item(ActorPtr(child));
+			children_.remove(ActorPtr(child));
 		}
 	}
 
 	void Actor::RemoveChildren(String const& child_name)
 	{
-		if (children_.item_empty())
+		if (children_.empty())
 		{
 			return;
 		}
@@ -643,7 +567,7 @@ namespace kiwano
 
 	void Actor::RemoveAllChildren()
 	{
-		children_.clear_items();
+		children_.clear();
 	}
 
 	void Actor::SetResponsible(bool enable)

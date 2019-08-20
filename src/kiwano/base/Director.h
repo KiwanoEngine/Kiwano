@@ -35,12 +35,12 @@ namespace kiwano
 	public:
 		// 切换舞台
 		void EnterStage(
-			StagePtr scene				/* 舞台 */
+			StagePtr stage				/* 舞台 */
 		);
 
 		// 切换舞台
 		void EnterStage(
-			StagePtr scene,				/* 舞台 */
+			StagePtr stage,				/* 舞台 */
 			TransitionPtr transition	/* 过渡动画 */
 		);
 
@@ -63,9 +63,7 @@ namespace kiwano
 
 		void OnUpdate(Duration dt) override;
 
-		void OnRender(Renderer* renderer) override;
-
-		void AfterRender() override;
+		void OnRender(RenderTarget* rt) override;
 
 		void HandleEvent(Event& evt) override;
 
@@ -76,8 +74,8 @@ namespace kiwano
 
 	protected:
 		bool			render_border_enabled_;
-		StagePtr		curr_scene_;
-		StagePtr		next_scene_;
+		StagePtr		curr_stage_;
+		StagePtr		next_stage_;
 		ActorPtr		debug_actor_;
 		TransitionPtr	transition_;
 	};

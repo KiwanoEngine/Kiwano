@@ -200,14 +200,14 @@ namespace kiwano
 		style_.outline_stroke = outline_stroke;
 	}
 
-	void Text::OnRender(Renderer* renderer)
+	void Text::OnRender(RenderTarget* rt)
 	{
 		UpdateLayout();
 
-		if (text_layout_ && renderer->CheckVisibility(size_, transform_matrix_))
+		if (text_layout_ && rt->CheckVisibility(size_, transform_matrix_))
 		{
-			PrepareRender(renderer);
-			renderer->DrawTextLayout(text_layout_);
+			PrepareRender(rt);
+			rt->DrawTextLayout(text_layout_);
 		}
 	}
 

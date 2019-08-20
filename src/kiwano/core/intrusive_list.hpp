@@ -71,9 +71,9 @@ class intrusive_list
 public:
 	using ItemType = T;
 
-	intrusive_list() : first_(), last_() {}
+	intrusive_list()				: first_(), last_() {}
 
-	~intrusive_list()				{ clear_items(); }
+	~intrusive_list()				{ clear(); }
 
 	T const& first_item() const		{ return first_; }
 
@@ -83,9 +83,9 @@ public:
 
 	T& last_item()					{ return last_; }
 
-	bool item_empty() const			{ return !first_; }
+	bool empty() const				{ return !first_; }
 
-	void push_back_item(T const& child)
+	void push_back(T const& child)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -109,7 +109,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void push_front_item(T const& child)
+	void push_front(T const& child)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -171,7 +171,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void remove_item(T const& child)
+	void remove(T const& child)
 	{
 #ifdef KGE_DEBUG_ENABLE_LIST_CHECK
 		T tmp = first_;
@@ -206,7 +206,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void clear_items()
+	void clear()
 	{
 		T p = first_;
 		while (p)

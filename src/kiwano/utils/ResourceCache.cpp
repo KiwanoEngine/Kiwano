@@ -119,7 +119,7 @@ namespace kiwano
 		{
 			ifs.open(file_path.c_str());
 
-			std::wstringstream ss;
+			StringStream ss;
 			ss << ifs.rdbuf();
 
 			if (tinyxml2::XML_SUCCESS != doc.Parse(ss.str().c_str()))
@@ -248,7 +248,7 @@ namespace kiwano
 				FramePtr ptr = new (std::nothrow) Frame(raw->GetImage());
 				if (ptr)
 				{
-					ptr->SetCropRect(Rect{ j * width, i * height, width, height });
+					ptr->SetCropRect(Rect{ j * width, i * height, (j + 1) * width, (i + 1) * height });
 					image_arr.push_back(ptr);
 				}
 			}
