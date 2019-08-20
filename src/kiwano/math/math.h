@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "..\core\core.h"
 #include "constants.hpp"
 #include "ease.hpp"
 #include "scalar.hpp"
@@ -28,6 +29,10 @@
 
 namespace kiwano
 {
+	using Vec2 = kiwano::math::Vec2T<Float32>;
+	using Rect = kiwano::math::RectT<Float32>;
+	using Matrix3x2 = kiwano::math::Matrix3x2T<Float32>;
+
 	using Point = Vec2;
 	using Size = Vec2;
 }

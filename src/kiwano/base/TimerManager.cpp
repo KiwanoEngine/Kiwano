@@ -25,7 +25,7 @@ namespace kiwano
 {
 	void TimerManager::UpdateTimers(Duration dt)
 	{
-		if (timers_.item_empty())
+		if (timers_.empty())
 			return;
 
 		TimerPtr next;
@@ -37,24 +37,32 @@ namespace kiwano
 			timer->Update(dt, remove_after_update);
 
 			if (remove_after_update)
-				timers_.remove_item(timer);
+				timers_.remove(timer);
 		}
 	}
 
-	void TimerManager::AddTimer(TimerPtr timer)
+	Timer* TimerManager::AddTimer(Timer::Callback const& func, Duration delay, Int32 times, String const& name)
+	{
+		TimerPtr timer = new Timer(func, delay, times, name);
+		return AddTimer(timer);
+	}
+
+	Timer* TimerManager::AddTimer(TimerPtr timer)
 	{
 		KGE_ASSERT(timer && "AddTimer failed, NULL pointer exception");
 
 		if (timer)
 		{
 			timer->Reset();
-			timers_.push_back_item(timer);
+			timers_.push_back(timer);
 		}
+
+		return timer.get();
 	}
 
 	void TimerManager::StopTimers(String const& name)
 	{
-		if (timers_.item_empty())
+		if (timers_.empty())
 			return;
 
 		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
@@ -68,7 +76,7 @@ namespace kiwano
 
 	void TimerManager::StartTimers(String const& name)
 	{
-		if (timers_.item_empty())
+		if (timers_.empty())
 			return;
 		
 		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
@@ -82,7 +90,7 @@ namespace kiwano
 
 	void TimerManager::RemoveTimers(String const& name)
 	{
-		if (timers_.item_empty())
+		if (timers_.empty())
 			return;
 
 		TimerPtr next;
@@ -91,14 +99,14 @@ namespace kiwano
 			next = timer->next_item();
 			if (timer->IsName(name))
 			{
-				timers_.remove_item(timer);
+				timers_.remove(timer);
 			}
 		}
 	}
 
 	void TimerManager::StopAllTimers()
 	{
-		if (timers_.item_empty())
+		if (timers_.empty())
 			return;
 
 		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
@@ -109,7 +117,7 @@ namespace kiwano
 
 	void TimerManager::StartAllTimers()
 	{
-		if (timers_.item_empty())
+		if (timers_.empty())
 			return;
 
 		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
@@ -120,7 +128,7 @@ namespace kiwano
 
 	void TimerManager::RemoveAllTimers()
 	{
-		timers_.clear_items();
+		timers_.clear();
 	}
 
 	const TimerManager::Timers & TimerManager::GetAllTimers() const

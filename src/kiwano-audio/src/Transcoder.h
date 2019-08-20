@@ -31,31 +31,36 @@ namespace kiwano
 		class KGE_API Transcoder
 		{
 		public:
+			struct Buffer
+			{
+				Byte* data;
+				UInt32 size;
+				const WAVEFORMATEX* format;
+			};
+
 			Transcoder();
 
 			~Transcoder();
 
-			const WAVEFORMATEX* GetWaveFormatEx() const;
+			Buffer GetBuffer() const;
+
+			void ClearBuffer();
 
 			HRESULT LoadMediaFile(
-				String const& file_path,
-				BYTE** wave_data,
-				UInt32* wave_data_size
+				String const& file_path
 			);
 
 			HRESULT LoadMediaResource(
-				Resource const& res,
-				BYTE** wave_data,
-				UInt32* wave_data_size
+				Resource const& res
 			);
 
 			HRESULT ReadSource(
-				IMFSourceReader* reader,
-				BYTE** wave_data,
-				UInt32* wave_data_size
+				IMFSourceReader* reader
 			);
 
 		private:
+			Byte* wave_data_;
+			UInt32 wave_size_;
 			WAVEFORMATEX* wave_format_;
 		};
 	}

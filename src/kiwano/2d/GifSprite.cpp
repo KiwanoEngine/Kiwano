@@ -72,10 +72,7 @@ namespace kiwano
 			loop_count_ = 0;
 			disposal_type_ = DisposalType::None;
 
-			SetSize(
-				static_cast<Float32>(image_.GetWidthInPixels()),
-				static_cast<Float32>(image_.GetHeightInPixels())
-			);
+			SetSize(Size{ static_cast<Float32>(image_.GetWidthInPixels()), static_cast<Float32>(image_.GetHeightInPixels()) });
 
 			if (!frame_rt_.IsValid())
 			{
@@ -91,13 +88,13 @@ namespace kiwano
 		return false;
 	}
 
-	void GifSprite::OnRender(Renderer* renderer)
+	void GifSprite::OnRender(RenderTarget* rt)
 	{
-		if (frame_.IsValid() && renderer->CheckVisibility(size_, transform_matrix_))
+		if (frame_.IsValid() && rt->CheckVisibility(GetBounds(), GetTransformMatrix()))
 		{
-			PrepareRender(renderer);
+			PrepareRender(rt);
 
-			renderer->DrawImage(frame_);
+			rt->DrawImage(frame_);
 		}
 	}
 
@@ -195,8 +192,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			Image frame_to_render;
-			frame_rt_.GetOutput(frame_to_render);
+			Image frame_to_render = frame_rt_.GetOutput();
 
 			hr = frame_to_render.IsValid() ? S_OK : E_FAIL;
 
@@ -222,8 +218,7 @@ namespace kiwano
 
 	void GifSprite::SaveComposedFrame()
 	{
-		Image frame_to_be_saved;
-		frame_rt_.GetOutput(frame_to_be_saved);
+		Image frame_to_be_saved = frame_rt_.GetOutput();
 
 		HRESULT hr = frame_to_be_saved.IsValid() ? S_OK : E_FAIL;
 
@@ -258,8 +253,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			Image frame_to_copy_to;
-			frame_rt_.GetOutput(frame_to_copy_to);
+			Image frame_to_copy_to = frame_rt_.GetOutput();
 
 			hr = frame_to_copy_to.IsValid() ? S_OK : E_FAIL;
 

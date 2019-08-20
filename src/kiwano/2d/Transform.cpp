@@ -18,33 +18,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "../math/Vec2.hpp"
+#include "Transform.h"
 
 namespace kiwano
 {
-	class Transform
+	Transform::Transform()
+		: position()
+		, rotation(0.f)
+		, scale(1.f, 1.f)
+		, skew(0.f, 0.f)
 	{
-	public:
-		Float32 rotation;		// 旋转
-		Point position;		// 坐标
-		Point scale;		// 缩放
-		Point skew;			// 错切角度
+	}
 
-	public:
-		Transform()
-			: position()
-			, rotation(0.f)
-			, scale(1.f, 1.f)
-			, skew(0.f, 0.f)
-		{}
-
-		bool operator== (const Transform& other) const
+	Matrix3x2 Transform::ToMatrix() const
+	{
+		if (!skew.IsOrigin())
 		{
-			return position == other.position &&
-				scale == other.scale &&
-				skew == other.skew &&
-				rotation == other.rotation;
+			return Matrix3x2::Skewing(skew) * Matrix3x2::SRT(position, scale, rotation);
 		}
-	};
+		return Matrix3x2::SRT(position, scale, rotation);
+	}
+
+	bool Transform::operator== (Transform const& rhs) const
+	{
+		return position == rhs.position &&
+			rotation == rhs.rotation &&
+			scale == rhs.scale &&
+			skew == rhs.skew;
+	}
 }

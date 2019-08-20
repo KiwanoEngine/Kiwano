@@ -172,7 +172,7 @@ namespace kiwano
 				value_type top = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
 				value_type bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
 
-				return rect_type{ left, top, (right - left), (bottom - top) };
+				return rect_type{ left, top, right, bottom };
 			}
 
 			inline void Translate(const vec2_type& v)
@@ -323,9 +323,4 @@ namespace kiwano
 			return MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, Matrix3x2T<_Ty>>(lhs, rhs);
 		}
 	}
-}
-
-namespace kiwano
-{
-	using Matrix3x2 = kiwano::math::Matrix3x2T<Float32>;
 }

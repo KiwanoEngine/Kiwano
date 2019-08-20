@@ -42,6 +42,8 @@ namespace kiwano
 
 		Geometry(ComPtr<ID2D1Geometry> geo);
 
+		bool IsValid() const;
+
 		// 获取外切包围盒
 		Rect GetBoundingBox(
 			Matrix3x2 const& transform = Matrix3x2()
@@ -49,28 +51,29 @@ namespace kiwano
 
 		// 判断图形是否包含点
 		bool ContainsPoint(
-			Point const& point
-		);
+			Point const& point,
+			Matrix3x2 const& transform = Matrix3x2()
+		) const;
 
 		// 获取图形展开成一条直线的长度
-		Float32 GetLength();
+		Float32 GetLength() const;
 
 		// 计算面积
-		Float32 ComputeArea();
+		Float32 ComputeArea() const;
 
 		// 计算图形路径上点的位置和切线向量
 		bool ComputePointAtLength(
 			Float32 length,
 			Point& point,
 			Vec2& tangent
-		);
+		) const;
 
 		// 组合几何体
 		Geometry CombineWith(
 			Geometry input,
 			CombineMode mode,
 			Matrix3x2 const& input_matrix = Matrix3x2()
-		);
+		) const;
 
 		// 组合多个几何体
 		// 参数 modes 和 matrixs 的数量应为 1 或 geos 的数量减一
@@ -114,7 +117,7 @@ namespace kiwano
 
 		inline void SetGeometry(ComPtr<ID2D1Geometry> geometry)	{ geo_ = geometry; }
 
-		inline operator bool() const							{ return static_cast<bool>(geo_); }
+		inline operator bool() const							{ return IsValid(); }
 
 	protected:
 		ComPtr<ID2D1Geometry> geo_;

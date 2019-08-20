@@ -263,7 +263,7 @@ namespace kiwano
 	template <typename ..._Args>
 	std::wstring Logger::MakeOutputString(const WChar* prompt, _Args&& ... args) const
 	{
-		std::wstringstream ss;
+		StringStream ss;
 		ss << Logger::OutPrefix;
 
 		if (prompt)

@@ -25,8 +25,14 @@ Write-Host "Start to build nupkg files"
 # This is the CoApp .autopkg file to create.
 $autopkgFile = "scripts\coapp\kiwano.autopkg"
 
+# Create a copy of ".autopkg" file
+Copy-Item -Path $autopkgFile -Destination ($autopkgFile + '.template')
+
 # Get the ".autopkg.template" file, replace "@appveyor_version" with the Appveyor version number, then save to the ".autopkg" file.
-Get-Content ($autopkgFile + ".template") | ForEach-Object { $_ -replace "@appveyor_version", $env:appveyor_build_version } > $autopkgFile
+Get-Content ($autopkgFile + ".template") -Encoding UTF8 | ForEach-Object { $_ -replace "@appveyor_version", $env:appveyor_build_version } | Out-File $autopkgFile -Encoding UTF8
+
+# Delete the copy file
+Remove-Item -Path ($autopkgFile + '.template')
 
 # Use the CoApp tools to create NuGet native packages from the .autopkg.
 Write-NuGetPackage $autopkgFile

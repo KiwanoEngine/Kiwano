@@ -23,13 +23,6 @@ environment:
     flag_to_deploy: false
     appveyor_api_token:
       secure: UJFCbRNHMOqQg3e3Kv/ZnaIqqwXAt+5HDldetaZsZ5E=
-  matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      VS_PLATFORM_TOOLSET: v142
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      VS_PLATFORM_TOOLSET: v141
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      VS_PLATFORM_TOOLSET: v140
 
 matrix:
   fast_finish: true # set this flag to immediately finish build once one of the jobs fails
@@ -48,6 +41,18 @@ only_commits:
     - appveyor.yml
 
 for:
+-
+  branches:
+    only:
+      - master
+  environment:
+   matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      VS_PLATFORM_TOOLSET: v142
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      VS_PLATFORM_TOOLSET: v141
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      VS_PLATFORM_TOOLSET: v140
 -
   branches:
     except:

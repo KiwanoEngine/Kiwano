@@ -34,17 +34,6 @@ namespace kiwano
 		Renderer::GetInstance()->CreateImageRenderTarget(rt_);
 	}
 
-	Canvas::Canvas(Float32 width, Float32 height)
-		: Canvas()
-	{
-		this->SetSize(width, height);
-	}
-
-	Canvas::Canvas(Size const & size)
-		: Canvas(size.x, size.y)
-	{
-	}
-
 	Canvas::~Canvas()
 	{
 	}
@@ -60,16 +49,16 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	void Canvas::OnRender(Renderer* renderer)
+	void Canvas::OnRender(RenderTarget* rt)
 	{
 		UpdateCache();
 		
 		if (image_cached_.IsValid())
 		{
-			PrepareRender(renderer);
+			PrepareRender(rt);
 
 			Rect bitmap_rect(0.f, 0.f, image_cached_.GetWidth(), image_cached_.GetHeight());
-			renderer->DrawImage(image_cached_, bitmap_rect, bitmap_rect);
+			rt->DrawImage(image_cached_, bitmap_rect, bitmap_rect);
 		}
 	}
 
@@ -130,18 +119,32 @@ namespace kiwano
 
 	void Canvas::SetBrushTransform(Transform const& transform)
 	{
-		Matrix3x2 matrix = Matrix3x2::SRT(transform.position, transform.scale, transform.rotation);
-		if (!transform.skew.IsOrigin())
-		{
-			matrix = Matrix3x2::Skewing(transform.skew) * matrix;
-		}
-
-		rt_.SetTransform(matrix);
+		rt_.SetTransform(transform.ToMatrix());
 	}
 
 	void Canvas::SetBrushTransform(Matrix3x2 const & transform)
 	{
 		rt_.SetTransform(transform);
+	}
+
+	void Canvas::PushLayerArea(LayerArea& area)
+	{
+		rt_.PushLayer(area);
+	}
+
+	void Canvas::PopLayerArea()
+	{
+		rt_.PopLayer();
+	}
+
+	void Canvas::PushClipRect(Rect const& clip_rect)
+	{
+		rt_.PushClipRect(clip_rect);
+	}
+
+	void Canvas::PopClipRect()
+	{
+		rt_.PopClipRect();
 	}
 
 	void Canvas::DrawLine(Point const& begin, Point const& end)
@@ -333,7 +336,7 @@ namespace kiwano
 	{
 		if (cache_expired_)
 		{
-			rt_.GetOutput(image_cached_);
+			image_cached_ = rt_.GetOutput();
 			cache_expired_ = false;
 		}
 	}

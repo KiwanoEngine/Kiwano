@@ -21,7 +21,8 @@
 #include "Window.h"
 #include "Logger.h"
 
-#define WINDOW_STYLE			WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
+#define WINDOW_FIXED_STYLE		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
+#define WINDOW_RESIZABLE_STYLE	WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
 #define WINDOW_FULLSCREEN_STYLE	WS_CLIPCHILDREN | WS_POPUP
 #define KGE_WND_CLASS_NAME		L"KiwanoAppWnd"
 
@@ -44,7 +45,8 @@ namespace kiwano
 		, height_(0)
 		, device_name_(nullptr)
 		, is_fullscreen_(false)
-		, mouse_cursor_(MouseCursor(-1))
+		, resizable_(false)
+		, mouse_cursor_(MouseCursor::Arrow)
 	{
 	}
 
@@ -66,7 +68,7 @@ namespace kiwano
 		}
 	}
 
-	void Window::Init(String const& title, Int32 width, Int32 height, LPCWSTR icon, bool fullscreen, WNDPROC proc)
+	void Window::Init(String const& title, Int32 width, Int32 height, UInt32 icon, bool resizable, bool fullscreen, WNDPROC proc)
 	{
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
@@ -80,11 +82,11 @@ namespace kiwano
 		wcex.hInstance		= hinst;
 		wcex.hbrBackground	= nullptr;
 		wcex.lpszMenuName	= nullptr;
-		wcex.hCursor		= nullptr;
+		wcex.hCursor		= ::LoadCursorW(hinst, IDC_ARROW);
 
 		if (icon)
 		{
-			wcex.hIcon = (HICON)::LoadImageW(hinst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+			wcex.hIcon = (HICON)::LoadImageW(hinst, MAKEINTRESOURCE(icon), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 		}
 
 		::RegisterClassExW(&wcex);
@@ -106,6 +108,7 @@ namespace kiwano
 		Int32 left = -1;
 		Int32 top = -1;
 
+		resizable_ = resizable;
 		is_fullscreen_ = fullscreen;
 
 		if (is_fullscreen_)
@@ -165,8 +168,6 @@ namespace kiwano
 			GetClientRect(handle_, &rc);
 			width_ = rc.right - rc.left;
 			height_ = rc.bottom - rc.top;
-
-			SetMouseCursor(MouseCursor::Arrow);
 		}
 	}
 
@@ -216,14 +217,14 @@ namespace kiwano
 		return static_cast<Float32>(height_);
 	}
 
-	void Window::SetIcon(LPCWSTR icon_resource)
+	void Window::SetIcon(UInt32 icon_resource)
 	{
 		if (handle_)
 		{
 			HINSTANCE hinstance = GetModuleHandle(nullptr);
 			HICON icon = (HICON)::LoadImage(
 				hinstance,
-				icon_resource,
+				MAKEINTRESOURCE(icon_resource),
 				IMAGE_ICON,
 				0,
 				0,
@@ -296,24 +297,7 @@ namespace kiwano
 
 	void Window::SetMouseCursor(MouseCursor cursor)
 	{
-		if (mouse_cursor_ != cursor)
-		{
-			mouse_cursor_ = cursor;
-
-			LPTSTR win32_cursor = IDC_ARROW;
-			switch (cursor)
-			{
-			case MouseCursor::Arrow:		win32_cursor = IDC_ARROW; break;
-			case MouseCursor::TextInput:	win32_cursor = IDC_IBEAM; break;
-			case MouseCursor::SizeAll:		win32_cursor = IDC_SIZEALL; break;
-			case MouseCursor::SizeWE:		win32_cursor = IDC_SIZEWE; break;
-			case MouseCursor::SizeNS:		win32_cursor = IDC_SIZENS; break;
-			case MouseCursor::SizeNESW:		win32_cursor = IDC_SIZENESW; break;
-			case MouseCursor::SizeNWSE:		win32_cursor = IDC_SIZENWSE; break;
-			case MouseCursor::Hand:			win32_cursor = IDC_HAND; break;
-			}
-			::SetCursor(::LoadCursorW(nullptr, win32_cursor));
-		}
+		mouse_cursor_ = cursor;
 	}
 
 	HWND Window::GetHandle() const
@@ -323,7 +307,7 @@ namespace kiwano
 
 	DWORD Window::GetWindowStyle() const
 	{
-		return is_fullscreen_ ? (WINDOW_FULLSCREEN_STYLE) : (WINDOW_STYLE);
+		return is_fullscreen_ ? (WINDOW_FULLSCREEN_STYLE) : (resizable_ ? (WINDOW_RESIZABLE_STYLE) : (WINDOW_FIXED_STYLE));
 	}
 
 	void Window::UpdateWindowRect()
@@ -336,6 +320,23 @@ namespace kiwano
 
 		width_ = rc.right - rc.left;
 		height_ = rc.bottom - rc.top;
+	}
+
+	void Window::UpdateCursor()
+	{
+		LPTSTR win32_cursor = IDC_ARROW;
+		switch (mouse_cursor_)
+		{
+		case MouseCursor::Arrow:		win32_cursor = IDC_ARROW; break;
+		case MouseCursor::TextInput:	win32_cursor = IDC_IBEAM; break;
+		case MouseCursor::SizeAll:		win32_cursor = IDC_SIZEALL; break;
+		case MouseCursor::SizeWE:		win32_cursor = IDC_SIZEWE; break;
+		case MouseCursor::SizeNS:		win32_cursor = IDC_SIZENS; break;
+		case MouseCursor::SizeNESW:		win32_cursor = IDC_SIZENESW; break;
+		case MouseCursor::SizeNWSE:		win32_cursor = IDC_SIZENWSE; break;
+		case MouseCursor::Hand:			win32_cursor = IDC_HAND; break;
+		}
+		::SetCursor(::LoadCursorW(nullptr, win32_cursor));
 	}
 
 	void Window::SetActive(bool actived)

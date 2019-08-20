@@ -166,7 +166,7 @@ namespace kiwano
 			Duration duration,		/* 持续时长 */
 			Point const& vec,		/* 跳跃距离 */
 			Float32 height,			/* 跳跃高度 */
-			Int32 jumps = 1,			/* 跳跃次数 */
+			Int32 jumps = 1,		/* 跳跃次数 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -199,7 +199,7 @@ namespace kiwano
 			Duration duration,		/* 持续时长 */
 			Point const& pos,		/* 目的坐标 */
 			Float32 height,			/* 跳跃高度 */
-			Int32 jumps = 1,			/* 跳跃次数 */
+			Int32 jumps = 1,		/* 跳跃次数 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -234,8 +234,8 @@ namespace kiwano
 
 		ActionScaleBy(
 			Duration duration,		/* 持续时长 */
-			Float32 scale_x,			/* 横向缩放相对变化值 */
-			Float32 scale_y,			/* 纵向缩放相对变化值 */
+			Float32 scale_x,		/* 横向缩放相对变化值 */
+			Float32 scale_y,		/* 纵向缩放相对变化值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -271,8 +271,8 @@ namespace kiwano
 
 		ActionScaleTo(
 			Duration duration,		/* 持续时长 */
-			Float32 scale_x,			/* 横向缩放目标值 */
-			Float32 scale_y,			/* 纵向缩放目标值 */
+			Float32 scale_x,		/* 横向缩放目标值 */
+			Float32 scale_y,		/* 纵向缩放目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -302,7 +302,7 @@ namespace kiwano
 	public:
 		ActionFadeTo(
 			Duration duration,		/* 持续时长 */
-			Float32 opacity,			/* 目标值 */
+			Float32 opacity,		/* 目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -361,7 +361,7 @@ namespace kiwano
 	public:
 		ActionRotateBy(
 			Duration duration,		/* 持续时长 */
-			Float32 rotation,			/* 相对变化值 */
+			Float32 rotation,		/* 相对变化值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -389,7 +389,7 @@ namespace kiwano
 	public:
 		ActionRotateTo(
 			Duration duration,		/* 持续时长 */
-			Float32 rotation,			/* 目标值 */
+			Float32 rotation,		/* 目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 

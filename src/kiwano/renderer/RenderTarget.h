@@ -33,6 +33,8 @@ namespace kiwano
 		: public noncopyable
 	{
 	public:
+		bool IsValid() const;
+
 		void BeginDraw();
 
 		void EndDraw();
@@ -125,7 +127,7 @@ namespace kiwano
 		void PopClipRect();
 
 		void PushLayer(
-			LayerArea const& layer
+			LayerArea& layer
 		);
 
 		void PopLayer();
@@ -138,11 +140,17 @@ namespace kiwano
 
 		Float32 GetOpacity() const;
 
+		Matrix3x2 GetGlobalTransform() const;
+
 		void SetOpacity(
 			Float32 opacity
 		);
 
 		void SetTransform(
+			const Matrix3x2& matrix
+		);
+
+		void SetGlobalTransform(
 			const Matrix3x2& matrix
 		);
 
@@ -154,6 +162,11 @@ namespace kiwano
 		// 设置文字抗锯齿模式
 		void SetTextAntialiasMode(
 			TextAntialias mode
+		);
+
+		bool CheckVisibility(
+			Rect const& bounds,
+			Matrix3x2 const& transform
 		);
 
 	public:
@@ -170,17 +183,19 @@ namespace kiwano
 
 		inline Status const& GetStatus() const						{ return status_; }
 
-		inline ComPtr<ID2D1RenderTarget> GetRenderTarget() const	{ return render_target_; }
+		inline ComPtr<ID2D1RenderTarget> GetRenderTarget() const	{ KGE_ASSERT(render_target_); return render_target_; }
+
+		inline ComPtr<ITextRenderer> GetTextRenderer() const		{ KGE_ASSERT(text_renderer_); return text_renderer_; }
 
 	public:
 		RenderTarget();
 
-		HRESULT InitDeviceResources(
+		HRESULT CreateDeviceResources(
 			ComPtr<ID2D1RenderTarget> rt,
 			ComPtr<ID2DDeviceResources> dev_res
 		);
 
-		bool IsValid() const;
+		void DiscardDeviceResources();
 
 	protected:
 		Float32							opacity_;
@@ -188,10 +203,12 @@ namespace kiwano
 		mutable bool					collecting_status_;
 		mutable Status					status_;
 		TextAntialias					text_antialias_;
-		ComPtr<ID2D1RenderTarget>		render_target_;
 		ComPtr<ITextRenderer>			text_renderer_;
-		ComPtr<ID2D1SolidColorBrush>	solid_color_brush_;
-		ComPtr<ID2DDeviceResources>		d2d_res_;
+		ComPtr<ID2D1RenderTarget>		render_target_;
+		ComPtr<ID2D1SolidColorBrush>	default_brush_;
+		ComPtr<ID2D1Brush>				current_brush_;
+		ComPtr<ID2DDeviceResources>		device_resources_;
+		Matrix3x2						global_matrix_;
 	};
 
 
@@ -202,6 +219,6 @@ namespace kiwano
 	public:
 		ImageRenderTarget();
 
-		void GetOutput(Image& output) const;
+		Image GetOutput() const;
 	};
 }

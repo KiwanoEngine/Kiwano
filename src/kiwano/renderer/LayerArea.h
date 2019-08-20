@@ -33,27 +33,36 @@ namespace kiwano
 
 		Size GetSize() const;
 
-		inline Rect const& GetAreaRect() const				{ return area_; }
-
-		inline void SetAreaRect(Rect const& area)			{ area_ = area; }
+		inline Rect const& GetAreaRect() const					{ return area_; }
 
 		inline Float32 GetOpacity() const						{ return opacity_; }
 
-		inline void SetOpacity(Float32 opacity)				{ opacity_ = opacity; }
+		inline Geometry const& GetMaskGeometry() const			{ return mask_; }
 
-		inline Geometry const& GetMaskGeometry() const		{ return mask_; }
+		inline Matrix3x2 const& GetMaskTransform() const		{ return mask_transform_; }
 
-		inline void SetMaskGeometry(Geometry const& mask)	{ mask_ = mask; }
+		// 设置图层区域
+		inline void SetAreaRect(Rect const& area)				{ area_ = area; }
+
+		// 设置图层透明度
+		inline void SetOpacity(Float32 opacity)					{ opacity_ = opacity; }
+
+		// 设置几何蒙层
+		inline void SetMaskGeometry(Geometry const& mask)		{ mask_ = mask; }
+
+		// 设置几何蒙层变换
+		inline void SetMaskTransform(Matrix3x2 const& matrix)	{ mask_transform_ = matrix; }
 
 	public:
-		inline ComPtr<ID2D1Layer> GetLayer() const			{ return layer_; }
+		inline ComPtr<ID2D1Layer> GetLayer() const				{ return layer_; }
 
-		inline void SetLayer(ComPtr<ID2D1Layer> layer)		{ layer_ = layer; }
+		inline void SetLayer(ComPtr<ID2D1Layer> layer)			{ layer_ = layer; }
 
 	protected:
 		Rect area_;
 		Float32 opacity_;
 		Geometry mask_;
+		Matrix3x2 mask_transform_;
 		ComPtr<ID2D1Layer> layer_;
 	};
 }

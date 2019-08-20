@@ -281,7 +281,7 @@ namespace kiwano
 
 	void ActionScaleBy::UpdateTween(ActorPtr target, Float32 percent)
 	{
-		target->SetScale(start_scale_x_ + delta_x_ * percent, start_scale_y_ + delta_y_ * percent);
+		target->SetScale(Vec2{ start_scale_x_ + delta_x_ * percent, start_scale_y_ + delta_y_ * percent });
 	}
 
 	ActionPtr ActionScaleBy::Clone() const

@@ -51,4 +51,13 @@ namespace kiwano
 		GrayScale,	// 灰度抗锯齿
 		None		// 不启用抗锯齿
 	};
+
+	// 分辨率模式
+	enum class ResolutionMode
+	{
+		Fixed,		/* 固定 */
+		Center,		/* 居中 */
+		Stretch,	/* 拉伸 */
+		Adaptive,	/* 宽高自适应 */
+	};
 }

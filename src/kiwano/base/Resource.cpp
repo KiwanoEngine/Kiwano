@@ -31,7 +31,7 @@ namespace kiwano
 
 	}
 
-	Resource::Resource(UInt32 id, LPCWSTR type)
+	Resource::Resource(UInt32 id, const WChar* type)
 		: id_(id)
 		, type_(type)
 	{

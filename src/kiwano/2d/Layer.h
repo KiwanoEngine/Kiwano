@@ -20,6 +20,8 @@
 
 #pragma once
 #include "Actor.h"
+#include "..\renderer\LayerArea.h"
+#include "..\renderer\RenderTarget.h"
 
 namespace kiwano
 {
@@ -31,25 +33,49 @@ namespace kiwano
 
 		virtual ~Layer();
 
+		// 重载下列函数以获取图层事件
 		virtual void OnMouseButtonDown(Int32 btn, Point const& p) {}
 		virtual void OnMouseButtonUp(Int32 btn, Point const& p) {}
 		virtual void OnMouseMoved(Point const& p) {}
 		virtual void OnMouseWheel(Float32 wheel) {}
-
 		virtual void OnKeyDown(Int32 key) {}
 		virtual void OnKeyUp(Int32 key) {}
 		virtual void OnChar(char c) {}
 
+		// 是否开启消息吞没
+		inline bool IsSwallowEventsEnabled() const	{ return swallow_; }
+
 		// 吞没消息
-		inline void SetSwallowEvents(bool enabled) { swallow_ = enabled; }
+		inline void SetSwallowEvents(bool enabled)	{ swallow_ = enabled; }
+
+		// 设置裁剪区域
+		void SetClipRect(Rect const& clip_rect);
+
+		// 设置图层透明度
+		void SetOpacity(Float32 opacity) override;
+
+		// 设置几何蒙层
+		void SetMaskGeometry(Geometry const& mask);
+
+		// 设置几何蒙层的二维变换
+		void SetMaskTransform(Matrix3x2 const& transform);
+
+		// 设置图层区域
+		inline void SetArea(LayerArea const& area)	{ area_ = area; }
+
+		// 获取图层区域
+		inline LayerArea const& GetArea() const		{ return area_; }
 
 	public:
 		void Dispatch(Event& evt) override;
 
 	protected:
+		void Render(RenderTarget* rt) override;
+
 		void HandleMessages(Event const& evt);
 
 	protected:
-		bool swallow_;
+		bool		swallow_;
+		LayerArea	area_;
 	};
 }

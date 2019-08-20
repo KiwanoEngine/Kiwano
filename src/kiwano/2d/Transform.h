@@ -19,7 +19,23 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "../math/math.h"
 
-#include "src/audio.h"
-#include "src/Sound.h"
-#include "src/SoundPlayer.h"
+namespace kiwano
+{
+	class Transform
+	{
+	public:
+		Float32 rotation;	// 旋转
+		Point position;		// 坐标
+		Point scale;		// 缩放
+		Point skew;			// 错切角度
+
+	public:
+		Transform();
+
+		Matrix3x2 ToMatrix() const;
+
+		bool operator== (const Transform& rhs) const;
+	};
+}

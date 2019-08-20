@@ -29,7 +29,6 @@
     <ClInclude Include="..\src\kiwano\2d\include-forwards.h" />
     <ClInclude Include="..\src\kiwano\2d\Canvas.h" />
     <ClInclude Include="..\src\kiwano\2d\DebugActor.h" />
-    <ClInclude Include="..\src\kiwano\2d\Font.hpp" />
     <ClInclude Include="..\src\kiwano\2d\FrameSequence.h" />
     <ClInclude Include="..\src\kiwano\2d\ShapeActor.h" />
     <ClInclude Include="..\src\kiwano\2d\Layer.h" />
@@ -38,7 +37,7 @@
     <ClInclude Include="..\src\kiwano\2d\Sprite.h" />
     <ClInclude Include="..\src\kiwano\2d\Text.h" />
     <ClInclude Include="..\src\kiwano\2d\TextStyle.hpp" />
-    <ClInclude Include="..\src\kiwano\2d\Transform.hpp" />
+    <ClInclude Include="..\src\kiwano\2d\Transform.h" />
     <ClInclude Include="..\src\kiwano\2d\Transition.h" />
     <ClInclude Include="..\src\kiwano\base\AsyncTask.h" />
     <ClInclude Include="..\src\kiwano\base\Component.h" />
@@ -112,6 +111,7 @@
     <ClCompile Include="..\src\kiwano\2d\Stage.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Sprite.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Text.cpp" />
+    <ClCompile Include="..\src\kiwano\2d\Transform.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Transition.cpp" />
     <ClCompile Include="..\src\kiwano\base\AsyncTask.cpp" />
     <ClCompile Include="..\src\kiwano\base\EventDispatcher.cpp" />

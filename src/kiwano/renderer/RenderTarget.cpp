@@ -36,14 +36,14 @@ namespace kiwano
 		status_.primitives = 0;
 	}
 
-	HRESULT RenderTarget::InitDeviceResources(ComPtr<ID2D1RenderTarget> rt, ComPtr<ID2DDeviceResources> dev_res)
+	HRESULT RenderTarget::CreateDeviceResources(ComPtr<ID2D1RenderTarget> rt, ComPtr<ID2DDeviceResources> dev_res)
 	{
 		HRESULT hr = E_FAIL;
 
 		if (rt && dev_res)
 		{
 			render_target_ = rt;
-			d2d_res_ = dev_res;
+			device_resources_ = dev_res;
 			hr = S_OK;
 		}
 
@@ -58,20 +58,29 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_.reset();
+			default_brush_.reset();
 			hr = render_target_->CreateSolidColorBrush(
 				D2D1::ColorF(D2D1::ColorF::White),
 				D2D1::BrushProperties(),
-				&solid_color_brush_
+				&default_brush_
 			);
 		}
 
 		return hr;
 	}
 
+	void RenderTarget::DiscardDeviceResources()
+	{
+		text_renderer_.reset();
+		render_target_.reset();
+		default_brush_.reset();
+		current_brush_.reset();
+		device_resources_.reset();
+	}
+
 	bool RenderTarget::IsValid() const
 	{
-		return render_target_ && d2d_res_;
+		return render_target_ && device_resources_;
 	}
 
 	void RenderTarget::BeginDraw()
@@ -111,20 +120,20 @@ namespace kiwano
 	) const
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !render_target_)
+		if (!default_brush_ || !render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr) && geometry.GetGeometry())
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
+			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
 			render_target_->DrawGeometry(
 				geometry.GetGeometry().get(),
-				solid_color_brush_.get(),
+				default_brush_.get(),
 				stroke_width,
-				d2d_res_->GetStrokeStyle(stroke)
+				device_resources_->GetStrokeStyle(stroke)
 			);
 
 			IncreasePrimitivesCount();
@@ -136,17 +145,17 @@ namespace kiwano
 	void RenderTarget::FillGeometry(Geometry const& geometry, Color const& fill_color) const
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !render_target_)
+		if (!default_brush_ || !render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr) && geometry.GetGeometry())
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
+			default_brush_->SetColor(DX::ConvertToColorF(fill_color));
 			render_target_->FillGeometry(
 				geometry.GetGeometry().get(),
-				solid_color_brush_.get()
+				default_brush_.get()
 			);
 		}
 
@@ -156,21 +165,21 @@ namespace kiwano
 	void RenderTarget::DrawLine(Point const& point1, Point const& point2, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !render_target_)
+		if (!default_brush_ || !render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
+			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
 			render_target_->DrawLine(
 				DX::ConvertToPoint2F(point1),
 				DX::ConvertToPoint2F(point2),
-				solid_color_brush_.get(),
+				default_brush_.get(),
 				stroke_width,
-				d2d_res_->GetStrokeStyle(stroke)
+				device_resources_->GetStrokeStyle(stroke)
 			);
 
 			IncreasePrimitivesCount();
@@ -182,20 +191,20 @@ namespace kiwano
 	void RenderTarget::DrawRectangle(Rect const& rect, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !render_target_)
+		if (!default_brush_ || !render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
+			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
 			render_target_->DrawRectangle(
 				DX::ConvertToRectF(rect),
-				solid_color_brush_.get(),
+				default_brush_.get(),
 				stroke_width,
-				d2d_res_->GetStrokeStyle(stroke)
+				device_resources_->GetStrokeStyle(stroke)
 			);
 
 			IncreasePrimitivesCount();
@@ -207,17 +216,17 @@ namespace kiwano
 	void RenderTarget::FillRectangle(Rect const& rect, Color const& fill_color) const
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !render_target_)
+		if (!default_brush_ || !render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
+			default_brush_->SetColor(DX::ConvertToColorF(fill_color));
 			render_target_->FillRectangle(
 				DX::ConvertToRectF(rect),
-				solid_color_brush_.get()
+				default_brush_.get()
 			);
 		}
 
@@ -227,14 +236,14 @@ namespace kiwano
 	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !render_target_)
+		if (!default_brush_ || !render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
+			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
 			render_target_->DrawRoundedRectangle(
 				D2D1::RoundedRect(
@@ -242,9 +251,9 @@ namespace kiwano
 					radius.x,
 					radius.y
 				),
-				solid_color_brush_.get(),
+				default_brush_.get(),
 				stroke_width,
-				d2d_res_->GetStrokeStyle(stroke)
+				device_resources_->GetStrokeStyle(stroke)
 			);
 
 			IncreasePrimitivesCount();
@@ -256,21 +265,21 @@ namespace kiwano
 	void RenderTarget::FillRoundedRectangle(Rect const& rect, Vec2 const& radius, Color const& fill_color) const
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !render_target_)
+		if (!default_brush_ || !render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
+			default_brush_->SetColor(DX::ConvertToColorF(fill_color));
 			render_target_->FillRoundedRectangle(
 				D2D1::RoundedRect(
 					DX::ConvertToRectF(rect),
 					radius.x,
 					radius.y
 				),
-				solid_color_brush_.get()
+				default_brush_.get()
 			);
 		}
 
@@ -280,14 +289,14 @@ namespace kiwano
 	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !render_target_)
+		if (!default_brush_ || !render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(stroke_color));
+			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
 
 			render_target_->DrawEllipse(
 				D2D1::Ellipse(
@@ -295,9 +304,9 @@ namespace kiwano
 					radius.x,
 					radius.y
 				),
-				solid_color_brush_.get(),
+				default_brush_.get(),
 				stroke_width,
-				d2d_res_->GetStrokeStyle(stroke)
+				device_resources_->GetStrokeStyle(stroke)
 			);
 
 			IncreasePrimitivesCount();
@@ -309,21 +318,21 @@ namespace kiwano
 	void RenderTarget::FillEllipse(Point const& center, Vec2 const& radius, Color const& fill_color) const
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_ || !render_target_)
+		if (!default_brush_ || !render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			solid_color_brush_->SetColor(DX::ConvertToColorF(fill_color));
+			default_brush_->SetColor(DX::ConvertToColorF(fill_color));
 			render_target_->FillEllipse(
 				D2D1::Ellipse(
 					DX::ConvertToPoint2F(center),
 					radius.x,
 					radius.y
 				),
-				solid_color_brush_.get()
+				default_brush_.get()
 			);
 		}
 
@@ -375,7 +384,7 @@ namespace kiwano
 				layout.GetTextStyle().outline,
 				DX::ConvertToColorF(layout.GetTextStyle().outline_color),
 				layout.GetTextStyle().outline_width,
-				d2d_res_->GetStrokeStyle(layout.GetTextStyle().outline_stroke)
+				device_resources_->GetStrokeStyle(layout.GetTextStyle().outline_stroke)
 			);
 		}
 
@@ -447,12 +456,17 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::PushLayer(LayerArea const& layer)
+	void RenderTarget::PushLayer(LayerArea& layer)
 	{
 		HRESULT hr = S_OK;
-		if (!render_target_ || !solid_color_brush_)
+		if (!render_target_ || !default_brush_)
 		{
 			hr = E_UNEXPECTED;
+		}
+
+		if (!layer.IsValid())
+		{
+			CreateLayer(layer);
 		}
 
 		if (SUCCEEDED(hr) && layer.IsValid())
@@ -462,7 +476,7 @@ namespace kiwano
 					DX::ConvertToRectF(layer.GetAreaRect()),
 					layer.GetMaskGeometry().GetGeometry().get(),
 					antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED,
-					D2D1::Matrix3x2F::Identity(),
+					DX::ConvertToMatrix3x2F(layer.GetMaskTransform()),
 					layer.GetOpacity(),
 					nullptr,
 					D2D1_LAYER_OPTIONS_NONE
@@ -521,6 +535,11 @@ namespace kiwano
 		return opacity_;
 	}
 
+	Matrix3x2 RenderTarget::GetGlobalTransform() const
+	{
+		return global_matrix_;
+	}
+
 	void RenderTarget::SetTransform(const Matrix3x2& matrix)
 	{
 		HRESULT hr = S_OK;
@@ -531,16 +550,22 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			render_target_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
+			Matrix3x2 result = matrix * global_matrix_;
+			render_target_->SetTransform(DX::ConvertToMatrix3x2F(&result));
 		}
 
 		ThrowIfFailed(hr);
 	}
 
+	void RenderTarget::SetGlobalTransform(const Matrix3x2& matrix)
+	{
+		global_matrix_ = matrix;
+	}
+
 	void RenderTarget::SetOpacity(Float32 opacity)
 	{
 		HRESULT hr = S_OK;
-		if (!solid_color_brush_)
+		if (!default_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
@@ -550,7 +575,7 @@ namespace kiwano
 			if (opacity_ != opacity)
 			{
 				opacity_ = opacity;
-				solid_color_brush_->SetOpacity(opacity);
+				default_brush_->SetOpacity(opacity);
 			}
 		}
 
@@ -611,6 +636,13 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
+	bool RenderTarget::CheckVisibility(Rect const& bounds, Matrix3x2 const& transform)
+	{
+		return Rect{ Point{}, reinterpret_cast<const Size&>(render_target_->GetSize()) }.Intersects(
+			Matrix3x2(transform * global_matrix_).Transform(bounds)
+		);
+	}
+
 	void RenderTarget::SetCollectingStatus(bool collecting)
 	{
 		collecting_status_ = collecting;
@@ -633,28 +665,29 @@ namespace kiwano
 	{
 	}
 
-	void ImageRenderTarget::GetOutput(Image& output) const
+	Image ImageRenderTarget::GetOutput() const
 	{
 		HRESULT hr = E_FAIL;
 
-		ComPtr<ID2D1BitmapRenderTarget> bitmap_rt;
 		if (render_target_)
 		{
+			ComPtr<ID2D1BitmapRenderTarget> bitmap_rt;
 			hr = render_target_->QueryInterface<ID2D1BitmapRenderTarget>(&bitmap_rt);
-		}
 
-		ComPtr<ID2D1Bitmap> bitmap;
-		if (SUCCEEDED(hr))
-		{
-			hr = bitmap_rt->GetBitmap(&bitmap);
-		}
+			if (SUCCEEDED(hr))
+			{
+				ComPtr<ID2D1Bitmap> bitmap;
+				hr = bitmap_rt->GetBitmap(&bitmap);
 
-		if (SUCCEEDED(hr))
-		{
-			output.SetBitmap(bitmap);
+				if (SUCCEEDED(hr))
+				{
+					return Image(bitmap);
+				}
+			}
 		}
 
 		ThrowIfFailed(hr);
+		return Image();
 	}
 
 }

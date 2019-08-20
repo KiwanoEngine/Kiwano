@@ -24,6 +24,7 @@ namespace kiwano
 {
 	LayerArea::LayerArea()
 		: opacity_(1.f)
+		, area_(Rect::Infinite())
 	{
 	}
 

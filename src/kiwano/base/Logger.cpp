@@ -279,7 +279,7 @@ namespace kiwano
 	{
 		static WChar temp_buffer[1024 * 3 + 1];
 
-		std::wstringstream ss;
+		StringStream ss;
 		ss << Logger::OutPrefix;
 
 		if (prompt)

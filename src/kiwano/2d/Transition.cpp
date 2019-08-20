@@ -37,8 +37,8 @@ namespace kiwano
 		, delta_()
 		, process_(0)
 		, window_size_()
-		, out_scene_(nullptr)
-		, in_scene_(nullptr)
+		, out_stage_(nullptr)
+		, in_stage_(nullptr)
 		, out_layer_()
 		, in_layer_()
 	{
@@ -58,22 +58,19 @@ namespace kiwano
 		process_ = 0;
 		delta_ = Duration{};
 
-		out_scene_ = prev;
-		in_scene_ = next;
-
-		if (in_scene_)
-		{
-			Renderer::GetInstance()->CreateLayer(in_layer_);
-		}
-
-		if (out_scene_)
-		{
-			Renderer::GetInstance()->CreateLayer(out_layer_);
-		}
-
+		out_stage_ = prev;
+		in_stage_ = next;
 		window_size_ = Renderer::GetInstance()->GetOutputSize();
-		out_layer_.SetAreaRect(Rect{ Point(), window_size_ });
-		in_layer_.SetAreaRect(Rect{ Point(), window_size_ });
+
+		if (in_stage_)
+		{
+			in_layer_.SetAreaRect(Rect{ Point(), window_size_ });
+		}
+
+		if (out_stage_)
+		{
+			out_layer_.SetAreaRect(Rect{ Point(), window_size_ });
+		}
 	}
 
 	void Transition::Update(Duration dt)
@@ -94,30 +91,30 @@ namespace kiwano
 		}
 	}
 
-	void Transition::Render(Renderer* renderer)
+	void Transition::Render(RenderTarget* rt)
 	{
-		if (out_scene_)
+		if (out_stage_)
 		{
-			renderer->SetTransform(out_scene_->GetTransformMatrix());
-			renderer->PushClipRect(Rect{ Point{}, window_size_ });
-			renderer->PushLayer(out_layer_);
+			out_stage_->PrepareRender(rt);
+			rt->PushClipRect(Rect{ Point{}, window_size_ });
+			rt->PushLayer(out_layer_);
 
-			out_scene_->Render(renderer);
+			out_stage_->Render(rt);
 
-			renderer->PopLayer();
-			renderer->PopClipRect();
+			rt->PopLayer();
+			rt->PopClipRect();
 		}
 
-		if (in_scene_)
+		if (in_stage_)
 		{
-			renderer->SetTransform(in_scene_->GetTransformMatrix());
-			renderer->PushClipRect(Rect{ Point{}, window_size_ });
-			renderer->PushLayer(in_layer_);
+			in_stage_->PrepareRender(rt);
+			rt->PushClipRect(Rect{ Point{}, window_size_ });
+			rt->PushLayer(in_layer_);
 
-			in_scene_->Render(renderer);
+			in_stage_->Render(rt);
 
-			renderer->PopLayer();
-			renderer->PopClipRect();
+			rt->PopLayer();
+			rt->PopClipRect();
 		}
 	}
 
@@ -153,8 +150,8 @@ namespace kiwano
 				Rect(
 					window_size_.x * process_,
 					window_size_.y * process_,
-					window_size_.x * (1 - process_ * 2),
-					window_size_.y * (1 - process_ * 2)
+					window_size_.x * (1 - process_),
+					window_size_.y * (1 - process_)
 				)
 			);
 		}
@@ -166,8 +163,8 @@ namespace kiwano
 				Rect(
 					window_size_.x * (1 - process_),
 					window_size_.y * (1 - process_),
-					window_size_.x * (2 * process_ - 1),
-					window_size_.y * (2 * process_ - 1)
+					window_size_.x * process_,
+					window_size_.y * process_
 				)
 			);
 		}
@@ -265,16 +262,16 @@ namespace kiwano
 			break;
 		}
 
-		if (out_scene_)
+		if (out_stage_)
 		{
-			out_scene_->SetTransform(Transform{});
+			out_stage_->SetTransform(Transform{});
 		}
 
-		if (in_scene_)
+		if (in_stage_)
 		{
 			auto transform = Transform{};
 			transform.position = start_pos_;
-			in_scene_->SetTransform(transform);
+			in_stage_->SetTransform(transform);
 		}
 	}
 
@@ -282,31 +279,31 @@ namespace kiwano
 	{
 		Transition::Update(dt);
 
-		if (out_scene_)
+		if (out_stage_)
 		{
 			auto transform = Transform{};
 			transform.position = pos_delta_ * process_;
-			out_scene_->SetTransform(transform);
+			out_stage_->SetTransform(transform);
 		}
 
-		if (in_scene_)
+		if (in_stage_)
 		{
 			auto transform = Transform{};
 			transform.position = start_pos_ + pos_delta_ * process_;
-			in_scene_->SetTransform(transform);
+			in_stage_->SetTransform(transform);
 		}
 	}
 
 	void MoveTransition::Reset()
 	{
-		if (out_scene_)
+		if (out_stage_)
 		{
-			out_scene_->SetTransform(Transform{});
+			out_stage_->SetTransform(Transform{});
 		}
 
-		if (in_scene_)
+		if (in_stage_)
 		{
-			in_scene_->SetTransform(Transform{});
+			in_stage_->SetTransform(Transform{});
 		}
 	}
 
@@ -327,16 +324,16 @@ namespace kiwano
 		auto transform = Transform{};
 		transform.position = Point{ window_size_.x / 2, window_size_.y / 2 };
 
-		if (out_scene_)
+		if (out_stage_)
 		{
-			out_scene_->SetTransform(transform);
-			out_scene_->SetAnchor(0.5f, 0.5f);
+			out_stage_->SetTransform(transform);
+			out_stage_->SetAnchor(Vec2{ 0.5f, 0.5f });
 		}
 
-		if (in_scene_)
+		if (in_stage_)
 		{
-			in_scene_->SetTransform(transform);
-			in_scene_->SetAnchor(0.5f, 0.5f);
+			in_stage_->SetTransform(transform);
+			in_stage_->SetAnchor(Vec2{ 0.5f, 0.5f });
 		}
 
 		in_layer_.SetOpacity(0.f);
@@ -348,42 +345,42 @@ namespace kiwano
 
 		if (process_ < .5f)
 		{
-			if (out_scene_)
+			if (out_stage_)
 			{
-				auto transform = out_scene_->GetTransform();
+				auto transform = out_stage_->GetTransform();
 				transform.scale = Point{ (.5f - process_) * 2, (.5f - process_) * 2 };
 				transform.rotation = rotation_ * (.5f - process_) * 2;
-				out_scene_->SetTransform(transform);
+				out_stage_->SetTransform(transform);
 			}
 		}
 		else
 		{
-			if (in_scene_)
+			if (in_stage_)
 			{
 				out_layer_.SetOpacity(0.f);
 				in_layer_.SetOpacity(1.f);
 
-				auto transform = in_scene_->GetTransform();
+				auto transform = in_stage_->GetTransform();
 				transform.scale = Point{ (process_ - .5f) * 2, (process_ - .5f) * 2 };
 				transform.rotation = rotation_ * (process_ - .5f) * 2;
 
-				in_scene_->SetTransform(transform);
+				in_stage_->SetTransform(transform);
 			}
 		}
 	}
 
 	void RotationTransition::Reset()
 	{
-		if (out_scene_)
+		if (out_stage_)
 		{
-			out_scene_->SetTransform(Transform{});
-			out_scene_->SetAnchor(0.f, 0.f);
+			out_stage_->SetTransform(Transform{});
+			out_stage_->SetAnchor(Vec2{ 0.f, 0.f });
 		}
 
-		if (in_scene_)
+		if (in_stage_)
 		{
-			in_scene_->SetTransform(Transform{});
-			in_scene_->SetAnchor(0.f, 0.f);
+			in_stage_->SetTransform(Transform{});
+			in_stage_->SetAnchor(Vec2{ 0.f, 0.f });
 		}
 	}
 }

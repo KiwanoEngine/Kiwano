@@ -25,7 +25,7 @@
 
 namespace kiwano
 {
-	class Renderer;
+	class RenderTarget;
 
 	class KGE_API Component
 	{
@@ -38,7 +38,7 @@ namespace kiwano
 		virtual void AfterUpdate() {}
 
 		virtual void BeforeRender() {}
-		virtual void OnRender(Renderer*) {}
+		virtual void OnRender(RenderTarget*) {}
 		virtual void AfterRender() {}
 
 		virtual void HandleEvent(Event&) {}

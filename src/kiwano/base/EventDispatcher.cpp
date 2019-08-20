@@ -25,7 +25,7 @@ namespace kiwano
 {
 	void EventDispatcher::Dispatch(Event& evt)
 	{
-		if (listeners_.item_empty())
+		if (listeners_.empty())
 			return;
 
 		EventListenerPtr next;
@@ -40,24 +40,21 @@ namespace kiwano
 		}
 	}
 
-	EventListenerPtr EventDispatcher::AddListener(EventListenerPtr listener)
+	EventListener* EventDispatcher::AddListener(EventListenerPtr listener)
 	{
 		KGE_ASSERT(listener && "AddListener failed, NULL pointer exception");
 
 		if (listener)
 		{
-			listeners_.push_back_item(listener);
+			listeners_.push_back(listener);
 		}
-		return listener;
+		return listener.get();
 	}
 
-	void EventDispatcher::AddListener(UInt32 type, EventCallback callback, String const& name)
+	EventListener* EventDispatcher::AddListener(UInt32 type, EventCallback callback, String const& name)
 	{
 		EventListenerPtr listener = new EventListener(type, callback, name);
-		if (listener)
-		{
-			listeners_.push_back_item(listener);
-		}
+		return AddListener(listener);
 	}
 
 	void EventDispatcher::StartListeners(String const & listener_name)
@@ -91,7 +88,7 @@ namespace kiwano
 
 			if (listener->IsName(listener_name))
 			{
-				listeners_.remove_item(listener);
+				listeners_.remove(listener);
 			}
 		}
 	}
@@ -127,7 +124,7 @@ namespace kiwano
 
 			if (listener->type_ == type)
 			{
-				listeners_.remove_item(listener);
+				listeners_.remove(listener);
 			}
 		}
 	}

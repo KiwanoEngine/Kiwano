@@ -23,6 +23,7 @@
 #include <kiwano/base/ObjectBase.h>
 #include <kiwano/base/Resource.h>
 #include <xaudio2.h>
+#include "Transcoder.h"
 
 namespace kiwano
 {
@@ -86,11 +87,10 @@ namespace kiwano
 			);
 
 		protected:
-			bool	opened_;
-			bool	playing_;
-			UInt32	size_;
-			BYTE* wave_data_;
-			IXAudio2SourceVoice* voice_;
+			bool					opened_;
+			bool					playing_;
+			Transcoder				transcoder_;
+			IXAudio2SourceVoice*	voice_;
 		};
 	}
 }

@@ -25,100 +25,105 @@ namespace kiwano
 {
 	namespace math
 	{
-		// 矩形
 		template <typename _Ty>
 		struct RectT
 		{
 		public:
 			using value_type = _Ty;
 
-			Vec2T<value_type> origin;	// 左上角坐标
-			Vec2T<value_type> size;	// 宽度和高度
+			Vec2T<value_type> left_top;
+			Vec2T<value_type> right_bottom;
 
 		public:
 			RectT() {}
 
 			RectT(
-				value_type x,
-				value_type y,
-				value_type width,
-				value_type height
+				value_type left,
+				value_type top,
+				value_type right,
+				value_type bottom
 			)
-				: origin(x, y)
-				, size(width, height)
+				: left_top(left, top)
+				, right_bottom(right, bottom)
 			{}
 
 			RectT(
-				const Vec2T<value_type>& pos,
-				const Vec2T<value_type>& size
+				const Vec2T<value_type>& left_top,
+				const Vec2T<value_type>& right_bottom
 			)
-				: origin(pos.x, pos.y)
-				, size(size.x, size.y)
+				: left_top(left_top)
+				, right_bottom(right_bottom)
 			{}
 
 			RectT(
 				const RectT& other
 			)
-				: origin(other.origin.x, other.origin.y)
-				, size(other.size.x, other.size.y)
+				: left_top(other.left_top)
+				, right_bottom(other.right_bottom)
 			{}
 
 			RectT& operator= (const RectT& other)
 			{
-				origin = other.origin;
-				size = other.size;
+				left_top = other.left_top;
+				right_bottom = other.right_bottom;
 				return *this;
 			}
 
 			inline bool operator== (const RectT& rect) const
 			{
-				return (origin == rect.origin) && (size == rect.size);
+				return (left_top == rect.left_top) && (right_bottom == rect.right_bottom);
 			}
 
-			inline void Set(value_type x, value_type y, value_type width, value_type height)
+			inline void Set(value_type left, value_type top, value_type right, value_type bottom)
 			{
-				origin = Vec2T<value_type>{ x, y };
-				size = Vec2T<value_type>{ width, height };
+				left_top = Vec2T<value_type>{ left, top };
+				right_bottom = Vec2T<value_type>{ right, bottom };
 			}
 
-			inline Vec2T<value_type> GetCenter() const		{ return Vec2T<value_type>{ origin.x + size.x / 2, origin.y + size.y / 2 }; }
+			inline Vec2T<value_type> GetCenter() const		{ return Vec2T<value_type>{ (left_top.x + right_bottom.x) / 2, (left_top.y + right_bottom.y) / 2 }; }
 
-			inline Vec2T<value_type> GetLeftTop() const		{ return origin; }
+			inline Vec2T<value_type> GetLeftTop() const		{ return left_top; }
 
-			inline Vec2T<value_type> GetRightBottom() const	{ return Vec2T<value_type>{ GetRight(), GetBottom() }; }
+			inline Vec2T<value_type> GetRightBottom() const	{ return right_bottom; }
 
-			inline Vec2T<value_type> GetRightTop() const	{ return Vec2T<value_type>{ GetRight(), GetTop() }; }
+			inline Vec2T<value_type> GetRightTop() const	{ return Vec2T<value_type>{ right_bottom.x, left_top.y }; }
 
-			inline Vec2T<value_type> GetLeftBottom() const	{ return Vec2T<value_type>{ GetLeft(), GetBottom() }; }
+			inline Vec2T<value_type> GetLeftBottom() const	{ return Vec2T<value_type>{ left_top.x, right_bottom.y }; }
 
-			inline value_type GetLeft() const				{ return origin.x; }
+			inline value_type GetLeft() const				{ return left_top.x; }
 
-			inline value_type GetTop() const				{ return origin.y; }
+			inline value_type GetTop() const				{ return left_top.y; }
 
-			inline value_type GetRight() const				{ return origin.x + size.x; }
+			inline value_type GetRight() const				{ return right_bottom.x; }
 
-			inline value_type GetBottom() const				{ return origin.y + size.y; }
+			inline value_type GetBottom() const				{ return right_bottom.y; }
 
-			inline bool IsEmpty() const						{ return origin.IsOrigin() && size.IsOrigin(); }
+			inline value_type GetWidth() const				{ return right_bottom.x - left_top.x; }
+
+			inline value_type GetHeight() const				{ return right_bottom.y - left_top.y; }
+
+			inline Vec2T<value_type> GetSize() const		{ return Vec2T<value_type>{ GetWidth(), GetHeight() }; }
+
+			inline bool IsEmpty() const						{ return left_top.IsOrigin() && right_bottom.IsOrigin(); }
 
 			inline bool ContainsPoint(const Vec2T<value_type>& point) const
 			{
-				return	point.x >= origin.x && point.x <= (origin.x + size.x) &&
-					point.y >= origin.y && point.y <= (origin.y + size.y);
+				return	point.x >= left_top.x && point.x <= right_bottom.x &&
+					point.y >= left_top.y && point.y <= right_bottom.y;
 			}
 
 			inline bool Intersects(const RectT& rect) const
 			{
-				return !((origin.x + size.x)			< rect.origin.x ||
-						(rect.origin.x + rect.size.x)	< origin.x ||
-						(origin.y + size.y)				< rect.origin.y ||
-						(rect.origin.y + rect.size.y)	< origin.y);
+				return !(right_bottom.x		< rect.left_top.x ||
+						rect.right_bottom.x	< left_top.x ||
+						right_bottom.y		< rect.left_top.y ||
+						rect.right_bottom.y	< left_top.y);
+			}
+
+			static inline RectT Infinite()
+			{
+				return RectT{ -math::constants::FLOAT_MAX, -math::constants::FLOAT_MAX, math::constants::FLOAT_MAX, math::constants::FLOAT_MAX };
 			}
 		};
 	}
-}
-
-namespace kiwano
-{
-	using Rect = kiwano::math::RectT<Float32>;
 }

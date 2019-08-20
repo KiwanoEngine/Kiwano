@@ -26,7 +26,7 @@ namespace kiwano
 {
 	void ActionManager::UpdateActions(ActorPtr target, Duration dt)
 	{
-		if (actions_.item_empty() || !target)
+		if (actions_.empty() || !target)
 			return;
 
 		ActionPtr next;
@@ -38,7 +38,7 @@ namespace kiwano
 				action->UpdateStep(target, dt);
 
 			if (action->IsRemoveable())
-				actions_.remove_item(action);
+				actions_.remove(action);
 		}
 	}
 
@@ -48,14 +48,14 @@ namespace kiwano
 
 		if (action)
 		{
-			actions_.push_back_item(action);
+			actions_.push_back(action);
 		}
 		return action.get();
 	}
 
 	ActionPtr ActionManager::GetAction(String const & name)
 	{
-		if (actions_.item_empty())
+		if (actions_.empty())
 			return nullptr;
 
 		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
@@ -66,7 +66,7 @@ namespace kiwano
 
 	void ActionManager::ResumeAllActions()
 	{
-		if (actions_.item_empty())
+		if (actions_.empty())
 			return;
 
 		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
@@ -77,7 +77,7 @@ namespace kiwano
 
 	void ActionManager::PauseAllActions()
 	{
-		if (actions_.item_empty())
+		if (actions_.empty())
 			return;
 
 		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
@@ -88,7 +88,7 @@ namespace kiwano
 
 	void ActionManager::StopAllActions()
 	{
-		if (actions_.item_empty())
+		if (actions_.empty())
 			return;
 
 		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())

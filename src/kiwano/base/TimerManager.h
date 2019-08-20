@@ -28,8 +28,16 @@ namespace kiwano
 		using Timers = intrusive_list<TimerPtr>;
 
 	public:
-		// 添加任务
-		void AddTimer(
+		// 添加定时器
+		Timer* AddTimer(
+			Timer::Callback const& func,	/* 执行函数 */
+			Duration delay,					/* 时间间隔（秒） */
+			Int32 times = -1,				/* 执行次数（设 -1 为永久执行） */
+			String const& name = L""		/* 任务名称 */
+		);
+
+		// 添加定时器
+		Timer* AddTimer(
 			TimerPtr timer
 		);
 

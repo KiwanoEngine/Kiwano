@@ -61,16 +61,16 @@ namespace kiwano
 		);
 
 		// 获取宽度
-		Float32 GetWidth() const					{ return crop_rect_.size.x; }
+		Float32 GetWidth() const				{ return crop_rect_.GetWidth(); }
 
 		// 获取高度
-		Float32 GetHeight() const					{ return crop_rect_.size.y; }
+		Float32 GetHeight() const				{ return crop_rect_.GetHeight(); }
 
 		// 获取大小
-		Size GetSize() const					{ return crop_rect_.size; }
+		Size GetSize() const					{ return crop_rect_.GetSize(); }
 
 		// 获取裁剪位置
-		Point GetCropPoint() const				{ return crop_rect_.origin; }
+		Point GetCropPoint() const				{ return crop_rect_.GetLeftTop(); }
 
 		// 获取裁剪矩形
 		inline Rect const& GetCropRect() const	{ return crop_rect_; }

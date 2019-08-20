@@ -23,6 +23,7 @@
 #include "../2d/Stage.h"
 #include "../2d/Transition.h"
 #include "../2d/DebugActor.h"
+#include "../renderer/RenderTarget.h"
 
 namespace kiwano
 {
@@ -35,34 +36,34 @@ namespace kiwano
 	{
 	}
 
-	void Director::EnterStage(StagePtr scene)
+	void Director::EnterStage(StagePtr stage)
 	{
-		KGE_ASSERT(scene && "Director::EnterStage failed, NULL pointer exception");
+		KGE_ASSERT(stage && "Director::EnterStage failed, NULL pointer exception");
 
-		if (curr_scene_ == scene || next_scene_ == scene)
+		if (curr_stage_ == stage || next_stage_ == stage)
 			return;
 
-		next_scene_ = scene;
+		next_stage_ = stage;
 	}
 
-	void Director::EnterStage(StagePtr scene, TransitionPtr transition)
+	void Director::EnterStage(StagePtr stage, TransitionPtr transition)
 	{
-		EnterStage(scene);
+		EnterStage(stage);
 
-		if (transition && next_scene_)
+		if (transition && next_stage_)
 		{
 			if (transition_)
 			{
 				transition_->Stop();
 			}
 			transition_ = transition;
-			transition_->Init(curr_scene_, next_scene_);
+			transition_->Init(curr_stage_, next_stage_);
 		}
 	}
 
 	StagePtr Director::GetCurrentStage()
 	{
-		return curr_scene_;
+		return curr_stage_;
 	}
 
 	void Director::SetRenderBorderEnabled(bool enabled)
@@ -85,8 +86,8 @@ namespace kiwano
 
 	void Director::ClearStages()
 	{
-		curr_scene_.reset();
-		next_scene_.reset();
+		curr_stage_.reset();
+		next_stage_.reset();
 		debug_actor_.reset();
 		transition_.reset();
 	}
@@ -101,54 +102,52 @@ namespace kiwano
 				transition_ = nullptr;
 		}
 
-		if (next_scene_ && !transition_)
+		if (next_stage_ && !transition_)
 		{
-			if (curr_scene_)
+			if (curr_stage_)
 			{
-				curr_scene_->OnExit();
+				curr_stage_->OnExit();
 			}
 
-			next_scene_->OnEnter();
+			next_stage_->OnEnter();
 
-			curr_scene_ = next_scene_;
-			next_scene_ = nullptr;
+			curr_stage_ = next_stage_;
+			next_stage_ = nullptr;
 		}
 
-		if (curr_scene_)
-			curr_scene_->Update(dt);
+		if (curr_stage_)
+			curr_stage_->Update(dt);
 
-		if (next_scene_)
-			next_scene_->Update(dt);
+		if (next_stage_)
+			next_stage_->Update(dt);
 
 		if (debug_actor_)
 			debug_actor_->Update(dt);
 	}
 
-	void Director::OnRender(Renderer* renderer)
+	void Director::OnRender(RenderTarget* rt)
 	{
 		if (transition_)
 		{
-			transition_->Render(renderer);
+			transition_->Render(rt);
 		}
-		else if (curr_scene_)
+		else if (curr_stage_)
 		{
-			curr_scene_->Render(renderer);
+			curr_stage_->Render(rt);
+		}
+
+		if (render_border_enabled_)
+		{
+			rt->SetOpacity(1.f);
+			if (curr_stage_)
+			{
+				curr_stage_->RenderBorder(rt);
+			}
 		}
 
 		if (debug_actor_)
 		{
-			debug_actor_->Render(renderer);
-		}
-	}
-
-	void Director::AfterRender()
-	{
-		if (render_border_enabled_)
-		{
-			if (curr_scene_)
-			{
-				curr_scene_->RenderBorder();
-			}
+			debug_actor_->Render(rt);
 		}
 	}
 
@@ -157,8 +156,8 @@ namespace kiwano
 		if (debug_actor_)
 			debug_actor_->Dispatch(evt);
 
-		if (curr_scene_)
-			curr_scene_->Dispatch(evt);
+		if (curr_stage_)
+			curr_stage_->Dispatch(evt);
 	}
 
 }

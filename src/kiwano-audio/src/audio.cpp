@@ -76,9 +76,17 @@ namespace kiwano
 
 		HRESULT Audio::CreateVoice(IXAudio2SourceVoice** voice, const WAVEFORMATEX* wfx)
 		{
+			KGE_ASSERT(x_audio2_ && "Audio engine hasn't been initialized!");
+
 			if (voice == nullptr)
 			{
-				return E_UNEXPECTED;
+				return E_INVALIDARG;
+			}
+
+			if (*voice)
+			{
+				(*voice)->DestroyVoice();
+				(*voice) = nullptr;
 			}
 
 			HRESULT hr = x_audio2_->CreateSourceVoice(voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
@@ -87,11 +95,15 @@ namespace kiwano
 
 		void Audio::Open()
 		{
+			KGE_ASSERT(x_audio2_ && "Audio engine hasn't been initialized!");
+
 			x_audio2_->StartEngine();
 		}
 
 		void Audio::Close()
 		{
+			KGE_ASSERT(x_audio2_ && "Audio engine hasn't been initialized!");
+
 			x_audio2_->StopEngine();
 		}
 	}

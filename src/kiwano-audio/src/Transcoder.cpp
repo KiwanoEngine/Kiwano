@@ -38,24 +38,39 @@ namespace kiwano
 
 		Transcoder::Transcoder()
 			: wave_format_(nullptr)
+			, wave_data_(nullptr)
+			, wave_size_(0)
 		{
 		}
 
 		Transcoder::~Transcoder()
+		{
+			ClearBuffer();
+		}
+
+		Transcoder::Buffer Transcoder::GetBuffer() const
+		{
+			return Buffer{ wave_data_, wave_size_, wave_format_ };
+		}
+
+		void Transcoder::ClearBuffer()
 		{
 			if (wave_format_)
 			{
 				::CoTaskMemFree(wave_format_);
 				wave_format_ = nullptr;
 			}
+
+			if (wave_data_)
+			{
+				delete[] wave_data_;
+				wave_data_ = nullptr;
+			}
+
+			wave_size_ = 0;
 		}
 
-		const WAVEFORMATEX* Transcoder::GetWaveFormatEx() const
-		{
-			return wave_format_;
-		}
-
-		HRESULT Transcoder::LoadMediaFile(String const& file_path, BYTE** wave_data, UInt32* wave_data_size)
+		HRESULT Transcoder::LoadMediaFile(String const& file_path)
 		{
 			HRESULT hr = S_OK;
 
@@ -69,13 +84,13 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = ReadSource(reader.get(), wave_data, wave_data_size);
+				hr = ReadSource(reader.get());
 			}
 
 			return hr;
 		}
 
-		HRESULT Transcoder::LoadMediaResource(Resource const& res, BYTE** wave_data, UInt32* wave_data_size)
+		HRESULT Transcoder::LoadMediaResource(Resource const& res)
 		{
 			HRESULT	hr = S_OK;
 
@@ -87,7 +102,7 @@ namespace kiwano
 			if (!data) { return E_FAIL; }
 
 			stream = kiwano::modules::Shlwapi::Get().SHCreateMemStream(
-				static_cast<const BYTE*>(data.buffer),
+				static_cast<const Byte*>(data.buffer),
 				static_cast<UInt32>(data.size)
 			);
 
@@ -113,13 +128,13 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = ReadSource(reader.get(), wave_data, wave_data_size);
+				hr = ReadSource(reader.get());
 			}
 
 			return hr;
 		}
 
-		HRESULT Transcoder::ReadSource(IMFSourceReader* reader, BYTE** wave_data, UInt32* wave_data_size)
+		HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
 		{
 			HRESULT hr = S_OK;
 			DWORD max_stream_size = 0;
@@ -194,7 +209,7 @@ namespace kiwano
 				LONGLONG duration = prop.uhVal.QuadPart;
 				max_stream_size = static_cast<DWORD>(
 					(duration * wave_format_->nAvgBytesPerSec) / 10000000 + 1
-					);
+				);
 				PropVariantClear(&prop);
 			}
 
@@ -203,7 +218,7 @@ namespace kiwano
 			{
 				DWORD flags = 0;
 				DWORD position = 0;
-				BYTE* data = new (std::nothrow) BYTE[max_stream_size];
+				Byte* data = new (std::nothrow) Byte[max_stream_size];
 
 				ComPtr<IMFSample> sample;
 				ComPtr<IMFMediaBuffer> buffer;
@@ -236,7 +251,7 @@ namespace kiwano
 
 							if (SUCCEEDED(hr))
 							{
-								BYTE* audio_data = nullptr;
+								Byte* audio_data = nullptr;
 								DWORD sample_buffer_length = 0;
 
 								hr = buffer->Lock(
@@ -245,7 +260,7 @@ namespace kiwano
 									&sample_buffer_length
 								);
 
-								if (SUCCEEDED(hr))
+								if (SUCCEEDED(hr) && sample_buffer_length <= max_stream_size)
 								{
 									for (DWORD i = 0; i < sample_buffer_length; i++)
 									{
@@ -263,8 +278,8 @@ namespace kiwano
 
 					if (SUCCEEDED(hr))
 					{
-						*wave_data = data;
-						*wave_data_size = position;
+						wave_data_ = data;
+						wave_size_ = position;
 					}
 				}
 			}

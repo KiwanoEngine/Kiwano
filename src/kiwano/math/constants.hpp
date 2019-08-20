@@ -26,13 +26,16 @@ namespace kiwano
 	{
 		namespace constants
 		{
-			const auto PI_F     = 3.141592653589793f;
-			const auto PI_F_2   = 1.570796326794896f;
-			const auto PI_F_X_2 = 6.283185307179586f;
+			constexpr auto PI_F			= 3.141592653589793f;
+			constexpr auto PI_F_2		= 1.570796326794896f;
+			constexpr auto PI_F_X_2		= 6.283185307179586f;
 
-			const auto PI_D     = 3.14159265358979323846;
-			const auto PI_D_2   = 1.57079632679489661923;
-			const auto PI_D_X_2 = 6.28318530717958647692;
+			constexpr auto PI_D			= 3.14159265358979323846;
+			constexpr auto PI_D_2		= 1.57079632679489661923;
+			constexpr auto PI_D_X_2		= 6.28318530717958647692;
+
+			constexpr auto FLOAT_MAX	= 3.402823466e+38F;
+			constexpr auto FLOAT_MIN	= 1.175494351e-38F;
 		}
 	}
 }

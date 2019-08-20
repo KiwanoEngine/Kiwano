@@ -22,7 +22,6 @@
 #include <kiwano/utils/FileUtil.h>
 #include "Sound.h"
 #include "audio.h"
-#include "Transcoder.h"
 
 namespace kiwano
 {
@@ -32,10 +31,14 @@ namespace kiwano
 		Sound::Sound()
 			: opened_(false)
 			, playing_(false)
-			, size_(0)
-			, wave_data_(nullptr)
 			, voice_(nullptr)
 		{
+		}
+
+		Sound::Sound(String const& file_path)
+			: Sound()
+		{
+			Load(file_path);
 		}
 
 		Sound::Sound(Resource const& res)
@@ -51,21 +54,19 @@ namespace kiwano
 
 		bool Sound::Load(String const& file_path)
 		{
-			if (opened_)
-			{
-				Close();
-			}
-
-#if defined(KGE_DEBUG)
 			if (!FileUtil::ExistsFile(file_path))
 			{
 				KGE_WARNING_LOG(L"Media file '%s' not found", file_path.c_str());
 				return false;
 			}
-#endif
+
+			if (opened_)
+			{
+				Close();
+			}
 
 			Transcoder transcoder;
-			HRESULT hr = transcoder.LoadMediaFile(file_path, &wave_data_, &size_);
+			HRESULT hr = transcoder.LoadMediaFile(file_path);
 
 			if (FAILED(hr))
 			{
@@ -73,14 +74,11 @@ namespace kiwano
 				return false;
 			}
 
-			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder.GetBuffer().format);
 			if (FAILED(hr))
 			{
-				if (wave_data_)
-				{
-					delete[] wave_data_;
-					wave_data_ = nullptr;
-				}
+				Close();
+
 				KGE_ERROR_LOG(L"Create source voice failed with HRESULT of %08X", hr);
 				return false;
 			}
@@ -97,7 +95,7 @@ namespace kiwano
 			}
 
 			Transcoder transcoder;
-			HRESULT hr = transcoder.LoadMediaResource(res, &wave_data_, &size_);
+			HRESULT hr = transcoder.LoadMediaResource(res);
 
 			if (FAILED(hr))
 			{
@@ -105,14 +103,11 @@ namespace kiwano
 				return false;
 			}
 
-			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder.GetWaveFormatEx());
+			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder.GetBuffer().format);
 			if (FAILED(hr))
 			{
-				if (wave_data_)
-				{
-					delete[] wave_data_;
-					wave_data_ = nullptr;
-				}
+				Close();
+
 				KGE_ERROR_LOG(L"Create source voice failed with HRESULT of %08X", hr);
 				return false;
 			}
@@ -140,10 +135,12 @@ namespace kiwano
 			// clamp loop count
 			loop_count = (loop_count < 0) ? XAUDIO2_LOOP_INFINITE : std::min(loop_count, XAUDIO2_LOOP_INFINITE - 1);
 
+			auto wave_buffer = transcoder_.GetBuffer();
+
 			XAUDIO2_BUFFER buffer = { 0 };
-			buffer.pAudioData = wave_data_;
+			buffer.pAudioData = wave_buffer.data;
 			buffer.Flags = XAUDIO2_END_OF_STREAM;
-			buffer.AudioBytes = size_;
+			buffer.AudioBytes = wave_buffer.size;
 			buffer.LoopCount = static_cast<UInt32>(loop_count);
 
 			HRESULT hr = voice_->SubmitSourceBuffer(&buffer);
@@ -202,11 +199,7 @@ namespace kiwano
 				voice_ = nullptr;
 			}
 
-			if (wave_data_)
-			{
-				delete[] wave_data_;
-				wave_data_ = nullptr;
-			}
+			transcoder_.ClearBuffer();
 
 			opened_ = false;
 			playing_ = false;

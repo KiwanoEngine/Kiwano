@@ -29,12 +29,12 @@ namespace kiwano
 
 	public:
 		// Ìí¼Ó¼àÌıÆ÷
-		EventListenerPtr AddListener(
+		EventListener* AddListener(
 			EventListenerPtr listener
 		);
 
 		// Ìí¼Ó¼àÌıÆ÷
-		void AddListener(
+		EventListener* AddListener(
 			UInt32 type,
 			EventCallback callback,
 			String const& name = L""

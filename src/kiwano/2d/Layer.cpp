@@ -27,8 +27,6 @@ namespace kiwano
 	Layer::Layer()
 		: swallow_(false)
 	{
-		SetSize(Renderer::GetInstance()->GetOutputSize());
-
 		auto handler = Closure(this, &Layer::HandleMessages);
 
 		AddListener(Event::MouseBtnDown, handler);
@@ -43,6 +41,27 @@ namespace kiwano
 
 	Layer::~Layer()
 	{
+	}
+
+	void Layer::SetClipRect(Rect const& clip_rect)
+	{
+		area_.SetAreaRect(clip_rect);
+	}
+
+	void Layer::SetOpacity(Float32 opacity)
+	{
+		// Actor::SetOpacity(opacity);
+		area_.SetOpacity(opacity);
+	}
+
+	void Layer::SetMaskGeometry(Geometry const& mask)
+	{
+		area_.SetMaskGeometry(mask);
+	}
+
+	void Layer::SetMaskTransform(Matrix3x2 const& transform)
+	{
+		area_.SetMaskTransform(transform);
 	}
 
 	void Layer::Dispatch(Event& evt)
@@ -63,7 +82,19 @@ namespace kiwano
 		EventDispatcher::Dispatch(evt);
 	}
 
-	void Layer::HandleMessages(Event const & evt)
+	void Layer::Render(RenderTarget* rt)
+	{
+		if (!children_.empty())
+		{
+			PrepareRender(rt);
+
+			rt->PushLayer(area_);
+			Actor::Render(rt);
+			rt->PopLayer();
+		}
+	}
+
+	void Layer::HandleMessages(Event const& evt)
 	{
 		switch (evt.type)
 		{

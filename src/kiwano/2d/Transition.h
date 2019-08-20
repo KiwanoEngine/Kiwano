@@ -25,7 +25,7 @@
 namespace kiwano
 {
 	class Director;
-	class Renderer;
+	class RenderTarget;
 
 	// ÎèÌ¨¹ý¶É
 	class KGE_API Transition
@@ -50,7 +50,7 @@ namespace kiwano
 
 		virtual void Update(Duration dt);
 
-		virtual void Render(Renderer* renderer);
+		virtual void Render(RenderTarget* rt);
 
 		virtual void Stop();
 
@@ -62,8 +62,8 @@ namespace kiwano
 		Duration	duration_;
 		Duration	delta_;
 		Size		window_size_;
-		StagePtr	out_scene_;
-		StagePtr	in_scene_;
+		StagePtr	out_stage_;
+		StagePtr	in_stage_;
 		LayerArea	out_layer_;
 		LayerArea	in_layer_;
 	};

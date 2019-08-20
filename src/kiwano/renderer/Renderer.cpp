@@ -29,6 +29,7 @@ namespace kiwano
 		: hwnd_(nullptr)
 		, vsync_(true)
 		, clear_color_(Color::Black)
+		, resolution_mode_(ResolutionMode::Fixed)
 	{
 	}
 
@@ -41,7 +42,7 @@ namespace kiwano
 		KGE_LOG(L"Creating device resources");
 
 		hwnd_ = Window::GetInstance()->GetHandle();
-		output_size_ = Window::GetInstance()->GetSize();
+		resolution_ = output_size_ = Window::GetInstance()->GetSize();
 
 		d2d_res_ = nullptr;
 		d3d_res_ = nullptr;
@@ -126,6 +127,8 @@ namespace kiwano
 	{
 		KGE_LOG(L"Destroying device resources");
 
+		RenderTarget::DiscardDeviceResources();
+
 		d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.get());
 		res_font_file_loader_.reset();
 
@@ -133,7 +136,6 @@ namespace kiwano
 		res_font_collection_loader_.reset();
 
 		drawing_state_block_.reset();
-		solid_color_brush_.reset();
 		d2d_res_.reset();
 		d3d_res_.reset();
 	}
@@ -158,6 +160,12 @@ namespace kiwano
 			hr = d3d_res_->ClearRenderTarget(clear_color_);
 		}
 
+		if (SUCCEEDED(hr))
+		{
+			SetTransform(Matrix3x2{});
+			PushClipRect(Rect{ Point{}, resolution_ });
+		}
+
 		ThrowIfFailed(hr);
 	}
 
@@ -170,8 +178,11 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
+
 		if (SUCCEEDED(hr))
 		{
+			PopClipRect();
+
 			EndDraw();
 
 			render_target_->RestoreDrawingState(drawing_state_block_.get());
@@ -200,7 +211,7 @@ namespace kiwano
 			UInt32 width = LOWORD(lparam);
 			UInt32 height = HIWORD(lparam);
 
-			Resize(width, height);
+			ResizeTarget(width, height);
 			break;
 		}
 		}
@@ -208,7 +219,9 @@ namespace kiwano
 
 	HRESULT Renderer::CreateDeviceResources()
 	{
-		HRESULT hr = InitDeviceResources(
+		KGE_ASSERT(d2d_res_);
+
+		HRESULT hr = RenderTarget::CreateDeviceResources(
 			d2d_res_->GetDeviceContext(),
 			d2d_res_
 		);
@@ -656,7 +669,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			hr = render_target.InitDeviceResources(output, d2d_res_);
+			hr = render_target.CreateDeviceResources(output, d2d_res_);
 		}
 
 		ThrowIfFailed(hr);
@@ -667,7 +680,30 @@ namespace kiwano
 		vsync_ = enabled;
 	}
 
-	void Renderer::Resize(UInt32 width, UInt32 height)
+	void Renderer::SetResolution(Size const& resolution)
+	{
+		if (resolution_ != resolution)
+		{
+			resolution_ = resolution;
+			UpdateResolution();
+		}
+	}
+
+	void Renderer::SetResolutionMode(ResolutionMode mode)
+	{
+		if (resolution_mode_ != mode)
+		{
+			resolution_mode_ = mode;
+			UpdateResolution();
+		}
+	}
+
+	void Renderer::SetClearColor(const Color& color)
+	{
+		clear_color_ = color;
+	}
+
+	void Renderer::ResizeTarget(UInt32 width, UInt32 height)
 	{
 		HRESULT hr = S_OK;
 		if (!d3d_res_)
@@ -682,19 +718,58 @@ namespace kiwano
 			hr = d3d_res_->SetLogicalSize(output_size_);
 		}
 
+		if (SUCCEEDED(hr))
+		{
+			UpdateResolution();
+		}
+
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::SetClearColor(const Color& color)
+	void Renderer::UpdateResolution()
 	{
-		clear_color_ = color;
-	}
+		switch (resolution_mode_)
+		{
+		case ResolutionMode::Fixed:
+		{
+			SetGlobalTransform(Matrix3x2{});
+			break;
+		}
 
-	bool Renderer::CheckVisibility(Size const& content_size, Matrix3x2 const& transform)
-	{
-		return Rect{ Point{}, output_size_ }.Intersects(
-			transform.Transform(Rect{ Point{}, content_size })
-		);
+		case ResolutionMode::Center:
+		{
+			Float32 left = math::Ceil((output_size_.x - resolution_.x) / 2);
+			Float32 top = math::Ceil((output_size_.y - resolution_.y) / 2);
+			SetGlobalTransform(Matrix3x2::Translation(Vec2{ left, top }));
+			break;
+		}
+
+		case ResolutionMode::Stretch:
+		{
+			Float32 scalex = Float32(Int32((output_size_.x / resolution_.x) * 100 + 0.5f)) / 100;
+			Float32 scaley = Float32(Int32((output_size_.y / resolution_.y) * 100 + 0.5f)) / 100;
+			SetGlobalTransform(Matrix3x2::Scaling(Vec2{ scalex, scaley }));
+			break;
+		}
+
+		case ResolutionMode::Adaptive:
+		{
+			Float32 scalex = Float32(Int32((output_size_.x / resolution_.x) * 100 + 0.5f)) / 100;
+			Float32 scaley = Float32(Int32((output_size_.y / resolution_.y) * 100 + 0.5f)) / 100;
+			if (scalex > scaley)
+			{
+				Float32 left = math::Ceil((output_size_.x - resolution_.x * scaley) / 2);
+				SetGlobalTransform(Matrix3x2::SRT(Vec2{ left, 0 }, Vec2{ scaley, scaley }, 0));
+			}
+			else
+			{
+				Float32 top = math::Ceil((output_size_.y - resolution_.y * scalex) / 2);
+				SetGlobalTransform(Matrix3x2::SRT(Vec2{ 0, top }, Vec2{ scalex, scalex }, 0));
+
+			}
+			break;
+		}
+		}
 	}
 
 }

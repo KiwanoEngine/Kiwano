@@ -28,6 +28,7 @@ namespace kiwano
 	KGE_DEFINE_NUMERIC_TYPE(Char, signed char);
 	KGE_DEFINE_NUMERIC_TYPE(UChar, unsigned char);
 	KGE_DEFINE_NUMERIC_TYPE(WChar, wchar_t);
+	KGE_DEFINE_NUMERIC_TYPE(Byte, UChar);
 
 	KGE_DEFINE_NUMERIC_TYPE(Int8, std::int8_t);
 	KGE_DEFINE_NUMERIC_TYPE(Int16, std::int16_t);
