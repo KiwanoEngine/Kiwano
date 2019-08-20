@@ -535,6 +535,11 @@ namespace kiwano
 		return opacity_;
 	}
 
+	Matrix3x2 RenderTarget::GetGlobalTransform() const
+	{
+		return global_matrix_;
+	}
+
 	void RenderTarget::SetTransform(const Matrix3x2& matrix)
 	{
 		HRESULT hr = S_OK;
@@ -545,10 +550,16 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			render_target_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
+			Matrix3x2 result = matrix * global_matrix_;
+			render_target_->SetTransform(DX::ConvertToMatrix3x2F(&result));
 		}
 
 		ThrowIfFailed(hr);
+	}
+
+	void RenderTarget::SetGlobalTransform(const Matrix3x2& matrix)
+	{
+		global_matrix_ = matrix;
 	}
 
 	void RenderTarget::SetOpacity(Float32 opacity)
@@ -628,7 +639,7 @@ namespace kiwano
 	bool RenderTarget::CheckVisibility(Rect const& bounds, Matrix3x2 const& transform)
 	{
 		return Rect{ Point{}, reinterpret_cast<const Size&>(render_target_->GetSize()) }.Intersects(
-			transform.Transform(bounds)
+			Matrix3x2(transform * global_matrix_).Transform(bounds)
 		);
 	}
 

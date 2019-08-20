@@ -65,6 +65,7 @@ namespace kiwano
 			Int32			width,
 			Int32			height,
 			UInt32			icon,
+			bool			resizable,
 			bool			fullscreen,
 			WNDPROC			proc
 		);
@@ -77,6 +78,8 @@ namespace kiwano
 
 		void UpdateWindowRect();
 
+		void UpdateCursor();
+		
 		void SetActive(bool actived);
 
 	protected:
@@ -85,8 +88,9 @@ namespace kiwano
 		~Window();
 
 	private:
-		HWND		handle_;
+		bool		resizable_;
 		bool		is_fullscreen_;
+		HWND		handle_;
 		Int32		width_;
 		Int32		height_;
 		WCHAR*		device_name_;

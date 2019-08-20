@@ -35,6 +35,7 @@ namespace kiwano
 		UInt32	icon;				// 图标资源 ID
 		Color	clear_color;		// 清屏颜色
 		bool	vsync;				// 垂直同步
+		bool	resizable;			// 窗口大小可拉伸
 		bool	fullscreen;			// 全屏模式
 		bool	debug;				// 调试模式
 
@@ -45,6 +46,7 @@ namespace kiwano
 			UInt32 icon			= 0,
 			Color clear_color	= Color::Black,
 			bool vsync			= true,
+			bool resizable		= false,
 			bool fullscreen		= false,
 			bool debug			= false
 		);

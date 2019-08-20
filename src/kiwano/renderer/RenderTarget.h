@@ -140,11 +140,17 @@ namespace kiwano
 
 		Float32 GetOpacity() const;
 
+		Matrix3x2 GetGlobalTransform() const;
+
 		void SetOpacity(
 			Float32 opacity
 		);
 
 		void SetTransform(
+			const Matrix3x2& matrix
+		);
+
+		void SetGlobalTransform(
 			const Matrix3x2& matrix
 		);
 
@@ -202,6 +208,7 @@ namespace kiwano
 		ComPtr<ID2D1SolidColorBrush>	default_brush_;
 		ComPtr<ID2D1Brush>				current_brush_;
 		ComPtr<ID2DDeviceResources>		device_resources_;
+		Matrix3x2						global_matrix_;
 	};
 
 

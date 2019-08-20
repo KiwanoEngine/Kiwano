@@ -131,9 +131,12 @@ namespace kiwano
 			ImageRenderTarget& render_target
 		);
 
-		void Resize(
-			UInt32 width,
-			UInt32 height
+		void SetResolution(
+			Size const& resolution
+		);
+
+		void SetResolutionMode(
+			ResolutionMode mode
 		);
 
 	public:
@@ -152,6 +155,10 @@ namespace kiwano
 
 		inline Size const&				GetOutputSize() const			{ return output_size_; }
 
+		inline Size const&				GetResolution() const			{ return resolution_; }
+
+		inline Color const&				GetClearColor() const			{ return clear_color_; }
+
 		inline ID2DDeviceResources*		GetD2DDeviceResources() const	{ KGE_ASSERT(d2d_res_); return d2d_res_.get(); }
 
 		inline ID3DDeviceResources*		GetD3DDeviceResources() const	{ KGE_ASSERT(d3d_res_); return d3d_res_.get(); }
@@ -165,11 +172,17 @@ namespace kiwano
 
 		HRESULT HandleDeviceLost();
 
+		void ResizeTarget(UInt32 width, UInt32 height);
+
+		void UpdateResolution();
+
 	private:
-		bool	vsync_;
-		HWND	hwnd_;
-		Size	output_size_;
-		Color	clear_color_;
+		bool			vsync_;
+		HWND			hwnd_;
+		Color			clear_color_;
+		Size			output_size_;
+		Size			resolution_;
+		ResolutionMode	resolution_mode_;
 
 		ComPtr<ID2DDeviceResources>		d2d_res_;
 		ComPtr<ID3DDeviceResources>		d3d_res_;

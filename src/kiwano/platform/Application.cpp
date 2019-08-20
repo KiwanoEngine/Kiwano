@@ -43,13 +43,14 @@ namespace kiwano
 		Queue<FunctionToPerform> functions_to_perform_;
 	}
 
-	Options::Options(String const& title, Int32 width, Int32 height, UInt32 icon, Color clear_color, bool vsync, bool fullscreen, bool debug)
+	Options::Options(String const& title, Int32 width, Int32 height, UInt32 icon, Color clear_color, bool vsync, bool resizable, bool fullscreen, bool debug)
 		: title(title)
 		, width(width)
 		, height(height)
 		, icon(icon)
 		, clear_color(clear_color)
 		, vsync(vsync)
+		, resizable(resizable)
 		, fullscreen(fullscreen)
 		, debug(debug)
 	{}
@@ -85,6 +86,7 @@ namespace kiwano
 			options.width,
 			options.height,
 			options.icon,
+			options.resizable,
 			options.fullscreen,
 			Application::WndProc
 		);
@@ -380,11 +382,11 @@ namespace kiwano
 		{
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{
-				KGE_LOG(L"Window minimized");
+				// KGE_LOG(L"Window minimized");
 			}
 			else
 			{
-				KGE_LOG(L"Window resized");
+				// KGE_LOG(L"Window resized");
 
 				Window::GetInstance()->UpdateWindowRect();
 
@@ -422,7 +424,7 @@ namespace kiwano
 
 		case WM_SETTEXT:
 		{
-			KGE_LOG(L"Window title changed");
+			// KGE_LOG(L"Window title changed");
 
 			Event evt(Event::WindowTitleChanged);
 			evt.win.title = reinterpret_cast<const WChar*>(lparam);
@@ -432,21 +434,27 @@ namespace kiwano
 
 		case WM_SETICON:
 		{
-			KGE_LOG(L"Window icon changed");
+			// KGE_LOG(L"Window icon changed");
 		}
 		break;
 
 		case WM_DISPLAYCHANGE:
 		{
-			KGE_LOG(L"The display resolution has changed");
+			// KGE_LOG(L"The display resolution has changed");
 
 			::InvalidateRect(hwnd, nullptr, FALSE);
 		}
 		break;
 
+		case WM_SETCURSOR:
+		{
+			Window::GetInstance()->UpdateCursor();
+		}
+		break;
+
 		case WM_CLOSE:
 		{
-			KGE_LOG(L"Window is closing");
+			// KGE_LOG(L"Window is closing");
 
 			if (!app->OnClosing())
 			{
