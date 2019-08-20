@@ -1,4 +1,4 @@
-#defines {
+﻿#defines {
     // Global variables may be added here.
     // Variables on the "value" side of each definition will be processed at access time.
     // GlobalVar1 = "";

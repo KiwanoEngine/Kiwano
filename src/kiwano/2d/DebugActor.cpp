@@ -21,13 +21,29 @@
 #include "DebugActor.h"
 #include "Text.h"
 #include "../renderer/Renderer.h"
-#include <sstream>
 #include <psapi.h>
 
 #pragma comment(lib, "psapi.lib")
 
 namespace kiwano
 {
+	namespace
+	{
+		class comma_numpunct : public std::numpunct<wchar_t>
+		{
+		protected:
+			virtual wchar_t do_thousands_sep() const override
+			{
+				return L',';
+			}
+
+			virtual std::string do_grouping() const override
+			{
+				return "\03";
+			}
+		};
+	}
+
 	DebugActor::DebugActor()
 		: background_color_(0.0f, 0.0f, 0.0f, 0.7f)
 	{
@@ -41,6 +57,7 @@ namespace kiwano
 		this->AddChild(debug_text_);
 
 		Font font;
+		font.family = L"Arial";
 		font.size = 16.f;
 		font.weight = FontWeight::Normal;
 		debug_text_->SetFont(font);
@@ -61,11 +78,7 @@ namespace kiwano
 	{
 		PrepareRender(renderer);
 
-		renderer->GetSolidColorBrush()->SetColor(DX::ConvertToColorF(background_color_));
-		renderer->GetD2DDeviceResources()->GetDeviceContext()->FillRoundedRectangle(
-			D2D1::RoundedRect(DX::ConvertToRectF(GetBounds()), 5.f, 5.f),
-			renderer->GetSolidColorBrush()
-		);
+		renderer->FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f }, background_color_);
 	}
 
 	void DebugActor::OnUpdate(Duration dt)
@@ -77,8 +90,15 @@ namespace kiwano
 		{
 			frame_time_.erase(frame_time_.begin());
 		}
-		
-		std::wstringstream ss;
+
+		StringStream ss;
+
+		{
+			// For formatting integers with commas
+			static std::locale comma_locale(std::locale(), new comma_numpunct);
+			(void)ss.imbue(comma_locale);
+		}
+
 		ss << "Fps: " << frame_time_.size() << std::endl;
 
 #if defined(KGE_DEBUG)
@@ -90,11 +110,21 @@ namespace kiwano
 
 		ss << "Render: " << Renderer::GetInstance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
 
-		ss << "Primitives / sec: " << Renderer::GetInstance()->GetStatus().primitives * frame_time_.size() << std::endl;
+		ss << "Primitives / sec: " << std::fixed << Renderer::GetInstance()->GetStatus().primitives * frame_time_.size() << std::endl;
 
-		PROCESS_MEMORY_COUNTERS_EX pmc;
-		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-		ss << "Memory: " << pmc.PrivateUsage / 1024 << "kb";
+		ss << "Memory: ";
+		{
+			PROCESS_MEMORY_COUNTERS_EX pmc;
+			GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+
+			if (pmc.PrivateUsage > 1024 * 1024)
+			{
+				ss << pmc.PrivateUsage / (1024 * 1024) << "Mb ";
+				pmc.PrivateUsage %= (1024 * 1024);
+			}
+
+			ss << pmc.PrivateUsage / 1024 << "Kb";
+		}
 
 		debug_text_->SetText(ss.str());
 		SetSize(Size{ 20 + debug_text_->GetSize().x, 20 + debug_text_->GetSize().y });
