@@ -38,16 +38,19 @@ namespace kiwano
 		virtual ~ShapeActor();
 
 		// 获取填充颜色
-		Color GetFillColor() const				{ return fill_color_; }
+		inline Color GetFillColor() const			{ return fill_color_; }
 
 		// 获取线条颜色
-		Color GetStrokeColor() const			{ return stroke_color_; }
+		inline Color GetStrokeColor() const			{ return stroke_color_; }
 
 		// 获取线条宽度
-		Float32 GetStrokeWidth() const			{ return stroke_width_; }
+		inline Float32 GetStrokeWidth() const		{ return stroke_width_; }
 
 		// 获取线条样式
-		StrokeStyle SetStrokeStyle() const		{ return stroke_style_; }
+		inline StrokeStyle SetStrokeStyle() const	{ return stroke_style_; }
+
+		// 获取形状
+		inline Geometry GetGeometry() const			{ return geo_; }
 
 		// 获取边界
 		Rect GetBounds() const override;
@@ -55,31 +58,23 @@ namespace kiwano
 		// 获取外切包围盒
 		Rect GetBoundingBox() const override;
 
+		// 判断点是否在形状内
+		bool ContainsPoint(const Point& point) const override;
+
 		// 设置填充颜色
-		void SetFillColor(
-			const Color& color
-		);
+		void SetFillColor(const Color& color);
 
 		// 设置线条颜色
-		void SetStrokeColor(
-			const Color& color
-		);
+		void SetStrokeColor(const Color& color);
 
 		// 设置线条宽度
-		void SetStrokeWidth(
-			Float32 width
-		);
+		void SetStrokeWidth(Float32 width);
 
 		// 设置线条样式
-		void SetStrokeStyle(
-			StrokeStyle stroke_style
-		);
+		void SetStrokeStyle(StrokeStyle stroke_style);
 
 		// 设置形状
-		inline void SetGeometry(Geometry geometry)	{ geo_ = geometry; }
-
-		// 获取形状
-		inline Geometry GetGeometry() const			{ return geo_; }
+		void SetGeometry(Geometry geometry);
 
 		void OnRender(RenderTarget* rt) override;
 
@@ -88,6 +83,7 @@ namespace kiwano
 		Color		stroke_color_;
 		Float32		stroke_width_;
 		StrokeStyle	stroke_style_;
+		Rect		bounds_;
 		Geometry	geo_;
 	};
 

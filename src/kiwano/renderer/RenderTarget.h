@@ -159,7 +159,7 @@ namespace kiwano
 		);
 
 		bool CheckVisibility(
-			Size const& content_size,
+			Rect const& bounds,
 			Matrix3x2 const& transform
 		);
 

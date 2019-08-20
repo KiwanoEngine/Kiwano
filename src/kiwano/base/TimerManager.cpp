@@ -41,7 +41,13 @@ namespace kiwano
 		}
 	}
 
-	void TimerManager::AddTimer(TimerPtr timer)
+	Timer* TimerManager::AddTimer(Timer::Callback const& func, Duration delay, Int32 times, String const& name)
+	{
+		TimerPtr timer = new Timer(func, delay, times, name);
+		return AddTimer(timer);
+	}
+
+	Timer* TimerManager::AddTimer(TimerPtr timer)
 	{
 		KGE_ASSERT(timer && "AddTimer failed, NULL pointer exception");
 
@@ -50,6 +56,8 @@ namespace kiwano
 			timer->Reset();
 			timers_.push_back(timer);
 		}
+
+		return timer.get();
 	}
 
 	void TimerManager::StopTimers(String const& name)

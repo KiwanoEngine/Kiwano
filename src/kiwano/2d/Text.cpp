@@ -204,7 +204,7 @@ namespace kiwano
 	{
 		UpdateLayout();
 
-		if (text_layout_ && rt->CheckVisibility(size_, transform_matrix_))
+		if (text_layout_ && rt->CheckVisibility(GetBounds(), GetTransformMatrix()))
 		{
 			PrepareRender(rt);
 			rt->DrawTextLayout(text_layout_);

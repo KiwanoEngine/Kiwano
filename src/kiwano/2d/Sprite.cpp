@@ -104,7 +104,7 @@ namespace kiwano
 
 	void Sprite::OnRender(RenderTarget* rt)
 	{
-		if (frame_ && rt->CheckVisibility(size_, transform_matrix_))
+		if (frame_ && rt->CheckVisibility(GetBounds(), GetTransformMatrix()))
 		{
 			PrepareRender(rt);
 

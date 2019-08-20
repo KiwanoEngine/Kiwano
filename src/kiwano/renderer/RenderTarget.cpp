@@ -625,10 +625,10 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	bool RenderTarget::CheckVisibility(Size const& content_size, Matrix3x2 const& transform)
+	bool RenderTarget::CheckVisibility(Rect const& bounds, Matrix3x2 const& transform)
 	{
 		return Rect{ Point{}, reinterpret_cast<const Size&>(render_target_->GetSize()) }.Intersects(
-			transform.Transform(Rect{ Point{}, content_size })
+			transform.Transform(bounds)
 		);
 	}
 

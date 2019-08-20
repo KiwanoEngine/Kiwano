@@ -46,7 +46,7 @@ namespace kiwano
 
 		inline bool IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
 
-		inline UInt32 GetObjectID() const			{ return id_; }
+		inline UInt32 GetObjectID() const				{ return id_; }
 
 		String DumpObject();
 

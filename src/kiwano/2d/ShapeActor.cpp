@@ -44,10 +44,7 @@ namespace kiwano
 
 	Rect ShapeActor::GetBounds() const
 	{
-		if (!geo_)
-			return Rect{};
-
-		return geo_.GetBoundingBox(Matrix3x2());
+		return bounds_;
 	}
 
 	Rect ShapeActor::GetBoundingBox() const
@@ -56,6 +53,11 @@ namespace kiwano
 			return Rect{};
 
 		return geo_.GetBoundingBox(GetTransformMatrix());
+	}
+
+	bool ShapeActor::ContainsPoint(const Point& point) const
+	{
+		return geo_.ContainsPoint(point, GetTransformMatrix());
 	}
 
 	void ShapeActor::SetFillColor(const Color & color)
@@ -78,9 +80,24 @@ namespace kiwano
 		stroke_style_ = stroke_style;
 	}
 
+	void ShapeActor::SetGeometry(Geometry geometry)
+	{
+		geo_ = geometry;
+		if (geo_)
+		{
+			bounds_ = geo_.GetBoundingBox(Matrix3x2());
+			SetSize(bounds_.GetSize());
+		}
+		else
+		{
+			bounds_ = Rect{};
+			SetSize(0.f, 0.f);
+		}
+	}
+
 	void ShapeActor::OnRender(RenderTarget* rt)
 	{
-		if (geo_ && rt->CheckVisibility(size_, transform_matrix_))
+		if (geo_ && rt->CheckVisibility(GetBounds(), GetTransformMatrix()))
 		{
 			PrepareRender(rt);
 
@@ -117,12 +134,12 @@ namespace kiwano
 
 	void LineActor::SetPoint(Point const& point)
 	{
-		geo_ = Geometry::CreateLine(Point{}, point);
+		Geometry geo = Geometry::CreateLine(Point{}, point);
 
-		if (geo_)
+		if (geo)
 		{
 			point_ = point;
-			SetSize(point_);
+			SetGeometry(geo);
 		}
 	}
 
@@ -146,12 +163,12 @@ namespace kiwano
 
 	void RectActor::SetRectSize(Size const& size)
 	{
-		geo_ = Geometry::CreateRect(Rect{ Point{}, size });
+		Geometry geo = Geometry::CreateRect(Rect{ Point{}, size });
 
-		if (geo_)
+		if (geo)
 		{
 			rect_size_ = size;
-			SetSize(size);
+			SetGeometry(geo);
 		}
 	}
 
@@ -185,12 +202,12 @@ namespace kiwano
 
 	void RoundRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
 	{
-		geo_ = Geometry::CreateRoundedRect(Rect{ Point{}, size }, radius);
+		Geometry geo = Geometry::CreateRoundedRect(Rect{ Point{}, size }, radius);
 
-		if (geo_)
+		if (geo)
 		{
 			rect_size_ = size;
-			SetSize(size);
+			SetGeometry(geo);
 		}
 	}
 
@@ -215,11 +232,11 @@ namespace kiwano
 
 	void CircleActor::SetRadius(Float32 radius)
 	{
-		geo_ = Geometry::CreateCircle(Point{}, radius);
+		Geometry geo = Geometry::CreateCircle(Point{}, radius);
 
-		if (geo_)
+		if (geo)
 		{
-			SetSize(Size{ radius * 2, radius * 2 });
+			SetGeometry(geo);
 		}
 	}
 
@@ -243,11 +260,11 @@ namespace kiwano
 
 	void EllipseActor::SetRadius(Vec2 const& radius)
 	{
-		geo_ = Geometry::CreateEllipse(Point{}, radius);
+		Geometry geo = Geometry::CreateEllipse(Point{}, radius);
 
-		if (geo_)
+		if (geo)
 		{
-			SetSize(radius * 2);
+			SetGeometry(geo);
 		}
 	}
 
@@ -272,12 +289,11 @@ namespace kiwano
 	void PathActor::EndPath(bool closed)
 	{
 		sink_.EndPath(closed);
-		geo_ = sink_.GetGeometry();
+		Geometry geo = sink_.GetGeometry();
 
-		if (geo_)
+		if (geo)
 		{
-			Rect bounds = geo_.GetBoundingBox();
-			SetSize(bounds.GetSize());
+			SetGeometry(geo);
 		}
 	}
 

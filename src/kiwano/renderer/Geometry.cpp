@@ -38,6 +38,11 @@ namespace kiwano
 	{
 	}
 
+	bool Geometry::IsValid() const
+	{
+		return geo_ != nullptr;
+	}
+
 	Rect Geometry::GetBoundingBox(Matrix3x2 const& transform) const
 	{
 		if (!geo_)
@@ -49,7 +54,7 @@ namespace kiwano
 		return rect;
 	}
 
-	Float32 Geometry::GetLength()
+	Float32 Geometry::GetLength() const
 	{
 		Float32 length = 0.f;
 		if (geo_)
@@ -60,7 +65,7 @@ namespace kiwano
 		return length;
 	}
 
-	bool Geometry::ComputePointAtLength(Float32 length, Point& point, Vec2& tangent)
+	bool Geometry::ComputePointAtLength(Float32 length, Point& point, Vec2& tangent) const
 	{
 		if (geo_)
 		{
@@ -76,7 +81,7 @@ namespace kiwano
 		return false;
 	}
 
-	Geometry Geometry::CombineWith(Geometry input, CombineMode mode, Matrix3x2 const& input_matrix)
+	Geometry Geometry::CombineWith(Geometry input, CombineMode mode, Matrix3x2 const& input_matrix) const
 	{
 		if (geo_ && input.geo_)
 		{
@@ -129,7 +134,7 @@ namespace kiwano
 		return Geometry();
 	}
 
-	Float32 Geometry::ComputeArea()
+	Float32 Geometry::ComputeArea() const
 	{
 		if (!geo_)
 			return 0.f;
@@ -140,7 +145,7 @@ namespace kiwano
 		return area;
 	}
 
-	bool Geometry::ContainsPoint(Point const& point)
+	bool Geometry::ContainsPoint(Point const& point, Matrix3x2 const& transform) const
 	{
 		if (!geo_)
 			return false;
@@ -149,7 +154,7 @@ namespace kiwano
 		// no matter it failed or not
 		geo_->FillContainsPoint(
 			DX::ConvertToPoint2F(point),
-			D2D1::Matrix3x2F::Identity(),
+			DX::ConvertToMatrix3x2F(transform),
 			&ret
 		);
 		return !!ret;

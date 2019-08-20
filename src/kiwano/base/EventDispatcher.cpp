@@ -40,7 +40,7 @@ namespace kiwano
 		}
 	}
 
-	EventListenerPtr EventDispatcher::AddListener(EventListenerPtr listener)
+	EventListener* EventDispatcher::AddListener(EventListenerPtr listener)
 	{
 		KGE_ASSERT(listener && "AddListener failed, NULL pointer exception");
 
@@ -48,16 +48,13 @@ namespace kiwano
 		{
 			listeners_.push_back(listener);
 		}
-		return listener;
+		return listener.get();
 	}
 
-	void EventDispatcher::AddListener(UInt32 type, EventCallback callback, String const& name)
+	EventListener* EventDispatcher::AddListener(UInt32 type, EventCallback callback, String const& name)
 	{
 		EventListenerPtr listener = new EventListener(type, callback, name);
-		if (listener)
-		{
-			listeners_.push_back(listener);
-		}
+		return AddListener(listener);
 	}
 
 	void EventDispatcher::StartListeners(String const & listener_name)

@@ -352,9 +352,7 @@ namespace kiwano
 		void RemoveFromParent();
 
 		// 判断点是否在角色内
-		bool ContainsPoint(
-			const Point& point
-		)  const;
+		virtual bool ContainsPoint(const Point& point) const;
 
 		// 暂停角色更新
 		inline void PauseUpdating()									{ update_pausing_ = true; }
