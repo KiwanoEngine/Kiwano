@@ -224,7 +224,7 @@ namespace kiwano
 		return 0;
 	}
 
-	UInt32 ResourceCache::AddFrameSequence(String const & id, String const& file_path, Int32 cols, Int32 rows)
+	UInt32 ResourceCache::AddFrameSequence(String const & id, String const& file_path, Int32 cols, Int32 rows, Float32 padding_x, Float32 padding_y)
 	{
 		if (cols <= 0 || rows <= 0)
 			return 0;
@@ -235,23 +235,27 @@ namespace kiwano
 
 		Float32 raw_width = raw->GetWidth();
 		Float32 raw_height = raw->GetHeight();
-		Float32 width = raw_width / cols;
-		Float32 height = raw_height / rows;
+		Float32 width = (raw_width - (cols - 1) * padding_x) / cols;
+		Float32 height = (raw_height - (rows - 1) * padding_y) / rows;
 
 		Vector<FramePtr> frames;
 		frames.reserve(rows * cols);
 
+		Float32 dty = 0;
 		for (Int32 i = 0; i < rows; i++)
 		{
+			Float32 dtx = 0;
 			for (Int32 j = 0; j < cols; j++)
 			{
 				FramePtr ptr = new (std::nothrow) Frame(raw->GetTexture());
 				if (ptr)
 				{
-					ptr->SetCropRect(Rect{ j * width, i * height, (j + 1) * width, (i + 1) * height });
+					ptr->SetCropRect(Rect{ dtx, dty, dtx + width, dty + height });
 					frames.push_back(ptr);
 				}
+				dtx += (width + padding_x);
 			}
+			dty += (height + padding_y);
 		}
 
 		FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
@@ -309,27 +313,21 @@ namespace kiwano
 			String path;
 		};
 
-		bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type,
-			const String* file, const Vector<const WChar*>* files, Int32 rows, Int32 cols)
+		bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type, const String* file)
 		{
 			if (!gdata || !id) return false;
 
-			if (file)
+			if (file && !(*file).empty())
 			{
-				if (!(*file).empty())
-				{
-					if (rows || cols)
-					{
-						// Frame slices
-						return !!loader->AddFrameSequence(*id, gdata->path + (*file), std::max(cols, 1), std::max(rows, 1));
-					}
-					else
-					{
-						// Simple image
-						return loader->AddFrame(*id, gdata->path + (*file));
-					}
-				}
+				// Simple image
+				return loader->AddFrame(*id, gdata->path + (*file));
 			}
+			return false;
+		}
+
+		bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const Vector<const WChar*>* files)
+		{
+			if (!gdata || !id) return false;
 
 			// Frames
 			if (files)
@@ -346,6 +344,30 @@ namespace kiwano
 				}
 				FrameSequencePtr frame_seq = new FrameSequence(frames);
 				return !!loader->AddFrameSequence(*id, frame_seq);
+			}
+			return false;
+		}
+
+		bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* file,
+			Int32 rows, Int32 cols, Float32 padding_x, Float32 padding_y)
+		{
+			if (!gdata || !id) return false;
+
+			if (file)
+			{
+				if (!(*file).empty())
+				{
+					if (rows || cols)
+					{
+						// Frame slices
+						return !!loader->AddFrameSequence(*id, gdata->path + (*file), std::max(cols, 1), std::max(rows, 1), padding_x, padding_y);
+					}
+					else
+					{
+						// Simple image
+						return loader->AddFrame(*id, gdata->path + (*file));
+					}
+				}
 			}
 			return false;
 		}
@@ -371,6 +393,15 @@ namespace kiwano
 					if (image.count(L"rows")) rows = image[L"rows"].as_int();
 					if (image.count(L"cols")) cols = image[L"cols"].as_int();
 
+					if (rows || cols)
+					{
+						Float32 padding_x = 0, padding_y = 0;
+						if (image.count(L"padding-x")) padding_x = image[L"padding-x"].get<Float32>();
+						if (image.count(L"padding-y")) padding_y = image[L"padding-y"].get<Float32>();
+
+						return LoadTexturesFromData(loader, &global_data, id, file, rows, cols, padding_x, padding_y);
+					}
+
 					if (image.count(L"files"))
 					{
 						Vector<const WChar*> files;
@@ -379,13 +410,11 @@ namespace kiwano
 						{
 							files.push_back(file.as_string().c_str());
 						}
-						if (!LoadTexturesFromData(loader, &global_data, id, type, file, &files, rows, cols))
-							return false;
+						return LoadTexturesFromData(loader, &global_data, id, &files);
 					}
 					else
 					{
-						if (!LoadTexturesFromData(loader, &global_data, id, type, file, nullptr, rows, cols))
-							return false;
+						return LoadTexturesFromData(loader, &global_data, id, type, file);
 					}
 				}
 			}
@@ -413,6 +442,16 @@ namespace kiwano
 					if (auto attr = image->IntAttribute(L"rows")) rows = attr;
 					if (auto attr = image->IntAttribute(L"cols")) cols = attr;
 
+					if (rows || cols)
+					{
+						Float32 padding_x = 0, padding_y = 0;
+						if (auto attr = image->FloatAttribute(L"padding-x")) padding_x = attr;
+						if (auto attr = image->FloatAttribute(L"padding-y")) padding_y = attr;
+
+						if (!LoadTexturesFromData(loader, &global_data, &id, &file, rows, cols, padding_x, padding_y))
+							return false;
+					}
+
 					if (file.empty() && !image->NoChildren())
 					{
 						Vector<const WChar*> files_arr;
@@ -423,12 +462,12 @@ namespace kiwano
 								files_arr.push_back(path);
 							}
 						}
-						if (!LoadTexturesFromData(loader, &global_data, &id, &type, &file, &files_arr, rows, cols))
+						if (!LoadTexturesFromData(loader, &global_data, &id, &files_arr))
 							return false;
 					}
 					else
 					{
-						if (!LoadTexturesFromData(loader, &global_data, &id, &type, &file, nullptr, rows, cols))
+						if (!LoadTexturesFromData(loader, &global_data, &id, &type, &file))
 							return false;
 					}
 				}
