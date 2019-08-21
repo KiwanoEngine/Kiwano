@@ -52,6 +52,7 @@ namespace kiwano
 
 	void Animation::Init(ActorPtr target)
 	{
+		KGE_ASSERT(frame_seq_ && "Animation::Init() failed: FrameSequence is NULL!");
 		if (!frame_seq_ || frame_seq_->GetFrames().empty())
 		{
 			Done();
@@ -59,6 +60,8 @@ namespace kiwano
 		}
 
 		auto sprite_target = dynamic_cast<Sprite*>(target.get());
+		KGE_ASSERT(sprite_target && "Animation only supports Sprites!");
+
 		if (sprite_target && frame_seq_)
 		{
 			sprite_target->SetFrame(frame_seq_->GetFrames()[0]);
@@ -69,13 +72,14 @@ namespace kiwano
 	{
 		auto sprite_target = dynamic_cast<Sprite*>(target.get());
 
-		KGE_ASSERT(sprite_target && "Animation only supports Sprites");
+		if (sprite_target && frame_seq_)
+		{
+			const auto& frames = frame_seq_->GetFrames();
+			auto size = frames.size();
+			auto index = std::min(static_cast<UInt32>(math::Floor(size * percent)), size - 1);
 
-		const auto& frames = frame_seq_->GetFrames();
-		auto size = frames.size();
-		auto index = std::min(static_cast<UInt32>(math::Floor(size * percent)), size - 1);
-
-		sprite_target->SetFrame(frames[index]);
+			sprite_target->SetFrame(frames[index]);
+		}
 	}
 
 	ActionPtr Animation::Clone() const

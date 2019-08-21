@@ -62,7 +62,7 @@ namespace kiwano
 	{
 		if (!path_)
 		{
-			Complete(target);
+			Done();
 			return;
 		}
 

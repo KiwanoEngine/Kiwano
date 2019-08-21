@@ -191,7 +191,7 @@ namespace kiwano
 
 		D2D1_FACTORY_OPTIONS options;
 		ZeroMemory(&options, sizeof(D2D1_FACTORY_OPTIONS));
-#ifdef KGE_DEBUG
+#if defined(KGE_DEBUG) && defined(KGE_ENABLE_DX_DEBUG)
 		options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
 #endif
 

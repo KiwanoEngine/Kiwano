@@ -201,8 +201,8 @@ namespace kiwano
 		if (files.empty())
 			return 0;
 
-		Vector<FramePtr> texture_arr;
-		texture_arr.reserve(files.size());
+		Vector<FramePtr> frames;
+		frames.reserve(files.size());
 
 		for (const auto& file : files)
 		{
@@ -211,15 +211,15 @@ namespace kiwano
 			{
 				if (ptr->Load(file))
 				{
-					texture_arr.push_back(ptr);
+					frames.push_back(ptr);
 				}
 			}
 		}
 
-		if (!texture_arr.empty())
+		if (!frames.empty())
 		{
-			FrameSequencePtr frames = new (std::nothrow) FrameSequence(texture_arr);
-			return AddFrameSequence(id, frames);
+			FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
+			return AddFrameSequence(id, fs);
 		}
 		return 0;
 	}
@@ -238,8 +238,8 @@ namespace kiwano
 		Float32 width = raw_width / cols;
 		Float32 height = raw_height / rows;
 
-		Vector<FramePtr> texture_arr;
-		texture_arr.reserve(rows * cols);
+		Vector<FramePtr> frames;
+		frames.reserve(rows * cols);
 
 		for (Int32 i = 0; i < rows; i++)
 		{
@@ -249,13 +249,13 @@ namespace kiwano
 				if (ptr)
 				{
 					ptr->SetCropRect(Rect{ j * width, i * height, (j + 1) * width, (i + 1) * height });
-					texture_arr.push_back(ptr);
+					frames.push_back(ptr);
 				}
 			}
 		}
 
-		FrameSequencePtr frames = new (std::nothrow) FrameSequence(texture_arr);
-		return AddFrameSequence(id, frames);
+		FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
+		return AddFrameSequence(id, fs);
 	}
 
 	UInt32 ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
@@ -325,7 +325,7 @@ namespace kiwano
 					}
 					else
 					{
-						// Simple texture
+						// Simple image
 						return loader->AddFrame(*id, gdata->path + (*file));
 					}
 				}
@@ -358,24 +358,24 @@ namespace kiwano
 				global_data.path = json_data[L"path"];
 			}
 
-			if (json_data.count(L"textures"))
+			if (json_data.count(L"images"))
 			{
-				for (const auto& texture : json_data[L"textures"])
+				for (const auto& image : json_data[L"images"])
 				{
 					const String* id = nullptr, * type = nullptr, * file = nullptr;
 					Int32 rows = 0, cols = 0;
 
-					if (texture.count(L"id")) id = &texture[L"id"].as_string();
-					if (texture.count(L"type")) type = &texture[L"type"].as_string();
-					if (texture.count(L"file")) file = &texture[L"file"].as_string();
-					if (texture.count(L"rows")) rows = texture[L"rows"].as_int();
-					if (texture.count(L"cols")) cols = texture[L"cols"].as_int();
+					if (image.count(L"id")) id = &image[L"id"].as_string();
+					if (image.count(L"type")) type = &image[L"type"].as_string();
+					if (image.count(L"file")) file = &image[L"file"].as_string();
+					if (image.count(L"rows")) rows = image[L"rows"].as_int();
+					if (image.count(L"cols")) cols = image[L"cols"].as_int();
 
-					if (texture.count(L"files"))
+					if (image.count(L"files"))
 					{
 						Vector<const WChar*> files;
-						files.reserve(texture[L"files"].size());
-						for (const auto& file : texture[L"files"])
+						files.reserve(image[L"files"].size());
+						for (const auto& file : image[L"files"])
 						{
 							files.push_back(file.as_string().c_str());
 						}
@@ -400,23 +400,23 @@ namespace kiwano
 				global_data.path = path->GetText();
 			}
 
-			if (auto textures = elem->FirstChildElement(L"textures"))
+			if (auto images = elem->FirstChildElement(L"images"))
 			{
-				for (auto texture = textures->FirstChildElement(); texture; texture = texture->NextSiblingElement())
+				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
 				{
 					String id, type, file;
 					Int32 rows = 0, cols = 0;
 
-					if (auto attr = texture->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
-					if (auto attr = texture->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
-					if (auto attr = texture->Attribute(L"file"))    file = attr;
-					if (auto attr = texture->IntAttribute(L"rows")) rows = attr;
-					if (auto attr = texture->IntAttribute(L"cols")) cols = attr;
+					if (auto attr = image->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
+					if (auto attr = image->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
+					if (auto attr = image->Attribute(L"file"))    file = attr;
+					if (auto attr = image->IntAttribute(L"rows")) rows = attr;
+					if (auto attr = image->IntAttribute(L"cols")) cols = attr;
 
-					if (file.empty() && !texture->NoChildren())
+					if (file.empty() && !image->NoChildren())
 					{
 						Vector<const WChar*> files_arr;
-						for (auto file = texture->FirstChildElement(); file; file = file->NextSiblingElement())
+						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
 						{
 							if (auto path = file->Attribute(L"path"))
 							{
