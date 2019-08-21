@@ -24,7 +24,7 @@
 #include "../base/Logger.h"
 #include "../base/input.h"
 #include "../base/Director.h"
-#include "../renderer/ImageCache.h"
+#include "../renderer/TextureCache.h"
 #include "../renderer/Renderer.h"
 #include "../utils/ResourceCache.h"
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
@@ -150,7 +150,7 @@ namespace kiwano
 		// Clear all resources
 		Director::GetInstance()->ClearStages();
 		ResourceCache::GetInstance()->Clear();
-		ImageCache::GetInstance()->Clear();
+		TextureCache::GetInstance()->Clear();
 
 		if (inited_)
 		{
@@ -166,7 +166,7 @@ namespace kiwano
 		// Destroy all instances
 		Director::DestroyInstance();
 		ResourceCache::DestroyInstance();
-		ImageCache::DestroyInstance();
+		TextureCache::DestroyInstance();
 		Input::DestroyInstance();
 		Renderer::DestroyInstance();
 		Window::DestroyInstance();

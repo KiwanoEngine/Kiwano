@@ -20,7 +20,7 @@
 
 #include "GifSprite.h"
 #include "../base/Logger.h"
-#include "../renderer/ImageCache.h"
+#include "../renderer/TextureCache.h"
 #include "../renderer/Renderer.h"
 
 namespace kiwano
@@ -45,41 +45,41 @@ namespace kiwano
 		Load(res);
 	}
 
-	GifSprite::GifSprite(GifImage image)
+	GifSprite::GifSprite(GifImage texture)
 	{
-		Load(image);
+		Load(texture);
 	}
 
 	bool GifSprite::Load(String const& file_path)
 	{
-		GifImage image = ImageCache::GetInstance()->AddOrGetGifImage(file_path);
-		return Load(image);
+		GifImage texture = TextureCache::GetInstance()->AddOrGetGifImage(file_path);
+		return Load(texture);
 	}
 
 	bool GifSprite::Load(Resource const& res)
 	{
-		GifImage image = ImageCache::GetInstance()->AddOrGetGifImage(res);
-		return Load(image);
+		GifImage texture = TextureCache::GetInstance()->AddOrGetGifImage(res);
+		return Load(texture);
 	}
 
-	bool GifSprite::Load(GifImage image)
+	bool GifSprite::Load(GifImage texture)
 	{
-		if (image.IsValid())
+		if (texture.IsValid())
 		{
-			image_ = image;
+			texture_ = texture;
 
 			next_index_ = 0;
 			loop_count_ = 0;
 			disposal_type_ = DisposalType::None;
 
-			SetSize(Size{ static_cast<Float32>(image_.GetWidthInPixels()), static_cast<Float32>(image_.GetHeightInPixels()) });
+			SetSize(Size{ static_cast<Float32>(texture_.GetWidthInPixels()), static_cast<Float32>(texture_.GetHeightInPixels()) });
 
 			if (!frame_rt_.IsValid())
 			{
-				Renderer::GetInstance()->CreateImageRenderTarget(frame_rt_);
+				Renderer::GetInstance()->CreateTextureRenderTarget(frame_rt_);
 			}
 
-			if (image_.GetFramesCount() > 0)
+			if (texture_.GetFramesCount() > 0)
 			{
 				ComposeNextFrame();
 			}
@@ -94,7 +94,7 @@ namespace kiwano
 		{
 			PrepareRender(rt);
 
-			rt->DrawImage(frame_);
+			rt->DrawTexture(frame_);
 		}
 	}
 
@@ -102,7 +102,7 @@ namespace kiwano
 	{
 		Actor::Update(dt);
 
-		if (image_.IsValid() && animating_)
+		if (texture_.IsValid() && animating_)
 		{
 			frame_elapsed_ += dt;
 			if (frame_delay_ <= frame_elapsed_)
@@ -132,7 +132,7 @@ namespace kiwano
 				OverlayNextFrame();
 			} while (frame_delay_.IsZero() && !IsLastFrame());
 
-			animating_ = (!EndOfAnimation() && image_.GetFramesCount() > 1);
+			animating_ = (!EndOfAnimation() && texture_.GetFramesCount() > 1);
 		}
 	}
 
@@ -163,9 +163,9 @@ namespace kiwano
 
 	void GifSprite::OverlayNextFrame()
 	{
-		Image raw_image;
+		Texture raw_texture;
 
-		HRESULT hr = image_.GetRawFrame(next_index_, raw_image, frame_rect_, frame_delay_, disposal_type_);
+		HRESULT hr = texture_.GetRawFrame(next_index_, raw_texture, frame_rect_, frame_delay_, disposal_type_);
 		
 		if (SUCCEEDED(hr))
 		{
@@ -182,24 +182,24 @@ namespace kiwano
 			if (next_index_ == 0)
 			{
 				// ÖØÐÂ»æÖÆ±³¾°
-				frame_rt_.Clear(image_.GetBackgroundColor());
+				frame_rt_.Clear(texture_.GetBackgroundColor());
 				loop_count_++;
 			}
 
-			frame_rt_.DrawImage(raw_image, nullptr, &frame_rect_);
+			frame_rt_.DrawTexture(raw_texture, nullptr, &frame_rect_);
 			frame_rt_.EndDraw();
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			Image frame_to_render = frame_rt_.GetOutput();
+			Texture frame_to_render = frame_rt_.GetOutput();
 
 			hr = frame_to_render.IsValid() ? S_OK : E_FAIL;
 
 			if (SUCCEEDED(hr))
 			{
 				frame_ = frame_to_render;
-				next_index_ = (++next_index_) % image_.GetFramesCount();
+				next_index_ = (++next_index_) % texture_.GetFramesCount();
 			}
 		}
 
@@ -218,7 +218,7 @@ namespace kiwano
 
 	void GifSprite::SaveComposedFrame()
 	{
-		Image frame_to_be_saved = frame_rt_.GetOutput();
+		Texture frame_to_be_saved = frame_rt_.GetOutput();
 
 		HRESULT hr = frame_to_be_saved.IsValid() ? S_OK : E_FAIL;
 
@@ -253,7 +253,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			Image frame_to_copy_to = frame_rt_.GetOutput();
+			Texture frame_to_copy_to = frame_rt_.GetOutput();
 
 			hr = frame_to_copy_to.IsValid() ? S_OK : E_FAIL;
 
@@ -271,7 +271,7 @@ namespace kiwano
 		frame_rt_.BeginDraw();
 
 		frame_rt_.PushClipRect(frame_rect_);
-		frame_rt_.Clear(image_.GetBackgroundColor());
+		frame_rt_.Clear(texture_.GetBackgroundColor());
 		frame_rt_.PopClipRect();
 
 		return frame_rt_.EndDraw();

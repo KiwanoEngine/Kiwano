@@ -20,6 +20,7 @@
 
 #pragma once
 #include "include-forwards.h"
+#include "../renderer/StrokeStyle.h"
 
 namespace kiwano
 {

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Image.h"
+#include "Texture.h"
 
 namespace kiwano
 {
@@ -58,7 +58,7 @@ namespace kiwano
 
 		HRESULT GetRawFrame(
 			UInt32 frame_index,
-			Image& raw_frame,
+			Texture& raw_frame,
 			Rect& frame_rect,
 			Duration& delay,
 			DisposalType& disposal_type

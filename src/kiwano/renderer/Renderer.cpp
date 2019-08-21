@@ -245,7 +245,7 @@ namespace kiwano
 		return hr;
 	}
 
-	void Renderer::CreateImage(Image& image, String const& file_path)
+	void Renderer::CreateTexture(Texture& texture, String const& file_path)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -260,17 +260,17 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				image.SetBitmap(bitmap);
+				texture.SetBitmap(bitmap);
 			}
 		}
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load image failed with HRESULT of %08X!", hr);
+			KGE_WARNING_LOG(L"Load texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
-	void Renderer::CreateImage(Image& image, Resource const& res)
+	void Renderer::CreateTexture(Texture& texture, Resource const& res)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -285,17 +285,17 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				image.SetBitmap(bitmap);
+				texture.SetBitmap(bitmap);
 			}
 		}
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load image failed with HRESULT of %08X!", hr);
+			KGE_WARNING_LOG(L"Load texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
-	void Renderer::CreateGifImage(GifImage& image, String const& file_path)
+	void Renderer::CreateGifImage(GifImage& texture, String const& file_path)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -305,7 +305,7 @@ namespace kiwano
 
 		if (!FileUtil::ExistsFile(file_path))
 		{
-			KGE_WARNING_LOG(L"Gif image file '%s' not found!", file_path.c_str());
+			KGE_WARNING_LOG(L"Gif texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
 		}
 
@@ -322,17 +322,17 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				image.SetDecoder(decoder);
+				texture.SetDecoder(decoder);
 			}
 		}
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load GIF image failed with HRESULT of %08X!", hr);
+			KGE_WARNING_LOG(L"Load GIF texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
-	void Renderer::CreateGifImage(GifImage& image, Resource const& res)
+	void Renderer::CreateGifImage(GifImage& texture, Resource const& res)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -369,14 +369,14 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					image.SetDecoder(decoder);
+					texture.SetDecoder(decoder);
 				}
 			}
 		}
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load GIF image failed with HRESULT of %08X!", hr);
+			KGE_WARNING_LOG(L"Load GIF texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -653,7 +653,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateImageRenderTarget(ImageRenderTarget& render_target)
+	void Renderer::CreateTextureRenderTarget(TextureRenderTarget& render_target)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)

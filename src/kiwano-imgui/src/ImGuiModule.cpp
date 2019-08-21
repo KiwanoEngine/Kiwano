@@ -247,20 +247,20 @@ namespace kiwano
 			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange)
 				return;
 
-			MouseCursor cursor = MouseCursor::Arrow;
+			CursorType cursor = CursorType::Arrow;
 			switch (ImGui::GetMouseCursor())
 			{
-			case ImGuiMouseCursor_Arrow:        cursor = MouseCursor::Arrow; break;
-			case ImGuiMouseCursor_TextInput:    cursor = MouseCursor::TextInput; break;
-			case ImGuiMouseCursor_ResizeAll:    cursor = MouseCursor::SizeAll; break;
-			case ImGuiMouseCursor_ResizeEW:     cursor = MouseCursor::SizeWE; break;
-			case ImGuiMouseCursor_ResizeNS:     cursor = MouseCursor::SizeNS; break;
-			case ImGuiMouseCursor_ResizeNESW:   cursor = MouseCursor::SizeNESW; break;
-			case ImGuiMouseCursor_ResizeNWSE:   cursor = MouseCursor::SizeNWSE; break;
-			case ImGuiMouseCursor_Hand:         cursor = MouseCursor::Hand; break;
+			case ImGuiMouseCursor_Arrow:        cursor = CursorType::Arrow; break;
+			case ImGuiMouseCursor_TextInput:    cursor = CursorType::TextInput; break;
+			case ImGuiMouseCursor_ResizeAll:    cursor = CursorType::SizeAll; break;
+			case ImGuiMouseCursor_ResizeEW:     cursor = CursorType::SizeWE; break;
+			case ImGuiMouseCursor_ResizeNS:     cursor = CursorType::SizeNS; break;
+			case ImGuiMouseCursor_ResizeNESW:   cursor = CursorType::SizeNESW; break;
+			case ImGuiMouseCursor_ResizeNWSE:   cursor = CursorType::SizeNWSE; break;
+			case ImGuiMouseCursor_Hand:         cursor = CursorType::Hand; break;
 			}
 
-			Window::GetInstance()->SetMouseCursor(cursor);
+			Window::GetInstance()->SetCursor(cursor);
 		}
 		void ImGuiModule::UpdateGamepads()
 		{

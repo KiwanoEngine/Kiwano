@@ -61,12 +61,12 @@
 
 #include "renderer/Color.h"
 #include "renderer/Font.h"
-#include "renderer/Image.h"
+#include "renderer/Texture.h"
 #include "renderer/GifImage.h"
 #include "renderer/TextLayout.h"
 #include "renderer/Geometry.h"
 #include "renderer/LayerArea.h"
-#include "renderer/ImageCache.h"
+#include "renderer/TextureCache.h"
 #include "renderer/Renderer.h"
 
 

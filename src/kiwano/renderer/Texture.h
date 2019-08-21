@@ -23,25 +23,36 @@
 
 namespace kiwano
 {
-	// 图像
-	class KGE_API Image
+	// 插值模式
+	// 插值模式指定了位图在缩放和旋转时像素颜色的计算方式
+	// Linear (双线性插值): 对周围四个像素进行两次线性插值计算, 在图像放大时可能会模糊（默认）
+	// Nearest (最邻近插值): 取最邻近的像素点的颜色值
+	enum class InterpolationMode
+	{
+		Linear,		// 双线性插值
+		Nearest,	// 最邻近插值
+	};
+
+
+	// 纹理
+	class KGE_API Texture
 	{
 	public:
-		Image();
+		Texture();
 
-		explicit Image(
+		explicit Texture(
 			String const& file_path
 		);
 
-		explicit Image(
+		explicit Texture(
 			Resource const& res
 		);
 
-		explicit Image(
+		explicit Texture(
 			ComPtr<ID2D1Bitmap> const& bitmap
 		);
 
-		virtual ~Image();
+		virtual ~Texture();
 
 		// 加载本地文件
 		bool Load(
@@ -56,29 +67,38 @@ namespace kiwano
 		// 资源是否有效
 		bool IsValid() const;
 
-		// 获取位图宽度
+		// 获取宽度
 		Float32 GetWidth() const;
 
-		// 获取位图高度
+		// 获取高度
 		Float32 GetHeight() const;
 
-		// 获取位图大小
+		// 获取大小
 		Size GetSize() const;
 
-		// 获取位图像素宽度
+		// 获取像素宽度
 		UInt32 GetWidthInPixels() const;
 
-		// 获取位图像素高度
+		// 获取像素高度
 		UInt32 GetHeightInPixels() const;
 
-		// 获取位图像素大小
+		// 获取像素大小
 		math::Vec2T<UInt32> GetSizeInPixels() const;
 
-		// 拷贝位图内存
-		void CopyFrom(Image const& copy_from);
+		// 获取像素插值方式
+		InterpolationMode GetBitmapInterpolationMode() const;
 
 		// 拷贝位图内存
-		void CopyFrom(Image const& copy_from, Rect const& src_rect, Point const& dest_point);
+		void CopyFrom(Texture const& copy_from);
+
+		// 拷贝位图内存
+		void CopyFrom(Texture const& copy_from, Rect const& src_rect, Point const& dest_point);
+
+		// 设置像素插值方式
+		void SetInterpolationMode(InterpolationMode mode);
+
+		// 设置默认的像素插值方式
+		static void SetDefaultInterpolationMode(InterpolationMode mode);
 
 	public:
 		// 获取源位图
@@ -92,5 +112,8 @@ namespace kiwano
 
 	protected:
 		ComPtr<ID2D1Bitmap>	bitmap_;
+		InterpolationMode	interpolation_mode_;
+
+		static InterpolationMode default_interpolation_mode_;
 	};
 }

@@ -46,7 +46,7 @@ namespace kiwano
 		);
 
 		GifSprite(
-			GifImage image
+			GifImage texture
 		);
 
 		bool Load(
@@ -58,7 +58,7 @@ namespace kiwano
 		);
 
 		bool Load(
-			GifImage image
+			GifImage texture
 		);
 
 		// 设置 GIF 动画循环次数
@@ -108,10 +108,10 @@ namespace kiwano
 		DisposalType		disposal_type_;
 		LoopDoneCallback	loop_cb_;
 		DoneCallback		done_cb_;
-		GifImage			image_;
-		Image				frame_;
+		GifImage			texture_;
+		Texture				frame_;
 		Rect				frame_rect_;
-		Image				saved_frame_;
-		ImageRenderTarget	frame_rt_;
+		Texture				saved_frame_;
+		TextureRenderTarget	frame_rt_;
 	};
 }

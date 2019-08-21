@@ -24,7 +24,6 @@
 #include "../base/RefCounter.hpp"
 #include "../base/SmartPtr.hpp"
 #include "../base/ObjectBase.h"
-#include "../base/types.h"
 #include "../math/math.h"
 #include "../renderer/Color.h"
 

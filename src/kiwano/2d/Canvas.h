@@ -95,9 +95,9 @@ namespace kiwano
 			Vec2 const& radius
 		);
 
-		// »­Í¼Æ¬
-		void DrawImage(
-			Image const& image,
+		// »­Í¼
+		void DrawTexture(
+			Texture const& texture,
 			const Rect* src_rect = nullptr,
 			const Rect* dest_rect = nullptr
 		);
@@ -232,7 +232,7 @@ namespace kiwano
 		Float32 GetBrushOpacity() const;
 
 		// µ¼³öÎªÍ¼Æ¬
-		Image ExportToImage() const;
+		Texture ExportToTexture() const;
 
 		void OnRender(RenderTarget* rt) override;
 
@@ -247,9 +247,9 @@ namespace kiwano
 		TextStyle			text_style_;
 		StrokeStyle			stroke_style_;
 		GeometrySink		geo_sink_;
-		ImageRenderTarget	rt_;
+		TextureRenderTarget	rt_;
 
 		mutable bool		cache_expired_;
-		mutable Image		image_cached_;
+		mutable Texture		texture_cached_;
 	};
 }

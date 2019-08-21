@@ -211,8 +211,6 @@ namespace kiwano
 			_In_ ComPtr<IDWriteTextFormat> const& text_format
 		) const = 0;
 
-		virtual ID2D1StrokeStyle* GetStrokeStyle(StrokeStyle stroke) const = 0;
-
 		virtual HRESULT SetD2DDevice(
 			_In_ ComPtr<ID2D1Device> const& device
 		) = 0;
@@ -230,6 +228,10 @@ namespace kiwano
 		inline ID2D1DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.get(); }
 		inline ID2D1Bitmap1*			GetTargetBitmap() const			{ KGE_ASSERT(target_bitmap_); return target_bitmap_.get(); }
 
+		inline ID2D1StrokeStyle*		GetMiterStrokeStyle() const		{ KGE_ASSERT(d2d_miter_stroke_style_); return d2d_miter_stroke_style_.get(); }
+		inline ID2D1StrokeStyle*		GetBevelStrokeStyle() const		{ KGE_ASSERT(d2d_bevel_stroke_style_); return d2d_bevel_stroke_style_.get(); }
+		inline ID2D1StrokeStyle*		GetRoundStrokeStyle() const		{ KGE_ASSERT(d2d_round_stroke_style_); return d2d_round_stroke_style_.get(); }
+
 	protected:
 		ComPtr<ID2D1Factory1>		factory_;
 		ComPtr<ID2D1Device>			device_;
@@ -238,6 +240,10 @@ namespace kiwano
 
 		ComPtr<IWICImagingFactory>	imaging_factory_;
 		ComPtr<IDWriteFactory>		dwrite_factory_;
+
+		ComPtr<ID2D1StrokeStyle>	d2d_miter_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>	d2d_bevel_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>	d2d_round_stroke_style_;
 	};
 
 }

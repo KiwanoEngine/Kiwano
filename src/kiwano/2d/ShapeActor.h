@@ -21,6 +21,7 @@
 #pragma once
 #include "Actor.h"
 #include "../renderer/Geometry.h"
+#include "../renderer/StrokeStyle.h"
 
 namespace kiwano
 {

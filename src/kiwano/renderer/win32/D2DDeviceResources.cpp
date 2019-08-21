@@ -68,8 +68,6 @@ namespace kiwano
 			_In_ ComPtr<ID2D1Bitmap1> const& target
 		) override;
 
-		ID2D1StrokeStyle* GetStrokeStyle(StrokeStyle stroke) const override;
-
 		void DiscardResources() override;
 
 	public:
@@ -85,10 +83,6 @@ namespace kiwano
 	protected:
 		unsigned long ref_count_;
 		Float32 dpi_;
-
-		ComPtr<ID2D1StrokeStyle>	d2d_miter_stroke_style_;
-		ComPtr<ID2D1StrokeStyle>	d2d_bevel_stroke_style_;
-		ComPtr<ID2D1StrokeStyle>	d2d_round_stroke_style_;
 	};
 
 
@@ -323,7 +317,7 @@ namespace kiwano
 
 		if (!FileUtil::ExistsFile(file_path))
 		{
-			KGE_WARNING_LOG(L"Image file '%s' not found!", file_path.c_str());
+			KGE_WARNING_LOG(L"Texture file '%s' not found!", file_path.c_str());
 			return E_FAIL;
 		}
 
@@ -576,17 +570,6 @@ namespace kiwano
 			text_layout = output;
 		}
 		return hr;
-	}
-
-	ID2D1StrokeStyle* D2DDeviceResources::GetStrokeStyle(StrokeStyle stroke) const
-	{
-		switch (stroke)
-		{
-		case StrokeStyle::Miter: return d2d_miter_stroke_style_.get(); break;
-		case StrokeStyle::Bevel: return d2d_bevel_stroke_style_.get(); break;
-		case StrokeStyle::Round: return d2d_round_stroke_style_.get(); break;
-		}
-		return nullptr;
 	}
 
 }

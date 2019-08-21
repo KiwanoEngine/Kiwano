@@ -22,10 +22,24 @@
 #include "../macros.h"
 #include "../core/core.h"
 #include "../math/math.h"
-#include "types.h"
 
 namespace kiwano
 {
+	// 鼠标指针类型
+	enum class CursorType
+	{
+		Arrow,		/* 指针 */
+		TextInput,	/* 文本 */
+		Hand,		/* 手指 */
+		SizeAll,
+		SizeNESW,
+		SizeNS,
+		SizeNWSE,
+		SizeWE,
+	};
+
+
+	// 窗口
 	class KGE_API Window
 		: public Singleton<Window>
 	{
@@ -56,8 +70,8 @@ namespace kiwano
 		// 设置全屏模式
 		void SetFullscreen(bool fullscreen, Int32 width, Int32 height);
 
-		// 设置鼠标指针
-		void SetMouseCursor(MouseCursor cursor);
+		// 设置鼠标指针类型
+		void SetCursor(CursorType cursor);
 
 	public:
 		void Init(
@@ -94,6 +108,6 @@ namespace kiwano
 		Int32		width_;
 		Int32		height_;
 		WCHAR*		device_name_;
-		MouseCursor	mouse_cursor_;
+		CursorType	mouse_cursor_;
 	};
 }

@@ -39,6 +39,20 @@ namespace kiwano
 	typedef ID3D11DeviceResources ID3DDeviceResources;
 #endif
 
+	// 分辨率模式
+	// 分辨率模式决定了将画面渲染到视区上的方式
+	// Fixed (固定): 分辨率不随视区改变, 且画面始终与视区边界对齐（默认）
+	// Center (居中): 分辨率不随视区改变, 且画面始终在视区上居中
+	// Stretch (拉伸): 分辨率始终随视区等比例拉伸
+	// Adaptive (宽高自适应): 分辨率始终保持宽高比, 且尽可能的填充视区, 可能会出现黑色边界
+	enum class ResolutionMode
+	{
+		Fixed,		/* 固定 */
+		Center,		/* 居中 */
+		Stretch,	/* 拉伸 */
+		Adaptive,	/* 宽高自适应 */
+	};
+
 	class KGE_API Renderer
 		: public Singleton<Renderer>
 		, public Component
@@ -57,24 +71,34 @@ namespace kiwano
 			bool enabled
 		);
 
+		// 设置画面分辨率
+		void SetResolution(
+			Size const& resolution
+		);
+
+		// 设置分辨率模式
+		void SetResolutionMode(
+			ResolutionMode mode
+		);
+
 	public:
-		void CreateImage(
-			Image& image,
+		void CreateTexture(
+			Texture& texture,
 			String const& file_path
 		);
 
-		void CreateImage(
-			Image& image,
+		void CreateTexture(
+			Texture& texture,
 			Resource const& res
 		);
 
 		void CreateGifImage(
-			GifImage& image,
+			GifImage& texture,
 			String const& file_path
 		);
 
 		void CreateGifImage(
-			GifImage& image,
+			GifImage& texture,
 			Resource const& res
 		);
 
@@ -127,16 +151,8 @@ namespace kiwano
 			GeometrySink& sink
 		);
 
-		void CreateImageRenderTarget(
-			ImageRenderTarget& render_target
-		);
-
-		void SetResolution(
-			Size const& resolution
-		);
-
-		void SetResolutionMode(
-			ResolutionMode mode
+		void CreateTextureRenderTarget(
+			TextureRenderTarget& render_target
 		);
 
 	public:

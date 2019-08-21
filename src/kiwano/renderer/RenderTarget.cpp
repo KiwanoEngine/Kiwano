@@ -30,9 +30,9 @@ namespace kiwano
 	RenderTarget::RenderTarget()
 		: opacity_(1.f)
 		, collecting_status_(false)
-		, antialias_(true)
 		, fast_global_transform_(true)
-		, text_antialias_(TextAntialias::GrayScale)
+		, antialias_(true)
+		, text_antialias_(TextAntialiasMode::GrayScale)
 	{
 		status_.primitives = 0;
 	}
@@ -134,7 +134,7 @@ namespace kiwano
 				geometry.GetGeometry().get(),
 				default_brush_.get(),
 				stroke_width,
-				device_resources_->GetStrokeStyle(stroke)
+				GetStrokeStyle(stroke).get()
 			);
 
 			IncreasePrimitivesCount();
@@ -180,7 +180,7 @@ namespace kiwano
 				DX::ConvertToPoint2F(point2),
 				default_brush_.get(),
 				stroke_width,
-				device_resources_->GetStrokeStyle(stroke)
+				GetStrokeStyle(stroke).get()
 			);
 
 			IncreasePrimitivesCount();
@@ -205,7 +205,7 @@ namespace kiwano
 				DX::ConvertToRectF(rect),
 				default_brush_.get(),
 				stroke_width,
-				device_resources_->GetStrokeStyle(stroke)
+				GetStrokeStyle(stroke).get()
 			);
 
 			IncreasePrimitivesCount();
@@ -254,7 +254,7 @@ namespace kiwano
 				),
 				default_brush_.get(),
 				stroke_width,
-				device_resources_->GetStrokeStyle(stroke)
+				GetStrokeStyle(stroke).get()
 			);
 
 			IncreasePrimitivesCount();
@@ -307,7 +307,7 @@ namespace kiwano
 				),
 				default_brush_.get(),
 				stroke_width,
-				device_resources_->GetStrokeStyle(stroke)
+				GetStrokeStyle(stroke).get()
 			);
 
 			IncreasePrimitivesCount();
@@ -340,12 +340,12 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawImage(Image const& image, Rect const& src_rect, Rect const& dest_rect) const
+	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect) const
 	{
-		DrawImage(image, &src_rect, &dest_rect);
+		DrawTexture(texture, &src_rect, &dest_rect);
 	}
 
-	void RenderTarget::DrawImage(Image const& image, const Rect* src_rect, const Rect* dest_rect) const
+	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect) const
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_)
@@ -353,13 +353,17 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (SUCCEEDED(hr) && image.IsValid())
+		if (SUCCEEDED(hr) && texture.IsValid())
 		{
+			auto mode = (texture.GetBitmapInterpolationMode() == InterpolationMode::Linear)
+				? D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
+				: D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+
 			render_target_->DrawBitmap(
-				image.GetBitmap().get(),
+				texture.GetBitmap().get(),
 				dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
 				opacity_,
-				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+				mode,
 				src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr
 			);
 
@@ -385,7 +389,7 @@ namespace kiwano
 				layout.GetTextStyle().outline,
 				DX::ConvertToColorF(layout.GetTextStyle().outline_color),
 				layout.GetTextStyle().outline_width,
-				device_resources_->GetStrokeStyle(layout.GetTextStyle().outline_stroke)
+				GetStrokeStyle(layout.GetTextStyle().outline_stroke).get()
 			);
 		}
 
@@ -541,6 +545,17 @@ namespace kiwano
 		return global_transform_;
 	}
 
+	ComPtr<ID2D1StrokeStyle> RenderTarget::GetStrokeStyle(StrokeStyle style) const
+	{
+		switch (style)
+		{
+		case StrokeStyle::Miter: return device_resources_->GetMiterStrokeStyle(); break;
+		case StrokeStyle::Bevel: return device_resources_->GetBevelStrokeStyle(); break;
+		case StrokeStyle::Round: return device_resources_->GetRoundStrokeStyle(); break;
+		}
+		return nullptr;
+	}
+
 	void RenderTarget::SetTransform(const Matrix3x2& matrix)
 	{
 		HRESULT hr = S_OK;
@@ -623,7 +638,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::SetTextAntialiasMode(TextAntialias mode)
+	void RenderTarget::SetTextAntialiasMode(TextAntialiasMode mode)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_)
@@ -637,16 +652,16 @@ namespace kiwano
 			D2D1_TEXT_ANTIALIAS_MODE antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
 			switch (text_antialias_)
 			{
-			case TextAntialias::Default:
+			case TextAntialiasMode::Default:
 				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_DEFAULT;
 				break;
-			case TextAntialias::ClearType:
+			case TextAntialiasMode::ClearType:
 				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
 				break;
-			case TextAntialias::GrayScale:
+			case TextAntialiasMode::GrayScale:
 				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
 				break;
-			case TextAntialias::None:
+			case TextAntialiasMode::None:
 				antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_ALIASED;
 				break;
 			default:
@@ -683,14 +698,14 @@ namespace kiwano
 
 
 	//
-	// ImageRenderTarget
+	// TextureRenderTarget
 	//
 
-	ImageRenderTarget::ImageRenderTarget()
+	TextureRenderTarget::TextureRenderTarget()
 	{
 	}
 
-	Image ImageRenderTarget::GetOutput() const
+	Texture TextureRenderTarget::GetOutput() const
 	{
 		HRESULT hr = E_FAIL;
 
@@ -706,13 +721,13 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					return Image(bitmap);
+					return Texture(bitmap);
 				}
 			}
 		}
 
 		ThrowIfFailed(hr);
-		return Image();
+		return Texture();
 	}
 
 }

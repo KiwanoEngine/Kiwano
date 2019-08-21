@@ -201,8 +201,8 @@ namespace kiwano
 		if (files.empty())
 			return 0;
 
-		Vector<FramePtr> image_arr;
-		image_arr.reserve(files.size());
+		Vector<FramePtr> texture_arr;
+		texture_arr.reserve(files.size());
 
 		for (const auto& file : files)
 		{
@@ -211,14 +211,14 @@ namespace kiwano
 			{
 				if (ptr->Load(file))
 				{
-					image_arr.push_back(ptr);
+					texture_arr.push_back(ptr);
 				}
 			}
 		}
 
-		if (!image_arr.empty())
+		if (!texture_arr.empty())
 		{
-			FrameSequencePtr frames = new (std::nothrow) FrameSequence(image_arr);
+			FrameSequencePtr frames = new (std::nothrow) FrameSequence(texture_arr);
 			return AddFrameSequence(id, frames);
 		}
 		return 0;
@@ -238,23 +238,23 @@ namespace kiwano
 		Float32 width = raw_width / cols;
 		Float32 height = raw_height / rows;
 
-		Vector<FramePtr> image_arr;
-		image_arr.reserve(rows * cols);
+		Vector<FramePtr> texture_arr;
+		texture_arr.reserve(rows * cols);
 
 		for (Int32 i = 0; i < rows; i++)
 		{
 			for (Int32 j = 0; j < cols; j++)
 			{
-				FramePtr ptr = new (std::nothrow) Frame(raw->GetImage());
+				FramePtr ptr = new (std::nothrow) Frame(raw->GetTexture());
 				if (ptr)
 				{
 					ptr->SetCropRect(Rect{ j * width, i * height, (j + 1) * width, (i + 1) * height });
-					image_arr.push_back(ptr);
+					texture_arr.push_back(ptr);
 				}
 			}
 		}
 
-		FrameSequencePtr frames = new (std::nothrow) FrameSequence(image_arr);
+		FrameSequencePtr frames = new (std::nothrow) FrameSequence(texture_arr);
 		return AddFrameSequence(id, frames);
 	}
 
@@ -309,7 +309,7 @@ namespace kiwano
 			String path;
 		};
 
-		bool LoadImagesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type,
+		bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type,
 			const String* file, const Vector<const WChar*>* files, Int32 rows, Int32 cols)
 		{
 			if (!gdata || !id) return false;
@@ -325,7 +325,7 @@ namespace kiwano
 					}
 					else
 					{
-						// Simple image
+						// Simple texture
 						return loader->AddFrame(*id, gdata->path + (*file));
 					}
 				}
@@ -358,33 +358,33 @@ namespace kiwano
 				global_data.path = json_data[L"path"];
 			}
 
-			if (json_data.count(L"images"))
+			if (json_data.count(L"textures"))
 			{
-				for (const auto& image : json_data[L"images"])
+				for (const auto& texture : json_data[L"textures"])
 				{
 					const String* id = nullptr, * type = nullptr, * file = nullptr;
 					Int32 rows = 0, cols = 0;
 
-					if (image.count(L"id")) id = &image[L"id"].as_string();
-					if (image.count(L"type")) type = &image[L"type"].as_string();
-					if (image.count(L"file")) file = &image[L"file"].as_string();
-					if (image.count(L"rows")) rows = image[L"rows"].as_int();
-					if (image.count(L"cols")) cols = image[L"cols"].as_int();
+					if (texture.count(L"id")) id = &texture[L"id"].as_string();
+					if (texture.count(L"type")) type = &texture[L"type"].as_string();
+					if (texture.count(L"file")) file = &texture[L"file"].as_string();
+					if (texture.count(L"rows")) rows = texture[L"rows"].as_int();
+					if (texture.count(L"cols")) cols = texture[L"cols"].as_int();
 
-					if (image.count(L"files"))
+					if (texture.count(L"files"))
 					{
 						Vector<const WChar*> files;
-						files.reserve(image[L"files"].size());
-						for (const auto& file : image[L"files"])
+						files.reserve(texture[L"files"].size());
+						for (const auto& file : texture[L"files"])
 						{
 							files.push_back(file.as_string().c_str());
 						}
-						if (!LoadImagesFromData(loader, &global_data, id, type, file, &files, rows, cols))
+						if (!LoadTexturesFromData(loader, &global_data, id, type, file, &files, rows, cols))
 							return false;
 					}
 					else
 					{
-						if (!LoadImagesFromData(loader, &global_data, id, type, file, nullptr, rows, cols))
+						if (!LoadTexturesFromData(loader, &global_data, id, type, file, nullptr, rows, cols))
 							return false;
 					}
 				}
@@ -400,35 +400,35 @@ namespace kiwano
 				global_data.path = path->GetText();
 			}
 
-			if (auto images = elem->FirstChildElement(L"images"))
+			if (auto textures = elem->FirstChildElement(L"textures"))
 			{
-				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
+				for (auto texture = textures->FirstChildElement(); texture; texture = texture->NextSiblingElement())
 				{
 					String id, type, file;
 					Int32 rows = 0, cols = 0;
 
-					if (auto attr = image->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
-					if (auto attr = image->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
-					if (auto attr = image->Attribute(L"file"))    file = attr;
-					if (auto attr = image->IntAttribute(L"rows")) rows = attr;
-					if (auto attr = image->IntAttribute(L"cols")) cols = attr;
+					if (auto attr = texture->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
+					if (auto attr = texture->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
+					if (auto attr = texture->Attribute(L"file"))    file = attr;
+					if (auto attr = texture->IntAttribute(L"rows")) rows = attr;
+					if (auto attr = texture->IntAttribute(L"cols")) cols = attr;
 
-					if (file.empty() && !image->NoChildren())
+					if (file.empty() && !texture->NoChildren())
 					{
 						Vector<const WChar*> files_arr;
-						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
+						for (auto file = texture->FirstChildElement(); file; file = file->NextSiblingElement())
 						{
 							if (auto path = file->Attribute(L"path"))
 							{
 								files_arr.push_back(path);
 							}
 						}
-						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, &files_arr, rows, cols))
+						if (!LoadTexturesFromData(loader, &global_data, &id, &type, &file, &files_arr, rows, cols))
 							return false;
 					}
 					else
 					{
-						if (!LoadImagesFromData(loader, &global_data, &id, &type, &file, nullptr, rows, cols))
+						if (!LoadTexturesFromData(loader, &global_data, &id, &type, &file, nullptr, rows, cols))
 							return false;
 					}
 				}

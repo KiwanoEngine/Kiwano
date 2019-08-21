@@ -19,39 +19,14 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Image.h"
-#include "GifImage.h"
 
 namespace kiwano
 {
-	class KGE_API ImageCache
-		: public Singleton<ImageCache>
+	// 线条样式
+	enum class StrokeStyle
 	{
-		KGE_DECLARE_SINGLETON(ImageCache);
-
-	public:
-		Image AddOrGetImage(String const& file_path);
-		Image AddOrGetImage(Resource const& res);
-		GifImage AddOrGetGifImage(String const& file_path);
-		GifImage AddOrGetGifImage(Resource const& res);
-
-		void RemoveImage(String const& file_path);
-		void RemoveImage(Resource const& res);
-		void RemoveGifImage(String const& file_path);
-		void RemoveGifImage(Resource const& res);
-
-		void Clear();
-
-	protected:
-		ImageCache();
-
-		virtual ~ImageCache();
-
-	protected:
-		using ImageMap = UnorderedMap<UInt32, Image>;
-		ImageMap image_cache_;
-
-		using GifImageMap = UnorderedMap<UInt32, GifImage>;
-		GifImageMap gif_image_cache_;
+		Miter = 0,	/* 斜切 */
+		Bevel = 1,	/* 斜角 */
+		Round = 2	/* 圆角 */
 	};
 }

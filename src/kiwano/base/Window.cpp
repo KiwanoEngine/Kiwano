@@ -46,7 +46,7 @@ namespace kiwano
 		, device_name_(nullptr)
 		, is_fullscreen_(false)
 		, resizable_(false)
-		, mouse_cursor_(MouseCursor::Arrow)
+		, mouse_cursor_(CursorType::Arrow)
 	{
 	}
 
@@ -222,7 +222,7 @@ namespace kiwano
 		if (handle_)
 		{
 			HINSTANCE hinstance = GetModuleHandle(nullptr);
-			HICON icon = (HICON)::LoadImage(
+			HICON icon = (HICON)::LoadImageW(
 				hinstance,
 				MAKEINTRESOURCE(icon_resource),
 				IMAGE_ICON,
@@ -295,7 +295,7 @@ namespace kiwano
 		}
 	}
 
-	void Window::SetMouseCursor(MouseCursor cursor)
+	void Window::SetCursor(CursorType cursor)
 	{
 		mouse_cursor_ = cursor;
 	}
@@ -327,14 +327,14 @@ namespace kiwano
 		LPTSTR win32_cursor = IDC_ARROW;
 		switch (mouse_cursor_)
 		{
-		case MouseCursor::Arrow:		win32_cursor = IDC_ARROW; break;
-		case MouseCursor::TextInput:	win32_cursor = IDC_IBEAM; break;
-		case MouseCursor::SizeAll:		win32_cursor = IDC_SIZEALL; break;
-		case MouseCursor::SizeWE:		win32_cursor = IDC_SIZEWE; break;
-		case MouseCursor::SizeNS:		win32_cursor = IDC_SIZENS; break;
-		case MouseCursor::SizeNESW:		win32_cursor = IDC_SIZENESW; break;
-		case MouseCursor::SizeNWSE:		win32_cursor = IDC_SIZENWSE; break;
-		case MouseCursor::Hand:			win32_cursor = IDC_HAND; break;
+		case CursorType::Arrow:		win32_cursor = IDC_ARROW; break;
+		case CursorType::TextInput:	win32_cursor = IDC_IBEAM; break;
+		case CursorType::SizeAll:	win32_cursor = IDC_SIZEALL; break;
+		case CursorType::SizeWE:	win32_cursor = IDC_SIZEWE; break;
+		case CursorType::SizeNS:	win32_cursor = IDC_SIZENS; break;
+		case CursorType::SizeNESW:	win32_cursor = IDC_SIZENESW; break;
+		case CursorType::SizeNWSE:	win32_cursor = IDC_SIZENWSE; break;
+		case CursorType::Hand:		win32_cursor = IDC_HAND; break;
 		}
 		::SetCursor(::LoadCursorW(nullptr, win32_cursor));
 	}

@@ -255,7 +255,7 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT GifImage::GetRawFrame(UInt32 frame_index, Image& raw_frame, Rect& frame_rect, Duration& delay, DisposalType& disposal_type)
+	HRESULT GifImage::GetRawFrame(UInt32 frame_index, Texture& raw_frame, Rect& frame_rect, Duration& delay, DisposalType& disposal_type)
 	{
 		ComPtr<IWICFormatConverter> converter;
 		ComPtr<IWICBitmapFrameDecode> wic_frame;

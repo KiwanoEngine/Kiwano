@@ -108,7 +108,7 @@ namespace kiwano
 		{
 			PrepareRender(rt);
 
-			rt->DrawImage(frame_->GetImage(), &frame_->GetCropRect(), nullptr);
+			rt->DrawTexture(frame_->GetTexture(), &frame_->GetCropRect(), nullptr);
 		}
 	}
 }

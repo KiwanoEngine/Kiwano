@@ -18,53 +18,59 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Image.h"
+#include "Texture.h"
 #include "Renderer.h"
 #include "../base/Logger.h"
 
 namespace kiwano
 {
-	Image::Image()
+	InterpolationMode	Texture::default_interpolation_mode_ = InterpolationMode::Linear;
+
+	Texture::Texture()
+		: interpolation_mode_(default_interpolation_mode_)
 	{
 	}
 
-	Image::Image(String const& file_path)
+	Texture::Texture(String const& file_path)
+		: Texture()
 	{
 		Load(file_path);
 	}
 
-	Image::Image(Resource const& res)
+	Texture::Texture(Resource const& res)
+		: Texture()
 	{
 		Load(res);
 	}
 
-	Image::Image(ComPtr<ID2D1Bitmap> const & bitmap)
+	Texture::Texture(ComPtr<ID2D1Bitmap> const & bitmap)
+		: Texture()
 	{
 		SetBitmap(bitmap);
 	}
 
-	Image::~Image()
+	Texture::~Texture()
 	{
 	}
 
-	bool Image::Load(String const& file_path)
+	bool Texture::Load(String const& file_path)
 	{
-		Renderer::GetInstance()->CreateImage(*this, file_path);
+		Renderer::GetInstance()->CreateTexture(*this, file_path);
 		return IsValid();
 	}
 
-	bool Image::Load(Resource const& res)
+	bool Texture::Load(Resource const& res)
 	{
-		Renderer::GetInstance()->CreateImage(*this, res);
+		Renderer::GetInstance()->CreateTexture(*this, res);
 		return IsValid();
 	}
 
-	bool Image::IsValid() const
+	bool Texture::IsValid() const
 	{
 		return bitmap_ != nullptr;
 	}
 
-	Float32 Image::GetWidth() const
+	Float32 Texture::GetWidth() const
 	{
 		if (bitmap_)
 		{
@@ -73,7 +79,7 @@ namespace kiwano
 		return 0;
 	}
 
-	Float32 Image::GetHeight() const
+	Float32 Texture::GetHeight() const
 	{
 		if (bitmap_)
 		{
@@ -82,7 +88,7 @@ namespace kiwano
 		return 0;
 	}
 
-	Size Image::GetSize() const
+	Size Texture::GetSize() const
 	{
 		if (bitmap_)
 		{
@@ -92,7 +98,7 @@ namespace kiwano
 		return Size{};
 	}
 
-	UInt32 Image::GetWidthInPixels() const
+	UInt32 Texture::GetWidthInPixels() const
 	{
 		if (bitmap_)
 		{
@@ -101,7 +107,7 @@ namespace kiwano
 		return 0;
 	}
 
-	UInt32 Image::GetHeightInPixels() const
+	UInt32 Texture::GetHeightInPixels() const
 	{
 		if (bitmap_)
 		{
@@ -110,7 +116,7 @@ namespace kiwano
 		return 0;
 	}
 
-	math::Vec2T<UInt32> Image::GetSizeInPixels() const
+	math::Vec2T<UInt32> Texture::GetSizeInPixels() const
 	{
 		if (bitmap_)
 		{
@@ -120,7 +126,12 @@ namespace kiwano
 		return math::Vec2T<UInt32>{};
 	}
 
-	void Image::CopyFrom(Image const& copy_from)
+	InterpolationMode Texture::GetBitmapInterpolationMode() const
+	{
+		return interpolation_mode_;
+	}
+
+	void Texture::CopyFrom(Texture const& copy_from)
 	{
 		if (IsValid() && copy_from.IsValid())
 		{
@@ -130,7 +141,7 @@ namespace kiwano
 		}
 	}
 
-	void Image::CopyFrom(Image const& copy_from, Rect const& src_rect, Point const& dest_point)
+	void Texture::CopyFrom(Texture const& copy_from, Rect const& src_rect, Point const& dest_point)
 	{
 		if (IsValid() && copy_from.IsValid())
 		{
@@ -148,7 +159,21 @@ namespace kiwano
 		}
 	}
 
-	D2D1_PIXEL_FORMAT Image::GetPixelFormat() const
+	void Texture::SetInterpolationMode(InterpolationMode mode)
+	{
+		interpolation_mode_ = mode;
+		switch (mode)
+		{
+		case InterpolationMode::Linear:
+			break;
+		case InterpolationMode::Nearest:
+			break;
+		default:
+			break;
+		}
+	}
+
+	D2D1_PIXEL_FORMAT Texture::GetPixelFormat() const
 	{
 		if (bitmap_)
 		{
@@ -157,14 +182,18 @@ namespace kiwano
 		return D2D1_PIXEL_FORMAT();
 	}
 
-	ComPtr<ID2D1Bitmap> Image::GetBitmap() const
+	ComPtr<ID2D1Bitmap> Texture::GetBitmap() const
 	{
 		return bitmap_;
 	}
 
-	void Image::SetBitmap(ComPtr<ID2D1Bitmap> bitmap)
+	void Texture::SetBitmap(ComPtr<ID2D1Bitmap> bitmap)
 	{
 		bitmap_ = bitmap;
+	}
+
+	void Texture::SetDefaultInterpolationMode(InterpolationMode mode)
+	{
 	}
 
 }

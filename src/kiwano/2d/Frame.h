@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../renderer/Image.h"
+#include "../renderer/Texture.h"
 
 namespace kiwano
 {
@@ -39,7 +39,7 @@ namespace kiwano
 		);
 
 		explicit Frame(
-			Image const& image
+			Texture const& texture
 		);
 
 		bool Load(
@@ -55,31 +55,31 @@ namespace kiwano
 			Rect const& crop_rect	/* 裁剪矩形 */
 		);
 
-		// 设置位图
-		void SetImage(
-			Image const& image
+		// 设置纹理
+		void SetTexture(
+			Texture const& texture
 		);
 
 		// 获取宽度
-		Float32 GetWidth() const				{ return crop_rect_.GetWidth(); }
+		Float32 GetWidth() const					{ return crop_rect_.GetWidth(); }
 
 		// 获取高度
-		Float32 GetHeight() const				{ return crop_rect_.GetHeight(); }
+		Float32 GetHeight() const					{ return crop_rect_.GetHeight(); }
 
 		// 获取大小
-		Size GetSize() const					{ return crop_rect_.GetSize(); }
+		Size GetSize() const						{ return crop_rect_.GetSize(); }
 
 		// 获取裁剪位置
-		Point GetCropPoint() const				{ return crop_rect_.GetLeftTop(); }
+		Point GetCropPoint() const					{ return crop_rect_.GetLeftTop(); }
 
 		// 获取裁剪矩形
-		inline Rect const& GetCropRect() const	{ return crop_rect_; }
+		inline Rect const& GetCropRect() const		{ return crop_rect_; }
 
-		// 获取位图
-		inline Image const& GetImage() const	{ return image_; }
+		// 获取纹理
+		inline Texture const& GetTexture() const	{ return texture_; }
 
 	protected:
-		Image image_;
+		Texture texture_;
 		Rect crop_rect_;
 	};
 }

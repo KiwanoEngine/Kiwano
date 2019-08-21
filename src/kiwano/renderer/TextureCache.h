@@ -19,45 +19,39 @@
 // THE SOFTWARE.
 
 #pragma once
+#include "Texture.h"
+#include "GifImage.h"
 
 namespace kiwano
 {
-	// 线条样式
-	enum class StrokeStyle : Int32
+	class KGE_API TextureCache
+		: public Singleton<TextureCache>
 	{
-		Miter = 0,	/* 斜切 */
-		Bevel = 1,	/* 斜角 */
-		Round = 2	/* 圆角 */
-	};
+		KGE_DECLARE_SINGLETON(TextureCache);
 
-	// 鼠标指针
-	enum class MouseCursor : Int32
-	{
-		Arrow,		/* 指针 */
-		TextInput,	/* 输入文本 */
-		Hand,		/* 手指 */
-		SizeAll,
-		SizeNESW,
-		SizeNS,
-		SizeNWSE,
-		SizeWE,
-	};
+	public:
+		Texture AddOrGetTexture(String const& file_path);
+		Texture AddOrGetTexture(Resource const& res);
+		GifImage AddOrGetGifImage(String const& file_path);
+		GifImage AddOrGetGifImage(Resource const& res);
 
-	// 文字抗锯齿属性
-	enum class TextAntialias
-	{
-		Default,	// 系统默认
-		ClearType,	// ClearType 抗锯齿
-		GrayScale,	// 灰度抗锯齿
-		None		// 不启用抗锯齿
-	};
+		void RemoveTexture(String const& file_path);
+		void RemoveTexture(Resource const& res);
+		void RemoveGifImage(String const& file_path);
+		void RemoveGifImage(Resource const& res);
 
-	// 分辨率模式
-	enum class ResolutionMode
-	{
-		Fixed,		/* 固定 */
-		Center,		/* 居中 */
-		Stretch,	/* 拉伸 */
-		Adaptive,	/* 宽高自适应 */
+		void Clear();
+
+	protected:
+		TextureCache();
+
+		virtual ~TextureCache();
+
+	protected:
+		using TextureMap = UnorderedMap<UInt32, Texture>;
+		TextureMap texture_cache_;
+
+		using GifImageMap = UnorderedMap<UInt32, GifImage>;
+		GifImageMap gif_texture_cache_;
 	};
 }
