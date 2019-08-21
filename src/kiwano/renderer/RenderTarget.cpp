@@ -31,6 +31,7 @@ namespace kiwano
 		: opacity_(1.f)
 		, collecting_status_(false)
 		, antialias_(true)
+		, fast_global_transform_(true)
 		, text_antialias_(TextAntialias::GrayScale)
 	{
 		status_.primitives = 0;
@@ -537,7 +538,7 @@ namespace kiwano
 
 	Matrix3x2 RenderTarget::GetGlobalTransform() const
 	{
-		return global_matrix_;
+		return global_transform_;
 	}
 
 	void RenderTarget::SetTransform(const Matrix3x2& matrix)
@@ -550,8 +551,16 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			Matrix3x2 result = matrix * global_matrix_;
-			render_target_->SetTransform(DX::ConvertToMatrix3x2F(&result));
+			if (fast_global_transform_)
+			{
+				render_target_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
+
+			}
+			else
+			{
+				Matrix3x2 result = matrix * global_transform_;
+				render_target_->SetTransform(DX::ConvertToMatrix3x2F(&result));
+			}
 		}
 
 		ThrowIfFailed(hr);
@@ -559,7 +568,20 @@ namespace kiwano
 
 	void RenderTarget::SetGlobalTransform(const Matrix3x2& matrix)
 	{
-		global_matrix_ = matrix;
+		SetGlobalTransform(&matrix);
+	}
+
+	void RenderTarget::SetGlobalTransform(const Matrix3x2* matrix)
+	{
+		if (matrix)
+		{
+			global_transform_ = *matrix;
+			fast_global_transform_ = false;
+		}
+		else
+		{
+			fast_global_transform_ = true;
+		}
 	}
 
 	void RenderTarget::SetOpacity(Float32 opacity)
@@ -638,9 +660,12 @@ namespace kiwano
 
 	bool RenderTarget::CheckVisibility(Rect const& bounds, Matrix3x2 const& transform)
 	{
-		return Rect{ Point{}, reinterpret_cast<const Size&>(render_target_->GetSize()) }.Intersects(
-			Matrix3x2(transform * global_matrix_).Transform(bounds)
-		);
+		Rect visible_size = { Point{}, reinterpret_cast<const Size&>(render_target_->GetSize()) };
+		if (fast_global_transform_)
+		{
+			return visible_size.Intersects(transform.Transform(bounds));
+		}
+		return visible_size.Intersects(Matrix3x2(transform * global_transform_).Transform(bounds));
 	}
 
 	void RenderTarget::SetCollectingStatus(bool collecting)

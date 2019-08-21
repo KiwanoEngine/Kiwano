@@ -154,6 +154,10 @@ namespace kiwano
 			const Matrix3x2& matrix
 		);
 
+		void SetGlobalTransform(
+			const Matrix3x2* matrix
+		);
+
 		// 设置抗锯齿模式
 		void SetAntialiasMode(
 			bool enabled
@@ -164,6 +168,7 @@ namespace kiwano
 			TextAntialias mode
 		);
 
+		// 检查边界是否在视区内
 		bool CheckVisibility(
 			Rect const& bounds,
 			Matrix3x2 const& transform
@@ -200,6 +205,7 @@ namespace kiwano
 	protected:
 		Float32							opacity_;
 		bool							antialias_;
+		bool							fast_global_transform_;
 		mutable bool					collecting_status_;
 		mutable Status					status_;
 		TextAntialias					text_antialias_;
@@ -208,7 +214,7 @@ namespace kiwano
 		ComPtr<ID2D1SolidColorBrush>	default_brush_;
 		ComPtr<ID2D1Brush>				current_brush_;
 		ComPtr<ID2DDeviceResources>		device_resources_;
-		Matrix3x2						global_matrix_;
+		Matrix3x2						global_transform_;
 	};
 
 

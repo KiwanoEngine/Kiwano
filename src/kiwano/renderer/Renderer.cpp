@@ -732,7 +732,7 @@ namespace kiwano
 		{
 		case ResolutionMode::Fixed:
 		{
-			SetGlobalTransform(Matrix3x2{});
+			SetGlobalTransform(nullptr);
 			break;
 		}
 

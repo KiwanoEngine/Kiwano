@@ -470,7 +470,7 @@ namespace kiwano
 			font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
 			font.size,
-			L"en-us",
+			L"",
 			&output
 		);
 
