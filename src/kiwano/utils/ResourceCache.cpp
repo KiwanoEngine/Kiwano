@@ -23,6 +23,7 @@
 #include "../2d/Frame.h"
 #include "../2d/FrameSequence.h"
 #include "../renderer/GifImage.h"
+#include "../renderer/FontCollection.h"
 #include <fstream>
 
 namespace kiwano
@@ -30,7 +31,7 @@ namespace kiwano
 	namespace __resource_cache_01
 	{
 		bool LoadJsonData(ResourceCache* loader, Json const& json_data);
-		bool LoadXmlData(ResourceCache* loader, tinyxml2::XMLElement* elem);
+		bool LoadXmlData(ResourceCache* loader, const tinyxml2::XMLElement* elem);
 	}
 
 	namespace
@@ -40,7 +41,7 @@ namespace kiwano
 			{ L"0.1", __resource_cache_01::LoadJsonData },
 		};
 
-		Map<String, Function<bool(ResourceCache*, tinyxml2::XMLElement*)>> load_xml_funcs = {
+		Map<String, Function<bool(ResourceCache*, const tinyxml2::XMLElement*)>> load_xml_funcs = {
 			{ L"latest", __resource_cache_01::LoadXmlData },
 			{ L"0.1", __resource_cache_01::LoadXmlData },
 		};
@@ -138,7 +139,7 @@ namespace kiwano
 		return LoadFromXml(&doc);
 	}
 
-	bool ResourceCache::LoadFromXml(tinyxml2::XMLDocument* doc)
+	bool ResourceCache::LoadFromXml(const tinyxml2::XMLDocument* doc)
 	{
 		if (doc)
 		{
@@ -282,6 +283,36 @@ namespace kiwano
 		return false;
 	}
 
+	bool ResourceCache::AddGifImage(String const& id, GifImage const& gif)
+	{
+		if (gif.IsValid())
+		{
+			gif_cache_.insert(std::make_pair(id, gif));
+			return true;
+		}
+		return false;
+	}
+
+	bool ResourceCache::AddGifImage(String const& id, String const& file_path)
+	{
+		GifImage gif;
+		if (gif.Load(file_path))
+		{
+			return AddGifImage(id, gif);
+		}
+		return false;
+	}
+
+	bool ResourceCache::AddFontCollection(String const& id, FontCollection const& collection)
+	{
+		if (collection.IsValid())
+		{
+			font_collection_cache_.insert(std::make_pair(id, collection));
+			return true;
+		}
+		return false;
+	}
+
 	FramePtr ResourceCache::GetFrame(String const & id) const
 	{
 		return Get<Frame>(id);
@@ -290,6 +321,22 @@ namespace kiwano
 	FrameSequencePtr ResourceCache::GetFrameSequence(String const & id) const
 	{
 		return Get<FrameSequence>(id);
+	}
+
+	GifImage ResourceCache::GetGifImage(String const& id) const
+	{
+		auto iter = gif_cache_.find(id);
+		if (iter != gif_cache_.end())
+			return iter->second;
+		return GifImage();
+	}
+
+	FontCollection ResourceCache::GetFontCollection(String const& id) const
+	{
+		auto iter = font_collection_cache_.find(id);
+		if (iter != font_collection_cache_.end())
+			return iter->second;
+		return FontCollection();
 	}
 
 	void ResourceCache::Delete(String const & id)
@@ -316,6 +363,12 @@ namespace kiwano
 		bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type, const String* file)
 		{
 			if (!gdata || !id) return false;
+
+			if (type && (*type) == L"gif")
+			{
+				// GIF image
+				return loader->AddGifImage(*id, gdata->path + (*file));
+			}
 
 			if (file && !(*file).empty())
 			{
@@ -372,6 +425,28 @@ namespace kiwano
 			return false;
 		}
 
+		bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const Vector<String>* files)
+		{
+			if (!gdata || !id) return false;
+
+			// Font Collection
+			if (files)
+			{
+				Vector<String> files_copy(*files);
+				for (auto& file : files_copy)
+				{
+					file = gdata->path + file;
+				}
+
+				FontCollection collection;
+				if (collection.Load(files_copy))
+				{
+					return loader->AddFontCollection(*id, collection);
+				}
+			}
+			return false;
+		}
+
 		bool LoadJsonData(ResourceCache* loader, Json const& json_data)
 		{
 			GlobalData global_data;
@@ -399,7 +474,8 @@ namespace kiwano
 						if (image.count(L"padding-x")) padding_x = image[L"padding-x"].get<Float32>();
 						if (image.count(L"padding-y")) padding_y = image[L"padding-y"].get<Float32>();
 
-						return LoadTexturesFromData(loader, &global_data, id, file, rows, cols, padding_x, padding_y);
+						if (!LoadTexturesFromData(loader, &global_data, id, file, rows, cols, padding_x, padding_y))
+							return false;
 					}
 
 					if (image.count(L"files"))
@@ -410,18 +486,41 @@ namespace kiwano
 						{
 							files.push_back(file.as_string().c_str());
 						}
-						return LoadTexturesFromData(loader, &global_data, id, &files);
+						if(!LoadTexturesFromData(loader, &global_data, id, &files))
+							return false;
 					}
 					else
 					{
-						return LoadTexturesFromData(loader, &global_data, id, type, file);
+						if(!LoadTexturesFromData(loader, &global_data, id, type, file))
+							return false;
+					}
+				}
+			}
+
+			if (json_data.count(L"fonts"))
+			{
+				for (const auto& font : json_data[L"fonts"])
+				{
+					String id;
+
+					if (font.count(L"id")) id = font[L"id"].as_string();
+					if (font.count(L"files"))
+					{
+						Vector<String> files;
+						files.reserve(font[L"files"].size());
+						for (const auto& file : font[L"files"])
+						{
+							files.push_back(file.as_string());
+						}
+						if (!LoadFontsFromData(loader, &global_data, &id, &files))
+							return false;
 					}
 				}
 			}
 			return true;
 		}
 
-		bool LoadXmlData(ResourceCache* loader, tinyxml2::XMLElement* elem)
+		bool LoadXmlData(ResourceCache* loader, const tinyxml2::XMLElement* elem)
 		{
 			GlobalData global_data;
 			if (auto path = elem->FirstChildElement(L"path"))
@@ -470,6 +569,26 @@ namespace kiwano
 						if (!LoadTexturesFromData(loader, &global_data, &id, &type, &file))
 							return false;
 					}
+				}
+			}
+
+			if (auto fonts = elem->FirstChildElement(L"fonts"))
+			{
+				for (auto font = fonts->FirstChildElement(); font; font = font->NextSiblingElement())
+				{
+					String id;
+					if (auto attr = font->Attribute(L"id")) id.assign(attr);
+
+					Vector<String> files_arr;
+					for (auto file = font->FirstChildElement(); file; file = file->NextSiblingElement())
+					{
+						if (auto path = file->Attribute(L"path"))
+						{
+							files_arr.push_back(path);
+						}
+					}
+					if (!LoadFontsFromData(loader, &global_data, &id, &files_arr))
+						return false;
 				}
 			}
 			return true;

@@ -49,11 +49,18 @@ namespace kiwano
 
 	public:
 		Font(
-			const String& family		= L"",
+			String const& family		= L"",
 			Float32 size				= 18,
 			UInt32 weight				= FontWeight::Normal,
-			bool italic					= false,
-			FontCollection collection	= FontCollection()
+			bool italic					= false
+		);
+
+		Font(
+			FontCollection collection,
+			String const& family		= L"",
+			Float32 size				= 18,
+			UInt32 weight				= FontWeight::Normal,
+			bool italic					= false
 		);
 	};
 }
