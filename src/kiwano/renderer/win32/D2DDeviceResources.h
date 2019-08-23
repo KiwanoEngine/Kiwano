@@ -223,7 +223,6 @@ namespace kiwano
 		virtual HRESULT CreateTextLayout(
 			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
 			_In_ String const& text,
-			_In_ TextStyle const& text_style,
 			_In_ ComPtr<IDWriteTextFormat> const& text_format
 		) const = 0;
 

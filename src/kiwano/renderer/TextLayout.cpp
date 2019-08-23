@@ -76,9 +76,73 @@ namespace kiwano
 		Renderer::GetInstance()->CreateTextLayout(
 			*this,
 			text,
-			style,
 			text_format_
 		);
+
+		HRESULT hr = text_layout_ ? S_OK : E_FAIL;
+
+		if (SUCCEEDED(hr))
+		{
+			if (style.line_spacing == 0.f)
+			{
+				hr = text_layout_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
+			}
+			else
+			{
+				hr = text_layout_->SetLineSpacing(
+					DWRITE_LINE_SPACING_METHOD_UNIFORM,
+					style.line_spacing,
+					style.line_spacing * 0.8f
+				);
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = text_layout_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(style.alignment));
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = text_layout_->SetWordWrapping((style.wrap_width > 0) ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			if (style.underline)
+			{
+				hr = text_layout_->SetUnderline(true, { 0, text.length() });
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			if (style.strikethrough)
+			{
+				text_layout_->SetStrikethrough(true, { 0, text.length() });
+			}
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			if (style.wrap_width > 0)
+			{
+				hr = text_layout_->SetMaxWidth(style.wrap_width);
+			}
+			else
+			{
+				// Fix the layout width when the text does not wrap
+				DWRITE_TEXT_METRICS metrics;
+				hr = text_layout_->GetMetrics(&metrics);
+
+				if (SUCCEEDED(hr))
+				{
+					hr = text_layout_->SetMaxWidth(metrics.width);
+				}
+			}
+		}
+
+		ThrowIfFailed(hr);
 	}
 
 	UInt32 TextLayout::GetLineCount()

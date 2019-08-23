@@ -138,7 +138,6 @@ namespace kiwano
 		void CreateTextLayout(
 			TextLayout& layout,
 			String const& text,
-			TextStyle const& style,
 			TextFormat const& format
 		);
 

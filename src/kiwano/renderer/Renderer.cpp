@@ -706,7 +706,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateTextLayout(TextLayout& layout, String const& text, TextStyle const& style, TextFormat const& format)
+	void Renderer::CreateTextLayout(TextLayout& layout, String const& text, TextFormat const& format)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -720,7 +720,6 @@ namespace kiwano
 			hr = d2d_res_->CreateTextLayout(
 				output,
 				text,
-				style,
 				format.GetTextFormat()
 			);
 		}

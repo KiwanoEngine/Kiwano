@@ -102,7 +102,7 @@ namespace kiwano
 
 		// 设置文字斜体（默认值为 false）
 		void SetItalic(
-			bool val
+			bool italic
 		);
 
 		// 设置文本自动换行的宽度（默认为 0）

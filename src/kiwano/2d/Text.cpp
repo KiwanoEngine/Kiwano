@@ -126,11 +126,11 @@ namespace kiwano
 		style_.color = color;
 	}
 
-	void Text::SetItalic(bool val)
+	void Text::SetItalic(bool italic)
 	{
-		if (font_.italic != val)
+		if (font_.italic != italic)
 		{
-			font_.italic = val;
+			font_.italic = italic;
 			format_dirty_ = true;
 		}
 	}

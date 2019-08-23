@@ -71,7 +71,6 @@ namespace kiwano
 		HRESULT CreateTextLayout(
 			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
 			_In_ String const& text,
-			_In_ TextStyle const& text_style,
 			_In_ ComPtr<IDWriteTextFormat> const& text_format
 		) const override;
 
@@ -460,95 +459,21 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout> & text_layout, _In_ String const & text,
-		_In_ TextStyle const & text_style, _In_ ComPtr<IDWriteTextFormat> const& text_format) const
+	HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, _In_ String const& text,
+		_In_ ComPtr<IDWriteTextFormat> const& text_format) const
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;
 
-		HRESULT hr;
 		ComPtr<IDWriteTextLayout> output;
-		UInt32 length = static_cast<UInt32>(text.length());
-
-		if (text_style.wrap_width > 0)
-		{
-			hr = dwrite_factory_->CreateTextLayout(
-				text.c_str(),
-				length,
-				text_format.get(),
-				text_style.wrap_width,
-				0,
-				&output
-			);
-		}
-		else
-		{
-			hr = dwrite_factory_->CreateTextLayout(
-				text.c_str(),
-				length,
-				text_format.get(),
-				0,
-				0,
-				&output
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			if (text_style.line_spacing == 0.f)
-			{
-				hr = output->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
-			}
-			else
-			{
-				hr = output->SetLineSpacing(
-					DWRITE_LINE_SPACING_METHOD_UNIFORM,
-					text_style.line_spacing,
-					text_style.line_spacing * 0.8f
-				);
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = output->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(text_style.alignment));
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = output->SetWordWrapping((text_style.wrap_width > 0) ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			if (text_style.underline)
-			{
-				hr = output->SetUnderline(true, { 0, length });
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			if (text_style.strikethrough)
-			{
-				output->SetStrikethrough(true, { 0, length });
-			}
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			// Fix the layout width when the text does not wrap
-			if (!(text_style.wrap_width > 0))
-			{
-				DWRITE_TEXT_METRICS metrics;
-				hr = output->GetMetrics(&metrics);
-				
-				if (SUCCEEDED(hr))
-				{
-					hr = output->SetMaxWidth(metrics.width);
-				}
-			}
-		}
+		HRESULT hr = dwrite_factory_->CreateTextLayout(
+			text.c_str(),
+			static_cast<UINT32>(text.length()),
+			text_format.get(),
+			0,
+			0,
+			&output
+		);
 
 		if (SUCCEEDED(hr))
 		{
