@@ -209,7 +209,7 @@ namespace kiwano
 		// than the API default. It is required for compatibility with Direct2D.
 		UInt32 creation_flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
-#if defined(KGE_DEBUG)
+#if defined(KGE_DEBUG) && defined(KGE_ENABLE_DX_DEBUG)
 		if (DX::SdkLayersAvailable())
 		{
 			creation_flags |= D3D11_CREATE_DEVICE_DEBUG;

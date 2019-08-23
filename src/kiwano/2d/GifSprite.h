@@ -31,7 +31,6 @@ namespace kiwano
 		: public Actor
 	{
 	public:
-		using DisposalType		= GifImage::DisposalType;
 		using LoopDoneCallback	= Function<void(Int32)>;
 		using DoneCallback		= Function<void()>;
 
@@ -46,7 +45,7 @@ namespace kiwano
 		);
 
 		GifSprite(
-			GifImage image
+			GifImage gif
 		);
 
 		bool Load(
@@ -58,7 +57,7 @@ namespace kiwano
 		);
 
 		bool Load(
-			GifImage image
+			GifImage gif
 		);
 
 		// 设置 GIF 动画循环次数
@@ -70,12 +69,17 @@ namespace kiwano
 		// 设置 GIF 动画结束回调函数
 		inline void SetDoneCallback(DoneCallback const& cb)			{ done_cb_ = cb; }
 
+		// 设置 GIF 图像
+		void SetGifImage(GifImage const& gif);
+
 		// 重新播放动画
 		void RestartAnimation();
 
-		inline LoopDoneCallback GetLoopDoneCallback() const			{ return loop_cb_; }
+		inline LoopDoneCallback	GetLoopDoneCallback() const			{ return loop_cb_; }
 
-		inline DoneCallback GetDoneCallback() const					{ return done_cb_; }
+		inline DoneCallback		GetDoneCallback() const				{ return done_cb_; }
+
+		inline GifImage const&	GetGifImage() const					{ return gif_; }
 
 		void OnRender(RenderTarget* rt) override;
 
@@ -103,15 +107,12 @@ namespace kiwano
 		Int32				total_loop_count_;
 		Int32				loop_count_;
 		UInt32				next_index_;
-		Duration			frame_delay_;
 		Duration			frame_elapsed_;
-		DisposalType		disposal_type_;
 		LoopDoneCallback	loop_cb_;
 		DoneCallback		done_cb_;
-		GifImage			image_;
-		Image				frame_;
-		Rect				frame_rect_;
-		Image				saved_frame_;
-		ImageRenderTarget	frame_rt_;
+		GifImage			gif_;
+		GifImage::Frame		frame_;
+		Texture				saved_frame_;
+		TextureRenderTarget	frame_rt_;
 	};
 }

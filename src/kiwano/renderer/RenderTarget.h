@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../base/time.h"
-#include "Image.h"
+#include "Texture.h"
 #include "Geometry.h"
 #include "TextLayout.h"
 #include "LayerArea.h"
@@ -28,6 +28,16 @@
 
 namespace kiwano
 {
+	// 文字抗锯齿模式
+	enum class TextAntialiasMode
+	{
+		Default,	// 系统默认
+		ClearType,	// ClearType 抗锯齿
+		GrayScale,	// 灰度抗锯齿
+		None		// 不启用抗锯齿
+	};
+
+
 	// 渲染目标
 	class KGE_API RenderTarget
 		: public noncopyable
@@ -103,14 +113,14 @@ namespace kiwano
 			Color const& fill_color
 		) const;
 
-		void DrawImage(
-			Image const& image,
+		void DrawTexture(
+			Texture const& texture,
 			Rect const& src_rect,
 			Rect const& dest_rect
 		) const;
 
-		void DrawImage(
-			Image const& image,
+		void DrawTexture(
+			Texture const& texture,
 			const Rect* src_rect = nullptr,
 			const Rect* dest_rect = nullptr
 		) const;
@@ -154,6 +164,10 @@ namespace kiwano
 			const Matrix3x2& matrix
 		);
 
+		void SetGlobalTransform(
+			const Matrix3x2* matrix
+		);
+
 		// 设置抗锯齿模式
 		void SetAntialiasMode(
 			bool enabled
@@ -161,9 +175,10 @@ namespace kiwano
 
 		// 设置文字抗锯齿模式
 		void SetTextAntialiasMode(
-			TextAntialias mode
+			TextAntialiasMode mode
 		);
 
+		// 检查边界是否在视区内
 		bool CheckVisibility(
 			Rect const& bounds,
 			Matrix3x2 const& transform
@@ -181,11 +196,13 @@ namespace kiwano
 
 		void IncreasePrimitivesCount() const;
 
-		inline Status const& GetStatus() const						{ return status_; }
+		inline Status const&				GetStatus() const			{ return status_; }
 
-		inline ComPtr<ID2D1RenderTarget> GetRenderTarget() const	{ KGE_ASSERT(render_target_); return render_target_; }
+		inline ComPtr<ID2D1RenderTarget>	GetRenderTarget() const		{ KGE_ASSERT(render_target_); return render_target_; }
 
-		inline ComPtr<ITextRenderer> GetTextRenderer() const		{ KGE_ASSERT(text_renderer_); return text_renderer_; }
+		inline ComPtr<ITextRenderer>		GetTextRenderer() const		{ KGE_ASSERT(text_renderer_); return text_renderer_; }
+
+		ComPtr<ID2D1StrokeStyle>			GetStrokeStyle(StrokeStyle style) const;
 
 	public:
 		RenderTarget();
@@ -200,25 +217,26 @@ namespace kiwano
 	protected:
 		Float32							opacity_;
 		bool							antialias_;
+		bool							fast_global_transform_;
 		mutable bool					collecting_status_;
 		mutable Status					status_;
-		TextAntialias					text_antialias_;
+		TextAntialiasMode				text_antialias_;
 		ComPtr<ITextRenderer>			text_renderer_;
 		ComPtr<ID2D1RenderTarget>		render_target_;
 		ComPtr<ID2D1SolidColorBrush>	default_brush_;
 		ComPtr<ID2D1Brush>				current_brush_;
 		ComPtr<ID2DDeviceResources>		device_resources_;
-		Matrix3x2						global_matrix_;
+		Matrix3x2						global_transform_;
 	};
 
 
 	// 位图渲染目标
-	class KGE_API ImageRenderTarget
+	class KGE_API TextureRenderTarget
 		: public RenderTarget
 	{
 	public:
-		ImageRenderTarget();
+		TextureRenderTarget();
 
-		Image GetOutput() const;
+		Texture GetOutput() const;
 	};
 }

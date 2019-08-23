@@ -20,6 +20,7 @@
 
 #include "Window.h"
 #include "Logger.h"
+#include "../platform/Application.h"
 
 #define WINDOW_FIXED_STYLE		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_RESIZABLE_STYLE	WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
@@ -39,6 +40,16 @@ namespace kiwano
 		void RestoreResolution(WCHAR* device_name);
 	}
 
+	WindowConfig::WindowConfig(String const& title, UInt32 width, UInt32 height, UInt32 icon, bool resizable, bool fullscreen)
+		: title(title)
+		, width(width)
+		, height(height)
+		, icon(icon)
+		, resizable(resizable)
+		, fullscreen(fullscreen)
+	{
+	}
+
 	Window::Window()
 		: handle_(nullptr)
 		, width_(0)
@@ -46,7 +57,7 @@ namespace kiwano
 		, device_name_(nullptr)
 		, is_fullscreen_(false)
 		, resizable_(false)
-		, mouse_cursor_(MouseCursor::Arrow)
+		, mouse_cursor_(CursorType::Arrow)
 	{
 	}
 
@@ -68,7 +79,7 @@ namespace kiwano
 		}
 	}
 
-	void Window::Init(String const& title, Int32 width, Int32 height, UInt32 icon, bool resizable, bool fullscreen, WNDPROC proc)
+	void Window::Init(WindowConfig const& config, WNDPROC proc)
 	{
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
@@ -84,9 +95,10 @@ namespace kiwano
 		wcex.lpszMenuName	= nullptr;
 		wcex.hCursor		= ::LoadCursorW(hinst, IDC_ARROW);
 
-		if (icon)
+		if (config.icon)
 		{
-			wcex.hIcon = (HICON)::LoadImageW(hinst, MAKEINTRESOURCE(icon), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+			wcex.hIcon = (HICON)::LoadImageW(hinst, MAKEINTRESOURCE(config.icon), IMAGE_ICON, 0, 0,
+				LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 		}
 
 		::RegisterClassExW(&wcex);
@@ -105,22 +117,24 @@ namespace kiwano
 		device_name_ = new WCHAR[len + 1];
 		lstrcpyW(device_name_, monitor_info_ex.szDevice);
 
+		UInt32 width = config.width;
+		UInt32 height = config.height;
 		Int32 left = -1;
 		Int32 top = -1;
 
-		resizable_ = resizable;
-		is_fullscreen_ = fullscreen;
+		resizable_ = config.resizable;
+		is_fullscreen_ = config.fullscreen;
 
 		if (is_fullscreen_)
 		{
 			top = monitor_info_ex.rcMonitor.top;
 			left = monitor_info_ex.rcMonitor.left;
 
-			if (width > monitor_info_ex.rcWork.right - left)
-				width = monitor_info_ex.rcWork.right - left;
+			if (width > static_cast<UInt32>(monitor_info_ex.rcWork.right - left))
+				width = static_cast<UInt32>(monitor_info_ex.rcWork.right - left);
 
-			if (height > monitor_info_ex.rcWork.bottom - top)
-				height = monitor_info_ex.rcWork.bottom - top;
+			if (height > static_cast<UInt32>(monitor_info_ex.rcWork.bottom - top))
+				height = static_cast<UInt32>(monitor_info_ex.rcWork.bottom - top);
 		}
 		else
 		{
@@ -145,7 +159,7 @@ namespace kiwano
 		handle_ = ::CreateWindowExW(
 			is_fullscreen_ ? WS_EX_TOPMOST : 0,
 			KGE_WND_CLASS_NAME,
-			title.c_str(),
+			config.title.c_str(),
 			GetWindowStyle(),
 			left,
 			top,
@@ -222,7 +236,7 @@ namespace kiwano
 		if (handle_)
 		{
 			HINSTANCE hinstance = GetModuleHandle(nullptr);
-			HICON icon = (HICON)::LoadImage(
+			HICON icon = (HICON)::LoadImageW(
 				hinstance,
 				MAKEINTRESOURCE(icon_resource),
 				IMAGE_ICON,
@@ -295,7 +309,7 @@ namespace kiwano
 		}
 	}
 
-	void Window::SetMouseCursor(MouseCursor cursor)
+	void Window::SetCursor(CursorType cursor)
 	{
 		mouse_cursor_ = cursor;
 	}
@@ -327,14 +341,14 @@ namespace kiwano
 		LPTSTR win32_cursor = IDC_ARROW;
 		switch (mouse_cursor_)
 		{
-		case MouseCursor::Arrow:		win32_cursor = IDC_ARROW; break;
-		case MouseCursor::TextInput:	win32_cursor = IDC_IBEAM; break;
-		case MouseCursor::SizeAll:		win32_cursor = IDC_SIZEALL; break;
-		case MouseCursor::SizeWE:		win32_cursor = IDC_SIZEWE; break;
-		case MouseCursor::SizeNS:		win32_cursor = IDC_SIZENS; break;
-		case MouseCursor::SizeNESW:		win32_cursor = IDC_SIZENESW; break;
-		case MouseCursor::SizeNWSE:		win32_cursor = IDC_SIZENWSE; break;
-		case MouseCursor::Hand:			win32_cursor = IDC_HAND; break;
+		case CursorType::Arrow:		win32_cursor = IDC_ARROW; break;
+		case CursorType::TextInput:	win32_cursor = IDC_IBEAM; break;
+		case CursorType::SizeAll:	win32_cursor = IDC_SIZEALL; break;
+		case CursorType::SizeWE:	win32_cursor = IDC_SIZEWE; break;
+		case CursorType::SizeNS:	win32_cursor = IDC_SIZENS; break;
+		case CursorType::SizeNESW:	win32_cursor = IDC_SIZENESW; break;
+		case CursorType::SizeNWSE:	win32_cursor = IDC_SIZENWSE; break;
+		case CursorType::Hand:		win32_cursor = IDC_HAND; break;
 		}
 		::SetCursor(::LoadCursorW(nullptr, win32_cursor));
 	}
@@ -417,4 +431,5 @@ namespace kiwano
 			::ChangeDisplaySettingsExW(device_name, NULL, NULL, 0, NULL);
 		}
 	}
+
 }

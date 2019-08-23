@@ -51,8 +51,8 @@ namespace kiwano
 
 		if (status_ == Status::NotStarted)
 		{
-			Init(target);
 			status_ = delay_.IsZero() ? Status::Started : Status::Delayed;
+			Init(target);
 		}
 
 		switch (status_)

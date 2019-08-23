@@ -31,7 +31,7 @@ namespace kiwano
 		, stroke_color_(Color::White)
 		, stroke_style_(StrokeStyle::Miter)
 	{
-		Renderer::GetInstance()->CreateImageRenderTarget(rt_);
+		Renderer::GetInstance()->CreateTextureRenderTarget(rt_);
 	}
 
 	Canvas::~Canvas()
@@ -53,12 +53,12 @@ namespace kiwano
 	{
 		UpdateCache();
 		
-		if (image_cached_.IsValid())
+		if (texture_cached_.IsValid())
 		{
 			PrepareRender(rt);
 
-			Rect bitmap_rect(0.f, 0.f, image_cached_.GetWidth(), image_cached_.GetHeight());
-			rt->DrawImage(image_cached_, bitmap_rect, bitmap_rect);
+			Rect bitmap_rect(0.f, 0.f, texture_cached_.GetWidth(), texture_cached_.GetHeight());
+			rt->DrawTexture(texture_cached_, bitmap_rect, bitmap_rect);
 		}
 	}
 
@@ -245,11 +245,11 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawImage(Image const& image, const Rect* src_rect, const Rect* dest_rect)
+	void Canvas::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
 	{
-		if (image.IsValid())
+		if (texture.IsValid())
 		{
-			rt_.DrawImage(image, src_rect, dest_rect);
+			rt_.DrawTexture(texture, src_rect, dest_rect);
 			cache_expired_ = true;
 		}
 	}
@@ -326,17 +326,17 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	Image Canvas::ExportToImage() const
+	Texture Canvas::ExportToTexture() const
 	{
 		UpdateCache();
-		return image_cached_;
+		return texture_cached_;
 	}
 
 	void Canvas::UpdateCache() const
 	{
 		if (cache_expired_)
 		{
-			image_cached_ = rt_.GetOutput();
+			texture_cached_ = rt_.GetOutput();
 			cache_expired_ = false;
 		}
 	}

@@ -127,7 +127,16 @@ namespace kiwano
 		}
 
 		debug_text_->SetText(ss.str());
-		SetSize(Size{ 20 + debug_text_->GetSize().x, 20 + debug_text_->GetSize().y });
+
+		if (debug_text_->GetWidth() > GetWidth() - 20)
+		{
+			SetWidth(20 + debug_text_->GetWidth());
+		}
+
+		if (debug_text_->GetHeight() > GetHeight() - 20)
+		{
+			SetHeight(20 + debug_text_->GetHeight());
+		}
 	}
 
 }

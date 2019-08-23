@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Frame.h"
-#include "../renderer/ImageCache.h"
+#include "../renderer/TextureCache.h"
 
 namespace kiwano
 {
@@ -37,17 +37,17 @@ namespace kiwano
 		Load(res);
 	}
 
-	Frame::Frame(Image const& image)
+	Frame::Frame(Texture const& texture)
 	{
-		SetImage(image);
+		SetTexture(texture);
 	}
 
 	bool Frame::Load(String const& file_path)
 	{
-		Image image = ImageCache::GetInstance()->AddOrGetImage(file_path);
-		if (image.IsValid())
+		Texture texture = TextureCache::GetInstance()->AddOrGetTexture(file_path);
+		if (texture.IsValid())
 		{
-			SetImage(image);
+			SetTexture(texture);
 			return true;
 		}
 		return false;
@@ -55,10 +55,10 @@ namespace kiwano
 
 	bool Frame::Load(Resource const& res)
 	{
-		Image image = ImageCache::GetInstance()->AddOrGetImage(res);
-		if (image.IsValid())
+		Texture texture = TextureCache::GetInstance()->AddOrGetTexture(res);
+		if (texture.IsValid())
 		{
-			SetImage(image);
+			SetTexture(texture);
 			return true;
 		}
 		return false;
@@ -66,9 +66,9 @@ namespace kiwano
 
 	void Frame::SetCropRect(Rect const& crop_rect)
 	{
-		if (image_.IsValid())
+		if (texture_.IsValid())
 		{
-			auto bitmap_size = image_.GetSize();
+			auto bitmap_size = texture_.GetSize();
 			crop_rect_.left_top.x = std::min(std::max(crop_rect.left_top.x, 0.f), bitmap_size.x);
 			crop_rect_.left_top.y = std::min(std::max(crop_rect.left_top.y, 0.f), bitmap_size.y);
 			crop_rect_.right_bottom.x = std::min(std::max(crop_rect.right_bottom.x, 0.f), bitmap_size.x);
@@ -76,14 +76,14 @@ namespace kiwano
 		}
 	}
 
-	void Frame::SetImage(Image const& image)
+	void Frame::SetTexture(Texture const& texture)
 	{
-		image_ = image;
-		if (image_.IsValid())
+		texture_ = texture;
+		if (texture_.IsValid())
 		{
 			crop_rect_.left_top.x = crop_rect_.left_top.y = 0;
-			crop_rect_.right_bottom.x = image_.GetWidth();
-			crop_rect_.right_bottom.y = image_.GetHeight();
+			crop_rect_.right_bottom.x = texture_.GetWidth();
+			crop_rect_.right_bottom.y = texture_.GetHeight();
 		}
 	}
 }

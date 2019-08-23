@@ -51,6 +51,8 @@ namespace kiwano
 		// 从多个资源加载字体
 		bool Load(Vector<Resource> const& res_arr);
 
+		bool IsValid() const;
+
 	public:
 		inline ComPtr<IDWriteFontCollection> GetFontCollection() const			{ return collection_; }
 

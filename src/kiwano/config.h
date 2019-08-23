@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// Compile-time options for Kiwano
+// Compile-time configurations for Kiwano
 //-----------------------------------------------------------------------------
 
 #pragma once
@@ -19,3 +19,6 @@
 
 //---- Define DirectX version. Defaults to using Direct3D11
 //#define KGE_USE_DIRECTX10
+
+//---- Define to enable DirectX debug layer
+//#define KGE_ENABLE_DX_DEBUG

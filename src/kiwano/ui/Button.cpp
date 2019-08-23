@@ -112,7 +112,7 @@ namespace kiwano
 			if (evt.type == Event::MouseHover)
 			{
 				SetStatus(Status::Hover);
-				Window::GetInstance()->SetMouseCursor(MouseCursor::Hand);
+				Window::GetInstance()->SetCursor(CursorType::Hand);
 
 				if (mouse_over_callback_)
 					mouse_over_callback_();
@@ -120,7 +120,7 @@ namespace kiwano
 			else if (evt.type == Event::MouseOut)
 			{
 				SetStatus(Status::Normal);
-				Window::GetInstance()->SetMouseCursor(MouseCursor::Arrow);
+				Window::GetInstance()->SetCursor(CursorType::Arrow);
 
 				if (mouse_out_callback_)
 					mouse_out_callback_();

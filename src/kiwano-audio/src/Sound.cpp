@@ -65,8 +65,7 @@ namespace kiwano
 				Close();
 			}
 
-			Transcoder transcoder;
-			HRESULT hr = transcoder.LoadMediaFile(file_path);
+			HRESULT hr = transcoder_.LoadMediaFile(file_path);
 
 			if (FAILED(hr))
 			{
@@ -74,7 +73,7 @@ namespace kiwano
 				return false;
 			}
 
-			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder.GetBuffer().format);
+			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder_.GetBuffer().format);
 			if (FAILED(hr))
 			{
 				Close();
@@ -94,8 +93,7 @@ namespace kiwano
 				Close();
 			}
 
-			Transcoder transcoder;
-			HRESULT hr = transcoder.LoadMediaResource(res);
+			HRESULT hr = transcoder_.LoadMediaResource(res);
 
 			if (FAILED(hr))
 			{
@@ -103,7 +101,7 @@ namespace kiwano
 				return false;
 			}
 
-			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder.GetBuffer().format);
+			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder_.GetBuffer().format);
 			if (FAILED(hr))
 			{
 				Close();

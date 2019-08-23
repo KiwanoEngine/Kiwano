@@ -20,12 +20,10 @@
 
 #include "Application.h"
 #include "modules.h"
-#include "../base/Window.h"
 #include "../base/Logger.h"
 #include "../base/input.h"
 #include "../base/Director.h"
-#include "../renderer/ImageCache.h"
-#include "../renderer/Renderer.h"
+#include "../renderer/TextureCache.h"
 #include "../utils/ResourceCache.h"
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext
@@ -43,17 +41,19 @@ namespace kiwano
 		Queue<FunctionToPerform> functions_to_perform_;
 	}
 
-	Options::Options(String const& title, Int32 width, Int32 height, UInt32 icon, Color clear_color, bool vsync, bool resizable, bool fullscreen, bool debug)
-		: title(title)
-		, width(width)
-		, height(height)
-		, icon(icon)
-		, clear_color(clear_color)
-		, vsync(vsync)
-		, resizable(resizable)
-		, fullscreen(fullscreen)
-		, debug(debug)
-	{}
+	Config::Config(String const& title, UInt32 width, UInt32 height, UInt32 icon)
+	{
+		window.title = title;
+		window.width = width;
+		window.height = height;
+		window.icon = icon;
+	}
+
+	Config::Config(WindowConfig const& wnd_config, RenderConfig const& render_config)
+	{
+		window = wnd_config;
+		render = render_config;
+	}
 }
 
 namespace kiwano
@@ -79,20 +79,10 @@ namespace kiwano
 		::CoUninitialize();
 	}
 
-	void Application::Init(const Options& options)
+	void Application::Init(const Config& config)
 	{
-		Window::GetInstance()->Init(
-			options.title,
-			options.width,
-			options.height,
-			options.icon,
-			options.resizable,
-			options.fullscreen,
-			Application::WndProc
-		);
-
-		Renderer::GetInstance()->SetClearColor(options.clear_color);
-		Renderer::GetInstance()->SetVSyncEnabled(options.vsync);
+		Window::GetInstance()->Init(config.window, Application::WndProc);
+		Renderer::GetInstance()->Init(config.render);
 
 		// Setup all components
 		for (Component* c : components_)
@@ -100,7 +90,7 @@ namespace kiwano
 			c->SetupComponent();
 		}
 
-		if (options.debug)
+		if (config.debug)
 		{
 			Director::GetInstance()->ShowDebugInfo(true);
 			Renderer::GetInstance()->SetCollectingStatus(true);
@@ -150,7 +140,7 @@ namespace kiwano
 		// Clear all resources
 		Director::GetInstance()->ClearStages();
 		ResourceCache::GetInstance()->Clear();
-		ImageCache::GetInstance()->Clear();
+		TextureCache::GetInstance()->Clear();
 
 		if (inited_)
 		{
@@ -166,7 +156,7 @@ namespace kiwano
 		// Destroy all instances
 		Director::DestroyInstance();
 		ResourceCache::DestroyInstance();
-		ImageCache::DestroyInstance();
+		TextureCache::DestroyInstance();
 		Input::DestroyInstance();
 		Renderer::DestroyInstance();
 		Window::DestroyInstance();
@@ -299,10 +289,11 @@ namespace kiwano
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam)
 	{
-		Application * app = reinterpret_cast<Application*>(static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA)));
-
-		if (!app)
+		Application* app = reinterpret_cast<Application*>(static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA)));
+		if (app == nullptr)
+		{
 			return ::DefWindowProcW(hwnd, msg, wparam, lparam);
+		}
 
 		// Handle Message
 		for (Component* c : app->components_)

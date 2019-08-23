@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ImageCache.h"
+#include "TextureCache.h"
 #include "Renderer.h"
 #include "../base/Logger.h"
 
@@ -33,12 +33,12 @@ namespace kiwano
 			return iter->second;
 		}
 
-		_Ty image;
-		if (image.Load(path))
+		_Ty texture;
+		if (texture.Load(path))
 		{
-			cache.insert(std::make_pair(hash, image));
+			cache.insert(std::make_pair(hash, texture));
 		}
-		return image;
+		return texture;
 	}
 
 	template <typename _CacheTy>
@@ -51,58 +51,58 @@ namespace kiwano
 		}
 	}
 
-	ImageCache::ImageCache()
+	TextureCache::TextureCache()
 	{
 	}
 
-	ImageCache::~ImageCache()
+	TextureCache::~TextureCache()
 	{
 	}
 
-	Image ImageCache::AddOrGetImage(String const& file_path)
+	Texture TextureCache::AddOrGetTexture(String const& file_path)
 	{
-		return CreateOrGetCache<Image>(image_cache_, file_path, file_path.hash());
+		return CreateOrGetCache<Texture>(texture_cache_, file_path, file_path.hash());
 	}
 
-	Image ImageCache::AddOrGetImage(Resource const& res)
+	Texture TextureCache::AddOrGetTexture(Resource const& res)
 	{
-		return CreateOrGetCache<Image>(image_cache_, res, res.GetId());
+		return CreateOrGetCache<Texture>(texture_cache_, res, res.GetId());
 	}
 
-	GifImage ImageCache::AddOrGetGifImage(String const& file_path)
+	GifImage TextureCache::AddOrGetGifImage(String const& file_path)
 	{
-		return CreateOrGetCache<GifImage>(gif_image_cache_, file_path, file_path.hash());
+		return CreateOrGetCache<GifImage>(gif_texture_cache_, file_path, file_path.hash());
 	}
 
-	GifImage ImageCache::AddOrGetGifImage(Resource const& res)
+	GifImage TextureCache::AddOrGetGifImage(Resource const& res)
 	{
-		return CreateOrGetCache<GifImage>(gif_image_cache_, res, res.GetId());
+		return CreateOrGetCache<GifImage>(gif_texture_cache_, res, res.GetId());
 	}
 
-	void ImageCache::RemoveImage(String const& file_path)
+	void TextureCache::RemoveTexture(String const& file_path)
 	{
-		RemoveCache(image_cache_, file_path.hash());
+		RemoveCache(texture_cache_, file_path.hash());
 	}
 
-	void ImageCache::RemoveImage(Resource const& res)
+	void TextureCache::RemoveTexture(Resource const& res)
 	{
-		RemoveCache(image_cache_, res.GetId());
+		RemoveCache(texture_cache_, res.GetId());
 	}
 
-	void ImageCache::RemoveGifImage(String const& file_path)
+	void TextureCache::RemoveGifImage(String const& file_path)
 	{
-		RemoveCache(gif_image_cache_, file_path.hash());
+		RemoveCache(gif_texture_cache_, file_path.hash());
 	}
 
-	void ImageCache::RemoveGifImage(Resource const& res)
+	void TextureCache::RemoveGifImage(Resource const& res)
 	{
-		RemoveCache(gif_image_cache_, res.GetId());
+		RemoveCache(gif_texture_cache_, res.GetId());
 	}
 
-	void ImageCache::Clear()
+	void TextureCache::Clear()
 	{
-		image_cache_.clear();
-		gif_image_cache_.clear();
+		texture_cache_.clear();
+		gif_texture_cache_.clear();
 	}
 
 }

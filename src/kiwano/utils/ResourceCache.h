@@ -44,7 +44,7 @@ namespace kiwano
 		bool LoadFromXmlFile(String const& file_path);
 
 		// 从 XML 文档对象加载资源信息
-		bool LoadFromXml(tinyxml2::XMLDocument* doc);
+		bool LoadFromXml(const tinyxml2::XMLDocument* doc);
 
 		// 添加帧图像
 		bool AddFrame(String const& id, String const& file_path);
@@ -57,7 +57,7 @@ namespace kiwano
 
 		// 添加序列帧
 		// 按行列数裁剪图片
-		UInt32 AddFrameSequence(String const& id, String const& file_path, Int32 cols, Int32 rows = 1);
+		UInt32 AddFrameSequence(String const& id, String const& file_path, Int32 cols, Int32 rows = 1, Float32 padding_x = 0, Float32 padding_y = 0);
 
 		// 添加序列帧
 		UInt32 AddFrameSequence(String const& id, FrameSequencePtr frames);
@@ -65,11 +65,26 @@ namespace kiwano
 		// 添加对象
 		bool AddObjectBase(String const& id, ObjectBasePtr obj);
 
+		// 添加 GIF 图像
+		bool AddGifImage(String const& id, GifImage const& gif);
+
+		// 添加 GIF 图像
+		bool AddGifImage(String const& id, String const& file_path);
+
+		// 添加字体集
+		bool AddFontCollection(String const& id, FontCollection const& collection);
+
 		// 获取帧图像
 		FramePtr GetFrame(String const& id) const;
 
 		// 获取序列帧
 		FrameSequencePtr GetFrameSequence(String const& id) const;
+
+		// 获取 GIF 图像
+		GifImage GetGifImage(String const& id) const;
+
+		// 获取字体集
+		FontCollection GetFontCollection(String const& id) const;
 
 		// 删除指定资源
 		void Delete(String const& id);
@@ -93,5 +108,8 @@ namespace kiwano
 
 	protected:
 		UnorderedMap<String, ObjectBasePtr> cache_;
+
+		UnorderedMap<String, GifImage> gif_cache_;
+		UnorderedMap<String, FontCollection> font_collection_cache_;
 	};
 }

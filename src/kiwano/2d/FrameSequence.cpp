@@ -54,8 +54,8 @@ namespace kiwano
 		else
 		{
 			frames_.reserve(frames_.size() + frames.size());
-			for (const auto& image : frames)
-				AddFrame(image);
+			for (const auto& texture : frames)
+				AddFrame(texture);
 		}
 	}
 

@@ -23,32 +23,27 @@
 #include "../base/time.h"
 #include "../base/Component.h"
 #include "../base/Event.hpp"
-#include "../renderer/Color.h"
+#include "../base/Window.h"
+#include "../renderer/Renderer.h"
 
 namespace kiwano
 {
-	struct Options
+	struct Config
 	{
-		String	title;				// 标题
-		Int32	width;				// 宽度
-		Int32	height;				// 高度
-		UInt32	icon;				// 图标资源 ID
-		Color	clear_color;		// 清屏颜色
-		bool	vsync;				// 垂直同步
-		bool	resizable;			// 窗口大小可拉伸
-		bool	fullscreen;			// 全屏模式
-		bool	debug;				// 调试模式
+		WindowConfig window;	// 窗口设置
+		RenderConfig render;	// 渲染设置
+		bool debug;				// 调试模式
 
-		Options(
+		Config(
 			String const& title	= L"Kiwano Game",
-			Int32 width			= 640,
-			Int32 height		= 480,
-			UInt32 icon			= 0,
-			Color clear_color	= Color::Black,
-			bool vsync			= true,
-			bool resizable		= false,
-			bool fullscreen		= false,
-			bool debug			= false
+			UInt32 width		= 640,
+			UInt32 height		= 480,
+			UInt32 icon			= 0
+		);
+
+		Config(
+			WindowConfig const& wnd_config,
+			RenderConfig const& render_config = RenderConfig()
 		);
 	};
 
@@ -64,7 +59,7 @@ namespace kiwano
 
 		// 初始化
 		void Init(
-			Options const& options = Options{}
+			Config const& config = Config()
 		);
 
 		// 初始化成功时
