@@ -38,6 +38,26 @@ namespace kiwano
 		SizeWE,
 	};
 
+	// 窗口设置
+	struct WindowConfig
+	{
+		String	title;				// 标题
+		UInt32	width;				// 宽度
+		UInt32	height;				// 高度
+		UInt32	icon;				// 图标资源 ID
+		bool	resizable;			// 窗口大小可拉伸
+		bool	fullscreen;			// 全屏模式
+
+		WindowConfig(
+			String const& title = L"Kiwano Game",
+			UInt32 width = 640,
+			UInt32 height = 480,
+			UInt32 icon = 0,
+			bool resizable = false,
+			bool fullscreen = false
+		);
+	};
+
 
 	// 窗口
 	class KGE_API Window
@@ -74,15 +94,7 @@ namespace kiwano
 		void SetCursor(CursorType cursor);
 
 	public:
-		void Init(
-			String const&	title,
-			Int32			width,
-			Int32			height,
-			UInt32			icon,
-			bool			resizable,
-			bool			fullscreen,
-			WNDPROC			proc
-		);
+		void Init(WindowConfig const& config, WNDPROC proc);
 
 		void Prepare();
 

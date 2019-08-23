@@ -20,6 +20,7 @@
 
 #include "Window.h"
 #include "Logger.h"
+#include "../platform/Application.h"
 
 #define WINDOW_FIXED_STYLE		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_RESIZABLE_STYLE	WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
@@ -37,6 +38,16 @@ namespace kiwano
 		void ChangeFullScreenResolution(Int32 width, Int32 height, WCHAR* device_name);
 
 		void RestoreResolution(WCHAR* device_name);
+	}
+
+	WindowConfig::WindowConfig(String const& title, UInt32 width, UInt32 height, UInt32 icon, bool resizable, bool fullscreen)
+		: title(title)
+		, width(width)
+		, height(height)
+		, icon(icon)
+		, resizable(resizable)
+		, fullscreen(fullscreen)
+	{
 	}
 
 	Window::Window()
@@ -68,7 +79,7 @@ namespace kiwano
 		}
 	}
 
-	void Window::Init(String const& title, Int32 width, Int32 height, UInt32 icon, bool resizable, bool fullscreen, WNDPROC proc)
+	void Window::Init(WindowConfig const& config, WNDPROC proc)
 	{
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
@@ -84,9 +95,10 @@ namespace kiwano
 		wcex.lpszMenuName	= nullptr;
 		wcex.hCursor		= ::LoadCursorW(hinst, IDC_ARROW);
 
-		if (icon)
+		if (config.icon)
 		{
-			wcex.hIcon = (HICON)::LoadImageW(hinst, MAKEINTRESOURCE(icon), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+			wcex.hIcon = (HICON)::LoadImageW(hinst, MAKEINTRESOURCE(config.icon), IMAGE_ICON, 0, 0,
+				LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 		}
 
 		::RegisterClassExW(&wcex);
@@ -105,22 +117,24 @@ namespace kiwano
 		device_name_ = new WCHAR[len + 1];
 		lstrcpyW(device_name_, monitor_info_ex.szDevice);
 
+		UInt32 width = config.width;
+		UInt32 height = config.height;
 		Int32 left = -1;
 		Int32 top = -1;
 
-		resizable_ = resizable;
-		is_fullscreen_ = fullscreen;
+		resizable_ = config.resizable;
+		is_fullscreen_ = config.fullscreen;
 
 		if (is_fullscreen_)
 		{
 			top = monitor_info_ex.rcMonitor.top;
 			left = monitor_info_ex.rcMonitor.left;
 
-			if (width > monitor_info_ex.rcWork.right - left)
-				width = monitor_info_ex.rcWork.right - left;
+			if (width > static_cast<UInt32>(monitor_info_ex.rcWork.right - left))
+				width = static_cast<UInt32>(monitor_info_ex.rcWork.right - left);
 
-			if (height > monitor_info_ex.rcWork.bottom - top)
-				height = monitor_info_ex.rcWork.bottom - top;
+			if (height > static_cast<UInt32>(monitor_info_ex.rcWork.bottom - top))
+				height = static_cast<UInt32>(monitor_info_ex.rcWork.bottom - top);
 		}
 		else
 		{
@@ -145,7 +159,7 @@ namespace kiwano
 		handle_ = ::CreateWindowExW(
 			is_fullscreen_ ? WS_EX_TOPMOST : 0,
 			KGE_WND_CLASS_NAME,
-			title.c_str(),
+			config.title.c_str(),
 			GetWindowStyle(),
 			left,
 			top,
@@ -417,4 +431,5 @@ namespace kiwano
 			::ChangeDisplaySettingsExW(device_name, NULL, NULL, 0, NULL);
 		}
 	}
+
 }

@@ -189,14 +189,30 @@ namespace kiwano
 	public:
 		static HRESULT Create(ID2DDeviceResources** device_resources);
 
-		virtual HRESULT CreateBitmapFromFile(
-			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
-			_In_ String const& file_path
+		virtual HRESULT CreateBitmapConverter(
+			_Out_ ComPtr<IWICFormatConverter>& converter,
+			_In_opt_ ComPtr<IWICBitmapSource> source,
+			_In_ REFWICPixelFormatGUID format,
+			WICBitmapDitherType dither,
+			_In_opt_ ComPtr<IWICPalette> palette,
+			double alpha_threshold_percent,
+			WICBitmapPaletteType palette_translate
 		) = 0;
 
-		virtual HRESULT CreateBitmapFromResource(
+		virtual HRESULT CreateBitmapFromConverter(
 			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
-			_In_ Resource const& res
+			_In_opt_ const D2D1_BITMAP_PROPERTIES* properties,
+			_In_ ComPtr<IWICFormatConverter> converter
+		) = 0;
+
+		virtual HRESULT CreateBitmapDecoderFromFile(
+			_Out_ ComPtr<IWICBitmapDecoder>& decoder,
+			const String& file_path
+		) = 0;
+
+		virtual HRESULT CreateBitmapDecoderFromResource(
+			_Out_ ComPtr<IWICBitmapDecoder>& decoder,
+			const Resource& resource
 		) = 0;
 
 		virtual HRESULT CreateTextFormat(

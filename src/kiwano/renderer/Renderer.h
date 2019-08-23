@@ -39,6 +39,18 @@ namespace kiwano
 	typedef ID3D11DeviceResources ID3DDeviceResources;
 #endif
 
+	// 渲染设置
+	struct RenderConfig
+	{
+		Color	clear_color;	// 清屏颜色
+		bool	vsync;			// 垂直同步
+
+		RenderConfig(
+			Color clear_color	= Color::Black,
+			bool vsync			= true
+		);
+	};
+
 	// 分辨率模式
 	// 分辨率模式决定了将画面渲染到视区上的方式
 	// Fixed (固定): 分辨率不随视区改变, 且画面始终与视区边界对齐（默认）
@@ -89,17 +101,23 @@ namespace kiwano
 
 		void CreateTexture(
 			Texture& texture,
-			Resource const& res
+			Resource const& resource
 		);
 
 		void CreateGifImage(
-			GifImage& texture,
+			GifImage& gif,
 			String const& file_path
 		);
 
 		void CreateGifImage(
-			GifImage& texture,
-			Resource const& res
+			GifImage& gif,
+			Resource const& resource
+		);
+
+		void CreateGifImageFrame(
+			GifImage::Frame& frame,
+			GifImage const& gif,
+			UInt32 frame_index
 		);
 
 		void CreateFontCollection(
@@ -156,6 +174,8 @@ namespace kiwano
 		);
 
 	public:
+		void Init(RenderConfig const& config);
+
 		void SetupComponent() override;
 
 		void DestroyComponent() override;

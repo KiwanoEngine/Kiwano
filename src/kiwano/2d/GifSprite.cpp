@@ -30,7 +30,6 @@ namespace kiwano
 		, next_index_(0)
 		, total_loop_count_(1)
 		, loop_count_(0)
-		, disposal_type_(DisposalType::Unknown)
 	{
 	}
 
@@ -45,9 +44,9 @@ namespace kiwano
 		Load(res);
 	}
 
-	GifSprite::GifSprite(GifImage texture)
+	GifSprite::GifSprite(GifImage gif)
 	{
-		Load(texture);
+		Load(gif);
 	}
 
 	bool GifSprite::Load(String const& file_path)
@@ -62,24 +61,24 @@ namespace kiwano
 		return Load(texture);
 	}
 
-	bool GifSprite::Load(GifImage texture)
+	bool GifSprite::Load(GifImage gif)
 	{
-		if (texture.IsValid())
+		if (gif.IsValid())
 		{
-			texture_ = texture;
+			gif_ = gif;
 
 			next_index_ = 0;
 			loop_count_ = 0;
-			disposal_type_ = DisposalType::None;
+			frame_.disposal_type = GifImage::DisposalType::None;
 
-			SetSize(Size{ static_cast<Float32>(texture_.GetWidthInPixels()), static_cast<Float32>(texture_.GetHeightInPixels()) });
+			SetSize(Size{ static_cast<Float32>(gif_.GetWidthInPixels()), static_cast<Float32>(gif_.GetHeightInPixels()) });
 
 			if (!frame_rt_.IsValid())
 			{
 				Renderer::GetInstance()->CreateTextureRenderTarget(frame_rt_);
 			}
 
-			if (texture_.GetFramesCount() > 0)
+			if (gif_.GetFramesCount() > 0)
 			{
 				ComposeNextFrame();
 			}
@@ -90,11 +89,11 @@ namespace kiwano
 
 	void GifSprite::OnRender(RenderTarget* rt)
 	{
-		if (frame_.IsValid() && rt->CheckVisibility(GetBounds(), GetTransformMatrix()))
+		if (frame_.raw.IsValid() && rt->CheckVisibility(GetBounds(), GetTransformMatrix()))
 		{
 			PrepareRender(rt);
 
-			rt->DrawTexture(frame_);
+			rt->DrawTexture(frame_.raw, &frame_.rect, nullptr);
 		}
 	}
 
@@ -102,16 +101,22 @@ namespace kiwano
 	{
 		Actor::Update(dt);
 
-		if (texture_.IsValid() && animating_)
+		if (gif_.IsValid() && animating_)
 		{
 			frame_elapsed_ += dt;
-			if (frame_delay_ <= frame_elapsed_)
+			if (frame_.delay <= frame_elapsed_)
 			{
-				frame_delay_ -= frame_elapsed_;
+				frame_.delay -= frame_elapsed_;
 				frame_elapsed_ = 0;
 				ComposeNextFrame();
 			}
 		}
+	}
+
+	void GifSprite::SetGifImage(GifImage const& gif)
+	{
+		gif_ = gif;
+		RestartAnimation();
 	}
 
 	void GifSprite::RestartAnimation()
@@ -119,7 +124,7 @@ namespace kiwano
 		animating_ = true;
 		next_index_ = 0;
 		loop_count_ = 0;
-		disposal_type_ = DisposalType::None;
+		frame_.disposal_type = GifImage::DisposalType::None;
 	}
 
 	void GifSprite::ComposeNextFrame()
@@ -130,27 +135,27 @@ namespace kiwano
 			{
 				DisposeCurrentFrame();
 				OverlayNextFrame();
-			} while (frame_delay_.IsZero() && !IsLastFrame());
+			} while (frame_.delay.IsZero() && !IsLastFrame());
 
-			animating_ = (!EndOfAnimation() && texture_.GetFramesCount() > 1);
+			animating_ = (!EndOfAnimation() && gif_.GetFramesCount() > 1);
 		}
 	}
 
 	void GifSprite::DisposeCurrentFrame()
 	{
-		switch (disposal_type_)
+		switch (frame_.disposal_type)
 		{
-		case DisposalType::Unknown:
-		case DisposalType::None:
+		case GifImage::DisposalType::Unknown:
+		case GifImage::DisposalType::None:
 			break;
 
-		case DisposalType::Background:
+		case GifImage::DisposalType::Background:
 		{
 			ClearCurrentFrameArea();
 			break;
 		}
 
-		case DisposalType::Previous:
+		case GifImage::DisposalType::Previous:
 		{
 			RestoreSavedFrame();
 			break;
@@ -163,43 +168,30 @@ namespace kiwano
 
 	void GifSprite::OverlayNextFrame()
 	{
-		Texture raw_texture;
-
-		HRESULT hr = texture_.GetRawFrame(next_index_, raw_texture, frame_rect_, frame_delay_, disposal_type_);
+		Renderer::GetInstance()->CreateGifImageFrame(frame_, gif_, next_index_);
 		
-		if (SUCCEEDED(hr))
+		if (frame_.disposal_type == GifImage::DisposalType::Previous)
 		{
-			if (disposal_type_ == DisposalType::Previous)
-			{
-				SaveComposedFrame();
-			}
+			SaveComposedFrame();
 		}
 
-		if (SUCCEEDED(hr))
+		if (frame_rt_.IsValid())
 		{
 			frame_rt_.BeginDraw();
 
 			if (next_index_ == 0)
 			{
-				// ÖØÐÂ»æÖÆ±³¾°
-				frame_rt_.Clear(texture_.GetBackgroundColor());
 				loop_count_++;
 			}
 
-			frame_rt_.DrawTexture(raw_texture, nullptr, &frame_rect_);
+			frame_rt_.DrawTexture(frame_.raw, nullptr, &frame_.rect);
 			frame_rt_.EndDraw();
-		}
 
-		if (SUCCEEDED(hr))
-		{
 			Texture frame_to_render = frame_rt_.GetOutput();
-
-			hr = frame_to_render.IsValid() ? S_OK : E_FAIL;
-
-			if (SUCCEEDED(hr))
+			if (frame_to_render.IsValid())
 			{
-				frame_ = frame_to_render;
-				next_index_ = (++next_index_) % texture_.GetFramesCount();
+				frame_.raw = frame_to_render;
+				next_index_ = (++next_index_) % gif_.GetFramesCount();
 			}
 		}
 
@@ -212,8 +204,6 @@ namespace kiwano
 		{
 			done_cb_();
 		}
-
-		ThrowIfFailed(hr);
 	}
 
 	void GifSprite::SaveComposedFrame()
@@ -270,8 +260,8 @@ namespace kiwano
 	{
 		frame_rt_.BeginDraw();
 
-		frame_rt_.PushClipRect(frame_rect_);
-		frame_rt_.Clear(texture_.GetBackgroundColor());
+		frame_rt_.PushClipRect(frame_.rect);
+		frame_rt_.Clear();
 		frame_rt_.PopClipRect();
 
 		return frame_rt_.EndDraw();

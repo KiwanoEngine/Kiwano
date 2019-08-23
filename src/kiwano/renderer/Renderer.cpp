@@ -25,6 +25,12 @@
 
 namespace kiwano
 {
+	RenderConfig::RenderConfig(Color clear_color, bool vsync)
+		: clear_color(clear_color)
+		, vsync(vsync)
+	{
+	}
+
 	Renderer::Renderer()
 		: hwnd_(nullptr)
 		, vsync_(true)
@@ -35,6 +41,12 @@ namespace kiwano
 
 	Renderer::~Renderer()
 	{
+	}
+
+	void Renderer::Init(RenderConfig const& config)
+	{
+		SetClearColor(config.clear_color);
+		SetVSyncEnabled(config.vsync);
 	}
 
 	void Renderer::SetupComponent()
@@ -253,14 +265,50 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
+		if (!FileUtil::ExistsFile(file_path))
+		{
+			KGE_WARNING_LOG(L"Texture file '%s' not found!", file_path.c_str());
+			hr = E_FAIL;
+		}
+
 		if (SUCCEEDED(hr))
 		{
-			ComPtr<ID2D1Bitmap> bitmap;
-			hr = d2d_res_->CreateBitmapFromFile(bitmap, file_path);
+			ComPtr<IWICBitmapDecoder> decoder;
+			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, file_path);
 
 			if (SUCCEEDED(hr))
 			{
-				texture.SetBitmap(bitmap);
+				ComPtr<IWICBitmapFrameDecode> source;
+				hr = decoder->GetFrame(0, &source);
+
+				if (SUCCEEDED(hr))
+				{
+					ComPtr<IWICFormatConverter> converter;
+					hr = d2d_res_->CreateBitmapConverter(
+						converter,
+						source,
+						GUID_WICPixelFormat32bppPBGRA,
+						WICBitmapDitherTypeNone,
+						nullptr,
+						0.f,
+						WICBitmapPaletteTypeMedianCut
+					);
+
+					if (SUCCEEDED(hr))
+					{
+						ComPtr<ID2D1Bitmap> bitmap;
+						hr = d2d_res_->CreateBitmapFromConverter(
+							bitmap,
+							nullptr,
+							converter
+						);
+
+						if (SUCCEEDED(hr))
+						{
+							texture.SetBitmap(bitmap);
+						}
+					}
+				}
 			}
 		}
 
@@ -270,7 +318,7 @@ namespace kiwano
 		}
 	}
 
-	void Renderer::CreateTexture(Texture& texture, Resource const& res)
+	void Renderer::CreateTexture(Texture& texture, Resource const& resource)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -280,12 +328,42 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			ComPtr<ID2D1Bitmap> bitmap;
-			hr = d2d_res_->CreateBitmapFromResource(bitmap, res);
+			ComPtr<IWICBitmapDecoder> decoder;
+			hr = d2d_res_->CreateBitmapDecoderFromResource(decoder, resource);
 
 			if (SUCCEEDED(hr))
 			{
-				texture.SetBitmap(bitmap);
+				ComPtr<IWICBitmapFrameDecode> source;
+				hr = decoder->GetFrame(0, &source);
+
+				if (SUCCEEDED(hr))
+				{
+					ComPtr<IWICFormatConverter> converter;
+					hr = d2d_res_->CreateBitmapConverter(
+						converter,
+						source,
+						GUID_WICPixelFormat32bppPBGRA,
+						WICBitmapDitherTypeNone,
+						nullptr,
+						0.f,
+						WICBitmapPaletteTypeMedianCut
+					);
+
+					if (SUCCEEDED(hr))
+					{
+						ComPtr<ID2D1Bitmap> bitmap;
+						hr = d2d_res_->CreateBitmapFromConverter(
+							bitmap,
+							nullptr,
+							converter
+						);
+
+						if (SUCCEEDED(hr))
+						{
+							texture.SetBitmap(bitmap);
+						}
+					}
+				}
 			}
 		}
 
@@ -295,7 +373,7 @@ namespace kiwano
 		}
 	}
 
-	void Renderer::CreateGifImage(GifImage& texture, String const& file_path)
+	void Renderer::CreateGifImage(GifImage& gif, String const& file_path)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -312,17 +390,11 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			ComPtr<IWICBitmapDecoder> decoder;
-			hr = d2d_res_->GetWICImagingFactory()->CreateDecoderFromFilename(
-				file_path.c_str(),
-				nullptr,
-				GENERIC_READ,
-				WICDecodeMetadataCacheOnLoad,
-				&decoder
-			);
+			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, file_path);
 
 			if (SUCCEEDED(hr))
 			{
-				texture.SetDecoder(decoder);
+				gif.SetDecoder(decoder);
 			}
 		}
 
@@ -332,7 +404,7 @@ namespace kiwano
 		}
 	}
 
-	void Renderer::CreateGifImage(GifImage& texture, Resource const& res)
+	void Renderer::CreateGifImage(GifImage& gif, Resource const& resource)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -340,43 +412,187 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		Resource::Data res_data = res.GetData();
-
-		hr = res_data ? S_OK : E_FAIL;
-
 		if (SUCCEEDED(hr))
 		{
-			ComPtr<IWICStream> stream;
-			hr = d2d_res_->GetWICImagingFactory()->CreateStream(&stream);
+			ComPtr<IWICBitmapDecoder> decoder;
+			hr = d2d_res_->CreateBitmapDecoderFromResource(decoder, resource);
 
 			if (SUCCEEDED(hr))
 			{
-				hr = stream->InitializeFromMemory(
-					static_cast<WICInProcPointer>(res_data.buffer),
-					res_data.size
-				);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				ComPtr<IWICBitmapDecoder> decoder;
-				hr = d2d_res_->GetWICImagingFactory()->CreateDecoderFromStream(
-					stream.get(),
-					nullptr,
-					WICDecodeMetadataCacheOnLoad,
-					&decoder
-				);
-
-				if (SUCCEEDED(hr))
-				{
-					texture.SetDecoder(decoder);
-				}
+				gif.SetDecoder(decoder);
 			}
 		}
 
 		if (FAILED(hr))
 		{
 			KGE_WARNING_LOG(L"Load GIF texture failed with HRESULT of %08X!", hr);
+		}
+	}
+
+	void Renderer::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, UInt32 frame_index)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (gif.GetDecoder() == nullptr)
+		{
+			hr = E_INVALIDARG;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ComPtr<IWICBitmapFrameDecode> wic_frame;
+			HRESULT hr = gif.GetDecoder()->GetFrame(frame_index, &wic_frame);
+
+			if (SUCCEEDED(hr))
+			{
+				ComPtr<IWICFormatConverter> converter;
+				d2d_res_->CreateBitmapConverter(
+					converter,
+					wic_frame,
+					GUID_WICPixelFormat32bppPBGRA,
+					WICBitmapDitherTypeNone,
+					nullptr,
+					0.f,
+					WICBitmapPaletteTypeCustom
+				);
+
+				if (SUCCEEDED(hr))
+				{
+					ComPtr<ID2D1Bitmap> raw_bitmap;
+					hr = d2d_res_->CreateBitmapFromConverter(
+						raw_bitmap,
+						nullptr,
+						converter
+					);
+
+					if (SUCCEEDED(hr))
+					{
+						frame.raw.SetBitmap(raw_bitmap);
+					}
+				}
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				PROPVARIANT prop_val;
+				PropVariantInit(&prop_val);
+
+				// Get Metadata Query Reader from the frame
+				ComPtr<IWICMetadataQueryReader> metadata_reader;
+				hr = wic_frame->GetMetadataQueryReader(&metadata_reader);
+
+				// Get the Metadata for the current frame
+				if (SUCCEEDED(hr))
+				{
+					hr = metadata_reader->GetMetadataByName(L"/imgdesc/Left", &prop_val);
+					if (SUCCEEDED(hr))
+					{
+						hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+						if (SUCCEEDED(hr))
+						{
+							frame.rect.left_top.x = static_cast<Float32>(prop_val.uiVal);
+						}
+						PropVariantClear(&prop_val);
+					}
+				}
+
+				if (SUCCEEDED(hr))
+				{
+					hr = metadata_reader->GetMetadataByName(L"/imgdesc/Top", &prop_val);
+					if (SUCCEEDED(hr))
+					{
+						hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+						if (SUCCEEDED(hr))
+						{
+							frame.rect.left_top.y = static_cast<Float32>(prop_val.uiVal);
+						}
+						PropVariantClear(&prop_val);
+					}
+				}
+
+				if (SUCCEEDED(hr))
+				{
+					hr = metadata_reader->GetMetadataByName(L"/imgdesc/Width", &prop_val);
+					if (SUCCEEDED(hr))
+					{
+						hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+						if (SUCCEEDED(hr))
+						{
+							frame.rect.right_bottom.x = frame.rect.left_top.x + static_cast<Float32>(prop_val.uiVal);
+						}
+						PropVariantClear(&prop_val);
+					}
+				}
+
+				if (SUCCEEDED(hr))
+				{
+					hr = metadata_reader->GetMetadataByName(L"/imgdesc/Height", &prop_val);
+					if (SUCCEEDED(hr))
+					{
+						hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+						if (SUCCEEDED(hr))
+						{
+							frame.rect.right_bottom.y = frame.rect.left_top.y + static_cast<Float32>(prop_val.uiVal);
+						}
+						PropVariantClear(&prop_val);
+					}
+				}
+
+				if (SUCCEEDED(hr))
+				{
+					hr = metadata_reader->GetMetadataByName(L"/grctlext/Delay", &prop_val);
+
+					if (SUCCEEDED(hr))
+					{
+						hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
+
+						if (SUCCEEDED(hr))
+						{
+							UInt32 udelay = 0;
+							hr = UIntMult(prop_val.uiVal, 10, &udelay);
+							if (SUCCEEDED(hr))
+							{
+								frame.delay.SetMilliseconds(static_cast<long>(udelay));
+							}
+						}
+						PropVariantClear(&prop_val);
+					}
+					else
+					{
+						frame.delay = 0;
+					}
+				}
+
+				if (SUCCEEDED(hr))
+				{
+					hr = metadata_reader->GetMetadataByName(L"/grctlext/Disposal", &prop_val);
+
+					if (SUCCEEDED(hr))
+					{
+						hr = (prop_val.vt == VT_UI1) ? S_OK : E_FAIL;
+						if (SUCCEEDED(hr))
+						{
+							frame.disposal_type = GifImage::DisposalType(prop_val.bVal);
+						}
+						::PropVariantClear(&prop_val);
+					}
+					else
+					{
+						frame.disposal_type = GifImage::DisposalType::Unknown;
+					}
+				}
+
+				::PropVariantClear(&prop_val);
+			}
+		}
+
+		if (FAILED(hr))
+		{
+			KGE_WARNING_LOG(L"Load GIF frame failed with HRESULT of %08X!", hr);
 		}
 	}
 

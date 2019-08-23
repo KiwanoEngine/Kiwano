@@ -20,7 +20,6 @@
 
 #include "D2DDeviceResources.h"
 #include "../../base/Logger.h"
-#include "../../utils/FileUtil.h"
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -38,14 +37,30 @@ namespace kiwano
 		HRESULT CreateDeviceIndependentResources();
 
 	public:
-		HRESULT CreateBitmapFromFile(
-			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
-			_In_ String const& file_path
+		HRESULT CreateBitmapConverter(
+			_Out_ ComPtr<IWICFormatConverter>& converter,
+			_In_opt_ ComPtr<IWICBitmapSource> source,
+			_In_ REFWICPixelFormatGUID format,
+			WICBitmapDitherType dither,
+			_In_opt_ ComPtr<IWICPalette> palette,
+			double alpha_threshold_percent,
+			WICBitmapPaletteType palette_translate
 		) override;
 
-		HRESULT CreateBitmapFromResource(
+		HRESULT CreateBitmapFromConverter(
 			_Out_ ComPtr<ID2D1Bitmap>& bitmap,
-			_In_ Resource const& res
+			_In_opt_ const D2D1_BITMAP_PROPERTIES* properties,
+			_In_ ComPtr<IWICFormatConverter> converter
+		) override;
+
+		HRESULT CreateBitmapDecoderFromFile(
+			_Out_ ComPtr<IWICBitmapDecoder>& decoder,
+			const String& file_path
+		) override;
+
+		HRESULT CreateBitmapDecoderFromResource(
+			_Out_ ComPtr<IWICBitmapDecoder>& decoder,
+			const Resource& resource
 		) override;
 
 		HRESULT CreateTextFormat(
@@ -189,16 +204,16 @@ namespace kiwano
 		ComPtr<IWICImagingFactory>	imaging_factory;
 		ComPtr<IDWriteFactory>		dwrite_factory;
 
-		D2D1_FACTORY_OPTIONS options;
-		ZeroMemory(&options, sizeof(D2D1_FACTORY_OPTIONS));
+		D2D1_FACTORY_OPTIONS config;
+		ZeroMemory(&config, sizeof(D2D1_FACTORY_OPTIONS));
 #if defined(KGE_DEBUG) && defined(KGE_ENABLE_DX_DEBUG)
-		options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
+		config.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
 #endif
 
 		hr = D2D1CreateFactory(
 			D2D1_FACTORY_TYPE_SINGLE_THREADED,
 			__uuidof(ID2D1Factory1),
-			&options,
+			&config,
 			reinterpret_cast<void**>(&d2d_factory)
 		);
 
@@ -310,143 +325,113 @@ namespace kiwano
 			device_context_->SetTarget(target_bitmap_.get());
 	}
 
-	HRESULT D2DDeviceResources::CreateBitmapFromFile(_Out_ ComPtr<ID2D1Bitmap> & bitmap, _In_ String const & file_path)
+	HRESULT D2DDeviceResources::CreateBitmapConverter(_Out_ ComPtr<IWICFormatConverter>& converter, _In_opt_ ComPtr<IWICBitmapSource> source,
+		_In_ REFWICPixelFormatGUID format, WICBitmapDitherType dither, _In_opt_ ComPtr<IWICPalette> palette, double alpha_threshold_percent,
+		WICBitmapPaletteType palette_translate
+	)
 	{
-		if (!imaging_factory_ || !device_context_)
+		if (!imaging_factory_)
 			return E_UNEXPECTED;
 
-		if (!FileUtil::ExistsFile(file_path))
+		ComPtr<IWICFormatConverter> output;
+		HRESULT hr = imaging_factory_->CreateFormatConverter(&output);
+
+		if (SUCCEEDED(hr))
 		{
-			KGE_WARNING_LOG(L"Texture file '%s' not found!", file_path.c_str());
-			return E_FAIL;
+			hr = output->Initialize(
+				source.get(),
+				format,
+				dither,
+				palette.get(),
+				alpha_threshold_percent,
+				palette_translate
+			);
 		}
 
-		ComPtr<IWICBitmapDecoder>		decoder;
-		ComPtr<IWICBitmapFrameDecode>	source;
-		ComPtr<IWICStream>				stream;
-		ComPtr<IWICFormatConverter>		converter;
-		ComPtr<ID2D1Bitmap>				bitmap_tmp;
+		if (SUCCEEDED(hr))
+		{
+			converter = output;
+		}
+		return hr;
+	}
 
+	HRESULT D2DDeviceResources::CreateBitmapFromConverter(_Out_ ComPtr<ID2D1Bitmap>& bitmap, _In_opt_ const D2D1_BITMAP_PROPERTIES* properties,
+		_In_ ComPtr<IWICFormatConverter> converter)
+	{
+		if (!device_context_)
+			return E_UNEXPECTED;
+
+		ComPtr<ID2D1Bitmap> output;
+		HRESULT hr = device_context_->CreateBitmapFromWicBitmap(
+			converter.get(),
+			properties,
+			&output
+		);
+
+		if (SUCCEEDED(hr))
+		{
+			bitmap = output;
+		}
+		return hr;
+	}
+
+	HRESULT D2DDeviceResources::CreateBitmapDecoderFromFile(_Out_ ComPtr<IWICBitmapDecoder>& decoder, const String& file_path)
+	{
+		if (!imaging_factory_)
+			return E_UNEXPECTED;
+
+		ComPtr<IWICBitmapDecoder> decoder_output;
 		HRESULT hr = imaging_factory_->CreateDecoderFromFilename(
 			file_path.c_str(),
 			nullptr,
 			GENERIC_READ,
 			WICDecodeMetadataCacheOnLoad,
-			&decoder
+			&decoder_output
 		);
 
 		if (SUCCEEDED(hr))
 		{
-			hr = decoder->GetFrame(0, &source);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = imaging_factory_->CreateFormatConverter(&converter);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			// 图片格式转换成 32bppPBGRA
-			hr = converter->Initialize(
-				source.get(),
-				GUID_WICPixelFormat32bppPBGRA,
-				WICBitmapDitherTypeNone,
-				nullptr,
-				0.f,
-				WICBitmapPaletteTypeMedianCut
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = device_context_->CreateBitmapFromWicBitmap(
-				converter.get(),
-				nullptr,
-				&bitmap_tmp
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			bitmap = bitmap_tmp;
+			decoder = decoder_output;
 		}
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateBitmapFromResource(_Out_ ComPtr<ID2D1Bitmap> & bitmap, _In_ Resource const & res)
+	HRESULT D2DDeviceResources::CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBitmapDecoder>& decoder, const Resource& resource)
 	{
-		if (!imaging_factory_ || !device_context_)
+		if (!imaging_factory_)
 			return E_UNEXPECTED;
 
-		ComPtr<IWICBitmapDecoder>		decoder;
-		ComPtr<IWICBitmapFrameDecode>	source;
-		ComPtr<IWICStream>				stream;
-		ComPtr<IWICFormatConverter>		converter;
-		ComPtr<ID2D1Bitmap>				bitmap_tmp;
-
-		// 加载资源
-		Resource::Data res_data = res.GetData();
+		Resource::Data res_data = resource.GetData();
 		HRESULT hr = res_data ? S_OK : E_FAIL;
 
 		if (SUCCEEDED(hr))
 		{
+			ComPtr<IWICStream> stream;
 			hr = imaging_factory_->CreateStream(&stream);
-		}
 
-		if (SUCCEEDED(hr))
-		{
-			hr = stream->InitializeFromMemory(
-				static_cast<WICInProcPointer>(res_data.buffer),
-				res_data.size
-			);
-		}
+			if (SUCCEEDED(hr))
+			{
+				hr = stream->InitializeFromMemory(
+					static_cast<WICInProcPointer>(res_data.buffer),
+					res_data.size
+				);
+			}
 
-		if (SUCCEEDED(hr))
-		{
-			hr = imaging_factory_->CreateDecoderFromStream(
-				stream.get(),
-				nullptr,
-				WICDecodeMetadataCacheOnLoad,
-				&decoder
-			);
-		}
+			if (SUCCEEDED(hr))
+			{
+				ComPtr<IWICBitmapDecoder> decoder_output;
+				hr = imaging_factory_->CreateDecoderFromStream(
+					stream.get(),
+					nullptr,
+					WICDecodeMetadataCacheOnLoad,
+					&decoder_output
+				);
 
-		if (SUCCEEDED(hr))
-		{
-			hr = decoder->GetFrame(0, &source);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = imaging_factory_->CreateFormatConverter(&converter);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			// 图片格式转换成 32bppPBGRA
-			hr = converter->Initialize(
-				source.get(),
-				GUID_WICPixelFormat32bppPBGRA,
-				WICBitmapDitherTypeNone,
-				nullptr,
-				0.f,
-				WICBitmapPaletteTypeMedianCut
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = device_context_->CreateBitmapFromWicBitmap(
-				converter.get(),
-				nullptr,
-				&bitmap_tmp
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			bitmap = bitmap_tmp;
+				if (SUCCEEDED(hr))
+				{
+					decoder = decoder_output;
+				}
+			}
 		}
 		return hr;
 	}

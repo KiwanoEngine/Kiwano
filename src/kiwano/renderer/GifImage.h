@@ -43,9 +43,7 @@ namespace kiwano
 
 		inline UInt32 GetHeightInPixels() const	{ return height_in_pixels_; }
 
-		inline UInt32 GetFramesCount() const		{ return frames_count_; }
-
-		inline Color GetBackgroundColor() const	{ return bg_color_; }
+		inline UInt32 GetFramesCount() const	{ return frames_count_; }
 
 	public:
 		enum class DisposalType
@@ -56,13 +54,15 @@ namespace kiwano
 			Previous
 		};
 
-		HRESULT GetRawFrame(
-			UInt32 frame_index,
-			Texture& raw_frame,
-			Rect& frame_rect,
-			Duration& delay,
-			DisposalType& disposal_type
-		);
+		struct Frame
+		{
+			Duration delay;
+			Texture raw;
+			Rect rect;
+			DisposalType disposal_type;
+
+			Frame() : disposal_type(DisposalType::Unknown) {}
+		};
 
 		inline ComPtr<IWICBitmapDecoder> GetDecoder() const			{ return decoder_; }
 
@@ -71,16 +71,11 @@ namespace kiwano
 	protected:
 		HRESULT GetGlobalMetadata();
 
-		HRESULT GetBackgroundColor(
-			ComPtr<IWICMetadataQueryReader> metadata_reader
-		);
-
 	protected:
 		UInt32	frames_count_;
 		UInt32	width_in_pixels_;
 		UInt32	height_in_pixels_;
-		Color	bg_color_;
 
-		ComPtr<IWICBitmapDecoder>	decoder_;
+		ComPtr<IWICBitmapDecoder> decoder_;
 	};
 }
