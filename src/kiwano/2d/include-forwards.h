@@ -45,6 +45,7 @@ namespace kiwano
 	KGE_DECLARE_SMART_PTR(RoundRectActor);
 	KGE_DECLARE_SMART_PTR(CircleActor);
 	KGE_DECLARE_SMART_PTR(EllipseActor);
+	KGE_DECLARE_SMART_PTR(PolygonActor);
 	KGE_DECLARE_SMART_PTR(PathActor);
 
 	KGE_DECLARE_SMART_PTR(Action);

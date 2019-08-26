@@ -32,7 +32,7 @@ namespace kiwano
 	{
 	}
 
-	ShapeActor::ShapeActor(Geometry geometry)
+	ShapeActor::ShapeActor(Geometry const& geometry)
 		: ShapeActor()
 	{
 		SetGeometry(geometry);
@@ -80,7 +80,7 @@ namespace kiwano
 		stroke_style_ = stroke_style;
 	}
 
-	void ShapeActor::SetGeometry(Geometry geometry)
+	void ShapeActor::SetGeometry(Geometry const& geometry)
 	{
 		geo_ = geometry;
 		if (geo_)
@@ -134,13 +134,7 @@ namespace kiwano
 
 	void LineActor::SetPoint(Point const& point)
 	{
-		Geometry geo = Geometry::CreateLine(Point{}, point);
-
-		if (geo)
-		{
-			point_ = point;
-			SetGeometry(geo);
-		}
+		SetGeometry(Geometry::CreateLine(Point{}, point));
 	}
 
 
@@ -163,13 +157,7 @@ namespace kiwano
 
 	void RectActor::SetRectSize(Size const& size)
 	{
-		Geometry geo = Geometry::CreateRect(Rect{ Point{}, size });
-
-		if (geo)
-		{
-			rect_size_ = size;
-			SetGeometry(geo);
-		}
+		SetGeometry(Geometry::CreateRect(Rect{ Point{}, size }));
 	}
 
 
@@ -202,13 +190,7 @@ namespace kiwano
 
 	void RoundRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
 	{
-		Geometry geo = Geometry::CreateRoundedRect(Rect{ Point{}, size }, radius);
-
-		if (geo)
-		{
-			rect_size_ = size;
-			SetGeometry(geo);
-		}
+		SetGeometry(Geometry::CreateRoundedRect(Rect{ Point{}, size }, radius));
 	}
 
 
@@ -232,12 +214,7 @@ namespace kiwano
 
 	void CircleActor::SetRadius(Float32 radius)
 	{
-		Geometry geo = Geometry::CreateCircle(Point{}, radius);
-
-		if (geo)
-		{
-			SetGeometry(geo);
-		}
+		SetGeometry(Geometry::CreateCircle(Point{ radius, radius }, radius));
 	}
 
 
@@ -260,11 +237,38 @@ namespace kiwano
 
 	void EllipseActor::SetRadius(Vec2 const& radius)
 	{
-		Geometry geo = Geometry::CreateEllipse(Point{}, radius);
+		SetGeometry(Geometry::CreateEllipse(radius, radius));
+	}
 
-		if (geo)
+
+	//-------------------------------------------------------
+	// PolygonActor
+	//-------------------------------------------------------
+
+	PolygonActor::PolygonActor()
+	{
+	}
+
+	PolygonActor::PolygonActor(Vector<Point> const& points)
+	{
+		SetVertices(points);
+	}
+
+	PolygonActor::~PolygonActor()
+	{
+	}
+
+	void PolygonActor::SetVertices(Vector<Point> const& points)
+	{
+		if (points.size() > 1)
 		{
-			SetGeometry(geo);
+			SetGeometry(
+				GeometrySink()
+				.BeginPath(points[0])
+				.AddLines(&points[1], points.size() - 1)
+				.EndPath(true)
+				.GetGeometry()
+			);
 		}
 	}
 

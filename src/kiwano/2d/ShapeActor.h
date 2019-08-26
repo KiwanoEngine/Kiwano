@@ -33,7 +33,7 @@ namespace kiwano
 		ShapeActor();
 
 		ShapeActor(
-			Geometry geometry
+			Geometry const& geometry
 		);
 
 		virtual ~ShapeActor();
@@ -75,7 +75,7 @@ namespace kiwano
 		void SetStrokeStyle(StrokeStyle stroke_style);
 
 		// 设置形状
-		void SetGeometry(Geometry geometry);
+		void SetGeometry(Geometry const& geometry);
 
 		void OnRender(RenderTarget* rt) override;
 
@@ -215,6 +215,25 @@ namespace kiwano
 
 	protected:
 		Vec2 radius_;
+	};
+
+
+	// 多边形角色
+	class KGE_API PolygonActor
+		: public ShapeActor
+	{
+	public:
+		PolygonActor();
+
+		PolygonActor(
+			Vector<Point> const& points
+		);
+
+		virtual ~PolygonActor();
+
+		void SetVertices(
+			Vector<Point> const& points
+		);
 	};
 
 

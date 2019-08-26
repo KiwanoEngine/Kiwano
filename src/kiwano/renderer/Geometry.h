@@ -151,6 +151,12 @@ namespace kiwano
 			Vector<Point> const& points
 		);
 
+		// 添加多条线段
+		GeometrySink& AddLines(
+			const Point* points,
+			UInt32 count
+		);
+
 		// 添加一条三次方贝塞尔曲线
 		GeometrySink& AddBezier(
 			Point const& point1,	/* 贝塞尔曲线的第一个控制点 */
@@ -162,7 +168,7 @@ namespace kiwano
 		GeometrySink& AddArc(
 			Point const& point,		/* 终点 */
 			Size const& radius,		/* 椭圆半径 */
-			Float32 rotation,			/* 椭圆旋转角度 */
+			Float32 rotation,		/* 椭圆旋转角度 */
 			bool clockwise = true,	/* 顺时针 or 逆时针 */
 			bool is_small = true	/* 是否取小于 180° 的弧 */
 		);

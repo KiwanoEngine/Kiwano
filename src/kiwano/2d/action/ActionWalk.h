@@ -90,10 +90,10 @@ namespace kiwano
 		void ClearPath();
 
 		// 获取路线
-		inline Geometry GetPath() const		{ return path_; }
+		inline Geometry const& GetPath() const		{ return path_; }
 
 		// 设置路径
-		inline void SetPath(Geometry path)	{ path_ = path; }
+		inline void SetPath(Geometry const& path)	{ path_ = path; }
 
 	protected:
 		void Init(ActorPtr target) override;

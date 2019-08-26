@@ -246,6 +246,14 @@ namespace kiwano
 		return (*this);
 	}
 
+	GeometrySink& kiwano::GeometrySink::AddLines(const Point* points, UInt32 count)
+	{
+		if (!sink_) BeginPath();
+
+		sink_->AddLines(reinterpret_cast<const D2D_POINT_2F*>(points), count);
+		return (*this);
+	}
+
 	GeometrySink& GeometrySink::AddBezier(Point const& point1, Point const& point2, Point const& point3)
 	{
 		if (!sink_) BeginPath();
