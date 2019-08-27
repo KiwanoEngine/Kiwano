@@ -39,10 +39,12 @@ namespace kiwano
 
 	Actor::Actor()
 		: visible_(true)
+		, visible_in_rt_(true)
 		, update_pausing_(false)
 		, hover_(false)
 		, pressed_(false)
 		, responsible_(false)
+		, dirty_visibility_(true)
 		, dirty_transform_(false)
 		, dirty_transform_inverse_(false)
 		, cascade_opacity_(false)
@@ -139,6 +141,16 @@ namespace kiwano
 		}
 	}
 
+	bool Actor::CheckVisibilty(RenderTarget* rt) const
+	{
+		if (dirty_visibility_)
+		{
+			dirty_visibility_ = false;
+			visible_in_rt_ = rt->CheckVisibility(GetBounds(), GetTransformMatrix());
+		}
+		return visible_in_rt_;
+	}
+
 	void Actor::Dispatch(Event& evt)
 	{
 		if (!visible_)
@@ -224,6 +236,7 @@ namespace kiwano
 
 		dirty_transform_ = false;
 		dirty_transform_inverse_ = true;
+		dirty_visibility_ = true;
 
 		if (is_fast_transform_)
 		{

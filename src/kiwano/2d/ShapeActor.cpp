@@ -85,7 +85,7 @@ namespace kiwano
 		geo_ = geometry;
 		if (geo_)
 		{
-			bounds_ = geo_.GetBoundingBox(Matrix3x2());
+			bounds_ = geo_.GetBoundingBox();
 			SetSize(bounds_.GetSize());
 		}
 		else
@@ -97,20 +97,20 @@ namespace kiwano
 
 	void ShapeActor::OnRender(RenderTarget* rt)
 	{
-		if (geo_ && rt->CheckVisibility(GetBounds(), GetTransformMatrix()))
+		if (geo_ && CheckVisibilty(rt))
 		{
 			PrepareRender(rt);
-
-			rt->FillGeometry(
-				geo_,
-				fill_color_
-			);
 
 			rt->DrawGeometry(
 				geo_,
 				stroke_color_,
-				stroke_width_,
+				stroke_width_ * 2,  // twice width for widening
 				stroke_style_
+			);
+
+			rt->FillGeometry(
+				geo_,
+				fill_color_
 			);
 		}
 	}

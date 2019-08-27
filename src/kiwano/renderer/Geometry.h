@@ -45,8 +45,11 @@ namespace kiwano
 		bool IsValid() const;
 
 		// 获取外切包围盒
+		Rect GetBoundingBox() const;
+
+		// 获取外切包围盒
 		Rect GetBoundingBox(
-			Matrix3x2 const& transform = Matrix3x2()
+			Matrix3x2 const& transform
 		) const;
 
 		// 判断图形是否包含点

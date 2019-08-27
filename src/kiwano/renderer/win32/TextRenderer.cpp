@@ -198,7 +198,7 @@ namespace kiwano
 		sFillColor_ = fillColor;
 		bShowOutline_ = outline;
 		sOutlineColor_ = outlineColor;
-		fOutlineWidth = 2 * outlineWidth;
+		fOutlineWidth = outlineWidth;
 		pCurrStrokeStyle_ = outlineJoin;
 
 		if (pBrush_) pBrush_->SetOpacity(opacity);
@@ -220,80 +220,87 @@ namespace kiwano
 
 		HRESULT hr = S_OK;
 
-		ID2D1PathGeometry* pPathGeometry = NULL;
-		hr = pFactory_->CreatePathGeometry(
-			&pPathGeometry
-		);
-
-		ID2D1GeometrySink* pSink = NULL;
-		if (SUCCEEDED(hr))
+		if (bShowOutline_)
 		{
-			hr = pPathGeometry->Open(
-				&pSink
+			ID2D1GeometrySink* pSink = NULL;
+			ID2D1PathGeometry* pPathGeometry = NULL;
+			ID2D1TransformedGeometry* pTransformedGeometry = NULL;
+
+			hr = pFactory_->CreatePathGeometry(
+				&pPathGeometry
 			);
-		}
 
-		if (SUCCEEDED(hr))
-		{
-			hr = glyphRun->fontFace->GetGlyphRunOutline(
-				glyphRun->fontEmSize,
-				glyphRun->glyphIndices,
-				glyphRun->glyphAdvances,
-				glyphRun->glyphOffsets,
-				glyphRun->glyphCount,
-				glyphRun->isSideways,
-				glyphRun->bidiLevel % 2,
-				pSink
-			);
-		}
+			if (SUCCEEDED(hr))
+			{
+				hr = pPathGeometry->Open(
+					&pSink
+				);
 
-		if (SUCCEEDED(hr))
-		{
-			hr = pSink->Close();
-		}
+				if (SUCCEEDED(hr))
+				{
+					hr = glyphRun->fontFace->GetGlyphRunOutline(
+						glyphRun->fontEmSize,
+						glyphRun->glyphIndices,
+						glyphRun->glyphAdvances,
+						glyphRun->glyphOffsets,
+						glyphRun->glyphCount,
+						glyphRun->isSideways,
+						glyphRun->bidiLevel % 2,
+						pSink
+					);
+				}
 
-		D2D1::Matrix3x2F const matrix = D2D1::Matrix3x2F(
-			1.0f, 0.0f,
-			0.0f, 1.0f,
-			baselineOriginX, baselineOriginY
-		);
+				if (SUCCEEDED(hr))
+				{
+					hr = pSink->Close();
+				}
 
-		ID2D1TransformedGeometry* pTransformedGeometry = NULL;
-		if (SUCCEEDED(hr))
-		{
-			hr = pFactory_->CreateTransformedGeometry(
-				pPathGeometry,
-				&matrix,
-				&pTransformedGeometry
-			);
-		}
+				if (SUCCEEDED(hr))
+				{
+					D2D1::Matrix3x2F const matrix = D2D1::Matrix3x2F(
+						1.0f, 0.0f,
+						0.0f, 1.0f,
+						baselineOriginX, baselineOriginY
+					);
 
-		if (SUCCEEDED(hr) && bShowOutline_)
-		{
-			pBrush_->SetColor(sOutlineColor_);
+					if (SUCCEEDED(hr))
+					{
+						hr = pFactory_->CreateTransformedGeometry(
+							pPathGeometry,
+							&matrix,
+							&pTransformedGeometry
+						);
+					}
 
-			pRT_->DrawGeometry(
-				pTransformedGeometry,
-				pBrush_,
-				fOutlineWidth,
-				pCurrStrokeStyle_
-			);
+					if (SUCCEEDED(hr))
+					{
+						pBrush_->SetColor(sOutlineColor_);
+
+						pRT_->DrawGeometry(
+							pTransformedGeometry,
+							pBrush_,
+							fOutlineWidth * 2,  // twice width for widening
+							pCurrStrokeStyle_
+						);
+					}
+				}
+			}
+
+			DX::SafeRelease(pPathGeometry);
+			DX::SafeRelease(pSink);
+			DX::SafeRelease(pTransformedGeometry);
 		}
 
 		if (SUCCEEDED(hr))
 		{
 			pBrush_->SetColor(sFillColor_);
 
-			pRT_->FillGeometry(
-				pTransformedGeometry,
+			pRT_->DrawGlyphRun(
+				D2D1::Point2F(baselineOriginX, baselineOriginY),
+				glyphRun,
 				pBrush_
 			);
 		}
-
-		DX::SafeRelease(pPathGeometry);
-		DX::SafeRelease(pSink);
-		DX::SafeRelease(pTransformedGeometry);
-
 		return hr;
 	}
 

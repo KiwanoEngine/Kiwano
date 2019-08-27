@@ -390,6 +390,8 @@ namespace kiwano
 
 		virtual void RenderBorder(RenderTarget* rt);
 
+		virtual bool CheckVisibilty(RenderTarget* rt) const;
+
 		void UpdateTransform() const;
 
 		void UpdateOpacity();
@@ -400,12 +402,12 @@ namespace kiwano
 
 	protected:
 		bool			visible_;
-		bool			hover_;
-		bool			pressed_;
-		bool			responsible_;
 		bool			update_pausing_;
 		bool			cascade_opacity_;
 		bool			show_border_;
+		bool			hover_;
+		bool			pressed_;
+		bool			responsible_;
 		Int32			z_order_;
 		Float32			opacity_;
 		Float32			displayed_opacity_;
@@ -419,6 +421,8 @@ namespace kiwano
 		Transform		transform_;
 
 		bool				is_fast_transform_;
+		mutable bool		visible_in_rt_;
+		mutable	bool		dirty_visibility_;
 		mutable bool		dirty_transform_;
 		mutable bool		dirty_transform_inverse_;
 		mutable Matrix3x2	transform_matrix_;

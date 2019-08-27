@@ -43,15 +43,26 @@ namespace kiwano
 		return geo_ != nullptr;
 	}
 
+	Rect Geometry::GetBoundingBox() const
+	{
+		Rect bounds;
+		if (geo_)
+		{
+			// no matter it failed or not
+			geo_->GetBounds(nullptr, DX::ConvertToRectF(&bounds));
+		}
+		return bounds;
+	}
+
 	Rect Geometry::GetBoundingBox(Matrix3x2 const& transform) const
 	{
-		if (!geo_)
-			return Rect{};
-
-		Rect rect;
-		// no matter it failed or not
-		geo_->GetBounds(DX::ConvertToMatrix3x2F(transform), DX::ConvertToRectF(&rect));
-		return rect;
+		Rect bounds;
+		if (geo_)
+		{
+			// no matter it failed or not
+			geo_->GetBounds(DX::ConvertToMatrix3x2F(transform), DX::ConvertToRectF(&bounds));
+		}
+		return bounds;
 	}
 
 	Float32 Geometry::GetLength() const
