@@ -123,18 +123,23 @@ namespace kiwano
 	{
 	}
 
-	LineActor::LineActor(Point const& point)
+	LineActor::LineActor(Point const& begin, Point const& end)
 	{
-		SetPoint(point);
+		SetLine(begin, end);
 	}
 
 	LineActor::~LineActor()
 	{
 	}
 
-	void LineActor::SetPoint(Point const& point)
+	void LineActor::SetLine(Point const& begin, Point const& end)
 	{
-		SetGeometry(Geometry::CreateLine(Point{}, point));
+		if (begin_ != begin || end_ != end)
+		{
+			begin_ = begin;
+			end_ = end;
+			SetGeometry(Geometry::CreateLine(begin, end));
+		}
 	}
 
 
@@ -157,7 +162,11 @@ namespace kiwano
 
 	void RectActor::SetRectSize(Size const& size)
 	{
-		SetGeometry(Geometry::CreateRect(Rect{ Point{}, size }));
+		if (size != rect_size_)
+		{
+			rect_size_ = size;
+			SetGeometry(Geometry::CreateRect(Rect{ Point{}, size }));
+		}
 	}
 
 
@@ -190,7 +199,12 @@ namespace kiwano
 
 	void RoundRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
 	{
-		SetGeometry(Geometry::CreateRoundedRect(Rect{ Point{}, size }, radius));
+		if (rect_size_ != size || radius_ != radius)
+		{
+			rect_size_ = size;
+			radius_ = radius;
+			SetGeometry(Geometry::CreateRoundedRect(Rect{ Point{}, size }, radius));
+		}
 	}
 
 
@@ -214,7 +228,11 @@ namespace kiwano
 
 	void CircleActor::SetRadius(Float32 radius)
 	{
-		SetGeometry(Geometry::CreateCircle(Point{ radius, radius }, radius));
+		if (radius_ != radius)
+		{
+			radius_ = radius;
+			SetGeometry(Geometry::CreateCircle(Point{ radius, radius }, radius));
+		}
 	}
 
 
@@ -237,7 +255,11 @@ namespace kiwano
 
 	void EllipseActor::SetRadius(Vec2 const& radius)
 	{
-		SetGeometry(Geometry::CreateEllipse(radius, radius));
+		if (radius_ != radius)
+		{
+			radius_ = radius;
+			SetGeometry(Geometry::CreateEllipse(radius, radius));
+		}
 	}
 
 

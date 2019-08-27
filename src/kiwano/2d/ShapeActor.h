@@ -97,19 +97,34 @@ namespace kiwano
 		LineActor();
 
 		LineActor(
-			Point const& point
+			Point const& begin,
+			Point const& end
 		);
 
 		virtual ~LineActor();
 
-		Point const& GetPoint() const { return point_; }
+		inline Point const& GetBeginPoint() const	{ return begin_; }
+		
+		inline Point const& GetEndPoint() const		{ return end_; }
 
-		void SetPoint(
-			Point const& point
+		inline void SetBeginPoint(Point const& begin)
+		{
+			SetLine(begin, end_);
+		}
+
+		inline void SetEndPoint(Point const& end)
+		{
+			SetLine(begin_, end);
+		}
+
+		void SetLine(
+			Point const& begin,
+			Point const& end
 		);
 
 	protected:
-		Point point_;
+		Point begin_;
+		Point end_;
 	};
 
 
@@ -126,9 +141,9 @@ namespace kiwano
 
 		virtual ~RectActor();
 
-		void SetRectSize(Size const& size);
-
 		inline Size const& GetRectSize() const { return rect_size_; }
+
+		void SetRectSize(Size const& size);
 
 	protected:
 		Size rect_size_;
@@ -149,6 +164,10 @@ namespace kiwano
 
 		virtual ~RoundRectActor();
 
+		inline Vec2 GetRadius() const	{ return radius_; }
+
+		inline Size GetRectSize() const	{ return size_; }
+
 		void SetRadius(
 			Vec2 const& radius
 		);
@@ -161,10 +180,6 @@ namespace kiwano
 			Size const& size,
 			Vec2 const& radius
 		);
-
-		inline Vec2 GetRadius() const	{ return radius_; }
-
-		inline Size GetRectSize() const	{ return size_; }
 
 	protected:
 		Size rect_size_;

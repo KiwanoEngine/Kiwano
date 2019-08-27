@@ -20,6 +20,7 @@
 
 #pragma once
 #include "Texture.h"
+#include "../base/time.h"
 
 namespace kiwano
 {
