@@ -352,7 +352,7 @@ namespace kiwano
 			pRT_->DrawGeometry(
 				pTransformedGeometry,
 				pBrush_,
-				fOutlineWidth,
+				fOutlineWidth * 2,
 				pCurrStrokeStyle_
 			);
 		}
@@ -421,7 +421,7 @@ namespace kiwano
 			pRT_->DrawGeometry(
 				pTransformedGeometry,
 				pBrush_,
-				fOutlineWidth,
+				fOutlineWidth * 2,
 				pCurrStrokeStyle_
 			);
 		}

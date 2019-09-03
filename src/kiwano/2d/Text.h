@@ -35,17 +35,17 @@ namespace kiwano
 			String const& text		/* 文字内容 */
 		);
 
-		explicit Text(
+		Text(
 			String const& text,		/* 文字内容 */
 			const Font& font		/* 字体 */
 		);
 
-		explicit Text(
+		Text(
 			String const& text,		/* 文字内容 */
 			const TextStyle& style	/* 文本样式 */
 		);
 
-		explicit Text(
+		Text(
 			String const& text,		/* 文字内容 */
 			const Font& font,		/* 字体 */
 			const TextStyle& style	/* 文本样式 */
