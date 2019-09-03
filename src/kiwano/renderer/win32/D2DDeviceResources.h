@@ -23,7 +23,6 @@
 #include "../Color.h"
 #include "../../math/math.h"
 #include "../../base/Resource.h"
-#include "../../2d/TextStyle.hpp"
 #include <dwrite.h>
 #include <d2d1.h>
 #include <d2d1_1.h>
@@ -243,9 +242,9 @@ namespace kiwano
 		inline ID2D1DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.get(); }
 		inline ID2D1Bitmap1*			GetTargetBitmap() const			{ KGE_ASSERT(target_bitmap_); return target_bitmap_.get(); }
 
-		inline ID2D1StrokeStyle*		GetMiterStrokeStyle() const		{ KGE_ASSERT(d2d_miter_stroke_style_); return d2d_miter_stroke_style_.get(); }
-		inline ID2D1StrokeStyle*		GetBevelStrokeStyle() const		{ KGE_ASSERT(d2d_bevel_stroke_style_); return d2d_bevel_stroke_style_.get(); }
-		inline ID2D1StrokeStyle*		GetRoundStrokeStyle() const		{ KGE_ASSERT(d2d_round_stroke_style_); return d2d_round_stroke_style_.get(); }
+		inline ID2D1StrokeStyle*		GetMiterStrokeStyle() const		{ KGE_ASSERT(miter_stroke_style_); return miter_stroke_style_.get(); }
+		inline ID2D1StrokeStyle*		GetBevelStrokeStyle() const		{ KGE_ASSERT(bevel_stroke_style_); return bevel_stroke_style_.get(); }
+		inline ID2D1StrokeStyle*		GetRoundStrokeStyle() const		{ KGE_ASSERT(round_stroke_style_); return round_stroke_style_.get(); }
 
 	protected:
 		ComPtr<ID2D1Factory1>		factory_;
@@ -256,9 +255,9 @@ namespace kiwano
 		ComPtr<IWICImagingFactory>	imaging_factory_;
 		ComPtr<IDWriteFactory>		dwrite_factory_;
 
-		ComPtr<ID2D1StrokeStyle>	d2d_miter_stroke_style_;
-		ComPtr<ID2D1StrokeStyle>	d2d_bevel_stroke_style_;
-		ComPtr<ID2D1StrokeStyle>	d2d_round_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>	miter_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>	bevel_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>	round_stroke_style_;
 	};
 
 }

@@ -89,7 +89,7 @@ namespace kiwano
 
 	void GifSprite::OnRender(RenderTarget* rt)
 	{
-		if (frame_.raw.IsValid() && rt->CheckVisibility(GetBounds(), GetTransformMatrix()))
+		if (frame_.raw.IsValid() && CheckVisibilty(rt))
 		{
 			PrepareRender(rt);
 

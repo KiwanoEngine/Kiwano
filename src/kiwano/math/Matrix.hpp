@@ -78,12 +78,17 @@ namespace kiwano
 			{
 			}
 
+#pragma warning (push)
+#pragma warning (disable: 26495)  // ignore warning "always initialize member variables"
+
 			template <typename _MTy>
 			Matrix3x2T(_MTy const& other)
 			{
 				for (Int32 i = 0; i < 6; i++)
 					m[i] = other[i];
 			}
+
+#pragma warning (pop)
 
 			inline value_type operator [](UInt32 index) const
 			{

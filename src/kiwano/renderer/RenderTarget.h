@@ -190,6 +190,8 @@ namespace kiwano
 			Int32 primitives;
 			Time start;
 			Duration duration;
+
+			Status() : primitives(0) {}
 		};
 
 		void SetCollectingStatus(bool collecting);

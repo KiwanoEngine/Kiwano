@@ -163,17 +163,17 @@ namespace kiwano
 			Color const& color
 		);
 
-		// 设置线条颜色
+		// 设置轮廓颜色
 		void SetStrokeColor(
 			Color const& color
 		);
 
-		// 设置线条宽度
+		// 设置轮廓宽度
 		void SetStrokeWidth(
 			Float32 width
 		);
 
-		// 设置线条样式
+		// 设置轮廓样式
 		void SetStrokeStyle(
 			StrokeStyle stroke_style
 		);
@@ -222,10 +222,10 @@ namespace kiwano
 		// 获取填充颜色
 		Color GetFillColor() const;
 
-		// 获取线条颜色
+		// 获取轮廓颜色
 		Color GetStrokeColor() const;
 
-		// 获取线条宽度
+		// 获取轮廓宽度
 		Float32 GetStrokeWidth() const;
 
 		// 获取画笔透明度

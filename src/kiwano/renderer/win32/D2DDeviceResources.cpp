@@ -190,16 +190,16 @@ namespace kiwano
 		imaging_factory_.reset();
 		dwrite_factory_.reset();
 
-		d2d_miter_stroke_style_.reset();
-		d2d_bevel_stroke_style_.reset();
-		d2d_round_stroke_style_.reset();
+		miter_stroke_style_.reset();
+		bevel_stroke_style_.reset();
+		round_stroke_style_.reset();
 	}
 
 	HRESULT D2DDeviceResources::CreateDeviceIndependentResources()
 	{
 		HRESULT hr = S_OK;
 
-		ComPtr<ID2D1Factory1>		d2d_factory;
+		ComPtr<ID2D1Factory1>		factory;
 		ComPtr<IWICImagingFactory>	imaging_factory;
 		ComPtr<IDWriteFactory>		dwrite_factory;
 
@@ -213,12 +213,12 @@ namespace kiwano
 			D2D1_FACTORY_TYPE_SINGLE_THREADED,
 			__uuidof(ID2D1Factory1),
 			&config,
-			reinterpret_cast<void**>(&d2d_factory)
+			reinterpret_cast<void**>(&factory)
 		);
 
 		if (SUCCEEDED(hr))
 		{
-			factory_ = d2d_factory;
+			factory_ = factory;
 
 			hr = CoCreateInstance(
 				CLSID_WICImagingFactory,
@@ -244,9 +244,9 @@ namespace kiwano
 		{
 			dwrite_factory_ = dwrite_factory;
 
-			ComPtr<ID2D1StrokeStyle> d2d_miter_stroke_style;
-			ComPtr<ID2D1StrokeStyle> d2d_bevel_stroke_style;
-			ComPtr<ID2D1StrokeStyle> d2d_round_stroke_style;
+			ComPtr<ID2D1StrokeStyle> miter_stroke_style;
+			ComPtr<ID2D1StrokeStyle> bevel_stroke_style;
+			ComPtr<ID2D1StrokeStyle> round_stroke_style;
 
 			D2D1_STROKE_STYLE_PROPERTIES stroke_style = D2D1::StrokeStyleProperties(
 				D2D1_CAP_STYLE_FLAT,
@@ -262,7 +262,7 @@ namespace kiwano
 				stroke_style,
 				nullptr,
 				0,
-				&d2d_miter_stroke_style
+				&miter_stroke_style
 			);
 
 			if (SUCCEEDED(hr))
@@ -272,7 +272,7 @@ namespace kiwano
 					stroke_style,
 					nullptr,
 					0,
-					&d2d_bevel_stroke_style
+					&bevel_stroke_style
 				);
 			}
 
@@ -283,15 +283,15 @@ namespace kiwano
 					stroke_style,
 					nullptr,
 					0,
-					&d2d_round_stroke_style
+					&round_stroke_style
 				);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				d2d_miter_stroke_style_ = d2d_miter_stroke_style;
-				d2d_bevel_stroke_style_ = d2d_bevel_stroke_style;
-				d2d_round_stroke_style_ = d2d_round_stroke_style;
+				miter_stroke_style_ = miter_stroke_style;
+				bevel_stroke_style_ = bevel_stroke_style;
+				round_stroke_style_ = round_stroke_style;
 			}
 		}
 
@@ -300,17 +300,17 @@ namespace kiwano
 
 	HRESULT D2DDeviceResources::SetD2DDevice(_In_ ComPtr<ID2D1Device> const& device)
 	{
-		ComPtr<ID2D1DeviceContext> d2d_device_ctx;
+		ComPtr<ID2D1DeviceContext> device_ctx;
 
 		HRESULT hr = device->CreateDeviceContext(
 			D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
-			&d2d_device_ctx
+			&device_ctx
 		);
 
 		if (SUCCEEDED(hr))
 		{
 			device_ = device;
-			device_context_ = d2d_device_ctx;
+			device_context_ = device_ctx;
 			device_context_->SetDpi(dpi_, dpi_);
 		}
 

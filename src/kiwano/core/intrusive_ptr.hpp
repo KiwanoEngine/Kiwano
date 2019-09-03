@@ -78,9 +78,9 @@ public:
 
 	inline pointer_type get() const noexcept { return ptr_; }
 
-	inline void reset() noexcept
+	inline void reset(pointer_type ptr = nullptr) noexcept
 	{
-		intrusive_ptr{}.swap(*this);
+		intrusive_ptr{ ptr }.swap(*this);
 	}
 
 	inline void swap(intrusive_ptr& other) noexcept

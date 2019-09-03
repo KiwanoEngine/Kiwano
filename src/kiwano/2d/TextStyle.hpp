@@ -48,29 +48,16 @@ namespace kiwano
 		StrokeStyle	outline_stroke;		// 描边线相交样式
 
 	public:
-		TextStyle()
-			: color(Color::White)
-			, alignment(TextAlign::Left)
-			, wrap_width(0.f)
-			, line_spacing(0.f)
-			, underline(false)
-			, strikethrough(false)
-			, outline(true)
-			, outline_color(Color(Color::Black, 0.5))
-			, outline_width(1.f)
-			, outline_stroke(StrokeStyle::Round)
-		{}
-
 		TextStyle(
-			Color color,
+			Color color					= Color::White,
 			TextAlign alignment			= TextAlign::Left,
 			Float32 wrap_width			= 0.f,
-			Float32 line_spacing			= 0.f,
+			Float32 line_spacing		= 0.f,
 			bool underline				= false,
 			bool strikethrough			= false,
-			bool outline				= true,
+			bool outline				= false,
 			Color outline_color			= Color(Color::Black, 0.5),
-			Float32 outline_width			= 1.f,
+			Float32 outline_width		= 1.f,
 			StrokeStyle outline_stroke	= StrokeStyle::Round
 		)
 			: color(color)

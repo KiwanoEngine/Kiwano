@@ -58,6 +58,16 @@ namespace kiwano
 			Float32 alpha
 		);
 
+		inline bool operator== (const Color& rhs) const
+		{
+			return r == rhs.r && g == rhs.g && b == rhs.b && a == rhs.a;
+		}
+
+		inline bool operator!= (const Color& rhs) const
+		{
+			return !((*this) == rhs);
+		}
+
 	public:
 		enum Value : UInt32
 		{

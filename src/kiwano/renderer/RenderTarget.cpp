@@ -391,12 +391,12 @@ namespace kiwano
 				layout.GetTextStyle().outline_width,
 				GetStrokeStyle(layout.GetTextStyle().outline_stroke).get()
 			);
+
+			hr = layout.GetTextLayout()->Draw(nullptr, text_renderer_.get(), offset.x, offset.y);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = layout.GetTextLayout()->Draw(nullptr, text_renderer_.get(), offset.x, offset.y);
-
 			IncreasePrimitivesCount();
 		}
 
