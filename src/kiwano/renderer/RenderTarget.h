@@ -20,6 +20,7 @@
 
 #pragma once
 #include "../base/time.h"
+#include "Brush.h"
 #include "Texture.h"
 #include "Geometry.h"
 #include "TextLayout.h"
@@ -55,62 +56,53 @@ namespace kiwano
 
 		void DrawGeometry(
 			Geometry const& geometry,
-			Color const& stroke_color,
 			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
 		void FillGeometry(
-			Geometry const& geometry,
-			Color const& fill_color
+			Geometry const& geometry
 		) const;
 
 		void DrawLine(
 			Point const& point1,
 			Point const& point2,
-			Color const& stroke_color,
 			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
 		void DrawRectangle(
 			Rect const& rect,
-			Color const& stroke_color,
 			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
 		void FillRectangle(
-			Rect const& rect,
-			Color const& fill_color
+			Rect const& rect
 		) const;
 
 		void DrawRoundedRectangle(
 			Rect const& rect,
 			Vec2 const& radius,
-			Color const& stroke_color,
 			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
 		void FillRoundedRectangle(
 			Rect const& rect,
-			Vec2 const& radius,
-			Color const& fill_color
+			Vec2 const& radius
 		) const;
 
 		void DrawEllipse(
 			Point const& center,
 			Vec2 const& radius,
-			Color const& stroke_color,
 			Float32 stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
 		void FillEllipse(
 			Point const& center,
-			Vec2 const& radius,
-			Color const& fill_color
+			Vec2 const& radius
 		) const;
 
 		void DrawTexture(
@@ -150,10 +142,20 @@ namespace kiwano
 
 		Float32 GetOpacity() const;
 
+		Brush GetCurrentBrush() const;
+
 		Matrix3x2 GetGlobalTransform() const;
 
 		void SetOpacity(
 			Float32 opacity
+		);
+
+		void SetCurrentBrush(
+			Brush const& brush
+		);
+
+		void SetDefaultBrushColor(
+			Color const& color
 		);
 
 		void SetTransform(

@@ -45,7 +45,7 @@ namespace kiwano
 			};
 		};
 
-		static bool Check(UInt32 type);
+		static bool Check(Int32 type);
 	};
 
 	// 键盘事件
@@ -65,7 +65,7 @@ namespace kiwano
 			};
 		};
 
-		static bool Check(UInt32 type);
+		static bool Check(Int32 type);
 	};
 
 	// 窗口事件
@@ -96,7 +96,7 @@ namespace kiwano
 			};
 		};
 
-		static bool Check(UInt32 type);
+		static bool Check(Int32 type);
 	};
 
 	// 自定义事件
@@ -110,7 +110,7 @@ namespace kiwano
 	// 事件
 	struct KGE_API Event
 	{
-		enum Type : UInt32
+		enum Type : Int32
 		{
 			First,
 
@@ -144,34 +144,34 @@ namespace kiwano
 			Last
 		};
 
-		UInt32 type;
+		Int32 type;
 		Actor* target;
 
 		union
 		{
 			MouseEvent mouse;
 			KeyboardEvent key;
-			WindowEvent win;
+			WindowEvent window;
 			CustomEvent custom;
 		};
 
-		Event(UInt32 type = Type::First) : type(type), target(nullptr) {}
+		Event(Int32 type = Type::First) : type(type), target(nullptr) {}
 	};
 
 
 	// Check-functions
 
-	inline bool MouseEvent::Check(UInt32 type)
+	inline bool MouseEvent::Check(Int32 type)
 	{
 		return type > Event::MouseFirst && type < Event::MouseLast;
 	}
 
-	inline bool KeyboardEvent::Check(UInt32 type)
+	inline bool KeyboardEvent::Check(Int32 type)
 	{
 		return type > Event::KeyFirst && type < Event::KeyLast;
 	}
 
-	inline bool WindowEvent::Check(UInt32 type)
+	inline bool WindowEvent::Check(Int32 type)
 	{
 		return type > Event::WindowFirst && type < Event::WindowLast;
 	}

@@ -42,6 +42,7 @@ namespace kiwano
 	}
 
 	Config::Config(String const& title, UInt32 width, UInt32 height, UInt32 icon)
+		: debug(false)
 	{
 		window.title = title;
 		window.width = width;
@@ -50,6 +51,7 @@ namespace kiwano
 	}
 
 	Config::Config(WindowConfig const& wnd_config, RenderConfig const& render_config)
+		: debug(false)
 	{
 		window = wnd_config;
 		render = render_config;
@@ -382,8 +384,8 @@ namespace kiwano
 				Window::GetInstance()->UpdateWindowRect();
 
 				Event evt(Event::WindowResized);
-				evt.win.width = LOWORD(lparam);
-				evt.win.height = HIWORD(lparam);
+				evt.window.width = LOWORD(lparam);
+				evt.window.height = HIWORD(lparam);
 				app->DispatchEvent(evt);
 			}
 		}
@@ -395,8 +397,8 @@ namespace kiwano
 			Int32 y = (Int32)(short)HIWORD(lparam);
 
 			Event evt(Event::WindowMoved);
-			evt.win.x = x;
-			evt.win.y = y;
+			evt.window.x = x;
+			evt.window.y = y;
 			app->DispatchEvent(evt);
 		}
 		break;
@@ -408,7 +410,7 @@ namespace kiwano
 			Window::GetInstance()->SetActive(active);
 
 			Event evt(Event::WindowFocusChanged);
-			evt.win.focus = active;
+			evt.window.focus = active;
 			app->DispatchEvent(evt);
 		}
 		break;
@@ -418,7 +420,7 @@ namespace kiwano
 			// KGE_LOG(L"Window title changed");
 
 			Event evt(Event::WindowTitleChanged);
-			evt.win.title = reinterpret_cast<const WChar*>(lparam);
+			evt.window.title = reinterpret_cast<const WChar*>(lparam);
 			app->DispatchEvent(evt);
 		}
 		break;

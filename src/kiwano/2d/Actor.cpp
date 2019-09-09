@@ -128,11 +128,15 @@ namespace kiwano
 	{
 		if (show_border_ && !size_.IsOrigin())
 		{
-            Rect bounds = GetBounds();
+			Rect bounds = GetBounds();
 
 			rt->SetTransform(transform_matrix_);
-			rt->FillRectangle(bounds, Color(Color::Red, .4f));
-			rt->DrawRectangle(bounds, Color(Color::Red, .8f), 2.f);
+
+			rt->SetDefaultBrushColor(Color(Color::Red, .4f));
+			rt->FillRectangle(bounds);
+
+			rt->SetDefaultBrushColor(Color(Color::Red, .8f));
+			rt->DrawRectangle(bounds, 2.f);
 		}
 
 		for (auto child = children_.first_item(); child; child = child->next_item())

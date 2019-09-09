@@ -101,16 +101,16 @@ namespace kiwano
 		{
 			PrepareRender(rt);
 
+			rt->SetDefaultBrushColor(stroke_color_);
 			rt->DrawGeometry(
 				geo_,
-				stroke_color_,
 				stroke_width_ * 2,  // twice width for widening
 				stroke_style_
 			);
 
+			rt->SetDefaultBrushColor(fill_color_);
 			rt->FillGeometry(
-				geo_,
-				fill_color_
+				geo_
 			);
 		}
 	}

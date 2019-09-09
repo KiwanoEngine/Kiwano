@@ -67,6 +67,11 @@ namespace kiwano
 			);
 		}
 
+		if (SUCCEEDED(hr))
+		{
+			current_brush_ = default_brush_;
+		}
+
 		return hr;
 	}
 
@@ -86,8 +91,6 @@ namespace kiwano
 
 	void RenderTarget::BeginDraw()
 	{
-		HRESULT hr = E_FAIL;
-
 		if (collecting_status_)
 		{
 			status_.start = Time::Now();
@@ -97,15 +100,12 @@ namespace kiwano
 		if (render_target_)
 		{
 			render_target_->BeginDraw();
-			hr = S_OK;
 		}
-
-		ThrowIfFailed(hr);
 	}
 
 	void RenderTarget::EndDraw()
 	{
-		ThrowIfFailed(render_target_->EndDraw());
+		ThrowIfFailed( render_target_->EndDraw() );
 
 		if (collecting_status_)
 		{
@@ -113,26 +113,19 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::DrawGeometry(
-		Geometry const& geometry,
-		Color const& stroke_color,
-		Float32 stroke_width,
-		StrokeStyle stroke
-	) const
+	void RenderTarget::DrawGeometry(Geometry const& geometry, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_ || !render_target_)
+		if (!render_target_ || !current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr) && geometry.GetGeometry())
 		{
-			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
-
 			render_target_->DrawGeometry(
 				geometry.GetGeometry().get(),
-				default_brush_.get(),
+				current_brush_.get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -143,42 +136,39 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::FillGeometry(Geometry const& geometry, Color const& fill_color) const
+	void RenderTarget::FillGeometry(Geometry const& geometry) const
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_ || !render_target_)
+		if (!render_target_ || !current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr) && geometry.GetGeometry())
 		{
-			default_brush_->SetColor(DX::ConvertToColorF(fill_color));
 			render_target_->FillGeometry(
 				geometry.GetGeometry().get(),
-				default_brush_.get()
+				current_brush_.get()
 			);
 		}
 
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawLine(Point const& point1, Point const& point2, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawLine(Point const& point1, Point const& point2, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_ || !render_target_)
+		if (!render_target_ || !current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
-
 			render_target_->DrawLine(
 				DX::ConvertToPoint2F(point1),
 				DX::ConvertToPoint2F(point2),
-				default_brush_.get(),
+				current_brush_.get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -189,21 +179,20 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawRectangle(Rect const& rect, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawRectangle(Rect const& rect, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_ || !render_target_)
+
+		if (!render_target_ || !current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
-
 			render_target_->DrawRectangle(
 				DX::ConvertToRectF(rect),
-				default_brush_.get(),
+				current_brush_.get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -214,45 +203,42 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::FillRectangle(Rect const& rect, Color const& fill_color) const
+	void RenderTarget::FillRectangle(Rect const& rect) const
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_ || !render_target_)
+		if (!render_target_ || !current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			default_brush_->SetColor(DX::ConvertToColorF(fill_color));
 			render_target_->FillRectangle(
 				DX::ConvertToRectF(rect),
-				default_brush_.get()
+				current_brush_.get()
 			);
 		}
 
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_ || !render_target_)
+		if (!render_target_ || !current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
-
 			render_target_->DrawRoundedRectangle(
 				D2D1::RoundedRect(
 					DX::ConvertToRectF(rect),
 					radius.x,
 					radius.y
 				),
-				default_brush_.get(),
+				current_brush_.get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -263,49 +249,46 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::FillRoundedRectangle(Rect const& rect, Vec2 const& radius, Color const& fill_color) const
+	void RenderTarget::FillRoundedRectangle(Rect const& rect, Vec2 const& radius) const
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_ || !render_target_)
+		if (!render_target_ || !current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			default_brush_->SetColor(DX::ConvertToColorF(fill_color));
 			render_target_->FillRoundedRectangle(
 				D2D1::RoundedRect(
 					DX::ConvertToRectF(rect),
 					radius.x,
 					radius.y
 				),
-				default_brush_.get()
+				current_brush_.get()
 			);
 		}
 
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, Color const& stroke_color, Float32 stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, Float32 stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_ || !render_target_)
+		if (!render_target_ || !current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			default_brush_->SetColor(DX::ConvertToColorF(stroke_color));
-
 			render_target_->DrawEllipse(
 				D2D1::Ellipse(
 					DX::ConvertToPoint2F(center),
 					radius.x,
 					radius.y
 				),
-				default_brush_.get(),
+				current_brush_.get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -316,24 +299,23 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::FillEllipse(Point const& center, Vec2 const& radius, Color const& fill_color) const
+	void RenderTarget::FillEllipse(Point const& center, Vec2 const& radius) const
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_ || !render_target_)
+		if (!render_target_ || !current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			default_brush_->SetColor(DX::ConvertToColorF(fill_color));
 			render_target_->FillEllipse(
 				D2D1::Ellipse(
 					DX::ConvertToPoint2F(center),
 					radius.x,
 					radius.y
 				),
-				default_brush_.get()
+				current_brush_.get()
 			);
 		}
 
@@ -464,7 +446,7 @@ namespace kiwano
 	void RenderTarget::PushLayer(LayerArea& layer)
 	{
 		HRESULT hr = S_OK;
-		if (!render_target_ || !default_brush_)
+		if (!render_target_)
 		{
 			hr = E_UNEXPECTED;
 		}
@@ -540,6 +522,11 @@ namespace kiwano
 		return opacity_;
 	}
 
+	Brush RenderTarget::GetCurrentBrush() const
+	{
+		return Brush( current_brush_ );
+	}
+
 	Matrix3x2 RenderTarget::GetGlobalTransform() const
 	{
 		return global_transform_;
@@ -569,7 +556,6 @@ namespace kiwano
 			if (fast_global_transform_)
 			{
 				render_target_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
-
 			}
 			else
 			{
@@ -602,7 +588,7 @@ namespace kiwano
 	void RenderTarget::SetOpacity(Float32 opacity)
 	{
 		HRESULT hr = S_OK;
-		if (!default_brush_)
+		if (!current_brush_)
 		{
 			hr = E_UNEXPECTED;
 		}
@@ -612,11 +598,22 @@ namespace kiwano
 			if (opacity_ != opacity)
 			{
 				opacity_ = opacity;
-				default_brush_->SetOpacity(opacity);
+				current_brush_->SetOpacity(opacity);
 			}
 		}
 
 		ThrowIfFailed(hr);
+	}
+
+	void RenderTarget::SetCurrentBrush(Brush const& brush)
+	{
+		current_brush_ = brush.GetBrush();
+	}
+
+	void RenderTarget::SetDefaultBrushColor(Color const& color)
+	{
+		KGE_ASSERT(default_brush_);
+		default_brush_->SetColor(DX::ConvertToColorF(color));
 	}
 
 	void RenderTarget::SetAntialiasMode(bool enabled)

@@ -35,7 +35,6 @@ namespace kiwano
 		: hwnd_(nullptr)
 		, vsync_(true)
 		, clear_color_(Color::Black)
-		, resolution_mode_(ResolutionMode::Fixed)
 	{
 	}
 
@@ -54,7 +53,7 @@ namespace kiwano
 		KGE_LOG(L"Creating device resources");
 
 		hwnd_ = Window::GetInstance()->GetHandle();
-		resolution_ = output_size_ = Window::GetInstance()->GetSize();
+		output_size_ = Window::GetInstance()->GetSize();
 
 		d2d_res_ = nullptr;
 		d3d_res_ = nullptr;
@@ -71,19 +70,11 @@ namespace kiwano
 		// Direct3D device resources
 		if (SUCCEEDED(hr))
 		{
-#if defined(KGE_USE_DIRECTX10)
-			hr = ID3D10DeviceResources::Create(
+			hr = ID3DDeviceResources::Create(
 				&d3d_res_,
 				d2d_res_.get(),
 				hwnd_
 			);
-#else
-			hr = ID3D11DeviceResources::Create(
-				&d3d_res_,
-				d2d_res_.get(),
-				hwnd_
-			);
-#endif
 		}
 
 		// DrawingStateBlock
@@ -163,19 +154,13 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			render_target_->SaveDrawingState(drawing_state_block_.get());
-			BeginDraw();
-		}
-
-		if (SUCCEEDED(hr))
-		{
 			hr = d3d_res_->ClearRenderTarget(clear_color_);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			SetTransform(Matrix3x2{});
-			PushClipRect(Rect{ Point{}, resolution_ });
+			render_target_->SaveDrawingState(drawing_state_block_.get());
+			BeginDraw();
 		}
 
 		ThrowIfFailed(hr);
@@ -190,11 +175,8 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-
 		if (SUCCEEDED(hr))
 		{
-			PopClipRect();
-
 			EndDraw();
 
 			render_target_->RestoreDrawingState(drawing_state_block_.get());
@@ -890,27 +872,116 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
+	void Renderer::CreateSolidBrush(Brush& brush, Color const& color)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<ID2D1SolidColorBrush> output;
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetDeviceContext()->CreateSolidColorBrush(DX::ConvertToColorF(color), &output);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			brush.SetBrush(output);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreateLinearGradientBrush(Brush& brush, Point const& begin, Point const& end, Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ID2D1GradientStopCollection* collection = nullptr;
+			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
+				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
+				stops.size(),
+				D2D1_GAMMA_2_2,
+				D2D1_EXTEND_MODE(extend_mode),
+				&collection
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				ComPtr<ID2D1LinearGradientBrush> output;
+				hr = d2d_res_->GetDeviceContext()->CreateLinearGradientBrush(
+					D2D1::LinearGradientBrushProperties(
+						DX::ConvertToPoint2F(begin),
+						DX::ConvertToPoint2F(end)
+					),
+					collection,
+					&output
+				);
+
+				if (SUCCEEDED(hr))
+				{
+					brush.SetBrush(output);
+				}
+			}
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreateRadialGradientBrush(Brush& brush, Point const& center, Vec2 const& offset, Vec2 const& radius,
+		Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ID2D1GradientStopCollection* collection = nullptr;
+			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
+				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
+				stops.size(),
+				D2D1_GAMMA_2_2,
+				D2D1_EXTEND_MODE(extend_mode),
+				&collection
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				ComPtr<ID2D1RadialGradientBrush> output;
+				hr = d2d_res_->GetDeviceContext()->CreateRadialGradientBrush(
+					D2D1::RadialGradientBrushProperties(
+						DX::ConvertToPoint2F(center),
+						DX::ConvertToPoint2F(offset),
+						radius.x,
+						radius.y
+					),
+					collection,
+					&output
+				);
+
+				if (SUCCEEDED(hr))
+				{
+					brush.SetBrush(output);
+				}
+			}
+		}
+
+		ThrowIfFailed(hr);
+	}
+
 	void Renderer::SetVSyncEnabled(bool enabled)
 	{
 		vsync_ = enabled;
-	}
-
-	void Renderer::SetResolution(Size const& resolution)
-	{
-		if (resolution_ != resolution)
-		{
-			resolution_ = resolution;
-			UpdateResolution();
-		}
-	}
-
-	void Renderer::SetResolutionMode(ResolutionMode mode)
-	{
-		if (resolution_mode_ != mode)
-		{
-			resolution_mode_ = mode;
-			UpdateResolution();
-		}
 	}
 
 	void Renderer::SetClearColor(const Color& color)
@@ -933,58 +1004,7 @@ namespace kiwano
 			hr = d3d_res_->SetLogicalSize(output_size_);
 		}
 
-		if (SUCCEEDED(hr))
-		{
-			UpdateResolution();
-		}
-
 		ThrowIfFailed(hr);
-	}
-
-	void Renderer::UpdateResolution()
-	{
-		switch (resolution_mode_)
-		{
-		case ResolutionMode::Fixed:
-		{
-			SetGlobalTransform(nullptr);
-			break;
-		}
-
-		case ResolutionMode::Center:
-		{
-			Float32 left = math::Ceil((output_size_.x - resolution_.x) / 2);
-			Float32 top = math::Ceil((output_size_.y - resolution_.y) / 2);
-			SetGlobalTransform(Matrix3x2::Translation(Vec2{ left, top }));
-			break;
-		}
-
-		case ResolutionMode::Stretch:
-		{
-			Float32 scalex = Float32(Int32((output_size_.x / resolution_.x) * 100 + 0.5f)) / 100;
-			Float32 scaley = Float32(Int32((output_size_.y / resolution_.y) * 100 + 0.5f)) / 100;
-			SetGlobalTransform(Matrix3x2::Scaling(Vec2{ scalex, scaley }));
-			break;
-		}
-
-		case ResolutionMode::Adaptive:
-		{
-			Float32 scalex = Float32(Int32((output_size_.x / resolution_.x) * 100 + 0.5f)) / 100;
-			Float32 scaley = Float32(Int32((output_size_.y / resolution_.y) * 100 + 0.5f)) / 100;
-			if (scalex > scaley)
-			{
-				Float32 left = math::Ceil((output_size_.x - resolution_.x * scaley) / 2);
-				SetGlobalTransform(Matrix3x2::SRT(Vec2{ left, 0 }, Vec2{ scaley, scaley }, 0));
-			}
-			else
-			{
-				Float32 top = math::Ceil((output_size_.y - resolution_.y * scalex) / 2);
-				SetGlobalTransform(Matrix3x2::SRT(Vec2{ 0, top }, Vec2{ scalex, scalex }, 0));
-
-			}
-			break;
-		}
-		}
 	}
 
 }

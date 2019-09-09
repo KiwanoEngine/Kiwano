@@ -84,14 +84,11 @@ namespace kiwano
 
 	void Layer::Render(RenderTarget* rt)
 	{
-		if (!children_.empty())
-		{
-			PrepareRender(rt);
+		PrepareRender(rt);
 
-			rt->PushLayer(area_);
-			Actor::Render(rt);
-			rt->PopLayer();
-		}
+		rt->PushLayer(area_);
+		Actor::Render(rt);
+		rt->PopLayer();
 	}
 
 	void Layer::HandleMessages(Event const& evt)
