@@ -51,20 +51,8 @@ namespace kiwano
 		);
 	};
 
-	// 分辨率模式
-	// 分辨率模式决定了将画面渲染到视区上的方式
-	// Fixed (固定): 分辨率不随视区改变, 且画面始终与视区边界对齐（默认）
-	// Center (居中): 分辨率不随视区改变, 且画面始终在视区上居中
-	// Stretch (拉伸): 分辨率始终随视区等比例拉伸
-	// Adaptive (宽高自适应): 分辨率始终保持宽高比, 且尽可能的填充视区, 可能会出现黑色边界
-	enum class ResolutionMode
-	{
-		Fixed,		/* 固定 */
-		Center,		/* 居中 */
-		Stretch,	/* 拉伸 */
-		Adaptive,	/* 宽高自适应 */
-	};
 
+	// 渲染器
 	class KGE_API Renderer
 		: public Singleton<Renderer>
 		, public Component
@@ -81,16 +69,6 @@ namespace kiwano
 		// 开启或关闭垂直同步
 		void SetVSyncEnabled(
 			bool enabled
-		);
-
-		// 设置画面分辨率
-		void SetResolution(
-			Size const& resolution
-		);
-
-		// 设置分辨率模式
-		void SetResolutionMode(
-			ResolutionMode mode
 		);
 
 	public:
@@ -190,8 +168,6 @@ namespace kiwano
 
 		inline Size const&				GetOutputSize() const			{ return output_size_; }
 
-		inline Size const&				GetResolution() const			{ return resolution_; }
-
 		inline Color const&				GetClearColor() const			{ return clear_color_; }
 
 		inline ID2DDeviceResources*		GetD2DDeviceResources() const	{ KGE_ASSERT(d2d_res_); return d2d_res_.get(); }
@@ -209,15 +185,11 @@ namespace kiwano
 
 		void ResizeTarget(UInt32 width, UInt32 height);
 
-		void UpdateResolution();
-
 	private:
 		bool			vsync_;
 		HWND			hwnd_;
 		Color			clear_color_;
 		Size			output_size_;
-		Size			resolution_;
-		ResolutionMode	resolution_mode_;
 
 		ComPtr<ID2DDeviceResources>		d2d_res_;
 		ComPtr<ID3DDeviceResources>		d3d_res_;

@@ -128,7 +128,7 @@ namespace kiwano
 	{
 		if (show_border_ && !size_.IsOrigin())
 		{
-            Rect bounds = GetBounds();
+			Rect bounds = GetBounds();
 
 			rt->SetTransform(transform_matrix_);
 			rt->FillRectangle(bounds, Color(Color::Red, .4f));
