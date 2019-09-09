@@ -78,7 +78,8 @@ namespace kiwano
 	{
 		PrepareRender(rt);
 
-		rt->FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f }, background_color_);
+		rt->SetDefaultBrushColor(background_color_);
+		rt->FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
 	}
 
 	void DebugActor::OnUpdate(Duration dt)

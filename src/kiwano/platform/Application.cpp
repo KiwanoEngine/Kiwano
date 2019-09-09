@@ -42,6 +42,7 @@ namespace kiwano
 	}
 
 	Config::Config(String const& title, UInt32 width, UInt32 height, UInt32 icon)
+		: debug(false)
 	{
 		window.title = title;
 		window.width = width;
@@ -50,6 +51,7 @@ namespace kiwano
 	}
 
 	Config::Config(WindowConfig const& wnd_config, RenderConfig const& render_config)
+		: debug(false)
 	{
 		window = wnd_config;
 		render = render_config;

@@ -53,6 +53,7 @@ namespace kiwano
 		KGE_LOG(L"Creating device resources");
 
 		hwnd_ = Window::GetInstance()->GetHandle();
+		output_size_ = Window::GetInstance()->GetSize();
 
 		d2d_res_ = nullptr;
 		d3d_res_ = nullptr;
@@ -153,13 +154,13 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			render_target_->SaveDrawingState(drawing_state_block_.get());
-			BeginDraw();
+			hr = d3d_res_->ClearRenderTarget(clear_color_);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = d3d_res_->ClearRenderTarget(clear_color_);
+			render_target_->SaveDrawingState(drawing_state_block_.get());
+			BeginDraw();
 		}
 
 		ThrowIfFailed(hr);
@@ -173,7 +174,6 @@ namespace kiwano
 		{
 			hr = E_UNEXPECTED;
 		}
-
 
 		if (SUCCEEDED(hr))
 		{
@@ -867,6 +867,113 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = render_target.CreateDeviceResources(output, d2d_res_);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreateSolidBrush(Brush& brush, Color const& color)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		ComPtr<ID2D1SolidColorBrush> output;
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->GetDeviceContext()->CreateSolidColorBrush(DX::ConvertToColorF(color), &output);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			brush.SetBrush(output);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreateLinearGradientBrush(Brush& brush, Point const& begin, Point const& end, Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ID2D1GradientStopCollection* collection = nullptr;
+			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
+				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
+				stops.size(),
+				D2D1_GAMMA_2_2,
+				D2D1_EXTEND_MODE(extend_mode),
+				&collection
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				ComPtr<ID2D1LinearGradientBrush> output;
+				hr = d2d_res_->GetDeviceContext()->CreateLinearGradientBrush(
+					D2D1::LinearGradientBrushProperties(
+						DX::ConvertToPoint2F(begin),
+						DX::ConvertToPoint2F(end)
+					),
+					collection,
+					&output
+				);
+
+				if (SUCCEEDED(hr))
+				{
+					brush.SetBrush(output);
+				}
+			}
+		}
+
+		ThrowIfFailed(hr);
+	}
+
+	void Renderer::CreateRadialGradientBrush(Brush& brush, Point const& center, Vec2 const& offset, Vec2 const& radius,
+		Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ID2D1GradientStopCollection* collection = nullptr;
+			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
+				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
+				stops.size(),
+				D2D1_GAMMA_2_2,
+				D2D1_EXTEND_MODE(extend_mode),
+				&collection
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				ComPtr<ID2D1RadialGradientBrush> output;
+				hr = d2d_res_->GetDeviceContext()->CreateRadialGradientBrush(
+					D2D1::RadialGradientBrushProperties(
+						DX::ConvertToPoint2F(center),
+						DX::ConvertToPoint2F(offset),
+						radius.x,
+						radius.y
+					),
+					collection,
+					&output
+				);
+
+				if (SUCCEEDED(hr))
+				{
+					brush.SetBrush(output);
+				}
+			}
 		}
 
 		ThrowIfFailed(hr);

@@ -150,6 +150,28 @@ namespace kiwano
 			TextureRenderTarget& render_target
 		);
 
+		void CreateSolidBrush(
+			Brush& brush,
+			Color const& color
+		);
+
+		void CreateLinearGradientBrush(
+			Brush& brush,
+			Point const& begin,
+			Point const& end,
+			Vector<GradientStop> const& stops,
+			GradientExtendMode extend_mode
+		);
+
+		void CreateRadialGradientBrush(
+			Brush& brush,
+			Point const& center,
+			Vec2 const& offset,
+			Vec2 const& radius,
+			Vector<GradientStop> const& stops,
+			GradientExtendMode extend_mode
+		);
+
 	public:
 		void Init(RenderConfig const& config);
 
