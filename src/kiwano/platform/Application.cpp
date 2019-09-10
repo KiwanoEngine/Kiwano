@@ -87,7 +87,7 @@ namespace kiwano
 		Renderer::GetInstance()->Init(config.render);
 
 		// Setup all components
-		for (Component* c : components_)
+		for (auto c : comps_)
 		{
 			c->SetupComponent();
 		}
@@ -148,11 +148,11 @@ namespace kiwano
 		{
 			inited_ = false;
 
-			for (auto iter = components_.rbegin(); iter != components_.rend(); ++iter)
+			for (auto iter = comps_.rbegin(); iter != comps_.rend(); ++iter)
 			{
 				(*iter)->DestroyComponent();
 			}
-			components_.clear();
+			comps_.clear();
 		}
 
 		// Destroy all instances
@@ -167,35 +167,28 @@ namespace kiwano
 		// Logger::DestroyInstance();
 	}
 
-	void Application::Use(Component* component)
+	void Application::Use(ComponentBase* component)
 	{
 		if (component)
 		{
 
 #if defined(KGE_DEBUG)
-			if (components_.contains(component))
+			if (comps_.contains(component))
 			{
 				KGE_ASSERT(false && "Component already exists!");
 			}
 #endif
 
-			components_.push_back(component);
-		}
-	}
+			comps_.push_back(component);
 
-	void Application::Remove(Component* component)
-	{
-		if (component)
-		{
-			for (auto iter = components_.begin(); iter != components_.end(); ++iter)
-			{
-				if ((*iter) == component)
-				{
-					(*iter)->DestroyComponent();
-					components_.erase(iter);
-					break;
-				}
-			}
+			if (component->Check(RenderComponent::flag))
+				render_comps_.push_back(dynamic_cast<RenderComponent*>(component));
+
+			if (component->Check(UpdateComponent::flag))
+				update_comps_.push_back(dynamic_cast<UpdateComponent*>(component));
+
+			if (component->Check(EventComponent::flag))
+				event_comps_.push_back(dynamic_cast<EventComponent*>(component));
 		}
 	}
 
@@ -207,7 +200,7 @@ namespace kiwano
 	void Application::Update()
 	{
 		// Before update
-		for (Component* c : components_)
+		for (auto c : update_comps_)
 		{
 			c->BeforeUpdate();
 		}
@@ -240,14 +233,14 @@ namespace kiwano
 			const auto dt = (now - last) * time_scale_;
 			last = now;
 
-			for (Component* c : components_)
+			for (auto c : update_comps_)
 			{
 				c->OnUpdate(dt);
 			}
 		}
 
 		// After update
-		for (auto rit = components_.rbegin(); rit != components_.rend(); ++rit)
+		for (auto rit = update_comps_.rbegin(); rit != update_comps_.rend(); ++rit)
 		{
 			(*rit)->AfterUpdate();
 		}
@@ -256,20 +249,20 @@ namespace kiwano
 	void Application::Render()
 	{
 		// Before render
-		for (Component* c : components_)
+		for (auto c : render_comps_)
 		{
 			c->BeforeRender();
 		}
 
 		// Rendering
 		Renderer* renderer = Renderer::GetInstance();
-		for (Component* c : components_)
+		for (auto c : render_comps_)
 		{
 			c->OnRender(renderer);
 		}
 
 		// After render
-		for (auto rit = components_.rbegin(); rit != components_.rend(); ++rit)
+		for (auto rit = render_comps_.rbegin(); rit != render_comps_.rend(); ++rit)
 		{
 			(*rit)->AfterRender();
 		}
@@ -277,7 +270,7 @@ namespace kiwano
 
 	void Application::DispatchEvent(Event& evt)
 	{
-		for (Component* c : components_)
+		for (auto c : event_comps_)
 		{
 			c->HandleEvent(evt);
 		}
@@ -298,7 +291,7 @@ namespace kiwano
 		}
 
 		// Handle Message
-		for (Component* c : app->components_)
+		for (auto c : app->event_comps_)
 		{
 			c->HandleMessage(hwnd, msg, wparam, lparam);
 		}

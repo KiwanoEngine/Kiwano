@@ -28,7 +28,9 @@ namespace kiwano
 	{
 		class ImGuiModule
 			: public Singleton<ImGuiModule>
-			, public Component
+			, public RenderComponent
+			, public UpdateComponent
+			, public EventComponent
 		{
 			KGE_DECLARE_SINGLETON(ImGuiModule);
 

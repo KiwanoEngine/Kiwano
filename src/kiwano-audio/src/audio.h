@@ -30,15 +30,11 @@ namespace kiwano
 	{
 		class KGE_API Audio
 			: public Singleton<Audio>
-			, public Component
+			, public ComponentBase
 		{
 			KGE_DECLARE_SINGLETON(Audio);
 
 		public:
-			void SetupComponent() override;
-
-			void DestroyComponent() override;
-
 			// ¿ªÆôÉè±¸
 			void Open();
 
@@ -49,6 +45,11 @@ namespace kiwano
 				IXAudio2SourceVoice** voice,
 				const Transcoder::Buffer& buffer
 			);
+
+		public:
+			void SetupComponent() override;
+
+			void DestroyComponent() override;
 
 		protected:
 			Audio();

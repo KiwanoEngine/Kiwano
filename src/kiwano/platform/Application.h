@@ -82,12 +82,7 @@ namespace kiwano
 
 		// 添加组件
 		void Use(
-			Component* component
-		);
-
-		// 卸载组件
-		void Remove(
-			Component* component
+			ComponentBase* component
 		);
 
 		// 设置时间缩放因子
@@ -116,6 +111,9 @@ namespace kiwano
 		bool	inited_;
 		Float32	time_scale_;
 
-		Vector<Component*>	components_;
+		Vector<ComponentBase*>		comps_;
+		Vector<RenderComponent*>	render_comps_;
+		Vector<UpdateComponent*>	update_comps_;
+		Vector<EventComponent*>		event_comps_;
 	};
 }

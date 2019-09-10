@@ -115,6 +115,7 @@
     <ClCompile Include="..\src\kiwano\2d\Transform.cpp" />
     <ClCompile Include="..\src\kiwano\2d\Transition.cpp" />
     <ClCompile Include="..\src\kiwano\base\AsyncTask.cpp" />
+    <ClCompile Include="..\src\kiwano\base\Component.cpp" />
     <ClCompile Include="..\src\kiwano\base\EventDispatcher.cpp" />
     <ClCompile Include="..\src\kiwano\base\EventListener.cpp" />
     <ClCompile Include="..\src\kiwano\base\Input.cpp" />

@@ -18,67 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include "../macros.h"
-#include "../2d/include-forwards.h"
 #include "Component.h"
 
 namespace kiwano
 {
-	// 导演
-	class KGE_API Director
-		: public Singleton<Director>
-		, public UpdateComponent
-		, public RenderComponent
-		, public EventComponent
+
+	ComponentBase::ComponentBase()
+		: flag_(0)
 	{
-		KGE_DECLARE_SINGLETON(Director);
+	}
 
-	public:
-		// 切换舞台
-		void EnterStage(
-			StagePtr stage				/* 舞台 */
-		);
+	bool ComponentBase::Check(const Int32 flag)
+	{
+		return !!(flag_ & flag);
+	}
 
-		// 切换舞台
-		void EnterStage(
-			StagePtr stage,				/* 舞台 */
-			TransitionPtr transition	/* 过渡动画 */
-		);
+	RenderComponent::RenderComponent()
+	{
+		flag_ |= flag;
+	}
 
-		// 获取当前舞台
-		StagePtr GetCurrentStage();
+	UpdateComponent::UpdateComponent()
+	{
+		flag_ |= flag;
+	}
 
-		// 启用或禁用角色边界渲染功能
-		void SetRenderBorderEnabled(bool enabled);
+	EventComponent::EventComponent()
+	{
+		flag_ |= flag;
+	}
 
-		// 显示调试信息
-		void ShowDebugInfo(bool show = true);
-
-		// 清空舞台
-		void ClearStages();
-
-	public:
-		void SetupComponent() override {}
-
-		void DestroyComponent() override {}
-
-		void OnUpdate(Duration dt) override;
-
-		void OnRender(RenderTarget* rt) override;
-
-		void HandleEvent(Event& evt) override;
-
-	protected:
-		Director();
-
-		virtual ~Director();
-
-	protected:
-		bool			render_border_enabled_;
-		StagePtr		curr_stage_;
-		StagePtr		next_stage_;
-		ActorPtr		debug_actor_;
-		TransitionPtr	transition_;
-	};
 }

@@ -55,7 +55,8 @@ namespace kiwano
 	// äÖÈ¾Æ÷
 	class KGE_API Renderer
 		: public Singleton<Renderer>
-		, public Component
+		, public RenderComponent
+		, public EventComponent
 		, public RenderTarget
 	{
 		KGE_DECLARE_SINGLETON(Renderer);

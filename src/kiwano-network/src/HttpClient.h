@@ -31,7 +31,7 @@ namespace kiwano
 	{
 		class KGE_API HttpClient
 			: public Singleton<HttpClient>
-			, public Component
+			, public ComponentBase
 		{
 			KGE_DECLARE_SINGLETON(HttpClient);
 

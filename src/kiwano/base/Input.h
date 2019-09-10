@@ -29,7 +29,8 @@ namespace kiwano
 {
 	class KGE_API Input
 		: public Singleton<Input>
-		, public Component
+		, public UpdateComponent
+		, public EventComponent
 	{
 		KGE_DECLARE_SINGLETON(Input);
 
