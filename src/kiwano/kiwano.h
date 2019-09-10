@@ -47,9 +47,9 @@
 // math
 //
 
-#include "math/constants.hpp"
-#include "math/scalar.hpp"
-#include "math/ease.hpp"
+#include "math/constants.h"
+#include "math/scalar.h"
+#include "math/ease.h"
 #include "math/Vec2.hpp"
 #include "math/rand.h"
 #include "math/Matrix.hpp"

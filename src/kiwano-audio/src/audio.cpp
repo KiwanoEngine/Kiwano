@@ -74,7 +74,7 @@ namespace kiwano
 			modules::MediaFoundation::Get().MFShutdown();
 		}
 
-		HRESULT Audio::CreateVoice(IXAudio2SourceVoice** voice, const WAVEFORMATEX* wfx)
+		HRESULT Audio::CreateVoice(IXAudio2SourceVoice** voice, const Transcoder::Buffer& buffer)
 		{
 			KGE_ASSERT(x_audio2_ && "Audio engine hasn't been initialized!");
 
@@ -89,8 +89,7 @@ namespace kiwano
 				(*voice) = nullptr;
 			}
 
-			HRESULT hr = x_audio2_->CreateSourceVoice(voice, wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
-			return hr;
+			return x_audio2_->CreateSourceVoice(voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
 		}
 
 		void Audio::Open()

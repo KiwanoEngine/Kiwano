@@ -31,7 +31,6 @@ namespace kiwano
 	{
 		KGE_DECLARE_SMART_PTR(Sound);
 
-		// “Ù¿÷∂‘œÛ
 		class KGE_API Sound
 			: public ObjectBase
 		{
@@ -87,9 +86,10 @@ namespace kiwano
 			);
 
 		protected:
-			bool					opened_;
-			bool					playing_;
-			Transcoder				transcoder_;
+			bool		opened_;
+			bool		playing_;
+			Transcoder	transcoder_;
+
 			IXAudio2SourceVoice*	voice_;
 		};
 	}

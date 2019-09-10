@@ -20,7 +20,7 @@
 
 #pragma once
 #include "../base/Resource.h"
-#include "win32/ComPtr.hpp"
+#include "../base/win32/ComPtr.hpp"
 #include <dwrite.h>
 
 namespace kiwano

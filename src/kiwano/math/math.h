@@ -20,9 +20,9 @@
 
 #pragma once
 #include "..\core\core.h"
-#include "constants.hpp"
-#include "ease.hpp"
-#include "scalar.hpp"
+#include "constants.h"
+#include "ease.h"
+#include "scalar.h"
 #include "Vec2.hpp"
 #include "Rect.hpp"
 #include "Matrix.hpp"

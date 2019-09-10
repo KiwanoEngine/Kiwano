@@ -21,6 +21,8 @@
 #pragma once
 #include <kiwano/core/singleton.hpp>
 #include <kiwano/base/Component.h>
+#include <kiwano/base/win32/ComPtr.hpp>
+#include "Transcoder.h"
 
 namespace kiwano
 {
@@ -45,7 +47,7 @@ namespace kiwano
 
 			HRESULT CreateVoice(
 				IXAudio2SourceVoice** voice,
-				const WAVEFORMATEX* wfx
+				const Transcoder::Buffer& buffer
 			);
 
 		protected:

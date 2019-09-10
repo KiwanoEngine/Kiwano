@@ -12,6 +12,7 @@
     <ClInclude Include="..\src\kiwano\2d\Frame.h" />
     <ClInclude Include="..\src\kiwano\2d\GifSprite.h" />
     <ClInclude Include="..\src\kiwano\base\Director.h" />
+    <ClInclude Include="..\src\kiwano\base\win32\ComPtr.hpp" />
     <ClInclude Include="..\src\kiwano\core\basic_json.hpp" />
     <ClInclude Include="..\src\kiwano\core\function.hpp" />
     <ClInclude Include="..\src\kiwano\core\core.h" />
@@ -54,13 +55,13 @@
     <ClInclude Include="..\src\kiwano\base\TimerManager.h" />
     <ClInclude Include="..\src\kiwano\base\time.h" />
     <ClInclude Include="..\src\kiwano\base\Window.h" />
-    <ClInclude Include="..\src\kiwano\math\constants.hpp" />
-    <ClInclude Include="..\src\kiwano\math\ease.hpp" />
+    <ClInclude Include="..\src\kiwano\math\constants.h" />
+    <ClInclude Include="..\src\kiwano\math\ease.h" />
     <ClInclude Include="..\src\kiwano\math\math.h" />
     <ClInclude Include="..\src\kiwano\math\Matrix.hpp" />
     <ClInclude Include="..\src\kiwano\math\rand.h" />
     <ClInclude Include="..\src\kiwano\math\Rect.hpp" />
-    <ClInclude Include="..\src\kiwano\math\scalar.hpp" />
+    <ClInclude Include="..\src\kiwano\math\scalar.h" />
     <ClInclude Include="..\src\kiwano\math\Vec2.hpp" />
     <ClInclude Include="..\src\kiwano\platform\Application.h" />
     <ClInclude Include="..\src\kiwano\platform\modules.h" />
@@ -77,7 +78,6 @@
     <ClInclude Include="..\src\kiwano\renderer\Renderer.h" />
     <ClInclude Include="..\src\kiwano\renderer\RenderTarget.h" />
     <ClInclude Include="..\src\kiwano\renderer\TextLayout.h" />
-    <ClInclude Include="..\src\kiwano\renderer\win32\ComPtr.hpp" />
     <ClInclude Include="..\src\kiwano\renderer\win32\D2DDeviceResources.h" />
     <ClInclude Include="..\src\kiwano\renderer\win32\D3D10DeviceResources.h" />
     <ClInclude Include="..\src\kiwano\renderer\win32\D3D11DeviceResources.h" />

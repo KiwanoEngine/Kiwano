@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/base/Resource.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>

@@ -97,8 +97,8 @@ namespace kiwano
 		protected:
 			Float32 volume_;
 
-			using MusicMap = Map<UInt32, SoundPtr>;
-			MusicMap sound_cache_;
+			using SoundMap = Map<UInt32, SoundPtr>;
+			SoundMap sound_cache_;
 		};
 	}
 }

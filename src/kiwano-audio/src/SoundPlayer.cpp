@@ -38,7 +38,7 @@ namespace kiwano
 		{
 			UInt32 hash_code = file_path.hash();
 			if (sound_cache_.end() != sound_cache_.find(hash_code))
-				return true;
+				return hash_code;
 
 			SoundPtr sound = new (std::nothrow) Sound;
 
@@ -48,17 +48,17 @@ namespace kiwano
 				{
 					sound->SetVolume(volume_);
 					sound_cache_.insert(std::make_pair(hash_code, sound));
-					return true;
+					return hash_code;
 				}
 			}
-			return false;
+			return 0;
 		}
 
 		UInt32 SoundPlayer::Load(Resource const& res)
 		{
 			UInt32 hash_code = res.GetId();
 			if (sound_cache_.end() != sound_cache_.find(hash_code))
-				return true;
+				return hash_code;
 
 			SoundPtr sound = new (std::nothrow) Sound;
 
@@ -68,10 +68,10 @@ namespace kiwano
 				{
 					sound->SetVolume(volume_);
 					sound_cache_.insert(std::make_pair(hash_code, sound));
-					return true;
+					return hash_code;
 				}
 			}
-			return false;
+			return 0;
 		}
 
 		void SoundPlayer::Play(UInt32 id, Int32 loop_count)

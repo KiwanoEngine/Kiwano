@@ -73,7 +73,7 @@ namespace kiwano
 				return false;
 			}
 
-			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder_.GetBuffer().format);
+			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder_.GetBuffer());
 			if (FAILED(hr))
 			{
 				Close();
@@ -101,7 +101,7 @@ namespace kiwano
 				return false;
 			}
 
-			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder_.GetBuffer().format);
+			hr = Audio::GetInstance()->CreateVoice(&voice_, transcoder_.GetBuffer());
 			if (FAILED(hr))
 			{
 				Close();

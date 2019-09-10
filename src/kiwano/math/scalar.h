@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "constants.hpp"
+#include "constants.h"
 #include <cmath>
 
 namespace kiwano
