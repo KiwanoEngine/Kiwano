@@ -95,7 +95,4 @@ namespace kiwano
 		EventComponent();
 	};
 
-
-#undef KGE_DEFINE_COMPONENT_FLAG
-
 }

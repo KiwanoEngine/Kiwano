@@ -20,13 +20,13 @@
 
 #include "Component.h"
 
-#define KGE_DEFINE_COMPONENT_FLAG ( 0x01 << (__COUNTER__ % 32) )
+#define KGE_DEFINE_COMPONENT_FLAG(OFFSET) ( 0x01 << (OFFSET % 32) )
 
 namespace kiwano
 {
-	const Int32 RenderComponent::flag = KGE_DEFINE_COMPONENT_FLAG;
-	const Int32 UpdateComponent::flag = KGE_DEFINE_COMPONENT_FLAG;
-	const Int32 EventComponent::flag = KGE_DEFINE_COMPONENT_FLAG;
+	const Int32 RenderComponent::flag = KGE_DEFINE_COMPONENT_FLAG(0);
+	const Int32 UpdateComponent::flag = KGE_DEFINE_COMPONENT_FLAG(1);
+	const Int32 EventComponent::flag = KGE_DEFINE_COMPONENT_FLAG(2);
 
 	ComponentBase::ComponentBase()
 		: flag_(0)
