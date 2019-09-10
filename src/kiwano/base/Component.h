@@ -25,9 +25,7 @@
 
 namespace kiwano
 {
-
-#define KGE_DEFINE_COMPONENT_FLAG ( 0x01 << (__COUNTER__ % 32) )
-
+	// 基础组件
 	class KGE_API ComponentBase
 	{
 	public:
@@ -46,49 +44,55 @@ namespace kiwano
 
 	class RenderTarget;
 
+	// 渲染支持组件
 	class KGE_API RenderComponent
 		: public virtual ComponentBase
 	{
 	public:
-		static const Int32 flag = KGE_DEFINE_COMPONENT_FLAG;
-
-		RenderComponent();
-
 		virtual void BeforeRender() {}
 
 		virtual void OnRender(RenderTarget*) {}
 
 		virtual void AfterRender() {}
+
+	public:
+		static const Int32 flag;
+
+		RenderComponent();
 	};
 
 
+	// 更新支持组件
 	class KGE_API UpdateComponent
 		: public virtual ComponentBase
 	{
 	public:
-		static const Int32 flag = KGE_DEFINE_COMPONENT_FLAG;
-
-		UpdateComponent();
-
 		virtual void BeforeUpdate() {}
 
 		virtual void OnUpdate(Duration) {}
 
 		virtual void AfterUpdate() {}
+
+	public:
+		static const Int32 flag;
+
+		UpdateComponent();
 	};
 
 
+	// 事件支持组件
 	class KGE_API EventComponent
 		: public virtual ComponentBase
 	{
 	public:
-		static const Int32 flag = KGE_DEFINE_COMPONENT_FLAG;
-
-		EventComponent();
-
 		virtual void HandleEvent(Event&) {}
 
 		virtual void HandleMessage(HWND, UInt32, WPARAM, LPARAM) {}
+
+	public:
+		static const Int32 flag;
+
+		EventComponent();
 	};
 
 

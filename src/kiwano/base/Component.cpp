@@ -20,8 +20,13 @@
 
 #include "Component.h"
 
+#define KGE_DEFINE_COMPONENT_FLAG ( 0x01 << (__COUNTER__ % 32) )
+
 namespace kiwano
 {
+	const Int32 RenderComponent::flag = KGE_DEFINE_COMPONENT_FLAG;
+	const Int32 UpdateComponent::flag = KGE_DEFINE_COMPONENT_FLAG;
+	const Int32 EventComponent::flag = KGE_DEFINE_COMPONENT_FLAG;
 
 	ComponentBase::ComponentBase()
 		: flag_(0)

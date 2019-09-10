@@ -209,15 +209,14 @@ namespace kiwano
 		void ResizeTarget(UInt32 width, UInt32 height);
 
 	private:
-		bool			vsync_;
-		HWND			hwnd_;
-		Color			clear_color_;
-		Size			output_size_;
+		bool	vsync_;
+		HWND	hwnd_;
+		Color	clear_color_;
+		Size	output_size_;
 
-		ComPtr<ID2DDeviceResources>		d2d_res_;
-		ComPtr<ID3DDeviceResources>		d3d_res_;
-		ComPtr<ID2D1DrawingStateBlock>	drawing_state_block_;
-
+		ComPtr<ID2DDeviceResources>				d2d_res_;
+		ComPtr<ID3DDeviceResources>				d3d_res_;
+		ComPtr<ID2D1DrawingStateBlock>			drawing_state_block_;
 		ComPtr<IFontCollectionLoader>			font_collection_loader_;
 		ComPtr<IResourceFontFileLoader>			res_font_file_loader_;
 		ComPtr<IResourceFontCollectionLoader>	res_font_collection_loader_;
