@@ -97,7 +97,7 @@ namespace kiwano
 
 		namespace
 		{
-			const auto duration_regex = std::wregex(LR"([-+]?([0-9]*(\.[0-9]*)?[a-z]+)+)");
+			const auto duration_regex = std::wregex(LR"(^[-+]?([0-9]*(\.[0-9]*)?(h|m|s|ms)+)+$)");
 
 			typedef std::unordered_map<String, Duration> UnitMap;
 			const auto unit_map = UnitMap
@@ -172,14 +172,7 @@ namespace kiwano
 
 			if (ms != 0)
 			{
-				auto float_to_str = [](Float32 val) -> String
-				{
-					WChar buf[10] = {};
-					::swprintf_s(buf, L"%g", val);
-					return String(buf);
-				};
-
-				result.append(float_to_str(static_cast<Float32>(sec) + static_cast<Float32>(ms) / 1000.f))
+				result.append(String::parse(static_cast<Float32>(sec) + static_cast<Float32>(ms) / 1000.f))
 					.append(L"s");
 			}
 			else if (sec != 0)
@@ -400,11 +393,7 @@ namespace kiwano
 				String num_str = str.substr(pos, i - pos);
 				pos = i;
 
-				if (num_str.empty() || num_str == L".")
-				{
-					KGE_ERROR_LOG(L"Duration::Parse failed, invalid duration");
-					return Duration();
-				}
+				KGE_ASSERT(!(num_str.empty() || num_str == L".") && "Duration::Parse failed, invalid duration");
 
 				// µ¥Î»
 				for (; i < len; ++i)
@@ -419,11 +408,7 @@ namespace kiwano
 				String unit_str = str.substr(pos, i - pos);
 				pos = i;
 
-				if (unit_map.find(unit_str) == unit_map.end())
-				{
-					KGE_ERROR_LOG(L"Duration::Parse failed, invalid duration");
-					return Duration();
-				}
+				KGE_ASSERT(unit_map.find(unit_str) != unit_map.end() && "Duration::Parse failed, invalid duration");
 
 				Float64 num = std::wcstod(num_str.c_str(), nullptr);
 				Duration unit = unit_map.at(unit_str);
