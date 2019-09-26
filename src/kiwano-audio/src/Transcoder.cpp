@@ -260,12 +260,15 @@ namespace kiwano
 									&sample_buffer_length
 								);
 
-								if (SUCCEEDED(hr) && sample_buffer_length <= max_stream_size)
+								if (position + sample_buffer_length >= max_stream_size)
 								{
-									for (DWORD i = 0; i < sample_buffer_length; i++)
-									{
-										data[position++] = audio_data[i];
-									}
+									hr = E_FAIL;
+								}
+
+								if (SUCCEEDED(hr))
+								{
+									::memcpy(data + position, audio_data, sample_buffer_length);
+									position += sample_buffer_length;
 									hr = buffer->Unlock();
 								}
 							}
@@ -280,6 +283,11 @@ namespace kiwano
 					{
 						wave_data_ = data;
 						wave_size_ = position;
+					}
+					else
+					{
+						delete[] data;
+						data = nullptr;
 					}
 				}
 			}

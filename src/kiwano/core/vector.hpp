@@ -225,12 +225,12 @@ namespace __vector_details
 		static void copy_data(value_type* dest, size_type count, const value_type& val) { ::memset(dest, (Int32)val, (UInt32)count * sizeof(value_type)); }
 		static void move_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; ::memmove(dest, src, (UInt32)count * sizeof(value_type)); }
 
-		static value_type* allocate(size_type count) { return get_allocator().allocate(count); }
-		static void deallocate(value_type*& ptr, size_type count) { if (ptr) { get_allocator().deallocate(ptr, count); ptr = nullptr; } }
+		static value_type* allocate(size_type count)									{ return get_allocator().allocate(count); }
+		static void deallocate(value_type*& ptr, size_type count) { if (ptr)			{ get_allocator().deallocate(ptr, count); ptr = nullptr; } }
 
-		static void construct(value_type* ptr, size_type count) { }
-		static void construct(value_type* ptr, size_type count, const value_type& val) { while (count) { --count; *(ptr + count) = val; } }
-		static void destroy(value_type* ptr, size_type count) { }
+		static void construct(value_type* ptr, size_type count)							{ }
+		static void construct(value_type* ptr, size_type count, const value_type& val)	{ while (count) { --count; *(ptr + count) = val; } }
+		static void destroy(value_type* ptr, size_type count)							{ }
 
 	private:
 		static allocator_type& get_allocator()
@@ -269,12 +269,12 @@ namespace __vector_details
 			}
 		}
 
-		static value_type* allocate(size_type count) { return get_allocator().allocate(count); }
-		static void deallocate(value_type*& ptr, size_type count) { if (ptr) { get_allocator().deallocate(ptr, count); ptr = nullptr; } }
+		static value_type* allocate(size_type count)									{ return get_allocator().allocate(count); }
+		static void deallocate(value_type*& ptr, size_type count)						{ if (ptr) { get_allocator().deallocate(ptr, count); ptr = nullptr; } }
 
-		static void construct(value_type* ptr, size_type count) { construct(ptr, count, value_type()); }
-		static void construct(value_type* ptr, size_type count, const value_type& val) { while (count) get_allocator().construct(ptr + (--count), val); }
-		static void destroy(value_type* ptr, size_type count) { while (count) get_allocator().destroy(ptr + (--count)); }
+		static void construct(value_type* ptr, size_type count)							{ construct(ptr, count, value_type()); }
+		static void construct(value_type* ptr, size_type count, const value_type& val)	{ while (count) get_allocator().construct(ptr + (--count), val); }
+		static void destroy(value_type* ptr, size_type count)							{ while (count) get_allocator().destroy(ptr + (--count)); }
 
 	private:
 		static allocator_type& get_allocator()
