@@ -71,7 +71,7 @@ namespace kiwano
 			loop_count_ = 0;
 			frame_.disposal_type = GifImage::DisposalType::None;
 
-			SetSize(Size{ static_cast<Float32>(gif_.GetWidthInPixels()), static_cast<Float32>(gif_.GetHeightInPixels()) });
+			SetSize(Size{ static_cast<float>(gif_.GetWidthInPixels()), static_cast<float>(gif_.GetHeightInPixels()) });
 
 			if (!frame_rt_.IsValid())
 			{

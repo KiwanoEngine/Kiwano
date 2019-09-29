@@ -41,7 +41,7 @@ namespace kiwano
 		return enabled_;
 	}
 
-	UInt32 Menu::GetButtonCount() const
+	std::size_t Menu::GetButtonCount() const
 	{
 		return buttons_.size();
 	}

@@ -49,109 +49,109 @@ namespace kiwano
 		Actor();
 
 		// 更新角色
-		virtual void OnUpdate(Duration dt)		{ KGE_UNUSED(dt); }
+		virtual void		OnUpdate(Duration dt)			{ KGE_UNUSED(dt); }
 
 		// 渲染角色
-		virtual void OnRender(RenderTarget* rt)	{ KGE_UNUSED(rt); }
+		virtual void		OnRender(RenderTarget* rt)		{ KGE_UNUSED(rt); }
 
 		// 获取显示状态
-		bool IsVisible()				const	{ return visible_; }
+		bool				IsVisible() const				{ return visible_; }
 
 		// 获取响应状态
-		bool IsResponsible()			const	{ return responsible_; }
+		bool				IsResponsible() const			{ return responsible_; }
 
 		// 是否启用级联透明度
-		bool IsCascadeOpacityEnabled()	const	{ return cascade_opacity_; }
+		bool				IsCascadeOpacityEnabled() const	{ return cascade_opacity_; }
 
 		// 获取名称的 Hash 值
-		UInt32 GetHashName()			const	{ return hash_name_; }
+		std::size_t			GetHashName() const				{ return hash_name_; }
 
 		// 获取 Z 轴顺序
-		Int32 GetZOrder()				const	{ return z_order_; }
+		int					GetZOrder() const				{ return z_order_; }
 
 		// 获取坐标
-		Point GetPosition()				const	{ return transform_.position; }
+		Point				GetPosition() const				{ return transform_.position; }
 
 		// 获取 x 坐标
-		Float32 GetPositionX()			const	{ return transform_.position.x; }
+		float				GetPositionX() const			{ return transform_.position.x; }
 
 		// 获取 y 坐标
-		Float32 GetPositionY()			const	{ return transform_.position.y; }
+		float				GetPositionY() const			{ return transform_.position.y; }
 
 		// 获取缩放比例
-		Point GetScale()				const	{ return transform_.scale; }
+		Point				GetScale() const				{ return transform_.scale; }
 
 		// 获取横向缩放比例
-		Float32 GetScaleX()				const	{ return transform_.scale.x; }
+		float				GetScaleX() const				{ return transform_.scale.x; }
 
 		// 获取纵向缩放比例
-		Float32 GetScaleY()				const	{ return transform_.scale.y; }
+		float				GetScaleY() const				{ return transform_.scale.y; }
 
 		// 获取错切角度
-		Point GetSkew()					const	{ return transform_.skew; }
+		Point				GetSkew() const					{ return transform_.skew; }
 
 		// 获取横向错切角度
-		Float32 GetSkewX()				const	{ return transform_.skew.x; }
+		float				GetSkewX() const				{ return transform_.skew.x; }
 
 		// 获取纵向错切角度
-		Float32 GetSkewY()				const	{ return transform_.skew.y; }
+		float				GetSkewY() const				{ return transform_.skew.y; }
 
 		// 获取旋转角度
-		Float32 GetRotation()			const	{ return transform_.rotation; }
+		float				GetRotation() const				{ return transform_.rotation; }
 
 		// 获取宽度
-		Float32 GetWidth()				const	{ return size_.x; }
+		float				GetWidth() const				{ return size_.x; }
 
 		// 获取高度
-		Float32 GetHeight()				const	{ return size_.y; }
+		float				GetHeight() const				{ return size_.y; }
 
 		// 获取大小
-		Size GetSize()					const	{ return size_; }
+		Size				GetSize() const					{ return size_; }
 
 		// 获取缩放后的宽度
-		Float32 GetScaledWidth()		const	{ return size_.x * transform_.scale.x; }
+		float				GetScaledWidth() const			{ return size_.x * transform_.scale.x; }
 
 		// 获取缩放后的高度
-		Float32 GetScaledHeight()		const	{ return size_.y * transform_.scale.y; }
+		float				GetScaledHeight() const			{ return size_.y * transform_.scale.y; }
 
 		// 获取缩放后的大小
-		Size GetScaledSize()			const	{ return Size{ GetScaledWidth(), GetScaledHeight() }; }
+		Size				GetScaledSize() const			{ return Size{ GetScaledWidth(), GetScaledHeight() }; }
 
 		// 获取锚点
-		Point GetAnchor()				const	{ return anchor_; }
+		Point				GetAnchor() const				{ return anchor_; }
 
 		// 获取 x 方向锚点
-		Float32 GetAnchorX()			const	{ return anchor_.x; }
+		float				GetAnchorX() const				{ return anchor_.x; }
 
 		// 获取 y 方向锚点
-		Float32 GetAnchorY()			const	{ return anchor_.y; }
+		float				GetAnchorY() const				{ return anchor_.y; }
 
 		// 获取透明度
-		Float32 GetOpacity()			const	{ return opacity_; }
+		float				GetOpacity() const				{ return opacity_; }
 
 		// 获取显示透明度
-		Float32 GetDisplayedOpacity()	const	{ return displayed_opacity_; }
+		float				GetDisplayedOpacity() const		{ return displayed_opacity_; }
 
 		// 获取变换
-		Transform GetTransform()		const	{ return transform_; }
-
-		// 获取边框
-		virtual Rect GetBounds() const;
-
-		// 获取外切包围盒
-		virtual Rect GetBoundingBox() const;
-
-		// 获取二维变换矩阵
-		Matrix3x2 const& GetTransformMatrix()  const;
-
-		// 获取二维变换的逆矩阵
-		Matrix3x2 const& GetTransformInverseMatrix()  const;
+		Transform			GetTransform() const			{ return transform_; }
 
 		// 获取父角色
-		inline Actor* GetParent() const { return parent_; }
+		inline Actor*		GetParent() const				{ return parent_; }
 
 		// 获取所在舞台
-		inline Stage* GetStage() const { return stage_; }
+		inline Stage*		GetStage() const				{ return stage_; }
+
+		// 获取边框
+		virtual Rect		GetBounds() const;
+
+		// 获取外切包围盒
+		virtual Rect		GetBoundingBox() const;
+
+		// 获取二维变换矩阵
+		Matrix3x2 const&	GetTransformMatrix()  const;
+
+		// 获取二维变换的逆矩阵
+		Matrix3x2 const&	GetTransformInverseMatrix()  const;
 
 		// 设置是否显示
 		void SetVisible(
@@ -170,8 +170,8 @@ namespace kiwano
 
 		// 设置坐标
 		inline void SetPosition(
-			Float32 x,
-			Float32 y
+			float x,
+			float y
 		)
 		{
 			SetPosition(Point{ x, y });
@@ -179,12 +179,12 @@ namespace kiwano
 
 		// 设置横坐标
 		void SetPositionX(
-			Float32 x
+			float x
 		);
 
 		// 设置纵坐标
 		void SetPositionY(
-			Float32 y
+			float y
 		);
 
 		// 移动坐标
@@ -194,8 +194,8 @@ namespace kiwano
 
 		// 移动坐标
 		inline void Move(
-			Float32 vx,
-			Float32 vy
+			float vx,
+			float vy
 		)
 		{
 			Move(Vec2{ vx, vy });
@@ -210,8 +210,8 @@ namespace kiwano
 		// 设置缩放比例
 		// 默认为 (1.0, 1.0)
 		inline void SetScale(
-			Float32 scalex,
-			Float32 scaley
+			float scalex,
+			float scaley
 		)
 		{
 			SetScale(Vec2{ scalex, scaley });
@@ -226,8 +226,8 @@ namespace kiwano
 		// 设置错切角度
 		// 默认为 (0, 0)
 		inline void SetSkew(
-			Float32 skewx,
-			Float32 skewy
+			float skewx,
+			float skewy
 		)
 		{
 			SetSkew(Vec2{ skewx, skewy });
@@ -236,7 +236,7 @@ namespace kiwano
 		// 设置旋转角度
 		// 默认为 0
 		virtual void SetRotation(
-			Float32 rotation
+			float rotation
 		);
 
 		// 设置锚点位置
@@ -248,8 +248,8 @@ namespace kiwano
 		// 设置锚点位置
 		// 默认为 (0, 0), 范围 [0, 1]
 		inline void SetAnchor(
-			Float32 anchorx,
-			Float32 anchory
+			float anchorx,
+			float anchory
 		)
 		{
 			SetAnchor(Vec2{ anchorx, anchory });
@@ -257,12 +257,12 @@ namespace kiwano
 
 		// 修改宽度
 		virtual void SetWidth(
-			Float32 width
+			float width
 		);
 
 		// 修改高度
 		virtual void SetHeight(
-			Float32 height
+			float height
 		);
 
 		// 修改大小
@@ -272,8 +272,8 @@ namespace kiwano
 
 		// 修改大小
 		inline void SetSize(
-			Float32 width,
-			Float32 height
+			float width,
+			float height
 		)
 		{
 			SetSize(Size{ width, height });
@@ -282,7 +282,7 @@ namespace kiwano
 		// 设置透明度
 		// 默认为 1.0, 范围 [0, 1]
 		virtual void SetOpacity(
-			Float32 opacity
+			float opacity
 		);
 
 		// 启用或禁用级联透明度
@@ -298,7 +298,7 @@ namespace kiwano
 		// 设置 Z 轴顺序
 		// 默认为 0
 		void SetZOrder(
-			Int32 zorder
+			int zorder
 		);
 
 		// 是否可响应 (鼠标 Hover | Out | Click 消息)
@@ -354,32 +354,32 @@ namespace kiwano
 		// 判断点是否在角色内
 		virtual bool ContainsPoint(const Point& point) const;
 
-		// 暂停角色更新
-		inline void PauseUpdating()									{ update_pausing_ = true; }
-
-		// 继续角色更新
-		inline void ResumeUpdating()								{ update_pausing_ = false; }
-
-		// 角色更新是否暂停
-		inline bool IsUpdatePausing() const							{ return update_pausing_; }
-
-		// 设置更新时的回调函数
-		inline void SetCallbackOnUpdate(UpdateCallback const& cb)	{ cb_update_ = cb; }
-
-		// 获取更新时的回调函数
-		inline UpdateCallback GetCallbackOnUpdate() const			{ return cb_update_; }
-
-		// 渲染角色边界
-		inline void ShowBorder(bool show)							{ show_border_ = show; }
-
 		// 事件分发
 		void Dispatch(Event& evt) override;
 
 		// 设置默认锚点
 		static void SetDefaultAnchor(
-			Float32 anchor_x,
-			Float32 anchor_y
+			float anchor_x,
+			float anchor_y
 		);
+
+		// 暂停角色更新
+		inline void				PauseUpdating()									{ update_pausing_ = true; }
+
+		// 继续角色更新
+		inline void				ResumeUpdating()								{ update_pausing_ = false; }
+
+		// 角色更新是否暂停
+		inline bool				IsUpdatePausing() const							{ return update_pausing_; }
+
+		// 设置更新时的回调函数
+		inline void				SetCallbackOnUpdate(UpdateCallback const& cb)	{ cb_update_ = cb; }
+
+		// 获取更新时的回调函数
+		inline UpdateCallback	GetCallbackOnUpdate() const						{ return cb_update_; }
+
+		// 渲染角色边界
+		inline void				ShowBorder(bool show)							{ show_border_ = show; }
 
 	protected:
 		virtual void Update(Duration dt);
@@ -408,12 +408,12 @@ namespace kiwano
 		bool			hover_;
 		bool			pressed_;
 		bool			responsible_;
-		Int32			z_order_;
-		Float32			opacity_;
-		Float32			displayed_opacity_;
+		int				z_order_;
+		float			opacity_;
+		float			displayed_opacity_;
 		Actor*			parent_;
 		Stage*			stage_;
-		UInt32			hash_name_;
+		std::size_t		hash_name_;
 		Point			anchor_;
 		Size			size_;
 		Children		children_;

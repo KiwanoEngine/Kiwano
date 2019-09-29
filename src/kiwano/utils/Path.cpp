@@ -32,10 +32,10 @@ namespace kiwano
 			if (dir_path.empty() || dir_path.size() >= MAX_PATH)
 				return false;
 
-			WChar tmp_dir_path[MAX_PATH] = { 0 };
-			UInt32 length = dir_path.length();
+			wchar_t tmp_dir_path[MAX_PATH] = { 0 };
+			std::size_t length = dir_path.length();
 
-			for (UInt32 i = 0; i < length; ++i)
+			for (std::size_t i = 0; i < length; ++i)
 			{
 				tmp_dir_path[i] = dir_path.at(i);
 				if (tmp_dir_path[i] == L'\\' || tmp_dir_path[i] == L'/' || i == (length - 1))
@@ -59,7 +59,7 @@ namespace kiwano
 		if (temp_path.empty())
 		{
 			// 设置临时文件保存路径
-			WChar path[_MAX_PATH];
+			wchar_t path[_MAX_PATH];
 
 			if (0 != ::GetTempPath(_MAX_PATH, path))
 			{
@@ -80,7 +80,7 @@ namespace kiwano
 		if (local_app_data_path.empty())
 		{
 			// 获取 AppData/Local 文件夹的路径
-			WChar path[MAX_PATH] = { 0 };
+			wchar_t path[MAX_PATH] = { 0 };
 			::SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
 			local_app_data_path = path;
 		}

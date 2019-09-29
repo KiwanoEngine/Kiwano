@@ -22,7 +22,7 @@
 
 namespace kiwano
 {
-	Timer::Timer(Callback const& func, Duration delay, Int32 times, String const& name)
+	Timer::Timer(Callback const& func, Duration delay, int times, String const& name)
 		: running_(true)
 		, run_times_(0)
 		, total_times_(times)

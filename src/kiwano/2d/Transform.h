@@ -26,7 +26,7 @@ namespace kiwano
 	class Transform
 	{
 	public:
-		Float32 rotation;	// 旋转
+		float rotation;	// 旋转
 		Point position;		// 坐标
 		Point scale;		// 缩放
 		Point skew;			// 错切角度

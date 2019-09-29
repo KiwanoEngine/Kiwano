@@ -25,7 +25,7 @@
 namespace kiwano
 {
 	template <typename _Ty, typename _PathTy, typename _CacheTy>
-	_Ty CreateOrGetCache(_CacheTy& cache, _PathTy const& path, UInt32 hash)
+	_Ty CreateOrGetCache(_CacheTy& cache, _PathTy const& path, std::size_t hash)
 	{
 		auto iter = cache.find(hash);
 		if (iter != cache.end())
@@ -42,7 +42,7 @@ namespace kiwano
 	}
 
 	template <typename _CacheTy>
-	void RemoveCache(_CacheTy& cache, UInt32 hash)
+	void RemoveCache(_CacheTy& cache, std::size_t hash)
 	{
 		auto iter = cache.find(hash);
 		if (iter != cache.end())

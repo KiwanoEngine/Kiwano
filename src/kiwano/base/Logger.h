@@ -66,13 +66,13 @@ namespace kiwano
 		// ½ûÓÃ Logger
 		void Disable();
 
-		void Printf(const WChar* format, ...);
+		void Printf(const wchar_t* format, ...);
 
-		void Messagef(const WChar * format, ...);
+		void Messagef(const wchar_t * format, ...);
 
-		void Warningf(const WChar* format, ...);
+		void Warningf(const wchar_t* format, ...);
 
-		void Errorf(const WChar* format, ...);
+		void Errorf(const wchar_t* format, ...);
 
 		template <typename ..._Args>
 		void Print(_Args&& ... args);
@@ -109,24 +109,33 @@ namespace kiwano
 
 		~Logger();
 
-		void Outputf(std::wostream& os, std::wostream&(*color)(std::wostream&), const WChar* prompt, const WChar* format, va_list args) const;
-
-		std::wstring MakeOutputStringf(const WChar* prompt, const WChar* format, va_list args) const;
-
-		template <typename ..._Args>
-		void OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const WChar* prompt, _Args&& ... args) const;
+		//
+		// output functions
+		//
+		void Outputf(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const;
 
 		template <typename ..._Args>
-		void Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const WChar* prompt, _Args&& ... args) const;
+		void OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const;
 
 		template <typename ..._Args>
-		std::wstring MakeOutputString(const WChar* prompt, _Args&& ... args) const;
+		void Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const;
 
+		static std::wostream& OutPrefix(std::wostream& out);
+
+		//
+		// make string
+		//
+		std::wstring MakeOutputStringf(const wchar_t* prompt, const wchar_t* format, va_list args) const;
+
+		template <typename ..._Args>
+		std::wstring MakeOutputString(const wchar_t* prompt, _Args&& ... args) const;
+
+		//
+		// reset functions
+		//
 		void ResetConsoleColor() const;
 
 		static std::wostream& DefaultOutputColor(std::wostream& out);
-
-		static std::wostream& OutPrefix(std::wostream& out);
 
 	private:
 		bool enabled_;
@@ -235,7 +244,7 @@ namespace kiwano
 	}
 
 	template <typename ..._Args>
-	void Logger::OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const WChar* prompt, _Args&& ... args) const
+	void Logger::OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
 	{
 		if (enabled_)
 		{
@@ -247,7 +256,7 @@ namespace kiwano
 	}
 
 	template <typename ..._Args>
-	void Logger::Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const WChar* prompt, _Args&& ... args) const
+	void Logger::Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
 	{
 		if (enabled_)
 		{
@@ -261,7 +270,7 @@ namespace kiwano
 	}
 
 	template <typename ..._Args>
-	std::wstring Logger::MakeOutputString(const WChar* prompt, _Args&& ... args) const
+	std::wstring Logger::MakeOutputString(const wchar_t* prompt, _Args&& ... args) const
 	{
 		StringStream ss;
 		ss << Logger::OutPrefix;
@@ -269,7 +278,7 @@ namespace kiwano
 		if (prompt)
 			ss << prompt;
 
-		(void)std::initializer_list<Int32>{((ss << ' ' << args), 0)...};
+		(void)std::initializer_list<int>{((ss << ' ' << args), 0)...};
 
 		return ss.str();
 	}

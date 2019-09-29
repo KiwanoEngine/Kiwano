@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "types.h"
 #include <memory>
 #include <type_traits>
 #include <exception>
@@ -52,7 +51,7 @@ class vector
 {
 public:
 	using value_type				= _Ty;
-	using size_type					= UInt32;
+	using size_type					= std::size_t;
 	using iterator					= value_type * ;
 	using const_iterator			= const value_type*;
 	using reference					= value_type & ;
@@ -212,18 +211,18 @@ typename vector<_Ty, _Alloc, _Manager>::iterator
 namespace __vector_details
 {
 	//
-	// ArrayManager for core type
+	// vector_memory_manager for common type
 	//
 	template<typename _Ty, typename _Alloc>
 	struct vector_memory_manager<_Ty, _Alloc, false>
 	{
 		using value_type		= _Ty;
-		using size_type			= UInt32;
+		using size_type			= std::size_t;
 		using allocator_type	= typename _Alloc;
 
-		static void copy_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; ::memcpy(dest, src, (UInt32)count * sizeof(value_type)); }
-		static void copy_data(value_type* dest, size_type count, const value_type& val) { ::memset(dest, (Int32)val, (UInt32)count * sizeof(value_type)); }
-		static void move_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; ::memmove(dest, src, (UInt32)count * sizeof(value_type)); }
+		static void copy_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; ::memcpy(dest, src, size_type(count) * sizeof(value_type)); }
+		static void copy_data(value_type* dest, size_type count, const value_type& val) { ::memset(dest, int(val), size_type(count) * sizeof(value_type)); }
+		static void move_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; ::memmove(dest, src, size_type(count) * sizeof(value_type)); }
 
 		static value_type* allocate(size_type count)									{ return get_allocator().allocate(count); }
 		static void deallocate(value_type*& ptr, size_type count) { if (ptr)			{ get_allocator().deallocate(ptr, count); ptr = nullptr; } }
@@ -241,13 +240,13 @@ namespace __vector_details
 	};
 
 	//
-	// ArrayManager for class
+	// vector_memory_manager for classes
 	//
 	template<typename _Ty, typename _Alloc>
 	struct vector_memory_manager<_Ty, _Alloc, true>
 	{
 		using value_type		= _Ty;
-		using size_type			= UInt32;
+		using size_type			= std::size_t;
 		using allocator_type	= typename _Alloc;
 
 		static void copy_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; while (count--) (*dest++) = (*src++); }

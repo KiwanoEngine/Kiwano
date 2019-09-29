@@ -56,7 +56,7 @@ namespace kiwano
 
 		void Update(String const& text, TextStyle const& style);
 
-		UInt32 GetLineCount();
+		std::uint32_t GetLineCount();
 
 		Size GetLayoutSize() const;
 

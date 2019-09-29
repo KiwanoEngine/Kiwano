@@ -311,7 +311,7 @@ namespace kiwano
 	// RotationTransition
 	//-------------------------------------------------------
 
-	RotationTransition::RotationTransition(Duration duration, Float32 rotation)
+	RotationTransition::RotationTransition(Duration duration, float rotation)
 		: Transition(duration)
 		, rotation_(rotation)
 	{

@@ -40,7 +40,7 @@ namespace kiwano
 
 	bool DataUtil::Exists(String const& key) const
 	{
-		WChar temp[256] = { 0 };
+		wchar_t temp[256] = { 0 };
 		::GetPrivateProfileStringW(
 			field_name_.c_str(),
 			key.c_str(),
@@ -52,7 +52,7 @@ namespace kiwano
 		return temp[0] == L'\0';
 	}
 
-	bool DataUtil::SaveInt(String const& key, Int32 val) const
+	bool DataUtil::SaveInt(String const& key, int val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_name_.c_str(),
@@ -63,7 +63,7 @@ namespace kiwano
 		return ret == TRUE;
 	}
 
-	bool DataUtil::SaveFloat(String const& key, Float32 val) const
+	bool DataUtil::SaveFloat(String const& key, float val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_name_.c_str(),
@@ -74,7 +74,7 @@ namespace kiwano
 		return ret == TRUE;
 	}
 
-	bool DataUtil::SaveDouble(String const& key, Float64 val) const
+	bool DataUtil::SaveDouble(String const& key, double val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_name_.c_str(),
@@ -107,7 +107,7 @@ namespace kiwano
 		return ret == TRUE;
 	}
 
-	Int32 DataUtil::GetInt(String const & key, Int32 default_value) const
+	int DataUtil::GetInt(String const & key, int default_value) const
 	{
 		return ::GetPrivateProfileIntW(
 			field_name_.c_str(),
@@ -117,17 +117,17 @@ namespace kiwano
 		);
 	}
 
-	Float32 DataUtil::GetFloat(String const & key, Float32 default_value) const
+	float DataUtil::GetFloat(String const & key, float default_value) const
 	{
-		WChar temp[32] = { 0 };
+		wchar_t temp[32] = { 0 };
 		String default_str = String::parse(default_value);
 		::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
 		return std::stof(temp);
 	}
 
-	Float64 DataUtil::GetDouble(String const & key, Float64 default_value) const
+	double DataUtil::GetDouble(String const & key, double default_value) const
 	{
-		WChar temp[32] = { 0 };
+		wchar_t temp[32] = { 0 };
 		String default_str = String::parse(default_value);
 		::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
 		return std::stod(temp);
@@ -135,7 +135,7 @@ namespace kiwano
 
 	bool DataUtil::GetBool(String const & key, bool default_value) const
 	{
-		Int32 nValue = ::GetPrivateProfileIntW(
+		int nValue = ::GetPrivateProfileIntW(
 			field_name_.c_str(),
 			key.c_str(),
 			default_value ? 1 : 0,
@@ -145,7 +145,7 @@ namespace kiwano
 
 	String DataUtil::GetString(String const & key, String const & default_value) const
 	{
-		WChar temp[256] = { 0 };
+		wchar_t temp[256] = { 0 };
 		::GetPrivateProfileStringW(
 			field_name_.c_str(),
 			key.c_str(),

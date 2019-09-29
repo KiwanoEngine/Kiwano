@@ -87,12 +87,12 @@ namespace kiwano
 		SetBrush(brush);
 	}
 
-	Float32 Brush::GetOpacity() const
+	float Brush::GetOpacity() const
 	{
 		return opacity_;
 	}
 
-	void Brush::SetOpacity(Float32 opacity)
+	void Brush::SetOpacity(float opacity)
 	{
 		opacity_ = opacity;
 		if (raw_)

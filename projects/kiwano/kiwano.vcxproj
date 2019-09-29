@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\src\kiwano\2d\action\Action.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionDelay.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionGroup.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionHelper.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionManager.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionWalk.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\Frame.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
+    <ClInclude Include="..\..\src\kiwano\base\Director.h" />
+    <ClInclude Include="..\..\src\kiwano\base\win32\ComPtr.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\basic_json.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\function.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\core.h" />
+    <ClInclude Include="..\..\src\kiwano\core\intrusive_list.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\intrusive_ptr.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\noncopyable.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\singleton.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\string.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\vector.hpp" />
+    <ClInclude Include="..\..\src\kiwano\kiwano.h" />
+    <ClInclude Include="..\..\src\kiwano\config.h" />
+    <ClInclude Include="..\..\src\kiwano\macros.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\include-forwards.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\Canvas.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\ShapeActor.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\Layer.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\Actor.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\Stage.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\Sprite.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\Text.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\TextStyle.hpp" />
+    <ClInclude Include="..\..\src\kiwano\2d\Transform.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\Transition.h" />
+    <ClInclude Include="..\..\src\kiwano\base\AsyncTask.h" />
+    <ClInclude Include="..\..\src\kiwano\base\Component.h" />
+    <ClInclude Include="..\..\src\kiwano\base\Event.hpp" />
+    <ClInclude Include="..\..\src\kiwano\base\EventDispatcher.h" />
+    <ClInclude Include="..\..\src\kiwano\base\EventListener.h" />
+    <ClInclude Include="..\..\src\kiwano\base\Input.h" />
+    <ClInclude Include="..\..\src\kiwano\base\keys.hpp" />
+    <ClInclude Include="..\..\src\kiwano\base\Logger.h" />
+    <ClInclude Include="..\..\src\kiwano\base\ObjectBase.h" />
+    <ClInclude Include="..\..\src\kiwano\base\RefCounter.hpp" />
+    <ClInclude Include="..\..\src\kiwano\base\Resource.h" />
+    <ClInclude Include="..\..\src\kiwano\base\SmartPtr.hpp" />
+    <ClInclude Include="..\..\src\kiwano\base\Timer.h" />
+    <ClInclude Include="..\..\src\kiwano\base\TimerManager.h" />
+    <ClInclude Include="..\..\src\kiwano\base\time.h" />
+    <ClInclude Include="..\..\src\kiwano\base\Window.h" />
+    <ClInclude Include="..\..\src\kiwano\math\constants.h" />
+    <ClInclude Include="..\..\src\kiwano\math\ease.h" />
+    <ClInclude Include="..\..\src\kiwano\math\math.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Matrix.hpp" />
+    <ClInclude Include="..\..\src\kiwano\math\rand.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Rect.hpp" />
+    <ClInclude Include="..\..\src\kiwano\math\scalar.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Vec2.hpp" />
+    <ClInclude Include="..\..\src\kiwano\platform\Application.h" />
+    <ClInclude Include="..\..\src\kiwano\platform\modules.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\Brush.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\Color.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\Font.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\FontCollection.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\Geometry.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\GifImage.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\StrokeStyle.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\Texture.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\TextureCache.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\LayerArea.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\Renderer.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\RenderTarget.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\TextLayout.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\D2DDeviceResources.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\D3D10DeviceResources.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\D3D11DeviceResources.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\D3DDeviceResourcesBase.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\FontCollectionLoader.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\TextRenderer.h" />
+    <ClInclude Include="..\..\src\kiwano\third-party\StackWalker\StackWalker.h" />
+    <ClInclude Include="..\..\src\kiwano\third-party\tinyxml2\tinyxml2.h" />
+    <ClInclude Include="..\..\src\kiwano\ui\Button.h" />
+    <ClInclude Include="..\..\src\kiwano\ui\Menu.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\DataUtil.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\FileUtil.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\Path.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionDelay.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionGroup.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionManager.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionWalk.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionTween.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\action\Animation.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\DebugActor.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Frame.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\FrameSequence.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\ShapeActor.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Layer.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Text.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Transform.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\AsyncTask.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\Component.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\EventDispatcher.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\EventListener.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\Input.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\Logger.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\ObjectBase.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\Resource.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\Director.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\Timer.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\TimerManager.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\time.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\Window.cpp" />
+    <ClCompile Include="..\..\src\kiwano\platform\Application.cpp" />
+    <ClCompile Include="..\..\src\kiwano\platform\modules.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\Brush.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\Color.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\Font.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\FontCollection.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\Geometry.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\GifImage.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\Texture.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\TextureCache.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\LayerArea.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\Renderer.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\RenderTarget.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\TextLayout.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\D2DDeviceResources.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\D3D10DeviceResources.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\D3D11DeviceResources.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\FontCollectionLoader.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\TextRenderer.cpp" />
+    <ClCompile Include="..\..\src\kiwano\third-party\StackWalker\StackWalker.cpp" />
+    <ClCompile Include="..\..\src\kiwano\third-party\tinyxml2\tinyxml2.cpp" />
+    <ClCompile Include="..\..\src\kiwano\ui\Button.cpp" />
+    <ClCompile Include="..\..\src\kiwano\ui\Menu.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\DataUtil.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\FileUtil.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\Path.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
+  </ItemGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}</ProjectGuid>
+    <RootNamespace>kiwano</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)\output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)\output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)\output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(PlatformToolset)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -34,7 +34,7 @@ namespace kiwano
 		STDMETHOD(AddFilePaths)(
 			Vector<String> const& filePaths,
 			_Out_ LPVOID * pCollectionKey,
-			_Out_ UInt32 * pCollectionKeySize
+			_Out_ std::uint32_t * pCollectionKeySize
 		) PURE;
 	};
 
@@ -66,7 +66,7 @@ namespace kiwano
 		STDMETHOD(AddResources)(
 			Vector<Resource> const& resources,
 			_Out_ LPVOID * pCollectionKey,
-			_Out_ UInt32 * pCollectionKeySize
+			_Out_ std::uint32_t * pCollectionKeySize
 		) PURE;
 	};
 

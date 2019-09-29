@@ -96,7 +96,7 @@ namespace kiwano
 
 	protected:
 		unsigned long ref_count_;
-		Float32 dpi_;
+		float dpi_;
 	};
 
 

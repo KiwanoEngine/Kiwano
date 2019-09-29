@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "types.h"
 #include <string>
 #include <algorithm>
 #include <codecvt>
@@ -63,10 +62,10 @@ public:
 		inline pointer base() const											{ return base_; }
 
 		inline iterator_impl& operator++()									{ ++base_; return (*this); }
-		inline iterator_impl operator++(Int32)								{ iterator_impl old = (*this); ++(*this); return old; }
+		inline iterator_impl operator++(int)								{ iterator_impl old = (*this); ++(*this); return old; }
 
 		inline iterator_impl& operator--()									{ --base_; return (*this); }
-		inline iterator_impl operator--(Int32)								{ iterator_impl old = (*this); --(*this); return old; }
+		inline iterator_impl operator--(int)								{ iterator_impl old = (*this); --(*this); return old; }
 
 		inline const iterator_impl operator+(difference_type off) const		{ return iterator_impl(base_ + off); }
 		inline const iterator_impl operator-(difference_type off) const		{ return iterator_impl(base_ - off); }
@@ -96,7 +95,7 @@ public:
 public:
 	using value_type				= _CharTy;
 	using char_type					= value_type;
-	using size_type					= UInt32;
+	using size_type					= std::size_t;
 	using reference					= value_type &;
 	using const_reference			= const value_type &;
 	using iterator					= iterator_impl<value_type>;
@@ -121,7 +120,7 @@ public:
 
 	inline const char_type*	c_str() const																				{ return empty() ? empty_cstr : const_str_; }
 	inline const char_type*	data() const																				{ return empty() ? empty_cstr : const_str_; }
-	inline char_type		at(UInt32 i) const																			{ return (*this)[i]; }
+	inline char_type		at(size_type i) const																		{ return (*this)[i]; }
 	inline size_type		size() const																				{ return size_; }
 	inline size_type		length() const																				{ return size(); }
 	inline size_type		capacity() const																			{ return capacity_; }
@@ -132,8 +131,8 @@ public:
 	void					reserve(const size_type new_cap = 0);
 	inline void				resize(const size_type new_size, const char_type ch = value_type())							{ check_operability(); if (new_size < size_) str_[size_ = new_size] = value_type(); else append(new_size - size_, ch); }
 
-	Int32					compare(const char_type* const str) const;
-	inline Int32			compare(basic_string const& str) const														{ return compare(str.c_str()); }
+	int						compare(const char_type* const str) const;
+	inline int				compare(basic_string const& str) const														{ return compare(str.c_str()); }
 
 	basic_string&			append(size_type count, char_type ch);
 	basic_string&			append(const char_type* cstr, size_type count);
@@ -196,17 +195,17 @@ public:
 	size_type				copy(char_type* cstr, size_type count, size_type pos = 0) const;
 
 	void					swap(basic_string& rhs) noexcept;
-	UInt32					hash() const;
+	size_type				hash() const;
 
 public:
-	static basic_string parse(Int32 val);
-	static basic_string parse(UInt32 val);
+	static basic_string parse(int val);
+	static basic_string parse(unsigned int val);
 	static basic_string parse(long val);
 	static basic_string parse(unsigned long val);
 	static basic_string parse(long long val);
 	static basic_string parse(unsigned long long val);
-	static basic_string parse(Float32 val);
-	static basic_string parse(Float64 val);
+	static basic_string parse(float val);
+	static basic_string parse(double val);
 	static basic_string parse(long double val);
 
 	template <typename ..._Args>
@@ -386,10 +385,10 @@ std::basic_istream<typename basic_string<_CharTy>::char_type>& operator>>(std::b
 //
 
 template <typename _CharTy>
-basic_string<_CharTy> to_basic_string(Int32 val);
+basic_string<_CharTy> to_basic_string(int val);
 	
 template <typename _CharTy>
-basic_string<_CharTy> to_basic_string(UInt32 val);
+basic_string<_CharTy> to_basic_string(unsigned int val);
 	
 template <typename _CharTy>
 basic_string<_CharTy> to_basic_string(long val);
@@ -404,10 +403,10 @@ template <typename _CharTy>
 basic_string<_CharTy> to_basic_string(unsigned long long val);
 	
 template <typename _CharTy>
-basic_string<_CharTy> to_basic_string(Float32 val);
+basic_string<_CharTy> to_basic_string(float val);
 	
 template <typename _CharTy>
-basic_string<_CharTy> to_basic_string(Float64 val);
+basic_string<_CharTy> to_basic_string(double val);
 	
 template <typename _CharTy>
 basic_string<_CharTy> to_basic_string(long double val);
@@ -420,35 +419,35 @@ template <typename ..._Args>
 basic_string<char> format_string(const char* const fmt, _Args&& ... args);
 
 template <typename ..._Args>
-basic_string<WChar> format_string(const WChar* const fmt, _Args&& ... args);
+basic_string<wchar_t> format_string(const wchar_t* const fmt, _Args&& ... args);
 
 
 //
 // string && wstring
 //
 using string = ::kiwano::core::basic_string<char>;
-using wstring = ::kiwano::core::basic_string<WChar>;
+using wstring = ::kiwano::core::basic_string<wchar_t>;
 
 
-inline string to_string(Int32 val)					{ return to_basic_string<char>(val); }
-inline string to_string(UInt32 val)					{ return to_basic_string<char>(val); }
+inline string to_string(int val)					{ return to_basic_string<char>(val); }
+inline string to_string(unsigned int val)			{ return to_basic_string<char>(val); }
 inline string to_string(long val)					{ return to_basic_string<char>(val); }
 inline string to_string(unsigned long val)			{ return to_basic_string<char>(val); }
 inline string to_string(long long val)				{ return to_basic_string<char>(val); }
 inline string to_string(unsigned long long val)		{ return to_basic_string<char>(val); }
-inline string to_string(Float32 val)				{ return to_basic_string<char>(val); }
-inline string to_string(Float64 val)				{ return to_basic_string<char>(val); }
+inline string to_string(float val)					{ return to_basic_string<char>(val); }
+inline string to_string(double val)					{ return to_basic_string<char>(val); }
 inline string to_string(long double val)			{ return to_basic_string<char>(val); }
 
-inline wstring to_wstring(Int32 val)				{ return to_basic_string<WChar>(val); }
-inline wstring to_wstring(UInt32 val)				{ return to_basic_string<WChar>(val); }
-inline wstring to_wstring(long val)					{ return to_basic_string<WChar>(val); }
-inline wstring to_wstring(unsigned long val)		{ return to_basic_string<WChar>(val); }
-inline wstring to_wstring(long long val)			{ return to_basic_string<WChar>(val); }
-inline wstring to_wstring(unsigned long long val)	{ return to_basic_string<WChar>(val); }
-inline wstring to_wstring(Float32 val)				{ return to_basic_string<WChar>(val); }
-inline wstring to_wstring(Float64 val)				{ return to_basic_string<WChar>(val); }
-inline wstring to_wstring(long double val)			{ return to_basic_string<WChar>(val); }
+inline wstring to_wstring(int val)					{ return to_basic_string<wchar_t>(val); }
+inline wstring to_wstring(unsigned int val)			{ return to_basic_string<wchar_t>(val); }
+inline wstring to_wstring(long val)					{ return to_basic_string<wchar_t>(val); }
+inline wstring to_wstring(unsigned long val)		{ return to_basic_string<wchar_t>(val); }
+inline wstring to_wstring(long long val)			{ return to_basic_string<wchar_t>(val); }
+inline wstring to_wstring(unsigned long long val)	{ return to_basic_string<wchar_t>(val); }
+inline wstring to_wstring(float val)				{ return to_basic_string<wchar_t>(val); }
+inline wstring to_wstring(double val)				{ return to_basic_string<wchar_t>(val); }
+inline wstring to_wstring(long double val)			{ return to_basic_string<wchar_t>(val); }
 
 
 }  // inline namespace core
@@ -462,14 +461,14 @@ namespace kiwano
 //
 namespace __string_details
 {
-	template<class _Traits>
-	UInt32 TraitsFind(
-		const typename _Traits::char_type* first, UInt32 first_size, UInt32 offset,
-		const typename _Traits::char_type* second, UInt32 count)
+	template <typename _Traits, typename _SizeTy>
+	_SizeTy TraitsFind(
+		const typename _Traits::char_type* first, _SizeTy first_size, _SizeTy offset,
+		const typename _Traits::char_type* second, _SizeTy count)
 	{
 		if (count > first_size || offset > first_size - count)
 		{
-			return static_cast<UInt32>(-1);
+			return static_cast<_SizeTy>(-1);
 		}
 
 		if (count == 0)
@@ -480,23 +479,23 @@ namespace __string_details
 		const auto matches_end = first + (first_size - count) + 1;
 		for (auto iter = first + offset; ; ++iter)
 		{
-			iter = typename _Traits::find(iter, static_cast<UInt32>(matches_end - iter), *second);
+			iter = typename _Traits::find(iter, static_cast<_SizeTy>(matches_end - iter), *second);
 			if (!iter)
 			{
-				return static_cast<UInt32>(-1);
+				return static_cast<_SizeTy>(-1);
 			}
 
 			if (typename _Traits::compare(iter, second, count) == 0)
 			{
-				return static_cast<UInt32>(iter - first);
+				return static_cast<_SizeTy>(iter - first);
 			}
 		}
 	}
 
-	template<class _Traits>
-	UInt32 TraitsFindLastOf(
-		const typename _Traits::char_type* first, const UInt32 first_size, const UInt32 pos,
-		const typename _Traits::char_type* second, const UInt32 count)
+	template <typename _Traits, typename _SizeTy>
+	_SizeTy TraitsFindLastOf(
+		const typename _Traits::char_type* first, const _SizeTy first_size, const _SizeTy pos,
+		const typename _Traits::char_type* second, const _SizeTy count)
 	{
 		if (count != 0 && first_size != 0)
 		{
@@ -504,7 +503,7 @@ namespace __string_details
 			{
 				if (typename _Traits::find(second, count, *iter))
 				{
-					return static_cast<UInt32>(iter - first);
+					return static_cast<_SizeTy>(iter - first);
 				}
 				if (iter == first)
 				{
@@ -512,7 +511,7 @@ namespace __string_details
 				}
 			}
 		}
-		return static_cast<UInt32>(-1);
+		return static_cast<_SizeTy>(-1);
 	}
 }
 
@@ -829,8 +828,8 @@ inline namespace core
 	{
 		check_operability();
 
-		UInt32 new_size = size_ + count;
-		UInt32 new_cap = new_size + 1;
+		size_type new_size = size_ + count;
+		size_type new_cap = new_size + 1;
 		char_type* new_str = allocate(new_cap);
 
 		traits_type::move(new_str, str_, size_);
@@ -850,8 +849,8 @@ inline namespace core
 	{
 		check_operability();
 
-		UInt32 new_size = size_ + count;
-		UInt32 new_cap = new_size + 1;
+		size_type new_size = size_ + count;
+		size_type new_cap = new_size + 1;
 		char_type* new_str = allocate(new_cap);
 
 		traits_type::move(new_str, str_, size_);
@@ -876,8 +875,8 @@ inline namespace core
 
 		count = other.clamp_suffix_size(pos, count);
 
-		UInt32 new_size = size_ + count;
-		UInt32 new_cap = new_size + 1;
+		size_type new_size = size_ + count;
+		size_type new_cap = new_size + 1;
 		char_type* new_str = allocate(new_cap);
 
 		traits_type::move(new_str, str_, size_);
@@ -910,27 +909,27 @@ inline namespace core
 	}
 
 	template <typename _CharTy>
-	inline UInt32 basic_string<_CharTy>::hash() const
+	inline typename basic_string<_CharTy>::size_type basic_string<_CharTy>::hash() const
 	{
-		static UInt32 fnv_prime = 16777619U;
-		UInt32 fnv_offset_basis = 2166136261U;
+		static size_type fnv_prime = 16777619U;
+		size_type fnv_offset_basis = 2166136261U;
 
-		for (UInt32 index = 0; index < size_; ++index)
+		for (size_type index = 0; index < size_; ++index)
 		{
-			fnv_offset_basis ^= static_cast<UInt32>(const_str_[index]);
+			fnv_offset_basis ^= static_cast<size_type>(const_str_[index]);
 			fnv_offset_basis *= fnv_prime;
 		}
 		return fnv_offset_basis;
 	}
 
 	template <typename _CharTy>
-	inline Int32 basic_string<_CharTy>::compare(const char_type* const str) const
+	inline int basic_string<_CharTy>::compare(const char_type* const str) const
 	{
 		size_type count1 = size();
 		size_type count2 = traits_type::length(str);
 		size_type rlen = std::min(count1, count2);
 
-		Int32 ret = traits_type::compare(const_str_, str, rlen);
+		int ret = traits_type::compare(const_str_, str, rlen);
 		if (ret != 0)
 			return ret;
 
@@ -958,7 +957,7 @@ inline namespace core
 	{
 		if (offset >= size_)
 			return basic_string<_CharTy>::npos;
-		return __string_details::TraitsFind<typename basic_string<_CharTy>::traits_type>(const_str_, size_, offset, str, count);
+		return __string_details::TraitsFind<traits_type, size_type>(const_str_, size_, offset, str, count);
 	}
 
 	template <typename _CharTy>
@@ -987,7 +986,7 @@ inline namespace core
 		if (pos == 0 || pos > size_ || pos == npos)
 			return npos;
 
-		return __string_details::TraitsFindLastOf<typename basic_string<_CharTy>::traits_type>(const_str_, size_, pos, str, count);
+		return __string_details::TraitsFindLastOf<traits_type, size_type>(const_str_, size_, pos, str, count);
 	}
 
 	template <typename _CharTy>
@@ -1160,31 +1159,31 @@ inline namespace core
 	//
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(Int32 val) { return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(int val)					{ return ::kiwano::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(UInt32 val) { return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned int val)			{ return ::kiwano::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long val) { return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long val)					{ return ::kiwano::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long val) { return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long val)		{ return ::kiwano::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long long val) { return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long long val)			{ return ::kiwano::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long long val) { return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long long val)	{ return ::kiwano::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(Float32 val) { return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(float val)				{ return ::kiwano::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(Float64 val) { return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(double val)				{ return ::kiwano::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long double val) { return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long double val)			{ return ::kiwano::to_basic_string<char_type>(val); }
 
 	//
 	// details of basic_string::format
@@ -1336,13 +1335,13 @@ inline namespace core
 	}
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> to_basic_string(Int32 val)
+	inline basic_string<_CharTy> to_basic_string(int val)
 	{
 		return (__to_string_detail::IntegralToString<_CharTy>::convert(val));
 	}
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> to_basic_string(UInt32 val)
+	inline basic_string<_CharTy> to_basic_string(unsigned int val)
 	{
 		return (__to_string_detail::IntegralToString<_CharTy>::convert(val));
 	}
@@ -1372,13 +1371,13 @@ inline namespace core
 	}
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> to_basic_string(Float32 val)
+	inline basic_string<_CharTy> to_basic_string(float val)
 	{
 		return (__to_string_detail::FloatingToString<_CharTy>::convert(val));
 	}
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> to_basic_string(Float64 val)
+	inline basic_string<_CharTy> to_basic_string(double val)
 	{
 		return (__to_string_detail::FloatingToString<_CharTy>::convert(val));
 	}
@@ -1404,9 +1403,9 @@ inline namespace core
 	}
 
 	template <typename ..._Args>
-	inline basic_string<WChar> format_string(const WChar* const fmt, _Args&& ... args)
+	inline basic_string<wchar_t> format_string(const wchar_t* const fmt, _Args&& ... args)
 	{
-		using string_type = basic_string<WChar>;
+		using string_type = basic_string<wchar_t>;
 		const auto len = static_cast<typename string_type::size_type>(::_scwprintf(fmt, std::forward<_Args>(args)...));
 		if (len)
 		{
@@ -1461,37 +1460,37 @@ inline namespace core
 		};
 
 		template <>
-		struct IntegralToString<WChar>
+		struct IntegralToString<wchar_t>
 		{
 			template <typename _Ty>
-			static basic_string<WChar> convert(const _Ty val)
+			static basic_string<wchar_t> convert(const _Ty val)
 			{
 				static_assert(std::is_integral<_Ty>::value, "_Ty must be integral");
 
-				using _Elem = typename basic_string<WChar>::traits_type::char_type;
+				using _Elem = typename basic_string<wchar_t>::traits_type::char_type;
 
 				_Elem buffer[21];
 				_Elem* const buffer_end = std::end(buffer);
 				_Elem* buffer_begin = __IntegerToStringBufferEnd(val, buffer_end);
 
-				return basic_string<WChar>(buffer_begin, buffer_end);
+				return basic_string<wchar_t>(buffer_begin, buffer_end);
 			}
 		};
 
 		template<>
-		struct FloatingToString<WChar>
+		struct FloatingToString<wchar_t>
 		{
-			static inline basic_string<WChar> convert(const Float32 val)
+			static inline basic_string<wchar_t> convert(const float val)
 			{
 				return format_string(L"%g", val);
 			}
 
-			static inline basic_string<WChar> convert(const Float64 val)
+			static inline basic_string<wchar_t> convert(const double val)
 			{
 				return format_string(L"%g", val);
 			}
 
-			static inline basic_string<WChar> convert(const long double val)
+			static inline basic_string<wchar_t> convert(const long double val)
 			{
 				return format_string(L"%Lg", val);
 			}
@@ -1500,12 +1499,12 @@ inline namespace core
 		template<>
 		struct FloatingToString<char>
 		{
-			static inline basic_string<char> convert(const Float32 val)
+			static inline basic_string<char> convert(const float val)
 			{
 				return format_string("%g", val);
 			}
 
-			static inline basic_string<char> convert(const Float64 val)
+			static inline basic_string<char> convert(const double val)
 			{
 				return format_string("%g", val);
 			}
@@ -1522,10 +1521,10 @@ inline namespace core
 namespace kiwano
 {
 
-template <typename _Codecvt, typename _Elem = WChar>
+template <typename _Codecvt, typename _Elem = wchar_t>
 class string_convert
 {
-	enum { BUFFER_INCREASE = 8, BUFFER_MAX = 16 };
+	enum : std::size_t { BUFFER_INCREASE = 8, BUFFER_MAX = 16 };
 
 public:
 	using byte_string  = ::kiwano::core::basic_string<char>;
@@ -1550,7 +1549,7 @@ public:
 
 	virtual ~string_convert() { }
 
-	UInt32 converted() const noexcept { return conv_num_; }
+	std::size_t converted() const noexcept { return conv_num_; }
 
 	state_type state() const { return state_; }
 
@@ -1577,8 +1576,8 @@ public:
 
 		state_ = state_type{};
 
-		wbuf.append((UInt32) BUFFER_INCREASE, (_Elem) '\0');
-		for (conv_num_ = 0; first != last; conv_num_ = static_cast<UInt32>(first - first_save))
+		wbuf.append(BUFFER_INCREASE, (_Elem) '\0');
+		for (conv_num_ = 0; first != last; conv_num_ = static_cast<std::size_t>(first - first_save))
 		{
 			_Elem* dest = &*wbuf.begin();
 			_Elem* dnext;
@@ -1590,15 +1589,15 @@ public:
 			{
 				if (dest < dnext)
 				{
-					wstr.append(dest, static_cast<UInt32>(dnext - dest));
+					wstr.append(dest, static_cast<std::size_t>(dnext - dest));
 				}
 				else if (wbuf.size() < BUFFER_MAX)
 				{
-					wbuf.append(static_cast<UInt32>(BUFFER_INCREASE), '\0');
+					wbuf.append(BUFFER_INCREASE, '\0');
 				}
 				else
 				{
-					throw (std::range_error("bad conversion"));
+					throw std::range_error("bad conversion");
 				}
 				break;
 			}
@@ -1607,13 +1606,13 @@ public:
 			{
 				// no conversion, just copy code values
 				for (; first != last; ++first) {
-					wstr.push_back((_Elem)(UChar)* first);
+					wstr.push_back(static_cast<_Elem>(*first));
 				}
 				break;
 			}
 
 			default:
-				throw (std::range_error("bad conversion"));
+				throw std::range_error("bad conversion");
 			}
 		}
 		return wstr;
@@ -1645,8 +1644,8 @@ public:
 
 		state_ = state_type{};
 
-		bbuf.append((UInt32) BUFFER_INCREASE, '\0');
-		for (conv_num_ = 0; first != last; conv_num_ = static_cast<UInt32>(first - first_save))
+		bbuf.append(BUFFER_INCREASE, '\0');
+		for (conv_num_ = 0; first != last; conv_num_ = static_cast<std::size_t>(first - first_save))
 		{
 			char* dest = &*bbuf.begin();
 			char* dnext;
@@ -1658,11 +1657,11 @@ public:
 			{
 				if (dest < dnext)
 				{
-					bstr.append(dest, (UInt32)(dnext - dest));
+					bstr.append(dest, (std::size_t)(dnext - dest));
 				}
 				else if (bbuf.size() < BUFFER_MAX)
 				{
-					bbuf.append((UInt32) BUFFER_INCREASE, '\0');
+					bbuf.append(BUFFER_INCREASE, '\0');
 				}
 				else
 				{
@@ -1691,14 +1690,14 @@ public:
 	string_convert& operator=(const string_convert&) = delete;
 
 private:
-	const codecvt_type* cvt_;
-	std::locale loc_;
-	state_type state_;
-	UInt32 conv_num_;
+	const codecvt_type*	cvt_;
+	std::locale			loc_;
+	state_type			state_;
+	std::size_t			conv_num_;
 };
 
 class chs_codecvt
-	: public std::codecvt_byname<WChar, char, std::mbstate_t>
+	: public std::codecvt_byname<wchar_t, char, std::mbstate_t>
 {
 public:
 	chs_codecvt() : codecvt_byname("chs") {}

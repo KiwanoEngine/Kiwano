@@ -67,7 +67,7 @@ namespace kiwano
 
 			explicit Matrix3x2T(const value_type* p)
 			{
-				for (Int32 i = 0; i < 6; i++)
+				for (int i = 0; i < 6; i++)
 					m[i] = p[i];
 			}
 
@@ -84,25 +84,25 @@ namespace kiwano
 			template <typename _MTy>
 			Matrix3x2T(_MTy const& other)
 			{
-				for (Int32 i = 0; i < 6; i++)
+				for (int i = 0; i < 6; i++)
 					m[i] = other[i];
 			}
 
 #pragma warning (pop)
 
-			inline value_type operator [](UInt32 index) const
+			inline value_type operator [](std::uint32_t index) const
 			{
 				return m[index];
 			}
 
-			inline value_type& operator [](UInt32 index)
+			inline value_type& operator [](std::uint32_t index)
 			{
 				return m[index];
 			}
 
 			inline Matrix3x2T& operator= (Matrix3x2T const& other)
 			{
-				for (Int32 i = 0; i < 6; i++)
+				for (int i = 0; i < 6; i++)
 					m[i] = other[i];
 				return (*this);
 			}
@@ -290,7 +290,7 @@ namespace kiwano
 				, rhs(rhs)
 			{}
 
-			inline _Ty operator [](UInt32 index) const
+			inline _Ty operator [](std::uint32_t index) const
 			{
 				switch (index)
 				{

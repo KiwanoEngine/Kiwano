@@ -31,7 +31,7 @@ namespace kiwano
 		: public Actor
 	{
 	public:
-		using LoopDoneCallback	= Function<void(Int32)>;
+		using LoopDoneCallback	= Function<void(int)>;
 		using DoneCallback		= Function<void()>;
 
 		GifSprite();
@@ -61,7 +61,7 @@ namespace kiwano
 		);
 
 		// 设置 GIF 动画循环次数
-		inline void SetLoopCount(Int32 loops)						{ total_loop_count_ = loops; }
+		inline void SetLoopCount(int loops)						{ total_loop_count_ = loops; }
 
 		// 设置 GIF 动画每次循环结束回调函数
 		inline void SetLoopDoneCallback(LoopDoneCallback const& cb)	{ loop_cb_ = cb; }
@@ -104,9 +104,9 @@ namespace kiwano
 
 	protected:
 		bool				animating_;
-		Int32				total_loop_count_;
-		Int32				loop_count_;
-		UInt32				next_index_;
+		int				total_loop_count_;
+		int				loop_count_;
+		std::size_t			next_index_;
 		Duration			frame_elapsed_;
 		LoopDoneCallback	loop_cb_;
 		DoneCallback		done_cb_;

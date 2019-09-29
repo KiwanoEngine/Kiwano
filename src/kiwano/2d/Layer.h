@@ -34,12 +34,12 @@ namespace kiwano
 		virtual ~Layer();
 
 		// 重载下列函数以获取图层事件
-		virtual void OnMouseButtonDown(Int32 btn, Point const& p) {}
-		virtual void OnMouseButtonUp(Int32 btn, Point const& p) {}
+		virtual void OnMouseButtonDown(int btn, Point const& p) {}
+		virtual void OnMouseButtonUp(int btn, Point const& p) {}
 		virtual void OnMouseMoved(Point const& p) {}
-		virtual void OnMouseWheel(Float32 wheel) {}
-		virtual void OnKeyDown(Int32 key) {}
-		virtual void OnKeyUp(Int32 key) {}
+		virtual void OnMouseWheel(float wheel) {}
+		virtual void OnKeyDown(int key) {}
+		virtual void OnKeyUp(int key) {}
 		virtual void OnChar(char c) {}
 
 		// 是否开启消息吞没
@@ -52,7 +52,7 @@ namespace kiwano
 		void SetClipRect(Rect const& clip_rect);
 
 		// 设置图层透明度
-		void SetOpacity(Float32 opacity) override;
+		void SetOpacity(float opacity) override;
 
 		// 设置几何蒙层
 		void SetMaskGeometry(Geometry const& mask);

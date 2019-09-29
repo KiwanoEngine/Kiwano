@@ -35,7 +35,7 @@ namespace kiwano
 
 		inline Rect const& GetAreaRect() const					{ return area_; }
 
-		inline Float32 GetOpacity() const						{ return opacity_; }
+		inline float GetOpacity() const							{ return opacity_; }
 
 		inline Geometry const& GetMaskGeometry() const			{ return mask_; }
 
@@ -45,7 +45,7 @@ namespace kiwano
 		inline void SetAreaRect(Rect const& area)				{ area_ = area; }
 
 		// 设置图层透明度
-		inline void SetOpacity(Float32 opacity)					{ opacity_ = opacity; }
+		inline void SetOpacity(float opacity)					{ opacity_ = opacity; }
 
 		// 设置几何蒙层
 		inline void SetMaskGeometry(Geometry const& mask)		{ mask_ = mask; }
@@ -60,7 +60,7 @@ namespace kiwano
 
 	protected:
 		Rect area_;
-		Float32 opacity_;
+		float opacity_;
 		Geometry mask_;
 		Matrix3x2 mask_transform_;
 		ComPtr<ID2D1Layer> layer_;

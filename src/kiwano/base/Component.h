@@ -32,13 +32,13 @@ namespace kiwano
 		virtual void SetupComponent() = 0;
 		virtual void DestroyComponent() = 0;
 
-		bool Check(const Int32 flag);
+		bool Check(const int flag);
 
 	protected:
 		ComponentBase();
 
 	protected:
-		Int32 flag_;
+		int flag_;
 	};
 
 
@@ -56,7 +56,7 @@ namespace kiwano
 		virtual void AfterRender() {}
 
 	public:
-		static const Int32 flag;
+		static const int flag;
 
 		RenderComponent();
 	};
@@ -74,7 +74,7 @@ namespace kiwano
 		virtual void AfterUpdate() {}
 
 	public:
-		static const Int32 flag;
+		static const int flag;
 
 		UpdateComponent();
 	};
@@ -87,10 +87,10 @@ namespace kiwano
 	public:
 		virtual void HandleEvent(Event&) {}
 
-		virtual void HandleMessage(HWND, UInt32, WPARAM, LPARAM) {}
+		virtual void HandleMessage(HWND, UINT32, WPARAM, LPARAM) {}
 
 	public:
-		static const Int32 flag;
+		static const int flag;
 
 		EventComponent();
 	};

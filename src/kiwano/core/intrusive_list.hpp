@@ -20,7 +20,6 @@
 
 #pragma once
 #include "../macros.h"
-#include "types.h"
 
 // #define KGE_DEBUG_ENABLE_LIST_CHECK
 
@@ -36,56 +35,56 @@ namespace kiwano
 inline namespace core
 {
 
-template <typename T> class intrusive_list;
+template <typename _Ty> class intrusive_list;
 
-template <typename T>
+template <typename _Ty>
 class intrusive_list_item
 {
-	T prev_;
-	T next_;
+	_Ty prev_;
+	_Ty next_;
 
 	template <typename U>
 	friend class intrusive_list;
 
 public:
-	using ItemType = T;
+	using value_type = _Ty;
 
 	intrusive_list_item() : prev_(), next_() {}
 
-	T const& prev_item() const	{ return prev_; }
+	_Ty const& prev_item() const	{ return prev_; }
 
-	T& prev_item()				{ return prev_; }
+	_Ty& prev_item()				{ return prev_; }
 
-	T const& next_item() const	{ return next_; }
+	_Ty const& next_item() const	{ return next_; }
 
-	T& next_item()				{ return next_; }
+	_Ty& next_item()				{ return next_; }
 };
 
 
-template <typename T>
+template <typename _Ty>
 class intrusive_list
 {
-	T first_;
-	T last_;
+	_Ty first_;
+	_Ty last_;
 
 public:
-	using ItemType = T;
+	using value_type = _Ty;
 
 	intrusive_list()				: first_(), last_() {}
 
 	~intrusive_list()				{ clear(); }
 
-	T const& first_item() const		{ return first_; }
+	_Ty const& first_item() const		{ return first_; }
 
-	T& first_item()					{ return first_; }
+	_Ty& first_item()					{ return first_; }
 
-	T const& last_item() const		{ return last_; }
+	_Ty const& last_item() const		{ return last_; }
 
-	T& last_item()					{ return last_; }
+	_Ty& last_item()					{ return last_; }
 
 	bool empty() const				{ return !first_; }
 
-	void push_back(T const& child)
+	void push_back(_Ty const& child)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -109,7 +108,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void push_front(T const& child)
+	void push_front(_Ty const& child)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -133,7 +132,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void insert_before(T const& child, T const& before)
+	void insert_before(_Ty const& child, _Ty const& before)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -152,7 +151,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void insert_after(T const& child, T const& after)
+	void insert_after(_Ty const& child, _Ty const& after)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -171,10 +170,10 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void remove(T const& child)
+	void remove(_Ty const& child)
 	{
 #ifdef KGE_DEBUG_ENABLE_LIST_CHECK
-		T tmp = first_;
+		_Ty tmp = first_;
 		while (tmp != child)
 		{
 			KGE_ASSERT((tmp != last_) && "The actor to be removed is not in this list");
@@ -208,10 +207,10 @@ public:
 
 	void clear()
 	{
-		T p = first_;
+		_Ty p = first_;
 		while (p)
 		{
-			T tmp = p;
+			_Ty tmp = p;
 			p = p->next_;
 			if (tmp)
 			{
@@ -231,9 +230,9 @@ private:
 		if (!first_)
 			return;
 
-		Int32 pos = 0;
-		T p = first_;
-		T tmp = p;
+		int pos = 0;
+		_Ty p = first_;
+		_Ty tmp = p;
 		do
 		{
 			tmp = p;

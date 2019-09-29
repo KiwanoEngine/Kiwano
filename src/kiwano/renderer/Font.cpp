@@ -22,7 +22,7 @@
 
 namespace kiwano
 {
-	Font::Font(String const& family, Float32 size, UInt32 weight, bool italic)
+	Font::Font(String const& family, float size, std::uint32_t weight, bool italic)
 		: family(family)
 		, size(size)
 		, weight(weight)
@@ -31,7 +31,7 @@ namespace kiwano
 	{
 	}
 
-	Font::Font(FontCollection collection, String const& family, Float32 size, UInt32 weight, bool italic)
+	Font::Font(FontCollection collection, String const& family, float size, std::uint32_t weight, bool italic)
 		: family(family)
 		, size(size)
 		, weight(weight)

@@ -119,7 +119,7 @@ namespace kiwano
 			Render();
 		}
 
-		void ImGuiModule::HandleMessage(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam)
+		void ImGuiModule::HandleMessage(HWND hwnd, std::uint32_t msg, WPARAM wparam, LPARAM lparam)
 		{
 			if (ImGui::GetCurrentContext() == NULL)
 				return;
@@ -132,7 +132,7 @@ namespace kiwano
 			case WM_MBUTTONDOWN: case WM_MBUTTONDBLCLK:
 			case WM_XBUTTONDOWN: case WM_XBUTTONDBLCLK:
 			{
-				Int32 button = 0;
+				int button = 0;
 				if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONDBLCLK) { button = 0; }
 				if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONDBLCLK) { button = 1; }
 				if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONDBLCLK) { button = 2; }
@@ -148,7 +148,7 @@ namespace kiwano
 			case WM_MBUTTONUP:
 			case WM_XBUTTONUP:
 			{
-				Int32 button = 0;
+				int button = 0;
 				if (msg == WM_LBUTTONUP) { button = 0; }
 				if (msg == WM_RBUTTONUP) { button = 1; }
 				if (msg == WM_MBUTTONUP) { button = 2; }
@@ -160,12 +160,12 @@ namespace kiwano
 			}
 			case WM_MOUSEWHEEL:
 			{
-				io.MouseWheel += (Float32)GET_WHEEL_DELTA_WPARAM(wparam) / (Float32)WHEEL_DELTA;
+				io.MouseWheel += (float)GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
 				break;
 			}
 			case WM_MOUSEHWHEEL:
 			{
-				io.MouseWheelH += (Float32)GET_WHEEL_DELTA_WPARAM(wparam) / (Float32)WHEEL_DELTA;
+				io.MouseWheelH += (float)GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
 				break;
 			}
 			case WM_KEYDOWN:
@@ -185,7 +185,7 @@ namespace kiwano
 			case WM_CHAR:
 			{
 				// You can also use ToAscii()+GetKeyboardState() to retrieve characters.
-				io.AddInputCharacter((UInt32)wparam);
+				io.AddInputCharacter((std::uint32_t)wparam);
 				break;
 			}
 			case WM_SETCURSOR:
@@ -198,7 +198,7 @@ namespace kiwano
 			}
 			case WM_DEVICECHANGE:
 			{
-				if ((UInt32)wparam == DBT_DEVNODES_CHANGED)
+				if ((std::uint32_t)wparam == DBT_DEVNODES_CHANGED)
 					want_update_has_gamepad_ = true;
 				break;
 			}
@@ -233,7 +233,7 @@ namespace kiwano
 			// Set OS mouse position if requested (rarely used, only when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
 			if (io.WantSetMousePos)
 			{
-				POINT pos = { (Int32)io.MousePos.x, (Int32)io.MousePos.y };
+				POINT pos = { (int)io.MousePos.x, (int)io.MousePos.y };
 				::ClientToScreen(target_window_, &pos);
 				::SetCursorPos(pos.x, pos.y);
 			}
@@ -286,7 +286,7 @@ namespace kiwano
 				io.BackendFlags |= ImGuiBackendFlags_HasGamepad;
 
 #define MAP_BUTTON(NAV_NO, BUTTON_ENUM)     { io.NavInputs[NAV_NO] = (gamepad.wButtons & BUTTON_ENUM) ? 1.0f : 0.0f; }
-#define MAP_ANALOG(NAV_NO, VALUE, V0, V1)   { Float32 vn = (Float32)(VALUE - V0) / (Float32)(V1 - V0); if (vn > 1.0f) vn = 1.0f; if (vn > 0.0f && io.NavInputs[NAV_NO] < vn) io.NavInputs[NAV_NO] = vn; }
+#define MAP_ANALOG(NAV_NO, VALUE, V0, V1)   { float vn = (float)(VALUE - V0) / (float)(V1 - V0); if (vn > 1.0f) vn = 1.0f; if (vn > 0.0f && io.NavInputs[NAV_NO] < vn) io.NavInputs[NAV_NO] = vn; }
 				MAP_BUTTON(ImGuiNavInput_Activate, XINPUT_GAMEPAD_A);               // Cross / A
 				MAP_BUTTON(ImGuiNavInput_Cancel, XINPUT_GAMEPAD_B);                 // Circle / B
 				MAP_BUTTON(ImGuiNavInput_Menu, XINPUT_GAMEPAD_X);                   // Square / X

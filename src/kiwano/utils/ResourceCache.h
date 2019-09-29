@@ -53,14 +53,14 @@ namespace kiwano
 		bool AddFrame(String const& id, FramePtr frame);
 
 		// 添加序列帧
-		UInt32 AddFrameSequence(String const& id, Vector<String> const& files);
+		std::size_t AddFrameSequence(String const& id, Vector<String> const& files);
 
 		// 添加序列帧
 		// 按行列数裁剪图片
-		UInt32 AddFrameSequence(String const& id, String const& file_path, Int32 cols, Int32 rows = 1, Float32 padding_x = 0, Float32 padding_y = 0);
+		std::size_t AddFrameSequence(String const& id, String const& file_path, int cols, int rows = 1, float padding_x = 0, float padding_y = 0);
 
 		// 添加序列帧
-		UInt32 AddFrameSequence(String const& id, FrameSequencePtr frames);
+		std::size_t AddFrameSequence(String const& id, FrameSequencePtr frames);
 
 		// 添加对象
 		bool AddObjectBase(String const& id, ObjectBasePtr obj);

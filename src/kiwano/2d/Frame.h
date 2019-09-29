@@ -62,22 +62,22 @@ namespace kiwano
 		);
 
 		// 获取宽度
-		Float32 GetWidth() const					{ return crop_rect_.GetWidth(); }
+		float					GetWidth() const		{ return crop_rect_.GetWidth(); }
 
 		// 获取高度
-		Float32 GetHeight() const					{ return crop_rect_.GetHeight(); }
+		float					GetHeight() const		{ return crop_rect_.GetHeight(); }
 
 		// 获取大小
-		Size GetSize() const						{ return crop_rect_.GetSize(); }
+		Size					GetSize() const			{ return crop_rect_.GetSize(); }
 
 		// 获取裁剪位置
-		Point GetCropPoint() const					{ return crop_rect_.GetLeftTop(); }
+		Point					GetCropPoint() const	{ return crop_rect_.GetLeftTop(); }
 
 		// 获取裁剪矩形
-		inline Rect const& GetCropRect() const		{ return crop_rect_; }
+		inline Rect const&		GetCropRect() const		{ return crop_rect_; }
 
 		// 获取纹理
-		inline Texture const& GetTexture() const	{ return texture_; }
+		inline Texture const&	GetTexture() const		{ return texture_; }
 
 	protected:
 		Texture texture_;

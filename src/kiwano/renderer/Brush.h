@@ -26,12 +26,12 @@ namespace kiwano
 	// ½¥±ä×ª»»µã
 	struct GradientStop
 	{
-		Float32 offset;
+		float offset;
 		Color color;
 
 		GradientStop() : offset(0.f), color() {}
 
-		GradientStop(Float32 offset, Color color) : offset(offset), color(color) {}
+		GradientStop(float offset, Color color) : offset(offset), color(color) {}
 	};
 
 
@@ -133,9 +133,9 @@ namespace kiwano
 			RadialGradientStyle const& style
 		);
 
-		Float32 GetOpacity() const;
+		float GetOpacity() const;
 
-		void SetOpacity(Float32 opacity);
+		void SetOpacity(float opacity);
 
 	public:
 		enum class Type
@@ -159,7 +159,7 @@ namespace kiwano
 
 	protected:
 		Type type_;
-		Float32 opacity_;
+		float opacity_;
 		ComPtr<ID2D1Brush> raw_;
 	};
 

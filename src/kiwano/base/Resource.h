@@ -39,7 +39,7 @@ namespace kiwano
 		struct Data
 		{
 			void* buffer;
-			UInt32 size;
+			std::uint32_t size;
 
 			inline Data() : buffer(nullptr), size(0) {}
 
@@ -49,20 +49,20 @@ namespace kiwano
 		Resource();
 
 		Resource(
-			UInt32 id,			/* 资源 ID */
-			const WChar* type	/* 资源类型 */
+			std::uint32_t id,	/* 资源 ID */
+			const wchar_t* type	/* 资源类型 */
 		);
 
 		// 获取二进制数据
-		Resource::Data GetData() const;
+		Resource::Data			GetData() const;
 
-		inline UInt32 GetId() const		{ return id_; }
+		inline std::uint32_t	GetId() const	{ return id_; }
 
-		inline const WChar* GetType() const	{ return type_; }
+		inline const wchar_t*	GetType() const	{ return type_; }
 
 	private:
-		UInt32			id_;
-		const WChar*	type_;
+		std::uint32_t	id_;
+		const wchar_t*	type_;
 
 		mutable Resource::Data	data_;
 	};

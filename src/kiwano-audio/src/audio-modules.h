@@ -37,7 +37,7 @@ namespace kiwano
 				HMODULE xaudio2;
 
 				// XAudio2 functions
-				typedef HRESULT(WINAPI* PFN_XAudio2Create)(IXAudio2**, UInt32, XAUDIO2_PROCESSOR);
+				typedef HRESULT(WINAPI* PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
 
 			public:
 				static inline XAudio2& Get()
@@ -61,7 +61,7 @@ namespace kiwano
 				typedef HRESULT(WINAPI* PFN_MFStartup)(ULONG, DWORD);
 				typedef HRESULT(WINAPI* PFN_MFShutdown)();
 				typedef HRESULT(WINAPI* PFN_MFCreateMediaType)(IMFMediaType**);
-				typedef HRESULT(WINAPI* PFN_MFCreateWaveFormatExFromMFMediaType)(IMFMediaType*, WAVEFORMATEX**, UInt32*, UInt32);
+				typedef HRESULT(WINAPI* PFN_MFCreateWaveFormatExFromMFMediaType)(IMFMediaType*, WAVEFORMATEX**, UINT32*, UINT32);
 				typedef HRESULT(WINAPI* PFN_MFCreateSourceReaderFromURL)(LPCWSTR, IMFAttributes*, IMFSourceReader**);
 				typedef HRESULT(WINAPI* PFN_MFCreateSourceReaderFromByteStream)(IMFByteStream*, IMFAttributes*, IMFSourceReader**);
 				typedef HRESULT(WINAPI* PFN_MFCreateMFByteStreamOnStream)(IStream*, IMFByteStream**);

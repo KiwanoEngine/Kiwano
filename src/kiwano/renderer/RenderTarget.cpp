@@ -113,7 +113,7 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::DrawGeometry(Geometry const& geometry, Float32 stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawGeometry(Geometry const& geometry, float stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -155,7 +155,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawLine(Point const& point1, Point const& point2, Float32 stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawLine(Point const& point1, Point const& point2, float stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -179,7 +179,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawRectangle(Rect const& rect, Float32 stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawRectangle(Rect const& rect, float stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
 
@@ -222,7 +222,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, Float32 stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, float stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -272,7 +272,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, Float32 stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width, StrokeStyle stroke) const
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -517,7 +517,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	Float32 RenderTarget::GetOpacity() const
+	float RenderTarget::GetOpacity() const
 	{
 		return opacity_;
 	}
@@ -585,7 +585,7 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::SetOpacity(Float32 opacity)
+	void RenderTarget::SetOpacity(float opacity)
 	{
 		HRESULT hr = S_OK;
 		if (!current_brush_)

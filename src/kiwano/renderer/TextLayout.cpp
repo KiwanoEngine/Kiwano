@@ -111,7 +111,7 @@ namespace kiwano
 		{
 			if (style.underline)
 			{
-				hr = text_layout_->SetUnderline(true, { 0, text.length() });
+				hr = text_layout_->SetUnderline(true, { 0, UINT32(text.length()) });
 			}
 		}
 
@@ -119,7 +119,7 @@ namespace kiwano
 		{
 			if (style.strikethrough)
 			{
-				text_layout_->SetStrikethrough(true, { 0, text.length() });
+				text_layout_->SetStrikethrough(true, { 0, UINT32(text.length()) });
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	UInt32 TextLayout::GetLineCount()
+	std::uint32_t TextLayout::GetLineCount()
 	{
 		if (text_layout_)
 		{

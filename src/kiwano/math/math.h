@@ -29,9 +29,9 @@
 
 namespace kiwano
 {
-	using Vec2 = kiwano::math::Vec2T<Float32>;
-	using Rect = kiwano::math::RectT<Float32>;
-	using Matrix3x2 = kiwano::math::Matrix3x2T<Float32>;
+	using Vec2 = kiwano::math::Vec2T<float>;
+	using Rect = kiwano::math::RectT<float>;
+	using Matrix3x2 = kiwano::math::Matrix3x2T<float>;
 
 	using Point = Vec2;
 	using Size = Vec2;

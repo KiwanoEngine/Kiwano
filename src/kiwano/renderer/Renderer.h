@@ -96,7 +96,7 @@ namespace kiwano
 		void CreateGifImageFrame(
 			GifImage::Frame& frame,
 			GifImage const& gif,
-			UInt32 frame_index
+			std::size_t frame_index
 		);
 
 		void CreateFontCollection(
@@ -184,7 +184,7 @@ namespace kiwano
 
 		void AfterRender() override;
 
-		void HandleMessage(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam) override;
+		void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
 
 	public:
 		inline HWND						GetTargetWindow() const			{ return hwnd_; }
@@ -206,7 +206,7 @@ namespace kiwano
 
 		HRESULT HandleDeviceLost();
 
-		void ResizeTarget(UInt32 width, UInt32 height);
+		void ResizeTarget(std::uint32_t width, std::uint32_t height);
 
 	private:
 		bool	vsync_;

@@ -41,7 +41,7 @@ namespace kiwano
 		}
 	}
 
-	Timer* TimerManager::AddTimer(Timer::Callback const& func, Duration delay, Int32 times, String const& name)
+	Timer* TimerManager::AddTimer(Timer::Callback const& func, Duration delay, int times, String const& name)
 	{
 		TimerPtr timer = new Timer(func, delay, times, name);
 		return AddTimer(timer);

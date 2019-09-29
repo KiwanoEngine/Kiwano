@@ -35,10 +35,10 @@ namespace
 	using namespace kiwano;
 	using namespace kiwano::network;
 
-	UInt32 write_data(void* buffer, UInt32 size, UInt32 nmemb, void* userp)
+	std::uint32_t write_data(void* buffer, std::uint32_t size, std::uint32_t nmemb, void* userp)
 	{
 		kiwano::string* recv_buffer = (kiwano::string*)userp;
-		UInt32 total = size * nmemb;
+		std::uint32_t total = size * nmemb;
 
 		// add data to the end of recv_buffer
 		// write data maybe called more than once in a single request
@@ -49,7 +49,7 @@ namespace
 
 	kiwano::string convert_to_utf8(kiwano::wstring const& str)
 	{
-		std::wstring_convert<std::codecvt_utf8<WChar>> utf8_conv;
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
 		kiwano::string result;
 
 		try
@@ -66,7 +66,7 @@ namespace
 
 	kiwano::wstring convert_from_utf8(kiwano::string const& str)
 	{
-		kiwano::string_convert<std::codecvt_utf8<WChar>> utf8_conv;
+		kiwano::string_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
 		kiwano::wstring result;
 
 		try

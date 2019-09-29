@@ -25,7 +25,7 @@ namespace kiwano
 {
 	namespace math
 	{
-		inline Float32 Linear(Float32 step)
+		inline float Linear(float step)
 		{
 			return step;
 		}
@@ -33,17 +33,17 @@ namespace kiwano
 
 		// Ease
 
-		inline Float32 EaseIn(Float32 step, Float32 rate)
+		inline float EaseIn(float step, float rate)
 		{
 			return math::Pow(step, rate);
 		}
 
-		inline Float32 EaseOut(Float32 step, Float32 rate)
+		inline float EaseOut(float step, float rate)
 		{
 			return math::Pow(step, 1.f / rate);
 		}
 
-		inline Float32 EaseInOut(Float32 step, Float32 rate)
+		inline float EaseInOut(float step, float rate)
 		{
 			if (step < .5f)
 				return .5f * math::Pow(2 * step, rate);
@@ -53,17 +53,17 @@ namespace kiwano
 
 		// Exponential Ease
 
-		inline Float32 EaseExponentialIn(Float32 step)
+		inline float EaseExponentialIn(float step)
 		{
 			return math::Pow(2.f, 10 * (step - 1));
 		}
 
-		inline Float32 EaseExponentialOut(Float32 step)
+		inline float EaseExponentialOut(float step)
 		{
 			return 1.f - math::Pow(2.f, -10 * step);
 		}
 
-		inline Float32 EaseExponentialInOut(Float32 step)
+		inline float EaseExponentialInOut(float step)
 		{
 			if (step < .5f)
 				return .5f * math::Pow(2.f, 10 * (2 * step - 1));
@@ -73,7 +73,7 @@ namespace kiwano
 
 		// Bounce Ease
 
-		inline Float32 EaseBounceOut(Float32 step)
+		inline float EaseBounceOut(float step)
 		{
 			if (step < 1 / 2.75f)
 			{
@@ -94,12 +94,12 @@ namespace kiwano
 			return 7.5625f * step * step + 0.984375f;
 		}
 
-		inline Float32 EaseBounceIn(Float32 step)
+		inline float EaseBounceIn(float step)
 		{
 			return 1 - EaseBounceOut(1 - step);
 		}
 
-		inline Float32 EaseBounceInOut(Float32 step)
+		inline float EaseBounceInOut(float step)
 		{
 			if (step < 0.5f)
 			{
@@ -114,7 +114,7 @@ namespace kiwano
 
 		// Elastic Ease
 
-		inline Float32 EaseElasticIn(Float32 step, Float32 period)
+		inline float EaseElasticIn(float step, float period)
 		{
 			if (step == 0 || step == 1)
 				return step;
@@ -123,7 +123,7 @@ namespace kiwano
 			return -math::Pow(2, 10 * step) * math::Sin((step - period / 4) * 360.f / period);
 		}
 
-		inline Float32 EaseElasticOut(Float32 step, Float32 period)
+		inline float EaseElasticOut(float step, float period)
 		{
 			if (step == 0 || step == 1)
 				return step;
@@ -131,7 +131,7 @@ namespace kiwano
 			return math::Pow(2, -10 * step) * math::Sin((step - period / 4) * 360.f / period) + 1;
 		}
 
-		inline Float32 EaseElasticInOut(Float32 step, Float32 period)
+		inline float EaseElasticInOut(float step, float period)
 		{
 			if (step == 0 || step == 1)
 				return step;
@@ -147,22 +147,22 @@ namespace kiwano
 
 		// Back Ease
 
-		inline Float32 EaseBackIn(Float32 step)
+		inline float EaseBackIn(float step)
 		{
-			const Float32 overshoot = 1.70158f;
+			const float overshoot = 1.70158f;
 			return step * step * ((overshoot + 1) * step - overshoot);
 		}
 
-		inline Float32 EaseBackOut(Float32 step)
+		inline float EaseBackOut(float step)
 		{
-			const Float32 overshoot = 1.70158f;
+			const float overshoot = 1.70158f;
 			step = step - 1;
 			return step * step * ((overshoot + 1) * step + overshoot) + 1;
 		}
 
-		inline Float32 EaseBackInOut(Float32 step)
+		inline float EaseBackInOut(float step)
 		{
-			const Float32 overshoot = 1.70158f * 1.525f;
+			const float overshoot = 1.70158f * 1.525f;
 
 			step = step * 2;
 			if (step < 1)
@@ -177,17 +177,17 @@ namespace kiwano
 
 		// Sine Ease
 
-		inline Float32 EaseSineIn(Float32 step)
+		inline float EaseSineIn(float step)
 		{
 			return 1.f - math::Cos(step * 90);
 		}
 
-		inline Float32 EaseSineOut(Float32 step)
+		inline float EaseSineOut(float step)
 		{
 			return math::Sin(step * 90);
 		}
 
-		inline Float32 EaseSineInOut(Float32 step)
+		inline float EaseSineInOut(float step)
 		{
 			return -0.5f * (math::Cos(step * 180) - 1);
 		}
@@ -195,17 +195,17 @@ namespace kiwano
 
 		// Quad Ease
 
-		inline Float32 EaseQuadIn(Float32 step)
+		inline float EaseQuadIn(float step)
 		{
 			return step * step;
 		}
 
-		inline Float32 EaseQuadOut(Float32 step)
+		inline float EaseQuadOut(float step)
 		{
 			return -1 * step * (step - 2);
 		}
 
-		inline Float32 EaseQuadInOut(Float32 step)
+		inline float EaseQuadInOut(float step)
 		{
 			step = step * 2;
 			if (step < 1)
@@ -217,18 +217,18 @@ namespace kiwano
 
 		// Cubic Ease
 
-		inline Float32 EaseCubicIn(Float32 step)
+		inline float EaseCubicIn(float step)
 		{
 			return step * step * step;
 		}
 
-		inline Float32 EaseCubicOut(Float32 step)
+		inline float EaseCubicOut(float step)
 		{
 			step -= 1;
 			return (step * step * step + 1);
 		}
 
-		inline Float32 EaseCubicInOut(Float32 step)
+		inline float EaseCubicInOut(float step)
 		{
 			step = step * 2;
 			if (step < 1)
@@ -240,18 +240,18 @@ namespace kiwano
 
 		// Quart Ease
 
-		inline Float32 EaseQuartIn(Float32 step)
+		inline float EaseQuartIn(float step)
 		{
 			return step * step * step * step;
 		}
 
-		inline Float32 EaseQuartOut(Float32 step)
+		inline float EaseQuartOut(float step)
 		{
 			step -= 1;
 			return -(step * step * step * step - 1);
 		}
 
-		inline Float32 EaseQuartInOut(Float32 step)
+		inline float EaseQuartInOut(float step)
 		{
 			step = step * 2;
 			if (step < 1)
@@ -263,18 +263,18 @@ namespace kiwano
 
 		// Quint Ease
 
-		inline Float32 EaseQuintIn(Float32 step)
+		inline float EaseQuintIn(float step)
 		{
 			return step * step * step * step * step;
 		}
 
-		inline Float32 EaseQuintOut(Float32 step)
+		inline float EaseQuintOut(float step)
 		{
 			step -= 1;
 			return (step * step * step * step * step + 1);
 		}
 
-		inline Float32 EaseQuintInOut(Float32 step)
+		inline float EaseQuintInOut(float step)
 		{
 			step = step * 2;
 			if (step < 1)

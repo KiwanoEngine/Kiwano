@@ -102,8 +102,8 @@ namespace kiwano
 			if (!data) { return E_FAIL; }
 
 			stream = kiwano::modules::Shlwapi::Get().SHCreateMemStream(
-				static_cast<const Byte*>(data.buffer),
-				static_cast<UInt32>(data.size)
+				static_cast<const BYTE*>(data.buffer),
+				static_cast<std::uint32_t>(data.size)
 			);
 
 			if (stream == nullptr)
@@ -185,7 +185,7 @@ namespace kiwano
 			// 获取 WAVEFORMAT 数据
 			if (SUCCEEDED(hr))
 			{
-				UInt32 size = 0;
+				std::uint32_t size = 0;
 				hr = modules::MediaFoundation::Get().MFCreateWaveFormatExFromMFMediaType(
 					uncompressed_type.get(),
 					&wave_format_,
@@ -218,7 +218,7 @@ namespace kiwano
 			{
 				DWORD flags = 0;
 				DWORD position = 0;
-				Byte* data = new (std::nothrow) Byte[max_stream_size];
+				BYTE* data = new (std::nothrow) BYTE[max_stream_size];
 
 				ComPtr<IMFSample> sample;
 				ComPtr<IMFMediaBuffer> buffer;
@@ -251,7 +251,7 @@ namespace kiwano
 
 							if (SUCCEEDED(hr))
 							{
-								Byte* audio_data = nullptr;
+								BYTE* audio_data = nullptr;
 								DWORD sample_buffer_length = 0;
 
 								hr = buffer->Lock(

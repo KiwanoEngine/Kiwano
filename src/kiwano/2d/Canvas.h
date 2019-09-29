@@ -52,7 +52,7 @@ namespace kiwano
 		// 画圆形边框
 		void DrawCircle(
 			Point const& center,
-			Float32 radius
+			float radius
 		);
 
 		// 画椭圆形边框
@@ -75,7 +75,7 @@ namespace kiwano
 		// 填充圆形
 		void FillCircle(
 			Point const& center,
-			Float32 radius
+			float radius
 		);
 
 		// 填充椭圆形
@@ -139,7 +139,7 @@ namespace kiwano
 		void AddArc(
 			Point const& point,		/* 终点 */
 			Point const& radius,	/* 椭圆半径 */
-			Float32 rotation,		/* 椭圆旋转角度 */
+			float rotation,		/* 椭圆旋转角度 */
 			bool clockwise = true,	/* 顺时针 or 逆时针 */
 			bool is_small = true	/* 是否取小于 180° 的弧 */
 		);
@@ -170,7 +170,7 @@ namespace kiwano
 
 		// 设置轮廓宽度
 		void SetStrokeWidth(
-			Float32 width
+			float width
 		);
 
 		// 设置轮廓样式
@@ -190,7 +190,7 @@ namespace kiwano
 
 		// 设置画笔透明度
 		void SetBrushOpacity(
-			Float32 opacity
+			float opacity
 		);
 
 		// 画笔二维变换
@@ -226,10 +226,10 @@ namespace kiwano
 		Color GetStrokeColor() const;
 
 		// 获取轮廓宽度
-		Float32 GetStrokeWidth() const;
+		float GetStrokeWidth() const;
 
 		// 获取画笔透明度
-		Float32 GetBrushOpacity() const;
+		float GetBrushOpacity() const;
 
 		// 导出为图片
 		Texture ExportToTexture() const;
@@ -240,7 +240,7 @@ namespace kiwano
 		void UpdateCache() const;
 
 	protected:
-		Float32				stroke_width_;
+		float				stroke_width_;
 		Color				fill_color_;
 		Color				stroke_color_;
 		Font				text_font_;

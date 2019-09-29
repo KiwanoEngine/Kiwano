@@ -27,8 +27,8 @@ namespace kiwano
 	// 鼠标事件
 	struct MouseEvent
 	{
-		Float32 x;
-		Float32 y;
+		float x;
+		float y;
 		bool left_btn_down;		// 左键是否按下
 		bool right_btn_down;	// 右键是否按下
 
@@ -36,27 +36,27 @@ namespace kiwano
 		{
 			struct	// Events::MouseDown | Events::MouseUp | Events::MouseClick
 			{
-				Int32 button;
+				int button;
 			};
 
 			struct	// Events::MouseWheel
 			{
-				Float32 wheel;
+				float wheel;
 			};
 		};
 
-		static bool Check(Int32 type);
+		static bool Check(int type);
 	};
 
 	// 键盘事件
 	struct KeyboardEvent
 	{
-		Int32 count;
+		int count;
 		union
 		{
 			struct	// Events::KeyDown | Events::KeyUp
 			{
-				Int32 code;		// enum KeyCode
+				int code;		// enum KeyCode
 			};
 
 			struct	// Events::Char
@@ -65,7 +65,7 @@ namespace kiwano
 			};
 		};
 
-		static bool Check(Int32 type);
+		static bool Check(int type);
 	};
 
 	// 窗口事件
@@ -75,14 +75,14 @@ namespace kiwano
 		{
 			struct		// Events::WindowMoved
 			{
-				Int32 x;
-				Int32 y;
+				int x;
+				int y;
 			};
 
 			struct		// Events::WindowResized
 			{
-				Int32 width;
-				Int32 height;
+				int width;
+				int height;
 			};
 
 			struct		// Events::WindowFocusChanged
@@ -92,11 +92,11 @@ namespace kiwano
 
 			struct		// Events::WindowTitleChanged
 			{
-				const WChar* title;
+				const wchar_t* title;
 			};
 		};
 
-		static bool Check(Int32 type);
+		static bool Check(int type);
 	};
 
 	// 自定义事件
@@ -110,7 +110,7 @@ namespace kiwano
 	// 事件
 	struct KGE_API Event
 	{
-		enum Type : Int32
+		enum Type : int
 		{
 			First,
 
@@ -144,7 +144,7 @@ namespace kiwano
 			Last
 		};
 
-		Int32 type;
+		int type;
 		Actor* target;
 
 		union
@@ -155,23 +155,23 @@ namespace kiwano
 			CustomEvent custom;
 		};
 
-		Event(Int32 type = Type::First) : type(type), target(nullptr) {}
+		Event(int type = Type::First) : type(type), target(nullptr) {}
 	};
 
 
 	// Check-functions
 
-	inline bool MouseEvent::Check(Int32 type)
+	inline bool MouseEvent::Check(int type)
 	{
 		return type > Event::MouseFirst && type < Event::MouseLast;
 	}
 
-	inline bool KeyboardEvent::Check(Int32 type)
+	inline bool KeyboardEvent::Check(int type)
 	{
 		return type > Event::KeyFirst && type < Event::KeyLast;
 	}
 
-	inline bool WindowEvent::Check(Int32 type)
+	inline bool WindowEvent::Check(int type)
 	{
 		return type > Event::WindowFirst && type < Event::WindowLast;
 	}

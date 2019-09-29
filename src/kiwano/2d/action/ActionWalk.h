@@ -32,8 +32,8 @@ namespace kiwano
 		ActionWalk(
 			Duration duration,		/* 持续时长 */
 			bool rotating = false,	/* 沿路线切线方向旋转 */
-			Float32 start = 0.f,		/* 起点 */
-			Float32 end = 1.f,		/* 终点 */
+			float start = 0.f,		/* 起点 */
+			float end = 1.f,		/* 终点 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -41,8 +41,8 @@ namespace kiwano
 			Duration duration,		/* 持续时长 */
 			Geometry const& path,	/* 路线 */
 			bool rotating = false,	/* 沿路线切线方向旋转 */
-			Float32 start = 0.f,		/* 起点 */
-			Float32 end = 1.f,		/* 终点 */
+			float start = 0.f,		/* 起点 */
+			float end = 1.f,		/* 终点 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -81,7 +81,7 @@ namespace kiwano
 		void AddArc(
 			Point const& point,		/* 终点 */
 			Size const& radius,		/* 椭圆半径 */
-			Float32 rotation,			/* 椭圆旋转角度 */
+			float rotation,			/* 椭圆旋转角度 */
 			bool clockwise = true,	/* 顺时针 or 逆时针 */
 			bool is_small = true	/* 是否取小于 180° 的弧 */
 		);
@@ -98,13 +98,13 @@ namespace kiwano
 	protected:
 		void Init(ActorPtr target) override;
 
-		void UpdateTween(ActorPtr target, Float32 percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		bool			rotating_;
-		Float32			start_;
-		Float32			end_;
-		Float32			length_;
+		float			start_;
+		float			end_;
+		float			length_;
 		Point			start_pos_;
 		Geometry		path_;
 		GeometrySink	sink_;

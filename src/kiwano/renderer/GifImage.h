@@ -40,11 +40,11 @@ namespace kiwano
 
 		bool IsValid() const;
 
-		inline UInt32 GetWidthInPixels() const	{ return width_in_pixels_; }
+		inline std::uint32_t GetWidthInPixels() const	{ return width_in_pixels_; }
 
-		inline UInt32 GetHeightInPixels() const	{ return height_in_pixels_; }
+		inline std::uint32_t GetHeightInPixels() const	{ return height_in_pixels_; }
 
-		inline UInt32 GetFramesCount() const	{ return frames_count_; }
+		inline std::uint32_t GetFramesCount() const		{ return frames_count_; }
 
 	public:
 		enum class DisposalType
@@ -73,9 +73,9 @@ namespace kiwano
 		HRESULT GetGlobalMetadata();
 
 	protected:
-		UInt32	frames_count_;
-		UInt32	width_in_pixels_;
-		UInt32	height_in_pixels_;
+		std::uint32_t	frames_count_;
+		std::uint32_t	width_in_pixels_;
+		std::uint32_t	height_in_pixels_;
 
 		ComPtr<IWICBitmapDecoder> decoder_;
 	};

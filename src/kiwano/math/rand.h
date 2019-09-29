@@ -29,26 +29,24 @@ namespace kiwano
 		// 随机数
 		// 
 		// 获取指定范围内的一个随机数, 如:
-		// Int32 n = math::Rand(1, 5);  // 获取 1~5 内的随机整数, 包含 1 和 5
+		// int n = math::Random(1, 5);  // 获取 1~5 内的随机整数, 包含 1 和 5
 		// 产生的随机数类型取决于参数的类型, 如获取随机浮点数:
-		// Float64 d = math::Rand(1.2, 1.5);
+		// float d = math::Random(1.2f, 1.5f);
 		//
 
-		Int32 Rand(Int32 min, Int32 max);
+		int				Random(int min, int max);
 
-		UInt32 Rand(UInt32 min, UInt32 max);
+		unsigned int	Random(unsigned int min, unsigned int max);
 
-		long Rand(long min, long max);
+		long			Random(long min, long max);
 
-		unsigned long Rand(unsigned long min, unsigned long max);
+		unsigned long	Random(unsigned long min, unsigned long max);
 
-		char Rand(char min, char max);
+		char			Random(char min, char max);
 
-		UChar Rand(UChar min, UChar max);
+		float			Random(float min, float max);
 
-		Float32 Rand(Float32 min, Float32 max);
-
-		Float64 Rand(Float64 min, Float64 max);
+		double			Random(double min, double max);
 
 
 		//
@@ -79,46 +77,39 @@ namespace kiwano
 			}
 		}
 
-		inline Int32 Rand(Int32 min, Int32 max)
+		inline int Random(int min, int max)
 		{
 			return __rand_detail::RandomInt(min, max);
 		}
 
-		inline UInt32 Rand(UInt32 min, UInt32 max)
+		inline unsigned int Random(unsigned int min, unsigned int max)
 		{
 			return __rand_detail::RandomInt(min, max);
 		}
 
-		inline long Rand(long min, long max)
+		inline long Random(long min, long max)
 		{
 			return __rand_detail::RandomInt(min, max);
 		}
 
-		inline unsigned long Rand(unsigned long min, unsigned long max)
+		inline unsigned long Random(unsigned long min, unsigned long max)
 		{
 			return __rand_detail::RandomInt(min, max);
 		}
 
-		inline char Rand(char min, char max)
+		inline char Random(char min, char max)
 		{
 			return static_cast<char>(
-				__rand_detail::RandomInt(static_cast<Int32>(min), static_cast<Int32>(max))
+				__rand_detail::RandomInt(static_cast<int>(min), static_cast<int>(max))
 			);
 		}
 
-		inline UChar Rand(UChar min, UChar max)
-		{
-			return static_cast<UChar>(
-				__rand_detail::RandomInt(static_cast<UInt32>(min), static_cast<UInt32>(max))
-			);
-		}
-
-		inline Float32 Rand(Float32 min, Float32 max)
+		inline float Random(float min, float max)
 		{
 			return __rand_detail::RandomReal(min, max);
 		}
 
-		inline Float64 Rand(Float64 min, Float64 max)
+		inline double Random(double min, double max)
 		{
 			return __rand_detail::RandomReal(min, max);
 		}

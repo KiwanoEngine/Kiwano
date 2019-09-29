@@ -48,7 +48,7 @@ namespace kiwano
 		area_.SetAreaRect(clip_rect);
 	}
 
-	void Layer::SetOpacity(Float32 opacity)
+	void Layer::SetOpacity(float opacity)
 	{
 		// Actor::SetOpacity(opacity);
 		area_.SetOpacity(opacity);

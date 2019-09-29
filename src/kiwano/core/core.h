@@ -69,7 +69,7 @@ namespace kiwano
 	using Function = kiwano::core::function<_FuncTy>;
 
 	using Json = kiwano::core::basic_json<kiwano::Map, kiwano::Vector, kiwano::String,
-		Int32, Float64, bool, std::allocator>;
+		int, double, bool, std::allocator>;
 }
 
 namespace std

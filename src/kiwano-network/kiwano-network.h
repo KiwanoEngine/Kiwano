@@ -24,6 +24,3 @@
 #include "src/HttpRequest.hpp"
 #include "src/HttpResponse.hpp"
 #include "src/HttpClient.h"
-
-// CURL
-#include "third-party/curl/curl.h"

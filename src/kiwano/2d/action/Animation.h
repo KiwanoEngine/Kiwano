@@ -55,7 +55,7 @@ namespace kiwano
 	protected:
 		void Init(ActorPtr target) override;
 
-		void UpdateTween(ActorPtr target, Float32 percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		FrameSequencePtr frame_seq_;

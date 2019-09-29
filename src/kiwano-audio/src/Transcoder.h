@@ -34,8 +34,8 @@ namespace kiwano
 		public:
 			struct Buffer
 			{
-				Byte* data;
-				UInt32 size;
+				BYTE* data;
+				std::uint32_t size;
 				const WAVEFORMATEX* format;
 			};
 
@@ -60,8 +60,8 @@ namespace kiwano
 			);
 
 		private:
-			Byte* wave_data_;
-			UInt32 wave_size_;
+			BYTE* wave_data_;
+			std::uint32_t wave_size_;
 			WAVEFORMATEX* wave_format_;
 		};
 	}

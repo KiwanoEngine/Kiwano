@@ -65,9 +65,9 @@ namespace kiwano
 		return bounds;
 	}
 
-	Float32 Geometry::GetLength() const
+	float Geometry::GetLength() const
 	{
-		Float32 length = 0.f;
+		float length = 0.f;
 		if (geo_)
 		{
 			// no matter it failed or not
@@ -76,7 +76,7 @@ namespace kiwano
 		return length;
 	}
 
-	bool Geometry::ComputePointAtLength(Float32 length, Point& point, Vec2& tangent) const
+	bool Geometry::ComputePointAtLength(float length, Point& point, Vec2& tangent) const
 	{
 		if (geo_)
 		{
@@ -124,7 +124,7 @@ namespace kiwano
 			sink.Init();
 			sink.OpenSink();
 
-			for (UInt32 i = 0; i < geos.size() - 1; i++)
+			for (std::size_t i = 0; i < geos.size() - 1; i++)
 			{
 				CombineMode mode = (modes.size() == 1) ? modes[0] : modes[i];
 				const Matrix3x2& matrix = (matrixs.size() == 1) ? matrixs[0] : matrixs[i];
@@ -145,12 +145,12 @@ namespace kiwano
 		return Geometry();
 	}
 
-	Float32 Geometry::ComputeArea() const
+	float Geometry::ComputeArea() const
 	{
 		if (!geo_)
 			return 0.f;
 
-		Float32 area = 0.f;
+		float area = 0.f;
 		// no matter it failed or not
 		geo_->ComputeArea(D2D1::Matrix3x2F::Identity(), &area);
 		return area;
@@ -192,7 +192,7 @@ namespace kiwano
 		return output;
 	}
 
-	Geometry Geometry::CreateCircle(Point const& center, Float32 radius)
+	Geometry Geometry::CreateCircle(Point const& center, float radius)
 	{
 		Geometry output;
 		Renderer::GetInstance()->CreateEllipseGeometry(output, center, Vec2{ radius, radius });
@@ -252,16 +252,16 @@ namespace kiwano
 		
 		sink_->AddLines(
 			reinterpret_cast<const D2D_POINT_2F*>(&points[0]),
-			static_cast<UInt32>(points.size())
+			static_cast<std::uint32_t>(points.size())
 		);
 		return (*this);
 	}
 
-	GeometrySink& kiwano::GeometrySink::AddLines(const Point* points, UInt32 count)
+	GeometrySink& kiwano::GeometrySink::AddLines(const Point* points, std::size_t count)
 	{
 		if (!sink_) BeginPath();
 
-		sink_->AddLines(reinterpret_cast<const D2D_POINT_2F*>(points), count);
+		sink_->AddLines(reinterpret_cast<const D2D_POINT_2F*>(points), UINT32(count));
 		return (*this);
 	}
 
@@ -279,7 +279,7 @@ namespace kiwano
 		return (*this);
 	}
 
-	GeometrySink& GeometrySink::AddArc(Point const& point, Size const& radius, Float32 rotation, bool clockwise, bool is_small)
+	GeometrySink& GeometrySink::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 	{
 		if (!sink_) BeginPath();
 

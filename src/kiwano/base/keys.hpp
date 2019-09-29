@@ -26,7 +26,7 @@ namespace kiwano
 	// 鼠标按键
 	struct MouseButton
 	{
-		typedef Int32 Value;
+		typedef int Value;
 
 		enum : Value
 		{
@@ -40,7 +40,7 @@ namespace kiwano
 	// 按键键值
 	struct KeyCode
 	{
-		typedef Int32 Value;
+		typedef int Value;
 
 		enum : Value
 		{

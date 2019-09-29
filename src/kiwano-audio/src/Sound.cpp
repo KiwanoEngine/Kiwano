@@ -114,7 +114,7 @@ namespace kiwano
 			return true;
 		}
 
-		void Sound::Play(Int32 loop_count)
+		void Sound::Play(int loop_count)
 		{
 			if (!opened_)
 			{
@@ -139,7 +139,7 @@ namespace kiwano
 			buffer.pAudioData = wave_buffer.data;
 			buffer.Flags = XAUDIO2_END_OF_STREAM;
 			buffer.AudioBytes = wave_buffer.size;
-			buffer.LoopCount = static_cast<UInt32>(loop_count);
+			buffer.LoopCount = static_cast<std::uint32_t>(loop_count);
 
 			HRESULT hr = voice_->SubmitSourceBuffer(&buffer);
 			if (SUCCEEDED(hr))
@@ -212,7 +212,7 @@ namespace kiwano
 
 				XAUDIO2_VOICE_STATE state;
 				voice_->GetState(&state);
-				UInt32 buffers_queued = state.BuffersQueued;
+				std::uint32_t buffers_queued = state.BuffersQueued;
 
 				if (buffers_queued && playing_)
 					return true;
@@ -220,16 +220,16 @@ namespace kiwano
 			return false;
 		}
 
-		Float32 Sound::GetVolume() const
+		float Sound::GetVolume() const
 		{
 			KGE_ASSERT(voice_ != nullptr && "IXAudio2SourceVoice* is NULL");
 
-			Float32 volume = 0.0f;
+			float volume = 0.0f;
 			voice_->GetVolume(&volume);
 			return volume;
 		}
 
-		void Sound::SetVolume(Float32 volume)
+		void Sound::SetVolume(float volume)
 		{
 			KGE_ASSERT(voice_ != nullptr && "IXAudio2SourceVoice* is NULL");
 

@@ -59,7 +59,7 @@ namespace kiwano
 		}
 	}
 
-	FramePtr FrameSequence::GetFrame(UInt32 index) const
+	FramePtr FrameSequence::GetFrame(std::size_t index) const
 	{
 		KGE_ASSERT(index < frames_.size());
 		return frames_[index];

@@ -103,7 +103,7 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetFontSize(Float32 size)
+	void Text::SetFontSize(float size)
 	{
 		if (font_.size != size)
 		{
@@ -112,7 +112,7 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetFontWeight(UInt32 weight)
+	void Text::SetFontWeight(std::uint32_t weight)
 	{
 		if (font_.weight != weight)
 		{
@@ -135,7 +135,7 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetWrapWidth(Float32 wrap_width)
+	void Text::SetWrapWidth(float wrap_width)
 	{
 		if (style_.wrap_width != wrap_width)
 		{
@@ -144,7 +144,7 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetLineSpacing(Float32 line_spacing)
+	void Text::SetLineSpacing(float line_spacing)
 	{
 		if (style_.line_spacing != line_spacing)
 		{
@@ -190,7 +190,7 @@ namespace kiwano
 		style_.outline_color = outline_color;
 	}
 
-	void Text::SetOutlineWidth(Float32 outline_width)
+	void Text::SetOutlineWidth(float outline_width)
 	{
 		style_.outline_width = outline_width;
 	}

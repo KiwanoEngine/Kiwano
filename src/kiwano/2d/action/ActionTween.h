@@ -25,7 +25,7 @@
 namespace kiwano
 {
 	// 缓动函数
-	using EaseFunc = Function<Float32(Float32)>;
+	using EaseFunc = Function<float(float)>;
 
 	// 缓动函数枚举
 	// See https://easings.net for more information
@@ -91,7 +91,7 @@ namespace kiwano
 	protected:
 		void Update(ActorPtr target, Duration dt) override;
 
-		virtual void UpdateTween(ActorPtr target, Float32 percent) = 0;
+		virtual void UpdateTween(ActorPtr target, float percent) = 0;
 
 	protected:
 		Duration dur_;
@@ -119,7 +119,7 @@ namespace kiwano
 	protected:
 		void Init(ActorPtr target) override;
 
-		void UpdateTween(ActorPtr target, Float32 percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		Point	start_pos_;
@@ -165,8 +165,8 @@ namespace kiwano
 		ActionJumpBy(
 			Duration duration,		/* 持续时长 */
 			Point const& vec,		/* 跳跃距离 */
-			Float32 height,			/* 跳跃高度 */
-			Int32 jumps = 1,		/* 跳跃次数 */
+			float height,			/* 跳跃高度 */
+			int jumps = 1,		/* 跳跃次数 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -179,13 +179,13 @@ namespace kiwano
 	protected:
 		void Init(ActorPtr target) override;
 
-		void UpdateTween(ActorPtr target, Float32 percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		Point	start_pos_;
 		Point	delta_pos_;
-		Float32	height_;
-		Int32		jumps_;
+		float	height_;
+		int		jumps_;
 		Point	prev_pos_;
 	};
 
@@ -198,8 +198,8 @@ namespace kiwano
 		ActionJumpTo(
 			Duration duration,		/* 持续时长 */
 			Point const& pos,		/* 目的坐标 */
-			Float32 height,			/* 跳跃高度 */
-			Int32 jumps = 1,		/* 跳跃次数 */
+			float height,			/* 跳跃高度 */
+			int jumps = 1,		/* 跳跃次数 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -228,14 +228,14 @@ namespace kiwano
 	public:
 		ActionScaleBy(
 			Duration duration,		/* 持续时长 */
-			Float32 scale,			/* 相对变化值 */
+			float scale,			/* 相对变化值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		ActionScaleBy(
 			Duration duration,		/* 持续时长 */
-			Float32 scale_x,		/* 横向缩放相对变化值 */
-			Float32 scale_y,		/* 纵向缩放相对变化值 */
+			float scale_x,			/* 横向缩放相对变化值 */
+			float scale_y,			/* 纵向缩放相对变化值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -248,13 +248,13 @@ namespace kiwano
 	protected:
 		void Init(ActorPtr target) override;
 
-		void UpdateTween(ActorPtr target, Float32 percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
-		Float32	start_scale_x_;
-		Float32	start_scale_y_;
-		Float32	delta_x_;
-		Float32	delta_y_;
+		float	start_scale_x_;
+		float	start_scale_y_;
+		float	delta_x_;
+		float	delta_y_;
 	};
 
 
@@ -265,14 +265,14 @@ namespace kiwano
 	public:
 		ActionScaleTo(
 			Duration duration,		/* 持续时长 */
-			Float32 scale,			/* 目标值 */
+			float scale,			/* 目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
 		ActionScaleTo(
 			Duration duration,		/* 持续时长 */
-			Float32 scale_x,		/* 横向缩放目标值 */
-			Float32 scale_y,		/* 纵向缩放目标值 */
+			float scale_x,			/* 横向缩放目标值 */
+			float scale_y,			/* 纵向缩放目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -290,8 +290,8 @@ namespace kiwano
 		void Init(ActorPtr target) override;
 
 	protected:
-		Float32	end_scale_x_;
-		Float32	end_scale_y_;
+		float	end_scale_x_;
+		float	end_scale_y_;
 	};
 
 
@@ -302,7 +302,7 @@ namespace kiwano
 	public:
 		ActionFadeTo(
 			Duration duration,		/* 持续时长 */
-			Float32 opacity,		/* 目标值 */
+			float opacity,			/* 目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -319,12 +319,12 @@ namespace kiwano
 	protected:
 		void Init(ActorPtr target) override;
 
-		void UpdateTween(ActorPtr target, Float32 percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
-		Float32 start_val_;
-		Float32 delta_val_;
-		Float32 end_val_;
+		float start_val_;
+		float delta_val_;
+		float end_val_;
 	};
 
 
@@ -361,7 +361,7 @@ namespace kiwano
 	public:
 		ActionRotateBy(
 			Duration duration,		/* 持续时长 */
-			Float32 rotation,		/* 相对变化值 */
+			float rotation,			/* 相对变化值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -374,11 +374,11 @@ namespace kiwano
 	protected:
 		void Init(ActorPtr target) override;
 
-		void UpdateTween(ActorPtr target, Float32 percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
-		Float32 start_val_;
-		Float32 delta_val_;
+		float start_val_;
+		float delta_val_;
 	};
 
 
@@ -389,7 +389,7 @@ namespace kiwano
 	public:
 		ActionRotateTo(
 			Duration duration,		/* 持续时长 */
-			Float32 rotation,		/* 目标值 */
+			float rotation,			/* 目标值 */
 			EaseFunc func = nullptr	/* 速度变化 */
 		);
 
@@ -407,7 +407,7 @@ namespace kiwano
 		void Init(ActorPtr target) override;
 
 	protected:
-		Float32 end_val_;
+		float end_val_;
 	};
 
 
@@ -416,7 +416,7 @@ namespace kiwano
 		: public ActionTween
 	{
 	public:
-		using TweenFunc = Function<void(ActorPtr, Float32)>;
+		using TweenFunc = Function<void(ActorPtr, float)>;
 
 		ActionCustom(
 			Duration duration,		/* 持续时长 */
@@ -437,7 +437,7 @@ namespace kiwano
 	protected:
 		void Init(ActorPtr target) override;
 
-		void UpdateTween(ActorPtr target, Float32 percent) override;
+		void UpdateTween(ActorPtr target, float percent) override;
 
 	protected:
 		TweenFunc tween_func_;

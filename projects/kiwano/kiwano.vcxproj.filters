@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{80bc6386-2b70-4bae-993c-649a55163a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{68eac919-ee87-4030-a033-c251731928f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{07b6d541-4a1b-472a-aae0-daf9d082fe84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{c2654ccc-59f6-4c17-bb6b-99b07fc78702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2d">
+      <UniqueIdentifier>{896bdedf-6e82-449b-9b6e-0bc69f3699b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{2e18d99a-e906-499a-9e29-4e0783202644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{7897afce-24cb-42b4-9443-56508e4ec89c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third-party">
+      <UniqueIdentifier>{91029e1e-40c2-40d9-bfc4-a51d9df02b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third-party\StackWalker">
+      <UniqueIdentifier>{1fec4835-63a1-4612-80b5-828dadf0ac63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third-party\tinyxml2">
+      <UniqueIdentifier>{0cae76f7-7016-4a45-bb26-a130fbce8024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2d\action">
+      <UniqueIdentifier>{9314f30d-5742-48b6-94e5-e3b4284106f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{86e2d0f2-a9d0-4456-b6a5-d480228bbf82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\win32">
+      <UniqueIdentifier>{30333461-e9bc-4709-84bd-ce6e0e1a3079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\win32">
+      <UniqueIdentifier>{192a47a9-9df6-4f40-a7d3-888eb00c53ac}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\kiwano\ui\Button.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ui\Menu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Canvas.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\include-forwards.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Layer.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Sprite.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Text.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\TextStyle.hpp">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Transition.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Component.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Event.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\EventDispatcher.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\EventListener.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\keys.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\RefCounter.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Resource.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\time.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\Matrix.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\rand.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\Rect.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\Application.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\modules.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\Path.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\config.h" />
+    <ClInclude Include="..\..\src\kiwano\macros.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Vec2.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Input.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\SmartPtr.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\kiwano.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\DataUtil.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Timer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\TimerManager.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\AsyncTask.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\third-party\StackWalker\StackWalker.h">
+      <Filter>third-party\StackWalker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\FileUtil.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\third-party\tinyxml2\tinyxml2.h">
+      <Filter>third-party\tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Director.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Actor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Stage.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Frame.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\Action.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionGroup.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionHelper.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionManager.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\basic_json.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\function.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\intrusive_list.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\intrusive_ptr.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\noncopyable.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\singleton.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\string.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\vector.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\core.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\ShapeActor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionDelay.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionWalk.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Logger.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Window.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\ObjectBase.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\Color.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\Font.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\Geometry.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\GifImage.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\LayerArea.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\Renderer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\TextLayout.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\D2DDeviceResources.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\D3D10DeviceResources.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\D3D11DeviceResources.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\D3DDeviceResourcesBase.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\FontCollectionLoader.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\TextRenderer.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\RenderTarget.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\FontCollection.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Transform.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\Texture.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\TextureCache.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\StrokeStyle.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\Brush.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\constants.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\ease.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\scalar.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\win32\ComPtr.hpp">
+      <Filter>base\win32</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ui\Menu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Layer.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Text.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\EventDispatcher.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\EventListener.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Resource.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\time.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\platform\Application.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\platform\modules.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\Path.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Input.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\DataUtil.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Timer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\TimerManager.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\AsyncTask.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\third-party\StackWalker\StackWalker.cpp">
+      <Filter>third-party\StackWalker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\FileUtil.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\third-party\tinyxml2\tinyxml2.cpp">
+      <Filter>third-party\tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Director.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Frame.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionGroup.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionTween.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionManager.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\Animation.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\FrameSequence.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\DebugActor.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\ShapeActor.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionDelay.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionWalk.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Logger.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Window.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\ObjectBase.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\Color.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\Font.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\Geometry.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\GifImage.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\LayerArea.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\Renderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\TextLayout.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\D2DDeviceResources.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\D3D10DeviceResources.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\D3D11DeviceResources.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\FontCollectionLoader.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\win32\TextRenderer.cpp">
+      <Filter>renderer\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\RenderTarget.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\FontCollection.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Transform.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\Texture.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\TextureCache.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\Brush.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Component.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

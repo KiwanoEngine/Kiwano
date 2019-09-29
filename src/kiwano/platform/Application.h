@@ -35,10 +35,10 @@ namespace kiwano
 		bool debug;				// 调试模式
 
 		Config(
-			String const& title	= L"Kiwano Game",
-			UInt32 width		= 640,
-			UInt32 height		= 480,
-			UInt32 icon			= 0
+			String const& title		= L"Kiwano Game",
+			std::uint32_t width		= 640,
+			std::uint32_t height	= 480,
+			std::uint32_t icon		= 0
 		);
 
 		Config(
@@ -87,7 +87,7 @@ namespace kiwano
 
 		// 设置时间缩放因子
 		void SetTimeScale(
-			Float32 scale_factor
+			float scale_factor
 		);
 
 		// 分发事件
@@ -104,12 +104,12 @@ namespace kiwano
 
 		void Update();
 
-		static LRESULT CALLBACK WndProc(HWND, UInt32, WPARAM, LPARAM);
+		static LRESULT CALLBACK WndProc(HWND, UINT32, WPARAM, LPARAM);
 
 	protected:
 		bool	end_;
 		bool	inited_;
-		Float32	time_scale_;
+		float	time_scale_;
 
 		Vector<ComponentBase*>		comps_;
 		Vector<RenderComponent*>	render_comps_;

@@ -59,7 +59,7 @@ namespace kiwano
 
 			// 播放
 			void Play(
-				Int32 loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
+				int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
 			);
 
 			// 暂停
@@ -78,11 +78,11 @@ namespace kiwano
 			bool IsPlaying() const;
 
 			// 获取音量
-			Float32 GetVolume() const;
+			float GetVolume() const;
 
 			// 设置音量
 			void SetVolume(
-				Float32 volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
+				float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
 			);
 
 		protected:

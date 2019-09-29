@@ -54,7 +54,7 @@ namespace kiwano
 
 			void AfterRender() override;
 
-			void HandleMessage(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam) override;
+			void HandleMessage(HWND hwnd, std::uint32_t msg, WPARAM wparam, LPARAM lparam) override;
 
 			void UpdateMousePos();
 

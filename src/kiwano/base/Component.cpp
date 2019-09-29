@@ -24,16 +24,16 @@
 
 namespace kiwano
 {
-	const Int32 RenderComponent::flag = KGE_DEFINE_COMPONENT_FLAG(0);
-	const Int32 UpdateComponent::flag = KGE_DEFINE_COMPONENT_FLAG(1);
-	const Int32 EventComponent::flag = KGE_DEFINE_COMPONENT_FLAG(2);
+	const int RenderComponent::flag = KGE_DEFINE_COMPONENT_FLAG(0);
+	const int UpdateComponent::flag = KGE_DEFINE_COMPONENT_FLAG(1);
+	const int EventComponent::flag = KGE_DEFINE_COMPONENT_FLAG(2);
 
 	ComponentBase::ComponentBase()
 		: flag_(0)
 	{
 	}
 
-	bool ComponentBase::Check(const Int32 flag)
+	bool ComponentBase::Check(const int flag)
 	{
 		return !!(flag_ & flag);
 	}

@@ -34,9 +34,9 @@ namespace kiwano
 			ClearCache();
 		}
 
-		UInt32 SoundPlayer::Load(String const& file_path)
+		std::size_t SoundPlayer::Load(String const& file_path)
 		{
-			UInt32 hash_code = file_path.hash();
+			int hash_code = static_cast<int>(file_path.hash());
 			if (sound_cache_.end() != sound_cache_.find(hash_code))
 				return hash_code;
 
@@ -54,9 +54,9 @@ namespace kiwano
 			return 0;
 		}
 
-		UInt32 SoundPlayer::Load(Resource const& res)
+		std::size_t SoundPlayer::Load(Resource const& res)
 		{
-			UInt32 hash_code = res.GetId();
+			std::size_t hash_code = static_cast<std::size_t>(res.GetId());
 			if (sound_cache_.end() != sound_cache_.find(hash_code))
 				return hash_code;
 
@@ -74,35 +74,35 @@ namespace kiwano
 			return 0;
 		}
 
-		void SoundPlayer::Play(UInt32 id, Int32 loop_count)
+		void SoundPlayer::Play(std::size_t id, int loop_count)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Play(loop_count);
 		}
 
-		void SoundPlayer::Pause(UInt32 id)
+		void SoundPlayer::Pause(std::size_t id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Pause();
 		}
 
-		void SoundPlayer::Resume(UInt32 id)
+		void SoundPlayer::Resume(std::size_t id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Resume();
 		}
 
-		void SoundPlayer::Stop(UInt32 id)
+		void SoundPlayer::Stop(std::size_t id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
 				iter->second->Stop();
 		}
 
-		bool SoundPlayer::IsPlaying(UInt32 id)
+		bool SoundPlayer::IsPlaying(std::size_t id)
 		{
 			auto iter = sound_cache_.find(id);
 			if (sound_cache_.end() != iter)
@@ -110,12 +110,12 @@ namespace kiwano
 			return false;
 		}
 
-		Float32 SoundPlayer::GetVolume() const
+		float SoundPlayer::GetVolume() const
 		{
 			return volume_;
 		}
 
-		void SoundPlayer::SetVolume(Float32 volume)
+		void SoundPlayer::SetVolume(float volume)
 		{
 			volume_ = std::min(std::max(volume, -224.f), 224.f);
 			for (const auto& pair : sound_cache_)

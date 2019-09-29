@@ -39,47 +39,47 @@ namespace kiwano
 			~SoundPlayer();
 
 			// 加载本地音频文件, 返回该资源的标识符
-			UInt32 Load(
+			std::size_t Load(
 				String const& file_path
 			);
 
 			// 加载音乐资源, 返回该资源的标识符
-			UInt32 Load(
-				Resource const& res		/* 音乐资源 */
+			std::size_t Load(
+				Resource const& res			/* 音乐资源 */
 			);
 
 			// 播放音乐
 			void Play(
-				UInt32 id,				/* 标识符 */
-				Int32 loop_count = 0	/* 播放循环次数 (-1 为循环播放) */
+				std::size_t id,				/* 标识符 */
+				int loop_count = 0			/* 播放循环次数 (-1 为循环播放) */
 			);
 
 			// 暂停音乐
 			void Pause(
-				UInt32 id				/* 标识符 */
+				std::size_t id				/* 标识符 */
 			);
 
 			// 继续播放音乐
 			void Resume(
-				UInt32 id				/* 标识符 */
+				std::size_t id				/* 标识符 */
 			);
 
 			// 停止音乐
 			void Stop(
-				UInt32 id				/* 标识符 */
+				std::size_t id				/* 标识符 */
 			);
 
 			// 获取音乐播放状态
 			bool IsPlaying(
-				UInt32 id				/* 标识符 */
+				std::size_t id				/* 标识符 */
 			);
 
 			// 获取音量
-			Float32 GetVolume() const;
+			float GetVolume() const;
 
 			// 设置音量
 			void SetVolume(
-				Float32 volume			/* 1.0 为原始音量 */
+				float volume				/* 1.0 为原始音量 */
 			);
 
 			// 暂停所有音乐
@@ -95,9 +95,9 @@ namespace kiwano
 			void ClearCache();
 
 		protected:
-			Float32 volume_;
+			float volume_;
 
-			using SoundMap = Map<UInt32, SoundPtr>;
+			using SoundMap = Map<std::size_t, SoundPtr>;
 			SoundMap sound_cache_;
 		};
 	}

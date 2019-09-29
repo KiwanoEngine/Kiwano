@@ -42,13 +42,13 @@ namespace kiwano
 
 		void SetName(String const& name);
 
-		inline String GetName() const					{ if (name_) return *name_; return String(); }
-
-		inline bool IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
-
-		inline UInt32 GetObjectID() const				{ return id_; }
-
 		String DumpObject();
+
+		inline String			GetName() const						{ if (name_) return *name_; return String(); }
+
+		inline bool				IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
+
+		inline std::uint32_t	GetObjectID() const					{ return id_; }
 
 	public:
 		static bool IsTracingLeaks();
@@ -71,7 +71,7 @@ namespace kiwano
 		void* user_data_;
 		String* name_;
 
-		const UInt32 id_;
-		static UInt32 last_object_id;
+		const std::uint32_t id_;
+		static std::uint32_t last_object_id;
 	};
 }
