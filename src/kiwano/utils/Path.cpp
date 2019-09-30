@@ -20,7 +20,11 @@
 
 #include "Path.h"
 #include "../platform/modules.h"
+
+#pragma warning (push)
+#pragma warning (disable:4091)  // ignore warning 4091 (on winSDK 8.1)
 #include <shlobj.h>
+#pragma warning (pop)
 
 namespace kiwano
 {
