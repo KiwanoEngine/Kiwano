@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano-audio\kiwano-audio.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\src\audio.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano-audio\src\audio-modules.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -17,11 +14,11 @@
     <ClInclude Include="..\..\src\kiwano-audio\src\SoundPlayer.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano-audio\src\AudioEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-audio\src\audio.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano-audio\src\audio-modules.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -32,6 +29,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano-audio\src\SoundPlayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano-audio\src\AudioEngine.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

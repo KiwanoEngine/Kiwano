@@ -20,25 +20,25 @@
 
 #include <kiwano/base/win32/helper.h>
 #include "audio-modules.h"
-#include "audio.h"
+#include "AudioEngine.h"
 
 namespace kiwano
 {
 	namespace audio
 	{
-		Audio::Audio()
+		AudioEngine::AudioEngine()
 			: x_audio2_(nullptr)
 			, mastering_voice_(nullptr)
 		{
 		}
 
-		Audio::~Audio()
+		AudioEngine::~AudioEngine()
 		{
 		}
 
-		void Audio::SetupComponent()
+		void AudioEngine::SetupComponent()
 		{
-			KGE_LOG(L"Creating audio resources");
+			// KGE_LOG(L"Creating audio resources");
 
 			HRESULT hr = modules::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
 
@@ -55,9 +55,9 @@ namespace kiwano
 			ThrowIfFailed(hr);
 		}
 
-		void Audio::DestroyComponent()
+		void AudioEngine::DestroyComponent()
 		{
-			KGE_LOG(L"Destroying audio resources");
+			// KGE_LOG(L"Destroying audio resources");
 
 			if (mastering_voice_)
 			{
@@ -74,9 +74,9 @@ namespace kiwano
 			modules::MediaFoundation::Get().MFShutdown();
 		}
 
-		HRESULT Audio::CreateVoice(IXAudio2SourceVoice** voice, const Transcoder::Buffer& buffer)
+		HRESULT AudioEngine::CreateVoice(IXAudio2SourceVoice** voice, const Transcoder::Buffer& buffer)
 		{
-			KGE_ASSERT(x_audio2_ && "Audio engine hasn't been initialized!");
+			KGE_ASSERT(x_audio2_ && "AudioEngine hasn't been initialized!");
 
 			if (voice == nullptr)
 			{
@@ -92,16 +92,16 @@ namespace kiwano
 			return x_audio2_->CreateSourceVoice(voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
 		}
 
-		void Audio::Open()
+		void AudioEngine::Open()
 		{
-			KGE_ASSERT(x_audio2_ && "Audio engine hasn't been initialized!");
+			KGE_ASSERT(x_audio2_ && "AudioEngine hasn't been initialized!");
 
 			x_audio2_->StartEngine();
 		}
 
-		void Audio::Close()
+		void AudioEngine::Close()
 		{
-			KGE_ASSERT(x_audio2_ && "Audio engine hasn't been initialized!");
+			KGE_ASSERT(x_audio2_ && "AudioEngine hasn't been initialized!");
 
 			x_audio2_->StopEngine();
 		}

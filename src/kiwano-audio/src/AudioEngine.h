@@ -28,11 +28,11 @@ namespace kiwano
 {
 	namespace audio
 	{
-		class KGE_API Audio
-			: public Singleton<Audio>
+		class KGE_API AudioEngine
+			: public Singleton<AudioEngine>
 			, public ComponentBase
 		{
-			KGE_DECLARE_SINGLETON(Audio);
+			KGE_DECLARE_SINGLETON(AudioEngine);
 
 		public:
 			// ¿ªÆôÉè±¸
@@ -52,9 +52,9 @@ namespace kiwano
 			void DestroyComponent() override;
 
 		protected:
-			Audio();
+			AudioEngine();
 
-			~Audio();
+			~AudioEngine();
 
 		protected:
 			IXAudio2* x_audio2_;
