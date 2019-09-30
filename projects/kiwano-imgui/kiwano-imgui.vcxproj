@@ -7,22 +7,12 @@
     <ClInclude Include="..\..\src\kiwano-imgui\src\imgui_impl.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\src\imgui_impl_dx10.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\src\imgui_impl_dx11.h" />
-    <ClInclude Include="..\..\src\3rd-party\imgui\imconfig.h" />
-    <ClInclude Include="..\..\src\3rd-party\imgui\imgui.h" />
-    <ClInclude Include="..\..\src\3rd-party\imgui\imgui_internal.h" />
-    <ClInclude Include="..\..\src\3rd-party\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\..\src\3rd-party\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\..\src\3rd-party\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-imgui\src\ImGuiLayer.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\src\ImGuiModule.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\src\imgui_impl_dx10.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\src\imgui_impl_dx11.cpp" />
-    <ClCompile Include="..\..\src\3rd-party\imgui\imgui.cpp" />
-    <ClCompile Include="..\..\src\3rd-party\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\..\src\3rd-party\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\..\src\3rd-party\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -35,6 +25,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\3rd-party\imgui\libimgui.vcxproj">
+      <Project>{7fa1e56d-62ac-47d1-97d1-40b302724198}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\kiwano\kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>

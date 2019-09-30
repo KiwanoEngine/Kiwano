@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\src\kiwano-network\kiwano-network.h" />
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpClient.h" />
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpRequest.h" />
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpResponse.h" />
+    <ClInclude Include="..\..\..\src\3rd-party\StackWalker\StackWalker.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-network\src\HttpClient.cpp" />
-    <ClCompile Include="..\..\src\kiwano-network\src\HttpRequest.cpp" />
+    <ClCompile Include="..\..\..\src\3rd-party\StackWalker\StackWalker.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -20,17 +16,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\3rd-party\curl\libcurl.vcxproj">
-      <Project>{a9abacc7-75a1-46ba-8e48-4105346d9719}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\kiwano\kiwano.vcxproj">
-      <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}</ProjectGuid>
-    <RootNamespace>kiwano-network</RootNamespace>
+    <ProjectGuid>{3A3948DC-9865-46B3-B7B9-7E5572704ED2}</ProjectGuid>
+    <RootNamespace>libStackWalker</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,7 +30,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>
@@ -75,7 +63,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>../../src;../../src/3rd-party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src/3rd-party;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
@@ -93,7 +81,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>../../src;../../src/3rd-party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src/3rd-party;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>

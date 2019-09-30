@@ -21,7 +21,7 @@
 #include <kiwano/base/Logger.h>
 #include <kiwano/utils/FileUtil.h>
 #include "Sound.h"
-#include "audio.h"
+#include "AudioEngine.h"
 
 namespace kiwano
 {

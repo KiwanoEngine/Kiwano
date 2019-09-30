@@ -34,15 +34,6 @@
     <Filter Include="base\win32">
       <UniqueIdentifier>{192a47a9-9df6-4f40-a7d3-888eb00c53ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rd-party">
-      <UniqueIdentifier>{d2453005-418d-42a7-9dbd-5f29021d472c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rd-party\StackWalker">
-      <UniqueIdentifier>{7883b9c3-7251-4401-ac8f-a8d47191bc17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rd-party\tinyxml2">
-      <UniqueIdentifier>{5f00587e-28b0-4925-ad5d-ac5efab9c541}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano\ui\Button.h">
@@ -306,12 +297,6 @@
     <ClInclude Include="..\..\src\kiwano\base\win32\helper.h">
       <Filter>base\win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\3rd-party\StackWalker\StackWalker.h">
-      <Filter>3rd-party\StackWalker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\3rd-party\tinyxml2\tinyxml2.h">
-      <Filter>3rd-party\tinyxml2</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -487,12 +472,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\Component.cpp">
       <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\3rd-party\StackWalker\StackWalker.cpp">
-      <Filter>3rd-party\StackWalker</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\3rd-party\tinyxml2\tinyxml2.cpp">
-      <Filter>3rd-party\tinyxml2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -90,8 +90,6 @@
     <ClInclude Include="..\..\src\kiwano\utils\FileUtil.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Path.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
-    <ClInclude Include="..\..\src\3rd-party\StackWalker\StackWalker.h" />
-    <ClInclude Include="..\..\src\3rd-party\tinyxml2\tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp" />
@@ -152,8 +150,6 @@
     <ClCompile Include="..\..\src\kiwano\utils\FileUtil.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Path.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
-    <ClCompile Include="..\..\src\3rd-party\StackWalker\StackWalker.cpp" />
-    <ClCompile Include="..\..\src\3rd-party\tinyxml2\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -164,6 +160,14 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3rd-party\StackWalker\libStackWalker.vcxproj">
+      <Project>{3a3948dc-9865-46b3-b7b9-7e5572704ed2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\3rd-party\tinyxml2\libtinyxml2.vcxproj">
+      <Project>{ab47e875-85e5-4105-a71e-88930eaab910}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}</ProjectGuid>
