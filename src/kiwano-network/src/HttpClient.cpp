@@ -18,17 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/Logger.h>
-#include <kiwano/platform/Application.h>
-#include "helper.h"
-#include "HttpRequest.hpp"
-#include "HttpResponse.hpp"
-#include "HttpClient.h"
 #include <thread>
 #include <codecvt>
 
-// CURL
-#include "../third-party/curl/curl.h"
+#include "HttpRequest.h"
+#include "HttpResponse.h"
+#include "HttpClient.h"
+
+#include <kiwano/base/Logger.h>
+#include <kiwano/platform/Application.h>
+#include <curl/curl.h>  // CURL
 
 namespace
 {
@@ -373,7 +372,7 @@ namespace kiwano
 
 				if (callback)
 				{
-					callback(request, response);
+					callback(request.get(), response.get());
 				}
 			}
 		}

@@ -27,26 +27,26 @@
 
 #ifndef KGE_LOG
 #	ifdef KGE_DEBUG
-#		define KGE_LOG(FORMAT, ...) ::kiwano::Logger::GetInstance()->Messagef((FORMAT ## "\n"), __VA_ARGS__)
+#		define KGE_LOG(FORMAT, ...)		::kiwano::Logger::GetInstance()->Messagef((FORMAT ## "\n"), __VA_ARGS__)
 #	else
 #		define KGE_LOG __noop
 #	endif
 #endif
 
 #ifndef KGE_WARNING_LOG
-#	define KGE_WARNING_LOG(FORMAT, ...) ::kiwano::Logger::GetInstance()->Warningf((FORMAT ## "\n"), __VA_ARGS__)
+#	define KGE_WARNING_LOG(FORMAT, ...)	::kiwano::Logger::GetInstance()->Warningf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 #ifndef KGE_ERROR_LOG
-#	define KGE_ERROR_LOG(FORMAT, ...) ::kiwano::Logger::GetInstance()->Errorf((FORMAT ## "\n"), __VA_ARGS__)
+#	define KGE_ERROR_LOG(FORMAT, ...)	::kiwano::Logger::GetInstance()->Errorf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 #ifndef KGE_PRINT
-#	define KGE_PRINT(...) ::kiwano::Logger::GetInstance()->Println(__VA_ARGS__)
+#	define KGE_PRINT(...)				::kiwano::Logger::GetInstance()->Println(__VA_ARGS__)
 #endif
 
 #ifndef KGE_PRINTF
-#	define KGE_PRINTF(FORMAT, ...) ::kiwano::Logger::GetInstance()->Printf((FORMAT), __VA_ARGS__)
+#	define KGE_PRINTF(FORMAT, ...)		::kiwano::Logger::GetInstance()->Printf((FORMAT), __VA_ARGS__)
 #endif
 
 namespace kiwano
@@ -293,28 +293,5 @@ namespace kiwano
 	{
 		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), Logger::GetInstance()->default_stdout_color_);
 		return out;
-	}
-}
-
-//
-// Display stack trace on exception
-//
-
-#include "../third-party/StackWalker/StackWalker.h"
-
-namespace kiwano
-{
-	inline void ThrowIfFailed(HRESULT hr)
-	{
-		if (FAILED(hr))
-		{
-			KGE_ERROR_LOG(L"Fatal error with HRESULT of %08X", hr);
-
-			StackWalker{}.ShowCallstack();
-
-			static char buffer[1024 + 1];
-			sprintf_s(buffer, "Fatal error with HRESULT of %08X", hr);
-			throw std::runtime_error(buffer);
-		}
 	}
 }

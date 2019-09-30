@@ -20,7 +20,7 @@
 
 #include "Application.h"
 #include "modules.h"
-#include "../base/Logger.h"
+#include "../base/win32/helper.h"
 #include "../base/input.h"
 #include "../base/Director.h"
 #include "../renderer/TextureCache.h"
@@ -65,9 +65,7 @@ namespace kiwano
 		, inited_(false)
 		, time_scale_(1.f)
 	{
-		ThrowIfFailed(
-			::CoInitialize(nullptr)
-		);
+		ThrowIfFailed(::CoInitialize(nullptr));
 
 		Use(Renderer::GetInstance());
 		Use(Input::GetInstance());

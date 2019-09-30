@@ -19,79 +19,41 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Function.hpp>
-#include <kiwano/core/basic_json.hpp>
-#include <kiwano/base/ObjectBase.h>
+#include "HttpRequest.h"
 
 namespace kiwano
 {
 	namespace network
 	{
+		KGE_DECLARE_SMART_PTR(HttpResponse);
+
 		class KGE_API HttpResponse
 			: public ObjectBase
 		{
 		public:
-			inline HttpResponse(HttpRequestPtr request)
-				: request_(request)
-				, succeed_(false)
-				, response_code_(0)
-			{
-			}
+			inline HttpResponse(HttpRequestPtr request)							: request_(request), succeed_(false), response_code_(0) {}
 
-			inline HttpRequestPtr GetRequest() const
-			{
-				return request_;
-			}
+			inline HttpRequestPtr	GetRequest() const							{ return request_; }
 
-			inline void SetSucceed(bool succeed)
-			{
-				succeed_ = succeed;
-			}
+			inline void				SetSucceed(bool succeed)					{ succeed_ = succeed; }
 
-			inline bool IsSucceed() const
-			{
-				return succeed_;
-			}
+			inline bool				IsSucceed() const							{ return succeed_; }
 
-			inline void SetResponseCode(long response_code)
-			{
-				response_code_ = response_code;
-			}
+			inline void				SetResponseCode(long response_code)			{ response_code_ = response_code; }
 
-			inline long GetResponseCode() const
-			{
-				return response_code_;
-			}
+			inline long				GetResponseCode() const						{ return response_code_; }
 
-			inline void SetHeader(String const& response_header)
-			{
-				response_header_ = response_header;
-			}
+			inline void				SetHeader(String const& response_header)	{ response_header_ = response_header; }
 
-			inline String GetHeader() const
-			{
-				return response_header_;
-			}
+			inline String			GetHeader() const							{ return response_header_; }
 
-			inline void SetData(String const& response_data)
-			{
-				response_data_ = response_data;
-			}
+			inline void				SetData(String const& response_data)		{ response_data_ = response_data; }
 
-			inline String const& GetData() const
-			{
-				return response_data_;
-			}
+			inline String const&	GetData() const								{ return response_data_; }
 
-			inline void SetError(String const& error_buffer)
-			{
-				error_buffer_ = error_buffer;
-			}
+			inline void				SetError(String const& error_buffer)		{ error_buffer_ = error_buffer; }
 
-			inline String const& GetError() const
-			{
-				return error_buffer_;
-			}
+			inline String const&	GetError() const							{ return error_buffer_; }
 
 		protected:
 			bool succeed_;

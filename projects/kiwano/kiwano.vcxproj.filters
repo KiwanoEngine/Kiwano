@@ -22,15 +22,6 @@
     <Filter Include="renderer">
       <UniqueIdentifier>{7897afce-24cb-42b4-9443-56508e4ec89c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="third-party">
-      <UniqueIdentifier>{91029e1e-40c2-40d9-bfc4-a51d9df02b80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third-party\StackWalker">
-      <UniqueIdentifier>{1fec4835-63a1-4612-80b5-828dadf0ac63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third-party\tinyxml2">
-      <UniqueIdentifier>{0cae76f7-7016-4a45-bb26-a130fbce8024}</UniqueIdentifier>
-    </Filter>
     <Filter Include="2d\action">
       <UniqueIdentifier>{9314f30d-5742-48b6-94e5-e3b4284106f6}</UniqueIdentifier>
     </Filter>
@@ -42,6 +33,15 @@
     </Filter>
     <Filter Include="base\win32">
       <UniqueIdentifier>{192a47a9-9df6-4f40-a7d3-888eb00c53ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd-party">
+      <UniqueIdentifier>{d2453005-418d-42a7-9dbd-5f29021d472c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd-party\StackWalker">
+      <UniqueIdentifier>{7883b9c3-7251-4401-ac8f-a8d47191bc17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd-party\tinyxml2">
+      <UniqueIdentifier>{5f00587e-28b0-4925-ad5d-ac5efab9c541}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,17 +138,11 @@
     <ClInclude Include="..\..\src\kiwano\base\AsyncTask.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\third-party\StackWalker\StackWalker.h">
-      <Filter>third-party\StackWalker</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\FileUtil.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
       <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\third-party\tinyxml2\tinyxml2.h">
-      <Filter>third-party\tinyxml2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\base\Director.h">
       <Filter>base</Filter>
@@ -309,6 +303,15 @@
     <ClInclude Include="..\..\src\kiwano\base\win32\ComPtr.hpp">
       <Filter>base\win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\win32\helper.h">
+      <Filter>base\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\3rd-party\StackWalker\StackWalker.h">
+      <Filter>3rd-party\StackWalker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\3rd-party\tinyxml2\tinyxml2.h">
+      <Filter>3rd-party\tinyxml2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -368,17 +371,11 @@
     <ClCompile Include="..\..\src\kiwano\base\AsyncTask.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\third-party\StackWalker\StackWalker.cpp">
-      <Filter>third-party\StackWalker</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\FileUtil.cpp">
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp">
       <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\third-party\tinyxml2\tinyxml2.cpp">
-      <Filter>third-party\tinyxml2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\Director.cpp">
       <Filter>base</Filter>
@@ -490,6 +487,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\Component.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\3rd-party\StackWalker\StackWalker.cpp">
+      <Filter>3rd-party\StackWalker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\3rd-party\tinyxml2\tinyxml2.cpp">
+      <Filter>3rd-party\tinyxml2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

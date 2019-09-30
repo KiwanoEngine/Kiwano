@@ -20,11 +20,11 @@
 
 #include "Texture.h"
 #include "Renderer.h"
-#include "../base/Logger.h"
+#include "../base/win32/helper.h"
 
 namespace kiwano
 {
-	InterpolationMode	Texture::default_interpolation_mode_ = InterpolationMode::Linear;
+	InterpolationMode Texture::default_interpolation_mode_ = InterpolationMode::Linear;
 
 	Texture::Texture()
 		: interpolation_mode_(default_interpolation_mode_)

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Window.h"
-#include "Logger.h"
+#include "win32/helper.h"
 #include "../platform/Application.h"
 
 #define WINDOW_FIXED_STYLE		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX

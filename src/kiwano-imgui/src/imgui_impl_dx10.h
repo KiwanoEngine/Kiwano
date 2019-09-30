@@ -1,7 +1,7 @@
 // dear imgui: Renderer for Kiwano (DirectX10)
 
 #pragma once
-#include "../third-party/ImGui/imgui.h"
+#include <imgui/imgui.h>
 
 struct ID3D10Device;
 

@@ -4,10 +4,10 @@
     <Filter Include="src">
       <UniqueIdentifier>{ed21cd51-048d-4bbc-804a-d09a8afa1423}</UniqueIdentifier>
     </Filter>
-    <Filter Include="third-party">
+    <Filter Include="3rd-party">
       <UniqueIdentifier>{f737b6d4-4462-49c1-8e9d-5c834bed598f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="third-party\ImGui">
+    <Filter Include="3rd-party\imgui">
       <UniqueIdentifier>{5b9d2eaa-0247-4ef5-8410-3221821b1221}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -21,23 +21,23 @@
     <ClInclude Include="..\..\src\kiwano-imgui\src\ImGuiLayer.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-imgui\third-party\ImGui\imconfig.h">
-      <Filter>third-party\ImGui</Filter>
+    <ClInclude Include="..\..\src\3rd-party\imgui\imconfig.h">
+      <Filter>3rd-party\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-imgui\third-party\ImGui\imgui.h">
-      <Filter>third-party\ImGui</Filter>
+    <ClInclude Include="..\..\src\3rd-party\imgui\imgui.h">
+      <Filter>3rd-party\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-imgui\third-party\ImGui\imgui_internal.h">
-      <Filter>third-party\ImGui</Filter>
+    <ClInclude Include="..\..\src\3rd-party\imgui\imgui_internal.h">
+      <Filter>3rd-party\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-imgui\third-party\ImGui\imstb_rectpack.h">
-      <Filter>third-party\ImGui</Filter>
+    <ClInclude Include="..\..\src\3rd-party\imgui\imstb_rectpack.h">
+      <Filter>3rd-party\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-imgui\third-party\ImGui\imstb_textedit.h">
-      <Filter>third-party\ImGui</Filter>
+    <ClInclude Include="..\..\src\3rd-party\imgui\imstb_textedit.h">
+      <Filter>3rd-party\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-imgui\third-party\ImGui\imstb_truetype.h">
-      <Filter>third-party\ImGui</Filter>
+    <ClInclude Include="..\..\src\3rd-party\imgui\imstb_truetype.h">
+      <Filter>3rd-party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano-imgui\kiwano-imgui.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\src\imgui_impl.h">
@@ -57,17 +57,17 @@
     <ClCompile Include="..\..\src\kiwano-imgui\src\ImGuiLayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-imgui\third-party\ImGui\imgui.cpp">
-      <Filter>third-party\ImGui</Filter>
+    <ClCompile Include="..\..\src\3rd-party\imgui\imgui.cpp">
+      <Filter>3rd-party\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-imgui\third-party\ImGui\imgui_demo.cpp">
-      <Filter>third-party\ImGui</Filter>
+    <ClCompile Include="..\..\src\3rd-party\imgui\imgui_demo.cpp">
+      <Filter>3rd-party\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-imgui\third-party\ImGui\imgui_draw.cpp">
-      <Filter>third-party\ImGui</Filter>
+    <ClCompile Include="..\..\src\3rd-party\imgui\imgui_draw.cpp">
+      <Filter>3rd-party\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-imgui\third-party\ImGui\imgui_widgets.cpp">
-      <Filter>third-party\ImGui</Filter>
+    <ClCompile Include="..\..\src\3rd-party\imgui\imgui_widgets.cpp">
+      <Filter>3rd-party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano-imgui\src\ImGuiModule.cpp">
       <Filter>src</Filter>

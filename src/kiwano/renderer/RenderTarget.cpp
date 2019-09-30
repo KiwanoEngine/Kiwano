@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "RenderTarget.h"
-#include "../base/Logger.h"
+#include "../base/win32/helper.h"
 
 namespace kiwano
 {

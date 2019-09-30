@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "GifSprite.h"
-#include "../base/Logger.h"
+#include "../base/win32/helper.h"
 #include "../renderer/TextureCache.h"
 #include "../renderer/Renderer.h"
 

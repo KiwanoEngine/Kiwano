@@ -22,17 +22,22 @@
 #include <kiwano/core/Function.hpp>
 #include <kiwano/core/basic_json.hpp>
 #include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/SmartPtr.hpp>
 
 namespace kiwano
 {
 	namespace network
 	{
-		typedef Function<void(HttpRequestPtr, HttpResponsePtr)> ResponseCallback;
+		class HttpResponse;
+
+		KGE_DECLARE_SMART_PTR(HttpRequest);
 
 		class KGE_API HttpRequest
 			: public ObjectBase
 		{
 		public:
+			using ResponseCallback = Function<void(HttpRequest*, HttpResponse*)>;
+
 			enum class Type
 			{
 				Unknown,
@@ -42,91 +47,35 @@ namespace kiwano
 				Delete
 			};
 
-			inline HttpRequest()
-				: type_(Type::Unknown)
-			{
+			inline HttpRequest()			: type_(Type::Unknown) {}
 
-			}
+			inline HttpRequest(Type type)	: type_(type) {}
 
-			inline HttpRequest(Type type)
-				: type_(type)
-			{
+			inline void						SetUrl(String const& url)								{ url_ = url; }
 
-			}
+			inline String const&			GetUrl() const											{ return url_; }
 
-			inline void SetUrl(String const& url)
-			{
-				url_ = url;
-			}
+			inline void						SetType(Type type)										{ type_ = type; }
 
-			inline String const& GetUrl() const
-			{
-				return url_;
-			}
+			inline Type						GetType() const											{ return type_; }
 
-			inline void SetType(Type type)
-			{
-				type_ = type;
-			}
+			inline void						SetData(String const& data)								{ data_ = data; }
 
-			inline Type GetType() const
-			{
-				return type_;
-			}
+			void							SetJsonData(Json const& json);
 
-			inline void SetData(String const& data)
-			{
-				data_ = data;
-			}
+			inline String const&			GetData() const											{ return data_; }
 
-			inline void SetJsonData(Json const& json)
-			{
-				SetHeader(L"Content-Type", L"application/json;charset=UTF-8");
-				data_ = json.dump();
-			}
+			inline void						SetHeaders(Map<String, String> const& headers)			{ headers_ = headers; }
 
-			inline String const& GetData() const
-			{
-				return data_;
-			}
+			void							SetHeader(String const& field, String const& content);
 
-			inline void SetHeaders(Map<String, String> const& headers)
-			{
-				headers_ = headers;
-			}
+			inline Map<String, String>&		GetHeaders()											{ return headers_; }
 
-			inline void SetHeader(String const& field, String const& content)
-			{
-				auto iter = headers_.find(field);
-				if (iter != headers_.end())
-				{
-					headers_[field] = content;
-				}
-				else
-				{
-					headers_.insert(std::make_pair(field, content));
-				}
-			}
+			inline String const&			GetHeader(String const& header) const					{ return headers_.at(header); }
 
-			inline Map<String, String>& GetHeaders()
-			{
-				return headers_;
-			}
+			inline void						SetResponseCallback(ResponseCallback const& callback)	{ response_cb_ = callback; }
 
-			inline String const& GetHeader(String const& header) const
-			{
-				return headers_.at(header);
-			}
-
-			inline void SetResponseCallback(ResponseCallback const& callback)
-			{
-				response_cb_ = callback;
-			}
-
-			inline ResponseCallback const& GetResponseCallback() const
-			{
-				return response_cb_;
-			}
+			inline ResponseCallback const&	GetResponseCallback() const								{ return response_cb_; }
 
 		protected:
 			Type type_;

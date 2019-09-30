@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "Renderer.h"
-#include "../base/Logger.h"
+#include "../base/win32/helper.h"
 #include "../base/Window.h"
 #include "../utils/FileUtil.h"
 

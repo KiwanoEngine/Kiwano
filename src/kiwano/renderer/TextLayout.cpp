@@ -20,7 +20,7 @@
 
 #include "TextLayout.h"
 #include "Renderer.h"
-#include "../base/Logger.h"
+#include "../base/win32/helper.h"
 
 namespace kiwano
 {

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2018-2019 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,14 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/base/SmartPtr.hpp>
+#include "../Logger.h"
+#include <StackWalker/StackWalker.h>
 
 namespace kiwano
 {
-	namespace network
+	// Display stack trace on exception
+	inline void ThrowIfFailed(HRESULT hr)
 	{
-		KGE_DECLARE_SMART_PTR(HttpRequest);
-		KGE_DECLARE_SMART_PTR(HttpResponse);
+		if (FAILED(hr))
+		{
+			KGE_ERROR_LOG(L"Fatal error with HRESULT of %08X", hr);
+
+			StackWalker{}.ShowCallstack();
+
+			static char buffer[1024 + 1];
+			sprintf_s(buffer, "Fatal error with HRESULT of %08X", hr);
+			throw std::runtime_error(buffer);
+		}
 	}
 }

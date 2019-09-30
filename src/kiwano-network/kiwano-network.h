@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "src/helper.h"
-#include "src/HttpRequest.hpp"
-#include "src/HttpResponse.hpp"
+#include "src/HttpRequest.h"
+#include "src/HttpResponse.h"
 #include "src/HttpClient.h"
