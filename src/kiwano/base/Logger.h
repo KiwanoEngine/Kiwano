@@ -19,11 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+
+#include "../macros.h"
+#include "../core/core.h"
 
 #ifndef KGE_LOG
 #	ifdef KGE_DEBUG

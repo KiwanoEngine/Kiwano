@@ -19,10 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
 #include <ostream>
 #include <istream>
+
+#include "../macros.h"
+#include "../core/core.h"
 
 namespace kiwano
 {

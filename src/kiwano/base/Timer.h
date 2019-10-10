@@ -19,9 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <functional>
+
 #include "ObjectBase.h"
 #include "time.h"
-#include <functional>
 
 namespace kiwano
 {

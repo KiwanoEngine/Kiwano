@@ -19,6 +19,14 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <set>
+#include <map>
+#include <list>
+#include <queue>
+#include <unordered_set>
+#include <unordered_map>
+#include <sstream>
+
 #include "vector.hpp"
 #include "string.hpp"
 #include "intrusive_list.hpp"
@@ -27,13 +35,6 @@
 #include "singleton.hpp"
 #include "function.hpp"
 #include "basic_json.hpp"
-#include <set>
-#include <map>
-#include <list>
-#include <queue>
-#include <unordered_set>
-#include <unordered_map>
-#include <sstream>
 
 namespace kiwano
 {

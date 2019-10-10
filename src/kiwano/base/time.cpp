@@ -18,10 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "time.h"
-#include "Logger.h"
 #include <regex>
 #include <unordered_map>
+
+#include "time.h"
+#include "Logger.h"
 
 namespace kiwano
 {

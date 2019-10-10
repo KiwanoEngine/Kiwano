@@ -18,13 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <fstream>
+
 #include "ResourceCache.h"
 #include "../base/Logger.h"
 #include "../2d/Frame.h"
 #include "../2d/FrameSequence.h"
 #include "../renderer/GifImage.h"
 #include "../renderer/FontCollection.h"
-#include <fstream>
 
 namespace kiwano
 {

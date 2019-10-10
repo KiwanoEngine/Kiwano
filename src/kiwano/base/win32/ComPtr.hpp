@@ -19,9 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <type_traits>
+
 #include "../../core/intrusive_ptr.hpp"
 #include <Unknwnbase.h>
-#include <type_traits>
 
 namespace kiwano
 {

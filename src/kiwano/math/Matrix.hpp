@@ -19,9 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <algorithm>
+
 #include "Vec2.hpp"
 #include "Rect.hpp"
-#include <algorithm>
 
 namespace kiwano
 {

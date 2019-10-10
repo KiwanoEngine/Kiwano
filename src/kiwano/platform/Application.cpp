@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <mutex>
+
 #include "Application.h"
 #include "modules.h"
 #include "../base/win32/helper.h"
@@ -25,9 +27,9 @@
 #include "../base/Director.h"
 #include "../renderer/TextureCache.h"
 #include "../utils/ResourceCache.h"
+
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext
-#include <mutex>  // std::mutex
 
 #pragma comment(lib, "imm32.lib")
 
