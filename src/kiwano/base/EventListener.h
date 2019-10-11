@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/core.h"
-#include "../base/SmartPtr.hpp"
-#include "ObjectBase.h"
-#include "Event.hpp"
+#include <kiwano/core/core.h>
+#include <kiwano/base/SmartPtr.hpp>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/Event.hpp>
 
 namespace kiwano
 {

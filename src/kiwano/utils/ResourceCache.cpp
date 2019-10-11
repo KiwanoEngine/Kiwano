@@ -20,12 +20,12 @@
 
 #include <fstream>
 
-#include "ResourceCache.h"
-#include "../base/Logger.h"
-#include "../2d/Frame.h"
-#include "../2d/FrameSequence.h"
-#include "../renderer/GifImage.h"
-#include "../renderer/FontCollection.h"
+#include <kiwano/utils/ResourceCache.h>
+#include <kiwano/base/Logger.h>
+#include <kiwano/2d/Frame.h>
+#include <kiwano/2d/FrameSequence.h>
+#include <kiwano/renderer/GifImage.h>
+#include <kiwano/renderer/FontCollection.h>
 
 namespace kiwano
 {

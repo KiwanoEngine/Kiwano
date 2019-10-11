@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/time.h"
-#include "Brush.h"
-#include "Texture.h"
-#include "Geometry.h"
-#include "TextLayout.h"
-#include "LayerArea.h"
-#include "win32/TextRenderer.h"
+#include <kiwano/base/time.h>
+#include <kiwano/renderer/Brush.h>
+#include <kiwano/renderer/Texture.h>
+#include <kiwano/renderer/Geometry.h>
+#include <kiwano/renderer/TextLayout.h>
+#include <kiwano/renderer/LayerArea.h>
+#include <kiwano/renderer/win32/TextRenderer.h>
 
 namespace kiwano
 {

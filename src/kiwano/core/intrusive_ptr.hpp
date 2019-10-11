@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
+#include <kiwano/macros.h>
 #include <utility>
 #include <type_traits>
 

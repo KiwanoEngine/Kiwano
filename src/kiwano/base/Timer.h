@@ -21,8 +21,8 @@
 #pragma once
 #include <functional>
 
-#include "ObjectBase.h"
-#include "time.h"
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/time.h>
 
 namespace kiwano
 {

@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Font.h"
-#include "../2d/TextStyle.hpp"
+#include <kiwano/renderer/Font.h>
+#include <kiwano/2d/TextStyle.hpp>
 
 namespace kiwano
 {

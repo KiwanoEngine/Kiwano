@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../2d/include-forwards.h"
-#include "Component.h"
+#include <kiwano/macros.h>
+#include <kiwano/2d/include-forwards.h>
+#include <kiwano/base/Component.h>
 
 namespace kiwano
 {

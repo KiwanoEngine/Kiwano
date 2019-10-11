@@ -20,6 +20,6 @@
 
 #pragma once
 
-#include "src/HttpRequest.h"
-#include "src/HttpResponse.hpp"
-#include "src/HttpClient.h"
+#include <kiwano-network/HttpRequest.h>
+#include <kiwano-network/HttpResponse.hpp>
+#include <kiwano-network/HttpClient.h>

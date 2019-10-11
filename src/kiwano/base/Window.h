@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
-#include "../math/math.h"
+#include <kiwano/macros.h>
+#include <kiwano/core/core.h>
+#include <kiwano/math/math.h>
 
 namespace kiwano
 {

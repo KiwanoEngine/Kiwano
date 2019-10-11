@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "..\core\core.h"
-#include "constants.h"
-#include "ease.h"
-#include "scalar.h"
-#include "Vec2.hpp"
-#include "Rect.hpp"
-#include "Matrix.hpp"
+#include <kiwano/core/core.h>
+#include <kiwano/math/constants.h>
+#include <kiwano/math/ease.h>
+#include <kiwano/math/scalar.h>
+#include <kiwano/math/Vec2.hpp>
+#include <kiwano/math/Rect.hpp>
+#include <kiwano/math/Matrix.hpp>
 
 namespace kiwano
 {

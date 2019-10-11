@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
-#include "Transform.h"
-#include "action/ActionManager.h"
-#include "../base/TimerManager.h"
-#include "../base/EventDispatcher.h"
+#include <kiwano/2d/include-forwards.h>
+#include <kiwano/2d/Transform.h>
+#include <kiwano/2d/action/ActionManager.h>
+#include <kiwano/base/TimerManager.h>
+#include <kiwano/base/EventDispatcher.h>
 
 namespace kiwano
 {

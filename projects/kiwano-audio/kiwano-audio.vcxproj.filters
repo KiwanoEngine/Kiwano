@@ -2,42 +2,17 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano-audio\kiwano-audio.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\src\audio-modules.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-audio\src\Sound.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-audio\src\Transcoder.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-audio\src\SoundPlayer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-audio\src\AudioEngine.h">
-      <Filter>src</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano-audio\AudioEngine.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\audio-modules.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\Sound.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\SoundPlayer.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\Transcoder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-audio\src\audio-modules.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-audio\src\Sound.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-audio\src\Transcoder.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-audio\src\SoundPlayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-audio\src\AudioEngine.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="src">
-      <UniqueIdentifier>{331b453a-33de-4e2a-9c06-19a3fc9d43f3}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="..\..\src\kiwano-audio\AudioEngine.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\audio-modules.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\Sound.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\SoundPlayer.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\Transcoder.cpp" />
   </ItemGroup>
 </Project>

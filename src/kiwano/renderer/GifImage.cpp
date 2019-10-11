@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "GifImage.h"
-#include "Renderer.h"
-#include "../base/Logger.h"
+#include <kiwano/renderer/GifImage.h>
+#include <kiwano/renderer/Renderer.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {

@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../base/Resource.h"
-#include "../2d/include-forwards.h"
-#include "../renderer/GifImage.h"
+#include <kiwano/macros.h>
+#include <kiwano/base/Resource.h>
+#include <kiwano/2d/include-forwards.h>
+#include <kiwano/renderer/GifImage.h>
 #include <3rd-party/tinyxml2/tinyxml2.h>
 
 namespace kiwano

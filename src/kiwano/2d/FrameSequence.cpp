@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "FrameSequence.h"
-#include "Frame.h"
-#include "../base/Logger.h"
+#include <kiwano/2d/FrameSequence.h>
+#include <kiwano/2d/Frame.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {

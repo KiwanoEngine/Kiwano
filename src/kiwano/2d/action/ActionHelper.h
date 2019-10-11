@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "ActionTween.h"
-#include "ActionWalk.h"
-#include "ActionDelay.h"
-#include "ActionGroup.h"
-#include "Animation.h"
+#include <kiwano/2d/action/ActionTween.h>
+#include <kiwano/2d/action/ActionWalk.h>
+#include <kiwano/2d/action/ActionDelay.h>
+#include <kiwano/2d/action/ActionGroup.h>
+#include <kiwano/2d/action/Animation.h>
 
 namespace kiwano
 {

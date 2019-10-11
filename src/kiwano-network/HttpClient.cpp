@@ -21,9 +21,9 @@
 #include <thread>
 #include <codecvt>
 
-#include "HttpRequest.h"
-#include "HttpResponse.hpp"
-#include "HttpClient.h"
+#include <kiwano-network/HttpRequest.h>
+#include <kiwano-network/HttpResponse.hpp>
+#include <kiwano-network/HttpClient.h>
 
 #include <kiwano/base/Logger.h>
 #include <kiwano/platform/Application.h>

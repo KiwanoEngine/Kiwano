@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "keys.hpp"
+#include <kiwano/base/keys.hpp>
 
 namespace kiwano
 {

@@ -19,30 +19,46 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "HttpRequest.h"
+#include <kiwano/core/singleton.hpp>
+#include <kiwano/base/Component.h>
+#include <kiwano/base/win32/ComPtr.hpp>
+#include <kiwano-audio/Transcoder.h>
 
 namespace kiwano
 {
-	namespace network
+	namespace audio
 	{
-		void HttpRequest::SetJsonData(Json const& json)
+		class KGE_API AudioEngine
+			: public Singleton<AudioEngine>
+			, public ComponentBase
 		{
-			SetHeader(L"Content-Type", L"application/json;charset=UTF-8");
-			data_ = json.dump();
-		}
+			KGE_DECLARE_SINGLETON(AudioEngine);
 
-		void HttpRequest::SetHeader(String const& field, String const& content)
-		{
-			auto iter = headers_.find(field);
-			if (iter != headers_.end())
-			{
-				headers_[field] = content;
-			}
-			else
-			{
-				headers_.insert(std::make_pair(field, content));
-			}
-		}
+		public:
+			// 开启设备
+			void Open();
 
+			// 关闭设备
+			void Close();
+
+			HRESULT CreateVoice(
+				IXAudio2SourceVoice** voice,
+				const Transcoder::Buffer& buffer
+			);
+
+		public:
+			void SetupComponent() override;
+
+			void DestroyComponent() override;
+
+		protected:
+			AudioEngine();
+
+			~AudioEngine();
+
+		protected:
+			IXAudio2* x_audio2_;
+			IXAudio2MasteringVoice* mastering_voice_;
+		};
 	}
 }

@@ -74,7 +74,7 @@
 #include <cassert>
 
 // Compile-time Config Header File
-#include "config.h"
+#include <kiwano/config.h>
 
 
 #if defined(DEBUG) || defined(_DEBUG)

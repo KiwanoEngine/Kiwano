@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/intrusive_ptr.hpp>
 #include <kiwano/base/ObjectBase.h>
-#include "Sound.h"
+#include <kiwano-audio/Sound.h>
 
 namespace kiwano
 {

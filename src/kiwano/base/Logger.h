@@ -23,8 +23,8 @@
 #include <iomanip>
 #include <sstream>
 
-#include "../macros.h"
-#include "../core/core.h"
+#include <kiwano/macros.h>
+#include <kiwano/core/core.h>
 
 #ifndef KGE_LOG
 #	ifdef KGE_DEBUG

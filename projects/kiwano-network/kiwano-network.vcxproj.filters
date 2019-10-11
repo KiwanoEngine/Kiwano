@@ -1,28 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="src">
-      <UniqueIdentifier>{702f4435-7612-4ce6-86c8-744d1868c19a}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\src\kiwano-network\kiwano-network.h" />
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpClient.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpRequest.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpResponse.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano-network\HttpClient.h" />
+    <ClInclude Include="..\..\src\kiwano-network\HttpRequest.h" />
+    <ClInclude Include="..\..\src\kiwano-network\HttpResponse.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-network\src\HttpClient.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-network\src\HttpRequest.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano-network\HttpClient.cpp" />
+    <ClCompile Include="..\..\src\kiwano-network\HttpRequest.cpp" />
   </ItemGroup>
 </Project>

@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include <kiwano/base/win32/helper.h>
-#include "audio-modules.h"
-#include "AudioEngine.h"
+#include <kiwano-audio/audio-modules.h>
+#include <kiwano-audio/AudioEngine.h>
 
 namespace kiwano
 {

@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Geometry.h"
-#include "Renderer.h"
-#include "../base/win32/helper.h"
+#include <kiwano/renderer/Geometry.h>
+#include <kiwano/renderer/Renderer.h>
+#include <kiwano/base/win32/helper.h>
 
 namespace kiwano
 {

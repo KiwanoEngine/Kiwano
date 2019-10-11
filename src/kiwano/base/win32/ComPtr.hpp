@@ -20,8 +20,7 @@
 
 #pragma once
 #include <type_traits>
-
-#include "../../core/intrusive_ptr.hpp"
+#include <kiwano/core/intrusive_ptr.hpp>
 #include <Unknwnbase.h>
 
 namespace kiwano

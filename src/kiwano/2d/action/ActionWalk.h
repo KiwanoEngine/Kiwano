@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "ActionTween.h"
-#include "../../renderer/Geometry.h"  // Geometry, GeometrySink
+#include <kiwano/2d/action/ActionTween.h>
+#include <kiwano/renderer/Geometry.h>  // Geometry, GeometrySink
 
 namespace kiwano
 {

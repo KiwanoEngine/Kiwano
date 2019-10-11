@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include <typeinfo>
-#include "ObjectBase.h"
-#include "Logger.h"
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {

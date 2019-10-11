@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Geometry.h"
+#include <kiwano/renderer/Geometry.h>
 
 namespace kiwano
 {

@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Component.h"
-#include "win32/FontCollectionLoader.h"
-#include "RenderTarget.h"
-#include "GifImage.h"
+#include <kiwano/base/Component.h>
+#include <kiwano/renderer/win32/FontCollectionLoader.h>
+#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/renderer/GifImage.h>
 
 #if defined(KGE_USE_DIRECTX10)
 #	include "D3D10DeviceResources.h"

@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Actor.h"
-#include "../renderer/TextLayout.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/renderer/TextLayout.h>
 
 namespace kiwano
 {

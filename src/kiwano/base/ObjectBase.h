@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
-#include "RefCounter.hpp"
-#include "SmartPtr.hpp"
+#include <kiwano/macros.h>
+#include <kiwano/core/core.h>
+#include <kiwano/base/RefCounter.hpp>
+#include <kiwano/base/SmartPtr.hpp>
 
 namespace kiwano
 {

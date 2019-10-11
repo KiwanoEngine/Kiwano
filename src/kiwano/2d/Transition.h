@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
-#include "../renderer/LayerArea.h"
+#include <kiwano/2d/include-forwards.h>
+#include <kiwano/renderer/LayerArea.h>
 
 namespace kiwano
 {

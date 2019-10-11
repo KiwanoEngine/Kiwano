@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Transform.h"
+#include <kiwano/2d/Transform.h>
 
 namespace kiwano
 {

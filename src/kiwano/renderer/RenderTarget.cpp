@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "RenderTarget.h"
-#include "../base/win32/helper.h"
+#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/base/win32/helper.h>
 
 namespace kiwano
 {

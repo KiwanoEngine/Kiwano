@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClInclude Include="..\..\src\kiwano-audio\audio-modules.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\AudioEngine.h" />
     <ClInclude Include="..\..\src\kiwano-audio\kiwano-audio.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\src\audio-modules.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\src\AudioEngine.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\src\SoundPlayer.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\src\Sound.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\src\Transcoder.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-audio\src\audio-modules.cpp" />
-    <ClCompile Include="..\..\src\kiwano-audio\src\AudioEngine.cpp" />
-    <ClCompile Include="..\..\src\kiwano-audio\src\SoundPlayer.cpp" />
-    <ClCompile Include="..\..\src\kiwano-audio\src\Sound.cpp" />
-    <ClCompile Include="..\..\src\kiwano-audio\src\Transcoder.cpp" />
+    <ClInclude Include="..\..\src\kiwano-audio\Sound.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\SoundPlayer.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\Transcoder.h" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -29,6 +22,13 @@
     <ProjectReference Include="..\kiwano\kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\kiwano-audio\audio-modules.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\AudioEngine.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\Sound.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\SoundPlayer.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\Transcoder.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1B97937D-8184-426C-BE71-29A163DC76C9}</ProjectGuid>

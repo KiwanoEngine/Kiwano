@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Vec2.hpp"
+#include <kiwano/math/Vec2.hpp>
 
 namespace kiwano
 {

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Timer.h"
+#include <kiwano/base/Timer.h>
 
 namespace kiwano
 {

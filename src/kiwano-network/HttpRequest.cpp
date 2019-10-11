@@ -19,78 +19,30 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/intrusive_ptr.hpp>
-#include <kiwano/base/ObjectBase.h>
-#include <kiwano/base/Resource.h>
-#include <xaudio2.h>
-#include "Transcoder.h"
+#include <kiwano-network/HttpRequest.h>
 
 namespace kiwano
 {
-	namespace audio
+	namespace network
 	{
-		KGE_DECLARE_SMART_PTR(Sound);
-
-		class KGE_API Sound
-			: public ObjectBase
+		void HttpRequest::SetJsonData(Json const& json)
 		{
-		public:
-			Sound();
+			SetHeader(L"Content-Type", L"application/json;charset=UTF-8");
+			data_ = json.dump();
+		}
 
-			Sound(
-				String const& file_path	/* 本地音频文件 */
-			);
+		void HttpRequest::SetHeader(String const& field, String const& content)
+		{
+			auto iter = headers_.find(field);
+			if (iter != headers_.end())
+			{
+				headers_[field] = content;
+			}
+			else
+			{
+				headers_.insert(std::make_pair(field, content));
+			}
+		}
 
-			Sound(
-				Resource const& res		/* 音乐资源 */
-			);
-
-			virtual ~Sound();
-
-			// 打开本地音频文件
-			bool Load(
-				String const& file_path
-			);
-
-			// 打开音乐资源
-			bool Load(
-				Resource const& res		/* 音乐资源 */
-			);
-
-			// 播放
-			void Play(
-				int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
-			);
-
-			// 暂停
-			void Pause();
-
-			// 继续
-			void Resume();
-
-			// 停止
-			void Stop();
-
-			// 关闭并回收资源
-			void Close();
-
-			// 是否正在播放
-			bool IsPlaying() const;
-
-			// 获取音量
-			float GetVolume() const;
-
-			// 设置音量
-			void SetVolume(
-				float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
-			);
-
-		protected:
-			bool		opened_;
-			bool		playing_;
-			Transcoder	transcoder_;
-
-			IXAudio2SourceVoice*	voice_;
-		};
 	}
 }

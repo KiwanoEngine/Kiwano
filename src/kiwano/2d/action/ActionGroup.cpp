@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ActionGroup.h"
-#include "../Actor.h"
-#include "../../base/Logger.h"
+#include <kiwano/2d/action/ActionGroup.h>
+#include <kiwano/2d/Actor.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {

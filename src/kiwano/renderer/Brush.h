@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "win32/D2DDeviceResources.h"
+#include <kiwano/renderer/win32/D2DDeviceResources.h>
 
 namespace kiwano
 {

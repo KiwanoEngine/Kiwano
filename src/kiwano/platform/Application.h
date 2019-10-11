@@ -19,12 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/core.h"
-#include "../base/time.h"
-#include "../base/Component.h"
-#include "../base/Event.hpp"
-#include "../base/Window.h"
-#include "../renderer/Renderer.h"
+#include <kiwano/core/core.h>
+#include <kiwano/base/time.h>
+#include <kiwano/base/Component.h>
+#include <kiwano/base/Event.hpp>
+#include <kiwano/base/Window.h>
+#include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
 {

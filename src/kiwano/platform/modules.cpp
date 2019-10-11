@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "modules.h"
-#include "../base/Logger.h"
+#include <kiwano/platform/modules.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {

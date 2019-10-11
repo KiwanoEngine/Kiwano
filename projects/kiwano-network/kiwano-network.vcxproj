@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClInclude Include="..\..\src\kiwano-network\HttpClient.h" />
+    <ClInclude Include="..\..\src\kiwano-network\HttpRequest.h" />
+    <ClInclude Include="..\..\src\kiwano-network\HttpResponse.hpp" />
     <ClInclude Include="..\..\src\kiwano-network\kiwano-network.h" />
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpClient.h" />
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpRequest.h" />
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpResponse.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-network\src\HttpClient.cpp" />
-    <ClCompile Include="..\..\src\kiwano-network\src\HttpRequest.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -27,6 +23,10 @@
     <ProjectReference Include="..\kiwano\kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\kiwano-network\HttpClient.cpp" />
+    <ClCompile Include="..\..\src\kiwano-network\HttpRequest.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}</ProjectGuid>

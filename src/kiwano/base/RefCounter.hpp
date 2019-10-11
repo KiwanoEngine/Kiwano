@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/noncopyable.hpp"
+#include <kiwano/macros.h>
+#include <kiwano/core/noncopyable.hpp>
 
 namespace kiwano
 {

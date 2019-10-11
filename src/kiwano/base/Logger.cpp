@@ -21,7 +21,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "Logger.h"
+#include <kiwano/base/Logger.h>
 
 namespace
 {

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Component.h"
+#include <kiwano/base/Component.h>
 
 #define KGE_DEFINE_COMPONENT_FLAG(OFFSET) ( 0x01 << (OFFSET % 32) )
 

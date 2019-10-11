@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Director.h"
-#include "../2d/Actor.h"
-#include "../2d/Stage.h"
-#include "../2d/Transition.h"
-#include "../2d/DebugActor.h"
-#include "../renderer/RenderTarget.h"
+#include <kiwano/base/Director.h>
+#include <kiwano/2d/Actor.h>
+#include <kiwano/2d/Stage.h>
+#include <kiwano/2d/Transition.h>
+#include <kiwano/2d/DebugActor.h>
+#include <kiwano/renderer/RenderTarget.h>
 
 namespace kiwano
 {

@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../2d/Sprite.h"
-#include <functional>
+#include <kiwano/2d/Sprite.h>
 
 namespace kiwano
 {

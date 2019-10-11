@@ -18,47 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/core/singleton.hpp>
-#include <kiwano/base/Component.h>
-#include <kiwano/base/win32/ComPtr.hpp>
-#include "Transcoder.h"
+#include <kiwano-imgui/ImGuiLayer.h>
 
 namespace kiwano
 {
-	namespace audio
+	namespace imgui
 	{
-		class KGE_API AudioEngine
-			: public Singleton<AudioEngine>
-			, public ComponentBase
+		ImGuiLayer::ImGuiLayer()
 		{
-			KGE_DECLARE_SINGLETON(AudioEngine);
+			SetSwallowEvents(true);
+		}
 
-		public:
-			// 开启设备
-			void Open();
+		ImGuiLayer::~ImGuiLayer()
+		{
+		}
 
-			// 关闭设备
-			void Close();
+		void ImGuiLayer::OnRender(RenderTarget* rt)
+		{
+			PrepareRender(rt);
+			for (const auto& pipeline : pipelines_)
+			{
+				pipeline.second();
+			}
+		}
 
-			HRESULT CreateVoice(
-				IXAudio2SourceVoice** voice,
-				const Transcoder::Buffer& buffer
-			);
+		void ImGuiLayer::AddItem(ImGuiPipeline const& item, String const& name)
+		{
+			pipelines_.insert(std::make_pair(name, item));
+		}
 
-		public:
-			void SetupComponent() override;
+		void ImGuiLayer::RemoveItem(String const& name)
+		{
+			auto iter = pipelines_.find(name);
+			if (iter != pipelines_.end())
+			{
+				pipelines_.erase(iter);
+			}
+		}
 
-			void DestroyComponent() override;
-
-		protected:
-			AudioEngine();
-
-			~AudioEngine();
-
-		protected:
-			IXAudio2* x_audio2_;
-			IXAudio2MasteringVoice* mastering_voice_;
-		};
+		void ImGuiLayer::RemoveAllItems()
+		{
+			pipelines_.clear();
+		}
 	}
 }

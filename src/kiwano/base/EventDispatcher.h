@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "EventListener.h"
+#include <kiwano/base/EventListener.h>
 
 namespace kiwano
 {

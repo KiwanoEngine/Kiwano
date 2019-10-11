@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Actor.h"
-#include "../renderer/RenderTarget.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/renderer/RenderTarget.h>
 
 #ifdef DrawText
 #	undef DrawText

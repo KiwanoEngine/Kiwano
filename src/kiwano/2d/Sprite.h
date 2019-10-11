@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Actor.h"
-#include "Frame.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/2d/Frame.h>
 
 namespace kiwano
 {

@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "GifSprite.h"
-#include "../base/win32/helper.h"
-#include "../renderer/TextureCache.h"
-#include "../renderer/Renderer.h"
+#include <kiwano/2d/GifSprite.h>
+#include <kiwano/base/win32/helper.h>
+#include <kiwano/renderer/TextureCache.h>
+#include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
 {

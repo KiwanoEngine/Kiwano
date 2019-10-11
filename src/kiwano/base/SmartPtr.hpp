@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/RefCounter.hpp"
-#include "../core/intrusive_ptr.hpp"
+#include <kiwano/base/RefCounter.hpp>
+#include <kiwano/core/intrusive_ptr.hpp>
 
 namespace kiwano
 {

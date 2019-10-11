@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/ObjectBase.h"
-#include "../renderer/Texture.h"
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/renderer/Texture.h>
 
 namespace kiwano
 {

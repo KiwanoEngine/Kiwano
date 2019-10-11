@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Actor.h"
-#include "../base/Resource.h"
-#include "../renderer/RenderTarget.h"
-#include "../renderer/GifImage.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/base/Resource.h>
+#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/renderer/GifImage.h>
 
 namespace kiwano
 {

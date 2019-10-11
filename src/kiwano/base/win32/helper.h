@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "../Logger.h"
+#include <kiwano/base/Logger.h>
 #include <3rd-party/StackWalker/StackWalker.h>
 
 namespace kiwano

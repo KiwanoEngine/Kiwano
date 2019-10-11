@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
+#include <kiwano/macros.h>
 
 // #define KGE_DEBUG_ENABLE_LIST_CHECK
 

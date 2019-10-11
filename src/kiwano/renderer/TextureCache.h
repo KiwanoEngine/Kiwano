@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Texture.h"
-#include "GifImage.h"
+#include <kiwano/renderer/Texture.h>
+#include <kiwano/renderer/GifImage.h>
 
 namespace kiwano
 {

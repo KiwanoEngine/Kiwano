@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "time.h"
-#include "Event.hpp"
+#include <kiwano/macros.h>
+#include <kiwano/base/time.h>
+#include <kiwano/base/Event.hpp>
 
 namespace kiwano
 {

@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ShapeActor.h"
-#include "../base/Logger.h"
-#include "../renderer/Renderer.h"
+#include <kiwano/2d/ShapeActor.h>
+#include <kiwano/base/Logger.h>
+#include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
 {

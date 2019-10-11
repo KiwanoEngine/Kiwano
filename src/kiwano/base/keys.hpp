@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
+#include <kiwano/macros.h>
 
 namespace kiwano
 {

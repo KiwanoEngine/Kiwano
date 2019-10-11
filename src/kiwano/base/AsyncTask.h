@@ -22,7 +22,7 @@
 #include <thread>
 #include <mutex>
 
-#include "ObjectBase.h"
+#include <kiwano/base/ObjectBase.h>
 
 namespace kiwano
 {

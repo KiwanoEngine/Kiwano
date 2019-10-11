@@ -22,8 +22,8 @@
 #include <ostream>
 #include <istream>
 
-#include "../macros.h"
-#include "../core/core.h"
+#include <kiwano/macros.h>
+#include <kiwano/core/core.h>
 
 namespace kiwano
 {

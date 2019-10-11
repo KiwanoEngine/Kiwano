@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Color.h"
+#include <kiwano/renderer/Color.h>
 
 namespace kiwano
 {

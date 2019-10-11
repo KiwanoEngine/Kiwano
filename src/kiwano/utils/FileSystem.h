@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Resource.h"
+#include <kiwano/base/Resource.h>
 
 namespace kiwano
 {

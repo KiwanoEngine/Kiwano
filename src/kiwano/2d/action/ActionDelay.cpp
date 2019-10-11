@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ActionDelay.h"
+#include <kiwano/2d/action/ActionDelay.h>
 
 namespace kiwano
 {

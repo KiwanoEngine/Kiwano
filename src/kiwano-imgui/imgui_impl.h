@@ -4,7 +4,7 @@
 
 #if !defined(KGE_USE_DIRECTX10)
 
-#include "imgui_impl_dx11.h"
+#include <kiwano-imgui/imgui_impl_dx11.h>
 
 inline bool     ImGui_Impl_Init(::kiwano::Renderer* renderer)		{ return ImGui_ImplDX11_Init(renderer->GetD3DDeviceResources()->GetDevice(), renderer->GetD3DDeviceResources()->GetDeviceContext()); }
 inline void     ImGui_Impl_Shutdown()								{ ImGui_ImplDX11_Shutdown(); }
@@ -16,7 +16,7 @@ inline bool     ImGui_Impl_CreateDeviceObjects()					{ return ImGui_ImplDX11_Cre
 
 #else
 
-#include "imgui_impl_dx10.h"
+#include <kiwano-imgui/imgui_impl_dx10.h>
 
 inline bool     ImGui_Impl_Init(::kiwano::Renderer* renderer)		{ return ImGui_ImplDX10_Init(renderer->GetD3DDeviceResources()->GetDevice()); }
 inline void     ImGui_Impl_Shutdown()								{ ImGui_ImplDX10_Shutdown(); }

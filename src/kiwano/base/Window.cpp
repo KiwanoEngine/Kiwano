@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Window.h"
-#include "win32/helper.h"
-#include "../platform/Application.h"
+#include <kiwano/base/Window.h>
+#include <kiwano/base/win32/helper.h>
+#include <kiwano/platform/Application.h>
 
 #define WINDOW_FIXED_STYLE		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_RESIZABLE_STYLE	WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX

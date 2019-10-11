@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../Font.h"
-#include "../Color.h"
-#include "../../math/math.h"
-#include "../../base/Resource.h"
+#include <kiwano/renderer/Font.h>
+#include <kiwano/renderer/Color.h>
+#include <kiwano/math/math.h>
+#include <kiwano/base/Resource.h>
 #include <dwrite.h>
 #include <d2d1.h>
 #include <d2d1_1.h>

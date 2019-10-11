@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "FontCollection.h"
+#include <kiwano/renderer/FontCollection.h>
 
 namespace kiwano
 {

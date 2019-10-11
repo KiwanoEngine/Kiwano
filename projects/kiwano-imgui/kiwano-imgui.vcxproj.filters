@@ -1,40 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="src">
-      <UniqueIdentifier>{ed21cd51-048d-4bbc-804a-d09a8afa1423}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\kiwano-imgui\src\imgui_impl_dx10.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-imgui\src\imgui_impl_dx11.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-imgui\src\ImGuiLayer.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano-imgui\kiwano-imgui.h" />
-    <ClInclude Include="..\..\src\kiwano-imgui\src\imgui_impl.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-imgui\src\ImGuiModule.h">
-      <Filter>src</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl_dx10.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\ImGuiLayer.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\ImGuiModule.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-imgui\src\imgui_impl_dx10.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-imgui\src\imgui_impl_dx11.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-imgui\src\ImGuiLayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano-imgui\src\ImGuiModule.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl_dx10.cpp" />
+    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\..\src\kiwano-imgui\ImGuiLayer.cpp" />
+    <ClCompile Include="..\..\src\kiwano-imgui\ImGuiModule.cpp" />
   </ItemGroup>
 </Project>

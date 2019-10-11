@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Actor.h"
-#include "..\renderer\LayerArea.h"
-#include "..\renderer\RenderTarget.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/2d/..\renderer\LayerArea.h>
+#include <kiwano/2d/..\renderer\RenderTarget.h>
 
 namespace kiwano
 {

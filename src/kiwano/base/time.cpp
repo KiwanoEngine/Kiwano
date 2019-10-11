@@ -21,8 +21,8 @@
 #include <regex>
 #include <unordered_map>
 
-#include "time.h"
-#include "Logger.h"
+#include <kiwano/base/time.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {

@@ -6,8 +6,8 @@
 #include <kiwano/base/Window.h>
 #include <kiwano/base/Input.h>
 #include <kiwano/renderer/Renderer.h>
-#include "ImGuiModule.h"
-#include "imgui_impl.h"
+#include <kiwano-imgui/ImGuiModule.h>
+#include <kiwano-imgui/imgui_impl.h>
 
 #include <XInput.h>
 #pragma comment(lib, "xinput")

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "HttpRequest.h"
+#include <kiwano-network/HttpRequest.h>
 
 namespace kiwano
 {

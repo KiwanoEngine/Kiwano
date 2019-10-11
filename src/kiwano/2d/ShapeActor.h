@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Actor.h"
-#include "../renderer/Geometry.h"
-#include "../renderer/StrokeStyle.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/renderer/Geometry.h>
+#include <kiwano/renderer/StrokeStyle.h>
 
 namespace kiwano
 {

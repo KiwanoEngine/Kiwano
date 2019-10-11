@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ActionWalk.h"
-#include "../Actor.h"
+#include <kiwano/2d/action/ActionWalk.h>
+#include <kiwano/2d/Actor.h>
 
 namespace kiwano
 {

@@ -21,8 +21,8 @@
 #pragma once
 #include <algorithm>
 
-#include "Vec2.hpp"
-#include "Rect.hpp"
+#include <kiwano/math/Vec2.hpp>
+#include <kiwano/math/Rect.hpp>
 
 namespace kiwano
 {

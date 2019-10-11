@@ -20,13 +20,13 @@
 
 #include <mutex>
 
-#include "Application.h"
-#include "modules.h"
-#include "../base/win32/helper.h"
-#include "../base/input.h"
-#include "../base/Director.h"
-#include "../renderer/TextureCache.h"
-#include "../utils/ResourceCache.h"
+#include <kiwano/platform/Application.h>
+#include <kiwano/platform/modules.h>
+#include <kiwano/base/win32/helper.h>
+#include <kiwano/base/input.h>
+#include <kiwano/base/Director.h>
+#include <kiwano/renderer/TextureCache.h>
+#include <kiwano/utils/ResourceCache.h>
 
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext

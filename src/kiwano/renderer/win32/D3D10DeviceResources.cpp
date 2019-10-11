@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "D3D10DeviceResources.h"
+#include <kiwano/renderer/win32/D3D10DeviceResources.h>
 
-#include "../../base/Logger.h"
+#include <kiwano/base/Logger.h>
 
 #pragma comment(lib, "d3d10_1.lib")
 

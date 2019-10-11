@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "FontCollection.h"
-#include "Renderer.h"
+#include <kiwano/renderer/FontCollection.h>
+#include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
 {

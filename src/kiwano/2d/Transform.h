@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../math/math.h"
+#include <kiwano/math/math.h>
 
 namespace kiwano
 {

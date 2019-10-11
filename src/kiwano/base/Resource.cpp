@@ -20,8 +20,8 @@
 
 #include <iostream>
 
-#include "Resource.h"
-#include "../base/Logger.h"
+#include <kiwano/base/Resource.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {

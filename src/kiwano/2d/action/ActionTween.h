@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Action.h"
-#include "../../base/Logger.h"
+#include <kiwano/2d/action/Action.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {

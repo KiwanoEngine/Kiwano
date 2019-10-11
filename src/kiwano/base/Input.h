@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
-#include "../math/math.h"
-#include "keys.hpp"
-#include "Component.h"
+#include <kiwano/macros.h>
+#include <kiwano/core/core.h>
+#include <kiwano/math/math.h>
+#include <kiwano/base/keys.hpp>
+#include <kiwano/base/Component.h>
 
 namespace kiwano
 {

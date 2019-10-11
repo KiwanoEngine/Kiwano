@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "FileSystem.h"
-#include "../platform/modules.h"
+#include <kiwano/utils/FileSystem.h>
+#include <kiwano/platform/modules.h>
 
 namespace kiwano
 {
@@ -155,8 +155,8 @@ namespace kiwano
 		}
 		else
 		{
-			 String full_path = GetFullPathForFile(file_path);
-			 return !full_path.empty();
+			String full_path = GetFullPathForFile(file_path);
+			return !full_path.empty();
 		}
 	}
 

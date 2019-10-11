@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "AsyncTask.h"
-#include "../platform/Application.h"
+#include <kiwano/base/AsyncTask.h>
+#include <kiwano/platform/Application.h>
 
 namespace kiwano
 {

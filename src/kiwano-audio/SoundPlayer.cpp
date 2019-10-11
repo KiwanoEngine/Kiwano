@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "SoundPlayer.h"
+#include <kiwano-audio/SoundPlayer.h>
 
 namespace kiwano
 {

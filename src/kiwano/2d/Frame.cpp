@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Frame.h"
-#include "../renderer/TextureCache.h"
+#include <kiwano/2d/Frame.h>
+#include <kiwano/renderer/TextureCache.h>
 
 namespace kiwano
 {

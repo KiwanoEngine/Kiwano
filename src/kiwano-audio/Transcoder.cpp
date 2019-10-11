@@ -28,8 +28,8 @@
 #include <kiwano/base/Logger.h>
 #include <kiwano/base/win32/ComPtr.hpp>
 #include <kiwano/platform/modules.h>
-#include "audio-modules.h"
-#include "Transcoder.h"
+#include <kiwano-audio/audio-modules.h>
+#include <kiwano-audio/Transcoder.h>
 
 namespace kiwano
 {

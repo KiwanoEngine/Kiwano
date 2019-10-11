@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Button.h"
+#include <kiwano/ui/Button.h>
 
 namespace kiwano
 {
