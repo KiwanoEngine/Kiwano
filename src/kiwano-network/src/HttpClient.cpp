@@ -22,12 +22,12 @@
 #include <codecvt>
 
 #include "HttpRequest.h"
-#include "HttpResponse.h"
+#include "HttpResponse.hpp"
 #include "HttpClient.h"
 
 #include <kiwano/base/Logger.h>
 #include <kiwano/platform/Application.h>
-#include <curl/curl.h>  // CURL
+#include <3rd-party/curl/curl.h>  // CURL
 
 namespace
 {

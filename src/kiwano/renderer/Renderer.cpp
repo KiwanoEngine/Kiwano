@@ -21,7 +21,7 @@
 #include "Renderer.h"
 #include "../base/win32/helper.h"
 #include "../base/Window.h"
-#include "../utils/FileUtil.h"
+#include "../utils/FileSystem.h"
 
 namespace kiwano
 {
@@ -247,7 +247,7 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileUtil::ExistsFile(file_path))
+		if (!FileSystem::GetInstance()->IsFileExists(file_path))
 		{
 			KGE_WARNING_LOG(L"Texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
@@ -255,8 +255,10 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
+			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+
 			ComPtr<IWICBitmapDecoder> decoder;
-			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, file_path);
+			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
 
 			if (SUCCEEDED(hr))
 			{
@@ -363,7 +365,7 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileUtil::ExistsFile(file_path))
+		if (!FileSystem::GetInstance()->IsFileExists(file_path))
 		{
 			KGE_WARNING_LOG(L"Gif texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
@@ -371,8 +373,10 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
+			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+
 			ComPtr<IWICBitmapDecoder> decoder;
-			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, file_path);
+			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
 
 			if (SUCCEEDED(hr))
 			{
@@ -586,15 +590,19 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
+		Vector<String> full_paths(file_paths);
+
 		if (SUCCEEDED(hr))
 		{
-			for (const auto& file_path : file_paths)
+			for (auto& file_path : full_paths)
 			{
-				if (!FileUtil::ExistsFile(file_path))
+				if (!FileSystem::GetInstance()->IsFileExists(file_path))
 				{
 					KGE_WARNING_LOG(L"Font file '%s' not found!", file_path.c_str());
 					hr = E_FAIL;
 				}
+
+				file_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
 			}
 		}
 
@@ -603,7 +611,7 @@ namespace kiwano
 			LPVOID collection_key = nullptr;
 			std::uint32_t collection_key_size = 0;
 
-			hr = font_collection_loader_->AddFilePaths(file_paths, &collection_key, &collection_key_size);
+			hr = font_collection_loader_->AddFilePaths(full_paths, &collection_key, &collection_key_size);
 
 			if (SUCCEEDED(hr))
 			{

@@ -18,27 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "DataUtil.h"
+#include "LocalStorage.h"
 
 namespace kiwano
 {
-	DataUtil::DataUtil(String const & file_path, String const & field)
+	LocalStorage::LocalStorage(String const & file_path, String const & field)
 	{
 		SetFilePath(file_path);
 		SetFieldName(field);
 	}
 
-	void DataUtil::SetFilePath(String const & file_path)
+	void LocalStorage::SetFilePath(String const & file_path)
 	{
 		file_path_ = file_path;
 	}
 
-	void DataUtil::SetFieldName(String const & field_name)
+	void LocalStorage::SetFieldName(String const & field_name)
 	{
 		field_name_ = field_name;
 	}
 
-	bool DataUtil::Exists(String const& key) const
+	bool LocalStorage::Exists(String const& key) const
 	{
 		wchar_t temp[256] = { 0 };
 		::GetPrivateProfileStringW(
@@ -52,7 +52,7 @@ namespace kiwano
 		return temp[0] == L'\0';
 	}
 
-	bool DataUtil::SaveInt(String const& key, int val) const
+	bool LocalStorage::SaveInt(String const& key, int val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_name_.c_str(),
@@ -63,7 +63,7 @@ namespace kiwano
 		return ret == TRUE;
 	}
 
-	bool DataUtil::SaveFloat(String const& key, float val) const
+	bool LocalStorage::SaveFloat(String const& key, float val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_name_.c_str(),
@@ -74,7 +74,7 @@ namespace kiwano
 		return ret == TRUE;
 	}
 
-	bool DataUtil::SaveDouble(String const& key, double val) const
+	bool LocalStorage::SaveDouble(String const& key, double val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_name_.c_str(),
@@ -85,7 +85,7 @@ namespace kiwano
 		return ret == TRUE;
 	}
 
-	bool DataUtil::SaveBool(String const& key, bool val) const
+	bool LocalStorage::SaveBool(String const& key, bool val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_name_.c_str(),
@@ -96,7 +96,7 @@ namespace kiwano
 		return ret == TRUE;
 	}
 
-	bool DataUtil::SaveString(String const& key, String const& val) const
+	bool LocalStorage::SaveString(String const& key, String const& val) const
 	{
 		BOOL ret = ::WritePrivateProfileStringW(
 			field_name_.c_str(),
@@ -107,7 +107,7 @@ namespace kiwano
 		return ret == TRUE;
 	}
 
-	int DataUtil::GetInt(String const & key, int default_value) const
+	int LocalStorage::GetInt(String const & key, int default_value) const
 	{
 		return ::GetPrivateProfileIntW(
 			field_name_.c_str(),
@@ -117,7 +117,7 @@ namespace kiwano
 		);
 	}
 
-	float DataUtil::GetFloat(String const & key, float default_value) const
+	float LocalStorage::GetFloat(String const & key, float default_value) const
 	{
 		wchar_t temp[32] = { 0 };
 		String default_str = String::parse(default_value);
@@ -125,7 +125,7 @@ namespace kiwano
 		return std::stof(temp);
 	}
 
-	double DataUtil::GetDouble(String const & key, double default_value) const
+	double LocalStorage::GetDouble(String const & key, double default_value) const
 	{
 		wchar_t temp[32] = { 0 };
 		String default_str = String::parse(default_value);
@@ -133,7 +133,7 @@ namespace kiwano
 		return std::stod(temp);
 	}
 
-	bool DataUtil::GetBool(String const & key, bool default_value) const
+	bool LocalStorage::GetBool(String const & key, bool default_value) const
 	{
 		int nValue = ::GetPrivateProfileIntW(
 			field_name_.c_str(),
@@ -143,7 +143,7 @@ namespace kiwano
 		return nValue == TRUE;
 	}
 
-	String DataUtil::GetString(String const & key, String const & default_value) const
+	String LocalStorage::GetString(String const & key, String const & default_value) const
 	{
 		wchar_t temp[256] = { 0 };
 		::GetPrivateProfileStringW(

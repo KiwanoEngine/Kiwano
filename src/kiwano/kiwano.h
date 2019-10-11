@@ -135,9 +135,8 @@
 // utils
 //
 
-#include "utils/Path.h"
-#include "utils/DataUtil.h"
-#include "utils/FileUtil.h"
+#include "utils/FileSystem.h"
+#include "utils/LocalStorage.h"
 #include "utils/ResourceCache.h"
 
 

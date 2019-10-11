@@ -4,7 +4,7 @@
     <ClInclude Include="..\..\src\kiwano-network\kiwano-network.h" />
     <ClInclude Include="..\..\src\kiwano-network\src\HttpClient.h" />
     <ClInclude Include="..\..\src\kiwano-network\src\HttpRequest.h" />
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpResponse.h" />
+    <ClInclude Include="..\..\src\kiwano-network\src\HttpResponse.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-network\src\HttpClient.cpp" />
@@ -75,7 +75,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>../../src;../../src/3rd-party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
@@ -93,7 +93,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>../../src;../../src/3rd-party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>

@@ -86,9 +86,8 @@
     <ClInclude Include="..\..\src\kiwano\renderer\win32\TextRenderer.h" />
     <ClInclude Include="..\..\src\kiwano\ui\Button.h" />
     <ClInclude Include="..\..\src\kiwano\ui\Menu.h" />
-    <ClInclude Include="..\..\src\kiwano\utils\DataUtil.h" />
-    <ClInclude Include="..\..\src\kiwano\utils\FileUtil.h" />
-    <ClInclude Include="..\..\src\kiwano\utils\Path.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\FileSystem.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
   </ItemGroup>
   <ItemGroup>
@@ -146,9 +145,8 @@
     <ClCompile Include="..\..\src\kiwano\renderer\win32\TextRenderer.cpp" />
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp" />
     <ClCompile Include="..\..\src\kiwano\ui\Menu.cpp" />
-    <ClCompile Include="..\..\src\kiwano\utils\DataUtil.cpp" />
-    <ClCompile Include="..\..\src\kiwano\utils\FileUtil.cpp" />
-    <ClCompile Include="..\..\src\kiwano\utils\Path.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
@@ -215,7 +213,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>../../src;../../src/3rd-party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -233,7 +231,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>../../src;../../src/3rd-party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

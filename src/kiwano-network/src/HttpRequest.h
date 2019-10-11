@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Function.hpp>
+#include <kiwano/core/function.hpp>
 #include <kiwano/core/basic_json.hpp>
 #include <kiwano/base/ObjectBase.h>
 #include <kiwano/base/SmartPtr.hpp>

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include "../Logger.h"
-#include <StackWalker/StackWalker.h>
+#include <3rd-party/StackWalker/StackWalker.h>
 
 namespace kiwano
 {

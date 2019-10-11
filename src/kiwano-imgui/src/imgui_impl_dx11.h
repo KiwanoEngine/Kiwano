@@ -1,7 +1,7 @@
 // dear imgui: Renderer for Kiwano (DirectX11)
 
 #pragma once
-#include <imgui/imgui.h>
+#include <3rd-party/imgui/imgui.h>
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;

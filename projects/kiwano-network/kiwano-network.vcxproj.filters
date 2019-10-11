@@ -13,7 +13,7 @@
     <ClInclude Include="..\..\src\kiwano-network\src\HttpRequest.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano-network\src\HttpResponse.h">
+    <ClInclude Include="..\..\src\kiwano-network\src\HttpResponse.hpp">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

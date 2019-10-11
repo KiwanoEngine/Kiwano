@@ -102,9 +102,6 @@
     <ClInclude Include="..\..\src\kiwano\platform\modules.h">
       <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\utils\Path.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\config.h" />
     <ClInclude Include="..\..\src\kiwano\macros.h" />
     <ClInclude Include="..\..\src\kiwano\math\Vec2.hpp">
@@ -117,9 +114,6 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
-    <ClInclude Include="..\..\src\kiwano\utils\DataUtil.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\base\Timer.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -128,9 +122,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\base\AsyncTask.h">
       <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\utils\FileUtil.h">
-      <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
       <Filter>2d</Filter>
@@ -297,6 +288,12 @@
     <ClInclude Include="..\..\src\kiwano\base\win32\helper.h">
       <Filter>base\win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\FileSystem.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -338,14 +335,8 @@
     <ClCompile Include="..\..\src\kiwano\platform\modules.cpp">
       <Filter>platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\utils\Path.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\Input.cpp">
       <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\utils\DataUtil.cpp">
-      <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\Timer.cpp">
       <Filter>base</Filter>
@@ -355,9 +346,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\AsyncTask.cpp">
       <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\utils\FileUtil.cpp">
-      <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp">
       <Filter>2d</Filter>
@@ -472,6 +460,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\Component.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\FileSystem.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

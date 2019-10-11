@@ -25,19 +25,19 @@
 namespace kiwano
 {
 	//
-	// 数据存取工具 (.ini 格式)
-	// 一个 DataUtil 对象表示一个数据储存实体, 用于存取简单格式 (bool | int | float | double | String) 的数据
+	// 本地数据存取工具
+	// LocalStorage 用于在本地存取数据, 支持的数据类型包括 (bool | int | float | double | String)
 	// 数据都采用 key-value (键-值) 的方式存取
 	// 例如, 保存一份游戏最高分, 以便下次进行游戏时读取:
-	// DataUtil data;                          // 创建数据对象
-	// data.SaveInt(L"best score", 20);        // 保存最高分 20
-	// int best = data.GetInt(L"best score");  // 读取之前储存的最高分
+	// LocalStorage data;                      // 创建数据对象
+	// data.SaveInt(L"best-score", 20);        // 保存最高分 20
+	// int best = data.GetInt(L"best-score");  // 读取之前储存的最高分
 	//
 
-	class KGE_API DataUtil
+	class KGE_API LocalStorage
 	{
 	public:
-		DataUtil(
+		LocalStorage(
 			String const& file_path = L"./data.ini",	// 文件路径
 			String const& field = L"defalut"			// 字段名
 		);

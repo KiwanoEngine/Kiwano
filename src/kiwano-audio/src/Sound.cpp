@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/base/Logger.h>
-#include <kiwano/utils/FileUtil.h>
+#include <kiwano/utils/FileSystem.h>
 #include "Sound.h"
 #include "AudioEngine.h"
 
@@ -54,7 +54,7 @@ namespace kiwano
 
 		bool Sound::Load(String const& file_path)
 		{
-			if (!FileUtil::ExistsFile(file_path))
+			if (!FileSystem::GetInstance()->IsFileExists(file_path))
 			{
 				KGE_WARNING_LOG(L"Media file '%s' not found", file_path.c_str());
 				return false;
@@ -65,7 +65,9 @@ namespace kiwano
 				Close();
 			}
 
-			HRESULT hr = transcoder_.LoadMediaFile(file_path);
+			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+
+			HRESULT hr = transcoder_.LoadMediaFile(full_path);
 
 			if (FAILED(hr))
 			{

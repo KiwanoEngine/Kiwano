@@ -23,7 +23,7 @@
 #include "../base/Resource.h"
 #include "../2d/include-forwards.h"
 #include "../renderer/GifImage.h"
-#include <tinyxml2/tinyxml2.h>
+#include <3rd-party/tinyxml2/tinyxml2.h>
 
 namespace kiwano
 {

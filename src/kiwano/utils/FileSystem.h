@@ -19,28 +19,55 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
 #include "../base/Resource.h"
 
 namespace kiwano
 {
     // 文件
-	class KGE_API FileUtil
+	class KGE_API FileSystem
+		: public Singleton<FileSystem>
 	{
-	public:
-		// 删除文件
-		static bool Delete(String const& file_path);
+		KGE_DECLARE_SINGLETON(FileSystem);
 
-		// 释放二进制资源到临时文件目录
-		static bool Extract(
-			Resource const& res,			/* 资源 */
-			String const& dest_file_name	/* 目标文件名 */
-		);
+	public:
+		// 添加文件搜索路径
+		void AddSearchPath(String const& path);
+
+		// 设置文件搜索路径
+		void SetSearchPaths(Vector<String> const& paths);
+
+		// 获取文件的完整路径
+		String GetFullPathForFile(String const& file) const;
+
+		// 添加文件路径查找字典规则
+		void AddFileLookupRule(String const& key, String const& file_path);
+
+		// 设置文件路径查找字典
+		void SetFileLookupDictionary(UnorderedMap<String, String> const& dict);
 
 		// 文件是否存在
-		static bool ExistsFile(String const& file_path);
+		bool IsFileExists(String const& file_path) const;
 
-		// 文件夹是否存在
-		static bool ExistsDirectory(String const& dir_path);
+		// 判断路径是否是绝对路径
+		bool IsAbsolutePath(String const& path) const;
+
+		// 删除文件
+		bool RemoveFile(String const& file_path) const;
+
+		// 释放二进制资源到临时文件目录
+		bool ExtractResourceToFile(
+			Resource const& res,			/* 资源 */
+			String const& dest_file_name	/* 目标文件名 */
+		) const;
+
+	private:
+		FileSystem();
+
+		~FileSystem();
+
+	private:
+		Vector<String> search_paths_;
+		UnorderedMap<String, String> file_lookup_dict_;
+		mutable UnorderedMap<String, String> file_lookup_cache_;
 	};
 }

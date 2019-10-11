@@ -21,5 +21,5 @@
 #pragma once
 
 #include "src/HttpRequest.h"
-#include "src/HttpResponse.h"
+#include "src/HttpResponse.hpp"
 #include "src/HttpClient.h"
