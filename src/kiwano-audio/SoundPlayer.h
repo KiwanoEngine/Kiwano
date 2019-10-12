@@ -39,39 +39,39 @@ namespace kiwano
 			~SoundPlayer();
 
 			// 加载本地音频文件, 返回该资源的标识符
-			std::size_t Load(
+			size_t Load(
 				String const& file_path
 			);
 
 			// 加载音乐资源, 返回该资源的标识符
-			std::size_t Load(
+			size_t Load(
 				Resource const& res			/* 音乐资源 */
 			);
 
 			// 播放音乐
 			void Play(
-				std::size_t id,				/* 标识符 */
+				size_t id,				/* 标识符 */
 				int loop_count = 0			/* 播放循环次数 (-1 为循环播放) */
 			);
 
 			// 暂停音乐
 			void Pause(
-				std::size_t id				/* 标识符 */
+				size_t id				/* 标识符 */
 			);
 
 			// 继续播放音乐
 			void Resume(
-				std::size_t id				/* 标识符 */
+				size_t id				/* 标识符 */
 			);
 
 			// 停止音乐
 			void Stop(
-				std::size_t id				/* 标识符 */
+				size_t id				/* 标识符 */
 			);
 
 			// 获取音乐播放状态
 			bool IsPlaying(
-				std::size_t id				/* 标识符 */
+				size_t id				/* 标识符 */
 			);
 
 			// 获取音量
@@ -97,7 +97,7 @@ namespace kiwano
 		protected:
 			float volume_;
 
-			using SoundMap = Map<std::size_t, SoundPtr>;
+			using SoundMap = Map<size_t, SoundPtr>;
 			SoundMap sound_cache_;
 		};
 	}

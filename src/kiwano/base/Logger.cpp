@@ -298,7 +298,7 @@ namespace kiwano
 
 	std::wostream& Logger::OutPrefix(std::wostream& out)
 	{
-		std::time_t unix = std::time(nullptr);
+		time_t unix = std::time(nullptr);
 		std::tm tmbuf;
 		localtime_s(&tmbuf, &unix);
 		out << std::put_time(&tmbuf, L"[kiwano] %H:%M:%S");

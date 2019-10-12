@@ -64,7 +64,7 @@ namespace kiwano
 		bool				IsCascadeOpacityEnabled() const	{ return cascade_opacity_; }
 
 		// 获取名称的 Hash 值
-		std::size_t			GetHashName() const				{ return hash_name_; }
+		size_t				GetHashName() const				{ return hash_name_; }
 
 		// 获取 Z 轴顺序
 		int					GetZOrder() const				{ return z_order_; }
@@ -413,7 +413,7 @@ namespace kiwano
 		float			displayed_opacity_;
 		Actor*			parent_;
 		Stage*			stage_;
-		std::size_t		hash_name_;
+		size_t			hash_name_;
 		Point			anchor_;
 		Size			size_;
 		Children		children_;

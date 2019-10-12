@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	EventListener::EventListener(std::uint32_t type, EventCallback const & callback, String const & name)
+	EventListener::EventListener(EventType type, Callback const & callback, String const & name)
 		: type_(type)
 		, callback_(callback)
 		, running_(true)

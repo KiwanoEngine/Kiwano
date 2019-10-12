@@ -44,11 +44,11 @@ namespace kiwano
 
 		String DumpObject();
 
-		inline String			GetName() const						{ if (name_) return *name_; return String(); }
+		inline String	GetName() const						{ if (name_) return *name_; return String(); }
 
-		inline bool				IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
+		inline bool		IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
 
-		inline std::uint32_t	GetObjectID() const					{ return id_; }
+		inline uint32_t	GetObjectID() const					{ return id_; }
 
 	public:
 		static bool IsTracingLeaks();
@@ -67,11 +67,11 @@ namespace kiwano
 		static void __RemoveObjectFromTracingList(ObjectBase*);
 
 	private:
-		bool tracing_leak_;
-		void* user_data_;
-		String* name_;
+		bool	tracing_leak_;
+		void*	user_data_;
+		String*	name_;
 
-		const std::uint32_t id_;
-		static std::uint32_t last_object_id;
+		const uint32_t id_;
+		static uint32_t last_object_id;
 	};
 }

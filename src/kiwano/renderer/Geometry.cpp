@@ -124,7 +124,7 @@ namespace kiwano
 			sink.Init();
 			sink.OpenSink();
 
-			for (std::size_t i = 0; i < geos.size() - 1; i++)
+			for (size_t i = 0; i < geos.size() - 1; i++)
 			{
 				CombineMode mode = (modes.size() == 1) ? modes[0] : modes[i];
 				const Matrix3x2& matrix = (matrixs.size() == 1) ? matrixs[0] : matrixs[i];
@@ -252,12 +252,12 @@ namespace kiwano
 		
 		sink_->AddLines(
 			reinterpret_cast<const D2D_POINT_2F*>(&points[0]),
-			static_cast<std::uint32_t>(points.size())
+			static_cast<uint32_t>(points.size())
 		);
 		return (*this);
 	}
 
-	GeometrySink& kiwano::GeometrySink::AddLines(const Point* points, std::size_t count)
+	GeometrySink& kiwano::GeometrySink::AddLines(const Point* points, size_t count)
 	{
 		if (!sink_) BeginPath();
 

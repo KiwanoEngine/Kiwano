@@ -51,7 +51,7 @@ namespace kiwano
 		return listener.get();
 	}
 
-	EventListener* EventDispatcher::AddListener(std::uint32_t type, EventCallback callback, String const& name)
+	EventListener* EventDispatcher::AddListener(EventType type, EventListener::Callback callback, String const& name)
 	{
 		EventListenerPtr listener = new EventListener(type, callback, name);
 		return AddListener(listener);
@@ -93,7 +93,7 @@ namespace kiwano
 		}
 	}
 
-	void EventDispatcher::StartListeners(std::uint32_t type)
+	void EventDispatcher::StartListeners(uint32_t type)
 	{
 		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
@@ -104,7 +104,7 @@ namespace kiwano
 		}
 	}
 
-	void EventDispatcher::StopListeners(std::uint32_t type)
+	void EventDispatcher::StopListeners(uint32_t type)
 	{
 		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
@@ -115,7 +115,7 @@ namespace kiwano
 		}
 	}
 
-	void EventDispatcher::RemoveListeners(std::uint32_t type)
+	void EventDispatcher::RemoveListeners(uint32_t type)
 	{
 		EventListenerPtr next;
 		for (auto listener = listeners_.first_item(); listener; listener = next)

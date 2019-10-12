@@ -76,7 +76,7 @@ namespace kiwano
 		{
 			const auto& frames = frame_seq_->GetFrames();
 			auto size = frames.size();
-			auto index = std::min(static_cast<std::size_t>(math::Floor(size * percent)), size - 1);
+			auto index = std::min(static_cast<size_t>(math::Floor(size * percent)), size - 1);
 
 			sprite_target->SetFrame(frames[index]);
 		}

@@ -202,8 +202,8 @@ namespace kiwano
 		{
 		case WM_SIZE:
 		{
-			std::uint32_t width = LOWORD(lparam);
-			std::uint32_t height = HIWORD(lparam);
+			uint32_t width = LOWORD(lparam);
+			uint32_t height = HIWORD(lparam);
 
 			ResizeTarget(width, height);
 			break;
@@ -415,7 +415,7 @@ namespace kiwano
 		}
 	}
 
-	void Renderer::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, std::size_t frame_index)
+	void Renderer::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -538,7 +538,7 @@ namespace kiwano
 
 						if (SUCCEEDED(hr))
 						{
-							std::uint32_t udelay = 0;
+							uint32_t udelay = 0;
 							hr = UIntMult(prop_val.uiVal, 10, &udelay);
 							if (SUCCEEDED(hr))
 							{
@@ -609,7 +609,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			LPVOID collection_key = nullptr;
-			std::uint32_t collection_key_size = 0;
+			uint32_t collection_key_size = 0;
 
 			hr = font_collection_loader_->AddFilePaths(full_paths, &collection_key, &collection_key_size);
 
@@ -647,7 +647,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			LPVOID collection_key = nullptr;
-			std::uint32_t collection_key_size = 0;
+			uint32_t collection_key_size = 0;
 
 			hr = res_font_collection_loader_->AddResources(res_arr, &collection_key, &collection_key_size);
 
@@ -997,7 +997,7 @@ namespace kiwano
 		clear_color_ = color;
 	}
 
-	void Renderer::ResizeTarget(std::uint32_t width, std::uint32_t height)
+	void Renderer::ResizeTarget(uint32_t width, uint32_t height)
 	{
 		HRESULT hr = S_OK;
 		if (!d3d_res_)

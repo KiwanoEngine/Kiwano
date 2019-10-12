@@ -198,7 +198,7 @@ namespace kiwano
 		return false;
 	}
 
-	std::size_t ResourceCache::AddFrameSequence(String const& id, Vector<String> const& files)
+	size_t ResourceCache::AddFrameSequence(String const& id, Vector<String> const& files)
 	{
 		if (files.empty())
 			return 0;
@@ -226,7 +226,7 @@ namespace kiwano
 		return 0;
 	}
 
-	std::size_t ResourceCache::AddFrameSequence(String const & id, String const& file_path, int cols, int rows, float padding_x, float padding_y)
+	size_t ResourceCache::AddFrameSequence(String const & id, String const& file_path, int cols, int rows, float padding_x, float padding_y)
 	{
 		if (cols <= 0 || rows <= 0)
 			return 0;
@@ -264,7 +264,7 @@ namespace kiwano
 		return AddFrameSequence(id, fs);
 	}
 
-	std::size_t ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
+	size_t ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
 	{
 		if (frames)
 		{

@@ -35,8 +35,8 @@ namespace kiwano
 
 		// Ìí¼Ó¼àÌıÆ÷
 		EventListener* AddListener(
-			std::uint32_t type,
-			EventCallback callback,
+			EventType type,
+			EventListener::Callback callback,
 			String const& name = L""
 		);
 
@@ -57,17 +57,17 @@ namespace kiwano
 
 		// Æô¶¯¼àÌıÆ÷
 		void StartListeners(
-			std::uint32_t type
+			uint32_t type
 		);
 
 		// Í£Ö¹¼àÌıÆ÷
 		void StopListeners(
-			std::uint32_t type
+			uint32_t type
 		);
 
 		// ÒÆ³ı¼àÌıÆ÷
 		void RemoveListeners(
-			std::uint32_t type
+			uint32_t type
 		);
 
 		virtual void Dispatch(Event& evt);

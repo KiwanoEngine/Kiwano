@@ -112,7 +112,7 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetFontWeight(std::uint32_t weight)
+	void Text::SetFontWeight(uint32_t weight)
 	{
 		if (font_.weight != weight)
 		{

@@ -43,7 +43,7 @@ namespace kiwano
 		Queue<FunctionToPerform> functions_to_perform_;
 	}
 
-	Config::Config(String const& title, std::uint32_t width, std::uint32_t height, std::uint32_t icon)
+	Config::Config(String const& title, uint32_t width, uint32_t height, uint32_t icon)
 		: debug(false)
 	{
 		window.title = title;

@@ -219,7 +219,7 @@ public:
 	{
 	}
 
-	function(::std::nullptr_t)
+	function(std::nullptr_t)
 		: callable_(nullptr)
 	{
 	}

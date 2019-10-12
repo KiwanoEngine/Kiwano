@@ -104,9 +104,9 @@ namespace kiwano
 
 	protected:
 		bool				animating_;
-		int				total_loop_count_;
-		int				loop_count_;
-		std::size_t			next_index_;
+		int					total_loop_count_;
+		int					loop_count_;
+		size_t				next_index_;
 		Duration			frame_elapsed_;
 		LoopDoneCallback	loop_cb_;
 		DoneCallback		done_cb_;

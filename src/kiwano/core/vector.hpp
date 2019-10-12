@@ -51,7 +51,7 @@ class vector
 {
 public:
 	using value_type				= _Ty;
-	using size_type					= std::size_t;
+	using size_type					= size_t;
 	using iterator					= value_type * ;
 	using const_iterator			= const value_type*;
 	using reference					= value_type & ;
@@ -217,7 +217,7 @@ namespace __vector_details
 	struct vector_memory_manager<_Ty, _Alloc, false>
 	{
 		using value_type		= _Ty;
-		using size_type			= std::size_t;
+		using size_type			= size_t;
 		using allocator_type	= typename _Alloc;
 
 		static void copy_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; ::memcpy(dest, src, size_type(count) * sizeof(value_type)); }
@@ -246,7 +246,7 @@ namespace __vector_details
 	struct vector_memory_manager<_Ty, _Alloc, true>
 	{
 		using value_type		= _Ty;
-		using size_type			= std::size_t;
+		using size_type			= size_t;
 		using allocator_type	= typename _Alloc;
 
 		static void copy_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; while (count--) (*dest++) = (*src++); }

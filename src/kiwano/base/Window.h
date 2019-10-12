@@ -41,18 +41,18 @@ namespace kiwano
 	// 窗口设置
 	struct WindowConfig
 	{
-		String			title;				// 标题
-		std::uint32_t	width;				// 宽度
-		std::uint32_t	height;				// 高度
-		std::uint32_t	icon;				// 图标资源 ID
-		bool			resizable;			// 窗口大小可拉伸
-		bool			fullscreen;			// 全屏模式
+		String		title;				// 标题
+		uint32_t	width;				// 宽度
+		uint32_t	height;				// 高度
+		uint32_t	icon;				// 图标资源 ID
+		bool		resizable;			// 窗口大小可拉伸
+		bool		fullscreen;			// 全屏模式
 
 		WindowConfig(
 			String const&	title = L"Kiwano Game",
-			std::uint32_t	width = 640,
-			std::uint32_t	height = 480,
-			std::uint32_t	icon = 0,
+			uint32_t		width = 640,
+			uint32_t		height = 480,
+			uint32_t		icon = 0,
 			bool			resizable = false,
 			bool			fullscreen = false
 		);
@@ -82,7 +82,7 @@ namespace kiwano
 		void SetTitle(String const& title);
 
 		// 设置窗口图标
-		void SetIcon(std::uint32_t icon_resource);
+		void SetIcon(uint32_t icon_resource);
 
 		// 重设窗口大小
 		void Resize(int width, int height);
@@ -121,7 +121,7 @@ namespace kiwano
 		HWND		handle_;
 		int			width_;
 		int			height_;
-		WCHAR*		device_name_;
+		wchar_t*	device_name_;
 		CursorType	mouse_cursor_;
 	};
 }

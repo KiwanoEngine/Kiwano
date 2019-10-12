@@ -24,13 +24,13 @@ namespace kiwano
 {
 	namespace
 	{
-		const std::uint32_t RED_SHIFT = 16;
-		const std::uint32_t GREEN_SHIFT = 8;
-		const std::uint32_t BLUE_SHIFT = 0;
+		const uint32_t RED_SHIFT = 16;
+		const uint32_t GREEN_SHIFT = 8;
+		const uint32_t BLUE_SHIFT = 0;
 
-		const std::uint32_t RED_MASK = 0xff << RED_SHIFT;
-		const std::uint32_t GREEN_MASK = 0xff << GREEN_SHIFT;
-		const std::uint32_t BLUE_MASK = 0xff << BLUE_SHIFT;
+		const uint32_t RED_MASK = 0xff << RED_SHIFT;
+		const uint32_t GREEN_MASK = 0xff << GREEN_SHIFT;
+		const uint32_t BLUE_MASK = 0xff << BLUE_SHIFT;
 	}
 
 	Color::Color()
@@ -57,7 +57,7 @@ namespace kiwano
 	{
 	}
 
-	Color::Color(std::uint32_t rgb)
+	Color::Color(uint32_t rgb)
 		: r(((rgb & RED_MASK) >> RED_SHIFT) / 255.f)
 		, g(((rgb & GREEN_MASK) >> GREEN_SHIFT) / 255.f)
 		, b(((rgb & BLUE_MASK) >> BLUE_SHIFT) / 255.f)
@@ -65,7 +65,7 @@ namespace kiwano
 	{
 	}
 
-	Color::Color(std::uint32_t rgb, float alpha)
+	Color::Color(uint32_t rgb, float alpha)
 		: r(((rgb & RED_MASK) >> RED_SHIFT) / 255.f)
 		, g(((rgb & GREEN_MASK) >> GREEN_SHIFT) / 255.f)
 		, b(((rgb & BLUE_MASK) >> BLUE_SHIFT) / 255.f)

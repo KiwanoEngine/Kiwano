@@ -96,7 +96,7 @@ namespace kiwano
 		void CreateGifImageFrame(
 			GifImage::Frame& frame,
 			GifImage const& gif,
-			std::size_t frame_index
+			size_t frame_index
 		);
 
 		void CreateFontCollection(
@@ -206,7 +206,7 @@ namespace kiwano
 
 		HRESULT HandleDeviceLost();
 
-		void ResizeTarget(std::uint32_t width, std::uint32_t height);
+		void ResizeTarget(uint32_t width, uint32_t height);
 
 	private:
 		bool	vsync_;

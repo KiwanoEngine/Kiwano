@@ -145,7 +145,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	std::uint32_t TextLayout::GetLineCount()
+	uint32_t TextLayout::GetLineCount()
 	{
 		if (text_layout_)
 		{

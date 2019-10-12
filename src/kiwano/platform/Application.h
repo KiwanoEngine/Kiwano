@@ -36,9 +36,9 @@ namespace kiwano
 
 		Config(
 			String const& title		= L"Kiwano Game",
-			std::uint32_t width		= 640,
-			std::uint32_t height	= 480,
-			std::uint32_t icon		= 0
+			uint32_t width		= 640,
+			uint32_t height	= 480,
+			uint32_t icon		= 0
 		);
 
 		Config(

@@ -95,8 +95,8 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				std::uint32_t width = 0;
-				std::uint32_t height = 0;
+				uint32_t width = 0;
+				uint32_t height = 0;
 
 				PROPVARIANT prop_val;
 				::PropVariantInit(&prop_val);
@@ -154,11 +154,11 @@ namespace kiwano
 								if (pixel_asp_ratio > 1.f)
 								{
 									width_in_pixels_ = width;
-									height_in_pixels_ = static_cast<std::uint32_t>(height / pixel_asp_ratio);
+									height_in_pixels_ = static_cast<uint32_t>(height / pixel_asp_ratio);
 								}
 								else
 								{
-									width_in_pixels_ = static_cast<std::uint32_t>(width * pixel_asp_ratio);
+									width_in_pixels_ = static_cast<uint32_t>(width * pixel_asp_ratio);
 									height_in_pixels_ = height;
 								}
 							}

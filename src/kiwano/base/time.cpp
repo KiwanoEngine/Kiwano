@@ -359,8 +359,8 @@ namespace kiwano
 		Duration Duration::Parse(const String& str)
 		{
 			bool		negative	= false;
-			std::size_t	len			= str.length();
-			std::size_t	pos			= 0;
+			size_t	len			= str.length();
+			size_t	pos			= 0;
 			Duration	ret;
 
 			if (!std::regex_match(str.c_str(), duration_regex))
@@ -381,7 +381,7 @@ namespace kiwano
 			while (pos < len)
 			{
 				// ÊýÖµ
-				std::size_t i = pos;
+				size_t i = pos;
 				for (; i < len; ++i)
 				{
 					wchar_t ch = str[i];

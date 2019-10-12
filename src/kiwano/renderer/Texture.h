@@ -77,13 +77,13 @@ namespace kiwano
 		Size GetSize() const;
 
 		// 获取像素宽度
-		std::uint32_t GetWidthInPixels() const;
+		uint32_t GetWidthInPixels() const;
 
 		// 获取像素高度
-		std::uint32_t GetHeightInPixels() const;
+		uint32_t GetHeightInPixels() const;
 
 		// 获取像素大小
-		math::Vec2T<std::uint32_t> GetSizeInPixels() const;
+		math::Vec2T<uint32_t> GetSizeInPixels() const;
 
 		// 获取像素插值方式
 		InterpolationMode GetBitmapInterpolationMode() const;

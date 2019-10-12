@@ -103,7 +103,7 @@ namespace kiwano
 
 			stream = kiwano::modules::Shlwapi::Get().SHCreateMemStream(
 				static_cast<const BYTE*>(data.buffer),
-				static_cast<std::uint32_t>(data.size)
+				static_cast<uint32_t>(data.size)
 			);
 
 			if (stream == nullptr)
@@ -185,7 +185,7 @@ namespace kiwano
 			// 获取 WAVEFORMAT 数据
 			if (SUCCEEDED(hr))
 			{
-				std::uint32_t size = 0;
+				uint32_t size = 0;
 				hr = modules::MediaFoundation::Get().MFCreateWaveFormatExFromMFMediaType(
 					uncompressed_type.get(),
 					&wave_format_,

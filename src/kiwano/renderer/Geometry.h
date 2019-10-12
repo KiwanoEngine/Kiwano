@@ -157,7 +157,7 @@ namespace kiwano
 		// 添加多条线段
 		GeometrySink& AddLines(
 			const Point* points,
-			std::size_t count
+			size_t count
 		);
 
 		// 添加一条三次方贝塞尔曲线

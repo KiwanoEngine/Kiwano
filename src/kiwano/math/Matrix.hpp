@@ -91,12 +91,12 @@ namespace kiwano
 
 #pragma warning (pop)
 
-			inline value_type operator [](std::uint32_t index) const
+			inline value_type operator [](uint32_t index) const
 			{
 				return m[index];
 			}
 
-			inline value_type& operator [](std::uint32_t index)
+			inline value_type& operator [](uint32_t index)
 			{
 				return m[index];
 			}
@@ -291,7 +291,7 @@ namespace kiwano
 				, rhs(rhs)
 			{}
 
-			inline _Ty operator [](std::uint32_t index) const
+			inline _Ty operator [](uint32_t index) const
 			{
 				switch (index)
 				{

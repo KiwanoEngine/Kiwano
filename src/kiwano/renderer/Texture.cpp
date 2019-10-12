@@ -98,7 +98,7 @@ namespace kiwano
 		return Size{};
 	}
 
-	std::uint32_t Texture::GetWidthInPixels() const
+	uint32_t Texture::GetWidthInPixels() const
 	{
 		if (bitmap_)
 		{
@@ -107,7 +107,7 @@ namespace kiwano
 		return 0;
 	}
 
-	std::uint32_t Texture::GetHeightInPixels() const
+	uint32_t Texture::GetHeightInPixels() const
 	{
 		if (bitmap_)
 		{
@@ -116,14 +116,14 @@ namespace kiwano
 		return 0;
 	}
 
-	math::Vec2T<std::uint32_t> Texture::GetSizeInPixels() const
+	math::Vec2T<uint32_t> Texture::GetSizeInPixels() const
 	{
 		if (bitmap_)
 		{
 			auto bitmap_size = bitmap_->GetPixelSize();
-			return math::Vec2T<std::uint32_t>{ bitmap_size.width, bitmap_size.height };
+			return math::Vec2T<uint32_t>{ bitmap_size.width, bitmap_size.height };
 		}
-		return math::Vec2T<std::uint32_t>{};
+		return math::Vec2T<uint32_t>{};
 	}
 
 	InterpolationMode Texture::GetBitmapInterpolationMode() const
@@ -146,13 +146,13 @@ namespace kiwano
 		if (IsValid() && copy_from.IsValid())
 		{
 			HRESULT hr = bitmap_->CopyFromBitmap(
-				&D2D1::Point2U(std::uint32_t(dest_point.x), std::uint32_t(dest_point.y)),
+				&D2D1::Point2U(uint32_t(dest_point.x), uint32_t(dest_point.y)),
 				copy_from.GetBitmap().get(),
 				&D2D1::RectU(
-					std::uint32_t(src_rect.GetLeft()),
-					std::uint32_t(src_rect.GetTop()),
-					std::uint32_t(src_rect.GetRight()),
-					std::uint32_t(src_rect.GetBottom()))
+					uint32_t(src_rect.GetLeft()),
+					uint32_t(src_rect.GetTop()),
+					uint32_t(src_rect.GetRight()),
+					uint32_t(src_rect.GetBottom()))
 			);
 
 			ThrowIfFailed(hr);

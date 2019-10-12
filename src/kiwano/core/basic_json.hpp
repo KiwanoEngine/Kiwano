@@ -355,7 +355,7 @@ namespace __json_detail
 
 	struct primitive_iterator
 	{
-		using difference_type = std::ptrdiff_t;
+		using difference_type = ptrdiff_t;
 
 		inline primitive_iterator(difference_type it = 0)						: it_(it) {}
 
@@ -403,7 +403,7 @@ namespace __json_detail
 		using object_type	= typename _BasicJsonTy::object_type;
 
 		using value_type		= _BasicJsonTy;
-		using difference_type	= std::ptrdiff_t;
+		using difference_type	= ptrdiff_t;
 		using iterator_category = std::bidirectional_iterator_tag;
 		using pointer			= value_type*;
 		using reference			= value_type&;
@@ -731,11 +731,11 @@ namespace __json_detail
 		using char_traits = std::char_traits<char_type>;
 
 		virtual void write(const _CharTy ch) = 0;
-		virtual void write(const _CharTy* str, std::uint32_t size) = 0;
+		virtual void write(const _CharTy* str, uint32_t size) = 0;
 		virtual void write(const _CharTy* str)
 		{
 			const auto size = char_traits::length(str);
-			write(str, static_cast<std::uint32_t>(size));
+			write(str, static_cast<uint32_t>(size));
 		}
 	};
 
@@ -754,7 +754,7 @@ namespace __json_detail
 			str_.push_back(ch);
 		}
 
-		virtual void write(const char_type* str, std::uint32_t size) override
+		virtual void write(const char_type* str, uint32_t size) override
 		{
 			str_.append(str, static_cast<size_type>(size));
 		}
@@ -778,7 +778,7 @@ namespace __json_detail
 			stream_.put(ch);
 		}
 
-		virtual void write(const char_type* str, std::uint32_t size) override
+		virtual void write(const char_type* str, uint32_t size) override
 		{
 			stream_.write(str, static_cast<size_type>(size));
 		}
@@ -815,8 +815,8 @@ namespace __json_detail
 		void dump(
 			const _BasicJsonTy& json,
 			const bool pretty_print,
-			const std::uint32_t indent_step,
-			const std::uint32_t current_indent = 0)
+			const uint32_t indent_step,
+			const uint32_t current_indent = 0)
 		{
 			switch (json.type())
 			{
@@ -842,7 +842,7 @@ namespace __json_detail
 
 					auto iter = object.cbegin();
 					const auto size = object.size();
-					for (std::uint32_t i = 0; i < size; ++i, ++iter)
+					for (uint32_t i = 0; i < size; ++i, ++iter)
 					{
 						out->write(indent_string.c_str(), new_indent);
 						out->write('\"');
@@ -865,7 +865,7 @@ namespace __json_detail
 
 					auto iter = object.cbegin();
 					const auto size = object.size();
-					for (std::uint32_t i = 0; i < size; ++i, ++iter)
+					for (uint32_t i = 0; i < size; ++i, ++iter)
 					{
 						out->write('\"');
 						out->write(iter->first.c_str());
@@ -905,7 +905,7 @@ namespace __json_detail
 
 					auto iter = vector.cbegin();
 					const auto size = vector.size();
-					for (std::uint32_t i = 0; i < size; ++i, ++iter)
+					for (uint32_t i = 0; i < size; ++i, ++iter)
 					{
 						out->write(indent_string.c_str(), new_indent);
 						dump(*iter, true, indent_step, new_indent);
@@ -925,7 +925,7 @@ namespace __json_detail
 
 					auto iter = vector.cbegin();
 					const auto size = vector.size();
-					for (std::uint32_t i = 0; i < size; ++i, ++iter)
+					for (uint32_t i = 0; i < size; ++i, ++iter)
 					{
 						dump(*iter, false, indent_step, current_indent);
 						// not last element
@@ -1015,7 +1015,7 @@ namespace __json_detail
 			if (len)
 			{
 				number_buffer[0] = '\0';
-				::swprintf_s(&number_buffer[0], std::size_t(len) + 1, L"%.*g", digits, val);
+				::swprintf_s(&number_buffer[0], size_t(len) + 1, L"%.*g", digits, val);
 			}
 			else
 			{
@@ -1204,7 +1204,7 @@ namespace __json_detail
 
 	private:
 		const char_type* str;
-		std::uint32_t index;
+		uint32_t index;
 	};
 } // end of namespace __json_detail
 
@@ -1338,7 +1338,7 @@ namespace __json_detail
 
 		token_type scan_literal(const char_type* text, token_type result)
 		{
-			for (std::uint32_t i = 0; text[i] != '\0'; ++i)
+			for (uint32_t i = 0; text[i] != '\0'; ++i)
 			{
 				if (text[i] != char_traits::to_char_type(current))
 				{
@@ -1613,10 +1613,10 @@ namespace __json_detail
 					read_next();
 				}
 
-				std::uint32_t exponent = static_cast<std::uint32_t>(current - '0');
+				uint32_t exponent = static_cast<uint32_t>(current - '0');
 				while (std::isdigit(read_next()))
 				{
-					exponent = (exponent * 10) + static_cast<std::uint32_t>(current - '0');
+					exponent = (exponent * 10) + static_cast<uint32_t>(current - '0');
 				}
 
 				float_type power = 1;
@@ -1858,8 +1858,8 @@ class basic_json
 public:
 	template <typename _Ty>
 	using allocator_type			= _Allocator<_Ty>;
-	using size_type					= std::size_t;
-	using difference_type			= std::ptrdiff_t;
+	using size_type					= size_t;
+	using difference_type			= ptrdiff_t;
 	using string_type				= _StringTy;
 	using char_type					= typename _StringTy::value_type;
 	using integer_type				= _IntegerTy;
@@ -2544,7 +2544,7 @@ public:
 		out.width(0);
 
 		__json_detail::stream_output_adapter<char_type> adapter(out);
-		__json_detail::json_serializer<basic_json>(&adapter, out.fill()).dump(json, pretty_print, static_cast<std::uint32_t>(indentation));
+		__json_detail::json_serializer<basic_json>(&adapter, out.fill()).dump(json, pretty_print, static_cast<uint32_t>(indentation));
 		return out;
 	}
 
@@ -2565,7 +2565,7 @@ public:
 	{
 		if (indent >= 0)
 		{
-			__json_detail::json_serializer<basic_json>(adapter, indent_char).dump(*this, true, static_cast<std::uint32_t>(indent));
+			__json_detail::json_serializer<basic_json>(adapter, indent_char).dump(*this, true, static_cast<uint32_t>(indent));
 		}
 		else
 		{

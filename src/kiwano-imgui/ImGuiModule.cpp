@@ -119,7 +119,7 @@ namespace kiwano
 			Render();
 		}
 
-		void ImGuiModule::HandleMessage(HWND hwnd, std::uint32_t msg, WPARAM wparam, LPARAM lparam)
+		void ImGuiModule::HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
 		{
 			if (ImGui::GetCurrentContext() == NULL)
 				return;
@@ -185,7 +185,7 @@ namespace kiwano
 			case WM_CHAR:
 			{
 				// You can also use ToAscii()+GetKeyboardState() to retrieve characters.
-				io.AddInputCharacter((std::uint32_t)wparam);
+				io.AddInputCharacter((uint32_t)wparam);
 				break;
 			}
 			case WM_SETCURSOR:
@@ -198,7 +198,7 @@ namespace kiwano
 			}
 			case WM_DEVICECHANGE:
 			{
-				if ((std::uint32_t)wparam == DBT_DEVNODES_CHANGED)
+				if ((uint32_t)wparam == DBT_DEVNODES_CHANGED)
 					want_update_has_gamepad_ = true;
 				break;
 			}

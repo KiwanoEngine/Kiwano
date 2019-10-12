@@ -34,10 +34,10 @@ namespace
 	using namespace kiwano;
 	using namespace kiwano::network;
 
-	std::uint32_t write_data(void* buffer, std::uint32_t size, std::uint32_t nmemb, void* userp)
+	uint32_t write_data(void* buffer, uint32_t size, uint32_t nmemb, void* userp)
 	{
 		kiwano::string* recv_buffer = (kiwano::string*)userp;
-		std::uint32_t total = size * nmemb;
+		uint32_t total = size * nmemb;
 
 		// add data to the end of recv_buffer
 		// write data maybe called more than once in a single request

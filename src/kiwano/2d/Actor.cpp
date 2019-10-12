@@ -502,7 +502,7 @@ namespace kiwano
 	Vector<ActorPtr> Actor::GetChildren(String const& name) const
 	{
 		Vector<ActorPtr> children;
-		std::size_t hash_code = std::hash<String>{}(name);
+		size_t hash_code = std::hash<String>{}(name);
 
 		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 		{
@@ -516,7 +516,7 @@ namespace kiwano
 
 	ActorPtr Actor::GetChild(String const& name) const
 	{
-		std::size_t hash_code = std::hash<String>{}(name);
+		size_t hash_code = std::hash<String>{}(name);
 
 		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 		{
@@ -568,7 +568,7 @@ namespace kiwano
 			return;
 		}
 
-		std::size_t hash_code = std::hash<String>{}(child_name);
+		size_t hash_code = std::hash<String>{}(child_name);
 
 		Actor* next;
 		for (Actor* child = children_.first_item().get(); child; child = next)

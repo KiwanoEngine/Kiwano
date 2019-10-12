@@ -92,7 +92,7 @@ namespace kiwano
 
 		// 设置字体粗细值（默认值为 FontWeight::Normal）
 		void SetFontWeight(
-			std::uint32_t weight
+			uint32_t weight
 		);
 
 		// 设置文字颜色（默认值为 Color::White）

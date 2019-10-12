@@ -78,7 +78,7 @@ namespace std
 	template<>
 	struct hash<::kiwano::Json>
 	{
-		::std::size_t operator()(const ::kiwano::Json& json) const
+		size_t operator()(const ::kiwano::Json& json) const
 		{
 			return hash<::kiwano::Json::string_type>{}(json.dump());
 		}

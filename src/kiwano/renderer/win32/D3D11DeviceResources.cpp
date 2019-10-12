@@ -207,7 +207,7 @@ namespace kiwano
 
 		// This flag adds support for surfaces with a different color channel ordering
 		// than the API default. It is required for compatibility with Direct2D.
-		std::uint32_t creation_flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+		uint32_t creation_flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
 #if defined(KGE_DEBUG) && defined(KGE_ENABLE_DX_DEBUG)
 		if (DX::SdkLayersAvailable())
@@ -408,8 +408,8 @@ namespace kiwano
 
 			CD3D11_TEXTURE2D_DESC tex_desc(
 				DXGI_FORMAT_D24_UNORM_S8_UINT,
-				static_cast<std::uint32_t>(output_size_.x),
-				static_cast<std::uint32_t>(output_size_.y),
+				static_cast<uint32_t>(output_size_.x),
+				static_cast<uint32_t>(output_size_.y),
 				1, // This depth stencil view has only one texture.
 				1, // Use a single mipmap level.
 				D3D11_BIND_DEPTH_STENCIL

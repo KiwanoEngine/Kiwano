@@ -48,10 +48,10 @@ namespace kiwano
 		virtual ~TextureCache();
 
 	protected:
-		using TextureMap = UnorderedMap<std::size_t, Texture>;
+		using TextureMap = UnorderedMap<size_t, Texture>;
 		TextureMap texture_cache_;
 
-		using GifImageMap = UnorderedMap<std::size_t, GifImage>;
+		using GifImageMap = UnorderedMap<size_t, GifImage>;
 		GifImageMap gif_texture_cache_;
 	};
 }

@@ -33,14 +33,14 @@ namespace kiwano
 	{
 		MONITORINFOEX GetMoniterInfoEx(HWND hwnd);
 
-		void AdjustWindow(std::uint32_t width, std::uint32_t height, DWORD style, std::uint32_t* win_width, std::uint32_t* win_height);
+		void AdjustWindow(uint32_t width, uint32_t height, DWORD style, uint32_t* win_width, uint32_t* win_height);
 
 		void ChangeFullScreenResolution(int width, int height, WCHAR* device_name);
 
 		void RestoreResolution(WCHAR* device_name);
 	}
 
-	WindowConfig::WindowConfig(String const& title, std::uint32_t width, std::uint32_t height, std::uint32_t icon, bool resizable, bool fullscreen)
+	WindowConfig::WindowConfig(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen)
 		: title(title)
 		, width(width)
 		, height(height)
@@ -114,11 +114,11 @@ namespace kiwano
 
 		// Save the device name
 		int len = lstrlenW(monitor_info_ex.szDevice);
-		device_name_ = new WCHAR[len + 1];
+		device_name_ = new wchar_t[len + 1];
 		lstrcpyW(device_name_, monitor_info_ex.szDevice);
 
-		std::uint32_t width = config.width;
-		std::uint32_t height = config.height;
+		uint32_t width = config.width;
+		uint32_t height = config.height;
 		int left = -1;
 		int top = -1;
 
@@ -130,18 +130,18 @@ namespace kiwano
 			top = monitor_info_ex.rcMonitor.top;
 			left = monitor_info_ex.rcMonitor.left;
 
-			if (width > static_cast<std::uint32_t>(monitor_info_ex.rcWork.right - left))
-				width = static_cast<std::uint32_t>(monitor_info_ex.rcWork.right - left);
+			if (width > static_cast<uint32_t>(monitor_info_ex.rcWork.right - left))
+				width = static_cast<uint32_t>(monitor_info_ex.rcWork.right - left);
 
-			if (height > static_cast<std::uint32_t>(monitor_info_ex.rcWork.bottom - top))
-				height = static_cast<std::uint32_t>(monitor_info_ex.rcWork.bottom - top);
+			if (height > static_cast<uint32_t>(monitor_info_ex.rcWork.bottom - top))
+				height = static_cast<uint32_t>(monitor_info_ex.rcWork.bottom - top);
 		}
 		else
 		{
-			std::uint32_t screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
-			std::uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
+			uint32_t screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
+			uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
 
-			std::uint32_t win_width, win_height;
+			uint32_t win_width, win_height;
 			AdjustWindow(
 				width,
 				height,
@@ -242,7 +242,7 @@ namespace kiwano
 		return static_cast<float>(height_);
 	}
 
-	void Window::SetIcon(std::uint32_t icon_resource)
+	void Window::SetIcon(uint32_t icon_resource)
 	{
 		if (handle_)
 		{
@@ -301,10 +301,10 @@ namespace kiwano
 
 				MONITORINFOEX info = GetMoniterInfoEx(handle_);
 
-				std::uint32_t screenw = info.rcWork.right - info.rcWork.left;
-				std::uint32_t screenh = info.rcWork.bottom - info.rcWork.top;
+				uint32_t screenw = info.rcWork.right - info.rcWork.left;
+				uint32_t screenh = info.rcWork.bottom - info.rcWork.top;
 
-				std::uint32_t win_width, win_height;
+				uint32_t win_width, win_height;
 				AdjustWindow(width, height, GetWindowStyle(), &win_width, &win_height);
 
 				int left = screenw > win_width ? ((screenw - win_width) / 2) : 0;
@@ -402,7 +402,7 @@ namespace kiwano
 			return monitor_info;
 		}
 
-		void AdjustWindow(std::uint32_t width, std::uint32_t height, DWORD style, std::uint32_t* win_width, std::uint32_t* win_height)
+		void AdjustWindow(uint32_t width, uint32_t height, DWORD style, uint32_t* win_width, uint32_t* win_height)
 		{
 			RECT rc;
 			::SetRect(&rc, 0, 0, (int)width, (int)height);
@@ -413,8 +413,8 @@ namespace kiwano
 
 			MONITORINFOEX info = GetMoniterInfoEx(NULL);
 
-			std::uint32_t screenw = info.rcWork.right - info.rcWork.left;
-			std::uint32_t screenh = info.rcWork.bottom - info.rcWork.top;
+			uint32_t screenw = info.rcWork.right - info.rcWork.left;
+			uint32_t screenh = info.rcWork.bottom - info.rcWork.top;
 
 			if (*win_width > screenw)
 				*win_width = screenw;

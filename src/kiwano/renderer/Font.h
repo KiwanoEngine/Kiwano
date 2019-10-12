@@ -26,7 +26,7 @@ namespace kiwano
 	// 字体粗细值
 	struct FontWeight
 	{
-		enum Value : std::uint32_t
+		enum Value : uint32_t
 		{
 			Thin		= 100U,
 			ExtraLight	= 200U,
@@ -46,24 +46,24 @@ namespace kiwano
 	public:
 		String			family;		// 字体族
 		float			size;		// 字号
-		std::uint32_t	weight;		// 粗细值
+		uint32_t		weight;		// 粗细值
 		bool			italic;		// 是否斜体
 		FontCollection	collection;	// 字体集
 
 	public:
 		Font(
-			String const& family		= L"",
-			float size				= 18,
-			std::uint32_t weight		= FontWeight::Normal,
-			bool italic					= false
+			String const&	family	= L"",
+			float			size	= 18,
+			uint32_t		weight	= FontWeight::Normal,
+			bool			italic	= false
 		);
 
 		Font(
-			FontCollection collection,
-			String const& family		= L"",
-			float size				= 18,
-			std::uint32_t weight		= FontWeight::Normal,
-			bool italic					= false
+			FontCollection	collection,
+			String const&	family	= L"",
+			float			size	= 18,
+			uint32_t		weight	= FontWeight::Normal,
+			bool			italic	= false
 		);
 	};
 }

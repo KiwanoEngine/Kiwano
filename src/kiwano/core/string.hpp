@@ -95,7 +95,7 @@ public:
 public:
 	using value_type				= _CharTy;
 	using char_type					= value_type;
-	using size_type					= std::size_t;
+	using size_type					= size_t;
 	using reference					= value_type &;
 	using const_reference			= const value_type &;
 	using iterator					= iterator_impl<value_type>;
@@ -1524,7 +1524,7 @@ namespace kiwano
 template <typename _Codecvt, typename _Elem = wchar_t>
 class string_convert
 {
-	enum : std::size_t { BUFFER_INCREASE = 8, BUFFER_MAX = 16 };
+	enum : size_t { BUFFER_INCREASE = 8, BUFFER_MAX = 16 };
 
 public:
 	using byte_string  = ::kiwano::core::basic_string<char>;
@@ -1549,7 +1549,7 @@ public:
 
 	virtual ~string_convert() { }
 
-	std::size_t converted() const noexcept { return conv_num_; }
+	size_t converted() const noexcept { return conv_num_; }
 
 	state_type state() const { return state_; }
 
@@ -1577,7 +1577,7 @@ public:
 		state_ = state_type{};
 
 		wbuf.append(BUFFER_INCREASE, (_Elem) '\0');
-		for (conv_num_ = 0; first != last; conv_num_ = static_cast<std::size_t>(first - first_save))
+		for (conv_num_ = 0; first != last; conv_num_ = static_cast<size_t>(first - first_save))
 		{
 			_Elem* dest = &*wbuf.begin();
 			_Elem* dnext;
@@ -1589,7 +1589,7 @@ public:
 			{
 				if (dest < dnext)
 				{
-					wstr.append(dest, static_cast<std::size_t>(dnext - dest));
+					wstr.append(dest, static_cast<size_t>(dnext - dest));
 				}
 				else if (wbuf.size() < BUFFER_MAX)
 				{
@@ -1645,7 +1645,7 @@ public:
 		state_ = state_type{};
 
 		bbuf.append(BUFFER_INCREASE, '\0');
-		for (conv_num_ = 0; first != last; conv_num_ = static_cast<std::size_t>(first - first_save))
+		for (conv_num_ = 0; first != last; conv_num_ = static_cast<size_t>(first - first_save))
 		{
 			char* dest = &*bbuf.begin();
 			char* dnext;
@@ -1657,7 +1657,7 @@ public:
 			{
 				if (dest < dnext)
 				{
-					bstr.append(dest, (std::size_t)(dnext - dest));
+					bstr.append(dest, (size_t)(dnext - dest));
 				}
 				else if (bbuf.size() < BUFFER_MAX)
 				{
@@ -1693,11 +1693,11 @@ private:
 	const codecvt_type*	cvt_;
 	std::locale			loc_;
 	state_type			state_;
-	std::size_t			conv_num_;
+	size_t			conv_num_;
 };
 
 class chs_codecvt
-	: public std::codecvt_byname<wchar_t, char, std::mbstate_t>
+	: public std::codecvt_byname<wchar_t, char, mbstate_t>
 {
 public:
 	chs_codecvt() : codecvt_byname("chs") {}
@@ -1732,7 +1732,7 @@ namespace std
 	template<>
 	struct hash<::kiwano::core::string>
 	{
-		inline std::size_t operator()(const ::kiwano::core::string& key) const
+		inline size_t operator()(const ::kiwano::core::string& key) const
 		{
 			return key.hash();
 		}
@@ -1741,7 +1741,7 @@ namespace std
 	template<>
 	struct hash<::kiwano::core::wstring>
 	{
-		inline std::size_t operator()(const ::kiwano::core::wstring& key) const
+		inline size_t operator()(const ::kiwano::core::wstring& key) const
 		{
 			return key.hash();
 		}
