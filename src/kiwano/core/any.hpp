@@ -21,12 +21,25 @@
 #pragma once
 #include <typeinfo>
 #include <type_traits>
+#include <exception>
 
 namespace kiwano
 {
 
 inline namespace core
 {
+
+class bad_any_cast : public std::exception
+{
+public:
+	bad_any_cast() {}
+
+	virtual const char* what() const override
+	{
+		return "bad and cast";
+	}
+};
+
 
 class any
 {
@@ -38,11 +51,11 @@ public:
 	template <
 		typename _Ty,
 		typename _Decayed = typename std::decay<_Ty>::type,
-		typename = typename std::enable_if<std::is_copy_constructible<_Decayed>::value>::type
+		typename std::enable_if<std::is_copy_constructible<_Decayed>::value, int>::type = 0
 	>
 	any(_Ty&& val) : storage_{}
 	{
-		emplace<_Decayed>(std::forward<_Ty&&>(val));
+		emplace<_Decayed>(std::forward<_Ty>(val));
 	}
 
 	template <
@@ -57,22 +70,7 @@ public:
 
 	any(const any& rhs) : storage_{}
 	{
-		if (rhs.has_value())
-		{
-			typeinfo() = rhs.typeinfo();
-			storage_.is_small_ = rhs.storage_.is_small_;
-
-			if (rhs.has_small_type())
-			{
-				small_rtti() = rhs.small_rtti();
-				small_rtti().copy(small_data(), rhs.small_data());
-			}
-			else
-			{
-				big_rtti() = rhs.big_rtti();
-				big_data() = big_rtti().copy(rhs.big_data());
-			}
-		}
+		copy_from(rhs);
 	}
 
 	any(any&& rhs) noexcept : storage_{}
@@ -100,7 +98,10 @@ public:
 		return typeinfo() != nullptr;
 	}
 
-	template <typename _Decayed, typename... _Args>
+	template <
+		typename _Decayed,
+		typename... _Args
+	>
 	void emplace(_Args&&... args)
 	{
 		reset();
@@ -117,6 +118,58 @@ public:
 	inline void reset() noexcept
 	{
 		tidy();
+	}
+
+	template <typename _Ty>
+	_Ty* cast_pointer() noexcept
+	{
+		return const_cast<_Ty*>(const_cast<const any*>(this)->cast_pointer<_Ty>());
+	}
+
+	template <typename _Ty>
+	const _Ty* cast_pointer() const noexcept
+	{
+		static_assert(!std::is_void<_Ty>::value, "kiwano::any cannot contain void");
+
+		const type_info* const info = typeinfo();
+		if (info && (*info == typeid(std::decay<_Ty>::type)))
+		{
+			if (has_small_type())
+			{
+				return static_cast<const _Ty*>(small_data());
+			}
+			else
+			{
+				return static_cast<const _Ty*>(big_data());
+			}
+		}
+		return nullptr;
+	}
+
+	template <typename _Ty>
+	_Ty cast()
+	{
+		using _Decayed = typename std::decay<_Ty>::type;
+
+		const auto ptr = cast_pointer<_Decayed>();
+		if (!ptr)
+		{
+			throw bad_any_cast{};
+		}
+		return static_cast<_Ty>(*ptr);
+	}
+
+	template <typename _Ty>
+	_Ty cast() const
+	{
+		using _Decayed = typename std::decay<_Ty>::type;
+
+		const auto ptr = cast_pointer<_Decayed>();
+		if (!ptr)
+		{
+			throw bad_any_cast{};
+		}
+		return static_cast<_Ty>(*ptr);
 	}
 
 	any& operator=(const any& rhs)
@@ -143,7 +196,10 @@ protected:
 		return storage_.small_.info_;
 	}
 
-	template <typename _Decayed, typename... _Args>
+	template <
+		typename _Decayed,
+		typename... _Args
+	>
 	void store(std::true_type, _Args&&... args)
 	{
 		storage_.is_small_ = true;
@@ -153,7 +209,10 @@ protected:
 		::new (small_data()) _Decayed(std::forward<_Args>(args)...);
 	}
 
-	template <typename _Decayed, typename... _Args>
+	template <
+		typename _Decayed,
+		typename... _Args
+	>
 	void store(std::false_type, _Args&&... args)
 	{
 		storage_.is_small_ = false;
@@ -180,6 +239,26 @@ protected:
 		}
 	}
 
+	void copy_from(const any& rhs)
+	{
+		if (rhs.has_value())
+		{
+			typeinfo() = rhs.typeinfo();
+			storage_.is_small_ = rhs.storage_.is_small_;
+
+			if (rhs.has_small_type())
+			{
+				small_rtti() = rhs.small_rtti();
+				small_rtti().copy(small_data(), rhs.small_data());
+			}
+			else
+			{
+				big_rtti() = rhs.big_rtti();
+				big_data() = big_rtti().copy(rhs.big_data());
+			}
+		}
+	}
+
 	void move_from(any&& rhs) noexcept
 	{
 		if (rhs.has_value())
@@ -196,8 +275,8 @@ protected:
 			{
 				big_rtti() = rhs.big_rtti();
 				big_data() = rhs.big_data();
+				rhs.typeinfo() = nullptr;
 			}
-			rhs.typeinfo() = nullptr;
 		}
 	}
 
@@ -227,10 +306,10 @@ protected:
 	}
 
 protected:
-	static const auto ANY_SPACE_SIZE = 16U;
+	static const auto ANY_SMALL_SPACE_SIZE = 16U;
 
 	template <typename _Ty>
-	struct decayed_is_small : public std::bool_constant<sizeof(_Ty) <= ANY_SPACE_SIZE>
+	struct decayed_is_small : public std::bool_constant<sizeof(_Ty) <= ANY_SMALL_SPACE_SIZE>
 	{
 	};
 
@@ -274,7 +353,7 @@ protected:
 	{
 		using destroy_func	= void(void*);
 		using copy_func		= void* (void*, const void*);
-		using move_func		= void*(void*, const void*);
+		using move_func		= void*(void*, void*);
 
 		small_storage_rtti()
 		{
@@ -310,9 +389,9 @@ protected:
 		}
 
 		template <typename _Ty>
-		static void* move_impl(void* const target, const void* const ptr) noexcept
+		static void* move_impl(void* const target, void* const ptr) noexcept
 		{
-			return ::new (static_cast<_Ty*>(target)) _Ty(std::move(*static_cast<const _Ty*>(ptr)));
+			return ::new (static_cast<_Ty*>(target)) _Ty(std::move(*static_cast<_Ty*>(ptr)));
 		}
 
 		destroy_func* destroy;
@@ -346,7 +425,7 @@ protected:
 	{
 		const type_info* info_;
 		small_storage_rtti rtti_;
-		char buffer_[ANY_SPACE_SIZE];
+		char buffer_[ANY_SMALL_SPACE_SIZE];
 	};
 
 	struct big_storage
@@ -369,6 +448,64 @@ protected:
 	storage storage_;
 };
 
+
+//
+// any_cast functions
+//
+
+template <typename _Ty>
+_Ty* any_cast(any* const a) noexcept
+{
+	return a->cast_pointer<_Ty>();
 }
 
+template <typename _Ty>
+const _Ty* any_cast(const any* const a) noexcept
+{
+	return a->cast_pointer<_Ty>();
+}
+
+template <typename _Ty>
+_Ty any_cast(any& a)
+{
+	const auto ptr = any_cast<std::decay<_Ty>::type>(&a);
+	if (!ptr)
+	{
+		throw bad_any_cast{};
+	}
+	return static_cast<_Ty>(*ptr);
+}
+
+template <typename _Ty>
+const _Ty any_cast(const any& a)
+{
+	const auto ptr = any_cast<std::decay<_Ty>::type>(&a);
+	if (!ptr)
+	{
+		throw bad_any_cast{};
+	}
+	return static_cast<_Ty>(*ptr);
+}
+
+template <typename _Ty>
+_Ty any_cast(any&& a)
+{
+	_Ty* ptr = a.cast_pointer<_Ty>();
+	if (!ptr)
+	{
+		throw bad_any_cast{};
+	}
+	return static_cast<_Ty>(std::move(*ptr));
+}
+
+}  // namespace core
+
+}  // namespace kiwano
+
+namespace std
+{
+	inline void swap(kiwano::core::any& lhs, kiwano::core::any& rhs) noexcept
+	{
+		lhs.swap(rhs);
+	}
 }
