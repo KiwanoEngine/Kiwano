@@ -23,6 +23,8 @@
 
 namespace kiwano
 {
+	// 事件类型
+	typedef int EventType;
 
 	// 鼠标事件
 	struct MouseEvent
@@ -36,7 +38,7 @@ namespace kiwano
 		{
 			struct	// Events::MouseDown | Events::MouseUp | Events::MouseClick
 			{
-				int button;
+				MouseButton::Value button;
 			};
 
 			struct	// Events::MouseWheel
@@ -45,7 +47,7 @@ namespace kiwano
 			};
 		};
 
-		static bool Check(int type);
+		static bool Check(EventType type);
 	};
 
 	// 键盘事件
@@ -56,7 +58,7 @@ namespace kiwano
 		{
 			struct	// Events::KeyDown | Events::KeyUp
 			{
-				int code;		// enum KeyCode
+				KeyCode::Value code;
 			};
 
 			struct	// Events::Char
@@ -65,7 +67,7 @@ namespace kiwano
 			};
 		};
 
-		static bool Check(int type);
+		static bool Check(EventType type);
 	};
 
 	// 窗口事件
@@ -96,7 +98,7 @@ namespace kiwano
 			};
 		};
 
-		static bool Check(int type);
+		static bool Check(EventType type);
 	};
 
 	// 自定义事件
@@ -110,7 +112,7 @@ namespace kiwano
 	// 事件
 	struct KGE_API Event
 	{
-		enum Type : int
+		enum Type : EventType
 		{
 			First,
 
@@ -155,23 +157,23 @@ namespace kiwano
 			CustomEvent custom;
 		};
 
-		Event(int type = Type::First) : type(type), target(nullptr) {}
+		Event(EventType type = Type::First) : type(type), target(nullptr) {}
 	};
 
 
 	// Check-functions
 
-	inline bool MouseEvent::Check(int type)
+	inline bool MouseEvent::Check(EventType type)
 	{
 		return type > Event::MouseFirst && type < Event::MouseLast;
 	}
 
-	inline bool KeyboardEvent::Check(int type)
+	inline bool KeyboardEvent::Check(EventType type)
 	{
 		return type > Event::KeyFirst && type < Event::KeyLast;
 	}
 
-	inline bool WindowEvent::Check(int type)
+	inline bool WindowEvent::Check(EventType type)
 	{
 		return type > Event::WindowFirst && type < Event::WindowLast;
 	}

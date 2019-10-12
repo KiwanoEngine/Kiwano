@@ -116,19 +116,12 @@ namespace kiwano
 	{
 		KGE_ASSERT(inited_ && "Calling Application::Run before Application::Init");
 
-		HWND hwnd = Window::GetInstance()->GetHandle();
+		end_ = false;
 
-		if (hwnd)
+		Window::GetInstance()->Prepare();
+		while (!end_)
 		{
-			end_ = false;
-			Window::GetInstance()->Prepare();
-
-			MSG msg = {};
-			while (::GetMessageW(&msg, nullptr, 0, 0) && !end_)
-			{
-				::TranslateMessage(&msg);
-				::DispatchMessageW(&msg);
-			}
+			Window::GetInstance()->PollEvents();
 		}
 	}
 
@@ -351,14 +344,14 @@ namespace kiwano
 			evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
 			evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
 
-			if (msg == WM_MOUSEMOVE) { evt.type = Event::MouseMove; }
-			else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN) { evt.type = Event::MouseBtnDown; }
-			else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP) { evt.type = Event::MouseBtnUp; }
-			else if (msg == WM_MOUSEWHEEL) { evt.type = Event::MouseWheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA; }
+			if		(msg == WM_MOUSEMOVE)															{ evt.type = Event::MouseMove; }
+			else if	(msg == WM_LBUTTONDOWN	|| msg == WM_RBUTTONDOWN	|| msg == WM_MBUTTONDOWN)	{ evt.type = Event::MouseBtnDown; }
+			else if	(msg == WM_LBUTTONUP	|| msg == WM_RBUTTONUP		|| msg == WM_MBUTTONUP)		{ evt.type = Event::MouseBtnUp; }
+			else if	(msg == WM_MOUSEWHEEL)															{ evt.type = Event::MouseWheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA; }
 
-			if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { evt.mouse.button = MouseButton::Left; }
-			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { evt.mouse.button = MouseButton::Right; }
-			else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { evt.mouse.button = MouseButton::Middle; }
+			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP)	{ evt.mouse.button = MouseButton::Left; }
+			else if	(msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP)	{ evt.mouse.button = MouseButton::Right; }
+			else if	(msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP)	{ evt.mouse.button = MouseButton::Middle; }
 
 			app->DispatchEvent(evt);
 		}
@@ -444,6 +437,8 @@ namespace kiwano
 
 			if (!app->OnClosing())
 			{
+				Event evt(Event::WindowClosed);
+				app->DispatchEvent(evt);
 				return 0;
 			}
 		}
@@ -453,8 +448,7 @@ namespace kiwano
 		{
 			KGE_LOG(L"Window was destroyed");
 
-			Event evt(Event::WindowClosed);
-			app->DispatchEvent(evt);
+			app->Quit();
 			app->OnDestroy();
 
 			::PostQuitMessage(0);

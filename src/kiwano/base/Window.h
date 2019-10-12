@@ -49,12 +49,12 @@ namespace kiwano
 		bool			fullscreen;			// х╚фадёй╫
 
 		WindowConfig(
-			String const& title = L"Kiwano Game",
-			std::uint32_t width = 640,
-			std::uint32_t height = 480,
-			std::uint32_t icon = 0,
-			bool resizable = false,
-			bool fullscreen = false
+			String const&	title = L"Kiwano Game",
+			std::uint32_t	width = 640,
+			std::uint32_t	height = 480,
+			std::uint32_t	icon = 0,
+			bool			resizable = false,
+			bool			fullscreen = false
 		);
 	};
 
@@ -98,6 +98,8 @@ namespace kiwano
 
 		void Prepare();
 
+		void PollEvents();
+
 		HWND GetHandle() const;
 
 		DWORD GetWindowStyle() const;
@@ -117,8 +119,8 @@ namespace kiwano
 		bool		resizable_;
 		bool		is_fullscreen_;
 		HWND		handle_;
-		int		width_;
-		int		height_;
+		int			width_;
+		int			height_;
 		WCHAR*		device_name_;
 		CursorType	mouse_cursor_;
 	};

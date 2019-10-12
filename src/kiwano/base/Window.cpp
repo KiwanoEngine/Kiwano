@@ -196,6 +196,17 @@ namespace kiwano
 		}
 	}
 
+	void Window::PollEvents()
+	{
+		static MSG msg = {};
+
+		if (::GetMessageW(&msg, nullptr, 0, 0))
+		{
+			::TranslateMessage(&msg);
+			::DispatchMessageW(&msg);
+		}
+	}
+
 	String Window::GetTitle() const
 	{
 		if (handle_)
