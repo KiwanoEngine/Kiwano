@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/macros.h>
 #include <kiwano/base/Resource.h>
 #include <kiwano/2d/include-forwards.h>
 #include <kiwano/renderer/GifImage.h>
@@ -87,7 +86,7 @@ namespace kiwano
 		FontCollection GetFontCollection(String const& id) const;
 
 		// 删除指定资源
-		void Delete(String const& id);
+		void Remove(String const& id);
 
 		// 清空所有资源
 		void Clear();
@@ -95,8 +94,8 @@ namespace kiwano
 		template<typename _Ty>
 		_Ty* Get(String const& id) const
 		{
-			auto iter = cache_.find(id);
-			if (iter == cache_.end())
+			auto iter = object_cache_.find(id);
+			if (iter == object_cache_.end())
 				return nullptr;
 			return dynamic_cast<_Ty*>((*iter).second.get());
 		}
@@ -107,9 +106,8 @@ namespace kiwano
 		virtual ~ResourceCache();
 
 	protected:
-		UnorderedMap<String, ObjectBasePtr> cache_;
-
-		UnorderedMap<String, GifImage> gif_cache_;
-		UnorderedMap<String, FontCollection> font_collection_cache_;
+		UnorderedMap<String, ObjectBasePtr>		object_cache_;
+		UnorderedMap<String, GifImage>			gif_cache_;
+		UnorderedMap<String, FontCollection>	font_collection_cache_;
 	};
 }

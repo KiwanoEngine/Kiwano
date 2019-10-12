@@ -21,11 +21,13 @@
 #include <fstream>
 
 #include <kiwano/utils/ResourceCache.h>
+#include <kiwano/utils/FileSystem.h>
 #include <kiwano/base/Logger.h>
 #include <kiwano/2d/Frame.h>
 #include <kiwano/2d/FrameSequence.h>
 #include <kiwano/renderer/GifImage.h>
 #include <kiwano/renderer/FontCollection.h>
+
 
 namespace kiwano
 {
@@ -59,13 +61,20 @@ namespace kiwano
 
 	bool ResourceCache::LoadFromJsonFile(String const& file_path)
 	{
+		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		{
+			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: File not found.");
+			return false;
+		}
+
 		Json json_data;
 		std::wifstream ifs;
 		ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
 		try
 		{
-			ifs.open(file_path.c_str());
+			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			ifs.open(full_path.c_str());
 			ifs >> json_data;
 			ifs.close();
 		}
@@ -112,14 +121,20 @@ namespace kiwano
 
 	bool ResourceCache::LoadFromXmlFile(String const& file_path)
 	{
-		tinyxml2::XMLDocument doc;
+		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		{
+			KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: File not found.");
+			return false;
+		}
 
+		tinyxml2::XMLDocument doc;
 		std::wifstream ifs;
 		ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
 		try
 		{
-			ifs.open(file_path.c_str());
+			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			ifs.open(full_path.c_str());
 
 			StringStream ss;
 			ss << ifs.rdbuf();
@@ -192,7 +207,7 @@ namespace kiwano
 	{
 		if (frame)
 		{
-			cache_.insert(std::make_pair(id, frame));
+			object_cache_.insert(std::make_pair(id, frame));
 			return true;
 		}
 		return false;
@@ -268,7 +283,7 @@ namespace kiwano
 	{
 		if (frames)
 		{
-			cache_.insert(std::make_pair(id, frames));
+			object_cache_.insert(std::make_pair(id, frames));
 			return frames->GetFrames().size();
 		}
 		return 0;
@@ -278,7 +293,7 @@ namespace kiwano
 	{
 		if (obj)
 		{
-			cache_.insert(std::make_pair(id, obj));
+			object_cache_.insert(std::make_pair(id, obj));
 			return true;
 		}
 		return false;
@@ -340,14 +355,14 @@ namespace kiwano
 		return FontCollection();
 	}
 
-	void ResourceCache::Delete(String const & id)
+	void ResourceCache::Remove(String const & id)
 	{
-		cache_.erase(id);
+		object_cache_.erase(id);
 	}
 
 	void ResourceCache::Clear()
 	{
-		cache_.clear();
+		object_cache_.clear();
 	}
 
 }
