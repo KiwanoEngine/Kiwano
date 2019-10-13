@@ -319,7 +319,7 @@ protected:
 	}
 
 protected:
-	static const auto ANY_SMALL_SPACE_SIZE = 16U;
+	static const auto ANY_SMALL_SPACE_SIZE = 8U;
 
 	template <typename _Ty>
 	struct decayed_is_small : public std::bool_constant<sizeof(_Ty) <= ANY_SMALL_SPACE_SIZE>

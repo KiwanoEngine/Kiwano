@@ -90,6 +90,7 @@
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h" />
     <ClInclude Include="..\..\src\kiwano\utils\FileSystem.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\UserData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\UserData.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
