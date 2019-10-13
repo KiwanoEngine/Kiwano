@@ -36,13 +36,13 @@ namespace kiwano
 
 		virtual ~ObjectBase();
 
-		void* GetUserData() const;
+		const Any&		GetUserData() const;
 
-		void SetUserData(void* data);
+		void			SetUserData(Any const& data);
 
-		void SetName(String const& name);
+		void			SetName(String const& name);
 
-		String DumpObject();
+		String			DumpObject();
 
 		inline String	GetName() const						{ if (name_) return *name_; return String(); }
 
@@ -68,7 +68,7 @@ namespace kiwano
 
 	private:
 		bool	tracing_leak_;
-		void*	user_data_;
+		Any		user_data_;
 		String*	name_;
 
 		const uint32_t id_;

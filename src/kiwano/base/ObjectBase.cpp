@@ -57,12 +57,12 @@ namespace kiwano
 #endif
 	}
 
-	void * ObjectBase::GetUserData() const
+	const Any& ObjectBase::GetUserData() const
 	{
 		return user_data_;
 	}
 
-	void ObjectBase::SetUserData(void * data)
+	void ObjectBase::SetUserData(Any const& data)
 	{
 		user_data_ = data;
 	}

@@ -34,13 +34,14 @@
 
 #include <kiwano/core/vector.hpp>
 #include <kiwano/core/string.hpp>
-#include <kiwano/core/core.h>
-#include <kiwano/core/Function.hpp>
+#include <kiwano/core/any.hpp>
+#include <kiwano/core/function.hpp>
 #include <kiwano/core/intrusive_list.hpp>
 #include <kiwano/core/intrusive_ptr.hpp>
 #include <kiwano/core/noncopyable.hpp>
 #include <kiwano/core/singleton.hpp>
 #include <kiwano/core/basic_json.hpp>
+#include <kiwano/core/core.h>
 
 
 //

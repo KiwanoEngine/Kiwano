@@ -36,7 +36,7 @@ public:
 
 	virtual const char* what() const override
 	{
-		return "bad and cast";
+		return "bad any_cast";
 	}
 };
 
@@ -60,12 +60,14 @@ public:
 
 	template <
 		typename _Ty,
-		typename _Decayed = typename std::decay<_Ty>::type,
 		typename... _Args
 	>
 	any(_Args&&... args) : storage_{}
 	{
-		emplace<_Decayed>(std::forward<_Args>(args)...);
+		using _Decayed = typename std::decay<_Ty>::type;
+
+		reset();
+		emplace_decayed<_Decayed>(std::forward<_Args>(args)...);
 	}
 
 	any(const any& rhs) : storage_{}
@@ -99,13 +101,15 @@ public:
 	}
 
 	template <
-		typename _Decayed,
+		typename _Ty,
 		typename... _Args
 	>
 	void emplace(_Args&&... args)
 	{
+		using _Decayed = typename std::decay<_Ty>::type;
+
 		reset();
-		store<_Decayed>(decayed_is_small<_Decayed>{}, std::forward<_Args>(args)...);
+		emplace_decayed<_Decayed>(std::forward<_Args>(args)...);
 	}
 
 	void swap(any& rhs) noexcept
@@ -194,6 +198,15 @@ protected:
 	const type_info* typeinfo() const
 	{
 		return storage_.small_.info_;
+	}
+
+	template <
+		typename _Decayed,
+		typename... _Args
+	>
+	inline void emplace_decayed(_Args&&... args)
+	{
+		store<_Decayed>(decayed_is_small<_Decayed>{}, std::forward<_Args>(args)...);
 	}
 
 	template <
@@ -340,9 +353,9 @@ protected:
 		}
 
 		template <typename _Ty>
-		static void* copy_impl(void* const ptr) noexcept
+		static void* copy_impl(const void* const ptr) noexcept
 		{
-			return ::new _Ty(*static_cast<_Ty*>(ptr));
+			return ::new _Ty(*static_cast<const _Ty*>(ptr));
 		}
 
 		destroy_func* destroy;
@@ -468,7 +481,9 @@ const _Ty* any_cast(const any* const a) noexcept
 template <typename _Ty>
 _Ty any_cast(any& a)
 {
-	const auto ptr = any_cast<std::decay<_Ty>::type>(&a);
+	using _Decayed = typename std::decay<_Ty>::type;
+
+	const auto ptr = any_cast<_Decayed>(&a);
 	if (!ptr)
 	{
 		throw bad_any_cast{};
@@ -479,7 +494,9 @@ _Ty any_cast(any& a)
 template <typename _Ty>
 const _Ty any_cast(const any& a)
 {
-	const auto ptr = any_cast<std::decay<_Ty>::type>(&a);
+	using _Decayed = typename std::decay<_Ty>::type;
+
+	const auto ptr = any_cast<_Decayed>(&a);
 	if (!ptr)
 	{
 		throw bad_any_cast{};
@@ -490,7 +507,9 @@ const _Ty any_cast(const any& a)
 template <typename _Ty>
 _Ty any_cast(any&& a)
 {
-	_Ty* ptr = a.cast_pointer<_Ty>();
+	using _Decayed = typename std::decay<_Ty>::type;
+
+	const auto ptr = any_cast<_Decayed>(&a);
 	if (!ptr)
 	{
 		throw bad_any_cast{};

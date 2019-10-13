@@ -29,6 +29,7 @@
 
 #include <kiwano/core/vector.hpp>
 #include <kiwano/core/string.hpp>
+#include <kiwano/core/any.hpp>
 #include <kiwano/core/intrusive_list.hpp>
 #include <kiwano/core/intrusive_ptr.hpp>
 #include <kiwano/core/noncopyable.hpp>
@@ -68,6 +69,8 @@ namespace kiwano
 
 	template <typename _FuncTy>
 	using Function = kiwano::core::function<_FuncTy>;
+
+	using Any = kiwano::core::any;
 
 	using Json = kiwano::core::basic_json<kiwano::Map, kiwano::Vector, kiwano::String,
 		int, double, bool, std::allocator>;
