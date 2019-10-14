@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ActionWalk.h"
-#include "../Actor.h"
+#include <kiwano/2d/action/ActionWalk.h>
+#include <kiwano/2d/Actor.h>
 
 namespace kiwano
 {
-	ActionWalk::ActionWalk(Duration duration, bool rotating, Float32 start, Float32 end, EaseFunc func)
+	ActionWalk::ActionWalk(Duration duration, bool rotating, float start, float end, EaseFunc func)
 		: ActionTween(duration, func)
 		, start_(start)
 		, end_(end)
@@ -32,7 +32,7 @@ namespace kiwano
 	{
 	}
 
-	ActionWalk::ActionWalk(Duration duration, Geometry const& path, bool rotating, Float32 start, Float32 end, EaseFunc func)
+	ActionWalk::ActionWalk(Duration duration, Geometry const& path, bool rotating, float start, float end, EaseFunc func)
 		: ActionWalk(duration, rotating, start, end, func)
 	{
 		path_ = path;
@@ -70,9 +70,9 @@ namespace kiwano
 		length_ = path_.GetLength();
 	}
 
-	void ActionWalk::UpdateTween(ActorPtr target, Float32 percent)
+	void ActionWalk::UpdateTween(ActorPtr target, float percent)
 	{
-		Float32 distance = length_ * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
+		float distance = length_ * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
 
 		Point point, tangent;
 		if (path_.ComputePointAtLength(distance, point, tangent))
@@ -81,8 +81,8 @@ namespace kiwano
 
 			if (rotating_)
 			{
-				Float32 ac = math::Acos(tangent.x);
-				Float32 rotation = (tangent.y < 0.f) ? 360.f - ac : ac;
+				float ac = math::Acos(tangent.x);
+				float rotation = (tangent.y < 0.f) ? 360.f - ac : ac;
 				target->SetRotation(rotation);
 			}
 		}
@@ -114,7 +114,7 @@ namespace kiwano
 		sink_.AddBezier(point1, point2, point3);
 	}
 
-	void ActionWalk::AddArc(Point const& point, Size const& radius, Float32 rotation, bool clockwise, bool is_small)
+	void ActionWalk::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 	{
 		sink_.AddArc(point, radius, rotation, clockwise, is_small);
 	}

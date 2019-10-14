@@ -20,10 +20,6 @@
 
 #pragma once
 
-#include "src/helper.h"
-#include "src/HttpRequest.hpp"
-#include "src/HttpResponse.hpp"
-#include "src/HttpClient.h"
-
-// CURL
-#include "third-party/curl/curl.h"
+#include <kiwano-network/HttpRequest.h>
+#include <kiwano-network/HttpResponse.hpp>
+#include <kiwano-network/HttpClient.h>

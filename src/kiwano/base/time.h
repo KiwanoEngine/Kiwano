@@ -19,10 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
 #include <ostream>
 #include <istream>
+
+#include <kiwano/macros.h>
+#include <kiwano/core/core.h>
 
 namespace kiwano
 {
@@ -51,24 +52,24 @@ namespace kiwano
 			inline long Milliseconds() const		{ return milliseconds_; }
 
 			// 转化为秒
-			Float32 Seconds() const;
+			float Seconds() const;
 
 			// 转化为分钟
-			Float32 Minutes() const;
+			float Minutes() const;
 
 			// 转化为小时
-			Float32 Hours() const;
+			float Hours() const;
 
 			// 时长是否是零
 			inline bool IsZero() const				{ return milliseconds_ == 0LL; }
 
 			inline void SetMilliseconds(long ms)	{ milliseconds_ = ms; }
 
-			inline void SetSeconds(Float32 seconds)	{ milliseconds_ = static_cast<long>(seconds * 1000.f); }
+			inline void SetSeconds(float seconds)	{ milliseconds_ = static_cast<long>(seconds * 1000.f); }
 
-			inline void SetMinutes(Float32 minutes)	{ milliseconds_ = static_cast<long>(minutes * 60 * 1000.f); }
+			inline void SetMinutes(float minutes)	{ milliseconds_ = static_cast<long>(minutes * 60 * 1000.f); }
 
-			inline void SetHours(Float32 hours)		{ milliseconds_ = static_cast<long>(hours * 60 * 60 * 1000.f); }
+			inline void SetHours(float hours)		{ milliseconds_ = static_cast<long>(hours * 60 * 60 * 1000.f); }
 
 			// 转为字符串
 			String ToString() const;
@@ -82,36 +83,36 @@ namespace kiwano
 			bool operator< (const Duration &) const;
 			bool operator<= (const Duration &) const;
 
-			Float32 operator / (const Duration &) const;
+			float operator / (const Duration &) const;
 
 			const Duration operator + (const Duration &) const;
 			const Duration operator - (const Duration &) const;
 			const Duration operator - () const;
-			const Duration operator * (Int32) const;
+			const Duration operator * (int) const;
 			const Duration operator * (unsigned long long) const;
-			const Duration operator * (Float32) const;
-			const Duration operator * (Float64) const;
+			const Duration operator * (float) const;
+			const Duration operator * (double) const;
 			const Duration operator * (long double) const;
-			const Duration operator / (Int32) const;
-			const Duration operator / (Float32) const;
-			const Duration operator / (Float64) const;
+			const Duration operator / (int) const;
+			const Duration operator / (float) const;
+			const Duration operator / (double) const;
 
 			Duration& operator += (const Duration &);
 			Duration& operator -= (const Duration &);
-			Duration& operator *= (Int32);
-			Duration& operator *= (Float32);
-			Duration& operator *= (Float64);
-			Duration& operator /= (Int32);
-			Duration& operator /= (Float32);
-			Duration& operator /= (Float64);
+			Duration& operator *= (int);
+			Duration& operator *= (float);
+			Duration& operator *= (double);
+			Duration& operator /= (int);
+			Duration& operator /= (float);
+			Duration& operator /= (double);
 
-			friend const Duration operator* (Int32, const Duration &);
-			friend const Duration operator* (Float32, const Duration &);
-			friend const Duration operator* (Float64, const Duration &);
+			friend const Duration operator* (int, const Duration &);
+			friend const Duration operator* (float, const Duration &);
+			friend const Duration operator* (double, const Duration &);
 			friend const Duration operator* (long double, const Duration &);
-			friend const Duration operator/ (Int32, const Duration &);
-			friend const Duration operator/ (Float32, const Duration &);
-			friend const Duration operator/ (Float64, const Duration &);
+			friend const Duration operator/ (int, const Duration &);
+			friend const Duration operator/ (float, const Duration &);
+			friend const Duration operator/ (double, const Duration &);
 
 		public:
 			// 时间段格式化
@@ -154,7 +155,7 @@ namespace kiwano
 		// 获取当前时间: Time now = Time::Now();
 		// 两时间相减, 得到一个 Duration 对象, 例如:
 		//     Time t1, t2;
-		//     Int32 ms = (t2 - t1).Milliseconds();  // 获取两时间相差的毫秒数
+		//     int ms = (t2 - t1).Milliseconds();  // 获取两时间相差的毫秒数
 		// 
 		struct KGE_API Time
 		{

@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/time.h"
-#include "Brush.h"
-#include "Texture.h"
-#include "Geometry.h"
-#include "TextLayout.h"
-#include "LayerArea.h"
-#include "win32/TextRenderer.h"
+#include <kiwano/base/time.h>
+#include <kiwano/renderer/Brush.h>
+#include <kiwano/renderer/Texture.h>
+#include <kiwano/renderer/Geometry.h>
+#include <kiwano/renderer/TextLayout.h>
+#include <kiwano/renderer/LayerArea.h>
+#include <kiwano/renderer/win32/TextRenderer.h>
 
 namespace kiwano
 {
@@ -56,7 +56,7 @@ namespace kiwano
 
 		void DrawGeometry(
 			Geometry const& geometry,
-			Float32 stroke_width,
+			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
@@ -67,13 +67,13 @@ namespace kiwano
 		void DrawLine(
 			Point const& point1,
 			Point const& point2,
-			Float32 stroke_width,
+			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
 		void DrawRectangle(
 			Rect const& rect,
-			Float32 stroke_width,
+			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
@@ -84,7 +84,7 @@ namespace kiwano
 		void DrawRoundedRectangle(
 			Rect const& rect,
 			Vec2 const& radius,
-			Float32 stroke_width,
+			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
@@ -96,7 +96,7 @@ namespace kiwano
 		void DrawEllipse(
 			Point const& center,
 			Vec2 const& radius,
-			Float32 stroke_width,
+			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		) const;
 
@@ -140,14 +140,14 @@ namespace kiwano
 			Color const& clear_color
 		);
 
-		Float32 GetOpacity() const;
+		float GetOpacity() const;
 
 		Brush GetCurrentBrush() const;
 
 		Matrix3x2 GetGlobalTransform() const;
 
 		void SetOpacity(
-			Float32 opacity
+			float opacity
 		);
 
 		void SetCurrentBrush(
@@ -189,7 +189,7 @@ namespace kiwano
 	public:
 		struct Status
 		{
-			Int32 primitives;
+			int primitives;
 			Time start;
 			Duration duration;
 
@@ -200,11 +200,11 @@ namespace kiwano
 
 		void IncreasePrimitivesCount() const;
 
-		inline Status const&				GetStatus() const			{ return status_; }
+		inline Status const&				GetStatus() const						{ return status_; }
 
-		inline ComPtr<ID2D1RenderTarget>	GetRenderTarget() const		{ KGE_ASSERT(render_target_); return render_target_; }
+		inline ComPtr<ID2D1RenderTarget>	GetRenderTarget() const					{ KGE_ASSERT(render_target_); return render_target_; }
 
-		inline ComPtr<ITextRenderer>		GetTextRenderer() const		{ KGE_ASSERT(text_renderer_); return text_renderer_; }
+		inline ComPtr<ITextRenderer>		GetTextRenderer() const					{ KGE_ASSERT(text_renderer_); return text_renderer_; }
 
 		ComPtr<ID2D1StrokeStyle>			GetStrokeStyle(StrokeStyle style) const;
 
@@ -219,7 +219,7 @@ namespace kiwano
 		void DiscardDeviceResources();
 
 	protected:
-		Float32							opacity_;
+		float							opacity_;
 		bool							antialias_;
 		bool							fast_global_transform_;
 		mutable bool					collecting_status_;

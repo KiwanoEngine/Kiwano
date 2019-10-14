@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "TextLayout.h"
-#include "Renderer.h"
-#include "../base/Logger.h"
+#include <kiwano/renderer/TextLayout.h>
+#include <kiwano/renderer/Renderer.h>
+#include <kiwano/base/win32/helper.h>
 
 namespace kiwano
 {
@@ -111,7 +111,7 @@ namespace kiwano
 		{
 			if (style.underline)
 			{
-				hr = text_layout_->SetUnderline(true, { 0, text.length() });
+				hr = text_layout_->SetUnderline(true, { 0, UINT32(text.length()) });
 			}
 		}
 
@@ -119,7 +119,7 @@ namespace kiwano
 		{
 			if (style.strikethrough)
 			{
-				text_layout_->SetStrikethrough(true, { 0, text.length() });
+				text_layout_->SetStrikethrough(true, { 0, UINT32(text.length()) });
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	UInt32 TextLayout::GetLineCount()
+	uint32_t TextLayout::GetLineCount()
 	{
 		if (text_layout_)
 		{

@@ -18,9 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Logger.h"
 #include <iostream>
 #include <fstream>
+
+#include <kiwano/base/Logger.h>
 
 namespace
 {
@@ -216,7 +217,7 @@ namespace kiwano
 		return error_stream_.rdbuf(buf);
 	}
 
-	void Logger::Printf(const WChar* format, ...)
+	void Logger::Printf(const wchar_t* format, ...)
 	{
 		va_list args = nullptr;
 		va_start(args, format);
@@ -226,7 +227,7 @@ namespace kiwano
 		va_end(args);
 	}
 
-	void Logger::Messagef(const WChar* format, ...)
+	void Logger::Messagef(const wchar_t* format, ...)
 	{
 		using namespace __console_colors;
 
@@ -238,7 +239,7 @@ namespace kiwano
 		va_end(args);
 	}
 
-	void Logger::Warningf(const WChar* format, ...)
+	void Logger::Warningf(const wchar_t* format, ...)
 	{
 		using namespace __console_colors;
 
@@ -250,7 +251,7 @@ namespace kiwano
 		va_end(args);
 	}
 
-	void Logger::Errorf(const WChar* format, ...)
+	void Logger::Errorf(const wchar_t* format, ...)
 	{
 		using namespace __console_colors;
 
@@ -262,7 +263,7 @@ namespace kiwano
 		va_end(args);
 	}
 
-	void Logger::Outputf(std::wostream& os, std::wostream& (*color)(std::wostream&), const WChar* prompt, const WChar* format, va_list args) const
+	void Logger::Outputf(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const
 	{
 		if (enabled_)
 		{
@@ -275,9 +276,9 @@ namespace kiwano
 		}
 	}
 
-	std::wstring Logger::MakeOutputStringf(const WChar* prompt, const WChar* format, va_list args) const
+	std::wstring Logger::MakeOutputStringf(const wchar_t* prompt, const wchar_t* format, va_list args) const
 	{
-		static WChar temp_buffer[1024 * 3 + 1];
+		static wchar_t temp_buffer[1024 * 3 + 1];
 
 		StringStream ss;
 		ss << Logger::OutPrefix;
@@ -297,7 +298,7 @@ namespace kiwano
 
 	std::wostream& Logger::OutPrefix(std::wostream& out)
 	{
-		std::time_t unix = std::time(nullptr);
+		time_t unix = std::time(nullptr);
 		std::tm tmbuf;
 		localtime_s(&tmbuf, &unix);
 		out << std::put_time(&tmbuf, L"[kiwano] %H:%M:%S");

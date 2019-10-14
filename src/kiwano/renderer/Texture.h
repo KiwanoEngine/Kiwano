@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "win32/D2DDeviceResources.h"
+#include <kiwano/renderer/win32/D2DDeviceResources.h>
 
 namespace kiwano
 {
@@ -68,22 +68,22 @@ namespace kiwano
 		bool IsValid() const;
 
 		// 获取宽度
-		Float32 GetWidth() const;
+		float GetWidth() const;
 
 		// 获取高度
-		Float32 GetHeight() const;
+		float GetHeight() const;
 
 		// 获取大小
 		Size GetSize() const;
 
 		// 获取像素宽度
-		UInt32 GetWidthInPixels() const;
+		uint32_t GetWidthInPixels() const;
 
 		// 获取像素高度
-		UInt32 GetHeightInPixels() const;
+		uint32_t GetHeightInPixels() const;
 
 		// 获取像素大小
-		math::Vec2T<UInt32> GetSizeInPixels() const;
+		math::Vec2T<uint32_t> GetSizeInPixels() const;
 
 		// 获取像素插值方式
 		InterpolationMode GetBitmapInterpolationMode() const;

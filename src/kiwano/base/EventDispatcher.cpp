@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "EventDispatcher.h"
-#include "../base/Logger.h"
+#include <kiwano/base/EventDispatcher.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {
@@ -51,7 +51,7 @@ namespace kiwano
 		return listener.get();
 	}
 
-	EventListener* EventDispatcher::AddListener(UInt32 type, EventCallback callback, String const& name)
+	EventListener* EventDispatcher::AddListener(EventType type, EventListener::Callback callback, String const& name)
 	{
 		EventListenerPtr listener = new EventListener(type, callback, name);
 		return AddListener(listener);
@@ -93,7 +93,7 @@ namespace kiwano
 		}
 	}
 
-	void EventDispatcher::StartListeners(UInt32 type)
+	void EventDispatcher::StartListeners(uint32_t type)
 	{
 		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
@@ -104,7 +104,7 @@ namespace kiwano
 		}
 	}
 
-	void EventDispatcher::StopListeners(UInt32 type)
+	void EventDispatcher::StopListeners(uint32_t type)
 	{
 		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
 		{
@@ -115,7 +115,7 @@ namespace kiwano
 		}
 	}
 
-	void EventDispatcher::RemoveListeners(UInt32 type)
+	void EventDispatcher::RemoveListeners(uint32_t type)
 	{
 		EventListenerPtr next;
 		for (auto listener = listeners_.first_item(); listener; listener = next)

@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "DebugActor.h"
-#include "Text.h"
-#include "../renderer/Renderer.h"
+#include <kiwano/2d/DebugActor.h>
+#include <kiwano/2d/Text.h>
+#include <kiwano/renderer/Renderer.h>
 #include <psapi.h>
 
 #pragma comment(lib, "psapi.lib")

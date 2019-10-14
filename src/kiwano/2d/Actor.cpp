@@ -18,20 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Actor.h"
-#include "Stage.h"
-#include "../base/Logger.h"
-#include "../renderer/Renderer.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/2d/Stage.h>
+#include <kiwano/base/Logger.h>
+#include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
 {
 	namespace
 	{
-		Float32 default_anchor_x = 0.f;
-		Float32 default_anchor_y = 0.f;
+		float default_anchor_x = 0.f;
+		float default_anchor_y = 0.f;
 	}
 
-	void Actor::SetDefaultAnchor(Float32 anchor_x, Float32 anchor_y)
+	void Actor::SetDefaultAnchor(float anchor_x, float anchor_y)
 	{
 		default_anchor_x = anchor_x;
 		default_anchor_y = anchor_y;
@@ -325,7 +325,7 @@ namespace kiwano
 		}
 	}
 
-	void Actor::SetZOrder(Int32 zorder)
+	void Actor::SetZOrder(int zorder)
 	{
 		if (z_order_ != zorder)
 		{
@@ -334,7 +334,7 @@ namespace kiwano
 		}
 	}
 
-	void Actor::SetOpacity(Float32 opacity)
+	void Actor::SetOpacity(float opacity)
 	{
 		if (opacity_ == opacity)
 			return;
@@ -361,12 +361,12 @@ namespace kiwano
 		dirty_transform_ = true;
 	}
 
-	void Actor::SetWidth(Float32 width)
+	void Actor::SetWidth(float width)
 	{
 		SetSize(Size{ width, size_.y });
 	}
 
-	void Actor::SetHeight(Float32 height)
+	void Actor::SetHeight(float height)
 	{
 		SetSize(Size{ size_.x, height });
 	}
@@ -410,12 +410,12 @@ namespace kiwano
 		dirty_transform_ = true;
 	}
 
-	void Actor::SetPositionX(Float32 x)
+	void Actor::SetPositionX(float x)
 	{
 		SetPosition(Point{ x, transform_.position.y });
 	}
 
-	void Actor::SetPositionY(Float32 y)
+	void Actor::SetPositionY(float y)
 	{
 		SetPosition(Point{ transform_.position.x, y });
 	}
@@ -445,7 +445,7 @@ namespace kiwano
 		is_fast_transform_ = false;
 	}
 
-	void Actor::SetRotation(Float32 angle)
+	void Actor::SetRotation(float angle)
 	{
 		if (transform_.rotation == angle)
 			return;
@@ -502,7 +502,7 @@ namespace kiwano
 	Vector<ActorPtr> Actor::GetChildren(String const& name) const
 	{
 		Vector<ActorPtr> children;
-		UInt32 hash_code = std::hash<String>{}(name);
+		size_t hash_code = std::hash<String>{}(name);
 
 		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 		{
@@ -516,7 +516,7 @@ namespace kiwano
 
 	ActorPtr Actor::GetChild(String const& name) const
 	{
-		UInt32 hash_code = std::hash<String>{}(name);
+		size_t hash_code = std::hash<String>{}(name);
 
 		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
 		{
@@ -568,7 +568,7 @@ namespace kiwano
 			return;
 		}
 
-		UInt32 hash_code = std::hash<String>{}(child_name);
+		size_t hash_code = std::hash<String>{}(child_name);
 
 		Actor* next;
 		for (Actor* child = children_.first_item().get(); child; child = next)

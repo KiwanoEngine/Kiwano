@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "D3D10DeviceResources.h"
+#include <kiwano/renderer/win32/D3D10DeviceResources.h>
 
-#include "../../base/Logger.h"
+#include <kiwano/base/Logger.h>
 
 #pragma comment(lib, "d3d10_1.lib")
 
@@ -29,7 +29,7 @@ namespace kiwano
 
 	namespace DX
 	{
-		HRESULT CreateD3DDevice(IDXGIAdapter *adapter, D3D10_DRIVER_TYPE driver_type, UInt32 flags, ID3D10Device1 **device)
+		HRESULT CreateD3DDevice(IDXGIAdapter *adapter, D3D10_DRIVER_TYPE driver_type, uint32_t flags, ID3D10Device1 **device)
 		{
 			HRESULT hr = S_OK;
 
@@ -42,7 +42,7 @@ namespace kiwano
 				D3D10_FEATURE_LEVEL_9_1,
 			};
 
-			for (UInt32 level = 0; level < ARRAYSIZE(levels); level++)
+			for (uint32_t level = 0; level < ARRAYSIZE(levels); level++)
 			{
 				hr = D3D10CreateDevice1(
 					adapter,
@@ -89,7 +89,7 @@ namespace kiwano
 
 		HRESULT SetLogicalSize(Size logical_size);
 
-		HRESULT SetDpi(Float32 dpi);
+		HRESULT SetDpi(float dpi);
 
 		void DiscardResources();
 
@@ -114,7 +114,7 @@ namespace kiwano
 
 	public:
 		HWND	hwnd_;
-		Float32	dpi_;
+		float	dpi_;
 		Size	logical_size_;
 		Size	output_size_;
 		unsigned long ref_count_;
@@ -127,7 +127,7 @@ namespace kiwano
 		: ref_count_(0)
 		, hwnd_(nullptr)
 	{
-		dpi_ = 96.f; // dpi_ = (Float32)GetDpiForWindow(hwnd);
+		dpi_ = 96.f; // dpi_ = (float)GetDpiForWindow(hwnd);
 	}
 
 	D3D10DeviceResources::~D3D10DeviceResources()
@@ -149,8 +149,8 @@ namespace kiwano
 
 				res->hwnd_ = hwnd;
 				res->d2d_res_ = d2d_device_res;
-				res->logical_size_.x = Float32(rc.right - rc.left);
-				res->logical_size_.y = Float32(rc.bottom - rc.top);
+				res->logical_size_.x = float(rc.right - rc.left);
+				res->logical_size_.y = float(rc.bottom - rc.top);
 
 				hr = res->CreateDeviceResources();
 
@@ -193,7 +193,7 @@ namespace kiwano
 
 		auto rt_view = rt_view_.get();
 		device_->OMSetRenderTargets(1, &rt_view, ds_view_.get());
-		device_->ClearRenderTargetView(rt_view, reinterpret_cast<Float32*>(&clear_color));
+		device_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
 		return S_OK;
 	}
 
@@ -215,7 +215,7 @@ namespace kiwano
 
 		// This flag adds support for surfaces with a different color channel ordering
 		// than the API default. It is required for compatibility with Direct2D.
-		UInt32 creation_flags = D3D10_CREATE_DEVICE_BGRA_SUPPORT;
+		uint32_t creation_flags = D3D10_CREATE_DEVICE_BGRA_SUPPORT;
 
 #if defined(KGE_DEBUG) && defined(KGE_ENABLE_DX_DEBUG)
 		if (DX::SdkLayersAvailable())
@@ -383,8 +383,8 @@ namespace kiwano
 			tex_desc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
 			tex_desc.CPUAccessFlags = 0;
 			tex_desc.Format = DXGI_FORMAT_D16_UNORM;
-			tex_desc.Width = static_cast<UInt32>(output_size_.x);
-			tex_desc.Height = static_cast<UInt32>(output_size_.y);
+			tex_desc.Width = static_cast<uint32_t>(output_size_.x);
+			tex_desc.Height = static_cast<uint32_t>(output_size_.y);
 			tex_desc.MipLevels = 1;
 			tex_desc.MiscFlags = 0;
 			tex_desc.SampleDesc.Count = 1;
@@ -415,8 +415,8 @@ namespace kiwano
 		{
 			// Set a new viewport based on the new dimensions
 			D3D10_VIEWPORT viewport;
-			viewport.Width = static_cast<UInt32>(output_size_.x);
-			viewport.Height = static_cast<UInt32>(output_size_.y);
+			viewport.Width = static_cast<uint32_t>(output_size_.x);
+			viewport.Height = static_cast<uint32_t>(output_size_.y);
 			viewport.TopLeftX = 0;
 			viewport.TopLeftY = 0;
 			viewport.MinDepth = 0;
@@ -478,7 +478,7 @@ namespace kiwano
 		return S_OK;
 	}
 
-	HRESULT D3D10DeviceResources::SetDpi(Float32 dpi)
+	HRESULT D3D10DeviceResources::SetDpi(float dpi)
 	{
 		if (dpi != dpi_)
 		{
@@ -487,8 +487,8 @@ namespace kiwano
 			RECT rc;
 			GetClientRect(hwnd_, &rc);
 
-			logical_size_.x = Float32(rc.right - rc.left);
-			logical_size_.y = Float32(rc.bottom - rc.top);
+			logical_size_.x = float(rc.right - rc.left);
+			logical_size_.y = float(rc.bottom - rc.top);
 
 			d2d_res_->GetDeviceContext()->SetDpi(dpi_, dpi_);
 

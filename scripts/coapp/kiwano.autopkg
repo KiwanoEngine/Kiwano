@@ -95,8 +95,8 @@ nuget {
             ${SRC_ROOT}\**\*.hpp
         };
 
-        // kiwano-network 3-rd patry
-        bin: { ${SRC_ROOT}\kiwano-network\dlls\*.dll };
+        // third patry
+        bin: { ${SRC_ROOT}\3rd-party\**\*.dll };
 
         ("v140,v141,v142", "Win32", "Debug") => {
             [${0},${1},${2}] {

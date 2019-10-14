@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\src\kiwano-network\kiwano-network.h" />
+    <ClInclude Include="..\..\src\kiwano-network\HttpClient.h" />
+    <ClInclude Include="..\..\src\kiwano-network\HttpRequest.h" />
+    <ClInclude Include="..\..\src\kiwano-network\HttpResponse.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\kiwano-network\HttpClient.cpp" />
+    <ClCompile Include="..\..\src\kiwano-network\HttpRequest.cpp" />
+  </ItemGroup>
+</Project>

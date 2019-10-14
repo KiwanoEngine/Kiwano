@@ -19,21 +19,24 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "vector.hpp"
-#include "string.hpp"
-#include "intrusive_list.hpp"
-#include "intrusive_ptr.hpp"
-#include "noncopyable.hpp"
-#include "singleton.hpp"
-#include "function.hpp"
-#include "basic_json.hpp"
 #include <set>
 #include <map>
 #include <list>
 #include <queue>
+#include <stack>
 #include <unordered_set>
 #include <unordered_map>
 #include <sstream>
+
+#include <kiwano/core/vector.hpp>
+#include <kiwano/core/string.hpp>
+#include <kiwano/core/any.hpp>
+#include <kiwano/core/intrusive_list.hpp>
+#include <kiwano/core/intrusive_ptr.hpp>
+#include <kiwano/core/noncopyable.hpp>
+#include <kiwano/core/singleton.hpp>
+#include <kiwano/core/function.hpp>
+#include <kiwano/core/basic_json.hpp>
 
 namespace kiwano
 {
@@ -59,6 +62,9 @@ namespace kiwano
 	template <typename _Ty, typename... _Args>
 	using UnorderedSet = std::unordered_set<_Ty, _Args...>;
 
+	template <typename _Ty, typename... _Args>
+	using Stack = std::stack<_Ty, _Args...>;
+
 	template <typename _Kty, typename _Ty, typename... _Args>
 	using Map = std::map<_Kty, _Ty, _Args...>;
 
@@ -68,8 +74,10 @@ namespace kiwano
 	template <typename _FuncTy>
 	using Function = kiwano::core::function<_FuncTy>;
 
+	using Any = kiwano::core::any;
+
 	using Json = kiwano::core::basic_json<kiwano::Map, kiwano::Vector, kiwano::String,
-		Int32, Float64, bool, std::allocator>;
+		int, double, bool, std::allocator>;
 }
 
 namespace std
@@ -77,7 +85,7 @@ namespace std
 	template<>
 	struct hash<::kiwano::Json>
 	{
-		::std::size_t operator()(const ::kiwano::Json& json) const
+		size_t operator()(const ::kiwano::Json& json) const
 		{
 			return hash<::kiwano::Json::string_type>{}(json.dump());
 		}

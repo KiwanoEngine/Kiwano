@@ -18,10 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "time.h"
-#include "Logger.h"
 #include <regex>
 #include <unordered_map>
+
+#include <kiwano/base/time.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {
@@ -97,7 +98,7 @@ namespace kiwano
 
 		namespace
 		{
-			const auto duration_regex = std::wregex(LR"([-+]?([0-9]*(\.[0-9]*)?[a-z]+)+)");
+			const auto duration_regex = std::wregex(LR"(^[-+]?([0-9]*(\.[0-9]*)?(h|m|s|ms)+)+$)");
 
 			typedef std::unordered_map<String, Duration> UnitMap;
 			const auto unit_map = UnitMap
@@ -119,25 +120,25 @@ namespace kiwano
 		{
 		}
 
-		Float32 Duration::Seconds() const
+		float Duration::Seconds() const
 		{
 			long sec = milliseconds_ / Sec.milliseconds_;
 			long ms = milliseconds_ % Sec.milliseconds_;
-			return static_cast<Float32>(sec) + static_cast<Float32>(ms) / 1000.f;
+			return static_cast<float>(sec) + static_cast<float>(ms) / 1000.f;
 		}
 
-		Float32 Duration::Minutes() const
+		float Duration::Minutes() const
 		{
 			long min = milliseconds_ / Min.milliseconds_;
 			long ms = milliseconds_ % Min.milliseconds_;
-			return static_cast<Float32>(min) + static_cast<Float32>(ms) / (60 * 1000.f);
+			return static_cast<float>(min) + static_cast<float>(ms) / (60 * 1000.f);
 		}
 
-		Float32 Duration::Hours() const
+		float Duration::Hours() const
 		{
 			long hour = milliseconds_ / Hour.milliseconds_;
 			long ms = milliseconds_ % Hour.milliseconds_;
-			return static_cast<Float32>(hour) + static_cast<Float32>(ms) / (60 * 60 * 1000.f);
+			return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
 		}
 
 		String kiwano::time::Duration::ToString() const
@@ -172,14 +173,7 @@ namespace kiwano
 
 			if (ms != 0)
 			{
-				auto float_to_str = [](Float32 val) -> String
-				{
-					WChar buf[10] = {};
-					::swprintf_s(buf, L"%g", val);
-					return String(buf);
-				};
-
-				result.append(float_to_str(static_cast<Float32>(sec) + static_cast<Float32>(ms) / 1000.f))
+				result.append(String::parse(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f))
 					.append(L"s");
 			}
 			else if (sec != 0)
@@ -219,9 +213,9 @@ namespace kiwano
 			return milliseconds_ <= other.milliseconds_;
 		}
 
-		Float32 kiwano::time::Duration::operator/(const Duration & other) const
+		float kiwano::time::Duration::operator/(const Duration & other) const
 		{
-			return static_cast<Float32>(milliseconds_) / other.milliseconds_;
+			return static_cast<float>(milliseconds_) / other.milliseconds_;
 		}
 
 		const Duration Duration::operator+(const Duration & other) const
@@ -239,7 +233,7 @@ namespace kiwano
 			return Duration(-milliseconds_);
 		}
 
-		const Duration Duration::operator*(Int32 val) const
+		const Duration Duration::operator*(int val) const
 		{
 			return Duration(milliseconds_ * val);
 		}
@@ -249,12 +243,12 @@ namespace kiwano
 			return Duration(static_cast<long>(milliseconds_ * val));
 		}
 
-		const Duration Duration::operator*(Float32 val) const
+		const Duration Duration::operator*(float val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ * val));
 		}
 
-		const Duration Duration::operator*(Float64 val) const
+		const Duration Duration::operator*(double val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ * val));
 		}
@@ -264,17 +258,17 @@ namespace kiwano
 			return Duration(static_cast<long>(milliseconds_ * val));
 		}
 
-		const Duration Duration::operator/(Int32 val) const
+		const Duration Duration::operator/(int val) const
 		{
 			return Duration(milliseconds_ / val);
 		}
 
-		const Duration Duration::operator/(Float32 val) const
+		const Duration Duration::operator/(float val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ / val));
 		}
 
-		const Duration Duration::operator/(Float64 val) const
+		const Duration Duration::operator/(double val) const
 		{
 			return Duration(static_cast<long>(milliseconds_ / val));
 		}
@@ -291,68 +285,68 @@ namespace kiwano
 			return (*this);
 		}
 
-		Duration & Duration::operator*=(Int32 val)
+		Duration & Duration::operator*=(int val)
 		{
 			milliseconds_ *= val;
 			return (*this);
 		}
 
-		Duration & Duration::operator/=(Int32 val)
+		Duration & Duration::operator/=(int val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ / val);
 			return (*this);
 		}
 
-		Duration & Duration::operator*=(Float32 val)
+		Duration & Duration::operator*=(float val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ * val);
 			return (*this);
 		}
 
-		Duration & Duration::operator/=(Float32 val)
+		Duration & Duration::operator/=(float val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ / val);
 			return (*this);
 		}
 
-		Duration & Duration::operator*=(Float64 val)
+		Duration & Duration::operator*=(double val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ * val);
 			return (*this);
 		}
 
-		Duration & Duration::operator/=(Float64 val)
+		Duration & Duration::operator/=(double val)
 		{
 			milliseconds_ = static_cast<long>(milliseconds_ / val);
 			return (*this);
 		}
 
-		const Duration kiwano::time::operator*(Int32 val, const Duration & dur)
+		const Duration kiwano::time::operator*(int val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		const Duration kiwano::time::operator/(Int32 val, const Duration & dur)
+		const Duration kiwano::time::operator/(int val, const Duration & dur)
 		{
 			return dur / val;
 		}
 
-		const Duration kiwano::time::operator*(Float32 val, const Duration & dur)
+		const Duration kiwano::time::operator*(float val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		const Duration kiwano::time::operator/(Float32 val, const Duration & dur)
+		const Duration kiwano::time::operator/(float val, const Duration & dur)
 		{
 			return dur / val;
 		}
 
-		const Duration kiwano::time::operator*(Float64 val, const Duration & dur)
+		const Duration kiwano::time::operator*(double val, const Duration & dur)
 		{
 			return dur * val;
 		}
 
-		const Duration kiwano::time::operator/(Float64 val, const Duration & dur)
+		const Duration kiwano::time::operator/(double val, const Duration & dur)
 		{
 			return dur / val;
 		}
@@ -364,18 +358,18 @@ namespace kiwano
 
 		Duration Duration::Parse(const String& str)
 		{
-			UInt32 len = str.length();
-			UInt32 pos = 0;
-			bool negative = false;
-			Duration d;
+			bool		negative	= false;
+			size_t	len			= str.length();
+			size_t	pos			= 0;
+			Duration	ret;
 
 			if (!std::regex_match(str.c_str(), duration_regex))
 			{
 				KGE_ERROR_LOG(L"Duration::Parse failed, invalid duration");
-				return Duration();
+				return ret;
 			}
 
-			if (str.empty() || str == L"0") { return d; }
+			if (str.empty() || str == L"0") { return ret; }
 
 			// 符号位
 			if (str[0] == L'-' || str[0] == L'+')
@@ -387,10 +381,10 @@ namespace kiwano
 			while (pos < len)
 			{
 				// 数值
-				UInt32 i = pos;
+				size_t i = pos;
 				for (; i < len; ++i)
 				{
-					WChar ch = str[i];
+					wchar_t ch = str[i];
 					if (!(ch == L'.' || L'0' <= ch && ch <= L'9'))
 					{
 						break;
@@ -400,16 +394,12 @@ namespace kiwano
 				String num_str = str.substr(pos, i - pos);
 				pos = i;
 
-				if (num_str.empty() || num_str == L".")
-				{
-					KGE_ERROR_LOG(L"Duration::Parse failed, invalid duration");
-					return Duration();
-				}
+				KGE_ASSERT(!(num_str.empty() || num_str == L".") && "Duration::Parse failed, invalid duration");
 
 				// 单位
 				for (; i < len; ++i)
 				{
-					WChar ch = str[i];
+					wchar_t ch = str[i];
 					if (ch == L'.' || L'0' <= ch && ch <= L'9')
 					{
 						break;
@@ -419,22 +409,18 @@ namespace kiwano
 				String unit_str = str.substr(pos, i - pos);
 				pos = i;
 
-				if (unit_map.find(unit_str) == unit_map.end())
-				{
-					KGE_ERROR_LOG(L"Duration::Parse failed, invalid duration");
-					return Duration();
-				}
+				KGE_ASSERT(unit_map.find(unit_str) != unit_map.end() && "Duration::Parse failed, invalid duration");
 
-				Float64 num = std::wcstod(num_str.c_str(), nullptr);
+				double num = std::wcstod(num_str.c_str(), nullptr);
 				Duration unit = unit_map.at(unit_str);
-				d += unit * num;
+				ret += unit * num;
 			}
 
 			if (negative)
 			{
-				d = -d;
+				ret = -ret;
 			}
-			return d;
+			return ret;
 		}
 	}
 }

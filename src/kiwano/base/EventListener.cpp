@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "EventListener.h"
+#include <kiwano/base/EventListener.h>
 
 namespace kiwano
 {
-	EventListener::EventListener(UInt32 type, EventCallback const & callback, String const & name)
+	EventListener::EventListener(EventType type, Callback const & callback, String const & name)
 		: type_(type)
 		, callback_(callback)
 		, running_(true)

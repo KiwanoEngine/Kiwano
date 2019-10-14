@@ -25,69 +25,70 @@
 
 #pragma once
 
-#include "macros.h"
+#include <kiwano/macros.h>
 
 
 //
 // core
 //
 
-#include "core/vector.hpp"
-#include "core/string.hpp"
-#include "core/core.h"
-#include "core/Function.hpp"
-#include "core/intrusive_list.hpp"
-#include "core/intrusive_ptr.hpp"
-#include "core/noncopyable.hpp"
-#include "core/singleton.hpp"
-#include "core/basic_json.hpp"
+#include <kiwano/core/vector.hpp>
+#include <kiwano/core/string.hpp>
+#include <kiwano/core/any.hpp>
+#include <kiwano/core/function.hpp>
+#include <kiwano/core/intrusive_list.hpp>
+#include <kiwano/core/intrusive_ptr.hpp>
+#include <kiwano/core/noncopyable.hpp>
+#include <kiwano/core/singleton.hpp>
+#include <kiwano/core/basic_json.hpp>
+#include <kiwano/core/core.h>
 
 
 //
 // math
 //
 
-#include "math/constants.hpp"
-#include "math/scalar.hpp"
-#include "math/ease.hpp"
-#include "math/Vec2.hpp"
-#include "math/rand.h"
-#include "math/Matrix.hpp"
+#include <kiwano/math/constants.h>
+#include <kiwano/math/scalar.h>
+#include <kiwano/math/ease.h>
+#include <kiwano/math/Vec2.hpp>
+#include <kiwano/math/rand.h>
+#include <kiwano/math/Matrix.hpp>
 
 
 //
 // renderer
 //
 
-#include "renderer/Color.h"
-#include "renderer/Font.h"
-#include "renderer/Texture.h"
-#include "renderer/GifImage.h"
-#include "renderer/TextLayout.h"
-#include "renderer/Geometry.h"
-#include "renderer/LayerArea.h"
-#include "renderer/TextureCache.h"
-#include "renderer/Renderer.h"
+#include <kiwano/renderer/Color.h>
+#include <kiwano/renderer/Font.h>
+#include <kiwano/renderer/Texture.h>
+#include <kiwano/renderer/GifImage.h>
+#include <kiwano/renderer/TextLayout.h>
+#include <kiwano/renderer/Geometry.h>
+#include <kiwano/renderer/LayerArea.h>
+#include <kiwano/renderer/TextureCache.h>
+#include <kiwano/renderer/Renderer.h>
 
 
 //
 // base
 //
 
-#include "base/time.h"
-#include "base/Window.h"
-#include "base/input.h"
-#include "base/Director.h"
-#include "base/Logger.h"
-#include "base/SmartPtr.hpp"
-#include "base/ObjectBase.h"
-#include "base/Event.hpp"
-#include "base/EventListener.h"
-#include "base/EventDispatcher.h"
-#include "base/Timer.h"
-#include "base/TimerManager.h"
-#include "base/AsyncTask.h"
-#include "base/Resource.h"
+#include <kiwano/base/time.h>
+#include <kiwano/base/Window.h>
+#include <kiwano/base/input.h>
+#include <kiwano/base/Director.h>
+#include <kiwano/base/Logger.h>
+#include <kiwano/base/SmartPtr.hpp>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/Event.hpp>
+#include <kiwano/base/EventListener.h>
+#include <kiwano/base/EventDispatcher.h>
+#include <kiwano/base/Timer.h>
+#include <kiwano/base/TimerManager.h>
+#include <kiwano/base/AsyncTask.h>
+#include <kiwano/base/Resource.h>
 
 
 //
@@ -95,55 +96,54 @@
 //
 
 
-#include "2d/Transform.h"
-#include "2d/TextStyle.hpp"
+#include <kiwano/2d/Transform.h>
+#include <kiwano/2d/TextStyle.hpp>
 
-#include "2d/Frame.h"
-#include "2d/FrameSequence.h"
+#include <kiwano/2d/Frame.h>
+#include <kiwano/2d/FrameSequence.h>
 
-#include "2d/action/Action.h"
-#include "2d/action/ActionGroup.h"
-#include "2d/action/ActionTween.h"
-#include "2d/action/ActionWalk.h"
-#include "2d/action/ActionDelay.h"
-#include "2d/action/Animation.h"
-#include "2d/action/ActionHelper.h"
-#include "2d/action/ActionManager.h"
+#include <kiwano/2d/action/Action.h>
+#include <kiwano/2d/action/ActionGroup.h>
+#include <kiwano/2d/action/ActionTween.h>
+#include <kiwano/2d/action/ActionWalk.h>
+#include <kiwano/2d/action/ActionDelay.h>
+#include <kiwano/2d/action/Animation.h>
+#include <kiwano/2d/action/ActionHelper.h>
+#include <kiwano/2d/action/ActionManager.h>
 
-#include "2d/Transition.h"
+#include <kiwano/2d/Transition.h>
 
-#include "2d/Actor.h"
-#include "2d/Stage.h"
-#include "2d/Layer.h"
-#include "2d/Sprite.h"
-#include "2d/GifSprite.h"
-#include "2d/Text.h"
-#include "2d/Canvas.h"
-#include "2d/ShapeActor.h"
-#include "2d/DebugActor.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/2d/Stage.h>
+#include <kiwano/2d/Layer.h>
+#include <kiwano/2d/Sprite.h>
+#include <kiwano/2d/GifSprite.h>
+#include <kiwano/2d/Text.h>
+#include <kiwano/2d/Canvas.h>
+#include <kiwano/2d/ShapeActor.h>
+#include <kiwano/2d/DebugActor.h>
 
 
 //
 // platform
 //
 
-#include "platform/modules.h"
-#include "platform/Application.h"
+#include <kiwano/platform/modules.h>
+#include <kiwano/platform/Application.h>
 
 
 //
 // utils
 //
 
-#include "utils/Path.h"
-#include "utils/DataUtil.h"
-#include "utils/FileUtil.h"
-#include "utils/ResourceCache.h"
+#include <kiwano/utils/FileSystem.h>
+#include <kiwano/utils/LocalStorage.h>
+#include <kiwano/utils/ResourceCache.h>
 
 
 //
 // ui
 //
 
-#include "ui/Button.h"
-#include "ui/Menu.h"
+#include <kiwano/ui/Button.h>
+#include <kiwano/ui/Menu.h>

@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "TimerManager.h"
-#include "../base/Logger.h"
+#include <kiwano/base/TimerManager.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {
@@ -41,7 +41,7 @@ namespace kiwano
 		}
 	}
 
-	Timer* TimerManager::AddTimer(Timer::Callback const& func, Duration delay, Int32 times, String const& name)
+	Timer* TimerManager::AddTimer(Timer::Callback const& func, Duration delay, int times, String const& name)
 	{
 		TimerPtr timer = new Timer(func, delay, times, name);
 		return AddTimer(timer);

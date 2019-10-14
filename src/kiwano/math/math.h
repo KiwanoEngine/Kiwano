@@ -19,19 +19,19 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "..\core\core.h"
-#include "constants.hpp"
-#include "ease.hpp"
-#include "scalar.hpp"
-#include "Vec2.hpp"
-#include "Rect.hpp"
-#include "Matrix.hpp"
+#include <kiwano/core/core.h>
+#include <kiwano/math/constants.h>
+#include <kiwano/math/ease.h>
+#include <kiwano/math/scalar.h>
+#include <kiwano/math/Vec2.hpp>
+#include <kiwano/math/Rect.hpp>
+#include <kiwano/math/Matrix.hpp>
 
 namespace kiwano
 {
-	using Vec2 = kiwano::math::Vec2T<Float32>;
-	using Rect = kiwano::math::RectT<Float32>;
-	using Matrix3x2 = kiwano::math::Matrix3x2T<Float32>;
+	using Vec2 = kiwano::math::Vec2T<float>;
+	using Rect = kiwano::math::RectT<float>;
+	using Matrix3x2 = kiwano::math::Matrix3x2T<float>;
 
 	using Point = Vec2;
 	using Size = Vec2;

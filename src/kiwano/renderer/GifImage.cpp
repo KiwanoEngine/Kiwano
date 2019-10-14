@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "GifImage.h"
-#include "Renderer.h"
-#include "../base/Logger.h"
+#include <kiwano/renderer/GifImage.h>
+#include <kiwano/renderer/Renderer.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {
@@ -95,8 +95,8 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				UInt32 width = 0;
-				UInt32 height = 0;
+				uint32_t width = 0;
+				uint32_t height = 0;
 
 				PROPVARIANT prop_val;
 				::PropVariantInit(&prop_val);
@@ -148,17 +148,17 @@ namespace kiwano
 							{
 								// 需要计算比率
 								// 最高像素 1：4，最宽像素 4：1，增量为 1/64
-								Float32 pixel_asp_ratio = (prop_val.bVal + 15.f) / 64.f;
+								float pixel_asp_ratio = (prop_val.bVal + 15.f) / 64.f;
 
 								// 根据像素长宽比计算像素中的图像宽度和高度，只缩小图像
 								if (pixel_asp_ratio > 1.f)
 								{
 									width_in_pixels_ = width;
-									height_in_pixels_ = static_cast<UInt32>(height / pixel_asp_ratio);
+									height_in_pixels_ = static_cast<uint32_t>(height / pixel_asp_ratio);
 								}
 								else
 								{
-									width_in_pixels_ = static_cast<UInt32>(width * pixel_asp_ratio);
+									width_in_pixels_ = static_cast<uint32_t>(width * pixel_asp_ratio);
 									height_in_pixels_ = height;
 								}
 							}

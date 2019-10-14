@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Actor.h"
-#include "../renderer/Geometry.h"
-#include "../renderer/StrokeStyle.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/renderer/Geometry.h>
+#include <kiwano/renderer/StrokeStyle.h>
 
 namespace kiwano
 {
@@ -45,7 +45,7 @@ namespace kiwano
 		inline Color GetStrokeColor() const			{ return stroke_color_; }
 
 		// 获取线条宽度
-		inline Float32 GetStrokeWidth() const		{ return stroke_width_; }
+		inline float GetStrokeWidth() const		{ return stroke_width_; }
 
 		// 获取线条样式
 		inline StrokeStyle SetStrokeStyle() const	{ return stroke_style_; }
@@ -69,7 +69,7 @@ namespace kiwano
 		void SetStrokeColor(const Color& color);
 
 		// 设置线条宽度
-		void SetStrokeWidth(Float32 width);
+		void SetStrokeWidth(float width);
 
 		// 设置线条样式
 		void SetStrokeStyle(StrokeStyle stroke_style);
@@ -82,7 +82,7 @@ namespace kiwano
 	protected:
 		Color		fill_color_;
 		Color		stroke_color_;
-		Float32		stroke_width_;
+		float		stroke_width_;
 		StrokeStyle	stroke_style_;
 		Rect		bounds_;
 		Geometry	geo_;
@@ -195,17 +195,17 @@ namespace kiwano
 		CircleActor();
 
 		CircleActor(
-			Float32 radius
+			float radius
 		);
 
 		virtual ~CircleActor();
 
-		inline Float32 GetRadius() const { return radius_; }
+		inline float GetRadius() const { return radius_; }
 
-		void SetRadius(Float32 radius);
+		void SetRadius(float radius);
 
 	protected:
-		Float32 radius_;
+		float radius_;
 	};
 
 
@@ -292,7 +292,7 @@ namespace kiwano
 		void AddArc(
 			Point const& point,		/* 终点 */
 			Size const& radius,		/* 椭圆半径 */
-			Float32 rotation,		/* 椭圆旋转角度 */
+			float rotation,		/* 椭圆旋转角度 */
 			bool clockwise = true,	/* 顺时针 or 逆时针 */
 			bool is_small = true	/* 是否取小于 180° 的弧 */
 		);

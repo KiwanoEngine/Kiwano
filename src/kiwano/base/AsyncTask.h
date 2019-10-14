@@ -19,9 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "ObjectBase.h"
 #include <thread>
 #include <mutex>
+
+#include <kiwano/base/ObjectBase.h>
 
 namespace kiwano
 {

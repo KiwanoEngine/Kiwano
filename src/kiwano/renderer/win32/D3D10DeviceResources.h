@@ -20,10 +20,10 @@
 
 #pragma once
 
-#include "../../macros.h"
+#include <kiwano/macros.h>
 
-#include "D2DDeviceResources.h"
-#include "D3DDeviceResourcesBase.h"
+#include <kiwano/renderer/win32/D2DDeviceResources.h>
+#include <kiwano/renderer/win32/D3DDeviceResourcesBase.h>
 #include <d3d10_1.h>
 
 namespace kiwano

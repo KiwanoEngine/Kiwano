@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Font.h"
+#include <kiwano/renderer/Font.h>
 
 namespace kiwano
 {
-	Font::Font(String const& family, Float32 size, UInt32 weight, bool italic)
+	Font::Font(String const& family, float size, uint32_t weight, bool italic)
 		: family(family)
 		, size(size)
 		, weight(weight)
@@ -31,7 +31,7 @@ namespace kiwano
 	{
 	}
 
-	Font::Font(FontCollection collection, String const& family, Float32 size, UInt32 weight, bool italic)
+	Font::Font(FontCollection collection, String const& family, float size, uint32_t weight, bool italic)
 		: family(family)
 		, size(size)
 		, weight(weight)

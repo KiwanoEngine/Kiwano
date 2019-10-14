@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../include-forwards.h"
+#include <kiwano/2d/include-forwards.h>
 
 namespace kiwano
 {
@@ -62,7 +62,7 @@ namespace kiwano
 		inline void SetDelay(Duration delay)						{ delay_ = delay; }
 
 		// 设置循环次数 (-1 为永久循环)
-		inline void SetLoops(Int32 loops)							{ loops_ = loops; }
+		inline void SetLoops(int loops)								{ loops_ = loops; }
 
 		// 动作结束时移除目标角色
 		inline void RemoveTargetWhenDone()							{ detach_target_ = true; }
@@ -89,7 +89,7 @@ namespace kiwano
 
 		inline bool IsRemoveable() const							{ return status_ == Status::Removeable; }
 
-		inline Int32 GetLoops() const								{ return loops_; }
+		inline int GetLoops() const									{ return loops_; }
 
 		inline Duration GetDelay() const							{ return delay_; }
 
@@ -114,8 +114,8 @@ namespace kiwano
 		Status			status_;
 		bool			running_;
 		bool			detach_target_;
-		Int32			loops_;
-		Int32			loops_done_;
+		int				loops_;
+		int				loops_done_;
 		Duration		delay_;
 		Duration		elapsed_;
 		ActionCallback	cb_done_;

@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "D2DDeviceResources.h"
-#include "../../base/Logger.h"
+#include <kiwano/renderer/win32/D2DDeviceResources.h>
+#include <kiwano/base/Logger.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -96,7 +96,7 @@ namespace kiwano
 
 	protected:
 		unsigned long ref_count_;
-		Float32 dpi_;
+		float dpi_;
 	};
 
 

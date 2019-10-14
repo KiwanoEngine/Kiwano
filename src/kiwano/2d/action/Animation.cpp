@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Animation.h"
-#include "../FrameSequence.h"
-#include "../Sprite.h"
+#include <kiwano/2d/action/Animation.h>
+#include <kiwano/2d/FrameSequence.h>
+#include <kiwano/2d/Sprite.h>
 
 namespace kiwano
 {
@@ -68,7 +68,7 @@ namespace kiwano
 		}
 	}
 
-	void Animation::UpdateTween(ActorPtr target, Float32 percent)
+	void Animation::UpdateTween(ActorPtr target, float percent)
 	{
 		auto sprite_target = dynamic_cast<Sprite*>(target.get());
 
@@ -76,7 +76,7 @@ namespace kiwano
 		{
 			const auto& frames = frame_seq_->GetFrames();
 			auto size = frames.size();
-			auto index = std::min(static_cast<UInt32>(math::Floor(size * percent)), size - 1);
+			auto index = std::min(static_cast<size_t>(math::Floor(size * percent)), size - 1);
 
 			sprite_target->SetFrame(frames[index]);
 		}

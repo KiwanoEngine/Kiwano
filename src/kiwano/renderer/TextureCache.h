@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Texture.h"
-#include "GifImage.h"
+#include <kiwano/renderer/Texture.h>
+#include <kiwano/renderer/GifImage.h>
 
 namespace kiwano
 {
@@ -48,10 +48,10 @@ namespace kiwano
 		virtual ~TextureCache();
 
 	protected:
-		using TextureMap = UnorderedMap<UInt32, Texture>;
+		using TextureMap = UnorderedMap<size_t, Texture>;
 		TextureMap texture_cache_;
 
-		using GifImageMap = UnorderedMap<UInt32, GifImage>;
+		using GifImageMap = UnorderedMap<size_t, GifImage>;
 		GifImageMap gif_texture_cache_;
 	};
 }

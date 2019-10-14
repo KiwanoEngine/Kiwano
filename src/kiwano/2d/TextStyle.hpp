@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
-#include "../renderer/StrokeStyle.h"
+#include <kiwano/2d/include-forwards.h>
+#include <kiwano/renderer/StrokeStyle.h>
 
 namespace kiwano
 {
@@ -38,26 +38,26 @@ namespace kiwano
 	public:
 		Color		color;				// 颜色
 		TextAlign	alignment;			// 对齐方式
-		Float32		wrap_width;			// 自动换行宽度
-		Float32		line_spacing;		// 行间距
+		float		wrap_width;			// 自动换行宽度
+		float		line_spacing;		// 行间距
 		bool		underline;			// 下划线
 		bool		strikethrough;		// 删除线
 		bool		outline;			// 显示描边
 		Color		outline_color;		// 描边颜色
-		Float32		outline_width;		// 描边线宽
+		float		outline_width;		// 描边线宽
 		StrokeStyle	outline_stroke;		// 描边线相交样式
 
 	public:
 		TextStyle(
 			Color color					= Color::White,
 			TextAlign alignment			= TextAlign::Left,
-			Float32 wrap_width			= 0.f,
-			Float32 line_spacing		= 0.f,
+			float wrap_width			= 0.f,
+			float line_spacing		= 0.f,
 			bool underline				= false,
 			bool strikethrough			= false,
 			bool outline				= false,
 			Color outline_color			= Color(Color::Black, 0.5),
-			Float32 outline_width		= 1.f,
+			float outline_width		= 1.f,
 			StrokeStyle outline_stroke	= StrokeStyle::Round
 		)
 			: color(color)

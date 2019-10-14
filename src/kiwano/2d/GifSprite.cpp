@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "GifSprite.h"
-#include "../base/Logger.h"
-#include "../renderer/TextureCache.h"
-#include "../renderer/Renderer.h"
+#include <kiwano/2d/GifSprite.h>
+#include <kiwano/base/win32/helper.h>
+#include <kiwano/renderer/TextureCache.h>
+#include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
 {
@@ -71,7 +71,7 @@ namespace kiwano
 			loop_count_ = 0;
 			frame_.disposal_type = GifImage::DisposalType::None;
 
-			SetSize(Size{ static_cast<Float32>(gif_.GetWidthInPixels()), static_cast<Float32>(gif_.GetHeightInPixels()) });
+			SetSize(Size{ static_cast<float>(gif_.GetWidthInPixels()), static_cast<float>(gif_.GetHeightInPixels()) });
 
 			if (!frame_rt_.IsValid())
 			{

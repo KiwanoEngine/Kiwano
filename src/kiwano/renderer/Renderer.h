@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../base/Component.h"
-#include "win32/FontCollectionLoader.h"
-#include "RenderTarget.h"
-#include "GifImage.h"
+#include <kiwano/base/Component.h>
+#include <kiwano/renderer/win32/FontCollectionLoader.h>
+#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/renderer/GifImage.h>
 
 #if defined(KGE_USE_DIRECTX10)
-#	include "D3D10DeviceResources.h"
+#	include "win32/D3D10DeviceResources.h"
 #else
 #	include "win32/D3D11DeviceResources.h"
 #endif
@@ -55,7 +55,8 @@ namespace kiwano
 	// äÖÈ¾Æ÷
 	class KGE_API Renderer
 		: public Singleton<Renderer>
-		, public Component
+		, public RenderComponent
+		, public EventComponent
 		, public RenderTarget
 	{
 		KGE_DECLARE_SINGLETON(Renderer);
@@ -71,7 +72,6 @@ namespace kiwano
 			bool enabled
 		);
 
-	public:
 		void CreateTexture(
 			Texture& texture,
 			String const& file_path
@@ -95,7 +95,7 @@ namespace kiwano
 		void CreateGifImageFrame(
 			GifImage::Frame& frame,
 			GifImage const& gif,
-			UInt32 frame_index
+			size_t frame_index
 		);
 
 		void CreateFontCollection(
@@ -183,7 +183,7 @@ namespace kiwano
 
 		void AfterRender() override;
 
-		void HandleMessage(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam) override;
+		void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
 
 	public:
 		inline HWND						GetTargetWindow() const			{ return hwnd_; }
@@ -205,18 +205,17 @@ namespace kiwano
 
 		HRESULT HandleDeviceLost();
 
-		void ResizeTarget(UInt32 width, UInt32 height);
+		void ResizeTarget(uint32_t width, uint32_t height);
 
 	private:
-		bool			vsync_;
-		HWND			hwnd_;
-		Color			clear_color_;
-		Size			output_size_;
+		bool	vsync_;
+		HWND	hwnd_;
+		Color	clear_color_;
+		Size	output_size_;
 
-		ComPtr<ID2DDeviceResources>		d2d_res_;
-		ComPtr<ID3DDeviceResources>		d3d_res_;
-		ComPtr<ID2D1DrawingStateBlock>	drawing_state_block_;
-
+		ComPtr<ID2DDeviceResources>				d2d_res_;
+		ComPtr<ID3DDeviceResources>				d3d_res_;
+		ComPtr<ID2D1DrawingStateBlock>			drawing_state_block_;
 		ComPtr<IFontCollectionLoader>			font_collection_loader_;
 		ComPtr<IResourceFontFileLoader>			res_font_file_loader_;
 		ComPtr<IResourceFontCollectionLoader>	res_font_collection_loader_;

@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Texture.h"
-#include "../base/time.h"
+#include <kiwano/renderer/Texture.h>
+#include <kiwano/base/time.h>
 
 namespace kiwano
 {
@@ -40,11 +40,11 @@ namespace kiwano
 
 		bool IsValid() const;
 
-		inline UInt32 GetWidthInPixels() const	{ return width_in_pixels_; }
+		inline uint32_t GetWidthInPixels() const	{ return width_in_pixels_; }
 
-		inline UInt32 GetHeightInPixels() const	{ return height_in_pixels_; }
+		inline uint32_t GetHeightInPixels() const	{ return height_in_pixels_; }
 
-		inline UInt32 GetFramesCount() const	{ return frames_count_; }
+		inline uint32_t GetFramesCount() const		{ return frames_count_; }
 
 	public:
 		enum class DisposalType
@@ -73,9 +73,9 @@ namespace kiwano
 		HRESULT GetGlobalMetadata();
 
 	protected:
-		UInt32	frames_count_;
-		UInt32	width_in_pixels_;
-		UInt32	height_in_pixels_;
+		uint32_t	frames_count_;
+		uint32_t	width_in_pixels_;
+		uint32_t	height_in_pixels_;
 
 		ComPtr<IWICBitmapDecoder> decoder_;
 	};

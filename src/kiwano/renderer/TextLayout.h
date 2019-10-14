@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Font.h"
-#include "../2d/TextStyle.hpp"
+#include <kiwano/renderer/Font.h>
+#include <kiwano/2d/TextStyle.hpp>
 
 namespace kiwano
 {
@@ -56,7 +56,7 @@ namespace kiwano
 
 		void Update(String const& text, TextStyle const& style);
 
-		UInt32 GetLineCount();
+		uint32_t GetLineCount();
 
 		Size GetLayoutSize() const;
 

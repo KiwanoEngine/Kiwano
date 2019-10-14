@@ -18,13 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Texture.h"
-#include "Renderer.h"
-#include "../base/Logger.h"
+#include <kiwano/renderer/Texture.h>
+#include <kiwano/renderer/Renderer.h>
+#include <kiwano/base/win32/helper.h>
 
 namespace kiwano
 {
-	InterpolationMode	Texture::default_interpolation_mode_ = InterpolationMode::Linear;
+	InterpolationMode Texture::default_interpolation_mode_ = InterpolationMode::Linear;
 
 	Texture::Texture()
 		: interpolation_mode_(default_interpolation_mode_)
@@ -70,7 +70,7 @@ namespace kiwano
 		return bitmap_ != nullptr;
 	}
 
-	Float32 Texture::GetWidth() const
+	float Texture::GetWidth() const
 	{
 		if (bitmap_)
 		{
@@ -79,7 +79,7 @@ namespace kiwano
 		return 0;
 	}
 
-	Float32 Texture::GetHeight() const
+	float Texture::GetHeight() const
 	{
 		if (bitmap_)
 		{
@@ -98,7 +98,7 @@ namespace kiwano
 		return Size{};
 	}
 
-	UInt32 Texture::GetWidthInPixels() const
+	uint32_t Texture::GetWidthInPixels() const
 	{
 		if (bitmap_)
 		{
@@ -107,7 +107,7 @@ namespace kiwano
 		return 0;
 	}
 
-	UInt32 Texture::GetHeightInPixels() const
+	uint32_t Texture::GetHeightInPixels() const
 	{
 		if (bitmap_)
 		{
@@ -116,14 +116,14 @@ namespace kiwano
 		return 0;
 	}
 
-	math::Vec2T<UInt32> Texture::GetSizeInPixels() const
+	math::Vec2T<uint32_t> Texture::GetSizeInPixels() const
 	{
 		if (bitmap_)
 		{
 			auto bitmap_size = bitmap_->GetPixelSize();
-			return math::Vec2T<UInt32>{ bitmap_size.width, bitmap_size.height };
+			return math::Vec2T<uint32_t>{ bitmap_size.width, bitmap_size.height };
 		}
-		return math::Vec2T<UInt32>{};
+		return math::Vec2T<uint32_t>{};
 	}
 
 	InterpolationMode Texture::GetBitmapInterpolationMode() const
@@ -146,13 +146,13 @@ namespace kiwano
 		if (IsValid() && copy_from.IsValid())
 		{
 			HRESULT hr = bitmap_->CopyFromBitmap(
-				&D2D1::Point2U(UInt32(dest_point.x), UInt32(dest_point.y)),
+				&D2D1::Point2U(uint32_t(dest_point.x), uint32_t(dest_point.y)),
 				copy_from.GetBitmap().get(),
 				&D2D1::RectU(
-					UInt32(src_rect.GetLeft()),
-					UInt32(src_rect.GetTop()),
-					UInt32(src_rect.GetRight()),
-					UInt32(src_rect.GetBottom()))
+					uint32_t(src_rect.GetLeft()),
+					uint32_t(src_rect.GetTop()),
+					uint32_t(src_rect.GetRight()),
+					uint32_t(src_rect.GetBottom()))
 			);
 
 			ThrowIfFailed(hr);

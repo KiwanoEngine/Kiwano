@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
-#include "RefCounter.hpp"
-#include "SmartPtr.hpp"
+#include <kiwano/macros.h>
+#include <kiwano/core/core.h>
+#include <kiwano/base/RefCounter.hpp>
+#include <kiwano/base/SmartPtr.hpp>
 
 namespace kiwano
 {
@@ -36,19 +36,19 @@ namespace kiwano
 
 		virtual ~ObjectBase();
 
-		void* GetUserData() const;
+		const Any&		GetUserData() const;
 
-		void SetUserData(void* data);
+		void			SetUserData(Any const& data);
 
-		void SetName(String const& name);
+		void			SetName(String const& name);
 
-		inline String GetName() const					{ if (name_) return *name_; return String(); }
+		String			DumpObject();
 
-		inline bool IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
+		inline String	GetName() const						{ if (name_) return *name_; return String(); }
 
-		inline UInt32 GetObjectID() const				{ return id_; }
+		inline bool		IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
 
-		String DumpObject();
+		inline uint32_t	GetObjectID() const					{ return id_; }
 
 	public:
 		static bool IsTracingLeaks();
@@ -67,11 +67,11 @@ namespace kiwano
 		static void __RemoveObjectFromTracingList(ObjectBase*);
 
 	private:
-		bool tracing_leak_;
-		void* user_data_;
-		String* name_;
+		bool	tracing_leak_;
+		Any		user_data_;
+		String*	name_;
 
-		const UInt32 id_;
-		static UInt32 last_object_id;
+		const uint32_t id_;
+		static uint32_t last_object_id;
 	};
 }

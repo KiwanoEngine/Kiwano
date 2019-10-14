@@ -72,12 +72,9 @@
 
 // C++ RunTime Header Files
 #include <cassert>
-#include <string>
-#include <vector>
-#include <algorithm>
 
 // Compile-time Config Header File
-#include "config.h"
+#include <kiwano/config.h>
 
 
 #if defined(DEBUG) || defined(_DEBUG)

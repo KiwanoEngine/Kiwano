@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../Font.h"
-#include "../Color.h"
-#include "../../math/math.h"
-#include "../../base/Resource.h"
+#include <kiwano/renderer/Font.h>
+#include <kiwano/renderer/Color.h>
+#include <kiwano/math/math.h>
+#include <kiwano/base/Resource.h>
 #include <dwrite.h>
 #include <d2d1.h>
 #include <d2d1_1.h>
@@ -171,9 +171,9 @@ namespace kiwano
 		}
 
 		// Converts a length in device-independent pixels (DIPs) to a length in physical pixels.
-		inline Float32 ConvertDipsToPixels(Float32 dips, Float32 dpi)
+		inline float ConvertDipsToPixels(float dips, float dpi)
 		{
-			static const Float32 dips_per_inch = 96.0f;
+			static const float dips_per_inch = 96.0f;
 			return math::Floor(dips * dpi / dips_per_inch + 0.5f); // Round to nearest integer.
 		}
 	}

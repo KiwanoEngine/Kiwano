@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Brush.h"
-#include "Renderer.h"
-#include "../base/Logger.h"
+#include <kiwano/renderer/Brush.h>
+#include <kiwano/renderer/Renderer.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {
@@ -87,12 +87,12 @@ namespace kiwano
 		SetBrush(brush);
 	}
 
-	Float32 Brush::GetOpacity() const
+	float Brush::GetOpacity() const
 	{
 		return opacity_;
 	}
 
-	void Brush::SetOpacity(Float32 opacity)
+	void Brush::SetOpacity(float opacity)
 	{
 		opacity_ = opacity;
 		if (raw_)

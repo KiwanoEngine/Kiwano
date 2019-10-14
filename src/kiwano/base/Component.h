@@ -19,29 +19,80 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "time.h"
-#include "Event.hpp"
+#include <kiwano/macros.h>
+#include <kiwano/base/time.h>
+#include <kiwano/base/Event.hpp>
 
 namespace kiwano
 {
-	class RenderTarget;
-
-	class KGE_API Component
+	// 基础组件
+	class KGE_API ComponentBase
 	{
 	public:
 		virtual void SetupComponent() = 0;
 		virtual void DestroyComponent() = 0;
 
-		virtual void BeforeUpdate() {}
-		virtual void OnUpdate(Duration) {}
-		virtual void AfterUpdate() {}
+		bool Check(const int flag);
 
+	protected:
+		ComponentBase();
+
+	protected:
+		int flag_;
+	};
+
+
+	class RenderTarget;
+
+	// 渲染支持组件
+	class KGE_API RenderComponent
+		: public virtual ComponentBase
+	{
+	public:
 		virtual void BeforeRender() {}
+
 		virtual void OnRender(RenderTarget*) {}
+
 		virtual void AfterRender() {}
 
-		virtual void HandleEvent(Event&) {}
-		virtual void HandleMessage(HWND, UInt32, WPARAM, LPARAM) {}
+	public:
+		static const int flag;
+
+		RenderComponent();
 	};
+
+
+	// 更新支持组件
+	class KGE_API UpdateComponent
+		: public virtual ComponentBase
+	{
+	public:
+		virtual void BeforeUpdate() {}
+
+		virtual void OnUpdate(Duration) {}
+
+		virtual void AfterUpdate() {}
+
+	public:
+		static const int flag;
+
+		UpdateComponent();
+	};
+
+
+	// 事件支持组件
+	class KGE_API EventComponent
+		: public virtual ComponentBase
+	{
+	public:
+		virtual void HandleEvent(Event&) {}
+
+		virtual void HandleMessage(HWND, UINT32, WPARAM, LPARAM) {}
+
+	public:
+		static const int flag;
+
+		EventComponent();
+	};
+
 }

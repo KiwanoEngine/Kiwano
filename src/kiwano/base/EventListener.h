@@ -19,15 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../core/core.h"
-#include "../base/SmartPtr.hpp"
-#include "ObjectBase.h"
-#include "Event.hpp"
+#include <kiwano/core/core.h>
+#include <kiwano/base/SmartPtr.hpp>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/Event.hpp>
 
 namespace kiwano
 {
-	typedef Function<void(Event const&)> EventCallback;
-
 	class EventDispatcher;
 
 	KGE_DECLARE_SMART_PTR(EventListener);
@@ -41,9 +39,11 @@ namespace kiwano
 		friend class intrusive_list<EventListenerPtr>;
 
 	public:
+		using Callback = Function<void(Event const&)>;
+
 		EventListener(
-			UInt32 type,
-			EventCallback const& callback,
+			EventType type,
+			Callback const& callback,
 			String const& name = L""
 		);
 
@@ -56,8 +56,8 @@ namespace kiwano
 		inline bool IsRunning() const	{ return running_; }
 
 	protected:
-		bool			running_;
-		UInt32			type_;
-		EventCallback	callback_;
+		bool		running_;
+		EventType	type_;
+		Callback	callback_;
 	};
 }

@@ -42,7 +42,7 @@ namespace __function_detail
 		template <typename _Ty, typename _Ret, typename... _Args>
 		struct helper
 		{
-			template <typename _Uty> static Int32 test(...);
+			template <typename _Uty> static int test(...);
 
 			template <typename _Uty, _Ret(_Uty::*)(_Args...)> struct class_mem;
 			template <typename _Uty> static char test(class_mem<_Uty, &_Uty::operator()>*);
@@ -54,7 +54,7 @@ namespace __function_detail
 				typename _Uty,
 				typename _Uret = typename ::std::decay<decltype(::std::declval<_Uty>().operator()(::std::declval<_Args>()...))>::type,
 				typename = typename ::std::enable_if<::std::is_convertible<_Ret, _Uret>::value>::type>
-			static char test(Int32);
+			static char test(int);
 
 			static constexpr bool value = sizeof(test<_Ty>(0)) == sizeof(char);
 		};
@@ -103,7 +103,7 @@ namespace __function_detail
 		}
 
 	private:
-		Int32 ref_count_;
+		int ref_count_;
 	};
 
 	template<typename _Ty, typename _Ret, typename... _Args>
@@ -219,7 +219,7 @@ public:
 	{
 	}
 
-	function(::std::nullptr_t)
+	function(std::nullptr_t)
 		: callable_(nullptr)
 	{
 	}
@@ -244,7 +244,7 @@ public:
 
 	template<
 		typename _Ty,
-		typename = typename ::std::enable_if<__function_detail::is_callable<_Ty, _Ret, _Args...>::value, Int32>::type>
+		typename = typename ::std::enable_if<__function_detail::is_callable<_Ty, _Ret, _Args...>::value, int>::type>
 	function(_Ty val)
 	{
 		callable_ = __function_detail::proxy_callable<_Ty, _Ret, _Args...>::make(::std::move(val));
@@ -253,7 +253,7 @@ public:
 
 	template<typename _Ty,
 		typename _Uty,
-		typename = typename ::std::enable_if<::std::is_same<_Ty, _Uty>::value || ::std::is_base_of<_Ty, _Uty>::value, Int32>::type>
+		typename = typename ::std::enable_if<::std::is_same<_Ty, _Uty>::value || ::std::is_base_of<_Ty, _Uty>::value, int>::type>
 	function(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
 	{
 		callable_ = __function_detail::proxy_mem_callable<_Ty, _Ret, _Args...>::make(ptr, func);
@@ -262,7 +262,7 @@ public:
 
 	template<typename _Ty,
 		typename _Uty,
-		typename = typename ::std::enable_if<::std::is_same<_Ty, _Uty>::value || ::std::is_base_of<_Ty, _Uty>::value, Int32>::type>
+		typename = typename ::std::enable_if<::std::is_same<_Ty, _Uty>::value || ::std::is_base_of<_Ty, _Uty>::value, int>::type>
 	function(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
 	{
 		callable_ = __function_detail::proxy_const_mem_callable<_Ty, _Ret, _Args...>::make(ptr, func);
@@ -330,7 +330,7 @@ namespace kiwano
 	template<typename _Ty,
 		typename _Uty,
 		typename = typename std::enable_if<
-			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, Int32
+			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
 		>::type,
 		typename _Ret,
 		typename... _Args>
@@ -342,7 +342,7 @@ namespace kiwano
 	template<typename _Ty,
 		typename _Uty,
 		typename = typename std::enable_if<
-			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, Int32
+			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
 		>::type,
 		typename _Ret,
 		typename... _Args>

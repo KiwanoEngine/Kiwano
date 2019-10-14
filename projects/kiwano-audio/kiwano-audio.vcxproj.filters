@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\src\kiwano-audio\kiwano-audio.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\AudioEngine.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\audio-modules.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\Sound.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\SoundPlayer.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\Transcoder.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\kiwano-audio\AudioEngine.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\audio-modules.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\Sound.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\SoundPlayer.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\Transcoder.cpp" />
+  </ItemGroup>
+</Project>

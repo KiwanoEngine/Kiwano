@@ -19,29 +19,36 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../2d/include-forwards.h"
-#include "Component.h"
+#include <kiwano/2d/include-forwards.h>
+#include <kiwano/base/Component.h>
 
 namespace kiwano
 {
 	// 导演
 	class KGE_API Director
 		: public Singleton<Director>
-		, public Component
+		, public UpdateComponent
+		, public RenderComponent
+		, public EventComponent
 	{
 		KGE_DECLARE_SINGLETON(Director);
 
 	public:
 		// 切换舞台
 		void EnterStage(
-			StagePtr stage				/* 舞台 */
+			StagePtr stage,						/* 舞台 */
+			TransitionPtr transition = nullptr	/* 过渡动画 */
 		);
 
-		// 切换舞台
-		void EnterStage(
-			StagePtr stage,				/* 舞台 */
-			TransitionPtr transition	/* 过渡动画 */
+		// 舞台压栈
+		void PushStage(
+			StagePtr stage,						/* 舞台 */
+			TransitionPtr transition = nullptr	/* 过渡动画 */
+		);
+
+		// 舞台出栈
+		void PopStage(
+			TransitionPtr transition = nullptr	/* 过渡动画 */
 		);
 
 		// 获取当前舞台
@@ -74,7 +81,8 @@ namespace kiwano
 
 	protected:
 		bool			render_border_enabled_;
-		StagePtr		curr_stage_;
+		Stack<StagePtr>	stages_;
+		StagePtr		current_stage_;
 		StagePtr		next_stage_;
 		ActorPtr		debug_actor_;
 		TransitionPtr	transition_;

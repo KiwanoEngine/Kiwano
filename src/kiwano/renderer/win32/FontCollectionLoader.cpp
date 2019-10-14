@@ -18,7 +18,7 @@
 // _Out_ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "FontCollectionLoader.h"
+#include <kiwano/renderer/win32/FontCollectionLoader.h>
 
 namespace kiwano
 {
@@ -40,7 +40,7 @@ namespace kiwano
 		STDMETHOD(AddFilePaths)(
 			Vector<String> const& filePaths,
 			_Out_ LPVOID* pCollectionKey,
-			_Out_ UInt32* pCollectionKeySize
+			_Out_ uint32_t* pCollectionKeySize
 		);
 
 		// IUnknown methods
@@ -52,7 +52,7 @@ namespace kiwano
 		virtual HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(
 			IDWriteFactory* pFactory,
 			void const* collectionKey,
-			UInt32 collectionKeySize,
+			uint32_t collectionKeySize,
 			_Out_ IDWriteFontFileEnumerator** fontFileEnumerator
 		);
 
@@ -61,7 +61,7 @@ namespace kiwano
 
 		typedef Vector<String> FileCollection;
 		Vector<FileCollection> filePaths_;
-		Vector<UInt32> collectionKeys_;
+		Vector<size_t> collectionKeys_;
 	};
 
 	HRESULT IFontCollectionLoader::Create(_Out_ IFontCollectionLoader** ppCollectionLoader)
@@ -90,7 +90,7 @@ namespace kiwano
 	STDMETHODIMP FontCollectionLoader::AddFilePaths(
 		Vector<String> const& filePaths,
 		_Out_ LPVOID* pCollectionKey,
-		_Out_ UInt32* pCollectionKeySize
+		_Out_ uint32_t* pCollectionKeySize
 	)
 	{
 		if (!pCollectionKey || !pCollectionKeySize)
@@ -100,7 +100,7 @@ namespace kiwano
 
 		try
 		{
-			UInt32 collectionKey = filePaths_.size();
+			size_t collectionKey = filePaths_.size();
 			collectionKeys_.push_back(collectionKey);
 			filePaths_.push_back(filePaths);
 
@@ -150,13 +150,13 @@ namespace kiwano
 	HRESULT STDMETHODCALLTYPE FontCollectionLoader::CreateEnumeratorFromKey(
 		IDWriteFactory* pFactory,
 		void const* collectionKey,
-		UInt32 collectionKeySize,
+		uint32_t collectionKeySize,
 		_Out_ IDWriteFontFileEnumerator** fontFileEnumerator
 	)
 	{
 		HRESULT hr = S_OK;
 
-		if (collectionKey == NULL || collectionKeySize % sizeof(UInt32) != 0)
+		if (collectionKey == NULL || collectionKeySize % sizeof(uint32_t) != 0)
 			hr = E_INVALIDARG;
 
 		if (SUCCEEDED(hr))
@@ -166,7 +166,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				const UInt32 fileIndex = *static_cast<UInt32 const*>(collectionKey);
+				const uint32_t fileIndex = *static_cast<uint32_t const*>(collectionKey);
 				hr = pEnumerator->SetFilePaths(filePaths_[fileIndex]);
 			}
 
@@ -220,7 +220,7 @@ namespace kiwano
 		IDWriteFactory* pFactory_;
 		IDWriteFontFile* currentFile_;
 		Vector<String> filePaths_;
-		UInt32 nextIndex_;
+		uint32_t nextIndex_;
 	};
 
 	HRESULT IFontFileEnumerator::Create(_Out_ IFontFileEnumerator** ppEnumerator, IDWriteFactory* pFactory)
@@ -372,7 +372,7 @@ namespace kiwano
 		STDMETHOD(AddResources)(
 			Vector<Resource> const& resources,
 			_Out_ LPVOID* pCollectionKey,
-			_Out_ UInt32* pCollectionKeySize
+			_Out_ uint32_t* pCollectionKeySize
 		);
 
 		// IUnknown methods
@@ -384,7 +384,7 @@ namespace kiwano
 		virtual HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(
 			IDWriteFactory* pFactory,
 			void const* collectionKey,
-			UInt32 collectionKeySize,
+			uint32_t collectionKeySize,
 			_Out_ IDWriteFontFileEnumerator** fontFileEnumerator
 		);
 
@@ -394,7 +394,7 @@ namespace kiwano
 
 		typedef Vector<Resource> ResourceCollection;
 		Vector<ResourceCollection> resources_;
-		Vector<UInt32> collectionKeys_;
+		Vector<size_t> collectionKeys_;
 	};
 
 	HRESULT IResourceFontCollectionLoader::Create(_Out_ IResourceFontCollectionLoader** ppCollectionLoader, IDWriteFontFileLoader* pFileLoader)
@@ -423,7 +423,7 @@ namespace kiwano
 	STDMETHODIMP ResourceFontCollectionLoader::AddResources(
 		Vector<Resource> const& resources,
 		_Out_ LPVOID* pCollectionKey,
-		_Out_ UInt32* pCollectionKeySize
+		_Out_ uint32_t* pCollectionKeySize
 		)
 	{
 		if (!pCollectionKey || !pCollectionKeySize)
@@ -433,7 +433,7 @@ namespace kiwano
 
 		try
 		{
-			UInt32 collectionKey = resources_.size();
+			size_t collectionKey = resources_.size();
 			collectionKeys_.push_back(collectionKey);
 			resources_.push_back(resources);
 
@@ -483,7 +483,7 @@ namespace kiwano
 	HRESULT STDMETHODCALLTYPE ResourceFontCollectionLoader::CreateEnumeratorFromKey(
 		IDWriteFactory* pFactory,
 		void const* collectionKey,
-		UInt32 collectionKeySize,
+		uint32_t collectionKeySize,
 		_Out_ IDWriteFontFileEnumerator** fontFileEnumerator
 	)
 	{
@@ -499,7 +499,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				const UInt32 resourceIndex = *static_cast<const UInt32*>(collectionKey);
+				const uint32_t resourceIndex = *static_cast<const uint32_t*>(collectionKey);
 
 				hr = pEnumerator->SetResources(resources_[resourceIndex]);
 			}
@@ -536,7 +536,7 @@ namespace kiwano
 		// IDWriteFontFileLoader methods
 		virtual HRESULT STDMETHODCALLTYPE CreateStreamFromKey(
 			void const* fontFileReferenceKey,
-			UInt32 fontFileReferenceKeySize,
+			uint32_t fontFileReferenceKeySize,
 			_Out_ IDWriteFontFileStream** fontFileStream
 		);
 
@@ -597,7 +597,7 @@ namespace kiwano
 
 	HRESULT STDMETHODCALLTYPE ResourceFontFileLoader::CreateStreamFromKey(
 		void const* fontFileReferenceKey,
-		UInt32 fontFileReferenceKeySize,
+		uint32_t fontFileReferenceKeySize,
 		_Out_ IDWriteFontFileStream** fontFileStream
 	)
 	{
@@ -668,7 +668,7 @@ namespace kiwano
 		IDWriteFontFile* currentFile_;
 		IDWriteFontFileLoader* pLoader_;
 		Vector<Resource> resources_;
-		UInt32 nextIndex_;
+		uint32_t nextIndex_;
 	};
 
 	HRESULT IResourceFontFileEnumerator::Create(_Out_ IResourceFontFileEnumerator** ppEnumerator, IDWriteFactory* pFactory, IDWriteFontFileLoader* pFileLoader)
@@ -948,7 +948,7 @@ namespace kiwano
 		if (fileOffset <= resourceSize_ &&
 			fragmentSize <= resourceSize_ - fileOffset)
 		{
-			*fragmentStart = static_cast<Byte const*>(resourcePtr_) + static_cast<UInt32>(fileOffset);
+			*fragmentStart = static_cast<BYTE const*>(resourcePtr_) + static_cast<uint32_t>(fileOffset);
 			*fragmentContext = NULL;
 			return S_OK;
 		}

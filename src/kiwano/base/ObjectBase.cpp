@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ObjectBase.h"
-#include "Logger.h"
 #include <typeinfo>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {
@@ -30,7 +30,7 @@ namespace kiwano
 		Vector<ObjectBase*> tracing_objects;
 	}
 
-	UInt32 ObjectBase::last_object_id = 0;
+	uint32_t ObjectBase::last_object_id = 0;
 
 	ObjectBase::ObjectBase()
 		: tracing_leak_(false)
@@ -57,12 +57,12 @@ namespace kiwano
 #endif
 	}
 
-	void * ObjectBase::GetUserData() const
+	const Any& ObjectBase::GetUserData() const
 	{
 		return user_data_;
 	}
 
-	void ObjectBase::SetUserData(void * data)
+	void ObjectBase::SetUserData(Any const& data)
 	{
 		user_data_ = data;
 	}

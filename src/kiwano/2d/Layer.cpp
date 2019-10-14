@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Layer.h"
-#include "../renderer/Renderer.h"
+#include <kiwano/2d/Layer.h>
+#include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
 {
@@ -48,7 +48,7 @@ namespace kiwano
 		area_.SetAreaRect(clip_rect);
 	}
 
-	void Layer::SetOpacity(Float32 opacity)
+	void Layer::SetOpacity(float opacity)
 	{
 		// Actor::SetOpacity(opacity);
 		area_.SetOpacity(opacity);

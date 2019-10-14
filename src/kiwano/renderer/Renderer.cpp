@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Renderer.h"
-#include "../base/Logger.h"
-#include "../base/Window.h"
-#include "../utils/FileUtil.h"
+#include <kiwano/renderer/Renderer.h>
+#include <kiwano/base/win32/helper.h>
+#include <kiwano/base/Window.h>
+#include <kiwano/utils/FileSystem.h>
 
 namespace kiwano
 {
@@ -196,14 +196,14 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::HandleMessage(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam)
+	void Renderer::HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
 	{
 		switch (msg)
 		{
 		case WM_SIZE:
 		{
-			UInt32 width = LOWORD(lparam);
-			UInt32 height = HIWORD(lparam);
+			uint32_t width = LOWORD(lparam);
+			uint32_t height = HIWORD(lparam);
 
 			ResizeTarget(width, height);
 			break;
@@ -247,7 +247,7 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileUtil::ExistsFile(file_path))
+		if (!FileSystem::GetInstance()->IsFileExists(file_path))
 		{
 			KGE_WARNING_LOG(L"Texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
@@ -255,8 +255,10 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
+			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+
 			ComPtr<IWICBitmapDecoder> decoder;
-			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, file_path);
+			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
 
 			if (SUCCEEDED(hr))
 			{
@@ -363,7 +365,7 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileUtil::ExistsFile(file_path))
+		if (!FileSystem::GetInstance()->IsFileExists(file_path))
 		{
 			KGE_WARNING_LOG(L"Gif texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
@@ -371,8 +373,10 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
+			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+
 			ComPtr<IWICBitmapDecoder> decoder;
-			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, file_path);
+			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
 
 			if (SUCCEEDED(hr))
 			{
@@ -411,7 +415,7 @@ namespace kiwano
 		}
 	}
 
-	void Renderer::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, UInt32 frame_index)
+	void Renderer::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -427,7 +431,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			ComPtr<IWICBitmapFrameDecode> wic_frame;
-			HRESULT hr = gif.GetDecoder()->GetFrame(frame_index, &wic_frame);
+			HRESULT hr = gif.GetDecoder()->GetFrame(UINT(frame_index), &wic_frame);
 
 			if (SUCCEEDED(hr))
 			{
@@ -476,7 +480,7 @@ namespace kiwano
 						hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 						if (SUCCEEDED(hr))
 						{
-							frame.rect.left_top.x = static_cast<Float32>(prop_val.uiVal);
+							frame.rect.left_top.x = static_cast<float>(prop_val.uiVal);
 						}
 						PropVariantClear(&prop_val);
 					}
@@ -490,7 +494,7 @@ namespace kiwano
 						hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 						if (SUCCEEDED(hr))
 						{
-							frame.rect.left_top.y = static_cast<Float32>(prop_val.uiVal);
+							frame.rect.left_top.y = static_cast<float>(prop_val.uiVal);
 						}
 						PropVariantClear(&prop_val);
 					}
@@ -504,7 +508,7 @@ namespace kiwano
 						hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 						if (SUCCEEDED(hr))
 						{
-							frame.rect.right_bottom.x = frame.rect.left_top.x + static_cast<Float32>(prop_val.uiVal);
+							frame.rect.right_bottom.x = frame.rect.left_top.x + static_cast<float>(prop_val.uiVal);
 						}
 						PropVariantClear(&prop_val);
 					}
@@ -518,7 +522,7 @@ namespace kiwano
 						hr = (prop_val.vt == VT_UI2 ? S_OK : E_FAIL);
 						if (SUCCEEDED(hr))
 						{
-							frame.rect.right_bottom.y = frame.rect.left_top.y + static_cast<Float32>(prop_val.uiVal);
+							frame.rect.right_bottom.y = frame.rect.left_top.y + static_cast<float>(prop_val.uiVal);
 						}
 						PropVariantClear(&prop_val);
 					}
@@ -534,7 +538,7 @@ namespace kiwano
 
 						if (SUCCEEDED(hr))
 						{
-							UInt32 udelay = 0;
+							uint32_t udelay = 0;
 							hr = UIntMult(prop_val.uiVal, 10, &udelay);
 							if (SUCCEEDED(hr))
 							{
@@ -586,24 +590,28 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
+		Vector<String> full_paths(file_paths);
+
 		if (SUCCEEDED(hr))
 		{
-			for (const auto& file_path : file_paths)
+			for (auto& file_path : full_paths)
 			{
-				if (!FileUtil::ExistsFile(file_path))
+				if (!FileSystem::GetInstance()->IsFileExists(file_path))
 				{
 					KGE_WARNING_LOG(L"Font file '%s' not found!", file_path.c_str());
 					hr = E_FAIL;
 				}
+
+				file_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
 			}
 		}
 
 		if (SUCCEEDED(hr))
 		{
 			LPVOID collection_key = nullptr;
-			UInt32 collection_key_size = 0;
+			uint32_t collection_key_size = 0;
 
-			hr = font_collection_loader_->AddFilePaths(file_paths, &collection_key, &collection_key_size);
+			hr = font_collection_loader_->AddFilePaths(full_paths, &collection_key, &collection_key_size);
 
 			if (SUCCEEDED(hr))
 			{
@@ -639,7 +647,7 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			LPVOID collection_key = nullptr;
-			UInt32 collection_key_size = 0;
+			uint32_t collection_key_size = 0;
 
 			hr = res_font_collection_loader_->AddResources(res_arr, &collection_key, &collection_key_size);
 
@@ -907,7 +915,7 @@ namespace kiwano
 			ID2D1GradientStopCollection* collection = nullptr;
 			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
 				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
-				stops.size(),
+				UINT32(stops.size()),
 				D2D1_GAMMA_2_2,
 				D2D1_EXTEND_MODE(extend_mode),
 				&collection
@@ -949,7 +957,7 @@ namespace kiwano
 			ID2D1GradientStopCollection* collection = nullptr;
 			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
 				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
-				stops.size(),
+				UINT32(stops.size()),
 				D2D1_GAMMA_2_2,
 				D2D1_EXTEND_MODE(extend_mode),
 				&collection
@@ -989,7 +997,7 @@ namespace kiwano
 		clear_color_ = color;
 	}
 
-	void Renderer::ResizeTarget(UInt32 width, UInt32 height)
+	void Renderer::ResizeTarget(uint32_t width, uint32_t height)
 	{
 		HRESULT hr = S_OK;
 		if (!d3d_res_)
@@ -999,8 +1007,8 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			output_size_.x = static_cast<Float32>(width);
-			output_size_.y = static_cast<Float32>(height);
+			output_size_.x = static_cast<float>(width);
+			output_size_.y = static_cast<float>(height);
 			hr = d3d_res_->SetLogicalSize(output_size_);
 		}
 

@@ -18,10 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Resource.h"
-#include "../base/Logger.h"
-
 #include <iostream>
+
+#include <kiwano/base/Resource.h>
+#include <kiwano/base/Logger.h>
+
 namespace kiwano
 {
 	Resource::Resource()
@@ -31,7 +32,7 @@ namespace kiwano
 
 	}
 
-	Resource::Resource(UInt32 id, const WChar* type)
+	Resource::Resource(uint32_t id, const wchar_t* type)
 		: id_(id)
 		, type_(type)
 	{
@@ -75,7 +76,7 @@ namespace kiwano
 			}
 
 			data_.buffer = static_cast<void*>(buffer);
-			data_.size = static_cast<UInt32>(size);
+			data_.size = static_cast<uint32_t>(size);
 		} while (0);
 
 		return data_;

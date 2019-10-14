@@ -18,16 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Application.h"
-#include "modules.h"
-#include "../base/Logger.h"
-#include "../base/input.h"
-#include "../base/Director.h"
-#include "../renderer/TextureCache.h"
-#include "../utils/ResourceCache.h"
+#include <mutex>
+
+#include <kiwano/platform/Application.h>
+#include <kiwano/platform/modules.h>
+#include <kiwano/base/win32/helper.h>
+#include <kiwano/base/input.h>
+#include <kiwano/base/Director.h>
+#include <kiwano/renderer/TextureCache.h>
+#include <kiwano/utils/ResourceCache.h>
+
 #include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext
-#include <mutex>  // std::mutex
 
 #pragma comment(lib, "imm32.lib")
 
@@ -41,7 +43,7 @@ namespace kiwano
 		Queue<FunctionToPerform> functions_to_perform_;
 	}
 
-	Config::Config(String const& title, UInt32 width, UInt32 height, UInt32 icon)
+	Config::Config(String const& title, uint32_t width, uint32_t height, uint32_t icon)
 		: debug(false)
 	{
 		window.title = title;
@@ -65,9 +67,7 @@ namespace kiwano
 		, inited_(false)
 		, time_scale_(1.f)
 	{
-		ThrowIfFailed(
-			::CoInitialize(nullptr)
-		);
+		ThrowIfFailed(::CoInitialize(nullptr));
 
 		Use(Renderer::GetInstance());
 		Use(Input::GetInstance());
@@ -87,7 +87,7 @@ namespace kiwano
 		Renderer::GetInstance()->Init(config.render);
 
 		// Setup all components
-		for (Component* c : components_)
+		for (auto c : comps_)
 		{
 			c->SetupComponent();
 		}
@@ -116,19 +116,12 @@ namespace kiwano
 	{
 		KGE_ASSERT(inited_ && "Calling Application::Run before Application::Init");
 
-		HWND hwnd = Window::GetInstance()->GetHandle();
+		end_ = false;
 
-		if (hwnd)
+		Window::GetInstance()->Prepare();
+		while (!end_)
 		{
-			end_ = false;
-			Window::GetInstance()->Prepare();
-
-			MSG msg = {};
-			while (::GetMessageW(&msg, nullptr, 0, 0) && !end_)
-			{
-				::TranslateMessage(&msg);
-				::DispatchMessageW(&msg);
-			}
+			Window::GetInstance()->PollEvents();
 		}
 	}
 
@@ -148,11 +141,11 @@ namespace kiwano
 		{
 			inited_ = false;
 
-			for (auto iter = components_.rbegin(); iter != components_.rend(); ++iter)
+			for (auto iter = comps_.rbegin(); iter != comps_.rend(); ++iter)
 			{
 				(*iter)->DestroyComponent();
 			}
-			components_.clear();
+			comps_.clear();
 		}
 
 		// Destroy all instances
@@ -167,39 +160,32 @@ namespace kiwano
 		// Logger::DestroyInstance();
 	}
 
-	void Application::Use(Component* component)
+	void Application::Use(ComponentBase* component)
 	{
 		if (component)
 		{
 
 #if defined(KGE_DEBUG)
-			if (components_.contains(component))
+			if (comps_.contains(component))
 			{
 				KGE_ASSERT(false && "Component already exists!");
 			}
 #endif
 
-			components_.push_back(component);
+			comps_.push_back(component);
+
+			if (component->Check(RenderComponent::flag))
+				render_comps_.push_back(dynamic_cast<RenderComponent*>(component));
+
+			if (component->Check(UpdateComponent::flag))
+				update_comps_.push_back(dynamic_cast<UpdateComponent*>(component));
+
+			if (component->Check(EventComponent::flag))
+				event_comps_.push_back(dynamic_cast<EventComponent*>(component));
 		}
 	}
 
-	void Application::Remove(Component* component)
-	{
-		if (component)
-		{
-			for (auto iter = components_.begin(); iter != components_.end(); ++iter)
-			{
-				if ((*iter) == component)
-				{
-					(*iter)->DestroyComponent();
-					components_.erase(iter);
-					break;
-				}
-			}
-		}
-	}
-
-	void Application::SetTimeScale(Float32 scale_factor)
+	void Application::SetTimeScale(float scale_factor)
 	{
 		time_scale_ = scale_factor;
 	}
@@ -207,7 +193,7 @@ namespace kiwano
 	void Application::Update()
 	{
 		// Before update
-		for (Component* c : components_)
+		for (auto c : update_comps_)
 		{
 			c->BeforeUpdate();
 		}
@@ -240,14 +226,14 @@ namespace kiwano
 			const auto dt = (now - last) * time_scale_;
 			last = now;
 
-			for (Component* c : components_)
+			for (auto c : update_comps_)
 			{
 				c->OnUpdate(dt);
 			}
 		}
 
 		// After update
-		for (auto rit = components_.rbegin(); rit != components_.rend(); ++rit)
+		for (auto rit = update_comps_.rbegin(); rit != update_comps_.rend(); ++rit)
 		{
 			(*rit)->AfterUpdate();
 		}
@@ -256,20 +242,20 @@ namespace kiwano
 	void Application::Render()
 	{
 		// Before render
-		for (Component* c : components_)
+		for (auto c : render_comps_)
 		{
 			c->BeforeRender();
 		}
 
 		// Rendering
 		Renderer* renderer = Renderer::GetInstance();
-		for (Component* c : components_)
+		for (auto c : render_comps_)
 		{
 			c->OnRender(renderer);
 		}
 
 		// After render
-		for (auto rit = components_.rbegin(); rit != components_.rend(); ++rit)
+		for (auto rit = render_comps_.rbegin(); rit != render_comps_.rend(); ++rit)
 		{
 			(*rit)->AfterRender();
 		}
@@ -277,7 +263,7 @@ namespace kiwano
 
 	void Application::DispatchEvent(Event& evt)
 	{
-		for (Component* c : components_)
+		for (auto c : event_comps_)
 		{
 			c->HandleEvent(evt);
 		}
@@ -289,7 +275,7 @@ namespace kiwano
 		functions_to_perform_.push(Function);
 	}
 
-	LRESULT CALLBACK Application::WndProc(HWND hwnd, UInt32 msg, WPARAM wparam, LPARAM lparam)
+	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
 	{
 		Application* app = reinterpret_cast<Application*>(static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA)));
 		if (app == nullptr)
@@ -298,7 +284,7 @@ namespace kiwano
 		}
 
 		// Handle Message
-		for (Component* c : app->components_)
+		for (auto c : app->event_comps_)
 		{
 			c->HandleMessage(hwnd, msg, wparam, lparam);
 		}
@@ -322,8 +308,8 @@ namespace kiwano
 		{
 			bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
 			Event evt(down ? Event::KeyDown : Event::KeyUp);
-			evt.key.code = static_cast<Int32>(wparam);
-			evt.key.count = static_cast<Int32>(lparam & 0xFF);
+			evt.key.code = static_cast<int>(wparam);
+			evt.key.count = static_cast<int>(lparam & 0xFF);
 
 			app->DispatchEvent(evt);
 		}
@@ -333,7 +319,7 @@ namespace kiwano
 		{
 			Event evt(Event::Char);
 			evt.key.c = static_cast<char>(wparam);
-			evt.key.count = static_cast<Int32>(lparam & 0xFF);
+			evt.key.count = static_cast<int>(lparam & 0xFF);
 
 			app->DispatchEvent(evt);
 		}
@@ -353,19 +339,19 @@ namespace kiwano
 		{
 			Event evt;
 
-			evt.mouse.x = static_cast<Float32>(GET_X_LPARAM(lparam));
-			evt.mouse.y = static_cast<Float32>(GET_Y_LPARAM(lparam));
+			evt.mouse.x = static_cast<float>(GET_X_LPARAM(lparam));
+			evt.mouse.y = static_cast<float>(GET_Y_LPARAM(lparam));
 			evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
 			evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
 
-			if (msg == WM_MOUSEMOVE) { evt.type = Event::MouseMove; }
-			else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN) { evt.type = Event::MouseBtnDown; }
-			else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP) { evt.type = Event::MouseBtnUp; }
-			else if (msg == WM_MOUSEWHEEL) { evt.type = Event::MouseWheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (Float32)WHEEL_DELTA; }
+			if		(msg == WM_MOUSEMOVE)															{ evt.type = Event::MouseMove; }
+			else if	(msg == WM_LBUTTONDOWN	|| msg == WM_RBUTTONDOWN	|| msg == WM_MBUTTONDOWN)	{ evt.type = Event::MouseBtnDown; }
+			else if	(msg == WM_LBUTTONUP	|| msg == WM_RBUTTONUP		|| msg == WM_MBUTTONUP)		{ evt.type = Event::MouseBtnUp; }
+			else if	(msg == WM_MOUSEWHEEL)															{ evt.type = Event::MouseWheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA; }
 
-			if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) { evt.mouse.button = MouseButton::Left; }
-			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) { evt.mouse.button = MouseButton::Right; }
-			else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) { evt.mouse.button = MouseButton::Middle; }
+			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP)	{ evt.mouse.button = MouseButton::Left; }
+			else if	(msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP)	{ evt.mouse.button = MouseButton::Right; }
+			else if	(msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP)	{ evt.mouse.button = MouseButton::Middle; }
 
 			app->DispatchEvent(evt);
 		}
@@ -393,8 +379,8 @@ namespace kiwano
 
 		case WM_MOVE:
 		{
-			Int32 x = (Int32)(short)LOWORD(lparam);
-			Int32 y = (Int32)(short)HIWORD(lparam);
+			int x = (int)(short)LOWORD(lparam);
+			int y = (int)(short)HIWORD(lparam);
 
 			Event evt(Event::WindowMoved);
 			evt.window.x = x;
@@ -420,7 +406,7 @@ namespace kiwano
 			// KGE_LOG(L"Window title changed");
 
 			Event evt(Event::WindowTitleChanged);
-			evt.window.title = reinterpret_cast<const WChar*>(lparam);
+			evt.window.title = reinterpret_cast<const wchar_t*>(lparam);
 			app->DispatchEvent(evt);
 		}
 		break;
@@ -451,6 +437,8 @@ namespace kiwano
 
 			if (!app->OnClosing())
 			{
+				Event evt(Event::WindowClosed);
+				app->DispatchEvent(evt);
 				return 0;
 			}
 		}
@@ -460,8 +448,7 @@ namespace kiwano
 		{
 			KGE_LOG(L"Window was destroyed");
 
-			Event evt(Event::WindowClosed);
-			app->DispatchEvent(evt);
+			app->Quit();
 			app->OnDestroy();
 
 			::PostQuitMessage(0);

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "include-forwards.h"
+#include <kiwano/2d/include-forwards.h>
 
 namespace kiwano
 {
@@ -47,7 +47,7 @@ namespace kiwano
 		);
 
 		// 获取关键帧
-		FramePtr GetFrame(UInt32 index) const;
+		FramePtr GetFrame(size_t index) const;
 
 		// 获取关键帧
 		Vector<FramePtr> const& GetFrames() const;

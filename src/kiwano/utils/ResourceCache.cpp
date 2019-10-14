@@ -18,13 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ResourceCache.h"
-#include "../base/Logger.h"
-#include "../2d/Frame.h"
-#include "../2d/FrameSequence.h"
-#include "../renderer/GifImage.h"
-#include "../renderer/FontCollection.h"
 #include <fstream>
+
+#include <kiwano/utils/ResourceCache.h>
+#include <kiwano/utils/FileSystem.h>
+#include <kiwano/base/Logger.h>
+#include <kiwano/2d/Frame.h>
+#include <kiwano/2d/FrameSequence.h>
+#include <kiwano/renderer/GifImage.h>
+#include <kiwano/renderer/FontCollection.h>
+
 
 namespace kiwano
 {
@@ -58,13 +61,20 @@ namespace kiwano
 
 	bool ResourceCache::LoadFromJsonFile(String const& file_path)
 	{
+		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		{
+			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: File not found.");
+			return false;
+		}
+
 		Json json_data;
 		std::wifstream ifs;
 		ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
 		try
 		{
-			ifs.open(file_path.c_str());
+			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			ifs.open(full_path.c_str());
 			ifs >> json_data;
 			ifs.close();
 		}
@@ -111,14 +121,20 @@ namespace kiwano
 
 	bool ResourceCache::LoadFromXmlFile(String const& file_path)
 	{
-		tinyxml2::XMLDocument doc;
+		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		{
+			KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: File not found.");
+			return false;
+		}
 
+		tinyxml2::XMLDocument doc;
 		std::wifstream ifs;
 		ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
 		try
 		{
-			ifs.open(file_path.c_str());
+			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			ifs.open(full_path.c_str());
 
 			StringStream ss;
 			ss << ifs.rdbuf();
@@ -191,13 +207,13 @@ namespace kiwano
 	{
 		if (frame)
 		{
-			cache_.insert(std::make_pair(id, frame));
+			object_cache_.insert(std::make_pair(id, frame));
 			return true;
 		}
 		return false;
 	}
 
-	UInt32 ResourceCache::AddFrameSequence(String const& id, Vector<String> const& files)
+	size_t ResourceCache::AddFrameSequence(String const& id, Vector<String> const& files)
 	{
 		if (files.empty())
 			return 0;
@@ -225,7 +241,7 @@ namespace kiwano
 		return 0;
 	}
 
-	UInt32 ResourceCache::AddFrameSequence(String const & id, String const& file_path, Int32 cols, Int32 rows, Float32 padding_x, Float32 padding_y)
+	size_t ResourceCache::AddFrameSequence(String const & id, String const& file_path, int cols, int rows, float padding_x, float padding_y)
 	{
 		if (cols <= 0 || rows <= 0)
 			return 0;
@@ -234,19 +250,19 @@ namespace kiwano
 		if (!raw || !raw->Load(file_path))
 			return false;
 
-		Float32 raw_width = raw->GetWidth();
-		Float32 raw_height = raw->GetHeight();
-		Float32 width = (raw_width - (cols - 1) * padding_x) / cols;
-		Float32 height = (raw_height - (rows - 1) * padding_y) / rows;
+		float raw_width = raw->GetWidth();
+		float raw_height = raw->GetHeight();
+		float width = (raw_width - (cols - 1) * padding_x) / cols;
+		float height = (raw_height - (rows - 1) * padding_y) / rows;
 
 		Vector<FramePtr> frames;
 		frames.reserve(rows * cols);
 
-		Float32 dty = 0;
-		for (Int32 i = 0; i < rows; i++)
+		float dty = 0;
+		for (int i = 0; i < rows; i++)
 		{
-			Float32 dtx = 0;
-			for (Int32 j = 0; j < cols; j++)
+			float dtx = 0;
+			for (int j = 0; j < cols; j++)
 			{
 				FramePtr ptr = new (std::nothrow) Frame(raw->GetTexture());
 				if (ptr)
@@ -263,11 +279,11 @@ namespace kiwano
 		return AddFrameSequence(id, fs);
 	}
 
-	UInt32 ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
+	size_t ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
 	{
 		if (frames)
 		{
-			cache_.insert(std::make_pair(id, frames));
+			object_cache_.insert(std::make_pair(id, frames));
 			return frames->GetFrames().size();
 		}
 		return 0;
@@ -277,7 +293,7 @@ namespace kiwano
 	{
 		if (obj)
 		{
-			cache_.insert(std::make_pair(id, obj));
+			object_cache_.insert(std::make_pair(id, obj));
 			return true;
 		}
 		return false;
@@ -339,14 +355,14 @@ namespace kiwano
 		return FontCollection();
 	}
 
-	void ResourceCache::Delete(String const & id)
+	void ResourceCache::Remove(String const & id)
 	{
-		cache_.erase(id);
+		object_cache_.erase(id);
 	}
 
 	void ResourceCache::Clear()
 	{
-		cache_.clear();
+		object_cache_.clear();
 	}
 
 }
@@ -378,7 +394,7 @@ namespace kiwano
 			return false;
 		}
 
-		bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const Vector<const WChar*>* files)
+		bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const Vector<const wchar_t*>* files)
 		{
 			if (!gdata || !id) return false;
 
@@ -402,7 +418,7 @@ namespace kiwano
 		}
 
 		bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* file,
-			Int32 rows, Int32 cols, Float32 padding_x, Float32 padding_y)
+			int rows, int cols, float padding_x, float padding_y)
 		{
 			if (!gdata || !id) return false;
 
@@ -460,7 +476,7 @@ namespace kiwano
 				for (const auto& image : json_data[L"images"])
 				{
 					const String* id = nullptr, * type = nullptr, * file = nullptr;
-					Int32 rows = 0, cols = 0;
+					int rows = 0, cols = 0;
 
 					if (image.count(L"id")) id = &image[L"id"].as_string();
 					if (image.count(L"type")) type = &image[L"type"].as_string();
@@ -470,9 +486,9 @@ namespace kiwano
 
 					if (rows || cols)
 					{
-						Float32 padding_x = 0, padding_y = 0;
-						if (image.count(L"padding-x")) padding_x = image[L"padding-x"].get<Float32>();
-						if (image.count(L"padding-y")) padding_y = image[L"padding-y"].get<Float32>();
+						float padding_x = 0, padding_y = 0;
+						if (image.count(L"padding-x")) padding_x = image[L"padding-x"].get<float>();
+						if (image.count(L"padding-y")) padding_y = image[L"padding-y"].get<float>();
 
 						if (!LoadTexturesFromData(loader, &global_data, id, file, rows, cols, padding_x, padding_y))
 							return false;
@@ -480,7 +496,7 @@ namespace kiwano
 
 					if (image.count(L"files"))
 					{
-						Vector<const WChar*> files;
+						Vector<const wchar_t*> files;
 						files.reserve(image[L"files"].size());
 						for (const auto& file : image[L"files"])
 						{
@@ -533,7 +549,7 @@ namespace kiwano
 				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
 				{
 					String id, type, file;
-					Int32 rows = 0, cols = 0;
+					int rows = 0, cols = 0;
 
 					if (auto attr = image->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
 					if (auto attr = image->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
@@ -543,7 +559,7 @@ namespace kiwano
 
 					if (rows || cols)
 					{
-						Float32 padding_x = 0, padding_y = 0;
+						float padding_x = 0, padding_y = 0;
 						if (auto attr = image->FloatAttribute(L"padding-x")) padding_x = attr;
 						if (auto attr = image->FloatAttribute(L"padding-y")) padding_y = attr;
 
@@ -553,7 +569,7 @@ namespace kiwano
 
 					if (file.empty() && !image->NoChildren())
 					{
-						Vector<const WChar*> files_arr;
+						Vector<const wchar_t*> files_arr;
 						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
 						{
 							if (auto path = file->Attribute(L"path"))

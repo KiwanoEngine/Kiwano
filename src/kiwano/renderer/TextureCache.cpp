@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "TextureCache.h"
-#include "Renderer.h"
-#include "../base/Logger.h"
+#include <kiwano/renderer/TextureCache.h>
+#include <kiwano/renderer/Renderer.h>
+#include <kiwano/base/Logger.h>
 
 namespace kiwano
 {
 	template <typename _Ty, typename _PathTy, typename _CacheTy>
-	_Ty CreateOrGetCache(_CacheTy& cache, _PathTy const& path, UInt32 hash)
+	_Ty CreateOrGetCache(_CacheTy& cache, _PathTy const& path, size_t hash)
 	{
 		auto iter = cache.find(hash);
 		if (iter != cache.end())
@@ -42,7 +42,7 @@ namespace kiwano
 	}
 
 	template <typename _CacheTy>
-	void RemoveCache(_CacheTy& cache, UInt32 hash)
+	void RemoveCache(_CacheTy& cache, size_t hash)
 	{
 		auto iter = cache.find(hash);
 		if (iter != cache.end())

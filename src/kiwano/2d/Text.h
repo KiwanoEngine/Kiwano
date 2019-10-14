@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "Actor.h"
-#include "../renderer/TextLayout.h"
+#include <kiwano/2d/Actor.h>
+#include <kiwano/renderer/TextLayout.h>
 
 namespace kiwano
 {
@@ -87,12 +87,12 @@ namespace kiwano
 
 		// 设置字号（默认值为 18）
 		void SetFontSize(
-			Float32 size
+			float size
 		);
 
 		// 设置字体粗细值（默认值为 FontWeight::Normal）
 		void SetFontWeight(
-			UInt32 weight
+			uint32_t weight
 		);
 
 		// 设置文字颜色（默认值为 Color::White）
@@ -107,12 +107,12 @@ namespace kiwano
 
 		// 设置文本自动换行的宽度（默认为 0）
 		void SetWrapWidth(
-			Float32 wrap_width
+			float wrap_width
 		);
 
 		// 设置行间距（默认为 0）
 		void SetLineSpacing(
-			Float32 line_spacing
+			float line_spacing
 		);
 
 		// 设置对齐方式（默认为 TextAlign::Left）
@@ -142,7 +142,7 @@ namespace kiwano
 
 		// 设置描边线宽
 		void SetOutlineWidth(
-			Float32 outline_width
+			float outline_width
 		);
 
 		// 设置描边线相交样式

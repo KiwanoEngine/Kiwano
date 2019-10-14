@@ -19,11 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../base/Resource.h"
-#include "../2d/include-forwards.h"
-#include "../renderer/GifImage.h"
-#include "../third-party/tinyxml2/tinyxml2.h"
+#include <kiwano/base/Resource.h>
+#include <kiwano/2d/include-forwards.h>
+#include <kiwano/renderer/GifImage.h>
+#include <3rd-party/tinyxml2/tinyxml2.h>
 
 namespace kiwano
 {
@@ -53,14 +52,14 @@ namespace kiwano
 		bool AddFrame(String const& id, FramePtr frame);
 
 		// 添加序列帧
-		UInt32 AddFrameSequence(String const& id, Vector<String> const& files);
+		size_t AddFrameSequence(String const& id, Vector<String> const& files);
 
 		// 添加序列帧
 		// 按行列数裁剪图片
-		UInt32 AddFrameSequence(String const& id, String const& file_path, Int32 cols, Int32 rows = 1, Float32 padding_x = 0, Float32 padding_y = 0);
+		size_t AddFrameSequence(String const& id, String const& file_path, int cols, int rows = 1, float padding_x = 0, float padding_y = 0);
 
 		// 添加序列帧
-		UInt32 AddFrameSequence(String const& id, FrameSequencePtr frames);
+		size_t AddFrameSequence(String const& id, FrameSequencePtr frames);
 
 		// 添加对象
 		bool AddObjectBase(String const& id, ObjectBasePtr obj);
@@ -87,7 +86,7 @@ namespace kiwano
 		FontCollection GetFontCollection(String const& id) const;
 
 		// 删除指定资源
-		void Delete(String const& id);
+		void Remove(String const& id);
 
 		// 清空所有资源
 		void Clear();
@@ -95,8 +94,8 @@ namespace kiwano
 		template<typename _Ty>
 		_Ty* Get(String const& id) const
 		{
-			auto iter = cache_.find(id);
-			if (iter == cache_.end())
+			auto iter = object_cache_.find(id);
+			if (iter == object_cache_.end())
 				return nullptr;
 			return dynamic_cast<_Ty*>((*iter).second.get());
 		}
@@ -107,9 +106,8 @@ namespace kiwano
 		virtual ~ResourceCache();
 
 	protected:
-		UnorderedMap<String, ObjectBasePtr> cache_;
-
-		UnorderedMap<String, GifImage> gif_cache_;
-		UnorderedMap<String, FontCollection> font_collection_cache_;
+		UnorderedMap<String, ObjectBasePtr>		object_cache_;
+		UnorderedMap<String, GifImage>			gif_cache_;
+		UnorderedMap<String, FontCollection>	font_collection_cache_;
 	};
 }

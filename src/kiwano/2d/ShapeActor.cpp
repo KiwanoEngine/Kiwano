@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "ShapeActor.h"
-#include "../base/Logger.h"
-#include "../renderer/Renderer.h"
+#include <kiwano/2d/ShapeActor.h>
+#include <kiwano/base/Logger.h>
+#include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
 {
@@ -70,7 +70,7 @@ namespace kiwano
 		stroke_color_ = color;
 	}
 
-	void ShapeActor::SetStrokeWidth(Float32 width)
+	void ShapeActor::SetStrokeWidth(float width)
 	{
 		stroke_width_ = std::max(width, 0.f);
 	}
@@ -217,7 +217,7 @@ namespace kiwano
 	{
 	}
 
-	CircleActor::CircleActor(Float32 radius)
+	CircleActor::CircleActor(float radius)
 	{
 		SetRadius(radius);
 	}
@@ -226,7 +226,7 @@ namespace kiwano
 	{
 	}
 
-	void CircleActor::SetRadius(Float32 radius)
+	void CircleActor::SetRadius(float radius)
 	{
 		if (radius_ != radius)
 		{
@@ -338,7 +338,7 @@ namespace kiwano
 		sink_.AddBezier(point1, point2, point3);
 	}
 
-	void PathActor::AddArc(Point const& point, Size const& radius, Float32 rotation, bool clockwise, bool is_small)
+	void PathActor::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 	{
 		sink_.AddArc(point, radius, rotation, clockwise, is_small);
 	}

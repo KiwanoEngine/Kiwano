@@ -19,22 +19,25 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "FontCollection.h"
+#include <kiwano/renderer/FontCollection.h>
 
 namespace kiwano
 {
 	// 字体粗细值
-	enum FontWeight : UInt32
+	struct FontWeight
 	{
-		Thin		= 100,
-		ExtraLight	= 200,
-		Light		= 300,
-		Normal		= 400,
-		Medium		= 500,
-		Bold		= 700,
-		ExtraBold	= 800,
-		Black		= 900,
-		ExtraBlack	= 950
+		enum Value : uint32_t
+		{
+			Thin		= 100U,
+			ExtraLight	= 200U,
+			Light		= 300U,
+			Normal		= 400U,
+			Medium		= 500U,
+			Bold		= 700U,
+			ExtraBold	= 800U,
+			Black		= 900U,
+			ExtraBlack	= 950U
+		};
 	};
 
 	// 字体
@@ -42,25 +45,25 @@ namespace kiwano
 	{
 	public:
 		String			family;		// 字体族
-		Float32			size;		// 字号
-		UInt32			weight;		// 粗细值
+		float			size;		// 字号
+		uint32_t		weight;		// 粗细值
 		bool			italic;		// 是否斜体
 		FontCollection	collection;	// 字体集
 
 	public:
 		Font(
-			String const& family		= L"",
-			Float32 size				= 18,
-			UInt32 weight				= FontWeight::Normal,
-			bool italic					= false
+			String const&	family	= L"",
+			float			size	= 18,
+			uint32_t		weight	= FontWeight::Normal,
+			bool			italic	= false
 		);
 
 		Font(
-			FontCollection collection,
-			String const& family		= L"",
-			Float32 size				= 18,
-			UInt32 weight				= FontWeight::Normal,
-			bool italic					= false
+			FontCollection	collection,
+			String const&	family	= L"",
+			float			size	= 18,
+			uint32_t		weight	= FontWeight::Normal,
+			bool			italic	= false
 		);
 	};
 }

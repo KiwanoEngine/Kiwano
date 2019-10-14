@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
-#include "../math/math.h"
+#include <kiwano/macros.h>
+#include <kiwano/core/core.h>
+#include <kiwano/math/math.h>
 
 namespace kiwano
 {
@@ -41,20 +41,20 @@ namespace kiwano
 	// 窗口设置
 	struct WindowConfig
 	{
-		String	title;				// 标题
-		UInt32	width;				// 宽度
-		UInt32	height;				// 高度
-		UInt32	icon;				// 图标资源 ID
-		bool	resizable;			// 窗口大小可拉伸
-		bool	fullscreen;			// 全屏模式
+		String		title;				// 标题
+		uint32_t	width;				// 宽度
+		uint32_t	height;				// 高度
+		uint32_t	icon;				// 图标资源 ID
+		bool		resizable;			// 窗口大小可拉伸
+		bool		fullscreen;			// 全屏模式
 
 		WindowConfig(
-			String const& title = L"Kiwano Game",
-			UInt32 width = 640,
-			UInt32 height = 480,
-			UInt32 icon = 0,
-			bool resizable = false,
-			bool fullscreen = false
+			String const&	title = L"Kiwano Game",
+			uint32_t		width = 640,
+			uint32_t		height = 480,
+			uint32_t		icon = 0,
+			bool			resizable = false,
+			bool			fullscreen = false
 		);
 	};
 
@@ -73,22 +73,22 @@ namespace kiwano
 		Size GetSize() const;
 
 		// 获取窗口宽度
-		Float32 GetWidth() const;
+		float GetWidth() const;
 
 		// 获取窗口高度
-		Float32 GetHeight() const;
+		float GetHeight() const;
 
 		// 设置标题
 		void SetTitle(String const& title);
 
 		// 设置窗口图标
-		void SetIcon(UInt32 icon_resource);
+		void SetIcon(uint32_t icon_resource);
 
 		// 重设窗口大小
-		void Resize(Int32 width, Int32 height);
+		void Resize(int width, int height);
 
 		// 设置全屏模式
-		void SetFullscreen(bool fullscreen, Int32 width, Int32 height);
+		void SetFullscreen(bool fullscreen, int width, int height);
 
 		// 设置鼠标指针类型
 		void SetCursor(CursorType cursor);
@@ -97,6 +97,8 @@ namespace kiwano
 		void Init(WindowConfig const& config, WNDPROC proc);
 
 		void Prepare();
+
+		void PollEvents();
 
 		HWND GetHandle() const;
 
@@ -117,9 +119,9 @@ namespace kiwano
 		bool		resizable_;
 		bool		is_fullscreen_;
 		HWND		handle_;
-		Int32		width_;
-		Int32		height_;
-		WCHAR*		device_name_;
+		int			width_;
+		int			height_;
+		wchar_t*	device_name_;
 		CursorType	mouse_cursor_;
 	};
 }

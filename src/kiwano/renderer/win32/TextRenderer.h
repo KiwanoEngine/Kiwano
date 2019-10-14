@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "D2DDeviceResources.h"
+#include <kiwano/renderer/win32/D2DDeviceResources.h>
 
 namespace kiwano
 {
@@ -33,11 +33,11 @@ namespace kiwano
 		);
 
 		STDMETHOD_(void, SetTextStyle)(
-			_In_ Float32 opacity,
+			_In_ float opacity,
 			_In_ CONST D2D1_COLOR_F &fillColor,
 			_In_ BOOL outline,
 			_In_ CONST D2D1_COLOR_F &outlineColor,
-			_In_ Float32 outlineWidth,
+			_In_ float outlineWidth,
 			_In_ ID2D1StrokeStyle* outlineJoin
 		) PURE;
 	};

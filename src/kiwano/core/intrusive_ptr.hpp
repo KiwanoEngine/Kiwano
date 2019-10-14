@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
+#include <kiwano/macros.h>
 #include <utility>
 #include <type_traits>
 
@@ -40,7 +40,7 @@ public:
 
 	intrusive_ptr() noexcept {}
 
-	intrusive_ptr(nullptr_t) noexcept {}
+	intrusive_ptr(std::nullptr_t) noexcept {}
 
 	intrusive_ptr(pointer_type p) noexcept : ptr_(p)
 	{
@@ -132,7 +132,7 @@ public:
 		return *this;
 	}
 
-	inline intrusive_ptr& operator =(nullptr_t) noexcept
+	inline intrusive_ptr& operator =(std::nullptr_t) noexcept
 	{
 		if (nullptr != ptr_)
 			intrusive_ptr{}.swap(*this);
@@ -186,25 +186,25 @@ inline bool operator!=(_Ty* lhs, intrusive_ptr<_Ty, manager_type> const& rhs) no
 }
 
 template <class _Ty, class manager_type>
-inline bool operator==(intrusive_ptr<_Ty, manager_type> const& lhs, nullptr_t) noexcept
+inline bool operator==(intrusive_ptr<_Ty, manager_type> const& lhs, std::nullptr_t) noexcept
 {
 	return !static_cast<bool>(lhs);
 }
 
 template <class _Ty, class manager_type>
-inline bool operator!=(intrusive_ptr<_Ty, manager_type> const& lhs, nullptr_t) noexcept
+inline bool operator!=(intrusive_ptr<_Ty, manager_type> const& lhs, std::nullptr_t) noexcept
 {
 	return static_cast<bool>(lhs);
 }
 
 template <class _Ty, class manager_type>
-inline bool operator==(nullptr_t, intrusive_ptr<_Ty, manager_type> const& rhs) noexcept
+inline bool operator==(std::nullptr_t, intrusive_ptr<_Ty, manager_type> const& rhs) noexcept
 {
 	return !static_cast<bool>(rhs);
 }
 
 template <class _Ty, class manager_type>
-inline bool operator!=(nullptr_t, intrusive_ptr<_Ty, manager_type> const& rhs) noexcept
+inline bool operator!=(std::nullptr_t, intrusive_ptr<_Ty, manager_type> const& rhs) noexcept
 {
 	return static_cast<bool>(rhs);
 }

@@ -2,13 +2,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano", "kiwano.vcxproj", "{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano", "kiwano\kiwano.vcxproj", "{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-audio", "kiwano-audio.vcxproj", "{1B97937D-8184-426C-BE71-29A163DC76C9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-audio", "kiwano-audio\kiwano-audio.vcxproj", "{1B97937D-8184-426C-BE71-29A163DC76C9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-network", "kiwano-network.vcxproj", "{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-network", "kiwano-network\kiwano-network.vcxproj", "{69DFBE92-C06F-4CF8-9495-CA9BF2E3BAF2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-imgui", "kiwano-imgui.vcxproj", "{A7062ED8-8910-48A5-A3BC-C1612672571F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-imgui", "kiwano-imgui\kiwano-imgui.vcxproj", "{A7062ED8-8910-48A5-A3BC-C1612672571F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd-party", "3rd-party", "{2D8919F2-8922-4B3F-8F68-D4127C6BCBB7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libStackWalker", "3rd-party\StackWalker\libStackWalker.vcxproj", "{3A3948DC-9865-46B3-B7B9-7E5572704ED2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libtinyxml2", "3rd-party\tinyxml2\libtinyxml2.vcxproj", "{AB47E875-85E5-4105-A71E-88930EAAB910}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libimgui", "3rd-party\imgui\libimgui.vcxproj", "{7FA1E56D-62AC-47D1-97D1-40B302724198}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcurl", "3rd-party\curl\libcurl.vcxproj", "{A9ABACC7-75A1-46BA-8E48-4105346D9719}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +43,31 @@ Global
 		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Debug|Win32.Build.0 = Debug|Win32
 		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Release|Win32.ActiveCfg = Release|Win32
 		{A7062ED8-8910-48A5-A3BC-C1612672571F}.Release|Win32.Build.0 = Release|Win32
+		{3A3948DC-9865-46B3-B7B9-7E5572704ED2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3A3948DC-9865-46B3-B7B9-7E5572704ED2}.Debug|Win32.Build.0 = Debug|Win32
+		{3A3948DC-9865-46B3-B7B9-7E5572704ED2}.Release|Win32.ActiveCfg = Release|Win32
+		{3A3948DC-9865-46B3-B7B9-7E5572704ED2}.Release|Win32.Build.0 = Release|Win32
+		{AB47E875-85E5-4105-A71E-88930EAAB910}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AB47E875-85E5-4105-A71E-88930EAAB910}.Debug|Win32.Build.0 = Debug|Win32
+		{AB47E875-85E5-4105-A71E-88930EAAB910}.Release|Win32.ActiveCfg = Release|Win32
+		{AB47E875-85E5-4105-A71E-88930EAAB910}.Release|Win32.Build.0 = Release|Win32
+		{7FA1E56D-62AC-47D1-97D1-40B302724198}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FA1E56D-62AC-47D1-97D1-40B302724198}.Debug|Win32.Build.0 = Debug|Win32
+		{7FA1E56D-62AC-47D1-97D1-40B302724198}.Release|Win32.ActiveCfg = Release|Win32
+		{7FA1E56D-62AC-47D1-97D1-40B302724198}.Release|Win32.Build.0 = Release|Win32
+		{A9ABACC7-75A1-46BA-8E48-4105346D9719}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A9ABACC7-75A1-46BA-8E48-4105346D9719}.Debug|Win32.Build.0 = Debug|Win32
+		{A9ABACC7-75A1-46BA-8E48-4105346D9719}.Release|Win32.ActiveCfg = Release|Win32
+		{A9ABACC7-75A1-46BA-8E48-4105346D9719}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3A3948DC-9865-46B3-B7B9-7E5572704ED2} = {2D8919F2-8922-4B3F-8F68-D4127C6BCBB7}
+		{AB47E875-85E5-4105-A71E-88930EAAB910} = {2D8919F2-8922-4B3F-8F68-D4127C6BCBB7}
+		{7FA1E56D-62AC-47D1-97D1-40B302724198} = {2D8919F2-8922-4B3F-8F68-D4127C6BCBB7}
+		{A9ABACC7-75A1-46BA-8E48-4105346D9719} = {2D8919F2-8922-4B3F-8F68-D4127C6BCBB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FAC2BE2F-19AF-477A-8DC6-4645E66868A4}

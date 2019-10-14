@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "Menu.h"
+#include <kiwano/ui/Menu.h>
 
 namespace kiwano
 {
@@ -41,7 +41,7 @@ namespace kiwano
 		return enabled_;
 	}
 
-	UInt32 Menu::GetButtonCount() const
+	size_t Menu::GetButtonCount() const
 	{
 		return buttons_.size();
 	}

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "scalar.hpp"
+#include <kiwano/math/scalar.h>
 
 namespace kiwano
 {
@@ -41,7 +41,7 @@ namespace kiwano
 
 			inline value_type Length() const
 			{
-				return static_cast<value_type>(math::Sqrt(static_cast<Float32>(x * x + y * y)));
+				return static_cast<value_type>(math::Sqrt(static_cast<float>(x * x + y * y)));
 			}
 
 			inline bool IsOrigin() const

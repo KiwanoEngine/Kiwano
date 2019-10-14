@@ -19,34 +19,35 @@
 // THE SOFTWARE.
 
 #pragma once
-#include "../macros.h"
-#include "../core/core.h"
 #include <ctime>
 #include <iomanip>
 #include <sstream>
 
+#include <kiwano/macros.h>
+#include <kiwano/core/core.h>
+
 #ifndef KGE_LOG
 #	ifdef KGE_DEBUG
-#		define KGE_LOG(FORMAT, ...) ::kiwano::Logger::GetInstance()->Messagef((FORMAT ## "\n"), __VA_ARGS__)
+#		define KGE_LOG(FORMAT, ...)		::kiwano::Logger::GetInstance()->Messagef((FORMAT ## "\n"), __VA_ARGS__)
 #	else
 #		define KGE_LOG __noop
 #	endif
 #endif
 
 #ifndef KGE_WARNING_LOG
-#	define KGE_WARNING_LOG(FORMAT, ...) ::kiwano::Logger::GetInstance()->Warningf((FORMAT ## "\n"), __VA_ARGS__)
+#	define KGE_WARNING_LOG(FORMAT, ...)	::kiwano::Logger::GetInstance()->Warningf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 #ifndef KGE_ERROR_LOG
-#	define KGE_ERROR_LOG(FORMAT, ...) ::kiwano::Logger::GetInstance()->Errorf((FORMAT ## "\n"), __VA_ARGS__)
+#	define KGE_ERROR_LOG(FORMAT, ...)	::kiwano::Logger::GetInstance()->Errorf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 #ifndef KGE_PRINT
-#	define KGE_PRINT(...) ::kiwano::Logger::GetInstance()->Println(__VA_ARGS__)
+#	define KGE_PRINT(...)				::kiwano::Logger::GetInstance()->Println(__VA_ARGS__)
 #endif
 
 #ifndef KGE_PRINTF
-#	define KGE_PRINTF(FORMAT, ...) ::kiwano::Logger::GetInstance()->Printf((FORMAT), __VA_ARGS__)
+#	define KGE_PRINTF(FORMAT, ...)		::kiwano::Logger::GetInstance()->Printf((FORMAT), __VA_ARGS__)
 #endif
 
 namespace kiwano
@@ -66,13 +67,13 @@ namespace kiwano
 		// ½ûÓÃ Logger
 		void Disable();
 
-		void Printf(const WChar* format, ...);
+		void Printf(const wchar_t* format, ...);
 
-		void Messagef(const WChar * format, ...);
+		void Messagef(const wchar_t * format, ...);
 
-		void Warningf(const WChar* format, ...);
+		void Warningf(const wchar_t* format, ...);
 
-		void Errorf(const WChar* format, ...);
+		void Errorf(const wchar_t* format, ...);
 
 		template <typename ..._Args>
 		void Print(_Args&& ... args);
@@ -109,24 +110,33 @@ namespace kiwano
 
 		~Logger();
 
-		void Outputf(std::wostream& os, std::wostream&(*color)(std::wostream&), const WChar* prompt, const WChar* format, va_list args) const;
-
-		std::wstring MakeOutputStringf(const WChar* prompt, const WChar* format, va_list args) const;
-
-		template <typename ..._Args>
-		void OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const WChar* prompt, _Args&& ... args) const;
+		//
+		// output functions
+		//
+		void Outputf(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const;
 
 		template <typename ..._Args>
-		void Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const WChar* prompt, _Args&& ... args) const;
+		void OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const;
 
 		template <typename ..._Args>
-		std::wstring MakeOutputString(const WChar* prompt, _Args&& ... args) const;
+		void Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const;
 
+		static std::wostream& OutPrefix(std::wostream& out);
+
+		//
+		// make string
+		//
+		std::wstring MakeOutputStringf(const wchar_t* prompt, const wchar_t* format, va_list args) const;
+
+		template <typename ..._Args>
+		std::wstring MakeOutputString(const wchar_t* prompt, _Args&& ... args) const;
+
+		//
+		// reset functions
+		//
 		void ResetConsoleColor() const;
 
 		static std::wostream& DefaultOutputColor(std::wostream& out);
-
-		static std::wostream& OutPrefix(std::wostream& out);
 
 	private:
 		bool enabled_;
@@ -235,7 +245,7 @@ namespace kiwano
 	}
 
 	template <typename ..._Args>
-	void Logger::OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const WChar* prompt, _Args&& ... args) const
+	void Logger::OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
 	{
 		if (enabled_)
 		{
@@ -247,7 +257,7 @@ namespace kiwano
 	}
 
 	template <typename ..._Args>
-	void Logger::Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const WChar* prompt, _Args&& ... args) const
+	void Logger::Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
 	{
 		if (enabled_)
 		{
@@ -261,7 +271,7 @@ namespace kiwano
 	}
 
 	template <typename ..._Args>
-	std::wstring Logger::MakeOutputString(const WChar* prompt, _Args&& ... args) const
+	std::wstring Logger::MakeOutputString(const wchar_t* prompt, _Args&& ... args) const
 	{
 		StringStream ss;
 		ss << Logger::OutPrefix;
@@ -269,7 +279,7 @@ namespace kiwano
 		if (prompt)
 			ss << prompt;
 
-		(void)std::initializer_list<Int32>{((ss << ' ' << args), 0)...};
+		(void)std::initializer_list<int>{((ss << ' ' << args), 0)...};
 
 		return ss.str();
 	}
@@ -284,28 +294,5 @@ namespace kiwano
 	{
 		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), Logger::GetInstance()->default_stdout_color_);
 		return out;
-	}
-}
-
-//
-// Display stack trace on exception
-//
-
-#include "../third-party/StackWalker/StackWalker.h"
-
-namespace kiwano
-{
-	inline void ThrowIfFailed(HRESULT hr)
-	{
-		if (FAILED(hr))
-		{
-			KGE_ERROR_LOG(L"Fatal error with HRESULT of %08X", hr);
-
-			StackWalker{}.ShowCallstack();
-
-			static char buffer[1024 + 1];
-			sprintf_s(buffer, "Fatal error with HRESULT of %08X", hr);
-			throw std::runtime_error(buffer);
-		}
 	}
 }

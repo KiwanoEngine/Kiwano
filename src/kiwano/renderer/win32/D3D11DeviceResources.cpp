@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "D3D11DeviceResources.h"
+#include <kiwano/renderer/win32/D3D11DeviceResources.h>
 
-#include "../../base/Logger.h"
+#include <kiwano/base/Logger.h>
 #include <versionhelpers.h>  // IsWindows10OrGreater
 
 #pragma comment(lib, "d3d11.lib")
@@ -64,7 +64,7 @@ namespace kiwano
 
 		HRESULT SetLogicalSize(Size logical_size) override;
 
-		HRESULT SetDpi(Float32 dpi) override;
+		HRESULT SetDpi(float dpi) override;
 
 		void DiscardResources() override;
 
@@ -89,7 +89,7 @@ namespace kiwano
 
 	public:
 		HWND	hwnd_;
-		Float32	dpi_;
+		float	dpi_;
 		Size	logical_size_;
 		Size	output_size_;
 		unsigned long ref_count_;
@@ -104,7 +104,7 @@ namespace kiwano
 		, hwnd_(nullptr)
 		, d3d_feature_level_(D3D_FEATURE_LEVEL_9_1)
 	{
-		dpi_ = 96.f; // dpi_ = (Float32)GetDpiForWindow(hwnd);
+		dpi_ = 96.f; // dpi_ = (float)GetDpiForWindow(hwnd);
 	}
 
 	D3D11DeviceResources::~D3D11DeviceResources()
@@ -126,8 +126,8 @@ namespace kiwano
 
 				res->hwnd_ = hwnd;
 				res->d2d_res_ = d2d_device_res;
-				res->logical_size_.x = Float32(rc.right - rc.left);
-				res->logical_size_.y = Float32(rc.bottom - rc.top);
+				res->logical_size_.x = float(rc.right - rc.left);
+				res->logical_size_.y = float(rc.bottom - rc.top);
 
 				hr = res->CreateDeviceResources();
 
@@ -170,7 +170,7 @@ namespace kiwano
 
 		auto rt_view = rt_view_.get();
 		device_context_->OMSetRenderTargets(1, &rt_view, ds_view_.get());
-		device_context_->ClearRenderTargetView(rt_view, reinterpret_cast<Float32*>(&clear_color));
+		device_context_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
 		return S_OK;
 	}
 
@@ -207,7 +207,7 @@ namespace kiwano
 
 		// This flag adds support for surfaces with a different color channel ordering
 		// than the API default. It is required for compatibility with Direct2D.
-		UInt32 creation_flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+		uint32_t creation_flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
 #if defined(KGE_DEBUG) && defined(KGE_ENABLE_DX_DEBUG)
 		if (DX::SdkLayersAvailable())
@@ -408,8 +408,8 @@ namespace kiwano
 
 			CD3D11_TEXTURE2D_DESC tex_desc(
 				DXGI_FORMAT_D24_UNORM_S8_UINT,
-				static_cast<UInt32>(output_size_.x),
-				static_cast<UInt32>(output_size_.y),
+				static_cast<uint32_t>(output_size_.x),
+				static_cast<uint32_t>(output_size_.y),
 				1, // This depth stencil view has only one texture.
 				1, // Use a single mipmap level.
 				D3D11_BIND_DEPTH_STENCIL
@@ -497,7 +497,7 @@ namespace kiwano
 		return S_OK;
 	}
 
-	HRESULT D3D11DeviceResources::SetDpi(Float32 dpi)
+	HRESULT D3D11DeviceResources::SetDpi(float dpi)
 	{
 		if (dpi != dpi_)
 		{
@@ -506,8 +506,8 @@ namespace kiwano
 			RECT rc;
 			GetClientRect(hwnd_, &rc);
 
-			logical_size_.x = Float32(rc.right - rc.left);
-			logical_size_.y = Float32(rc.bottom - rc.top);
+			logical_size_.x = float(rc.right - rc.left);
+			logical_size_.y = float(rc.bottom - rc.top);
 
 			d2d_res_->GetDeviceContext()->SetDpi(dpi_, dpi_);
 
