@@ -25,7 +25,7 @@
 #include <kiwano/renderer/GifImage.h>
 
 #if defined(KGE_USE_DIRECTX10)
-#	include "D3D10DeviceResources.h"
+#	include "win32/D3D10DeviceResources.h"
 #else
 #	include "win32/D3D11DeviceResources.h"
 #endif
@@ -72,7 +72,6 @@ namespace kiwano
 			bool enabled
 		);
 
-	public:
 		void CreateTexture(
 			Texture& texture,
 			String const& file_path

@@ -23,6 +23,7 @@
 #include <map>
 #include <list>
 #include <queue>
+#include <stack>
 #include <unordered_set>
 #include <unordered_map>
 #include <sstream>
@@ -60,6 +61,9 @@ namespace kiwano
 
 	template <typename _Ty, typename... _Args>
 	using UnorderedSet = std::unordered_set<_Ty, _Args...>;
+
+	template <typename _Ty, typename... _Args>
+	using Stack = std::stack<_Ty, _Args...>;
 
 	template <typename _Kty, typename _Ty, typename... _Args>
 	using Map = std::map<_Kty, _Ty, _Args...>;

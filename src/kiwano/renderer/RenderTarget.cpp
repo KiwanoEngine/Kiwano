@@ -150,6 +150,8 @@ namespace kiwano
 				geometry.GetGeometry().get(),
 				current_brush_.get()
 			);
+
+			IncreasePrimitivesCount();
 		}
 
 		ThrowIfFailed(hr);
@@ -217,6 +219,8 @@ namespace kiwano
 				DX::ConvertToRectF(rect),
 				current_brush_.get()
 			);
+
+			IncreasePrimitivesCount();
 		}
 
 		ThrowIfFailed(hr);
@@ -267,6 +271,8 @@ namespace kiwano
 				),
 				current_brush_.get()
 			);
+
+			IncreasePrimitivesCount();
 		}
 
 		ThrowIfFailed(hr);
@@ -317,6 +323,8 @@ namespace kiwano
 				),
 				current_brush_.get()
 			);
+
+			IncreasePrimitivesCount();
 		}
 
 		ThrowIfFailed(hr);
