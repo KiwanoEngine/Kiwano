@@ -1481,7 +1481,7 @@ public:
 	}
 
 	/// Sets the named attribute to value.
-    void SetAttribute( const TCHAR* name, const char* value )	{
+    void SetAttribute( const TCHAR* name, const TCHAR* value )	{
         XMLAttribute* a = FindOrCreateAttribute( name );
         a->SetAttribute( value );
     }
