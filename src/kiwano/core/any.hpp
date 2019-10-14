@@ -456,6 +456,8 @@ protected:
 			small_storage small_;
 			big_storage big_;
 		};
+
+		storage() : is_small_(false), small_() {} // fix error C2280 for VisualStudio 2015
 	};
 
 	storage storage_;
