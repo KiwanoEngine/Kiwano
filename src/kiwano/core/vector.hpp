@@ -52,10 +52,10 @@ class vector
 public:
 	using value_type				= _Ty;
 	using size_type					= size_t;
-	using iterator					= value_type * ;
+	using reference					= value_type&;
+	using const_reference			= const value_type&;
+	using iterator					= value_type*;
 	using const_iterator			= const value_type*;
-	using reference					= value_type & ;
-	using const_reference			= const value_type &;
 	using reverse_iterator			= std::reverse_iterator<iterator>;
 	using const_reverse_iterator	= std::reverse_iterator<const_iterator>;
 	using allocator_type			= typename _Alloc;

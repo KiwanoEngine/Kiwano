@@ -42,7 +42,7 @@ inline namespace core
 template <typename _CharTy>
 class basic_string
 {
-public:
+private:
 	// Iterator
 	template <typename _Ty>
 	struct iterator_impl
