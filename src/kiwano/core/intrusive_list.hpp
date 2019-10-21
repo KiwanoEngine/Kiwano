@@ -268,9 +268,9 @@ private:
 		inline iterator_impl	operator++(int)									{ iterator_impl old = (*this); ++(*this); return old; }
 		inline iterator_impl&	operator--()									{ KGE_ASSERT(base_); if (is_end_) is_end_ = false; else base_ = value_type(base_->prev_item()); return (*this); }
 		inline iterator_impl	operator--(int)									{ iterator_impl old = (*this); --(*this); return old; }
-		inline bool				operator==(iterator_impl const& other) const	{ return base_ == other.base_; }
+		inline bool				operator==(iterator_impl const& other) const	{ return base_ == other.base_ && is_end_ == other.is_end_; }
 		inline bool				operator!=(iterator_impl const& other) const	{ return !(*this == other); }
-		inline					operator bool() const							{ return base_ != nullptr; }
+		inline					operator bool() const							{ return base_ != nullptr && !is_end_; }
 
 	private:
 		bool is_end_;

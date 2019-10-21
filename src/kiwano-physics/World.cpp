@@ -42,20 +42,29 @@ namespace kiwano
 
 		World::~World()
 		{
-			// Make sure destroyed b2World after b2Body
+			// Make sure b2World was destroyed after b2Body
 			RemoveAllChildren();
+			RemoveAllBodies();
+			RemoveAllJoints();
+		}
+
+		BodyPtr World::CreateBody(ActorPtr actor)
+		{
+			return CreateBody(actor.get());
 		}
 
 		BodyPtr World::CreateBody(Actor* actor)
 		{
 			BodyPtr body = new Body(this, actor);
 			body->UpdateFromActor();
+			bodies_.push_back(body.get());
 			return body;
 		}
 
 		JointPtr World::CreateJoint(b2JointDef* joint_def)
 		{
 			JointPtr joint = new Joint(this, joint_def);
+			joints_.push_back(joint.get());
 			return joint;
 		}
 
@@ -67,17 +76,27 @@ namespace kiwano
 				if (iter != bodies_.end())
 				{
 					bodies_.erase(iter);
-				}
 
-				if (body->GetB2Body())
-				{
-					world_.DestroyBody(body->GetB2Body());
+					if (body->GetB2Body())
+					{
+						world_.DestroyBody(body->GetB2Body());
+					}
 				}
 			}
 		}
 
 		void World::RemoveAllBodies()
 		{
+			if (world_.GetBodyCount())
+			{
+				b2Body* body = world_.GetBodyList();
+				while (body)
+				{
+					b2Body* next = body->GetNext();
+					world_.DestroyBody(body);
+					body = next;
+				}
+			}
 			bodies_.clear();
 		}
 
@@ -89,17 +108,27 @@ namespace kiwano
 				if (iter != joints_.end())
 				{
 					joints_.erase(iter);
-				}
 
-				if (joint->GetB2Joint())
-				{
-					world_.DestroyJoint(joint->GetB2Joint());
+					if (joint->GetB2Joint())
+					{
+						world_.DestroyJoint(joint->GetB2Joint());
+					}
 				}
 			}
 		}
 
 		void World::RemoveAllJoints()
 		{
+			if (world_.GetJointCount())
+			{
+				b2Joint* joint = world_.GetJointList();
+				while (joint)
+				{
+					b2Joint* next = joint->GetNext();
+					world_.DestroyJoint(joint);
+					joint = next;
+				}
+			}
 			joints_.clear();
 		}
 

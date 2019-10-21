@@ -42,10 +42,10 @@ namespace kiwano
 		friend class Transition;
 		friend class intrusive_list<ActorPtr>;
 
-		using Children = intrusive_list<ActorPtr>;
-		using UpdateCallback = Function<void(Duration)>;
-
 	public:
+		using Children			= intrusive_list<ActorPtr>;
+		using UpdateCallback	= Function<void(Duration)>;
+
 		Actor();
 
 		// 更新角色
@@ -309,7 +309,14 @@ namespace kiwano
 
 		// 添加子角色
 		void AddChild(
-			ActorPtr child
+			ActorPtr child,
+			int zorder = 0
+		);
+
+		// 添加子角色
+		void AddChild(
+			Actor* child,
+			int zorder = 0
 		);
 
 		// 添加多个子角色
@@ -317,18 +324,18 @@ namespace kiwano
 			Vector<ActorPtr> const& children
 		);
 
-		// 获取所有名称相同的子角色
-		Vector<ActorPtr> GetChildren(
-			String const& name
-		) const;
-
 		// 获取名称相同的子角色
 		ActorPtr GetChild(
 			String const& name
 		) const;
 
+		// 获取所有名称相同的子角色
+		Vector<ActorPtr> GetChildren(
+			String const& name
+		) const;
+
 		// 获取全部子角色
-		Children const& GetChildren() const;
+		Children const& GetAllChildren() const;
 
 		// 移除子角色
 		void RemoveChild(

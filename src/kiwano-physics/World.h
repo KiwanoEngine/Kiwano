@@ -30,6 +30,9 @@ namespace kiwano
 		class KGE_API World
 			: public Stage
 		{
+			friend class Body;
+			friend class Joint;
+
 		public:
 			World();
 
@@ -38,22 +41,11 @@ namespace kiwano
 			virtual ~World();
 
 			// 创建刚体
+			BodyPtr CreateBody(ActorPtr actor);
 			BodyPtr CreateBody(Actor* actor);
 
 			// 创建关节
 			JointPtr CreateJoint(b2JointDef* joint_def);
-
-			// 移除刚体
-			void RemoveBody(Body* body);
-
-			// 移除所有刚体
-			void RemoveAllBodies();
-
-			// 移除关节
-			void RemoveJoint(Joint* joint);
-
-			// 移除所有关节
-			void RemoveAllJoints();
 
 			// 获取重力
 			Vec2 GetGravity() const;
@@ -88,6 +80,19 @@ namespace kiwano
 			const b2World* GetB2World() const;
 
 		protected:
+			// 移除刚体
+			void RemoveBody(Body* body);
+
+			// 移除所有刚体
+			void RemoveAllBodies();
+
+			// 移除关节
+			void RemoveJoint(Joint* joint);
+
+			// 移除所有关节
+			void RemoveAllJoints();
+
+		protected:
 			void Update(Duration dt) override;
 
 		protected:
@@ -95,8 +100,8 @@ namespace kiwano
 			int vel_iter_;
 			int pos_iter_;
 			float global_scale_;
-			Vector<BodyPtr> bodies_;
-			Vector<JointPtr> joints_;
+			Vector<Body*> bodies_;
+			Vector<Joint*> joints_;
 		};
 
 		KGE_DECLARE_SMART_PTR(World);

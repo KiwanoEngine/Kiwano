@@ -455,30 +455,41 @@ namespace kiwano
 		is_fast_transform_ = false;
 	}
 
-	void Actor::AddChild(ActorPtr child)
+	void Actor::AddChild(Actor* child, int zorder)
 	{
 		KGE_ASSERT(child && "Actor::AddChild failed, NULL pointer exception");
 
 		if (child)
 		{
+			KGE_ASSERT(!child->parent_ && "Actor::AddChild failed, the actor to be added already has a parent");
+
 #ifdef KGE_DEBUG
 
-			if (child->parent_)
-				KGE_ERROR_LOG(L"The actor to be added already has a parent");
-
 			for (Actor* parent = parent_; parent; parent = parent->parent_)
+			{
 				if (parent == child)
+				{
 					KGE_ERROR_LOG(L"A actor cannot be its own parent");
+					return;
+				}
+			}
 
 #endif // KGE_DEBUG
 
 			children_.push_back(child);
 			child->parent_ = this;
 			child->SetStage(this->stage_);
+
 			child->dirty_transform_ = true;
-			child->UpdateOpacity();
+			child->z_order_ = zorder;
 			child->Reorder();
+			child->UpdateOpacity();
 		}
+	}
+
+	void Actor::AddChild(ActorPtr child, int zorder)
+	{
+		AddChild(child.get());
 	}
 
 	void Actor::AddChildren(Vector<ActorPtr> const& children)
@@ -528,7 +539,7 @@ namespace kiwano
 		return nullptr;
 	}
 
-	Actor::Children const & Actor::GetChildren() const
+	Actor::Children const & Actor::GetAllChildren() const
 	{
 		return children_;
 	}
