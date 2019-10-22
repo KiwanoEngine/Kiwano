@@ -61,21 +61,23 @@ namespace kiwano
 		{
 		}
 
-		CircleShape::CircleShape(float radius)
+		CircleShape::CircleShape(float radius, Point const& offset)
 			: CircleShape()
 		{
-			Set(radius);
+			Set(radius, offset);
 		}
 
-		void CircleShape::Set(float radius)
+		void CircleShape::Set(float radius, Point const& offset)
 		{
 			radius_ = radius;
+			offset_ = offset;
 		}
 
 		void CircleShape::FitWorld(World* world)
 		{
 			KGE_ASSERT(world);
 			circle_.m_radius = world->Stage2World(radius_);
+			circle_.m_p = world->Stage2World(offset_);
 		}
 
 		//
@@ -85,18 +87,21 @@ namespace kiwano
 		BoxShape::BoxShape()
 			: Shape(&polygon_)
 			, polygon_()
+			, rotation_(0.f)
 		{
 		}
 
-		BoxShape::BoxShape(Vec2 const& size)
+		BoxShape::BoxShape(Vec2 const& size, Point const& offset, float rotation)
 			: BoxShape()
 		{
-			Set(size);
+			Set(size, offset, rotation);
 		}
 
-		void BoxShape::Set(Vec2 const& size)
+		void BoxShape::Set(Vec2 const& size, Point const& offset, float rotation)
 		{
 			box_size_ = size;
+			offset_ = offset;
+			rotation_ = rotation;
 		}
 
 		void BoxShape::FitWorld(World* world)
@@ -104,7 +109,8 @@ namespace kiwano
 			KGE_ASSERT(world);
 
 			b2Vec2 box = world->Stage2World(box_size_);
-			polygon_.SetAsBox(box.x / 2, box.y / 2);
+			b2Vec2 offset = world->Stage2World(offset_);
+			polygon_.SetAsBox(box.x / 2, box.y / 2, offset, rotation_);
 		}
 
 		//
@@ -142,5 +148,80 @@ namespace kiwano
 			polygon_.Set(&b2vertexs[0], static_cast<int32>(b2vertexs.size()));
 		}
 
-	}
+		//
+		// EdgeShape
+		//
+
+		EdgeShape::EdgeShape()
+			: Shape(&edge_)
+			, edge_()
+		{
+		}
+
+		EdgeShape::EdgeShape(Point const& p1, Point const& p2)
+			: EdgeShape()
+		{
+			Set(p1, p2);
+		}
+
+		void EdgeShape::Set(Point const& p1, Point const& p2)
+		{
+			p_[0] = p1;
+			p_[1] = p2;
+		}
+
+		void EdgeShape::FitWorld(World* world)
+		{
+			KGE_ASSERT(world);
+
+			b2Vec2 p1 = world->Stage2World(p_[0]);
+			b2Vec2 p2 = world->Stage2World(p_[1]);
+			edge_.Set(p1, p2);
+		}
+
+		//
+		// ChainShape
+		//
+
+		ChainShape::ChainShape()
+			: Shape(&chain_)
+			, chain_()
+			, loop_(false)
+		{
+		}
+
+		ChainShape::ChainShape(Vector<Point> const& vertexs, bool loop)
+			: ChainShape()
+		{
+			Set(vertexs, loop);
+		}
+
+		void ChainShape::Set(Vector<Point> const& vertexs, bool loop)
+		{
+			vertexs_ = vertexs;
+			loop_ = loop;
+		}
+
+		void ChainShape::FitWorld(World* world)
+		{
+			KGE_ASSERT(world);
+
+			Vector<b2Vec2> b2vertexs;
+			b2vertexs.reserve(vertexs_.size());
+			for (const auto& v : vertexs_)
+			{
+				b2vertexs.push_back(world->Stage2World(v));
+			}
+
+			if (loop_)
+			{
+				chain_.CreateLoop(&b2vertexs[0], static_cast<int32>(b2vertexs.size()));
+			}
+			else
+			{
+				chain_.CreateChain(&b2vertexs[0], static_cast<int32>(b2vertexs.size()));
+			}
+		}
+
+}
 }

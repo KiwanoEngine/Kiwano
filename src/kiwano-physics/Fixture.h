@@ -18,73 +18,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-physics/Joint.h>
-#include <kiwano-physics/World.h>
+#pragma once
+#include <kiwano-physics/helper.h>
+#include <kiwano-physics/Shape.h>
 
 namespace kiwano
 {
 	namespace physics
 	{
-		//
-		// Joint
-		//
+		class Body;
 
-		Joint::Joint()
-			: joint_(nullptr)
-			, world_(nullptr)
-			, type_(Type::Unknown)
+		// 夹具
+		class Fixture
 		{
-		}
-
-		Joint::Joint(b2Joint* joint)
-			: Joint()
-		{
-			SetB2Joint(joint);
-		}
-
-		Joint::Joint(World* world, b2JointDef* joint_def)
-			: Joint()
-		{
-			world_ = world;
-			if (world_)
+		public:
+			struct Property
 			{
-				b2Joint* joint = world_->GetB2World()->CreateJoint(joint_def);
-				SetB2Joint(joint);
-			}
-		}
+				float density;		// 密度 kg/m^2
+				float friction;		// 摩擦系数 [0,1]
+				float restitution;	// 弹性 [0,1]
 
-		Joint::~Joint()
-		{
-			if (world_)
-			{
-				world_->RemoveJoint(this);
-			}
-		}
+				Property()
+					: density(0.f)
+					, friction(0.2f)
+					, restitution(0.f)
+				{
+				}
 
-		BodyPtr Joint::GetBodyA() const
-		{
-			KGE_ASSERT(joint_);
+				Property(float density, float friction, float restitution)
+					: density(density)
+					, friction(friction)
+					, restitution(restitution)
+				{
+				}
+			};
 
-			b2Body* body = joint_->GetBodyA();
-			return BodyPtr(static_cast<Body*>(body->GetUserData()));
-		}
+			Fixture();
+			Fixture(b2Fixture* fixture);
+			Fixture(Body* body, Shape* shape, Property const& prop);
 
-		BodyPtr Joint::GetBodyB() const
-		{
-			KGE_ASSERT(joint_);
+			Shape GetShape() const;
+			Fixture GetNext() const;
 
-			b2Body* body = joint_->GetBodyB();
-			return BodyPtr(static_cast<Body*>(body->GetUserData()));
-		}
+			b2Fixture* GetB2Fixture()				{ return fixture_; }
+			const b2Fixture* GetB2Fixture() const	{ return fixture_; }
+			void SetB2Fixture(b2Fixture* fixture)	{ fixture_ = fixture; }
 
-		void Joint::SetB2Joint(b2Joint* joint)
-		{
-			joint_ = joint;
-			if (joint_)
-			{
-				type_ = Joint::Type(joint_->GetType());
-			}
-		}
-
+		protected:
+			b2Fixture* fixture_;
+		};
 	}
 }

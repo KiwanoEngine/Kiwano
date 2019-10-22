@@ -18,72 +18,55 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-physics/Joint.h>
+#include <kiwano-physics/Fixture.h>
+#include <kiwano-physics/Body.h>
 #include <kiwano-physics/World.h>
 
 namespace kiwano
 {
 	namespace physics
 	{
-		//
-		// Joint
-		//
 
-		Joint::Joint()
-			: joint_(nullptr)
-			, world_(nullptr)
-			, type_(Type::Unknown)
+		Fixture::Fixture()
+			: fixture_(nullptr)
 		{
 		}
 
-		Joint::Joint(b2Joint* joint)
-			: Joint()
+		Fixture::Fixture(b2Fixture* fixture)
+			: Fixture()
 		{
-			SetB2Joint(joint);
+			SetB2Fixture(fixture);
 		}
 
-		Joint::Joint(World* world, b2JointDef* joint_def)
-			: Joint()
+		Fixture::Fixture(Body* body, Shape* shape, Property const& prop)
+			: Fixture()
 		{
-			world_ = world;
-			if (world_)
+			KGE_ASSERT(body);
+
+			if (shape)
 			{
-				b2Joint* joint = world_->GetB2World()->CreateJoint(joint_def);
-				SetB2Joint(joint);
+				shape->FitWorld(body->GetWorld());
+
+				b2Body* b2body = body->GetB2Body();
+				b2FixtureDef fd;
+				fd.density = prop.density;
+				fd.friction = prop.friction;
+				fd.restitution = prop.restitution;
+				fd.shape = shape->GetB2Shape();
+				fixture_ = b2body->CreateFixture(&fd);
 			}
 		}
 
-		Joint::~Joint()
+		Shape Fixture::GetShape() const
 		{
-			if (world_)
-			{
-				world_->RemoveJoint(this);
-			}
+			KGE_ASSERT(fixture_);
+			return Shape(fixture_->GetShape());
 		}
 
-		BodyPtr Joint::GetBodyA() const
+		Fixture Fixture::GetNext() const
 		{
-			KGE_ASSERT(joint_);
-
-			b2Body* body = joint_->GetBodyA();
-			return BodyPtr(static_cast<Body*>(body->GetUserData()));
-		}
-
-		BodyPtr Joint::GetBodyB() const
-		{
-			KGE_ASSERT(joint_);
-
-			b2Body* body = joint_->GetBodyB();
-			return BodyPtr(static_cast<Body*>(body->GetUserData()));
-		}
-
-		void Joint::SetB2Joint(b2Joint* joint)
-		{
-			joint_ = joint;
-			if (joint_)
-			{
-				type_ = Joint::Type(joint_->GetType());
-			}
+			KGE_ASSERT(fixture_);
+			return Fixture(fixture_->GetNext());
 		}
 
 	}

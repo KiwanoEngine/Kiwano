@@ -25,8 +25,10 @@ namespace kiwano
 {
 	namespace physics
 	{
+
 		Body::Body()
-			: body_(nullptr)
+			: ignore_rotation_(false)
+			, body_(nullptr)
 			, actor_(nullptr)
 			, world_(nullptr)
 		{
@@ -50,6 +52,7 @@ namespace kiwano
 				SetB2Body(body);
 			}
 			SetActor(actor);
+			UpdateFromActor();
 		}
 
 		Body::~Body()
@@ -60,54 +63,61 @@ namespace kiwano
 			}
 		}
 
-		b2Fixture* Body::AddShape(ShapePtr shape, Property const& prop)
+		Fixture Body::AddShape(Shape* shape, Fixture::Property const& prop)
 		{
 			KGE_ASSERT(body_ && world_);
-			KGE_ASSERT(shape);
 
 			if (shape)
 			{
-				shape->FitWorld(world_);
-
-				b2FixtureDef fd;
-				fd.density = prop.density;
-				fd.friction = prop.friction;
-				fd.restitution = prop.restitution;
-				fd.shape = shape->GetB2Shape();
-
-				return body_->CreateFixture(&fd);
+				return Fixture(this, shape, prop);
 			}
-			return nullptr;
+			return Fixture();
 		}
 
-		b2Fixture* Body::AddCircleShape(float radius, Property const& prop)
+		Fixture Body::AddCircleShape(float radius, Fixture::Property const& prop)
 		{
-			ShapePtr shape = new CircleShape(radius);
-			return AddShape(shape, prop);
+			return AddShape(&CircleShape(radius), prop);
 		}
 
-		b2Fixture* Body::AddBoxShape(Vec2 const& size, Property const& prop)
+		Fixture Body::AddBoxShape(Vec2 const& size, Fixture::Property const& prop)
 		{
-			ShapePtr shape = new BoxShape(size);
-			return AddShape(shape, prop);
+			return AddShape(&BoxShape(size), prop);
 		}
 
-		b2Fixture* Body::AddPolygonShape(Vector<Point> const& vertexs, Property const& prop)
+		Fixture Body::AddPolygonShape(Vector<Point> const& vertexs, Fixture::Property const& prop)
 		{
-			ShapePtr shape = new PolygonShape(vertexs);
-			return AddShape(shape, prop);
+			return AddShape(&PolygonShape(vertexs), prop);
 		}
 
-		Body::Type Body::GetType() const
+		Fixture Body::AddEdgeShape(Point const& p1, Point const& p2, Fixture::Property const& prop)
 		{
-			KGE_ASSERT(body_);
-			return Type(body_->GetType());
+			return AddShape(&EdgeShape(p1, p2), prop);
 		}
 
-		void Body::SetType(Type type)
+		Fixture Body::AddChainShape(Vector<Point> const& vertexs, bool loop, Fixture::Property const& prop)
 		{
-			KGE_ASSERT(body_);
-			body_->SetType(static_cast<b2BodyType>(type));
+			return AddShape(&ChainShape(vertexs, loop), prop);
+		}
+
+		void Body::RemoveFixture(Fixture const& fixture)
+		{
+			if (fixture.GetB2Fixture())
+			{
+				b2Fixture* ptr = const_cast<b2Fixture*>(fixture.GetB2Fixture());
+				body_->DestroyFixture(ptr);
+			}
+		}
+
+		Point Body::GetLocalPoint(Point const& world) const
+		{
+			KGE_ASSERT(body_ && world_);
+			return world_->World2Stage(body_->GetLocalPoint(world_->Stage2World(world)));
+		}
+
+		Point Body::GetWorldPoint(Point const& local) const
+		{
+			KGE_ASSERT(body_ && world_);
+			return world_->World2Stage(body_->GetWorldPoint(world_->Stage2World(local)));
 		}
 
 		void Body::SetB2Body(b2Body* body)
@@ -131,7 +141,11 @@ namespace kiwano
 				{
 					actor_->SetPosition(World2Stage(body_->GetPosition()));
 				}
-				actor_->SetRotation(math::Radian2Angle(body_->GetAngle()));
+
+				if (!ignore_rotation_)
+				{
+					actor_->SetRotation(math::Radian2Angle(body_->GetAngle()));
+				}
 			}
 		}
 
@@ -139,22 +153,24 @@ namespace kiwano
 		{
 			if (actor_ && body_)
 			{
+				float rotation = ignore_rotation_ ? body_->GetAngle() : math::Angle2Radian(actor_->GetRotation());
+
 				if (world_)
 				{
 					body_->SetTransform(
 						world_->Stage2World(actor_->GetPosition()),
-						math::Angle2Radian(actor_->GetRotation())
+						rotation
 					);
 				}
 				else
 				{
 					body_->SetTransform(
 						Stage2World(actor_->GetPosition()),
-						math::Angle2Radian(actor_->GetRotation())
+						rotation
 					);
 				}
 			}
 		}
 
-	}
+}
 }

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano-physics\Body.h" />
+    <ClInclude Include="..\..\src\kiwano-physics\Fixture.h" />
     <ClInclude Include="..\..\src\kiwano-physics\helper.h" />
     <ClInclude Include="..\..\src\kiwano-physics\Joint.h" />
     <ClInclude Include="..\..\src\kiwano-physics\kiwano-physics.h" />
@@ -20,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-physics\Body.cpp" />
+    <ClCompile Include="..\..\src\kiwano-physics\Fixture.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\Joint.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\World.cpp" />

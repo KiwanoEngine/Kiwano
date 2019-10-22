@@ -27,25 +27,18 @@ namespace kiwano
 	{
 		class World;
 
-		KGE_DECLARE_SMART_PTR(Shape);
-		KGE_DECLARE_SMART_PTR(CircleShape);
-		KGE_DECLARE_SMART_PTR(BoxShape);
-		KGE_DECLARE_SMART_PTR(PolygonShape);
-
 		// 形状基类
 		class KGE_API Shape
-			: public ObjectBase
 		{
 		public:
 			Shape();
-
 			Shape(b2Shape* shape);
 
 			b2Shape* GetB2Shape();
 			const b2Shape* GetB2Shape() const;
 			void SetB2Shape(b2Shape* shape);
 
-			virtual void FitWorld(World* world) = 0;
+			virtual void FitWorld(World* world) {}
 
 		protected:
 			b2Shape* shape_;
@@ -58,14 +51,15 @@ namespace kiwano
 		public:
 			CircleShape();
 
-			CircleShape(float radius);
+			CircleShape(float radius, Point const& offset = Point());
 
-			void Set(float radius);
+			void Set(float radius, Point const& offset = Point());
 
 			void FitWorld(World* world) override;
 
 		protected:
 			float radius_;
+			Point offset_;
 			b2CircleShape circle_;
 		};
 
@@ -76,14 +70,16 @@ namespace kiwano
 		public:
 			BoxShape();
 
-			BoxShape(Vec2 const& size);
+			BoxShape(Vec2 const& size, Point const& offset = Point(), float rotation = 0.f);
 
-			void Set(Vec2 const& size);
+			void Set(Vec2 const& size, Point const& offset = Point(), float rotation = 0.f);
 
 			void FitWorld(World* world) override;
 
 		protected:
+			float rotation_;
 			Vec2 box_size_;
+			Point offset_;
 			b2PolygonShape polygon_;
 		};
 
@@ -103,6 +99,43 @@ namespace kiwano
 		protected:
 			Vector<Point> vertexs_;
 			b2PolygonShape polygon_;
+		};
+
+		// 线段形状, 用于表示一条边
+		class KGE_API EdgeShape
+			: public Shape
+		{
+		public:
+			EdgeShape();
+
+			EdgeShape(Point const& p1, Point const& p2);
+
+			void Set(Point const& p1, Point const& p2);
+
+			void FitWorld(World* world) override;
+
+		protected:
+			Point p_[2];
+			b2EdgeShape edge_;
+		};
+
+		// 链式形状
+		class KGE_API ChainShape
+			: public Shape
+		{
+		public:
+			ChainShape();
+
+			ChainShape(Vector<Point> const& vertexs, bool loop = false);
+
+			void Set(Vector<Point> const& vertexs, bool loop = false);
+
+			void FitWorld(World* world) override;
+
+		protected:
+			bool loop_;
+			Vector<Point> vertexs_;
+			b2ChainShape chain_;
 		};
 	}
 }

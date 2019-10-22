@@ -56,7 +56,6 @@ namespace kiwano
 		BodyPtr World::CreateBody(Actor* actor)
 		{
 			BodyPtr body = new Body(this, actor);
-			body->UpdateFromActor();
 			bodies_.push_back(body.get());
 			return body;
 		}
@@ -76,11 +75,11 @@ namespace kiwano
 				if (iter != bodies_.end())
 				{
 					bodies_.erase(iter);
+				}
 
-					if (body->GetB2Body())
-					{
-						world_.DestroyBody(body->GetB2Body());
-					}
+				if (body->GetB2Body())
+				{
+					world_.DestroyBody(body->GetB2Body());
 				}
 			}
 		}
@@ -108,11 +107,11 @@ namespace kiwano
 				if (iter != joints_.end())
 				{
 					joints_.erase(iter);
+				}
 
-					if (joint->GetB2Joint())
-					{
-						world_.DestroyJoint(joint->GetB2Joint());
-					}
+				if (joint->GetB2Joint())
+				{
+					world_.DestroyJoint(joint->GetB2Joint());
 				}
 			}
 		}

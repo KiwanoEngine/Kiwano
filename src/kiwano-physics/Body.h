@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano-physics/helper.h>
 #include <kiwano-physics/Shape.h>
+#include <kiwano-physics/Fixture.h>
 
 namespace kiwano
 {
@@ -40,54 +41,52 @@ namespace kiwano
 				Dynamic,
 			};
 
-			struct Property
-			{
-				float density;		// 密度 kg/m^2
-				float friction;		// 摩擦系数 [0,1]
-				float restitution;	// 弹性 [0,1]
-
-				Property()
-					: density(0.f)
-					, friction(0.2f)
-					, restitution(0.f)
-				{
-				}
-
-				Property(float density, float friction, float restitution)
-					: density(density)
-					, friction(friction)
-					, restitution(restitution)
-				{
-				}
-			};
-
 			Body();
 			Body(b2Body* body, Actor* actor);
 			Body(World* world, Actor* actor);
 			virtual ~Body();
 
-			b2Fixture* AddShape(ShapePtr shape, Property const& prop);
-			b2Fixture* AddCircleShape(float radius, Property const& prop = Property());
-			b2Fixture* AddBoxShape(Vec2 const& size, Property const& prop = Property());
-			b2Fixture* AddPolygonShape(Vector<Point> const& vertexs, Property const& prop = Property());
+			// 添加形状
+			Fixture AddShape(Shape* shape, Fixture::Property const& prop = Fixture::Property());
+			Fixture AddCircleShape(float radius, Fixture::Property const& prop = Fixture::Property());
+			Fixture AddBoxShape(Vec2 const& size, Fixture::Property const& prop = Fixture::Property());
+			Fixture AddPolygonShape(Vector<Point> const& vertexs, Fixture::Property const& prop = Fixture::Property());
+			Fixture AddEdgeShape(Point const& p1, Point const& p2, Fixture::Property const& prop = Fixture::Property());
+			Fixture AddChainShape(Vector<Point> const& vertexs, bool loop = false, Fixture::Property const& prop = Fixture::Property());
 
-			Type GetType() const;
-			void SetType(Type type);
+			// 获取夹具列表
+			Fixture GetFixture() const						{ KGE_ASSERT(body_); Fixture(body_->GetFixtureList()); }
 
-			Actor* GetActor() const				{ return actor_; }
-			void SetActor(Actor* actor)			{ actor_ = actor; }
+			// 移除夹具
+			void RemoveFixture(Fixture const& fixture);
 
-			b2Body* GetB2Body()					{ return body_; }
-			const b2Body* GetB2Body() const		{ return body_; }
+			// 获取质量
+			float GetMass() const							{ KGE_ASSERT(body_); return body_->GetMass(); }
+
+			Point GetLocalPoint(Point const& world) const;
+			Point GetWorldPoint(Point const& local) const;
+
+			Type GetType() const							{ KGE_ASSERT(body_); return Type(body_->GetType()); }
+			void SetType(Type type)							{ KGE_ASSERT(body_); body_->SetType(static_cast<b2BodyType>(type)); }
+
+			bool IsIgnoreRotation() const					{ return ignore_rotation_; }
+			void SetIgnoreRotation(bool ignore_rotation)	{ ignore_rotation_ = ignore_rotation; }
+
+			Actor* GetActor() const							{ return actor_; }
+			void SetActor(Actor* actor)						{ actor_ = actor; }
+
+			b2Body* GetB2Body()								{ return body_; }
+			const b2Body* GetB2Body() const					{ return body_; }
 			void SetB2Body(b2Body* body);
 
-			World* GetWorld()					{ return world_; }
-			const World* GetWorld() const		{ return world_; }
+			World* GetWorld()								{ return world_; }
+			const World* GetWorld() const					{ return world_; }
 
 			void UpdateActor();
 			void UpdateFromActor();
 
 		protected:
+			bool ignore_rotation_;
 			Actor* actor_;
 			World* world_;
 			b2Body* body_;
