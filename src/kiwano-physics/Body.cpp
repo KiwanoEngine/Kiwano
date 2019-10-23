@@ -41,20 +41,6 @@ namespace kiwano
 			SetActor(actor);
 		}
 
-		Body::Body(World* world, Actor* actor)
-			: Body()
-		{
-			world_ = world;
-			if (world_)
-			{
-				b2BodyDef def;
-				b2Body* body = world_->GetB2World()->CreateBody(&def);
-				SetB2Body(body);
-			}
-			SetActor(actor);
-			UpdateFromActor();
-		}
-
 		Body::~Body()
 		{
 			if (world_)
@@ -63,40 +49,58 @@ namespace kiwano
 			}
 		}
 
-		Fixture Body::AddShape(Shape* shape, Fixture::Property const& prop)
+		BodyPtr Body::Create(World* world, Actor* actor)
+		{
+			BodyPtr body = new Body;
+			if (body)
+			{
+				body->world_ = world;
+				if (world)
+				{
+					b2BodyDef def;
+					b2Body* b2body = world->GetB2World()->CreateBody(&def);
+					body->SetB2Body(b2body);
+				}
+				body->SetActor(actor);
+				body->UpdateFromActor();
+			}
+			return body;
+		}
+
+		Fixture Body::AddShape(Shape* shape, float density, float friction, float restitution)
 		{
 			KGE_ASSERT(body_ && world_);
 
 			if (shape)
 			{
-				return Fixture(this, shape, prop);
+				return Fixture::Create(this, shape, density, friction, restitution);
 			}
 			return Fixture();
 		}
 
-		Fixture Body::AddCircleShape(float radius, Fixture::Property const& prop)
+		Fixture Body::AddCircleShape(float radius, float density)
 		{
-			return AddShape(&CircleShape(radius), prop);
+			return AddShape(&CircleShape(radius), density);
 		}
 
-		Fixture Body::AddBoxShape(Vec2 const& size, Fixture::Property const& prop)
+		Fixture Body::AddBoxShape(Vec2 const& size, float density)
 		{
-			return AddShape(&BoxShape(size), prop);
+			return AddShape(&BoxShape(size), density);
 		}
 
-		Fixture Body::AddPolygonShape(Vector<Point> const& vertexs, Fixture::Property const& prop)
+		Fixture Body::AddPolygonShape(Vector<Point> const& vertexs, float density)
 		{
-			return AddShape(&PolygonShape(vertexs), prop);
+			return AddShape(&PolygonShape(vertexs), density);
 		}
 
-		Fixture Body::AddEdgeShape(Point const& p1, Point const& p2, Fixture::Property const& prop)
+		Fixture Body::AddEdgeShape(Point const& p1, Point const& p2, float density)
 		{
-			return AddShape(&EdgeShape(p1, p2), prop);
+			return AddShape(&EdgeShape(p1, p2), density);
 		}
 
-		Fixture Body::AddChainShape(Vector<Point> const& vertexs, bool loop, Fixture::Property const& prop)
+		Fixture Body::AddChainShape(Vector<Point> const& vertexs, bool loop, float density)
 		{
-			return AddShape(&ChainShape(vertexs, loop), prop);
+			return AddShape(&ChainShape(vertexs, loop), density);
 		}
 
 		void Body::RemoveFixture(Fixture const& fixture)
@@ -118,6 +122,24 @@ namespace kiwano
 		{
 			KGE_ASSERT(body_ && world_);
 			return world_->World2Stage(body_->GetWorldPoint(world_->Stage2World(local)));
+		}
+
+		void Body::ApplyForce(Vec2 const& force, Point const& point, bool wake)
+		{
+			KGE_ASSERT(body_ && world_);
+			body_->ApplyForce(b2Vec2(force.x, force.y), world_->Stage2World(point), wake);
+		}
+
+		void Body::ApplyForceToCenter(Vec2 const& force, bool wake)
+		{
+			KGE_ASSERT(body_ && world_);
+			body_->ApplyForceToCenter(b2Vec2(force.x, force.y), wake);
+		}
+
+		void Body::ApplyTorque(float torque, bool wake)
+		{
+			KGE_ASSERT(body_ && world_);
+			body_->ApplyTorque(torque, wake);
 		}
 
 		void Body::SetB2Body(b2Body* body)

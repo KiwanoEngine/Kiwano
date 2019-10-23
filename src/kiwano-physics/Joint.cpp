@@ -86,5 +86,33 @@ namespace kiwano
 			}
 		}
 
-	}
+		//
+		// DistanceJoint
+		//
+
+		DistanceJoint::DistanceJoint()
+			: Joint()
+		{
+		}
+
+		DistanceJoint::DistanceJoint(World* world, b2DistanceJointDef* def)
+			: Joint(world, def)
+		{
+		}
+
+		DistanceJointPtr DistanceJoint::Create(World* world, Param const& param)
+		{
+			KGE_ASSERT(param.body_a && param.body_b);
+
+			b2DistanceJointDef def;
+			def.bodyA = param.body_a->GetB2Body();
+			def.bodyB = param.body_b->GetB2Body();
+			def.localAnchorA = world->Stage2World(param.local_anchor_a);
+			def.localAnchorB = world->Stage2World(param.local_anchor_b);
+			def.length = world->Stage2World((param.body_a->GetWorldPoint(param.local_anchor_a) - param.body_b->GetWorldPoint(param.local_anchor_b)).Length());
+
+			DistanceJointPtr joint = new DistanceJoint(world, &def);
+			return joint;
+		}
+}
 }

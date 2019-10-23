@@ -30,6 +30,7 @@ namespace kiwano
 		class World;
 
 		// 刚体
+		KGE_DECLARE_SMART_PTR(Body);
 		class KGE_API Body
 			: public ObjectBase
 		{
@@ -43,16 +44,17 @@ namespace kiwano
 
 			Body();
 			Body(b2Body* body, Actor* actor);
-			Body(World* world, Actor* actor);
 			virtual ~Body();
 
+			static BodyPtr Create(World* world, Actor* actor);
+
 			// 添加形状
-			Fixture AddShape(Shape* shape, Fixture::Property const& prop = Fixture::Property());
-			Fixture AddCircleShape(float radius, Fixture::Property const& prop = Fixture::Property());
-			Fixture AddBoxShape(Vec2 const& size, Fixture::Property const& prop = Fixture::Property());
-			Fixture AddPolygonShape(Vector<Point> const& vertexs, Fixture::Property const& prop = Fixture::Property());
-			Fixture AddEdgeShape(Point const& p1, Point const& p2, Fixture::Property const& prop = Fixture::Property());
-			Fixture AddChainShape(Vector<Point> const& vertexs, bool loop = false, Fixture::Property const& prop = Fixture::Property());
+			Fixture AddShape(Shape* shape, float density = 0.f, float friction = 0.2f, float restitution = 0.f);
+			Fixture AddCircleShape(float radius, float density = 0.f);
+			Fixture AddBoxShape(Vec2 const& size, float density = 0.f);
+			Fixture AddPolygonShape(Vector<Point> const& vertexs, float density = 0.f);
+			Fixture AddEdgeShape(Point const& p1, Point const& p2, float density = 0.f);
+			Fixture AddChainShape(Vector<Point> const& vertexs, bool loop, float density = 0.f);
 
 			// 获取夹具列表
 			Fixture GetFixture() const						{ KGE_ASSERT(body_); Fixture(body_->GetFixtureList()); }
@@ -68,6 +70,11 @@ namespace kiwano
 
 			Type GetType() const							{ KGE_ASSERT(body_); return Type(body_->GetType()); }
 			void SetType(Type type)							{ KGE_ASSERT(body_); body_->SetType(static_cast<b2BodyType>(type)); }
+
+			void ApplyForce(Vec2 const& force, Point const& point, bool wake = true);
+			void ApplyForceToCenter(Vec2 const& force, bool wake = true);
+
+			void ApplyTorque(float torque, bool wake = true);
 
 			bool IsIgnoreRotation() const					{ return ignore_rotation_; }
 			void SetIgnoreRotation(bool ignore_rotation)	{ ignore_rotation_ = ignore_rotation; }
@@ -91,7 +98,5 @@ namespace kiwano
 			World* world_;
 			b2Body* body_;
 		};
-
-		KGE_DECLARE_SMART_PTR(Body);
 	}
 }

@@ -32,33 +32,15 @@ namespace kiwano
 		class Fixture
 		{
 		public:
-			struct Property
-			{
-				float density;		// 密度 kg/m^2
-				float friction;		// 摩擦系数 [0,1]
-				float restitution;	// 弹性 [0,1]
-
-				Property()
-					: density(0.f)
-					, friction(0.2f)
-					, restitution(0.f)
-				{
-				}
-
-				Property(float density, float friction, float restitution)
-					: density(density)
-					, friction(friction)
-					, restitution(restitution)
-				{
-				}
-			};
-
 			Fixture();
 			Fixture(b2Fixture* fixture);
-			Fixture(Body* body, Shape* shape, Property const& prop);
+
+			static Fixture Create(Body* body, Shape* shape, float density = 0.f, float friction = 0.2f, float restitution = 0.f);
 
 			Shape GetShape() const;
 			Fixture GetNext() const;
+
+			bool IsValid() const					{ return !!fixture_; }
 
 			b2Fixture* GetB2Fixture()				{ return fixture_; }
 			const b2Fixture* GetB2Fixture() const	{ return fixture_; }

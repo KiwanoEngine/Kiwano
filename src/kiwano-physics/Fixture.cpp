@@ -38,8 +38,7 @@ namespace kiwano
 			SetB2Fixture(fixture);
 		}
 
-		Fixture::Fixture(Body* body, Shape* shape, Property const& prop)
-			: Fixture()
+		Fixture Fixture::Create(Body* body, Shape* shape, float density, float friction, float restitution)
 		{
 			KGE_ASSERT(body);
 
@@ -49,12 +48,14 @@ namespace kiwano
 
 				b2Body* b2body = body->GetB2Body();
 				b2FixtureDef fd;
-				fd.density = prop.density;
-				fd.friction = prop.friction;
-				fd.restitution = prop.restitution;
+				fd.density = density;
+				fd.friction = friction;
+				fd.restitution = restitution;
 				fd.shape = shape->GetB2Shape();
-				fixture_ = b2body->CreateFixture(&fd);
+				auto fixture = b2body->CreateFixture(&fd);
+				return Fixture(fixture);
 			}
+			return Fixture();
 		}
 
 		Shape Fixture::GetShape() const

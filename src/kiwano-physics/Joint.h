@@ -47,6 +47,15 @@ namespace kiwano
 				Motor
 			};
 
+			struct ParamBase
+			{
+				Body* body_a;
+				Body* body_b;
+
+				ParamBase(Body* body_a, Body* body_b) : body_a(body_a), body_b(body_b) {}
+				ParamBase(BodyPtr body_a, BodyPtr body_b) : body_a(body_a.get()), body_b(body_b.get()) {}
+			};
+
 			Joint();
 			Joint(b2Joint* joint);
 			Joint(World* world, b2JointDef* joint_def);
@@ -66,6 +75,33 @@ namespace kiwano
 			b2Joint* joint_;
 			World* world_;
 			Type type_;
+		};
+
+		KGE_DECLARE_SMART_PTR(DistanceJoint);
+		class KGE_API DistanceJoint
+			: public Joint
+		{
+		public:
+			struct Param : public Joint::ParamBase
+			{
+				Point local_anchor_a;
+				Point local_anchor_b;
+
+				Param(Body* body_a, Body* body_b, Point const& local_anchor_a, Point const& local_anchor_b)
+					: ParamBase(body_a, body_b)
+					, local_anchor_a(local_anchor_a)
+					, local_anchor_b(local_anchor_b)
+				{}
+
+				Param(BodyPtr body_a, BodyPtr body_b, Point const& local_anchor_a, Point const& local_anchor_b)
+					: Param(body_a.get(), body_b.get(), local_anchor_a, local_anchor_b)
+				{}
+			};
+
+			DistanceJoint();
+			DistanceJoint(World* world, b2DistanceJointDef* def);
+
+			static DistanceJointPtr Create(World* world, Param const& param);
 		};
 	}
 }
