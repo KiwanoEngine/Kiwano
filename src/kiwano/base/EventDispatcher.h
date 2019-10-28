@@ -35,6 +35,11 @@ namespace kiwano
 
 		// Ìí¼Ó¼àÌıÆ÷
 		EventListener* AddListener(
+			EventListener* listener
+		);
+
+		// Ìí¼Ó¼àÌıÆ÷
+		EventListener* AddListener(
 			EventType type,
 			EventListener::Callback callback,
 			String const& name = L""

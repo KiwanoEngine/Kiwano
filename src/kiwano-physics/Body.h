@@ -65,6 +65,12 @@ namespace kiwano
 			// 获取质量
 			float GetMass() const							{ KGE_ASSERT(body_); return body_->GetMass(); }
 
+			// 获取旋转角度
+			float GetRotation() const						{ KGE_ASSERT(body_); return math::Radian2Angle(body_->GetAngle()); }
+
+			// 获取位置
+			Point GetPosition() const;
+
 			Point GetLocalPoint(Point const& world) const;
 			Point GetWorldPoint(Point const& local) const;
 

@@ -325,7 +325,7 @@ namespace kiwano
 		);
 
 		// 获取名称相同的子角色
-		ActorPtr GetChild(
+		Actor* GetChild(
 			String const& name
 		) const;
 

@@ -32,9 +32,13 @@ namespace kiwano
 		Action* AddAction(
 			ActionPtr action
 		);
+		// 添加动作
+		Action* AddAction(
+			Action* action
+		);
 
 		// 获取动作
-		ActionPtr GetAction(
+		Action* GetAction(
 			String const& name
 		);
 

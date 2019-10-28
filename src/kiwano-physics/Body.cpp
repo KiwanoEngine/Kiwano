@@ -112,6 +112,12 @@ namespace kiwano
 			}
 		}
 
+		Point Body::GetPosition() const
+		{
+			KGE_ASSERT(body_ && world_);
+			return world_->World2Stage(body_->GetPosition());
+		}
+
 		Point Body::GetLocalPoint(Point const& world) const
 		{
 			KGE_ASSERT(body_ && world_);

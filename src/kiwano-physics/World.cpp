@@ -24,24 +24,56 @@ namespace kiwano
 {
 	namespace physics
 	{
-		World::World()
-			: world_(b2Vec2(0, 10))
-			, vel_iter_(6)
-			, pos_iter_(2)
-			, global_scale_(100.f)
+		namespace
 		{
+			const float DefaultGlobalScale = 100.f;		// 100 pixels per meters
 		}
 
-		World::World(Vec2 gravity)
-			: world_(b2Vec2(gravity.x, gravity.y))
+		class World::DestructionListener : public b2DestructionListener
+		{
+			World* world_;
+
+		public:
+			DestructionListener(World* world)
+				: world_(world)
+			{
+			}
+
+			void SayGoodbye(b2Joint* joint) override
+			{
+				if (world_)
+				{
+					world_->JointRemoved(joint);
+				}
+			}
+
+			void SayGoodbye(b2Fixture* fixture) override
+			{
+
+			}
+		};
+
+		World::World()
+			: world_(b2Vec2(0, 10.0f))
 			, vel_iter_(6)
 			, pos_iter_(2)
-			, global_scale_(100.f)
+			, global_scale_(DefaultGlobalScale)
+			, destruction_listener_(nullptr)
+			, removing_joint_(false)
 		{
+			destruction_listener_ = new DestructionListener(this);
+			world_.SetDestructionListener(destruction_listener_);
 		}
 
 		World::~World()
 		{
+			world_.SetDestructionListener(nullptr);
+			if (destruction_listener_)
+			{
+				delete destruction_listener_;
+				destruction_listener_ = nullptr;
+			}
+
 			// Make sure b2World was destroyed after b2Body
 			RemoveAllChildren();
 			RemoveAllBodies();
@@ -56,27 +88,13 @@ namespace kiwano
 		BodyPtr World::CreateBody(Actor* actor)
 		{
 			BodyPtr body = Body::Create(this, actor);
-			bodies_.push_back(body.get());
 			return body;
-		}
-
-		JointPtr World::CreateJoint(b2JointDef* joint_def)
-		{
-			JointPtr joint = new Joint(this, joint_def);
-			joints_.push_back(joint.get());
-			return joint;
 		}
 
 		void World::RemoveBody(Body* body)
 		{
 			if (body)
 			{
-				auto iter = std::find(bodies_.begin(), bodies_.end(), body);
-				if (iter != bodies_.end())
-				{
-					bodies_.erase(iter);
-				}
-
 				if (body->GetB2Body())
 				{
 					world_.DestroyBody(body->GetB2Body());
@@ -96,7 +114,14 @@ namespace kiwano
 					body = next;
 				}
 			}
-			bodies_.clear();
+		}
+
+		void World::AddJoint(Joint* joint)
+		{
+			if (joint)
+			{
+				joints_.push_back(joint);
+			}
 		}
 
 		void World::RemoveJoint(Joint* joint)
@@ -107,11 +132,13 @@ namespace kiwano
 				if (iter != joints_.end())
 				{
 					joints_.erase(iter);
-				}
 
-				if (joint->GetB2Joint())
-				{
-					world_.DestroyJoint(joint->GetB2Joint());
+					if (joint->GetB2Joint())
+					{
+						removing_joint_ = true;
+						world_.DestroyJoint(joint->GetB2Joint());
+						removing_joint_ = false;
+					}
 				}
 			}
 		}
@@ -120,15 +147,36 @@ namespace kiwano
 		{
 			if (world_.GetJointCount())
 			{
-				b2Joint* joint = world_.GetJointList();
-				while (joint)
+				removing_joint_ = true;
 				{
-					b2Joint* next = joint->GetNext();
-					world_.DestroyJoint(joint);
-					joint = next;
+					b2Joint* joint = world_.GetJointList();
+					while (joint)
+					{
+						b2Joint* next = joint->GetNext();
+						world_.DestroyJoint(joint);
+						joint = next;
+					}
 				}
+				removing_joint_ = false;
 			}
 			joints_.clear();
+		}
+
+		void World::JointRemoved(b2Joint* joint)
+		{
+			if (!removing_joint_ && joint)
+			{
+				auto iter = std::find_if(
+					joints_.begin(),
+					joints_.end(),
+					[joint](Joint* j) -> bool { return j->GetB2Joint() == joint; }
+				);
+
+				if (iter != joints_.end())
+				{
+					joints_.erase(iter);
+				}
+			}
 		}
 
 		b2World* World::GetB2World()

@@ -525,7 +525,7 @@ namespace kiwano
 		return children;
 	}
 
-	ActorPtr Actor::GetChild(String const& name) const
+	Actor* Actor::GetChild(String const& name) const
 	{
 		size_t hash_code = std::hash<String>{}(name);
 

@@ -36,16 +36,11 @@ namespace kiwano
 		public:
 			World();
 
-			World(Vec2 gravity);
-
 			virtual ~World();
 
 			// 创建刚体
 			BodyPtr CreateBody(ActorPtr actor);
 			BodyPtr CreateBody(Actor* actor);
-
-			// 创建关节
-			JointPtr CreateJoint(b2JointDef* joint_def);
 
 			// 获取重力
 			Vec2 GetGravity() const;
@@ -67,10 +62,10 @@ namespace kiwano
 			inline float	Stage2World(float value)		{ return value / GetGlobalScale(); }
 			inline b2Vec2	Stage2World(const Point& pos)	{ return b2Vec2(Stage2World(pos.x), Stage2World(pos.y)); }
 
-			// 设置速度迭代次数
+			// 设置速度迭代次数, 默认为 6
 			inline void SetVelocityIterations(int vel_iter)	{ vel_iter_ = vel_iter; }
 
-			// 设置位置迭代次数
+			// 设置位置迭代次数, 默认为 2
 			inline void SetPositionIterations(int pos_iter)	{ pos_iter_ = pos_iter; }
 
 			// 获取 Box2D 世界
@@ -86,21 +81,32 @@ namespace kiwano
 			// 移除所有刚体
 			void RemoveAllBodies();
 
+			// 添加关节
+			void AddJoint(Joint* joint);
+
 			// 移除关节
 			void RemoveJoint(Joint* joint);
 
 			// 移除所有关节
 			void RemoveAllJoints();
 
+			// 关节被移除
+			void JointRemoved(b2Joint* joint);
+
 		protected:
 			void Update(Duration dt) override;
+
+			class DestructionListener;
+			friend DestructionListener;
 
 		protected:
 			b2World world_;
 			int vel_iter_;
 			int pos_iter_;
 			float global_scale_;
-			Vector<Body*> bodies_;
+			DestructionListener* destruction_listener_;
+
+			bool removing_joint_;
 			Vector<Joint*> joints_;
 		};
 
