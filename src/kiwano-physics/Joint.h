@@ -31,8 +31,13 @@ namespace kiwano
 		KGE_DECLARE_SMART_PTR(FrictionJoint);
 		KGE_DECLARE_SMART_PTR(GearJoint);
 		KGE_DECLARE_SMART_PTR(MotorJoint);
-		KGE_DECLARE_SMART_PTR(WheelJoint);
 		KGE_DECLARE_SMART_PTR(MouseJoint);
+		KGE_DECLARE_SMART_PTR(PrismaticJoint);
+		KGE_DECLARE_SMART_PTR(PulleyJoint);
+		KGE_DECLARE_SMART_PTR(RevoluteJoint);
+		KGE_DECLARE_SMART_PTR(RopeJoint);
+		KGE_DECLARE_SMART_PTR(WeldJoint);
+		KGE_DECLARE_SMART_PTR(WheelJoint);
 
 		// 关节
 		class KGE_API Joint
@@ -93,22 +98,22 @@ namespace kiwano
 		public:
 			struct Param : public Joint::ParamBase
 			{
-				Point local_anchor_a;
-				Point local_anchor_b;
+				Point anchor_a;
+				Point anchor_b;
 				float frequency_hz;
 				float damping_ratio;
 
 				Param(
 					Body* body_a,
 					Body* body_b,
-					Point const& local_anchor_a,
-					Point const& local_anchor_b,
+					Point const& anchor_a,
+					Point const& anchor_b,
 					float frequency_hz = 0.f,
 					float damping_ratio = 0.f
 				)
 					: ParamBase(body_a, body_b)
-					, local_anchor_a(local_anchor_a)
-					, local_anchor_b(local_anchor_b)
+					, anchor_a(anchor_a)
+					, anchor_b(anchor_b)
 					, frequency_hz(frequency_hz)
 					, damping_ratio(damping_ratio)
 				{}
@@ -116,12 +121,12 @@ namespace kiwano
 				Param(
 					BodyPtr body_a,
 					BodyPtr body_b,
-					Point const& local_anchor_a,
-					Point const& local_anchor_b,
+					Point const& anchor_a,
+					Point const& anchor_b,
 					float frequency_hz = 0.f,
 					float damping_ratio = 0.f
 				)
-					: Param(body_a.get(), body_b.get(), local_anchor_a, local_anchor_b, frequency_hz, damping_ratio)
+					: Param(body_a.get(), body_b.get(), anchor_a, anchor_b, frequency_hz, damping_ratio)
 				{}
 			};
 
@@ -297,6 +302,341 @@ namespace kiwano
 		};
 
 
+		// 平移关节
+		class KGE_API PrismaticJoint
+			: public Joint
+		{
+		public:
+			struct Param : public Joint::ParamBase
+			{
+				Point anchor;
+				Vec2 axis;
+				bool enable_limit;
+				float lower_translation;
+				float upper_translation;
+				bool enable_motor;
+				float max_motor_force;
+				float motor_speed;
+
+				Param(
+					Body* body_a,
+					Body* body_b,
+					Point const& anchor,
+					Vec2 const& axis,
+					bool enable_limit = false,
+					float lower_translation = 0.0f,
+					float upper_translation = 0.0f,
+					bool enable_motor = false,
+					float max_motor_force = 0.0f,
+					float motor_speed = 0.0f
+				)
+					: ParamBase(body_a, body_b)
+					, anchor(anchor)
+					, axis(axis)
+					, enable_limit(enable_limit)
+					, lower_translation(lower_translation)
+					, upper_translation(upper_translation)
+					, enable_motor(enable_motor)
+					, max_motor_force(max_motor_force)
+					, motor_speed(motor_speed)
+				{}
+
+				Param(
+					BodyPtr body_a,
+					BodyPtr body_b,
+					Point const& anchor,
+					Vec2 const& axis,
+					bool enable_limit = false,
+					float lower_translation = 0.0f,
+					float upper_translation = 0.0f,
+					bool enable_motor = false,
+					float max_motor_force = 0.0f,
+					float motor_speed = 0.0f
+				)
+					: Param(body_a.get(), body_b.get(), anchor, axis, enable_limit, lower_translation, upper_translation, enable_motor, max_motor_force, motor_speed)
+				{}
+			};
+
+			PrismaticJoint();
+			PrismaticJoint(World* world, b2PrismaticJointDef* def);
+
+			static PrismaticJointPtr Create(World* world, Param const& param);
+
+			float GetReferenceAngle() const				{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetReferenceAngle()); }
+			float GetJointTranslation() const;
+			float GetJointSpeed() const;
+
+			bool IsLimitEnabled() const					{ KGE_ASSERT(raw_joint_); return raw_joint_->IsLimitEnabled(); }
+			void EnableLimit(bool flag)					{ KGE_ASSERT(raw_joint_); raw_joint_->EnableLimit(flag); }
+
+			float GetLowerLimit() const;
+			float GetUpperLimit() const;
+			void SetLimits(float lower, float upper);
+
+			bool IsMotorEnabled() const					{ KGE_ASSERT(raw_joint_); return raw_joint_->IsMotorEnabled(); }
+			void EnableMotor(bool flag)					{ KGE_ASSERT(raw_joint_); raw_joint_->EnableMotor(flag); }
+
+			// 设置马达转速 [degree/s]
+			void SetMotorSpeed(float speed)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Angle2Radian(speed)); }
+			float GetMotorSpeed() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetMotorSpeed()); }
+
+			// 设定最大马达力 [N]
+			void SetMaxMotorForce(float force)			{ KGE_ASSERT(raw_joint_); raw_joint_->SetMaxMotorForce(force); }
+			float GetMaxMotorForce() const				{ KGE_ASSERT(raw_joint_); return raw_joint_->GetMaxMotorForce(); }
+
+		protected:
+			b2PrismaticJoint* raw_joint_;
+		};
+
+
+		// 滑轮关节
+		class KGE_API PulleyJoint
+			: public Joint
+		{
+		public:
+			struct Param : public Joint::ParamBase
+			{
+				Point anchor_a;
+				Point anchor_b;
+				Point ground_anchor_a;
+				Point ground_anchor_b;
+				float ratio;
+
+				Param(
+					Body* body_a,
+					Body* body_b,
+					Point const& anchor_a,
+					Point const& anchor_b,
+					Point const& ground_anchor_a,
+					Point const& ground_anchor_b,
+					float ratio = 1.0f
+				)
+					: ParamBase(body_a, body_b)
+					, anchor_a(anchor_a)
+					, anchor_b(anchor_b)
+					, ground_anchor_a(ground_anchor_a)
+					, ground_anchor_b(ground_anchor_b)
+					, ratio(ratio)
+				{}
+
+				Param(
+					BodyPtr body_a,
+					BodyPtr body_b,
+					Point const& anchor_a,
+					Point const& anchor_b,
+					Point const& ground_anchor_a,
+					Point const& ground_anchor_b,
+					float ratio = 1.0f
+				)
+					: Param(body_a.get(), body_b.get(), anchor_a, anchor_b, ground_anchor_a, ground_anchor_b, ratio)
+				{}
+			};
+
+			PulleyJoint();
+			PulleyJoint(World* world, b2PulleyJointDef* def);
+
+			static PulleyJointPtr Create(World* world, Param const& param);
+
+			Point GetGroundAnchorA() const;
+			Point GetGroundAnchorB() const;
+
+			float GetRatio() const;
+
+			float GetLengthA() const;
+			float GetLengthB() const;
+
+			float GetCurrentLengthA() const;
+			float GetCurrentLengthB() const;
+
+		protected:
+			b2PulleyJoint* raw_joint_;
+		};
+
+
+		// 旋转关节
+		class KGE_API RevoluteJoint
+			: public Joint
+		{
+		public:
+			struct Param : public Joint::ParamBase
+			{
+				Point anchor;
+				bool enable_limit;
+				float lower_angle;
+				float upper_angle;
+				bool enable_motor;
+				float max_motor_torque;
+				float motor_speed;
+
+				Param(
+					Body* body_a,
+					Body* body_b,
+					Point const& anchor,
+					bool enable_limit = false,
+					float lower_angle = 0.0f,
+					float upper_angle = 0.0f,
+					bool enable_motor = false,
+					float max_motor_torque = 0.0f,
+					float motor_speed = 0.0f
+				)
+					: ParamBase(body_a, body_b)
+					, anchor(anchor)
+					, enable_limit(enable_limit)
+					, lower_angle(lower_angle)
+					, upper_angle(upper_angle)
+					, enable_motor(enable_motor)
+					, max_motor_torque(max_motor_torque)
+					, motor_speed(motor_speed)
+				{}
+
+				Param(
+					BodyPtr body_a,
+					BodyPtr body_b,
+					Point const& anchor,
+					bool enable_limit = false,
+					float lower_angle = 0.0f,
+					float upper_angle = 0.0f,
+					bool enable_motor = false,
+					float max_motor_torque = 0.0f,
+					float motor_speed = 0.0f
+				)
+					: Param(body_a.get(), body_b.get(), anchor, enable_limit, lower_angle, upper_angle, enable_motor, max_motor_torque, motor_speed)
+				{}
+			};
+
+			RevoluteJoint();
+			RevoluteJoint(World* world, b2RevoluteJointDef* def);
+
+			static RevoluteJointPtr Create(World* world, Param const& param);
+
+			float GetReferenceAngle() const				{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetReferenceAngle()); }
+			float GetJointAngle() const;
+			float GetJointSpeed() const;
+
+			bool IsLimitEnabled() const					{ KGE_ASSERT(raw_joint_); return raw_joint_->IsLimitEnabled(); }
+			void EnableLimit(bool flag)					{ KGE_ASSERT(raw_joint_); raw_joint_->EnableLimit(flag); }
+
+			float GetLowerLimit() const;
+			float GetUpperLimit() const;
+			void SetLimits(float lower, float upper);
+
+			bool IsMotorEnabled() const					{ KGE_ASSERT(raw_joint_); return raw_joint_->IsMotorEnabled(); }
+			void EnableMotor(bool flag)					{ KGE_ASSERT(raw_joint_); raw_joint_->EnableMotor(flag); }
+
+			// 设置马达转速 [degree/s]
+			void SetMotorSpeed(float speed)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Angle2Radian(speed)); }
+			float GetMotorSpeed() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetMotorSpeed()); }
+
+			// 设定最大马达转矩 [N/m]
+			void SetMaxMotorTorque(float torque);
+			float GetMaxMotorTorque() const;
+
+		protected:
+			b2RevoluteJoint* raw_joint_;
+		};
+
+
+		// 绳关节
+		class KGE_API RopeJoint
+			: public Joint
+		{
+		public:
+			struct Param : public Joint::ParamBase
+			{
+				Point local_anchor_a;
+				Point local_anchor_b;
+				float max_length;
+
+				Param(
+					Body* body_a,
+					Body* body_b,
+					Point const& local_anchor_a,
+					Point const& local_anchor_b,
+					float max_length = 0.f
+				)
+					: ParamBase(body_a, body_b)
+					, local_anchor_a(local_anchor_a)
+					, local_anchor_b(local_anchor_b)
+					, max_length(max_length)
+				{}
+
+				Param(
+					BodyPtr body_a,
+					BodyPtr body_b,
+					Point const& local_anchor_a,
+					Point const& local_anchor_b,
+					float max_length = 0.f
+				)
+					: Param(body_a.get(), body_b.get(), local_anchor_a, local_anchor_b, max_length)
+				{}
+			};
+
+			RopeJoint();
+			RopeJoint(World* world, b2RopeJointDef* def);
+
+			static RopeJointPtr Create(World* world, Param const& param);
+
+			void SetMaxLength(float length);
+			float GetMaxLength() const;
+
+		protected:
+			b2RopeJoint* raw_joint_;
+		};
+
+
+		// 焊接关节
+		class KGE_API WeldJoint
+			: public Joint
+		{
+		public:
+			struct Param : public Joint::ParamBase
+			{
+				Point anchor;
+				float frequency_hz;
+				float damping_ratio;
+
+				Param(
+					Body* body_a,
+					Body* body_b,
+					Point const& anchor,
+					float frequency_hz = 0.f,
+					float damping_ratio = 0.f
+				)
+					: ParamBase(body_a, body_b)
+					, anchor(anchor)
+					, frequency_hz(frequency_hz)
+					, damping_ratio(damping_ratio)
+				{}
+
+				Param(
+					BodyPtr body_a,
+					BodyPtr body_b,
+					Point const& anchor,
+					float frequency_hz = 0.f,
+					float damping_ratio = 0.f
+				)
+					: Param(body_a.get(), body_b.get(), anchor, frequency_hz, damping_ratio)
+				{}
+			};
+
+			WeldJoint();
+			WeldJoint(World* world, b2WeldJointDef* def);
+
+			static WeldJointPtr Create(World* world, Param const& param);
+
+			// 设置弹簧阻尼器频率 [赫兹]
+			void SetFrequency(float hz)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetFrequency(hz); }
+			float GetFrequency() const				{ KGE_ASSERT(raw_joint_); return raw_joint_->GetFrequency(); }
+
+			// 设置阻尼比
+			void SetDampingRatio(float ratio)		{ KGE_ASSERT(raw_joint_); raw_joint_->SetDampingRatio(ratio); }
+			float GetDampingRatio() const			{ KGE_ASSERT(raw_joint_); return raw_joint_->GetDampingRatio(); }
+
+		protected:
+			b2WeldJoint* raw_joint_;
+		};
+
+
 		// 轮关节
 		class KGE_API WheelJoint
 			: public Joint
@@ -361,11 +701,11 @@ namespace kiwano
 			bool IsMotorEnabled() const					{ KGE_ASSERT(raw_joint_); return raw_joint_->IsMotorEnabled(); }
 			void EnableMotor(bool flag)					{ KGE_ASSERT(raw_joint_); raw_joint_->EnableMotor(flag); }
 
-			// 设置马达转速 [度/秒]
+			// 设置马达转速 [degree/s]
 			void SetMotorSpeed(float speed)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Angle2Radian(speed)); }
 			float GetMotorSpeed() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetMotorSpeed()); }
 
-			// 设定最大马达转矩
+			// 设定最大马达转矩 [N/m]
 			void SetMaxMotorTorque(float torque);
 			float GetMaxMotorTorque() const;
 
@@ -425,11 +765,11 @@ namespace kiwano
 
 			static MouseJointPtr Create(World* world, Param const& param);
 
-			// 设定最大摩擦力
+			// 设定最大摩擦力 [N]
 			void SetMaxForce(float force);
 			float GetMaxForce() const;
 
-			// 设置响应速度 [赫兹]
+			// 设置响应速度 [hz]
 			void SetFrequency(float hz)			{ KGE_ASSERT(raw_joint_); raw_joint_->SetFrequency(hz); }
 			float GetFrequency() const			{ KGE_ASSERT(raw_joint_); return raw_joint_->GetFrequency(); }
 
