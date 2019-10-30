@@ -26,7 +26,7 @@ namespace kiwano
 {
 	namespace physics
 	{
-		KGE_DECLARE_SMART_PTR(Joint);
+		KGE_DECLARE_SMART_PTR(PhysicJoint);
 		KGE_DECLARE_SMART_PTR(DistanceJoint);
 		KGE_DECLARE_SMART_PTR(FrictionJoint);
 		KGE_DECLARE_SMART_PTR(GearJoint);
@@ -40,8 +40,8 @@ namespace kiwano
 		KGE_DECLARE_SMART_PTR(WheelJoint);
 
 		// 关节
-		class KGE_API Joint
-			: public ObjectBase
+		class KGE_API PhysicJoint
+			: public virtual RefCounter
 		{
 		public:
 			enum class Type
@@ -62,41 +62,43 @@ namespace kiwano
 
 			struct ParamBase
 			{
-				Body* body_a;
-				Body* body_b;
+				PhysicBody* body_a;
+				PhysicBody* body_b;
 
-				ParamBase(Body* body_a, Body* body_b) : body_a(body_a), body_b(body_b) {}
-				ParamBase(BodyPtr body_a, BodyPtr body_b) : body_a(body_a.get()), body_b(body_b.get()) {}
+				ParamBase(PhysicBody* body_a, PhysicBody* body_b) : body_a(body_a), body_b(body_b) {}
+				ParamBase(PhysicBodyPtr body_a, PhysicBodyPtr body_b) : body_a(body_a.get()), body_b(body_b.get()) {}
 			};
 
-			Joint();
-			Joint(b2Joint* joint);
-			Joint(World* world, b2JointDef* joint_def);
-			virtual ~Joint();
+			PhysicJoint();
+			PhysicJoint(b2Joint* joint);
+			PhysicJoint(PhysicWorld* world, b2JointDef* joint_def);
+			virtual ~PhysicJoint();
 
-			BodyPtr GetBodyA() const;
-			BodyPtr GetBodyB() const;
+			void Init(PhysicWorld* world, b2JointDef* joint_def);
+
+			PhysicBodyPtr GetBodyA() const;
+			PhysicBodyPtr GetBodyB() const;
 
 			b2Joint* GetB2Joint()				{ return joint_; }
 			const b2Joint* GetB2Joint() const	{ return joint_; }
 			void SetB2Joint(b2Joint* joint);
 
-			World* GetWorld()					{ return world_; }
-			const World* GetWorld() const		{ return world_; }
+			PhysicWorld* GetWorld()					{ return world_; }
+			const PhysicWorld* GetWorld() const		{ return world_; }
 
 		protected:
 			b2Joint* joint_;
-			World* world_;
+			PhysicWorld* world_;
 			Type type_;
 		};
 
 
 		// 固定距离关节
 		class KGE_API DistanceJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				Point anchor_a;
 				Point anchor_b;
@@ -104,8 +106,8 @@ namespace kiwano
 				float damping_ratio;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					Point const& anchor_a,
 					Point const& anchor_b,
 					float frequency_hz = 0.f,
@@ -119,8 +121,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					Point const& anchor_a,
 					Point const& anchor_b,
 					float frequency_hz = 0.f,
@@ -131,9 +133,8 @@ namespace kiwano
 			};
 
 			DistanceJoint();
-			DistanceJoint(World* world, b2DistanceJointDef* def);
-
-			static DistanceJointPtr Create(World* world, Param const& param);
+			DistanceJoint(PhysicWorld* world, b2DistanceJointDef* def);
+			DistanceJoint(PhysicWorld* world, Param const& param);
 
 			void SetLength(float length);
 			float GetLength() const;
@@ -153,18 +154,18 @@ namespace kiwano
 
 		// 摩擦关节
 		class KGE_API FrictionJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				Point anchor;
 				float max_force;
 				float max_torque;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					Point const& anchor,
 					float max_force = 0.f,
 					float max_torque = 0.f
@@ -176,8 +177,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					Point const& anchor,
 					float max_force = 0.f,
 					float max_torque = 0.f
@@ -187,9 +188,8 @@ namespace kiwano
 			};
 
 			FrictionJoint();
-			FrictionJoint(World* world, b2FrictionJointDef* def);
-
-			static FrictionJointPtr Create(World* world, Param const& param);
+			FrictionJoint(PhysicWorld* world, b2FrictionJointDef* def);
+			FrictionJoint(PhysicWorld* world, Param const& param);
 
 			// 设定最大摩擦力
 			void SetMaxForce(float force);
@@ -206,18 +206,18 @@ namespace kiwano
 
 		// 齿轮关节
 		class KGE_API GearJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
-				JointPtr joint_a;
-				JointPtr joint_b;
+				PhysicJointPtr joint_a;
+				PhysicJointPtr joint_b;
 				float ratio;
 
 				Param(
-					Joint* joint_a,
-					Joint* joint_b,
+					PhysicJoint* joint_a,
+					PhysicJoint* joint_b,
 					float ratio = 1.f
 				)
 					: ParamBase(nullptr, nullptr)
@@ -227,8 +227,8 @@ namespace kiwano
 				{}
 
 				Param(
-					JointPtr joint_a,
-					JointPtr joint_b,
+					PhysicJointPtr joint_a,
+					PhysicJointPtr joint_b,
 					float ratio = 1.f
 				)
 					: Param(joint_a.get(), joint_b.get(), ratio)
@@ -236,9 +236,8 @@ namespace kiwano
 			};
 
 			GearJoint();
-			GearJoint(World* world, b2GearJointDef* def);
-
-			static GearJointPtr Create(World* world, Param const& param);
+			GearJoint(PhysicWorld* world, b2GearJointDef* def);
+			GearJoint(PhysicWorld* world, Param const& param);
 
 			// 设定齿轮传动比
 			void SetRatio(float ratio);
@@ -251,18 +250,18 @@ namespace kiwano
 
 		// 马达关节
 		class KGE_API MotorJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				float max_force;
 				float max_torque;
 				float correction_factor;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					float max_force = 1.f,
 					float max_torque = 100.f,
 					float correction_factor = 0.3f
@@ -274,8 +273,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					float max_force = 0.f,
 					float max_torque = 0.f,
 					float correction_factor = 0.3f
@@ -285,9 +284,8 @@ namespace kiwano
 			};
 
 			MotorJoint();
-			MotorJoint(World* world, b2MotorJointDef* def);
-
-			static MotorJointPtr Create(World* world, Param const& param);
+			MotorJoint(PhysicWorld* world, b2MotorJointDef* def);
+			MotorJoint(PhysicWorld* world, Param const& param);
 
 			// 设定最大摩擦力
 			void SetMaxForce(float force);
@@ -304,10 +302,10 @@ namespace kiwano
 
 		// 平移关节
 		class KGE_API PrismaticJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				Point anchor;
 				Vec2 axis;
@@ -319,8 +317,8 @@ namespace kiwano
 				float motor_speed;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					Point const& anchor,
 					Vec2 const& axis,
 					bool enable_limit = false,
@@ -342,8 +340,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					Point const& anchor,
 					Vec2 const& axis,
 					bool enable_limit = false,
@@ -358,11 +356,10 @@ namespace kiwano
 			};
 
 			PrismaticJoint();
-			PrismaticJoint(World* world, b2PrismaticJointDef* def);
+			PrismaticJoint(PhysicWorld* world, b2PrismaticJointDef* def);
+			PrismaticJoint(PhysicWorld* world, Param const& param);
 
-			static PrismaticJointPtr Create(World* world, Param const& param);
-
-			float GetReferenceAngle() const				{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetReferenceAngle()); }
+			float GetReferenceAngle() const				{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetReferenceAngle()); }
 			float GetJointTranslation() const;
 			float GetJointSpeed() const;
 
@@ -377,8 +374,8 @@ namespace kiwano
 			void EnableMotor(bool flag)					{ KGE_ASSERT(raw_joint_); raw_joint_->EnableMotor(flag); }
 
 			// 设置马达转速 [degree/s]
-			void SetMotorSpeed(float speed)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Angle2Radian(speed)); }
-			float GetMotorSpeed() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetMotorSpeed()); }
+			void SetMotorSpeed(float speed)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Degree2Radian(speed)); }
+			float GetMotorSpeed() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetMotorSpeed()); }
 
 			// 设定最大马达力 [N]
 			void SetMaxMotorForce(float force)			{ KGE_ASSERT(raw_joint_); raw_joint_->SetMaxMotorForce(force); }
@@ -391,10 +388,10 @@ namespace kiwano
 
 		// 滑轮关节
 		class KGE_API PulleyJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				Point anchor_a;
 				Point anchor_b;
@@ -403,8 +400,8 @@ namespace kiwano
 				float ratio;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					Point const& anchor_a,
 					Point const& anchor_b,
 					Point const& ground_anchor_a,
@@ -420,8 +417,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					Point const& anchor_a,
 					Point const& anchor_b,
 					Point const& ground_anchor_a,
@@ -433,9 +430,8 @@ namespace kiwano
 			};
 
 			PulleyJoint();
-			PulleyJoint(World* world, b2PulleyJointDef* def);
-
-			static PulleyJointPtr Create(World* world, Param const& param);
+			PulleyJoint(PhysicWorld* world, b2PulleyJointDef* def);
+			PulleyJoint(PhysicWorld* world, Param const& param);
 
 			Point GetGroundAnchorA() const;
 			Point GetGroundAnchorB() const;
@@ -455,10 +451,10 @@ namespace kiwano
 
 		// 旋转关节
 		class KGE_API RevoluteJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				Point anchor;
 				bool enable_limit;
@@ -469,8 +465,8 @@ namespace kiwano
 				float motor_speed;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					Point const& anchor,
 					bool enable_limit = false,
 					float lower_angle = 0.0f,
@@ -490,8 +486,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					Point const& anchor,
 					bool enable_limit = false,
 					float lower_angle = 0.0f,
@@ -505,11 +501,10 @@ namespace kiwano
 			};
 
 			RevoluteJoint();
-			RevoluteJoint(World* world, b2RevoluteJointDef* def);
+			RevoluteJoint(PhysicWorld* world, b2RevoluteJointDef* def);
+			RevoluteJoint(PhysicWorld* world, Param const& param);
 
-			static RevoluteJointPtr Create(World* world, Param const& param);
-
-			float GetReferenceAngle() const				{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetReferenceAngle()); }
+			float GetReferenceAngle() const				{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetReferenceAngle()); }
 			float GetJointAngle() const;
 			float GetJointSpeed() const;
 
@@ -524,8 +519,8 @@ namespace kiwano
 			void EnableMotor(bool flag)					{ KGE_ASSERT(raw_joint_); raw_joint_->EnableMotor(flag); }
 
 			// 设置马达转速 [degree/s]
-			void SetMotorSpeed(float speed)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Angle2Radian(speed)); }
-			float GetMotorSpeed() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetMotorSpeed()); }
+			void SetMotorSpeed(float speed)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Degree2Radian(speed)); }
+			float GetMotorSpeed() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetMotorSpeed()); }
 
 			// 设定最大马达转矩 [N/m]
 			void SetMaxMotorTorque(float torque);
@@ -538,18 +533,18 @@ namespace kiwano
 
 		// 绳关节
 		class KGE_API RopeJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				Point local_anchor_a;
 				Point local_anchor_b;
 				float max_length;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					Point const& local_anchor_a,
 					Point const& local_anchor_b,
 					float max_length = 0.f
@@ -561,8 +556,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					Point const& local_anchor_a,
 					Point const& local_anchor_b,
 					float max_length = 0.f
@@ -572,9 +567,8 @@ namespace kiwano
 			};
 
 			RopeJoint();
-			RopeJoint(World* world, b2RopeJointDef* def);
-
-			static RopeJointPtr Create(World* world, Param const& param);
+			RopeJoint(PhysicWorld* world, b2RopeJointDef* def);
+			RopeJoint(PhysicWorld* world, Param const& param);
 
 			void SetMaxLength(float length);
 			float GetMaxLength() const;
@@ -586,18 +580,18 @@ namespace kiwano
 
 		// 焊接关节
 		class KGE_API WeldJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				Point anchor;
 				float frequency_hz;
 				float damping_ratio;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					Point const& anchor,
 					float frequency_hz = 0.f,
 					float damping_ratio = 0.f
@@ -609,8 +603,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					Point const& anchor,
 					float frequency_hz = 0.f,
 					float damping_ratio = 0.f
@@ -620,9 +614,8 @@ namespace kiwano
 			};
 
 			WeldJoint();
-			WeldJoint(World* world, b2WeldJointDef* def);
-
-			static WeldJointPtr Create(World* world, Param const& param);
+			WeldJoint(PhysicWorld* world, b2WeldJointDef* def);
+			WeldJoint(PhysicWorld* world, Param const& param);
 
 			// 设置弹簧阻尼器频率 [赫兹]
 			void SetFrequency(float hz)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetFrequency(hz); }
@@ -639,10 +632,10 @@ namespace kiwano
 
 		// 轮关节
 		class KGE_API WheelJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				Point anchor;
 				Vec2 axis;
@@ -653,8 +646,8 @@ namespace kiwano
 				float damping_ratio;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					Point const& anchor,
 					Vec2 const& axis,
 					float frequency_hz = 2.0f,
@@ -674,8 +667,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					Point const& anchor,
 					Vec2 const& axis,
 					float frequency_hz = 2.0f,
@@ -689,21 +682,20 @@ namespace kiwano
 			};
 
 			WheelJoint();
-			WheelJoint(World* world, b2WheelJointDef* def);
-
-			static WheelJointPtr Create(World* world, Param const& param);
+			WheelJoint(PhysicWorld* world, b2WheelJointDef* def);
+			WheelJoint(PhysicWorld* world, Param const& param);
 
 			float GetJointTranslation() const;
 			float GetJointLinearSpeed() const;
-			float GetJointAngle() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetJointAngle()); }
-			float GetJointAngularSpeed() const			{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetJointAngularSpeed()); }
+			float GetJointAngle() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetJointAngle()); }
+			float GetJointAngularSpeed() const			{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetJointAngularSpeed()); }
 
 			bool IsMotorEnabled() const					{ KGE_ASSERT(raw_joint_); return raw_joint_->IsMotorEnabled(); }
 			void EnableMotor(bool flag)					{ KGE_ASSERT(raw_joint_); raw_joint_->EnableMotor(flag); }
 
 			// 设置马达转速 [degree/s]
-			void SetMotorSpeed(float speed)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Angle2Radian(speed)); }
-			float GetMotorSpeed() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Angle(raw_joint_->GetMotorSpeed()); }
+			void SetMotorSpeed(float speed)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Degree2Radian(speed)); }
+			float GetMotorSpeed() const					{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetMotorSpeed()); }
 
 			// 设定最大马达转矩 [N/m]
 			void SetMaxMotorTorque(float torque);
@@ -723,10 +715,10 @@ namespace kiwano
 		// 鼠标关节
 		// 用于使身体的某个点追踪世界上的指定点，例如让物体追踪鼠标位置
 		class KGE_API MouseJoint
-			: public Joint
+			: public PhysicJoint
 		{
 		public:
-			struct Param : public Joint::ParamBase
+			struct Param : public PhysicJoint::ParamBase
 			{
 				Point target;
 				float max_force;
@@ -734,8 +726,8 @@ namespace kiwano
 				float damping_ratio;
 
 				Param(
-					Body* body_a,
-					Body* body_b,
+					PhysicBody* body_a,
+					PhysicBody* body_b,
 					Point const& target,
 					float max_force,
 					float frequency_hz = 5.0f,
@@ -749,8 +741,8 @@ namespace kiwano
 				{}
 
 				Param(
-					BodyPtr body_a,
-					BodyPtr body_b,
+					PhysicBodyPtr body_a,
+					PhysicBodyPtr body_b,
 					Point const& target,
 					float max_force,
 					float frequency_hz = 5.0f,
@@ -761,9 +753,8 @@ namespace kiwano
 			};
 
 			MouseJoint();
-			MouseJoint(World* world, b2MouseJointDef* def);
-
-			static MouseJointPtr Create(World* world, Param const& param);
+			MouseJoint(PhysicWorld* world, b2MouseJointDef* def);
+			MouseJoint(PhysicWorld* world, Param const& param);
 
 			// 设定最大摩擦力 [N]
 			void SetMaxForce(float force);

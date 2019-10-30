@@ -26,7 +26,7 @@
 namespace kiwano
 {
 
-inline namespace core
+namespace core
 {
 
 class bad_any_cast : public std::exception

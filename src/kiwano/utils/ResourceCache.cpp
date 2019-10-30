@@ -83,7 +83,7 @@ namespace kiwano
 			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
-		catch (json_exception& e)
+		catch (core::json_exception& e)
 		{
 			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", string_to_wide(e.what()).c_str());
 			return false;
@@ -163,7 +163,7 @@ namespace kiwano
 			{
 				if (auto root = doc->FirstChildElement(L"resources"))
 				{
-					kiwano::wstring version;
+					String version;
 					if (auto ver = root->FirstChildElement(L"version")) version = ver->GetText();
 
 					auto load = load_xml_funcs.find(version);

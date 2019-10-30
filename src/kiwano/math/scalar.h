@@ -40,29 +40,29 @@ namespace kiwano
 		inline float	Sign(float val)						{ return val < 0 ? -1.f : 1.f; }
 		inline double	Sign(double val)					{ return val < 0 ? -1.0 : 1.0; }
 
-		inline float	Angle2Radian(float angle)			{ return angle * constants::PI_F / 180.f; }
-		inline double	Angle2Radian(double angle)			{ return angle * constants::PI_D / 180.0; }
+		inline float	Degree2Radian(float angle)			{ return angle * constants::PI_F / 180.f; }
+		inline double	Degree2Radian(double angle)			{ return angle * constants::PI_D / 180.0; }
 
-		inline float	Radian2Angle(float radian)			{ return radian * 180.f / math::constants::PI_F; }
-		inline double	Radian2Angle(double radian)			{ return radian * 180.0 / math::constants::PI_D; }
+		inline float	Radian2Degree(float radian)			{ return radian * 180.f / math::constants::PI_F; }
+		inline double	Radian2Degree(double radian)		{ return radian * 180.0 / math::constants::PI_D; }
 
-		inline float	Sin(float val)						{ return ::sinf(Angle2Radian(val)); }
-		inline double	Sin(double val)						{ return ::sin(Angle2Radian(val)); }
+		inline float	Sin(float val)						{ return ::sinf(Degree2Radian(val)); }
+		inline double	Sin(double val)						{ return ::sin(Degree2Radian(val)); }
 
-		inline float	Cos(float val)						{ return ::cosf(Angle2Radian(val)); }
-		inline double	Cos(double val)						{ return ::cos(Angle2Radian(val)); }
+		inline float	Cos(float val)						{ return ::cosf(Degree2Radian(val)); }
+		inline double	Cos(double val)						{ return ::cos(Degree2Radian(val)); }
 
-		inline float	Tan(float val)						{ return ::tanf(Angle2Radian(val)); }
-		inline double	Tan(double val)						{ return ::tan(Angle2Radian(val)); }
+		inline float	Tan(float val)						{ return ::tanf(Degree2Radian(val)); }
+		inline double	Tan(double val)						{ return ::tan(Degree2Radian(val)); }
 
-		inline float	Asin(float val)						{ return Radian2Angle(::asinf(val)); }
-		inline double	Asin(double val)					{ return Radian2Angle(::asin(val)); }
+		inline float	Asin(float val)						{ return Radian2Degree(::asinf(val)); }
+		inline double	Asin(double val)					{ return Radian2Degree(::asin(val)); }
 
-		inline float	Acos(float val)						{ return Radian2Angle(::acosf(val)); }
-		inline double	Acos(double val)					{ return Radian2Angle(::acos(val)); }
+		inline float	Acos(float val)						{ return Radian2Degree(::acosf(val)); }
+		inline double	Acos(double val)					{ return Radian2Degree(::acos(val)); }
 
-		inline float	Atan(float val)						{ return Radian2Angle(::atanf(val)); }
-		inline double	Atan(double val)					{ return Radian2Angle(::atan(val)); }
+		inline float	Atan(float val)						{ return Radian2Degree(::atanf(val)); }
+		inline double	Atan(double val)					{ return Radian2Degree(::atan(val)); }
 
 		inline float	Ceil(float val)						{ return ::ceil(val); }
 		inline double	Ceil(double val)					{ return ::ceil(val); }

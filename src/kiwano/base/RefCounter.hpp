@@ -25,7 +25,7 @@
 namespace kiwano
 {
 	class KGE_API RefCounter
-		: protected noncopyable
+		: protected core::noncopyable
 	{
 	public:
 		// 增加引用计数

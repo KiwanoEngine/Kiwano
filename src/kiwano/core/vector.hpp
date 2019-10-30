@@ -25,7 +25,7 @@
 
 namespace kiwano
 {
-inline namespace core
+namespace core
 {
 
 
@@ -284,5 +284,5 @@ namespace __vector_details
 	};
 }
 
-}  // inline namespace core
+}  // namespace core
 }  // namespace kiwano

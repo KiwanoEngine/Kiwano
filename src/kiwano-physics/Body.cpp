@@ -26,84 +26,83 @@ namespace kiwano
 	namespace physics
 	{
 
-		Body::Body()
-			: ignore_rotation_(false)
-			, body_(nullptr)
+		PhysicBody::PhysicBody()
+			: body_(nullptr)
 			, actor_(nullptr)
 			, world_(nullptr)
 		{
 		}
 
-		Body::Body(b2Body* body, Actor* actor)
-			: Body()
+		PhysicBody::PhysicBody(b2Body* body, Actor* actor)
+			: PhysicBody()
 		{
 			SetB2Body(body);
 			SetActor(actor);
 		}
 
-		Body::~Body()
+		PhysicBody::PhysicBody(PhysicWorld* world, Actor* actor)
+			: PhysicBody()
 		{
-			if (world_)
-			{
-				world_->RemoveBody(this);
-			}
+			Init(world, actor);
 		}
 
-		BodyPtr Body::Create(World* world, Actor* actor)
+		PhysicBody::~PhysicBody()
 		{
-			BodyPtr body = new Body;
-			if (body)
-			{
-				body->world_ = world;
-				if (world)
-				{
-					b2BodyDef def;
-					b2Body* b2body = world->GetB2World()->CreateBody(&def);
-					body->SetB2Body(b2body);
-				}
-				body->SetActor(actor);
-				body->UpdateFromActor();
-			}
-			return body;
+			Destroy();
 		}
 
-		Fixture Body::AddShape(Shape* shape, float density, float friction, float restitution)
+		void PhysicBody::Init(PhysicWorld* world, Actor* actor)
+		{
+			KGE_ASSERT(world);
+
+			Destroy();
+
+			world_ = world;
+			b2BodyDef def;
+			b2Body* b2body = world->GetB2World()->CreateBody(&def);
+
+			SetB2Body(b2body);
+			SetActor(actor);
+			UpdateFromActor();
+		}
+
+		PhysicFixture PhysicBody::AddShape(PhysicShape* shape, float density, float friction, float restitution)
 		{
 			KGE_ASSERT(body_ && world_);
 
 			if (shape)
 			{
-				return Fixture::Create(this, shape, density, friction, restitution);
+				return PhysicFixture::Create(this, shape, density, friction, restitution);
 			}
-			return Fixture();
+			return PhysicFixture();
 		}
 
-		Fixture Body::AddCircleShape(float radius, float density)
+		PhysicFixture PhysicBody::AddCircleShape(float radius, float density)
 		{
-			return AddShape(&CircleShape(radius), density);
+			return AddShape(&PhysicCircleShape(radius), density);
 		}
 
-		Fixture Body::AddBoxShape(Vec2 const& size, float density)
+		PhysicFixture PhysicBody::AddBoxShape(Vec2 const& size, float density)
 		{
-			return AddShape(&BoxShape(size), density);
+			return AddShape(&PhysicBoxShape(size), density);
 		}
 
-		Fixture Body::AddPolygonShape(Vector<Point> const& vertexs, float density)
+		PhysicFixture PhysicBody::AddPolygonShape(Vector<Point> const& vertexs, float density)
 		{
-			return AddShape(&PolygonShape(vertexs), density);
+			return AddShape(&PhysicPolygonShape(vertexs), density);
 		}
 
-		Fixture Body::AddEdgeShape(Point const& p1, Point const& p2, float density)
+		PhysicFixture PhysicBody::AddEdgeShape(Point const& p1, Point const& p2, float density)
 		{
-			return AddShape(&EdgeShape(p1, p2), density);
+			return AddShape(&PhysicEdgeShape(p1, p2), density);
 		}
 
-		Fixture Body::AddChainShape(Vector<Point> const& vertexs, bool loop, float density)
+		PhysicFixture PhysicBody::AddChainShape(Vector<Point> const& vertexs, bool loop, float density)
 		{
-			return AddShape(&ChainShape(vertexs, loop), density);
+			return AddShape(&PhysicChainShape(vertexs, loop), density);
 		}
 
-		void Body::RemoveFixture(Fixture const& fixture)
+		void PhysicBody::RemoveFixture(PhysicFixture const& fixture)
 		{
 			if (fixture.GetB2Fixture())
 			{
@@ -112,43 +111,90 @@ namespace kiwano
 			}
 		}
 
-		Point Body::GetPosition() const
+		void PhysicBody::GetMassData(float* mass, Point* center, float* inertia)
+		{
+			KGE_ASSERT(body_ && world_);
+
+			b2MassData data;
+			body_->GetMassData(&data);
+
+			if (mass) *mass = data.mass;
+			if (center) *center = world_->World2Stage(data.center);
+			if (inertia) *inertia = data.I;
+		}
+
+		void PhysicBody::SetMassData(float mass, Point const& center, float inertia)
+		{
+			KGE_ASSERT(body_ && world_);
+
+			b2MassData data;
+			data.mass = mass;
+			data.center = world_->Stage2World(center);
+			data.I = inertia;
+			body_->SetMassData(&data);
+		}
+
+		void PhysicBody::ResetMassData()
+		{
+			KGE_ASSERT(body_);
+			body_->ResetMassData();
+		}
+
+		Point PhysicBody::GetBodyPosition() const
 		{
 			KGE_ASSERT(body_ && world_);
 			return world_->World2Stage(body_->GetPosition());
 		}
 
-		Point Body::GetLocalPoint(Point const& world) const
+		void PhysicBody::SetBodyTransform(Point const& pos, float angle)
+		{
+			KGE_ASSERT(body_ && world_);
+			body_->SetTransform(world_->Stage2World(pos), math::Degree2Radian(angle));
+		}
+
+		Point PhysicBody::GetLocalPoint(Point const& world) const
 		{
 			KGE_ASSERT(body_ && world_);
 			return world_->World2Stage(body_->GetLocalPoint(world_->Stage2World(world)));
 		}
 
-		Point Body::GetWorldPoint(Point const& local) const
+		Point PhysicBody::GetWorldPoint(Point const& local) const
 		{
 			KGE_ASSERT(body_ && world_);
 			return world_->World2Stage(body_->GetWorldPoint(world_->Stage2World(local)));
 		}
 
-		void Body::ApplyForce(Vec2 const& force, Point const& point, bool wake)
+		Point PhysicBody::GetLocalCenter() const
+		{
+			KGE_ASSERT(body_ && world_);
+			return world_->World2Stage(body_->GetLocalCenter());
+		}
+
+		Point PhysicBody::GetWorldCenter() const
+		{
+			KGE_ASSERT(body_ && world_);
+			return world_->World2Stage(body_->GetWorldCenter());
+		}
+
+		void PhysicBody::ApplyForce(Vec2 const& force, Point const& point, bool wake)
 		{
 			KGE_ASSERT(body_ && world_);
 			body_->ApplyForce(b2Vec2(force.x, force.y), world_->Stage2World(point), wake);
 		}
 
-		void Body::ApplyForceToCenter(Vec2 const& force, bool wake)
+		void PhysicBody::ApplyForceToCenter(Vec2 const& force, bool wake)
 		{
 			KGE_ASSERT(body_ && world_);
 			body_->ApplyForceToCenter(b2Vec2(force.x, force.y), wake);
 		}
 
-		void Body::ApplyTorque(float torque, bool wake)
+		void PhysicBody::ApplyTorque(float torque, bool wake)
 		{
 			KGE_ASSERT(body_ && world_);
 			body_->ApplyTorque(torque, wake);
 		}
 
-		void Body::SetB2Body(b2Body* body)
+		void PhysicBody::SetB2Body(b2Body* body)
 		{
 			body_ = body;
 			if (body_)
@@ -157,7 +203,19 @@ namespace kiwano
 			}
 		}
 
-		void Body::UpdateActor()
+		void PhysicBody::Destroy()
+		{
+			if (world_)
+			{
+				world_->RemoveBody(this);
+			}
+
+			body_ = nullptr;
+			world_ = nullptr;
+			actor_ = nullptr;
+		}
+
+		void PhysicBody::UpdateActor()
 		{
 			if (actor_ && body_)
 			{
@@ -169,32 +227,26 @@ namespace kiwano
 				{
 					actor_->SetPosition(World2Stage(body_->GetPosition()));
 				}
-
-				if (!ignore_rotation_)
-				{
-					actor_->SetRotation(math::Radian2Angle(body_->GetAngle()));
-				}
+				actor_->SetRotation(math::Radian2Degree(body_->GetAngle()));
 			}
 		}
 
-		void Body::UpdateFromActor()
+		void PhysicBody::UpdateFromActor()
 		{
 			if (actor_ && body_)
 			{
-				float rotation = ignore_rotation_ ? body_->GetAngle() : math::Angle2Radian(actor_->GetRotation());
-
 				if (world_)
 				{
 					body_->SetTransform(
 						world_->Stage2World(actor_->GetPosition()),
-						rotation
+						math::Degree2Radian(actor_->GetRotation())
 					);
 				}
 				else
 				{
 					body_->SetTransform(
 						Stage2World(actor_->GetPosition()),
-						rotation
+						math::Degree2Radian(actor_->GetRotation())
 					);
 				}
 			}

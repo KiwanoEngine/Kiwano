@@ -25,37 +25,37 @@ namespace kiwano
 {
 	namespace physics
 	{
-		class World;
+		class PhysicWorld;
 
 		// 形状基类
-		class KGE_API Shape
+		class KGE_API PhysicShape
 		{
 		public:
-			Shape();
-			Shape(b2Shape* shape);
+			PhysicShape();
+			PhysicShape(b2Shape* shape);
 
 			b2Shape* GetB2Shape();
 			const b2Shape* GetB2Shape() const;
 			void SetB2Shape(b2Shape* shape);
 
-			virtual void FitWorld(World* world) {}
+			virtual void FitWorld(PhysicWorld* world) {}
 
 		protected:
 			b2Shape* shape_;
 		};
 
 		// 圆形形状
-		class KGE_API CircleShape
-			: public Shape
+		class KGE_API PhysicCircleShape
+			: public PhysicShape
 		{
 		public:
-			CircleShape();
+			PhysicCircleShape();
 
-			CircleShape(float radius, Point const& offset = Point());
+			PhysicCircleShape(float radius, Point const& offset = Point());
 
 			void Set(float radius, Point const& offset = Point());
 
-			void FitWorld(World* world) override;
+			void FitWorld(PhysicWorld* world) override;
 
 		protected:
 			float radius_;
@@ -64,17 +64,17 @@ namespace kiwano
 		};
 
 		// 盒子形状
-		class KGE_API BoxShape
-			: public Shape
+		class KGE_API PhysicBoxShape
+			: public PhysicShape
 		{
 		public:
-			BoxShape();
+			PhysicBoxShape();
 
-			BoxShape(Vec2 const& size, Point const& offset = Point(), float rotation = 0.f);
+			PhysicBoxShape(Vec2 const& size, Point const& offset = Point(), float rotation = 0.f);
 
 			void Set(Vec2 const& size, Point const& offset = Point(), float rotation = 0.f);
 
-			void FitWorld(World* world) override;
+			void FitWorld(PhysicWorld* world) override;
 
 		protected:
 			float rotation_;
@@ -84,17 +84,17 @@ namespace kiwano
 		};
 
 		// 多边形形状
-		class KGE_API PolygonShape
-			: public Shape
+		class KGE_API PhysicPolygonShape
+			: public PhysicShape
 		{
 		public:
-			PolygonShape();
+			PhysicPolygonShape();
 
-			PolygonShape(Vector<Point> const& vertexs);
+			PhysicPolygonShape(Vector<Point> const& vertexs);
 
 			void Set(Vector<Point> const& vertexs);
 
-			void FitWorld(World* world) override;
+			void FitWorld(PhysicWorld* world) override;
 
 		protected:
 			Vector<Point> vertexs_;
@@ -102,17 +102,17 @@ namespace kiwano
 		};
 
 		// 线段形状, 用于表示一条边
-		class KGE_API EdgeShape
-			: public Shape
+		class KGE_API PhysicEdgeShape
+			: public PhysicShape
 		{
 		public:
-			EdgeShape();
+			PhysicEdgeShape();
 
-			EdgeShape(Point const& p1, Point const& p2);
+			PhysicEdgeShape(Point const& p1, Point const& p2);
 
 			void Set(Point const& p1, Point const& p2);
 
-			void FitWorld(World* world) override;
+			void FitWorld(PhysicWorld* world) override;
 
 		protected:
 			Point p_[2];
@@ -120,17 +120,17 @@ namespace kiwano
 		};
 
 		// 链式形状
-		class KGE_API ChainShape
-			: public Shape
+		class KGE_API PhysicChainShape
+			: public PhysicShape
 		{
 		public:
-			ChainShape();
+			PhysicChainShape();
 
-			ChainShape(Vector<Point> const& vertexs, bool loop = false);
+			PhysicChainShape(Vector<Point> const& vertexs, bool loop = false);
 
 			void Set(Vector<Point> const& vertexs, bool loop = false);
 
-			void FitWorld(World* world) override;
+			void FitWorld(PhysicWorld* world) override;
 
 		protected:
 			bool loop_;

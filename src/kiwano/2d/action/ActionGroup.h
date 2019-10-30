@@ -28,7 +28,7 @@ namespace kiwano
 		: public Action
 	{
 	public:
-		using ActionList = intrusive_list<ActionPtr>;
+		using ActionList = IntrusiveList<ActionPtr>;
 
 		ActionGroup();
 

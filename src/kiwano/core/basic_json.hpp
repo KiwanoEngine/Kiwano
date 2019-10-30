@@ -28,7 +28,7 @@
 namespace kiwano
 {
 
-inline namespace core
+namespace core
 {
 
 //
@@ -2728,7 +2728,7 @@ private:
 	__json_detail::json_value<basic_json> value_;
 };
 
-} // inline namespace core
+} // namespace core
 
 } // namespace kiwano
 

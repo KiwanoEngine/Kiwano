@@ -26,7 +26,7 @@
 namespace kiwano
 {
 
-inline namespace core
+namespace core
 {
 
 template <typename _Ty, typename _ManagerTy>
@@ -141,6 +141,6 @@ inline void swap(intrusive_ptr<_Ty, manager_type>& lhs, intrusive_ptr<_Ty, manag
 	lhs.swap(rhs);
 }
 
-}  // inline namespace core
+}  // namespace core
 
 }  // namespace kiwano

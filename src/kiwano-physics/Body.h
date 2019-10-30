@@ -27,12 +27,12 @@ namespace kiwano
 {
 	namespace physics
 	{
-		class World;
+		class PhysicWorld;
 
-		// 刚体
-		KGE_DECLARE_SMART_PTR(Body);
-		class KGE_API Body
-			: public ObjectBase
+		// 物体
+		KGE_DECLARE_SMART_PTR(PhysicBody);
+		class KGE_API PhysicBody
+			: public virtual RefCounter
 		{
 		public:
 			enum class Type
@@ -42,48 +42,91 @@ namespace kiwano
 				Dynamic,
 			};
 
-			Body();
-			Body(b2Body* body, Actor* actor);
-			virtual ~Body();
+			PhysicBody();
+			PhysicBody(b2Body* body, Actor* actor);
+			PhysicBody(PhysicWorld* world, Actor* actor);
+			PhysicBody(PhysicWorld* world, ActorPtr actor) : PhysicBody(world, actor.get()) {}
+			virtual ~PhysicBody();
 
-			static BodyPtr Create(World* world, Actor* actor);
+			// 初始化
+			void Init(PhysicWorld* world, Actor* actor);
 
 			// 添加形状
-			Fixture AddShape(Shape* shape, float density = 0.f, float friction = 0.2f, float restitution = 0.f);
-			Fixture AddCircleShape(float radius, float density = 0.f);
-			Fixture AddBoxShape(Vec2 const& size, float density = 0.f);
-			Fixture AddPolygonShape(Vector<Point> const& vertexs, float density = 0.f);
-			Fixture AddEdgeShape(Point const& p1, Point const& p2, float density = 0.f);
-			Fixture AddChainShape(Vector<Point> const& vertexs, bool loop, float density = 0.f);
+			PhysicFixture AddShape(PhysicShape* shape, float density = 0.f, float friction = 0.2f, float restitution = 0.f);
+			PhysicFixture AddCircleShape(float radius, float density = 0.f);
+			PhysicFixture AddBoxShape(Vec2 const& size, float density = 0.f);
+			PhysicFixture AddPolygonShape(Vector<Point> const& vertexs, float density = 0.f);
+			PhysicFixture AddEdgeShape(Point const& p1, Point const& p2, float density = 0.f);
+			PhysicFixture AddChainShape(Vector<Point> const& vertexs, bool loop, float density = 0.f);
 
-			// 获取夹具列表
-			Fixture GetFixture() const						{ KGE_ASSERT(body_); Fixture(body_->GetFixtureList()); }
+			// 获取夹具
+			PhysicFixture GetFixture() const				{ KGE_ASSERT(body_); PhysicFixture(body_->GetFixtureList()); }
 
 			// 移除夹具
-			void RemoveFixture(Fixture const& fixture);
+			void RemoveFixture(PhysicFixture const& fixture);
 
-			// 获取质量
+			// 旋转角度
+			float GetBodyRotation() const					{ KGE_ASSERT(body_); return math::Radian2Degree(body_->GetAngle()); }
+			void SetBodyRotation(float angle)				{ SetBodyTransform(GetBodyPosition(), angle); }
+
+			// 位置
+			Point GetBodyPosition() const;
+			void SetBodyPosition(Point const& pos)			{ SetBodyTransform(pos, GetBodyRotation()); }
+
+			// 位置和旋转变换
+			void SetBodyTransform(Point const& pos, float angle);
+
+			// 质量
 			float GetMass() const							{ KGE_ASSERT(body_); return body_->GetMass(); }
 
-			// 获取旋转角度
-			float GetRotation() const						{ KGE_ASSERT(body_); return math::Radian2Angle(body_->GetAngle()); }
+			// 惯性
+			float GetInertia() const						{ KGE_ASSERT(body_); return body_->GetInertia(); }
 
-			// 获取位置
-			Point GetPosition() const;
+			// 质量数据
+			void GetMassData(float* mass, Point* center, float* inertia);
+			void SetMassData(float mass, Point const& center, float inertia);
+			void ResetMassData();
 
+			// 坐标转换
 			Point GetLocalPoint(Point const& world) const;
 			Point GetWorldPoint(Point const& local) const;
 
+			// 质心坐标
+			Point GetLocalCenter() const;
+			Point GetWorldCenter() const;
+
+			// 物体类型
 			Type GetType() const							{ KGE_ASSERT(body_); return Type(body_->GetType()); }
 			void SetType(Type type)							{ KGE_ASSERT(body_); body_->SetType(static_cast<b2BodyType>(type)); }
 
+			// 重力因子
+			float GetGravityScale() const					{ KGE_ASSERT(body_); return body_->GetGravityScale(); }
+			void SetGravityScale(float scale)				{ KGE_ASSERT(body_); body_->SetGravityScale(scale); }
+
+			// 施力
 			void ApplyForce(Vec2 const& force, Point const& point, bool wake = true);
 			void ApplyForceToCenter(Vec2 const& force, bool wake = true);
 
+			// 施加扭矩
 			void ApplyTorque(float torque, bool wake = true);
 
-			bool IsIgnoreRotation() const					{ return ignore_rotation_; }
-			void SetIgnoreRotation(bool ignore_rotation)	{ ignore_rotation_ = ignore_rotation; }
+			// 固定旋转
+			bool IsIgnoreRotation() const					{ KGE_ASSERT(body_); return body_->IsFixedRotation(); }
+			void SetIgnoreRotation(bool flag)				{ KGE_ASSERT(body_); body_->SetFixedRotation(flag); }
+
+			// 子弹
+			bool IsBullet() const							{ KGE_ASSERT(body_); return body_->IsBullet(); }
+			void SetBullet(bool flag)						{ KGE_ASSERT(body_); body_->SetBullet(flag); }
+
+			// 休眠
+			bool IsAwake() const							{ KGE_ASSERT(body_); return body_->IsAwake(); }
+			void SetAwake(bool flag)						{ KGE_ASSERT(body_); body_->SetAwake(flag); }
+			bool IsSleepingAllowed() const					{ KGE_ASSERT(body_); return body_->IsSleepingAllowed(); }
+			void SetSleepingAllowed(bool flag)				{ KGE_ASSERT(body_); body_->SetSleepingAllowed(flag); }
+
+			// 活动状态
+			bool IsActive() const							{ KGE_ASSERT(body_); return body_->IsActive(); }
+			void SetActive(bool flag)						{ KGE_ASSERT(body_); body_->SetActive(flag); }
 
 			Actor* GetActor() const							{ return actor_; }
 			void SetActor(Actor* actor)						{ actor_ = actor; }
@@ -92,16 +135,17 @@ namespace kiwano
 			const b2Body* GetB2Body() const					{ return body_; }
 			void SetB2Body(b2Body* body);
 
-			World* GetWorld()								{ return world_; }
-			const World* GetWorld() const					{ return world_; }
+			PhysicWorld* GetWorld()							{ return world_; }
+			const PhysicWorld* GetWorld() const				{ return world_; }
+
+			void Destroy();
 
 			void UpdateActor();
 			void UpdateFromActor();
 
 		protected:
-			bool ignore_rotation_;
 			Actor* actor_;
-			World* world_;
+			PhysicWorld* world_;
 			b2Body* body_;
 		};
 	}

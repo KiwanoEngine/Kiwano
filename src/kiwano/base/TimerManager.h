@@ -25,7 +25,7 @@ namespace kiwano
 {
 	class KGE_API TimerManager
 	{
-		using Timers = intrusive_list<TimerPtr>;
+		using Timers = IntrusiveList<TimerPtr>;
 
 	public:
 		// Ìí¼Ó¶¨Ê±Æ÷

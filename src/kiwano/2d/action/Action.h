@@ -29,11 +29,11 @@ namespace kiwano
 
 	class KGE_API Action
 		: public ObjectBase
-		, protected intrusive_list_item<ActionPtr>
+		, protected IntrusiveListItem<ActionPtr>
 	{
 		friend class ActionManager;
 		friend class ActionGroup;
-		friend class intrusive_list<ActionPtr>;
+		friend IntrusiveList<ActionPtr>;
 
 	public:
 		enum class Status

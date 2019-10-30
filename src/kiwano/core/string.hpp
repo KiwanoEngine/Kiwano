@@ -29,7 +29,7 @@
 
 namespace kiwano
 {
-inline namespace core
+namespace core
 {
 
 //
@@ -450,7 +450,7 @@ inline wstring to_wstring(double val)				{ return to_basic_string<wchar_t>(val);
 inline wstring to_wstring(long double val)			{ return to_basic_string<wchar_t>(val); }
 
 
-}  // inline namespace core
+}  // namespace core
 }  // namespace kiwano
 
 namespace kiwano
@@ -515,7 +515,7 @@ namespace __string_details
 	}
 }
 
-inline namespace core
+namespace core
 {
 
 	template <typename _CharTy>
@@ -1159,31 +1159,31 @@ inline namespace core
 	//
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(int val)					{ return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(int val)					{ return ::kiwano::core::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned int val)			{ return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned int val)			{ return ::kiwano::core::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long val)					{ return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long val)					{ return ::kiwano::core::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long val)		{ return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long val)		{ return ::kiwano::core::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long long val)			{ return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long long val)			{ return ::kiwano::core::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long long val)	{ return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(unsigned long long val)	{ return ::kiwano::core::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(float val)				{ return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(float val)				{ return ::kiwano::core::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(double val)				{ return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(double val)				{ return ::kiwano::core::to_basic_string<char_type>(val); }
 
 	template <typename _CharTy>
-	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long double val)			{ return ::kiwano::to_basic_string<char_type>(val); }
+	inline basic_string<_CharTy> basic_string<_CharTy>::parse(long double val)			{ return ::kiwano::core::to_basic_string<char_type>(val); }
 
 	//
 	// details of basic_string::format
@@ -1193,7 +1193,7 @@ inline namespace core
 	template <typename ..._Args>
 	inline basic_string<_CharTy> basic_string<_CharTy>::format(const char_type* fmt, _Args&& ... args)
 	{
-		return ::kiwano::format_string(fmt, std::forward<_Args>(args)...);
+		return ::kiwano::core::format_string(fmt, std::forward<_Args>(args)...);
 	}
 
 	//

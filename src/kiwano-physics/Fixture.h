@@ -26,19 +26,19 @@ namespace kiwano
 {
 	namespace physics
 	{
-		class Body;
+		class PhysicBody;
 
 		// ¼Ð¾ß
-		class Fixture
+		class PhysicFixture
 		{
 		public:
-			Fixture();
-			Fixture(b2Fixture* fixture);
+			PhysicFixture();
+			PhysicFixture(b2Fixture* fixture);
 
-			static Fixture Create(Body* body, Shape* shape, float density = 0.f, float friction = 0.2f, float restitution = 0.f);
+			static PhysicFixture Create(PhysicBody* body, PhysicShape* shape, float density = 0.f, float friction = 0.2f, float restitution = 0.f);
 
-			Shape GetShape() const;
-			Fixture GetNext() const;
+			PhysicShape GetShape() const;
+			PhysicFixture GetNext() const;
 
 			bool IsValid() const					{ return !!fixture_; }
 

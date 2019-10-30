@@ -32,7 +32,7 @@
 namespace kiwano
 {
 
-inline namespace core
+namespace core
 {
 
 template <typename _Ty>
@@ -285,8 +285,8 @@ public:
 	using reverse_iterator			= std::reverse_iterator<iterator>;
 	using const_reverse_iterator	= std::reverse_iterator<const_iterator>;
 
-	inline iterator					begin()			{ return iterator(first_item()); }
-	inline const_iterator			begin() const	{ return const_iterator(first_item()); }
+	inline iterator					begin()			{ return iterator(first_item(), first_item() == nullptr); }
+	inline const_iterator			begin() const	{ return const_iterator(first_item(), first_item() == nullptr); }
 	inline const_iterator			cbegin() const	{ return begin(); }
 	inline iterator					end()			{ return iterator(last_item(), true); }
 	inline const_iterator			end() const		{ return const_iterator(last_item(), true); }
@@ -307,7 +307,7 @@ private:
 	value_type last_;
 };
 
-}  // inline namespace core
+}  // namespace core
 
 }  // namespace kiwano
 

@@ -25,7 +25,7 @@
 namespace kiwano
 {
 
-inline namespace core
+namespace core
 {
 //
 // function is a light weight ::std::function<>-like class
@@ -321,7 +321,7 @@ private:
 	__function_detail::callable<_Ret, _Args...>* callable_;
 };
 
-}  // inline namespace core
+}  // namespace core
 
 }  // namespace kiwano
 
@@ -333,10 +333,11 @@ namespace kiwano
 			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
 		>::type,
 		typename _Ret,
-		typename... _Args>
-	inline function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
+		typename... _Args
+	>
+	inline core::function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
 	{
-		return function<_Ret(_Args...)>(ptr, func);
+		return core::function<_Ret(_Args...)>(ptr, func);
 	}
 
 	template<typename _Ty,
@@ -345,9 +346,10 @@ namespace kiwano
 			std::is_same<_Ty, _Uty>::value || std::is_base_of<_Ty, _Uty>::value, int
 		>::type,
 		typename _Ret,
-		typename... _Args>
-	inline function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
+		typename... _Args
+	>
+	inline core::function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
 	{
-		return function<_Ret(_Args...)>(ptr, func);
+		return core::function<_Ret(_Args...)>(ptr, func);
 	}
 }

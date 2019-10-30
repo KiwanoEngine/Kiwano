@@ -33,10 +33,10 @@ namespace kiwano
 	// ÊÂ¼ş¼àÌıÆ÷
 	class KGE_API EventListener
 		: public ObjectBase
-		, protected intrusive_list_item<EventListenerPtr>
+		, protected IntrusiveListItem<EventListenerPtr>
 	{
 		friend class EventDispatcher;
-		friend class intrusive_list<EventListenerPtr>;
+		friend IntrusiveList<EventListenerPtr>;
 
 	public:
 		using Callback = Function<void(Event const&)>;

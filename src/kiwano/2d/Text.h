@@ -150,6 +150,9 @@ namespace kiwano
 			StrokeStyle outline_stroke
 		);
 
+		// 更新文本布局
+		void UpdateLayout();
+
 		// 设置默认字体
 		static void SetDefaultFont(
 			Font const& font
@@ -161,9 +164,6 @@ namespace kiwano
 		);
 
 		void OnRender(RenderTarget* rt) override;
-
-	protected:
-		void UpdateLayout();
 
 	protected:
 		bool		format_dirty_;

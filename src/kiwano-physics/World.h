@@ -27,20 +27,16 @@ namespace kiwano
 	namespace physics
 	{
 		// 物理世界
-		class KGE_API World
+		class KGE_API PhysicWorld
 			: public Stage
 		{
-			friend class Body;
-			friend class Joint;
+			friend class PhysicBody;
+			friend class PhysicJoint;
 
 		public:
-			World();
+			PhysicWorld();
 
-			virtual ~World();
-
-			// 创建刚体
-			BodyPtr CreateBody(ActorPtr actor);
-			BodyPtr CreateBody(Actor* actor);
+			virtual ~PhysicWorld();
 
 			// 获取重力
 			Vec2 GetGravity() const;
@@ -75,17 +71,17 @@ namespace kiwano
 			const b2World* GetB2World() const;
 
 		protected:
-			// 移除刚体
-			void RemoveBody(Body* body);
+			// 移除物体
+			void RemoveBody(PhysicBody* body);
 
-			// 移除所有刚体
+			// 移除所有物体
 			void RemoveAllBodies();
 
 			// 添加关节
-			void AddJoint(Joint* joint);
+			void AddJoint(PhysicJoint* joint);
 
 			// 移除关节
-			void RemoveJoint(Joint* joint);
+			void RemoveJoint(PhysicJoint* joint);
 
 			// 移除所有关节
 			void RemoveAllJoints();
@@ -107,9 +103,9 @@ namespace kiwano
 			DestructionListener* destruction_listener_;
 
 			bool removing_joint_;
-			Vector<Joint*> joints_;
+			Vector<PhysicJoint*> joints_;
 		};
 
-		KGE_DECLARE_SMART_PTR(World);
+		KGE_DECLARE_SMART_PTR(PhysicWorld);
 	}
 }

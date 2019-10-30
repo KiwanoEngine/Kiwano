@@ -33,10 +33,10 @@ namespace kiwano
     // 定时任务
 	class KGE_API Timer
 		: public ObjectBase
-		, protected intrusive_list_item<TimerPtr>
+		, protected IntrusiveListItem<TimerPtr>
 	{
 		friend class TimerManager;
-		friend class intrusive_list<TimerPtr>;
+		friend IntrusiveList<TimerPtr>;
 
 		using Callback = Function<void()>;
 

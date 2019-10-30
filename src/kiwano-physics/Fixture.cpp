@@ -27,18 +27,18 @@ namespace kiwano
 	namespace physics
 	{
 
-		Fixture::Fixture()
+		PhysicFixture::PhysicFixture()
 			: fixture_(nullptr)
 		{
 		}
 
-		Fixture::Fixture(b2Fixture* fixture)
-			: Fixture()
+		PhysicFixture::PhysicFixture(b2Fixture* fixture)
+			: PhysicFixture()
 		{
 			SetB2Fixture(fixture);
 		}
 
-		Fixture Fixture::Create(Body* body, Shape* shape, float density, float friction, float restitution)
+		PhysicFixture PhysicFixture::Create(PhysicBody* body, PhysicShape* shape, float density, float friction, float restitution)
 		{
 			KGE_ASSERT(body);
 
@@ -53,21 +53,21 @@ namespace kiwano
 				fd.restitution = restitution;
 				fd.shape = shape->GetB2Shape();
 				auto fixture = b2body->CreateFixture(&fd);
-				return Fixture(fixture);
+				return PhysicFixture(fixture);
 			}
-			return Fixture();
+			return PhysicFixture();
 		}
 
-		Shape Fixture::GetShape() const
+		PhysicShape PhysicFixture::GetShape() const
 		{
 			KGE_ASSERT(fixture_);
-			return Shape(fixture_->GetShape());
+			return PhysicShape(fixture_->GetShape());
 		}
 
-		Fixture Fixture::GetNext() const
+		PhysicFixture PhysicFixture::GetNext() const
 		{
 			KGE_ASSERT(fixture_);
-			return Fixture(fixture_->GetNext());
+			return PhysicFixture(fixture_->GetNext());
 		}
 
 	}

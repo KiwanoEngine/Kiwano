@@ -25,7 +25,7 @@ namespace kiwano
 {
 	class KGE_API EventDispatcher
 	{
-		using Listeners = intrusive_list<EventListenerPtr>;
+		using Listeners = IntrusiveList<EventListenerPtr>;
 
 	public:
 		// Ìí¼Ó¼àÌıÆ÷
