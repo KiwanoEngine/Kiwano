@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano-physics/Body.h>
 #include <kiwano-physics/Joint.h>
+#include <kiwano-physics/ContactListener.h>
 
 namespace kiwano
 {
@@ -29,6 +30,7 @@ namespace kiwano
 		// 物理世界
 		class KGE_API PhysicWorld
 			: public Stage
+			, public PhysicContactDispatcher
 		{
 			friend class PhysicBody;
 			friend class PhysicJoint;
@@ -45,32 +47,29 @@ namespace kiwano
 			void SetGravity(Vec2 gravity);
 
 			// 获取全局缩放比例
-			inline float	GetGlobalScale() const			{ return global_scale_; }
+			inline float	GetGlobalScale() const					{ return global_scale_; }
 
 			// 设置全局缩放比例
-			inline void		SetGlobalScale(float scale)		{ global_scale_ = scale; }
+			inline void		SetGlobalScale(float scale)				{ global_scale_ = scale; }
 
 			// 游戏世界单位转换为物理世界单位
-			inline float	World2Stage(float value)		{ return value * GetGlobalScale(); }
-			inline Point	World2Stage(const b2Vec2& pos)	{ return Point(World2Stage(pos.x), World2Stage(pos.y)); }
+			inline float	World2Stage(float value) const			{ return value * GetGlobalScale(); }
+			inline Point	World2Stage(const b2Vec2& pos) const	{ return Point(World2Stage(pos.x), World2Stage(pos.y)); }
 
 			// 物理世界单位转换为游戏世界单位
-			inline float	Stage2World(float value)		{ return value / GetGlobalScale(); }
-			inline b2Vec2	Stage2World(const Point& pos)	{ return b2Vec2(Stage2World(pos.x), Stage2World(pos.y)); }
+			inline float	Stage2World(float value) const			{ return value / GetGlobalScale(); }
+			inline b2Vec2	Stage2World(const Point& pos) const		{ return b2Vec2(Stage2World(pos.x), Stage2World(pos.y)); }
 
 			// 设置速度迭代次数, 默认为 6
-			inline void SetVelocityIterations(int vel_iter)	{ vel_iter_ = vel_iter; }
+			inline void SetVelocityIterations(int vel_iter)			{ vel_iter_ = vel_iter; }
 
 			// 设置位置迭代次数, 默认为 2
-			inline void SetPositionIterations(int pos_iter)	{ pos_iter_ = pos_iter; }
+			inline void SetPositionIterations(int pos_iter)			{ pos_iter_ = pos_iter; }
 
-			// 获取 Box2D 世界
 			b2World* GetB2World();
-
-			// 获取 Box2D 世界
 			const b2World* GetB2World() const;
 
-		protected:
+		private:
 			// 移除物体
 			void RemoveBody(PhysicBody* body);
 
@@ -89,18 +88,21 @@ namespace kiwano
 			// 关节被移除
 			void JointRemoved(b2Joint* joint);
 
-		protected:
 			void Update(Duration dt) override;
 
-			class DestructionListener;
-			friend DestructionListener;
-
-		protected:
+		private:
 			b2World world_;
 			int vel_iter_;
 			int pos_iter_;
 			float global_scale_;
+
+			class DestructionListener;
+			friend DestructionListener;
 			DestructionListener* destruction_listener_;
+
+			class ContactListener;
+			friend ContactListener;
+			ContactListener* contact_listener_;
 
 			bool removing_joint_;
 			Vector<PhysicJoint*> joints_;

@@ -166,7 +166,7 @@ namespace kiwano
 
 		inline Vec2 GetRadius() const	{ return radius_; }
 
-		inline Size GetRectSize() const	{ return size_; }
+		inline Size GetRectSize() const	{ return GetSize(); }
 
 		void SetRadius(
 			Vec2 const& radius

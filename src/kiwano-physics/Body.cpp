@@ -30,6 +30,9 @@ namespace kiwano
 			: body_(nullptr)
 			, actor_(nullptr)
 			, world_(nullptr)
+			, category_bits_(0x0001)
+			, mask_bits_(0xFFFF)
+			, group_index_(0)
 		{
 		}
 
@@ -108,6 +111,57 @@ namespace kiwano
 			{
 				b2Fixture* ptr = const_cast<b2Fixture*>(fixture.GetB2Fixture());
 				body_->DestroyFixture(ptr);
+			}
+		}
+
+		void PhysicBody::SetCategoryBits(uint16_t category_bits)
+		{
+			KGE_ASSERT(body_);
+
+			if (category_bits != category_bits_)
+			{
+				category_bits_ = category_bits;
+
+				b2Fixture* fixture = body_->GetFixtureList();
+				while (fixture)
+				{
+					UpdateFixtureFilter(fixture);
+					fixture = fixture->GetNext();
+				}
+			}
+		}
+
+		void PhysicBody::SetMaskBits(uint16_t mask_bits)
+		{
+			KGE_ASSERT(body_);
+
+			if (mask_bits != mask_bits_)
+			{
+				mask_bits_ = mask_bits;
+
+				b2Fixture* fixture = body_->GetFixtureList();
+				while (fixture)
+				{
+					UpdateFixtureFilter(fixture);
+					fixture = fixture->GetNext();
+				}
+			}
+		}
+
+		void PhysicBody::SetGroupIndex(int16_t index)
+		{
+			KGE_ASSERT(body_);
+
+			if (index != group_index_)
+			{
+				group_index_ = index;
+
+				b2Fixture* fixture = body_->GetFixtureList();
+				while (fixture)
+				{
+					UpdateFixtureFilter(fixture);
+					fixture = fixture->GetNext();
+				}
 			}
 		}
 
@@ -250,6 +304,15 @@ namespace kiwano
 					);
 				}
 			}
+		}
+
+		void PhysicBody::UpdateFixtureFilter(b2Fixture* fixture)
+		{
+			b2Filter filter;
+			filter.categoryBits = category_bits_;
+			filter.maskBits = mask_bits_;
+			filter.groupIndex = group_index_;
+			fixture->SetFilterData(filter);
 		}
 
 }

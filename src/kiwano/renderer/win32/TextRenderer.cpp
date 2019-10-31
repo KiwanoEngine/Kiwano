@@ -213,10 +213,10 @@ namespace kiwano
 		__in DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
 		IUnknown* clientDrawingEffect)
 	{
-		KGE_UNUSED(clientDrawingContext);
-		KGE_UNUSED(measuringMode);
-		KGE_UNUSED(glyphRunDescription);
-		KGE_UNUSED(clientDrawingEffect);
+		KGE_NOT_USED(clientDrawingContext);
+		KGE_NOT_USED(measuringMode);
+		KGE_NOT_USED(glyphRunDescription);
+		KGE_NOT_USED(clientDrawingEffect);
 
 		HRESULT hr = S_OK;
 
@@ -311,8 +311,8 @@ namespace kiwano
 		__in DWRITE_UNDERLINE const* underline,
 		IUnknown* clientDrawingEffect)
 	{
-		KGE_UNUSED(clientDrawingContext);
-		KGE_UNUSED(clientDrawingEffect);
+		KGE_NOT_USED(clientDrawingContext);
+		KGE_NOT_USED(clientDrawingEffect);
 
 		HRESULT hr;
 
@@ -380,8 +380,8 @@ namespace kiwano
 		__in DWRITE_STRIKETHROUGH const* strikethrough,
 		IUnknown* clientDrawingEffect)
 	{
-		KGE_UNUSED(clientDrawingContext);
-		KGE_UNUSED(clientDrawingEffect);
+		KGE_NOT_USED(clientDrawingContext);
+		KGE_NOT_USED(clientDrawingEffect);
 
 		HRESULT hr;
 
@@ -451,13 +451,13 @@ namespace kiwano
 		BOOL IsRightToLeft,
 		IUnknown* clientDrawingEffect)
 	{
-		KGE_UNUSED(clientDrawingContext);
-		KGE_UNUSED(originX);
-		KGE_UNUSED(originY);
-		KGE_UNUSED(inlineObject);
-		KGE_UNUSED(IsSideways);
-		KGE_UNUSED(IsRightToLeft);
-		KGE_UNUSED(clientDrawingEffect);
+		KGE_NOT_USED(clientDrawingContext);
+		KGE_NOT_USED(originX);
+		KGE_NOT_USED(originY);
+		KGE_NOT_USED(inlineObject);
+		KGE_NOT_USED(IsSideways);
+		KGE_NOT_USED(IsRightToLeft);
+		KGE_NOT_USED(clientDrawingEffect);
 		return E_NOTIMPL;
 	}
 
@@ -465,7 +465,7 @@ namespace kiwano
 		__maybenull void* clientDrawingContext,
 		__out BOOL* isDisabled)
 	{
-		KGE_UNUSED(clientDrawingContext);
+		KGE_NOT_USED(clientDrawingContext);
 
 		*isDisabled = FALSE;
 		return S_OK;
@@ -475,7 +475,7 @@ namespace kiwano
 		__maybenull void* clientDrawingContext,
 		__out DWRITE_MATRIX* transform)
 	{
-		KGE_UNUSED(clientDrawingContext);
+		KGE_NOT_USED(clientDrawingContext);
 
 		pRT_->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(transform));
 		return S_OK;
@@ -485,7 +485,7 @@ namespace kiwano
 		__maybenull void* clientDrawingContext,
 		__out float* pixelsPerDip)
 	{
-		KGE_UNUSED(clientDrawingContext);
+		KGE_NOT_USED(clientDrawingContext);
 
 		float x, yUnused;
 

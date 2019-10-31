@@ -53,16 +53,37 @@ namespace kiwano
 			}
 		};
 
+		class PhysicWorld::ContactListener
+			: public b2ContactListener
+		{
+			PhysicWorld* world_;
+
+		public:
+			ContactListener(PhysicWorld* world)
+				: world_(world)
+			{
+			}
+
+			void BeginContact(b2Contact* contact) override									{ world_->OnContactBegin(contact); }
+			void EndContact(b2Contact* contact) override									{ world_->OnContactEnd(contact); }
+			void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override		{ KGE_NOT_USED(contact); KGE_NOT_USED(oldManifold); }
+			void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override	{ KGE_NOT_USED(contact); KGE_NOT_USED(impulse); }
+		};
+
 		PhysicWorld::PhysicWorld()
 			: world_(b2Vec2(0, 10.0f))
 			, vel_iter_(6)
 			, pos_iter_(2)
 			, global_scale_(DefaultGlobalScale)
 			, destruction_listener_(nullptr)
+			, contact_listener_(nullptr)
 			, removing_joint_(false)
 		{
 			destruction_listener_ = new DestructionListener(this);
 			world_.SetDestructionListener(destruction_listener_);
+
+			contact_listener_ = new ContactListener(this);
+			world_.SetContactListener(contact_listener_);
 		}
 
 		PhysicWorld::~PhysicWorld()
@@ -72,6 +93,13 @@ namespace kiwano
 			{
 				delete destruction_listener_;
 				destruction_listener_ = nullptr;
+			}
+
+			world_.SetContactListener(nullptr);
+			if (contact_listener_)
+			{
+				delete contact_listener_;
+				contact_listener_ = nullptr;
 			}
 
 			// Make sure b2World was destroyed after b2Body

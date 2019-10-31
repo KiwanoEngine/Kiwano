@@ -283,7 +283,7 @@ namespace kiwano
 
 	void Actor::SetStage(Stage* stage)
 	{
-		if (stage && stage_ != stage)
+		if (stage_ != stage)
 		{
 			stage_ = stage;
 			for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
@@ -537,6 +537,11 @@ namespace kiwano
 			}
 		}
 		return nullptr;
+	}
+
+	Actor::Children& Actor::GetAllChildren()
+	{
+		return children_;
 	}
 
 	Actor::Children const & Actor::GetAllChildren() const

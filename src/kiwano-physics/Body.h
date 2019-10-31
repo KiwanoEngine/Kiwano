@@ -22,6 +22,7 @@
 #include <kiwano-physics/helper.h>
 #include <kiwano-physics/Shape.h>
 #include <kiwano-physics/Fixture.h>
+#include <kiwano-physics/Contact.h>
 
 namespace kiwano
 {
@@ -60,10 +61,25 @@ namespace kiwano
 			PhysicFixture AddChainShape(Vector<Point> const& vertexs, bool loop, float density = 0.f);
 
 			// 获取夹具
-			PhysicFixture GetFixture() const				{ KGE_ASSERT(body_); PhysicFixture(body_->GetFixtureList()); }
+			PhysicFixture GetFixtureList() const			{ KGE_ASSERT(body_); PhysicFixture(body_->GetFixtureList()); }
 
 			// 移除夹具
 			void RemoveFixture(PhysicFixture const& fixture);
+
+			// 获取接触边
+			PhysicContactEdge GetContactList() const		{ KGE_ASSERT(body_); PhysicContactEdge(body_->GetContactList()); }
+
+			// 类别码
+			uint16_t GetCategoryBits() const				{ return category_bits_; }
+			void SetCategoryBits(uint16_t category_bits);
+
+			// 碰撞掩码
+			uint16_t GetMaskBits() const					{ return mask_bits_; }
+			void SetMaskBits(uint16_t mask_bits);
+
+			// 组索引
+			int16_t GetGroupIndex() const					{ return group_index_; }
+			void SetGroupIndex(int16_t index);
 
 			// 旋转角度
 			float GetBodyRotation() const					{ KGE_ASSERT(body_); return math::Radian2Degree(body_->GetAngle()); }
@@ -144,9 +160,16 @@ namespace kiwano
 			void UpdateFromActor();
 
 		protected:
+			void UpdateFixtureFilter(b2Fixture* fixture);
+
+		protected:
 			Actor* actor_;
 			PhysicWorld* world_;
 			b2Body* body_;
+
+			uint16_t category_bits_;
+			uint16_t mask_bits_;
+			int16_t group_index_;
 		};
 	}
 }

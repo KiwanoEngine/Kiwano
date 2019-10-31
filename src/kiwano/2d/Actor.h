@@ -49,10 +49,10 @@ namespace kiwano
 		Actor();
 
 		// 更新角色
-		virtual void		OnUpdate(Duration dt)			{ KGE_UNUSED(dt); }
+		virtual void		OnUpdate(Duration dt)			{ KGE_NOT_USED(dt); }
 
 		// 渲染角色
-		virtual void		OnRender(RenderTarget* rt)		{ KGE_UNUSED(rt); }
+		virtual void		OnRender(RenderTarget* rt)		{ KGE_NOT_USED(rt); }
 
 		// 获取显示状态
 		bool				IsVisible() const				{ return visible_; }
@@ -335,6 +335,9 @@ namespace kiwano
 		) const;
 
 		// 获取全部子角色
+		Children& GetAllChildren();
+
+		// 获取全部子角色
 		Children const& GetAllChildren() const;
 
 		// 移除子角色
@@ -407,7 +410,7 @@ namespace kiwano
 
 		void SetStage(Stage* stage);
 
-	protected:
+	private:
 		bool			visible_;
 		bool			update_pausing_;
 		bool			cascade_opacity_;

@@ -37,7 +37,14 @@ namespace kiwano
 
 			static PhysicFixture Create(PhysicBody* body, PhysicShape* shape, float density = 0.f, float friction = 0.2f, float restitution = 0.f);
 
+			// 物体
+			PhysicBody* GetBody();
+			const PhysicBody* GetBody() const;
+
+			// 形状
 			PhysicShape GetShape() const;
+
+			// 下一夹具 (同一物体上)
 			PhysicFixture GetNext() const;
 
 			bool IsValid() const					{ return !!fixture_; }

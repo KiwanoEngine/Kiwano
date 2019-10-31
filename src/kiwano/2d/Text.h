@@ -60,7 +60,7 @@ namespace kiwano
 		inline Font GetFont() const				{ return font_; }
 
 		// 获取文本样式
-		inline TextStyle GetStyle() const		{ return style_; }
+		inline TextStyle GetStyle() const		{ return text_layout_.GetTextStyle(); }
 
 		// 获取文本布局
 		inline TextLayout GetLayout() const		{ return text_layout_; }
@@ -171,6 +171,5 @@ namespace kiwano
 		TextLayout	text_layout_;
 		String		text_;
 		Font		font_;
-		TextStyle	style_;
 	};
 }

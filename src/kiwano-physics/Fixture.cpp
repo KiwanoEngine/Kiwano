@@ -58,6 +58,18 @@ namespace kiwano
 			return PhysicFixture();
 		}
 
+		PhysicBody* PhysicFixture::GetBody()
+		{
+			KGE_ASSERT(fixture_);
+			return static_cast<PhysicBody*>(fixture_->GetBody()->GetUserData());
+		}
+
+		const PhysicBody* PhysicFixture::GetBody() const
+		{
+			KGE_ASSERT(fixture_);
+			return static_cast<const PhysicBody*>(fixture_->GetBody()->GetUserData());
+		}
+
 		PhysicShape PhysicFixture::GetShape() const
 		{
 			KGE_ASSERT(fixture_);

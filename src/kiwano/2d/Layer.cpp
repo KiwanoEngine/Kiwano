@@ -72,7 +72,7 @@ namespace kiwano
 		if (!swallow_)
 		{
 			ActorPtr prev;
-			for (auto child = children_.last_item(); child; child = prev)
+			for (auto child = GetAllChildren().last_item(); child; child = prev)
 			{
 				prev = child->prev_item();
 				child->Dispatch(evt);
