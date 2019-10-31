@@ -29,7 +29,7 @@ namespace kiwano
 	KGE_DECLARE_SMART_PTR(ObjectBase);
 
 	class KGE_API ObjectBase
-		: public RefCounter
+		: public virtual RefCounter
 	{
 	public:
 		ObjectBase();

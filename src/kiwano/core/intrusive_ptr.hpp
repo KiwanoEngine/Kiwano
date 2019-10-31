@@ -26,7 +26,7 @@
 namespace kiwano
 {
 
-inline namespace core
+namespace core
 {
 
 template <typename _Ty, typename _ManagerTy>
@@ -38,106 +38,30 @@ public:
 	using const_pointer_type	= const _Ty*;
 	using manager_type			= _ManagerTy;
 
-	intrusive_ptr() noexcept {}
-
-	intrusive_ptr(std::nullptr_t) noexcept {}
-
-	intrusive_ptr(pointer_type p) noexcept : ptr_(p)
-	{
-		typename manager_type::AddRef(ptr_);
-	}
-
-	intrusive_ptr(const_pointer_type p) noexcept : ptr_(p)
-	{
-		typename manager_type::AddRef(ptr_);
-	}
-
-	intrusive_ptr(const intrusive_ptr& other) noexcept
-		: ptr_(other.ptr_)
-	{
-		typename manager_type::AddRef(ptr_);
-	}
+	intrusive_ptr() noexcept													{}
+	intrusive_ptr(std::nullptr_t) noexcept										{}
+	intrusive_ptr(pointer_type p)												: ptr_(p) { typename manager_type::AddRef(ptr_); }
+	intrusive_ptr(const intrusive_ptr& other)									: ptr_(other.ptr_) { typename manager_type::AddRef(ptr_); }
+	intrusive_ptr(intrusive_ptr&& other) noexcept								{ ptr_ = other.ptr_; other.ptr_ = nullptr; }
+	~intrusive_ptr()															{ typename manager_type::Release(ptr_); }
 
 	template <typename _UTy>
-	intrusive_ptr(const intrusive_ptr<_UTy, manager_type>& other) noexcept
-		: ptr_(other.get())
-	{
-		typename manager_type::AddRef(ptr_);
-	}
+	intrusive_ptr(const intrusive_ptr<_UTy, manager_type>& other)				: ptr_(other.get()) { typename manager_type::AddRef(ptr_); }
 
-	intrusive_ptr(intrusive_ptr&& other) noexcept
-	{
-		ptr_ = other.ptr_;
-		other.ptr_ = nullptr;
-	}
+	inline pointer_type		get() const noexcept								{ return ptr_; }
+	inline void				reset(pointer_type ptr = nullptr)					{ intrusive_ptr{ ptr }.swap(*this); }
+	inline void				swap(intrusive_ptr& other) noexcept					{ std::swap(ptr_, other.ptr_); }
 
-	~intrusive_ptr() noexcept
-	{
-		typename manager_type::Release(ptr_);
-	}
+	inline pointer_type		operator ->() const									{ KGE_ASSERT(ptr_ != nullptr && "Invalid pointer"); return ptr_; }
+	inline value_type&		operator *() const									{ KGE_ASSERT(ptr_ != nullptr && "Invalid pointer"); return *ptr_; }
+	inline pointer_type*	operator &()										{ KGE_ASSERT(ptr_ == nullptr && "Memory leak"); return &ptr_; }
+	inline					operator bool() const noexcept						{ return ptr_ != nullptr; }
+	inline bool				operator !() const noexcept							{ return ptr_ == 0; }
 
-	inline pointer_type get() const noexcept { return ptr_; }
-
-	inline void reset(pointer_type ptr = nullptr) noexcept
-	{
-		intrusive_ptr{ ptr }.swap(*this);
-	}
-
-	inline void swap(intrusive_ptr& other) noexcept
-	{
-		std::swap(ptr_, other.ptr_);
-	}
-
-	inline pointer_type operator ->() const
-	{
-		KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
-		return ptr_;
-	}
-
-	inline value_type& operator *() const
-	{
-		KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
-		return *ptr_;
-	}
-
-	inline pointer_type* operator &()
-	{
-		KGE_ASSERT(ptr_ == nullptr && "Memory leak");
-		return &ptr_;
-	}
-
-	inline operator bool() const noexcept { return ptr_ != nullptr; }
-
-	inline bool operator !() const noexcept { return ptr_ == 0; }
-
-	inline intrusive_ptr& operator =(const intrusive_ptr& other) noexcept
-	{
-		if (other.ptr_ != ptr_)
-			intrusive_ptr(other).swap(*this);
-		return *this;
-	}
-
-	inline intrusive_ptr& operator =(intrusive_ptr&& other) noexcept
-	{
-		typename manager_type::Release(ptr_);
-		ptr_ = other.ptr_;
-		other.ptr_ = nullptr;
-		return *this;
-	}
-
-	inline intrusive_ptr& operator =(pointer_type p) noexcept
-	{
-		if (p != ptr_)
-			intrusive_ptr(p).swap(*this);
-		return *this;
-	}
-
-	inline intrusive_ptr& operator =(std::nullptr_t) noexcept
-	{
-		if (nullptr != ptr_)
-			intrusive_ptr{}.swap(*this);
-		return *this;
-	}
+	inline const intrusive_ptr& operator=(const intrusive_ptr& other) const		{ if (other.ptr_ != ptr_) intrusive_ptr(other).swap(*const_cast<intrusive_ptr*>(this)); return *this; }
+	inline const intrusive_ptr& operator=(intrusive_ptr&& other) const noexcept	{ if (other.ptr_ != ptr_) other.swap(*const_cast<intrusive_ptr*>(this)); return *this; }
+	inline const intrusive_ptr& operator=(pointer_type p) const					{ if (p != ptr_) intrusive_ptr(p).swap(*const_cast<intrusive_ptr*>(this)); return *this; }
+	inline const intrusive_ptr& operator=(std::nullptr_t) const noexcept		{ if (nullptr != ptr_) intrusive_ptr{}.swap(*const_cast<intrusive_ptr*>(this)); return *this; }
 
 private:
 	pointer_type ptr_{ nullptr };
@@ -149,28 +73,10 @@ inline bool operator==(intrusive_ptr<_Ty, manager_type> const& lhs, intrusive_pt
 	return lhs.get() == rhs.get();
 }
 
-template <class _Ty, class _UTy, class manager_type>
-inline bool operator!=(intrusive_ptr<_Ty, manager_type> const& lhs, intrusive_ptr<_UTy, manager_type> const& rhs) noexcept
-{
-	return lhs.get() != rhs.get();
-}
-
-template <class _Ty, class _UTy, class manager_type>
-inline bool operator<(intrusive_ptr<_Ty, manager_type> const& lhs, intrusive_ptr<_UTy, manager_type> const& rhs) noexcept
-{
-	return lhs.get() < rhs.get();
-}
-
 template <class _Ty, class manager_type>
 inline bool operator==(intrusive_ptr<_Ty, manager_type> const& lhs, _Ty* rhs) noexcept
 {
 	return lhs.get() == rhs;
-}
-
-template <class _Ty, class manager_type>
-inline bool operator!=(intrusive_ptr<_Ty, manager_type> const& lhs, _Ty* rhs) noexcept
-{
-	return lhs.get() != rhs;
 }
 
 template <class _Ty, class manager_type>
@@ -180,15 +86,33 @@ inline bool operator==(_Ty* lhs, intrusive_ptr<_Ty, manager_type> const& rhs) no
 }
 
 template <class _Ty, class manager_type>
-inline bool operator!=(_Ty* lhs, intrusive_ptr<_Ty, manager_type> const& rhs) noexcept
-{
-	return lhs != rhs.get();
-}
-
-template <class _Ty, class manager_type>
 inline bool operator==(intrusive_ptr<_Ty, manager_type> const& lhs, std::nullptr_t) noexcept
 {
 	return !static_cast<bool>(lhs);
+}
+
+template <class _Ty, class manager_type>
+inline bool operator==(std::nullptr_t, intrusive_ptr<_Ty, manager_type> const& rhs) noexcept
+{
+	return !static_cast<bool>(rhs);
+}
+
+template <class _Ty, class _UTy, class manager_type>
+inline bool operator!=(intrusive_ptr<_Ty, manager_type> const& lhs, intrusive_ptr<_UTy, manager_type> const& rhs) noexcept
+{
+	return !(lhs == rhs);
+}
+
+template <class _Ty, class manager_type>
+inline bool operator!=(intrusive_ptr<_Ty, manager_type> const& lhs, _Ty* rhs) noexcept
+{
+	return lhs.get() != rhs;
+}
+
+template <class _Ty, class manager_type>
+inline bool operator!=(_Ty* lhs, intrusive_ptr<_Ty, manager_type> const& rhs) noexcept
+{
+	return lhs != rhs.get();
 }
 
 template <class _Ty, class manager_type>
@@ -198,15 +122,15 @@ inline bool operator!=(intrusive_ptr<_Ty, manager_type> const& lhs, std::nullptr
 }
 
 template <class _Ty, class manager_type>
-inline bool operator==(std::nullptr_t, intrusive_ptr<_Ty, manager_type> const& rhs) noexcept
-{
-	return !static_cast<bool>(rhs);
-}
-
-template <class _Ty, class manager_type>
 inline bool operator!=(std::nullptr_t, intrusive_ptr<_Ty, manager_type> const& rhs) noexcept
 {
 	return static_cast<bool>(rhs);
+}
+
+template <class _Ty, class _UTy, class manager_type>
+inline bool operator<(intrusive_ptr<_Ty, manager_type> const& lhs, intrusive_ptr<_UTy, manager_type> const& rhs) noexcept
+{
+	return lhs.get() < rhs.get();
 }
 
 // template class cannot specialize std::swap,
@@ -217,6 +141,6 @@ inline void swap(intrusive_ptr<_Ty, manager_type>& lhs, intrusive_ptr<_Ty, manag
 	lhs.swap(rhs);
 }
 
-}  // inline namespace core
+}  // namespace core
 
 }  // namespace kiwano

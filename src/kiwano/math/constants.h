@@ -39,8 +39,3 @@ namespace kiwano
 		}
 	}
 }
-
-namespace kiwano
-{
-	using namespace math::constants;
-}

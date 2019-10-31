@@ -36,7 +36,7 @@ namespace
 
 	uint32_t write_data(void* buffer, uint32_t size, uint32_t nmemb, void* userp)
 	{
-		kiwano::string* recv_buffer = (kiwano::string*)userp;
+		core::string* recv_buffer = (core::string*)userp;
 		uint32_t total = size * nmemb;
 
 		// add data to the end of recv_buffer
@@ -46,10 +46,10 @@ namespace
 		return total;
 	}
 
-	kiwano::string convert_to_utf8(kiwano::wstring const& str)
+	core::string convert_to_utf8(core::wstring const& str)
 	{
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-		kiwano::string result;
+		core::string result;
 
 		try
 		{
@@ -63,10 +63,10 @@ namespace
 		return result;
 	}
 
-	kiwano::wstring convert_from_utf8(kiwano::string const& str)
+	core::wstring convert_from_utf8(core::string const& str)
 	{
 		kiwano::string_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-		kiwano::wstring result;
+		core::wstring result;
 
 		try
 		{
@@ -104,7 +104,7 @@ namespace
 			}
 		}
 
-		bool Init(HttpClient* client, Vector<kiwano::string> const& headers, kiwano::string const& url, kiwano::string* response_data, kiwano::string* response_header, char* error_buffer)
+		bool Init(HttpClient* client, Vector<core::string> const& headers, core::string const& url, core::string* response_data, core::string* response_header, char* error_buffer)
 		{
 			if (!SetOption(CURLOPT_ERRORBUFFER, error_buffer))
 				return false;
@@ -170,11 +170,11 @@ namespace
 	public:
 		static inline bool GetRequest(
 			HttpClient* client,
-			Vector<kiwano::string> const& headers,
-			kiwano::string const& url,
+			Vector<core::string> const& headers,
+			core::string const& url,
 			long* response_code,
-			kiwano::string* response_data,
-			kiwano::string* response_header,
+			core::string* response_data,
+			core::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -185,12 +185,12 @@ namespace
 
 		static inline bool PostRequest(
 			HttpClient* client,
-			Vector<kiwano::string> const& headers,
-			kiwano::string const& url,
-			kiwano::string const& request_data,
+			Vector<core::string> const& headers,
+			core::string const& url,
+			core::string const& request_data,
 			long* response_code,
-			kiwano::string* response_data,
-			kiwano::string* response_header,
+			core::string* response_data,
+			core::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -203,12 +203,12 @@ namespace
 
 		static inline bool PutRequest(
 			HttpClient* client,
-			Vector<kiwano::string> const& headers,
-			kiwano::string const& url,
-			kiwano::string const& request_data,
+			Vector<core::string> const& headers,
+			core::string const& url,
+			core::string const& request_data,
 			long* response_code,
-			kiwano::string* response_data,
-			kiwano::string* response_header,
+			core::string* response_data,
+			core::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -221,11 +221,11 @@ namespace
 
 		static inline bool DeleteRequest(
 			HttpClient* client,
-			Vector<kiwano::string> const& headers,
-			kiwano::string const& url,
+			Vector<core::string> const& headers,
+			core::string const& url,
 			long* response_code,
-			kiwano::string* response_data,
-			kiwano::string* response_header,
+			core::string* response_data,
+			core::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -307,13 +307,13 @@ namespace kiwano
 			bool ok = false;
 			long response_code = 0;
 			char error_message[256] = { 0 };
-			kiwano::string response_header;
-			kiwano::string response_data;
+			core::string response_header;
+			core::string response_data;
 
-			kiwano::string url = convert_to_utf8(request->GetUrl());
-			kiwano::string data = convert_to_utf8(request->GetData());
+			core::string url = convert_to_utf8(request->GetUrl());
+			core::string data = convert_to_utf8(request->GetData());
 
-			Vector<kiwano::string> headers;
+			Vector<core::string> headers;
 			headers.reserve(request->GetHeaders().size());
 			for (const auto& pair : request->GetHeaders())
 			{

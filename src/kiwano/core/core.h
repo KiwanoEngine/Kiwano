@@ -78,6 +78,15 @@ namespace kiwano
 
 	using Json = kiwano::core::basic_json<kiwano::Map, kiwano::Vector, kiwano::String,
 		int, double, bool, std::allocator>;
+
+	template <typename _Ty>
+	using Singleton = core::singleton<_Ty>;
+
+	template <typename _Ty>
+	using IntrusiveList = core::intrusive_list<_Ty>;
+
+	template <typename _Ty>
+	using IntrusiveListItem = core::intrusive_list_item<_Ty>;
 }
 
 namespace std

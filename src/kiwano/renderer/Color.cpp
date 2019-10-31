@@ -33,6 +33,8 @@ namespace kiwano
 		const uint32_t BLUE_MASK = 0xff << BLUE_SHIFT;
 	}
 
+	const Color Color::Transparent = Color(0.f, 0.f, 0.f, 0.f);
+
 	Color::Color()
 		: r(0)
 		, g(0)

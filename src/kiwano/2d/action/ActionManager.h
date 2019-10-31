@@ -25,16 +25,20 @@ namespace kiwano
 {
 	class KGE_API ActionManager
 	{
-		using Actions = intrusive_list<ActionPtr>;
+		using Actions = IntrusiveList<ActionPtr>;
 
 	public:
 		// 添加动作
 		Action* AddAction(
 			ActionPtr action
 		);
+		// 添加动作
+		Action* AddAction(
+			Action* action
+		);
 
 		// 获取动作
-		ActionPtr GetAction(
+		Action* GetAction(
 			String const& name
 		);
 

@@ -42,10 +42,10 @@ namespace kiwano
 
 	Text::Text()
 		: font_(text_default_font)
-		, style_(text_default_style)
 		, layout_dirty_(false)
 		, format_dirty_(false)
 	{
+		text_layout_.SetTextStyle(text_default_style);
 	}
 
 	Text::Text(String const& text)
@@ -65,11 +65,11 @@ namespace kiwano
 
 	Text::Text(String const& text, const Font & font, const TextStyle & style)
 		: font_(font)
-		, style_(style)
 		, text_(text)
 		, layout_dirty_(true)
 		, format_dirty_(true)
 	{
+		text_layout_.SetTextStyle(style);
 	}
 
 	Text::~Text()
@@ -84,7 +84,7 @@ namespace kiwano
 
 	void Text::SetStyle(const TextStyle& style)
 	{
-		style_ = style;
+		text_layout_.SetTextStyle(style);
 		layout_dirty_ = true;
 	}
 
@@ -121,11 +121,6 @@ namespace kiwano
 		}
 	}
 
-	void Text::SetColor(Color const& color)
-	{
-		style_.color = color;
-	}
-
 	void Text::SetItalic(bool italic)
 	{
 		if (font_.italic != italic)
@@ -137,67 +132,73 @@ namespace kiwano
 
 	void Text::SetWrapWidth(float wrap_width)
 	{
-		if (style_.wrap_width != wrap_width)
+		if (text_layout_.GetTextStyle().wrap_width != wrap_width)
 		{
-			style_.wrap_width = wrap_width;
+			text_layout_.GetTextStyle().wrap_width = wrap_width;
 			layout_dirty_ = true;
 		}
 	}
 
 	void Text::SetLineSpacing(float line_spacing)
 	{
-		if (style_.line_spacing != line_spacing)
+		if (text_layout_.GetTextStyle().line_spacing != line_spacing)
 		{
-			style_.line_spacing = line_spacing;
+			text_layout_.GetTextStyle().line_spacing = line_spacing;
 			layout_dirty_ = true;
 		}
 	}
 
 	void Text::SetAlignment(TextAlign align)
 	{
-		if (style_.alignment != align)
+		if (text_layout_.GetTextStyle().alignment != align)
 		{
-			style_.alignment = align;
+			text_layout_.GetTextStyle().alignment = align;
 			layout_dirty_ = true;
 		}
 	}
 
 	void Text::SetUnderline(bool underline)
 	{
-		if (style_.underline != underline)
+		if (text_layout_.GetTextStyle().underline != underline)
 		{
-			style_.underline = underline;
+			text_layout_.GetTextStyle().underline = underline;
 			layout_dirty_ = true;
 		}
 	}
 
 	void Text::SetStrikethrough(bool strikethrough)
 	{
-		if (style_.strikethrough != strikethrough)
+		if (text_layout_.GetTextStyle().strikethrough != strikethrough)
 		{
-			style_.strikethrough = strikethrough;
+			text_layout_.GetTextStyle().strikethrough = strikethrough;
 			layout_dirty_ = true;
 		}
 	}
 
+	void Text::SetColor(Color const& color)
+	{
+		text_layout_.GetTextStyle().color = color;
+		text_layout_.GetTextStyle().color = color;
+	}
+
 	void Text::SetOutline(bool outline)
 	{
-		style_.outline = outline;
+		text_layout_.GetTextStyle().outline = outline;
 	}
 
 	void Text::SetOutlineColor(Color const&outline_color)
 	{
-		style_.outline_color = outline_color;
+		text_layout_.GetTextStyle().outline_color = outline_color;
 	}
 
 	void Text::SetOutlineWidth(float outline_width)
 	{
-		style_.outline_width = outline_width;
+		text_layout_.GetTextStyle().outline_width = outline_width;
 	}
 
 	void Text::SetOutlineStroke(StrokeStyle outline_stroke)
 	{
-		style_.outline_stroke = outline_stroke;
+		text_layout_.GetTextStyle().outline_stroke = outline_stroke;
 	}
 
 	void Text::OnRender(RenderTarget* rt)
@@ -216,13 +217,13 @@ namespace kiwano
 		if (format_dirty_)
 		{
 			format_dirty_ = false;
-			text_layout_.Update(font_);
+			text_layout_.UpdateFont(font_);
 		}
 
 		if (layout_dirty_)
 		{
 			layout_dirty_ = false;
-			text_layout_.Update(text_, style_);
+			text_layout_.UpdateLayout(text_);
 			SetSize(text_layout_.GetLayoutSize());
 		}
 	}

@@ -53,19 +53,18 @@ namespace kiwano
 
 	TextLayout::TextLayout(String const& text, Font const& font, TextStyle const& style)
 	{
-		Update(font);
-		Update(text, style);
+		UpdateFont(font);
+		SetTextStyle(style);
+		UpdateLayout(text);
 	}
 
-	void TextLayout::Update(Font const& font)
+	void TextLayout::UpdateFont(Font const& font)
 	{
 		text_format_.Update(font);
 	}
 
-	void TextLayout::Update(String const& text, TextStyle const& style)
+	void TextLayout::UpdateLayout(String const& text)
 	{
-		style_ = style;
-
 		if (text.empty())
 		{
 			text_format_.SetTextFormat(nullptr);
@@ -83,7 +82,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			if (style.line_spacing == 0.f)
+			if (style_.line_spacing == 0.f)
 			{
 				hr = text_layout_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
 			}
@@ -91,25 +90,25 @@ namespace kiwano
 			{
 				hr = text_layout_->SetLineSpacing(
 					DWRITE_LINE_SPACING_METHOD_UNIFORM,
-					style.line_spacing,
-					style.line_spacing * 0.8f
+					style_.line_spacing,
+					style_.line_spacing * 0.8f
 				);
 			}
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = text_layout_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(style.alignment));
+			hr = text_layout_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(style_.alignment));
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = text_layout_->SetWordWrapping((style.wrap_width > 0) ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP);
+			hr = text_layout_->SetWordWrapping((style_.wrap_width > 0) ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			if (style.underline)
+			if (style_.underline)
 			{
 				hr = text_layout_->SetUnderline(true, { 0, UINT32(text.length()) });
 			}
@@ -117,7 +116,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			if (style.strikethrough)
+			if (style_.strikethrough)
 			{
 				text_layout_->SetStrikethrough(true, { 0, UINT32(text.length()) });
 			}
@@ -125,9 +124,9 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			if (style.wrap_width > 0)
+			if (style_.wrap_width > 0)
 			{
-				hr = text_layout_->SetMaxWidth(style.wrap_width);
+				hr = text_layout_->SetMaxWidth(style_.wrap_width);
 			}
 			else
 			{

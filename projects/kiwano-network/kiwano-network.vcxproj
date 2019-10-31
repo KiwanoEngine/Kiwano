@@ -17,14 +17,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rd-party\curl\libcurl.vcxproj">
-      <Project>{a9abacc7-75a1-46ba-8e48-4105346d9719}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\kiwano\kiwano.vcxproj">
-      <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-network\HttpClient.cpp" />
     <ClCompile Include="..\..\src\kiwano-network\HttpRequest.cpp" />
   </ItemGroup>
@@ -103,6 +95,14 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3rd-party\curl\libcurl.vcxproj">
+      <Project>{a9abacc7-75a1-46ba-8e48-4105346d9719}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\kiwano\kiwano.vcxproj">
+      <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

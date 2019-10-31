@@ -19,14 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rd-party\imgui\libimgui.vcxproj">
-      <Project>{7fa1e56d-62ac-47d1-97d1-40b302724198}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\kiwano\kiwano.vcxproj">
-      <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-imgui\ImGuiLayer.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\ImGuiModule.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl_dx10.cpp" />
@@ -107,6 +99,14 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3rd-party\imgui\libimgui.vcxproj">
+      <Project>{7fa1e56d-62ac-47d1-97d1-40b302724198}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\kiwano\kiwano.vcxproj">
+      <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

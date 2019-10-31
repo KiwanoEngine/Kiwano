@@ -27,17 +27,17 @@
 
 #ifndef KGE_DECLARE_SINGLETON
 #define KGE_DECLARE_SINGLETON( CLASS )			\
-	friend ::kiwano::Singleton< CLASS >;  \
+	friend ::kiwano::core::singleton< CLASS >;  \
 	friend typename std::unique_ptr< CLASS >::deleter_type
 #endif
 
 namespace kiwano
 {
-inline namespace core
+namespace core
 {
 
 template <typename _Ty>
-struct Singleton
+struct singleton
 {
 public:
 	static inline _Ty* GetInstance()
@@ -55,12 +55,12 @@ public:
 	}
 
 protected:
-	Singleton() = default;
+	singleton() = default;
 
 private:
-	Singleton(const Singleton&) = delete;
+	singleton(const singleton&) = delete;
 
-	Singleton& operator=(const Singleton&) = delete;
+	singleton& operator=(const singleton&) = delete;
 
 	static inline void InitInstance()
 	{
@@ -76,10 +76,10 @@ private:
 };
 
 template <typename _Ty>
-std::once_flag Singleton<_Ty>::once_;
+std::once_flag singleton<_Ty>::once_;
 
 template <typename _Ty>
-std::unique_ptr<_Ty> Singleton<_Ty>::instance_;
+std::unique_ptr<_Ty> singleton<_Ty>::instance_;
 
-}  // inline namespace core
+}  // namespace core
 }  // namespace kiwano

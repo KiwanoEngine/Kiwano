@@ -44,16 +44,21 @@ namespace kiwano
 
 	Action* ActionManager::AddAction(ActionPtr action)
 	{
+		return AddAction(action.get());
+	}
+
+	Action* ActionManager::AddAction(Action* action)
+	{
 		KGE_ASSERT(action && "AddAction failed, NULL pointer exception");
 
 		if (action)
 		{
 			actions_.push_back(action);
 		}
-		return action.get();
+		return action;
 	}
 
-	ActionPtr ActionManager::GetAction(String const & name)
+	Action* ActionManager::GetAction(String const & name)
 	{
 		if (actions_.empty())
 			return nullptr;

@@ -189,7 +189,7 @@ namespace kiwano
 
 	void RoundRectActor::SetRadius(Vec2 const& radius)
 	{
-		SetRoundedRect(size_, radius);
+		SetRoundedRect(GetSize(), radius);
 	}
 
 	void RoundRectActor::SetRectSize(Size const& size)

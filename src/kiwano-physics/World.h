@@ -1,0 +1,113 @@
+// Copyright (c) 2018-2019 Kiwano - Nomango
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+#pragma once
+#include <kiwano-physics/Body.h>
+#include <kiwano-physics/Joint.h>
+#include <kiwano-physics/ContactListener.h>
+
+namespace kiwano
+{
+	namespace physics
+	{
+		// 物理世界
+		class KGE_API PhysicWorld
+			: public Stage
+			, public PhysicContactDispatcher
+		{
+			friend class PhysicBody;
+			friend class PhysicJoint;
+
+		public:
+			PhysicWorld();
+
+			virtual ~PhysicWorld();
+
+			// 获取重力
+			Vec2 GetGravity() const;
+
+			// 设置重力
+			void SetGravity(Vec2 gravity);
+
+			// 获取全局缩放比例
+			inline float	GetGlobalScale() const					{ return global_scale_; }
+
+			// 设置全局缩放比例
+			inline void		SetGlobalScale(float scale)				{ global_scale_ = scale; }
+
+			// 游戏世界单位转换为物理世界单位
+			inline float	World2Stage(float value) const			{ return value * GetGlobalScale(); }
+			inline Point	World2Stage(const b2Vec2& pos) const	{ return Point(World2Stage(pos.x), World2Stage(pos.y)); }
+
+			// 物理世界单位转换为游戏世界单位
+			inline float	Stage2World(float value) const			{ return value / GetGlobalScale(); }
+			inline b2Vec2	Stage2World(const Point& pos) const		{ return b2Vec2(Stage2World(pos.x), Stage2World(pos.y)); }
+
+			// 设置速度迭代次数, 默认为 6
+			inline void SetVelocityIterations(int vel_iter)			{ vel_iter_ = vel_iter; }
+
+			// 设置位置迭代次数, 默认为 2
+			inline void SetPositionIterations(int pos_iter)			{ pos_iter_ = pos_iter; }
+
+			b2World* GetB2World();
+			const b2World* GetB2World() const;
+
+		private:
+			// 移除物体
+			void RemoveBody(PhysicBody* body);
+
+			// 移除所有物体
+			void RemoveAllBodies();
+
+			// 添加关节
+			void AddJoint(PhysicJoint* joint);
+
+			// 移除关节
+			void RemoveJoint(PhysicJoint* joint);
+
+			// 移除所有关节
+			void RemoveAllJoints();
+
+			// 关节被移除
+			void JointRemoved(b2Joint* joint);
+
+			void Update(Duration dt) override;
+
+		private:
+			b2World world_;
+			int vel_iter_;
+			int pos_iter_;
+			float global_scale_;
+
+			class DestructionListener;
+			friend DestructionListener;
+			DestructionListener* destruction_listener_;
+
+			class ContactListener;
+			friend ContactListener;
+			ContactListener* contact_listener_;
+
+			bool removing_joint_;
+			Vector<PhysicJoint*> joints_;
+		};
+
+		KGE_DECLARE_SMART_PTR(PhysicWorld);
+	}
+}

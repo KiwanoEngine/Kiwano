@@ -22,7 +22,7 @@
 
 namespace kiwano
 {
-inline namespace core
+namespace core
 {
 
 class noncopyable
@@ -36,5 +36,5 @@ private:
 	noncopyable& operator=(const noncopyable&) = delete;
 };
 
-}  // inline namespace core
+}  // namespace core
 }  // namespace kiwano

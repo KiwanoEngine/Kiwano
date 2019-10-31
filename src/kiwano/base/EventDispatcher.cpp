@@ -33,7 +33,7 @@ namespace kiwano
 		{
 			next = listener->next_item();
 
-			if (listener->type_ == evt.type)
+			if (listener->IsRunning() && listener->type_ == evt.type)
 			{
 				listener->callback_(evt);
 			}
@@ -42,13 +42,18 @@ namespace kiwano
 
 	EventListener* EventDispatcher::AddListener(EventListenerPtr listener)
 	{
+		return AddListener(listener.get());
+	}
+
+	EventListener* EventDispatcher::AddListener(EventListener* listener)
+	{
 		KGE_ASSERT(listener && "AddListener failed, NULL pointer exception");
 
 		if (listener)
 		{
 			listeners_.push_back(listener);
 		}
-		return listener.get();
+		return listener;
 	}
 
 	EventListener* EventDispatcher::AddListener(EventType type, EventListener::Callback callback, String const& name)

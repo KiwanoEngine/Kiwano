@@ -42,6 +42,6 @@ namespace kiwano
 	template<
 		typename _Ty,
 		typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-	using ComPtr = intrusive_ptr<_Ty, ComPtrManager>;
+	using ComPtr = core::intrusive_ptr<_Ty, ComPtrManager>;
 
 }

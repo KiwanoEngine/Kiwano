@@ -26,7 +26,7 @@ namespace kiwano
 {
 	Stage::Stage()
 	{
-		stage_ = this;
+		SetStage(this);
 
 		SetAnchor(Vec2{ 0, 0 });
 		SetSize(Renderer::GetInstance()->GetOutputSize());

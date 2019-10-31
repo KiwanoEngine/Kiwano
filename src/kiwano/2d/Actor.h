@@ -36,23 +36,23 @@ namespace kiwano
 		, public TimerManager
 		, public ActionManager
 		, public EventDispatcher
-		, public intrusive_list_item<ActorPtr>
+		, public IntrusiveListItem<ActorPtr>
 	{
 		friend class Director;
 		friend class Transition;
-		friend class intrusive_list<ActorPtr>;
-
-		using Children = intrusive_list<ActorPtr>;
-		using UpdateCallback = Function<void(Duration)>;
+		friend IntrusiveList<ActorPtr>;
 
 	public:
+		using Children			= IntrusiveList<ActorPtr>;
+		using UpdateCallback	= Function<void(Duration)>;
+
 		Actor();
 
 		// 更新角色
-		virtual void		OnUpdate(Duration dt)			{ KGE_UNUSED(dt); }
+		virtual void		OnUpdate(Duration dt)			{ KGE_NOT_USED(dt); }
 
 		// 渲染角色
-		virtual void		OnRender(RenderTarget* rt)		{ KGE_UNUSED(rt); }
+		virtual void		OnRender(RenderTarget* rt)		{ KGE_NOT_USED(rt); }
 
 		// 获取显示状态
 		bool				IsVisible() const				{ return visible_; }
@@ -70,61 +70,61 @@ namespace kiwano
 		int					GetZOrder() const				{ return z_order_; }
 
 		// 获取坐标
-		Point				GetPosition() const				{ return transform_.position; }
+		Point const&		GetPosition() const				{ return transform_.position; }
 
 		// 获取 x 坐标
-		float				GetPositionX() const			{ return transform_.position.x; }
+		float				GetPositionX() const			{ return GetPosition().x; }
 
 		// 获取 y 坐标
-		float				GetPositionY() const			{ return transform_.position.y; }
+		float				GetPositionY() const			{ return GetPosition().y; }
 
 		// 获取缩放比例
-		Point				GetScale() const				{ return transform_.scale; }
+		Point const&		GetScale() const				{ return transform_.scale; }
 
 		// 获取横向缩放比例
-		float				GetScaleX() const				{ return transform_.scale.x; }
+		float				GetScaleX() const				{ return GetScale().x; }
 
 		// 获取纵向缩放比例
-		float				GetScaleY() const				{ return transform_.scale.y; }
+		float				GetScaleY() const				{ return GetScale().y; }
 
 		// 获取错切角度
-		Point				GetSkew() const					{ return transform_.skew; }
+		Point const&		GetSkew() const					{ return transform_.skew; }
 
 		// 获取横向错切角度
-		float				GetSkewX() const				{ return transform_.skew.x; }
+		float				GetSkewX() const				{ return GetSkew().x; }
 
 		// 获取纵向错切角度
-		float				GetSkewY() const				{ return transform_.skew.y; }
+		float				GetSkewY() const				{ return GetSkew().y; }
 
 		// 获取旋转角度
 		float				GetRotation() const				{ return transform_.rotation; }
 
 		// 获取宽度
-		float				GetWidth() const				{ return size_.x; }
+		float				GetWidth() const				{ return GetSize().x; }
 
 		// 获取高度
-		float				GetHeight() const				{ return size_.y; }
+		float				GetHeight() const				{ return GetSize().y; }
 
 		// 获取大小
-		Size				GetSize() const					{ return size_; }
+		Size const&			GetSize() const					{ return size_; }
 
 		// 获取缩放后的宽度
-		float				GetScaledWidth() const			{ return size_.x * transform_.scale.x; }
+		float				GetScaledWidth() const			{ return GetWidth() * GetScaleX(); }
 
 		// 获取缩放后的高度
-		float				GetScaledHeight() const			{ return size_.y * transform_.scale.y; }
+		float				GetScaledHeight() const			{ return GetHeight() * GetScaleY(); }
 
 		// 获取缩放后的大小
 		Size				GetScaledSize() const			{ return Size{ GetScaledWidth(), GetScaledHeight() }; }
 
 		// 获取锚点
-		Point				GetAnchor() const				{ return anchor_; }
+		Point const&		GetAnchor() const				{ return anchor_; }
 
 		// 获取 x 方向锚点
-		float				GetAnchorX() const				{ return anchor_.x; }
+		float				GetAnchorX() const				{ return GetAnchor().x; }
 
 		// 获取 y 方向锚点
-		float				GetAnchorY() const				{ return anchor_.y; }
+		float				GetAnchorY() const				{ return GetAnchor().y; }
 
 		// 获取透明度
 		float				GetOpacity() const				{ return opacity_; }
@@ -309,7 +309,14 @@ namespace kiwano
 
 		// 添加子角色
 		void AddChild(
-			ActorPtr child
+			ActorPtr child,
+			int zorder = 0
+		);
+
+		// 添加子角色
+		void AddChild(
+			Actor* child,
+			int zorder = 0
 		);
 
 		// 添加多个子角色
@@ -317,18 +324,21 @@ namespace kiwano
 			Vector<ActorPtr> const& children
 		);
 
+		// 获取名称相同的子角色
+		Actor* GetChild(
+			String const& name
+		) const;
+
 		// 获取所有名称相同的子角色
 		Vector<ActorPtr> GetChildren(
 			String const& name
 		) const;
 
-		// 获取名称相同的子角色
-		ActorPtr GetChild(
-			String const& name
-		) const;
+		// 获取全部子角色
+		Children& GetAllChildren();
 
 		// 获取全部子角色
-		Children const& GetChildren() const;
+		Children const& GetAllChildren() const;
 
 		// 移除子角色
 		void RemoveChild(
@@ -400,7 +410,7 @@ namespace kiwano
 
 		void SetStage(Stage* stage);
 
-	protected:
+	private:
 		bool			visible_;
 		bool			update_pausing_;
 		bool			cascade_opacity_;

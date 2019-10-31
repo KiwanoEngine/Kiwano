@@ -52,15 +52,17 @@ namespace kiwano
 
 		TextLayout(String const& text, Font const& font, TextStyle const& style);
 
-		void Update(Font const& font);
+		void UpdateFont(Font const& font);
 
-		void Update(String const& text, TextStyle const& style);
+		void UpdateLayout(String const& text);
 
 		uint32_t GetLineCount();
 
 		Size GetLayoutSize() const;
 
+		inline TextStyle& GetTextStyle()							{ return style_; }
 		inline TextStyle const& GetTextStyle() const				{ return style_; }
+		inline void SetTextStyle(TextStyle const& style)			{ style_ = style; }
 
 	public:
 		inline TextFormat GetTextFormat() const						{ return text_format_; }

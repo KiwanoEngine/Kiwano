@@ -112,6 +112,8 @@ namespace kiwano
 			YellowGreen		= 0x9ACD32
 		};
 
+		static const Color Transparent;
+
 	public:
 		float r;
 		float g;
