@@ -102,6 +102,8 @@ namespace kiwano
 				contact_listener_ = nullptr;
 			}
 
+			RemoveAllContactListeners();
+
 			// Make sure b2World was destroyed after b2Body
 			RemoveAllChildren();
 			RemoveAllBodies();
@@ -110,12 +112,9 @@ namespace kiwano
 
 		void PhysicWorld::RemoveBody(PhysicBody* body)
 		{
-			if (body)
+			if (body && body->GetB2Body())
 			{
-				if (body->GetB2Body())
-				{
-					world_.DestroyBody(body->GetB2Body());
-				}
+				world_.DestroyBody(body->GetB2Body());
 			}
 		}
 

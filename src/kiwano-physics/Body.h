@@ -63,7 +63,7 @@ namespace kiwano
 			PhysicFixture AddChainShape(Vector<Point> const& vertexs, bool loop, float density = 0.f);
 
 			// 获取夹具
-			PhysicFixture GetFixtureList() const			{ KGE_ASSERT(body_); PhysicFixture(body_->GetFixtureList()); }
+			PhysicFixture GetFixtureList() const			{ KGE_ASSERT(body_); return PhysicFixture(body_->GetFixtureList()); }
 
 			// 移除夹具
 			void RemoveFixture(PhysicFixture const& fixture);

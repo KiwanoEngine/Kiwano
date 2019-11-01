@@ -63,7 +63,7 @@ namespace kiwano
 
 		void PhysicContactDispatcher::StartContactListeners(String const& listener_name)
 		{
-			for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
+			for (auto listener : listeners_)
 			{
 				if (listener->IsName(listener_name))
 				{
@@ -74,7 +74,7 @@ namespace kiwano
 
 		void PhysicContactDispatcher::StopContactListeners(String const& listener_name)
 		{
-			for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
+			for (auto listener : listeners_)
 			{
 				if (listener->IsName(listener_name))
 				{
@@ -95,6 +95,27 @@ namespace kiwano
 					listeners_.remove(listener);
 				}
 			}
+		}
+
+		void PhysicContactDispatcher::StartAllContactListeners()
+		{
+			for (auto listener : listeners_)
+			{
+				listener->Start();
+			}
+		}
+
+		void PhysicContactDispatcher::StopAllContactListeners()
+		{
+			for (auto listener : listeners_)
+			{
+				listener->Stop();
+			}
+		}
+
+		void PhysicContactDispatcher::RemoveAllContactListeners()
+		{
+			listeners_.clear();
 		}
 
 		void PhysicContactDispatcher::OnContactBegin(b2Contact* b2contact)

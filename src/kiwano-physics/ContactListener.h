@@ -120,6 +120,15 @@ namespace kiwano
 				String const& listener_name
 			);
 
+			// 启动所有监听器
+			void StartAllContactListeners();
+
+			// 停止所有监听器
+			void StopAllContactListeners();
+
+			// 移除所有监听器
+			void RemoveAllContactListeners();
+
 		protected:
 			void OnContactBegin(b2Contact* contact);
 
