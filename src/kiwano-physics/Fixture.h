@@ -32,10 +32,26 @@ namespace kiwano
 		class PhysicFixture
 		{
 		public:
+			struct Param
+			{
+				float density = 0.f;
+				float friction = 0.2f;
+				float restitution = 0.f;
+				bool is_sensor = false;
+
+				Param() {}
+
+				Param(float density, float friction = 0.2f, float restitution = 0.f, bool is_sensor = false)
+					: density(density)
+					, friction(friction)
+					, restitution(restitution)
+					, is_sensor(is_sensor)
+				{}
+			};
+
 			PhysicFixture();
 			PhysicFixture(b2Fixture* fixture);
-
-			static PhysicFixture Create(PhysicBody* body, PhysicShape* shape, float density = 0.f, float friction = 0.2f, float restitution = 0.f);
+			PhysicFixture(PhysicBody* body, PhysicShape* shape, const Param& param);
 
 			// 物体
 			PhysicBody* GetBody();
@@ -46,6 +62,28 @@ namespace kiwano
 
 			// 下一夹具 (同一物体上)
 			PhysicFixture GetNext() const;
+
+			// 接触传感器
+			bool IsSensor() const					{ KGE_ASSERT(fixture_); return fixture_->IsSensor(); }
+			void SetSensor(bool sensor)				{ KGE_ASSERT(fixture_); fixture_->SetSensor(sensor); }
+
+			// 质量数据
+			void GetMassData(float* mass, Point* center, float* inertia) const;
+
+			// 密度
+			float GetDensity() const				{ KGE_ASSERT(fixture_); return fixture_->GetDensity(); }
+			void SetDensity(float density)			{ KGE_ASSERT(fixture_); fixture_->SetDensity(density); }
+
+			// 摩擦力
+			float GetFriction() const				{ KGE_ASSERT(fixture_); return fixture_->GetFriction(); }
+			void SetFriction(float friction)		{ KGE_ASSERT(fixture_); fixture_->SetFriction(friction); }
+
+			// 弹性恢复
+			float GetRestitution() const			{ KGE_ASSERT(fixture_); return fixture_->GetRestitution(); }
+			void SetRestitution(float restitution)	{ KGE_ASSERT(fixture_); fixture_->SetRestitution(restitution); }
+
+			// 点测试
+			bool TestPoint(const Point& p) const;
 
 			bool IsValid() const					{ return !!fixture_; }
 

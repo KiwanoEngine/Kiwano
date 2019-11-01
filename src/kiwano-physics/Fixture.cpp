@@ -38,7 +38,8 @@ namespace kiwano
 			SetB2Fixture(fixture);
 		}
 
-		PhysicFixture PhysicFixture::Create(PhysicBody* body, PhysicShape* shape, float density, float friction, float restitution)
+		PhysicFixture::PhysicFixture(PhysicBody* body, PhysicShape* shape, const Param& param)
+			: PhysicFixture()
 		{
 			KGE_ASSERT(body);
 
@@ -48,14 +49,13 @@ namespace kiwano
 
 				b2Body* b2body = body->GetB2Body();
 				b2FixtureDef fd;
-				fd.density = density;
-				fd.friction = friction;
-				fd.restitution = restitution;
+				fd.density = param.density;
+				fd.friction = param.friction;
+				fd.restitution = param.restitution;
 				fd.shape = shape->GetB2Shape();
 				auto fixture = b2body->CreateFixture(&fd);
-				return PhysicFixture(fixture);
+				SetB2Fixture(fixture);
 			}
-			return PhysicFixture();
 		}
 
 		PhysicBody* PhysicFixture::GetBody()
@@ -80,6 +80,37 @@ namespace kiwano
 		{
 			KGE_ASSERT(fixture_);
 			return PhysicFixture(fixture_->GetNext());
+		}
+
+		void PhysicFixture::GetMassData(float* mass, Point* center, float* inertia) const
+		{
+			KGE_ASSERT(fixture_);
+
+			const PhysicBody* body = GetBody();
+			KGE_ASSERT(body);
+
+			const PhysicWorld* world = body->GetWorld();
+			KGE_ASSERT(world);
+
+			b2MassData data;
+			fixture_->GetMassData(&data);
+
+			if (mass) *mass = data.mass;
+			if (center) *center = world->World2Stage(data.center);
+			if (inertia) *inertia = data.I;
+		}
+
+		bool PhysicFixture::TestPoint(const Point& p) const
+		{
+			KGE_ASSERT(fixture_);
+
+			const PhysicBody* body = GetBody();
+			KGE_ASSERT(body);
+
+			const PhysicWorld* world = body->GetWorld();
+			KGE_ASSERT(world);
+
+			return fixture_->TestPoint(world->Stage2World(p));
 		}
 
 	}

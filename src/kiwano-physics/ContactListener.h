@@ -66,8 +66,8 @@ namespace kiwano
 			friend class PhysicContactDispatcher;
 
 		public:
-			using ContactBeginCallback = Function<void(PhysicContact)>;
-			using ContactEndCallback = Function<void(PhysicContact)>;
+			using ContactBeginCallback	= Function<void(PhysicContact)>;
+			using ContactEndCallback	= Function<void(PhysicContact)>;
 
 			PhysicContactCallbackListener();
 			virtual ~PhysicContactCallbackListener();

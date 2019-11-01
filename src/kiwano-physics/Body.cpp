@@ -69,40 +69,35 @@ namespace kiwano
 			UpdateFromActor();
 		}
 
-		PhysicFixture PhysicBody::AddShape(PhysicShape* shape, float density, float friction, float restitution)
+		PhysicFixture PhysicBody::AddFixture(PhysicShape* shape, const PhysicFixture::Param& param)
 		{
 			KGE_ASSERT(body_ && world_);
-
-			if (shape)
-			{
-				return PhysicFixture::Create(this, shape, density, friction, restitution);
-			}
-			return PhysicFixture();
+			return PhysicFixture(this, shape, param);
 		}
 
 		PhysicFixture PhysicBody::AddCircleShape(float radius, float density)
 		{
-			return AddShape(&PhysicCircleShape(radius), density);
+			return AddFixture(&PhysicCircleShape(radius), PhysicFixture::Param(density));
 		}
 
 		PhysicFixture PhysicBody::AddBoxShape(Vec2 const& size, float density)
 		{
-			return AddShape(&PhysicBoxShape(size), density);
+			return AddFixture(&PhysicBoxShape(size), PhysicFixture::Param(density));
 		}
 
 		PhysicFixture PhysicBody::AddPolygonShape(Vector<Point> const& vertexs, float density)
 		{
-			return AddShape(&PhysicPolygonShape(vertexs), density);
+			return AddFixture(&PhysicPolygonShape(vertexs), PhysicFixture::Param(density));
 		}
 
 		PhysicFixture PhysicBody::AddEdgeShape(Point const& p1, Point const& p2, float density)
 		{
-			return AddShape(&PhysicEdgeShape(p1, p2), density);
+			return AddFixture(&PhysicEdgeShape(p1, p2), PhysicFixture::Param(density));
 		}
 
 		PhysicFixture PhysicBody::AddChainShape(Vector<Point> const& vertexs, bool loop, float density)
 		{
-			return AddShape(&PhysicChainShape(vertexs, loop), density);
+			return AddFixture(&PhysicChainShape(vertexs, loop), PhysicFixture::Param(density));
 		}
 
 		void PhysicBody::RemoveFixture(PhysicFixture const& fixture)
@@ -165,7 +160,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicBody::GetMassData(float* mass, Point* center, float* inertia)
+		void PhysicBody::GetMassData(float* mass, Point* center, float* inertia) const
 		{
 			KGE_ASSERT(body_ && world_);
 
