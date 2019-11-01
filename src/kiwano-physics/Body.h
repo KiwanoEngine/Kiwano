@@ -52,8 +52,10 @@ namespace kiwano
 			// 初始化
 			void Init(PhysicWorld* world, Actor* actor);
 
+			// 添加夹具
+			PhysicFixture AddFixture(PhysicShape* shape, const PhysicFixture::Param& param);
+
 			// 添加形状
-			PhysicFixture AddShape(PhysicShape* shape, float density = 0.f, float friction = 0.2f, float restitution = 0.f);
 			PhysicFixture AddCircleShape(float radius, float density = 0.f);
 			PhysicFixture AddBoxShape(Vec2 const& size, float density = 0.f);
 			PhysicFixture AddPolygonShape(Vector<Point> const& vertexs, float density = 0.f);
@@ -99,7 +101,7 @@ namespace kiwano
 			float GetInertia() const						{ KGE_ASSERT(body_); return body_->GetInertia(); }
 
 			// 质量数据
-			void GetMassData(float* mass, Point* center, float* inertia);
+			void GetMassData(float* mass, Point* center, float* inertia) const;
 			void SetMassData(float mass, Point const& center, float inertia);
 			void ResetMassData();
 
