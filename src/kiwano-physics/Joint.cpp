@@ -26,29 +26,29 @@ namespace kiwano
 	namespace physics
 	{
 		//
-		// PhysicJoint
+		// Joint
 		//
 
-		PhysicJoint::PhysicJoint()
+		Joint::Joint()
 			: joint_(nullptr)
 			, world_(nullptr)
 			, type_(Type::Unknown)
 		{
 		}
 
-		PhysicJoint::PhysicJoint(b2Joint* joint)
-			: PhysicJoint()
+		Joint::Joint(b2Joint* joint)
+			: Joint()
 		{
 			SetB2Joint(joint);
 		}
 
-		PhysicJoint::PhysicJoint(PhysicWorld* world, b2JointDef* joint_def)
-			: PhysicJoint()
+		Joint::Joint(World* world, b2JointDef* joint_def)
+			: Joint()
 		{
 			Init(world, joint_def);
 		}
 
-		PhysicJoint::~PhysicJoint()
+		Joint::~Joint()
 		{
 			if (world_)
 			{
@@ -56,7 +56,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicJoint::Init(PhysicWorld* world, b2JointDef* joint_def)
+		void Joint::Init(World* world, b2JointDef* joint_def)
 		{
 			world_ = world;
 			if (world_)
@@ -68,28 +68,28 @@ namespace kiwano
 			}
 		}
 
-		PhysicBodyPtr PhysicJoint::GetBodyA() const
+		BodyPtr Joint::GetBodyA() const
 		{
 			KGE_ASSERT(joint_);
 
 			b2Body* body = joint_->GetBodyA();
-			return PhysicBodyPtr(static_cast<PhysicBody*>(body->GetUserData()));
+			return BodyPtr(static_cast<Body*>(body->GetUserData()));
 		}
 
-		PhysicBodyPtr PhysicJoint::GetBodyB() const
+		BodyPtr Joint::GetBodyB() const
 		{
 			KGE_ASSERT(joint_);
 
 			b2Body* body = joint_->GetBodyB();
-			return PhysicBodyPtr(static_cast<PhysicBody*>(body->GetUserData()));
+			return BodyPtr(static_cast<Body*>(body->GetUserData()));
 		}
 
-		void PhysicJoint::SetB2Joint(b2Joint* joint)
+		void Joint::SetB2Joint(b2Joint* joint)
 		{
 			joint_ = joint;
 			if (joint_)
 			{
-				type_ = PhysicJoint::Type(joint_->GetType());
+				type_ = Joint::Type(joint_->GetType());
 			}
 		}
 
@@ -98,19 +98,19 @@ namespace kiwano
 		//
 
 		DistanceJoint::DistanceJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		DistanceJoint::DistanceJoint(PhysicWorld* world, b2DistanceJointDef* def)
-			: PhysicJoint(world, def)
+		DistanceJoint::DistanceJoint(World* world, b2DistanceJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		DistanceJoint::DistanceJoint(PhysicWorld* world, DistanceJoint::Param const& param)
-			: PhysicJoint()
+		DistanceJoint::DistanceJoint(World* world, DistanceJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
@@ -141,19 +141,19 @@ namespace kiwano
 		//
 
 		FrictionJoint::FrictionJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		FrictionJoint::FrictionJoint(PhysicWorld* world, b2FrictionJointDef* def)
-			: PhysicJoint(world, def)
+		FrictionJoint::FrictionJoint(World* world, b2FrictionJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		FrictionJoint::FrictionJoint(PhysicWorld* world, FrictionJoint::Param const& param)
-			: PhysicJoint()
+		FrictionJoint::FrictionJoint(World* world, FrictionJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
@@ -196,19 +196,19 @@ namespace kiwano
 		//
 
 		GearJoint::GearJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		GearJoint::GearJoint(PhysicWorld* world, b2GearJointDef* def)
-			: PhysicJoint(world, def)
+		GearJoint::GearJoint(World* world, b2GearJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		GearJoint::GearJoint(PhysicWorld* world, GearJoint::Param const& param)
-			: PhysicJoint()
+		GearJoint::GearJoint(World* world, GearJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.joint_a && param.joint_b);
@@ -239,19 +239,19 @@ namespace kiwano
 		//
 
 		MotorJoint::MotorJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		MotorJoint::MotorJoint(PhysicWorld* world, b2MotorJointDef* def)
-			: PhysicJoint(world, def)
+		MotorJoint::MotorJoint(World* world, b2MotorJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		MotorJoint::MotorJoint(PhysicWorld* world, MotorJoint::Param const& param)
-			: PhysicJoint()
+		MotorJoint::MotorJoint(World* world, MotorJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
@@ -294,19 +294,19 @@ namespace kiwano
 		//
 
 		PrismaticJoint::PrismaticJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		PrismaticJoint::PrismaticJoint(PhysicWorld* world, b2PrismaticJointDef* def)
-			: PhysicJoint(world, def)
+		PrismaticJoint::PrismaticJoint(World* world, b2PrismaticJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		PrismaticJoint::PrismaticJoint(PhysicWorld* world, PrismaticJoint::Param const& param)
-			: PhysicJoint()
+		PrismaticJoint::PrismaticJoint(World* world, PrismaticJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
@@ -359,19 +359,19 @@ namespace kiwano
 		//
 
 		PulleyJoint::PulleyJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		PulleyJoint::PulleyJoint(PhysicWorld* world, b2PulleyJointDef* def)
-			: PhysicJoint(world, def)
+		PulleyJoint::PulleyJoint(World* world, b2PulleyJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		PulleyJoint::PulleyJoint(PhysicWorld* world, PulleyJoint::Param const& param)
-			: PhysicJoint()
+		PulleyJoint::PulleyJoint(World* world, PulleyJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
@@ -431,19 +431,19 @@ namespace kiwano
 		//
 
 		RevoluteJoint::RevoluteJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		RevoluteJoint::RevoluteJoint(PhysicWorld* world, b2RevoluteJointDef* def)
-			: PhysicJoint(world, def)
+		RevoluteJoint::RevoluteJoint(World* world, b2RevoluteJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		RevoluteJoint::RevoluteJoint(PhysicWorld* world, RevoluteJoint::Param const& param)
-			: PhysicJoint()
+		RevoluteJoint::RevoluteJoint(World* world, RevoluteJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
@@ -508,19 +508,19 @@ namespace kiwano
 		//
 
 		RopeJoint::RopeJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		RopeJoint::RopeJoint(PhysicWorld* world, b2RopeJointDef* def)
-			: PhysicJoint(world, def)
+		RopeJoint::RopeJoint(World* world, b2RopeJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		RopeJoint::RopeJoint(PhysicWorld* world, RopeJoint::Param const& param)
-			: PhysicJoint()
+		RopeJoint::RopeJoint(World* world, RopeJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
@@ -553,19 +553,19 @@ namespace kiwano
 		//
 
 		WeldJoint::WeldJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		WeldJoint::WeldJoint(PhysicWorld* world, b2WeldJointDef* def)
-			: PhysicJoint(world, def)
+		WeldJoint::WeldJoint(World* world, b2WeldJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		WeldJoint::WeldJoint(PhysicWorld* world, WeldJoint::Param const& param)
-			: PhysicJoint()
+		WeldJoint::WeldJoint(World* world, WeldJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
@@ -584,19 +584,19 @@ namespace kiwano
 		//
 
 		WheelJoint::WheelJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		WheelJoint::WheelJoint(PhysicWorld* world, b2WheelJointDef* def)
-			: PhysicJoint(world, def)
+		WheelJoint::WheelJoint(World* world, b2WheelJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		WheelJoint::WheelJoint(PhysicWorld* world, WheelJoint::Param const& param)
-			: PhysicJoint()
+		WheelJoint::WheelJoint(World* world, WheelJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
@@ -642,19 +642,19 @@ namespace kiwano
 		//
 
 		MouseJoint::MouseJoint()
-			: PhysicJoint()
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 		}
 
-		MouseJoint::MouseJoint(PhysicWorld* world, b2MouseJointDef* def)
-			: PhysicJoint(world, def)
+		MouseJoint::MouseJoint(World* world, b2MouseJointDef* def)
+			: Joint(world, def)
 			, raw_joint_(nullptr)
 		{
 		}
 
-		MouseJoint::MouseJoint(PhysicWorld* world, MouseJoint::Param const& param)
-			: PhysicJoint()
+		MouseJoint::MouseJoint(World* world, MouseJoint::Param const& param)
+			: Joint()
 			, raw_joint_(nullptr)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);

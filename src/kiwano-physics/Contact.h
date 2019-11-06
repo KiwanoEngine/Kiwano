@@ -26,14 +26,14 @@ namespace kiwano
 {
 	namespace physics
 	{
-		class PhysicBody;
+		class Body;
 
 		// 接触
-		class KGE_API PhysicContact
+		class KGE_API Contact
 		{
 		public:
-			PhysicContact();
-			PhysicContact(b2Contact* contact);
+			Contact();
+			Contact(b2Contact* contact);
 			
 			// 是否是接触
 			bool IsTouching() const						{ KGE_ASSERT(contact_); return contact_->IsTouching(); }
@@ -43,16 +43,16 @@ namespace kiwano
 			bool IsEnabled() const						{ KGE_ASSERT(contact_); return contact_->IsEnabled(); }
 
 			// 获取下一接触
-			PhysicContact GetNext();
-			const PhysicContact GetNext() const;
+			Contact GetNext();
+			const Contact GetNext() const;
 
 			// 夹具 A
-			PhysicFixture GetFixtureA();
-			const PhysicFixture GetFixtureA() const;
+			Fixture GetFixtureA();
+			const Fixture GetFixtureA() const;
 
 			// 夹具 B
-			PhysicFixture GetFixtureB();
-			const PhysicFixture GetFixtureB() const;
+			Fixture GetFixtureB();
+			const Fixture GetFixtureB() const;
 
 			// 摩擦
 			void SetFriction(float friction)			{ KGE_ASSERT(contact_); contact_->SetFriction(friction); }
@@ -78,27 +78,27 @@ namespace kiwano
 
 
 		// 接触边
-		class KGE_API PhysicContactEdge
+		class KGE_API ContactEdge
 		{
 		public:
-			PhysicContactEdge();
-			PhysicContactEdge(b2ContactEdge* edge);
+			ContactEdge();
+			ContactEdge(b2ContactEdge* edge);
 
 			// 获取接触物体
-			PhysicBody* GetOtherBody()						{ KGE_ASSERT(edge_); return static_cast<PhysicBody*>(edge_->other->GetUserData()); }
-			const PhysicBody* GetOtherBody() const			{ KGE_ASSERT(edge_); return static_cast<PhysicBody*>(edge_->other->GetUserData()); }
+			Body* GetOtherBody()						{ KGE_ASSERT(edge_); return static_cast<Body*>(edge_->other->GetUserData()); }
+			const Body* GetOtherBody() const			{ KGE_ASSERT(edge_); return static_cast<Body*>(edge_->other->GetUserData()); }
 
 			// 获取接触
-			PhysicContact GetContact()						{ KGE_ASSERT(edge_); return PhysicContact(edge_->contact); }
-			const PhysicContact GetContact() const			{ KGE_ASSERT(edge_); return PhysicContact(edge_->contact); }
+			Contact GetContact()						{ KGE_ASSERT(edge_); return Contact(edge_->contact); }
+			const Contact GetContact() const			{ KGE_ASSERT(edge_); return Contact(edge_->contact); }
 
 			// 获取上一接触边
-			PhysicContactEdge GetPrev()						{ KGE_ASSERT(edge_); return PhysicContactEdge(edge_->prev); }
-			const PhysicContactEdge GetPrev() const			{ KGE_ASSERT(edge_); return PhysicContactEdge(edge_->prev); }
+			ContactEdge GetPrev()						{ KGE_ASSERT(edge_); return ContactEdge(edge_->prev); }
+			const ContactEdge GetPrev() const			{ KGE_ASSERT(edge_); return ContactEdge(edge_->prev); }
 
 			// 获取下一接触边
-			PhysicContactEdge GetNext()						{ KGE_ASSERT(edge_); return PhysicContactEdge(edge_->next); }
-			const PhysicContactEdge GetNext() const			{ KGE_ASSERT(edge_); return PhysicContactEdge(edge_->next); }
+			ContactEdge GetNext()						{ KGE_ASSERT(edge_); return ContactEdge(edge_->next); }
+			const ContactEdge GetNext() const			{ KGE_ASSERT(edge_); return ContactEdge(edge_->next); }
 
 			b2ContactEdge* GetB2ContactEdge()				{ return edge_; }
 			const b2ContactEdge* GetB2ContactEdge() const	{ return edge_; }

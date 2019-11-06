@@ -26,7 +26,7 @@ namespace kiwano
 	namespace physics
 	{
 
-		PhysicBody::PhysicBody()
+		Body::Body()
 			: body_(nullptr)
 			, actor_(nullptr)
 			, world_(nullptr)
@@ -36,25 +36,25 @@ namespace kiwano
 		{
 		}
 
-		PhysicBody::PhysicBody(b2Body* body, Actor* actor)
-			: PhysicBody()
+		Body::Body(b2Body* body, Actor* actor)
+			: Body()
 		{
 			SetB2Body(body);
 			SetActor(actor);
 		}
 
-		PhysicBody::PhysicBody(PhysicWorld* world, Actor* actor)
-			: PhysicBody()
+		Body::Body(World* world, Actor* actor)
+			: Body()
 		{
 			Init(world, actor);
 		}
 
-		PhysicBody::~PhysicBody()
+		Body::~Body()
 		{
 			Destroy();
 		}
 
-		void PhysicBody::Init(PhysicWorld* world, Actor* actor)
+		void Body::Init(World* world, Actor* actor)
 		{
 			KGE_ASSERT(world);
 
@@ -69,38 +69,38 @@ namespace kiwano
 			UpdateFromActor();
 		}
 
-		PhysicFixture PhysicBody::AddFixture(PhysicShape* shape, const PhysicFixture::Param& param)
+		Fixture Body::AddFixture(Shape* shape, const Fixture::Param& param)
 		{
 			KGE_ASSERT(body_ && world_);
-			return PhysicFixture(this, shape, param);
+			return Fixture(this, shape, param);
 		}
 
-		PhysicFixture PhysicBody::AddCircleShape(float radius, float density)
+		Fixture Body::AddCircleShape(float radius, float density)
 		{
-			return AddFixture(&PhysicCircleShape(radius), PhysicFixture::Param(density));
+			return AddFixture(&CircleShape(radius), Fixture::Param(density));
 		}
 
-		PhysicFixture PhysicBody::AddBoxShape(Vec2 const& size, float density)
+		Fixture Body::AddBoxShape(Vec2 const& size, float density)
 		{
-			return AddFixture(&PhysicBoxShape(size), PhysicFixture::Param(density));
+			return AddFixture(&BoxShape(size), Fixture::Param(density));
 		}
 
-		PhysicFixture PhysicBody::AddPolygonShape(Vector<Point> const& vertexs, float density)
+		Fixture Body::AddPolygonShape(Vector<Point> const& vertexs, float density)
 		{
-			return AddFixture(&PhysicPolygonShape(vertexs), PhysicFixture::Param(density));
+			return AddFixture(&PolygonShape(vertexs), Fixture::Param(density));
 		}
 
-		PhysicFixture PhysicBody::AddEdgeShape(Point const& p1, Point const& p2, float density)
+		Fixture Body::AddEdgeShape(Point const& p1, Point const& p2, float density)
 		{
-			return AddFixture(&PhysicEdgeShape(p1, p2), PhysicFixture::Param(density));
+			return AddFixture(&EdgeShape(p1, p2), Fixture::Param(density));
 		}
 
-		PhysicFixture PhysicBody::AddChainShape(Vector<Point> const& vertexs, bool loop, float density)
+		Fixture Body::AddChainShape(Vector<Point> const& vertexs, bool loop, float density)
 		{
-			return AddFixture(&PhysicChainShape(vertexs, loop), PhysicFixture::Param(density));
+			return AddFixture(&ChainShape(vertexs, loop), Fixture::Param(density));
 		}
 
-		void PhysicBody::RemoveFixture(PhysicFixture const& fixture)
+		void Body::RemoveFixture(Fixture const& fixture)
 		{
 			if (fixture.GetB2Fixture())
 			{
@@ -109,7 +109,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicBody::SetCategoryBits(uint16_t category_bits)
+		void Body::SetCategoryBits(uint16_t category_bits)
 		{
 			KGE_ASSERT(body_);
 
@@ -126,7 +126,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicBody::SetMaskBits(uint16_t mask_bits)
+		void Body::SetMaskBits(uint16_t mask_bits)
 		{
 			KGE_ASSERT(body_);
 
@@ -143,7 +143,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicBody::SetGroupIndex(int16_t index)
+		void Body::SetGroupIndex(int16_t index)
 		{
 			KGE_ASSERT(body_);
 
@@ -160,7 +160,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicBody::GetMassData(float* mass, Point* center, float* inertia) const
+		void Body::GetMassData(float* mass, Point* center, float* inertia) const
 		{
 			KGE_ASSERT(body_ && world_);
 
@@ -172,7 +172,7 @@ namespace kiwano
 			if (inertia) *inertia = data.I;
 		}
 
-		void PhysicBody::SetMassData(float mass, Point const& center, float inertia)
+		void Body::SetMassData(float mass, Point const& center, float inertia)
 		{
 			KGE_ASSERT(body_ && world_);
 
@@ -183,67 +183,67 @@ namespace kiwano
 			body_->SetMassData(&data);
 		}
 
-		void PhysicBody::ResetMassData()
+		void Body::ResetMassData()
 		{
 			KGE_ASSERT(body_);
 			body_->ResetMassData();
 		}
 
-		Point PhysicBody::GetBodyPosition() const
+		Point Body::GetBodyPosition() const
 		{
 			KGE_ASSERT(body_ && world_);
 			return world_->World2Stage(body_->GetPosition());
 		}
 
-		void PhysicBody::SetBodyTransform(Point const& pos, float angle)
+		void Body::SetBodyTransform(Point const& pos, float angle)
 		{
 			KGE_ASSERT(body_ && world_);
 			body_->SetTransform(world_->Stage2World(pos), math::Degree2Radian(angle));
 		}
 
-		Point PhysicBody::GetLocalPoint(Point const& world) const
+		Point Body::GetLocalPoint(Point const& world) const
 		{
 			KGE_ASSERT(body_ && world_);
 			return world_->World2Stage(body_->GetLocalPoint(world_->Stage2World(world)));
 		}
 
-		Point PhysicBody::GetWorldPoint(Point const& local) const
+		Point Body::GetWorldPoint(Point const& local) const
 		{
 			KGE_ASSERT(body_ && world_);
 			return world_->World2Stage(body_->GetWorldPoint(world_->Stage2World(local)));
 		}
 
-		Point PhysicBody::GetLocalCenter() const
+		Point Body::GetLocalCenter() const
 		{
 			KGE_ASSERT(body_ && world_);
 			return world_->World2Stage(body_->GetLocalCenter());
 		}
 
-		Point PhysicBody::GetWorldCenter() const
+		Point Body::GetWorldCenter() const
 		{
 			KGE_ASSERT(body_ && world_);
 			return world_->World2Stage(body_->GetWorldCenter());
 		}
 
-		void PhysicBody::ApplyForce(Vec2 const& force, Point const& point, bool wake)
+		void Body::ApplyForce(Vec2 const& force, Point const& point, bool wake)
 		{
 			KGE_ASSERT(body_ && world_);
 			body_->ApplyForce(b2Vec2(force.x, force.y), world_->Stage2World(point), wake);
 		}
 
-		void PhysicBody::ApplyForceToCenter(Vec2 const& force, bool wake)
+		void Body::ApplyForceToCenter(Vec2 const& force, bool wake)
 		{
 			KGE_ASSERT(body_ && world_);
 			body_->ApplyForceToCenter(b2Vec2(force.x, force.y), wake);
 		}
 
-		void PhysicBody::ApplyTorque(float torque, bool wake)
+		void Body::ApplyTorque(float torque, bool wake)
 		{
 			KGE_ASSERT(body_ && world_);
 			body_->ApplyTorque(torque, wake);
 		}
 
-		void PhysicBody::SetB2Body(b2Body* body)
+		void Body::SetB2Body(b2Body* body)
 		{
 			body_ = body;
 			if (body_)
@@ -252,7 +252,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicBody::Destroy()
+		void Body::Destroy()
 		{
 			if (world_)
 			{
@@ -264,7 +264,7 @@ namespace kiwano
 			actor_ = nullptr;
 		}
 
-		void PhysicBody::UpdateActor()
+		void Body::UpdateActor()
 		{
 			if (actor_ && body_)
 			{
@@ -280,7 +280,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicBody::UpdateFromActor()
+		void Body::UpdateFromActor()
 		{
 			if (actor_ && body_)
 			{
@@ -301,7 +301,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicBody::UpdateFixtureFilter(b2Fixture* fixture)
+		void Body::UpdateFixtureFilter(b2Fixture* fixture)
 		{
 			b2Filter filter;
 			filter.categoryBits = category_bits_;

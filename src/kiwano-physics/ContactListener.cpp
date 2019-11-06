@@ -26,31 +26,31 @@ namespace kiwano
 {
 	namespace physics
 	{
-		PhysicContactListener::PhysicContactListener()
+		ContactListener::ContactListener()
 			: running_(true)
 		{
 		}
 
-		PhysicContactListener::~PhysicContactListener()
+		ContactListener::~ContactListener()
 		{
 		}
 
 
-		PhysicContactCallbackListener::PhysicContactCallbackListener()
+		ContactCallbackListener::ContactCallbackListener()
 		{
 		}
 
-		PhysicContactCallbackListener::~PhysicContactCallbackListener()
+		ContactCallbackListener::~ContactCallbackListener()
 		{
 		}
 
 
-		PhysicContactListener* PhysicContactDispatcher::AddContactListener(PhysicContactListenerPtr listener)
+		ContactListener* ContactDispatcher::AddContactListener(ContactListenerPtr listener)
 		{
 			return AddContactListener(listener.get());
 		}
 
-		PhysicContactListener* PhysicContactDispatcher::AddContactListener(PhysicContactListener* listener)
+		ContactListener* ContactDispatcher::AddContactListener(ContactListener* listener)
 		{
 			KGE_ASSERT(listener && "AddListener failed, NULL pointer exception");
 
@@ -61,7 +61,7 @@ namespace kiwano
 			return listener;
 		}
 
-		void PhysicContactDispatcher::StartContactListeners(String const& listener_name)
+		void ContactDispatcher::StartContactListeners(String const& listener_name)
 		{
 			for (auto listener : listeners_)
 			{
@@ -72,7 +72,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicContactDispatcher::StopContactListeners(String const& listener_name)
+		void ContactDispatcher::StopContactListeners(String const& listener_name)
 		{
 			for (auto listener : listeners_)
 			{
@@ -83,9 +83,9 @@ namespace kiwano
 			}
 		}
 
-		void PhysicContactDispatcher::RemoveContactListeners(String const& listener_name)
+		void ContactDispatcher::RemoveContactListeners(String const& listener_name)
 		{
-			PhysicContactListenerPtr next;
+			ContactListenerPtr next;
 			for (auto listener = listeners_.first_item(); listener; listener = next)
 			{
 				next = listener->next_item();
@@ -97,7 +97,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicContactDispatcher::StartAllContactListeners()
+		void ContactDispatcher::StartAllContactListeners()
 		{
 			for (auto listener : listeners_)
 			{
@@ -105,7 +105,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicContactDispatcher::StopAllContactListeners()
+		void ContactDispatcher::StopAllContactListeners()
 		{
 			for (auto listener : listeners_)
 			{
@@ -113,18 +113,18 @@ namespace kiwano
 			}
 		}
 
-		void PhysicContactDispatcher::RemoveAllContactListeners()
+		void ContactDispatcher::RemoveAllContactListeners()
 		{
 			listeners_.clear();
 		}
 
-		void PhysicContactDispatcher::OnContactBegin(b2Contact* b2contact)
+		void ContactDispatcher::OnContactBegin(b2Contact* b2contact)
 		{
 			if (listeners_.empty())
 				return;
 
-			PhysicContact contact(b2contact);
-			PhysicContactListenerPtr next;
+			Contact contact(b2contact);
+			ContactListenerPtr next;
 			for (auto listener = listeners_.first_item(); listener; listener = next)
 			{
 				next = listener->next_item();
@@ -136,13 +136,13 @@ namespace kiwano
 			}
 		}
 
-		void PhysicContactDispatcher::OnContactEnd(b2Contact* b2contact)
+		void ContactDispatcher::OnContactEnd(b2Contact* b2contact)
 		{
 			if (listeners_.empty())
 				return;
 
-			PhysicContact contact(b2contact);
-			PhysicContactListenerPtr next;
+			Contact contact(b2contact);
+			ContactListenerPtr next;
 			for (auto listener = listeners_.first_item(); listener; listener = next)
 			{
 				next = listener->next_item();

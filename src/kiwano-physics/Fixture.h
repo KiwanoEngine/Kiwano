@@ -26,10 +26,10 @@ namespace kiwano
 {
 	namespace physics
 	{
-		class PhysicBody;
+		class Body;
 
 		// 夹具
-		class PhysicFixture
+		class Fixture
 		{
 		public:
 			struct Param
@@ -49,19 +49,19 @@ namespace kiwano
 				{}
 			};
 
-			PhysicFixture();
-			PhysicFixture(b2Fixture* fixture);
-			PhysicFixture(PhysicBody* body, PhysicShape* shape, const Param& param);
+			Fixture();
+			Fixture(b2Fixture* fixture);
+			Fixture(Body* body, Shape* shape, const Param& param);
 
 			// 物体
-			PhysicBody* GetBody();
-			const PhysicBody* GetBody() const;
+			Body* GetBody();
+			const Body* GetBody() const;
 
 			// 形状
-			PhysicShape GetShape() const;
+			Shape GetShape() const;
 
 			// 下一夹具 (同一物体上)
-			PhysicFixture GetNext() const;
+			Fixture GetNext() const;
 
 			// 接触传感器
 			bool IsSensor() const					{ KGE_ASSERT(fixture_); return fixture_->IsSensor(); }

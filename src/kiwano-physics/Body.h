@@ -28,11 +28,11 @@ namespace kiwano
 {
 	namespace physics
 	{
-		class PhysicWorld;
+		class World;
 
 		// 物体
-		KGE_DECLARE_SMART_PTR(PhysicBody);
-		class KGE_API PhysicBody
+		KGE_DECLARE_SMART_PTR(Body);
+		class KGE_API Body
 			: public virtual RefCounter
 		{
 		public:
@@ -43,33 +43,33 @@ namespace kiwano
 				Dynamic,
 			};
 
-			PhysicBody();
-			PhysicBody(b2Body* body, Actor* actor);
-			PhysicBody(PhysicWorld* world, Actor* actor);
-			PhysicBody(PhysicWorld* world, ActorPtr actor) : PhysicBody(world, actor.get()) {}
-			virtual ~PhysicBody();
+			Body();
+			Body(b2Body* body, Actor* actor);
+			Body(World* world, Actor* actor);
+			Body(World* world, ActorPtr actor) : Body(world, actor.get()) {}
+			virtual ~Body();
 
 			// 初始化
-			void Init(PhysicWorld* world, Actor* actor);
+			void Init(World* world, Actor* actor);
 
 			// 添加夹具
-			PhysicFixture AddFixture(PhysicShape* shape, const PhysicFixture::Param& param);
+			Fixture AddFixture(Shape* shape, const Fixture::Param& param);
 
 			// 添加形状
-			PhysicFixture AddCircleShape(float radius, float density = 0.f);
-			PhysicFixture AddBoxShape(Vec2 const& size, float density = 0.f);
-			PhysicFixture AddPolygonShape(Vector<Point> const& vertexs, float density = 0.f);
-			PhysicFixture AddEdgeShape(Point const& p1, Point const& p2, float density = 0.f);
-			PhysicFixture AddChainShape(Vector<Point> const& vertexs, bool loop, float density = 0.f);
+			Fixture AddCircleShape(float radius, float density = 0.f);
+			Fixture AddBoxShape(Vec2 const& size, float density = 0.f);
+			Fixture AddPolygonShape(Vector<Point> const& vertexs, float density = 0.f);
+			Fixture AddEdgeShape(Point const& p1, Point const& p2, float density = 0.f);
+			Fixture AddChainShape(Vector<Point> const& vertexs, bool loop, float density = 0.f);
 
 			// 获取夹具
-			PhysicFixture GetFixtureList() const			{ KGE_ASSERT(body_); return PhysicFixture(body_->GetFixtureList()); }
+			Fixture GetFixtureList() const			{ KGE_ASSERT(body_); return Fixture(body_->GetFixtureList()); }
 
 			// 移除夹具
-			void RemoveFixture(PhysicFixture const& fixture);
+			void RemoveFixture(Fixture const& fixture);
 
 			// 获取接触边
-			PhysicContactEdge GetContactList() const		{ KGE_ASSERT(body_); PhysicContactEdge(body_->GetContactList()); }
+			ContactEdge GetContactList() const		{ KGE_ASSERT(body_); ContactEdge(body_->GetContactList()); }
 
 			// 类别码
 			uint16_t GetCategoryBits() const				{ return category_bits_; }
@@ -153,8 +153,8 @@ namespace kiwano
 			const b2Body* GetB2Body() const					{ return body_; }
 			void SetB2Body(b2Body* body);
 
-			PhysicWorld* GetWorld()							{ return world_; }
-			const PhysicWorld* GetWorld() const				{ return world_; }
+			World* GetWorld()							{ return world_; }
+			const World* GetWorld() const				{ return world_; }
 
 			void Destroy();
 
@@ -166,7 +166,7 @@ namespace kiwano
 
 		protected:
 			Actor* actor_;
-			PhysicWorld* world_;
+			World* world_;
 			b2Body* body_;
 
 			uint16_t category_bits_;

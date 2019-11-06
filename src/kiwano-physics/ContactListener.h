@@ -25,27 +25,27 @@ namespace kiwano
 {
 	namespace physics
 	{
-		class PhysicContactDispatcher;
+		class ContactDispatcher;
 
-		KGE_DECLARE_SMART_PTR(PhysicContactListener);
+		KGE_DECLARE_SMART_PTR(ContactListener);
 
 		// 接触监听器
-		class KGE_API PhysicContactListener
+		class KGE_API ContactListener
 			: public ObjectBase
-			, protected IntrusiveListItem<PhysicContactListenerPtr>
+			, protected IntrusiveListItem<ContactListenerPtr>
 		{
-			friend IntrusiveList<PhysicContactListenerPtr>;
-			friend class PhysicContactDispatcher;
+			friend IntrusiveList<ContactListenerPtr>;
+			friend class ContactDispatcher;
 
 		public:
-			PhysicContactListener();
-			virtual ~PhysicContactListener();
+			ContactListener();
+			virtual ~ContactListener();
 
 			// 接触开始
-			virtual void OnContactBegin(PhysicContact contact)	{ KGE_NOT_USED(contact); }
+			virtual void OnContactBegin(Contact contact)	{ KGE_NOT_USED(contact); }
 
 			// 接触结束
-			virtual void OnContactEnd(PhysicContact contact)	{ KGE_NOT_USED(contact); }
+			virtual void OnContactEnd(Contact contact)	{ KGE_NOT_USED(contact); }
 
 			inline void Start()									{ running_ = true; }
 			inline void Stop()									{ running_ = true; }
@@ -56,21 +56,21 @@ namespace kiwano
 		};
 
 
-		KGE_DECLARE_SMART_PTR(PhysicContactCallbackListener);
+		KGE_DECLARE_SMART_PTR(ContactCallbackListener);
 
 		// 接触回调监听器
-		class KGE_API PhysicContactCallbackListener
-			: public PhysicContactListener
+		class KGE_API ContactCallbackListener
+			: public ContactListener
 		{
-			friend IntrusiveList<PhysicContactListenerPtr>;
-			friend class PhysicContactDispatcher;
+			friend IntrusiveList<ContactListenerPtr>;
+			friend class ContactDispatcher;
 
 		public:
-			using ContactBeginCallback	= Function<void(PhysicContact)>;
-			using ContactEndCallback	= Function<void(PhysicContact)>;
+			using ContactBeginCallback	= Function<void(Contact)>;
+			using ContactEndCallback	= Function<void(Contact)>;
 
-			PhysicContactCallbackListener();
-			virtual ~PhysicContactCallbackListener();
+			ContactCallbackListener();
+			virtual ~ContactCallbackListener();
 
 			// 接触开始回调
 			void SetCallbackOnContactBegin(ContactBeginCallback const& cb)	{ begin_ = cb; }
@@ -80,8 +80,8 @@ namespace kiwano
 			void SetCallbackOnContactEnd(ContactEndCallback const& cb)		{ end_ = cb; }
 			ContactEndCallback GetCallbackOnContactEnd() const				{ return end_; }
 
-			void OnContactBegin(PhysicContact contact) override				{ if (begin_) begin_(contact); }
-			void OnContactEnd(PhysicContact contact) override				{ if (end_) end_(contact); }
+			void OnContactBegin(Contact contact) override				{ if (begin_) begin_(contact); }
+			void OnContactEnd(Contact contact) override				{ if (end_) end_(contact); }
 
 		protected:
 			ContactBeginCallback begin_;
@@ -90,19 +90,19 @@ namespace kiwano
 
 
 		// 接触分发器
-		class KGE_API PhysicContactDispatcher
+		class KGE_API ContactDispatcher
 		{
 		public:
-			using Listeners = IntrusiveList<PhysicContactListenerPtr>;
+			using Listeners = IntrusiveList<ContactListenerPtr>;
 
 			// 添加监听器
-			PhysicContactListener* AddContactListener(
-				PhysicContactListenerPtr listener
+			ContactListener* AddContactListener(
+				ContactListenerPtr listener
 			);
 
 			// 添加监听器
-			PhysicContactListener* AddContactListener(
-				PhysicContactListener* listener
+			ContactListener* AddContactListener(
+				ContactListener* listener
 			);
 
 			// 启动监听器
