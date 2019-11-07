@@ -20,35 +20,35 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/base/Library.h>
+#include <kiwano/base/time.h>
+#include <kiwano/base/Event.hpp>
 
 namespace kiwano
 {
-    namespace modules
+	// DLL ¿â
+	class KGE_API Library
 	{
-		class KGE_API Shlwapi
+	public:
+		Library();
+		Library(String const& lib);
+		virtual ~Library();
+
+		bool Load(String const& lib);
+
+		bool IsValid() const;
+
+		void Free();
+
+		FARPROC GetProcess(String const& proc_name);
+
+		template <typename _Proc>
+		inline _Proc GetProcess(String const& proc_name)
 		{
-		public:
-			static inline Shlwapi& Get()
-			{
-				static Shlwapi instance;
-				return instance;
-			}
+			return reinterpret_cast<_Proc>(GetProcess(proc_name));
+		}
 
-			// Shlwapi functions
-			typedef BOOL(WINAPI* PFN_PathFileExistsW)(LPCWSTR);
-			typedef IStream* (WINAPI* PFN_SHCreateMemStream)(const BYTE*, UINT);
+	private:
+		HMODULE instance_;
+	};
 
-			PFN_PathFileExistsW PathFileExistsW;
-			PFN_SHCreateMemStream SHCreateMemStream;
-
-		private:
-			Shlwapi();
-
-			Shlwapi(const Shlwapi&) = delete;
-			Shlwapi& operator=(const Shlwapi&) = delete;
-
-			Library shlwapi;
-		};
-	}
 }

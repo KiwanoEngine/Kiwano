@@ -29,12 +29,12 @@ namespace kiwano
 
 	ActionPtr ActionDelay::Clone() const
 	{
-		return new ActionDelay(delay_);
+		return new ActionDelay(GetDelay());
 	}
 
 	ActionPtr ActionDelay::Reverse() const
 	{
-		return new ActionDelay(delay_);
+		return new ActionDelay(GetDelay());
 	}
 
 }

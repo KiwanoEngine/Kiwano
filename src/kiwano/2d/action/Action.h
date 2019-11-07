@@ -36,42 +36,33 @@ namespace kiwano
 		friend IntrusiveList<ActionPtr>;
 
 	public:
-		enum class Status
-		{
-			NotStarted,
-			Delayed,
-			Started,
-			Done,
-			Removeable
-		};
-
 		Action();
 
 		virtual ~Action();
 
 		// 继续动作
-		inline void Resume()										{ running_ = true; }
+		void Resume();
 
 		// 暂停动作
-		inline void Pause()											{ running_ = false; }
+		void Pause();
 
 		// 停止动作
-		inline void Stop()											{ status_ = Status::Removeable; }
+		void Stop();
 
 		// 设置动作延时
-		inline void SetDelay(Duration delay)						{ delay_ = delay; }
+		void SetDelay(Duration delay);
 
 		// 设置循环次数 (-1 为永久循环)
-		inline void SetLoops(int loops)								{ loops_ = loops; }
+		void SetLoops(int loops);
 
 		// 动作结束时移除目标角色
-		inline void RemoveTargetWhenDone()							{ detach_target_ = true; }
+		void RemoveTargetWhenDone();
 
 		// 设置动作结束时的回调函数
-		inline void SetDoneCallback(ActionCallback const& cb)		{ cb_done_ = cb; }
+		void SetDoneCallback(ActionCallback const& cb);
 
 		// 设置动作循环结束时的回调函数
-		inline void SetLoopDoneCallback(ActionCallback const& cb)	{ cb_loop_done_ = cb; }
+		void SetLoopDoneCallback(ActionCallback const& cb);
 
 		// 获取动作的拷贝
 		virtual ActionPtr Clone() const = 0;
@@ -79,25 +70,15 @@ namespace kiwano
 		// 获取动作的倒转
 		virtual ActionPtr Reverse() const = 0;
 
-		inline void Done()											{ status_ = Status::Done; }
+		bool IsRunning() const;
 
-		inline Status GetStatus() const								{ return status_; }
+		int GetLoops() const;
 
-		inline bool IsRunning() const								{ return running_; }
+		Duration GetDelay() const;
 
-		inline bool IsDone() const									{ return status_ == Status::Done || status_ == Status::Removeable; }
+		ActionCallback GetDoneCallback() const;
 
-		inline bool IsRemoveable() const							{ return status_ == Status::Removeable; }
-
-		inline int GetLoops() const									{ return loops_; }
-
-		inline Duration GetDelay() const							{ return delay_; }
-
-		inline Duration GetElapsed() const							{ return elapsed_; }
-
-		inline ActionCallback GetDoneCallback() const				{ return cb_done_; }
-
-		inline ActionCallback GetLoopDoneCallback() const			{ return cb_loop_done_; }
+		ActionCallback GetLoopDoneCallback() const;
 
 	protected:
 		virtual void Init(ActorPtr target);
@@ -110,7 +91,28 @@ namespace kiwano
 
 		void Restart(ActorPtr target);
 
-	protected:
+		enum class Status
+		{
+			NotStarted,
+			Delayed,
+			Started,
+			Done,
+			Removeable
+		};
+
+		Status GetStatus() const;
+
+		Duration GetElapsed() const;
+
+		int GetLoopsDone() const;
+
+		void Done();
+
+		bool IsDone() const;
+
+		bool IsRemoveable() const;
+
+	private:
 		Status			status_;
 		bool			running_;
 		bool			detach_target_;
@@ -121,4 +123,100 @@ namespace kiwano
 		ActionCallback	cb_done_;
 		ActionCallback	cb_loop_done_;
 	};
+
+
+	inline void Action::Resume()
+	{
+		running_ = true;
+	}
+
+	inline void Action::Pause()
+	{
+		running_ = false;
+	}
+
+	inline void Action::Stop()
+	{
+		Done();
+	}
+
+	inline void Action::SetDelay(Duration delay)
+	{
+		delay_ = delay;
+	}
+
+	inline void Action::SetLoops(int loops)
+	{
+		loops_ = loops;
+	}
+
+	inline void Action::RemoveTargetWhenDone()
+	{
+		detach_target_ = true;
+	}
+
+	inline void Action::SetDoneCallback(ActionCallback const& cb)
+	{
+		cb_done_ = cb;
+	}
+
+	inline void Action::SetLoopDoneCallback(ActionCallback const& cb)
+	{
+		cb_loop_done_ = cb;
+	}
+
+	inline void Action::Done()
+	{
+		status_ = Status::Done;
+	}
+
+	inline Action::Status Action::GetStatus() const
+	{
+		return status_;
+	}
+
+	inline bool Action::IsRunning() const
+	{
+		return running_;
+	}
+
+	inline bool Action::IsDone() const
+	{
+		return status_ == Status::Done || status_ == Status::Removeable;
+	}
+
+	inline bool Action::IsRemoveable() const
+	{
+		return status_ == Status::Removeable;
+	}
+
+	inline int Action::GetLoops() const
+	{
+		return loops_;
+	}
+
+	inline Duration Action::GetDelay() const
+	{
+		return delay_;
+	}
+
+	inline Duration Action::GetElapsed() const
+	{
+		return elapsed_;
+	}
+
+	inline int Action::GetLoopsDone() const
+	{
+		return loops_done_;
+	}
+
+	inline ActionCallback Action::GetDoneCallback() const
+	{
+		return cb_done_;
+	}
+
+	inline ActionCallback Action::GetLoopDoneCallback() const
+	{
+		return cb_loop_done_;
+	}
 }

@@ -300,6 +300,9 @@
     <ClInclude Include="..\..\src\kiwano\utils\UserData.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Library.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -475,6 +478,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\UserData.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Library.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

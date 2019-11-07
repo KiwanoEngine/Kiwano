@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/base/Library.h>
 #include <xaudio2.h>
 #include <mfapi.h>
 #include <mfidl.h>
@@ -32,13 +33,6 @@ namespace kiwano
 		{
 			class KGE_API XAudio2
 			{
-				XAudio2();
-
-				HMODULE xaudio2;
-
-				// XAudio2 functions
-				typedef HRESULT(WINAPI* PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
-
 			public:
 				static inline XAudio2& Get()
 				{
@@ -46,16 +40,29 @@ namespace kiwano
 					return instance;
 				}
 
+				// XAudio2 functions
+				typedef HRESULT(WINAPI* PFN_XAudio2Create)(IXAudio2**, UINT32, XAUDIO2_PROCESSOR);
+
 				PFN_XAudio2Create XAudio2Create;
+
+			private:
+				XAudio2();
+
+				XAudio2(const XAudio2&) = delete;
+				XAudio2& operator=(const XAudio2&) = delete;
+
+				Library xaudio2;
 			};
 
 
 			class KGE_API MediaFoundation
 			{
-				MediaFoundation();
-
-				HMODULE mfplat;
-				HMODULE mfreadwrite;
+			public:
+				static inline MediaFoundation& Get()
+				{
+					static MediaFoundation instance;
+					return instance;
+				}
 
 				// MediaFoundation functions
 				typedef HRESULT(WINAPI* PFN_MFStartup)(ULONG, DWORD);
@@ -66,13 +73,6 @@ namespace kiwano
 				typedef HRESULT(WINAPI* PFN_MFCreateSourceReaderFromByteStream)(IMFByteStream*, IMFAttributes*, IMFSourceReader**);
 				typedef HRESULT(WINAPI* PFN_MFCreateMFByteStreamOnStream)(IStream*, IMFByteStream**);
 
-			public:
-				static inline MediaFoundation& Get()
-				{
-					static MediaFoundation instance;
-					return instance;
-				}
-
 				PFN_MFStartup MFStartup;
 				PFN_MFShutdown MFShutdown;
 				PFN_MFCreateMediaType MFCreateMediaType;
@@ -80,6 +80,15 @@ namespace kiwano
 				PFN_MFCreateSourceReaderFromURL MFCreateSourceReaderFromURL;
 				PFN_MFCreateSourceReaderFromByteStream MFCreateSourceReaderFromByteStream;
 				PFN_MFCreateMFByteStreamOnStream MFCreateMFByteStreamOnStream;
+
+			private:
+				MediaFoundation();
+
+				MediaFoundation(const MediaFoundation&) = delete;
+				MediaFoundation& operator=(const MediaFoundation&) = delete;
+
+				Library mfplat;
+				Library mfreadwrite;
 			};
 		}
 	}

@@ -18,37 +18,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/macros.h>
 #include <kiwano/base/Library.h>
 
 namespace kiwano
 {
-    namespace modules
+
+	Library::Library()
+		: instance_(nullptr)
 	{
-		class KGE_API Shlwapi
-		{
-		public:
-			static inline Shlwapi& Get()
-			{
-				static Shlwapi instance;
-				return instance;
-			}
-
-			// Shlwapi functions
-			typedef BOOL(WINAPI* PFN_PathFileExistsW)(LPCWSTR);
-			typedef IStream* (WINAPI* PFN_SHCreateMemStream)(const BYTE*, UINT);
-
-			PFN_PathFileExistsW PathFileExistsW;
-			PFN_SHCreateMemStream SHCreateMemStream;
-
-		private:
-			Shlwapi();
-
-			Shlwapi(const Shlwapi&) = delete;
-			Shlwapi& operator=(const Shlwapi&) = delete;
-
-			Library shlwapi;
-		};
 	}
+
+	Library::Library(String const& lib)
+		: instance_(nullptr)
+	{
+		Load(lib);
+	}
+
+	Library::~Library()
+	{
+		Free();
+	}
+
+	bool Library::Load(String const& lib)
+	{
+		instance_ = ::LoadLibraryW(lib.c_str());
+		return IsValid();
+	}
+
+	bool Library::IsValid() const
+	{
+		return instance_ != nullptr;
+	}
+
+	void Library::Free()
+	{
+		if (instance_)
+		{
+			::FreeLibrary(instance_);
+			instance_ = nullptr;
+		}
+	}
+
+	FARPROC Library::GetProcess(String const& proc_name)
+	{
+		KGE_ASSERT(instance_ != nullptr);
+		return GetProcAddress(instance_, wide_to_string(proc_name).c_str());
+	}
+
 }
