@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/time.h>
+#include <kiwano/core/time.h>
 #include <kiwano/renderer/Brush.h>
 #include <kiwano/renderer/Texture.h>
 #include <kiwano/renderer/Geometry.h>
@@ -41,7 +41,7 @@ namespace kiwano
 
 	// äÖÈ¾Ä¿±ê
 	class KGE_API RenderTarget
-		: public core::noncopyable
+		: public common::noncopyable
 	{
 	public:
 		bool IsValid() const;

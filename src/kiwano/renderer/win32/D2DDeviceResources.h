@@ -22,7 +22,7 @@
 #include <kiwano/renderer/Font.h>
 #include <kiwano/renderer/Color.h>
 #include <kiwano/math/math.h>
-#include <kiwano/base/Resource.h>
+#include <kiwano/core/Resource.h>
 #include <dwrite.h>
 #include <d2d1.h>
 #include <d2d1_1.h>

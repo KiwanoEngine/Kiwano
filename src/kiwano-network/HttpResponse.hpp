@@ -31,29 +31,30 @@ namespace kiwano
 			: public ObjectBase
 		{
 		public:
-			inline HttpResponse(HttpRequestPtr request)							: request_(request), succeed_(false), response_code_(0) {}
+			HttpResponse(HttpRequestPtr request);
 
-			inline HttpRequestPtr	GetRequest() const							{ return request_; }
+			// 获取请求
+			HttpRequestPtr GetRequest() const;
 
-			inline void				SetSucceed(bool succeed)					{ succeed_ = succeed; }
+			// 响应状态
+			bool IsSucceed() const;
+			void SetSucceed(bool succeed);
 
-			inline bool				IsSucceed() const							{ return succeed_; }
+			// 响应状态码
+			long GetResponseCode() const;
+			void SetResponseCode(long response_code);
 
-			inline void				SetResponseCode(long response_code)			{ response_code_ = response_code; }
+			// 响应头
+			String GetHeader() const;
+			void SetHeader(String const& response_header);
 
-			inline long				GetResponseCode() const						{ return response_code_; }
+			// 响应数据
+			String const& GetData() const;
+			void SetData(String const& response_data);
 
-			inline void				SetHeader(String const& response_header)	{ response_header_ = response_header; }
-
-			inline String			GetHeader() const							{ return response_header_; }
-
-			inline void				SetData(String const& response_data)		{ response_data_ = response_data; }
-
-			inline String const&	GetData() const								{ return response_data_; }
-
-			inline void				SetError(String const& error_buffer)		{ error_buffer_ = error_buffer; }
-
-			inline String const&	GetError() const							{ return error_buffer_; }
+			// 错误信息
+			String const& GetError() const;
+			void SetError(String const& error_buffer);
 
 		protected:
 			bool succeed_;
@@ -64,5 +65,29 @@ namespace kiwano
 			String response_data_;
 			String error_buffer_;
 		};
+
+		inline HttpResponse::HttpResponse(HttpRequestPtr request)						: request_(request), succeed_(false), response_code_(0) {}
+
+		inline HttpRequestPtr	HttpResponse::GetRequest() const						{ return request_; }
+
+		inline void				HttpResponse::SetSucceed(bool succeed)					{ succeed_ = succeed; }
+
+		inline bool				HttpResponse::IsSucceed() const							{ return succeed_; }
+
+		inline void				HttpResponse::SetResponseCode(long response_code)		{ response_code_ = response_code; }
+
+		inline long				HttpResponse::GetResponseCode() const					{ return response_code_; }
+
+		inline void				HttpResponse::SetHeader(String const& response_header)	{ response_header_ = response_header; }
+
+		inline String			HttpResponse::GetHeader() const							{ return response_header_; }
+
+		inline void				HttpResponse::SetData(String const& response_data)		{ response_data_ = response_data; }
+
+		inline String const&	HttpResponse::GetData() const							{ return response_data_; }
+
+		inline void				HttpResponse::SetError(String const& error_buffer)		{ error_buffer_ = error_buffer; }
+
+		inline String const&	HttpResponse::GetError() const							{ return error_buffer_; }
 	}
 }

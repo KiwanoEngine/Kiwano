@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/function.hpp>
-#include <kiwano/core/basic_json.hpp>
-#include <kiwano/base/ObjectBase.h>
-#include <kiwano/base/SmartPtr.hpp>
+#include <kiwano/common/function.hpp>
+#include <kiwano/common/basic_json.hpp>
+#include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/SmartPtr.hpp>
 
 namespace kiwano
 {
@@ -47,35 +47,32 @@ namespace kiwano
 				Delete
 			};
 
-			inline HttpRequest()			: type_(Type::Unknown) {}
+			HttpRequest();
 
-			inline HttpRequest(Type type)	: type_(type) {}
+			HttpRequest(Type type);
 
-			inline void						SetUrl(String const& url)								{ url_ = url; }
+			// 请求地址
+			void SetUrl(String const& url);
+			String const& GetUrl() const;
 
-			inline String const&			GetUrl() const											{ return url_; }
+			// 请求类型
+			void SetType(Type type);
+			Type GetType() const;
 
-			inline void						SetType(Type type)										{ type_ = type; }
+			// 请求数据
+			void SetData(String const& data);
+			void SetJsonData(Json const& json);
+			String const& GetData() const;
 
-			inline Type						GetType() const											{ return type_; }
+			// 请求头
+			void SetHeaders(Map<String, String> const& headers);
+			void SetHeader(String const& field, String const& content);
+			Map<String, String>& GetHeaders();
+			String const& GetHeader(String const& header) const;
 
-			inline void						SetData(String const& data)								{ data_ = data; }
-
-			void							SetJsonData(Json const& json);
-
-			inline String const&			GetData() const											{ return data_; }
-
-			inline void						SetHeaders(Map<String, String> const& headers)			{ headers_ = headers; }
-
-			void							SetHeader(String const& field, String const& content);
-
-			inline Map<String, String>&		GetHeaders()											{ return headers_; }
-
-			inline String const&			GetHeader(String const& header) const					{ return headers_.at(header); }
-
-			inline void						SetResponseCallback(ResponseCallback const& callback)	{ response_cb_ = callback; }
-
-			inline ResponseCallback const&	GetResponseCallback() const								{ return response_cb_; }
+			// 响应回调
+			void SetResponseCallback(ResponseCallback const& callback);
+			ResponseCallback const& GetResponseCallback() const;
 
 		protected:
 			Type type_;
@@ -84,5 +81,33 @@ namespace kiwano
 			Map<String, String> headers_;
 			ResponseCallback response_cb_;
 		};
+
+		inline HttpRequest::HttpRequest()														: type_(Type::Unknown) {}
+
+		inline HttpRequest::HttpRequest(Type type)												: type_(type) {}
+
+		inline void HttpRequest::SetUrl(String const& url)										{ url_ = url; }
+
+		inline String const& HttpRequest::GetUrl() const										{ return url_; }
+
+		inline void HttpRequest::SetType(Type type)												{ type_ = type; }
+
+		inline HttpRequest::Type HttpRequest::GetType() const									{ return type_; }
+
+		inline void HttpRequest::SetData(String const& data)									{ data_ = data; }
+
+		inline String const& HttpRequest::GetData() const										{ return data_; }
+
+		inline void HttpRequest::SetHeaders(Map<String, String> const& headers)					{ headers_ = headers; }
+
+		inline void HttpRequest::SetHeader(String const& field, String const& content)			{ headers_[field] = content; }
+
+		inline Map<String, String>& HttpRequest::GetHeaders()									{ return headers_; }
+
+		inline String const& HttpRequest::GetHeader(String const& header) const					{ return headers_.at(header); }
+
+		inline void HttpRequest::SetResponseCallback(ResponseCallback const& callback)			{ response_cb_ = callback; }
+
+		inline HttpRequest::ResponseCallback const&	HttpRequest::GetResponseCallback() const	{ return response_cb_; }
 	}
 }

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/core.h>
+#include <kiwano/common/common.h>
 #include <kiwano/math/constants.h>
 #include <kiwano/math/ease.h>
 #include <kiwano/math/scalar.h>

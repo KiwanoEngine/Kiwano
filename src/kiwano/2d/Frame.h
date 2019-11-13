@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/ObjectBase.h>
 #include <kiwano/renderer/Texture.h>
 
 namespace kiwano

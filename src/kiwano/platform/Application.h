@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/core.h>
-#include <kiwano/base/time.h>
-#include <kiwano/base/Component.h>
-#include <kiwano/base/Event.h>
-#include <kiwano/base/Window.h>
+#include <kiwano/common/common.h>
+#include <kiwano/core/time.h>
+#include <kiwano/core/Component.h>
+#include <kiwano/core/Event.h>
+#include <kiwano/platform/Window.h>
 #include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
@@ -50,7 +50,7 @@ namespace kiwano
 
 	// ”¶”√
 	class KGE_API Application
-		: protected core::noncopyable
+		: protected common::noncopyable
 	{
 	public:
 		Application();

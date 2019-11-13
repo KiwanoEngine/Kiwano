@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/win32/D2DDeviceResources.h>
-#include <kiwano/base/Logger.h>
+#include <kiwano/core/Logger.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")

@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/core.h>
-#include <kiwano/core/singleton.hpp>
-#include <kiwano/base/Component.h>
+#include <kiwano/common/common.h>
+#include <kiwano/common/singleton.hpp>
+#include <kiwano/core/Component.h>
 #include <mutex>
 #include <condition_variable>
 
@@ -36,39 +36,19 @@ namespace kiwano
 			KGE_DECLARE_SINGLETON(HttpClient);
 
 		public:
-			void Send(
-				HttpRequestPtr request
-			);
+			void Send(HttpRequestPtr request);
 
-			inline void SetTimeoutForConnect(Duration timeout)
-			{
-				timeout_for_connect_ = timeout;
-			}
+			void SetTimeoutForConnect(Duration timeout);
 
-			inline Duration GetTimeoutForConnect() const
-			{
-				return timeout_for_connect_;
-			}
+			Duration GetTimeoutForConnect() const;
 
-			inline void SetTimeoutForRead(Duration timeout)
-			{
-				timeout_for_read_ = timeout;
-			}
+			void SetTimeoutForRead(Duration timeout);
 
-			inline Duration GetTimeoutForRead() const
-			{
-				return timeout_for_read_;
-			}
+			Duration GetTimeoutForRead() const;
 
-			inline void SetSSLVerification(String const& root_certificate_path)
-			{
-				ssl_verification_ = root_certificate_path;
-			}
+			void SetSSLVerification(String const& root_certificate_path);
 
-			inline String const& GetSSLVerification() const
-			{
-				return ssl_verification_;
-			}
+			String const& GetSSLVerification() const;
 
 		public:
 			virtual void SetupComponent() override;
@@ -101,5 +81,37 @@ namespace kiwano
 
 			std::condition_variable_any sleep_condition_;
 		};
+
+
+		inline void HttpClient::SetTimeoutForConnect(Duration timeout)
+		{
+			timeout_for_connect_ = timeout;
+		}
+
+		inline Duration HttpClient::GetTimeoutForConnect() const
+		{
+			return timeout_for_connect_;
+		}
+
+		inline void HttpClient::SetTimeoutForRead(Duration timeout)
+		{
+			timeout_for_read_ = timeout;
+		}
+
+		inline Duration HttpClient::GetTimeoutForRead() const
+		{
+			return timeout_for_read_;
+		}
+
+		inline void HttpClient::SetSSLVerification(String const& root_certificate_path)
+		{
+			ssl_verification_ = root_certificate_path;
+		}
+
+		inline String const& HttpClient::GetSSLVerification() const
+		{
+			return ssl_verification_;
+		}
+
 	}
 }

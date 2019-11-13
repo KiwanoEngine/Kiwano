@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/Component.h>
+#include <kiwano/core/Component.h>
 #include <kiwano/renderer/win32/FontCollectionLoader.h>
 #include <kiwano/renderer/RenderTarget.h>
 #include <kiwano/renderer/GifImage.h>

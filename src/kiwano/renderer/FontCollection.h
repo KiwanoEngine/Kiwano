@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/Resource.h>
-#include <kiwano/base/win32/ComPtr.hpp>
+#include <kiwano/core/Resource.h>
+#include <kiwano/core/win32/ComPtr.hpp>
 #include <dwrite.h>
 
 namespace kiwano

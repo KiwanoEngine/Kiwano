@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/Resource.h>
+#include <kiwano/core/Resource.h>
 #include <kiwano/2d/include-forwards.h>
 #include <kiwano/renderer/GifImage.h>
 #include <3rd-party/tinyxml2/tinyxml2.h>

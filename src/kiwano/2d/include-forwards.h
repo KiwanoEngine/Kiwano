@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/core.h>
-#include <kiwano/base/time.h>
-#include <kiwano/base/RefCounter.hpp>
-#include <kiwano/base/SmartPtr.hpp>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/common/common.h>
+#include <kiwano/core/time.h>
+#include <kiwano/core/RefCounter.hpp>
+#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/ObjectBase.h>
 #include <kiwano/math/math.h>
 #include <kiwano/renderer/Color.h>
 

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/Library.h>
+#include <kiwano/core/Library.h>
 #include <xaudio2.h>
 #include <mfapi.h>
 #include <mfidl.h>

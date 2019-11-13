@@ -21,8 +21,8 @@
 #include <kiwano/2d/Transition.h>
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
-#include <kiwano/base/Window.h>
-#include <kiwano/base/Logger.h>
+#include <kiwano/platform/Window.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/renderer/Renderer.h>
 
 namespace kiwano

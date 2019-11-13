@@ -20,7 +20,7 @@
 
 #include <kiwano/ui/Button.h>
 #include <kiwano/2d/Stage.h>
-#include <kiwano/base/Window.h>
+#include <kiwano/platform/Window.h>
 
 namespace kiwano
 {

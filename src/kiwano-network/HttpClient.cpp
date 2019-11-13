@@ -25,7 +25,7 @@
 #include <kiwano-network/HttpResponse.hpp>
 #include <kiwano-network/HttpClient.h>
 
-#include <kiwano/base/Logger.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
 #include <3rd-party/curl/curl.h>  // CURL
 
@@ -36,7 +36,7 @@ namespace
 
 	uint32_t write_data(void* buffer, uint32_t size, uint32_t nmemb, void* userp)
 	{
-		core::string* recv_buffer = (core::string*)userp;
+		common::string* recv_buffer = (common::string*)userp;
 		uint32_t total = size * nmemb;
 
 		// add data to the end of recv_buffer
@@ -46,10 +46,10 @@ namespace
 		return total;
 	}
 
-	core::string convert_to_utf8(core::wstring const& str)
+	common::string convert_to_utf8(common::wstring const& str)
 	{
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-		core::string result;
+		common::string result;
 
 		try
 		{
@@ -63,10 +63,10 @@ namespace
 		return result;
 	}
 
-	core::wstring convert_from_utf8(core::string const& str)
+	common::wstring convert_from_utf8(common::string const& str)
 	{
 		kiwano::string_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-		core::wstring result;
+		common::wstring result;
 
 		try
 		{
@@ -104,7 +104,7 @@ namespace
 			}
 		}
 
-		bool Init(HttpClient* client, Vector<core::string> const& headers, core::string const& url, core::string* response_data, core::string* response_header, char* error_buffer)
+		bool Init(HttpClient* client, Vector<common::string> const& headers, common::string const& url, common::string* response_data, common::string* response_header, char* error_buffer)
 		{
 			if (!SetOption(CURLOPT_ERRORBUFFER, error_buffer))
 				return false;
@@ -170,11 +170,11 @@ namespace
 	public:
 		static inline bool GetRequest(
 			HttpClient* client,
-			Vector<core::string> const& headers,
-			core::string const& url,
+			Vector<common::string> const& headers,
+			common::string const& url,
 			long* response_code,
-			core::string* response_data,
-			core::string* response_header,
+			common::string* response_data,
+			common::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -185,12 +185,12 @@ namespace
 
 		static inline bool PostRequest(
 			HttpClient* client,
-			Vector<core::string> const& headers,
-			core::string const& url,
-			core::string const& request_data,
+			Vector<common::string> const& headers,
+			common::string const& url,
+			common::string const& request_data,
 			long* response_code,
-			core::string* response_data,
-			core::string* response_header,
+			common::string* response_data,
+			common::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -203,12 +203,12 @@ namespace
 
 		static inline bool PutRequest(
 			HttpClient* client,
-			Vector<core::string> const& headers,
-			core::string const& url,
-			core::string const& request_data,
+			Vector<common::string> const& headers,
+			common::string const& url,
+			common::string const& request_data,
 			long* response_code,
-			core::string* response_data,
-			core::string* response_header,
+			common::string* response_data,
+			common::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -221,11 +221,11 @@ namespace
 
 		static inline bool DeleteRequest(
 			HttpClient* client,
-			Vector<core::string> const& headers,
-			core::string const& url,
+			Vector<common::string> const& headers,
+			common::string const& url,
 			long* response_code,
-			core::string* response_data,
-			core::string* response_header,
+			common::string* response_data,
+			common::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -307,13 +307,13 @@ namespace kiwano
 			bool ok = false;
 			long response_code = 0;
 			char error_message[256] = { 0 };
-			core::string response_header;
-			core::string response_data;
+			common::string response_header;
+			common::string response_data;
 
-			core::string url = convert_to_utf8(request->GetUrl());
-			core::string data = convert_to_utf8(request->GetData());
+			common::string url = convert_to_utf8(request->GetUrl());
+			common::string data = convert_to_utf8(request->GetData());
 
-			Vector<core::string> headers;
+			Vector<common::string> headers;
 			headers.reserve(request->GetHeaders().size());
 			for (const auto& pair : request->GetHeaders())
 			{

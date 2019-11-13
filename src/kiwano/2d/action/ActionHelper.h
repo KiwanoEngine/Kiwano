@@ -30,71 +30,71 @@ namespace kiwano
 	struct ActionHelper
 	{
 		// 设置循环次数
-		inline ActionHelper& SetLoops(int loops)							{ base->SetLoops(loops); return (*this); }
+		inline ActionHelper& SetLoops(int loops)							{ core->SetLoops(loops); return (*this); }
 
 		// 设置动作延迟
-		inline ActionHelper& SetDelay(Duration delay)						{ base->SetDelay(delay); return (*this); }
+		inline ActionHelper& SetDelay(Duration delay)						{ core->SetDelay(delay); return (*this); }
 
 		// 设置动作结束回调函数
-		inline ActionHelper& SetDoneCallback(ActionCallback const& cb)		{ base->SetDoneCallback(cb); return (*this); }
+		inline ActionHelper& SetDoneCallback(ActionCallback const& cb)		{ core->SetDoneCallback(cb); return (*this); }
 
 		// 设置动作循环结束时的回调函数
-		inline ActionHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ base->SetLoopDoneCallback(cb); return (*this); }
+		inline ActionHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ core->SetLoopDoneCallback(cb); return (*this); }
 
 		// 动作结束时移除目标角色
-		inline ActionHelper& RemoveTargetWhenDone()							{ base->RemoveTargetWhenDone(); return (*this); }
+		inline ActionHelper& RemoveTargetWhenDone()							{ core->RemoveTargetWhenDone(); return (*this); }
 
 		// 设置名称
-		inline ActionHelper& SetName(String const& name)					{ base->SetName(name); return (*this); }
+		inline ActionHelper& SetName(String const& name)					{ core->SetName(name); return (*this); }
 
 		// 获取指针
-		inline ActionPtr Get() const										{ return base; }
+		inline ActionPtr Get() const										{ return core; }
 
-		inline ActionHelper(ActionPtr base)									: base(base) {}
+		inline ActionHelper(ActionPtr core)									: core(core) {}
 
-		inline operator ActionPtr() const									{ return base; }
+		inline operator ActionPtr() const									{ return core; }
 
 	protected:
-		ActionPtr base;
+		ActionPtr core;
 	};
 
 	struct TweenHelper
 	{
 		// 设置动画持续时长
-		inline TweenHelper& SetDuration(Duration dur)						{ base->SetDuration(dur); return (*this); }
+		inline TweenHelper& SetDuration(Duration dur)						{ core->SetDuration(dur); return (*this); }
 
 		// 设置循环次数
-		inline TweenHelper& SetLoops(int loops)							{ base->SetLoops(loops); return (*this); }
+		inline TweenHelper& SetLoops(int loops)							{ core->SetLoops(loops); return (*this); }
 
 		// 设置缓动函数
-		inline TweenHelper& SetEaseFunc(EaseFunc ease)						{ base->SetEaseFunc(ease); return (*this); }
+		inline TweenHelper& SetEaseFunc(EaseFunc ease)						{ core->SetEaseFunc(ease); return (*this); }
 
 		// 设置动作延迟
-		inline TweenHelper& SetDelay(Duration delay)						{ base->SetDelay(delay); return (*this); }
+		inline TweenHelper& SetDelay(Duration delay)						{ core->SetDelay(delay); return (*this); }
 
 		// 设置动作结束回调函数
-		inline TweenHelper& SetDoneCallback(ActionCallback const& cb)		{ base->SetDoneCallback(cb); return (*this); }
+		inline TweenHelper& SetDoneCallback(ActionCallback const& cb)		{ core->SetDoneCallback(cb); return (*this); }
 
 		// 设置动作循环结束时的回调函数
-		inline TweenHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ base->SetLoopDoneCallback(cb); return (*this); }
+		inline TweenHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ core->SetLoopDoneCallback(cb); return (*this); }
 
 		// 动作结束时移除目标角色
-		inline TweenHelper& RemoveTargetWhenDone()							{ base->RemoveTargetWhenDone(); return (*this); }
+		inline TweenHelper& RemoveTargetWhenDone()							{ core->RemoveTargetWhenDone(); return (*this); }
 
 		// 设置名称
-		inline TweenHelper& SetName(String const& name)						{ base->SetName(name); return (*this); }
+		inline TweenHelper& SetName(String const& name)						{ core->SetName(name); return (*this); }
 
 		// 获取指针
-		inline ActionTweenPtr Get() const									{ return base; }
+		inline ActionTweenPtr Get() const									{ return core; }
 		
-		inline TweenHelper(ActionTweenPtr base)								: base(base) {}
+		inline TweenHelper(ActionTweenPtr core)								: core(core) {}
 
-		inline operator ActionPtr() const									{ return base; }
+		inline operator ActionPtr() const									{ return core; }
 
-		inline operator ActionTweenPtr() const								{ return base; }
+		inline operator ActionTweenPtr() const								{ return core; }
 
 	protected:
-		ActionTweenPtr base;
+		ActionTweenPtr core;
 	};
 
 	// Tween actions helper

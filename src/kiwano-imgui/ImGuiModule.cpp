@@ -1,10 +1,10 @@
 // Copyright (C) 2019 Nomango
 
-#include <kiwano/core/core.h>
-#include <kiwano/core/Function.hpp>
-#include <kiwano/core/intrusive_ptr.hpp>
-#include <kiwano/base/Window.h>
-#include <kiwano/base/Input.h>
+#include <kiwano/common/common.h>
+#include <kiwano/common/Function.hpp>
+#include <kiwano/common/intrusive_ptr.hpp>
+#include <kiwano/platform/Window.h>
+#include <kiwano/platform/Input.h>
 #include <kiwano/renderer/Renderer.h>
 #include <kiwano-imgui/ImGuiModule.h>
 #include <kiwano-imgui/imgui_impl.h>

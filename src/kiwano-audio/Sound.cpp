@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/Logger.h>
-#include <kiwano/utils/FileSystem.h>
+#include <kiwano/core/Logger.h>
+#include <kiwano/platform/FileSystem.h>
 #include <kiwano-audio/Sound.h>
 #include <kiwano-audio/AudioEngine.h>
 

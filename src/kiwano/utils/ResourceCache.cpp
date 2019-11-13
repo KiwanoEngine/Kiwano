@@ -21,8 +21,8 @@
 #include <fstream>
 
 #include <kiwano/utils/ResourceCache.h>
-#include <kiwano/utils/FileSystem.h>
-#include <kiwano/base/Logger.h>
+#include <kiwano/platform/FileSystem.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/2d/Frame.h>
 #include <kiwano/2d/FrameSequence.h>
 #include <kiwano/renderer/GifImage.h>
@@ -83,7 +83,7 @@ namespace kiwano
 			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
 			return false;
 		}
-		catch (core::json_exception& e)
+		catch (common::json_exception& e)
 		{
 			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", string_to_wide(e.what()).c_str());
 			return false;

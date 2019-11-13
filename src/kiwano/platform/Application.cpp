@@ -22,9 +22,9 @@
 
 #include <kiwano/platform/Application.h>
 #include <kiwano/platform/modules.h>
-#include <kiwano/base/win32/helper.h>
-#include <kiwano/base/input.h>
-#include <kiwano/base/Director.h>
+#include <kiwano/core/win32/helper.h>
+#include <kiwano/platform/Input.h>
+#include <kiwano/core/Director.h>
 #include <kiwano/renderer/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
 
