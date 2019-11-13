@@ -72,7 +72,7 @@ namespace kiwano
 
 		void OnRender(RenderTarget* rt) override;
 
-		void HandleEvent(Event& evt) override;
+		void HandleEvent(Event* evt) override;
 
 	protected:
 		Director();

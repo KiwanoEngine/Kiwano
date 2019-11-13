@@ -261,7 +261,7 @@ namespace kiwano
 		}
 	}
 
-	void Application::DispatchEvent(Event& evt)
+	void Application::DispatchEvent(Event* evt)
 	{
 		for (auto c : event_comps_)
 		{
@@ -307,21 +307,29 @@ namespace kiwano
 		case WM_SYSKEYUP:
 		{
 			bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
-			Event evt(down ? Event::KeyDown : Event::KeyUp);
-			evt.key.code = static_cast<int>(wparam);
-			evt.key.count = static_cast<int>(lparam & 0xFF);
-
-			app->DispatchEvent(evt);
+			if (down)
+			{
+				KeyDownEvent evt;
+				evt.code = static_cast<int>(wparam);
+				evt.count = static_cast<int>(lparam & 0xFF);
+				app->DispatchEvent(&evt);
+			}
+			else
+			{
+				KeyUpEvent evt;
+				evt.code = static_cast<int>(wparam);
+				evt.count = static_cast<int>(lparam & 0xFF);
+				app->DispatchEvent(&evt);
+			}
 		}
 		break;
 
 		case WM_CHAR:
 		{
-			Event evt(Event::Char);
-			evt.key.c = static_cast<char>(wparam);
-			evt.key.count = static_cast<int>(lparam & 0xFF);
-
-			app->DispatchEvent(evt);
+			KeyCharEvent evt;
+			evt.value = static_cast<char>(wparam);
+			evt.count = static_cast<int>(lparam & 0xFF);
+			app->DispatchEvent(&evt);
 		}
 		break;
 
@@ -337,23 +345,44 @@ namespace kiwano
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
-			Event evt;
+			auto UpdateMouseData = [&](MouseEvent* evt)
+			{
+				evt->pos = Point(static_cast<float>(GET_X_LPARAM(lparam)), static_cast<float>(GET_Y_LPARAM(lparam)));
+				evt->left_btn_down = !!(wparam & MK_LBUTTON);
+				evt->left_btn_down = !!(wparam & MK_RBUTTON);
+			};
 
-			evt.mouse.x = static_cast<float>(GET_X_LPARAM(lparam));
-			evt.mouse.y = static_cast<float>(GET_Y_LPARAM(lparam));
-			evt.mouse.left_btn_down = !!(wparam & MK_LBUTTON);
-			evt.mouse.left_btn_down = !!(wparam & MK_RBUTTON);
-
-			if		(msg == WM_MOUSEMOVE)															{ evt.type = Event::MouseMove; }
-			else if	(msg == WM_LBUTTONDOWN	|| msg == WM_RBUTTONDOWN	|| msg == WM_MBUTTONDOWN)	{ evt.type = Event::MouseBtnDown; }
-			else if	(msg == WM_LBUTTONUP	|| msg == WM_RBUTTONUP		|| msg == WM_MBUTTONUP)		{ evt.type = Event::MouseBtnUp; }
-			else if	(msg == WM_MOUSEWHEEL)															{ evt.type = Event::MouseWheel; evt.mouse.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA; }
-
-			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP)	{ evt.mouse.button = MouseButton::Left; }
-			else if	(msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP)	{ evt.mouse.button = MouseButton::Right; }
-			else if	(msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP)	{ evt.mouse.button = MouseButton::Middle; }
-
-			app->DispatchEvent(evt);
+			if (msg == WM_MOUSEMOVE)
+			{
+				MouseMoveEvent evt;
+				UpdateMouseData(&evt);
+				app->DispatchEvent(&evt);
+			}
+			else if	(msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN)
+			{
+				MouseDownEvent evt;
+				UpdateMouseData(&evt);
+				if		(msg == WM_LBUTTONDOWN)	{ evt.button = MouseButton::Left; }
+				else if	(msg == WM_RBUTTONDOWN)	{ evt.button = MouseButton::Right; }
+				else if	(msg == WM_MBUTTONDOWN)	{ evt.button = MouseButton::Middle; }
+				app->DispatchEvent(&evt);
+			}
+			else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP)
+			{
+				MouseDownEvent evt;
+				UpdateMouseData(&evt);
+				if		(msg == WM_LBUTTONUP)	{ evt.button = MouseButton::Left; }
+				else if	(msg == WM_RBUTTONUP)	{ evt.button = MouseButton::Right; }
+				else if	(msg == WM_MBUTTONUP)	{ evt.button = MouseButton::Middle; }
+				app->DispatchEvent(&evt);
+			}
+			else if	(msg == WM_MOUSEWHEEL)
+			{
+				MouseWheelEvent evt;
+				UpdateMouseData(&evt);
+				evt.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
+				app->DispatchEvent(&evt);
+			}
 		}
 		break;
 
@@ -369,10 +398,10 @@ namespace kiwano
 
 				Window::GetInstance()->UpdateWindowRect();
 
-				Event evt(Event::WindowResized);
-				evt.window.width = LOWORD(lparam);
-				evt.window.height = HIWORD(lparam);
-				app->DispatchEvent(evt);
+				WindowResizedEvent evt;
+				evt.width = LOWORD(lparam);
+				evt.height = HIWORD(lparam);
+				app->DispatchEvent(&evt);
 			}
 		}
 		break;
@@ -382,10 +411,10 @@ namespace kiwano
 			int x = (int)(short)LOWORD(lparam);
 			int y = (int)(short)HIWORD(lparam);
 
-			Event evt(Event::WindowMoved);
-			evt.window.x = x;
-			evt.window.y = y;
-			app->DispatchEvent(evt);
+			WindowMovedEvent evt;
+			evt.x = x;
+			evt.y = y;
+			app->DispatchEvent(&evt);
 		}
 		break;
 
@@ -395,9 +424,9 @@ namespace kiwano
 
 			Window::GetInstance()->SetActive(active);
 
-			Event evt(Event::WindowFocusChanged);
-			evt.window.focus = active;
-			app->DispatchEvent(evt);
+			WindowFocusChangedEvent evt;
+			evt.focus = active;
+			app->DispatchEvent(&evt);
 		}
 		break;
 
@@ -405,9 +434,9 @@ namespace kiwano
 		{
 			// KGE_LOG(L"Window title changed");
 
-			Event evt(Event::WindowTitleChanged);
-			evt.window.title = reinterpret_cast<const wchar_t*>(lparam);
-			app->DispatchEvent(evt);
+			WindowTitleChangedEvent evt;
+			evt.title = reinterpret_cast<const wchar_t*>(lparam);
+			app->DispatchEvent(&evt);
 		}
 		break;
 
@@ -437,8 +466,8 @@ namespace kiwano
 
 			if (!app->OnClosing())
 			{
-				Event evt(Event::WindowClosed);
-				app->DispatchEvent(evt);
+				WindowClosedEvent evt;
+				app->DispatchEvent(&evt);
 				return 0;
 			}
 		}

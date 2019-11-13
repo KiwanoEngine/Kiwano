@@ -66,9 +66,6 @@
     <ClInclude Include="..\..\src\kiwano\base\Component.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\Event.hpp">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\base\EventDispatcher.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -303,6 +300,9 @@
     <ClInclude Include="..\..\src\kiwano\base\Library.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Event.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -480,6 +480,9 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\Library.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Event.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

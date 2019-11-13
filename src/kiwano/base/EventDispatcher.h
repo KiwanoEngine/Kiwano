@@ -40,9 +40,15 @@ namespace kiwano
 
 		// Ìí¼Ó¼àÌıÆ÷
 		EventListener* AddListener(
+			String const& name,
 			EventType type,
-			EventListener::Callback callback,
-			String const& name = L""
+			EventListener::Callback callback
+		);
+
+		// Ìí¼Ó¼àÌıÆ÷
+		EventListener* AddListener(
+			EventType type,
+			EventListener::Callback callback
 		);
 
 		// Æô¶¯¼àÌıÆ÷
@@ -62,20 +68,20 @@ namespace kiwano
 
 		// Æô¶¯¼àÌıÆ÷
 		void StartListeners(
-			uint32_t type
+			const EventType& type
 		);
 
 		// Í£Ö¹¼àÌıÆ÷
 		void StopListeners(
-			uint32_t type
+			const EventType& type
 		);
 
 		// ÒÆ³ı¼àÌıÆ÷
 		void RemoveListeners(
-			uint32_t type
+			const EventType& type
 		);
 
-		virtual void Dispatch(Event& evt);
+		virtual void Dispatch(Event* evt);
 
 	protected:
 		Listeners listeners_;

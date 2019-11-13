@@ -180,7 +180,7 @@ namespace kiwano
 		}
 	}
 
-	void Director::HandleEvent(Event& evt)
+	void Director::HandleEvent(Event* evt)
 	{
 		if (debug_actor_)
 			debug_actor_->Dispatch(evt);

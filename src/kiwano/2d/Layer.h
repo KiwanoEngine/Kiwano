@@ -34,8 +34,8 @@ namespace kiwano
 		virtual ~Layer();
 
 		// 重载下列函数以获取图层事件
-		virtual void OnMouseButtonDown(int btn, Point const& p) {}
-		virtual void OnMouseButtonUp(int btn, Point const& p) {}
+		virtual void OnMouseButtonDown(MouseButton::Value btn, Point const& p) {}
+		virtual void OnMouseButtonUp(MouseButton::Value btn, Point const& p) {}
 		virtual void OnMouseMoved(Point const& p) {}
 		virtual void OnMouseWheel(float wheel) {}
 		virtual void OnKeyDown(int key) {}
@@ -67,12 +67,12 @@ namespace kiwano
 		inline LayerArea const& GetArea() const		{ return area_; }
 
 	public:
-		void Dispatch(Event& evt) override;
+		void Dispatch(Event* evt) override;
 
 	protected:
 		void Render(RenderTarget* rt) override;
 
-		void HandleMessages(Event const& evt);
+		void HandleMessages(Event* evt);
 
 	protected:
 		bool		swallow_;

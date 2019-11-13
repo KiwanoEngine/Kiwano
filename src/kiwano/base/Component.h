@@ -21,10 +21,12 @@
 #pragma once
 #include <kiwano/macros.h>
 #include <kiwano/base/time.h>
-#include <kiwano/base/Event.hpp>
 
 namespace kiwano
 {
+	class RenderTarget;
+	class Event;
+
 	// 基础组件
 	class KGE_API ComponentBase
 	{
@@ -41,8 +43,6 @@ namespace kiwano
 		int flag_;
 	};
 
-
-	class RenderTarget;
 
 	// 渲染支持组件
 	class KGE_API RenderComponent
@@ -85,7 +85,7 @@ namespace kiwano
 		: public virtual ComponentBase
 	{
 	public:
-		virtual void HandleEvent(Event&) {}
+		virtual void HandleEvent(Event*) {}
 
 		virtual void HandleMessage(HWND, UINT32, WPARAM, LPARAM) {}
 

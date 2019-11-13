@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2018-2019 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,47 +19,44 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/singleton.hpp>
-#include <kiwano/base/Component.h>
-#include <kiwano/base/win32/ComPtr.hpp>
-#include <kiwano-audio/Transcoder.h>
-#include <xaudio2.h>
+#include <kiwano-physics/Contact.h>
+#include <kiwano-physics/Body.h>
 
 namespace kiwano
 {
-	namespace audio
+	namespace physics
 	{
-		class KGE_API AudioEngine
-			: public Singleton<AudioEngine>
-			, public ComponentBase
+		// 接触开始事件
+		class KGE_API ContactBeginEvent
+			: public Event
 		{
-			KGE_DECLARE_SINGLETON(AudioEngine);
-
 		public:
-			// 开启设备
-			void Open();
+			Contact contact;
+			Body* body_a;
+			Body* body_b;
 
-			// 关闭设备
-			void Close();
-
-			HRESULT CreateVoice(
-				IXAudio2SourceVoice** voice,
-				const Transcoder::Buffer& buffer
-			);
-
-		public:
-			void SetupComponent() override;
-
-			void DestroyComponent() override;
-
-		protected:
-			AudioEngine();
-
-			~AudioEngine();
-
-		protected:
-			IXAudio2* x_audio2_;
-			IXAudio2MasteringVoice* mastering_voice_;
+			ContactBeginEvent();
+			ContactBeginEvent(Contact const& contact);
 		};
+
+		// 接触结束事件
+		class KGE_API ContactEndEvent
+			: public Event
+		{
+		public:
+			Contact contact;
+			Body* body_a;
+			Body* body_b;
+
+			ContactEndEvent();
+			ContactEndEvent(Contact const& contact);
+		};
+
+	}
+
+	namespace event
+	{
+		extern EventType ContactBegin;	// 接触开始
+		extern EventType ContactEnd;	// 接触结束
 	}
 }

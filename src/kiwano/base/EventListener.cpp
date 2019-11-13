@@ -23,10 +23,22 @@
 
 namespace kiwano
 {
-	EventListener::EventListener(EventType type, Callback const & callback, String const & name)
+	EventListener::EventListener()
+		: type_()
+		, callback_()
+		, running_(true)
+	{
+	}
+
+	EventListener::EventListener(EventType type, Callback const& callback)
 		: type_(type)
 		, callback_(callback)
 		, running_(true)
+	{
+	}
+
+	EventListener::EventListener(String const& name, EventType type, Callback const& callback)
+		: EventListener(type, callback)
 	{
 		SetName(name);
 	}

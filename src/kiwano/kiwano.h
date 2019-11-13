@@ -82,7 +82,7 @@
 #include <kiwano/base/Logger.h>
 #include <kiwano/base/SmartPtr.hpp>
 #include <kiwano/base/ObjectBase.h>
-#include <kiwano/base/Event.hpp>
+#include <kiwano/base/Event.h>
 #include <kiwano/base/EventListener.h>
 #include <kiwano/base/EventDispatcher.h>
 #include <kiwano/base/Timer.h>

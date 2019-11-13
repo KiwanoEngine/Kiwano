@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "World.h"
+#include <kiwano-physics/ContactEvent.h>
 
 namespace kiwano
 {
@@ -64,8 +65,18 @@ namespace kiwano
 			{
 			}
 
-			void BeginContact(b2Contact* contact) override									{ world_->OnContactBegin(contact); }
-			void EndContact(b2Contact* contact) override									{ world_->OnContactEnd(contact); }
+			void BeginContact(b2Contact* contact) override
+			{
+				ContactBeginEvent evt(contact);
+				world_->Dispatch(&evt);
+			}
+
+			void EndContact(b2Contact* contact) override
+			{
+				ContactEndEvent evt(contact);
+				world_->Dispatch(&evt);
+			}
+
 			void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override		{ KGE_NOT_USED(contact); KGE_NOT_USED(oldManifold); }
 			void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override	{ KGE_NOT_USED(contact); KGE_NOT_USED(impulse); }
 		};
@@ -101,8 +112,6 @@ namespace kiwano
 				delete contact_listener_;
 				contact_listener_ = nullptr;
 			}
-
-			RemoveAllContactListeners();
 
 			// Make sure b2World was destroyed after b2Body
 			RemoveAllChildren();

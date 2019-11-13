@@ -21,7 +21,6 @@
 #pragma once
 #include <kiwano-physics/Body.h>
 #include <kiwano-physics/Joint.h>
-#include <kiwano-physics/ContactListener.h>
 
 namespace kiwano
 {
@@ -30,7 +29,6 @@ namespace kiwano
 		// 物理世界
 		class KGE_API World
 			: public Stage
-			, public ContactDispatcher
 		{
 			friend class Body;
 			friend class Joint;

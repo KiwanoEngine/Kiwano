@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2018-2019 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,48 +18,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/core/singleton.hpp>
-#include <kiwano/base/Component.h>
-#include <kiwano/base/win32/ComPtr.hpp>
-#include <kiwano-audio/Transcoder.h>
-#include <xaudio2.h>
+#include <kiwano-physics/ContactEvent.h>
 
 namespace kiwano
 {
-	namespace audio
+	namespace event
 	{
-		class KGE_API AudioEngine
-			: public Singleton<AudioEngine>
-			, public ComponentBase
-		{
-			KGE_DECLARE_SINGLETON(AudioEngine);
-
-		public:
-			// 开启设备
-			void Open();
-
-			// 关闭设备
-			void Close();
-
-			HRESULT CreateVoice(
-				IXAudio2SourceVoice** voice,
-				const Transcoder::Buffer& buffer
-			);
-
-		public:
-			void SetupComponent() override;
-
-			void DestroyComponent() override;
-
-		protected:
-			AudioEngine();
-
-			~AudioEngine();
-
-		protected:
-			IXAudio2* x_audio2_;
-			IXAudio2MasteringVoice* mastering_voice_;
-		};
+		EventType event::ContactBegin = EventType(L"ContactBegin");
+		EventType event::ContactEnd		= EventType(L"ContactEnd");
 	}
+
+	namespace physics
+	{
+
+		ContactBeginEvent::ContactBeginEvent()
+			: Event(event::ContactBegin)
+			, body_a(nullptr)
+			, body_b(nullptr)
+		{
+		}
+
+		ContactBeginEvent::ContactBeginEvent(Contact const& contact)
+			: ContactBeginEvent()
+		{
+			this->contact = contact;
+			body_a = this->contact.GetFixtureA().GetBody();
+			body_b = this->contact.GetFixtureB().GetBody();
+		}
+
+		ContactEndEvent::ContactEndEvent()
+			: Event(event::ContactEnd)
+			, body_a(nullptr)
+			, body_b(nullptr)
+		{
+		}
+
+		ContactEndEvent::ContactEndEvent(Contact const& contact)
+			: ContactEndEvent()
+		{
+			this->contact = contact;
+			body_a = this->contact.GetFixtureA().GetBody();
+			body_b = this->contact.GetFixtureB().GetBody();
+		}
+
+}
 }

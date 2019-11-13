@@ -20,8 +20,7 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/base/time.h>
-#include <kiwano/base/Event.hpp>
+#include <kiwano/core/core.h>
 
 namespace kiwano
 {
