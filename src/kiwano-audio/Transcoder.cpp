@@ -23,10 +23,10 @@
 #endif
 
 #include <kiwano/macros.h>
-#include <kiwano/core/string.hpp>
-#include <kiwano/base/Resource.h>
-#include <kiwano/base/Logger.h>
-#include <kiwano/base/win32/ComPtr.hpp>
+#include <kiwano/common/string.hpp>
+#include <kiwano/core/Resource.h>
+#include <kiwano/core/Logger.h>
+#include <kiwano/core/win32/ComPtr.hpp>
 #include <kiwano/platform/modules.h>
 #include <kiwano-audio/audio-modules.h>
 #include <kiwano-audio/Transcoder.h>

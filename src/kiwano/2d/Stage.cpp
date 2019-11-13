@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/Stage.h>
-#include <kiwano/base/Logger.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/renderer/Renderer.h>
 
 namespace kiwano

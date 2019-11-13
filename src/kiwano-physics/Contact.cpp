@@ -27,87 +27,87 @@ namespace kiwano
 	namespace physics
 	{
 
-		PhysicContact::PhysicContact()
+		Contact::Contact()
 			: contact_(nullptr)
 		{
 		}
 
-		PhysicContact::PhysicContact(b2Contact* contact)
-			: PhysicContact()
+		Contact::Contact(b2Contact* contact)
+			: Contact()
 		{
 			SetB2Contact(contact);
 		}
 
-		PhysicContact PhysicContact::GetNext()
+		Contact Contact::GetNext()
 		{
 			KGE_ASSERT(contact_);
-			return PhysicContact(contact_->GetNext());
+			return Contact(contact_->GetNext());
 		}
 
-		const PhysicContact PhysicContact::GetNext() const
+		const Contact Contact::GetNext() const
 		{
 			KGE_ASSERT(contact_);
-			return PhysicContact(contact_->GetNext());
+			return Contact(contact_->GetNext());
 		}
 
-		PhysicFixture PhysicContact::GetFixtureA()
+		Fixture Contact::GetFixtureA()
 		{
 			KGE_ASSERT(contact_);
-			return PhysicFixture(contact_->GetFixtureA());
+			return Fixture(contact_->GetFixtureA());
 		}
 
-		const PhysicFixture PhysicContact::GetFixtureA() const
+		const Fixture Contact::GetFixtureA() const
 		{
 			KGE_ASSERT(contact_);
-			return PhysicFixture(contact_->GetFixtureA());
+			return Fixture(contact_->GetFixtureA());
 		}
 
-		PhysicFixture PhysicContact::GetFixtureB()
+		Fixture Contact::GetFixtureB()
 		{
 			KGE_ASSERT(contact_);
-			return PhysicFixture(contact_->GetFixtureB());
+			return Fixture(contact_->GetFixtureB());
 		}
 
-		const PhysicFixture PhysicContact::GetFixtureB() const
+		const Fixture Contact::GetFixtureB() const
 		{
 			KGE_ASSERT(contact_);
-			return PhysicFixture(contact_->GetFixtureB());
+			return Fixture(contact_->GetFixtureB());
 		}
 
-		void PhysicContact::SetTangentSpeed(float speed)
+		void Contact::SetTangentSpeed(float speed)
 		{
 			KGE_ASSERT(contact_);
 
-			PhysicBody* body = GetFixtureA().GetBody();
+			Body* body = GetFixtureA().GetBody();
 			KGE_ASSERT(body);
 
-			PhysicWorld* world = body->GetWorld();
+			World* world = body->GetWorld();
 			KGE_ASSERT(world);
 
 			contact_->SetTangentSpeed(world->Stage2World(speed));
 		}
 
-		float PhysicContact::GetTangentSpeed() const
+		float Contact::GetTangentSpeed() const
 		{
 			KGE_ASSERT(contact_);
 
-			const PhysicBody* body = GetFixtureA().GetBody();
+			const Body* body = GetFixtureA().GetBody();
 			KGE_ASSERT(body);
 
-			const PhysicWorld* world = body->GetWorld();
+			const World* world = body->GetWorld();
 			KGE_ASSERT(world);
 
 			return world->World2Stage(contact_->GetTangentSpeed());
 		}
 
 
-		PhysicContactEdge::PhysicContactEdge()
+		ContactEdge::ContactEdge()
 			: edge_(nullptr)
 		{
 		}
 
-		PhysicContactEdge::PhysicContactEdge(b2ContactEdge* edge)
-			: PhysicContactEdge()
+		ContactEdge::ContactEdge(b2ContactEdge* edge)
+			: ContactEdge()
 		{
 			SetB2ContactEdge(edge);
 		}

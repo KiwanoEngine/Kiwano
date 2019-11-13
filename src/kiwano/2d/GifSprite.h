@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/base/Resource.h>
+#include <kiwano/core/Resource.h>
 #include <kiwano/renderer/RenderTarget.h>
 #include <kiwano/renderer/GifImage.h>
 

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/GifSprite.h>
-#include <kiwano/base/win32/helper.h>
+#include <kiwano/core/win32/helper.h>
 #include <kiwano/renderer/TextureCache.h>
 #include <kiwano/renderer/Renderer.h>
 

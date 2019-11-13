@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/RenderTarget.h>
-#include <kiwano/base/win32/helper.h>
+#include <kiwano/core/win32/helper.h>
 
 namespace kiwano
 {

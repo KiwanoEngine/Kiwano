@@ -30,19 +30,5 @@ namespace kiwano
 			SetHeader(L"Content-Type", L"application/json;charset=UTF-8");
 			data_ = json.dump();
 		}
-
-		void HttpRequest::SetHeader(String const& field, String const& content)
-		{
-			auto iter = headers_.find(field);
-			if (iter != headers_.end())
-			{
-				headers_[field] = content;
-			}
-			else
-			{
-				headers_.insert(std::make_pair(field, content));
-			}
-		}
-
 	}
 }

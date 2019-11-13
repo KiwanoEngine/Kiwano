@@ -20,10 +20,7 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <xaudio2.h>
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mfreadwrite.h>
+#include <kiwano/core/Library.h>
 
 namespace kiwano
 {
@@ -31,14 +28,6 @@ namespace kiwano
 	{
 		class KGE_API Shlwapi
 		{
-			Shlwapi();
-
-			HMODULE shlwapi;
-
-			// Shlwapi functions
-			typedef BOOL(WINAPI *PFN_PathFileExistsW)(LPCWSTR);
-			typedef IStream*(WINAPI *PFN_SHCreateMemStream)(const BYTE*, UINT);
-
 		public:
 			static inline Shlwapi& Get()
 			{
@@ -46,8 +35,20 @@ namespace kiwano
 				return instance;
 			}
 
+			// Shlwapi functions
+			typedef BOOL(WINAPI* PFN_PathFileExistsW)(LPCWSTR);
+			typedef IStream* (WINAPI* PFN_SHCreateMemStream)(const BYTE*, UINT);
+
 			PFN_PathFileExistsW PathFileExistsW;
 			PFN_SHCreateMemStream SHCreateMemStream;
+
+		private:
+			Shlwapi();
+
+			Shlwapi(const Shlwapi&) = delete;
+			Shlwapi& operator=(const Shlwapi&) = delete;
+
+			Library shlwapi;
 		};
 	}
 }

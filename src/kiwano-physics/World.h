@@ -21,24 +21,22 @@
 #pragma once
 #include <kiwano-physics/Body.h>
 #include <kiwano-physics/Joint.h>
-#include <kiwano-physics/ContactListener.h>
 
 namespace kiwano
 {
 	namespace physics
 	{
 		// 物理世界
-		class KGE_API PhysicWorld
+		class KGE_API World
 			: public Stage
-			, public PhysicContactDispatcher
 		{
-			friend class PhysicBody;
-			friend class PhysicJoint;
+			friend class Body;
+			friend class Joint;
 
 		public:
-			PhysicWorld();
+			World();
 
-			virtual ~PhysicWorld();
+			virtual ~World();
 
 			// 获取重力
 			Vec2 GetGravity() const;
@@ -71,16 +69,16 @@ namespace kiwano
 
 		private:
 			// 移除物体
-			void RemoveBody(PhysicBody* body);
+			void RemoveBody(Body* body);
 
 			// 移除所有物体
 			void RemoveAllBodies();
 
 			// 添加关节
-			void AddJoint(PhysicJoint* joint);
+			void AddJoint(Joint* joint);
 
 			// 移除关节
-			void RemoveJoint(PhysicJoint* joint);
+			void RemoveJoint(Joint* joint);
 
 			// 移除所有关节
 			void RemoveAllJoints();
@@ -105,9 +103,9 @@ namespace kiwano
 			ContactListener* contact_listener_;
 
 			bool removing_joint_;
-			Vector<PhysicJoint*> joints_;
+			Vector<Joint*> joints_;
 		};
 
-		KGE_DECLARE_SMART_PTR(PhysicWorld);
+		KGE_DECLARE_SMART_PTR(World);
 	}
 }

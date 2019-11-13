@@ -23,7 +23,7 @@
 #include <kiwano-physics/Shape.h>
 #include <kiwano-physics/Fixture.h>
 #include <kiwano-physics/Contact.h>
-#include <kiwano-physics/ContactListener.h>
+#include <kiwano-physics/ContactEvent.h>
 #include <kiwano-physics/Body.h>
 #include <kiwano-physics/Joint.h>
 #include <kiwano-physics/World.h>

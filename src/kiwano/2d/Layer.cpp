@@ -29,14 +29,14 @@ namespace kiwano
 	{
 		auto handler = Closure(this, &Layer::HandleMessages);
 
-		AddListener(Event::MouseBtnDown, handler);
-		AddListener(Event::MouseBtnUp, handler);
-		AddListener(Event::MouseMove, handler);
-		AddListener(Event::MouseWheel, handler);
+		AddListener(event::MouseDown, handler);
+		AddListener(event::MouseUp, handler);
+		AddListener(event::MouseMove, handler);
+		AddListener(event::MouseWheel, handler);
 
-		AddListener(Event::KeyDown, handler);
-		AddListener(Event::KeyUp, handler);
-		AddListener(Event::Char, handler);
+		AddListener(event::KeyDown, handler);
+		AddListener(event::KeyUp, handler);
+		AddListener(event::KeyChar, handler);
 	}
 
 	Layer::~Layer()
@@ -64,7 +64,7 @@ namespace kiwano
 		area_.SetMaskTransform(transform);
 	}
 
-	void Layer::Dispatch(Event& evt)
+	void Layer::Dispatch(Event* evt)
 	{
 		if (!IsVisible())
 			return;
@@ -91,31 +91,42 @@ namespace kiwano
 		rt->PopLayer();
 	}
 
-	void Layer::HandleMessages(Event const& evt)
+	void Layer::HandleMessages(Event* evt)
 	{
-		switch (evt.type)
+		if (evt->type == event::MouseDown)
 		{
-		case Event::MouseBtnDown:
-			OnMouseButtonDown(evt.mouse.button, Point{ evt.mouse.x, evt.mouse.y });
-			break;
-		case Event::MouseBtnUp:
-			OnMouseButtonUp(evt.mouse.button, Point{ evt.mouse.x, evt.mouse.y });
-			break;
-		case Event::MouseMove:
-			OnMouseMoved(Point{ evt.mouse.x, evt.mouse.y });
-			break;
-		case Event::MouseWheel:
-			OnMouseWheel(evt.mouse.wheel);
-			break;
-		case Event::KeyDown:
-			OnKeyDown(evt.key.code);
-			break;
-		case Event::KeyUp:
-			OnKeyUp(evt.key.code);
-			break;
-		case Event::Char:
-			OnChar(evt.key.c);
-			break;
+			auto real_evt = evt->SafeCast<MouseDownEvent>();
+			OnMouseButtonDown(real_evt->button, real_evt->pos);
+		}
+		else if (evt->type == event::MouseUp)
+		{
+			auto real_evt = evt->SafeCast<MouseUpEvent>();
+			OnMouseButtonUp(real_evt->button, real_evt->pos);
+		}
+		else if (evt->type == event::MouseMove)
+		{
+			auto real_evt = evt->SafeCast<MouseMoveEvent>();
+			OnMouseMoved(real_evt->pos);
+		}
+		else if (evt->type == event::MouseWheel)
+		{
+			auto real_evt = evt->SafeCast<MouseWheelEvent>();
+			OnMouseWheel(real_evt->wheel);
+		}
+		else if (evt->type == event::KeyDown)
+		{
+			auto real_evt = evt->SafeCast<KeyDownEvent>();
+			OnKeyDown(real_evt->code);
+		}
+		else if (evt->type == event::KeyUp)
+		{
+			auto real_evt = evt->SafeCast<KeyUpEvent>();
+			OnKeyUp(real_evt->code);
+		}
+		else if (evt->type == event::KeyChar)
+		{
+			auto real_evt = evt->SafeCast<KeyCharEvent>();
+			OnChar(real_evt->value);
 		}
 	}
 

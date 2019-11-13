@@ -20,7 +20,7 @@
 
 #include <kiwano/renderer/GifImage.h>
 #include <kiwano/renderer/Renderer.h>
-#include <kiwano/base/Logger.h>
+#include <kiwano/core/Logger.h>
 
 namespace kiwano
 {

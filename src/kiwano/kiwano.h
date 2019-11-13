@@ -29,19 +29,19 @@
 
 
 //
-// core
+// common
 //
 
-#include <kiwano/core/vector.hpp>
-#include <kiwano/core/string.hpp>
-#include <kiwano/core/any.hpp>
-#include <kiwano/core/function.hpp>
-#include <kiwano/core/intrusive_list.hpp>
-#include <kiwano/core/intrusive_ptr.hpp>
-#include <kiwano/core/noncopyable.hpp>
-#include <kiwano/core/singleton.hpp>
-#include <kiwano/core/basic_json.hpp>
-#include <kiwano/core/core.h>
+#include <kiwano/common/vector.hpp>
+#include <kiwano/common/string.hpp>
+#include <kiwano/common/any.hpp>
+#include <kiwano/common/function.hpp>
+#include <kiwano/common/intrusive_list.hpp>
+#include <kiwano/common/intrusive_ptr.hpp>
+#include <kiwano/common/noncopyable.hpp>
+#include <kiwano/common/singleton.hpp>
+#include <kiwano/common/basic_json.hpp>
+#include <kiwano/common/common.h>
 
 
 //
@@ -72,23 +72,21 @@
 
 
 //
-// base
+// core
 //
 
-#include <kiwano/base/time.h>
-#include <kiwano/base/Window.h>
-#include <kiwano/base/input.h>
-#include <kiwano/base/Director.h>
-#include <kiwano/base/Logger.h>
-#include <kiwano/base/SmartPtr.hpp>
-#include <kiwano/base/ObjectBase.h>
-#include <kiwano/base/Event.hpp>
-#include <kiwano/base/EventListener.h>
-#include <kiwano/base/EventDispatcher.h>
-#include <kiwano/base/Timer.h>
-#include <kiwano/base/TimerManager.h>
-#include <kiwano/base/AsyncTask.h>
-#include <kiwano/base/Resource.h>
+#include <kiwano/core/time.h>
+#include <kiwano/core/Director.h>
+#include <kiwano/core/Logger.h>
+#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/Event.h>
+#include <kiwano/core/EventListener.h>
+#include <kiwano/core/EventDispatcher.h>
+#include <kiwano/core/Timer.h>
+#include <kiwano/core/TimerManager.h>
+#include <kiwano/core/AsyncTask.h>
+#include <kiwano/core/Resource.h>
 
 
 //
@@ -129,6 +127,9 @@
 //
 
 #include <kiwano/platform/modules.h>
+#include <kiwano/platform/FileSystem.h>
+#include <kiwano/platform/Input.h>
+#include <kiwano/platform/Window.h>
 #include <kiwano/platform/Application.h>
 
 
@@ -136,7 +137,7 @@
 // utils
 //
 
-#include <kiwano/utils/FileSystem.h>
+#include <kiwano/utils/UserData.h>
 #include <kiwano/utils/LocalStorage.h>
 #include <kiwano/utils/ResourceCache.h>
 

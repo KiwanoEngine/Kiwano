@@ -19,10 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/singleton.hpp>
-#include <kiwano/base/Component.h>
-#include <kiwano/base/win32/ComPtr.hpp>
+#include <kiwano/common/singleton.hpp>
+#include <kiwano/core/Component.h>
+#include <kiwano/core/win32/ComPtr.hpp>
 #include <kiwano-audio/Transcoder.h>
+#include <xaudio2.h>
 
 namespace kiwano
 {

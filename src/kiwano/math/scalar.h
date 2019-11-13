@@ -33,8 +33,8 @@ namespace kiwano
 		inline float	Sqrt(float val)						{ return ::sqrtf(val); }
 		inline double	Sqrt(double val)					{ return ::sqrt(val); }
 
-		inline float	Pow(float base, float exponent)		{ return ::powf(base, exponent); }
-		inline double	Pow(double base, double exponent)	{ return ::pow(base, exponent); }
+		inline float	Pow(float core, float exponent)		{ return ::powf(core, exponent); }
+		inline double	Pow(double core, double exponent)	{ return ::pow(core, exponent); }
 
 		inline int		Sign(int val)						{ return val < 0 ? -1 : 1; }
 		inline float	Sign(float val)						{ return val < 0 ? -1.f : 1.f; }

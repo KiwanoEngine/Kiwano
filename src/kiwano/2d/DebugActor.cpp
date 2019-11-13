@@ -66,8 +66,8 @@ namespace kiwano
 		style.line_spacing = 20.f;
 		debug_text_->SetStyle(style);
 
-		AddListener(Event::MouseHover, [=](const Event&) { SetOpacity(0.4f); });
-		AddListener(Event::MouseOut, [=](const Event&) { SetOpacity(1.f); });
+		AddListener(event::MouseHover, [=](Event*) { SetOpacity(0.4f); });
+		AddListener(event::MouseOut, [=](Event*) { SetOpacity(1.f); });
 	}
 
 	DebugActor::~DebugActor()
@@ -87,7 +87,7 @@ namespace kiwano
 		KGE_NOT_USED(dt);
 
 		frame_time_.push_back(Time::Now());
-		while (frame_time_.back() - frame_time_.front() >= time::Sec)
+		while (frame_time_.back() - frame_time_.front() >= Duration::Second)
 		{
 			frame_time_.erase(frame_time_.begin());
 		}

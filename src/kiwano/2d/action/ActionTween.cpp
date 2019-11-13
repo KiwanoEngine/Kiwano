@@ -108,15 +108,15 @@ namespace kiwano
 		}
 		else
 		{
-			Duration elapsed = elapsed_ - delay_;
+			Duration elapsed = GetElapsed() - GetDelay();
 			float loops_done = elapsed / dur_;
 
-			while (loops_done_ < static_cast<int>(loops_done))
+			while (GetLoopsDone() < static_cast<int>(loops_done))
 			{
 				Complete(target);	// loops_done_++
 			}
 
-			percent = (status_ == Status::Done) ? 1.f : (loops_done - static_cast<float>(loops_done_));
+			percent = (GetStatus() == Status::Done) ? 1.f : (loops_done - static_cast<float>(GetLoopsDone()));
 		}
 
 		if (ease_func_)

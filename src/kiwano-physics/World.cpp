@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include "World.h"
+#include <kiwano-physics/ContactEvent.h>
 
 namespace kiwano
 {
@@ -29,12 +30,12 @@ namespace kiwano
 			const float DefaultGlobalScale = 100.f;		// 100 pixels per meters
 		}
 
-		class PhysicWorld::DestructionListener : public b2DestructionListener
+		class World::DestructionListener : public b2DestructionListener
 		{
-			PhysicWorld* world_;
+			World* world_;
 
 		public:
-			DestructionListener(PhysicWorld* world)
+			DestructionListener(World* world)
 				: world_(world)
 			{
 			}
@@ -53,24 +54,34 @@ namespace kiwano
 			}
 		};
 
-		class PhysicWorld::ContactListener
+		class World::ContactListener
 			: public b2ContactListener
 		{
-			PhysicWorld* world_;
+			World* world_;
 
 		public:
-			ContactListener(PhysicWorld* world)
+			ContactListener(World* world)
 				: world_(world)
 			{
 			}
 
-			void BeginContact(b2Contact* contact) override									{ world_->OnContactBegin(contact); }
-			void EndContact(b2Contact* contact) override									{ world_->OnContactEnd(contact); }
+			void BeginContact(b2Contact* contact) override
+			{
+				ContactBeginEvent evt(contact);
+				world_->Dispatch(&evt);
+			}
+
+			void EndContact(b2Contact* contact) override
+			{
+				ContactEndEvent evt(contact);
+				world_->Dispatch(&evt);
+			}
+
 			void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override		{ KGE_NOT_USED(contact); KGE_NOT_USED(oldManifold); }
 			void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override	{ KGE_NOT_USED(contact); KGE_NOT_USED(impulse); }
 		};
 
-		PhysicWorld::PhysicWorld()
+		World::World()
 			: world_(b2Vec2(0, 10.0f))
 			, vel_iter_(6)
 			, pos_iter_(2)
@@ -86,7 +97,7 @@ namespace kiwano
 			world_.SetContactListener(contact_listener_);
 		}
 
-		PhysicWorld::~PhysicWorld()
+		World::~World()
 		{
 			world_.SetDestructionListener(nullptr);
 			if (destruction_listener_)
@@ -102,15 +113,13 @@ namespace kiwano
 				contact_listener_ = nullptr;
 			}
 
-			RemoveAllContactListeners();
-
 			// Make sure b2World was destroyed after b2Body
 			RemoveAllChildren();
 			RemoveAllBodies();
 			RemoveAllJoints();
 		}
 
-		void PhysicWorld::RemoveBody(PhysicBody* body)
+		void World::RemoveBody(Body* body)
 		{
 			if (body && body->GetB2Body())
 			{
@@ -118,7 +127,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicWorld::RemoveAllBodies()
+		void World::RemoveAllBodies()
 		{
 			if (world_.GetBodyCount())
 			{
@@ -132,7 +141,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicWorld::AddJoint(PhysicJoint* joint)
+		void World::AddJoint(Joint* joint)
 		{
 			if (joint)
 			{
@@ -140,7 +149,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicWorld::RemoveJoint(PhysicJoint* joint)
+		void World::RemoveJoint(Joint* joint)
 		{
 			if (joint)
 			{
@@ -159,7 +168,7 @@ namespace kiwano
 			}
 		}
 
-		void PhysicWorld::RemoveAllJoints()
+		void World::RemoveAllJoints()
 		{
 			if (world_.GetJointCount())
 			{
@@ -178,14 +187,14 @@ namespace kiwano
 			joints_.clear();
 		}
 
-		void PhysicWorld::JointRemoved(b2Joint* joint)
+		void World::JointRemoved(b2Joint* joint)
 		{
 			if (!removing_joint_ && joint)
 			{
 				auto iter = std::find_if(
 					joints_.begin(),
 					joints_.end(),
-					[joint](PhysicJoint* j) -> bool { return j->GetB2Joint() == joint; }
+					[joint](Joint* j) -> bool { return j->GetB2Joint() == joint; }
 				);
 
 				if (iter != joints_.end())
@@ -195,36 +204,36 @@ namespace kiwano
 			}
 		}
 
-		b2World* PhysicWorld::GetB2World()
+		b2World* World::GetB2World()
 		{
 			return &world_;
 		}
 
-		const b2World* PhysicWorld::GetB2World() const
+		const b2World* World::GetB2World() const
 		{
 			return &world_;
 		}
 
-		Vec2 PhysicWorld::GetGravity() const
+		Vec2 World::GetGravity() const
 		{
 			b2Vec2 g = world_.GetGravity();
 			return Vec2(g.x, g.y);
 		}
 
-		void PhysicWorld::SetGravity(Vec2 gravity)
+		void World::SetGravity(Vec2 gravity)
 		{
 			world_.SetGravity(b2Vec2(gravity.x, gravity.y));
 		}
 
-		void PhysicWorld::Update(Duration dt)
+		void World::Update(Duration dt)
 		{
 			Stage::Update(dt);
 
 			b2Body* b2body = world_.GetBodyList();
 			while (b2body)
 			{
-				PhysicBody* body = static_cast<PhysicBody*>(b2body->GetUserData());
-				if (body && body->GetType() != PhysicBody::Type::Static)
+				Body* body = static_cast<Body*>(b2body->GetUserData());
+				if (body && body->GetType() != Body::Type::Static)
 				{
 					body->UpdateFromActor();
 				}
@@ -237,8 +246,8 @@ namespace kiwano
 			b2body = world_.GetBodyList();
 			while (b2body)
 			{
-				PhysicBody* body = static_cast<PhysicBody*>(b2body->GetUserData());
-				if (body && body->GetType() != PhysicBody::Type::Static)
+				Body* body = static_cast<Body*>(b2body->GetUserData());
+				if (body && body->GetType() != Body::Type::Static)
 				{
 					body->UpdateActor();
 				}

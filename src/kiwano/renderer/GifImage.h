@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/renderer/Texture.h>
-#include <kiwano/base/time.h>
+#include <kiwano/core/time.h>
 
 namespace kiwano
 {

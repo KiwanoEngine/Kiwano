@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/Renderer.h>
-#include <kiwano/base/win32/helper.h>
-#include <kiwano/base/Window.h>
-#include <kiwano/utils/FileSystem.h>
+#include <kiwano/core/win32/helper.h>
+#include <kiwano/platform/Window.h>
+#include <kiwano/platform/FileSystem.h>
 
 namespace kiwano
 {

@@ -27,19 +27,19 @@ namespace kiwano
 	namespace physics
 	{
 
-		PhysicFixture::PhysicFixture()
+		Fixture::Fixture()
 			: fixture_(nullptr)
 		{
 		}
 
-		PhysicFixture::PhysicFixture(b2Fixture* fixture)
-			: PhysicFixture()
+		Fixture::Fixture(b2Fixture* fixture)
+			: Fixture()
 		{
 			SetB2Fixture(fixture);
 		}
 
-		PhysicFixture::PhysicFixture(PhysicBody* body, PhysicShape* shape, const Param& param)
-			: PhysicFixture()
+		Fixture::Fixture(Body* body, Shape* shape, const Param& param)
+			: Fixture()
 		{
 			KGE_ASSERT(body);
 
@@ -58,38 +58,38 @@ namespace kiwano
 			}
 		}
 
-		PhysicBody* PhysicFixture::GetBody()
+		Body* Fixture::GetBody()
 		{
 			KGE_ASSERT(fixture_);
-			return static_cast<PhysicBody*>(fixture_->GetBody()->GetUserData());
+			return static_cast<Body*>(fixture_->GetBody()->GetUserData());
 		}
 
-		const PhysicBody* PhysicFixture::GetBody() const
+		const Body* Fixture::GetBody() const
 		{
 			KGE_ASSERT(fixture_);
-			return static_cast<const PhysicBody*>(fixture_->GetBody()->GetUserData());
+			return static_cast<const Body*>(fixture_->GetBody()->GetUserData());
 		}
 
-		PhysicShape PhysicFixture::GetShape() const
+		Shape Fixture::GetShape() const
 		{
 			KGE_ASSERT(fixture_);
-			return PhysicShape(fixture_->GetShape());
+			return Shape(fixture_->GetShape());
 		}
 
-		PhysicFixture PhysicFixture::GetNext() const
+		Fixture Fixture::GetNext() const
 		{
 			KGE_ASSERT(fixture_);
-			return PhysicFixture(fixture_->GetNext());
+			return Fixture(fixture_->GetNext());
 		}
 
-		void PhysicFixture::GetMassData(float* mass, Point* center, float* inertia) const
+		void Fixture::GetMassData(float* mass, Point* center, float* inertia) const
 		{
 			KGE_ASSERT(fixture_);
 
-			const PhysicBody* body = GetBody();
+			const Body* body = GetBody();
 			KGE_ASSERT(body);
 
-			const PhysicWorld* world = body->GetWorld();
+			const World* world = body->GetWorld();
 			KGE_ASSERT(world);
 
 			b2MassData data;
@@ -100,14 +100,14 @@ namespace kiwano
 			if (inertia) *inertia = data.I;
 		}
 
-		bool PhysicFixture::TestPoint(const Point& p) const
+		bool Fixture::TestPoint(const Point& p) const
 		{
 			KGE_ASSERT(fixture_);
 
-			const PhysicBody* body = GetBody();
+			const Body* body = GetBody();
 			KGE_ASSERT(body);
 
-			const PhysicWorld* world = body->GetWorld();
+			const World* world = body->GetWorld();
 			KGE_ASSERT(world);
 
 			return fixture_->TestPoint(world->Stage2World(p));

@@ -19,25 +19,21 @@
 // THE SOFTWARE.
 
 #include <kiwano/platform/modules.h>
-#include <kiwano/base/Logger.h>
+#include <kiwano/core/Logger.h>
 
 namespace kiwano
 {
 	namespace modules
 	{
 		Shlwapi::Shlwapi()
-			: shlwapi(nullptr)
+			: shlwapi()
 			, PathFileExistsW(nullptr)
 			, SHCreateMemStream(nullptr)
 		{
-			shlwapi = LoadLibraryW(L"shlwapi.dll");
-			if (shlwapi)
+			if (shlwapi.Load(L"shlwapi.dll"))
 			{
-				PathFileExistsW = (PFN_PathFileExistsW)
-					GetProcAddress(shlwapi, "PathFileExistsW");
-
-				SHCreateMemStream = (PFN_SHCreateMemStream)
-					GetProcAddress(shlwapi, "SHCreateMemStream");
+				PathFileExistsW = shlwapi.GetProcess<PFN_PathFileExistsW>(L"PathFileExistsW");
+				SHCreateMemStream = shlwapi.GetProcess<PFN_SHCreateMemStream>(L"SHCreateMemStream");
 			}
 			else
 			{

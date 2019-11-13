@@ -25,55 +25,55 @@ namespace kiwano
 {
 	namespace physics
 	{
-		PhysicShape::PhysicShape()
+		Shape::Shape()
 			: shape_(nullptr)
 		{
 		}
 
-		PhysicShape::PhysicShape(b2Shape* shape)
+		Shape::Shape(b2Shape* shape)
 			: shape_(shape)
 		{
 		}
 
-		b2Shape* PhysicShape::GetB2Shape()
+		b2Shape* Shape::GetB2Shape()
 		{
 			return shape_;
 		}
 
-		const b2Shape* PhysicShape::GetB2Shape() const
+		const b2Shape* Shape::GetB2Shape() const
 		{
 			return shape_;
 		}
 
-		void PhysicShape::SetB2Shape(b2Shape* shape)
+		void Shape::SetB2Shape(b2Shape* shape)
 		{
 			shape_ = shape;
 		}
 
 		//
-		// PhysicCircleShape
+		// CircleShape
 		//
 
-		PhysicCircleShape::PhysicCircleShape()
-			: PhysicShape(&circle_)
+		CircleShape::CircleShape()
+			: Shape(&circle_)
 			, circle_()
 			, radius_(0.f)
 		{
 		}
 
-		PhysicCircleShape::PhysicCircleShape(float radius, Point const& offset)
-			: PhysicCircleShape()
+		CircleShape::CircleShape(float radius, Point const& offset)
+			: CircleShape()
 		{
 			Set(radius, offset);
 		}
 
-		void PhysicCircleShape::Set(float radius, Point const& offset)
+		void CircleShape::Set(float radius, Point const& offset)
 		{
 			radius_ = radius;
 			offset_ = offset;
 		}
 
-		void PhysicCircleShape::FitWorld(PhysicWorld* world)
+		void CircleShape::FitWorld(World* world)
 		{
 			KGE_ASSERT(world);
 			circle_.m_radius = world->Stage2World(radius_);
@@ -81,30 +81,30 @@ namespace kiwano
 		}
 
 		//
-		// PhysicBoxShape
+		// BoxShape
 		//
 
-		PhysicBoxShape::PhysicBoxShape()
-			: PhysicShape(&polygon_)
+		BoxShape::BoxShape()
+			: Shape(&polygon_)
 			, polygon_()
 			, rotation_(0.f)
 		{
 		}
 
-		PhysicBoxShape::PhysicBoxShape(Vec2 const& size, Point const& offset, float rotation)
-			: PhysicBoxShape()
+		BoxShape::BoxShape(Vec2 const& size, Point const& offset, float rotation)
+			: BoxShape()
 		{
 			Set(size, offset, rotation);
 		}
 
-		void PhysicBoxShape::Set(Vec2 const& size, Point const& offset, float rotation)
+		void BoxShape::Set(Vec2 const& size, Point const& offset, float rotation)
 		{
 			box_size_ = size;
 			offset_ = offset;
 			rotation_ = rotation;
 		}
 
-		void PhysicBoxShape::FitWorld(PhysicWorld* world)
+		void BoxShape::FitWorld(World* world)
 		{
 			KGE_ASSERT(world);
 
@@ -114,27 +114,27 @@ namespace kiwano
 		}
 
 		//
-		// PhysicPolygonShape
+		// PolygonShape
 		//
 
-		PhysicPolygonShape::PhysicPolygonShape()
-			: PhysicShape(&polygon_)
+		PolygonShape::PolygonShape()
+			: Shape(&polygon_)
 			, polygon_()
 		{
 		}
 
-		PhysicPolygonShape::PhysicPolygonShape(Vector<Point> const& vertexs)
-			: PhysicPolygonShape()
+		PolygonShape::PolygonShape(Vector<Point> const& vertexs)
+			: PolygonShape()
 		{
 			Set(vertexs);
 		}
 
-		void PhysicPolygonShape::Set(Vector<Point> const& vertexs)
+		void PolygonShape::Set(Vector<Point> const& vertexs)
 		{
 			vertexs_ = vertexs;
 		}
 
-		void PhysicPolygonShape::FitWorld(PhysicWorld* world)
+		void PolygonShape::FitWorld(World* world)
 		{
 			KGE_ASSERT(world);
 
@@ -149,28 +149,28 @@ namespace kiwano
 		}
 
 		//
-		// PhysicEdgeShape
+		// EdgeShape
 		//
 
-		PhysicEdgeShape::PhysicEdgeShape()
-			: PhysicShape(&edge_)
+		EdgeShape::EdgeShape()
+			: Shape(&edge_)
 			, edge_()
 		{
 		}
 
-		PhysicEdgeShape::PhysicEdgeShape(Point const& p1, Point const& p2)
-			: PhysicEdgeShape()
+		EdgeShape::EdgeShape(Point const& p1, Point const& p2)
+			: EdgeShape()
 		{
 			Set(p1, p2);
 		}
 
-		void PhysicEdgeShape::Set(Point const& p1, Point const& p2)
+		void EdgeShape::Set(Point const& p1, Point const& p2)
 		{
 			p_[0] = p1;
 			p_[1] = p2;
 		}
 
-		void PhysicEdgeShape::FitWorld(PhysicWorld* world)
+		void EdgeShape::FitWorld(World* world)
 		{
 			KGE_ASSERT(world);
 
@@ -180,29 +180,29 @@ namespace kiwano
 		}
 
 		//
-		// PhysicChainShape
+		// ChainShape
 		//
 
-		PhysicChainShape::PhysicChainShape()
-			: PhysicShape(&chain_)
+		ChainShape::ChainShape()
+			: Shape(&chain_)
 			, chain_()
 			, loop_(false)
 		{
 		}
 
-		PhysicChainShape::PhysicChainShape(Vector<Point> const& vertexs, bool loop)
-			: PhysicChainShape()
+		ChainShape::ChainShape(Vector<Point> const& vertexs, bool loop)
+			: ChainShape()
 		{
 			Set(vertexs, loop);
 		}
 
-		void PhysicChainShape::Set(Vector<Point> const& vertexs, bool loop)
+		void ChainShape::Set(Vector<Point> const& vertexs, bool loop)
 		{
 			vertexs_ = vertexs;
 			loop_ = loop;
 		}
 
-		void PhysicChainShape::FitWorld(PhysicWorld* world)
+		void ChainShape::FitWorld(World* world)
 		{
 			KGE_ASSERT(world);
 

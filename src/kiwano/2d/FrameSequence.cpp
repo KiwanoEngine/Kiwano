@@ -20,7 +20,7 @@
 
 #include <kiwano/2d/FrameSequence.h>
 #include <kiwano/2d/Frame.h>
-#include <kiwano/base/Logger.h>
+#include <kiwano/core/Logger.h>
 
 namespace kiwano
 {

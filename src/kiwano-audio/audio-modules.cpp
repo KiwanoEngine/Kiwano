@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/Logger.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano-audio/audio-modules.h>
 
 namespace kiwano
@@ -28,7 +28,7 @@ namespace kiwano
 		namespace modules
 		{
 			XAudio2::XAudio2()
-				: xaudio2(nullptr)
+				: xaudio2()
 				, XAudio2Create(nullptr)
 			{
 				const auto xaudio2_dll_names =
@@ -40,16 +40,17 @@ namespace kiwano
 
 				for (const auto& name : xaudio2_dll_names)
 				{
-					xaudio2 = LoadLibraryW(name);
-					if (xaudio2)
+					if (xaudio2.Load(name))
 					{
-						XAudio2Create = (PFN_XAudio2Create)
-							GetProcAddress(xaudio2, "XAudio2Create");
 						break;
 					}
 				}
 
-				if (!xaudio2)
+				if (xaudio2.IsValid())
+				{
+					XAudio2Create = xaudio2.GetProcess<PFN_XAudio2Create>(L"XAudio2Create");
+				}
+				else
 				{
 					KGE_ERROR_LOG(L"Load xaudio2.dll failed");
 					throw std::runtime_error("Load xaudio2.dll failed");
@@ -57,8 +58,8 @@ namespace kiwano
 			}
 
 			MediaFoundation::MediaFoundation()
-				: mfplat(nullptr)
-				, mfreadwrite(nullptr)
+				: mfplat()
+				, mfreadwrite()
 				, MFStartup(nullptr)
 				, MFShutdown(nullptr)
 				, MFCreateMediaType(nullptr)
@@ -67,23 +68,13 @@ namespace kiwano
 				, MFCreateSourceReaderFromByteStream(nullptr)
 				, MFCreateMFByteStreamOnStream(nullptr)
 			{
-				mfplat = LoadLibraryW(L"Mfplat.dll");
-				if (mfplat)
+				if (mfplat.Load(L"Mfplat.dll"))
 				{
-					MFStartup = (PFN_MFStartup)
-						GetProcAddress(mfplat, "MFStartup");
-
-					MFShutdown = (PFN_MFShutdown)
-						GetProcAddress(mfplat, "MFShutdown");
-
-					MFCreateMediaType = (PFN_MFCreateMediaType)
-						GetProcAddress(mfplat, "MFCreateMediaType");
-
-					MFCreateWaveFormatExFromMFMediaType = (PFN_MFCreateWaveFormatExFromMFMediaType)
-						GetProcAddress(mfplat, "MFCreateWaveFormatExFromMFMediaType");
-
-					MFCreateMFByteStreamOnStream = (PFN_MFCreateMFByteStreamOnStream)
-						GetProcAddress(mfplat, "MFCreateMFByteStreamOnStream");
+					MFStartup = mfplat.GetProcess<PFN_MFStartup>(L"MFStartup");
+					MFShutdown = mfplat.GetProcess<PFN_MFShutdown>(L"MFShutdown");
+					MFCreateMediaType = mfplat.GetProcess<PFN_MFCreateMediaType>(L"MFCreateMediaType");
+					MFCreateWaveFormatExFromMFMediaType = mfplat.GetProcess<PFN_MFCreateWaveFormatExFromMFMediaType>(L"MFCreateWaveFormatExFromMFMediaType");
+					MFCreateMFByteStreamOnStream = mfplat.GetProcess<PFN_MFCreateMFByteStreamOnStream>(L"MFCreateMFByteStreamOnStream");
 				}
 				else
 				{
@@ -91,14 +82,10 @@ namespace kiwano
 					throw std::runtime_error("Load Mfplat.dll failed");
 				}
 
-				mfreadwrite = LoadLibraryW(L"Mfreadwrite.dll");
-				if (mfreadwrite)
+				if (mfreadwrite.Load(L"Mfreadwrite.dll"))
 				{
-					MFCreateSourceReaderFromURL = (PFN_MFCreateSourceReaderFromURL)
-						GetProcAddress(mfreadwrite, "MFCreateSourceReaderFromURL");
-
-					MFCreateSourceReaderFromByteStream = (PFN_MFCreateSourceReaderFromByteStream)
-						GetProcAddress(mfreadwrite, "MFCreateSourceReaderFromByteStream");
+					MFCreateSourceReaderFromURL = mfreadwrite.GetProcess<PFN_MFCreateSourceReaderFromURL>(L"MFCreateSourceReaderFromURL");
+					MFCreateSourceReaderFromByteStream = mfreadwrite.GetProcess<PFN_MFCreateSourceReaderFromByteStream>(L"MFCreateSourceReaderFromByteStream");
 				}
 				else
 				{
