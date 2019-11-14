@@ -84,7 +84,7 @@ namespace kiwano
 			Status status
 		);
 
-		void UpdateStatus(Event* evt);
+		void UpdateStatus(Event& evt);
 
 	private:
 		bool		enabled_;

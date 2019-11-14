@@ -81,7 +81,7 @@ namespace kiwano
 			const EventType& type
 		);
 
-		virtual void Dispatch(Event* evt);
+		virtual void Dispatch(Event& evt);
 
 	protected:
 		Listeners listeners_;

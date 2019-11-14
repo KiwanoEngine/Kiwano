@@ -64,7 +64,7 @@ namespace kiwano
 		area_.SetMaskTransform(transform);
 	}
 
-	void Layer::Dispatch(Event* evt)
+	void Layer::Dispatch(Event& evt)
 	{
 		if (!IsVisible())
 			return;
@@ -91,41 +91,41 @@ namespace kiwano
 		rt->PopLayer();
 	}
 
-	void Layer::HandleMessages(Event* evt)
+	void Layer::HandleMessages(Event& evt)
 	{
-		if (evt->type == event::MouseDown)
+		if (evt.type == event::MouseDown)
 		{
-			auto real_evt = evt->SafeCast<MouseDownEvent>();
+			auto real_evt = evt.SafeCast<MouseDownEvent>();
 			OnMouseButtonDown(real_evt->button, real_evt->pos);
 		}
-		else if (evt->type == event::MouseUp)
+		else if (evt.type == event::MouseUp)
 		{
-			auto real_evt = evt->SafeCast<MouseUpEvent>();
+			auto real_evt = evt.SafeCast<MouseUpEvent>();
 			OnMouseButtonUp(real_evt->button, real_evt->pos);
 		}
-		else if (evt->type == event::MouseMove)
+		else if (evt.type == event::MouseMove)
 		{
-			auto real_evt = evt->SafeCast<MouseMoveEvent>();
+			auto real_evt = evt.SafeCast<MouseMoveEvent>();
 			OnMouseMoved(real_evt->pos);
 		}
-		else if (evt->type == event::MouseWheel)
+		else if (evt.type == event::MouseWheel)
 		{
-			auto real_evt = evt->SafeCast<MouseWheelEvent>();
+			auto real_evt = evt.SafeCast<MouseWheelEvent>();
 			OnMouseWheel(real_evt->wheel);
 		}
-		else if (evt->type == event::KeyDown)
+		else if (evt.type == event::KeyDown)
 		{
-			auto real_evt = evt->SafeCast<KeyDownEvent>();
+			auto real_evt = evt.SafeCast<KeyDownEvent>();
 			OnKeyDown(real_evt->code);
 		}
-		else if (evt->type == event::KeyUp)
+		else if (evt.type == event::KeyUp)
 		{
-			auto real_evt = evt->SafeCast<KeyUpEvent>();
+			auto real_evt = evt.SafeCast<KeyUpEvent>();
 			OnKeyUp(real_evt->code);
 		}
-		else if (evt->type == event::KeyChar)
+		else if (evt.type == event::KeyChar)
 		{
-			auto real_evt = evt->SafeCast<KeyCharEvent>();
+			auto real_evt = evt.SafeCast<KeyCharEvent>();
 			OnChar(real_evt->value);
 		}
 	}

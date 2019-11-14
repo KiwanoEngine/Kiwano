@@ -62,11 +62,11 @@ namespace kiwano
 
 	void Actor::Update(Duration dt)
 	{
+		UpdateActions(this, dt);
+		UpdateTimers(dt);
+
 		if (!update_pausing_)
 		{
-			UpdateActions(this, dt);
-			UpdateTimers(dt);
-
 			if (cb_update_)
 				cb_update_(dt);
 
@@ -155,7 +155,7 @@ namespace kiwano
 		return visible_in_rt_;
 	}
 
-	void Actor::Dispatch(Event* evt)
+	void Actor::Dispatch(Event& evt)
 	{
 		if (!visible_)
 			return;
@@ -169,9 +169,9 @@ namespace kiwano
 
 		if (responsible_)
 		{
-			if (evt->type == event::MouseMove)
+			if (evt.type == event::MouseMove)
 			{
-				auto mouse_evt = evt->SafeCast<MouseMoveEvent>();
+				auto mouse_evt = evt.SafeCast<MouseMoveEvent>();
 				if (!mouse_evt->target && ContainsPoint(mouse_evt->pos))
 				{
 					mouse_evt->target = this;
@@ -185,7 +185,7 @@ namespace kiwano
 						hover.left_btn_down = mouse_evt->left_btn_down;
 						hover.right_btn_down = mouse_evt->right_btn_down;
 						hover.target = this;
-						EventDispatcher::Dispatch(&hover);
+						EventDispatcher::Dispatch(hover);
 					}
 				}
 				else if (hover_)
@@ -198,29 +198,30 @@ namespace kiwano
 					out.left_btn_down = mouse_evt->left_btn_down;
 					out.right_btn_down = mouse_evt->right_btn_down;
 					out.target = this;
-					EventDispatcher::Dispatch(&out);
+					EventDispatcher::Dispatch(out);
 				}
 			}
 
-			if (evt->type == event::MouseDown && hover_)
+			if (evt.type == event::MouseDown && hover_)
 			{
 				pressed_ = true;
-				evt->SafeCast<MouseDownEvent>()->target = this;
+				evt.SafeCast<MouseDownEvent>()->target = this;
 			}
 
-			if (evt->type == event::MouseUp && pressed_)
+			if (evt.type == event::MouseUp && pressed_)
 			{
 				pressed_ = false;
 
-				auto mouse_up_evt = evt->SafeCast<MouseUpEvent>();
+				auto mouse_up_evt = evt.SafeCast<MouseUpEvent>();
 				mouse_up_evt->target = this;
 
-				MouseOutEvent click;
+				MouseClickEvent click;
 				click.pos = mouse_up_evt->pos;
 				click.left_btn_down = mouse_up_evt->left_btn_down;
 				click.right_btn_down = mouse_up_evt->right_btn_down;
 				click.target = this;
-				EventDispatcher::Dispatch(&click);
+				click.button = mouse_up_evt->button;
+				EventDispatcher::Dispatch(click);
 			}
 		}
 

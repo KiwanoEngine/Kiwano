@@ -76,7 +76,6 @@
 //
 
 #include <kiwano/core/time.h>
-#include <kiwano/core/Director.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/ObjectBase.h>
@@ -130,6 +129,7 @@
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Window.h>
+#include <kiwano/platform/Director.h>
 #include <kiwano/platform/Application.h>
 
 

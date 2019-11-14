@@ -68,13 +68,13 @@ namespace kiwano
 			void BeginContact(b2Contact* contact) override
 			{
 				ContactBeginEvent evt(contact);
-				world_->Dispatch(&evt);
+				world_->Dispatch(evt);
 			}
 
 			void EndContact(b2Contact* contact) override
 			{
 				ContactEndEvent evt(contact);
-				world_->Dispatch(&evt);
+				world_->Dispatch(evt);
 			}
 
 			void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override		{ KGE_NOT_USED(contact); KGE_NOT_USED(oldManifold); }
@@ -227,33 +227,37 @@ namespace kiwano
 
 		void World::Update(Duration dt)
 		{
-			Stage::Update(dt);
-
-			b2Body* b2body = world_.GetBodyList();
-			while (b2body)
 			{
-				Body* body = static_cast<Body*>(b2body->GetUserData());
-				if (body && body->GetType() != Body::Type::Static)
+				b2Body* b2body = world_.GetBodyList();
+				while (b2body)
 				{
-					body->UpdateFromActor();
-				}
+					Body* body = static_cast<Body*>(b2body->GetUserData());
+					if (body && body->GetType() != Body::Type::Static)
+					{
+						body->UpdateFromActor();
+					}
 
-				b2body = b2body->GetNext();
+					b2body = b2body->GetNext();
+				}
 			}
 
 			world_.Step(dt.Seconds(), vel_iter_, pos_iter_);
 
-			b2body = world_.GetBodyList();
-			while (b2body)
 			{
-				Body* body = static_cast<Body*>(b2body->GetUserData());
-				if (body && body->GetType() != Body::Type::Static)
+				b2Body* b2body = world_.GetBodyList();
+				while (b2body)
 				{
-					body->UpdateActor();
-				}
+					Body* body = static_cast<Body*>(b2body->GetUserData());
+					if (body && body->GetType() != Body::Type::Static)
+					{
+						body->UpdateActor();
+					}
 
-				b2body = b2body->GetNext();
+					b2body = b2body->GetNext();
+				}
 			}
+
+			Stage::Update(dt);
 		}
 
 	}

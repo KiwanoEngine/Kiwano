@@ -3,8 +3,8 @@
 namespace kiwano
 {
 	EventType event::MouseMove			= EventType(L"MouseMove");
-	EventType event::MouseDown			= EventType(L"MouseBtnDown");
-	EventType event::MouseUp			= EventType(L"MouseBtnUp");
+	EventType event::MouseDown			= EventType(L"MouseDown");
+	EventType event::MouseUp			= EventType(L"MouseUp");
 	EventType event::MouseWheel			= EventType(L"MouseWheel");
 	EventType event::MouseHover			= EventType(L"MouseHover");
 	EventType event::MouseOut			= EventType(L"MouseOut");
@@ -82,21 +82,18 @@ namespace kiwano
 	KeyDownEvent::KeyDownEvent()
 		: Event(event::KeyDown)
 		, code(0)
-		, count(0)
 	{
 	}
 
 	KeyUpEvent::KeyUpEvent()
 		: Event(event::KeyUp)
 		, code(0)
-		, count(0)
 	{
 	}
 
 	KeyCharEvent::KeyCharEvent()
 		: Event(event::KeyChar)
 		, value()
-		, count(0)
 	{
 	}
 
