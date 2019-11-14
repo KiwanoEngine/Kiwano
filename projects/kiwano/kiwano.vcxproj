@@ -11,7 +11,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Frame.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Director.h" />
     <ClInclude Include="..\..\src\kiwano\core\Event.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\core\win32\ComPtr.hpp" />
@@ -64,6 +63,7 @@
     <ClInclude Include="..\..\src\kiwano\math\scalar.h" />
     <ClInclude Include="..\..\src\kiwano\math\Vec2.hpp" />
     <ClInclude Include="..\..\src\kiwano\platform\Application.h" />
+    <ClInclude Include="..\..\src\kiwano\platform\Director.h" />
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Input.h" />
     <ClInclude Include="..\..\src\kiwano\platform\modules.h" />
@@ -123,11 +123,11 @@
     <ClCompile Include="..\..\src\kiwano\core\Logger.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\ObjectBase.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Resource.cpp" />
-    <ClCompile Include="..\..\src\kiwano\core\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Timer.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\TimerManager.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\time.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp" />
+    <ClCompile Include="..\..\src\kiwano\platform\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Input.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\modules.cpp" />

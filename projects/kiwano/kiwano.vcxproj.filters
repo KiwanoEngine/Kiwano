@@ -117,9 +117,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Director.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Actor.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -303,6 +300,9 @@
     <ClInclude Include="..\..\src\kiwano\platform\Window.h">
       <Filter>platform</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\Director.h">
+      <Filter>platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -355,9 +355,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp">
       <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Director.cpp">
-      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp">
       <Filter>2d</Filter>
@@ -483,6 +480,9 @@
       <Filter>platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Window.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\platform\Director.cpp">
       <Filter>platform</Filter>
     </ClCompile>
   </ItemGroup>

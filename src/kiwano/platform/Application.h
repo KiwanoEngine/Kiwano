@@ -91,7 +91,7 @@ namespace kiwano
 		);
 
 		// 分发事件
-		void DispatchEvent(Event* evt);
+		void DispatchEvent(Event& evt);
 
 		// 在 Kiwano 主线程中执行函数
 		// 当在其他线程调用 Kiwano 函数时使用

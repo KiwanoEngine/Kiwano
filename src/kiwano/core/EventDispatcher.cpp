@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	void EventDispatcher::Dispatch(Event* evt)
+	void EventDispatcher::Dispatch(Event& evt)
 	{
 		if (listeners_.empty())
 			return;
@@ -33,7 +33,7 @@ namespace kiwano
 		{
 			next = listener->next_item();
 
-			if (listener->IsRunning() && listener->type_ == evt->type)
+			if (listener->IsRunning() && listener->type_ == evt.type)
 			{
 				listener->callback_(evt);
 			}

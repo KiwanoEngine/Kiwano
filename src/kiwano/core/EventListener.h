@@ -39,7 +39,7 @@ namespace kiwano
 		friend IntrusiveList<EventListenerPtr>;
 
 	public:
-		using Callback = Function<void(Event*)>;
+		using Callback = Function<void(Event&)>;
 
 		EventListener();
 

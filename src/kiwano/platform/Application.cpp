@@ -24,7 +24,7 @@
 #include <kiwano/platform/modules.h>
 #include <kiwano/core/win32/helper.h>
 #include <kiwano/platform/Input.h>
-#include <kiwano/core/Director.h>
+#include <kiwano/platform/Director.h>
 #include <kiwano/renderer/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
 
@@ -261,7 +261,7 @@ namespace kiwano
 		}
 	}
 
-	void Application::DispatchEvent(Event* evt)
+	void Application::DispatchEvent(Event& evt)
 	{
 		for (auto c : event_comps_)
 		{
@@ -311,15 +311,15 @@ namespace kiwano
 			{
 				KeyDownEvent evt;
 				evt.code = static_cast<int>(wparam);
-				evt.count = static_cast<int>(lparam & 0xFF);
-				app->DispatchEvent(&evt);
+				// evt.count = static_cast<int>(lparam & 0xFF);
+				app->DispatchEvent(evt);
 			}
 			else
 			{
 				KeyUpEvent evt;
 				evt.code = static_cast<int>(wparam);
-				evt.count = static_cast<int>(lparam & 0xFF);
-				app->DispatchEvent(&evt);
+				// evt.count = static_cast<int>(lparam & 0xFF);
+				app->DispatchEvent(evt);
 			}
 		}
 		break;
@@ -328,8 +328,8 @@ namespace kiwano
 		{
 			KeyCharEvent evt;
 			evt.value = static_cast<char>(wparam);
-			evt.count = static_cast<int>(lparam & 0xFF);
-			app->DispatchEvent(&evt);
+			// evt.count = static_cast<int>(lparam & 0xFF);
+			app->DispatchEvent(evt);
 		}
 		break;
 
@@ -345,43 +345,43 @@ namespace kiwano
 		case WM_MOUSEMOVE:
 		case WM_MOUSEWHEEL:
 		{
-			auto UpdateMouseData = [&](MouseEvent* evt)
+			auto UpdateMouseData = [&](MouseEvent& evt)
 			{
-				evt->pos = Point(static_cast<float>(GET_X_LPARAM(lparam)), static_cast<float>(GET_Y_LPARAM(lparam)));
-				evt->left_btn_down = !!(wparam & MK_LBUTTON);
-				evt->left_btn_down = !!(wparam & MK_RBUTTON);
+				evt.pos = Point(static_cast<float>(GET_X_LPARAM(lparam)), static_cast<float>(GET_Y_LPARAM(lparam)));
+				evt.left_btn_down = !!(wparam & MK_LBUTTON);
+				evt.left_btn_down = !!(wparam & MK_RBUTTON);
 			};
 
 			if (msg == WM_MOUSEMOVE)
 			{
 				MouseMoveEvent evt;
-				UpdateMouseData(&evt);
-				app->DispatchEvent(&evt);
+				UpdateMouseData(evt);
+				app->DispatchEvent(evt);
 			}
 			else if	(msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN)
 			{
 				MouseDownEvent evt;
-				UpdateMouseData(&evt);
+				UpdateMouseData(evt);
 				if		(msg == WM_LBUTTONDOWN)	{ evt.button = MouseButton::Left; }
 				else if	(msg == WM_RBUTTONDOWN)	{ evt.button = MouseButton::Right; }
 				else if	(msg == WM_MBUTTONDOWN)	{ evt.button = MouseButton::Middle; }
-				app->DispatchEvent(&evt);
+				app->DispatchEvent(evt);
 			}
 			else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP)
 			{
-				MouseDownEvent evt;
-				UpdateMouseData(&evt);
+				MouseUpEvent evt;
+				UpdateMouseData(evt);
 				if		(msg == WM_LBUTTONUP)	{ evt.button = MouseButton::Left; }
 				else if	(msg == WM_RBUTTONUP)	{ evt.button = MouseButton::Right; }
 				else if	(msg == WM_MBUTTONUP)	{ evt.button = MouseButton::Middle; }
-				app->DispatchEvent(&evt);
+				app->DispatchEvent(evt);
 			}
 			else if	(msg == WM_MOUSEWHEEL)
 			{
 				MouseWheelEvent evt;
-				UpdateMouseData(&evt);
+				UpdateMouseData(evt);
 				evt.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
-				app->DispatchEvent(&evt);
+				app->DispatchEvent(evt);
 			}
 		}
 		break;
@@ -401,7 +401,7 @@ namespace kiwano
 				WindowResizedEvent evt;
 				evt.width = LOWORD(lparam);
 				evt.height = HIWORD(lparam);
-				app->DispatchEvent(&evt);
+				app->DispatchEvent(evt);
 			}
 		}
 		break;
@@ -414,7 +414,7 @@ namespace kiwano
 			WindowMovedEvent evt;
 			evt.x = x;
 			evt.y = y;
-			app->DispatchEvent(&evt);
+			app->DispatchEvent(evt);
 		}
 		break;
 
@@ -426,7 +426,7 @@ namespace kiwano
 
 			WindowFocusChangedEvent evt;
 			evt.focus = active;
-			app->DispatchEvent(&evt);
+			app->DispatchEvent(evt);
 		}
 		break;
 
@@ -436,7 +436,7 @@ namespace kiwano
 
 			WindowTitleChangedEvent evt;
 			evt.title = reinterpret_cast<const wchar_t*>(lparam);
-			app->DispatchEvent(&evt);
+			app->DispatchEvent(evt);
 		}
 		break;
 
@@ -467,7 +467,7 @@ namespace kiwano
 			if (!app->OnClosing())
 			{
 				WindowClosedEvent evt;
-				app->DispatchEvent(&evt);
+				app->DispatchEvent(evt);
 				return 0;
 			}
 		}

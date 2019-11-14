@@ -365,7 +365,7 @@ namespace kiwano
 		void ShowBorder(bool show);
 
 		// 事件分发
-		void Dispatch(Event* evt) override;
+		void Dispatch(Event& evt) override;
 
 		// 设置默认锚点
 		static void SetDefaultAnchor(

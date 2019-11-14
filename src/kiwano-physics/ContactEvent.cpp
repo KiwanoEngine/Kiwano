@@ -24,7 +24,7 @@ namespace kiwano
 {
 	namespace event
 	{
-		EventType event::ContactBegin = EventType(L"ContactBegin");
+		EventType event::ContactBegin	= EventType(L"ContactBegin");
 		EventType event::ContactEnd		= EventType(L"ContactEnd");
 	}
 

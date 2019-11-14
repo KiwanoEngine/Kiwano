@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Director.h>
+#include <kiwano/platform/Director.h>
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/Transition.h>
@@ -180,7 +180,7 @@ namespace kiwano
 		}
 	}
 
-	void Director::HandleEvent(Event* evt)
+	void Director::HandleEvent(Event& evt)
 	{
 		if (debug_actor_)
 			debug_actor_->Dispatch(evt);

@@ -192,7 +192,6 @@ namespace kiwano
 	{
 	public:
 		KeyCode::Value code;
-		int count;
 
 		KeyDownEvent();
 	};
@@ -203,7 +202,6 @@ namespace kiwano
 	{
 	public:
 		KeyCode::Value code;
-		int count;
 
 		KeyUpEvent();
 	};
@@ -214,7 +212,6 @@ namespace kiwano
 	{
 	public:
 		char value;
-		int count;
 
 		KeyCharEvent();
 	};

@@ -67,12 +67,12 @@ namespace kiwano
 		inline LayerArea const& GetArea() const		{ return area_; }
 
 	public:
-		void Dispatch(Event* evt) override;
+		void Dispatch(Event& evt) override;
 
 	protected:
 		void Render(RenderTarget* rt) override;
 
-		void HandleMessages(Event* evt);
+		void HandleMessages(Event& evt);
 
 	protected:
 		bool		swallow_;

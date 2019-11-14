@@ -85,7 +85,7 @@ namespace kiwano
 		: public virtual ComponentBase
 	{
 	public:
-		virtual void HandleEvent(Event*) {}
+		virtual void HandleEvent(Event&) {}
 
 		virtual void HandleMessage(HWND, UINT32, WPARAM, LPARAM) {}
 
