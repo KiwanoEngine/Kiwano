@@ -97,7 +97,7 @@ namespace kiwano
 			auto iter = object_cache_.find(id);
 			if (iter == object_cache_.end())
 				return nullptr;
-			return dynamic_cast<_Ty*>((*iter).second.get());
+			return const_cast<_Ty*>(dynamic_cast<const _Ty*>((*iter).second.get()));
 		}
 
 	protected:

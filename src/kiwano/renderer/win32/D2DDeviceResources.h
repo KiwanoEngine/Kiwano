@@ -217,34 +217,34 @@ namespace kiwano
 		virtual HRESULT CreateTextFormat(
 			_Out_ ComPtr<IDWriteTextFormat>& text_format,
 			_In_ Font const& font
-		) const = 0;
+		) = 0;
 
 		virtual HRESULT CreateTextLayout(
 			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
 			_In_ String const& text,
-			_In_ ComPtr<IDWriteTextFormat> const& text_format
-		) const = 0;
+			_In_ ComPtr<IDWriteTextFormat> text_format
+		) = 0;
 
 		virtual HRESULT SetD2DDevice(
-			_In_ ComPtr<ID2D1Device> const& device
+			_In_ ComPtr<ID2D1Device> device
 		) = 0;
 
 		virtual void SetTargetBitmap(
-			_In_ ComPtr<ID2D1Bitmap1> const& target
+			_In_ ComPtr<ID2D1Bitmap1> target
 		) = 0;
 
 		virtual void DiscardResources() = 0;
 
-		inline ID2D1Factory1*			GetFactory() const				{ KGE_ASSERT(factory_); return factory_.get(); }
-		inline IWICImagingFactory*		GetWICImagingFactory() const	{ KGE_ASSERT(imaging_factory_); return imaging_factory_.get(); }
-		inline IDWriteFactory*			GetDWriteFactory() const		{ KGE_ASSERT(dwrite_factory_); return dwrite_factory_.get(); }
-		inline ID2D1Device*				GetDevice() const				{ KGE_ASSERT(device_); return device_.get(); }
-		inline ID2D1DeviceContext*		GetDeviceContext() const		{ KGE_ASSERT(device_context_); return device_context_.get(); }
-		inline ID2D1Bitmap1*			GetTargetBitmap() const			{ KGE_ASSERT(target_bitmap_); return target_bitmap_.get(); }
+		inline ID2D1Factory1*		GetFactory()				{ KGE_ASSERT(factory_); return factory_.get(); }
+		inline IWICImagingFactory*	GetWICImagingFactory()		{ KGE_ASSERT(imaging_factory_); return imaging_factory_.get(); }
+		inline IDWriteFactory*		GetDWriteFactory()			{ KGE_ASSERT(dwrite_factory_); return dwrite_factory_.get(); }
+		inline ID2D1Device*			GetDevice()					{ KGE_ASSERT(device_); return device_.get(); }
+		inline ID2D1DeviceContext*	GetDeviceContext()			{ KGE_ASSERT(device_context_); return device_context_.get(); }
+		inline ID2D1Bitmap1*		GetTargetBitmap()			{ KGE_ASSERT(target_bitmap_); return target_bitmap_.get(); }
 
-		inline ID2D1StrokeStyle*		GetMiterStrokeStyle() const		{ KGE_ASSERT(miter_stroke_style_); return miter_stroke_style_.get(); }
-		inline ID2D1StrokeStyle*		GetBevelStrokeStyle() const		{ KGE_ASSERT(bevel_stroke_style_); return bevel_stroke_style_.get(); }
-		inline ID2D1StrokeStyle*		GetRoundStrokeStyle() const		{ KGE_ASSERT(round_stroke_style_); return round_stroke_style_.get(); }
+		inline ID2D1StrokeStyle*	GetMiterStrokeStyle()		{ KGE_ASSERT(miter_stroke_style_); return miter_stroke_style_.get(); }
+		inline ID2D1StrokeStyle*	GetBevelStrokeStyle()		{ KGE_ASSERT(bevel_stroke_style_); return bevel_stroke_style_.get(); }
+		inline ID2D1StrokeStyle*	GetRoundStrokeStyle()		{ KGE_ASSERT(round_stroke_style_); return round_stroke_style_.get(); }
 
 	protected:
 		ComPtr<ID2D1Factory1>		factory_;

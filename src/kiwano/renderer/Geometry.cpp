@@ -92,14 +92,10 @@ namespace kiwano
 		return false;
 	}
 
-	Geometry Geometry::CombineWith(Geometry input, CombineMode mode, Matrix3x2 const& input_matrix) const
+	void Geometry::CombineWith(GeometrySink& sink, Geometry input, CombineMode mode, Matrix3x2 const& input_matrix) const
 	{
 		if (geo_ && input.geo_)
 		{
-			GeometrySink sink;
-			sink.Init();
-			sink.OpenSink();
-
 			ThrowIfFailed(
 				geo_->CombineWithGeometry(
 					input.geo_.get(),
@@ -108,41 +104,18 @@ namespace kiwano
 					sink.GetGeometrySink().get()
 				)
 			);
-
-			sink.CloseSink();
-			return sink.GetGeometry();
 		}
-		return Geometry();
 	}
 
-	Geometry Geometry::Combine(Vector<Geometry> const& geos, Vector<CombineMode> const& modes, Vector<Matrix3x2> const& matrixs)
+	Geometry Geometry::CombineWith(Geometry input, CombineMode mode, Matrix3x2 const& input_matrix) const
 	{
-		if ((geos.size() == (modes.size() + 1) || modes.size() == 1)
-			&& (geos.size() == (matrixs.size() + 1) || matrixs.size() == 1))
-		{
-			GeometrySink sink;
-			sink.Init();
-			sink.OpenSink();
+		GeometrySink sink;
+		sink.Open();
 
-			for (size_t i = 0; i < geos.size() - 1; i++)
-			{
-				CombineMode mode = (modes.size() == 1) ? modes[0] : modes[i];
-				const Matrix3x2& matrix = (matrixs.size() == 1) ? matrixs[0] : matrixs[i];
+		CombineWith(sink, input, mode, input_matrix);
 
-				ThrowIfFailed(
-					geos[i].geo_->CombineWithGeometry(
-						geos[i + 1].geo_.get(),
-						D2D1_COMBINE_MODE(mode),
-						DX::ConvertToMatrix3x2F(matrix),
-						sink.GetGeometrySink().get()
-					)
-				);
-			}
-
-			sink.CloseSink();
-			return sink.GetGeometry();
-		}
-		return Geometry();
+		sink.Close();
+		return sink.GetGeometry();
 	}
 
 	float Geometry::ComputeArea() const
@@ -214,13 +187,16 @@ namespace kiwano
 	{
 	}
 
+	GeometrySink::~GeometrySink()
+	{
+		Close();
+	}
+
 	GeometrySink& GeometrySink::BeginPath(Point const& begin_pos)
 	{
-		Init();
-
 		if (!sink_)
 		{
-			OpenSink();
+			Open();
 		}
 
 		sink_->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
@@ -233,7 +209,7 @@ namespace kiwano
 		{
 			sink_->EndFigure(closed ? D2D1_FIGURE_END_CLOSED : D2D1_FIGURE_END_OPEN);
 			
-			CloseSink();
+			Close();
 		}
 		return (*this);
 	}
@@ -312,15 +288,17 @@ namespace kiwano
 		}
 	}
 
-	void GeometrySink::OpenSink()
+	void GeometrySink::Open()
 	{
+		Init();
+
 		if (!sink_)
 		{
 			ThrowIfFailed(path_geo_->Open(&sink_));
 		}
 	}
 
-	void GeometrySink::CloseSink()
+	void GeometrySink::Close()
 	{
 		if (sink_)
 		{

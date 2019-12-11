@@ -23,6 +23,7 @@
 
 namespace kiwano
 {
+	class GeometrySink;
 
 	// 几何体
 	class KGE_API Geometry
@@ -72,19 +73,19 @@ namespace kiwano
 		) const;
 
 		// 组合几何体
-		Geometry CombineWith(
+		void CombineWith(
+			GeometrySink& sink,
 			Geometry input,
 			CombineMode mode,
 			Matrix3x2 const& input_matrix = Matrix3x2()
 		) const;
 
-		// 组合多个几何体
-		// 参数 modes 和 matrixs 的数量应为 1 或 geos 的数量减一
-		static Geometry Combine(
-			Vector<Geometry> const& geos,
-			Vector<CombineMode> const& modes,
-			Vector<Matrix3x2> const& matrixs = { Matrix3x2() }
-		);
+		// 组合几何体
+		Geometry CombineWith(
+			Geometry input,
+			CombineMode mode,
+			Matrix3x2 const& input_matrix = Matrix3x2()
+		) const;
 
 		// 创建直线
 		static Geometry CreateLine(
@@ -133,6 +134,7 @@ namespace kiwano
 	{
 	public:
 		GeometrySink();
+		~GeometrySink();
 
 		// 开始添加路径
 		GeometrySink& BeginPath(
@@ -179,6 +181,12 @@ namespace kiwano
 		// 获取生成路径几何体
 		Geometry GetGeometry();
 
+		// 打开流
+		void Open();
+
+		// 关闭流
+		void Close();
+
 	public:
 		inline ComPtr<ID2D1PathGeometry> GetPathGeometry() const	{ return path_geo_; }
 
@@ -189,10 +197,6 @@ namespace kiwano
 		inline void SetGeometrySink(ComPtr<ID2D1GeometrySink> sink)	{ sink_ = sink; }
 
 		void Init();
-
-		void OpenSink();
-
-		void CloseSink();
 
 	protected:
 		ComPtr<ID2D1PathGeometry> path_geo_;

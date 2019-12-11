@@ -66,20 +66,20 @@ namespace kiwano
 		HRESULT CreateTextFormat(
 			_Out_ ComPtr<IDWriteTextFormat>& text_format,
 			_In_ Font const& font
-		) const override;
+		) override;
 
 		HRESULT CreateTextLayout(
 			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
 			_In_ String const& text,
-			_In_ ComPtr<IDWriteTextFormat> const& text_format
-		) const override;
+			_In_ ComPtr<IDWriteTextFormat> text_format
+		) override;
 
 		HRESULT SetD2DDevice(
-			_In_ ComPtr<ID2D1Device> const& device
+			_In_ ComPtr<ID2D1Device> device
 		) override;
 
 		void SetTargetBitmap(
-			_In_ ComPtr<ID2D1Bitmap1> const& target
+			_In_ ComPtr<ID2D1Bitmap1> target
 		) override;
 
 		void DiscardResources() override;
@@ -298,7 +298,7 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::SetD2DDevice(_In_ ComPtr<ID2D1Device> const& device)
+	HRESULT D2DDeviceResources::SetD2DDevice(_In_ ComPtr<ID2D1Device> device)
 	{
 		ComPtr<ID2D1DeviceContext> device_ctx;
 
@@ -317,7 +317,7 @@ namespace kiwano
 		return hr;
 	}
 
-	void D2DDeviceResources::SetTargetBitmap(_In_ ComPtr<ID2D1Bitmap1> const& target)
+	void D2DDeviceResources::SetTargetBitmap(_In_ ComPtr<ID2D1Bitmap1> target)
 	{
 		target_bitmap_ = target;
 		if (device_context_)
@@ -435,7 +435,7 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format, _In_ Font const & font) const
+	HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format, _In_ Font const & font)
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;
@@ -460,7 +460,7 @@ namespace kiwano
 	}
 
 	HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, _In_ String const& text,
-		_In_ ComPtr<IDWriteTextFormat> const& text_format) const
+		_In_ ComPtr<IDWriteTextFormat> text_format)
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;

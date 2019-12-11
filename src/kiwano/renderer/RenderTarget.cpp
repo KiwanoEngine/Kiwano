@@ -113,7 +113,7 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::DrawGeometry(Geometry const& geometry, float stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawGeometry(Geometry const& geometry, float stroke_width, StrokeStyle stroke)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -136,7 +136,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::FillGeometry(Geometry const& geometry) const
+	void RenderTarget::FillGeometry(Geometry const& geometry)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -157,7 +157,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawLine(Point const& point1, Point const& point2, float stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawLine(Point const& point1, Point const& point2, float stroke_width, StrokeStyle stroke)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -181,7 +181,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawRectangle(Rect const& rect, float stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawRectangle(Rect const& rect, float stroke_width, StrokeStyle stroke)
 	{
 		HRESULT hr = S_OK;
 
@@ -205,7 +205,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::FillRectangle(Rect const& rect) const
+	void RenderTarget::FillRectangle(Rect const& rect)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -226,7 +226,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, float stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, float stroke_width, StrokeStyle stroke)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -253,7 +253,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::FillRoundedRectangle(Rect const& rect, Vec2 const& radius) const
+	void RenderTarget::FillRoundedRectangle(Rect const& rect, Vec2 const& radius)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -278,7 +278,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width, StrokeStyle stroke) const
+	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width, StrokeStyle stroke)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -305,7 +305,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::FillEllipse(Point const& center, Vec2 const& radius) const
+	void RenderTarget::FillEllipse(Point const& center, Vec2 const& radius)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_ || !current_brush_)
@@ -330,12 +330,12 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect) const
+	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect)
 	{
 		DrawTexture(texture, &src_rect, &dest_rect);
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect) const
+	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_)
@@ -363,7 +363,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawTextLayout(TextLayout const& layout, Point const& offset) const
+	void RenderTarget::DrawTextLayout(TextLayout const& layout, Point const& offset)
 	{
 		HRESULT hr = S_OK;
 		if (!text_renderer_)
@@ -393,7 +393,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::CreateLayer(LayerArea& layer) const
+	void RenderTarget::CreateLayer(LayerArea& layer)
 	{
 		HRESULT hr = S_OK;
 
@@ -540,7 +540,7 @@ namespace kiwano
 		return global_transform_;
 	}
 
-	ComPtr<ID2D1StrokeStyle> RenderTarget::GetStrokeStyle(StrokeStyle style) const
+	ComPtr<ID2D1StrokeStyle> RenderTarget::GetStrokeStyle(StrokeStyle style)
 	{
 		switch (style)
 		{
@@ -710,7 +710,7 @@ namespace kiwano
 	{
 	}
 
-	Texture TextureRenderTarget::GetOutput() const
+	Texture TextureRenderTarget::GetOutput()
 	{
 		HRESULT hr = E_FAIL;
 

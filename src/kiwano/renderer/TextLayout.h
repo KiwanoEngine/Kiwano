@@ -76,6 +76,6 @@ namespace kiwano
 	protected:
 		TextStyle style_;
 		TextFormat text_format_;
-		ComPtr<IDWriteTextLayout> text_layout_;
+		mutable ComPtr<IDWriteTextLayout> text_layout_;
 	};
 }

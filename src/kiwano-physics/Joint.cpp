@@ -207,7 +207,7 @@ namespace kiwano
 		{
 		}
 
-		GearJoint::GearJoint(World* world, GearJoint::Param const& param)
+		GearJoint::GearJoint(World* world, GearJoint::Param param)
 			: Joint()
 			, raw_joint_(nullptr)
 		{

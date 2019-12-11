@@ -272,7 +272,7 @@ namespace kiwano
 		}
 
 		// update children's transform
-		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
+		for (auto child = children_.first_item().get(); child; child = child->next_item().get())
 			child->dirty_transform_ = true;
 	}
 
@@ -527,11 +527,11 @@ namespace kiwano
 		Vector<ActorPtr> children;
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
+		for (auto child = children_.first_item().get(); child; child = child->next_item().get())
 		{
 			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
-				children.push_back(child);
+				children.push_back(const_cast<Actor*>(child));
 			}
 		}
 		return children;
@@ -541,11 +541,11 @@ namespace kiwano
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
+		for (auto child = children_.first_item().get(); child; child = child->next_item().get())
 		{
 			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
-				return child;
+				return const_cast<Actor*>(child);
 			}
 		}
 		return nullptr;

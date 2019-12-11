@@ -52,7 +52,7 @@ namespace kiwano
 		{
 			enabled_ = enabled;
 
-			for (const auto& button : buttons_)
+			for (auto& button : buttons_)
 			{
 				button->SetEnabled(enabled);
 			}

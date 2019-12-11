@@ -21,7 +21,7 @@
 #pragma once
 #include <memory>
 #include <type_traits>
-#include <exception>
+#include <stdexcept>
 
 namespace kiwano
 {

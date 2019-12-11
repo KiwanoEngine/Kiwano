@@ -43,8 +43,8 @@ class intrusive_list_item
 {
 public:
 	using value_type		= _Ty;
-	using reference			= value_type&;
-	using const_reference	= const value_type&;
+	using reference			= _Ty&;
+	using const_reference	= const _Ty&;
 
 	intrusive_list_item()				: prev_(), next_() {}
 	intrusive_list_item(_Ty const& rhs)	: prev_(rhs->prev_), next_(rhs->next_) {}
@@ -80,7 +80,7 @@ public:
 	reference		last_item()				{ return last_; }
 	bool			empty() const			{ return !first_; }
 
-	void push_back(const_reference child)
+	void push_back(value_type child)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -104,7 +104,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void push_front(const_reference child)
+	void push_front(value_type child)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -128,7 +128,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void insert_before(const_reference child, const_reference before)
+	void insert_before(value_type child, value_type before)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -147,7 +147,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void insert_after(const_reference child, const_reference after)
+	void insert_after(value_type child, value_type after)
 	{
 		if (child->prev_)
 			child->prev_->next_ = child->next_;
@@ -166,7 +166,7 @@ public:
 		KGE_DEBUG_CHECK_LIST(this);
 	}
 
-	void remove(const_reference child)
+	void remove(value_type child)
 	{
 #ifdef KGE_DEBUG_ENABLE_LIST_CHECK
 		_Ty tmp = first_;

@@ -192,9 +192,9 @@ namespace kiwano
 
 		inline Color const&				GetClearColor() const			{ return clear_color_; }
 
-		inline ID2DDeviceResources*		GetD2DDeviceResources() const	{ KGE_ASSERT(d2d_res_); return d2d_res_.get(); }
+		inline ID2DDeviceResources*		GetD2DDeviceResources()			{ KGE_ASSERT(d2d_res_); return d2d_res_.get(); }
 
-		inline ID3DDeviceResources*		GetD3DDeviceResources() const	{ KGE_ASSERT(d3d_res_); return d3d_res_.get(); }
+		inline ID3DDeviceResources*		GetD3DDeviceResources()			{ KGE_ASSERT(d3d_res_); return d3d_res_.get(); }
 
 	private:
 		Renderer();

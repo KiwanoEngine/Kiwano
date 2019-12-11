@@ -237,7 +237,7 @@ namespace kiwano
 
 			GearJoint();
 			GearJoint(World* world, b2GearJointDef* def);
-			GearJoint(World* world, Param const& param);
+			GearJoint(World* world, Param param);
 
 			// 设定齿轮传动比
 			void SetRatio(float ratio);

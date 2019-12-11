@@ -52,75 +52,75 @@ namespace kiwano
 
 		void CreateLayer(
 			LayerArea& layer
-		) const;
+		);
 
 		void DrawGeometry(
 			Geometry const& geometry,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
 		void FillGeometry(
 			Geometry const& geometry
-		) const;
+		);
 
 		void DrawLine(
 			Point const& point1,
 			Point const& point2,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
 		void DrawRectangle(
 			Rect const& rect,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
 		void FillRectangle(
 			Rect const& rect
-		) const;
+		);
 
 		void DrawRoundedRectangle(
 			Rect const& rect,
 			Vec2 const& radius,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
 		void FillRoundedRectangle(
 			Rect const& rect,
 			Vec2 const& radius
-		) const;
+		);
 
 		void DrawEllipse(
 			Point const& center,
 			Vec2 const& radius,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
 		void FillEllipse(
 			Point const& center,
 			Vec2 const& radius
-		) const;
+		);
 
 		void DrawTexture(
 			Texture const& texture,
 			Rect const& src_rect,
 			Rect const& dest_rect
-		) const;
+		);
 
 		void DrawTexture(
 			Texture const& texture,
 			const Rect* src_rect = nullptr,
 			const Rect* dest_rect = nullptr
-		) const;
+		);
 
 		void DrawTextLayout(
 			TextLayout const& layout,
 			Point const& offset = Point{}
-		) const;
+		);
 
 		void PushClipRect(
 			Rect const& clip_rect
@@ -206,7 +206,7 @@ namespace kiwano
 
 		inline ComPtr<ITextRenderer>		GetTextRenderer() const					{ KGE_ASSERT(text_renderer_); return text_renderer_; }
 
-		ComPtr<ID2D1StrokeStyle>			GetStrokeStyle(StrokeStyle style) const;
+		ComPtr<ID2D1StrokeStyle>			GetStrokeStyle(StrokeStyle style);
 
 	public:
 		RenderTarget();
@@ -241,6 +241,6 @@ namespace kiwano
 	public:
 		TextureRenderTarget();
 
-		Texture GetOutput() const;
+		Texture GetOutput();
 	};
 }

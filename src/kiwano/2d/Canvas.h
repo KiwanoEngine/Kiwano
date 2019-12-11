@@ -247,9 +247,9 @@ namespace kiwano
 		TextStyle			text_style_;
 		StrokeStyle			stroke_style_;
 		GeometrySink		geo_sink_;
-		TextureRenderTarget	rt_;
 
 		mutable bool		cache_expired_;
 		mutable Texture		texture_cached_;
+		mutable TextureRenderTarget	rt_;
 	};
 }
