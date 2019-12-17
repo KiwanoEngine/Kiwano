@@ -52,8 +52,8 @@ namespace kiwano
 	{
 		KGE_LOG(L"Creating device resources");
 
-		hwnd_ = Window::GetInstance()->GetHandle();
-		output_size_ = Window::GetInstance()->GetSize();
+		hwnd_ = Window::instance().GetHandle();
+		output_size_ = Window::instance().GetSize();
 
 		d2d_res_ = nullptr;
 		d3d_res_ = nullptr;
@@ -247,15 +247,15 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARNING_LOG(L"Texture file '%s' not found!", file_path.c_str());
+			KGE_WARN(L"Texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 
 			ComPtr<IWICBitmapDecoder> decoder;
 			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
@@ -298,7 +298,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load texture failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -353,7 +353,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load texture failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -365,15 +365,15 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARNING_LOG(L"Gif texture file '%s' not found!", file_path.c_str());
+			KGE_WARN(L"Gif texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 
 			ComPtr<IWICBitmapDecoder> decoder;
 			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
@@ -386,7 +386,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load GIF texture failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load GIF texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -411,7 +411,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load GIF texture failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load GIF texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -578,7 +578,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load GIF frame failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load GIF frame failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -596,13 +596,13 @@ namespace kiwano
 		{
 			for (auto& file_path : full_paths)
 			{
-				if (!FileSystem::GetInstance()->IsFileExists(file_path))
+				if (!FileSystem::instance().IsFileExists(file_path))
 				{
-					KGE_WARNING_LOG(L"Font file '%s' not found!", file_path.c_str());
+					KGE_WARN(L"Font file '%s' not found!", file_path.c_str());
 					hr = E_FAIL;
 				}
 
-				file_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+				file_path = FileSystem::instance().GetFullPathForFile(file_path);
 			}
 		}
 
@@ -632,7 +632,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load font failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load font failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -670,7 +670,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load font failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load font failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -1013,6 +1013,18 @@ namespace kiwano
 		}
 
 		ThrowIfFailed(hr);
+	}
+
+	void Renderer::Destroy()
+	{
+		DiscardDeviceResources();
+
+		d2d_res_.reset();
+		d3d_res_.reset();
+		drawing_state_block_.reset();
+		font_collection_loader_.reset();
+		res_font_file_loader_.reset();
+		res_font_collection_loader_.reset();
 	}
 
 }

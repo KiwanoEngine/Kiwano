@@ -140,4 +140,8 @@ namespace kiwano
 	{
 		return Point{ mouse_pos_x_, mouse_pos_y_ };
 	}
+
+	void Input::Destroy()
+	{
+	}
 }

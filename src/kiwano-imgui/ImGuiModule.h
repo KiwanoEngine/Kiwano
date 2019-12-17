@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Component.h>
-#include <kiwano/common/singleton.hpp>
+#include <kiwano/common/common.h>
 
 namespace kiwano
 {
@@ -32,7 +32,7 @@ namespace kiwano
 			, public UpdateComponent
 			, public EventComponent
 		{
-			KGE_DECLARE_SINGLETON(ImGuiModule);
+			OC_DECLARE_SINGLETON(ImGuiModule);
 
 		private:
 			void Init(HWND hwnd);

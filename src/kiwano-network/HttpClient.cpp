@@ -36,7 +36,7 @@ namespace
 
 	uint32_t write_data(void* buffer, uint32_t size, uint32_t nmemb, void* userp)
 	{
-		common::string* recv_buffer = (common::string*)userp;
+		oc::string* recv_buffer = (oc::string*)userp;
 		uint32_t total = size * nmemb;
 
 		// add data to the end of recv_buffer
@@ -46,10 +46,10 @@ namespace
 		return total;
 	}
 
-	common::string convert_to_utf8(common::wstring const& str)
+	oc::string convert_to_utf8(oc::wstring const& str)
 	{
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-		common::string result;
+		oc::string result;
 
 		try
 		{
@@ -63,10 +63,10 @@ namespace
 		return result;
 	}
 
-	common::wstring convert_from_utf8(common::string const& str)
+	oc::wstring convert_from_utf8(oc::string const& str)
 	{
-		kiwano::string_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-		common::wstring result;
+		oc::string_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
+		oc::wstring result;
 
 		try
 		{
@@ -104,7 +104,7 @@ namespace
 			}
 		}
 
-		bool Init(HttpClient* client, Vector<common::string> const& headers, common::string const& url, common::string* response_data, common::string* response_header, char* error_buffer)
+		bool Init(HttpClient* client, Vector<oc::string> const& headers, oc::string const& url, oc::string* response_data, oc::string* response_header, char* error_buffer)
 		{
 			if (!SetOption(CURLOPT_ERRORBUFFER, error_buffer))
 				return false;
@@ -170,11 +170,11 @@ namespace
 	public:
 		static inline bool GetRequest(
 			HttpClient* client,
-			Vector<common::string> const& headers,
-			common::string const& url,
+			Vector<oc::string> const& headers,
+			oc::string const& url,
 			long* response_code,
-			common::string* response_data,
-			common::string* response_header,
+			oc::string* response_data,
+			oc::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -185,12 +185,12 @@ namespace
 
 		static inline bool PostRequest(
 			HttpClient* client,
-			Vector<common::string> const& headers,
-			common::string const& url,
-			common::string const& request_data,
+			Vector<oc::string> const& headers,
+			oc::string const& url,
+			oc::string const& request_data,
 			long* response_code,
-			common::string* response_data,
-			common::string* response_header,
+			oc::string* response_data,
+			oc::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -203,12 +203,12 @@ namespace
 
 		static inline bool PutRequest(
 			HttpClient* client,
-			Vector<common::string> const& headers,
-			common::string const& url,
-			common::string const& request_data,
+			Vector<oc::string> const& headers,
+			oc::string const& url,
+			oc::string const& request_data,
 			long* response_code,
-			common::string* response_data,
-			common::string* response_header,
+			oc::string* response_data,
+			oc::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -221,11 +221,11 @@ namespace
 
 		static inline bool DeleteRequest(
 			HttpClient* client,
-			Vector<common::string> const& headers,
-			common::string const& url,
+			Vector<oc::string> const& headers,
+			oc::string const& url,
 			long* response_code,
-			common::string* response_data,
-			common::string* response_header,
+			oc::string* response_data,
+			oc::string* response_header,
 			char* error_buffer)
 		{
 			Curl curl;
@@ -307,13 +307,13 @@ namespace kiwano
 			bool ok = false;
 			long response_code = 0;
 			char error_message[256] = { 0 };
-			common::string response_header;
-			common::string response_data;
+			oc::string response_header;
+			oc::string response_data;
 
-			common::string url = convert_to_utf8(request->GetUrl());
-			common::string data = convert_to_utf8(request->GetData());
+			oc::string url = convert_to_utf8(request->GetUrl());
+			oc::string data = convert_to_utf8(request->GetData());
 
-			Vector<common::string> headers;
+			Vector<oc::string> headers;
 			headers.reserve(request->GetHeaders().size());
 			for (const auto& pair : request->GetHeaders())
 			{
@@ -335,17 +335,17 @@ namespace kiwano
 				ok = Curl::DeleteRequest(this, headers, url, &response_code, &response_data, &response_header, error_message);
 				break;
 			default:
-				KGE_ERROR_LOG(L"HttpClient: unknown request type, only GET, POST, PUT or DELETE is supported");
+				KGE_ERROR(L"HttpClient: unknown request type, only GET, POST, PUT or DELETE is supported");
 				return;
 			}
 
 			response->SetResponseCode(response_code);
-			response->SetHeader(string_to_wide(response_header));
+			response->SetHeader(oc::string_to_wide(response_header));
 			response->SetData(convert_from_utf8(response_data));
 			if (!ok)
 			{
 				response->SetSucceed(false);
-				response->SetError(string_to_wide(error_message));
+				response->SetError(oc::string_to_wide(error_message));
 			}
 			else
 			{

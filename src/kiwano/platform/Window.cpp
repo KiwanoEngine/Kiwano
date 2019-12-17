@@ -63,20 +63,6 @@ namespace kiwano
 
 	Window::~Window()
 	{
-		if (is_fullscreen_)
-			RestoreResolution(device_name_);
-
-		if (device_name_)
-		{
-			delete[] device_name_;
-			device_name_ = nullptr;
-		}
-
-		if (handle_)
-		{
-			::DestroyWindow(handle_);
-			handle_ = nullptr;
-		}
 	}
 
 	void Window::Init(WindowConfig const& config, WNDPROC proc)
@@ -388,6 +374,24 @@ namespace kiwano
 		}
 	}
 
+	void Window::Destroy()
+	{
+		if (is_fullscreen_)
+			RestoreResolution(device_name_);
+
+		if (device_name_)
+		{
+			delete[] device_name_;
+			device_name_ = nullptr;
+		}
+
+		if (handle_)
+		{
+			::DestroyWindow(handle_);
+			handle_ = nullptr;
+		}
+	}
+
 	namespace
 	{
 		MONITORINFOEX GetMoniterInfoEx(HWND hwnd)
@@ -434,7 +438,7 @@ namespace kiwano
 			mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
 			if (::ChangeDisplaySettingsExW(device_name, &mode, NULL, CDS_FULLSCREEN, NULL) != DISP_CHANGE_SUCCESSFUL)
-				KGE_ERROR_LOG(L"ChangeDisplaySettings failed");
+				KGE_ERROR(L"ChangeDisplaySettings failed");
 		}
 
 		void RestoreResolution(WCHAR* device_name)

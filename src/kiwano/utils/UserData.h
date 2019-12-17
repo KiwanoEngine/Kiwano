@@ -27,7 +27,7 @@ namespace kiwano
 	class KGE_API UserData
 		: public Singleton<UserData>
 	{
-		KGE_DECLARE_SINGLETON(UserData);
+		OC_DECLARE_SINGLETON(UserData);
 
 	public:
 		using DataMap = UnorderedMap<String, Any>;

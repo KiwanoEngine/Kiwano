@@ -69,9 +69,9 @@ namespace kiwano
 	{
 		ThrowIfFailed(::CoInitialize(nullptr));
 
-		Use(Renderer::GetInstance());
-		Use(Input::GetInstance());
-		Use(Director::GetInstance());
+		Use(&Renderer::instance());
+		Use(&Input::instance());
+		Use(&Director::instance());
 	}
 
 	Application::~Application()
@@ -83,8 +83,8 @@ namespace kiwano
 
 	void Application::Init(const Config& config)
 	{
-		Window::GetInstance()->Init(config.window, Application::WndProc);
-		Renderer::GetInstance()->Init(config.render);
+		Window::instance().Init(config.window, Application::WndProc);
+		Renderer::instance().Init(config.render);
 
 		// Setup all components
 		for (auto c : comps_)
@@ -94,14 +94,14 @@ namespace kiwano
 
 		if (config.debug)
 		{
-			Director::GetInstance()->ShowDebugInfo(true);
-			Renderer::GetInstance()->SetCollectingStatus(true);
+			Director::instance().ShowDebugInfo(true);
+			Renderer::instance().SetCollectingStatus(true);
 		}
 
 		// Everything is ready
 		OnReady();
 
-		HWND hwnd = Window::GetInstance()->GetHandle();
+		HWND hwnd = Window::instance().GetHandle();
 
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
@@ -118,10 +118,10 @@ namespace kiwano
 
 		end_ = false;
 
-		Window::GetInstance()->Prepare();
+		Window::instance().Prepare();
 		while (!end_)
 		{
-			Window::GetInstance()->PollEvents();
+			Window::instance().PollEvents();
 		}
 	}
 
@@ -133,9 +133,9 @@ namespace kiwano
 	void Application::Destroy()
 	{
 		// Clear all resources
-		Director::GetInstance()->ClearStages();
-		ResourceCache::GetInstance()->Clear();
-		TextureCache::GetInstance()->Clear();
+		Director::instance().ClearStages();
+		ResourceCache::instance().Clear();
+		TextureCache::instance().Clear();
 
 		if (inited_)
 		{
@@ -148,16 +148,9 @@ namespace kiwano
 			comps_.clear();
 		}
 
-		// Destroy all instances
-		Director::DestroyInstance();
-		ResourceCache::DestroyInstance();
-		TextureCache::DestroyInstance();
-		Input::DestroyInstance();
-		Renderer::DestroyInstance();
-		Window::DestroyInstance();
-
-		// DO NOT destroy Logger instance manually
-		// Logger::DestroyInstance();
+		Input::instance().Destroy();
+		Renderer::instance().Destroy();
+		Window::instance().Destroy();
 	}
 
 	void Application::Use(ComponentBase* component)
@@ -248,7 +241,7 @@ namespace kiwano
 		}
 
 		// Rendering
-		Renderer* renderer = Renderer::GetInstance();
+		Renderer* renderer = &Renderer::instance();
 		for (auto c : render_comps_)
 		{
 			c->OnRender(renderer);
@@ -396,7 +389,7 @@ namespace kiwano
 			{
 				// KGE_LOG(L"Window resized");
 
-				Window::GetInstance()->UpdateWindowRect();
+				Window::instance().UpdateWindowRect();
 
 				WindowResizedEvent evt;
 				evt.width = LOWORD(lparam);
@@ -422,7 +415,7 @@ namespace kiwano
 		{
 			bool active = (LOWORD(wparam) != WA_INACTIVE);
 
-			Window::GetInstance()->SetActive(active);
+			Window::instance().SetActive(active);
 
 			WindowFocusChangedEvent evt;
 			evt.focus = active;
@@ -456,7 +449,7 @@ namespace kiwano
 
 		case WM_SETCURSOR:
 		{
-			Window::GetInstance()->UpdateCursor();
+			Window::instance().UpdateCursor();
 		}
 		break;
 

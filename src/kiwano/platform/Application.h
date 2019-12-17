@@ -50,7 +50,7 @@ namespace kiwano
 
 	// ”¶”√
 	class KGE_API Application
-		: protected common::noncopyable
+		: protected Noncopyable
 	{
 	public:
 		Application();

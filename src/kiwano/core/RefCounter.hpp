@@ -20,12 +20,12 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/noncopyable.hpp>
+#include <kiwano/common/common.h>
 
 namespace kiwano
 {
 	class KGE_API RefCounter
-		: protected common::noncopyable
+		: protected Noncopyable
 	{
 	public:
 		// 增加引用计数

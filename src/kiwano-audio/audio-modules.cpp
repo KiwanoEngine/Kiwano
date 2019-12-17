@@ -52,7 +52,7 @@ namespace kiwano
 				}
 				else
 				{
-					KGE_ERROR_LOG(L"Load xaudio2.dll failed");
+					KGE_ERROR(L"Load xaudio2.dll failed");
 					throw std::runtime_error("Load xaudio2.dll failed");
 				}
 			}

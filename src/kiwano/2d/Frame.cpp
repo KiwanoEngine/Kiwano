@@ -44,7 +44,7 @@ namespace kiwano
 
 	bool Frame::Load(String const& file_path)
 	{
-		Texture texture = TextureCache::GetInstance()->AddOrGetTexture(file_path);
+		Texture texture = TextureCache::instance().AddOrGetTexture(file_path);
 		if (texture.IsValid())
 		{
 			SetTexture(texture);
@@ -55,7 +55,7 @@ namespace kiwano
 
 	bool Frame::Load(Resource const& res)
 	{
-		Texture texture = TextureCache::GetInstance()->AddOrGetTexture(res);
+		Texture texture = TextureCache::instance().AddOrGetTexture(res);
 		if (texture.IsValid())
 		{
 			SetTexture(texture);

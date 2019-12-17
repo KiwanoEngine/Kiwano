@@ -130,7 +130,7 @@ namespace kiwano
 
 	// 几何体生成器
 	class KGE_API GeometrySink
-		: protected common::noncopyable
+		: protected Noncopyable
 	{
 	public:
 		GeometrySink();

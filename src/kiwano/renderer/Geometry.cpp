@@ -147,35 +147,35 @@ namespace kiwano
 	Geometry Geometry::CreateLine(Point const& begin, Point const& end)
 	{
 		Geometry output;
-		Renderer::GetInstance()->CreateLineGeometry(output, begin, end);
+		Renderer::instance().CreateLineGeometry(output, begin, end);
 		return output;
 	}
 
 	Geometry Geometry::CreateRect(Rect const& rect)
 	{
 		Geometry output;
-		Renderer::GetInstance()->CreateRectGeometry(output, rect);
+		Renderer::instance().CreateRectGeometry(output, rect);
 		return output;
 	}
 
 	Geometry Geometry::CreateRoundedRect(Rect const& rect, Vec2 const& radius)
 	{
 		Geometry output;
-		Renderer::GetInstance()->CreateRoundedRectGeometry(output, rect, radius);
+		Renderer::instance().CreateRoundedRectGeometry(output, rect, radius);
 		return output;
 	}
 
 	Geometry Geometry::CreateCircle(Point const& center, float radius)
 	{
 		Geometry output;
-		Renderer::GetInstance()->CreateEllipseGeometry(output, center, Vec2{ radius, radius });
+		Renderer::instance().CreateEllipseGeometry(output, center, Vec2{ radius, radius });
 		return output;
 	}
 
 	Geometry Geometry::CreateEllipse(Point const& center, Vec2 const& radius)
 	{
 		Geometry output;
-		Renderer::GetInstance()->CreateEllipseGeometry(output, center, radius);
+		Renderer::instance().CreateEllipseGeometry(output, center, radius);
 		return output;
 	}
 
@@ -284,7 +284,7 @@ namespace kiwano
 	{
 		if (!path_geo_)
 		{
-			Renderer::GetInstance()->CreatePathGeometrySink(*this);
+			Renderer::instance().CreatePathGeometrySink(*this);
 		}
 	}
 

@@ -1,8 +1,6 @@
 // Copyright (C) 2019 Nomango
 
 #include <kiwano/common/common.h>
-#include <kiwano/common/Function.hpp>
-#include <kiwano/common/intrusive_ptr.hpp>
 #include <kiwano/platform/Window.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/renderer/Renderer.h>
@@ -45,9 +43,9 @@ namespace kiwano
 			//ImGui::StyleColorsClassic();
 
 			// Setup Platform/Renderer bindings
-			Init(Window::GetInstance()->GetHandle());
+			Init(Window::instance().GetHandle());
 
-			target_window_ = Renderer::GetInstance()->GetTargetWindow();
+			target_window_ = Renderer::instance().GetTargetWindow();
 		}
 
 		void ImGuiModule::DestroyComponent()
@@ -64,9 +62,9 @@ namespace kiwano
 			io.DeltaTime = dt.Seconds();
 
 			// Read keyboard modifiers inputs
-			io.KeyCtrl = Input::GetInstance()->IsDown(KeyCode::Ctrl);
-			io.KeyShift = Input::GetInstance()->IsDown(KeyCode::Shift);
-			io.KeyAlt = Input::GetInstance()->IsDown(KeyCode::Alt);
+			io.KeyCtrl = Input::instance().IsDown(KeyCode::Ctrl);
+			io.KeyShift = Input::instance().IsDown(KeyCode::Shift);
+			io.KeyAlt = Input::instance().IsDown(KeyCode::Alt);
 			io.KeySuper = false;
 			// io.KeysDown[], io.MousePos, io.MouseDown[], io.MouseWheel: filled by the WndProc handler below.
 
@@ -106,7 +104,7 @@ namespace kiwano
 			io.KeyMap[ImGuiKey_Y] = KeyCode::Y;
 			io.KeyMap[ImGuiKey_Z] = KeyCode::Z;
 
-			ImGui_Impl_Init(Renderer::GetInstance());
+			ImGui_Impl_Init(&Renderer::instance());
 		}
 
 		void ImGuiModule::BeforeRender()
@@ -213,7 +211,7 @@ namespace kiwano
 			KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
 
 			// Setup display size (every frame to accommodate for window resizing)
-			Size display_size = Renderer::GetInstance()->GetOutputSize();
+			Size display_size = Renderer::instance().GetOutputSize();
 			io.DisplaySize = ImVec2(display_size.x, display_size.y);
 
 			ImGui::NewFrame();
@@ -238,7 +236,7 @@ namespace kiwano
 				::SetCursorPos(pos.x, pos.y);
 			}
 
-			Point pos = Input::GetInstance()->GetMousePos();
+			Point pos = Input::instance().GetMousePos();
 			io.MousePos = ImVec2(pos.x, pos.y);
 		}
 
@@ -260,7 +258,7 @@ namespace kiwano
 			case ImGuiMouseCursor_Hand:         cursor = CursorType::Hand; break;
 			}
 
-			Window::GetInstance()->SetCursor(cursor);
+			Window::instance().SetCursor(cursor);
 		}
 		void ImGuiModule::UpdateGamepads()
 		{

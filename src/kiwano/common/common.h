@@ -28,24 +28,17 @@
 #include <unordered_map>
 #include <sstream>
 
-#include <kiwano/common/vector.hpp>
-#include <kiwano/common/string.hpp>
-#include <kiwano/common/any.hpp>
-#include <kiwano/common/intrusive_list.hpp>
-#include <kiwano/common/intrusive_ptr.hpp>
-#include <kiwano/common/noncopyable.hpp>
-#include <kiwano/common/singleton.hpp>
-#include <kiwano/common/function.hpp>
-#include <kiwano/common/basic_json.hpp>
+#include <3rd-party/OuterC/oc/oc.h>
+#include <kiwano/macros.h>
 
 namespace kiwano
 {
-	using String = kiwano::common::wstring;
+	using String = oc::wstring;
 
 	using StringStream = std::wstringstream;
 
 	template <typename _Ty, typename... _Args>
-	using Vector = kiwano::common::vector<_Ty, _Args...>;
+	using Vector = oc::vector<_Ty, _Args...>;
 
 	template <typename _Ty, typename... _Args>
 	using List = std::list<_Ty, _Args...>;
@@ -72,37 +65,38 @@ namespace kiwano
 	using UnorderedMap = std::unordered_map<_Kty, _Ty, _Args...>;
 
 	template <typename _FuncTy>
-	using Function = kiwano::common::function<_FuncTy>;
+	using Function = oc::function<_FuncTy>;
 
-	using Any = kiwano::common::any;
+	using Any = oc::any;
 
-	using Json = kiwano::common::basic_json<kiwano::Map, kiwano::Vector, kiwano::String,
-		int, double, bool, std::allocator>;
-
-	template <typename _Ty>
-	using Singleton = common::singleton<_Ty>;
+	using Json = oc::basic_json<Map, Vector, String, int, double, bool, std::allocator>;
 
 	template <typename _Ty>
-	using IntrusiveList = common::intrusive_list<_Ty>;
+	using Singleton = oc::singleton<_Ty>;
 
 	template <typename _Ty>
-	using IntrusiveListItem = common::intrusive_list_item<_Ty>;
-}
+	using IntrusiveList = oc::intrusive_list<_Ty>;
 
-namespace std
-{
-	template<>
-	struct hash<::kiwano::Json>
+	template <typename _Ty>
+	using IntrusiveListItem = oc::intrusive_list_item<_Ty>;
+
+	template <typename _Ty, typename _RefProxyTy>
+	using IntrusivePtr = oc::intrusive_ptr<_Ty, _RefProxyTy>;
+
+	using Noncopyable = oc::noncopyable;
+
+
+	// Closure
+
+	template<typename _Ty, typename _Uty, typename _Ret, typename... _Args>
+	inline Function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...))
 	{
-		size_t operator()(const ::kiwano::Json& json) const
-		{
-			return hash<::kiwano::Json::string_type>{}(json.dump());
-		}
-	};
+		return oc::closure(ptr, func);
+	}
 
-	template<>
-	inline void swap<::kiwano::Json>(::kiwano::Json& lhs, ::kiwano::Json& rhs) noexcept
+	template<typename _Ty, typename _Uty, typename _Ret, typename... _Args>
+	inline Function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
 	{
-		lhs.swap(rhs);
+		return oc::closure(ptr, func);
 	}
 }

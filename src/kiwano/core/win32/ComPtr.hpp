@@ -20,19 +20,19 @@
 
 #pragma once
 #include <type_traits>
-#include <kiwano/common/intrusive_ptr.hpp>
+#include <kiwano/common/common.h>
 #include <Unknwnbase.h>
 
 namespace kiwano
 {
-	struct ComPtrManager
+	struct ComPtrProxy
 	{
-		static inline void AddRef(IUnknown* ptr)
+		static inline void add_ref(IUnknown* ptr)
 		{
 			if (ptr) ptr->AddRef();
 		}
 
-		static inline void Release(IUnknown* ptr)
+		static inline void release(IUnknown* ptr)
 		{
 			if (ptr) ptr->Release();
 		}
@@ -42,6 +42,6 @@ namespace kiwano
 	template<
 		typename _Ty,
 		typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-	using ComPtr = common::intrusive_ptr<_Ty, ComPtrManager>;
+	using ComPtr = IntrusivePtr<_Ty, ComPtrProxy>;
 
 }

@@ -1,52 +1,18 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// Copyright (c) 2019-2020 OuterC - Nomango
 
 #pragma once
 #include <memory>
-#include <type_traits>
 #include <stdexcept>
+#include "vector/details.h"
 
-namespace kiwano
+namespace oc
 {
-namespace common
-{
-
-
-//
-// vector_memory_manager<> with memory operations
-//
-namespace __vector_details
-{
-	template<typename _Ty, typename _Alloc, bool _IsClassType = std::is_class<_Ty>::value>
-	struct vector_memory_manager;
-}
-
 
 //
 // vector<>
 // Lightweight std::vector<>-like class
 //
-template<
-	typename _Ty,
-	typename _Alloc = std::allocator<_Ty>,
-	typename _Manager = __vector_details::vector_memory_manager<_Ty, _Alloc>>
+template <typename _Ty, typename _Alloc = std::allocator<_Ty>>
 class vector
 {
 public:
@@ -59,7 +25,7 @@ public:
 	using reverse_iterator			= std::reverse_iterator<iterator>;
 	using const_reverse_iterator	= std::reverse_iterator<const_iterator>;
 	using allocator_type			= typename _Alloc;
-	using manager					= typename _Manager;
+	using manager					= typename __vector_details::vector_memory_manager<_Ty, _Alloc>;
 	using initializer_list			= std::initializer_list<value_type>;
 
 public:
@@ -74,11 +40,11 @@ public:
 	template <typename _Iter>
 	inline vector(_Iter first, _Iter last)									: vector() { assign(first, last); }
 
-	inline vector&		operator=(const vector& src)						{ if (&src != this) { resize(src.size_); manager::copy_data(begin(), src.cbegin(), size_); } return (*this); }
+	inline vector&		operator=(const vector& src)						{ if (&src != this) { resize(src.size_); manager::copy_n(begin(), src.cbegin(), size_); } return (*this); }
 	inline vector&		operator=(vector&& src) noexcept					{ swap(src); return *this; }
 	inline vector&		operator=(initializer_list list)					{ if (list.size()) { assign(list.begin(), list.end()); } else clear(); return (*this); }
 
-	inline vector&		assign(size_type count, const _Ty& val)				{ if (count > 0) { resize(count); manager::copy_data(begin(), count, val); } else clear(); return (*this); }
+	inline vector&		assign(size_type count, const _Ty& val)				{ if (count > 0) { resize(count); manager::copy(begin(), count, val); } else clear(); return (*this); }
 	inline vector&		assign(const vector& src)							{ return operator=(src); }
 	inline vector&		assign(initializer_list list)						{ return operator=(list); }
 
@@ -140,8 +106,8 @@ protected:
 	_Ty*		data_;
 };
 
-template<typename _Ty, typename _Alloc, typename _Manager>
-void vector<_Ty, _Alloc, _Manager>::resize(size_type new_size, const _Ty& val)
+template<typename _Ty, typename _Alloc>
+void vector<_Ty, _Alloc>::resize(size_type new_size, const _Ty& val)
 {
 	if (new_size > size_)
 	{
@@ -158,8 +124,8 @@ void vector<_Ty, _Alloc, _Manager>::resize(size_type new_size, const _Ty& val)
 	size_ = new_size;
 }
 
-template<typename _Ty, typename _Alloc, typename _Manager>
-void vector<_Ty, _Alloc, _Manager>::reserve(size_type new_capacity)
+template<typename _Ty, typename _Alloc>
+void vector<_Ty, _Alloc>::reserve(size_type new_capacity)
 {
 	if (new_capacity <= capacity_)
 		return;
@@ -167,8 +133,7 @@ void vector<_Ty, _Alloc, _Manager>::reserve(size_type new_capacity)
 	auto new_data = manager::allocate(new_capacity);
 	if (data_)
 	{
-		manager::construct(new_data, size_/* only construct needed size */);
-		manager::copy_data(new_data, data_, size_);
+		manager::construct_n(new_data, data_, size_/* only construct needed size */);
 		/* destroy old memory, but not resize */
 		destroy();
 	}
@@ -176,9 +141,9 @@ void vector<_Ty, _Alloc, _Manager>::reserve(size_type new_capacity)
 	capacity_ = new_capacity;
 }
 
-template<typename _Ty, typename _Alloc, typename _Manager>
-typename vector<_Ty, _Alloc, _Manager>::iterator
-	vector<_Ty, _Alloc, _Manager>::erase(const_iterator first, const_iterator last)
+template<typename _Ty, typename _Alloc>
+typename vector<_Ty, _Alloc>::iterator
+	vector<_Ty, _Alloc>::erase(const_iterator first, const_iterator last)
 {
 	const auto off = first - begin();
 	const auto count = last - first;
@@ -187,15 +152,15 @@ typename vector<_Ty, _Alloc, _Manager>::iterator
 	{
 		check_offset(off);
 
-		manager::move_data(begin() + off, begin() + off + count, size_ - off - count);
+		manager::move(begin() + off, begin() + off + count, size_ - off - count);
 		resize(size_ - count);  // do destruction
 	}
 	return begin() + off;
 }
 
-template<typename _Ty, typename _Alloc, typename _Manager>
-typename vector<_Ty, _Alloc, _Manager>::iterator
-	vector<_Ty, _Alloc, _Manager>::insert(const_iterator where, const _Ty& v)
+template<typename _Ty, typename _Alloc>
+typename vector<_Ty, _Alloc>::iterator
+	vector<_Ty, _Alloc>::insert(const_iterator where, const _Ty& v)
 {
 	const auto off = where - begin();
 	const auto insert_at = begin() + off;
@@ -203,86 +168,9 @@ typename vector<_Ty, _Alloc, _Manager>::iterator
 	check_offset(off);
 		
 	resize(size_ + 1);
-	manager::move_data(insert_at + 1, insert_at, size_ - off - 1);
+	manager::move(insert_at + 1, insert_at, size_ - off - 1);
 	data_[off] = v;
 	return begin() + off;
 }
 
-namespace __vector_details
-{
-	//
-	// vector_memory_manager for common type
-	//
-	template<typename _Ty, typename _Alloc>
-	struct vector_memory_manager<_Ty, _Alloc, false>
-	{
-		using value_type		= _Ty;
-		using size_type			= size_t;
-		using allocator_type	= typename _Alloc;
-
-		static void copy_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; ::memcpy(dest, src, size_type(count) * sizeof(value_type)); }
-		static void copy_data(value_type* dest, size_type count, const value_type& val) { ::memset(dest, int(val), size_type(count) * sizeof(value_type)); }
-		static void move_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; ::memmove(dest, src, size_type(count) * sizeof(value_type)); }
-
-		static value_type* allocate(size_type count)									{ return get_allocator().allocate(count); }
-		static void deallocate(value_type*& ptr, size_type count) { if (ptr)			{ get_allocator().deallocate(ptr, count); ptr = nullptr; } }
-
-		static void construct(value_type* ptr, size_type count)							{ }
-		static void construct(value_type* ptr, size_type count, const value_type& val)	{ while (count) { --count; *(ptr + count) = val; } }
-		static void destroy(value_type* ptr, size_type count)							{ }
-
-	private:
-		static allocator_type& get_allocator()
-		{
-			static allocator_type allocator_;
-			return allocator_;
-		}
-	};
-
-	//
-	// vector_memory_manager for classes
-	//
-	template<typename _Ty, typename _Alloc>
-	struct vector_memory_manager<_Ty, _Alloc, true>
-	{
-		using value_type		= _Ty;
-		using size_type			= size_t;
-		using allocator_type	= typename _Alloc;
-
-		static void copy_data(value_type* dest, const value_type* src, size_type count) { if (src == dest) return; while (count--) (*dest++) = (*src++); }
-		static void copy_data(value_type* dest, size_type count, const value_type& val) { while (count--) (*dest++) = val; }
-		static void move_data(value_type* dest, const value_type* src, size_type count)
-		{
-			if (src == dest) return;
-			if (dest > src && dest < src + count)
-			{
-				src = src + count - 1;
-				dest = dest + count - 1;
-				while (count--)
-					(*dest--) = (*src--);
-			}
-			else
-			{
-				while (count--)
-					(*dest++) = (*src++);
-			}
-		}
-
-		static value_type* allocate(size_type count)									{ return get_allocator().allocate(count); }
-		static void deallocate(value_type*& ptr, size_type count)						{ if (ptr) { get_allocator().deallocate(ptr, count); ptr = nullptr; } }
-
-		static void construct(value_type* ptr, size_type count)							{ construct(ptr, count, value_type()); }
-		static void construct(value_type* ptr, size_type count, const value_type& val)	{ while (count) get_allocator().construct(ptr + (--count), val); }
-		static void destroy(value_type* ptr, size_type count)							{ while (count) get_allocator().destroy(ptr + (--count)); }
-
-	private:
-		static allocator_type& get_allocator()
-		{
-			static allocator_type allocator_;
-			return allocator_;
-		}
-	};
-}
-
-}  // namespace common
-}  // namespace kiwano
+}  // namespace oc

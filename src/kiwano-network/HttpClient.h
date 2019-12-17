@@ -20,7 +20,6 @@
 
 #pragma once
 #include <kiwano/common/common.h>
-#include <kiwano/common/singleton.hpp>
 #include <kiwano/core/Component.h>
 #include <mutex>
 #include <condition_variable>
@@ -33,7 +32,7 @@ namespace kiwano
 			: public Singleton<HttpClient>
 			, public ComponentBase
 		{
-			KGE_DECLARE_SINGLETON(HttpClient);
+			OC_DECLARE_SINGLETON(HttpClient);
 
 		public:
 			void Send(HttpRequestPtr request);

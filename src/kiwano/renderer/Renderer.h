@@ -59,7 +59,7 @@ namespace kiwano
 		, public EventComponent
 		, public RenderTarget
 	{
-		KGE_DECLARE_SINGLETON(Renderer);
+		OC_DECLARE_SINGLETON(Renderer);
 
 	public:
 		// …Ë÷√«Â∆¡—’…´
@@ -184,6 +184,8 @@ namespace kiwano
 		void AfterRender() override;
 
 		void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
+
+		void Destroy();
 
 	public:
 		inline HWND						GetTargetWindow() const			{ return hwnd_; }

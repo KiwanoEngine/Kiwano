@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/function.hpp>
-#include <kiwano/common/basic_json.hpp>
+#include <kiwano/common/common.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/SmartPtr.hpp>
 

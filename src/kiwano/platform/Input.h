@@ -32,7 +32,7 @@ namespace kiwano
 		, public UpdateComponent
 		, public EventComponent
 	{
-		KGE_DECLARE_SINGLETON(Input);
+		OC_DECLARE_SINGLETON(Input);
 
 	public:
 		// 检测键盘或鼠标按键是否正被按下
@@ -71,6 +71,8 @@ namespace kiwano
 		void UpdateKey(int, bool);
 
 		void UpdateMousePos(float, float);
+
+		void Destroy();
 
 	protected:
 		Input();

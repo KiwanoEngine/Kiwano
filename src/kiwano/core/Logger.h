@@ -28,26 +28,26 @@
 
 #ifndef KGE_LOG
 #	ifdef KGE_DEBUG
-#		define KGE_LOG(FORMAT, ...)		::kiwano::Logger::GetInstance()->Messagef((FORMAT ## "\n"), __VA_ARGS__)
+#		define KGE_LOG(FORMAT, ...)		::kiwano::Logger::instance().Messagef((FORMAT ## "\n"), __VA_ARGS__)
 #	else
 #		define KGE_LOG __noop
 #	endif
 #endif
 
-#ifndef KGE_WARNING_LOG
-#	define KGE_WARNING_LOG(FORMAT, ...)	::kiwano::Logger::GetInstance()->Warningf((FORMAT ## "\n"), __VA_ARGS__)
+#ifndef KGE_WARN
+#	define KGE_WARN(FORMAT, ...)		::kiwano::Logger::instance().Warningf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
-#ifndef KGE_ERROR_LOG
-#	define KGE_ERROR_LOG(FORMAT, ...)	::kiwano::Logger::GetInstance()->Errorf((FORMAT ## "\n"), __VA_ARGS__)
+#ifndef KGE_ERROR
+#	define KGE_ERROR(FORMAT, ...)		::kiwano::Logger::instance().Errorf((FORMAT ## "\n"), __VA_ARGS__)
 #endif
 
 #ifndef KGE_PRINT
-#	define KGE_PRINT(...)				::kiwano::Logger::GetInstance()->Println(__VA_ARGS__)
+#	define KGE_PRINT(...)				::kiwano::Logger::instance().Println(__VA_ARGS__)
 #endif
 
 #ifndef KGE_PRINTF
-#	define KGE_PRINTF(FORMAT, ...)		::kiwano::Logger::GetInstance()->Printf((FORMAT), __VA_ARGS__)
+#	define KGE_PRINTF(FORMAT, ...)		::kiwano::Logger::instance().Printf((FORMAT), __VA_ARGS__)
 #endif
 
 namespace kiwano
@@ -55,7 +55,7 @@ namespace kiwano
 	class KGE_API Logger
 		: public Singleton<Logger>
 	{
-		KGE_DECLARE_SINGLETON(Logger);
+		OC_DECLARE_SINGLETON(Logger);
 
 	public:
 		// 显示或关闭控制台
@@ -98,6 +98,10 @@ namespace kiwano
 
 		template <typename ..._Args>
 		void Errorln(_Args&& ... args);
+
+		std::wostream& GetOutputStream();
+
+		std::wostream& GetErrorStream();
 
 		std::wstreambuf* RedirectOutputStreamBuffer(std::wstreambuf* buf);
 
@@ -292,7 +296,17 @@ namespace kiwano
 
 	inline std::wostream& Logger::DefaultOutputColor(std::wostream& out)
 	{
-		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), Logger::GetInstance()->default_stdout_color_);
+		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), Logger::instance().default_stdout_color_);
 		return out;
+	}
+
+	inline std::wostream& Logger::GetOutputStream()
+	{
+		return output_stream_;
+	}
+
+	inline std::wostream& Logger::GetErrorStream()
+	{
+		return error_stream_;
 	}
 }

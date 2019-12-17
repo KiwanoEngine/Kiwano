@@ -145,7 +145,7 @@ namespace kiwano
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			KGE_ERROR_LOG(L"Reverse() not supported in ActionMoveTo");
+			KGE_ERROR(L"Reverse() not supported in ActionMoveTo");
 			return nullptr;
 		}
 
@@ -209,7 +209,7 @@ namespace kiwano
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			KGE_ERROR_LOG(L"Reverse() not supported in ActionJumpTo");
+			KGE_ERROR(L"Reverse() not supported in ActionJumpTo");
 			return nullptr;
 		}
 
@@ -282,7 +282,7 @@ namespace kiwano
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			KGE_ERROR_LOG(L"Reverse() not supported in ActionScaleTo");
+			KGE_ERROR(L"Reverse() not supported in ActionScaleTo");
 			return nullptr;
 		}
 
@@ -312,7 +312,7 @@ namespace kiwano
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			KGE_ERROR_LOG(L"Reverse() not supported in ActionFadeTo");
+			KGE_ERROR(L"Reverse() not supported in ActionFadeTo");
 			return nullptr;
 		}
 
@@ -399,7 +399,7 @@ namespace kiwano
 		// 获取该动作的倒转
 		virtual ActionPtr Reverse() const override
 		{
-			KGE_ERROR_LOG(L"Reverse() not supported in ActionRotateTo");
+			KGE_ERROR(L"Reverse() not supported in ActionRotateTo");
 			return nullptr;
 		}
 
@@ -430,7 +430,7 @@ namespace kiwano
 		// 获取该动作的倒转
 		ActionPtr Reverse() const override
 		{
-			KGE_ERROR_LOG(L"Reverse() not supported in ActionCustom");
+			KGE_ERROR(L"Reverse() not supported in ActionCustom");
 			return nullptr;
 		}
 

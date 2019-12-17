@@ -20,25 +20,25 @@
 
 #pragma once
 #include <kiwano/core/RefCounter.hpp>
-#include <kiwano/common/intrusive_ptr.hpp>
+#include <kiwano/common/common.h>
 
 namespace kiwano
 {
-	struct DefaultIntrusivePtrManager
+	struct DefaultIntrusivePtrProxy
 	{
-		static inline void AddRef(RefCounter* ptr)
+		static inline void add_ref(RefCounter* ptr)
 		{
 			if (ptr) ptr->Retain();
 		}
 
-		static inline void Release(RefCounter* ptr)
+		static inline void release(RefCounter* ptr)
 		{
 			if (ptr) ptr->Release();
 		}
 	};
 
 	template <typename _Ty>
-	using SmartPtr = common::intrusive_ptr<_Ty, DefaultIntrusivePtrManager>;
+	using SmartPtr = IntrusivePtr<_Ty, DefaultIntrusivePtrProxy>;
 
 }
 

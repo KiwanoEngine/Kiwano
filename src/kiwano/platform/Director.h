@@ -31,7 +31,7 @@ namespace kiwano
 		, public RenderComponent
 		, public EventComponent
 	{
-		KGE_DECLARE_SINGLETON(Director);
+		OC_DECLARE_SINGLETON(Director);
 
 	public:
 		// ÇÐ»»ÎèÌ¨

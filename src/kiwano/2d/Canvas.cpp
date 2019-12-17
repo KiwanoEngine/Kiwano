@@ -31,7 +31,7 @@ namespace kiwano
 		, stroke_color_(Color::White)
 		, stroke_style_(StrokeStyle::Miter)
 	{
-		Renderer::GetInstance()->CreateTextureRenderTarget(rt_);
+		Renderer::instance().CreateTextureRenderTarget(rt_);
 	}
 
 	Canvas::~Canvas()

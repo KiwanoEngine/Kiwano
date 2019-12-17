@@ -55,13 +55,13 @@ namespace kiwano
 
 	bool Texture::Load(String const& file_path)
 	{
-		Renderer::GetInstance()->CreateTexture(*this, file_path);
+		Renderer::instance().CreateTexture(*this, file_path);
 		return IsValid();
 	}
 
 	bool Texture::Load(Resource const& res)
 	{
-		Renderer::GetInstance()->CreateTexture(*this, res);
+		Renderer::instance().CreateTexture(*this, res);
 		return IsValid();
 	}
 

@@ -111,20 +111,20 @@ namespace kiwano
 		}
 		else
 		{
-			Renderer::GetInstance()->CreateSolidBrush(*this, style.color);
+			Renderer::instance().CreateSolidBrush(*this, style.color);
 			type_ = Type::SolidColor;
 		}
 	}
 
 	void Brush::SetStyle(LinearGradientStyle const& style)
 	{
-		Renderer::GetInstance()->CreateLinearGradientBrush(*this, style.begin, style.end, style.stops, style.extend_mode);
+		Renderer::instance().CreateLinearGradientBrush(*this, style.begin, style.end, style.stops, style.extend_mode);
 		type_ = Type::LinearGradient;
 	}
 
 	void Brush::SetStyle(RadialGradientStyle const& style)
 	{
-		Renderer::GetInstance()->CreateRadialGradientBrush(*this, style.center, style.offset, style.radius, style.stops, style.extend_mode);
+		Renderer::instance().CreateRadialGradientBrush(*this, style.center, style.offset, style.radius, style.stops, style.extend_mode);
 		type_ = Type::RadialGradient;
 	}
 

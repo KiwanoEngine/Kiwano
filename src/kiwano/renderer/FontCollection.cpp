@@ -49,25 +49,25 @@ namespace kiwano
 
 	bool FontCollection::Load(String const& file)
 	{
-		Renderer::GetInstance()->CreateFontCollection(*this, { file });
+		Renderer::instance().CreateFontCollection(*this, { file });
 		return IsValid();
 	}
 
 	bool FontCollection::Load(Vector<String> const& files)
 	{
-		Renderer::GetInstance()->CreateFontCollection(*this, files);
+		Renderer::instance().CreateFontCollection(*this, files);
 		return IsValid();
 	}
 
 	bool FontCollection::Load(Resource const& res)
 	{
-		Renderer::GetInstance()->CreateFontCollection(*this, { res });
+		Renderer::instance().CreateFontCollection(*this, { res });
 		return IsValid();
 	}
 
 	bool FontCollection::Load(Vector<Resource> const& res_arr)
 	{
-		Renderer::GetInstance()->CreateFontCollection(*this, res_arr);
+		Renderer::instance().CreateFontCollection(*this, res_arr);
 		return IsValid();
 	}
 

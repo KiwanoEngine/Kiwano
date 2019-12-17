@@ -28,7 +28,7 @@ namespace kiwano
 	{
 		if (FAILED(hr))
 		{
-			KGE_ERROR_LOG(L"Fatal error with HRESULT of %08X", hr);
+			KGE_ERROR(L"Fatal error with HRESULT of %08X", hr);
 
 			StackWalker{}.ShowCallstack();
 

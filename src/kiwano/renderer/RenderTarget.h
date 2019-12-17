@@ -41,7 +41,7 @@ namespace kiwano
 
 	// äÖÈ¾Ä¿±ê
 	class KGE_API RenderTarget
-		: public common::noncopyable
+		: public Noncopyable
 	{
 	public:
 		bool IsValid() const;

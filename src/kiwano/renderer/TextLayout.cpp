@@ -39,7 +39,7 @@ namespace kiwano
 
 	void TextFormat::Update(Font const& font)
 	{
-		Renderer::GetInstance()->CreateTextFormat(*this, font);
+		Renderer::instance().CreateTextFormat(*this, font);
 	}
 
 
@@ -72,7 +72,7 @@ namespace kiwano
 			return;
 		}
 
-		Renderer::GetInstance()->CreateTextLayout(
+		Renderer::instance().CreateTextLayout(
 			*this,
 			text,
 			text_format_

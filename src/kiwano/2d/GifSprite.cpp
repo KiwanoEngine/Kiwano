@@ -51,13 +51,13 @@ namespace kiwano
 
 	bool GifSprite::Load(String const& file_path)
 	{
-		GifImage texture = TextureCache::GetInstance()->AddOrGetGifImage(file_path);
+		GifImage texture = TextureCache::instance().AddOrGetGifImage(file_path);
 		return Load(texture);
 	}
 
 	bool GifSprite::Load(Resource const& res)
 	{
-		GifImage texture = TextureCache::GetInstance()->AddOrGetGifImage(res);
+		GifImage texture = TextureCache::instance().AddOrGetGifImage(res);
 		return Load(texture);
 	}
 
@@ -75,7 +75,7 @@ namespace kiwano
 
 			if (!frame_rt_.IsValid())
 			{
-				Renderer::GetInstance()->CreateTextureRenderTarget(frame_rt_);
+				Renderer::instance().CreateTextureRenderTarget(frame_rt_);
 			}
 
 			if (gif_.GetFramesCount() > 0)
@@ -168,7 +168,7 @@ namespace kiwano
 
 	void GifSprite::OverlayNextFrame()
 	{
-		Renderer::GetInstance()->CreateGifImageFrame(frame_, gif_, next_index_);
+		Renderer::instance().CreateGifImageFrame(frame_, gif_, next_index_);
 		
 		if (frame_.disposal_type == GifImage::DisposalType::Previous)
 		{

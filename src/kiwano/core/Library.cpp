@@ -62,7 +62,7 @@ namespace kiwano
 	FARPROC Library::GetProcess(String const& proc_name)
 	{
 		KGE_ASSERT(instance_ != nullptr);
-		return GetProcAddress(instance_, wide_to_string(proc_name).c_str());
+		return GetProcAddress(instance_, oc::wide_to_string(proc_name).c_str());
 	}
 
 }

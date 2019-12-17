@@ -23,7 +23,7 @@
 #endif
 
 #include <kiwano/macros.h>
-#include <kiwano/common/string.hpp>
+#include <kiwano/common/common.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/win32/ComPtr.hpp>
@@ -108,7 +108,7 @@ namespace kiwano
 
 			if (stream == nullptr)
 			{
-				KGE_ERROR_LOG(L"SHCreateMemStream failed");
+				KGE_ERROR(L"SHCreateMemStream failed");
 				return E_OUTOFMEMORY;
 			}
 
@@ -225,7 +225,7 @@ namespace kiwano
 
 				if (data == nullptr)
 				{
-					KGE_ERROR_LOG(L"Low memory");
+					KGE_ERROR(L"Low memory");
 					hr = E_OUTOFMEMORY;
 				}
 				else

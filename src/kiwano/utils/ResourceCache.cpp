@@ -61,9 +61,9 @@ namespace kiwano
 
 	bool ResourceCache::LoadFromJsonFile(String const& file_path)
 	{
-		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: File not found.");
+			KGE_WARN(L"ResourceCache::LoadFromJsonFile failed: File not found.");
 			return false;
 		}
 
@@ -73,19 +73,19 @@ namespace kiwano
 
 		try
 		{
-			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 			ifs.open(full_path.c_str());
 			ifs >> json_data;
 			ifs.close();
 		}
 		catch (std::wifstream::failure& e)
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARN(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
-		catch (common::json_exception& e)
+		catch (oc::json_exception& e)
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARN(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return LoadFromJson(json_data);
@@ -113,7 +113,7 @@ namespace kiwano
 		}
 		catch (std::exception& e)
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromJson failed: JSON data is invalid. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARN(L"ResourceCache::LoadFromJson failed: JSON data is invalid. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return false;
@@ -121,9 +121,9 @@ namespace kiwano
 
 	bool ResourceCache::LoadFromXmlFile(String const& file_path)
 	{
-		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: File not found.");
+			KGE_WARN(L"ResourceCache::LoadFromXmlFile failed: File not found.");
 			return false;
 		}
 
@@ -133,7 +133,7 @@ namespace kiwano
 
 		try
 		{
-			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 			ifs.open(full_path.c_str());
 
 			StringStream ss;
@@ -141,14 +141,14 @@ namespace kiwano
 
 			if (tinyxml2::XML_SUCCESS != doc.Parse(ss.str().c_str()))
 			{
-				KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: %s (%s)",
+				KGE_WARN(L"ResourceCache::LoadFromXmlFile failed: %s (%s)",
 					tinyxml2::XMLDocument::ErrorIDToName(doc.ErrorID()), doc.ErrorStr());
 				return false;
 			}
 		}
 		catch (std::wifstream::failure& e)
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARN(L"ResourceCache::LoadFromXmlFile failed: Cannot open file. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
 
@@ -183,7 +183,7 @@ namespace kiwano
 			}
 			catch (std::exception& e)
 			{
-				KGE_WARNING_LOG(L"ResourceCache::LoadFromXml failed: %s", string_to_wide(e.what()).c_str());
+				KGE_WARN(L"ResourceCache::LoadFromXml failed: %s", oc::string_to_wide(e.what()).c_str());
 				return false;
 			}
 		}
@@ -363,6 +363,8 @@ namespace kiwano
 	void ResourceCache::Clear()
 	{
 		object_cache_.clear();
+		gif_cache_.clear();
+		font_collection_cache_.clear();
 	}
 
 }

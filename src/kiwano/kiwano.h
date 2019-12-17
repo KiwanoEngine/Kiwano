@@ -32,15 +32,6 @@
 // common
 //
 
-#include <kiwano/common/vector.hpp>
-#include <kiwano/common/string.hpp>
-#include <kiwano/common/any.hpp>
-#include <kiwano/common/function.hpp>
-#include <kiwano/common/intrusive_list.hpp>
-#include <kiwano/common/intrusive_ptr.hpp>
-#include <kiwano/common/noncopyable.hpp>
-#include <kiwano/common/singleton.hpp>
-#include <kiwano/common/basic_json.hpp>
 #include <kiwano/common/common.h>
 
 

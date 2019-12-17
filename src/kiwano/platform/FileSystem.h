@@ -27,7 +27,7 @@ namespace kiwano
 	class KGE_API FileSystem
 		: public Singleton<FileSystem>
 	{
-		KGE_DECLARE_SINGLETON(FileSystem);
+		OC_DECLARE_SINGLETON(FileSystem);
 
 	public:
 		// 添加文件搜索路径

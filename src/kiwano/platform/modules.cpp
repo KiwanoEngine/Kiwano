@@ -37,7 +37,7 @@ namespace kiwano
 			}
 			else
 			{
-				KGE_ERROR_LOG(L"Load shlapi.dll failed");
+				KGE_ERROR(L"Load shlapi.dll failed");
 				throw std::runtime_error("Load shlapi.dll failed");
 			}
 		}

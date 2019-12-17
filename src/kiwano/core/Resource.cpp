@@ -50,28 +50,28 @@ namespace kiwano
 			HRSRC res_info = FindResourceW(nullptr, MAKEINTRESOURCE(id_), type_);
 			if (res_info == nullptr)
 			{
-				KGE_ERROR_LOG(L"FindResource failed");
+				KGE_ERROR(L"FindResource failed");
 				break;
 			}
 
 			HGLOBAL res_data = LoadResource(nullptr, res_info);
 			if (res_data == nullptr)
 			{
-				KGE_ERROR_LOG(L"LoadResource failed");
+				KGE_ERROR(L"LoadResource failed");
 				break;
 			}
 
 			DWORD size = SizeofResource(nullptr, res_info);
 			if (size == 0)
 			{
-				KGE_ERROR_LOG(L"SizeofResource failed");
+				KGE_ERROR(L"SizeofResource failed");
 				break;
 			}
 
 			LPVOID buffer = LockResource(res_data);
 			if (buffer == nullptr)
 			{
-				KGE_ERROR_LOG(L"LockResource failed");
+				KGE_ERROR(L"LockResource failed");
 				break;
 			}
 

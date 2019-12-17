@@ -109,9 +109,9 @@ namespace kiwano
 		}
 #endif
 
-		ss << "Render: " << Renderer::GetInstance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
+		ss << "Render: " << Renderer::instance().GetStatus().duration.Milliseconds() << "ms" << std::endl;
 
-		ss << "Primitives / sec: " << std::fixed << Renderer::GetInstance()->GetStatus().primitives * frame_time_.size() << std::endl;
+		ss << "Primitives / sec: " << std::fixed << Renderer::instance().GetStatus().primitives * frame_time_.size() << std::endl;
 
 		ss << "Memory: ";
 		{

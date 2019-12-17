@@ -30,7 +30,7 @@ namespace kiwano
 	class KGE_API ResourceCache
 		: public Singleton<ResourceCache>
 	{
-		KGE_DECLARE_SINGLETON(ResourceCache);
+		OC_DECLARE_SINGLETON(ResourceCache);
 
 	public:
 		// 从 JSON 文件加载资源信息

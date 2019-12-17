@@ -363,7 +363,7 @@ namespace kiwano
 
 		if (!std::regex_match(str.c_str(), duration_regex))
 		{
-			KGE_ERROR_LOG(L"Duration::Parse failed, invalid duration");
+			KGE_ERROR(L"Duration::Parse failed, invalid duration");
 			return ret;
 		}
 

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/singleton.hpp>
+#include <kiwano/common/common.h>
 #include <kiwano/core/Component.h>
 #include <kiwano/core/win32/ComPtr.hpp>
 #include <kiwano-audio/Transcoder.h>
@@ -33,7 +33,7 @@ namespace kiwano
 			: public Singleton<AudioEngine>
 			, public ComponentBase
 		{
-			KGE_DECLARE_SINGLETON(AudioEngine);
+			OC_DECLARE_SINGLETON(AudioEngine);
 
 		public:
 			// ¿ªÆôÉè±¸

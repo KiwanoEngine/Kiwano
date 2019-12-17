@@ -150,30 +150,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\basic_json.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\function.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\intrusive_list.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\intrusive_ptr.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\noncopyable.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\singleton.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\string.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\vector.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\common\common.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -275,9 +251,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h">
       <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\any.hpp">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\UserData.h">
       <Filter>utils</Filter>

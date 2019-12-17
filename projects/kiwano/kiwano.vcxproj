@@ -15,16 +15,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\core\win32\ComPtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\core\win32\helper.h" />
-    <ClInclude Include="..\..\src\kiwano\common\any.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\basic_json.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\function.hpp" />
     <ClInclude Include="..\..\src\kiwano\common\common.h" />
-    <ClInclude Include="..\..\src\kiwano\common\intrusive_list.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\intrusive_ptr.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\noncopyable.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\singleton.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\string.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\vector.hpp" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\config.h" />
     <ClInclude Include="..\..\src\kiwano\macros.h" />

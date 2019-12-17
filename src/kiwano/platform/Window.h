@@ -63,7 +63,7 @@ namespace kiwano
 	class KGE_API Window
 		: public Singleton<Window>
 	{
-		KGE_DECLARE_SINGLETON(Window);
+		OC_DECLARE_SINGLETON(Window);
 
 	public:
 		// 获取标题
@@ -109,6 +109,8 @@ namespace kiwano
 		void UpdateCursor();
 		
 		void SetActive(bool actived);
+
+		void Destroy();
 
 	protected:
 		Window();
