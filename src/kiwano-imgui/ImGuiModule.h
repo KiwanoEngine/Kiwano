@@ -32,7 +32,7 @@ namespace kiwano
 			, public UpdateComponent
 			, public EventComponent
 		{
-			OC_DECLARE_SINGLETON(ImGuiModule);
+			friend Singleton<ImGuiModule>;
 
 		private:
 			void Init(HWND hwnd);

@@ -262,10 +262,10 @@ namespace kiwano
 		}
 	}
 
-	void Application::PreformInMainThread(Function<void()> Function)
+	void Application::PreformInMainThread(Function<void()> func)
 	{
 		std::lock_guard<std::mutex> lock(perform_mutex_);
-		functions_to_perform_.push(Function);
+		functions_to_perform_.push(func);
 	}
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)

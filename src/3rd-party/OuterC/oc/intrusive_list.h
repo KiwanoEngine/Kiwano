@@ -31,7 +31,7 @@ private:
 	pointer_type prev_;
 	pointer_type next_;
 
-	friend class intrusive_list<_Ty>;
+	friend class intrusive_list<_Ty, _PTy>;
 };
 
 

@@ -55,7 +55,7 @@ namespace kiwano
 	class KGE_API Logger
 		: public Singleton<Logger>
 	{
-		OC_DECLARE_SINGLETON(Logger);
+		friend Singleton<Logger>;
 
 	public:
 		// 显示或关闭控制台

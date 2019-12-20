@@ -33,7 +33,7 @@ namespace kiwano
 			: public Singleton<AudioEngine>
 			, public ComponentBase
 		{
-			OC_DECLARE_SINGLETON(AudioEngine);
+			friend Singleton<AudioEngine>;
 
 		public:
 			// ¿ªÆôÉè±¸

@@ -59,7 +59,7 @@ namespace kiwano
 		, public EventComponent
 		, public RenderTarget
 	{
-		OC_DECLARE_SINGLETON(Renderer);
+		friend Singleton<Renderer>;
 
 	public:
 		// …Ë÷√«Â∆¡—’…´

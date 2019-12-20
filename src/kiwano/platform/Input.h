@@ -27,36 +27,70 @@
 
 namespace kiwano
 {
+	/**
+	* \~chinese
+	* @brief 输入设备实例，可获取鼠标和键盘的按键状态
+	*/
 	class KGE_API Input
 		: public Singleton<Input>
 		, public UpdateComponent
 		, public EventComponent
 	{
-		OC_DECLARE_SINGLETON(Input);
+		friend Singleton<Input>;
 
 	public:
-		// 检测键盘或鼠标按键是否正被按下
+		/**
+		* \~chinese
+		* @brief 检测键盘或鼠标按键是否正被按下
+		* @param key_or_btn 键值
+		* @return 是否正被按下
+		* @see kiwano::KeyCode kiwano::MouseButton
+		*/
 		bool IsDown(
 			int key_or_btn
 		);
 
-		// 检测键盘或鼠标按键是否刚被点击
+		/**
+		* \~chinese
+		* @brief 检测键盘或鼠标按键是否刚被点击
+		* @param key_or_btn 键值
+		* @return 是否刚被点击
+		* @see kiwano::KeyCode kiwano::MouseButton
+		*/
 		bool WasPressed(
 			int key_or_btn
 		);
 
-		// 检测键盘或鼠标按键是否刚抬起
+		/**
+		* \~chinese
+		* @brief 检测键盘或鼠标按键是否刚抬起
+		* @param key_or_btn 键值
+		* @return 是否刚抬起
+		* @see kiwano::KeyCode kiwano::MouseButton
+		*/
 		bool WasReleased(
 			int key_or_btn
 		);
 
-		// 获得鼠标 x 坐标
+		/**
+		* \~chinese
+		* @brief 获得鼠标 x 坐标
+		* @return 鼠标 x 坐标
+		*/
 		float GetMouseX();
 
-		// 获得鼠标 y 坐标
+		/**
+		* \~chinese
+		* @brief 获得鼠标 y 坐标
+		* @return 鼠标 y 坐标
+		*/
 		float GetMouseY();
 
-		// 获得鼠标坐标
+		/**
+		* \~chinese
+		* @brief 获得鼠标坐标
+		* @return 鼠标坐标
+		*/
 		Point GetMousePos();
 
 	public:

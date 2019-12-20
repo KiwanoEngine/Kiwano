@@ -27,7 +27,7 @@ namespace kiwano
 	class KGE_API TextureCache
 		: public Singleton<TextureCache>
 	{
-		OC_DECLARE_SINGLETON(TextureCache);
+		friend Singleton<TextureCache>;
 
 	public:
 		Texture AddOrGetTexture(String const& file_path);

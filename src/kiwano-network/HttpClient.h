@@ -32,7 +32,7 @@ namespace kiwano
 			: public Singleton<HttpClient>
 			, public ComponentBase
 		{
-			OC_DECLARE_SINGLETON(HttpClient);
+			friend Singleton<HttpClient>;
 
 		public:
 			void Send(HttpRequestPtr request);
