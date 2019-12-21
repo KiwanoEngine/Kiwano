@@ -23,144 +23,209 @@
 #include <kiwano/math/math.h>
 #include <kiwano/core/keys.h>
 
+#include <typeinfo>
+#include <typeindex>
+
 namespace kiwano
 {
 	class Actor;
 
-	// 事件类型
-	struct EventType
+	/// \~chinese
+	/// @brief 事件类型
+	class EventType
+		: public std::type_index
 	{
-		inline EventType() : hash(0), type()
-		{
-		}
+		class Dummy { };
 
-		inline EventType(String const& type) : hash(0), type(type)
-		{
-			hash = type.hash();
-		}
+	public:
+		/// \~chinese
+		/// @brief 构建事件类型
+		EventType() : std::type_index(typeid(EventType::Dummy)) {}
 
-		inline bool operator==(const EventType& rhs) const
-		{
-			return hash == rhs.hash && type == rhs.type;
-		}
+		/// \~chinese
+		/// @brief 构建事件类型
+		/// @param info 事件标识符
+		EventType(const type_info& info) : std::type_index(info) {}
 
-		size_t hash;
-		String type;
+		/// \~chinese
+		/// @brief 构建事件类型
+		/// @param index 事件标识符
+		EventType(const std::type_index& index) : std::type_index(index) {}
 	};
 
 
-	namespace event
+#define KGE_EVENT(EVENT_TYPE)								::kiwano::EventType(typeid(EVENT_TYPE))
+
+#define KGE_DECLARE_EVENT_TYPE(EVENT_NAME)					extern ::kiwano::EventType EVENT_NAME;
+
+#define KGE_IMPLEMENT_EVENT_TYPE(EVENT_NAME, EVENT_TYPE)	::kiwano::EventType EVENT_NAME = KGE_EVENT(EVENT_TYPE);
+
+
+	namespace events
 	{
+		/**
+		* \~chinese
+		* \defgroup EventTypes 事件类型
+		*/
+
+		/**
+		* \addtogroup EventTypes
+		* @{
+		*/
+
 		// 鼠标事件
-		extern EventType MouseMove;				// 移动
-		extern EventType MouseDown;				// 鼠标按下
-		extern EventType MouseUp;				// 鼠标抬起
-		extern EventType MouseWheel;			// 滚轮滚动
-		extern EventType MouseHover;			// 鼠标移入
-		extern EventType MouseOut;				// 鼠标移出
-		extern EventType MouseClick;			// 鼠标点击
+		KGE_DECLARE_EVENT_TYPE(MouseMove);				///< 鼠标移动
+		KGE_DECLARE_EVENT_TYPE(MouseDown);				///< 鼠标按下
+		KGE_DECLARE_EVENT_TYPE(MouseUp);				///< 鼠标抬起
+		KGE_DECLARE_EVENT_TYPE(MouseWheel);				///< 滚轮滚动
+		KGE_DECLARE_EVENT_TYPE(MouseHover);				///< 鼠标移入
+		KGE_DECLARE_EVENT_TYPE(MouseOut);				///< 鼠标移出
+		KGE_DECLARE_EVENT_TYPE(MouseClick);				///< 鼠标点击
 
 		// 按键事件
-		extern EventType KeyDown;				// 按键按下
-		extern EventType KeyUp;					// 按键抬起
-		extern EventType KeyChar;				// 输出字符
+		KGE_DECLARE_EVENT_TYPE(KeyDown);				///< 按键按下
+		KGE_DECLARE_EVENT_TYPE(KeyUp);					///< 按键抬起
+		KGE_DECLARE_EVENT_TYPE(KeyChar);				///< 输出字符
 
 		// 窗口消息
-		extern EventType WindowMoved;			// 窗口移动
-		extern EventType WindowResized;			// 窗口大小变化
-		extern EventType WindowFocusChanged;	// 获得或失去焦点
-		extern EventType WindowTitleChanged;	// 标题变化
-		extern EventType WindowClosed;			// 窗口被关闭
+		KGE_DECLARE_EVENT_TYPE(WindowMoved);			///< 窗口移动
+		KGE_DECLARE_EVENT_TYPE(WindowResized);			///< 窗口大小变化
+		KGE_DECLARE_EVENT_TYPE(WindowFocusChanged);		///< 获得或失去焦点
+		KGE_DECLARE_EVENT_TYPE(WindowTitleChanged);		///< 标题变化
+		KGE_DECLARE_EVENT_TYPE(WindowClosed);			///< 窗口被关闭
+
+		/** @} */
 	}
 
+	/**
+	* \~chinese
+	* \defgroup Events 事件
+	*/
 
-	// 事件
+	/**
+	* \addtogroup Events
+	* @{
+	*/
+
+	/// \~chinese
+	/// @brief 事件
 	class KGE_API Event
 	{
 	public:
-		const EventType type;
-
+		/// \~chinese
+		/// @brief 构造事件
 		Event(EventType const& type);
+
 		virtual ~Event();
 
-		template <
-			typename _Ty,
-			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
-		>
-		inline const _Ty* SafeCast() const
+		/// \~chinese
+		/// @brief 获取类型事件
+		inline const EventType& GetType() const
 		{
-			const _Ty* ptr = dynamic_cast<const _Ty*>(this);
-			if (ptr)
-			{
-				return ptr;
-			}
-			return nullptr;
+			return type_;
 		}
 
+		/// \~chinese
+		/// @brief 判断事件类型
+		/// @return 是否是指定事件类型
 		template <
 			typename _Ty,
 			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
 		>
-		inline _Ty* SafeCast()
+		inline bool IsType() const
 		{
-			return const_cast<_Ty*>(const_cast<const Event*>(this)->SafeCast<_Ty>());
+			return type_ == KGE_EVENT(_Ty);
 		}
+
+		/// \~chinese
+		/// @brief 安全转换为其他类型事件
+		/// @throw std::bad_cast 无法转换的类型
+		template <
+			typename _Ty,
+			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
+		>
+		inline const _Ty& SafeCast() const
+		{
+			if (!IsType<_Ty>()) throw std::bad_cast();
+			return *dynamic_cast<const _Ty*>(this);
+		}
+
+		/// \~chinese
+		/// @brief 安全转换为其他类型事件
+		/// @throw std::bad_cast 无法转换的类型
+		template <
+			typename _Ty,
+			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
+		>
+		inline _Ty& SafeCast()
+		{
+			return const_cast<_Ty&>(const_cast<const Event*>(this)->SafeCast<_Ty>());
+		}
+
+	protected:
+		const EventType type_;
 	};
 
-	// 鼠标事件
+	/// \~chinese
+	/// @brief 鼠标事件
 	class KGE_API MouseEvent
 		: public Event
 	{
 	public:
-		Point pos;
-		bool left_btn_down;		// 左键是否按下
-		bool right_btn_down;	// 右键是否按下
-		Actor* target;
+		Point pos;				///< 鼠标位置
+		bool left_btn_down;		///< 鼠标左键是否按下
+		bool right_btn_down;	///< 鼠标右键是否按下
+		Actor* target;			///< 目标
 
 		MouseEvent(EventType const& type);
 	};
 
-	// 鼠标移动事件
+	/// \~chinese
+	/// @brief 鼠标移动事件
 	class KGE_API MouseMoveEvent
 		: public MouseEvent
 	{
 	public:
-		MouseButton::Value button;
+		MouseButton::Value button;	///< 鼠标键值
 
 		MouseMoveEvent();
 	};
 
-	// 鼠标按键按下事件
+	/// \~chinese
+	/// @brief 鼠标按键按下事件
 	class KGE_API MouseDownEvent
 		: public MouseEvent
 	{
 	public:
-		MouseButton::Value button;
+		MouseButton::Value button;	///< 鼠标键值
 
 		MouseDownEvent();
 	};
 
-	// 鼠标按键抬起事件
+	/// \~chinese
+	/// @brief 鼠标按键抬起事件
 	class KGE_API MouseUpEvent
 		: public MouseEvent
 	{
 	public:
-		MouseButton::Value button;
+		MouseButton::Value button;	///< 鼠标键值
 
 		MouseUpEvent();
 	};
 
-	// 鼠标点击事件
+	/// \~chinese
+	/// @brief 鼠标点击事件
 	class KGE_API MouseClickEvent
 		: public MouseEvent
 	{
 	public:
-		MouseButton::Value button;
+		MouseButton::Value button;	///< 鼠标键值
 
 		MouseClickEvent();
 	};
 
-	// 鼠标移入事件
+	/// \~chinese
+	/// @brief 鼠标移入事件
 	class KGE_API MouseHoverEvent
 		: public MouseEvent
 	{
@@ -168,7 +233,8 @@ namespace kiwano
 		MouseHoverEvent();
 	};
 
-	// 鼠标移出事件
+	/// \~chinese
+	/// @brief 鼠标移出事件
 	class KGE_API MouseOutEvent
 		: public MouseEvent
 	{
@@ -176,94 +242,105 @@ namespace kiwano
 		MouseOutEvent();
 	};
 
-	// 鼠标滚轮事件
+	/// \~chinese
+	/// @brief 鼠标滚轮事件
 	class KGE_API MouseWheelEvent
 		: public MouseEvent
 	{
 	public:
-		float wheel;
+		float wheel;			///< 滚轮值
 
 		MouseWheelEvent();
 	};
 
-	// 键盘按下事件
+	/// \~chinese
+	/// @brief 键盘按下事件
 	class KGE_API KeyDownEvent
 		: public Event
 	{
 	public:
-		KeyCode::Value code;
+		KeyCode::Value code;	///< 键值
 
 		KeyDownEvent();
 	};
 
-	// 键盘抬起事件
+	/// \~chinese
+	/// @brief 键盘抬起事件
 	class KGE_API KeyUpEvent
 		: public Event
 	{
 	public:
-		KeyCode::Value code;
+		KeyCode::Value code;	///< 键值
 
 		KeyUpEvent();
 	};
 
-	// 键盘字符事件
+	/// \~chinese
+	/// @brief 键盘字符事件
 	class KGE_API KeyCharEvent
 		: public Event
 	{
 	public:
-		char value;
+		char value;		///< 字符
 
 		KeyCharEvent();
 	};
 
-	// 窗口移动事件
+	/// \~chinese
+	/// @brief 窗口移动事件
 	class KGE_API WindowMovedEvent
 		: public Event
 	{
 	public:
-		int x;
-		int y;
+		int x;			///< 窗口左上角 x 坐标
+		int y;			///< 窗口左上角 y 坐标
 
 		WindowMovedEvent();
 	};
 
-	// 窗口大小变化事件
+	/// \~chinese
+	/// @brief 窗口大小变化事件
 	class KGE_API WindowResizedEvent
 		: public Event
 	{
 	public:
-		int width;
-		int height;
+		int width;		///< 窗口宽度
+		int height;		///< 窗口高度
 
 		WindowResizedEvent();
 	};
 
-	// 窗口焦点变化事件
+	/// \~chinese
+	/// @brief 窗口焦点变化事件
 	class KGE_API WindowFocusChangedEvent
 		: public Event
 	{
 	public:
-		bool focus;
+		bool focus;		///< 是否获取到焦点
 
 		WindowFocusChangedEvent();
 	};
 
-	// 窗口标题更改事件
+	/// \~chinese
+	/// @brief 窗口标题更改事件
 	class KGE_API WindowTitleChangedEvent
 		: public Event
 	{
 	public:
-		String title;
+		String title;	///< 标题
 
 		WindowTitleChangedEvent();
 	};
 
-	// 窗口关闭事件
+	/// \~chinese
+	/// @brief 窗口关闭事件
 	class KGE_API WindowClosedEvent
 		: public Event
 	{
 	public:
 		WindowClosedEvent();
 	};
+
+	/** @} */
 
 }

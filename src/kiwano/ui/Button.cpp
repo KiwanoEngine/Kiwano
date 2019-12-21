@@ -32,10 +32,10 @@ namespace kiwano
 	{
 		SetResponsible(true);
 
-		AddListener(event::MouseHover, Closure(this, &Button::UpdateStatus));
-		AddListener(event::MouseOut, Closure(this, &Button::UpdateStatus));
-		AddListener(event::MouseDown, Closure(this, &Button::UpdateStatus));
-		AddListener(event::MouseUp, Closure(this, &Button::UpdateStatus));
+		AddListener(events::MouseHover, Closure(this, &Button::UpdateStatus));
+		AddListener(events::MouseOut, Closure(this, &Button::UpdateStatus));
+		AddListener(events::MouseDown, Closure(this, &Button::UpdateStatus));
+		AddListener(events::MouseUp, Closure(this, &Button::UpdateStatus));
 	}
 
 	Button::Button(const Callback& click)
@@ -105,12 +105,12 @@ namespace kiwano
 
 	void Button::UpdateStatus(Event& evt)
 	{
-		auto mouse_evt = evt.SafeCast<MouseEvent>();
-		KGE_ASSERT(mouse_evt);
+		auto mouse_evt = dynamic_cast<MouseEvent*>(&evt);
+		KGE_ASSERT(mouse_evt != nullptr);
 
 		if (enabled_ && (mouse_evt->target == this))
 		{
-			if (evt.type == event::MouseHover)
+			if (evt.IsType<MouseHoverEvent>())
 			{
 				SetStatus(Status::Hover);
 				Window::instance().SetCursor(CursorType::Hand);
@@ -118,7 +118,7 @@ namespace kiwano
 				if (mouse_over_callback_)
 					mouse_over_callback_();
 			}
-			else if (evt.type == event::MouseOut)
+			else if (evt.IsType<MouseOutEvent>())
 			{
 				SetStatus(Status::Normal);
 				Window::instance().SetCursor(CursorType::Arrow);
@@ -126,14 +126,14 @@ namespace kiwano
 				if (mouse_out_callback_)
 					mouse_out_callback_();
 			}
-			else if (evt.type == event::MouseDown && status_ == Status::Hover)
+			else if (evt.IsType<MouseDownEvent>() && status_ == Status::Hover)
 			{
 				SetStatus(Status::Pressed);
 
 				if (pressed_callback_)
 					pressed_callback_();
 			}
-			else if (evt.type == event::MouseUp && status_ == Status::Pressed)
+			else if (evt.IsType<MouseUpEvent>() && status_ == Status::Pressed)
 			{
 				SetStatus(Status::Hover);
 

@@ -29,14 +29,14 @@ namespace kiwano
 	{
 		auto handler = Closure(this, &Layer::HandleMessages);
 
-		AddListener(event::MouseDown, handler);
-		AddListener(event::MouseUp, handler);
-		AddListener(event::MouseMove, handler);
-		AddListener(event::MouseWheel, handler);
+		AddListener(events::MouseDown, handler);
+		AddListener(events::MouseUp, handler);
+		AddListener(events::MouseMove, handler);
+		AddListener(events::MouseWheel, handler);
 
-		AddListener(event::KeyDown, handler);
-		AddListener(event::KeyUp, handler);
-		AddListener(event::KeyChar, handler);
+		AddListener(events::KeyDown, handler);
+		AddListener(events::KeyUp, handler);
+		AddListener(events::KeyChar, handler);
 	}
 
 	Layer::~Layer()
@@ -93,40 +93,40 @@ namespace kiwano
 
 	void Layer::HandleMessages(Event& evt)
 	{
-		if (evt.type == event::MouseDown)
+		if (evt.IsType<MouseDownEvent>())
 		{
-			auto real_evt = evt.SafeCast<MouseDownEvent>();
-			OnMouseButtonDown(real_evt->button, real_evt->pos);
+			const auto& real_evt = evt.SafeCast<MouseDownEvent>();
+			OnMouseButtonDown(real_evt.button, real_evt.pos);
 		}
-		else if (evt.type == event::MouseUp)
+		else if (evt.IsType<MouseUpEvent>())
 		{
-			auto real_evt = evt.SafeCast<MouseUpEvent>();
-			OnMouseButtonUp(real_evt->button, real_evt->pos);
+			const auto& real_evt = evt.SafeCast<MouseUpEvent>();
+			OnMouseButtonUp(real_evt.button, real_evt.pos);
 		}
-		else if (evt.type == event::MouseMove)
+		else if (evt.IsType<MouseMoveEvent>())
 		{
-			auto real_evt = evt.SafeCast<MouseMoveEvent>();
-			OnMouseMoved(real_evt->pos);
+			const auto& real_evt = evt.SafeCast<MouseMoveEvent>();
+			OnMouseMoved(real_evt.pos);
 		}
-		else if (evt.type == event::MouseWheel)
+		else if (evt.IsType<MouseWheelEvent>())
 		{
-			auto real_evt = evt.SafeCast<MouseWheelEvent>();
-			OnMouseWheel(real_evt->wheel);
+			const auto& real_evt = evt.SafeCast<MouseWheelEvent>();
+			OnMouseWheel(real_evt.wheel);
 		}
-		else if (evt.type == event::KeyDown)
+		else if (evt.IsType<KeyDownEvent>())
 		{
-			auto real_evt = evt.SafeCast<KeyDownEvent>();
-			OnKeyDown(real_evt->code);
+			const auto& real_evt = evt.SafeCast<KeyDownEvent>();
+			OnKeyDown(real_evt.code);
 		}
-		else if (evt.type == event::KeyUp)
+		else if (evt.IsType<KeyUpEvent>())
 		{
-			auto real_evt = evt.SafeCast<KeyUpEvent>();
-			OnKeyUp(real_evt->code);
+			const auto& real_evt = evt.SafeCast<KeyUpEvent>();
+			OnKeyUp(real_evt.code);
 		}
-		else if (evt.type == event::KeyChar)
+		else if (evt.IsType<KeyCharEvent>())
 		{
-			auto real_evt = evt.SafeCast<KeyCharEvent>();
-			OnChar(real_evt->value);
+			const auto& real_evt = evt.SafeCast<KeyCharEvent>();
+			OnChar(real_evt.value);
 		}
 	}
 

@@ -26,37 +26,46 @@ namespace kiwano
 {
 	namespace physics
 	{
-		// 接触开始事件
+		namespace events
+		{
+			/**
+			* \addtogroup EventTypes
+			* @{
+			*/
+
+			KGE_DECLARE_EVENT_TYPE(ContactBegin);	///< 接触开始
+			KGE_DECLARE_EVENT_TYPE(ContactEnd);		///< 接触结束
+
+			/** @} */
+		}
+
+		/// \~chinese
+		/// @brief 接触开始事件
 		class KGE_API ContactBeginEvent
 			: public Event
 		{
 		public:
-			Contact contact;
-			Body* body_a;
-			Body* body_b;
+			Contact contact;	///< 产生的接触
+			Body* body_a;		///< 产生接触的物体A
+			Body* body_b;		///< 产生接触的物体B
 
 			ContactBeginEvent();
 			ContactBeginEvent(Contact const& contact);
 		};
 
-		// 接触结束事件
+		/// \~chinese
+		/// @brief 接触结束事件
 		class KGE_API ContactEndEvent
 			: public Event
 		{
 		public:
-			Contact contact;
-			Body* body_a;
-			Body* body_b;
+			Contact contact;	///< 产生的接触
+			Body* body_a;		///< 产生接触的物体A
+			Body* body_b;		///< 产生接触的物体B
 
 			ContactEndEvent();
 			ContactEndEvent(Contact const& contact);
 		};
 
-	}
-
-	namespace event
-	{
-		extern EventType ContactBegin;	// 接触开始
-		extern EventType ContactEnd;	// 接触结束
 	}
 }

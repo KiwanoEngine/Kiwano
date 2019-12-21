@@ -169,21 +169,21 @@ namespace kiwano
 
 		if (responsible_)
 		{
-			if (evt.type == event::MouseMove)
+			if (evt.IsType<MouseMoveEvent>())
 			{
-				auto mouse_evt = evt.SafeCast<MouseMoveEvent>();
-				if (!mouse_evt->target && ContainsPoint(mouse_evt->pos))
+				auto& mouse_evt = evt.SafeCast<MouseMoveEvent>();
+				if (!mouse_evt.target && ContainsPoint(mouse_evt.pos))
 				{
-					mouse_evt->target = this;
+					mouse_evt.target = this;
 
 					if (!hover_)
 					{
 						hover_ = true;
 
 						MouseHoverEvent hover;
-						hover.pos = mouse_evt->pos;
-						hover.left_btn_down = mouse_evt->left_btn_down;
-						hover.right_btn_down = mouse_evt->right_btn_down;
+						hover.pos = mouse_evt.pos;
+						hover.left_btn_down = mouse_evt.left_btn_down;
+						hover.right_btn_down = mouse_evt.right_btn_down;
 						hover.target = this;
 						EventDispatcher::Dispatch(hover);
 					}
@@ -194,33 +194,33 @@ namespace kiwano
 					pressed_ = false;
 
 					MouseOutEvent out;
-					out.pos = mouse_evt->pos;
-					out.left_btn_down = mouse_evt->left_btn_down;
-					out.right_btn_down = mouse_evt->right_btn_down;
+					out.pos = mouse_evt.pos;
+					out.left_btn_down = mouse_evt.left_btn_down;
+					out.right_btn_down = mouse_evt.right_btn_down;
 					out.target = this;
 					EventDispatcher::Dispatch(out);
 				}
 			}
 
-			if (evt.type == event::MouseDown && hover_)
+			if (evt.IsType<MouseDownEvent>() && hover_)
 			{
 				pressed_ = true;
-				evt.SafeCast<MouseDownEvent>()->target = this;
+				evt.SafeCast<MouseDownEvent>().target = this;
 			}
 
-			if (evt.type == event::MouseUp && pressed_)
+			if (evt.IsType<MouseUpEvent>() && pressed_)
 			{
 				pressed_ = false;
 
 				auto mouse_up_evt = evt.SafeCast<MouseUpEvent>();
-				mouse_up_evt->target = this;
+				mouse_up_evt.target = this;
 
 				MouseClickEvent click;
-				click.pos = mouse_up_evt->pos;
-				click.left_btn_down = mouse_up_evt->left_btn_down;
-				click.right_btn_down = mouse_up_evt->right_btn_down;
+				click.pos = mouse_up_evt.pos;
+				click.left_btn_down = mouse_up_evt.left_btn_down;
+				click.right_btn_down = mouse_up_evt.right_btn_down;
 				click.target = this;
-				click.button = mouse_up_evt->button;
+				click.button = mouse_up_evt.button;
 				EventDispatcher::Dispatch(click);
 			}
 		}

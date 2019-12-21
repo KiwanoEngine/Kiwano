@@ -29,13 +29,18 @@ namespace kiwano
 	* @brief 时间段
 	* @details
 	*   时间段表示法:
-	*     5 秒: time::Second * 5
-	*     1.5 小时: time::Hour * 1.5
-	*     3 小时 45 分 15 秒: time::Hour * 3 + time::Minute * 45 + time::Second * 15
+	*   @code
+	*     time::Second * 5  // 5 秒
+	*     time::Hour * 1.5  // 1.5 小时
+	*     time::Hour * 3 + time::Minute * 45 + time::Second * 15  // 3 小时 45 分 15 秒
+	*   @endcode
 	*   在 VS2015 及更高版本可以使用 time literals:
-	*     5 秒: 5_s
-	*     1.5 小时: 1.5_h
-	*     3 小时 45 分 15 秒: 3_h + 45_m + 15_s
+	*   @code
+	*     using namespace kiwano;
+	*     5_sec                     // 5 秒
+	*     1.5_hour                  // 1.5 小时
+	*     3_hour + 45_min + 15_sec  // 3 小时 45 分 15 秒
+	*   @endcode
 	*/
 	struct KGE_API Duration
 	{
@@ -217,48 +222,48 @@ namespace kiwano
 	inline bool Time::IsZero() const				{ return dur_ == 0; }
 }
 
-#if KGE_VS_VER > KGE_VS_2013
+#if defined(KGE_VS_VER) && KGE_VS_VER > KGE_VS_2013
 
 namespace kiwano
 {
 	inline namespace literals
 	{
-		inline const kiwano::Duration operator "" _ms(long double val)
+		inline const kiwano::Duration operator "" _msec(long double val)
 		{
 			return kiwano::Duration::Ms * val;
 		}
 
-		inline const kiwano::Duration operator "" _s(long double val)
+		inline const kiwano::Duration operator "" _msec(unsigned long long val)
+		{
+			return kiwano::Duration::Ms * val;
+		}
+
+		inline const kiwano::Duration operator "" _sec(long double val)
 		{
 			return kiwano::Duration::Second * val;
 		}
 
-		inline const kiwano::Duration operator "" _m(long double val)
+		inline const kiwano::Duration operator "" _sec(unsigned long long val)
+		{
+			return kiwano::Duration::Second * val;
+		}
+
+		inline const kiwano::Duration operator "" _min(long double val)
 		{
 			return kiwano::Duration::Minute * val;
 		}
 
-		inline const kiwano::Duration operator "" _h(long double val)
+		inline const kiwano::Duration operator "" _min(unsigned long long val)
+		{
+			return kiwano::Duration::Minute * val;
+		}
+
+		inline const kiwano::Duration operator "" _hour(long double val)
 		{
 			return kiwano::Duration::Hour * val;
 		}
 
-		inline const kiwano::Duration operator "" _ms(unsigned long long val)
-		{
-			return kiwano::Duration::Ms * val;
-		}
-
-		inline const kiwano::Duration operator "" _s(unsigned long long val)
-		{
-			return kiwano::Duration::Second * val;
-		}
-
-		inline const kiwano::Duration operator "" _m(unsigned long long val)
-		{
-			return kiwano::Duration::Minute * val;
-		}
-
-		inline const kiwano::Duration operator "" _h(unsigned long long val)
+		inline const kiwano::Duration operator "" _hour(unsigned long long val)
 		{
 			return kiwano::Duration::Hour * val;
 		}

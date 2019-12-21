@@ -2,27 +2,29 @@
 
 namespace kiwano
 {
-	EventType event::MouseMove			= EventType(L"MouseMove");
-	EventType event::MouseDown			= EventType(L"MouseDown");
-	EventType event::MouseUp			= EventType(L"MouseUp");
-	EventType event::MouseWheel			= EventType(L"MouseWheel");
-	EventType event::MouseHover			= EventType(L"MouseHover");
-	EventType event::MouseOut			= EventType(L"MouseOut");
-	EventType event::MouseClick			= EventType(L"MouseClick");
+	namespace events
+	{
+		KGE_IMPLEMENT_EVENT_TYPE(MouseMove, MouseMoveEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(MouseDown, MouseDownEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(MouseUp, MouseUpEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(MouseWheel, MouseWheelEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(MouseHover, MouseHoverEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(MouseOut, MouseOutEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(MouseClick, MouseClickEvent);
 
-	EventType event::KeyDown			= EventType(L"KeyDown");
-	EventType event::KeyUp				= EventType(L"KeyUp");
-	EventType event::KeyChar			= EventType(L"KeyChar");
+		KGE_IMPLEMENT_EVENT_TYPE(KeyDown, KeyDownEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(KeyUp, KeyUpEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(KeyChar, KeyCharEvent);
 
-	EventType event::WindowMoved		= EventType(L"WindowMoved");
-	EventType event::WindowResized		= EventType(L"WindowResized");
-	EventType event::WindowFocusChanged	= EventType(L"WindowFocusChanged");
-	EventType event::WindowTitleChanged	= EventType(L"WindowTitleChanged");
-	EventType event::WindowClosed		= EventType(L"WindowClosed");
-
+		KGE_IMPLEMENT_EVENT_TYPE(WindowMoved, WindowMovedEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(WindowResized, WindowResizedEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(WindowFocusChanged, WindowFocusChangedEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(WindowTitleChanged, WindowTitleChangedEvent);
+		KGE_IMPLEMENT_EVENT_TYPE(WindowClosed, WindowClosedEvent);
+	}
 
 	Event::Event(EventType const& type)
-		: type(type)
+		: type_(type)
 	{
 	}
 
@@ -40,91 +42,91 @@ namespace kiwano
 	}
 
 	MouseMoveEvent::MouseMoveEvent()
-		: MouseEvent(event::MouseMove)
+		: MouseEvent(events::MouseMove)
 		, button(0)
 	{
 	}
 
 	MouseDownEvent::MouseDownEvent()
-		: MouseEvent(event::MouseDown)
+		: MouseEvent(events::MouseDown)
 		, button(0)
 	{
 	}
 
 	MouseUpEvent::MouseUpEvent()
-		: MouseEvent(event::MouseUp)
+		: MouseEvent(events::MouseUp)
 		, button(0)
 	{
 	}
 
 	MouseClickEvent::MouseClickEvent()
-		: MouseEvent(event::MouseClick)
+		: MouseEvent(events::MouseClick)
 		, button(0)
 	{
 	}
 
 	MouseHoverEvent::MouseHoverEvent()
-		: MouseEvent(event::MouseHover)
+		: MouseEvent(events::MouseHover)
 	{
 	}
 
 	MouseOutEvent::MouseOutEvent()
-		: MouseEvent(event::MouseOut)
+		: MouseEvent(events::MouseOut)
 	{
 	}
 
 	MouseWheelEvent::MouseWheelEvent()
-		: MouseEvent(event::MouseWheel)
+		: MouseEvent(events::MouseWheel)
 		, wheel(0.f)
 	{
 	}
 
 	KeyDownEvent::KeyDownEvent()
-		: Event(event::KeyDown)
+		: Event(events::KeyDown)
 		, code(0)
 	{
 	}
 
 	KeyUpEvent::KeyUpEvent()
-		: Event(event::KeyUp)
+		: Event(events::KeyUp)
 		, code(0)
 	{
 	}
 
 	KeyCharEvent::KeyCharEvent()
-		: Event(event::KeyChar)
+		: Event(events::KeyChar)
 		, value()
 	{
 	}
 
 	WindowMovedEvent::WindowMovedEvent()
-		: Event(event::WindowMoved)
+		: Event(events::WindowMoved)
 		, x(0)
 		, y(0)
 	{
 	}
 
 	WindowResizedEvent::WindowResizedEvent()
-		: Event(event::WindowResized)
+		: Event(events::WindowResized)
 		, width(0)
 		, height(0)
 	{
 	}
 
 	WindowFocusChangedEvent::WindowFocusChangedEvent()
-		: Event(event::WindowFocusChanged)
+		: Event(events::WindowFocusChanged)
 		, focus(false)
 	{
 	}
 
 	WindowTitleChangedEvent::WindowTitleChangedEvent()
-		: Event(event::WindowTitleChanged)
+		: Event(events::WindowTitleChanged)
 		, title()
 	{
 	}
 
 	WindowClosedEvent::WindowClosedEvent()
-		: Event(event::WindowClosed)
+		: Event(events::WindowClosed)
 	{
 	}
 
