@@ -40,16 +40,34 @@ namespace kiwano
 
 		// Ìí¼Ó¼àÌıÆ÷
 		EventListener* AddListener(
-			String const& name,
 			EventType type,
 			EventListener::Callback callback
 		);
 
 		// Ìí¼Ó¼àÌıÆ÷
 		EventListener* AddListener(
+			String const& name,
 			EventType type,
 			EventListener::Callback callback
 		);
+
+		template <
+			typename _EventTy,
+			typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type
+		>
+		EventListener* AddListener(EventListener::Callback callback)
+		{
+			return AddListener(KGE_EVENT(_EventTy), callback);
+		}
+
+		template <
+			typename _EventTy,
+			typename = typename std::enable_if<IsEvent<_EventTy>::value, int>
+		>
+		EventListener* AddListener(String const& name, EventListener::Callback callback)
+		{
+			return AddListener(name, KGE_EVENT(_EventTy), callback);
+		}
 
 		// Æô¶¯¼àÌıÆ÷
 		void StartListeners(

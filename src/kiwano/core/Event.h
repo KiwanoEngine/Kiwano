@@ -19,12 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <typeinfo>
+#include <typeindex>
 #include <kiwano/common/common.h>
 #include <kiwano/math/math.h>
 #include <kiwano/core/keys.h>
-
-#include <typeinfo>
-#include <typeindex>
 
 namespace kiwano
 {
@@ -53,49 +52,8 @@ namespace kiwano
 		EventType(const std::type_index& index) : std::type_index(index) {}
 	};
 
+#define KGE_EVENT(EVENT_TYPE)	::kiwano::EventType(typeid(EVENT_TYPE))
 
-#define KGE_EVENT(EVENT_TYPE)								::kiwano::EventType(typeid(EVENT_TYPE))
-
-#define KGE_DECLARE_EVENT_TYPE(EVENT_NAME)					extern ::kiwano::EventType EVENT_NAME;
-
-#define KGE_IMPLEMENT_EVENT_TYPE(EVENT_NAME, EVENT_TYPE)	::kiwano::EventType EVENT_NAME = KGE_EVENT(EVENT_TYPE);
-
-
-	namespace events
-	{
-		/**
-		* \~chinese
-		* \defgroup EventTypes 事件类型
-		*/
-
-		/**
-		* \addtogroup EventTypes
-		* @{
-		*/
-
-		// 鼠标事件
-		KGE_DECLARE_EVENT_TYPE(MouseMove);				///< 鼠标移动
-		KGE_DECLARE_EVENT_TYPE(MouseDown);				///< 鼠标按下
-		KGE_DECLARE_EVENT_TYPE(MouseUp);				///< 鼠标抬起
-		KGE_DECLARE_EVENT_TYPE(MouseWheel);				///< 滚轮滚动
-		KGE_DECLARE_EVENT_TYPE(MouseHover);				///< 鼠标移入
-		KGE_DECLARE_EVENT_TYPE(MouseOut);				///< 鼠标移出
-		KGE_DECLARE_EVENT_TYPE(MouseClick);				///< 鼠标点击
-
-		// 按键事件
-		KGE_DECLARE_EVENT_TYPE(KeyDown);				///< 按键按下
-		KGE_DECLARE_EVENT_TYPE(KeyUp);					///< 按键抬起
-		KGE_DECLARE_EVENT_TYPE(KeyChar);				///< 输出字符
-
-		// 窗口消息
-		KGE_DECLARE_EVENT_TYPE(WindowMoved);			///< 窗口移动
-		KGE_DECLARE_EVENT_TYPE(WindowResized);			///< 窗口大小变化
-		KGE_DECLARE_EVENT_TYPE(WindowFocusChanged);		///< 获得或失去焦点
-		KGE_DECLARE_EVENT_TYPE(WindowTitleChanged);		///< 标题变化
-		KGE_DECLARE_EVENT_TYPE(WindowClosed);			///< 窗口被关闭
-
-		/** @} */
-	}
 
 	/**
 	* \~chinese
@@ -167,6 +125,12 @@ namespace kiwano
 	};
 
 	/// \~chinese
+	/// @brief 事件特性：判断是否是事件类型
+	template <typename _Ty>
+	class IsEvent : public std::bool_constant<std::is_base_of<Event, _Ty>::value || std::is_same<Event, _Ty>::value> {};
+
+
+	/// \~chinese
 	/// @brief 鼠标事件
 	class KGE_API MouseEvent
 		: public Event
@@ -186,8 +150,6 @@ namespace kiwano
 		: public MouseEvent
 	{
 	public:
-		MouseButton::Value button;	///< 鼠标键值
-
 		MouseMoveEvent();
 	};
 
@@ -343,4 +305,57 @@ namespace kiwano
 
 	/** @} */
 
+
+	/**
+	* \~chinese
+	* \defgroup EventTypes 事件类型
+	* 
+	*/
+
+	/**
+	* \addtogroup EventTypes
+	* @{
+	*/
+
+
+#define KGE_EVENT_BEGIN(NAME)	struct NAME {
+#define KGE_EVENT_END			};
+#define KGE_DEFINE_EVENT(EVENT_NAME, EVENT_TYPE) \
+	static inline const EventType& EVENT_NAME() \
+	{ \
+		static EventType event_type = KGE_EVENT(EVENT_TYPE); \
+		return event_type; \
+	}
+
+	/// \~chinese
+	/// @brief 鼠标事件
+	KGE_EVENT_BEGIN(MouseEvents);
+		KGE_DEFINE_EVENT(Move,	MouseMoveEvent);	///< 鼠标移动
+		KGE_DEFINE_EVENT(Down,	MouseDownEvent);	///< 鼠标按下
+		KGE_DEFINE_EVENT(Up,	MouseUpEvent);		///< 鼠标抬起
+		KGE_DEFINE_EVENT(Wheel, MouseWheelEvent);	///< 滚轮滚动
+		KGE_DEFINE_EVENT(Hover, MouseHoverEvent);	///< 鼠标移入
+		KGE_DEFINE_EVENT(Out,	MouseOutEvent);		///< 鼠标移出
+		KGE_DEFINE_EVENT(Click,	MouseClickEvent);	///< 鼠标点击
+	KGE_EVENT_END;
+
+	/// \~chinese
+	/// @brief 键盘按键事件
+	KGE_EVENT_BEGIN(KeyEvents);
+		KGE_DEFINE_EVENT(Down,	KeyDownEvent);		///< 按键按下
+		KGE_DEFINE_EVENT(Up,	KeyUpEvent);		///< 按键抬起
+		KGE_DEFINE_EVENT(Char,	KeyCharEvent);		///< 输出字符
+	KGE_EVENT_END;
+
+	/// \~chinese
+	/// @brief 窗口事件
+	KGE_EVENT_BEGIN(WindowEvents);
+		KGE_DEFINE_EVENT(Moved,			WindowMovedEvent);			///< 窗口移动
+		KGE_DEFINE_EVENT(Resized,		WindowResizedEvent);		///< 窗口大小变化
+		KGE_DEFINE_EVENT(FocusChanged,	WindowFocusChangedEvent);	///< 获得或失去焦点
+		KGE_DEFINE_EVENT(TitleChanged,	WindowTitleChangedEvent);	///< 标题变化
+		KGE_DEFINE_EVENT(Closed,		WindowClosedEvent);			///< 窗口被关闭
+	KGE_EVENT_END;
+
+	/** @} */
 }

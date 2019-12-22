@@ -22,17 +22,10 @@
 
 namespace kiwano
 {
-
 	namespace physics
 	{
-		namespace events
-		{
-			KGE_IMPLEMENT_EVENT_TYPE(ContactBegin, physics::ContactBeginEvent);
-			KGE_IMPLEMENT_EVENT_TYPE(ContactEnd, physics::ContactEndEvent);
-		}
-
 		ContactBeginEvent::ContactBeginEvent()
-			: Event(events::ContactBegin)
+			: Event(KGE_EVENT(ContactBeginEvent))
 			, body_a(nullptr)
 			, body_b(nullptr)
 		{
@@ -47,7 +40,7 @@ namespace kiwano
 		}
 
 		ContactEndEvent::ContactEndEvent()
-			: Event(events::ContactEnd)
+			: Event(KGE_EVENT(ContactEndEvent))
 			, body_a(nullptr)
 			, body_b(nullptr)
 		{

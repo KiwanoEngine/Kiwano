@@ -42,7 +42,7 @@ FILE_PATTERNS          = *.c \
                          *.hh \
                          *.hxx \
                          *.hpp \
-                         *.h++ \
+                         *.h++
 
 RECURSIVE              = YES
 EXCLUDE                = src/3rd-party
@@ -60,8 +60,13 @@ PREDEFINED             = KGE_API=
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           =
-INCLUDE_FILE_PATTERNS  =
+SEARCH_INCLUDES        = YES
+INCLUDE_PATH           = src/
+INCLUDE_FILE_PATTERNS  = *.h \
+                         *.hh \
+                         *.hxx \
+                         *.hpp \
+                         *.h++
 
 #---------------------------------------------------------------------------
 # Configuration options related to the HTML output

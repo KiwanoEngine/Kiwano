@@ -106,8 +106,8 @@ namespace kiwano
 		String ToString() const;
 
 		/// \~chinese
-		/// @brief 时间段格式化
-		/// @param format 格式
+		/// @brief 解析时间段字符串
+		/// @param str 时间段字符串
 		/// @details
 		///   时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
 		///   例如: "300ms", "-1.5h", "2h45m"

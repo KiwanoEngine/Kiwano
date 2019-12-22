@@ -89,7 +89,7 @@ namespace kiwano
 		/**
 		* \~chinese
 		* @brief 删除文件
-		* @param path 文件路径
+		* @param file_path 文件路径
 		* @return 删除是否成功
 		*/
 		bool RemoveFile(String const& file_path) const;
