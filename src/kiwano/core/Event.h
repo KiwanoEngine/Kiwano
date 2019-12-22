@@ -96,21 +96,46 @@ namespace kiwano
 		}
 
 		/// \~chinese
+		/// @brief 转换为其他类型事件
+		/// @throw std::bad_cast 类型无法转换时抛出
+		template <
+			typename _Ty,
+			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
+		>
+		inline const _Ty& Cast() const
+		{
+			return *dynamic_cast<const _Ty*>(this);
+		}
+
+		/// \~chinese
+		/// @brief 转换为其他类型事件
+		/// @throw std::bad_cast 类型无法转换时抛出
+		template <
+			typename _Ty,
+			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
+		>
+		inline _Ty& Cast()
+		{
+			return *dynamic_cast<_Ty*>(this);
+		}
+
+		/// \~chinese
 		/// @brief 安全转换为其他类型事件
-		/// @throw std::bad_cast 无法转换的类型
+		/// @throw std::bad_cast 类型无法转换时抛出
 		template <
 			typename _Ty,
 			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
 		>
 		inline const _Ty& SafeCast() const
 		{
-			if (!IsType<_Ty>()) throw std::bad_cast();
-			return *dynamic_cast<const _Ty*>(this);
+			if (!IsType<_Ty>())
+				throw std::bad_cast();
+			return Cast<_Ty>();
 		}
 
 		/// \~chinese
 		/// @brief 安全转换为其他类型事件
-		/// @throw std::bad_cast 无法转换的类型
+		/// @throw std::bad_cast 类型无法转换时抛出
 		template <
 			typename _Ty,
 			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
@@ -305,57 +330,4 @@ namespace kiwano
 
 	/** @} */
 
-
-	/**
-	* \~chinese
-	* \defgroup EventTypes 事件类型
-	* 
-	*/
-
-	/**
-	* \addtogroup EventTypes
-	* @{
-	*/
-
-
-#define KGE_EVENT_BEGIN(NAME)	struct NAME {
-#define KGE_EVENT_END			};
-#define KGE_DEFINE_EVENT(EVENT_NAME, EVENT_TYPE) \
-	static inline const EventType& EVENT_NAME() \
-	{ \
-		static EventType event_type = KGE_EVENT(EVENT_TYPE); \
-		return event_type; \
-	}
-
-	/// \~chinese
-	/// @brief 鼠标事件
-	KGE_EVENT_BEGIN(MouseEvents);
-		KGE_DEFINE_EVENT(Move,	MouseMoveEvent);	///< 鼠标移动
-		KGE_DEFINE_EVENT(Down,	MouseDownEvent);	///< 鼠标按下
-		KGE_DEFINE_EVENT(Up,	MouseUpEvent);		///< 鼠标抬起
-		KGE_DEFINE_EVENT(Wheel, MouseWheelEvent);	///< 滚轮滚动
-		KGE_DEFINE_EVENT(Hover, MouseHoverEvent);	///< 鼠标移入
-		KGE_DEFINE_EVENT(Out,	MouseOutEvent);		///< 鼠标移出
-		KGE_DEFINE_EVENT(Click,	MouseClickEvent);	///< 鼠标点击
-	KGE_EVENT_END;
-
-	/// \~chinese
-	/// @brief 键盘按键事件
-	KGE_EVENT_BEGIN(KeyEvents);
-		KGE_DEFINE_EVENT(Down,	KeyDownEvent);		///< 按键按下
-		KGE_DEFINE_EVENT(Up,	KeyUpEvent);		///< 按键抬起
-		KGE_DEFINE_EVENT(Char,	KeyCharEvent);		///< 输出字符
-	KGE_EVENT_END;
-
-	/// \~chinese
-	/// @brief 窗口事件
-	KGE_EVENT_BEGIN(WindowEvents);
-		KGE_DEFINE_EVENT(Moved,			WindowMovedEvent);			///< 窗口移动
-		KGE_DEFINE_EVENT(Resized,		WindowResizedEvent);		///< 窗口大小变化
-		KGE_DEFINE_EVENT(FocusChanged,	WindowFocusChangedEvent);	///< 获得或失去焦点
-		KGE_DEFINE_EVENT(TitleChanged,	WindowTitleChangedEvent);	///< 标题变化
-		KGE_DEFINE_EVENT(Closed,		WindowClosedEvent);			///< 窗口被关闭
-	KGE_EVENT_END;
-
-	/** @} */
 }

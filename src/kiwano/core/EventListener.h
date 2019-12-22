@@ -54,6 +54,24 @@ namespace kiwano
 			Callback const& callback
 		);
 
+		template <
+			typename _EventTy,
+			typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type
+		>
+		EventListener(Callback const& callback)
+			: EventListener(KGE_EVENT(_EventTy), callback)
+		{
+		}
+
+		template <
+			typename _EventTy,
+			typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type
+		>
+		EventListener(String const& name, Callback const& callback)
+			: EventListener(name, KGE_EVENT(_EventTy), callback)
+		{
+		}
+
 		virtual ~EventListener();
 
 		void Start();

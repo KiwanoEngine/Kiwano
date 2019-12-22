@@ -32,10 +32,10 @@ namespace kiwano
 	{
 		SetResponsible(true);
 
-		AddListener(MouseEvents::Hover(), Closure(this, &Button::UpdateStatus));
-		AddListener(MouseEvents::Out(), Closure(this, &Button::UpdateStatus));
-		AddListener(MouseEvents::Down(), Closure(this, &Button::UpdateStatus));
-		AddListener(MouseEvents::Up(), Closure(this, &Button::UpdateStatus));
+		AddListener<MouseHoverEvent>(Closure(this, &Button::UpdateStatus));
+		AddListener<MouseOutEvent>(Closure(this, &Button::UpdateStatus));
+		AddListener<MouseDownEvent>(Closure(this, &Button::UpdateStatus));
+		AddListener<MouseUpEvent>(Closure(this, &Button::UpdateStatus));
 	}
 
 	Button::Button(const Callback& click)
@@ -105,10 +105,7 @@ namespace kiwano
 
 	void Button::UpdateStatus(Event& evt)
 	{
-		auto mouse_evt = dynamic_cast<MouseEvent*>(&evt);
-		KGE_ASSERT(mouse_evt != nullptr);
-
-		if (enabled_ && (mouse_evt->target == this))
+		if (enabled_ && (evt.Cast<MouseEvent>().target == this))
 		{
 			if (evt.IsType<MouseHoverEvent>())
 			{

@@ -66,8 +66,8 @@ namespace kiwano
 		style.line_spacing = 20.f;
 		debug_text_->SetStyle(style);
 
-		AddListener(MouseEvents::Hover(), [=](Event&) { SetOpacity(0.4f); });
-		AddListener(MouseEvents::Out(), [=](Event&) { SetOpacity(1.f); });
+		AddListener<MouseHoverEvent>([=](Event&) { SetOpacity(0.4f); });
+		AddListener<MouseOutEvent>([=](Event&) { SetOpacity(1.f); });
 	}
 
 	DebugActor::~DebugActor()

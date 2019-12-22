@@ -29,14 +29,14 @@ namespace kiwano
 	{
 		auto handler = Closure(this, &Layer::HandleMessages);
 
-		AddListener(MouseEvents::Down(), handler);
-		AddListener(MouseEvents::Up(), handler);
-		AddListener(MouseEvents::Move(), handler);
-		AddListener(MouseEvents::Wheel(), handler);
+		AddListener<MouseDownEvent>(handler);
+		AddListener<MouseUpEvent>(handler);
+		AddListener<MouseMoveEvent>(handler);
+		AddListener<MouseWheelEvent>(handler);
 
-		AddListener(KeyEvents::Down(), handler);
-		AddListener(KeyEvents::Up(), handler);
-		AddListener(KeyEvents::Char(), handler);
+		AddListener<KeyDownEvent>(handler);
+		AddListener<KeyUpEvent>(handler);
+		AddListener<KeyCharEvent>(handler);
 	}
 
 	Layer::~Layer()
