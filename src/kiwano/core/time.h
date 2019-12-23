@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 
 namespace kiwano
 {
@@ -57,22 +57,18 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 获取毫秒数
-		/// @return 毫秒数
 		long Milliseconds() const;
 
 		/// \~chinese
 		/// @brief 获取秒数
-		/// @return 秒数
 		float Seconds() const;
 
 		/// \~chinese
 		/// @brief 获取分钟数
-		/// @return 分钟数
 		float Minutes() const;
 
 		/// \~chinese
 		/// @brief 获取小时数
-		/// @return 小时数
 		float Hours() const;
 
 		/// \~chinese
@@ -102,7 +98,6 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 转为字符串
-		/// @return 格式化后的字符串
 		String ToString() const;
 
 		/// \~chinese
@@ -188,7 +183,6 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 获取当前时间
-		/// @return 当前时间
 		static Time Now() noexcept;
 
 		const Duration operator -(const Time&) const;

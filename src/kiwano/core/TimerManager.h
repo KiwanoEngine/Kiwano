@@ -71,7 +71,7 @@ namespace kiwano
 	protected:
 		void UpdateTimers(Duration dt);
 
-	protected:
+	private:
 		Timers timers_;
 	};
 }

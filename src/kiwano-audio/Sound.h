@@ -84,7 +84,7 @@ namespace kiwano
 				float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
 			);
 
-		protected:
+		private:
 			bool		opened_;
 			bool		playing_;
 			Transcoder	transcoder_;

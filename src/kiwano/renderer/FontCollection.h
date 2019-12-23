@@ -58,7 +58,7 @@ namespace kiwano
 
 		inline void SetFontCollection(ComPtr<IDWriteFontCollection> collection)	{ collection_ = collection; }
 
-	protected:
+	private:
 		ComPtr<IDWriteFontCollection> collection_;
 	};
 }

@@ -20,9 +20,20 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
+#include <kiwano/2d/TextActor.h>
+#include <kiwano/renderer/Color.h>
 
 namespace kiwano
 {
+	/**
+	* \addtogroup Actors
+	* @{
+	*/
+
+	/**
+	* \~chinese
+	* @brief µ÷ÊÔ½Úµã
+	*/
 	class KGE_API DebugActor
 		: public Actor
 	{
@@ -35,9 +46,12 @@ namespace kiwano
 
 		void OnUpdate(Duration dt) override;
 
-	protected:
-		Color		background_color_;
-		TextPtr		debug_text_;
+	private:
+		Color			background_color_;
+		TextActorPtr	debug_text_;
 		Vector<Time>	frame_time_;
 	};
+
+	/** @} */
+
 }

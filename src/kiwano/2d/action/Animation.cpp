@@ -45,12 +45,12 @@ namespace kiwano
 		return frame_seq_;
 	}
 
-	void Animation::SetFrameSequence(FrameSequencePtr frames)
+	void Animation::SetFrameSequence(FrameSequencePtr frame_seq)
 	{
-		frame_seq_ = frames;
+		frame_seq_ = frame_seq;
 	}
 
-	void Animation::Init(ActorPtr target)
+	void Animation::Init(Actor* target)
 	{
 		KGE_ASSERT(frame_seq_ && "Animation::Init() failed: FrameSequence is NULL!");
 		if (!frame_seq_ || frame_seq_->GetFrames().empty())
@@ -59,7 +59,7 @@ namespace kiwano
 			return;
 		}
 
-		auto sprite_target = dynamic_cast<Sprite*>(target.get());
+		auto sprite_target = dynamic_cast<Sprite*>(target);
 		KGE_ASSERT(sprite_target && "Animation only supports Sprites!");
 
 		if (sprite_target && frame_seq_)
@@ -68,9 +68,9 @@ namespace kiwano
 		}
 	}
 
-	void Animation::UpdateTween(ActorPtr target, float percent)
+	void Animation::UpdateTween(Actor* target, float percent)
 	{
-		auto sprite_target = dynamic_cast<Sprite*>(target.get());
+		auto sprite_target = dynamic_cast<Sprite*>(target);
 
 		if (sprite_target && frame_seq_)
 		{
@@ -86,7 +86,7 @@ namespace kiwano
 	{
 		if (frame_seq_)
 		{
-			return new (std::nothrow) Animation(dur_, frame_seq_, ease_func_);
+			return new (std::nothrow) Animation(GetDuration(), frame_seq_, GetEaseFunc());
 		}
 		return nullptr;
 	}
@@ -98,7 +98,7 @@ namespace kiwano
 			FrameSequencePtr frames = frame_seq_->Reverse();
 			if (frames)
 			{
-				return new (std::nothrow) Animation(dur_, frames, ease_func_);
+				return new (std::nothrow) Animation(GetDuration(), frames, GetEaseFunc());
 			}
 		}
 		return nullptr;

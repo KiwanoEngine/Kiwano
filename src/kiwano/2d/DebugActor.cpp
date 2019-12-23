@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/DebugActor.h>
-#include <kiwano/2d/Text.h>
 #include <kiwano/renderer/Renderer.h>
 #include <psapi.h>
 
@@ -31,7 +30,7 @@ namespace kiwano
 	{
 		class comma_numpunct : public std::numpunct<wchar_t>
 		{
-		protected:
+		private:
 			virtual wchar_t do_thousands_sep() const override
 			{
 				return L',';
@@ -42,6 +41,8 @@ namespace kiwano
 				return "\03";
 			}
 		};
+
+		std::locale comma_locale(std::locale(), new comma_numpunct);
 	}
 
 	DebugActor::DebugActor()
@@ -52,7 +53,7 @@ namespace kiwano
 		SetResponsible(true);
 		SetCascadeOpacityEnabled(true);
 
-		debug_text_ = new Text;
+		debug_text_ = new TextActor;
 		debug_text_->SetPosition(Point{ 10, 10 });
 		this->AddChild(debug_text_);
 
@@ -94,11 +95,8 @@ namespace kiwano
 
 		StringStream ss;
 
-		{
-			// For formatting integers with commas
-			static std::locale comma_locale(std::locale(), new comma_numpunct);
-			(void)ss.imbue(comma_locale);
-		}
+		// For formatting integers with commas
+		(void)ss.imbue(comma_locale);
 
 		ss << "Fps: " << frame_time_.size() << std::endl;
 

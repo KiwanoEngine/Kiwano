@@ -19,14 +19,18 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/include-forwards.h>
 #include <kiwano/core/Component.h>
+#include <kiwano/2d/Actor.h>
+#include <kiwano/2d/Stage.h>
+#include <kiwano/2d/Transition.h>
 
 namespace kiwano
 {
 	/**
 	* \~chinese
-	* @brief 导演完成场景的渲染、更新、事件分发以及控制场景间跳转
+	* @brief 导演
+	* @details 导演完成舞台的渲染、更新、事件分发以及控制舞台间跳转
+	* @see kiwano::Stage
 	*/
 	class KGE_API Director
 		: public Singleton<Director>
@@ -50,7 +54,7 @@ namespace kiwano
 
 		/**
 		* \~chinese
-		* @brief 切换舞台，并将当前舞台压栈
+		* @brief 切换舞台，并将当前舞台储存到栈中
 		* @param[in] stage 舞台
 		* @param[in] transition 过渡动画
 		*/
@@ -61,7 +65,7 @@ namespace kiwano
 
 		/**
 		* \~chinese
-		* @brief 退出当前舞台，并切换到栈顶舞台
+		* @brief 退出当前舞台，并切换到上一个舞台
 		* @param[in] transition 过渡动画
 		*/
 		void PopStage(
@@ -106,12 +110,12 @@ namespace kiwano
 
 		void HandleEvent(Event& evt) override;
 
-	protected:
+	private:
 		Director();
 
 		virtual ~Director();
 
-	protected:
+	private:
 		bool			render_border_enabled_;
 		Stack<StagePtr>	stages_;
 		StagePtr		current_stage_;

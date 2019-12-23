@@ -23,6 +23,8 @@
 
 namespace kiwano
 {
+	KGE_DECLARE_SMART_PTR(Button);
+
 	class KGE_API Button
 		: public Sprite
 	{

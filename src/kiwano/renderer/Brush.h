@@ -157,7 +157,7 @@ namespace kiwano
 
 		inline ComPtr<ID2D1Brush> const& GetBrush() const { return raw_; }
 
-	protected:
+	private:
 		Type type_;
 		float opacity_;
 		ComPtr<ID2D1Brush> raw_;

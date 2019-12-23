@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 
 namespace kiwano
 {
@@ -46,7 +46,7 @@ namespace kiwano
 
 		virtual ~RefCounter() {}
 
-	protected:
+	private:
 		long ref_count_;
 	};
 }

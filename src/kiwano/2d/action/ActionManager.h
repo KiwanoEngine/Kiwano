@@ -23,41 +23,49 @@
 
 namespace kiwano
 {
+	/**
+	* \addtogroup Actions
+	* @{
+	*/
+
 	class KGE_API ActionManager
 	{
 		using Actions = IntrusiveList<ActionPtr>;
 
 	public:
-		// 添加动作
+		// 添加动画
 		Action* AddAction(
 			ActionPtr action
 		);
-		// 添加动作
+
+		// 添加动画
 		Action* AddAction(
 			Action* action
 		);
 
-		// 获取动作
+		// 获取动画
 		Action* GetAction(
 			String const& name
 		);
 
-		// 继续所有暂停动作
+		// 继续所有暂停动画
 		void ResumeAllActions();
 
-		// 暂停所有动作
+		// 暂停所有动画
 		void PauseAllActions();
 
-		// 停止所有动作
+		// 停止所有动画
 		void StopAllActions();
 
-		// 获取所有动作
+		// 获取所有动画
 		Actions const& GetAllActions() const;
 
 	protected:
-		void UpdateActions(ActorPtr target, Duration dt);
+		void UpdateActions(Actor* target, Duration dt);
 
-	protected:
+	private:
 		Actions actions_;
 	};
+
+	/** @} */
 }

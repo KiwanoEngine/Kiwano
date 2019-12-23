@@ -94,7 +94,7 @@ namespace kiwano
 			void** ppvObject
 		);
 
-	protected:
+	private:
 		unsigned long ref_count_;
 		float dpi_;
 	};

@@ -69,6 +69,9 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
+			SetAntialiasMode(antialias_);
+			SetTextAntialiasMode(text_antialias_);
+
 			current_brush_ = default_brush_;
 		}
 
@@ -714,10 +717,10 @@ namespace kiwano
 	{
 		HRESULT hr = E_FAIL;
 
-		if (render_target_)
+		if (GetRenderTarget())
 		{
 			ComPtr<ID2D1BitmapRenderTarget> bitmap_rt;
-			hr = render_target_->QueryInterface<ID2D1BitmapRenderTarget>(&bitmap_rt);
+			hr = GetRenderTarget()->QueryInterface<ID2D1BitmapRenderTarget>(&bitmap_rt);
 
 			if (SUCCEEDED(hr))
 			{

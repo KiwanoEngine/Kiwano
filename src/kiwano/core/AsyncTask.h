@@ -73,12 +73,12 @@ namespace kiwano
 		/// @brief 启动异步任务
 		void Start();
 
-	protected:
+	private:
 		void TaskThread();
 
 		void Complete();
 
-	protected:
+	private:
 		std::thread thread_;
 		std::mutex func_mutex_;
 		Queue<AsyncTaskFunc> thread_func_queue_;

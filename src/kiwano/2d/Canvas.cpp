@@ -254,13 +254,17 @@ namespace kiwano
 		}
 	}
 
-	void Canvas::DrawText(String const& text, Point const& point)
+	void Canvas::DrawTextLayout(String const& text, Point const& point)
 	{
 		if (text.empty())
 			return;
 
 		TextLayout layout(text, text_font_, text_style_);
+		DrawTextLayout(layout, point);
+	}
 
+	void Canvas::DrawTextLayout(TextLayout const& layout, Point const& point)
+	{
 		rt_.DrawTextLayout(layout, point);
 	}
 
@@ -289,7 +293,7 @@ namespace kiwano
 		geo_sink_.AddBezier(point1, point2, point3);
 	}
 
-	void Canvas::AddArc(Point const & point, Point const & radius, float rotation, bool clockwise, bool is_small)
+	void Canvas::AddArc(Point const & point, Size const & radius, float rotation, bool clockwise, bool is_small)
 	{
 		geo_sink_.AddArc(point, radius, rotation, clockwise, is_small);
 	}

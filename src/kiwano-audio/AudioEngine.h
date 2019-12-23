@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/core/Component.h>
 #include <kiwano/core/win32/ComPtr.hpp>
 #include <kiwano-audio/Transcoder.h>
@@ -52,12 +52,12 @@ namespace kiwano
 
 			void DestroyComponent() override;
 
-		protected:
+		private:
 			AudioEngine();
 
 			~AudioEngine();
 
-		protected:
+		private:
 			IXAudio2* x_audio2_;
 			IXAudio2MasteringVoice* mastering_voice_;
 		};

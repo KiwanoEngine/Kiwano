@@ -36,16 +36,16 @@ namespace kiwano
 	{
 	}
 
-	void Action::Init(ActorPtr target)
+	void Action::Init(Actor* target)
 	{
 	}
 
-	void Action::Update(ActorPtr target, Duration dt)
+	void Action::Update(Actor* target, Duration dt)
 	{
 		Complete(target);
 	}
 
-	void Action::UpdateStep(ActorPtr target, Duration dt)
+	void Action::UpdateStep(Actor* target, Duration dt)
 	{
 		elapsed_ += dt;
 
@@ -81,7 +81,7 @@ namespace kiwano
 		}
 	}
 
-	void Action::Complete(ActorPtr target)
+	void Action::Complete(Actor* target)
 	{
 		if (cb_loop_done_)
 			cb_loop_done_();
@@ -99,7 +99,7 @@ namespace kiwano
 		++loops_done_;
 	}
 
-	void Action::Restart(ActorPtr target)
+	void Action::Restart(Actor* target)
 	{
 		status_ = Status::NotStarted;
 		elapsed_ = 0;

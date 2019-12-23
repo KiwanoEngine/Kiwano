@@ -58,7 +58,7 @@ namespace kiwano
 
 		inline void SetLayer(ComPtr<ID2D1Layer> layer)			{ layer_ = layer; }
 
-	protected:
+	private:
 		Rect area_;
 		float opacity_;
 		Geometry mask_;

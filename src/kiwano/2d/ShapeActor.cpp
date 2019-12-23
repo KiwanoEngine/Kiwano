@@ -345,7 +345,7 @@ namespace kiwano
 
 	void PathActor::ClearPath()
 	{
-		geo_.SetGeometry(nullptr);
+		SetGeometry(Geometry());
 	}
 
 }

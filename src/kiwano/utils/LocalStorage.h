@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 
 namespace kiwano
 {
@@ -123,7 +123,7 @@ namespace kiwano
 			String const& default_value = String()
 		) const;
 
-	protected:
+	private:
 		String file_path_;
 		String field_name_;
 	};

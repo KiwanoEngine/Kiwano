@@ -54,7 +54,7 @@ namespace kiwano
 		public:
 			void OnRender(RenderTarget* rt) override;
 
-		protected:
+		private:
 			Map<String, ImGuiPipeline> pipelines_;
 		};
 	}

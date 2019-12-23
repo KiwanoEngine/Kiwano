@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/math/math.h>
 
 namespace kiwano
@@ -170,7 +170,7 @@ namespace kiwano
 
 		void Destroy();
 
-	protected:
+	private:
 		Window();
 
 		~Window();

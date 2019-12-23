@@ -40,7 +40,7 @@ namespace kiwano
 
 			virtual void FitWorld(World* world) {}
 
-		protected:
+		private:
 			b2Shape* shape_;
 		};
 
@@ -57,7 +57,7 @@ namespace kiwano
 
 			void FitWorld(World* world) override;
 
-		protected:
+		private:
 			float radius_;
 			Point offset_;
 			b2CircleShape circle_;
@@ -76,7 +76,7 @@ namespace kiwano
 
 			void FitWorld(World* world) override;
 
-		protected:
+		private:
 			float rotation_;
 			Vec2 box_size_;
 			Point offset_;
@@ -96,7 +96,7 @@ namespace kiwano
 
 			void FitWorld(World* world) override;
 
-		protected:
+		private:
 			Vector<Point> vertexs_;
 			b2PolygonShape polygon_;
 		};
@@ -114,7 +114,7 @@ namespace kiwano
 
 			void FitWorld(World* world) override;
 
-		protected:
+		private:
 			Point p_[2];
 			b2EdgeShape edge_;
 		};
@@ -132,7 +132,7 @@ namespace kiwano
 
 			void FitWorld(World* world) override;
 
-		protected:
+		private:
 			bool loop_;
 			Vector<Point> vertexs_;
 			b2ChainShape chain_;

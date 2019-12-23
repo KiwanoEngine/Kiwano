@@ -161,10 +161,10 @@ namespace kiwano
 			void UpdateActor();
 			void UpdateFromActor();
 
-		protected:
+		private:
 			void UpdateFixtureFilter(b2Fixture* fixture);
 
-		protected:
+		private:
 			Actor* actor_;
 			World* world_;
 			b2Body* body_;

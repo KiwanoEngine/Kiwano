@@ -110,7 +110,7 @@ namespace kiwano
 		// 获取像素格式
 		D2D1_PIXEL_FORMAT GetPixelFormat() const;
 
-	protected:
+	private:
 		ComPtr<ID2D1Bitmap>	bitmap_;
 		InterpolationMode	interpolation_mode_;
 

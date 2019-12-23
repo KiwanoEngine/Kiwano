@@ -1,6 +1,6 @@
 // Copyright (C) 2019 Nomango
 
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/platform/Window.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/renderer/Renderer.h>

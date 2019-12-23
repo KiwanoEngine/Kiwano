@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/common.h>
 #include <kiwano/core/Component.h>
-#include <kiwano/common/common.h>
 
 namespace kiwano
 {

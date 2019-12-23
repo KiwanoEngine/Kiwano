@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/include-forwards.h>
+#include <kiwano/2d/Stage.h>
 #include <kiwano/renderer/LayerArea.h>
 
 namespace kiwano
@@ -27,34 +27,77 @@ namespace kiwano
 	class Director;
 	class RenderTarget;
 
-	// 舞台过渡
+	KGE_DECLARE_SMART_PTR(Transition);
+	KGE_DECLARE_SMART_PTR(FadeTransition);
+	KGE_DECLARE_SMART_PTR(EmergeTransition);
+	KGE_DECLARE_SMART_PTR(BoxTransition);
+	KGE_DECLARE_SMART_PTR(MoveTransition);
+	KGE_DECLARE_SMART_PTR(RotationTransition);
+
+	/**
+	* \~chinese
+	* @brief 舞台过渡动画
+	*/
 	class KGE_API Transition
 		: public ObjectBase
 	{
 		friend class Director;
 
 	public:
+		/**
+		* \~chinese
+		* @brief 构建空的场景过渡动画
+		* @param duration 动画时长
+		*/
 		explicit Transition(
 			Duration duration
 		);
 
 		virtual ~Transition();
 
+		/**
+		* \~chinese
+		* @brief 场景过渡动画是否已结束
+		*/
 		bool IsDone();
 
 	protected:
+		/**
+		* \~chinese
+		* @brief 初始化场景过渡动画
+		* @param[in] prev 转出场景
+		* @param[in] next 转入场景
+		*/
 		virtual void Init(
 			StagePtr prev,
 			StagePtr next
 		);
 
+		/**
+		* \~chinese
+		* @brief 更新过渡动画
+		* @param dt 距上一次更新的时间间隔
+		*/
 		virtual void Update(Duration dt);
 
+		/**
+		* \~chinese
+		* @brief 渲染过度动画
+		* @param[in] rt 渲染目标
+		*/
 		virtual void Render(RenderTarget* rt);
 
+		/**
+		* \~chinese
+		* @brief 停止动画
+		*/
 		virtual void Stop();
 
-		virtual void Reset() { };
+		/**
+		* \~chinese
+		* @brief 重置动画
+		*/
+		virtual void Reset() {}
 
 	protected:
 		bool		done_;
@@ -69,17 +112,25 @@ namespace kiwano
 	};
 
 
-	// 淡入淡出过渡
+	/**
+	* \~chinese
+	* @brief 淡入淡出过渡动画
+	* @details 前一场景淡出动画结束后，后一场景淡入
+	*/
 	class FadeTransition
 		: public Transition
 	{
 	public:
+		/**
+		* \~chinese
+		* @brief 构建淡入淡出过渡动画
+		* @param duration 动画时长
+		*/
 		explicit FadeTransition(
-			Duration duration	/* 动画持续时长 */
+			Duration duration
 		);
 
 	protected:
-		// 更新动画
 		void Update(Duration dt) override;
 
 		virtual void Init(
@@ -89,13 +140,22 @@ namespace kiwano
 	};
 
 
-	// 渐变过渡
+	/**
+	* \~chinese
+	* @brief 渐变过渡动画
+	* @details 前一场景淡出动画的同时，后一场景淡入
+	*/
 	class EmergeTransition
 		: public Transition
 	{
 	public:
+		/**
+		* \~chinese
+		* @brief 构建渐变过渡动画
+		* @param duration 动画时长
+		*/
 		explicit EmergeTransition(
-			Duration duration	/* 动画持续时长 */
+			Duration duration
 		);
 
 	protected:
@@ -108,13 +168,22 @@ namespace kiwano
 	};
 
 
-	// 盒状过渡
+	/**
+	* \~chinese
+	* @brief 盒状过渡动画
+	* @details 前一场景以盒状收缩至消失，后一场景以盒状扩大
+	*/
 	class BoxTransition
 		: public Transition
 	{
 	public:
+		/**
+		* \~chinese
+		* @brief 构建盒状过渡动画
+		* @param duration 动画时长
+		*/
 		explicit BoxTransition(
-			Duration duration	/* 动画持续时长 */
+			Duration duration
 		);
 
 	protected:
@@ -127,22 +196,36 @@ namespace kiwano
 	};
 
 
-	// 位移过渡
+	/**
+	* \~chinese
+	* @brief 位移过渡动画
+	* @details 两场景以位移的方式切换
+	*/
 	class MoveTransition
 		: public Transition
 	{
 	public:
+		/**
+		* \~chinese
+		* @brief 位移方式
+		*/
 		enum class Type : int
 		{
-			Up,		/* 上移 */
-			Down,	/* 下移 */
-			Left,	/* 左移 */
-			Right	/* 右移 */
+			Up,		///< 上移
+			Down,	///< 下移
+			Left,	///< 左移
+			Right	///< 右移
 		};
 
+		/**
+		* \~chinese
+		* @brief 位移过渡动画
+		* @param duration 动画时长
+		* @param type 位移方式
+		*/
 		explicit MoveTransition(
-			Duration duration,	/* 动画持续时长 */
-			Type type			/* 移动方式 */
+			Duration duration,
+			Type type
 		);
 
 	protected:
@@ -155,21 +238,31 @@ namespace kiwano
 
 		void Reset() override;
 
-	protected:
+	private:
 		Type	type_;
 		Point	pos_delta_;
 		Point	start_pos_;
 	};
 
 
-	// 旋转过渡
+	/**
+	* \~chinese
+	* @brief 旋转过渡动画
+	* @details 前一场景以旋转方式收缩至消失，后一场景以旋转方式扩大
+	*/
 	class RotationTransition
 		: public Transition
 	{
 	public:
+		/**
+		* \~chinese
+		* @brief 构建旋转过渡动画
+		* @param duration 动画时长
+		* @param rotation 旋转度数
+		*/
 		explicit RotationTransition(
-			Duration duration,		/* 动画持续时长 */
-			float rotation = 360	/* 旋转度数 */
+			Duration duration,
+			float rotation = 360
 		);
 
 	protected:
@@ -182,7 +275,7 @@ namespace kiwano
 
 		void Reset() override;
 
-	protected:
+	private:
 		float	rotation_;
 	};
 }

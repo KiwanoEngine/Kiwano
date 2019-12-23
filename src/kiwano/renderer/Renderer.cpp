@@ -159,7 +159,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			render_target_->SaveDrawingState(drawing_state_block_.get());
+			GetRenderTarget()->SaveDrawingState(drawing_state_block_.get());
 			BeginDraw();
 		}
 
@@ -179,7 +179,7 @@ namespace kiwano
 		{
 			EndDraw();
 
-			render_target_->RestoreDrawingState(drawing_state_block_.get());
+			GetRenderTarget()->RestoreDrawingState(drawing_state_block_.get());
 		}
 
 		if (SUCCEEDED(hr))
@@ -219,12 +219,6 @@ namespace kiwano
 			d2d_res_->GetDeviceContext(),
 			d2d_res_
 		);
-
-		if (SUCCEEDED(hr))
-		{
-			SetAntialiasMode(antialias_);
-			SetTextAntialiasMode(text_antialias_);
-		}
 		return hr;
 	}
 

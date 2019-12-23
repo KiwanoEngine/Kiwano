@@ -56,7 +56,7 @@ namespace kiwano
 			String const& GetError() const;
 			void SetError(String const& error_buffer);
 
-		protected:
+		private:
 			bool succeed_;
 			long response_code_;
 			HttpRequestPtr request_;

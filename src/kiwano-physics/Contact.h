@@ -72,7 +72,7 @@ namespace kiwano
 			const b2Contact* GetB2Contact() const		{ return contact_; }
 			void SetB2Contact(b2Contact* contact)		{ contact_ = contact; }
 
-		protected:
+		private:
 			b2Contact* contact_;
 		};
 
@@ -104,7 +104,7 @@ namespace kiwano
 			const b2ContactEdge* GetB2ContactEdge() const	{ return edge_; }
 			void SetB2ContactEdge(b2ContactEdge* edge)		{ edge_ = edge; }
 
-		protected:
+		private:
 			b2ContactEdge* edge_;
 		};
 

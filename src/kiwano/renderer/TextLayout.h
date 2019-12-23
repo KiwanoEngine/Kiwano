@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/math/math.h>
 #include <kiwano/renderer/Font.h>
 #include <kiwano/2d/TextStyle.hpp>
 
@@ -39,7 +40,7 @@ namespace kiwano
 
 		inline void SetTextFormat(ComPtr<IDWriteTextFormat> format)	{ text_format_ = format; }
 
-	protected:
+	private:
 		ComPtr<IDWriteTextFormat> text_format_;
 	};
 
@@ -73,7 +74,7 @@ namespace kiwano
 
 		inline operator bool() const								{ return static_cast<bool>(text_layout_); }
 
-	protected:
+	private:
 		TextStyle style_;
 		TextFormat text_format_;
 		mutable ComPtr<IDWriteTextLayout> text_layout_;

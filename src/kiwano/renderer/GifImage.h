@@ -69,10 +69,10 @@ namespace kiwano
 
 		inline void SetDecoder(ComPtr<IWICBitmapDecoder> decoder)	{ decoder_ = decoder; }
 
-	protected:
+	private:
 		HRESULT GetGlobalMetadata();
 
-	protected:
+	private:
 		uint32_t	frames_count_;
 		uint32_t	width_in_pixels_;
 		uint32_t	height_in_pixels_;

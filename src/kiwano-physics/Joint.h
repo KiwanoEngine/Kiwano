@@ -86,7 +86,7 @@ namespace kiwano
 			World* GetWorld()					{ return world_; }
 			const World* GetWorld() const		{ return world_; }
 
-		protected:
+		private:
 			b2Joint* joint_;
 			World* world_;
 			Type type_;
@@ -147,7 +147,7 @@ namespace kiwano
 			void SetDampingRatio(float ratio)	{ KGE_ASSERT(raw_joint_); raw_joint_->SetDampingRatio(ratio); }
 			float GetDampingRatio() const		{ KGE_ASSERT(raw_joint_); return raw_joint_->GetDampingRatio(); }
 
-		protected:
+		private:
 			b2DistanceJoint* raw_joint_;
 		};
 
@@ -199,7 +199,7 @@ namespace kiwano
 			void SetMaxTorque(float torque);
 			float GetMaxTorque() const;
 
-		protected:
+		private:
 			b2FrictionJoint* raw_joint_;
 		};
 
@@ -243,7 +243,7 @@ namespace kiwano
 			void SetRatio(float ratio);
 			float GetRatio() const;
 
-		protected:
+		private:
 			b2GearJoint* raw_joint_;
 		};
 
@@ -295,7 +295,7 @@ namespace kiwano
 			void SetMaxTorque(float torque);
 			float GetMaxTorque() const;
 
-		protected:
+		private:
 			b2MotorJoint* raw_joint_;
 		};
 
@@ -381,7 +381,7 @@ namespace kiwano
 			void SetMaxMotorForce(float force)			{ KGE_ASSERT(raw_joint_); raw_joint_->SetMaxMotorForce(force); }
 			float GetMaxMotorForce() const				{ KGE_ASSERT(raw_joint_); return raw_joint_->GetMaxMotorForce(); }
 
-		protected:
+		private:
 			b2PrismaticJoint* raw_joint_;
 		};
 
@@ -444,7 +444,7 @@ namespace kiwano
 			float GetCurrentLengthA() const;
 			float GetCurrentLengthB() const;
 
-		protected:
+		private:
 			b2PulleyJoint* raw_joint_;
 		};
 
@@ -526,7 +526,7 @@ namespace kiwano
 			void SetMaxMotorTorque(float torque);
 			float GetMaxMotorTorque() const;
 
-		protected:
+		private:
 			b2RevoluteJoint* raw_joint_;
 		};
 
@@ -573,7 +573,7 @@ namespace kiwano
 			void SetMaxLength(float length);
 			float GetMaxLength() const;
 
-		protected:
+		private:
 			b2RopeJoint* raw_joint_;
 		};
 
@@ -625,7 +625,7 @@ namespace kiwano
 			void SetDampingRatio(float ratio)		{ KGE_ASSERT(raw_joint_); raw_joint_->SetDampingRatio(ratio); }
 			float GetDampingRatio() const			{ KGE_ASSERT(raw_joint_); return raw_joint_->GetDampingRatio(); }
 
-		protected:
+		private:
 			b2WeldJoint* raw_joint_;
 		};
 
@@ -707,7 +707,7 @@ namespace kiwano
 			void SetSpringDampingRatio(float ratio)		{ KGE_ASSERT(raw_joint_); raw_joint_->SetSpringDampingRatio(ratio); }
 			float GetSpringDampingRatio() const			{ KGE_ASSERT(raw_joint_); return raw_joint_->GetSpringDampingRatio(); }
 
-		protected:
+		private:
 			b2WheelJoint* raw_joint_;
 		};
 
@@ -768,7 +768,7 @@ namespace kiwano
 			void SetDampingRatio(float ratio)	{ KGE_ASSERT(raw_joint_); raw_joint_->SetDampingRatio(ratio); }
 			float GetDampingRatio() const		{ KGE_ASSERT(raw_joint_); return raw_joint_->GetDampingRatio(); }
 
-		protected:
+		private:
 			b2MouseJoint* raw_joint_;
 		};
 	}

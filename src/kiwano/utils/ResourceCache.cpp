@@ -19,12 +19,9 @@
 // THE SOFTWARE.
 
 #include <fstream>
-
 #include <kiwano/utils/ResourceCache.h>
-#include <kiwano/platform/FileSystem.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/2d/Frame.h>
-#include <kiwano/2d/FrameSequence.h>
+#include <kiwano/platform/FileSystem.h>
 #include <kiwano/renderer/GifImage.h>
 #include <kiwano/renderer/FontCollection.h>
 

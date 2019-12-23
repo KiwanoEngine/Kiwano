@@ -23,17 +23,23 @@
 
 namespace kiwano
 {
+	/**
+	* \~chinese
+	* @brief 二维放射变换
+	*/
 	class Transform
 	{
 	public:
-		float rotation;	// 旋转
-		Point position;		// 坐标
-		Point scale;		// 缩放
-		Point skew;			// 错切角度
+		float rotation;		///< 旋转
+		Point position;		///< 坐标
+		Point scale;		///< 缩放
+		Point skew;			///< 错切角度
 
 	public:
 		Transform();
 
+		/// \~chinese
+		/// @brief 将二维放射变换转换为矩阵
 		Matrix3x2 ToMatrix() const;
 
 		bool operator== (const Transform& rhs) const;

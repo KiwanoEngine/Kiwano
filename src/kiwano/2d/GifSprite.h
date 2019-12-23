@@ -26,83 +26,131 @@
 
 namespace kiwano
 {
-	// GIF 精灵
+	KGE_DECLARE_SMART_PTR(GifSprite);
+
+	/**
+	* \addtogroup Actors
+	* @{
+	*/
+
+	/**
+	* \~chinese
+	* @brief GIF 精灵
+	*/
 	class KGE_API GifSprite
 		: public Actor
 	{
 	public:
+		/// \~chinese
+		/// @brief GIF播放循环结束回调
 		using LoopDoneCallback	= Function<void(int)>;
+
+		/// \~chinese
+		/// @brief GIF播放结束回调
 		using DoneCallback		= Function<void()>;
 
 		GifSprite();
 
-		GifSprite(
-			String const& file_path
-		);
+		/// \~chinese
+		/// @brief 构造GIF精灵
+		/// @param file_path GIF图片路径
+		GifSprite(String const& file_path);
 
-		GifSprite(
-			Resource const& res
-		);
+		/// \~chinese
+		/// @brief 构造GIF精灵
+		/// @param res GIF图片资源
+		GifSprite(Resource const& res);
 
-		GifSprite(
-			GifImage gif
-		);
+		/// \~chinese
+		/// @brief 构造GIF精灵
+		/// @param gif GIF图片
+		GifSprite(GifImage gif);
 
-		bool Load(
-			String const& file_path
-		);
+		/// \~chinese
+		/// @brief 加载GIF图片
+		/// @param file_path GIF图片路径
+		bool Load(String const& file_path);
 
-		bool Load(
-			Resource const& res
-		);
+		/// \~chinese
+		/// @brief 加载GIF图片
+		/// @param res GIF图片资源
+		bool Load(Resource const& res);
 
-		bool Load(
-			GifImage gif
-		);
+		/// \~chinese
+		/// @brief 加载GIF图片
+		/// @param gif GIF图片
+		bool Load(GifImage gif);
 
-		// 设置 GIF 动画循环次数
-		inline void SetLoopCount(int loops)						{ total_loop_count_ = loops; }
+		/// \~chinese
+		/// @brief 设置 GIF 动画循环次数
+		void SetLoopCount(int loops);
 
-		// 设置 GIF 动画每次循环结束回调函数
-		inline void SetLoopDoneCallback(LoopDoneCallback const& cb)	{ loop_cb_ = cb; }
+		/// \~chinese
+		/// @brief 设置 GIF 动画每次循环结束回调函数
+		void SetLoopDoneCallback(LoopDoneCallback const& cb);
 
-		// 设置 GIF 动画结束回调函数
-		inline void SetDoneCallback(DoneCallback const& cb)			{ done_cb_ = cb; }
+		/// \~chinese
+		/// @brief 设置 GIF 动画结束回调函数
+		void SetDoneCallback(DoneCallback const& cb);
 
-		// 设置 GIF 图像
+		/// \~chinese
+		/// @brief 设置 GIF 图像
 		void SetGifImage(GifImage const& gif);
 
-		// 重新播放动画
+		/// \~chinese
+		/// @brief 重新播放 GIF 动画
 		void RestartAnimation();
 
-		inline LoopDoneCallback	GetLoopDoneCallback() const			{ return loop_cb_; }
+		/// \~chinese
+		/// @brief 获取 GIF 动画循环结束回调
+		LoopDoneCallback GetLoopDoneCallback() const;
 
-		inline DoneCallback		GetDoneCallback() const				{ return done_cb_; }
+		/// \~chinese
+		/// @brief 获取 GIF 动画播放结束回调
+		DoneCallback GetDoneCallback() const;
 
-		inline GifImage const&	GetGifImage() const					{ return gif_; }
+		/// \~chinese
+		/// @brief 获取 GIF 图片
+		GifImage const& GetGifImage() const;
 
 		void OnRender(RenderTarget* rt) override;
 
-	protected:
+	private:
 		void Update(Duration dt) override;
 
-		inline bool IsLastFrame() const								{ return (next_index_ == 0); }
+		/// \~chinese
+		/// @brief 是否是最后一帧
+		bool IsLastFrame() const;
 
-		inline bool EndOfAnimation() const							{ return IsLastFrame() && loop_count_ == total_loop_count_ + 1; }
+		/// \~chinese
+		/// @brief 动画是否已结束
+		bool EndOfAnimation() const;
 
+		/// \~chinese
+		/// @brief 合成下一帧
 		void ComposeNextFrame();
 
+		/// \~chinese
+		/// @brief 解析当前图像帧
 		void DisposeCurrentFrame();
 
+		/// \~chinese
+		/// @brief 覆盖下一帧
 		void OverlayNextFrame();
 
+		/// \~chinese
+		/// @brief 保存合成后的图像帧
 		void SaveComposedFrame();
 
+		/// \~chinese
+		/// @brief 恢复已保存的图像帧
 		void RestoreSavedFrame();
 
+		/// \~chinese
+		/// @brief 清空当前图像区域
 		void ClearCurrentFrameArea();
 
-	protected:
+	private:
 		bool				animating_;
 		int					total_loop_count_;
 		int					loop_count_;
@@ -115,4 +163,22 @@ namespace kiwano
 		Texture				saved_frame_;
 		TextureRenderTarget	frame_rt_;
 	};
+
+	/** @} */
+
+	inline void							GifSprite::SetLoopCount(int loops)							{ total_loop_count_ = loops; }
+
+	inline void							GifSprite::SetLoopDoneCallback(LoopDoneCallback const& cb)	{ loop_cb_ = cb; }
+
+	inline void							GifSprite::SetDoneCallback(DoneCallback const& cb)			{ done_cb_ = cb; }
+
+	inline GifSprite::LoopDoneCallback	GifSprite::GetLoopDoneCallback() const						{ return loop_cb_; }
+
+	inline GifSprite::DoneCallback		GifSprite::GetDoneCallback() const							{ return done_cb_; }
+
+	inline GifImage const&				GifSprite::GetGifImage() const								{ return gif_; }
+
+	inline bool							GifSprite::IsLastFrame() const								{ return (next_index_ == 0); }
+
+	inline bool							GifSprite::EndOfAnimation() const							{ return IsLastFrame() && loop_count_ == total_loop_count_ + 1; }
 }

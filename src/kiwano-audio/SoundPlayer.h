@@ -93,7 +93,7 @@ namespace kiwano
 			// Çå³ý»º´æ
 			void ClearCache();
 
-		protected:
+		private:
 			float volume_;
 
 			using SoundMap = Map<size_t, SoundPtr>;

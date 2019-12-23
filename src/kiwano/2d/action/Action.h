@@ -19,14 +19,31 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/include-forwards.h>
+#include <kiwano/core/common.h>
+#include <kiwano/core/time.h>
+#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/ObjectBase.h>
+#include <kiwano/math/math.h>
 
 namespace kiwano
 {
-	using ActionCallback = Function<void()>;
-
+	class Actor;
 	class ActionManager;
 
+	KGE_DECLARE_SMART_PTR(Action);
+
+	/**
+	* \~chinese
+	* \defgroup Actions 动画
+	*/
+
+	/**
+	* \addtogroup Actions
+	* @{
+	*/
+
+	/// \~chinese
+	/// @brief 动画
 	class KGE_API Action
 		: public ObjectBase
 		, protected IntrusiveListItem<ActionPtr>
@@ -36,80 +53,129 @@ namespace kiwano
 		friend IntrusiveList<ActionPtr>;
 
 	public:
+		/// \~chinese
+		/// @brief 动画结束时的回调函数
+		using DoneCallback = Function<void()>;
+
 		Action();
 
 		virtual ~Action();
 
-		// 继续动作
+		/// \~chinese
+		/// @brief 继续动画
 		void Resume();
 
-		// 暂停动作
+		/// \~chinese
+		/// @brief 暂停动画
 		void Pause();
 
-		// 停止动作
+		/// \~chinese
+		/// @brief 停止动画
 		void Stop();
 
-		// 设置动作延时
+		/// \~chinese
+		/// @brief 设置动画延时
 		void SetDelay(Duration delay);
 
-		// 设置循环次数 (-1 为永久循环)
+		/// \~chinese
+		/// @brief 设置循环次数
+		/// @param loops 循环次数，-1 为永久循环
 		void SetLoops(int loops);
 
-		// 动作结束时移除目标角色
+		/// \~chinese
+		/// @brief 动画结束时移除目标角色
 		void RemoveTargetWhenDone();
 
-		// 设置动作结束时的回调函数
-		void SetDoneCallback(ActionCallback const& cb);
+		/// \~chinese
+		/// @brief 设置动画结束时的回调函数
+		void SetDoneCallback(DoneCallback const& cb);
 
-		// 设置动作循环结束时的回调函数
-		void SetLoopDoneCallback(ActionCallback const& cb);
+		/// \~chinese
+		/// @brief 设置动画循环结束时的回调函数
+		void SetLoopDoneCallback(DoneCallback const& cb);
 
-		// 获取动作的拷贝
+		/// \~chinese
+		/// @brief 获取动画的拷贝
 		virtual ActionPtr Clone() const = 0;
 
-		// 获取动作的倒转
+		/// \~chinese
+		/// @brief 获取动画的倒转
 		virtual ActionPtr Reverse() const = 0;
 
+		/// \~chinese
+		/// @brief 获取动画的运行状态
 		bool IsRunning() const;
 
+		/// \~chinese
+		/// @brief 获取动画的循环次数
 		int GetLoops() const;
 
+		/// \~chinese
+		/// @brief 获取动画的延时
 		Duration GetDelay() const;
 
-		ActionCallback GetDoneCallback() const;
+		/// \~chinese
+		/// @brief 获取动画结束时的回调函数
+		DoneCallback GetDoneCallback() const;
 
-		ActionCallback GetLoopDoneCallback() const;
+		/// \~chinese
+		/// @brief 获取动画循环结束时的回调函数
+		DoneCallback GetLoopDoneCallback() const;
 
 	protected:
-		virtual void Init(ActorPtr target);
+		/// \~chinese
+		/// @brief 初始化动画
+		virtual void Init(Actor* target);
 
-		virtual void Update(ActorPtr target, Duration dt);
+		/// \~chinese
+		/// @brief 更新动画
+		virtual void Update(Actor* target, Duration dt);
 
-		void UpdateStep(ActorPtr target, Duration dt);
+		/// \~chinese
+		/// @brief 更新一个时间步
+		void UpdateStep(Actor* target, Duration dt);
 
-		void Complete(ActorPtr target);
+		/// \~chinese
+		/// @brief 完成动画
+		void Complete(Actor* target);
 
-		void Restart(ActorPtr target);
+		/// \~chinese
+		/// @brief 重新开始动画
+		void Restart(Actor* target);
 
+		/// \~chinese
+		/// @brief 动画状态
 		enum class Status
 		{
-			NotStarted,
-			Delayed,
-			Started,
-			Done,
-			Removeable
+			NotStarted,	///< 未开始
+			Delayed,	///< 等待延时
+			Started,	///< 已开始
+			Done,		///< 已结束
+			Removeable	///< 可移除
 		};
 
+		/// \~chinese
+		/// @brief 获取动画状态
 		Status GetStatus() const;
 
+		/// \~chinese
+		/// @brief 获取消逝时间
 		Duration GetElapsed() const;
 
+		/// \~chinese
+		/// @brief 获取完成的循环次数
 		int GetLoopsDone() const;
 
+		/// \~chinese
+		/// @brief 结束动画
 		void Done();
 
+		/// \~chinese
+		/// @brief 是否已结束
 		bool IsDone() const;
 
+		/// \~chinese
+		/// @brief 是否可移除
 		bool IsRemoveable() const;
 
 	private:
@@ -120,9 +186,11 @@ namespace kiwano
 		int				loops_done_;
 		Duration		delay_;
 		Duration		elapsed_;
-		ActionCallback	cb_done_;
-		ActionCallback	cb_loop_done_;
+		DoneCallback	cb_done_;
+		DoneCallback	cb_loop_done_;
 	};
+
+	/** @} */
 
 
 	inline void Action::Resume()
@@ -155,12 +223,12 @@ namespace kiwano
 		detach_target_ = true;
 	}
 
-	inline void Action::SetDoneCallback(ActionCallback const& cb)
+	inline void Action::SetDoneCallback(DoneCallback const& cb)
 	{
 		cb_done_ = cb;
 	}
 
-	inline void Action::SetLoopDoneCallback(ActionCallback const& cb)
+	inline void Action::SetLoopDoneCallback(DoneCallback const& cb)
 	{
 		cb_loop_done_ = cb;
 	}
@@ -210,12 +278,12 @@ namespace kiwano
 		return loops_done_;
 	}
 
-	inline ActionCallback Action::GetDoneCallback() const
+	inline Action::DoneCallback Action::GetDoneCallback() const
 	{
 		return cb_done_;
 	}
 
-	inline ActionCallback Action::GetLoopDoneCallback() const
+	inline Action::DoneCallback Action::GetLoopDoneCallback() const
 	{
 		return cb_loop_done_;
 	}

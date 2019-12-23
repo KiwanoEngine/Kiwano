@@ -23,7 +23,19 @@
 
 namespace kiwano
 {
-	// 舞台
+	KGE_DECLARE_SMART_PTR(Stage);
+
+	/**
+	* \addtogroup Actors
+	* @{
+	*/
+
+	/**
+	* \~chinese
+	* @brief 舞台
+	* @details 舞台是所有角色的载体，是导演直接控制的对象
+	* @see kiwano::Actor kiwano::Director
+	*/
 	class KGE_API Stage
 		: public Actor
 	{
@@ -35,10 +47,17 @@ namespace kiwano
 
 		virtual ~Stage();
 
-		// 进入舞台
+		/// \~chinese
+		/// @brief 进入舞台时
+		/// @details 重载该函数以处理进入舞台前的行为
 		virtual void OnEnter();
 
-		// 退出舞台
+		/// \~chinese
+		/// @brief 退出舞台时
+		/// @details 重载该函数以处理退出舞台前的行为
 		virtual void OnExit();
 	};
+
+	/** @} */
+
 }

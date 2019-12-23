@@ -19,45 +19,65 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/include-forwards.h>
+#include <kiwano/renderer/Color.h>
 #include <kiwano/renderer/StrokeStyle.h>
 
 namespace kiwano
 {
-	// 文本对齐方式
+	/**
+	* \~chinese
+	* @brief 文本对齐方式
+	*/
 	enum class TextAlign
 	{
-		Left,		/* 左对齐 */
-		Right,		/* 右对齐 */
-		Center		/* 居中对齐 */
+		Left,	///< 左对齐
+		Right,	///< 右对齐
+		Center	///< 居中对齐
 	};
 
-	// 文本样式
+	/**
+	* \~chinese
+	* @brief 文本样式
+	*/
 	class KGE_API TextStyle
 	{
 	public:
-		Color		color;				// 颜色
-		TextAlign	alignment;			// 对齐方式
-		float		wrap_width;			// 自动换行宽度
-		float		line_spacing;		// 行间距
-		bool		underline;			// 下划线
-		bool		strikethrough;		// 删除线
-		bool		outline;			// 显示描边
-		Color		outline_color;		// 描边颜色
-		float		outline_width;		// 描边线宽
-		StrokeStyle	outline_stroke;		// 描边线相交样式
+		Color		color;				///< 颜色
+		TextAlign	alignment;			///< 对齐方式
+		float		wrap_width;			///< 自动换行宽度
+		float		line_spacing;		///< 行间距
+		bool		underline;			///< 下划线
+		bool		strikethrough;		///< 删除线
+		bool		outline;			///< 描边
+		Color		outline_color;		///< 描边颜色
+		float		outline_width;		///< 描边线宽
+		StrokeStyle	outline_stroke;		///< 描边线相交样式
 
 	public:
+		/**
+		* \~chinese
+		* @brief 构建文本样式
+		* @param color 颜色
+		* @param alignment 对齐方式
+		* @param wrap_width 自动换行宽度
+		* @param line_spacing 行间距
+		* @param underline 下划线
+		* @param strikethrough 删除线
+		* @param outline 描边
+		* @param outline_color 描边颜色
+		* @param outline_width 描边线宽
+		* @param outline_stroke 描边线相交样式
+		*/
 		TextStyle(
 			Color color					= Color::White,
 			TextAlign alignment			= TextAlign::Left,
 			float wrap_width			= 0.f,
-			float line_spacing		= 0.f,
+			float line_spacing			= 0.f,
 			bool underline				= false,
 			bool strikethrough			= false,
 			bool outline				= false,
 			Color outline_color			= Color(Color::Black, 0.5),
-			float outline_width		= 1.f,
+			float outline_width			= 1.f,
 			StrokeStyle outline_stroke	= StrokeStyle::Round
 		)
 			: color(color)

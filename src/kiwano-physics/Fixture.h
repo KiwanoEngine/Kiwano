@@ -91,7 +91,7 @@ namespace kiwano
 			const b2Fixture* GetB2Fixture() const	{ return fixture_; }
 			void SetB2Fixture(b2Fixture* fixture)	{ fixture_ = fixture; }
 
-		protected:
+		private:
 			b2Fixture* fixture_;
 		};
 	}

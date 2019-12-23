@@ -101,7 +101,7 @@ namespace kiwano
 
 		virtual void Dispatch(Event& evt);
 
-	protected:
+	private:
 		Listeners listeners_;
 	};
 }

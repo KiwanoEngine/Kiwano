@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/core/time.h>
 #include <kiwano/core/Component.h>
 #include <kiwano/core/Event.h>
@@ -84,9 +84,7 @@ namespace kiwano
 		* @param config 初始化配置
 		* @attention 应在使用其他功能前执行初始化，否则可能引发异常
 		*/
-		void Init(
-			Config const& config = Config()
-		);
+		void Init(Config const& config = Config());
 
 		/**
 		* \~chinese
@@ -134,9 +132,7 @@ namespace kiwano
 		* @brief 添加功能组件
 		* @param[in] component 功能组件
 		*/
-		void Use(
-			ComponentBase* component
-		);
+		void Use(ComponentBase* component);
 
 		/**
 		* \~chinese
@@ -145,9 +141,7 @@ namespace kiwano
 		* @param scale_factor 缩放因子
 		* @warning 设置为负数可能导致动画系统紊乱
 		*/
-		void SetTimeScale(
-			float scale_factor
-		);
+		void SetTimeScale(float scale_factor);
 
 		/**
 		* \~chinese
@@ -163,18 +157,16 @@ namespace kiwano
 		* @details 提供在其他线程调用 Kiwano 函数的能力
 		* @param func 需要执行的函数
 		*/
-		static void PreformInMainThread(
-			Function<void()> func
-		);
+		static void PreformInMainThread(Function<void()> func);
 
-	protected:
+	private:
 		void Render();
 
 		void Update();
 
 		static LRESULT CALLBACK WndProc(HWND, UINT32, WPARAM, LPARAM);
 
-	protected:
+	private:
 		bool	end_;
 		bool	inited_;
 		float	time_scale_;

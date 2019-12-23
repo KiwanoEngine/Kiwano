@@ -25,9 +25,6 @@
     <Filter Include="2d\action">
       <UniqueIdentifier>{9314f30d-5742-48b6-94e5-e3b4284106f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="common">
-      <UniqueIdentifier>{86e2d0f2-a9d0-4456-b6a5-d480228bbf82}</UniqueIdentifier>
-    </Filter>
     <Filter Include="renderer\win32">
       <UniqueIdentifier>{30333461-e9bc-4709-84bd-ce6e0e1a3079}</UniqueIdentifier>
     </Filter>
@@ -45,16 +42,10 @@
     <ClInclude Include="..\..\src\kiwano\2d\Canvas.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\include-forwards.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Layer.h">
       <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Sprite.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Text.h">
       <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\TextStyle.hpp">
@@ -149,9 +140,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h">
       <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\common.h">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h">
       <Filter>2d</Filter>
@@ -276,6 +264,12 @@
     <ClInclude Include="..\..\src\kiwano\platform\Director.h">
       <Filter>platform</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\TextActor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\common.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -291,9 +285,6 @@
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Text.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp">
@@ -457,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Director.cpp">
       <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp">
+      <Filter>2d</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

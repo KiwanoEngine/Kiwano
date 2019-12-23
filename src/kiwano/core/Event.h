@@ -21,7 +21,7 @@
 #pragma once
 #include <typeinfo>
 #include <typeindex>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/math/math.h>
 #include <kiwano/core/keys.h>
 
@@ -145,7 +145,7 @@ namespace kiwano
 			return const_cast<_Ty&>(const_cast<const Event*>(this)->SafeCast<_Ty>());
 		}
 
-	protected:
+	private:
 		const EventType type_;
 	};
 

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/core/Component.h>
 #include <mutex>
 #include <condition_variable>

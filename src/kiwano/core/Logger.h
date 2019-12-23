@@ -24,7 +24,7 @@
 #include <sstream>
 
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 
 #ifndef KGE_LOG
 #	ifdef KGE_DEBUG

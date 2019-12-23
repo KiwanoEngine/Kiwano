@@ -218,7 +218,7 @@ namespace kiwano
 
 		void DiscardDeviceResources();
 
-	protected:
+	private:
 		float							opacity_;
 		bool							antialias_;
 		bool							fast_global_transform_;

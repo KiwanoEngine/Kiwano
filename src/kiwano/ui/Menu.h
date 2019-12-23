@@ -23,6 +23,8 @@
 
 namespace kiwano
 {
+	KGE_DECLARE_SMART_PTR(Menu);
+
 	// ²Ëµ¥
 	class KGE_API Menu
 		: public Actor

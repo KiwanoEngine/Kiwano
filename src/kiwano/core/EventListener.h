@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Event.h>
@@ -88,7 +88,7 @@ namespace kiwano
 
 		void SetEventType(EventType const& type);
 
-	protected:
+	private:
 		bool		running_;
 		EventType	type_;
 		Callback	callback_;

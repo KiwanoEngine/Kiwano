@@ -27,12 +27,12 @@ namespace kiwano
 	// Ease Functions
 	//-------------------------------------------------------
 
-	inline EaseFunc MakeEaseIn(float rate) { return std::bind(math::EaseIn, std::placeholders::_1, rate); }
-	inline EaseFunc MakeEaseOut(float rate) { return std::bind(math::EaseOut, std::placeholders::_1, rate); }
-	inline EaseFunc MakeEaseInOut(float rate) { return std::bind(math::EaseInOut, std::placeholders::_1, rate); }
-	inline EaseFunc MakeEaseElasticIn(float period) { return std::bind(math::EaseElasticIn, std::placeholders::_1, period); }
-	inline EaseFunc MakeEaseElasticOut(float period) { return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
-	inline EaseFunc MakeEaseElasticInOut(float period) { return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseIn(float rate)				{ return std::bind(math::EaseIn, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseOut(float rate)				{ return std::bind(math::EaseOut, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseInOut(float rate)			{ return std::bind(math::EaseInOut, std::placeholders::_1, rate); }
+	inline EaseFunc MakeEaseElasticIn(float period)		{ return std::bind(math::EaseElasticIn, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseElasticOut(float period)	{ return std::bind(math::EaseElasticOut, std::placeholders::_1, period); }
+	inline EaseFunc MakeEaseElasticInOut(float period)	{ return std::bind(math::EaseElasticInOut, std::placeholders::_1, period); }
 
 	KGE_API EaseFunc Ease::Linear = math::Linear;
 	KGE_API EaseFunc Ease::EaseIn = MakeEaseIn(2.f);
@@ -97,7 +97,7 @@ namespace kiwano
 		return dur_;
 	}
 
-	void ActionTween::Update(ActorPtr target, Duration dt)
+	void ActionTween::Update(Actor* target, Duration dt)
 	{
 		float percent;
 
@@ -135,13 +135,13 @@ namespace kiwano
 	// Move Action
 	//-------------------------------------------------------
 
-	ActionMoveBy::ActionMoveBy(Duration duration, Point const& vector, EaseFunc func)
+	ActionMoveBy::ActionMoveBy(Duration duration, Vec2 const& vector, EaseFunc func)
 		: ActionTween(duration, func)
 	{
 		delta_pos_ = vector;
 	}
 
-	void ActionMoveBy::Init(ActorPtr target)
+	void ActionMoveBy::Init(Actor* target)
 	{
 		if (target)
 		{
@@ -149,7 +149,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionMoveBy::UpdateTween(ActorPtr target, float percent)
+	void ActionMoveBy::UpdateTween(Actor* target, float percent)
 	{
 		Point diff = target->GetPosition() - prev_pos_;
 		start_pos_ = start_pos_ + diff;
@@ -162,12 +162,12 @@ namespace kiwano
 
 	ActionPtr ActionMoveBy::Clone() const
 	{
-		return new (std::nothrow) ActionMoveBy(dur_, delta_pos_, ease_func_);
+		return new (std::nothrow) ActionMoveBy(GetDuration(), delta_pos_, GetEaseFunc());
 	}
 
 	ActionPtr ActionMoveBy::Reverse() const
 	{
-		return new (std::nothrow) ActionMoveBy(dur_, -delta_pos_, ease_func_);
+		return new (std::nothrow) ActionMoveBy(GetDuration(), -delta_pos_, GetEaseFunc());
 	}
 
 	ActionMoveTo::ActionMoveTo(Duration duration, Point const& pos, EaseFunc func)
@@ -178,10 +178,10 @@ namespace kiwano
 
 	ActionPtr ActionMoveTo::Clone() const
 	{
-		return new (std::nothrow) ActionMoveTo(dur_, end_pos_, ease_func_);
+		return new (std::nothrow) ActionMoveTo(GetDuration(), end_pos_, GetEaseFunc());
 	}
 
-	void ActionMoveTo::Init(ActorPtr target)
+	void ActionMoveTo::Init(Actor* target)
 	{
 		ActionMoveBy::Init(target);
 		delta_pos_ = end_pos_ - start_pos_;
@@ -192,7 +192,7 @@ namespace kiwano
 	// Jump Action
 	//-------------------------------------------------------
 
-	ActionJumpBy::ActionJumpBy(Duration duration, Point const& vec, float height, int jumps, EaseFunc func)
+	ActionJumpBy::ActionJumpBy(Duration duration, Vec2 const& vec, float height, int jumps, EaseFunc func)
 		: ActionTween(duration, func)
 		, delta_pos_(vec)
 		, height_(height)
@@ -202,15 +202,15 @@ namespace kiwano
 
 	ActionPtr ActionJumpBy::Clone() const
 	{
-		return new (std::nothrow) ActionJumpBy(dur_, delta_pos_, height_, jumps_, ease_func_);
+		return new (std::nothrow) ActionJumpBy(GetDuration(), delta_pos_, height_, jumps_, GetEaseFunc());
 	}
 
 	ActionPtr ActionJumpBy::Reverse() const
 	{
-		return new (std::nothrow) ActionJumpBy(dur_, -delta_pos_, height_, jumps_, ease_func_);
+		return new (std::nothrow) ActionJumpBy(GetDuration(), -delta_pos_, height_, jumps_, GetEaseFunc());
 	}
 
-	void ActionJumpBy::Init(ActorPtr target)
+	void ActionJumpBy::Init(Actor* target)
 	{
 		if (target)
 		{
@@ -218,7 +218,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionJumpBy::UpdateTween(ActorPtr target, float percent)
+	void ActionJumpBy::UpdateTween(Actor* target, float percent)
 	{
 		float frac = fmod(percent * jumps_, 1.f);
 		float x = delta_pos_.x * percent;
@@ -242,10 +242,10 @@ namespace kiwano
 
 	ActionPtr ActionJumpTo::Clone() const
 	{
-		return new (std::nothrow) ActionJumpTo(dur_, end_pos_, height_, jumps_, ease_func_);
+		return new (std::nothrow) ActionJumpTo(GetDuration(), end_pos_, height_, jumps_, GetEaseFunc());
 	}
 
-	void ActionJumpTo::Init(ActorPtr target)
+	void ActionJumpTo::Init(Actor* target)
 	{
 		ActionJumpBy::Init(target);
 		delta_pos_ = end_pos_ - start_pos_;
@@ -256,11 +256,6 @@ namespace kiwano
 	// Scale Action
 	//-------------------------------------------------------
 
-	ActionScaleBy::ActionScaleBy(Duration duration, float scale, EaseFunc func)
-		: ActionScaleBy(duration, scale, scale, func)
-	{
-	}
-
 	ActionScaleBy::ActionScaleBy(Duration duration, float scale_x, float scale_y, EaseFunc func)
 		: ActionTween(duration, func)
 		, delta_x_(scale_x)
@@ -270,7 +265,7 @@ namespace kiwano
 	{
 	}
 
-	void ActionScaleBy::Init(ActorPtr target)
+	void ActionScaleBy::Init(Actor* target)
 	{
 		if (target)
 		{
@@ -279,26 +274,19 @@ namespace kiwano
 		}
 	}
 
-	void ActionScaleBy::UpdateTween(ActorPtr target, float percent)
+	void ActionScaleBy::UpdateTween(Actor* target, float percent)
 	{
 		target->SetScale(Vec2{ start_scale_x_ + delta_x_ * percent, start_scale_y_ + delta_y_ * percent });
 	}
 
 	ActionPtr ActionScaleBy::Clone() const
 	{
-		return new (std::nothrow) ActionScaleBy(dur_, delta_x_, delta_y_, ease_func_);
+		return new (std::nothrow) ActionScaleBy(GetDuration(), delta_x_, delta_y_, GetEaseFunc());
 	}
 
 	ActionPtr ActionScaleBy::Reverse() const
 	{
-		return new (std::nothrow) ActionScaleBy(dur_, -delta_x_, -delta_y_, ease_func_);
-	}
-
-	ActionScaleTo::ActionScaleTo(Duration duration, float scale, EaseFunc func)
-		: ActionScaleBy(duration, 0, 0, func)
-	{
-		end_scale_x_ = scale;
-		end_scale_y_ = scale;
+		return new (std::nothrow) ActionScaleBy(GetDuration(), -delta_x_, -delta_y_, GetEaseFunc());
 	}
 
 	ActionScaleTo::ActionScaleTo(Duration duration, float scale_x, float scale_y, EaseFunc func)
@@ -310,10 +298,10 @@ namespace kiwano
 
 	ActionPtr ActionScaleTo::Clone() const
 	{
-		return new (std::nothrow) ActionScaleTo(dur_, end_scale_x_, end_scale_y_, ease_func_);
+		return new (std::nothrow) ActionScaleTo(GetDuration(), end_scale_x_, end_scale_y_, GetEaseFunc());
 	}
 
-	void ActionScaleTo::Init(ActorPtr target)
+	void ActionScaleTo::Init(Actor* target)
 	{
 		ActionScaleBy::Init(target);
 		delta_x_ = end_scale_x_ - start_scale_x_;
@@ -333,7 +321,7 @@ namespace kiwano
 	{
 	}
 
-	void ActionFadeTo::Init(ActorPtr target)
+	void ActionFadeTo::Init(Actor* target)
 	{
 		if (target)
 		{
@@ -342,14 +330,14 @@ namespace kiwano
 		}
 	}
 
-	void ActionFadeTo::UpdateTween(ActorPtr target, float percent)
+	void ActionFadeTo::UpdateTween(Actor* target, float percent)
 	{
 		target->SetOpacity(start_val_ + delta_val_ * percent);
 	}
 
 	ActionPtr ActionFadeTo::Clone() const
 	{
-		return new (std::nothrow) ActionFadeTo(dur_, end_val_, ease_func_);
+		return new (std::nothrow) ActionFadeTo(GetDuration(), end_val_, GetEaseFunc());
 	}
 
 	ActionFadeIn::ActionFadeIn(Duration duration, EaseFunc func)
@@ -374,7 +362,7 @@ namespace kiwano
 	{
 	}
 
-	void ActionRotateBy::Init(ActorPtr target)
+	void ActionRotateBy::Init(Actor* target)
 	{
 		if (target)
 		{
@@ -382,7 +370,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionRotateBy::UpdateTween(ActorPtr target, float percent)
+	void ActionRotateBy::UpdateTween(Actor* target, float percent)
 	{
 		float rotation = start_val_ + delta_val_ * percent;
 		if (rotation > 360.f)
@@ -393,12 +381,12 @@ namespace kiwano
 
 	ActionPtr ActionRotateBy::Clone() const
 	{
-		return new (std::nothrow) ActionRotateBy(dur_, delta_val_, ease_func_);
+		return new (std::nothrow) ActionRotateBy(GetDuration(), delta_val_, GetEaseFunc());
 	}
 
 	ActionPtr ActionRotateBy::Reverse() const
 	{
-		return new (std::nothrow) ActionRotateBy(dur_, -delta_val_, ease_func_);
+		return new (std::nothrow) ActionRotateBy(GetDuration(), -delta_val_, GetEaseFunc());
 	}
 
 	ActionRotateTo::ActionRotateTo(Duration duration, float rotation, EaseFunc func)
@@ -409,10 +397,10 @@ namespace kiwano
 
 	ActionPtr ActionRotateTo::Clone() const
 	{
-		return new (std::nothrow) ActionRotateTo(dur_, end_val_, ease_func_);
+		return new (std::nothrow) ActionRotateTo(GetDuration(), end_val_, GetEaseFunc());
 	}
 
-	void ActionRotateTo::Init(ActorPtr target)
+	void ActionRotateTo::Init(Actor* target)
 	{
 		ActionRotateBy::Init(target);
 		delta_val_ = end_val_ - start_val_;
@@ -431,16 +419,16 @@ namespace kiwano
 
 	ActionPtr ActionCustom::Clone() const
 	{
-		return new ActionCustom(dur_, tween_func_);
+		return new ActionCustom(GetDuration(), tween_func_);
 	}
 
-	void ActionCustom::Init(ActorPtr target)
+	void ActionCustom::Init(Actor* target)
 	{
 		if (!tween_func_)
 			this->Done();
 	}
 
-	void ActionCustom::UpdateTween(ActorPtr target, float percent)
+	void ActionCustom::UpdateTween(Actor* target, float percent)
 	{
 		if (tween_func_)
 			tween_func_(target, percent);

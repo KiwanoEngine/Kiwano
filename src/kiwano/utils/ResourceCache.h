@@ -20,7 +20,8 @@
 
 #pragma once
 #include <kiwano/core/Resource.h>
-#include <kiwano/2d/include-forwards.h>
+#include <kiwano/2d/Frame.h>
+#include <kiwano/2d/FrameSequence.h>
 #include <kiwano/renderer/GifImage.h>
 #include <3rd-party/tinyxml2/tinyxml2.h>
 
@@ -100,12 +101,12 @@ namespace kiwano
 			return const_cast<_Ty*>(dynamic_cast<const _Ty*>((*iter).second.get()));
 		}
 
-	protected:
+	private:
 		ResourceCache();
 
 		virtual ~ResourceCache();
 
-	protected:
+	private:
 		UnorderedMap<String, ObjectBasePtr>		object_cache_;
 		UnorderedMap<String, GifImage>			gif_cache_;
 		UnorderedMap<String, FontCollection>	font_collection_cache_;

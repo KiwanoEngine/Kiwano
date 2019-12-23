@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/SmartPtr.hpp>
 
@@ -73,7 +73,7 @@ namespace kiwano
 			void SetResponseCallback(ResponseCallback const& callback);
 			ResponseCallback const& GetResponseCallback() const;
 
-		protected:
+		private:
 			Type type_;
 			String url_;
 			String data_;

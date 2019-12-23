@@ -42,12 +42,12 @@ namespace kiwano
 
 		void Clear();
 
-	protected:
+	private:
 		TextureCache();
 
 		virtual ~TextureCache();
 
-	protected:
+	private:
 		using TextureMap = UnorderedMap<size_t, Texture>;
 		TextureMap texture_cache_;
 

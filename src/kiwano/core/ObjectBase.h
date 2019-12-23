@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/core/RefCounter.hpp>
 #include <kiwano/core/SmartPtr.hpp>
 

@@ -24,26 +24,28 @@
 
 namespace kiwano
 {
-	// 缓动函数
+	/// \~chinese
+	/// @brief 缓动函数
 	using EaseFunc = Function<float(float)>;
 
-	// 缓动函数枚举
-	// See https://easings.net for more information
+	/// \~chinese
+	/// @brief 缓动函数枚举
+	/// @details 查看 https://easings.net 获取更多信息
 	struct Ease
 	{
-		static KGE_API EaseFunc Linear;			// 线性
-		static KGE_API EaseFunc EaseIn;			// 由慢变快
-		static KGE_API EaseFunc EaseOut;		// 由快变慢
-		static KGE_API EaseFunc EaseInOut;		// 由慢变快, 再由快变慢
-		static KGE_API EaseFunc ExpoIn;			// 由慢变极快
-		static KGE_API EaseFunc ExpoOut;		// 由极快变慢
-		static KGE_API EaseFunc ExpoInOut;		// 由慢至极快, 再由极快边慢
-		static KGE_API EaseFunc ElasticIn;		// 自起点赋予弹性
-		static KGE_API EaseFunc ElasticOut;		// 自终点赋予弹性
-		static KGE_API EaseFunc ElasticInOut;	// 再起点和终点赋予弹性
-		static KGE_API EaseFunc BounceIn;		// 自起点赋予反弹力
-		static KGE_API EaseFunc BounceOut;		// 自终点赋予反弹力
-		static KGE_API EaseFunc BounceInOut;	// 在起点和终点赋予反弹力
+		static KGE_API EaseFunc Linear;			///< 线性
+		static KGE_API EaseFunc EaseIn;			///< 由慢变快
+		static KGE_API EaseFunc EaseOut;		///< 由快变慢
+		static KGE_API EaseFunc EaseInOut;		///< 由慢变快, 再由快变慢
+		static KGE_API EaseFunc ExpoIn;			///< 由慢变极快
+		static KGE_API EaseFunc ExpoOut;		///< 由极快变慢
+		static KGE_API EaseFunc ExpoInOut;		///< 由慢至极快, 再由极快边慢
+		static KGE_API EaseFunc ElasticIn;		///< 自起点赋予弹性
+		static KGE_API EaseFunc ElasticOut;		///< 自终点赋予弹性
+		static KGE_API EaseFunc ElasticInOut;	///< 再起点和终点赋予弹性
+		static KGE_API EaseFunc BounceIn;		///< 自起点赋予反弹力
+		static KGE_API EaseFunc BounceOut;		///< 自终点赋予反弹力
+		static KGE_API EaseFunc BounceInOut;	///< 在起点和终点赋予反弹力
 		static KGE_API EaseFunc BackIn;
 		static KGE_API EaseFunc BackOut;
 		static KGE_API EaseFunc BackInOut;
@@ -65,84 +67,119 @@ namespace kiwano
 	};
 
 
-	// 补间动画
+	KGE_DECLARE_SMART_PTR(ActionTween);
+	KGE_DECLARE_SMART_PTR(ActionMoveBy);
+	KGE_DECLARE_SMART_PTR(ActionMoveTo);
+	KGE_DECLARE_SMART_PTR(ActionJumpBy);
+	KGE_DECLARE_SMART_PTR(ActionJumpTo);
+	KGE_DECLARE_SMART_PTR(ActionScaleBy);
+	KGE_DECLARE_SMART_PTR(ActionScaleTo);
+	KGE_DECLARE_SMART_PTR(ActionFadeTo);
+	KGE_DECLARE_SMART_PTR(ActionFadeIn);
+	KGE_DECLARE_SMART_PTR(ActionFadeOut);
+	KGE_DECLARE_SMART_PTR(ActionRotateBy);
+	KGE_DECLARE_SMART_PTR(ActionRotateTo);
+	KGE_DECLARE_SMART_PTR(ActionCustom);
+
+
+	/**
+	* \addtogroup Actions
+	* @{
+	*/
+
+	/// \~chinese
+	/// @brief 补间动画
 	class KGE_API ActionTween
 		: public Action
 	{
 	public:
 		ActionTween();
 
-		ActionTween(
-			Duration duration,
-			EaseFunc func
-		);
+		/// \~chinese
+		/// @brief 补间动画
+		/// @param duration 动画时长
+		/// @param func 动画速度缓动函数
+		ActionTween(Duration duration, EaseFunc func);
 
-		// 自定义缓动函数
-		void SetEaseFunc(
-			EaseFunc const& func
-		);
-
-		EaseFunc const& GetEaseFunc() const;
-
+		/// \~chinese
+		/// @brief 获取动画时长
 		Duration GetDuration() const;
 
+		/// \~chinese
+		/// @brief 设置动画时长
 		void SetDuration(Duration duration);
 
-	protected:
-		void Update(ActorPtr target, Duration dt) override;
+		/// \~chinese
+		/// @brief 获取动画速度缓动函数
+		EaseFunc const& GetEaseFunc() const;
 
-		virtual void UpdateTween(ActorPtr target, float percent) = 0;
+		/// \~chinese
+		/// @brief 设置动画速度缓动函数
+		void SetEaseFunc(EaseFunc const& func);
 
 	protected:
+		void Update(Actor* target, Duration dt) override;
+
+		virtual void UpdateTween(Actor* target, float percent) = 0;
+
+	private:
 		Duration dur_;
 		EaseFunc ease_func_;
 	};
 
 
-	// 相对位移动作
+	/// \~chinese
+	/// @brief 相对位移动画
 	class KGE_API ActionMoveBy
 		: public ActionTween
 	{
 	public:
-		ActionMoveBy(
-			Duration duration,		/* 持续时长 */
-			Point const& vector,	/* 移动距离 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造相对位移动画
+		/// @param duration 动画时长
+		/// @param vector 移动向量
+		/// @param func 动画速度缓动函数
+		ActionMoveBy(Duration duration, Vec2 const& vector, EaseFunc func = nullptr);
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-		void UpdateTween(ActorPtr target, float percent) override;
+		void UpdateTween(Actor* target, float percent) override;
 
 	protected:
 		Point	start_pos_;
 		Point	prev_pos_;
-		Point	delta_pos_;
+		Vec2	delta_pos_;
 	};
 
 
-	// 位移动作
+	/// \~chinese
+	/// @brief 位移动画
 	class KGE_API ActionMoveTo
 		: public ActionMoveBy
 	{
 	public:
-		ActionMoveTo(
-			Duration duration,		/* 持续时长 */
-			Point const& pos,		/* 目的坐标 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造位移动画
+		/// @param duration 动画时长
+		/// @param pos 目的坐标
+		/// @param func 动画速度缓动函数
+		ActionMoveTo(Duration duration, Point const& pos, EaseFunc func = nullptr);
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		virtual ActionPtr Reverse() const override
 		{
 			KGE_ERROR(L"Reverse() not supported in ActionMoveTo");
@@ -150,36 +187,40 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-	protected:
+	private:
 		Point end_pos_;
 	};
 
 
-	// 相对跳跃动作
+	/// \~chinese
+	/// @brief 相对跳跃动画
 	class KGE_API ActionJumpBy
 		: public ActionTween
 	{
 	public:
-		ActionJumpBy(
-			Duration duration,		/* 持续时长 */
-			Point const& vec,		/* 跳跃距离 */
-			float height,			/* 跳跃高度 */
-			int jumps = 1,		/* 跳跃次数 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造相对跳跃动画
+		/// @param duration 动画时长
+		/// @param vec 跳跃位移向量
+		/// @param height 跳跃高度
+		/// @param jumps 跳跃次数
+		/// @param func 动画速度缓动函数
+		ActionJumpBy(Duration duration, Vec2 const& vec, float height, int jumps = 1, EaseFunc func = nullptr);
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-		void UpdateTween(ActorPtr target, float percent) override;
+		void UpdateTween(Actor* target, float percent) override;
 
 	protected:
 		Point	start_pos_;
@@ -190,23 +231,27 @@ namespace kiwano
 	};
 
 
-	// 跳跃动作
+	/// \~chinese
+	/// @brief 跳跃动画
 	class KGE_API ActionJumpTo
 		: public ActionJumpBy
 	{
 	public:
-		ActionJumpTo(
-			Duration duration,		/* 持续时长 */
-			Point const& pos,		/* 目的坐标 */
-			float height,			/* 跳跃高度 */
-			int jumps = 1,		/* 跳跃次数 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造跳跃动画
+		/// @param duration 动画时长
+		/// @param pos 目的坐标
+		/// @param height 跳跃高度
+		/// @param jumps 跳跃次数
+		/// @param func 动画速度缓动函数
+		ActionJumpTo(Duration duration, Point const& pos, float height, int jumps = 1, EaseFunc func = nullptr);
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		virtual ActionPtr Reverse() const override
 		{
 			KGE_ERROR(L"Reverse() not supported in ActionJumpTo");
@@ -214,41 +259,39 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-	protected:
+	private:
 		Point end_pos_;
 	};
 
 
-	// 相对缩放动作
+	/// \~chinese
+	/// @brief 相对缩放动画
 	class KGE_API ActionScaleBy
 		: public ActionTween
 	{
 	public:
-		ActionScaleBy(
-			Duration duration,		/* 持续时长 */
-			float scale,			/* 相对变化值 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造相对缩放动画
+		/// @param duration 动画时长
+		/// @param scale_x 横向缩放相对变化值
+		/// @param scale_y 纵向缩放相对变化值
+		/// @param func 动画速度缓动函数
+		ActionScaleBy(Duration duration, float scale_x, float scale_y, EaseFunc func = nullptr);
 
-		ActionScaleBy(
-			Duration duration,		/* 持续时长 */
-			float scale_x,			/* 横向缩放相对变化值 */
-			float scale_y,			/* 纵向缩放相对变化值 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
-
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-		void UpdateTween(ActorPtr target, float percent) override;
+		void UpdateTween(Actor* target, float percent) override;
 
 	protected:
 		float	start_scale_x_;
@@ -258,28 +301,26 @@ namespace kiwano
 	};
 
 
-	// 缩放动作
+	/// \~chinese
+	/// @brief 缩放动画
 	class KGE_API ActionScaleTo
 		: public ActionScaleBy
 	{
 	public:
-		ActionScaleTo(
-			Duration duration,		/* 持续时长 */
-			float scale,			/* 目标值 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造缩放动画
+		/// @param duration 动画时长
+		/// @param scale_x 横向缩放目标值
+		/// @param scale_y 纵向缩放目标值
+		/// @param func 动画速度缓动函数
+		ActionScaleTo(Duration duration, float scale_x, float scale_y, EaseFunc func = nullptr);
 
-		ActionScaleTo(
-			Duration duration,		/* 持续时长 */
-			float scale_x,			/* 横向缩放目标值 */
-			float scale_y,			/* 纵向缩放目标值 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
-
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		virtual ActionPtr Reverse() const override
 		{
 			KGE_ERROR(L"Reverse() not supported in ActionScaleTo");
@@ -287,29 +328,33 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-	protected:
+	private:
 		float	end_scale_x_;
 		float	end_scale_y_;
 	};
 
 
-	// 透明度渐变动作
+	/// \~chinese
+	/// @brief 透明度渐变动画
 	class KGE_API ActionFadeTo
 		: public ActionTween
 	{
 	public:
-		ActionFadeTo(
-			Duration duration,		/* 持续时长 */
-			float opacity,			/* 目标值 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造透明度渐变动画
+		/// @param duration 动画时长
+		/// @param opacity 目标透明度
+		/// @param func 动画速度缓动函数
+		ActionFadeTo(Duration duration, float opacity, EaseFunc func = nullptr);
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		virtual ActionPtr Reverse() const override
 		{
 			KGE_ERROR(L"Reverse() not supported in ActionFadeTo");
@@ -317,64 +362,70 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-		void UpdateTween(ActorPtr target, float percent) override;
+		void UpdateTween(Actor* target, float percent) override;
 
-	protected:
+	private:
 		float start_val_;
 		float delta_val_;
 		float end_val_;
 	};
 
 
-	// 淡入动作
+	/// \~chinese
+	/// @brief 淡入动画
 	class KGE_API ActionFadeIn
 		: public ActionFadeTo
 	{
 	public:
-		// 创建淡入动作
-		explicit ActionFadeIn(
-			Duration duration,		/* 持续时长 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造淡入动画
+		/// @param duration 动画时长
+		/// @param func 动画速度缓动函数
+		explicit ActionFadeIn(Duration duration, EaseFunc func = nullptr);
 	};
 
 
-	// 淡出动作
+	/// \~chinese
+	/// @brief 淡出动画
 	class KGE_API ActionFadeOut
 		: public ActionFadeTo
 	{
 	public:
-		// 创建淡出动作
-		explicit ActionFadeOut(
-			Duration duration,		/* 持续时长 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造淡出动画
+		/// @param duration 动画时长
+		/// @param func 动画速度缓动函数
+		explicit ActionFadeOut(Duration duration, EaseFunc func = nullptr);
 	};
 
 
-	// 相对旋转动作
+	/// \~chinese
+	/// @brief 相对旋转动画
 	class KGE_API ActionRotateBy
 		: public ActionTween
 	{
 	public:
-		ActionRotateBy(
-			Duration duration,		/* 持续时长 */
-			float rotation,			/* 相对变化值 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造相对旋转动画
+		/// @param duration 动画时长
+		/// @param rotation 角度相对变化值
+		/// @param func 动画速度缓动函数
+		ActionRotateBy(Duration duration, float rotation, EaseFunc func = nullptr);
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-		void UpdateTween(ActorPtr target, float percent) override;
+		void UpdateTween(Actor* target, float percent) override;
 
 	protected:
 		float start_val_;
@@ -382,21 +433,25 @@ namespace kiwano
 	};
 
 
-	// 旋转动作
+	/// \~chinese
+	/// @brief 旋转动画
 	class KGE_API ActionRotateTo
 		: public ActionRotateBy
 	{
 	public:
-		ActionRotateTo(
-			Duration duration,		/* 持续时长 */
-			float rotation,			/* 目标值 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造旋转动画
+		/// @param duration 动画时长
+		/// @param rotation 目标角度
+		/// @param func 动画速度缓动函数
+		ActionRotateTo(Duration duration, float rotation, EaseFunc func = nullptr);
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		virtual ActionPtr Reverse() const override
 		{
 			KGE_ERROR(L"Reverse() not supported in ActionRotateTo");
@@ -404,30 +459,37 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-	protected:
+	private:
 		float end_val_;
 	};
 
 
-	// 自定义动作
+	/// \~chinese
+	/// @brief 自定义动画
 	class KGE_API ActionCustom
 		: public ActionTween
 	{
 	public:
-		using TweenFunc = Function<void(ActorPtr, float)>;
+		/// \~chinese
+		/// @brief 动画回调函数
+		/// @details 在动画更新时回调该函数，第一个参数是执行动画的目标，第二个参数是动画进度（0.0 - 1.0）
+		using TweenFunc = Function<void(Actor*, float)>;
 
-		ActionCustom(
-			Duration duration,		/* 持续时长 */
-			TweenFunc tween_func,	/* 过程函数 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构造自定义动画
+		/// @param duration 动画时长
+		/// @param tween_func 动画回调函数
+		/// @param func 动画速度缓动函数
+		ActionCustom(Duration duration, TweenFunc tween_func, EaseFunc func = nullptr);
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		ActionPtr Reverse() const override
 		{
 			KGE_ERROR(L"Reverse() not supported in ActionCustom");
@@ -435,12 +497,14 @@ namespace kiwano
 		}
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-		void UpdateTween(ActorPtr target, float percent) override;
+		void UpdateTween(Actor* target, float percent) override;
 
-	protected:
+	private:
 		TweenFunc tween_func_;
 	};
+
+	/** @} */
 
 }

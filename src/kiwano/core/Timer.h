@@ -57,12 +57,12 @@ namespace kiwano
 		// 任务是否正在执行
 		bool IsRunning() const;
 
-	protected:
+	private:
 		void Update(Duration dt, bool& remove_after_update);
 
 		void Reset();
 
-	protected:
+	private:
 		bool		running_;
 		int		run_times_;
 		int		total_times_;

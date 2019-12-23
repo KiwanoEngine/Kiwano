@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/common.h>
 #include <kiwano/core/RefCounter.hpp>
-#include <kiwano/common/common.h>
 
 namespace kiwano
 {

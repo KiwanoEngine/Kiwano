@@ -26,8 +26,13 @@ namespace kiwano
 {
 	namespace physics
 	{
+		/**
+		* \addtogroup Events
+		* @{
+		*/
+
 		/// \~chinese
-		/// @brief 接触开始事件
+		/// @brief 物理接触开始事件
 		class KGE_API ContactBeginEvent
 			: public Event
 		{
@@ -41,7 +46,7 @@ namespace kiwano
 		};
 
 		/// \~chinese
-		/// @brief 接触结束事件
+		/// @brief 物理接触结束事件
 		class KGE_API ContactEndEvent
 			: public Event
 		{
@@ -53,5 +58,7 @@ namespace kiwano
 			ContactEndEvent();
 			ContactEndEvent(Contact const& contact);
 		};
+
+		/** @} */
 	}
 }

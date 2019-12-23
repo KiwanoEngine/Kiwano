@@ -123,7 +123,7 @@ namespace kiwano
 
 		inline operator bool() const							{ return IsValid(); }
 
-	protected:
+	private:
 		ComPtr<ID2D1Geometry> geo_;
 	};
 
@@ -198,7 +198,7 @@ namespace kiwano
 
 		void Init();
 
-	protected:
+	private:
 		ComPtr<ID2D1PathGeometry> path_geo_;
 		ComPtr<ID2D1GeometrySink> sink_;
 	};

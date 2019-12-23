@@ -29,13 +29,6 @@
 
 
 //
-// common
-//
-
-#include <kiwano/common/common.h>
-
-
-//
 // math
 //
 
@@ -45,6 +38,24 @@
 #include <kiwano/math/Vec2.hpp>
 #include <kiwano/math/rand.h>
 #include <kiwano/math/Matrix.hpp>
+
+
+//
+// core
+//
+
+#include <kiwano/core/common.h>
+#include <kiwano/core/time.h>
+#include <kiwano/core/Logger.h>
+#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/Event.h>
+#include <kiwano/core/EventListener.h>
+#include <kiwano/core/EventDispatcher.h>
+#include <kiwano/core/Timer.h>
+#include <kiwano/core/TimerManager.h>
+#include <kiwano/core/AsyncTask.h>
+#include <kiwano/core/Resource.h>
 
 
 //
@@ -60,23 +71,6 @@
 #include <kiwano/renderer/LayerArea.h>
 #include <kiwano/renderer/TextureCache.h>
 #include <kiwano/renderer/Renderer.h>
-
-
-//
-// core
-//
-
-#include <kiwano/core/time.h>
-#include <kiwano/core/Logger.h>
-#include <kiwano/core/SmartPtr.hpp>
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/Event.h>
-#include <kiwano/core/EventListener.h>
-#include <kiwano/core/EventDispatcher.h>
-#include <kiwano/core/Timer.h>
-#include <kiwano/core/TimerManager.h>
-#include <kiwano/core/AsyncTask.h>
-#include <kiwano/core/Resource.h>
 
 
 //
@@ -106,7 +100,7 @@
 #include <kiwano/2d/Layer.h>
 #include <kiwano/2d/Sprite.h>
 #include <kiwano/2d/GifSprite.h>
-#include <kiwano/2d/Text.h>
+#include <kiwano/2d/TextActor.h>
 #include <kiwano/2d/Canvas.h>
 #include <kiwano/2d/ShapeActor.h>
 #include <kiwano/2d/DebugActor.h>

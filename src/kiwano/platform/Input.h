@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/math/math.h>
 #include <kiwano/core/keys.h>
 #include <kiwano/core/Component.h>
@@ -46,9 +46,7 @@ namespace kiwano
 		* @return 是否正被按下
 		* @see kiwano::KeyCode kiwano::MouseButton
 		*/
-		bool IsDown(
-			int key_or_btn
-		);
+		bool IsDown(int key_or_btn);
 
 		/**
 		* \~chinese
@@ -57,9 +55,7 @@ namespace kiwano
 		* @return 是否刚被点击
 		* @see kiwano::KeyCode kiwano::MouseButton
 		*/
-		bool WasPressed(
-			int key_or_btn
-		);
+		bool WasPressed(int key_or_btn);
 
 		/**
 		* \~chinese
@@ -68,9 +64,7 @@ namespace kiwano
 		* @return 是否刚抬起
 		* @see kiwano::KeyCode kiwano::MouseButton
 		*/
-		bool WasReleased(
-			int key_or_btn
-		);
+		bool WasReleased(int key_or_btn);
 
 		/**
 		* \~chinese
@@ -108,12 +102,12 @@ namespace kiwano
 
 		void Destroy();
 
-	protected:
+	private:
 		Input();
 
 		~Input();
 
-	protected:
+	private:
 		static const int KEY_NUM = 256;
 
 		bool want_update_;
