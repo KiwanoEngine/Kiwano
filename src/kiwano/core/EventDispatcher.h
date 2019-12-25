@@ -23,34 +23,40 @@
 
 namespace kiwano
 {
+	/**
+	* \~chinese
+	* @brief 事件分发系统
+	*/
 	class KGE_API EventDispatcher
 	{
+	public:
 		using Listeners = IntrusiveList<EventListenerPtr>;
 
-	public:
-		// 添加监听器
-		EventListener* AddListener(
-			EventListenerPtr listener
-		);
+		/// \~chinese
+		/// @brief 添加监听器
+		EventListener* AddListener(EventListenerPtr listener);
 
-		// 添加监听器
-		EventListener* AddListener(
-			EventListener* listener
-		);
+		/// \~chinese
+		/// @brief 添加监听器
+		EventListener* AddListener(EventListener* listener);
 
-		// 添加监听器
-		EventListener* AddListener(
-			EventType type,
-			EventListener::Callback callback
-		);
+		/// \~chinese
+		/// @brief 添加监听器
+		/// @param type 监听的事件类型
+		/// @param callback 回调函数
+		EventListener* AddListener(EventType type, EventListener::Callback callback);
 
-		// 添加监听器
-		EventListener* AddListener(
-			String const& name,
-			EventType type,
-			EventListener::Callback callback
-		);
+		/// \~chinese
+		/// @brief 添加监听器
+		/// @param name 监听器名称
+		/// @param type 监听的事件类型
+		/// @param callback 回调函数
+		EventListener* AddListener(String const& name, EventType type, EventListener::Callback callback);
 
+		/// \~chinese
+		/// @brief 添加监听器
+		/// @tparam _EventTy 事件类型
+		/// @param callback 回调函数
 		template <
 			typename _EventTy,
 			typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type
@@ -60,6 +66,11 @@ namespace kiwano
 			return AddListener(KGE_EVENT(_EventTy), callback);
 		}
 
+		/// \~chinese
+		/// @brief 添加监听器
+		/// @tparam _EventTy 事件类型
+		/// @param name 监听器名称
+		/// @param callback 回调函数
 		template <
 			typename _EventTy,
 			typename = typename std::enable_if<IsEvent<_EventTy>::value, int>
@@ -69,36 +80,55 @@ namespace kiwano
 			return AddListener(name, KGE_EVENT(_EventTy), callback);
 		}
 
-		// 启动监听器
-		void StartListeners(
-			String const& listener_name
-		);
+		/// \~chinese
+		/// @brief 启动监听器
+		/// @param name 监听器名称
+		void StartListeners(String const& name);
 
-		// 停止监听器
-		void StopListeners(
-			String const& listener_name
-		);
+		/// \~chinese
+		/// @brief 停止监听器
+		/// @param name 监听器名称
+		void StopListeners(String const& name);
 
-		// 移除监听器
-		void RemoveListeners(
-			String const& listener_name
-		);
+		/// \~chinese
+		/// @brief 移除监听器
+		/// @param name 监听器名称
+		void RemoveListeners(String const& name);
 
-		// 启动监听器
-		void StartListeners(
-			const EventType& type
-		);
+		/// \~chinese
+		/// @brief 启动监听器
+		/// @param type 监听的事件类型
+		void StartListeners(const EventType& type);
 
-		// 停止监听器
-		void StopListeners(
-			const EventType& type
-		);
+		/// \~chinese
+		/// @brief 停止监听器
+		/// @param type 监听的事件类型
+		void StopListeners(const EventType& type);
 
-		// 移除监听器
-		void RemoveListeners(
-			const EventType& type
-		);
+		/// \~chinese
+		/// @brief 移除监听器
+		/// @param type 监听的事件类型
+		void RemoveListeners(const EventType& type);
 
+		/// \~chinese
+		/// @brief 启动所有监听器
+		void StartAllListeners();
+
+		/// \~chinese
+		/// @brief 停止所有监听器
+		void StopAllListeners();
+
+		/// \~chinese
+		/// @brief 移除所有监听器
+		void RemoveAllListeners();
+
+		/// \~chinese
+		/// @brief 获取所有监听器
+		const Listeners& GetAllListeners() const;
+
+		/// \~chinese
+		/// @brief 分发事件
+		/// @param evt 事件
 		virtual void Dispatch(Event& evt);
 
 	private:

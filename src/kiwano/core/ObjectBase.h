@@ -72,14 +72,24 @@ namespace kiwano
 		String DumpObject();
 
 	public:
+		/// \~chinese
+		/// @brief 是否启用了内存泄漏追踪
 		static bool IsTracingLeaks();
 
+		/// \~chinese
+		/// @brief 开始追踪内存泄漏
 		static void StartTracingLeaks();
 
+		/// \~chinese
+		/// @brief 停止追踪内存泄漏
 		static void StopTracingLeaks();
 
+		/// \~chinese
+		/// @brief 打印所有追踪中的对象信息
 		static void DumpTracingObjects();
 
+		/// \~chinese
+		/// @brief 获取所有追踪中的对象
 		static Vector<ObjectBase*>& GetTracingObjects();
 
 	private:

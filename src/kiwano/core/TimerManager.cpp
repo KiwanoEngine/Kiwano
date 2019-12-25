@@ -69,7 +69,7 @@ namespace kiwano
 		if (timers_.empty())
 			return;
 
-		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
+		for (auto& timer : timers_)
 		{
 			if (timer->IsName(name))
 			{
@@ -83,7 +83,7 @@ namespace kiwano
 		if (timers_.empty())
 			return;
 		
-		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
+		for (auto& timer : timers_)
 		{
 			if (timer->IsName(name))
 			{
@@ -97,10 +97,8 @@ namespace kiwano
 		if (timers_.empty())
 			return;
 
-		TimerPtr next;
-		for (auto timer = timers_.first_item(); timer; timer = next)
+		for (auto& timer : timers_)
 		{
-			next = timer->next_item();
 			if (timer->IsName(name))
 			{
 				timer->Remove();
@@ -113,7 +111,7 @@ namespace kiwano
 		if (timers_.empty())
 			return;
 
-		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
+		for (auto& timer : timers_)
 		{
 			timer->Stop();
 		}
@@ -124,7 +122,7 @@ namespace kiwano
 		if (timers_.empty())
 			return;
 
-		for (auto timer = timers_.first_item().get(); timer; timer = timer->next_item().get())
+		for (auto& timer : timers_)
 		{
 			timer->Start();
 		}

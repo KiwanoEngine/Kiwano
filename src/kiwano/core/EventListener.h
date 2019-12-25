@@ -30,7 +30,10 @@ namespace kiwano
 
 	KGE_DECLARE_SMART_PTR(EventListener);
 
-	// 事件监听器
+	/**
+	* \~chinese
+	* @brief 事件监听器
+	*/
 	class KGE_API EventListener
 		: public ObjectBase
 		, protected IntrusiveListItem<EventListenerPtr>
@@ -39,57 +42,107 @@ namespace kiwano
 		friend IntrusiveList<EventListenerPtr>;
 
 	public:
+		/// \~chinese
+		/// @brief 监听器回调函数
 		using Callback = Function<void(Event&)>;
 
+		/// \~chinese
+		/// @brief 构造空监听器
 		EventListener();
 
-		EventListener(
-			EventType type,
-			Callback const& callback
-		);
+		/// \~chinese
+		/// @brief 构造监听器
+		/// @param type 监听的事件类型
+		/// @param callback 回调函数
+		EventListener(EventType type, Callback const& callback);
 
-		EventListener(
-			String const& name,
-			EventType type,
-			Callback const& callback
-		);
+		/// \~chinese
+		/// @brief 构造监听器
+		/// @param name 监听器名称
+		/// @param type 监听的事件类型
+		/// @param callback 回调函数
+		EventListener(String const& name, EventType type, Callback const& callback);
 
+		/// \~chinese
+		/// @brief 构造监听器
+		/// @tparam _EventTy 事件类型
+		/// @param callback 回调函数
 		template <
 			typename _EventTy,
 			typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type
 		>
-		EventListener(Callback const& callback)
+		inline EventListener(Callback const& callback)
 			: EventListener(KGE_EVENT(_EventTy), callback)
 		{
 		}
 
+		/// \~chinese
+		/// @brief 构造监听器
+		/// @tparam _EventTy 事件类型
+		/// @param name 监听器名称
+		/// @param callback 回调函数
 		template <
 			typename _EventTy,
 			typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type
 		>
-		EventListener(String const& name, Callback const& callback)
+		inline EventListener(String const& name, Callback const& callback)
 			: EventListener(name, KGE_EVENT(_EventTy), callback)
 		{
 		}
 
 		virtual ~EventListener();
 
+		/// \~chinese
+		/// @brief 启动监听器
 		void Start();
 
+		/// \~chinese
+		/// @brief 停止监听器
 		void Stop();
 
+		/// \~chinese
+		/// @brief 移除监听器
+		void Remove();
+
+		/// \~chinese
+		/// @brief 是否正在运行
 		bool IsRunning() const;
 
-		Callback GetCallback() const;
+		/// \~chinese
+		/// @brief 是否可移除
+		bool IsRemoveable() const;
 
+		/// \~chinese
+		/// @brief 获取回调函数
+		const Callback& GetCallback() const;
+
+		/// \~chinese
+		/// @brief 设置回调函数
 		void SetCallback(Callback const& cb);
 
-		EventType const& GetEventType() const;
+		/// \~chinese
+		/// @brief 获取监听的事件类型
+		EventType GetEventType() const;
 
+		/// \~chinese
+		/// @brief 设置监听的事件类型
 		void SetEventType(EventType const& type);
+
+		/// \~chinese
+		/// @brief 设置监听的事件类型
+		/// @tparam _EventTy 事件类型
+		template <
+			typename _EventTy,
+			typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type
+		>
+		inline void SetEventType()
+		{
+			SetEventType(KGE_EVENT(_EventTy));
+		}
 
 	private:
 		bool		running_;
+		bool		removeable_;
 		EventType	type_;
 		Callback	callback_;
 	};
@@ -105,12 +158,22 @@ namespace kiwano
 		running_ = false;
 	}
 
+	inline void EventListener::Remove()
+	{
+		removeable_ = true;
+	}
+
 	inline bool EventListener::IsRunning() const
 	{
 		return running_;
 	}
 
-	inline EventListener::Callback EventListener::GetCallback() const
+	inline bool EventListener::IsRemoveable() const
+	{
+		return removeable_;
+	}
+
+	inline const EventListener::Callback& EventListener::GetCallback() const
 	{
 		return callback_;
 	}
@@ -120,7 +183,7 @@ namespace kiwano
 		callback_ = cb;
 	}
 
-	inline EventType const& EventListener::GetEventType() const
+	inline EventType EventListener::GetEventType() const
 	{
 		return type_;
 	}

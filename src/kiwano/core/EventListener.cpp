@@ -27,6 +27,7 @@ namespace kiwano
 		: type_()
 		, callback_()
 		, running_(true)
+		, removeable_(false)
 	{
 	}
 

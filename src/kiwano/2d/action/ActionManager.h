@@ -48,7 +48,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 获取指定名称的动画
 		/// @param name 动画名称
-		Action* GetAction(String const& name);
+		ActionPtr GetAction(String const& name);
 
 		/// \~chinese
 		/// @brief 继续所有暂停动画

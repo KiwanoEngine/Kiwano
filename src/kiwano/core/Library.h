@@ -24,22 +24,45 @@
 
 namespace kiwano
 {
-	// DLL 库
+	/**
+	* \~chinese
+	* @brief DLL库
+	*/
 	class KGE_API Library
 	{
 	public:
+		/// \~chinese
+		/// @brief 构造DLL库
 		Library();
+
+		/// \~chinese
+		/// @brief 构造DLL库
+		/// @param lib DLL文件路径
 		Library(String const& lib);
+
 		virtual ~Library();
 
+		/// \~chinese
+		/// @brief 加载DLL
+		/// @param lib DLL文件路径
 		bool Load(String const& lib);
 
+		/// \~chinese
+		/// @brief 是否有效
 		bool IsValid() const;
 
+		/// \~chinese
+		/// @brief 释放DLL
 		void Free();
 
+		/// \~chinese
+		/// @brief 检索指定的DLL中的输出库函数地址
+		/// @param proc_name 函数名
 		FARPROC GetProcess(String const& proc_name);
 
+		/// \~chinese
+		/// @brief 检索指定的DLL中的输出库函数地址
+		/// @param proc_name 函数名
 		template <typename _Proc>
 		inline _Proc GetProcess(String const& proc_name)
 		{
