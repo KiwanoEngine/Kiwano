@@ -383,11 +383,11 @@ namespace kiwano
 		{
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{
-				// KGE_LOG(L"Window minimized");
+				// KGE_SYS_LOG(L"Window minimized");
 			}
 			else
 			{
-				// KGE_LOG(L"Window resized");
+				// KGE_SYS_LOG(L"Window resized");
 
 				Window::instance().UpdateWindowRect();
 
@@ -425,7 +425,7 @@ namespace kiwano
 
 		case WM_SETTEXT:
 		{
-			// KGE_LOG(L"Window title changed");
+			// KGE_SYS_LOG(L"Window title changed");
 
 			WindowTitleChangedEvent evt;
 			evt.title = reinterpret_cast<const wchar_t*>(lparam);
@@ -435,13 +435,13 @@ namespace kiwano
 
 		case WM_SETICON:
 		{
-			// KGE_LOG(L"Window icon changed");
+			// KGE_SYS_LOG(L"Window icon changed");
 		}
 		break;
 
 		case WM_DISPLAYCHANGE:
 		{
-			// KGE_LOG(L"The display resolution has changed");
+			// KGE_SYS_LOG(L"The display resolution has changed");
 
 			::InvalidateRect(hwnd, nullptr, FALSE);
 		}
@@ -455,7 +455,7 @@ namespace kiwano
 
 		case WM_CLOSE:
 		{
-			// KGE_LOG(L"Window is closing");
+			// KGE_SYS_LOG(L"Window is closing");
 
 			if (!app->OnClosing())
 			{
@@ -468,7 +468,7 @@ namespace kiwano
 
 		case WM_DESTROY:
 		{
-			KGE_LOG(L"Window was destroyed");
+			KGE_SYS_LOG(L"Window was destroyed");
 
 			app->Quit();
 			app->OnDestroy();

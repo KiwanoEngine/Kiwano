@@ -27,7 +27,7 @@ namespace kiwano
 	/**
 	* \~chinese
 	* @brief 时间段
-	* @details
+	* @par
 	*   时间段表示法:
 	*   @code
 	*     time::Second * 5  // 5 秒

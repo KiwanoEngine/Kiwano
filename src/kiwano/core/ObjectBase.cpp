@@ -28,32 +28,30 @@ namespace kiwano
 	{
 		bool tracing_leaks = false;
 		Vector<ObjectBase*> tracing_objects;
+		uint32_t last_object_id = 0;
 	}
-
-	uint32_t ObjectBase::last_object_id = 0;
 
 	ObjectBase::ObjectBase()
 		: tracing_leak_(false)
-		, user_data_(nullptr)
+		, user_data_()
 		, name_(nullptr)
 		, id_(++last_object_id)
 	{
 #ifdef KGE_DEBUG
-
-		ObjectBase::__AddObjectToTracingList(this);
-
+		ObjectBase::AddObjectToTracingList(this);
 #endif
 	}
 
 	ObjectBase::~ObjectBase()
 	{
 		if (name_)
+		{
 			delete name_;
+			name_ = nullptr;
+		}
 
 #ifdef KGE_DEBUG
-
-		ObjectBase::__RemoveObjectFromTracingList(this);
-
+		ObjectBase::RemoveObjectFromTracingList(this);
 #endif
 	}
 
@@ -112,36 +110,33 @@ namespace kiwano
 
 	void ObjectBase::DumpTracingObjects()
 	{
-		KGE_LOG(L"-------------------------- All Objects --------------------------");
+		KGE_SYS_LOG(L"-------------------------- All Objects --------------------------");
 		for (const auto object : tracing_objects)
 		{
-			KGE_LOG(L"%s", object->DumpObject().c_str());
+			KGE_SYS_LOG(L"%s", object->DumpObject().c_str());
 		}
-		KGE_LOG(L"------------------------- Total size: %d -------------------------", tracing_objects.size());
+		KGE_SYS_LOG(L"------------------------- Total size: %d -------------------------", tracing_objects.size());
 	}
 
-	Vector<ObjectBase*>& kiwano::ObjectBase::__GetTracingObjects()
+	Vector<ObjectBase*>& ObjectBase::GetTracingObjects()
 	{
 		return tracing_objects;
 	}
 
-	void ObjectBase::__AddObjectToTracingList(ObjectBase * obj)
+	void ObjectBase::AddObjectToTracingList(ObjectBase * obj)
 	{
 #ifdef KGE_DEBUG
-
 		if (tracing_leaks && !obj->tracing_leak_)
 		{
 			obj->tracing_leak_ = true;
 			tracing_objects.push_back(obj);
 		}
-
 #endif
 	}
 
-	void ObjectBase::__RemoveObjectFromTracingList(ObjectBase * obj)
+	void ObjectBase::RemoveObjectFromTracingList(ObjectBase * obj)
 	{
 #ifdef KGE_DEBUG
-
 		if (tracing_leaks && obj->tracing_leak_)
 		{
 			obj->tracing_leak_ = false;
@@ -152,7 +147,6 @@ namespace kiwano
 				tracing_objects.erase(iter);
 			}
 		}
-
 #endif
 	}
 

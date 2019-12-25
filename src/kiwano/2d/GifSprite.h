@@ -43,7 +43,7 @@ namespace kiwano
 	public:
 		/// \~chinese
 		/// @brief GIF播放循环结束回调
-		using LoopDoneCallback	= Function<void(int)>;
+		using LoopDoneCallback	= Function<void(int /* times */)>;
 
 		/// \~chinese
 		/// @brief GIF播放结束回调

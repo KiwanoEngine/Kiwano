@@ -38,7 +38,7 @@ namespace kiwano
 
 		void AudioEngine::SetupComponent()
 		{
-			// KGE_LOG(L"Creating audio resources");
+			// KGE_SYS_LOG(L"Creating audio resources");
 
 			HRESULT hr = modules::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
 
@@ -57,7 +57,7 @@ namespace kiwano
 
 		void AudioEngine::DestroyComponent()
 		{
-			// KGE_LOG(L"Destroying audio resources");
+			// KGE_SYS_LOG(L"Destroying audio resources");
 
 			if (mastering_voice_)
 			{

@@ -475,7 +475,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 动画回调函数
 		/// @details 在动画更新时回调该函数，第一个参数是执行动画的目标，第二个参数是动画进度（0.0 - 1.0）
-		using TweenFunc = Function<void(Actor*, float)>;
+		using TweenFunc = Function<void(Actor* /* target */, float /* percent */)>;
 
 		/// \~chinese
 		/// @brief 构造自定义动画

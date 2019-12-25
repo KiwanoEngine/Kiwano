@@ -29,7 +29,6 @@ namespace kiwano
 		: id_(0)
 		, type_(nullptr)
 	{
-
 	}
 
 	Resource::Resource(uint32_t id, const wchar_t* type)

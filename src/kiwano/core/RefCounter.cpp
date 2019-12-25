@@ -18,35 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/macros.h>
-#include <kiwano/core/common.h>
+#include <kiwano/core/RefCounter.h>
 
 namespace kiwano
 {
-	class KGE_API RefCounter
-		: protected Noncopyable
+	RefCounter::RefCounter()
+		: ref_count_(0)
 	{
-	public:
-		// 增加引用计数
-		inline void Retain() { ++ref_count_; }
+	}
 
-		// 减少引用计数
-		inline void Release()
-		{
-			if (--ref_count_ <= 0)
-				delete this;
-		}
+	RefCounter::~RefCounter()
+	{
+	}
 
-		// 获取引用计数
-		inline long GetRefCount() const { return ref_count_; }
+	void RefCounter::Retain()
+	{
+		++ref_count_;
+	}
 
-	protected:
-		RefCounter() : ref_count_(0) {}
+	void RefCounter::Release()
+	{
+		--ref_count_;
+		if (ref_count_ <= 0)
+			delete this;
+	}
 
-		virtual ~RefCounter() {}
-
-	private:
-		long ref_count_;
-	};
 }

@@ -50,7 +50,7 @@ namespace kiwano
 
 	void Renderer::SetupComponent()
 	{
-		KGE_LOG(L"Creating device resources");
+		KGE_SYS_LOG(L"Creating device resources");
 
 		hwnd_ = Window::instance().GetHandle();
 		output_size_ = Window::instance().GetSize();
@@ -128,7 +128,7 @@ namespace kiwano
 
 	void Renderer::DestroyComponent()
 	{
-		KGE_LOG(L"Destroying device resources");
+		KGE_SYS_LOG(L"Destroying device resources");
 
 		RenderTarget::DiscardDeviceResources();
 

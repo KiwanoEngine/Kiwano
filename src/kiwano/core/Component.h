@@ -122,7 +122,7 @@ namespace kiwano
 		virtual void HandleEvent(Event& evt) {}
 
 		/// \~chinese
-		/// @brief Windows 消息处理
+		/// @brief 处理 Windows 消息
 		virtual void HandleMessage(HWND, UINT32, WPARAM, LPARAM) {}
 
 	public:

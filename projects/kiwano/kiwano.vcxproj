@@ -38,7 +38,7 @@
     <ClInclude Include="..\..\src\kiwano\core\keys.h" />
     <ClInclude Include="..\..\src\kiwano\core\Logger.h" />
     <ClInclude Include="..\..\src\kiwano\core\ObjectBase.h" />
-    <ClInclude Include="..\..\src\kiwano\core\RefCounter.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\RefCounter.h" />
     <ClInclude Include="..\..\src\kiwano\core\Resource.h" />
     <ClInclude Include="..\..\src\kiwano\core\SmartPtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\core\Timer.h" />
@@ -112,6 +112,7 @@
     <ClCompile Include="..\..\src\kiwano\core\Library.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Logger.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\ObjectBase.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\RefCounter.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Resource.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Timer.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\TimerManager.cpp" />

@@ -26,78 +26,35 @@ namespace kiwano
 {
 	/**
 	* \~chinese
-	* @brief 资源
-	* @details
-	*   资源是保存在 exe 中的二进制数据，
-	*   例如，一份音频资源的类型为 L"WAVE"，名称标识符为 IDR_WAVE_1，那么可以这样指定该资源: 
-	*   @code
-	*     Resource(IDR_WAVE_1, L"WAVE");
-	*   @endcode
-	*   了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
+	* @brief 引用计数器
 	*/
-	class KGE_API Resource
+	class KGE_API RefCounter
+		: protected Noncopyable
 	{
 	public:
 		/// \~chinese
-		/// @brief 资源的二进制数据
-		struct Data
-		{
-			void* buffer;	///< 资源数据
-			uint32_t size;	///< 资源数据大小
-
-			Data();
-
-			operator bool() const;
-		};
+		/// @brief 增加引用计数
+		void Retain();
 
 		/// \~chinese
-		/// @brief 构造资源
-		Resource();
+		/// @brief 减少引用计数
+		void Release();
 
 		/// \~chinese
-		/// @brief 构造资源
-		/// @param id 资源 ID
-		/// @param type 资源类型
-		Resource(uint32_t id, const wchar_t* type);
+		/// @brief 获取引用计数
+		long GetRefCount() const;
 
-		/// \~chinese
-		/// @brief 获取资源的二进制数据
-		/// @return 资源数据
-		Resource::Data GetData() const;
+	protected:
+		RefCounter();
 
-		/// \~chinese
-		/// @brief 获取资源 ID
-		uint32_t GetId() const;
-
-		/// \~chinese
-		/// @brief 获取资源类型
-		const wchar_t* GetType() const;
+		virtual ~RefCounter();
 
 	private:
-		uint32_t		id_;
-		const wchar_t*	type_;
-
-		mutable Resource::Data	data_;
+		long ref_count_;
 	};
 
-	inline Resource::Data::Data()
-		: buffer(nullptr)
-		, size(0)
+	inline long RefCounter::GetRefCount() const
 	{
-	}
-
-	inline Resource::Data::operator bool() const
-	{
-		return buffer != nullptr && size;
-	}
-
-	inline uint32_t Resource::GetId() const
-	{
-		return id_;
-	}
-
-	inline const wchar_t* Resource::GetType() const
-	{
-		return type_;
+		return ref_count_;
 	}
 }

@@ -22,68 +22,64 @@
 
 namespace kiwano
 {
-	Timer::Timer(Callback const& func, Duration delay, int times, String const& name)
+
+	Timer::Timer()
 		: running_(true)
+		, removeable_(false)
 		, run_times_(0)
-		, total_times_(times)
-		, delay_(delay)
-		, callback_(func)
-		, delta_()
+		, total_times_(0)
+		, interval_(0)
+		, elapsed_(0)
+		, callback_()
+	{
+	}
+
+	Timer::Timer(Callback const& cb, Duration interval, int times)
+		: Timer(String(), cb, interval, times)
+	{
+	}
+
+	Timer::Timer(String const& name, Callback const& cb, Duration interval, int times)
+		: Timer()
 	{
 		SetName(name);
+		SetCallback(cb);
+		SetInterval(interval);
+		SetTotalRunTimes(times);
 	}
 
-	void Timer::Start()
+	void Timer::Update(Duration dt)
 	{
-		running_ = true;
-	}
-
-	void Timer::Stop()
-	{
-		running_ = false;
-	}
-
-	void Timer::Update(Duration dt, bool& remove_after_update)
-	{
-		if (!running_)
-			return;
-
 		if (total_times_ == 0)
 		{
-			remove_after_update = true;
+			Remove();
 			return;
 		}
 
-		if (!delay_.IsZero())
+		if (IsRunning())
 		{
-			delta_ += dt;
-			if (delta_ < delay_)
-				return;
-		}
+			if (!interval_.IsZero())
+			{
+				elapsed_ += dt;
+				if (elapsed_ < interval_)
+					return;
+			}
 
-		++run_times_;
+			if (callback_)
+				callback_(this, elapsed_);
 
-		if (callback_)
-		{
-			callback_();
-		}
+			++run_times_;
+			elapsed_ = 0;
 
-		if (run_times_ == total_times_)
-		{
-			remove_after_update = true;
-			return;
+			if (run_times_ == total_times_)
+				Remove();
 		}
 	}
 
 	void Timer::Reset()
 	{
-		delta_ = Duration{};
+		elapsed_ = 0;
 		run_times_ = 0;
-	}
-
-	bool Timer::IsRunning() const
-	{
-		return running_;
 	}
 
 }

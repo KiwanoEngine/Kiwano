@@ -47,6 +47,8 @@ namespace kiwano
 
 	void Action::UpdateStep(Actor* target, Duration dt)
 	{
+		KGE_ASSERT(target != nullptr && "Action target should NOT be nullptr!");
+
 		elapsed_ += dt;
 
 		if (status_ == Status::NotStarted)
@@ -72,7 +74,7 @@ namespace kiwano
 		if (status_ == Status::Done)
 		{
 			if (cb_done_)
-				cb_done_();
+				cb_done_(target);
 
 			if (detach_target_)
 				target->RemoveFromParent();
@@ -84,7 +86,7 @@ namespace kiwano
 	void Action::Complete(Actor* target)
 	{
 		if (cb_loop_done_)
-			cb_loop_done_();
+			cb_loop_done_(target);
 
 		if (loops_ >= 0
 			&& loops_done_ >= loops_)

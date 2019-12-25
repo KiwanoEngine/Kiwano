@@ -103,7 +103,7 @@ namespace kiwano
 #if defined(KGE_DEBUG)
 		if (ObjectBase::IsTracingLeaks())
 		{
-			ss << "Objects: " << ObjectBase::__GetTracingObjects().size() << std::endl;
+			ss << "Objects: " << ObjectBase::GetTracingObjects().size() << std::endl;
 		}
 #endif
 

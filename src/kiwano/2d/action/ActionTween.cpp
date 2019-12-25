@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <functional>
 #include <kiwano/2d/action/ActionTween.h>
 #include <kiwano/2d/Actor.h>
 

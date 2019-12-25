@@ -20,11 +20,15 @@
 
 #pragma once
 #include <kiwano/core/common.h>
-#include <kiwano/core/RefCounter.hpp>
+#include <kiwano/core/RefCounter.h>
 
 namespace kiwano
 {
-	struct DefaultIntrusivePtrProxy
+	/**
+	* \~chinese
+	* @brief 默认的智能指针代理
+	*/
+	struct DefaultSmartPtrRefProxy
 	{
 		static inline void add_ref(RefCounter* ptr)
 		{
@@ -37,13 +41,17 @@ namespace kiwano
 		}
 	};
 
+	/**
+	* \~chinese
+	* @brief 智能指针
+	*/
 	template <typename _Ty>
-	using SmartPtr = IntrusivePtr<_Ty, DefaultIntrusivePtrProxy>;
+	using SmartPtr = IntrusivePtr<_Ty, DefaultSmartPtrRefProxy>;
 
 }
 
 #ifndef KGE_DECLARE_SMART_PTR
 #define KGE_DECLARE_SMART_PTR(CLASS)\
 	class CLASS;\
-	using CLASS##Ptr = ::kiwano::SmartPtr< CLASS >
+	typedef ::kiwano::SmartPtr< CLASS > CLASS##Ptr;
 #endif

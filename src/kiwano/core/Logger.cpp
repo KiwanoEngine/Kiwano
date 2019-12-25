@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <ctime>
 
 #include <kiwano/core/Logger.h>
 
@@ -109,25 +110,29 @@ namespace
 
 namespace kiwano
 {
-	namespace __console_colors
+	namespace console_colors
 	{
-		const WORD _blue	= FOREGROUND_BLUE | FOREGROUND_INTENSITY;
-		const WORD _green	= FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-		const WORD _red		= FOREGROUND_RED | FOREGROUND_INTENSITY;
-		const WORD _yellow	= FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
-		const WORD _white	= FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+		const WORD blue			= FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+		const WORD green		= FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+		const WORD red			= FOREGROUND_RED | FOREGROUND_INTENSITY;
+		const WORD yellow		= FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+		const WORD white		= FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
 
-		const WORD _blue_bg		= _white | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
-		const WORD _green_bg	= _white | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
-		const WORD _red_bg		= _white | BACKGROUND_RED | BACKGROUND_INTENSITY;
-		const WORD _yellow_bg	= BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
-		const WORD _white_bg	= BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+		const WORD blue_bg		= white | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+		const WORD green_bg		= white | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
+		const WORD red_bg		= white | BACKGROUND_RED | BACKGROUND_INTENSITY;
+		const WORD yellow_bg	= BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+		const WORD white_bg		= BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
 
-		const WORD _reset = _white;
+		const WORD reset		= white;
+	}
 
 #define DECLARE_HANDLE_COLOR(NAME, HANDLE_NAME, COLOR)\
 	inline std::wostream& (NAME)(std::wostream& _out)\
-		{ ::SetConsoleTextAttribute(::GetStdHandle(HANDLE_NAME), _##COLOR); return _out; }
+	{\
+		::SetConsoleTextAttribute(::GetStdHandle(HANDLE_NAME), console_colors::##COLOR);\
+		return _out;\
+	}
 
 #define DECLARE_COLOR(COLOR) \
 	DECLARE_HANDLE_COLOR(stdout_##COLOR, STD_OUTPUT_HANDLE, COLOR)\
@@ -137,6 +142,8 @@ namespace kiwano
 	DECLARE_HANDLE_COLOR(stdout_##COLOR##_bg, STD_OUTPUT_HANDLE, COLOR##_bg)\
 	DECLARE_HANDLE_COLOR(stderr_##COLOR##_bg, STD_ERROR_HANDLE, COLOR##_bg)
 
+	namespace console_colors
+	{
 		DECLARE_COLOR(red);
 		DECLARE_COLOR(green);
 		DECLARE_COLOR(yellow);
@@ -149,9 +156,6 @@ namespace kiwano
 		DECLARE_BG_COLOR(yellow);
 		DECLARE_BG_COLOR(blue);
 		DECLARE_BG_COLOR(white);
-
-#undef DECLARE_COLOR
-#undef DECLARE_BG_COLOR
 	}
 
 	Logger::Logger()
@@ -167,6 +171,98 @@ namespace kiwano
 	Logger::~Logger()
 	{
 		FreeAllocatedConsole();
+	}
+
+	void Logger::Printf(Level level, const wchar_t* format, ...)
+	{
+		if (!enabled_)
+			return;
+
+		StringStream sstream;
+		Prepare(level, sstream);
+
+		// Format message
+		if (format)
+		{
+			va_list args = nullptr;
+			va_start(args, format);
+
+			static wchar_t temp_buffer[1024 * 3 + 1];
+			const auto len = ::_vscwprintf(format, args) + 1;
+			::_vsnwprintf_s(temp_buffer, len, len, format, args);
+
+			sstream << ' ' << temp_buffer << L"\r\n";
+
+			va_end(args);
+		}
+
+		Output(level, sstream);
+	}
+
+	void Logger::Prepare(Level level, StringStream& sstream)
+	{
+		String prompt;
+
+		switch (level)
+		{
+		case Level::Info:
+			prompt = L"[INFO] ";
+			break;
+		case Level::System:
+			prompt = L"[SYSTEM] ";
+			break;
+		case Level::Warning:
+			prompt = L"[WARNING] ";
+			break;
+		case Level::Error:
+			prompt = L"[ERROR] ";
+			break;
+		}
+
+		// Prefix
+		sstream << L"[KIWANO] " << prompt;
+
+		// Timestamp
+		time_t unix = std::time(nullptr);
+		std::tm tmbuf;
+		localtime_s(&tmbuf, &unix);
+		sstream << std::put_time(&tmbuf, L"%H:%M:%S ");
+	}
+
+	void Logger::Output(Level level, StringStream& sstream)
+	{
+		OutputStream* ostream = nullptr;
+		ConsoleColor color = nullptr;
+
+		switch (level)
+		{
+		case Level::Info:
+			ostream = &output_stream_;
+			color = Closure(this, &Logger::DefaultOutputColor);
+			break;
+		case Level::System:
+			ostream = &output_stream_;
+			color = console_colors::stdout_blue;
+			break;
+		case Level::Warning:
+			ostream = &output_stream_;
+			color = console_colors::stdout_yellow_bg;
+			break;
+		case Level::Error:
+			ostream = &error_stream_;
+			color = console_colors::stderr_red_bg;
+			break;
+		}
+
+		// Printing
+		if (ostream)
+		{
+			auto output = sstream.str();
+			color(*ostream) << output << std::flush;
+			::OutputDebugStringW(output.c_str());
+
+			ResetConsoleColor();
+		}
 	}
 
 	void Logger::ResetOutputStream()
@@ -206,96 +302,6 @@ namespace kiwano
 	std::wstreambuf* Logger::RedirectErrorStreamBuffer(std::wstreambuf* buf)
 	{
 		return error_stream_.rdbuf(buf);
-	}
-
-	void Logger::Printf(const wchar_t* format, ...)
-	{
-		va_list args = nullptr;
-		va_start(args, format);
-
-		Outputf(output_stream_, Logger::DefaultOutputColor, nullptr, format, args);
-
-		va_end(args);
-	}
-
-	void Logger::Messagef(const wchar_t* format, ...)
-	{
-		using namespace __console_colors;
-
-		va_list args = nullptr;
-		va_start(args, format);
-
-		Outputf(output_stream_, stdout_blue, nullptr, format, args);
-
-		va_end(args);
-	}
-
-	void Logger::Warningf(const wchar_t* format, ...)
-	{
-		using namespace __console_colors;
-
-		va_list args = nullptr;
-		va_start(args, format);
-
-		Outputf(output_stream_, stdout_yellow_bg, L" Warning:", format, args);
-
-		va_end(args);
-	}
-
-	void Logger::Errorf(const wchar_t* format, ...)
-	{
-		using namespace __console_colors;
-
-		va_list args = nullptr;
-		va_start(args, format);
-
-		Outputf(error_stream_, stderr_red_bg, L" Error:", format, args);
-
-		va_end(args);
-	}
-
-	void Logger::Outputf(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const
-	{
-		if (enabled_)
-		{
-			std::wstring output = MakeOutputStringf(prompt, format, args);
-
-			os << color << output << std::flush;
-			::OutputDebugStringW(output.c_str());
-
-			ResetConsoleColor();
-		}
-	}
-
-	std::wstring Logger::MakeOutputStringf(const wchar_t* prompt, const wchar_t* format, va_list args) const
-	{
-		static wchar_t temp_buffer[1024 * 3 + 1];
-
-		StringStream ss;
-		ss << Logger::OutPrefix;
-
-		if (prompt)
-			ss << prompt;
-
-		if (format)
-		{
-			const auto len = ::_vscwprintf(format, args) + 1;
-			::_vsnwprintf_s(temp_buffer, len, len, format, args);
-
-			ss << ' ' << temp_buffer;
-		}
-		return ss.str();
-	}
-
-	std::wostream& Logger::OutPrefix(std::wostream& out)
-	{
-		out << L"[KIWANO] ";
-
-		time_t unix = std::time(nullptr);
-		std::tm tmbuf;
-		localtime_s(&tmbuf, &unix);
-		out << std::put_time(&tmbuf, L"%H:%M:%S");
-		return out;
 	}
 
 	void Logger::ShowConsole(bool show)

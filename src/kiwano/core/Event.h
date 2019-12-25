@@ -104,7 +104,7 @@ namespace kiwano
 		>
 		inline const _Ty& Cast() const
 		{
-			return *dynamic_cast<const _Ty*>(this);
+			return dynamic_cast<const _Ty&>(*this);
 		}
 
 		/// \~chinese
@@ -116,7 +116,7 @@ namespace kiwano
 		>
 		inline _Ty& Cast()
 		{
-			return *dynamic_cast<_Ty*>(this);
+			return dynamic_cast<_Ty&>(*this);
 		}
 
 		/// \~chinese

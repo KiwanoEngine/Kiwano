@@ -33,17 +33,21 @@ namespace kiwano
 		{
 			next = timer->next_item();
 
-			bool remove_after_update = false;
-			timer->Update(dt, remove_after_update);
+			timer->Update(dt);
 
-			if (remove_after_update)
+			if (timer->IsRemoveable())
 				timers_.remove(timer);
 		}
 	}
 
-	Timer* TimerManager::AddTimer(Timer::Callback const& func, Duration delay, int times, String const& name)
+	Timer* TimerManager::AddTimer(Timer::Callback const& cb, Duration interval, int times)
 	{
-		TimerPtr timer = new Timer(func, delay, times, name);
+		return AddTimer(String(), cb, interval, times);
+	}
+
+	Timer* TimerManager::AddTimer(String const& name, Timer::Callback const& cb, Duration interval, int times)
+	{
+		TimerPtr timer = new Timer(name, cb, interval, times);
 		return AddTimer(timer);
 	}
 
@@ -99,7 +103,7 @@ namespace kiwano
 			next = timer->next_item();
 			if (timer->IsName(name))
 			{
-				timers_.remove(timer);
+				timer->Remove();
 			}
 		}
 	}

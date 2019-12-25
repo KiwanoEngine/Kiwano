@@ -28,39 +28,47 @@ namespace kiwano
 	* @{
 	*/
 
+	/**
+	* \~chinese
+	* @brief 动画管理器
+	*/
 	class KGE_API ActionManager
 	{
+	public:
 		using Actions = IntrusiveList<ActionPtr>;
 
-	public:
-		// 添加动画
-		Action* AddAction(
-			ActionPtr action
-		);
+		/// \~chinese
+		/// @brief 添加动画
+		Action* AddAction(ActionPtr action);
 
-		// 添加动画
-		Action* AddAction(
-			Action* action
-		);
+		/// \~chinese
+		/// @brief 添加动画
+		Action* AddAction(Action* action);
 
-		// 获取动画
-		Action* GetAction(
-			String const& name
-		);
+		/// \~chinese
+		/// @brief 获取指定名称的动画
+		/// @param name 动画名称
+		Action* GetAction(String const& name);
 
-		// 继续所有暂停动画
+		/// \~chinese
+		/// @brief 继续所有暂停动画
 		void ResumeAllActions();
 
-		// 暂停所有动画
+		/// \~chinese
+		/// @brief 暂停所有动画
 		void PauseAllActions();
 
-		// 停止所有动画
+		/// \~chinese
+		/// @brief 停止所有动画
 		void StopAllActions();
 
-		// 获取所有动画
+		/// \~chinese
+		/// @brief 获取所有动画
 		Actions const& GetAllActions() const;
 
 	protected:
+		/// \~chinese
+		/// @brief 更新动画
 		void UpdateActions(Actor* target, Duration dt);
 
 	private:

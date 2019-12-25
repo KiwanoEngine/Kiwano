@@ -78,7 +78,7 @@ namespace kiwano
 				}
 				else
 				{
-					KGE_LOG(L"Load Mfplat.dll failed");
+					KGE_SYS_LOG(L"Load Mfplat.dll failed");
 					throw std::runtime_error("Load Mfplat.dll failed");
 				}
 
@@ -89,7 +89,7 @@ namespace kiwano
 				}
 				else
 				{
-					KGE_LOG(L"Load Mfreadwrite.dll failed");
+					KGE_SYS_LOG(L"Load Mfreadwrite.dll failed");
 					throw std::runtime_error("Load Mfreadwrite.dll failed");
 				}
 			}

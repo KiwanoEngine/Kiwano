@@ -63,9 +63,6 @@
     <ClInclude Include="..\..\src\kiwano\core\EventListener.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\RefCounter.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Resource.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -270,6 +267,9 @@
     <ClInclude Include="..\..\src\kiwano\core\common.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\RefCounter.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -451,6 +451,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp">
       <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\RefCounter.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

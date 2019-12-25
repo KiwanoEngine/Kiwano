@@ -55,7 +55,7 @@ namespace kiwano
 	public:
 		/// \~chinese
 		/// @brief 动画结束时的回调函数
-		using DoneCallback = Function<void()>;
+		using DoneCallback = Function<void(Actor* /* target */)>;
 
 		Action();
 
